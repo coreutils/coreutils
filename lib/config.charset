@@ -31,32 +31,34 @@
 # The current list of GNU canonical charset names is as follows.
 #
 #       name                         used by which systems         a MIME name?
-#   ASCII, ANSI_X3.4-1968     glibc solaris
-#   ISO-8859-1                glibc aix hpux irix osf solaris           yes
-#   ISO-8859-2                glibc aix hpux irix solaris               yes
+#   ASCII, ANSI_X3.4-1968     glibc solaris freebsd
+#   ISO-8859-1                glibc aix hpux irix osf solaris freebsd   yes
+#   ISO-8859-2                glibc aix hpux irix solaris freebsd       yes
 #   ISO-8859-4                solaris                                   yes
 #   ISO-8859-5                glibc aix hpux irix solaris               yes
-#   ISO-8859-6                aix hpux solaris                          yes
+#   ISO-8859-6                glibc aix hpux solaris                    yes
 #   ISO-8859-7                glibc aix hpux irix osf solaris           yes
 #   ISO-8859-8                glibc aix hpux solaris                    yes
 #   ISO-8859-9                glibc aix hpux irix osf solaris           yes
 #   ISO-8859-13               glibc
-#   ISO-8859-15               aix solaris
-#   KOI8-R                    glibc solaris                             yes
+#   ISO-8859-15               aix solaris freebsd
+#   KOI8-R                    glibc solaris freebsd                     yes
 #   KOI8-U                    glibc                                     yes
 #   CP850                     aix osf
 #   CP856                     aix
+#   CP866                     freebsd
 #   CP922                     aix
 #   CP932                     aix
 #   CP943                     aix
 #   CP1046                    aix
 #   CP1124                    aix
 #   CP1129                    aix
+#   CP1251                    glibc
 #   CP1252                    aix
-#   EUC-CN                    aix hpux solaris
-#   EUC-JP                    aix hpux solaris                          yes
-#   EUC-KR                    aix hpux solaris                          yes
-#   EUC-TW                    aix hpux solaris
+#   EUC-CN                    aix hpux irix solaris
+#   EUC-JP                    aix hpux irix solaris                     yes
+#   EUC-KR                    aix hpux irix solaris                     yes
+#   EUC-TW                    aix hpux irix solaris
 #   BIG5                      aix hpux solaris                          yes
 #   GBK                       aix
 #   SJIS                      hpux solaris
@@ -132,6 +134,7 @@ case "$os" in
 	echo "iso88597 ISO-8859-7"
 	echo "iso88598 ISO-8859-8"
 	echo "iso88599 ISO-8859-9"
+	echo "iso885915 ISO-8859-15"
 	echo "roman8 HP-ROMAN8"
 	echo "arabic8 HP-ARABIC8"
 	echo "greek8 HP-GREEK8"
@@ -154,6 +157,10 @@ case "$os" in
 	echo "ISO8859-5 ISO-8859-5"
 	echo "ISO8859-7 ISO-8859-7"
 	echo "ISO8859-9 ISO-8859-9"
+	echo "eucCN EUC-CN"
+	echo "eucJP EUC-JP"
+	echo "eucKR EUC-KR"
+	echo "eucTW EUC-TW"
 	;;
     osf*)
 	echo "ISO8859-1 ISO-8859-1"
@@ -182,5 +189,28 @@ case "$os" in
 	echo "TIS620.2533 TIS-620"
 	#echo "sun_eu_greek ?" # what is this?
 	echo "UTF-8 UTF-8"
+	;;
+    freebsd*)
+	# FreeBSD 3.3 doesn't have nl_langinfo(CODESET); therefore
+	# localcharset.c falls back to using the full locale name
+	# from the environment variables.
+	echo "C ASCII"
+	echo "US-ASCII ASCII"
+	for l in lt_LN; do
+	  echo "$l.ASCII ASCII"
+	done
+	for l in da_DK de_AT de_CH de_DE en_AU en_CA en_GB en_US es_ES \
+                 fi_FI fr_BE fr_CA fr_CH fr_FR is_IS it_CH it_IT lt_LN \
+                 nl_BE nl_NL no_NO pt_PT sv_SE; do
+	  echo "$l.ISO_8859-1 ISO-8859-1"
+	  echo "$l.DIS_8859-15 ISO-8859-15"
+	done
+	for l in hr_HR hu_HU lt_LN pl_PL sl_SI; do
+	  echo "$l.ISO_8859-2 ISO-8859-2"
+	done
+	for l in ru_RU ru_SU; do
+	  echo "$l.KOI8-R KOI8-R"
+	  echo "$l.CP866 CP866"
+	done
 	;;
 esac
