@@ -1,3 +1,8 @@
+2003-02-19  Jim Meyering  <jim@meyering.net>
+
+	* md5.c: Merge in some clean-up and optimization changes from glibc.
+	* sha.c: Apply those same changes here, too.
+
 2003-02-18  Jim Meyering  <jim@meyering.net>
 
 	* md5.c (md5_stream) [BLOCKSIZE]: Move definition to top of file.
