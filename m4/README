@@ -4,5 +4,4 @@ used by autoconf to create the configure script at the the top level in
 this distribution.
 
 The Makefile.am file in this directory is automatically generated
-from the template file, Makefile.am.in.  The generation will fail
-if you don't have all the right tools.
+from the template file, Makefile.am.in.
