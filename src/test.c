@@ -857,7 +857,8 @@ EXPRESSION is true or false and sets exit status.  It is one of:\n\
 "), stdout);
       fputs (_("\
 \n\
-  [-n] STRING          the length of STRING is nonzero\n\
+  -n STRING            the length of STRING is nonzero\n\
+  STRING               equivalent to -n STRING\n\
   -z STRING            the length of STRING is zero\n\
   STRING1 = STRING2    the strings are equal\n\
   STRING1 != STRING2   the strings are not equal\n\
