@@ -78,11 +78,10 @@ static int posix_format;
 
 /* If nonzero, invoke the `sync' system call before getting any usage data.
    Using this option can make df very slow, especially with many or very
-   busy disks.  Default to nonzero because the sync call does make a
-   difference on some systems -- SunOs4.1.3, for one.  I have been assured
-   that it is *not* necessary on Linux, so there should be a way to
-   configure this.  FIXME.  */
-static int require_sync = 1;
+   busy disks.  Note that this may make a difference on some systems --
+   SunOs4.1.3, for one.  I have been assured that it is *not* necessary
+   on Linux.  */
+static int require_sync = 0;
 
 /* Nonzero if errors have occurred. */
 static int exit_status;
