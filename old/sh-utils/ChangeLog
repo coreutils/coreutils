@@ -1,3 +1,8 @@
+Fri Jan  3 21:08:29 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* acconfig.h (getgroups): Add #undef.
+	From Marcus Daniels.
+
 Fri Dec 27 17:25:18 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/who-users.c [!WTMP_FILE]: Provide default path.
