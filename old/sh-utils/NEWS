@@ -1,4 +1,6 @@
-User visible changes in release 1.10
+User visible changes in release 1.9.3
+* who and tee no longer fail gratuitously when continued after an
+  interrupted read or write system call.
 * date accepts new format: %s time in seconds since 00:00:00 1/1/1971
 * date -d can parse dates like `11-JUL-1991'
 * expr '' == 0 works (before, it printed 1)
