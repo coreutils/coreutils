@@ -1,4 +1,4 @@
-#serial 2
+#serial 3
 
 dnl Misc lib-related macros for fileutils, sh-utils, textutils.
 
@@ -39,8 +39,8 @@ AC_DEFUN(jm_LIB_CHECK,
   AC_SEARCH_LIBS(yp_match, [sun ypsec])
 
   # SysV needs -lsec, older versions of Linux need -lshadow for
-  # shadow passwords.
-  AC_SEARCH_LIBS(getspnam, [shadow sec])
+  # shadow passwords.  UnixWare 7 needs -lgen.
+  AC_SEARCH_LIBS(getspnam, [shadow sec gen])
 
   # Requirements for su.c.
   AC_CHECK_MEMBERS((struct spwd.sp_pwdp))
