@@ -1,5 +1,14 @@
 1999-02-07  Jim Meyering  <meyering@ascend.com>
 
+	* tests/stty/basic-1: Run all tests even if some fail.
+	Don't use trap.
+
+	* tests/stty/basic-1: Use `stty', not $STTY.
+	Fix typo in VERBOSE code: s/\$RM/stty/.
+	* tests/stty/row-col-1: Likewise.
+
+	* tests/stty/Makefile.am (TESTS_ENVIRONMENT): Set PATH, not STTY.
+
 	Include stdio.h before defining `_unlocked' macros.
 	* src/pinky.c: Include stdio.h.
 	* src/uptime.c: Likewise.
