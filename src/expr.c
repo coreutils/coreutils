@@ -1,5 +1,5 @@
 /* expr -- evaluate expressions.
-   Copyright (C) 86, 1991-1997, 1999-2004 Free Software Foundation, Inc.
+   Copyright (C) 86, 1991-1997, 1999-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -322,34 +322,44 @@ tostring (VALUE *v)
 static bool
 toarith (VALUE *v)
 {
-  intmax_t i;
-  bool neg;
-  char *cp;
-
   switch (v->type)
     {
     case integer:
       return true;
     case string:
-      i = 0;
-      cp = v->u.s;
-      neg = (*cp == '-');
-      if (neg)
-	cp++;
+      {
+	intmax_t value = 0;
+	char *cp = v->u.s;
+	int sign = (*cp == '-' ? -1 : 1);
 
-      do
-	{
-	  if (ISDIGIT (*cp))
-	    i = i * 10 + *cp - '0';
-	  else
-	    return false;
-	}
-      while (*++cp);
+	if (sign < 0)
+	  cp++;
 
-      free (v->u.s);
-      v->u.i = i * (neg ? -1 : 1);
-      v->type = integer;
-      return true;
+	do
+	  {
+	    if (ISDIGIT (*cp))
+	      {
+		intmax_t new_v = 10 * value + sign * (*cp - '0');
+		if (0 < sign
+		    ? (INTMAX_MAX / 10 < value || new_v < 0)
+		    : (value < INTMAX_MIN / 10 || 0 < new_v))
+		  error (EXPR_FAILURE, 0,
+			 (0 < sign
+			  ? _("integer is too large: %s")
+			  : _("integer is too small: %s")),
+			 quotearg_colon (v->u.s));
+		value = new_v;
+	      }
+	    else
+	      return false;
+	  }
+	while (*++cp);
+
+	free (v->u.s);
+	v->u.i = value * sign;
+	v->type = integer;
+	return true;
+      }
     default:
       abort ();
     }
