@@ -8,6 +8,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   Now, they operate on whatever a symbolic points to, instead.
   To get the old behavior, use --no-dereference (-h).
 
+  chown --dereference now works, even when the specified owner
+  and/or group match those of an affected symlink.
+
   rm no longer required read access to the current directory.
 
   For some types of errors (e.g., read-only file system, I/O error)
