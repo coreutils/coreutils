@@ -2,6 +2,7 @@ Sun Aug 25 22:50:47 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* checks/sort-test/Makefile.am (EXTRA_DIST): Add $x-tests.
 	($x-tests): Guard dependencies with @MAINT@.
+	* checks/tr-test/Makefile.am: Likewise.
 
 Sat Aug 24 14:25:41 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
