@@ -53,10 +53,6 @@
    allocated for the output line. */
 #define OUTPUT_BLOCK 256
 
-/* The number of bytes added at a time to the amount of memory
-   allocated for the list of tabstops. */
-#define TABLIST_BLOCK 256
-
 /* The name this program was run with. */
 char *program_name;
 
@@ -74,7 +70,8 @@ static int *tab_list;
 
 /* The index of the first invalid element of `tab_list',
    where the next element can be added. */
-static int first_free_tab;
+static size_t first_free_tab;
+static size_t n_tabs_allocated;
 
 /* Null-terminated array of input filenames. */
 static char **file_list;
@@ -142,9 +139,8 @@ add_tabstop (int tabval)
 {
   if (tabval == -1)
     return;
-  if (first_free_tab % TABLIST_BLOCK == 0)
-    tab_list = xrealloc (tab_list, (first_free_tab
-				    + TABLIST_BLOCK * sizeof (tab_list[0])));
+  if (first_free_tab == n_tabs_allocated)
+    tab_list = x2nrealloc (tab_list, &n_tabs_allocated, sizeof *tab_list);
   tab_list[first_free_tab++] = tabval;
 }
 
