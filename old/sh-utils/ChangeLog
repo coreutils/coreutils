@@ -3,6 +3,7 @@ Wed Jul 17 23:13:19 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	* src/chroot.c: Include <sys/types.h> before system.h.
 	* src/seq.c: Likewise.
 	* src/yes.c: Likewise.
+	From Arne Juul.
 
 Tue Jul 16 00:06:33 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
