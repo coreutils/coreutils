@@ -1,3 +1,8 @@
+2004-05-03  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am (EXTRA_DIST): Add m4/ChangeLog, now that we no longer
+	have m4/Makefile*.
+
 2004-05-01  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
