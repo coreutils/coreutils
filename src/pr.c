@@ -1,5 +1,5 @@
 /* pr -- convert text files for printing.
-   Copyright (C) 88, 91, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 88, 91, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -725,11 +725,19 @@ static int last_line = FALSE;
    -h HEADER using pr test-suite */
 static int test_suite;
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  PAGES_OPTION = CHAR_MAX + 1,
+  COLUMNS_OPTION
+};
+
 static struct option const long_options[] =
 {
   {"test", no_argument, &test_suite, 1},
-  {"pages", required_argument, NULL, CHAR_MAX + 1},
-  {"columns", required_argument, NULL, CHAR_MAX + 2},
+  {"pages", required_argument, NULL, PAGES_OPTION},
+  {"columns", required_argument, NULL, COLUMNS_OPTION},
   {"across", no_argument, NULL, 'a'},
   {"show-control-chars", no_argument, NULL, 'c'},
   {"double-space", no_argument, NULL, 'd'},
@@ -901,7 +909,7 @@ main (int argc, char **argv)
 	case 0:			/* getopt long option */
 	  break;
 
-	case CHAR_MAX + 1:	/* --pages=FIRST_PAGE[:LAST_PAGE] */
+	case PAGES_OPTION:	/* --pages=FIRST_PAGE[:LAST_PAGE] */
 	  {			/* dominates old opt +... */
 	    if (optarg)
 	      first_last_page (optarg);
@@ -911,7 +919,7 @@ main (int argc, char **argv)
 	    break;
 	  }
 
-	case CHAR_MAX + 2:	/* --columns=COLUMN */
+	case COLUMNS_OPTION:	/* --columns=COLUMN */
 	  {
 	    long int tmp_long;
 	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
