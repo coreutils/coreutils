@@ -235,7 +235,7 @@ pretty_name (struct File_spec const *f)
 static void
 xwrite (int fd, char *const buffer, size_t n_bytes)
 {
-  assert (fd == 1);
+  assert (fd == STDOUT_FILENO);
   assert (n_bytes >= 0);
   if (n_bytes > 0 && fwrite (buffer, 1, n_bytes, stdout) == 0)
     error (EXIT_FAILURE, errno, _("write error"));
