@@ -187,10 +187,8 @@ ADD_FIELD (struct line *line, const unsigned char *field, size_t len)
 {
   if (line->nfields >= line->nfields_allocated)
     {
-      line->nfields_allocated = (3 * line->nfields_allocated) / 2 + 1;
-      line->fields = xrealloc (line->fields,
-			       (line->nfields_allocated
-				* sizeof (struct field)));
+      line->fields = x2nrealloc (line->fields, &line->nfields_allocated,
+				 sizeof (struct field));
     }
   line->fields[line->nfields].beg = field;
   line->fields[line->nfields].len = len;
@@ -287,8 +285,8 @@ static void
 initseq (struct seq *seq)
 {
   seq->count = 0;
-  seq->alloc = 1;
-  seq->lines = xmalloc (seq->alloc * sizeof *seq->lines);
+  seq->alloc = 0;
+  seq->lines = NULL;
 }
 
 /* Read a line from FP and add it to SEQ.  Return 0 if EOF, 1 otherwise.  */
@@ -297,11 +295,7 @@ static int
 getseq (FILE *fp, struct seq *seq)
 {
   if (seq->count == seq->alloc)
-    {
-      seq->alloc *= 2;
-      seq->lines = (struct line *)
-	xrealloc (seq->lines, seq->alloc * sizeof (struct line));
-    }
+    seq->lines = x2nrealloc (seq->lines, &seq->alloc, sizeof *seq->lines);
 
   if (get_line (fp, &seq->lines[seq->count]))
     {
