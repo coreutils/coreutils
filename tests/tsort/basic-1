@@ -33,6 +33,14 @@ my @Tests =
     {OUT => "a\nc\nd\nh\nb\ne\nf\ng\n"}],
    ['posix-2', {IN => "b a\nd c\nz h x h r h\n"},
     {OUT => "b\nd\nr\nx\nz\na\nc\nh\n"}],
+
+   ['linear-1', {IN => "a b b c c d d e e f f g\n"},
+    {OUT => "a\nb\nc\nd\ne\nf\ng\n"}],
+
+   ['tree-1', {IN => "a b b c c d d e e f f g\nc x x y y z\n"},
+    {OUT => "a\nb\nc\nx\nd\ny\ne\nz\nf\ng\n"}],
+   ['tree-2', {IN => "a b b c c d d e e f f g\nc x x y y z\nf r r s s t\n"},
+    {OUT => "a\nb\nc\nx\nd\ny\ne\nz\nf\nr\ng\ns\nt\n"}],
   );
 
 my $save_temps = $ENV{DEBUG};
