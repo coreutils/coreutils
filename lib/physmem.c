@@ -1,5 +1,5 @@
 /* Calculate the size of physical memory.
-   Copyright 2000, 2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -20,6 +20,8 @@
 #if HAVE_CONFIG_H
 # include <config.h>
 #endif
+
+#include "physmem.h"
 
 #if HAVE_UNISTD_H
 # include <unistd.h>
@@ -75,8 +77,6 @@ typedef struct
 } lMEMORYSTATUSEX;
 typedef WINBOOL (WINAPI *PFN_MS_EX) (lMEMORYSTATUSEX*);
 #endif
-
-#include "physmem.h"
 
 #define ARRAY_SIZE(a) (sizeof (a) / sizeof ((a)[0]))
 
