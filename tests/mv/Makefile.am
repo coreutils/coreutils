@@ -4,7 +4,7 @@ AUTOMAKE_OPTIONS = 1.3 gnits
 TESTS = i-2 mv-special-1 into-self into-self-2 into-self-3 into-self-4 \
   backup-is-src \
   i-1 hard-link-1 force partition-perm to-symlink dir-file diag \
-  part-symlink part-rename
+  part-symlink part-rename trailing-slash
 
 EXTRA_DIST = $(TESTS) setup
 TESTS_ENVIRONMENT = \
