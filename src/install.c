@@ -635,10 +635,10 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION]... [-T] SOURCE DEST        (1st form)\n\
-  or:  %s [OPTION]... SOURCE... DIRECTORY     (2nd form)\n\
-  or:  %s [OPTION]... -t DIRECTORY SOURCE...  (3rd form)\n\
-  or:  %s [OPTION]... -d DIRECTORY...         (4th form)\n\
+Usage: %s [OPTION]... [-T] SOURCE DEST\n\
+  or:  %s [OPTION]... SOURCE... DIRECTORY\n\
+  or:  %s [OPTION]... -t DIRECTORY SOURCE...\n\
+  or:  %s [OPTION]... -d DIRECTORY...\n\
 "),
 	      program_name, program_name, program_name, program_name);
       fputs (_("\
@@ -659,7 +659,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -D                  create all leading components of DEST except the last,\n\
-                        then copy SOURCE to DEST;  useful in the 1st format\n\
+                        then copy SOURCE to DEST\n\
   -g, --group=GROUP   set group ownership, instead of process' current group\n\
   -m, --mode=MODE     set permission mode (as in chmod), instead of rwxr-xr-x\n\
   -o, --owner=OWNER   set ownership (super-user only)\n\
@@ -667,7 +667,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -p, --preserve-timestamps   apply access/modification times of SOURCE files\n\
                         to corresponding destination files\n\
-  -s, --strip         strip symbol tables, only for 1st and 2nd formats\n\
+  -s, --strip         strip symbol tables\n\
   -S, --suffix=SUFFIX override the usual backup suffix\n\
   -t, --target-directory=DIRECTORY  copy all SOURCE arguments into DIRECTORY\n\
   -T, --no-target-directory  treat DEST as a normal file\n\
