@@ -291,18 +291,17 @@ lines_split (uintmax_t n_lines, char *buf, size_t bufsize)
 /* Split into pieces that are as large as possible while still not more
    than N_BYTES bytes, and are split on line boundaries except
    where lines longer than N_BYTES bytes occur.
-   FIXME: don't require a buffer of size N_BYTES, in case N_BYTES
-   is very large.  */
+   FIXME: Allow N_BYTES to be any uintmax_t value, and don't require a
+   buffer of size N_BYTES, in case N_BYTES is very large.  */
 
 static void
-line_bytes_split (uintmax_t n_bytes)
+line_bytes_split (size_t n_bytes)
 {
   size_t n_read;
   char *bp;
   int eof = 0;
   size_t n_buffered = 0;
-  size_t n = n_bytes;
-  char *buf = (char *) xmalloc (n);
+  char *buf = (char *) xmalloc (n_bytes);
 
   do
     {
@@ -459,8 +458,15 @@ main (int argc, char **argv)
 	  if (digits_optind != 0 && digits_optind != this_optind)
 	    n_units = 0;	/* More than one number given; ignore other. */
 	  digits_optind = this_optind;
+	  if (UINTMAX_MAX / 10 < n_units
+	      || n_units * 10 + c - '0' < n_units * 10)
+	    {
+	      char buffer[INT_BUFSIZE_BOUND (uintmax_t)];
+	      error (EXIT_FAILURE, 0,
+		     _("line count option -%s%c... is too large"),
+		     umaxtostr (n_units, buffer), c);
+	    }
 	  n_units = n_units * 10 + c - '0';
-	  /* FIXME: detect overflow, or remove this support altogether */
 	  break;
 
 	case_GETOPT_HELP_CHAR;
