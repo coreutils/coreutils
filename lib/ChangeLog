@@ -1,3 +1,10 @@
+2003-08-08  Jim Meyering  <jim@meyering.net>
+
+	* mountlist.c (read_filesystem_list) [MOUNTED_GETFSSTAT]:
+	Use MNT_NOWAIT, rather than MNT_WAIT.  Otherwise, `df DIR' could
+	hang on OSF/1 5.1 for DIR on both local and remote file systems.
+	Reported by (and fix confirmed by) Nelson H. F. Beebe.
+
 2003-08-07  Jim Meyering  <jim@meyering.net>
 
 	* regex.h (RE_SYNTAX_POSIX_AWK): Remove SPACE in SPACE-TAB sequence.
