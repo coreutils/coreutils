@@ -418,7 +418,7 @@ save_stdin (FILE **g_tmp, char **g_tempfile)
   sprintf (template, "%s/tacXXXXXX", tempdir);
   tempfile = mktemp (template);
 
-  fd = creat (tempfile, 0600);
+  fd = open (tempfile, O_WRONLY | O_CREAT | O_TRUNC | O_EXCL, 0600);
   if (fd == -1 || (tmp = fdopen (fd, "rw")) == NULL)
     error (EXIT_FAILURE, errno, "%s", tempfile);
   tmp = fdopen (fd, "rw");
