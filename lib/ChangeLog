@@ -1,3 +1,18 @@
+2003-01-20  Jim Meyering  <jim@meyering.net>
+
+	Merge in changes from libc
+	* error.c: Eliminate many `#ifdef USE_IN_LIBIO' conditionals.
+
+2003-01-19  Jim Meyering  <jim@meyering.net>
+
+	* strftime.c (widen) [COMPILE_WIDE]: Merge nearly-identical definitions.
+	(nl_get_alt_digit) [! defined my_strftime]: Define.
+	(my_strftime) [_NL_CURRENT]: Merge nearly-identical uses of
+	_nl_get_alt_digit and _nl_get_walt_digit.
+
+	* strftime.c (my_strftime): Merge in locale-related changes from libc.
+	These changes have no effect outside of _LIBC.
+
 2003-01-14  Jim Meyering  <jim@meyering.net>
 
 	* same.c (same_name): Declare *_basename locals to be `const'.
