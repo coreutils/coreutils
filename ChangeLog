@@ -1,3 +1,16 @@
+2004-03-23  Paul Eggert  <eggert@twinsun.com>
+
+	* NEWS: Shorten the du --files0-from announcement, and say
+	"NUL-terminated" rather than "NUL-separated".
+	* src/du.c (EXPECTED_BYTES_PER_FILE_NAME, DEFAULT_PROJECTED_N_FILES):
+	Remove: not used.
+	(usage): Say "NUL-terminated", not "NUL-separated".
+	(main): Check for I/O error when istream is closed.
+	Allow --files0-from=F even if F is empty; this specifies no files.
+	(du_files): Now that we allow the list of files to be empty,
+	handle that case.
+	* tests/du/files0-from: Adjust to above changes to src/du.c.
+
 2004-03-24  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
