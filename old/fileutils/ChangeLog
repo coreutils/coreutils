@@ -8,6 +8,8 @@
 	`shred --exact file1 file2' wouldn't touch `file1'
 	* src/shred.c (long_opts): --exact doesn't take an argument.
 	Reported by Alan Iwi.
+	* tests/shred/exact: New test for this.
+	* tests/shred/Makefile.am (TESTS): Add exact.
 
 	* Makefile.maint (PREV_VERSION): Get the value from a file, rather
 	than trying to derive it from the current version number.
