@@ -1,3 +1,11 @@
+Tue Jan  7 22:10:51 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/nice.c (main): Work around failures induced by new version of
+	getopt.c by not modifying optind before the first getopt_long call
+	in main.  With suggestions from Ulrich Drepper.
+
+	* lib/getopt.c: New (more POSIX compliant) version from GNU libc.
+
 Fri Jan  3 21:08:29 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* acconfig.h (getgroups): Add #undef.

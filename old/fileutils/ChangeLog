@@ -1,3 +1,7 @@
+Tue Jan  7 22:49:55 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/getopt.c: New (more POSIX compliant) version from GNU libc.
+
 Sun Jan  5 09:33:07 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/ls.c (print_long_format): Avoid making unnecessary copy of
