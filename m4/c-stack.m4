@@ -1,6 +1,6 @@
 # Check prerequisites for compiling lib/c-stack.c.
 
-# Copyright (C) 2002 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ AC_DEFUN([AC_SYS_XSI_STACK_OVERFLOW_HEURISTIC],
      ac_cv_sys_xsi_stack_overflow_heuristic,
      [AC_TRY_RUN(
 	[
+	 #include <unistd.h>
 	 #include <signal.h>
 	 #include <ucontext.h>
 
