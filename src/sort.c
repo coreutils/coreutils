@@ -1184,10 +1184,11 @@ look_for_fraction (unsigned const char *s, unsigned const char *e)
   static unsigned short max_groups = 0;
   static unsigned short *groups = NULL;
 
-  if (groups == NULL) {
-    max_groups = NLS_MAX_GROUPS;
-    groups = (unsigned short *) xmalloc (sizeof (*groups) * max_groups);
-  }
+  if (groups == NULL)
+    {
+      max_groups = NLS_MAX_GROUPS;
+      groups = (unsigned short *) xmalloc (sizeof (*groups) * max_groups);
+    }
 
   /* skip blanks and signs */
   while (blanks[*s] || *s == NEGATIVE_SIGN)
@@ -1199,11 +1200,14 @@ look_for_fraction (unsigned const char *s, unsigned const char *e)
          n = number of separators so far */
       if (*p == decimal_point || *p == th_sep || *p == FLOATING_POINT)
 	{
-	  if (++n >= max_groups) {  /* WOW! BIG Number... enlarge table */
-	    max_groups += NLS_MAX_GROUPS;
-	    groups = (unsigned short *) xrealloc ((char *)groups,
-						  sizeof(*groups) * max_groups);
-	  }
+	  if (++n >= max_groups)
+	    {
+	      /* BIG Number... enlarge table */
+	      max_groups += NLS_MAX_GROUPS;
+	      groups = (unsigned short *) xrealloc ((char *) groups,
+						    (sizeof (*groups)
+						     * max_groups));
+	    }
 	  groups[n] = (unsigned short) (p - s);
 	  s = p + 1;
 	}
@@ -1241,8 +1245,9 @@ look_for_fraction (unsigned const char *s, unsigned const char *e)
 	    nls_fraction_found = 1;
 	}
     }
-  else /* no grouping allowed here, last separator IS decimal point */
+  else
     {
+      /* no grouping allowed here, last separator IS decimal point */
       nls_set_fraction (*s);
     }
 }
@@ -1522,9 +1527,9 @@ getmonth (const char *s, int len)
 
   do
     {
-      int ix  = (lo + hi) / 2;
+      int ix = (lo + hi) / 2;
 
-      len  = strlen (monthtab[ix].name);
+      len = strlen (monthtab[ix].name);
       if (NLS_STRNCMP (month, monthtab[ix].name, len) < 0)
 	hi = ix;
       else
@@ -2041,7 +2046,7 @@ mergefps (FILE **fps, register int nfps, FILE *ofp)
 		}
 	      saved.length = lines[ord[0]].lines[cur[ord[0]]].length;
 	      memcpy (saved.text, lines[ord[0]].lines[cur[ord[0]]].text,
-		     saved.length + 1);
+		      saved.length + 1);
 	      if (lines[ord[0]].lines[cur[ord[0]]].keybeg != NULL)
 		{
 		  saved.keybeg = saved.text +
@@ -2132,7 +2137,7 @@ nls_numeric_format (const struct line *line, int nlines)
   for (; !nls_fraction_found && nlines > 0; line++, nlines--)
     {
       int iter;
-      for (iter=0; !nls_fraction_found; iter++)
+      for (iter = 0; !nls_fraction_found; iter++)
 	{
 	  unsigned char *text;
 	  unsigned char *lim;
@@ -2316,7 +2321,7 @@ sort (char **files, int nfiles, FILE *ofp)
 	  if (nls_keyhead)
 	    nls_keyhead = nls_keyhead->next;
 	  if (!nls_fraction_found && nls_keyhead)
-	    nls_numeric_format(lines.lines, lines.used);
+	    nls_numeric_format (lines.lines, lines.used);
 #endif
 	  sortlines (lines.lines, lines.used, tmp);
 	  if (feof (fp) && !nfiles && !n_temp_files && !buf.left)
@@ -2585,7 +2590,7 @@ main (int argc, char **argv)
   gkey.sword = gkey.eword = -1;
   gkey.ignore = NULL;
   gkey.translate = NULL;
-  gkey.numeric =  gkey.general_numeric = gkey.month = gkey.reverse = 0;
+  gkey.numeric = gkey.general_numeric = gkey.month = gkey.reverse = 0;
   gkey.skipsblanks = gkey.skipeblanks = 0;
 
   files = (char **) xmalloc (sizeof (char *) * argc);
