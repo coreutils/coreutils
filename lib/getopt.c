@@ -1,23 +1,25 @@
 /* Getopt for GNU.
-   NOTE: The canonical source of this file is maintained with the GNU
-   C Library.  Bugs can be reported to bug-glibc@gnu.org.
-
-   Copyright (C) 1987, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
+   NOTE: getopt is now part of the C library, so if you don't know what
+   "Keep this file name-space clean" means, talk to drepper@gnu.org
+   before changing it!
+   Copyright (C) 1987,88,89,90,91,92,93,94,95,96,98,99,2000,2001
    	Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-   This program is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the
-   Free Software Foundation; either version 2, or (at your option) any
-   later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
-   This program is distributed in the hope that it will be useful,
+   The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 /* This tells Alpha OSF/1 not to define a getopt prototype in <stdio.h>.
    Ditto for AIX 3.2 and <stdlib.h>.  */
@@ -251,11 +253,13 @@ static int last_nonopt;
 /* Bash 2.0 gives us an environment variable containing flags
    indicating ARGV elements that should not be considered arguments.  */
 
+#ifdef USE_NONOPTION_FLAGS
 /* Defined in getopt_init.c  */
 extern char *__getopt_nonoption_flags;
 
 static int nonoption_flags_max_len;
 static int nonoption_flags_len;
+#endif
 
 static int original_argc;
 static char *const *original_argv;
@@ -276,13 +280,17 @@ store_args_and_env (int argc, char *const *argv)
 text_set_element (__libc_subinit, store_args_and_env);
 # endif /* text_set_element */
 
-# define SWAP_FLAGS(ch1, ch2) \
+# ifdef USE_NONOPTION_FLAGS
+#  define SWAP_FLAGS(ch1, ch2) \
   if (nonoption_flags_len > 0)						      \
     {									      \
       char __tmp = __getopt_nonoption_flags[ch1];			      \
       __getopt_nonoption_flags[ch1] = __getopt_nonoption_flags[ch2];	      \
       __getopt_nonoption_flags[ch2] = __tmp;				      \
     }
+# else
+#  define SWAP_FLAGS(ch1, ch2)
+# endif
 #else	/* !_LIBC */
 # define SWAP_FLAGS(ch1, ch2)
 #endif	/* _LIBC */
@@ -314,7 +322,7 @@ exchange (argv)
      It leaves the longer segment in the right place overall,
      but it consists of two parts that need to be swapped next.  */
 
-#ifdef _LIBC
+#if defined _LIBC && defined USE_NONOPTION_FLAGS
   /* First make sure the handling of the `__getopt_nonoption_flags'
      string can work normally.  Our top argument must be in the range
      of the string.  */
@@ -418,7 +426,7 @@ _getopt_initialize (argc, argv, optstring)
   else
     ordering = PERMUTE;
 
-#ifdef _LIBC
+#if defined _LIBC && defined USE_NONOPTION_FLAGS
   if (posixly_correct == NULL
       && argc == original_argc && argv == original_argv)
     {
@@ -537,7 +545,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
      Either it does not have option syntax, or there is an environment flag
      from the shell indicating it is not an option.  The later information
      is only used when the used in the GNU libc.  */
-#ifdef _LIBC
+#if defined _LIBC && defined USE_NONOPTION_FLAGS
 # define NONOPTION_P (argv[optind][0] != '-' || argv[optind][1] == '\0'	      \
 		      || (optind < nonoption_flags_len			      \
 			  && __getopt_nonoption_flags[optind] == '1'))

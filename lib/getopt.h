@@ -1,26 +1,37 @@
 /* Declarations for getopt.
-   Copyright (C) 1989,90,91,92,93,94,96,97,98 Free Software Foundation, Inc.
-   NOTE: The canonical source of this file is maintained with the GNU C Library.
-   Bugs can be reported to bug-glibc@gnu.org.
-   This program is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the
-   Free Software Foundation; either version 2, or (at your option) any
-   later version.
+   Copyright (C) 1989-1994, 1996-1999, 2001 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-   This program is distributed in the hope that it will be useful,
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
-   USA.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #ifndef _GETOPT_H
 
 #ifndef __need_getopt
 # define _GETOPT_H 1
+#endif
+
+/* If __GNU_LIBRARY__ is not already defined, either we are being used
+   standalone, or this is the first header included in the source file.
+   If we are being used with glibc, we need to include <features.h>, but
+   that does not exist if we are standalone.  So: if __GNU_LIBRARY__ is
+   not defined, include <ctype.h>, which will pull in <features.h> for us
+   if it's from glibc.  (Why ctype.h?  It's guaranteed to exist and it
+   doesn't flood the namespace with stuff the way some other headers do.)  */
+#if !defined __GNU_LIBRARY__
+# include <ctype.h>
 #endif
 
 #ifdef	__cplusplus
@@ -82,7 +93,7 @@ extern int optopt;
 
 struct option
 {
-# if defined __STDC__ && __STDC__
+# if (defined __STDC__ && __STDC__) || defined __cplusplus
   const char *name;
 # else
   char *name;
@@ -126,7 +137,7 @@ struct option
    arguments to the option '\0'.  This behavior is specific to the GNU
    `getopt'.  */
 
-#if defined __STDC__ && __STDC__
+#if (defined __STDC__ && __STDC__) || defined __cplusplus
 # ifdef __GNU_LIBRARY__
 /* Many other libraries have conflicting prototypes for getopt, with
    differences in the consts, in stdlib.h.  To avoid compilation
