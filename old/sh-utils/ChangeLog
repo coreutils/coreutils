@@ -1,3 +1,11 @@
+2000-02-02  Bruno Haible  <haible@clisp.cons.org>
+
+	* printf.c: Include "unicodeio.h".
+	(usage): Mention \u and \U directives. \x outputs a byte, not a
+	character.
+	(print_esc): Implement \u and \U.
+	* Makefile.am (printf_LDADD): Add @LIBICONV@.
+
 2000-03-03  Jim Meyering  <meyering@lucent.com>
 
 	Make it so stty's rprnt attribute works on HPUX 10.20.
