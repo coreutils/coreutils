@@ -1,3 +1,14 @@
+1999-03-27  Jim Meyering  <meyering@ascend.com>
+
+	* src/id.c (print_user): Use uid_t instead of int.
+	(print_group): Use gid_t instead of int.
+	From John Bley.
+
+1999-03-26  Jim Meyering  <meyering@ascend.com>
+
+	* lib/Makefile.am (libfu_a_SOURCES): Add version-etc.c.
+	(noinst_HEADERS): Add version-etc.h.
+
 1999-03-20  Jim Meyering  <meyering@ascend.com>
 
 	* src/nohup.sh: Don't modify PATH just to get GNU nice.  Instead,
