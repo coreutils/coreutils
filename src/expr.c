@@ -92,7 +92,7 @@ Usage: %s EXPRESSION\n\
   or:  %s OPTION\n\
 "),
 	      program_name, program_name);
-      fputs ("\n", stdout);
+      putchar ('\n');
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
