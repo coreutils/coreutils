@@ -3,7 +3,7 @@
 	* Version 4.5.4.
 
 	* src/pinky.c (print_heading): Align TTY and Name headings.
-	Who reported this?
+	Reported by Karl Eichwalder.
 
 2002-10-18  Jim Meyering  <meyering@lucent.com>
 
