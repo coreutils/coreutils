@@ -1,3 +1,7 @@
+1998-07-12  Paul Eggert  <eggert@twinsun.com>
+
+	* src/df.c (print_header): Print "1k-blocks", not "1.0k-blocks".
+
 1998-07-07  Jim Meyering  <meyering@ascend.com>
 
 	* src/sys2.h [HAVE_FCLOSE_UNLOCKED]: Remove unnecessary block.
