@@ -2,7 +2,6 @@
 require 5.002;
 use strict;
 
-my $xx = './tr';
 $| = 1;
 
 print <<EOF;
