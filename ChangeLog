@@ -1,3 +1,9 @@
+2003-01-07  Jim Meyering  <jim@meyering.net>
+
+	* Version 4.5.5.
+
+	* tests/touch/fail-diag: Fix typo: s/ld/ls/.
+
 2003-01-04  Jim Meyering  <jim@meyering.net>
 
 	* src/copy.h: Remove use of PARAMS.
@@ -96,8 +102,6 @@
 	* src/remove.c (remove_cwd_entries): Fix typo in comment.
 
 2002-12-21  Jim Meyering  <jim@meyering.net>
-
-	* Version 4.5.5.
 
 	* announce-gen: Generate MML-formatted announcement.
 	This makes it a *lot* harder to send stale MD5/SHA1 signatures.
