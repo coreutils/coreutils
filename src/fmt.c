@@ -29,6 +29,7 @@
 #include "system.h"
 #include "closeout.h"
 #include "error.h"
+#include "quote.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -318,6 +319,7 @@ int
 main (register int argc, register char **argv)
 {
   int optchar;
+  int fail;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -346,7 +348,8 @@ main (register int argc, register char **argv)
 	}
 
       if (*s)
-	error (EXIT_FAILURE, 0, _("invalid width option: `%s'"), argv[1]);
+	error (EXIT_FAILURE, 0, _("invalid width option: %s"),
+	       quote (argv[1]));
 
       /* Make the options we just parsed invisible to getopt. */
       argv[1] = argv[0];
@@ -386,8 +389,7 @@ main (register int argc, register char **argv)
 	  long int tmp_long;
 	  if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
 	      || tmp_long <= 0 || tmp_long > INT_MAX)
-	    error (EXIT_FAILURE, 0, _("invalid width: `%s'"),
-		   optarg);
+	    error (EXIT_FAILURE, 0, _("invalid width: %s"), quote (optarg));
 	  max_width = (int) tmp_long;
 	}
 	break;
@@ -404,6 +406,7 @@ main (register int argc, register char **argv)
 
   best_width = max_width * (2 * (100 - LEEWAY) + 1) / 200;
 
+  fail = 0;
   if (optind == argc)
     fmt (stdin);
   else
@@ -421,15 +424,21 @@ main (register int argc, register char **argv)
 		{
 		  fmt (in_stream);
 		  if (fclose (in_stream) == EOF)
-		    error (EXIT_FAILURE, errno, "%s", file);
+		    {
+		      error (0, errno, "%s", file);
+		      fail = 1;
+		    }
 		}
 	      else
-		error (0, errno, "%s", file);
+		{
+		  error (0, errno, "cannot open %s for reading", quote (file));
+		  fail = 1;
+		}
 	    }
 	}
     }
 
-  exit (EXIT_SUCCESS);
+  exit (fail ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 
 /* Trim space from the front and back of the string P, yielding the prefix,
