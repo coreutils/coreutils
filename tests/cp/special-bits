@@ -25,6 +25,11 @@ chmod u-w file || framework_failure=1
   echo ""
   echo "cd $pwd && $MAKE check TESTS=special-bits"
   echo ""
+  echo "  or"
+  echo ""
+  echo "cd $pwd \\"
+  echo "  && env PATH=../../src:\$PATH MAKE=$MAKE ./special-bits"
+  echo ""
   echo '********************************************'
   exit 77
 }
