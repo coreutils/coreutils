@@ -41,12 +41,12 @@
 #include "closeout.h"
 #include "error.h"
 #include "argmatch.h"
+#include "get-date.h"
 
 #ifndef STDC_HEADERS
 time_t time ();
 #endif
 
-time_t get_date ();
 time_t posixtime ();
 int safe_read ();
 int full_write ();
