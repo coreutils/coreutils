@@ -39,7 +39,6 @@ libfetish_a_SOURCES = \
   full-read.c full-read.h \
   full-write.c full-write.h \
   gettext.h \
-  linebuffer.c linebuffer.h \
   localcharset.c localcharset.h \
   mbswidth.c mbswidth.h \
   open-safer.c \
@@ -48,7 +47,6 @@ libfetish_a_SOURCES = \
   root-dev-ino.c root-dev-ino.h \
   stat-macros.h \
   stdio-safer.h \
-  stripslash.c \
   time_r.c time_r.h \
   unicodeio.c unicodeio.h \
   unistd-safer.h \
