@@ -37,6 +37,9 @@ int putenv ();
 int stime ();
 
 char *xrealloc ();
+char *xmalloc ();
+char *xstrdup ();
+char *stpcpy ();
 time_t posixtime ();
 
 static void show_date __P ((const char *format, time_t when));
@@ -72,8 +75,29 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
-/* Parse each line in INPUT_FILENAME as with --date and display the
-   each resulting time and date.  If the file cannot be opened, tell why
+#define TZ_UTC0 "TZ=UTC0"
+
+#if LOCALTIME_CACHE
+# define TZSET tzset ()
+#else
+# define TZSET /* empty */
+#endif
+
+#define MAYBE_SET_TZ_UTC0 \
+  do { if (universal_time) set_tz (TZ_UTC0); } while (0)
+
+/* Set the TZ environment variable.  */
+
+static void
+set_tz (const char *tz_eq_zone)
+{
+  if (putenv (tz_eq_zone) != 0)
+    error (1, 0, "memory exhausted");
+  TZSET;
+}
+
+/* Parse each line in INPUT_FILENAME as with --date and display each
+   resulting time and date.  If the file cannot be opened, tell why
    then exit.  Issue a diagnostic for any lines that cannot be parsed.
    If any line cannot be parsed, return nonzero;  otherwise return zero.  */
 
@@ -86,6 +110,12 @@ batch_convert (const char *input_filename, const char *format)
   int line_length;
   size_t buflen;
   time_t when;
+  char *initial_TZ;
+
+#ifdef lint
+  /* Suppress `may be used before initialized' warning.  */
+  initial_TZ = NULL;
+#endif
 
   if (strcmp (input_filename, "-") == 0)
     {
@@ -104,6 +134,21 @@ batch_convert (const char *input_filename, const char *format)
   line = NULL;
   buflen = 0;
 
+  if (universal_time)
+    {
+      initial_TZ = getenv ("TZ");
+      if (initial_TZ == NULL)
+	{
+	  initial_TZ = xstrdup ("TZ=");
+	}
+      else
+	{
+	  char *buf = xmalloc (3 + strlen (initial_TZ) + 1);
+	  stpcpy (stpcpy (buf, "TZ="), initial_TZ);
+	  initial_TZ = buf;
+	}
+    }
+
   status = 0;
   while (1)
     {
@@ -113,7 +158,16 @@ batch_convert (const char *input_filename, const char *format)
 	  /* FIXME: detect/handle error here.  */
 	  break;
 	}
+
+      if (universal_time)
+	{
+	  /* When given a universal time option, restore the initial
+	     value of TZ before parsing each string.  */
+	  set_tz (initial_TZ);
+	}
+
       when = get_date (line, NULL);
+
       if (when == -1)
 	{
 	  if (line[line_length - 1] == '\n')
@@ -123,9 +177,12 @@ batch_convert (const char *input_filename, const char *format)
 	}
       else
 	{
+	  MAYBE_SET_TZ_UTC0;
 	  show_date (format, when);
 	}
     }
+
+  free (initial_TZ);
 
   if (fclose (in_stream) == EOF)
     error (2, errno, input_filename);
@@ -181,11 +238,6 @@ main (int argc, char **argv)
 	break;
       case 'u':
  	universal_time = 1;
-	if (putenv ("TZ=UTC0") != 0)
-	  error (1, 0, "memory exhausted");
-#if LOCALTIME_CACHE
-	tzset ();
-#endif
 	break;
       default:
 	usage (1);
@@ -278,7 +330,10 @@ argument must be a format string beginning with `+'."),
 	      when = refstats.st_mtime;
 	    }
 	  else
-	    when = get_date (datestr, NULL);
+	    {
+	      when = get_date (datestr, NULL);
+	    }
+
 	  format = (n_args == 1 ? argv[optind] + 1 : NULL);
 	}
 
@@ -292,6 +347,10 @@ argument must be a format string beginning with `+'."),
 	  if (stime (&when) == -1)
 	    error (0, errno, _("cannot set date"));
 	}
+
+      /* When given a universal time option, set TZ to UTC0 after
+	 parsing the specified date, but before printing it.  */
+      MAYBE_SET_TZ_UTC0;
 
       show_date (format, when);
     }
