@@ -1,6 +1,11 @@
-2001-09-16  Jim Meyering  <meyering@lucent.com>
+2001-09-17  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* src/printf.c (main): Change the `ignoring excess arguments' diagnostic
+	to list the first one we're ignoring.  Suggestion from Karl Berry.
+
+2001-09-16  Jim Meyering  <meyering@lucent.com>
 
 	* src/stty.c (usage): Prefix each line with a space, so that
 	help2man produces a better stty.1 man page.
