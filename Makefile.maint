@@ -153,7 +153,6 @@ wget-update:
 	$(WGET) $(ftp-gnu)/config/config.sub -O $(srcdir)/config.sub
 	cvs -d $(automake_repo) co -p automake/depcomp > depcomp
 
-
 alpha: writable-files po-check
 	$(MAKE) cvs-dist
 	$(MAKE) -s announcement > /tmp/announce-$(distdir)
