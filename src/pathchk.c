@@ -1,4 +1,4 @@
-/* pathchk -- check whether pathnames are valid or portable
+/* pathchk -- check whether file names are valid or portable
    Copyright (C) 1991-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -15,75 +15,29 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Usage: pathchk [-p] [--portability] path...
-
-   For each PATH, print a message if any of these conditions are false:
-   * all existing leading directories in PATH have search (execute) permission
-   * strlen (PATH) <= PATH_MAX
-   * strlen (each_directory_in_PATH) <= NAME_MAX
-
-   Exit status:
-   0			All PATH names passed all of the tests.
-   1			An error occurred.
-
-   Options:
-   -p, --portability	Instead of performing length checks on the
-			underlying file system, test the length of the
-			pathname and its components against the POSIX
-			minimum limits for portability, _POSIX_NAME_MAX
-			and _POSIX_PATH_MAX in 2.9.2.  Also check that
-			the pathname contains no character not in the
-			portable filename character set.
-
-   David MacKenzie <djm@gnu.ai.mit.edu>
-   and Jim Meyering <meyering@cs.utexas.edu> */
-
 #include <config.h>
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+#if HAVE_WCHAR_H
+# include <wchar.h>
+#endif
 
 #include "system.h"
 #include "error.h"
 #include "euidaccess.h"
+#include "quote.h"
+#include "quotearg.h"
+
+#if ! (HAVE_MBRLEN && HAVE_MBSTATE_T)
+# define mbrlen(s, n, ps) 1
+# define mbstate_t int
+#endif
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "pathchk"
 
-#define AUTHORS "David MacKenzie", "Jim Meyering"
-
-#define NEED_PATHCONF_WRAPPER 0
-#if HAVE_PATHCONF
-# ifndef PATH_MAX
-#  define PATH_MAX_FOR(p) pathconf_wrapper ((p), _PC_PATH_MAX)
-#  define NEED_PATHCONF_WRAPPER 1
-# endif /* not PATH_MAX */
-# ifndef NAME_MAX
-#  define NAME_MAX_FOR(p) pathconf_wrapper ((p), _PC_NAME_MAX);
-#  undef NEED_PATHCONF_WRAPPER
-#  define NEED_PATHCONF_WRAPPER 1
-# endif /* not NAME_MAX */
-
-#else
-
-# include <sys/param.h>
-# ifndef PATH_MAX
-#  ifdef MAXPATHLEN
-#   define PATH_MAX MAXPATHLEN
-#  else /* not MAXPATHLEN */
-#   define PATH_MAX _POSIX_PATH_MAX
-#  endif /* not MAXPATHLEN */
-# endif /* not PATH_MAX */
-
-# ifndef NAME_MAX
-#  ifdef MAXNAMLEN
-#   define NAME_MAX MAXNAMLEN
-#  else /* not MAXNAMLEN */
-#   define NAME_MAX _POSIX_NAME_MAX
-#  endif /* not MAXNAMLEN */
-# endif /* not NAME_MAX */
-
-#endif
+#define AUTHORS "Paul Eggert", "David MacKenzie", "Jim Meyering"
 
 #ifndef _POSIX_PATH_MAX
 # define _POSIX_PATH_MAX 255
@@ -92,14 +46,29 @@
 # define _POSIX_NAME_MAX 14
 #endif
 
-#ifndef PATH_MAX_FOR
-# define PATH_MAX_FOR(p) PATH_MAX
+#ifdef _XOPEN_NAME_MAX
+# define NAME_MAX_MINIMUM _XOPEN_NAME_MAX
+#else
+# define NAME_MAX_MINIMUM _POSIX_NAME_MAX
 #endif
-#ifndef NAME_MAX_FOR
-# define NAME_MAX_FOR(p) NAME_MAX
+#ifdef _XOPEN_PATH_MAX
+# define PATH_MAX_MINIMUM _XOPEN_PATH_MAX
+#else
+# define PATH_MAX_MINIMUM _POSIX_PATH_MAX
 #endif
 
-static bool validate_path (char *path, bool portability);
+#if ! (HAVE_PATHCONF && defined _PC_NAME_MAX && defined _PC_PATH_MAX)
+# ifndef _PC_NAME_MAX
+#  define _PC_NAME_MAX 0
+#  define _PC_PATH_MAX 1
+# endif
+# ifndef pathconf
+#  define pathconf(file, flag) \
+     (flag == _PC_NAME_MAX ? NAME_MAX_MINIMUM : PATH_MAX_MINIMUM)
+# endif
+#endif
+
+static bool validate_file_name (char *file, bool portability);
 
 /* The name this program was run with. */
 char *program_name;
@@ -111,25 +80,6 @@ static struct option const longopts[] =
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
-
-#if NEED_PATHCONF_WRAPPER
-/* Distinguish between the cases when pathconf fails and when it reports there
-   is no limit (the latter is the case for PATH_MAX on the Hurd).  When there
-   is no limit, return LONG_MAX.  Otherwise, return pathconf's return value.  */
-
-static long int
-pathconf_wrapper (const char *filename, int param)
-{
-  long int ret;
-
-  errno = 0;
-  ret = pathconf (filename, param);
-  if (ret < 0 && errno == 0)
-    return LONG_MAX;
-
-  return ret;
-}
-#endif
 
 void
 usage (int status)
@@ -191,190 +141,223 @@ main (int argc, char **argv)
     }
 
   for (; optind < argc; ++optind)
-    ok &= validate_path (argv[optind], check_portability);
+    ok &= validate_file_name (argv[optind], check_portability);
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
-/* Each element is nonzero if the corresponding ASCII character is
-   in the POSIX portable character set, and zero if it is not.
-   In addition, the entry for `/' is nonzero to simplify checking. */
-static char const portable_chars[256] =
-{
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 0-15 */
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 16-31 */
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, /* 32-47 */
-  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, /* 48-63 */
-  0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, /* 64-79 */
-  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, /* 80-95 */
-  0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, /* 96-111 */
-  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, /* 112-127 */
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-};
-
-/* If PATH contains only portable characters, return true, else false.  */
+/* If FILE (of length FILELEN) contains only portable characters,
+   return true, else report an error and return false.  */
 
 static bool
-portable_chars_only (const char *path)
+portable_chars_only (char const *file, size_t filelen)
 {
-  const char *p;
+  size_t validlen = strspn (file,
+			    ("/"
+			     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+			     "abcdefghijklmnopqrstuvwxyz"
+			     "0123456789._-"));
+  char const *invalid = file + validlen;
 
-  for (p = path; *p; ++p)
-    if (portable_chars[to_uchar (*p)] == 0)
-      {
-	error (0, 0, _("path `%s' contains nonportable character `%c'"),
-	       path, *p);
-	return false;
-      }
+  if (*invalid)
+    {
+      mbstate_t mbstate = {0};
+      size_t charlen = mbrlen (invalid, filelen - validlen, &mbstate);
+      error (0, 0,
+	     _("nonportable character %s in file name %s"),
+	     quotearg_n_style_mem (1, locale_quoting_style, invalid,
+				   (charlen <= MB_LEN_MAX ? charlen : 1)),
+	     quote_n (0, file));
+      return false;
+    }
+
   return true;
 }
 
-/* Return 1 if PATH is a usable leading directory, 0 if not,
-   2 if it doesn't exist.  */
+/* Return the address of the start of the next file name component in F.  */
 
-static int
-dir_ok (const char *path)
+static char *
+component_start (char *f)
 {
-  struct stat stats;
+  while (*f == '/')
+    f++;
+  return f;
+}
 
-  if (stat (path, &stats))
-    return 2;
+/* Return the size of the file name component F.  F must be nonempty.  */
 
-  if (!S_ISDIR (stats.st_mode))
-    {
-      error (0, 0, _("`%s' is not a directory"), path);
-      return 0;
-    }
-
-  /* Use access to test for search permission because
-     testing permission bits of st_mode can lose with new
-     access control mechanisms.  */
-  if (euidaccess (path, X_OK) != 0)
-    {
-      if (errno == EACCES)
-	error (0, 0, _("directory `%s' is not searchable"), path);
-      else
-	error (0, errno, "%s", path);
-      return 0;
-    }
-
-  return 1;
+static size_t
+component_len (char const *f)
+{
+  size_t len;
+  for (len = 1; f[len] != '/' && f[len]; len++)
+    continue;
+  return len;
 }
 
 /* Make sure that
-   strlen (PATH) <= PATH_MAX
-   && strlen (each-existing-directory-in-PATH) <= NAME_MAX
+   strlen (FILE) <= PATH_MAX
+   && strlen (each-existing-directory-in-FILE) <= NAME_MAX
 
    If PORTABILITY is true, compare against _POSIX_PATH_MAX and
-   _POSIX_NAME_MAX instead, and make sure that PATH contains no
+   _POSIX_NAME_MAX instead, and make sure that FILE contains no
    characters not in the POSIX portable filename character set, which
-   consists of A-Z, a-z, 0-9, ., _, -.
+   consists of A-Z, a-z, 0-9, ., _, - (plus / for separators).
 
-   Make sure that all leading directories along PATH that exist have
-   `x' permission.
+   If PORTABILITY is false, make sure that all leading directories
+   along FILE that exist are searchable.
 
    Return true if all of these tests are successful, false if any fail.  */
 
 static bool
-validate_path (char *path, bool portability)
+validate_file_name (char *file, bool portability)
 {
-  long int path_max;
-  int last_elem;		/* Nonzero if checking last element of path. */
-  int exists IF_LINT (= 0);	/* 2 if the path element exists.  */
-  char *slash;
-  char *parent;			/* Last existing leading directory so far.  */
+  size_t filelen = strlen (file);
 
-  if (portability && !portable_chars_only (path))
+  /* Start of file name component being checked.  */
+  char *start;
+
+  /* True if component lengths need to be checked.  */
+  bool check_component_lengths;
+
+  if (portability && ! portable_chars_only (file, filelen))
     return false;
 
-  if (*path == '\0')
+  if (*file == '\0')
     return true;
 
-  /* Figure out the parent of the first element in PATH.  */
-  parent = xstrdup (*path == '/' ? "/" : ".");
-
-  slash = path;
-  last_elem = 0;
-  while (1)
+  if (portability || PATH_MAX_MINIMUM <= filelen)
     {
-      long int name_max;
-      long int length;		/* Length of partial path being checked. */
-      char *start;		/* Start of path element being checked. */
+      size_t maxsize;
 
-      /* Find the end of this element of the path.
-	 Then chop off the rest of the path after this element. */
-      while (*slash == '/')
-	slash++;
-      start = slash;
-      slash = strchr (slash, '/');
-      if (slash != NULL)
-	*slash = '\0';
+      if (portability)
+	maxsize = _POSIX_PATH_MAX;
       else
 	{
-	  last_elem = 1;
-	  slash = strchr (start, '\0');
-	}
-
-      if (!last_elem)
-	{
-	  exists = dir_ok (path);
-	  if (exists == 0)
+	  long int size;
+	  char const *dir = (*file == '/' ? "/" : ".");
+	  errno = 0;
+	  size = pathconf (dir, _PC_PATH_MAX);
+	  if (size < 0 && errno != 0)
 	    {
-	      free (parent);
+	      error (0, errno, dir);
 	      return false;
 	    }
+	  maxsize = MIN (size, SIZE_MAX);
 	}
 
-      length = slash - start;
-      /* Since we know that `parent' is a directory, it's ok to call
-	 pathconf with it as the argument.  (If `parent' isn't a directory
-	 or doesn't exist, the behavior of pathconf is undefined.)
-	 But if `parent' is a directory and is on a remote file system,
-	 it's likely that pathconf can't give us a reasonable value
-	 and will return -1.  (NFS and tempfs are not POSIX . . .)
-	 In that case, we have no choice but to assume the pessimal
-	 POSIX minimums.  */
-      name_max = portability ? _POSIX_NAME_MAX : NAME_MAX_FOR (parent);
-      if (name_max < 0)
-	name_max = _POSIX_NAME_MAX;
-      if (length > name_max)
+      if (maxsize <= filelen)
 	{
-	  error (0, 0, _("name `%s' has length %ld; exceeds limit of %ld"),
-		 start, length, name_max);
-	  free (parent);
+	  unsigned long int len = filelen;
+	  unsigned long int maxlen = maxsize - 1;
+	  error (0, 0, _("limit %lu exceeded by length %lu of file name %s"),
+		 maxlen, len, quote (file));
 	  return false;
 	}
-
-      if (last_elem)
-	break;
-
-      if (exists == 1)
-	{
-	  free (parent);
-	  parent = xstrdup (path);
-	}
-
-      *slash++ = '/';
     }
 
-  /* `parent' is now the last existing leading directory in the whole path,
-     so it's ok to call pathconf with it as the argument.  */
-  path_max = portability ? _POSIX_PATH_MAX : PATH_MAX_FOR (parent);
-  if (path_max < 0)
-    path_max = _POSIX_PATH_MAX;
-  free (parent);
-  if (strlen (path) > (size_t) path_max)
+  if (! portability)
     {
-      error (0, 0, _("path `%s' has length %lu; exceeds limit of %ld"),
-	     path, (unsigned long int) strlen (path), path_max);
-      return false;
+      /* Check whether a file name component is in a directory that
+	 is not searchable, or has some other serious problem.  */
+
+      struct stat st;
+      if (lstat (file, &st) != 0 && errno != ENOENT)
+	{
+	  error (0, errno, "%s", file);
+	  return false;
+	}
+    }
+
+  /* Check whether pathconf (..., _PC_NAME_MAX) can be avoided, i.e.,
+     whether all file name components are so short that they are valid
+     in any file system on this platform.  If PORTABILITY, though,
+     it's more convenient to check component lengths below.  */
+
+  check_component_lengths = portability;
+  if (! check_component_lengths)
+    {
+      for (start = file; *(start = component_start (start)); )
+	{
+	  size_t length = component_len (start);
+
+	  if (NAME_MAX_MINIMUM < length)
+	    {
+	      check_component_lengths = true;
+	      break;
+	    }
+
+	  start += length;
+	}
+    }
+
+  if (check_component_lengths)
+    {
+      /* The limit on file name components for the current component.
+         This defaults to NAME_MAX_MINIMUM, for the sake of non-POSIX
+         systems (NFS, say?) where pathconf fails on "." or "/" with
+         errno == ENOENT.  */
+      size_t name_max = NAME_MAX_MINIMUM;
+
+      /* If nonzero, the known limit on file name components.  */
+      size_t known_name_max = (portability ? _POSIX_NAME_MAX : 0);
+
+      for (start = file; *(start = component_start (start)); )
+	{
+	  size_t length;
+
+	  if (known_name_max)
+	    name_max = known_name_max;
+	  else
+	    {
+	      long int len;
+	      char const *dir = (start == file ? "." : file);
+	      char c = *start;
+	      errno = 0;
+	      *start = '\0';
+	      len = pathconf (dir, _PC_NAME_MAX);
+	      *start = c;
+	      if (0 <= len)
+		name_max = MIN (len, SIZE_MAX);
+	      else
+		switch (errno)
+		  {
+		  case 0:
+		    /* There is no limit.  */
+		    name_max = SIZE_MAX;
+		    break;
+
+		  case ENOENT:
+		    /* DIR does not exist; use its parent's maximum.  */
+		    known_name_max = name_max;
+		    break;
+
+		  default:
+		    *start = '\0';
+		    error (0, errno, "%s", dir);
+		    *start = c;
+		    return false;
+		  }
+	    }
+
+	  length = component_len (start);
+
+	  if (name_max < length)
+	    {
+	      unsigned long int len = length;
+	      unsigned long int maxlen = name_max;
+	      char c = start[len];
+	      start[len] = '\0';
+	      error (0, 0,
+		     _("limit %lu exceeded by length %lu "
+		       "of file name component %s"),
+		     maxlen, len, quote (start));
+	      start[len] = c;
+	      return false;
+	    }
+
+	  start += length;
+	}
     }
 
   return true;
