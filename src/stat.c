@@ -500,6 +500,10 @@ print_stat (char *pformat, char m, char const *filename, void const *data)
       strcat (pformat, PRIuMAX);
       printf (pformat, (uintmax_t) (statbuf->st_size));
       break;
+    case 'B':
+      strcat (pformat, "u");
+      printf (pformat, (unsigned int) ST_NBLOCKSIZE);
+      break;
     case 'b':
       strcat (pformat, "u");
       printf (pformat, (unsigned int) ST_NBLOCKS (*statbuf));
@@ -693,6 +697,7 @@ The valid format sequences for files (without --filesystem):\n\
 \n\
   %A   Access rights in human readable form\n\
   %a   Access rights in octal\n\
+  %B   The size of each block reported by `%b'\n\
   %b   Number of blocks allocated\n\
 "), stdout);
       fputs (_("\
