@@ -1,4 +1,4 @@
-#serial 11
+#serial 12
 
 dnl This is just a wrapper function to encapsulate this kludge.
 dnl Putting it in a separate file like this helps share it between
@@ -43,7 +43,7 @@ AC_DEFUN(jm_CHECK_DECLS,
 #endif
 '
 
-  AC_CHECK_DECLS((
+  AC_CHECK_DECLS([
     free,
     getenv,
     geteuid,
@@ -59,7 +59,7 @@ AC_DEFUN(jm_CHECK_DECLS,
     strstr,
     strtoul,
     strtoull,
-    ttyname), , , $headers)
+    ttyname], , , $headers)
 ])
 
 dnl FIXME: when autoconf has support for it.
