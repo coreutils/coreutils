@@ -84,19 +84,24 @@ static int ignore_case;
 
 enum delimit_method
 {
-  delimit_none,          /* --all-repeated[=none] No delimiters output. */
-  delimit_all,           /* --all-repeated=all Delimiter precedes all groups. */
-  delimit_minimum,       /* --all-repeated=minimum Delimit all groups. */
+  /* No delimiters output.  --all-repeated[=none] */
+  DM_NONE,
+
+  /* Delimiter precedes all groups.  --all-repeated=precede */
+  DM_PRECEDE,
+
+  /* Delimit all groups.  --all-repeated=separate */
+  DM_SEPARATE
 };
 
 static char const *const delimit_method_string[] =
 {
-  "none", "all", "minimum", 0
+  "none", "precede", "separate", 0
 };
 
 static enum delimit_method const delimit_method_map[] =
 {
-  delimit_none, delimit_all, delimit_minimum
+  DM_NONE, DM_PRECEDE, DM_SEPARATE
 };
 
 /* Select whether/how to delimit groups of duplicate lines.  */
@@ -320,17 +325,17 @@ check_file (const char *infile, const char *outfile)
 	  if (match)
 	    ++match_count;
 
-          if (mode == output_all_repeated && delimit_groups != delimit_none)
+          if (mode == output_all_repeated && delimit_groups != DM_NONE)
 	    {
 	      if (!match)
 		{
 		  if (match_count) /* a previous match */
-		    first_delimiter = 0; /* Only used when delimit_minimum */
+		    first_delimiter = 0; /* Only used when DM_SEPARATE */
 		}
 	      else if (match_count == 1)
 		{
-		  if ((delimit_groups == delimit_all)
-		      || (delimit_groups == delimit_minimum
+		  if ((delimit_groups == DM_PRECEDE)
+		      || (delimit_groups == DM_SEPARATE
 			  && !first_delimiter))
 		    putc ('\n', ostream);
 		}
@@ -381,7 +386,7 @@ main (int argc, char **argv)
   check_chars = 0;
   mode = output_all;
   countmode = count_none;
-  delimit_groups = delimit_none;
+  delimit_groups = DM_NONE;
 
   while ((optc = getopt_long (argc, argv, "0123456789cdDf:is:uw:", longopts,
 			      NULL)) != -1)
@@ -415,7 +420,7 @@ main (int argc, char **argv)
 	case 'D':
 	  mode = output_all_repeated;
 	  if (optarg == NULL)
-	    delimit_groups = delimit_none;
+	    delimit_groups = DM_NONE;
 	  else
 	    delimit_groups = XARGMATCH ("--all-repeated", optarg,
 					delimit_method_string,
