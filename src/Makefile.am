@@ -248,7 +248,7 @@ au_actual = authors-actual
 .PHONY: check-AUTHORS
 check-AUTHORS: $(all_programs)
 	rm -f $(au_actual) $(au_dotdot)
-	for i in $(all_programs); do			\
+	for i in `ls $(all_programs) | $(ASSORT) -u`; do \
 	  test "$$i" = '[' && continue;			\
 	  exe=$$i;					\
 	  if test "$$i" = install; then			\
@@ -256,11 +256,9 @@ check-AUTHORS: $(all_programs)
 	  elif test "$$i" = test; then			\
 	    exe='[';					\
 	  fi;						\
-	  ./printf "$$i: ";				\
 	  ./$$exe --version				\
-	    |sed -n '/Written by /s///p'		\
-	    |sed 's/,\? and /, /;s/\.$$//';		\
-	done | $(ASSORT) > $(au_actual)
+	    |sed -n '/Written by /{ s//'"$$i"': /; s/,* and /, /; s/\.$$//; p; }'; \
+	done > $(au_actual)
 	sed -n '/:/p' $(top_srcdir)/AUTHORS > $(au_dotdot)
 	diff $(au_actual) $(au_dotdot) && rm -f $(au_actual) $(au_dotdot)
 
