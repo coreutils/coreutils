@@ -215,8 +215,6 @@ static struct option const long_options[] =
   {"follow", optional_argument, NULL, LONG_FOLLOW_OPTION},
   {"lines", required_argument, NULL, 'n'},
   {"max-unchanged-stats", required_argument, NULL, MAX_UNCHANGED_STATS_OPTION},
-  {"max-consecutive-size-changes", required_argument, NULL,
-   MAX_CONSECUTIVE_SIZE_CHANGES_OPTION},
   {"pid", required_argument, NULL, PID_OPTION},
   {"quiet", no_argument, NULL, 'q'},
   {"retry", no_argument, NULL, RETRY_OPTION},
@@ -253,12 +251,6 @@ With no FILE, or when FILE is -, read standard input.\n\
                              -f, --follow, and --follow=descriptor are\n\
                              equivalent\n\
   -n, --lines=N            output the last N lines, instead of the last %d\n\
-      --max-consecutive-size-changes=N\n\
-                           with --follow=name, reopen a FILE after N\n\
-                             (default %d) consecutive size changes to see if\n\
-                             it has been unlinked or renamed\n\
-                             (this is the unusual case where a log file\n\
-                             continues to be written to after rotation)\n\
       --max-unchanged-stats=N\n\
                            with --follow=name, reopen a FILE which has not\n\
                              changed size after N (default %d) iterations\n\
@@ -290,8 +282,7 @@ recreated by some other program.\n\
 \n\
 "),
 	      DEFAULT_N_LINES, DEFAULT_N_LINES,
-	      DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS,
-	      DEFAULT_MAX_N_CONSECUTIVE_SIZE_CHANGES
+	      DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS
 	      );
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
@@ -1422,18 +1413,6 @@ parse_options (int argc, char **argv,
 	    {
 	      error (EXIT_FAILURE, 0,
 	       _("%s: invalid maximum number of unchanged stats between opens"),
-		     optarg);
-	    }
-	  break;
-
-	case MAX_CONSECUTIVE_SIZE_CHANGES_OPTION:
-  	  /* --max-consecutive-size-changes=N */
-	  if (xstrtoul (optarg, NULL, 10,
-			&max_n_consecutive_size_changes_between_opens, "")
-	      != LONGINT_OK)
-	    {
-	      error (EXIT_FAILURE, 0,
-		   _("%s: invalid maximum number of consecutive size changes"),
 		     optarg);
 	    }
 	  break;
