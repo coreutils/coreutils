@@ -1,5 +1,8 @@
 Changes in release 1.13
  [1.12r]
+* uname --processor (-p) works on systems that have sysinfo and define
+  SI_ARCHITECTURE.
+* stty works better on systems like i386-pc-isc3.0
 * date --date=DATE accepts dates like those in an RCS log listing, e.g.,
   `1992/11/01 05:44:34'.
 * printf now warns if excess arguments are ignored.
