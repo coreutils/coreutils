@@ -2871,52 +2871,52 @@ static int rev_str_extension (V a, V b) { return compstr_extension (b, a); }
 static void
 sort_files (void)
 {
-  /* `func' must be `volatile', so it can't be
-     clobbered by a `longjmp' into this function.  */
-  int (* volatile func) (V, V);
-
-  switch (sort_type)
-    {
-    case sort_none:
-      return;
-    case sort_time:
-      switch (time_type)
-	{
-	case time_ctime:
-	  func = sort_reverse ? rev_cmp_ctime : compare_ctime;
-	  break;
-	case time_mtime:
-	  func = sort_reverse ? rev_cmp_mtime : compare_mtime;
-	  break;
-	case time_atime:
-	  func = sort_reverse ? rev_cmp_atime : compare_atime;
-	  break;
-	default:
-	  abort ();
-	}
-      break;
-    case sort_name:
-      func = sort_reverse ? rev_cmp_name : compare_name;
-      break;
-    case sort_extension:
-      func = sort_reverse ? rev_cmp_extension : compare_extension;
-      break;
-    case sort_size:
-      func = sort_reverse ? rev_cmp_size : compare_size;
-      break;
-    case sort_version:
-      func = sort_reverse ? rev_cmp_version : compare_version;
-      break;
-    default:
-      abort ();
-    }
+  int (*func) (V, V);
 
   /* Try strcoll.  If it fails, fall back on strcmp.  We can't safely
      ignore strcoll failures, as a failing strcoll might be a
      comparison function that is not a total order, and if we ignored
      the failure this might cause qsort to dump core.  */
 
-  if (setjmp (failed_strcoll))
+  if (! setjmp (failed_strcoll))
+    {
+      switch (sort_type)
+	{
+	case sort_none:
+	  return;
+	case sort_time:
+	  switch (time_type)
+	    {
+	    case time_ctime:
+	      func = sort_reverse ? rev_cmp_ctime : compare_ctime;
+	      break;
+	    case time_mtime:
+	      func = sort_reverse ? rev_cmp_mtime : compare_mtime;
+	      break;
+	    case time_atime:
+	      func = sort_reverse ? rev_cmp_atime : compare_atime;
+	      break;
+	    default:
+	      abort ();
+	    }
+	  break;
+	case sort_name:
+	  func = sort_reverse ? rev_cmp_name : compare_name;
+	  break;
+	case sort_extension:
+	  func = sort_reverse ? rev_cmp_extension : compare_extension;
+	  break;
+	case sort_size:
+	  func = sort_reverse ? rev_cmp_size : compare_size;
+	  break;
+	case sort_version:
+	  func = sort_reverse ? rev_cmp_version : compare_version;
+	  break;
+	default:
+	  abort ();
+	}
+    }
+  else
     {
       switch (sort_type)
 	{
