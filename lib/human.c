@@ -207,16 +207,13 @@ human_readable (uintmax_t n, char *buf, int opts,
     opts & (human_round_to_nearest | human_floor | human_ceiling);
   unsigned int base = opts & human_base_1024 ? 1024 : 1000;
   uintmax_t amt;
-  uintmax_t multiplier;
-  uintmax_t divisor;
-  uintmax_t r2;
-  uintmax_t r10;
   int tenths = 0;
   int exponent = -1;
   int exponent_max = sizeof power_letter - 1;
   char *p;
   char *psuffix;
   char const *integerlim;
+  int use_fp;
 
   /* 0 means adjusted N == AMT.TENTHS;
      1 means AMT.TENTHS < adjusted N < AMT.TENTHS + 0.05;
@@ -246,19 +243,29 @@ human_readable (uintmax_t n, char *buf, int opts,
 
   /* Adjust AMT out of FROM_BLOCK_SIZE units and into TO_BLOCK_SIZE units.  */
 
-  if (to_block_size <= from_block_size
-      ? (from_block_size % to_block_size != 0
-	 || (multiplier = from_block_size / to_block_size,
-	     (amt = n * multiplier) / multiplier != n))
-      : (from_block_size == 0
-	 || to_block_size % from_block_size != 0
-	 || (divisor = to_block_size / from_block_size,
-	     r10 = (n % divisor) * 10,
-	     r2 = (r10 % divisor) * 2,
-	     amt = n / divisor,
-	     tenths = r10 / divisor,
-	     rounding = r2 < divisor ? 0 < r2 : 2 + (divisor < r2),
-	     0)))
+  if (to_block_size <= from_block_size)
+    {
+      uintmax_t multiplier;
+      use_fp = (from_block_size % to_block_size != 0
+		|| (multiplier = from_block_size / to_block_size,
+		    (amt = n * multiplier) / multiplier != n));
+    }
+  else
+    {
+      use_fp = (from_block_size == 0
+		|| to_block_size % from_block_size != 0);
+      if (! use_fp)
+	{
+	  uintmax_t divisor = to_block_size / from_block_size;
+	  uintmax_t r10 = (n % divisor) * 10;
+	  uintmax_t r2 = (r10 % divisor) * 2;
+	  amt = n / divisor;
+	  tenths = r10 / divisor;
+	  rounding = r2 < divisor ? 0 < r2 : 2 + (divisor < r2);
+	}
+    }
+
+  if (use_fp)
     {
       /* Either the result cannot be computed easily using uintmax_t,
 	 or from_block_size is zero.  Fall back on floating point.
@@ -277,7 +284,6 @@ human_readable (uintmax_t n, char *buf, int opts,
 	}
       else
 	{
-	  size_t buflen;
 	  long double e = 1;
 	  exponent = 0;
 
