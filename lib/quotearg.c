@@ -1,5 +1,5 @@
 /* quotearg.c - quote arguments for output
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -71,7 +71,22 @@ struct quoting_options
 /* Names of quoting styles.  */
 char const *const quoting_style_args[] =
 {
-  "literal", "shell", "shell-always", "c", "escape", 0
+  "literal",
+  "shell",
+  "shell-always",
+  "c",
+  "escape",
+  0
+};
+
+/* Correspondances to quoting style names.  */
+enum quoting_style const quoting_style_vals[] =
+{
+  literal_quoting_style,
+  shell_quoting_style,
+  shell_always_quoting_style,
+  c_quoting_style,
+  escape_quoting_style
 };
 
 /* The default quoting options.  */
@@ -151,7 +166,7 @@ quotearg_buffer (char *buffer, size_t buffersize,
   switch (quoting_style)
     {
     case shell_quoting_style:
-      if (! (argsize == -1 ? arg[0] == '\0' : argsize == 0))
+      if (! (argsize == (size_t) -1 ? arg[0] == '\0' : argsize == 0))
 	{
 	  switch (arg[0])
 	    {
@@ -162,7 +177,7 @@ quotearg_buffer (char *buffer, size_t buffersize,
 	      len = 0;
 	      for (i = 0; ; i++)
 		{
-		  if (argsize == -1 ? arg[i] == '\0' : i == argsize)
+		  if (argsize == (size_t) -1 ? arg[i] == '\0' : i == argsize)
 		    goto done;
 
 		  c = arg[i];
@@ -209,7 +224,7 @@ quotearg_buffer (char *buffer, size_t buffersize,
   if (quote_mark)
     STORE (quote_mark);
 
-  for (i = 0;  ! (argsize == -1 ? arg[i] == '\0' : i == argsize);  i++)
+  for (i = 0;  ! (argsize == (size_t) -1 ? arg[i] == '\0' : i == argsize);  i++)
     {
       c = arg[i];
 
@@ -291,9 +306,10 @@ quotearg_buffer (char *buffer, size_t buffersize,
    reused by the next call to this function with the same value of N.
    N must be nonnegative.  */
 static char *
-quotearg_n_options (int n, char const *arg, struct quoting_options *options)
+quotearg_n_options (unsigned int n, char const *arg,
+		    struct quoting_options *options)
 {
-  static unsigned nslots;
+  static unsigned int nslots;
   static struct slotvec
     {
       size_t size;
@@ -328,7 +344,7 @@ quotearg_n_options (int n, char const *arg, struct quoting_options *options)
 }
 
 char *
-quotearg_n (int n, char const *arg)
+quotearg_n (unsigned int n, char const *arg)
 {
   return quotearg_n_options (n, arg, &default_quoting_options);
 }
