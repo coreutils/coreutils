@@ -395,11 +395,11 @@ xfclose (FILE *fp)
 }
 
 static void
-write_bytes (const char *buf, size_t n_bytes, FILE *fp)
+write_bytes (const char *buf, size_t n_bytes, FILE *fp, const char *output_file)
 {
   if (fwrite (buf, 1, n_bytes, fp) != n_bytes)
     {
-      error (0, errno, _("write error"));
+      error (0, errno, _("%s: write error"), output_file);
       cleanup ();
       exit (SORT_FAILURE);
     }
@@ -1450,7 +1450,8 @@ finish:
     {
       fprintf (stderr, _("%s: %s:%d: disorder: "), program_name, file_name,
 	       disorder_line_number);
-      write_bytes (disorder_line->text, disorder_line->length, stderr);
+      write_bytes (disorder_line->text, disorder_line->length, stderr,
+		   _("standard error"));
     }
 
   free (buf.buf);
@@ -1463,7 +1464,7 @@ finish:
    Close FPS before returning. */
 
 static void
-mergefps (FILE **fps, register int nfps, FILE *ofp)
+mergefps (FILE **fps, register int nfps, FILE *ofp, const char *output_file)
 {
   struct buffer buffer[NMERGE];	/* Input buffers for each file. */
   struct lines lines[NMERGE];	/* Line tables for each buffer. */
@@ -1530,7 +1531,7 @@ mergefps (FILE **fps, register int nfps, FILE *ofp)
 	{
 	  if (savedflag && compare (&saved, &lines[ord[0]].lines[cur[ord[0]]]))
 	    {
-	      write_bytes (saved.text, saved.length, ofp);
+	      write_bytes (saved.text, saved.length, ofp, output_file);
 	      savedflag = 0;
 	    }
 	  if (!savedflag)
@@ -1561,7 +1562,7 @@ mergefps (FILE **fps, register int nfps, FILE *ofp)
 	}
       else
 	write_bytes (lines[ord[0]].lines[cur[ord[0]]].text,
-		     lines[ord[0]].lines[cur[ord[0]]].length, ofp);
+		     lines[ord[0]].lines[cur[ord[0]]].length, ofp, output_file);
 
       /* Check if we need to read more lines into core. */
       if (++cur[ord[0]] == lines[ord[0]].used)
@@ -1614,7 +1615,7 @@ mergefps (FILE **fps, register int nfps, FILE *ofp)
 
   if (unique && savedflag)
     {
-      write_bytes (saved.text, saved.length, ofp);
+      write_bytes (saved.text, saved.length, ofp, output_file);
       free (saved.text);
     }
 }
@@ -1686,7 +1687,7 @@ check (char **files, int nfiles)
 /* Merge NFILES FILES onto OFP. */
 
 static void
-merge (char **files, int nfiles, FILE *ofp)
+merge (char **files, int nfiles, FILE *ofp, const char *output_file)
 {
   int i, j, t;
   char *temp;
@@ -1700,7 +1701,7 @@ merge (char **files, int nfiles, FILE *ofp)
 	  for (j = 0; j < NMERGE; ++j)
 	    fps[j] = xfopen (files[i * NMERGE + j], "r");
 	  tfp = xtmpfopen (temp = tempname ());
-	  mergefps (fps, NMERGE, tfp);
+	  mergefps (fps, NMERGE, tfp, temp);
 	  xfclose (tfp);
 	  for (j = 0; j < NMERGE; ++j)
 	    zaptemp (files[i * NMERGE + j]);
@@ -1709,7 +1710,7 @@ merge (char **files, int nfiles, FILE *ofp)
       for (j = 0; j < nfiles % NMERGE; ++j)
 	fps[j] = xfopen (files[i * NMERGE + j], "r");
       tfp = xtmpfopen (temp = tempname ());
-      mergefps (fps, nfiles % NMERGE, tfp);
+      mergefps (fps, nfiles % NMERGE, tfp, temp);
       xfclose (tfp);
       for (j = 0; j < nfiles % NMERGE; ++j)
 	zaptemp (files[i * NMERGE + j]);
@@ -1719,7 +1720,7 @@ merge (char **files, int nfiles, FILE *ofp)
 
   for (i = 0; i < nfiles; ++i)
     fps[i] = xfopen (files[i], "r");
-  mergefps (fps, i, ofp);
+  mergefps (fps, i, ofp, output_file);
   for (i = 0; i < nfiles; ++i)
     zaptemp (files[i]);
 }
@@ -1727,7 +1728,7 @@ merge (char **files, int nfiles, FILE *ofp)
 /* Sort NFILES FILES onto OFP. */
 
 static void
-sort (char **files, int nfiles, FILE *ofp)
+sort (char **files, int nfiles, FILE *ofp, const char *output_file)
 {
   struct buffer buf;
   struct lines lines;
@@ -1746,6 +1747,8 @@ sort (char **files, int nfiles, FILE *ofp)
 
   while (nfiles--)
     {
+      const char *temp_output;
+
       fp = xfopen (*files++, "r");
       while (fillbuf (&buf, fp))
 	{
@@ -1761,16 +1764,18 @@ sort (char **files, int nfiles, FILE *ofp)
 	  if (feof (fp) && !nfiles && !n_temp_files && !buf.left)
 	    {
 	      tfp = ofp;
+	      temp_output = output_file;
 	    }
 	  else
 	    {
 	      ++n_temp_files;
-	      tfp = xtmpfopen (tempname ());
+	      tfp = xtmpfopen (temp_output = tempname ());
 	    }
 	  for (i = 0; i < lines.used; ++i)
 	    if (!unique || i == 0
 		|| compare (&lines.lines[i], &lines.lines[i - 1]))
-	      write_bytes (lines.lines[i].text, lines.lines[i].length, tfp);
+	      write_bytes (lines.lines[i].text, lines.lines[i].length, tfp,
+			   temp_output);
 	  if (tfp != ofp)
 	    xfclose (tfp);
 	}
@@ -1787,7 +1792,7 @@ sort (char **files, int nfiles, FILE *ofp)
       i = n_temp_files;
       for (node = temphead.next; i > 0; node = node->next)
 	tempfiles[--i] = node->name;
-      merge (tempfiles, n_temp_files, ofp);
+      merge (tempfiles, n_temp_files, ofp, output_file);
       free ((char *) tempfiles);
     }
 }
@@ -2310,7 +2315,7 @@ but lacks following character offset"));
 	      out_fp = xtmpfopen (tmp);
 	      /* FIXME: maybe use copy.c(copy) here. */
 	      while ((cc = fread (buf, 1, sizeof buf, in_fp)) > 0)
-		write_bytes (buf, cc, out_fp);
+		write_bytes (buf, cc, out_fp, tmp);
 	      if (ferror (in_fp))
 		{
 		  error (0, errno, "%s", files[i]);
@@ -2352,9 +2357,9 @@ but lacks following character offset"));
     }
 
   if (mergeonly)
-    merge (files, nfiles, ofp);
+    merge (files, nfiles, ofp, outfile);
   else
-    sort (files, nfiles, ofp);
+    sort (files, nfiles, ofp, outfile);
   cleanup ();
 
   /* If we wait for the implicit flush on exit, and the parent process
