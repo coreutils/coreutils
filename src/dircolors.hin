@@ -20,11 +20,13 @@ TERM con80x43
 TERM con80x50
 TERM con80x60
 TERM dtterm
+TERM putty
 TERM xterm
 TERM xterm-color
 TERM xterm-debian
 TERM rxvt
 TERM screen
+TERM screen-bce
 TERM screen-w
 TERM vt100
 TERM Eterm
