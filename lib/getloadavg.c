@@ -926,7 +926,7 @@ getloadavg (double loadavg[], int nelem)
 	{
 	  /* Set the channel to close on exec, so it does not
 	     litter any child's descriptor table.  */
-	  set_cloexec_flag (channel, 1)
+	  set_cloexec_flag (channel, true);
 	  getloadavg_initialized = 1;
 	}
 #  else /* SUNOS_5 */
