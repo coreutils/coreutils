@@ -1,5 +1,5 @@
 /* cp.c  -- file copying (main routines)
-   Copyright (C) 89, 90, 91, 1995-2004 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2005 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -177,7 +177,6 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -d                           same as --no-dereference --preserve=link\n\
 "), stdout);
       fputs (_("\
-      --no-dereference         never follow symbolic links\n\
   -f, --force                  if an existing destination file cannot be\n\
                                  opened, remove it and try again\n\
   -i, --interactive            prompt before overwrite\n\
@@ -186,6 +185,11 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -l, --link                   link files instead of copying\n\
   -L, --dereference            always follow symbolic links\n\
+"), stdout);
+      fputs (_("\
+  -P  --no-dereference         never follow symbolic links\n\
+"), stdout);
+      fputs (_("\
   -p                           same as --preserve=mode,ownership,timestamps\n\
       --preserve[=ATTR_LIST]   preserve the specified attributes (default:\n\
                                  mode,ownership,timestamps), if possible\n\
@@ -194,7 +198,6 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
       --no-preserve=ATTR_LIST  don't preserve the specified attributes\n\
       --parents                append source path to DIRECTORY\n\
-  -P                           same as `--no-dereference'\n\
 "), stdout);
       fputs (_("\
   -R, -r, --recursive          copy directories recursively\n\
