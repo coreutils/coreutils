@@ -25,7 +25,7 @@ main ()
 {
   static struct timeval timeval[2] = {{9, 10}, {999999, 999999}};
   struct stat sbuf;
-  char const *file = "x";
+  char const *file = "conftest.utimes";
   FILE *f;
 
   exit ( ! ((f = fopen (file, "w"))
