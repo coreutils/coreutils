@@ -50,6 +50,7 @@ AC_DEFUN(jm_PREREQ_READUTMP,
   AC_HEADER_STDC
   AC_CHECK_HEADERS(string.h utmpx.h sys/param.h)
   AC_CHECK_FUNCS(utmpname)
+  AC_CHECK_FUNCS(utmpxname)
   AM_C_PROTOTYPES
 
   utmp_includes="\
