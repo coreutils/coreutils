@@ -8,7 +8,7 @@ fi
 
 . $srcdir/../envvar-check
 . $srcdir/../lang-default
-. $srcdir/../priv-check require-root
+PRIV_CHECK_ARG=require-root . $srcdir/../priv-check
 
 pwd=`pwd`
 tmp=basic.$$

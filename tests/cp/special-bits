@@ -10,7 +10,7 @@ if test "$VERBOSE" = yes; then
   cp --version
 fi
 
-. $srcdir/../priv-check require-root
+PRIV_CHECK_ARG=require-root . $srcdir/../priv-check
 
 pwd=`pwd`
 tmp=spec-bits.$$
