@@ -308,7 +308,7 @@ make_path (const char *argpath,
 	  if (newly_created_dir)
 	    {
 	      if (verbose_fmt_string)
-		fprintf (stderr, verbose_fmt_string, dirpath);
+		error (0, 0, verbose_fmt_string, dirpath);
 
 	      if ((owner != (uid_t) -1 || group != (gid_t) -1)
 		  && chown (basename_dir, owner, group)
