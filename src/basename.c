@@ -32,9 +32,9 @@
 #include "system.h"
 #include "version.h"
 #include "long-options.h"
+#include "error.h"
 
 char *basename ();
-void error ();
 void strip_trailing_slashes ();
 
 static void remove_suffix ();

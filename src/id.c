@@ -28,6 +28,7 @@
 
 #include "version.h"
 #include "system.h"
+#include "error.h"
 
 #ifdef _POSIX_VERSION
 #include <limits.h>
@@ -51,7 +52,6 @@ gid_t getegid ();
 
 char *xmalloc ();
 int getugroups ();
-void error ();
 
 static void print_user ();
 static void print_group ();

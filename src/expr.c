@@ -36,6 +36,7 @@
 #include "system.h"
 #include "version.h"
 #include "long-options.h"
+#include "error.h"
 
 #define NEW(type) ((type *) xmalloc (sizeof (type)))
 #define OLD(x) free ((char *) x)
@@ -66,7 +67,6 @@ static char **args;
 /* The name this program was run with. */
 char *program_name;
 
-void error ();
 char *xstrdup ();
 char *strstr ();
 char *xmalloc ();

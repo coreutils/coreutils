@@ -36,8 +36,7 @@
 
 #include "system.h"
 #include "version.h"
-
-void error ();
+#include "error.h"
 
 static void print_element ();
 static void usage ();

@@ -38,6 +38,7 @@
 #  include "safe-stat.h"
 #  include "safe-lstat.h"
 #  include "group-member.h"
+#  include "error.h"
 #  if !defined (S_IXUGO)
 #    define S_IXUGO 0111
 #  endif /* S_IXUGO */

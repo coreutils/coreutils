@@ -85,9 +85,9 @@
 
 #include "version.h"
 #include "system.h"
+#include "error.h"
 
 int putenv ();
-void error ();
 
 static void usage ();
 

@@ -33,14 +33,13 @@
 #include "version.h"
 #include "system.h"
 #include "long-options.h"
+#include "error.h"
 
 #ifdef NICE_PRIORITY
 #define GET_PRIORITY() nice (0)
 #else
 #define GET_PRIORITY() getpriority (PRIO_PROCESS, 0)
 #endif
-
-void error ();
 
 static int isinteger ();
 static void usage ();

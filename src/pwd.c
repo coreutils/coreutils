@@ -24,8 +24,8 @@
 #include "system.h"
 #include "version.h"
 #include "long-options.h"
+#include "error.h"
 
-void error ();
 char *xgetcwd ();
 
 /* The name this program was run with. */

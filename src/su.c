@@ -121,6 +121,7 @@ uid_t getuid ();
 #endif
 
 #include "version.h"
+#include "error.h"
 
 /* The default PATH for simulated logins to non-superuser accounts.  */
 #define DEFAULT_LOGIN_PATH ":/usr/ucb:/bin:/usr/bin"
@@ -144,7 +145,6 @@ char *basename ();
 char *xmalloc ();
 char *xrealloc ();
 char *xstrdup ();
-void error ();
 
 static char *concat ();
 static int correct_password ();

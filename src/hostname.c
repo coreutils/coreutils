@@ -24,6 +24,7 @@
 #include "system.h"
 #include "version.h"
 #include "long-options.h"
+#include "error.h"
 
 #if !defined(HAVE_SETHOSTNAME) && defined(HAVE_SYSINFO) && \
      defined (HAVE_SYS_SYSTEMINFO_H) && defined(HAVE_LIMITS_H)
@@ -46,7 +47,6 @@ sethostname (name, namelen)
 #define HAVE_SETHOSTNAME 1  /* Now we have it... */
 #endif
 
-void error ();
 char *xgethostname ();
 
 /* The name this program was run with. */

@@ -51,6 +51,7 @@
 #include "system.h"
 #include "version.h"
 #include "long-options.h"
+#include "error.h"
 
 #ifndef STDC_HEADERS
 double strtod ();
@@ -63,7 +64,6 @@ unsigned long strtoul ();
 #define octtobin(c) ((c) - '0')
 
 char *xmalloc ();
-void error ();
 
 static double xstrtod ();
 static int print_esc ();

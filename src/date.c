@@ -25,6 +25,7 @@
 #include "version.h"
 #include "system.h"
 #include "getline.h"
+#include "error.h"
 
 #ifdef TM_IN_SYS_TIME
 #include <sys/time.h>
@@ -42,7 +43,6 @@ int stime ();
 char *xrealloc ();
 time_t get_date ();
 time_t posixtime ();
-void error ();
 
 static void show_date ();
 static void usage ();

@@ -46,6 +46,7 @@
 #include "version.h"
 #include "system.h"
 #include "safe-stat.h"
+#include "error.h"
 
 #ifdef _POSIX_VERSION
 #include <limits.h>
@@ -92,7 +93,6 @@
 #endif
 
 char *xstrdup ();
-void error ();
 
 static int validate_path ();
 static void usage ();

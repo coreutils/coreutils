@@ -50,6 +50,7 @@
 #include "system.h"
 #include "version.h"
 #include "long-options.h"
+#include "error.h"
 
 #if defined(GWINSZ_BROKEN)	/* Such as for SCO UNIX 3.2.2. */
 #undef TIOCGWINSZ
@@ -160,8 +161,6 @@ static void sane_mode ();
 static void set_control_char ();
 static void set_speed ();
 static void set_window_size ();
-
-void error ();
 
 /* Which speeds to set.  */
 enum speed_setting

@@ -34,8 +34,7 @@
 
 #include "version.h"
 #include "system.h"
-
-void error ();
+#include "error.h"
 
 /* The name this program was run with. */
 char *program_name;

@@ -29,8 +29,7 @@
 
 #include "system.h"
 #include "version.h"
-
-void error ();
+#include "error.h"
 
 static void usage ();
 

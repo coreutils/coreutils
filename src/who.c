@@ -53,6 +53,7 @@
 #include "system.h"
 #include "version.h"
 #include "safe-stat.h"
+#include "error.h"
 
 #if !defined (UTMP_FILE) && defined (_PATH_UTMP)	/* 4.4BSD.  */
 #define UTMP_FILE _PATH_UTMP
@@ -85,7 +86,6 @@
 #endif /* USERS */
 #endif /* WHO */
 
-void error ();
 int gethostname ();
 char *ttyname ();
 char *xmalloc ();
