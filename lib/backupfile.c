@@ -27,11 +27,7 @@
 
 #include <stddef.h>
 #include <stdio.h>
-#if HAVE_STRING_H
-# include <string.h>
-#else
-# include <strings.h>
-#endif
+#include <string.h>
 
 #if HAVE_DIRENT_H
 # include <dirent.h>
@@ -57,23 +53,7 @@
 # define CLOSEDIR(d) closedir (d)
 #endif
 
-#if HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
-
-#ifndef HAVE_DECL_GETENV
-"this configure-time declaration test was not run"
-#endif
-#if !HAVE_DECL_GETENV
-char *getenv ();
-#endif
-
-#ifndef HAVE_DECL_MALLOC
-"this configure-time declaration test was not run"
-#endif
-#if !HAVE_DECL_MALLOC
-char *malloc ();
-#endif
+#include <stdlib.h>
 
 #if HAVE_DIRENT_H || HAVE_NDIR_H || HAVE_SYS_DIR_H || HAVE_SYS_NDIR_H
 # define HAVE_DIR 1
