@@ -844,7 +844,7 @@ process_regexp (p, repetition)
      int repetition;
 {
   struct cstring *line;		/* From input file. */
-  register unsigned line_len;	/* To make "$" in regexps work. */
+  unsigned line_len;	/* To make "$" in regexps work. */
   unsigned break_line;		/* First line number of next file. */
   boolean ignore = p->ignore;	/* If TRUE, skip this section. */
   int ret;
@@ -945,7 +945,7 @@ process_regexp (p, repetition)
 static void
 split_file ()
 {
-  register int i, j;
+  int i, j;
 
   for (i = 0; i < control_used; i++)
     {
@@ -1070,7 +1070,7 @@ static struct control *
 new_control_record ()
 {
   static unsigned control_allocated = 0; /* Total space allocated. */
-  register struct control *p;
+  struct control *p;
 
   if (control_allocated == 0)
     {
@@ -1101,8 +1101,8 @@ string_to_number (result, num)
      int *result;
      char *num;
 {
-  register char ch;
-  register int val = 0;
+  char ch;
+  int val = 0;
 
   if (*num == '\0')
     return FALSE;
@@ -1250,9 +1250,9 @@ parse_patterns (argc, start, argv)
 
 static unsigned
 get_format_flags (format_ptr)
-     register char **format_ptr;
+     char **format_ptr;
 {
-  register unsigned count = 0;
+  unsigned count = 0;
 
   for (; **format_ptr; (*format_ptr)++)
     switch (**format_ptr)
@@ -1279,11 +1279,11 @@ get_format_flags (format_ptr)
 
 static unsigned
 get_format_width (format_ptr)
-     register char **format_ptr;
+     char **format_ptr;
 {
-  register unsigned count = 0;
-  register char *start;
-  register int ch_save;
+  unsigned count = 0;
+  char *start;
+  int ch_save;
 
   start = *format_ptr;
   for (; **format_ptr; (*format_ptr)++)
@@ -1305,12 +1305,12 @@ get_format_width (format_ptr)
 
 static unsigned
 get_format_prec (format_ptr)
-     register char **format_ptr;
+     char **format_ptr;
 {
-  register unsigned count = 0;
-  register char *start;
-  register int ch_save;
-  register int is_negative;
+  unsigned count = 0;
+  char *start;
+  int ch_save;
+  int is_negative;
 
   if (**format_ptr != '.')
     return 0;
@@ -1342,9 +1342,9 @@ get_format_prec (format_ptr)
 
 static void
 get_format_conv_type (format_ptr)
-     register char **format_ptr;
+     char **format_ptr;
 {
-  register int ch = *((*format_ptr)++);
+  int ch = *((*format_ptr)++);
 
   switch (ch)
     {
@@ -1367,12 +1367,12 @@ static unsigned
 max_out (format)
      char *format;
 {
-  register unsigned out_count = 0;
-  register unsigned percents = 0;
+  unsigned out_count = 0;
+  unsigned percents = 0;
 
   for (; *format; )
     {
-      register int ch = *format++;
+      int ch = *format++;
 
       if (ch != '%')
         out_count++;
@@ -1381,8 +1381,8 @@ max_out (format)
 	  percents++;
 	  out_count += get_format_flags (&format);
 	  {
-	    register width = get_format_width (&format);
-	    register prec = get_format_prec (&format);
+	    int width = get_format_width (&format);
+	    int prec = get_format_prec (&format);
 
 	    out_count += max (width, prec);
 	  }
