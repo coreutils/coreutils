@@ -2,6 +2,9 @@
 
 	* Version 5.3.0.
 
+	* src/stat.c (STATFS): New macro, for portability to Solaris 9.
+	(do_statfs): Use it.
+
 	* src/basename.c, src/chroot.c, src/cksum.c, src/dd.c, src/dirname.c,
 	src/factor.c, src/hostid.c, src/hostname.c, src/link.c, src/logname.c,
 	src/nohup.c, src/printenv.c, src/pwd.c, src/setuidgid.c, src/sleep.c,
