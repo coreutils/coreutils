@@ -1,3 +1,9 @@
+1999-04-18  Jim Meyering  <meyering@ascend.com>
+
+	* src/dd.c (main): Open the output file with *read* access
+	only if we might need to read to satisfy a `seek=' request.
+	From Matthias Urlichs.
+
 1999-04-10  Jim Meyering  <meyering@ascend.com>
 
 	* Makefile.maint (alpha): Add trailing slash for ncftp.
