@@ -12,6 +12,7 @@
 	(main): Use LBRACKET rather than argv[0].
 
 	* src/test.c (one_argument): Do not check for -t if POSIXLY_CORRECT.
+	Reported by Paul Jarc and Dan Jacobson.
 
 	* src/test.c (main): Do not recognize --help or --version if
 	POSIXLY_CORRECT, when invoked as "test".  Handle "[ ]" correctly.
