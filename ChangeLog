@@ -1,6 +1,19 @@
-2002-08-05  Jim Meyering  <meyering@lucent.com>
+2002-08-07  Jim Meyering  <meyering@lucent.com>
 
 	* Version 0.1.0.
+
+2002-08-05  Paul Eggert  <eggert@twinsun.com>
+
+	Fix some minor time-related bugs with POSIX time arguments.
+	Some valid time stamps were being rejected (notably -1, and
+	time stamps before 1900 on 64-bit hosts).  And some invalid
+	time stamps were being accepted, e.g. September 31.
+
+	* src/date.c (main): Adjust to posixtime signature change.
+	* src/touch.c (main): Likewise.  Remove unnecessary initialization.
+	Use localtime, not posixtm, to warn about obsolete "touch".
+
+2002-08-05  Jim Meyering  <meyering@lucent.com>
 
 	* tests/misc/Makefile.am (TESTS): Add nice and pathchk1.
 
