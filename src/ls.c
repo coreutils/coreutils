@@ -894,7 +894,7 @@ main (int argc, char **argv)
   if (dir_defaulted)
     {
       if (immediate_dirs)
-	gobble_file (".", unknown, 1, "");
+	gobble_file (".", directory, 1, "");
       else
 	queue_directory (".", 0);
     }
