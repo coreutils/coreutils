@@ -277,25 +277,10 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
   if (error_msg == NULL)
     {
       if (u != NULL)
-	{
-	  *username_arg = strdup (u);
-	  if (*username_arg == NULL)
-	    error_msg = xalloc_msg_memory_exhausted;
-	}
+	*username_arg = xstrdup (u);
 
-      if (groupname != NULL && error_msg == NULL)
-	{
-	  *groupname_arg = strdup (groupname);
-	  if (*groupname_arg == NULL)
-	    {
-	      if (*username_arg != NULL)
-		{
-		  free (*username_arg);
-		  *username_arg = NULL;
-		}
-	      error_msg = xalloc_msg_memory_exhausted;
-	    }
-	}
+      if (groupname != NULL)
+	*groupname_arg = xstrdup (groupname);
     }
 
   if (error_msg && dot)

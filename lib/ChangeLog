@@ -1,5 +1,14 @@
 2004-08-09  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* xalloc-die.c: New files.
+	* xalloc.h (xalloc_fail_func, xalloc_msg_memory_exhausted): Remove.
+	All uses removed.
+	* xmalloc.c (xalloc_fail_func, xalloc_msg_memory_exhausted): Likewise.
+	Move inclusions of gettext.h, error.h, exitfail.h to xalloc-die.c.
+	(_, N_, xalloc_die): Move to xalloc-die.c.
+	* userspec.c (parse_user_spaec): Use xstrdup rather than strdup,
+	so that we needn't mess with xalloc_msg_memory_exhausted.
+
 	* sha1.h (sha1_ctx): Renamed from sha_ctx.
 	(sha1_init_ctx): Renamed from sha_init_ctx.
 	(sha1_process_block): Renamed from sha_process_block.

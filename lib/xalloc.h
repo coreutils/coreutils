@@ -38,19 +38,9 @@ extern "C" {
 #  define ATTRIBUTE_NORETURN __attribute__ ((__noreturn__))
 # endif
 
-
-/* If this pointer is non-zero, run the specified function upon each
-   allocation failure.  It is initialized to zero. */
-extern void (*xalloc_fail_func) (void);
-
-/* If XALLOC_FAIL_FUNC is undefined or a function that returns, this
-   message is output.  It is translated via gettext.
-   Its value is "memory exhausted".  */
-extern char const xalloc_msg_memory_exhausted[];
-
-/* This function is always triggered when memory is exhausted.  It is
-   in charge of honoring the two previous items.  It exits with status
-   exit_failure (defined in exitfail.h).  This is the
+/* This function is always triggered when memory is exhausted.
+   It must be defined by the application, either explicitly
+   or by using gnulib's xalloc-die module.  This is the
    function to call when one wants the program to die because of a
    memory allocation failure.  */
 extern void xalloc_die (void) ATTRIBUTE_NORETURN;
