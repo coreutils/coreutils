@@ -1,3 +1,11 @@
+2003-03-06  Jim Meyering  <jim@meyering.net>
+
+	* Version 4.5.10.
+
+	* tests/cp/same-file: Unset CDPATH.  Otherwise, having the
+	CDPATH shell variable set could cause this test to fail.
+	Reported by Karl Berry.
+
 2003-03-05  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.9.
