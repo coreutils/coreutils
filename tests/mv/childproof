@@ -32,13 +32,25 @@ fi
 fail=0
 
 cp a/f b/f c 2> /dev/null && fail=1
+test -f a/f || fail=1
+test -f b/f || fail=1
+test -f c/f || fail=1
+test "`cat c/f`" = a || fail=1
 rm -f c/f
 
 # With --backup=numbered, it should succeed
 cp --backup=numbered a/f b/f c || fail=1
+test -f a/f || fail=1
+test -f b/f || fail=1
+test -f c/f || fail=1
+test -f c/f.~1~ || fail=1
 rm -f c/f*
 
 mv a/f b/f c 2> /dev/null && fail=1
+test -f a/f && fail=1
+test -f b/f || fail=1
+test -f c/f || fail=1
+test "`cat c/f`" = a || fail=1
 
 # Make sure mv still works when moving hard links.
 # This is where the same_file test is necessary, and why
@@ -47,5 +59,18 @@ rm -f c/f* b/f
 touch a/f
 ln a/f b/g
 mv a/f b/g c || fail=1
+test -f a/f && fail=1
+test -f b/g && fail=1
+test -f c/f || fail=1
+test -f c/g || fail=1
+
+mkdir aa
+touch a/f b/f b/g
+mv a/f b/f b/g c
+test -f a/f && fail=1  # a/f should have been moved
+test -f b/f || fail=1  # b/f should remain
+test -f b/g && fail=1  # b/g should have been moved
+test -f c/f || fail=1
+test -f c/g || fail=1
 
 (exit $fail); exit
