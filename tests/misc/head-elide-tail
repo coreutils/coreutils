@@ -1,0 +1,76 @@
+#!/bin/sh
+# -*- perl -*-
+# Exercise head's --bytes=-N option.
+
+: ${PERL=perl}
+: ${srcdir=.}
+
+$PERL -e 1 > /dev/null 2>&1 || {
+  echo 1>&2 "$0: configure didn't find a usable version of Perl," \
+    "so can't run this test"
+  exit 77
+}
+
+exec $PERL -w -I$srcdir/.. -MFetish -- - <<\EOF
+#/
+require 5.003;
+use strict;
+
+(my $program_name = $0) =~ s|.*/||;
+
+$ENV{PROG} = 'head';
+
+# Turn off localization of executable's ouput.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+
+# This should match the definition in head.c.
+my $READ_BUFSIZE = 4096;
+
+my @Tests =
+  (
+   # Elide the exact size of the file.
+   ['elide-1', "--bytes=-2", {IN=>"a\n"}, {OUT=>''}],
+   # Elide more than the size of the file.
+   ['elide-2', "--bytes=-2", {IN=>"a"},   {OUT=>''}],
+   # Leave just one byte.
+   ['elide-3', "--bytes=-2", {IN=>"abc"}, {OUT=>'a'}],
+   # Make it so the elided bytes straddle the end of the first
+   # $READ_BUFSIZE block.
+   ['elide-4', "--bytes=-2",
+    {IN=> 'a' x ($READ_BUFSIZE-3) . "\nbcd"},
+    {OUT=>'a' x ($READ_BUFSIZE-3) . "\nb"}],
+   # Make it so the elided bytes straddle the end of the 2nd
+   # $READ_BUFSIZE block.
+   ['elide-5', "--bytes=-2",
+    {IN=> 'a' x (2 * $READ_BUFSIZE - 2) . 'bcd'},
+    {OUT=>'a' x (2 * $READ_BUFSIZE - 2) . 'b'}],
+  );
+
+# Brute force: use all combinations of file sizes [0..20] and
+# number of bytes to elide [0..20].
+my $s = "abcdefghijklmnopqrst";
+for my $file_size (0..20)
+  {
+    for my $n_elide (0..20)
+      {
+	my $input = substr $s, 0, $file_size;
+	my $out_len = $n_elide < $file_size ? $file_size - $n_elide : 0;
+	my $output = substr $input, 0, $out_len;
+	my $t = ["elide-$file_size-$n_elide", "--bytes=-$n_elide",
+		 {IN=>$input}, {OUT=>$output}];
+	push @Tests, $t;
+	my @u = @$t;
+	# Insert the --presume-input-pipe option.
+	$u[0] .= 'p';
+	$u[1] .= ' --presume-input-pipe';
+	push @Tests, \@u;
+      }
+  }
+
+my $save_temps = $ENV{DEBUG};
+my $verbose = $ENV{VERBOSE};
+
+my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
+my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF
