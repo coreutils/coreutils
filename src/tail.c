@@ -768,9 +768,9 @@ start_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
 	n_bytes -= bytes_read;
       else
 	{
-	  size_t remainder = bytes_read - n_bytes;
-	  if (remainder)
-	    xwrite (STDOUT_FILENO, &buffer[n_bytes], remainder);
+	  size_t n_remaining = bytes_read - n_bytes;
+	  if (n_remaining)
+	    xwrite (STDOUT_FILENO, &buffer[n_bytes], n_remaining);
 	  break;
 	}
     }
