@@ -1,12 +1,15 @@
-#serial 2
+#serial 103
+dnl FIXME: when this goes back into automake, reset this to a small number
 
 dnl From Jim Meyering.
 dnl FIXME: this should migrate into libit.
 
-AC_DEFUN(AM_FUNC_MKTIME,
+dnl FIXME: when this goes back into automake, remove all jm_ prefixes
+
+AC_DEFUN(jm_AM_FUNC_MKTIME,
 [AC_REQUIRE([AC_HEADER_TIME])dnl
  AC_CHECK_HEADERS(sys/time.h)
- AC_CACHE_CHECK([for working mktime], am_cv_func_working_mktime,
+ AC_CACHE_CHECK([for working mktime], jm_am_cv_func_working_mktime,
   [AC_TRY_RUN(
 changequote(<<, >>)dnl
 <</* Test program from Paul Eggert (eggert@twinsun.com)
@@ -41,6 +44,23 @@ mktime_test (now)
     exit (1);
 }
 
+static void
+irix_6_4_bug ()
+{
+  /* Based on code from Ariel Faigon.  */
+  struct tm tm;
+  tm.tm_year = 96;
+  tm.tm_mon = 3;
+  tm.tm_mday = 0;
+  tm.tm_hour = 0;
+  tm.tm_min = 0;
+  tm.tm_sec = 0;
+  tm.tm_isdst = -1;
+  mktime (&tm);
+  if (tm.tm_mon != 2 || tm.tm_mday != 31)
+    exit (1);
+}
+
 int
 main ()
 {
@@ -61,15 +81,16 @@ main ()
       mktime_test ((time_t) 60 * 60);
       mktime_test ((time_t) 60 * 60 * 24);
     }
+  irix_6_4_bug ();
   exit (0);
 }
 	      >>,
 changequote([, ])dnl
-	     am_cv_func_working_mktime=yes, am_cv_func_working_mktime=no,
+	     jm_am_cv_func_working_mktime=yes, jm_am_cv_func_working_mktime=no,
 	     dnl When crosscompiling, assume mktime is missing or broken.
-	     am_cv_func_working_mktime=no)
+	     jm_am_cv_func_working_mktime=no)
   ])
-  if test $am_cv_func_working_mktime = no; then
+  if test $jm_am_cv_func_working_mktime = no; then
     LIBOBJS="$LIBOBJS mktime.o"
   fi
 ])
