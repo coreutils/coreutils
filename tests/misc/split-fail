@@ -34,4 +34,14 @@ env -u _POSIX2_VERSION split -1 in 2> /dev/null || fail=1
 # Then make sure that -0 evokes a failure.
 env -u _POSIX2_VERSION split -0 in 2> /dev/null && fail=1
 
+# Ensure that split --lines=N and --bytes=N work for N=2^32.
+_4gb=4294967296
+split --lines=$_4gb in || fail=1
+split --bytes=$_4gb in || fail=1
+
+# Currently (coreutils-5.0.1) split --line-bytes=M fails
+# with `invalid number of bytes' for M=2^32 or larger.  Test it.
+# Of course, this is an artificial limit and should be fixed.
+split --line-bytes=$_4gb 2> /dev/null in && fail=1
+
 (exit $fail); exit $fail
