@@ -37,6 +37,12 @@ int link ();			/* Some systems don't declare this anywhere. */
 int symlink ();
 #endif
 
+#ifdef S_ISLNK
+# define SYMBOLIC_SPACE_STRING symbolic_link ? _("symbolic ") : ""
+#else
+# define SYMBOLIC_SPACE_STRING ""
+#endif
+
 /* Construct a string NEW_DEST by concatenating DEST, a slash, and
    basename(SOURCE) in alloca'd memory.  Don't modify DEST or SOURCE.  */
 
@@ -233,19 +239,15 @@ do_link (char *source, char *dest)
     }
 
   if (verbose)
-    printf ("%s -> %s\n", source, dest);
+    printf (_("create %slink %s to %s\n"), SYMBOLIC_SPACE_STRING,
+	    dest, source);
 
   if ((*linkfunc) (source, dest) == 0)
     {
       return 0;
     }
 
-  error (0, errno, _("cannot %slink `%s' to `%s'"),
-#ifdef S_ISLNK
-	 symbolic_link ? _("symbolic ") : "",
-#else
-	 "",
-#endif
+  error (0, errno, _("cannot %slink `%s' to `%s'"), SYMBOLIC_SPACE_STRING,
 	 source, dest);
 
   if (dest_backup)
