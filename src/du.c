@@ -231,8 +231,8 @@ Summarize disk usage of each FILE, recursively for directories.\n\
   -X FILE, --exclude-from=FILE  Exclude files that match any pattern in FILE.\n\
       --exclude=PAT     Exclude files that match PAT.\n\
       --max-depth=N     print the total for a directory (or file, with --all)\n\
-			  only if it is N or fewer levels below the command\n\
-			  line argument;  --max-depth=0 is the same as\n\
+                          only if it is N or fewer levels below the command\n\
+                          line argument;  --max-depth=0 is the same as\n\
                           --summarize\n\
       --help            display this help and exit\n\
       --version         output version information and exit\n\
