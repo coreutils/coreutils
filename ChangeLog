@@ -2,6 +2,9 @@
 
 	* Version 5.0.92.
 
+	* configure.ac: Don't invoke AC_AIX or AC_MINIX explicitly, now
+	that we use gl_USE_SYSTEM_EXTENSIONS, since it AC_REQUIREs them.
+
 	* Use autoconf-2.57d.  Regenerate dependent files.
 
 2003-09-24  Jim Meyering  <jim@meyering.net>
