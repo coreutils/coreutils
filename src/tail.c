@@ -35,6 +35,7 @@
 #include "argmatch.h"
 #include "c-strtod.h"
 #include "error.h"
+#include "fcntl-safer.h"
 #include "inttostr.h"
 #include "posixver.h"
 #include "quote.h"
@@ -58,8 +59,9 @@
 /* Number of items to tail.  */
 #define DEFAULT_N_LINES 10
 
-/* A special value for dump_remainder's N_BYTES parameter.  */
-#define COPY_TO_EOF OFF_T_MAX
+/* Special values for dump_remainder's N_BYTES parameter.  */
+#define COPY_TO_EOF UINTMAX_MAX
+#define COPY_A_BUFFER (UINTMAX_MAX - 1)
 
 /* FIXME: make Follow_name the default?  */
 #define DEFAULT_FOLLOW_MODE Follow_descriptor
@@ -99,12 +101,15 @@ struct File_spec
   /* File descriptor on which the file is open; -1 if it's not open.  */
   int fd;
 
-  /* The size of the file the last time we checked.  */
+  /* Attributes of the file the last time we checked.  */
   off_t size;
-
-  /* The device and inode of the file the last time we checked.  */
+  struct timespec mtime;
   dev_t dev;
   ino_t ino;
+  mode_t mode;
+
+  /* 1 if O_NONBLOCK is clear, 0 if set, -1 if not known.  */
+  int blocking;
 
   /* The specified name initially referred to a directory or some other
      type for which tail isn't meaningful.  Unlike for a permission problem
@@ -113,9 +118,6 @@ struct File_spec
 
   /* See description of DEFAULT_MAX_N_... below.  */
   unsigned int n_unchanged_stats;
-
-  /* See description of DEFAULT_MAX_N_... below.  */
-  unsigned int n_consecutive_size_changes;
 
   /* A file is tailable if it exists, is readable, and is of type
      IS_TAILABLE_FILE_TYPE.  */
@@ -154,23 +156,13 @@ enum header_mode
 };
 
 /* When tailing a file by name, if there have been this many consecutive
-   iterations for which the size has remained the same, then open/fstat
+   iterations for which the file has not changed, then open/fstat
    the file to determine if that file name is still associated with the
    same device/inode-number pair as before.  This option is meaningful only
    when following by name.  --max-unchanged-stats=N  */
 #define DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS 5
 static unsigned long max_n_unchanged_stats_between_opens =
   DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS;
-
-/* This variable is used to ensure that a file that is unlinked or moved
-   aside, yet always growing will be recognized as having been renamed.
-   After detecting this many consecutive size changes for a file, open/fstat
-   the file to determine if that file name is still associated with the
-   same device/inode-number pair as before.  This option is meaningful only
-   when following by name.  --max-consecutive-size-changes=N  */
-#define DEFAULT_MAX_N_CONSECUTIVE_SIZE_CHANGES 200
-static unsigned long max_n_consecutive_size_changes_between_opens =
-  DEFAULT_MAX_N_CONSECUTIVE_SIZE_CHANGES;
 
 /* The name this program was run with.  */
 char *program_name;
@@ -194,11 +186,6 @@ enum
   RETRY_OPTION = CHAR_MAX + 1,
   ALLOW_MISSING_OPTION,   /* deprecated, FIXME: remove in late 2004 */
   MAX_UNCHANGED_STATS_OPTION,
-
-  /* FIXME: remove this in 2001, unless someone can show a good
-     reason to keep it.  */
-  MAX_CONSECUTIVE_SIZE_CHANGES_OPTION,
-
   PID_OPTION,
   PRESUME_INPUT_PIPE_OPTION,
   LONG_FOLLOW_OPTION
@@ -212,8 +199,6 @@ static struct option const long_options[] =
   {"follow", optional_argument, NULL, LONG_FOLLOW_OPTION},
   {"lines", required_argument, NULL, 'n'},
   {"max-unchanged-stats", required_argument, NULL, MAX_UNCHANGED_STATS_OPTION},
-  {"max-consecutive-size-changes", required_argument, NULL,
-   MAX_CONSECUTIVE_SIZE_CHANGES_OPTION},
   {"pid", required_argument, NULL, PID_OPTION},
   {"presume-input-pipe", no_argument, NULL,
    PRESUME_INPUT_PIPE_OPTION}, /* do not document */
@@ -327,6 +312,28 @@ xwrite (int fd, char const *buffer, size_t n_bytes)
     error (EXIT_FAILURE, errno, _("write error"));
 }
 
+/* Record a file F with descriptor FD, size SIZE, status ST, and
+   blocking status BLOCKING.  */
+
+static void
+record_open_fd (struct File_spec *f, int fd,
+		off_t size, struct stat const *st,
+		int blocking)
+{
+  f->fd = fd;
+  f->size = size;
+  f->mtime.tv_sec = st->st_mtime;
+  f->mtime.tv_nsec = TIMESPEC_NS (st->st_mtim);
+  f->dev = st->st_dev;
+  f->ino = st->st_ino;
+  f->mode = st->st_mode;
+  f->blocking = blocking;
+  f->n_unchanged_stats = 0;
+  f->ignore = 0;
+}
+
+/* Close the file with descriptor FD and name FILENAME.  */
+
 static void
 close_fd (int fd, const char *filename)
 {
@@ -347,6 +354,7 @@ write_header (const char *pretty_filename)
 
 /* Read and output N_BYTES of file PRETTY_FILENAME starting at the current
    position in FD.  If N_BYTES is COPY_TO_EOF, then copy until end of file.
+   If N_BYTES is COPY_A_BUFFER, then copy at most one buffer's worth.
    Return the number of bytes read from the file.  */
 
 static uintmax_t
@@ -362,13 +370,22 @@ dump_remainder (const char *pretty_filename, int fd, uintmax_t n_bytes)
       size_t n = MIN (n_remaining, BUFSIZ);
       size_t bytes_read = safe_read (fd, buffer, n);
       if (bytes_read == SAFE_READ_ERROR)
-	error (EXIT_FAILURE, errno, _("error reading %s"),
-	       quote (pretty_filename));
+	{
+	  if (errno != EAGAIN)
+	    error (EXIT_FAILURE, errno, _("error reading %s"),
+		   quote (pretty_filename));
+	  break;
+	}
       if (bytes_read == 0)
 	break;
       xwrite (STDOUT_FILENO, buffer, bytes_read);
-      n_remaining -= bytes_read;
       n_written += bytes_read;
+      if (n_bytes != COPY_TO_EOF)
+	{
+	  n_remaining -= bytes_read;
+	  if (n_remaining == 0 || n_bytes == COPY_A_BUFFER)
+	    break;
+	}
     }
 
   return n_written;
@@ -822,20 +839,20 @@ start_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
 /* FIXME: describe */
 
 static void
-recheck (struct File_spec *f)
+recheck (struct File_spec *f, bool blocking)
 {
   /* open/fstat the file and announce if dev/ino have changed */
   struct stat new_stats;
-  int fd;
   int fail = 0;
   int is_stdin = (STREQ (f->name, "-"));
   int was_tailable = f->tailable;
   int prev_errnum = f->errnum;
   int new_file;
+  int fd = (is_stdin
+	    ? STDIN_FILENO
+	    : open_safer (f->name, O_RDONLY | (blocking ? 0 : O_NONBLOCK)));
 
   assert (valid_file_spec (f));
-
-  fd = (is_stdin ? STDIN_FILENO : open (f->name, O_RDONLY));
 
   /* If the open fails because the file doesn't exist,
      then mark the file as not tailable.  */
@@ -931,32 +948,24 @@ recheck (struct File_spec *f)
 
   if (new_file)
     {
-      /* Record new file info in f.  */
-      f->fd = fd;
-      f->size = 0; /* Start at the beginning of the file...  */
-      f->dev = new_stats.st_dev;
-      f->ino = new_stats.st_ino;
-      f->n_unchanged_stats = 0;
-      f->n_consecutive_size_changes = 0;
-      f->ignore = 0;
-      xlseek (f->fd, f->size, SEEK_SET, pretty_name (f));
+      /* Start at the beginning of the file.  */
+      record_open_fd (f, fd, 0, &new_stats, (is_stdin ? -1 : blocking));
+      xlseek (fd, 0, SEEK_SET, pretty_name (f));
     }
 }
 
-/* FIXME: describe */
+/* Return true if any of the N_FILES files in F are live, i.e., have
+   open file descriptors.  */
 
-static unsigned int
-n_live_files (const struct File_spec *f, int n_files)
+static bool
+any_live_files (const struct File_spec *f, int n_files)
 {
   int i;
-  unsigned int n_live = 0;
 
   for (i = 0; i < n_files; i++)
-    {
-      if (f[i].fd >= 0)
-	++n_live;
-    }
-  return n_live;
+    if (0 <= f[i].fd)
+      return true;
+  return false;
 }
 
 /* Tail NFILES files forever, or until killed.
@@ -969,6 +978,9 @@ n_live_files (const struct File_spec *f, int n_files)
 static void
 tail_forever (struct File_spec *f, int nfiles, double sleep_interval)
 {
+  /* Use blocking I/O as an optimization, when it's easy.  */
+  bool blocking = (pid == 0 && follow_mode == Follow_descriptor
+		   && nfiles == 1 && ! S_ISREG (f[0].mode));
   int last;
   int writer_is_dead = 0;
 
@@ -977,90 +989,110 @@ tail_forever (struct File_spec *f, int nfiles, double sleep_interval)
   while (1)
     {
       int i;
-      int any_changed;
+      bool any_input = false;
 
-      any_changed = 0;
       for (i = 0; i < nfiles; i++)
 	{
+	  int fd;
+	  char const *name;
+	  mode_t mode;
 	  struct stat stats;
+	  uintmax_t bytes_read;
 
 	  if (f[i].ignore)
 	    continue;
 
 	  if (f[i].fd < 0)
 	    {
-	      recheck (&f[i]);
+	      recheck (&f[i], blocking);
 	      continue;
 	    }
 
-	  if (fstat (f[i].fd, &stats) < 0)
+	  fd = f[i].fd;
+	  name = pretty_name (&f[i]);
+	  mode = f[i].mode;
+
+	  if (f[i].blocking != blocking)
 	    {
-	      f[i].fd = -1;
-	      f[i].errnum = errno;
-	      error (0, errno, "%s", pretty_name (&f[i]));
-	      continue;
+	      int old_flags = fcntl (fd, F_GETFL);
+	      int new_flags = old_flags | (blocking ? 0 : O_NONBLOCK);
+	      if (old_flags < 0
+		  || (new_flags != old_flags
+		      && fcntl (fd, F_SETFL, new_flags) == -1))
+		error (EXIT_FAILURE, errno,
+		       _("%s: cannot change nonblocking mode"), name);
+	      f[i].blocking = blocking;
 	    }
 
-	  if (stats.st_size == f[i].size)
+	  if (!blocking)
 	    {
-	      f[i].n_consecutive_size_changes = 0;
-	      if ((max_n_unchanged_stats_between_opens
-		   <= f[i].n_unchanged_stats++)
-		  && follow_mode == Follow_name)
+	      if (fstat (fd, &stats) != 0)
 		{
-		  recheck (&f[i]);
-		  f[i].n_unchanged_stats = 0;
+		  f[i].fd = -1;
+		  f[i].errnum = errno;
+		  error (0, errno, "%s", name);
+		  continue;
 		}
-	      continue;
+
+	      if ((! S_ISREG (stats.st_mode) || f[i].size == stats.st_size)
+		  && f[i].mtime.tv_sec == stats.st_mtime
+		  && f[i].mtime.tv_nsec == TIMESPEC_NS (stats.st_mtim)
+		  && f[i].mode == stats.st_mode)
+		{
+		  if ((max_n_unchanged_stats_between_opens
+		       <= f[i].n_unchanged_stats++)
+		      && follow_mode == Follow_name)
+		    {
+		      recheck (&f[i], blocking);
+		      f[i].n_unchanged_stats = 0;
+		    }
+		  continue;
+		}
+
+	      /* This file has changed.  Print out what we can, and
+		 then keep looping.  */
+
+	      f[i].mtime.tv_sec = stats.st_mtime;
+	      f[i].mtime.tv_nsec = TIMESPEC_NS (stats.st_mtim);
+	      f[i].mode = stats.st_mode;
+
+	      /* reset counter */
+	      f[i].n_unchanged_stats = 0;
+
+	      if (S_ISREG (mode) && stats.st_size < f[i].size)
+		{
+		  error (0, 0, _("%s: file truncated"), name);
+		  last = i;
+		  xlseek (fd, stats.st_size, SEEK_SET, name);
+		  f[i].size = stats.st_size;
+		  continue;
+		}
+
+	      if (i != last)
+		{
+		  if (print_headers)
+		    write_header (name);
+		  last = i;
+		}
 	    }
 
-	  /* Ensure that a file that's unlinked or moved aside, yet always
-	     growing will be recognized as having been renamed.  */
-	  if ((max_n_consecutive_size_changes_between_opens
-	       <= f[i].n_consecutive_size_changes++)
-	      && follow_mode == Follow_name)
-	    {
-	      f[i].n_consecutive_size_changes = 0;
-	      recheck (&f[i]);
-	      continue;
-	    }
-
-	  /* This file has changed size.  Print out what we can, and
-	     then keep looping.  */
-
-	  any_changed = 1;
-
-	  /* reset counter */
-	  f[i].n_unchanged_stats = 0;
-
-	  if (stats.st_size < f[i].size)
-	    {
-	      error (0, 0, _("%s: file truncated"), pretty_name (&f[i]));
-	      last = i;
-	      xlseek (f[i].fd, (off_t) stats.st_size, SEEK_SET,
-		      pretty_name (&f[i]));
-	      f[i].size = stats.st_size;
-	      continue;
-	    }
-
-	  if (i != last)
-	    {
-	      if (print_headers)
-		write_header (pretty_name (&f[i]));
-	      last = i;
-	    }
-	  f[i].size += dump_remainder (pretty_name (&f[i]), f[i].fd,
-				       COPY_TO_EOF);
+	  bytes_read = dump_remainder (name, fd,
+				       blocking ? COPY_A_BUFFER : COPY_TO_EOF);
+	  any_input |= (bytes_read != 0);
+	  f[i].size += bytes_read;
 	}
 
-      if (n_live_files (f, nfiles) == 0 && ! reopen_inaccessible_files)
+      if (! any_live_files (f, nfiles) && ! reopen_inaccessible_files)
 	{
 	  error (0, 0, _("no files remaining"));
 	  break;
 	}
 
-      /* If none of the files changed size, sleep.  */
-      if (!any_changed)
+      if ((!any_input | blocking) && fflush (stdout) != 0)
+	error (EXIT_FAILURE, errno, _("write error"));
+
+      /* If nothing was read, sleep and/or check for dead writers.  */
+      if (!any_input)
 	{
 	  if (writer_is_dead)
 	    break;
@@ -1189,8 +1221,8 @@ tail_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
 	 which lseek (... SEEK_END) works.  */
       if ( ! presume_input_pipe
 	   && S_ISREG (stats.st_mode)
-	   && (start_pos = lseek (fd, (off_t) 0, SEEK_CUR)) != -1
-	   && start_pos < (end_pos = lseek (fd, (off_t) 0, SEEK_END)))
+	   && (start_pos = lseek (fd, 0, SEEK_CUR)) != -1
+	   && start_pos < (end_pos = lseek (fd, 0, SEEK_END)))
 	{
 	  *read_pos = end_pos;
 	  if (end_pos != 0 && file_lines (pretty_filename, fd, n_lines,
@@ -1250,7 +1282,7 @@ tail_file (struct File_spec *f, uintmax_t n_units)
     }
   else
     {
-      fd = open (f->name, O_RDONLY);
+      fd = open_safer (f->name, O_RDONLY);
     }
 
   f->tailable = !(reopen_inaccessible_files && fd == -1);
@@ -1310,17 +1342,10 @@ tail_file (struct File_spec *f, uintmax_t n_units)
 	    }
 	  else
 	    {
-	      f->fd = fd;
-
 	      /* Note: we must use read_pos here, not stats.st_size,
 		 to avoid a race condition described by Ken Raeburn:
 	http://mail.gnu.org/archive/html/bug-textutils/2003-05/msg00007.html */
-	      f->size = read_pos;
-	      f->dev = stats.st_dev;
-	      f->ino = stats.st_ino;
-	      f->n_unchanged_stats = 0;
-	      f->n_consecutive_size_changes = 0;
-	      f->ignore = 0;
+	      record_open_fd (f, fd, read_pos, &stats, (is_stdin ? -1 : 1));
 	    }
 	}
       else
@@ -1553,18 +1578,6 @@ parse_options (int argc, char **argv,
 	    }
 	  break;
 
-	case MAX_CONSECUTIVE_SIZE_CHANGES_OPTION:
-	  /* --max-consecutive-size-changes=N */
-	  if (xstrtoul (optarg, NULL, 10,
-			&max_n_consecutive_size_changes_between_opens, "")
-	      != LONGINT_OK)
-	    {
-	      error (EXIT_FAILURE, 0,
-		   _("%s: invalid maximum number of consecutive size changes"),
-		     optarg);
-	    }
-	  break;
-
 	case PID_OPTION:
 	  {
 	    strtol_error s_err;
@@ -1729,14 +1742,7 @@ main (int argc, char **argv)
     exit_status |= tail_file (&F[i], n_units);
 
   if (forever)
-    {
-      /* This fflush appears to be required only on Solaris 5.7.  */
-      if (fflush (stdout) < 0)
-	error (EXIT_FAILURE, errno, _("write error"));
-
-      SETVBUF (stdout, NULL, _IONBF, 0);
-      tail_forever (F, n_files, sleep_interval);
-    }
+    tail_forever (F, n_files, sleep_interval);
 
   if (have_read_stdin && close (STDIN_FILENO) < 0)
     error (EXIT_FAILURE, errno, "-");
