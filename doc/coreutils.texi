@@ -10972,7 +10972,8 @@ Print the hardware platform name
 @cindex machine type
 @cindex hardware class
 @cindex hardware type
-Print the machine hardware name (sometimes called the hardware class).
+Print the machine hardware name (sometimes called the hardware class
+or hardware type).
 
 @item -n
 @itemx --nodename
@@ -11013,6 +11014,14 @@ Print the kernel release.
 @cindex kernel name
 @cindex name of kernel
 Print the kernel name.
+@acronym{POSIX} 1003.1-2001 (@pxref{Standards conformance}) calls this
+``the implementation of the operating system'', because the
+@acronym{POSIX} specification itself has no notion of ``kernel''.
+The kernel name might be the same as the operating system name printed
+by the @option{-o} or @option{--operating-system} option, but it might
+differ.  Some operating systems (e.g., FreeBSD, HP-UX) have the same
+name as their underlying kernels; others (e.g., GNU/Linux, Solaris)
+do not.
 
 @item -v
 @itemx --kernel-version
