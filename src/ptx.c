@@ -505,7 +505,7 @@ initialize_regex (void)
 | This routine will attempt to swallow a whole file name FILE_NAME into a |
 | contiguous region of memory and return a description of it into BLOCK.  |
 | Standard input is assumed whenever FILE_NAME is NULL, empty or "-".	  |
-| 									  |
+|									  |
 | Previously, in some cases, white space compression was attempted while  |
 | inputting text.  This was defeating some regexps like default end of	  |
 | sentence, which checks for two consecutive spaces.  If white space	  |
@@ -603,7 +603,7 @@ swallow_file_in_memory (const char *file_name, BLOCK *block)
 | Compare two words, FIRST and SECOND, and return 0 if they are identical.  |
 | Return less than 0 if the first word goes before the second; return	    |
 | greater than 0 if the first word goes after the second.		    |
-| 									    |
+|									    |
 | If a word is indeed a prefix of the other, the shorter should go first.   |
 `--------------------------------------------------------------------------*/
 

@@ -1,5 +1,5 @@
 /* `ln' program to create links between files.
-   Copyright (C) 86, 89, 90, 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 86, 89, 90, 91, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -229,8 +229,8 @@ do_link (const char *source, const char *dest)
       && source_stats.st_dev == dest_stats.st_dev
       && source_stats.st_ino == dest_stats.st_ino
       /* The following detects whether removing DEST will also remove
- 	 SOURCE.  If the file has only one link then both are surely
- 	 the same link.  Otherwise check whether they point to the same
+	 SOURCE.  If the file has only one link then both are surely
+	 the same link.  Otherwise check whether they point to the same
 	 name in the same directory.  */
       && (source_stats.st_nlink == 1 || same_name (source, dest)))
     {
@@ -427,7 +427,7 @@ main (int argc, char **argv)
       switch (c)
 	{
 	case 0:			/* Long-named option. */
- 	  break;
+	  break;
 
 	case 'V':  /* FIXME: this is deprecated.  Remove it in 2001.  */
 	  error (0, 0,
