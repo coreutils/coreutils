@@ -877,8 +877,7 @@ yylex ()
 
 /* Yield A - B, measured in seconds.  */
 static long
-difftm (a, b)
-     struct tm *a, *b;
+difftm (struct tm *a, struct tm *b)
 {
   int ay = a->tm_year + (TM_YEAR_ORIGIN - 1);
   int by = b->tm_year + (TM_YEAR_ORIGIN - 1);
