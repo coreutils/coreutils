@@ -49,36 +49,36 @@ static void usage ();
 /* An element of the list describing the format of each
    output line. */
 struct outlist
-{
-  int file;			/* File to take field from (1 or 2). */
-  int field;			/* Field number to print. */
-  struct outlist *next;
-};
+  {
+    int file;			/* File to take field from (1 or 2). */
+    int field;			/* Field number to print. */
+    struct outlist *next;
+  };
 
 /* A field of a line. */
 struct field
-{
-  char *beg;			/* First character in field. */
-  char *lim;			/* Character after last character in field. */
-};
+  {
+    char *beg;			/* First character in field. */
+    char *lim;			/* Character after last character in field. */
+  };
 
 /* A line read from an input file.  Newlines are not stored. */
 struct line
-{
-  char *beg;			/* First character in line. */
-  char *lim;			/* Character after last character in line. */
-  int nfields;			/* Number of elements in `fields'. */
-  struct field *fields;
-};
+  {
+    char *beg;			/* First character in line. */
+    char *lim;			/* Character after last character in line. */
+    int nfields;		/* Number of elements in `fields'. */
+    struct field *fields;
+  };
 
 /* One or more consecutive lines read from a file that all have the
    same join field value. */
 struct seq
-{
-  int count;			/* Elements used in `lines'. */
-  int alloc;			/* Elements allocated in `lines'. */
-  struct line *lines;
-};
+  {
+    int count;			/* Elements used in `lines'. */
+    int alloc;			/* Elements allocated in `lines'. */
+    struct line *lines;
+  };
 
 /* The name this program was run with. */
 char *program_name;
@@ -426,7 +426,7 @@ join (fp1, fp2)
 	}
 
       /* Keep reading lines from file1 as long as they continue to
-	 match the current line from file2. */
+         match the current line from file2. */
       eof1 = 0;
       do
 	if (!getseq (fp1, &seq1))
@@ -438,7 +438,7 @@ join (fp1, fp2)
       while (!keycmp (&seq1.lines[seq1.count - 1], &seq2.lines[0]));
 
       /* Keep reading lines from file2 as long as they continue to
-	 match the current line from file1. */
+         match the current line from file1. */
       eof2 = 0;
       do
 	if (!getseq (fp2, &seq2))
@@ -479,22 +479,22 @@ join (fp1, fp2)
 
   if (print_unpairables_1 && seq1.count)
     {
-      prjoin(&seq1.lines[0], &blank2);
+      prjoin (&seq1.lines[0], &blank2);
       freeline (&seq1.lines[0]);
       while (get_line (fp1, &line))
 	{
-	  prjoin(&line, &blank2);
+	  prjoin (&line, &blank2);
 	  freeline (&line);
 	}
     }
 
   if (print_unpairables_2 && seq2.count)
     {
-      prjoin(&blank1, &seq2.lines[0]);
+      prjoin (&blank1, &seq2.lines[0]);
       freeline (&seq2.lines[0]);
       while (get_line (fp2, &line))
 	{
-	  prjoin(&blank1, &line);
+	  prjoin (&blank1, &line);
 	  freeline (&line);
 	}
     }
@@ -546,10 +546,16 @@ add_field_list (str)
       if (*str == ',' || ISBLANK (*str))
 	{
 	  added += add_field (file, field);
-	  switch (file) {
-	   case 1: blank1.nfields = max(blank1.nfields, field); break;
-	   case 2: blank2.nfields = max(blank2.nfields, field); break;
-	  }
+	  switch (file)
+	    {
+	    case 1:
+	      blank1.nfields = max (blank1.nfields, field);
+	      break;
+
+	    case 2:
+	      blank2.nfields = max (blank2.nfields, field);
+	      break;
+	    }
 	  file = field = -1;
 	  dot_found = 0;
 	}
@@ -586,12 +592,13 @@ make_blank (blank, count)
      int count;
 {
   int i;
-  blank->beg = xmalloc(blank->nfields + 1);
-  blank->fields = (struct field *)xmalloc(sizeof(struct field) * count);
-  for (i = 0; i < blank->nfields; i++) {
-    blank->beg[i] = '\t';
-    blank->fields[i].lim = blank->fields[i].beg = &blank->beg[i];
-  }
+  blank->beg = xmalloc (blank->nfields + 1);
+  blank->fields = (struct field *) xmalloc (sizeof (struct field) * count);
+  for (i = 0; i < blank->nfields; i++)
+    {
+      blank->beg[i] = '\t';
+      blank->fields[i].lim = blank->fields[i].beg = &blank->beg[i];
+    }
   blank->beg[i] = '\0';
   blank->lim = &blank->beg[i];
 }
@@ -607,15 +614,15 @@ main (argc, argv)
 
   blank1.nfields = 1;
   blank2.nfields = 1;
-  
+
   program_name = argv[0];
 
   parse_long_options (argc, argv, usage);
 
   /* Now that we've seen the options, we can construct the blank line
      structures.  */
-  make_blank(&blank1, blank1.nfields);
-  make_blank(&blank2, blank2.nfields);
+  make_blank (&blank1, blank1.nfields);
+  make_blank (&blank2, blank2.nfields);
 
   nfiles = 0;
   print_pairables = 1;
@@ -683,7 +690,7 @@ main (argc, argv)
 	  print_pairables = 0;
 	  break;
 
-	case 1:			/* Non-option argument. */
+	case 1:		/* Non-option argument. */
 	  if (prev_optc == 'o')
 	    {
 	      /* Might be continuation of args to -o. */
