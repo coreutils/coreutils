@@ -1,0 +1,139 @@
+#! /bin/sh
+# Make sure all these programs work properly
+# when invoked with --help or --version.
+
+test "$VERBOSE" = yes && set -x
+
+expected_failure_status_date=2
+expected_failure_status_printenv=2
+expected_failure_status_tty=3
+expected_failure_status_sort=2
+
+case "$all_programs" in
+  *nohup*)
+    if test -w /dev/full && echo > /dev/full; then
+      cat 1>&2 <<\EOF
+************************************************
+WARNING: On this system, the built-in echo function of /bin/sh
+does not report failure when writing to a full device.
+To demonstrate, run this command:
+
+  /bin/sh -c 'echo hello > /dev/full; echo status=$?'
+
+Notice that the failing echo leaves its exit status set to zero
+and does not produce a diagnostic.
+
+That bug in /bin/sh would cause the tests of the nohup and groups
+scripts to fail, so those two are being removed from the list of
+programs checked by this test.
+************************************************
+EOF
+      all_programs=`echo $all_programs|sed 's/\<nohup\> *//;s/\<groups\> *//'`
+    fi
+  ;;
+esac
+
+fail=0
+for i in $all_programs; do
+
+  # false fails even when invoked with --help or --version.
+  if test $i = false; then
+    ./$i --help >/dev/null && fail=1
+    ./$i --version >/dev/null && fail=1
+    continue
+  fi
+
+  # The just-built install executable is always named `ginstall'.
+  test $i = install && i=ginstall
+
+  # Make sure they exit successfully, under normal conditions.
+  ./$i --help >/dev/null || fail=1
+  ./$i --version >/dev/null || fail=1
+
+  # Make sure they fail upon `disk full' error.
+  if test -w /dev/full; then
+    ./$i --help >/dev/full 2>/dev/null && fail=1
+    ./$i --version >/dev/full 2>/dev/null
+    status=$?
+    eval "expected=\$expected_failure_status_$i"
+    test x$expected = x && expected=1
+    if test $status = $expected; then
+      : # ok
+    else
+      fail=1
+    fi
+  fi
+done
+
+tmp=tmp-$$
+tmp_in=in-$$
+tmp_in2=in2-$$
+tmp_dir=dir-$$
+tmp_out=out-$$
+mkdir $tmp || fail=1
+cd $tmp || fail=1
+
+comm_args="$tmp_in $tmp_in"
+csplit_args="$tmp_in //"
+cut_args='-f 1'
+join_args="$tmp_in $tmp_in"
+tr_args='a a'
+
+chmod_args="a+x $tmp_in"
+# Punt on these.
+chgrp_args=--version
+chown_args=--version
+mkfifo_args=--version
+mknod_args=--version
+
+cp_args="$tmp_in $tmp_in2"
+ln_args="$tmp_in $tmp_in2"
+ginstall_args="$tmp_in $tmp_in2"
+mv_args="$tmp_in $tmp_in2"
+mkdir_args=$tmp_in2
+rmdir_args=$tmp_dir
+rm_args=$tmp_in
+shred_args=$tmp_in
+touch_args=$tmp_in2
+
+basename_args=$tmp_in
+dirname_args=$tmp_in
+expr_args=foo
+
+# Punt, in case GNU `id' hasn't been installed yet.
+groups_args=--version
+
+pathchk_args=$tmp_in
+yes_args=--version
+logname_args=--version
+nohup_args=--version
+printf_args=foo
+seq_args=10
+sleep_args=0
+su_args=--version
+test_args=foo
+# skip chroot, stty, tty, false
+
+for i in $all_programs; do
+  # Skip these.
+  case $i in chroot|stty|tty|false) continue;; esac
+
+  rm -rf $tmp_in $tmp_in2 $tmp_dir $tmp_out
+  echo > $tmp_in
+  mkdir $tmp_dir
+  # echo ================== $i
+  eval "args=\$${i}_args"
+  if ../$i $args < $tmp_in > $tmp_out; then
+    : # ok
+  else
+    echo FAIL: $i
+    fail=1
+  fi
+  rm -rf $tmp_in $tmp_in2 $tmp_out $tmp_dir
+done
+
+# FIXME: trap
+cd ..
+rm -rf $tmp
+
+exit $fail
