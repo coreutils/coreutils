@@ -22,9 +22,6 @@
 # Do not save the original name or timestamp in the .tar.gz file.
 GZIP_ENV = '--no-name --best'
 
-# Automake 1.4 does not define AMTAR.
-AMTAR ?= $(TAR)
-
 CVS = cvs
 
 prev_version_file ?= .prev-version
@@ -279,11 +276,50 @@ announcement: NEWS ChangeLog $(rel-files) $(signatures)
 	      -e 'print "\n"."*"x70 ."\n"; s///; print; print "*"x70 ."\n"'; \
 	)
 
+
+## ---------------- ##
+## Updating files.  ##
+## ---------------- ##
+
 WGET = wget
 ftp-gnu = ftp://ftp.gnu.org/gnu
 
 # Use mv, if you don't have/want move-if-change.
 move_if_change ?= move-if-change
+
+
+# --------------------- #
+# Updating everything.  #
+# --------------------- #
+
+.PHONY: update
+local_updates ?= wget-update cvs-update po-update
+update: $(local_updates)
+
+
+# ------------------- #
+# Updating PO files.  #
+# ------------------- #
+
+po_repo = http://www.iro.umontreal.ca/contrib/po/maint/$(PACKAGE)
+.PHONY: do-po-update po-update
+do-po-update:
+	tmppo=/tmp/$(PACKAGE)-$(VERSION)-po &&\
+	rm -rf $$tmppo && \
+	mkdir $$tmppo && \
+	(cd $$tmppo && $(WGET) -r -l1 -nd --no-parent -A '*.po' $(po_repo)) &&\
+	cp $$tmppo/*.po po
+	cd po && $(MAKE) update-po
+	$(MAKE) po-check
+
+po-update:
+	if test -d "po"; then \
+	  $(MAKE) do-po-update; \
+	fi
+
+# -------------------------- #
+# Updating GNU build tools.  #
+# -------------------------- #
 
 # The following pseudo table associates a local directory and a URL
 # with each of the files that belongs to some other package and is
@@ -312,15 +348,20 @@ $(get-targets):
 	$(WGET) $(url) -O $(target).t \
 	  && $(move_if_change) $(target).t $(target)
 
-automake_repo = :pserver:anoncvs@subversions.gnu.org:/cvsroot/automake
+cvs_files ?= $(srcdir)/config/depcomp $(srcdir)/config/missing $(srcdir)/config/mkinstalldirs \
+             $(srcdir)/config/install-sh $(srcdir)/src/ansi2knr.c
+automake_repo=:pserver:anoncvs:anoncvs@sources.redhat.com:/cvs/automake
 .PHONY: wget-update
 wget-update: $(get-targets)
-	cd config &&							\
-	for f in depcomp missing mkinstalldirs; do			\
-	  test -f $$f || { echo "*** skipping $$f" 1>&2; continue; };	\
-	  echo checking out $$f...;					\
-	  $(CVS) -d $(automake_repo) co -p automake/lib/$$f > $$f.t	\
-	    && $(move_if_change) $$f.t $$f;				\
+
+.PHONY: cvs-update
+cvs-update:
+	for f in $(cvs_files); do				      \
+	  test -f $$f || { echo "*** skipping $$f" 1>&2; continue; }; \
+	  file=$$(basename $$f);				      \
+	  echo checking out $$file...;				      \
+	  $(CVS) -d $(automake_repo) co -p automake/lib/$$file> $$f.t \
+	    && $(move_if_change) $$f.t $$f;			      \
 	done
 
 define emit-upload-commands
