@@ -1868,17 +1868,23 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -C, --copyright                display Copyright and copying conditions\n\
   -G, --traditional              behave more like System V `ptx'\n\
   -F, --flag-truncation=STRING   use STRING for flagging line truncations\n\
+"), stdout);
+      fputs (_("\
   -M, --macro-name=STRING        macro name to use instead of `xx'\n\
   -O, --format=roff              generate output as roff directives\n\
   -R, --right-side-refs          put references at right, not counted in -w\n\
   -S, --sentence-regexp=REGEXP   for end of lines or end of sentences\n\
   -T, --format=tex               generate output as TeX directives\n\
+"), stdout);
+      fputs (_("\
   -W, --word-regexp=REGEXP       use REGEXP to match each keyword\n\
   -b, --break-file=FILE          word break characters in this FILE\n\
   -f, --ignore-case              fold lower case to upper case for sorting\n\
   -g, --gap-size=NUMBER          gap size in columns between output fields\n\
   -i, --ignore-file=FILE         read ignore word list from FILE\n\
   -o, --only-file=FILE           read only word list from this FILE\n\
+"), stdout);
+      fputs (_("\
   -r, --references               first field of each line is a reference\n\
   -t, --typeset-mode               - not implemented -\n\
   -w, --width=NUMBER             output width in columns, reference excluded\n\
@@ -1970,6 +1976,8 @@ the Free Software Foundation; either version 2, or (at your option)\n\
 any later version.\n\
 \n\
 This program is distributed in the hope that it will be useful,\n\
+"), stdout);
+	  fputs (_("\
 but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n\
 GNU General Public License for more details.\n\
