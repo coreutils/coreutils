@@ -507,7 +507,7 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
      source and destination are the same directory entry.  In that
      case, moving the destination file aside (in making the backup)
      would also rename the source file and result in an error.  */
-  if (x->backup_type != none)
+  if (x->backup_type != no_backups)
     {
       if (!same_link)
 	{
@@ -854,7 +854,7 @@ copy_internal (const char *src_path, const char *dst_path,
   if (command_line_arg)
     {
       if ( ! S_ISDIR (src_sb.st_mode)
-	   && x->backup_type == none
+	   && x->backup_type == no_backups
 	   && seen_file (x->src_info, src_path, &src_sb))
 	{
 	  error (0, 0, _("warning: source file %s specified more than once"),
@@ -925,7 +925,7 @@ copy_internal (const char *src_path, const char *dst_path,
 		 a move using cp and rm.
 		 Note that it works fine if you use --backup=numbered.  */
 	      if (command_line_arg
-		  && x->backup_type != numbered
+		  && x->backup_type != numbered_backups
 		  && seen_file (x->dest_info, dst_path, &dst_sb))
 		{
 		  error (0, 0,
@@ -1028,7 +1028,7 @@ copy_internal (const char *src_path, const char *dst_path,
 		}
 	    }
 
-	  if (x->backup_type != none && !S_ISDIR (dst_sb.st_mode))
+	  if (x->backup_type != no_backups && !S_ISDIR (dst_sb.st_mode))
 	    {
 	      char *tmp_backup = find_backup_file_name (dst_path,
 							x->backup_type);

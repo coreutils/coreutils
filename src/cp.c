@@ -648,20 +648,20 @@ do_copy (int n_files, char **file, const char *target_directory,
 	 where SUFFIX is determined by any version control options used.  */
 
       if (x->unlink_dest_after_failed_open
-	  && x->backup_type != none
+	  && x->backup_type != no_backups
 	  && STREQ (source, dest)
 	  && !new_dst && S_ISREG (sb.st_mode))
 	{
 	  static struct cp_options x_tmp;
 
 	  new_dest = find_backup_file_name (dest, x->backup_type);
-	  /* Set x->backup_type to `none' so that the normal backup
+	  /* Set x->backup_type to `no_backups' so that the normal backup
 	     mechanism is not used when performing the actual copy.
-	     backup_type must be set to `none' only *after* the above
+	     backup_type must be set to `no_backups' only *after* the above
 	     call to find_backup_file_name -- that function uses
 	     backup_type to determine the suffix it applies.  */
 	  x_tmp = *x;
-	  x_tmp.backup_type = none;
+	  x_tmp.backup_type = no_backups;
 	  x = &x_tmp;
 	}
       else
@@ -999,7 +999,7 @@ main (int argc, char **argv)
   x.backup_type = (make_backups
 		   ? xget_version (_("backup type"),
 				   version_control_string)
-		   : none);
+		   : no_backups);
 
   if (x.preserve_mode)
     x.umask_kill = ~ (mode_t) 0;
