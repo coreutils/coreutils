@@ -100,10 +100,6 @@ static int (*linkfunc) ();
 /* If nonzero, make symbolic links; otherwise, make hard links.  */
 static int symbolic_link;
 
-/* A string describing type of link to make.  For use in verbose
-   diagnostics and in error messages.  */
-static const char *link_type_string;
-
 /* If nonzero, ask the user before removing existing files.  */
 static int interactive;
 
@@ -301,7 +297,10 @@ do_link (const char *source, const char *dest)
 
   if (verbose)
     {
-      printf (_("create %s %s to %s"), link_type_string, dest, source);
+      printf ((symbolic_link
+	       ? _("create symbolic link `%s' to `%s'")
+	       : _("create hard link `%s' to `%s'")),
+	      dest, source);
       if (backup_succeeded)
 	printf (_(" (backup: %s)"), dest_backup);
       putchar ('\n');
@@ -312,7 +311,10 @@ do_link (const char *source, const char *dest)
       return 0;
     }
 
-  error (0, errno, _("cannot create %s `%s' to `%s'"), link_type_string,
+  error (0, errno,
+	 (symbolic_link
+	  ? _("create symbolic link `%s' to `%s'")
+	  : _("create hard link `%s' to `%s'")),
 	 dest, source);
 
   if (dest_backup)
@@ -494,20 +496,10 @@ main (int argc, char **argv)
       dest_is_dir = isdir (target_directory);
     }
 
-#ifdef S_ISLNK
   if (symbolic_link)
-    {
-      linkfunc = symlink;
-      link_type_string = _("symbolic link");
-    }
+    linkfunc = symlink;
   else
-    {
-      linkfunc = link;
-      link_type_string = _("hard link");
-    }
-#else
-  link_type_string = _("link");
-#endif
+    linkfunc = link;
 
   if (target_directory_specified && !dest_is_dir)
     {
