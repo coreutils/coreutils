@@ -18,7 +18,9 @@
 ## 02111-1307, USA.
 
 noinst_LIBRARIES = libfetish.a
+
 noinst_PROGRAMS = t-fpending
+LDADD = $(noinst_LIBRARIES)
 
 AM_CPPFLAGS = -I.. -I$(srcdir)
 DEFS += -DLIBDIR=\"$(libdir)\"
