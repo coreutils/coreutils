@@ -2,6 +2,8 @@
 
 	* prereq.m4 (jm_PREREQ_CANON_HOST): New macro.
 	(jm_PREREQ): Use it.
+	(jm_PREREQ_READUTMP): New macro.
+	(jm_PREREQ): Use it.
 
 2000-01-11  Paul Eggert  <eggert@twinsun.com>
 
