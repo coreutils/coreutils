@@ -62,8 +62,8 @@ kernels may use the sticky bit on files for system-defined purposes.
 On some systems, only the superuser can set the sticky bit on files.
 .SH STICKY DIRECTORIES
 When the sticky bit is set on a directory, files in that directory may
-only be unlinked or renamed by root or their owner.  (Without the
+be unlinked or renamed only by root or their owner.  Without the
 sticky bit, anyone able to write to the directory can delete or rename
-files.) The sticky bit is commonly found on directories, such as /tmp,
-which are world-writable.
+files.  The sticky bit is commonly found on directories, such as /tmp,
+that are world-writable.
 .SH OPTIONS
