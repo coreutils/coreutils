@@ -1,6 +1,11 @@
-2005-03-18  Paul Eggert  <eggert@cs.ucla.edu>
+2005-03-19  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/Makefile.am (pr_LDADD): Now that pr uses gettime, add
+	$(LIB_CLOCK_GETTIME) to get the required -lrt on newer Linux systems.
+
+2005-03-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: pr -D "FORMAT" now accepts the same formats that
 	date +"FORMAT" does.
