@@ -2,7 +2,8 @@
 
 	* Version 3.16m.
 
-	* Makefile.maint (cvs-dist): Update po/ before running cvs tag -c.
+	* Makefile.maint (cvs-dist): Update po/ to clear modified status
+	of *.po files before running cvs tag -c.
 
 	* src/ln.c (usage): Reword to use `TARGET' and `LINK_NAME' in
 	description.
