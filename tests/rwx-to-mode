@@ -3,8 +3,6 @@
 # to the equivalent chmod --mode (-m) argument, (=,u=rwx,g=r,o=x and
 # =,u=rw,g=rx,o=wx).
 
-# FIXME: handle special bits, too.
-
 case $# in
   1) rwx=$1;;
   *) echo "$0: wrong number of arguments" 1>&2
@@ -13,12 +11,21 @@ case $# in
 esac
 
 case $rwx in
-  [ld-][rwx-][rwx-][rwxs-][rwx-][rwx-][rwxs-][rwx-][rwx-][rwxt-]) ;;
+  [ld-][rwx-][rwx-][rwxsS-][rwx-][rwx-][rwxsS-][rwx-][rwx-][rwxtT-]) ;;
   *) echo "$0: invalid mode string: $rwx" 1>&2; exit 1;;
 esac
 
-u=`echo $rwx|sed 's/^.\(...\).*/,u=\1/;s/-//g;s/^,u=$//'`
-g=`echo $rwx|sed 's/^....\(...\).*/,g=\1/;s/-//g;s/^,g=$//'`
-o=`echo $rwx|sed 's/^.......\(...\).*/,o=\1/;s/-//g;s/^,o=$//'`
+# Perform these conversions:
+# S  s
+# s  xs
+# T  t
+# t  xt
+# The `T' and `t' ones are only valid for `other'.
+s='s/S/@/;s/s/x@/;s/@/s/'
+t='s/T/@/;s/t/x@/;s/@/t/'
+
+u=`echo $rwx|sed 's/^.\(...\).*/,u=\1/;s/-//g;s/^,u=$//;'$s`
+g=`echo $rwx|sed 's/^....\(...\).*/,g=\1/;s/-//g;s/^,g=$//;'$s`
+o=`echo $rwx|sed 's/^.......\(...\).*/,o=\1/;s/-//g;s/^,o=$//;'$s';'$t`
 echo "=$u$g$o"
 exit 0
