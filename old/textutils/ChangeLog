@@ -1,3 +1,9 @@
+Sun Jan 26 12:49:50 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* Version 1.22.
+
+	* src/tail.c (parse_options): Add quotes to make messages identical.
+
 Sat Jan 25 00:12:29 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/tail.c (parse_obsolescent_option): Comment.
