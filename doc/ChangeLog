@@ -21,14 +21,14 @@
 	ls --block-size=si.  Displayed file size is now always affected by
 	--block-size.
 
-2002-09-13  Jim Meyering  <meyering@lucent.com>
+2002-09-13  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (tail invocation): In --sleep-interval=NUMBER,
 	NUMBER may now be a floating point number.
 	(stat invocation): Remove references to now-removed %S and %C.
 	(Time directives) [%S]: Explain why the range is [0..60].
 
-2002-08-30  Jim Meyering  <meyering@lucent.com>
+2002-08-30  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi [START-INFO-DIR-ENTRY]: Don't use sc{} on LHS.
 	Fix typo: s/permission/permissions/.  From Michail Litvak.
@@ -46,7 +46,7 @@
 	  - Exit status is now 126 if command was found but not invoked,
 	    127 if nohup failed or if command was not found.
 
-2002-07-24  Jim Meyering  <meyering@lucent.com>
+2002-07-24  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (Time directives): Document %P, %R, %e, %F,
 	%g, %G, and %V
@@ -57,23 +57,23 @@
 	that -N/--literal are equivalent to --quoting-style=literal.
 	Reported by Oskar Liljeblad as Debian bug#103612.
 
-2002-07-10  Jim Meyering  <meyering@lucent.com>
+2002-07-10  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (du invocation): s/PAT/PATTERN/.
 	From Martin Michlmayr.
 
-2002-07-08  Jim Meyering  <meyering@lucent.com>
+2002-07-08  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (cp invocation): Remove unnecessary "$@" in example;
 	Texinfo would render the @" as an umlaut over the following character.
 	From Paul Eggert.
 	* Makefile.am (check-texinfo): Check for the above.
 
-2002-07-06  Jim Meyering  <meyering@lucent.com>
+2002-07-06  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (stat invocation): Remove description of --secure.
 
-2002-07-03  Jim Meyering  <meyering@lucent.com>
+2002-07-03  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (stat invocation): Rename --link/-l
 	to --dereference/-L.  Rewrite description of --dereference.
@@ -83,7 +83,7 @@
 	* coreutils.texi (Putting the tools together): Don't mention egrep,
 	since it's not part of POSIX 1003.1-2001.
 
-2002-06-21  Jim Meyering  <meyering@lucent.com>
+2002-06-21  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (stat invocation): New section.  From Michael Meskes.
 
@@ -91,22 +91,22 @@
 
 	* coreutils.texi (ls invocation): Document new option: --author.
 
-2002-06-03  Jim Meyering  <meyering@lucent.com>
+2002-06-03  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (rm invocation): Add the warning (also in the --help
 	output) that the contents of a removed file are often recoverable.
 
-2002-05-27  Jim Meyering  <meyering@lucent.com>
+2002-05-27  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (check-texinfo): Adapt to reflect that now we use
 	@acronym{POSIX}.
 
-2002-05-26  Jim Meyering  <meyering@lucent.com>
+2002-05-26  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi: Use @acronym in place of most uses of @sc.
 	* getdate.texi (Date input formats): Likewise.
 
-2002-04-28  Jim Meyering  <meyering@lucent.com>
+2002-04-28  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi: Change `@code{PROG}' to `@command{PROG}'.
 
@@ -115,16 +115,16 @@
 	* coreutils.texi (kill invocation): Document the above.
 	Document POSIX signals better.
 
-2002-04-15  Jim Meyering  <meyering@lucent.com>
+2002-04-15  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi: Document kill.
 	Written by Marcus Brinkmann.
 
-2002-04-13  Jim Meyering  <meyering@lucent.com>
+2002-04-13  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi: Document link and unlink.
 
-2002-04-08  Jim Meyering  <meyering@lucent.com>
+2002-04-08  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi: Use new directives, @copying and @insertcopying,
 	thus now requiring texinfo-4.2 to create the .info file.
@@ -153,7 +153,7 @@
 	symlink options.  Warn that cp -R is not portable on symbolic
 	links unless you also specify -P.
 
-2002-03-02  Jim Meyering  <meyering@lucent.com>
+2002-03-02  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (cp invocation): Document that cp -r
 	preserves symlinks.  Emphasize non-portability of cp -r.
@@ -163,7 +163,7 @@
 	* coreutils.texi (Time directives): Add %N for nanoseconds.
 	This documents the recent change to 'ls'.
 
-2002-02-28  Jim Meyering  <meyering@lucent.com>
+2002-02-28  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (pr invocation): Reword to avoid using `:'
 	in an @opindex entry -- info doesn't permit it.
@@ -178,7 +178,7 @@
 	* coreutils.texi (seq invocation): In the example, use "tail
 	-n 3", not "tail -3", to conform to POSIX 1003.1-2001.
 
-2002-02-17  Jim Meyering  <meyering@lucent.com>
+2002-02-17  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (tsort background): New section.
 	From Ian Lance Taylor.
@@ -189,7 +189,7 @@
 	* coreutils.texi: Document _POSIX2_VERSION.
 	(Standards Conformance): New section.
 
-2002-01-24  Jim Meyering  <meyering@lucent.com>
+2002-01-24  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (START-INFO-DIR-ENTRY): Remove a few entries
 	and clean up a few others based on suggestions from Bob Proulx.
@@ -201,11 +201,11 @@
 	* coreutils.texi: Document this.  (Also, document a similar
 	change to "touch", for fileutils).
 
-2002-01-12  Jim Meyering  <meyering@lucent.com>
+2002-01-12  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (shred invocation): List some journaled filesystems.
 
-2001-11-10  Jim Meyering  <meyering@lucent.com>
+2001-11-10  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (Date directives): Document %u.
 
@@ -214,18 +214,18 @@
 	* coreutils.texi (paste invocation): Give examples.
 	Thanks to Dan Jacobson for suggesting the examples.
 
-2001-11-05  Jim Meyering  <meyering@lucent.com>
+2001-11-05  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (sort invocation): Recommend setting LC_ALL=C,
 	not LC_COLLATE=C.  Explain how the latter can cause problems.
 	Based on a message from Paul Eggert.
 	(ls invocation): Recommend setting LC_ALL=C, not LC_COLLATE=C.
 
-2001-10-21  Jim Meyering  <meyering@lucent.com>
+2001-10-21  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (cp invocation): Describe --reply=...
 
-2001-10-17  Jim Meyering  <meyering@lucent.com>
+2001-10-17  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (cp invocation): `cp --no-dereference' is
 	no longer equivalent to `cp -d'.
@@ -234,12 +234,12 @@
 	Describe new optional argument to --preserve.
 	Describe new option: --no-preserve=ATTRIBUTE_LIST.
 
-2001-09-23  Jim Meyering  <meyering@lucent.com>
+2001-09-23  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (check-texinfo): Redirect stderr of `grep -w' to
 	/dev/null, so people with old versions of grep don't see the failure.
 
-2001-09-16  Jim Meyering  <meyering@lucent.com>
+2001-09-16  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (mv invocation): Describe new option:
 	--reply={yes,no,query}.  Fix a few typos.
@@ -249,7 +249,7 @@
 	* coreutils.texi (uniq invocation): The input need not
 	be sorted.  Try to clarify -d versus -D versus -u.
 
-2001-09-12  Jim Meyering  <meyering@lucent.com>
+2001-09-12  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (tail invocation): Document new option: -F.
 	From Herbert Xu.
@@ -281,7 +281,7 @@
 	* coreutils.texi: expr now uses LC_COLLATE for string comparison,
 	as per POSIX.
 
-2001-08-25  Jim Meyering  <meyering@lucent.com>
+2001-08-25  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi: Use @option, rather than @samp everywhere.
 
@@ -290,12 +290,12 @@
 	* coreutils.texi: 'expr' now requires '+' rather than 'quote'
 	to quote tokens.
 
-2001-07-14  Jim Meyering  <meyering@lucent.com>
+2001-07-14  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (cp invocation): Reflect 2001-07-08 change to
 	cp (via copy.c).
 
-2001-06-16  Jim Meyering  <meyering@lucent.com>
+2001-06-16  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (info_TEXINFOS): Reflect renaming: s/omni-/core/.
 	* coreutils.texi: Likewise.
@@ -306,14 +306,14 @@
 	* omni-utils.texi (ls invocation): Mention the effect of locale.
 	Reported by Keith Thompson.
 
-2001-05-24  Jim Meyering  <meyering@lucent.com>
+2001-05-24  Jim Meyering  <jim@meyering.net>
 
 	* texinfo.tex: Update from master source.
 
 	* omni-utils.texi (ls invocation): Document more clearly what ls
 	does when given no arguments.
 
-2001-05-21  Jim Meyering  <meyering@lucent.com>
+2001-05-21  Jim Meyering  <jim@meyering.net>
 
 	* textutils.texi: Remove file.
 

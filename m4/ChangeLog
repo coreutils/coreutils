@@ -2,12 +2,12 @@
 
 	* jm-macros.m4 (jm_CHECK_ALL_HEADERS): Remove fenv.h.
 
-2002-09-29  Jim Meyering  <meyering@lucent.com>
+2002-09-29  Jim Meyering  <jim@meyering.net>
 
 	* gettext.m4 (AM_INTL_SUBDIR): Don't require gt_HEADER_INTTYPES_H.
 	It's not necessary with autoconf-2.54.
 
-2002-09-28  Jim Meyering  <meyering@lucent.com>
+2002-09-28  Jim Meyering  <jim@meyering.net>
 
 	* getgroups.m4 (jm_FUNC_GETGROUPS): Rewrite to use AC_FUNC_GETGROUPS
 	and (if needed) to call AC_LIBOBJ and to set GETGROUPS_LIB.
@@ -17,7 +17,7 @@
 	* strerror_r.m4: Remove file -- now it's part of autoconf-2.54.
 	Reported by Akim Demaille.
 
-2002-09-25  Jim Meyering  <meyering@lucent.com>
+2002-09-25  Jim Meyering  <jim@meyering.net>
 
 	* gettext.m4: Upgrade to gettext-0.11.5.
 
@@ -25,12 +25,12 @@
 
 	* host-os.m4 (UTILS_HOST_OS): Add a case for freebsd*-gnu*.
 
-2002-09-17  Jim Meyering  <meyering@lucent.com>
+2002-09-17  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (jm_MACROS): Require gt_INTTYPES_PRI.
 	* inttypes-pri.m4 (gt_INTTYPES_PRI): New file, mostly from gettext.
 
-2002-09-16  Jim Meyering  <meyering@lucent.com>
+2002-09-16  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4: Forbid symbols matching ^jm_[A-Z].
 	(jm_PREREQ_QUOTEARG): Add jm_FUNC_MEMCMP.
@@ -39,55 +39,55 @@
 	* error.m4 (jm_PREREQ_ERROR): Check for libintl.h.
 	Reported by Akim Demaille.
 
-2002-09-13  Jim Meyering  <meyering@lucent.com>
+2002-09-13  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (jm_MACROS): Require autoconf-2.54.
 
-2002-09-09  Jim Meyering  <meyering@lucent.com>
+2002-09-09  Jim Meyering  <jim@meyering.net>
 
 	* getloadavg.m4: Remove file -- now it's part of autoconf-2.53c.
 	* jm-macros.m4: Use AC_CONFIG_LIBOBJ_DIR(lib) to tell the new
 	AC_FUNC_GETLOADAVG where to find getloadavg.c.
 
-2002-09-03  Jim Meyering  <meyering@lucent.com>
+2002-09-03  Jim Meyering  <jim@meyering.net>
 
 	* gnu-source.m4: Remove file -- now it's part of autoconf-2.53c.
 	* mbstate_t.m4: Likewise.
 	* fnmatch.m4: Likewise.
 
-2002-08-05  Jim Meyering  <meyering@lucent.com>
+2002-08-05  Jim Meyering  <jim@meyering.net>
 
 	* jm-winsz1.m4: Also change use of $am_cv_sys_posix_termios
 	to $ac_cv_sys_posix_termios.  Reported by Andreas Schwab.
 
-2002-08-03  Jim Meyering  <meyering@lucent.com>
+2002-08-03  Jim Meyering  <jim@meyering.net>
 
 	* jm-winsz1.m4: Require AC_SYS_POSIX_TERMIOS, not AM_SYS_POSIX_TERMIOS.
 	Reported by mkc@mathdogs.com.
 
-2002-08-01  Jim Meyering  <meyering@lucent.com>
+2002-08-01  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4 (jm_PREREQ_TEMPNAME): lib/tempname.c may use uintmax_t,
 	so require jm_AC_TYPE_UINTMAX_T.  Patch by Joe Orton.
 
-2002-07-28  Jim Meyering  <meyering@lucent.com>
+2002-07-28  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4: Don't require jm_FUNC_READDIR.
 	* readdir.m4 (jm_FUNC_READDIR): Remove file/macro.  No longer needed.
 
-2002-07-27  Jim Meyering  <meyering@lucent.com>
+2002-07-27  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4 (jm_PREREQ_READUTMP): Don't check just
 	`struct utmpx.ut_exit' and `struct utmp.ut_exit'.  Instead, check
 	all combinations of utmp/utmpx and ut_termination/e_termination
 	and ut_exit/e_exit.
 
-2002-07-23  Jim Meyering  <meyering@lucent.com>
+2002-07-23  Jim Meyering  <jim@meyering.net>
 
 	* c-bs-a.m4 (AC_C_BACKSLASH_A): Remove file, now that autoconf
 	provides this macro.
 
-2002-07-20  Jim Meyering  <meyering@lucent.com>
+2002-07-20  Jim Meyering  <jim@meyering.net>
 
 	* intdiv0.m4: New file.  From gettex-0.11.3.
 
@@ -105,12 +105,12 @@
 	* lcmessage.m4: Upgrade to gettext-0.11.3.
 	* lib-link.m4: Upgrade to gettext-0.11.3.
 
-2002-07-17  Jim Meyering  <meyering@lucent.com>
+2002-07-17  Jim Meyering  <jim@meyering.net>
 
 	* boottime.m4: New file.  Extracted from sh-utils' configure.ac
 	and extended to work also with *BSD systems.
 
-2002-07-15  Jim Meyering  <meyering@lucent.com>
+2002-07-15  Jim Meyering  <jim@meyering.net>
 
 	FreeBSD support for uname and uptime.
 	* jm-macros.m4 (jm_MACROS): Check for the sysctl function.
@@ -121,7 +121,7 @@
 
 	* fnmatch.m4 (_AC_LIBOBJ_FNMATCH): Check for btowc.
 
-2002-06-22  Jim Meyering  <meyering@lucent.com>
+2002-06-22  Jim Meyering  <jim@meyering.net>
 
 	* c-stack.m4: New file, from diffutils-2.8.2.
 	* prereq.m4 (jm_PREREQ): Add jm_PREREQ_C_STACK.
@@ -138,7 +138,7 @@
 	* prereq.m4: Change each use of AC_CHECK_HEADERS(stdbool.h)
 	to AC_HEADER_STDBOOL
 
-2002-06-21  Jim Meyering  <meyering@lucent.com>
+2002-06-21  Jim Meyering  <jim@meyering.net>
 
 	* c-bs-a.m4: Add comment, from diffutils-2.8.2.
 	* mbrtowc.m4: Likewise.
@@ -158,7 +158,7 @@
 
 	* jm-macros.m4 (jm_CHECK_ALL_TYPES): Check for st_author.
 
-2002-06-07  Jim Meyering  <meyering@lucent.com>
+2002-06-07  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4 (jm_PREREQ_STAT): Check for sys/param.h and sys/mount.h.
 	They're needed at least for NetBSD 1.5.2.
@@ -168,17 +168,17 @@
 	Check for the following members in both structs statfs and statvfs:
 	f_basetype, f_type, f_fsid.__val, f_namemax, f_namelen.
 
-2002-06-01  Jim Meyering  <meyering@lucent.com>
+2002-06-01  Jim Meyering  <jim@meyering.net>
 
 	* d-type.m4 (jm_CHECK_TYPE_STRUCT_DIRENT_D_TYPE): Rename macro:
 	s/D_TYPE_IN_DIRENT/HAVE_STRUCT_DIRENT_D_TYPE/.
 
-2002-05-28  Jim Meyering  <meyering@lucent.com>
+2002-05-28  Jim Meyering  <jim@meyering.net>
 
 	* readdir.m4 (jm_FUNC_READDIR): Undefine `mkdir', not `rmdir'.
 	Reported by Volker Borchert.
 
-2002-05-27  Jim Meyering  <meyering@lucent.com>
+2002-05-27  Jim Meyering  <jim@meyering.net>
 
 	* gettimeofday.m4 (AC_FUNC_GETTIMEOFDAY_CLOBBER): Also replace
 	localtime.
@@ -187,7 +187,7 @@
 	use the replacement function; it wouldn't resolve at link time.
 	Reported by Volker Borchert.
 
-2002-04-30  Jim Meyering  <meyering@lucent.com>
+2002-04-30  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4 (jm_PREREQ): Add jm_PREREQ_STAT.
 
@@ -201,7 +201,7 @@
 
 	* prereq.m4 (jm_PREREQ_SIG2STR): Remove; all callers changed.
 
-2002-04-29  Jim Meyering  <meyering@lucent.com>
+2002-04-29  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (jm_MACROS): Remove use of AC_FUNC_STRNLEN.
 	* prereq.m4: Add jm_PREREQ_STRNLEN.
@@ -215,7 +215,7 @@
 	* jm-macros.m4 (jm_MACROS): Add AC_REPLACE_FUNCS(sig2str).
 	* prereq.m4 (jm_PREREQ): Add jm_PREREQ_SIG2STR.
 
-2002-04-24  Jim Meyering  <meyering@lucent.com>
+2002-04-24  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4 (jm_PREREQ_HARD_LOCALE): New macro.
 	(jm_PREREQ): Use it.
@@ -224,12 +224,12 @@
 	mach/mach.h fcntl.h.
 	Check for this function: setlocale.
 
-2002-04-16  Jim Meyering  <meyering@lucent.com>
+2002-04-16  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4 (jm_PREREQ_READUTMP): Also check for these members:
 	ut_pid, ut_id, ut_exit.
 
-2002-04-12  Jim Meyering  <meyering@lucent.com>
+2002-04-12  Jim Meyering  <jim@meyering.net>
 
 	* ls-mntd-fs.m4 (checking for getmntinfo function...): Remove now-bogus
 	check for f_type in sys/mount.h.  Instead, just test for the existence
@@ -242,7 +242,7 @@
 	AC_FUNC_STRNLEN.  Otherwise, we'd end up putting two copies of strnlen.o
 	in the library, and that makes some versions of ranlib object.
 
-2002-04-09  Jim Meyering  <meyering@lucent.com>
+2002-04-09  Jim Meyering  <jim@meyering.net>
 
 	* malloc.m4: (jm_FUNC_MALLOC): Change the `checking ...' message
 	to be more precise.  Rather than saying we're checking whether the
@@ -279,7 +279,7 @@
 	* m4/prereq.m4 (jm_PREREQ_POSIXVER): New macro.
 	(jm_PREREQ): Use it.
 
-2002-01-26  Jim Meyering  <meyering@lucent.com>
+2002-01-26  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (jm_MACROS): Require autoconf-2.52g.
 	* strnlen.m4: Remove file, now that it's part of autoconf.
@@ -288,23 +288,23 @@
 
 	* jm-macros.m4 (jm_MACROS): Require AC_FUNC_FSEEKO.
 
-2002-01-19  Jim Meyering  <meyering@lucent.com>
+2002-01-19  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (jm_MACROS): Use AC_FUNC_STRNLEN.
 	Remove useless quotes: DF_PROG="df".
 	* strnlen.m4: New file.
 
-2001-12-14  Jim Meyering  <meyering@lucent.com>
+2001-12-14  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (jm_MACROS): Check for iswspace.
 	Suggestion from Bruno Haible.
 
-2001-11-20  Jim Meyering  <meyering@lucent.com>
+2001-11-20  Jim Meyering  <jim@meyering.net>
 
 	* mkstemp.m4 (UTILS_FUNC_MKSTEMP): Update comment to reflect that
 	SunOS4.1.4 and solaris2.5.1 lose, too.
 
-2001-11-19  Jim Meyering  <meyering@lucent.com>
+2001-11-19  Jim Meyering  <jim@meyering.net>
 
 	* mkstemp.m4 (UTILS_FUNC_MKSTEMP): Don't bother with a temporary
 	directory.  Use "conftestXXXXXX" as the template.
@@ -313,11 +313,11 @@
 	* mkstemp.m4 (UTILS_FUNC_MKSTEMP): Close each descriptor immediately,
 	so the test doesn't mistakenly hit the max-open-files limit.
 
-2001-11-18  Jim Meyering  <meyering@lucent.com>
+2001-11-18  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4 (jm_PREREQ_TEMPNAME): Check for declaration of getenv.
 
-2001-11-17  Jim Meyering  <meyering@lucent.com>
+2001-11-17  Jim Meyering  <jim@meyering.net>
 
 	* mkstemp.m4 (UTILS_FUNC_MKSTEMP): New file and macro.
 	Prompted by a report from Bob Proulx.
@@ -325,7 +325,7 @@
 	* jm-macros.m4 (jm_MACROS): Don't test for mkstemp here.
 	Instead, require UTILS_FUNC_MKSTEMP.
 
-2001-11-11  Jim Meyering  <meyering@lucent.com>
+2001-11-11  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (jm_MACROS): Remove code to set POW_LIBM.
 	Now, that's done as part of AC_FUNC_STRTOD.
@@ -335,12 +335,12 @@
 	* jm-winsz1.m4 (jm_WINSIZE_IN_PTEM): Do not define
 	WINSIZE_IN_PTEM if <termios.h> defines struct winsize.
 
-2001-11-10  Jim Meyering  <meyering@lucent.com>
+2001-11-10  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4 (jm_PREREQ_PHYSMEM): New function.
 	(jm_PREREQ): Use it.
 
-2001-11-09  Jim Meyering  <meyering@lucent.com>
+2001-11-09  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4: Require autoconf-2.52f.
 	(AC_FUNC_ERROR_AT_LINE, AC_FUNC_OBSTACK, AC_FUNC_STRTOD):
@@ -348,11 +348,11 @@
 
 	* afs.m4 (jm_AFS): Quote the body.  Patch by Akim Demaille.
 
-2001-11-04  Jim Meyering  <meyering@lucent.com>
+2001-11-04  Jim Meyering  <jim@meyering.net>
 
 	* fpending.m4: Remove unused cruft that saved, set, and restored $DEFS.
 
-2001-11-03  Jim Meyering  <meyering@lucent.com>
+2001-11-03  Jim Meyering  <jim@meyering.net>
 
 	* jm-glibc-io.m4n (jm_FUNC_GLIBC_UNLOCKED_IO): Quote first arg
 	of AC_DEFUN.
@@ -360,7 +360,7 @@
 	* dirfd.m4 (UTILS_FUNC_DIRFD): Rework so dirfd.c doesn't have to
 	know the name of the variable in the macro definition.
 
-2001-11-01  Jim Meyering  <meyering@lucent.com>
+2001-11-01  Jim Meyering  <jim@meyering.net>
 
 	* dirfd.m4 (UTILS_FUNC_DIRFD): New macro.
 	* jm-macros.m4 (jm_MACROS): Require UTILS_FUNC_DIRFD.
@@ -380,14 +380,14 @@
 	and rename HAVE_WORKING_STRERROR_R to STRERROR_R_CHAR_P, since
 	POSIX decided to standardize on the int flavor of strerror_r.
 
-2001-09-30  Jim Meyering  <meyering@lucent.com>
+2001-09-30  Jim Meyering  <jim@meyering.net>
 
 	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): See if
 	`struct fsstat' has the `f_fstypename' member.
 	Use that to define FS_TYPE, which is now used to make
 	the getfsstat link test tighter.
 
-2001-09-29  Jim Meyering  <meyering@lucent.com>
+2001-09-29  Jim Meyering  <jim@meyering.net>
 
 	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS)
 	[one-argument getmntent function]): Include stdio.h before mntent.h.
@@ -414,11 +414,11 @@
 	* xstrtoumax.m4 (jm_AC_PREREQ_XSTRTOUMAX):
 	Likewise, for strtol and strtoimax.
 
-2001-09-24  Jim Meyering  <meyering@lucent.com>
+2001-09-24  Jim Meyering  <jim@meyering.net>
 
 	* gettext.m4: Use the version from gettext-0.10.40, not CVS.
 
-2001-09-23  Jim Meyering  <meyering@lucent.com>
+2001-09-23  Jim Meyering  <jim@meyering.net>
 
 	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): Add a compile-test
 	instead of the mere test for existence of mntent.h.  The latter
@@ -427,7 +427,7 @@
 	tests succeeds.  Instead, just fall through and continue with the
 	remaining tests.
 
-2001-09-22  Jim Meyering  <meyering@lucent.com>
+2001-09-22  Jim Meyering  <jim@meyering.net>
 
 	* gettext.m4: New file.  From gettext.
 	* lcmessage.m4: Sync with gettext -- this changes only comments.
@@ -437,14 +437,14 @@
 
 	* libintl.m4: Remove.  No longer used.
 
-2001-09-20  Jim Meyering  <meyering@lucent.com>
+2001-09-20  Jim Meyering  <jim@meyering.net>
 
 	* xstrtoimax.m4 (jm_AC_PREREQ_XSTRTOIMAX): Check for declaration of
 	strtoimax.
 	* xstrtoumax.m4 (jm_AC_PREREQ_XSTRTOUMAX): Check for declaration of
 	strtoumax.
 
-2001-09-17  Jim Meyering  <meyering@lucent.com>
+2001-09-17  Jim Meyering  <jim@meyering.net>
 
 	* chown.m4, fstypename.m4, getgroups.m4, gettimeofday.m4,
 	* jm-mktime.m4, lstat.m4, malloc.m4, memcmp.m4, mkdir-slash.m4,
@@ -462,16 +462,16 @@
 	Use AC_DEFINE, not AC_DEFINE_UNQUOTED, as there's no
 	special shell magic here.
 
-2001-09-16  Jim Meyering  <meyering@lucent.com>
+2001-09-16  Jim Meyering  <jim@meyering.net>
 
 	* mkdir-slash.m4 (UTILS_FUNC_MKDIR_TRAILING_SLASH): New file/macro.
 	* jm-macros.m4: Require it.
 
-2001-09-15  Jim Meyering  <meyering@lucent.com>
+2001-09-15  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4: Check for help2man.
 
-2001-09-11  Jim Meyering  <meyering@lucent.com>
+2001-09-11  Jim Meyering  <jim@meyering.net>
 
 	* host-os.m4 (UTILS_HOST_OS): New file/macro.
 	The body, by Paul Eggert, was moved here from configure.in.
@@ -494,7 +494,7 @@
 
 	* getcwd.m4: New file.
 
-2001-09-01  Jim Meyering  <meyering@lucent.com>
+2001-09-01  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (jm_MACROS): Check for canonicalize_file_name.
 	Used by df.
@@ -529,7 +529,7 @@
 	* prereq.m4 (jm_PREREQ): Add jm_PREREQ_EXCLUDE.
 	(jm_PREREQ_EXCLUDE): New macro.
 
-2001-08-26  Jim Meyering  <meyering@lucent.com>
+2001-08-26  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4: Require jm_AC_PREREQ_XSTRTOIMAX.
 
@@ -550,7 +550,7 @@
 	* inttypes.m4: Renamed from inttypes_h.m4.
 	* uintmax_t.m4: Removed.
 
-2001-08-12  Jim Meyering  <meyering@lucent.com>
+2001-08-12  Jim Meyering  <jim@meyering.net>
 
 	* afs.m4, assert.m4, bison.m4, check-decl.m4, chown.m4, d-ino.m4,
 	d-type.m4, dos.m4, error.m4, fnmatch.m4, fpending.m4, fstypename.m4,
@@ -565,7 +565,7 @@
 	utime.m4, utimes.m4, xstrtoumax.m4:
 	Quote the first argument in each use of AC_DEFUN.
 
-2001-08-05  Jim Meyering  <meyering@lucent.com>
+2001-08-05  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4: Require autoconf-2.52.
 
@@ -612,28 +612,28 @@
 	Use AC_TRY_COMPILE to emulate AC_CHECK_DECLS, for portability
 	to Autoconf 2.13.
 
-2001-08-03  Jim Meyering  <meyering@lucent.com>
+2001-08-03  Jim Meyering  <jim@meyering.net>
 
 	* mbrtowc.m4 (jm_FUNC_MBRTOWC): Use `#include', not `@%:@include',
 	as it was in the original.  Reported by Paul Eggert.
 
-2001-07-16  Jim Meyering  <meyering@lucent.com>
+2001-07-16  Jim Meyering  <jim@meyering.net>
 
 	* gettimeofday.m4: New file.
 	Prompted by a report from Bernhard Baehr.
 
-2001-07-15  Jim Meyering  <meyering@lucent.com>
+2001-07-15  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am.in (Makefile.am): Remove most of the unlocked-io.h stuff.
 	Now it's in ../Makefile.cfg.
 
-2001-07-04  Jim Meyering  <meyering@lucent.com>
+2001-07-04  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am.in (glibc-io.struct): New target.  Rework the code
 	that generates jm-glibc-io.m4 so that it doesn't trigger any make
 	distcheck failure.
 
-2001-07-02  Jim Meyering  <meyering@lucent.com>
+2001-07-02  Jim Meyering  <jim@meyering.net>
 
 	The following changes were prompted by suggestions from Bruno Haible.
 
@@ -647,24 +647,24 @@
 	(jm-glibc-io.m4): New rule.
 	(unlocked-io.h): New rule -- currently unused.
 
-2001-06-24  Jim Meyering  <meyering@lucent.com>
+2001-06-24  Jim Meyering  <jim@meyering.net>
 
 	* regex.m4 (jm_INCLUDED_REGEX): Use a quadrigraph to represent an
 	unmatched right bracket, rather than kludging it with an extra,
 	falsely-matching quote in a comment.  Patch by Akim Demaille.
 
-2001-05-27  Jim Meyering  <meyering@lucent.com>
+2001-05-27  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4 (jm_PREREQ_READUTMP): Check for ut_type in struct utmpx.
 	Check for ut_type in struct utmp.
 
-2001-05-22  Jim Meyering  <meyering@lucent.com>
+2001-05-22  Jim Meyering  <jim@meyering.net>
 
 	* strftime.m4 (_jm_STRFTIME_PREREQS): Don't use AC_LIBOBJ(strftime),
 	now that we use the package-supplied version unconditionally.
 	(jm_FUNC_STRFTIME): Don't replace strftime, for the same reason.
 
-2001-05-21  Jim Meyering  <meyering@lucent.com>
+2001-05-21  Jim Meyering  <jim@meyering.net>
 
 	* regex.m4: Change a couple backticks to single quotes to avoid shell
 	syntax errors.
@@ -680,12 +680,12 @@
 	we'll be using our own my_strftime function anyway.
 	Define my_strftime instead of strftime.
 
-2001-05-15  Jim Meyering  <meyering@lucent.com>
+2001-05-15  Jim Meyering  <jim@meyering.net>
 
 	* regex.m4: Use proper quoting so brackets appear in the test program.
 	Reported by, and with help from, Bruno Haible.
 
-2001-05-13  Jim Meyering  <meyering@lucent.com>
+2001-05-13  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (major_t, minor_t): Define to unsigned int if undefined.
 
@@ -693,7 +693,7 @@
 
 	* jm-macros.m4 (jm_MACROS): Do not check for fseeko; no longer used.
 
-2001-04-21  Jim Meyering  <meyering@lucent.com>
+2001-04-21  Jim Meyering  <jim@meyering.net>
 
 	* rmdir-errno.m4: Write to a new file, so that a restrictive umask
 	doesn't interfere.
@@ -704,7 +704,7 @@
 	Link with ftruncate.o unconditionally if ftruncate is missing.
 	This was required when cross-compiling to i586-mingw32msvc.
 
-2001-03-24  Jim Meyering  <meyering@lucent.com>
+2001-03-24  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4: Require autoconf-2.49d.
 
@@ -712,7 +712,7 @@
 
         * iconv.m4 (jm_ICONV): Recommend GNU libiconv.
 
-2001-03-17  Jim Meyering  <meyering@lucent.com>
+2001-03-17  Jim Meyering  <jim@meyering.net>
 
 	* memcmp.m4 (jm_AC_FUNC_MEMCMP): Remove my copy of AC_FUNC_MEMCMP,
 	now that the version in autoconf is equivalent.
@@ -730,7 +730,7 @@
 	lacks mkstemp.  Compile our own tempname.c if we compile our own
 	mkstemp.c, as mkstemp relies on tempname.
 
-2001-03-01  Jim Meyering  <meyering@lucent.com>
+2001-03-01  Jim Meyering  <jim@meyering.net>
 
 	* dos.m4 (jm_AC_DOS): Remove extra backslashes, now that
 	AH_VERBATIM really does output its argument verbatim.
@@ -739,7 +739,7 @@
 
 	* jm-macros.m4 (jm_CHECK_ALL_HEADERS): Check for sys/resource.h.
 
-2001-02-17  Jim Meyering  <meyering@lucent.com>
+2001-02-17  Jim Meyering  <jim@meyering.net>
 
 	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): Don't check for
 	getmntent via AC_CHECK_FUNCS, since that would get a `no' and disrupt
@@ -756,23 +756,23 @@
 	Use jm_FUNC_MBRTOWC, not AC_CHECK_FUNCS(mbrtowc).
 	* prereq.m4 (jm_PREREQ_QUOTEARG): Likewise.
 
-2001-02-07  Jim Meyering  <meyering@lucent.com>
+2001-02-07  Jim Meyering  <jim@meyering.net>
 
 	* regex.m4 (jm_INCLUDED_REGEX): Add a test for the latest bug.
 
-2001-02-05  Jim Meyering  <meyering@lucent.com>
+2001-02-05  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4: Require autoconf-2.14d (not yet released), because
 	it includes the patch required for `large file' support with at least
 	HP-UX's 10.20 /bin/cc.
 
-2001-02-03  Jim Meyering  <meyering@lucent.com>
+2001-02-03  Jim Meyering  <jim@meyering.net>
 
 	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): Restore prior use of
 	AS_IF, now that it works once again (mysteriously).
 	* fsusage.m4 (jm_FILE_SYSTEM_USAGE): Likewise.
 
-2001-01-30  Jim Meyering  <meyering@lucent.com>
+2001-01-30  Jim Meyering  <jim@meyering.net>
 
 	Don't use filenames that are 8.3-equivalent to "conftest" on DOS.
 	* chown.m4: Rename conftestchown to conftest.chown.
@@ -780,13 +780,13 @@
 	* utimes.m4: s/conftestdata/conftest.data/
 	Inspired by Pavel Roskin's change in autoconf.
 
-2001-01-27  Jim Meyering  <meyering@lucent.com>
+2001-01-27  Jim Meyering  <jim@meyering.net>
 
 	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): Open-code what was
 	a use of AS_IF.
 	* fsusage.m4 (jm_FILE_SYSTEM_USAGE): Likewise.
 
-2001-01-26  Jim Meyering  <meyering@lucent.com>
+2001-01-26  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4 (jm_PREREQ_QUOTEARG): Check for stddef.h, now that
 	quotearg.c includes it.
@@ -796,7 +796,7 @@
 	* iconv.m4 (jm_ICONV): Also check whether the iconv declaration
 	has const.
 
-2001-01-20  Jim Meyering  <meyering@lucent.com>
+2001-01-20  Jim Meyering  <jim@meyering.net>
 
 	Be sure that headers are checked before used in code compiled
 	for the type checks.
@@ -811,13 +811,13 @@
 	* prereq.m4 (jm_PREREQ): Add jm_PREREQ_HASH.
 	(jm_PREREQ_HASH): New function.
 
-2001-01-17  Jim Meyering  <meyering@lucent.com>
+2001-01-17  Jim Meyering  <jim@meyering.net>
 
 	* fsusage.m4 (jm_FILE_SYSTEM_USAGE): Use AS_IF, not AS_IFELSE,
 	for autoconf-2.49c.
 	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): Likewise.
 
-2001-01-14  Jim Meyering  <meyering@lucent.com>
+2001-01-14  Jim Meyering  <jim@meyering.net>
 
 	* rename.m4: Use temporary directories named conftestdir{,2}, not
 	foo and bar.  Create conftestdir/ in the script, not in the C code.
@@ -836,7 +836,7 @@
 	expanding the value of $ac_aux_dir, as in AM_MISSING_HAS_RUN,
 	so `make install' also works in VPATH builds.
 
-2001-01-01  Jim Meyering  <meyering@lucent.com>
+2001-01-01  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4 (jm_PREREQ_READUTMP): Include utmp.h (if available), even
 	on systems with utmpx.h.  It's necessary for the declaration of utmp's
@@ -853,12 +853,12 @@
 	prepend $(top_srcdir) to the value of MKINSTALLDIRS so that it
 	can be used in subdirectories.
 
-2000-12-26  Jim Meyering  <meyering@lucent.com>
+2000-12-26  Jim Meyering  <jim@meyering.net>
 
 	* dos.m4 (jm_AC_DOS): Rewrite (though it's still a stub) to work better
 	with autoheader.
 
-2000-12-17  Jim Meyering  <meyering@lucent.com>
+2000-12-17  Jim Meyering  <jim@meyering.net>
 
 	* dos.m4 (jm_AC_DOS): New file and macro.
 	* jm-macros.m4 (jm_MACROS): Require jm_AC_DOS.
@@ -868,7 +868,7 @@
 	* off_t-format.m4: Remove this file.
 	* jm-macros.m4 (jm_MACROS): Remove jm_SYS_OFF_T_PRINTF_FORMAT.
 
-2000-12-06  Jim Meyering  <meyering@lucent.com>
+2000-12-06  Jim Meyering  <jim@meyering.net>
 
 	* xstrtoumax.m4 (jm_AC_PREREQ_XSTRTOUMAX): If we need the replacement
 	strtoull, we may well need the replacement strtoul, too.
@@ -877,16 +877,16 @@
 	strtol.c -- that file is included by each of strtoul.c and strtoull.c.
 	Check for limits.h -- strtol.c needs it.
 
-2000-12-02  Jim Meyering  <meyering@lucent.com>
+2000-12-02  Jim Meyering  <jim@meyering.net>
 
 	* off_t-format.m4 (OFF_T_PRINTF_FORMAT_STRING): New file/macro.
 	* jm-macros.m4 (jm_MACROS): require it.
 
-2000-11-30  Jim Meyering  <meyering@lucent.com>
+2000-11-30  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (jm_MACROS): Check for stdint.h.
 
-2000-11-30  Jim Meyering  <meyering@lucent.com>
+2000-11-30  Jim Meyering  <jim@meyering.net>
 
 	* getloadavg.m4: s/ifval/m4_ifval/ to accommodate new autoconf.
 
@@ -894,38 +894,38 @@
 
 	* jm-macros.m4 (jm_MACROS): Add test for wcrtomb.
 
-2000-11-04  Jim Meyering  <meyering@lucent.com>
+2000-11-04  Jim Meyering  <jim@meyering.net>
 
 	* regex.m4: Use the `m4_' prefix on `syscmd' and `m4_sysval'.
 
-2000-10-29  Jim Meyering  <meyering@lucent.com>
+2000-10-29  Jim Meyering  <jim@meyering.net>
 
 	* fsusage.m4: s/AC_SHELL_IFELSE/AS_IFELSE/ to match autoconf renaming.
 	* ls-mntd-fs.m4: Likewise
 
-2000-10-28  Jim Meyering  <meyering@lucent.com>
+2000-10-28  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4 (jm_PREREQ): Add jm_PREREQ_MEMCHR.
 	(jm_PREREQ_MEMCHR): New function.
 
-2000-10-21  Jim Meyering  <meyering@lucent.com>
+2000-10-21  Jim Meyering  <jim@meyering.net>
 
 	* check-decl.m4 (jm_CHECK_DECLS): Also check for memrchr.
 	* prereq.m4 (jm_PREREQ_DIRNAME): New macro.
 	* jm-macros.m4 (AC_REPLACE_FUNCS): Add memrchr.
 
-2000-09-18  Jim Meyering  <meyering@lucent.com>
+2000-09-18  Jim Meyering  <jim@meyering.net>
 
 	* getloadavg.m4 (AC_FUNC_GETLOADAVG): Restore the initial value of LIBS.
 	Otherwise, everyone ends up linking with -lelf for some configurations.
 	Reported by Mike Stone.
 
-2000-08-26  Jim Meyering  <meyering@lucent.com>
+2000-08-26  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4: Use jm_FUNC_FPENDING.
 	* fpending.m4: New file.
 
-2000-08-20  Jim Meyering  <meyering@lucent.com>
+2000-08-20  Jim Meyering  <jim@meyering.net>
 
 	* check-decl.m4: Include utmp.h `#if HAVE_UTMP_H', rather than
 	`#if !HAVE_UTMPX_H'.  The latter would lose on systems with neither
@@ -947,7 +947,7 @@
 
 	* mbswidth.m4 (jm_PREREQ_MBSWIDTH): Check for wcwidth declaration.
 
-2000-07-23  Jim Meyering  <meyering@lucent.com>
+2000-07-23  Jim Meyering  <jim@meyering.net>
 
 	* check-decl.m4 (jm_CHECK_DECLS): Check for declarations of these, too:
 	getgrgid, getpwuid, getuid.
@@ -957,7 +957,7 @@
 	* mbswidth.m4: New file.
 	* prereq.m4 (jm_PREREQ): Call jm_PREREQ_MBSWIDTH.
 
-2000-07-14  Jim Meyering  <meyering@lucent.com>
+2000-07-14  Jim Meyering  <jim@meyering.net>
 
 	* xstrtoumax.m4 (jm_AC_PREREQ_XSTRTOUMAX): Require jm_AC_TYPE_UINTMAX_T.
 
@@ -970,14 +970,14 @@
 	and mbstate_t, to a single-part test that simply defines mbstate_t.
 	* prereq.m4 (jm_PREREQ_QUOTEARG): s/AC_MBSTATE_T_OBJECT/AC_MBSTATE_T/.
 
-2000-07-10  Jim Meyering  <meyering@lucent.com>
+2000-07-10  Jim Meyering  <jim@meyering.net>
 
 	* strerror_r.m4: Mirror the correction made in autoconf.
 
 	* gnu-source.m4: Output to confdefs.h directly.
 	Suggestion from Akim Demaille.
 
-2000-07-09  Jim Meyering  <meyering@lucent.com>
+2000-07-09  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (jm_MACROS): Add a test to see if -lm is required
 	to link seq.  If so, set SEQ_LIBM to -lm.  From Bruno Haible.
@@ -1000,12 +1000,12 @@
 	system object type after we "#define mbstate_t int" to work
 	around its lack.
 
-2000-07-04  Jim Meyering  <meyering@lucent.com>
+2000-07-04  Jim Meyering  <jim@meyering.net>
 
 	* fsusage.m4 (jm_FILE_SYSTEM_USAGE): Use plain old `echo' instead
 	of the deprecated AC_CHECKING.
 
-2000-07-03  Jim Meyering  <meyering@lucent.com>
+2000-07-03  Jim Meyering  <jim@meyering.net>
 
 	* check-decl.m4 (AC_CHECK_DECLS): Add strnlen.
 
@@ -1014,7 +1014,7 @@
 	* mbstate_t.m4 (AC_MBSTATE_T_OBJECT): Port to autoconf 2.13.
 	Add AC_CHECK_HEADERS(stdlib.h), since we use HAVE_STDLIB_H.
 
-2000-07-02  Jim Meyering  <meyering@lucent.com>
+2000-07-02  Jim Meyering  <jim@meyering.net>
 
 	* mbstate_t.m4: Also define mbstate_t, if necessary.
 
@@ -1037,7 +1037,7 @@
 	* stat.m4: Likewise.
 	* strftime.m4: Likewise.
 
-2000-07-01  Jim Meyering  <meyering@lucent.com>
+2000-07-01  Jim Meyering  <jim@meyering.net>
 
 	* ls-mntd-fs.m4: Remove a `FIXME' comment and fix the associated
 	problem.
@@ -1047,11 +1047,11 @@
 	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): Rename BeOS specific
 	macro from MOUNTED_NEXT_DEV to MOUNTED_FS_STAT_DEV.
 
-2000-07-01  Jim Meyering  <meyering@lucent.com>
+2000-07-01  Jim Meyering  <jim@meyering.net>
 
 	* uptime.m4: Put double quotes around use of $cross_compiling.
 
-2000-06-28  Jim Meyering  <meyering@lucent.com>
+2000-06-28  Jim Meyering  <jim@meyering.net>
 
 	* mbstate_t.m4: Use stdlib.h, not stdio.h.  The latter is not included
 	by quotearg.c, for which we perform this test.  From Bruno Haible.
@@ -1062,12 +1062,12 @@
 	* prereq.m4 (jm_PREREQ_READUTMP): Likewise. If either <utmp.h> or
 	<utmpx.h> exists, put readutmp.o into LIBOBJS.
 
-2000-06-25  Jim Meyering  <meyering@lucent.com>
+2000-06-25  Jim Meyering  <jim@meyering.net>
 
 	* mbstate_t.m4: Include stdio.h before wchar.h to work around
 	Linux header bug when _XOPEN_SOURCE is defined to 500.
 
-2000-06-24  Jim Meyering  <meyering@lucent.com>
+2000-06-24  Jim Meyering  <jim@meyering.net>
 
 	* strerror_r.m4: Revive this file -- to try out an experimental
 	version of AC_FUNC_STRERROR_R that may work even on BeOS, a system
@@ -1081,7 +1081,7 @@
 	* mbstate_t.m4: New file, defining AC_MBSTATE_T_OBJECT.
 	* prereq.m4 (jm_PREREQ_QUOTEARG): Use it.  Add check for iswprint.
 
-2000-06-23  Jim Meyering  <meyering@lucent.com>
+2000-06-23  Jim Meyering  <jim@meyering.net>
 
 	* afs.m4: Add missing AC_MSG_RESULT.
 	Reported by Bruno Haible.
@@ -1089,11 +1089,11 @@
 	* fsusage.m4: s/AC_MSG_CHECKING/AC_CHECKING/.
 	Suggestion from Bruno Haible.
 
-2000-06-21  Jim Meyering  <meyering@lucent.com>
+2000-06-21  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (AC_REPLACE_FUNCS): Add getpass.
 
-2000-06-18  Jim Meyering  <meyering@lucent.com>
+2000-06-18  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (AC_REPLACE_FUNCS): Remove mkdir.
 
@@ -1105,14 +1105,14 @@
 
 	* glibc21.m4 (jm_GLIBC21): Define GLIBC21 for Makefiles, not for C.
 
-2000-06-12  Jim Meyering  <meyering@lucent.com>
+2000-06-12  Jim Meyering  <jim@meyering.net>
 
 	* getloadavg.m4 (AM_FUNC_GETLOADAVG): Replace with AC_FUNC_GETLOADAVG
 	from autoconf, and tweak the latter to accept an optional argument.
 	* jm-macros.m4: s/AM_FUNC_GETLOADAVG/AC_FUNC_GETLOADAVG/, and supply
 	the optional argument, `lib'.
 
-2000-06-08  Jim Meyering  <meyering@lucent.com>
+2000-06-08  Jim Meyering  <jim@meyering.net>
 
 	* largefile.m4: Remove file (now that it's part of autoconf).
 
@@ -1134,7 +1134,7 @@
 	for getconf.  Instead, check for the needed flags by compiling
 	test programs.
 
-2000-06-03  Jim Meyering  <meyering@lucent.com>
+2000-06-03  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4 (jm_PREREQ_HUMAN): Use []-quoted list in AC_CHECK_DECLS,
 	now that autoconf requires that.
@@ -1148,7 +1148,7 @@
 	* glibc21.m4: New file.
 	* jm-macros.m4 (jm_MACROS): Call jm_GLIBC21.
 
-2000-05-28  Jim Meyering  <meyering@lucent.com>
+2000-05-28  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK): Rename from
 	jm_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK.
@@ -1159,11 +1159,11 @@
 	* jm-macros.m4 (AC_FUNC_STRERROR_R): Rename from jm_FUNC_STRERROR_R.
 	* strerror_r.m4: Remove file (absorbed into autoconf).
 
-2000-05-26  Jim Meyering  <meyering@lucent.com>
+2000-05-26  Jim Meyering  <jim@meyering.net>
 
 	* uptime.m4: Use `$cross_compiling', not `$ac_cv_prog_cc_cross'.
 
-2000-05-24  Jim Meyering  <meyering@lucent.com>
+2000-05-24  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4: Use []-quoted list in AC_CHECK_MEMBERS, now that
 	autoconf requires that.
@@ -1174,22 +1174,22 @@
 	* check-decl.m4 (jm_CHECK_DECLS): Use []-quoted list in AC_CHECK_DECLS,
 	now that autoconf requires that.
 
-2000-05-22  Jim Meyering  <meyering@lucent.com>
+2000-05-22  Jim Meyering  <jim@meyering.net>
 
 	* stat.m4: Require jm_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK.
 	* lstat.m4: Likewise.
 
-2000-05-20  Jim Meyering  <meyering@lucent.com>
+2000-05-20  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4 (jm_PREREQ_HUMAN): New macro.
 	(jm_PREREQ): Use it.
 
-2000-05-09  Jim Meyering  <meyering@lucent.com>
+2000-05-09  Jim Meyering  <jim@meyering.net>
 
 	* gettext.m4: Rename this...
 	* libintl.m4: ...to this.
 
-2000-05-06  Jim Meyering  <meyering@lucent.com>
+2000-05-06  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (AC_REPLACE_FUNCS): Add atexit.
 	(AC_REPLACE_FUNCS): Add strnlen.
@@ -1208,7 +1208,7 @@
 	2.1.3 bug.  This avoids a clash when files like regex.c define
 	_GNU_SOURCE.
 
-2000-05-05  Jim Meyering  <meyering@lucent.com>
+2000-05-05  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (jm_MACROS): Save and restore LIBS around AC_SEARCH_LIBS
 	call for clock_gettime.
@@ -1220,7 +1220,7 @@
 	* lib-check.m4: When checking for struct spwd.sp_pwdp, also include
 	<shadow.h>.  Reported by Dragos Harabor.
 
-2000-05-03  Jim Meyering  <meyering@lucent.com>
+2000-05-03  Jim Meyering  <jim@meyering.net>
 
 	* check-decl.m4 (AC_CHECK_DECLS): Add strndup.
 
@@ -1231,37 +1231,37 @@
 	compile-time test, rather than inspecting host and OS, to
 	decide whether to define _LARGEFILE_SOURCE.
 
-2000-05-01  Jim Meyering  <meyering@lucent.com>
+2000-05-01  Jim Meyering  <jim@meyering.net>
 
 	* fsusage.m4: Use AC_MSG_CHECKING instead of obsolete AC_CHECKING.
 
 	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): Add BeOS support.
 	Based on a patch from Bruno Haible.
 
-2000-04-18  Jim Meyering  <meyering@lucent.com>
+2000-04-18  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4 (jm_PREREQ_GETPAGESIZE): New macro.
 	(jm_PREREQ): Use it.
 
-2000-04-17  Jim Meyering  <meyering@lucent.com>
+2000-04-17  Jim Meyering  <jim@meyering.net>
 
 	Get it right :-)
 	* jm-macros.m4 (jm_CHECK_ALL_TYPES) [_GNU_SOURCE]: Emit the
 	actual #define via AH_VERBATIM.  Don't need separate AC_DEFINE.
 	Suggestion from Akim Demaille.
 
-2000-04-14  Jim Meyering  <meyering@lucent.com>
+2000-04-14  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (jm_CHECK_ALL_TYPES) [_GNU_SOURCE]: Use the one-arg form
 	of AC_DEFINE.  Otherwise, the #ifndef in AH_VERBATIM gets clobbered.
 
-2000-04-13  Jim Meyering  <meyering@lucent.com>
+2000-04-13  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (jm_CHECK_ALL_TYPES) [_GNU_SOURCE]: Use new AH_VERBATIM
 	to insert required #ifndef into config.h.in.
 	Suggestion from Akim Demaille.
 
-2000-04-12  Jim Meyering  <meyering@lucent.com>
+2000-04-12  Jim Meyering  <jim@meyering.net>
 
 	* getloadavg.m4 (AM_FUNC_GETLOADAVG): Use AC_CHECK_HEADERS, not
 	`AC_CHECK_HEADER' to check for locale.h.  Thanks to a report from
@@ -1277,7 +1277,7 @@
 	* largefile.m4 (AC_SYS_LARGEFILE_FLAGS): Don't use -n32 on
 	IRIX if the installer said otherwise.
 
-2000-04-05  Jim Meyering  <meyering@lucent.com>
+2000-04-05  Jim Meyering  <jim@meyering.net>
 
 	Portability tweaks required for ultrix4.3.
 	* check-decl.m4 [!HAVE_UTMPX_H] (headers): Include <utmp.h>.
@@ -1288,7 +1288,7 @@
 	* strftime.m4: Back out the 2000-04-02 change.
 	Instead of that change, simply undefine putenv in the test program.
 
-2000-04-03  Jim Meyering  <meyering@lucent.com>
+2000-04-03  Jim Meyering  <jim@meyering.net>
 
 	* gettext.m4: Fix typo in comment.
 
@@ -1315,7 +1315,7 @@
 	since strftime.c uses HAVE_STRFTIME to decide whether to use
 	the underlying strftime.
 
-2000-03-10  Jim Meyering  <meyering@lucent.com>
+2000-03-10  Jim Meyering  <jim@meyering.net>
 
 	* lib-check.m4: Look for getspnam in -lgen, too.
 	From Marco Franzen.
@@ -1326,16 +1326,16 @@
 	* iconv.m4: New file.
 	* jm-macros.m4 (jm_MACROS): Call jm_LANGINFO_CODESET and jm_ICONV.
 
-2000-03-04  Jim Meyering  <meyering@lucent.com>
+2000-03-04  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (jm_CHECK_ALL_TYPES): Require AC_C_VOLATILE,
 	for lib/localcharset.c.
 
-2000-03-03  Jim Meyering  <meyering@lucent.com>
+2000-03-03  Jim Meyering  <jim@meyering.net>
 
 	* regex.m4: Make sure re_compile_pattern accepts patterns like `{1'.
 
-2000-03-02  Jim Meyering  <meyering@lucent.com>
+2000-03-02  Jim Meyering  <jim@meyering.net>
 
 	* timespec.m4: Require AC_HEADER_TIME before the cache check so
 	the messages come out on separate lines.
@@ -1346,21 +1346,21 @@
 
 	* check-decl.m4 (AC_CHECK_DECLS): Add getlogin, ttyname, and geteuid.
 
-2000-02-27  Jim Meyering  <meyering@lucent.com>
+2000-02-27  Jim Meyering  <jim@meyering.net>
 
 	* check-decl.m4: Add getenv to the list.
 
-2000-02-23  Jim Meyering  <meyering@lucent.com>
+2000-02-23  Jim Meyering  <jim@meyering.net>
 
 	* check-decl.m4: Now that we have the new AC_CHECK_DECLS, use it
 	in place of my hack.
 
-2000-02-10  Jim Meyering  <meyering@lucent.com>
+2000-02-10  Jim Meyering  <jim@meyering.net>
 
 	* nanosleep.m4 (jm_FUNC_NANOSLEEP): Rename replacement function from
 	gnu_nanosleep to rpl_nanosleep.
 
-2000-02-09  Jim Meyering  <meyering@lucent.com>
+2000-02-09  Jim Meyering  <jim@meyering.net>
 
 	* lib-check.m4 (jm_LIB_CHECK): Fix typo: check for sp_pwdp in
 	struct spwd, rather than in struct passwd.  Reported by Gaël Quéri.
@@ -1379,7 +1379,7 @@
 	* memcmp.m4 (jm_AC_FUNC_MEMCMP): Likewise, and add `int' for main.
 	* getloadavg.m4 (AM_FUNC_GETLOADAVG): Likewise.
 
-2000-02-05  Jim Meyering  <meyering@lucent.com>
+2000-02-05  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (jm_CHECK_ALL_TYPES): Require most macros.
 	Remove explicit use of AC_HEADER_TIME.  It is required by
@@ -1389,23 +1389,23 @@
 	the expansion of its prerequisite, AC_HEADER_TIME.
 	Reported by Volker Borchert.
 
-2000-02-03  Jim Meyering  <meyering@lucent.com>
+2000-02-03  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4 (jm_PREREQ_READUTMP): Check for utmpxname.
 
-2000-02-02  Jim Meyering  <meyering@lucent.com>
+2000-02-02  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4 (jm_PREREQ_ADDEXT): Fix typo that resulted in no
 	definition of HAVE_PATHCONF: s/AC_CHECK_FUNC/AC_CHECK_FUNCS/.
 	Reported by Eli Zaretskii.
 
-2000-01-31  Jim Meyering  <meyering@lucent.com>
+2000-01-31  Jim Meyering  <jim@meyering.net>
 
 	* check-decl.m4 (jm_CHECK_DECLS): Add nanosleep to the list of
 	functions.  Add the time.h and sys/time.h headers along with the
 	AC_REQUIRE'ment of AC_HEADER_TIME.
 
-2000-01-30  Jim Meyering  <meyering@lucent.com>
+2000-01-30  Jim Meyering  <jim@meyering.net>
 
 	* lib-check.m4: Clean up some kludgy old shadow password tests.
 
@@ -1413,24 +1413,24 @@
 	Check for ut_user and ut_name members in both struct utmpx
 	and struct utmp.
 
-2000-01-29  Jim Meyering  <meyering@lucent.com>
+2000-01-29  Jim Meyering  <jim@meyering.net>
 
 	* lib-check.m4: New file containing library-related checks from
 	fileutils and sh-utils (textutils had none).
 
-2000-01-28  Jim Meyering  <meyering@lucent.com>
+2000-01-28  Jim Meyering  <jim@meyering.net>
 
 	* perl.m4: Change format of warning message to look more like that
 	from the missing script.  Suggestion from François Pinard.
 
-2000-01-25  Jim Meyering  <meyering@lucent.com>
+2000-01-25  Jim Meyering  <jim@meyering.net>
 
 	* timespec.m4: Require AC_HEADER_TIME, and include sys/time.h as well
 	as time.h in the compile check.
 	* nanosleep.m4: Require AC_HEADER_TIME rather than simply using it.
 	Fix typo in cross-compiling case: s/yes/no/.
 
-2000-01-23  Jim Meyering  <meyering@lucent.com>
+2000-01-23  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4: Move df-related tests here from fileutils/configure.in
 
@@ -1455,7 +1455,7 @@
 	(AC_SUBST(POW_LIBM)): Likewise.
 	(AC_SUBST(DF_PROG)): Moved from fileutils/configure.in.
 
-2000-01-22  Jim Meyering  <meyering@lucent.com>
+2000-01-22  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4: Call AC_PROG_CC_STDC just before AC_C_CONST.
 
@@ -1479,7 +1479,7 @@
 	(_jm_DECL_HEADERS): Define new function.
 	(jm_CHECK_DECLARATIONS): Require it.
 
-2000-01-19  Jim Meyering  <meyering@lucent.com>
+2000-01-19  Jim Meyering  <jim@meyering.net>
 
 	* nanosleep.m4 (jm_FUNC_NANOSLEEP): Include <sys/time.h>, too.
 	Use AC_HEADER_TIME.  Volker Borchert reported that OpenBSD-2.3/sparc
@@ -1488,19 +1488,19 @@
 	* c-bs-a.m4: Remove uses of changequote altogether.
 	Thanks to Akim for explaining.
 
-2000-01-16  Jim Meyering  <meyering@lucent.com>
+2000-01-16  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4: Require jm_FUNC_GROUP_MEMBER, jm_FUNC_PUTENV,
 	AM_FUNC_ERROR_AT_LINE, jm_FUNC_GNU_STRFTIME, jm_FUNC_MKTIME,
 	jm_FUNC_GETGROUPS AC_FUNC_VPRINTF, AC_FUNC_ALLOCA,
 	AM_FUNC_GETLOADAVG, and jm_SYS_PROC_UPTIME.
 
-2000-01-16  Jim Meyering  <meyering@lucent.com>
+2000-01-16  Jim Meyering  <jim@meyering.net>
 
 	* c-bs-a.m4: Use `changequote(<<,>>)', rather than `changequote(, )'
 	because the latter didn't work.
 
-2000-01-15  Jim Meyering  <meyering@lucent.com>
+2000-01-15  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (AC_REPLACE_FUNCS): Add gethostname and getusershell.
 	(AC_REPLACE_FUNCS): Add memcpy and memset.
@@ -1508,7 +1508,7 @@
 	Add strpbrk.
 	Add these: euidaccess memcmp mkdir rmdir rpmatch strndup strverscmp.
 
-2000-01-12  Jim Meyering  <meyering@lucent.com>
+2000-01-12  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4 (jm_PREREQ_CANON_HOST): New macro.
 	(jm_PREREQ): Use it.

@@ -25,7 +25,7 @@
 	(human_options): Renamed from human_block_size, with new signature
 	that allows block sizes up to UINTMAX_MAX.  All callers changed.
 
-2002-10-13  Jim Meyering  <meyering@lucent.com>
+2002-10-13  Jim Meyering  <jim@meyering.net>
 
 	* xnanosleep.c (initialized): Remove declaration now that it's unused.
 
@@ -37,13 +37,13 @@
 	(#pragma STDC FENV_ACCESS ON): Remove.
 	(xnanosleep): Don't futz with rounding state.
 
-2002-10-06  Jim Meyering  <meyering@lucent.com>
+2002-10-06  Jim Meyering  <jim@meyering.net>
 
 	* safe-read.c (safe_read): Change type of function
 	from ssize_t to size_t.
 	* safe-read.h: Update prototype.
 
-2002-09-28  Jim Meyering  <meyering@lucent.com>
+2002-09-28  Jim Meyering  <jim@meyering.net>
 
 	* makepath.c (make_path): Restore umask *before* creating the final
 	component.
@@ -58,14 +58,14 @@
 	(get_fs_usage): (uintmax_t) -1 -> UINTMAX_MAX to avoid a cast.
 	Don't assume that f_frsize and f_bsize are the same type.
 
-2002-09-25  Jim Meyering  <meyering@lucent.com>
+2002-09-25  Jim Meyering  <jim@meyering.net>
 
 	* fsusage.c: Remove unneeded parentheses around operands of `defined'.
 
 	* safe-read.c (safe_read): Make comment more precise:
 	upon error, it returns -1.
 
-2002-09-22  Jim Meyering  <meyering@lucent.com>
+2002-09-22  Jim Meyering  <jim@meyering.net>
 
 	* makepath.c (make_path): Minor reformatting.
 
@@ -75,12 +75,12 @@
 	for consistency with nanosleep.  Check errno after nanosleep
 	returns -1.
 
-2002-09-11  Jim Meyering  <meyering@lucent.com>
+2002-09-11  Jim Meyering  <jim@meyering.net>
 
 	* xnanosleep.c, xnanosleep.h: New files, factored out of sleep.c.
 	* Makefile.am (libfetish_a_SOURCES): Add them.
 
-2002-09-04  Jim Meyering  <meyering@lucent.com>
+2002-09-04  Jim Meyering  <jim@meyering.net>
 
 	* addext.c (addext): Add a cast to avoid gcc's warning about
 	`comparison between signed and unsigned'.
@@ -89,7 +89,7 @@
 	of type size_t so that they match type of upper bound, thus avoiding
 	warning about `comparison between signed and unsigned'.
 
-2002-08-31  Jim Meyering  <meyering@lucent.com>
+2002-08-31  Jim Meyering  <jim@meyering.net>
 
 	* mktime.c: Update from GNU libc.
 	* obstack.c: Likewise.
@@ -124,7 +124,7 @@
 	posixtime failures better.
 	Improve the test data (in comments only).
 
-2002-07-27  Jim Meyering  <meyering@lucent.com>
+2002-07-27  Jim Meyering  <jim@meyering.net>
 
 	* readutmp.h: If we have both utmpx.h and utmp.h, and there exists
 	the utmp.ut_exit member, but not the utmpx.ut_exit member, then
@@ -132,7 +132,7 @@
 	a big kludge; someday we'll put the brains in an autoconf macro.
 	(UT_EXIT_E_TERMINATION, UT_EXIT_E_EXIT): Define.
 
-2002-07-20  Jim Meyering  <meyering@lucent.com>
+2002-07-20  Jim Meyering  <jim@meyering.net>
 
 	* xmalloc.c: Adjust to work with new autoconf macros, AC_FUNC_MALLOC
 	and AC_FUNC_REALLOC: test #ifndef HAVE_MALLOC/HAVE_REALLOC.
@@ -145,13 +145,13 @@
 	* mountlist.c: #undef MNT_IGNORE before defining it, to avoid warning
 	on FreeBSD.
 
-2002-07-09  Jim Meyering  <meyering@lucent.com>
+2002-07-09  Jim Meyering  <jim@meyering.net>
 
 	* mountlist.h (ME_DUMMY): Don't count entries of type `auto' as dummy
 	ones.  At least on GNU/Linux systems, `auto' means something else.
 	From Michael Stone.
 
-2002-07-01  Jim Meyering  <meyering@lucent.com>
+2002-07-01  Jim Meyering  <jim@meyering.net>
 
 	* c-stack.c: Include sys/time.h.
 	From Volker Borchert.
@@ -164,7 +164,7 @@
 	It also uses HAVE_BTOWC, to fix a porting bug on Solaris 2.5.1
 	reported by Vin Shelton.
 
-2002-06-22  Jim Meyering  <meyering@lucent.com>
+2002-06-22  Jim Meyering  <jim@meyering.net>
 
 	* fnmatch.c (ISASCII, ISPRINT): Undefine, to avoid warning about
 	redefinition due to Solaris5.6's definition in /usr/include/sys/euc.h.
@@ -175,7 +175,7 @@
 	Do not assume SA_SIGINFO behavior.
 	Bug reported by Jim Meyering on NetBSD 1.5.2.
 
-2002-06-22  Jim Meyering  <meyering@lucent.com>
+2002-06-22  Jim Meyering  <jim@meyering.net>
 
 	* c-stack.c, c-stack.h: New files, from diffutils-2.8.2.
 
@@ -200,7 +200,7 @@
 	Unix Version 7 had S_IFREG.  We don't need to check for
 	<sys/types.h> since we don't use any symbols that it defines.
 
-2002-06-15  Jim Meyering  <meyering@lucent.com>
+2002-06-15  Jim Meyering  <jim@meyering.net>
 
 	* file-type.h (FILE_TYPE_H): Guard entire contents with #ifndef.
 	For GNU libc 2.2 and newer, ensure that <sys/types.h> and <sys/stat.h>
@@ -212,7 +212,7 @@
 	so that each temporary file name is unique and valid in the first
 	8 characters, for operation under DOS.
 
-2002-06-15  Jim Meyering  <meyering@lucent.com>
+2002-06-15  Jim Meyering  <jim@meyering.net>
 
 	Work even with DJGPP 2.03, which lacks support for symlinks.
 	From Richard Dawe.
@@ -220,12 +220,12 @@
 	is defined.
 	* lchown.c (S_ISLNK): Likewise.
 
-2002-06-14  Jim Meyering  <meyering@lucent.com>
+2002-06-14  Jim Meyering  <jim@meyering.net>
 
 	* file-type.h: Use the version from diffutils-2.8.2.
 	* file-type.c: Likewise.
 
-2002-05-27  Jim Meyering  <meyering@lucent.com>
+2002-05-27  Jim Meyering  <jim@meyering.net>
 
 	Fix a problem seen only on nonconforming systems whereby ls.c's
 	use of localtime, and then of gettimeofday would cause trouble:
@@ -237,7 +237,7 @@
 	* gettimeofday.c (localtime): Undefine.
 	(rpl_localtime): New function.
 
-2002-05-22  Jim Meyering  <meyering@lucent.com>
+2002-05-22  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (libfetish_a_SOURCES): Add file-type.c and file-type.h.
 	* file-type.h: New file.
@@ -255,7 +255,7 @@
 	nonstandard hosts.
 	* sig2str.c: Do not include <sys/wait.h>; no longer needed.
 
-2002-04-28  Jim Meyering  <meyering@lucent.com>
+2002-04-28  Jim Meyering  <jim@meyering.net>
 
 	* sig2str.c (WTERMSIG): Remove definition (unused).
 
@@ -264,33 +264,33 @@
 	* sig2str.h, sig2str.c: New files.
 	* Makefile.am (libfetish_a_SOURCES): Add sig2str.h.
 
-2002-04-24  Jim Meyering  <meyering@lucent.com>
+2002-04-24  Jim Meyering  <jim@meyering.net>
 
 	* gettext.h: New file, from Gettext.
 	* Makefile.am (INCLUDES): Remove -I../intl.
 	(libfetish_a_SOURCES): Add gettext.h.
 
-2002-04-16  Jim Meyering  <meyering@lucent.com>
+2002-04-16  Jim Meyering  <jim@meyering.net>
 
 	* readutmp.h (UT_TYPE): Remove definition (now in who.c).
 	(HAVE_STRUCT_XTMP_UT_EXIT, HAVE_STRUCT_XTMP_UT_ID): Define.
 	(HAVE_STRUCT_XTMP_UT_PID, HAVE_STRUCT_XTMP_UT_TYPE): Define.
 
-2002-04-12  Jim Meyering  <meyering@lucent.com>
+2002-04-12  Jim Meyering  <jim@meyering.net>
 
 	* dirfd.h (dirfd): Elide prototype if dirfd is a macro.
 
-2002-03-10  Jim Meyering  <meyering@lucent.com>
+2002-03-10  Jim Meyering  <jim@meyering.net>
 
 	* makepath.c (make_path): Remove a comma from a diagnostic.
 	Suggestion from Santiago Vila.
 
-2002-03-08  Jim Meyering  <meyering@lucent.com>
+2002-03-08  Jim Meyering  <jim@meyering.net>
 
 	* rename.c: Mention that this wrapper is needed also on
 	mips-dec-ultrix4.4 systems.
 
-2002-03-02  Jim Meyering  <meyering@lucent.com>
+2002-03-02  Jim Meyering  <jim@meyering.net>
 
 	* gettime.c (gettime): Test HAVE_CLOCK_GETTIME,
 	not HAVE_CLOCK_SETTIME.
@@ -312,7 +312,7 @@
 	* acl.c, acl.h: New files.
 	* Makefile.am (libfetish_a_SOURCES): Add acl.h, acl.c.
 
-2002-02-24  Jim Meyering  <meyering@lucent.com>
+2002-02-24  Jim Meyering  <jim@meyering.net>
 
 	* strnlen.c (strnlen): Define-away/undef so that an inconsistent
 	prototype in string.h (on at least AIX4.3.2.0 w/gcc-2.95.3) doesn't
@@ -323,7 +323,7 @@
 	* path-concat.c (xpath_concat): Reorder code to pacify
 	compilers that don't know that xalloc_die never returns.
 
-2002-02-20  Jim Meyering  <meyering@lucent.com>
+2002-02-20  Jim Meyering  <jim@meyering.net>
 
 	* getdate.c: Regenerate using bison-1.33.
 
@@ -344,11 +344,11 @@
 	(fallback_failure_callback): New function.
 	(print_unicode_char): Call unicode_to_mb.
 
-2002-01-26  Jim Meyering  <meyering@lucent.com>
+2002-01-26  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (getdate$U.o): Depend on unlocked-io.h.
 
-2002-01-22  Jim Meyering  <meyering@lucent.com>
+2002-01-22  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (Makefile): Don't depend on $(BUILT_SOURCES).
 	Otherwise, some versions of automake would omit the rule that makes
@@ -372,7 +372,7 @@
 
 	* quotearg.h (quotearg_n_style_mem): New function.
 
-2002-01-16  Jim Meyering  <meyering@lucent.com>
+2002-01-16  Jim Meyering  <jim@meyering.net>
 
 	* getdate.y: Add three semicolons, each just before a closing brace.
 	Bison (as of version 1.31) no longer papers over that mistake.
@@ -385,7 +385,7 @@
 	* strverscmp.c (ISDIGIT): Likewise.
 	* userspec.c (ISDIGIT): Likewise.
 
-2002-01-05  Jim Meyering  <meyering@lucent.com>
+2002-01-05  Jim Meyering  <jim@meyering.net>
 
 	* version-etc.c (version_etc_copyright): Update copyright year.
 
@@ -405,7 +405,7 @@
 	is a valid suffix, assume 1.  "MB" now means decimal, "MiB" binary.
 	Accept 'K' as well as 'k'.
 
-2001-12-15  Jim Meyering  <meyering@lucent.com>
+2001-12-15  Jim Meyering  <jim@meyering.net>
 
 	* regex.h (__restrict_arr): Update from libc.
 
@@ -413,7 +413,7 @@
 	as `remote' if the name starts with `//'.  Suggested by Michael Stone.
 	(STREQ): Define.
 
-2001-12-10  Jim Meyering  <meyering@lucent.com>
+2001-12-10  Jim Meyering  <jim@meyering.net>
 
 	* linebuffer.c: Remove explicit declarations of xmalloc and xrealloc,
 	Instead, include "xalloc.h".
@@ -422,7 +422,7 @@
 	Don't cast xrealloc return value to char*
 	Return NULL, not 0.
 
-2001-12-09  Jim Meyering  <meyering@lucent.com>
+2001-12-09  Jim Meyering  <jim@meyering.net>
 
 	* modechange.c (mode_compile): Add cast to avoid pedantic warning about
 	`signed and unsigned type in conditional expression'.
@@ -444,7 +444,7 @@
 	* xgethostname.c: Remove declarations of xmalloc and xrealloc.
 	Include xalloc.h instead.
 
-2001-12-02  Jim Meyering  <meyering@lucent.com>
+2001-12-02  Jim Meyering  <jim@meyering.net>
 
 	* tempname.c: Don't declare getenv, thus reverting the change of
 	2001-11-18.  It's no longer necessary, now that stdlib.h is always
@@ -469,7 +469,7 @@
 	is 32 bits, as overflow is impossible there.
 	Fix off-by-one typo that caused unnecessary reallocation.
 
-2001-11-27  Jim Meyering  <meyering@lucent.com>
+2001-11-27  Jim Meyering  <jim@meyering.net>
 
 	* tempname.c: Merge with version from libc.
 	* regex.c: Likewise.
@@ -479,7 +479,7 @@
 	warning about an integer-to-pointer conversion problem with getenv.
 	Reported by Volker Borchert.
 
-2001-11-26  Jim Meyering  <meyering@lucent.com>
+2001-11-26  Jim Meyering  <jim@meyering.net>
 
 	* gtod.h: Remove file.
 	* Makefile.am (libfetish_a_SOURCES): Remove gtod.h.
@@ -488,12 +488,12 @@
 	(rpl_gettimeofday): Do its job here instead, rather than aborting.
 	Suggestion from Volker Borchert.
 
-2001-11-23  Jim Meyering  <meyering@lucent.com>
+2001-11-23  Jim Meyering  <jim@meyering.net>
 
 	* hash.h (struct hash_table): Don't define here.  Merely declare it.
 	* hash.c (struct hash_table): Define it here instead.
 
-2001-11-22  Jim Meyering  <meyering@lucent.com>
+2001-11-22  Jim Meyering  <jim@meyering.net>
 
 	* hash.h: Bracket contents of file with #ifndef HASH_H_ ... #endif.
 
@@ -505,7 +505,7 @@
 	removes an artificial limitation (e.g. HP-UX 10.20, where
 	TMP_MAX is 17576).
 
-2001-11-18  Jim Meyering  <meyering@lucent.com>
+2001-11-18  Jim Meyering  <jim@meyering.net>
 
 	* tempname.c [!HAVE_DECL_GETENV]: Declare getenv to avoid warning
 	on SunOS4.
@@ -513,7 +513,7 @@
 	* Makefile.am (Makefile): Depend on $(BUILT_SOURCES), so those
 	files will be created before anything else.
 
-2001-11-17  Jim Meyering  <meyering@lucent.com>
+2001-11-17  Jim Meyering  <jim@meyering.net>
 
 	* modechange.c (mode_adjust): Fix error introduced on 1999-04-26
 	that made e.g., `chmod a=,o=w,g=o F' cause F to be group readable
@@ -538,7 +538,7 @@
 	(rpl_mkstemp): Rename from mkstemp.
 	Protoize.
 
-2001-11-16  Jim Meyering  <meyering@lucent.com>
+2001-11-16  Jim Meyering  <jim@meyering.net>
 
 	* physmem.c [HAVE_SYS_PSTAT_H]: Include <sys/pstat.h>.
 	(physmem_total) [HAVE_PSTAT_GETSTATIC]: If sysconf couldn't be used to
@@ -549,11 +549,11 @@
 	physical memory, use both pstat_getstatic and pstat_getdynamic.
 	Based on a patch from Bob Proulx.
 
-2001-11-05  Jim Meyering  <meyering@lucent.com>
+2001-11-05  Jim Meyering  <jim@meyering.net>
 
 	* xstat.in (slash_aware_lstat): Correct a misleading comment.
 
-2001-11-03  Jim Meyering  <meyering@lucent.com>
+2001-11-03  Jim Meyering  <jim@meyering.net>
 
 	* argmatch.h (ARGMATCH_TO_ARGUMENT): Remove casts of first two args
 	in argmatch_to_argument call.
@@ -564,7 +564,7 @@
 	* hash.c (hash_clear): Fix a bug that could lead to an infloop or
 	e.g., a fault due to an attempt to free a NULL pointer.
 
-2001-11-01  Jim Meyering  <meyering@lucent.com>
+2001-11-01  Jim Meyering  <jim@meyering.net>
 
 	* dirfd.c, dirfd.h: New files.
 	* Makefile.am (libfetish_a_SOURCES): Add dirfd.h.
@@ -580,7 +580,7 @@
 
 	* regex.c (uintptr_t): Remove macro and decl; it's config.h's job.
 
-2001-10-21  Jim Meyering  <meyering@lucent.com>
+2001-10-21  Jim Meyering  <jim@meyering.net>
 
 	* obstack.c (_): Honor the setting of ENABLE_NLS.  Otherwise,
 	this code would end up calling gettext even in packages built
@@ -600,18 +600,18 @@
 	char*-flavored one.
 	(error_tail, error, error_at_line): Use it.
 
-2001-10-11  Jim Meyering  <meyering@lucent.com>
+2001-10-11  Jim Meyering  <jim@meyering.net>
 
 	* argmatch.c (argmatch_invalid): Use quotearg_n_style (0, ...
 	and quote_n (1, ... to avoid clobbering a buffer.
 
-2001-10-05  Jim Meyering  <meyering@lucent.com>
+2001-10-05  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am: (libfetish_a_SOURCES): Add hash-pjw.c and hash-pjw.h.
 	* hash-pjw.c: New file (factored out of fileutils' remove.c).
 	* hash-pjw.h: New file.
 
-2001-09-30  Jim Meyering  <meyering@lucent.com>
+2001-09-30  Jim Meyering  <jim@meyering.net>
 
 	* mountlist.c [MOUNTED_GETFSSTAT]:
 	Include <sys/ucred.h>, for Apple Darwin.
@@ -634,7 +634,7 @@
 	(strtoul): Do not declare if HAVE_DECL_STRTOUL.
 	(strtoimax, strtoumax): Do not declare if already defined as a macro.
 
-2001-09-26  Jim Meyering  <meyering@lucent.com>
+2001-09-26  Jim Meyering  <jim@meyering.net>
 
 	Most macros in unlocked-io.h had the wrong number of arguments.
 	* gen-uio: New script.
@@ -649,18 +649,18 @@
 
 	* gettimeofday.c (rpl_gettimeofday): Declare local variable `result'.
 
-2001-09-23  Jim Meyering  <meyering@lucent.com>
+2001-09-23  Jim Meyering  <jim@meyering.net>
 
 	* mountlist.c: Remove useless parentheses in #if directives.
 	(MOUNTED) [!defined MOUNTED]: Define to _PATH_MOUNTED, for when
 	the deprecated MOUNTED symbol is no longer defined in mntent.h.
 
-2001-09-22  Jim Meyering  <meyering@lucent.com>
+2001-09-22  Jim Meyering  <jim@meyering.net>
 
 	* localcharset.c: Update from latest gettext.
 	* config.charset: Likewise.
 
-2001-09-20  Jim Meyering  <meyering@lucent.com>
+2001-09-20  Jim Meyering  <jim@meyering.net>
 
 	* xstrtol.c (strtoimax): Guard declaration with
 	`#if !HAVE_DECL_STRTOIMAX', rather than just `#ifndef strtoimax'.
@@ -675,7 +675,7 @@
 	(strtoimax): Use sizeof (long), not sizeof strtol (ptr, endptr, base),
 	to work around bug in IBM C compiler.
 
-2001-09-16  Jim Meyering  <meyering@lucent.com>
+2001-09-16  Jim Meyering  <jim@meyering.net>
 
 	* mkdir.c: New file.
 
@@ -708,7 +708,7 @@
 	usage of FNM_CASEFOLD and FNM_LEADING_DIR.  The bug was
 	spotted by Jim Meyering.
 
-2001-09-03  Jim Meyering  <meyering@lucent.com>
+2001-09-03  Jim Meyering  <jim@meyering.net>
 
 	* xreadlink.c (xreadlink): Preserve errno around `free' during failure.
 
@@ -728,11 +728,11 @@
 	* xgetcwd.c (xgetcwd): Use HAVE_GETCWD_NULL, not (defined
 	__GLIBC__ && __GLIBC__ >= 2), to decide whether to use getcwd (NULL, 0).
 
-2001-09-02  Jim Meyering  <meyering@lucent.com>
+2001-09-02  Jim Meyering  <jim@meyering.net>
 
 	* error.c: Update from GNU libc.
 
-2001-09-01  Jim Meyering  <meyering@lucent.com>
+2001-09-01  Jim Meyering  <jim@meyering.net>
 
 	* xreadlink.c: New file.
 	* xreadlink.h: New file.
@@ -746,7 +746,7 @@
 	(fnmatch_no_wildcards): Rewrite not to use function names, strcasecmp
 	and strncasecmp as r-values.  Unixware didn't have declarations.
 
-2001-08-31  Jim Meyering  <meyering@lucent.com>
+2001-08-31  Jim Meyering  <jim@meyering.net>
 
 	* xgetcwd.c (xgetcwd): Reorganize to avoid some duplication.
 	Use an initial, malloc'd, buffer of length 128 rather than
@@ -867,7 +867,7 @@
 
 	* alloca.c (alloca): Arg is of type size_t, not unsigned.
 
-2001-08-27  Jim Meyering  <meyering@lucent.com>
+2001-08-27  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (libfetish_a_SOURCES): Add strtoxmax.c
 
@@ -878,7 +878,7 @@
 
 	* strtoxmax.c: Tweak comment.
 
-2001-08-26  Jim Meyering  <meyering@lucent.com>
+2001-08-26  Jim Meyering  <jim@meyering.net>
 
 	* version-etc.c (version_etc_copyright_fmt): Replace literal year
 	of copyright with `%s' so translators don't get an untranslated
@@ -914,7 +914,7 @@
 	errno alone because there is no limit.  Also, work even if
 	pathconf returns a value greater than SIZE_MAX.
 
-2001-08-12  Jim Meyering  <meyering@lucent.com>
+2001-08-12  Jim Meyering  <jim@meyering.net>
 
 	* xgetcwd.c (xgetcwd) [defined __GLIBC__ && __GLIBC__ >= 2]:
 	Simply `return getcwd (NULL, 0);'.
@@ -923,13 +923,13 @@
 
 	* pathmax.h: Clean up cpp syntax.
 
-2001-08-12  Jim Meyering  <meyering@lucent.com>
+2001-08-12  Jim Meyering  <jim@meyering.net>
 
 	* gettimeofday.c: New file.
 	* gtod.h: New file.
 	* Makefile.am (libfetish_a_SOURCES): Add gtod.h.
 
-2001-08-04  Jim Meyering  <meyering@lucent.com>
+2001-08-04  Jim Meyering  <jim@meyering.net>
 
 	* error.h (__attribute__): Remove `|| __STRICT_ANSI__' from #if stmt,
 	to get in sync with glibc.
@@ -951,7 +951,7 @@
 	can optimize it when MB_CUR_MAX == 1.
 	The width of control characters is zero, not 1.
 
-2001-07-15  Jim Meyering  <meyering@lucent.com>
+2001-07-15  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (EXTRA_DIST): Add unlocked-io.hin.
 	(BUILT_SOURCES): Add unlocked-io.h.
@@ -964,7 +964,7 @@
 
 	* regex.c: Update from glibc.
 
-2001-07-05  Jim Meyering  <meyering@lucent.com>
+2001-07-05  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (noinst_HEADERS): Remove definition, per new automake
 	recommendation.
@@ -972,15 +972,15 @@
 	Remove a thus-exposed (better checks in automake) duplicate and
 	two unnecessary .h files.
 
-2001-06-11  Jim Meyering  <meyering@lucent.com>
+2001-06-11  Jim Meyering  <jim@meyering.net>
 
 	* regex.c: Update from GNU libc.
 
-2001-05-27  Jim Meyering  <meyering@lucent.com>
+2001-05-27  Jim Meyering  <jim@meyering.net>
 
 	* readutmp.h (UT_TYPE): Define.
 
-2001-05-24  Jim Meyering  <meyering@lucent.com>
+2001-05-24  Jim Meyering  <jim@meyering.net>
 
 	* argmatch.c: Include "quote.h".
 	(argmatch_invalid): Remove explicit `' quotes.  Instead, use the
@@ -1071,13 +1071,13 @@
 	a slash was stripped.  Do not strip the last slash after a
 	file system prefix.
 
-2001-04-08  Jim Meyering  <meyering@lucent.com>
+2001-04-08  Jim Meyering  <jim@meyering.net>
 
 	* getdate.y (get_date): Set tm_isdst to -1 to ensure that it is
 	recomputed; that's necessary when the offset spans a DST transition.
 	Patch by David J. MacKenzie.  Reported by Hon-Yin Kok.
 
-2001-04-02  Jim Meyering  <meyering@lucent.com>
+2001-04-02  Jim Meyering  <jim@meyering.net>
 
 	* regex.h, regex.c: Update from GNU libc.
 
@@ -1098,7 +1098,7 @@
 	alias if codeset is empty.
 	* config.charset (BeOS): Use wildcard syntax.
 
-2001-03-13  Jim Meyering  <meyering@lucent.com>
+2001-03-13  Jim Meyering  <jim@meyering.net>
 
 	* path-concat.c (path_concat) [FILESYSTEM_ACCEPTS_DRIVE_LETTER_PREFIX]:
 	Don't insert a backslash when concatenating e.g., `C:' and `foo'.
@@ -1156,7 +1156,7 @@
 
 	* mkstemp.c, tempname.c: New files, taken from glibc 2.2.2.
 
-2001-02-17  Jim Meyering  <meyering@lucent.com>
+2001-02-17  Jim Meyering  <jim@meyering.net>
 
 	* strtoul.c: Sync from GNU libc.  Use double quotes, not <...>
 	around included file name.
@@ -1176,7 +1176,7 @@
 	mbstate_t, as we now insist on proper declarations for both
 	before using mbrtowc.
 
-2001-02-17  Jim Meyering  <meyering@lucent.com>
+2001-02-17  Jim Meyering  <jim@meyering.net>
 
 	* regex.c: Update from libc.
 
@@ -1190,7 +1190,7 @@
 
 	* config.charset: Update for FreeBSD 4.2.
 
-2001-01-26  Jim Meyering  <meyering@lucent.com>
+2001-01-26  Jim Meyering  <jim@meyering.net>
 
 	* quotearg.c: Include stddef.h.
 	* quote.c: Include stddef.h.
@@ -1206,12 +1206,12 @@
 	* unicodeio.c (print_unicode_char): Cast the second iconv() arg,
 	to avoid a warning.  Add back 'const' to inptr.
 
-2001-01-16  Jim Meyering  <meyering@lucent.com>
+2001-01-16  Jim Meyering  <jim@meyering.net>
 
 	* basename.c: Include <stdio.h>, needed by assert on SunOS4.
 	From Bruno Haible.
 
-2001-01-14  Jim Meyering  <meyering@lucent.com>
+2001-01-14  Jim Meyering  <jim@meyering.net>
 
 	* rename.c: New file.  From Volker Borchert.
 	Include stdlib.h, string.h or strings.h, and xalloc.h.
@@ -1221,7 +1221,7 @@
 
 	* strftime.c: Sync with glibc time/strftime.c 1.81.
 
-2001-01-03  Jim Meyering  <meyering@lucent.com>
+2001-01-03  Jim Meyering  <jim@meyering.net>
 
 	* unicodeio.c (print_unicode_char): Remove `const' from declaration of
 	local `inptr' to avoid warning with some system declarations of iconv.
@@ -1243,7 +1243,7 @@
 	No need to use uintmax_t; unsigned long is long enough.
 	Don't bother to get suffix since we don't use it.
 
-2000-12-24  Jim Meyering  <meyering@lucent.com>
+2000-12-24  Jim Meyering  <jim@meyering.net>
 
 	* hash.c (is_prime): Return explicit boolean values.
 	(hash_get_first): Return NULL to appease Irix5.6's 89.
@@ -1267,7 +1267,7 @@
 
 	* config.charset: Add support for BeOS.
 
-2000-12-16  Jim Meyering  <meyering@lucent.com>
+2000-12-16  Jim Meyering  <jim@meyering.net>
 
 	* getusershell.c [!SHELLS_FILE && __DJGPP__]: Define
 	SHELLS_FILE to a file name that's useful on djgpp systems.
@@ -1276,7 +1276,7 @@
 	(default_shells): Prepend ADDITIONAL_DEFAULT_SHELLS.
 	Based mostly on a patch from Prashant TR.
 
-2000-12-16  Jim Meyering  <meyering@lucent.com>
+2000-12-16  Jim Meyering  <jim@meyering.net>
 
 	This bug had a serious impact on chown: `chown N:M FILE' (for integer
 	N and M) would have treated it like `chown N:N FILE'.
@@ -1294,7 +1294,7 @@
 	* mbswidth.c (mbsnwidth): Don't loop endlessly when called with an
 	invalid mulitbyte sequence and with the MBSW_ACCEPT_INVALID flag set.
 
-2000-12-07  Jim Meyering  <meyering@lucent.com>
+2000-12-07  Jim Meyering  <jim@meyering.net>
 
 	* stripslash.c (ISSLASH): Define.
 	(strip_trailing_slashes): Use ISSLASH rather than comparing against `/'.
@@ -1312,17 +1312,17 @@
 
 	* dirname.h (dir_name_r): Remove prototype.
 
-2000-12-05  Jim Meyering  <meyering@lucent.com>
+2000-12-05  Jim Meyering  <jim@meyering.net>
 
 	* dirname.c (dir_name_r): Add `const' in a few local declarations.
 
-2000-12-04  Jim Meyering  <meyering@lucent.com>
+2000-12-04  Jim Meyering  <jim@meyering.net>
 
 	* path-concat.c: [!HAVE_DECL_MALLOC]: Declare malloc.
 	Also include memory.h, stdlib.h, unistd.h if appropriate.
 	Reported by Andreas Jaeger (conflicting declaration of malloc).
 
-2000-12-02  Jim Meyering  <meyering@lucent.com>
+2000-12-02  Jim Meyering  <jim@meyering.net>
 
 	* closeout.h: Make idempotent, to avoid some obscure warnings.
 
@@ -1334,7 +1334,7 @@
 
 	* dirname.c (dir_name_r): Fix typo: int -> size_t.
 
-2000-11-26  Jim Meyering  <meyering@lucent.com>
+2000-11-26  Jim Meyering  <jim@meyering.net>
 
 	* memcoll.c: Include sys/types.h.  From Werner Almesberger.
 
@@ -1353,19 +1353,19 @@
 	variable is valid.
 	(obstack_int_grow, obstack_int_grow_fast): Don't cast AINT to int.
 
-2000-11-17  Jim Meyering  <meyering@lucent.com>
+2000-11-17  Jim Meyering  <jim@meyering.net>
 
 	* strstr.c: Update from GNU libc.
 
-2000-11-16  Jim Meyering  <meyering@lucent.com>
+2000-11-16  Jim Meyering  <jim@meyering.net>
 
 	* strverscmp.c: Incorporate weak-alias-related changes from glibc.
 
-2000-11-11  Jim Meyering  <meyering@lucent.com>
+2000-11-11  Jim Meyering  <jim@meyering.net>
 
 	* error.c: Add a couple #includes, merging from GNU libc version.
 
-2000-11-10  Jim Meyering  <meyering@lucent.com>
+2000-11-10  Jim Meyering  <jim@meyering.net>
 
 	* obstack.h: Update from GNU libc.
 	* obstack.c: Likewise.
@@ -1377,7 +1377,7 @@
 	Don't bother opening SHELLS_FILE if shellstream is NULL;
 	it's not necessary.
 
-2000-11-05  Jim Meyering  <meyering@lucent.com>
+2000-11-05  Jim Meyering  <jim@meyering.net>
 
 	* makepath.h (make_dir): Declare.
 	* makepath.c (make_dir): Remove `static' attribute.
@@ -1415,11 +1415,11 @@
 	Required because egcs-2.91.66 (aka 1.1.2) defines __restrict, but
 	doesn't define __restrict_arr.
 
-2000-10-29  Jim Meyering  <meyering@lucent.com>
+2000-10-29  Jim Meyering  <jim@meyering.net>
 
 	* xstat.in: Fix grammar in comment.
 
-2000-10-28  Jim Meyering  <meyering@lucent.com>
+2000-10-28  Jim Meyering  <jim@meyering.net>
 
 	* memchr.c: Update from libc.
 	Adjust for portability:
@@ -1437,21 +1437,21 @@
 	Avoid using fseek, when possible -- it's broken by design.
 	Patch by Ulrich Drepper.
 
-2000-10-26  Jim Meyering  <meyering@lucent.com>
+2000-10-26  Jim Meyering  <jim@meyering.net>
 
 	* strftime.c: Update from libc.
 
-2000-10-25  Jim Meyering  <meyering@lucent.com>
+2000-10-25  Jim Meyering  <jim@meyering.net>
 
 	* obstack.c: Update from libc.
 
-2000-10-23  Jim Meyering  <meyering@lucent.com>
+2000-10-23  Jim Meyering  <jim@meyering.net>
 
 	* hard-locale.c (hard_locale): Revert last change -- it was simply
 	wrong.  That set_locale call must not have any side effects.
 	From Paul Eggert.
 
-2000-10-22  Jim Meyering  <meyering@lucent.com>
+2000-10-22  Jim Meyering  <jim@meyering.net>
 
 	* md5.c (md5_process_block) [OP]: Use `rol', not CYCLIC.
 	[CYCLIC]: Remove now-unused definition.
@@ -1460,13 +1460,13 @@
 	(save_cwd) [HAVE_FCHDIR]: Use O_DIRECTORY when opening ".".
 	Suggestion from Ulrich Drepper.
 
-2000-10-21  Jim Meyering  <meyering@lucent.com>
+2000-10-21  Jim Meyering  <jim@meyering.net>
 
 	* dirname.c (dir_name_r): New function, factored out of dir_name.
 	(dir_name): Use dir_name_r.
 	* dirname.h (dir_name_r): Declare it.
 
-2000-10-21  Jim Meyering  <meyering@lucent.com>
+2000-10-21  Jim Meyering  <jim@meyering.net>
 
 	* dirname.c (memrchr): Declare if necessary.
 	(dir_name): Remove the restriction that there be no
@@ -1479,19 +1479,19 @@
 	[!weak_alias]: Define __memrchr to memrchr.
 	Guard weak_alias use with `#ifdef weak_alias'.
 
-2000-10-17  Jim Meyering  <meyering@lucent.com>
+2000-10-17  Jim Meyering  <jim@meyering.net>
 
 	* quote.h (PARAMS): Define and use.
 	Reported by Akim Demaille.
 
 	* getopt.c: Update from libc.
 
-2000-10-16  Jim Meyering  <meyering@lucent.com>
+2000-10-16  Jim Meyering  <jim@meyering.net>
 
 	* hard-locale.c (hard_locale): Use "", not 0 as 2nd arg to setlocale.
 	From Jan Fedak.
 
-2000-09-25  Jim Meyering  <meyering@lucent.com>
+2000-09-25  Jim Meyering  <jim@meyering.net>
 
 	* md5.h (rol): Define (from GnuPG).
 
@@ -1499,26 +1499,26 @@
 	(M): Use rol rather than open-coding it.
 	Add a FIXME comment.
 
-2000-09-21  Jim Meyering  <meyering@lucent.com>
+2000-09-21  Jim Meyering  <jim@meyering.net>
 
 	* userspec.c (parse_user_spec): Remove debugging printf I'd added.
 	Reported by Michael Stone.
 
-2000-09-20  Jim Meyering  <meyering@lucent.com>
+2000-09-20  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (libfetish_a_SOURCES): Add sha.c.
 	(noinst_HEADERS): Add sha.h.
 	Based on code from Scott G. Miller and from GnuPG.
 
-2000-09-15  Jim Meyering  <meyering@lucent.com>
+2000-09-15  Jim Meyering  <jim@meyering.net>
 
 	* regex.c: Update from libc.
 
-2000-09-10  Jim Meyering  <meyering@lucent.com>
+2000-09-10  Jim Meyering  <jim@meyering.net>
 
 	* getopt.c (_getopt_internal): Update from glibc.
 
-2000-09-09  Jim Meyering  <meyering@lucent.com>
+2000-09-09  Jim Meyering  <jim@meyering.net>
 
 	* quotearg.c: Rename ISASCII to IN_CTYPE_DOMAIN, so people don't
 	think it should be used as a general replacement for isascii.
@@ -1534,15 +1534,15 @@
 	(parse_user_spec): Use xstrtoul, not atoi when converting numeric
 	UID, GID.  Check range.
 
-2000-09-06  Jim Meyering  <meyering@lucent.com>
+2000-09-06  Jim Meyering  <jim@meyering.net>
 
 	* getopt.c (_getopt_internal): Update from glibc.
 
-2000-08-30  Jim Meyering  <meyering@lucent.com>
+2000-08-30  Jim Meyering  <jim@meyering.net>
 
 	* strftime.c: Merge in changes from GNU libc.
 
-2000-08-26  Jim Meyering  <meyering@lucent.com>
+2000-08-26  Jim Meyering  <jim@meyering.net>
 
 	* closeout.c: Include "__fpending.h".
 	(close_stdout_status): Return right away if there's nothing to flush.
@@ -1572,7 +1572,7 @@
 	Don't translate a message until just before returning,
 	to avoid unnecessary translation.
 
-2000-08-07  Jim Meyering  <meyering@lucent.com>
+2000-08-07  Jim Meyering  <jim@meyering.net>
 
 	* addext.c, argmatch.c, argmatch.h, backupfile.h, bumpalloc.h,
 	chown.c, diacrit.h, dirname.h, dup2.c, exclude.h, fileblocks.c,
@@ -1595,7 +1595,7 @@
 	ELSE_EXTEND_BUFFER_HIGH_BOUND): New macros.
 	(EXTEND_BUFFER): Use them.
 
-2000-08-01  Jim Meyering  <meyering@lucent.com>
+2000-08-01  Jim Meyering  <jim@meyering.net>
 
 	* dirname.c (ISSLASH): Define.
 	(BACKSLASH_IS_PATH_SEPARATOR): Define.
@@ -1608,7 +1608,7 @@
 	* quotearg.c (quotearg_n_options): Don't make the initial
 	slot vector a constant, since it might get modified.
 
-2000-07-31  Jim Meyering  <meyering@lucent.com>
+2000-07-31  Jim Meyering  <jim@meyering.net>
 
 	* xmalloc.c: Use `virtual memory exhausted', not `Memory exhausted'.
 	* obstack.c (print_and_abort): Likewise.
@@ -1620,7 +1620,7 @@
 	component of a "memory exhausted" message in slot 0.
 	From a suggestion by Jim Meyering.
 
-2000-07-30  Jim Meyering  <meyering@lucent.com>
+2000-07-30  Jim Meyering  <jim@meyering.net>
 
 	* makepath.c (make_path): Quote the other instance, too.
 
@@ -1630,7 +1630,7 @@
 	N < N_STATIC_SLOTVECS and the length of the quoted result is smaller
 	than STATIC_BUF_SIZE.
 
-2000-07-29  Jim Meyering  <meyering@lucent.com>
+2000-07-29  Jim Meyering  <jim@meyering.net>
 
 	* diacrit.c (diacrit_diac): Use __MSDOS__ in favor of MSDOS.
 	* dirname.c (dir_name): Likewise.
@@ -1648,7 +1648,7 @@
 	* mbswidth.c (mbswidth): Add a flags argument.
 	(mbsnwidth): New function.
 
-2000-07-24  Jim Meyering  <meyering@lucent.com>
+2000-07-24  Jim Meyering  <jim@meyering.net>
 
 	* mbswidth.c: Remove useless #else.  From Bruno Haible.
 
@@ -1678,7 +1678,7 @@
 	(quotearg_buffer_restyled): If a unibyte locale, don't bother to
 	invoke multibyte primitives.
 
-2000-07-23  Jim Meyering  <meyering@lucent.com>
+2000-07-23  Jim Meyering  <jim@meyering.net>
 
 	* basename.c (base_name): Add an assertion.
 
@@ -1699,7 +1699,7 @@
 	* config.charset: Add support for FreeBSD. Improve support for HP-UX
 	and IRIX 6.
 
-2000-07-15  Jim Meyering  <meyering@lucent.com>
+2000-07-15  Jim Meyering  <jim@meyering.net>
 
 	* makepath.c: Include quote.h.
 	(make_path): Convert "`%s'" in format strings to "%s", and wrap each
@@ -1747,11 +1747,11 @@
 	gettext_default ("{LEFT QUOTATION MARK}", "\"") for left quote, and
 	gettext_default ("{RIGHT QUOTATION MARK}", "\"") for right quote.
 
-2000-07-09  Jim Meyering  <meyering@lucent.com>
+2000-07-09  Jim Meyering  <jim@meyering.net>
 
 	* Most files: Update copyright dates to include 2000.
 
-2000-07-08  Jim Meyering  <meyering@lucent.com>
+2000-07-08  Jim Meyering  <jim@meyering.net>
 
 	* xgethostname.c (ENAMETOOLONG): Define to an unlikely value
 	if not defined.
@@ -1775,12 +1775,12 @@
 	* quotearg.c (struct quoting_options): Simplify quote_these_too
 	dimension.
 
-2000-07-03  Jim Meyering  <meyering@lucent.com>
+2000-07-03  Jim Meyering  <jim@meyering.net>
 
 	* strndup.c: [!HAVE_DECL_STRNLEN]: Declare strnlen.
 	Reported by Bruno Haible.
 
-2000-07-04  Jim Meyering  <meyering@lucent.com>
+2000-07-04  Jim Meyering  <jim@meyering.net>
 
 	* quotearg.c: Make inclusion of <wchar.h> independent of whether
 	HAVE_MBRTOWC is set.  Required at least for irix-5.6, which
@@ -1793,17 +1793,17 @@
 	Assign to *pwc, and return 1 only if result is nonzero.
 	(iswprint): Use ISPRINT when substituting our own mbrtowc.
 
-2000-07-03  Jim Meyering  <meyering@lucent.com>
+2000-07-03  Jim Meyering  <jim@meyering.net>
 
 	* readutmp.h: [HAVE_UTMPX_H]: Include <utmp.h> if HAVE_UTMP_H.
 	This is necessary to get a definition of e.g., UTMP_FILE on HP-UX 10.20.
 	From Bob Proulx.
 
-2000-07-02  Jim Meyering  <meyering@lucent.com>
+2000-07-02  Jim Meyering  <jim@meyering.net>
 
 	* quotearg.c (mbstate_t): Don't define here.
 
-2000-07-02  Jim Meyering  <meyering@lucent.com>
+2000-07-02  Jim Meyering  <jim@meyering.net>
 
 	* nanosleep.c (SIGCONT): Define if not already defined.
 
@@ -1813,7 +1813,7 @@
 	per change in ../m4/ls-mntd-fs.m4.
 	(read_filesystem_list): Ignore symbolic links.
 
-2000-06-29  Jim Meyering  <meyering@lucent.com>
+2000-06-29  Jim Meyering  <jim@meyering.net>
 
 	* same.c: Include <string.h> or <strings.h>, as appropriate,
 	for declaration of strcmp.
@@ -1849,7 +1849,7 @@
 	Set errno properly when returning NULL.
 	Check for readdir error.
 
-2000-06-26  Jim Meyering  <meyering@lucent.com>
+2000-06-26  Jim Meyering  <jim@meyering.net>
 
 	* posixtm.c [HAVE_STDLIB_H]: Include stdlib.h, for decl of abort.
 
@@ -1863,11 +1863,11 @@
 
 	* unicodeio.c (print_unicode_char): Work around ansi2knr deficiency.
 
-2000-06-24  Jim Meyering  <meyering@lucent.com>
+2000-06-24  Jim Meyering  <jim@meyering.net>
 
 	* error.c [!HAVE_DECL_STRERROR_R]: Declare strerror_r.
 
-2000-06-21  Jim Meyering  <meyering@lucent.com>
+2000-06-21  Jim Meyering  <jim@meyering.net>
 
 	* getpass.c: New file, from Bruno Haible.  Required for BeOS.
 
@@ -1897,7 +1897,7 @@
 	* path-concat.c (path_concat): Don't access dir[-1] if dir is
 	the empty string.
 
-2000-06-21  Jim Meyering  <meyering@lucent.com>
+2000-06-21  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (libfetish_a_SOURCES): Add getstr.c.
 	(noinst_HEADERS): Add getstr.h.
@@ -1909,11 +1909,11 @@
 	with 8-bit delimiters.
 	* getstr.h: New file.
 
-2000-06-19  Jim Meyering  <meyering@lucent.com>
+2000-06-19  Jim Meyering  <jim@meyering.net>
 
 	* getloadavg.c [HAVE_NLIST_H] (NLIST_STRUCT): Define.
 
-2000-06-18  Jim Meyering  <meyering@lucent.com>
+2000-06-18  Jim Meyering  <jim@meyering.net>
 
 	* mkdir.c: Remove file, due mainly to copyright incompatibility.
 	Besides, these days every porting target provides a mkdir function.
@@ -1938,7 +1938,7 @@
 	* getdate.y (get_date): Apply relative times after time
 	zone indicator, not before.  Reported by Todd A. Jacobs.
 
-2000-06-13  Jim Meyering  <meyering@lucent.com>
+2000-06-13  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (all-local): Depend on lstat.c and stat.c.
 
@@ -1952,12 +1952,12 @@
 
 	* strnlen.c: Include <config.h> if HAVE_CONFIG_H.
 
-2000-06-04  Jim Meyering  <meyering@lucent.com>
+2000-06-04  Jim Meyering  <jim@meyering.net>
 
 	* getugroups.c (getugroups): Cast -1 to gid_t, for systems like
 	SunOS4.1.4 for which gid_t is an unsigned type.
 
-2000-06-03  Jim Meyering  <meyering@lucent.com>
+2000-06-03  Jim Meyering  <jim@meyering.net>
 
 	* strnlen.c [!HAVE_DECL_MEMCHR]: Declare memchr.
 
@@ -1968,7 +1968,7 @@
 	* config.charset: Change the Linux/glibc rules so they become empty
 	on glibc-2.1 or newer.
 
-2000-06-02  Jim Meyering  <meyering@lucent.com>
+2000-06-02  Jim Meyering  <jim@meyering.net>
 
 	* mountlist.c: Back out last change.  Instead, do this...
 	* mountlist.c (read_filesystem_list) [MOUNTED_VMOUNT]: Set the me_dummy
@@ -1977,16 +1977,16 @@
 	fs_type strings.
 	From Mark D. Roth.
 
-2000-05-29  Jim Meyering  <meyering@lucent.com>
+2000-05-29  Jim Meyering  <jim@meyering.net>
 
 	* mountlist.c (read_filesystem_list) [MOUNTED_VMOUNT]: Ignore mounts
 	with the `ignore' attribute.  Based on a patch from Mark D. Roth.
 
-2000-05-22  Jim Meyering  <meyering@lucent.com>
+2000-05-22  Jim Meyering  <jim@meyering.net>
 
 	* makepath.c: Remove old, now-unnecessary `#ifdef __MSDOS__' block.
 
-2000-05-18  Jim Meyering  <meyering@lucent.com>
+2000-05-18  Jim Meyering  <jim@meyering.net>
 
 	* hash.c (hash_rehash): Fix a nasty bug: copy the free entry list
 	back, too, since it may have been modified by allocate_entry.
@@ -2006,37 +2006,37 @@
 	Quote file name colons.
 	Do not assume that _("write error") lacks format strings.
 
-2000-05-15  Jim Meyering  <meyering@lucent.com>
+2000-05-15  Jim Meyering  <jim@meyering.net>
 
 	* version-etc.c (version_etc_copyright): Update the copyright string
 	used in all --version output.
 
-2000-05-14  Jim Meyering  <meyering@lucent.com>
+2000-05-14  Jim Meyering  <jim@meyering.net>
 
 	* closeout.c (close_stdout_set_file_name): New function.
 	(close_stdout_status): Use new file-scoped global.
 	Return right away if fstat says the stdout file descriptor is invalid.
 	* closeout.h (close_stdout_set_file_name): Declare.
 
-2000-05-10  Jim Meyering  <meyering@lucent.com>
+2000-05-10  Jim Meyering  <jim@meyering.net>
 
 	* closeout.c [default_exit_status]: New file-scoped variable.
 	(close_stdout_set_status): New function.
 	* closeout.h (close_stdout_set_status): Declare.
 
-2000-05-08  Jim Meyering  <meyering@lucent.com>
+2000-05-08  Jim Meyering  <jim@meyering.net>
 
 	* long-options.c: Don't include closeout.h.
 	(parse_long_options): Don't call close_stdout for --version.
 
-2000-05-06  Jim Meyering  <meyering@lucent.com>
+2000-05-06  Jim Meyering  <jim@meyering.net>
 
 	* strnlen.c: Undefine __strnlen and strnlen.
 	[!weak_alias]: Define __strnlen to strnlen.
 
 	* atexit.c: New file, from libiberty.
 
-2000-05-06  Jim Meyering  <meyering@lucent.com>
+2000-05-06  Jim Meyering  <jim@meyering.net>
 
 	* closeout.c (close_stdout_status): Also check for errors on the
 	stderr stream.
@@ -2048,7 +2048,7 @@
 	(locale_charset): Treat empty environment variables as absent.
 	(DIRECTORY_SEPARATOR, ISSLASH): New macros.
 
-2000-05-04  Jim Meyering  <meyering@lucent.com>
+2000-05-04  Jim Meyering  <jim@meyering.net>
 
 	* getopt.c: Update from glibc.
 	* obstack.c: Likewise.
@@ -2059,43 +2059,43 @@
 	* strndup.c: Likewise.
 	* strnlen.c: New file, from glibc.
 
-2000-05-01  Jim Meyering  <meyering@lucent.com>
+2000-05-01  Jim Meyering  <jim@meyering.net>
 
 	* full-write.c (full_write): Remove `FIXME' part of comment.
 
-2000-04-29  Jim Meyering  <meyering@lucent.com>
+2000-04-29  Jim Meyering  <jim@meyering.net>
 
 	* path-concat.c: Declare strdup only if it's not defined.
 	* canon-host.c: Likewise.
 
-2000-04-28  Jim Meyering  <meyering@lucent.com>
+2000-04-28  Jim Meyering  <jim@meyering.net>
 
 	* rpmatch.c [HAVE_LIMITS_H]: Include limits.h before regex.h to avoid
 	redefinition warning on some systems (HPUX).  Otherwise, regex.h is
 	included first, then limits.h is included by locale.h by libintl.h.
 	From John David Anglin.
 
-2000-04-25  Jim Meyering  <meyering@lucent.com>
+2000-04-25  Jim Meyering  <jim@meyering.net>
 
 	* makepath.c (S_IRWXUGO): Define.
 	(make_path): Always perform explicit chmod if MODE specifies any
 	of the `special' permission bits.  Prompted by a bug report against
 	install from Mate Wierdl and Joost van Baal.
 
-2000-04-18  Jim Meyering  <meyering@lucent.com>
+2000-04-18  Jim Meyering  <jim@meyering.net>
 
 	* README: New file.
 
 	* getpagesize.h [!getpagesize && HAVE_OS_H && B_PAGE_SIZE]: Define
 	getpagesize.  For BeOS.  Based on a patch from Bruno Haible.
 
-2000-04-17  Jim Meyering  <meyering@lucent.com>
+2000-04-17  Jim Meyering  <jim@meyering.net>
 
 	* strftime.c (my_strftime) [strftime]: Declare strftime here, since
 	the definition of it to rpl_strftime also defined-away the system's
 	declaration.
 
-2000-04-15  Jim Meyering  <meyering@lucent.com>
+2000-04-15  Jim Meyering  <jim@meyering.net>
 
 	Use `C' to denote so-called `contiguous' files, the same way
 	that tar does.
@@ -2103,11 +2103,11 @@
 	(ftypelet): Use S_ISCTG.
 	From Michael Deutschmann.
 
-2000-04-14  Jim Meyering  <meyering@lucent.com>
+2000-04-14  Jim Meyering  <jim@meyering.net>
 
 	* strftime.c (my_strftime) [#ifdef strftime]: Declare strftime.
 
-2000-04-08  Jim Meyering  <meyering@lucent.com>
+2000-04-08  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (charset.alias): Use t-$@, not $@-t so the DOS 8.3
 	names don't conflict.  Reported by Eli Zaretskii.
@@ -2117,12 +2117,12 @@
 	* unicodeio.c (print_unicode_char): Avoid triggering Solaris iconv
 	bug.  Deal with the different error behavior of Irix iconv.
 
-2000-04-07  Jim Meyering  <meyering@lucent.com>
+2000-04-07  Jim Meyering  <jim@meyering.net>
 
 	* putenv.c: Move inclusion of errno.h so it follows that of sys/types.h,
 	to work around system header problems on AIX 3.2.5.  From Bruno Haible.
 
-2000-04-05  Jim Meyering  <meyering@lucent.com>
+2000-04-05  Jim Meyering  <jim@meyering.net>
 
 	Portability tweaks required for ultrix4.3.
 	* readutmp.h [HAVE_UTMPX_H && !HAVE_DECL_GETUTENT]: Declare getutent.
@@ -2131,7 +2131,7 @@
 	* path-concat.c: Likewise.
 	From John David Anglin.
 
-2000-04-04  Jim Meyering  <meyering@lucent.com>
+2000-04-04  Jim Meyering  <jim@meyering.net>
 
 	Be more DOS 8.3-friendly.
 	* ref-add.sin: Renamed from ref-add.sed.in.
@@ -2151,7 +2151,7 @@
 	* time/strftime.c (my_strftime): Make sure we call the system
 	strftime, not ourselves, when invoking the underlying strftime.
 
-2000-03-24  Jim Meyering  <meyering@lucent.com>
+2000-03-24  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (EXTRA_DIST): Add ref-add.sed.in and ref-del.sed.in.
 	(charset_alias): Define.
@@ -2169,7 +2169,7 @@
 	* Makefile.am (install-exec-local, uninstall-local, ref-add.sed,
 	ref-del.sed): New rules.
 
-2000-03-17  Jim Meyering  <meyering@lucent.com>
+2000-03-17  Jim Meyering  <jim@meyering.net>
 
 	* unicodeio.c (<string.h>): Include only #if HAVE_STRING_H.
 	Otherwise, include <strings.h>
@@ -2185,12 +2185,12 @@
 	* savedir.c (savedir): Work even if directory size is
 	negative; this can happen with some screwy NFS configurations.
 
-2000-03-06  Jim Meyering  <meyering@lucent.com>
+2000-03-06  Jim Meyering  <jim@meyering.net>
 
 	* localcharset.c (get_charset_aliases): Don't try to free file_name
 	if it's NULL (because we ran out of memory).  From Bruno Haible.
 
-2000-03-05  Jim Meyering  <meyering@lucent.com>
+2000-03-05  Jim Meyering  <jim@meyering.net>
 
 	* localcharset.c ("path-concat.h"): Include.
 	(get_charset_aliases): Use path_concat instead of ANSI string
@@ -2199,7 +2199,7 @@
 	* unicodeio.h (PARAMS): Define.
 	Use it to guard prototype.
 
-2000-03-04  Jim Meyering  <meyering@lucent.com>
+2000-03-04  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (install-exec-local): Create $(libdir) before installing
 	into it.
@@ -2214,11 +2214,11 @@
 	* config.charset: New version, incorporating remarks from a linux
 	i18n mailing list.  From Bruno Haible.
 
-2000-03-02  Jim Meyering  <meyering@lucent.com>
+2000-03-02  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (EXTRA_DIST): Add config.charset.
 
-2000-03-01  Jim Meyering  <meyering@lucent.com>
+2000-03-01  Jim Meyering  <jim@meyering.net>
 
 	* localcharset.c: Guard some #includes with `#if HAVE_...'.
 	* unicodeio.c: Likewise.
@@ -2238,7 +2238,7 @@
 	* quotearg.c (ALERT_CHAR): New macro.
 	(quotearg_buffer_restyled): Use it.
 
-2000-02-27  Jim Meyering  <meyering@lucent.com>
+2000-02-27  Jim Meyering  <jim@meyering.net>
 
 	* strtoumax.c: Fix typo in decl of strtoul: s/long long/long/.
 	Guard declaration of strtoull also with `&& HAVE_UNSIGNED_LONG_LONG'.
@@ -2290,7 +2290,7 @@
 	* getpagesize.h (getpagesize): Port to VMS for Alpha;
 	adapted from changes to grep getpagesize.h by Martin P.J. Zinser.
 
-2000-02-12  Jim Meyering  <meyering@lucent.com>
+2000-02-12  Jim Meyering  <jim@meyering.net>
 
 	* userspec.c (ISDIGIT): Define it.
 	(isdigit): Remove definition.
@@ -2299,7 +2299,7 @@
 	(_ and N_): Define.
 	(parse_user_spec): Mark translatable strings.
 
-2000-02-10  Jim Meyering  <meyering@lucent.com>
+2000-02-10  Jim Meyering  <jim@meyering.net>
 
 	With these changes, nanosleep.[ch] are finally enough like the other
 	lib/* replacement files to compile on a few more losing systems.
@@ -2310,16 +2310,16 @@
 	* nanosleep.c: #undef nanosleep.
 	(rpl_nanosleep): Rename from nanosleep.
 
-2000-02-03  Jim Meyering  <meyering@lucent.com>
+2000-02-03  Jim Meyering  <jim@meyering.net>
 
 	* readutmp.c (read_utmp): Guard with `#ifdef UTMP_NAME_FUNCTION',
 	rather than with `#if HAVE_UTMPNAME'.
 
-2000-02-01  Jim Meyering  <meyering@lucent.com>
+2000-02-01  Jim Meyering  <jim@meyering.net>
 
 	* readutmp.h (UT_USER): Add parens.  From Andreas Schwab.
 
-2000-01-31  Jim Meyering  <meyering@lucent.com>
+2000-01-31  Jim Meyering  <jim@meyering.net>
 
 	* nanosleep.h (nanosleep): Guard declaration with
 	`#if ! HAVE_DECL_NANOSLEEP'.
@@ -2332,7 +2332,7 @@
 	(ISPRINT): Likewise.
 	Reported by Tom Tromey.
 
-2000-01-30  Jim Meyering  <meyering@lucent.com>
+2000-01-30  Jim Meyering  <jim@meyering.net>
 
 	* readutmp.c (extract_trimmed_name): Use UT_USER instead of hard-coding
 	uses of ->ut_name.  The latter doesn't work with new Linux header files
@@ -2340,12 +2340,12 @@
 
 	* readutmp.h (UT_USER): Define.
 
-2000-01-23  Jim Meyering  <meyering@lucent.com>
+2000-01-23  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (libfetish_a_SOURCES): Remove explicit mention of
 	obstack.c.
 
-2000-01-22  Jim Meyering  <meyering@lucent.com>
+2000-01-22  Jim Meyering  <jim@meyering.net>
 
 	* strtoumax.c: [! HAVE_DECL_STRTOUL]: Declare strtoul.
 	[! HAVE_DECL_STRTOULL]: Declare strtoull.
@@ -2369,7 +2369,7 @@
 	(e.g. Solaris 7) don't define it.  Use SA_NOCLDSTOP instead;
 	it's been part of POSIX.1 since day 1 (in 1988).
 
-2000-01-17  Jim Meyering  <meyering@lucent.com>
+2000-01-17  Jim Meyering  <jim@meyering.net>
 
 	* interlock: Remove unused file.  Reported by François Pinard.
 
