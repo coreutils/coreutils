@@ -182,7 +182,20 @@ head_lines (const char *filename, int fd, uintmax_t lines_to_write)
 	break;
       while (bytes_to_write < bytes_read)
 	if (buffer[bytes_to_write++] == '\n' && --lines_to_write == 0)
-	  break;
+	  {
+	    /* If we have read more data than that on the specified number
+	       of lines, try to seek back to the position we would have
+	       gotten to had we been reading one byte at a time.  */
+	    if (lseek (fd, bytes_to_write - bytes_read, SEEK_CUR) < 0)
+	      {
+		int e = errno;
+		struct stat st;
+		if (fstat (fd, &st) != 0 || S_ISREG (st.st_mode))
+		  error (0, e, _("cannot reposition file pointer for %s"),
+			 filename);
+	      }
+	    break;
+	  }
       if (fwrite (buffer, 1, bytes_to_write, stdout) == 0)
 	error (EXIT_FAILURE, errno, _("write error"));
     }
