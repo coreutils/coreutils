@@ -1,3 +1,22 @@
+1999-08-25  Jim Meyering  <meyering@ascend.com>
+
+	* man/Makefile.summ (seq-summary): Define.
+	* man/Makefile.am (man_MANS): Add seq.1.
+	Reported by Dirk-Jan Faber.
+
+1999-08-23  Jim Meyering  <meyering@ascend.com>
+
+	* src/pathchk.c (longopts): Restore accidentally-removed entry for
+	`--portability' long option.
+	* src/chroot.c (usage): Correct --help message.
+	* src/hostid.c (usage): Likewise.
+	* src/hostname.c (usage): Likewise.
+	* src/logname.c (usage): Likewise.
+	* src/nice.c (usage): Likewise.
+	* src/printenv.c (usage): Likewise.
+	* src/sleep.c (usage): Likewise.
+	Reported by Daniel Bergstrom.
+
 1999-08-22  Jim Meyering  <meyering@ascend.com>
 
 	* src/sys2.h (ATTRIBUTE_NORETURN): Define.
