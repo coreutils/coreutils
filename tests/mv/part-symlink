@@ -80,10 +80,9 @@ for copy in cp mv; do
 	  $copy $options $args 2>.err
 	  echo $? $copy $options $args
 
-
 	  # Normalize the program name in the error output,
 	  # and put brackets around the output.
-	  test -s .err && echo "[`sed 's/^[^:][^:]*:/cp:/' .err`]"
+	  test -s .err && echo "[`sed 's/^[^:][^:]*\(..\):/\1:/' .err`]"
 	  # Strip off all but the file names.
 	  ls="`ls -lG --ignore=.err . \
 	      | sed \
