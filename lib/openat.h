@@ -21,8 +21,19 @@
 # include <fcntl.h>
 #endif
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <unistd.h>
+
 #ifndef AT_FDCWD
 # define AT_FDCWD (-3041965) /* same value as Solaris 9 */
+
+enum
+{
+  /* FIXME: use same value Solaris uses */
+  AT_SYMLINK_NOFOLLOW = 100
+};
 
 # ifdef __OPENAT_PREFIX
 #  undef openat
@@ -31,5 +42,10 @@
 #  define __OPENAT_ID(y) __OPENAT_XCONCAT (__OPENAT_PREFIX, y)
 #  define openat __OPENAT_ID (openat)
 int openat (int fd, char const *filename, int flags, /* mode_t mode */ ...);
+#  define fdopendir __OPENAT_ID (fdopendir)
+DIR *fdopendir (int fd);
+#  define fstatat __OPENAT_ID (fstatat)
+int fstatat (int fd, char const *filename, struct stat *st, int flag);
 # endif
+
 #endif
