@@ -1,3 +1,11 @@
+2002-12-14  Jim Meyering  <jim@meyering.net>
+
+	* Version 4.5.5.
+
+	* src/mknod.c (usage): Specify how major and minor mode numbers
+	are interpreted.  Report forwarded by Kristin E Thomas.
+	* src/mknod.c: Remove now-redundant usage-specifying comment.
+
 2002-12-13  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.4.
