@@ -32,16 +32,6 @@
 char *xmalloc ();
 char *xstrdup ();
 
-static void add_excluded_fs_type __P ((char *fstype));
-static void add_fs_type __P ((char *fstype));
-static void print_header __P ((void));
-static void show_entry __P ((char *path, struct stat *statp));
-static void show_all_entries __P ((void));
-static void show_dev __P ((char *disk, char *mount_point, char *fstype));
-static void show_disk __P ((char *disk));
-static void show_point __P ((char *point, struct stat *statp));
-static void usage __P ((int status));
-
 /* The maximum length of a human-readable string.  Be pessimistic
    and assume `int' is 64-bits wide.  Converting 2^63 - 1 gives the
    14-character string, 8796093022208G.  The number being converted
@@ -138,6 +128,359 @@ static struct option const long_options[] =
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
+
+static void
+print_header (void)
+{
+  printf ("Filesystem ");
+
+  if (print_type)
+    printf ("   Type");
+  else
+    printf ("       ");
+
+  if (inode_format)
+    printf ("   Inodes   IUsed   IFree  %%IUsed");
+  else
+    if (megabyte_blocks)
+      printf (" MB-blocks    Used Available Capacity");
+    else if (human_blocks)
+      printf ("    Size  Used  Avail  Capacity");
+    else
+      printf (" %s  Used Available Capacity",
+	    kilobyte_blocks ? "1024-blocks" : " 512-blocks");
+  printf (" Mounted on\n");
+}
+
+/* Convert N_1K_BYTE_BLOCKS to a more readable string than %d would.
+   Most people visually process strings of 3-4 digits effectively,
+   but longer strings of digits are more prone to misinterpretation.
+   Hence, converting to an abbreviated form usually improves readability.
+   Use a suffix indicating multiples of 1024 (M) and 1024*1024 (G).
+   For example, 8500 would be converted to 8.3M, 133456345 to 127G,
+   and so on.  Numbers smaller than 1024 get the `K' suffix.  */
+
+static char *
+human_readable_1k_blocks (int n_1k_byte_blocks, char *buf, int buf_len)
+{
+  const char *suffix;
+  double amt;
+  char *p;
+
+  assert (buf_len > LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS);
+
+  p = buf;
+  amt = n_1k_byte_blocks;
+
+  if (amt >= 1024 * 1024)
+    {
+      amt /= (1024 * 1024);
+      suffix = "G";
+    }
+  else if (amt >= 1024)
+    {
+      amt /= 1024;
+      suffix = "M";
+    }
+  else
+    {
+      suffix = "K";
+    }
+
+  if (amt >= 10)
+    {
+      sprintf (p, "%4.0f%s", amt, suffix);
+    }
+  else if (amt == 0)
+    {
+      strcpy (p, "0");
+    }
+  else
+    {
+      sprintf (p, "%4.1f%s", amt, suffix);
+    }
+  return (p);
+}
+
+/* If FSTYPE is a type of filesystem that should be listed,
+   return nonzero, else zero. */
+
+static int
+selected_fstype (const char *fstype)
+{
+  const struct fs_type_list *fsp;
+
+  if (fs_select_list == NULL || fstype == NULL)
+    return 1;
+  for (fsp = fs_select_list; fsp; fsp = fsp->fs_next)
+    if (!strcmp (fstype, fsp->fs_name))
+      return 1;
+  return 0;
+}
+
+/* If FSTYPE is a type of filesystem that should be omitted,
+   return nonzero, else zero. */
+
+static int
+excluded_fstype (const char *fstype)
+{
+  const struct fs_type_list *fsp;
+
+  if (fs_exclude_list == NULL || fstype == NULL)
+    return 0;
+  for (fsp = fs_exclude_list; fsp; fsp = fsp->fs_next)
+    if (!strcmp (fstype, fsp->fs_name))
+      return 1;
+  return 0;
+}
+
+/* Display a space listing for the disk device with absolute path DISK.
+   If MOUNT_POINT is non-NULL, it is the path of the root of the
+   filesystem on DISK.
+   If FSTYPE is non-NULL, it is the type of the filesystem on DISK. */
+
+static void
+show_dev (const char *disk, const char *mount_point, const char *fstype)
+{
+  struct fs_usage fsu;
+  long blocks_used;
+  long blocks_percent_used;
+  long inodes_used;
+  long inodes_percent_used;
+  const char *stat_file;
+
+  if (!selected_fstype (fstype) || excluded_fstype (fstype))
+    return;
+
+  /* If MOUNT_POINT is NULL, then the filesystem is not mounted, and this
+     program reports on the filesystem that the special file is on.
+     It would be better to report on the unmounted filesystem,
+     but statfs doesn't do that on most systems.  */
+  stat_file = mount_point ? mount_point : disk;
+
+  if (get_fs_usage (stat_file, disk, &fsu))
+    {
+      error (0, errno, "%s", stat_file);
+      exit_status = 1;
+      return;
+    }
+
+  if (megabyte_blocks)
+    {
+      fsu.fsu_blocks /= 2*1024;
+      fsu.fsu_bfree /= 2*1024;
+      fsu.fsu_bavail /= 2*1024;
+    }
+  else if (kilobyte_blocks)
+    {
+      fsu.fsu_blocks /= 2;
+      fsu.fsu_bfree /= 2;
+      fsu.fsu_bavail /= 2;
+    }
+
+  if (fsu.fsu_blocks == 0)
+    {
+      if (!show_all_fs && !show_listed_fs)
+	return;
+      blocks_used = fsu.fsu_bavail = blocks_percent_used = 0;
+    }
+  else
+    {
+      blocks_used = fsu.fsu_blocks - fsu.fsu_bfree;
+      blocks_percent_used = (long)
+	(blocks_used * 100.0 / (blocks_used + fsu.fsu_bavail) + 0.5);
+    }
+
+  if (fsu.fsu_files == 0)
+    {
+      inodes_used = fsu.fsu_ffree = inodes_percent_used = 0;
+    }
+  else
+    {
+      inodes_used = fsu.fsu_files - fsu.fsu_ffree;
+      inodes_percent_used = (long)
+	(inodes_used * 100.0 / fsu.fsu_files + 0.5);
+    }
+
+  printf ((print_type ? "%-13s" : "%-20s"), disk);
+  if (strlen (disk) > (print_type ? 13 : 20) && !posix_format)
+    printf ((print_type ? "\n%13s" : "\n%20s"), "");
+
+  if (print_type)
+    printf (" %-5s ", fstype);
+
+  if (inode_format)
+    printf (" %7ld %7ld %7ld %5ld%%",
+	    fsu.fsu_files, inodes_used, fsu.fsu_ffree, inodes_percent_used);
+  else if (human_blocks)
+    {
+      char buf[3][LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS + 1];
+      printf (" %4s %4s  %5s  %5ld%% ",
+	      human_readable_1k_blocks (fsu.fsu_blocks, buf[0],
+				    LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS + 1),
+	      human_readable_1k_blocks (blocks_used, buf[1],
+				    LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS + 1),
+	      human_readable_1k_blocks (fsu.fsu_bavail, buf[2],
+				    LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS + 1),
+	      blocks_percent_used);
+    }
+  else
+    printf (" %7ld %7ld  %7ld  %5ld%% ",
+	    fsu.fsu_blocks, blocks_used, fsu.fsu_bavail, blocks_percent_used);
+
+  if (mount_point)
+    {
+#ifdef HIDE_AUTOMOUNT_PREFIX
+      /* Don't print the first directory name in MOUNT_POINT if it's an
+	 artifact of an automounter.  This is a bit too aggressive to be
+	 the default.  */
+      if (strncmp ("/auto/", mount_point, 6) == 0)
+	mount_point += 5;
+      else if (strncmp ("/tmp_mnt/", mount_point, 9) == 0)
+	mount_point += 8;
+#endif
+      printf ("  %s", mount_point);
+    }
+  putchar ('\n');
+}
+
+/* Identify the directory, if any, that device
+   DISK is mounted on, and show its disk usage.  */
+
+static void
+show_disk (const char *disk)
+{
+  struct mount_entry *me;
+
+  for (me = mount_list; me; me = me->me_next)
+    if (!strcmp (disk, me->me_devname))
+      {
+	show_dev (me->me_devname, me->me_mountdir, me->me_type);
+	return;
+      }
+  /* No filesystem is mounted on DISK. */
+  show_dev (disk, (char *) NULL, (char *) NULL);
+}
+
+/* Figure out which device file or directory POINT is mounted on
+   and show its disk usage.
+   STATP is the results of `stat' on POINT.  */
+
+static void
+show_point (const char *point, const struct stat *statp)
+{
+  struct stat disk_stats;
+  struct mount_entry *me;
+
+  for (me = mount_list; me; me = me->me_next)
+    {
+      if (me->me_dev == (dev_t) -1)
+	{
+	  if (stat (me->me_mountdir, &disk_stats) == 0)
+	    me->me_dev = disk_stats.st_dev;
+	  else
+	    {
+	      error (0, errno, "%s", me->me_mountdir);
+	      exit_status = 1;
+	      /* So we won't try and fail repeatedly. */
+	      me->me_dev = (dev_t) -2;
+	    }
+	}
+
+      if (statp->st_dev == me->me_dev)
+	{
+	  /* Skip bogus mtab entries.  */
+	  if (stat (me->me_mountdir, &disk_stats) != 0 ||
+	      disk_stats.st_dev != me->me_dev)
+	    continue;
+	  show_dev (me->me_devname, me->me_mountdir, me->me_type);
+	  return;
+	}
+    }
+  error (0, 0, _("cannot find mount point for %s"), point);
+  exit_status = 1;
+}
+
+/* Determine what kind of node PATH is and show the disk usage
+   for it.  STATP is the results of `stat' on PATH.  */
+
+static void
+show_entry (const char *path, const struct stat *statp)
+{
+  if (S_ISBLK (statp->st_mode) || S_ISCHR (statp->st_mode))
+    show_disk (path);
+  else
+    show_point (path, statp);
+}
+
+/* Show all mounted filesystems, except perhaps those that are of
+   an unselected type or are empty. */
+
+static void
+show_all_entries (void)
+{
+  struct mount_entry *me;
+
+  for (me = mount_list; me; me = me->me_next)
+    show_dev (me->me_devname, me->me_mountdir, me->me_type);
+}
+
+/* Add FSTYPE to the list of filesystem types to display. */
+
+static void
+add_fs_type (const char *fstype)
+{
+  struct fs_type_list *fsp;
+
+  fsp = (struct fs_type_list *) xmalloc (sizeof (struct fs_type_list));
+  fsp->fs_name = (char *) fstype;
+  fsp->fs_next = fs_select_list;
+  fs_select_list = fsp;
+}
+
+/* Add FSTYPE to the list of filesystem types to be omitted. */
+
+static void
+add_excluded_fs_type (const char *fstype)
+{
+  struct fs_type_list *fsp;
+
+  fsp = (struct fs_type_list *) xmalloc (sizeof (struct fs_type_list));
+  fsp->fs_name = (char *) fstype;
+  fsp->fs_next = fs_exclude_list;
+  fs_exclude_list = fsp;
+}
+
+static void
+usage (int status)
+{
+  if (status != 0)
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+	     program_name);
+  else
+    {
+      printf (_("Usage: %s [OPTION]... [FILE]...\n"), program_name);
+      printf (_("\
+Show information about the filesystem on which each FILE resides,\n\
+or all filesystems by default.\n\
+\n\
+  -a, --all             include filesystems having 0 blocks\n\
+  -h, --human-readable  print sizes in human readable format (e.g. 1K 234M 2G)\n\
+  -i, --inodes          list inode information instead of block usage\n\
+  -k, --kilobytes       use 1024-byte blocks, not 512 despite POSIXLY_CORRECT\n\
+  -m, --megabytes       use 1024K-byte blocks, not 512 despite POSIXLY_CORRECT\n\
+      --no-sync         do not invoke sync before getting usage info (default)\n\
+      --sync            invoke sync before getting usage info\n\
+  -t, --type=TYPE       limit listing to filesystems of type TYPE\n\
+  -x, --exclude-type=TYPE   limit listing to filesystems not of type TYPE\n\
+  -v                    (ignored)\n\
+  -P, --portability     use the POSIX output format\n\
+  -T, --print-type      print filesystem type\n\
+      --help            display this help and exit\n\
+      --version         output version information and exit\n"));
+    }
+  exit (status);
+}
 
 int
 main (int argc, char **argv)
@@ -316,355 +659,3 @@ with the portable output format"));
   exit (exit_status);
 }
 
-static void
-print_header (void)
-{
-  printf ("Filesystem ");
-
-  if (print_type)
-    printf ("   Type");
-  else
-    printf ("       ");
-
-  if (inode_format)
-    printf ("   Inodes   IUsed   IFree  %%IUsed");
-  else
-    if (megabyte_blocks)
-      printf (" MB-blocks    Used Available Capacity");
-    else if (human_blocks)
-      printf ("    Size  Used  Avail  Capacity");
-    else
-      printf (" %s  Used Available Capacity",
-	    kilobyte_blocks ? "1024-blocks" : " 512-blocks");
-  printf (" Mounted on\n");
-}
-
-/* Show all mounted filesystems, except perhaps those that are of
-   an unselected type or are empty. */
-
-static void
-show_all_entries (void)
-{
-  struct mount_entry *me;
-
-  for (me = mount_list; me; me = me->me_next)
-    show_dev (me->me_devname, me->me_mountdir, me->me_type);
-}
-
-/* Determine what kind of node PATH is and show the disk usage
-   for it.  STATP is the results of `stat' on PATH.  */
-
-static void
-show_entry (char *path, struct stat *statp)
-{
-  if (S_ISBLK (statp->st_mode) || S_ISCHR (statp->st_mode))
-    show_disk (path);
-  else
-    show_point (path, statp);
-}
-
-/* Identify the directory, if any, that device
-   DISK is mounted on, and show its disk usage.  */
-
-static void
-show_disk (char *disk)
-{
-  struct mount_entry *me;
-
-  for (me = mount_list; me; me = me->me_next)
-    if (!strcmp (disk, me->me_devname))
-      {
-	show_dev (me->me_devname, me->me_mountdir, me->me_type);
-	return;
-      }
-  /* No filesystem is mounted on DISK. */
-  show_dev (disk, (char *) NULL, (char *) NULL);
-}
-
-/* Figure out which device file or directory POINT is mounted on
-   and show its disk usage.
-   STATP is the results of `stat' on POINT.  */
-
-static void
-show_point (char *point, struct stat *statp)
-{
-  struct stat disk_stats;
-  struct mount_entry *me;
-
-  for (me = mount_list; me; me = me->me_next)
-    {
-      if (me->me_dev == (dev_t) -1)
-	{
-	  if (stat (me->me_mountdir, &disk_stats) == 0)
-	    me->me_dev = disk_stats.st_dev;
-	  else
-	    {
-	      error (0, errno, "%s", me->me_mountdir);
-	      exit_status = 1;
-	      /* So we won't try and fail repeatedly. */
-	      me->me_dev = (dev_t) -2;
-	    }
-	}
-
-      if (statp->st_dev == me->me_dev)
-	{
-	  /* Skip bogus mtab entries.  */
-	  if (stat (me->me_mountdir, &disk_stats) != 0 ||
-	      disk_stats.st_dev != me->me_dev)
-	    continue;
-	  show_dev (me->me_devname, me->me_mountdir, me->me_type);
-	  return;
-	}
-    }
-  error (0, 0, _("cannot find mount point for %s"), point);
-  exit_status = 1;
-}
-
-/* Convert N_1K_BYTE_BLOCKS to a more readable string than %d would.
-   Most people visually process strings of 3-4 digits effectively,
-   but longer strings of digits are more prone to misinterpretation.
-   Hence, converting to an abbreviated form usually improves readability.
-   Use a suffix indicating multiples of 1024 (M) and 1024*1024 (G).
-   For example, 8500 would be converted to 8.3M, 133456345 to 127G,
-   and so on.  Numbers smaller than 1024 get the `K' suffix.  */
-
-static char *
-human_readable_1k_blocks (int n_1k_byte_blocks, char *buf, int buf_len)
-{
-  const char *suffix;
-  double amt;
-  char *p;
-
-  assert (buf_len > LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS);
-
-  p = buf;
-  amt = n_1k_byte_blocks;
-
-  if (amt >= 1024 * 1024)
-    {
-      amt /= (1024 * 1024);
-      suffix = "G";
-    }
-  else if (amt >= 1024)
-    {
-      amt /= 1024;
-      suffix = "M";
-    }
-  else
-    {
-      suffix = "K";
-    }
-
-  if (amt >= 10)
-    {
-      sprintf (p, "%4.0f%s", amt, suffix);
-    }
-  else if (amt == 0)
-    {
-      strcpy (p, "0");
-    }
-  else
-    {
-      sprintf (p, "%4.1f%s", amt, suffix);
-    }
-  return (p);
-}
-
-/* If FSTYPE is a type of filesystem that should be listed,
-   return nonzero, else zero. */
-
-static int
-selected_fstype (const char *fstype)
-{
-  const struct fs_type_list *fsp;
-
-  if (fs_select_list == NULL || fstype == NULL)
-    return 1;
-  for (fsp = fs_select_list; fsp; fsp = fsp->fs_next)
-    if (!strcmp (fstype, fsp->fs_name))
-      return 1;
-  return 0;
-}
-
-/* If FSTYPE is a type of filesystem that should be omitted,
-   return nonzero, else zero. */
-
-static int
-excluded_fstype (const char *fstype)
-{
-  const struct fs_type_list *fsp;
-
-  if (fs_exclude_list == NULL || fstype == NULL)
-    return 0;
-  for (fsp = fs_exclude_list; fsp; fsp = fsp->fs_next)
-    if (!strcmp (fstype, fsp->fs_name))
-      return 1;
-  return 0;
-}
-
-/* Display a space listing for the disk device with absolute path DISK.
-   If MOUNT_POINT is non-NULL, it is the path of the root of the
-   filesystem on DISK.
-   If FSTYPE is non-NULL, it is the type of the filesystem on DISK. */
-
-static void
-show_dev (char *disk, char *mount_point, char *fstype)
-{
-  struct fs_usage fsu;
-  long blocks_used;
-  long blocks_percent_used;
-  long inodes_used;
-  long inodes_percent_used;
-  char *stat_file;
-
-  if (!selected_fstype (fstype) || excluded_fstype (fstype))
-    return;
-
-  /* If MOUNT_POINT is NULL, then the filesystem is not mounted, and this
-     program reports on the filesystem that the special file is on.
-     It would be better to report on the unmounted filesystem,
-     but statfs doesn't do that on most systems.  */
-  stat_file = mount_point ? mount_point : disk;
-
-  if (get_fs_usage (stat_file, disk, &fsu))
-    {
-      error (0, errno, "%s", stat_file);
-      exit_status = 1;
-      return;
-    }
-
-  if (megabyte_blocks)
-    {
-      fsu.fsu_blocks /= 2*1024;
-      fsu.fsu_bfree /= 2*1024;
-      fsu.fsu_bavail /= 2*1024;
-    }
-  else if (kilobyte_blocks)
-    {
-      fsu.fsu_blocks /= 2;
-      fsu.fsu_bfree /= 2;
-      fsu.fsu_bavail /= 2;
-    }
-
-  if (fsu.fsu_blocks == 0)
-    {
-      if (!show_all_fs && !show_listed_fs)
-	return;
-      blocks_used = fsu.fsu_bavail = blocks_percent_used = 0;
-    }
-  else
-    {
-      blocks_used = fsu.fsu_blocks - fsu.fsu_bfree;
-      blocks_percent_used = (long)
-	(blocks_used * 100.0 / (blocks_used + fsu.fsu_bavail) + 0.5);
-    }
-
-  if (fsu.fsu_files == 0)
-    {
-      inodes_used = fsu.fsu_ffree = inodes_percent_used = 0;
-    }
-  else
-    {
-      inodes_used = fsu.fsu_files - fsu.fsu_ffree;
-      inodes_percent_used = (long)
-	(inodes_used * 100.0 / fsu.fsu_files + 0.5);
-    }
-
-  printf ((print_type ? "%-13s" : "%-20s"), disk);
-  if (strlen (disk) > (print_type ? 13 : 20) && !posix_format)
-    printf ((print_type ? "\n%13s" : "\n%20s"), "");
-
-  if (print_type)
-    printf (" %-5s ", fstype);
-
-  if (inode_format)
-    printf (" %7ld %7ld %7ld %5ld%%",
-	    fsu.fsu_files, inodes_used, fsu.fsu_ffree, inodes_percent_used);
-  else if (human_blocks)
-    {
-      char buf[3][LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS + 1];
-      printf (" %4s %4s  %5s  %5ld%% ",
-	      human_readable_1k_blocks (fsu.fsu_blocks, buf[0],
-				    LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS + 1),
-	      human_readable_1k_blocks (blocks_used, buf[1],
-				    LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS + 1),
-	      human_readable_1k_blocks (fsu.fsu_bavail, buf[2],
-				    LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS + 1),
-	      blocks_percent_used);
-    }
-  else
-    printf (" %7ld %7ld  %7ld  %5ld%% ",
-	    fsu.fsu_blocks, blocks_used, fsu.fsu_bavail, blocks_percent_used);
-
-  if (mount_point)
-    {
-#ifdef HIDE_AUTOMOUNT_PREFIX
-      /* Don't print the first directory name in MOUNT_POINT if it's an
-	 artifact of an automounter.  This is a bit too aggressive to be
-	 the default.  */
-      if (strncmp ("/auto/", mount_point, 6) == 0)
-	mount_point += 5;
-      else if (strncmp ("/tmp_mnt/", mount_point, 9) == 0)
-	mount_point += 8;
-#endif
-      printf ("  %s", mount_point);
-    }
-  putchar ('\n');
-}
-
-/* Add FSTYPE to the list of filesystem types to display. */
-
-static void
-add_fs_type (char *fstype)
-{
-  struct fs_type_list *fsp;
-
-  fsp = (struct fs_type_list *) xmalloc (sizeof (struct fs_type_list));
-  fsp->fs_name = fstype;
-  fsp->fs_next = fs_select_list;
-  fs_select_list = fsp;
-}
-
-/* Add FSTYPE to the list of filesystem types to be omitted. */
-
-static void
-add_excluded_fs_type (char *fstype)
-{
-  struct fs_type_list *fsp;
-
-  fsp = (struct fs_type_list *) xmalloc (sizeof (struct fs_type_list));
-  fsp->fs_name = fstype;
-  fsp->fs_next = fs_exclude_list;
-  fs_exclude_list = fsp;
-}
-
-static void
-usage (int status)
-{
-  if (status != 0)
-    fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
-  else
-    {
-      printf (_("Usage: %s [OPTION]... [FILE]...\n"), program_name);
-      printf (_("\
-Show information about the filesystem on which each FILE resides,\n\
-or all filesystems by default.\n\
-\n\
-  -a, --all             include filesystems having 0 blocks\n\
-  -h, --human-readable  print sizes in human readable format (e.g. 1K 234M 2G)\n\
-  -i, --inodes          list inode information instead of block usage\n\
-  -k, --kilobytes       use 1024-byte blocks, not 512 despite POSIXLY_CORRECT\n\
-  -m, --megabytes       use 1024K-byte blocks, not 512 despite POSIXLY_CORRECT\n\
-      --no-sync         do not invoke sync before getting usage info (default)\n\
-      --sync            invoke sync before getting usage info\n\
-  -t, --type=TYPE       limit listing to filesystems of type TYPE\n\
-  -x, --exclude-type=TYPE   limit listing to filesystems not of type TYPE\n\
-  -v                    (ignored)\n\
-  -P, --portability     use the POSIX output format\n\
-  -T, --print-type      print filesystem type\n\
-      --help            display this help and exit\n\
-      --version         output version information and exit\n"));
-    }
-  exit (status);
-}
