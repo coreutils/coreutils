@@ -436,8 +436,7 @@ print_statfs (char *pformat, char m, char const *filename,
       strcat (pformat, "lx");
       printf (pformat, (long int) (statfsbuf->f_type));  /* no equiv. */
 #else
-      strcat (pformat, "s");
-      printf (pformat, "*");
+      fputc ('*', stdout);
 #endif
       break;
     case 'T':
@@ -468,19 +467,28 @@ print_statfs (char *pformat, char m, char const *filename,
       strcat (pformat, PRIdMAX);
       printf (pformat, (intmax_t) (statfsbuf->f_ffree));
       break;
-#ifdef FLASK_LINUX
+
     case 'S':
+#ifdef FLASK_LINUX
       strcat (pformat, "d");
       printf (pformat, sid);
+#else
+      fputc ('*', stdout);
+#endif
       break;
+
     case 'C':
+#ifdef FLASK_LINUX
       rv = security_sid_to_context (sid, (security_context_t *) &sbuf,
 				    &sbuflen);
       if (rv < 0)
 	sprintf (sbuf, "<error finding security context %d>", sid);
       fputs (sbuf, stdout);
-      break;
+#else
+      fputc ('*', stdout);
 #endif
+      break;
+
     default:
       strcat (pformat, "c");
       printf (pformat, m);
@@ -564,19 +572,27 @@ print_stat (char *pformat, char m, char const *filename,
       strcat (pformat, "d");
       printf (pformat, (int) statbuf->st_nlink);
       break;
-#ifdef FLASK_LINUX
     case 'S':
+#ifdef FLASK_LINUX
       strcat (pformat, "d");
       printf (pformat, sid);
+#else
+      fputc ('*', stdout);
+#endif
       break;
+
     case 'C':
+#ifdef FLASK_LINUX
       rv = security_sid_to_context (sid, (security_context_t *) &sbuf,
 				    &sbuflen);
       if (rv < 0)
 	sprintf (sbuf, "<error finding security context %d>", sid);
       fputs (sbuf, stdout);
-      break;
+#else
+      fputc ('*', stdout);
 #endif
+      break;
+
     case 'u':
       strcat (pformat, "d");
       printf (pformat, statbuf->st_uid);
