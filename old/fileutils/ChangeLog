@@ -1,3 +1,10 @@
+Mon Dec 18 22:29:49 1995  Jim Meyering  (meyering@comco.com)
+
+	* ln.c: [SYMBOLIC_SPACE_STRING]: New macro.
+	(do_link): Use it instead of open-code #ifdef.
+	For --verbose, say `create link DEST to SRC' instead of ambiguous
+	(or inconsistent with cp -v and mv -v) `SRC -> DEST.'
+
 Tue Dec  5 17:38:11 1995  Jim Meyering  (meyering@comco.com)
 
 	* rm.c (rm): Work around SunOS 4 bug whereby lstat doesn't fail
