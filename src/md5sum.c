@@ -110,15 +110,19 @@
 # define UINT_MAX UINT_MAX_32_BITS
 #endif
 
-#if UINT_MAX == UINT_MAX_32_BITS
-typedef unsigned int uint32;
+#if ULONG_MAX == UINT_MAX_32_BITS
+ typedef unsigned long uint32;
 #else
-# if USHRT_MAX == UINT_MAX_32_BITS
-typedef unsigned short uint32;
+# if UINT_MAX == UINT_MAX_32_BITS
+   typedef unsigned int uint32;
 # else
-  /* The following line is intended to throw an error.  Using #error is
-     not portable enough.  */
-  "Cannot determine unsigned 32-bit data type."
+#  if USHRT_MAX == UINT_MAX_32_BITS
+    typedef unsigned short uint32;
+#  else
+    /* The following line is intended to throw an error.  Using #error is
+       not portable enough.  */
+    "Cannot determine unsigned 32-bit data type."
+#  endif
 # endif
 #endif
 
