@@ -1,3 +1,9 @@
+2003-07-22  Paul Eggert  <eggert@twinsun.com>
+
+	* src/wc.c (wc): Fix typo in computation of file from file_x,
+	which caused the former to be used uninitialized if file_x was
+	nonzero.
+
 2003-07-22  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.90.
