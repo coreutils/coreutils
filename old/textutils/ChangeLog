@@ -1,5 +1,15 @@
+2002-01-21  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.20.
+
+2002-01-20  Paul Eggert  <eggert@twinsun.com>
+
+	* src/comm.c (compare_files): Don't assume that the difference
+	between two size_t values can be stored in an int; this doesn't
+	work, for example, on 64-bit Solaris.
+	* src/sort.c (CMP_WITH_IGNORE): Likewise.
+	* src/join.c (keycmp): Likewise.  Also, fix the type of two locals
+	to be size_t instead of int.
 
 2002-01-20  Paul Eggert  <eggert@twinsun.com>
 
