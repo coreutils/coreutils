@@ -1,3 +1,13 @@
+2001-07-15  Jim Meyering  <meyering@lucent.com>
+
+	* gettimeofday.m4: New file.
+
+2001-07-04  Jim Meyering  <meyering@lucent.com>
+
+	* Makefile.am.in (glibc-io.struct): New target.  Rework the code
+	that generates jm-glibc-io.m4 so that it doesn't trigger any make
+	distcheck failure.
+
 2001-07-02  Jim Meyering  <meyering@lucent.com>
 
 	The following changes were prompted by suggestions from Bruno Haible.
