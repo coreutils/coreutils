@@ -171,7 +171,7 @@ paste_parallel (int nfiles, char **fnamptr)
   int opened_stdin = 0;		/* Nonzero if any fopen got fd 0. */
 
   delbuf = xmalloc (file_list_size + 2);
-  fileptr = xmalloc ((file_list_size + 1) * sizeof (FILE *));
+  fileptr = xmalloc ((file_list_size + 1) * sizeof *fileptr);
 
   /* Attempt to open all files.  This could be expanded to an infinite
      number of files, but at the (considerable) expense of remembering
