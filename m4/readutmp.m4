@@ -1,4 +1,4 @@
-# readutmp.m4 serial 7
+# readutmp.m4 serial 8
 dnl Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -10,8 +10,9 @@ AC_DEFUN([gl_READUTMP],
   AC_LIBOBJ([readutmp])
 
   dnl Prerequisites of lib/readutmp.h.
-  AC_CHECK_HEADERS(utmp.h utmpx.h)
-  AC_CHECK_FUNCS(utmpname utmpxname)
+  AC_REQUIRE([AC_C_INLINE])
+  AC_CHECK_HEADERS_ONCE(utmp.h utmpx.h)
+  AC_CHECK_FUNCS_ONCE(utmpname utmpxname)
   AC_CHECK_DECLS(getutent,,,[
 #ifdef HAVE_UTMP_H
 # include <utmp.h>
@@ -49,14 +50,5 @@ $ac_includes_default
     AC_CHECK_MEMBERS([struct utmp.ut_exit.ut_termination],,,[$utmp_includes])
     AC_CHECK_MEMBERS([struct utmpx.ut_exit.e_termination],,,[$utmp_includes])
     AC_CHECK_MEMBERS([struct utmp.ut_exit.e_termination],,,[$utmp_includes])
-
-    AC_LIBOBJ(readutmp)
-    gl_PREREQ_READUTMP
   fi
-])
-
-# Prerequisites of lib/readutmp.c.
-AC_DEFUN([gl_PREREQ_READUTMP],
-[
-  AC_REQUIRE([gl_FUNC_FREE])
 ])
