@@ -1,9 +1,11 @@
 2000-10-28  Jim Meyering  <meyering@lucent.com>
 
+	Shred can now determine the size of a block devices (e.g. /dev/fd0)
+	by writing until a write operation fails.
 	* src/shred.c: Include assert.h.
 	(fillrand): Add a parameter, size_max.
-	Add an assertion.
 	Adjust caller.
+	Add an assertion.
 	(dopass): Break out of the `for (;;)' loop if size < offset.
 	That can happen now that dopass is called with SIZE == -1.
 	(do_wipefd): Accept a length of zero only for a regular file.
