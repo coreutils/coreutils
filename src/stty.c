@@ -643,7 +643,7 @@ prints baud rate, line discipline, and deviations from stty sane.  In\n\
 settings, CHAR is taken literally, or coded as in ^c, 0x37, 0177 or\n\
 127; special values ^- or undef used to disable special characters.\n\
 "));
-      puts (_("\nReport bugs to sh-utils-bugs@gnu.ai.mit.edu"));
+      puts (_("\nReport bugs to <sh-utils-bugs@gnu.ai.mit.edu>."));
     }
   exit (status);
 }

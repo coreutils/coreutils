@@ -57,7 +57,7 @@ Same as id -un.\n\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n"));
-      puts (_("\nReport bugs to sh-utils-bugs@gnu.ai.mit.edu"));
+      puts (_("\nReport bugs to <sh-utils-bugs@gnu.ai.mit.edu>."));
     }
   exit (status);
 }

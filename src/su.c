@@ -442,7 +442,7 @@ Change the effective user id and group id to that of USER.\n\
 \n\
 A mere - implies -l.   If USER not given, assume root.\n\
 "));
-      puts (_("\nReport bugs to sh-utils-bugs@gnu.ai.mit.edu"));
+      puts (_("\nReport bugs to <sh-utils-bugs@gnu.ai.mit.edu>."));
     }
   exit (status);
 }

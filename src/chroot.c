@@ -48,7 +48,7 @@ Run COMMAND with root directory set to NEWROOT.\n\
 \n\
 If no command is given, run ``${SHELL} -i'' (default: /bin/sh).\n\
 "));
-      puts (_("\nReport bugs to sh-utils-bugs@gnu.ai.mit.edu"));
+      puts (_("\nReport bugs to <sh-utils-bugs@gnu.ai.mit.edu>."));
     }
   exit (status);
 }

@@ -33,7 +33,7 @@ usage_help="Run COMMAND, ignoring hangup signals.
   --help      display this help and exit
   --version   output version information and exit
 
-Report bugs to sh-utils-bugs@gnu.ai.mit.edu"
+Report bugs to <sh-utils-bugs@gnu.ai.mit.edu>."
 
 if [ $# -eq 0 ]; then
   echo >&2 "$usage"

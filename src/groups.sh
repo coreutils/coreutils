@@ -29,7 +29,7 @@ usage="Usage: $0 [OPTION]... [USERNAME]...
 
 Same as id -Gn.  If no USERNAME, use current process.
 
-Report bugs to sh-utils-bugs@gnu.ai.mit.edu"
+Report bugs to <sh-utils-bugs@gnu.ai.mit.edu>."
 
 case $# in
   1 )

@@ -384,7 +384,7 @@ Print information for USERNAME, or the current user.\n\
 \n\
 Without any OPTION, print some useful set of identified information.\n\
 "));
-      puts (_("\nReport bugs to sh-utils-bugs@gnu.ai.mit.edu"));
+      puts (_("\nReport bugs to <sh-utils-bugs@gnu.ai.mit.edu>."));
     }
   exit (status);
 }
