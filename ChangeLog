@@ -1,6 +1,8 @@
-2002-08-02  Jim Meyering  <meyering@lucent.com>
+2002-08-03  Jim Meyering  <meyering@lucent.com>
 
 	* Version 0.1.0.
+
+	* src/Makefile.am (AM_INSTALLCHECK_STD_OPTIONS_EXEMPT): Set to false.
 
 2002-08-02  Paul Eggert  <eggert@twinsun.com>
 
