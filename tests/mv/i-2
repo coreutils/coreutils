@@ -59,7 +59,6 @@ mv -fi c d < y >/dev/null 2>&1 || fail=1
 
 # Before 4.0s, this would not prompt.
 cp -if e f < y > out 2>&1 || fail=1
-    cp out /tmp
 
 # Make sure out contains the prompt.
 case "`cat out`" in
