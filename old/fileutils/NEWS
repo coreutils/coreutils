@@ -1,5 +1,6 @@
 Changes in release 4.1:
 [4.0r]
+* `du dir/subdir1 dir/subdir2' no longer fails
 * chown accepts new option: --from=CURRENT_OWNER:CURRENT_GROUP
 * cp accepts new option: --strip-trailing-slashes
 * install --directory (-d) may now be used to set special bits
