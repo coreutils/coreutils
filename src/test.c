@@ -22,7 +22,6 @@
 
 /* Define TEST_STANDALONE to get the /bin/test version.  Otherwise, you get
    the shell builtin version. */
-/* #define TEST_STANDALONE */
 
 #include <config.h>
 #include <stdio.h>
@@ -33,27 +32,19 @@
 
 #define TEST_STANDALONE 1
 
-#if !defined (TEST_STANDALONE)
-# include "shell.h"
-# include "posixstat.h"
-# include "filecntl.h"
-#else /* TEST_STANDALONE */
-# include "system.h"
-# include "error.h"
-# include "euidaccess.h"
-# if !defined (S_IXUGO)
-#  define S_IXUGO 0111
-# endif /* S_IXUGO */
-# if defined (_POSIX_VERSION)
-#  include <limits.h>
-# else /* !_POSIX_VERSION */
-#  include <sys/param.h>
-# endif /* _POSIX_VERSION */
-# define whitespace(c) (((c) == ' ') || ((c) == '\t'))
-# define digit(c)  ((c) >= '0' && (c) <= '9')
-# define digit_value(c) ((c) - '0')
+#include "system.h"
+#include "error.h"
+#include "euidaccess.h"
+
+#include <limits.h>
+#ifndef _POSIX_VERSION
+# include <sys/param.h>
+#endif /* _POSIX_VERSION */
+#define whitespace(c) (((c) == ' ') || ((c) == '\t'))
+#define digit(c)  ((c) >= '0' && (c) <= '9')
+#define digit_value(c) ((c) - '0')
+
 char *program_name;
-#endif /* TEST_STANDALONE */
 
 #if !defined (_POSIX_VERSION)
 # include <sys/file.h>
@@ -63,9 +54,6 @@ char *program_name;
 #ifndef errno
 extern int errno;
 #endif
-
-#undef STREQ
-#define STREQ(a, b) ((a)[0] == (b)[0] && strcmp (a, b) == 0)
 
 #if !defined (member)
 # define member(c, s) ((c) ? (strchr ((s), (c)) ? 1 : 0) : 0)
