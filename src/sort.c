@@ -342,11 +342,12 @@ Set LC_ALL=C to get the traditional sort order that uses native byte values.\n\
 static sigset_t caught_signals;
 
 /* The list of temporary files. */
-static struct tempnode
+struct tempnode
 {
-  char *name;
-  struct tempnode * volatile next;
-} temphead;
+  struct tempnode *volatile next;
+  char name[1];  /* Actual size is 1 + file name length.  */
+};
+static struct tempnode *volatile temphead;
 
 /* Clean up any remaining temporary files. */
 
@@ -355,7 +356,7 @@ cleanup (void)
 {
   struct tempnode *node;
 
-  for (node = temphead.next; node; node = node->next)
+  for (node = temphead; node; node = node->next)
     unlink (node->name);
 }
 
@@ -372,13 +373,13 @@ create_temp_file (FILE **pfp)
   int saved_errno;
   char const *temp_dir = temp_dirs[temp_dir_index];
   size_t len = strlen (temp_dir);
-  char *file = xmalloc (len + sizeof slashbase);
-  struct tempnode *node = (struct tempnode *) xmalloc (sizeof *node);
+  struct tempnode *node =
+    (struct tempnode *) xmalloc (sizeof node->next + len + sizeof slashbase);
+  char *file = node->name;
 
   memcpy (file, temp_dir, len);
   memcpy (file + len, slashbase, sizeof slashbase);
-  node->name = file;
-  node->next = temphead.next;
+  node->next = temphead;
   if (++temp_dir_index == temp_dir_count)
     temp_dir_index = 0;
 
@@ -386,7 +387,7 @@ create_temp_file (FILE **pfp)
   sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
   fd = mkstemp (file);
   if (0 <= fd)
-    temphead.next = node;
+    temphead = node;
   saved_errno = errno;
   sigprocmask (SIG_SETMASK, &oldset, NULL);
   errno = saved_errno;
@@ -484,19 +485,17 @@ add_temp_dir (char const *dir)
 static void
 zaptemp (const char *name)
 {
-  struct tempnode *node, *temp;
+  struct tempnode *volatile *pnode;
+  struct tempnode *node;
 
-  for (node = &temphead; node->next; node = node->next)
-    if (STREQ (name, node->next->name))
-      break;
-  if (node->next)
-    {
-      temp = node->next;
-      unlink (temp->name);
-      node->next = temp->next;
-      free (temp->name);
-      free ((char *) temp);
-    }
+  for (pnode = &temphead; (node = *pnode); pnode = &node->next)
+    if (node->name == name)
+      {
+	unlink (name);
+	*pnode = node->next;
+	free ((char *) node);
+	break;
+      }
 }
 
 #ifdef ENABLE_NLS
@@ -1906,7 +1905,7 @@ sort (char **files, int nfiles, FILE *ofp, const char *output_file)
     {
       int i = n_temp_files;
       tempfiles = (char **) xmalloc (n_temp_files * sizeof (char *));
-      for (node = temphead.next; i > 0; node = node->next)
+      for (node = temphead; i > 0; node = node->next)
 	tempfiles[--i] = node->name;
       merge (tempfiles, n_temp_files, ofp, output_file);
       free ((char *) tempfiles);
