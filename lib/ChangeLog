@@ -1,3 +1,8 @@
+2004-12-11  Jim Meyering  <jim@meyering.net>
+
+	* chdir-long.c: Fail via #error if PATH_MAX is not defined, since
+	this file is now compiled only on systems that define PATH_MAX.
+
 2004-12-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getdate.y (textint): New member "negative".
