@@ -46,4 +46,4 @@ fi
 cmp t/E t/O || fail=1
 test $fail = 1 && diff t/E t/O 2> /dev/null
 
-(exit $fail); exit
+(exit $fail); exit $fail

@@ -30,7 +30,7 @@ chmod 444 $file || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 . $abs_srcdir/../setgid-check
@@ -47,4 +47,4 @@ case "`cat out`" in
   *) fail=1 ;;
 esac
 
-(exit $fail); exit
+(exit $fail); exit $fail

@@ -24,7 +24,7 @@ echo new > new || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework' 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 fail=0
@@ -51,4 +51,4 @@ cp --update new old || fail=1
 case "`cat old`" in new) ;; *) fail=1 ;; esac
 case "`cat new`" in new) ;; *) fail=1 ;; esac
 
-(exit $fail); exit
+(exit $fail); exit $fail

@@ -25,7 +25,7 @@ pwd_tmp=$pwd/$tmp
 (unset CDPATH) >/dev/null 2>&1 && unset CDPATH
 
 if test -z "$other_partition_tmpdir"; then
-  (exit 77); exit
+  (exit 77); exit 77
 fi
 
 framework_failure=0
@@ -209,4 +209,4 @@ EOF
 cmp $expected $actual \
   || { diff -c $expected $actual 1>&2; fail=1; }
 
-(exit $fail); exit
+(exit $fail); exit $fail

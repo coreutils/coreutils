@@ -37,4 +37,4 @@ set `ls -l s`
 # call and so cp ends up dereferencing the symlink and copying the directory.
 test "$*" = 'total 0' && : || fail=1
 
-(exit $fail); exit
+(exit $fail); exit $fail

@@ -22,7 +22,7 @@ ln -s / symlink
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 fail=0
@@ -40,4 +40,4 @@ ls -l symlink > /dev/null 2>&1 && fail=1
 
 kill $pid > /dev/null 2>&1
 
-(exit $fail); exit
+(exit $fail); exit $fail

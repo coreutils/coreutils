@@ -36,4 +36,4 @@ fail=0
 cp --update --no-dereference a b || fail=1
 cp --update --no-dereference c d || fail=1
 
-(exit $fail); exit
+(exit $fail); exit $fail

@@ -17,7 +17,7 @@ cd $tmp || framework_failure=1
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 fail=0
@@ -26,4 +26,4 @@ touch -c no-file > /dev/null 2>&1 || fail=1
 touch -cm no-file > /dev/null 2>&1 || fail=1
 touch -ca no-file > /dev/null 2>&1 || fail=1
 
-(exit $fail); exit
+(exit $fail); exit $fail

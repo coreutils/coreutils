@@ -24,7 +24,7 @@ mkdir -m 700 e-dir || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 . $abs_srcdir/../setgid-check
@@ -56,4 +56,4 @@ p=`ls -ld a/b/c|sed 's/ .*//'`; case $p in drwx------);; *) fail=1;; esac
 # `d's perms are determined by the -m argument.
 p=`ls -ld a/b/c/d|sed 's/ .*//'`; case $p in $d_mode_str);; *) fail=1;; esac
 
-(exit $fail); exit
+(exit $fail); exit $fail

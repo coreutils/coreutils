@@ -29,7 +29,7 @@ EOF
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 fail=0
@@ -45,4 +45,4 @@ done
 cmp $test.E $test.O || fail=1
 test $fail = 1 && diff $test.E $test.O 2> /dev/null
 
-(exit $fail); exit
+(exit $fail); exit $fail

@@ -47,7 +47,7 @@ chmod g+s d 2> /dev/null ||
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework' 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 fail=0
@@ -70,4 +70,4 @@ chmod 755 d
 # For now, this test simply confirms the existing behavior.
 p=`ls -ld d|sed 's/ .*//'`; case $p in drwxr-xr-x);; *) fail=1;; esac
 
-(exit $fail); exit
+(exit $fail); exit $fail

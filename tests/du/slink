@@ -23,7 +23,7 @@ if test -s tmp; then
   : # Ok.
 else
   echo "$0: skipping this test, since \`.' is on a non-local file system" 1>&2
-  (exit 77); exit
+  (exit 77); exit 77
 fi
 
 df --type=xfs . | tail -n +2 > tmp
@@ -31,7 +31,7 @@ if test -s tmp; then
   # At least on Irix-6.5.19, when using an xfs file system,
   # each created symlink (name lengths up to 255) would have a size of `0'.
   echo "$0: skipping this test, since \`.' is on an XFS file system" 1>&2
-  (exit 77); exit
+  (exit 77); exit 77
 fi
 
 if test $framework_failure = 1; then

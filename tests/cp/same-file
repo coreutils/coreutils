@@ -191,4 +191,4 @@ fail=0;
 cmp $expected $actual \
   || { diff -c $expected $actual 1>&2; fail=1; }
 
-(exit $fail); exit
+(exit $fail); exit $fail

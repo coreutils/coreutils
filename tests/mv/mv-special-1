@@ -16,7 +16,7 @@ trap '(exit $?); exit' 1 2 13 15
 . $srcdir/../lang-default
 
 if test -z "$other_partition_tmpdir"; then
-  (exit 77); exit
+  (exit 77); exit 77
 fi
 
 null=mv-null
@@ -37,7 +37,7 @@ if test $framework_failure = 1; then
   # exit 77 here to indicate that we couldn't run the test.
   # At least running on SunOS 4.1.4, using a directory NFS mounted
   # from an OpenBSD system, the above mknod fails.
-  (exit 77); exit
+  (exit 77); exit 77
 fi
 
 fail=0
@@ -80,4 +80,4 @@ cmp out2 exp || fail=1
 # cd $other_partition_tmpdir
 # ls -l -A -R $other_partition_tmpdir
 
-(exit $fail); exit
+(exit $fail); exit $fail

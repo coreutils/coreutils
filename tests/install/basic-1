@@ -58,4 +58,4 @@ set X `ls -l $dir/dd`
 shift
 test "$1" = -r-xr-xr-x || fail=1
 
-(exit $fail); exit
+(exit $fail); exit $fail

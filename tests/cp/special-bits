@@ -42,4 +42,4 @@ set _ `ls -l b`; shift; p1=$1
 set _ `ls -l b2`; shift; p2=$1
 test $p1 = $p2 || fail=1
 
-(exit $fail); exit
+(exit $fail); exit $fail

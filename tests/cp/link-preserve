@@ -27,7 +27,7 @@ test -f c/b || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework' 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 fail=0
@@ -86,4 +86,4 @@ test "$mode" = "-rwx------" || fail=1
 umask 022
 # --------------------------------------
 
-(exit $fail); exit
+(exit $fail); exit $fail

@@ -41,4 +41,4 @@ cat dest-dir/src-dir/slink > /dev/null 2>&1 && fail=1
 
 # FIXME: test -L, too.
 
-(exit $fail); exit
+(exit $fail); exit $fail

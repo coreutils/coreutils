@@ -22,7 +22,7 @@ touch file || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework' 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 fail=0
@@ -34,4 +34,4 @@ cp -R dir file 2>/dev/null && fail=1
 # In 4.0.35, it was.
 test -f file || fail=1
 
-(exit $fail); exit
+(exit $fail); exit $fail

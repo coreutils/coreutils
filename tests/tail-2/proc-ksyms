@@ -18,4 +18,4 @@ if test -f $ksyms; then
   tail $ksyms > /dev/null || fail=1
 fi
 
-(exit $fail); exit
+(exit $fail); exit $fail

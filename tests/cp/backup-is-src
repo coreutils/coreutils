@@ -22,7 +22,7 @@ echo a-tilde > a~ || framework_failure=1
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 # This cp command should exit nonzero.
@@ -36,4 +36,4 @@ EOF
 
 cmp out2 exp || fail=1
 
-(exit $fail); exit
+(exit $fail); exit $fail

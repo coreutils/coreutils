@@ -41,4 +41,4 @@ rm -r $tmp || fail=1
 # Make sure all of $tmp was deleted.
 test -d $tmp && fail=1
 
-(exit $fail); exit
+(exit $fail); exit $fail

@@ -22,7 +22,7 @@ touch f || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework' 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 fail=0
@@ -36,4 +36,4 @@ chown --from=0:1 2:3 f || fail=1
 # And now they should be 2 and 3 respectively.
 set _ `ls -n f`; shift; test "$3:$4" = 2:3 || fail=1
 
-(exit $fail); exit
+(exit $fail); exit $fail

@@ -28,4 +28,4 @@ fail=0
 
 mv foo/ bar || fail=1
 
-(exit $fail); exit
+(exit $fail); exit $fail

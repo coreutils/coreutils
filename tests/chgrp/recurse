@@ -19,7 +19,7 @@ cd $tmp || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework' 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 set _ $groups; shift
@@ -53,4 +53,4 @@ set _ `ls -l e/ee`; g=$5; test "$g" = $g2 || fail=1
 # But it *should* change d/dd.
 set _ `ls -l d/dd`; g=$5; test "$g" = $g1 || fail=1
 
-(exit $fail); exit
+(exit $fail); exit $fail

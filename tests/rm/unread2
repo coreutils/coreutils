@@ -23,7 +23,7 @@ chmod u-r a
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 fail=0
@@ -37,4 +37,4 @@ EOF
 cmp out exp || fail=1
 test $fail = 1 && diff out exp 2> /dev/null
 
-(exit $fail); exit
+(exit $fail); exit $fail

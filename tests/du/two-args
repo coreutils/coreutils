@@ -18,7 +18,7 @@ cd $tmp || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 mkdir -p $tmp/1 $tmp/2
@@ -31,4 +31,4 @@ du $tmp/1 $tmp/2 > /dev/null || fail=1
 du . $tmp > /dev/null || fail=1
 du .. $tmp > /dev/null || fail=1
 
-(exit $fail); exit
+(exit $fail); exit $fail

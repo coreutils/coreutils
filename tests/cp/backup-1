@@ -16,7 +16,7 @@ cd $tmp || framework_failure=1
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 suffix=.b
@@ -37,4 +37,4 @@ test -f $file || fail=1
 test -f $file_backup || fail=1
 cmp $file $file_backup > /dev/null || fail=1
 
-(exit $fail); exit
+(exit $fail); exit $fail

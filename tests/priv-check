@@ -13,14 +13,14 @@ esac
 my_uid=`id -u`
 test $? = 0 || {
   echo "$0: cannot run \`id -u'" 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 }
 
 # Make sure it gives valid output.
 case $my_uid in
   *[!0-9]*)
     echo "$0: invalid output (\`$my_uid') from \`id -u'" 1>&2
-    (exit 1); exit
+    (exit 1); exit 1
     ;;
   *) ;;
 esac
@@ -58,7 +58,7 @@ case $PRIV_CHECK_ARG:$my_uid in
       {
 	echo "$0: `pwd`: not writable by user \`$NON_ROOT_USERNAME'" 1>&2
 	echo "$0: skipping this test" 1>&2
-	(exit 77); exit
+	(exit 77); exit 77
       }
     exec setuidgid $NON_ROOT_USERNAME env PATH="$PATH" $0
     ;;
@@ -73,5 +73,5 @@ $0: This test is being skipped, since it works only
 when run $who.
 ***************************
 EOF
-  (exit 77); exit
+  (exit 77); exit 77
 }

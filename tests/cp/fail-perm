@@ -38,4 +38,4 @@ shift
 test "$1" = dr-x------ || fail=1
 chmod 700 D
 
-(exit $fail); exit
+(exit $fail); exit $fail

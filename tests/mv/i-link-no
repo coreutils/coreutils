@@ -26,7 +26,7 @@ chmod a-w b/bar || framework_failure=1
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 fail=0
@@ -49,4 +49,4 @@ case "`cat b/foo`" in
   *) fail=1;;
 esac
 
-(exit $fail); exit
+(exit $fail); exit $fail

@@ -23,10 +23,10 @@ ln -s slink-target slink || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework' 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 fail=0
 cp -d f slink || fail=1
 
-(exit $fail); exit
+(exit $fail); exit $fail

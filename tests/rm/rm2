@@ -23,7 +23,7 @@ chmod u-x a/1 b || framework_failure=1
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 fail=0
@@ -44,4 +44,4 @@ test -d a/1 || fail=1
 chmod u+x b
 test -d b/3 || fail=1
 
-(exit $fail); exit
+(exit $fail); exit $fail

@@ -17,7 +17,7 @@ trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
 trap '(exit $?); exit' 1 2 13 15
 
 if test -z "$other_partition_tmpdir"; then
-  (exit 77); exit
+  (exit 77); exit 77
 fi
 t0="$t0 $other_partition_tmpdir"
 
@@ -28,11 +28,11 @@ mkdir foo || framework_failure=1
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 fail=0
 
 mv foo/ $other_partition_tmpdir/bar || fail=1
 
-(exit $fail); exit
+(exit $fail); exit $fail

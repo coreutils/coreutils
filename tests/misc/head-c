@@ -18,7 +18,7 @@ echo abc > in || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework' 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 fail=0
@@ -29,4 +29,4 @@ case "`cat out`" in
   *) fail=1 ;;
 esac
 
-(exit $fail); exit
+(exit $fail); exit $fail

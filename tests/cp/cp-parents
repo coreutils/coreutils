@@ -54,4 +54,4 @@ p=`ls -ld e/d|sed 's/ .*//'`; case $p in drwxr-xr-x);; *) fail=1;; esac
 p=`ls -ld e/d/a|sed 's/ .*//'`; case $p in drwx-w--w-);; *) fail=1;; esac
 p=`ls -ld e/d/a/b/c|sed 's/ .*//'`; case $p in drwxr-xr-x);; *) fail=1;; esac
 
-(exit $fail); exit
+(exit $fail); exit $fail

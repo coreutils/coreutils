@@ -26,7 +26,7 @@ echo b > b/f || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework' 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 fail=0
@@ -72,4 +72,4 @@ test -f b/g && fail=1  # b/g should have been moved
 test -f c/f || fail=1
 test -f c/g || fail=1
 
-(exit $fail); exit
+(exit $fail); exit $fail

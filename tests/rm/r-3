@@ -35,11 +35,11 @@ cd $pwd || framework_fail=1
 
 if test $framework_fail = 1; then
   echo 'failure in testing framework'
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 fail=0
 rm -rf $tmp || fail=1
 test -d $tmp && fail=1
 
-(exit $fail); exit
+(exit $fail); exit $fail

@@ -14,6 +14,6 @@ set in your environment to the space-separated list of names.  E.g.,
   env FETISH_GROUPS='users cdrom' make check
 
 EOF
-     (exit 77); exit
+     (exit 77); exit 77
      ;;
 esac

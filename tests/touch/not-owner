@@ -45,4 +45,4 @@ test "$match" = 1 || fail=1
 
 test $fail = 1 && diff out exp 2> /dev/null
 
-(exit $fail); exit
+(exit $fail); exit $fail

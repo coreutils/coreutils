@@ -19,7 +19,7 @@ cd $tmp || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework' 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 set _ $groups; shift
@@ -37,7 +37,7 @@ test "$g" = $g2 || {
 $0: skipping this test; your system doesn't support changing
 the owner or group of a symbolic link.
 EOF
-  (exit 77); exit
+  (exit 77); exit 77
 }
 
 fail=0
@@ -64,4 +64,4 @@ chgrp --dereference $g1 symlink
 set _ `ls -l f`; g=$5; test "$g" = $g1 || fail=1
 set _ `ls -l symlink`; g=$5; test "$g" = $g2 || fail=1
 
-(exit $fail); exit
+(exit $fail); exit $fail

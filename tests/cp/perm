@@ -78,4 +78,4 @@ for u in 31 37 2; do
   done
 done
 
-(exit $fail); exit
+(exit $fail); exit $fail

@@ -25,7 +25,7 @@ cd $tmp || framework_failure=1
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 fail=0
@@ -70,4 +70,4 @@ EOF
   test $fail = 1 && diff out exp 2> /dev/null
 done
 
-(exit $fail); exit
+(exit $fail); exit $fail

@@ -22,7 +22,7 @@ ln -s file s || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework' 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 fail=0
@@ -34,4 +34,4 @@ mv s s 2> /dev/null && fail=1
 # Before 4.0.36, `s' would have been removed.
 test -f s || fail=1
 
-(exit $fail); exit
+(exit $fail); exit $fail

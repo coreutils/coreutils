@@ -20,7 +20,7 @@ touch file || framework_failure=1
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit
+  (exit 1); exit 1
 fi
 
 fail=0
@@ -29,4 +29,4 @@ fail=0
 # but exited successfully.
 pathchk file/x > /dev/null 2>&1 && fail=1
 
-(exit $fail); exit
+(exit $fail); exit $fail
