@@ -648,6 +648,11 @@ static int format_needs_stat;
 
 static int format_needs_type;
 
+/* strftime formats for non-recent and recent files, respectively, in
+   -l output.  */
+
+static char const *long_time_format[2];
+
 /* The exit status to use if we don't get any fatal errors. */
 
 static int exit_status;
@@ -1350,6 +1355,17 @@ decode_switches (int argc, char **argv)
       && !sort_type_specified && format != long_format)
     {
       sort_type = sort_time;
+    }
+
+  if (format == long_format)
+    {
+      if (full_time)
+	long_time_format[0] = long_time_format[1] = _("%a %b %d %H:%M:%S %Y");
+      else
+	{
+	  long_time_format[0] = _("%b %e  %Y");
+	  long_time_format[1] = _("%b %e %H:%M");
+	}
     }
 
   return optind;
@@ -2347,7 +2363,6 @@ print_long_format (const struct fileinfo *f)
   char *p;
   time_t when;
   struct tm *when_local;
-  const char *fmt;
   char *user_name;
 
 #if HAVE_ST_DM_MODE
@@ -2371,29 +2386,6 @@ print_long_format (const struct fileinfo *f)
     case time_atime:
       when = f->stat.st_atime;
       break;
-    }
-
-  if (full_time)
-    {
-      fmt = _("%a %b %d %H:%M:%S %Y");
-    }
-  else
-    {
-      if (current_time > when + 6L * 30L * 24L * 60L * 60L	/* Old. */
-	  || current_time < when - 60L * 60L)	/* In the future. */
-	{
-	  /* The file is fairly old or in the future.
-	     POSIX says the cutoff is 6 months old;
-	     approximate this by 6*30 days.
-	     Allow a 1 hour slop factor for what is considered "the future",
-	     to allow for NFS server/client clock disagreement.
-	     Show the year instead of the time of day.  */
-	  fmt = _("%b %e  %Y");
-	}
-      else
-	{
-	  fmt = _("%b %e %H:%M");
-	}
     }
 
   p = buf;
@@ -2453,6 +2445,15 @@ print_long_format (const struct fileinfo *f)
 
   if ((when_local = localtime (&when)))
     {
+      /* The file is recent if it is neither old nor in the future.
+	 POSIX says the cutoff is 6 months old;
+	 approximate this by 6*30 days.
+	 Allow a 1 hour slop factor for what is considered "the future",
+	 to allow for NFS server/client clock disagreement.  */
+      int recent = (current_time <= when + 6L * 30L * 24L * 60L * 60L
+		    && when - 60L * 60L <= current_time);
+
+      char const *fmt = long_time_format[recent];
       *p = '\1';
 
       while (! (s = strftime (p, buf + bufsize - p - 1, fmt, when_local))
