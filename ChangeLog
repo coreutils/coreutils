@@ -1,6 +1,13 @@
-2004-04-17  Jim Meyering  <jim@meyering.net>
+2004-04-18  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/system.h (readdir_ignoring_dot_and_dotdot): New inline function,
+	from remove.c.
+	* src/remove.c (readdir_ignoring_dotdirs): Move function to system.h,
+	renaming it.  Update uses.
+
+2004-04-17  Jim Meyering  <jim@meyering.net>
 
 	* configure.ac: Depend on automake-1.8.3.
 
