@@ -1,3 +1,25 @@
+Tue Jul 30 23:24:18 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/cp.c (DO_CHOWN): New macro -- derived from code in copy.
+	(copy): Use DO_CHOWN to assure that any newly-created symbolic
+	links have proper owner and group.
+
+Sat Jul 27 17:22:14 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/system.h (bindtextdomain) [!ENABLE_NLS]: Undefine to avoid
+	redefinition warnings on solaris.
+	(textdomain) [!ENABLE_NLS]: Likewise.
+
+Thu Jul 25 21:10:42 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/chgrp.c (main): Fix typo in getopt_long string: s/n/h/.
+	Reported by Ken Pizzini.
+
+Wed Jul 24 22:24:37 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/dircolors.c (usage): Remove -h.  It is not an option.
+	Reported by Ulrich Drepper.
+
 Sun Jul 21 11:58:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (AC_CHECK_HEADERS): Add sys/timeb.h for lib/getdate.y.
