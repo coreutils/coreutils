@@ -297,6 +297,19 @@ static int nfiles;
 
 static int files_index;
 
+/* When nonzero, in a color listing, color each symlink name according to the
+   type of file it points to.  Otherwise, color them according to the `ln'
+   directive in LS_COLORS.  Dangling (orphan) symlinks are treated specially,
+   regardless.  This is set when `ln=target' appears in LS_COLORS.  */
+
+static int color_symlink_as_referent;
+
+/* mode of appropriate file for colorization */
+#define FILE_OR_LINK_MODE(File) \
+    ((color_symlink_as_referent && (File)->linkok) \
+     ? (File)->linkmode : (File)->stat.st_mode)
+
+
 /* Record of one pending directory waiting to be listed.  */
 
 struct pending
@@ -1588,6 +1601,10 @@ parse_ls_color (void)
 	}
       print_with_color = 0;
     }
+
+  if (color_indicator[C_LINK].len == 6
+      && !strncmp (color_indicator[C_LINK].string, "target", 6))
+    color_symlink_as_referent = 1;
 }
 
 /* Request that the directory named `name' have its contents listed later.
@@ -2383,7 +2400,7 @@ print_long_format (const struct fileinfo *f)
 
   DIRED_INDENT ();
   DIRED_FPUTS (buf, stdout, p - buf);
-  print_name_with_quoting (f->name, f->stat.st_mode, f->linkok,
+  print_name_with_quoting (f->name, FILE_OR_LINK_MODE (f), f->linkok,
 			   &dired_obstack);
 
   if (f->filetype == symbolic_link)
@@ -2482,7 +2499,7 @@ print_file_name_and_frills (const struct fileinfo *f)
 	    human_readable ((uintmax_t) ST_NBLOCKS (f->stat), buf,
 			    ST_NBLOCKSIZE, output_block_size));
 
-  print_name_with_quoting (f->name, f->stat.st_mode, f->linkok, NULL);
+  print_name_with_quoting (f->name, FILE_OR_LINK_MODE (f), f->linkok, NULL);
 
   if (indicator_style != none)
     print_type_indicator (f->stat.st_mode);
