@@ -5,6 +5,10 @@
 	FIXME: update coreutils.texi:
 	chmod's new options: --preserve-root and --no-preserve-root.
 
+	* tests/help-version: Ensure that the bug-reporting address is
+	included in the --help output for every program.
+	* tests/Makefile.am (TESTS_ENVIRONMENT): Add $PACKAGE_BUGREPORT.
+
 	* src/ptx.c (usage): Output bug-reporting address.
 	Reported by Dan Jacobson.
 
