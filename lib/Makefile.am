@@ -36,10 +36,8 @@ libfetish_a_SOURCES = \
   exit.h \
   fcntl-safer.h \
   fopen-safer.c \
-  fts.c fts_.h \
   full-read.c full-read.h \
   full-write.c full-write.h \
-  getcwd.h \
   gettext.h \
   imaxtostr.c \
   linebuffer.c linebuffer.h \
