@@ -1,5 +1,7 @@
 Sun Jan 26 12:51:05 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* Version 1.16.
+
 	* src/who-users.c (usage): Fix typo (--writeable -> --writable)
 	in help output.  From Galen Hazelwood.
 
