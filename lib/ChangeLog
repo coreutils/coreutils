@@ -1,3 +1,8 @@
+2002-11-22  Jim Meyering  <jim@meyering.net>
+
+	From gnulib.
+	* strstr.c: Don't include <sys/types.h>.  It's unnecessary.
+
 2002-11-21  Bruno Haible  <bruno@clisp.org>
 
 	Remove case insensitive option matching.
