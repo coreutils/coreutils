@@ -71,22 +71,12 @@ void error (int, int, const char *, ...);
 void error ();
 #endif
 
-static void *
-fixup_null_alloc (n)
-     size_t n;
+static void
+xalloc_fail ()
 {
-  void *p;
-
-  p = 0;
-  if (n == 0)
-    p = malloc ((size_t) 1);
-  if (p == 0)
-    {
-      if (xalloc_fail_func)
-	(*xalloc_fail_func) ();
-      error (xalloc_exit_failure, 0, xalloc_msg_memory_exhausted);
-    }
-  return p;
+  if (xalloc_fail_func)
+    (*xalloc_fail_func) ();
+  error (xalloc_exit_failure, 0, xalloc_msg_memory_exhausted);
 }
 
 /* Allocate N bytes of memory dynamically, with error checking.  */
@@ -99,9 +89,26 @@ xmalloc (n)
 
   p = malloc (n);
   if (p == 0)
-    p = fixup_null_alloc (n);
+    xalloc_fail ();
   return p;
 }
+
+/* Change the size of an allocated block of memory P to N bytes,
+   with error checking.
+   If P is NULL, run xmalloc.  */
+
+void *
+xrealloc (p, n)
+     void *p;
+     size_t n;
+{
+  p = realloc (p, n);
+  if (p == 0)
+    xalloc_fail ();
+  return p;
+}
+
+#ifdef NOT_USED
 
 /* Allocate memory for N elements of S bytes, with error checking.  */
 
@@ -117,19 +124,4 @@ xcalloc (n, s)
   return p;
 }
 
-/* Change the size of an allocated block of memory P to N bytes,
-   with error checking.
-   If P is NULL, run xmalloc.  */
-
-void *
-xrealloc (p, n)
-     void *p;
-     size_t n;
-{
-  if (p == 0)
-    return xmalloc (n);
-  p = realloc (p, n);
-  if (p == 0)
-    p = fixup_null_alloc (n);
-  return p;
-}
+#endif /* NOT_USED */
