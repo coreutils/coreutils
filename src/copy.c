@@ -1,5 +1,5 @@
 /* copy.c -- core functions for copying files and directories
-   Copyright (C) 89, 90, 91, 95, 96, 97, 1998 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 95, 96, 97, 1998, 1999 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -625,14 +625,28 @@ copy_internal (const char *src_path, const char *dst_path,
 
       /* This happens when attempting to rename a directory to a
 	 subdirectory of itself.  */
-      if (errno == EINVAL)
+      if (errno == EINVAL
+
+	  /* When src_path is on an NFS file system, some types of
+	     clients, e.g., SunOS4.1.4 and IRIX-5.3, set errno to EIO
+	     instead.  Testing for this here risks misinterpreting a real
+	     I/O error as an attempt to move a directory into itself, so
+	     FIXME: consider not doing this.  */
+	  || errno == EIO
+
+	  /* And with SunOS-4.1.4 client and OpenBSD-2.3 server,
+	     we get ENOTEMPTY.  */
+	  || errno == ENOTEMPTY)
 	{
 	  /* FIXME: this is a little fragile in that it relies on rename(2)
-	     returning a specific errno (EINVAL).  Expect problems on
+	     failing with a specific errno value.  Expect problems on
 	     non-POSIX systems.  */
 	  *copy_into_self = 1;
 	  return 0;
 	}
+
+      /* Ignore other types of failure (e.g. EXDEV), since the following
+	 code will try to perform a copy, then remove.  */
     }
 
   if (S_ISDIR (src_type))
