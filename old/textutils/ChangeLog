@@ -2,7 +2,7 @@
 
 	* Version 2.0.15.
 
-	* tests/od/od-N: New test for the fix of 2001-09-19.
+	* tests/od/od-N: New test for the 2001-09-19 fix by Ian Bruce.
 	* tests/od/Makefile.am: New file.
 	* tests/od: New directory.
 	* tests/Makefile.am (SUBDIRS): Add od.
