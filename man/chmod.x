@@ -28,19 +28,19 @@ The letters `rwxXstugo' select the new permissions for the affected
 users: read (r), write (w), execute (or access for directories) (x),
 execute only if the file is a directory or already has execute
 permission for some user (X), set user or group ID on execution (s),
-save program text on swap device (t), the permissions that the user
-who owns the file currently has for it (u), the permissions that other
-users in the file's group have for it (g), and the permissions that
-other users not in the file's group have for it (o).
+sticky (t), the permissions granted to the user who owns the file (u),
+the permissions granted to other users who are members of the file's group (g),
+and the permissions granted to users that are in neither of the two preceding
+categories (o).
 .PP
 A numeric mode is from one to four octal digits (0-7), derived by
 adding up the bits with values 4, 2, and 1.  Any omitted digits are
 assumed to be leading zeros.  The first digit selects the set user ID
-(4) and set group ID (2) and save text image (1) attributes.  The
-second digit selects permissions for the user who owns the file: read
-(4), write (2), and execute (1); the third selects permissions for
-other users in the file's group, with the same values; and the fourth
-for other users not in the file's group, with the same values.
+(4) and set group ID (2) and sticky (1) attributes.  The second digit
+selects permissions for the user who owns the file: read (4), write (2),
+and execute (1); the third selects permissions for other users in the
+file's group, with the same values; and the fourth for other users not
+in the file's group, with the same values.
 .PP
 .B chmod
 never changes the permissions of symbolic links; the
@@ -54,4 +54,16 @@ In contrast,
 .B chmod
 ignores symbolic links encountered during recursive directory
 traversals.
+.SH STICKY FILES
+On older Unix systems, the sticky bit caused executable files to be
+hoarded in swap space.  This feature is not useful on modern VM
+systems, and the Linux kernel ignores the sticky bit on files.  Other
+kernels may use the sticky bit on files for system-defined purposes.
+On some systems, only the superuser can set the sticky bit on files.
+.SH STICKY DIRECTORIES
+When the sticky bit is set on a directory, files in that directory may
+only be unlinked or renamed by root or their owner.  (Without the
+sticky bit, anyone able to write to the directory can delete or rename
+files.) The sticky bit is commonly found on directories, such as /tmp,
+which are world-writable.
 .SH OPTIONS
