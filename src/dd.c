@@ -17,42 +17,6 @@
 
 /* Written by Paul Rubin, David MacKenzie, and Stuart Kemp. */
 
-/* Options:
-
-   Numbers can be followed by a multiplier:
-   b=512, c=1, k=1024, w=2, xm=number m
-
-   if=FILE			Read from FILE instead of stdin.
-   of=FILE			Write to FILE instead of stdout; don't
-				truncate FILE.
-   ibs=BYTES			Read BYTES bytes at a time.
-   obs=BYTES			Write BYTES bytes at a time.
-   bs=BYTES			Override ibs and obs.
-   cbs=BYTES			Convert BYTES bytes at a time.
-   skip=BLOCKS			Skip BLOCKS ibs-sized blocks at
-				start of input.
-   seek=BLOCKS			Skip BLOCKS obs-sized blocks at
-				start of output.
-   count=BLOCKS			Copy only BLOCKS input blocks.
-   conv=CONVERSION[,CONVERSION...]
-
-   Conversions:
-   ascii			Convert EBCDIC to ASCII.
-   ebcdic			Convert ASCII to EBCDIC.
-   ibm				Convert ASCII to alternate EBCDIC.
-   block			Pad newline-terminated records to size of
-				cbs, replacing newline with trailing spaces.
-   unblock			Replace trailing spaces in cbs-sized block
-				with newline.
-   lcase			Change upper case characters to lower case.
-   ucase			Change lower case characters to upper case.
-   swab				Swap every pair of input bytes.
-				Unlike the Unix dd, this works when an odd
-				number of bytes are read.
-   noerror			Continue after read errors.
-   sync				Pad every input block to size of ibs with
-				trailing NULs. */
-
 #include <config.h>
 #include <stdio.h>
 
@@ -1151,7 +1115,7 @@ Copy a file, converting and formatting according to the options.\n\
   ibs=BYTES       read BYTES bytes at a time\n\
   if=FILE         read from FILE instead of stdin\n\
   obs=BYTES       write BYTES bytes at a time\n\
-  of=FILE         write to FILE instead of stdout, don't truncate file\n\
+  of=FILE         write to FILE instead of stdout\n\
   seek=BLOCKS     skip BLOCKS obs-sized blocks at start of output\n\
   skip=BLOCKS     skip BLOCKS ibs-sized blocks at start of input\n\
       --help      display this help and exit\n\
