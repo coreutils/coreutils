@@ -1,3 +1,6 @@
+[4.1.3]
+* ls -R once again outputs a blank line between per-directory groups of files.
+    This was broken by the cycle-detection change in 4.1.1.
 [4.1.2]
 * cp no longer fails when two or more source files are the same;
     now it just gives a warning and doesn't copy the file the second time.
