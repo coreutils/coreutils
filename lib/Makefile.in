@@ -13,7 +13,7 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 SHELL = /bin/sh
 
@@ -27,10 +27,10 @@ DEFS = @DEFS@
 CFLAGS = @CFLAGS@
 YACC = @YACC@
 
-GETOPT = getopt.o getopt1.o
-
 exec_prefix = @exec_prefix@
 libdir = $(exec_prefix)/lib
+
+GETOPT = getopt.o getopt1.o
 
 SOURCES = getdate.y posixtm.y \
 argmatch.c backupfile.c basename.c dirname.c euidaccess.c \
@@ -55,7 +55,8 @@ DISTFILES = Makefile.in backupfile.h getopt.h long-options.h modechange.h \
 fnmatch.h fsusage.h group-member.h makepath.h mountlist.h obstack.h pathmax.h \
 save-cwd.h getdate.c posixtm.c error.h xstrtol.h xstrtoul.h $(SOURCES)
 
-all: libfu.a
+default: all
+all check: libfu.a
 
 .SUFFIXES:
 .SUFFIXES: .c .o
@@ -78,8 +79,6 @@ uninstall:
 TAGS: $(SOURCES)
 	etags $(SOURCES)
 
-check:
-
 clean:
 	rm -f *.a *.o
 
@@ -87,12 +86,11 @@ mostlyclean: clean
 
 distclean: clean
 	rm -f Makefile *.tab.c tposixtm.c
-	rm -rf .deps
 
 maintainer-clean: distclean
 	rm -f TAGS getdate.c posixtm.c
 
-distdir = ../`cat ../distname`/$(subdir)
+distdir = ../@PACKAGE@-@VERSION@/$(subdir)
 dist: $(DISTFILES)
 	for file in $(DISTFILES); do \
 	  ln $$file $(distdir) \
@@ -139,8 +137,8 @@ makepath.o: makepath.h
 obstack.o: obstack.h
 group-member.o: group-member.h
 
-.PHONY: all check clean dist distclean install install-data install-exec \
-installdirs maintainer-clean mostlyclean uninstall
+.PHONY: all check clean default dist distclean install install-data \
+install-exec installdirs maintainer-clean mostlyclean uninstall
 
 # Tell versions [3.59,3.63) of GNU make not to export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
