@@ -2,6 +2,10 @@
 
 	* Version 4.5.3.
 
+	* src/du.c (count_entry): Also save cwd when dereferencing (via
+	--dereference-args, -D) a command-line argument.
+	Reported by Michal Svec.  Based on a patch by Andreas Schwab.
+
 	* src/Makefile.am (../AUTHORS): New target/rule.
 
 2002-10-12  Jim Meyering  <meyering@lucent.com>
@@ -25,11 +29,6 @@
 	(tail_bytes): Upon EOF in start_bytes, return immediately.
 	(file_lines): Reorganize to use memrchr rather than an explicit loop.
 	Adapt to new safe_read ABI.
-
-2002-10-11  Andreas Schwab  <schwab@suse.de>
-
-	* src/du.c (count_entry): Also save cwd when dereferencing
-	arguments and we are at toplevel.  Reported by Michal Svec.
 
 2002-10-11  Jim Meyering  <meyering@lucent.com>
 
