@@ -1,5 +1,5 @@
 /* hash - hashing table processing.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    Written by Jim Meyering, 1992.
 
    This program is free software; you can redistribute it and/or modify
@@ -186,8 +186,8 @@ hash_print_statistics (const Hash_table *table, FILE *stream)
   fprintf (stream, "max bucket length: %u\n", max_bucket_length);
 }
 
-/* Return the user entry from the hash table, if some entry in the hash table
-   compares equally with ENTRY, or NULL otherwise. */
+/* If an entry from table, TABLE, matches ENTRY, return the one from
+   the table.  Otherwise, return NULL. */
 
 void *
 hash_lookup (const Hash_table *table, const void *entry)
@@ -761,68 +761,61 @@ hash_rehash (Hash_table *table, unsigned int new_n_buckets)
   return true;
 }
 
-/* If ENTRY matches an entry already in the hash table, don't modify the table
-   and return the matched entry.  Otherwise, insert ENTRY and return NULL.
-   *DONE is set to true in all cases, unless the storage required for
-   insertion cannot be allocated.  */
+/* If ENTRY matches an entry already in the hash table, return the pointer
+   to the entry from the table.  Otherwise, insert ENTRY and return ENTRY.
+   Return NULL if the storage required for insertion cannot be allocated.  */
 
 void *
-hash_insert (Hash_table *table, const void *entry, bool *done)
+hash_insert (Hash_table *table, const void *entry)
 {
   void *data;
   struct hash_entry *bucket;
 
-  assert (entry);		/* cannot insert a NULL data */
+  assert (entry);		/* cannot insert a NULL entry */
 
-  if (data = hash_find_entry (table, entry, &bucket, false), data)
-    {
-      *done = true;
-      return data;
-    }
+  /* If there's a matching entry already in the table, return that.  */
+  if ((data = hash_find_entry (table, entry, &bucket, false)) != NULL)
+    return data;
 
   /* ENTRY is not matched, it should be inserted.  */
-
-  table->n_entries++;
 
   if (bucket->data)
     {
       struct hash_entry *new_entry = allocate_entry (table);
 
       if (new_entry == NULL)
-	{
-	  *done = false;
-	  return NULL;
-	}
+	return NULL;
 
       /* Add ENTRY in the overflow of the bucket.  */
 
       new_entry->data = (void *) entry;
       new_entry->next = bucket->next;
       bucket->next = new_entry;
-      *done = true;
-      return NULL;
+      table->n_entries++;
+      return (void *) entry;
     }
 
   /* Add ENTRY right in the bucket head.  */
 
   bucket->data = (void *) entry;
+  table->n_entries++;
   table->n_buckets_used++;
 
-  /* If more than 80% of the buckets are in use, rehash the table two
-     times bigger.  It's no real use checking the number of entries, as if
-     the hashing function is ill-conditioned, rehashing is not likely to
-     improve it.  */
+  /* If more than 80% of the buckets are in use, rehash the table so it's two
+     times bigger.  There's no point in checking the number of entries,
+     because if the hashing function is ill-conditioned, rehashing is not
+     likely to improve it.  */
 
   if (5 * table->n_buckets_used > 4 * table->n_buckets)
     {
       unsigned int new_n_buckets = next_prime (2 * table->n_buckets + 1);
 
-      *done = hash_rehash (table, new_n_buckets);
-      return NULL;
+      /* If the rehash fails, arrange to return NULL.  */
+      if (!hash_rehash (table, new_n_buckets))
+	entry = NULL;
     }
 
-  *done = true;
-  return NULL;
+  return (void *) entry;
 }
 
 /* If ENTRY is already in the table, remove it and return the just-deleted
