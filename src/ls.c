@@ -267,7 +267,7 @@ static int numeric_users;
 static int print_block_size;
 
 /* Nonzero means show file sizes in kilobytes instead of blocks
-   (the size of which is system-dependant).  -k */
+   (the size of which is system-dependent).  -k */
 
 static int kilobyte_blocks;
 

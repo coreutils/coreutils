@@ -76,7 +76,7 @@ distclean: clean
 realclean: distclean
 	rm -f TAGS
 
-dist:
+dist: $(DISTFILES)
 	for file in $(DISTFILES); do \
 	  ln $$file ../`cat ../.fname`/lib \
 	    || cp -p $$file ../`cat ../.fname`/lib; \
@@ -104,6 +104,8 @@ posixtm.c: posixtm.y getdate.c
 	sed -e 's/yy/zz/g' posixtm.tab.c > tposixtm.c
 	mv tposixtm.c posixtm.c
 	rm -f posixtm.tab.c
+
+$(OBJECTS): config.h
 
 backupfile.o getversion.o: backupfile.h
 fnmatch.o: fnmatch.h

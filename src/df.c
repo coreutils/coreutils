@@ -51,7 +51,6 @@
 #include "system.h"
 #include "version.h"
 
-char *strstr ();
 char *xmalloc ();
 char *xstrdup ();
 void error ();

@@ -1,3 +1,18 @@
+Sun Oct 10 13:38:54 1993  Jim Meyering  (meyering@comco.com)
+
+	* src/Makefile.in (dist): Depend on $(DISTFILES).
+
+	* src/Makefile.in [libdir, LIBPROGS]: Define them.
+	From Francois Pinard.
+
+	* posixtm.y: [HAVE_CONFIG_H, CONFIG_BROKETS]: Include <config.h>
+	or "config.h".  From Francois Pinard.
+
+	* makepath.c: [HAVE_CONFIG_H, CONFIG_BROKETS]: Remove the duplicate
+	#ifdef block following the alloca #ifdefs.  From Francois Pinard.
+
+	* df.c: Remove unnecessary dcl of strstr.
+
 Sat Oct  9 13:30:28 1993  Jim Meyering  (meyering@comco.com)
 
 	* configure.in [STATFS_OSF1]: Change name to STAT_STATFS3_OSF1
@@ -14,6 +29,10 @@ Sat Oct  9 13:30:28 1993  Jim Meyering  (meyering@comco.com)
 
 	* ls.c (usage): Split long usage string between two fprintf
 	statements to avoid default limit of SGI's cc on string length.
+
+	* Makefile.in, src/Makefile.in [PROGS]: Alphabetize.
+
+	* configure.in: Remove AC_UNISTD_H; add unistd.h to AC_HAVE_HEADERS.
 
 Thu Oct 07 12:57:10 1993  Jim Meyering  (meyering@comco.com)
 
