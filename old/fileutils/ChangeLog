@@ -1,5 +1,7 @@
 1999-04-10  Jim Meyering  <meyering@ascend.com>
 
+	* Version 4.0f.
+
 	`ls --color' would segfault
 	* src/ls.c: Include assert.h.
 	(color_indicator[]): Add an entry for the type, `door.'
