@@ -25,6 +25,7 @@
 #include <getopt.h>
 #include "closeout.h"
 #include "long-options.h"
+#include "version-etc.h"
 
 #if ENABLE_NLS
 # include <libintl.h>
@@ -69,15 +70,7 @@ parse_long_options (int argc,
 	  (*usage_func) (0);
 
 	case 'v':
-	  printf ("%s (%s) %s\n", command_name, package, version);
-	  printf (_("\
-\n\
-Copyright (C) 1999 Free Software Foundation, Inc.\n\
-This is free software; see the source for copying conditions.  There is NO\n\
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-\n\
-"));
-	  printf (_("Written by %s.\n"), authors);
+	  version_etc (stdout, command_name, package, version, authors);
 	  close_stdout (); /* FIXME: output failure exit status
 			      should be settable via an arg.  */
 	  exit (0);
