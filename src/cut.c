@@ -68,6 +68,8 @@
 #include "system.h"
 #include "error.h"
 
+char *xstrdup ();
+
 #define FATAL_ERROR(s)							\
   do									\
     {									\
@@ -156,6 +158,13 @@ static int suppress_non_delimited;
 /* The delimeter character for field mode. */
 static int delim;
 
+/* The length of output_delimiter_string.  */
+static size_t output_delimiter_length;
+
+/* The output field separator string.  Defaults to the 1-character
+   string consisting of the input delimiter.  */
+static char *output_delimiter_string;
+
 /* Nonzero if we have ever read standard input. */
 static int have_read_stdin;
 
@@ -172,6 +181,7 @@ static struct option const longopts[] =
   {"fields", required_argument, 0, 'f'},
   {"delimiter", required_argument, 0, 'd'},
   {"only-delimited", no_argument, 0, 's'},
+  {"output-delimiter", required_argument, 0, 14},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
   {0, 0, 0, 0}
@@ -198,6 +208,8 @@ Print selected parts of lines from each FILE to standard output.\n\
   -f, --fields=LIST       output only these fields\n\
   -n                      (ignored)\n\
   -s, --only-delimited    do not print lines not containing delimiters\n\
+      --output-delimiter=STRING  use STRING as the output delimiter\n\
+                            the default is to use the input delimiter\n\
       --help              display this help and exit\n\
       --version           output version information and exit\n\
 \n\
@@ -580,8 +592,8 @@ cut_fields (FILE *stream)
 	    {
 	      if (found_any_selected_field)
 		{
-		  /* FIXME: use output delimiter here */
-		  putchar (delim);
+		  fwrite (output_delimiter_string, sizeof (char),
+			  output_delimiter_length, stdout);
 		}
 	      found_any_selected_field = 1;
 
@@ -677,6 +689,7 @@ int
 main (int argc, char **argv)
 {
   int optc, exit_status = 0;
+  int delim_specified = 0;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -723,6 +736,15 @@ main (int argc, char **argv)
 	  if (optarg[0] != '\0' && optarg[1] != '\0')
 	    FATAL_ERROR (_("the delimiter must be a single character"));
 	  delim = optarg[0];
+	  delim_specified = 1;
+	  break;
+
+	case 14:
+	  /* Interpret --output-delimiter='' to mean
+	     `use the NUL byte as the delimiter.'  */
+	  output_delimiter_length = (optarg[0] == '\0'
+				     ? 1 : strlen (optarg));
+	  output_delimiter_string = xstrdup (optarg);
 	  break;
 
 	case 'n':
@@ -756,8 +778,17 @@ main (int argc, char **argv)
     FATAL_ERROR (_("suppressing non-delimited lines makes sense\n\
 \tonly when operating on fields"));
 
-  if (delim == '\0')
+  if (!delim_specified)
     delim = '\t';
+
+  if (output_delimiter_string == NULL)
+    {
+      static char dummy[2];
+      dummy[0] = delim;
+      dummy[1] = '\0';
+      output_delimiter_string = dummy;
+      output_delimiter_length = 1;
+    }
 
   if (optind == argc)
     exit_status |= cut_file ("-");
