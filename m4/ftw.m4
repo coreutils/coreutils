@@ -8,6 +8,7 @@ AC_DEFUN([AC_FUNC_FTW],
   # prerequisites
   AC_REQUIRE([AC_HEADER_DIRENT])
   AC_CHECK_HEADERS(sys/param.h)
+  AC_CHECK_DECLS([stpcpy])
 
   # The following test would fail prior to glibc-2.3.2, because `depth'
   # would be 2 rather than 4.
