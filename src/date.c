@@ -1,5 +1,5 @@
 /* date - print or set the system date and time
-   Copyright (C) 1989-2000 Free Software Foundation, Inc.
+   Copyright (C) 1989-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -352,6 +352,15 @@ the argument `%s' lacks a leading `+';\n\
 When using an option to specify date(s), any non-option\n\
 argument must be a format string beginning with `+'."),
 	     argv[optind]);
+      usage (1);
+    }
+
+  /* Simply ignore --rfc-822 if specified when setting the date.  */
+  if (rfc_format && !set_date && n_args > 0)
+    {
+      error (0, 0,
+	     _("a format string may not be specified when using\
+ the --rfc-822 (-R) option"));
       usage (1);
     }
 
