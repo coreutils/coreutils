@@ -35,6 +35,7 @@
 #include "error.h"
 #include "dirname.h"
 #include "path-concat.h"
+#include "quote.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "cp"
@@ -371,7 +372,8 @@ make_path_private (const char *const_dirpath, int src_offset, int mode,
 	      new->is_new_dir = 1;
 	      if (mkdir (dirpath, mode))
 		{
-		  error (0, errno, _("cannot make directory `%s'"), dirpath);
+		  error (0, errno, _("cannot make directory %s"),
+			 quote (dirpath));
 		  return 1;
 		}
 	      else
@@ -382,7 +384,8 @@ make_path_private (const char *const_dirpath, int src_offset, int mode,
 	    }
 	  else if (!S_ISDIR (stats.st_mode))
 	    {
-	      error (0, 0, _("`%s' exists but is not a directory"), dirpath);
+	      error (0, 0, _("%s exists but is not a directory"),
+		     quote (dirpath));
 	      return 1;
 	    }
 	  else
@@ -403,7 +406,7 @@ make_path_private (const char *const_dirpath, int src_offset, int mode,
 
   else if (!S_ISDIR (stats.st_mode))
     {
-      error (0, 0, _("`%s' exists but is not a directory"), dst_dirname);
+      error (0, 0, _("%s exists but is not a directory"), quote (dst_dirname));
       return 1;
     }
   else
@@ -472,15 +475,16 @@ do_copy (int n_files, char **file, const char *target_directory,
     {
       if (target_directory)
 	{
-	  error (0, 0, _("specified target, `%s' is not a directory"), dest);
+	  error (0, 0, _("specified target, %s is not a directory"),
+		 quote (dest));
 	  usage (1);
 	}
 
       if (n_files > 1)
 	{
 	  error (0, 0,
-	 _("copying multiple files, but last argument (%s) is not a directory"),
-	     dest);
+	 _("copying multiple files, but last argument %s is not a directory"),
+	     quote (dest));
 	  usage (1);
 	}
     }
