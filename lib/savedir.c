@@ -1,7 +1,7 @@
 /* savedir.c -- save the list of files in a directory in a string
 
-   Copyright 1990, 1997, 1998, 1999, 2000, 2001, 2003 Free Software
-   Foundation, Inc.
+   Copyright 1990, 1997, 1998, 1999, 2000, 2001, 2003, 2004 Free
+   Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -89,7 +89,7 @@ savedir (const char *dir)
   while ((dp = readdir (dirp)) != NULL)
     {
       /* Skip "", ".", and "..".  "" is returned by at least one buggy
-         implementation: Solaris 2.4 readdir on NFS filesystems.  */
+         implementation: Solaris 2.4 readdir on NFS file systems.  */
       char const *entry = dp->d_name;
       if (entry[entry[0] != '.' ? 0 : entry[1] != '.' ? 1 : 2] != '\0')
 	{
