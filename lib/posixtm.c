@@ -125,7 +125,7 @@ posix_time_parse (const char *s, unsigned int syntax_bits)
 
   size_t s_len = strlen (s);
   size_t len = (((syntax_bits & PDS_SECONDS) && (dot = strchr (s, '.')))
-		? dot - s
+		? (size_t) (dot - s)
 		: s_len);
 
   if (len != 8 && len != 10 && len != 12)
