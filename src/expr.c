@@ -283,14 +283,6 @@ null (VALUE *v)
     }
 }
 
-/* Return nonzero if V is a string value.  */
-
-static int
-isstring (VALUE *v)
-{
-  return v->type == string;
-}
-
 /* Coerce V to a string value (can't fail).  */
 
 static void
@@ -699,16 +691,11 @@ eval2 (void)
 	return l;
       args++;
       r = eval3 ();
-      toarith (l);
-      toarith (r);
-      if (isstring (l) || isstring (r))
-	{
-	  tostring (l);
-	  tostring (r);
-	  lval = strcoll (l->u.s, r->u.s);
-	  rval = 0;
-	}
-      else
+      tostring (l);
+      tostring (r);
+      lval = strcoll (l->u.s, r->u.s);
+      rval = 0;
+      if (toarith (l) && toarith (r))
 	{
 	  lval = l->u.i;
 	  rval = r->u.i;
