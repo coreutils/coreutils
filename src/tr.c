@@ -1403,7 +1403,7 @@ string2_extend (const struct Spec_list *s1, struct Spec_list *s2)
    given, S2 may be extended.  */
 
 static void
-validate (const struct Spec_list *s1, struct Spec_list *s2)
+validate (struct Spec_list *s1, struct Spec_list *s2)
 {
   get_s1_spec_stats (s1);
   if (s1->n_indefinite_repeats > 0)
