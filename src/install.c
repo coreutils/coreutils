@@ -558,7 +558,8 @@ change_timestamps (const char *from, const char *to)
 static void
 strip (const char *path)
 {
-  int pid, status;
+  int status;
+  pid_t pid;
 
   pid = fork ();
   switch (pid)
