@@ -100,8 +100,10 @@ fileutils.info: fileutils.texi version.texi
 install-info: $(INFO_DEPS)
 	$(top_srcdir)/mkinstalldirs $(infodir)
 	for file in $(INFO_DEPS); do		\
-	  for ifile in $(srcdir)/$${file}*; do	\
-	    $(INSTALL_DATA) $(srcdir)/$$ifile $(infodir)/$$ifile; \
+	  if [ -r ./$$file ]; then dir=.; else dir=$(srcdir); fi; \
+	  for ifile in $$dir/$$file*; do	\
+	    basename=`echo $$ifile|sed 's,.*/,,'`; \
+	    $(INSTALL_DATA) $$dir/$$ifile $(infodir)/$$basename; \
 	  done;					\
 	done
 
