@@ -2,6 +2,11 @@
 
 	* Version 5.0.1.
 
+	* src/Makefile.am (noinst_PROGRAMS): Define to setuidgid.
+
+	* tests/rm/fail-2eperm: Now that we have setuidgid, use it in
+	place of the kludge in this test.  Suggestion from Paul Jarc.
+
 	* src/setuidgid.c: New program, solely for testing (not installed).
 
 	* src/chown-core.c (change_file_owner): Don't leak file descriptors
