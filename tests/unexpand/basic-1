@@ -18,6 +18,8 @@ use strict;
 # Turn off localisation of executable's ouput.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
+my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
+
 my @Tests =
     (
      ['a1', {IN=> ' 'x 1 ."y\n"}, {OUT=> ' 'x 1 ."y\n"}],
@@ -66,12 +68,14 @@ my @Tests =
      ['blanks-11', '-t', '3,4', {IN=> "    4\n"}, {OUT=> "\t\t4\n"}],
      ['blanks-12', '-t', '3,4', {IN=> "01  4\n"}, {OUT=> "01\t\t4\n"}],
      ['blanks-13', '-t', '3,4', {IN=> "0   4\n"}, {OUT=> "0\t\t4\n"}],
+
+     ['obs-ovflo', '-18446744073709551617', {IN=>''}, {OUT=>''},
+      {EXIT => 1}, {ERR => "$prog: tab stop value is too large\n"}],
     );
 
 my $save_temps = $ENV{DEBUG};
 my $verbose = $ENV{VERBOSE};
 
-my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
 my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
 exit $fail;
 EOF
