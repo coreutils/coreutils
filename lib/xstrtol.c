@@ -33,21 +33,10 @@
    need stderr defined if assertion checking is enabled.  */
 #include <stdio.h>
 
-#if STDC_HEADERS
-# include <stdlib.h>
-#endif
-
-#if HAVE_STRING_H
-# include <string.h>
-#else
-# include <strings.h>
-# ifndef strchr
-#  define strchr index
-# endif
-#endif
-
 #include <assert.h>
 #include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include <errno.h>
 #ifndef errno
@@ -68,14 +57,6 @@ extern int errno;
 #define ISSPACE(c) (IN_CTYPE_DOMAIN (c) && isspace (c))
 
 #include "xstrtol.h"
-
-#if !HAVE_DECL_STRTOL && !defined strtol
-long int strtol ();
-#endif
-
-#if !HAVE_DECL_STRTOUL && !defined strtoul
-unsigned long int strtoul ();
-#endif
 
 #if !HAVE_DECL_STRTOIMAX && !defined strtoimax
 intmax_t strtoimax ();
@@ -266,7 +247,7 @@ __xstrtol (const char *s, char **ptr, int strtol_base,
 char *program_name;
 
 int
-main (int argc, char** argv)
+main (int argc, char **argv)
 {
   strtol_error s_err;
   int i;
