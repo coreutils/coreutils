@@ -2,6 +2,7 @@
 
 	Most macros in unlocked-io.h had the wrong number of arguments.
 	* gen-uio: New script.
+	(USE_UNLOCKED_IO): Define to 1 if not already defined.
 	* unlocked-io.hin: Remove file.
 	* Makefile.am (unlocked-io.h): Rewrite to use a separate script,
 	rather than trying to embed it here.
