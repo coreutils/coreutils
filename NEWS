@@ -120,12 +120,14 @@ GNU coreutils NEWS                                    -*- outline -*-
   In the following cases POSIX allows the default GNU behavior,
   so when POSIXLY_CORRECT is set:
 
-    printf and unlink support --help and --option.
+    false, printf, true, unlink, and yes all support --help and --option.
     ls supports TABSIZE.
     pr no longer depends on LC_TIME for the date format in non-POSIX locales.
     printf supports \u, \U, \x.
     tail supports two or more files when using the obsolete option syntax.
 
+  The usual `--' operand is now supported by chroot, hostid, hostname,
+  pwd, sync, and yes.
 
 * Major changes in release 5.2.1 (2004-03-12) [stable]
 
