@@ -1,3 +1,9 @@
+Thu Sep 12 17:05:23 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/Makefile.am (EXTRA_DIST): Add getline.c.
+	(tu_SOURCES): Remove getline.c
+	From Kaveh Ghazi.
+
 Sun Sep  8 13:55:18 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* checks/sort-test/build-script.pl: Prefix $in with \$srcdir/
