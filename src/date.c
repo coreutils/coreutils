@@ -39,7 +39,6 @@ int stime ();
 char *xrealloc ();
 char *xmalloc ();
 char *xstrdup ();
-char *stpcpy ();
 time_t posixtime ();
 
 static void show_date __P ((const char *format, time_t when));
