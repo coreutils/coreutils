@@ -22,11 +22,6 @@
 # include <config.h>
 #endif
 
-/* Some systems need this in order to declare localtime_r properly.  */
-#ifndef _REENTRANT
-# define _REENTRANT 1
-#endif
-
 #ifdef _LIBC
 # define HAVE_LIMITS_H 1
 # define HAVE_MBLEN 1
@@ -47,11 +42,6 @@
 
 #include <ctype.h>
 #include <sys/types.h>		/* Some systems define `time_t' here.  */
-
-/* Provide a declaration of localtime_r on systems that lack it.  */
-#if ! defined HAVE_DECL_LOCALTIME_R
-extern struct tm* localtime_r ();
-#endif
 
 #ifdef TIME_WITH_SYS_TIME
 # include <sys/time.h>
@@ -141,7 +131,7 @@ extern char *tzname[];
    add one for integer division truncation;
    add one more for a minus sign if t is signed.  */
 #define INT_STRLEN_BOUND(t) \
-  ((sizeof (t) * CHAR_BIT - TYPE_SIGNED (t)) * 302 / 100 + 1 + TYPE_SIGNED (t))
+ ((sizeof (t) * CHAR_BIT - TYPE_SIGNED (t)) * 302 / 1000 + 1 + TYPE_SIGNED (t))
 
 #define TM_YEAR_BASE 1900
 
@@ -154,19 +144,20 @@ extern char *tzname[];
 
 
 #ifdef _LIBC
-# define gmtime_r __gmtime_r
-# define localtime_r __localtime_r
+# define my_strftime_gmtime_r __gmtime_r
+# define my_strftime_localtime_r __localtime_r
 # define tzname __tzname
 # define tzset __tzset
 #else
-# if ! HAVE_LOCALTIME_R
-#  if ! HAVE_TM_GMTOFF
-/* Approximate gmtime_r as best we can in its absence.  */
-#   undef gmtime_r
-#   define gmtime_r my_gmtime_r
-static struct tm *gmtime_r __P ((const time_t *, struct tm *));
+
+/* If we're a strftime substitute in a GNU program, then prefer gmtime
+   to gmtime_r, since many gmtime_r implementations are buggy.
+   Similarly for localtime_r.  */
+
+# if ! HAVE_TM_GMTOFF
+static struct tm *my_strftime_gmtime_r __P ((const time_t *, struct tm *));
 static struct tm *
-gmtime_r (t, tp)
+my_strftime_gmtime_r (t, tp)
      const time_t *t;
      struct tm *tp;
 {
@@ -176,14 +167,11 @@ gmtime_r (t, tp)
   *tp = *l;
   return tp;
 }
-#  endif /* ! HAVE_TM_GMTOFF */
+# endif /* ! HAVE_TM_GMTOFF */
 
-/* Approximate localtime_r as best we can in its absence.  */
-#  undef localtime_r
-#  define localtime_r my_ftime_localtime_r
-static struct tm *localtime_r __P ((const time_t *, struct tm *));
+static struct tm *my_strftime_localtime_r __P ((const time_t *, struct tm *));
 static struct tm *
-localtime_r (t, tp)
+my_strftime_localtime_r (t, tp)
      const time_t *t;
      struct tm *tp;
 {
@@ -193,7 +181,6 @@ localtime_r (t, tp)
   *tp = *l;
   return tp;
 }
-# endif /* ! HAVE_LOCALTIME_R */
 #endif /* ! defined _LIBC */
 
 
@@ -381,34 +368,35 @@ static char const month_name[][10] =
 
 
 #ifdef emacs
-# define my_strftime emacs_strftime
- /* Emacs 20.2 uses `-Dstrftime=emacs_strftime' when compiling,
-    because that's how strftime used to be configured.
-    Undo this, since it gets in the way of accessing the underlying strftime,
-    which is needed for things like %Ec in Solaris.
-    The following two lines can be removed once Emacs stops compiling with
-    `-Dstrftime=emacs_strftime'.  */
-# undef strftime
-size_t strftime __P ((char *, size_t, const char *, const struct tm *));
+# define my_strftime emacs_strftimeu
+# define ut_argument , ut
+# define ut_argument_spec int ut;
+# define ut_argument_spec_iso , int ut
 #else
 # define my_strftime strftime
+# define ut_argument
+# define ut_argument_spec
+# define ut_argument_spec_iso
+/* We don't have this information in general.  */
+# define ut 0
 #endif
 
 #if !defined _LIBC && HAVE_TZNAME && HAVE_TZSET
   /* Solaris 2.5 tzset sometimes modifies the storage returned by localtime.
      Work around this bug by copying *tp before it might be munged.  */
   size_t _strftime_copytm __P ((char *, size_t, const char *,
-			        const struct tm *));
+			        const struct tm * ut_argument_spec_iso));
   size_t
-  my_strftime (s, maxsize, format, tp)
+  my_strftime (s, maxsize, format, tp ut_argument)
       char *s;
       size_t maxsize;
       const char *format;
       const struct tm *tp;
+      ut_argument_spec
   {
     struct tm tmcopy;
     tmcopy = *tp;
-    return _strftime_copytm (s, maxsize, format, &tmcopy);
+    return _strftime_copytm (s, maxsize, format, &tmcopy ut_argument);
   }
 # undef my_strftime
 # define my_strftime(S, Maxsize, Format, Tp) \
@@ -423,41 +411,44 @@ size_t strftime __P ((char *, size_t, const char *, const struct tm *));
    anywhere, so to determine how many characters would be
    written, use NULL for S and (size_t) UINT_MAX for MAXSIZE.  */
 size_t
-my_strftime (s, maxsize, format, tp)
+my_strftime (s, maxsize, format, tp ut_argument)
       char *s;
       size_t maxsize;
       const char *format;
       const struct tm *tp;
+      ut_argument_spec
 {
   int hour12 = tp->tm_hour;
 #ifdef _NL_CURRENT
-  const char *const a_wkday = _NL_CURRENT (LC_TIME, ABDAY_1 + tp->tm_wday);
-  const char *const f_wkday = _NL_CURRENT (LC_TIME, DAY_1 + tp->tm_wday);
-  const char *const a_month = _NL_CURRENT (LC_TIME, ABMON_1 + tp->tm_mon);
-  const char *const f_month = _NL_CURRENT (LC_TIME, MON_1 + tp->tm_mon);
-  const char *const ampm = _NL_CURRENT (LC_TIME,
-					hour12 > 11 ? PM_STR : AM_STR);
-  size_t aw_len = strlen (a_wkday);
-  size_t am_len = strlen (a_month);
-  size_t ap_len = strlen (ampm);
+  /* We cannot make the following values variables since we must delay
+     the evaluation of these values until really needed since some
+     expressions might not be valid in every situation.  The `struct tm'
+     might be generated by a strptime() call that initialized
+     only a few elements.  Dereference the pointers only if the format
+     requires this.  Then it is ok to fail if the pointers are invalid.  */
+# define a_wkday _NL_CURRENT (LC_TIME, ABDAY_1 + tp->tm_wday)
+# define f_wkday _NL_CURRENT (LC_TIME, DAY_1 + tp->tm_wday)
+# define a_month _NL_CURRENT (LC_TIME, ABMON_1 + tp->tm_mon)
+# define f_month _NL_CURRENT (LC_TIME, MON_1 + tp->tm_mon)
+# define ampm _NL_CURRENT (LC_TIME, tp->tm_hour > 11 ? PM_STR : AM_STR)
+
+# define aw_len strlen (a_wkday)
+# define am_len strlen (a_month)
+# define ap_len strlen (ampm)
 #else
 # if !HAVE_STRFTIME
-  const char *const f_wkday = weekday_name[tp->tm_wday];
-  const char *const f_month = month_name[tp->tm_mon];
-  const char *const a_wkday = f_wkday;
-  const char *const a_month = f_month;
-  const char *const ampm = "AMPM" + 2 * (hour12 > 11);
+#  define f_wkday (weekday_name[tp->tm_wday])
+#  define f_month (month_name[tp->tm_mon])
+#  define a_wkday f_wkday
+#  define a_month f_month
+#  define ampm ("AMPM" + 2 * (tp->tm_hour > 11))
+
   size_t aw_len = 3;
   size_t am_len = 3;
   size_t ap_len = 2;
 # endif
 #endif
-#if defined _NL_CURRENT || !HAVE_STRFTIME
-  size_t wkday_len = strlen (f_wkday);
-  size_t month_len = strlen (f_month);
-#endif
   const char *zone;
-  size_t zonelen;
   size_t i = 0;
   char *p = s;
   const char *f;
@@ -473,25 +464,27 @@ my_strftime (s, maxsize, format, tp)
   zone = (const char *) tp->tm_zone;
 #endif
 #if HAVE_TZNAME
-  /* POSIX.1 8.1.1 requires that whenever strftime() is called, the
-     time zone names contained in the external variable `tzname' shall
-     be set as if the tzset() function had been called.  */
+  if (ut)
+    {
+      if (! (zone && *zone))
+	zone = "GMT";
+    }
+  else
+    {
+      /* POSIX.1 8.1.1 requires that whenever strftime() is called, the
+	 time zone names contained in the external variable `tzname' shall
+	 be set as if the tzset() function had been called.  */
 # if HAVE_TZSET
-  tzset ();
+      tzset ();
 # endif
-
-  if (!(zone && *zone) && tp->tm_isdst >= 0)
-    zone = tzname[tp->tm_isdst];
+    }
 #endif
-  if (! zone)
-    zone = "";		/* POSIX.2 requires the empty string here.  */
-
-  zonelen = strlen (zone);
 
   if (hour12 > 12)
     hour12 -= 12;
   else
-    if (hour12 == 0) hour12 = 12;
+    if (hour12 == 0)
+      hour12 = 12;
 
   for (f = format; *f != '\0'; ++f)
     {
@@ -557,7 +550,13 @@ my_strftime (s, maxsize, format, tp)
 		if (bytes == 0)
 		  break;
 
-		if (bytes == (size_t) -2 || bytes == (size_t) -1)
+		if (bytes == (size_t) -2)
+		  {
+		    len += strlen (f + len);
+		    break;
+		  }
+
+		if (bytes == (size_t) -1)
 		  {
 		    len++;
 		    break;
@@ -568,6 +567,7 @@ my_strftime (s, maxsize, format, tp)
 	    while (! mbsinit (&mbstate));
 
 	    cpy (len, f);
+	    f += len - 1;
 	    continue;
 	  }
 	}
@@ -677,7 +677,7 @@ my_strftime (s, maxsize, format, tp)
 	      to_lowcase = 0;
 	    }
 #if defined _NL_CURRENT || !HAVE_STRFTIME
-	  cpy (wkday_len, f_wkday);
+	  cpy (strlen (f_wkday), f_wkday);
 	  break;
 #else
 	  goto underlying_strftime;
@@ -703,7 +703,7 @@ my_strftime (s, maxsize, format, tp)
 	      to_lowcase = 0;
 	    }
 #if defined _NL_CURRENT || !HAVE_STRFTIME
-	  cpy (month_len, f_month);
+	  cpy (strlen (f_month), f_month);
 	  break;
 #else
 	  goto underlying_strftime;
@@ -727,9 +727,7 @@ my_strftime (s, maxsize, format, tp)
 	subformat:
 	  {
 	    char *old_start = p;
-	    size_t len = my_strftime (NULL, maxsize - i, subfmt, tp);
-	    if (len == 0 && *subfmt)
-	      return 0;
+	    size_t len = my_strftime (NULL, (size_t) -1, subfmt, tp);
 	    add (len, my_strftime (p, maxsize - i, subfmt, tp));
 
 	    if (to_uppcase)
@@ -755,7 +753,6 @@ my_strftime (s, maxsize, format, tp)
 	      *u++ = modifier;
 	    *u++ = format_char;
 	    *u = '\0';
-	    ubuf[0] = '\1';
 	    len = strftime (ubuf, sizeof ubuf, ufmt, tp);
 	    if (len == 0 && ubuf[0] != '\0')
 	      return 0;
@@ -1155,7 +1152,16 @@ my_strftime (s, maxsize, format, tp)
 	      to_uppcase = 0;
 	      to_lowcase = 1;
 	    }
-	  cpy (zonelen, zone);
+
+#if HAVE_TZNAME
+	  /* The tzset() call might have changed the value.  */
+	  if (!(zone && *zone) && tp->tm_isdst >= 0)
+	    zone = tzname[tp->tm_isdst];
+#endif
+	  if (! zone)
+	    zone = "";		/* POSIX.2 requires the empty string here.  */
+
+	  cpy (strlen (zone), zone);
 	  break;
 
 	case 'z':		/* GNU extension.  */
@@ -1167,34 +1173,39 @@ my_strftime (s, maxsize, format, tp)
 #if HAVE_TM_GMTOFF
 	    diff = tp->tm_gmtoff;
 #else
-	    struct tm gtm;
-	    struct tm ltm;
-	    time_t lt;
-
-	    ltm = *tp;
-	    lt = mktime (&ltm);
-
-	    if (lt == (time_t) -1)
+	    if (ut)
+	      diff = 0;
+	    else
 	      {
-		/* mktime returns -1 for errors, but -1 is also a
-		   valid time_t value.  Check whether an error really
-		   occurred.  */
-		struct tm tm;
-		localtime_r (&lt, &tm);
+		struct tm gtm;
+		struct tm ltm;
+		time_t lt;
 
-		if ((ltm.tm_sec ^ tm.tm_sec)
-		    | (ltm.tm_min ^ tm.tm_min)
-		    | (ltm.tm_hour ^ tm.tm_hour)
-		    | (ltm.tm_mday ^ tm.tm_mday)
-		    | (ltm.tm_mon ^ tm.tm_mon)
-		    | (ltm.tm_year ^ tm.tm_year))
+		ltm = *tp;
+		lt = mktime (&ltm);
+
+		if (lt == (time_t) -1)
+		  {
+		    /* mktime returns -1 for errors, but -1 is also a
+		       valid time_t value.  Check whether an error really
+		       occurred.  */
+		    struct tm tm;
+
+		    if (! my_strftime_localtime_r (&lt, &tm)
+			|| ((ltm.tm_sec ^ tm.tm_sec)
+			    | (ltm.tm_min ^ tm.tm_min)
+			    | (ltm.tm_hour ^ tm.tm_hour)
+			    | (ltm.tm_mday ^ tm.tm_mday)
+			    | (ltm.tm_mon ^ tm.tm_mon)
+			    | (ltm.tm_year ^ tm.tm_year)))
+		      break;
+		  }
+
+		if (! my_strftime_gmtime_r (&lt, &gtm))
 		  break;
+
+		diff = tm_diff (&ltm, &gtm);
 	      }
-
-	    if (! gmtime_r (&lt, &gtm))
-	      break;
-
-	    diff = tm_diff (&ltm, &gtm);
 #endif
 
 	    if (diff < 0)
@@ -1227,7 +1238,23 @@ my_strftime (s, maxsize, format, tp)
 	}
     }
 
-  if (p)
+  if (p && i < maxsize)
     *p = '\0';
   return i;
 }
+
+
+#ifdef emacs
+/* For Emacs we have a separate interface which corresponds to the normal
+   strftime function and does not have the extra information whether the
+   TP arguments comes from a `gmtime' call or not.  */
+size_t
+emacs_strftime (s, maxsize, format, tp)
+      char *s;
+      size_t maxsize;
+      const char *format;
+      const struct tm *tp;
+{
+  return my_strftime (s, maxsize, format, tp, 0);
+}
+#endif
