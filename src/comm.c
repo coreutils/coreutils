@@ -262,7 +262,7 @@ main (int argc, char **argv)
 
   if (optind + 2 != argc)
     {
-      error (0, 0, _("too few arguments"))
+      error (0, 0, _("too few arguments"));
       usage (EXIT_FAILURE);
     }
 
