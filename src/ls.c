@@ -1303,114 +1303,116 @@ parse_ls_color (void)
   struct col_ext_type *ext;	/* Extension we are working on */
   struct col_ext_type *ext2;	/* Extra pointer */
 
+  if ((p = getenv ("LS_COLORS")) == NULL || *p == '\0')
+    return;
+
+  ext = NULL;
   strcpy (label, "??");
-  if (((p = getenv ("LS_COLORS")) != NULL && *p != '\0'))
+
+  /* This is an overly conservative estimate, but any possible
+     LS_COLORS string will *not* generate a color_buf longer than
+     itself, so it is a safe way of allocating a buffer in
+     advance.  */
+  buf = color_buf = xstrdup (p);
+
+  state = 1;
+  while (state > 0)
     {
-      buf = color_buf = xstrdup (p);
-      /* This is an overly conservative estimate, but any possible
-	 LS_COLORS string will *not* generate a color_buf longer than
-	 itself, so it is a safe way of allocating a buffer in
-	 advance.  */
-
-      state = 1;
-      while (state > 0)
+      switch (state)
 	{
-	  switch (state)
+	case 1:		/* First label character */
+	  switch (*p)
 	    {
-	    case 1:		/* First label character */
-	      switch (*p)
-		{
-		case ':':
-		  ++p;
-		  break;
-
-		case '*':
-		  /* Allocate new extension block and add to head of
-		     linked list (this way a later definition will
-		     override an earlier one, which can be useful for
-		     having terminal-specific defs override global).  */
-
-		  ext = (struct col_ext_type *)
-		    xmalloc (sizeof (struct col_ext_type));
-		  ext->next = col_ext_list;
-		  col_ext_list = ext;
-
-		  ++p;
-		  ext->ext.string = buf;
-
-		  state = (ext->ext.len =
-			   get_funky_string (&buf, &p, 1)) < 0 ? -1 : 4;
-		  break;
-
-		case '\0':
-		  state = 0;	/* Done! */
-		  break;
-
-		default:	/* Assume it is file type label */
-		  label[0] = *(p++);
-		  state = 2;
-		  break;
-		}
+	    case ':':
+	      ++p;
 	      break;
 
-	    case 2:		/* Second label character */
-	      if (*p)
-		{
-		  label[1] = *(p++);
-		  state = 3;
-		}
-	      else
-		state = -1;	/* Error */
+	    case '*':
+	      /* Allocate new extension block and add to head of
+		 linked list (this way a later definition will
+		 override an earlier one, which can be useful for
+		 having terminal-specific defs override global).  */
+
+	      ext = (struct col_ext_type *)
+		xmalloc (sizeof (struct col_ext_type));
+	      ext->next = col_ext_list;
+	      col_ext_list = ext;
+
+	      ++p;
+	      ext->ext.string = buf;
+
+	      state = (ext->ext.len =
+		       get_funky_string (&buf, &p, 1)) < 0 ? -1 : 4;
 	      break;
 
-	    case 3:		/* Equal sign after indicator label */
-	      state = -1;	/* Assume failure... */
-	      if (*(p++) == '=')/* It *should* be... */
+	    case '\0':
+	      state = 0;	/* Done! */
+	      break;
+
+	    default:	/* Assume it is file type label */
+	      label[0] = *(p++);
+	      state = 2;
+	      break;
+	    }
+	  break;
+
+	case 2:		/* Second label character */
+	  if (*p)
+	    {
+	      label[1] = *(p++);
+	      state = 3;
+	    }
+	  else
+	    state = -1;	/* Error */
+	  break;
+
+	case 3:		/* Equal sign after indicator label */
+	  state = -1;	/* Assume failure... */
+	  if (*(p++) == '=')/* It *should* be... */
+	    {
+	      for (ind_no = 0; indicator_name[ind_no] != NULL; ++ind_no)
 		{
-		  for (ind_no = 0; indicator_name[ind_no] != NULL; ++ind_no)
+		  if (strcmp (label, indicator_name[ind_no]) == 0)
 		    {
-		      if (strcmp (label, indicator_name[ind_no]) == 0)
-			{
-			  color_indicator[ind_no].string = buf;
-			  state = ((color_indicator[ind_no].len =
-				    get_funky_string (&buf, &p, 0)) < 0 ?
-				   -1 : 1);
-			  break;
-			}
+		      color_indicator[ind_no].string = buf;
+		      state = ((color_indicator[ind_no].len =
+				get_funky_string (&buf, &p, 0)) < 0 ?
+			       -1 : 1);
+		      break;
 		    }
-		  if (state == -1)
-		    error (0, 0, _("unrecognized prefix: %s"), label);
 		}
-             break;
-
-	    case 4:		/* Equal sign after *.ext */
-	      if (*(p++) == '=')
-		{
-		  ext->seq.string = buf;
-		  state = (ext->seq.len =
-			   get_funky_string (&buf, &p, 0)) < 0 ? -1 : 1;
-		}
-	      else
-		state = -1;
-	      break;
+	      if (state == -1)
+		error (0, 0, _("unrecognized prefix: %s"), label);
 	    }
-	}
+	 break;
 
-      if (state < 0)
-	{
-	  struct col_ext_type *e;
-
-	  error (0, 0,
-		 _("unparsable value for LS_COLORS environment variable"));
-	  free (color_buf);
-	  for (e = col_ext_list; e != NULL ; /* empty */)
+	case 4:		/* Equal sign after *.ext */
+	  if (*(p++) == '=')
 	    {
-	      ext2 = e;
-	      e = e->next;
-	      free (ext2);
+	      ext->seq.string = buf;
+	      state = (ext->seq.len =
+		       get_funky_string (&buf, &p, 0)) < 0 ? -1 : 1;
 	    }
-	  print_with_color = 0;
+	  else
+	    state = -1;
+	  break;
 	}
+    }
+
+  if (state < 0)
+    {
+      struct col_ext_type *e;
+
+      error (0, 0,
+	     _("unparsable value for LS_COLORS environment variable"));
+      free (color_buf);
+      for (e = col_ext_list; e != NULL ; /* empty */)
+	{
+	  ext2 = e;
+	  e = e->next;
+	  free (ext2);
+	}
+      print_with_color = 0;
     }
 }
 
