@@ -131,6 +131,24 @@ use strict;
 # of sort from textutils-1.19p and before.
 ["17", '-c', "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n", "", 0],
 
+# POSIX says -n no longer implies -b, so here we're comparing ` 9' and `10'.
+["18a", '-k1.1,1.2n', " 901\n100\n", " 901\n100\n", 0],
+
+# Just like above, because the the global `-b' has no effect on the
+# key specifier when a key-specific option (`n' in this case) is used.
+["18b", '-b -k1.1,1.2n', " 901\n100\n", " 901\n100\n", 0],
+
+# No change from above because the `b' on the key-end part of the
+# key specifier makes sort ignore only trailing blanks
+["18c", '-k1.1,1.2nb', " 901\n100\n", " 901\n100\n", 0],
+
+# Here we're comparing `90' and `10', because the `b' on the key-start
+# specifier makes sort ignore *leading* blanks on that key.
+["18d", '-k1.1b,1.2n', " 901\n100\n", "100\n 901\n", 0],
+
+# Equivalent to above, except it ignores both leading and trailing blanks.
+["18e", '-nb -k1.1,1.2', " 901\n100\n", "100\n 901\n", 0],
+
 );
 
 1;
