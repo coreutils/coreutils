@@ -1,3 +1,8 @@
+2002-01-16  Jim Meyering  <meyering@lucent.com>
+
+	* getdate.y: Add three semicolons, each just before a closing brace.
+	Bison (as of version 1.31) no longer papers over that mistake.
+
 2002-01-05  Jim Meyering  <meyering@lucent.com>
 
 	* version-etc.c (version_etc_copyright): Update copyright year.
