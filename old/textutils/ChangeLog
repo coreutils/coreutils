@@ -2,8 +2,8 @@
 
 	* Version 2.0.15.
 
-	* ABOUT-NLS: Upgrade to gettext 0.10.39.
-	* intl: Upgrade entire directory to gettext 0.10.39.
+	* ABOUT-NLS: Upgrade to gettext 0.10.40
+	* intl: Upgrade entire directory to gettext 0.10.40
 	* po/ChangeLog: New file.
 
 	* Makefile.am (DISTCLEANFILES): Remove definition, since intl/libintl.h
