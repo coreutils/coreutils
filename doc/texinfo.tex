@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{1999-04-25.15}%
+\def\texinfoversion{1999-07-22.19} % updated for pdfTeX
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99
 % Free Software Foundation, Inc.
@@ -85,14 +85,6 @@
 % We never want plain's outer \+ definition in Texinfo.
 % For @tex, we can use \tabalign.
 \let\+ = \relax
-
-% Get ready for pdf.
-\newif\ifpdf
-\ifx\pdfoutput\undefined\else
-  \input pdfcolor
-  \pdfoutput=1
-  \pdftrue
-\fi
 
 \message{Basics,}
 \chardef\other=12
@@ -251,7 +243,7 @@
         \unvbox\footlinebox
       \fi
       %
-      \ifpdf\pdfmkdest{\the\pageno}\fi
+      \ifpdfmakepagedest \pdfmkdest{\the\pageno} \fi
       %
       \ifcropmarks
           \egroup % end of \vbox\bgroup
@@ -852,123 +844,176 @@ where each line of input produces a line of output.}
 
 \message{pdf,}
 % adobe `portable' document format
-
 \newcount\tempnum
 \newcount\lnkcount
 \newtoks\filename
 \newcount\filenamelength
 \newcount\pgn
+\newtoks\toksA
+\newtoks\toksB
+\newtoks\toksC
+\newtoks\toksD
+\newbox\boxA
+\newcount\countA
+\newcount\charcode
+\newif\ifpdf
+\newif\ifpdfmakepagedest
 
-\ifpdf
-\def\pdfmkdest#1{\pdfdest name{#1@} xyz}
-\def\pdfmkpgn#1{#1@}
-
-% Adding outlines to PDF; macros for calculating structure of outlines
-% come from Petr Olsak
-\def\expnumber#1{\expandafter\ifx\csname#1\endcsname\relax 0%
-  \else \csname#1\endcsname \fi}
-\def\advancenumber#1{\tempnum=\expnumber{#1}\relax
-  \advance\tempnum by1
-  \expandafter\xdef\csname#1\endcsname{\the\tempnum}}
-\def\pdfmakeoutlines{{%
-  \openin 1 \jobname.toc
-  \ifeof 1\else\bgroup
-    \closein 1 
-    \def\code##1{##1}
-    \def\file##1{##1}
-    \def\TeX##1{TeX}
-    \def\tt{}
-    \def\char{char}
-    \def\samp##1{##1}
-    \def\kbd##1{##1}
-    \def\key##1{##1}
-    \def\rawbackslashxx{\string\\}
-    \def\chapentry ##1##2##3{}
-    \def\unnumbchapentry ##1##2{}
-    \def\secentry ##1##2##3##4{\advancenumber{chap##2}}
-    \def\unnumbsecentry ##1##2{}
-    \def\subsecentry ##1##2##3##4##5{\advancenumber{sec##2.##3}}
-    \def\unnumbsubsecentry ##1##2{}
-    \def\subsubsecentry ##1##2##3##4##5##6{\advancenumber{subsec##2.##3.##4}}
-    \def\unnumbsubsubsecentry ##1##2{}
-    \input \jobname.toc
-    \def\chapentry ##1##2##3{%
-      \pdfoutline goto name{\pdfmkpgn{##3}}count-\expnumber{chap##2}{##1}}
-    \def\unnumbchapentry ##1##2{%
-      \pdfoutline goto name{\pdfmkpgn{##2}}{##1}}
-    \def\secentry ##1##2##3##4{%
-      \pdfoutline goto name{\pdfmkpgn{##4}}count-\expnumber{sec##2.##3}{##1}}
-    \def\unnumbsecentry ##1##2{%
-      \pdfoutline goto name{\pdfmkpgn{##2}}{##1}}
-    \def\subsecentry ##1##2##3##4##5{%
-      \pdfoutline goto name{\pdfmkpgn{##5}}count-\expnumber{subsec##2.##3.##4}{##1}}
-    \def\unnumbsubsecentry ##1##2{%
-      \pdfoutline goto name{\pdfmkpgn{##2}}{##1}}
-    \def\subsubsecentry ##1##2##3##4##5##6{%
-      \pdfoutline goto name{\pdfmkpgn{##6}}{##1}}
-    \def\unnumbsubsubsecentry ##1##2{%
-      \pdfoutline goto name{\pdfmkpgn{##2}}{##1}}
-    \input \jobname.toc
-  \egroup\fi
-}}
-\pdfmakeoutlines
-
-\def\makelinks #1,{%
-  \def\params{#1}\def\E{END}%
-  \ifx\params\E
-    \let\nextmakelinks=\relax
-  \else
-    \let\nextmakelinks=\makelinks
-    \ifnum\lnkcount>0,\fi
-    \picknum{#1}%
-    \Blue\pdfannotlink attr{/Border [0 0 0]} 
-      goto name{\pdfmkpgn{\the\pgn}}%
-    #1%
-    \advance\lnkcount by 1%
-    \Black\pdfendlink
-  \fi
-  \nextmakelinks
-}
-
-\def\picknum#1{\expandafter\pn#1}
-\def\pn#1{%
-  \def\p{#1}%
-  \ifx\p\lbrace
-    \let\nextpn=\ppn
-  \else
-    \let\nextpn=\ppnn
-    \def\first{#1}
-  \fi
-  \nextpn
-}
-\def\ppn#1{\pgn=#1\gobble}
-\def\ppnn{\pgn=\first}
-\def\pdfmklnk#1{\lnkcount=0\makelinks #1,END,}
-
-\def\addtokens#1#2{\edef\addtoks{\noexpand#1={\the#1#2}}\addtoks}
-\def\skipspaces#1{\def\PP{#1}\def\D{|}%
-  \ifx\PP\D\let\nextsp\relax
-  \else\let\nextsp\skipspaces
-    \ifx\p\space\else\addtokens{\filename}{\PP}%
-      \advance\filenamelength by 1
-    \fi
-  \fi
-  \nextsp}
-\def\getfilename#1{\filenamelength=0\expandafter\skipspaces#1|\relax}
-
-\def\pdflink#1{%
-  \leavevmode\Red
-  \begingroup
-    \normalturnoffactive\def\@{@}%
-    \pdfannotlink
-      attr{/Border [0 0 0]}%
-      user{/Subtype /Link /A << /S /URI /URI (#1) >>}%
-  \endgroup
-}
-
+\ifx\pdfoutput\undefined
+  \pdffalse
+  \let\pdfmkdest = \gobble
+  \let\pdfurl = \gobble
+  \let\endlink = \relax
+  \let\linkcolor = \relax
+  \let\pdfmakeoutlines = \relax
 \else
-\let\pdflink = \gobble
-\fi % end \ifpdf
+  \pdftrue
+  \pdfoutput = 1
+  \input pdfcolor
+  \def\dopdfimage#1#2#3#4{
+    \def\imagewidth{#2}
+    \def\imageheight{#3}
+    \ifnum\pdftexversion < 14
+      \pdfimage
+    \else
+      \pdfximage
+    \fi
+      \ifx\empty\imagewidth\else width \imagewidth \fi
+      \ifx\empty\imageheight\else height \imageheight \fi
+      {#1.pdf}
+    \ifnum\pdftexversion < 14 \else
+      \pdfrefxform \pdflastxform
+    \fi}
+  \def\pdfmkdest#1{\pdfdest name{#1@} xyz}
+  \def\pdfmkpgn#1{#1@}
+  \let\linkcolor = \Cyan
+  \def\endlink{\Black\pdfendlink}
+  % Adding outlines to PDF; macros for calculating structure of outlines
+  % come from Petr Olsak
+  \def\expnumber#1{\expandafter\ifx\csname#1\endcsname\relax 0%
+    \else \csname#1\endcsname \fi}
+  \def\advancenumber#1{\tempnum=\expnumber{#1}\relax
+    \advance\tempnum by1
+    \expandafter\xdef\csname#1\endcsname{\the\tempnum}}
+  \def\pdfmakeoutlines{{%
+    \openin 1 \jobname.toc
+    \ifeof 1\else\bgroup
+      \closein 1 
+      \indexnofonts
+      \def\tt{}
+      % thanh's hack / proper braces in bookmarks  
+      \edef\mylbrace{\iftrue \string{\else}\fi}\let\{=\mylbrace
+      \edef\myrbrace{\iffalse{\else\string}\fi}\let\}=\myrbrace
+      %
+      \def\chapentry ##1##2##3{}
+      \def\unnumbchapentry ##1##2{}
+      \def\secentry ##1##2##3##4{\advancenumber{chap##2}}
+      \def\unnumbsecentry ##1##2{}
+      \def\subsecentry ##1##2##3##4##5{\advancenumber{sec##2.##3}}
+      \def\unnumbsubsecentry ##1##2{}
+      \def\subsubsecentry ##1##2##3##4##5##6{\advancenumber{subsec##2.##3.##4}}
+      \def\unnumbsubsubsecentry ##1##2{}
+      \input \jobname.toc
+      \def\chapentry ##1##2##3{%
+        \pdfoutline goto name{\pdfmkpgn{##3}}count-\expnumber{chap##2}{##1}}
+      \def\unnumbchapentry ##1##2{%
+        \pdfoutline goto name{\pdfmkpgn{##2}}{##1}}
+      \def\secentry ##1##2##3##4{%
+        \pdfoutline goto name{\pdfmkpgn{##4}}count-\expnumber{sec##2.##3}{##1}}
+      \def\unnumbsecentry ##1##2{%
+        \pdfoutline goto name{\pdfmkpgn{##2}}{##1}}
+      \def\subsecentry ##1##2##3##4##5{%
+        \pdfoutline goto name{\pdfmkpgn{##5}}count-\expnumber{subsec##2.##3.##4}{##1}}
+      \def\unnumbsubsecentry ##1##2{%
+        \pdfoutline goto name{\pdfmkpgn{##2}}{##1}}
+      \def\subsubsecentry ##1##2##3##4##5##6{%
+        \pdfoutline goto name{\pdfmkpgn{##6}}{##1}}
+      \def\unnumbsubsubsecentry ##1##2{%
+        \pdfoutline goto name{\pdfmkpgn{##2}}{##1}}
+      \input \jobname.toc
+    \egroup\fi
+  }}
+  \def\makelinks #1,{%
+    \def\params{#1}\def\E{END}%
+    \ifx\params\E
+      \let\nextmakelinks=\relax
+    \else
+      \let\nextmakelinks=\makelinks
+      \ifnum\lnkcount>0,\fi
+      \picknum{#1}%
+      \startlink attr{/Border [0 0 0]} 
+        goto name{\pdfmkpgn{\the\pgn}}%
+      \linkcolor #1%
+      \advance\lnkcount by 1%
+      \endlink
+    \fi
+    \nextmakelinks
+  }
+  \def\picknum#1{\expandafter\pn#1}
+  \def\pn#1{%
+    \def\p{#1}%
+    \ifx\p\lbrace
+      \let\nextpn=\ppn
+    \else
+      \let\nextpn=\ppnn
+      \def\first{#1}
+    \fi
+    \nextpn
+  }
+  \def\ppn#1{\pgn=#1\gobble}
+  \def\ppnn{\pgn=\first}
+  \def\pdfmklnk#1{\lnkcount=0\makelinks #1,END,}
+  \def\addtokens#1#2{\edef\addtoks{\noexpand#1={\the#1#2}}\addtoks}
+  \def\skipspaces#1{\def\PP{#1}\def\D{|}%
+    \ifx\PP\D\let\nextsp\relax
+    \else\let\nextsp\skipspaces
+      \ifx\p\space\else\addtokens{\filename}{\PP}%
+        \advance\filenamelength by 1
+      \fi
+    \fi
+    \nextsp}
+  \def\getfilename#1{\filenamelength=0\expandafter\skipspaces#1|\relax}
+  \ifnum\pdftexversion < 14
+    \let \startlink \pdfannotlink
+  \else
+    \let \startlink \pdfstartlink
+  \fi
+  \def\pdfurl#1{%
+    \begingroup
+      \normalturnoffactive\def\@{@}%
+      \leavevmode\Red
+      \startlink attr{/Border [0 0 0]}%
+        user{/Subtype /Link /A << /S /URI /URI (#1) >>}%
+        % #1
+    \endgroup}
+  \def\pdfgettoks#1.{\setbox\boxA=\hbox{\toksA={#1.}\toksB={}\maketoks}}
+  \def\addtokens#1#2{\edef\addtoks{\noexpand#1={\the#1#2}}\addtoks}
+  \def\adn#1{\addtokens{\toksC}{#1}\global\countA=1\let\next=\maketoks}
+  \def\poptoks#1#2|ENDTOKS|{\let\first=#1\toksD={#1}\toksA={#2}}
+  \def\maketoks{%
+    \expandafter\poptoks\the\toksA|ENDTOKS|
+    \ifx\first0\adn0
+    \else\ifx\first1\adn1 \else\ifx\first2\adn2 \else\ifx\first3\adn3
+    \else\ifx\first4\adn4 \else\ifx\first5\adn5 \else\ifx\first6\adn6
+    \else\ifx\first7\adn7 \else\ifx\first8\adn8 \else\ifx\first9\adn9 
+    \else
+      \ifnum0=\countA\else\makelink\fi
+      \ifx\first.\let\next=\done\else
+        \let\next=\maketoks
+        \addtokens{\toksB}{\the\toksD}
+        \ifx\first,\addtokens{\toksB}{\space}\fi
+      \fi
+    \fi\fi\fi\fi\fi\fi\fi\fi\fi\fi
+    \next}
+  \def\makelink{\addtokens{\toksB}%
+    {\noexpand\pdflink{\the\toksC}}\toksC={}\global\countA=0}
+  \def\pdflink#1{%
+    \startlink attr{/Border [0 0 0]} goto name{\mkpgn{#1}}
+    \linkcolor #1\endlink}
+  \def\mkpgn#1{#1@} 
+  \def\done{\edef\st{\global\noexpand\toksA={\the\toksB}}\st}
+\fi % \ifx\pdfoutput
+
 
 \message{fonts,}
 % Font-change commands.
@@ -1336,7 +1381,7 @@ where each line of input produces a line of output.}
 %
 \def\uref#1{\douref #1,,,\finish}
 \def\douref#1,#2,#3,#4\finish{%
-  \pdflink{#1}%
+  \pdfurl{#1}%
   \setbox0 = \hbox{\ignorespaces #3}%
   \ifdim\wd0 > 0pt
     \unhbox0 % third arg given, show only that
@@ -1344,18 +1389,15 @@ where each line of input produces a line of output.}
     \setbox0 = \hbox{\ignorespaces #2}%
     \ifdim\wd0 > 0pt
       \ifpdf
-        \unhbox0\ (\code{#1})% DVI: 2nd arg given, show both it and url
-      \else
         \unhbox0             % PDF: 2nd arg given, show only it
+      \else
+        \unhbox0\ (\code{#1})% DVI: 2nd arg given, show both it and url
       \fi
     \else
       \code{#1}% only url given, so show it
     \fi
   \fi
-  %
-  \ifpdf
-    \Black\pdfendlink
-  \fi
+  \endlink
 }
 
 % rms does not like angle brackets --karl, 17may97.
@@ -1365,10 +1407,10 @@ where each line of input produces a line of output.}
 \ifpdf
   \def\email#1{\doemail#1,,\finish}
   \def\doemail#1,#2,#3\finish{%
-    \pdflink{mailto:#1}%
+    \pdfurl{mailto:#1}%
     \setbox0 = \hbox{\ignorespaces #2}%
     \ifdim\wd0>0pt\unhbox0\else\code{#1}\fi
-    \Black\pdfendlink
+    \endlink
   }
 \else
   \let\email=\uref
@@ -1491,10 +1533,13 @@ where each line of input produces a line of output.}
      \global\let\shortcontents = \relax
    \fi
    %
+   \ifpdf \pdfmakepagedesttrue \fi
+   %
    \HEADINGSon
 }
 
 \def\finishtitlepage{%
+   \message{FINISH TITLE}
    \vskip4pt \hrule height 2pt width \hsize
    \vskip\titlepagebottomglue
    \finishedtitlepagetrue
@@ -2212,6 +2257,7 @@ width0pt\relax} \fi
   \let\deftypefn = \relax
   \let\deftypefun = \relax
   \let\deftypeivar = \relax
+  \let\deftypeop = \relax
   \let\deftypevar = \relax
   \let\deftypevr = \relax
   \let\defun = \relax
@@ -2671,6 +2717,8 @@ width0pt\relax} \fi
 \def\dfn##1{\realbackslash dfn {##1}}%
 \def\emph##1{\realbackslash emph {##1}}%
 \def\acronym##1{\realbackslash acronym {##1}}%
+\def\{{\realbackslash mylbrace}%
+\def\}{\realbackslash myrbrace}%
 %
 % Handle some cases of @value -- where the variable name does not
 % contain - or _, and the value does not contain any
@@ -3019,7 +3067,11 @@ width0pt\relax} \fi
     % The `\ ' here is removed by the implicit \unskip that TeX does as
     % part of (the primitive) \par.  Without it, a spurious underfull
     % \hbox ensues.
-    \ #2% The page number ends the paragraph.
+    \ifpdf
+      \pdfgettoks#2.\ \the\toksA % The page number ends the paragraph.
+    \else
+      \ #2% The page number ends the paragraph.
+    \fi
   \fi%
   \par
 \endgroup}
@@ -3186,12 +3238,43 @@ width0pt\relax} \fi
 \newcount\subsubsecno  \subsubsecno=0
 
 % This counter is funny since it counts through charcodes of letters A, B, ...
-% The \the is necessary, despite appearances, because \appendixletter is
-% expanded while writing the .toc file.  \char\appendixno is not
-% expandable, thus it is written literally, thus all appendixes come out
-% with the same letter (or @) in the toc without it.
 \newcount\appendixno  \appendixno = `\@
-\def\appendixletter{\char\the\appendixno}
+% \def\appendixletter{\char\the\appendixno}
+% Now we do the following for the sake of pdftex.
+\def\appendixletter{%
+  \ifnum\appendixno=`A A%
+  \else\ifnum\appendixno=`B B%
+  \else\ifnum\appendixno=`C C%
+  \else\ifnum\appendixno=`D D%
+  \else\ifnum\appendixno=`E E%
+  \else\ifnum\appendixno=`F F%
+  \else\ifnum\appendixno=`G G%
+  \else\ifnum\appendixno=`H H%
+  \else\ifnum\appendixno=`I I%
+  \else\ifnum\appendixno=`J J%
+  \else\ifnum\appendixno=`K K%
+  \else\ifnum\appendixno=`L L%
+  \else\ifnum\appendixno=`M M%
+  \else\ifnum\appendixno=`N N%
+  \else\ifnum\appendixno=`O O%
+  \else\ifnum\appendixno=`P P%
+  \else\ifnum\appendixno=`Q Q%
+  \else\ifnum\appendixno=`R R%
+  \else\ifnum\appendixno=`S S%
+  \else\ifnum\appendixno=`T T%
+  \else\ifnum\appendixno=`U U%
+  \else\ifnum\appendixno=`V V%
+  \else\ifnum\appendixno=`W W%
+  \else\ifnum\appendixno=`X X%
+  \else\ifnum\appendixno=`Y Y%
+  \else\ifnum\appendixno=`Z Z%
+  % The \the is necessary, despite appearances, because \appendixletter is
+  % expanded while writing the .toc file.  \char\appendixno is not
+  % expandable, thus it is written literally, thus all appendixes come out
+  % with the same letter (or @) in the toc without it.
+  \else\char\the\appendixno
+  \fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi
+  \fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi}
 
 % Each @chapter defines this as the name of the chapter.
 % page headings and footings can use it.  @section does likewise.
@@ -3725,6 +3808,7 @@ width0pt\relax} \fi
      \fi
      \vfill \eject
      \contentsalignmacro % in case @setchapternewpage odd is in effect
+     \pdfmakeoutlines
    \endgroup
    \lastnegativepageno = \pageno
    \pageno = \savepageno
@@ -3775,7 +3859,7 @@ width0pt\relax} \fi
 
 % See comments in \dochapentry re vbox and related settings
 \def\shortchapentry#1#2#3{%
-  \tocentry{\shortchaplabel{#2}\labelspace #1}{\doshortpageno{#3}}%
+  \tocentry{\shortchaplabel{#2}\labelspace #1}{\doshortpageno\bgroup#3\egroup}%
 }
 
 % Typeset the label for a chapter or appendix for the short contents.
@@ -3801,7 +3885,7 @@ width0pt\relax} \fi
 }
 
 \def\unnumbchapentry#1#2{\dochapentry{#1}{#2}}
-\def\shortunnumberedentry#1#2{\tocentry{#1}{\doshortpageno{#2}}}
+\def\shortunnumberedentry#1#2{\tocentry{#1}{\doshortpageno\bgroup#2\egroup}}
 
 % Sections.
 \def\secentry#1#2#3#4{\dosecentry{#2.#3\labelspace#1}{#4}}
@@ -3828,24 +3912,24 @@ width0pt\relax} \fi
    \penalty-300 \vskip1\baselineskip plus.33\baselineskip minus.25\baselineskip
    \begingroup
      \chapentryfonts
-     \tocentry{#1}{\dopageno{#2}}%
+     \tocentry{#1}{\dopageno\bgroup#2\egroup}%
    \endgroup
    \nobreak\vskip .25\baselineskip plus.1\baselineskip
 }
 
 \def\dosecentry#1#2{\begingroup
   \secentryfonts \leftskip=\tocindent
-  \tocentry{#1}{\dopageno{#2}}%
+  \tocentry{#1}{\dopageno\bgroup#2\egroup}%
 \endgroup}
 
 \def\dosubsecentry#1#2{\begingroup
   \subsecentryfonts \leftskip=2\tocindent
-  \tocentry{#1}{\dopageno{#2}}%
+  \tocentry{#1}{\dopageno\bgroup#2\egroup}%
 \endgroup}
 
 \def\dosubsubsecentry#1#2{\begingroup
   \subsubsecentryfonts \leftskip=3\tocindent
-  \tocentry{#1}{\dopageno{#2}}%
+  \tocentry{#1}{\dopageno\bgroup#2\egroup}%
 \endgroup}
 
 % Final typesetting of a toc entry; we use the same \entry macro as for
@@ -4326,23 +4410,39 @@ width0pt\relax} \fi
 \exdentamount=\defbodyindent
 \begingroup\obeylines\activeparens\spacesplit{#3{#4}}}
 
-% @deftypemethod has an extra argument that nothing else does.  Sigh.
+% Used for @deftypemethod and @deftypeivar.
 % #1 is the \E... control sequence to end the definition (which we define).
 % #2 is the \...x control sequence for consecutive fns (which we define).
 % #3 is the control sequence to call to resume processing.
-% #4, delimited by the space, is the class name.
+% #4, delimited by a space, is the class name.
 % #5 is the method's return type.
 %
-\def\deftypemethparsebody#1#2#3#4 #5 {\begingroup\inENV %
-\medbreak %
-% Define the end token that this defining construct specifies
-% so that it will exit this group.
-\def#1{\endgraf\endgroup\medbreak}%
-\def#2##1 ##2 {\begingroup\obeylines\activeparens\spacesplit{#3{##1}{##2}}}%
-\parindent=0in
-\advance\leftskip by \defbodyindent
-\exdentamount=\defbodyindent
-\begingroup\obeylines\activeparens\spacesplit{#3{#4}{#5}}}
+\def\deftypemethparsebody#1#2#3#4 #5 {\begingroup\inENV
+  \medbreak
+  \def#1{\endgraf\endgroup\medbreak}%
+  \def#2##1 ##2 {\begingroup\obeylines\activeparens\spacesplit{#3{##1}{##2}}}%
+  \parindent=0in
+  \advance\leftskip by \defbodyindent
+  \exdentamount=\defbodyindent
+  \begingroup\obeylines\activeparens\spacesplit{#3{#4}{#5}}}
+
+% Used for @deftypeop.  The change from \deftypemethparsebody is an
+% extra argument at the beginning which is the `category', instead of it
+% being the hardwired string `Method' or `Instance Variable'.  We have
+% to account for this both in the \...x definition and in parsing the
+% input at hand.  Thus also need a control sequence (passed as #5) for
+% the \E... definition to assign the category name to.
+% 
+\def\deftypeopparsebody#1#2#3#4#5 #6 {\begingroup\inENV
+  \medbreak
+  \def#1{\endgraf\endgroup\medbreak}%
+  \def#2##1 ##2 ##3 {%
+    \def#4{##1}%
+    \begingroup\obeylines\activeparens\spacesplit{#3{##2}{##3}}}%
+  \parindent=0in
+  \advance\leftskip by \defbodyindent
+  \exdentamount=\defbodyindent
+  \begingroup\obeylines\activeparens\spacesplit{#3{#5}{#6}}}
 
 \def\defopparsebody #1#2#3#4#5 {\begingroup\inENV %
 \medbreak %
@@ -4558,13 +4658,29 @@ width0pt\relax} \fi
 \def\defop #1 {\def\defoptype{#1}%
 \defopparsebody\Edefop\defopx\defopheader\defoptype}
 %
-\def\defopheader #1#2#3{%
+\def\defopheader#1#2#3{%
 \dosubind {fn}{\code{#2}}{\putwordon\ #1}% Make entry in function index
 \begingroup\defname {#2}{\defoptype\ \putwordon\ #1}%
 \defunargs {#3}\endgroup %
 }
 
-% @deftypemethod CLASS RETURN-TYPE METHOD ARG...
+% @deftypeop CATEGORY CLASS TYPE OPERATION ARG...
+%
+\def\deftypeop #1 {\def\deftypeopcategory{#1}%
+  \deftypeopparsebody\Edeftypeop\deftypeopx\deftypeopheader
+                       \deftypeopcategory}
+%
+% #1 is the class name, #2 the data type, #3 the operation name, #4 the args.
+\def\deftypeopheader#1#2#3#4{%
+  \dosubind{fn}{\code{#3}}{\putwordon\ \code{#1}}% entry in function index
+  \begingroup
+    \defname{\defheaderxcond#2\relax$$$#3}
+            {\deftypeopcategory\ \putwordon\ \code{#1}}%
+    \deftypefunargs{#4}%
+  \endgroup
+}
+
+% @deftypemethod CLASS TYPE METHOD ARG...
 %
 \def\deftypemethod{%
   \deftypemethparsebody\Edeftypemethod\deftypemethodx\deftypemethodheader}
@@ -4713,6 +4829,7 @@ width0pt\relax} \fi
 \def\deftypefunx#1 {\errmessage{@deftypefunx in invalid context}}
 \def\deftypeivarx#1 {\errmessage{@deftypeivarx in invalid context}}
 \def\deftypemethodx#1 {\errmessage{@deftypemethodx in invalid context}}
+\def\deftypeopx#1 {\errmessage{@deftypeopx in invalid context}}
 \def\deftypevarx#1 {\errmessage{@deftypevarx in invalid context}}
 \def\deftypevrx#1 {\errmessage{@deftypevrx in invalid context}}
 \def\defunx#1 {\errmessage{@defunx in invalid context}}
@@ -5071,7 +5188,7 @@ width0pt\relax} \fi
 %
 \def\setref#1#2{{%
   \indexdummies
-  \ifpdf \pdfmkdest{#1}\fi
+  \pdfmkdest{#1}
   \dosetq{#1-title}{Ytitle}%
   \dosetq{#1-pg}{Ypagenumber}%
   \dosetq{#1-snt}{#2}%
@@ -5123,13 +5240,13 @@ width0pt\relax} \fi
     \leavevmode
     \getfilename{#4}%
     \ifnum\filenamelength>0
-      \pdfannotlink attr{/Border [0 0 0]}%
+      \startlink attr{/Border [0 0 0]}%
         goto file{\the\filename.pdf} name{#1@}%
     \else
-      \pdfannotlink attr{/Border [0 0 0]}%
+      \startlink attr{/Border [0 0 0]}%
         goto name{#1@}%
     \fi
-    \BlueGreen
+    \linkcolor
   \fi
   %
   \ifdim \wd1 > 0pt
@@ -5151,7 +5268,7 @@ width0pt\relax} \fi
     % page 3
     \turnoffactive \putwordpage\tie\refx{#1-pg}{}%
   \fi
-  \ifpdf \Black\pdfendlink \fi
+  \endlink
 \endgroup}
 
 % \dosetq is the interface for calls from other macros
@@ -5497,7 +5614,9 @@ width0pt\relax} \fi
 % #2 is (optional) width, #3 is (optional) height.
 % #4 is just the usual extra ignored arg for parsing this stuff.
 \def\imagexxx#1,#2,#3,#4\finish{%
-  \ifx\pdfoutput\undefined
+  \ifpdf
+    \centerline{\dopdfimage{#1}{#2}{#3}}%
+  \else
     % \epsfbox itself resets \epsf?size at each figure.
     \setbox0 = \hbox{\ignorespaces #2}\ifdim\wd0 > 0pt \epsfxsize=#2\relax \fi
     \setbox0 = \hbox{\ignorespaces #3}\ifdim\wd0 > 0pt \epsfysize=#3\relax \fi
@@ -5518,8 +5637,6 @@ width0pt\relax} \fi
         \epsfbox{#1.eps}%
       \fi
     \endgroup
-  \else
-    \centerline{\pdfimage #1.pdf}%
   \fi
 }
 
@@ -5863,6 +5980,6 @@ should work if nowhere else does.}
 @c eval: (add-hook 'write-file-hooks 'time-stamp)
 @c page-delimiter: "^\\\\message"
 @c time-stamp-start: "def\\\\texinfoversion{"
-@c time-stamp-format: "%:y-%02m-%02d.%H"
+@c time-stamp-format: "%:y-%02m-%02d.%02H"
 @c time-stamp-end: "}"
 @c End:
