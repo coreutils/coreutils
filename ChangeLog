@@ -1,6 +1,23 @@
-2003-01-30  Jim Meyering  <jim@meyering.net>
+2003-01-31  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.5.
+
+	Rewrite to perform directory traversal using nftw.
+
+	* src/du.c: Include "dirname.h", "ftw.h", and "quotearg.h".
+	(AUTHORS): Add self.
+	(opt_one_file_system): Move global into `main'.
+	(path, xstat, exit_status): Remove declarations.
+	(arg_length, suffix_length): New globals.
+	(G_fail): New global, sort of like the old `exit_status'.
+	(IS_FTW_DIR_TYPE): Define.
+	(print_only_size): New function.
+	(process_file): New function.
+	(str_init, ensure_space, str_copyc, str_concatc): Remove functions.
+	(str_trunc, pop_dir, count_entry): Likewise.
+	(du_files): Rewrite to use nftw.
+
+2003-01-30  Jim Meyering  <jim@meyering.net>
 
 	* tests/du/trailing-slash: Ensure that du/ftw follows a command-line
 	symlink-to-directory with -L, even without the trailing slash.
