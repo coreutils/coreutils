@@ -1,5 +1,5 @@
 /* pathchk -- check whether pathnames are valid or portable
-   Copyright (C) 1991-2002 Free Software Foundation, Inc.
+   Copyright (C) 1991-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -232,7 +232,7 @@ portable_chars_only (const char *path)
   const char *p;
 
   for (p = path; *p; ++p)
-    if (portable_chars[(const unsigned char) *p] == 0)
+    if (portable_chars[(unsigned char) *p] == 0)
       {
 	error (0, 0, _("path `%s' contains nonportable character `%c'"),
 	       path, *p);
