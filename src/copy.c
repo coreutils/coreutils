@@ -207,7 +207,7 @@ copy_reg (const char *src_path, const char *dst_path,
     {
       error (0, errno, _("cannot create regular file %s"), quote (dst_path));
       return_val = -1;
-      goto ret2;
+      goto close_src_desc;
     }
 
   /* Find out the optimal buffer size.  */
@@ -216,7 +216,7 @@ copy_reg (const char *src_path, const char *dst_path,
     {
       error (0, errno, _("cannot fstat %s"), quote (dst_path));
       return_val = -1;
-      goto ret;
+      goto close_src_and_dst_desc;
     }
 
   buf_size = ST_BLKSIZE (sb);
@@ -231,7 +231,7 @@ copy_reg (const char *src_path, const char *dst_path,
 	{
 	  error (0, errno, _("cannot fstat %s"), quote (src_path));
 	  return_val = -1;
-	  goto ret;
+	  goto close_src_and_dst_desc;
 	}
 
       /* If the file has fewer blocks than would normally
@@ -258,7 +258,7 @@ copy_reg (const char *src_path, const char *dst_path,
 #endif
 	  error (0, errno, _("reading %s"), quote (src_path));
 	  return_val = -1;
-	  goto ret;
+	  goto close_src_and_dst_desc;
 	}
       if (n_read == 0)
 	break;
@@ -292,7 +292,7 @@ copy_reg (const char *src_path, const char *dst_path,
 		{
 		  error (0, errno, _("cannot lseek %s"), quote (dst_path));
 		  return_val = -1;
-		  goto ret;
+		  goto close_src_and_dst_desc;
 		}
 	      last_write_made_hole = 1;
 	    }
@@ -306,7 +306,7 @@ copy_reg (const char *src_path, const char *dst_path,
 	    {
 	      error (0, errno, _("writing %s"), quote (dst_path));
 	      return_val = -1;
-	      goto ret;
+	      goto close_src_and_dst_desc;
 	    }
 	  last_write_made_hole = 0;
 	}
@@ -333,13 +333,13 @@ copy_reg (const char *src_path, const char *dst_path,
 	}
     }
 
-ret:
+close_src_and_dst_desc:
   if (close (dest_desc) < 0)
     {
       error (0, errno, _("closing %s"), quote (dst_path));
       return_val = -1;
     }
-ret2:
+close_src_desc:
   if (close (source_desc) < 0)
     {
       error (0, errno, _("closing %s"), quote (src_path));
