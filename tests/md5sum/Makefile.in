@@ -1,6 +1,6 @@
-# Makefile.in generated automatically by automake 1.1p from Makefile.am
+# Makefile.in generated automatically by automake 1.2 from Makefile.am
 
-# Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy, distribute and modify it.
 
@@ -49,10 +49,6 @@ POST_INSTALL = true
 NORMAL_UNINSTALL = true
 PRE_UNINSTALL = true
 POST_UNINSTALL = true
-ACLOCAL = @ACLOCAL@
-AUTOCONF = @AUTOCONF@
-AUTOHEADER = @AUTOHEADER@
-AUTOMAKE = @AUTOMAKE@
 CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
@@ -146,24 +142,27 @@ check-TESTS: $(TESTS)
 	@failed=0; all=0; \
 	srcdir=$(srcdir); export srcdir; \
 	for tst in $(TESTS); do \
-	  all=`expr $$all + 1`; \
 	  if test -f $$tst; then dir=.; \
 	  else dir="$(srcdir)"; fi; \
 	  if $(TESTS_ENVIRONMENT) $$dir/$$tst; then \
+	    all=`expr $$all + 1`; \
 	    echo "PASS: $$tst"; \
-	  else \
+	  elif test $$? -ne 77; then \
+	    all=`expr $$all + 1`; \
 	    failed=`expr $$failed + 1`; \
 	    echo "FAIL: $$tst"; \
 	  fi; \
 	done; \
 	if test "$$failed" -eq 0; then \
-	  echo "========================"; \
-	  echo "All $$all tests passed"; \
-	  echo "========================"; \
+	  banner="All $$all tests passed"; \
 	else \
-	  echo "$$failed of $$all tests failed"; \
-	  exit 1; \
-	fi
+	  banner="$$failed of $$all tests failed"; \
+	fi; \
+	dashes=`echo "$$banner" | sed s/./=/g`; \
+	echo "$$dashes"; \
+	echo "$$banner"; \
+	echo "$$dashes"; \
+	test "$$failed" -eq 0
 info:
 dvi:
 check: all
@@ -183,7 +182,7 @@ uninstall:
 all: Makefile $(SCRIPTS)
 
 install-strip:
-	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' install
+	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' INSTALL_SCRIPT='$(INSTALL_PROGRAM)' install
 installdirs:
 
 
@@ -218,10 +217,12 @@ mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 
-$x-tests: @MAINT@mk-script Test.pm
+$(srcdir)/$x-tests: @MAINT@mk-script Test.pm
 	./mk-script ../../src/$x > $@.n
 	mv $@.n $@
 	chmod 755 $@
+
+mk-script: ../../config.status
 
 .pl:
 	rm -f $@ $@.tmp
@@ -229,15 +230,14 @@ $x-tests: @MAINT@mk-script Test.pm
 	chmod +x-w $@.tmp
 	mv $@.tmp $@
 
-@MAINT@rebuild-check: Test.pm mk-script
-@MAINT@	rb=rb-check; rm -f $rb; \
-@MAINT@	m_template=../Makefile.am.in; \
-@MAINT@	sed -n '1,/^##test-files-begin/p' $$m_template > $$rb; \
+@MAINT@Makefile.am: ../Makefile.am.in Test.pm mk-script
+@MAINT@	rm -f $@ $@t
+@MAINT@	sed -n '1,/^##test-files-begin/p' $< > $@t
 @MAINT@	tool=`echo $(subdir)|sed 's/^tests.//;s/-test//'`; \
-@MAINT@	echo "x = $$tool" >> $$rb; \
-@MAINT@	./mk-script --list >> $$rb; \
-@MAINT@	sed -n '/^##test-files-end/,$$p' $$m_template >> $$rb; \
-@MAINT@	diff -u Makefile.am $$rb && echo ok || echo no
+@MAINT@	  echo "x = $$tool" >> $@t
+@MAINT@	./mk-script --list >> $@t
+@MAINT@	sed -n '/^##test-files-end/,$$p' $< >> $@t
+@MAINT@	mv $@t $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
