@@ -2370,7 +2370,7 @@ print_long_format (const struct fileinfo *f)
 
   if (full_time)
     {
-      fmt = "%a %b %d %H:%M:%S %Y";
+      fmt = _("%a %b %d %H:%M:%S %Y");
     }
   else
     {
