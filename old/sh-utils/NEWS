@@ -1,5 +1,6 @@
 Changes in release 2.1
  [2.0.13]
+* uname and uptime work better on *BSD systems
 * pathchk now exits nonzero for a path with a directory component
     that specifies a non-directory
  [2.0.12]
