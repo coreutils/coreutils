@@ -520,7 +520,9 @@ do_copy (int argc, char **argv)
 
       /* When the destination is specified with a trailing slash and the
 	 source exists but is not a directory, convert the user's command
-	 `cp source dest/' to `cp source dest/basename(source)'.  */
+	 `cp source dest/' to `cp source dest/basename(source)'.  Doing
+	 this ensures that the command `cp non-directory file/' will now
+	 fail rather than performing the copy.  */
 
       else if (dest[strlen (dest) - 1] == '/'
 	  && lstat (source, &source_stats) == 0
