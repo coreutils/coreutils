@@ -86,6 +86,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   pathchk no longer accepts trailing options, e.g., "pathchk -p foo -b"
   now treats -b as a file name to check, not as an invalid option.
 
+  `pr --columns=N' was not equivalent to `pr -N' when also using
+  either -s or -w.
+
   pr now supports page numbers up to 2**64 on most hosts, and it
   detects page number overflow instead of silently wrapping around.
   pr now accepts file names that begin with "+" so long as the rest of
