@@ -82,7 +82,7 @@ typedef WINBOOL (WINAPI *PFN_MS_EX) (lMEMORYSTATUSEX*);
 
 /* Return the total amount of physical memory.  */
 double
-physmem_total ()
+physmem_total (void)
 {
 #if defined _SC_PHYS_PAGES && defined _SC_PAGESIZE
   { /* This works on linux-gnu, solaris2 and cygwin.  */
@@ -186,7 +186,7 @@ physmem_total ()
 
 /* Return the amount of physical memory available.  */
 double
-physmem_available ()
+physmem_available (void)
 {
 #if defined _SC_AVPHYS_PAGES && defined _SC_PAGESIZE
   { /* This works on linux-gnu, solaris2 and cygwin.  */
@@ -292,7 +292,7 @@ physmem_available ()
 # include <stdlib.h>
 
 int
-main ()
+main (void)
 {
   printf ("%12.f %12.f\n", physmem_total (), physmem_available ());
   exit (0);
