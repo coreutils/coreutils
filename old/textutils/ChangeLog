@@ -1,11 +1,31 @@
+1999-01-09  Jim Meyering  <meyering@ascend.com>
+
+	* Version 1.22g.
+
+	* tests/uniq/Test.pm: Add tests from Jochen Hein.
+	* src/uniq.c: New option: --all-repeated (-D).
+	(output_all_repeated) [output_mode]: New enum value.
+	(usage): Describe it.
+	(writeline): Test for new mode.
+	(check_file): Likewise.
+	Based on patches from Jochen Hein and Florin Iucha.
+	(main): Diagnose `too many arguments'.
+
+	* tests/head/Test.pm (null-1): Add test from Jochen Hein.
+
+	* src/tail.c (parse_obsolescent_option): Interpret `number' as decimal.
+	(parse_options): Likewise.
+	Reported by Kamal Paul Nigam.
+
+	* src/tail.c: New option: --max-unchanged-stats=N.
+	New option: --max-n-consecutive-size-changes=N.
+
 1999-01-03  Jim Meyering  <meyering@ascend.com>
 
 	* src/md5sum.c (usage): Remove third program_name argument -- there
 	were only two `%s' in the format string.
 
 1999-01-02  Jim Meyering  <meyering@ascend.com>
-
-	* Version 1.22g.
 
 	* src/tsort.c (tsort): Use a single call to error instead of two
 	to fprintf.
