@@ -315,7 +315,7 @@ EOF1
 $cmd
 code=\$?
 if test \$code != $e_ret_code; then
-  \$echo "Test $t_name failed: $xx return code \$code differs from expected value $e_ret_code" 1>&2
+  \$echo "Test $t_name failed: \$xx return code \$code differs from expected value $e_ret_code" 1>&2
   errors=`expr \$errors + 1`
 else
   cmp $out $exp_name > /dev/null 2>&1
