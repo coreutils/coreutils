@@ -1,3 +1,8 @@
+2000-05-13  Jim Meyering  <meyering@lucent.com>
+
+	* src/groups.sh: Detect and report write failure of --help/--version.
+	* src/nohup.sh: Likewise.
+
 2000-05-11  Jim Meyering  <meyering@lucent.com>
 
 	* src/date.c (usage): Don't call close_stdout_status directly,
