@@ -1,11 +1,12 @@
 2002-12-04  Jim Meyering  <jim@meyering.net>
 
 	Reflect the fact that stat.c and lstat.c are no longer generated.
-	* Makefile.am: (BUILT_SOURCES): Remove stat.c and lstat.c.
+	* Makefile.am (BUILT_SOURCES): Remove stat.c and lstat.c.
 	(DISTCLEANFILES): Likewise.
 	(EXTRA_DIST): Likewise.
 	(all_local): Don't depend on stat.c or lstat.c.
 	(stat.c, lstat.c): Remove rules.
+	(EXTRA_DIST): Remove xstat.in.
 
 	* xstat.in: Remove file.  Contents moved into stat.c.
 	* stat.c: Rework so that it may serve to define rpl_lstat, too.
