@@ -1,4 +1,8 @@
 [4.5.4]
+* `du symlink-to-dir/' would improperly remove the trailing slash
+* `du ""' would evoke a bounds violation.
+* In the unlikely event that running `du /' resulted in `stat ("/", ...)'
+  failing, du would give a diagnostic about `' (empty string) rather than `/'.
 * printf: a hexadecimal escape sequence has at most two hex. digits, not three.
 * The following features have been added to the --block-size option
   and similar environment variables of df, du, and ls.
