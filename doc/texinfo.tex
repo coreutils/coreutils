@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{1999-02-04}%
+\def\texinfoversion{1999-02-09}%
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99
 % Free Software Foundation, Inc.
@@ -132,9 +132,9 @@
 \ifx\putwordDefivar\undefined	\gdef\putwordDefivar{Instance Variable}\fi
 \ifx\putwordDefvar\undefined	\gdef\putwordDefvar{Variable}\fi
 \ifx\putwordDefopt\undefined	\gdef\putwordDefopt{User Option}\fi
-\ifx\putwordDeftypevar\undefined	\gdef\putwordDeftypevar{Variable}\fi
+\ifx\putwordDeftypevar\undefined\gdef\putwordDeftypevar{Variable}\fi
 \ifx\putwordDeffunc\undefined	\gdef\putwordDeffunc{Function}\fi
-\ifx\putwordDeftypefun\undefined	\gdef\putwordDeftypefun{Function}\fi
+\ifx\putwordDeftypefun\undefined\gdef\putwordDeftypefun{Function}\fi
 
 % Ignore a token.
 %
@@ -737,351 +737,6 @@ where each line of input produces a line of output.}
 
 % @paragraphindent  is defined for the Info formatting commands only.
 \let\paragraphindent=\comment
-
-% Prevent errors for section commands.
-% Used in @ignore and in failing conditionals.
-\def\ignoresections{%
-\let\chapter=\relax
-\let\unnumbered=\relax
-\let\top=\relax
-\let\unnumberedsec=\relax
-\let\unnumberedsection=\relax
-\let\unnumberedsubsec=\relax
-\let\unnumberedsubsection=\relax
-\let\unnumberedsubsubsec=\relax
-\let\unnumberedsubsubsection=\relax
-\let\section=\relax
-\let\subsec=\relax
-\let\subsubsec=\relax
-\let\subsection=\relax
-\let\subsubsection=\relax
-\let\appendix=\relax
-\let\appendixsec=\relax
-\let\appendixsection=\relax
-\let\appendixsubsec=\relax
-\let\appendixsubsection=\relax
-\let\appendixsubsubsec=\relax
-\let\appendixsubsubsection=\relax
-\let\contents=\relax
-\let\smallbook=\relax
-\let\titlepage=\relax
-}
-
-% Used in nested conditionals, where we have to parse the Texinfo source
-% and so want to turn off most commands, in case they are used
-% incorrectly.
-%
-\def\ignoremorecommands{%
-  \let\defcodeindex = \relax
-  \let\defcv = \relax
-  \let\deffn = \relax
-  \let\deffnx = \relax
-  \let\defindex = \relax
-  \let\defivar = \relax
-  \let\defmac = \relax
-  \let\defmethod = \relax
-  \let\defop = \relax
-  \let\defopt = \relax
-  \let\defspec = \relax
-  \let\deftp = \relax
-  \let\deftypefn = \relax
-  \let\deftypefun = \relax
-  \let\deftypevar = \relax
-  \let\deftypevr = \relax
-  \let\defun = \relax
-  \let\defvar = \relax
-  \let\defvr = \relax
-  \let\ref = \relax
-  \let\xref = \relax
-  \let\printindex = \relax
-  \let\pxref = \relax
-  \let\settitle = \relax
-  \let\setchapternewpage = \relax
-  \let\setchapterstyle = \relax
-  \let\everyheading = \relax
-  \let\evenheading = \relax
-  \let\oddheading = \relax
-  \let\everyfooting = \relax
-  \let\evenfooting = \relax
-  \let\oddfooting = \relax
-  \let\headings = \relax
-  \let\include = \relax
-  \let\lowersections = \relax
-  \let\down = \relax
-  \let\raisesections = \relax
-  \let\up = \relax
-  \let\set = \relax
-  \let\clear = \relax
-  \let\item = \relax
-}
-
-% Ignore @ignore ... @end ignore.
-%
-\def\ignore{\doignore{ignore}}
-
-% Ignore @ifinfo, @ifhtml, @ifnottex, @html, @menu, and @direntry text.
-%
-\def\ifinfo{\doignore{ifinfo}}
-\def\ifhtml{\doignore{ifhtml}}
-\def\ifnottex{\doignore{ifnottex}}
-\def\html{\doignore{html}}
-\def\menu{\doignore{menu}}
-\def\direntry{\doignore{direntry}}
-
-% @dircategory CATEGORY  -- specify a category of the dir file
-% which this file should belong to.  Ignore this in TeX.
-\let\dircategory = \comment
-
-% Ignore text until a line `@end #1'.
-%
-\def\doignore#1{\begingroup
-  % Don't complain about control sequences we have declared \outer.
-  \ignoresections
-  %
-  % Define a command to swallow text until we reach `@end #1'.
-  % This @ is a catcode 12 token (that is the normal catcode of @ in
-  % this texinfo.tex file).  We change the catcode of @ below to match.
-  \long\def\doignoretext##1@end #1{\enddoignore}%
-  %
-  % Make sure that spaces turn into tokens that match what \doignoretext wants.
-  \catcode32 = 10
-  %
-  % Ignore braces, too, so mismatched braces don't cause trouble.
-  \catcode`\{ = 9
-  \catcode`\} = 9
-  %
-  % We must not have @c interpreted as a control sequence.
-  \catcode`\@ = 12
-  %
-  % Make the letter c a comment character so that the rest of the line
-  % will be ignored. This way, the document can have (for example)
-  %   @c @end ifinfo
-  % and the @end ifinfo will be properly ignored.
-  % (We've just changed @ to catcode 12.)
-  \catcode`\c = 14
-  %
-  % And now expand that command.
-  \doignoretext
-}
-
-% What we do to finish off ignored text.
-%
-\def\enddoignore{\endgroup\ignorespaces}%
-
-\newif\ifwarnedobs\warnedobsfalse
-\def\obstexwarn{%
-  \ifwarnedobs\relax\else
-  % We need to warn folks that they may have trouble with TeX 3.0.
-  % This uses \immediate\write16 rather than \message to get newlines.
-    \immediate\write16{}
-    \immediate\write16{WARNING: for users of Unix TeX 3.0!}
-    \immediate\write16{This manual trips a bug in TeX version 3.0 (tex hangs).}
-    \immediate\write16{If you are running another version of TeX, relax.}
-    \immediate\write16{If you are running Unix TeX 3.0, kill this TeX process.}
-    \immediate\write16{  Then upgrade your TeX installation if you can.}
-    \immediate\write16{  (See ftp://ftp.gnu.org/pub/gnu/TeX.README.)}
-    \immediate\write16{If you are stuck with version 3.0, run the}
-    \immediate\write16{  script ``tex3patch'' from the Texinfo distribution}
-    \immediate\write16{  to use a workaround.}
-    \immediate\write16{}
-    \global\warnedobstrue
-    \fi
-}
-
-% **In TeX 3.0, setting text in \nullfont hangs tex.  For a
-% workaround (which requires the file ``dummy.tfm'' to be installed),
-% uncomment the following line:
-%%%%%\font\nullfont=dummy\let\obstexwarn=\relax
-
-% Ignore text, except that we keep track of conditional commands for
-% purposes of nesting, up to an `@end #1' command.
-%
-\def\nestedignore#1{%
-  \obstexwarn
-  % We must actually expand the ignored text to look for the @end
-  % command, so that nested ignore constructs work.  Thus, we put the
-  % text into a \vbox and then do nothing with the result.  To minimize
-  % the change of memory overflow, we follow the approach outlined on
-  % page 401 of the TeXbook: make the current font be a dummy font.
-  %
-  \setbox0 = \vbox\bgroup
-    % Don't complain about control sequences we have declared \outer.
-    \ignoresections
-    %
-    % Define `@end #1' to end the box, which will in turn undefine the
-    % @end command again.
-    \expandafter\def\csname E#1\endcsname{\egroup\ignorespaces}%
-    %
-    % We are going to be parsing Texinfo commands.  Most cause no
-    % trouble when they are used incorrectly, but some commands do
-    % complicated argument parsing or otherwise get confused, so we
-    % undefine them.
-    %
-    % We can't do anything about stray @-signs, unfortunately;
-    % they'll produce `undefined control sequence' errors.
-    \ignoremorecommands
-    %
-    % Set the current font to be \nullfont, a TeX primitive, and define
-    % all the font commands to also use \nullfont.  We don't use
-    % dummy.tfm, as suggested in the TeXbook, because not all sites
-    % might have that installed.  Therefore, math mode will still
-    % produce output, but that should be an extremely small amount of
-    % stuff compared to the main input.
-    %
-    \nullfont
-    \let\tenrm = \nullfont  \let\tenit = \nullfont  \let\tensl = \nullfont
-    \let\tenbf = \nullfont  \let\tentt = \nullfont  \let\smallcaps = \nullfont
-    \let\tensf = \nullfont
-    % Similarly for index fonts (mostly for their use in
-    % smallexample)
-    \let\indrm = \nullfont  \let\indit = \nullfont  \let\indsl = \nullfont
-    \let\indbf = \nullfont  \let\indtt = \nullfont  \let\indsc = \nullfont
-    \let\indsf = \nullfont
-    %
-    % Don't complain when characters are missing from the fonts.
-    \tracinglostchars = 0
-    %
-    % Don't bother to do space factor calculations.
-    \frenchspacing
-    %
-    % Don't report underfull hboxes.
-    \hbadness = 10000
-    %
-    % Do minimal line-breaking.
-    \pretolerance = 10000
-    %
-    % Do not execute instructions in @tex
-    \def\tex{\doignore{tex}}%
-    % Do not execute macro definitions.
-    % `c' is a comment character, so the word `macro' will get cut off.
-    \def\macro{\doignore{ma}}%
-}
-
-% @set VAR sets the variable VAR to an empty value.
-% @set VAR REST-OF-LINE sets VAR to the value REST-OF-LINE.
-%
-% Since we want to separate VAR from REST-OF-LINE (which might be
-% empty), we can't just use \parsearg; we have to insert a space of our
-% own to delimit the rest of the line, and then take it out again if we
-% didn't need it.  Make sure the catcode of space is correct to avoid
-% losing inside @example, for instance.
-%
-\def\set{\begingroup\catcode` =10
-  \catcode`\-=12 \catcode`\_=12 % Allow - and _ in VAR.
-  \parsearg\setxxx}
-\def\setxxx#1{\setyyy#1 \endsetyyy}
-\def\setyyy#1 #2\endsetyyy{%
-  \def\temp{#2}%
-  \ifx\temp\empty \global\expandafter\let\csname SET#1\endcsname = \empty
-  \else \setzzz{#1}#2\endsetzzz % Remove the trailing space \setxxx inserted.
-  \fi
-  \endgroup
-}
-% Can't use \xdef to pre-expand #2 and save some time, since \temp or
-% \next or other control sequences that we've defined might get us into
-% an infinite loop. Consider `@set foo @cite{bar}'.
-\def\setzzz#1#2 \endsetzzz{\expandafter\gdef\csname SET#1\endcsname{#2}}
-
-% @clear VAR clears (i.e., unsets) the variable VAR.
-%
-\def\clear{\parsearg\clearxxx}
-\def\clearxxx#1{\global\expandafter\let\csname SET#1\endcsname=\relax}
-
-% @value{foo} gets the text saved in variable foo.
-%
-{
-  \catcode`\_ = \active
-  %
-  % We might end up with active _ or - characters in the argument if
-  % we're called from @code, as @code{@value{foo-bar_}}.  So \let any
-  % such active characters to their normal equivalents.
-  \gdef\value{\begingroup
-    \catcode`\-=12 \catcode`\_=12
-    \indexbreaks \let_\normalunderscore
-    \valuexxx}
-}
-\def\valuexxx#1{\expandablevalue{#1}\endgroup}
-
-% We have this subroutine so that we can handle at least some @value's
-% properly in indexes (we \let\value to this in \indexdummies).  Ones
-% whose names contain - or _ still won't work, but we can't do anything
-% about that.  The command has to be fully expandable, since the result
-% winds up in the index file.  This means that if the variable's value
-% contains other Texinfo commands, it's almost certain it will fail
-% (although perhaps we could fix that with sufficient work to do a
-% one-level expansion on the result, instead of complete).
-%
-\def\expandablevalue#1{%
-  \expandafter\ifx\csname SET#1\endcsname\relax
-    {[No value for ``#1'']}%
-  \else
-    \csname SET#1\endcsname
-  \fi
-}
-
-% @ifset VAR ... @end ifset reads the `...' iff VAR has been defined
-% with @set.
-%
-\def\ifset{\parsearg\ifsetxxx}
-\def\ifsetxxx #1{%
-  \expandafter\ifx\csname SET#1\endcsname\relax
-    \expandafter\ifsetfail
-  \else
-    \expandafter\ifsetsucceed
-  \fi
-}
-\def\ifsetsucceed{\conditionalsucceed{ifset}}
-\def\ifsetfail{\nestedignore{ifset}}
-\defineunmatchedend{ifset}
-
-% @ifclear VAR ... @end ifclear reads the `...' iff VAR has never been
-% defined with @set, or has been undefined with @clear.
-%
-\def\ifclear{\parsearg\ifclearxxx}
-\def\ifclearxxx #1{%
-  \expandafter\ifx\csname SET#1\endcsname\relax
-    \expandafter\ifclearsucceed
-  \else
-    \expandafter\ifclearfail
-  \fi
-}
-\def\ifclearsucceed{\conditionalsucceed{ifclear}}
-\def\ifclearfail{\nestedignore{ifclear}}
-\defineunmatchedend{ifclear}
-
-% @iftex, @ifnothtml, @ifnotinfo always succeed; we read the text
-% following, through the first @end iftex (etc.).  Make `@end iftex'
-% (etc.) valid only after an @iftex.
-%
-\def\iftex{\conditionalsucceed{iftex}}
-\def\ifnothtml{\conditionalsucceed{ifnothtml}}
-\def\ifnotinfo{\conditionalsucceed{ifnotinfo}}
-\defineunmatchedend{iftex}
-\defineunmatchedend{ifnothtml}
-\defineunmatchedend{ifnotinfo}
-
-% We can't just want to start a group at @iftex (for example) and end it
-% at @end iftex, since then @set commands inside the conditional have no
-% effect (they'd get reverted at the end of the group).  So we must
-% define \Eiftex to redefine itself to be its previous value.  (We can't
-% just define it to fail again with an ``unmatched end'' error, since
-% the @ifset might be nested.)
-%
-\def\conditionalsucceed#1{%
-  \edef\temp{%
-    % Remember the current value of \E#1.
-    \let\nece{prevE#1} = \nece{E#1}%
-    %
-    % At the `@end #1', redefine \E#1 to be its previous value.
-    \def\nece{E#1}{\let\nece{E#1} = \nece{prevE#1}}%
-  }%
-  \temp
-}
-
-% We need to expand lots of \csname's, but we don't want to expand the
-% control sequences after we've constructed them.
-%
-\def\nece#1{\expandafter\noexpand\csname#1\endcsname}
 
 % @asis just yields its argument.  Used with @table, for example.
 %
@@ -2320,6 +1975,355 @@ width0pt\relax} \fi
 \global\advance\multitableparskip-7pt %% to keep parskip somewhat smaller
                                       %% than skip between lines in the table.
 \fi}
+
+
+\message{conditionals,}
+% Prevent errors for section commands.
+% Used in @ignore and in failing conditionals.
+\def\ignoresections{%
+  \let\chapter=\relax
+  \let\unnumbered=\relax
+  \let\top=\relax
+  \let\unnumberedsec=\relax
+  \let\unnumberedsection=\relax
+  \let\unnumberedsubsec=\relax
+  \let\unnumberedsubsection=\relax
+  \let\unnumberedsubsubsec=\relax
+  \let\unnumberedsubsubsection=\relax
+  \let\section=\relax
+  \let\subsec=\relax
+  \let\subsubsec=\relax
+  \let\subsection=\relax
+  \let\subsubsection=\relax
+  \let\appendix=\relax
+  \let\appendixsec=\relax
+  \let\appendixsection=\relax
+  \let\appendixsubsec=\relax
+  \let\appendixsubsection=\relax
+  \let\appendixsubsubsec=\relax
+  \let\appendixsubsubsection=\relax
+  \let\contents=\relax
+  \let\smallbook=\relax
+  \let\titlepage=\relax
+}
+
+% Used in nested conditionals, where we have to parse the Texinfo source
+% and so want to turn off most commands, in case they are used
+% incorrectly.
+%
+\def\ignoremorecommands{%
+  \let\defcodeindex = \relax
+  \let\defcv = \relax
+  \let\deffn = \relax
+  \let\deffnx = \relax
+  \let\defindex = \relax
+  \let\defivar = \relax
+  \let\defmac = \relax
+  \let\defmethod = \relax
+  \let\defop = \relax
+  \let\defopt = \relax
+  \let\defspec = \relax
+  \let\deftp = \relax
+  \let\deftypefn = \relax
+  \let\deftypefun = \relax
+  \let\deftypevar = \relax
+  \let\deftypevr = \relax
+  \let\defun = \relax
+  \let\defvar = \relax
+  \let\defvr = \relax
+  \let\ref = \relax
+  \let\xref = \relax
+  \let\printindex = \relax
+  \let\pxref = \relax
+  \let\settitle = \relax
+  \let\setchapternewpage = \relax
+  \let\setchapterstyle = \relax
+  \let\everyheading = \relax
+  \let\evenheading = \relax
+  \let\oddheading = \relax
+  \let\everyfooting = \relax
+  \let\evenfooting = \relax
+  \let\oddfooting = \relax
+  \let\headings = \relax
+  \let\include = \relax
+  \let\lowersections = \relax
+  \let\down = \relax
+  \let\raisesections = \relax
+  \let\up = \relax
+  \let\set = \relax
+  \let\clear = \relax
+  \let\item = \relax
+}
+
+% Ignore @ignore ... @end ignore.
+%
+\def\ignore{\doignore{ignore}}
+
+% Ignore @ifinfo, @ifhtml, @ifnottex, @html, @menu, and @direntry text.
+%
+\def\ifinfo{\doignore{ifinfo}}
+\def\ifhtml{\doignore{ifhtml}}
+\def\ifnottex{\doignore{ifnottex}}
+\def\html{\doignore{html}}
+\def\menu{\doignore{menu}}
+\def\direntry{\doignore{direntry}}
+
+% @dircategory CATEGORY  -- specify a category of the dir file
+% which this file should belong to.  Ignore this in TeX.
+\let\dircategory = \comment
+
+% Ignore text until a line `@end #1'.
+%
+\def\doignore#1{\begingroup
+  % Don't complain about control sequences we have declared \outer.
+  \ignoresections
+  %
+  % Define a command to swallow text until we reach `@end #1'.
+  % This @ is a catcode 12 token (that is the normal catcode of @ in
+  % this texinfo.tex file).  We change the catcode of @ below to match.
+  \long\def\doignoretext##1@end #1{\enddoignore}%
+  %
+  % Make sure that spaces turn into tokens that match what \doignoretext wants.
+  \catcode32 = 10
+  %
+  % Ignore braces, too, so mismatched braces don't cause trouble.
+  \catcode`\{ = 9
+  \catcode`\} = 9
+  %
+  % We must not have @c interpreted as a control sequence.
+  \catcode`\@ = 12
+  %
+  % Make the letter c a comment character so that the rest of the line
+  % will be ignored. This way, the document can have (for example)
+  %   @c @end ifinfo
+  % and the @end ifinfo will be properly ignored.
+  % (We've just changed @ to catcode 12.)
+  \catcode`\c = 14
+  %
+  % And now expand that command.
+  \doignoretext
+}
+
+% What we do to finish off ignored text.
+%
+\def\enddoignore{\endgroup\ignorespaces}%
+
+\newif\ifwarnedobs\warnedobsfalse
+\def\obstexwarn{%
+  \ifwarnedobs\relax\else
+  % We need to warn folks that they may have trouble with TeX 3.0.
+  % This uses \immediate\write16 rather than \message to get newlines.
+    \immediate\write16{}
+    \immediate\write16{WARNING: for users of Unix TeX 3.0!}
+    \immediate\write16{This manual trips a bug in TeX version 3.0 (tex hangs).}
+    \immediate\write16{If you are running another version of TeX, relax.}
+    \immediate\write16{If you are running Unix TeX 3.0, kill this TeX process.}
+    \immediate\write16{  Then upgrade your TeX installation if you can.}
+    \immediate\write16{  (See ftp://ftp.gnu.org/pub/gnu/TeX.README.)}
+    \immediate\write16{If you are stuck with version 3.0, run the}
+    \immediate\write16{  script ``tex3patch'' from the Texinfo distribution}
+    \immediate\write16{  to use a workaround.}
+    \immediate\write16{}
+    \global\warnedobstrue
+    \fi
+}
+
+% **In TeX 3.0, setting text in \nullfont hangs tex.  For a
+% workaround (which requires the file ``dummy.tfm'' to be installed),
+% uncomment the following line:
+%%%%%\font\nullfont=dummy\let\obstexwarn=\relax
+
+% Ignore text, except that we keep track of conditional commands for
+% purposes of nesting, up to an `@end #1' command.
+%
+\def\nestedignore#1{%
+  \obstexwarn
+  % We must actually expand the ignored text to look for the @end
+  % command, so that nested ignore constructs work.  Thus, we put the
+  % text into a \vbox and then do nothing with the result.  To minimize
+  % the change of memory overflow, we follow the approach outlined on
+  % page 401 of the TeXbook: make the current font be a dummy font.
+  %
+  \setbox0 = \vbox\bgroup
+    % Don't complain about control sequences we have declared \outer.
+    \ignoresections
+    %
+    % Define `@end #1' to end the box, which will in turn undefine the
+    % @end command again.
+    \expandafter\def\csname E#1\endcsname{\egroup\ignorespaces}%
+    %
+    % We are going to be parsing Texinfo commands.  Most cause no
+    % trouble when they are used incorrectly, but some commands do
+    % complicated argument parsing or otherwise get confused, so we
+    % undefine them.
+    %
+    % We can't do anything about stray @-signs, unfortunately;
+    % they'll produce `undefined control sequence' errors.
+    \ignoremorecommands
+    %
+    % Set the current font to be \nullfont, a TeX primitive, and define
+    % all the font commands to also use \nullfont.  We don't use
+    % dummy.tfm, as suggested in the TeXbook, because not all sites
+    % might have that installed.  Therefore, math mode will still
+    % produce output, but that should be an extremely small amount of
+    % stuff compared to the main input.
+    %
+    \nullfont
+    \let\tenrm = \nullfont  \let\tenit = \nullfont  \let\tensl = \nullfont
+    \let\tenbf = \nullfont  \let\tentt = \nullfont  \let\smallcaps = \nullfont
+    \let\tensf = \nullfont
+    % Similarly for index fonts (mostly for their use in
+    % smallexample)
+    \let\indrm = \nullfont  \let\indit = \nullfont  \let\indsl = \nullfont
+    \let\indbf = \nullfont  \let\indtt = \nullfont  \let\indsc = \nullfont
+    \let\indsf = \nullfont
+    %
+    % Don't complain when characters are missing from the fonts.
+    \tracinglostchars = 0
+    %
+    % Don't bother to do space factor calculations.
+    \frenchspacing
+    %
+    % Don't report underfull hboxes.
+    \hbadness = 10000
+    %
+    % Do minimal line-breaking.
+    \pretolerance = 10000
+    %
+    % Do not execute instructions in @tex
+    \def\tex{\doignore{tex}}%
+    % Do not execute macro definitions.
+    % `c' is a comment character, so the word `macro' will get cut off.
+    \def\macro{\doignore{ma}}%
+}
+
+% @set VAR sets the variable VAR to an empty value.
+% @set VAR REST-OF-LINE sets VAR to the value REST-OF-LINE.
+%
+% Since we want to separate VAR from REST-OF-LINE (which might be
+% empty), we can't just use \parsearg; we have to insert a space of our
+% own to delimit the rest of the line, and then take it out again if we
+% didn't need it.  Make sure the catcode of space is correct to avoid
+% losing inside @example, for instance.
+%
+\def\set{\begingroup\catcode` =10
+  \catcode`\-=12 \catcode`\_=12 % Allow - and _ in VAR.
+  \parsearg\setxxx}
+\def\setxxx#1{\setyyy#1 \endsetyyy}
+\def\setyyy#1 #2\endsetyyy{%
+  \def\temp{#2}%
+  \ifx\temp\empty \global\expandafter\let\csname SET#1\endcsname = \empty
+  \else \setzzz{#1}#2\endsetzzz % Remove the trailing space \setxxx inserted.
+  \fi
+  \endgroup
+}
+% Can't use \xdef to pre-expand #2 and save some time, since \temp or
+% \next or other control sequences that we've defined might get us into
+% an infinite loop. Consider `@set foo @cite{bar}'.
+\def\setzzz#1#2 \endsetzzz{\expandafter\gdef\csname SET#1\endcsname{#2}}
+
+% @clear VAR clears (i.e., unsets) the variable VAR.
+%
+\def\clear{\parsearg\clearxxx}
+\def\clearxxx#1{\global\expandafter\let\csname SET#1\endcsname=\relax}
+
+% @value{foo} gets the text saved in variable foo.
+{
+  \catcode`\_ = \active
+  %
+  % We might end up with active _ or - characters in the argument if
+  % we're called from @code, as @code{@value{foo-bar_}}.  So \let any
+  % such active characters to their normal equivalents.
+  \gdef\value{\begingroup
+    \catcode`\-=12 \catcode`\_=12
+    \indexbreaks \let_\normalunderscore
+    \valuexxx}
+}
+\def\valuexxx#1{\expandablevalue{#1}\endgroup}
+
+% We have this subroutine so that we can handle at least some @value's
+% properly in indexes (we \let\value to this in \indexdummies).  Ones
+% whose names contain - or _ still won't work, but we can't do anything
+% about that.  The command has to be fully expandable, since the result
+% winds up in the index file.  This means that if the variable's value
+% contains other Texinfo commands, it's almost certain it will fail
+% (although perhaps we could fix that with sufficient work to do a
+% one-level expansion on the result, instead of complete).
+%
+\def\expandablevalue#1{%
+  \expandafter\ifx\csname SET#1\endcsname\relax
+    {[No value for ``#1'']}%
+  \else
+    \csname SET#1\endcsname
+  \fi
+}
+
+% @ifset VAR ... @end ifset reads the `...' iff VAR has been defined
+% with @set.
+%
+\def\ifset{\parsearg\ifsetxxx}
+\def\ifsetxxx #1{%
+  \expandafter\ifx\csname SET#1\endcsname\relax
+    \expandafter\ifsetfail
+  \else
+    \expandafter\ifsetsucceed
+  \fi
+}
+\def\ifsetsucceed{\conditionalsucceed{ifset}}
+\def\ifsetfail{\nestedignore{ifset}}
+\defineunmatchedend{ifset}
+
+% @ifclear VAR ... @end ifclear reads the `...' iff VAR has never been
+% defined with @set, or has been undefined with @clear.
+%
+\def\ifclear{\parsearg\ifclearxxx}
+\def\ifclearxxx #1{%
+  \expandafter\ifx\csname SET#1\endcsname\relax
+    \expandafter\ifclearsucceed
+  \else
+    \expandafter\ifclearfail
+  \fi
+}
+\def\ifclearsucceed{\conditionalsucceed{ifclear}}
+\def\ifclearfail{\nestedignore{ifclear}}
+\defineunmatchedend{ifclear}
+
+% @iftex, @ifnothtml, @ifnotinfo always succeed; we read the text
+% following, through the first @end iftex (etc.).  Make `@end iftex'
+% (etc.) valid only after an @iftex.
+%
+\def\iftex{\conditionalsucceed{iftex}}
+\def\ifnothtml{\conditionalsucceed{ifnothtml}}
+\def\ifnotinfo{\conditionalsucceed{ifnotinfo}}
+\defineunmatchedend{iftex}
+\defineunmatchedend{ifnothtml}
+\defineunmatchedend{ifnotinfo}
+
+% We can't just want to start a group at @iftex (for example) and end it
+% at @end iftex, since then @set commands inside the conditional have no
+% effect (they'd get reverted at the end of the group).  So we must
+% define \Eiftex to redefine itself to be its previous value.  (We can't
+% just define it to fail again with an ``unmatched end'' error, since
+% the @ifset might be nested.)
+%
+\def\conditionalsucceed#1{%
+  \edef\temp{%
+    % Remember the current value of \E#1.
+    \let\nece{prevE#1} = \nece{E#1}%
+    %
+    % At the `@end #1', redefine \E#1 to be its previous value.
+    \def\nece{E#1}{\let\nece{E#1} = \nece{prevE#1}}%
+  }%
+  \temp
+}
+
+% We need to expand lots of \csname's, but we don't want to expand the
+% control sequences after we've constructed them.
+%
+\def\nece#1{\expandafter\noexpand\csname#1\endcsname}
+
+% @defininfoenclose.
+\let\definfoenclose=\comment
 
 
 \message{indexing,}
@@ -4521,7 +4525,8 @@ width0pt\relax} \fi
    \begingroup \newlinechar`\^^M
    % Undo catcode changes of \startcontents and \doprintindex
    \catcode`\@=0 \catcode`\\=12 \escapechar=`\@
-   \toks0={#1}%
+   % Append \endinput to make sure that TeX does not see the ending newline.
+   \toks0={#1\endinput}%
    \immediate\openout\macscribble=\jobname.tmp
    \immediate\write\macscribble{\the\toks0}%
    \immediate\closeout\macscribble
@@ -4534,7 +4539,7 @@ width0pt\relax} \fi
 \begingroup \newlinechar`\^^M
 % Undo catcode changes of \startcontents and \doprintindex
 \catcode`\@=0 \catcode`\\=12 \escapechar=`\@
-\let\xeatspaces\eatspaces\scantokens{#1}\endgroup}
+\let\xeatspaces\eatspaces\scantokens{#1\endinput}\endgroup}
 \fi
 
 \newcount\paramno   % Count of parameters
@@ -4648,7 +4653,7 @@ width0pt\relax} \fi
     \global\expandafter\let \csname ismacro.#1\endcsname=0%
     % Remove the macro name from \macrolist
     \begingroup
-      \edef\tempa{\expandafter\noexpand\csname#1\endcsname}
+      \edef\tempa{\expandafter\noexpand\csname#1\endcsname}%
       \def\do##1{%
         \def\tempb{##1}%
         \ifx\tempa\tempb
@@ -4656,7 +4661,7 @@ width0pt\relax} \fi
         \else
           \toks0 = \expandafter{\newmacrolist\do}%
           \edef\newmacrolist{\the\toks0\expandafter\noexpand\tempa}%
-        \fi}
+        \fi}%
       \def\newmacrolist{}%
       % Execute macro list to define \newmacrolist
       \macrolist
@@ -4729,7 +4734,7 @@ width0pt\relax} \fi
     \else % many
       \expandafter\xdef\csname\the\macname\endcsname{%
          \bgroup\noexpand\macroargctxt
-         \noexpand\csname\the\macname xx\endcsname}
+         \noexpand\csname\the\macname xx\endcsname}%
       \expandafter\xdef\csname\the\macname xx\endcsname##1{%
           \expandafter\noexpand\csname\the\macname xxx\endcsname ##1,}%
       \expandafter\expandafter
@@ -4756,7 +4761,7 @@ width0pt\relax} \fi
     \else % many
       \expandafter\xdef\csname\the\macname\endcsname{%
          \bgroup\noexpand\macroargctxt
-         \expandafter\noexpand\csname\the\macname xx\endcsname}
+         \expandafter\noexpand\csname\the\macname xx\endcsname}%
       \expandafter\xdef\csname\the\macname xx\endcsname##1{%
           \expandafter\noexpand\csname\the\macname xxx\endcsname ##1,}%
       \expandafter\expandafter
@@ -4786,6 +4791,11 @@ width0pt\relax} \fi
 % expanded by \write.
 \def\turnoffmacros{\begingroup \def\do##1{\let\noexpand##1=\relax}%
   \edef\next{\macrolist}\expandafter\endgroup\next}
+
+
+% @alias.
+\def\alias#1=#2{\let#1=#2}
+
 
 \message{cross references,}
 \newwrite\auxfile
@@ -4843,7 +4853,7 @@ width0pt\relax} \fi
   \indexdummies
   \dosetq{#1-title}{Ytitle}%
   \dosetq{#1-pg}{Ypagenumber}%
-  \dosetq{#1-snt}{#2}
+  \dosetq{#1-snt}{#2}%
 }}
 
 % @xref, @pxref, and @ref generate cross-references.  For \xrefX, #1 is
