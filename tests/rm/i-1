@@ -1,17 +1,16 @@
 #!/bin/sh
 
-: ${RM=rm}
 test=i-1
 
 if test "$VERBOSE" = yes; then
   set -x
-  $RM --version
+  rm --version
 fi
 
-# Don't require use of TMPDIR.
-: ${RM_TMPDIR=.}
-
-tmp=$RM_TMPDIR/t-rm.$$
+pwd=`pwd`
+tmp=`echo "$0"|sed 's,.*/,,'`.tmp
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
 
 test_failure=0
 mkdir $tmp || test_failure=1
@@ -27,11 +26,11 @@ echo y > $tmp/$test.Iy
 echo n > $tmp/$test.In
 
 fail=0
-$RM -i $tmp/a < $tmp/$test.In > /dev/null 2>&1 || fail=1
+rm -i $tmp/a < $tmp/$test.In > /dev/null 2>&1 || fail=1
 # The file should not have been removed.
 test -f $tmp/a || fail=1
 
-$RM -i $tmp/a < $tmp/$test.Iy > /dev/null 2>&1 || fail=1
+rm -i $tmp/a < $tmp/$test.Iy > /dev/null 2>&1 || fail=1
 # The file should have been removed this time.
 test -f $tmp/a && fail=1
 
