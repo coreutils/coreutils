@@ -29,6 +29,7 @@
 
 2003-04-11  Jim Meyering  <jim@meyering.net>
 
+	Clean up.
 	* src/chown.c, src/cp.c, src/dircolors.hin, src/du.c, src/ln.c:
 	* src/mkfifo.c, src/ptx.c, src/spline.c, src/stty.c, src/tail.c:
 	* src/test.c, src/unexpand.c: Remove (or replace-with-TAB(s) to
