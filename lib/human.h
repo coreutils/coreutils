@@ -23,7 +23,16 @@
 #  endif
 # endif
 
+enum human_inexact_style
+{
+  human_floor = -1,
+  human_round_to_even = 0,
+  human_ceiling = 1
+};
+
 char *human_readable PARAMS ((uintmax_t, char *, int, int));
+char *human_readable_inexact PARAMS ((uintmax_t, char *, int, int,
+				      enum human_inexact_style));
 
 void human_block_size PARAMS ((char const *, int, int *));
 
