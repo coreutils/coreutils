@@ -1,3 +1,10 @@
+Sun Apr 28 17:10:03 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* configure.in: Make fp_C_PROTOTYPES precede AC_C_INLINE.
+	Otherwise, some systems lose because the value AC_C_INLINE choses
+	with plain `cc' is different from that chosen when using the ANSI-mode
+	C compiler.  From Kaveh Ghazi.
+
 Tue Apr 23 22:05:35 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* aclocal.m4 (AC_REPLACE_GNU_GETOPT): New macro.

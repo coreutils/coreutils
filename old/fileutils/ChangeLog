@@ -1,5 +1,10 @@
 Sun Apr 28 16:32:38 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
+	* configure.in: Add a comment that fp_C_PROTOTYPES must precede
+	AC_C_INLINE.  Otherwise, some systems lose because the value
+	AC_C_INLINE choses with plain `cc' is different from that chosen
+	when using the ANSI-mode C compiler.  From Kaveh Ghazi.
+
 	* fileblocks.c [HAVE_ST_BLOCKS || _POSIX_VERSION]: Add extern dcl
 	of unused variable so that after preprocessing, the file will never
 	be empty.  Otherwise, some compilers in ANSI mode (among them, the
