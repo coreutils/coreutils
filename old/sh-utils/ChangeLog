@@ -1,20 +1,44 @@
+1999-03-06  Jim Meyering  <meyering@ascend.com>
+
+	* src/date.c: Include long-options.h.
+	[long_options]: Remove the "help" and "version" entries.
+	Remove declarations of show_help and show_version.
+	(main): Use parse_long_options, including author name(s).
+	Remove the show_version and show_help blocks.
+	* src/env.c: Likewise.
+	* src/id.c: Likewise.
+	* src/logname.c: Likewise.
+	* src/pathchk.c: Likewise.
+	* src/pinky.c: Likewise.
+	* src/printenv.c: Likewise.
+	* src/seq.c: Likewise.
+	* src/sleep.c: Likewise.
+	* src/su.c: Likewise.
+	* src/tee.c: Likewise.
+	* src/tty.c: Likewise.
+	* src/uname.c: Likewise.
+	* src/uptime.c: Likewise.
+	* src/users.c: Likewise.
+	* src/who.c: Likewise.
+	* src/whoami.c: Likewise.
+
 1999-03-04  Jim Meyering  <meyering@ascend.com>
 
-	* basename.c (main): Include author name argument in call to
+	* src/basename.c (main): Include author name argument in call to
 	parse_long_options.
-	* chroot.c: Likewise.
-	* dirname.c: Likewise.
-	* echo.c: Likewise.
-	* expr.c: Likewise.
-	* factor.c: Likewise.
-	* hostid.c: Likewise.
-	* hostname.c: Likewise.
-	* nice.c: Likewise.
-	* printf.c: Likewise.
-	* pwd.c: Likewise.
-	* stty.c: Likewise.
-	* test.c: Likewise.
-	* yes.c: Likewise.
+	* src/chroot.c: Likewise.
+	* src/dirname.c: Likewise.
+	* src/echo.c: Likewise.
+	* src/expr.c: Likewise.
+	* src/factor.c: Likewise.
+	* src/hostid.c: Likewise.
+	* src/hostname.c: Likewise.
+	* src/nice.c: Likewise.
+	* src/printf.c: Likewise.
+	* src/pwd.c: Likewise.
+	* src/stty.c: Likewise.
+	* src/test.c: Likewise.
+	* src/yes.c: Likewise.
 
 1999-03-02  Jim Meyering  <meyering@ascend.com>
 
