@@ -1,4 +1,4 @@
-#serial 27
+#serial 28
 
 dnl We use jm_ for non Autoconf macros.
 m4_pattern_forbid([^jm_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
@@ -88,11 +88,13 @@ AC_DEFUN([jm_PREREQ_HASH],
 ])
 
 # If you use human.c, you need the following files:
-# inttypes.m4 ulonglong.m4
+# inttypes.m4 longlong.m4
 AC_DEFUN([jm_PREREQ_HUMAN],
 [
-  AC_CHECK_HEADERS(limits.h stdlib.h string.h)
+  AC_CHECK_HEADERS(locale.h)
   AC_CHECK_DECLS([getenv])
+  AC_CHECK_FUNCS(localeconv)
+  AC_HEADER_STDBOOL
   AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])
 ])
 
