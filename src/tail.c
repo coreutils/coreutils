@@ -327,15 +327,15 @@ main (argc, argv)
   exit (exit_status);
 }
 
-/* Display the last NUMBER units of file FILENAME.
+/* Display the last N_UNITS units of file FILENAME.
    "-" for FILENAME means the standard input.
    FILENUM is this file's index in the list of files the user gave.
    Return 0 if successful, 1 if an error occurred. */
 
 static int
-tail_file (filename, number, filenum)
+tail_file (filename, n_units, filenum)
      char *filename;
-     long number;
+     long n_units;
      int filenum;
 {
   int fd, errors;
@@ -347,7 +347,7 @@ tail_file (filename, number, filenum)
       filename = "standard input";
       if (print_headers)
 	write_header (filename, NULL);
-      errors = tail (filename, 0, number);
+      errors = tail (filename, 0, n_units);
       if (forever_multiple)
 	{
 	  if (fstat (0, &stats) < 0)
@@ -385,7 +385,7 @@ tail_file (filename, number, filenum)
 	{
 	  if (print_headers)
 	    write_header (filename, NULL);
-	  errors = tail (filename, fd, number);
+	  errors = tail (filename, fd, n_units);
 	  if (forever_multiple)
 	    {
 	      if (fstat (fd, &stats) < 0)
@@ -436,31 +436,31 @@ write_header (filename, comment)
   first_file = 0;
 }
 
-/* Display the last NUMBER units of file FILENAME, open for reading
+/* Display the last N_UNITS units of file FILENAME, open for reading
    in FD.
    Return 0 if successful, 1 if an error occurred. */
 
 static int
-tail (filename, fd, number)
+tail (filename, fd, n_units)
      char *filename;
      int fd;
-     long number;
+     long n_units;
 {
   if (unit_size)
-    return tail_bytes (filename, fd, number);
+    return tail_bytes (filename, fd, n_units);
   else
-    return tail_lines (filename, fd, number);
+    return tail_lines (filename, fd, n_units);
 }
 
 /* Display the last part of file FILENAME, open for reading in FD,
-   using NUMBER characters.
+   using N_BYTES bytes.
    Return 0 if successful, 1 if an error occurred. */
 
 static int
-tail_bytes (filename, fd, number)
+tail_bytes (filename, fd, n_bytes)
      char *filename;
      int fd;
-     long number;
+     long n_bytes;
 {
   struct stat stats;
 
@@ -476,8 +476,8 @@ tail_bytes (filename, fd, number)
   if (from_start)
     {
       if (S_ISREG (stats.st_mode))
-	lseek (fd, number, SEEK_SET);
-      else if (start_bytes (filename, fd, number))
+	lseek (fd, n_bytes, SEEK_SET);
+      else if (start_bytes (filename, fd, n_bytes))
 	return 1;
       dump_remainder (filename, fd);
     }
@@ -485,30 +485,30 @@ tail_bytes (filename, fd, number)
     {
       if (S_ISREG (stats.st_mode))
 	{
-	  if (lseek (fd, 0L, SEEK_END) <= number)
+	  if (lseek (fd, 0L, SEEK_END) <= n_bytes)
 	    /* The file is shorter than we want, or just the right size, so
 	       print the whole file. */
 	    lseek (fd, 0L, SEEK_SET);
 	  else
 	    /* The file is longer than we want, so go back. */
-	    lseek (fd, -number, SEEK_END);
+	    lseek (fd, -n_bytes, SEEK_END);
 	  dump_remainder (filename, fd);
 	}
       else
-	return pipe_bytes (filename, fd, number);
+	return pipe_bytes (filename, fd, n_bytes);
     }
   return 0;
 }
 
 /* Display the last part of file FILENAME, open for reading on FD,
-   using NUMBER lines.
+   using N_LINES lines.
    Return 0 if successful, 1 if an error occurred. */
 
 static int
-tail_lines (filename, fd, number)
+tail_lines (filename, fd, n_lines)
      char *filename;
      int fd;
-     long number;
+     long n_lines;
 {
   struct stat stats;
   long length;
@@ -521,7 +521,7 @@ tail_lines (filename, fd, number)
 
   if (from_start)
     {
-      if (start_lines (filename, fd, number))
+      if (start_lines (filename, fd, n_lines))
 	return 1;
       dump_remainder (filename, fd);
     }
@@ -530,17 +530,17 @@ tail_lines (filename, fd, number)
       if (S_ISREG (stats.st_mode))
 	{
 	  length = lseek (fd, 0L, SEEK_END);
-	  if (length != 0 && file_lines (filename, fd, number, length))
+	  if (length != 0 && file_lines (filename, fd, n_lines, length))
 	    return 1;
 	  dump_remainder (filename, fd);
 	}
       else
-	return pipe_lines (filename, fd, number);
+	return pipe_lines (filename, fd, n_lines);
     }
   return 0;
 }
 
-/* Print the last NUMBER lines from the end of file FD.
+/* Print the last N_LINES lines from the end of file FD.
    Go backward through the file, reading `BUFSIZ' bytes at a time (except
    probably the first), until we hit the start of the file or have
    read NUMBER newlines.
@@ -549,17 +549,17 @@ tail_lines (filename, fd, number)
    Return 0 if successful, 1 if an error occurred. */
 
 static int
-file_lines (filename, fd, number, pos)
+file_lines (filename, fd, n_lines, pos)
      char *filename;
      int fd;
-     long number;
+     long n_lines;
      long pos;
 {
   char buffer[BUFSIZ];
   int bytes_read;
   int i;			/* Index into `buffer' for scanning. */
 
-  if (number == 0)
+  if (n_lines == 0)
     return 0;
 
   /* Set `bytes_read' to the size of the last, probably partial, buffer;
@@ -580,7 +580,7 @@ file_lines (filename, fd, number, pos)
 
   /* Count the incomplete line on files that don't end with a newline. */
   if (bytes_read && buffer[bytes_read - 1] != '\n')
-    --number;
+    --n_lines;
 
   do
     {
@@ -588,7 +588,7 @@ file_lines (filename, fd, number, pos)
       for (i = bytes_read - 1; i >= 0; i--)
 	{
 	  /* Have we counted the requested number of newlines yet? */
-	  if (buffer[i] == '\n' && number-- == 0)
+	  if (buffer[i] == '\n' && n_lines-- == 0)
 	    {
 	      /* If this newline wasn't the last character in the buffer,
 	         print the text after it. */
@@ -616,16 +616,16 @@ file_lines (filename, fd, number, pos)
   return 0;
 }
 
-/* Print the last NUMBER lines from the end of the standard input,
+/* Print the last N_LINES lines from the end of the standard input,
    open for reading as pipe FD.
    Buffer the text as a linked list of LBUFFERs, adding them as needed.
    Return 0 if successful, 1 if an error occured. */
 
 static int
-pipe_lines (filename, fd, number)
+pipe_lines (filename, fd, n_lines)
      char *filename;
      int fd;
-     long number;
+     long n_lines;
 {
   struct linebuffer
   {
@@ -673,7 +673,7 @@ pipe_lines (filename, fd, number)
 	     Some compaction mechanism is possible but probably not
 	     worthwhile. */
 	  last = last->next = tmp;
-	  if (total_lines - first->nlines > number)
+	  if (total_lines - first->nlines > n_lines)
 	    {
 	      tmp = first;
 	      total_lines -= first->nlines;
@@ -694,7 +694,7 @@ pipe_lines (filename, fd, number)
   free ((char *) tmp);
 
   /* This prevents a core dump when the pipe contains no newlines. */
-  if (number == 0)
+  if (n_lines == 0)
     goto free_lbuffers;
 
   /* Count the incomplete line on files that don't end with a newline. */
@@ -706,18 +706,18 @@ pipe_lines (filename, fd, number)
 
   /* Run through the list, printing lines.  First, skip over unneeded
      buffers. */
-  for (tmp = first; total_lines - tmp->nlines > number; tmp = tmp->next)
+  for (tmp = first; total_lines - tmp->nlines > n_lines; tmp = tmp->next)
     total_lines -= tmp->nlines;
 
   /* Find the correct beginning, then print the rest of the file. */
-  if (total_lines > number)
+  if (total_lines > n_lines)
     {
       char *cp;
 
-      /* Skip `total_lines' - `number' newlines.  We made sure that
-         `total_lines' - `number' <= `tmp->nlines'. */
+      /* Skip `total_lines' - `n_lines' newlines.  We made sure that
+         `total_lines' - `n_lines' <= `tmp->nlines'. */
       cp = tmp->buffer;
-      for (i = total_lines - number; i; --i)
+      for (i = total_lines - n_lines; i; --i)
 	while (*cp++ != '\n')
 	  /* Do nothing. */ ;
       i = cp - tmp->buffer;
@@ -739,15 +739,15 @@ free_lbuffers:
   return errors;
 }
 
-/* Print the last NUMBER characters from the end of pipe FD.
+/* Print the last N_BYTES characters from the end of pipe FD.
    This is a stripped down version of pipe_lines.
    Return 0 if successful, 1 if an error occurred. */
 
 static int
-pipe_bytes (filename, fd, number)
+pipe_bytes (filename, fd, n_bytes)
      char *filename;
      int fd;
-     long number;
+     long n_bytes;
 {
   struct charbuffer
   {
@@ -788,7 +788,7 @@ pipe_bytes (filename, fd, number)
 	     one.  Some compaction mechanism is possible but probably not
 	     worthwhile. */
 	  last = last->next = tmp;
-	  if (total_bytes - first->nbytes > number)
+	  if (total_bytes - first->nbytes > n_bytes)
 	    {
 	      tmp = first;
 	      total_bytes -= first->nbytes;
@@ -812,13 +812,13 @@ pipe_bytes (filename, fd, number)
 
   /* Run through the list, printing characters.  First, skip over unneeded
      buffers. */
-  for (tmp = first; total_bytes - tmp->nbytes > number; tmp = tmp->next)
+  for (tmp = first; total_bytes - tmp->nbytes > n_bytes; tmp = tmp->next)
     total_bytes -= tmp->nbytes;
 
   /* Find the correct beginning, then print the rest of the file.
-     We made sure that `total_bytes' - `number' <= `tmp->nbytes'. */
-  if (total_bytes > number)
-    i = total_bytes - number;
+     We made sure that `total_bytes' - `n_bytes' <= `tmp->nbytes'. */
+  if (total_bytes > n_bytes)
+    i = total_bytes - n_bytes;
   else
     i = 0;
   XWRITE (STDOUT_FILENO, &tmp->buffer[i], tmp->nbytes - i);
@@ -836,50 +836,50 @@ free_cbuffers:
   return errors;
 }
 
-/* Skip NUMBER characters from the start of pipe FD, and print
+/* Skip N_BYTES characters from the start of pipe FD, and print
    any extra characters that were read beyond that.
    Return 1 on error, 0 if ok.  */
 
 static int
-start_bytes (filename, fd, number)
+start_bytes (filename, fd, n_bytes)
      char *filename;
      int fd;
-     long number;
+     long n_bytes;
 {
   char buffer[BUFSIZ];
   int bytes_read = 0;
 
-  while (number > 0 && (bytes_read = safe_read (fd, buffer, BUFSIZ)) > 0)
-    number -= bytes_read;
+  while (n_bytes > 0 && (bytes_read = safe_read (fd, buffer, BUFSIZ)) > 0)
+    n_bytes -= bytes_read;
   if (bytes_read == -1)
     {
       error (0, errno, "%s", filename);
       return 1;
     }
-  else if (number < 0)
-    XWRITE (STDOUT_FILENO, &buffer[bytes_read + number], -number);
+  else if (n_bytes < 0)
+    XWRITE (STDOUT_FILENO, &buffer[bytes_read + n_bytes], -n_bytes);
   return 0;
 }
 
-/* Skip NUMBER lines at the start of file or pipe FD, and print
+/* Skip N_LINES lines at the start of file or pipe FD, and print
    any extra characters that were read beyond that.
    Return 1 on error, 0 if ok.  */
 
 static int
-start_lines (filename, fd, number)
+start_lines (filename, fd, n_lines)
      char *filename;
      int fd;
-     long number;
+     long n_lines;
 {
   char buffer[BUFSIZ];
   int bytes_read = 0;
   int bytes_to_skip = 0;
 
-  while (number && (bytes_read = safe_read (fd, buffer, BUFSIZ)) > 0)
+  while (n_lines && (bytes_read = safe_read (fd, buffer, BUFSIZ)) > 0)
     {
       bytes_to_skip = 0;
       while (bytes_to_skip < bytes_read)
-	if (buffer[bytes_to_skip++] == '\n' && --number == 0)
+	if (buffer[bytes_to_skip++] == '\n' && --n_lines == 0)
 	  break;
     }
   if (bytes_read == -1)
