@@ -182,8 +182,15 @@ tee (nfiles, files)
 	}
     }
 
-  while ((bytes_read = read (0, buffer, sizeof buffer)) > 0)
+  while (1)
     {
+      bytes_read = read (0, buffer, sizeof buffer);
+#ifdef EINTR
+      if (bytes_read < 0 && errno == EINTR)
+        continue;
+#endif
+      if (bytes_read <= 0)
+	break;
       xwrite (1, buffer, bytes_read);
       for (i = 0; i < nfiles; i++)
 	if (descriptors[i] != -1)

@@ -195,9 +195,6 @@ main (argc, argv)
   if (show_help)
     usage (0);
 
-  if (chdir ("/dev"))
-    error (1, errno, "cannot change directory to /dev");
-
   switch (argc - optind)
     {
     case 0:			/* who */
@@ -249,27 +246,27 @@ static int
 read_utmp (filename)
      char *filename;
 {
-  register int desc;
+  FILE *utmp;
   struct stat file_stats;
+  int n_read;
 
-  desc = open (filename, O_RDONLY, 0);
-  if (desc < 0)
+  utmp = fopen (filename, "r");
+  if (utmp == NULL)
     error (1, errno, "%s", filename);
 
-  fstat (desc, &file_stats);
+  fstat (fileno (utmp), &file_stats);
   if (file_stats.st_size > 0)
     utmp_contents = (STRUCT_UTMP *) xmalloc ((unsigned) file_stats.st_size);
   else
     {
-      close (desc);
+      fclose (utmp);
       return 0;
     }
 
   /* Use < instead of != in case the utmp just grew.  */
-  if (read (desc, utmp_contents, file_stats.st_size) < file_stats.st_size)
-    error (1, errno, "%s", filename);
-
-  if (close (desc) != 0)
+  n_read = fread (utmp_contents, 1, file_stats.st_size, utmp);
+  if (ferror (utmp) || fclose (utmp) == EOF
+      || n_read < file_stats.st_size)
     error (1, errno, "%s", filename);
 
   return file_stats.st_size / sizeof (STRUCT_UTMP);
@@ -284,10 +281,16 @@ print_entry (this)
   struct stat stats;
   time_t last_change;
   char mesg;
-  char line[sizeof (this->ut_line) + 1];
 
-  strncpy (line, this->ut_line, sizeof (this->ut_line));
-  line[sizeof (this->ut_line)] = 0;
+#define DEV_DIR_WITH_TRAILING_SLASH "/dev/"
+#define DEV_DIR_LEN (sizeof (DEV_DIR_WITH_TRAILING_SLASH) - 1)
+
+  char line[sizeof (this->ut_line) + DEV_DIR_LEN + 1];
+
+  strcpy(line, DEV_DIR_WITH_TRAILING_SLASH);
+  strncpy (line + DEV_DIR_LEN, this->ut_line, sizeof (this->ut_line));
+  line[DEV_DIR_LEN + sizeof (this->ut_line)] = '\0';
+
   if (stat (line, &stats) == 0)
     {
       mesg = (stats.st_mode & S_IWGRP) ? '+' : '-';
