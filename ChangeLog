@@ -1,5 +1,7 @@
 2003-08-26  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.0.91.
+
 	Apply changes from bison.
 	* GNUmakefile (SHELL): Define to `sh', if necessary.
 	Add copyright.
@@ -19,8 +21,6 @@
 	"<\#" to avoid magic from Gnus when posting parts of this script.
 
 2003-08-25  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.91.
 
 	* src/stat.c (main): Warn about use of deprecated `-l' option.
 
