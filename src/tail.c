@@ -289,13 +289,13 @@ b for 512, k for 1024, m for 1048576 (1 Meg).  \
 "), stdout);
      fputs (_("\
 A first OPTION of -VALUE\n\
-or +VALUE is treated like -n VALUE or -n +VALUE unless VALUE has one of\n\
-the [bkm] suffix multipliers, in which case it is treated like -c VALUE\n\
-or -c +VALUE.  \
+is treated like -n VALUE unless VALUE has one of the [bkm] suffix\n\
+multipliers, in which case it is treated like -c VALUE.\n\
 "), stdout);
-     fputs (_("\
-Warning: a first option of +VALUE is obsolescent, and support\n\
-for it will be withdrawn.\n\
+     if (POSIX2_VERSION < 200112)
+       fputs (_("\
+A first option of +VALUE is treated like -+VALUE, but this usage is obsolete\n\
+and support for it will be withdrawn.\n\
 \n\
 "), stdout);
      fputs (_("\
@@ -1285,9 +1285,11 @@ parse_obsolescent_option (int argc, const char *const *argv,
   if (argc < 2)
     return 0;
 
-  /* If P starts with `+', `-N' (where N is a digit), or `-l',
+  /* If P starts with `+' and the POSIX version predates 1003.1-2001,
+     or P starts with `-N' (where N is a digit) or `-l',
      then it is obsolescent.  Return zero otherwise.  */
-  if ( ! (p[0] == '+' || (p[0] == '-' && (p[1] == 'l' || ISDIGIT (p[1])))) )
+  if (! ((POSIX2_VERSION < 200112 && p[0] == '+')
+	 || (p[0] == '-' && (p[1] == 'l' || ISDIGIT (p[1])))))
     return 0;
 
   if (*p == '+')
