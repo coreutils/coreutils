@@ -221,7 +221,7 @@ md5_process_bytes (buffer, len, ctx)
 	  ctx->buflen = (left_over + add) & 63;
 	}
 
-      buffer += add;
+      buffer = (const char *) buffer + add;
       len -= add;
     }
 
@@ -229,7 +229,7 @@ md5_process_bytes (buffer, len, ctx)
   if (len > 64)
     {
       md5_process_block (buffer, len & ~63, ctx);
-      buffer += len & ~63;
+      buffer = (const char *) buffer + (len & ~63);
       len &= 63;
     }
 
