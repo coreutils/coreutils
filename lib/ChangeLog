@@ -1,3 +1,8 @@
+2000-01-23  Jim Meyering  <meyering@lucent.com>
+
+	* Makefile.am (libfetish_a_SOURCES): Remove explicit mention of
+	obstack.c.
+
 2000-01-22  Jim Meyering  <meyering@lucent.com>
 
 	* strtoumax.c: [! HAVE_DECL_STRTOUL]: Declare strtoul.
