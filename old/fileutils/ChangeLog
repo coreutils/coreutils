@@ -3,7 +3,7 @@
 	* Version 3.16m.
 
 	* ChangeLog-1997: New file.
-	* Makefile.am (EXTRA_DIST): Add ChangeLog-1997.
+	* Makefile.am  (EXTRA_DIST): Add ChangeLog-1997.
 
 1998-02-21  Jim Meyering  <meyering@eng.ascend.com>
 
