@@ -1859,6 +1859,7 @@ Usage: %s [-abcdgiklmnpqrstuxABCFGLNQRSUX1] [-w cols] [-T cols] [-I pattern]\n\
        [--classify] [--file-type] [--ignore=pattern] [--dereference]\n\
        [--quote-name] [--recursive] [--sort={none,time,size,extension}]\n\
        [--format={long,verbose,commas,across,vertical,single-column}]\n\
-       [--time={atime,access,use,ctime,status}] [--no-group] [path...]\n");
+       [--time={atime,access,use,ctime,status}] [--no-group]\n\
+       [--help] [--version] [path...]\n");
   exit (1);
 }

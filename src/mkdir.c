@@ -91,13 +91,13 @@ main (argc, argv)
 	}
     }
 
-  if (optind == argc)
-    usage ();
-
   if (flag_version)
     fprintf (stderr, "%s\n", version_string);
 
   if (flag_help)
+    usage ();
+
+  if (optind == argc)
     usage ();
 
   newmode = 0777 & ~umask (0);
@@ -130,7 +130,7 @@ static void
 usage ()
 {
   fprintf (stderr, "\
-Usage: %s [-p] [-m mode] [--path] [--mode=mode] dir...\n",
+Usage: %s [-p] [-m mode] [--path] [--mode=mode] [--help] [--version] dir...\n",
 	   program_name);
   exit (1);
 }

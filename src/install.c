@@ -194,16 +194,16 @@ main (argc, argv)
 	}
     }
 
-  /* Check for invalid combinations of arguments. */
-  if ((dir_arg && strip_files)
-      || (optind == argc)
-      || (optind == argc - 1 && !dir_arg))
-    usage ();
-
   if (flag_version)
     fprintf (stderr, "%s\n", version_string);
 
   if (flag_help)
+    usage ();
+
+  /* Check for invalid combinations of arguments. */
+  if ((dir_arg && strip_files)
+      || (optind == argc)
+      || (optind == argc - 1 && !dir_arg))
     usage ();
 
   if (symbolic_mode)
@@ -511,8 +511,8 @@ Usage: %s [options] [-s] [--strip] source dest\n\
        %s [options] [-s] [--strip] source... directory\n\
        %s [options] {-d,--directory} directory...\n\
 Options:\n\
-       [-c] [-g group] [-m mode] [-o owner]\n\
-       [--group=group] [--mode=mode] [--owner=owner]\n",
+       [-c] [-g group] [-m mode] [-o owner] [--group=group]\n\
+       [--help] [--version] [--mode=mode] [--owner=owner]\n",
 	    program_name, program_name, program_name);
   exit (1);
 }

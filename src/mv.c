@@ -160,13 +160,14 @@ main (argc, argv)
 	  usage ();
 	}
     }
-  if (argc < optind + 2)
-    usage ();
 
   if (flag_version)
     fprintf (stderr, "%s\n", version_string);
 
   if (flag_help)
+    usage ();
+
+  if (argc < optind + 2)
     usage ();
 
   if (make_backups)
@@ -447,7 +448,8 @@ Usage: %s [options] source dest\n\
 Options:\n\
        [-bfiuv] [-S backup-suffix] [-V {numbered,existing,simple}]\n\
        [--backup] [--force] [--interactive] [--update] [--verbose]\n\
-       [--suffix=backup-suffix] [--version-control={numbered,existing,simple}]\n",
+       [--suffix=backup-suffix] [--version-control={numbered,existing,simple}]\n\
+       [--help] [--version]\n",
 	   program_name, program_name);
   exit (1);
 }

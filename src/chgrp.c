@@ -125,13 +125,13 @@ main (argc, argv)
 	}
     }
 
-  if (optind >= argc - 1)
-    usage ();
-
   if (flag_version)
     fprintf (stderr, "%s\n", version_string);
 
   if (flag_help)
+    usage ();
+
+  if (optind >= argc - 1)
     usage ();
 
   parse_group (argv[optind++], &group);
@@ -292,7 +292,7 @@ usage ()
 {
   fprintf (stderr, "\
 Usage: %s [-Rcfv] [--recursive] [--changes] [--silent] [--quiet]\n\
-       [--verbose] group file...\n",
+       [--verbose] [--help] [--version] group file...\n",
 	   program_name);
   exit (1);
 }

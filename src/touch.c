@@ -366,7 +366,7 @@ usage ()
   fprintf (stderr, "\
 Usage: %s [-acfm] [-r reference-file] [-t MMDDhhmm[[CC]YY][.ss]]\n\
        [-d time] [--time={atime,access,use,mtime,modify}] [--date=time]\n\
-       [--file=reference-file] [--no-create] file...\n",
+       [--file=reference-file] [--no-create] [--help] [--version] file...\n",
 	   program_name);
   exit (1);
 }

@@ -79,13 +79,13 @@ main (argc, argv)
 	}
     }
 
-  if (optind == argc)
-    usage ();
-
   if (flag_version)
     fprintf (stderr, "%s\n", version_string);
 
   if (flag_help)
+    usage ();
+
+  if (optind == argc)
     usage ();
 
   for (; optind < argc; ++optind)
@@ -131,7 +131,7 @@ remove_parents (path)
 static void
 usage ()
 {
-  fprintf (stderr, "Usage: %s [-p] [--path] dir...\n",
+  fprintf (stderr, "Usage: %s [-p] [--path] [--help] [--version] dir...\n",
 	   program_name);
   exit (1);
 }

@@ -148,13 +148,14 @@ main (argc, argv)
 	  break;
 	}
     }
-  if (optind == argc)
-    usage ();
 
   if (flag_version)
     fprintf (stderr, "%s\n", version_string);
 
   if (flag_help)
+    usage ();
+
+  if (optind == argc)
     usage ();
 
   if (make_backups)
@@ -303,7 +304,7 @@ Options:\n\
        [-bdfisvF] [-S backup-suffix] [-V {numbered,existing,simple}]\n\
        [--version-control={numbered,existing,simple}] [--backup] [--directory]\n\
        [--force] [--interactive] [--symbolic] [--verbose]\n\
-       [--suffix=backup-suffix]\n",
+       [--suffix=backup-suffix] [--help] [--version]\n",
 	   program_name, program_name);
   exit (1);
 }

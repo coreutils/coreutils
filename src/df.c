@@ -458,7 +458,7 @@ usage ()
   fprintf (stderr, "\
 Usage: %s [-aikPv] [-t fstype] [-x fstype] [--all] [--inodes]\n\
 \t[--type=fstype] [--exclude-type=fstype] [--kilobytes] [--portability]\n\
-\t[path...]\n",
+\t[--help] [--version] [path...]\n",
 	   program_name);
   exit (1);
 }

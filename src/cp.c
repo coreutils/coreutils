@@ -258,14 +258,14 @@ main (argc, argv)
 	}
     }
 
-  if (flag_hard_link && flag_symbolic_link)
-    usage ("cannot make both hard and symbolic links");
-
   if (flag_version)
     fprintf (stderr, "%s\n", version_string);
 
   if (flag_help)
     usage (NULL);
+
+  if (flag_hard_link && flag_symbolic_link)
+    usage ("cannot make both hard and symbolic links");
 
   if (make_backups)
     backup_type = get_version (version);

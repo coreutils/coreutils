@@ -514,7 +514,7 @@ usage ()
 {
   fprintf (stderr, "\
 Usage: %s [-dfirvR] [--directory] [--force] [--interactive] [--recursive]\n\
-       [--verbose] path...\n",
+       [--verbose] [--help] [--version] path...\n",
 	   program_name);
   exit (1);
 }

@@ -188,7 +188,7 @@ usage (reason)
   fprintf (stderr, "\
 Usage: %s [-abcklsxDLS] [--all] [--total] [--count-links] [--summarize]\n\
        [--bytes] [--kilobytes] [--one-file-system] [--separate-dirs]\n\
-       [--dereference] [--dereference-args] [path...]\n",
+       [--dereference] [--dereference-args] [--help] [--version] [path...]\n",
 	   program_name);
 
   exit (2);
@@ -258,14 +258,14 @@ main (argc, argv)
 	}
     }
 
-  if (opt_all && opt_summarize_only)
-    usage ("cannot both summarize and show all entries");
-
   if (flag_version)
     fprintf (stderr, "%s\n", version_string);
 
   if (flag_help)
-    usage ("");
+    usage (NULL);
+
+  if (opt_all && opt_summarize_only)
+    usage ("cannot both summarize and show all entries");
 
   /* Initialize the hash structure for inode numbers.  */
   hash_init (INITIAL_HASH_MODULE, INITIAL_ENTRY_TAB_SIZE);

@@ -140,15 +140,16 @@ main (argc, argv)
 	}
     }
 
-  if (modeind == 0)
-    modeind = optind++;
-  if (optind >= argc)
-    usage ();
-
   if (flag_version)
     fprintf (stderr, "%s\n", version_string);
 
   if (flag_help)
+    usage ();
+
+  if (modeind == 0)
+    modeind = optind++;
+
+  if (optind >= argc)
     usage ();
 
   changes = mode_compile (argv[modeind],
@@ -288,7 +289,8 @@ static void
 usage ()
 {
   fprintf (stderr, "\
-Usage: %s [-Rcfv] mode file...\n\
+Usage: %s [-Rcfv] [--recursive] [--changes] [--silent] [--quiet]\n\
+       [--verbose] [--help] [--version] mode file...\n\
        mode is [ugoa...][[+-=][rwxXstugo...]...][,...] or octal number\n",
 	   program_name);
   exit (1);

@@ -152,8 +152,10 @@ static void
 usage ()
 {
   fprintf (stderr, "\
-Usage: %s [-m mode] [--mode=mode] path {bcu} major minor\n\
-       %s [-m mode] [--mode=mode] path p\n",
+Usage: %s [options] path {bcu} major minor\n\
+       %s [options] path p\n\
+Options:\n\
+       [-m mode] [--mode=mode] [--help] [--version]\n",
 	   program_name, program_name);
   exit (1);
 }

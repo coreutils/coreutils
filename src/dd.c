@@ -1059,7 +1059,7 @@ usage ()
 Usage: %s [if=file] [of=file] [ibs=bytes] [obs=bytes] [bs=bytes] [cbs=bytes]\n\
        [skip=blocks] [seek=blocks] [count=blocks]\n\
        [conv={ascii,ebcdic,ibm,block,unblock,lcase,ucase,swab,noerror,notrunc,\n\
-       sync}]\n\
+       sync}] [--help] [--version]\n\
 Numbers can be followed by a multiplier:\n\
 b=512, k=1024, w=2, xm=number m\n",
 	   program_name);
