@@ -1,5 +1,6 @@
 Changes in release 4.1:
 [4.0j]
+* ln now makes hard links to symlinks on systems that support it.
 * touch: no longer infloop on dangling symlinks
 * cp, install, ln, mv: deprecate the --version-control option.  Use --backup's
   new optional argument instead.  The old option still works, but now evokes a
