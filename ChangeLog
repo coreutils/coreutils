@@ -1,6 +1,14 @@
-2004-12-09  Paul Eggert  <eggert@cs.ucla.edu>
+2004-12-11  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	Avoid a race condition vulnerability in chown, when used with
+	--from=O:G and without the (-h) --no-dereference option.
+	* src/chown-core.c (restricted_chown): New function.
+	(change_file_owner): Call it.
+	Reported by Ulrich Drepper.
+
+2004-12-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* ls now exits with status 1 on minor problems, 2 if serious trouble.
 	* NEWS: Document this.
