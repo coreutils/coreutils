@@ -2,6 +2,12 @@
 
 	* Version 4.5.5.
 
+	* man/Makefile.am (check-x-vs-1): Use @PATH_SEPARATOR@, not `:'.
+
+	Ensure that there are no offending uses of `:'.
+	* Makefile.maint (makefile_path_separator_check): New rule.
+	(local-check): Add it to the list.
+
 2003-02-01  Jim Meyering  <jim@meyering.net>
 
 	* src/du.c (MAX_N_DESCRIPTORS): Define.
