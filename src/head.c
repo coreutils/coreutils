@@ -164,7 +164,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-N may have a multiplier suffix: b for 512, k for 1024, m for 1048576 (1 Meg)\n\
+N may have a multiplier suffix: b 512, k 1024, m 1024*1024.\n\
 "), stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }

@@ -283,7 +283,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 If the first character of N (the number of bytes or lines) is a `+',\n\
 print beginning with the Nth item from the start of each file, otherwise,\n\
 print the last N items in the file.  N may have a multiplier suffix:\n\
-b for 512, k for 1024, m for 1048576 (1 Meg).\n\
+b 512, k 1024, m 1024*1024.\n\
 \n\
 "), stdout);
      fputs (_("\
