@@ -45,8 +45,7 @@ evar-check:
 
 # Advertise `check-root' target.
 root-hint:
-	@echo '********************************************'
-	@echo "NOTICE: Some tests will or might need to be"
-	@echo "        run as root. Do \`make check-root'"
-	@echo "        as \`root' to run just these tests."
-	@echo '********************************************'
+	@echo '***********************************************************'
+	@echo "NOTICE: Some tests may be run only as root."
+	@echo "  Do \`make check-root' as \`root' to run these tests."
+	@echo '***********************************************************'
