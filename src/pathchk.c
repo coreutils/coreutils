@@ -95,8 +95,6 @@
 # define NAME_MAX_FOR(p) NAME_MAX
 #endif
 
-char *xstrdup ();
-
 static int validate_path PARAMS ((char *path, int portability));
 
 /* The name this program was run with. */
