@@ -167,7 +167,7 @@ off_t lseek ();
 
 #include "xalloc.h"
 
-#ifndef HAVE_MEMPCPY
+#if ! defined HAVE_MEMPCPY && ! defined mempcpy
 /* Be CAREFUL that there are no side effects in N.  */
 # define mempcpy(D, S, N) ((void *) ((char *) memcpy (D, S, N) + (N)))
 #endif
