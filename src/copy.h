@@ -1,6 +1,8 @@
 #ifndef COPY_H
 # define COPY_H
 
+# include "hash.h"
+
 /* Control creation of sparse files (files with holes).  */
 enum Sparse_type
 {
@@ -153,6 +155,17 @@ struct cp_options
 
   /* If nonzero, stdin is a tty.  */
   int stdin_tty;
+
+  /* This is a set of destination name/inode/dev triples.  Each such triple
+     represents a file we have created corresponding to a source file name
+     that was specified on the command line.  Use it to avoid clobbering
+     source files in commands like this:
+       rm -rf a b c; mkdir a b c; touch a/f b/f; mv a/f b/f c
+     For now, it protects only regular files when copying (i.e. not renaming).
+     When renaming, it protects all non-directories.
+     Use dest_info_init to initialize it, or set it to NULL to disable
+     this feature.  */
+  struct hash_table *dest_info;
 };
 
 int stat ();
@@ -184,6 +197,6 @@ copy PARAMS ((const char *src_path, const char *dst_path,
 	      int *copy_into_self, int *rename_succeeded));
 
 void
-dest_info_init PARAMS ((void));
+dest_info_init PARAMS ((struct cp_options *));
 
 #endif
