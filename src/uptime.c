@@ -132,11 +132,14 @@ print_uptime (int n, const STRUCT_UTMP *this)
   uphours = (uptime - (updays * 86400)) / 3600;
   upmins = (uptime - (updays * 86400) - (uphours * 3600)) / 60;
   tmn = localtime (&time_now);
-  printf (_(" %2d:%02d%s  up "), ((tmn->tm_hour % 12) == 0
-				  ? 12 : tmn->tm_hour % 12),
-	  /* FIXME: use strftime, not am, pm.  Uli reports that
-	     the german translation is meaningless.  */
-	  tmn->tm_min, (tmn->tm_hour < 12 ? _("am") : _("pm")));
+  if (tmn)
+    printf (_(" %2d:%02d%s  up "),
+	    ((tmn->tm_hour % 12) == 0 ? 12 : tmn->tm_hour % 12),
+	    /* FIXME: use strftime, not am, pm.  Uli reports that
+	       the german translation is meaningless.  */
+	    tmn->tm_min, (tmn->tm_hour < 12 ? _("am") : _("pm")));
+  else
+    printf (_(" ??:????  up "));
   if (updays > 0)
     printf (ngettext("%d day", "%d days", updays), updays);
   printf (" %2d:%02d,  ", uphours, upmins);
