@@ -5,6 +5,7 @@ User-visible changes in release 1.15
 * join without -t now ignores leading blanks
 * sort accepts new option: -z for NUL terminated records
 * join accepts new option: --ignore-case, -i
+* uniq accepts new option: --ignore-case, -i
 User-visible changes in release 1.14
 * sort -i and sort -d properly order strings containing ignored characters
 * nl: rename misleading --first-page=N option to --starting-line-number=N.
