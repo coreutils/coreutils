@@ -1,3 +1,9 @@
+2001-01-27  Jim Meyering  <meyering@lucent.com>
+
+	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): Add `[]' between use of
+	AS_IF and following `dnl'.
+	* fsusage.m4 (jm_FILE_SYSTEM_USAGE): Likewise.
+
 2001-01-26  Jim Meyering  <meyering@lucent.com>
 
 	* prereq.m4 (jm_PREREQ_QUOTEARG): Check for stddef.h, now that
