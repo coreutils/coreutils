@@ -1,3 +1,10 @@
+1998-10-25  Jim Meyering  <meyering@ascend.com>
+
+	* src/remove.c (remove_cwd_entries): Don't apply CLOSEDIR to a NULL
+	pointer. (provoke with `mkdir -m 0100 x; rm -rf x')
+	Upon CLOSEDIR failure, set `status' to RM_ERROR, not RM_OK.
+	(remove_dir): Return `status', rather than always RM_OK.
+
 1998-10-18  Jim Meyering  <meyering@ascend.com>
 
 	* Version 4.0-b5.
