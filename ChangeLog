@@ -2,6 +2,10 @@
 
 	* Version 5.3.0.
 
+	* src/ls.c (usage): Clarify description of --author.
+	Tweak indentation so that help2man creates better nroff.
+	Reported by Dan Jacobson.
+
 	* src/uniq.c (check_file): Don't check stdout for errors here.
 
 	* src/pwd.c (find_dir_entry): Update comment to match reality.
