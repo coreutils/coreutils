@@ -92,7 +92,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   ptx now diagnoses invalid values for its --width=N (-w)
   and --gap-size=N (-g) options.
 
-  rm (and mv when moving between partitions) no longer fails when
+  mv (when moving between partitions) no longer fails when
   operating on too many command-line-specified nonempty directories.
 
   rm (without -f) no longer hangs when attempting to remove a symlink
