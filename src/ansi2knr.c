@@ -1,6 +1,6 @@
 /* Copyright (C) 1989, 1997, 1998, 1999 Aladdin Enterprises.  All rights reserved. */
 
-/*$Id: ansi2knr.c,v 1.11 1999/01/25 05:50:56 meyering Exp $*/
+/*$Id: ansi2knr.c,v 1.12 1999/02/03 02:01:06 meyering Exp $*/
 /* Convert ANSI C function definitions to K&R ("traditional C") syntax */
 
 /*
@@ -58,6 +58,9 @@ program under the GPL.
  * The original and principal author of ansi2knr is L. Peter Deutsch
  * <ghost@aladdin.com>.  Other authors are noted in the change history
  * that follows (in reverse chronological order):
+	lpd 1999-01-28 fixed two bugs: a '/' in an argument list caused an
+		endless loop; quoted strings within an argument list
+		confused the parser
 	lpd 1999-01-24 added a check for write errors on the output,
 		suggested by Jim Meyering <meyering@ascend.com>
 	lpd 1998-11-09 added further hack to recognize identifier(void)
@@ -180,6 +183,7 @@ program under the GPL.
 
 /* Forward references */
 char *skipspace();
+char *scanstring();
 int writeblanks();
 int test1();
 int convert1();
@@ -326,7 +330,7 @@ wl:			fputs(buf, out);
 	return 0;
 }
 
-/* Skip over space and comments, in either direction. */
+/* Skip over whitespace and comments, in either direction. */
 char *
 skipspace(p, dir)
     register char *p;
@@ -345,6 +349,17 @@ skipspace(p, dir)
 		p += dir;  p += dir;
 	   }
 	return p;
+}
+
+/* Scan over a quoted string, in either direction. */
+char *
+scanstring(p, dir)
+    register char *p;
+    register int dir;
+{
+    for (p += dir; ; p += dir)
+	if (*p == '"' && p[-dir] != '\\')
+	    return p + dir;
 }
 
 /*
@@ -519,8 +534,12 @@ top:	p = endfn;
 				else rp = p;
 				break;
 			   case '/':
-				p = skipspace(p, 1) - 1;
+				if (p[1] == '*')
+				    p = skipspace(p, 1) - 1;
 				break;
+			   case '"':
+			       p = scanstring(p, 1) - 1;
+			       break;
 			   default:
 				;
 			   }
@@ -542,9 +561,19 @@ top:	p = endfn;
 				while ( level )
 				 switch ( *--p )
 				   {
-				   case ']': case ')': level++; break;
-				   case '[': case '(': level--; break;
-				   case '/': p = skipspace(p, -1) + 1; break;
+				   case ']': case ')':
+				       level++;
+				       break;
+				   case '[': case '(':
+				       level--;
+				       break;
+				   case '/':
+				       if (p > buf && p[-1] == '*')
+					   p = skipspace(p, -1) + 1;
+				       break;
+				   case '"':
+				       p = scanstring(p, -1) + 1;
+				       break;
 				   default: ;
 				   }
 			   }
