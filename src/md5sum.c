@@ -1,6 +1,6 @@
 /* Compute MD5 checksum of files or strings according to the definition
    of MD5 in RFC 1321 from April 1992.
-   Copyright (C) 1995 Software Foundation, Inc.
+   Copyright (C) 1995 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -13,8 +13,8 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /* Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>.  */
 
