@@ -1,5 +1,5 @@
 /* install - copy files and set attributes
-   Copyright (C) 89, 90, 91, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -153,7 +153,7 @@ cp_option_init (struct cp_options *x)
   x->failed_unlink_is_fatal = 0;
 
   x->hard_link = 0;
-  x->interactive = 0;
+  x->interactive = I_UNSPECIFIED;
   x->move_mode = 0;
   x->myeuid = geteuid ();
   x->one_file_system = 0;
@@ -171,6 +171,7 @@ cp_option_init (struct cp_options *x)
      would fail.  */
   x->set_mode = 1;
   x->mode = S_IRUSR | S_IWUSR;
+  x->stdin_tty = 0;
 
   x->umask_kill = 0;
   x->update = 0;
