@@ -1,5 +1,7 @@
 2003-01-20  Jim Meyering  <jim@meyering.net>
 
+	* canonicalize.c: Include "path-concat.h".
+
 	* search_.h: New file, from GNU libc.
 
 	* Makefile.am (libfetish_a_SOURCES): Use ftw_.h here, too.
