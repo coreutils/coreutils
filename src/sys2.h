@@ -360,65 +360,8 @@ uid_t getuid ();
 # define mempcpy(D, S, N) ((void *) ((char *) memcpy (D, S, N) + (N)))
 #endif
 
-/* These are wrappers for functions/macros from GNU libc.
-   The standard I/O functions are thread-safe.  These *_unlocked ones
-   are more efficient but not thread-safe.  That they're not thread-safe
-   is fine since all these applications are single threaded.  */
-
-#if HAVE_CLEARERR_UNLOCKED
-# undef clearerr
-# define clearerr(S) clearerr_unlocked (S)
-#endif
-
-#if HAVE_FEOF_UNLOCKED
-# undef feof
-# define feof(S) feof_unlocked (S)
-#endif
-
-#if HAVE_FERROR_UNLOCKED
-# undef ferror
-# define ferror(S) ferror_unlocked (S)
-#endif
-
-#if HAVE_FFLUSH_UNLOCKED
-# undef fflush
-# define fflush(S) fflush_unlocked (S)
-#endif
-
-#if HAVE_FPUTC_UNLOCKED
-# undef fputc
-# define fputc(C, S) fputc_unlocked (C, S)
-#endif
-
-#if HAVE_FREAD_UNLOCKED
-# undef fread
-# define fread(P, Z, N, S) fread_unlocked (P, Z, N, S)
-#endif
-
-#if HAVE_FWRITE_UNLOCKED
-# undef fwrite
-# define fwrite(P, Z, N, S) fwrite_unlocked (P, Z, N, S)
-#endif
-
-#if HAVE_GETC_UNLOCKED
-# undef getc
-# define getc(S) getc_unlocked (S)
-#endif
-
-#if HAVE_GETCHAR_UNLOCKED
-# undef getchar
-# define getchar(S) getchar_unlocked (S)
-#endif
-
-#if HAVE_PUTC_UNLOCKED
-# undef putc
-# define putc(C, S) putc_unlocked (C, S)
-#endif
-
-#if HAVE_PUTCHAR_UNLOCKED
-# undef putchar
-# define putchar(C) putchar_unlocked (C)
-#endif
+/* Include automatically-generated macros for unlocked I/O.  */
+#include "unlocked-io.h"
 
 #define SAME_INODE(Stat_buf_1, Stat_buf_2) \
   ((Stat_buf_1).st_ino == (Stat_buf_2).st_ino \
