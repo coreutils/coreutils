@@ -4,9 +4,31 @@
 # It is necessary if you want to build targets usually of interest
 # only to the maintainer.
 
+# Copyright (C) 2001, 2003 Free Software Foundation, Inc.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
+
 # Systems where /bin/sh is not the default shell need this.  The $(shell)
 # command below won't work with e.g. stock DOS/Windows shells.
+ifeq ($(wildcard /bin/s[h]),/bin/sh)
 SHELL = /bin/sh
+else
+# will be used only with the next shell-test line, then overwritten
+# by a configured-in value
+SHELL = sh
+endif
 
 have-Makefile := $(shell test -f Makefile && echo yes)
 
