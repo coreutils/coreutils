@@ -39,7 +39,7 @@ info: fileutils.info
 
 version.texi: ../src/version.c
 	sed -e '/version_string/!d' \
-	    -e 's/[^"]*"\([^"]*\)".*/@set VERSION \1/' \
+	    -e 's/[^0-9.]*\([0-9.a-z]*\).*/@set VERSION \1/' \
 	    -e q $(srcdir)/../src/version.c \
 	  > $@-t
 	echo '@set RELEASEDATE '`date '+%B %Y'` >> $@-t
