@@ -2,6 +2,7 @@
 
 	* strtoll.c: Update from gnulib (trivial changes).
 	* strdup.c: Likewise.
+	* strpbrk.c: Likewise.
 	* strstr.c: Likewise.
 	* tempname.c: Likewise.
 
