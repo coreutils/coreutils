@@ -1,0 +1,31 @@
+#!/bin/sh
+# cp -a --parents dir-specified-with-trailing-slash/ other-dir
+# would get a failed assertion.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  mv --version
+fi
+
+pwd=`pwd`
+tmp=cp-parents.$$
+trap 'status=$?; cd $pwd; exec 1>&2; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+. $srcdir/../envvar-check
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+mkdir foo bar || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+fail=0
+
+cp --parents foo/ bar || fail=1
+
+(exit $fail); exit
