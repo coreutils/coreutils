@@ -1,3 +1,14 @@
+2004-05-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Improve the efficiency (and in one case, correctness) of code
+	that reads symlinks.
+
+	* src/copy.c (copy_internal): Don't use alloca, as it can mess up
+	royally if the link length is long (e.g., GNU/Hurd).  Use
+	xreadlink instead, it's safer.  Don't bother to read the link if
+	it's the wrong size.  Add a FIXME because this area is a bit murky
+	and undocumented.
+
 2004-06-01  Jim Meyering  <jim@meyering.net>
 
 	* src/env.c (main): Prefer the notation `STREQ (a, b)'
