@@ -9,4 +9,4 @@ TESTS = \
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
   host_triplet=$(host_triplet) \
-  PATH="`pwd`/../../src/vg$(PATH_SEPARATOR)$$PATH"
+  PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
