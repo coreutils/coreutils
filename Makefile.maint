@@ -50,7 +50,8 @@ release_archive_dir ?= ../release
 # new ChangeLog entries.
 local-check = \
   po-check copyright-check writable-files m4-check author_mark_check \
-  changelog-check strftime-check header-check makefile_path_separator_check
+  changelog-check strftime-check header-check makefile_path_separator_check \
+  makefile-check
 .PHONY: $(local-check)
 
 # Make sure C source files in src/ don't include xalloc.h directly,
@@ -77,6 +78,13 @@ strftime-check:
 	  diff -u $@-src $@-info || exit 1;				\
 	  rm -f $@-src $@-info;						\
 	fi
+
+# Ensure that we use only the standard $(VAR) notation,
+# not @...@ in Makefile.am, now that we can rely on automake
+# to emit a definition for each substituted variable.
+makefile-check:
+	grep -E '@[A-Z_]+@' `find . -name Makefile.am` \
+	  && { echo 'Makefile.maint: use $(...), not @...@' 1>&2; exit 1; } || :
 
 changelog-check:
 	if head ChangeLog | grep 'Version $(VERSION)' >/dev/null; then \
