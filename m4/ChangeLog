@@ -1,3 +1,12 @@
+1998-05-09  Jim Meyering  <meyering@ascend.com>
+
+	* Makefile.am (EXTRA_DIST): Add ssize_t.m4.
+	(EXTRA_DIST): Remove mktime.m4, now that the new version is included
+	with automake.
+
+	* ssize_t.m4: New file.
+	* mktime.m4: Remove file -- the new automake has this now.
+
 1998-04-26  Jim Meyering  <meyering@ascend.com>
 
 	* assert.m4: New file.
