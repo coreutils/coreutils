@@ -1,5 +1,16 @@
 Mon Nov  4 20:24:31 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	Thu Oct 31 19:32:32 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	  * lib/xgethostname.c [ENAMETOOLONG] (xgethostname): If gethostname
+	  returns an error other than buffer overflow, exit with an error
+	  message instead of allocating infinite amounts of space.
+	  [!EXIT_FAILURE] (EXIT_FAILURE): New macro.
+	  <errno.h>: New include.
+	  [!errno] (errno): New declaration.
+
+	* acinclude.m4 (AM_FUNC_GETLINE): Use cache.
+
 	* configure.in: Check for -linet library before checking for the
 	gethostbyname function.  Suggested by Karl Heuer.
 	Use AM_FUNC_GETLINE.
