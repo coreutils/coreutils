@@ -1,5 +1,18 @@
 1998-10-03  Jim Meyering  <meyering@ascend.com>
 
+	* man/Makefile.am: Switch to using help2man.
+	(EXTRA_DIST): Add Makefile.summ.
+
+	* man/help2man: Invoke program with --manhelp option only if
+	--name=STRING not specified.  Otherwise, this would fail with `yes'.
+	* man/Makefile.summ: New file.
+	* man/Makefile.maint: Include it.
+	* man/help2man: New file.
+	* man/GNUmakefile: New file.
+	* man/Makefile.maint: New file.
+	* man/*.x: New files.
+	* man/*.1: Remove files.
+
 	* src/Makefile.am (install-exec-local): Change comments to use `##'
 	to avoid automake warning.
 
