@@ -1,5 +1,5 @@
 Changes in release 3.13:
-* internationalized diagnostic messages (french and german, so far)
+* internationalized diagnostic messages
 * mkdir accepts new option: --verbose
 * cp has been fixed so that the full file name it uses for the destination
   in `cp file D/' is `D/file', not `D//file'.
