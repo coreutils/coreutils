@@ -121,8 +121,9 @@ open_maybe_create (const char *file, int *file_created)
 	*file_created = 1;
 
       /* If the open succeeded or if it failed for any reason other
-	 than the existence of FILE, then we're done.  */
-      if (fd != -1 || errno != EEXIST)
+	 than the existence of FILE, then we're done.  Some systems
+         (solaris) set errno to EINVAL when FILE is a directory.  */
+      if (fd != -1 || (errno != EEXIST && errno != EINVAL))
 	break;
 
       /* The first open failed because FILE already exists.
