@@ -73,7 +73,6 @@ dbl-sp-a.E dbl-sp-b.O dbl-sp-b.E narrow-1.O narrow-1.E col-last.O col-last.E
 EXTRA_DIST = Test.pm $x-tests $(explicit) $(maint_gen)
 noinst_SCRIPTS = $x-tests
 
-PERL = $(PERL)
 editpl = sed -e 's,@''PERL''@,$(PERL),g' -e 's,@''srcdir''@,@srcdir@,g'
 
 TESTS = $x-tests
