@@ -1,5 +1,5 @@
 /* human.c -- print human readable file size
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -16,9 +16,12 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /* Originally contributed by lm@sgi.com;
-   --si and large file support added by eggert@twinsun.com.  */
+   --si, output block size selection, and large file support
+   added by eggert@twinsun.com.  */
 
-#include <config.h>
+#if HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #if HAVE_INTTYPES_H
 # include <inttypes.h>
@@ -34,6 +37,24 @@
 #ifndef CHAR_BIT
 # define CHAR_BIT 8
 #endif
+#if HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
+
+#ifndef HAVE_DECL_GETENV
+char *getenv ();
+#endif
+
+#if ENABLE_NLS
+# include <libintl.h>
+# define _(Text) gettext (Text)
+#else
+# define _(Text) Text
+#endif
+
+#include <argmatch.h>
+#include <error.h>
+#include <xstrtoul.h>
 
 #include "human.h"
 
@@ -52,25 +73,32 @@ static const char suffixes[] =
 
 /* Convert N to a human readable format in BUF.
 
-   N is expressed in units of FROM_UNITS; use units of TO_UNITS in the
-   output number.  FROM_UNITS and TO_UNITS must be positive, and one must
-   be a multiple of the other.
+   N is expressed in units of FROM_BLOCK_SIZE.  FROM_BLOCK_SIZE must
+   be positive.
 
-   If BASE is nonzero, use a format like "127k" if possible,
-   using powers of BASE; otherwise, use ordinary decimal format.
-   Normally BASE is either 1000 or 1024; it must be at least 2.
-   Most people visually process strings of 3-4 digits effectively,
-   but longer strings of digits are more prone to misinterpretation.
-   Hence, converting to an abbreviated form usually improves readability.
-   Use a suffix indicating which power is being used.
-   For example, assuming BASE is 1024, 8500 would be converted to 8.3k,
+   If OUTPUT_BLOCK_SIZE is positive, use units of OUTPUT_BLOCK_SIZE in
+   the output number.  OUTPUT_BLOCK_SIZE must be a multiple of
+   FROM_BLOCK_SIZE or vice versa.
+
+   If OUTPUT_BLOCK_SIZE is negative, use a format like "127k" if
+   possible, using powers of -OUTPUT_BLOCK_SIZE; otherwise, use
+   ordinary decimal format.  Normally -OUTPUT_BLOCK_SIZE is either
+   1000 or 1024; it must be at least 2.  Most people visually process
+   strings of 3-4 digits effectively, but longer strings of digits are
+   more prone to misinterpretation.  Hence, converting to an
+   abbreviated form usually improves readability.  Use a suffix
+   indicating which power is being used.  For example, assuming
+   -OUTPUT_BLOCK_SIZE is 1024, 8500 would be converted to 8.3k,
    133456345 to 127M, 56990456345 to 53G, and so on.  Numbers smaller
-   than BASE aren't modified.  */
+   than -OUTPUT_BLOCK_SIZE aren't modified.  */
 
 char *
-human_readable (uintmax_t n, char *buf, int from_units, int to_units, int base)
+human_readable (uintmax_t n, char *buf,
+		int from_block_size, int output_block_size)
 {
   uintmax_t amt;
+  int base;
+  int to_block_size;
   int tenths;
   int power;
   char *p;
@@ -81,6 +109,17 @@ human_readable (uintmax_t n, char *buf, int from_units, int to_units, int base)
      3 means AMT.TENTHS + 0.05 < adjusted N < AMT.TENTHS + 0.1.  */
   int rounding;
 
+  if (output_block_size < 0)
+    {
+      base = -output_block_size;
+      to_block_size = 1;
+    }
+  else
+    {
+      base = 0;
+      to_block_size = output_block_size;
+    }
+
   p = buf + LONGEST_HUMAN_READABLE;
   *p = '\0';
 
@@ -89,11 +128,11 @@ human_readable (uintmax_t n, char *buf, int from_units, int to_units, int base)
   power = 0;
 #endif
 
-  /* Adjust AMT out of FROM_UNITS units and into TO_UNITS units.  */
+  /* Adjust AMT out of FROM_BLOCK_SIZE units and into TO_BLOCK_SIZE units.  */
 
-  if (to_units <= from_units)
+  if (to_block_size <= from_block_size)
     {
-      int multiplier = from_units / to_units;
+      int multiplier = from_block_size / to_block_size;
       amt = n * multiplier;
       tenths = rounding = 0;
 
@@ -133,7 +172,7 @@ human_readable (uintmax_t n, char *buf, int from_units, int to_units, int base)
     }
   else
     {
-      int divisor = to_units / from_units;
+      int divisor = to_block_size / from_block_size;
       int r10 = (n % divisor) * 10;
       int r2 = (r10 % divisor) * 2;
       amt = n / divisor;
@@ -200,4 +239,48 @@ human_readable (uintmax_t n, char *buf, int from_units, int to_units, int base)
   while ((amt /= 10) != 0);
 
   return p;
+}
+
+
+/* The default block size used for output.  This number may change in
+   the future as disks get larger.  */
+#ifndef DEFAULT_BLOCK_SIZE
+# define DEFAULT_BLOCK_SIZE 1024
+#endif
+
+static char const *const block_size_args[] = { "human-readable", "si", 0 };
+static int const block_size_types[] = { -1024, -1000 };
+
+static strtol_error
+humblock (char const *spec, int *block_size)
+{
+  int i;
+
+  if (! spec && ! (spec = getenv ("BLOCK_SIZE")))
+    *block_size = getenv ("POSIXLY_CORRECT") ? 512 : DEFAULT_BLOCK_SIZE;
+  else if (0 <= (i = argmatch (spec, block_size_args)))
+    *block_size = block_size_types[i];
+  else
+    {
+      char *ptr;
+      unsigned long val;
+      strtol_error e = xstrtoul (spec, &ptr, 0, &val, "eEgGkKmMpPtTyYzZ0");
+      if (e != LONGINT_OK)
+	return e;
+      if (*ptr)
+	return LONGINT_INVALID_SUFFIX_CHAR;
+      if ((int) val < 0 || val != (int) val)
+	return LONGINT_OVERFLOW;
+      *block_size = (int) val;
+    }
+
+  return LONGINT_OK;
+}
+
+void
+human_block_size (char const *spec, int report_errors, int *block_size)
+{
+  strtol_error e = humblock (spec, block_size);
+  if (e != LONGINT_OK && report_errors)
+    STRTOL_FATAL_ERROR (spec, _("block size"), e);
 }
