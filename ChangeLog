@@ -2,10 +2,21 @@
 
 	* Version 5.0.90.
 
+	Use only one bit per field/offset in array, not one `int'.
+	* src/cut.c (printable_field): Change type to `unsigned char'.
+	(mark_printable_field, is_printable_field): New functions.
+	Use them in place of all direct accesses of `printable_field'.
+
+	* src/expand.c (parse_tabstops): Detect overflow properly.
+	* src/cut.c (set_fields): Likewise.
+
 	* src/rm.c: Include "dirname.h".
 	(usage): Use base_name (program_name) in body of --help output.
 	This lets me...
 	* man/Makefile.am (.x.1): ...back out the kludge of 2003-07-22.
+	Idea from Brendan O'Dea, who suggested using
+	`program_name = basename (argv[0]);' everywhere --
+	can't do that, but using base_name works just fine here.
 
 	* src/Makefile.am (AM_INSTALLCHECK_STD_OPTIONS_EXEMPT): Exempt test.
 
