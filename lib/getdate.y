@@ -99,7 +99,7 @@ enum { MERam, MERpm, MER24 };
 
 /* Information passed to and from the parser.  */
 struct parser_control
-{ 
+{
   /* The input string remaining to be parsed. */
   const char *input;
 
@@ -1014,7 +1014,7 @@ get_date (const char *p, const time_t *now)
       if (! gmt)
 	return -1;
       delta = pc.time_zone * 60 + difftm (gmt, &tm);
-      if ((Start - delta < Start) != (delta < 0))
+      if ((Start - delta < Start) != (delta > 0))
 	return -1;	/* time_t overflow */
       Start -= delta;
     }
