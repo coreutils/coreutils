@@ -129,7 +129,7 @@ struct ftw_data
   int flags;
 
   /* Conversion array for flag values.  It is the identity mapping for
-     `nftw' calls, otherwise it maps the values to those know by
+     `nftw' calls, otherwise it maps the values to those known by
      `ftw'.  */
   const int *cvt_arr;
 
@@ -145,9 +145,8 @@ struct ftw_data
 };
 
 
-/* Internally we use the FTW_* constants used for `nftw'.  When the
-   process called `ftw' we must reduce the flag to the known flags
-   for `ftw'.  */
+/* Internally we use the FTW_* constants used for `nftw'.  When invoked
+   as `ftw' map the flag to the subset of values used by `ftw'.  */
 static const int nftw_arr[] =
 {
   FTW_F, FTW_D, FTW_DNR, FTW_NS, FTW_SL, FTW_DP, FTW_SLN
