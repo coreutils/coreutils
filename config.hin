@@ -1221,6 +1221,9 @@
 /* the number of pending output bytes on stream `fp' */
 #undef PENDING_OUTPUT_N_BYTES
 
+/* Define if <inttypes.h> exists and defines unusable PRI* macros. */
+#undef PRI_MACROS_BROKEN
+
 /* Define to 1 if the C compiler supports function prototypes. */
 #undef PROTOTYPES
 

@@ -1,6 +1,6 @@
-# aclocal.m4 generated automatically by aclocal 1.6b -*- Autoconf -*-
+# generated automatically by aclocal 1.6f -*- Autoconf -*-
 
-# Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002
+# Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002
 # Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -69,7 +69,7 @@ AU_DEFUN([AM_CONFIG_HEADER], [AC_CONFIG_HEADERS($@)])
 # CC etc. in the Makefile, will ask for an AC_PROG_CC use...
 
 
-AC_PREREQ([2.53b])
+AC_PREREQ([2.54])
 
 # Autoconf 2.50 wants to disallow AM_ names.  We explicitly allow
 # the ones we care about.
@@ -94,6 +94,16 @@ if test "`cd $srcdir && pwd`" != "`pwd`" &&
    test -f $srcdir/config.status; then
   AC_MSG_ERROR([source directory already configured; run "make distclean" there first])
 fi
+
+# test whether we have cygpath
+if test -z "$CYGPATH_W"; then
+  if (cygpath --version) >/dev/null 2>/dev/null; then
+    CYGPATH_W='cygpath -w'
+  else
+    CYGPATH_W=echo
+  fi
+fi
+AC_SUBST([CYGPATH_W])
 
 # Define the identity of the package.
 dnl Distinguish between old-style and new-style calls.
@@ -169,14 +179,14 @@ echo "timestamp for $1" >`AS_DIRNAME([$1])`/stamp-h[]$_am_stamp_count])
 # ----------------------------
 # Automake X.Y traces this macro to ensure aclocal.m4 has been
 # generated from the m4 files accompanying Automake X.Y.
-AC_DEFUN([AM_AUTOMAKE_VERSION],[am__api_version="1.6b"])
+AC_DEFUN([AM_AUTOMAKE_VERSION],[am__api_version="1.6f"])
 
 # AM_SET_CURRENT_AUTOMAKE_VERSION
 # -------------------------------
 # Call AM_AUTOMAKE_VERSION so it can be traced.
 # This function is AC_REQUIREd by AC_INIT_AUTOMAKE.
 AC_DEFUN([AM_SET_CURRENT_AUTOMAKE_VERSION],
-	 [AM_AUTOMAKE_VERSION([1.6b])])
+	 [AM_AUTOMAKE_VERSION([1.6f])])
 
 # Helper functions for option handling.                    -*- Autoconf -*-
 
@@ -795,7 +805,7 @@ else
 fi
 AC_CONFIG_COMMANDS_PRE(
 [if test -z "${$1_TRUE}" && test -z "${$1_FALSE}"; then
-  AC_MSG_ERROR([conditional \"$1\" was never defined.
+  AC_MSG_ERROR([conditional "$1" was never defined.
 Usually this means the macro was only invoked conditionally.])
 fi])])
 
@@ -841,13 +851,13 @@ WARNING: You don't seem to have perl5.003 or newer installed, or you lack
 ] )
 ])
 
-#serial 50   -*- autoconf -*-
+#serial 52   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
 AC_DEFUN([jm_MACROS],
 [
-  AC_PREREQ(2.53b)
+  AC_PREREQ(2.54)
 
   GNU_PACKAGE="GNU $PACKAGE"
   AC_DEFINE_UNQUOTED(GNU_PACKAGE, "$GNU_PACKAGE",
@@ -903,6 +913,10 @@ AC_DEFUN([jm_MACROS],
   AC_REQUIRE([jm_FUNC_GNU_STRFTIME])
   AC_REQUIRE([jm_FUNC_MKTIME])
   AC_REQUIRE([jm_FUNC_FPENDING])
+
+  # This is for od and stat, and any other program that
+  # uses the PRI.MAX macros from inttypes.h.
+  AC_REQUIRE([gt_INTTYPES_PRI])
 
   AC_REQUIRE([jm_FUNC_GETGROUPS])
   test -n "$GETGROUPS_LIB" && LIBS="$GETGROUPS_LIB $LIBS"
@@ -1260,7 +1274,7 @@ AC_DEFUN([jm_INCLUDED_REGEX],
   ]
 )
 
-#serial 1
+#serial 2
 
 dnl From Paul Eggert.
 
@@ -1302,6 +1316,7 @@ AC_DEFUN([UTILS_HOST_OS],
        hpux*)		os='HP-UX';;
        hiux*)		os='HI-UX';;
        gnu*)		os='GNU';;
+       freebsd*-gnu*)	os='GNU/FreeBSD';;
        freebsd*)	os='FreeBSD';;
        dgux*)		os='DG/UX';;
        bsdi*)		os='BSD/OS';;
@@ -1604,10 +1619,13 @@ AC_DEFUN([_jm_DECL_HEADERS],
                    unistd.h sys/time.h utmp.h utmpx.h)
 ])
 
-#serial 26
+#serial 27
 
-dnl These are the prerequisite macros for files in the lib/
-dnl directories of the fileutils, sh-utils, and textutils packages.
+dnl We use jm_ for non Autoconf macros.
+m4_pattern_forbid([^jm_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
+
+# These are the prerequisite macros for files in the lib/
+# directory of the coreutils package.
 
 AC_DEFUN([jm_PREREQ],
 [
@@ -1720,6 +1738,7 @@ AC_DEFUN([jm_PREREQ_QUOTEARG],
 [
   AC_CHECK_FUNCS(isascii iswprint)
   jm_FUNC_MBRTOWC
+  jm_FUNC_MEMCMP
   AC_CHECK_HEADERS(limits.h stddef.h stdlib.h string.h wchar.h wctype.h)
   AC_HEADER_STDC
   AC_C_BACKSLASH_A
@@ -1989,7 +2008,7 @@ AC_DEFUN([jm_PREREQ_C_STACK],
 
    AC_CHECK_TYPES([stack_t], , , [#include <signal.h>])])
 
-#serial 4
+#serial 5
 
 dnl FIXME: put these prerequisite-only *.m4 files in a separate
 dnl directory -- otherwise, they'll conflict with existing files.
@@ -1999,6 +2018,7 @@ AC_DEFUN([jm_PREREQ_ERROR],
 [
   AC_CHECK_FUNCS(strerror vprintf doprnt)
   AC_CHECK_DECLS([strerror])
+  AC_CHECK_HEADERS([libintl.h])
   AC_FUNC_STRERROR_R
   AC_HEADER_STDC
 ])
@@ -2449,6 +2469,16 @@ AC_DEFUN([jm_AC_TYPE_UNSIGNED_LONG_LONG],
   fi
 ])
 
+#serial 7
+
+AC_DEFUN([jm_FUNC_MEMCMP],
+[AC_REQUIRE([AC_FUNC_MEMCMP])dnl
+ if test $ac_cv_func_memcmp_working = no; then
+   AC_DEFINE(memcmp, rpl_memcmp,
+     [Define to rpl_memcmp if the replacement function should be used.])
+ fi
+])
+
 # getcwd.m4 - check whether getcwd (NULL, 0) allocates memory for result
 
 # Copyright 2001 Free Software Foundation, Inc.
@@ -2865,16 +2895,6 @@ AC_DEFUN([jm_FUNC_NANOSLEEP],
  LIBS=$nanosleep_save_libs
 ])
 
-#serial 7
-
-AC_DEFUN([jm_FUNC_MEMCMP],
-[AC_REQUIRE([AC_FUNC_MEMCMP])dnl
- if test $ac_cv_func_memcmp_working = no; then
-   AC_DEFINE(memcmp, rpl_memcmp,
-     [Define to rpl_memcmp if the replacement function should be used.])
- fi
-])
-
 dnl This file is automatically generated from jm-glibc-io.m4n.
 
 #serial 6 -*- autoconf -*-
@@ -3241,6 +3261,41 @@ AC_DEFUN([jm_FUNC_FPENDING],
     AC_DEFINE_UNQUOTED(PENDING_OUTPUT_N_BYTES,
       $ac_cv_sys_pending_output_n_bytes,
       [the number of pending output bytes on stream `fp'])
+  fi
+])
+
+# inttypes-pri.m4 serial 1001 (based on gettext-0.11.4's `serial 1')
+dnl Copyright (C) 1997-2002 Free Software Foundation, Inc.
+dnl This file is free software, distributed under the terms of the GNU
+dnl General Public License.  As a special exception to the GNU General
+dnl Public License, this file may be distributed as part of a program
+dnl that contains a configuration script generated by Autoconf, under
+dnl the same distribution terms as the rest of that program.
+
+dnl From Bruno Haible.
+
+# Define PRI_MACROS_BROKEN if <inttypes.h> exists and defines the PRI*
+# macros to non-string values.  This is the case on AIX 4.3.3.
+
+AC_DEFUN([gt_INTTYPES_PRI],
+[
+  # autoconf-2.52 has a proper check for inttypes.h.
+  AC_PREREQ(2.52)
+
+  if test $ac_cv_header_inttypes_h = yes; then
+    AC_CACHE_CHECK([whether the inttypes.h PRIxNN macros are broken],
+      gt_cv_inttypes_pri_broken,
+      [
+        AC_TRY_COMPILE([#include <inttypes.h>
+#ifdef PRId32
+char *p = PRId32;
+#endif
+], [], gt_cv_inttypes_pri_broken=no, gt_cv_inttypes_pri_broken=yes)
+      ])
+  fi
+  if test "$gt_cv_inttypes_pri_broken" = yes; then
+    AC_DEFINE_UNQUOTED(PRI_MACROS_BROKEN, 1,
+      [Define if <inttypes.h> exists and defines unusable PRI* macros.])
   fi
 ])
 
