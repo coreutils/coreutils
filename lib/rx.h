@@ -1422,7 +1422,7 @@ extern reg_syntax_t re_syntax_options;
 #define RE_SYNTAX_AWK							\
   (RE_BACKSLASH_ESCAPE_IN_LISTS | RE_DOT_NOT_NULL			\
    | RE_NO_BK_PARENS            | RE_NO_BK_REFS				\
-   | RE_NO_BK_VAR               | RE_NO_EMPTY_RANGES			\
+   | RE_NO_BK_VBAR               | RE_NO_EMPTY_RANGES			\
    | RE_UNMATCHED_RIGHT_PAREN_ORD)
 
 #define RE_SYNTAX_POSIX_AWK 						\
@@ -1527,7 +1527,7 @@ extern reg_syntax_t re_syntax_options;
 #endif
 
 extern int rx_cache_bound;
-extern char rx_version_string[];
+extern const char *rx_version_string;
 
 
 
@@ -2221,11 +2221,7 @@ char *realloc ();
 #define Sword 1
 #endif
 #define SYNTAX(c) re_syntax_table[c]
-#ifdef SYNTAX_TABLE
-extern char *re_syntax_table;
-#else
 RX_DECL char re_syntax_table[CHAR_SET_SIZE];
-#endif
 #endif /* not emacs */
 
 
@@ -2639,8 +2635,10 @@ rx_search  (rxb, startpos, range, stop, total_size,
 	startpos = (  search_state.outer_pos.pos
 		    - search_state.outer_pos.string
 		    + search_state.outer_pos.offset);
+#if 0
 /*|*/	if ((range > 0) && (startpos == search_state.outer_pos.search_end))
 /*|*/	  goto finish;
+#endif
       }
 
       search_state.test_match_resume_pt = rx_test_start;
@@ -2693,7 +2691,7 @@ rx_search  (rxb, startpos, range, stop, total_size,
       } /* } while (...see below...) */
 
       if ((search_state.outer_pos.search_direction == 1)
-	  ? (startpos < search_state.outer_pos.search_end)
+	  ? (startpos <= search_state.outer_pos.search_end)
 	  : (startpos > search_state.outer_pos.search_end))
 	goto pseudo_do;
 
@@ -3482,7 +3480,7 @@ rx_search  (rxb, startpos, range, stop, total_size,
 #endif
 		  
 		  /* No more search-stack -- this test is done. */
-		  if (search_state.test_ret)
+		  if (search_state.test_ret != rx_test_internal_error)
 		    goto return_from_test_match;
 		  else
 		    goto error_in_testing_match;
@@ -3511,10 +3509,11 @@ rx_search  (rxb, startpos, range, stop, total_size,
 		      sizeof (struct rx_counter_frame));
 		}
 	      
-	      if (search_state.test_ret == rx_test_error)
+	      if (search_state.test_ret == rx_test_internal_error)
 		{
 		  POP (search_state.backtrack_stack,
 		       search_state.backtrack_frame_bytes);
+		  search_state.test_ret = rx_test_internal_error;
 		  goto test_do_return;
 		}
 	      

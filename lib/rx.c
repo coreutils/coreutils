@@ -30,12 +30,8 @@ write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA
 #define	_GNU_SOURCE
 #endif
 
-#if HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 
-char rx_version_string[] = "GNU Rx version 0.07.1";
+const char *rx_version_string = "GNU Rx version 0.07.2";
 
 			/* ``Too hard!''
 			 *	    -- anon.
@@ -122,6 +118,8 @@ char *alloca ();
 #ifdef SYNTAX_TABLE
 extern char *re_syntax_table;
 #else /* not SYNTAX_TABLE */
+
+RX_DECL char re_syntax_table[CHAR_SET_SIZE];
 
 #ifdef __STDC__
 static void
@@ -3672,7 +3670,8 @@ compute_super_edge (rx, dfout, csetout, superstate, chr)
 		{
 		  struct rx_distinct_future * df;
 		  df = saved;
-		  df->next_same_super_edge[1]->next_same_super_edge[0] = 0;
+		  if (df)
+		    df->next_same_super_edge[1]->next_same_super_edge[0] = 0;
 		  while (df)
 		    {
 		      struct rx_distinct_future *dft;
@@ -6250,9 +6249,9 @@ rx_blow_up_fastmap (rxb)
 
 struct re_search_2_closure
 {
-  __const__ char * string1;
+  __const__ unsigned char * string1;
   int size1;
-  __const__ char * string2;
+  __const__ unsigned char * string2;
   int size2;
 };
 
@@ -6395,7 +6394,7 @@ re_search_2_fetch_char (pos, offset, app_closure, stop)
 	return *pos->pos;
       else
 	{
-	  if (   (pos->string == (__const__ unsigned char *) closure->string2)
+	  if (   (pos->string == closure->string2)
 	      && (closure->string1)
 	      && (closure->size1))
 	    return closure->string1[closure->size1 - 1];
@@ -6882,6 +6881,7 @@ re_comp (s)
   /* Match anchors at newlines.  */
   rx_comp_buf.newline_anchor = 1;
 
+  rx_comp_buf.fastmap_accurate = 0;
   rx_comp_buf.re_nsub = 0;
   rx_comp_buf.start = 0;
   rx_comp_buf.se_params = 0;
@@ -6891,6 +6891,7 @@ re_comp (s)
   rx_comp_buf.rx.nfa_states = 0;
   rx_comp_buf.rx.start = 0;
   rx_comp_buf.rx.se_list_cmp = posix_se_list_order;
+  rx_comp_buf.rx.start_set = 0;
   rx_comp_buf.rx.local_cset_size = 256;
 
   ret = rx_compile (s, strlen (s), re_syntax_options, &rx_comp_buf);
