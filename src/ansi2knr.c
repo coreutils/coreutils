@@ -1,6 +1,6 @@
 /* Copyright (C) 1989, 1997, 1998, 1999 Aladdin Enterprises.  All rights reserved. */
 
-/*$Id: ansi2knr.c,v 1.13 1999/02/03 15:23:21 meyering Exp $*/
+/*$Id: ansi2knr.c,v 1.14 1999/04/13 14:44:33 meyering Exp $*/
 /* Convert ANSI C function definitions to K&R ("traditional C") syntax */
 
 /*
@@ -44,7 +44,10 @@ program under the GPL.
  * consisting of only
  *	identifier1(identifier2)
  * will not be considered a function definition unless identifier2 is
- * the word "void".  ansi2knr will recognize a multi-line header provided
+ * the word "void", and a line consisting of
+ *	identifier1(identifier2, <<arbitrary>>)
+ * will not be considered a function definition.
+ * ansi2knr will recognize a multi-line header provided
  * that no intervening line ends with a left or right brace or a semicolon.
  * These algorithms ignore whitespace and comments, except that
  * the function name must be the first thing on the line.
@@ -58,6 +61,12 @@ program under the GPL.
  * The original and principal author of ansi2knr is L. Peter Deutsch
  * <ghost@aladdin.com>.  Other authors are noted in the change history
  * that follows (in reverse chronological order):
+	lpd 1999-04-12 added minor fixes from Pavel Roskin
+		<pavel_roskin@geocities.com> for clean compilation with
+		gcc -W -Wall
+	lpd 1999-03-22 added hack to recognize lines consisting of
+		identifier1(identifier2, xxx) as *not* being procedures
+	lpd 1999-02-03 made indentation of preprocessor commands consistent
 	lpd 1999-01-28 fixed two bugs: a '/' in an argument list caused an
 		endless loop; quoted strings within an argument list
 		confused the parser
@@ -156,6 +165,11 @@ program under the GPL.
 #  endif
 # endif
 
+#endif
+
+/* Define NULL (for *very* old compilers). */
+#ifndef NULL
+# define NULL (0)
 #endif
 
 /*
@@ -263,6 +277,11 @@ main(argc, argv)
 	if ( filename )
 	  fprintf(out, "#line 1 \"%s\"\n", filename);
 	buf = malloc(bufsize);
+	if ( buf == NULL )
+	   {
+		fprintf(stderr, "Unable to allocate read buffer!\n");
+		exit(1);
+	   }
 	line = buf;
 	while ( fgets(line, (unsigned)(buf + bufsize - line), in) != NULL )
 	   {
@@ -430,7 +449,7 @@ test1(buf)
 		   };
 		char **key = words;
 		char *kp;
-		int len = endfn - buf;
+		unsigned len = endfn - buf;
 
 		while ( (kp = *key) != 0 )
 		   {	if ( strlen(kp) == len && !strncmp(kp, buf, len) )
@@ -443,14 +462,16 @@ test1(buf)
 	       int len;
 	       /*
 		* Check for identifier1(identifier2) and not
-		* identifier1(void).
+		* identifier1(void), or identifier1(identifier2, xxxx).
 		*/
 
 	       while ( isidchar(*p) )
 		   p++;
 	       len = p - id;
 	       p = skipspace(p, 1);
-	       if ( *p == ')' && (len != 4 || strncmp(id, "void", 4)) )
+	       if (*p == ',' ||
+		   (*p == ')' && (len != 4 || strncmp(id, "void", 4)))
+		   )
 		   return 0;	/* not a function */
 	   }
 	/*
@@ -495,7 +516,7 @@ convert1(buf, out, header, convert_varargs)
 	  ;
 top:	p = endfn;
 	breaks = (char **)malloc(sizeof(char *) * num_breaks * 2);
-	if ( breaks == 0 )
+	if ( breaks == NULL )
 	   {	/* Couldn't allocate break table, give up */
 		fprintf(stderr, "Unable to allocate break table!\n");
 		fputs(buf, out);
@@ -507,7 +528,7 @@ top:	p = endfn;
 	do
 	   {	int level = 0;
 		char *lp = NULL;
-		char *rp;
+		char *rp = NULL;
 		char *end = NULL;
 
 		if ( bp >= btop )
@@ -545,7 +566,7 @@ top:	p = endfn;
 			   }
 		   }
 		/* Erase any embedded prototype parameters. */
-		if ( lp )
+		if ( lp && rp )
 		  writeblanks(lp + 1, rp);
 		p--;			/* back up over terminator */
 		/* Find the name being declared. */
