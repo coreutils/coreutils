@@ -522,7 +522,7 @@ zaptemp (const char *name)
       {
 	unlink (name);
 	*pnode = node->next;
-	free ((char *) node);
+	free (node);
 	break;
       }
 }
