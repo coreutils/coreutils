@@ -60,8 +60,8 @@ chopt_init (struct Chown_option *chopt)
   chopt->affect_symlink_referent = true;
   chopt->recurse = false;
   chopt->force_silent = false;
-  chopt->user_name = 0;
-  chopt->group_name = 0;
+  chopt->user_name = NULL;
+  chopt->group_name = NULL;
 }
 
 extern void
