@@ -187,6 +187,8 @@ tgz-md5 = $(shell md5sum < $(my_distdir).tar.gz|sed 's/  -//')
 tgz-sha1 = $(shell sha1sum < $(my_distdir).tar.gz|sed 's/  -//')
 bz2-md5 = $(shell md5sum < $(my_distdir).tar.bz2|sed 's/  -//')
 bz2-sha1 = $(shell sha1sum < $(my_distdir).tar.bz2|sed 's/  -//')
+xdelta-md5 = $(shell md5sum < $(xd-delta)|sed 's/  -//')
+xdelta-sha1 = $(shell sha1sum < $(xd-delta)|sed 's/  -//')
 tgz-size = $(shell du --human $(my_distdir).tar.gz|sed 's/\([Mk]\).*/ \1B/')
 bz2-size = $(shell du --human $(my_distdir).tar.bz2|sed 's/\([Mk]\).*/ \1B/')
 xd-size = $(shell du --human $(xd-delta)|sed 's/\([Mk]\).*/ \1B/')
@@ -228,12 +230,14 @@ announcement: NEWS ChangeLog $(rel-files)
 	    echo "  $$url/$(xd-delta)   ($(xd-size))"; \
 	  done; \
 	  echo; \
-	  echo "Here are the MD5 and SHA1 signatures for the compressed tar files:"; \
+	  echo "Here are the MD5 and SHA1 signatures:"; \
 	  echo; \
 	  echo "$(tgz-md5)  $(my_distdir).tar.gz"; \
 	  echo "$(bz2-md5)  $(my_distdir).tar.bz2"; \
+	  echo "$(xdelta-md5)  $(xd-delta)"; \
 	  echo "$(tgz-sha1)  $(my_distdir).tar.gz"; \
 	  echo "$(bz2-sha1)  $(my_distdir).tar.bz2"; \
+	  echo "$(xdelta-sha1)  $(xd-delta)"; \
 	  echo; \
 	  echo NEWS:; \
 	  sed -n "/$(THIS_VERSION_REGEXP)[]:]/,/$(PREV_VERSION_REGEXP)[]:]/p" NEWS \
