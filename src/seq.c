@@ -95,10 +95,12 @@ Print numbers from FIRST to LAST, in steps of INCREMENT.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-If FIRST or INCREMENT is omitted, it defaults to 1.\n\
+If FIRST or INCREMENT is omitted, it defaults to 1.  That is, an\n\
+omitted INCREMENT defaults to 1 even when LAST is smaller than FIRST.\n \
 FIRST, INCREMENT, and LAST are interpreted as floating point values.\n\
-INCREMENT should be positive if FIRST is smaller than LAST, and negative\n\
-otherwise.  When given, the FORMAT argument must contain exactly one of\n\
+INCREMENT is usually positive if FIRST is smaller than LAST, and\n\
+INCREMENT is usually negative if FIRST is greater than LAST.\n\
+When given, the FORMAT argument must contain exactly one of\n\
 the printf-style, floating point output formats %e, %f, %g\n\
 "), stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
