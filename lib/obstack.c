@@ -1,23 +1,22 @@
 /* obstack.c - subroutines used implicitly by object stack macros
    Copyright (C) 1988-1994,96,97,98,99,2000,2001 Free Software Foundation, Inc.
-
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
 
    The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public License as
-   published by the Free Software Foundation; either version 2 of the
-   License, or (at your option) any later version.
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public
-   License along with the GNU C Library; see the file COPYING.LIB.  If not,
-   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -47,6 +46,9 @@
 # endif
 #endif
 
+#if defined _LIBC && defined USE_IN_LIBIO
+# include <wchar.h>
+#endif
 
 #ifndef ELIDE_CODE
 
@@ -471,19 +473,28 @@ _obstack_memory_used (h)
 #  define fputs(s, f) _IO_fputs (s, f)
 # endif
 
-#ifndef __attribute__
+# ifndef __attribute__
 /* This feature is available in gcc versions 2.5 and later.  */
-# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || __STRICT_ANSI__
-#  define __attribute__(Spec) /* empty */
+#  if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 5)
+#   define __attribute__(Spec) /* empty */
+#  endif
 # endif
-#endif
 
 static void
 __attribute__ ((noreturn))
 print_and_abort ()
 {
-  fputs (_("memory exhausted"), stderr);
-  fputc ('\n', stderr);
+  /* Don't change any of these strings.  Yes, it would be possible to add
+     the newline to the string and use fputs or so.  But this must not
+     happen because the "memory exhausted" message appears in other places
+     like this and the translation should be reused instead of creating
+     a very similar string which requires a separate translation.  */
+# if defined _LIBC && defined USE_IN_LIBIO
+  if (_IO_fwide (stderr, 0) > 0)
+    __fwprintf (stderr, L"%s\n", _("memory exhausted"));
+  else
+# endif
+    fprintf (stderr, "%s\n", _("memory exhausted"));
   exit (obstack_exit_failure);
 }
 
@@ -494,7 +505,7 @@ print_and_abort ()
 /* Now define the functional versions of the obstack macros.
    Define them to simply use the corresponding macros to do the job.  */
 
-#  if defined (__STDC__) && __STDC__
+#  if defined __STDC__ && __STDC__
 /* These function definitions do not work with non-ANSI preprocessors;
    they won't pass through the macro names in parentheses.  */
 
