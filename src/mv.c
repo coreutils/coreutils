@@ -56,10 +56,6 @@
 #include "remove.h"
 #include "error.h"
 
-#if HAVE_LCHOWN
-# define chown(PATH, OWNER, GROUP) lchown(PATH, OWNER, GROUP)
-#endif
-
 /* Initial number of entries in each hash table entry's table of inodes.  */
 #define INITIAL_HASH_MODULE 100
 
