@@ -10,6 +10,7 @@
 	would exit immediately upon the write error while trying to copy
 	non-seekable /proc/modules to the full partition.  Now it still
 	reports the failure but continues on with the remaining file.
+	(tac_nonseekable): Return false also if copy_to_temp fails.
 
 2004-12-13  Paul Eggert  <eggert@cs.ucla.edu>
 
