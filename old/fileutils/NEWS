@@ -1,5 +1,9 @@
 Changes in release 4.01:
 [4.0z]
+* mv's --force (-f) option now controls solely whether mv prompts (per POSIX)
+* `cp -f' now first attempts to open an existing destination file, and only
+    if that fails does it resort to unlinking the file and retrying the open
+* when ls sorts directory entries, it now honors the current locale settings
 * dd's `skip=BLOCKS' operator once again works on systems with a buggy lseek
   function (Linux, at least on SCSI tape devices)
 * fix a typo in install-sh
