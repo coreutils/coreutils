@@ -189,11 +189,11 @@ charset.alias: config.charset
 	mv t-$@ $@
 
 BUILT_SOURCES += $(STDBOOL_H)
-EXTRA_DIST += stdbool.hin
+EXTRA_DIST += stdbool_.h
 MOSTLYCLEANFILES += stdbool.h stdbool.ht
 # Create stdbool.h on systems that lack a working one.
-stdbool.h: stdbool.hin
-	sed -e 's/@''HAVE__BOOL''@/$(HAVE__BOOL)/g' $(srcdir)/stdbool.hin > $@t
+stdbool.h: stdbool_.h
+	sed -e 's/@''HAVE__BOOL''@/$(HAVE__BOOL)/g' $(srcdir)/stdbool_.h > $@t
 	mv $@t $@
 
 BUILT_SOURCES += $(ALLOCA_H)
