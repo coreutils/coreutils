@@ -1,6 +1,16 @@
-2004-06-05  Paul Eggert  <eggert@cs.ucla.edu>
+2004-06-07  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	Enable direct-mode I/O (bypassing the buffer cache), if possible.
+	Prompted by a suggestion from Kalle Olavi Niemitalo
+	in http://bugs.debian.org/207035.
+	* src/shred.c (direct_mode): New function.
+	(do_wipefd): Turn on direct-mode I/O.
+	(dopass): If a file's first write fails with EINVAL,
+	turn off direct-mode I/O and retry the write.
+
+2004-06-05  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/tr.c (main): "tr -d a b" is now a fatal error even if
 	POSIXLY_CORRECT is set.  The POSIX SYNOPSIS does not allow this
