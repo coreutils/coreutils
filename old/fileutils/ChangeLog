@@ -1,5 +1,10 @@
 1999-04-04  Jim Meyering  <meyering@ascend.com>
 
+	* tests/ln/misc: Comment out the test added on 1999-01-31.
+
+	* Makefile.maint (url_dir_list): Define properly.
+	(real_dir_list): Likewise.
+
 	* src/shred.c: Don't include string.h.
 	[!HAVE_CONFIG_H]: Include string.h here.
 	[!HAVE_CONFIG_H]: Hard-code RETSIGTYPE to `int'.
