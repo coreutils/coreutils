@@ -46,7 +46,7 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s NUMBER[SUFFIX]\n\
+Usage: %s NUMBER[SUFFIX]...\n\
   or:  %s OPTION\n\
 Pause for NUMBER seconds.\n\
 SUFFIX may be s for seconds (the default), m for minutes,\n\
