@@ -1,5 +1,10 @@
 1997-10-25  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/Makefile.am (noinst_HEADERS): Add xalloc.h.
+
+	* src/system.h: Include xalloc.h.
+	Remove dcls of xmalloc, xcalloc and xrealloc.
+
 	* lib/xalloc.h: New file.
 
 	* lib/xmalloc.c: Include xalloc.h.
