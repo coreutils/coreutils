@@ -1,6 +1,13 @@
-2004-03-02  Jim Meyering  <jim@meyering.net>
+2004-03-06  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.2.1.
+
+	cp --sparse=always sparse-image-file.img /dev/hda1 could
+	produce an invalid copy on the destination device.
+
+	* src/copy.c (copy_reg): Even with --sparse=always, try to
+	make `holes' only if the destination is a regular file.
+	Reported by Szakacsits Szabolcs.
 
 2004-03-03  Paul Eggert  <eggert@twinsun.com>
 
@@ -15,7 +22,7 @@
 2004-03-01  Paul Eggert  <eggert@twinsun.com>
 
 	* configure.ac: Include <signal.h> when checking for strsignal,
-	sys_siglist, and friends.  Problem reported by Toney Leneis in
+	sys_siglist, and friends.  Problem reported by Tony Leneis in
 	<http://mail.gnu.org/archive/html/bug-coreutils/2004-02/msg00136.html>.
 
 2004-02-25  Paul Eggert  <eggert@twinsun.com>
