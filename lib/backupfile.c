@@ -63,12 +63,12 @@ char *malloc ();
 #endif
 
 #if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
-# define ISASCII(c) 1
+# define IN_CTYPE_DOMAIN(c) 1
 #else
-# define ISASCII(c) isascii(c)
+# define IN_CTYPE_DOMAIN(c) isascii(c)
 #endif
 
-#define ISDIGIT(c) (ISASCII ((unsigned char) (c)) \
+#define ISDIGIT(c) (IN_CTYPE_DOMAIN ((unsigned char) (c)) \
 		    && isdigit ((unsigned char) (c)))
 
 #if defined (HAVE_UNISTD_H)
