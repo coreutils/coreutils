@@ -264,7 +264,7 @@ read_filesystem_list (need_fs_type, all_fs)
     struct tabmntent *mntlist, *p;
     struct mntent *mnt;
     struct mount_entry *me;
-    
+
     /* the third and fourth arguments could be used to filter mounts,
        but Crays doesn't seem to have any mounts that we want to
        remove. Specifically, automount create normal NFS mounts.
