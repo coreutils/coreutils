@@ -1,5 +1,10 @@
 2003-07-16  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.0.2.
+
+	* src/kill.c (main): Fix bug introduced on 2003-05-10 (for 5.0.1)
+	whereby kill would always attempt to operate on argv[0] and fail.
+
 	* src/test.c (integer_expected_error): Improve diagnostic -- now,
 	it also matches the one from bash's builtin test.
 	(binary_operator): Add \n at end of diagnostic.
@@ -7,8 +12,6 @@
 	* tests/rm/fail-2eperm: Remove setuidgid-related code.  Move it to ...
 	* tests/priv-check: Move setuidgid-related and
 	NON_ROOT_USERNAME-checking code to this file.
-
-	* Version 5.0.2.
 
 	* README: Update section on testing as `root'.
 	Suggestion from Paul Jarc.
