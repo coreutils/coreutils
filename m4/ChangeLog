@@ -1,3 +1,12 @@
+2002-04-24  Jim Meyering  <meyering@lucent.com>
+
+	* prereq.m4 (jm_PREREQ_HARD_LOCALE): New macro.
+	(jm_PREREQ): Use it.
+
+	* getloadavg.m4: Check for these headers: locale.h unistd.h
+	mach/mach.h fcntl.h.
+	Check for this function: setlocale.
+
 2002-04-16  Jim Meyering  <meyering@lucent.com>
 
 	* prereq.m4 (jm_PREREQ_READUTMP): Also check for these members:
