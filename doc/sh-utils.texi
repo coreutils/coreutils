@@ -166,10 +166,19 @@ The GNU shell utilities are mostly compatible with the POSIX.2 standard.
 @cindex bugs, reporting
 Please report bugs to @samp{bug-gnu-utils@@prep.ai.mit.edu}.  Remember
 to include the version number, machine architecture, input files, and
-any other information needed to reproduce the bug.  @xref{Bugs, , , gcc,
-GNU CC}.
+any other information needed to reproduce the bug: your input, what you
+expected, what you got, and why it is wrong.  Diffs are welcome, but
+please include a description of the problem as well, since this is
+sometimes difficult to infer. @xref{Bugs, , , gcc, GNU CC}.
 
 @cindex history
+@cindex MacKenzie, David
+@cindex Meyering, Jim
+@c Sorry, but the @value trick doesn't work with TeX in indexing
+@c commands, and I don't want to fix it right now. --karl.
+@cindex Pinard, Francois
+@cindex Berry, Karl
+@cindex Stallman, Richard
 This manual is based on the Unix man pages in the distribution, which
 were originally written by David MacKenzie and updated by Jim Meyering.
 @c If the following space before `@value' is removed, makeinfo
@@ -241,7 +250,7 @@ This section describes commands that display text strings.
 Synopsis:
 
 @example
-echo [ @var{option} ]@dots{} [ @var{string} ]@dots{}
+echo [@var{option}]@dots{} [@var{string}]@dots{}
 @end example
 
 @code{echo} writes each given @var{string} to standard output, with a
@@ -294,7 +303,7 @@ a valid octal number, it is printed literally.
 Synopsis:
 
 @example
-printf @var{format} [ @var{argument} ]@dots{}
+printf @var{format} [@var{argument}]@dots{}
 @end example
 
 @code{printf} prints the @var{format} string, interpreting @samp{%}
@@ -470,7 +479,7 @@ True if @var{file} exists and is a named pipe.
 @cindex socket check
 True if @var{file} exists and is a socket.
 
-@item -t [ @var{fd} ]
+@item -t [@var{fd}]
 @opindex -t
 @cindex terminal check
 True if @var{fd} is opened on a terminal.  If @var{fd} is omitted, it
@@ -910,7 +919,7 @@ to send some data down a pipe, but also to save a copy.
 Synopsis:
 
 @example
-tee [ @var{option} ]@dots{} [ @var{file} ]@dots{}
+tee [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
 If a file being written to does not already exist, it is created.  If a
@@ -965,7 +974,7 @@ This section describes commands that manipulate file names.
 Synopsis:
 
 @example
-basename @var{name} [ @var{suffix} ]
+basename @var{name} [@var{suffix}]
 @end example
 
 The @code{basename} command removes any leading directory components
@@ -1010,7 +1019,7 @@ options}.
 Synopsis:
 
 @example
-pathchk [ @var{option} ]@dots{} @var{name}@dots{}
+pathchk [@var{option}]@dots{} @var{name}@dots{}
 @end example
 
 For each @var{name}, @code{pathchk} prints a message if any of
@@ -1113,8 +1122,8 @@ the terminal line operation, as described below.
 Synopses:
 
 @example
-stty [ @var{setting} ]@dots{}
-stty [ @var{option} ]
+stty [@var{setting}]@dots{}
+stty [@var{option}]
 @end example
 
 The program accepts the following options.  Also see @ref{Common options}.
@@ -1731,7 +1740,7 @@ of: 0 50 75 110 134 134.5 150 200 300 600 1200 1800 2400 4800 9600
 Synopsis:
 
 @example
-printenv [ @var{option} ] [ @var{variable} ]@dots{}
+printenv [@var{option}] [@var{variable}]@dots{}
 @end example
 
 If no @var{variable}s are specified, @code{printenv} prints the value of
@@ -1764,7 +1773,7 @@ input.  It prints @samp{not a tty} if standard input is not a tty.
 Synopsis:
 
 @example
-tty [ @var{option} ]@dots{}
+tty [@var{option}]@dots{}
 @end example
 
 The program accepts the following option.  Also see @ref{Common options}.
@@ -1825,7 +1834,7 @@ running it if no user is specified.
 Synopsis:
 
 @example
-id [ @var{option} ]@dots{} [ @var{username} ]
+id [@var{option}]@dots{} [@var{username}]
 @end example
 
 By default, it prints the real user id, real group id, effective user id
@@ -1923,7 +1932,7 @@ printed before the list of that user's groups.
 Synopsis:
 
 @example
-groups [ @var{username} ]@dots{}
+groups [@var{username}]@dots{}
 @end example
 
 The group lists are equivalent to the output of the command @samp{id -Gn}.
@@ -1949,7 +1958,7 @@ output.
 Synopsis:
 
 @example
-users [ @var{file} ]
+users [@var{file}]
 @end example
 
 @flindex /etc/utmp
@@ -1972,7 +1981,7 @@ options}.
 Synopsis:
 
 @example
-@code{who} [ @var{option} ] [ @var{file} ] [ am i ]
+@code{who} [@var{option}] [@var{file}] [am i]
 @end example
 
 @cindex terminal lines, currently used
@@ -2084,8 +2093,8 @@ the format of the @samp{%c} directive (described below).
 Synopses:
 
 @example
-date [ @var{option} ]@dots{} [ +@var{format} ]
-date [ -u|--utc|--universal ] @c this avoids a newline in the output
+date [@var{option}]@dots{} [+@var{format}]
+date [-u|--utc|--universal] @c this avoids a newline in the output
 [ @var{MMDDhhmm}[[@var{CC}]@var{YY}][.@var{ss}] ]
 @end example
 
@@ -2099,24 +2108,11 @@ which is the same as in the @code{strftime} function.  Except for
 directives, which start with @samp{%}, characters in the format string
 are printed unchanged.  The directives are described below.
 
-@cindex numeric field padding
-@cindex padding of numeric fields
-@cindex fields, padding numeric
-By default, @code{date} pads numeric fields with zeroes.
-GNU @code{date} recognizes the following numeric modifiers
-between the @samp{%} and the directive.  These are GNU extensions.
-
-@table @samp
-@item -
-(hyphen) do not pad the field
-@item _
-(underscore) pad the field with spaces
-@end table
-
 @menu
 * Time directives::             %[HIklMprsSTXZ]
 * Date directives::             %[aAbBcdDhjmUwWxyY]
 * Literal directives::          %[%nt]
+* Padding::			Pad with zeroes, spaces (%_), or nothing (%-).
 * Setting the time::            Changing the system clock.
 * Options for date::            Instead of the current time.
 * Examples of date::            Examples.
@@ -2223,6 +2219,42 @@ a newline
 @item %t
 a horizontal tab
 @end table
+
+
+@node Padding
+@subsection Padding
+
+@cindex numeric field padding
+@cindex padding of numeric fields
+@cindex fields, padding numeric
+
+By default, @code{date} pads numeric fields with zeroes, so that, for
+example, numeric months are always output as two digits. GNU @code{date}
+recognizes the following numeric modifiers between the @samp{%} and the
+directive.
+
+@table @samp
+@item -
+(hyphen) do not pad the field; useful if the output is intended for
+human consumption.
+@item _
+(underscore) pad the field with spaces; useful if you need a fixed
+number of characters in the output, but zeroes are too distracting.
+@end table
+
+@noindent
+These are GNU extensions.
+
+Here is an example illustrating the differences:
+
+@example
+date +%d/%m -d "Feb 1"
+@result{} 01/02
+date +%-d/%-m -d "Feb 1"
+@result{} 1/2
+date +%_d/%_m -d "Feb 1"
+@result{}  1/ 2
+@end example
 
 
 @node Setting the time
@@ -2397,7 +2429,7 @@ it is run on.  If no options are given, @code{uname} acts as if the
 Synopsis:
 
 @example
-uname [ @var{option} ]@dots{}
+uname [@var{option}]@dots{}
 @end example
 
 If multiple options or @code{-a} are given, the selected information is
@@ -2484,7 +2516,7 @@ name.
 Synopsis:
 
 @example
-hostname [ @var{name} ]
+hostname [@var{name}]
 @end example
 
 The only options are @samp{--help} and @samp{--version}.  @xref{Common
@@ -2523,8 +2555,8 @@ by the command line arguments.
 Synopses:
 
 @example
-env [ @var{option} ]@dots{} [ @var{name}=@var{value} ]@dots{} @c
-[ @var{command} [ @var{args} ]@dots{} ]
+env [@var{option}]@dots{} [@var{name}=@var{value}]@dots{} @c
+[@var{command} [@var{args}]@dots{}]
 env
 @end example
 
@@ -2586,7 +2618,7 @@ of -20 (the highest priority) to 19 (the lowest).
 Synopsis:
 
 @example
-nice [ @var{option} ]@dots{} [ @var{command} [ @var{arg} ]@dots{} ]
+nice [@var{option}]@dots{} [@var{command} [@var{arg}]@dots{}]
 @end example
 
 @cindex conflicts with shell built-ins
@@ -2623,7 +2655,7 @@ out.
 Synopsis:
 
 @example
-nohup @var{command} [ @var{arg} ]@dots{}
+nohup @var{command} [@var{arg}]@dots{}
 @end example
 
 @flindex nohup.out
@@ -2662,7 +2694,7 @@ id, group id, and supplemental groups of a given @var{user}.
 Synopsis:
 
 @example
-su [ @var{option} ]@dots{} [ @var{user} [ @var{arg} ]@dots{} ]
+su [@var{option}]@dots{} [@var{user} [@var{arg}]@dots{}]
 @end example
 
 @cindex passwd entry, and @code{su} shell
@@ -2820,7 +2852,7 @@ the values of the command line arguments.
 Synopsis:
 
 @example
-sleep [ @var{number}[smhd] ]@dots{}
+sleep [@var{number}[smhd]]@dots{}
 @end example
 
 @cindex time units
