@@ -83,6 +83,7 @@
 
 #include <getopt.h>
 #include <stdio.h>
+#include <assert.h>
 #include <setjmp.h>
 #include <signal.h>
 #include <sys/types.h>
@@ -990,13 +991,14 @@ fillpattern (int type, unsigned char *r, size_t size)
 }
 
 /*
- * Fill a buffer with random data.
- * size is rounded UP to a multiple of ISAAC_BYTES.
+ * Fill a buffer, R (of size SIZE_MAX), with random data.
+ * SIZE is rounded UP to a multiple of ISAAC_BYTES.
  */
 static void
-fillrand (struct isaac_state *s, word32 *r, size_t size)
+fillrand (struct isaac_state *s, word32 *r, size_t size_max, size_t size)
 {
   size = (size + ISAAC_BYTES - 1) / ISAAC_BYTES;
+  assert (size <= size_max);
 
   while (size--)
     {
@@ -1083,12 +1085,14 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
       lim = sizeof r;
       if ((off_t) lim > size - offset && size != -1)
 	{
+	  if (size < offset)
+	    break;
 	  lim = (size_t) (size - offset);
 	  if (!lim)
 	    break;
 	}
       if (type < 0)
-	fillrand (s, r, lim);
+	fillrand (s, r, sizeof r, lim);
       /* Loop to retry partial writes. */
       for (soff = 0; soff < lim; soff += ssize)
 	{
@@ -1422,17 +1426,33 @@ do_wipefd (int fd, char const *qname, struct isaac_state *s,
   size = flags->size;
   if (size == -1)
     {
-      size = (S_ISREG (st.st_mode)
-	      ? st.st_size
-	      : lseek (fd, (off_t) 0, SEEK_END));
-      if (size < (S_ISREG (st.st_mode) ? 0 : -1))
+      /* Accept a length of zero only if it's a regular file.
+	 For any other type of file, try to get the size another way.  */
+      if (S_ISREG (st.st_mode))
 	{
-	  error (0, 0, _("%s: file has negative size"), qname);
-	  return -1;
+	  size = st.st_size;
+	  if (size < 0)
+	    {
+	      error (0, 0, _("%s: file has negative size"), qname);
+	      return -1;
+	    }
 	}
+      else
+	{
+	  size = lseek (fd, (off_t) 0, SEEK_END);
+	  if (size <= 0)
+	    {
+	      /* We are unable to determine the length, up front.
+		 Let dopass do that as part of its first iteration.  */
+	      size = -1;
+	    }
+	}
+
       if (0 <= size && !(flags->exact))
 	{
 	  size += ST_BLKSIZE (st) - 1 - (size - 1) % ST_BLKSIZE (st);
+
+	  /* If in rounding up, we've just overflowed, use the maximum.  */
 	  if (size < 0)
 	    size = TYPE_MAXIMUM (off_t);
 	}
