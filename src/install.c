@@ -538,7 +538,7 @@ change_timestamps (const char *from, const char *to)
   if (stat (from, &stb))
     {
       error (0, errno, _("cannot obtain time stamps for %s"), quote (from));
-      return true;
+      return false;
     }
 
   timespec[0].tv_sec = stb.st_atime;
@@ -548,9 +548,9 @@ change_timestamps (const char *from, const char *to)
   if (utimens (to, timespec))
     {
       error (0, errno, _("cannot set time stamps for %s"), quote (to));
-      return true;
+      return false;
     }
-  return false;
+  return true;
 }
 
 /* Strip the symbol table from the file PATH.
