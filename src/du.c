@@ -40,10 +40,6 @@
    Variable blocks added by lm@sgi.com.
 */
 
-#ifdef _AIX
- #pragma alloca
-#endif
-
 #include <config.h>
 #include <stdio.h>
 #include <getopt.h>
@@ -114,7 +110,7 @@ char *xrealloc ();
 static int hash_insert __P ((ino_t ino, dev_t dev));
 static int hash_insert2 __P ((struct htab *_htab, ino_t ino, dev_t dev));
 static long count_entry __P ((const char *ent, int top, dev_t last_dev,
-			      int max_depth));
+			      int depth));
 static void du_files __P ((char **files));
 static void hash_init __P ((unsigned int modulus,
 			    unsigned int entry_tab_size));
@@ -126,9 +122,6 @@ static void str_trunc __P ((string s1, unsigned int length));
 
 /* Name under which this program was invoked.  */
 char *program_name;
-
-/* If nonzero, display only a total for each argument. */
-static int opt_summarize_only = 0;
 
 /* If nonzero, display counts for all files, not just directories. */
 static int opt_all = 0;
@@ -148,10 +141,9 @@ static int opt_separate_dirs = 0;
 /* If nonzero, dereference symlinks that are command line arguments. */
 static int opt_dereference_arguments = 0;
 
-/* Show the total for each directory that is at most MAX_DEPTH levels
-   down from the root of the hierarchy.  The root is at level 0, so
-   `du --max-depth=0' is equivalent to `du -s.'  `du --max-depth=1' is
-   like `du -s *' but includes directories whose names begin with `.'.  */
+/* Show the total for each directory (and file if --all) that is at
+   most MAX_DEPTH levels down from the root of the hierarchy.  The root
+   is at level 0, so `du --max-depth=0' is equivalent to `du -s'.  */
 static int max_depth = INT_MAX;
 
 enum output_size
@@ -206,7 +198,7 @@ static struct option const long_options[] =
   {"megabytes", no_argument, NULL, 'm'},
   {"one-file-system", no_argument, &opt_one_file_system, 1},
   {"separate-dirs", no_argument, &opt_separate_dirs, 1},
-  {"summarize", no_argument, &opt_summarize_only, 1},
+  {"summarize", no_argument, NULL, 's'},
   {"total", no_argument, &opt_combined_arguments, 1},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
@@ -241,8 +233,10 @@ Summarize disk usage of each FILE, recursively for directories.\n\
   -S, --separate-dirs   do not include size of subdirectories\n\
   -s, --summarize       display only a total for each argument\n\
   -x, --one-file-system  skip directories on different filesystems\n\
-      --max-depth=N     FIXME how deep to recurse before not showing the size,\n\
-                          --depth=0 is equal to -s aka --summarize.\n\
+      --max-depth=N     print the total for a directory (or file, with --all)\n\
+			  only if it is N or fewer levels below the command\n\
+			  line argument;  --max-depth=0 is the same as\n\
+                          --summarize\n\
       --help            display this help and exit\n\
       --version         output version information and exit\n\
 "));
@@ -257,6 +251,10 @@ main (int argc, char **argv)
   int c;
   char *cwd_only[2];
   char *bs;
+  int max_depth_specified = 0;
+
+  /* If nonzero, display only a total for each argument. */
+  int opt_summarize_only = 0;
 
   cwd_only[0] = ".";
   cwd_only[1] = NULL;
@@ -316,6 +314,7 @@ main (int argc, char **argv)
 	      || tmp_long < 0 || tmp_long > INT_MAX)
 	    error (1, 0, _("invalid maximum depth `%s'"), optarg);
 
+	  max_depth_specified = 1;
 	  max_depth = (int) tmp_long;
  	  break;
 
@@ -349,7 +348,7 @@ main (int argc, char **argv)
 	  break;
 
 	default:
-	  usage (2, (char *) 0);
+	  usage (1, (char *) 0);
 	}
     }
 
@@ -363,7 +362,24 @@ main (int argc, char **argv)
     usage (0, NULL);
 
   if (opt_all && opt_summarize_only)
-    usage (2, _("cannot both summarize and show all entries"));
+    usage (1, _("cannot both summarize and show all entries"));
+
+  if (opt_summarize_only && max_depth_specified && max_depth == 0)
+    {
+      error (0, 0,
+	     _("warning: summarizing is the same as using --max-depth=0"));
+    }
+
+  if (opt_summarize_only && max_depth_specified && max_depth != 0)
+    {
+      error (0, 0,
+	     _("warning: summarizing conflicts with --max-depth=%d"),
+	       max_depth);
+      usage (1, NULL);
+    }
+
+  if (opt_summarize_only)
+    max_depth = 0;
 
   /* Initialize the hash structure for inode numbers.  */
   hash_init (INITIAL_HASH_MODULE, INITIAL_ENTRY_TAB_SIZE);
@@ -475,7 +491,7 @@ du_files (char **files)
       if (!opt_combined_arguments)
 	hash_reset ();
 
-      count_entry (arg, 1, 0, max_depth);
+      count_entry (arg, 1, 0, 0);
 
       /* chdir if `count_entry' has changed the working directory.  */
       if (stat (".", &stat_buf))
@@ -509,8 +525,9 @@ du_files (char **files)
 /* Print (if appropriate) and return the size
    (in units determined by `output_size') of file or directory ENT.
    TOP is one for external calls, zero for recursive calls.
-   LAST_DEV is the device that the parent directory of ENT is on.  */
-/* FIXME: describe DEPTH */
+   LAST_DEV is the device that the parent directory of ENT is on.
+   DEPTH is the number of levels (in hierarchy) down from a command
+   line argument.  Don't print if DEPTH > max_depth.  */
 
 static long
 count_entry (const char *ent, int top, dev_t last_dev, int depth)
@@ -606,7 +623,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 	{
 	  str_concatc (path, namep);
 
-	  size += count_entry (namep, 0, dir_dev, depth - 1);
+	  size += count_entry (namep, 0, dir_dev, depth + 1);
 
 	  str_trunc (path, pathlen);
 	  namep += strlen (namep) + 1;
@@ -622,7 +639,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 	       _("cannot change to `..' from directory %s"), path->text);
 
       str_trunc (path, pathlen - 1); /* Remove the "/" we added.  */
-      if ((!opt_summarize_only && depth >= 0) || top)
+      if (depth <= max_depth || top)
 	{
 	  if (opt_human_readable)
 	    {
@@ -642,7 +659,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 	}
       return opt_separate_dirs ? 0 : size;
     }
-  else if (opt_all || top)
+  else if ((opt_all && depth <= max_depth) || top)
     {
       /* FIXME: make this an option.  */
       int print_only_dir_size = 0;
