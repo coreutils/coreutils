@@ -1,5 +1,9 @@
 1999-01-10  Jim Meyering  <meyering@ascend.com>
 
+	* Version 4.1-b2.
+
+	* Upgrade to autoconf-2.13 and automake-1.3b.
+
 	* src/copy.c (copy_internal): Handle two more values of errno from
 	failed rename of a directory into a subdirectory of itself.
 	Thanks to Volker Borchert for testing many types and combinations
