@@ -358,7 +358,7 @@ char *base_name PARAMS ((char const *));
 # define IF_LINT(Code) /* empty */
 #endif
 
-#if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 7)
+#if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 8) || __STRICT_ANSI__
 # define __attribute__(x)
 #endif
 
