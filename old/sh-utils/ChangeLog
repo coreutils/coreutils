@@ -1,3 +1,14 @@
+Thu Apr 28 00:45:02 1994  Jim Meyering  (meyering@comco.com)
+
+	* pwd.c: New program.
+	* pwd.1: New file.
+	* Makefile.in (PROGS): Add pwd.
+	* lib/Makefile.in: (DISTFILES): Add pathmax.h.
+	(SOURCES, OBJECTS): Add xgetcwd.c and xgetcwd.o respectively.
+	* src/Makefile.in: Add rules and dependencies for pwd.
+
+	* yes.c: Don't include version.h.
+
 Mon Apr 18 19:54:24 1994  Jim Meyering  (meyering@comco.com)
 
 	* documentation: Change uses of `pathname' and `path' as per

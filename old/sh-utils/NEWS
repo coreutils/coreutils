@@ -1,4 +1,5 @@
 User visible changes in release 2.0
+* add pwd command
 * --version outputs the name of the utility as well as the package name
   and version number.
 * Configure properly determines options for stty on SCO ODT 3.0 systems.
