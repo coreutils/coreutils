@@ -46,7 +46,6 @@
 
 #include "error.h"
 #include "filemode.h"
-#include "file-type.h"
 #include "fs.h"
 #include "getopt.h"
 #include "inttostr.h"
