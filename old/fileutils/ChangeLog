@@ -1,5 +1,9 @@
 Sun Jul 21 11:58:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/yesno.c (yesno) [!HAVE_RPMATCH]: Remove function since we'll
+	always use the rpmatch-based version.
+	Declare rpmatch.
+
 	* lib/rpmatch.c [STDC_HEADERS]: Guard inclusion of stdlib.h.
 	(_) [!_]: Define it.
 	(try): Add RESPONSE parameter.
