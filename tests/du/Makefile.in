@@ -147,7 +147,7 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 AUTOMAKE_OPTIONS = 1.4 gnits
 
-TESTS = two-args
+TESTS = two-args slink
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
   PATH=`pwd`/../../src:$$PATH
