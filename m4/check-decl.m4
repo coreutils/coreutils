@@ -1,4 +1,4 @@
-#serial 9
+#serial 10
 
 dnl This is just a wrapper function to encapsulate this kludge.
 dnl Putting it in a separate file like this helps share it between
@@ -37,6 +37,10 @@ AC_DEFUN(jm_CHECK_DECLS,
 #  include <time.h>
 # endif
 #endif
+
+#if !HAVE_UTMPX_H
+# include <utmp.h>
+#endif
 '
 
   AC_CHECK_DECLS((
@@ -44,6 +48,7 @@ AC_DEFUN(jm_CHECK_DECLS,
     getenv,
     geteuid,
     getlogin,
+    getutent
     lseek,
     malloc,
     memchr,
@@ -61,5 +66,6 @@ dnl This is a little helper so we can require these header checks.
 AC_DEFUN(_jm_DECL_HEADERS,
 [
   AC_REQUIRE([AC_HEADER_STDC])
-  AC_CHECK_HEADERS(memory.h string.h strings.h stdlib.h unistd.h sys/time.h)
+  AC_CHECK_HEADERS(memory.h string.h strings.h stdlib.h unistd.h sys/time.h
+                   utmpx.h)
 ])
