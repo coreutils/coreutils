@@ -1,6 +1,13 @@
-2003-07-27  Jim Meyering  <jim@meyering.net>
+2003-07-28  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.90.
+
+	* src/sort.c (sortlines_temp): Declare local `swap' to be `int', not
+	`bool'.  Otherwise, at least one buggy compiler (alpha gcc-2.95.4)
+	would cause lines[-1 - swap] (with swap = false) to evaluate to
+	lines[4294967295].
+
+2003-07-27  Jim Meyering  <jim@meyering.net>
 
 	* tests/priv-check (my_uid): Use `!', not `^' in case pattern `[!0-9]',
 	since /bin/sh of at least NetBSD 1.6 and OpenBSD 3.2 don't accept `^'.
