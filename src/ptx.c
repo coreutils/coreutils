@@ -38,29 +38,6 @@
 /* Number of possible characters in a byte.  */
 #define CHAR_SET_SIZE 256
 
-/* The ctype definitions should work for all 256 characters.  */
-#if STDC_HEADERS
-# include <ctype.h>
-#else
-# define isspace(C) ((C) == ' ' || (C) == '\t' || (C) == '\n')
-# define isxdigit(C) \
-  (((unsigned char) (C) >= 'a' && (unsigned char) (C) <= 'f')		\
-   || ((unsigned char) (C) >= 'A' && (unsigned char) (C) <= 'F')	\
-   || ((unsigned char) (C) >= '0' && (unsigned char) (C) <= '9'))
-# define islower(C) ((unsigned char) (C) >= 'a' && (unsigned char) (C) <= 'z')
-# define isupper(C) ((unsigned char) (C) >= 'A' && (unsigned char) (C) <= 'Z')
-# define isalpha(C) (islower (C) || isupper (C))
-# define toupper(C) (islower (C) ? (C) - 'a' + 'A' : (C))
-#endif
-
-#if !defined (isascii) || defined (STDC_HEADERS)
-# undef isascii
-# define isascii(C) 1
-#endif
-
-#ifndef ISXDIGIT
-# define ISXDIGIT(C) (isascii (C) && isxdigit (C))
-#endif
 #define ISODIGIT(C) ((C) >= '0' && (C) <= '7')
 #define HEXTOBIN(C) ((C) >= 'a' && (C) <= 'f' ? (C)-'a'+10 \
 		     : (C) >= 'A' && (C) <= 'F' ? (C)-'A'+10 : (C)-'0')
@@ -196,15 +173,15 @@ char *text_buffer_maxend;	/* allocated end of text_buffer */
 /* SKIP_NON_WHITE used only for getting or skipping the reference.  */
 
 #define SKIP_NON_WHITE(cursor, limit) \
-  while (cursor < limit && !isspace(*cursor))				\
+  while (cursor < limit && !ISSPACE(*cursor))				\
     cursor++
 
 #define SKIP_WHITE(cursor, limit) \
-  while (cursor < limit && isspace(*cursor))				\
+  while (cursor < limit && ISSPACE(*cursor))				\
     cursor++
 
 #define SKIP_WHITE_BACKWARDS(cursor, start) \
-  while (cursor > start && isspace(cursor[-1]))				\
+  while (cursor > start && ISSPACE(cursor[-1]))				\
     cursor--
 
 #define SKIP_SOMETHING(cursor, limit) \
@@ -462,13 +439,13 @@ initialize_regex (void)
   /* Initialize the regex syntax table.  */
 
   for (character = 0; character < CHAR_SET_SIZE; character++)
-    syntax_table[character] = isalpha (character) ? Sword : 0;
+    syntax_table[character] = ISALPHA (character) ? Sword : 0;
 
   /* Initialize the case folding table.  */
 
   if (ignore_case)
     for (character = 0; character < CHAR_SET_SIZE; character++)
-      folded_chars[character] = toupper (character);
+      folded_chars[character] = TOUPPER (character);
 
   /* Unless the user already provided a description of the end of line or
      end of sentence sequence, select an end of line sequence to compile.
@@ -508,7 +485,7 @@ initialize_regex (void)
 	  /* Simulate \w+.  */
 
 	  for (character = 0; character < CHAR_SET_SIZE; character++)
-	    word_fastmap[character] = isalpha (character) ? 1 : 0;
+	    word_fastmap[character] = ISALPHA (character) ? 1 : 0;
 	}
       else
 	{
@@ -1368,7 +1345,7 @@ fix_output_parameters (void)
      form feed as a space character, but we do.  */
 
   for (character = 0; character < CHAR_SET_SIZE; character++)
-    edited_flag[character] = isspace (character) != 0;
+    edited_flag[character] = ISSPACE (character) != 0;
   edited_flag['\f'] = 1;
 
   /* Complete the special character flagging according to selected output
