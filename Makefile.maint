@@ -177,10 +177,6 @@ my-distcheck: local-check
 	echo "$(distdir).tar.gz is ready for distribution"; \
 	echo "========================"
 
-# This must be the same name on both hosts.
-# Make it a symlink that points to the right place.
-real_dir = fetish-ftp
-
 url_dir_list = $(foreach x,$(hosts),ftp://$($(x)_host)/$($(x)_url_dir))
 
 tgz-md5 = $(shell md5sum < $(my_distdir).tar.gz|sed 's/  -//')
