@@ -1,6 +1,14 @@
-2002-10-07  Jim Meyering  <meyering@lucent.com>
+2002-10-08  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.3.
+
+2002-10-07  Paul Eggert  <eggert@twinsun.com>
+
+	* src/cat.c (cat):
+	Don't advance the write pointer past the end of the write buffer.
+	* src/sort.c (begfield, limfield): Likewise.
+
+2002-10-07  Jim Meyering  <meyering@lucent.com>
 
 	* src/cat.c (simple_cat, cat): Adapt to new safe_read ABI.
 	* src/head.c (head_bytes, head_lines): Likewise.
