@@ -1,3 +1,4 @@
+ [2.0a]
 Changes in release 2.0
 * disable stty tests (otherwise they fail) when `make check' is run via rsh
  [1.16m]
