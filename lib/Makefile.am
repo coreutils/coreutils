@@ -102,7 +102,7 @@ libfetish_a_SOURCES = \
   savedir.c savedir.h \
   search_.h \
   settime.c \
-  sha.c sha.h \
+  sha1.c sha1.h \
   sig2str.h \
   stdio-safer.h \
   stripslash.c \
