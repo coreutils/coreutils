@@ -1,4 +1,4 @@
-#serial 11
+#serial 12
 
 dnl These are the prerequisite macros for files in the lib/
 dnl directories of the fileutils, sh-utils, and textutils packages.
@@ -7,6 +7,7 @@ AC_DEFUN(jm_PREREQ,
 [
   jm_PREREQ_ADDEXT
   jm_PREREQ_CANON_HOST
+  jm_PREREQ_DIRNAME
   jm_PREREQ_ERROR
   jm_PREREQ_GETPAGESIZE
   jm_PREREQ_HUMAN
@@ -37,6 +38,12 @@ AC_DEFUN(jm_PREREQ_CANON_HOST,
   AC_CHECK_FUNCS(gethostbyname gethostbyaddr inet_ntoa)
   AC_CHECK_HEADERS(unistd.h string.h netdb.h sys/socket.h \
                    netinet/in.h arpa/inet.h)
+])
+
+AC_DEFUN(jm_PREREQ_DIRNAME,
+[
+  AC_HEADER_STDC
+  AC_CHECK_HEADERS(string.h)
 ])
 
 # If you use human.c, you need the following files:
