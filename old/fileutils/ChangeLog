@@ -1,5 +1,11 @@
 Fri Nov 29 21:19:13 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/install.c (copy_file): Allow installation from non-directory
+	(rather than only regular) files.  Suggestion from Charles Karney.
+
+	* src/df.c (main): Accept -F as a synonym for -t for compatibility
+	with Solaris.  From Peter Eriksson.
+
 	* src/ls.c (main): Close stdout and check result, in case any
 	deferred writes fail.
 	Use EXIT_SUCCESS and EXIT_FAILURE in exit and usage calls.
