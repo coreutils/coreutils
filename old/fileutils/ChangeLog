@@ -1,3 +1,49 @@
+1998-04-14  Jim Meyering  <meyering@ascend.com>
+
+	* src/.rm-warning: New file.
+	* src/Makefile.am (EXTRA_DIST): Add .rm-warning
+	(DISTCLEANFILES): Add .rm-warn-stamp.
+	(rm_DEPENDENCIES): Depend on .rm-warn-stamp.
+	(.rm-warn-stamp): New rule.
+	(rm_prep): Comment out rule.
+
+	* src/df.c (main): Use STREQ in string equality tests, not strcmp.
+	* src/dircolors.c (dc_parse_stream): Likewise.
+	(dc_parse_file): Likewise.
+	* src/du.c (main): Likewise.
+	* src/ls.c (decode_switches): Likewise.
+	* src/remove.c (hash_compare_strings): Likewise.
+	* src/touch.c (main): Likewise.
+
+1998-04-13  Jim Meyering  <meyering@ascend.com>
+
+	* lib/Makefile.am (noinst_HEADERS): Add safe-read.h.
+
+1998-04-11  Jim Meyering  <meyering@ascend.com>
+
+	* lib/hash.c: Add curly braces around statements in
+	if/else/while/do/etc. that span more than a line -- even around
+	multiline simple statements or single-line simple statements
+	preceded by a comment line.
+
+1998-04-09  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in: Don't use AC_PATH_PROG to check for perl, now that
+	we use jm_PERL.
+
+1998-04-06  Jim Meyering  <meyering@ascend.com>
+
+	* src/cp-hash.c (cph_hash_insert): Rename from now-conflicting
+	hash_insert.  Also declare to be static.
+	* src/cp-hash.h (hash_insert): Remove declaration.
+
+	* lib/hash.c: Lots of minor spec and name changes, and new comments.
+	(hash_rehash): Rewrite to be easier on the allocator.
+	From François Pinard.
+	* lib/hash.h: More comments.
+	* src/remove.c: Change names/usage of hash-related functions to work
+	with the above.
+
 1998-04-05  Jim Meyering  <meyering@ascend.com>
 
 	* lib/regex.c (WIDE_CHAR_SUPPORT): Define.
