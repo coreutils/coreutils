@@ -1,3 +1,43 @@
+2001-08-03  Paul Eggert  <eggert@twinsun.com>
+
+	The following changes are from gettext 0.10.39 as maintained by
+	Bruno Haible, except that getline.m4 continues to use AC_LIBOBJ.
+
+	* codeset.m4: Upgrade to serial AM1.
+	(AM_LANGINFO_CODESET): Renamed from jm_LANGINFO_CODESET;
+	all uses changed.  Quote first arg of AC_DEFUN.
+	(am_cv_langinfo_codeset): Renamed from jm_cv_langinfo_codeset.
+
+	* iconv.m4: Upgrade to serial AM2.
+	(AM_ICONV): Renamed from jm_ICONV; all uses changed.
+	Add --with-libconv-prefix.
+	Quote first arg of AC_DEFUN.  Add description for ICONV_CONST.
+	(am_cv_func_iconv): Renamed from jm_cv_func_iconv.
+	(am_cv_lib_iconv): Renamed from jm_cv_lib_iconv.
+	(am_cv_proto_iconv): Renamed from jm_cv_proto_iconv.
+	* jm-macros.m4 (jm_MACROS): Reflect s/jm_/AM_/ renamings.
+
+	* c-bs-a.m4 (AC_C_BACKSLASH_A): Quote first arg of AC_DEFUN.
+	* getline.m4 (AM_FUNC_GETLINE): Likewise.
+	* glibc21.m4 (jm_GLIBC21): Likewise.
+	* inttypes_h.m4 (jm_AC_HEADER_INTTYPES_H): Likewise.
+	* isc-posix.m4 (AC_ISC_POSIX): Likewise.
+	* lcmessage.m4 (AM_LC_MESSAGES): Likewise.
+	* progtest.m4 (AM_PATH_PROG_WITH_TEST): Likewise.
+	* uintmax_t.m4 (jm_AC_TYPE_UINTMAX_T): Likewise.
+	* ulonglong.m4 (jm_AC_TYPE_UNSIGNED_LONG_LONG): Likewise.
+
+	* getline.m4 (AM_FUNC_GETLINE): Don't bother checking for
+	string.h any more.
+
+	* progtest.m4 (AM_PATH_PROG_WITH_TEST):
+	Output "no" only if $1 isn't $4.
+
+	* mbswidth.m4 (jm_PREREQ_MBSWIDTH):
+	No longer requires AM_C_PROTOTYPES.
+	Check for iswcntrl, mbsinit.  Use AC_TRY_COMPILE, not AC_CHECK_DECLS,
+	for portability to Autoconf 2.13.
+
 2001-08-03  Jim Meyering  <meyering@lucent.com>
 
 	* mbrtowc.m4 (jm_FUNC_MBRTOWC): Use `#include', not `@%:@include',
