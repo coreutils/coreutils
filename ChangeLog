@@ -1,6 +1,9 @@
-2002-12-12  Jim Meyering  <jim@meyering.net>
+2002-12-13  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.4.
+
+	* tests/cp/preserve-2: New file/test, for latest fix.
+	* tests/cp/Makefile.am (TESTS): Add preserve-2.
 
 2002-12-11  TAKAI Kousuke  <takai@vlsi.kuee.kyoto-u.ac.jp>
 
