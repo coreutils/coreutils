@@ -155,6 +155,7 @@ eaccess (char const *file, int mode)
       egid = getegid ();
     }
 
+  /* Set the real user and group IDs to the effective ones.  */
   if (uid != euid)
     setreuid (euid, uid);
   if (gid != egid)
@@ -162,10 +163,11 @@ eaccess (char const *file, int mode)
 
   result = access (file, mode);
 
+  /* Restore them.  */
   if (uid != euid)
-    setreuid (euid, uid);
+    setreuid (uid, euid);
   if (gid != egid)
-    setregid (egid, gid);
+    setregid (gid, egid);
 
   return result;
 }
