@@ -1,6 +1,11 @@
-2001-01-11  Jim Meyering  <meyering@lucent.com>
+2001-01-13  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0.36.
+
+	* tests/chmod/setgid: If `chmod g+s d' fails, then try to chgrp
+	to a group of which we're a member, then try the chmod again.
+
+2001-01-11  Jim Meyering  <meyering@lucent.com>
 
 	* depcomp: New version, from automake.
 
