@@ -146,7 +146,7 @@ all: all-am
 .SUFFIXES: .dvi .info .ps .texi
 $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.ac $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  doc/Makefile
+	  $(AUTOMAKE) --gnits  doc/Makefile
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
 
