@@ -5,8 +5,9 @@ TESTS_ENVIRONMENT = \
   all_programs="$(bin_SCRIPTS) $(bin_PROGRAMS)"
 
 EXTRA_DIST = \
-  $(TESTS) .env-warn Fetish.pm Makefile.am.in Makefile.am.in README \
-  input-tty lang-default mk-script mk-script priv-check
+  $(TESTS) .env-warn Fetish.pm Makefile.am.in README envvar-check \
+  expensive group-names input-tty lang-default mk-script priv-check \
+  rwx-to-mode sample-test setgid-check
 
 SUBDIRS = \
   basename chgrp chmod chown cp cut date dd dircolors du expr factor \
