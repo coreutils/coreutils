@@ -1,3 +1,6 @@
+Changes in release 1.18
+* link sort with -lm on sytems that use replacement strtod
+* update from gettext-0.10.16.
 Changes in release 1.17
 * include texinfo.tex in the distribution
 Changes in release 1.16
