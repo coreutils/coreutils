@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{1998-12-15}%
+\def\texinfoversion{1998-12-19}%
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98
 % Free Software Foundation, Inc.
@@ -2145,31 +2145,44 @@ July\or August\or September\or October\or November\or December\fi
 \def\xcolumnfractions{\columnfractions}
 \newif\ifsetpercent
 
-% 2/1/96, to allow fractions to be given with more than one digit.
-\def\pickupwholefraction#1 {\global\advance\colcount by1 %
-\expandafter\xdef\csname col\the\colcount\endcsname{.#1\hsize}%
-\setuptable}
+% #1 is the part of the @columnfraction before the decimal point, which
+% is presumably either 0 or the empty string (but we don't check, we
+% just throw it away).  #2 is the decimal part, which we use as the
+% percent of \hsize for this column.
+\def\pickupwholefraction#1.#2 {%
+  \global\advance\colcount by 1
+  \expandafter\xdef\csname col\the\colcount\endcsname{.#2\hsize}%
+  \setuptable
+}
 
 \newcount\colcount
-\def\setuptable#1{\def\firstarg{#1}%
-\ifx\firstarg\xendsetuptable\let\go\relax%
-\else
-  \ifx\firstarg\xcolumnfractions\global\setpercenttrue%
+\def\setuptable#1{%
+  \def\firstarg{#1}%
+  \ifx\firstarg\xendsetuptable
+    \let\go = \relax
   \else
-    \ifsetpercent
-       \let\go\pickupwholefraction   % In this case arg of setuptable
-                                     % is the decimal point before the
-                                     % number given in percent of hsize.
-                                     % We don't need this so we don't use it.
+    \ifx\firstarg\xcolumnfractions
+      \global\setpercenttrue
     \else
-       \global\advance\colcount by1
-       \setbox0=\hbox{#1 }% Add a normal word space as a separator;
-                          % typically that is always in the input, anyway.
-       \expandafter\xdef\csname col\the\colcount\endcsname{\the\wd0}%
+      \ifsetpercent
+         \let\go\pickupwholefraction
+      \else
+         \global\advance\colcount by 1
+         \setbox0=\hbox{#1\unskip }% Add a normal word space as a separator;
+                            % typically that is always in the input, anyway.
+         \expandafter\xdef\csname col\the\colcount\endcsname{\the\wd0}%
+      \fi
+    \fi
+    \ifx\go\pickupwholefraction
+      % Put the argument back for the \pickupwholefraction call, so
+      % we'll always have a period there to be parsed.
+      \def\go{\pickupwholefraction#1}%
+    \else
+      \let\go = \setuptable
     \fi%
-  \fi%
-\ifx\go\pickupwholefraction\else\let\go\setuptable\fi%
-\fi\go}
+  \fi
+  \go
+}
 
 % multitable syntax
 \def\tab{&\hskip1sp\relax} % 2/2/96
@@ -2177,7 +2190,7 @@ July\or August\or September\or October\or November\or December\fi
                            % maintained, even if it is never used.
 
 % @multitable ... @end multitable definitions:
-
+%
 \def\multitable{\parsearg\dotable}
 \def\dotable#1{\bgroup
   \vskip\parskip
