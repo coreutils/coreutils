@@ -1,5 +1,6 @@
 2003-09-07  Jim Meyering  <jim@meyering.net>
 
+
 	* Version 5.0.91.
 
 	* Makefile.maint (po-check): Use cvsu, so that a temporary source
@@ -141,7 +142,9 @@
 	* src/copy.c (same_file_ok): Invoke same_name (which might still
 	return false for names that refer to the same directory entry)
 	only if the link count is 2 or more.
-	* tests/mv/vfat: Disabled test to demonstrate the above problem.
+	* tests/mv/vfat: Show how to demonstrate the above problem.
+	This test is not run.
+	* tests/mv/Makefile.am (EXTRA_DIST): Add vfat.
 
 2003-08-27  Jim Meyering  <jim@meyering.net>
 
