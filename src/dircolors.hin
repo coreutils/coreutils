@@ -75,7 +75,6 @@ EXEC 01;32
 
 # image formats
 .jpg 01;35
-.png 01;35
 .gif 01;35
 .bmp 01;35
 .ppm 01;35
