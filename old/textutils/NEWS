@@ -1,4 +1,5 @@
 User-visible changes in release 1.14
+* sort -n properly orders `-' with respect to valid integers
 * sorting works with character offsets larger than corresponding field width
 * sort's -b option and `b' modifier work
 * sort -k2,2 works.
