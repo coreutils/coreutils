@@ -704,13 +704,14 @@ main (int argc, char **argv)
 			   || print_type),
 			  show_all_fs);
 
+  if (mount_list == NULL)
+    error (1, errno, _("cannot read table of mounted filesystems"));
+
   if (require_sync)
     sync ();
 
   if (optind == argc)
     {
-      if (mount_list == NULL)
-	error (1, errno, _("cannot read table of mounted filesystems"));
       print_header ();
       show_all_entries ();
     }
