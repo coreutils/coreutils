@@ -34,3 +34,5 @@ See if we can be consistent about where --verbose sends its output:
   These send it to stderr:
     shred mkdir split
   readlink is different
+
+coreutils.texi: Add an entry for sort's --stable option.
