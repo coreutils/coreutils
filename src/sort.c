@@ -2005,7 +2005,7 @@ sort (char **files, int nfiles, char const *output_file)
       for (node = temphead; i > 0; node = node->next)
 	tempfiles[--i] = node->name;
       merge (tempfiles, n_temp_files, NMERGE, output_file);
-      free ((char *) tempfiles);
+      free (tempfiles);
     }
 }
 
