@@ -1,5 +1,10 @@
 2003-11-05  Jim Meyering  <jim@meyering.net>
 
+	* jm-macros.m4 (jm_MACROS): Require gl_FUNC_FREE.
+	* free.m4: New file, from gnulib.
+
+	* exitfail.m4, host-os.m4, strndup.m4: Update from gnulib.
+
 	* jm-macros.m4 (jm_MACROS): Require autoconf-2.58.
 	(AC_LANG_SOURCE): Remove definition, now that we require autoconf-2.58.
 
