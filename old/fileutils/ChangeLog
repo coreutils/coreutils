@@ -1,3 +1,8 @@
+Fri Jul  5 22:16:13 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/dircolors.c [!STDC_HEADERS]: Declare free.
+	From Marcus Daniels.
+
 Thu Jul  4 12:34:50 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/dd.c (usage): Remove space before newline in usage message.
