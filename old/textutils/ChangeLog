@@ -1,6 +1,10 @@
-1998-10-03  Jim Meyering  <meyering@ascend.com>
+1998-10-04  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.22g.
+
+	* lib/Makefile.am (noinst_HEADERS): Add fnmatch.h.
+
+1998-10-03  Jim Meyering  <meyering@ascend.com>
 
 	* man/Makefile.am: Switch to using help2man.
 	(EXTRA_DIST): Add Makefile.summ.
