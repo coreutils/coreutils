@@ -1,3 +1,7 @@
+2000-09-21  Jim Meyering  <meyering@lucent.com>
+
+	* userspec.c (parse_user_spec): Remove debugging printf I'd added.
+
 2000-09-20  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.am (libfetish_a_SOURCES): Add sha.c.
