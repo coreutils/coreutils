@@ -1,3 +1,33 @@
+1997-10-14  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/xstrdup.c: New file.
+	* lib/Makefile.am (libtu_a_SOURCES): Add xstrdup.c
+
+	* src/sort.c: Declare xstrdup.
+	(my_setlocale): New function.
+	(main): Guard against failure of strdup (use xstrdup) and setlocale.
+
+	* src/system.h (STREQ): Define.
+	* src/od.c (STREQ): Remove definition.
+
+	* src/sort.c (look_for_fraction): Eliminate arbitrary limit on
+	number of `groups'.  Declare as void, not int.
+	Patch from Ørn E. Hansen.
+	(main): When determining whether we're in the C or POSIX locale,
+	don't rely on the form of the string returned by setlocale.
+	Suggestion from Ulrich Drepper.
+
+1997-10-12  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/sort.c: Apply big patch from Ørn E. Hansen.
+	Clean up, indent.
+	(NLS_MEMCMP): Define.
+	(keycompare): Use it instead of open-coded #ifdefs.
+	(compare): Likewise.
+	(NLS_MAP): Remove unused definitions.
+	Replace with uses of UCHAR.
+	(nls_locale_map): Remove dcl of unused file-scope array.
+
 1997-10-10  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* tests/sort-test/Test.pm: Add a test.
