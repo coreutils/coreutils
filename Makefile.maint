@@ -233,6 +233,7 @@ announcement: NEWS ChangeLog $(rel-files)
 	@( \
 	  echo Subject: $(my_distdir) released; \
 	  echo; \
+	  echo '<#secure method=pgpmime mode=sign>'; \
 	  echo FIXME: put comments here; \
 	  echo; \
 	  for url in $(url_dir_list); do \
@@ -245,6 +246,10 @@ announcement: NEWS ChangeLog $(rel-files)
 	  for url in $(url_dir_list); do \
 	    echo "  $$url/$(xd-delta)   ($(xd-size))"; \
 	  done; \
+	  echo; \
+	  echo "Here are GPG detached signatures:"; \
+	    echo "  $$url/$(my_distdir).tar.gz.sig"; \
+	    echo "  $$url/$(my_distdir).tar.bz2.sig"; \
 	  echo; \
 	  echo "Here are the MD5 and SHA1 signatures:"; \
 	  echo; \
