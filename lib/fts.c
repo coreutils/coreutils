@@ -42,6 +42,7 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 # include <include/sys/stat.h>
 #else
 # include <sys/stat.h>
+# undef __P
 # define __P(x) x
 #endif
 #include <fcntl.h>
