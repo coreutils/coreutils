@@ -522,7 +522,7 @@ eval6 (void)
       tostring (l);
       tostring (r);
       v = int_value (strcspn (l->u.s, r->u.s) + 1);
-      if (v->u.i == strlen (l->u.s) + 1)
+      if (v->u.i == (int) strlen (l->u.s) + 1)
 	v->u.i = 0;
       freev (l);
       freev (r);
@@ -536,7 +536,7 @@ eval6 (void)
       i2 = eval6 ();
       tostring (l);
       if (!toarith (i1) || !toarith (i2)
-	  || i1->u.i > strlen (l->u.s)
+	  || i1->u.i > (int) strlen (l->u.s)
 	  || i1->u.i <= 0 || i2->u.i <= 0)
 	v = str_value ("");
       else
