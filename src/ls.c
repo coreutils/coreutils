@@ -2014,7 +2014,8 @@ static void
 print_long_format (const struct fileinfo *f)
 {
   char modebuf[20];
-  char timebuf[40];
+#define TIMEBUF_SIZE 40
+  char timebuf[TIMEBUF_SIZE];
 
   /* 7 fields that may (worst case: 64-bit integral values) require 20 bytes,
      1 10-character mode string,
@@ -2046,7 +2047,9 @@ print_long_format (const struct fileinfo *f)
       break;
     }
 
-  strcpy (timebuf, ctime (&when));
+  /* Use strftime rather than ctime, because the former can produce
+     locale-dependent names for the weekday (%a) and month (%b).  */
+  strftime (timebuf, TIMEBUF_SIZE, "%a %b %d %H:%M:%S %Y", localtime (&when));
 
   if (full_time)
     timebuf[24] = '\0';
