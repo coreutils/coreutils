@@ -4,6 +4,7 @@
 
 	Don't include headers already included by system.h:
 	* src/tr.c: Don't include errno.h.
+	* src/true.c: Don't include version-etc.h.
 	* src/test.c: Don't include limits.h or error.h.
 	* src/stat.c: Don't include unistd.h or time.h.
 	* src/readlink.c: Don't include stdlib.h, unistd.h, or limits.h.
@@ -11,6 +12,16 @@
 	* src/pathchk.c: Don't include errno.h.
 	* src/nice.c: Don't include sys/time.h.
 	* src/ls.c: Don't include stdlib.h.
+
+	* basename.c, cat.c, chroot.c, cksum.c, comm.c, csplit.c, cut.c, date.c:
+	* dd.c, dirname.c, echo.c, env.c, expand.c, expr.c, factor.c, fmt.c:
+	* fold.c, head.c, hostid.c, hostname.c, id.c, join.c, kill.c, logname.c:
+	* md5sum.c, nice.c, nl.c, nohup.c, od.c, paste.c, pathchk.c, pinky.c:
+	* pr.c, printenv.c, printf.c, ptx.c, pwd.c, seq.c, setuidgid.c, shred.c:
+	* sleep.c, sort.c, split.c, stat.c, stty.c, su.c, sum.c, tac.c, tail.c:
+	* tee.c, test.c, tr.c, true.c, tsort.c, tty.c, uname.c, unexpand.c:
+	* uniq.c, uptime.c, users.c, wc.c, who.c, whoami.c, yes.c:
+	Don't include closeout.h.
 
 	* tests/rm/fail-2eperm: Add a check for whether $NON_ROOT_USERNAME
 	can access the required version of rm.
