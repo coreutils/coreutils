@@ -1,5 +1,5 @@
 /* wc - print the number of bytes, words, and lines in files
-   Copyright (C) 85, 91, 1995-2001 Free Software Foundation, Inc.
+   Copyright (C) 85, 91, 1995-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -130,7 +130,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 "),
 	      program_name);
       fputs (_("\
-Print newline, word, and byte counts for each FILE, and a total line if\n\
+Print byte, word, and newline counts for each FILE, and a total line if\n\
 more than one FILE is specified.  With no FILE, or when FILE is -,\n\
 read standard input.\n\
   -c, --bytes            print the byte counts\n\
