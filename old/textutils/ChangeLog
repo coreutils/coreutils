@@ -5,6 +5,8 @@ Tue Apr 23 22:05:35 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	* lib/Makefile.am (tu_SOURCES): Remove getopt.c and getopt1.c.
 	(EXTRA_DIST): Add getopt.c and getopt1.c
 
+	* src/*.c, src/*.h: Update Copyright years to include 1996.
+
 Sun Apr 21 08:04:51 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* getline.c: New version from gettext-0.10.12.
