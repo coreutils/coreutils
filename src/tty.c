@@ -31,8 +31,6 @@
 #include "closeout.h"
 #include "error.h"
 
-static void usage PARAMS ((int status));
-
 /* The name under which this program was run. */
 char *program_name;
 
@@ -53,6 +51,27 @@ static struct option const longopts[] =
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
+
+void
+usage (int status)
+{
+  if (status != 0)
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+	     program_name);
+  else
+    {
+      printf (_("Usage: %s [OPTION]...\n"), program_name);
+      printf (_("\
+Print the file name of the terminal connected to standard input.\n\
+\n\
+  -s, --silent, --quiet   print nothing, only return an exit status\n\
+      --help              display this help and exit\n\
+      --version           output version information and exit\n\
+"));
+      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
+    }
+  exit (status);
+}
 
 int
 main (int argc, char **argv)
@@ -107,25 +126,4 @@ main (int argc, char **argv)
     }
 
   exit (isatty (0) ? 0 : 1);
-}
-
-static void
-usage (int status)
-{
-  if (status != 0)
-    fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
-  else
-    {
-      printf (_("Usage: %s [OPTION]...\n"), program_name);
-      printf (_("\
-Print the file name of the terminal connected to standard input.\n\
-\n\
-  -s, --silent, --quiet   print nothing, only return an exit status\n\
-      --help              display this help and exit\n\
-      --version           output version information and exit\n\
-"));
-      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
-    }
-  exit (status);
 }
