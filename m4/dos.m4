@@ -7,7 +7,10 @@
 
 AC_DEFUN(jm_AC_DOS,
   [
+    # FIXME: this is incomplete.  Add a compile-test that does something
+    # like this:
     #if defined _WIN32 || defined __WIN32__ || defined __MSDOS__
+
     ac_fspl_def="((Filename)[0] && (Filename)[1] == ':' ? 2 : 0)"
     ac_fspl_def=0
     AC_DEFINE_UNQUOTED([FILESYSTEM_PREFIX_LEN(Filename)], $ac_fspl_def,
