@@ -10,7 +10,7 @@ file=into-self-file
 
 test_failure=0
 
-$RM -f $dir $file || test_failure=1
+$RM -rf $dir $file || test_failure=1
 $MKDIR -p $dir/a/b || test_failure=1
 $TOUCH $file || test_failure=1
 
@@ -27,5 +27,6 @@ test -f $file && fail=1
 test -d $dir/$dir/a/b || fail=1
 # Make sure the file has been moved to the right place.
 test -f $dir/$file || fail=1
+$RM -rf $dir $file
 
 exit $fail
