@@ -1239,8 +1239,10 @@ AC_DEFUN([UTILS_HOST_OS],
        openbsd*)	os='OpenBSD';;
        nsk*)		os='NonStop Kernel';;
        nonstopux*)	os='NonStop-UX';;
-       netbsd*-gnu*)	os='GNU/NetBSD';;
+       netbsd*-gnu*)	os='GNU/NetBSD';; # NetBSD kernel+libc, GNU userland
        netbsd*)		os='NetBSD';;
+       knetbsd*-gnu)	os='GNU/KNetBSD';; # NetBSD kernel, GNU libc+userland
+       kfreebsd*-gnu)	os='GNU/KFreeBSD';; # FreeBSD kernel, GNU libc+userland
        msdosdjgpp*)	os='DJGPP';;
        mpeix*)		os='MPE/iX';;
        mint*)		os='MiNT';;
@@ -1250,7 +1252,6 @@ AC_DEFUN([UTILS_HOST_OS],
        hpux*)		os='HP-UX';;
        hiux*)		os='HI-UX';;
        gnu*)		os='GNU';;
-       freebsd*-gnu*)	os='GNU/FreeBSD';;
        freebsd*)	os='FreeBSD';;
        dgux*)		os='DG/UX';;
        bsdi*)		os='BSD/OS';;
@@ -5595,7 +5596,7 @@ main ()
   fi
 ])
 
-# xalloc.m4 serial 4
+# xalloc.m4 serial 6
 dnl Copyright (C) 2002-2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General

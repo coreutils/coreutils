@@ -302,3 +302,20 @@ p arg
 n
 p result
 q
+complete b vasnp
+b vasnprintf 
+r
+n 30
+n
+p buf
+p result
+complete p alloc
+p allocated
+n
+n
+n
+n
+p count
+p maxlen
+n
+n
