@@ -1,3 +1,14 @@
+Mon Oct 25 20:27:00 1993  Jim Meyering  (meyering@comco.com)
+
+	* cp-aux.c, df.c, install.c, ln.c, ls.c, mkdir.c, mkfifo.c,
+	mknod.c, mv.c, touch.c: Use the preferred `--longopt=arg'
+	syntax in --help message rather than `--longopt arg'.
+	From Francois Pinard.
+
+Tue Oct 19 07:02:18 1993  Jim Meyering  (meyering@comco.com)
+
+	* Version 3.9.
+
 Mon Oct 18 00:13:40 1993  Jim Meyering  (meyering@comco.com)
 
 	* src/*.c (usage): Now the usage message is simply
