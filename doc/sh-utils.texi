@@ -19,6 +19,13 @@
 @syncodeindex vr cp
 
 @ifinfo
+@set Francois Franc,ois
+@end ifinfo
+@tex
+@set Francois Fran\noexpand\ptexc cois
+@end tex
+
+@ifinfo
 @format
 START-INFO-DIR-ENTRY
 * Shell utilities: (sh-utils).		GNU shell utilities.
@@ -84,7 +91,7 @@ by the Foundation.
 @titlepage
 @title GNU sh-utils, version @value{VERSION}
 @subtitle A set of shell utilities
-@subtitle for version @value{VERSION}, @value{RELEASE-DATE}
+@subtitle for version @value{VERSION}, @value{RELEASEDATE}
 @author David MacKenzie et al.
 
 @page
@@ -161,14 +168,8 @@ GNU CC}.
 
 This manual is based on the Unix man pages in the distribution, which
 were originally written by David MacKenzie and updated by Jim Meyering.
-@ifinfo
-Franc,ois
-@end ifinfo
-@tex
-Fran\c cois
-@end tex
-Pinard did the initial conversion to Texinfo format.  Karl
-Berry did the indexing, some reorganization, and editing of the results.
+@value{Francois} Pinard did the initial conversion to Texinfo format.
+Karl Berry did the indexing, some reorganization, and editing of the results.
 Richard Stallman contributed his usual invaluable insights to the
 overall process.
 
