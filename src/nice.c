@@ -63,7 +63,7 @@ usage (int status)
 	     program_name);
   else
     {
-      printf (_("Usage: %s [OPTION]... [COMMAND [ARG]...]\n"), program_name);
+      printf (_("Usage: %s [OPTION] [COMMAND [ARG]...]\n"), program_name);
       printf (_("\
 Run COMMAND with an adjusted scheduling priority.\n\
 With no COMMAND, print the current scheduling priority.  ADJUST is 10\n\
@@ -192,7 +192,12 @@ main (int argc, char **argv)
     error (1, errno, _("cannot set priority"));
 
   execvp (argv[i], &argv[i]);
-  error (errno == ENOENT ? 127 : 126, errno, "%s", argv[i]);
+
+  {
+    int exit_status = (errno == ENOENT ? 127 : 126);
+    error (0, errno, "%s", argv[i]);
+    exit (exit_status);
+  }
 }
 
 /* Return nonzero if S represents a (possibly signed) decimal integer,
