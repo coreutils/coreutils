@@ -6,7 +6,8 @@
 	* src/uniq.c (enum delimit_method): s/DM_PRECEDE/DM_PREPEND/
 	and change all uses.
 	(delimit_method_string): s/precede/prepend/
-	Patch by Padraig Brady.
+	* tests/uniq/Test.pm: Adjust tests accordingly.
+	Patches by Padraig Brady.
 
 	* src/uniq.c (usage): Correct typo in description of --all-repeated.
 	Patch by Padraig Brady.
