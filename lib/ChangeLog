@@ -1,3 +1,13 @@
+2000-03-28  Bruno Haible  <haible@clisp.cons.org>
+
+	* unicodeio.c (print_unicode_char): Avoid triggering Solaris iconv
+	bug.  Deal with the different error behaviour of Irix iconv.
+
+2000-04-07  Jim Meyering  <meyering@lucent.com>
+
+	* putenv.c: Move inclusion of errno.h so it follows that of sys/types.h,
+	to work around system header problems on AIX 3.2.5.  From Bruno Haible.
+
 2000-04-05  Jim Meyering  <meyering@lucent.com>
 
 	Portability tweaks required for ultrix4.3.
