@@ -15,4 +15,5 @@ search.h
 stat.c
 stdbool.h
 sysexit.h
+t-fpending
 unlocked-io.h
