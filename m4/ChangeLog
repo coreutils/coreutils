@@ -1,4 +1,14 @@
+2002-09-29  Jim Meyering  <meyering@lucent.com>
+
+	* gettext.m4 (AM_INTL_SUBDIR): Don't require gt_HEADER_INTTYPES_H.
+	It's not necessary with autoconf-2.54.
+
 2002-09-28  Jim Meyering  <meyering@lucent.com>
+
+	* getgroups.m4 (jm_FUNC_GETGROUPS): Rewrite to use AC_FUNC_GETGROUPS
+	and (if needed) to call AC_LIBOBJ and to set GETGROUPS_LIB.
+	* jm-macros.m4 (jm_MACROS): Don't set GETGROUPS_LIB here; now it's
+	done via getgroups.m4's wrapper function.
 
 	* strerror_r.m4: Remove file -- now it's part of autoconf-2.54.
 	Reported by Akim Demaille.
