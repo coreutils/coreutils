@@ -21,9 +21,29 @@ use strict;
 
 my @Tests =
     (
+     ['a1', {IN=> ' 'x 1 ."y\n"}, {OUT=> ' 'x 1 ."y\n"}],
+     ['a2', {IN=> ' 'x 2 ."y\n"}, {OUT=> ' 'x 2 ."y\n"}],
+     ['a3', {IN=> ' 'x 3 ."y\n"}, {OUT=> ' 'x 3 ."y\n"}],
+     ['a4', {IN=> ' 'x 4 ."y\n"}, {OUT=> ' 'x 4 ."y\n"}],
+     ['a5', {IN=> ' 'x 5 ."y\n"}, {OUT=> ' 'x 5 ."y\n"}],
+     ['a6', {IN=> ' 'x 6 ."y\n"}, {OUT=> ' 'x 6 ."y\n"}],
+     ['a7', {IN=> ' 'x 7 ."y\n"}, {OUT=> ' 'x 7 ."y\n"}],
+     ['a8', {IN=> ' 'x 8 ."y\n"}, {OUT=> "\ty\n"}],
+
+     ['at-1', '-a', {IN=> 'w'.' 'x 1 ."y\n"}, {OUT=> 'w'.' 'x 1 ."y\n"}],
+     ['at-2', '-a', {IN=> 'w'.' 'x 2 ."y\n"}, {OUT=> 'w'.' 'x 2 ."y\n"}],
+     ['at-3', '-a', {IN=> 'w'.' 'x 3 ."y\n"}, {OUT=> 'w'.' 'x 3 ."y\n"}],
+     ['at-4', '-a', {IN=> 'w'.' 'x 4 ."y\n"}, {OUT=> 'w'.' 'x 4 ."y\n"}],
+     ['at-5', '-a', {IN=> 'w'.' 'x 5 ."y\n"}, {OUT=> 'w'.' 'x 5 ."y\n"}],
+     ['at-6', '-a', {IN=> 'w'.' 'x 6 ."y\n"}, {OUT=> 'w'.' 'x 6 ."y\n"}],
+     ['at-7', '-a', {IN=> 'w'.' 'x 7 ."y\n"}, {OUT=> "w\ty\n"}],
+     ['at-8', '-a', {IN=> 'w'.' 'x 8 ."y\n"}, {OUT=> "w\t y\n"}],
+
+     ['b-1', '-t', '2,4', {IN=> "      ."}, {OUT=>"\t\t  ."}],
      # These would infloop prior to textutils-2.0d.
-     ['infloop-1', '-t', '1,2', {IN=> " \t\t "}, {OUT=>"junk\n"}],
+     ['infloop-1', '-t', '1,2', {IN=> " \t\t .\n"}, {OUT=>" \t\t .\n"}],
      ['infloop-2', '-t', '4,5', {IN=> ' 'x4 . "\t\t "}, {OUT=>"junk\n"}],
+     ['c-1', '-t', '1,2', {IN=> "x\t\t .\n"}, {OUT=>"x\t\t .\n"}],
     );
 
 my $save_temps = $ENV{DEBUG};
