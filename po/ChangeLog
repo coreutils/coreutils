@@ -1,3 +1,8 @@
+2002-11-14  Jim Meyering  <jim@meyering.net>
+
+	* POTFILES.in: Remove lib/long-options.c and lib/same.c.
+	Although each defines `_', neither actually used it.
+
 2002-11-09  Jim Meyering  <jim@meyering.net>
 
 	* Makevars (EXTRA_LOCALE_CATEGORIES): Add LC_TIME.
