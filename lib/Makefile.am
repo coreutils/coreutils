@@ -75,6 +75,7 @@ libfetish_a_SOURCES = \
   savedir.c savedir.h \
   settime.c \
   sha.c sha.h \
+  sig2str.h \
   stdio-safer.h \
   stripslash.c \
   strverscmp.h \
