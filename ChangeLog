@@ -1,6 +1,10 @@
-2005-03-25  Paul Eggert  <eggert@cs.ucla.edu>
+2005-03-25  Eric Blake  <ebb9@byu.net>  (tiny change)
 
 	* Version 5.3.1.
+
+	* src/ls.c (usage): Document usage of LS_COLORS.
+
+2005-03-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/dircolors.hin: Add "TERM cygwin".
 
