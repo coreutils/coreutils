@@ -1,5 +1,5 @@
 /* du -- summarize disk usage
-   Copyright (C) 88, 89, 90, 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 88, 89, 90, 91, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -451,9 +451,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
       if (opt_one_file_system && !top && last_dev != dir_dev)
 	return 0;		/* Don't enter a new file system.  */
 
-#ifndef S_ISLNK
-# define S_ISLNK(s) 0
-#endif
+
       /* If we're traversing more than one level, or if we're
 	 dereferencing symlinks and we're about to chdir through a
 	 symlink, remember the current directory so we can return to
