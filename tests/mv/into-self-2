@@ -38,6 +38,9 @@ export LANG
 # This mv command should exit nonzero.
 mv $symlink $file > out 2>&1 && fail=1
 
+# And so should this one.
+mv $file $symlink >> out 2>&1 && fail=1
+
 sed \
    -e "s,mv:,XXX:," \
    -e "s,$file,YYY," \
@@ -46,6 +49,7 @@ sed \
 
 cat > exp <<\EOF
 XXX: `ZZZ' and `YYY' are the same file
+XXX: `YYY' and `ZZZ' are the same file
 EOF
 #'
 
