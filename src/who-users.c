@@ -55,13 +55,22 @@
 #define WTMP_FILE _PATH_WTMP
 #endif
 
-#if defined (UTMPX_FILE)	/* Solaris, SysVr4 */
-#undef  UTMP_FILE
+#ifdef UTMPX_FILE /* Solaris, SysVr4 */
+#undef UTMP_FILE
 #define UTMP_FILE UTMPX_FILE
+#endif
+
+#ifdef WTMPX_FILE /* Solaris, SysVr4 */
+#undef WTMP_FILE
+#define WTMP_FILE WTMPX_FILE
 #endif
 
 #ifndef UTMP_FILE
 #define UTMP_FILE "/etc/utmp"
+#endif
+
+#ifndef WTMP_FILE
+#define WTMP_FILE "/etc/wtmp"
 #endif
 
 #ifndef MAXHOSTNAMELEN
