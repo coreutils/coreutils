@@ -136,3 +136,24 @@ physmem_available (void)
   /* Guess 25% of physical memory.  */
   return physmem_total () / 4;
 }
+
+
+#if DEBUG
+
+# include <stdio.h>
+# include <stdlib.h>
+
+int
+main ()
+{
+  printf ("%12.f %12.f\n", physmem_total (), physmem_available ());
+  exit (0);
+}
+
+#endif /* DEBUG */
+
+/*
+Local Variables:
+compile-command: "gcc -DDEBUG -DHAVE_CONFIG_H -I.. -g -O -Wall -W physmem.c"
+End:
+*/
