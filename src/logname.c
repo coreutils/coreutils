@@ -1,5 +1,5 @@
 /* logname -- print user's login name
-   Copyright (C) 1990-1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1990-1997, 1999, 2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
 #include <getopt.h>
 
 #include "system.h"
+#include "closeout.h"
 #include "long-options.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -90,6 +91,7 @@ main (int argc, char **argv)
   if (cp)
     {
       puts (cp);
+      close_stdout ();
       exit (0);
     }
   /* POSIX.2 prohibits using a fallback technique.  */
