@@ -39,7 +39,7 @@ char *xmalloc ();
 char *xrealloc ();
 
 #ifndef INITIAL_HOSTNAME_LENGTH
-# define INITIAL_HOSTNAME_LENGTH 33
+# define INITIAL_HOSTNAME_LENGTH 34
 #endif
 
 char *
@@ -53,10 +53,15 @@ xgethostname ()
   hostname = xmalloc (size);
   while (1)
     {
+      /* Use size - 2 here rather than size - 1 to work around the bug
+	 in SunOS5.5's gethostname whereby it NUL-terminates HOSTNAME
+	 even when the name is longer than the supplied buffer.  */
+      int k = size - 2;
+
       errno = 0;
-      hostname[size - 1] = '\0';
+      hostname[k] = '\0';
       err = gethostname (hostname, size);
-      if (err == 0 && hostname[size - 1] == '\0')
+      if (err == 0 && hostname[k] == '\0')
 	break;
 #ifdef ENAMETOOLONG
       else if (err != 0 && errno != ENAMETOOLONG && errno != 0)
