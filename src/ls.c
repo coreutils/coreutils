@@ -3722,6 +3722,8 @@ attach (char *dest, const char *dirname, const char *name)
   *dest = 0;
 }
 
+/* FIXME: this code allocates allocates O(N^2) space when ls is invoked
+   with `--width=N' and -x or -C.  Either fix that or limit N.  */
 static void
 init_column_info (void)
 {
