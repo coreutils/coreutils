@@ -46,7 +46,12 @@ usage (int status)
 	     program_name);
   else
     {
-      printf (_("Usage: %s [OPTION]... [STRING]...\n"), program_name);
+      printf (_("\
+Usage: %s [STRING]...\n\
+  or:  %s OPTION\n\
+"),
+	      program_name, program_name);
+
       printf (_("\
 Repeatedly output a line with all specified STRING(s), or `y'.\n\
 \n\
