@@ -1,3 +1,9 @@
+Tue Jun 18 22:14:42 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* aclocal.m4: Update from gettext-0.10.20.
+	* ABOUT-NLS: Likewise.
+	* intl/*: Likewise.
+
 Sun Jun 16 13:44:36 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* doc/Makefile.am (EXTRA_DIST): Add texinfo.tex.
