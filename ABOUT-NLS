@@ -2,9 +2,9 @@ Notes on the GNU Translation Project
 ************************************
 
    GNU is going international!  The GNU Translation Project is a way to
-get maintainers, translators and users all together, so GNU will
-gradually become able to speak many native languages.  A few packages
-already provide native language translation for their messages.
+get maintainers, translators, and users all together, so that GNU will
+gradually become able to speak many languages.  A few packages already
+provide translations for their messages.
 
    If you found this `ABOUT-NLS' file inside a GNU distribution, you
 may assume that the distributed package does use GNU `gettext'
@@ -90,7 +90,7 @@ want to use the `catgets' functions use
 to enable the test for `catgets' (this causes no harm if `catgets' is
 not available on your system).  If you really select this option we
 would like to hear about the reasons because we cannot think of any
-good ones outself.
+good one ourself.
 
    Internationalized packages have usually many `po/LL.po' files, where
 LL gives an ISO 639 two-letter code identifying the language.  Unless
@@ -127,109 +127,89 @@ leaving `LANG' to `sv'.
 Translating Teams
 =================
 
-   The GNU `gettext' tool set contains *everything* maintainers need
-for internationalizing their packages for messages.  It also contains
-quite useful tools for helping translators at localizing messages to
-their native language, once a package has already been
-internationalized.
-
-   To achieve the GNU Translation Project, we need many interested
+   For the GNU Translation Project to be a success, we need interested
 people who like their own language and write it well, and who are also
 able to synergize with other translators speaking the same language.
-Each translating team has its own mailing list, courtesy of Linux
-International.  You may reach your translating team at the address
+Each translation team has its own mailing list, courtesy of Linux
+International.  You may reach your translation team at the address
 `LL@li.org', replacing LL by the two-letter ISO 639 code for your
-language.  Language codes are *not* the same as country codes given in
-ISO 3166.  The following translating teams exist, as of January 1996:
+language.  Language codes are *not* the same as the country codes given
+in ISO 3166.  The following translation teams exist, as of May 1996:
 
-     Chinese `zh', Czech `cs', Danish `da', Dutch `nl', English `en',
-     Esperanto `eo', Finnish `fi', French `fr', Irish `ga', German
-     `de', Greek `el', Italian `it', Japanese `ja', Indonesian `in',
+     Arabic `ar', Chinese `zh', Czech `cs', Danish `da', Dutch `nl',
+     English `en', Esperanto `eo', Finnish `fi', French `fr', German
+     `de', Greek `el', Hebrew `he', Hungarian `hu', Irish `ga', Italian
+     `it', Indonesian `id', Japanese `ja', Korean `ko', Latin `la',
      Norwegian `no', Persian `fa', Polish `pl', Portuguese `pt',
-     Russian `ru', Spanish `es', Swedish `sv', Telugu `te' and Turkish
-     `tr'.
+     Russian `ru', Slovenian `sl', Spanish `es', Swedish `sv', Telugu
+     `te', Turkish `tr' and Ukrainian `uk'.
 
-For example, you may reach the Chinese translating team by writing to
+For example, you may reach the Chinese translation team by writing to
 `zh@li.org'.
 
    If you'd like to volunteer to *work* at translating messages, you
 should become a member of the translating team for your own language.
 The subscribing address is *not* the same as the list itself, it has
-`-request' appended.  For example, Swedish people can send a message to
-`sv-request@li.org', having this message body:
+`-request' appended.  For example, speakers of Swedish can send a
+message to `sv-request@li.org', having this message body:
 
      subscribe
 
-   Keep in mind that team members should be interested in *working* at
-translations, or at solving translational difficulties, rather than
-merely lurking around.  If your team does not exist yet and you want to
-start one, please write to `gnu-translation@gnu.ai.mit.edu'; you will
-then reach the GNU coordinator for all translator teams.
+   Keep in mind that team members are expected to participate
+*actively* in translations, or at solving translational difficulties,
+rather than merely lurking around.  If your team does not exist yet and
+you want to start one, or if you are unsure about what to do or how to
+get started, please write to `gnu-translation@gnu.ai.mit.edu' to reach
+the GNU coordinator for all translator teams.
 
    The English team is special.  It works at improving and uniformizing
 the terminology used in GNU.  Proven linguistic skill are praised more
 than programming skill, here.  For the time being, please avoid
-subscribing to the English team unless explicitely invited to do so.
+subscribing to the English team unless explicitly invited to do so.
 
 Available Packages
 ==================
 
    Languages are not equally supported in all GNU packages.  The
 following matrix shows the current state of GNU internationalization,
-as of January 1996.  Listed are: internationalized packages, and
-languages for which work is in progress, or about to start.
+as of May 1996.  The matrix shows, in regard of each package, for which
+languages PO files have been submitted to translation coordination.
 
-          See note    cs de en fr it ja ko nl no pl pt sv
-                \   .-------------------------------------.
-     chess      (1) |    X  /                          X  |
-     clisp          |    X  X  X                          |
-     diffutils  (2) |       /  .                          |
-     fileutils      |    .  /                             |
-     flex       (3) |       /  .                          |
-     m4             |    -  /  -  -  .                 -  |
-     gettext        |    X  /  X        -     X  -     X  |
-     ptx            |    -  /  -                       -  |
-     recode         |    -  /  -           -        -     |
-     sh-utils       |    .  /  .                          |
-     sharutils      |    X  /  X     X     X        X  X  |
-     tar            |    X  /  X              -     X  X  |
-     textutils      |    .  /  .                          |
-     wdiff          | -  -  /  -  -                       |
-                    `-------------------------------------'
-                      cs de en fr it ja ko nl no pl pt sv
+                       cs de en es fi fr ja ko no pt sl sv
+                     .-------------------------------------.
+     bash            |                []                   |  1
+     bison           |                                     |  0
+     clisp           |    [] []       []                   |  3
+     cpio            |                []                   |  1
+     diffutils       |                []                [] |  2
+     enscript        |    []       [] []             []    |  4
+     fileutils       |    []          []                [] |  3
+     findutils       |    []          []                   |  2
+     flex            |                []                   |  1
+     gettext         |    []          []    [] []       [] |  6
+     glibc           |    []    []          []             |  3
+     grep            |          []    []    []       []    |  4
+     hello           |    []          []    []       []    |  4
+     m4              |    []          [] []             [] |  4
+     make            |                                     |  0
+     mkid            |    []          []                   |  2
+     music           |                []                   |  1
+     ptx             |    []          []                [] |  3
+     recode          |    []    []    []             [] [] |  5
+     sh-utils        |    []          []                   |  2
+     sharutils       |    []          []                [] |  3
+     tar             |    []          []    [] [] [] [] [] |  7
+     textutils       |    []          []    []             |  3
+     wdiff           | [] []          []                [] |  4
+                     `-------------------------------------'
+                       cs de en es fi fr ja ko no pt sl sv
+                        1 16  1  3  1 21  1  6  3  1  5  9
 
-   The interpretation legend and notes are:
+   For a PO file in the matrix above to be effective, the package to
+which it applies should also have been internationalized and distributed
+as such by its maintainer.  There is often a lag between the mere
+existence a PO file and its wide availability in a GNU distribution.
 
-`/'
-     There is no PO file, this package merely defaults to this language.
-
-`.'
-     The effort of localizing this package has been undertaken by
-     someone, or by a translating team, and work is, or should be in
-     progress.
-
-`-'
-     A PO file for this package and this language is completed and is
-     currently available in a pretest release, or is all ready for
-     inclusion in the next release of this package.
-
-`X'
-     The localization of this package to this particular language is
-     fully completed, and now distributed through an official release.
-
-(1)
-     This package is translated to specific languages by methods
-     predating GNU `gettext'.  Translations are all kept on disk files,
-     and sources contain numbers where one normally expects strings.
-
-(2)
-     This package is planned to switch to GNU `gettext'.  For the time
-     being, it uses temporary means for internationalization.
-
-(3)
-     This package has its translatable strings marked, but does not use
-     GNU `gettext'.  A convenience patch may be available separately.
-
-   If January 1996 seems to be old, you may fetch a more recent copy of
+   If May 1996 seems to be old, you may fetch a more recent copy of
 this `ABOUT-NLS' file on most GNU archive sites.
 
