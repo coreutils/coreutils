@@ -54,8 +54,6 @@ struct dir_attr
 int stat ();
 int lstat ();
 
-char *base_name ();
-enum backup_type get_version ();
 void strip_trailing_slashes ();
 char *xstrdup ();
 
@@ -115,7 +113,7 @@ static struct option const long_opts[] =
   {NULL, 0, NULL, 0}
 };
 
-static void
+void
 usage (int status)
 {
   if (status != 0)
@@ -164,9 +162,10 @@ Use --sparse=never to inhibit creation of sparse files.\n\
 The backup suffix is ~, unless set with SIMPLE_BACKUP_SUFFIX.  The\n\
 version control may be set with VERSION_CONTROL, values are:\n\
 \n\
-  t, numbered     make numbered backups\n\
-  nil, existing   numbered if numbered backups exist, simple otherwise\n\
-  never, simple   always make simple backups\n\
+  none, off       never make backups (even if --backup is given)\n\
+  numbered, t     make numbered backups\n\
+  existing, nil   numbered if numbered backups exist, simple otherwise\n\
+  simple, never   always make simple backups\n\
 "));
       printf (_("\
 \n\
@@ -641,10 +640,12 @@ main (int argc, char **argv)
 
   cp_option_init (&x);
 
+  /* FIXME: consider not calling getenv for SIMPLE_BACKUP_SUFFIX unless
+     we'll actually use simple_backup_suffix.  */
   version = getenv ("SIMPLE_BACKUP_SUFFIX");
   if (version)
     simple_backup_suffix = version;
-  version = getenv ("VERSION_CONTROL");
+  version = NULL;
 
   while ((c = getopt_long (argc, argv, "abdfilprsuvxPRS:V:", long_opts, NULL))
 	 != -1)
@@ -655,8 +656,8 @@ main (int argc, char **argv)
 	  break;
 
 	case CHAR_MAX + 1:
-	  XARGMATCH (&x.sparse_mode, "--sparse", optarg,
-		     sparse_type_string, sparse_type, usage (1));
+	  x.sparse_mode = XARGMATCH ("--sparse", optarg,
+				     sparse_type_string, sparse_type);
 	  break;
 
 	case 'a':		/* Like -dpR. */
@@ -761,7 +762,9 @@ main (int argc, char **argv)
       usage (1);
     }
 
-  x.backup_type = (make_backups ? get_version (version) : none);
+  x.backup_type = (make_backups
+		   ? xget_version (_("--version-control"), version)
+		   : none);
 
   if (x.preserve_chmod_bits == 1)
     x.umask_kill = 0777777;
