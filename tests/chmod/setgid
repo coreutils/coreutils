@@ -36,7 +36,7 @@ chmod g+s d 2> /dev/null ||
     # it may happen that when you create a directory, its group isn't one
     # to which you belong.  When that happens, the above chmod fails.  So
     # here, upon failure, we try to set the group, then rerun the chmod command.
-    group=${FETISH_GROUP-`(id -nG || /usr/xpg4/bin/id -nG) 2>/dev/null`}
+    group=${FETISH_GROUP-`(id -ng || /usr/xpg4/bin/id -ng) 2>/dev/null`}
     if test "$group"; then
       chgrp "$group" d || framework_failure=1
       chmod g+s d || framework_failure=1
