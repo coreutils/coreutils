@@ -1,7 +1,8 @@
 /* TODO:
    x use getopt_long
    x use error, not pferror
-   - don't use pfstatus -- or maybe leave it in and see who complains
+   - don't use pfstatus (at least vprintf isn't portable) -- or maybe
+       leave it in and see who complains
    x bracket strings with _(...) for gettext
    - use consistent non-capitalization in error messages
    - add standard GNU copyleft comment
@@ -1377,6 +1378,8 @@ main (int argc, char **argv)
 
   /* Just on general principles, wipe s. */
   memset (&s, 0, sizeof (s));
+
+  close_stdout ();
 
   exit (err);
 }
