@@ -52,8 +52,7 @@ getugroups (int maxcount, GETGROUPS_T *grouplist, char *username, gid_t gid)
   register int count = 0;
 
   if (maxcount != 0)
-    grouplist[count] = gid;
-  ++count;
+    grouplist[count++] = gid;
 
   setgrent ();
   while ((grp = getgrent ()) != 0)
