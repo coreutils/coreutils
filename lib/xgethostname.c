@@ -30,14 +30,11 @@ extern int errno;
 #endif
 
 #include "error.h"
+#include "exit.h"
 #include "xalloc.h"
 
 #ifndef ENAMETOOLONG
 # define ENAMETOOLONG 9999
-#endif
-
-#ifndef EXIT_FAILURE
-# define EXIT_FAILURE 1
 #endif
 
 int gethostname ();
