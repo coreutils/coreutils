@@ -8,26 +8,14 @@ if test "$VERBOSE" = yes; then
   ginstall --version
 fi
 
+. $srcdir/../envvar-check
+
 pwd=`pwd`
 dir=install-D$$
 
 trap "cd $pwd; rm -rf $dir" 0 1 2 3 15
 
 mkdir $dir
-unset VERSION_CONTROL SIMPLE_BACKUP_SUFFIX
-
-if test "${VERSION_CONTROL+set}" = set; then
-  echo '$0: the VERSION_CONTROL envvar is set --' \
-    ' unset it and rerun this test' >&2
-  exit 1
-fi
-
-if test "${SIMPLE_BACKUP_SUFFIX+set}" = set; then
-  echo '$0: the SIMPLE_BACKUP_SUFFIX envvar is set --' \
-    ' unset it and rerun this test' >&2
-    >&2
-  exit 1
-fi
 
 fail=0
 cd $dir
