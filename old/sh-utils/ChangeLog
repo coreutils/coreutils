@@ -1,3 +1,8 @@
+Wed May 29 21:28:53 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/expr.c (docolon): Give a warning when the first character
+	of the basic regular expression is `^'.
+
 Mon May 20 22:56:06 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* id.c (xgetgroups): New function, factored out of
@@ -9,10 +14,9 @@ Mon May 20 22:56:06 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	require rerunning YACC when not in maintainer mode.
 	(posixtm.c): Likewise.
 
-Tue May 14 18:47:35 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund\
-.de>
+Tue May 14 18:47:35 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
-	* src/id.c (print_group_list): When USERNAME is specified use
+	* id.c (print_group_list): When USERNAME is specified use
 	getugroups to get the number of groups.
 	(print_full_info): Likewise.
 
