@@ -4574,6 +4574,14 @@ command line.
 @opindex --directory
 List just the names of directories, as with other types of files, rather
 than listing their contents.
+ 
+@item -H
+@itemx --dereference-command-line
+@opindex -H
+@opindex --dereference-command-line
+@cindex symbolic links, dereferencing
+If a command line argument specifies a symbolic link, show information
+for the file the link references rather than for the link itself.
 
 @item -I PATTERN
 @itemx --ignore=PATTERN
@@ -4598,9 +4606,8 @@ except @samp{..}, and the third ignores names that start with @samp{#}.
 @opindex -L
 @opindex --dereference
 @cindex symbolic links, dereferencing
-In a long listing, show file information (e.g., times and permissions)
-for the referents of symbolic links rather than for the symbolic links
-themselves.
+When showing file information for a symbolic link, show information
+for the file the link references rather than the link itself.
 
 @item -R
 @itemx --recursive
@@ -4671,20 +4678,6 @@ provide this option for compatibility.)
 Append a size letter such as @samp{M} for megabytes to each size.
 Powers of 1024 are used, not 1000; @samp{M} stands for 1,048,576 bytes.
 Use the @samp{--si} option if you prefer powers of 1000.
-
-@item -H
-@itemx --si
-@opindex -H
-@opindex --si
-@cindex SI output
-Append a size letter such as @samp{M} for megabytes to each size.  (SI
-is the International System of Units, which defines these letters as
-prefixes.)  Powers of 1000 are used, not 1024; @samp{M} stands for
-1,000,000 bytes.  Use the @samp{-h} or @samp{--human-readable} option if
-you prefer powers of 1024.
-
-Warning: the meaning of @option{-H} will change in the future to conform
-to @sc{posix}.  Use @option{--si} for the old meaning.
 
 @item -i
 @itemx --inode
@@ -4783,6 +4776,15 @@ this option reports sizes that are half the correct values.  On HP-UX
 systems, it reports sizes that are twice the correct values for files
 that are NFS-mounted from BSD systems.  This is due to a flaw in HP-UX;
 it also affects the HP-UX @code{ls} program.
+
+@itemx --si
+@opindex --si
+@cindex SI output
+Append a size letter such as @samp{M} for megabytes to each size.  (SI
+is the International System of Units, which defines these letters as
+prefixes.)  Powers of 1000 are used, not 1024; @samp{M} stands for
+1,000,000 bytes.  Use the @samp{-h} or @samp{--human-readable} option if
+you prefer powers of 1024.
 
 @end table
 
