@@ -42,6 +42,9 @@
 #  endif
 # else
 #  include <utmp.h>
+#  if !HAVE_DECL_GETUTENT
+    struct utmp *getutent();
+#  endif
 #  define UTMP_STRUCT_NAME utmp
 #  define UT_TIME_MEMBER(UT_PTR) ((UT_PTR)->ut_time)
 #  define SET_UTMP_ENT setutent
