@@ -104,14 +104,14 @@
 # define UINT_MAX UINT_MAX_32_BITS
 #endif
 
-#if ULONG_MAX == UINT_MAX_32_BITS
- typedef unsigned long uint32;
+#if UINT_MAX == UINT_MAX_32_BITS
+  typedef unsigned int uint32;
 #else
-# if UINT_MAX == UINT_MAX_32_BITS
-   typedef unsigned int uint32;
+# if USHRT_MAX == UINT_MAX_32_BITS
+   typedef unsigned short uint32;
 # else
-#  if USHRT_MAX == UINT_MAX_32_BITS
-    typedef unsigned short uint32;
+#  if ULONG_MAX == UINT_MAX_32_BITS
+    typedef unsigned long uint32;
 #  else
     /* The following line is intended to throw an error.  Using #error is
        not portable enough.  */
@@ -144,8 +144,9 @@ static const unsigned char fillbuf[64] = { 0x80, 0 /* , 0, 0, ...  */ };
 static const struct option long_options[] =
 {
   { "binary", no_argument, 0, 'b' },
-  { "check", required_argument, 0, 'c' },
+  { "check", no_argument, 0, 'c' },
   { "help", no_argument, 0, 'h' },
+  { "quiet", no_argument, 0, 'q' },
   { "string", required_argument, 0, 's' },
   { "text", no_argument, 0, 't' },
   { "verbose", no_argument, 0, 'v' },
@@ -170,54 +171,65 @@ static void process_buffer __P ((const void *buffer, size_t len,
 /* FIXME: This is provisory.  Use strtok.  */
 
 static int
-split_3 (s, u, v, w)
-     char *s, **u, **v, **w;
+split_3 (s, u, binary, w)
+     char *s, **u, **w;
+     int *binary;
 {
   size_t i;
-  char *p[3];
 
 #define ISWHITE(c) ((c) == ' ' || (c) == '\t')
 
   i = 0;
-  while (s[i] && ISWHITE (s[i]))
+  while (ISWHITE (s[i]))
     ++i;
-  if (s[i])
+
+  /* The line has to be at least 35 characters long to contain correct
+     message digest information.  */
+  if (strlen (&s[i]) >= 35)
     {
-      p[0] = &s[i];
-      while (s[i] && !ISWHITE (s[i]))
-	++i;
-      if (s[i])
-	s[i++] = '\0';
-      while (s[i] && ISWHITE (s[i]))
-	++i;
+      *u = &s[i];
+
+      /* The first field has to be the 32 character hexadecimal
+	 representation of the message digest.  If it not immediately
+	 followed by a white space it's an error.  */
+      if (!ISWHITE (s[i + 32]))
+	return 1;
+
+      i += 32;
+      s[i++] = '\0';
+
+      /* Now we have to look for two possibilities: the line is in the
+	 new format in which case we have the character 'b' or 't' followed
+	 by a white space or we have a ' ' or '*' immediately followed by
+	 the file name.  */
+      if (ISWHITE (s[i + 1]))
+	{
+	  if (s[i] != 'b' && s[i] != 't')
+	    return 1;
+	  *binary = s[i] == 'b';
+	  i += 2;
+	}
+      else
+	{
+	  if (s[i] != ' ' && s[i] != '*')
+	    return 1;
+	  *binary = s[i] == '*';
+	  ++i;
+	}
+
       if (s[i])
 	{
-	  p[1] = &s[i];
+	  *w = &s[i];
+	  /* Skip past the third token.  */
 	  while (s[i] && !ISWHITE (s[i]))
 	    ++i;
 	  if (s[i])
 	    s[i++] = '\0';
-	  while (s[i] && ISWHITE (s[i]))
+	  /* Allow trailing white space.  */
+	  while (ISWHITE (s[i]))
 	    ++i;
-	  if (s[i])
-	    {
-	      p[2] = &s[i];
-	      /* Skip past the third token.  */
-	      while (s[i] && !ISWHITE (s[i]))
-		++i;
-	      if (s[i])
-		s[i++] = '\0';
-	      /* Allow trailing white space.  */
-	      while (s[i] && ISWHITE (s[i]))
-		++i;
-	      if (!s[i])
-	        {
-		  *u = p[0];
-		  *v = p[1];
-		  *w = p[2];
-		  return 0;
-		}
-	    }
+	  if (!s[i])
+	    return 0;
 	}
     }
   return 1;
@@ -244,12 +256,14 @@ main (argc, argv)
      char *argv[];
 {
   unsigned char md5buffer[16];
-  const char *check_file = NULL;
-  int binary = 1;
+  int old_format = 1;	/* Use Plumb/Lankester format by default.  */
+  int binary = 0;	/* Text is default of the Plumb/Lankester format.  */
+  int do_check = 0;
   int do_help = 0;
   int do_version = 0;
   int verbose = 0;
   int opt;
+  int quiet = 0;
   char **string = NULL;
   char n_strings = 0;
   size_t i;
@@ -257,7 +271,7 @@ main (argc, argv)
   /* Setting values of global variables.  */
   program_name = argv[0];
 
-  while ((opt = getopt_long (argc, argv, "bc:hs:tvV", long_options, NULL))
+  while ((opt = getopt_long (argc, argv, "bchqs:tvV", long_options, NULL))
 	 != EOF)
     switch (opt)
       {
@@ -267,10 +281,14 @@ main (argc, argv)
 	binary = 1;
 	break;
       case 'c':
-	check_file = optarg;
+	do_check = 1;
 	break;
       case 'h':
 	do_help = 1;
+	break;
+      case 'q':
+	quiet = 1;
+	verbose = 0;
 	break;
       case 's':
 	{
@@ -286,6 +304,7 @@ main (argc, argv)
 	binary = 0;
 	break;
       case 'v':
+	quiet = 0;
 	verbose = 1;
 	break;
       case 'V':
@@ -304,7 +323,7 @@ main (argc, argv)
   if (do_help)
     usage (0);
 
-  if (n_strings > 0 && check_file != NULL)
+  if (n_strings > 0 && do_check != 0)
     {
       error (0, 0,
 	     _("the --string and --check options are mutually exclusive"));
@@ -313,6 +332,7 @@ main (argc, argv)
 
   if (n_strings > 0)
     {
+      /* --quiet does not make much sense with --string.  */
       if (optind < argc)
 	{
 	  error (0, 0, _("no files may be specified when using --string"));
@@ -329,8 +349,10 @@ main (argc, argv)
 	  printf (" b \"%s\"\n", string[i]);
 	}
     }
-  else if (check_file == NULL)
+  else if (do_check == 0)
     {
+      /* --quiet does no make much sense without --check.  So print the
+	 result even if --quiet is given.  */
       if (optind == argc)
 	argv[argc++] = "-";
 
@@ -343,7 +365,10 @@ main (argc, argv)
 	  for (cnt = 0; cnt < 16; ++cnt)
 	    printf ("%02x", md5buffer[cnt]);
 
-	  printf (" %c %s\n", binary ? 'b' : 't', argv[optind]);
+	  if (old_format)
+	    printf (" %c%s\n", binary ? '*' : ' ', argv[optind]);
+	  else
+	    printf (" %c %s\n", binary ? 'b' : 't', argv[optind]);
 	}
     }
   else
@@ -352,33 +377,40 @@ main (argc, argv)
       int n_tests = 0;
       int n_tests_failed = 0;
 
-      if (optind < argc)
+      if (optind + 1 < argc)
 	{
 	  error (0, 0,
-		 _("no additional files may be specified when using --check"));
+		 _("only one argument may be specified when using --check"));
 	  usage (1);
 	}
 
-      if (strcmp (check_file, "-") == 0)
+      if (optind == argc || strcmp (argv[optind], "-") == 0)
 	cfp = stdin;
       else
 	{
-	  cfp = fopen (check_file, "r");
+	  cfp = fopen (argv[optind], "r");
 	  if (cfp == NULL)
-	    error (1, errno, _("check file: %s"), check_file);
+	    if (quiet)
+	      exit (1);
+	    else
+	      error (1, errno, _("check file: %s"), argv[optind]);
 	}
 
       do
 	{
 	  char line[1024];
 	  char *filename;
-	  char *type_flag;
+	  int type_flag;
 	  char *md5num;
 	  int err;
 
 	  /* FIXME: Use getline, not fgets.  */
 	  if (fgets (line, 1024, cfp) == NULL)
 	    break;
+
+	  /* Ignore comment lines, which begin with a '#' character.  */
+	  if (line[0] == '#')
+	    continue;
 
 	  /* Remove any trailing newline.  */
 	  if (line[strlen (line) - 1] == '\n')
@@ -387,11 +419,7 @@ main (argc, argv)
 	  /* FIXME: maybe accept the output of --string=STRING.  */
 	  err = split_3 (line, &md5num, &type_flag, &filename);
 
-	  if (err
-	      || strlen (md5num) != 32
-	      || !hex_digits (md5num)
-	      || strlen (type_flag) != 1
-	      || (*type_flag != 'b' && *type_flag != 't'))
+	  if (err || !hex_digits (md5num))
 	    {
 	      if (verbose)
 		error (0, 0, _("invalid line in check file: %s"), line);
@@ -404,12 +432,15 @@ main (argc, argv)
 					      'c', 'd', 'e', 'f' };
 	      size_t cnt;
 
-	      printf ("%s: ", filename);
-	      if (verbose)
-		fflush (stdout);
+	      if (!quiet)
+		{
+		  printf ("%s: ", filename);
+		  if (verbose)
+		    fflush (stdout);
+		}
 
 	      ++n_tests;
-	      md5_file (filename, md5buffer, *type_flag == 'b');
+	      md5_file (filename, md5buffer, type_flag);
 
 	      /* Compare generated binary number with text representation
 		 in check file.  Ignore case of hex digits.  */
@@ -419,12 +450,19 @@ main (argc, argv)
 		       != (bin2hex[md5buffer[cnt] & 0xf]))
 		  break;
 
-	      puts (cnt < 16 ? (++n_tests_failed, _("FAILED")) : _("OK"));
+	      if (cnt < 16)
+		++n_tests_failed;
+	      if (!quiet)
+		puts (cnt < 16 ? _("FAILED") : _("OK"));
 	    }
 	}
       while (!feof (cfp));
+      fclose (cfp);
 
-      printf (_("%d out of %d tests failed\n"), n_tests_failed, n_tests);
+      if (!quiet)
+	printf (_("%d out of %d tests failed\n"), n_tests_failed, n_tests);
+
+      exit (n_tests_failed > 0);
     }
 
   exit (0);
@@ -440,23 +478,25 @@ usage (status)
   else
     printf (_("\
 Usage: %s [OPTION] [FILE]...\n\
-  or:  %s --check=FILE\n\
-  or:  %s --string=STRING\n\
-Mandatory arguments to long options are mandatory for short options too.\n\
+  or:  %s [OPTION] --string=STRING\n\
+  or:  %s [OPTION] --check [FILE]\n\
+Print or check MD5 checksums.\n\
+With no FILE, or when FILE is -, read standard input.\n\
 \n\
   -h, --help              display this help and exit\n\
+  -q, --quiet             don't show anything, status code shows success\n\
   -v, --verbose           verbose output level\n\
   -V, --version           output version information and exit\n\
 \n\
   -b, --binary            read files in binary mode (default)\n\
   -t, --text              read files in text mode\n\
 \n\
-  -c, --check=FILE        check MD5 sums against list in FILE\n\
+  -c, --check             check MD5 sums against given list\n\
   -s, --string=STRING     compute checksum for STRING\n\
 \n\
-The sums are computed as described in RFC 1321.  The file given at the -c\n\
-option should be a former output of this program.  The default mode is to\n\
-produce a list with the checksum informations.  A file name - denotes stdin.\n"),
+The sums are computed as described in RFC 1321.  When checking, the input\n\
+should be a former output of this program.  The default mode is to print\n\
+a line with checksum, type, and name for each FILE.\n"),
 	    program_name, program_name, program_name);
 
   exit (status);
