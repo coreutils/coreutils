@@ -1,3 +1,5 @@
+User visible changes in release 1.11
+* nice accepts options like `--5' (this is interpreted like `-n -5')
 User visible changes in release 1.10
 * change package name from shellutils to sh-utils
 * add hostname, pwd, and users commands

@@ -1,3 +1,19 @@
+Sun Jun 19 00:18:06 1994  Jim Meyering  (meyering@comco.com)
+
+	* nice.c (main): Accept options like `--5' (equivalent to `-n -5')
+	instead of letting getopt give an `unrecognized option' error.
+
+Thu Jun 02 14:11:31 1994  Jim Meyering  (meyering@comco.com)
+
+	* stty.c (main): Set max_col and current_col before running
+	display_window_size.  Otherwise, `stty size' output a spurious
+	newline.  From Bauke Jan Douma (bjdouma@xs4all.hacktic.nl).
+
+Mon May 30 09:33:53 1994  Jim Meyering  (meyering@comco.com)
+
+	* test.c (test_syntax_error, beyond): Add __attribute__ ((noreturn))
+	so gcc will know enough not to give warnings.
+
 Sun May 29 17:40:21 1994  Jim Meyering  (meyering@comco.com)
 
 	* long-options.c: Move from src/ to lib/.
