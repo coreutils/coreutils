@@ -1,7 +1,8 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-.
 AUTOMAKE_OPTIONS = 1.1 gnits
 
-TESTS = dangling-symlink rm1 rm2 rm3 rm4 rm5 \
+TESTS = fail-eperm \
+  dangling-symlink rm1 rm2 rm3 rm4 rm5 \
   unread2 r-1 r-2 r-3 i-1 ir-1 f-1 sunos-1 deep-1 hash \
   isatty # unreadable empty-name
 EXTRA_DIST = $(TESTS)
