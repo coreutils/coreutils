@@ -273,11 +273,11 @@ scan_entries (int n)
 static void
 who (const char *filename)
 {
-  int users = read_utmp (filename);
+  int n_users = read_utmp (filename);
   if (short_list)
-    list_entries_who (users);
+    list_entries_who (n_users);
   else
-    scan_entries (users);
+    scan_entries (n_users);
 }
 
 /* Search `utmp_contents', which should have N entries, for
