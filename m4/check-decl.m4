@@ -9,8 +9,8 @@ AC_DEFUN(jm_CHECK_DECLS,
     dnl for each of these symbols in the config.h.in.
     dnl Otherwise, I'd have to update acconfig.h every time I change
     dnl this list of functions.
-    AC_CHECK_FUNCS(DECL_FREE DECL_MALLOC DECL_MEMCHR DECL_REALLOC \
+    AC_CHECK_FUNCS(DECL_FREE DECL_LSEEK DECL_MALLOC DECL_MEMCHR DECL_REALLOC \
 		   DECL_STPCPY DECL_STRSTR)
   fi
-  jm_CHECK_DECLARATIONS(free malloc memchr realloc stpcpy strstr)
+  jm_CHECK_DECLARATIONS(free lseek malloc memchr realloc stpcpy strstr)
 ])
