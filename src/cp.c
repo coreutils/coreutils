@@ -846,7 +846,7 @@ main (int argc, char **argv)
       error (0, 0,
 	     _("\
 Warning: the meaning of `-P' will change in the future to conform to POSIX.\n\
-Use `--parents' for the old meaning, and `--no-dereference' for the new."));
+Use `--parents' for the old meaning, and `--no-dereference' for the new one."));
     }
 
   if (backup_suffix_string)
