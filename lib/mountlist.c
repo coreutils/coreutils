@@ -256,7 +256,7 @@ static char *
 fsp_to_string (const struct statfs *fsp)
 {
 # if defined HAVE_F_FSTYPENAME_IN_STATFS
-  return xstrdup (fsp->f_fstypename);
+  return fsp->f_fstypename;
 # else
   return fstype_to_string (fsp->f_type);
 # endif
@@ -377,23 +377,14 @@ read_filesystem_list (int need_fs_type, int all_fs)
       return NULL;
     for (; entries-- > 0; fsp++)
       {
-	if (all_fs < 0)
-	  {
-# ifdef HAVE_F_FSTYPENAME_IN_STATFS
-	    if (REMOTE_FS_TYPE (fsp->f_fstypename))
-	      continue;
-# else
-#  ifdef MOUNT_NFS
-	    if (REMOTE_FS_TYPE (fstype_to_string (fsp->f_type)))
-	      continue;
-#  endif
-# endif
-	  }
+	char *fs_type = fsp_to_string (fsp);
+	if (all_fs < 0 && REMOTE_FS_TYPE (fs_type))
+	  continue;
 
 	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
 	me->me_devname = xstrdup (fsp->f_mntfromname);
 	me->me_mountdir = xstrdup (fsp->f_mntonname);
-	me->me_type = fsp_to_string (fsp);
+	me->me_type = fs_type;
 	me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
 
 	/* Add to the linked list. */
