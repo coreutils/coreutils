@@ -6,6 +6,7 @@ dnl From Jim Meyering
 AC_DEFUN([UTILS_FUNC_DIRFD],
 [
   AC_REPLACE_FUNCS([dirfd])
+  AC_CHECK_DECLS([dirfd])
   if test $ac_cv_func_dirfd = no; then
     AC_CACHE_CHECK(
 	      [how to get the file descriptor associated with an open DIR*],
