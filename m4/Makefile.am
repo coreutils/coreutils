@@ -19,6 +19,7 @@ getline.m4 \
 getloadavg.m4 \
 gettext.m4 \
 glibc.m4 \
+group-member.m4 \
 inttypes_h.m4 \
 isc-posix.m4 \
 jm-glibc-io.m4 \

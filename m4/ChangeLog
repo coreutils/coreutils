@@ -1,5 +1,7 @@
 1999-02-07  Jim Meyering  <meyering@ascend.com>
 
+	* group-member.m4: New file -- extracted from sh-utils' configure.in.
+
 	1999-02-05  Eli Zaretskii  <eliz@is.elta.co.il>
 	* m4/gettext.m4: Support DOS-style d:/foo/bar absolute file names.
 
