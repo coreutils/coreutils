@@ -75,11 +75,12 @@ static struct option const long_options[] =
 /* Parse each line in INPUT_FILENAME as with --date and display the
    each resulting time and date.  If the file cannot be opened, tell why
    then exit.  Issue a diagnostic for any lines that cannot be parsed.
-   If any line cannot be parsed, return non-zero;  otherwise return zero.
-   */
+   If any line cannot be parsed, return non-zero;  otherwise return zero.  */
 
 static int
-batch_convert (const char *input_filename, const char *format)
+batch_convert (input_filename, format)
+     const char *input_filename;
+     const char *format;
 {
   int have_read_stdin;
   int status;
@@ -217,11 +218,11 @@ non-option argument must be a format string beginning with `+'");
       if (set_date || print_date)
 	{
 	  error (0, 0, "\
-the print and set options may not be used when reading dates from a file");
+neither print nor set options may be used when reading dates from a file");
 	  usage (1);
 	}
       status = batch_convert (batch_file,
-			      (n_args == 1 ? argv[optind] : NULL));
+			      (n_args == 1 ? argv[optind] + 1 : NULL));
     }
   else
     {
