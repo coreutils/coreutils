@@ -2,6 +2,9 @@
 
 	* Version 4.1.1.
 
+	* src/mv.c (movefile): Now that remember_copied xstrdup's the file
+	name, free `new_dest'.
+
 	Plug a leak.
 	* src/cp-hash.c (remember_copied): Use src_to_dest_free to free
 	the entry we couldn't insert.
