@@ -318,6 +318,7 @@
 #include <sys/types.h>
 #include <time.h>
 #include "system.h"
+#include "closeout.h"
 #include "error.h"
 #include "xstrtol.h"
 
@@ -853,6 +854,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
   n_files = 0;
   file_names = (argc > 1
 		? (char **) xmalloc ((argc - 1) * sizeof (char *))
@@ -1162,8 +1165,6 @@ main (int argc, char **argv)
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, _("standard input"));
-  if (ferror (stdout) || fclose (stdout) == EOF)
-    error (EXIT_FAILURE, errno, _("write error"));
   if (failed_opens > 0)
     exit (EXIT_FAILURE);
   exit (EXIT_SUCCESS);

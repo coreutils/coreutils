@@ -64,6 +64,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "closeout.h"
 #include "error.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -698,6 +699,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
   operating_mode = undefined_mode;
 
   /* By default, all non-delimited lines are printed.  */
@@ -798,8 +801,6 @@ main (int argc, char **argv)
       error (0, errno, "-");
       exit_status = 1;
     }
-  if (ferror (stdout) || fclose (stdout) == EOF)
-    error (EXIT_FAILURE, errno, _("write error"));
 
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

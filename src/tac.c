@@ -1,5 +1,5 @@
 /* tac - concatenate and print files in reverse
-   Copyright (C) 1988-1991, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 1988-1991, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -41,6 +41,7 @@ tac -r -s '.\|
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "closeout.h"
 
 #include <regex.h>
 
@@ -615,6 +616,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
   errors = 0;
   separator = "\n";
   sentinel_length = 1;
@@ -711,7 +714,5 @@ main (int argc, char **argv)
 
   if (have_read_stdin && close (0) < 0)
     error (EXIT_FAILURE, errno, "-");
-  if (ferror (stdout) || fclose (stdout) == EOF)
-    error (EXIT_FAILURE, errno, _("write error"));
   exit (errors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

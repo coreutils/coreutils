@@ -1,5 +1,5 @@
 /* uniq -- remove duplicate lines from a sorted file
-   Copyright (C) 86, 91, 1995-1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 86, 91, 1995-1998, 1999, 2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "closeout.h"
 #include "linebuffer.h"
 #include "error.h"
 #include "xstrtol.h"
@@ -313,7 +314,9 @@ check_file (const char *infile, const char *outfile)
   if (ferror (istream) || fclose (istream) == EOF)
     error (EXIT_FAILURE, errno, _("error reading %s"), infile);
 
-  if (ferror (ostream) || fclose (ostream) == EOF)
+  /* Close ostream only if it's not stdout -- the latter is closed
+     via the atexit-invoked close_stdout.  */
+  if (ostream != stdout && (ferror (ostream) || fclose (ostream) == EOF))
     error (EXIT_FAILURE, errno, _("error writing %s"), outfile);
 
   free (lb1.buffer);
@@ -330,6 +333,8 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 
   skip_chars = 0;
   skip_fields = 0;

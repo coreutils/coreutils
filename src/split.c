@@ -1,5 +1,5 @@
 /* split.c -- split a file into pieces.
-   Copyright (C) 88, 91, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 88, 91, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "closeout.h"
 #include "error.h"
 #include "safe-read.h"
 #include "xstrtol.h"
@@ -347,6 +348,8 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 
   /* Parse command line options.  */
 

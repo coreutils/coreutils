@@ -1,5 +1,5 @@
 /* nl -- number lines of files
-   Copyright (C) 89, 92, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 89, 92, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 #include <getopt.h>
 
 #include "system.h"
+#include "closeout.h"
 
 #include <regex.h>
 
@@ -362,7 +363,7 @@ static enum section
 check_section (void)
 {
   size_t len = line_buf.length - 1;
-  
+
   if (len < 2 || memcmp (line_buf.buffer, section_del, 2))
     return Text;
   if (len == header_del_len
@@ -452,6 +453,8 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 
   have_read_stdin = 0;
 
@@ -604,8 +607,6 @@ main (int argc, char **argv)
       error (0, errno, "-");
       exit_status = 1;
     }
-  if (ferror (stdout) || fclose (stdout) == EOF)
-    error (EXIT_FAILURE, errno, _("write error"));
 
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

@@ -1,5 +1,5 @@
 /* wc - print the number of bytes, words, and lines in files
-   Copyright (C) 85, 91, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 85, 91, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "closeout.h"
 #include "error.h"
 #include "human.h"
 #include "safe-read.h"
@@ -308,6 +309,8 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 
   exit_status = 0;
   posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);

@@ -30,6 +30,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "closeout.h"
 #include "error.h"
 #include "xstrtol.h"
 #include "safe-read.h"
@@ -191,6 +192,7 @@ head_file (const char *filename, uintmax_t n_units, int count_lines)
       filename = _("standard input");
       if (print_headers)
 	write_header (filename);
+      /* FIXME: use STDIN_FILENO, not `0' */
       return head (filename, 0, n_units, count_lines);
     }
   else
@@ -262,6 +264,8 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 
   have_read_stdin = 0;
 
@@ -383,8 +387,6 @@ main (int argc, char **argv)
 
   if (have_read_stdin && close (0) < 0)
     error (EXIT_FAILURE, errno, "-");
-  if (fclose (stdout) == EOF)
-    error (EXIT_FAILURE, errno, _("write error"));
 
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

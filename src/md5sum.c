@@ -1,6 +1,6 @@
 /* Compute MD5 checksum of files or strings according to the definition
    of MD5 in RFC 1321 from April 1992.
-   Copyright (C) 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@
 #include "md5.h"
 #include "getline.h"
 #include "system.h"
+#include "closeout.h"
 #include "error.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -472,6 +473,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
   while ((opt = getopt_long (argc, argv, "bctw", long_options, NULL)) != -1)
     switch (opt)
       {
@@ -624,9 +627,6 @@ verifying checksums"));
 	    }
 	}
     }
-
-  if (fclose (stdout) == EOF)
-    error (EXIT_FAILURE, errno, _("write error"));
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, _("standard input"));

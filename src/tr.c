@@ -26,6 +26,7 @@
 #include <getopt.h>
 
 #include "system.h"
+#include "closeout.h"
 #include "error.h"
 #include "safe-read.h"
 #include "xstrtol.h"
@@ -1783,6 +1784,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
   while ((c = getopt_long (argc, argv, "cdst", long_options, NULL)) != -1)
     {
       switch (c)
@@ -2005,9 +2008,6 @@ construct in string1 must be aligned with a corresponding construct\n\
 	  while (chars_read > 0);
 	}
     }
-
-  if (fclose (stdout) == EOF)
-    error (EXIT_FAILURE, errno, _("write error"));
 
   if (close (0) != 0)
     error (EXIT_FAILURE, errno, _("standard input"));

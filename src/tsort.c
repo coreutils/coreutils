@@ -30,6 +30,7 @@
 #include <getopt.h>
 
 #include "system.h"
+#include "closeout.h"
 #include "long-options.h"
 #include "error.h"
 #include "readtokens.h"
@@ -552,6 +553,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
   exit_status = 0;
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
@@ -578,9 +581,6 @@ main (int argc, char **argv)
     tsort (argv[optind]);
   else
     tsort ("-");
-
-  if (fclose (stdout) == EOF)
-    error (EXIT_FAILURE, errno, _("write error"));
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, _("standard input"));

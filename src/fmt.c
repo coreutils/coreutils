@@ -1,5 +1,5 @@
 /* GNU fmt -- simple text formatter.
-   Copyright (C) 1994-1999 Free Software Foundation, Inc.
+   Copyright (C) 1994-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 #define word unused_word_type
 
 #include "system.h"
+#include "closeout.h"
 #include "error.h"
 #include "xstrtol.h"
 
@@ -316,6 +317,8 @@ main (register int argc, register char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
   crown = tagged = split = uniform = FALSE;
   max_width = WIDTH;
   prefix = "";
@@ -411,9 +414,6 @@ main (register int argc, register char **argv)
 	    }
 	}
     }
-
-  if (ferror (stdout) || fclose (stdout) == EOF)
-    error (EXIT_FAILURE, errno, _("write error"));
 
   exit (EXIT_SUCCESS);
 }

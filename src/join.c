@@ -25,6 +25,7 @@
 #include <getopt.h>
 
 #include "system.h"
+#include "closeout.h"
 #include "error.h"
 #include "hard-locale.h"
 #include "linebuffer.h"
@@ -737,6 +738,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
 #ifdef ENABLE_NLS
   hard_LC_COLLATE = hard_locale (LC_COLLATE);
 #endif
@@ -868,8 +871,6 @@ main (int argc, char **argv)
     error (EXIT_FAILURE, errno, "%s", names[1]);
   if ((fp1 == stdin || fp2 == stdin) && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, "-");
-  if (ferror (stdout) || fclose (stdout) == EOF)
-    error (EXIT_FAILURE, errno, _("write error"));
 
   exit (EXIT_SUCCESS);
 }

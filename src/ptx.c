@@ -1,5 +1,5 @@
 /* Permuted index for GNU, with keywords in their context.
-   Copyright (C) 1990, 1991, 1993, 1998-1999 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1991, 1993, 1998-2000 Free Software Foundation, Inc.
    François Pinard <pinard@iro.umontreal.ca>, 1988.
 
    This program is free software; you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "closeout.h"
 #include "argmatch.h"
 #include "bumpalloc.h"
 #include "diacrit.h"
@@ -1942,6 +1943,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
 #if HAVE_SETCHRCLASS
   setchrclass (NULL);
 #endif
@@ -2111,6 +2114,7 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"),
 
       if (optind < argc)
 	{
+	  /* FIXME: don't fclose here? */
 	  fclose (stdout);
 	  if (fopen (argv[optind], "w") == NULL)
 	    error (EXIT_FAILURE, errno, "%s", argv[optind]);
