@@ -1,3 +1,10 @@
+2004-04-14  Jim Meyering  <jim@meyering.net>
+
+	* jm-macros.m4: Require cu_PREREQ_STAT_PROG.
+
+	* prereq.m4: Move prerequisite function for src/stat.c to ...
+	* stat-prog.m4 (cu_PREREQ_STAT_PROG): New file.  Contents from prereq.m4.
+
 2004-04-13  Jim Meyering  <jim@meyering.net>
 
 	Change `jm_' in AC_DEFINE'd names to `gl_'.  Update all uses.
