@@ -1,5 +1,5 @@
 /* su for GNU.  Run a shell with substitute user and group IDs.
-   Copyright (C) 1992-1999 Free Software Foundation, Inc.
+   Copyright (C) 1992-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -275,7 +275,7 @@ static int
 correct_password (const struct passwd *pw)
 {
   char *unencrypted, *encrypted, *correct;
-#ifdef HAVE_SHADOW_H
+#if HAVE_GETSPNAM && HAVE_STRUCT_PASSWD_SP_PWDP
   /* Shadow passwd stuff for SVR3 and maybe other systems.  */
   struct spwd *sp = getspnam (pw->pw_name);
 
