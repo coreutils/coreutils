@@ -5388,6 +5388,12 @@ fractional one:
       abc-1.01a.tgz      abc-1.012b.tgz
 @end example
 
+This functionality is implemented using the @code{strverscmp} function.
+@xref{String/Array Comparison, , , libc, The GNU C Library Reference Manual}.
+One result of that implementation decision is that @code{ls -v} does not
+use the locale category, @env{LC_COLLATE}.  As a result, non-numeric prefixes
+are sorted as if @env{LC_COLLATE} were set to @code{C}.
+
 @node General output formatting
 @subsection General output formatting
 
