@@ -23,7 +23,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "dirname.h"
 #include "error.h"
 #include "filemode.h"
 #include "modechange.h"
@@ -364,10 +363,7 @@ main (int argc, char **argv)
     error (1, errno, _("getting attributes of %s"), quote (reference_file));
 
   for (; optind < argc; ++optind)
-    {
-      strip_trailing_slashes (argv[optind]);
-      errors |= change_file_mode (argv[optind], changes, 1);
-    }
+    errors |= change_file_mode (argv[optind], changes, 1);
 
   exit (errors);
 }
