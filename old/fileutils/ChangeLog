@@ -1,5 +1,8 @@
 1998-06-28  Jim Meyering  <meyering@ascend.com>
 
+	* src/ls.c (usage): Make --kilobytes description consistent with
+	that in du and df.  From Göran Uddeborg.
+
 	* lib/mountlist.c (fsp_to_string): Clean out some crufty #ifdefs
 	now that we're using the jm_FSTYPENAME autoconf macro.
 
