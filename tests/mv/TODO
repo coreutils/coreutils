@@ -1,26 +1,27 @@
+#! /bin/sh
+
 # Use df to find a writable directory on a file system different from that
-# of the current directory.
+# of the current directory.  If one is found, create a temporary directory
+# inside it.
+
+: ${DF=df}
+: ${MKDIR=mkdir}
 
 # Try these:
-tmp_dirs='
+candidate_tmp_dirs="
  $TMPDIR
  /tmp
  /var/tmp
  /usr/tmp
  $HOME
-'
+"
 
-# FIXME
-DF=df
-# FIXME
-MKDIR=mkdir
-
-tmp=
+other_partition_tmpdir=
 
 # WARNING: using sed like this to extract the mount point will fail
 # if the mount point name contains `% '.
 dot_mount_point=`$DF --no-sync -P . | sed -n '2s/.*%  *//p'`
-for d in $tmp_dirs; do
+for d in $candidate_tmp_dirs; do
   d_mount_point=`$DF --no-sync -P $d | sed -n '2s/.*%  *//p'`
 
   # Same partition?  Skip it.
@@ -28,7 +29,7 @@ for d in $tmp_dirs; do
 
   # See if we can create a directory in it.
   if $MKDIR "$d/df-$$" > /dev/null 2>&1; then
-    tmp="$d/df-$$"
+    other_partition_tmpdir="$d/df-$$"
     break
   fi
 
