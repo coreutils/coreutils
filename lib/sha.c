@@ -274,8 +274,8 @@ sha_process_block (const void *buffer, size_t len, struct sha_ctx *ctx)
       /* SHA1 Data expansion */
       for (t = 16; t < 80; t++)
 	{
-	  md5_uint32 x = W[t - 3] ^ W[t - 8] ^ W[t - 14] ^ W[t - 16];
-	  W[t] = rol (x, 1);
+	  md5_uint32 tmp = W[t - 3] ^ W[t - 8] ^ W[t - 14] ^ W[t - 16];
+	  W[t] = rol (tmp, 1);
 	}
 
       /* SHA1 main loop (t=0 to 79)
