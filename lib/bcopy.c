@@ -3,11 +3,13 @@
    In the public domain.
    By David MacKenzie <djm@gnu.ai.mit.edu>.  */
 
+#include <stddef.h>
+
 void
-bcopy (source, dest, length)
-     char *source, *dest;
-     unsigned length;
+bcopy (void const *source0, void *dest0, size_t length)
 {
+  char const *source = source0;
+  char *dest = dest0;
   if (source < dest)
     /* Moving from low mem to hi mem; start at end.  */
     for (source += length, dest += length; length; --length)
