@@ -54,7 +54,7 @@ char *xrealloc ();
 
 static FILE dummy_closed;
 /* Element marking a file that has reached EOF and been closed. */
-#define	CLOSED (&dummy_closed)
+#define CLOSED (&dummy_closed)
 
 static FILE dummy_endlist;
 /* Element marking end of list of open files. */

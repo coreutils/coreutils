@@ -44,10 +44,10 @@
 
 #ifdef CRCTAB
 
-#include <stdio.h>
+# include <stdio.h>
 
-#define BIT(x)	( (unsigned long)1 << (x) )
-#define SBIT	BIT(31)
+# define BIT(x)	( (unsigned long)1 << (x) )
+# define SBIT	BIT(31)
 
 /* The generating polynomial is
 
@@ -56,7 +56,7 @@
 
   The i bit in GEN is set if X^i is a summand of G(X) except X^32.  */
 
-#define GEN     (BIT(26)|BIT(23)|BIT(22)|BIT(16)|BIT(12)|BIT(11)|BIT(10)\
+# define GEN     (BIT(26)|BIT(23)|BIT(22)|BIT(16)|BIT(12)|BIT(11)|BIT(10)\
                 |BIT(8) |BIT(7) |BIT(5) |BIT(4) |BIT(2) |BIT(1) |BIT(0));
 
 static unsigned long r[8];
@@ -104,14 +104,14 @@ main ()
 
 #else /* !CRCTAB */
 
-#include <stdio.h>
-#include <getopt.h>
-#include <sys/types.h>
-#include "system.h"
-#include "error.h"
+# include <stdio.h>
+# include <getopt.h>
+# include <sys/types.h>
+# include "system.h"
+# include "error.h"
 
 /* Number of bytes to read at once.  */
-#define BUFLEN (1 << 16)
+# define BUFLEN (1 << 16)
 
 /* The name this program was run with.  */
 char *program_name;

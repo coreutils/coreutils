@@ -28,7 +28,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #ifndef _POSIX_SOURCE
-#include <sys/ioctl.h>
+# include <sys/ioctl.h>
 #endif
 #include "system.h"
 #include "error.h"
@@ -279,9 +279,9 @@ cat (
 		     Irix-5 returns ENOSYS on pipes.  */
 		  if (errno == EOPNOTSUPP || errno == ENOTTY
 		      || errno == EINVAL || errno == ENODEV
-#ifdef ENOSYS
+# ifdef ENOSYS
 		      || errno == ENOSYS
-#endif
+# endif
 		      )
 		    use_fionread = 0;
 		  else

@@ -30,7 +30,7 @@
 #include <sys/types.h>
 #include <signal.h>
 #ifdef HAVE_LIMITS_H
-#include <limits.h>
+# include <limits.h>
 #endif /* HAVE_LIMITS_H */
 
 #ifndef UINT_MAX
@@ -51,19 +51,19 @@
 #include "xstrtoul.h"
 
 #ifdef STDC_HEADERS
-#include <stdlib.h>
+# include <stdlib.h>
 #else
 char *malloc ();
 char *realloc ();
 #endif
 
 #ifndef MAX
-#define MAX(a,b) (((a) > (b)) ? (a) : (b))
+# define MAX(a,b) (((a) > (b)) ? (a) : (b))
 #endif
 
 #ifndef TRUE
-#define FALSE 0
-#define TRUE 1
+# define FALSE 0
+# define TRUE 1
 #endif
 
 /* Increment size of area for control records. */
@@ -98,9 +98,9 @@ struct control
 
 #ifdef DEBUG
 /* Some small values to test the algorithms. */
-#define START_SIZE	200
-#define INCR_SIZE	10
-#define CTRL_SIZE	1
+# define START_SIZE	200
+# define INCR_SIZE	10
+# define CTRL_SIZE	1
 #endif
 
 /* A string with a length count. */

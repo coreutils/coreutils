@@ -46,15 +46,15 @@
    "best".  Adjust to taste, subject to the caveats given.  */
 
 /* Default longest permitted line length (max_width).  */
-#define	WIDTH	75
+#define WIDTH	75
 
 /* Prefer lines to be LEEWAY % shorter than the maximum width, giving
    room for optimization.  */
-#define	LEEWAY	7
+#define LEEWAY	7
 
 /* The default secondary indent of tagged paragraph used for unindented
    one-line paragraphs not preceded by any multi-line paragraphs.  */
-#define	DEF_INDENT 3
+#define DEF_INDENT 3
 
 /* Costs and bonuses are expressed as the equivalent departure from the
    optimal line length, multiplied by 10.  e.g. assigning something a
@@ -64,62 +64,62 @@
 
 typedef long COST;
 
-#define	MAXCOST	(~(((unsigned long) 1) << (8 * sizeof (COST) -1)))
+#define MAXCOST	(~(((unsigned long) 1) << (8 * sizeof (COST) -1)))
 
-#define	SQR(n)		((n) * (n))
-#define	EQUIV(n)	SQR ((COST) (n))
+#define SQR(n)		((n) * (n))
+#define EQUIV(n)	SQR ((COST) (n))
 
 /* Cost of a filled line n chars longer or shorter than best_width.  */
-#define	SHORT_COST(n)	EQUIV ((n) * 10)
+#define SHORT_COST(n)	EQUIV ((n) * 10)
 
 /* Cost of the difference between adjacent filled lines.  */
-#define	RAGGED_COST(n)	(SHORT_COST (n) / 2)
+#define RAGGED_COST(n)	(SHORT_COST (n) / 2)
 
 /* Basic cost per line.  */
-#define	LINE_COST	EQUIV (70)
+#define LINE_COST	EQUIV (70)
 
 /* Cost of breaking a line after the first word of a sentence, where
    the length of the word is N.  */
-#define	WIDOW_COST(n)	(EQUIV (200) / ((n) + 2))
+#define WIDOW_COST(n)	(EQUIV (200) / ((n) + 2))
 
 /* Cost of breaking a line before the last word of a sentence, where
    the length of the word is N.  */
-#define	ORPHAN_COST(n)	(EQUIV (150) / ((n) + 2))
+#define ORPHAN_COST(n)	(EQUIV (150) / ((n) + 2))
 
 /* Bonus for breaking a line at the end of a sentence.  */
-#define	SENTENCE_BONUS	EQUIV (50)
+#define SENTENCE_BONUS	EQUIV (50)
 
 /* Cost of breaking a line after a period not marking end of a sentence.
    With the definition of sentence we are using (borrowed from emacs, see
    get_line()) such a break would then look like a sentence break.  Hence
    we assign a very high cost -- it should be avoided unless things are
    really bad.  */
-#define	NOBREAK_COST	EQUIV (600)
+#define NOBREAK_COST	EQUIV (600)
 
 /* Bonus for breaking a line before open parenthesis.  */
-#define	PAREN_BONUS	EQUIV (40)
+#define PAREN_BONUS	EQUIV (40)
 
 /* Bonus for breaking a line after other punctuation.  */
-#define	PUNCT_BONUS	EQUIV(40)
+#define PUNCT_BONUS	EQUIV(40)
 
 /* Credit for breaking a long paragraph one line later.  */
-#define	LINE_CREDIT	EQUIV(3)
+#define LINE_CREDIT	EQUIV(3)
 
 /* Size of paragraph buffer, in words and characters.  Longer paragraphs
    are handled neatly (cf. flush_paragraph()), so there's little to gain
    by making these larger.  */
-#define	MAXWORDS	1000
-#define	MAXCHARS	5000
+#define MAXWORDS	1000
+#define MAXCHARS	5000
 
 /* Extra ctype(3)-style macros.  */
 
-#define	isopen(c)	(strchr ("([`'\"", c) != NULL)
-#define	isclose(c)	(strchr (")]'\"", c) != NULL)
-#define	isperiod(c)	(strchr (".?!", c) != NULL)
+#define isopen(c)	(strchr ("([`'\"", c) != NULL)
+#define isclose(c)	(strchr (")]'\"", c) != NULL)
+#define isperiod(c)	(strchr (".?!", c) != NULL)
 
 /* Size of a tab stop, for expansion on input and re-introduction on
    output.  */
-#define	TABWIDTH	8
+#define TABWIDTH	8
 
 /* Miscellaneous definitions.  */
 
