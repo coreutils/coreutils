@@ -27,27 +27,11 @@
 #if HAVE_CONFIG_H
 # include <config.h>
 #endif
-#if HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
 
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
-
-#ifndef HAVE_DECL_FREE
-"this configure-time declaration test was not run"
-#endif
-#if !HAVE_DECL_FREE
-void free ();
-#endif
-
-#ifndef HAVE_DECL_MALLOC
-"this configure-time declaration test was not run"
-#endif
-#if !HAVE_DECL_MALLOC
-char *malloc ();
-#endif
+#include <stdlib.h>
 
 #if USE_OBSTACK
 # include "obstack.h"
