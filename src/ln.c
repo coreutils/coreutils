@@ -283,7 +283,12 @@ do_link (const char *source, const char *dest)
 		dest_backup = NULL;
 	    }
 	}
-      else if (unlink (dest) && errno != ENOENT)
+
+      /* Try to unlink DEST even if we may have renamed it.  In some unusual
+	 cases (when DEST and DEST_BACKUP are hard-links that refer to the
+	 same file), rename succeeds and DEST remains.  If we didn't remove
+	 DEST in that case, the subsequent LINKFUNC call would fail.  */
+      if (unlink (dest) && errno != ENOENT)
 	{
 	  error (0, errno, _("cannot remove `%s'"), dest);
 	  return 1;
