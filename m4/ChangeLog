@@ -1,3 +1,7 @@
+2005-02-22  Jim Meyering  <jim@meyering.net>
+
+	* extensions.m4 (gl_USE_SYSTEM_EXTENSIONS): Fix typo: s/ifndef/ifdef/.
+
 2005-02-21  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* xnanosleep.m4: New file.
