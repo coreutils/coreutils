@@ -49,9 +49,12 @@
 # include <sys/types.h>
 #endif
 
+#define WIDE_CHAR_SUPPORT \
+  defined _LIBC || (HAVE_WCTYPE_H && HAVE_WCHAR_H && HAVE_BTOWC)
+
 /* For platform which support the ISO C amendement 1 functionality we
    support user defined character classes.  */
-#if defined _LIBC || (defined HAVE_WCTYPE_H && defined HAVE_WCHAR_H)
+#if WIDE_CHAR_SUPPORT
 # include <wchar.h>
 # include <wctype.h>
 #endif
@@ -1685,7 +1688,7 @@ typedef struct
        } 								\
     }
 
-#if defined _LIBC || (defined HAVE_WCTYPE_H && defined HAVE_WCHAR_H)
+#if WIDE_CHAR_SUPPORT
 /* The GNU C library provides support for user-defined character classes
    and the functions from ISO C amendement 1.  */
 # ifdef CHARCLASS_NAME_MAX
@@ -2185,7 +2188,7 @@ regex_compile (pattern, size, syntax, bufp)
                        the leading `:' and `[' (but set bits for them).  */
                     if (c == ':' && *p == ']')
                       {
-#if defined _LIBC || (defined HAVE_WCTYPE_H && defined HAVE_WCHAR_H)
+#if WIDE_CHAR_SUPPORT
                         boolean is_lower = STREQ (str, "lower");
                         boolean is_upper = STREQ (str, "upper");
 			wctype_t wt;
