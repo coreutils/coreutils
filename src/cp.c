@@ -935,7 +935,7 @@ Use `--parents' for the old meaning, and `--no-dereference' for the new one."));
 
   /* Allocate space for remembering copied and created files.  */
 
-  hash_init (INITIAL_HASH_MODULE, INITIAL_ENTRY_TAB_SIZE);
+  hash_init ();
 
   exit_status |= do_copy (argc - optind, argv + optind, target_directory, &x);
 

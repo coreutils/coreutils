@@ -316,7 +316,7 @@ main (int argc, char **argv)
     {
       /* FIXME: it's a little gross that this initialization is
 	 required by copy.c::copy. */
-      hash_init (INITIAL_HASH_MODULE, INITIAL_ENTRY_TAB_SIZE);
+      hash_init ();
 
       if (n_files == 2)
         {
