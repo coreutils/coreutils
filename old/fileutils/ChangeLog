@@ -1,3 +1,11 @@
+2000-02-09  Jim Meyering  <meyering@lucent.com>
+
+	* tests/mv/mv-special-1: Use $null and $dir in place of literals
+	in `here' script.
+	Exit 77 if we can't set up the framework (Volker Borchert reported
+	that this test would fail because mknod failed when run on SunOS4.1.4
+	using NFS-mounted disk from an OpenBSD system).
+
 2000-02-05  Jim Meyering  <meyering@lucent.com>
 
 	* src/copy.c (copy_internal): Don't allow mv to move a directory onto
