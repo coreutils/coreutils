@@ -806,6 +806,7 @@ decode_switches (argc, argv)
 
 	case 'c':
 	  time_type = time_ctime;
+	  sort_type = sort_time;
 	  break;
 
 	case 'd':
