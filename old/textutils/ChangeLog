@@ -1,3 +1,8 @@
+2000-07-31  Jim Meyering  <meyering@lucent.com>
+
+	* src/cut.c (cut_fields): Use `virtual memory exhausted',
+	not `Memory exhausted'.
+
 2000-07-30  Jim Meyering  <meyering@lucent.com>
 
 	* src/help-version: Remove file.  Move it to ...

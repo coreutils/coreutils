@@ -1,3 +1,8 @@
+2000-07-31  Jim Meyering  <meyering@lucent.com>
+
+	* xmalloc.c: Use `virtual memory exhausted', not `Memory exhausted'.
+	* obstack.c (print_and_abort): Likewise.
+
 2000-07-30  Jim Meyering  <meyering@lucent.com>
 
 	* makepath.c (make_path): Quote the other instance, too.
