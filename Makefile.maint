@@ -77,8 +77,7 @@ syntax-check-rules = \
   sc_space_tab \
   sc_sun_os_names \
   sc_system_h_headers \
-  sc_unmarked_diagnostics \
-  sc_xalloc_h_in_src
+  sc_unmarked_diagnostics
 
 syntax-check: $(syntax-check-rules)
 #	@grep -E '#  *include <(limits|std(def|arg|bool))\.h>'		\
