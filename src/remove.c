@@ -418,9 +418,7 @@ AD_mark_current_as_unremovable (void)
   struct AD_ent *top = AD_stack_top ();
   const char *curr = top_dir ();
 
-  /* FIXME: assert this? */
-  if (AD_stack_height () <= 1)
-    return;
+  assert (1 < AD_stack_height ());
 
   --top;
   AD_mark_helper (&top->unremovable, curr);
