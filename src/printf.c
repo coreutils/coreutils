@@ -52,6 +52,7 @@
 #include <getopt.h>
 
 #include "system.h"
+#include "c-strtod.h"
 #include "long-options.h"
 #include "error.h"
 #include "unicodeio.h"
@@ -60,12 +61,6 @@
 #define PROGRAM_NAME "printf"
 
 #define AUTHORS "David MacKenzie"
-
-#ifndef STDC_HEADERS
-double strtod ();
-long int strtol ();
-unsigned long int strtoul ();
-#endif
 
 #define isodigit(c) ((c) >= '0' && (c) <= '7')
 #define hextobin(c) ((c) >= 'a' && (c) <= 'f' ? (c) - 'a' + 10 : \
@@ -194,7 +189,7 @@ FUNC_NAME (s)								 \
 
 STRTOX (unsigned long int, xstrtoul, (strtoul (s, &end, 0)))
 STRTOX (long int,          xstrtol,  (strtol  (s, &end, 0)))
-STRTOX (double,            xstrtod,  (strtod  (s, &end)))
+STRTOX (double,            xstrtod,  (c_strtod (s, &end)))
 
 /* Output a single-character \ escape.  */
 
