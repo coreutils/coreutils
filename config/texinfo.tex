@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2004-09-06.16}
+\def\texinfoversion{2004-10-31.06}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004 Free Software
@@ -2732,19 +2732,17 @@ where each line of input produces a line of output.}
   \global\setpercentfalse
 }
 
-\def\setmultitablespacing{% test to see if user has set \multitablelinespace.
-% If so, do nothing. If not, give it an appropriate dimension based on
-% current baselineskip.
+\def\setmultitablespacing{%
+  \def\multistrut{\strut}% just use the standard line spacing
+  %
+  % Compute \multitablelinespace (if not defined by user) for use in
+  % \multitableparskip calculation.  We used define \multistrut based on
+  % this, but (ironically) that caused the spacing to be off.
+  % See bug-texinfo report from Werner Lemberg, 31 Oct 2004 12:52:20 +0100.
 \ifdim\multitablelinespace=0pt
 \setbox0=\vbox{X}\global\multitablelinespace=\the\baselineskip
 \global\advance\multitablelinespace by-\ht0
-%% strut to put in table in case some entry doesn't have descenders,
-%% to keep lines equally spaced
-\let\multistrut = \strut
-\else
-%% FIXME: what is \box0 supposed to be?
-\gdef\multistrut{\vrule height\multitablelinespace depth\dp0
-width0pt\relax} \fi
+\fi
 %% Test to see if parskip is larger than space between lines of
 %% table. If not, do nothing.
 %%        If so, set to same dimension as multitablelinespace.

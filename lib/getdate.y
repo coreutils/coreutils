@@ -50,6 +50,7 @@
 
 #include <ctype.h>
 #include <limits.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -1307,8 +1308,8 @@ get_date (struct timespec *result, char const *p, struct timespec const *now)
 	  int month = tm.tm_mon + pc.rel_month;
 	  int day = tm.tm_mday + pc.rel_day;
 	  if (((year < tm.tm_year) ^ (pc.rel_year < 0))
-	      | (month < tm.tm_mon) ^ (pc.rel_month < 0)
-	      | (day < tm.tm_mday) ^ (pc.rel_day < 0))
+	      | ((month < tm.tm_mon) ^ (pc.rel_month < 0))
+	      | ((day < tm.tm_mday) ^ (pc.rel_day < 0)))
 	    goto fail;
 	  tm.tm_year = year;
 	  tm.tm_mon = month;
@@ -1364,8 +1365,6 @@ get_date (struct timespec *result, char const *p, struct timespec const *now)
 }
 
 #if TEST
-
-#include <stdio.h>
 
 int
 main (int ac, char **av)

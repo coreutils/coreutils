@@ -1,3 +1,7 @@
+2004-11-02  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getdate.y, getpass.c, setenv.h: Sync from gnulib.
+
 2004-10-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getdate.y, getpagesize.h, mktime.c: Sync from gnulib.

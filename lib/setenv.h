@@ -1,5 +1,5 @@
 /* Setting environment variables.
-   Copyright (C) 2001-2003 Free Software Foundation, Inc.
+   Copyright (C) 2001-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -34,7 +34,15 @@ extern int setenv (const char *name, const char *value, int replace);
 
 #endif
 
-#if !HAVE_UNSETENV
+#if HAVE_UNSETENV
+
+# if VOID_UNSETENV
+/* On some systems, unsetenv() returns void.
+   This is the case for FreeBSD 4.8, NetBSD 1.6, OpenBSD 3.4.  */
+#  define unsetenv(name) ((unsetenv)(name), 0)
+# endif
+
+#else
 
 /* Remove the variable NAME from the environment.  */
 extern int unsetenv (const char *name);

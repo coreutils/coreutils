@@ -41,6 +41,8 @@
 # define SSIZE_MAX ((ssize_t) (SIZE_MAX / 2))
 #endif
 
+#define MAXSIZE (SIZE_MAX < SSIZE_MAX ? SIZE_MAX : SSIZE_MAX)
+
 #include "xalloc.h"
 
 /* Call readlink to get the symbolic link value of FILENAME.
@@ -56,14 +58,15 @@ xreadlink (char const *filename, size_t size)
 {
   /* The initial buffer size for the link value.  A power of 2
      detects arithmetic overflow earlier, but is not required.  */
-  size_t buf_size = size + 1;
+  size_t buf_size = size < MAXSIZE ? size + 1 : MAXSIZE;
 
   while (1)
     {
       char *buffer = xmalloc (buf_size);
-      ssize_t link_length = readlink (filename, buffer, buf_size);
+      ssize_t r = readlink (filename, buffer, buf_size);
+      size_t link_length = r;
 
-      if (link_length < 0)
+      if (r < 0)
 	{
 	  int saved_errno = errno;
 	  free (buffer);
@@ -71,15 +74,18 @@ xreadlink (char const *filename, size_t size)
 	  return NULL;
 	}
 
-      if ((size_t) link_length < buf_size)
+      if (link_length < buf_size)
 	{
 	  buffer[link_length] = 0;
 	  return buffer;
 	}
 
       free (buffer);
-      buf_size *= 2;
-      if (! (0 < buf_size && buf_size <= SSIZE_MAX))
+      if (buf_size <= MAXSIZE / 2)
+	buf_size *= 2;
+      else if (buf_size < MAXSIZE)
+	buf_size = MAXSIZE;
+      else
 	xalloc_die ();
     }
 }

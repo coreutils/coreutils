@@ -58,16 +58,26 @@
 #elif USE_UNLOCKED_IO
 # include "unlocked-io.h"
 #else
-# undef fflush_unlocked
-# define fflush_unlocked(x) fflush (x)
-# undef flockfile
-# define flockfile(x) ((void) 0)
-# undef funlockfile
-# define funlockfile(x) ((void) 0)
-# undef fputs_unlocked
-# define fputs_unlocked(str,stream) fputs (str, stream)
-# undef putc_unlocked
-# define putc_unlocked(c,stream) putc (c, stream)
+# if !HAVE_DECL_FFLUSH_UNLOCKED
+#  undef fflush_unlocked
+#  define fflush_unlocked(x) fflush (x)
+# endif
+# if !HAVE_DECL_FLOCKFILE
+#  undef flockfile
+#  define flockfile(x) ((void) 0)
+# endif
+# if !HAVE_DECL_FUNLOCKFILE
+#  undef funlockfile
+#  define funlockfile(x) ((void) 0)
+# endif
+# if !HAVE_DECL_FPUTS_UNLOCKED
+#  undef fputs_unlocked
+#  define fputs_unlocked(str,stream) fputs (str, stream)
+# endif
+# if !HAVE_DECL_PUTC_UNLOCKED
+#  undef putc_unlocked
+#  define putc_unlocked(c,stream) putc (c, stream)
+# endif
 #endif
 
 #if _LIBC
