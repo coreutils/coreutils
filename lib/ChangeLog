@@ -1,3 +1,8 @@
+2005-01-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* save-cwd.c (save_cwd): Remove code to support the case
+	where fchdir is missing or flaky.
+
 2005-01-19  Jim Meyering  <jim@meyering.net>
 
 	* openat.h (AT_SYMLINK_NOFOLLOW): Define to 4096, so it's the
