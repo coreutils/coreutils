@@ -9,7 +9,7 @@
 	* tests/du/Makefile.am (TESTS): Add fd-leak.
 
 	* src/head.c (AUTHORS): Enclose string in N_(...), now that it
-	includes `and'.
+	includes a translatable word, `and'.
 
 	* src/dd.c (usage): Don't use `,' as the thousands separator
 	in e.g. 1,000,000 and 1,048,576.  Instead, do this:
