@@ -1599,7 +1599,7 @@ make_link_path (path, linkname)
 
   /* The link is to a relative path.  Prepend any leading path
      in `path' to the link name. */
-  linkbuf = rindex (path, '/');
+  linkbuf = strrchr (path, '/');
   if (linkbuf == 0)
     return xstrdup (linkname);
 
@@ -1667,7 +1667,7 @@ is_not_dot_or_dotdot (name)
 {
   char *t;
 
-  t = rindex (name, '/');
+  t = strrchr (name, '/');
   if (t)
     name = t + 1;
 
@@ -1804,8 +1804,8 @@ compare_extension (file1, file2)
   register char *base1, *base2;
   register int cmp;
 
-  base1 = rindex (file1->name, '.');
-  base2 = rindex (file2->name, '.');
+  base1 = strrchr (file1->name, '.');
+  base2 = strrchr (file2->name, '.');
   if (base1 == 0 && base2 == 0)
     return strcmp (file1->name, file2->name);
   if (base1 == 0)
@@ -1825,8 +1825,8 @@ rev_cmp_extension (file2, file1)
   register char *base1, *base2;
   register int cmp;
 
-  base1 = rindex (file1->name, '.');
-  base2 = rindex (file2->name, '.');
+  base1 = strrchr (file1->name, '.');
+  base2 = strrchr (file2->name, '.');
   if (base1 == 0 && base2 == 0)
     return strcmp (file1->name, file2->name);
   if (base1 == 0)
@@ -2494,7 +2494,8 @@ print_with_commas ()
   putchar ('\n');
 }
 
-/* Assuming cursor is at position FROM, indent up to position TO.  */
+/* Assuming cursor is at position FROM, indent up to position TO.
+   Use a TAB character instead of two or more spaces whenever possible.  */
 
 static void
 indent (from, to)
@@ -2502,7 +2503,7 @@ indent (from, to)
 {
   while (from < to)
     {
-      if (to / tabsize > from / tabsize)
+      if (to / tabsize > (from + 1) / tabsize)
 	{
 	  putchar ('\t');
 	  from += tabsize - from % tabsize;
