@@ -1,4 +1,6 @@
-Fri Dec 22 20:55:42 1995  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+Fri Dec 22 21:34:55 1995  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* configure.in: Touch stamp-h only if config.h is remade.
 
 	* csplit.c (extract_regexp) [!WITH_REGEX]: Intialize
  	syntax_parens field.
