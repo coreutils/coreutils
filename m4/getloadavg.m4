@@ -12,6 +12,9 @@ undefine([AC_FUNC_GETLOADAVG])
 AC_DEFUN([AC_FUNC_GETLOADAVG],
 [ac_have_func=no # yes means we've found a way to get the load average.
 
+AC_CHECK_HEADERS(locale.h unistd.h mach/mach.h fcntl.h)
+AC_CHECK_FUNCS(setlocale)
+
 # By default, expect to find getloadavg.c in $srcdir/.
 ac_lib_dir_getloadavg=$srcdir
 # But if there's an argument, DIR, expect to find getloadavg.c in $srcdir/DIR.
