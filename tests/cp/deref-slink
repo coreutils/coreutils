@@ -1,0 +1,32 @@
+#!/bin/sh
+# Demonstrate bug when using -d with an existing destination file
+# that is a symlink.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  cp --version
+fi
+
+. $srcdir/../envvar-check
+. $srcdir/../lang-default
+
+pwd=`pwd`
+tmp=FIXME.$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+touch f slink-target || framework_failure=1
+ln -s slink-target slink || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework' 1>&2
+  (exit 1); exit
+fi
+
+fail=0
+cp -d f slink || fail=1
+
+(exit $fail); exit
