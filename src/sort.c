@@ -1744,7 +1744,7 @@ main (argc, argv)
   if (strcmp (outfile, "-"))
     {
       struct stat outstat;
-      if (SAFE_STAT (outfile, &outstat) == 0)
+      if (safe_stat (outfile, &outstat) == 0)
 	{
 	  /* The following code prevents a race condition when
 	     people use the brain dead shell programming idiom:
@@ -1765,7 +1765,7 @@ main (argc, argv)
 		{
 		  struct stat instat;
 		  if ((strcmp (files[i], "-")
-		       ? SAFE_STAT (files[i], &instat)
+		       ? safe_stat (files[i], &instat)
 		       : fstat (fileno (stdin), &instat)) != 0)
 		    {
 		      error (0, errno, "%s", files[i]);
