@@ -35,7 +35,7 @@ my @Tests =
 
      ['q-lit-q', '--quoting=literal -q',     $q_bell, {OUT => "q?\n"}],
      ['q-qs-lit', '--quoting=literal',       $q_bell, {OUT => "q\a\n"}],
-     ['q-qs-sh', '--quoting=shell',          $q_bell, {OUT => "'q\a'\n"}],
+     ['q-qs-sh', '--quoting=shell',          $q_bell, {OUT => "q\a\n"}],
      ['q-qs-sh-a', '--quoting=shell-always', $q_bell, {OUT => "'q\a'\n"}],
      ['q-qs-c', '--quoting=c',               $q_bell, {OUT => "\"q\\a\"\n"}],
      ['q-qs-esc', '--quoting=escape',        $q_bell, {OUT => "q\\a\n"}],
