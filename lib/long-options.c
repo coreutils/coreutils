@@ -64,7 +64,7 @@ parse_long_options (argc, argv, command_name, version_string, usage)
 	case 'v':
 	  printf ("%s - %s\n", command_name, version_string);
 	  exit (0);
-	
+
 	default:
 	  /* Don't process any other long-named options.  */
 	  break;
