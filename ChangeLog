@@ -2,7 +2,7 @@
 
 	* Version 4.5.11.
 
-	* src/ansi2knr.c: Remove file.
+	* src/ansi2knr.c: Remove no-longer-used file.
 	* src/ansi2knr.1: Likewise.
 
 	* Makefile.maint (prev_version_file): Don't use ?= for this particular
