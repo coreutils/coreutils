@@ -1,3 +1,17 @@
+2000-11-12  Jim Meyering  <meyering@lucent.com>
+
+	* doc/texinfo.tex: Update from master repository.
+
+2000-11-11  Paul Eggert  <eggert@sic.twinsun.com>
+
+	* src/ls.c (<langinfo.h>): Include if HAVE_LANGINFO_H.
+	(DATE_FMT_LANGINFO): New macro, taken from sh-utils/src/date.c.
+	(print_long_format): Use it to determine "date" format.
+	Do not wrap "%b %e %Y" and "%b %e %H:%M" in _(), as it results in
+	incorrect behavior when LC_ALL is unset, LC_TIME is "C", and
+	LC_MESSAGES or LANG is set to something disagreeing with the POSIX
+	locale.
+
 2000-11-11  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0.32.
