@@ -1,5 +1,33 @@
 1998-04-04  Jim Meyering  <meyering@eng.ascend.com>
 
+	* tests/Makefile.am (SUBDIRS): Add stty.
+	* tests/stty/row-col-1: New file.
+	* tests/stty: New directory.
+	* configure.in (AC_OUTPUT): Add tests/stty/Makefile.
+
+	* src/stty.c: Use STREQ in place of strcmp everywhere.
+	(valid_options): Indent.
+	Parenthesize assignment in while expr.
+	(main): s/case 'f':/case 'F':/
+	Tweak error messages to make them consistent.
+	Remove #if-0'd block.
+	Move dcl of `fdflags' into scope where it's used.
+	Remove dcl of unused `cp'.
+
+	[1998-03-31  Theodore Ts'o  <tytso@rsts-11.mit.edu>]
+	* src/stty.c (valid_options): New function.
+	(main): Fix broken options parsing that worked only
+	by serendipity (getopt_long_only already parsed short options; no
+	need to parse them again manually!).  Add support for the --file
+	option, which allows the user to specify the device whose line
+	settings are to be set.  This is necessary because POSIX ttys will
+	block waiting for carrier detect to go high if CLOCAL is not set,
+	unless the device is opened with the O_NONBLOCK flag.
+	Unfortunately, the shell doesn't use this flag, so users lose.
+	Opening the device in stty is the easist way to fix this.
+	(speeds): Add support for 230400 and 460800 line speeds, which are
+	supported by Linux.
+
 	* acconfig.h (uintmax_t): Add #undef.
 
 	* configure.in (jm_AC_HEADER_INTTYPES_H): Use it.
