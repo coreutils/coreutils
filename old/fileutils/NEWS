@@ -1,5 +1,4 @@
 Changes in release 3.16:
-[3.15a]
 * du --megabytes (-m) works
 * ls -l works even on systems with non-POSIX strftime in their C library
 
