@@ -1,5 +1,9 @@
+2001-08-26  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.15.
+
+	* Makefile.maint (copyright-check): Update to reflect fact that
+	the copyright year is now defined separately.
 
 2001-08-08  Charles Randall <crandall@matchlogic.com>
 
