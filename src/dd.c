@@ -783,21 +783,25 @@ buggy_lseek_support (int fdesc)
    nonzero.  */
 
 static void
-skip (int fdesc, char *file, uintmax_t records, size_t blocksize,
-      unsigned char *buf)
+skip (int fdesc, char *file, int count_bytes, uintmax_t records,
+      size_t blocksize, unsigned char *buf)
 {
-  off_t o;
+  size_t seek_blocksize = count_bytes ? 1 : blocksize;
+  off_t offset = records * seek_blocksize;
 
   /* Try lseek and if an error indicates it was an inappropriate
      operation, fall back on using read.  Some broken versions of
      lseek may return zero, so count that as an error too as a valid
      zero return is not possible here.  */
-  o = records * blocksize;
-  if (o / blocksize != records
+
+  if (offset / seek_blocksize != records
       || buggy_lseek_support (fdesc)
-      || lseek (fdesc, o, SEEK_CUR) <= 0)
+      || lseek (fdesc, offset, SEEK_CUR) <= 0)
     {
-      while (records-- > 0)
+      if (count_bytes)
+	records = offset;
+
+      while (records)
 	{
 	  int nread;
 
@@ -812,6 +816,15 @@ skip (int fdesc, char *file, uintmax_t records, size_t blocksize,
 	     FIXME: maybe give a warning.  */
 	  if (nread == 0)
 	    break;
+
+	  if (count_bytes)
+	    {
+	      records -= nread;
+	      if (records < blocksize)
+		blocksize = records;
+	    }
+	  else
+	    records--;
 	}
     }
 }
@@ -961,8 +974,8 @@ dd_copy (void)
     }
 
   if (skip_records != 0)
-    skip (STDIN_FILENO, input_file, skip_records,
-	  skip_bytes ? 1 : input_blocksize, ibuf);
+    skip (STDIN_FILENO, input_file, skip_bytes, skip_records,
+	  input_blocksize, ibuf);
 
   if (seek_records != 0)
     {
@@ -973,8 +986,8 @@ dd_copy (void)
 	 0+0 records out
 	 */
 
-      skip (STDOUT_FILENO, output_file, seek_records,
-	    seek_bytes ? 1 : output_blocksize, obuf);
+      skip (STDOUT_FILENO, output_file, seek_bytes, seek_records,
+	    output_blocksize, obuf);
     }
 
   if (max_records == 0)
