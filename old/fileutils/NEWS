@@ -1,3 +1,5 @@
+[4.1.7]
+* rm: close a hole that would allow a running rm process to be subverted
 [4.1.6]
 * New cp option: --copy-contents.
 * cp -r is now equivalent to cp -R.  Use cp -R -L --copy-contents to get the
