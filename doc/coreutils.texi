@@ -6783,7 +6783,7 @@ reading, writing, and so on) are passed the symbolic link file, the
 kernel automatically @dfn{dereferences} the link and operates on the
 target of the link.  But some operations (e.g., removing) work on the
 link file itself, rather than on its target.  @xref{Symbolic Links,,,
-library, The GNU C Library Reference Manual}.
+libc, The GNU C Library Reference Manual}.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -7134,9 +7134,9 @@ timestamps, and other information.  Collectively, we call these a file's
 These commands change file attributes.
 
 @menu
-* chown invocation::            Change file owners and groups.
 * chgrp invocation::            Change file groups.
 * chmod invocation::            Change access permissions.
+* chown invocation::            Change file owners and groups.
 * touch invocation::            Change file timestamps.
 @end menu
 
