@@ -2,6 +2,9 @@
 
 	* Version 4.0u.
 
+	* tests/rm/r-1: Clean up.
+	Be careful to remove temp directory upon interrupt.
+
 	* src/mv.c (main): Give the correct diagnostic when using the
 	--target-dir=DIR option, but no arguments.
 	Patch from Michael Stone.  Reported by Herbert Xu.
