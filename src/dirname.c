@@ -83,7 +83,7 @@ main (argc, argv)
 
   slash = rindex (path, '/');
   if (slash == NULL)
-    path = ".";
+    path = (char *) ".";
   else
     {
       /* Remove any trailing slashes and final element. */
