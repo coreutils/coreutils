@@ -1,9 +1,5 @@
 2001-08-12  Jim Meyering  <meyering@lucent.com>
 
-	* src/shred.c: Include gtod.h.
-	(main): `Call' GETTIMEOFDAY_INIT, just in case the code ever changes
-	to make it necessary.
-
 	Work around non-compliant gettimeofday on Mac OS X 10.0.4,
 	(aka Darwin 1.3.7) that caused the date of the first file listed
 	in long output to be the current time rather than the file's mtime.
@@ -13,6 +9,10 @@
 	(main): `Call' GETTIMEOFDAY_INIT.
 	(print_long_format): Add a comment about gettimeofday.
 	Reported by Bernhard Baehr.
+
+	* src/shred.c: Include gtod.h.
+	(main): `Call' GETTIMEOFDAY_INIT, just in case the code ever changes
+	to make it necessary.
 
 2001-08-10  Paul Eggert  <eggert@twinsun.com>
 
