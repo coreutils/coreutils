@@ -41,6 +41,7 @@ START-INFO-DIR-ENTRY
 * id: (sh-utils)id invocation.			Print real/effective uid/gid.
 * logname: (sh-utils)logname invocation.	Print current login name.
 * nice: (sh-utils)nice invocation.		Modify scheduling priority.
+* nohup: (sh-utils)nohup invocation.		Immunize to hangups.
 * pathchk: (sh-utils)pathchk invocation.	Check file name portability.
 * printenv: (sh-utils)printenv invocation.	Print environment variables.
 * printf: (sh-utils)printf invocation.	        Format and print data.
@@ -127,11 +128,12 @@ utilities.
 @menu
 * Introduction::		Caveats, overview, and authors.
 * Common options::              Common options.
+* Date input formats::		Specifying date strings.
 * Printing text::               echo printf yes
 * Conditions::                  false true test expr
 * Redirection::                 tee
 * File name manipulation::      dirname basename pathchk
-* Working context information:: pwd stty printenv tty
+* Working context::		pwd stty printenv tty
 * User information::            id logname whoami groups users who
 * System context::              date uname hostname
 * Modified command invocation:: env nice nohup su
@@ -207,6 +209,9 @@ Print a usage message listing all available options, then exit successfully.
 Print the version number, then exit successfully.
 
 @end table
+
+
+@include getdate.texi
 
 
 @node Printing text
@@ -1047,8 +1052,8 @@ Exit status:
 @end display
 
 
-@node Working context information
-@chapter Working context information
+@node Working context
+@chapter Working context
 
 @cindex working context
 @cindex commands for printing the working context
@@ -2153,7 +2158,7 @@ time, 24-hour (hh:mm:ss)
 @item %X
 locale's time representation (%H:%M:%S)
 @item %Z
-time zone (e.g., EDT), or nothing if no time zone is
+timezone (e.g., EDT), or nothing if no timezone is
 determinable
 @end table
 
@@ -2280,13 +2285,10 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex tomorrow
 @opindex next @var{day}
 @opindex last @var{day}
-@flindex getdate.y
 Display the time and date specified in @var{datestr} instead of the
 current time and date.  @var{datestr} can be in almost any common
 format.  It can contain month names, timezones, @samp{am} and @samp{pm},
-@samp{yesterday}, @samp{ago}, @samp{next}, etc.  The source file
-@file{getdate.y} implements this parsing for all GNU routines; we need
-precise documentation!
+@samp{yesterday}, @samp{ago}, @samp{next}, etc.  @xref{Date input formats}.
 
 @item -f @var{datefile}
 @itemx --file=@var{datefile}
