@@ -298,9 +298,5 @@ AC_CONFIG_FILES(
   tests/unexpand/Makefile
   tests/uniq/Makefile
   tests/wc/Makefile
-  old/Makefile
-  old/fileutils/Makefile
-  old/sh-utils/Makefile
-  old/textutils/Makefile
   )
 AC_OUTPUT
