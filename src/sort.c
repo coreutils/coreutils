@@ -148,8 +148,8 @@ struct keyfield
   size_t echar;			/* Additional characters in field. */
   bool const *ignore;		/* Boolean array of characters to ignore. */
   char const *translate;	/* Translation applied to characters. */
-  bool skipsblanks;		/* Skip leading blanks at start. */
-  bool skipeblanks;		/* Skip trailing blanks at finish. */
+  bool skipsblanks;		/* Skip leading blanks when finding start.  */
+  bool skipeblanks;		/* Skip leading blanks when finding end.  */
   bool numeric;			/* Flag for numeric comparison.  Handle
 				   strings of digits with optional decimal
 				   point, but no exponential notation. */
@@ -912,7 +912,7 @@ limfield (const struct line *line, const struct keyfield *key)
 
   /* If we're skipping leading blanks, don't start counting characters
      until after skipping past any leading blanks.  */
-  if (key->skipsblanks)
+  if (key->skipeblanks)
     while (ptr < lim && blanks[UCHAR (*ptr)])
       ++ptr;
 
@@ -924,17 +924,6 @@ limfield (const struct line *line, const struct keyfield *key)
     ptr = lim;
 
   return ptr;
-}
-
-/* Return the number of trailing blanks in FIELD, with LEN bytes.  */
-
-static size_t
-trailing_blanks (char const *field, size_t len)
-{
-  size_t i;
-  for (i = len; 0 < i && blanks[UCHAR (field[i - 1])]; i--)
-    continue;
-  return len - i;
 }
 
 /* Fill BUF reading from FP, moving buf->left bytes from the end
@@ -1022,11 +1011,6 @@ fillbuf (struct buffer *buf, register FILE *fp, char const *file)
 			while (blanks[UCHAR (*line_start)])
 			  line_start++;
 		      line->keybeg = line_start;
-		    }
-		  if (key->skipeblanks)
-		    {
-		      size_t keylen = line->keylim - line->keybeg;
-		      line->keylim -= trailing_blanks (line->keybeg, keylen);
 		    }
 		}
 
@@ -1312,7 +1296,6 @@ getmonth (const char *s, size_t len)
   month = alloca (len + 1);
   for (i = 0; i < len; ++i)
     month[i] = fold_toupper[UCHAR (s[i])];
-  len -= trailing_blanks (month, len);
   month[len] = '\0';
 
   do
@@ -1357,12 +1340,6 @@ keycompare (const struct line *a, const struct line *b)
       /* Find the lengths. */
       size_t lena = lima <= texta ? 0 : lima - texta;
       size_t lenb = limb <= textb ? 0 : limb - textb;
-
-      if (key->skipeblanks)
-	{
-	  lena -= trailing_blanks (texta, lena);
-	  lenb -= trailing_blanks (textb, lenb);
-	}
 
       /* Actually compare the fields. */
       if (key->numeric | key->general_numeric)
