@@ -1,6 +1,16 @@
-2004-03-27  Jim Meyering  <jim@meyering.net>
+2004-03-28  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	Minor optimization:
+	* src/du.c (process_file): Don't record dev/inode for directories.
+
+	Under some circumstances, without -c, du would mistakenly count the
+	space of hard-linked files, not just the first one it encountered.
+	Reported by Anthony Thyssen.
+	* src/du.c (du_files): Don't ever clear the set of `seen' dev/inodes.
+
+	* src/du.c: Rename global `print_totals' to `print_grand_total'.
 
 	* src/du.c (main): Rearrange filtering loop to be a tiny bit
 	more efficient.
