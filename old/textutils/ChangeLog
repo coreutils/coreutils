@@ -1,3 +1,14 @@
+Thu May 27 01:37:51 1993  Jim Meyering  (meyering@comco.com)
+
+	* Version 1.8.
+
+	* memchr.c: De-ansify the fixed version from glibc.
+	It is supposed to work on systems with 64-bit long ints.
+
+Mon May 24 00:32:43 1993  Jim Meyering  (meyering@comco.com)
+
+	* Version 1.7.
+
 Sat May 22 02:13:12 1993  Jim Meyering  (meyering@comco.com)
 
 	* Version 1.6.

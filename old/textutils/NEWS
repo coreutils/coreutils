@@ -1,3 +1,8 @@
+Major changes in release 1.8:
+* added non-ANSIfied version of memchr.c from GNU libc.
+
+Major changes in release 1.7:
+* none
 Major changes in release 1.6:
 * with the --version option programs print the version and exit immediately
 * pr -2a really terminates
