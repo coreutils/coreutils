@@ -1,3 +1,11 @@
+1998-09-26  Jim Meyering  <meyering@ascend.com>
+
+	* lib/xstrtol.c (__xstrtol) [STRING_TO_UNSIGNED]: Return
+	LONGINT_INVALID for strings that begin with `-'.
+
+	* tests/factor/Test.pm: Add a test for negative argument.
+	Tweak postprocessing framework.
+
 1998-09-19  Jim Meyering  <meyering@ascend.com>
 
 	* src/stty.c (main): Revamp option processing, again.
