@@ -41,8 +41,8 @@ gid_t getegid ();
 
 int getugroups ();
 
-static void print_user PARAMS ((int uid));
-static void print_group PARAMS ((int gid));
+static void print_user PARAMS ((uid_t uid));
+static void print_group PARAMS ((gid_t gid));
 static void print_group_list PARAMS ((const char *username));
 static void print_full_info PARAMS ((const char *username));
 
@@ -192,7 +192,7 @@ main (int argc, char **argv)
 /* Print the name or value of user ID UID. */
 
 static void
-print_user (int uid)
+print_user (uid_t uid)
 {
   struct passwd *pwd = NULL;
 
@@ -212,7 +212,7 @@ print_user (int uid)
 /* Print the name or value of group ID GID. */
 
 static void
-print_group (int gid)
+print_group (gid_t gid)
 {
   struct group *grp = NULL;
 
