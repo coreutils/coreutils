@@ -3,6 +3,8 @@
 # @configure_input@
 
 require 5.002;
+
+BEGIN { push @INC, '@srcdir@' if '@srcdir@' ne '.'; }
 use strict;
 use Trtest;
 
