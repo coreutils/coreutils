@@ -834,7 +834,9 @@ usage (int status)
     {
       fputs (_("\
 Usage: test EXPRESSION\n\
+  or:  test\n\
   or:  [ EXPRESSION ]\n\
+  or:  [ ]\n\
   or:  [ OPTION\n\
 Exit with the status determined by EXPRESSION.\n\
 \n\
@@ -843,6 +845,7 @@ Exit with the status determined by EXPRESSION.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
+An omitted EXPRESSION defaults to false.  Otherwise,\n\
 EXPRESSION is true or false and sets exit status.  It is one of:\n\
 "), stdout);
       fputs (_("\
