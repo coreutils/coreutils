@@ -20,7 +20,7 @@ VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
-top_builddir = ..
+top_builddir = .
 
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
 INSTALL = @INSTALL@
@@ -145,26 +145,28 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 
-TESTS = help-version
-TESTS_ENVIRONMENT = \
-  all_programs="$(bin_SCRIPTS) $(bin_PROGRAMS)"
+SUBDIRS = lib src doc man m4 po tests old
+EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
+  .kludge-stamp .prev-version
 
 
-EXTRA_DIST = \
-  $(TESTS) .env-warn Fetish.pm Makefile.am.in README envvar-check \
-  expensive group-names input-tty lang-default mk-script priv-check \
-  rwx-to-mode sample-test setgid-check
+ACLOCAL_AMFLAGS = -I m4
 
 
-SUBDIRS = \
-  basename chgrp chmod chown cp cut date dd dircolors du expr factor \
-  fmt head install join ln ls ls-2 md5sum misc mkdir mv od pr rm rmdir \
-  seq sha1sum shred sort stty sum tac tail tail-2 test touch tr tsort \
-  unexpand uniq wc
+# Just prior to distribution, ...
+# transform the automake-generated rule that runs `rm -f rm'.
+# On some systems, that command would fail with a diagnostic like
+# `rm: cannot unlink `rm': Text file busy' when `.' appears so early
+# in the shell's search path that running `rm' would run the `rm'
+# executable in the current directory.
+# Similarly, adjust the clean-binPROGRAMS rule.
+rm_subst = \
+  s!(rm -f (rm|\$$\(bin_PROGRAMS\)))$$!$$1 > /dev/null 2>&1 || /bin/$$1!
 
-subdir = tests
+subdir = .
+ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
-CONFIG_HEADER = $(top_builddir)/config.h
+CONFIG_HEADER = config.h
 CONFIG_CLEAN_FILES =
 DIST_SOURCES =
 
@@ -173,16 +175,50 @@ RECURSIVE_TARGETS = info-recursive dvi-recursive pdf-recursive \
 	all-recursive install-data-recursive install-exec-recursive \
 	installdirs-recursive install-recursive uninstall-recursive \
 	check-recursive installcheck-recursive
-DIST_COMMON = README Makefile.am Makefile.in
+DIST_COMMON = README ABOUT-NLS AUTHORS COPYING ChangeLog INSTALL \
+	Makefile.am Makefile.in NEWS THANKS TODO aclocal.m4 config.hin \
+	config/ChangeLog config/config.guess config/config.rpath \
+	config/config.sub config/depcomp config/install-sh \
+	config/mdate-sh config/missing config/mkinstalldirs \
+	config/texinfo.tex configure configure.ac
 DIST_SUBDIRS = $(SUBDIRS)
-all: all-recursive
+all: config.h
+	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
 .SUFFIXES:
+
+am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
+ configure.lineno
 $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.ac $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnits  tests/Makefile
+	  $(AUTOMAKE) --gnits  Makefile
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
-	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
+	cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe)
+
+$(top_builddir)/config.status: $(srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
+	$(SHELL) ./config.status --recheck
+$(srcdir)/configure:  $(srcdir)/configure.ac $(ACLOCAL_M4) $(CONFIGURE_DEPENDENCIES)
+	cd $(srcdir) && $(AUTOCONF)
+
+$(ACLOCAL_M4):  configure.ac m4/acl.m4 m4/afs.m4 m4/assert.m4 m4/bison.m4 m4/boottime.m4 m4/c-stack.m4 m4/check-decl.m4 m4/chown.m4 m4/codeset.m4 m4/d-ino.m4 m4/d-type.m4 m4/dirfd.m4 m4/dos.m4 m4/error.m4 m4/fnmatch.m4 m4/fpending.m4 m4/fstypename.m4 m4/fsusage.m4 m4/ftruncate.m4 m4/getcwd.m4 m4/getgroups.m4 m4/getline.m4 m4/getloadavg.m4 m4/gettext.m4 m4/gettimeofday.m4 m4/glibc.m4 m4/glibc21.m4 m4/gnu-source.m4 m4/group-member.m4 m4/host-os.m4 m4/iconv.m4 m4/intdiv0.m4 m4/inttypes.m4 m4/isc-posix.m4 m4/jm-glibc-io.m4 m4/jm-macros.m4 m4/jm-mktime.m4 m4/jm-winsz1.m4 m4/jm-winsz2.m4 m4/lchown.m4 m4/lcmessage.m4 m4/lib-check.m4 m4/lib-ld.m4 m4/lib-link.m4 m4/lib-prefix.m4 m4/link-follow.m4 m4/longlong.m4 m4/ls-mntd-fs.m4 m4/lstat.m4 m4/mbrtowc.m4 m4/mbstate_t.m4 m4/mbswidth.m4 m4/memcmp.m4 m4/mkdir-slash.m4 m4/mkstemp.m4 m4/nanosleep.m4 m4/perl.m4 m4/prereq.m4 m4/progtest.m4 m4/putenv.m4 m4/regex.m4 m4/rename.m4 m4/rmdir-errno.m4 m4/search-libs.m4 m4/st_dm_mode.m4 m4/st_mtim.m4 m4/stat.m4 m4/stdbool.m4 m4/strerror_r.m4 m4/strftime.m4 m4/timespec.m4 m4/unlink-busy.m4 m4/uptime.m4 m4/utimbuf.m4 m4/utime.m4 m4/utimes.m4 m4/xstrtoimax.m4 m4/xstrtoumax.m4
+	cd $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
+
+config.h: stamp-h1
+	@if test ! -f $@; then \
+	  rm -f stamp-h1; \
+	  $(MAKE) stamp-h1; \
+	else :; fi
+
+stamp-h1: $(srcdir)/config.hin $(top_builddir)/config.status
+	@rm -f stamp-h1
+	cd $(top_builddir) && $(SHELL) ./config.status config.h
+
+$(srcdir)/config.hin:  $(top_srcdir)/configure.ac $(ACLOCAL_M4) 
+	cd $(top_srcdir) && $(AUTOHEADER)
+	touch $(srcdir)/config.hin
+
+distclean-hdr:
+	-rm -f config.h stamp-h1
 uninstall-info-am:
 
 # This directory's subdirectories are mostly independent; you can cd
@@ -261,7 +297,7 @@ ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	       END { for (i in files) print i; }'`; \
 	mkid -fID $$unique
 
-TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+TAGS: tags-recursive $(HEADERS) $(SOURCES) config.hin $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
 	tags=; \
 	here=`pwd`; \
@@ -270,7 +306,7 @@ TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 	    test -f $$subdir/TAGS && tags="$$tags -i $$here/$$subdir/TAGS"; \
 	  fi; \
 	done; \
-	list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
+	list='$(SOURCES) $(HEADERS) config.hin $(LISP) $(TAGS_FILES)'; \
 	unique=`for i in $$list; do \
 	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
 	  done | \
@@ -281,11 +317,11 @@ TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 	     $$tags $$unique
 
 ctags: CTAGS
-CTAGS: ctags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+CTAGS: ctags-recursive $(HEADERS) $(SOURCES) config.hin $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
 	tags=; \
 	here=`pwd`; \
-	list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
+	list='$(SOURCES) $(HEADERS) config.hin $(LISP) $(TAGS_FILES)'; \
 	unique=`for i in $$list; do \
 	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
 	  done | \
@@ -302,85 +338,29 @@ GTAGS:
 
 distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
-
-check-TESTS: $(TESTS)
-	@failed=0; all=0; xfail=0; xpass=0; skip=0; \
-	srcdir=$(srcdir); export srcdir; \
-	list='$(TESTS)'; \
-	if test -n "$$list"; then \
-	  for tst in $$list; do \
-	    if test -f ./$$tst; then dir=./; \
-	    elif test -f $$tst; then dir=; \
-	    else dir="$(srcdir)/"; fi; \
-	    if $(TESTS_ENVIRONMENT) $${dir}$$tst; then \
-	      all=`expr $$all + 1`; \
-	      case " $(XFAIL_TESTS) " in \
-	      *" $$tst "*) \
-	        xpass=`expr $$xpass + 1`; \
-	        failed=`expr $$failed + 1`; \
-	        echo "XPASS: $$tst"; \
-	      ;; \
-	      *) \
-	        echo "PASS: $$tst"; \
-	      ;; \
-	      esac; \
-	    elif test $$? -ne 77; then \
-	      all=`expr $$all + 1`; \
-	      case " $(XFAIL_TESTS) " in \
-	      *" $$tst "*) \
-	        xfail=`expr $$xfail + 1`; \
-	        echo "XFAIL: $$tst"; \
-	      ;; \
-	      *) \
-	        failed=`expr $$failed + 1`; \
-	        echo "FAIL: $$tst"; \
-	      ;; \
-	      esac; \
-	    else \
-	      skip=`expr $$skip + 1`; \
-	      echo "SKIP: $$tst"; \
-	    fi; \
-	  done; \
-	  if test "$$failed" -eq 0; then \
-	    if test "$$xfail" -eq 0; then \
-	      banner="All $$all tests passed"; \
-	    else \
-	      banner="All $$all tests behaved as expected ($$xfail expected failures)"; \
-	    fi; \
-	  else \
-	    if test "$$xpass" -eq 0; then \
-	      banner="$$failed of $$all tests failed"; \
-	    else \
-	      banner="$$failed of $$all tests did not behave as expected ($$xpass unexpected passes)"; \
-	    fi; \
-	  fi; \
-	  dashes="$$banner"; \
-	  skipped=""; \
-	  if test "$$skip" -ne 0; then \
-	    skipped="($$skip tests were not run)"; \
-	    test `echo "$$skipped" | wc -c` -gt `echo "$$banner" | wc -c` && \
-	      dashes="$$skipped"; \
-	  fi; \
-	  report=""; \
-	  if test "$$failed" -ne 0 && test -n "$(PACKAGE_BUGREPORT)"; then \
-	    report="Please report to $(PACKAGE_BUGREPORT)"; \
-	    test `echo "$$report" | wc -c` -gt `echo "$$banner" | wc -c` && \
-	      dashes="$$report"; \
-	  fi; \
-	  dashes=`echo "$$dashes" | sed s/./=/g`; \
-	  echo "$$dashes"; \
-	  echo "$$banner"; \
-	  test -n "$$skipped" && echo "$$skipped"; \
-	  test -n "$$report" && echo "$$report"; \
-	  echo "$$dashes"; \
-	  test "$$failed" -eq 0; \
-	else :; fi
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
-top_distdir = ..
-distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
+top_distdir = .
+distdir = $(PACKAGE)-$(VERSION)
+
+am__remove_distdir = \
+  { test ! -d $(distdir) \
+    || { find $(distdir) -type d ! -perm -200 -exec chmod u+w {} ';' \
+         && rm -fr $(distdir); }; }
+
+GZIP_ENV = --best
+distcleancheck_listfiles = find . -type f -print
 
 distdir: $(DISTFILES)
+	@case `sed 15q $(srcdir)/NEWS` in \
+	*"$(VERSION)"*) : ;; \
+	*) \
+	  echo "NEWS not updated; not releasing" 1>&2; \
+	  exit 1;; \
+	esac
+	$(am__remove_distdir)
+	mkdir $(distdir)
+	$(mkinstalldirs) $(distdir)/config $(distdir)/po
 	@list='$(DISTFILES)'; for file in $$list; do \
 	  if test -f $$file || test -d $$file; then d=.; else d=$(srcdir); fi; \
 	  dir=`echo "$$file" | sed -e 's,/[^/]*$$,,'`; \
@@ -414,10 +394,78 @@ distdir: $(DISTFILES)
 	      || exit 1; \
 	  fi; \
 	done
+	-find $(distdir) -type d ! -perm -777 -exec chmod a+rwx {} \; -o \
+	  ! -type d ! -perm -444 -links 1 -exec chmod a+r {} \; -o \
+	  ! -type d ! -perm -400 -exec chmod a+r {} \; -o \
+	  ! -type d ! -perm -444 -exec $(SHELL) $(install_sh) -c -m a+r {} {} \; \
+	|| chmod -R a+r $(distdir)
+dist-gzip: distdir
+	$(AMTAR) chof - $(distdir) | GZIP=$(GZIP_ENV) gzip -c >$(distdir).tar.gz
+	$(am__remove_distdir)
+
+dist-bzip2: distdir
+	$(AMTAR) chof - $(distdir) | bzip2 -9 -c >$(distdir).tar.bz2
+	$(am__remove_distdir)
+
+dist dist-all: distdir
+	$(AMTAR) chof - $(distdir) | GZIP=$(GZIP_ENV) gzip -c >$(distdir).tar.gz
+	$(AMTAR) chof - $(distdir) | bzip2 -9 -c >$(distdir).tar.bz2
+	$(am__remove_distdir)
+
+# This target untars the dist file and tries a VPATH configuration.  Then
+# it guarantees that the distribution is self-contained by making another
+# tarfile.
+distcheck: dist
+	$(am__remove_distdir)
+	GZIP=$(GZIP_ENV) gunzip -c $(distdir).tar.gz | $(AMTAR) xf -
+	chmod -R a-w $(distdir); chmod a+w $(distdir)
+	mkdir $(distdir)/=build
+	mkdir $(distdir)/=inst
+	chmod a-w $(distdir)
+	dc_install_base=`$(am__cd) $(distdir)/=inst && pwd` \
+	  && dc_destdir="$${TMPDIR-/tmp}/am-dc-$$$$/" \
+	  && $(MAKE) $(AM_MAKEFLAGS) distcheck-hook \
+	  && cd $(distdir)/=build \
+	  && ../configure --srcdir=.. --prefix="$$dc_install_base" \
+	    --with-included-gettext \
+	    $(DISTCHECK_CONFIGURE_FLAGS) \
+	  && $(MAKE) $(AM_MAKEFLAGS) \
+	  && $(MAKE) $(AM_MAKEFLAGS) dvi \
+	  && $(MAKE) $(AM_MAKEFLAGS) check \
+	  && $(MAKE) $(AM_MAKEFLAGS) install \
+	  && $(MAKE) $(AM_MAKEFLAGS) installcheck \
+	  && $(MAKE) $(AM_MAKEFLAGS) uninstall \
+	  && (test `find "$$dc_install_base" -type f -print | wc -l` -le 1 \
+	      || { echo "ERROR: files left after uninstall:" ; \
+	           find $$dc_install_base -type f -print ; \
+	           exit 1; } >&2 ) \
+	  && chmod -R a-w "$$dc_install_base" \
+	  && ({   $(MAKE) $(AM_MAKEFLAGS) DESTDIR="$$dc_destdir" install \
+	       && $(MAKE) $(AM_MAKEFLAGS) DESTDIR="$$dc_destdir" uninstall \
+	       && (test `find "$$dc_destdir" -type f -print | wc -l` -le 1 \
+	           || { echo "ERROR: files left after uninstall (check DESTDIR support):" ; \
+	                find "$$dc_destdir" -type f -print ; \
+	                exit 1; } >&2 ) \
+	      } || { rm -rf "$$dc_destdir"; exit 1; }) \
+	  && rm -rf "$$dc_destdir" \
+	  && $(MAKE) $(AM_MAKEFLAGS) dist-gzip \
+	  && rm -f $(distdir).tar.gz \
+	  && $(MAKE) $(AM_MAKEFLAGS) distcleancheck
+	$(am__remove_distdir)
+	@echo "$(distdir).tar.gz is ready for distribution" | \
+	  sed 'h;s/./=/g;p;x;p;x'
+distcleancheck: distclean
+	if test '$(srcdir)' = . ; then \
+	  echo "ERROR: distcleancheck can only run from a VPATH build" ; \
+	  exit 1 ; \
+	fi
+	test `$(distcleancheck_listfiles) | wc -l` -eq 0 \
+	  || { echo "ERROR: files left after distclean:" ; \
+	       $(distcleancheck_listfiles) ; \
+	       exit 1; } >&2
 check-am: all-am
-	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
 check: check-recursive
-all-am: Makefile
+all-am: Makefile config.h
 installdirs: installdirs-recursive
 installdirs-am:
 
@@ -450,8 +498,8 @@ clean: clean-recursive
 clean-am: clean-generic mostlyclean-am
 
 distclean: distclean-recursive
-
-distclean-am: clean-am distclean-generic distclean-tags
+	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
+distclean-am: clean-am distclean-generic distclean-hdr distclean-tags
 
 dvi: dvi-recursive
 
@@ -472,7 +520,8 @@ install-man:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-recursive
-
+	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
+	-rm -rf autom4te.cache
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
 mostlyclean: mostlyclean-recursive
@@ -491,46 +540,36 @@ uninstall-am: uninstall-info-am
 
 uninstall-info: uninstall-info-recursive
 
-.PHONY: $(RECURSIVE_TARGETS) CTAGS GTAGS all all-am check check-TESTS \
-	check-am clean clean-generic clean-recursive ctags \
-	ctags-recursive distclean distclean-generic distclean-recursive \
-	distclean-tags distdir dvi dvi-am dvi-recursive info info-am \
-	info-recursive install install-am install-data install-data-am \
-	install-data-recursive install-exec install-exec-am \
-	install-exec-recursive install-info install-info-am \
-	install-info-recursive install-man install-recursive \
-	install-strip installcheck installcheck-am installdirs \
-	installdirs-am installdirs-recursive maintainer-clean \
-	maintainer-clean-generic maintainer-clean-recursive mostlyclean \
-	mostlyclean-generic mostlyclean-recursive pdf pdf-am \
-	pdf-recursive ps ps-am ps-recursive tags tags-recursive \
-	uninstall uninstall-am uninstall-info-am \
-	uninstall-info-recursive uninstall-recursive
+.PHONY: $(RECURSIVE_TARGETS) CTAGS GTAGS all all-am check check-am clean \
+	clean-generic clean-recursive ctags ctags-recursive dist \
+	dist-all dist-bzip2 dist-gzip distcheck distclean \
+	distclean-generic distclean-hdr distclean-recursive \
+	distclean-tags distcleancheck distdir dvi dvi-am dvi-recursive \
+	info info-am info-recursive install install-am install-data \
+	install-data-am install-data-recursive install-exec \
+	install-exec-am install-exec-recursive install-info \
+	install-info-am install-info-recursive install-man \
+	install-recursive install-strip installcheck installcheck-am \
+	installdirs installdirs-am installdirs-recursive \
+	maintainer-clean maintainer-clean-generic \
+	maintainer-clean-recursive mostlyclean mostlyclean-generic \
+	mostlyclean-recursive pdf pdf-am pdf-recursive ps ps-am \
+	ps-recursive tags tags-recursive uninstall uninstall-am \
+	uninstall-info-am uninstall-info-recursive uninstall-recursive
 
 
+install-root:
+	cd src && $(MAKE) $@
+
+# Some tests always need root privileges, others need them only sometimes.
 check-root:
-	cd chown && $(MAKE) check TESTS=basic
-	cd cp    && $(MAKE) check TESTS=special-bits
-	cd touch && $(MAKE) check TESTS=fifo
-	cd mv    && $(MAKE) check TESTS=mv-special-1
+	cd tests && $(MAKE) $@
 
-check-recursive: envvar-check root-hint
-
-# Warn when `make check' is run with POSIXLY_CORRECT or CDPATH set.
-.PHONY: envvar-check
-envvar-check:
-	test "$${POSIXLY_CORRECT+set}" = set \
-	  && sed s/%%/POSIXLY_CORRECT/ $(srcdir)/.env-warn || :
-	test "$${CDPATH+set}" = set \
-	  && sed s/%%/CDPATH/ $(srcdir)/.env-warn || :
-
-# Advertise `check-root' target.
-root-hint:
-	@echo '********************************************'
-	@echo "NOTICE: Some tests will or might need to be"
-	@echo "        run as root. Do \`make check-root'"
-	@echo "        as \`root' to run just these tests."
-	@echo '********************************************'
+distcheck-hook:
+	$(MAKE) my-distcheck
+.kludge-stamp: $(srcdir)/src/Makefile.in
+	perl -pi -e '$(rm_subst)' $(srcdir)/src/Makefile.in
+	touch $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
