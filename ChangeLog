@@ -6,7 +6,7 @@
 
 2004-01-10  Jim Meyering  <jim@meyering.net>
 
-	* tests/misc/stat-fmt: Use backticks, not $().
+	* tests/misc/stat-fmt: Use backticks, not `$()' notation.
 
 2004-01-09  Jim Meyering  <jim@meyering.net>
 
