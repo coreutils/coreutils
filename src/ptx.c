@@ -25,7 +25,6 @@
 #include <sys/types.h>
 #include "system.h"
 #include "argmatch.h"
-#include "bumpalloc.h"
 #include "diacrit.h"
 #include "error.h"
 #include "regex.h"
@@ -114,7 +113,8 @@ WORD;
 typedef struct
   {
     WORD *start;		/* array of WORDs */
-    size_t length;		/* number of entries */
+    size_t alloc;		/* allocated length */
+    size_t length;		/* number of used entries */
   }
 WORD_TABLE;
 
@@ -156,9 +156,6 @@ int reference_max_width;
 
 WORD_TABLE ignore_table;	/* table of words to ignore */
 WORD_TABLE only_table;		/* table of words to select */
-
-#define ALLOC_NEW_WORD(table) \
-  BUMP_ALLOC ((table)->start, (table)->length, 8, WORD)
 
 /* Source text table, and scanning macros.  */
 
@@ -239,10 +236,9 @@ OCCURS;
    being, there is no such multiple language support.  */
 
 OCCURS *occurs_table[1];	/* all words retained from the read text */
+size_t occurs_alloc[1];		/* allocated size of occurs_table */
 size_t number_of_occurs[1];	/* number of used slots in occurs_table */
 
-#define ALLOC_NEW_OCCURS(language) \
-  BUMP_ALLOC (occurs_table[language], number_of_occurs[language], 9, OCCURS)
 
 /* Communication among output routines.  */
 
@@ -764,6 +760,7 @@ digest_word_file (const char *file_name, WORD_TABLE *table)
   swallow_file_in_memory (file_name, &file_contents);
 
   table->start = NULL;
+  table->alloc = 0;
   table->length = 0;
 
   /* Read the whole file.  */
@@ -782,7 +779,15 @@ digest_word_file (const char *file_name, WORD_TABLE *table)
 
       if (cursor > word_start)
 	{
-	  ALLOC_NEW_WORD (table);
+	  if (table->length == table->alloc)
+	    {
+	      if ((SIZE_MAX / sizeof *table->start - 1) / 2 < table->alloc)
+		xalloc_die ();
+	      table->alloc = table->alloc * 2 + 1;
+	      table->start = xrealloc (table->start,
+				       table->alloc * sizeof *table->start);
+	    }
+
 	  table->start[table->length].start = word_start;
 	  table->start[table->length].size = cursor - word_start;
 	  table->length++;
@@ -994,7 +999,16 @@ find_occurs_in_text (void)
 	     proper allocation of the next OCCURS, and make a pointer to
 	     where it will be constructed.  */
 
-	  ALLOC_NEW_OCCURS (0);
+	  if (number_of_occurs[0] == occurs_alloc[0])
+	    {
+	      if ((SIZE_MAX / sizeof *occurs_table[0] - 1) / 2
+		  < occurs_alloc[0])
+		xalloc_die ();
+	      occurs_alloc[0] = occurs_alloc[0] * 2 + 1;
+	      occurs_table[0] = xrealloc (occurs_table[0],
+					  occurs_alloc[0] * sizeof *occurs_table[0]);
+	    }
+
 	  occurs_cursor = occurs_table[0] + number_of_occurs[0];
 
 	  /* Define the refence field, if any.  */
