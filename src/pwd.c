@@ -244,7 +244,8 @@ find_dir_entry (struct stat *dot_sb, struct Path *path, size_t parent_height)
   *dot_sb = parent_sb;
 }
 
-/* Print the full, absolute name of the current working directory.
+/* Construct the full, absolute name of the current working
+   directory and store it in *PATH.
    The getcwd function does nearly the same task, but is typically
    unable to handle names longer than PATH_MAX.  This function has
    no such limitation.  However, this function *can* fail due to
