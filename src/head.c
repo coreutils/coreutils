@@ -496,7 +496,8 @@ elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide)
      n_elide newlines, or until EOF, whichever comes first.  */
   while (1)
     {
-      n_read = tmp->nbytes = safe_read (fd, tmp->buffer, BUFSIZ);
+      n_read = safe_read (fd, tmp->buffer, BUFSIZ);
+      tmp->nbytes = n_read;
       if (n_read == 0 || n_read == SAFE_READ_ERROR)
 	break;
       tmp->nlines = 0;
