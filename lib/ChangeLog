@@ -1,5 +1,8 @@
 2003-07-10  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.am (libfetish_a_SOURCES): Add these:
+	printf-args.h, printf-parse.h, vasprintf.h, vasnprintf.h.
+
 	Now that a program (`who') uses asprintf, we need all of these:
 	* asnprintf.c, asprintf.c, printf-args.c, printf-args.h, printf-parse.c:
 	* printf-parse.h, vasnprintf.c, vasnprintf.h, vasprintf.c, vasprintf.h:
