@@ -13,7 +13,7 @@
 	Remove get_date decl.
 
 	* lib/getdate.h: Removed.  Could cause confusion with an
-	automake-generated `.y.h' rule.
+	automake-generated `.y.h' rule
 	* lib/get-date.h: Renamed from getdate.h.
 	* lib/getdate.y: s/getdate.h/get-date.h/
 	* lib/Makefile.am (noinst_HEADERS): s/getdate.h/get-date.h/
