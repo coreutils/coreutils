@@ -42,10 +42,10 @@
 # include <langinfo.h>
 #endif
 
-#if HAVE_UNISTD_H && defined(_PC_PATH_MAX) && _POSIX_NAME_MAX == 12
-# define PATH_MAX_IN_DIR(Dir) pathconf(Dir, _PC_PATH_MAX)
+#if HAVE_PATHCONF && defined _PC_NAME_MAX
+# define NAME_MAX_IN_DIR(Dir) pathconf (Dir, _PC_NAME_MAX)
 #else
-# define PATH_MAX_IN_DIR(Dir) 255
+# define NAME_MAX_IN_DIR(Dir) 255
 #endif
 
 char *xstrdup ();
@@ -436,7 +436,7 @@ tempname (void)
   static unsigned int seq;
   int len = strlen (temp_dir);
   char *name = xmalloc (len + 1 + sizeof ("sort") - 1 + 5 + 5 + 1);
-  int long_file_names = PATH_MAX_IN_DIR (temp_dir) > 12;
+  int long_file_names = NAME_MAX_IN_DIR (temp_dir) > 12;
   struct tempnode *node;
 
   node = (struct tempnode *) xmalloc (sizeof (struct tempnode));
