@@ -66,7 +66,9 @@ xreadlink (char const *filename, size_t size)
       ssize_t r = readlink (filename, buffer, buf_size);
       size_t link_length = r;
 
-      if (r < 0)
+      /* On AIX 5L v5.3 and HP-UX 11i v2 04/09, readlink returns -1
+	 with errno == ERANGE if the buffer is too small.  */
+      if (r < 0 && errno != ERANGE)
 	{
 	  int saved_errno = errno;
 	  free (buffer);
