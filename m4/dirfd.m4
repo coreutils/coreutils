@@ -1,4 +1,4 @@
-#serial 6
+#serial 7
 
 dnl Find out how to get the file descriptor associated with an open DIR*.
 dnl From Jim Meyering
@@ -76,7 +76,6 @@ AC_DEFUN([UTILS_FUNC_DIRFD],
 #else
 # define DIR_TO_FD(Dir_p) -1
 #endif
-]
-    )
+])
   fi
 ])
