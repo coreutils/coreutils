@@ -3707,8 +3707,42 @@ else
   esac
 fi
 test -s margin-0.E || rm -f margin-0.E
+$xx --test -h x -d -l 14 -h "" $srcdir/dbl-sp-a.I > dbl-sp-a.O 2> dbl-sp-a.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test dbl-sp-a failed: ../../src/pr return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp dbl-sp-a.O $srcdir/dbl-sp-a.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed dbl-sp-a"; fi ;;
+    1) $echo "Test dbl-sp-a failed: files dbl-sp-a.O and $srcdir/dbl-sp-a.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test dbl-sp-a may have failed." 1>&2;
+       $echo The command "cmp dbl-sp-a.O $srcdir/dbl-sp-a.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s dbl-sp-a.E || rm -f dbl-sp-a.E
+$xx --test -h x -d -t $srcdir/dbl-sp-b.I > dbl-sp-b.O 2> dbl-sp-b.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test dbl-sp-b failed: ../../src/pr return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp dbl-sp-b.O $srcdir/dbl-sp-b.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed dbl-sp-b"; fi ;;
+    1) $echo "Test dbl-sp-b failed: files dbl-sp-b.O and $srcdir/dbl-sp-b.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test dbl-sp-b may have failed." 1>&2;
+       $echo The command "cmp dbl-sp-b.O $srcdir/dbl-sp-b.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s dbl-sp-b.E || rm -f dbl-sp-b.E
 if test $errors = 0 ; then
-  $echo Passed all 217 tests. 1>&2
+  $echo Passed all 219 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
