@@ -1,5 +1,8 @@
 1999-01-31  Jim Meyering  <meyering@ascend.com>
 
+	* doc/sh-utils.texi: Wrap the @top node in @ifnottex instead of
+	@ifinfo so `makeinfo --html ...' works.  From Karl Berry.
+
 	* src/chroot.c (main): Call chdir ("/") after chroot.
 	Suggestion from James Youngman.
 
