@@ -122,8 +122,8 @@ sub spec_to_list ($$$)
 
   foreach $i (@explicit_file, @maint_gen_file)
     {
-      die "$0: $i: generated test file name would be longer than 20 characters"
-	if (length ($i) > 20);
+      die "$0: $i: generated test file name would be longer than 14 characters"
+	if (length ($i) > 14);
     }
 
   my %h = (
