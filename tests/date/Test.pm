@@ -94,9 +94,6 @@ sub test_vector
       # Append a newline to end of each expected string.
       push (@tv, [$test_name, $flags, $in, "$exp\n", $ret]);
     }
-  # Verify that the test-script generation code properly handles
-  # per-test overrides.
-  $Test::env{9} = ['LANG=C TZ=GMT'];
 
   return @tv;
 }
