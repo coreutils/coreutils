@@ -1,3 +1,9 @@
+2003-03-13  Jim Meyering  <jim@meyering.net>
+
+	* jm-macros.m4 (jm_MACROS): Arrange to compile the corresponding stub
+	function if any of the following is missing: fchown, lstat, readlink.
+	From Richard Dawe.
+
 2003-03-07  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (AC_LANG_SOURCE(C)): New macro, undefine, then define
