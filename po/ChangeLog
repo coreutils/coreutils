@@ -1,3 +1,7 @@
+2003-07-11  Jim Meyering  <jim@meyering.net>
+
+	* POTFILES.in: Add src/nohup.c and src/setuidgid.c.
+
 2003-03-18  Jim Meyering  <jim@meyering.net>
 
 	* POTFILES.in: Remove lib/c-stack.c.
