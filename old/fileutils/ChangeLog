@@ -1,6 +1,22 @@
-2002-03-17  Jim Meyering  <meyering@lucent.com>
+2002-03-30  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.8.
+
+	* src/copy.c (copy_internal): Move the block that sets `earlier_file'
+	down to just before the first use of that variable.  Otherwise, it was
+	possible to make mv (and probably cp, too) malfunction when copying
+	hard-linked files into a directory containing at least one of the
+	source file names.  Call forget_created everywhere thereafter where
+	this function returns without creating a destination file that might
+	subsequently be linked.  Reported by Iida Yosiaki.
+	* src/cp-hash.c (forget_created): New function.
+	* src/cp-hash.h (forget_created): Prototype.
+
+	* tests/mv/i-link-no: New test for the above.
+	Based on an example from Iida Yosiaki.
+	* tests/mv/Makefile.am (TESTS): Add i-link-no.
+
+2002-03-17  Jim Meyering  <meyering@lucent.com>
 
 	* src/copy.c (copy_internal) [move_mode]: Give a better diagnostic,
 	by using errno from the failed unlink, when a cross-device `mv'
