@@ -33,7 +33,7 @@ chown --dereference $user dangle 2> out1 && fail=1
 sed 's/: [^:]*$//' out1 > out
 
 cat <<\EOF > exp || fail=1
-chown: cannot dereference `dangle'
+chown: changing ownership of `dangle'
 EOF
 
 cmp out exp || fail=1
