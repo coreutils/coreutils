@@ -98,7 +98,7 @@ main (int argc, char **argv)
       /* Set hostname to argv[1].  */
       err = sethostname (argv[1], strlen (argv[1]));
       if (err != 0)
-	error (1, errno, "%s", argv[1]);
+	error (1, errno, _("cannot set hostname to `%s'"), argv[1]);
       exit (0);
     }
 #else
