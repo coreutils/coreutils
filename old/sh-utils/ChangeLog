@@ -1,3 +1,11 @@
+2000-01-07  Jim Meyering  <meyering@ascend.com>
+
+	* tests/basename/Makefile.am (TESTS_ENVIRONMENT): Add `pwd`/ prefix
+	to exported PATH value (though not strictly necessary, here).
+	* tests/factor/Makefile.am (TESTS_ENVIRONMENT): Likewise.
+	* tests/seq/Makefile.am (TESTS_ENVIRONMENT): Likewise.
+	* tests/stty/Makefile.am (TESTS_ENVIRONMENT): Likewise.
+
 2000-01-06  Paul Eggert  <eggert@set.twinsun.com>
 
 	* tar/lib/getdate.y: Sync tm_diff with the GNU C Library.
