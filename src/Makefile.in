@@ -213,6 +213,7 @@ seq_LDADD = $(LDADD) @SEQ_LIBM@
 nanosec_libs = \
   $(LDADD) @FESETROUND_LIBM@ @POW_LIB@ @LIB_CLOCK_GETTIME@ @LIB_NANOSLEEP@
 
+
 sleep_LDADD = $(nanosec_libs)
 tail_LDADD = $(nanosec_libs)
 
@@ -821,7 +822,7 @@ uninstall-binPROGRAMS:
 	done
 
 clean-binPROGRAMS:
-	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS) > /dev/null 2>&1 || /bin/rm -f $(bin_PROGRAMS)
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 
 installcheck-binPROGRAMS: $(bin_PROGRAMS)
 	bad=0; pid=$$$$; list="$(bin_PROGRAMS)"; for p in $$list; do \
