@@ -19,7 +19,7 @@
 	* src/ls.c [enum Dereference_symlink]
 	(DEREF_COMMAND_LINE_SYMLINK_TO_DIR): Rename from
 	DEREF_COMMAND_LINE_ARGUMENTS.  Update all uses.
-	(long_options): Rename the option.
+	(long_options): Rename the long option.
 	(usage): Say that --dereference-... changes how ls treats
 	only symlinks to directories specified on the command line.
 
