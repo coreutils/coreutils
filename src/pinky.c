@@ -573,9 +573,9 @@ main (int argc, char **argv)
     }
 
   if (do_short_format)
-    short_pinky (UTMP_FILE, argc - optind, argv + optind);
+    short_pinky (UTMP_FILE, n_users, argv + optind);
   else
-    long_pinky (argc - optind, argv + optind);
+    long_pinky (n_users, argv + optind);
 
   exit (0);
 }
