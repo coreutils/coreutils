@@ -155,7 +155,7 @@ my @tv = (
 # POSIX says -n no longer implies -b, so here we're comparing ` 9' and `10'.
 ["18a", '-k1.1,1.2n', " 901\n100\n", " 901\n100\n", 0],
 
-# Just like above, because the the global `-b' has no effect on the
+# Just like above, because the global `-b' has no effect on the
 # key specifier when a key-specific option (`n' in this case) is used.
 ["18b", '-b -k1.1,1.2n', " 901\n100\n", " 901\n100\n", 0],
 
