@@ -565,11 +565,10 @@ limfield (const struct line *line, const struct keyfield *key)
 {
   register char *ptr = line->text, *lim = ptr + line->length;
   register int eword = key->eword, echar = key->echar;
-  char *field_start;
 
   /* Note: from the POSIX spec:
      The leading field separator itself is included in
-     a field when -t is not used.  */
+     a field when -t is not used.  FIXME: move this comment up... */
 
   /* Move PTR past EWORD fields or to one past the last byte on LINE,
      whichever comes first.  If there are more than EWORD fields, leave
@@ -583,7 +582,7 @@ limfield (const struct line *line, const struct keyfield *key)
       {
 	while (ptr < lim && *ptr != tab)
 	  ++ptr;
-	if (ptr < lim)
+	if (ptr < lim && (eword || echar > 0))
 	  ++ptr;
       }
   else
@@ -594,8 +593,6 @@ limfield (const struct line *line, const struct keyfield *key)
 	while (ptr < lim && !blanks[UCHAR (*ptr)])
 	  ++ptr;
       }
-  /* Record beginning of field.  */
-  field_start = ptr;
 
   /* Make LIM point to the end of (one byte past) the current field.  */
   if (tab)
@@ -603,16 +600,24 @@ limfield (const struct line *line, const struct keyfield *key)
       char *newlim;
       newlim = memchr (ptr, tab, lim - ptr);
       if (newlim)
-        lim = newlim;
+	lim = newlim;
     }
   else
     {
       char *newlim;
       newlim = ptr;
+      while (newlim < lim && blanks[UCHAR (*newlim)])
+	++newlim;
       while (newlim < lim && !blanks[UCHAR (*newlim)])
 	++newlim;
       lim = newlim;
     }
+
+  /* If we're skipping leading blanks, don't start counting characters
+     until after skipping past any leading blanks.  */
+  if (key->skipsblanks)
+    while (ptr < lim && blanks[UCHAR (*ptr)])
+      ++ptr;
 
   /* Advance PTR by ECHAR (if possible), but no further than LIM.  */
   if (ptr + echar <= lim)
@@ -620,15 +625,16 @@ limfield (const struct line *line, const struct keyfield *key)
   else
     ptr = lim;
 
-  /* Back up over any trailing blanks, possibly back to the beginning
-     of the field.  */
-  if (key->skipeblanks)
-    {
-      while (ptr > field_start && blanks[UCHAR (*(ptr - 1))])
-	--ptr;
-    }
-
   return ptr;
+}
+
+/* FIXME */
+
+void
+trim_trailing_blanks (const char *a_start, char **a_end)
+{
+  while (*a_end > a_start && blanks[UCHAR (*(*a_end - 1))])
+    --(*a_end);
 }
 
 /* Find the lines in BUF, storing pointers and lengths in LINES.
@@ -679,6 +685,11 @@ findlines (struct buffer *buf, struct lines *lines)
 		while (blanks[UCHAR (*beg)])
 		  ++beg;
 	      lines->lines[lines->used].keybeg = beg;
+	    }
+	  if (key->skipeblanks)
+	    {
+	      trim_trailing_blanks (lines->lines[lines->used].keybeg,
+				    &lines->lines[lines->used].keylim);
 	    }
 	}
       else
@@ -948,6 +959,16 @@ keycompare (const struct line *a, const struct line *b)
 	lena = 0;
       if (lenb < 0)
 	lenb = 0;
+
+      if (key->skipeblanks)
+        {
+	  char *a_end = texta + lena;
+	  char *b_end = textb + lenb;
+	  trim_trailing_blanks (texta, &a_end);
+	  trim_trailing_blanks (textb, &b_end);
+	  lena = a_end - texta;
+	  lenb = b_end - textb;
+	}
 
       /* Actually compare the fields. */
       if (key->numeric)
@@ -1761,10 +1782,10 @@ main (int argc, char **argv)
 			for (t = 0; digits[UCHAR (*s)]; ++s)
 			  t = t * 10 + *s - '0';
 			if (t)
-			      t--;
+			  t--;
 			t2 = 0;
-			/* FIXME: It's an error to specify `.'
-			   but no char-spec. */
+			/* FIXME: It's an error to specify `.' without a
+			   following char-spec. */
 			if (*s == '.')
 			  {
 			    for (++s; digits[UCHAR (*s)]; ++s)
