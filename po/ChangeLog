@@ -1,3 +1,7 @@
+2004-01-12  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.in.in: Update from gettext-0.13.1.
+
 2003-11-09  Jim Meyering  <jim@meyering.net>
 
 	* POTFILES.in: Add lib/root-dev-ino.h.
