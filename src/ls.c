@@ -2362,9 +2362,14 @@ long_time_expected_width (void)
       size_t bufsize = sizeof initbuf;
       size_t len;
 
-      *buf = '\1';
-      while (! (len = strftime (buf, bufsize, fmt, tm)) && *buf)
-	buf = alloca (bufsize *= 2);
+      for (;;)
+	{
+	  *buf = '\1';
+	  len = strftime (buf, bufsize, fmt, tm);
+	  if (len || ! *buf)
+	    break;
+	  buf = alloca (bufsize *= 2);
+	}
 
       width = mbsnwidth (buf, len, 0);
       if (width < 0)
@@ -2491,12 +2496,15 @@ print_long_format (const struct fileinfo *f)
       int recent = six_months_ago <= when && when <= now;
 
       char const *fmt = long_time_format[recent];
-      *p = '\1';
 
-      while (! (s = strftime (p, buf + bufsize - p - 1, fmt, when_local))
-	     && *p)
+      for (;;)
 	{
-	  char *newbuf = (char *) alloca (bufsize *= 2);
+	  char *newbuf;
+	  *p = '\1';
+	  s = strftime (p, buf + bufsize - p - 1, fmt, when_local);
+	  if (s || ! *p)
+	    break;
+	  newbuf = alloca (bufsize *= 2);
 	  memcpy (newbuf, buf, p - buf);
 	  p = newbuf + (p - buf);
 	  buf = newbuf;
