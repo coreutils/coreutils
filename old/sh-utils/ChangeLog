@@ -1,4 +1,16 @@
+1999-04-25  Jim Meyering  <meyering@ascend.com>
+
+	* lib/human.c <inttypes.h>: Don't include it here.
+	* lib/human.h <inttypes.h>: Include it here instead.
+	<config.h>: Include it here too.
+	Reported by Andreas Jaeger.
+
+	* src/nice.c [NDEBUG]: Remove definition.
+	Reported by Andreas Jaeger.
+
 1999-04-24  Jim Meyering  <meyering@ascend.com>
+
+	* src/who.c (print_entry): Use `#if', not `#ifdef HAVE_UT_HOST'.
 
 	* Version 1.16g.
 
