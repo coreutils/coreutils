@@ -149,32 +149,27 @@ struct utimbuf
 };
 #endif
 
+/* Don't use bcopy!  Use memmove if source and destination may overlap,
+   memcpy otherwise.  */
+
 #ifdef HAVE_STRING_H
 # include <string.h>
-# ifndef bcopy
-#  define bcopy(from, to, len) memcpy ((to), (from), (len))
-# endif
-# ifndef bzero
-#  define bzero(s, n) memset ((s), 0, (n))
-# endif
 #else
 # include <strings.h>
-# ifndef strrchr
-#  define strrchr rindex
-# endif
-# ifndef strchr
-#  define strchr index
-# endif
+char *memchr ();
 #endif
 
 #include <errno.h>
+#ifndef errno
+extern int errno;
+#endif
+
 #ifdef STDC_HEADERS
 #define getopt system_getopt
 #include <stdlib.h>
 #undef getopt
 #else /* not STDC_HEADERS */
 char *getenv ();
-extern int errno;
 #endif /* STDC_HEADERS */
 
 #ifdef HAVE_FCNTL_H
