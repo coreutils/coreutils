@@ -1,4 +1,21 @@
+Sun Apr  7 11:58:13 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* seq.c (print_numbers): Rearrange loops to get it right.
+	Reported by Karl Eichwalder <ke@ke.Central.DE>.
+
+	* seq.c (print_numbers): Give more precise diagnostic when INCREMENT
+	is inconsistent with START and LIMIT.
+	(usage): Clean up help message.
+
+	* factor.c (usage): Give minimal description of the program.
+	(print_factors): Give a better diagnostic.
+	(main): Suggest --help upon failure.
+	Reported by Karl Eichwalder <ke@ke.Central.DE>.
+
 Fri Apr  5 07:33:00 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* strftime.c (sun_week): Make %U work properly.
+	Before, `date -d '1 Jan 1995' +%U' output `00'.  Now it prints `01'.
 
 	* nice.c (main): Simplify option handling.  Before, `nice -18 -- nice'
 	improperly printed `8'.  Patch from Frank Korz.
