@@ -218,6 +218,40 @@ print_group (int gid)
     printf ("%s", grp->gr_name);
 }
 
+static int
+xgetgroups (const char *username, int *n_groups, GETGROUPS_T **groups)
+{
+  int max_n_groups;
+  int ng;
+  GETGROUPS_T *g;
+  int fail = 0;
+
+  if (username == 0)
+    max_n_groups = getgroups (0, NULL);
+  else
+    max_n_groups = getugroups (0, NULL, username);
+
+  /* Add 1 just in case max_n_groups is zero.  */
+  g = (GETGROUPS_T *) xmalloc (max_n_groups * sizeof (GETGROUPS_T) + 1);
+  if (username == 0)
+    ng = getgroups (max_n_groups, g);
+  else
+    ng = getugroups (max_n_groups, g, username);
+
+  if (ng < 0)
+    {
+      error (0, errno, _("cannot get supplemental group list"));
+      ++fail;
+      free (groups);
+    }
+  if (!fail)
+    {
+      *n_groups = ng;
+      *groups = g;
+    }
+  return fail;
+}
+
 /* Print all of the distinct groups the user is in . */
 
 static void
@@ -232,23 +266,13 @@ print_group_list (char *username)
 
 #if HAVE_GETGROUPS
   {
-    int ng, n_groups;
+    int n_groups;
     GETGROUPS_T *groups;
     register int i;
 
-    n_groups = getgroups (0, NULL);
-    /* Add 1 just in case n_groups is zero.  */
-    groups = (GETGROUPS_T *) xmalloc (n_groups * sizeof (GETGROUPS_T) + 1);
-    if (username == 0)
-      ng = getgroups (n_groups, groups);
-    else
-      ng = getugroups (n_groups, groups, username);
-
-    if (ng < 0)
+    if (xgetgroups (username, &n_groups, &groups))
       {
-	error (0, errno, _("cannot get supplemental group list"));
 	++problems;
-	free (groups);
 	return;
       }
 
@@ -307,22 +331,13 @@ print_full_info (char *username)
 
 #if HAVE_GETGROUPS
   {
-    int ng, n_groups;
+    int n_groups;
     GETGROUPS_T *groups;
     register int i;
 
-    n_groups = getgroups (0, NULL);
-    /* Add 1 just in case n_groups is zero.  */
-    groups = (GETGROUPS_T *) xmalloc (n_groups * sizeof (GETGROUPS_T) + 1);
-    if (username == 0)
-      ng = getgroups (n_groups, groups);
-    else
-      ng = getugroups (n_groups, groups, username);
-    if (ng < 0)
+    if (xgetgroups (username, &n_groups, &groups))
       {
-	error (0, errno, _("cannot get supplemental group list"));
-	problems++;
-	free (groups);
+	++problems;
 	return;
       }
 
