@@ -625,7 +625,7 @@ remove_file (struct File_spec *fs, const struct rm_options *x)
     }
 
   if (x->verbose)
-    printf (_("removing non-directory %s\n"), full_filename (pathname));
+    printf (_("removing %s\n"), full_filename (pathname));
 
   if (unlink (pathname) && (errno != ENOENT || !x->ignore_missing_files))
     {
