@@ -34,6 +34,7 @@
 #include "error.h"
 #include "fsusage.h"
 #include "human.h"
+#include "inttostr.h"
 #include "mountlist.h"
 #include "path-concat.h"
 #include "quote.h"
@@ -64,9 +65,11 @@ static int show_local_fs;
    command line argument -- even if it's a dummy (automounter) entry.  */
 static int show_listed_fs;
 
-/* If positive, the units to use when printing sizes;
-   if negative, the human-readable base.  */
-static int output_block_size;
+/* Human-readable options for output.  */
+static int human_output_opts;
+
+/* The units to use when printing sizes.  */
+static uintmax_t output_block_size;
 
 /* If nonzero, use the POSIX output format.  */
 static int posix_format;
@@ -144,6 +147,8 @@ static struct option const long_options[] =
 static void
 print_header (void)
 {
+  char buf[MAX (LONGEST_HUMAN_READABLE + 1, INT_BUFSIZE_BOUND (uintmax_t))];
+
   printf (_("Filesystem "));
 
   if (print_type)
@@ -153,26 +158,47 @@ print_header (void)
 
   if (inode_format)
     printf (_("    Inodes   IUsed   IFree IUse%%"));
-  else if (output_block_size < 0)
+  else if (human_output_opts & human_autoscale)
     {
-      if (output_block_size == -1000)
-	printf (_("     Size   Used  Avail Use%%"));
-      else
+      if (human_output_opts & human_base_1024)
 	printf (_("    Size  Used Avail Use%%"));
+      else
+	printf (_("     Size   Used  Avail Use%%"));
     }
   else if (posix_format)
-    printf (_(" %4d-blocks      Used Available Capacity"), output_block_size);
+    printf (_(" %4s-blocks      Used Available Capacity"),
+	    umaxtostr (output_block_size, buf));
   else
     {
-      char buf[LONGEST_HUMAN_READABLE + 1];
-      char *p = human_readable (output_block_size, buf, 1, -1024);
+      int opts = (human_suppress_point_zero
+		  | human_autoscale | human_SI
+		  | (human_output_opts
+		     & (human_group_digits | human_base_1024 | human_B)));
 
-      /* Replace e.g. "1.0K" by "1K".  */
-      size_t plen = strlen (p);
-      if (3 <= plen && strncmp (p + plen - 3, ".0", 2) == 0)
-	strcpy (p + plen - 3, p + plen - 1);
+      /* Prefer the base that makes the human-readable value more exact,
+	 if there is a difference.  */
 
-      printf (_(" %4s-blocks      Used Available Use%%"), p);
+      uintmax_t q1000 = output_block_size;
+      uintmax_t q1024 = output_block_size;
+      bool divisible_by_1000;
+      bool divisible_by_1024;
+
+      do
+	{
+	  divisible_by_1000 = q1000 % 1000 == 0;  q1000 /= 1000;
+	  divisible_by_1024 = q1024 % 1024 == 0;  q1024 /= 1024;
+	}
+      while (divisible_by_1000 & divisible_by_1024);
+
+      if (divisible_by_1000 < divisible_by_1024)
+	opts |= human_base_1024;
+      if (divisible_by_1024 < divisible_by_1000)
+	opts &= ~human_base_1024;
+      if (! (opts & human_base_1024))
+	opts |= human_B;
+
+      printf (_(" %4s-blocks      Used Available Use%%"),
+	      human_readable (output_block_size, buf, opts, 1, 1));
     }
 
   printf (_(" Mounted on\n"));
@@ -210,23 +236,23 @@ excluded_fstype (const char *fstype)
   return 0;
 }
 
-/* Like human_readable_inexact with a human_ceiling
-   human_inexact_style, except return "-" if the argument is -1, and
-   if NEGATIVE is 1 then N represents a negative number, expressed in
-   two's complement.  */
+/* Like human_readable (N, BUF, human_output_opts, INPUT_UNITS, OUTPUT_UNITS),
+   except:
+
+    - Return "-" if N is -1,
+    - If NEGATIVE is 1 then N represents a negative number,
+      expressed in two's complement.  */
 
 static char const *
 df_readable (int negative, uintmax_t n, char *buf,
-	     int from_block_size, int t_output_block_size)
+	     uintmax_t input_units, uintmax_t output_units)
 {
   if (n == -1)
     return "-";
   else
     {
-      char *p = human_readable_inexact (negative ? - n : n,
-					buf + negative, from_block_size,
-					t_output_block_size,
-					human_ceiling);
+      char *p = human_readable (negative ? -n : n, buf + negative,
+				human_output_opts, input_units, output_units);
       if (negative)
 	*--p = '-';
       return p;
@@ -250,8 +276,8 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
   char buf[3][LONGEST_HUMAN_READABLE + 2];
   int width;
   int use_width;
-  int input_units;
-  int output_units;
+  uintmax_t input_units;
+  uintmax_t output_units;
   uintmax_t total;
   uintmax_t available;
   int negate_available;
@@ -315,8 +341,7 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
     {
       width = 7;
       use_width = 5;
-      input_units = 1;
-      output_units = output_block_size < 0 ? output_block_size : 1;
+      input_units = output_units = 1;
       total = fsu.fsu_files;
       available = fsu.fsu_ffree;
       negate_available = 0;
@@ -324,8 +349,12 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
     }
   else
     {
-      width = output_block_size < 0 ? 5 + (output_block_size == -1000) : 9;
-      use_width = (posix_format && 0 <= output_block_size) ? 8 : 4;
+      width = (human_output_opts & human_autoscale
+	       ? 5 + ! (human_output_opts & human_base_1024)
+	       : 9);
+      use_width = ((posix_format
+		    && ! (human_output_opts & human_autoscale))
+		   ? 8 : 4);
       input_units = fsu.fsu_blocksize;
       output_units = output_block_size;
       total = fsu.fsu_blocks;
@@ -808,7 +837,8 @@ main (int argc, char **argv)
   show_all_fs = 0;
   show_listed_fs = 0;
 
-  human_block_size (getenv ("DF_BLOCK_SIZE"), 0, &output_block_size);
+  human_output_opts = human_options (getenv ("DF_BLOCK_SIZE"), false,
+				     &output_block_size);
 
   print_type = 0;
   posix_format = 0;
@@ -825,24 +855,28 @@ main (int argc, char **argv)
 	  show_all_fs = 1;
 	  break;
 	case 'B':
-	  human_block_size (optarg, 1, &output_block_size);
+	  human_output_opts = human_options (optarg, true, &output_block_size);
 	  break;
 	case 'i':
 	  inode_format = 1;
 	  break;
 	case 'h':
-	  output_block_size = -1024;
+	  human_output_opts = human_autoscale | human_SI | human_base_1024;
+	  output_block_size = 1;
 	  break;
 	case 'H':
-	  output_block_size = -1000;
+	  human_output_opts = human_autoscale | human_SI;
+	  output_block_size = 1;
 	  break;
 	case 'k':
+	  human_output_opts = 0;
 	  output_block_size = 1024;
 	  break;
 	case 'l':
 	  show_local_fs = 1;
 	  break;
 	case 'm': /* obsolescent */
+	  human_output_opts = 0;
 	  output_block_size = 1024 * 1024;
 	  break;
 	case 'T':
