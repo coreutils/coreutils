@@ -1,6 +1,12 @@
-2001-11-10  Jim Meyering  <meyering@lucent.com>
+2001-11-11  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* src/Makefile.am (printf_LDADD): Reflect spelling change:
+	s/POW_LIBM/POW_LIB/.
+	(sleep_LDADD): Likewise.
+
+2001-11-10  Jim Meyering  <meyering@lucent.com>
 
 	* src/date.c (usage): Document %u.  Reported by Albert Hopkins.
 
