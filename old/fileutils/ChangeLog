@@ -2,6 +2,10 @@
 
 	* Version 4.1.9.
 
+	* tests/sample-test: Use a temporary directory named
+	`basename $0`.tmp/$$.  Create with mkdir -p.
+
+	* tests/cp/backup-1: Use better trap, etc.
 	* tests/mkdir/p-2: Use better trap.
 	* tests/mkdir/p-1: Likewise.
 	* tests/mkdir/concurrent-1: Likewise.
