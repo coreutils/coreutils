@@ -38,7 +38,7 @@ const char diacrit_base[256] =
   'p',    'q',    'r',    's',    't',    'u',    'v',    'w',
   'x',    'y',    'z',    0,      0,      0,      0,      0,
 
-#ifdef MSDOS
+#ifdef __MSDOS__
 
   'C',    'u',    'e',    'a',    'a',    'a',    'a',    'c',
   'e',    'e',    'e',    'i',    'i',    'i',    'A',    'A',
@@ -57,7 +57,7 @@ const char diacrit_base[256] =
   0,      0,      0,      0,      0,      0,      0,      0,
   0,      0,      0,      0,      0,      0,      0,      0,
 
-#else /* not MSDOS */
+#else
 
   0,      0,      0,      0,      0,      0,      0,      0,
   0,      0,      0,      0,      0,      0,      0,      0,
@@ -76,7 +76,7 @@ const char diacrit_base[256] =
   0,      'n',    'o',    'o',    'o',    'o',    'o',    0,
   'o',    'u',    'u',    'u',    'u',    'y',    0,      'y',
 
-#endif /* not MSDOS */
+#endif
 };
 
 /*------------------------------------------------------------------------.
@@ -106,7 +106,7 @@ const char diacrit_diac[256] =
   0,      0,      0,      0,      0,      0,      0,      0,
   0,      0,      0,      0,      0,      0,      6,      0,
 
-#ifdef MSDOS
+#ifdef __MSDOS__
 
   7,      5,      2,      4,      5,      3,      8,      7,
   4,      5,      3,      5,      4,      3,      5,      8,
@@ -125,7 +125,7 @@ const char diacrit_diac[256] =
   0,      0,      0,      0,      0,      0,      0,      0,
   0,      0,      0,      0,      0,      0,      0,      0,
 
-#else /* not MSDOS */
+#else
 
   0,      0,      0,      0,      0,      0,      0,      0,
   0,      0,      0,      0,      0,      0,      0,      0,
@@ -144,5 +144,5 @@ const char diacrit_diac[256] =
   0,      6,      3,      2,      4,      6,      5,      0,
   9,      3,      2,      4,      5,      2,      0,      0,
 
-#endif /* not MSDOS */
+#endif
 };
