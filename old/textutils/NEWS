@@ -2,7 +2,7 @@ Changes in release 1.16
 * sort is compatible with Unix sort when a key-end spec refers to the N'th
   character in a field that has fewer than N characters
 * tail with old-style options like -20k and +31m operates on units of bytes,
-  as --help documentation says.  Before, it used units of lines.
+  as the --help usage message says.  Before, it used units of lines.
 Changes in release 1.15
 * od gives better diagnostics for invalid format specs
 * uses automake-generated Makefile templates
