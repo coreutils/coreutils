@@ -9,7 +9,8 @@ DEFS = -DLIBDIR=\"$(libdir)\" @DEFS@
 
 libfetish_a_SOURCES = \
   getdate.y posixtm.c addext.c argmatch.c backupfile.c basename.c \
-  canon-host.c closeout.c diacrit.c dirname.c exclude.c filemode.c \
+  canon-host.c closeout.c diacrit.c dirname.c dup-safer.c \
+  exclude.c filemode.c fopen-safer.c \
   full-write.c getopt.c getopt1.c getstr.c getugroups.c hard-locale.c hash.c \
   human.c idcache.c isdir.c linebuffer.c localcharset.c long-options.c \
   makepath.c mbswidth.c md5.c memcasecmp.c memcoll.c modechange.c \
@@ -32,7 +33,8 @@ noinst_HEADERS = \
   path-concat.h pathmax.h physmem.h posixtm.h \
   quote.h quotearg.h readtokens.h \
   readutmp.h regex.h safe-read.h same.h save-cwd.h savedir.h sha.h \
-  strverscmp.h unicodeio.h version-etc.h xalloc.h xstrtod.h xstrtol.h
+  stdio-safer.h strverscmp.h unicodeio.h unistd-safer.h version-etc.h \
+  xalloc.h xstrtod.h xstrtol.h
 
 BUILT_SOURCES = getdate.c lstat.c stat.c
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
