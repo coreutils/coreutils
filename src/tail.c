@@ -968,7 +968,8 @@ tail_forever (names, nfiles)
 	     then keep looping.  */
 	  if (i != last)
 	    {
-	      write_header (names[i]);
+	      if (print_headers)
+		write_header (names[i]);
 	      last = i;
 	    }
 	  changed = 1;

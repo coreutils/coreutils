@@ -214,10 +214,28 @@ wc (fd, file)
 
   lines = words = chars = 0;
 
-  if (print_chars && !print_words && !print_lines
-      && fstat (fd, &stats) == 0 && S_ISREG (stats.st_mode))
+  /* When counting only bytes, save some line- and word-counting
+     overhead.  If FD is a `regular' Unix file, using fstat is enough
+     to get its size in bytes.  Otherwise, read blocks of BUFFER_SIZE
+     bytes at a time until EOF.  */
+  if (print_chars && !print_words && !print_lines)
     {
-      chars = stats.st_size;
+      if (fstat (fd, &stats) == 0 && S_ISREG (stats.st_mode))
+	{
+	  chars = stats.st_size;
+	}
+      else
+	{
+	  while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
+	    {
+	      chars += bytes_read;
+	    }
+	  if (bytes_read < 0)
+	    {
+	      error (0, errno, "%s", file);
+	      exit_status = 1;
+	    }
+	}
     }
   else
     {
