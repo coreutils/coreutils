@@ -180,6 +180,7 @@ getcwd-path-max.m4 \
 getcwd.m4 \
 getgroups.m4 \
 getline.m4 \
+getndelim2.m4 \
 gettext.m4 \
 gettimeofday.m4 \
 glibc.m4 \
@@ -232,6 +233,7 @@ restrict.m4 \
 rmdir-errno.m4 \
 search-libs.m4 \
 signed.m4 \
+ssize_t.m4 \
 st_dm_mode.m4 \
 st_mtim.m4 \
 stat.m4 \
