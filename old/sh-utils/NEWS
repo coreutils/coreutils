@@ -1,4 +1,6 @@
 Changes in release 2.1
+ [2.0d]
+* portability problem with sleep vs lib/strtod.c's requirement for -lm
  [2.0c]
 * fix portability problems with nanosleep.c and with the new code in sleep.c
  [2.0b]
