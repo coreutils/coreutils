@@ -502,18 +502,6 @@ AD_is_removable (Dirstack_state const *ds, char const *file)
   return ! (top->unremovable && hash_lookup (top->unremovable, file));
 }
 
-/* A wrapper for readdir so that callers don't see entries for `.' or `..'.  */
-static struct dirent const *
-readdir_ignoring_dotdirs (DIR *dirp)
-{
-  while (1)
-    {
-      struct dirent const *dp = readdir (dirp);
-      if (dp == NULL || ! DOT_OR_DOTDOT (dp->d_name))
-	return dp;
-    }
-}
-
 /* Return nonzero if DIR is determined to be an empty directory
    or if opendir or readdir fails.  */
 static bool
@@ -527,7 +515,7 @@ is_empty_dir (char const *dir)
     return false;
 
   errno = 0;
-  dp = readdir_ignoring_dotdirs (dirp);
+  dp = readdir_ignoring_dot_and_dotdot (dirp);
   saved_errno = errno;
   closedir (dirp);
   if (dp != NULL)
@@ -829,7 +817,7 @@ remove_cwd_entries (Dirstack_state *ds, char **subdir, struct stat *subdir_sb,
       /* Set errno to zero so we can distinguish between a readdir failure
 	 and when readdir simply finds that there are no more entries.  */
       errno = 0;
-      if ((dp = readdir_ignoring_dotdirs (dirp)) == NULL)
+      if ((dp = readdir_ignoring_dot_and_dotdot (dirp)) == NULL)
 	{
 	  if (errno)
 	    {
