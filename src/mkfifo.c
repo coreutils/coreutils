@@ -77,7 +77,7 @@ main (int argc, char **argv)
   mode_t newmode;
   struct mode_change *change;
   const char *specified_mode;
-  int errors = 0;
+  int exit_status = EXIT_SUCCESS;
   int optc;
 
   initialize_main (&argc, &argv);
@@ -145,9 +145,9 @@ main (int argc, char **argv)
 	}
 
       if (fail)
-	errors = 1;
+	exit_status = EXIT_FAILURE;
     }
 
-  exit (errors);
+  exit (exit_status);
 #endif
 }
