@@ -1,6 +1,8 @@
 2000-05-03  Jim Meyering  <meyering@lucent.com>
 
+	With a recent glibc, _GNU_SOURCE, and -O, strndup may be a macro.
 	* src/sys2.h (!HAVE_DECL_STRNDUP): Declare strndup.
+	* src/dircolors.c: Remove declaration of strndup.
 	Reported by Bruno Haible.
 
 2000-05-02  Jim Meyering  <meyering@lucent.com>
