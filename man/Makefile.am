@@ -136,7 +136,7 @@ check-local: check-x-vs-1
 .PHONY: check-x-vs-1
 check-x-vs-1:
 	t=ls-files.$$$$;						\
-	ls -1 *.x | sed 's/\.x$$//' | sort > $$t;			\
+	(cd $(srcdir) && ls -1 *.x) | sed 's/\.x$$//' | sort > $$t;	\
 	echo $(dist_man_MANS) | fmt -w1 | sed 's/\.1$$//' | sort -u	\
 	  | diff - $$t || { rm $$t; exit 1; };				\
 	rm $$t
