@@ -140,9 +140,9 @@ split_3 (char *s, size_t s_len, char **u, int *binary, char **w)
   while (ISWHITE (s[i]))
     ++i;
 
-  /* The line has to be at least 35 characters long to contain correct
+  /* The line must have at least 35 more characters to contain correct
      message digest information.  */
-  if (s_len >= 32 + 2 + 1)
+  if (s_len - i >= 32 + 2 + 1)
     {
       char *p;
       *u = &s[i];
