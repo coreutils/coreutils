@@ -1278,7 +1278,6 @@ copy_internal (const char *src_path, const char *dst_path,
 #ifdef S_ISLNK
   if (S_ISLNK (src_type))
     {
-      preserve_metadata = 0;
       char *src_link_val = xreadlink (src_path);
       if (src_link_val == NULL)
 	{
@@ -1312,6 +1311,9 @@ copy_internal (const char *src_path, const char *dst_path,
 	      goto un_backup;
 	    }
 	}
+
+      /* There's no need to preserve timestamps or permissions.  */
+      preserve_metadata = 0;
 
       if (x->preserve_ownership)
 	{
