@@ -206,6 +206,8 @@ make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
 
       while (1)
 	{
+	  int newly_created_dir = 1;
+
 	  /* slash points to the leftmost unprocessed component of dirpath.  */
 	  basename_dir = slash;
 
@@ -236,10 +238,11 @@ make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
 	      else
 		{
 		  /* DIRPATH already exists and is a directory. */
+		  newly_created_dir = 0;
 		}
 	    }
 
-	  if (verbose_fmt_string != NULL)
+	  if (newly_created_dir && verbose_fmt_string != NULL)
 	    error (0, 0, verbose_fmt_string, dirpath);
 
 	  if (owner != (uid_t) -1 && group != (gid_t) -1
