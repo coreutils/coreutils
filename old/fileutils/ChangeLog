@@ -1,3 +1,12 @@
+Thu Oct 10 23:47:34 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/Makefile.am (EXTRA_DIST): Remove posixtm.y and getdate.y.
+	(fu_SOURCES): Put them here instead.
+	Remove rules for building getdate.c and posixtm.c;  now automake
+	generates those rules.
+	* lib/ylwrap: New file.
+	* lib/interlock: New file.
+
 Wed Oct  9 06:51:47 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/ls.c (usage): Improve brief descriptions of --sort and --time.

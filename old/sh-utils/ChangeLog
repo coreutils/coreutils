@@ -1,3 +1,12 @@
+Thu Oct 10 23:50:05 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/Makefile.am (EXTRA_DIST): Remove posixtm.y and getdate.y.
+	(su_SOURCES): Put them here instead.
+	Remove rules for building getdate.c and posixtm.c;  now automake
+	generates those rules.
+	* lib/ylwrap: New file.
+	* lib/interlock: New file.
+
 Wed Oct  9 00:26:55 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/getloadavg.c [__sun]: Define sun.  Reported by Kaveh Ghazi.
