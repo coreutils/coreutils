@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{1999-01-14}%
+\def\texinfoversion{1999-01-20}%
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99
 % Free Software Foundation, Inc.
@@ -37,11 +37,11 @@
 %   (and all CTAN mirrors, finger ctan@ctan.org for a list).
 % The texinfo.tex in the texinfo distribution itself could well be out
 % of date, so if that's what you're using, please check.
-% 
+%
 % Send bug reports to bug-texinfo@gnu.org.
 % Please include a precise test case in each bug report,
 % including a complete document with which we can reproduce the problem.
-% 
+%
 % To process a Texinfo manual with TeX, it's most reliable to use the
 % texi2dvi shell script that comes with the distribution.  For simple
 % manuals, however, you can get away with:
@@ -143,7 +143,7 @@
 
 % For @cropmarks command.
 % Do @cropmarks to get crop marks.
-% 
+%
 \newif\ifcropmarks
 \let\cropmarks = \cropmarkstrue
 %
@@ -618,7 +618,7 @@ where each line of input produces a line of output.}
 }
 
 % @enddots{} is an end-of-sentence ellipsis.
-% 
+%
 \def\enddots{%
   \leavevmode
   \hbox to 2em{%
@@ -980,7 +980,7 @@ where each line of input produces a line of output.}
 % contains other Texinfo commands, it's almost certain it will fail
 % (although perhaps we could fix that with sufficient work to do a
 % one-level expansion on the result, instead of complete).
-% 
+%
 \def\expandablevalue#1{%
   \expandafter\ifx\csname SET#1\endcsname\relax
     {[No value for ``#1'']}%
@@ -1088,7 +1088,7 @@ where each line of input produces a line of output.}
 % So open here the files we need to have open while reading the input.
 % This makes it possible to make a .fmt file for texinfo.
 \def\setfilename{%
-   \iflinks 
+   \iflinks
      \readauxfile
    \fi % \openindices needs to do some work in any case.
    \openindices
@@ -1107,7 +1107,7 @@ where each line of input produces a line of output.}
 }
 
 % Called from \setfilename.
-% 
+%
 \def\openindices{%
   \newindex{cp}%
   \newcodeindex{fn}%
@@ -1482,7 +1482,7 @@ where each line of input produces a line of output.}
 % @uref (abbreviation for `urlref') takes an optional second argument
 % specifying the text to display.  First (mandatory) arg is the url.
 % Perhaps eventually put in a hypertex \special here.
-% 
+%
 \def\uref#1{\urefxxx #1,,\finish}
 \def\urefxxx#1,#2,#3\finish{%
   \setbox0 = \hbox{\ignorespaces #2}%
@@ -1540,7 +1540,7 @@ where each line of input produces a line of output.}
 
 % Do an implicit @contents or @shortcontents after @end titlepage if the
 % user says @setcontentsaftertitlepage or @setshortcontentsaftertitlepage.
-% 
+%
 \newif\ifsetcontentsaftertitlepage
  \let\setcontentsaftertitlepage = \setcontentsaftertitlepagetrue
 \newif\ifsetshortcontentsaftertitlepage
@@ -1841,7 +1841,7 @@ July\or August\or September\or October\or November\or December\fi
     \itemxneedsnegativevskipfalse
   \else
     % The item text fits into the space.  Start a paragraph, so that the
-    % following text (if any) will end up on the same line.  
+    % following text (if any) will end up on the same line.
     \noindent
     % Do this with kerns and \unhbox so that if there is a footnote in
     % the item text, it can migrate to the main vertical list and
@@ -2138,7 +2138,7 @@ July\or August\or September\or October\or November\or December\fi
 \multitablelinespace=0pt
 
 % Macros used to set up halign preamble:
-% 
+%
 \let\endsetuptable\relax
 \def\xendsetuptable{\endsetuptable}
 \let\columnfractions\relax
@@ -2229,15 +2229,15 @@ July\or August\or September\or October\or November\or December\fi
   % In order to keep entries from bumping into each other
   % we will add a \leftskip of \multitablecolspace to all columns after
   % the first one.
-  % 
+  %
   % If a template has been used, we will add \multitablecolspace
   % to the width of each template entry.
-  % 
+  %
   % If the user has set preamble in terms of percent of \hsize we will
   % use that dimension as the width of the column, and the \leftskip
   % will keep entries from bumping into each other.  Table will start at
   % left margin and final column will justify at right margin.
-  % 
+  %
   % Make sure we don't inherit \rightskip from the outer environment.
   \rightskip=0pt
   \ifnum\colcount=1
@@ -2540,14 +2540,14 @@ width0pt\relax} \fi
 \def\emptymacro{\empty}
 
 % Most index entries go through here, but \dosubind is the general case.
-% 
+%
 \def\doind#1#2{\dosubind{#1}{#2}\empty}
 
 % Workhorse for all \fooindexes.
 % #1 is name of index, #2 is stuff to put there, #3 is subentry --
 % \empty if called from \doind, as we usually are.  The main exception
 % is with defuns, which call us directly.
-% 
+%
 \def\dosubind#1#2#3{%
   % Put the index entry in the margin if desired.
   \ifx\SETmarginindex\relax\else
@@ -2601,12 +2601,12 @@ width0pt\relax} \fi
         % will have extra space inserted, because the \medbreak in the
         % start of the @defun won't see the skip inserted by the @end of
         % the previous defun.
-        % 
+        %
         % But don't do any of this if we're not in vertical mode.  We
         % don't want to do a \vskip and prematurely end a paragraph.
-        % 
+        %
         % Avoid page breaks due to these extra skips, too.
-        % 
+        %
         \iflinks
           \ifvmode
             \skip0 = \lastskip
@@ -2615,7 +2615,7 @@ width0pt\relax} \fi
           %
           \temp % do the write
           %
-          % 
+          %
           \ifvmode \ifdim\skip0 = 0pt \else \nobreak\vskip\skip0 \fi \fi
         \fi
       }%
@@ -2712,7 +2712,7 @@ width0pt\relax} \fi
   %
   % Remove any glue we may have, we'll be inserting our own.
   \removelastskip
-  % 
+  %
   % We like breaks before the index initials, so insert a bonus.
   \penalty -300
   %
@@ -2720,7 +2720,7 @@ width0pt\relax} \fi
   % baselineskips increases the chance of the dots lining up from column
   % to column.  It still won't often be perfect, because of the stretch
   % we need before each entry, but it's better.
-  % 
+  %
   % No shrink because it confuses \balancecolumns.
   \vskip 1.67\baselineskip plus .5\baselineskip
   \leftline{\secbf #1}%
@@ -2820,7 +2820,7 @@ width0pt\relax} \fi
 \def\begindoublecolumns{\begingroup % ended by \enddoublecolumns
   % Grab any single-column material above us.
   \output = {%
-    % 
+    %
     % Here is a possibility not foreseen in manmac: if we accumulate a
     % whole lot of material, we might end up calling this \output
     % routine twice in a row (see the doublecol-lose test, which is
@@ -2872,7 +2872,7 @@ width0pt\relax} \fi
 
 % The double-column output routine for all double-column pages except
 % the last.
-% 
+%
 \def\doublecolumnout{%
   \splittopskip=\topskip \splitmaxdepth=\maxdepth
   % Get the available space for the double columns -- the normal
@@ -3436,10 +3436,10 @@ width0pt\relax} \fi
 % Write an entry to the toc file, opening it if necessary.
 % Called from @chapter, etc.  We supply {\folio} at the end of the
 % argument, which will end up as the last argument to the \...entry macro.
-% 
+%
 % We open the .toc file here instead of at @setfilename or any other
 % given time so that @contents can be put in the document anywhere.
-% 
+%
 \newif\iftocfileopened
 \def\writetocentry#1{%
   \iftocfileopened\else
@@ -3455,7 +3455,7 @@ width0pt\relax} \fi
 
 % Finish up the main text and prepare to read what we've written
 % to \tocfile.
-% 
+%
 \def\startcontents#1{%
    % If @setchapternewpage on, and @headings double, the contents should
    % start on an odd page, unlike chapters.  Thus, we maintain
@@ -3490,6 +3490,7 @@ width0pt\relax} \fi
        \input \jobname.toc
      \fi
      \vfill \eject
+     \contentsalignmacro % in case @setchapternewpage odd is in effect
    \endgroup
    \lastnegativepageno = \pageno
    \pageno = \savepageno
@@ -3519,6 +3520,7 @@ width0pt\relax} \fi
         \input \jobname.toc
       \fi
      \vfill \eject
+     \contentalignmacro % in case @setchapternewpage odd is in effect
    \endgroup
    \lastnegativepageno = \pageno
    \pageno = \savepageno
@@ -3843,7 +3845,7 @@ width0pt\relax} \fi
 
 % Define the \E... control sequence only if we are inside the particular
 % environment, so the error checking in \end will work.
-% 
+%
 % To end an @example-like environment, we first end the paragraph (via
 % \afterenvbreak's vertical glue), and then the group.  That way we keep
 % the zero \parskip that the environments set -- \parskip glue will be
@@ -3868,7 +3870,7 @@ width0pt\relax} \fi
 % redefines).  We must call \example (or whatever) last in the
 % definition, since it reads the return following the @example (or
 % whatever) command.
-% 
+%
 % This actually allows (for example) @end display inside an
 % @smalldisplay.  Too bad, but makeinfo will catch the error anyway.
 %
@@ -3924,7 +3926,7 @@ width0pt\relax} \fi
 \def\flushleft{\begingroup \def\Eflushleft{\nonfillfinish\endgroup}\format}
 
 % @flushright.
-% 
+%
 \def\flushright{\begingroup
   \let\nonarrowing = t
   \nonfillstart
@@ -4066,7 +4068,7 @@ width0pt\relax} \fi
 % #2 is the \...x control sequence for consecutive fns (which we define).
 % #3 is the control sequence to call to resume processing.
 % #4, delimited by the space, is the class name.
-% 
+%
 \def\defmethparsebody#1#2#3#4 {\begingroup\inENV %
 \medbreak %
 % Define the end token that this defining construct specifies
@@ -4084,7 +4086,7 @@ width0pt\relax} \fi
 % #3 is the control sequence to call to resume processing.
 % #4, delimited by the space, is the class name.
 % #5 is the method's return type.
-% 
+%
 \def\deftypemethparsebody#1#2#3#4 #5 {\begingroup\inENV %
 \medbreak %
 % Define the end token that this defining construct specifies
@@ -4472,7 +4474,7 @@ width0pt\relax} \fi
 \message{macros,}
 % @macro.
 
-% To do this right we need a feature of e-TeX, \scantokens, 
+% To do this right we need a feature of e-TeX, \scantokens,
 % which we arrange to emulate with a temporary file in ordinary TeX.
 \ifx\eTeXversion\undefined
  \newwrite\macscribble
@@ -4525,8 +4527,8 @@ width0pt\relax} \fi
 % all characters are catcode 10, 11 or 12, except \ which is active
 % (as in normal texinfo). It is necessary to change the definition of \.
 
-% It's necessary to have hard CRs when the macro is executed. This is 
-% done by  making ^^M (\endlinechar) catcode 12 when reading the macro 
+% It's necessary to have hard CRs when the macro is executed. This is
+% done by  making ^^M (\endlinechar) catcode 12 when reading the macro
 % body, and then making it the \newlinechar in \scanmacro.
 
 \def\macrobodyctxt{%
@@ -4555,7 +4557,7 @@ width0pt\relax} \fi
   \catcode`\\=12}
 
 % \mbodybackslash is the definition of \ in @macro bodies.
-% It maps \foo\ => \csname macarg.foo\endcsname => #N 
+% It maps \foo\ => \csname macarg.foo\endcsname => #N
 % where N is the macro parameter number.
 % We define \csname macarg.\endcsname to be \realbackslash, so
 % \\ in macro replacement text gets you a backslash.
@@ -4574,7 +4576,7 @@ width0pt\relax} \fi
   \ifx\argl\empty       % no arguments
      \paramno=0%
   \else
-     \expandafter\parsemargdef \argl;% 
+     \expandafter\parsemargdef \argl;%
   \fi
   \expandafter\ifx \csname macsave.\the\macname\endcsname \relax
      \cslet{macsave.\the\macname}{\the\macname}%
@@ -4583,7 +4585,7 @@ width0pt\relax} \fi
   \fi
   \begingroup \macrobodyctxt
   \ifrecursive \expandafter\parsermacbody
-  \else \expandafter\parsemacbody 
+  \else \expandafter\parsemacbody
   \fi}
 
 \def\unmacro{\parsearg\unmacroxxx}
@@ -4663,7 +4665,7 @@ width0pt\relax} \fi
       \expandafter\expandafter
       \expandafter\xdef
       \expandafter\expandafter
-        \csname\the\macname xxx\endcsname 
+        \csname\the\macname xxx\endcsname
           \paramlist{\egroup\noexpand\scanmacro{\temp}}%
     \fi
   \else
@@ -4706,7 +4708,7 @@ width0pt\relax} \fi
 \def\braceorline#1{\let\next=#1\futurelet\nchar\braceorlinexxx}
 \def\braceorlinexxx{%
   \ifx\nchar\bgroup\else
-    \expandafter\parsearg 
+    \expandafter\parsearg
   \fi \next}
 
 
@@ -4752,7 +4754,7 @@ width0pt\relax} \fi
 
 
 % @anchor{NAME} -- define xref target at arbitrary point.
-% 
+%
 \def\anchor#1{\setref{#1}{Ynothing}}
 
 
@@ -4761,7 +4763,7 @@ width0pt\relax} \fi
 % to set \indexdummies so commands such as @code in a section title
 % aren't expanded.  It would be nicer not to expand the titles in the
 % first place, but there's so many layers that that is hard to do.
-% 
+%
 \def\setref#1#2{{%
   \indexdummies
   \dosetq{#1-title}{Ytitle}%
@@ -4825,7 +4827,7 @@ width0pt\relax} \fi
      \setbox2 = \hbox{\ignorespaces \refx{#1-snt}{}}%
      \ifdim \wd2 > 0pt \refx{#1-snt}\space\fi
     }%
-    % [mynode], 
+    % [mynode],
     [\printednodename],\space
     % page 3
     \turnoffactive \putwordpage\tie\refx{#1-pg}{}%
@@ -4914,7 +4916,7 @@ width0pt\relax} \fi
 }
 
 % This is the macro invoked by entries in the aux file.
-% 
+%
 \def\xrdef#1{\begingroup
   % Reenable \ as an escape while reading the second argument.
   \catcode`\\ = 0
@@ -5139,7 +5141,7 @@ width0pt\relax} \fi
 
 % @image.  We use the macros from epsf.tex to support this.
 % If epsf.tex is not installed and @image is used, we complain.
-% 
+%
 % Check for and read epsf.tex up front.  If we read it only at @image
 % time, we might be inside a group, and then its definitions would get
 % undone and the next image would fail.
@@ -5319,7 +5321,7 @@ width0pt\relax} \fi
 % @pagesizes TEXTHEIGHT[,TEXTWIDTH]
 % Perhaps we should allow setting the margins, \topskip, \parskip,
 % and/or leading, also. Or perhaps we should compute them somehow.
-% 
+%
 \def\pagesizes{\parsearg\pagesizesxxx}
 \def\pagesizesxxx#1{\pagesizesyyy #1,,\finish}
 \def\pagesizesyyy#1,#2,#3\finish{{%
@@ -5333,7 +5335,7 @@ width0pt\relax} \fi
 }}
 
 % Set default to letter.
-% 
+%
 \letterpaper
 
 \message{and turning on texinfo input format.}
