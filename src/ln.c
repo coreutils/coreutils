@@ -31,10 +31,10 @@
 #include "version.h"
 #include "error.h"
 
-int link (const char *, const char *);			/* Some systems don't declare this anywhere. */
+int link ();			/* Some systems don't declare this anywhere. */
 
 #ifdef S_ISLNK
-int symlink (const char *, const char *);
+int symlink ();
 #endif
 
 /* Construct a string NEW_DEST by concatenating DEST, a slash, and
@@ -57,15 +57,12 @@ int symlink (const char *, const char *);
       }									\
     while (0)
 
-char *basename (char *);
+char *basename ();
 enum backup_type get_version ();
 int isdir ();
 int yesno ();
 void strip_trailing_slashes ();
 char *stpcpy ();
-
-static void usage (int status);
-static int do_link (char *source, char *dest);
 
 /* The name by which the program was run, for error messages.  */
 char *program_name;
@@ -116,137 +113,6 @@ static struct option const long_options[] =
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
-
-void
-main (int argc, char **argv)
-{
-  int c;
-  int errors;
-  int make_backups = 0;
-  char *version;
-
-  version = getenv ("SIMPLE_BACKUP_SUFFIX");
-  if (version)
-    simple_backup_suffix = version;
-  version = getenv ("VERSION_CONTROL");
-  program_name = argv[0];
-  linkfunc = link;
-  symbolic_link = remove_existing_files = interactive = verbose
-    = hard_dir_link = 0;
-  errors = 0;
-
-  while ((c = getopt_long (argc, argv, "bdfinsvFS:V:", long_options, (int *) 0))
-	 != EOF)
-    {
-      switch (c)
-	{
-	case 0:			/* Long-named option. */
- 	  break;
-	case 'b':
-	  make_backups = 1;
-	  break;
-	case 'd':
-	case 'F':
-	  hard_dir_link = 1;
-	  break;
-	case 'f':
-	  remove_existing_files = 1;
-	  interactive = 0;
-	  break;
-	case 'i':
-	  remove_existing_files = 0;
-	  interactive = 1;
-	  break;
-	case 'n':
-	  dereference_dest_dir_symlinks = 0;
-	  break;
-	case 's':
-#ifdef S_ISLNK
-	  symbolic_link = 1;
-#else
-	  error (1, 0, "symbolic links are not supported on this system");
-#endif
-	  break;
-	case 'v':
-	  verbose = 1;
-	  break;
-	case 'S':
-	  simple_backup_suffix = optarg;
-	  break;
-	case 'V':
-	  version = optarg;
-	  break;
-	default:
-	  usage (1);
-	  break;
-	}
-    }
-
-  if (show_version)
-    {
-      printf ("ln - %s\n", version_string);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
-
-  if (optind == argc)
-    {
-      error (0, 0, "missing file argument");
-      usage (1);
-    }
-
-  if (make_backups)
-    backup_type = get_version (version);
-
-#ifdef S_ISLNK
-  if (symbolic_link)
-    linkfunc = symlink;
-#endif
-
-  if (optind == argc - 1)
-    errors = do_link (argv[optind], ".");
-  else if (optind == argc - 2)
-    {
-      struct stat source_stats;
-      char *source;
-      char *dest;
-      char *new_dest;
-
-      source = argv[optind];
-      dest = argv[optind + 1];
-
-      /* When the destination is specified with a trailing slash and the
-	 source exists but is not a directory, convert the user's command
-	 `ln source dest/' to `ln source dest/basename(source)'.  */
-
-      if (dest[strlen (dest) - 1] == '/'
-	  && lstat (source, &source_stats) == 0
-	  && !S_ISDIR (source_stats.st_mode))
-	{
-	  PATH_BASENAME_CONCAT (new_dest, dest, source);
-	}
-      else
-	{
-	  new_dest = dest;
-	}
-
-      errors = do_link (source, new_dest);
-    }
-  else
-    {
-      char *to;
-
-      to = argv[argc - 1];
-      if (!isdir (to))
-	error (1, 0, "when making multiple links, last argument must be a directory");
-      for (; optind < argc - 1; ++optind)
-	errors += do_link (argv[optind], to);
-    }
-
-  exit (errors != 0);
-}
 
 /* Make a link DEST to the (usually) existing file SOURCE.
    Symbolic links to nonexistent files are allowed.
@@ -428,4 +294,135 @@ version control may be set with VERSION_CONTROL, values are:\n\
   never, simple   always make simple backups\n");
     }
   exit (status);
+}
+
+void
+main (int argc, char **argv)
+{
+  int c;
+  int errors;
+  int make_backups = 0;
+  char *version;
+
+  version = getenv ("SIMPLE_BACKUP_SUFFIX");
+  if (version)
+    simple_backup_suffix = version;
+  version = getenv ("VERSION_CONTROL");
+  program_name = argv[0];
+  linkfunc = link;
+  symbolic_link = remove_existing_files = interactive = verbose
+    = hard_dir_link = 0;
+  errors = 0;
+
+  while ((c = getopt_long (argc, argv, "bdfinsvFS:V:", long_options, (int *) 0))
+	 != EOF)
+    {
+      switch (c)
+	{
+	case 0:			/* Long-named option. */
+ 	  break;
+	case 'b':
+	  make_backups = 1;
+	  break;
+	case 'd':
+	case 'F':
+	  hard_dir_link = 1;
+	  break;
+	case 'f':
+	  remove_existing_files = 1;
+	  interactive = 0;
+	  break;
+	case 'i':
+	  remove_existing_files = 0;
+	  interactive = 1;
+	  break;
+	case 'n':
+	  dereference_dest_dir_symlinks = 0;
+	  break;
+	case 's':
+#ifdef S_ISLNK
+	  symbolic_link = 1;
+#else
+	  error (1, 0, "symbolic links are not supported on this system");
+#endif
+	  break;
+	case 'v':
+	  verbose = 1;
+	  break;
+	case 'S':
+	  simple_backup_suffix = optarg;
+	  break;
+	case 'V':
+	  version = optarg;
+	  break;
+	default:
+	  usage (1);
+	  break;
+	}
+    }
+
+  if (show_version)
+    {
+      printf ("ln - %s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage (0);
+
+  if (optind == argc)
+    {
+      error (0, 0, "missing file argument");
+      usage (1);
+    }
+
+  if (make_backups)
+    backup_type = get_version (version);
+
+#ifdef S_ISLNK
+  if (symbolic_link)
+    linkfunc = symlink;
+#endif
+
+  if (optind == argc - 1)
+    errors = do_link (argv[optind], ".");
+  else if (optind == argc - 2)
+    {
+      struct stat source_stats;
+      char *source;
+      char *dest;
+      char *new_dest;
+
+      source = argv[optind];
+      dest = argv[optind + 1];
+
+      /* When the destination is specified with a trailing slash and the
+	 source exists but is not a directory, convert the user's command
+	 `ln source dest/' to `ln source dest/basename(source)'.  */
+
+      if (dest[strlen (dest) - 1] == '/'
+	  && lstat (source, &source_stats) == 0
+	  && !S_ISDIR (source_stats.st_mode))
+	{
+	  PATH_BASENAME_CONCAT (new_dest, dest, source);
+	}
+      else
+	{
+	  new_dest = dest;
+	}
+
+      errors = do_link (source, new_dest);
+    }
+  else
+    {
+      char *to;
+
+      to = argv[argc - 1];
+      if (!isdir (to))
+	error (1, 0, "when making multiple links, last argument must be a directory");
+      for (; optind < argc - 1; ++optind)
+	errors += do_link (argv[optind], to);
+    }
+
+  exit (errors != 0);
 }
