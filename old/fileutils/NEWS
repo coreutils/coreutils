@@ -1,4 +1,6 @@
 Changes in release 4.0:
+[4.0-b7]
+* rm -rf '' no longer gets a failed assertion on the Hurd
 [4.0-b6]
 * rm simply fails as it should (rather than segfaulting) for
   `mkdir -m 0100 x; rm -rf x'
