@@ -1656,7 +1656,7 @@ main (argc, argv)
 	}
     }
 
-  posix_pedantic = (getenv ("POSIXLY_CORRECT") != 0);
+  posix_pedantic = (getenv ("POSIXLY_CORRECT") != NULL);
 
   non_option_args = argc - optind;
   translating = (non_option_args == 2 && !delete);
