@@ -1,4 +1,7 @@
 Changes in release 3.17:
+[3.16u]
+* `cp -a --one-file-system' now copies any mount point directories it
+  encounters on the selected file system.
 [3.16t]
 * cp (with --update) and ls compare time stamps with subsecond resolution when
   available (e.g., on systems with recent Linux kernels and on Solaris 2.6).
