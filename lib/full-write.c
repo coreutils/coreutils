@@ -18,13 +18,13 @@
    Copied largely from GNU C's cccp.c.
    */
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
 # include <config.h>
 #endif
 
 #include <sys/types.h>
 
-#ifdef HAVE_UNISTD_H
+#if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
 
