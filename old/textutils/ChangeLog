@@ -1,3 +1,9 @@
+Sat Jun 14 12:29:12 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/cut.c (cut_fields): Detect when the input is empty and handle
+	that special case.  Before `cut -f1 </dev/null' would improperly
+	output a single newline.  Reported by Phil Richards.
+
 Sun Apr 27 15:10:58 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* man/Makefile.am (DISTFILES): Add $(man_MANS).
