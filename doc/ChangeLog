@@ -1,3 +1,12 @@
+2004-10-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (Standards conformance): Use "head -10" rather
+	than "head -1" as example of obsolete usage, since the POSIX
+	consensus is that "head -1" could be supported even if we don't
+	yet have clear consensus on "head -10".  See today's revision to
+	the SUS FAQ
+	<http://www.opengroup.org/austin/papers/single_unix_faq.html>.
+
 2004-10-24  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (pathchk invocation): Options must precede operands.
