@@ -102,6 +102,7 @@ int wcwidth ();
 
 #include "acl.h"
 #include "argmatch.h"
+#include "dev-ino.h"
 #include "dirname.h"
 #include "dirfd.h"
 #include "error.h"
@@ -298,7 +299,7 @@ char *program_name;
 
 /* The set of `active' directories, from the current command-line argument
    to the level in the hierarchy at which files are being listed.
-   A directory is represented by its device and inode numbers.
+   A directory is represented by its device and inode numbers (struct dev_ino).
    A directory is added to this set when ls begins listing it or its
    entries, and it is removed from the set just after ls has finished
    processing it.  This set is used solely to detect loops, e.g., with
@@ -306,13 +307,6 @@ char *program_name;
 static Hash_table *active_dir_set;
 
 #define LOOP_DETECT (!!active_dir_set)
-
-/* An entry in the active_dir_set.  */
-struct dev_ino
-{
-  dev_t st_dev;
-  ino_t st_ino;
-};
 
 /* The table of files in the current directory:
 
