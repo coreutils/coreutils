@@ -1,5 +1,7 @@
 1999-05-05  Jim Meyering  <meyering@ascend.com>
 
+	* Version 1.16i.
+
 	Add definitions to help read utmpx on systems with utmpname.
 	* lib/readutmp.h (UTMP_NAME_FUNCTION): Define.
 	(SET_UTMP_ENT): Likewise.
