@@ -1,3 +1,9 @@
+1997-11-12  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (AC_CHECK_FUNCS): Add mempcpy.
+	* src/date.c [!HAVE_MEMPCPY] (mempcpy): Define.
+	(batch_convert): Use mempcpy rather than stpcpy.
+
 1997-11-09  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* m4/jm-mktime.m4 (jm_FUNC_MKTIME): Check for localtime_r.
