@@ -36,11 +36,13 @@ struct group *getgrnam ();
 struct group *getgrgid ();
 #endif
 
+int lstat ();
+
 void
 chopt_init (struct Chown_option *chopt)
 {
   chopt->verbosity = V_off;
-  chopt->change_symlinks = 1;
+  chopt->dereference = DEREF_NEVER;
   chopt->recurse = 0;
   chopt->force_silent = 0;
   chopt->user_name = 0;
@@ -79,6 +81,8 @@ describe_change (const char *file, enum Change_status changed,
 		 char const *user, char const *group)
 {
   const char *fmt;
+  char *spec;
+  int spec_allocated = 0;
 
   if (changed == CH_NOT_APPLIED)
     {
@@ -87,46 +91,49 @@ describe_change (const char *file, enum Change_status changed,
       return;
     }
 
-  if (user == NULL)
+  if (user)
     {
-      switch (changed)
+      if (group)
 	{
-	case CH_SUCCEEDED:
-	  fmt = _("group of %s changed to %s\n");
-	  break;
-	case CH_FAILED:
-	  fmt = _("failed to change group of %s to %s\n");
-	  break;
-	case CH_NO_CHANGE_REQUESTED:
-	  fmt = _("group of %s retained as %s\n");
-	  break;
-	default:
-	  abort ();
+	  spec = xmalloc (strlen (user) + 1 + strlen (group) + 1);
+	  stpcpy (stpcpy (stpcpy (spec, user), ":"), group);
+	  spec_allocated = 1;
 	}
-      printf (fmt, quote (file), group);
+      else
+	{
+	  spec = (char *) user;
+	}
     }
   else
     {
-      switch (changed)
-	{
-	case CH_SUCCEEDED:
-	  fmt = _("ownership of %s changed to ");
-	  break;
-	case CH_FAILED:
-	  fmt = _("failed to change ownership of %s to ");
-	  break;
-	case CH_NO_CHANGE_REQUESTED:
-	  fmt = _("ownership of %s retained as ");
-	  break;
-	default:
-	  abort ();
-	}
-      printf (fmt, file);
-      if (group)
-	printf ("%s.%s\n", user, group);
-      else
-	printf ("%s\n", user);
+      spec = (char *) group;
     }
+
+  switch (changed)
+    {
+    case CH_SUCCEEDED:
+      fmt = (user
+	     ? _("changed ownership of %s to %s\n")
+	     : _("changed group of %s to %s\n"));
+      break;
+    case CH_FAILED:
+      fmt = (user
+	     ? _("failed to change ownership of %s to %s\n")
+	     : _("failed to change group of %s to %s\n"));
+      break;
+    case CH_NO_CHANGE_REQUESTED:
+      fmt = (user
+	     ? _("ownership of %s retained as %s\n")
+	     : _("group of %s retained as %s\n"));
+      break;
+    default:
+      abort ();
+    }
+
+  printf (fmt, quote (file), spec);
+
+  if (spec_allocated)
+    free (spec);
 }
 
 /* Recursively change the ownership of the files in directory DIR
@@ -194,6 +201,8 @@ change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group,
   uid_t newuser;
   gid_t newgroup;
   int errors = 0;
+  int is_symlink;
+  int is_directory;
 
   if (lstat (file, &file_stats))
     {
@@ -202,8 +211,33 @@ change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group,
       return 1;
     }
 
-  if ((old_user == (uid_t) -1  || file_stats.st_uid == old_user) &&
-      (old_group == (gid_t) -1 || file_stats.st_gid == old_group))
+  /* If it's a symlink and we're dereferencing, then use stat
+     to get the attributes of the referent.  */
+  if (S_ISLNK (file_stats.st_mode))
+    {
+      if (chopt->dereference == DEREF_ALWAYS
+	  && stat (file, &file_stats))
+	{
+	  if (chopt->force_silent == 0)
+	    error (0, errno, _("getting attributes of %s"), quote (file));
+	  return 1;
+	}
+
+      is_symlink = 1;
+
+      /* With -R, don't traverse through symlinks-to-directories.
+	 But of course, this will all change with POSIX's new
+	 -H, -L, -P options.  */
+      is_directory = 0;
+    }
+  else
+    {
+      is_symlink = 0;
+      is_directory = S_ISDIR (file_stats.st_mode);
+    }
+
+  if ((old_user == (uid_t) -1 || file_stats.st_uid == old_user)
+      && (old_group == (gid_t) -1 || file_stats.st_gid == old_group))
     {
       newuser = user == (uid_t) -1 ? file_stats.st_uid : user;
       newgroup = group == (gid_t) -1 ? file_stats.st_gid : group;
@@ -212,17 +246,35 @@ change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group,
 	  int fail;
 	  int symlink_changed = 1;
 	  int saved_errno;
+	  int called_lchown = 0;
 
-	  if (S_ISLNK (file_stats.st_mode) && chopt->change_symlinks)
+	  if (is_symlink)
 	    {
-	      fail = lchown (file, newuser, newgroup);
-
-	      /* Ignore the failure if it's due to lack of support (ENOSYS)
-		 and this is not a command line argument.  */
-	      if (!cmdline_arg && fail && errno == ENOSYS)
+	      if (chopt->dereference == DEREF_NEVER)
 		{
-		  fail = 0;
-		  symlink_changed = 0;
+		  called_lchown = 1;
+		  fail = lchown (file, newuser, newgroup);
+
+		  /* Ignore the failure if it's due to lack of support (ENOSYS)
+		     and this is not a command line argument.  */
+		  if (!cmdline_arg && fail && errno == ENOSYS)
+		    {
+		      fail = 0;
+		      symlink_changed = 0;
+		    }
+		}
+	      else if (chopt->dereference == DEREF_ALWAYS)
+		{
+		  /* Applying chown to a symlink and expecting it to affect
+		     the referent is not portable.  So instead, open the
+		     file and use fchown on the resulting descriptor.  */
+		  int fd = open (file, O_RDONLY | O_NONBLOCK | O_NOCTTY);
+		  fail = (fd == -1 ? 1 : fchown (fd, newuser, newgroup));
+		}
+	      else
+		{
+		  /* FIXME */
+		  abort ();
 		}
 	    }
 	  else
@@ -257,9 +309,10 @@ change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group,
 		 resets the `special' permission bits.  When run by a
 		 `privileged' user, this program must ensure that at least
 		 the set-uid and set-group ones are still set.  */
-	      if (file_stats.st_mode & ~S_IRWXUGO
-		  /* If this is a symlink and we changed *it*, then skip it.  */
-		  && ! (S_ISLNK (file_stats.st_mode) && chopt->change_symlinks))
+	      if (file_stats.st_mode & ~(S_IFMT | S_IRWXUGO)
+		  /* If we called lchown above (which means this is a symlink),
+		     then skip it.  */
+		  && ! called_lchown)
 		{
 		  if (chmod (file, file_stats.st_mode))
 		    {
@@ -278,7 +331,7 @@ change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group,
 	}
     }
 
-  if (chopt->recurse && S_ISDIR (file_stats.st_mode))
+  if (chopt->recurse && is_directory)
     errors |= change_dir_owner (file, user, group,
 				old_user, old_group, &file_stats, chopt);
   return errors;
