@@ -24,6 +24,12 @@
 #include <getopt.h>
 #include "system.h"
 
+#ifndef isascii
+#define isascii(c) 1
+#endif
+
+#define ISDIGIT(c) (isascii (c) && isdigit (c))
+
 #ifndef _POSIX_VERSION
 struct group *getgrnam ();
 #endif
@@ -260,7 +266,7 @@ isnumber (str)
      char *str;
 {
   for (; *str; str++)
-    if (!isdigit (*str))
+    if (!ISDIGIT (*str))
       return 0;
   return 1;
 }
