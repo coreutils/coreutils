@@ -1,3 +1,9 @@
+2000-06-20  Jim Meyering  <meyering@lucent.com>
+
+	* src/uniq.c (main): Fix off-by-argc test, so +N-style options are
+	recognized once again.  Reported by Geoff Keunning.
+	Fix typo in diagnostic: s/compare/skip/.
+
 2000-05-27  Jim Meyering  <meyering@lucent.com>
 
 	* src/tail.c: Arrange to call close_stdout upon exit.
