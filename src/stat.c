@@ -46,22 +46,6 @@
 #include <string.h>
 #include <ctype.h>
 
-#if ! defined PRIdMAX
-# if HAVE_LONG_LONG
-#  define PRIdMAX "lld"
-# else
-#  define PRIdMAX "ld"
-# endif
-#endif
-
-#if ! defined PRIuMAX
-# if HAVE_LONG_LONG
-#  define PRIuMAX "llu"
-# else
-#  define PRIuMAX "lu"
-# endif
-#endif
-
 #include "system.h"
 
 #include "closeout.h"
