@@ -1,3 +1,15 @@
+2000-05-05  Jim Meyering  <meyering@lucent.com>
+
+	Exit nonzero upon write failure.
+	* src/printf.c: Include "closeout.h".
+	(main): Call close_stdout.
+	Reported by Ian Jackson via Michael Stone.
+
+2000-05-04  Jim Meyering  <meyering@lucent.com>
+
+	* Makefile.maint (my-distcheck): Remove spurious blank line.
+	Remove $(DEPDIR) *after* making distclean, not before.
+
 2000-04-30  Jim Meyering  <meyering@lucent.com>
 
 	* src/yes.c: Detect and terminate upon write failure.
