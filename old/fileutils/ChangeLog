@@ -1,5 +1,9 @@
 Thu Jul  4 12:34:50 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/dd.c (usage): Remove space before newline in usage message.
+	* src/mknod.c (usage): Likewise.
+	* src/mv.c (usage): Likewise.
+
 	* src/Makefile.am (libexec_PROGRAMS): Regenerate using patched
 	automake-1.0 to work around rm -f bug on Solaris2.4.
 	Reported by Kaveh Ghazi.
