@@ -251,7 +251,8 @@ EXTRA_DIST += getopt_.h getopt_int.h
 
 check: unit-test
 
-unit-test:
+.PHONY: unit-test
+unit-test: t-fpending
 	./t-fpending > /dev/null
 
 # We need the following in order to create an <getopt.h> when the system
