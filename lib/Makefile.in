@@ -14,6 +14,9 @@
 
 @SET_MAKE@
 
+# Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002 Free
+# Software Foundation, Inc.
+
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 VPATH = @srcdir@
@@ -230,6 +233,7 @@ libfetish_a_SOURCES = \
   umaxtostr.c \
   unicodeio.c unicodeio.h \
   unistd-safer.h \
+  unlocked-io.h \
   userspec.c \
   version-etc.c version-etc.h \
   xalloc.h \
@@ -251,11 +255,10 @@ libfetish_a_SOURCES = \
 libfetish_a_LIBADD = @LIBOBJS@ @ALLOCA@
 libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
 
-BUILT_SOURCES = getdate.c unlocked-io.h
+BUILT_SOURCES = getdate.c
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
-DISTCLEANFILES = unlocked-io.h
 
-EXTRA_DIST = config.charset ref-add.sin ref-del.sin gen-uio \
+EXTRA_DIST = config.charset ref-add.sin ref-del.sin \
   fnmatch_loop.c inttostr.c inttostr.h
 
 
@@ -265,12 +268,6 @@ charset_tmp = $(DESTDIR)$(libdir)/charset.tmp
 SUFFIXES = .sed .sin
 
 CLEANFILES = charset.alias ref-add.sed ref-del.sed
-
-# FIXME: CAUTION this list is a duplicate of one in ../Makefile.cfg.
-io_functions = \
-  clearerr feof ferror fflush fgets fputc fputs \
-  fread fwrite getc getchar putc putchar
-
 subdir = lib
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
@@ -1065,7 +1062,6 @@ clean-generic:
 
 distclean-generic:
 	-rm -f Makefile $(CONFIG_CLEAN_FILES)
-	-test -z "$(DISTCLEANFILES)" || rm -f $(DISTCLEANFILES)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -1138,7 +1134,7 @@ uninstall-am: uninstall-info-am uninstall-local
 # On systems with glibc-2.1 or newer, the file is redundant, therefore we
 # avoid installing it.
 
-all-local: charset.alias ref-add.sed ref-del.sed unlocked-io.h
+all-local: charset.alias ref-add.sed ref-del.sed
 install-exec-local: all-local
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
 	if test -f $(charset_alias); then \
@@ -1171,19 +1167,6 @@ charset.alias: config.charset
 .sin.sed:
 	sed -e '/^#/d' -e 's/@''PACKAGE''@/@PACKAGE@/g' $< > t-$@
 	mv t-$@ $@
-
-###############################################
-
-# FIXME: remove this dependency once automake handles it.
-# As of cvs automake of about 2002-01-13,
-# this dependency is necessary to avoid a build failure
-# when running `make check' before running `make all'.
-# Otherwise, unlocked-io.h is not built before it's needed.
-getdate$U.o: unlocked-io.h
-
-unlocked-io.h: $(srcdir)/gen-uio Makefile.am
-	srcdir=$(srcdir) $(SHELL) $(srcdir)/gen-uio $(io_functions) > $@t
-	mv $@t $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
