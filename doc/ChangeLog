@@ -1,3 +1,8 @@
+2004-10-12  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am (check-texinfo): Add `builtin' and `builtins' to
+	the list of words to avoid.
+
 2004-10-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (Special built-in utilities): New node.
