@@ -169,17 +169,17 @@ hash_get_table_size (const HT *ht)
   return ht->hash_table_size;
 }
 
-/* CANDIDATE_TABLE_SIZE need not be prime.  If WHEN_TO_REHASH is positive, when
-   that percentage of table entries have been used, the table is
-   deemed too small;  then a new, larger table (GROW_FACTOR times
-   larger than the previous size) is allocated and all entries in
-   the old table are rehashed into the new, larger one.  The old
-   table is freed.  If WHEN_TO_REHASH is zero or negative, the
-   table is never resized.
+/* CANDIDATE_TABLE_SIZE need not be prime.  If WHEN_TO_REHASH (FIXME: add
+   this parameter) is positive, when that percentage of table entries have
+   been used, the table size is increased;  then a new, larger table
+   (GROW_FACTOR (FIXME: maybe add this parameter) times larger than the previous
+   size) is allocated and all entries in the old table are rehashed into
+   the new, larger one.  The old table is freed.  If WHEN_TO_REHASH is zero
+   or negative, the table is never resized.
 
    The function returns non-zero
-   - if TABLE_SIZE is zero or negative
-   - if EQUALITY_TESTER or HASH is null
+   - if CANDIDATE_TABLE_SIZE is zero or negative
+   - if KEY_COMPARATOR or HASH is null
    - if it was unable to allocate sufficient storage for the hash table
    - if WHEN_TO_REHASH is zero or negative
    Otherwise it returns zero.
