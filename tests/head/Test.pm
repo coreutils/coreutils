@@ -5,6 +5,9 @@ use strict;
 # Tell head to accept old-style options like `-1'.
 $Test::env_default = ['_POSIX2_VERSION=199209'];
 
+# This should match the definition in head.c.
+my $READ_BUFSIZE = 4096;
+
 my @tv = (
 # test name, options, input, expected output, expected return code
 #
@@ -50,13 +53,43 @@ my @tv = (
 ['no-oct-2', '-010', "\n"x12, "\n"x10, 0],
 ['no-oct-3', '-n 08', "\n"x12, "\n"x8, 0],
 ['no-oct-4', '-c 08', "\n"x12, "\n"x8, 0],
+
+# Elide the exact size of the file.
+['elide-1', "--bytes=-2", "a\n", '', 0],
+# Elide more than the size of the file.
+['elide-2', "--bytes=-2", "a", '', 0],
+# Leave just one byte.
+['elide-3', "--bytes=-2", "abc", 'a', 0],
+# Make it so the elided bytes straddle the end of the first $READ_BUFSIZE block.
+['elide-4', "--bytes=-2",
+ 'a' x ($READ_BUFSIZE-3) . "\nbcd",
+ 'a' x ($READ_BUFSIZE-3) . "\nb", 0],
+# Make it so the elided bytes straddle the end of the 2nd $READ_BUFSIZE block.
+['elide-5', "--bytes=-2",
+ 'a' x (2 * $READ_BUFSIZE - 2) . 'bcd',
+ 'a' x (2 * $READ_BUFSIZE - 2) . 'b', 0],
 );
+
+# Brute force: use all combinations of file sizes [0..20] and
+# number of bytes to elide [0..20].
+my $s = "abcdefghijklmnopqrst";
+for my $file_size (0..20)
+  {
+    for my $n_elide (0..20)
+      {
+	my $input = substr $s, 0, $file_size;
+	my $out_len = $n_elide < $file_size ? $file_size - $n_elide : 0;
+	my $output = substr $input, 0, $out_len;
+	push @tv, ["elide-$file_size-$n_elide", "--bytes=-$n_elide",
+		   $input, $output, 0];
+
+      }
+  }
 
 sub test_vector
 {
-  my $t;
   my @derived_tests;
-  foreach $t (@tv)
+  foreach my $t (@tv)
     {
       my ($test_name, $flags, $in, $exp, $ret) = @$t;
 
@@ -79,6 +112,12 @@ sub test_vector
 	  $flags = "-l $`";
 	}
       push (@derived_tests, [$test_name, $flags, $in, $exp, $ret]);
+    }
+
+  foreach my $t (@tv, @derived_tests)
+    {
+      my ($test_name) = @$t;
+      $Test::input_via{$test_name} = {REDIR => 0, FILE => 0, PIPE => 0}
     }
 
   return (@tv, @derived_tests);
