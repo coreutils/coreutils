@@ -442,7 +442,7 @@ unexpand (void)
 		  pending = 0;
 		  one_blank_before_tab_stop = false;
 		}
-	      
+
 	      prev_blank = blank;
 	      convert &= convert_entire_line | blank;
 	    }
