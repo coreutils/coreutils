@@ -1,11 +1,16 @@
-Thu Jan  4 06:47:37 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+Sat Jan 20 06:00:09 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* cp-aux.c (usage): Fix description of --archive.  From Andreas Schwab.
 
-	* install.c (copy_files): Accept backup options just as cp, ln, and
-	mv do: --backup (-b).  From Marty Leisner <leisner@sdsp.mc.xerox.c>.
+	* install.c (copy_files): Accept backup/suffix options just as cp,
+	ln, and mv do.  From Marty Leisner <leisner@sdsp.mc.xerox.com>.
 
-  --suffix=SUFFIX (-S SUFFIX), --version-control=WORD (-V WORD)
+	* src/Makefile.am (DISTCLEANFILES): Set to stamp-v version.c.
+	(version.c): Update with rules from textutils.
+	(transform): Add `s/ginstall/install/;' prefix.
+
+	* lib/Makefile.am (BUILT_SOURCES): Set to posixtm.c getdate.c so
+	autodependencies work after `make distclean.'
 
 Fri Dec 22 21:34:55 1995  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
