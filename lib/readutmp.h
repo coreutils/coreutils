@@ -34,10 +34,18 @@
 #  include <utmpx.h>
 #  define UTMP_STRUCT_NAME utmpx
 #  define UT_TIME_MEMBER(UT_PTR) ((UT_PTR)->ut_tv.tv_sec)
+#  define SET_UTMP_ENT setutxent
+#  define GET_UTMP_ENT getutxent
+#  define END_UTMP_ENT endutxent
+#  define UTMP_NAME_FUNCTION utmpxname
 # else
 #  include <utmp.h>
 #  define UTMP_STRUCT_NAME utmp
 #  define UT_TIME_MEMBER(UT_PTR) ((UT_PTR)->ut_time)
+#  define SET_UTMP_ENT setutent
+#  define GET_UTMP_ENT getutent
+#  define END_UTMP_ENT endutent
+#  define UTMP_NAME_FUNCTION utmpname
 # endif
 
 typedef struct UTMP_STRUCT_NAME STRUCT_UTMP;
