@@ -1,3 +1,13 @@
+2004-05-18  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* fts.c (fts_stat, fts_alloc): Always allocate and use a struct
+	stat, even if the user isn't interested in the results.
+	This prevents a core dump in cycle_check when FTS_NOSTAT is set.
+	* lchown.c (lchown): Return EOPNOTSUPP if not supported; this
+	is what POSIX-2004 specifies.
+	* lchown.h (EOPNOTSUPP): Define if not defined.
+	(ENOSYS): Remove.
+
 2004-06-06  Jim Meyering  <jim@meyering.net>
 
 	* getdate.y: Update from gnulib.
