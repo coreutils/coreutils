@@ -1317,7 +1317,7 @@ numcompare (register const char *a, register const char *b)
       if ((diff == 0) && (*a == decimal_point || *b == decimal_point))
 	return ret_code * fraccompare (a, b);
 
-      return diff;		/* fall through here, and diff decides */
+      return ret_code * diff;	/* fall through here, and diff decides */
     }
 }
 #else
