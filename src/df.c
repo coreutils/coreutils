@@ -1,5 +1,5 @@
 /* df - summarize free disk space
-   Copyright (C) 91, 1995-2001 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -328,7 +328,7 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
   else
     {
       width = output_block_size < 0 ? 5 + (output_block_size == -1000) : 9;
-      use_width = posix_format ? 8 : 4;
+      use_width = (posix_format && 0 <= output_block_size) ? 8 : 4;
       input_units = fsu.fsu_blocksize;
       output_units = output_block_size;
       total = fsu.fsu_blocks;
