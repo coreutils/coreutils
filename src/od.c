@@ -1038,13 +1038,10 @@ decode_format_string (const char *s)
       assert (s != next);
       s = next;
 
-      if (n_specs >= n_specs_allocated)
-	{
-	  spec = x2nrealloc (spec, &n_specs_allocated, sizeof (struct tspec));
-	}
+      if (n_specs_allocated <= n_specs)
+	spec = x2nrealloc (spec, &n_specs_allocated, sizeof *spec);
 
-      memcpy ((char *) &spec[n_specs], (char *) &tspec,
-	      sizeof (struct tspec));
+      memcpy (&spec[n_specs], &tspec, sizeof *spec);
       ++n_specs;
     }
 
@@ -1928,7 +1925,7 @@ it must be one character from [doxn]"),
 
   if (n_specs == 0)
     {
-      if (decode_one_format ("o2", "o2", NULL, &(spec[0])))
+      if (decode_format_string ("o2"))
 	{
 	  /* This happens on Cray systems that don't have a 2-byte
 	     integral type.  */
