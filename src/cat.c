@@ -20,7 +20,7 @@
    * Usually much faster than other versions of cat, the difference
    is especially apparent when using the -v option.
 
-   By tege@sics.se, Torbjorn Granlund, advised by rms, Richard Stallman. */
+   By tege@sics.se, Torbjorn Granlund, advised by rms, Richard Stallman.  */
 
 #include <config.h>
 
@@ -77,9 +77,6 @@ static char *line_num_end = line_buf + LINE_COUNTER_BUF_LEN - 3;
 
 /* Preserves the `cat' function's local `newlines' between invocations.  */
 static int newlines2 = 0;
-
-/* Nonzero if a non-fatal error has occurred.  */
-static int exit_status = 0;
 
 void
 usage (int status)
@@ -147,16 +144,17 @@ next_line_num (void)
     line_num_print--;
 }
 
-/* Plain cat.  Copies the file behind `input_desc' to STDOUT_FILENO.  */
+/* Plain cat.  Copies the file behind `input_desc' to STDOUT_FILENO.
+   Return true if successful.  */
 
-static void
+static bool
 simple_cat (
      /* Pointer to the buffer, used by reads and writes.  */
      char *buf,
 
      /* Number of characters preferably read or written by each read and write
         call.  */
-     int bufsize)
+     size_t bufsize)
 {
   /* Actual number of characters read, and therefore written.  */
   size_t n_read;
@@ -171,14 +169,13 @@ simple_cat (
       if (n_read == SAFE_READ_ERROR)
 	{
 	  error (0, errno, "%s", infile);
-	  exit_status = 1;
-	  return;
+	  return false;
 	}
 
       /* End of this file?  */
 
       if (n_read == 0)
-	break;
+	return true;
 
       /* Write this block out.  */
 
@@ -192,12 +189,13 @@ simple_cat (
 }
 
 /* Cat the file behind INPUT_DESC to the file behind OUTPUT_DESC.
+   Return true if successful.
    Called if any option more than -u was specified.
 
    A newline character is always put at the end of the buffer, to make
    an explicit test for buffer end unnecessary.  */
 
-static void
+static bool
 cat (
      /* Pointer to the beginning of the input buffer.  */
      char *inbuf,
@@ -212,12 +210,12 @@ cat (
      size_t outsize,
 
      /* Variables that have values according to the specified options.  */
-     int quote,
-     int output_tabs,
-     int numbers,
-     int numbers_at_empty_lines,
-     int mark_line_ends,
-     int squeeze_empty_lines)
+     bool show_nonprinting,
+     bool show_tabs,
+     bool number,
+     bool number_nonblank,
+     bool show_ends,
+     bool squeeze_blank)
 {
   /* Last character read from the input buffer.  */
   unsigned char ch;
@@ -245,7 +243,7 @@ cat (
 #ifdef FIONREAD
   /* If nonzero, use the FIONREAD ioctl, as an optimization.
      (On Ultrix, it is not supported on NFS file systems.)  */
-  int use_fionread = 1;
+  bool use_fionread = true;
 #endif
 
   /* The inbuf pointers are initialized so that BPIN > EOB, and thereby input
@@ -305,13 +303,12 @@ cat (
 		  if (errno == EOPNOTSUPP || errno == ENOTTY
 		      || errno == EINVAL || errno == ENODEV
 		      || errno == ENOSYS)
-		    use_fionread = 0;
+		    use_fionread = false;
 		  else
 		    {
 		      error (0, errno, _("cannot do ioctl on `%s'"), infile);
-		      exit_status = 1;
 		      newlines2 = newlines;
-		      return;
+		      return false;
 		    }
 		}
 	      if (n_to_read == 0)
@@ -330,14 +327,13 @@ cat (
 	      if (n_read == SAFE_READ_ERROR)
 		{
 		  error (0, errno, "%s", infile);
-		  exit_status = 1;
 		  newlines2 = newlines;
-		  return;
+		  return false;
 		}
 	      if (n_read == 0)
 		{
 		  newlines2 = newlines;
-		  return;
+		  return true;
 		}
 
 	      /* Update the pointers and insert a sentinel at the buffer
@@ -366,7 +362,7 @@ cat (
 		      /* Are multiple adjacent empty lines to be substituted
 			 by single ditto (-s), and this was the second empty
 			 line?  */
-		      if (squeeze_empty_lines)
+		      if (squeeze_blank)
 			{
 			  ch = *bpin++;
 			  continue;
@@ -375,7 +371,7 @@ cat (
 
 		  /* Are line numbers to be written at empty lines (-n)?  */
 
-		  if (numbers && numbers_at_empty_lines)
+		  if (number & !number_nonblank)
 		    {
 		      next_line_num ();
 		      bpout = stpcpy (bpout, line_num_print);
@@ -384,7 +380,7 @@ cat (
 
 	      /* Output a currency symbol if requested (-e).  */
 
-	      if (mark_line_ends)
+	      if (show_ends)
 		*bpout++ = '$';
 
 	      /* Output the newline.  */
@@ -397,7 +393,7 @@ cat (
 
       /* Are we at the beginning of a line, and line numbers are requested?  */
 
-      if (newlines >= 0 && numbers)
+      if (newlines >= 0 && number)
 	{
 	  next_line_num ();
 	  bpout = stpcpy (bpout, line_num_print);
@@ -411,7 +407,7 @@ cat (
 
       /* If quoting, i.e. at least one of -v, -e, or -t specified,
 	 scan for chars that need conversion.  */
-      if (quote)
+      if (show_nonprinting)
 	{
 	  for (;;)
 	    {
@@ -445,7 +441,7 @@ cat (
 			}
 		    }
 		}
-	      else if (ch == '\t' && output_tabs)
+	      else if (ch == '\t' && !show_tabs)
 		*bpout++ = '\t';
 	      else if (ch == '\n')
 		{
@@ -466,7 +462,7 @@ cat (
 	  /* Not quoting, neither of -v, -e, or -t specified.  */
 	  for (;;)
 	    {
-	      if (ch == '\t' && !output_tabs)
+	      if (ch == '\t' && show_tabs)
 		{
 		  *bpout++ = '^';
 		  *bpout++ = ch + 64;
@@ -513,6 +509,7 @@ main (int argc, char **argv)
   /* Pointer to the output buffer.  */
   char *outbuf;
 
+  bool ok = true;
   int c;
 
   /* Index in argv to processed argument.  */
@@ -524,29 +521,26 @@ main (int argc, char **argv)
   /* I-node number of the output.  */
   ino_t out_ino;
 
-  /* Nonzero if the output file should not be the same as any input file. */
-  int check_redirection = 1;
+  /* True if the output file should not be the same as any input file.  */
+  bool check_redirection = true;
 
-  /* Nonzero if we have ever read standard input. */
-  int have_read_stdin = 0;
+  /* Nonzero if we have ever read standard input.  */
+  bool have_read_stdin = false;
 
   struct stat stat_buf;
 
   /* Variables that are set according to the specified options.  */
-  int numbers = 0;
-  int numbers_at_empty_lines = 1;
-  int squeeze_empty_lines = 0;
-  int mark_line_ends = 0;
-  int quote = 0;
-  int output_tabs = 1;
+  bool number = false;
+  bool number_nonblank = false;
+  bool squeeze_blank = false;
+  bool show_ends = false;
+  bool show_nonprinting = false;
+  bool show_tabs = false;
 #if O_BINARY
-  int binary_files  = 0;
-  int binary_output = 0;
+  bool binary = false;
+  bool binary_output = false;
 #endif
   int file_open_mode = O_RDONLY;
-
-/* If nonzero, call cat, otherwise call simple_cat to do the actual work. */
-  int options = 0;
 
   static struct option const long_options[] =
   {
@@ -591,31 +585,26 @@ main (int argc, char **argv)
 	  break;
 
 	case 'b':
-	  ++options;
-	  numbers = 1;
-	  numbers_at_empty_lines = 0;
+	  number = true;
+	  number_nonblank = true;
 	  break;
 
 	case 'e':
-	  ++options;
-	  mark_line_ends = 1;
-	  quote = 1;
+	  show_ends = true;
+	  show_nonprinting = true;
 	  break;
 
 	case 'n':
-	  ++options;
-	  numbers = 1;
+	  number = true;
 	  break;
 
 	case 's':
-	  ++options;
-	  squeeze_empty_lines = 1;
+	  squeeze_blank = true;
 	  break;
 
 	case 't':
-	  ++options;
-	  output_tabs = 0;
-	  quote = 1;
+	  show_tabs = true;
+	  show_nonprinting = true;
 	  break;
 
 	case 'u':
@@ -623,32 +612,27 @@ main (int argc, char **argv)
 	  break;
 
 	case 'v':
-	  ++options;
-	  quote = 1;
+	  show_nonprinting = true;
 	  break;
 
 	case 'A':
-	  ++options;
-	  quote = 1;
-	  mark_line_ends = 1;
-	  output_tabs = 0;
+	  show_nonprinting = true;
+	  show_ends = true;
+	  show_tabs = true;
 	  break;
 
 #if O_BINARY
 	case 'B':
-	  ++options;
-	  binary_files = 1;
+	  binary = true;
 	  break;
 #endif
 
 	case 'E':
-	  ++options;
-	  mark_line_ends = 1;
+	  show_ends = true;
 	  break;
 
 	case 'T':
-	  ++options;
-	  output_tabs = 0;
+	  show_tabs = true;
 	  break;
 
 	case_GETOPT_HELP_CHAR;
@@ -673,7 +657,7 @@ main (int argc, char **argv)
      fstat on pipes returns S_IFSOCK on some systems, S_IFIFO
      on others, so the checking should not be done for those types,
      and to allow things like cat < /dev/tty > /dev/tty, checking
-     is not done for device files either. */
+     is not done for device files either.  */
 
   if (S_ISREG (stat_buf.st_mode))
     {
@@ -682,7 +666,7 @@ main (int argc, char **argv)
     }
   else
     {
-      check_redirection = 0;
+      check_redirection = false;
 #ifdef lint  /* Suppress `used before initialized' warning.  */
       out_dev = 0;
       out_ino = 0;
@@ -698,18 +682,18 @@ main (int argc, char **argv)
      with only CR-LF is an empty line.  (Besides, if they ask for
      one of these options, they don't care much about the original
      file contents anyway).  */
-  if ((!isatty (STDOUT_FILENO)
-       && !(numbers || squeeze_empty_lines || mark_line_ends))
-      || binary_files)
+  if (binary
+      || ! ((number | squeeze_blank | show_ends)
+	    || isatty (STDOUT_FILENO)))
     {
       /* Switch stdout to BINARY mode.  */
-      binary_output = 1;
+      binary_output = true;
       SET_BINARY (STDOUT_FILENO);
       /* When stdout is in binary mode, make sure all input files are
 	 also read in binary mode.  */
       file_open_mode |= O_BINARY;
     }
-  else if (quote)
+  else if (show_nonprinting)
     {
       /* If they want to see the non-printables, let's show them
 	 those CR characters as well, so make the input binary.
@@ -739,14 +723,14 @@ main (int argc, char **argv)
 
       if (infile[0] == '-' && infile[1] == 0)
 	{
-	  have_read_stdin = 1;
+	  have_read_stdin = true;
 	  input_desc = 0;
 
 #if O_BINARY
 	  /* Switch stdin to BINARY mode if needed.  */
 	  if (binary_output)
 	    {
-	      int tty_in = isatty (input_desc);
+	      bool tty_in = isatty (input_desc);
 
 	      /* If stdin is a terminal device, and it is the ONLY
 		 input file (i.e. we didn't write anything to the
@@ -775,7 +759,7 @@ main (int argc, char **argv)
 	  if (input_desc < 0)
 	    {
 	      error (0, errno, "%s", infile);
-	      exit_status = 1;
+	      ok = false;
 	      continue;
 	    }
 	}
@@ -783,7 +767,7 @@ main (int argc, char **argv)
       if (fstat (input_desc, &stat_buf) < 0)
 	{
 	  error (0, errno, "%s", infile);
-	  exit_status = 1;
+	  ok = false;
 	  goto contin;
 	}
       insize = ST_BLKSIZE (stat_buf);
@@ -798,20 +782,20 @@ main (int argc, char **argv)
 	  && (input_desc != STDIN_FILENO))
 	{
 	  error (0, 0, _("%s: input file is output file"), infile);
-	  exit_status = 1;
+	  ok = false;
 	  goto contin;
 	}
 
-      /* Select which version of `cat' to use. If any options (more than -u,
-	 --version, or --help) were specified, use `cat', otherwise use
-	 `simple_cat'.  */
+      /* Select which version of `cat' to use.  If any format-oriented
+	 options were given use `cat'; otherwise use `simple_cat'.  */
 
-      if (options == 0)
+      if (! (number | show_ends | show_nonprinting
+	     | show_tabs | squeeze_blank))
 	{
 	  insize = max (insize, outsize);
 	  inbuf = xmalloc (insize + page_size - 1);
 
-	  simple_cat (ptr_align (inbuf, page_size), insize);
+	  ok &= simple_cat (ptr_align (inbuf, page_size), insize);
 	}
       else
 	{
@@ -842,10 +826,10 @@ main (int argc, char **argv)
 	  outbuf = xmalloc (outsize - 1 + insize * 4 + LINE_COUNTER_BUF_LEN
 			    + page_size - 1);
 
-	  cat (ptr_align (inbuf, page_size), insize,
-	       ptr_align (outbuf, page_size), outsize, quote,
-	       output_tabs, numbers, numbers_at_empty_lines, mark_line_ends,
-	       squeeze_empty_lines);
+	  ok &= cat (ptr_align (inbuf, page_size), insize,
+		     ptr_align (outbuf, page_size), outsize, show_nonprinting,
+		     show_tabs, number, number_nonblank, show_ends,
+		     squeeze_blank);
 
 	  free (outbuf);
 	}
@@ -856,7 +840,7 @@ main (int argc, char **argv)
       if (!STREQ (infile, "-") && close (input_desc) < 0)
 	{
 	  error (0, errno, "%s", infile);
-	  exit_status = 1;
+	  ok = false;
 	}
     }
   while (++argind < argc);
@@ -867,5 +851,5 @@ main (int argc, char **argv)
   if (close (STDOUT_FILENO) < 0)
     error (EXIT_FAILURE, errno, _("closing standard output"));
 
-  exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
