@@ -85,6 +85,7 @@ libfetish_a_SOURCES = \
   xstrtod.c xstrtod.h \
   xstrtol.c xstrtol.h \
   xstrtoul.c \
+  xstrtoimax.c \
   xstrtoumax.c \
   yesno.c
 
