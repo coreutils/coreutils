@@ -30,6 +30,7 @@
 # include <strings.h>
 #endif
 
+#include <dirname.h>
 #include <xalloc.h>
 
 #ifndef HAVE_DECL_FREE
@@ -38,8 +39,6 @@
 #if !HAVE_DECL_FREE
 void free ();
 #endif
-
-void strip_trailing_slashes ();
 
 /* Rename the file SRC_PATH to DST_PATH, removing any trailing
    slashes from SRC_PATH.  Needed for SunOS 4.1.1_U1.  */
