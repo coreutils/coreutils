@@ -618,8 +618,11 @@ copy ()
       /* If the final input line didn't end with a '\n', pad
 	 the output block to `conversion_blocksize' chars.  */
       int pending_spaces = max (0, conversion_blocksize - col);
-      while (pending_spaces--)
-	output_char (space_character);
+      while (pending_spaces)
+	{
+	  output_char (space_character);
+	  --pending_spaces;
+	}
     }
 
   if ((conversions_mask & C_UNBLOCK) && col == conversion_blocksize)
@@ -690,8 +693,11 @@ copy_with_block (buf, nread)
       if (*buf == newline_character)
 	{
 	  int pending_spaces = max (0, conversion_blocksize - col);
-	  while (pending_spaces--)
-	    output_char (space_character);
+	  while (pending_spaces)
+	    {
+	      output_char (space_character);
+	      --pending_spaces;
+	    }
 	  col = 0;
 	}
       else
@@ -732,12 +738,12 @@ copy_with_unblock (buf, nread)
 	pending_spaces++;
       else
 	{
-	  if (pending_spaces)
+	  /* `c' is the character after a run of spaces that were not
+	     at the end of the conversion buffer.  Output them.  */
+	  while (pending_spaces)
 	    {
-	      /* `c' is the character after a run of spaces that were not
-		 at the end of the conversion buffer.  Output them.  */
-	      while (pending_spaces--)
-		output_char (space_character);
+	      output_char (space_character);
+	      --pending_spaces;
 	    }
 	  output_char (c);
 	}
