@@ -1,3 +1,12 @@
+2004-03-28  Paul Eggert  <eggert@twinsun.com>
+
+	Fix some gotchas encountered when porting to Solaris 8, using
+	the Forte 6u2 compiler.
+
+	* src/hostname.c [HAVE_SETHOSTNAME && !defined sethostname]:
+	Declare sethostname, since no Solaris header does it.
+	* src/who.c: Include "vasprintf.h", for asprintf.
+
 2004-03-28  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
