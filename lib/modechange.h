@@ -44,12 +44,14 @@ struct mode_change
 #define MODE_INVALID (struct mode_change *) 0
 #define MODE_MEMORY_EXHAUSTED (struct mode_change *) 1
 
-#ifdef __STDC__
-struct mode_change *mode_compile (char *, unsigned);
-unsigned short mode_adjust (unsigned, struct mode_change *);
-void mode_free (struct mode_change *);
+#ifndef __P
+#if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
+#define __P(args) args
 #else
-struct mode_change *mode_compile ();
-unsigned short mode_adjust ();
-void mode_free ();
-#endif
+#define __P(args) ()
+#endif  /* GCC.  */
+#endif  /* Not __P.  */
+
+struct mode_change *mode_compile __P ((const char *, unsigned));
+unsigned short mode_adjust __P ((unsigned, const struct mode_change *));
+void mode_free __P ((struct mode_change *));
