@@ -1,3 +1,10 @@
+2004-05-01  Jim Meyering  <jim@meyering.net>
+
+	* chown.c (rpl_chown) [CHOWN_FAILS_TO_HONOR_ID_OF_NEGATIVE_ONE]:
+	Wrap old code with this conditional.
+	[CHOWN_MODIFIES_SYMLINK]: Try to work around a chown
+	function that does not dereference symlinks.
+
 2004-04-18  Paul Eggert  <eggert@twinsun.com>
 
 	* nanosleep.c (suspended): Change its type from int to

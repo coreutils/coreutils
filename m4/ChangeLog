@@ -1,3 +1,12 @@
+2004-05-01  Jim Meyering  <jim@meyering.net>
+
+	* jm-macros.m4 (gl_MACROS): Move fchown-checking code to chown.m4.
+	* chown.m4 (gl_PREREQ_CHOWN): Check for fcntl.h.
+	See if we need an fchown replacement.
+	(gl_FUNC_CHOWN_FOLLOWS_SYMLINK): New macro.
+	(gl_FUNC_CHOWN): Require gl_FUNC_CHOWN_FOLLOWS_SYMLINK,
+	and use the replacement function if we detect either defect.
+
 2004-04-22  Paul Eggert  <eggert@twinsun.com>
 
 	* jm-macros.m4 (gl_MACROS): Check for tcgetpgrp.
