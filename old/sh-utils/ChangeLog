@@ -1,5 +1,15 @@
 1997-07-05  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/Makefile.am (EXTRA_PROGRAMS): Add su here.
+	(bin_PROGRAMS): Remove su here.
+	(install-exec-local): Rewrite rule so that su is installed only if
+	it can be made setuid root.  Before it was always installed and then
+	removed if it could *not* be made setuid root.  That had the potential
+	undesirable side effect of removing (and not replacing) a working
+	version of su.
+	(all_local): New target.  Dependend on su.  Required now that su is
+	no longer in bin_PROGRAMS.
+
 	* src/su.c: Redefine/undef getusershell around inclusion of <unistd.h>
 	(via system.h) so Cray's int-returning prototype doesn't conflict
 	with our char*-returning one.  Reported by Johan Danielsson.
