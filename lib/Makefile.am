@@ -6,7 +6,7 @@ noinst_LIBRARIES = libfu.a
 
 INCLUDES = -I.. -I$(srcdir) -I../intl
 
-libfu_a_SOURCES = getdate.y posixtm.y getopt.c getopt1.c \
+libfu_a_SOURCES = getdate.y posixtm.c getopt.c getopt1.c \
 addext.c argmatch.c backupfile.c basename.c \
 closeout.c dirname.c exclude.c filemode.c \
 full-write.c human.c idcache.c \
@@ -21,7 +21,7 @@ noinst_HEADERS = argmatch.h backupfile.h closeout.h \
 error.h exclude.h filemode.h fnmatch.h fsusage.h \
 getdate.h getline.h getopt.h group-member.h human.h lchown.h long-options.h \
 makepath.h modechange.h mountlist.h hash.h path-concat.h pathmax.h \
-quotearg.h regex.h safe-read.h save-cwd.h savedir.h strverscmp.h \
+posixtm.h quotearg.h regex.h safe-read.h save-cwd.h savedir.h strverscmp.h \
 xalloc.h xstrtol.h xstrtoul.h
 
-BUILT_SOURCES = getdate.c posixtm.c
+BUILT_SOURCES = getdate.c
