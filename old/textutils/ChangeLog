@@ -1,3 +1,13 @@
+Mon Oct 30 23:15:56 1995  Jim Meyering  (meyering@comco.com)
+
+	* wc.c: Reorder functions to obviate forward dcls.  Remove
+	forward dcls.  Protoize.  Add `const' attribute to some parameters.
+	* uniq.c: Likewise.
+	* split.c: Likewise.
+
+	* split.c (isdigits, convint): Remove these.
+	(main): Use xstrtol instead.
+
 Sun Oct 29 14:04:36 1995  Jim Meyering  (meyering@comco.com)
 
 	* paste.c (main): Move function body to end of file.
