@@ -245,20 +245,20 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 @AMDEP_TRUE@	$(DEPDIR)/stat.Po $(DEPDIR)/stime.Po \
 @AMDEP_TRUE@	$(DEPDIR)/stpcpy.Po $(DEPDIR)/strcasecmp.Po \
 @AMDEP_TRUE@	$(DEPDIR)/strcspn.Po $(DEPDIR)/strdup.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strftime$U.Po $(DEPDIR)/strftime.Po \
-@AMDEP_TRUE@	$(DEPDIR)/stripslash$U.Po $(DEPDIR)/strncasecmp.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strndup.Po $(DEPDIR)/strnlen.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strpbrk.Po $(DEPDIR)/strstr.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strtod.Po $(DEPDIR)/strtol.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strtoul.Po $(DEPDIR)/strtoull.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strtoumax.Po $(DEPDIR)/strverscmp.Po \
-@AMDEP_TRUE@	$(DEPDIR)/tempname.Po $(DEPDIR)/unicodeio$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/userspec$U.Po $(DEPDIR)/utime.Po \
-@AMDEP_TRUE@	$(DEPDIR)/version-etc$U.Po $(DEPDIR)/xgetcwd$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/xgethostname$U.Po $(DEPDIR)/xmalloc$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/xstrdup$U.Po $(DEPDIR)/xstrtod$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/xstrtol$U.Po $(DEPDIR)/xstrtoul$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/xstrtoumax$U.Po $(DEPDIR)/yesno$U.Po
+@AMDEP_TRUE@	$(DEPDIR)/strftime$U.Po $(DEPDIR)/stripslash$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strncasecmp.Po $(DEPDIR)/strndup.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strnlen.Po $(DEPDIR)/strpbrk.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strstr.Po $(DEPDIR)/strtod.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strtol.Po $(DEPDIR)/strtoul.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strtoull.Po $(DEPDIR)/strtoumax.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strverscmp.Po $(DEPDIR)/tempname.Po \
+@AMDEP_TRUE@	$(DEPDIR)/unicodeio$U.Po $(DEPDIR)/userspec$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/utime.Po $(DEPDIR)/version-etc$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/xgetcwd$U.Po $(DEPDIR)/xgethostname$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/xmalloc$U.Po $(DEPDIR)/xstrdup$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/xstrtod$U.Po $(DEPDIR)/xstrtol$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/xstrtoul$U.Po $(DEPDIR)/xstrtoumax$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/yesno$U.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -276,9 +276,9 @@ DIST_COMMON = README $(noinst_HEADERS) ChangeLog Makefile.am \
 	memset.c mkstemp.c mktime.c mountlist.c nanosleep.c obstack.c \
 	obstack.h putenv.c readutmp.c realloc.c regex.c rename.c \
 	rmdir.c rpmatch.c stime.c stpcpy.c strcasecmp.c strcspn.c \
-	strdup.c strftime.c strncasecmp.c strndup.c strnlen.c strpbrk.c \
-	strstr.c strtod.c strtol.c strtoul.c strtoull.c strtoumax.c \
-	strverscmp.c tempname.c utime.c
+	strdup.c strncasecmp.c strndup.c strnlen.c strpbrk.c strstr.c \
+	strtod.c strtol.c strtoul.c strtoull.c strtoumax.c strverscmp.c \
+	tempname.c utime.c
 SOURCES = $(libfetish_a_SOURCES)
 
 all: $(BUILT_SOURCES)
@@ -403,7 +403,6 @@ mostlyclean-kr:
 @AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/strcspn.Po@_am_quote@
 @AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/strdup.Po@_am_quote@
 @AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/strftime$U.Po@_am_quote@
-@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/strftime.Po@_am_quote@
 @AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/stripslash$U.Po@_am_quote@
 @AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/strncasecmp.Po@_am_quote@
 @AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/strndup.Po@_am_quote@

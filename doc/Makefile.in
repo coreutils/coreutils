@@ -134,8 +134,8 @@ DIST_SOURCES =
 INFO_DEPS = omni-utils.info
 DVIS = omni-utils.dvi
 TEXINFOS = omni-utils.texi
-DIST_COMMON = Makefile.am Makefile.in mdate-sh stamp-vti texinfo.tex \
-	version.texi
+DIST_COMMON = ChangeLog Makefile.am Makefile.in mdate-sh stamp-vti \
+	texinfo.tex version.texi
 all: all-am
 
 .SUFFIXES:
@@ -362,13 +362,13 @@ uninstall-info: uninstall-info-am
 	uninstall uninstall-am uninstall-info-am
 
 
-# Uncomment this when fileutils, textutils, and sh-utils have
+# Remove `DISABLED_' when fileutils, textutils, and sh-utils have
 # all been merged into one package.
-#constants.texi: $(top_srcdir)/src/tail.c
-#	LC_ALL=C \
-#	sed -n -e 's/^#define \(DEFAULT_MAX[_A-Z]*\) \(.*\)/@set \1 \2/p' \
-#	  $(top_srcdir)/src/tail.c > t-$@
-#	mv t-$@ $@
+DISABLED_constants.texi: $(top_srcdir)/src/tail.c
+	LC_ALL=C \
+	sed -n -e 's/^#define \(DEFAULT_MAX[_A-Z]*\) \(.*\)/@set \1 \2/p' \
+	  $(top_srcdir)/src/tail.c > t-$@
+	mv t-$@ $@
 
 # Uncomment this when fileutils, textutils, and sh-utils have
 # all been merged into one package.
