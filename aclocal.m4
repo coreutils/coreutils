@@ -1,4 +1,4 @@
-# generated automatically by aclocal 1.8.4 -*- Autoconf -*-
+# generated automatically by aclocal 1.8.5 -*- Autoconf -*-
 
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
 # Free Software Foundation, Inc.
@@ -40,7 +40,7 @@ AC_DEFUN([AM_AUTOMAKE_VERSION], [am__api_version="1.8"])
 # Call AM_AUTOMAKE_VERSION so it can be traced.
 # This function is AC_REQUIREd by AC_INIT_AUTOMAKE.
 AC_DEFUN([AM_SET_CURRENT_AUTOMAKE_VERSION],
-	 [AM_AUTOMAKE_VERSION([1.8.4])])
+	 [AM_AUTOMAKE_VERSION([1.8.5])])
 
 # AM_AUX_DIR_EXPAND
 
@@ -952,6 +952,7 @@ m4_include([m4/atexit.m4])
 m4_include([m4/backupfile.m4])
 m4_include([m4/bison.m4])
 m4_include([m4/boottime.m4])
+m4_include([m4/calloc.m4])
 m4_include([m4/canon-host.m4])
 m4_include([m4/canonicalize.m4])
 m4_include([m4/check-decl.m4])

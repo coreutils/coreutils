@@ -123,6 +123,10 @@
 /* Define to 1 if you have the `btowc' function. */
 #undef HAVE_BTOWC
 
+/* Define to 1 if your system has a GNU libc compatible `calloc' function, and
+   to 0 otherwise. */
+#undef HAVE_CALLOC
+
 /* Define to 1 if your system has a working `chown' function. */
 #undef HAVE_CHOWN
 
@@ -1399,6 +1403,9 @@
 
 /* Define like PROTOTYPES; this can be used by system headers. */
 #undef __PROTOTYPES
+
+/* Define to rpl_calloc if the replacement function should be used. */
+#undef calloc
 
 /* Define to rpl_chown if the replacement function should be used. */
 #undef chown
