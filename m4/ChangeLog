@@ -1,5 +1,13 @@
 2005-03-21  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* canonicalize.m4 (AC_FUNC_CANONICALIZE_FILE_NAME): Add stat-macros.h
+	to AC_LIBSOURCES.
+	* file-type.m4 (gl_FILE_TYPE): Likewise.
+	* filemode.m4 (gl_FILEMODE): Likewise.
+	* makepath.m4 (gl_MAKEPATH): Likewise.
+	* xstrtol.m4 (gl_XSTRTOL): Add xstrtoul.c to AC_LIBSOURCES.
+	Add xstrtoul to AC_LIBOBJ.
+
 	* onceonly.m4: Remove.
 	* onceonly_2_57.m4: Add.
 	This change shrinks "configure" by over 300 kB.
