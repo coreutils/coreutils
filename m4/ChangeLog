@@ -1,3 +1,8 @@
+2001-09-11  Jim Meyering  <meyering@lucent.com>
+
+	* host-os.m4 (UTILS_HOST_OS): New file/macro.
+	The body, by Paul Eggert, was moved here from configure.in.
+
 2001-09-04  Paul Eggert  <eggert@twinsun.com>
 
 	* prereq.m4 (jm_PREREQ_XREADLINK): New macro.
