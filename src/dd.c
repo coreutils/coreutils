@@ -55,13 +55,15 @@
 
 #include <stdio.h>
 #include <ctype.h>
-#ifdef STDC_HEADERS
-#define ISLOWER islower
-#define ISUPPER isupper
-#else
-#define ISLOWER(c) (isascii ((c)) && islower ((c)))
-#define ISUPPER(c) (isascii ((c)) && isupper ((c)))
+
+#ifndef isascii
+#define isascii(c) 1
 #endif
+
+#define ISLOWER(c) (isascii (c) && islower (c))
+#define ISUPPER(c) (isascii (c) && isupper (c))
+#define ISDIGIT(c) (isascii (c) && isdigit (c))
+
 #include <sys/types.h>
 #include <signal.h>
 #include "system.h"
@@ -839,7 +841,7 @@ parse_integer (str)
   register int temp;
   register char *p = str;
 
-  while (isdigit (*p))
+  while (ISDIGIT (*p))
     {
       n = n * 10 + *p - '0';
       p++;
