@@ -1,5 +1,6 @@
 .deps
 Makefile
+charset.alias
 getdate.c
 getdate.tab.c
 lstat.c
@@ -8,4 +9,3 @@ safe-lstat.h
 safe-stat.c
 safe-stat.h
 stat.c
-charset.alias

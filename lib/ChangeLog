@@ -1,3 +1,18 @@
+2000-03-01  Jim Meyering  <meyering@lucent.com>
+
+	* localcharset.c: Guard some #includes with `#if HAVE_...'.
+	* unicodeio.c: Likewise.
+
+2000-02-02  Bruno Haible  <haible@clisp.cons.org>
+
+	* config.charset: New file.
+	* localcharset.c: New file.
+	* unicodeio.h, unicodeio.c: New files.
+	* Makefile.am (DEFS): Add -DLIBDIR=...
+	(libfetish_a_SOURCES): Add localcharset.c and unicodeio.c.
+	(noinst_HEADERS): Add unicodeio.h.
+	(all-local, install-exec-local, charset.alias): New targets.
+
 2000-02-28  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/quotearg.c (ALERT_CHAR): New macro.
