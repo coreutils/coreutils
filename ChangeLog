@@ -1,6 +1,13 @@
-2003-03-14  Jim Meyering  <jim@meyering.net>
+2003-03-15  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.11.
+
+	* Makefile.cfg (gnu_rel_host): Fix code to match the comment
+	so that a version number with a two-digit component can still count
+	as an alpha release.
+	(gnu_rel_host): Define in terms of $(RELEASE_TYPE) instead.
+
+2003-03-14  Jim Meyering  <jim@meyering.net>
 
 	* src/ansi2knr.c: Remove no-longer-used file.
 	* src/ansi2knr.1: Likewise.
