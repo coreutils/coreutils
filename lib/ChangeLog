@@ -1,3 +1,31 @@
+2002-08-05  Paul Eggert  <eggert@twinsun.com>
+
+	Fix some minor time-related bugs with POSIX time arguments.
+	Some valid time stamps were being rejected (notably -1, and
+	time stamps before 1900 on 64-bit hosts).  And some invalid
+	time stamps were being accepted, e.g. September 31.
+
+	* lib/posixtm.h (posixtime): Return bool instead of time_t, so
+	that we can return (time_t) -1 successfully.
+	* lib/posixtm.c: Likewise.
+	[HAVE_STDBOOL_H]: Include <stdbool.h>.
+	(bool, false, true) [!HAVE_STDBOOL_H]: New type.
+	(t): Remove static var.
+	(year, posix_time_parse): Now takes struct tm * arg to modify, instead
+	of static var.  All uses changed.
+	(year): Do not reject years before 1900; they can occur with
+	64-bit time_t.
+	(posix_time_parse): Do not check for out-of-range components;
+	that is now the caller's responsibility, since our checks were
+	only approximations.
+	(posixtime): Use mktime to check for out-of-range components,
+	since it knows them exactly.
+	If mktime returns (time_t) -1, check whether an error actually occurred
+	by invoking localtime on -1.
+	(main) [TEST_POSIXTIME]: Check for input data errors, and report
+	posixtime failures better.
+	Improve the test data (in comments only).
+
 2002-07-27  Jim Meyering  <meyering@lucent.com>
 
 	* readutmp.h: If we have both utmpx.h and utmp.h, and there exists
