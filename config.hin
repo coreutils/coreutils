@@ -127,6 +127,9 @@
 /* Define to 1 if you have the `btowc' function. */
 #undef HAVE_BTOWC
 
+/* Define to 1 if strtold conforms to C99. */
+#undef HAVE_C99_STRTOLD
+
 /* Define to 1 if your system has a GNU libc compatible `calloc' function, and
    to 0 otherwise. */
 #undef HAVE_CALLOC
@@ -327,10 +330,6 @@
 /* Define to 1 if you have the declaration of `strtoimax', and to 0 if you
    don't. */
 #undef HAVE_DECL_STRTOIMAX
-
-/* Define to 1 if you have the declaration of `strtold', and to 0 if you
-   don't. */
-#undef HAVE_DECL_STRTOLD
 
 /* Define to 1 if you have the declaration of `strtoll', and to 0 if you
    don't. */
