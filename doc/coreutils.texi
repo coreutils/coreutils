@@ -9065,7 +9065,7 @@ Print the information in terse form, suitable for parsing by other programs.
 @cindex output format
 Use @var{format} rather than the default format.
 
-Interpreted sequences for file stat are:
+The valid format sequences for files are:
 
 @itemize @bullet
 @item %a - Access rights in octal
@@ -9074,19 +9074,19 @@ Interpreted sequences for file stat are:
 @item %B - The size in bytes of each block reported by @samp{%b}
 @item %d - Device number in decimal
 @item %D - Device number in hex
-@item %f - raw mode in hex
+@item %f - Raw mode in hex
 @item %F - File type
-@item %g - Group Id of owner
+@item %g - Group ID of owner
 @item %G - Group name of owner
 @item %h - Number of hard links
 @item %i - Inode number
 @item %n - File name
-@item %N - Quoted File name with dereference if symbolic link
+@item %N - Quoted file name with dereference if symbolic link
 @item %o - I/O block size
 @item %s - Total size, in bytes
 @item %t - Major device type in hex
 @item %T - Minor device type in hex
-@item %u - User Id of owner
+@item %u - User ID of owner
 @item %U - User name of owner
 @item %x - Time of last access
 @item %X - Time of last access as seconds since Epoch
@@ -9096,19 +9096,20 @@ Interpreted sequences for file stat are:
 @item %Z - Time of last change as seconds since Epoch
 @end itemize
 
-Interpreted sequences for file system stat are:
+The valid format sequences for file systems are:
 
 @itemize @bullet
-@item %n - File name
-@item %i - File System id in hex
+@item %a - Free blocks available to non-superuser
+@item %b - Total data blocks in file system
+@item %c - Total file nodes in file system
+@item %d - Free file nodes in file system
+@item %f - Free blocks in file system
+@item %i - File System ID in hex
 @item %l - Maximum length of file names
+@item %n - File name
+@item %s - Fundamental block size
 @item %t - Type in hex
 @item %T - Type in human readable form
-@item %b - Total data blocks in file system
-@item %f - Free blocks in file system
-@item %a - Free blocks available to non-superuser
-@item %s - Optimal transfer block size
-@item %c - Total file nodes in file system
 @end itemize
 
 @vindex TZ
