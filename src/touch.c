@@ -57,6 +57,10 @@ time_t time ();
 # define O_NOCTTY 0
 #endif
 
+#if !defined EISDIR
+# define EISDIR 0
+#endif
+
 /* The name by which this program was run. */
 char *program_name;
 
@@ -138,7 +142,11 @@ touch (const char *file)
       /* Try to open FILE, creating it if necessary.  */
       fd = open (file, O_WRONLY | O_CREAT | O_NONBLOCK | O_NOCTTY,
 		 S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-      if (fd == -1)
+
+      /* Don't save a copy of errno if it's EISDIR, since that would lead
+	 touch to give a bogus diagnostic for e.g., `touch /' (assuming
+	 we don't own / or have write access to it).  */
+      if (fd == -1 && errno != EISDIR)
 	open_errno = errno;
     }
 
