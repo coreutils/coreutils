@@ -2,12 +2,17 @@
 
 	* Version 5.0.91.
 
-	* tests/misc/Makefile.am (TESTS): Add stat-fmt.
+	* src/paste.c (paste_parallel): Don't output `EOF' (aka -1) as a `char'.
+	This would happen for nonempty files not ending with a newline.
+	Reported by Dan Jacobson.
+	* tests/misc/paste-no-nl: New file.  Test for above-fixed bug.
+	* tests/misc/Makefile.am (TESTS): Add paste-no-nl.
 
 	* src/stat.c (print_it): Avoid buffer overrun that would
 	occur when the user-specified format string ends with `%'.
 	Patch by Tommi Kyntola.
 	* tests/misc/stat-fmt: New file.  Test for above-fixed bug.
+	* tests/misc/Makefile.am (TESTS): Add stat-fmt.
 
 2003-08-26  Jim Meyering  <jim@meyering.net>
 
