@@ -37,11 +37,10 @@ while (<>)
     my $exp_name = 't' . $test_name . '.exp';
     my $out = "t$test_name.out";
 
-    open(IN, ">$in") || die "Couldn't open $in for writing.\n";
+    open(IN, ">$in") || die "$0: $in: $!\n";
     print IN $input;
     close(IN);
-    open(EXP, ">$exp_name")
-	|| die "Couldn't open $exp_name for writing.\n";
+    open(EXP, ">$exp_name") || die "$0: $in: $!\n";
     print EXP $expected;
     close(EXP);
     my $arg2 = ($s2 ? " '$s2'" : '');
@@ -73,6 +72,6 @@ if test \$errors = 0 ; then
 else
   \$echo Failed \$errors tests. 1>&2
 fi
-test \$errors = 0 || $errors=1
+test \$errors = 0 || errors=1
 exit \$errors
 EOF2
