@@ -35,13 +35,12 @@ version_etc (FILE *stream,
 	     const char *version, const char *authors)
 {
   fprintf (stream, "%s (%s) %s\n", command_name, package, version);
+  fprintf (stream, _("Written by %s.\n"), authors);
   fputs (_("\
 \n\
 Copyright (C) 1999 Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-\n\
 "
 	   ), stream);
-  fprintf (stream, _("Written by %s.\n"), authors);
 }
