@@ -150,17 +150,12 @@ canonicalize_file_name (const char *name)
       if (resolved_len < 0)
 	{
 	  free (resolved);
+	  free (extra_buf);
 	  return NULL;
 	}
       if (resolved_len < resolved_size)
 	break;
       free (resolved);
-    }
-
-  if (resolved_len < 0)
-    {
-      free (resolved);
-      resolved = NULL;
     }
 
   free (extra_buf);
