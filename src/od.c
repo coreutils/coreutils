@@ -12,8 +12,8 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /* Written by Jim Meyering.  */
 
@@ -298,8 +298,7 @@ static struct option const long_options[] =
 };
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -374,9 +373,7 @@ uses -A o -t d2 -w 16.\n\
    using Euclid's algorithm.  */
 
 static unsigned int
-gcd (u, v)
-     unsigned int u;
-     unsigned int v;
+gcd (unsigned int u, unsigned int v)
 {
   unsigned int t;
   while (v != 0)
@@ -391,9 +388,7 @@ gcd (u, v)
 /* Compute the least common multiple of U and V.  */
 
 static unsigned int
-lcm (u, v)
-     unsigned int u;
-     unsigned int v;
+lcm (unsigned int u, unsigned int v)
 {
   unsigned int t = gcd (u, v);
   if (t == 0)
@@ -402,10 +397,8 @@ lcm (u, v)
 }
 
 static void
-print_s_char (n_bytes, block, fmt_string)
-     long unsigned int n_bytes;
-     const char *block;
-     const char *fmt_string;
+print_s_char (long unsigned int n_bytes, const char *block,
+	      const char *fmt_string)
 {
   int i;
   for (i = n_bytes; i > 0; i--)
@@ -420,10 +413,8 @@ print_s_char (n_bytes, block, fmt_string)
 }
 
 static void
-print_char (n_bytes, block, fmt_string)
-     long unsigned int n_bytes;
-     const char *block;
-     const char *fmt_string;
+print_char (long unsigned int n_bytes, const char *block,
+	    const char *fmt_string)
 {
   int i;
   for (i = n_bytes; i > 0; i--)
@@ -435,10 +426,8 @@ print_char (n_bytes, block, fmt_string)
 }
 
 static void
-print_s_short (n_bytes, block, fmt_string)
-     long unsigned int n_bytes;
-     const char *block;
-     const char *fmt_string;
+print_s_short (long unsigned int n_bytes, const char *block,
+	       const char *fmt_string)
 {
   int i;
   for (i = n_bytes / sizeof (unsigned short); i > 0; i--)
@@ -452,10 +441,8 @@ print_s_short (n_bytes, block, fmt_string)
     }
 }
 static void
-print_short (n_bytes, block, fmt_string)
-     long unsigned int n_bytes;
-     const char *block;
-     const char *fmt_string;
+print_short (long unsigned int n_bytes, const char *block,
+	     const char *fmt_string)
 {
   int i;
   for (i = n_bytes / sizeof (unsigned short); i > 0; i--)
@@ -467,10 +454,8 @@ print_short (n_bytes, block, fmt_string)
 }
 
 static void
-print_int (n_bytes, block, fmt_string)
-     long unsigned int n_bytes;
-     const char *block;
-     const char *fmt_string;
+print_int (long unsigned int n_bytes, const char *block,
+	   const char *fmt_string)
 {
   int i;
   for (i = n_bytes / sizeof (unsigned int); i > 0; i--)
@@ -482,10 +467,8 @@ print_int (n_bytes, block, fmt_string)
 }
 
 static void
-print_long (n_bytes, block, fmt_string)
-     long unsigned int n_bytes;
-     const char *block;
-     const char *fmt_string;
+print_long (long unsigned int n_bytes, const char *block,
+	    const char *fmt_string)
 {
   int i;
   for (i = n_bytes / sizeof (unsigned long); i > 0; i--)
@@ -497,10 +480,8 @@ print_long (n_bytes, block, fmt_string)
 }
 
 static void
-print_float (n_bytes, block, fmt_string)
-     long unsigned int n_bytes;
-     const char *block;
-     const char *fmt_string;
+print_float (long unsigned int n_bytes, const char *block,
+	     const char *fmt_string)
 {
   int i;
   for (i = n_bytes / sizeof (float); i > 0; i--)
@@ -512,10 +493,8 @@ print_float (n_bytes, block, fmt_string)
 }
 
 static void
-print_double (n_bytes, block, fmt_string)
-     long unsigned int n_bytes;
-     const char *block;
-     const char *fmt_string;
+print_double (long unsigned int n_bytes, const char *block,
+	      const char *fmt_string)
 {
   int i;
   for (i = n_bytes / sizeof (double); i > 0; i--)
@@ -528,10 +507,8 @@ print_double (n_bytes, block, fmt_string)
 
 #ifdef HAVE_LONG_DOUBLE
 static void
-print_long_double (n_bytes, block, fmt_string)
-     long unsigned int n_bytes;
-     const char *block;
-     const char *fmt_string;
+print_long_double (long unsigned int n_bytes, const char *block,
+		   const char *fmt_string)
 {
   int i;
   for (i = n_bytes / sizeof (LONG_DOUBLE); i > 0; i--)
@@ -545,10 +522,8 @@ print_long_double (n_bytes, block, fmt_string)
 #endif
 
 static void
-print_named_ascii (n_bytes, block, unused_fmt_string)
-     long unsigned int n_bytes;
-     const char *block;
-     const char *unused_fmt_string;
+print_named_ascii (long unsigned int n_bytes, const char *block,
+		   const char *unused_fmt_string)
 {
   int i;
   for (i = n_bytes; i > 0; i--)
@@ -574,10 +549,8 @@ print_named_ascii (n_bytes, block, unused_fmt_string)
 }
 
 static void
-print_ascii (n_bytes, block, unused_fmt_string)
-     long unsigned int n_bytes;
-     const char *block;
-     const char *unused_fmt_string;
+print_ascii (long unsigned int n_bytes, const char *block,
+	     const char *unused_fmt_string)
 {
   int i;
   for (i = n_bytes; i > 0; i--)
@@ -639,10 +612,7 @@ print_ascii (n_bytes, block, unused_fmt_string)
    the result of the conversion and return zero.  */
 
 static int
-simple_strtoul (s, p, val)
-     const char *s;
-     const char **p;
-     long unsigned int *val;
+simple_strtoul (const char *s, const char **p, long unsigned int *val)
 {
   unsigned long int sum;
 
@@ -674,10 +644,7 @@ simple_strtoul (s, p, val)
    */
 
 static int
-decode_one_format (s, next, tspec)
-     const char *s;
-     const char **next;
-     struct tspec *tspec;
+decode_one_format (const char *s, const char **next, struct tspec *tspec)
 {
   enum size_spec size_spec;
   unsigned long int size;
@@ -909,8 +876,7 @@ decode_one_format (s, next, tspec)
    necessary.  Return zero if S is valid, non-zero otherwise.  */
 
 static int
-decode_format_string (s)
-     const char *s;
+decode_format_string (const char *s)
 {
   assert (s != NULL);
 
@@ -948,8 +914,7 @@ decode_format_string (s)
    input.  */
 
 static int
-skip (n_skip)
-     off_t n_skip;
+skip (off_t n_skip)
 {
   int err;
 
@@ -1050,15 +1015,13 @@ skip (n_skip)
 }
 
 static const char *
-format_address_none (address)
-     long unsigned int address;
+format_address_none (long unsigned int address)
 {
   return "";
 }
 
 static const char *
-format_address_std (address)
-     long unsigned int address;
+format_address_std (long unsigned int address)
 {
   const char *address_string;
 
@@ -1068,8 +1031,7 @@ format_address_std (address)
 }
 
 static const char *
-format_address_label (address)
-     long unsigned int address;
+format_address_label (long unsigned int address)
 {
   const char *address_string;
   assert (output_address_fmt_string != NULL);
@@ -1092,11 +1054,8 @@ format_address_label (address)
    only when it has not been padded to length BYTES_PER_BLOCK.  */
 
 static void
-write_block (current_offset, n_bytes, prev_block, curr_block)
-     long unsigned int current_offset;
-     long unsigned int n_bytes;
-     const char *prev_block;
-     const char *curr_block;
+write_block (long unsigned int current_offset, long unsigned int n_bytes,
+	     const char *prev_block, const char *curr_block)
 {
   static int first = 1;
   static int prev_pair_equal = 0;
@@ -1141,7 +1100,7 @@ write_block (current_offset, n_bytes, prev_block, curr_block)
    have occurred.  */
 
 static int
-check_and_close ()
+check_and_close (void)
 {
   int err;
 
@@ -1181,8 +1140,7 @@ check_and_close ()
    occured, zero otherwise.  */
 
 static int
-read_char (c)
-     int *c;
+read_char (int *c)
 {
   int err;
 
@@ -1244,10 +1202,7 @@ read_char (c)
    Otherwise return zero.  */
 
 static int
-read_block (n, block, n_bytes_in_buffer)
-     size_t n;
-     char *block;
-     size_t *n_bytes_in_buffer;
+read_block (size_t n, char *block, size_t *n_bytes_in_buffer)
 {
   int err;
 
@@ -1308,7 +1263,7 @@ read_block (n, block, n_bytes_in_buffer)
    with the format specs.  */
 
 static int
-get_lcm ()
+get_lcm (void)
 {
   unsigned int i;
   int l_c_m = 1;
@@ -1322,8 +1277,7 @@ get_lcm ()
    return the offset it denotes.  Otherwise, return -1.  */
 
 off_t
-parse_old_offset (s)
-     const char *s;
+parse_old_offset (const char *s)
 {
   int radix;
   off_t offset;
@@ -1373,7 +1327,7 @@ parse_old_offset (s)
    Otherwise, return zero.  */
 
 static int
-dump ()
+dump (void)
 {
   char *block[2];
   off_t current_offset;
@@ -1466,7 +1420,7 @@ dump ()
    occurs.  Otherwise, return zero.  */
 
 static int
-dump_strings ()
+dump_strings (void)
 {
   size_t bufsize = MAX (100, string_min);
   char *buf = xmalloc (bufsize);
@@ -1581,9 +1535,7 @@ dump_strings ()
 }
 
 int
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int c;
   int n_files;
