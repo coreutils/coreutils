@@ -169,6 +169,13 @@ CLEANFILES = charset.alias ref-add.sed ref-del.sed
 
 ###############################################
 
+# FIXME: remove this dependency once automake handles it.
+# As of cvs automake of about 2002-01-13,
+# this dependency is necessary to avoid a build failure
+# when running `make check' before running `make all'.
+# Otherwise, unlocked-io.h is not built before it's needed.
+getdate$U.o: unlocked-io.h
+
 # FIXME: CAUTION this list is a duplicate of one in ../Makefile.cfg.
 io_functions = \
   clearerr feof ferror fflush fgets fputc fputs \
