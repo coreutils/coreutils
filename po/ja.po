@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU textutils 2.0.22\n"
-"POT-Creation-Date: 2003-07-13 11:53+0200\n"
+"POT-Creation-Date: 2003-07-27 22:05+0200\n"
 "PO-Revision-Date: 2002-07-27 22:54+0900\n"
 "Last-Translator: Masahito Yamaga <ma@yama-ga.com>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
@@ -31,9 +31,9 @@ msgstr "`%2$s' に対する引数 %1$s が曖昧です"
 msgid "Valid arguments are:"
 msgstr "有効な引数:"
 
-#: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:323
-#: src/cksum.c:269 src/head.c:308 src/head.c:358 src/head.c:776 src/head.c:821
-#: src/tail.c:324 src/tail.c:1702 src/tr.c:1666 src/tr.c:1913 src/tr.c:2021
+#: lib/closeout.c:88 src/cat.c:188 src/cat.c:271 src/cat.c:322 src/cksum.c:268
+#: src/head.c:307 src/head.c:357 src/head.c:775 src/head.c:820 src/tail.c:323
+#: src/tail.c:1701 src/tr.c:1664 src/tr.c:1911 src/tr.c:2019
 msgid "write error"
 msgstr "書き込みエラー"
 
@@ -177,7 +177,7 @@ msgstr "ディレクトリ %s に移動できません"
 msgid "cannot change permissions of %s"
 msgstr "%s の属性を変更できません"
 
-#: lib/obstack.c:487 lib/obstack.c:490 lib/xmalloc.c:65
+#: lib/obstack.c:487 lib/obstack.c:490 lib/xmalloc.c:62
 msgid "memory exhausted"
 msgstr "メモリを使い果たしました"
 
@@ -252,43 +252,43 @@ msgstr ""
 "これはフリーソフトウェアです. コピーの条件についてはソースをお読みください.\n"
 "市場性及び特定目的適合性の如何によらず, いかなる保証もありません.\n"
 
-#: lib/xmemcoll.c:57
+#: lib/xmemcoll.c:54 src/expr.c:714
 msgid "string comparison failed"
 msgstr "文字列の比較に失敗"
 
-#: lib/xmemcoll.c:58
+#: lib/xmemcoll.c:55 src/expr.c:715
 msgid "Set LC_ALL='C' to work around the problem."
 msgstr "問題を回避するために LC_ALL='C' を指定してください."
 
-#: lib/xmemcoll.c:60
+#: lib/xmemcoll.c:57 src/expr.c:717
 #, c-format
 msgid "The strings compared were %s and %s."
 msgstr "比較した文字列は %s と %s です."
 
-#: src/basename.c:50 src/cat.c:88 src/chgrp.c:122 src/chmod.c:238
-#: src/chown.c:95 src/chroot.c:41 src/cksum.c:278 src/comm.c:69 src/cp.c:156
-#: src/csplit.c:1493 src/cut.c:169 src/date.c:114 src/dd.c:284 src/df.c:723
-#: src/dircolors.c:99 src/dirname.c:42 src/du.c:170 src/echo.c:73
-#: src/env.c:115 src/expand.c:106 src/expr.c:86 src/factor.c:70 src/fmt.c:268
-#: src/fold.c:63 src/head.c:113 src/hostid.c:44 src/hostname.c:63 src/id.c:83
-#: src/install.c:590 src/join.c:140 src/kill.c:91 src/link.c:47 src/ln.c:336
-#: src/logname.c:45 src/ls.c:3752 src/md5sum.c:121 src/mkdir.c:57
-#: src/mkfifo.c:51 src/mknod.c:51 src/mv.c:303 src/nice.c:63 src/nl.c:173
-#: src/nohup.c:50 src/od.c:283 src/paste.c:398 src/pathchk.c:142
-#: src/pinky.c:465 src/pr.c:2751 src/printenv.c:59 src/printf.c:97
-#: src/ptx.c:1855 src/pwd.c:42 src/readlink.c:66 src/rm.c:95 src/rmdir.c:142
-#: src/seq.c:78 src/setuidgid.c:47 src/shred.c:156 src/sleep.c:48
-#: src/sort.c:272 src/split.c:93 src/stat.c:693 src/stty.c:486 src/su.c:433
-#: src/sum.c:56 src/sync.c:40 src/tac.c:123 src/tail.c:231 src/tee.c:59
-#: src/test.c:967 src/touch.c:225 src/tr.c:323 src/tsort.c:93 src/tty.c:58
-#: src/uname.c:106 src/unexpand.c:370 src/uniq.c:131 src/unlink.c:47
-#: src/uptime.c:187 src/users.c:114 src/wc.c:121 src/who.c:616 src/whoami.c:48
-#: src/yes.c:46
+#: src/basename.c:49 src/cat.c:87 src/chgrp.c:122 src/chmod.c:238
+#: src/chown.c:95 src/chroot.c:40 src/cksum.c:277 src/comm.c:68 src/cp.c:156
+#: src/csplit.c:1492 src/cut.c:178 src/date.c:114 src/dd.c:283 src/df.c:723
+#: src/dircolors.c:100 src/dirname.c:41 src/du.c:170 src/echo.c:72
+#: src/env.c:114 src/expand.c:107 src/expr.c:99 src/factor.c:69 src/fmt.c:267
+#: src/fold.c:62 src/head.c:112 src/hostid.c:40 src/hostname.c:62 src/id.c:82
+#: src/install.c:590 src/join.c:139 src/kill.c:90 src/link.c:47 src/ln.c:336
+#: src/logname.c:44 src/ls.c:3751 src/md5sum.c:120 src/mkdir.c:57
+#: src/mkfifo.c:51 src/mknod.c:51 src/mv.c:303 src/nice.c:61 src/nl.c:172
+#: src/nohup.c:52 src/od.c:282 src/paste.c:397 src/pathchk.c:136
+#: src/pinky.c:464 src/pr.c:2749 src/printenv.c:59 src/printf.c:96
+#: src/ptx.c:1854 src/pwd.c:41 src/readlink.c:63 src/rm.c:96 src/rmdir.c:142
+#: src/seq.c:77 src/setuidgid.c:46 src/shred.c:155 src/sleep.c:47
+#: src/sort.c:275 src/split.c:92 src/stat.c:690 src/stty.c:485 src/su.c:432
+#: src/sum.c:55 src/sync.c:40 src/tac.c:122 src/tail.c:230 src/tee.c:58
+#: src/test.c:972 src/touch.c:225 src/tr.c:321 src/tsort.c:92 src/tty.c:58
+#: src/uname.c:105 src/unexpand.c:369 src/uniq.c:130 src/unlink.c:47
+#: src/uptime.c:186 src/users.c:113 src/wc.c:131 src/who.c:615 src/whoami.c:47
+#: src/yes.c:45
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "詳しくは `%s --help' を実行して下さい.\n"
 
-#: src/basename.c:54
+#: src/basename.c:53
 #, fuzzy, c-format
 msgid ""
 "Usage: %s NAME [SUFFIX]\n"
@@ -297,7 +297,7 @@ msgstr ""
 "使用法: %s [ファイル]...\n"
 "または: %s [オプション]\n"
 
-#: src/basename.c:59
+#: src/basename.c:58
 msgid ""
 "Print NAME with any leading directory components removed.\n"
 "If specified, also remove a trailing SUFFIX.\n"
@@ -307,25 +307,25 @@ msgstr ""
 "指定があれば, 末尾の拡張子も取り除く.\n"
 "\n"
 
-#: src/basename.c:66 src/cat.c:124 src/chgrp.c:152 src/chmod.c:264
-#: src/chown.c:139 src/chroot.c:59 src/cksum.c:293 src/comm.c:86 src/cp.c:253
-#: src/csplit.c:1535 src/cut.c:214 src/date.c:216 src/dd.c:331 src/df.c:762
-#: src/dircolors.c:120 src/dirname.c:58 src/du.c:219 src/echo.c:105
-#: src/env.c:134 src/expand.c:131 src/expr.c:149 src/factor.c:90
-#: src/false.c:45 src/fmt.c:298 src/fold.c:86 src/head.c:148 src/hostid.c:57
-#: src/hostname.c:76 src/id.c:104 src/install.c:645 src/join.c:181
-#: src/kill.c:121 src/link.c:59 src/ln.c:391 src/logname.c:56 src/ls.c:3886
-#: src/md5sum.c:157 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:82 src/mv.c:357
-#: src/nice.c:77 src/nl.c:228 src/nohup.c:66 src/od.c:370 src/paste.c:422
-#: src/pathchk.c:154 src/pinky.c:492 src/pr.c:2863 src/printenv.c:72
-#: src/printf.c:146 src/pwd.c:53 src/readlink.c:83 src/rm.c:128
-#: src/rmdir.c:162 src/seq.c:104 src/setuidgid.c:67 src/shred.c:220
-#: src/sleep.c:64 src/sort.c:343 src/split.c:125 src/stat.c:764 src/stty.c:700
-#: src/su.c:454 src/sum.c:76 src/sync.c:51 src/tac.c:146 src/tail.c:301
-#: src/tee.c:72 src/test.c:1049 src/touch.c:256 src/tr.c:396 src/true.c:45
-#: src/tsort.c:105 src/tty.c:70 src/uname.c:128 src/unexpand.c:394
-#: src/uniq.c:170 src/unlink.c:58 src/uptime.c:202 src/users.c:127
-#: src/wc.c:143 src/who.c:659 src/whoami.c:60 src/yes.c:62
+#: src/basename.c:65 src/cat.c:123 src/chgrp.c:152 src/chmod.c:264
+#: src/chown.c:139 src/chroot.c:58 src/cksum.c:292 src/comm.c:85 src/cp.c:253
+#: src/csplit.c:1534 src/cut.c:223 src/date.c:216 src/dd.c:341 src/df.c:762
+#: src/dircolors.c:121 src/dirname.c:57 src/du.c:219 src/echo.c:104
+#: src/env.c:133 src/expand.c:132 src/expr.c:162 src/factor.c:89
+#: src/false.c:43 src/fmt.c:297 src/fold.c:85 src/head.c:147 src/hostid.c:53
+#: src/hostname.c:75 src/id.c:103 src/install.c:645 src/join.c:180
+#: src/kill.c:120 src/link.c:59 src/ln.c:391 src/logname.c:55 src/ls.c:3885
+#: src/md5sum.c:156 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:82 src/mv.c:357
+#: src/nice.c:75 src/nl.c:227 src/nohup.c:68 src/od.c:369 src/paste.c:421
+#: src/pathchk.c:148 src/pinky.c:491 src/pr.c:2861 src/printenv.c:72
+#: src/printf.c:145 src/pwd.c:52 src/readlink.c:80 src/rm.c:130
+#: src/rmdir.c:162 src/seq.c:103 src/setuidgid.c:66 src/shred.c:219
+#: src/sleep.c:63 src/sort.c:346 src/split.c:124 src/stat.c:761 src/stty.c:699
+#: src/su.c:453 src/sum.c:75 src/sync.c:51 src/tac.c:145 src/tail.c:300
+#: src/tee.c:71 src/test.c:1051 src/touch.c:256 src/tr.c:394 src/true.c:43
+#: src/tsort.c:104 src/tty.c:70 src/uname.c:127 src/unexpand.c:393
+#: src/uniq.c:169 src/unlink.c:58 src/uptime.c:201 src/users.c:126
+#: src/wc.c:153 src/who.c:658 src/whoami.c:59 src/yes.c:61
 #, c-format
 msgid ""
 "\n"
@@ -334,33 +334,33 @@ msgstr ""
 "\n"
 "バグを発見したら <%s> 宛に報告して下さい.\n"
 
-#: src/basename.c:115 src/chgrp.c:211 src/chmod.c:353 src/chown.c:212
-#: src/chroot.c:79 src/comm.c:266 src/csplit.c:1465 src/dirname.c:90
-#: src/expr.c:179 src/install.c:281 src/link.c:88 src/mkdir.c:125
-#: src/mkfifo.c:114 src/mknod.c:138 src/nohup.c:99 src/pathchk.c:195
-#: src/readlink.c:131 src/rm.c:201 src/rmdir.c:207 src/seq.c:412
-#: src/setuidgid.c:99 src/sleep.c:140 src/stat.c:816 src/unlink.c:89
+#: src/basename.c:114 src/chgrp.c:211 src/chmod.c:353 src/chown.c:212
+#: src/chroot.c:78 src/comm.c:265 src/csplit.c:1464 src/dirname.c:89
+#: src/expr.c:202 src/install.c:281 src/link.c:88 src/mkdir.c:125
+#: src/mkfifo.c:114 src/mknod.c:138 src/nohup.c:101 src/pathchk.c:189
+#: src/readlink.c:128 src/rm.c:203 src/rmdir.c:207 src/seq.c:411
+#: src/setuidgid.c:98 src/sleep.c:139 src/stat.c:813 src/unlink.c:89
 msgid "too few arguments"
 msgstr "引数が足りません"
 
-#: src/basename.c:116 src/dircolors.c:483 src/dirname.c:91 src/hostid.c:80
-#: src/hostname.c:123 src/link.c:94 src/logname.c:92 src/mknod.c:140
-#: src/readlink.c:139 src/seq.c:418 src/split.c:515 src/tr.c:1849
-#: src/uname.c:216 src/unlink.c:95 src/uptime.c:245 src/users.c:170
-#: src/who.c:812
+#: src/basename.c:115 src/dircolors.c:475 src/dirname.c:90 src/hostid.c:76
+#: src/hostname.c:122 src/link.c:94 src/logname.c:91 src/mknod.c:140
+#: src/readlink.c:136 src/seq.c:417 src/split.c:514 src/tr.c:1847
+#: src/uname.c:215 src/unlink.c:95 src/uptime.c:244 src/users.c:169
+#: src/who.c:811
 msgid "too many arguments"
 msgstr "引数が多すぎます"
 
-#: src/cat.c:42 src/split.c:44
+#: src/cat.c:41 src/split.c:43
 msgid "Torbjorn Granlund and Richard M. Stallman"
 msgstr "Torbjorn Granlund と Richard M. Stallman"
 
-#: src/cat.c:92
+#: src/cat.c:91
 #, c-format
 msgid "Usage: %s [OPTION] [FILE]...\n"
 msgstr "使用法: %s [オプション] [ファイル]...\n"
 
-#: src/cat.c:96
+#: src/cat.c:95
 msgid ""
 "Concatenate FILE(s), or standard input, to standard output.\n"
 "\n"
@@ -380,7 +380,7 @@ msgstr ""
 "  -n, --number             行番号を付け加える\n"
 "  -s, --squeeze-blank      連続した空行を圧縮\n"
 
-#: src/cat.c:106
+#: src/cat.c:105
 msgid ""
 "  -t                       equivalent to -vT\n"
 "  -T, --show-tabs          display TAB characters as ^I\n"
@@ -393,7 +393,7 @@ msgstr ""
 "  -v, --show-nonprinting   非表示文字と`^'や`^'を付けて表示 (LFDとTABは除"
 "く)\n"
 
-#: src/cat.c:114 src/fmt.c:294 src/sum.c:72
+#: src/cat.c:113 src/fmt.c:293 src/sum.c:71
 msgid ""
 "\n"
 "With no FILE, or when FILE is -, read standard input.\n"
@@ -401,7 +401,7 @@ msgstr ""
 "\n"
 "ファイルの指定がなかったり, - であった場合, 標準入力から読み込みます.\n"
 
-#: src/cat.c:119
+#: src/cat.c:118
 msgid ""
 "\n"
 "  -B, --binary             use binary writes to the console device.\n"
@@ -411,26 +411,26 @@ msgstr ""
 "  -B, --binary             コンソールデバイスにバイナリで出力\n"
 "\n"
 
-#: src/cat.c:311
+#: src/cat.c:310
 #, c-format
 msgid "cannot do ioctl on `%s'"
 msgstr "`%s' で ioctl() を実行できません"
 
-#: src/cat.c:667 src/dd.c:1223 src/od.c:1013 src/tee.c:182 src/yes.c:113
+#: src/cat.c:666 src/dd.c:1233 src/od.c:1012 src/tee.c:181 src/yes.c:112
 msgid "standard output"
 msgstr "標準出力"
 
-#: src/cat.c:798
+#: src/cat.c:797
 #, c-format
 msgid "%s: input file is output file"
 msgstr "%s: 入力ファイルが出力ファイルが同じファイルです"
 
-#: src/cat.c:856
+#: src/cat.c:855
 #, fuzzy
 msgid "closing standard input"
 msgstr "標準入力"
 
-#: src/cat.c:859
+#: src/cat.c:858
 #, fuzzy
 msgid "closing standard output"
 msgstr "標準出力"
@@ -699,7 +699,7 @@ msgstr ""
 "す。\n"
 "OWNER と GROUP は名前でも数値でも構いません\n"
 
-#: src/chroot.c:45
+#: src/chroot.c:44
 #, fuzzy, c-format
 msgid ""
 "Usage: %s NEWROOT [COMMAND...]\n"
@@ -708,7 +708,7 @@ msgstr ""
 "使用法: %s [ファイル]...\n"
 "または: %s [オプション]\n"
 
-#: src/chroot.c:49
+#: src/chroot.c:48
 msgid ""
 "Run COMMAND with root directory set to NEWROOT.\n"
 "\n"
@@ -716,7 +716,7 @@ msgstr ""
 "ルートディレクトリを NEWROOT に設定してコマンドを実行.\n"
 "\n"
 
-#: src/chroot.c:55
+#: src/chroot.c:54
 msgid ""
 "\n"
 "If no command is given, run ``${SHELL} -i'' (default: /bin/sh).\n"
@@ -724,22 +724,22 @@ msgstr ""
 "\n"
 "もしコマンドが指定されなければ, ``${SHELL} -i'' を実行 (標準: /bin/sh).\n"
 
-#: src/chroot.c:85
+#: src/chroot.c:84
 #, fuzzy, c-format
 msgid "cannot change root directory to %s"
 msgstr "ディレクトリ %s に移動できません"
 
-#: src/chroot.c:88
+#: src/chroot.c:87
 #, fuzzy
 msgid "cannot chdir to root directory"
 msgstr "ディレクトリ %s に移動できません"
 
-#: src/cksum.c:234
+#: src/cksum.c:233
 #, c-format
 msgid "%s: file too long"
 msgstr "%s: ファイルが長すぎます"
 
-#: src/cksum.c:282
+#: src/cksum.c:281
 #, c-format
 msgid ""
 "Usage: %s [FILE]...\n"
@@ -748,7 +748,7 @@ msgstr ""
 "使用法: %s [ファイル]...\n"
 "または: %s [オプション]\n"
 
-#: src/cksum.c:287
+#: src/cksum.c:286
 msgid ""
 "Print CRC checksum and byte counts of each FILE.\n"
 "\n"
@@ -756,16 +756,16 @@ msgstr ""
 "CRC チェックサムと各々のファイルのバイト数を表示.\n"
 "\n"
 
-#: src/comm.c:35 src/ls.c:125 src/uniq.c:40
+#: src/comm.c:34 src/ls.c:122 src/uniq.c:39
 msgid "Richard Stallman and David MacKenzie"
 msgstr "Richard Stallman と David MacKenzie"
 
-#: src/comm.c:73
+#: src/comm.c:72
 #, c-format
 msgid "Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n"
 msgstr "使用法: %s [オプション]... ファイルA  ファイルB\n"
 
-#: src/comm.c:77
+#: src/comm.c:76
 msgid ""
 "Compare sorted files LEFT_FILE and RIGHT_FILE line by line.\n"
 "\n"
@@ -784,13 +784,13 @@ msgstr ""
 msgid "cannot access %s"
 msgstr "%s を実行できません"
 
-#: src/copy.c:222 src/fmt.c:436 src/head.c:868 src/tail.c:1248
+#: src/copy.c:222 src/fmt.c:435 src/head.c:867 src/tail.c:1247
 #, c-format
 msgid "cannot open %s for reading"
 msgstr "%s を 読み込み用でオープンできません"
 
-#: src/copy.c:228 src/copy.c:282 src/copy.c:297 src/dd.c:1200 src/tail.c:1091
-#: src/tail.c:1161
+#: src/copy.c:228 src/copy.c:282 src/copy.c:297 src/dd.c:1210 src/tail.c:1090
+#: src/tail.c:1160
 #, fuzzy, c-format
 msgid "cannot fstat %s"
 msgstr "日時を設定できません"
@@ -801,7 +801,7 @@ msgid "skipping file %s, as it was replaced while being copied"
 msgstr ""
 
 #: src/copy.c:258 src/copy.c:884 src/copy.c:1065 src/copy.c:1155 src/ln.c:292
-#: src/remove.c:727 src/remove.c:781 src/remove.c:902 src/remove.c:1009
+#: src/remove.c:734 src/remove.c:788 src/remove.c:909 src/remove.c:1016
 #, fuzzy, c-format
 msgid "cannot remove %s"
 msgstr "ディレクトリ %s を作成できません"
@@ -811,22 +811,22 @@ msgstr "ディレクトリ %s を作成できません"
 msgid "cannot create regular file %s"
 msgstr "一時ファイルを作成できません"
 
-#: src/copy.c:324 src/dd.c:816 src/dd.c:1010
+#: src/copy.c:324 src/dd.c:826 src/dd.c:1020
 #, fuzzy, c-format
 msgid "reading %s"
 msgstr "%s の読み込みエラー"
 
-#: src/copy.c:358 src/head.c:441
+#: src/copy.c:358 src/head.c:440
 #, fuzzy, c-format
 msgid "cannot lseek %s"
 msgstr "%s: オフセット %s%s を seek できません"
 
-#: src/copy.c:373 src/copy.c:397 src/dd.c:1054 src/dd.c:1115
+#: src/copy.c:373 src/copy.c:397 src/dd.c:1064 src/dd.c:1125
 #, fuzzy, c-format
 msgid "writing %s"
 msgstr "%s の書き込みエラー"
 
-#: src/copy.c:405 src/copy.c:411 src/head.c:876
+#: src/copy.c:405 src/copy.c:411 src/head.c:875
 #, fuzzy, c-format
 msgid "closing %s"
 msgstr "%s を閉じています (fd=%d)"
@@ -841,7 +841,7 @@ msgstr "%s: %s のモード %04lo を無視して上書きしますか？ "
 msgid "%s: overwrite %s? "
 msgstr "%s: %s を上書きしてもよろしいですか(yes/no)? "
 
-#: src/copy.c:828 src/copy.c:866 src/df.c:492 src/stat.c:651
+#: src/copy.c:828 src/copy.c:866 src/df.c:492 src/stat.c:648
 #, fuzzy, c-format
 msgid "cannot stat %s"
 msgstr "ディレクトリ %s を作成できません"
@@ -967,7 +967,7 @@ msgstr "ディレクトリ %s を作成できません"
 msgid "cannot create special file %s"
 msgstr "キャラクタスペシャルファイル"
 
-#: src/copy.c:1446 src/ls.c:2488 src/stat.c:439
+#: src/copy.c:1446 src/ls.c:2485 src/stat.c:436
 #, fuzzy, c-format
 msgid "cannot read symbolic link %s"
 msgstr "シンボリックリンク"
@@ -1041,13 +1041,13 @@ msgstr ""
 "SOURCE から DEST へ、或いは FILE (複数可)を DIRECTORY へコピーする。\n"
 "\n"
 
-#: src/cp.c:170 src/csplit.c:1506 src/cut.c:181 src/df.c:733 src/du.c:179
-#: src/expand.c:119 src/fmt.c:278 src/fold.c:76 src/head.c:127
-#: src/install.c:606 src/kill.c:105 src/ln.c:355 src/ls.c:3762 src/mkdir.c:66
-#: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:317 src/nl.c:186 src/paste.c:412
-#: src/pr.c:2764 src/ptx.c:1867 src/shred.c:166 src/sort.c:286 src/split.c:106
-#: src/tac.c:136 src/tail.c:245 src/touch.c:234 src/unexpand.c:383
-#: src/uniq.c:144
+#: src/cp.c:170 src/csplit.c:1505 src/cut.c:190 src/df.c:733 src/du.c:179
+#: src/expand.c:120 src/fmt.c:277 src/fold.c:75 src/head.c:126
+#: src/install.c:606 src/kill.c:104 src/ln.c:355 src/ls.c:3761 src/mkdir.c:66
+#: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:317 src/nl.c:185 src/paste.c:411
+#: src/pr.c:2762 src/ptx.c:1866 src/shred.c:165 src/sort.c:289 src/split.c:105
+#: src/tac.c:135 src/tail.c:244 src/touch.c:234 src/unexpand.c:382
+#: src/uniq.c:143
 msgid ""
 "Mandatory arguments to long options are mandatory for short options too.\n"
 msgstr "長いオプションに必須の引数は短いオプションにも必須です.\n"
@@ -1242,7 +1242,7 @@ msgstr "%s の属性を変更できません"
 msgid "cannot make directory %s"
 msgstr "ディレクトリ %s を作成できません"
 
-#: src/cp.c:489 src/ln.c:489 src/mv.c:456 src/shred.c:1602
+#: src/cp.c:489 src/ln.c:489 src/mv.c:456 src/shred.c:1601
 #, fuzzy
 msgid "missing file argument"
 msgstr "スキップ数指定の引数"
@@ -1297,133 +1297,133 @@ msgstr "ハードリンクもシンボリックリンクも作成できません"
 msgid "backup type"
 msgstr "バックアップタイプ"
 
-#: src/csplit.c:41
+#: src/csplit.c:40
 msgid "Stuart Kemp and David MacKenzie"
 msgstr "Stuart Kemp と David MacKenzie"
 
-#: src/csplit.c:289 src/csplit.c:1482 src/tac-pipe.c:57 src/tee.c:221
-#: src/tr.c:1609 src/tr.c:1711 src/tr.c:1754
+#: src/csplit.c:288 src/csplit.c:1481 src/tac-pipe.c:57 src/tee.c:220
+#: src/tr.c:1607 src/tr.c:1709 src/tr.c:1752
 msgid "read error"
 msgstr "読み込みエラー"
 
-#: src/csplit.c:583
+#: src/csplit.c:582
 msgid "input disappeared"
 msgstr "入力が無くなりました"
 
-#: src/csplit.c:705 src/csplit.c:716
+#: src/csplit.c:704 src/csplit.c:715
 #, c-format
 msgid "%s: line number out of range"
 msgstr "%s: 範囲外の行番号"
 
-#: src/csplit.c:743
+#: src/csplit.c:742
 #, c-format
 msgid "%s: `%s': line number out of range"
 msgstr "%s: `%s': 範囲外の行番号"
 
-#: src/csplit.c:746 src/csplit.c:792
+#: src/csplit.c:745 src/csplit.c:791
 #, c-format
 msgid " on repetition %d\n"
 msgstr ": 繰り返し %d 回目\n"
 
-#: src/csplit.c:788
+#: src/csplit.c:787
 #, c-format
 msgid "%s: `%s': match not found"
 msgstr "%s: `%s': 一致しません"
 
-#: src/csplit.c:849 src/csplit.c:889 src/tac.c:262
+#: src/csplit.c:848 src/csplit.c:888 src/tac.c:261
 msgid "error in regular expression search"
 msgstr "正規表現による検索中のエラー"
 
-#: src/csplit.c:992
+#: src/csplit.c:991
 #, c-format
 msgid "write error for `%s'"
 msgstr "`%s' への書き込みエラー"
 
-#: src/csplit.c:1064
+#: src/csplit.c:1063
 #, c-format
 msgid "%s: `+' or `-' expected after delimeter"
 msgstr "%s: デリミタ(`/') の次には `+',`-' 付きの整数値を指定して下さい"
 
-#: src/csplit.c:1068
+#: src/csplit.c:1067
 #, c-format
 msgid "%s: integer expected after `%c'"
 msgstr "%s: `%c' の次には整数値を指定して下さい"
 
-#: src/csplit.c:1088
+#: src/csplit.c:1087
 #, c-format
 msgid "%s: `}' is required in repeat count"
 msgstr "%s: 繰り返しカウントには `}' が必要です"
 
-#: src/csplit.c:1098
+#: src/csplit.c:1097
 #, c-format
 msgid "%s}: integer required between `{' and `}'"
 msgstr "%s}: `{' と `}' の間には整数値が必要です"
 
-#: src/csplit.c:1125
+#: src/csplit.c:1124
 #, c-format
 msgid "%s: closing delimeter `%c' missing"
 msgstr "%s: 終端デリミタ(`%c')が欠けています"
 
-#: src/csplit.c:1141
+#: src/csplit.c:1140
 #, c-format
 msgid "%s: invalid regular expression: %s"
 msgstr "%s: 無効な正規表現です: %s"
 
-#: src/csplit.c:1174
+#: src/csplit.c:1173
 #, c-format
 msgid "%s: invalid pattern"
 msgstr "%s: 無効なパターン指定です"
 
-#: src/csplit.c:1177
+#: src/csplit.c:1176
 #, c-format
 msgid "%s: line number must be greater than zero"
 msgstr "%s: 行番号はゼロより大きい数でなければなりません"
 
-#: src/csplit.c:1183
+#: src/csplit.c:1182
 #, c-format
 msgid "line number `%s' is smaller than preceding line number, %s"
 msgstr "行番号 `%s' が %s よりも順序が前になっています"
 
-#: src/csplit.c:1189
+#: src/csplit.c:1188
 #, c-format
 msgid "warning: line number `%s' is the same as preceding line number"
 msgstr "警告: 行番号 `%s' が同じ行番号になっています"
 
-#: src/csplit.c:1314
+#: src/csplit.c:1313
 msgid "missing conversion specifier in suffix"
 msgstr "末尾の変換修飾子が指定されていません"
 
-#: src/csplit.c:1320
+#: src/csplit.c:1319
 #, c-format
 msgid "invalid conversion specifier in suffix: %c"
 msgstr "末尾の変換修飾子が無効です: %c"
 
-#: src/csplit.c:1323
+#: src/csplit.c:1322
 #, c-format
 msgid "invalid conversion specifier in suffix: \\%.3o"
 msgstr "末尾の変換修飾子が無効です: \\%.3o"
 
-#: src/csplit.c:1355
+#: src/csplit.c:1354
 #, c-format
 msgid "missing %% conversion specification in suffix"
 msgstr "末尾の %% 変換修飾子が無効です"
 
-#: src/csplit.c:1358
+#: src/csplit.c:1357
 #, c-format
 msgid "too many %% conversion specifications in suffix"
 msgstr "末尾の %% 変換修飾子が多すぎます"
 
-#: src/csplit.c:1442
+#: src/csplit.c:1441
 #, c-format
 msgid "%s: invalid number"
 msgstr "%s: 無効な番号です"
 
-#: src/csplit.c:1497
+#: src/csplit.c:1496
 #, c-format
 msgid "Usage: %s [OPTION]... FILE PATTERN...\n"
 msgstr "使用法: %s [オプション]... ファイル パターン...\n"
 
-#: src/csplit.c:1501
+#: src/csplit.c:1500
 msgid ""
 "Output pieces of FILE separated by PATTERN(s) to files `xx01', `xx02', ...,\n"
 "and output byte counts of each piece to standard output.\n"
@@ -1432,7 +1432,7 @@ msgstr ""
 "指定されたファイルをパターンによって分割したファイル `xx01', `xx02', ...,\n"
 "を出力し, それらの分割したファイルの各々のバイト数を標準出力に出力.\n"
 
-#: src/csplit.c:1509
+#: src/csplit.c:1508
 #, c-format
 msgid ""
 "  -b, --suffix-format=FORMAT use sprintf FORMAT instead of %d\n"
@@ -1443,7 +1443,7 @@ msgstr ""
 "  -f, --prefix=PREFIX        `xx' の代わりに PREFIX を使う\n"
 "  -k, --keep-files           エラー時に出力ファイルを削除しない\n"
 
-#: src/csplit.c:1514
+#: src/csplit.c:1513
 msgid ""
 "  -n, --digits=DIGITS        use specified number of digits instead of 2\n"
 "  -s, --quiet, --silent      do not print counts of output file sizes\n"
@@ -1453,7 +1453,7 @@ msgstr ""
 "  -s, --quiet, --silent      出力ファイルの大きさを表示しない\n"
 "  -z, --elide-empty-files    空の出力ファイルを削除\n"
 
-#: src/csplit.c:1521
+#: src/csplit.c:1520
 msgid ""
 "\n"
 "Read standard input if FILE is -.  Each PATTERN may be:\n"
@@ -1461,7 +1461,7 @@ msgstr ""
 "\n"
 "ファイルが - ならば標準入力を読み込みます. 各々のパターンは:\n"
 
-#: src/csplit.c:1525
+#: src/csplit.c:1524
 msgid ""
 "\n"
 "  INTEGER            copy up to but not including specified line number\n"
@@ -1481,19 +1481,19 @@ msgstr ""
 "\n"
 "オフセットの指定には `+' または `-' に正の整数値を続けて指定します.\n"
 
-#: src/cut.c:39
+#: src/cut.c:42
 msgid "David Ihnat, David MacKenzie, and Jim Meyering"
 msgstr "David Ihnat, David MacKenzie および Jim Meyering"
 
-#: src/cut.c:173 src/df.c:727 src/du.c:174 src/expand.c:110 src/fold.c:67
-#: src/head.c:117 src/ls.c:3756 src/nl.c:177 src/paste.c:402 src/pr.c:2755
-#: src/sort.c:276 src/sum.c:60 src/tac.c:127 src/tail.c:235 src/tee.c:63
-#: src/unexpand.c:374 src/wc.c:125
+#: src/cut.c:182 src/df.c:727 src/du.c:174 src/expand.c:111 src/fold.c:66
+#: src/head.c:116 src/ls.c:3755 src/nl.c:176 src/paste.c:401 src/pr.c:2753
+#: src/sort.c:279 src/sum.c:59 src/tac.c:126 src/tail.c:234 src/tee.c:62
+#: src/unexpand.c:373 src/wc.c:135
 #, c-format
 msgid "Usage: %s [OPTION]... [FILE]...\n"
 msgstr "使用法: %s [オプション]... [ファイル]...\n"
 
-#: src/cut.c:177
+#: src/cut.c:186
 msgid ""
 "Print selected parts of lines from each FILE to standard output.\n"
 "\n"
@@ -1501,7 +1501,7 @@ msgstr ""
 "ファイルの各行から選択した部分だけを切り出して, 標準出力に表示します.\n"
 "\n"
 
-#: src/cut.c:184
+#: src/cut.c:193
 msgid ""
 "  -b, --bytes=LIST        output only these bytes\n"
 "  -c, --characters=LIST   output only these characters\n"
@@ -1511,7 +1511,7 @@ msgstr ""
 "  -c, --characters=LIST   LIST に指定した文字位置だけを出力\n"
 "  -d, --delimiter=DELIM   フィールドの区切り文字を TAB の代わりに DELIM に\n"
 
-#: src/cut.c:189
+#: src/cut.c:198
 msgid ""
 "  -f, --fields=LIST       output only these fields;  also print any line\n"
 "                            that contains no delimiter character, unless\n"
@@ -1523,7 +1523,7 @@ msgstr ""
 "                            が指定されなければ, 区切り文字を含む行も表示\n"
 "  -n                      (無視)\n"
 
-#: src/cut.c:195
+#: src/cut.c:204
 msgid ""
 "  -s, --only-delimited    do not print lines not containing delimiters\n"
 "      --output-delimiter=STRING  use STRING as the output delimiter\n"
@@ -1533,7 +1533,7 @@ msgstr ""
 "      --output-delimiter=STRING  出力の区切り文字として STRING を使用\n"
 "                            デフォルトでは入力の区切り文字を使用\n"
 
-#: src/cut.c:202
+#: src/cut.c:211
 msgid ""
 "\n"
 "Use one, and only one of -b, -c or -f.  Each LIST is made up of one\n"
@@ -1559,42 +1559,52 @@ msgstr ""
 "\n"
 "ファイルの指定がなかったり, `-'であった場合, 標準入力から読み込みます.\n"
 
-#: src/cut.c:287 src/cut.c:318 src/cut.c:378
+#: src/cut.c:334 src/cut.c:366 src/cut.c:452
 msgid "invalid byte or field list"
 msgstr "バイト数もしくはフィールドの範囲指定が間違っています"
 
-#: src/cut.c:667 src/cut.c:676
+#: src/cut.c:440
+#, fuzzy, c-format
+msgid "byte offset %s is too large"
+msgstr "%s は長すぎます"
+
+#: src/cut.c:443
+#, fuzzy, c-format
+msgid "field number %s is too large"
+msgstr "比較するバイト数の指定が無効です"
+
+#: src/cut.c:763 src/cut.c:771
 msgid "only one type of list may be specified"
 msgstr "切り出し方として指定できるのは 1 種類だけです"
 
-#: src/cut.c:670
-msgid "missing list of positions"
-msgstr "位置指定リストがありません"
-
-#: src/cut.c:679
-msgid "missing list of fields"
-msgstr "フィールドのリストがありません"
-
-#: src/cut.c:686
+#: src/cut.c:780
 msgid "the delimiter must be a single character"
 msgstr "区切り文字に指定できるのは 1 文字だけです"
 
-#: src/cut.c:717
+#: src/cut.c:811
 msgid "you must specify a list of bytes, characters, or fields"
 msgstr "バイト, 文字, もしくはフィールドのリストを指定してください"
 
-#: src/cut.c:720
+#: src/cut.c:814
 #, fuzzy
 msgid "an input delimiter may be specified only when operating on fields"
 msgstr "フィールドを指定して実行する場合にのみ, 区切り文字が指定できます"
 
-#: src/cut.c:724
+#: src/cut.c:818
 msgid ""
 "suppressing non-delimited lines makes sense\n"
 "\tonly when operating on fields"
 msgstr ""
 "区切られていない行の抑制が有効なのは, \n"
 "\tフィールドを指定して実行するときだけです"
+
+#: src/cut.c:834
+msgid "missing list of fields"
+msgstr "フィールドのリストがありません"
+
+#: src/cut.c:836
+msgid "missing list of positions"
+msgstr "位置指定リストがありません"
 
 #: src/date.c:118
 #, c-format
@@ -1789,10 +1799,10 @@ msgstr ""
 "  `-' (ハイフン) 欄を埋めない\n"
 "  `_' (下線) 欄をスペースで埋める\n"
 
-#: src/date.c:238 src/dd.c:1174 src/dircolors.c:540 src/head.c:861
-#: src/md5sum.c:384 src/md5sum.c:726 src/od.c:959 src/od.c:2000 src/pr.c:1165
-#: src/pr.c:1372 src/pr.c:1494 src/stty.c:902 src/tac.c:483 src/tac.c:489
-#: src/tee.c:152 src/tr.c:2028 src/tsort.c:586
+#: src/date.c:238 src/dd.c:1184 src/dircolors.c:532 src/head.c:860
+#: src/md5sum.c:383 src/md5sum.c:725 src/od.c:958 src/od.c:1999 src/pr.c:1163
+#: src/pr.c:1370 src/pr.c:1492 src/stty.c:901 src/tac.c:482 src/tac.c:488
+#: src/tee.c:151 src/tr.c:2026 src/tsort.c:585 src/wc.c:210
 msgid "standard input"
 msgstr "標準入力"
 
@@ -1845,17 +1855,17 @@ msgstr "複数の分割方法は指定できません"
 msgid "cannot set date"
 msgstr "日時を設定できません"
 
-#: src/dd.c:43
+#: src/dd.c:42
 #, fuzzy
 msgid "Paul Rubin, David MacKenzie, and Stuart Kemp"
 msgstr "Paul Rubin と David MacKenzie"
 
-#: src/dd.c:288 src/tty.c:62 src/uname.c:110 src/whoami.c:52
+#: src/dd.c:287 src/tty.c:62 src/uname.c:109 src/whoami.c:51
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]...\n"
 msgstr "使用法: %s [オプション] [ファイル]...\n"
 
-#: src/dd.c:289
+#: src/dd.c:288
 msgid ""
 "Copy a file, converting and formatting according to the options.\n"
 "\n"
@@ -1873,7 +1883,7 @@ msgstr ""
 "  count=BLOCKS    入力ファイルの BLOCKS の分だけコピーする\n"
 "  ibs=BYTES       一度に BYTES バイト分読み込む\n"
 
-#: src/dd.c:298
+#: src/dd.c:297
 msgid ""
 "  if=FILE         read from FILE instead of stdin\n"
 "  obs=BYTES       write BYTES bytes at a time\n"
@@ -1887,7 +1897,7 @@ msgstr ""
 "  seek=BLOCKS     サイズが obs の BLOCKS 分書込み開始位置をスキップ\n"
 "  skip=BLOCKS     サイズが ibs の BLOCKS 分読込み開始位置をスキップ\n"
 
-#: src/dd.c:307
+#: src/dd.c:306
 #, fuzzy
 msgid ""
 "\n"
@@ -1904,7 +1914,7 @@ msgstr ""
 "KEYWORD には以下のものを使えます:\n"
 "\n"
 
-#: src/dd.c:315
+#: src/dd.c:314
 msgid ""
 "  ascii     from EBCDIC to ASCII\n"
 "  ebcdic    from ASCII to EBCDIC\n"
@@ -1920,7 +1930,7 @@ msgstr ""
 "  unblock   末尾の空白列をを改行で置き換える\n"
 "  lcase     英大文字を英小文字に変換する\n"
 
-#: src/dd.c:323
+#: src/dd.c:322
 msgid ""
 "  notrunc   do not truncate the output file\n"
 "  ucase     change lower case to upper case\n"
@@ -1936,60 +1946,73 @@ msgstr ""
 "  sync      各入力ブロックが ibs の大きさになるように NUL で埋める\n"
 "              - block, unblock と共に使うと NUL ではなく空白で埋める\n"
 
-#: src/dd.c:362
+#: src/dd.c:330
+msgid ""
+"\n"
+"Note that sending a SIGUSR1 signal to a running `dd' process makes it\n"
+"print to standard error the number of records read and written so far,\n"
+"then to resume copying.\n"
+"\n"
+"  $ dd if=/dev/zero of=/dev/null& pid=$!\n"
+"  $ kill -USR1 $pid; sleep 1; kill $pid\n"
+"  10899206+0 records in\n"
+"  10899206+0 records out\n"
+msgstr ""
+
+#: src/dd.c:372
 #, c-format
 msgid "%s+%s records in\n"
 msgstr "読み込んだブロック数は %s+%s\n"
 
-#: src/dd.c:364
+#: src/dd.c:374
 #, c-format
 msgid "%s+%s records out\n"
 msgstr "書き込んだブロック数は %s+%s\n"
 
-#: src/dd.c:371
+#: src/dd.c:381
 msgid "truncated record"
 msgstr "切り詰められた書き込み"
 
-#: src/dd.c:372
+#: src/dd.c:382
 msgid "truncated records"
 msgstr "切り詰められた書き込みブロック数"
 
-#: src/dd.c:382
+#: src/dd.c:392
 #, fuzzy, c-format
 msgid "closing input file %s"
 msgstr "ファイル `%s' を作成\n"
 
-#: src/dd.c:385
+#: src/dd.c:395
 #, c-format
 msgid "closing output file %s"
 msgstr "出力ファイル %s をクローズ"
 
-#: src/dd.c:469
+#: src/dd.c:479
 #, fuzzy, c-format
 msgid "writing to %s"
 msgstr "%s の書き込みエラー"
 
-#: src/dd.c:501
+#: src/dd.c:511
 #, fuzzy, c-format
 msgid "invalid conversion: %s"
 msgstr "幅のオプション `%s' が正しくありません"
 
-#: src/dd.c:557
+#: src/dd.c:567
 #, fuzzy, c-format
 msgid "unrecognized option %s"
 msgstr "オプション `-%c' を認識できません"
 
-#: src/dd.c:610
+#: src/dd.c:620
 #, fuzzy, c-format
 msgid "unrecognized option %s=%s"
 msgstr "オプション `-%c' を認識できません"
 
-#: src/dd.c:616
+#: src/dd.c:626
 #, fuzzy, c-format
 msgid "invalid number %s"
 msgstr "%s: 無効な番号表記です"
 
-#: src/dd.c:646
+#: src/dd.c:656
 msgid ""
 "only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, "
 "{unblock,sync}"
@@ -1997,7 +2020,7 @@ msgstr ""
 "`-conv'により一度にできる変換は {ascii,ebcdic,ibm}, {lcase,ucase}, {block,"
 "unblock}, {unblock,sync} のいずれかのみです。"
 
-#: src/dd.c:781
+#: src/dd.c:791
 #, c-format
 msgid ""
 "warning: working around lseek kernel bug for file (%s)\n"
@@ -2006,17 +2029,17 @@ msgstr ""
 "警告: lseek のカーネルバグに対処します。\n"
 "   ファイル (%s) の mt_type=0x%0lx -- <sys/mtio.h> のタイプリストを見て下さい"
 
-#: src/dd.c:1171 src/dd.c:1189
+#: src/dd.c:1181 src/dd.c:1199
 #, fuzzy, c-format
 msgid "opening %s"
 msgstr "%s の読み込みエラー"
 
-#: src/dd.c:1197
+#: src/dd.c:1207
 #, fuzzy
 msgid "file offset out of range"
 msgstr "%s: 範囲外の行番号"
 
-#: src/dd.c:1215
+#: src/dd.c:1225
 #, c-format
 msgid "advancing past %s bytes in output file %s"
 msgstr "出力ファイル %s の直前 %s バイトを進めます"
@@ -2065,7 +2088,7 @@ msgstr " %4s-ブロック    使用   使用可 使用%%"
 msgid " Mounted on\n"
 msgstr " マウント位置\n"
 
-#: src/df.c:448 src/pwd.c:79 src/remove.c:980
+#: src/df.c:448 src/pwd.c:78 src/remove.c:987
 #, fuzzy
 msgid "cannot get current directory"
 msgstr "ディレクトリ %s を作成できません"
@@ -2135,7 +2158,7 @@ msgstr ""
 "  -x, --exclude-type=TYPE  指定した種類のファイルシステムを除いて表示する\n"
 "  -v                    (無視される)\n"
 
-#: src/df.c:758 src/du.c:215 src/ls.c:3874
+#: src/df.c:758 src/du.c:215 src/ls.c:3873
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
@@ -2156,12 +2179,12 @@ msgstr "警告: "
 msgid "%scannot read table of mounted filesystems"
 msgstr "%sマウントされているファイルシステムのテーブルを読めません"
 
-#: src/dircolors.c:103
+#: src/dircolors.c:104
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... [FILE]\n"
 msgstr "使用法: %s [オプション]... [ファイル]...\n"
 
-#: src/dircolors.c:104
+#: src/dircolors.c:105
 msgid ""
 "Output commands to set the LS_COLORS environment variable.\n"
 "\n"
@@ -2177,7 +2200,7 @@ msgstr ""
 "  -c, --csh, --c-shell        C シェル形式で LS_COLORS を出力する\n"
 "  -p, --print-database        デフォルト値を標準出力に表示する\n"
 
-#: src/dircolors.c:114
+#: src/dircolors.c:115
 msgid ""
 "\n"
 "If FILE is specified, read it to determine which colors to use for which\n"
@@ -2191,21 +2214,21 @@ msgstr ""
 "ベースが使われます。こういったファイルのフォーマットの詳細が知りたければ、\n"
 "`dircolors --print-database' を実行してください。\n"
 
-#: src/dircolors.c:299
+#: src/dircolors.c:291
 #, fuzzy, c-format
 msgid "%s:%lu: invalid line;  missing second token"
 msgstr "%s: 無効な秒数です"
 
-#: src/dircolors.c:371
+#: src/dircolors.c:363
 #, fuzzy, c-format
 msgid "%s:%lu: unrecognized keyword %s"
 msgstr "%s: オプション `%c%s' を認識できません\n"
 
-#: src/dircolors.c:372
+#: src/dircolors.c:364
 msgid "<internal>"
 msgstr "<内部>"
 
-#: src/dircolors.c:468
+#: src/dircolors.c:460
 #, fuzzy
 msgid ""
 "the options to output dircolors' internal database and\n"
@@ -2214,7 +2237,7 @@ msgstr ""
 "冗長オプションと stty の読める形式の出力を指定するオプションは\n"
 "どちらか一方しか同時に指定できません"
 
-#: src/dircolors.c:476
+#: src/dircolors.c:468
 msgid ""
 "no FILE arguments may be used with the option to output\n"
 "dircolors' internal database"
@@ -2222,17 +2245,17 @@ msgstr ""
 "dircolorの内部データベースを出力するオプションを指定した時はファイル\n"
 "引数を指定する必要はありません"
 
-#: src/dircolors.c:505
+#: src/dircolors.c:497
 msgid "no SHELL environment variable, and no shell type option given"
 msgstr ""
 "環境変数 SHELL が定義されておらず、シェル型のオプションも与えられていません"
 
-#: src/dirname.c:33 src/head.c:48 src/pathchk.c:59
+#: src/dirname.c:32 src/head.c:47 src/pathchk.c:53
 #, fuzzy
 msgid "David MacKenzie and Jim Meyering"
 msgstr "David Ihnat, David MacKenzie および Jim Meyering"
 
-#: src/dirname.c:46
+#: src/dirname.c:45
 #, fuzzy, c-format
 msgid ""
 "Usage: %s NAME\n"
@@ -2241,7 +2264,7 @@ msgstr ""
 "使用法: %s [ファイル]...\n"
 "または: %s [オプション]\n"
 
-#: src/dirname.c:51
+#: src/dirname.c:50
 msgid ""
 "Print NAME with its trailing /component removed; if NAME contains no /'s,\n"
 "output `.' (meaning the current directory).\n"
@@ -2345,7 +2368,7 @@ msgstr "ディレクトリ %s に移動できません"
 msgid "cannot read directory %s"
 msgstr "ディレクトリ %s を作成できません"
 
-#: src/du.c:554 src/ls.c:2236 src/wc.c:592
+#: src/du.c:554 src/ls.c:2233 src/wc.c:674
 msgid "total"
 msgstr "合計"
 
@@ -2367,12 +2390,12 @@ msgstr "警告: 統計(-s)と -max-depth=0 は同じ用法です"
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr "警告: 統計(-s)と -max-depth=%d の指定が競合しています"
 
-#: src/echo.c:77
+#: src/echo.c:76
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... [STRING]...\n"
 msgstr "使用法: %s [オプション]... [ファイル]...\n"
 
-#: src/echo.c:78
+#: src/echo.c:77
 msgid ""
 "Echo the STRING(s) to standard output.\n"
 "\n"
@@ -2387,7 +2410,7 @@ msgstr ""
 "  -e              後述のバックスラッシュでエスケープされる文字を解釈\n"
 "  -E              STRING 内のそれらのシーケンスを解釈しない\n"
 
-#: src/echo.c:88
+#: src/echo.c:87
 msgid ""
 "\n"
 "Without -E, the following sequences are recognized and interpolated:\n"
@@ -2405,7 +2428,7 @@ msgstr ""
 "  \\a     警告音 (ベル音)\n"
 "  \\b     バックスペース\n"
 
-#: src/echo.c:97
+#: src/echo.c:96
 msgid ""
 "  \\c     suppress trailing newline\n"
 "  \\f     form feed\n"
@@ -2421,17 +2444,17 @@ msgstr ""
 "  \\t     水平タブ\n"
 "  \\v     垂直タブ\n"
 
-#: src/env.c:93
+#: src/env.c:92
 #, fuzzy
 msgid "Richard Mlynarik and David MacKenzie"
 msgstr "Richard Stallman と David MacKenzie"
 
-#: src/env.c:119
+#: src/env.c:118
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... [-] [NAME=VALUE]... [COMMAND [ARG]...]\n"
 msgstr "使用法: %s [オプション]... [ファイル]...\n"
 
-#: src/env.c:122
+#: src/env.c:121
 msgid ""
 "Set each NAME to VALUE in the environment and run COMMAND.\n"
 "\n"
@@ -2443,7 +2466,7 @@ msgstr ""
 "  -i, --ignore-environment   何も環境変数が設定されていない状態で実行\n"
 "  -u, --unset=NAME           環境変数 NAME を削除する\n"
 
-#: src/env.c:130
+#: src/env.c:129
 msgid ""
 "\n"
 "A mere - implies -i.  If no COMMAND, print the resulting environment.\n"
@@ -2452,7 +2475,7 @@ msgstr ""
 "- だけを指定した場合は -i を指定したことになります. コマンドが指定されなけれ"
 "ば, 最終的な環境変数を表示します.\n"
 
-#: src/expand.c:114
+#: src/expand.c:115
 msgid ""
 "Convert tabs in each FILE to spaces, writing to standard output.\n"
 "With no FILE, or when FILE is -, read standard input.\n"
@@ -2462,7 +2485,7 @@ msgstr ""
 "ファイルの指定がなかったり, `-'であった場合, 標準入力から読み込みます.\n"
 "\n"
 
-#: src/expand.c:122
+#: src/expand.c:123
 msgid ""
 "  -i, --initial       do not convert TABs after non whitespace\n"
 "  -t, --tabs=NUMBER   have tabs NUMBER characters apart, not 8\n"
@@ -2470,28 +2493,34 @@ msgstr ""
 "  -i, --initial       非空白文字以降のタブを変換しない\n"
 "  -t, --tabs=数       タブ幅を標準の8にかわりに指定\n"
 
-#: src/expand.c:126
+#: src/expand.c:127
 msgid ""
 "  -t, --tabs=LIST     use comma separated list of explicit tab positions\n"
 msgstr "  -t, --tabs=リスト  コンマ(,)で区切られたリストにタブストップを設定\n"
 
-#: src/expand.c:172 src/unexpand.c:152
-msgid "tab size contains an invalid character"
+#: src/expand.c:184
+#, fuzzy, c-format
+msgid "tab stop is too large %s"
+msgstr "%s は長すぎます"
+
+#: src/expand.c:193
+#, fuzzy, c-format
+msgid "tab size contains invalid character(s): %s"
 msgstr "タブサイズの指定に不正な文字が含まれています"
 
-#: src/expand.c:190 src/unexpand.c:170
+#: src/expand.c:218 src/unexpand.c:169
 msgid "tab size cannot be 0"
 msgstr "タブサイズは0(ゼロ)にできません"
 
-#: src/expand.c:192 src/unexpand.c:172
+#: src/expand.c:220 src/unexpand.c:171
 msgid "tab sizes must be ascending"
 msgstr "タブサイズの指定は昇順でなければなりません"
 
-#: src/expand.c:386
+#: src/expand.c:414
 msgid "`-LIST' option is obsolete; use `-t LIST'"
 msgstr "`-LIST' オプションは過去のものです. `-t LIST' を使ってください"
 
-#: src/expr.c:90
+#: src/expr.c:103
 #, fuzzy, c-format
 msgid ""
 "Usage: %s EXPRESSION\n"
@@ -2500,7 +2529,7 @@ msgstr ""
 "使用法: %s [ファイル]...\n"
 "または: %s [オプション]\n"
 
-#: src/expr.c:98
+#: src/expr.c:111
 msgid ""
 "\n"
 "Print the value of EXPRESSION to standard output.  A blank line below\n"
@@ -2520,7 +2549,7 @@ msgstr ""
 "  ARG1 & ARG2       ARG1, ARG2 ともにヌルでも 0 でもなければ ARG1 を返し,\n"
 "                      それ以外の場合は 0 を返す\n"
 
-#: src/expr.c:107
+#: src/expr.c:120
 msgid ""
 "\n"
 "  ARG1 < ARG2       ARG1 is less than ARG2\n"
@@ -2538,7 +2567,7 @@ msgstr ""
 "  ARG1 >= ARG2      ARG1 が ARG2 より大きいか等しい\n"
 "  ARG1 > ARG2       ARG1 が ARG2 より大きい\n"
 
-#: src/expr.c:116
+#: src/expr.c:129
 msgid ""
 "\n"
 "  ARG1 + ARG2       arithmetic sum of ARG1 and ARG2\n"
@@ -2548,7 +2577,7 @@ msgstr ""
 "  ARG1 + ARG2       ARG1 と ARG2 の足し算\n"
 "  ARG1 - ARG2       ARG1 と ARG2 の引き算\n"
 
-#: src/expr.c:121
+#: src/expr.c:134
 #, c-format
 msgid ""
 "\n"
@@ -2561,7 +2590,7 @@ msgstr ""
 "  ARG1 / ARG2       ARG1 の ARG2 による割り算\n"
 "  ARG1 % ARG2       ARG1 の ARG2 による割り算のあまり\n"
 
-#: src/expr.c:127
+#: src/expr.c:140
 msgid ""
 "\n"
 "  STRING : REGEXP   anchored pattern match of REGEXP in STRING\n"
@@ -2580,7 +2609,7 @@ msgstr ""
 "                               見つからなければ 0\n"
 "  length STRING              STRING の長さ\n"
 
-#: src/expr.c:136
+#: src/expr.c:149
 msgid ""
 "  + TOKEN                    interpret TOKEN as a string, even if it is a\n"
 "                               keyword like `match' or an operator like `/'\n"
@@ -2592,7 +2621,7 @@ msgstr ""
 "\n"
 "  ( 式 )                     式の値\n"
 
-#: src/expr.c:142
+#: src/expr.c:155
 msgid ""
 "\n"
 "Beware that many operators need to be escaped or quoted for shells.\n"
@@ -2607,12 +2636,12 @@ msgstr ""
 "より行われます. パターン照合は, \\( と \\) の間, もしくはヌル文字に一致した\n"
 "文字列を返します. \\( と \\) を使わない場合は一致する文字数か 0 を返します.\n"
 
-#: src/expr.c:187 src/expr.c:439 src/expr.c:445 src/expr.c:450 src/expr.c:472
+#: src/expr.c:171
 #, fuzzy
 msgid "syntax error"
 msgstr "標準エラー"
 
-#: src/expr.c:385
+#: src/expr.c:408
 #, c-format
 msgid ""
 "warning: unportable BRE: `%s': using `^' as the first character\n"
@@ -2621,16 +2650,16 @@ msgstr ""
 "警告: 可搬でない BRE: `%s': 基本的な正規表現の最初の文字として\n"
 "`^' を使うことは可搬ではないので無視します"
 
-#: src/expr.c:587 src/expr.c:626
+#: src/expr.c:610 src/expr.c:649
 #, fuzzy
 msgid "non-numeric argument"
 msgstr "入力の大きさ制限の引数"
 
-#: src/expr.c:593
+#: src/expr.c:616
 msgid "division by zero"
 msgstr "ゼロでの割り算"
 
-#: src/factor.c:74
+#: src/factor.c:73
 #, fuzzy, c-format
 msgid ""
 "Usage: %s [NUMBER]...\n"
@@ -2639,7 +2668,7 @@ msgstr ""
 "使用法: %s [ファイル]...\n"
 "または: %s [オプション]\n"
 
-#: src/factor.c:79
+#: src/factor.c:78
 msgid ""
 "Print the prime factors of each NUMBER.\n"
 "\n"
@@ -2647,7 +2676,7 @@ msgstr ""
 "各々の数値の素因数を表示.\n"
 "\n"
 
-#: src/factor.c:85
+#: src/factor.c:84
 msgid ""
 "\n"
 "  Print the prime factors of all specified integer NUMBERs.  If no "
@@ -2658,12 +2687,12 @@ msgstr ""
 "  与えられた全ての数値 (整数) の素因数を表示します. もし数値が引数として\n"
 "  コマンド行から指定されない場合には, 標準入力より読み込まれます.\n"
 
-#: src/factor.c:154
+#: src/factor.c:153
 #, c-format
 msgid "`%s' is not a valid positive integer"
 msgstr "`%s' は有効な正の整数ではありません"
 
-#: src/false.c:34
+#: src/false.c:32
 #, c-format
 msgid ""
 "Usage: %s [ignored command line arguments]\n"
@@ -2680,12 +2709,12 @@ msgstr ""
 "これらのオプションは名前を短縮できない.\n"
 "\n"
 
-#: src/fmt.c:272
+#: src/fmt.c:271
 #, c-format
 msgid "Usage: %s [-DIGITS] [OPTION]... [FILE]...\n"
 msgstr "使用法: %s [-DIGITS] [オプション]... [ファイル]...\n"
 
-#: src/fmt.c:273
+#: src/fmt.c:272
 msgid ""
 "Reformat each paragraph in the FILE(s), writing to standard output.\n"
 "If no FILE or if FILE is `-', read standard input.\n"
@@ -2696,7 +2725,7 @@ msgstr ""
 "標準入力から読み込みます.\n"
 "\n"
 
-#: src/fmt.c:281
+#: src/fmt.c:280
 msgid ""
 "  -c, --crown-margin        preserve indentation of first two lines\n"
 "  -p, --prefix=STRING       combine only lines having STRING as prefix\n"
@@ -2706,7 +2735,7 @@ msgstr ""
 "  -p, --prefix=STRING       STRING で始まる行だけを結合\n"
 "  -s, --split-only          長い行の分割だけを行う\n"
 
-#: src/fmt.c:287
+#: src/fmt.c:286
 #, fuzzy
 msgid ""
 "  -t, --tagged-paragraph    indentation of first line different from second\n"
@@ -2717,24 +2746,24 @@ msgstr ""
 "  -u, --uniform-spacing     単語の間には 1つ, 文の間には 2 つの空白を置く\n"
 "  -w, --width=NUMBER        最大行幅 (標準 75文字) を指定\n"
 
-#: src/fmt.c:352
+#: src/fmt.c:351
 #, fuzzy, c-format
 msgid "invalid width option: %s"
 msgstr "幅のオプション `%s' が正しくありません"
 
-#: src/fmt.c:368
+#: src/fmt.c:367
 #, c-format
 msgid ""
 "invalid option -- %c; -WIDTH is recognized only when it is the first\n"
 "option; use -w N instead"
 msgstr ""
 
-#: src/fmt.c:394
+#: src/fmt.c:393
 #, fuzzy, c-format
 msgid "invalid width: %s"
 msgstr "幅 `%s' が正しくありません"
 
-#: src/fold.c:71
+#: src/fold.c:70
 msgid ""
 "Wrap input lines in each FILE (standard input by default), writing to\n"
 "standard output.\n"
@@ -2743,7 +2772,7 @@ msgstr ""
 "ファイルの各行の折り返しを行い, 結果を標準出力に書き込みます.\n"
 "\n"
 
-#: src/fold.c:79
+#: src/fold.c:78
 msgid ""
 "  -b, --bytes         count bytes rather than columns\n"
 "  -s, --spaces        break at spaces\n"
@@ -2753,17 +2782,17 @@ msgstr ""
 "  -s, --spaces        空白の位置で折り返す\n"
 "  -w, --width=WIDTH   80 の代わりに 1 行の幅を指定\n"
 
-#: src/fold.c:268
+#: src/fold.c:267
 #, c-format
 msgid "`%s' option is obsolete; use `%s'"
 msgstr "`%s' オプションは過去のものです. `%s' を使ってください"
 
-#: src/fold.c:296
+#: src/fold.c:295
 #, c-format
 msgid "invalid number of columns: `%s'"
 msgstr "行幅の指定が無効です: `%s'"
 
-#: src/head.c:121
+#: src/head.c:120
 #, fuzzy
 msgid ""
 "Print the first 10 lines of each FILE to standard output.\n"
@@ -2776,7 +2805,7 @@ msgstr ""
 "ファイル名を指定しないか, ファイル名に `-' を指定した場合には, \n"
 "標準入力を読み込みます.\n"
 
-#: src/head.c:130
+#: src/head.c:129
 msgid ""
 "  -c, --bytes=[-]N         print the first N bytes of each file;\n"
 "                             with the leading `-', print all but the last\n"
@@ -2786,7 +2815,7 @@ msgid ""
 "                             N lines of each file\n"
 msgstr ""
 
-#: src/head.c:138
+#: src/head.c:137
 msgid ""
 "  -q, --quiet, --silent    never print headers giving file names\n"
 "  -v, --verbose            always print headers giving file names\n"
@@ -2794,7 +2823,7 @@ msgstr ""
 "  -q, --quiet, --silent    ファイルごとのヘッダの出力を行わない\n"
 "  -v, --verbose            ファイルごとにヘッダを出力\n"
 
-#: src/head.c:144
+#: src/head.c:143
 #, fuzzy
 msgid ""
 "\n"
@@ -2804,81 +2833,81 @@ msgstr ""
 "SIZEはいくつかのサフィックスを付けられます: 512バイトでは`b',1キロでは`k',\n"
 "1メガでは`m'となっています.\n"
 
-#: src/head.c:159 src/head.c:272 src/head.c:344 src/head.c:551 src/head.c:633
-#: src/head.c:705 src/head.c:770 src/head.c:798 src/tail.c:362 src/tail.c:443
-#: src/tail.c:492 src/tail.c:584 src/tail.c:709 src/tail.c:757 src/tail.c:796
-#: src/tail.c:1274 src/tail.c:1310 src/uniq.c:379
+#: src/head.c:158 src/head.c:271 src/head.c:343 src/head.c:550 src/head.c:632
+#: src/head.c:704 src/head.c:769 src/head.c:797 src/tail.c:361 src/tail.c:442
+#: src/tail.c:491 src/tail.c:583 src/tail.c:708 src/tail.c:756 src/tail.c:795
+#: src/tail.c:1273 src/tail.c:1309 src/uniq.c:378
 #, c-format
 msgid "error reading %s"
 msgstr "%s の読み込みエラー"
 
-#: src/head.c:162 src/uniq.c:384
+#: src/head.c:161 src/uniq.c:383
 #, c-format
 msgid "error writing %s"
 msgstr "%s の書き込みエラー"
 
-#: src/head.c:165
+#: src/head.c:164
 #, c-format
 msgid "%s: file has shrunk too much"
 msgstr ""
 
-#: src/head.c:238
+#: src/head.c:237
 #, fuzzy, c-format
 msgid "%s: number of bytes is large"
 msgstr "バイト数"
 
-#: src/head.c:456
+#: src/head.c:455
 #, fuzzy, c-format
 msgid "%s: cannot lseek back to original position"
 msgstr "%s: 相対オフセット %s%s を seek できません"
 
-#: src/head.c:626 src/head.c:697 src/tail.c:393
+#: src/head.c:625 src/head.c:696 src/tail.c:392
 #, fuzzy, c-format
 msgid "%s: cannot seek to offset %s"
 msgstr "%s: オフセット %s%s を seek できません"
 
-#: src/head.c:815
+#: src/head.c:814
 #, c-format
 msgid "cannot reposition file pointer for %s"
 msgstr "%s に対するファイルポインタを再配置できません"
 
-#: src/head.c:899 src/tail.c:1434
+#: src/head.c:898 src/tail.c:1433
 #, c-format
 msgid "%s: %s is so large that it is not representable"
 msgstr "%s: %s は大きすぎて表示できません"
 
-#: src/head.c:900 src/tail.c:1436
+#: src/head.c:899 src/tail.c:1435
 msgid "number of lines"
 msgstr "行数"
 
-#: src/head.c:900 src/tail.c:1437
+#: src/head.c:899 src/tail.c:1436
 msgid "number of bytes"
 msgstr "バイト数"
 
-#: src/head.c:907 src/tail.c:1523
+#: src/head.c:906 src/tail.c:1522
 msgid "invalid number of lines"
 msgstr "行数の指定が正しくありません"
 
-#: src/head.c:908 src/tail.c:1524
+#: src/head.c:907 src/tail.c:1523
 msgid "invalid number of bytes"
 msgstr "バイト数の指定が正しくありません"
 
-#: src/head.c:995
+#: src/head.c:994
 #, c-format
 msgid "unrecognized option `-%c'"
 msgstr "オプション `-%c' を認識できません"
 
-#: src/head.c:1002
+#: src/head.c:1001
 #, c-format
 msgid "`-%s' option is obsolete; use `-%c %.*s%.*s%s'"
 msgstr "`-%s' オプションは過去のものです. `-%c %.*s%.*s%s' を使ってください"
 
-#: src/head.c:1078
+#: src/head.c:1077
 #, fuzzy, c-format
 msgid "%s: number of bytes is too large"
 msgstr "比較するバイト数の指定が無効です"
 
-#: src/hostid.c:48
+#: src/hostid.c:44
 #, c-format
 msgid ""
 "Usage: %s\n"
@@ -2891,7 +2920,7 @@ msgstr ""
 "現在のホストに対する数字による識別子 (16進数) を表示.\n"
 "\n"
 
-#: src/hostname.c:67
+#: src/hostname.c:66
 #, c-format
 msgid ""
 "Usage: %s [NAME]\n"
@@ -2904,30 +2933,30 @@ msgstr ""
 "現在のシステムのホスト名を表示または設定.\n"
 "\n"
 
-#: src/hostname.c:105
+#: src/hostname.c:104
 #, fuzzy, c-format
 msgid "cannot set hostname to `%s'"
 msgstr "`%s' で ioctl() を実行できません"
 
-#: src/hostname.c:111
+#: src/hostname.c:110
 msgid "cannot set hostname; this system lacks the functionality"
 msgstr "ホスト名を設定できません; このシステムは機能的に不足しています"
 
-#: src/hostname.c:118
+#: src/hostname.c:117
 msgid "cannot determine hostname"
 msgstr "ホスト名を特定できません"
 
-#: src/id.c:36
+#: src/id.c:35
 #, fuzzy
 msgid "Arnold Robbins and David MacKenzie"
 msgstr "Paul Rubin と David MacKenzie"
 
-#: src/id.c:87
+#: src/id.c:86
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... [USERNAME]\n"
 msgstr "使用法: %s [オプション]... SET1 [SET2]\n"
 
-#: src/id.c:88
+#: src/id.c:87
 msgid ""
 "Print information for USERNAME, or the current user.\n"
 "\n"
@@ -2947,7 +2976,7 @@ msgstr ""
 "  -r, --real      -ugG に対して, 実効 ID の代わりに実 ID を表示\n"
 "  -u, --user      実効ユーザ ID のみを表示\n"
 
-#: src/id.c:100
+#: src/id.c:99
 msgid ""
 "\n"
 "Without any OPTION, print some useful set of identified information.\n"
@@ -2955,35 +2984,35 @@ msgstr ""
 "\n"
 "オプションが無い場合はユーザ情報のうち有用なものを表示.\n"
 
-#: src/id.c:163
+#: src/id.c:162
 #, fuzzy
 msgid "cannot print only user and only group"
 msgstr "ユーザとグループの両方を省略することはできません"
 
-#: src/id.c:167
+#: src/id.c:166
 msgid "cannot print only names or real IDs in default format"
 msgstr "標準の形式では, 名前または ID だけを表示することはできません"
 
-#: src/id.c:176
+#: src/id.c:175
 #, c-format
 msgid "%s: No such user"
 msgstr "%s: そのようなユーザは存在しません"
 
-#: src/id.c:213
+#: src/id.c:212
 #, c-format
 msgid "cannot find name for user ID %u"
 msgstr "ユーザ ID %u に対するユーザ名が見つかりません"
 
-#: src/id.c:236
+#: src/id.c:235
 #, fuzzy, c-format
 msgid "cannot find name for group ID %u"
 msgstr "%s のオーナーとグループを変更できません"
 
-#: src/id.c:274
+#: src/id.c:273
 msgid "cannot get supplemental group list"
 msgstr "追加されたグループリストが得られません"
 
-#: src/id.c:386
+#: src/id.c:385
 msgid " groups="
 msgstr " 所属グループ="
 
@@ -3143,12 +3172,12 @@ msgstr ""
 "を通じて選択できます。以下がその際の値です:\n"
 "\n"
 
-#: src/join.c:144
+#: src/join.c:143
 #, c-format
 msgid "Usage: %s [OPTION]... FILE1 FILE2\n"
 msgstr "使用法: %s [オプション]... ファイル1 ファイル2\n"
 
-#: src/join.c:148
+#: src/join.c:147
 #, fuzzy
 msgid ""
 "For each pair of input lines with identical join fields, write a line to\n"
@@ -3168,7 +3197,7 @@ msgstr ""
 "  -a SIDE           SIDE に指定したファイルからの行は不一致の行も出力\n"
 "  -e EMPTY          空の出力フィールドを EMPTY で置き換える\n"
 
-#: src/join.c:157
+#: src/join.c:156
 msgid ""
 "  -i, --ignore-case ignore differences in case when comparing fields\n"
 "  -j FIELD          (obsolescent) equivalent to `-1 FIELD -2 FIELD'\n"
@@ -3184,7 +3213,7 @@ msgstr ""
 "  -o FORMAT         出力行を FORMAT の書式に従って構成\n"
 "  -t CHAR           出力・入力のフィールド区切り文字として CHAR を使用\n"
 
-#: src/join.c:165
+#: src/join.c:164
 #, fuzzy
 msgid ""
 "  -v FILENUM        like -a FILENUM, but suppress joined output lines\n"
@@ -3195,7 +3224,7 @@ msgstr ""
 "  -1 FIELD          ファイル1 の FIELD に基づいて結合\n"
 "  -2 FIELD          ファイル2 の FILED に基づいて結合\n"
 
-#: src/join.c:172
+#: src/join.c:171
 #, fuzzy
 msgid ""
 "\n"
@@ -3216,44 +3245,44 @@ msgstr ""
 "フィールド, FILE2 の残されたフィールド, 結合フィールドを CHAR で区切って\n"
 "出力します.\n"
 
-#: src/join.c:645
+#: src/join.c:644
 #, c-format
 msgid "invalid field specifier: `%s'"
 msgstr "フィールドの指定が無効です: `%s'"
 
-#: src/join.c:659 src/join.c:773 src/join.c:809
+#: src/join.c:658 src/join.c:772 src/join.c:808
 #, c-format
 msgid "invalid field number: `%s'"
 msgstr "フィールド数が間違っています: `%s'"
 
-#: src/join.c:672
+#: src/join.c:671
 #, c-format
 msgid "invalid file number in field spec: `%s'"
 msgstr "フィールドの指定でのファイル番号は無効です: %s"
 
-#: src/join.c:793
+#: src/join.c:792
 #, c-format
 msgid "invalid field number for file 1: `%s'"
 msgstr "ファイル1 のフィールド数が間違ってます: `%s'"
 
-#: src/join.c:802
+#: src/join.c:801
 #, c-format
 msgid "invalid field number for file 2: `%s'"
 msgstr "ファイル2 のフィールド数が間違ってます: `%s'"
 
-#: src/join.c:834
+#: src/join.c:833
 msgid "too many non-option arguments"
 msgstr "非オプション引数の数が多すぎます"
 
-#: src/join.c:856
+#: src/join.c:855
 msgid "too few non-option arguments"
 msgstr "非オプション引数の数が少なすぎます"
 
-#: src/join.c:867
+#: src/join.c:866
 msgid "both files cannot be standard input"
 msgstr "両方のファイルを標準入力にはできません"
 
-#: src/kill.c:95
+#: src/kill.c:94
 #, c-format
 msgid ""
 "Usage: %s [-s SIGNAL | -SIGNAL] PID...\n"
@@ -3264,7 +3293,7 @@ msgstr ""
 "または:  %s -l [SIGNAL]...\n"
 "または:  %s -t [SIGNAL]...\n"
 
-#: src/kill.c:101
+#: src/kill.c:100
 msgid ""
 "Send signals to processes, or list signals.\n"
 "\n"
@@ -3272,7 +3301,7 @@ msgstr ""
 "プロセスにシグナルを送信, またはシグナルを一覧表示.\n"
 "\n"
 
-#: src/kill.c:108
+#: src/kill.c:107
 msgid ""
 "  -s, --signal=SIGNAL, -SIGNAL\n"
 "                   specify the name or number of the signal to be sent\n"
@@ -3284,7 +3313,7 @@ msgstr ""
 "  -l, --list                    シグナル名および番号の一覧\n"
 "  -t, --table                   シグナル情報の一覧表を表示\n"
 
-#: src/kill.c:116
+#: src/kill.c:115
 msgid ""
 "\n"
 "SIGNAL may be a signal name like `HUP', or a signal number like `1',\n"
@@ -3296,35 +3325,35 @@ msgstr ""
 "シグナルによって終了されたプロセスの終了状態です.\n"
 "PID は整数です. 負の場合はプロセスグループを示します.\n"
 
-#: src/kill.c:165
+#: src/kill.c:164
 #, fuzzy, c-format
 msgid "%s: invalid signal"
 msgstr "%s: 無効なプロセス番号です"
 
-#: src/kill.c:270
+#: src/kill.c:269
 #, fuzzy, c-format
 msgid "%s: invalid process id"
 msgstr "%s: 無効なパターン指定です"
 
-#: src/kill.c:324
+#: src/kill.c:323
 #, fuzzy, c-format
 msgid "invalid option -- %c"
 msgstr "%s: 間違ったオプション -- %c\n"
 
-#: src/kill.c:333
+#: src/kill.c:332
 #, c-format
 msgid "%s: multiple signals specified"
 msgstr "%s: 複数のシグナルが指定されています"
 
-#: src/kill.c:347
+#: src/kill.c:346
 msgid "multiple -l or -t options specified"
 msgstr "-l または -t オプションが複数指定されています"
 
-#: src/kill.c:364
+#: src/kill.c:363
 msgid "cannot combine signal with -l or -t"
 msgstr "-l または -t とシグナルを組み合わせることができません"
 
-#: src/kill.c:370
+#: src/kill.c:369
 msgid "no process ID specified"
 msgstr ""
 
@@ -3484,12 +3513,12 @@ msgstr "%s は存在しますがディレクトリではありません"
 msgid "when making multiple links, last argument must be a directory"
 msgstr "複数のリンクをはる時は、最後の引数はディレクトリでなくてはなりません"
 
-#: src/logname.c:49 src/pwd.c:46 src/sync.c:44
+#: src/logname.c:48 src/pwd.c:45 src/sync.c:44
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]\n"
 msgstr "使用法: %s [オプション] [ファイル]...\n"
 
-#: src/logname.c:50
+#: src/logname.c:49
 msgid ""
 "Print the name of the current user.\n"
 "\n"
@@ -3497,81 +3526,81 @@ msgstr ""
 "現在のユーザの名前を表示.\n"
 "\n"
 
-#: src/logname.c:105
+#: src/logname.c:104
 #, fuzzy
 msgid "no login name"
 msgstr "%s: 無効な番号です"
 
-#: src/ls.c:667
+#: src/ls.c:664
 #, fuzzy
 msgid "%b %e  %Y"
 msgstr "%b %e %H:%M %Y"
 
-#: src/ls.c:675
+#: src/ls.c:672
 #, fuzzy
 msgid "%b %e %H:%M"
 msgstr "%b %e %H:%M %Y"
 
-#: src/ls.c:1302
+#: src/ls.c:1299
 #, fuzzy, c-format
 msgid "ignoring invalid value of environment variable QUOTING_STYLE: %s"
 msgstr "環境変数 QUOTING_STYLE の値(%s)が不適切なので無視します"
 
-#: src/ls.c:1329
+#: src/ls.c:1326
 #, c-format
 msgid "ignoring invalid width in environment variable COLUMNS: %s"
 msgstr "環境変数 COLUMNS の値(%s) が不適切な行幅なので無視します"
 
-#: src/ls.c:1360
+#: src/ls.c:1357
 #, c-format
 msgid "ignoring invalid tab size in environment variable TABSIZE: %s"
 msgstr "環境変数 TABSIZE の値(%s) が不適切なタブサイズなので無視します"
 
-#: src/ls.c:1477
+#: src/ls.c:1474
 #, fuzzy, c-format
 msgid "invalid line width: %s"
 msgstr "幅 `%s' が正しくありません"
 
-#: src/ls.c:1551
+#: src/ls.c:1548
 #, fuzzy, c-format
 msgid "invalid tab size: %s"
 msgstr "型指定が間違っています `%s'"
 
-#: src/ls.c:1717
+#: src/ls.c:1714
 #, fuzzy, c-format
 msgid "invalid time style format %s"
 msgstr "`%2$s' に対する引数 %1$s が間違っています"
 
-#: src/ls.c:2049
+#: src/ls.c:2046
 #, fuzzy, c-format
 msgid "unrecognized prefix: %s"
 msgstr "オプション `-%c' を認識できません"
 
-#: src/ls.c:2072
+#: src/ls.c:2069
 msgid "unparsable value for LS_COLORS environment variable"
 msgstr "環境変数 LS_COLORS の値を解釈できません"
 
-#: src/ls.c:2140
+#: src/ls.c:2137
 #, fuzzy, c-format
 msgid "cannot determine device and inode of %s"
 msgstr "%s に対するファイルポインタを再配置できません"
 
-#: src/ls.c:2150
+#: src/ls.c:2147
 #, fuzzy, c-format
 msgid "not listing already-listed directory: %s"
 msgstr "ディレクトリ %s を作成できません"
 
-#: src/ls.c:2203 src/remove.c:938
+#: src/ls.c:2200 src/remove.c:945
 #, fuzzy, c-format
 msgid "reading directory %s"
 msgstr "ディレクトリ %s を作成できません"
 
-#: src/ls.c:2598
+#: src/ls.c:2595
 #, fuzzy, c-format
 msgid "cannot compare file names %s and %s"
 msgstr "比較した文字列は %s と %s です."
 
-#: src/ls.c:3757
+#: src/ls.c:3756
 msgid ""
 "List information about the FILEs (the current directory by default).\n"
 "Sort entries alphabetically if none of -cftuSUX nor --sort.\n"
@@ -3581,7 +3610,7 @@ msgstr ""
 "-cftuSUX や --sort の指定がなくても、アルファベット順で整列する。\n"
 "\n"
 
-#: src/ls.c:3765
+#: src/ls.c:3764
 #, fuzzy
 msgid ""
 "  -a, --all                  do not hide entries starting with .\n"
@@ -3594,7 +3623,7 @@ msgstr ""
 "                                 は表示しない\n"
 "  -b, --escape               非表示文字は 8 進数エスケープして表示する\n"
 
-#: src/ls.c:3771
+#: src/ls.c:3770
 msgid ""
 "      --block-size=SIZE      use SIZE-byte blocks\n"
 "  -B, --ignore-backups       do not list implied entries ending with ~\n"
@@ -3611,7 +3640,7 @@ msgstr ""
 "                              -l 付き:  ctime を表示する。名前でソートする\n"
 "                              その他:   ctime でソートする\n"
 
-#: src/ls.c:3779
+#: src/ls.c:3778
 #, fuzzy
 msgid ""
 "  -C                         list entries by columns\n"
@@ -3630,7 +3659,7 @@ msgstr ""
 "  -d, --directory            ディレクトリの中身ではなく項目自身を表示\n"
 "  -D, --dired                Emacs の dired モードの様に表示する\n"
 
-#: src/ls.c:3787
+#: src/ls.c:3786
 msgid ""
 "  -f                         do not sort, enable -aU, disable -lst\n"
 "  -F, --classify             append indicator (one of */=@|) to entries\n"
@@ -3644,7 +3673,7 @@ msgstr ""
 "                               single-column -1, verbose -l, vertical -C\n"
 "      --full-time            -l --time-style=full-iso と同様\n"
 
-#: src/ls.c:3794
+#: src/ls.c:3793
 #, fuzzy
 msgid ""
 "  -g                         like -l, but do not list owner\n"
@@ -3666,7 +3695,7 @@ msgstr ""
 "      --si                   同上。但し単位は 1024 ではなく 1000 倍\n"
 "  -H, --dereference-command-line  コマンドラインのシンボリックリンクを辿る\n"
 
-#: src/ls.c:3805
+#: src/ls.c:3804
 #, fuzzy
 msgid ""
 "      --indicator-style=WORD append indicator with style WORD to entry "
@@ -3685,7 +3714,7 @@ msgstr ""
 "  -I, --ignore=PATTERN       PATTERN に一致する項目をリスト表示しない\n"
 "  -k, --kilobytes            --block-size=1024 と同様\n"
 
-#: src/ls.c:3812
+#: src/ls.c:3811
 msgid ""
 "  -l                         use a long listing format\n"
 "  -L, --dereference          when showing file information for a symbolic\n"
@@ -3701,7 +3730,7 @@ msgstr ""
 "                               情報を表示する\n"
 "  -m                         項目のリストをカンマで区切り、一行に詰め込む\n"
 
-#: src/ls.c:3819
+#: src/ls.c:3818
 msgid ""
 "  -n, --numeric-uid-gid      like -l, but list numeric UIDs and GIDs\n"
 "  -N, --literal              print raw entry names (don't treat e.g. "
@@ -3716,7 +3745,7 @@ msgstr ""
 "  -o                         -l と同様だが、グループ情報を表示しない\n"
 "  -p, --file-type            項目にファイル標識 (/=@| の内一つ) を付け足す\n"
 
-#: src/ls.c:3826
+#: src/ls.c:3825
 msgid ""
 "  -q, --hide-control-chars   print ? instead of non graphic characters\n"
 "      --show-control-chars   show non graphic characters as-is (default\n"
@@ -3736,7 +3765,7 @@ msgstr ""
 "                               literal, locale, shell, shell-always, c, "
 "escape\n"
 
-#: src/ls.c:3834
+#: src/ls.c:3833
 msgid ""
 "  -r, --reverse              reverse order while sorting\n"
 "  -R, --recursive            list subdirectories recursively\n"
@@ -3746,7 +3775,7 @@ msgstr ""
 "  -R, --recursive            サブディレクトリを再帰的にリストする\n"
 "  -s, --size                 ブロック単位で各ファイルサイズを表示する\n"
 
-#: src/ls.c:3839
+#: src/ls.c:3838
 #, fuzzy
 msgid ""
 "  -S                         sort by file size\n"
@@ -3769,7 +3798,7 @@ msgstr ""
 "                               指定した時刻は --sort=time のキーとして使われ"
 "る\n"
 
-#: src/ls.c:3848
+#: src/ls.c:3847
 #, fuzzy
 msgid ""
 "      --time-style=STYLE     show times using style STYLE:\n"
@@ -3788,7 +3817,7 @@ msgstr ""
 "  -t                         修正時刻でソートする\n"
 "  -T, --tabsize=COLS         タブ幅を 8 ではなく COLS とみなす\n"
 
-#: src/ls.c:3859
+#: src/ls.c:3858
 msgid ""
 "  -u                         with -lt: sort by, and show, access time\n"
 "                               with -l: show access time and sort by name\n"
@@ -3802,7 +3831,7 @@ msgstr ""
 "  -U                         ソートしない -- ディレクトリ内の順で項目を表示\n"
 "  -v                         バージョンでソート\n"
 
-#: src/ls.c:3866
+#: src/ls.c:3865
 #, fuzzy
 msgid ""
 "  -w, --width=COLS           assume screen width instead of current value\n"
@@ -3815,7 +3844,7 @@ msgstr ""
 "                            が指定されなければ, 区切り文字を含む行も表示\n"
 "  -n                      (無視)\n"
 
-#: src/ls.c:3878
+#: src/ls.c:3877
 msgid ""
 "\n"
 "By default, color is not used to distinguish types of files.  That is\n"
@@ -3830,11 +3859,11 @@ msgstr ""
 "使うと --color=always を使うのと同等です。--color=auto を使えば、接続された\n"
 "端末(tty)の標準出力にのみカラーコードを出力します。\n"
 
-#: src/md5sum.c:38
+#: src/md5sum.c:37
 msgid "Ulrich Drepper and Scott Miller"
 msgstr "Ulrich Drepper と Scott Miller"
 
-#: src/md5sum.c:125
+#: src/md5sum.c:124
 #, c-format
 msgid ""
 "Usage: %s [OPTION] [FILE]...\n"
@@ -3847,7 +3876,7 @@ msgstr ""
 "%s (%d ビット) チェックサムの表示, または照合.\n"
 "ファイルの指定がなかったり, - であった場合, 標準入力から読み込みます.\n"
 
-#: src/md5sum.c:134
+#: src/md5sum.c:133
 #, c-format
 msgid ""
 "\n"
@@ -3864,7 +3893,7 @@ msgstr ""
 "  -t, --text              ファイルをテキストモードで読み込む (標準)\n"
 "\n"
 
-#: src/md5sum.c:142
+#: src/md5sum.c:141
 msgid ""
 "The following two options are useful only when verifying checksums:\n"
 "      --status            don't output anything, status code shows success\n"
@@ -3877,7 +3906,7 @@ msgstr ""
 "  -w, --warn              チェックサム行が不適切な書式の場合に警告\n"
 "\n"
 
-#: src/md5sum.c:150
+#: src/md5sum.c:149
 #, c-format
 msgid ""
 "\n"
@@ -3893,82 +3922,82 @@ msgstr ""
 "チェックサム, タイプに関する印(バイナリには `*', テキストには ` '), \n"
 "及びファイル名を表示します.\n"
 
-#: src/md5sum.c:429
+#: src/md5sum.c:428
 #, c-format
 msgid "%s: %lu: improperly formatted %s checksum line"
 msgstr "%s: %lu: %s チェックサムの行として不適切な書式です"
 
-#: src/md5sum.c:451
+#: src/md5sum.c:450
 #, c-format
 msgid "%s: FAILED open or read\n"
 msgstr "%s: オープンまたは読み込みに失敗しました\n"
 
-#: src/md5sum.c:475
+#: src/md5sum.c:474
 msgid "FAILED"
 msgstr "失敗"
 
-#: src/md5sum.c:475
+#: src/md5sum.c:474
 msgid "OK"
 msgstr "完了"
 
-#: src/md5sum.c:488
+#: src/md5sum.c:487
 #, c-format
 msgid "%s: read error"
 msgstr "%s: 読み込みエラー"
 
-#: src/md5sum.c:501
+#: src/md5sum.c:500
 #, c-format
 msgid "%s: no properly formatted %s checksum lines found"
 msgstr "%s: %s チェックサムとして適切な書式の行がありません"
 
-#: src/md5sum.c:514
+#: src/md5sum.c:513
 #, c-format
 msgid "WARNING: %d of %d listed %s could not be read"
 msgstr "警告: %2$d のうち %1$d 個の%3$sを読めませんでした"
 
-#: src/md5sum.c:517
+#: src/md5sum.c:516
 msgid "file"
 msgstr "ファイル"
 
-#: src/md5sum.c:517
+#: src/md5sum.c:516
 msgid "files"
 msgstr "ファイル"
 
-#: src/md5sum.c:523
+#: src/md5sum.c:522
 #, c-format
 msgid "WARNING: %d of %d computed %s did NOT match"
 msgstr "警告: %2$d の内 %1$d の%3$sが一致しませんでした"
 
-#: src/md5sum.c:526
+#: src/md5sum.c:525
 msgid "checksum"
 msgstr "チェックサム"
 
-#: src/md5sum.c:526
+#: src/md5sum.c:525
 msgid "checksums"
 msgstr "チェックサム"
 
-#: src/md5sum.c:609
+#: src/md5sum.c:608
 msgid ""
 "the --binary and --text options are meaningless when verifying checksums"
 msgstr "--binary と --text オプションはチェックサムの確認時には無意味です"
 
-#: src/md5sum.c:617
+#: src/md5sum.c:616
 msgid "the --string and --check options are mutually exclusive"
 msgstr "オプション --string と --check は排他的に使われます"
 
-#: src/md5sum.c:624
+#: src/md5sum.c:623
 msgid "the --status option is meaningful only when verifying checksums"
 msgstr "--status オプションはチェックサムの確認時のみ意味を持ちます"
 
-#: src/md5sum.c:631
+#: src/md5sum.c:630
 msgid "the --warn option is meaningful only when verifying checksums"
 msgstr "--warn オプションはチェックサムの確認時のみ意味を持ちます"
 
-#: src/md5sum.c:641
+#: src/md5sum.c:640
 msgid "no files may be specified when using --string"
 msgstr "--string オプションを利用するときは, ファイルを指定できません"
 
-#: src/md5sum.c:663
+#: src/md5sum.c:662
 msgid "only one argument may be specified when using --check"
 msgstr "--check オプションを使うときは, 引数を一つだけ指定できます"
 
@@ -4202,12 +4231,12 @@ msgid "when moving multiple files, last argument must be a directory"
 msgstr ""
 "複数のファイルを移動させる時は、最後の引数はディレクトリでなければなりません"
 
-#: src/nice.c:67
+#: src/nice.c:65
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION] [COMMAND [ARG]...]\n"
 msgstr "使用法: %s [オプション] [ファイル]...\n"
 
-#: src/nice.c:68
+#: src/nice.c:66
 msgid ""
 "Run COMMAND with an adjusted scheduling priority.\n"
 "With no COMMAND, print the current scheduling priority.  ADJUST is 10\n"
@@ -4221,35 +4250,35 @@ msgstr ""
 "\n"
 "  -n, --adjustment=ADJUST   最初に優先順位を ADJUST に上げる\n"
 
-#: src/nice.c:110 src/nice.c:123
+#: src/nice.c:108 src/nice.c:121
 #, fuzzy, c-format
 msgid "invalid option `%s'"
 msgstr "幅のオプション `%s' が正しくありません"
 
-#: src/nice.c:148
+#: src/nice.c:146
 #, fuzzy, c-format
 msgid "invalid priority `%s'"
 msgstr "幅 `%s' が正しくありません"
 
-#: src/nice.c:172
+#: src/nice.c:170
 msgid "a command must be given with an adjustment"
 msgstr "(引数を持つ) コマンドを与えなくてはなりません"
 
-#: src/nice.c:179 src/nice.c:188
+#: src/nice.c:177 src/nice.c:186
 #, fuzzy
 msgid "cannot get priority"
 msgstr "ディレクトリ %s を作成できません"
 
-#: src/nice.c:193
+#: src/nice.c:191
 #, fuzzy
 msgid "cannot set priority"
 msgstr "ディレクトリ %s を作成できません"
 
-#: src/nl.c:40
+#: src/nl.c:39
 msgid "Scott Bartram and David MacKenzie"
 msgstr "Scott Bartram と David MacKenzie"
 
-#: src/nl.c:181
+#: src/nl.c:180
 msgid ""
 "Write each FILE to standard output, with line numbers added.\n"
 "With no FILE, or when FILE is -, read standard input.\n"
@@ -4259,7 +4288,7 @@ msgstr ""
 "ファイルの指定が無いか, `-' を指定した場合には, 標準入力を読み込みます.\n"
 "\n"
 
-#: src/nl.c:189
+#: src/nl.c:188
 msgid ""
 "  -b, --body-numbering=STYLE      use STYLE for numbering body lines\n"
 "  -d, --section-delimiter=CC      use CC for separating logical pages\n"
@@ -4269,7 +4298,7 @@ msgstr ""
 "  -d, --section-delimiter=CC      論理ページの区切り記号に CC を利用\n"
 "  -f, --footer-numbering=STYLE    フッタの行番号を STYLE の形式に\n"
 
-#: src/nl.c:194
+#: src/nl.c:193
 msgid ""
 "  -h, --header-numbering=STYLE    use STYLE for numbering header lines\n"
 "  -i, --page-increment=NUMBER     line number increment at each line\n"
@@ -4290,7 +4319,7 @@ msgstr ""
 "  -s, --number-separator=STRING   (可能な場合)行番号の後ろに STRING\n"
 "                                  を付け足す\n"
 
-#: src/nl.c:202
+#: src/nl.c:201
 msgid ""
 "  -v, --first-page=NUMBER         first line number on each logical page\n"
 "  -w, --number-width=NUMBER       use NUMBER columns for line numbers\n"
@@ -4298,7 +4327,7 @@ msgstr ""
 "  -v, --first-page=NUMBER         各論理ページの最初の行番号を NUMBER に\n"
 "  -w, --number-width=NUMBER       行番号に利用する文字幅を NUMBER に\n"
 
-#: src/nl.c:208
+#: src/nl.c:207
 msgid ""
 "\n"
 "By default, selects -v1 -i1 -l1 -sTAB -w6 -nrn -hn -bt -fn.  CC are\n"
@@ -4312,7 +4341,7 @@ msgstr ""
 "`\\\\' を 指定したければ, `\\\\' を使うようにしてください.\n"
 "STYLE は, 以下のうちの 1 つを指定します.\n"
 
-#: src/nl.c:214
+#: src/nl.c:213
 msgid ""
 "\n"
 "  a         number all lines\n"
@@ -4340,47 +4369,47 @@ msgstr ""
 "  rz   右揃え, ゼロを埋める\n"
 "\n"
 
-#: src/nl.c:492
+#: src/nl.c:491
 #, fuzzy, c-format
 msgid "invalid header numbering style: %s"
 msgstr "フィールド数が間違っています: `%s'"
 
-#: src/nl.c:500
+#: src/nl.c:499
 #, fuzzy, c-format
 msgid "invalid body numbering style: %s"
 msgstr "%s: 無効な番号表記です"
 
-#: src/nl.c:508
+#: src/nl.c:507
 #, fuzzy, c-format
 msgid "invalid footer numbering style: %s"
 msgstr "フィールドの指定でのファイル番号は無効です: %s"
 
-#: src/nl.c:520
+#: src/nl.c:519
 #, fuzzy, c-format
 msgid "invalid starting line number: %s"
 msgstr "開始行番号が正しくありません: `%s'"
 
-#: src/nl.c:536
+#: src/nl.c:535
 #, fuzzy, c-format
 msgid "invalid line number increment: %s"
 msgstr "行番号の増分が正しくありません: `%s'"
 
-#: src/nl.c:555
+#: src/nl.c:554
 #, fuzzy, c-format
 msgid "invalid number of blank lines: %s"
 msgstr "空行の行番号が正しくありません: `%s'"
 
-#: src/nl.c:574
+#: src/nl.c:573
 #, fuzzy, c-format
 msgid "invalid line number field width: %s"
 msgstr "フィールド幅の指定行番号が正しくありません: `%s'"
 
-#: src/nl.c:593
+#: src/nl.c:592
 #, fuzzy, c-format
 msgid "invalid line numbering format: %s"
 msgstr "行番号の増分が正しくありません: `%s'"
 
-#: src/nohup.c:54
+#: src/nohup.c:56
 #, fuzzy, c-format
 msgid ""
 "Usage: %s COMMAND [ARG]...\n"
@@ -4389,37 +4418,37 @@ msgstr ""
 "使用法: %s [ファイル]...\n"
 "または: %s [オプション]\n"
 
-#: src/nohup.c:60
+#: src/nohup.c:62
 msgid ""
 "Run COMMAND, ignoring hangup signals.\n"
 "\n"
 msgstr ""
 
-#: src/nohup.c:122 src/nohup.c:123
+#: src/nohup.c:124 src/nohup.c:125
 #, fuzzy, c-format
 msgid "failed to open %s"
 msgstr "%s のタイムスタンプを保存中"
 
-#: src/nohup.c:131
+#: src/nohup.c:133
 #, fuzzy
 msgid "failed to redirect standard output"
 msgstr "標準出力"
 
-#: src/nohup.c:133
+#: src/nohup.c:135
 #, fuzzy, c-format
 msgid "appending output to %s"
 msgstr "%s のオーナーとグループを変更できません"
 
-#: src/nohup.c:152
+#: src/nohup.c:154
 msgid "failed to redirect standard error"
 msgstr ""
 
-#: src/nohup.c:188 src/setuidgid.c:133
+#: src/nohup.c:190 src/setuidgid.c:132
 #, fuzzy, c-format
 msgid "cannot run command %s"
 msgstr "`%s' で ioctl() を実行できません"
 
-#: src/od.c:287
+#: src/od.c:286
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... [FILE]...\n"
@@ -4428,7 +4457,7 @@ msgstr ""
 "使用法:   %s [オプション]... [ファイル]...\n"
 "  又は: %s --traditional [ファイル] [[+]オフセット [[+]ラベル]]\n"
 
-#: src/od.c:292
+#: src/od.c:291
 msgid ""
 "\n"
 "Write an unambiguous representation, octal bytes by default,\n"
@@ -4443,11 +4472,11 @@ msgstr ""
 "標準入力を読み込みます.\n"
 "\n"
 
-#: src/od.c:299
+#: src/od.c:298
 msgid "All arguments to long options are mandatory for short options.\n"
 msgstr "長いオプションに必須の引数は短いオプションにも必須です.\n"
 
-#: src/od.c:302
+#: src/od.c:301
 msgid ""
 "  -A, --address-radix=RADIX   decide how file offsets are printed\n"
 "  -j, --skip-bytes=BYTES      skip BYTES input bytes first\n"
@@ -4455,7 +4484,7 @@ msgstr ""
 "  -A, --address-radix=RADIX   ファイルオフセットの表示形式を指定\n"
 "  -j, --skip-bytes=BYTES      ファイルの先頭より BYTES 分スキップ\n"
 
-#: src/od.c:306
+#: src/od.c:305
 msgid ""
 "  -N, --read-bytes=BYTES      limit dump to BYTES input bytes\n"
 "  -s, --strings[=BYTES]       output strings of at least BYTES graphic "
@@ -4472,7 +4501,7 @@ msgstr ""
 "  -w, --width[=BYTES]         一行あたりの出力バイト数を指定\n"
 "      --traditional           引数の形式を古い POSIX の形式として解釈\n"
 
-#: src/od.c:316
+#: src/od.c:315
 msgid ""
 "\n"
 "Traditional format specifications may be intermixed; they accumulate:\n"
@@ -4489,7 +4518,7 @@ msgstr ""
 "  -c   オプション -t c  と同じ, ASCII文字か`\\'エスケープの指定に\n"
 "  -d   オプション -t u2 と同じ, 符号なしショート10進数の指定に\n"
 
-#: src/od.c:324
+#: src/od.c:323
 msgid ""
 "  -f   same as -t fF, select floats\n"
 "  -h   same as -t x2, select hexadecimal shorts\n"
@@ -4505,7 +4534,7 @@ msgstr ""
 "  -o   オプション -t o2 と同じ, ショート8進数の指定に\n"
 "  -x   オプション -t x2 と同じ, ショート16進数の指定に\n"
 
-#: src/od.c:332
+#: src/od.c:331
 msgid ""
 "\n"
 "For older syntax (second call format), OFFSET means -j OFFSET.  LABEL\n"
@@ -4530,7 +4559,7 @@ msgstr ""
 "  a            文字名\n"
 "  c            ASCII 文字もしくは, `\\'エスケープ\n"
 
-#: src/od.c:344
+#: src/od.c:343
 msgid ""
 "  d[SIZE]    signed decimal, SIZE bytes per integer\n"
 "  f[SIZE]    floating point, SIZE bytes per integer\n"
@@ -4544,7 +4573,7 @@ msgstr ""
 "  u[サイズ]    符号なし10進数  1 整数(integer)のサイズ指定\n"
 "  x[サイズ]    16進数          1 整数(integer)のサイズ指定\n"
 
-#: src/od.c:351
+#: src/od.c:350
 msgid ""
 "\n"
 "SIZE is a number.  For TYPE in doux, SIZE may also be C for\n"
@@ -4559,7 +4588,7 @@ msgstr ""
 "F は sizeof(float) として, D は sizeof(double) として, または \n"
 "L は sizeof(long double) として指定できます.\n"
 
-#: src/od.c:358
+#: src/od.c:357
 msgid ""
 "\n"
 "RADIX is d for decimal, o for octal, x for hexadecimal or n for none.\n"
@@ -4576,7 +4605,7 @@ msgstr ""
 "1024 倍するには k を, 1048576 倍するには, m を付けます. z を後ろに付けると\n"
 "どんな型でも出力の各行の後ろに印字可能な文字を付け加えます. "
 
-#: src/od.c:366
+#: src/od.c:365
 msgid ""
 "--string without a number implies 3.  --width without a number\n"
 "implies 32.  By default, od uses -A o -t d2 -w 16.\n"
@@ -4587,12 +4616,12 @@ msgstr ""
 "特にオプションを指定しない場合には, od コマンドは `-A o -t d2 -w 16'\n"
 "の指定になっています.\n"
 
-#: src/od.c:722 src/od.c:844
+#: src/od.c:721 src/od.c:843
 #, c-format
 msgid "invalid type string `%s'"
 msgstr "型指定が間違っています `%s'"
 
-#: src/od.c:732
+#: src/od.c:731
 #, c-format
 msgid ""
 "invalid type string `%s';\n"
@@ -4601,7 +4630,7 @@ msgstr ""
 "型指定`%s'が間違っています\n"
 " -- このシステムでは %lu バイト整数型を扱えません"
 
-#: src/od.c:854
+#: src/od.c:853
 #, c-format
 msgid ""
 "invalid type string `%s';\n"
@@ -4610,88 +4639,88 @@ msgstr ""
 "型指定`%s'が間違っています\n"
 " -- このシステムでは %lu バイト浮動小数点型を扱えません"
 
-#: src/od.c:917
+#: src/od.c:916
 #, c-format
 msgid "invalid character `%c' in type string `%s'"
 msgstr "間違った文字 `%c' が型指定 `%s' の中にあります"
 
-#: src/od.c:1142
+#: src/od.c:1141
 msgid "cannot skip past end of combined input"
 msgstr "入力の終端を越えて読みとばす事はできません"
 
-#: src/od.c:1395
+#: src/od.c:1394
 msgid "old-style offset"
 msgstr "古い形式のオフセット"
 
-#: src/od.c:1706
+#: src/od.c:1705
 #, c-format
 msgid "invalid output address radix `%c'; it must be one character from [doxn]"
 msgstr ""
 "無効な出力アドレスの基数 `%c' が指定されました\n"
 "             -- doxn のいずれかを指定してください"
 
-#: src/od.c:1716
+#: src/od.c:1715
 msgid "skip argument"
 msgstr "スキップ数指定の引数"
 
-#: src/od.c:1724
+#: src/od.c:1723
 msgid "limit argument"
 msgstr "入力の大きさ制限の引数"
 
-#: src/od.c:1734
+#: src/od.c:1733
 msgid "minimum string length"
 msgstr "文字列長の最小値"
 
-#: src/od.c:1739 src/od.c:1805
+#: src/od.c:1738 src/od.c:1804
 #, c-format
 msgid "%s is too large"
 msgstr "%s は長すぎます"
 
-#: src/od.c:1803
+#: src/od.c:1802
 msgid "width specification"
 msgstr "幅の指定"
 
-#: src/od.c:1825
+#: src/od.c:1824
 msgid "no type may be specified when dumping strings"
 msgstr "文字列ダンプ時の型は指定できません"
 
-#: src/od.c:1873
+#: src/od.c:1872
 #, c-format
 msgid "invalid second operand in compatibility mode `%s'"
 msgstr "互換モード `%s' 中の 2 つめの演算子が無効"
 
-#: src/od.c:1894
+#: src/od.c:1893
 msgid "in compatibility mode, the last two arguments must be offsets"
 msgstr "互換モードでは, 後ろ 2 つの引数はオフセットでなければなりません"
 
-#: src/od.c:1901
+#: src/od.c:1900
 msgid "compatibility mode supports at most three arguments"
 msgstr "互換モードでは, 3 つ以上の引数を受け付けません"
 
-#: src/od.c:1922
+#: src/od.c:1921
 #, fuzzy
 msgid "skip-bytes + read-bytes is too large"
 msgstr "比較するバイト数の指定が無効です"
 
-#: src/od.c:1974
+#: src/od.c:1973
 #, c-format
 msgid "warning: invalid width %lu; using %d instead"
 msgstr "警告: 幅 %lu は無効な値です.  -- 代わりに %d を使用します"
 
-#: src/od.c:1990
+#: src/od.c:1989
 #, c-format
 msgid "%d: fmt=\"%s\" width=%d\n"
 msgstr "%d: フォーマット=\"%s\" 幅=%d\n"
 
-#: src/paste.c:50
+#: src/paste.c:49
 msgid "David M. Ihnat and David MacKenzie"
 msgstr "David M. Ihnat と David MacKenzie"
 
-#: src/paste.c:207
+#: src/paste.c:206
 msgid "standard input is closed"
 msgstr "標準入力が閉じられています"
 
-#: src/paste.c:406
+#: src/paste.c:405
 msgid ""
 "Write lines consisting of the sequentially corresponding lines from\n"
 "each FILE, separated by TABs, to standard output.\n"
@@ -4702,7 +4731,7 @@ msgstr ""
 "FILE が指定されない, あるいは `-' を指定した場合には標準入力を読み込みます.\n"
 "\n"
 
-#: src/paste.c:415
+#: src/paste.c:414
 msgid ""
 "  -d, --delimiters=LIST   reuse characters from LIST instead of TABs\n"
 "  -s, --serial            paste one file at a time instead of in parallel\n"
@@ -4710,12 +4739,12 @@ msgstr ""
 "  -d, --delimiters=LIST   タブ文字の代わりに, LIST の文字を区切りとして使用\n"
 "  -s, --serial            一行毎ではなく, 一度に 1 つのファイルを貼付ける\n"
 
-#: src/pathchk.c:146
+#: src/pathchk.c:140
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... NAME...\n"
 msgstr "使用法: %s [オプション]... [ファイル]...\n"
 
-#: src/pathchk.c:147
+#: src/pathchk.c:141
 msgid ""
 "Diagnose unportable constructs in NAME.\n"
 "\n"
@@ -4726,96 +4755,96 @@ msgstr ""
 "  -p, --portability   このシステムだけでなく, 全 POSIX システムに対してチェッ"
 "ク.\n"
 
-#: src/pathchk.c:238
+#: src/pathchk.c:232
 #, fuzzy, c-format
 msgid "path `%s' contains nonportable character `%c'"
 msgstr "タブサイズの指定に不正な文字が含まれています"
 
-#: src/pathchk.c:258
+#: src/pathchk.c:252
 #, fuzzy, c-format
 msgid "`%s' is not a directory"
 msgstr "%s は存在しますがディレクトリではありません"
 
-#: src/pathchk.c:269
+#: src/pathchk.c:263
 #, c-format
 msgid "directory `%s' is not searchable"
 msgstr "ディレクトリ `%s' が見つかりません"
 
-#: src/pathchk.c:356
+#: src/pathchk.c:350
 #, c-format
 msgid "name `%s' has length %ld; exceeds limit of %ld"
 msgstr "ファイル名 `%s' の長さは %ld; 制限の %ld を越えています"
 
-#: src/pathchk.c:382
-#, c-format
-msgid "path `%s' has length %d; exceeds limit of %ld"
+#: src/pathchk.c:376
+#, fuzzy, c-format
+msgid "path `%s' has length %lu; exceeds limit of %ld"
 msgstr "パス `%s' の長さは %d; 制限の %ld を越えています"
 
-#: src/pinky.c:35 src/uptime.c:39
+#: src/pinky.c:34 src/uptime.c:38
 msgid "Joseph Arceneaux, David MacKenzie, and Kaveh Ghazi"
 msgstr "Joseph Arceneaux, David MacKenzie および Kaveh Ghazi"
 
-#: src/pinky.c:292
+#: src/pinky.c:291
 msgid "Login name: "
 msgstr "ログイン名: "
 
-#: src/pinky.c:295
+#: src/pinky.c:294
 msgid "In real life: "
 msgstr "実名: "
 
-#: src/pinky.c:298
+#: src/pinky.c:297
 msgid "???\n"
 msgstr "(不明)\n"
 
-#: src/pinky.c:318
+#: src/pinky.c:317
 #, fuzzy
 msgid "Directory: "
 msgstr "ディレクトリ"
 
-#: src/pinky.c:320
+#: src/pinky.c:319
 msgid "Shell: "
 msgstr "シェル: "
 
-#: src/pinky.c:341
+#: src/pinky.c:340
 msgid "Project: "
 msgstr "プロジェクト: "
 
-#: src/pinky.c:367
+#: src/pinky.c:366
 msgid "Plan:\n"
 msgstr "プラン:\n"
 
-#: src/pinky.c:386
+#: src/pinky.c:385
 msgid "Login"
 msgstr "ログイン"
 
-#: src/pinky.c:388
+#: src/pinky.c:387
 #, fuzzy
 msgid "Name"
 msgstr "   名前"
 
-#: src/pinky.c:389
+#: src/pinky.c:388
 #, fuzzy
 msgid " TTY"
 msgstr " 端末"
 
-#: src/pinky.c:391
+#: src/pinky.c:390
 msgid "Idle"
 msgstr "待機"
 
-#: src/pinky.c:392
+#: src/pinky.c:391
 msgid "When"
 msgstr "開始時刻"
 
-#: src/pinky.c:395
+#: src/pinky.c:394
 msgid "Where"
 msgstr "ログイン元"
 
-#: src/pinky.c:469
+#: src/pinky.c:468
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... [USER]...\n"
 msgstr "使用法: %s [オプション]... [ファイル]...\n"
 
-#: src/pinky.c:470
+#: src/pinky.c:469
 msgid ""
 "\n"
 "  -l              produce long format output for the specified USERs\n"
@@ -4831,7 +4860,7 @@ msgstr ""
 "  -p              長形式でユーザのプランファイルを省略\n"
 "  -s              短形式で出力 (標準)\n"
 
-#: src/pinky.c:478
+#: src/pinky.c:477
 msgid ""
 "  -f              omit the line of column headings in short format\n"
 "  -w              omit the user's full name in short format\n"
@@ -4845,7 +4874,7 @@ msgstr ""
 "  -q              短形式でユーザのフルネーム, ログイン元および待機時間を省"
 "略\n"
 
-#: src/pinky.c:487
+#: src/pinky.c:486
 #, c-format
 msgid ""
 "\n"
@@ -4856,100 +4885,100 @@ msgstr ""
 "軽い `finger' プログラム; ユーザ情報を表示.\n"
 "utmp ファイルは %s.\n"
 
-#: src/pinky.c:575
+#: src/pinky.c:574
 #, fuzzy
 msgid "no username specified; at least one must be specified when using -l"
 msgstr "--string オプションを利用するときは, ファイルを指定できません"
 
-#: src/pr.c:328
+#: src/pr.c:326
 msgid "Pete TerMaat and Roland Huebner"
 msgstr "Pete TerMaat と Roland Huebner"
 
-#: src/pr.c:805
+#: src/pr.c:803
 #, c-format
 msgid "`--pages' invalid range of page numbers: `%s'"
 msgstr "`--pages' ページ数の範囲指定が間違っています: `%s'"
 
-#: src/pr.c:817
+#: src/pr.c:815
 #, c-format
 msgid "`--pages' invalid starting page number: `%s'"
 msgstr "`--pages' 開始ページ指定が無効です: `%s'"
 
-#: src/pr.c:829
+#: src/pr.c:827
 #, c-format
 msgid "`--pages' invalid ending page number: `%s'"
 msgstr "`--pages' 終了ページの指定が無効です: `%s'"
 
-#: src/pr.c:836
+#: src/pr.c:834
 msgid "`--pages' starting page number is larger than ending page number"
 msgstr "`--pages' 開始ページの指定が終了ページよりも大きい値になっています"
 
-#: src/pr.c:912
+#: src/pr.c:910
 msgid "`--pages=FIRST_PAGE[:LAST_PAGE]' missing argument"
 msgstr "`--pages=開始ページ[:終了ページ]' 指定がありません"
 
-#: src/pr.c:923
+#: src/pr.c:921
 #, c-format
 msgid "`--columns=COLUMN' invalid number of columns: `%s'"
 msgstr "`--columns=行幅' 行幅の指定が無効です: `%s'"
 
-#: src/pr.c:977
+#: src/pr.c:975
 #, c-format
 msgid "`-l PAGE_LENGTH' invalid number of lines: `%s'"
 msgstr "`-l ページの長さ' 無効な行番号です: `%s'"
 
-#: src/pr.c:1001
+#: src/pr.c:999
 #, c-format
 msgid "`-N NUMBER' invalid starting line number: `%s'"
 msgstr "`-N 行番号' 無効な開始行番号: `%s'"
 
-#: src/pr.c:1013
+#: src/pr.c:1011
 #, c-format
 msgid "`-o MARGIN' invalid line offset: `%s'"
 msgstr "`-o 余白' 無効な行オフセット: `%s'"
 
-#: src/pr.c:1054
+#: src/pr.c:1052
 #, c-format
 msgid "`-w PAGE_WIDTH' invalid number of characters: `%s'"
 msgstr "`-w ページの幅' 無効な文字数です: `%s'"
 
-#: src/pr.c:1066
+#: src/pr.c:1064
 #, c-format
 msgid "`-W PAGE_WIDTH' invalid number of characters: `%s'"
 msgstr "`-W ページの幅' 無効な文字数です: `%s'"
 
-#: src/pr.c:1080
+#: src/pr.c:1078
 msgid "%b %e %H:%M %Y"
 msgstr "%b %e %H:%M %Y"
 
-#: src/pr.c:1089
+#: src/pr.c:1087
 msgid "Cannot specify number of columns when printing in parallel."
 msgstr "並列に印刷するときにはカラム数を指定できません."
 
-#: src/pr.c:1093
+#: src/pr.c:1091
 msgid "Cannot specify both printing across and printing in parallel."
 msgstr "段組の横方向印刷(-a)と並列印刷を同時指定できません."
 
-#: src/pr.c:1189
+#: src/pr.c:1187
 #, c-format
 msgid "`-%c' extra characters or invalid number in the argument: `%s'"
 msgstr "`-%c' 余分な文字が付いているか引数の数字が無効です: `%s'"
 
-#: src/pr.c:1300
+#: src/pr.c:1298
 msgid "page width too narrow"
 msgstr "ページ幅が狭すぎます"
 
-#: src/pr.c:2363
+#: src/pr.c:2361
 #, c-format
 msgid "starting page number larger than total number of pages: `%d'"
 msgstr "開始ページの指定が総ページ数よりも大きい値になっています: `%d'"
 
-#: src/pr.c:2394
+#: src/pr.c:2392
 #, c-format
 msgid "Page %d"
 msgstr "%d ページ"
 
-#: src/pr.c:2760
+#: src/pr.c:2758
 msgid ""
 "Paginate or columnate FILE(s) for printing.\n"
 "\n"
@@ -4957,7 +4986,7 @@ msgstr ""
 "印字のために, ページ付けや段組を行ないます.\n"
 "\n"
 
-#: src/pr.c:2767
+#: src/pr.c:2765
 #, fuzzy
 msgid ""
 "  +FIRST_PAGE[:LAST_PAGE], --pages=FIRST_PAGE[:LAST_PAGE]\n"
@@ -4974,7 +5003,7 @@ msgstr ""
 "                    COLUMN 段の段組を生成し, 段の下方に向けて出力\n"
 "                    ページ毎にカラム内の行数を調整\n"
 
-#: src/pr.c:2775
+#: src/pr.c:2773
 msgid ""
 "  -a, --across      print columns across rather than down, used together\n"
 "                    with -COLUMN\n"
@@ -4991,7 +5020,7 @@ msgstr ""
 "  -d, --double-space\n"
 "                    行間に空行を挿入\n"
 
-#: src/pr.c:2783
+#: src/pr.c:2781
 msgid ""
 "  -D, --date-format=FORMAT\n"
 "                    use FORMAT for the header date\n"
@@ -5013,7 +5042,7 @@ msgstr ""
 "                    (-f と共に 3行分, -f を指定しない場合 5行分のヘッダを出"
 "力)\n"
 
-#: src/pr.c:2793
+#: src/pr.c:2791
 msgid ""
 "  -h HEADER, --header=HEADER\n"
 "                    use a centered HEADER instead of filename in page "
@@ -5037,7 +5066,7 @@ msgstr ""
 "  -J, --join-lines  行の全てを結合し, (-W の行切り落としを行なわない)段組の\n"
 "                    調節を行なわない. -S[STRING] で区切り文字を設定\n"
 
-#: src/pr.c:2802
+#: src/pr.c:2800
 msgid ""
 "  -l PAGE_LENGTH, --length=PAGE_LENGTH\n"
 "                    set the page length to PAGE_LENGTH (66) lines\n"
@@ -5051,7 +5080,7 @@ msgstr ""
 "  -m, --merge       各ファイルを一段ずつ並べて表示. はみ出した行は切り捨て\n"
 "                    られるが, -J オプションによって行の内容は繋げられる\n"
 
-#: src/pr.c:2809
+#: src/pr.c:2807
 msgid ""
 "  -n[SEP[DIGITS]], --number-lines[=SEP[DIGITS]]\n"
 "                    number lines, use DIGITS (5) digits, then SEP (TAB),\n"
@@ -5069,7 +5098,7 @@ msgstr ""
 "                    最初のページの 1 行目の行番号を NUMBER 番から開始\n"
 "                    (+FIRST_PAGE の説明を参照)\n"
 
-#: src/pr.c:2817
+#: src/pr.c:2815
 msgid ""
 "  -o MARGIN, --indent=MARGIN\n"
 "                    offset each line with MARGIN (zero) spaces, do not\n"
@@ -5085,7 +5114,7 @@ msgstr ""
 "  -r, --no-file-warnings\n"
 "                    ファイルが開けなかった場合の警告を省略する\n"
 
-#: src/pr.c:2824
+#: src/pr.c:2822
 msgid ""
 "  -s[CHAR],--separator[=CHAR]\n"
 "                    separate columns by a single character, default for "
@@ -5103,11 +5132,11 @@ msgstr ""
 "て\n"
 "                    による行の切り詰めを無効に\n"
 
-#: src/pr.c:2831
+#: src/pr.c:2829
 msgid "  -SSTRING, --sep-string[=STRING]\n"
 msgstr "  -SSTRING, --sep-string[=STRING]\n"
 
-#: src/pr.c:2834
+#: src/pr.c:2832
 msgid ""
 "                    separate columns by STRING,\n"
 "                    without -S: Default separator <TAB> with -J and <space>\n"
@@ -5123,7 +5152,7 @@ msgstr ""
 "い\n"
 "  -t, --omit-header ヘッダや本文の余白を省略\n"
 
-#: src/pr.c:2840
+#: src/pr.c:2838
 msgid ""
 "  -T, --omit-pagination\n"
 "                    omit page headers and trailers, eliminate any "
@@ -5145,7 +5174,7 @@ msgstr ""
 "                    複数の欄の出力に対してのみページ幅を PAGE_WIDTH (72)\n"
 "                    文字に設定し, -s[char] を無効に (72)\n"
 
-#: src/pr.c:2850
+#: src/pr.c:2848
 msgid ""
 "  -W PAGE_WIDTH, --page-width=PAGE_WIDTH\n"
 "                    set page width to PAGE_WIDTH (72) characters always,\n"
@@ -5158,7 +5187,7 @@ msgstr ""
 "                    切り捨て. ただし -J オプションが指定されていない場合に\n"
 "                    限る. -S や -s には何も影響しない\n"
 
-#: src/pr.c:2858
+#: src/pr.c:2856
 msgid ""
 "\n"
 "-T implied by -l nn when nn <= 10 or <= 3 with -F. With no FILE, or when\n"
@@ -5188,13 +5217,13 @@ msgstr ""
 "環境変数が指定されない場合は全ての環境変数を表示.\n"
 "\n"
 
-#: src/printf.c:88
+#: src/printf.c:87
 #, c-format
 msgid ""
 "warning: %s: character(s) following character constant have been ignored"
 msgstr "警告: %s: 文字定数の後の文字が無視されました"
 
-#: src/printf.c:101
+#: src/printf.c:100
 #, fuzzy, c-format
 msgid ""
 "Usage: %s FORMAT [ARGUMENT]...\n"
@@ -5203,7 +5232,7 @@ msgstr ""
 "使用法: %s [ファイル]...\n"
 "または: %s [オプション]\n"
 
-#: src/printf.c:106
+#: src/printf.c:105
 msgid ""
 "Print ARGUMENT(s) according to FORMAT.\n"
 "\n"
@@ -5211,7 +5240,7 @@ msgstr ""
 "データをフォーマットにしたがって表示.\n"
 "\n"
 
-#: src/printf.c:112
+#: src/printf.c:111
 #, fuzzy
 msgid ""
 "\n"
@@ -5228,7 +5257,7 @@ msgstr ""
 "  \\0NNN   8進数 NNN (0 から 3 桁の数字) の文字\n"
 "  \\\\      バックスラッシュ\n"
 
-#: src/printf.c:120
+#: src/printf.c:119
 msgid ""
 "  \\a      alert (BEL)\n"
 "  \\b      backspace\n"
@@ -5240,7 +5269,7 @@ msgstr ""
 "  \\c      これ以降の出力を抑制\n"
 "  \\f      用紙送り\n"
 
-#: src/printf.c:126
+#: src/printf.c:125
 msgid ""
 "  \\n      new line\n"
 "  \\r      carriage return\n"
@@ -5252,7 +5281,7 @@ msgstr ""
 "  \\t      水平タブ\n"
 "  \\v      垂直タブ\n"
 
-#: src/printf.c:132
+#: src/printf.c:131
 #, fuzzy
 msgid ""
 "  \\xNN    byte with hexadecimal value NN (1 to 2 digits)\n"
@@ -5265,7 +5294,7 @@ msgstr ""
 "  \\uNNNN  16進数 NNNN (4桁の数字) の文字\n"
 "  \\UNNNNNNNN  16進数 NNNNNNNN (8桁の数字) の文字\n"
 
-#: src/printf.c:138
+#: src/printf.c:137
 #, fuzzy
 msgid ""
 "  %%      a single %\n"
@@ -5281,56 +5310,56 @@ msgstr ""
 "更に diouxXfeEgGcs のうちの 1つで終わる C 言語の形式指定子が全て解釈され,\n"
 "引数は最初に適切な型に変換されます. 変数の幅は制御できます.\n"
 
-#: src/printf.c:162
+#: src/printf.c:161
 #, c-format
 msgid "%s: expected a numeric value"
 msgstr "%s: 数値による指定をして下さい"
 
-#: src/printf.c:164
+#: src/printf.c:163
 #, c-format
 msgid "%s: value not completely converted"
 msgstr "%s: 値は完全には変換されていません"
 
-#: src/printf.c:258 src/printf.c:285
+#: src/printf.c:257 src/printf.c:284
 msgid "missing hexadecimal number in escape"
 msgstr "エスケープ中に16進数の数値がありません"
 
-#: src/printf.c:297
+#: src/printf.c:296
 #, fuzzy, c-format
 msgid "invalid universal character name \\%c%0*x"
 msgstr "`%s' は無効な文字種類です"
 
-#: src/printf.c:477
+#: src/printf.c:476
 #, fuzzy, c-format
 msgid "invalid field width: %s"
 msgstr "幅 `%s' が正しくありません"
 
-#: src/printf.c:503
+#: src/printf.c:502
 #, fuzzy, c-format
 msgid "invalid precision: %s"
 msgstr "幅のオプション `%s' が正しくありません"
 
-#: src/printf.c:524
+#: src/printf.c:523
 #, fuzzy, c-format
 msgid "%%%c: invalid directive"
 msgstr "%s: 無効なパターン指定です"
 
-#: src/printf.c:582
+#: src/printf.c:581
 #, c-format
 msgid "Usage: %s format [argument...]\n"
 msgstr "使用法: %s フォーマット [データ...]\n"
 
-#: src/printf.c:600
+#: src/printf.c:599
 #, c-format
 msgid "warning: ignoring excess arguments, starting with `%s'"
 msgstr "警告: `%s' で始まる余計な引数は無視されます"
 
-#: src/ptx.c:410
+#: src/ptx.c:409
 #, c-format
 msgid "%s (for regexp `%s')"
 msgstr "%s (正規表現 `%s')"
 
-#: src/ptx.c:1859
+#: src/ptx.c:1858
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... [INPUT]...   (without -G)\n"
@@ -5339,7 +5368,7 @@ msgstr ""
 "使用法: %s [オプション]... [入力元]... (-G なし)\n"
 "  又は: %s -G [オプション]... [入力元 [出力先]]\n"
 
-#: src/ptx.c:1863
+#: src/ptx.c:1862
 msgid ""
 "Output a permuted index, including context, of the words in the input "
 "files.\n"
@@ -5348,7 +5377,7 @@ msgstr ""
 "入力ファイルに含まれる単語の索引を並べ替え, 前後を含めて出力.\n"
 "\n"
 
-#: src/ptx.c:1870
+#: src/ptx.c:1869
 msgid ""
 "  -A, --auto-reference           output automatically generated references\n"
 "  -C, --copyright                display Copyright and copying conditions\n"
@@ -5360,7 +5389,7 @@ msgstr ""
 "  -G, --traditional              System V の `ptx' により近い動作\n"
 "  -F, --flag-truncation=STRING   行の切り詰めの目印に STRING を使用\n"
 
-#: src/ptx.c:1876
+#: src/ptx.c:1875
 msgid ""
 "  -M, --macro-name=STRING        macro name to use instead of `xx'\n"
 "  -O, --format=roff              generate output as roff directives\n"
@@ -5374,7 +5403,7 @@ msgstr ""
 "  -S, --sentence-regexp=REGEXP   行末または文末を表現する正規表現を指定\n"
 "  -T, --format=tex               TeX 命令で出力を生成\n"
 
-#: src/ptx.c:1883
+#: src/ptx.c:1882
 msgid ""
 "  -W, --word-regexp=REGEXP       use REGEXP to match each keyword\n"
 "  -b, --break-file=FILE          word break characters in this FILE\n"
@@ -5390,7 +5419,7 @@ msgstr ""
 "  -i, --ignore-file=FILE         FILE から無視する単語一覧を読み込む\n"
 "  -o, --only-file=FILE           この FILE から単語一覧のみを読み込む\n"
 
-#: src/ptx.c:1891
+#: src/ptx.c:1890
 msgid ""
 "  -r, --references               first field of each line is a reference\n"
 "  -t, --typeset-mode               - not implemented -\n"
@@ -5401,7 +5430,7 @@ msgstr ""
 "  -t, --typeset-mode               - 未実装 -\n"
 "  -w, --width=NUMBER             列の出力幅を指定. 参照文を除いて数える\n"
 
-#: src/ptx.c:1898
+#: src/ptx.c:1897
 msgid ""
 "\n"
 "With no FILE or if FILE is -, read Standard Input.  `-F /' by default.\n"
@@ -5409,7 +5438,7 @@ msgstr ""
 "\n"
 "FILE が指定されない, もしくは FILE が - の場合, 標準入力が読み込まれます.\n"
 
-#: src/ptx.c:1979
+#: src/ptx.c:1978
 msgid ""
 "This program is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
@@ -5425,7 +5454,7 @@ msgstr ""
 "条項の下で本プログラムを再配布したり変更したりすることができます.\n"
 "\n"
 
-#: src/ptx.c:1986
+#: src/ptx.c:1985
 msgid ""
 "This program is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -5438,7 +5467,7 @@ msgstr ""
 "いかなる保証も致しません. 詳細は GNU 一般公有使用許諾をお読みください.\n"
 "\n"
 
-#: src/ptx.c:1993
+#: src/ptx.c:1992
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with this program; if not, write to the Free Software Foundation,\n"
@@ -5449,7 +5478,7 @@ msgstr ""
 "59 Temple Place - Suite 330, Boston, MA 02111-1307, USA へ手紙を書いてくださ"
 "い.\n"
 
-#: src/pwd.c:47
+#: src/pwd.c:46
 msgid ""
 "Print the full filename of the current working directory.\n"
 "\n"
@@ -5457,23 +5486,23 @@ msgstr ""
 "現在の作業ディレクトリのフルパス名を表示.\n"
 "\n"
 
-#: src/pwd.c:75
+#: src/pwd.c:74
 #, fuzzy
 msgid "ignoring non-option arguments"
 msgstr "非オプション引数の数が多すぎます"
 
-#: src/readlink.c:70
+#: src/readlink.c:67
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... FILE\n"
 msgstr "使用法: %s [オプション]... [ファイル]...\n"
 
-#: src/readlink.c:71
+#: src/readlink.c:68
 msgid ""
 "Display value of a symbolic link on standard output.\n"
 "\n"
 msgstr ""
 
-#: src/readlink.c:73
+#: src/readlink.c:70
 msgid ""
 "  -f, --canonicalize      canonicalize by following every symlink in every\n"
 "                          component of the given path recursively\n"
@@ -5498,57 +5527,57 @@ msgstr "%s を実行できません"
 msgid "%s changed dev/ino"
 msgstr ""
 
-#: src/remove.c:574 src/remove.c:712 src/remove.c:890 src/remove.c:996
+#: src/remove.c:574 src/remove.c:719 src/remove.c:897 src/remove.c:1003
 #, fuzzy, c-format
 msgid "cannot lstat %s"
 msgstr "日時を設定できません"
 
-#: src/remove.c:603
-#, fuzzy, c-format
-msgid "%s: descend into write-protected directory %s? "
-msgstr "ディレクトリ %s を作成できません"
-
-#: src/remove.c:604
-#, fuzzy, c-format
-msgid "%s: descend into directory %s? "
-msgstr "ディレクトリ %s に移動できません"
-
-#: src/remove.c:614
-#, fuzzy, c-format
-msgid "%s: remove write-protected %s %s? "
-msgstr "%s: 書き込み保護されたファイル %s を削除しますか(yes/no)? "
-
-#: src/remove.c:615
-#, fuzzy, c-format
-msgid "%s: remove %s %s? "
-msgstr "%s: %s を削除しますか(yes/no)? "
-
-#: src/remove.c:639
-#, fuzzy, c-format
-msgid "removed %s\n"
-msgstr "%s を削除しています\n"
-
-#: src/remove.c:654 src/remove.c:1071
-#, fuzzy, c-format
-msgid "removed directory: %s\n"
-msgstr "ディレクトリ %s を作成できません"
-
-#: src/remove.c:734 src/remove.c:751 src/remove.c:1076
+#: src/remove.c:581 src/remove.c:741 src/remove.c:758 src/remove.c:1083
 #, fuzzy, c-format
 msgid "cannot remove directory %s"
 msgstr "ディレクトリ %s を作成できません"
 
-#: src/remove.c:816
+#: src/remove.c:610
+#, fuzzy, c-format
+msgid "%s: descend into write-protected directory %s? "
+msgstr "ディレクトリ %s を作成できません"
+
+#: src/remove.c:611
+#, fuzzy, c-format
+msgid "%s: descend into directory %s? "
+msgstr "ディレクトリ %s に移動できません"
+
+#: src/remove.c:621
+#, fuzzy, c-format
+msgid "%s: remove write-protected %s %s? "
+msgstr "%s: 書き込み保護されたファイル %s を削除しますか(yes/no)? "
+
+#: src/remove.c:622
+#, fuzzy, c-format
+msgid "%s: remove %s %s? "
+msgstr "%s: %s を削除しますか(yes/no)? "
+
+#: src/remove.c:646
+#, fuzzy, c-format
+msgid "removed %s\n"
+msgstr "%s を削除しています\n"
+
+#: src/remove.c:661 src/remove.c:1078
+#, fuzzy, c-format
+msgid "removed directory: %s\n"
+msgstr "ディレクトリ %s を作成できません"
+
+#: src/remove.c:823
 #, fuzzy, c-format
 msgid "cannot open directory %s"
 msgstr "ディレクトリ %s を作成できません"
 
-#: src/remove.c:905 src/remove.c:1014
+#: src/remove.c:912 src/remove.c:1021
 #, fuzzy, c-format
 msgid "cannot chdir from %s to %s"
 msgstr "ディレクトリ %s に移動できません"
 
-#: src/remove.c:913
+#: src/remove.c:920
 #, fuzzy, c-format
 msgid ""
 "WARNING: Circular directory structure.\n"
@@ -5562,21 +5591,21 @@ msgstr ""
 "### あなたのシステム管理者に通知して下さい ###\n"
 "以下の 2 つのディレクトリの i ノード番号が同じです:\n"
 
-#: src/remove.c:1110
+#: src/remove.c:1117
 msgid "cannot remove `.' or `..'"
 msgstr "`.' や `..' は削除できません"
 
-#: src/rm.c:60
+#: src/rm.c:61
 #, fuzzy
 msgid "Paul Rubin, David MacKenzie, Richard Stallman, and Jim Meyering"
 msgstr "David Ihnat, David MacKenzie および Jim Meyering"
 
-#: src/rm.c:99 src/touch.c:229
+#: src/rm.c:101 src/touch.c:229
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... FILE...\n"
 msgstr "使用法: %s [オプション]... [ファイル]...\n"
 
-#: src/rm.c:100
+#: src/rm.c:102
 #, fuzzy
 msgid ""
 "Remove (unlink) the FILE(s).\n"
@@ -5598,7 +5627,7 @@ msgstr ""
 "  -r, -R, --recursive   ディレクトリの中身を再帰的に削除する\n"
 "  -v, --verbose         実行されることを説明する\n"
 
-#: src/rm.c:113
+#: src/rm.c:115
 #, c-format
 msgid ""
 "\n"
@@ -5615,7 +5644,7 @@ msgstr ""
 "\n"
 "  %s ./-foo\n"
 
-#: src/rm.c:122
+#: src/rm.c:124
 msgid ""
 "\n"
 "Note that if you use rm to remove a file, it is usually possible to recover\n"
@@ -5667,7 +5696,7 @@ msgstr ""
 "                    同等となる\n"
 "  -v, --verbose   ディレクトリ毎に、処理内容の詳細を表示する\n"
 
-#: src/seq.c:82
+#: src/seq.c:81
 #, fuzzy, c-format
 msgid ""
 "Usage: %s [OPTION]... LAST\n"
@@ -5677,7 +5706,7 @@ msgstr ""
 "使用法: %s [オプション]... [入力元]... (-G なし)\n"
 "  又は: %s -G [オプション]... [入力元 [出力先]]\n"
 
-#: src/seq.c:87
+#: src/seq.c:86
 #, c-format
 msgid ""
 "Print numbers from FIRST to LAST, in steps of INCREMENT.\n"
@@ -5694,7 +5723,7 @@ msgstr ""
 "  -s, --separator=STRING   数字の区切りに STRING を使用 (標準: \\n)\n"
 "  -w, --equal-width        表示幅 (桁) を揃えるためにに先頭をゼロで埋める\n"
 
-#: src/seq.c:96
+#: src/seq.c:95
 #, c-format
 msgid ""
 "\n"
@@ -5712,34 +5741,34 @@ msgstr ""
 "FORMAT を指定する場合, printf 形式, つまり浮動小数点の出力形式 %e, %f, %g\n"
 "のうち必ず 1つを含まなくてはなりません.\n"
 
-#: src/seq.c:119
+#: src/seq.c:118
 #, fuzzy, c-format
 msgid "invalid floating point argument: %s"
 msgstr "開始行番号が正しくありません: `%s'"
 
-#: src/seq.c:189
+#: src/seq.c:188
 msgid ""
 "when the starting value is larger than the limit,\n"
 "the increment must be negative"
 msgstr "初期の値が最後の値より大きいときは, ステップ数は負でなければなりません"
 
-#: src/seq.c:213
+#: src/seq.c:212
 msgid ""
 "when the starting value is smaller than the limit,\n"
 "the increment must be positive"
 msgstr "初期の値が最後の値より小さいときは, ステップ数は負でなければなりません"
 
-#: src/seq.c:424
+#: src/seq.c:423
 #, fuzzy, c-format
 msgid "invalid format string: `%s'"
 msgstr "型指定が間違っています `%s'"
 
-#: src/seq.c:446
+#: src/seq.c:445
 #, fuzzy
 msgid "format string may not be specified when printing equal width strings"
 msgstr "文字列ダンプ時の型は指定できません"
 
-#: src/setuidgid.c:51
+#: src/setuidgid.c:50
 #, fuzzy, c-format
 msgid ""
 "Usage: %s USERNAME COMMAND [ARGUMENT]...\n"
@@ -5748,7 +5777,7 @@ msgstr ""
 "使用法: %s [ファイル]...\n"
 "または: %s [オプション]\n"
 
-#: src/setuidgid.c:57
+#: src/setuidgid.c:56
 msgid ""
 "Drop any supplemental groups, assume the user-ID and group-ID of\n"
 "the specified USERNAME, and run COMMAND with any specified ARGUMENTs.\n"
@@ -5758,32 +5787,32 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/setuidgid.c:107
+#: src/setuidgid.c:106
 #, c-format
 msgid "unknown user-ID: %s"
 msgstr ""
 
-#: src/setuidgid.c:113
+#: src/setuidgid.c:112
 #, fuzzy
 msgid "cannot set supplemental group"
 msgstr "追加されたグループリストが得られません"
 
-#: src/setuidgid.c:119
+#: src/setuidgid.c:118
 #, fuzzy, c-format
 msgid "cannot set group-ID to %ld"
 msgstr "ユーザとグループの両方を省略することはできません"
 
-#: src/setuidgid.c:125
+#: src/setuidgid.c:124
 #, fuzzy, c-format
 msgid "cannot set user-ID to %ld"
 msgstr "ユーザとグループの両方を省略することはできません"
 
-#: src/shred.c:160
+#: src/shred.c:159
 #, fuzzy, c-format
 msgid "Usage: %s [OPTIONS] FILE [...]\n"
 msgstr "使用法: %s [オプション] [ファイル]...\n"
 
-#: src/shred.c:161
+#: src/shred.c:160
 msgid ""
 "Overwrite the specified FILE(s) repeatedly, in order to make it harder\n"
 "for even very expensive hardware probing to recover the data.\n"
@@ -5793,7 +5822,7 @@ msgstr ""
 "データ復元の為の調査を行う事が非常に困難となるようにします。\n"
 "\n"
 
-#: src/shred.c:169
+#: src/shred.c:168
 #, fuzzy, c-format
 msgid ""
 "  -f, --force    change permissions to allow writing if necessary\n"
@@ -5804,7 +5833,7 @@ msgstr ""
 "  -n, --iterations=N  デフォルト回数(%d)の代りに N 回上書きする\n"
 "  -s, --size=N   このバイト数で寸断する (k, M, G の様な接尾辞も使えます)\n"
 
-#: src/shred.c:174
+#: src/shred.c:173
 #, fuzzy
 msgid ""
 "  -u, --remove   truncate and remove file after overwriting\n"
@@ -5820,7 +5849,7 @@ msgstr ""
 "  -z, --zero     shred を隠すために、最後に一度ゼロでの上書きを行う\n"
 "  -              標準出力を寸断する\n"
 
-#: src/shred.c:184
+#: src/shred.c:183
 msgid ""
 "\n"
 "Delete FILE(s) if --remove (-u) is specified.  The default is not to remove\n"
@@ -5836,7 +5865,7 @@ msgstr ""
 "操作する時は殆んどの人が --remove オプションを使うことになります。\n"
 "\n"
 
-#: src/shred.c:192
+#: src/shred.c:191
 msgid ""
 "CAUTION: Note that shred relies on a very important assumption:\n"
 "that the filesystem overwrites data in place.  This is the traditional\n"
@@ -5851,7 +5880,7 @@ msgstr ""
 "shred を使う意味がないファイルシステムは以下の通りです。\n"
 "\n"
 
-#: src/shred.c:200
+#: src/shred.c:199
 #, fuzzy
 msgid ""
 "* log-structured or journaled filesystems, such as those supplied with\n"
@@ -5873,7 +5902,7 @@ msgstr ""
 "ム\n"
 "\n"
 
-#: src/shred.c:210
+#: src/shred.c:209
 msgid ""
 "* filesystems that cache in temporary locations, such as NFS\n"
 "  version 3 clients\n"
@@ -5895,92 +5924,92 @@ msgstr ""
 "た\n"
 "ファイルを後で復元することは造作もない事でしょう。\n"
 
-#: src/shred.c:808
+#: src/shred.c:807
 #, fuzzy, c-format
 msgid "%s: cannot rewind"
 msgstr "%s を実行できません"
 
-#: src/shred.c:831
+#: src/shred.c:830
 #, c-format
 msgid "%s: pass %lu/%lu (%s)..."
 msgstr "%s: 経過 %lu/%lu (%s)..."
 
-#: src/shred.c:868
+#: src/shred.c:867
 #, fuzzy, c-format
 msgid "%s: error writing at offset %s"
 msgstr "%s の書き込みエラー"
 
-#: src/shred.c:897
+#: src/shred.c:896
 #, fuzzy, c-format
 msgid "%s: file too large"
 msgstr "%s: ファイルが長すぎます"
 
-#: src/shred.c:920
+#: src/shred.c:919
 #, c-format
 msgid "%s: pass %lu/%lu (%s)...%s"
 msgstr "%s: 経過 %lu/%lu (%s)...%s"
 
-#: src/shred.c:936
+#: src/shred.c:935
 #, fuzzy, c-format
 msgid "%s: pass %lu/%lu (%s)...%s/%s %d%%"
 msgstr "%s: 経過 %lu/%lu (%s)...%s/%s"
 
-#: src/shred.c:1195
+#: src/shred.c:1194
 #, fuzzy, c-format
 msgid "%s: invalid file type"
 msgstr "%s: 接尾辞の長さが正しくありません"
 
-#: src/shred.c:1212
+#: src/shred.c:1211
 #, c-format
 msgid "%s: file has negative size"
 msgstr "%s: ファイルが負の大きさになっています"
 
-#: src/shred.c:1265
+#: src/shred.c:1264
 #, fuzzy, c-format
 msgid "%s: error truncating"
 msgstr "%s: ファイルが切り詰められました"
 
-#: src/shred.c:1286
+#: src/shred.c:1285
 #, c-format
 msgid "%s: cannot shred append-only file descriptor"
 msgstr "%s: 追加用ファイル記述子には shred できません"
 
-#: src/shred.c:1371
+#: src/shred.c:1370
 #, c-format
 msgid "%s: removing"
 msgstr "%s: 削除します"
 
-#: src/shred.c:1412
+#: src/shred.c:1411
 #, fuzzy, c-format
 msgid "%s: renamed to %s"
 msgstr "%s: 読み込みエラー"
 
-#: src/shred.c:1438
+#: src/shred.c:1437
 #, c-format
 msgid "%s: removed"
 msgstr "%s: 削除しました"
 
-#: src/shred.c:1503
+#: src/shred.c:1502
 #, c-format
 msgid "%s: cannot remove"
 msgstr "%s: 削除できません"
 
-#: src/shred.c:1552
+#: src/shred.c:1551
 #, fuzzy, c-format
 msgid "%s: invalid number of passes"
 msgstr "%s: 無効な秒数です"
 
-#: src/shred.c:1569
+#: src/shred.c:1568
 #, fuzzy, c-format
 msgid "%s: invalid file size"
 msgstr "%s: 接尾辞の長さが正しくありません"
 
-#: src/sleep.c:34
+#: src/sleep.c:33
 #, fuzzy
 msgid "Jim Meyering and Paul Eggert"
 msgstr "Mike Haertel と Paul Eggert"
 
-#: src/sleep.c:52
+#: src/sleep.c:51
 #, c-format
 msgid ""
 "Usage: %s NUMBER[SUFFIX]...\n"
@@ -6000,20 +6029,20 @@ msgstr ""
 "指定する数字は整数だけでなく, 小数でも構いません.\n"
 "\n"
 
-#: src/sleep.c:156
+#: src/sleep.c:155
 #, fuzzy, c-format
 msgid "invalid time interval `%s'"
 msgstr "フィールド数が間違っています: `%s'"
 
-#: src/sleep.c:167 src/tail.c:1062
+#: src/sleep.c:166 src/tail.c:1061
 msgid "cannot read realtime clock"
 msgstr "実時間の時計を読み取ることができません"
 
-#: src/sort.c:53
+#: src/sort.c:54
 msgid "Mike Haertel and Paul Eggert"
 msgstr "Mike Haertel と Paul Eggert"
 
-#: src/sort.c:280
+#: src/sort.c:283
 msgid ""
 "Write sorted concatenation of all FILE(s) to standard output.\n"
 "\n"
@@ -6026,7 +6055,7 @@ msgstr ""
 "並び替えオプション:\n"
 "\n"
 
-#: src/sort.c:289
+#: src/sort.c:292
 msgid ""
 "  -b, --ignore-leading-blanks ignore leading blanks\n"
 "  -d, --dictionary-order      consider only blanks and alphanumeric "
@@ -6037,7 +6066,7 @@ msgstr ""
 "  -d, --dictionary-order      英数字と空白文字のみを対象にして並び替え\n"
 "  -f, --ignore-case           大文字・小文字を同一視して並び替え\n"
 
-#: src/sort.c:294
+#: src/sort.c:297
 msgid ""
 "  -g, --general-numeric-sort  compare according to general numerical value\n"
 "  -i, --ignore-nonprinting    consider only printable characters\n"
@@ -6052,7 +6081,7 @@ msgstr ""
 "  -n, --numeric-sort          文字列を数値の大小によって比較\n"
 "  -r, --reverse               比較結果を反転\n"
 
-#: src/sort.c:302
+#: src/sort.c:305
 msgid ""
 "Other options:\n"
 "\n"
@@ -6074,7 +6103,7 @@ msgstr ""
 "  -s, --stable              前の比較結果に頼らない安定的な並び替え\n"
 "  -S, --buffer-size=SIZE    メインメモリバッファの大きさとして SIZE を使う\n"
 
-#: src/sort.c:312
+#: src/sort.c:315
 #, c-format
 msgid ""
 "  -t, --field-separator=SEP use SEP instead of non- to whitespace "
@@ -6095,11 +6124,11 @@ msgstr ""
 "                              そうでなければ等しい行のうち最初のものだけを表"
 "示\n"
 
-#: src/sort.c:319
+#: src/sort.c:322
 msgid "  -z, --zero-terminated     end lines with 0 byte, not newline\n"
 msgstr "  -z, --zero-terminated     文字列の最後に改行でなくヌル文字を付加\n"
 
-#: src/sort.c:324
+#: src/sort.c:327
 msgid ""
 "\n"
 "POS is F[.C][OPTS], where F is the field number and C the character "
@@ -6119,7 +6148,7 @@ msgstr ""
 "\n"
 "SIZE の後には次の複数指定可能な接尾辞を指定します.\n"
 
-#: src/sort.c:333
+#: src/sort.c:336
 #, c-format
 msgid ""
 "% 1% of memory, b 1, K 1024 (default), and so on for M, G, T, P, E, Z, Y.\n"
@@ -6137,102 +6166,102 @@ msgstr ""
 "環境変数によって指定されたロカールで並び替えの順番が変わります.\n"
 "本来のバイト単位の数値で昔ながらの並び替え順にしたいならば LC_ALL=C を指定.\n"
 
-#: src/sort.c:444
+#: src/sort.c:447
 msgid "cannot create temporary file"
 msgstr "一時ファイルを作成できません"
 
-#: src/sort.c:467
+#: src/sort.c:470
 msgid "open failed"
 msgstr "オープン失敗"
 
-#: src/sort.c:487 src/sort.c:2497
+#: src/sort.c:490 src/sort.c:2556
 msgid "close failed"
 msgstr "クローズ失敗"
 
-#: src/sort.c:495
+#: src/sort.c:498
 msgid "write failed"
 msgstr "書き込み失敗"
 
-#: src/sort.c:641
+#: src/sort.c:644
 msgid "sort size"
 msgstr "ソートサイズ"
 
-#: src/sort.c:715
+#: src/sort.c:718
 msgid "stat failed"
 msgstr "状態検知失敗"
 
-#: src/sort.c:972
+#: src/sort.c:975
 msgid "read failed"
 msgstr "読込み失敗"
 
-#: src/sort.c:1570
+#: src/sort.c:1573
 #, c-format
 msgid "%s: %s:%s: disorder: "
 msgstr "%s: %s:%s: 順序が不規則: "
 
-#: src/sort.c:1574
+#: src/sort.c:1577
 msgid "standard error"
 msgstr "標準エラー"
 
-#: src/sort.c:2032
+#: src/sort.c:2089
 #, c-format
 msgid "%s: invalid field specification `%s'"
 msgstr "%s: フィールドの指定 `%s' が無効です"
 
-#: src/sort.c:2058
+#: src/sort.c:2115
 #, c-format
 msgid "%s: count `%.*s' too large"
 msgstr "%s: カウント `%.*s' が大き過ぎます"
 
-#: src/sort.c:2064
+#: src/sort.c:2121
 #, c-format
 msgid "%s: invalid count at start of `%s'"
 msgstr "%s: `%s' の開始点でのカウントが間違っています"
 
-#: src/sort.c:2299
+#: src/sort.c:2358
 msgid "invalid number after `-'"
 msgstr "`-' の後の数字が正しくありません"
 
-#: src/sort.c:2302 src/sort.c:2348 src/sort.c:2375
+#: src/sort.c:2361 src/sort.c:2407 src/sort.c:2434
 msgid "invalid number after `.'"
 msgstr "`.' の後の数字が正しくありません"
 
-#: src/sort.c:2305 src/sort.c:2384
+#: src/sort.c:2364 src/sort.c:2443
 msgid "stray character in field spec"
 msgstr "フィールド指定に使えない文字があります"
 
-#: src/sort.c:2339
+#: src/sort.c:2398
 msgid "invalid number at field start"
 msgstr "フィールドの開始点の数字が正しくありません"
 
-#: src/sort.c:2343 src/sort.c:2371
+#: src/sort.c:2402 src/sort.c:2430
 msgid "field number is zero"
 msgstr "フィールド番号がゼロです"
 
-#: src/sort.c:2352
+#: src/sort.c:2411
 msgid "character offset is zero"
 msgstr "文字のオフセットがゼロです"
 
-#: src/sort.c:2367
+#: src/sort.c:2426
 msgid "invalid number after `,'"
 msgstr "`,' の後の数字が正しくありません"
 
-#: src/sort.c:2412
+#: src/sort.c:2471
 #, c-format
 msgid "multi-character tab `%s'"
 msgstr "複数文字のタブ `%s'"
 
-#: src/sort.c:2480
+#: src/sort.c:2539
 #, c-format
 msgid "extra operand `%s' not allowed with -c"
 msgstr "追加演算 `%s' は -c と一緒には使えません"
 
-#: src/split.c:97
+#: src/split.c:96
 #, c-format
 msgid "Usage: %s [OPTION] [INPUT [PREFIX]]\n"
 msgstr "使用法: %s [オプション] [INPUT [PREFIX]]\n"
 
-#: src/split.c:101
+#: src/split.c:100
 msgid ""
 "Output fixed-size pieces of INPUT to PREFIXaa, PREFIXab, ...; default\n"
 "PREFIX is `x'.  With no INPUT, or when INPUT is -, read standard input.\n"
@@ -6242,7 +6271,7 @@ msgstr ""
 "PREFIX は `x'. INPUT が指定されないか, INPUT が - の場合は標準入力が読まれ"
 "る.\n"
 
-#: src/split.c:109
+#: src/split.c:108
 #, c-format
 msgid ""
 "  -a, --suffix-length=N   use suffixes of length N (default %d)\n"
@@ -6255,7 +6284,7 @@ msgstr ""
 "  -C, --line-bytes=SIZE   1 出力ファイルを最大 SIZE バイト行に\n"
 "  -l, --lines=NUMBER      1 出力ファイルを NUMBER 行に\n"
 
-#: src/split.c:115
+#: src/split.c:114
 msgid ""
 "      --verbose           print a diagnostic to standard error just\n"
 "                            before each output file is opened\n"
@@ -6263,7 +6292,7 @@ msgstr ""
 "      --verbose           各々の出力ファイルを開く直前に, 標準エラー出力に\n"
 "                            診断メッセージを表示\n"
 
-#: src/split.c:121
+#: src/split.c:120
 msgid ""
 "\n"
 "SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n"
@@ -6272,65 +6301,65 @@ msgstr ""
 "SIZEはいくつかのサフィックスを付けられます: 512バイトでは`b',1キロでは`k',\n"
 "1メガでは`m'となっています.\n"
 
-#: src/split.c:172
+#: src/split.c:171
 msgid "Output file suffixes exhausted"
 msgstr "出力ファイルの接尾辞を使い果たしました"
 
-#: src/split.c:190
+#: src/split.c:189
 #, c-format
 msgid "creating file `%s'\n"
 msgstr "ファイル `%s' を作成\n"
 
-#: src/split.c:347
+#: src/split.c:346
 msgid "cannot split in more than one way"
 msgstr "複数の分割方法は指定できません"
 
-#: src/split.c:399
+#: src/split.c:398
 #, c-format
 msgid "%s: invalid suffix length"
 msgstr "%s: 接尾辞の長さが正しくありません"
 
-#: src/split.c:413 src/split.c:437
+#: src/split.c:412 src/split.c:436
 #, c-format
 msgid "%s: invalid number of bytes"
 msgstr "%s: 無効なバイト数表記です"
 
-#: src/split.c:425
+#: src/split.c:424
 #, c-format
 msgid "%s: invalid number of lines"
 msgstr "%s: 無効な行数表記です"
 
-#: src/split.c:467
+#: src/split.c:466
 #, fuzzy, c-format
 msgid "line count option -%s%c... is too large"
 msgstr "%s: カウント `%.*s' が大き過ぎます"
 
-#: src/split.c:486
+#: src/split.c:485
 #, fuzzy, c-format
 msgid "`-%s' option is obsolete; use `-l %s'"
 msgstr "`-%d' オプションは過去のものです. `-l %d' を使ってください"
 
-#: src/split.c:501
+#: src/split.c:500
 #, fuzzy
 msgid "invalid number of lines: 0"
 msgstr "行数の指定が正しくありません"
 
-#: src/stat.c:339
+#: src/stat.c:336
 #, fuzzy
 msgid "*** invalid date/time ***"
 msgstr "幅 `%s' が正しくありません"
 
-#: src/stat.c:621
+#: src/stat.c:618
 #, fuzzy, c-format
 msgid "cannot read file system information for %s"
 msgstr "%s に対するファイルポインタを再配置できません"
 
-#: src/stat.c:697
+#: src/stat.c:694
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION] FILE...\n"
 msgstr "使用法: %s [オプション] [ファイル]...\n"
 
-#: src/stat.c:698
+#: src/stat.c:695
 #, fuzzy
 msgid ""
 "Display file or filesystem status.\n"
@@ -6346,7 +6375,7 @@ msgstr ""
 "  -f, --filesystem\tファイルの状態ではなくファイルシステムの状態を表示する\n"
 "  -t, --terse\t\t簡潔な形式で情報を表示する\n"
 
-#: src/stat.c:709
+#: src/stat.c:706
 msgid ""
 "\n"
 "The valid format sequences for files (without --filesystem):\n"
@@ -6357,7 +6386,7 @@ msgid ""
 "  %b   Number of blocks allocated (see %B)\n"
 msgstr ""
 
-#: src/stat.c:717
+#: src/stat.c:714
 msgid ""
 "  %D   Device number in hex\n"
 "  %d   Device number in decimal\n"
@@ -6367,7 +6396,7 @@ msgid ""
 "  %g   Group ID of owner\n"
 msgstr ""
 
-#: src/stat.c:725
+#: src/stat.c:722
 msgid ""
 "  %h   Number of hard links\n"
 "  %i   Inode number\n"
@@ -6379,7 +6408,7 @@ msgid ""
 "  %t   Major device type in hex\n"
 msgstr ""
 
-#: src/stat.c:735
+#: src/stat.c:732
 msgid ""
 "  %U   User name of owner\n"
 "  %u   User ID of owner\n"
@@ -6392,7 +6421,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/stat.c:747
+#: src/stat.c:744
 msgid ""
 "Valid format sequences for file systems:\n"
 "\n"
@@ -6403,7 +6432,7 @@ msgid ""
 "  %f   Free blocks in file system\n"
 msgstr ""
 
-#: src/stat.c:756
+#: src/stat.c:753
 msgid ""
 "  %i   File System id in hex\n"
 "  %l   Maximum length of filenames\n"
@@ -6413,7 +6442,7 @@ msgid ""
 "  %t   Type in hex\n"
 msgstr ""
 
-#: src/stty.c:490
+#: src/stty.c:489
 #, c-format
 msgid ""
 "Usage: %s [-F DEVICE] [--file=DEVICE] [SETTING]...\n"
@@ -6424,7 +6453,7 @@ msgstr ""
 "もしくは: %s [-F デバイス] [--file=デバイス] [-a|--all]\n"
 "もしくは: %s [-F デバイス] [--file=デバイス] [-g|--save]\n"
 
-#: src/stty.c:496
+#: src/stty.c:495
 msgid ""
 "Print or change terminal characteristics.\n"
 "\n"
@@ -6438,7 +6467,7 @@ msgstr ""
 "  -g, --save         現在のすべての設定を別の stty が読める形式で出力\n"
 "  -F, --file=デバイス 標準入力の代わりに指定されたデバイスを使用\n"
 
-#: src/stty.c:505
+#: src/stty.c:504
 msgid ""
 "\n"
 "Optional - before SETTING indicates negation.  An * marks non-POSIX\n"
@@ -6449,7 +6478,7 @@ msgstr ""
 "は非 POSIX 設定であることを示しています.  使っているシステムによって,\n"
 "どの設定が有効なのかが決まります.\n"
 
-#: src/stty.c:510
+#: src/stty.c:509
 msgid ""
 "\n"
 "Special characters:\n"
@@ -6463,7 +6492,7 @@ msgstr ""
 "   eof CHAR      CHAR はファイル終端を送信 (入力の終了)\n"
 "   eol CHAR      CHAR は行末\n"
 
-#: src/stty.c:517
+#: src/stty.c:516
 msgid ""
 " * eol2 CHAR     alternate CHAR for ending the line\n"
 "   erase CHAR    CHAR will erase the last character typed\n"
@@ -6475,7 +6504,7 @@ msgstr ""
 "   intr CHAR     CHAR は割り込みシグナルを送信\n"
 "   kill CHAR     CHAR は現在の行を削除\n"
 
-#: src/stty.c:523
+#: src/stty.c:522
 msgid ""
 " * lnext CHAR    CHAR will enter the next character quoted\n"
 "   quit CHAR     CHAR will send a quit signal\n"
@@ -6487,7 +6516,7 @@ msgstr ""
 " * rprnt CHAR    CHAR は現在の行を再表示\n"
 "   start CHAR    CHAR は停止した出力を再開\n"
 
-#: src/stty.c:529
+#: src/stty.c:528
 msgid ""
 "   stop CHAR     CHAR will stop the output\n"
 "   susp CHAR     CHAR will send a terminal stop signal\n"
@@ -6499,7 +6528,7 @@ msgstr ""
 " * swtch CHAR    CHAR は別のシェル層に切り替え\n"
 " * werase CHAR   CHAR は最後にタイプされた単語を削除\n"
 
-#: src/stty.c:535
+#: src/stty.c:534
 msgid ""
 "\n"
 "Special settings:\n"
@@ -6513,7 +6542,7 @@ msgstr ""
 " * cols N        ターミナルが N 桁であることをカーネルに通知\n"
 " * columns N     cols N と同じ\n"
 
-#: src/stty.c:542
+#: src/stty.c:541
 msgid ""
 "   ispeed N      set the input speed to N\n"
 " * line N        use line discipline N\n"
@@ -6526,7 +6555,7 @@ msgstr ""
 "   min N         -icanon と共に使い, 完全な読込みに対して最低 N 文字を設定\n"
 "   ospeed N      出力速度を N に設定\n"
 
-#: src/stty.c:548
+#: src/stty.c:547
 msgid ""
 " * rows N        tell the kernel that the terminal has N rows\n"
 " * size          print the number of rows and columns according to the "
@@ -6540,7 +6569,7 @@ msgstr ""
 "   time N        -icanon と共に使い, 読込みのタイムアウトを 10 分の N 秒に設"
 "定\n"
 
-#: src/stty.c:554
+#: src/stty.c:553
 msgid ""
 "\n"
 "Control settings:\n"
@@ -6556,7 +6585,7 @@ msgstr ""
 " * [-]crtscts    RTS/CTS ハンドシェイクを有効に\n"
 "   csN           文字の大きさを N ビットに設定, N の範囲は [5..8]\n"
 
-#: src/stty.c:562
+#: src/stty.c:561
 msgid ""
 "   [-]cstopb     use two stop bits per character (one with `-')\n"
 "   [-]hup        send a hangup signal when the last process closes the tty\n"
@@ -6572,7 +6601,7 @@ msgstr ""
 "   [-]parenb     パリティビットを出力し, 入力にパリティビットがあるとする\n"
 "   [-]parodd     奇パリティを設定 (偶は `-')\n"
 
-#: src/stty.c:569
+#: src/stty.c:568
 msgid ""
 "\n"
 "Input settings:\n"
@@ -6588,7 +6617,7 @@ msgstr ""
 "   [-]ignbrk     ブレイク文字を無視\n"
 "   [-]igncr      復帰 (CR) を無視\n"
 
-#: src/stty.c:577
+#: src/stty.c:576
 msgid ""
 "   [-]ignpar     ignore characters with parity errors\n"
 " * [-]imaxbel    beep and do not flush a full input buffer on a character\n"
@@ -6602,7 +6631,7 @@ msgstr ""
 "   [-]inpck      入力パリティのチェックを可能に\n"
 "   [-]istrip     入力文字の最上位 (第8) ビットを落とす\n"
 
-#: src/stty.c:584
+#: src/stty.c:583
 msgid ""
 " * [-]iuclc      translate uppercase characters to lowercase\n"
 " * [-]ixany      let any character restart output, not only start character\n"
@@ -6618,7 +6647,7 @@ msgstr ""
 "   [-]parmrk     パリティーエラーをマーク (255-0 文字のシーケンスで)\n"
 "   [-]tandem     [-]ixoff と同じ\n"
 
-#: src/stty.c:592
+#: src/stty.c:591
 msgid ""
 "\n"
 "Output settings:\n"
@@ -6634,7 +6663,7 @@ msgstr ""
 " * ffN           用紙送り遅延スタイル. N の範囲は [0..1]\n"
 " * nlN           改行 (LF) 遅延スタイル. N の範囲は [0..1]\n"
 
-#: src/stty.c:600
+#: src/stty.c:599
 msgid ""
 " * [-]ocrnl      translate carriage return to newline\n"
 " * [-]ofdel      use delete characters for fill instead of null characters\n"
@@ -6650,7 +6679,7 @@ msgstr ""
 " * [-]onlcr      改行 (LF) を復帰改行 (CR-LF) に翻訳\n"
 " * [-]onlret     改行 (LF) が復帰 (CR) として振舞う\n"
 
-#: src/stty.c:608
+#: src/stty.c:607
 msgid ""
 " * [-]onocr      do not print carriage returns in the first column\n"
 "   [-]opost      postprocess output\n"
@@ -6666,7 +6695,7 @@ msgstr ""
 " * -tabs         tab3 と同じ\n"
 " * vtN           垂直タブ遅延スタイル. N の範囲は [0..1]\n"
 
-#: src/stty.c:616
+#: src/stty.c:615
 msgid ""
 "\n"
 "Local settings:\n"
@@ -6680,7 +6709,7 @@ msgstr ""
 " * crtkill       echoprt と echoe の設定にしたがって全ての行を削除\n"
 " * -crtkill      echoctl と echok の設定にしたがって全ての行を削除\n"
 
-#: src/stty.c:623
+#: src/stty.c:622
 msgid ""
 " * [-]ctlecho    echo control characters in hat notation (`^c')\n"
 "   [-]echo       echo input characters\n"
@@ -6694,7 +6723,7 @@ msgstr ""
 "   [-]echoe      [-]crterase と同じ\n"
 "   [-]echok      削除文字の後で改行をエコー\n"
 
-#: src/stty.c:630
+#: src/stty.c:629
 msgid ""
 " * [-]echoke     same as [-]crtkill\n"
 "   [-]echonl     echo newline even if not echoing other characters\n"
@@ -6708,7 +6737,7 @@ msgstr ""
 "   [-]icanon     erase, kill, werase および rprnt 特殊文字を使用可能に\n"
 "   [-]iexten     非 POSIX 特殊文字を使用可能に\n"
 
-#: src/stty.c:637
+#: src/stty.c:636
 msgid ""
 "   [-]isig       enable interrupt, quit, and suspend special characters\n"
 "   [-]noflsh     disable flushing after interrupt and quit special "
@@ -6725,7 +6754,7 @@ msgstr ""
 " * [-]tostop     端末に書き込もうとするバックグラウンドジョブを停止\n"
 " * [-]xcase      icanon と共に使い, 大文字に対して `\\' でエスケープ\n"
 
-#: src/stty.c:644
+#: src/stty.c:643
 msgid ""
 "\n"
 "Combination settings:\n"
@@ -6739,7 +6768,7 @@ msgstr ""
 "   cbreak        -icanon と同じ\n"
 "   -cbreak       icanon と同じ\n"
 
-#: src/stty.c:651
+#: src/stty.c:650
 msgid ""
 "   cooked        same as brkint ignpar istrip icrnl ixon opost isig\n"
 "                 icanon, eof and eol characters to their default values\n"
@@ -6751,7 +6780,7 @@ msgstr ""
 "   -cooked       raw と同じ\n"
 "   crt           echoe echoctl echoke と同じ\n"
 
-#: src/stty.c:657
+#: src/stty.c:656
 msgid ""
 "   dec           same as echoe echoctl echoke -ixany intr ^c erase 0177\n"
 "                 kill ^u\n"
@@ -6765,7 +6794,7 @@ msgstr ""
 "   ek            erase と kill 文字を標準の値に\n"
 "   evenp         parenb -parodd cs7 と同じ\n"
 
-#: src/stty.c:664
+#: src/stty.c:663
 msgid ""
 "   -evenp        same as -parenb cs8\n"
 " * [-]lcase      same as xcase iuclc olcuc\n"
@@ -6781,7 +6810,7 @@ msgstr ""
 "   nl            -icrnl -onlcr と同じ\n"
 "   -nl           icrnl -inlcr -igncr onlcr -ocrnl -onlret と同じ\n"
 
-#: src/stty.c:672
+#: src/stty.c:671
 msgid ""
 "   oddp          same as parenb parodd cs7\n"
 "   -oddp         same as -parenb cs8\n"
@@ -6795,7 +6824,7 @@ msgstr ""
 "   pass8         -parenb -istrip cs8 と同じ\n"
 "   -pass8        parenb istrip cs7 と同じ\n"
 
-#: src/stty.c:679
+#: src/stty.c:678
 msgid ""
 "   raw           same as -ignbrk -brkint -ignpar -parmrk -inpck -istrip\n"
 "                 -inlcr -igncr -icrnl  -ixon  -ixoff  -iuclc  -ixany\n"
@@ -6807,7 +6836,7 @@ msgstr ""
 "                 -imaxbel -opost -isig -icanon -xcase min 1 time 0 と同じ\n"
 "   -raw          cooked と同じ\n"
 
-#: src/stty.c:685
+#: src/stty.c:684
 msgid ""
 "   sane          same as cread -ignbrk brkint -inlcr -igncr icrnl\n"
 "                 -ixoff -iuclc -ixany imaxbel opost -olcuc -ocrnl onlcr\n"
@@ -6823,7 +6852,7 @@ msgstr ""
 "                 -xcase -tostop -echoprt echoctl echoke と同じ,\n"
 "                 全ての特殊文字は標準の値.\n"
 
-#: src/stty.c:693
+#: src/stty.c:692
 msgid ""
 "\n"
 "Handle the tty line connected to standard input.  Without arguments,\n"
@@ -6839,86 +6868,86 @@ msgstr ""
 "コード化されます.  特別な値 ^- または undef は特殊文字を無効にするのに\n"
 "使われます.\n"
 
-#: src/stty.c:780
+#: src/stty.c:779
 #, fuzzy
 msgid "only one device may be specified"
 msgstr "引数を一つだけ指定できます"
 
-#: src/stty.c:875
+#: src/stty.c:874
 #, fuzzy
 msgid ""
 "the options for verbose and stty-readable output styles are\n"
 "mutually exclusive"
 msgstr "オプション --string と --check は排他的に使われます"
 
-#: src/stty.c:880
+#: src/stty.c:879
 msgid "when specifying an output style, modes may not be set"
 msgstr "出力形式を指定した場合, モードを設定してはいけません"
 
-#: src/stty.c:896
+#: src/stty.c:895
 #, c-format
 msgid "%s: couldn't reset non-blocking mode"
 msgstr "%s: 非ブロッキングモードを再設定できませんでした"
 
-#: src/stty.c:950 src/stty.c:1057
+#: src/stty.c:949 src/stty.c:1056
 #, fuzzy, c-format
 msgid "invalid argument `%s'"
 msgstr "`%2$s' に対する引数 %1$s が間違っています"
 
-#: src/stty.c:961 src/stty.c:978 src/stty.c:990 src/stty.c:1003
-#: src/stty.c:1015 src/stty.c:1034
+#: src/stty.c:960 src/stty.c:977 src/stty.c:989 src/stty.c:1002
+#: src/stty.c:1014 src/stty.c:1033
 #, fuzzy, c-format
 msgid "missing argument to `%s'"
 msgstr "`%2$s' に対する引数 %1$s が曖昧です"
 
-#: src/stty.c:1110
+#: src/stty.c:1109
 #, c-format
 msgid "%s: unable to perform all requested operations"
 msgstr "%s: 要求された処理の全てを実行することができません"
 
-#: src/stty.c:1115
+#: src/stty.c:1114
 msgid "new_mode: mode\n"
 msgstr "new_mode: モード\n"
 
-#: src/stty.c:1455
+#: src/stty.c:1454
 #, c-format
 msgid "%s: no size information for this device"
 msgstr "%s: このデバイスのサイズ情報がありません"
 
-#: src/stty.c:1937
+#: src/stty.c:1936
 #, fuzzy, c-format
 msgid "invalid integer argument `%s'"
 msgstr "行番号の増分が正しくありません: `%s'"
 
-#: src/su.c:289
+#: src/su.c:288
 msgid "Password:"
 msgstr "パスワード:"
 
-#: src/su.c:292
+#: src/su.c:291
 msgid "getpass: cannot open /dev/tty"
 msgstr "getpass: /dev/tty を開けません"
 
-#: src/su.c:350
+#: src/su.c:349
 #, fuzzy
 msgid "cannot set groups"
 msgstr "ユーザとグループの両方を省略することはできません"
 
-#: src/su.c:354
+#: src/su.c:353
 #, fuzzy
 msgid "cannot set group id"
 msgstr "ユーザとグループの両方を省略することはできません"
 
-#: src/su.c:356
+#: src/su.c:355
 #, fuzzy
 msgid "cannot set user id"
 msgstr "ユーザとグループの両方を省略することはできません"
 
-#: src/su.c:437
+#: src/su.c:436
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... [-] [USER [ARG]...]\n"
 msgstr "使用法: %s [オプション]... [ファイル]...\n"
 
-#: src/su.c:438
+#: src/su.c:437
 msgid ""
 "Change the effective user id and group id to that of USER.\n"
 "\n"
@@ -6938,7 +6967,7 @@ msgstr ""
 "  -p                           -m と同じ\n"
 "  -s, --shell=SHELL            /etc/shells が許せば SHELL を実行\n"
 
-#: src/su.c:450
+#: src/su.c:449
 msgid ""
 "\n"
 "A mere - implies -l.   If USER not given, assume root.\n"
@@ -6966,11 +6995,11 @@ msgstr "制限付きシェル %s を使います"
 msgid "warning: cannot change directory to %s"
 msgstr "ディレクトリ %s を作成できません"
 
-#: src/sum.c:36
+#: src/sum.c:35
 msgid "Kayvan Aghaiepour and David MacKenzie"
 msgstr "Kayvan Aghaiepour と David MacKenzie"
 
-#: src/sum.c:64
+#: src/sum.c:63
 msgid ""
 "Print checksum and block counts for each FILE.\n"
 "\n"
@@ -7005,11 +7034,11 @@ msgstr "      --help     この使い方を表示して終了\n"
 msgid "      --version  output version information and exit\n"
 msgstr "      --version  バージョン情報を表示して終了\n"
 
-#: src/tac.c:54
+#: src/tac.c:53
 msgid "Jay Lepreau and David MacKenzie"
 msgstr "Jay Lepreau と David MacKenzie"
 
-#: src/tac.c:131
+#: src/tac.c:130
 msgid ""
 "Write each FILE to standard output, last line first.\n"
 "With no FILE, or when FILE is -, read standard input.\n"
@@ -7020,7 +7049,7 @@ msgstr ""
 "す\n"
 "\n"
 
-#: src/tac.c:139
+#: src/tac.c:138
 msgid ""
 "  -b, --before             attach the separator before instead of after\n"
 "  -r, --regex              interpret the separator as a regular expression\n"
@@ -7030,25 +7059,25 @@ msgstr ""
 "  -r, --regex              区切り文字列を正規表現として解釈\n"
 "  -s, --separator=STRING   改行文字の代わりに STRING を区切り文字列に\n"
 
-#: src/tac.c:230
+#: src/tac.c:229
 #, fuzzy, c-format
 msgid "%s: seek failed"
 msgstr "クローズ失敗"
 
-#: src/tac.c:453 src/tac.c:592
+#: src/tac.c:452 src/tac.c:591
 msgid "stdin: read error"
 msgstr "標準入力: 読み込みエラー"
 
-#: src/tac.c:639
+#: src/tac.c:638
 msgid "separator cannot be empty"
 msgstr "区切り文字が空であってはなりません"
 
-#: src/tail.c:50
+#: src/tail.c:49
 #, fuzzy
 msgid "Paul Rubin, David MacKenzie, Ian Lance Taylor, and Jim Meyering"
 msgstr "David Ihnat, David MacKenzie および Jim Meyering"
 
-#: src/tail.c:239
+#: src/tail.c:238
 #, c-format
 msgid ""
 "Print the last %d lines of each FILE to standard output.\n"
@@ -7060,7 +7089,7 @@ msgstr ""
 "複数の FILE が指定された場合は, ファイル名がヘッダ情報として出力されます.\n"
 "FILE が指定されないか, FILE が - の場合は, 標準入力が読まれます.\n"
 
-#: src/tail.c:248
+#: src/tail.c:247
 msgid ""
 "      --retry              keep trying to open a file even if it is\n"
 "                           inaccessible when tail starts or if it becomes\n"
@@ -7073,7 +7102,7 @@ msgstr ""
 "                           -f オプションを指定したときのみ有効\n"
 "  -c, --bytes=N            最後の N バイトを出力\n"
 
-#: src/tail.c:254
+#: src/tail.c:253
 msgid ""
 "  -f, --follow[={name|descriptor}]\n"
 "                           output appended data as the file grows;\n"
@@ -7086,7 +7115,7 @@ msgstr ""
 "                           -f, --follow および --follow=descriptor は同じ\n"
 "  -F                       --follow=name --retry と同じ\n"
 
-#: src/tail.c:261
+#: src/tail.c:260
 #, c-format
 msgid ""
 "  -n, --lines=N            output the last N lines, instead of the last %d\n"
@@ -7106,7 +7135,7 @@ msgstr ""
 "                           ファイルを再度開く (これは rotate されたログ\n"
 "                           ファイルなどに有効である)\n"
 
-#: src/tail.c:272
+#: src/tail.c:271
 #, fuzzy
 msgid ""
 "      --pid=PID            with -f, terminate after process ID, PID dies\n"
@@ -7123,7 +7152,7 @@ msgstr ""
 "                           秒に設定\n"
 "  -v, --verbose            常にファイル名を示すヘッダを出力\n"
 
-#: src/tail.c:281
+#: src/tail.c:280
 #, fuzzy
 msgid ""
 "\n"
@@ -7141,7 +7170,7 @@ msgstr ""
 "m.\n"
 "\n"
 
-#: src/tail.c:289
+#: src/tail.c:288
 msgid ""
 "With --follow (-f), tail defaults to following the file descriptor, which\n"
 "means that even if a tail'ed file is renamed, tail will continue to track\n"
@@ -7150,7 +7179,7 @@ msgstr ""
 "--follow (-f) を指定すると, tail は標準でファイル記述子を追尾します. つまり\n"
 "tail されたファイルの名前が変更されても, tail はその終端を追いかけ続けます.  "
 
-#: src/tail.c:294
+#: src/tail.c:293
 msgid ""
 "This default behavior is not desirable when you really want to\n"
 "track the actual name of the file, not the file descriptor (e.g., log\n"
@@ -7167,70 +7196,70 @@ msgstr ""
 "す\n"
 "ことで, その名前のファイルを追いかけるようになります.\n"
 
-#: src/tail.c:332
+#: src/tail.c:331
 #, c-format
 msgid "closing %s (fd=%d)"
 msgstr "%s を閉じています (fd=%d)"
 
-#: src/tail.c:397
+#: src/tail.c:396
 #, fuzzy, c-format
 msgid "%s: cannot seek to relative offset %s"
 msgstr "%s: 相対オフセット %s%s を seek できません"
 
-#: src/tail.c:401
+#: src/tail.c:400
 #, fuzzy, c-format
 msgid "%s: cannot seek to end-relative offset %s"
 msgstr "%s: 終了点からの相対オフセット %s%s を seek できません"
 
-#: src/tail.c:849
+#: src/tail.c:848
 #, c-format
 msgid "`%s' has become inaccessible"
 msgstr "`%s' はアクセス不能になりました"
 
-#: src/tail.c:866
+#: src/tail.c:865
 #, c-format
 msgid "`%s' has been replaced with an untailable file; giving up on this name"
 msgstr ""
 "`%s' は末尾を捕捉できないファイルで置き換えられたので, このファイル名について"
 "は処理を終了"
 
-#: src/tail.c:887
+#: src/tail.c:886
 #, c-format
 msgid "`%s' has become accessible"
 msgstr "`%s' はアクセス可能になりました"
 
-#: src/tail.c:895
+#: src/tail.c:894
 #, c-format
 msgid "`%s' has appeared;  following end of new file"
 msgstr "`%s' が現れました. 新しいファイルのファイル末尾を捕捉します"
 
-#: src/tail.c:906
+#: src/tail.c:905
 #, c-format
 msgid "`%s' has been replaced;  following end of new file"
 msgstr "`%s' は置き換えられました. 新しいファイルのファイル末尾を捕捉します"
 
-#: src/tail.c:1031
+#: src/tail.c:1030
 #, c-format
 msgid "%s: file truncated"
 msgstr "%s: ファイルが切り詰められました"
 
-#: src/tail.c:1051
+#: src/tail.c:1050
 msgid "no files remaining"
 msgstr "何もファイルは残っていません"
 
-#: src/tail.c:1278
+#: src/tail.c:1277
 #, c-format
 msgid "%s: cannot follow end of this type of file; giving up on this name"
 msgstr ""
 "%s: このタイプのファイルの終端を捕捉できないので, このファイルについては処理"
 "を終了します"
 
-#: src/tail.c:1402
+#: src/tail.c:1401
 #, c-format
 msgid "%c: invalid suffix character in obsolescent option"
 msgstr "%c: 旧式オプション中の接尾文字が無効です"
 
-#: src/tail.c:1451
+#: src/tail.c:1450
 #, c-format
 msgid ""
 "too many arguments;  When using tail's obsolescent option syntax (%s)\n"
@@ -7241,7 +7270,7 @@ msgstr ""
 "指定できるファイルは 1つだけになります. 代わりに等価の -n または -c\n"
 "オプションを使ってください."
 
-#: src/tail.c:1460
+#: src/tail.c:1459
 #, c-format
 msgid ""
 "Warning: it is not portable to use two or more file arguments with\n"
@@ -7252,51 +7281,51 @@ msgstr ""
 "可搬性がよくありません. 代わりに等価の -n または -c オプションを\n"
 "使ってください."
 
-#: src/tail.c:1469
+#: src/tail.c:1468
 #, c-format
 msgid "`%s' option is obsolete; use `%s-%c %.*s'"
 msgstr "`%s' オプションは過去のものです; `%s-%c %.*s' を使ってください"
 
-#: src/tail.c:1549
+#: src/tail.c:1548
 #, c-format
 msgid "%s: invalid maximum number of unchanged stats between opens"
 msgstr "%s: 無変化の状態の最大数が無効です"
 
-#: src/tail.c:1561
+#: src/tail.c:1560
 #, c-format
 msgid "%s: invalid maximum number of consecutive size changes"
 msgstr "%s: サイズの継続変化の最大数が無効です"
 
-#: src/tail.c:1573
+#: src/tail.c:1572
 #, c-format
 msgid "%s: invalid PID"
 msgstr "%s: 無効なプロセス番号です"
 
-#: src/tail.c:1588
+#: src/tail.c:1587
 #, c-format
 msgid "%s: invalid number of seconds"
 msgstr "%s: 無効な秒数です"
 
-#: src/tail.c:1607
+#: src/tail.c:1606
 msgid "warning: --retry is useful only when following by name"
 msgstr "警告: --retry はファイル名が指定されているときだけ意味があります"
 
-#: src/tail.c:1611
+#: src/tail.c:1610
 msgid "warning: PID ignored; --pid=PID is useful only when following"
 msgstr ""
 "警告: PID は無視されます. --pid=PID は --follow (-f) を指定している場合のみ意"
 "味があります"
 
-#: src/tail.c:1614
+#: src/tail.c:1613
 msgid "warning: --pid=PID is not supported on this system"
 msgstr "警告: --pid=PID はこのシステムではサポートされていません"
 
-#: src/tee.c:33
+#: src/tee.c:32
 #, fuzzy
 msgid "Mike Parker, Richard M. Stallman, and David MacKenzie"
 msgstr "Richard Stallman と David MacKenzie"
 
-#: src/tee.c:64
+#: src/tee.c:63
 msgid ""
 "Copy standard input to each FILE, and also to standard output.\n"
 "\n"
@@ -7308,122 +7337,116 @@ msgstr ""
 "  -a, --append              指定されたファイルに追加し, 上書きしない\n"
 "  -i, --ignore-interrupts   割込みシグナルを無視\n"
 
-#: src/test.c:208
+#: src/test.c:203
 msgid "argument expected\n"
 msgstr "引数が必要です\n"
 
-#: src/test.c:216
-#, c-format
-msgid "integer expression expected %s\n"
+#: src/test.c:211
+#, fuzzy, c-format
+msgid "%s: integer expression expected\n"
 msgstr "%s には, 整数表現が必要です\n"
 
-#: src/test.c:334
+#: src/test.c:341
 msgid "')' expected\n"
 msgstr "')' がありません\n"
 
-#: src/test.c:337
+#: src/test.c:344
 #, c-format
 msgid "')' expected, found %s\n"
 msgstr "')' があるべきところに, %s があります\n"
 
-#: src/test.c:353 src/test.c:886
+#: src/test.c:361 src/test.c:888
 #, c-format
 msgid "%s: unary operator expected\n"
 msgstr "%s: ユーナリ演算子があるはずです\n"
 
-#: src/test.c:381 src/test.c:912
+#: src/test.c:411
+msgid "before -lt"
+msgstr "-lt の前"
+
+#: src/test.c:419
+msgid "after -lt"
+msgstr "-lt の後"
+
+#: src/test.c:433
+msgid "before -le"
+msgstr "-le の前"
+
+#: src/test.c:440
+msgid "after -le"
+msgstr "-le の後"
+
+#: src/test.c:456
+msgid "before -gt"
+msgstr "-gt の前"
+
+#: src/test.c:463
+msgid "after -gt"
+msgstr "-gt の後"
+
+#: src/test.c:477
+msgid "before -ge"
+msgstr "-ge の前"
+
+#: src/test.c:484
+msgid "after -ge"
+msgstr "-ge の後"
+
+#: src/test.c:499
+msgid "-nt does not accept -l\n"
+msgstr "-nt は -l を受け付けません\n"
+
+#: src/test.c:513
+msgid "before -ne"
+msgstr "-ne の前"
+
+#: src/test.c:520
+msgid "after -ne"
+msgstr "-ne の後"
+
+#: src/test.c:536
+msgid "before -eq"
+msgstr "-eq の前"
+
+#: src/test.c:543
+msgid "after -eq"
+msgstr "-eq の後"
+
+#: src/test.c:554
+msgid "-ef does not accept -l\n"
+msgstr "-ef は -l を受け付けません\n"
+
+#: src/test.c:573
+msgid "-ot does not accept -l\n"
+msgstr "-ot は -l を受け付けません\n"
+
+#: src/test.c:582
+#, fuzzy
+msgid "unknown binary operator\n"
+msgstr "未知のシステムエラー"
+
+#: src/test.c:768
+msgid "after -t"
+msgstr "-t の後"
+
+#: src/test.c:916
 #, c-format
 msgid "%s: binary operator expected\n"
 msgstr "%s: バイナリ演算子があるはずです\n"
 
-#: src/test.c:416
-msgid "before -lt"
-msgstr "-lt の前"
-
-#: src/test.c:424
-msgid "after -lt"
-msgstr "-lt の後"
-
-#: src/test.c:438
-msgid "before -le"
-msgstr "-le の前"
-
-#: src/test.c:445
-msgid "after -le"
-msgstr "-le の後"
-
-#: src/test.c:461
-msgid "before -gt"
-msgstr "-gt の前"
-
-#: src/test.c:468
-msgid "after -gt"
-msgstr "-gt の後"
-
-#: src/test.c:482
-msgid "before -ge"
-msgstr "-ge の前"
-
-#: src/test.c:489
-msgid "after -ge"
-msgstr "-ge の後"
-
-#: src/test.c:504
-msgid "-nt does not accept -l\n"
-msgstr "-nt は -l を受け付けません\n"
-
-#: src/test.c:518
-msgid "before -ne"
-msgstr "-ne の前"
-
-#: src/test.c:525
-msgid "after -ne"
-msgstr "-ne の後"
-
-#: src/test.c:541
-msgid "before -eq"
-msgstr "-eq の前"
-
-#: src/test.c:548
-msgid "after -eq"
-msgstr "-eq の後"
-
-#: src/test.c:559
-msgid "-ef does not accept -l\n"
-msgstr "-ef は -l を受け付けません\n"
-
-#: src/test.c:578
-msgid "-ot does not accept -l\n"
-msgstr "-ot は -l を受け付けません\n"
-
-#: src/test.c:585
+#: src/test.c:976
 #, fuzzy
-msgid "unknown binary operator"
-msgstr "未知のシステムエラー"
-
-#: src/test.c:773
-msgid "after -t"
-msgstr "-t の後"
-
-#: src/test.c:971
-#, fuzzy, c-format
 msgid ""
-"Usage: %s EXPRESSION\n"
+"Usage: test EXPRESSION\n"
 "  or:  [ EXPRESSION ]\n"
-"  or:  %s OPTION\n"
+"  or:  [ OPTION\n"
+"Exit with the status determined by EXPRESSION.\n"
+"\n"
 msgstr ""
 "使用法: %s [ファイル]...\n"
 "または: %s [オプション]\n"
 
-#: src/test.c:977
-msgid ""
-"Exit with the status determined by EXPRESSION.\n"
-"\n"
-msgstr ""
-"式によって決められた状態で終了.\n"
-"\n"
-
-#: src/test.c:983
+#: src/test.c:985
 msgid ""
 "\n"
 "EXPRESSION is true or false and sets exit status.  It is one of:\n"
@@ -7431,7 +7454,7 @@ msgstr ""
 "\n"
 "式は真か偽であり, 終了状態を設定. 式は以下のうちの 1つ:\n"
 
-#: src/test.c:987
+#: src/test.c:989
 msgid ""
 "\n"
 "  ( EXPRESSION )               EXPRESSION is true\n"
@@ -7445,7 +7468,7 @@ msgstr ""
 "  式1 -a 式2           式1 と 式2 の両方が真\n"
 "  式1 -o 式2           式1 または 式2 のどちらかが真\n"
 
-#: src/test.c:994
+#: src/test.c:996
 msgid ""
 "\n"
 "  [-n] STRING          the length of STRING is nonzero\n"
@@ -7459,7 +7482,7 @@ msgstr ""
 "  STRING1 = STRING2    文字列が等しい\n"
 "  STRING1 != STRING2   文字列が等しくない\n"
 
-#: src/test.c:1001
+#: src/test.c:1003
 msgid ""
 "\n"
 "  INTEGER1 -eq INTEGER2   INTEGER1 is equal to INTEGER2\n"
@@ -7477,7 +7500,7 @@ msgstr ""
 "  INTEGER1 -lt INTEGER2   INTEGER1 が INTEGER2 未満\n"
 "  INTEGER1 -ne INTEGER2   INTEGER1 が INTEGER2 に等しくない\n"
 
-#: src/test.c:1010
+#: src/test.c:1012
 msgid ""
 "\n"
 "  FILE1 -ef FILE2   FILE1 and FILE2 have the same device and inode numbers\n"
@@ -7489,7 +7512,7 @@ msgstr ""
 "  FILE1 -nt FILE2   FILE1 が FILE2 より (更新された時刻が) 新しい\n"
 "  FILE1 -ot FILE2   FILE1 が FILE2 より古い\n"
 
-#: src/test.c:1016
+#: src/test.c:1018
 msgid ""
 "\n"
 "  -b FILE     FILE exists and is block special\n"
@@ -7503,7 +7526,7 @@ msgstr ""
 "  -d FILE     FILE が存在し, 且つディレクトリである\n"
 "  -e FILE     FILE が存在する\n"
 
-#: src/test.c:1023
+#: src/test.c:1025
 msgid ""
 "  -f FILE     FILE exists and is a regular file\n"
 "  -g FILE     FILE exists and is set-group-ID\n"
@@ -7517,7 +7540,7 @@ msgstr ""
 "  -G FILE     FILE が存在し, 且つ実効グループ ID に属している\n"
 "  -k FILE     FILE が存在し, 且つ sticky ビットが設定されている\n"
 
-#: src/test.c:1030
+#: src/test.c:1032
 msgid ""
 "  -L FILE     FILE exists and is a symbolic link (same as -h)\n"
 "  -O FILE     FILE exists and is owned by the effective user ID\n"
@@ -7531,7 +7554,7 @@ msgstr ""
 "  -r FILE     FILE が存在し, 且つ読み込み可能である\n"
 "  -s FILE     FILE が存在し, 且つ 0 より大きいサイズである\n"
 
-#: src/test.c:1037
+#: src/test.c:1039
 msgid ""
 "  -S FILE     FILE exists and is a socket\n"
 "  -t [FD]     file descriptor FD (stdout by default) is opened on a "
@@ -7546,7 +7569,7 @@ msgstr ""
 "  -w FILE     FILE が存在し, 且つ書き込み可能である\n"
 "  -x FILE     FILE が存在し, 且つ実行可能である\n"
 
-#: src/test.c:1044
+#: src/test.c:1046
 msgid ""
 "\n"
 "Beware that parentheses need to be escaped (e.g., by backslashes) for "
@@ -7558,15 +7581,15 @@ msgstr ""
 "ということに注意してください.\n"
 "INTEGER は文字列 STRING の長さを示す -l STRING である場合もあります.\n"
 
-#: src/test.c:1059
-msgid "FIXME: ksb and mjb"
-msgstr "FIXME: ksb と mjb"
+#: src/test.c:1061
+msgid "Kevin Braunsdorf and Matthew Bradburn"
+msgstr ""
 
-#: src/test.c:1099
+#: src/test.c:1105
 msgid "missing `]'\n"
 msgstr "`]'が足りません\n"
 
-#: src/test.c:1112
+#: src/test.c:1120
 #, fuzzy
 msgid "too many arguments\n"
 msgstr "引数が多すぎます"
@@ -7656,12 +7679,12 @@ msgstr ""
 msgid "file arguments missing"
 msgstr "引数が足りません"
 
-#: src/tr.c:327
+#: src/tr.c:325
 #, c-format
 msgid "Usage: %s [OPTION]... SET1 [SET2]\n"
 msgstr "使用法: %s [オプション]... SET1 [SET2]\n"
 
-#: src/tr.c:331
+#: src/tr.c:329
 msgid ""
 "Translate, squeeze, and/or delete characters from standard input,\n"
 "writing to standard output.\n"
@@ -7681,7 +7704,7 @@ msgstr ""
 "  -s, --squeeze-repeats   繰り返される文字の列を 1 文字に圧縮\n"
 "  -t, --truncate-set1     SET1 の長さを SET2 の長さに切り捨て\n"
 
-#: src/tr.c:344
+#: src/tr.c:342
 msgid ""
 "\n"
 "SETs are specified as strings of characters.  Most represent themselves.\n"
@@ -7709,7 +7732,7 @@ msgstr ""
 "  \\r              復帰\n"
 "  \\t              水平タブ\n"
 
-#: src/tr.c:358
+#: src/tr.c:356
 msgid ""
 "  \\v              vertical tab\n"
 "  CHAR1-CHAR2     all characters from CHAR1 to CHAR2 in ascending order\n"
@@ -7733,7 +7756,7 @@ msgstr ""
 "  [:cntrl:]       全ての制御文字\n"
 "  [:digit:]       全ての数字\n"
 
-#: src/tr.c:369
+#: src/tr.c:367
 msgid ""
 "  [:graph:]       all printable characters, not including space\n"
 "  [:lower:]       all lower case letters\n"
@@ -7753,7 +7776,7 @@ msgstr ""
 "  [:xdigit:]      全ての 16 進数数値\n"
 "  [=CHAR=]        全ての CHAR と等価な文字. 等価クラス\n"
 
-#: src/tr.c:379
+#: src/tr.c:377
 msgid ""
 "\n"
 "Translation occurs if -d is not given and both SET1 and SET2 appear.\n"
@@ -7766,7 +7789,7 @@ msgstr ""
 "の\n"
 "長さ分を満たすため必要に応じてその最後の文字で展開します. "
 
-#: src/tr.c:385
+#: src/tr.c:383
 msgid ""
 "Excess characters\n"
 "of SET2 are ignored.  Only [:lower:] and [:upper:] are guaranteed to\n"
@@ -7778,7 +7801,7 @@ msgstr ""
 "保証されます. これらのオプションは大文字と小文字との置換の指定を行なう際の\n"
 "組み合わせとして利用できます. "
 
-#: src/tr.c:391
+#: src/tr.c:389
 msgid ""
 "-s uses SET1 if not\n"
 "translating nor deleting; else squeezing uses SET2 and occurs after\n"
@@ -7789,7 +7812,7 @@ msgstr ""
 "後\n"
 "SET2 を利用した文字列の圧縮を行ないます.\n"
 
-#: src/tr.c:557
+#: src/tr.c:555
 #, c-format
 msgid ""
 "warning: the ambiguous octal escape \\%c%c%c is being\n"
@@ -7798,61 +7821,61 @@ msgstr ""
 "警告: 曖昧な 8 進数エスケープ \\%c%c%c です\n"
 "\t2 バイトの列 \\0%c%c, `%c' として解釈されました"
 
-#: src/tr.c:566
+#: src/tr.c:564
 msgid "invalid backslash escape at end of string"
 msgstr "文字列の終端でのバックスラッシュエスケープが無効"
 
-#: src/tr.c:572
+#: src/tr.c:570
 #, c-format
 msgid "invalid backslash escape `\\%c'"
 msgstr "無効なバックスラッシュエスケープ `\\%c'"
 
-#: src/tr.c:725
+#: src/tr.c:723
 #, c-format
 msgid "range-endpoints of `%s-%s' are in reverse collating sequence order"
 msgstr "範囲指定 `%s-%s' の端点が逆順に指定されています"
 
-#: src/tr.c:906
+#: src/tr.c:904
 #, c-format
 msgid "invalid repeat count `%s' in [c*n] construct"
 msgstr "[c*n] の構成内の `%s' は無効な繰り返し回数です"
 
-#: src/tr.c:999
+#: src/tr.c:997
 msgid "missing character class name `[::]'"
 msgstr "文字クラス名がありません `[::]'"
 
-#: src/tr.c:1002
+#: src/tr.c:1000
 msgid "missing equivalence class character `[==]'"
 msgstr "等価クラスの文字がありません `[==]'"
 
-#: src/tr.c:1025
+#: src/tr.c:1023
 #, c-format
 msgid "invalid character class `%s'"
 msgstr "`%s' は無効な文字種類です"
 
-#: src/tr.c:1050
+#: src/tr.c:1048
 #, c-format
 msgid "%s: equivalence class operand must be a single character"
 msgstr "%s: 等価クラス演算子は一つの文字でなければなりません"
 
-#: src/tr.c:1522
+#: src/tr.c:1520
 msgid "the [c*] repeat construct may not appear in string1"
 msgstr "[c*] 繰り返し回数指定は, 1 つ目の文字列中では利用できません"
 
-#: src/tr.c:1532
+#: src/tr.c:1530
 msgid "only one [c*] repeat construct may appear in string2"
 msgstr "[c*] 繰り返し回数指定は, 2 つめの文字列中では 1 つだけ利用できません"
 
-#: src/tr.c:1540
+#: src/tr.c:1538
 msgid "[=c=] expressions may not appear in string2 when translating"
 msgstr "置換の時には, 2 つ目の文字列中で [=c=] 形式の表現はできません"
 
-#: src/tr.c:1553
+#: src/tr.c:1551
 msgid "when not truncating set1, string2 must be non-empty"
 msgstr ""
 "SET1 を切り捨てるのではない場合は, 2 つめの文字列を指定しなければなりません"
 
-#: src/tr.c:1562
+#: src/tr.c:1560
 msgid ""
 "when translating with complemented character classes,\n"
 "string2 must map all characters in the domain to one"
@@ -7860,42 +7883,42 @@ msgstr ""
 "補集合文字クラスで置換を行なうとき, 2 つ目の文字列は該当する文字の全ての\n"
 "置換結果を特定できなければなりません"
 
-#: src/tr.c:1569
+#: src/tr.c:1567
 msgid ""
 "when translating, the only character classes that may appear in\n"
 "string2 are `upper' and `lower'"
 msgstr ""
 "置換の時, 2 つめの文字列中で利用できる文字クラスは, 大文字と小文字だけです"
 
-#: src/tr.c:1578
+#: src/tr.c:1576
 msgid "the [c*] construct may appear in string2 only when translating"
 msgstr "置換を行なう場合 [c*] は, 2 つ目の文字列でのみ利用できます"
 
-#: src/tr.c:1854
+#: src/tr.c:1852
 msgid "two strings must be given when translating"
 msgstr "置換を行なう場合, 2 つの文字列が与えられなければなりません"
 
-#: src/tr.c:1857
+#: src/tr.c:1855
 msgid "two strings must be given when both deleting and squeezing repeats"
 msgstr ""
 "削除及び繰り返し文字圧縮の両方を行なう場合, 2 つの文字列が与えられなければ\n"
 "なりません"
 
-#: src/tr.c:1871
+#: src/tr.c:1869
 msgid "only one string may be given when deleting without squeezing repeats"
 msgstr ""
 "繰り返しの圧縮をしないで削除するときには, 一つの文字列だけを受け付けます"
 
-#: src/tr.c:1877
+#: src/tr.c:1875
 msgid "at least one string must be given when squeezing repeats"
 msgstr ""
 "繰り返しの圧縮を行うには, 最低限 1 つの文字列が与えられなければなりません"
 
-#: src/tr.c:1968
+#: src/tr.c:1966
 msgid "misaligned [:upper:] and/or [:lower:] construct"
 msgstr "[:upper:] と [:lower:] との構成が一致しません"
 
-#: src/tr.c:1991
+#: src/tr.c:1989
 msgid ""
 "invalid identity mapping;  when translating, any [:lower:] or [:upper:]\n"
 "construct in string1 must be aligned with a corresponding construct\n"
@@ -7907,7 +7930,7 @@ msgstr ""
 "と\n"
 "       一致しなければなりません."
 
-#: src/true.c:34
+#: src/true.c:32
 #, c-format
 msgid ""
 "Usage: %s [ignored command line arguments]\n"
@@ -7924,7 +7947,7 @@ msgstr ""
 "以下のオプションは名前を短縮できない.\n"
 "\n"
 
-#: src/tsort.c:97
+#: src/tsort.c:96
 #, c-format
 msgid ""
 "Usage: %s [OPTION] [FILE]\n"
@@ -7938,17 +7961,17 @@ msgstr ""
 "す.\n"
 "\n"
 
-#: src/tsort.c:495
+#: src/tsort.c:494
 #, fuzzy, c-format
 msgid "%s: input contains an odd number of tokens"
 msgstr "%s: 入力にループが含まれています:"
 
-#: src/tsort.c:537
+#: src/tsort.c:536
 #, c-format
 msgid "%s: input contains a loop:"
 msgstr "%s: 入力にループが含まれています:"
 
-#: src/tsort.c:579
+#: src/tsort.c:578
 msgid "only one argument may be specified"
 msgstr "引数を一つだけ指定できます"
 
@@ -7966,7 +7989,7 @@ msgstr ""
 msgid "not a tty"
 msgstr "tty ではありません"
 
-#: src/uname.c:111
+#: src/uname.c:110
 msgid ""
 "Print certain system information.  With no OPTION, same as -s.\n"
 "\n"
@@ -7982,7 +8005,7 @@ msgstr ""
 "  -n, --nodename           ネットワークノードホスト名を表示\n"
 "  -r, --kernel-release     カーネルリリースを表示\n"
 
-#: src/uname.c:119
+#: src/uname.c:118
 msgid ""
 "  -v, --kernel-version     print the kernel version\n"
 "  -m, --machine            print the machine hardware name\n"
@@ -7996,12 +8019,16 @@ msgstr ""
 "  -i, --hardware-platform  ハードウェアプラットフォームを表示\n"
 "  -o, --operating-system   オペレーティングシステムを表示\n"
 
-#: src/uname.c:230
+#: src/uname.c:229
 #, fuzzy
 msgid "cannot get system name"
 msgstr "一時ファイルを作成できません"
 
-#: src/unexpand.c:378
+#: src/unexpand.c:151
+msgid "tab size contains an invalid character"
+msgstr "タブサイズの指定に不正な文字が含まれています"
+
+#: src/unexpand.c:377
 msgid ""
 "Convert spaces in each FILE to tabs, writing to standard output.\n"
 "With no FILE, or when FILE is -, read standard input.\n"
@@ -8012,7 +8039,7 @@ msgstr ""
 "す.\n"
 "\n"
 
-#: src/unexpand.c:386
+#: src/unexpand.c:385
 #, fuzzy
 msgid ""
 "  -a, --all        convert all whitespace, instead of just initial "
@@ -8026,17 +8053,17 @@ msgstr ""
 "  -t, --tabs=NUMBER   8 の代わりに NUMBER 個の空白をタブに変更\n"
 "  -t, --tabs=LIST     カンマで区切った LIST でタブの位置を明示的に指定\n"
 
-#: src/unexpand.c:464
+#: src/unexpand.c:463
 msgid "`-LIST' option is obsolete; use `--first-only -t LIST'"
 msgstr ""
 "`-LIST' オプションは過去のものです. `--first-only -t LIST' を使ってください"
 
-#: src/uniq.c:135
+#: src/uniq.c:134
 #, c-format
 msgid "Usage: %s [OPTION]... [INPUT [OUTPUT]]\n"
 msgstr "使用法: %s [オプション]... [入力元 [出力先]]\n"
 
-#: src/uniq.c:139
+#: src/uniq.c:138
 msgid ""
 "Discard all but one of successive identical lines from INPUT (or\n"
 "standard input), writing to OUTPUT (or standard output).\n"
@@ -8046,7 +8073,7 @@ msgstr ""
 "書き込みます.\n"
 "\n"
 
-#: src/uniq.c:147
+#: src/uniq.c:146
 msgid ""
 "  -c, --count           prefix lines by the number of occurrences\n"
 "  -d, --repeated        only print duplicate lines\n"
@@ -8054,7 +8081,7 @@ msgstr ""
 "  -c, --count           入力中に続けて出現した行の回数を表示\n"
 "  -d, --repeated        重複した行のみを出力\n"
 
-#: src/uniq.c:151
+#: src/uniq.c:150
 msgid ""
 "  -D, --all-repeated[=delimit-method] print all duplicate lines\n"
 "                        delimit-method={none(default),prepend,separate}\n"
@@ -8072,11 +8099,11 @@ msgstr ""
 "  -s, --skip-chars=N    最初のN文字を比較しない\n"
 "  -u, --unique          重複がなかった行のみを出力\n"
 
-#: src/uniq.c:160
+#: src/uniq.c:159
 msgid "  -w, --check-chars=N   compare no more than N characters in lines\n"
 msgstr "  -w, --check-chars=N   行中, N 文字以上を比較しない\n"
 
-#: src/uniq.c:165
+#: src/uniq.c:164
 msgid ""
 "\n"
 "A field is a run of whitespace, then non-whitespace characters.\n"
@@ -8086,29 +8113,29 @@ msgstr ""
 "フィールドとは, 空白文字で区切られた, 空白以外の文字からなる文字列を\n"
 "指します. 最初のフィールドを 1 として数えます.\n"
 
-#: src/uniq.c:433 src/uniq.c:450
+#: src/uniq.c:432 src/uniq.c:449
 #, c-format
 msgid "extra operand `%s'"
 msgstr "余計な演算 `%s'"
 
-#: src/uniq.c:473 src/uniq.c:499
+#: src/uniq.c:472 src/uniq.c:498
 msgid "invalid number of fields to skip"
 msgstr "スキップするフィールド数の指定が無効です"
 
-#: src/uniq.c:508
+#: src/uniq.c:507
 msgid "invalid number of bytes to skip"
 msgstr "スキップするバイト数の指定が無効です"
 
-#: src/uniq.c:517
+#: src/uniq.c:516
 msgid "invalid number of bytes to compare"
 msgstr "比較するバイト数の指定が無効です"
 
-#: src/uniq.c:531
+#: src/uniq.c:530
 #, c-format
 msgid "`-%lu' option is obsolete; use `-f %lu'"
 msgstr "`-%lu' オプションは過去のものです; `-f %lu' を使ってください"
 
-#: src/uniq.c:539
+#: src/uniq.c:538
 msgid "printing all duplicated lines and repeat counts is meaningless"
 msgstr "全ての重複行と繰り返し回数を表示することに意味がありません"
 
@@ -8132,48 +8159,48 @@ msgstr ""
 msgid "cannot unlink %s"
 msgstr "`%s' で ioctl() を実行できません"
 
-#: src/uptime.c:129
+#: src/uptime.c:128
 msgid "couldn't get boot time"
 msgstr "ブート時刻を得られませんでした"
 
-#: src/uptime.c:136
+#: src/uptime.c:135
 #, c-format
 msgid " %2d:%02d%s  up "
 msgstr " %3$s%1$2d時%2$02d分  稼働 "
 
-#: src/uptime.c:140
+#: src/uptime.c:139
 msgid "am"
 msgstr "午前"
 
-#: src/uptime.c:140
+#: src/uptime.c:139
 msgid "pm"
 msgstr "午後"
 
-#: src/uptime.c:142
+#: src/uptime.c:141
 #, c-format
 msgid "%d day"
 msgid_plural "%d days"
 msgstr[0] "%d日"
 msgstr[1] "%d日"
 
-#: src/uptime.c:144
+#: src/uptime.c:143
 #, fuzzy, c-format
 msgid "%d user"
 msgid_plural "%d users"
 msgstr[0] "ユーザ指定が不正"
 msgstr[1] "ユーザ指定が不正"
 
-#: src/uptime.c:157
+#: src/uptime.c:156
 #, c-format
 msgid ",  load average: %.2f"
 msgstr ",  平均負荷率: %.2f"
 
-#: src/uptime.c:191 src/users.c:118
+#: src/uptime.c:190 src/users.c:117
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... [ FILE ]\n"
 msgstr "使用法: %s [オプション]... [ファイル]...\n"
 
-#: src/uptime.c:192
+#: src/uptime.c:191
 #, c-format
 msgid ""
 "Print the current time, the length of time the system has been up,\n"
@@ -8188,12 +8215,12 @@ msgstr ""
 "ファイルとして %s が指定されると, これまでの累積データを表示.\n"
 "\n"
 
-#: src/users.c:35
+#: src/users.c:34
 #, fuzzy
 msgid "Joseph Arceneaux and David MacKenzie"
 msgstr "Jay Lepreau と David MacKenzie"
 
-#: src/users.c:119
+#: src/users.c:118
 #, c-format
 msgid ""
 "Output who is currently logged in according to FILE.\n"
@@ -8205,11 +8232,11 @@ msgstr ""
 "ファイルとして %s が指定されると, これまでの累積データを表示.\n"
 "\n"
 
-#: src/wc.c:75
+#: src/wc.c:74
 msgid "Paul Rubin and David MacKenzie"
 msgstr "Paul Rubin と David MacKenzie"
 
-#: src/wc.c:129
+#: src/wc.c:139
 #, fuzzy
 msgid ""
 "Print newline, word, and byte counts for each FILE, and a total line if\n"
@@ -8227,7 +8254,7 @@ msgstr ""
 "  -m, --chars            文字数を表示\n"
 "  -l, --lines            行数を表示\n"
 
-#: src/wc.c:137
+#: src/wc.c:147
 msgid ""
 "  -L, --max-line-length  print the length of the longest line\n"
 "  -w, --words            print the word counts\n"
@@ -8235,39 +8262,39 @@ msgstr ""
 "  -L, --max-line-length  最も長い行の長さを表示\n"
 "  -w, --words            単語数を表示\n"
 
-#: src/who.c:41
+#: src/who.c:40
 msgid "Joseph Arceneaux, David MacKenzie, and Michael Stone"
 msgstr "Joseph Arceneaux, David MacKenzie および Michael Stone"
 
-#: src/who.c:223
+#: src/who.c:222
 msgid " old "
 msgstr " 昔  "
 
-#: src/who.c:433 src/who.c:436
+#: src/who.c:432 src/who.c:435
 msgid "id="
 msgstr "ID="
 
-#: src/who.c:449 src/who.c:454
+#: src/who.c:448 src/who.c:453
 msgid "term="
 msgstr "端末="
 
-#: src/who.c:451 src/who.c:455
+#: src/who.c:450 src/who.c:454
 msgid "exit="
 msgstr "終了="
 
-#: src/who.c:492
+#: src/who.c:491
 msgid "clock change"
 msgstr "時刻の変更"
 
-#: src/who.c:504 src/who.c:505
+#: src/who.c:503 src/who.c:504
 msgid "run-level"
 msgstr "run-level"
 
-#: src/who.c:508 src/who.c:509
+#: src/who.c:507 src/who.c:508
 msgid "last="
 msgstr "最後="
 
-#: src/who.c:538
+#: src/who.c:537
 #, c-format
 msgid ""
 "\n"
@@ -8276,41 +8303,41 @@ msgstr ""
 "\n"
 "ユーザ数=%u\n"
 
-#: src/who.c:544
+#: src/who.c:543
 msgid "NAME"
 msgstr "名前"
 
-#: src/who.c:544
+#: src/who.c:543
 msgid "LINE"
 msgstr "端末"
 
-#: src/who.c:544
+#: src/who.c:543
 msgid "TIME"
 msgstr "時間"
 
-#: src/who.c:544
+#: src/who.c:543
 #, fuzzy
 msgid "IDLE"
 msgstr "失敗"
 
-#: src/who.c:544
+#: src/who.c:543
 msgid "PID"
 msgstr "PID"
 
-#: src/who.c:545
+#: src/who.c:544
 msgid "COMMENT"
 msgstr "コメント"
 
-#: src/who.c:545
+#: src/who.c:544
 msgid "EXIT"
 msgstr "終了"
 
-#: src/who.c:620
+#: src/who.c:619
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... [ FILE | ARG1 ARG2 ]\n"
 msgstr "使用法: %s [オプション]... ファイル1 ファイル2\n"
 
-#: src/who.c:621
+#: src/who.c:620
 msgid ""
 "\n"
 "  -a, --all         same as -b -d --login -p -r -t -T -u\n"
@@ -8324,7 +8351,7 @@ msgstr ""
 "  -d, --dead        終了したプロセスを表示\n"
 "  -H, --heading     ヘッダ行を表示\n"
 
-#: src/who.c:628
+#: src/who.c:627
 msgid ""
 "  -i, --idle        add idle time as HOURS:MINUTES, . or old\n"
 "                    (deprecated, use -u)\n"
@@ -8336,7 +8363,7 @@ msgstr ""
 "      --login       システムログインプロセスを表示\n"
 "                    (SUS -l と等しい)\n"
 
-#: src/who.c:634
+#: src/who.c:633
 msgid ""
 "  -l, --lookup      attempt to canonicalize hostnames via DNS\n"
 "                    (-l is deprecated, use --lookup)\n"
@@ -8348,7 +8375,7 @@ msgstr ""
 "  -m                標準入力に繋がっているユーザとホスト名だけを表示\n"
 "  -p, --process     init から起動されている実行中のプロセスを表示\n"
 
-#: src/who.c:640
+#: src/who.c:639
 msgid ""
 "  -q, --count       all login names and number of users logged on\n"
 "  -r, --runlevel    print current runlevel\n"
@@ -8360,7 +8387,7 @@ msgstr ""
 "  -s, --short       名前, 行および時間のみを表示 (標準)\n"
 "  -t, --time        最後にシステムの時刻が変更された時刻を表示\n"
 
-#: src/who.c:646
+#: src/who.c:645
 msgid ""
 "  -T, -w, --mesg    add user's message status as +, - or ?\n"
 "  -u, --users       list users logged in\n"
@@ -8372,7 +8399,7 @@ msgstr ""
 "      --message     -T と同じ\n"
 "      --writable    -T と同じ\n"
 
-#: src/who.c:654
+#: src/who.c:653
 #, c-format
 msgid ""
 "\n"
@@ -8384,19 +8411,19 @@ msgstr ""
 "ファイルとして %s が指定されると, これまでの累積データを表示.\n"
 "引数1 引数2 が指定されると, -m が仮定: 通常は `am i' または `mom likes'.\n"
 
-#: src/who.c:758
+#: src/who.c:757
 msgid "Warning: -i will be removed in a future release;   use -u instead"
 msgstr ""
 "警告: -i は将来のリリースでは削除されます. 代わりに -u を使ってください"
 
-#: src/who.c:769
+#: src/who.c:768
 msgid ""
 "Warning: the meaning of '-l' will change in a future release to conform to "
 "POSIX"
 msgstr ""
 "警告: '-l' の意味は POSIX に合わせるために将来のリリースで変更されます."
 
-#: src/whoami.c:53
+#: src/whoami.c:52
 msgid ""
 "Print the user name associated with the current effective user id.\n"
 "Same as id -un.\n"
@@ -8405,12 +8432,12 @@ msgstr ""
 "現在の実効ユーザ ID に対応したユーザ名を表示. `id -un' と同じ.\n"
 "\n"
 
-#: src/whoami.c:105
+#: src/whoami.c:104
 #, c-format
 msgid "%s: cannot find username for UID %u\n"
 msgstr "%s: UID %u のユーザ名が見つかりません\n"
 
-#: src/yes.c:50
+#: src/yes.c:49
 #, fuzzy, c-format
 msgid ""
 "Usage: %s [STRING]...\n"
@@ -8419,13 +8446,23 @@ msgstr ""
 "使用法: %s [ファイル]...\n"
 "または: %s [オプション]\n"
 
-#: src/yes.c:56
+#: src/yes.c:55
 msgid ""
 "Repeatedly output a line with all specified STRING(s), or `y'.\n"
 "\n"
 msgstr ""
 "指定された全ての文字列または `y' からなる行を繰り返し出力.\n"
 "\n"
+
+#~ msgid ""
+#~ "Exit with the status determined by EXPRESSION.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "式によって決められた状態で終了.\n"
+#~ "\n"
+
+#~ msgid "FIXME: ksb and mjb"
+#~ msgstr "FIXME: ksb と mjb"
 
 #, fuzzy
 #~ msgid "unable to restore permissions of %s"
