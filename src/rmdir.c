@@ -113,7 +113,7 @@ remove_parents (char *path)
 
       /* Give a diagnostic for each attempted removal if --verbose.  */
       if (verbose)
-	error (0, errno, _("removing directory, %s"), path);
+	error (0, 0, _("removing directory, %s"), path);
 
       fail = rmdir (path);
 
@@ -215,7 +215,7 @@ main (int argc, char **argv)
 
       /* Give a diagnostic for each attempted removal if --verbose.  */
       if (verbose)
-	error (0, errno, _("removing directory, %s"), dir);
+	error (0, 0, _("removing directory, %s"), dir);
 
       fail = rmdir (dir);
 
