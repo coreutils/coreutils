@@ -56,6 +56,7 @@
 # define OPENOPTS O_RDONLY
 # define ILLFILEVAL -1
 # define READ(f, b, n) read ((f), (b), (n))
+# define CLOSE(f) close (f)
 #else
 # ifdef MSDOS
 #  define TEXT1TO1 "rb"
@@ -70,6 +71,7 @@
 # define OPENOPTS (binary != 0 ? TEXT1TO1 : TEXTCNVT)
 # define ILLFILEVAL NULL
 # define READ(f, b, n) fread ((b), 1, (n), (f))
+# define CLOSE(f) fclose (f)
 #endif
 
 #if defined __STDC__ && __STDC__
@@ -295,7 +297,7 @@ main (argc, argv)
       if (optind < argc)
 	{
 	  error (0, 0,
-	       _("no additional files may be specified when using --check"));
+		 _("no additional files may be specified when using --check"));
 	  usage (1);
 	}
 
@@ -345,14 +347,12 @@ main (argc, argv)
 	      ++n_tests;
 	      md5_file (filename, md5buffer, type_flag == 'b');
 
-	      /* Convert any upper case hex digits to lower case.  */
-	      for (cnt = 0; cnt < 32; ++cnt)
-	        if (isupper (md5num[cnt]))
-		  md5num[cnt] = tolower (md5num[cnt]);
-
+	      /* Compare generated binary number with text representation
+		 in check file.  Ignore case of hex digits.  */
 	      for (cnt = 0; cnt < 16; ++cnt)
-		if (md5num[2 * cnt] != bin2hex[md5buffer[cnt] >> 4]
-		    || md5num[2 * cnt + 1] != (bin2hex[md5buffer[cnt] & 0xf]))
+		if (tolower (md5num[2 * cnt]) != bin2hex[md5buffer[cnt] >> 4]
+		    || tolower (md5num[2 * cnt + 1])
+		       != (bin2hex[md5buffer[cnt] & 0xf]))
 		  break;
 
 	      puts (cnt < 16 ? (++n_tests_failed, _("FAILED")) : _("OK"));
@@ -481,7 +481,7 @@ md5_file (filename, resblock, binary)
 	}
       while (sum < BLOCKSIZE && n != 0);
 
-      /* RCS 1321 specifies the possible length of the file upto 2^64 bits.
+      /* RFC 1321 specifies the possible length of the file upto 2^64 bits.
 	 Here we only compute the number of bytes.  Do a double word
          increment.  */
       len[0] += sum;
@@ -497,6 +497,9 @@ md5_file (filename, resblock, binary)
        */
       process_buffer (buffer, BLOCKSIZE, &ctx);
     }
+
+  /* The complete file contents is read.  Close it now.  */
+  CLOSE (f);
 
   /* We can copy 64 byte because the buffer is always big enough.  FILLBUF
      contains the needed bits.  */
