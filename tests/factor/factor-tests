@@ -511,8 +511,25 @@ else
   esac
 fi
 test -s y.E || rm -f y.E
+$xx -1  > z.O 2> z.E
+code=$?
+if test $code != 1 ; then
+  $echo "Test z failed: ../../src/factor return code $code differs from expected value 1" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp z.O $srcdir/z.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed z"; fi ;;
+    1) $echo "Test z failed: files z.O and $srcdir/z.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test z may have failed." 1>&2;
+       $echo The command "cmp z.O $srcdir/z.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s z.E || rm -f z.E
 if test $errors = 0 ; then
-  $echo Passed all 29 tests. 1>&2
+  $echo Passed all 30 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
