@@ -1,36 +1,50 @@
-[5.0.1]
-* date's %r format directive now honors locale settings
-* md5sum --check now accepts the output of the BSD md5sum program, e.g.,
-  MD5 (f) = d41d8cd98f00b204e9800998ecf8427e
-* du no longer runs out of file descriptors unnecessarily
-* date's `-' (no-pad) format flag now affects the space-padded-by-default
-  conversion specifiers, %e, %k, %l
-* FEATURE: head now accepts --lines=-N (--bytes=-N) to print all but the
+GNU coreutils NEWS                                    -*- outline -*-
+* Major changes in release 5.0.1:
+
+** New features:
+- head now accepts --lines=-N (--bytes=-N) to print all but the
   N lines (bytes) at the end of the file
-* sleep now works on AIX systems that lack support for clock_gettime
-* df and `readlink --canonicalize' no longer corrupt the heap on
+- md5sum --check now accepts the output of the BSD md5sum program, e.g.,
+  MD5 (f) = d41d8cd98f00b204e9800998ecf8427e
+
+** Bug fixes
+- tail -f is no longer subject to a race condition that could make it
+  delay displaying the last part of a file that had stopped growing.  That
+  bug could also make tail -f give an unwarranted `file truncated' warning.
+- du no longer runs out of file descriptors unnecessarily
+- df and `readlink --canonicalize' no longer corrupt the heap on
   non-glibc, non-solaris systems
-* `env -u SOME_ALREADY_UNSET_VARIABLE' no longer dumps core on non-glibc systems
-* fmt now diagnoses invalid obsolescent width specifications like `-72x'
-* fmt now exits nonzero when unable to open an input file
-* rm now works around Darwin6.5's broken readdir function;  before `rm -rf DIR'
-  would fail to remove all files in DIR if there were more than 338.
-* tail's byte and line counts are no longer limited to OFF_T_MAX.
-  Now the limit is UINTMAX_MAX (usually 2^64).
-* tsort now fails when given an odd number of input tokens, as required by POSIX
-  Before, it would act as if the final token appeared one additional time.
-* readlink's --canonicalize option now works on systems like Solaris that
+- `env -u UNSET_VARIABLE' no longer dumps core on non-glibc systems
+- readlink's --canonicalize option now works on systems like Solaris that
   lack the canonicalize_file_name function but do have resolvepath.
-* split can now handle --bytes=N and --lines=N with N=2^31 or more.
-* `kill -t' now prints signal descriptions (rather than `?') on systems
-  like Tru64 with __sys_siglist but no strsignal function.
-* stat.c now compiles on Ultrix systems
-* mv now removes `a' in this example on all systems: touch a; ln a b; mv a b
+- mv now removes `a' in this example on all systems: touch a; ln a b; mv a b
   This behavior is contrary to POSIX (which requires that the mv command do
   nothing and exit successfully), but I suspect POSIX will change.
+- date's %r format directive now honors locale settings
+- date's `-' (no-pad) format flag now affects the space-padded-by-default
+  conversion specifiers, %e, %k, %l
+- fmt now diagnoses invalid obsolescent width specifications like `-72x'
+- fmt now exits nonzero when unable to open an input file
+- tsort now fails when given an odd number of input tokens,
+  as required by POSIX.  Before, it would act as if the final token
+  appeared one additional time.
 
-[5.0]
-* false --help now exits nonzero
+** Fewer arbitrary limitations
+- tail's byte and line counts are no longer limited to OFF_T_MAX.
+  Now the limit is UINTMAX_MAX (usually 2^64).
+- split can now handle --bytes=N and --lines=N with N=2^31 or more.
+
+** Portability
+- `kill -t' now prints signal descriptions (rather than `?') on systems
+  like Tru64 with __sys_siglist but no strsignal function.
+- stat.c now compiles on Ultrix systems
+- sleep now works on AIX systems that lack support for clock_gettime
+- rm now works around Darwin6.5's broken readdir function
+  Before `rm -rf DIR' would fail to remove all files in DIR
+  if there were more than 338.
+
+* Major changes in release 5.0:
+- false --help now exits nonzero
 
 [4.5.12]
 * printf no longer treats \x specially when POSIXLY_CORRECT is set
