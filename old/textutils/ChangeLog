@@ -1,3 +1,13 @@
+2001-02-27  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sort.c (initbuf): If the desired size cannot be
+	allocated, repeatedly halve it until allocation succeeds.
+	Reported by Solar Designer.
+
+2001-02-26  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sort.c (parse_field_count): Comment fix.
+
 2001-02-25  Paul Eggert  <eggert@twinsun.com>
 
 	* src/sort.c: Tune allocation and comparison of nodes
