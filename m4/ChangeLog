@@ -1,7 +1,7 @@
 2002-04-12  Jim Meyering  <meyering@lucent.com>
 
 	* jm-macros.m4: Don't AC_REPLACE(strnlen), now that we use
-	AC_FUNC_STRNLEN.  That would end up putting two copies of strnlen.o
+	AC_FUNC_STRNLEN.  Otherwise, we'd end up putting two copies of strnlen.o
 	in the library, and that makes some versions of ranlib object.
 
 2002-04-09  Jim Meyering  <meyering@lucent.com>
