@@ -290,10 +290,10 @@ full_filename_ (Dirstack_state const *ds, const char *filename)
 	 error involving a file name to be expanded here wouldn't ever
 	 be issued.  Use realloc and fall back on using a static buffer
 	 if memory allocation fails.  */
-      buf = realloc (buf, n_bytes_needed);
+      char *new_buf = realloc (buf, n_bytes_needed);
       n_allocated = n_bytes_needed;
 
-      if (buf == NULL)
+      if (new_buf == NULL)
 	{
 #define SBUF_SIZE 512
 #define ELLIPSES_PREFIX "[...]"
@@ -302,6 +302,7 @@ full_filename_ (Dirstack_state const *ds, const char *filename)
 	  size_t len;
 	  char *p;
 
+	  free (buf);
 	  len = right_justify (static_buf, SBUF_SIZE, filename,
 			       filename_len + 1, &p, &truncated);
 	  right_justify (static_buf, len, dir_name, dir_len, &p, &truncated);
@@ -312,6 +313,8 @@ full_filename_ (Dirstack_state const *ds, const char *filename)
 	    }
 	  return p;
 	}
+
+      buf = new_buf;
     }
 
   if (filename_len == 1 && *filename == '.' && dir_len)
