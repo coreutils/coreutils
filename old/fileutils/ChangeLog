@@ -1,6 +1,10 @@
-1998-12-19  Jim Meyering  <meyering@ascend.com>
+1998-12-22  Jim Meyering  <meyering@ascend.com>
 
 	* Version 4.1-b1.
+
+	* configure.in (ALL_LINGUAS): Add chinese (zh).
+
+1998-12-19  Jim Meyering  <meyering@ascend.com>
 
 	* tests/ln/misc: Use absolute path for final rm.
 
