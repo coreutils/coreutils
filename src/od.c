@@ -29,7 +29,12 @@
 #ifdef _AIX
  #pragma alloca
 #else /* not _AIX */
+#ifdef _WIN32
+#include <malloc.h>
+#include <io.h>
+#else
 char *alloca ();
+#endif /* not _WIN32 */
 #endif /* not _AIX */
 #endif /* not HAVE_ALLOCA_H */
 #endif /* not __GNUC__ */
@@ -85,6 +90,22 @@ typedef double LONG_DOUBLE;
 
 #ifndef MIN
 # define MIN(a,b) (((a) < (b)) ? (a) : (b))
+#endif
+
+#if defined (_WIN32) && defined (_O_BINARY)
+# define WINDOWS_SETFILEMODE_BINARY(IN_STREAM, FILENAME)		\
+    do									\
+      { /* Turn off DOS text file modes, "rb" doesn't work on stdin.  */\
+	if (_setmode (_fileno ((IN_STREAM)), _O_BINARY) == -1)		\
+          {								\
+	    error (0, errno, "%s", (FILENAME));				\
+	    err = 1;							\
+	    continue;							\
+	  }								\
+      }									\
+    while (0)
+#else
+# define WINDOWS_SETFILEMODE_BINARY(IN_STREAM, FILENAME) /* empty */
 #endif
 
 /* The default number of input bytes per output line.  */
@@ -941,6 +962,7 @@ skip (off_t n_skip)
 	      continue;
 	    }
 	}
+      WINDOWS_SETFILEMODE_BINARY (in_stream, input_filename);
 
       if (n_skip == 0)
 	break;
@@ -1189,6 +1211,7 @@ read_char (int *c)
 		  err = 1;
 		}
 	    }
+	  WINDOWS_SETFILEMODE_BINARY (in_stream, input_filename);
 	}
       while (in_stream == NULL);
     }
@@ -1261,6 +1284,7 @@ read_block (size_t n, char *block, size_t *n_bytes_in_buffer)
 		  err = 1;
 		}
 	    }
+	  WINDOWS_SETFILEMODE_BINARY (in_stream, input_filename);
 	}
       while (in_stream == NULL);
     }
