@@ -1,5 +1,7 @@
 Tue Jul  2 22:56:03 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in (VERSION): Bump to 3.12p.
+
 	* src/system.h [!EXIT_SUCCESS]: Define it.
 	[!EXIT_FAILURE]: Define it.
 
