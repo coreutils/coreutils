@@ -2,13 +2,12 @@
 # include <config.h>
 #endif
 
+#include <stddef.h>
 #include <stdio.h>
 
 #if HAVE_STDIO_EXT_H
 # include <stdio_ext.h>
 #endif
-
-#include <sys/types.h>
 
 #ifndef HAVE_DECL___FPENDING
 "this configure-time declaration test was not run"
