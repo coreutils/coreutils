@@ -72,8 +72,6 @@ gid_t getgid ();
 /* Number of bytes of a file to copy at a time. */
 #define READ_SIZE (32 * 1024)
 
-int stat ();
-
 static bool change_timestamps (const char *from, const char *to);
 static bool change_attributes (const char *path);
 static bool copy_file (const char *from, const char *to,
