@@ -71,6 +71,7 @@
 #include "argmatch.h"
 #include "xstrtol.h"
 #include "strverscmp.h"
+#include "quotearg.h"
 
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
@@ -139,7 +140,8 @@ void strip_trailing_slashes ();
 char *xstrdup ();
 void invalid_arg ();
 
-static size_t quote_filename PARAMS ((FILE *out, const char *filename));
+static size_t quote_name PARAMS ((FILE *out, const char *name,
+				  struct quoting_options const *options));
 static char *make_link_path PARAMS ((const char *path, const char *linkname));
 static int compare_atime PARAMS ((const struct fileinfo *file1,
 				  const struct fileinfo *file2));
@@ -331,19 +333,25 @@ static int output_units;
 static int dired;
 
 /* `none' means don't mention the type of files.
-   `all' means mention the types of all files.
-   `not_programs' means do so except for executables.
+   `classify' means mention file types and mark executables.
+   `file_type' means mention only file types.
 
-   Controlled by -F and -p.  */
+   Controlled by -F, -p, and --indicator-style.  */
 
 enum indicator_style
   {
-    none,                      /* default */
-    all,                       /* -F */
-    not_programs               /* -p */
+    none,	/*     --indicator-style=none */
+    classify,	/* -F, --indicator-style=classify */
+    file_type	/* -p, --indicator-style=file-type */
   };
 
 static enum indicator_style indicator_style;
+
+/* Names of indicator styles.  */
+static char const *const indicator_style_args[] =
+{
+  "none", "classify", "file-type", 0
+};
 
 /* Nonzero means use colors to mark types.  Also define the different
    colors as well as the stuff for the LS_COLORS environment variable.
@@ -446,26 +454,14 @@ struct ignore_pattern
 
 static struct ignore_pattern *ignore_patterns;
 
-/* Nonzero means quote nongraphic chars in file names.  -b  */
-
-static int quote_funny_chars;
-
 /* Nonzero means output nongraphic chars in file names as `?'.  -q  */
 
 static int qmark_funny_chars;
 
-/* Nonzero means output each file name using C syntax for a string.
-   Always accompanied by `quote_funny_chars'.
-   This mode, together with -x or -C or -m,
-   and without such frills as -F or -s,
-   is guaranteed to make it possible for a program receiving
-   the output to tell exactly what file names are present.  -Q  */
+/* Quoting options for file and dir name output.  */
 
-static int quote_as_string;
-
-/* Nonzero means use shell style quoting; it is also unambiguous.  -e  */
-
-static int quote_shell;
+static struct quoting_options *filename_quoting_options;
+static struct quoting_options *dirname_quoting_options;
 
 /* The number of chars per hardware tab stop.  Setting this to zero
    inhibits the use of TAB characters for separating columns.  -T */
@@ -522,12 +518,14 @@ static struct option const long_options[] =
   {"file-type", no_argument, 0, 'F'},
   {"si", no_argument, 0, 'H'},
   {"ignore", required_argument, 0, 'I'},
+  {"indicator-style", required_argument, 0, 14},
   {"dereference", no_argument, 0, 'L'},
   {"literal", no_argument, 0, 'N'},
   {"quote-name", no_argument, 0, 'Q'},
-  {"quote-shell", no_argument, 0, 'e'},
+  {"quoting-style", required_argument, 0, 15},
   {"recursive", no_argument, 0, 'R'},
   {"format", required_argument, 0, 12},
+  {"show-control-chars", no_argument, 0, 16},
   {"sort", required_argument, 0, 10},
   {"tabsize", required_argument, 0, 'T'},
   {"time", required_argument, 0, 11},
@@ -651,11 +649,11 @@ static int max_idx;
 #define MIN_COLUMN_WIDTH	3
 
 
-/* Write to standard output the strings PREFIX and STYLE, followed by
+/* Write to standard output PREFIX, followed by the quoting style and
    a space-separated list of the integers stored in OS all on one line.  */
 
 static void
-dired_dump_obstack (const char *prefix, const char *style, struct obstack *os)
+dired_dump_obstack (const char *prefix, struct obstack *os)
 {
   int n_pos;
 
@@ -667,7 +665,6 @@ dired_dump_obstack (const char *prefix, const char *style, struct obstack *os)
 
       pos = (size_t *) obstack_finish (os);
       fputs (prefix, stdout);
-      fputs (style, stdout);
       for (i = 0; i < n_pos; i++)
 	printf (" %d", (int) pos[i]);
       fputs ("\n", stdout);
@@ -775,13 +772,11 @@ main (int argc, char **argv)
 
   if (dired && format == long_format)
     {
-      const char *quoting_style = (quote_shell ? " -e"
-				   : quote_as_string ? " -Q"
-				   : quote_funny_chars ? " -b"
-				   : " -N");
       /* No need to free these since we're about to exit.  */
-      dired_dump_obstack ("//DIRED//", quoting_style, &dired_obstack);
-      dired_dump_obstack ("//SUBDIRED//", quoting_style, &subdired_obstack);
+      dired_dump_obstack ("//DIRED//", &dired_obstack);
+      dired_dump_obstack ("//SUBDIRED//", &subdired_obstack);
+      printf ("//DIRED-OPTIONS// --quoting-style=%s\n",
+	      quoting_style_args[get_quoting_style (filename_quoting_options)]);
     }
 
   /* Restore default color before exiting */
@@ -801,13 +796,12 @@ main (int argc, char **argv)
 static int
 decode_switches (int argc, char **argv)
 {
-  register char *p;
+  register char const *p;
   int c;
   int i;
   long int tmp_long;
 
   qmark_funny_chars = 0;
-  quote_funny_chars = 0;
 
   /* initialize all switches to default settings */
 
@@ -816,13 +810,13 @@ decode_switches (int argc, char **argv)
     case LS_MULTI_COL:
       /* This is for the `dir' program.  */
       format = many_per_line;
-      quote_funny_chars = 1;
+      set_quoting_style (&quotearg_quoting_options, escape_quoting_style);
       break;
 
     case LS_LONG_FORMAT:
       /* This is for the `vdir' program.  */
       format = long_format;
-      quote_funny_chars = 1;
+      set_quoting_style (&quotearg_quoting_options, escape_quoting_style);
       break;
 
     case LS_LS:
@@ -858,8 +852,10 @@ decode_switches (int argc, char **argv)
   all_files = 0;
   really_all_files = 0;
   ignore_patterns = 0;
-  quote_as_string = 0;
-  quote_shell = 1;
+
+  if ((p = getenv ("QUOTING_STYLE"))
+      && 0 <= (i = argmatch (p, quoting_style_args)))
+    set_quoting_style (&quotearg_quoting_options, (enum quoting_style) i);
 
   if ((p = getenv ("BLOCKSIZE"))
       && strncmp (p, "HUMAN", sizeof ("HUMAN") - 1) == 0)
@@ -879,7 +875,7 @@ decode_switches (int argc, char **argv)
 	{
 	  error (0, 0,
 	       _("ignoring invalid width in environment variable COLUMNS: %s"),
-		 p);
+		 quotearg (p));
 	}
     }
 
@@ -906,7 +902,7 @@ decode_switches (int argc, char **argv)
 	{
 	  error (0, 0,
 	   _("ignoring invalid tab size in environment variable TABSIZE: %s"),
-		 p);
+		 quotearg (p));
 	}
     }
 
@@ -925,10 +921,7 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'b':
-	  quote_funny_chars = 1;
-	  quote_as_string = 0;
-	  quote_shell = 0;
-	  qmark_funny_chars = 0;
+	  set_quoting_style (&quotearg_quoting_options, escape_quoting_style);
 	  break;
 
 	case 'c':
@@ -938,13 +931,6 @@ decode_switches (int argc, char **argv)
 
 	case 'd':
 	  immediate_dirs = 1;
-	  break;
-
-	case 'e':
-	  quote_shell = 1;
-	  quote_as_string = 0;
-	  quote_funny_chars = 0;
-	  qmark_funny_chars = 0;
 	  break;
 
 	case 'f':
@@ -997,14 +983,11 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'p':
-	  indicator_style = not_programs;
+	  indicator_style = file_type;
 	  break;
 
 	case 'q':
 	  qmark_funny_chars = 1;
-	  quote_as_string = 0;
-	  quote_funny_chars = 0;
-	  quote_shell = 0;
 	  break;
 
 	case 'r':
@@ -1031,7 +1014,8 @@ decode_switches (int argc, char **argv)
 	case 'w':
 	  if (xstrtol (optarg, NULL, 0, &tmp_long, NULL) != LONGINT_OK
 	      || tmp_long <= 0 || tmp_long > INT_MAX)
-	    error (EXIT_FAILURE, 0, _("invalid line width: %s"), optarg);
+	    error (EXIT_FAILURE, 0, _("invalid line width: %s"),
+		   quotearg (optarg));
 	  line_length = (int) tmp_long;
 	  break;
 
@@ -1058,7 +1042,7 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'F':
-	  indicator_style = all;
+	  indicator_style = classify;
 	  break;
 
 	case 'G':		/* inhibit display of group info */
@@ -1074,17 +1058,11 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'N':
-	  quote_as_string = 0;
-	  quote_funny_chars = 0;
-	  quote_shell = 0;
-	  qmark_funny_chars = 0;
+	  set_quoting_style (&quotearg_quoting_options, literal_quoting_style);
 	  break;
 
 	case 'Q':
-	  quote_as_string = 1;
-	  quote_funny_chars = 1;
-	  quote_shell = 0;
-	  qmark_funny_chars = 0;
+	  set_quoting_style (&quotearg_quoting_options, c_quoting_style);
 	  break;
 
 	case 'R':
@@ -1098,7 +1076,8 @@ decode_switches (int argc, char **argv)
 	case 'T':
 	  if (xstrtol (optarg, NULL, 0, &tmp_long, NULL) != LONGINT_OK
 	      || tmp_long < 0 || tmp_long > INT_MAX)
-	    error (EXIT_FAILURE, 0, _("invalid tab size: %s"), optarg);
+	    error (EXIT_FAILURE, 0, _("invalid tab size: %s"),
+		   quotearg (optarg));
 	  tabsize = (int) tmp_long;
 	  break;
 
@@ -1175,6 +1154,31 @@ decode_switches (int argc, char **argv)
 	    }
 	  break;
 
+	case 14:		/* --indicator-style */
+	  i = argmatch (optarg, indicator_style_args);
+	  if (i < 0)
+	    {
+	      invalid_arg (_("indicator style"), optarg, i);
+	      usage (EXIT_FAILURE);
+	    }
+	  indicator_style = (enum indicator_style) i;
+	  break;
+
+	case 15:		/* --quoting-style */
+	  i = argmatch (optarg, quoting_style_args);
+	  if (i < 0)
+	    {
+	      invalid_arg (_("quoting style"), optarg, i);
+	      usage (EXIT_FAILURE);
+	    }
+	  set_quoting_style (&quotearg_quoting_options,
+			     (enum quoting_style) i);
+	  break;
+
+	case 16:
+	  qmark_funny_chars = 0;
+	  break;
+
 	default:
 	  usage (EXIT_FAILURE);
 	}
@@ -1182,6 +1186,14 @@ decode_switches (int argc, char **argv)
 
   if (human_readable_base)
     output_units = 1;
+
+  filename_quoting_options = clone_quoting_options (&quotearg_quoting_options);
+  if (indicator_style != none)
+    for (p = "*=@|" + (int) indicator_style - 1;  *p;  p++)
+      set_char_quoting (filename_quoting_options, *p, 1);
+
+  dirname_quoting_options = clone_quoting_options (&quotearg_quoting_options);
+  set_char_quoting (dirname_quoting_options, ':', 1);
 
   return optind;
 }
@@ -1480,7 +1492,7 @@ parse_ls_color (void)
 		    }
 		}
 	      if (state == -1)
-		error (0, 0, _("unrecognized prefix: %s"), label);
+		error (0, 0, _("unrecognized prefix: %s"), quotearg (label));
 	    }
 	 break;
 
@@ -1550,7 +1562,7 @@ print_dir (const char *name, const char *realname)
   reading = opendir (name);
   if (!reading)
     {
-      error (0, errno, "%s", name);
+      error (0, errno, "%s", quotearg_colon (name));
       exit_status = 1;
       return;
     }
@@ -1566,7 +1578,7 @@ print_dir (const char *name, const char *realname)
 
   if (CLOSEDIR (reading))
     {
-      error (0, errno, "%s", name);
+      error (0, errno, "%s", quotearg_colon (name));
       exit_status = 1;
       /* Don't return; print whatever we got. */
     }
@@ -1584,7 +1596,8 @@ print_dir (const char *name, const char *realname)
     {
       DIRED_INDENT ();
       PUSH_CURRENT_DIRED_POS (&subdired_obstack);
-      dired_pos += quote_filename (stdout, realname ? realname : name);
+      dired_pos += quote_name (stdout, realname ? realname : name,
+			       dirname_quoting_options);
       PUSH_CURRENT_DIRED_POS (&subdired_obstack);
       FPUTS_LITERAL (":\n", stdout);
     }
@@ -1716,7 +1729,7 @@ gobble_file (const char *name, int explicit_arg, const char *dirname)
 
       if (val < 0)
 	{
-	  error (0, errno, "%s", path);
+	  error (0, errno, "%s", quotearg_colon (path));
 	  exit_status = 1;
 	  return 0;
 	}
@@ -1821,7 +1834,7 @@ get_link_name (const char *filename, struct fileinfo *f)
   linksize = readlink (filename, linkbuf, PATH_MAX + 1);
   if (linksize < 0)
     {
-      error (0, errno, "%s", filename);
+      error (0, errno, "%s", quotearg_colon (filename));
       exit_status = 1;
     }
   else
@@ -2312,134 +2325,34 @@ print_long_format (const struct fileinfo *f)
     print_type_indicator (f->stat.st_mode);
 }
 
-/* If OUT is not null, output a quoted representation of the file name P.
+/* Output to OUT a quoted representation of the file name P,
+   using OPTIONS to control quoting.
    Return the number of characters in P's quoted representation.  */
 
 static size_t
-quote_filename (register FILE *out, register const char *p)
+quote_name (FILE *out, const char *p, struct quoting_options const *options)
 {
-  register unsigned char c;
-  register size_t len;
-#define OUTCHAR(c) do { len++; if (out) putc (c, out); } while (0)
+  char smallbuf[BUFSIZ];
+  size_t len = quotearg_buffer (smallbuf, sizeof smallbuf, p, -1, options);
+  char *buf;
 
-  if (quote_shell)
-    {
-      const char *p0 = p;
-
-      switch (*p)
-	{
-	case '\0': case '#': case '~':
-	  break;
-
-	default:
-	  for (;; p++)
-	    {
-	      switch (*p)
-		{
-		default:
-		  continue;
-
-		case '\t': case '\n': case ' ':
-		case '!': /* special in csh */
-		case '"': case '$': case '&': case '\'':
-		case '(': case ')': case '*': case ';':
-		case '<': case '>': case '?': case '[': case '\\':
-		case '^': /* synonym for | in old /bin/sh, e.g. SunOS 4.1.4 */
-		case '`': case '|':
-		  break;
-
-		case '\0':
-		  switch (p[-1])
-		    {
-		    case '=': case '@':
-		      /* These require quoting if at the end of the file name,
-			 to avoid ambiguity with the output of -F or -p.  */
-		      break;
-
-		    default:
-		      len = p - p0;
-		      if (out)
-			fwrite (p0, 1, len, out);
-		      return len;
-		    }
-
-		  break;
-		}
-
-	      break;
-	    }
-	}
-
-      /* Shell quoting is needed.  */
-
-      p = p0;
-      len = 0;
-      OUTCHAR ('\'');
-
-      while ((c = *p++))
-	{
-	  OUTCHAR (c);
-
-	  if (c == '\'')
-	    {
-	      OUTCHAR ('\\');
-	      OUTCHAR ('\'');
-	      OUTCHAR ('\'');
-	    }
-	}
-
-      OUTCHAR ('\'');
-    }
+  if (len < sizeof smallbuf)
+    buf = smallbuf;
   else
     {
-      len = 0;
-
-      if (quote_as_string)
-	OUTCHAR ('"');
-
-      while ((c = *p++))
-	{
-	  if (quote_funny_chars)
-	    {
-	      switch (c)
-		{
-		case '\\': OUTCHAR ('\\'); break;
-		case '\n': OUTCHAR ('\\'); c = 'n'; break;
-		case '\b': OUTCHAR ('\\'); c = 'b'; break;
-		case '\r': OUTCHAR ('\\'); c = 'r'; break;
-		case '\t': OUTCHAR ('\\'); c = 't'; break;
-		case '\f': OUTCHAR ('\\'); c = 'f'; break;
-
-		case ' ':
-		  if (!quote_as_string)
-		    OUTCHAR ('\\');
-		  break;
-
-		case '"':
-		  if (quote_as_string)
-		    OUTCHAR ('\\');
-		  break;
-
-		default:
-		  if (!ISGRAPH (c))
-		    {
-		      OUTCHAR ('\\');
-		      OUTCHAR ('0' + (c >> 6));
-		      OUTCHAR ('0' + ((c >> 3) & 3));
-		      c = '0' + (c & 3);
-		    }
-		}
-	    }
-	  else if (qmark_funny_chars && !ISPRINT (c))
-	    c = '?';
-
-	  OUTCHAR (c);
-	}
-
-      if (quote_as_string)
-	OUTCHAR ('"');
+      buf = (char *) alloca (len + 1);
+      quotearg_buffer (buf, len + 1, p, -1, options);
     }
 
+  if (qmark_funny_chars)
+    {
+      size_t i;
+      for (i = 0; i < len; i++)
+	if (! ISPRINT ((unsigned char) buf[i]))
+	  buf[i] = '?';
+    }
+
+  fwrite (buf, 1, len, out);
   return len;
 }
 
@@ -2453,7 +2366,7 @@ print_name_with_quoting (const char *p, unsigned int mode, int linkok,
   if (stack)
     PUSH_CURRENT_DIRED_POS (stack);
 
-  dired_pos += quote_filename (stdout, p);
+  dired_pos += quote_name (stdout, p, filename_quoting_options);
 
   if (stack)
     PUSH_CURRENT_DIRED_POS (stack);
@@ -2520,7 +2433,7 @@ print_type_indicator (unsigned int mode)
     PUTCHAR ('=');
 #endif
 
-  if (S_ISREG (mode) && indicator_style == all
+  if (S_ISREG (mode) && indicator_style == classify
       && (mode & S_IXUGO))
     PUTCHAR ('*');
 }
@@ -2620,7 +2533,7 @@ length_of_file_name_and_frills (const struct fileinfo *f)
   if (print_block_size)
     len += 1 + block_size_size;
 
-  len += quote_filename (0, f->name);
+  len += quotearg_buffer (0, 0, f->name, -1, filename_quoting_options);
 
   if (indicator_style != none)
     {
@@ -2628,7 +2541,7 @@ length_of_file_name_and_frills (const struct fileinfo *f)
 
       if (S_ISREG (filetype))
 	{
-	  if (indicator_style == all
+	  if (indicator_style == classify
 	      && (f->stat.st_mode & S_IXUGO))
 	    len += 1;
 	}
@@ -2939,9 +2852,8 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
                                types.  WHEN may be `never', `always', or `auto'\n\
   -d, --directory            list directory entries instead of contents\n\
   -D, --dired                generate output designed for Emacs' dired mode\n\
-  -e, --quote-shell          quote entry names for shell (default)\n\
   -f                         do not sort, enable -aU, disable -lst\n\
-  -F, --classify             append a character for typing each entry\n\
+  -F, --classify             append indicator (one of */=@|) to entries\n\
       --format=WORD          across -x, commas -m, horizontal -x, long -l,\n\
                                single-column -1, verbose -l, vertical -C\n\
       --full-time            list both full date and full time\n"));
@@ -2951,6 +2863,8 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -G, --no-group             inhibit display of group information\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
   -H, --si                   likewise, but use powers of 1000 not 1024\n\
+      --indicator-style=WORD append indicator with style WORD to entry names:\n\
+                               none (default), classify (-F), file-type (-p)\n\
   -i, --inode                print index number of each file\n\
   -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\n\
   -k, --kilobytes            use 1024 blocks, not 512 despite POSIXLY_CORRECT\n\
@@ -2961,9 +2875,12 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -N, --literal              print raw entry names (don't treat e.g. control\n\
                                characters specially)\n\
   -o                         use long listing format without group info\n\
-  -p                         append a character for typing each entry\n\
+  -p, --file-type            append indicator (one of /=@|) to entries\n\
   -q, --hide-control-chars   print ? instead of non graphic characters\n\
+      --show-control-chars   show non graphic characters as-is (default)\n\
   -Q, --quote-name           enclose entry names in double quotes\n\
+      --quoting-style=WORD   use quoting style WORD for entry names:\n\
+                               literal, shell, shell-always, c, escape\n\
   -r, --reverse              reverse order while sorting\n\
   -R, --recursive            list subdirectories recursively\n\
   -s, --size                 print size of each file, in blocks\n"));
