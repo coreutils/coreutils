@@ -1,5 +1,7 @@
 Changes in release 4.1:
 [4.0j]
+* under certain conditions, chgrp would fail to affect files referenced
+  through symlinks.  Now it does.
 * ln now makes hard links to symlinks on systems that support it.
 * touch: no longer infloop on dangling symlinks
 * cp, install, ln, mv: deprecate the --version-control option.  Use --backup's
