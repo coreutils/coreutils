@@ -1,3 +1,12 @@
+2003-05-07  Paul Eggert  <eggert@twinsun.com>
+
+	* xnanosleep.c (timespec_subtract): Don't modify the 2nd arg.
+        Work even if X-Y overflows when subtracting.  Make explicit the
+        assumption that tv_nsec must be in range.
+        (clock_get_realtime): Remove.  All callers changed to invoke gettime,
+        for simplicity.
+        (xnanosleep): Check for gettime failure every time.
+
 2003-05-06  Jim Meyering  <jim@meyering.net>
 
 	* xnanosleep.c (clock_get_realtime): Use gettime.c's gettime function,
