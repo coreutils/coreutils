@@ -1,8 +1,8 @@
 [4.5.10]
 Planned changes:
-  ftw: use save-cwd.c, not getcwd
   Andreas' suggestion re cp --no-preserve
   Rich's stub patches
+* printf no longer segfaults for a negative field width or precision
 * shred now always enables --exact for non-regular files
 * du no longer lists hard-linked files more than once
 * du no longer dumps core due to `infinite' recursion via nftw's
