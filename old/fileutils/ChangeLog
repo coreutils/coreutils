@@ -1,8 +1,22 @@
-Wed Oct 13 10:30:40 1993  Jim Meyering  (meyering@comco.com)
+Wed Oct 13 19:43:47 1993  Jim Meyering  (meyering@comco.com)
 
 	* cp.c (copy), ls.c (get_link_name): Complete Aug 27 change so
 	that we use PATH_MAX + 1 rather than sizeof(char*) as size of
 	buffer in readlink call.  This was causing spurious errors.
+
+        * cp.c (copy), mv.c (do_move), rm.c (remove_file, remove_dir):
+        Cast to `unsigned int' stat->st_mode printf arguments corresponding
+        to %o formats to avoid warnings.
+
+        * lib/Makefile.in [DEFS]: Remove -DMVDIR.  Add -DCONFIG_BROKETS.
+        (rename.o): Add a specific rule.  Use -DMVDIR=... here instead.
+
+        * src/Makefile.in [DEFS]: Add -DCONFIG_BROKETS.
+        (distclean): Don't delete dir.c and vdir.c; they aren't
+        created anymore.
+
+        * lib/Makefile.in: Make all .o files depend on $(srcdir)/../config.h.
+        * src/Makefile.in: Ditto.
 
 Sun Oct 10 13:38:54 1993  Jim Meyering  (meyering@comco.com)
 
