@@ -1249,6 +1249,9 @@ get_format_width (char **format_ptr)
      allow for enough octal digits to represent the value of LONG_MAX.  */
   count = ((*format_ptr == start)
 	   ? bytes_to_octal_digits[sizeof (long)]
+	   /* FIXME: don't use atoi, it may silently overflow.
+	      Besides, we know the result is non-negative, so shouldn't
+	      need that cast.  */
 	   : (unsigned) atoi (start));
   **format_ptr = ch_save;
   return count;
