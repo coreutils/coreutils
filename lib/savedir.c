@@ -15,28 +15,41 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-/* Written by David MacKenzie <djm@ai.mit.edu>. */
+/* Written by David MacKenzie <djm@gnu.ai.mit.edu>. */
+
+#ifdef HAVE_CONFIG_H
+#if defined (CONFIG_BROKETS)
+/* We use <config.h> instead of "config.h" so that a compilation
+   using -I. -I$srcdir will use ./config.h rather than $srcdir/config.h
+   (which it would do because it found this file in $srcdir).  */
+#include <config.h>
+#else
+#include "config.h"
+#endif
+#endif
 
 #include <sys/types.h>
+
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
 #ifdef DIRENT
 #include <dirent.h>
-#ifdef direct
-#undef direct
-#endif
-#define direct dirent
 #define NLENGTH(direct) (strlen((direct)->d_name))
-#else
+#else /* not DIRENT */
+#define dirent direct
 #define NLENGTH(direct) ((direct)->d_namlen)
-#ifdef USG
 #ifdef SYSNDIR
 #include <sys/ndir.h>
-#else
-#include <ndir.h>
-#endif
-#else
+#endif /* SYSNDIR */
+#ifdef SYSDIR
 #include <sys/dir.h>
-#endif
-#endif
+#endif /* SYSDIR */
+#ifdef NDIR
+#include <ndir.h>
+#endif /* NDIR */
+#endif /* DIRENT */
 
 #ifdef VOID_CLOSEDIR
 /* Fake a return value. */
@@ -71,7 +84,7 @@ savedir (dir, name_size)
      unsigned name_size;
 {
   DIR *dirp;
-  struct direct *dp;
+  struct dirent *dp;
   char *name_space;
   char *namep;
 
