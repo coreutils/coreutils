@@ -457,13 +457,13 @@ static int input_position;
    status if there were any.  */
 static int failed_opens = 0;
 
-/* The horizontal position we'll be at after printing a tab character
-   of width c_ from the position h_. */
-#define pos_after_tab(c_, h_) h_ - h_ % c_ + c_
-
 /* The number of spaces taken up if we print a tab character with width
    c_ from position h_. */
-#define tab_width(c_, h_) - h_ % c_ + c_
+#define TAB_WIDTH(c_, h_) ((c_) - ((h_) % (c_)))
+
+/* The horizontal position we'll be at after printing a tab character
+   of width c_ from the position h_. */
+#define POS_AFTER_TAB(c_, h_) ((h_) + TAB_WIDTH (c_, h_))
 
 /* (-NNN) Number of columns of text to print. */
 static int columns = 1;
@@ -996,7 +996,7 @@ init_parameters (int number_of_files)
       if (number_separator == input_tab_char)
 	{
 	  number_width = chars_per_number +
-	    tab_width (chars_per_input_tab,
+	    TAB_WIDTH (chars_per_input_tab,
 		       (chars_per_margin + chars_per_number));
 	}
       else
@@ -1927,7 +1927,7 @@ print_white_space (void)
   register int goal = h_old + spaces_not_printed;
 
   while (goal - h_old > 1
-	 && (h_new = pos_after_tab (chars_per_output_tab, h_old)) <= goal)
+	 && (h_new = POS_AFTER_TAB (chars_per_output_tab, h_old)) <= goal)
     {
       putchar (output_tab_char);
       h_old = h_new;
@@ -2298,7 +2298,7 @@ char_to_clump (int c)
 
   if (c == input_tab_char)
     {
-      width = tab_width (chars_per_input_tab, input_position);
+      width = TAB_WIDTH (chars_per_input_tab, input_position);
 
       if (untabify_input)
 	{
