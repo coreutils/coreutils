@@ -5,7 +5,7 @@ AC_CONFIG_SRCDIR(src/ls.c)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_HEADERS([config.h:config.hin])
 
-AM_INIT_AUTOMAKE([1.7.8 gnits dist-bzip2])
+AM_INIT_AUTOMAKE([1.8 gnits dist-bzip2])
 
 gl_USE_SYSTEM_EXTENSIONS
 jm_PERL
