@@ -127,7 +127,7 @@ libfetish_a_SOURCES = \
   full-write.c getopt.c getopt1.c getstr.c getugroups.c hard-locale.c hash.c \
   human.c idcache.c isdir.c linebuffer.c localcharset.c long-options.c \
   makepath.c md5.c memcasecmp.c memcoll.c modechange.c path-concat.c \
-  quotearg.c readtokens.c readutmp.c safe-read.c same.c save-cwd.c \
+  quotearg.c readtokens.c safe-read.c same.c save-cwd.c \
   savedir.c stripslash.c unicodeio.c userspec.c version-etc.c xgetcwd.c \
   xgethostname.c xmalloc.c xstrdup.c xstrtod.c xstrtol.c xstrtoul.c \
   xstrtoumax.c yesno.c
@@ -177,10 +177,10 @@ getopt$U.o getopt1$U.o getstr$U.o getugroups$U.o hard-locale$U.o \
 hash$U.o human$U.o idcache$U.o isdir$U.o linebuffer$U.o \
 localcharset$U.o long-options$U.o makepath$U.o md5$U.o memcasecmp$U.o \
 memcoll$U.o modechange$U.o path-concat$U.o quotearg$U.o readtokens$U.o \
-readutmp$U.o safe-read$U.o same$U.o save-cwd$U.o savedir$U.o \
-stripslash$U.o unicodeio$U.o userspec$U.o version-etc$U.o xgetcwd$U.o \
-xgethostname$U.o xmalloc$U.o xstrdup$U.o xstrtod$U.o xstrtol$U.o \
-xstrtoul$U.o xstrtoumax$U.o yesno$U.o
+safe-read$U.o same$U.o save-cwd$U.o savedir$U.o stripslash$U.o \
+unicodeio$U.o userspec$U.o version-etc$U.o xgetcwd$U.o xgethostname$U.o \
+xmalloc$U.o xstrdup$U.o xstrtod$U.o xstrtol$U.o xstrtoul$U.o \
+xstrtoumax$U.o yesno$U.o
 libfetish_a_OBJECTS =  $(am_libfetish_a_OBJECTS)
 AR = ar
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -213,7 +213,7 @@ $(DEPDIR)/memcpy.Po $(DEPDIR)/memmove.Po $(DEPDIR)/memset.Po \
 $(DEPDIR)/mktime.Po $(DEPDIR)/modechange$U.Po $(DEPDIR)/mountlist.Po \
 $(DEPDIR)/nanosleep.Po $(DEPDIR)/obstack.Po $(DEPDIR)/path-concat$U.Po \
 $(DEPDIR)/posixtm$U.Po $(DEPDIR)/putenv.Po $(DEPDIR)/quotearg$U.Po \
-$(DEPDIR)/readtokens$U.Po $(DEPDIR)/readutmp$U.Po $(DEPDIR)/realloc.Po \
+$(DEPDIR)/readtokens$U.Po $(DEPDIR)/readutmp.Po $(DEPDIR)/realloc.Po \
 $(DEPDIR)/regex.Po $(DEPDIR)/rmdir.Po $(DEPDIR)/rpmatch.Po \
 $(DEPDIR)/safe-read$U.Po $(DEPDIR)/same$U.Po $(DEPDIR)/save-cwd$U.Po \
 $(DEPDIR)/savedir$U.Po $(DEPDIR)/stat.Po $(DEPDIR)/stime.Po \
@@ -234,10 +234,10 @@ euidaccess.c fileblocks.c fnmatch.c fsusage.c ftruncate.c getdate.c \
 getgroups.c gethostname.c getline.c getloadavg.c getpass.c \
 getusershell.c group-member.c lchown.c malloc.c memchr.c memcmp.c \
 memcpy.c memmove.c memset.c mktime.c mountlist.c nanosleep.c obstack.c \
-obstack.h putenv.c realloc.c regex.c rmdir.c rpmatch.c stime.c stpcpy.c \
-strcasecmp.c strcspn.c strdup.c strftime.c strncasecmp.c strndup.c \
-strnlen.c strpbrk.c strstr.c strtod.c strtol.c strtoul.c strtoull.c \
-strtoumax.c strverscmp.c utime.c
+obstack.h putenv.c readutmp.c realloc.c regex.c rmdir.c rpmatch.c \
+stime.c stpcpy.c strcasecmp.c strcspn.c strdup.c strftime.c \
+strncasecmp.c strndup.c strnlen.c strpbrk.c strstr.c strtod.c strtol.c \
+strtoul.c strtoull.c strtoumax.c strverscmp.c utime.c
 
 
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -625,7 +625,7 @@ maintainer-clean-tags:
 @AMDEP@include $(DEPDIR)/putenv.Po
 @AMDEP@include $(DEPDIR)/quotearg$U.Po
 @AMDEP@include $(DEPDIR)/readtokens$U.Po
-@AMDEP@include $(DEPDIR)/readutmp$U.Po
+@AMDEP@include $(DEPDIR)/readutmp.Po
 @AMDEP@include $(DEPDIR)/realloc.Po
 @AMDEP@include $(DEPDIR)/regex.Po
 @AMDEP@include $(DEPDIR)/rmdir.Po
