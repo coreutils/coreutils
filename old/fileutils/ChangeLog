@@ -1,6 +1,16 @@
 Sun Jul 21 11:58:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	All this is from Ulrich Drepper.
+	* lib/rpmatch.c [STDC_HEADERS]: Guard inclusion of stdlib.h.
+	(_) [!_]: Define it.
+	(try): Add RESPONSE parameter.
+	(rpmatch): Update caller.
+	Change the regular expressions to be ^[yY] and ^[nN].
+
+	* configure.in (AC_CHECK_FUNCS): Don't check rpmatch.
+
+	* acconfig.h (HAVE_OBSTACK): Undef it.
+
+	The following is from Ulrich Drepper.
 
 	* configure.in (AC_REPLACE_FUNCS): Add rpmatch.
 	* lib/Makefile.am (EXTRA_DIST): Add rpmatch.c.
