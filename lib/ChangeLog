@@ -2,6 +2,7 @@
 
 	* hash.c (is_prime): Return explicit boolean values.
 	(hash_get_first): Return NULL to appease Irix5.6's 89.
+	Reported by Nelson Beebe.
 
 2000-10-31  Bruno Haible  <haible@clisp.cons.org>
 
