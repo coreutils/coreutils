@@ -154,12 +154,12 @@ static int
 eaccess (char *path, int mode)
 {
   struct stat st;
-  static int euid = -1;
+  static uid_t euid = -1;
 
   if (test_stat (path, &st) < 0)
     return (-1);
 
-  if (euid == -1)
+  if (euid == (uid_t) -1)
     euid = geteuid ();
 
   if (euid == 0)
