@@ -88,14 +88,15 @@ Usage: %s [OPTION]... LAST\n\
   or:  %s [OPTION]... FIRST INCREMENT LAST\n\
 "), program_name, program_name, program_name);
       printf (_("\
-Print numbers from FIRST (default 1) to LAST, moving by STEP (default 1).\n\
+Print numbers from FIRST to LAST, in steps of INCREMENT.\n\
 \n\
   -f, --format FORMAT      use printf(3) style FORMAT (default: %%g)\n\
-  -s, --separator STRING   use STRING for separating numbers (default: \\n)\n\
+  -s, --separator STRING   use STRING to separate numbers (default: \\n)\n\
   -w, --equal-width        equalize width by padding with leading zeroes\n\
       --help               display this help and exit\n\
       --version            output version information and exit\n\
 \n\
+If FIRST or INCREMENT is omitted, it defaults to 1.\n\
 FIRST, INCREMENT, and LAST are interpreted as floating point values.\n\
 INCREMENT should be positive if FIRST is smaller than LAST, and negative\n\
 otherwise.  When given, the FORMAT argument must contain exactly one of\n\
