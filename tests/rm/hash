@@ -21,7 +21,7 @@ cd $tmp
 
 # Create a hierarchy with 3*26 leaf directories, each at depth 153.
 echo "$0: creating 78 trees, each of depth 153; this will take a while..." >&2
-y=`yes |head -150 |tr '\012' /`
+y=`yes |head -n 150 |tr '\012' /`
 for i in 1 2 3; do
   for j in a b c d e f g h i j k l m n o p q r s t u v w x y z; do
     mkdir -p t/$i/$j/$y || framework_failure=1
