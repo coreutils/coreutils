@@ -547,7 +547,7 @@ swallow_file_in_memory (const char *file_name, BLOCK *block)
     file_handle = fileno (stdin);
   else
     if ((file_handle = open (file_name, O_RDONLY)) < 0)
-      error (EXIT_FAILURE, errno, file_name);
+      error (EXIT_FAILURE, errno, "%s", file_name);
 
   /* If the file is a plain, regular file, allocate the memory buffer all at
      once and swallow the file in one blow.  In other cases, read the file
@@ -555,7 +555,7 @@ swallow_file_in_memory (const char *file_name, BLOCK *block)
      once in a while, as we go.  */
 
   if (fstat (file_handle, &stat_block) < 0)
-    error (EXIT_FAILURE, errno, file_name);
+    error (EXIT_FAILURE, errno, "%s", file_name);
 
   if (S_ISREG (stat_block.st_mode))
     {
@@ -579,7 +579,7 @@ swallow_file_in_memory (const char *file_name, BLOCK *block)
 	  else
 #endif /* not MSDOS */
 
-	    error (EXIT_FAILURE, errno, file_name);
+	    error (EXIT_FAILURE, errno, "%s", file_name);
 	}
       block->end = block->start + in_memory_size;
     }
@@ -604,7 +604,7 @@ swallow_file_in_memory (const char *file_name, BLOCK *block)
 	}
 
       if (read_length < 0)
-	error (EXIT_FAILURE, errno, file_name);
+	error (EXIT_FAILURE, errno, "%s", file_name);
 
       block->end = block->start + used_length;
     }
@@ -2130,7 +2130,7 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"),
 	{
 	  fclose (stdout);
 	  if (fopen (argv[optind], "w") == NULL)
-	    error (EXIT_FAILURE, errno, argv[optind]);
+	    error (EXIT_FAILURE, errno, "%s", argv[optind]);
 	  optind++;
 	}
 
