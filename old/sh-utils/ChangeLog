@@ -1,5 +1,11 @@
 Mon Dec  9 06:58:11 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* acinclude.m4 (AC_REPLACE_GNU_GETOPT): Remove unused macro.
+	(jm_FUNC_GNU_STRFTIME): New macro.
+
+	* lib/Makefile.am (libsu_a_SOURCES): Remove strftime.c.
+	(EXTRA_DIST): Add strftime.c.
+
 	* configure.in (jm_HEADER_TIOCGWINSZ_IN_TERMIOS_H): Fix typo:
 	Change $am_cv_sys_tiocgwinsz_needs_sys_ioctl_h to
 	$jm_cv_sys_tiocgwinsz_needs_sys_ioctl_h.
