@@ -1614,7 +1614,7 @@ a warning is issued to standard error.
 Use the @samp{--status} option to inhibit that output.
 If any listed file cannot be opened or read, if any valid line has
 an MD5 checksum inconsistent with the associated file, or if no valid
-line is found, @code{md5sum} exits with non-zero status.  Otherwise,
+line is found, @code{md5sum} exits with nonzero status.  Otherwise,
 it exits successfully.
 
 @itemx --status
