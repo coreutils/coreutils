@@ -33,7 +33,9 @@ set - $tests
 
 saved_size=.saved-size
 
-stty size > $saved_size || exit 1
+stty size > $saved_size \
+  || { echo "$0: skipping this test: can't get window size" 1>&2;
+       exit 77; exit; }
 
 fail=0
 while :; do
