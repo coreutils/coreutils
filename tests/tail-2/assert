@@ -1,0 +1,49 @@
+#!/bin/sh
+# This test fails with tail from textutils-2.0.
+# It would get something like this:
+#   tail: tail.c:718: recheck: Assertion `valid_file_spec (f)' failed.
+#   Aborted
+# due to a race condition in which a dev/inode pair is reused.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  tail --version
+fi
+
+tmp=t1-tail.$$
+pwd=`pwd`
+trap "cd $pwd; rm -rf $dir" 0 1 2 3 15
+
+test_failure=0
+mkdir $tmp || test_failure=1
+cd $tmp || test_failure=1
+
+if test $test_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+ok='ok ok ok'
+
+touch a foo
+tail --follow=name a foo > err 2>&1 &
+tail_pid=$!
+# Arrange for the tail process to die after 12 seconds.
+(sleep 12; kill $tail_pid) &
+rm -f foo
+echo sleep 7...
+sleep 7
+echo $ok > f
+mv f foo
+
+echo waiting....
+wait
+
+case "`cat err`" in
+  *$ok) fail=0;;
+  *) fail=1;;
+esac
+
+test $fail = 1 && cat err
+
+exit $fail
