@@ -108,9 +108,9 @@ my @tv = (
 # Weird repeat counts.
 ['repeat-bs-9',          q|abc '[b*\9]'|, 'abcd', '[b*d', 0],
 ['repeat-0',             q|abc '[b*0]'|, 'abcd', 'bbbd', 0],
-['repeat-000',           q|abc '[b*00000000000000000000]'|, 'abcd', 'bbbd', 0],
+['repeat-zeros',         q|abc '[b*00000000000000000000]'|, 'abcd', 'bbbd', 0],
 ['repeat-compl', '-c ' . q|'[a*65536]\n' '[b*]'|, 'abcd', 'abbb', 0],
-['repeat-bigC',  '-C ' . q|'[a*65536]\n' '[b*]'|, 'abcd', 'abbb', 0],
+['repeat-xC',    '-C ' . q|'[a*65536]\n' '[b*]'|, 'abcd', 'abbb', 0],
 
 # From Glenn Fowler.
 ['fowler-1', q|ah -H|, 'aha', '-H-', 0],
