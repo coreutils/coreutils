@@ -456,7 +456,8 @@ static int qmark_funny_chars;
 
 static int quote_as_string;
 
-/* The number of chars per hardware tab stop.  -T */
+/* The number of chars per hardware tab stop.  Setting this to zero
+   inhibits the use of TAB characters for separating columns.  -T */
 static int tabsize;
 
 /* Nonzero means we are listing the working directory because no
@@ -834,14 +835,14 @@ decode_switches (int argc, char **argv)
   if (!getenv ("POSIXLY_CORRECT") && (p = getenv ("TABSIZE")))
     {
       if (xstrtol (p, NULL, 0, &tmp_long, NULL) == LONGINT_OK
-	  && 0 < tmp_long && tmp_long <= INT_MAX)
+	  && 0 <= tmp_long && tmp_long <= INT_MAX)
 	{
 	  tabsize = (int) tmp_long;
 	}
       else
 	{
 	  error (0, 0,
-	     _("ignoring invalid tab size in environment variable TABSIZE: %s"),
+	   _("ignoring invalid tab size in environment variable TABSIZE: %s"),
 		 p);
 	}
     }
@@ -1005,7 +1006,7 @@ decode_switches (int argc, char **argv)
 
 	case 'T':
 	  if (xstrtol (optarg, NULL, 0, &tmp_long, NULL) != LONGINT_OK
-	      || tmp_long <= 0 || tmp_long > INT_MAX)
+	      || tmp_long < 0 || tmp_long > INT_MAX)
 	    error (1, 0, _("invalid tab size: %s"), optarg);
 	  tabsize = (int) tmp_long;
 	  break;
@@ -1079,7 +1080,7 @@ decode_switches (int argc, char **argv)
 	      /* Don't use TAB characters in output.  Some terminal
 		 emulators can't handle the combination of tabs and
 		 color codes on the same line.  */
-	      tabsize = line_length;
+	      tabsize = 0;
 	    }
 	  break;
 
@@ -1380,8 +1381,7 @@ parse_ls_color (void)
 		    {
 		      color_indicator[ind_no].string = buf;
 		      state = ((color_indicator[ind_no].len =
-				get_funky_string (&buf, &p, 0)) < 0 ?
-			       -1 : 1);
+				get_funky_string (&buf, &p, 0)) < 0 ? -1 : 1);
 		      break;
 		    }
 		}
@@ -2638,7 +2638,7 @@ indent (int from, int to)
 {
   while (from < to)
     {
-      if (to / tabsize > (from + 1) / tabsize)
+      if (tabsize > 0 && to / tabsize > (from + 1) / tabsize)
 	{
 	  putchar ('\t');
 	  from += tabsize - from % tabsize;
