@@ -1,3 +1,8 @@
+Fri Apr 19 00:06:02 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* cp.c (copy_reg): Rearrange arithmetic in conditional to avoid
+	integer overflow with large files.
+
 Fri Apr 12 21:40:44 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* mkdir.c (main): Add new option: --verbose.
