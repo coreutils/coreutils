@@ -1814,9 +1814,9 @@ Synopsis:
 id [ @var{option} ]@dots{} [ @var{username} ]
 @end example
 
-By default, it prints the real user ID, real group ID, effective user ID
-if different from the real user ID, effective group ID if different from
-the real group ID, and supplemental group IDs.
+By default, it prints the real user id, real group id, effective user id
+if different from the real user id, effective group id if different from
+the real group id, and supplemental group ids.
 
 Each of these numeric values is preceded by an identifying string and
 followed by the corresponding user or group name in parentheses.
@@ -1829,7 +1829,7 @@ Also see @ref{Common options}.
 @itemx --group
 @opindex -g
 @opindex --group
-Print only the group ID.
+Print only the group id.
 
 @item -G
 @itemx --groups
@@ -1848,14 +1848,14 @@ Print the user or group name instead of the ID number.  Requires
 @itemx --real
 @opindex -r
 @opindex --real
-Print the real, instead of effective, user or group ID.  Requires
+Print the real, instead of effective, user or group id.  Requires
 @code{-u}, @code{-g}, or @code{-G}.
 
 @item -u
 @itemx --user
 @opindex -u
 @opindex --user
-Print only the user ID.
+Print only the user id.
 
 @end table
 
@@ -2639,8 +2639,8 @@ options}.
 @section @code{su}: Run a command with substitute user and group id
 
 @pindex su
-@cindex substitute user and group IDs
-@cindex user ID, switching
+@cindex substitute user and group ids
+@cindex user id, switching
 @cindex super-user, becoming
 @cindex root, becoming
 
@@ -2661,7 +2661,7 @@ If no @var{user} is given, the default is @code{root}, the super-user.
 The shell to use is taken from @var{user}'s @code{passwd} entry, or
 @file{/bin/sh} if none is specified there.  If @var{user} has a
 password, @code{su} prompts for the password unless run by a user with
-effective user ID of zero (the super-user).
+effective user id of zero (the super-user).
 
 @vindex HOME
 @vindex SHELL
