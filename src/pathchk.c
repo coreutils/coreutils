@@ -104,6 +104,7 @@ char *program_name;
 
 static struct option const longopts[] =
 {
+  {"portability", no_argument, NULL, 'p'},
   {NULL, 0, NULL, 0}
 };
 
