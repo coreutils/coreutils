@@ -1,3 +1,9 @@
+2003-04-15  Jim Meyering  <jim@meyering.net>
+
+	* getloadavg.c: Remove (or replace-with-TAB(s) to retain alignment)
+	each sequence of spaces before a TAB character.
+	* md5.c, getopt.c, getopt.h, obstack.h, strftime.c: Likewise.
+
 2003-04-11  Jim Meyering  <jim@meyering.net>
 
 	* readutmp.c: Include <string.h> and <stdlib.h> unconditionally.
