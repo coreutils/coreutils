@@ -1,3 +1,8 @@
+2004-12-10  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (id invocation): -G also prints main group.
+	Problem reported by Tim Waugh.
+
 2004-12-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (ls invocation): Document new "ls" exit status.
