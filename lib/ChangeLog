@@ -3,6 +3,14 @@
 	* getdate.y: Add three semicolons, each just before a closing brace.
 	Bison (as of version 1.31) no longer papers over that mistake.
 
+2002-02-14  Paul Eggert  <eggert@twinsun.com>
+
+	* backupfile.c (ISDIGIT): Comment fix.
+	* getdate.y (ISDIGIT): Likewise.
+	* posixtm.c (ISDIGIT, year): Likewise.
+	* strverscmp.c (ISDIGIT): Likewise.
+	* userspec.c (ISDIGIT): Likewise.
+
 2002-01-05  Jim Meyering  <meyering@lucent.com>
 
 	* version-etc.c (version_etc_copyright): Update copyright year.
