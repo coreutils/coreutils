@@ -88,7 +88,6 @@ libfetish_a_SOURCES = \
   xstrtoul.c \
   xstrtoimax.c \
   xstrtoumax.c \
-  xstrtoxmax.c \
   yesno.c
 
 libfetish_a_LIBADD = @LIBOBJS@ @ALLOCA@
