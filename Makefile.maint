@@ -78,7 +78,7 @@ my-distcheck: writable-files po-check
 	echo "$(distdir).tar.gz is ready for distribution"; \
 	echo "========================"
 
-a_host = fencepost.gnu.org
+a_host = alpha.gnu.org
 b_host = freefriends.org
 
 alpha_subdir = gnu/fetish
@@ -160,7 +160,18 @@ wget-update:
 	$(WGET) $(ftp-gnu)/config/config.sub -O $(srcdir)/config.sub
 	cvs -d $(automake_repo) co -p automake/depcomp > depcomp
 
-alpha: writable-files po-check
+define emit-rsync-commands
+	echo =====================================
+	echo =====================================
+	echo 'for host in $(a_host) $(b_host); do \'
+	echo '  rsync -e ssh --pro -av $(xd-delta) $(distdir).tar.gz \'
+	echo '    $$host/$(real_dir); done'
+	echo '# send the /tmp/announcement e-mail'
+	echo =====================================
+	echo =====================================
+endef
+
+alpha:
 	$(MAKE) cvs-dist
 	$(MAKE) -s announcement > /tmp/announce-$(distdir)
 	ln $(distdir).tar.gz ../release
@@ -171,11 +182,4 @@ alpha: writable-files po-check
 	chmod a-w $(release-archive-dir)/$(xd-delta)
 	echo $(VERSION) > $(prev_version_file)
 	cvs ci -m. $(prev_version_file)
-	@echo =====================================
-	@echo =====================================
-	@echo 'for host in $(a_host) $(b_host); do \'
-	@echo '  rsync -e ssh --pro -av $(xd-delta) $(distdir).tar.gz \'
-	@echo '    $$host/$(real_dir); done'
-	@echo '# send the /tmp/announcement e-mail'
-	@echo =====================================
-	@echo =====================================
+	@$(emit-rsync-commands)
