@@ -2347,12 +2347,24 @@ Sort in descending (reverse) numeric order.
 sort -nr
 @end example
 
+@item
+Ignore trailing newlines when comparing lines,
+so that empty lines always sort first.
+
+@example
+# "$newline" is a single newline character.
+newline='
+'
+sort -t "$newline" -k 1,1
+@end example
+
+@item
 Sort alphabetically, omitting the first and second fields.
 This uses a single key composed of the characters beginning
 at the start of field three and extending to the end of each line.
 
 @example
-sort -k3
+sort -k 3
 @end example
 
 @item
@@ -2394,6 +2406,7 @@ sort -t : -n -k 5b,5 -k 3,3 /etc/passwd
 
 @item
 Generate a tags file in case insensitive sorted order.
+
 @example
 find src -type f -print0 | sort -t / -z -f | xargs -0 etags --append
 @end example
