@@ -29,7 +29,7 @@
 #endif
 
 #include <errno.h>
-#ifndef STDC_HEADERS
+#ifndef errno
 extern int errno;
 #endif
 
