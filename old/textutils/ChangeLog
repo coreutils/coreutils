@@ -1,6 +1,19 @@
-1999-01-09  Jim Meyering  <meyering@ascend.com>
+1999-01-10  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.22g.
+
+	All of the following new code is protected by
+	`#if DONT_UNLINK_WHILE_OPEN'
+	* src/tac.c (file_to_remove): New global.
+	(fp_to_close): New global.
+	(unlink_tempfile): New function.
+	(record_tempfile): New function.
+	(save_stdin): Call record_tempfile.
+	Use SET_BINARY.
+	(main): Use SET_BINARY and SET_BINARY2.
+	From Eli Zaretskii.
+
+1999-01-09  Jim Meyering  <meyering@ascend.com>
 
 	* tests/uniq/Test.pm: Add tests from Jochen Hein.
 	* src/uniq.c: New option: --all-repeated (-D).
