@@ -17,15 +17,24 @@ trap '(exit $?); exit $?' 1 2 13 15
 framework_failure=0
 mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
-mkdir -p a/b || framework_failure=1
+mkdir -p a/b d d/sub || framework_failure=1
 printf 'make-sure-the-file-is-non-empty\n' > a/b/c || framework_failure=1
+echo nonempty-file > d/1
+echo nonempty-file > d/sub/1
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
   (exit 1); exit 1
 fi
 
+# Ensure that blocksize and block-count are what we expect for directories.
 if test "`stat --format=%bx%B a`" != 8x512; then
+  echo "$0: different block count/size, so skipping this test" 1>&2
+  (exit 77); exit 77
+fi
+
+# Ensure that blocksize and block-count are what we expect for files.
+if test "`stat --format=%bx%B d/1`" != 8x512; then
   echo "$0: different block count/size, so skipping this test" 1>&2
   (exit 77); exit 77
 fi
@@ -34,7 +43,7 @@ fail=0
 
 du -a a > out || fail=1
 echo === >> out
-du -aS a >> out || fail=1
+du -a -S a >> out || fail=1
 echo === >> out
 du -s a >> out || fail=1
 cat <<\EOF > exp
@@ -47,6 +56,17 @@ cat <<\EOF > exp
 4	a
 ===
 12	a
+EOF
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
+rm -f out exp
+du -S d > out || fail=1
+
+cat <<\EOF > exp
+8	d/sub
+8	d
 EOF
 
 cmp out exp || fail=1
