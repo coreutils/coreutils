@@ -1,3 +1,9 @@
+2005-02-06  Jim Meyering  <jim@meyering.net>
+
+	* memrchr.m4 (gl_FUNC_MEMRCHR): Check for declaration of memrchr.
+
+	* chdir-long.m4 (gl_PREREQ_CHDIR_LONG): Depend on gl_FUNC_MEMRCHR.
+
 2005-02-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* memrchr.m4 (gl_FUNC_MEMRCHR): Add AC_LIBSOURCES, for memrchr.h.
