@@ -1529,14 +1529,13 @@ changed size.
 @opindex --pid
 When following by name or by descriptor, you may specify the process ID,
 @var{pid}, of the sole writer of all @var{file} arguments.  Then, shortly
-after that process terminates, tail will also terminate.  This will work
-properly only if the tailing process and the writer are on the same
-machine and the tailing process is able to send signals to the writing
-process (@code{tail} does not actually send any signal).  For example,
-to save the output of a build in a file and to watch the file grow, if
-you invoke @code{make} and @code{tail} like this then the tail process
-will stop when your build completes.  Without this option, you would
-have had to kill the @code{tail -f} process yourself.
+after that process terminates, tail will also terminate.  This will
+work properly only if the writer and the tailing process are running on
+the same machine.  For example, to save the output of a build in a file
+and to watch the file grow, if you invoke @code{make} and @code{tail}
+like this then the tail process will stop when your build completes.
+Without this option, you would have had to kill the @code{tail -f}
+process yourself.
 @example
 $ make >& makerr & tail --pid=$! -f makerr
 @end example
