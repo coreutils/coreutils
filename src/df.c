@@ -110,10 +110,19 @@ static struct mount_entry *mount_list;
 /* If nonzero, print filesystem type as well.  */
 static int print_type;
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  SYNC_OPTION = CHAR_MAX + 1,
+  NO_SYNC_OPTION,
+  BLOCK_SIZE_OPTION
+};
+
 static struct option const long_options[] =
 {
   {"all", no_argument, NULL, 'a'},
-  {"block-size", required_argument, NULL, CHAR_MAX + 3},
+  {"block-size", required_argument, NULL, BLOCK_SIZE_OPTION},
   {"inodes", no_argument, NULL, 'i'},
   {"human-readable", no_argument, NULL, 'h'},
   {"si", no_argument, NULL, 'H'},
@@ -122,8 +131,8 @@ static struct option const long_options[] =
   {"megabytes", no_argument, NULL, 'm'},
   {"portability", no_argument, NULL, 'P'},
   {"print-type", no_argument, NULL, 'T'},
-  {"sync", no_argument, NULL, CHAR_MAX + 1},
-  {"no-sync", no_argument, NULL, CHAR_MAX + 2},
+  {"sync", no_argument, NULL, SYNC_OPTION},
+  {"no-sync", no_argument, NULL, NO_SYNC_OPTION},
   {"type", required_argument, NULL, 't'},
   {"exclude-type", required_argument, NULL, 'x'},
   {GETOPT_HELP_OPTION_DECL},
@@ -708,14 +717,14 @@ main (int argc, char **argv)
 	case 'P':
 	  posix_format = 1;
 	  break;
-	case CHAR_MAX + 1:
+	case SYNC_OPTION:
 	  require_sync = 1;
 	  break;
-	case CHAR_MAX + 2:
+	case NO_SYNC_OPTION:
 	  require_sync = 0;
 	  break;
 
-	case CHAR_MAX + 3:
+	case BLOCK_SIZE_OPTION:
 	  human_block_size (optarg, 1, &output_block_size);
 	  break;
 
