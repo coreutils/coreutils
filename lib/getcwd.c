@@ -19,10 +19,6 @@
 
 #include <config.h>
 
-/* Undefine getcwd here so any prototype is not redefined to be a
-   prototype for rpl_getcwd.  */
-#undef getcwd
-
 #include <stdlib.h>
 #include <string.h>
 
@@ -42,6 +38,14 @@ extern int errno;
 #define KLUDGE_POSIX_NAME_MAX 255
 
 #define MAX_SAFE_LEN (PATH_MAX - 1 - KLUDGE_POSIX_NAME_MAX - 1)
+
+/* Undefine getcwd here, as near the use as possible, in case any
+   of the files included above define it to rpl_getcwd.  */
+#undef getcwd
+
+/* Any declaration of getcwd from headers included above has
+   been changed to a declaration of rpl_getcwd.  Declare it here.  */
+extern char *getcwd (char *buf, size_t size);
 
 /* This is a wrapper for getcwd.
    Some implementations (at least GNU libc 2.3.1 + linux-2.4.20) return
