@@ -43,7 +43,7 @@ set X $pairlist
 shift
 status=0
 first=yes
-while "$#" -ne 0; do
+while test "$#" -ne 0; do
    if test -f "$1"; then
       mv "$1" "$2" || status=$?
    else
