@@ -29,8 +29,10 @@
 # include <sys/systeminfo.h>
 #endif
 
-#if HAVE_SYSCTL && HAVE_SYS_SYSCTL_H
-# include <sys/param.h> /* needed for OpenBSD 3.0 */
+#if HAVE_SYS_SYSCTL_H
+# if HAVE_SYS_PARAM_H
+#  include <sys/param.h> /* needed for OpenBSD 3.0 */
+# endif
 # include <sys/sysctl.h>
 # ifdef HW_MODEL
 #  ifdef HW_MACHINE_ARCH
@@ -260,6 +262,11 @@ main (int argc, char **argv)
 	  static int mib[] = { CTL_HW, UNAME_PROCESSOR };
 	  if (sysctl (mib, 2, processor, &s, 0, 0) >= 0)
 	    element = processor;
+# ifdef __POWERPC__
+	  /* This kludge works around a bug in Mac OS X.  */
+	  if (element == unknown)
+	    element = "powerpc";
+# endif
 	}
 #endif
       print_element (element);
