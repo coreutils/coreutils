@@ -1,5 +1,14 @@
 2000-06-25  Jim Meyering  <meyering@lucent.com>
 
+	* src/copy.c (copy_internal): Don't return return immediately after a
+	failed copy_dir call -- otherwise, the failure to read a single file
+	in a source directory would cause the containing destination directory
+	not to have owner/perms set properly.  I believe this fix is relevant
+	only when copying as `root' when the source is a remote partition where
+	root has insufficient access to read a source file.  It would also
+	apply when root gets e.g., I/O errors when copying local files.
+	Reported by Piotr Kwapulinski.
+
 	* Version 4.0v.
 
 2000-06-18  Jim Meyering  <meyering@lucent.com>
