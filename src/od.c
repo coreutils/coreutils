@@ -1854,7 +1854,7 @@ the maximum\nrepresentable value of type `long'"), optarg);
       else if (n_files > 3)
 	{
 	  error (0, 0,
-		 _("compatibility mode supports no more than three arguments"));
+		 _("compatibility mode supports at most three arguments"));
 	  usage (1);
 	}
 
