@@ -1,5 +1,7 @@
 2002-09-28  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.5.2.
+
 	Fix things so `mkdir -p' can create very deep directories, e.g.,
 	mkdir -p $(perl -e 'print "a/" x 40000') now works.
 	* src/mkdir.c (main): For --parents (-p), call make_path with the
@@ -19,8 +21,6 @@
 	conditional expression'.
 
 2002-09-22  Jim Meyering  <meyering@lucent.com>
-
-	* Version 4.5.2.
 
 	* src/rmdir.c: Include "dirname.h", for declaration of
 	strip_trailing_slashes.
