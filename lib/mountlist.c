@@ -532,6 +532,7 @@ read_filesystem_list (need_fs_type, all_fs)
     FILE *fp;
     int ret;
     int lockfd = -1;
+    int fail = 0;
 
 # if defined F_RDLCK && defined F_SETLKW
     /* MNTTAB_LOCK is a macro name of our own invention; it's not present in
@@ -557,7 +558,12 @@ read_filesystem_list (need_fs_type, all_fs)
 
     fp = fopen (table, "r");
     if (fp == NULL)
-      return NULL;
+      {
+	/* FIXME maybe: this close could clobber errno from fopen failure.  */
+	if (0 <= lockfd)
+	  close (lockfd);
+	return NULL;
+      }
 
     while ((ret = getmntent (fp, &mnt)) == 0)
       {
@@ -578,10 +584,13 @@ read_filesystem_list (need_fs_type, all_fs)
       }
 
     if (ret > 0)
-      return NULL;
+      fail = 1;
     if (fclose (fp) == EOF)
-      return NULL;
+      fail = 1;
     if (0 <= lockfd && close (lockfd) != 0)
+      fail = 1;
+
+    if (fail)
       return NULL;
   }
 #endif /* MOUNTED_GETMNTENT2.  */
