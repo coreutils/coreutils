@@ -12,7 +12,7 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.9 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.10 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my $debug = $ENV{DEBUG};
@@ -22,6 +22,12 @@ my %Types = map {$_ => 1} @Types;
 my %Zero_one_type = map {$_ => 1} qw (OUT ERR EXIT PRE POST);
 my $srcdir = $ENV{srcdir};
 my $Global_count = 1;
+
+# When running in a DJGPP environment, make $ENV{SHELL} point to bash.
+# Otherwise, a bad shell might be used (e.g. command.com) and many
+# tests would fail.
+defined $ENV{DJDIR}
+  and $ENV{SHELL} = "$ENV{DJDIR}/bin/bash.exe";
 
 # A file spec: a scalar or a reference to a single-keyed hash
 # ================
