@@ -1,3 +1,7 @@
+2000-08-20  Jim Meyering  <meyering@lucent.com>
+
+	* src/du.c (print_totals): Rename global from opt_combined_arguments.
+
 2000-08-17  Paul Eggert  <eggert@twinsun.com>
 
 	* src/copy.c (DO_CHOWN): Do not make a special case for non-root.
