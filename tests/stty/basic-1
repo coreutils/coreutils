@@ -26,7 +26,10 @@ stty --save > $saved_state || fail=1
 stty `cat $saved_state` || fail=1
 
 # Build a list of all boolean options stty accepts on this system.
-options=`stty -a|tail +2|tr ';' '\012'|sed '/ = /d;s/^ //'|tr -s ' -' '\012\012'`
+# Note the final tr has a portability hack.  Using just `-' instead of
+# `;-' caused the vendor tr programs to hang on Solaris2 and to produce
+# bogus output on OSF4 & Irix5.
+options=`stty -a|tail +2|tr ';' '\012'|sed '/ = /d;s/^ //'|tr -d ';-'`
 
 # Take them one at a time, with and without the leading `-'.
 for opt in $options; do
