@@ -1,3 +1,9 @@
+Thu Jul  4 12:34:50 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/ls.c: Make `dir --version' and `vdir --version' print their
+	names, not `ls'.
+	Reported by Ulrich Drepper.
+
 Wed Jul  3 17:41:15 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/dircolors.c: Include sys/types.h before system.h.
