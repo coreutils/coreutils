@@ -360,13 +360,14 @@ $ /usr/local/bin/printf '\u4e2d\u6587'
 will be output correctly in all chinese locales (GB2312, BIG5, UTF-8, etc).
 
 Note that in these examples, the full pathname of @code{printf} has been
-given, to distinguish it from the GNU bash builtin function @code{printf}.
+given, to distinguish it from the GNU @code{bash} builtin function
+@code{printf}.
 
 For larger strings, you don't need to look up the hexadecimal code values of
 each character one by one. ASCII characters mixed with \u escape sequences
 is also known as the JAVA source file encoding. You can use GNU recode 3.5c
 (or newer) to convert strings to this encoding. Here is how to convert a
-piece of text into a shell script which will output this text in a locale
+piece of text into a shell script which will output this text in a locale-
 independent way:
 
 @smallexample
@@ -756,7 +757,7 @@ True if either @var{expr1} or @var{expr2} is true.
 @code{expr} evaluates an expression and writes the result on standard
 output.  Each token of the expression must be a separate argument.
 
-Operands are either numbers or strings.  @code{expr} coerces
+Operands are either numbers or strings.  @code{expr} converts
 anything appearing in an operand position to an integer or a string
 depending on the operation being applied to it.
 
@@ -802,7 +803,7 @@ the next sections).
 @cindex pattern matching
 @cindex regular expression matching
 @cindex matching patterns
-Perform pattern matching.  The arguments are coerced to strings and the
+Perform pattern matching.  The arguments are converted to strings and the
 second is considered to be a (basic, a la GNU @code{grep}) regular
 expression, with a @code{^} implicitly prepended.  The first argument is
 then matched against this regular expression.
@@ -883,7 +884,7 @@ the connectives (next section) have higher.
 @kindex -
 @cindex addition
 @cindex subtraction
-Addition and subtraction.  Both arguments are coerced to numbers;
+Addition and subtraction.  Both arguments are converted to numbers;
 an error occurs if this cannot be done.
 
 @item * / %
@@ -893,7 +894,7 @@ an error occurs if this cannot be done.
 @cindex multiplication
 @cindex division
 @cindex remainder
-Multiplication, division, remainder.  Both arguments are coerced to
+Multiplication, division, remainder.  Both arguments are converted to
 numbers; an error occurs if this cannot be done.
 
 @end table
@@ -935,9 +936,9 @@ Return its first argument if neither argument is null or 0, otherwise
 @kindex >=
 @cindex comparison operators
 Compare the arguments and return 1 if the relation is true, 0 otherwise.
-@code{==} is a synonym for @code{=}.  @code{expr} first tries to coerce
+@code{==} is a synonym for @code{=}.  @code{expr} first tries to convert
 both arguments to numbers and do a numeric comparison; if either
-coercion fails, it does a lexicographic comparison.
+conversion fails, it does a lexicographic comparison.
 
 @end table
 
@@ -1619,10 +1620,11 @@ values.
 Same as:
 @c This is too long to write inline.
 @example
-cread -ignbrk brkint -inlcr -igncr icrnl -ixoff -iuclc -ixany
-imaxbel opost -olcuc -ocrnl onlcr -onocr -onlret -ofill -ofdel
-nl0 cr0 tab0 bs0 vt0 ff0 isig icanon iexten echo echoe echok
--echonl -noflsh -xcase -tostop -echoprt echoctl echoke
+cread -ignbrk brkint -inlcr -igncr icrnl -ixoff
+-iuclc -ixany imaxbel opost -olcuc -ocrnl onlcr
+-onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0
+ff0 isig icanon iexten echo echoe echok -echonl
+-noflsh -xcase -tostop -echoprt echoctl echoke
 @end example
 @noindent and also sets all special characters to their default values.
 
@@ -1637,9 +1639,9 @@ May be negated.  If negated, same as @code{raw}.
 @opindex raw
 Same as:
 @example
--ignbrk -brkint -ignpar -parmrk -inpck -istrip -inlcr -igncr
--icrnl -ixon -ixoff -iuclc -ixany -imaxbel -opost -isig
--icanon -xcase min 1 time 0
+-ignbrk -brkint -ignpar -parmrk -inpck -istrip
+-inlcr -igncr -icrnl -ixon -ixoff -iuclc -ixany
+-imaxbel -opost -isig -icanon -xcase min 1 time 0
 @end example
 @noindent May be negated.  If negated, same as @code{cooked}.
 
@@ -1783,7 +1785,7 @@ the time value has expired, when @code{-icanon} is set.
 
 @item time @var{n}
 @opindex time
-Set the number of tenths of a second before reads time out if the min
+Set the number of tenths of a second before reads time out if the minimum
 number of characters have not been read, when @code{-icanon} is set.
 
 @item ispeed @var{n}
@@ -1809,7 +1811,7 @@ Tell the kernel that the terminal has @var{n} columns.  Non-POSIX.
 @vindex LINES
 @vindex COLUMNS
 Print the number of rows and columns that the kernel thinks the
-terminal has.  (Systems that don't support rows and cols in the kernel
+terminal has.  (Systems that don't support rows and columns in the kernel
 typically use the environment variables @env{LINES} and @env{COLUMNS}
 instead; however, GNU @code{stty} does not know anything about them.)
 Non-POSIX.
@@ -1824,6 +1826,8 @@ Print the terminal speed.
 
 @item @var{n}
 @cindex baud rate, setting
+@c FIXME: Is this still true that the baud rate can't be set
+@c higher than 38400?
 Set the input and output speeds to @var{n}.  @var{n} can be one
 of: 0 50 75 110 134 134.5 150 200 300 600 1200 1800 2400 4800 9600
 19200 38400 @code{exta} @code{extb}.  @code{exta} is the same as
@@ -2596,7 +2600,7 @@ date --date='1970-01-01 00:00:01 UTC +5 hours' +%s
 @end example
 
 Suppose you had @emph{not} specified time zone information in the example above.
-Then, date would have used your computer's idea of the time zone when
+Then, @code{date} would have used your computer's idea of the time zone when
 interpreting the string.  Here's what you would get if you were in
 Greenwich, England:
 
@@ -3245,7 +3249,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex --format=@var{format}
 @cindex formatting of numbers in @code{seq}
 Print all numbers using @var{format}; default @samp{%g}.
-@var{format} must contain exactly one of the standarding floating point
+@var{format} must contain exactly one of the floating point
 output formats @samp{%e}, @samp{%f}, or @samp{%g}.
 
 @item -s @var{string}
