@@ -19,7 +19,9 @@
 # include <config.h>
 #endif
 
-#ifndef __GNUC__
+#if __GNUC__
+# define alloca __builtin_alloca
+#else
 # ifdef HAVE_ALLOCA_H
 #  include <alloca.h>
 # else
