@@ -209,9 +209,9 @@ bz2-md5 = $(shell md5sum < $(my_distdir).tar.bz2|sed 's/  -//')
 bz2-sha1 = $(shell sha1sum < $(my_distdir).tar.bz2|sed 's/  -//')
 xdelta-md5 = $(shell md5sum < $(xd-delta)|sed 's/  -//')
 xdelta-sha1 = $(shell sha1sum < $(xd-delta)|sed 's/  -//')
-tgz-size = $(shell du --human $(my_distdir).tar.gz|sed 's/\([Mk]\).*/ \1B/')
-bz2-size = $(shell du --human $(my_distdir).tar.bz2|sed 's/\([Mk]\).*/ \1B/')
-xd-size = $(shell du --human $(xd-delta)|sed 's/\([Mk]\).*/ \1B/')
+tgz-size = $(shell du --human $(my_distdir).tar.gz|sed 's/\([MkK]\).*/ \1B/')
+bz2-size = $(shell du --human $(my_distdir).tar.bz2|sed 's/\([MkK]\).*/ \1B/')
+xd-size = $(shell du --human $(xd-delta)|sed 's/\([MkK]\).*/ \1B/')
 
 rel-check:
 	tarz=/tmp/rel-check-tarz-$$$$; \
