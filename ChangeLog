@@ -13,6 +13,7 @@
 	(main): Likewise, for head_file.
 	Handle new, undocumented option, --presume-input-pipe.
 	Handle negative line and byte counts.
+	* tests/head/Test.pm: Add lots of tests to exercise --bytes=-N.
 
 	* tests/du/8gb: Skip test if the file system of `.' doesn't support
 	sparse files -- otherwise it'd create a file of size 8GB.
