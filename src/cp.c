@@ -690,8 +690,8 @@ copy (src_path, dst_path, new_dst, device, ancestors)
   else if (flag_symbolic_link)
     {
       if (*src_path == '/'
-	  || (!strncmp (dst_path, "./", 2) && index (dst_path + 2, '/') == 0)
-	  || index (dst_path, '/') == 0)
+	  || (!strncmp (dst_path, "./", 2) && strchr (dst_path + 2, '/') == 0)
+	  || strchr (dst_path, '/') == 0)
 	{
 	  if (symlink (src_path, dst_path))
 	    {
@@ -895,7 +895,7 @@ make_path_private (const_dirpath, src_offset, mode, verbose_fmt_string,
       slash = src;
       while (*slash == '/')
 	slash++;
-      while ((slash = index (slash, '/')))
+      while ((slash = strchr (slash, '/')))
 	{
 	  /* Add this directory to the list of directories whose modes need
 	     fixing later. */
