@@ -1,6 +1,10 @@
-2003-03-04  Jim Meyering  <jim@meyering.net>
+2003-03-05  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.9.
+
+	* src/du.c (MAX_N_DESCRIPTORS): Use 3 * UTILS_OPEN_MAX / 4.
+
+2003-03-04  Jim Meyering  <jim@meyering.net>
 
 	* README: Refer new feature discussion to bug-coreutils@gnu.org,
 	rather than bug-gnu-utils, now that the former is better known.
