@@ -1,3 +1,8 @@
+2000-06-17  Bruno Haible  <haible@clisp.cons.org>
+
+	* path-concat.c (path_concat): Don't access dir[-1] if dir is
+	the empty string.
+
 2000-06-21  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.am (libfetish_a_SOURCES): Add getstr.c.
