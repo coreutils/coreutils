@@ -217,9 +217,6 @@ check_file (const char *infile, const char *outfile)
   FILE *ostream;
   struct linebuffer lb1, lb2;
   struct linebuffer *thisline, *prevline;
-  char *prevfield;
-  size_t prevlen;
-  int match_count = 0;
 
   if (STREQ (infile, "-"))
     istream = stdin;
@@ -241,37 +238,69 @@ check_file (const char *infile, const char *outfile)
   initbuffer (thisline);
   initbuffer (prevline);
 
-  if (readline (prevline, istream) == 0)
-    goto closefiles;
-  prevfield = find_field (prevline);
-  prevlen = prevline->length - (prevfield - prevline->buffer);
-
-  while (!feof (istream))
+  if (mode == output_all && countmode == count_none)
     {
-      int match;
-      char *thisfield;
-      size_t thislen;
-      if (readline (thisline, istream) == 0)
-	break;
-      thisfield = find_field (thisline);
-      thislen = thisline->length - (thisfield - thisline->buffer);
-      match = !different (thisfield, prevfield, thislen, prevlen);
+      char *prevfield IF_LINT (= NULL);
+      size_t prevlen IF_LINT (= 0);
 
-      if (match)
-	++match_count;
-
-      if (!match || mode == output_all_repeated)
+      while (!feof (istream))
 	{
-	  writeline (prevline, ostream, match_count);
-	  SWAP_LINES (prevline, thisline);
-	  prevfield = thisfield;
-	  prevlen = thislen;
-	  if (!match)
-	    match_count = 0;
+	  char *thisfield;
+	  size_t thislen;
+	  if (readline (thisline, istream) == 0)
+	    break;
+	  thisfield = find_field (thisline);
+	  thislen = thisline->length - (thisfield - thisline->buffer);
+	  if (prevline->length == 0
+	      || different (thisfield, prevfield, thislen, prevlen))
+	    {
+	      fwrite (thisline->buffer, sizeof (char),
+		      thisline->length, ostream);
+
+	      SWAP_LINES (prevline, thisline);
+	      prevfield = thisfield;
+	      prevlen = thislen;
+	    }
 	}
     }
+  else
+    {
+      char *prevfield;
+      size_t prevlen;
+      int match_count = 0;
 
-  writeline (prevline, ostream, match_count);
+      if (readline (prevline, istream) == 0)
+	goto closefiles;
+      prevfield = find_field (prevline);
+      prevlen = prevline->length - (prevfield - prevline->buffer);
+
+      while (!feof (istream))
+	{
+	  int match;
+	  char *thisfield;
+	  size_t thislen;
+	  if (readline (thisline, istream) == 0)
+	    break;
+	  thisfield = find_field (thisline);
+	  thislen = thisline->length - (thisfield - thisline->buffer);
+	  match = !different (thisfield, prevfield, thislen, prevlen);
+
+	  if (match)
+	    ++match_count;
+
+	  if (!match || mode == output_all_repeated)
+	    {
+	      writeline (prevline, ostream, match_count);
+	      SWAP_LINES (prevline, thisline);
+	      prevfield = thisfield;
+	      prevlen = thislen;
+	      if (!match)
+		match_count = 0;
+	    }
+	}
+
+      writeline (prevline, ostream, match_count);
+    }
 
  closefiles:
   if (ferror (istream) || fclose (istream) == EOF)
