@@ -1235,7 +1235,7 @@ dd_copy (void)
     {
       if (errno != ENOSYS && errno != EINVAL)
 	{
-	  error (0, errno, "fdatasync %s", quote (output_file));
+	  error (0, errno, _("fdatasync failed for %s"), quote (output_file));
 	  exit_status = EXIT_FAILURE;
 	}
       conversions_mask |= C_FSYNC;
@@ -1245,7 +1245,7 @@ dd_copy (void)
     while (fsync (STDOUT_FILENO) != 0)
       if (errno != EINTR)
 	{
-	  error (0, errno, "fsync %s", quote (output_file));
+	  error (0, errno, _("fsync failed for %s"), quote (output_file));
 	  return EXIT_FAILURE;
 	}
 
