@@ -1,3 +1,17 @@
+2003-08-01  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.0.91.
+
+2003-07-31  Paul Eggert  <eggert@twinsun.com>
+
+	* src/ptx.c: Do not include bumpalloc.h.
+	(WORD_TABLE): New member alloc.
+	(ALLOC_NEW_WORD): Remove.
+	(occurs_alloc): New var.
+	(digest_word_file, find_occurs_in_text): Check for arithmetic
+	overflow when computing table size.  Use xrealloc rather than
+	bumpalloc primitives.
+
 2003-07-29  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.90.
