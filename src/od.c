@@ -150,17 +150,15 @@ static const char *const charname[33] =
   "sp"
 };
 
-/* A printf control string for printing a file offset.  */
-static const char *output_address_fmt_string;
+/* Address base (8, 10 or 16).  */
+int address_base;
 
 /* The number of octal digits required to represent the largest off_t value.  */
 #define MAX_ADDRESS_LENGTH \
   ((sizeof (off_t) * CHAR_BIT + CHAR_BIT - 1) / 3)
 
-/* Space for a normal address, a space, a pseudo address, parentheses
-   around the pseudo address, and a trailing zero byte. */
-static char address_fmt_buffer[2 * MAX_ADDRESS_LENGTH + 4];
-static char address_pad[MAX_ADDRESS_LENGTH + 1];
+/* Width of a normal address.  */
+static int address_pad_len;
 
 static size_t string_min;
 static int flag_dump_strings;
@@ -171,15 +169,15 @@ static int flag_dump_strings;
 static int traditional;
 
 /* Non-zero if an old-style `pseudo-address' was specified.  */
-static long int flag_pseudo_start;
+static int flag_pseudo_start;
 
 /* The difference between the old-style pseudo starting address and
    the number of bytes to skip.  */
-static long int pseudo_offset;
+static off_t pseudo_offset;
 
-/* Function to format an address and optionally an additional parenthesized
-   pseudo-address; it returns the formatted string.  */
-static const char *(*format_address) PARAMS ((off_t));
+/* Function that accepts an address and an optional following char,
+   and prints the address and char to stdout.  */
+static void (*format_address) PARAMS ((off_t, char));
 
 /* The number of input bytes to skip before formatting and writing.  */
 static off_t n_bytes_to_skip = 0;
@@ -201,16 +199,16 @@ static int abbreviate_duplicate_blocks = 1;
 static struct tspec *spec;
 
 /* The number of format specs.  */
-static unsigned int n_specs;
+static size_t n_specs;
 
 /* The allocated length of SPEC.  */
-static unsigned int n_specs_allocated;
+static size_t n_specs_allocated;
 
 /* The number of input bytes formatted per output line.  It must be
    a multiple of the least common multiple of the sizes associated with
    the specified output types.  It should be as large as possible, but
    no larger than 16 -- unless specified with the -w option.  */
-static unsigned int bytes_per_block;
+static size_t bytes_per_block;
 
 /* Human-readable representation of *file_list (for error messages).
    It differs from *file_list only when *file_list is "-".  */
@@ -1042,32 +1040,64 @@ skip (off_t n_skip)
   return err;
 }
 
-static const char *
-format_address_none (off_t address ATTRIBUTE_UNUSED)
+static void
+format_address_none (off_t address ATTRIBUTE_UNUSED, char c ATTRIBUTE_UNUSED)
 {
-  return "";
 }
 
-static const char *
-format_address_std (off_t address)
+static void
+format_address_std (off_t address, char c)
 {
-  const char *address_string;
+  char buf[MAX_ADDRESS_LENGTH + 2];
+  char *p = buf + sizeof buf;
+  char const *pbound;
 
-  sprintf (address_fmt_buffer, output_address_fmt_string, address);
-  address_string = address_fmt_buffer;
-  return address_string;
+  *--p = '\0';
+  *--p = c;
+  pbound = p - address_pad_len;
+
+  /* Use a special case of the code for each base.  This is measurably
+     faster than generic code.  */
+  switch (address_base)
+    {
+    case 8:
+      do
+	*--p = '0' + (address & 7);
+      while ((address >>= 3) != 0);
+      break;
+
+    case 10:
+      do
+	*--p = '0' + (address % 10);
+      while ((address /= 10) != 0);
+      break;
+
+    case 16:
+      do
+	*--p = "0123456789abcdef"[address & 15];
+      while ((address >>= 4) != 0);
+      break;
+    }
+
+  while (pbound < p)
+    *--p = '0';
+
+  fputs (p, stdout);
 }
 
-static const char *
-format_address_label (off_t address)
+static void
+format_address_paren (off_t address, char c)
 {
-  const char *address_string;
-  assert (output_address_fmt_string != NULL);
+  putchar ('(');
+  format_address_std (address, ')');
+  putchar (c);
+}
 
-  sprintf (address_fmt_buffer, output_address_fmt_string,
-	   address, address + pseudo_offset);
-  address_string = address_fmt_buffer;
-  return address_string;
+static void
+format_address_label (off_t address, char c)
+{
+  format_address_std (address, ' ');
+  format_address_paren (address + pseudo_offset, c);
 }
 
 /* Write N_BYTES bytes from CURR_BLOCK to standard output once for each
@@ -1107,16 +1137,15 @@ write_block (off_t current_offset, off_t n_bytes,
     }
   else
     {
-      unsigned int i;
+      size_t i;
 
       prev_pair_equal = 0;
       for (i = 0; i < n_specs; i++)
 	{
-	  const char *addr_or_pad = (i == 0
-				     ? format_address (current_offset)
-				     : address_pad);
-
-	  fputs (addr_or_pad, stdout);
+	  if (i == 0)
+	    format_address (current_offset, '\0');
+	  else
+	    printf ("%*s", address_pad_len, "");
 	  (*spec[i].print_function) (n_bytes, curr_block, spec[i].fmt_string);
 	  if (spec[i].hexl_mode_trailer)
 	    {
@@ -1307,7 +1336,7 @@ read_block (size_t n, char *block, size_t *n_bytes_in_buffer)
 static int
 get_lcm (void)
 {
-  unsigned int i;
+  size_t i;
   int l_c_m = 1;
 
   for (i = 0; i < n_specs; i++)
@@ -1436,7 +1465,7 @@ dump (void)
 
       /* Make bytes_to_write the smallest multiple of l_c_m that
 	 is at least as large as n_bytes_read.  */
-      bytes_to_write = l_c_m * (int) ((n_bytes_read + l_c_m - 1) / l_c_m);
+      bytes_to_write = l_c_m * ((n_bytes_read + l_c_m - 1) / l_c_m);
 
       memset (block[idx] + n_bytes_read, 0, bytes_to_write - n_bytes_read);
       write_block (current_offset, bytes_to_write,
@@ -1444,8 +1473,7 @@ dump (void)
       current_offset += n_bytes_read;
     }
 
-  if (output_address_fmt_string != NULL)
-    printf ("%s\n", format_address (current_offset));
+  format_address (current_offset, '\n');
 
   if (limit_bytes_to_format && current_offset > end_offset)
     err |= check_and_close ();
@@ -1523,10 +1551,8 @@ dump_strings (void)
       /* If we get here, the string is all printable and null-terminated,
 	 so print it.  It is all in `buf' and `i' is its length.  */
       buf[i] = 0;
-      if (output_address_fmt_string != NULL)
-	{
-	  printf ("%s ", format_address (address - i - 1));
-	}
+      format_address (address - i - 1, ' ');
+
       for (i = 0; (c = buf[i]); i++)
 	{
 	  switch (c)
@@ -1575,42 +1601,21 @@ dump_strings (void)
   return err;
 }
 
-/* There must be exactly one %s format specifier in FORMAT_TEMPLATE.
-   Return the just-malloc'd result of using sprintf to insert
-   OFF_T_PRINTF_FORMAT_STRING into FORMAT_TEMPLATE.
-   Technically, the caller should free this memory, but IMHO it's not
-   worth it in this case.  */
-static char *
-expand_address_fmt (char const *format_template)
-{
-  size_t len = strlen (format_template);
-  char *fmt = xmalloc (len + 1);
-  /* Ensure that the literal we're inserting is no longer than the two-byte
-     string `%s' it's replacing.  There's also the %%, so technically we don't
-     even need the `+ 1' above.  */
-  assert (OFF_T_PRINTF_FORMAT_STRING[0] == 0
-	  || OFF_T_PRINTF_FORMAT_STRING[1] == 0
-	  || OFF_T_PRINTF_FORMAT_STRING[2] == 0);
-  sprintf (fmt, format_template, OFF_T_PRINTF_FORMAT_STRING);
-  return fmt;
-}
-
 int
 main (int argc, char **argv)
 {
   int c;
   int n_files;
-  unsigned int i;
-  unsigned int l_c_m;
-  unsigned int address_pad_len;
-  unsigned long int desired_width IF_LINT (= 0);
+  size_t i;
+  int l_c_m;
+  size_t desired_width IF_LINT (= 0);
   int width_specified = 0;
   int n_failed_decodes = 0;
   int err;
 
   /* The old-style `pseudo starting address' to be printed in parentheses
      after any true address.  */
-  long int pseudo_start IF_LINT (= 0);
+  off_t pseudo_start IF_LINT (= 0);
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -1646,8 +1651,8 @@ main (int argc, char **argv)
   n_specs_allocated = 5;
   spec = (struct tspec *) xmalloc (n_specs_allocated * sizeof (struct tspec));
 
-  output_address_fmt_string = expand_address_fmt ("%%07%so");
   format_address = format_address_std;
+  address_base = 8;
   address_pad_len = 7;
   flag_dump_strings = 0;
 
@@ -1666,22 +1671,21 @@ main (int argc, char **argv)
 	  switch (optarg[0])
 	    {
 	    case 'd':
-	      output_address_fmt_string = expand_address_fmt ("%%07%sd");
 	      format_address = format_address_std;
+	      address_base = 10;
 	      address_pad_len = 7;
 	      break;
 	    case 'o':
-	      output_address_fmt_string = expand_address_fmt ("%%07%so");
 	      format_address = format_address_std;
+	      address_base = 8;
 	      address_pad_len = 7;
 	      break;
 	    case 'x':
-	      output_address_fmt_string = expand_address_fmt ("%%06%sx");
 	      format_address = format_address_std;
+	      address_base = 16;
 	      address_pad_len = 6;
 	      break;
 	    case 'n':
-	      output_address_fmt_string = NULL;
 	      format_address = format_address_none;
 	      address_pad_len = 0;
 	      break;
@@ -1785,7 +1789,7 @@ it must be one character from [doxn]"),
 	      s_err = xstrtoumax (optarg, NULL, 10, &w_tmp, "");
 	      if (s_err != LONGINT_OK)
 		STRTOL_FATAL_ERROR (optarg, _("width specification"), s_err);
-	      if (ULONG_MAX < w_tmp)
+	      if (SIZE_MAX < w_tmp)
 		error (EXIT_FAILURE, 0, _("%s is too large"), optarg);
 	      desired_width = w_tmp;
 	    }
@@ -1885,28 +1889,16 @@ it must be one character from [doxn]"),
 
       if (flag_pseudo_start)
 	{
-	  static char buf[10];
-
-	  if (output_address_fmt_string == NULL)
+	  if (format_address == format_address_none)
 	    {
-	      output_address_fmt_string = expand_address_fmt ("(%%07%so)");
-	      format_address = format_address_std;
+	      address_base = 8;
+	      address_pad_len = 7;
+	      format_address = format_address_paren;
 	    }
 	  else
-	    {
-	      sprintf (buf, "%s (%s)",
-		       output_address_fmt_string,
-		       output_address_fmt_string);
-	      output_address_fmt_string = buf;
-	      format_address = format_address_label;
-	    }
+	    format_address = format_address_label;
 	}
     }
-
-  assert (address_pad_len <= MAX_ADDRESS_LENGTH);
-  for (i = 0; i < address_pad_len; i++)
-    address_pad[i] = ' ';
-  address_pad[address_pad_len] = '\0';
 
   if (n_specs == 0)
     {
@@ -1948,14 +1940,14 @@ it must be one character from [doxn]"),
       else
 	{
 	  error (0, 0, _("warning: invalid width %lu; using %d instead"),
-		 desired_width, l_c_m);
+		 (unsigned long) desired_width, l_c_m);
 	  bytes_per_block = l_c_m;
 	}
     }
   else
     {
       if (l_c_m < DEFAULT_BYTES_PER_BLOCK)
-	bytes_per_block = l_c_m * (int) (DEFAULT_BYTES_PER_BLOCK / l_c_m);
+	bytes_per_block = l_c_m * (DEFAULT_BYTES_PER_BLOCK / l_c_m);
       else
 	bytes_per_block = l_c_m;
     }
