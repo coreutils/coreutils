@@ -1,6 +1,144 @@
+2002-06-02  Jim Meyering  <meyering@lucent.com>
+
+	`rm' no longer uses explicit recursion, and as such is now able
+	to remove hierarchies of effectively unlimited depth.  Prior to
+	this change, on typical systems, rm would fail (segfault) to remove
+	hierarchies of depth greater than about 25,000.
+
+	* src/remove.c: Merge in all changes from no-recursion branch.  See below.
+	* src/remove.h: Likewise.
+	* src/rm.c: Likewise.
+	* src/mv.c: Likewise.
+
+2002-06-02  Jim Meyering  <meyering@lucent.com>
+
+	* tests/rm/r-2: Adjust, now that we no longer report
+	`removing all entries of directory ...'.
+	* tests/rm/r-1: Likewise.
+
+	* src/remove.c (enum Ternary): Define type.
+	(prompt): Add a parameter.  Adjust callers.
+	(remove_entry): Attempt rmdir here, only if a directory is
+	`known' to be empty.  Significant rework.
+	(remove_dir): Propagate failure `up' also when rmdir fails.
+
 2002-06-01  Jim Meyering  <meyering@lucent.com>
 
-	* Version 4.1.9.
+	* tests/rm/Makefile.am (TESTS): Add rm5.
+	* tests/rm/rm5: New test.
+
+2002-05-30  Jim Meyering  <meyering@lucent.com>
+
+	In interactive mode, prompt only once about an empty directory.
+	* src/remove.c (enum Prompt_action): Define.
+	(prompt): Two new parameters.  Adjust all callers.
+
+	Performance.
+	* src/remove.c (remove_entry) [!ROOT_CAN_UNLINK_DIRS]:
+	Don't call rmdir here.
+
+2002-05-29  Jim Meyering  <meyering@lucent.com>
+
+	* src/remove.c (AD_pop_and_chdir): Don't use errno (it's not valid)
+	in diagnostic for changed dev/ino.
+	(remove_entry): Tweak diagnostic.
+
+2002-05-27  Jim Meyering  <meyering@lucent.com>
+
+	* src/remove.c (ROOT_CAN_UNLINK_DIRS): Define.
+	(AD_pop_and_chdir): Propagate status as we traverse back `up' the tree.
+	(DO_UNLINK, DO_RMDIR): Define.
+	(remove_entry) [ROOT_CAN_UNLINK_DIRS]: Add code so this works also on
+	systems where root can use `unlink' to remove directories.
+
+2002-05-24  Jim Meyering  <meyering@lucent.com>
+
+	* tests/mv/mv-special-1: Adapt for changed format of --verbose output.
+
+2002-05-22  Jim Meyering  <meyering@lucent.com>
+
+	* src/remove.c: Include file-type.h.
+	Include file type in prompt when asking whether to remove file.
+	Based on a patch from Paul Eggert.
+
+	* src/remove.c (prompt): Add comment.
+
+	* src/remove.c (remove_dir): Fix another (known) leak.
+
+	* tests/rm/rm3: Don't depend on order of traversal of dir entries.
+	It is nondeterministic on some types of filesystems.
+
+	* src/remove.c (hash_freer): New function.
+	(AD_mark_helper): Use it.
+	(AD_mark_as_unremovable): xstrdup the filename argument.
+	(remove_dir): Free directory name.
+
+	* src/remove.c (remove_entry): Fail also when trying to remove a
+	directory without the --recursive option.
+	Change a diagnostic, s/unlink/remove/, now that it can apply also
+	to a directory.
+
+	* src/remove.c (is_empty_dir): New function.
+	(prompt): New function, factored out of...
+	(remove_entry): ...here.  Call it.
+	(remove_dir): Call prompt before rmdir.
+
+	* src/remove.c (remove_entry): Add support for prompting (e.g., -i).
+
+	* src/remove.h (UPDATE_STATUS): New macro.
+	* src/remove.c [AD_ent] (status): New member.  This lets us propagate
+	the status from a subdirectory to its parent via AD_pop_and_chdir.
+	(AD_push_initial): Set it.
+	(AD_push): Likewise.
+	(remove_cwd_entries): Change return type to enum RM_status, and
+	adjust all callers.
+	(rm): Use UPDATE_STATUS rather than open-coding it.
+
+	* src/remove.c (remove_entry): New function, factored out of...
+	(remove_cwd_entries): ...here, and...
+	(rm_1): ...here.
+
+	* src/remove.c (remove_cwd_entries): Add support for --verbose.
+	(remove_dir): Likewise.
+	(rm_1): Likewise.
+
+2002-05-18  Jim Meyering  <meyering@lucent.com>
+
+	* tests/rm/rm3: New file.
+	* tests/rm/rm4: New file.
+	* tests/rm/Makefile.am (TESTS): Add rm3 and rm4.
+
+2002-05-17  Jim Meyering  <meyering@lucent.com>
+
+	* tests/rm/rm1: New file.
+	* tests/rm/rm2: New file.
+	* tests/rm/unread2: New file.
+	* tests/rm/Makefile.am (TESTS): Add rm1, rm2, and unread2.
+
+	* src/remove.h (enum RM_status) [RM_NONEMPTY_DIR]: New member.
+
+2002-05-13  Jim Meyering  <meyering@lucent.com>
+
+	* src/remove.c (rm): Free cwd_state, if necessary.
+
+2002-05-01  Jim Meyering  <meyering@lucent.com>
+
+	* src/remove.c (rm_1): Remove now useless (always true)
+	user_specified_name parameter.  Adjust sole caller.
+
+	* src/mv.c (do_move): Adapt to new calling sequence for rm.
+	* src/rm.c (main): Likewise.
+
+	* src/remove.c (rm): New function.  This interface allows
+	one to remove multiple arguments at a time.  This is important in
+	that it allows us to hide the remove_init/remove_fini functions and
+	the cwd_state parameter.
+	(rm_1): Renamed from rm.
+	(remove_init, remove_fini): Remove functions.  Each body is now
+	part of `rm'.
+	* src/remove.h (rm): Update prototype.
+
+2002-06-01  Jim Meyering  <meyering@lucent.com>
 
 	* src/ls.c: Remove use of D_TYPE_IN_DIRENT, now that that symbol
 	has been renamed.
@@ -10,18 +148,6 @@
 	* src/copy.c (copy_reg): Use a temporary to avoid a warning
 	from gcc -W about comparison between signed and unsigned.
 	(copy_internal): Likewise, but use a cast.
-
-2002-05-24  Jim Meyering  <meyering@lucent.com>
-
-	`rm' no longer uses explicit recursion, and as such is now able
-	to remove hierarchies of effectively unlimited depth.  Prior to
-	this change, on typical systems, rm was unable to remove
-	hierarchies of depth greater than about 25,000.
-
-	* src/remove.c: Merge in all changes from no-recursion branch.
-	* src/remove.h: Likewise.
-	* src/rm.c: Likewise.
-	* src/mv.c: Likewise.
 
 2002-05-22  Jim Meyering  <meyering@lucent.com>
 
