@@ -1,3 +1,11 @@
+2005-01-29  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am (libfetish_a_SOURCES): Remove many files from this
+	list, now that automake determines their names automatically,
+	thanks to the new AC_LIBSOURCES and AC_LIBOBJ uses in the
+	corresponding ../m4/*.m4 files.
+	(EXTRA_DIST): Add getdate.c here, so that we continue to distribute it.
+
 2005-01-25  Jim Meyering  <jim@meyering.net>
 
 	* path-concat.c: Don't include assert.h.
