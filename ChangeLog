@@ -2,6 +2,11 @@
 
 	* Version 5.0.1.
 
+	* tests/rm/rm5: Add a comment explaining why this test fails when
+	using Tru64's broken sed.
+	* tests/rm/rm3: Likewise.
+
+	Make `kill -t' output signal descriptions (not `?') on Tru64.
 	* src/kill.c (sys_siglist): Also check for __sys_siglist.
 	Patch by Tony Leneis.
 	* configure.ac: Also check for declaration of __sys_siglist.
