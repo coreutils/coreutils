@@ -12,10 +12,6 @@
 #  define __OPENAT_XCONCAT(x, y) __OPENAT_CONCAT (x, y)
 #  define __OPENAT_ID(y) __OPENAT_XCONCAT (__OPENAT_PREFIX, y)
 #  define openat __OPENAT_ID (openat)
-/* FIXME: use proper prototype */
-#if 0
-   int openat (int fd, char const *filename, int flags, /* mode_t mode */ ...);
-#endif
-int openat (int fd, char const *filename, int flags);
+int openat (int fd, char const *filename, int flags, /* mode_t mode */ ...);
 # endif
 #endif
