@@ -1,5 +1,6 @@
 Changes in release 2.1
 [2.0.8]
+* od now supports 8-byte integers, assuming they're printable with e.g., %lld
 * new program: sha1sum
 * wc accepts new -m option: count (potentially multi-byte) characters
 * wc's `--chars' option is now equivalent to -m, not --bytes as it used to be
