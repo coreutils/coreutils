@@ -1,3 +1,30 @@
+2000-12-07  Jim Meyering  <meyering@lucent.com>
+
+	* src/od.c (address_base): Declare to be static.
+
+2000-12-06  Paul Eggert  <eggert@twinsun.com>
+
+	* src/od.c (address_base, address_pad_len): New var.
+	(output_address_fmt_string, address_fmt_buffer, address_pad): Remove.
+	(flag_pseudo_start): Now int, not long int.
+	(pseudo_offset): Now off_t, not long int.
+	(n_specs, n_specs_allocated): Now size_t, not unsigned int.
+	(format_address, format_address_none, format_address_std,
+	format_address_label): Now accepts an extra char argument (an extra
+	char to print if nonzero), and prints instead of returning a string.
+	All callers changed.
+	(bytes_per_block): Now size_t, not int.
+	(format_address_none): Do not even print the extra char argument.
+	This simplifies the callers.
+	(format_address_std, format_address_label): Print off_t ourself
+	instead of trying to use autoconfigured format.  This is faster and
+	more portable.
+	(format_address_paren): New function.
+	(dump): Remove unnecessary cast.
+	(expand_address_fmt): Remove.
+	(main): Use size_t, off_t, etc. instead of builtin types where this is
+	advisable.  Adjust to above changes.  Remove unnecessary cast.
+
 2000-12-03  Jim Meyering  <meyering@lucent.com>
 
 	* src/tail.c (tail_file): Initialize ignore, dev, and ino members,
