@@ -75,9 +75,10 @@ syntax-check-rules = \
   sc_prohibit_atoi_atof \
   sc_prohibit_jm_in_m4 \
   sc_space_tab \
-  sc_src_functions_have_static_scope \
+  sc_src_tight_scope \
   sc_sun_os_names \
   sc_system_h_headers \
+  sc_tight_scope \
   sc_trailing_blank \
   sc_unmarked_diagnostics
 
@@ -92,9 +93,6 @@ syntax-check: $(syntax-check-rules)
 #	  { echo '$(ME): FIXME' 1>&2;					\
 #	    exit 1; } || :
 # FIXME: don't allow `#include .strings\.h' anywhere
-
-sc_src_functions_have_static_scope:
-	$(MAKE) -C src $@
 
 sc_cast_of_argument_to_free:
 	@grep -E '\<free \(\(' $(srcdir)/{lib,src}/*.[chly] &&		\
@@ -200,6 +198,9 @@ sc_sun_os_names:
 	  $$(cvsu --list | grep -vEf .x-$@ ) &&				\
 	  { echo '$(ME): found misuse of Sun OS version numbers' 1>&2;	\
 	    exit 1; } || :
+
+sc_tight_scope:
+	$(MAKE) -C src $@
 
 sc_trailing_blank:
 	@( cvsu --list ) > /dev/null 2>&1 || : &&			\
