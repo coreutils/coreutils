@@ -1,3 +1,8 @@
+2000-04-30  Jim Meyering  <meyering@lucent.com>
+
+	* src/touch.c (O_NOCTTY): Define if not defined already.
+	(touch): Add O_NOCTTY to the flags passed to open.
+
 2000-04-29  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0r.
