@@ -9,7 +9,6 @@ Changes in release 1.13
   Now, `nice -18 -- nice' prints `18'.  Before it printed `8'.
 * internationalized diagnostic messages
 * `date -d "01/01/1998 3 years" +%Y' now works properly.  It prints 2001.
-* expr's match operator has been corrected to use basic regular expressions
 * New programs: chroot, factor, seq, uptime.
 * date accepts new option: --rfc-822 (-R)
 * date accepts new format, %z, for RFC-822 style numeric timezone (-0500)
