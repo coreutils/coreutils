@@ -32,8 +32,6 @@
 #include "version.h"
 #include "error.h"
 
-static void usage (int status);
-
 /* The name this program was run with. */
 char *program_name;
 
@@ -50,6 +48,27 @@ static struct option const longopts[] =
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
+
+#ifdef S_ISFIFO
+static void
+usage (int status)
+{
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("Usage: %s [OPTION] NAME...\n", program_name);
+      printf ("\
+Create named pipes (FIFOs) with the given NAMEs.\n\
+\n\
+  -m, --mode=MODE   set permission mode (as in chmod), not 0666 - umask\n\
+      --help        display this help and exit\n\
+      --version     output version information and exit\n");
+    }
+  exit (status);
+}
+#endif
 
 void
 main (int argc, char **argv)
@@ -118,24 +137,3 @@ main (int argc, char **argv)
   exit (errors);
 #endif
 }
-
-#ifdef S_ISFIFO
-static void
-usage (int status)
-{
-  if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
-	     program_name);
-  else
-    {
-      printf ("Usage: %s [OPTION] NAME...\n", program_name);
-      printf ("\
-Create named pipes (FIFOs) with the given NAMEs.\n\
-\n\
-  -m, --mode=MODE   set permission mode (as in chmod), not 0666 - umask\n\
-      --help        display this help and exit\n\
-      --version     output version information and exit\n");
-    }
-  exit (status);
-}
-#endif
