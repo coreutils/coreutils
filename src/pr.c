@@ -1317,7 +1317,7 @@ store_columns (void)
 	  {
 	    input_position = 0;
 
-	    if (!read_line (p, i))
+	    if (!read_line (p))
 	      read_rest_of_line (p);
 
 	    if (p->status == OPEN
