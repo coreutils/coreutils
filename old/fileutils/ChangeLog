@@ -1,3 +1,11 @@
+2000-08-17  Paul Eggert  <eggert@twinsun.com>
+
+	* src/copy.c (DO_CHOWN): Do not make a special case for non-root.
+	POSIX.2 requires that cp -p and mv attempt to set the uid of the
+	destination file, even if you're not root.  This affects behavior
+	only on hosts that let you give files away via chmod.
+	* NEWS: Describe the above change.
+
 2000-08-15  Jim Meyering  <meyering@lucent.com>
 
 	* src/du.c (count_entry): Remember the current directory also for `.'
