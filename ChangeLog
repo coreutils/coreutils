@@ -1,6 +1,13 @@
-2004-03-31  Jim Meyering  <jim@meyering.net>
+2004-04-03  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+2004-03-30  Paul Eggert  <eggert@twinsun.com>
+
+	* src/nohup.c (main): Adjust to new calling convention
+	for set_cloexec_flag.
+
+2004-03-31  Jim Meyering  <jim@meyering.net>
 
 	* tests/Fetish.pm (run_tests): Remove `.orig' file.
 	Remove debugging diagnostic.
