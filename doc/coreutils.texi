@@ -432,15 +432,16 @@ File permissions
 
 Date input formats
 
-* General date syntax:           General date syntax
-* Calendar date items:           Calendar date items
-* Time of day items:             Time of day items
-* Time zone items:               Time zone items
-* Day of week items:             Day of week items
-* Relative items in date strings:  Relative items in date strings
-* Pure numbers in date strings:  Pure numbers in date strings
-* Seconds since the Epoch:       Seconds since the Epoch
-* Authors of get_date:           Authors of get_date
+* General date syntax::          Common rules.
+* Calendar date items::          19 Dec 1994.
+* Time of day items::            9:20pm.
+* Time zone items::              @sc{est}, @sc{pdt}, @sc{gmt}.
+* Day of week items::            Monday and others.
+* Relative items in date strings:: next tuesday, 2 years ago.
+* Pure numbers in date strings:: 19931219, 1440.
+* Seconds since the Epoch::      @@1078100502.
+* Specifying time zone rules::   TZ="America/New_York", TZ="UTC0".
+* Authors of get_date::          Bellovin, Eggert, Salz, Berets, et al.
 
 Opening the software toolbox
 
@@ -2046,6 +2047,12 @@ format defaults to @samp{%Y-%m-%d %H:%M} (for example, @samp{2001-12-04
 and the @env{LC_TIME} locale category specifies the @acronym{POSIX}
 locale, the default is @samp{%b %e %H:%M %Y} (for example,
 @samp{Dec@ @ 4 23:59 2001}.
+
+@vindex TZ
+Time stamps are listed according to the time zone rules specified by
+the @env{TZ} environment variable, or by the system default rules if
+@env{TZ} is not set.  @xref{TZ Variable,, Specifying the Time Zone
+with @env{TZ}, libc, The GNU C Library}.
 
 @item -e[@var{in-tabchar}[@var{in-tabwidth}]]
 @itemx --expand-tabs[=@var{in-tabchar}[@var{in-tabwidth}]]
@@ -5938,6 +5945,12 @@ today is not listed in recent form, the timestamp is in the future,
 which means you probably have clock skew problems which may break
 programs like @command{make} that rely on file timestamps.
 
+@vindex TZ
+Time stamps are listed according to the time zone rules specified by
+the @env{TZ} environment variable, or by the system default rules if
+@env{TZ} is not set.  @xref{TZ Variable,, Specifying the Time Zone
+with @env{TZ}, libc, The GNU C Library}.
+
 The following option changes how file timestamps are printed.
 
 @table @samp
@@ -8460,6 +8473,13 @@ Another operation that modifies a file's ctime without affecting
 the others is renaming.  In any case, it is not possible, in normal
 operations, for a user to change the ctime field to a user-specified value.
 
+@vindex TZ
+Time stamps assume the time zone rules specified by the @env{TZ}
+environment variable, or by the system default rules if @env{TZ} is
+not set.  @xref{TZ Variable,, Specifying the Time Zone with @env{TZ},
+libc, The GNU C Library}.  You can avoid avoid ambiguities during
+daylight saving transitions by using @sc{utc} time stamps.
+
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
@@ -9011,6 +9031,7 @@ Print the information in terse form, suitable for parsing by other programs.
 Use @var{format} rather than the default format.
 
 Interpreted sequences for file stat are:
+
 @itemize @bullet
 @item %a - Access rights in octal
 @item %A - Access rights in human readable form
@@ -9041,6 +9062,7 @@ Interpreted sequences for file stat are:
 @end itemize
 
 Interpreted sequences for file system stat are:
+
 @itemize @bullet
 @item %n - File name
 @item %i - File System id in hex
@@ -9053,6 +9075,12 @@ Interpreted sequences for file system stat are:
 @item %s - Optimal transfer block size
 @item %c - Total file nodes in file system
 @end itemize
+
+@vindex TZ
+Time stamps are listed according to the time zone rules specified by
+the @env{TZ} environment variable, or by the system default rules if
+@env{TZ} is not set.  @xref{TZ Variable,, Specifying the Time Zone
+with @env{TZ}, libc, The GNU C Library}.
 @end table
 
 @exitstatus
@@ -11185,6 +11213,12 @@ for the user running it (determined from its standard input), preceded
 by the hostname.  Traditionally, the two arguments given are @samp{am
 i}, as in @samp{who am i}.
 
+@vindex TZ
+Time stamps are listed according to the time zone rules specified by
+the @env{TZ} environment variable, or by the system default rules if
+@env{TZ} is not set.  @xref{TZ Variable,, Specifying the Time Zone
+with @env{TZ}, libc, The GNU C Library}.
+
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
@@ -11328,6 +11362,12 @@ Invoking @command{date} with no @var{format} argument is equivalent to invoking
 it with a default format that depends on the @env{LC_TIME} locale category.
 In the default C locale, this format is @samp{'+%a %b %e %H:%M:%S %Z %Y'},
 so the output looks like @samp{Fri Feb 27 13:47:51 PST 2004}.
+
+@vindex TZ
+Normally, @command{date} uses the time zone rules indicated by the
+@env{TZ} environment variable, or the system default rules if @env{TZ}
+is not set.  @xref{TZ Variable,, Specifying the Time Zone with
+@env{TZ}, libc, The GNU C Library}.
 
 @findex strftime @r{and @command{date}}
 @cindex time formats
@@ -11688,10 +11728,10 @@ Set the time and date to @var{datestr}.  See @option{-d} above.
 @cindex UTC
 @cindex Greenwich Mean Time
 @cindex GMT
+@vindex TZ
 Use Coordinated Universal Time (@acronym{UTC}) by operating as if the
 @env{TZ} environment variable were set to the string @samp{UTC0}.
-Normally, @command{date} operates in the time zone indicated by
-@env{TZ}, or the system default if @env{TZ} is not set.  Coordinated
+Coordinated
 Universal Time is often called ``Greenwich Mean Time'' (@sc{gmt}) for
 historical reasons.
 @end table
