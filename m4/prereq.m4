@@ -1,4 +1,4 @@
-#serial 35
+#serial 36
 
 dnl We use jm_ for non Autoconf macros.
 m4_pattern_forbid([^jm_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
@@ -120,19 +120,10 @@ AC_DEFUN([jm_PREREQ],
   AC_REQUIRE([jm_FUNC_REALLOC])
   AC_REQUIRE([jm_FUNC_STAT])
   AC_REQUIRE([jm_FUNC_UTIME])
-  AC_REQUIRE([jm_PREREQ_ADDEXT])
   AC_REQUIRE([jm_PREREQ_STAT])
   AC_REQUIRE([jm_XSTRTOIMAX])
   AC_REQUIRE([jm_XSTRTOUMAX])
   AC_REQUIRE([vb_FUNC_RENAME])
-])
-
-AC_DEFUN([jm_PREREQ_ADDEXT],
-[
-  dnl For addext.c.
-  AC_REQUIRE([AC_SYS_LONG_FILE_NAMES])
-  AC_CHECK_FUNCS(pathconf)
-  AC_CHECK_HEADERS(limits.h string.h unistd.h)
 ])
 
 AC_DEFUN([jm_PREREQ_STAT],
