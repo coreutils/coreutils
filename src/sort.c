@@ -2292,6 +2292,10 @@ main (int argc, char **argv)
 		}
 	      else
 		{
+		  if (! posix_pedantic)
+		    error (0, 0,
+			   _("warning: `sort %s' is obsolete; use `sort -k'"),
+			   optarg);
 		  if (optind != argc && argv[optind][0] == '-'
 		      && ISDIGIT (argv[optind][1]))
 		    {
