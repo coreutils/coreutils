@@ -1,5 +1,15 @@
 2001-09-04  Paul Eggert  <eggert@twinsun.com>
 
+	* xgetcwd.c: Revert some of the previous change; intead,
+	fix the HAVE_GETCWD_NULL code to behave more like the
+	!HAVE_GETCWD_NULL code used to.
+
+	Include "xalloc.h".
+	(xgetcwd): Do not return NULL when memory is exhausted; instead,
+	invoke xalloc_die.
+
+2001-09-04  Paul Eggert  <eggert@twinsun.com>
+
 	* xreadlink.c (xreadlink): Omit size_t* arg.  All uses changed.
 	Use ssize_t, not int, to store result of readlink.
 	Check for ssize_t overflow as well as size_t overflow,
