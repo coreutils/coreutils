@@ -1,3 +1,11 @@
+Wed Sep 25 21:43:10 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/sort-test/Makefile.am (t): Factor out .in suffix.
+	Include new test: t16a.
+	* tests/tr-test/Makefile.am (t): Likewise.
+
+	* src/Makefile.am (EXTRA_DIST): Remove md5-test.rfc.
+
 Mon Sep 23 10:00:50 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* tests/md5sum-test/Makefile.am (EXTRA_DIST): Distribute $(TESTS).
