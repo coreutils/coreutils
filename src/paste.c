@@ -328,6 +328,7 @@ paste_serial (int nfiles, char **fnamptr)
 
   for (; nfiles; nfiles--, fnamptr++)
     {
+      int saved_errno;
       if (STREQ (*fnamptr, "-"))
 	{
 	  have_read_stdin = 1;
@@ -347,6 +348,7 @@ paste_serial (int nfiles, char **fnamptr)
       delimptr = delims;	/* Set up for delimiter string. */
 
       charold = getc (fileptr);
+      saved_errno = errno;
       if (charold != EOF)
 	{
 	  /* `charold' is set up.  Hit it!
@@ -371,6 +373,7 @@ paste_serial (int nfiles, char **fnamptr)
 
 	      charold = charnew;
 	    }
+	  saved_errno = errno;
 
 	  /* Hit EOF.  Process that last character. */
 	  putc (charold, stdout);
@@ -381,7 +384,7 @@ paste_serial (int nfiles, char **fnamptr)
 
       if (ferror (fileptr))
 	{
-	  error (0, errno, "%s", *fnamptr);
+	  error (0, saved_errno, "%s", *fnamptr);
 	  errors = 1;
 	}
       if (fileptr == stdin)
