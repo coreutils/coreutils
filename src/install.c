@@ -34,6 +34,7 @@
 #include "modechange.h"
 #include "path-concat.h"
 #include "quote.h"
+#include "utimens.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -485,7 +486,7 @@ static int
 change_timestamps (const char *from, const char *to)
 {
   struct stat stb;
-  struct utimbuf utb;
+  struct timespec timespec[2];
 
   if (stat (from, &stb))
     {
@@ -493,13 +494,11 @@ change_timestamps (const char *from, const char *to)
       return 1;
     }
 
-  /* There's currently no interface to set file timestamps with
-     better than 1-second resolution, so discard any fractional
-     part of the source timestamp.  */
-
-  utb.actime = stb.st_atime;
-  utb.modtime = stb.st_mtime;
-  if (utime (to, &utb))
+  timespec[0].tv_sec = stb.st_atime;
+  timespec[0].tv_nsec = TIMESPEC_NS (stb.st_atim);
+  timespec[1].tv_sec = stb.st_mtime;
+  timespec[1].tv_nsec = TIMESPEC_NS (stb.st_mtim);
+  if (utimens (to, timespec))
     {
       error (0, errno, _("cannot set time stamps for %s"), quote (to));
       return 1;
