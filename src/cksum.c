@@ -1,5 +1,5 @@
 /* cksum -- calculate and print POSIX.2 checksums and sizes of files
-   Copyright (C) 92, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 92, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -267,9 +267,10 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION]... [FILE]...\n\
+Usage: %s [FILE]...\n\
+  or:  %s [OPTION]\n\
 "),
-	      program_name);
+	      program_name, program_name);
       printf (_("\
 Print CRC checksum and byte counts of each FILE.\n\
 \n\
