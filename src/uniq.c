@@ -397,6 +397,7 @@ main (int argc, char **argv)
   char const *file[2];
 
   file[0] = file[1] = "-";
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

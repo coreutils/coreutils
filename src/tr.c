@@ -1793,6 +1793,7 @@ main (int argc, char **argv)
   struct Spec_list *s1 = &buf1;
   struct Spec_list *s2 = &buf2;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

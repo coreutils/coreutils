@@ -290,6 +290,7 @@ main (int argc, char **argv)
   int signum = -1;
   char signame[SIG2STR_MAX];
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

@@ -342,6 +342,7 @@ main (int argc, char **argv)
   convert_entire_line = 1;
   tab_list = NULL;
   first_free_tab = 0;
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

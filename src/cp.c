@@ -837,6 +837,7 @@ main (int argc, char **argv)
   int copy_contents = 0;
   char *target_directory = NULL;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

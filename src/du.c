@@ -574,6 +574,7 @@ main (int argc, char **argv)
   cwd_only[0] = ".";
   cwd_only[1] = NULL;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

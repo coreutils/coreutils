@@ -1634,6 +1634,7 @@ main (int argc, char **argv)
      see if it has changed.  */
   double sleep_interval = 1.0;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

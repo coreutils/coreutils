@@ -69,6 +69,7 @@ main (int argc, char **argv)
   register uid_t uid;
   int c;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

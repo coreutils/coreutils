@@ -406,6 +406,7 @@ main (int argc, char **argv)
   char **file;
   int dest_is_dir;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

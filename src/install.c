@@ -187,6 +187,7 @@ main (int argc, char **argv)
   int n_files;
   char **file;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

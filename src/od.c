@@ -1626,6 +1626,7 @@ main (int argc, char **argv)
      after any true address.  */
   uintmax_t pseudo_start IF_LINT (= 0);
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

@@ -117,6 +117,7 @@ main (int argc, char **argv)
   int display_return = 1, do_v9 = 0;
   int allow_options = 1;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

@@ -776,6 +776,7 @@ main (int argc, char *argv[])
   int terse = 0;
   char *format = NULL;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

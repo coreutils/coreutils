@@ -468,6 +468,7 @@ main (int argc, char **argv)
   struct passwd *pw;
   struct passwd pw_copy;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

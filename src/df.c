@@ -755,6 +755,7 @@ main (int argc, char **argv)
   struct stat *stats IF_LINT (= 0);
   int n_valid_args = 0;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

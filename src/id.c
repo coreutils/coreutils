@@ -120,6 +120,7 @@ main (int argc, char **argv)
   /* If nonzero, output only the user ID(s). -u */
   int just_user = 0;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

@@ -430,6 +430,7 @@ main (int argc, char **argv)
   int optc, exit_status;
   char default_delims[2], zero_delims[3];
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

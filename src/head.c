@@ -937,6 +937,7 @@ main (int argc, char **argv)
   static char const *const default_file_list[] = {"-", NULL};
   char const *const *file_list;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

@@ -742,6 +742,7 @@ main (int argc, char **argv)
   const char *posixly_correct = getenv ("POSIXLY_CORRECT");
   int invalid_long_option = 0;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

@@ -223,6 +223,7 @@ main (int argc, char **argv)
   int files_given;
   int (*sum_func) (const char *, int) = bsd_sum_file;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

@@ -67,6 +67,7 @@ main (int argc, char **argv)
   char const *result;
   size_t len;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

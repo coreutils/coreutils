@@ -265,6 +265,7 @@ main (int argc, char **argv)
   int date_set = 0;
   int err = 0;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

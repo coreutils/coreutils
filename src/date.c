@@ -302,6 +302,7 @@ main (int argc, char **argv)
 			       ? COMMON_SHORT_OPTIONS "I::"
 			       : COMMON_SHORT_OPTIONS "I:");
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

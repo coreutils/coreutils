@@ -321,6 +321,7 @@ main (register int argc, register char **argv)
   int optchar;
   int fail;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

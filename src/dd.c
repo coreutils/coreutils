@@ -1141,6 +1141,7 @@ main (int argc, char **argv)
   int i;
   int exit_status;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

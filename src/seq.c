@@ -339,6 +339,7 @@ main (int argc, char **argv)
   /* The printf(3) format used for output.  */
   char *format_str = NULL;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

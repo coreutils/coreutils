@@ -426,6 +426,7 @@ main (int argc, char **argv)
   enum Shell_syntax syntax = SHELL_SYNTAX_UNKNOWN;
   int print_database = 0;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

@@ -621,6 +621,7 @@ main (int argc, char **argv)
   int optc, longind;
   int assumptions = 1;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

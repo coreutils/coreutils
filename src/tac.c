@@ -608,6 +608,7 @@ main (int argc, char **argv)
   int optc, errors;
   int have_read_stdin = 0;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

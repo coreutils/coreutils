@@ -553,6 +553,7 @@ main (int argc, char **argv)
 #endif
 
   /* Setting values of global variables.  */
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

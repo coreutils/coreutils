@@ -1073,6 +1073,7 @@ main (int margc, char **margv)
   if (code)
     return (test_error_return);
 #else /* TEST_STANDALONE */
+  initialize_main (&margc, &margv);
   program_name = margv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);

@@ -142,6 +142,7 @@ main (register int argc, register char **argv, char **envp)
   int optc;
   int ignore_environment = 0;
 
+  initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
