@@ -1,3 +1,7 @@
+2003-12-20  Jim Meyering  <jim@meyering.net>
+
+	* fts.c [!_LIBC]: Define __P.
+
 2003-12-19  Jim Meyering  <jim@meyering.net>
 
 	Rewrite fts to use a hash table or O(1)-mem cycle-detection
