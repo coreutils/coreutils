@@ -1,3 +1,9 @@
+2003-04-10  Jim Meyering  <jim@meyering.net>
+
+	* canonicalize.c (canonicalize_file_name): Remove stray semicolon
+	that caused `readlink --canonical RELATIVE_NAME' to fail on e.g.,
+	Solaris systems.  Reported by Bruce Korb.
+
 2003-04-05  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (DEFS): Use += notation rather than `DEFS = ... @DEFS@'.
