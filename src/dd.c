@@ -44,8 +44,8 @@
 				cbs, replacing newline with trailing spaces.
    unblock			Replace trailing spaces in cbs-sized block
 				with newline.
-   lcase			Change uppercase characters to lowercase.
-   ucase			Change lowercase characters to uppercase.
+   lcase			Change upper case characters to lower case.
+   ucase			Change lower case characters to upper case.
    swab				Swap every pair of input bytes.
 				Unlike the Unix dd, this works when an odd
 				number of bytes are read.
@@ -541,8 +541,10 @@ copy ()
   int nread;			/* Bytes read in the current block. */
   int exit_status = 0;
 
-  /* Leave an extra byte at the beginning and end of `ibuf' for conv=swab.  */
-  ibuf = (unsigned char *) xmalloc (input_blocksize + 2) + 1;
+  /* Leave an extra byte at the beginning and end of `ibuf' for conv=swab,
+     but keep the buffer address even.  Some peculiar device drivers work
+     only with word-aligned buffers.  */
+  ibuf = (unsigned char *) xmalloc (input_blocksize + 4) + 2;
   if (conversions_mask & C_TWOBUFS)
     obuf = (unsigned char *) xmalloc (output_blocksize);
   else
@@ -1107,8 +1109,8 @@ by w for x2, by b for x512, by k for x1024.  Each KEYWORD may be:\n\
   ibm       from ASCII to alternated EBCDIC\n\
   block     pad newline-terminated records with spaces to cbs-size \n\
   unblock   replace trailing spaces in cbs-size records with newline\n\
-  lcase     change uppercase to lowercase\n\
-  ucase     change lowercase to uppercase\n\
+  lcase     change upper case to lower case\n\
+  ucase     change lower case to upper case\n\
   swab      swap every pair of input bytes\n\
   noerror   continue after read errors\n\
   sync      pad every input block with NULs to ibs-size\n");
