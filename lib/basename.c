@@ -19,6 +19,8 @@
 # include <config.h>
 #endif
 
+#include <assert.h>
+
 #ifndef FILESYSTEM_PREFIX_LEN
 # define FILESYSTEM_PREFIX_LEN(Filename) 0
 #endif
@@ -60,6 +62,9 @@ base_name (char const *name)
   /* If NAME is all slashes, arrange to return `/'.  */
   if (*base == '\0' && ISSLASH (*name) && all_slashes)
     --base;
+
+  /* Make sure the last byte is not a slash.  */
+  assert (all_slashes || *(p - 1) != '/');
 
   return (char *) base;
 }
