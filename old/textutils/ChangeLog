@@ -2,6 +2,9 @@
 
 	* tests/mk-script ($program_name): Define.
 	(main): Use $program_name, rather than long-inaccurate `build-script'.
+	(main): Iterate over the sorted keys (rather than `while...each...'),
+	so this script produces the same output regardless of which version
+	of perl (e.g., perl5.6) is used.
 
 2001-08-04  Jim Meyering  <meyering@lucent.com>
 
