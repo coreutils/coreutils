@@ -57,11 +57,6 @@
 /* Number of items to tail.  */
 #define DEFAULT_N_LINES 10
 
-/* Size of atomic reads.  */
-#ifndef BUFSIZ
-# define BUFSIZ (512 * 8)
-#endif
-
 /* A special value for dump_remainder's N_BYTES parameter.  */
 #define COPY_TO_EOF OFF_T_MAX
 
@@ -518,8 +513,9 @@ pipe_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
 {
   struct linebuffer
   {
-    unsigned int nbytes, nlines;
     char buffer[BUFSIZ];
+    size_t nbytes;
+    size_t nlines;
     struct linebuffer *next;
   };
   typedef struct linebuffer LBUFFER;
@@ -537,9 +533,9 @@ pipe_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
   while (1)
     {
       n_read = safe_read (fd, tmp->buffer, BUFSIZ);
-      tmp->nbytes = n_read;
       if (n_read == 0 || n_read == SAFE_READ_ERROR)
 	break;
+      tmp->nbytes = n_read;
       *read_pos += n_read;
       tmp->nlines = 0;
       tmp->next = NULL;
@@ -656,13 +652,13 @@ pipe_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
 {
   struct charbuffer
   {
-    unsigned int nbytes;
     char buffer[BUFSIZ];
+    size_t nbytes;
     struct charbuffer *next;
   };
   typedef struct charbuffer CBUFFER;
   CBUFFER *first, *last, *tmp;
-  int i;			/* Index into buffers.  */
+  size_t i;			/* Index into buffers.  */
   size_t total_bytes = 0;	/* Total characters in all buffers.  */
   int errors = 0;
   size_t n_read;
@@ -676,11 +672,11 @@ pipe_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
   while (1)
     {
       n_read = safe_read (fd, tmp->buffer, BUFSIZ);
-      tmp->nbytes = n_read;
-      tmp->next = NULL;
       if (n_read == 0 || n_read == SAFE_READ_ERROR)
 	break;
       *read_pos += n_read;
+      tmp->nbytes = n_read;
+      tmp->next = NULL;
 
       total_bytes += tmp->nbytes;
       /* If there is enough room in the last buffer read, just append the new
