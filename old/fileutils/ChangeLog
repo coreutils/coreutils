@@ -1,3 +1,7 @@
+Tue Dec 10 00:14:24 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in: Bump version to 3.13k.
+
 Mon Dec  9 18:26:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/obstack.h: Include config.h.
