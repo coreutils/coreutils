@@ -449,7 +449,7 @@ quotearg_buffer_restyled (char *buffer, size_t buffersize,
 				  goto use_shell_always_quoting_style;
 				}
 			  }
-			    
+
 			if (! iswprint (w))
 			  printable = 0;
 			m += bytes;

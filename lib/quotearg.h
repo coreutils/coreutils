@@ -29,7 +29,7 @@ enum quoting_style
   {
     /* Output names as-is (ls --quoting-style=literal).  */
     literal_quoting_style,
-    
+
     /* Quote names for the shell if they contain shell metacharacters
        or would cause ambiguous output (ls --quoting-style=shell).  */
     shell_quoting_style,
