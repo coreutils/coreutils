@@ -205,7 +205,7 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
 	  dir_to_remove = NULL;
 	  error (0, 0,
 		 _("cannot move %s to a subdirectory of itself, %s"),
-		 quote_n (0, source), quote_n (0, dest));
+		 quote_n (0, source), quote_n (1, dest));
 	}
       else if (rename_succeeded)
 	{
