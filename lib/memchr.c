@@ -5,38 +5,58 @@
    adaptation to memchr suggested by Dick Karpinski (dick@cca.ucsf.edu),
    and implemented by Roland McGrath (roland@ai.mit.edu).
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+NOTE: The canonical source of this file is maintained with the GNU C Library.
+Bugs can be reported to bug-glibc@prep.ai.mit.edu.
 
-The GNU C Library is distributed in the hope that it will be useful,
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 2, or (at your option) any
+later version.
+
+This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
-#if (SIZEOF_LONG != 4 && SIZEOF_LONG != 8)
- error This function works only on systems for which sizeof(long) is 4 or 8.
-/* The previous line would begin with `#error,' but some compilers can't
-   handle that even when the condition is false.  */
+#undef __ptr_t
+#if defined (__cplusplus) || (defined (__STDC__) && __STDC__)
+# define __ptr_t void *
+#else /* Not C++ or ANSI C.  */
+# define __ptr_t char *
+#endif /* C++ or ANSI C.  */
+
+#if defined (HAVE_STRING_H) || defined (_LIBC)
+# include <string.h>
 #endif
+
+#if defined (HAVE_LIMIT_H) || defined (_LIBC)
+# include <limit.h>
+#endif
+
+#define LONG_MAX_32_BITS 2147483647
+
+#ifndef LONG_MAX
+#define LONG_MAX LONG_MAX_32_BITS
+#endif
+
+#include <sys/types.h>
+
 
 /* Search no more than N bytes of S for C.  */
 
-char *
+__ptr_t
 memchr (s, c, n)
-     unsigned char *s;
+     const __ptr_t s;
      int c;
-     unsigned n;
+     size_t n;
 {
   const unsigned char *char_ptr;
   const unsigned long int *longword_ptr;
@@ -50,7 +70,7 @@ memchr (s, c, n)
 			       & (sizeof (longword) - 1)) != 0;
        --n, ++char_ptr)
     if (*char_ptr == c)
-      return (char *) char_ptr;
+      return (__ptr_t) char_ptr;
 
   /* All these elucidatory comments refer to 4-byte longwords,
      but the theory applies equally well to 8-byte longwords.  */
@@ -60,27 +80,28 @@ memchr (s, c, n)
   /* Bits 31, 24, 16, and 8 of this number are zero.  Call these bits
      the "holes."  Note that there is a hole just to the left of
      each byte, with an extra at the end:
-
+     
      bits:  01111110 11111110 11111110 11111111
-     bytes: AAAAAAAA BBBBBBBB CCCCCCCC DDDDDDDD
+     bytes: AAAAAAAA BBBBBBBB CCCCCCCC DDDDDDDD 
 
      The 1-bits make sure that carries propagate to the next 0-bit.
      The 0-bits provide holes for carries to fall into.  */
-#if (SIZEOF_LONG == 8)
-  magic_bits = ((unsigned long int) 0x7efefefe << 32) | 0xfefefeff;
-#else
+
+  if (sizeof (longword) != 4 && sizeof (longword) != 8)
+    abort ();
+
+#if LONG_MAX <= LONG_MAX_32_BITS
   magic_bits = 0x7efefeff;
-#endif /* SIZEOF_LONG == 8 */
+#else
+  magic_bits = ((unsigned long int) 0x7efefefe << 32) | 0xfefefeff;
+#endif
 
   /* Set up a longword, each of whose bytes is C.  */
   charmask = c | (c << 8);
   charmask |= charmask << 16;
-#if (SIZEOF_LONG == 8)
-  charmask |= charmask << 32;
-#endif /* SIZEOF_LONG == 8 */
-  if (sizeof (longword) > 8)
-    abort ();
-
+#if LONG_MAX > LONG_MAX_32_BITS
+    charmask |= charmask << 32;
+#endif
 
   /* Instead of the traditional loop which tests each character,
      we will test a longword at a time.  The tricky part is testing
@@ -125,11 +146,11 @@ memchr (s, c, n)
 
       /* Add MAGIC_BITS to LONGWORD.  */
       if ((((longword + magic_bits)
-
-      /* Set those bits that were unchanged by the addition.  */
+	
+	    /* Set those bits that were unchanged by the addition.  */
 	    ^ ~longword)
-
-      /* Look at only the hole bits.  If any of the hole bits
+	       
+	   /* Look at only the hole bits.  If any of the hole bits
 	      are unchanged, most likely one of the bytes was a
 	      zero.  */
 	   & ~magic_bits) != 0)
@@ -140,23 +161,23 @@ memchr (s, c, n)
 	  const unsigned char *cp = (const unsigned char *) (longword_ptr - 1);
 
 	  if (cp[0] == c)
-	    return (char *) cp;
+	    return (__ptr_t) cp;
 	  if (cp[1] == c)
-	    return (char *) &cp[1];
+	    return (__ptr_t) &cp[1];
 	  if (cp[2] == c)
-	    return (char *) &cp[2];
+	    return (__ptr_t) &cp[2];
 	  if (cp[3] == c)
-	    return (char *) &cp[3];
-#if (SIZEOF_LONG == 8)
+	    return (__ptr_t) &cp[3];
+#if LONG_MAX > 2147483647
 	  if (cp[4] == c)
-	    return (char *) &cp[4];
+	    return (__ptr_t) &cp[4];
 	  if (cp[5] == c)
-	    return (char *) &cp[5];
+	    return (__ptr_t) &cp[5];
 	  if (cp[6] == c)
-	    return (char *) &cp[6];
+	    return (__ptr_t) &cp[6];
 	  if (cp[7] == c)
-	    return (char *) &cp[7];
-#endif /* SIZEOF_LONG == 8 */
+	    return (__ptr_t) &cp[7];
+#endif
 	}
 
       n -= sizeof (longword);
@@ -167,7 +188,7 @@ memchr (s, c, n)
   while (n-- > 0)
     {
       if (*char_ptr == c)
-	return (char *) char_ptr;
+	return (__ptr_t) char_ptr;
       else
 	++char_ptr;
     }
