@@ -1,5 +1,5 @@
 /* Determine the number of screen columns needed for a string.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,19 +21,10 @@
 # include <config.h>
 #endif
 
-/* Get MB_LEN_MAX.  */
-#if HAVE_LIMITS_H
-# include <limits.h>
-#endif
-
 /* Get MB_CUR_MAX.  */
-#if HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
+#include <stdlib.h>
 
-#if HAVE_STRING_H
-# include <string.h>
-#endif
+#include <string.h>
 
 /* Get isprint().  */
 #include <ctype.h>
@@ -43,12 +34,21 @@
 # include <wchar.h>
 #endif
 
-/* Get iswprint().  */
+/* Get iswprint(), iswcntrl().  */
 #if HAVE_WCTYPE_H
 # include <wctype.h>
 #endif
 #if !defined iswprint && !HAVE_ISWPRINT
 # define iswprint(wc) 1
+#endif
+#if !defined iswcntrl && !HAVE_ISWCNTRL
+# define iswcntrl(wc) 0
+#endif
+
+#ifndef mbsinit
+# if !HAVE_MBSINIT
+#  define mbsinit(ps) 1
+# endif
 #endif
 
 #ifndef HAVE_DECL_WCWIDTH
@@ -75,32 +75,40 @@ int wcwidth ();
 /* Undefine to protect against the definition in wctype.h of solaris2.6.   */
 #undef ISPRINT
 #define ISPRINT(c) (IN_CTYPE_DOMAIN (c) && isprint (c))
+#undef ISCNTRL
+#define ISCNTRL(c) (IN_CTYPE_DOMAIN (c) && iscntrl (c))
 
 #include "mbswidth.h"
 
 /* Returns the number of columns needed to represent the multibyte
    character string pointed to by STRING.  If a non-printable character
-   occurs, -1 is returned, unless MBSW_ACCEPT_UNPRINTABLE is specified.
-   With flags = 0, this is the multibyte analogon of the wcswidth function.  */
+   occurs, and MBSW_REJECT_UNPRINTABLE is specified, -1 is returned.
+   With flags = MBSW_REJECT_INVALID | MBSW_REJECT_UNPRINTABLE, this is
+   the multibyte analogon of the wcswidth function.  */
 int
-mbswidth (const char *string, int flags)
+mbswidth (string, flags)
+     const char *string;
+     int flags;
 {
   return mbsnwidth (string, strlen (string), flags);
 }
 
 /* Returns the number of columns needed to represent the multibyte
    character string pointed to by STRING of length NBYTES.  If a
-   non-printable character occurs, -1 is returned, unless
-   MBSW_ACCEPT_UNPRINTABLE is specified.  */
+   non-printable character occurs, and MBSW_REJECT_UNPRINTABLE is
+   specified, -1 is returned.  */
 int
-mbsnwidth (const char *string, size_t nbytes, int flags)
+mbsnwidth (string, nbytes, flags)
+     const char *string;
+     size_t nbytes;
+     int flags;
 {
   const char *p = string;
   const char *plimit = p + nbytes;
   int width;
 
   width = 0;
-#if HAVE_MBRTOWC && (MB_LEN_MAX > 1)
+#if HAVE_MBRTOWC
   if (MB_CUR_MAX > 1)
     {
       while (p < plimit)
@@ -146,7 +154,7 @@ mbsnwidth (const char *string, size_t nbytes, int flags)
 		    if (bytes == (size_t) -1)
 		      /* An invalid multibyte sequence was encountered.  */
 		      {
-			if (flags & MBSW_ACCEPT_INVALID)
+			if (!(flags & MBSW_REJECT_INVALID))
 			  {
 			    p++;
 			    width++;
@@ -159,7 +167,7 @@ mbsnwidth (const char *string, size_t nbytes, int flags)
 		    if (bytes == (size_t) -2)
 		      /* An incomplete multibyte character at the end.  */
 		      {
-			if (flags & MBSW_ACCEPT_INVALID)
+			if (!(flags & MBSW_REJECT_INVALID))
 			  {
 			    p = plimit;
 			    width++;
@@ -179,8 +187,8 @@ mbsnwidth (const char *string, size_t nbytes, int flags)
 		      width += w;
 		    else
 		      /* An unprintable multibyte character.  */
-		      if (flags & MBSW_ACCEPT_UNPRINTABLE)
-			width += 1;
+		      if (!(flags & MBSW_REJECT_UNPRINTABLE))
+			width += (iswcntrl (wc) ? 0 : 1);
 		      else
 			return -1;
 
@@ -198,8 +206,10 @@ mbsnwidth (const char *string, size_t nbytes, int flags)
     {
       unsigned char c = (unsigned char) *p++;
 
-      if ((flags & MBSW_ACCEPT_UNPRINTABLE) || ISPRINT (c))
+      if (ISPRINT (c))
 	width++;
+      else if (!(flags & MBSW_REJECT_UNPRINTABLE))
+	width += (ISCNTRL (c) ? 0 : 1);
       else
 	return -1;
     }
