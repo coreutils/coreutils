@@ -99,14 +99,17 @@ paren-4.O paren-4.E paren-5.O paren-5.E
 
 EXTRA_DIST = Test.pm $x-tests $(explicit) $(maint_gen)
 noinst_SCRIPTS = $x-tests
+TESTS_ENVIRONMENT = \
+  PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
 
 editpl = sed -e 's,@''PERL''@,$(PERL),g' -e 's,@''srcdir''@,$(srcdir),g'
 
 TESTS = $x-tests
 
 mk_script = $(srcdir)/../mk-script
-$(srcdir)/$x-tests: $(mk_script) Test.pm
-	$(PERL) -I$(srcdir) -w -- $(mk_script) $(srcdir) ../../src/$x > $@.n
+$(srcdir)/$x-tests: $(mk_script) Test.pm Makefile.am
+	test '$x' = test && prog=../../src/$x || prog=$x; \
+	$(PERL) -I$(srcdir) -w -- $(mk_script) $(srcdir) $$prog > $@.n
 	mv $@.n $@
 	chmod 755 $@
 

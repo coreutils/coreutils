@@ -38,7 +38,8 @@ TESTS = $x-tests
 
 mk_script = $(srcdir)/../mk-script
 $(srcdir)/$x-tests: $(mk_script) Test.pm Makefile.am
-	$(PERL) -I$(srcdir) -w -- $(mk_script) $(srcdir) $x > $@.n
+	test '$x' = test && prog=../../src/$x || prog=$x; \
+	$(PERL) -I$(srcdir) -w -- $(mk_script) $(srcdir) $$prog > $@.n
 	mv $@.n $@
 	chmod 755 $@
 
