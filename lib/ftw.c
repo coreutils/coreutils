@@ -36,6 +36,8 @@ char *alloca ();
 # endif
 #endif
 
+#include <sys/types.h>
+
 #if defined _LIBC
 # include <dirent.h>
 # define NAMLEN(dirent) _D_EXACT_NAMLEN (dirent)
