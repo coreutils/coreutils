@@ -1,3 +1,5 @@
+[4.5.4]
+* `yes|nl -s%n' no longer evokes a segfault
 [4.5.3]
 * du --dereference-args (-D) no longer fails in certain cases
 * `ln --target-dir=DIR' no longer fails when given a single argument
