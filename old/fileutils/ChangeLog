@@ -2,6 +2,23 @@
 
 	* Version 3.16q.
 
+	* lib/mountlist.c (read_filesystem_list) [MOUNTED_GETMNTENT2]:
+	Always close stream and file descriptor before returning.
+
+	* src/df.c (main): Move the test of the result of the
+	read_filesystem_list call up out of if-block -- code in the
+	else-block depends on it too.
+
+1998-06-29  Paul Eggert  <eggert@twinsun.com>
+
+ 	* lib/mountlist.c: (read_filesystem_list): If SVR4, lock
+ 	/etc/.mnttab.lock if available, to avoid race conditions
+ 	(e.g. with the automounter on Solaris 2.6).
+
+ 	Include <errno.h>, <fcntl.h>, <unistd.h>.
+
+1998-06-29  Jim Meyering  <meyering@ascend.com>
+
 	* lib/mountlist.c (fstype_to_string): Guard with
 	#if ! HAVE_F_FSTYPENAME_IN_STATFS.
 
