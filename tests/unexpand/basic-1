@@ -19,8 +19,6 @@ use strict;
 # Turn off localisation of executable's ouput.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
-my $degenerate = "d41d8cd98f00b204e9800998ecf8427e";
-
 my @Tests =
     (
      # These would infloop prior to textutils-2.0d.
