@@ -201,3 +201,5 @@ Adapt tools like wc, tr, fmt, etc. (most of the textutils) to be
   multibyte aware.  The problem is that I want to avoid duplicating
   significant blocks of logic, yet I also want to incur only minimal
   (preferably `no') cost when operating in single-byte mode.
+
+Remove all uses of the `register' keyword
