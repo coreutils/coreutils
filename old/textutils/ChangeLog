@@ -1,6 +1,11 @@
-2001-11-05  Jim Meyering  <meyering@lucent.com>
+2001-11-09  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.17.
+
+	* configure.ac: Use AC_CONFIG_FILES(...) and call AC_OUTPUT with no
+	arguments.
+
+2001-11-05  Jim Meyering  <meyering@lucent.com>
 
 	* src/sort.c (usage): Don't recommend setting LC_COLLATE=C.
 	That can cause problems (now documented in coreutils.texi).
