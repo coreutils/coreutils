@@ -1,6 +1,10 @@
+2000-06-12  Paul Eggert  <eggert@twinsun.com>
+
+	* xstat.in: Include <stdlib.h> in lstat, to declare "free".
+
 2000-06-04  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/strnlen.c: Include <config.h> if HAVE_CONFIG_H.
+	* strnlen.c: Include <config.h> if HAVE_CONFIG_H.
 
 2000-06-04  Jim Meyering  <meyering@lucent.com>
 
@@ -45,7 +49,7 @@
 
 2000-05-15  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/closeout.c:
+	* closeout.c:
 	<sys/stat.h>, <sys/types.h>, <unistd.h>, (STDOUT_FILENO):
 	Remove; no longer needed.
 	"quotearg.h": Add include.
@@ -232,7 +236,7 @@
 
 2000-03-07  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/savedir.c (savedir): Work even if directory size is
+	* savedir.c (savedir): Work even if directory size is
 	negative; this can happen with some screwy NFS configurations.
 
 2000-03-06  Jim Meyering  <meyering@lucent.com>
@@ -285,7 +289,7 @@
 
 2000-02-28  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/quotearg.c (ALERT_CHAR): New macro.
+	* quotearg.c (ALERT_CHAR): New macro.
 	(quotearg_buffer_restyled): Use it.
 
 2000-02-27  Jim Meyering  <meyering@lucent.com>
@@ -315,7 +319,7 @@
 
 2000-02-18  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/getdate.y: Handle two-digit years with leading zeros correctly.
+	* getdate.y: Handle two-digit years with leading zeros correctly.
 	(textint): New typedef.
 	(parser_control): Member year changed from int to textint.
 	All uses changed.
@@ -337,7 +341,7 @@
 
 2000-02-14  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/getpagesize.h (getpagesize): Port to VMS for Alpha;
+	* getpagesize.h (getpagesize): Port to VMS for Alpha;
 	adapted from changes to grep getpagesize.h by Martin P.J. Zinser.
 
 2000-02-12  Jim Meyering  <meyering@lucent.com>
@@ -425,7 +429,7 @@
 
 2000-01-16  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/quotearg.c (quotearg_buffer_restyled): Do not quote
+	* quotearg.c (quotearg_buffer_restyled): Do not quote
 	alert, backslash, formfeed, and vertical tab unnecessarily in
 	shell quoting style.
 
