@@ -1,3 +1,9 @@
+1999-02-13  Jim Meyering  <meyering@ascend.com>
+
+	* src/dircolors.c (dc_parse_stream): Don't try to dereference
+	NULL if there's an error in our built-in list.
+	Suggestion from François Pinard.
+
 1999-02-13  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* src/install.c (main): Set x.backup_type only if backups are requested.
