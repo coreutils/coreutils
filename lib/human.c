@@ -32,12 +32,12 @@
 #endif
 
 #ifndef CHAR_BIT
-#define CHAR_BIT 8
+# define CHAR_BIT 8
 #endif
 
 #include "human.h"
 
-static const char suffixes[] = 
+static const char suffixes[] =
 {
   0,	/* not used */
   'k',	/* kilo */
@@ -51,11 +51,11 @@ static const char suffixes[] =
 };
 
 /* Convert N to a human readable format in BUF.
-   
+
    N is expressed in units of FROM_UNITS; use units of TO_UNITS in the
    output number.  FROM_UNITS and TO_UNITS must be positive, and one must
    be a multiple of the other.
-   
+
    If BASE is nonzero, use a format like "127k" if possible,
    using powers of BASE; otherwise, use ordinary decimal format.
    Normally BASE is either 1000 or 1024; it must be at least 2.
@@ -68,12 +68,7 @@ static const char suffixes[] =
    than BASE aren't modified.  */
 
 char *
-human_readable (n, buf, from_units, to_units, base)
-     uintmax_t n;
-     char *buf;
-     int from_units;
-     int to_units;
-     int base;
+human_readable (uintmax_t n, char *buf, int from_units, int to_units, int base)
 {
   uintmax_t amt;
   int tenths;
@@ -88,10 +83,14 @@ human_readable (n, buf, from_units, to_units, base)
 
   p = buf + LONGEST_HUMAN_READABLE;
   *p = '\0';
-   
+
+#ifdef lint
+  /* Suppress `used before initialized' warning.  */
+  power = 0;
+#endif
 
   /* Adjust AMT out of FROM_UNITS units and into TO_UNITS units.  */
-   
+
   if (to_units <= from_units)
     {
       int multiplier = from_units / to_units;
@@ -142,7 +141,7 @@ human_readable (n, buf, from_units, to_units, base)
       rounding = r2 < divisor ? 0 < r2 : 2 + (divisor < r2);
     }
 
-   
+
   /* Use power of BASE notation if adjusted AMT is large enough.  */
 
   if (base && base <= amt)
@@ -182,7 +181,7 @@ human_readable (n, buf, from_units, to_units, base)
 	    }
 	}
     }
-   
+
   if (5 < tenths + (2 < rounding + (amt & 1)))
     {
       amt++;
