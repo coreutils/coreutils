@@ -1,5 +1,11 @@
 2004-08-10  Paul Eggert  <eggert@cs.ucla.edu>
 
+	Convert all files to UTF-8.
+	* tests/fmt/basic (8-bit-pfx): Use UTF-8, not Latin-1.
+	* tests/sort/Test.pm (16a): Likewise.
+	* tests/uniq/Test.pm (8): Likewise.
+	* tests/misc/printf-hex: Use ASCII, not Latin-1.
+
 	* NEWS: Document "sort -o -" and "tee -" POSIX-conformance fixes.
 	* src/shred.c (usage): "-" is an operand, not an option.
 	* src/sort.c (die, xfopen, mergefps, first_same_file, merge):
