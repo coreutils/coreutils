@@ -15,8 +15,8 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-#ifndef _error_h_
-# define _error_h_
+#ifndef ERROR_H_
+# define ERROR_H_
 
 # ifndef __attribute__
 /* This feature is available in gcc versions 2.5 and later.  */
@@ -62,4 +62,4 @@ extern unsigned int error_message_count;
    variable controls whether this mode is selected or not.  */
 extern int error_one_per_line;
 
-#endif /* not _error_h_ */
+#endif /* not ERROR_H_ */
