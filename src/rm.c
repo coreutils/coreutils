@@ -466,11 +466,11 @@ fspec_init_dp (struct File_spec *fs, struct dirent *dp)
   fs->have_filetype_mode = 0;
   fs->inum = D_INO (dp);
 
-#if D_TYPE_IN_DIRENT && defined (DT_UNKNOWN)
-  if (filetype_mode != DT_UNKNOWN)
+#if D_TYPE_IN_DIRENT && defined (DT_UNKNOWN) && defined (DTTOIF)
+  if (dp->d_type != DT_UNKNOWN)
     {
       fs->have_filetype_mode = 1;
-      fs->mode = filetype_mode;
+      fs->mode = DTTOIF (dp->d_type);
     }
 #endif
 }
