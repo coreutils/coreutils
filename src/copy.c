@@ -437,8 +437,12 @@ copy_internal (const char *src_path, const char *dst_path,
 	  if (!same
 	      /* If we're making a backup, we'll detect the problem case in
 		 copy_reg because SRC_PATH will no longer exist.  Allowing
-		 the test to be deferred lets cp do some useful things.  */
-	      && x->backup_type == none
+		 the test to be deferred lets cp do some useful things.
+		 But when creating hardlinks and SRC_PATH is a symlink
+		 but DST_PATH is not we must test anyway.  */
+	      && (x->backup_type == none
+		  || (x->hard_link && S_ISLNK (src_sb.st_mode)
+		      && !S_ISLNK (dst_sb.st_mode)))
 	      && !x->dereference
 	      && (S_ISLNK (dst_sb.st_mode) || S_ISLNK (src_sb.st_mode)))
 	    {
