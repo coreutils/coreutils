@@ -1,3 +1,13 @@
+2003-09-03  Jim Meyering  <jim@meyering.net>
+
+	* getdate.y (relative_time_table): Use tDAY_UNIT for "tomorrow",
+	"yesterday", "today", and "now" rather than tMINUTE_UNIT.  Of
+	course with correspondingly smaller numbers for tomorrow and
+	yesterday.  From Tadayoshi Funaba.  Originally installed into
+	sh-utils on 1999-08-07, but the patch was mistakenly reverted by
+	the next change to that shared file (but this time in fileutils)
+	on 1999-08-29.
+
 2003-08-18  Paul Eggert <eggert@twinsun.com>
 
 	* same.c: Include <stdlib.h> and <string.h> unconditionally,
