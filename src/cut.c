@@ -447,7 +447,6 @@ set_fields (const char *fieldstr)
 	}
       else if (ISDIGIT (*fieldstr))
 	{
-	  size_t new_v;
 	  /* Record beginning of digit string, in case we have to
 	     complain about it.  */
 	  static char const *num_start;
@@ -456,10 +455,9 @@ set_fields (const char *fieldstr)
 	  in_digits = true;
 
 	  /* Detect overflow.  */
-	  new_v = 10 * value + *fieldstr - '0';
-	  if (SIZE_MAX / 10 < value || new_v < value * 10)
+	  if (DECIMAL_DIGIT_ACCUMULATE (value, *fieldstr - '0', SIZE_MAX))
 	    {
-	      /* In case the user specified -c4294967296-22,
+	      /* In case the user specified -c4294967296,22,
 		 complain only about the first number.  */
 	      /* Determine the length of the offending number.  */
 	      size_t len = strspn (num_start, "0123456789");
@@ -473,7 +471,6 @@ set_fields (const char *fieldstr)
 	      free (bad_num);
 	      exit (EXIT_FAILURE);
 	    }
-	  value = new_v;
 
 	  fieldstr++;
 	}
