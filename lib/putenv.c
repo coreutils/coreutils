@@ -23,6 +23,11 @@
 # include <config.h>
 #endif
 
+/* Disable the definition of putenv to rpl_putenv (from config.h) in this
+   file.  Otherwise, we'd get conflicting prototypes for rpl_putenv on
+   systems like Irix 5.3.  */
+#undef putenv
+
 #if defined (__GNU_LIBRARY__) || defined (HAVE_STDLIB_H)
 # include <stdlib.h>
 #endif
