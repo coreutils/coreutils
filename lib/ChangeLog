@@ -1,3 +1,9 @@
+2003-03-09  Jim Meyering  <jim@meyering.net>
+
+	* ftw.c: Include "save-cwd.h".
+	(ftw_startup): Avoid use of getcwd, if possible.
+	Instead, use fopen/fchdir via save_cwd/restore_cwd.
+
 2003-03-08  Jim Meyering  <jim@meyering.net>
 
 	* xnanosleep.c: Don't use `defined' in a #define directive.
