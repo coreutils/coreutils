@@ -1,3 +1,9 @@
+2003-03-17  Jim Meyering  <jim@meyering.net>
+
+	* fchown-stub.c (fchown): Put function type on its own line.
+	* readlink-stub.c (readlink): Likewise.
+	* lstat-stub.c (lstat): Likewise.
+
 2003-03-14  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (AUTOMAKE_OPTIONS): Remove definition --
