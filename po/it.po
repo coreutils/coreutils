@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: coreutils 4.5.1\n"
-"POT-Creation-Date: 2003-03-18 20:11+0100\n"
+"POT-Creation-Date: 2003-03-27 10:07+0100\n"
 "PO-Revision-Date: 2002-07-24 18:12+0200\n"
 "Last-Translator: Marco d'Itri <md@linux.it>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
@@ -325,7 +325,7 @@ msgstr ""
 #: src/od.c:283 src/paste.c:399 src/pathchk.c:142 src/pinky.c:465
 #: src/pr.c:2750 src/printenv.c:59 src/printf.c:96 src/ptx.c:1855 src/pwd.c:42
 #: src/readlink.c:65 src/rm.c:95 src/rmdir.c:142 src/seq.c:78 src/shred.c:156
-#: src/sleep.c:48 src/sort.c:272 src/split.c:92 src/stat.c:679 src/stty.c:494
+#: src/sleep.c:48 src/sort.c:272 src/split.c:92 src/stat.c:680 src/stty.c:494
 #: src/su.c:433 src/sum.c:56 src/sync.c:40 src/tac.c:123 src/tail.c:230
 #: src/tee.c:59 src/test.c:975 src/touch.c:240 src/tr.c:323 src/tsort.c:93
 #: src/tty.c:58 src/uname.c:106 src/unexpand.c:371 src/uniq.c:135
@@ -367,7 +367,7 @@ msgstr ""
 #: src/pinky.c:492 src/pr.c:2862 src/printenv.c:72 src/printf.c:144
 #: src/pwd.c:53 src/readlink.c:82 src/rm.c:127 src/rmdir.c:162 src/seq.c:104
 #: src/shred.c:220 src/sleep.c:64 src/sort.c:343 src/split.c:124
-#: src/stat.c:750 src/stty.c:708 src/su.c:454 src/sum.c:76 src/sync.c:51
+#: src/stat.c:751 src/stty.c:708 src/su.c:454 src/sum.c:76 src/sync.c:51
 #: src/tac.c:146 src/tail.c:300 src/tee.c:72 src/test.c:1057 src/touch.c:271
 #: src/tr.c:396 src/true.c:45 src/tsort.c:105 src/tty.c:70 src/uname.c:128
 #: src/unexpand.c:395 src/uniq.c:174 src/unlink.c:58 src/uptime.c:202
@@ -388,7 +388,7 @@ msgstr ""
 #: src/chroot.c:78 src/csplit.c:1464 src/dirname.c:89 src/expr.c:178
 #: src/install.c:284 src/link.c:87 src/mkdir.c:124 src/mkfifo.c:113
 #: src/mknod.c:137 src/pathchk.c:194 src/readlink.c:101 src/readlink.c:133
-#: src/rm.c:199 src/rmdir.c:206 src/seq.c:411 src/sleep.c:139 src/stat.c:801
+#: src/rm.c:199 src/rmdir.c:206 src/seq.c:411 src/sleep.c:139 src/stat.c:802
 #: src/unlink.c:88
 msgid "too few arguments"
 msgstr "troppo pochi argomenti"
@@ -868,7 +868,7 @@ msgstr "%s: sovrascrivo %s ignorando il modo %04lo? "
 msgid "%s: overwrite %s? "
 msgstr "%s: sovrascrivo %s? "
 
-#: src/copy.c:810 src/copy.c:848 src/stat.c:637
+#: src/copy.c:810 src/copy.c:848 src/stat.c:638
 #, c-format
 msgid "cannot stat %s"
 msgstr "impossibile fare stat di %s"
@@ -996,7 +996,7 @@ msgstr "impossibile creare il fifo %s"
 msgid "cannot create special file %s"
 msgstr "impossibile creare il file speciale %s"
 
-#: src/copy.c:1415 src/ls.c:2493 src/stat.c:425
+#: src/copy.c:1415 src/ls.c:2493 src/stat.c:426
 #, c-format
 msgid "cannot read symbolic link %s"
 msgstr "impossibile leggere il link simbolico %s"
@@ -4970,32 +4970,27 @@ msgstr "manca il numero esadecimale nella sequenza di escape"
 msgid "invalid universal character name \\%c%0*x"
 msgstr "nome del set di caratteri universale \\\\%c%0*x non valido"
 
-#: src/printf.c:298
-#, c-format
-msgid "\\%c: invalid escape"
-msgstr "\\%c: sequenza di escape non valida"
-
-#: src/printf.c:465
+#: src/printf.c:472
 #, fuzzy, c-format
 msgid "invalid field width: %s"
 msgstr "larghezza delle righe non valida: %s"
 
-#: src/printf.c:491
+#: src/printf.c:498
 #, fuzzy, c-format
 msgid "invalid precision: %s"
 msgstr "conversione non valida: %s"
 
-#: src/printf.c:512
+#: src/printf.c:519
 #, c-format
 msgid "%%%c: invalid directive"
 msgstr "%%%c: direttiva non valida"
 
-#: src/printf.c:569
+#: src/printf.c:576
 #, c-format
 msgid "Usage: %s format [argument...]\n"
 msgstr "Uso: %s formato [argomento...]\n"
 
-#: src/printf.c:587
+#: src/printf.c:594
 #, c-format
 msgid "warning: ignoring excess arguments, starting with `%s'"
 msgstr ""
@@ -5895,22 +5890,22 @@ msgstr ""
 msgid "invalid number"
 msgstr "numero %s non valido"
 
-#: src/stat.c:325
+#: src/stat.c:326
 #, fuzzy
 msgid "*** invalid date/time ***"
 msgstr "data `%s' non valida"
 
-#: src/stat.c:607
+#: src/stat.c:608
 #, c-format
 msgid "cannot read file system information for %s"
 msgstr "impossibile leggere le informazioni del file system per %s"
 
-#: src/stat.c:683
+#: src/stat.c:684
 #, c-format
 msgid "Usage: %s [OPTION] FILE...\n"
 msgstr "Uso: %s [OPZIONE] FILE...\n"
 
-#: src/stat.c:684
+#: src/stat.c:685
 msgid ""
 "Display file or filesystem status.\n"
 "\n"
@@ -5927,7 +5922,7 @@ msgstr ""
 "  -l, --link            segue i link\n"
 "  -t, --terse           stampa le informazioni in forma sintetica\n"
 
-#: src/stat.c:695
+#: src/stat.c:696
 #, fuzzy
 msgid ""
 "\n"
@@ -5945,7 +5940,7 @@ msgstr ""
 "  %a - Diritti di accesso in formato ottale\n"
 "  %b - Numero di blocchi allocati\n"
 
-#: src/stat.c:703
+#: src/stat.c:704
 #, fuzzy
 msgid ""
 "  %D   Device number in hex\n"
@@ -5962,7 +5957,7 @@ msgstr ""
 "  %G - Nome del gruppo del proprietario\n"
 "  %g - ID del gruppo del proprietario\n"
 
-#: src/stat.c:711
+#: src/stat.c:712
 #, fuzzy
 msgid ""
 "  %h   Number of hard links\n"
@@ -5983,7 +5978,7 @@ msgstr ""
 "  %T - Minor number del device in esadecimale\n"
 "  %t - Major number del device in esadecimale\n"
 
-#: src/stat.c:721
+#: src/stat.c:722
 #, fuzzy
 msgid ""
 "  %U   User name of owner\n"
@@ -6006,7 +6001,7 @@ msgstr ""
 "  %z - Orario dell'ultimo cambiamento\n"
 "\n"
 
-#: src/stat.c:733
+#: src/stat.c:734
 #, fuzzy
 msgid ""
 "Valid format sequences for file systems:\n"
@@ -6025,7 +6020,7 @@ msgstr ""
 "  %d - Numero di inode liberi nel file system\n"
 "  %f - Numero di blocchi liberi file system\n"
 
-#: src/stat.c:742
+#: src/stat.c:743
 #, fuzzy
 msgid ""
 "  %i   File System id in hex\n"
@@ -7929,6 +7924,9 @@ msgstr ""
 "Stampa in continuazione una riga con tutte le STRINGA specificate oppure "
 "`y'.\n"
 "\n"
+
+#~ msgid "\\%c: invalid escape"
+#~ msgstr "\\%c: sequenza di escape non valida"
 
 #~ msgid "program error"
 #~ msgstr "errore del programma"

@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU coreutils 4.5.10\n"
-"POT-Creation-Date: 2003-03-18 20:11+0100\n"
+"POT-Creation-Date: 2003-03-27 10:07+0100\n"
 "PO-Revision-Date: 2003-03-14 15:07+0100\n"
 "Last-Translator: Santiago Vila Doncel <sanvila@unex.es>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -291,7 +291,7 @@ msgstr "Las cadenas comparadas eran %s y %s."
 #: src/od.c:283 src/paste.c:399 src/pathchk.c:142 src/pinky.c:465
 #: src/pr.c:2750 src/printenv.c:59 src/printf.c:96 src/ptx.c:1855 src/pwd.c:42
 #: src/readlink.c:65 src/rm.c:95 src/rmdir.c:142 src/seq.c:78 src/shred.c:156
-#: src/sleep.c:48 src/sort.c:272 src/split.c:92 src/stat.c:679 src/stty.c:494
+#: src/sleep.c:48 src/sort.c:272 src/split.c:92 src/stat.c:680 src/stty.c:494
 #: src/su.c:433 src/sum.c:56 src/sync.c:40 src/tac.c:123 src/tail.c:230
 #: src/tee.c:59 src/test.c:975 src/touch.c:240 src/tr.c:323 src/tsort.c:93
 #: src/tty.c:58 src/uname.c:106 src/unexpand.c:371 src/uniq.c:135
@@ -335,7 +335,7 @@ msgstr ""
 #: src/pinky.c:492 src/pr.c:2862 src/printenv.c:72 src/printf.c:144
 #: src/pwd.c:53 src/readlink.c:82 src/rm.c:127 src/rmdir.c:162 src/seq.c:104
 #: src/shred.c:220 src/sleep.c:64 src/sort.c:343 src/split.c:124
-#: src/stat.c:750 src/stty.c:708 src/su.c:454 src/sum.c:76 src/sync.c:51
+#: src/stat.c:751 src/stty.c:708 src/su.c:454 src/sum.c:76 src/sync.c:51
 #: src/tac.c:146 src/tail.c:300 src/tee.c:72 src/test.c:1057 src/touch.c:271
 #: src/tr.c:396 src/true.c:45 src/tsort.c:105 src/tty.c:70 src/uname.c:128
 #: src/unexpand.c:395 src/uniq.c:174 src/unlink.c:58 src/uptime.c:202
@@ -352,7 +352,7 @@ msgstr ""
 #: src/chroot.c:78 src/csplit.c:1464 src/dirname.c:89 src/expr.c:178
 #: src/install.c:284 src/link.c:87 src/mkdir.c:124 src/mkfifo.c:113
 #: src/mknod.c:137 src/pathchk.c:194 src/readlink.c:101 src/readlink.c:133
-#: src/rm.c:199 src/rmdir.c:206 src/seq.c:411 src/sleep.c:139 src/stat.c:801
+#: src/rm.c:199 src/rmdir.c:206 src/seq.c:411 src/sleep.c:139 src/stat.c:802
 #: src/unlink.c:88
 msgid "too few arguments"
 msgstr "número de argumentos insuficiente"
@@ -982,7 +982,7 @@ msgstr "%s: ¿sobreescribir %s, sustituyendo el modo %04lo? (s/n) "
 msgid "%s: overwrite %s? "
 msgstr "%s: ¿sobreescribir %s? (s/n) "
 
-#: src/copy.c:810 src/copy.c:848 src/stat.c:637
+#: src/copy.c:810 src/copy.c:848 src/stat.c:638
 #, c-format
 msgid "cannot stat %s"
 msgstr "no se puede efectuar `stat' sobre %s"
@@ -1153,7 +1153,7 @@ msgstr "no se puede crear el fichero `fifo' %s"
 msgid "cannot create special file %s"
 msgstr "no se puede crear el fichero especial %s"
 
-#: src/copy.c:1415 src/ls.c:2493 src/stat.c:425
+#: src/copy.c:1415 src/ls.c:2493 src/stat.c:426
 #, c-format
 msgid "cannot read symbolic link %s"
 msgstr "no se puede leer el enlace simbólico %s"
@@ -5933,32 +5933,27 @@ msgstr "falta un número hexadecimal en la secuencia de escape"
 msgid "invalid universal character name \\%c%0*x"
 msgstr "el nombre de carácter universal \\%c%0*x es inválido"
 
-#: src/printf.c:298
-#, c-format
-msgid "\\%c: invalid escape"
-msgstr "\\%c: secuencia de escape inválida"
-
-#: src/printf.c:465
+#: src/printf.c:472
 #, c-format
 msgid "invalid field width: %s"
 msgstr "ancho de campo inválido: %s"
 
-#: src/printf.c:491
+#: src/printf.c:498
 #, c-format
 msgid "invalid precision: %s"
 msgstr "precisión inválida: %s"
 
-#: src/printf.c:512
+#: src/printf.c:519
 #, c-format
 msgid "%%%c: invalid directive"
 msgstr "%%%c: directiva inválida"
 
-#: src/printf.c:569
+#: src/printf.c:576
 #, c-format
 msgid "Usage: %s format [argument...]\n"
 msgstr "Modo de empleo: %s formato [argumento...]\n"
 
-#: src/printf.c:587
+#: src/printf.c:594
 #, c-format
 msgid "warning: ignoring excess arguments, starting with `%s'"
 msgstr "atención: se descartan los argumentos que sobran, comenzando por `%s'"
@@ -7064,21 +7059,21 @@ msgstr "la opción `-%d' está obsoleta; utilice `-l %d'"
 msgid "invalid number"
 msgstr "número inválido"
 
-#: src/stat.c:325
+#: src/stat.c:326
 msgid "*** invalid date/time ***"
 msgstr "*** fecha/hora inválida ***"
 
-#: src/stat.c:607
+#: src/stat.c:608
 #, c-format
 msgid "cannot read file system information for %s"
 msgstr "no se puede leer la información del sistema de ficheros para %s"
 
-#: src/stat.c:683
+#: src/stat.c:684
 #, c-format
 msgid "Usage: %s [OPTION] FILE...\n"
 msgstr "Modo de empleo: %s [OPCIÓN] FICHERO...\n"
 
-#: src/stat.c:684
+#: src/stat.c:685
 msgid ""
 "Display file or filesystem status.\n"
 "\n"
@@ -7097,7 +7092,7 @@ msgstr ""
 "  -L, --dereference     sigue los enlaces\n"
 "  -t, --terse           muestra la información de manera escueta\n"
 
-#: src/stat.c:695
+#: src/stat.c:696
 msgid ""
 "\n"
 "The valid format sequences for files (without --filesystem):\n"
@@ -7115,7 +7110,7 @@ msgstr ""
 "  %B   El tamaño en bytes de cada bloque indicado por `%b'\n"
 "  %b   Número de bloques asignados (véase %B)\n"
 
-#: src/stat.c:703
+#: src/stat.c:704
 msgid ""
 "  %D   Device number in hex\n"
 "  %d   Device number in decimal\n"
@@ -7131,7 +7126,7 @@ msgstr ""
 "  %G   Nombre de grupo del propietario\n"
 "  %g   ID del grupo del propietario\n"
 
-#: src/stat.c:711
+#: src/stat.c:712
 msgid ""
 "  %h   Number of hard links\n"
 "  %i   Inode number\n"
@@ -7152,7 +7147,7 @@ msgstr ""
 "  %T   Tipo de dispositivo secundario en hexadecimal\n"
 "  %t   Tipo de dispositivo principal en hexadecimal\n"
 
-#: src/stat.c:721
+#: src/stat.c:722
 msgid ""
 "  %U   User name of owner\n"
 "  %u   User ID of owner\n"
@@ -7174,7 +7169,7 @@ msgstr ""
 "  %z   Fecha de último cambio\n"
 "\n"
 
-#: src/stat.c:733
+#: src/stat.c:734
 msgid ""
 "Valid format sequences for file systems:\n"
 "\n"
@@ -7192,7 +7187,7 @@ msgstr ""
 "  %d   Nodos de ficheros libres en el sistema de ficheros\n"
 "  %f   Bloques libres en el sistema de ficheros\n"
 
-#: src/stat.c:742
+#: src/stat.c:743
 msgid ""
 "  %i   File System id in hex\n"
 "  %l   Maximum length of filenames\n"
@@ -9499,6 +9494,9 @@ msgstr ""
 "Muestra repetidamente una línea con todas las CADENA(s) especificadas, o "
 "`y'.\n"
 "\n"
+
+#~ msgid "\\%c: invalid escape"
+#~ msgstr "\\%c: secuencia de escape inválida"
 
 #~ msgid "program error"
 #~ msgstr "error del programa"

@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU textutils 2.0.22\n"
-"POT-Creation-Date: 2003-03-18 20:11+0100\n"
+"POT-Creation-Date: 2003-03-27 10:07+0100\n"
 "PO-Revision-Date: 2002-07-27 22:54+0900\n"
 "Last-Translator: Masahito Yamaga <ma@yama-ga.com>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
@@ -277,7 +277,7 @@ msgstr "比較した文字列は %s と %s です."
 #: src/od.c:283 src/paste.c:399 src/pathchk.c:142 src/pinky.c:465
 #: src/pr.c:2750 src/printenv.c:59 src/printf.c:96 src/ptx.c:1855 src/pwd.c:42
 #: src/readlink.c:65 src/rm.c:95 src/rmdir.c:142 src/seq.c:78 src/shred.c:156
-#: src/sleep.c:48 src/sort.c:272 src/split.c:92 src/stat.c:679 src/stty.c:494
+#: src/sleep.c:48 src/sort.c:272 src/split.c:92 src/stat.c:680 src/stty.c:494
 #: src/su.c:433 src/sum.c:56 src/sync.c:40 src/tac.c:123 src/tail.c:230
 #: src/tee.c:59 src/test.c:975 src/touch.c:240 src/tr.c:323 src/tsort.c:93
 #: src/tty.c:58 src/uname.c:106 src/unexpand.c:371 src/uniq.c:135
@@ -319,7 +319,7 @@ msgstr ""
 #: src/pinky.c:492 src/pr.c:2862 src/printenv.c:72 src/printf.c:144
 #: src/pwd.c:53 src/readlink.c:82 src/rm.c:127 src/rmdir.c:162 src/seq.c:104
 #: src/shred.c:220 src/sleep.c:64 src/sort.c:343 src/split.c:124
-#: src/stat.c:750 src/stty.c:708 src/su.c:454 src/sum.c:76 src/sync.c:51
+#: src/stat.c:751 src/stty.c:708 src/su.c:454 src/sum.c:76 src/sync.c:51
 #: src/tac.c:146 src/tail.c:300 src/tee.c:72 src/test.c:1057 src/touch.c:271
 #: src/tr.c:396 src/true.c:45 src/tsort.c:105 src/tty.c:70 src/uname.c:128
 #: src/unexpand.c:395 src/uniq.c:174 src/unlink.c:58 src/uptime.c:202
@@ -336,7 +336,7 @@ msgstr ""
 #: src/chroot.c:78 src/csplit.c:1464 src/dirname.c:89 src/expr.c:178
 #: src/install.c:284 src/link.c:87 src/mkdir.c:124 src/mkfifo.c:113
 #: src/mknod.c:137 src/pathchk.c:194 src/readlink.c:101 src/readlink.c:133
-#: src/rm.c:199 src/rmdir.c:206 src/seq.c:411 src/sleep.c:139 src/stat.c:801
+#: src/rm.c:199 src/rmdir.c:206 src/seq.c:411 src/sleep.c:139 src/stat.c:802
 #: src/unlink.c:88
 msgid "too few arguments"
 msgstr "引数が足りません"
@@ -842,7 +842,7 @@ msgstr "%s: %s のモード %04lo を無視して上書きしますか？ "
 msgid "%s: overwrite %s? "
 msgstr "%s: %s を上書きしてもよろしいですか(yes/no)? "
 
-#: src/copy.c:810 src/copy.c:848 src/stat.c:637
+#: src/copy.c:810 src/copy.c:848 src/stat.c:638
 #, fuzzy, c-format
 msgid "cannot stat %s"
 msgstr "ディレクトリ %s を作成できません"
@@ -968,7 +968,7 @@ msgstr "ディレクトリ %s を作成できません"
 msgid "cannot create special file %s"
 msgstr "キャラクタスペシャルファイル"
 
-#: src/copy.c:1415 src/ls.c:2493 src/stat.c:425
+#: src/copy.c:1415 src/ls.c:2493 src/stat.c:426
 #, fuzzy, c-format
 msgid "cannot read symbolic link %s"
 msgstr "シンボリックリンク"
@@ -5162,32 +5162,27 @@ msgstr "エスケープ中に16進数の数値がありません"
 msgid "invalid universal character name \\%c%0*x"
 msgstr "`%s' は無効な文字種類です"
 
-#: src/printf.c:298
-#, fuzzy, c-format
-msgid "\\%c: invalid escape"
-msgstr "%s: 無効なパターン指定です"
-
-#: src/printf.c:465
+#: src/printf.c:472
 #, fuzzy, c-format
 msgid "invalid field width: %s"
 msgstr "幅 `%s' が正しくありません"
 
-#: src/printf.c:491
+#: src/printf.c:498
 #, fuzzy, c-format
 msgid "invalid precision: %s"
 msgstr "幅のオプション `%s' が正しくありません"
 
-#: src/printf.c:512
+#: src/printf.c:519
 #, fuzzy, c-format
 msgid "%%%c: invalid directive"
 msgstr "%s: 無効なパターン指定です"
 
-#: src/printf.c:569
+#: src/printf.c:576
 #, c-format
 msgid "Usage: %s format [argument...]\n"
 msgstr "使用法: %s フォーマット [データ...]\n"
 
-#: src/printf.c:587
+#: src/printf.c:594
 #, c-format
 msgid "warning: ignoring excess arguments, starting with `%s'"
 msgstr "警告: `%s' で始まる余計な引数は無視されます"
@@ -6131,22 +6126,22 @@ msgstr "`-%d' オプションは過去のものです. `-l %d' を使ってください"
 msgid "invalid number"
 msgstr "%s: 無効な番号表記です"
 
-#: src/stat.c:325
+#: src/stat.c:326
 #, fuzzy
 msgid "*** invalid date/time ***"
 msgstr "幅 `%s' が正しくありません"
 
-#: src/stat.c:607
+#: src/stat.c:608
 #, fuzzy, c-format
 msgid "cannot read file system information for %s"
 msgstr "%s に対するファイルポインタを再配置できません"
 
-#: src/stat.c:683
+#: src/stat.c:684
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION] FILE...\n"
 msgstr "使用法: %s [オプション] [ファイル]...\n"
 
-#: src/stat.c:684
+#: src/stat.c:685
 #, fuzzy
 msgid ""
 "Display file or filesystem status.\n"
@@ -6162,7 +6157,7 @@ msgstr ""
 "  -f, --filesystem\tファイルの状態ではなくファイルシステムの状態を表示する\n"
 "  -t, --terse\t\t簡潔な形式で情報を表示する\n"
 
-#: src/stat.c:695
+#: src/stat.c:696
 msgid ""
 "\n"
 "The valid format sequences for files (without --filesystem):\n"
@@ -6173,7 +6168,7 @@ msgid ""
 "  %b   Number of blocks allocated (see %B)\n"
 msgstr ""
 
-#: src/stat.c:703
+#: src/stat.c:704
 msgid ""
 "  %D   Device number in hex\n"
 "  %d   Device number in decimal\n"
@@ -6183,7 +6178,7 @@ msgid ""
 "  %g   Group ID of owner\n"
 msgstr ""
 
-#: src/stat.c:711
+#: src/stat.c:712
 msgid ""
 "  %h   Number of hard links\n"
 "  %i   Inode number\n"
@@ -6195,7 +6190,7 @@ msgid ""
 "  %t   Major device type in hex\n"
 msgstr ""
 
-#: src/stat.c:721
+#: src/stat.c:722
 msgid ""
 "  %U   User name of owner\n"
 "  %u   User ID of owner\n"
@@ -6208,7 +6203,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/stat.c:733
+#: src/stat.c:734
 msgid ""
 "Valid format sequences for file systems:\n"
 "\n"
@@ -6219,7 +6214,7 @@ msgid ""
 "  %f   Free blocks in file system\n"
 msgstr ""
 
-#: src/stat.c:742
+#: src/stat.c:743
 msgid ""
 "  %i   File System id in hex\n"
 "  %l   Maximum length of filenames\n"
@@ -8249,6 +8244,10 @@ msgid ""
 msgstr ""
 "指定された全ての文字列または `y' からなる行を繰り返し出力.\n"
 "\n"
+
+#, fuzzy
+#~ msgid "\\%c: invalid escape"
+#~ msgstr "%s: 無効なパターン指定です"
 
 #~ msgid "program error"
 #~ msgstr "プログラムエラー"

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: textutils 2.1\n"
-"POT-Creation-Date: 2003-03-18 20:11+0100\n"
+"POT-Creation-Date: 2003-03-27 10:07+0100\n"
 "PO-Revision-Date: 2002-08-11 11:25+0100\n"
 "Last-Translator: Simos Xenitellis <simos@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -326,7 +326,7 @@ msgstr ""
 #: src/od.c:283 src/paste.c:399 src/pathchk.c:142 src/pinky.c:465
 #: src/pr.c:2750 src/printenv.c:59 src/printf.c:96 src/ptx.c:1855 src/pwd.c:42
 #: src/readlink.c:65 src/rm.c:95 src/rmdir.c:142 src/seq.c:78 src/shred.c:156
-#: src/sleep.c:48 src/sort.c:272 src/split.c:92 src/stat.c:679 src/stty.c:494
+#: src/sleep.c:48 src/sort.c:272 src/split.c:92 src/stat.c:680 src/stty.c:494
 #: src/su.c:433 src/sum.c:56 src/sync.c:40 src/tac.c:123 src/tail.c:230
 #: src/tee.c:59 src/test.c:975 src/touch.c:240 src/tr.c:323 src/tsort.c:93
 #: src/tty.c:58 src/uname.c:106 src/unexpand.c:371 src/uniq.c:135
@@ -371,7 +371,7 @@ msgstr ""
 #: src/pinky.c:492 src/pr.c:2862 src/printenv.c:72 src/printf.c:144
 #: src/pwd.c:53 src/readlink.c:82 src/rm.c:127 src/rmdir.c:162 src/seq.c:104
 #: src/shred.c:220 src/sleep.c:64 src/sort.c:343 src/split.c:124
-#: src/stat.c:750 src/stty.c:708 src/su.c:454 src/sum.c:76 src/sync.c:51
+#: src/stat.c:751 src/stty.c:708 src/su.c:454 src/sum.c:76 src/sync.c:51
 #: src/tac.c:146 src/tail.c:300 src/tee.c:72 src/test.c:1057 src/touch.c:271
 #: src/tr.c:396 src/true.c:45 src/tsort.c:105 src/tty.c:70 src/uname.c:128
 #: src/unexpand.c:395 src/uniq.c:174 src/unlink.c:58 src/uptime.c:202
@@ -389,7 +389,7 @@ msgstr ""
 #: src/chroot.c:78 src/csplit.c:1464 src/dirname.c:89 src/expr.c:178
 #: src/install.c:284 src/link.c:87 src/mkdir.c:124 src/mkfifo.c:113
 #: src/mknod.c:137 src/pathchk.c:194 src/readlink.c:101 src/readlink.c:133
-#: src/rm.c:199 src/rmdir.c:206 src/seq.c:411 src/sleep.c:139 src/stat.c:801
+#: src/rm.c:199 src/rmdir.c:206 src/seq.c:411 src/sleep.c:139 src/stat.c:802
 #: src/unlink.c:88
 msgid "too few arguments"
 msgstr "πολύ λίγα ορίσματα"
@@ -925,7 +925,7 @@ msgid "%s: overwrite %s? "
 msgstr "%s: σφάλμα εγγραφής"
 
 #
-#: src/copy.c:810 src/copy.c:848 src/stat.c:637
+#: src/copy.c:810 src/copy.c:848 src/stat.c:638
 #, fuzzy, c-format
 msgid "cannot stat %s"
 msgstr "αδύνατη η αλλαγή δικαιωμάτων στο %s"
@@ -1072,7 +1072,7 @@ msgid "cannot create special file %s"
 msgstr "ειδικό αρχείο χαρακτήρων"
 
 #
-#: src/copy.c:1415 src/ls.c:2493 src/stat.c:425
+#: src/copy.c:1415 src/ls.c:2493 src/stat.c:426
 #, fuzzy, c-format
 msgid "cannot read symbolic link %s"
 msgstr "συμβολικός σύνδεσμος"
@@ -5160,35 +5160,29 @@ msgid "invalid universal character name \\%c%0*x"
 msgstr "μη έγκυρη τάξη χαρακτήρων `%s'"
 
 #
-#: src/printf.c:298
-#, fuzzy, c-format
-msgid "\\%c: invalid escape"
-msgstr "%s: μη έγκυρη μορφή"
-
-#
-#: src/printf.c:465
+#: src/printf.c:472
 #, fuzzy, c-format
 msgid "invalid field width: %s"
 msgstr "μη έγκυρος αριθμός πεδίου: `%s'"
 
 #
-#: src/printf.c:491
+#: src/printf.c:498
 #, fuzzy, c-format
 msgid "invalid precision: %s"
 msgstr "μη έγκυρο είδος αλφαριθμητικού `%s'"
 
 #
-#: src/printf.c:512
+#: src/printf.c:519
 #, fuzzy, c-format
 msgid "%%%c: invalid directive"
 msgstr "%s: μη έγκυρη μορφή"
 
-#: src/printf.c:569
+#: src/printf.c:576
 #, c-format
 msgid "Usage: %s format [argument...]\n"
 msgstr "Χρήση: %s ΜΟΡΦΗ [ΠΑΡΑΜΕΤΡΟΙ...]\n"
 
-#: src/printf.c:587
+#: src/printf.c:594
 #, fuzzy, c-format
 msgid "warning: ignoring excess arguments, starting with `%s'"
 msgstr "ΠΡΟΣΟΧΗ: οι υπερβολικές παράμετροι αγνοήθηκαν."
@@ -6127,24 +6121,24 @@ msgid "invalid number"
 msgstr "μη έγκυρος αριθμός"
 
 #
-#: src/stat.c:325
+#: src/stat.c:326
 #, fuzzy
 msgid "*** invalid date/time ***"
 msgstr "μη έγκυρος αριθμός πεδίου: `%s'"
 
 #
-#: src/stat.c:607
+#: src/stat.c:608
 #, fuzzy, c-format
 msgid "cannot read file system information for %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
 #
-#: src/stat.c:683
+#: src/stat.c:684
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION] FILE...\n"
 msgstr "Χρήση: %s [ΕΠΙΛΟΓΗ] [ΑΡΧΕΙΟ]...\n"
 
-#: src/stat.c:684
+#: src/stat.c:685
 msgid ""
 "Display file or filesystem status.\n"
 "\n"
@@ -6154,7 +6148,7 @@ msgid ""
 "  -t, --terse           print the information in terse form\n"
 msgstr ""
 
-#: src/stat.c:695
+#: src/stat.c:696
 msgid ""
 "\n"
 "The valid format sequences for files (without --filesystem):\n"
@@ -6165,7 +6159,7 @@ msgid ""
 "  %b   Number of blocks allocated (see %B)\n"
 msgstr ""
 
-#: src/stat.c:703
+#: src/stat.c:704
 msgid ""
 "  %D   Device number in hex\n"
 "  %d   Device number in decimal\n"
@@ -6175,7 +6169,7 @@ msgid ""
 "  %g   Group ID of owner\n"
 msgstr ""
 
-#: src/stat.c:711
+#: src/stat.c:712
 msgid ""
 "  %h   Number of hard links\n"
 "  %i   Inode number\n"
@@ -6187,7 +6181,7 @@ msgid ""
 "  %t   Major device type in hex\n"
 msgstr ""
 
-#: src/stat.c:721
+#: src/stat.c:722
 msgid ""
 "  %U   User name of owner\n"
 "  %u   User ID of owner\n"
@@ -6200,7 +6194,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/stat.c:733
+#: src/stat.c:734
 msgid ""
 "Valid format sequences for file systems:\n"
 "\n"
@@ -6211,7 +6205,7 @@ msgid ""
 "  %f   Free blocks in file system\n"
 msgstr ""
 
-#: src/stat.c:742
+#: src/stat.c:743
 msgid ""
 "  %i   File System id in hex\n"
 "  %l   Maximum length of filenames\n"
@@ -8190,6 +8184,11 @@ msgid ""
 "Repeatedly output a line with all specified STRING(s), or `y'.\n"
 "\n"
 msgstr ""
+
+#
+#, fuzzy
+#~ msgid "\\%c: invalid escape"
+#~ msgstr "%s: μη έγκυρη μορφή"
 
 #
 #~ msgid "program error"

@@ -5,13 +5,13 @@
 # sh-utils: Pawe³ Krawczyk <kravietz@ceti.pl>, 1997, 1998, 1999.
 # fileutils: Thanks for help to Marta Bartnicka, 1999.
 # fileutils: Andrzej Krzysztofowicz  <ankry@mif.pg.gda.pl>, 2002.
-# Thanks for help and 246 remarks to Jakub Bogusz, 2003
+# Thanks for help and 246+ remarks to Jakub Bogusz, 2003
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: coreutils 4.5.10\n"
-"POT-Creation-Date: 2003-03-18 20:11+0100\n"
-"PO-Revision-Date: 2003-03-14 13:30+0100\n"
+"Project-Id-Version: coreutils 4.5.11\n"
+"POT-Creation-Date: 2003-03-27 10:07+0100\n"
+"PO-Revision-Date: 2003-03-19 22:30+0100\n"
 "Last-Translator: Rafa³ Maszkowski <rzm@icm.edu.pl>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -277,7 +277,7 @@ msgstr "Porównywane ³añcuchy znaków do %s i %s."
 #: src/od.c:283 src/paste.c:399 src/pathchk.c:142 src/pinky.c:465
 #: src/pr.c:2750 src/printenv.c:59 src/printf.c:96 src/ptx.c:1855 src/pwd.c:42
 #: src/readlink.c:65 src/rm.c:95 src/rmdir.c:142 src/seq.c:78 src/shred.c:156
-#: src/sleep.c:48 src/sort.c:272 src/split.c:92 src/stat.c:679 src/stty.c:494
+#: src/sleep.c:48 src/sort.c:272 src/split.c:92 src/stat.c:680 src/stty.c:494
 #: src/su.c:433 src/sum.c:56 src/sync.c:40 src/tac.c:123 src/tail.c:230
 #: src/tee.c:59 src/test.c:975 src/touch.c:240 src/tr.c:323 src/tsort.c:93
 #: src/tty.c:58 src/uname.c:106 src/unexpand.c:371 src/uniq.c:135
@@ -319,7 +319,7 @@ msgstr ""
 #: src/pinky.c:492 src/pr.c:2862 src/printenv.c:72 src/printf.c:144
 #: src/pwd.c:53 src/readlink.c:82 src/rm.c:127 src/rmdir.c:162 src/seq.c:104
 #: src/shred.c:220 src/sleep.c:64 src/sort.c:343 src/split.c:124
-#: src/stat.c:750 src/stty.c:708 src/su.c:454 src/sum.c:76 src/sync.c:51
+#: src/stat.c:751 src/stty.c:708 src/su.c:454 src/sum.c:76 src/sync.c:51
 #: src/tac.c:146 src/tail.c:300 src/tee.c:72 src/test.c:1057 src/touch.c:271
 #: src/tr.c:396 src/true.c:45 src/tsort.c:105 src/tty.c:70 src/uname.c:128
 #: src/unexpand.c:395 src/uniq.c:174 src/unlink.c:58 src/uptime.c:202
@@ -336,7 +336,7 @@ msgstr ""
 #: src/chroot.c:78 src/csplit.c:1464 src/dirname.c:89 src/expr.c:178
 #: src/install.c:284 src/link.c:87 src/mkdir.c:124 src/mkfifo.c:113
 #: src/mknod.c:137 src/pathchk.c:194 src/readlink.c:101 src/readlink.c:133
-#: src/rm.c:199 src/rmdir.c:206 src/seq.c:411 src/sleep.c:139 src/stat.c:801
+#: src/rm.c:199 src/rmdir.c:206 src/seq.c:411 src/sleep.c:139 src/stat.c:802
 #: src/unlink.c:88
 msgid "too few arguments"
 msgstr "za ma³o argumentów"
@@ -845,7 +845,7 @@ msgstr "%s: zamazanie %s, obej¶æ uprawnienia %04lo? "
 msgid "%s: overwrite %s? "
 msgstr "%s: zamazaæ %s? "
 
-#: src/copy.c:810 src/copy.c:848 src/stat.c:637
+#: src/copy.c:810 src/copy.c:848 src/stat.c:638
 #, c-format
 msgid "cannot stat %s"
 msgstr "nie mo¿na wykonaæ stat na %s"
@@ -976,7 +976,7 @@ msgstr "nie mo¿na utworzyæ potoku %s"
 msgid "cannot create special file %s"
 msgstr "nie mo¿na utworzyæ pliku specjalnego %s"
 
-#: src/copy.c:1415 src/ls.c:2493 src/stat.c:425
+#: src/copy.c:1415 src/ls.c:2493 src/stat.c:426
 #, c-format
 msgid "cannot read symbolic link %s"
 msgstr "nie mo¿na przeczytaæ dowi±zania symbolicznego %s"
@@ -2297,12 +2297,13 @@ msgid ""
 "  -k                    like --block-size=1K\n"
 "  -l, --count-links     count sizes many times if hard linked\n"
 msgstr ""
-"  -h, --human-readable  rozmiary w formacie czytelnym dla ludzi (np. 1K 234M "
-"2G)\n"
+"  -h, --human-readable  rozmiary w formacie czytelnym dla ludzi (np. 1K "
+"234M\n"
+"                          2G)\n"
 "  -H, --si              podobnie, ale z u¿yciem potêg 1000, nie 1024\n"
 "  -k, --kilobytes       to samo co --block-size=1K\n"
 "  -l, --count-links     liczenie rozmiaru wielokrotnie je¿eli plik ma\n"
-"                        dowi±zania\n"
+"                          dowi±zania zwyk³e\n"
 
 #: src/du.c:199
 msgid ""
@@ -3600,7 +3601,7 @@ msgstr ""
 "                               (zawsze) albo `auto' (automatyczne)\n"
 "  -d, --directory            pokazanie katalogów zamiast ich zawarto¶ci, "
 "bez\n"
-"                               rozwi±zywania dowi±zañ symblicznych\n"
+"                               rozwi±zywania dowi±zañ symbolicznych\n"
 "  -D, --dired                dane wyj¶ciowe dla trybu dired Emacsa\n"
 
 #: src/ls.c:3792
@@ -5255,32 +5256,27 @@ msgstr "brak liczby szesnastkowej w sekwencji"
 msgid "invalid universal character name \\%c%0*x"
 msgstr "b³êdna nazwa znaku uniwersalnego \\%c%0*x"
 
-#: src/printf.c:298
-#, c-format
-msgid "\\%c: invalid escape"
-msgstr "\\%c: b³êdna sekwencja escape"
-
-#: src/printf.c:465
+#: src/printf.c:472
 #, c-format
 msgid "invalid field width: %s"
 msgstr "b³êdna szeroko¶æ pola: %s"
 
-#: src/printf.c:491
+#: src/printf.c:498
 #, c-format
 msgid "invalid precision: %s"
 msgstr "b³±d specyfikacji precyzji: %s"
 
-#: src/printf.c:512
+#: src/printf.c:519
 #, c-format
 msgid "%%%c: invalid directive"
 msgstr "%%%c: b³êdna dyrektywa"
 
-#: src/printf.c:569
+#: src/printf.c:576
 #, c-format
 msgid "Usage: %s format [argument...]\n"
 msgstr "Sk³adnia: %s format [argument...]\n"
 
-#: src/printf.c:587
+#: src/printf.c:594
 #, c-format
 msgid "warning: ignoring excess arguments, starting with `%s'"
 msgstr "uwaga: nadmiarowe argumenty pocz±wszy od `%s' zosta³y zignorowane"
@@ -6266,21 +6262,21 @@ msgstr "opcja `-%d' jest przestarza³a, u¿ywaj `-l %d'"
 msgid "invalid number"
 msgstr "b³êdna liczba"
 
-#: src/stat.c:325
+#: src/stat.c:326
 msgid "*** invalid date/time ***"
 msgstr "*** b³êdna data/czas ***"
 
-#: src/stat.c:607
+#: src/stat.c:608
 #, c-format
 msgid "cannot read file system information for %s"
 msgstr "nie mo¿na przeczytaæ informacji systemowych o %s"
 
-#: src/stat.c:683
+#: src/stat.c:684
 #, c-format
 msgid "Usage: %s [OPTION] FILE...\n"
 msgstr "Sk³adnia: %s [OPCJA] PLIK...\n"
 
-#: src/stat.c:684
+#: src/stat.c:685
 msgid ""
 "Display file or filesystem status.\n"
 "\n"
@@ -6296,7 +6292,7 @@ msgstr ""
 "  -L, --dereference     rozwi±zywanie dowi±zañ symbolicznych\n"
 "  -t, --terse           wypisywanie informacji w skróconej formie\n"
 
-#: src/stat.c:695
+#: src/stat.c:696
 msgid ""
 "\n"
 "The valid format sequences for files (without --filesystem):\n"
@@ -6314,7 +6310,7 @@ msgstr ""
 "  %B   rozmiar w bajtach ka¿dego bloku podanego przez `%b'\n"
 "  %b   liczba zajêtych bloków (zobacz %B)\n"
 
-#: src/stat.c:703
+#: src/stat.c:704
 msgid ""
 "  %D   Device number in hex\n"
 "  %d   Device number in decimal\n"
@@ -6330,7 +6326,7 @@ msgstr ""
 "  %G   nazwa grupy w³a¶ciciela pliku\n"
 "  %g   numer grupy w³a¶ciciela pliku\n"
 
-#: src/stat.c:711
+#: src/stat.c:712
 msgid ""
 "  %h   Number of hard links\n"
 "  %i   Inode number\n"
@@ -6350,7 +6346,7 @@ msgstr ""
 "  %T   mniejszy numer urz±dzenia szesnastkowo\n"
 "  %t   wiêkszy numer urz±dzenia szesnastkowo\n"
 
-#: src/stat.c:721
+#: src/stat.c:722
 msgid ""
 "  %U   User name of owner\n"
 "  %u   User ID of owner\n"
@@ -6372,7 +6368,7 @@ msgstr ""
 "  %z   czas ostatniej zmiany czasu\n"
 "\n"
 
-#: src/stat.c:733
+#: src/stat.c:734
 msgid ""
 "Valid format sequences for file systems:\n"
 "\n"
@@ -6390,7 +6386,7 @@ msgstr ""
 "  %d   liczba wolnych i-wêz³ów w systemie plików\n"
 "  %f   liczba wolnych bloków w systemie plików\n"
 
-#: src/stat.c:742
+#: src/stat.c:743
 msgid ""
 "  %i   File System id in hex\n"
 "  %l   Maximum length of filenames\n"
@@ -8439,6 +8435,9 @@ msgid ""
 msgstr ""
 "Powtarzanie na wyj¶ciu linii ze wszystkimi podanymi £AÑCUCH(AMI) albo `y'\n"
 "\n"
+
+#~ msgid "\\%c: invalid escape"
+#~ msgstr "\\%c: b³êdna sekwencja escape"
 
 #~ msgid "program error"
 #~ msgstr "b³±d programu"
