@@ -82,8 +82,10 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION]... [FIRST [INCREMENT]] LAST\n\
-"), program_name);
+Usage: %s [OPTION]... LAST\n\
+  or:  %s [OPTION]... FIRST LAST\n\
+  or:  %s [OPTION]... FIRST INCREMENT LAST\n\
+"), program_name, program_name, program_name);
       printf (_("\
 Print numbers from FIRST (default 1) to LAST, moving by STEP (default 1).\n\
 \n\
