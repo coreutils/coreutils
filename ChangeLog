@@ -1,6 +1,36 @@
-2003-11-06  Jim Meyering  <jim@meyering.net>
+2003-11-09  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.0.
+
+	* src/rm.c: Support new options: --preserve-root and --no-preserve-root.
+	* src/chown.c: Likewise.
+
+	* src/chown-core.c: Include "root-dev-ino.h".
+	(chopt_init): Initialize new member.
+	(change_file_owner): Support rm's new --preserve-root option.
+
+	* src/remove.c: Include "root-dev-ino.h".
+	(remove_cwd_entries): Remove now-obsolete FIXME comment.
+	(remove_dir): Support rm's new --preserve-root option.
+
+	* src/chown.c: Include "root-dev-ino.h".
+	Add new options: --preserve-root and --no-preserve-root.
+
+	* src/chmod.c: Include "root-dev-ino.h".
+	(process_file): Use newly-factored-out ROOT_DEV_INO_CHECK and
+	ROOT_DEV_INO_WARN macros.
+	(get_root_dev_ino): Remove function definition, now that it's
+	been moved to a separate file.
+	(usage): Describe new options.
+
+	* src/mv.c (rm_option_init): Initialized new member.
+
+	* src/remove.h: Include "dev-ino.h".
+	(struct rm_options): Add new member: root_dev_ino.
+	* src/chown-core.h: Include "dev-ino.h".
+	(struct Chown_option): Add new member: root_dev_ino.
+
+2003-11-06  Jim Meyering  <jim@meyering.net>
 
 	* src/paste.c (paste_parallel): Use `sizeof *var' rather than
 	hard-coding `sizeof FILE*'.
