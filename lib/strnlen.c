@@ -19,6 +19,13 @@
 
 #include <string.h>
 
+#undef __strnlen
+#undef strnlen
+
+#ifndef weak_alias
+# define __strnlen strnlen
+#endif
+
 /* Find the length of STRING, but scan at most MAXLEN characters.
    If no '\0' terminator is found in that many characters, return MAXLEN.  */
 
