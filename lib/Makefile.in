@@ -62,12 +62,12 @@ DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	lchown.h long-options.c long-options.h lstat.c makepath.c \
 	makepath.h malloc.c md5.c md5.h memchr.c memcmp.c memcoll.c \
 	memcoll.h memcpy.c memmove.c mempcpy.c mempcpy.h memrchr.c \
-	memset.c mkdir.c mkstemp.c mktime.c modechange.c modechange.h \
-	mountlist.c mountlist.h nanosleep.c obstack.c obstack.h \
-	openat.c openat.h path-concat.c path-concat.h pathmax.h \
-	physmem.c physmem.h posixtm.c posixtm.h posixver.c posixver.h \
-	printf-args.c printf-parse.c putenv.c quote.c quote.h \
-	quotearg.c quotearg.h raise.c readlink.c readtokens.c \
+	memrchr.h memset.c mkdir.c mkstemp.c mktime.c modechange.c \
+	modechange.h mountlist.c mountlist.h nanosleep.c obstack.c \
+	obstack.h openat.c openat.h path-concat.c path-concat.h \
+	pathmax.h physmem.c physmem.h posixtm.c posixtm.h posixver.c \
+	posixver.h printf-args.c printf-parse.c putenv.c quote.c \
+	quote.h quotearg.c quotearg.h raise.c readlink.c readtokens.c \
 	readtokens.h readutmp.c readutmp.h realloc.c regex.c rename.c \
 	rmdir.c rpmatch.c safe-read.c safe-read.h safe-write.c \
 	safe-write.h same.c same.h save-cwd.c save-cwd.h savedir.c \
