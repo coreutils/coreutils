@@ -600,7 +600,7 @@ output (start, past_end)
 
   if (start == 0)
     {
-      xwrite (1, buffer, bytes_in_buffer);
+      xwrite (STDOUT_FILENO, buffer, bytes_in_buffer);
       bytes_in_buffer = 0;
       return;
     }
@@ -611,7 +611,7 @@ output (start, past_end)
       bcopy (start, buffer + bytes_in_buffer, bytes_available);
       bytes_to_add -= bytes_available;
       start += bytes_available;
-      xwrite (1, buffer, WRITESIZE);
+      xwrite (STDOUT_FILENO, buffer, WRITESIZE);
       bytes_in_buffer = 0;
       bytes_available = WRITESIZE;
     }
