@@ -1,6 +1,11 @@
-2003-03-15  Jim Meyering  <jim@meyering.net>
+2003-03-16  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.11.
+
+	* src/remove.c (rm): Put two local variables in static storage,
+	so they can't be clobbered by the potential longjmp.
+
+2003-03-15  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.cfg (gnu_rel_host): Fix code to match the comment
 	so that a version number with a two-digit component can still count
