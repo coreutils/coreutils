@@ -1,5 +1,5 @@
 /* makepath.c -- Ensure that a directory path exists.
-   Copyright (C) 1990, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1997, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -99,9 +99,9 @@ void strip_trailing_slashes ();
 	 Restore working directory.  */			\
       if (do_chdir)					\
 	{						\
-	  int fail = restore_cwd (&cwd, NULL, NULL);	\
+	  int _fail = restore_cwd (&cwd, NULL, NULL);	\
 	  free_cwd (&cwd);				\
-	  if (fail)					\
+	  if (_fail)					\
 	    return 1;					\
 	}						\
     }							\
@@ -114,6 +114,56 @@ void strip_trailing_slashes ();
       CLEANUP_CWD;					\
     }							\
   while (0)
+
+/* Attempt to create directory DIR (aka DIRPATH) with the specified MODE.
+   If CREATED_DIR_P is non-NULL, set *CREATED_DIR_P to non-zero if this
+   function creates DIR and to zero otherwise.  Give a diagnostic and
+   return non-zero if DIR cannot be created or cannot be determined to
+   exist already.  Use DIRPATH in any diagnostic, not DIR.
+   Note that if DIR already exists, this function will return zero
+   (indicating success) and will set *CREATED_DIR_P to zero.  */
+
+static int
+make_dir (const char *dir, const char *dirpath, mode_t mode, int *created_dir_p)
+{
+  int fail = 0;
+  int created_dir;
+
+  created_dir = (mkdir (dir, mode) == 0);
+
+  if (!created_dir)
+    {
+      struct stat stats;
+
+      /* The mkdir and stat calls below may appear to be reversed.
+	 They are not.  It is important to call mkdir first and then to
+	 call stat (to distinguish the three cases) only if mkdir fails.
+	 The alternative to this approach is to `stat' each directory,
+	 then to call mkdir if it doesn't exist.  But if some other process
+	 were to create the directory between the stat & mkdir, the mkdir
+	 would fail with EEXIST.  */
+
+      if (stat (dir, &stats))
+	{
+	  error (0, errno, "cannot create directory `%s'", dirpath);
+	  fail = 1;
+	}
+      else if (!S_ISDIR (stats.st_mode))
+	{
+	  error (0, 0, "`%s' exists but is not a directory", dirpath);
+	  fail = 1;
+	}
+      else
+	{
+	  /* DIR (aka DIRPATH) already exists and is a directory. */
+	}
+    }
+
+  if (created_dir_p)
+    *created_dir_p = created_dir;
+
+  return fail;
+}
 
 /* Ensure that the directory ARGPATH exists.
    Remove any trailing slashes from ARGPATH before calling this function.
@@ -203,7 +253,8 @@ make_path (const char *argpath,
 
       while (1)
 	{
-	  int newly_created_dir = 1;
+	  int newly_created_dir;
+	  int fail;
 
 	  /* slash points to the leftmost unprocessed component of dirpath.  */
 	  basename_dir = slash;
@@ -217,34 +268,12 @@ make_path (const char *argpath,
 	  if (!do_chdir)
 	    basename_dir = dirpath;
 
-	  /* The mkdir and stat calls below appear to be reversed.
-	     They are not.  It is important to call mkdir first and then to
-	     call stat (to distinguish the three cases) only if mkdir fails.
-	     The alternative to this approach is to `stat' each directory,
-	     then to call mkdir if it doesn't exist.  But if some other process
-	     were to create the directory between the stat & mkdir, the mkdir
-	     would fail with EEXIST.  */
-
 	  *slash = '\0';
-	  if (mkdir (basename_dir, tmp_mode))
+	  fail = make_dir (basename_dir, dirpath, tmp_mode, &newly_created_dir);
+	  if (fail)
 	    {
-	      if (stat (basename_dir, &stats))
-		{
-		  error (0, errno, "cannot create directory `%s'", dirpath);
-		  CLEANUP;
-		  return 1;
-		}
-	      else if (!S_ISDIR (stats.st_mode))
-		{
-		  error (0, 0, "`%s' exists but is not a directory", dirpath);
-		  CLEANUP;
-		  return 1;
-		}
-	      else
-		{
-		  /* DIRPATH already exists and is a directory. */
-		  newly_created_dir = 0;
-		}
+	      CLEANUP;
+	      return 1;
 	    }
 
 	  if (newly_created_dir)
@@ -299,12 +328,8 @@ make_path (const char *argpath,
       /* We're done making leading directories.
 	 Create the final component of the path.  */
 
-      /* The path could end in "/." or contain "/..", so test
-	 if we really have to create the directory.  */
-
-      if (stat (basename_dir, &stats) && mkdir (basename_dir, mode))
+      if (make_dir (basename_dir, dirpath, mode, NULL))
 	{
-	  error (0, errno, "cannot create directory `%s'", dirpath);
 	  CLEANUP;
 	  return 1;
 	}
