@@ -899,7 +899,7 @@ scanargs (int argc, char **argv)
 	  else if (STREQ (name, "cbs"))
 	    {
 	      conversion_blocksize = n;
-	      invalid |= (conversion_blocksize != n 
+	      invalid |= (conversion_blocksize != n
 			  || conversion_blocksize == 0);
 	    }
 	  else if (STREQ (name, "skip"))
