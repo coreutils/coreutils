@@ -6,7 +6,7 @@ use Getopt::Long;
 use Digest::MD5;
 use Digest::SHA1;
 
-(my $VERSION = '$Revision: 1.22 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.23 $ ') =~ tr/[0-9].//cd;
 (my $ME = $0) =~ s|.*/||;
 
 my %valid_release_types = map {$_ => 1} qw (alpha beta major);
@@ -134,7 +134,7 @@ sub print_signatures (@)
 {
   my (@file) = @_;
 
-  print "Here are the MD5 and SHA1 signatures:\n";
+  print "Here are the MD5 and SHA1 checksums:\n";
   print "\n";
 
   foreach my $meth (qw (md5 sha1))
