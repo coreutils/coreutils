@@ -291,7 +291,7 @@ change_dir_group (const char *dir, gid_t group, const struct stat *statp)
   return errors;
 }
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

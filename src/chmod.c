@@ -229,7 +229,7 @@ change_dir_mode (const char *dir, const struct mode_change *changes,
   return errors;
 }
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

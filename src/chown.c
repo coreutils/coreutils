@@ -279,7 +279,7 @@ change_dir_owner (const char *dir, uid_t user, gid_t group, struct stat *statp)
   return errors;
 }
 
-static void
+void
 usage (int status)
 {
   if (status != 0)
