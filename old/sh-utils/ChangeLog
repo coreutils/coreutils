@@ -1,3 +1,13 @@
+1999-03-20  Jim Meyering  <meyering@ascend.com>
+
+	* src/nohup.sh: Don't modify PATH just to get GNU nice.  Instead,
+	try to find an absolute path for GNU nice.  From Bruno Haible.
+
+1999-03-19  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in: Use new macro, jm_WINSIZE_IN_PTEM, instead of
+	open-coding it.
+
 1999-03-17  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in (ALL_LINGUAS): Add Italian (it) and Slovak (sk).
