@@ -4,6 +4,7 @@
 
 	* tests/Makefile.am (TESTS_ENVIRONMENT): Set PATH so that
 	the tests in help-version will use the just-built binaries.
+	Reported by Christian Krackowizer.
 
 2003-07-31  Paul Eggert  <eggert@twinsun.com>
 
