@@ -393,6 +393,8 @@ static char *
 make_id_equals_comment (STRUCT_UTMP const *utmp_ent)
 {
   char *comment = xmalloc (sizeof (_("id=")) + sizeof UT_ID (utmp_ent) + 1);
+
+  /* Cast field width argument to `int' to avoid warning from gcc.  */
   sprintf (comment, "%s%.*s", _("id="), (int) sizeof UT_ID (utmp_ent),
 	   UT_ID (utmp_ent));
   return comment;
