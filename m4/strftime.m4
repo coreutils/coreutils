@@ -1,4 +1,12 @@
-#serial 3
+#serial 4
+
+AC_DEFUN(jm_STRFTIME_PREREQS,
+[
+ dnl strftime.c uses localtime_r if it exists.  Check for it.
+ AC_CHECK_FUNCS(localtime_r)
+ dnl FIXME: add tests for everything in strftime.c: e.g., HAVE_BCOPY,
+ dnl HAVE_TZNAME, HAVE_TZSET, HAVE_TM_ZONE, etc.
+])
 
 dnl From Jim Meyering.
 dnl If you use this macro in a package, you should
@@ -8,6 +16,9 @@ dnl   #undef strftime
 dnl
 AC_DEFUN(jm_FUNC_GNU_STRFTIME,
 [AC_REQUIRE([AC_HEADER_TIME])dnl
+
+ jm_STRFTIME_PREREQS
+
  AC_REQUIRE([AC_C_CONST])dnl
  AC_REQUIRE([AC_HEADER_STDC])dnl
  AC_CHECK_HEADERS(sys/time.h)
@@ -122,4 +133,10 @@ changequote([, ])dnl
     LIBOBJS="$LIBOBJS strftime.o"
     AC_DEFINE_UNQUOTED(strftime, gnu_strftime)
   fi
+])
+
+AC_DEFUN(jm_FUNC_STRFTIME,
+[
+  jm_STRFTIME_PREREQS
+  AC_REPLACE_FUNCS(strftime)
 ])
