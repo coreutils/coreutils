@@ -1,0 +1,37 @@
+#!/bin/sh
+
+: ${RM=rm}
+test=r-2
+
+: ${TMPDIR=.}
+
+if test "$VERBOSE" = yes; then
+  $RM --version
+  set -x
+fi
+
+tmp=$TMPDIR/t-rm.$$
+
+mkdir $tmp $tmp/a $tmp/a/b
+touch $tmp/a/f $tmp/a/b/g
+
+fail=0
+$RM --verbose -r $tmp/a > $tmp/$test.O || fail=1
+
+if test -d $tmp/a; then
+  fail=1
+fi
+
+cat <<EOF > $tmp/$test.E
+$tmp/a
+$tmp/a/b
+$tmp/a/b/g
+$tmp/a/f
+EOF
+
+# Compare expected and actual output.
+cmp $tmp/$test.E $tmp/$test.O || fail=1
+
+rm -rf $dir
+
+exit $fail
