@@ -439,7 +439,7 @@ file_lines (const char *pretty_filename, int fd, long int n_lines,
 	{
 	  /* Not enough lines in the file; print the entire file.  */
 	  /* FIXME: check lseek return value  */
-	  lseek (fd, (off_t) start_pos, SEEK_SET);
+	  lseek (fd, start_pos, SEEK_SET);
 	  dump_remainder (pretty_filename, fd, file_length);
 	  return 0;
 	}
@@ -1100,11 +1100,8 @@ tail_lines (const char *pretty_filename, int fd, long int n_lines)
       /* Use file_lines only if FD refers to a regular file for
 	 which lseek (... SEEK_END) works.  */
       if (S_ISREG (stats.st_mode)
-	  /* Record the current position before confirming that
-	     we can seek to the end.  */
-	  && ((start_pos = lseek (fd, (off_t) 0, SEEK_CUR)), 1)
-	  && (length = lseek (fd, (off_t) 0, SEEK_END)) >= 0
-	  && start_pos < length)
+	  && (start_pos = lseek (fd, (off_t) 0, SEEK_CUR)) != -1
+	  && start_pos < (length = lseek (fd, (off_t) 0, SEEK_END)))
 	{
 	  if (length != 0 && file_lines (pretty_filename, fd, n_lines,
 					 start_pos, length))
