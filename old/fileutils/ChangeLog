@@ -1,5 +1,9 @@
 2000-10-29  Jim Meyering  <meyering@lucent.com>
 
+	* src/cp.c (do_copy): When constructing dst_path for use with the
+	--parents option, first remove any trailing slashes from the command
+	line argument.  Otherwise, tests/cp/cp-parent would fail on NetBSD.
+
 	* tests/cp/cp-parents: Add a test.
 
 	* src/ls.c (DT_INIT): Define.
