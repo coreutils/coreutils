@@ -1,3 +1,10 @@
+Mon Dec  2 20:59:38 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (su_cv_func_ut_host_in_utmp): Move test that can
+	define WINSIZE_IN_PTEM to precede test that checks whether
+	`TIOCGWINSZ in sys/pty.h'.  The latter test uses the symbol.
+	(jm_FUNC_MKTIME): Use this instead of AM_FUNC_MKTIME.
+
 Sun Dec  1 13:07:39 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/getdate.y (date): Interpret the date, L/M/N, as YYYY/MM/DD
