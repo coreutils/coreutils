@@ -353,7 +353,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("head (GNU %s) %s\n", PACKAGE, VERSION);
+      printf ("head (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (EXIT_SUCCESS);
     }
 

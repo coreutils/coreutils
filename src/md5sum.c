@@ -505,7 +505,7 @@ main (int argc, char **argv)
 
   if (do_version)
     {
-      printf ("md5sum (GNU %s) %s\n", PACKAGE, VERSION);
+      printf ("md5sum (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (EXIT_SUCCESS);
     }
 

@@ -293,7 +293,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("wc (GNU %s) %s\n", PACKAGE, VERSION);
+      printf ("wc (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (EXIT_SUCCESS);
     }
 

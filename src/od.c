@@ -1793,7 +1793,7 @@ the maximum\nrepresentable value of type `long'"), optarg);
 
   if (show_version)
     {
-      printf ("od (GNU %s) %s\n", PACKAGE, VERSION);
+      printf ("od (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (EXIT_SUCCESS);
     }
 

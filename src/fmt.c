@@ -398,7 +398,7 @@ main (register int argc, register char **argv)
 
   if (show_version)
     {
-      printf ("fmt (GNU %s) %s\n", PACKAGE, VERSION);
+      printf ("fmt (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (EXIT_SUCCESS);
     }
 

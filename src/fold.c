@@ -310,7 +310,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("fold (GNU %s) %s\n", PACKAGE, VERSION);
+      printf ("fold (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (EXIT_SUCCESS);
     }
 

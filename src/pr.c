@@ -616,7 +616,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("pr (GNU %s) %s\n", PACKAGE, VERSION);
+      printf ("pr (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (EXIT_SUCCESS);
     }
 

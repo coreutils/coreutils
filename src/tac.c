@@ -622,7 +622,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("tac (GNU %s) %s\n", PACKAGE, VERSION);
+      printf ("tac (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (EXIT_SUCCESS);
     }
 

@@ -235,7 +235,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("sum (GNU %s) %s\n", PACKAGE, VERSION);
+      printf ("sum (%s) %s\n", GNU_PACKAGE, VERSION);
       exit (EXIT_SUCCESS);
     }
 
