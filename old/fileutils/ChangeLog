@@ -1,5 +1,10 @@
 Tue Dec 17 21:03:40 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/system.h (ISDIGIT): Replace with smaller, faster edition
+	that yields nonzero only on ASCII digits.
+	(ISDIGIT_LOCALE): New macro, with same meaning that ISDIGIT
+	used to have.  From Paul Eggert.
+
 	* src/cp.c (ROOT_CHOWN_AFFECTS_SYMLINKS): New macro.
 	(DO_CHOWN): Take an additional parameter.
 	(LINK_CHOWN): Remove macro.
