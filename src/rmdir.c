@@ -1,5 +1,5 @@
 /* rmdir -- remove directories
-   Copyright (C) 90, 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 90, 91, 1995-2002, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -91,7 +91,8 @@ errno_rmdir_non_empty (int error_number)
 
 /* Remove any empty parent directories of PATH.
    If PATH contains slash characters, at least one of them
-   (beginning with the rightmost) is replaced with a NUL byte.  */
+   (beginning with the rightmost) is replaced with a NUL byte.
+   Return zero if successful.  */
 
 static int
 remove_parents (char *path)
@@ -115,7 +116,7 @@ remove_parents (char *path)
       if (verbose)
 	error (0, 0, _("removing directory, %s"), path);
 
-      fail = rmdir (path);
+      fail = (rmdir (path) != 0);
 
       if (fail)
 	{
@@ -138,7 +139,7 @@ remove_parents (char *path)
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -230,7 +231,7 @@ main (int argc, char **argv)
 	}
       else if (empty_paths)
 	{
-	  errors += remove_parents (dir);
+	  errors |= remove_parents (dir);
 	}
     }
 
