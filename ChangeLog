@@ -2,6 +2,8 @@
 
 	* Version 5.3.0.
 
+	* src/remove.c (full_filename_): Don't leak upon failed realloc.
+
 	* src/system.h (readdir_ignoring_dot_and_dotdot): New inline function,
 	from remove.c.
 	* src/remove.c (readdir_ignoring_dotdirs): Move function to system.h,
