@@ -31,6 +31,10 @@
 #include "chown-core.h"
 #include "xalloc.h"
 
+/* The number of decimal digits required to represent the largest value of
+   type `unsigned int'.  This is enough for an 8-byte unsigned int type.  */
+#define UINT_MAX_DECIMAL_DIGITS 20
+
 #ifndef _POSIX_VERSION
 struct group *getgrnam ();
 struct group *getgrgid ();
@@ -56,20 +60,44 @@ chopt_free (struct Chown_option *chopt)
      They're not always allocated.  */
 }
 
-/* FIXME: describe */
+/* Convert N to a string, and return a pointer to that string in memory
+   allocated from the heap.  */
+
+static char *
+uint_to_string (unsigned int n)
+{
+  char buf[UINT_MAX_DECIMAL_DIGITS + 1];
+  char *p = buf + sizeof buf;
+
+  *--p = '\0';
+
+  do
+    *--p = '0' + (n % 10);
+  while ((n /= 10) != 0);
+
+  return xstrdup (p);
+}
+
+/* Convert the numeric group-id, GID, to a string stored in xmalloc'd memory,
+   and return it.  If there's no corresponding group name, use the decimal
+   representation of the ID.  */
 
 char *
 gid_to_name (gid_t gid)
 {
   struct group *grp = getgrgid (gid);
-  return xstrdup (grp == NULL ? _("<unknown>") : grp->gr_name);
+  return grp ? xstrdup (grp->gr_name) : uint_to_string (gid);
 }
+
+/* Convert the numeric user-id, UID, to a string stored in xmalloc'd memory,
+   and return it.  If there's no corresponding user name, use the decimal
+   representation of the ID.  */
 
 char *
 uid_to_name (uid_t uid)
 {
   struct passwd *pwd = getpwuid (uid);
-  return xstrdup (pwd == NULL ? _("<unknown>") : pwd->pw_name);
+  return pwd ? xstrdup (pwd->pw_name) : uint_to_string (uid);
 }
 
 /* Tell the user how/if the user and group of FILE have been changed.
@@ -136,14 +164,14 @@ describe_change (const char *file, enum Change_status changed,
     free (spec);
 }
 
-/* Recursively change the ownership of the files in directory DIR
-   to UID USER and GID GROUP, according to the options specified by CHOPT.
+/* Recursively change the ownership of the files in directory DIR to user-id,
+   UID, and group-id, GID, according to the options specified by CHOPT.
    STATP points to the results of lstat on DIR.
    Return 0 if successful, 1 if errors occurred. */
 
 static int
-change_dir_owner (const char *dir, uid_t user, gid_t group,
-		  uid_t old_user, gid_t old_group,
+change_dir_owner (const char *dir, uid_t uid, gid_t gid,
+		  uid_t old_uid, gid_t old_gid,
 		  const struct stat *statp,
 		  struct Chown_option const *chopt)
 {
@@ -178,7 +206,7 @@ change_dir_owner (const char *dir, uid_t user, gid_t group,
 	  path = xrealloc (path, pathlength);
 	}
       strcpy (path + dirlength, namep);
-      errors |= change_file_owner (0, path, user, group, old_user, old_group,
+      errors |= change_file_owner (0, path, uid, gid, old_uid, old_gid,
 				   chopt);
     }
   free (path);
@@ -186,20 +214,20 @@ change_dir_owner (const char *dir, uid_t user, gid_t group,
   return errors;
 }
 
-/* Change the ownership of FILE to UID USER and GID GROUP
-   provided it presently has UID OLDUSER and GID OLDGROUP.
+/* Change the ownership of FILE to user-id, UID, and group-id, GID,
+   provided it presently has owner OLD_UID and group OLD_GID.
    Honor the options specified by CHOPT.
    If FILE is a directory and -R is given, recurse.
    Return 0 if successful, 1 if errors occurred. */
 
 int
-change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group,
-		   uid_t old_user, gid_t old_group,
+change_file_owner (int cmdline_arg, const char *file, uid_t uid, gid_t gid,
+		   uid_t old_uid, gid_t old_gid,
 		   struct Chown_option const *chopt)
 {
   struct stat file_stats;
-  uid_t newuser;
-  gid_t newgroup;
+  uid_t new_uid;
+  gid_t new_gid;
   int errors = 0;
   int is_symlink;
   int is_directory;
@@ -236,12 +264,12 @@ change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group,
       is_directory = S_ISDIR (file_stats.st_mode);
     }
 
-  if ((old_user == (uid_t) -1 || file_stats.st_uid == old_user)
-      && (old_group == (gid_t) -1 || file_stats.st_gid == old_group))
+  if ((old_uid == (uid_t) -1 || file_stats.st_uid == old_uid)
+      && (old_gid == (gid_t) -1 || file_stats.st_gid == old_gid))
     {
-      newuser = user == (uid_t) -1 ? file_stats.st_uid : user;
-      newgroup = group == (gid_t) -1 ? file_stats.st_gid : group;
-      if (newuser != file_stats.st_uid || newgroup != file_stats.st_gid)
+      new_uid = (uid == (uid_t) -1 ? file_stats.st_uid : uid);
+      new_gid = (gid == (gid_t) -1 ? file_stats.st_gid : gid);
+      if (new_uid != file_stats.st_uid || new_gid != file_stats.st_gid)
 	{
 	  int fail;
 	  int symlink_changed = 1;
@@ -253,7 +281,7 @@ change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group,
 	      if (chopt->dereference == DEREF_NEVER)
 		{
 		  called_lchown = 1;
-		  fail = lchown (file, newuser, newgroup);
+		  fail = lchown (file, new_uid, new_gid);
 
 		  /* Ignore the failure if it's due to lack of support (ENOSYS)
 		     and this is not a command line argument.  */
@@ -269,7 +297,7 @@ change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group,
 		     the referent is not portable.  So instead, open the
 		     file and use fchown on the resulting descriptor.  */
 		  int fd = open (file, O_RDONLY | O_NONBLOCK | O_NOCTTY);
-		  fail = (fd == -1 ? 1 : fchown (fd, newuser, newgroup));
+		  fail = (fd == -1 ? 1 : fchown (fd, new_uid, new_gid));
 		}
 	      else
 		{
@@ -279,7 +307,7 @@ change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group,
 	    }
 	  else
 	    {
-	      fail = chown (file, newuser, newgroup);
+	      fail = chown (file, new_uid, new_gid);
 	    }
 	  saved_errno = errno;
 
@@ -297,7 +325,7 @@ change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group,
 	  if (fail)
 	    {
 	      if (chopt->force_silent == 0)
-		error (0, saved_errno, (user != (uid_t) -1
+		error (0, saved_errno, (uid != (uid_t) -1
 					? _("changing ownership of %s")
 					: _("changing group of %s")),
 		       quote (file));
@@ -332,7 +360,7 @@ change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group,
     }
 
   if (chopt->recurse && is_directory)
-    errors |= change_dir_owner (file, user, group,
-				old_user, old_group, &file_stats, chopt);
+    errors |= change_dir_owner (file, uid, gid,
+				old_uid, old_gid, &file_stats, chopt);
   return errors;
 }
