@@ -1,5 +1,7 @@
 2003-07-27  Jim Meyering  <jim@meyering.net>
 
+	* tests/mk-script: Emit `$xx', not its expansion.
+
 	* Version 5.0.90.
 
 2003-07-27  Paul Eggert  <eggert@twinsun.com>
