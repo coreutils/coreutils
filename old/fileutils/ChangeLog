@@ -2,7 +2,7 @@
 
 	* Version 3.16n.
 
-	* configure.in: Use jm_PREREQ_ERROR.
+	* configure.in: Use jm_PREREQ.
 
 1998-03-14  Jim Meyering  <meyering@eng.ascend.com>
 
