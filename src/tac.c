@@ -63,10 +63,6 @@ char *realloc ();
 
 char *mktemp ();
 
-static char *xmalloc ();
-static char *xrealloc ();
-static void xwrite ();
-
 int full_write ();
 int safe_read ();
 
@@ -124,8 +120,7 @@ static struct option const longopts[] =
 };
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -151,7 +146,7 @@ With no FILE, or when FILE is -, read standard input.\n\
 }
 
 static RETSIGTYPE
-cleanup ()
+cleanup (void)
 {
   unlink (tempfile);
   exit (1);
@@ -160,8 +155,7 @@ cleanup ()
 /* Allocate N bytes of memory dynamically, with error checking.  */
 
 static char *
-xmalloc (n)
-     unsigned n;
+xmalloc (unsigned int n)
 {
   char *p;
 
@@ -177,9 +171,7 @@ xmalloc (n)
 /* Change the size of memory area P to N bytes, with error checking. */
 
 static char *
-xrealloc (p, n)
-     char *p;
-     unsigned n;
+xrealloc (char *p, unsigned int n)
 {
   p = realloc (p, n);
   if (p == 0)
@@ -191,10 +183,7 @@ xrealloc (p, n)
 }
 
 static void
-xwrite (desc, buffer, size)
-     int desc;
-     char *buffer;
-     int size;
+xwrite (int desc, char *buffer, int size)
 {
   if (full_write (desc, buffer, size) < 0)
     {
@@ -207,9 +196,7 @@ xwrite (desc, buffer, size)
    If START is NULL, just flush the buffer. */
 
 static void
-output (start, past_end)
-     char *start;
-     char *past_end;
+output (char *start, char *past_end)
 {
   static char buffer[WRITESIZE];
   static int bytes_in_buffer = 0;
@@ -242,9 +229,7 @@ output (start, past_end)
    Return 0 if ok, 1 if an error occurs. */
 
 static int
-tac (fd, file)
-     int fd;
-     char *file;
+tac (int fd, char *file)
 {
   /* Pointer to the location in `buffer' where the search for
      the next separator will begin. */
@@ -411,8 +396,7 @@ tac (fd, file)
    Return 0 if ok, 1 if an error occurs. */
 
 static int
-tac_file (file)
-     char *file;
+tac_file (char *file)
 {
   int fd, errors;
 
@@ -434,7 +418,7 @@ tac_file (file)
 /* Make a copy of the standard input in `tempfile'. */
 
 static void
-save_stdin ()
+save_stdin (void)
 {
   static char *template = NULL;
   static char *tempdir;
@@ -480,7 +464,7 @@ save_stdin ()
    Return 0 if ok, 1 if an error occurs. */
 
 static int
-tac_stdin ()
+tac_stdin (void)
 {
   /* Previous values of signal handlers. */
   RETSIGTYPE (*sigint) (), (*sighup) (), (*sigpipe) (), (*sigterm) ();
@@ -570,9 +554,7 @@ tac_stdin ()
 }
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   const char *error_message;	/* Return value from re_compile_pattern. */
   int optc, errors;
