@@ -82,7 +82,7 @@
 #endif
 
 #define EPOCH_YEAR 1970
-#define TM_YEAR_ORIGIN 1900
+#define TM_YEAR_BASE 1900
 
 #define HOUR(x) ((x) * 60)
 
@@ -664,26 +664,32 @@ lookup_zone (struct parser_control const *pc, char const *name)
   return 0;
 }
 
-/* Yield A - B, measured in seconds.  */
+#if ! HAVE_TM_GMTOFF
+/* Yield the difference between *A and *B,
+   measured in seconds, ignoring leap seconds.
+   The body of this function is taken directly from the GNU C Library;
+   see src/strftime.c.  */
 static int
-difftm (struct tm *a, struct tm *b)
+tm_diff (struct tm const *a, struct tm const *b)
 {
-  int ay = a->tm_year + (TM_YEAR_ORIGIN - 1);
-  int by = b->tm_year + (TM_YEAR_ORIGIN - 1);
-  int days = (
-  /* difference in day of year */
-		a->tm_yday - b->tm_yday
-  /* + intervening leap days */
-		+ ((ay >> 2) - (by >> 2))
-		- (ay / 100 - by / 100)
-		+ ((ay / 100 >> 2) - (by / 100 >> 2))
-  /* + difference in years * 365 */
-		+ (int) (ay - by) * 365
-  );
+  /* Compute intervening leap days correctly even if year is negative.
+     Take care to avoid int overflow in leap day calculations,
+     but it's OK to assume that A and B are close to each other.  */
+  int a4 = (a->tm_year >> 2) + (TM_YEAR_BASE >> 2) - ! (a->tm_year & 3);
+  int b4 = (b->tm_year >> 2) + (TM_YEAR_BASE >> 2) - ! (b->tm_year & 3);
+  int a100 = a4 / 25 - (a4 % 25 < 0);
+  int b100 = b4 / 25 - (b4 % 25 < 0);
+  int a400 = a100 >> 2;
+  int b400 = b100 >> 2;
+  int intervening_leap_days = (a4 - b4) - (a100 - b100) + (a400 - b400);
+  int years = a->tm_year - b->tm_year;
+  int days = (365 * years + intervening_leap_days
+	      + (a->tm_yday - b->tm_yday));
   return (60 * (60 * (24 * days + (a->tm_hour - b->tm_hour))
 		+ (a->tm_min - b->tm_min))
 	  + (a->tm_sec - b->tm_sec));
 }
+#endif /* ! HAVE_TM_GMTOFF */
 
 static table const *
 lookup_word (struct parser_control const *pc, char *word)
@@ -848,7 +854,7 @@ get_date (const char *p, const time_t *now)
     return -1;
 
   pc.input = p;
-  pc.year = tmp->tm_year + TM_YEAR_ORIGIN;
+  pc.year = tmp->tm_year + TM_YEAR_BASE;
   pc.month = tmp->tm_mon + 1;
   pc.day = tmp->tm_mday;
   pc.hour = tmp->tm_hour;
@@ -934,7 +940,7 @@ get_date (const char *p, const time_t *now)
       || (pc.local_zones_seen && 1 < pc.local_isdst))
     return -1;
 
-  tm.tm_year = to_year (pc.year) - TM_YEAR_ORIGIN + pc.rel_year;
+  tm.tm_year = to_year (pc.year) - TM_YEAR_BASE + pc.rel_year;
   tm.tm_mon = pc.month - 1 + pc.rel_month;
   tm.tm_mday = pc.day + pc.rel_day;
   if (pc.times_seen || (pc.rels_seen && ! pc.dates_seen && ! pc.days_seen))
@@ -981,7 +987,7 @@ get_date (const char *p, const time_t *now)
       if (pc.zones_seen)
 	{
 	  tm = tm0;
-	  if (tm.tm_year <= EPOCH_YEAR - TM_YEAR_ORIGIN)
+	  if (tm.tm_year <= EPOCH_YEAR - TM_YEAR_BASE)
 	    {
 	      tm.tm_mday++;
 	      pc.time_zone += 24 * 60;
@@ -1009,11 +1015,15 @@ get_date (const char *p, const time_t *now)
 
   if (pc.zones_seen)
     {
-      int delta;
+      int delta = pc.time_zone * 60;
+#ifdef HAVE_TM_GMTOFF
+      delta -= tm.tm_gmtoff;
+#else
       struct tm *gmt = gmtime (&Start);
       if (! gmt)
 	return -1;
-      delta = pc.time_zone * 60 + difftm (gmt, &tm);
+      delta -= tm_diff (&tm, gmt);
+#endif
       if ((Start < Start - delta) != (delta < 0))
 	return -1;	/* time_t overflow */
       Start -= delta;
