@@ -1,6 +1,9 @@
 Sat May 13 07:47:44 1995  Jim Meyering  (meyering@comco.com)
 
 	* lib/Makefile.in: Remove safe-l?stat.[ch]in and related rules.
+	(maintainer-clean): Rename from realclean.
+	(.PHONY): New dependencies.
+	[.c.o]: Remove -I. since safe-l?stat.h are no longer used.
 
 	* argmatch.c (argmatch): Include sys/types.h and declare length
 	argument with type size_t.

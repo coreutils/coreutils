@@ -1,3 +1,21 @@
+Sat May 13 08:57:20 1995  Jim Meyering  (meyering@comco.com)
+
+	* lib/Makefile.in (maintainer-clean): Rename from realclean.
+	(.PHONY): New dependencies.
+	[.c.o]: Remove -I. since safe-l?stat.h are no longer used.
+
+Fri May 12 21:25:50 1995  Jim Meyering  (meyering@comco.com)
+
+	* test.c (usage): Remove duplicate descriptions of --help
+	and --version.  From Karl Berry.
+
+	* pathchk.c: Use stat (lstat), not safe_stat (safe_lstat).
+	* test.c: Likewise.
+	* who.c: Likewise.
+
+	* lib/Makefile.in (SOURCE): Add memcpy.c, memset.c.
+	Remove all reference to (now unused) safe-xstat.hin.
+
 Tue Apr 18 22:57:43 1995  Jim Meyering  (meyering@comco.com)
 
 	* configure.in: (AC_OUTPUT): Use echo, not date, to avoid creating

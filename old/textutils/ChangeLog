@@ -1,3 +1,8 @@
+Sat May 13 08:57:20 1995  Jim Meyering  (meyering@comco.com)
+
+	* lib/Makefile.in [.c.o]: Remove -I. since safe-l?stat.h are no
+	longer used.
+
 Wed May 10 22:26:35 1995  Jim Meyering  (meyering@comco.com)
 
 	* Version 1.11.1
