@@ -1,0 +1,12 @@
+#!/bin/sh
+# This test requires ln -s.
+# cp from 3.16 fails this test
+rm -rf a b
+mkdir a b
+echo foo > a/foo
+cd b
+ln -s ../a/foo .
+cd ..
+./cp -d a/foo b
+test "`cat a/foo`" = foo && fail=0 || fail=1
+exit $fail
