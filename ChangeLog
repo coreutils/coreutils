@@ -1,5 +1,11 @@
 2003-10-14  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.0.92.
+
+	FIXME: update coreutils.texi:
+	chmod's new options: --preserve-root and --no-preserve-root.
+	chown and chgrp have new options: -H -L -P
+
 	* tests/chgrp/posix-H: New tests for the above.
 	* tests/chgrp/Makefile.am (TESTS): Add posix-H.
 
@@ -61,10 +67,6 @@
 	brave enough to check coreutils out from CVS can rebuild it.
 
 2003-10-12  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.92.
-
-	FIXME: update coreutils.texi
 
 	New options: --preserve-root and --no-preserve-root.
 	* src/chmod.c (change_file_mode): Honor new option.
