@@ -8245,10 +8245,10 @@ argument string with @samp{\} escapes interpreted in the same way as in
 the @var{format} string.
 
 @kindex \0ooo
-@kindex \0xhhh
+@kindex \xhh
 @command{printf} interprets @samp{\0ooo} in @var{format} as an octal number
 (if @var{ooo} is 0 to 3 octal digits) specifying a character to print,
-and @samp{\xhhh} as a hexadecimal number (if @var{hhh} is 1 to 3 hex
+and @samp{\xhh} as a hexadecimal number (if @var{hh} is 1 to 2 hex
 digits) specifying a character to print.
 
 @kindex \uhhhh
