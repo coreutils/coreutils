@@ -131,7 +131,7 @@ standard input), writing to OUTPUT (or standard output).\n\
       --help            display this help and exit\n\
       --version         output version information and exit\n\
 \n\
-A field is a run of whitespace, than non-whitespace characters.\n\
+A field is a run of whitespace, then non-whitespace characters.\n\
 Fields are skipped before chars.\n\
 "));
       puts (_("\nReport bugs to <textutils-bugs@gnu.ai.mit.edu>."));
