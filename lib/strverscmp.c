@@ -71,11 +71,11 @@ strverscmp (s1, s2)
 
       /* S_N */  CMP, CMP, CMP, CMP, CMP, LEN, CMP, CMP,
                  CMP, CMP, CMP, CMP, CMP, CMP, CMP, CMP,
-      /* S_I */  CMP, -1,  -1,  CMP, +1,  LEN, LEN, CMP,
-                 +1,  LEN, LEN, CMP, CMP, CMP, CMP, CMP,
+      /* S_I */  CMP, -1,  -1,  CMP,  1,  LEN, LEN, CMP,
+                  1,  LEN, LEN, CMP, CMP, CMP, CMP, CMP,
       /* S_F */  CMP, CMP, CMP, CMP, CMP, LEN, CMP, CMP,
                  CMP, CMP, CMP, CMP, CMP, CMP, CMP, CMP,
-      /* S_Z */  CMP, +1,  +1,  CMP, -1,  CMP, CMP, CMP,
+      /* S_Z */  CMP,  1,   1,  CMP, -1,  CMP, CMP, CMP,
                  -1,  CMP, CMP, CMP
   };
 
