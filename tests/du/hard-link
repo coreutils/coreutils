@@ -30,13 +30,17 @@ fi
 
 fail=0
 
+# Note that for this first test, we transform f1 or f2
+# (whichever name we find first) to f_.  That is necessary because,
+# depending on the type of file system, du could encounter either of those
+# two hard-linked files first, thus listing that one and not the other.
 du -a --exclude=sub dir \
-  | sed 's/^[0-9][0-9]*	//' > out || fail=1
+  | sed 's/^[0-9][0-9]*	//' | sed 's/f[12]/f_/' > out || fail=1
 echo === >> out
 du -a --exclude=sub --count-links dir \
   | sed 's/^[0-9][0-9]*	//' | sort -r >> out || fail=1
 cat <<\EOF > exp
-dir/f1
+dir/f_
 dir
 ===
 dir/f2
