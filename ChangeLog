@@ -15,9 +15,12 @@
 
 	chown and chgrp now accept POSIX-mandated -H, -L, -P options and
 	use fts to perform a directory traversal when -R is specified.
-	Before, they used explicit recursion, and as such were limited by
-	the user's stack size to handling hierarchies no deeper than
-	about 30,000 levels.
+	Before, they operated on full path names, and as such would
+	encounter the PATH_MAX (often 4096) limit.
+	They are more efficient.  For example, before, chgrp -R would
+	take almost 5 seconds to change about 2000 directories and fail
+	(with `File name too long'), while now it succeeds on a hierarchy
+	of depth 20,000 in 1/10 the time.
 
 	* src/chown.c: Include "userspec.h" and "fts_.h".
 	(WRITTEN_BY): Add my name.
