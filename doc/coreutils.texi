@@ -2099,6 +2099,12 @@ growing.
 The option values @samp{descriptor} and @samp{name} may be specified only
 with the long form of the option, not with @option{-f}.
 
+@item -F
+@opindex -F
+This option is the same as @option{--follow=name --retry}.  That is, tail
+will attempt to reopen a file when it is removed.  Should this fail, tail
+will keep trying until it becomes accessible again.
+
 @itemx --retry
 @opindex --retry
 This option is meaningful only when following by name.
