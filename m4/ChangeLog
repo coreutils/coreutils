@@ -1,3 +1,8 @@
+2004-03-27  Paul Eggert  <eggert@twinsun.com>
+
+	* utimecmp.m4: New file.
+	* prereq.m4 (jm_PREREQ): Require gl_UTIMECMP.
+
 2004-04-07  Paul Eggert  <eggert@twinsun.com>
 
 	* jm-macros.m4 (jm_MACROS): Check for fdatasync within
