@@ -1,4 +1,4 @@
-#serial 18
+#serial 19
 # How to list mounted file systems.
 
 # Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2004 Free Software
@@ -30,7 +30,7 @@ dnl
 AC_DEFUN([AC_FUNC_GETMNTENT],
 [# getmntent is in the standard C library on UNICOS, in -lsun on Irix 4,
 # -lseq on Dynix/PTX, -lgen on Unixware.
-AC_SEARCH_LIBS(getmntent, -lsun -lseq -lgen, [AC_CHECK_FUNCS(getmntent)])
+AC_SEARCH_LIBS(getmntent, [sun seq gen], [AC_CHECK_FUNCS(getmntent)])
 ])
 
 # gl_LIST_MOUNTED_FILE_SYSTEMS([ACTION-IF-FOUND[, ACTION-IF-NOT-FOUND]])
