@@ -30,7 +30,7 @@
 
    -m, --mode=MODE
 	Set the permission mode for the installed file or directory
-	to MODE, which is an octal number (default is 0755).
+	to MODE, which is an octal number (default is u=rwx,g=rx,o=rx).
 
    -o, --owner=OWNER
 	If run as root, set the ownership of the installed file to
@@ -117,9 +117,6 @@ gid_t getgid ();
 /* Initial number of entries in the inode hash table.  */
 #define INITIAL_ENTRY_TAB_SIZE 70
 
-/* True if C is an ASCII octal digit. */
-#define isodigit(c) ((c) >= '0' && c <= '7')
-
 /* Number of bytes of a file to copy at a time. */
 #define READ_SIZE (32 * 1024)
 
@@ -161,7 +158,7 @@ static gid_t group_id;
 
 /* The permissions to which the files will be set.  The umask has
    no effect. */
-static mode_t mode = 0755;
+static mode_t mode = S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH;
 
 /* If nonzero, strip executable files after copying them. */
 static int strip_files;
@@ -214,7 +211,7 @@ cp_option_init (struct cp_options *x)
      Although GNU strip works fine on read-only files, some others
      would fail.  */
   x->set_mode = 1;
-  x->mode = 0600;
+  x->mode = S_IRUSR | S_IWUSR;
 
   x->umask_kill = 0;
   x->update = 0;
@@ -402,7 +399,7 @@ install_file_to_path (const char *from, const char *to,
 	 owner, group, and permissions for parent directories.  Remember
 	 that this option is intended mainly to help installers when the
 	 distribution doesn't provide proper install rules.  */
-#define DIR_MODE 0755
+#define DIR_MODE (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH)
       fail = make_path (dest_dir, DIR_MODE, DIR_MODE, owner_id, group_id, 0,
 			(x->verbose ? _("creating directory `%s'") : NULL));
 
