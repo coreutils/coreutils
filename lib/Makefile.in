@@ -95,7 +95,7 @@ noinst_LIBRARIES = libfu.a
 
 INCLUDES = -I.. -I$(srcdir) -I../intl
 
-libfu_a_SOURCES = getdate.y posixtm.y getopt.c getopt1.c \
+libfu_a_SOURCES = getdate.y posixtm.c getopt.c getopt1.c \
 addext.c argmatch.c backupfile.c basename.c \
 closeout.c dirname.c exclude.c filemode.c \
 full-write.c human.c idcache.c \
@@ -110,10 +110,10 @@ noinst_HEADERS = argmatch.h backupfile.h closeout.h \
 error.h exclude.h filemode.h fnmatch.h fsusage.h \
 getdate.h getline.h getopt.h group-member.h human.h lchown.h long-options.h \
 makepath.h modechange.h mountlist.h hash.h path-concat.h pathmax.h \
-quotearg.h regex.h safe-read.h save-cwd.h savedir.h strverscmp.h \
+posixtm.h quotearg.h regex.h safe-read.h save-cwd.h savedir.h strverscmp.h \
 xalloc.h xstrtol.h xstrtoul.h
 
-BUILT_SOURCES = getdate.c posixtm.c
+BUILT_SOURCES = getdate.c
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
@@ -133,7 +133,6 @@ hash$U.o path-concat$U.o quotearg$U.o safe-read$U.o save-cwd$U.o \
 savedir$U.o stripslash$U.o userspec$U.o xgetcwd$U.o xmalloc$U.o \
 xstrdup$U.o xstrtol$U.o xstrtoul$U.o yesno$U.o
 AR = ar
-YLWRAP = $(srcdir)/ylwrap
 CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 LINK = $(CC) $(CFLAGS) $(LDFLAGS) -o $@
@@ -143,9 +142,9 @@ DIST_COMMON =  Makefile.am Makefile.in TODO alloca.c chown.c error.c \
 error.h euidaccess.c fileblocks.c fnmatch.c fsusage.c ftruncate.c \
 getdate.c getgroups.c getline.c group-member.c lchown.c lstat.c \
 malloc.c memcmp.c memcpy.c memset.c mkdir.c mktime.c mountlist.c \
-obstack.c obstack.h posixtm.c realloc.c regex.c rename.c rmdir.c \
-rpmatch.c stat.c stpcpy.c strcasecmp.c strdup.c strftime.c strndup.c \
-strstr.c strtol.c strtoul.c strverscmp.c utime.c ylwrap
+obstack.c obstack.h realloc.c regex.c rename.c rmdir.c rpmatch.c stat.c \
+stpcpy.c strcasecmp.c strdup.c strftime.c strndup.c strstr.c strtol.c \
+strtoul.c strverscmp.c utime.c ylwrap
 
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
@@ -162,15 +161,14 @@ DEP_FILES =  .deps/addext.P .deps/alloca.P .deps/argmatch.P \
 .deps/isdir.P .deps/lchown.P .deps/long-options.P .deps/lstat.P \
 .deps/makepath.P .deps/malloc.P .deps/memcmp.P .deps/memcpy.P \
 .deps/memset.P .deps/mkdir.P .deps/mktime.P .deps/modechange.P \
-.deps/mountlist.P .deps/obstack.P .deps/path-concat.P .deps/posixtm \
-.deps/posixtm.P .deps/quotearg.P .deps/realloc.P .deps/regex.P \
-.deps/rename.P .deps/rmdir.P .deps/rpmatch.P .deps/safe-read.P \
-.deps/save-cwd.P .deps/savedir.P .deps/stat.P .deps/stpcpy.P \
-.deps/strcasecmp.P .deps/strdup.P .deps/strftime.P .deps/stripslash.P \
-.deps/strndup.P .deps/strstr.P .deps/strtol.P .deps/strtoul.P \
-.deps/strverscmp.P .deps/userspec.P .deps/utime.P .deps/xgetcwd.P \
-.deps/xmalloc.P .deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P \
-.deps/yesno.P
+.deps/mountlist.P .deps/obstack.P .deps/path-concat.P .deps/posixtm.P \
+.deps/quotearg.P .deps/realloc.P .deps/regex.P .deps/rename.P \
+.deps/rmdir.P .deps/rpmatch.P .deps/safe-read.P .deps/save-cwd.P \
+.deps/savedir.P .deps/stat.P .deps/stpcpy.P .deps/strcasecmp.P \
+.deps/strdup.P .deps/strftime.P .deps/stripslash.P .deps/strndup.P \
+.deps/strstr.P .deps/strtol.P .deps/strtoul.P .deps/strverscmp.P \
+.deps/userspec.P .deps/utime.P .deps/xgetcwd.P .deps/xmalloc.P \
+.deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P .deps/yesno.P
 SOURCES = $(libfu_a_SOURCES)
 OBJECTS = $(libfu_a_OBJECTS)
 
@@ -231,8 +229,10 @@ libfu.a: $(libfu_a_OBJECTS) $(libfu_a_DEPENDENCIES)
 	$(AR) cru libfu.a $(libfu_a_OBJECTS) $(libfu_a_LIBADD)
 	$(RANLIB) libfu.a
 .y.c:
-	$(SHELL) $(YLWRAP) "$(YACC)" $< y.tab.c $*.c y.tab.h $*.h -- $(YFLAGS)
-posixtm.h: posixtm.c
+	$(YACC) $(YFLAGS) $< && mv y.tab.c $*.c
+	if test -f y.tab.h; then \
+	if cmp -s y.tab.h $*.h; then rm -f y.tab.h; else mv y.tab.h $*.h; fi; \
+	else :; fi
 getdate.h: getdate.c
 
 addext_.c: addext.c $(ANSI2KNR)
