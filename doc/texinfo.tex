@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{1999-03-15.17}%
+\def\texinfoversion{1999-03-20.16}%
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99
 % Free Software Foundation, Inc.
@@ -3020,7 +3020,7 @@ width0pt\relax} \fi
 
 % This counter is funny since it counts through charcodes of letters A, B, ...
 \newcount\appendixno  \appendixno = `\@
-\def\appendixletter{\char\the\appendixno}
+\def\appendixletter{\char\appendixno}
 
 % Each @chapter defines this as the name of the chapter.
 % page headings and footings can use it.  @section does likewise.
@@ -4859,8 +4859,20 @@ width0pt\relax} \fi
 
 % @anchor{NAME} -- define xref target at arbitrary point.
 %
-\def\anchor#1{\setref{#1}{Ynothing}}
-
+{ \catcode`\@ = 11
+% From latex.ltx, to make @anchor truely invisible.
+\newdimen\@savsk
+\newcount\@savsf
+\gdef\@bsphack{\relax
+  \ifhmode \@savsk\lastskip \@savsf\spacefactor \fi
+}
+\gdef\@esphack{\relax
+  \ifhmode \spacefactor\@savsf
+    \ifdim\@savsk>\z@ \ignorespaces \fi
+  \fi
+}
+\gdef\anchor#1{\@bsphack \setref{#1}{Ynothing}\@esphack}
+}
 
 % \setref{NAME}{SNT} defines a cross-reference point NAME, namely
 % NAME-title, NAME-pg, and NAME-SNT.  Called from \foonoderef.  We have
@@ -4943,7 +4955,7 @@ width0pt\relax} \fi
 % Use \normalturnoffactive so that punctuation chars such as underscore
 % and backslash work in node names.  (\turnoffactive doesn't do \.)
 \def\dosetq#1#2{%
-  {\let\folio=0
+  {\let\folio=0%
    \normalturnoffactive
    \edef\next{\write\auxfile{\internalsetq{#1}{#2}}}%
    \iflinks
@@ -5258,25 +5270,21 @@ width0pt\relax} \fi
   \input epsf.tex
 \fi
 %
+% We will only complain once about lack of epsf.tex.
 \newif\ifwarnednoepsf
 \newhelp\noepsfhelp{epsf.tex must be installed for images to
   work.  It is also included in the Texinfo distribution, or you can get
   it from ftp://tug.org/tex/epsf.tex.}
 %
-% Only complain once about lack of epsf.tex.
 \def\image#1{%
-  \ifx\pdfoutput\undefined
-    \ifx\epsfbox\undefined
-      \ifwarnednoepsf \else
-        \errhelp = \noepsfhelp
-        \errmessage{epsf.tex not found, images will be ignored}%
-        \global\warnednoepsftrue
-      \fi
-    \else
-      \imagexxx #1,,,\finish
+  \ifx\epsfbox\undefined
+    \ifwarnednoepsf \else
+      \errhelp = \noepsfhelp
+      \errmessage{epsf.tex not found, images will be ignored}%
+      \global\warnednoepsftrue
     \fi
   \else
-    \centerline{\pdfimage #1.pdf}%
+    \imagexxx #1,,,\finish
   \fi
 }
 %
@@ -5285,22 +5293,26 @@ width0pt\relax} \fi
 % #2 is (optional) width, #3 is (optional) height.
 % #4 is just the usual extra ignored arg for parsing this stuff.
 \def\imagexxx#1,#2,#3,#4\finish{%
-  % \epsfbox itself resets \epsf?size at each figure.
-  \setbox0 = \hbox{\ignorespaces #2}\ifdim\wd0 > 0pt \epsfxsize=#2\relax \fi
-  \setbox0 = \hbox{\ignorespaces #3}\ifdim\wd0 > 0pt \epsfysize=#3\relax \fi
-  \begingroup
-    \catcode`\^^M = 5 % in case we're inside an example
-    % If the image is by itself, center it.
-    \ifvmode
-      \nobreak\medskip
-      \nobreak
-      \centerline{\epsfbox{#1.eps}}%
-      \bigbreak
-    \else
-      % In the middle of a paragraph, no extra space.
-      \epsfbox{#1.eps}%
-    \fi
-  \endgroup
+  \ifx\pdfoutput\undefined
+    % \epsfbox itself resets \epsf?size at each figure.
+    \setbox0 = \hbox{\ignorespaces #2}\ifdim\wd0 > 0pt \epsfxsize=#2\relax \fi
+    \setbox0 = \hbox{\ignorespaces #3}\ifdim\wd0 > 0pt \epsfysize=#3\relax \fi
+    \begingroup
+      \catcode`\^^M = 5 % in case we're inside an example
+      % If the image is by itself, center it.
+      \ifvmode
+        \nobreak\medskip
+        \nobreak
+        \centerline{\epsfbox{#1.eps}}%
+        \bigbreak
+      \else
+        % In the middle of a paragraph, no extra space.
+        \epsfbox{#1.eps}%
+      \fi
+    \endgroup
+  \else
+    \centerline{\pdfimage #1.pdf}%
+  \fi
 }
 
 
@@ -5486,6 +5498,7 @@ should work if nowhere else does.}
 \catcode`\<=\other
 \catcode`\>=\other
 \catcode`\+=\other
+\catcode`\$=\other
 \def\normaldoublequote{"}
 \def\normaltilde{~}
 \def\normalcaret{^}
@@ -5494,6 +5507,7 @@ should work if nowhere else does.}
 \def\normalless{<}
 \def\normalgreater{>}
 \def\normalplus{+}
+\def\normaldollar{$}
 
 % This macro is used to make a character print one way in ttfont
 % where it can probably just be output, and another way in other fonts,
@@ -5504,7 +5518,13 @@ should work if nowhere else does.}
 % interword stretch (and shrink), and it is reasonable to expect all
 % typewriter fonts to have this, we can check that font parameter.
 %
-\def\ifusingtt#1#2{\ifdim \fontdimen3\the\font=0pt #1\else #2\fi}
+\def\ifusingtt#1#2{\ifdim \fontdimen3\font=0pt #1\else #2\fi}
+
+% Same as above, but check for italic font.  Actually this also catches
+% non-italic slanted fonts since it is impossible to distinguish them from
+% italic fonts.  But since this is only used by $ and it uses \sl anyway
+% this is not a problem.
+\def\ifusingit#1#2{\ifdim \fontdimen1\font>0pt #1\else #2\fi}
 
 % Turn off all special characters except @
 % (and those which the user can use as if they were ordinary).
@@ -5535,6 +5555,8 @@ should work if nowhere else does.}
 \def>{{\tt \gtr}}
 \catcode`\+=\active
 \def+{{\tt \char 43}}
+\catcode`\$=\active
+\def${\ifusingit{{\sl\$}}\normaldollar}
 %\catcode 27=\active
 %\def^^[{$\diamondsuit$}
 
@@ -5581,7 +5603,8 @@ should work if nowhere else does.}
 @let|=@normalverticalbar
 @let<=@normalless
 @let>=@normalgreater
-@let+=@normalplus}
+@let+=@normalplus
+@let$=@normaldollar}
 
 @def@normalturnoffactive{@let"=@normaldoublequote
 @let\=@normalbackslash
@@ -5591,7 +5614,8 @@ should work if nowhere else does.}
 @let|=@normalverticalbar
 @let<=@normalless
 @let>=@normalgreater
-@let+=@normalplus}
+@let+=@normalplus
+@let$=@normaldollar}
 
 % Make _ and + \other characters, temporarily.
 % This is canceled by @fixbackslash.
@@ -5615,7 +5639,7 @@ should work if nowhere else does.}
 
 % These look ok in all fonts, so just make them not special.  The @rm below
 % makes sure that the current font starts out as the newly loaded cmr10
-@catcode`@$=@other @catcode`@%=@other @catcode`@&=@other @catcode`@#=@other
+@catcode`@%=@other @catcode`@&=@other @catcode`@#=@other
 
 @textfonts
 @rm
