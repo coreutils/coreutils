@@ -1,3 +1,12 @@
+Mon Jun 16 11:06:57 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* m4/putenv.m4 (jm_FUNC_PUTENV): New file and macro.
+	* configure.in (jm_FUNC_PUTENV): Use it.
+	* acconfig.h (putenv): Add #undef.
+	* lib/Makefile.am (EXTRA_DIST): Add putenv.c.
+	(libsu_a_SOURCES): Remove putenv.c.
+	* m4/Makefile.am (EXTRA_DIST): Add putenv.m4.
+
 Thu Jun 12 06:48:23 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/expr.c (eval6): Accept new unary operator, quote.
