@@ -800,10 +800,11 @@ skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
 {
   off_t offset = records * blocksize;
 
-  /* Try lseek and if an error indicates it was an inappropriate
-     operation, fall back on using read.  */
+  /* Try lseek and if an error indicates it was an inappropriate operation --
+     or if the the file offset is not representable as an off_t --
+     fall back on using read.  */
 
-  if (offset / blocksize != records
+  if ((uintmax_t) offset / blocksize != records
       || skip_via_lseek (file, fdesc, offset, SEEK_CUR) < 0)
     {
       while (records--)
@@ -1190,11 +1191,12 @@ main (int argc, char **argv)
 	{
 	  struct stat stdout_stat;
 	  off_t o = seek_records * output_blocksize;
-	  if (o / output_blocksize != seek_records)
+	  if ((uintmax_t) o / output_blocksize != seek_records)
 	    error (EXIT_FAILURE, 0, _("file offset out of range"));
 
 	  if (fstat (STDOUT_FILENO, &stdout_stat) != 0)
-	    error (EXIT_FAILURE, errno, _("cannot fstat %s"), quote (output_file));
+	    error (EXIT_FAILURE, errno, _("cannot fstat %s"),
+		   quote (output_file));
 
 	  /* Complain only when ftruncate fails on a regular file, a
 	     directory, or a shared memory object, as the 2000-08
