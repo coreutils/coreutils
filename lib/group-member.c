@@ -19,18 +19,16 @@
 # include <config.h>
 #endif
 
+#include "group-member.h"
+
 #include <stdio.h>
 #include <sys/types.h>
-
-#ifdef STDC_HEADERS
-# include <stdlib.h>
-#endif
+#include <stdlib.h>
 
 #if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
 
-#include "group-member.h"
 #include "xalloc.h"
 
 struct group_info
@@ -127,7 +125,7 @@ group_member (gid_t gid)
 char *program_name;
 
 int
-main (int argc, char** argv)
+main (int argc, char **argv)
 {
   int i;
 
