@@ -1,5 +1,9 @@
 1997-11-30  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/savedir.c (savedir): Revert last change.  malloc always
+	works when called with zero, because we use the wrapper if the
+	system version is lacking.
+
 	* configure.in (AC_LFS): Use this macro rather than open-coding it.
 	(jm_AC_HEADER_INTTYPES_H): Likewise.
 	(jm_AC_TYPE_UINTMAX_T): Likewise.
