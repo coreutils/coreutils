@@ -42,7 +42,7 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION] NEWROOT [COMMAND...]\n\
+Usage: %s NEWROOT [COMMAND...]\n\
   or:  %s OPTION\n\
 "), program_name, program_name);
       printf (_("\
