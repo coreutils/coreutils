@@ -1,5 +1,9 @@
 Sun Jul 21 11:58:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/Makefile.am (BUILT_SOURCES): Remove @MAINT@.
+	(dircolors.h): Remove @MAINT@.  These prevented `make distcheck'
+	from working sometimes.
+
 	* lib/yesno.c (yesno) [!HAVE_RPMATCH]: Remove function since we'll
 	always use the rpmatch-based version.
 	Declare rpmatch.
@@ -8,7 +12,7 @@ Sun Jul 21 11:58:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	(_) [!_]: Define it.
 	(try): Add RESPONSE parameter.
 	(rpmatch): Update caller.
-	Change the regular expressions to be ^[yY] and ^[nN].
+	Anchor regular expressions to beginning of string.
 
 	* configure.in (AC_CHECK_FUNCS): Don't check rpmatch.
 
