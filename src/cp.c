@@ -502,11 +502,28 @@ do_copy (int argc, char **argv)
 
       source = argv[optind];
 
+      /* When the force and backup options have been specified and
+	 the source and destination are the same name for an existing
+	 regular file, convert the user's command, e.g.
+	 `cp --force --backup foo foo' to `cp --force foo fooSUFFIX'
+	 where SUFFIX is determined by any version control options used.  */
+
+      if (flag_force
+	  && backup_type != none
+	  && STREQ (source, dest)
+	  && !new_dst && S_ISREG (sb.st_mode))
+	 {
+	   backup_type = none;
+	   new_dest = find_backup_file_name (dest);
+	   if (new_dest == NULL)
+	     error (1, 0, _("virtual memory exhausted"));
+	 }
+
       /* When the destination is specified with a trailing slash and the
 	 source exists but is not a directory, convert the user's command
 	 `cp source dest/' to `cp source dest/basename(source)'.  */
 
-      if (dest[strlen (dest) - 1] == '/'
+      else if (dest[strlen (dest) - 1] == '/'
 	  && lstat (source, &source_stats) == 0
 	  && !S_ISDIR (source_stats.st_mode))
 	{
