@@ -39,6 +39,8 @@ mv_LDADD = $(LDADD) $(LIB_EACCESS)
 pathchk_LDADD = $(LDADD) $(LIB_EACCESS)
 rm_LDADD = $(LDADD) $(LIB_EACCESS)
 test_LDADD = $(LDADD) $(LIB_EACCESS)
+# This is for the '[' program.  Automake transliterates '[' to '_'.
+__LDADD = $(LDADD) $(LIB_EACCESS)
 
 # for clock_gettime and fdatasync
 dd_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME) $(LIB_FDATASYNC)
