@@ -63,7 +63,6 @@ perl.m4 \
 prereq.m4 \
 progtest.m4 \
 putenv.m4 \
-readdir.m4 \
 regex.m4 \
 rename.m4 \
 rmdir-errno.m4 \
