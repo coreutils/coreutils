@@ -1,3 +1,8 @@
+2001-01-03  Jim Meyering  <meyering@lucent.com>
+
+	* unicodeio.c (print_unicode_char): Remove `const' from declaration of
+	local `inptr' to avoid warning with some system declarations of iconv.
+
 2000-12-29  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/modechange.c: Do not assume that mode_t uses the
