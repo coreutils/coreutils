@@ -1,5 +1,5 @@
 /* mkdir -- make directories
-   Copyright (C) 90, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 90, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -162,19 +162,17 @@ main (int argc, char **argv)
 	{
 	  const char *dir = argv[optind];
 	  int dir_created;
-	  int t_errno;
 	  fail = make_dir (dir, dir, newmode, &dir_created);
-	  t_errno = errno;
 	  if (fail)
 	    {
 	      /* make_dir already gave a diagnostic.  */
 	    }
-	  else if (!create_parents && !dir_created && (t_errno = EEXIST))
+	  else if (!create_parents && !dir_created)
 	    {
 	      /* make_dir `succeeds' when DIR already exists.
 		 In that case, mkdir must fail, unless --parents (-p)
 		 was specified.  */
-	      error (0, t_errno, _("cannot create directory %s"),
+	      error (0, EEXIST, _("cannot create directory %s"),
 		     quote (dir));
 	      fail = 1;
 	    }
