@@ -7,7 +7,8 @@
 
 test=deep-1
 
-: ${TMPDIR=.}
+# Don't require use of TMPDIR.
+: ${RM_TMPDIR=.}
 
 if test "$VERBOSE" = yes; then
   set -x
@@ -18,20 +19,22 @@ umask 022
 
 fail=0
 
-tmp=$TMPDIR/t-rm.$$
+tmp=$RM_TMPDIR/t-rm.$$
 
 k20=/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k
 k200=$k20$k20$k20$k20$k20$k20$k20$k20$k20$k20
-k400=$k200$k200
+k_deep=$k200$k200
 
-# Create a directory in $tmp with 400 `k' components.
-deep=$tmp/$k400
+# Create a directory in $tmp with lots of `k' components.
+deep=$tmp$k_deep
 $MKDIR -p $deep || fail=1
+
+find $tmp > k
 
 # Make sure the deep dir was created.
 test -d $deep || fail=1
 
-$RM -r $tmp > $tmp/$test.O || fail=1
+$RM -r $tmp || fail=1
 
 # Make sure it was deleted.
 test -d $deep && fail=1
