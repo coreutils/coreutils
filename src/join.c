@@ -277,7 +277,7 @@ get_line (FILE *fp, struct line *line)
 static void
 freeline (struct line *line)
 {
-  free ((char *) line->fields);
+  free (line->fields);
   free (line->buf.buffer);
   line->buf.buffer = NULL;
 }
@@ -317,7 +317,7 @@ delseq (struct seq *seq)
   for (i = 0; i < seq->count; i++)
     if (seq->lines[i].buf.buffer)
       freeline (&seq->lines[i]);
-  free ((char *) seq->lines);
+  free (seq->lines);
 }
 
 /* Return <0 if the join field in LINE1 compares less than the one in LINE2;
