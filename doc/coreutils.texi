@@ -5007,37 +5007,6 @@ square brackets from interpretation by a shell.
 @end itemize
 
 
-@node Warnings in tr
-@subsection Warning messages
-
-@vindex POSIXLY_CORRECT
-Setting the environment variable @env{POSIXLY_CORRECT} turns off the
-following warning and error messages, for strict compliance with
-@acronym{POSIX}.  Otherwise, the following diagnostics are issued:
-
-@enumerate
-
-@item
-When the @option{--delete} option is given but @option{--squeeze-repeats}
-is not, and @var{set2} is given, @sc{gnu} @command{tr} by default prints
-a usage message and exits, because @var{set2} would not be used.
-The @acronym{POSIX} specification says that @var{set2} must be ignored in
-this case. Silently ignoring arguments is a bad idea.
-
-@item
-When an ambiguous octal escape is given.  For example, @samp{\400}
-is actually @samp{\40} followed by the digit @samp{0}, because the
-value 400 octal does not fit into a single byte.
-
-@end enumerate
-
-@sc{gnu} @command{tr} does not provide complete BSD or System V compatibility.
-For example, it is impossible to disable interpretation of the @acronym{POSIX}
-constructs @samp{[:alpha:]}, @samp{[=c=]}, and @samp{[c*10]}.  Also, @sc{gnu}
-@command{tr} does not delete zero bytes automatically, unlike traditional
-Unix versions, which provide no way to preserve zero bytes.
-
-
 @node expand invocation
 @section @command{expand}: Convert tabs to spaces
 
