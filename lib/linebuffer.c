@@ -45,7 +45,9 @@ initbuffer (struct linebuffer *linebuffer)
    that ends in a non-newline character.  Do not null terminate.
    Therefore the stream can contain NUL bytes, and the length
    (including the newline) is returned in linebuffer->length.
-   Return NULL upon error, or when STREAM is empty.
+   Return NULL when stream is empty.  Return NULL and set errno upon
+   error; callers can distinguish this case from the empty case by
+   invoking ferror (stream).
    Otherwise, return LINEBUFFER.  */
 struct linebuffer *
 readlinebuffer (struct linebuffer *linebuffer, FILE *stream)
@@ -55,7 +57,7 @@ readlinebuffer (struct linebuffer *linebuffer, FILE *stream)
   char *p = linebuffer->buffer;
   char *end = buffer + linebuffer->size; /* Sentinel. */
 
-  if (feof (stream) || ferror (stream))
+  if (feof (stream))
     return NULL;
 
   do
@@ -63,7 +65,7 @@ readlinebuffer (struct linebuffer *linebuffer, FILE *stream)
       c = getc (stream);
       if (c == EOF)
 	{
-	  if (p == buffer)
+	  if (p == buffer || ferror (stream))
 	    return NULL;
 	  if (p[-1] == '\n')
 	    break;
