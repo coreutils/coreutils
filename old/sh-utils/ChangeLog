@@ -1,5 +1,11 @@
 Wed Oct 26 23:40:07 1994  Jim Meyering  (meyering@comco.com)
 
+	* safe-xstat.hin [EINTR]: Always define safe_l?stat.
+	Define it __static -- which is `static' for most includers,
+	but `/* empty */' for safe-xstat.cin.
+	* safe-xstat.cin: Define __static to nothing so we get public
+	safe_l?stat functions in the library.
+
 	* Makefile.in (All actions invoking $(MAKE) from within compound
 	(e.g. `for') sh statements): Exit non-zero if the sub-make fails.
 	Otherwise, the top-level make may exit successfully when it should
