@@ -76,17 +76,8 @@ extern int errno;
 # endif
 
 # include "pathmax.h"
+# include "stat-macros.h"
 # include "xreadlink.h"
-
-# ifdef STAT_MACROS_BROKEN
-#  undef S_ISLNK
-# endif
-
-# ifndef S_ISLNK
-#  ifdef S_IFLNK
-#   define S_ISLNK(m) (((m) & S_IFMT) == S_IFLNK)
-#  endif
-# endif
 
 #endif /* !HAVE_RESOLVEPATH */
 
