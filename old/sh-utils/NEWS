@@ -1,5 +1,6 @@
 Changes in release 1.17
  [1.16a]
+* expr accepts new unary operator, quote.
 * expr now returns 0 for failed matches where pattern contained e.g., `\\('
 * date -d DATE now works on Unicos systems
 * add tests for factor and more for date.
