@@ -20,7 +20,10 @@
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
-#else
+#endif
+
+#include "getopt.h"
+
 #if !defined __STDC__ || !__STDC__
 /* This is a separate conditional since some stdc systems
    reject `defined (const)'.  */
@@ -28,9 +31,6 @@
 #define const
 #endif
 #endif
-#endif
-
-#include "getopt.h"
 
 #include <stdio.h>
 
