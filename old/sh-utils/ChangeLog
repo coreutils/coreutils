@@ -2,6 +2,11 @@
 
 	* Version 2.0.13.
 
+	* tests/Makefile.am (TESTS_ENVIRONMENT): Remove now-unused parts
+	of this definition.
+	(EXTRA_DIST): Add priv-check.
+	* tests/priv-check: New file.
+
 	* src/Makefile.am (false.c): Convert only the final EXIT_SUCCESS
 	into EXIT_FAILURE.  Otherwise, false --help and false --version
 	would fail.
