@@ -1,3 +1,10 @@
+2001-01-26  Jim Meyering  <meyering@lucent.com>
+
+	* xmalloc.c [HAVE_DONE_WORKING_MALLOC_CHECK]: Enclose error-evoking
+	line in double quotes so that it evokes a better diagnostic.
+	[HAVE_DONE_WORKING_REALLOC_CHECK]: Likewise.
+	Reported by Axel Kittenberger.
+
 2001-01-15  Bruno Haible  <haible@clisp.cons.org>
 
 	* unicodeio.c (print_unicode_char): Cast the second iconv() arg,
