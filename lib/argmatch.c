@@ -216,17 +216,17 @@ char *program_name;
 enum backup_type
 {
   /* Never make backups.  */
-  none,
+  no_backups,
 
   /* Make simple backups of every file.  */
-  simple,
+  simple_backups,
 
   /* Make numbered backups of files that already have numbered backups,
      and simple backups of the others.  */
-  numbered_existing,
+  numbered_existing_backups,
 
   /* Make numbered backups of every file.  */
-  numbered
+  numbered_backups
 };
 
 /* Two tables describing arguments (keys) and their corresponding
@@ -242,17 +242,17 @@ static const char *const backup_args[] =
 
 static const enum backup_type backup_vals[] =
 {
-  none, none, none,
-  simple, simple,
-  numbered_existing, numbered_existing,
-  numbered, numbered
+  no_backups, no_backups, no_backups,
+  simple_backups, simple_backups,
+  numbered_existing_backups, numbered_existing_backups,
+  numbered_backups, numbered_backups
 };
 
 int
 main (int argc, const char *const *argv)
 {
   const char *cp;
-  enum backup_type backup_type = none;
+  enum backup_type backup_type = no_backups;
 
   program_name = (char *) argv[0];
 
