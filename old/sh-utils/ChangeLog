@@ -63,8 +63,6 @@ Wed Dec 18 07:47:29 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	[_PATH_DEFPATH_ROOT]: Use this to define DEFAULT_ROOT_LOGIN_PATH.
 	From Rik Faith.
 
-	* configure.in (VERSION): Increment to 1.15.
-
 	* acinclude.m4 (jm_FUNC_GNU_STRFTIME): Change m4 quote strings
 	outside the quoted test program.  Quote the test program with <<, >>.
 	Reported by Andreas Schwab.
