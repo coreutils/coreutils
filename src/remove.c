@@ -65,7 +65,7 @@ int rpl_lstat PARAMS((const char *, struct stat *));
 # define D_INO(dp) 1
 #endif
 
-#if !defined (S_ISLNK)
+#if !defined S_ISLNK
 # define S_ISLNK(Mode) 0
 #endif
 
@@ -356,7 +356,7 @@ fspec_init_dp (struct File_spec *fs, struct dirent *dp)
   fs->have_filetype_mode = 0;
   fs->inum = D_INO (dp);
 
-#if D_TYPE_IN_DIRENT && defined (DT_UNKNOWN) && defined (DTTOIF)
+#if D_TYPE_IN_DIRENT && defined DT_UNKNOWN && defined DTTOIF
   if (dp->d_type != DT_UNKNOWN)
     {
       fs->have_filetype_mode = 1;
