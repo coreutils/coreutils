@@ -24,6 +24,7 @@
 #include "closeout.h"
 
 #include <stdio.h>
+#include <stdbool.h>
 #include <errno.h>
 
 #include "gettext.h"
@@ -32,6 +33,7 @@
 #include "error.h"
 #include "exitfail.h"
 #include "quotearg.h"
+#include "__fpending.h"
 
 #if USE_UNLOCKED_IO
 # include "unlocked-io.h"
@@ -71,14 +73,25 @@ close_stdout_set_file_name (const char *file)
 void
 close_stdout (void)
 {
-  int e = ferror (stdout) ? 0 : -1;
+  bool prev_fail = ferror (stdout);
+  bool none_pending = (0 == __fpending (stdout));
+  bool fclose_fail = fclose (stdout);
 
-  if (fclose (stdout) != 0)
-    e = errno;
-
-  if (0 <= e)
+  if (prev_fail || fclose_fail)
     {
-      char const *write_error = _("write error");
+      int e = fclose_fail ? errno : 0;
+      char const *write_error;
+
+      /* If ferror returned zero, no data remains to be flushed, and we'd
+	 otherwise fail with EBADF due to a failed fclose, then assume that
+	 it's ok to ignore the fclose failure.  That can happen when a
+	 program like cp is invoked like this `cp a b >&-' (i.e., with
+	 stdout closed) and doesn't generate any output (hence no previous
+	 error and nothing to be flushed).  */
+      if (e == EBADF && !prev_fail && none_pending)
+	return;
+
+      write_error = _("write error");
       if (file_name)
 	error (exit_failure, e, "%s: %s", quotearg_colon (file_name),
 	       write_error);
