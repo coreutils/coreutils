@@ -1,3 +1,21 @@
+Thu Jan 26 23:38:04 1995  Jim Meyering  (meyering@comco.com)
+
+	* getdate.y (ToSeconds): Properly convert 12am and 12pm.
+	From Takeshi Sone <ts1@tsn.or.jp>.
+
+	* lib/Makefile.in (SOURCES, OBJECTS, DISTFILES): Add readtokens.[coh].
+	(all): Depend on safe-stat.h and safe-lstat.h.
+
+	* date.c (batch_convert): Remove any trailing newline from offending
+	line before including it in the `invalid date' error from `date -f'.
+	Reported by Franc,ois Pinard.
+
+Sat Dec 31 09:25:09 1994  Jim Meyering  (meyering@comco.com)
+
+	* Makefile.in (PROGS): Add factor.
+	* src/Makefile.in (SOURCES, OBJECTS, PROGS): Add factor.
+	(factor): New rule.
+
 Mon Dec 26 18:31:08 1994  Jim Meyering  (meyering@comco.com)
 
 	* test.c (term): Running `./test \( a -o b' got a seg fault.
