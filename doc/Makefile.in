@@ -1,4 +1,4 @@
-# Makefile for GNU file utilities documentation.
+# Makefile.in generated automatically by automake 0.25 from Makefile.am
 # Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
@@ -12,94 +12,197 @@
 # GNU General Public License for more details.
 
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+# 02111-1307, USA.
 
 SHELL = /bin/sh
 
 srcdir = @srcdir@
+top_srcdir = @top_srcdir@
 VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
+oldincludedir = /usr/include
+
+pkgdatadir = $(datadir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
 
 INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+transform = @program_transform_name@
+
+TEXINFOS = fileutils.texi
+DIST_OTHER = mdate-sh
+
 MAKEINFO = makeinfo
 TEXI2DVI = texi2dvi
 
-prefix = @prefix@
-infodir = @infodir@
+TEXFILES = *.aux *.cp *.cps *.dvi *.fn *.fns *.ky *.log *.pg \
+*.toc *.tp *.vr *.op
 
-.SUFFIXES:
+INFOS = fileutils.info*
+INFO_DEPS = fileutils.info
+DVIS = fileutils.dvi
 
-DISTFILES = Makefile.in texinfo.tex fileutils.texi fileutils.info \
-version.texi perm.texi getdate.texi
+DIST_COMMON = mdate-sh texinfo.tex stamp-vti Makefile.in version.texi Makefile.am
 
-all: fileutils.info
+PACKAGE = @PACKAGE@
+VERSION = @VERSION@
 
-info: fileutils.info
-
-# Don't fail if `date' is not GNU date;  just use current
-# month/year instead of those in the file's mod-time.
-date = `date --reference=@top_srcdir@/VERSION '+%B %Y' || date '+%B %Y'`
-version.texi: ../VERSION
-	@echo '@set VERSION @VERSION@' > $@-t
-	@echo '@set RELEASEDATE '"$(date)" \
-	  >> $@-t
-	mv $@-t $@
-
-fileutils.info: fileutils.texi version.texi
-	$(MAKEINFO) -I$(srcdir) --no-split fileutils.texi --output=$@
-
-dvi: fileutils.dvi
-
-fileutils.dvi: fileutils.texi version.texi texinfo.tex
-	$(TEXI2DVI) $(srcdir)/fileutils.texi
-
-installdirs:
-	$(srcdir)/../mkinstalldirs $(infodir)
-
-install: install-exec install-data
-install-exec:
-install-data: all installdirs
-	cd $(srcdir) && for file in fileutils.info; do \
-	  $(INSTALL_DATA) $$file $(infodir)/$$file; \
-	done
-
-uninstall:
-	rm -f $(infodir)/fileutils.info
-
-check:
-
-texclean:
-	rm -f *.aux *.cp *.dvi *.fn *.ky *.log *.pg *.toc *.tp *.vr \
-	    *.fl *.cm *.op *.cps
-
-mostlyclean: texclean
-	rm -f *.info
-
-clean: mostlyclean
-
-distclean: clean
-	rm -f Makefile
-
-maintainer-clean: distclean
-	@echo "This command is intended for use by maintainers;"
-	@echo "it deletes files that may require special tools to rebuild."
-	rm -f fileutils.info version.texi
-
-distdir = ../@PACKAGE@-@VERSION@/$(subdir)
-dist: $(DISTFILES)
-	for file in $(DISTFILES); do \
-	  ln $$file $(distdir) \
-	    || { echo copying $$file instead; cp -p $$file $(distdir);}; \
-	done
+DISTFILES = $(SOURCES) $(HEADERS) $(TEXINFOS) $(INFOS) $(MANS) \
+	$(DIST_OTHER) $(DIST_COMMON) $(DATA)
 
 subdir = doc
+
+default: all
+
+version.texi: stamp-vti
+
+stamp-vti: fileutils.texi $(top_srcdir)/configure.in
+	echo "@set UPDATED `cd $(srcdir) && $(SHELL) mdate-sh fileutils.texi`" \
+	  > version.tmp
+	echo "@set EDITION $(VERSION)" >> version.tmp
+	echo "@set VERSION $(VERSION)" >> version.tmp
+	if cmp -s version.tmp $(srcdir)/version.texi; then \
+	  rm version.tmp;			\
+	else					\
+	  mv version.tmp $(srcdir)/version.texi; \
+	fi
+	echo timestamp > $(srcdir)/stamp-vti
+
+mostlyclean-vti:
+	rm -f *.tmp
+
+clean-vti:
+
+distclean-vti:
+
+maintainer-clean-vti:
+	rm -f stamp-vti version.texi
+
+fileutils.info: fileutils.texi version.texi
+
+.texi.info:
+	$(MAKEINFO) -I$(srcdir) $<
+
+.texi.dvi:
+	TEXINPUTS=$(srcdir):$$TEXINPUTS $(TEXI2DVI) $<
+
+install-info: $(INFO_DEPS)
+	$(top_srcdir)/mkinstalldirs $(infodir)
+	for file in $(INFO_DEPS); do		\
+	  if test -f $$file; then		\
+	    d=.;				\
+	  else					\
+	    d=$(srcdir);			\
+	  fi;					\
+	  for ifile in $${file}*; do		\
+	    $(INSTALL_DATA) $$d/$$ifile $(infodir)/$$ifile; \
+	  done;					\
+	done
+
+uninstall-info:
+	cd $(srcdir) && for file in *.info*; do
+	  rm -f $(infodir)/$$file; \
+	done
+
+mostlyclean-info:
+	rm -f fileutils.aux fileutils.cp fileutils.cps fileutils.dvi
+	rm -f fileutils.fn fileutils.fns fileutils.ky fileutils.log
+	rm -f fileutils.pg fileutils.toc fileutils.tp fileutils.vr fileutils.op
+
+clean-info:
+
+distclean-info:
+
+maintainer-clean-info:
+	rm -f $(INFOS)
+
+$(srcdir)/Makefile.in: Makefile.am
+	cd $(top_srcdir) && automake $(subdir)/Makefile
+
 Makefile: ../config.status Makefile.in
 	cd .. && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
 
-.PHONY: all check clean dist distclean dvi info install install-data \
-install-exec installdirs maintainer-clean mostlyclean texclean uninstall
+tags: TAGS
+TAGS:
 
-# Tell versions [3.59,3.63) of GNU make not to export all variables.
+distdir = ../$(PACKAGE)-$(VERSION)/$(subdir)
+dist: $(DISTFILES)
+	@for file in $(DISTFILES); do		\
+	  test -f $(distdir)/$$file || {	\
+	    echo linking $$file;		\
+	    ln $(srcdir)/$$file $(distdir)/$$file; \
+	  } || {				\
+	    echo copying $$file instead;	\
+	    cp -p $(srcdir)/$$file $(distdir)/$$file; \
+	  };					\
+	done
+
+all: info
+
+info: $(INFO_DEPS)
+
+dvi: $(DVIS)
+
+check: 
+
+installcheck: 
+
+install-data: install-info
+
+install: install-data
+
+uninstall: uninstall-info
+
+installdirs:
+	$(top_srcdir)/mkinstalldirs $(infodir)
+
+mostlyclean-generic:
+	test -z "$(MOSTLYCLEANFILES)" || rm -f $(MOSTLYCLEANFILES)
+
+clean-generic:
+	test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
+
+distclean-generic:
+	rm -f Makefile $(DISTCLEANFILES)
+	rm -f config.cache config.log $(CONFIG_HEADER) stamp-h
+
+maintainer-clean-generic:
+	test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
+
+mostlyclean: mostlyclean-vti mostlyclean-info mostlyclean-generic
+
+clean: mostlyclean clean-vti clean-info clean-generic
+
+distclean: clean distclean-vti distclean-info distclean-generic
+	rm -f config.status
+
+maintainer-clean: distclean maintainer-clean-vti maintainer-clean-info maintainer-clean-generic
+	@echo "This command is intended for maintainers to use;"
+	@echo "it deletes files that may require special tools to rebuild."
+
+
+.SUFFIXES:
+.SUFFIXES: .texi .info .dvi
+
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
+
