@@ -31,13 +31,12 @@
 #ifdef emacs
 # include "lisp.h"
 # include "blockinput.h"
-# define xalloc_die() memory_full ()
 # ifdef EMACS_FREE
 #  undef free
 #  define free EMACS_FREE
 # endif
 #else
-# include <xalloc.h>
+# define memory_full() abort ()
 #endif
 
 /* If compiling with GCC 2, this file's not needed.  */
@@ -196,22 +195,25 @@ alloca (size_t size)
 
   {
     /* Address of header.  */
-    register void *new;
+    register header *new;
 
     size_t combined_size = sizeof (header) + size;
     if (combined_size < sizeof (header))
-      xalloc_die ();
+      memory_full ();
 
-    new = xmalloc (combined_size);
+    new = malloc (combined_size);
 
-    ((header *) new)->h.next = last_alloca_header;
-    ((header *) new)->h.deep = depth;
+    if (! new)
+      memory_full ();
 
-    last_alloca_header = (header *) new;
+    new->h.next = last_alloca_header;
+    new->h.deep = depth;
+
+    last_alloca_header = new;
 
     /* User storage begins just after header.  */
 
-    return (void *) ((char *) new + sizeof (header));
+    return (void *) (new + 1);
   }
 }
 
