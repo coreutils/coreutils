@@ -1,4 +1,6 @@
 Changes in release 1.17
+ [1.16i]
+* portability tweaks for lib/readutmp.[ch] and src/date.c
  [1.16h]
 * seq with no arguments now elicits a useful diagnostic rather than a segfault
 * portability tweaks to work around utmpname differences
