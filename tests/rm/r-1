@@ -1,0 +1,41 @@
+#!/bin/sh
+
+: ${RM=rm}
+test=r-1
+
+# TMPDIR should be an absolute dir for this test.
+# FIXME: enforce it
+: ${TMPDIR=/tmp}
+
+if test "$VERBOSE" = yes; then
+  set -x
+  $RM --version
+fi
+
+tmp=$TMPDIR/t-rm.$$
+mkdir $tmp
+
+mkdir $tmp/a $tmp/a/a
+touch $tmp/b
+
+fail=0
+$RM --verbose -r $tmp/a $tmp/b > $tmp/$test.O || fail=1
+
+for d in $dirs; do
+  if test -d $d; then
+    fail=1
+  fi
+done
+
+cat <<EOF > $tmp/$test.E
+$tmp/a
+$tmp/a/a
+$tmp/b
+EOF
+
+    # FIXME: use cmp
+diff -u $tmp/$test.E $tmp/$test.O
+
+#rm -rf $dir
+
+exit $fail
