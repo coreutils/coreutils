@@ -1,3 +1,17 @@
+2000-01-07  Jim Meyering  <meyering@ascend.com>
+
+	* tests/tsort/Makefile.am (TESTS_ENVIRONMENT): Add `pwd`/ prefix
+	to exported PATH value (though not strictly necessary, here).
+
+	Nits.
+	* lib/memcasecmp.c: Use `#if' instead of `#ifdef' for `HAVE_CONFIG_H'.
+	Capitalize all macro parameters.
+	(memcasecmp): Ansideclify.
+	Don't cast away `const'ness of parameters.
+	* lib/strpbrk.c (strpbrk): Ansideclify.
+	Use `#if' instead of `#ifdef' for `HAVE_CONFIG_H'.
+	Suggestions from François Pinard.
+
 2000-01-06  Jim Meyering  <meyering@ascend.com>
 
 	* tests/tail-2/assert: Tell the user just before sleeping for 7 seconds.
