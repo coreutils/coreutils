@@ -1,5 +1,11 @@
 1999-01-01  Jim Meyering  <meyering@ascend.com>
 
+	* lib/makepath.c (make_dir): New function, factored out of make_path.
+	(make_path): Use make_dir rather than open-coding it twice.
+	This effectively reverses the order of the latter pair of stat/mkdir
+	calls and fixes a race condition bug whereby one of two concurrent
+	`mkdir -p' processes could fail with EEXIST.
+
 	* lib/xmalloc.c: Add comments.
 	(xcalloc, xmalloc, xrealloc): Remove prototypes.
 	(xcalloc): Remove `#ifdef NOT_USED' that used to hide this function.
