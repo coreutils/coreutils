@@ -1,4 +1,5 @@
 #!/bin/sh
+# -*- perl -*-
 # Ensure that rm gives the expected diagnostic when failing to remove a file
 # owned by some other user in a directory with theh stick bit set.
 
@@ -6,12 +7,12 @@
 : ${srcdir=.}
 
 case "$PERL" in
-  *'missing perl')
-  echo 1>&2 "$0: configure didn't find a usable version of Perl, so can't run this test"
+  *'missing perl') #'
+  echo 1>&2 \
+   "$0: configure didn't find a usable version of Perl, so can't run this test"
   exit 77
   ;;
 esac
-
 ARGV_0=$0 exec $PERL -w -- - << \EOP
 require 5.003;
 use strict;
