@@ -1,3 +1,13 @@
+1997-11-30  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (AC_LFS): Use this macro rather than open-coding it.
+
+	* lib/human.c (human_readable): Convert to ANSI-style definition.
+	[lint]: Define `power'.
+
+	* src/ls.c (print_long_format): Rename inner-scoped `buf' arrays
+	to `hbuf' to avoid shadowing local.
+
 1997-11-29  Paul Eggert  <eggert@twinsun.com>
 
 	Port to LFS and C9X in general, and to Solaris 2.6 in particular.
