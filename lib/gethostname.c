@@ -1,5 +1,5 @@
 /* gethostname emulation for SysV and POSIX.1.
-   Copyright (C) 1992 Free Software Foundation, Inc.
+   Copyright (C) 1992, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,10 +29,10 @@
    Null terminate it if the name is shorter than LEN.
    Return 0 if ok, -1 if error.  */
 
+#include <stddef.h>
+
 int
-gethostname (name, len)
-     char *name;
-     int len;
+gethostname (char *name, size_t len)
 {
 #ifdef HAVE_UNAME
   struct utsname uts;
