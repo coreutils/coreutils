@@ -2,6 +2,12 @@
 
 	* Version 5.0.1.
 
+	* src/tsort.c (tsort): Remove unnecessary test of have_read_stdin.
+	(main): Minor syntactic clean-up.
+
+	* src/tsort.c (tsort): Fail if the input contains an odd number of
+	tokens.  Reported by junkio@cox.net.
+
 	* tests/tsort/basic-1: Test for the above fix.
 
 2003-04-21  Jim Meyering  <jim@meyering.net>
