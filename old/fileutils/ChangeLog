@@ -1,5 +1,9 @@
 1998-10-03  Jim Meyering  <meyering@ascend.com>
 
+	* Version 4.0-b2.
+
+	* tests/mv/Makefile.am (TESTS_ENVIRONMENT): Add PATH.
+
 	* man/Makefile.maint ($(man_MANS)): Don't depend on actual executables.
 	Instead, depend on corresponding source file and on configure.in.
 	Based on suggestion and code from Akim Demaille.
