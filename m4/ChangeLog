@@ -3,6 +3,9 @@
 	* xstrtoumax.m4 (jm_AC_PREREQ_XSTRTOUMAX): If we need the replacement
 	strtoull, we may well need the replacement strtoul, too.
 	Check for declarations of strtoul and strtoull.
+	Check for strtol.  Mainly as a cue to cause automake to include
+	strtol.c -- that file is included by each of strtoul.c and strtoull.c.
+	Check for limits.h -- strtol.c needs it.
 
 2000-12-02  Jim Meyering  <meyering@lucent.com>
 
