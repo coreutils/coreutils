@@ -61,7 +61,6 @@ libfetish_a_SOURCES = \
   ftw_.h \
   full-read.c full-read.h \
   full-write.c full-write.h \
-  getndelim2.c getndelim2.h \
   getline.h \
   getpagesize.h \
   gettime.c \
@@ -75,7 +74,7 @@ libfetish_a_SOURCES = \
   imaxtostr.c \
   lchown.h \
   linebuffer.c linebuffer.h \
-  localcharset.c \
+  localcharset.c localcharset.h \
   long-options.c long-options.h \
   makepath.c makepath.h \
   mbswidth.c mbswidth.h \
@@ -125,7 +124,6 @@ libfetish_a_SOURCES = \
   xstrtod.c xstrtod.h \
   xstrtol.c xstrtol.h \
   xstrtoul.c \
-  xstrtoimax.c \
   xstrtoumax.c \
   yesno.c
 
@@ -142,13 +140,16 @@ lib_OBJECTS = $(libfetish_a_OBJECTS)
 
 
 BUILT_SOURCES = getdate.c
+CLEANFILES =
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 MOSTLYCLEANFILES =
+SUFFIXES =
 
 EXTRA_DIST = config.charset ref-add.sin ref-del.sin \
+  getndelim2.c getndelim2.h \
   inttostr.c inttostr.h
 
-# The following is needed in order to install a simple file in $(libdir)
+# We need the following in order to install a simple file in $(libdir)
 # which is shared with other installed packages. We use a list of referencing
 # packages so that "make uninstall" will remove the file if and only if it
 # is not used by another installed package.
@@ -160,13 +161,13 @@ all-local: charset.alias ref-add.sed ref-del.sed
 charset_alias = $(DESTDIR)$(libdir)/charset.alias
 charset_tmp = $(DESTDIR)$(libdir)/charset.tmp
 install-exec-local: all-local
-	$(mkinstalldirs) $(DESTDIR)$(libdir)
+	test $(GLIBC21) != no || $(mkinstalldirs) $(DESTDIR)$(libdir)
 	if test -f $(charset_alias); then \
 	  sed -f ref-add.sed $(charset_alias) > $(charset_tmp) ; \
 	  $(INSTALL_DATA) $(charset_tmp) $(charset_alias) ; \
 	  rm -f $(charset_tmp) ; \
 	else \
-	  if test @GLIBC21@ = no; then \
+	  if test $(GLIBC21) = no; then \
 	    sed -f ref-add.sed charset.alias > $(charset_tmp) ; \
 	    $(INSTALL_DATA) $(charset_tmp) $(charset_alias) ; \
 	    rm -f $(charset_tmp) ; \
@@ -186,8 +187,15 @@ uninstall-local: all-local
 	fi
 
 charset.alias: config.charset
-	$(SHELL) $(srcdir)/config.charset '@host@' > t-$@
+	$(SHELL) $(srcdir)/config.charset '$(host)' > t-$@
 	mv t-$@ $@
+
+SUFFIXES += .sed .sin
+.sin.sed:
+	sed -e '/^#/d' -e 's/@''PACKAGE''@/$(PACKAGE)/g' $< > t-$@
+	mv t-$@ $@
+
+CLEANFILES += charset.alias ref-add.sed ref-del.sed
 
 BUILT_SOURCES += $(STDBOOL_H)
 EXTRA_DIST += stdbool_.h
@@ -219,10 +227,4 @@ fnmatch.h: fnmatch_.h
 	mv $@-t $@
 MOSTLYCLEANFILES += fnmatch.h fnmatch.h-t
 
-SUFFIXES = .sed .sin
-.sin.sed:
-	sed -e '/^#/d' -e 's/@''PACKAGE''@/$(PACKAGE)/g' $< > t-$@
-	mv t-$@ $@
-
-CLEANFILES = charset.alias ref-add.sed ref-del.sed
 DISTCLEANFILES = ftw.h search.h
