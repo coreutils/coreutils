@@ -133,7 +133,8 @@ describe_change (const char *file, enum Change_status changed)
 
   if (changed == CH_NOT_APPLIED)
     {
-      printf (_("symbolic link %s not changed\n"), file);
+      printf (_("neither symbolic link %s nor referent has been changed\n"),
+	      file);
       return;
     }
 
