@@ -6,6 +6,7 @@
 	* rpmatch.c: Likewise.
 	* userspec.c: Likewise.
 	* version-etc.c: Likewise.
+	* xmemcoll.c: Likewise.
 	* error.c [!_LIBC]: Include gettext.h instead of <libintl.h>.
 
 	* mbswidth.h: Update from gnulib.
