@@ -1,6 +1,6 @@
 #!/bin/sh
 # nohup -- run a command immume to hangups, with output to a non-tty
-# Copyright (C) 1991, 1997, 1999, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ usage_help="Run COMMAND, ignoring hangup signals.
   --help      display this help and exit
   --version   output version information and exit
 
-Report bugs to <sh-utils-bugs@gnu.org>."
+Report bugs to <@PACKAGE_BUGREPORT@>."
 
 if [ $# -eq 0 ]; then
   echo >&2 "$usage"
