@@ -1,6 +1,6 @@
 /* Utility to accept --help and --version options as unobtrusively as possible.
 
-   Copyright (C) 1993, 1994, 1998, 1999, 2000, 2002, 2003 Free
+   Copyright (C) 1993, 1994, 1998, 1999, 2000, 2002, 2003, 2004 Free
    Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -49,7 +49,7 @@ parse_long_options (int argc,
 		    const char *command_name,
 		    const char *package,
 		    const char *version,
-		    void (*usage_func)(),
+		    void (*usage_func) (int),
 		    /* const char *author1, ...*/ ...)
 {
   int c;
@@ -66,7 +66,7 @@ parse_long_options (int argc,
       switch (c)
 	{
 	case 'h':
-	  (*usage_func) (0);
+	  (*usage_func) (EXIT_SUCCESS);
 
 	case 'v':
 	  {
