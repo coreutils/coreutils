@@ -1,6 +1,15 @@
-2004-01-19  Jim Meyering  <jim@meyering.net>
+2004-01-20  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.2.
+
+2004-01-19  Paul Eggert  <eggert@twinsun.com>
+
+	* tests/touch/relative: Use TZ=UTC0, not TZ=utc (which isn't
+	portable).  Problem reported by Christian Krackowizer.  Also, use
+	+0000 rather than +0 to specify a time zone, as the documentation
+	requires four digits.
+
+2004-01-19  Jim Meyering  <jim@meyering.net>
 
 	* tests/mv/hard-4: Run envvar-check in case SIMPLE_BACKUP_SUFFIX is set.
 	* tests/mv/backup-is-src: Likewise.
