@@ -1,6 +1,13 @@
-2002-07-28  Jim Meyering  <meyering@lucent.com>
+2002-07-29  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.1.
+
+	* src/tail.c: Adjust command examples in comments to use
+	POSIX 1003.1-2001 option syntax.
+	* src/sort.c: Likewise.
+	From Paul Eggert.
+
+2002-07-28  Jim Meyering  <meyering@lucent.com>
 
 	* configure.ac: Require automake-1.6b.
 
