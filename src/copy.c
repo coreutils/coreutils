@@ -696,11 +696,13 @@ copy_internal (const char *src_path, const char *dst_path,
 		    {
 		      overwrite_prompt (dst_path, &dst_sb);
 		      if (!yesno ())
-			/* Pretend the rename succeeded, so the caller (mv)
-			   doesn't end up removing the source file.  */
-			if (rename_succeeded)
-			  *rename_succeeded = 1;
-			return 0;
+			{
+			  /* Pretend the rename succeeded, so the caller (mv)
+			     doesn't end up removing the source file.  */
+			  if (rename_succeeded)
+			    *rename_succeeded = 1;
+			  return 0;
+			}
 		    }
 		}
 	      else
