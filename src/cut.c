@@ -35,7 +35,6 @@
 #include "getdelim2.h"
 #include "hash.h"
 #include "quote.h"
-#include "stdbool.h"
 #include "xstrndup.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
