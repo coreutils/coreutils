@@ -1410,6 +1410,11 @@
    <sys/cpustats.h>. */
 #undef UMAX4_3
 
+/* Define to 1 if you want getc etc. to use unlocked I/O if available.
+   Unlocked I/O can improve performance in unithreaded apps, but it is not
+   safe for multithreaded apps. */
+#undef USE_UNLOCKED_IO
+
 /* Version number of package */
 #undef VERSION
 
