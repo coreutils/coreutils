@@ -1,3 +1,7 @@
+2004-10-29  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getpagesize.m4: Sync from gnulib.
+
 2004-10-17  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* jm-macros.m4 (gl_MACROS): Check for mbrlen, for pathchk.

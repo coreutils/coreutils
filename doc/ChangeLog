@@ -1,3 +1,12 @@
+2004-10-29  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi: Document TZ better, and adjust to new getdate.texi.
+	(Top): Update menu.
+	(pr invocation, Formatting file timestamps, touch invocation,
+	stat invocation, who invocation, date invocation, Options for date):
+	Mention TZ.
+	* getdate.texi: Sync from gnulib.
+
 2004-10-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (Standards conformance): Use "head -10" rather
