@@ -13,7 +13,7 @@
 #include <getopt.h>
 #include "error.h"
 #include "filemode.h"
-#include "fs.h"
+#include "gs.h"
 #include "quotearg.h"
 #include "system.h"
 #include "xreadlink.h"
@@ -38,6 +38,7 @@ static void
 do_statfs (char const *filename, int terse)
 {
   struct statfs statfsbuf;
+  char const *name;
 
   if (statfs (filename, &statfsbuf) == -1)
     {
@@ -77,86 +78,12 @@ do_statfs (char const *filename, int terse)
 	  statfsbuf.f_fsid.__val[1], statfsbuf.f_namelen);
 #endif
 
-  switch (statfsbuf.f_type)
-    {
-    case AFFS_SUPER_MAGIC:
-      printf ("AFFS\n");
-      break;
-    case EXT_SUPER_MAGIC:
-      printf ("EXT\n");
-      break;
-    case EXT2_OLD_SUPER_MAGIC:
-      printf ("EXT2\n");
-      break;
-    case EXT2_SUPER_MAGIC:
-      printf ("EXT2\n");
-      break;
-    case HPFS_SUPER_MAGIC:
-      printf ("HPFS\n");
-      break;
-    case ISOFS_SUPER_MAGIC:
-      printf ("ISOFS\n");
-      break;
-    case MINIX_SUPER_MAGIC:
-      printf ("MINIX\n");
-    case MINIX_SUPER_MAGIC2:
-      printf ("MINIX (30 char.)\n");
-      break;
-    case MINIX2_SUPER_MAGIC:
-      printf ("MINIX V2\n");
-      break;
-    case MINIX2_SUPER_MAGIC2:
-      printf ("MINIX V2 (30 char.)\n");
-      break;
-    case MSDOS_SUPER_MAGIC:
-      printf ("MSDOS\n");
-      break;
-    case NCP_SUPER_MAGIC:
-      printf ("NOVELL\n");
-      break;
-    case NFS_SUPER_MAGIC:
-      printf ("NFS\n");
-      break;
-    case PROC_SUPER_MAGIC:
-      printf ("PROC\n");
-      break;
-    case SMB_SUPER_MAGIC:
-      printf ("SMB\n");
-      break;
-    case XENIX_SUPER_MAGIC:
-      printf ("XENIX\n");
-      break;
-    case SYSV4_SUPER_MAGIC:
-      printf ("SYSV4\n");
-      break;
-    case SYSV2_SUPER_MAGIC:
-      printf ("SYSV2\n");
-      break;
-    case COH_SUPER_MAGIC:
-      printf ("COH\n");
-      break;
-    case UFS_MAGIC:
-      printf ("UFS\n");
-      break;
-    case _XIAFS_SUPER_MAGIC:
-      printf ("XIA\n");
-      break;
-    case NTFS_SUPER_MAGIC:
-      printf ("NTFS\n");
-      break;
-    case TMPFS_MAGIC:
-      printf ("TMPFS\n");
-      break;
-    case REISERFS_MAGIC:
-      printf ("TMPFS\n");
-      break;
-    default:
-#ifdef __USE_FILE_OFFSET64
-      printf ("UNKNOWN (0x%lx)\n", statfsbuf.f_type);
-#else
-      printf ("UNKNOWN (0x%x)\n", statfsbuf.f_type);
-#endif
-    }
+  name = fs_name (statfsbuf.f_type);
+  if (name)
+    printf ("%s\n", name);
+  else
+    printf ("UNKNOWN (0x%lx)\n", (long) statfsbuf.f_type);
+
 #ifdef __USE_FILE_OFFSET64
   printf
     ("Blocks: Total: %-10lld Free: %-10lld Available: %-10lld Size:%ld \n",
