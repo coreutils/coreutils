@@ -1,3 +1,8 @@
+2004-02-22  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (du invocation): Mention that using du's -H option
+	currently evokes a warning.
+
 2004-02-15  Paul Eggert  <eggert@twinsun.com>
 
 	* coreutils.texi (expr invocation):
