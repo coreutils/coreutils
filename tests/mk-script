@@ -10,6 +10,8 @@ require 5.002;
 use strict;
 use POSIX qw (assert);
 
+(my $program_name = $0) =~ s|.*/||;
+
 BEGIN { push @INC, '.' if '.' ne '.'; }
 use Test;
 
@@ -214,7 +216,7 @@ sub wrap
 
   print <<EOF1;
 #! /bin/sh
-# This script was generated automatically by build-script.
+# This script was generated automatically by $program_name.
 case \$# in
   0\) xx='$xx';;
   *\) xx="\$1";;
