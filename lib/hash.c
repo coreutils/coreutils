@@ -264,7 +264,8 @@ hash_get_next (const Hash_table *table, const void *entry)
    pointers.  */
 
 unsigned int
-hash_get_entries (const Hash_table *table, void **buffer, unsigned int buffer_size)
+hash_get_entries (const Hash_table *table, void **buffer,
+		  unsigned int buffer_size)
 {
   unsigned int counter = 0;
   struct hash_entry *bucket;
@@ -409,10 +410,11 @@ next_prime (candidate)
 }
 
 /* Allocate and return a new hash table, or NULL if an error is met.  The
-   initial number of buckets would be at least CANDIDATE (which need not be prime).
+   initial number of buckets would be at least CANDIDATE (which need not be
+   prime).
 
-   If DATA_FREER is not NULL, this function may be later called with the data as
-   an argument, just before they entry containing the data gets freed.  The
+   If DATA_FREER is not NULL, this function may be later called with the data
+   as an argument, just before they entry containing the data gets freed.  The
    HASHER function should be supplied, and FIXME.  The COMPARATOR function
    should also be supplied, and FIXME.  */
 
