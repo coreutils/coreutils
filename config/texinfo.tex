@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2002-03-01.06}
+\def\texinfoversion{2002-03-13.06}
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99,
 %               2000, 01, 02 Free Software Foundation, Inc.
@@ -846,7 +846,6 @@ where each line of input produces a line of output.}
 % @math gets a chance to work.  This could perhaps be fixed, but for now
 % at least we can have real math in the main text, where it's needed most.
 %
-% 
 \let\implicitmath = $%$ font-lock fix
 %
 % One complication: _ usually means subscripts, but it could also mean
@@ -857,10 +856,22 @@ where each line of input produces a line of output.}
 {\catcode95 = \active  % 95 = _
 \gdef\mathunderscore{%
   \catcode95=\active
-  \def_{\ifnum\fam=\slfam\_\else\sb\fi}%
+  \def_{\ifnum\fam=\slfam \_\else\sb\fi}%
 }}
 %
-\def\math{\tex\mathcode`\_="8000\mathunderscore \implicitmath\finishmath}
+% Another complication: we want \\ (and @\) to output a \ character.
+% FYI, plain.tex uses \\ as a temporary control sequence (why?), but
+% this is not advertised and we don't care.  Texinfo does not
+% otherwise define @\.
+% 
+% The \mathchar is class=0=ordinary, family=7=ttfam, position=5C=\.
+\def\mathbackslash{\ifnum\fam=\ttfam \mathchar"075C \else\backslash \fi}
+%
+\def\math{%
+  \tex
+  \mathcode`\_="8000 \mathunderscore
+  \let\\ = \mathbackslash
+  \implicitmath\finishmath}
 \def\finishmath#1{#1\implicitmath\Etex}
 
 % @bullet and @minus need the same treatment as @math, just above.
@@ -1431,10 +1442,18 @@ where each line of input produces a line of output.}
 
 \def\realdash{-}
 \def\codedash{-\discretionary{}{}{}}
-\def\codeunder{\ifusingtt{\normalunderscore\discretionary{}{}{}}{\_}}
+\def\codeunder{%
+  % this is all so @math{@code{var_name}+1} can work.  In math mode, _
+  % is "active" (mathcode"8000) and \normalunderscore (or \char95, etc.)
+  % will therefore expand the active definition of _, which is us
+  % (inside @code that is), therefore an endless loop.
+  \ifusingtt{\ifmmode
+               \mathchar"075F % class 0=ordinary, family 7=ttfam, pos 0x5F=_.
+             \else\normalunderscore \fi
+             \discretionary{}{}{}}%
+            {\_}%
+}
 \def\codex #1{\tclose{#1}\endgroup}
-
-%\let\exp=\tclose  %Was temporary
 
 % @kbd is like @code, except that if the argument is just one @key command,
 % then @kbd has no effect.
@@ -1637,8 +1656,6 @@ where each line of input produces a line of output.}
      \global\let\contents = \relax
      \global\let\shortcontents = \relax
    \fi
-   %
-   \ifpdf \pdfmakepagedesttrue \fi
 }
 
 \def\finishtitlepage{%
@@ -2861,7 +2878,7 @@ width0pt\relax} \fi
 
 % If an index command is used in an @example environment, any spaces
 % therein should become regular spaces in the raw index file, not the
-% expansion of \tie (\\leavevmode \penalty \@M \ ).
+% expansion of \tie (\leavevmode \penalty \@M \ ).
 {\obeyspaces
  \gdef\unsepspaces{\obeyspaces\let =\space}}
 
@@ -3906,7 +3923,7 @@ width0pt\relax} \fi
 % argument, which will end up as the last argument to the \...entry macro.
 %
 % We open the .toc file here instead of at @setfilename or any other
-% given time so that @contents can be put in the document anywhere.
+% fixed time so that @contents can be put in the document anywhere.
 %
 \newif\iftocfileopened
 \def\writetocentry#1{%
@@ -3915,6 +3932,14 @@ width0pt\relax} \fi
     \global\tocfileopenedtrue
   \fi
   \iflinks \write\tocfile{#1{\folio}}\fi
+  %
+  % Tell \shipout to create a page destination if we're doing pdf, which
+  % will be the target of the links in the table of contents.  We can't
+  % just do it on every page because the title pages are numbered 1 and
+  % 2 (the page numbers aren't printed), and so are the first two pages
+  % of the document.  Thus, we'd have two destinations named `1', and
+  % two named `2'.
+  \ifpdf \pdfmakepagedesttrue \fi
 }
 
 \newskip\contentsrightmargin \contentsrightmargin=1in
@@ -5274,7 +5299,7 @@ width0pt\relax} \fi
      \message{Warning: redefining \the\macname}%
   \else
      \expandafter\ifx\csname \the\macname\endcsname \relax
-     \else \errmessage{The name \the\macname\space is reserved}\fi
+     \else \errmessage{Macro name \the\macname\space already defined}\fi
      \global\cslet{macsave.\the\macname}{\the\macname}%
      \global\expandafter\let\csname ismacro.\the\macname\endcsname=1%
      % Add the macroname to \macrolist
