@@ -2426,8 +2426,8 @@ by 1048576.
 @vindex name @r{follow option}
 @vindex descriptor @r{follow option}
 Loop forever trying to read more characters at the end of the file,
-presumably because the file is growing.  This option is ignored when
-reading from a pipe.
+presumably because the file is growing.  This option is ignored if
+no @var{file} operand is specified and standard input is a pipe.
 If more than one file is given, @command{tail} prints a header whenever it
 gets output from a different file, to indicate which file that output is
 from.
