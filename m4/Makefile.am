@@ -31,6 +31,7 @@ lchown.m4 \
 lcmessage.m4 \
 link-follow.m4 \
 ls-mntd-fs.m4 \
+lstat-slash.m4 \
 lstat.m4 \
 malloc.m4 \
 memcmp.m4 \
