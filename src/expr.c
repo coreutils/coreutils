@@ -424,7 +424,7 @@ docolon (VALUE *sv, VALUE *pv)
   if (pv->u.s[0] == '^')
     {
       error (0, 0, _("\
-warning: unportable BRE: `%s': using `^' as the first character \n\
+warning: unportable BRE: `%s': using `^' as the first character\n\
 of the basic regular expression is not portable; it is being ignored"),
 	     pv->u.s);
     }
