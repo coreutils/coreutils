@@ -2,6 +2,8 @@
 
 	* Version 2.0.17.
 
+	* src/sys2.h (alloca) [__GNUC__]: Define only if not already defined.
+
 	* src/Makefile.am (sort_LDADD): Reflect spelling change:
 	s/POW_LIBM/POW_LIB/.
 
