@@ -89,13 +89,17 @@ many flavors of items:
 @findex first @r{in date strings}
 @findex next @r{in date strings}
 @findex last @r{in date strings}
-A few numbers may be written out in words in most contexts.  This is
+A few ordinal numbers may be written out in words in some contexts.  This is
 most useful for specifying day of the week items or relative items (see
-below).  Here is the list: @samp{first} for 1, @samp{next} for 2,
-@samp{third} for 3, @samp{fourth} for 4, @samp{fifth} for 5,
+below).  Among the most commonly used ordinal numbers, the word
+@samp{last} stands for @math{-1}, @samp{this} stands for 0, and
+@samp{first} and @samp{next} both stand for 1.  Because the word
+@samp{second} stands for the unit of time there is no way to write the
+ordinal number 2, but for convenience @samp{third} stands for 3,
+@samp{fourth} for 4, @samp{fifth} for 5,
 @samp{sixth} for 6, @samp{seventh} for 7, @samp{eighth} for 8,
 @samp{ninth} for 9, @samp{tenth} for 10, @samp{eleventh} for 11 and
-@samp{twelfth} for 12.  Also, @samp{last} means exactly @math{-1}.
+@samp{twelfth} for 12.
 
 @cindex months, written-out
 When a month is written this way, it is still considered to be written
