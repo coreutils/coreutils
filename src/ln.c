@@ -326,26 +326,28 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION]... SOURCE [DEST]\n\
-  or:  %s [OPTION]... SOURCE... DIRECTORY\n\
+Usage: %s [OPTION]... TARGET [LINK_NAME]\n\
+  or:  %s [OPTION]... TARGET... DIRECTORY\n\
 "),
 	      program_name, program_name);
       printf (_("\
-Link SOURCE to DEST (. by default), or multiple SOURCE(s) to DIRECTORY.\n\
-Makes hard links by default, symbolic links with -s.\n\
+Create a link to the specified TARGET with optional LINK_NAME.  If there is\n\
+more than one TARGET, the last argument must be a directory;  create links\n\
+in DIRECTORY to each TARGET.  Create hard links by default, symbolic links\n\
+with --symbolic.  When creating hard links, each TARGET must exist.\n\
 \n\
-  -b, --backup                 make backups for removed files\n\
-  -d, -F, --directory          hard link directories (super-user only)\n\
-  -f, --force                  remove existing destinations\n\
-  -n, --no-dereference         treat destination that is a symlink to a\n\
-                                 directory as if it were a normal file\n\
-  -i, --interactive            prompt whether to remove destinations\n\
-  -s, --symbolic               make symbolic links instead of hard links\n\
-  -S, --suffix=SUFFIX          override the usual backup suffix\n\
-  -v, --verbose                print name of each file before linking\n\
-  -V, --version-control=WORD   override the usual version control\n\
-      --help                   display this help and exit\n\
-      --version                output version information and exit\n\
+  -b, --backup                make a backup of each existing destination file\n\
+  -d, -F, --directory         hard link directories (super-user only)\n\
+  -f, --force                 remove existing destination files\n\
+  -n, --no-dereference        treat destination that is a symlink to a\n\
+                                directory as if it were a normal file\n\
+  -i, --interactive           prompt whether to remove destinations\n\
+  -s, --symbolic              make symbolic links instead of hard links\n\
+  -S, --suffix=SUFFIX         override the usual backup suffix\n\
+  -v, --verbose               print name of each file before linking\n\
+  -V, --version-control=WORD  override the usual version control\n\
+      --help                  display this help and exit\n\
+      --version               output version information and exit\n\
 \n\
 "));
       printf (_("\
