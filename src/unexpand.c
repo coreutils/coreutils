@@ -1,5 +1,5 @@
 /* unexpand - convert spaces to tabs
-   Copyright (C) 89, 91, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 89, 91, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -56,6 +56,11 @@
 /* The number of bytes added at a time to the amount of memory
    allocated for the list of tabstops. */
 #define TABLIST_BLOCK 256
+
+/* A sentinel value that's placed at the end of the list of tab stops.
+   This value must be a large number, but not so large that adding the
+   length of a line to it would cause the column variable to overflow.  */
+#define TAB_STOP_SENTINEL INT_MAX
 
 /* The name this program was run with. */
 char *program_name;
@@ -219,10 +224,10 @@ unexpand (void)
   /* Index in `tab_list' of next tabstop: */
   int tab_index = 0;		/* For calculating width of pending tabs. */
   int print_tab_index = 0;	/* For printing as many tabs as possible. */
-  int column = 0;		/* Column on screen of next char. */
+  unsigned int column = 0;	/* Column on screen of next char. */
   int next_tab_column; 		/* Column the next tab stop is on. */
   int convert = 1;		/* If nonzero, perform translations. */
-  int pending = 0;		/* Pending columns of blanks. */
+  unsigned int pending = 0;	/* Pending columns of blanks. */
 
   fp = next_file ((FILE *) NULL);
   if (fp == NULL)
@@ -235,7 +240,7 @@ unexpand (void)
     {
       c = getc (fp);
 
-      if (c == ' ' && convert)
+      if (c == ' ' && convert && column < TAB_STOP_SENTINEL)
 	{
 	  ++pending;
 	  ++column;
@@ -276,7 +281,7 @@ unexpand (void)
 	      pending = 0;
 	    }
 	  column -= pending;
-	  while (pending != 0)
+	  while (pending > 0)
 	    {
 	      if (tab_size == 0)
 		{
@@ -437,7 +442,7 @@ main (int argc, char **argv)
   else
     {
       /* Append a sentinel to the list of tab stop indices.  */
-      add_tabstop (INT_MAX);
+      add_tabstop (TAB_STOP_SENTINEL);
       tab_size = 0;
     }
 
