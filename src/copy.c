@@ -653,7 +653,13 @@ copy_internal (const char *src_path, const char *dst_path,
 		}
 
 	      if (x->update && MTIME_CMP (src_sb, dst_sb) <= 0)
-		return 0;
+		{
+		  /* Pretend the rename succeeded, so the caller (mv)
+		     doesn't end up removing the source file.  */
+		  if (rename_succeeded)
+		    *rename_succeeded = 1;
+		  return 0;
+		}
 	    }
 
 	  if (!S_ISDIR (src_type) && x->interactive)
