@@ -244,7 +244,7 @@ do_link (source, dest)
 	  char *tmp_backup = find_backup_file_name (dest);
 	  if (tmp_backup == NULL)
 	    error (1, 0, "virtual memory exhausted");
-	  dest_backup = alloca (strlen (tmp_backup) + 1);
+	  dest_backup = (char *) alloca (strlen (tmp_backup) + 1);
 	  strcpy (dest_backup, tmp_backup);
 	  free (tmp_backup);
 	  if (rename (dest, dest_backup))
