@@ -1,3 +1,33 @@
+1998-09-07  Jim Meyering  <meyering@ascend.com>
+
+	* tests/ls-2/quoting: Add tests.
+	* tests/Fetish.pm (run_tests): Add simple PRE/POST hooks.
+	(_create_file): Don't include $$ in temp file name.
+	(run_tests): Use shorter suffixes for temp file names.
+
+1998-09-06  Jim Meyering  <meyering@ascend.com>
+
+	* src/touch.c: Include posixtm.h.
+	(usage): Correct the description of the format of the
+	date string argument to -t option.
+	(main): Update to use rewritten posixtime function.
+	Reported by Andries Brouwer.
+
+	* Version 3.16w.
+
+	* lib/Makefile.am (libfu_a_SOURCES): Change posixtm.y to posixtm.c.
+	(noinst_HEADERS): Add posixtm.h.
+
+	* lib/posixtm.h: New file.
+	* lib/posixtm.c: New file.  Rewritten based on posixtm.y.
+	* lib/posixtm.y: Remove file.
+
+1998-09-05  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* src/ls.c (print_dir_name): Put back.
+	(print_dir): Also print directory name header if print_dir_name is
+	true.
+
 1998-08-29  Jim Meyering  <meyering@ascend.com>
 
 	* Version 3.16v.
