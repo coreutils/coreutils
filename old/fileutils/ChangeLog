@@ -1,5 +1,13 @@
 1997-09-01  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/ls.c [!STDC_HEADERS]: Declare malloc.
+
+	* m4/Makefile.am (EXTRA_DIST): Add stat.m4.
+	* m4/stat.m4: New file.
+	* m4/stat.m4 (jm_FUNC_STAT): New macro.
+	* lib/stat.c: New file.
+	* configure.in (jm_FUNC_STAT): Use it.
+
 	* src/ln.c (do_link): Form destination file name (when DEST is a
 	directory) before checking whether SOURCE and DEST are the same file.
 	See tests/ln/sf-1.  Reported by Michael Veksler.
@@ -9,8 +17,6 @@
 	* configure.in (AC_OUTPUT): Add tests/ln/Makefile.
 
 1997-08-31  Jim Meyering  <meyering@na-net.ornl.gov>
-
-	* configure.in (AC_REPLACE_FUNCS): Add lstat.
 
 	* src/chgrp.c (change_file_group): Call describe_change with a
 	3-state argument.
