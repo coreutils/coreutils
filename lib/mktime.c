@@ -1,5 +1,5 @@
 /* Convert a `struct tm' to a time_t value.
-   Copyright (C) 1993-1999, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1993-1999, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Eggert (eggert@twinsun.com).
 
@@ -26,7 +26,6 @@
 #endif
 
 #ifdef _LIBC
-# define HAVE_LIMITS_H 1
 # define STDC_HEADERS 1
 #endif
 
@@ -40,9 +39,7 @@
 #include <sys/types.h>		/* Some systems define `time_t' here.  */
 #include <time.h>
 
-#if HAVE_LIMITS_H
-# include <limits.h>
-#endif
+#include <limits.h>
 
 #if DEBUG
 # include <stdio.h>
@@ -54,18 +51,6 @@
 # define mktime my_mktime
 #endif /* DEBUG */
 
-#ifndef __P
-# if defined __GNUC__ || (defined __STDC__ && __STDC__)
-#  define __P(args) args
-# else
-#  define __P(args) ()
-# endif  /* GCC.  */
-#endif  /* Not __P.  */
-
-#ifndef CHAR_BIT
-# define CHAR_BIT 8
-#endif
-
 /* The extra casts work around common compiler bugs.  */
 #define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
 /* The outer cast is needed to work around a bug in Cray C 5.0.3.0.
@@ -73,13 +58,6 @@
 #define TYPE_MINIMUM(t) ((t) (TYPE_SIGNED (t) \
 			      ? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) : (t) 0))
 #define TYPE_MAXIMUM(t) ((t) (~ (t) 0 - TYPE_MINIMUM (t)))
-
-#ifndef INT_MIN
-# define INT_MIN TYPE_MINIMUM (int)
-#endif
-#ifndef INT_MAX
-# define INT_MAX TYPE_MAXIMUM (int)
-#endif
 
 #ifndef TIME_T_MIN
 # define TIME_T_MIN TYPE_MINIMUM (time_t)
@@ -221,7 +199,7 @@ static
 time_t
 __mktime_internal (struct tm *tp,
 		   struct tm *(*convert) (const time_t *, struct tm *),
-		   time_t *offset)
+		   long int *offset)
 {
   time_t t, dt, t0, t1, t2;
   struct tm tm;
@@ -264,12 +242,6 @@ __mktime_internal (struct tm *tp,
 
   int sec_requested = sec;
 
-  /* Only years after 1970 are defined.
-     If year is 69, it might still be representable due to
-     timezone differences.  */
-  if (year < 69)
-    return -1;
-
 #if LEAP_SECONDS_POSSIBLE
   /* Handle out-of-range seconds specially,
      since ydhms_tm_diff assumes every minute has 60 seconds.  */
@@ -285,8 +257,11 @@ __mktime_internal (struct tm *tp,
   tm.tm_year = EPOCH_YEAR - TM_YEAR_BASE;
   tm.tm_yday = tm.tm_hour = tm.tm_min = tm.tm_sec = 0;
   t0 = ydhms_tm_diff (year, yday, hour, min, sec, &tm);
+  t = t0 + *offset;
+  if ((t < t0) != (*offset < 0))
+    t = t0;
 
-  for (t = t1 = t2 = t0 + *offset, dst2 = 0;
+  for (t1 = t2 = t, dst2 = 0;
        (dt = ydhms_tm_diff (year, yday, hour, min, sec,
 			    ranged_convert (convert, &t, &tm)));
        t1 = t2, t2 = t, t += dt, dst2 = tm.tm_isdst != 0)
@@ -377,25 +352,16 @@ __mktime_internal (struct tm *tp,
 	return -1;
     }
 
-  if (year == 69)
-    {
-      /* If year was 69, need to check whether the time was representable
-	 or not.  */
-      if (t < 0 || t > 2 * 24 * 60 * 60)
-	return -1;
-    }
-
   *tp = tm;
   return t;
 }
 
 
-static time_t localtime_offset;
+static long int localtime_offset;
 
 /* Convert *TP to a time_t value.  */
 time_t
-mktime (tp)
-     struct tm *tp;
+mktime (struct tm *tp)
 {
 #ifdef _LIBC
   /* POSIX.1 8.1.1 requires that whenever mktime() is called, the
@@ -419,9 +385,7 @@ libc_hidden_weak (timelocal)
 #if DEBUG
 
 static int
-not_equal_tm (a, b)
-     struct tm *a;
-     struct tm *b;
+not_equal_tm (struct tm const *a, struct tm const *b)
 {
   return ((a->tm_sec ^ b->tm_sec)
 	  | (a->tm_min ^ b->tm_min)
@@ -435,8 +399,7 @@ not_equal_tm (a, b)
 }
 
 static void
-print_tm (tp)
-     struct tm *tp;
+print_tm (struct tm const *tp)
 {
   if (tp)
     printf ("%04d-%02d-%02d %02d:%02d:%02d yday %03d wday %d isdst %d",
@@ -448,11 +411,7 @@ print_tm (tp)
 }
 
 static int
-check_result (tk, tmk, tl, lt)
-     time_t tk;
-     struct tm tmk;
-     time_t tl;
-     struct tm *lt;
+check_result (time_t tk, struct tm tmk, time_t tl, struct tm const *lt)
 {
   if (tk != tl || !lt || not_equal_tm (&tmk, lt))
     {
@@ -468,9 +427,7 @@ check_result (tk, tmk, tl, lt)
 }
 
 int
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int status = 0;
   struct tm tm, tmk, tml;
@@ -516,7 +473,7 @@ main (argc, argv)
 	      {
 		tmk = tml = *lt;
 		tk = mktime (&tmk);
-		status |= check_result (tk, tmk, tl, tml);
+		status |= check_result (tk, tmk, tl, &tml);
 	      }
 	    else
 	      {
@@ -533,7 +490,7 @@ main (argc, argv)
 	      {
 		tmk = tml = *lt;
 		tk = tl;
-		status |= check_result (tk, tmk, tl, tml);
+		status |= check_result (tk, tmk, tl, &tml);
 	      }
 	    else
 	      {
@@ -556,6 +513,6 @@ main (argc, argv)
 
 /*
 Local Variables:
-compile-command: "gcc -DDEBUG -DHAVE_LIMITS_H -DSTDC_HEADERS -Wall -W -O -g mktime.c -o mktime"
+compile-command: "gcc -DDEBUG -DSTDC_HEADERS -Wall -W -O -g mktime.c -o mktime"
 End:
 */
