@@ -1,3 +1,14 @@
+2003-08-06  Paul Eggert  <eggert@twinsun.com>
+
+	* NEWS: Add support for setting file timestamps to microsecond
+	resolution, on hosts that support this.
+	* src/copy.c, src/cp.c, src/install.c, src/touch.c: Include utimens.h.
+	* src/copy.c (copy_internal):
+	Set file timestamps with utimens, not utime.
+	* src/cp.c (re_protect): Likewise.
+	* src/install.c (change_timestamps): Likewise.
+	* src/touch.c (newtime, touch, main): Likewise.
+
 2003-08-09  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.

@@ -7,9 +7,17 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   split accepts a new option -d or --numeric-suffixes.
 
+  cp, install, mv, and touch now preserve microsecond resolution on
+  file timestamps, on platforms that have the 'utimes' system call.
+  Unfortunately there is no system call yet to preserve file
+  timestamps to their full nanosecond resolution; microsecond
+  resolution is the best we can do right now.
+
 ** Bug fixes
 
   `split -a0' works once again.
+
+  `df DIR' used to hang under some conditions on OSF/1 5.1.  Now it doesn't.
 
 
 * Major changes in release 5.0.90:
