@@ -38,9 +38,7 @@ void free ();
 
 #include <sys/stat.h>
 
-#if HAVE_ERRNO_H
-# include <errno.h>
-#endif
+#include <errno.h>
 
 #include "xalloc.h"
 #include "xgetcwd.h"
@@ -55,11 +53,21 @@ extern int errno;
 
 #if !HAVE_RESOLVEPATH
 
-# if HAVE_STDDEF_H
-#  include <stddef.h>
-#  define PTR_INT_TYPE ptrdiff_t
+/* If __PTRDIFF_TYPE__ is
+   defined, as with GNU C, use that; that way we don't pollute the
+   namespace with <stddef.h>'s symbols.  Otherwise, if <stddef.h> is
+   available, include it and use ptrdiff_t.  In traditional C, long is
+   the best that we can do.  */
+
+# ifdef __PTRDIFF_TYPE__
+#  define PTR_INT_TYPE __PTRDIFF_TYPE__
 # else
-#  define PTR_INT_TYPE long
+#  ifdef HAVE_STDDEF_H
+#   include <stddef.h>
+#   define PTR_INT_TYPE ptrdiff_t
+#  else
+#   define PTR_INT_TYPE long
+#  endif
 # endif
 
 # include "pathmax.h"
