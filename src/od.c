@@ -84,11 +84,6 @@ typedef double LONG_DOUBLE;
 # define BITSPERBYTE 8
 #endif
 
-#ifndef OFF_T_MAX
-# define OFF_T_MAX ((off_t)(~((unsigned long)1 << (sizeof (off_t)
-						   * BITSPERBYTE - 1))))
-#endif
-
 #define STREQ(a,b) (strcmp((a), (b)) == 0)
 
 #ifndef MAX
@@ -1715,10 +1710,10 @@ it must be one character from [doxn]"),
 	  if (s_err != LONGINT_OK)
 	    STRTOL_FATAL_ERROR (optarg, _("limit argument"), s_err);
 
-	  if (tmp > OFF_T_MAX)
+	  if (tmp > LONG_MAX)
 	    error (EXIT_FAILURE, 0,
 		   _("specified number of bytes `%s' is larger than \
-the maximum\nrepresentable value of type off_t"), optarg);
+the maximum\nrepresentable value of type `long'"), optarg);
 	  break;
 
 	case 's':
