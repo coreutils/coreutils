@@ -2,6 +2,10 @@
 
 	* Version 5.1.1.
 
+	* src/system.h: Include contents of sys2.h.
+	* src/sys2.h: Remove file.
+	* src/Makefile.am (noinst_HEADERS): Remove sys2.h.
+
 	* Use automake-1.8.2.  Regenerate dependent files.
 
 	* Update to gettext-0.13.1.
