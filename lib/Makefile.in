@@ -1,6 +1,6 @@
 # Makefile.in generated automatically by automake 1.2d from Makefile.am
 
-# Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -117,7 +117,7 @@ save-cwd.h savedir.h strverscmp.h xalloc.h xstrtol.h xstrtoul.h
 BUILT_SOURCES = getdate.c posixtm.c
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
-CONFIG_CLEAN_FILES = 
+CONFIG_CLEAN_FILES =
 LIBRARIES =  $(noinst_LIBRARIES)
 
 
@@ -178,7 +178,7 @@ default: all
 
 .SUFFIXES:
 .SUFFIXES: .S .c .h .o .s .y
-$(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+$(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && $(AUTOMAKE) --gnits lib/Makefile
 
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
@@ -231,8 +231,10 @@ libfu.a: $(libfu_a_OBJECTS) $(libfu_a_DEPENDENCIES)
 	$(AR) cru libfu.a $(libfu_a_OBJECTS) $(libfu_a_LIBADD)
 	$(RANLIB) libfu.a
 .y.c:
+	echo building $@
 	$(SHELL) $(YLWRAP) "$(YACC)" $< y.tab.c $*.c y.tab.h $*.h -- $(YFLAGS)
 .y.h:
+	echo building $@
 	$(SHELL) $(YLWRAP) "$(YACC)" $< y.tab.c $*.c y.tab.h $*.h -- $(YFLAGS)
 addext_.c: addext.c $(ANSI2KNR)
 	$(ANSI2KNR) `if test -f $(srcdir)/addext.c; then echo $(srcdir)/addext.c; else echo addext.c; fi` addext_.c
@@ -451,16 +453,16 @@ dvi:
 check: all
 	$(MAKE)
 installcheck:
-install-exec: 
+install-exec:
 	@$(NORMAL_INSTALL)
 
-install-data: 
+install-data:
 	@$(NORMAL_INSTALL)
 
 install: install-exec install-data all
 	@:
 
-uninstall: 
+uninstall:
 
 all: Makefile $(LIBRARIES) $(HEADERS)
 
