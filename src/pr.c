@@ -343,9 +343,6 @@ static int first_page_number = 1;
 /* Number of files open (not closed, not on hold). */
 static int files_ready_to_read = 0;
 
-/* Number of columns with either an open file or stored lines. */
-static int cols_ready_to_print = 0;
-
 /* Current page number.  Displayed in header. */
 static int page_number;
 
@@ -445,7 +442,7 @@ static struct option const long_options[] =
    stored lines. */
 
 static int
-crtp ()
+cols_ready_to_print ()
 {
   COLUMN *q;
   int i;
@@ -1189,7 +1186,7 @@ print_page ()
 
   init_page ();
 
-  if (crtp () == 0)
+  if (cols_ready_to_print () == 0)
     return FALSE;
 
   if (extremities)
@@ -1203,7 +1200,7 @@ print_page ()
   if (double_space)
     lines_left_on_page *= 2;
 
-  while (lines_left_on_page > 0 && crtp () > 0)
+  while (lines_left_on_page > 0 && cols_ready_to_print () > 0)
     {
       output_position = 0;
       spaces_not_printed = 0;
@@ -1227,7 +1224,7 @@ print_page ()
 	      --p->lines_to_print;
 	      if (p->lines_to_print <= 0)
 		{
-		  if (crtp () <= 0)
+		  if (cols_ready_to_print () <= 0)
 		    break;
 		}
 	    }
