@@ -69,14 +69,11 @@ static int posix_date;
    we have neither read nor write access to it.  */
 static int amtime_now;
 
-/* New time to use when setting time. */
-static struct timespec newtime;
+/* New access and modification times to use when setting time.  */
+static struct timespec newtime[2];
 
 /* File to use for -r. */
 static char *ref_file;
-
-/* Info about the reference file. */
-static struct stat ref_stats;
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
@@ -109,17 +106,15 @@ static int const time_masks[] =
   CH_ATIME, CH_ATIME, CH_ATIME, CH_MTIME, CH_MTIME
 };
 
-/* Interpret FLEX_DATE as a date, relative to NOW, and return the
-   respresented time.  If NOW is null, use the current time.
-   FIXME: add support for subsecond resolution.  */
+/* Store into *RESULT the result of interpreting FLEX_DATE as a date,
+   relative to NOW.  If NOW is null, use the current time.  */
 
-static time_t
-get_reldate (char const *flex_date, time_t const *now)
+static void
+get_reldate (struct timespec *result,
+	     char const *flex_date, struct timespec const *now)
 {
-  time_t r = get_date (flex_date, now);
-  if (r == (time_t) -1)
+  if (! get_date (result, flex_date, now))
     error (EXIT_FAILURE, 0, _("invalid date format %s"), quote (flex_date));
-  return r;
 }
 
 /* Update the time of file FILE according to the options given.
@@ -185,20 +180,7 @@ touch (const char *file)
   else
     {
       struct timespec timespec[2];
-
-      /* There's currently no interface to set file timestamps with
-	 better than 1-second resolution, so discard any fractional
-	 part of the source timestamp.  */
-
-      if (use_ref)
-	{
-	  timespec[0].tv_sec = ref_stats.st_atime;
-	  timespec[0].tv_nsec = TIMESPEC_NS (ref_stats.st_atim);
-	  timespec[1].tv_sec = ref_stats.st_mtime;
-	  timespec[1].tv_nsec = TIMESPEC_NS (ref_stats.st_mtim);
-	}
-      else
-	timespec[0] = timespec[1] = newtime;
+      memcpy (timespec, newtime, sizeof timespec);
 
       if (!(change_times & CH_ATIME))
 	{
@@ -329,10 +311,11 @@ main (int argc, char **argv)
 
 	case 't':
 	  posix_date++;
-	  if (! posixtime (&newtime.tv_sec, optarg,
+	  if (! posixtime (&newtime[0].tv_sec, optarg,
 			   PDS_LEADING_YEAR | PDS_CENTURY | PDS_SECONDS))
 	    error (EXIT_FAILURE, 0, _("invalid date format %s"), quote (optarg));
-	  newtime.tv_nsec = 0;
+	  newtime[0].tv_nsec = 0;
+	  newtime[1] = newtime[0];
 	  date_set++;
 	  break;
 
@@ -361,15 +344,20 @@ main (int argc, char **argv)
 
   if (use_ref)
     {
+      struct stat ref_stats;
       if (stat (ref_file, &ref_stats))
 	error (EXIT_FAILURE, errno,
 	       _("failed to get attributes of %s"), quote (ref_file));
+      newtime[0].tv_sec = ref_stats.st_atime;
+      newtime[0].tv_nsec = TIMESPEC_NS (ref_stats.st_atim);
+      newtime[1].tv_sec = ref_stats.st_mtime;
+      newtime[1].tv_nsec = TIMESPEC_NS (ref_stats.st_mtim);
       if (flex_date)
 	{
 	  if (change_times & CH_ATIME)
-	    ref_stats.st_atime = get_reldate (flex_date, &ref_stats.st_atime);
+	    get_reldate (&newtime[0], flex_date, &newtime[0]);
 	  if (change_times & CH_MTIME)
-	    ref_stats.st_mtime = get_reldate (flex_date, &ref_stats.st_mtime);
+	    get_reldate (&newtime[1], flex_date, &newtime[1]);
 	}
       date_set++;
     }
@@ -377,8 +365,8 @@ main (int argc, char **argv)
     {
       if (flex_date)
 	{
-	  newtime.tv_sec = get_reldate (flex_date, NULL);
-	  newtime.tv_nsec = 0;
+	  get_reldate (&newtime[0], flex_date, NULL);
+	  newtime[1] = newtime[0];
 	}
     }
 
@@ -387,17 +375,18 @@ main (int argc, char **argv)
   if (!date_set && 2 <= argc - optind && !STREQ (argv[optind - 1], "--")
       && posix2_version () < 200112)
     {
-      if (posixtime (&newtime.tv_sec, argv[optind], PDS_TRAILING_YEAR))
+      if (posixtime (&newtime[0].tv_sec, argv[optind], PDS_TRAILING_YEAR))
 	{
-	  newtime.tv_nsec = 0;
+	  newtime[0].tv_nsec = 0;
+	  newtime[1] = newtime[0];
 	  if (! getenv ("POSIXLY_CORRECT"))
 	    {
-	      struct tm const *tm = localtime (&newtime.tv_sec);
+	      struct tm const *tm = localtime (&newtime[0].tv_sec);
 	      error (0, 0,
 		     _("warning: `touch %s' is obsolete; use\
- `touch -t %04d%02d%02d%02d%02d.%02d'"),
+ `touch -t %04ld%02d%02d%02d%02d.%02d'"),
 		     argv[optind],
-		     tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
+		     tm->tm_year + 1900L, tm->tm_mon + 1, tm->tm_mday,
 		     tm->tm_hour, tm->tm_min, tm->tm_sec);
 	    }
 
@@ -411,18 +400,9 @@ main (int argc, char **argv)
 	amtime_now = 1;
       else
 	{
-	  /* Get time of day, but only to microsecond resolution,
-	     since 'utimes' currently supports only microsecond
-	     resolution at best.  It would be cleaner here to invoke
-	     gettime, but then we would have to link in more shared
-	     libraries on platforms like Solaris, and we'd rather not
-	     have 'touch' depend on libraries that it doesn't
-	     need.  */
-	  struct timeval timeval;
-	  if (gettimeofday (&timeval, NULL) != 0)
+	  if (gettime (&newtime[0]) != 0)
 	    error (EXIT_FAILURE, errno, _("cannot get time of day"));
-	  newtime.tv_sec = timeval.tv_sec;
-	  newtime.tv_nsec = timeval.tv_usec * 1000;
+	  newtime[1] = newtime[0];
 	}
     }
 
