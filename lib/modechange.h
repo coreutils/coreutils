@@ -46,9 +46,9 @@ struct mode_change
 
 #ifndef __P
 # if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
-#  define __P(args) args
+#  define __P(Args) Args
 # else
-#  define __P(args) ()
+#  define __P(Args) ()
 # endif  /* GCC.  */
 #endif  /* Not __P.  */
 
