@@ -1,4 +1,5 @@
 [0.1.0]
 * uniq now obeys the LC_COLLATE locale, as per POSIX 1003.1-2001 TC1.
 
-  Baseline: textutils-2.1
+  This package is the union of the following:
+  textutils-2.1, fileutils-4.1.10, sh-utils-2.0.14.
