@@ -1,4 +1,10 @@
 User-visible changes in release 3.10:
+* Fix bug in cp that made the commands `mkdir dir; touch foo; cp -P foo dir'
+  incorrectly change the permissions on directory, dir.
+* df accepts a new option, --sync, that may ensure it reports more up to
+  date usage information.  df used to always call sync, but the value of so
+  doing is not apparent, and the drawback (it makes df very slow sometimes)
+  is glaring.
 * ls accepts a new option, --dired, that makes emacs' dired mode more efficient
 * skeletal texinfo documentation (mainly just the `invoking' nodes)
 * ln accepts a new option: --no-dereference (-n).  With this option,
