@@ -1,6 +1,7 @@
 #! /bin/sh
 # ylwrap - wrapper for lex/yacc invocations.
-# Written by Tom Tromey <tromey@cygnus.com>, Aug 11 1996
+# Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+# Written by Tom Tromey <tromey@cygnus.com>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,8 +18,9 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 # Usage:
-#     ylwrap PROG [OUTPUT DESIRED]... -- [ARGS]...
-# * PROG is program to run.
+#     ylwrap PROGRAM INPUT [OUTPUT DESIRED]... -- [ARGS]...
+# * PROGRAM is program to run.
+# * INPUT is the input file
 # * OUTPUT is file PROG generates
 # * DESIRED is file we actually want
 # * ARGS are passed to PROG
@@ -27,6 +29,21 @@
 # The program to run.
 prog="$1"
 shift
+
+# The input.
+input="$1"
+shift
+case "$input" in
+ /*)
+    # Absolute path; do nothing.
+    ;;
+ *)
+    # Relative path.  Make it absolute.  Why?  Because otherwise any
+    # debugging info in the generated file will point to the wrong
+    # place.  This is really gross.
+    input="`pwd`/$input"
+    ;;
+esac
 
 pairlist=
 while test "$#" -ne 0; do
@@ -37,26 +54,42 @@ while test "$#" -ne 0; do
    shift
 done
 
-$prog ${1+"$@"} || exit $?
+# FIXME: add hostname here for parallel makes that run commands on
+# other machines.  But that might take us over the 14-char limit.
+dirname=ylwrap$$
+trap "cd `pwd`; rm -rf $dirname > /dev/null 2>&1" 1 2 3 15
+mkdir $dirname || exit 1
 
-set X $pairlist
-shift
-status=0
-first=yes
-while test "$#" -ne 0; do
-   if test -f "$1"; then
-      mv "$1" "$2" || status=$?
-   else
-      # A missing file is only an error for the first file.  This is a
-      # blatant hack to let us support using "yacc -d".  If -d is not
-      # specified, we don't want an error when the header file is
-      # "missing".
-      if test $first = yes; then
-	 status=1
+cd $dirname
+$prog ${1+"$@"} "$input"
+status=$?
+
+if test $status -eq 0; then
+   set X $pairlist
+   shift
+   first=yes
+   while test "$#" -ne 0; do
+      if test -f "$1"; then
+	 mv "$1" "../$2" || status=$?
+      else
+	 # A missing file is only an error for the first file.  This
+	 # is a blatant hack to let us support using "yacc -d".  If -d
+	 # is not specified, we don't want an error when the header
+	 # file is "missing".
+	 if test $first = yes; then
+	    status=1
+	 fi
       fi
-   fi
-   shift
-   shift
-   first=no
-done
+      shift
+      shift
+      first=no
+   done
+else
+   status=$?
+fi
+
+# Remove the directory.
+cd ..
+rm -rf $dirname
+
 exit $status
