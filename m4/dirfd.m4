@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 
 dnl Find out how to get the file descriptor associated with an open DIR*.
 dnl From Jim Meyering
@@ -25,9 +25,19 @@ AC_DEFUN([UTILS_FUNC_DIRFD],
   AC_CHECK_FUNCS(dirfd)
   AC_CHECK_DECLS([dirfd], , , $dirfd_headers)
 
-  # Use the replacement only if we have neither the function
-  # nor a declaration.
-  if test $ac_cv_func_dirfd,$ac_cv_have_decl_dirfd = no,no; then
+  AC_CACHE_CHECK([whether dirfd is a macro],
+    jm_cv_func_dirfd_macro,
+    AC_EGREP_CPP([dirent_header_defines_dirfd], [$dirfd_headers
+#ifdef dirfd
+ dirent_header_defines_dirfd
+#endif],
+      jm_cv_func_dirfd_macro=yes,
+      jm_cv_func_dirfd_macro=no))
+
+  # Use the replacement only if we have no function, macro,
+  # or declaration with that name.
+  if test $ac_cv_func_dirfd,$ac_cv_have_decl_dirfd,$jm_cv_func_dirfd_macro \
+      = no,no,no; then
     AC_REPLACE_FUNCS([dirfd])
     AC_CACHE_CHECK(
 	      [how to get the file descriptor associated with an open DIR*],
