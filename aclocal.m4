@@ -838,7 +838,9 @@ fi])])
 # Enable extensions on systems that normally disable them,
 # typically due to standards-conformance issues.
 AC_DEFUN([gl_USE_SYSTEM_EXTENSIONS], [
+  AC_REQUIRE([AC_AIX])
   AC_REQUIRE([AC_GNU_SOURCE])
+  AC_REQUIRE([AC_MINIX])
   AH_VERBATIM([__EXTENSIONS__],
 [/* Enable extensions on Solaris.  */
 #ifndef __EXTENSIONS__
@@ -1496,7 +1498,7 @@ AC_DEFUN([jm_CHECK_TYPE_STRUCT_DIRENT_D_INO],
   ]
 )
 
-#serial 18
+#serial 19
 
 dnl This is just a wrapper function to encapsulate this kludge.
 dnl Putting it in a separate file like this helps share it between
@@ -1507,19 +1509,9 @@ AC_DEFUN([jm_CHECK_DECLS],
   AC_REQUIRE([AC_HEADER_TIME])
   headers='
 #include <stdio.h>
-#if HAVE_STRING_H
-# if !STDC_HEADERS && HAVE_MEMORY_H
-#  include <memory.h>
-# endif
-# include <string.h>
-#else
-# if HAVE_STRINGS_H
-#  include <strings.h>
-# endif
-#endif
-#if HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
+#include <string.h>
+#include <stdlib.h>
+
 #if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
@@ -1582,7 +1574,7 @@ AC_DEFUN([_jm_DECL_HEADERS],
                    unistd.h sys/time.h utmp.h utmpx.h)
 ])
 
-#serial 35
+#serial 36
 
 dnl We use jm_ for non Autoconf macros.
 m4_pattern_forbid([^jm_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
@@ -1651,10 +1643,15 @@ AC_DEFUN([jm_PREREQ],
   AC_REQUIRE([gl_GETNDELIM2])
   AC_REQUIRE([gl_GETOPT])
   AC_REQUIRE([gl_GETPAGESIZE])
+  AC_REQUIRE([gl_GETUGROUPS])
   AC_REQUIRE([gl_HARD_LOCALE])
   AC_REQUIRE([gl_HASH])
   AC_REQUIRE([gl_HUMAN])
+  AC_REQUIRE([gl_IDCACHE])
+  AC_REQUIRE([gl_LONG_OPTIONS])
+  AC_REQUIRE([gl_MAKEPATH])
   AC_REQUIRE([gl_MBSWIDTH])
+  AC_REQUIRE([gl_MD5])
   AC_REQUIRE([gl_MEMCOLL])
   AC_REQUIRE([gl_MODECHANGE])
   AC_REQUIRE([gl_MOUNTLIST])
@@ -1666,6 +1663,7 @@ AC_DEFUN([jm_PREREQ],
   AC_REQUIRE([gl_POSIXVER])
   AC_REQUIRE([gl_QUOTEARG])
   AC_REQUIRE([gl_QUOTE])
+  AC_REQUIRE([gl_READTOKENS])
   AC_REQUIRE([gl_READUTMP])
   AC_REQUIRE([gl_REGEX])
   AC_REQUIRE([gl_SAFE_READ])
@@ -1698,19 +1696,10 @@ AC_DEFUN([jm_PREREQ],
   AC_REQUIRE([jm_FUNC_REALLOC])
   AC_REQUIRE([jm_FUNC_STAT])
   AC_REQUIRE([jm_FUNC_UTIME])
-  AC_REQUIRE([jm_PREREQ_ADDEXT])
   AC_REQUIRE([jm_PREREQ_STAT])
   AC_REQUIRE([jm_XSTRTOIMAX])
   AC_REQUIRE([jm_XSTRTOUMAX])
   AC_REQUIRE([vb_FUNC_RENAME])
-])
-
-AC_DEFUN([jm_PREREQ_ADDEXT],
-[
-  dnl For addext.c.
-  AC_REQUIRE([AC_SYS_LONG_FILE_NAMES])
-  AC_CHECK_FUNCS(pathconf)
-  AC_CHECK_HEADERS(limits.h string.h unistd.h)
 ])
 
 AC_DEFUN([jm_PREREQ_STAT],
@@ -2063,7 +2052,6 @@ AC_DEFUN([gl_PREREQ_MKSTEMP],
 # Prerequisites of lib/tempname.c.
 AC_DEFUN([jm_PREREQ_TEMPNAME],
 [
-  AC_REQUIRE([AC_HEADER_STDC])
   AC_REQUIRE([AC_HEADER_STAT])
   AC_CHECK_HEADERS_ONCE(fcntl.h sys/time.h unistd.h)
   AC_CHECK_HEADERS(stdint.h)
@@ -2331,8 +2319,8 @@ AC_DEFUN([AC_SEARCH_LIBS],
   fi
 ])
 
-# closeout.m4 serial 1
-dnl Copyright (C) 2002 Free Software Foundation, Inc.
+# closeout.m4 serial 2
+dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -2342,7 +2330,7 @@ dnl the same distribution terms as the rest of that program.
 AC_DEFUN([gl_CLOSEOUT],
 [
   dnl Prerequisites of lib/closeout.c.
-  AC_CHECK_HEADERS_ONCE(stdlib.h)
+  :
 ])
 
 # dirname.m4 serial 2
@@ -2361,7 +2349,7 @@ AC_DEFUN([gl_DIRNAME],
   dnl No prerequisites of lib/basename.c, lib/dirname.c, lib/stripslash.c.
 ])
 
-#serial 8
+#serial 9
 
 AC_DEFUN([gl_ERROR],
 [
@@ -2373,8 +2361,8 @@ AC_DEFUN([gl_ERROR],
 # Prerequisites of lib/error.c.
 AC_DEFUN([jm_PREREQ_ERROR],
 [
-  AC_REQUIRE([AC_FUNC_VPRINTF])
-  AC_FUNC_STRERROR_R
+  AC_REQUIRE([AC_FUNC_STRERROR_R])
+  :
 ])
 
 # exclude.m4 serial 3
@@ -3130,7 +3118,6 @@ AC_DEFUN([gl_PREREQ_GETUSERSHELL], [
   AC_CHECK_FUNCS_ONCE(isascii)
 ])
 
-
 # memchr.m4 serial 2
 dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
@@ -3486,7 +3473,7 @@ AC_DEFUN([gl_PREREQ_RMDIR], [
 ])
 
 
-# rpmatch.m4 serial 3
+# rpmatch.m4 serial 4
 dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -3503,11 +3490,7 @@ AC_DEFUN([gl_FUNC_RPMATCH],
 ])
 
 # Prerequisites of lib/rpmatch.c.
-AC_DEFUN([gl_PREREQ_RPMATCH], [
-  AC_REQUIRE([AC_HEADER_STDC])
-  :
-])
-
+AC_DEFUN([gl_PREREQ_RPMATCH], [:])
 
 # sig2str.m4 serial 1
 dnl Copyright (C) 2002 Free Software Foundation, Inc.
@@ -3556,8 +3539,8 @@ AC_DEFUN([gl_PREREQ_STPCPY], [
 ])
 
 
-# strcspn.m4 serial 1
-dnl Copyright (C) 2002 Free Software Foundation, Inc.
+# strcspn.m4 serial 2
+dnl Copyright (C) 2002-2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -3573,12 +3556,10 @@ AC_DEFUN([gl_FUNC_STRCSPN],
 ])
 
 # Prerequisites of lib/strcspn.c.
-AC_DEFUN([gl_PREREQ_STRCSPN], [
-  AC_CHECK_HEADERS_ONCE(string.h)
-])
+AC_DEFUN([gl_PREREQ_STRCSPN], [:])
 
-# strdup.m4 serial 1
-dnl Copyright (C) 2002 Free Software Foundation, Inc.
+# strdup.m4 serial 2
+dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -3595,7 +3576,6 @@ AC_DEFUN([gl_FUNC_STRDUP],
 
 # Prerequisites of lib/strdup.c.
 AC_DEFUN([gl_PREREQ_STRDUP], [
-  AC_REQUIRE([AC_HEADER_STDC])
   :
 ])
 
@@ -3626,7 +3606,7 @@ AC_DEFUN([gl_PREREQ_STRNDUP], [
 ])
 
 
-# strnlen.m4 serial 2
+# strnlen.m4 serial 3
 dnl Copyright (C) 2002-2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -3652,15 +3632,10 @@ AC_DEFUN([gl_FUNC_STRNLEN],
 ])
 
 # Prerequisites of lib/strnlen.c.
-AC_DEFUN([gl_PREREQ_STRNLEN], [
-  AC_REQUIRE([AC_HEADER_STDC])
-  AC_CHECK_HEADERS_ONCE(memory.h string.h)
-  AC_CHECK_DECLS(memchr)
-])
+AC_DEFUN([gl_PREREQ_STRNLEN], [:])
 
-
-# strpbrk.m4 serial 1
-dnl Copyright (C) 2002 Free Software Foundation, Inc.
+# strpbrk.m4 serial 2
+dnl Copyright (C) 2002-2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -3676,12 +3651,10 @@ AC_DEFUN([gl_FUNC_STRPBRK],
 ])
 
 # Prerequisites of lib/strpbrk.c.
-AC_DEFUN([gl_PREREQ_STRPBRK], [
-  AC_CHECK_HEADERS_ONCE(string.h)
-])
+AC_DEFUN([gl_PREREQ_STRPBRK], [:])
 
-# strstr.m4 serial 1
-dnl Copyright (C) 2002 Free Software Foundation, Inc.
+# strstr.m4 serial 2
+dnl Copyright (C) 2002-2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -3697,11 +3670,9 @@ AC_DEFUN([gl_FUNC_STRSTR],
 ])
 
 # Prerequisites of lib/strstr.c.
-AC_DEFUN([gl_PREREQ_STRSTR], [
-  AC_CHECK_HEADERS_ONCE(string.h)
-])
+AC_DEFUN([gl_PREREQ_STRSTR], [:])
 
-# strtod.m4 serial 2
+# strtod.m4 serial 3
 dnl Copyright (C) 2002-2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -3723,11 +3694,10 @@ AC_DEFUN([gl_FUNC_STRTOD],
 # The need for pow() is already handled by AC_FUNC_STRTOD.
 AC_DEFUN([gl_PREREQ_STRTOD], [
   AC_REQUIRE([AC_HEADER_STDC])
-  AC_CHECK_HEADERS(float.h)
   AC_CHECK_FUNCS_ONCE(isascii)
 ])
 
-# strtoimax.m4 serial 2
+# strtoimax.m4 serial 3
 dnl Copyright (C) 2002-2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -3761,8 +3731,6 @@ AC_DEFUN([gl_FUNC_STRTOIMAX],
 # Prerequisites of lib/strtoimax.c.
 AC_DEFUN([gl_PREREQ_STRTOIMAX], [
   jm_AC_TYPE_INTMAX_T
-  AC_CHECK_HEADERS_ONCE(stdlib.h)
-  AC_CHECK_DECLS_ONCE(strtol)
   AC_CHECK_DECLS(strtoll)
   AC_REQUIRE([jm_AC_TYPE_LONG_LONG])
 ])
@@ -3884,8 +3852,8 @@ AC_DEFUN([gl_PREREQ_STRTOLL], [
 ])
 
 
-# strtol.m4 serial 1
-dnl Copyright (C) 2002 Free Software Foundation, Inc.
+# strtol.m4 serial 2
+dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -3903,7 +3871,6 @@ AC_DEFUN([gl_FUNC_STRTOL],
 # Prerequisites of lib/strtol.c.
 AC_DEFUN([gl_PREREQ_STRTOL], [
   AC_REQUIRE([AC_HEADER_STDC])
-  AC_CHECK_HEADERS_ONCE(limits.h)
   AC_CHECK_FUNCS_ONCE(isascii)
 ])
 
@@ -3955,7 +3922,7 @@ AC_DEFUN([gl_PREREQ_STRTOUL], [
   gl_PREREQ_STRTOL
 ])
 
-# strtoumax.m4 serial 2
+# strtoumax.m4 serial 3
 dnl Copyright (C) 2002-2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -3989,8 +3956,6 @@ AC_DEFUN([gl_FUNC_STRTOUMAX],
 # Prerequisites of lib/strtoumax.c.
 AC_DEFUN([gl_PREREQ_STRTOUMAX], [
   jm_AC_TYPE_UINTMAX_T
-  AC_CHECK_HEADERS_ONCE(stdlib.h)
-  AC_CHECK_DECLS_ONCE(strtoul)
   AC_CHECK_DECLS(strtoull)
   AC_REQUIRE([jm_AC_TYPE_UNSIGNED_LONG_LONG])
 ])
@@ -4284,6 +4249,21 @@ AC_DEFUN([gl_GETPAGESIZE],
   AC_CHECK_FUNCS(getpagesize)
 ])
 
+# getugroups.m4 serial 2
+dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+dnl This file is free software, distributed under the terms of the GNU
+dnl General Public License.  As a special exception to the GNU General
+dnl Public License, this file may be distributed as part of a program
+dnl that contains a configuration script generated by Autoconf, under
+dnl the same distribution terms as the rest of that program.
+
+AC_DEFUN([gl_GETUGROUPS],
+[
+  dnl Prerequisites of lib/getugroups.c.
+  AC_CHECK_HEADERS_ONCE(unistd.h)
+  AC_TYPE_GETGROUPS
+])
+
 # hard-locale.m4 serial 2
 dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
@@ -4331,6 +4311,65 @@ AC_DEFUN([gl_HUMAN],
   AC_CHECK_HEADERS_ONCE(locale.h)
   AC_CHECK_FUNCS_ONCE(localeconv)
 ])
+
+# idcache.m4 serial 2
+dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+dnl This file is free software, distributed under the terms of the GNU
+dnl General Public License.  As a special exception to the GNU General
+dnl Public License, this file may be distributed as part of a program
+dnl that contains a configuration script generated by Autoconf, under
+dnl the same distribution terms as the rest of that program.
+
+AC_DEFUN([gl_IDCACHE],
+[
+  dnl Prerequisites of lib/idcache.c.
+  AC_CHECK_HEADERS_ONCE(unistd.h)
+])
+
+# long-options.m4 serial 2
+dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+dnl This file is free software, distributed under the terms of the GNU
+dnl General Public License.  As a special exception to the GNU General
+dnl Public License, this file may be distributed as part of a program
+dnl that contains a configuration script generated by Autoconf, under
+dnl the same distribution terms as the rest of that program.
+
+AC_DEFUN([gl_LONG_OPTIONS],
+[
+  dnl Prerequisites of lib/long-options.c.
+  :
+])
+
+# makepath.m4 serial 2
+dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+dnl This file is free software, distributed under the terms of the GNU
+dnl General Public License.  As a special exception to the GNU General
+dnl Public License, this file may be distributed as part of a program
+dnl that contains a configuration script generated by Autoconf, under
+dnl the same distribution terms as the rest of that program.
+
+AC_DEFUN([gl_MAKEPATH],
+[
+  dnl Prerequisites of lib/makepath.c.
+  AC_REQUIRE([AC_FUNC_ALLOCA])
+  AC_CHECK_HEADERS_ONCE(unistd.h)
+  AC_REQUIRE([AC_HEADER_STAT])
+  AC_REQUIRE([jm_AFS])
+])
+
+#serial 5
+
+AC_DEFUN([jm_AFS],
+  [
+    AC_MSG_CHECKING(for AFS)
+    if test -d /afs; then
+      AC_DEFINE(AFS, 1, [Define if you have the Andrew File System.])
+      ac_result=yes
+    else
+      ac_result=no
+    fi
+    AC_MSG_RESULT($ac_result)
+  ])
 
 #serial 9
 
@@ -4395,6 +4434,22 @@ AC_DEFUN([jm_FUNC_MBRTOWC],
     AC_DEFINE(HAVE_MBRTOWC, 1,
       [Define to 1 if mbrtowc and mbstate_t are properly declared.])
   fi
+])
+
+# md5.m4 serial 3
+dnl Copyright (C) 2002-2003 Free Software Foundation, Inc.
+dnl This file is free software, distributed under the terms of the GNU
+dnl General Public License.  As a special exception to the GNU General
+dnl Public License, this file may be distributed as part of a program
+dnl that contains a configuration script generated by Autoconf, under
+dnl the same distribution terms as the rest of that program.
+
+AC_DEFUN([gl_MD5],
+[
+  dnl Prerequisites of lib/md5.h.
+  AC_REQUIRE([AC_C_INLINE])
+
+  dnl No prerequisites of lib/md5.c.
 ])
 
 # memcoll.m4 serial 3
@@ -4910,7 +4965,21 @@ AC_DEFUN([gl_QUOTE],
   dnl (none)
 ])
 
-# readutmp.m4 serial 2
+# readtokens.m4 serial 2
+dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+dnl This file is free software, distributed under the terms of the GNU
+dnl General Public License.  As a special exception to the GNU General
+dnl Public License, this file may be distributed as part of a program
+dnl that contains a configuration script generated by Autoconf, under
+dnl the same distribution terms as the rest of that program.
+
+AC_DEFUN([gl_READTOKENS],
+[
+  dnl Prerequisites of lib/readtokens.c.
+  :
+])
+
+# readutmp.m4 serial 3
 dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -4970,11 +5039,10 @@ $ac_includes_default
 # Prerequisites of lib/readutmp.c.
 AC_DEFUN([gl_PREREQ_READUTMP],
 [
-  AC_REQUIRE([AC_HEADER_STDC])
-  AC_CHECK_HEADERS_ONCE(string.h)
+  :
 ])
 
-#serial 19
+#serial 20
 
 dnl Initially derived from code in GNU grep.
 dnl Mostly written by Jim Meyering.
@@ -5089,7 +5157,7 @@ AC_DEFUN([jm_PREREQ_REGEX],
   AC_REQUIRE([gl_C_RESTRICT])
   AC_REQUIRE([AC_FUNC_ALLOCA])
   AC_REQUIRE([AC_HEADER_STDC])
-  AC_CHECK_HEADERS_ONCE(limits.h string.h wchar.h wctype.h)
+  AC_CHECK_HEADERS_ONCE(wchar.h wctype.h)
   AC_CHECK_FUNCS_ONCE(isascii mempcpy)
   AC_CHECK_FUNCS(btowc)
 ])
@@ -5197,8 +5265,8 @@ AC_DEFUN([gl_SAVEDIR],
   AC_REQUIRE([AC_FUNC_CLOSEDIR_VOID])
 ])
 
-# save-cwd.m4 serial 1
-dnl Copyright (C) 2002 Free Software Foundation, Inc.
+# save-cwd.m4 serial 2
+dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -5208,7 +5276,6 @@ dnl the same distribution terms as the rest of that program.
 AC_DEFUN([gl_SAVE_CWD],
 [
   dnl Prerequisites for lib/save-cwd.c.
-  AC_REQUIRE([AC_HEADER_STDC])
   AC_CHECK_HEADERS_ONCE(fcntl.h unistd.h)
   AC_CHECK_FUNCS(fchdir)
 ])
@@ -5407,8 +5474,8 @@ AC_DEFUN([AC_STRUCT_ST_MTIM_NSEC],
  ]
 )
 
-# unicodeio.m4 serial 1
-dnl Copyright (C) 2002 Free Software Foundation, Inc.
+# unicodeio.m4 serial 2
+dnl Copyright (C) 2002-2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -5417,8 +5484,8 @@ dnl the same distribution terms as the rest of that program.
 
 AC_DEFUN([gl_UNICODEIO],
 [
-  dnl Prerequisites of lib/unicodeio.c.
-  AC_CHECK_HEADERS_ONCE(string.h)
+  dnl No prerequisites of lib/unicodeio.c.
+  :
 ])
 
 # unistd-safer.m4 serial 1
@@ -5439,7 +5506,7 @@ AC_DEFUN([gl_PREREQ_DUP_SAFER], [
   AC_CHECK_HEADERS_ONCE(fcntl.h unistd.h)
 ])
 
-# userspec.m4 serial 2
+# userspec.m4 serial 3
 dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -5450,9 +5517,8 @@ dnl the same distribution terms as the rest of that program.
 AC_DEFUN([gl_USERSPEC],
 [
   dnl Prerequisites of lib/userspec.c.
-  AC_REQUIRE([AC_HEADER_STDC])
   AC_REQUIRE([AC_FUNC_ALLOCA])
-  AC_CHECK_HEADERS_ONCE(string.h sys/param.h unistd.h)
+  AC_CHECK_HEADERS_ONCE(sys/param.h unistd.h)
 ])
 
 dnl Copyright (C) 2003 Free Software Foundation, Inc.
@@ -5518,8 +5584,8 @@ main ()
   fi
 ])
 
-# xalloc.m4 serial 1
-dnl Copyright (C) 2002 Free Software Foundation, Inc.
+# xalloc.m4 serial 3
+dnl Copyright (C) 2002-2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -5534,15 +5600,13 @@ AC_DEFUN([gl_XALLOC],
 
 # Prerequisites of lib/xmalloc.c.
 AC_DEFUN([gl_PREREQ_XMALLOC], [
-  AC_REQUIRE([AC_HEADER_STDC])
   AC_REQUIRE([jm_FUNC_MALLOC])
   AC_REQUIRE([jm_FUNC_REALLOC])
 ])
 
 # Prerequisites of lib/xstrdup.c.
 AC_DEFUN([gl_PREREQ_XSTRDUP], [
-  AC_REQUIRE([AC_HEADER_STDC])
-  AC_CHECK_HEADERS_ONCE(string.h)
+  :
 ])
 
 # malloc.m4 serial 7
@@ -5597,8 +5661,8 @@ AC_DEFUN([gl_PREREQ_REALLOC], [
   :
 ])
 
-# xgetcwd.m4 serial 1
-dnl Copyright (C) 2002 Free Software Foundation, Inc.
+# xgetcwd.m4 serial 2
+dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -5608,14 +5672,14 @@ dnl the same distribution terms as the rest of that program.
 AC_DEFUN([gl_XGETCWD],
 [
   dnl Prerequisites of lib/xgetcwd.c.
-  AC_CHECK_HEADERS_ONCE(stdlib.h unistd.h)
+  AC_CHECK_HEADERS_ONCE(unistd.h)
   AC_CHECK_FUNCS(getcwd)
   AC_FUNC_GETCWD_NULL
 ])
 
 # getcwd.m4 - check whether getcwd (NULL, 0) allocates memory for result
 
-# Copyright 2001 Free Software Foundation, Inc.
+# Copyright (C) 2001, 2003 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -5635,14 +5699,12 @@ AC_DEFUN([gl_XGETCWD],
 
 AC_DEFUN([AC_FUNC_GETCWD_NULL],
   [
-   AC_CHECK_HEADERS_ONCE(stdlib.h unistd.h)
+   AC_CHECK_HEADERS_ONCE(unistd.h)
    AC_CACHE_CHECK([whether getcwd (NULL, 0) allocates memory for result],
      [ac_cv_func_getcwd_null],
      [AC_TRY_RUN(
         [
-#	 ifdef HAVE_STDLIB_H
-#	  include <stdlib.h>
-#	 endif
+#	 include <stdlib.h>
 #	 ifdef HAVE_UNISTD_H
 #	  include <unistd.h>
 #	 endif
@@ -5668,7 +5730,7 @@ AC_DEFUN([AC_FUNC_GETCWD_NULL],
 	       [Define if getcwd (NULL, 0) allocates memory for result.])
    fi])
 
-# xreadlink.m4 serial 3
+# xreadlink.m4 serial 4
 dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -5680,11 +5742,11 @@ AC_DEFUN([gl_XREADLINK],
 [
   dnl Prerequisites of lib/xreadlink.c.
   AC_REQUIRE([gt_TYPE_SSIZE_T])
-  AC_CHECK_HEADERS_ONCE(stdlib.h unistd.h)
+  AC_CHECK_HEADERS_ONCE(unistd.h)
 ])
 
-# xstrtod.m4 serial 1
-dnl Copyright (C) 2002 Free Software Foundation, Inc.
+# xstrtod.m4 serial 2
+dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -5694,10 +5756,10 @@ dnl the same distribution terms as the rest of that program.
 # Prerequisites of lib/xstrtod.c.
 AC_DEFUN([gl_XSTRTOD],
 [
-  AC_REQUIRE([AC_HEADER_STDC])
+  :
 ])
 
-# xstrtol.m4 serial 2
+# xstrtol.m4 serial 3
 dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -5723,9 +5785,7 @@ AC_DEFUN([gl_PREREQ_XSTRTOL],
 [
   AC_REQUIRE([gl_PREREQ_XSTRTOL_H])
   AC_REQUIRE([AC_HEADER_STDC])
-  AC_CHECK_HEADERS_ONCE(string.h)
   AC_CHECK_FUNCS_ONCE(isascii)
-  AC_CHECK_DECLS_ONCE(strtol strtoul)
   AC_CHECK_DECLS([strtoimax, strtoumax])
 ])
 
@@ -5735,8 +5795,8 @@ AC_DEFUN([gl_PREREQ_XSTRTOUL],
   AC_REQUIRE([gl_PREREQ_XSTRTOL])
 ])
 
-# yesno.m4 serial 1
-dnl Copyright (C) 2002 Free Software Foundation, Inc.
+# yesno.m4 serial 2
+dnl Copyright (C) 2002-2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -5745,8 +5805,8 @@ dnl the same distribution terms as the rest of that program.
 
 AC_DEFUN([gl_YESNO],
 [
-  dnl Prerequisites of lib/yesno.c.
-  AC_CHECK_HEADERS_ONCE(stdlib.h)
+  dnl No prerequisites of lib/yesno.c.
+  :
 ])
 
 #serial 8 -*- autoconf -*-
@@ -5772,7 +5832,7 @@ AC_DEFUN([jm_FUNC_GLIBC_UNLOCKED_IO],
       getchar_unlocked putc_unlocked putchar_unlocked])
 ])
 
-#serial 20
+#serial 21
 
 dnl This macro is intended to be used solely in this file.
 dnl These are the prerequisite macros for GNU's strftime.c replacement.
@@ -5781,9 +5841,8 @@ AC_DEFUN([_jm_STRFTIME_PREREQS],
  dnl strftime.c uses the underyling system strftime if it exists.
  AC_FUNC_STRFTIME
 
- AC_CHECK_HEADERS_ONCE(limits.h)
- AC_CHECK_FUNCS_ONCE(memcpy mempcpy)
- AC_CHECK_FUNCS(tzset memset)
+ AC_CHECK_FUNCS_ONCE(mempcpy)
+ AC_CHECK_FUNCS(tzset)
 
  # This defines (or not) HAVE_TZNAME and HAVE_TM_ZONE.
  AC_STRUCT_TIMEZONE
@@ -5803,7 +5862,6 @@ AC_DEFUN([jm_FUNC_GNU_STRFTIME],
  _jm_STRFTIME_PREREQS
 
  AC_REQUIRE([AC_C_CONST])dnl
- AC_REQUIRE([AC_HEADER_STDC])dnl
  AC_CHECK_HEADERS_ONCE(sys/time.h)
  AC_DEFINE([my_strftime], [nstrftime],
    [Define to the name of the strftime replacement function.])
@@ -5877,7 +5935,7 @@ main ()
   fi
 ])
 
-#serial 4
+#serial 5
 
 dnl From Jim Meyering.
 dnl
@@ -5891,14 +5949,11 @@ dnl the wrapper functions that work around the problem.
 AC_DEFUN([AC_FUNC_GETTIMEOFDAY_CLOBBER],
 [
  AC_REQUIRE([AC_HEADER_TIME])
- AC_CHECK_HEADERS_ONCE(stdlib.h string.h)
  AC_CACHE_CHECK([whether gettimeofday clobbers localtime buffer],
   jm_cv_func_gettimeofday_clobber,
   [AC_TRY_RUN([
 #include <stdio.h>
-#if HAVE_STRING_H
-# include <string.h>
-#endif
+#include <string.h>
 
 #if TIME_WITH_SYS_TIME
 # include <sys/time.h>
@@ -5911,9 +5966,7 @@ AC_DEFUN([AC_FUNC_GETTIMEOFDAY_CLOBBER],
 # endif
 #endif
 
-#if HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
+#include <stdlib.h>
 
 int
 main ()
@@ -5960,7 +6013,7 @@ AC_DEFUN([gl_PREREQ_GETTIMEOFDAY], [
   AC_REQUIRE([AC_HEADER_TIME])
 ])
 
-#serial 9
+#serial 10
 
 dnl From Jim Meyering.
 dnl Determine whether lstat has the bug that it succeeds when given the
@@ -5984,8 +6037,7 @@ AC_DEFUN([jm_FUNC_LSTAT],
 AC_DEFUN([gl_PREREQ_LSTAT],
 [
   AC_REQUIRE([AC_HEADER_STAT])
-  AC_CHECK_HEADERS_ONCE(stdlib.h)
-  AC_CHECK_DECLS_ONCE(free)
+  :
 ])
 
 # memcmp.m4 serial 9
@@ -6229,7 +6281,7 @@ AC_DEFUN([jm_XSTRTOUMAX],
   AC_REQUIRE([gl_PREREQ_XSTRTOL])
 ])
 
-#serial 5
+#serial 6
 
 dnl From Volker Borchert.
 dnl Determine whether rename works for source paths with a trailing slash.
@@ -6274,11 +6326,7 @@ AC_DEFUN([vb_FUNC_RENAME],
 ])
 
 # Prerequisites of lib/rename.c.
-AC_DEFUN([gl_PREREQ_RENAME],
-[
-  AC_CHECK_HEADERS_ONCE(stdlib.h string.h)
-  AC_CHECK_DECLS_ONCE(free)
-])
+AC_DEFUN([gl_PREREQ_RENAME], [:])
 
 #serial 6
 
@@ -6578,20 +6626,6 @@ AC_DEFUN([gl_PREREQ_GROUP_MEMBER],
   AC_CHECK_HEADERS_ONCE(unistd.h)
   AC_REQUIRE([AC_FUNC_GETGROUPS])
 ])
-
-#serial 5
-
-AC_DEFUN([jm_AFS],
-  [
-    AC_MSG_CHECKING(for AFS)
-    if test -d /afs; then
-      AC_DEFINE(AFS, 1, [Define if you have the Andrew File System.])
-      ac_result=yes
-    else
-      ac_result=no
-    fi
-    AC_MSG_RESULT($ac_result)
-  ])
 
 #serial 3
 dnl Run a program to determine whether whether link(2) follows symlinks.
@@ -7032,7 +7066,7 @@ main ()
   fi
 ])
 
-#serial 6
+#serial 7
 
 dnl SunOS's readdir is broken in such a way that rm.c has to add extra code
 dnl to test whether a NULL return value really means there are no more files
@@ -7052,7 +7086,6 @@ dnl Written by Jim Meyering.
 AC_DEFUN([GL_FUNC_READDIR],
 [dnl
 AC_REQUIRE([AC_HEADER_DIRENT])
-AC_CHECK_HEADERS_ONCE(string.h)
 AC_CACHE_CHECK([for working readdir], gl_cv_func_working_readdir,
   [dnl
   # Arrange for deletion of the temporary directory this test creates, in
@@ -7062,9 +7095,7 @@ AC_CACHE_CHECK([for working readdir], gl_cv_func_working_readdir,
   AC_TRY_RUN(
 [#   include <stdio.h>
 #   include <sys/types.h>
-#   if HAVE_STRING_H
-#    include <string.h>
-#   endif
+#   include <string.h>
 
 #   ifdef HAVE_DIRENT_H
 #    include <dirent.h>

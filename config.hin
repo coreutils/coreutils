@@ -275,10 +275,6 @@
    don't. */
 #undef HAVE_DECL_STRTOIMAX
 
-/* Define to 1 if you have the declaration of `strtol', and to 0 if you don't.
-   */
-#undef HAVE_DECL_STRTOL
-
 /* Define to 1 if you have the declaration of `strtoll', and to 0 if you
    don't. */
 #undef HAVE_DECL_STRTOLL
@@ -325,9 +321,6 @@
 
 /* Define to 1 if you have the `dirfd' function. */
 #undef HAVE_DIRFD
-
-/* Define to 1 if you don't have `vprintf' but do have `_doprnt.' */
-#undef HAVE_DOPRNT
 
 /* Define to 1 if you have the `dup2' function. */
 #undef HAVE_DUP2
@@ -1086,9 +1079,6 @@
 
 /* Define to 1 if you have the `vasprintf' function. */
 #undef HAVE_VASPRINTF
-
-/* Define to 1 if you have the `vprintf' function. */
-#undef HAVE_VPRINTF
 
 /* Define to 1 if you have the <wchar.h> header file. */
 #undef HAVE_WCHAR_H
