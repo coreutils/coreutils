@@ -1,5 +1,11 @@
 2005-01-29  Eric Blake  <ebb9@byu.net>  (tiny change)
 
+	* .cvsignore: Ignore config.cache and config.status.lineno.
+	* src/stty.c [VSWTCH]: Some systems, like Cygwin, use VSWTC
+	instead of VSWTCH, for use with CSWTCH.
+
+2005-01-29  Eric Blake  <ebb9@byu.net>  (tiny change)
+
 	* tests/Makefile.am (.PHONY): Add check-root and root-hint.
 	* tests/rwx-to-mode: Ignore ACL designation.
 	* tests/setgid-check: Likewise.
