@@ -119,14 +119,6 @@ struct buffer_record
   struct buffer_record *next;
 };
 
-#ifndef __P
-# if PROTOTYPES
-#  define __P(Args) Args
-# else
-#  define __P(Args) ()
-# endif
-#endif
-
 int safe_read ();
 
 static void close_output_file __P ((void));

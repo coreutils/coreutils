@@ -179,14 +179,6 @@ typedef struct COLUMN COLUMN;
 
 #define NULLCOL (COLUMN *)0
 
-#ifndef __P
-# if PROTOTYPES
-#  define __P(Args) Args
-# else
-#  define __P(Args) ()
-# endif
-#endif
-
 static int char_to_clump __P ((int c));
 static int read_line __P ((COLUMN *p));
 static int print_page __P ((void));

@@ -142,14 +142,6 @@ struct Word
 
 /* Forward declarations.  */
 
-#ifndef __P
-# if PROTOTYPES
-#  define __P(Args) Args
-# else
-#  define __P(Args) ()
-# endif
-#endif
-
 static void set_prefix __P ((char *p));
 static void fmt __P ((FILE *f));
 static bool get_paragraph __P ((FILE *f));
