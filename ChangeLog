@@ -1,3 +1,10 @@
+2003-09-21  Paul Eggert  <eggert@twinsun.com>
+
+	* src/ptx.c: Switch encoding from Latin-1 to UTF-8.
+        (WRITTEN_BY): Change "Franc,ois" (actually using
+        c-with-cedilla in Latin-1) to "F.", so that it's ASCII, as
+        xgettext requires.
+
 2003-09-19  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.92.
