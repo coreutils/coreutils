@@ -1,4 +1,4 @@
-#serial 33   -*- autoconf -*-
+#serial 34   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -82,6 +82,11 @@ AC_DEFUN(jm_MACROS,
 
   AC_REPLACE_FUNCS(memchr memcpy memmove memrchr memset)
   AC_CHECK_FUNCS(getpagesize)
+
+  AC_REPLACE_FUNCS(mkstemp)
+  if test $ac_cv_func_mkstemp != yes; then
+    AC_LIBOBJ(tempname)
+  fi
 
   # By default, argmatch should fail calling usage (1).
   AC_DEFINE(ARGMATCH_DIE, [usage (1)],
