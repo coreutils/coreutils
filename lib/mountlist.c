@@ -155,6 +155,8 @@ xatoi (char *cp)
 /* Convert, in place, each unambiguous `\040' sequence in the NUL-terminated
    string, STR, to a single space.  `unambiguous' means that it must not be
    immediately preceded by an odd number of backslash characters.  */
+/* FIXME: should any other backslash-escaped sequences be translated?  */
+/* FIXME: is the backslash counting necessary?  */
 
 static void
 translate_040_to_space (char *str)
@@ -180,10 +182,10 @@ translate_040_to_space (char *str)
 	  continue;
 	}
 
-      /* We found an unambiguous `\040'.  Replace it with a space
-	 and move everything following it back by 3 bytes.
-         The source and destination regions may overlap, so we have
-	 to use memmove.  */
+      /* We found an unambiguous `\040'.  Replace the `/' with a space
+	 and shift the string after `040' so that it starts where the
+	 first zero was.  The source and destination regions may overlap,
+	 so use memmove.  */
       *backslash = ' ';
       str = backslash + 1;
       /* Be sure to copy the trailing NUL byte, too.  */
