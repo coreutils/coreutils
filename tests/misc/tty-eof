@@ -10,6 +10,9 @@ s test"
   ;;
 esac
 
+ARGV_0=$0
+export ARGV_0
+
 exec $PERL -w -- - <<\EOF
 
 # Ensure that cat exits upon a single EOF (^D) from a tty.
@@ -17,7 +20,7 @@ exec $PERL -w -- - <<\EOF
 # requiring no arguments and that write to standard output.
 use strict;
 
-(my $ME = $0) =~ s|.*/||;
+(my $ME = $ENV{ARGV_0}) =~ s|.*/||;
 
 eval { require Expect };
 $@ and (warn "$ME: this script requires Perl's Expect package\n"), exit 77;
