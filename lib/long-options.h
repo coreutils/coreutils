@@ -1,8 +1,8 @@
 #undef __P
 #if defined (__STDC__) && __STDC__
-#define __P(args) args
+# define __P(args) args
 #else
-#define __P(args) ()
+# define __P(args) ()
 #endif
 
 void
