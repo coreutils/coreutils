@@ -2,6 +2,9 @@
 
 	* Version 2.0.19.
 
+	* Makefile.cfg (wget_files): Remove ansi2knr.c, since it's
+	no longer available at that location.
+
 2001-12-03  Jim Meyering  <meyering@lucent.com>
 
 	* src/od.c, src/tail.c, src/tr.c (usage): I will not split translatable
