@@ -1,6 +1,23 @@
-2003-02-14  Jim Meyering  <jim@meyering.net>
+2003-02-19  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.8.
+
+2003-02-18  Jim Meyering  <jim@meyering.net>
+
+	cksum would perform an extra read after encountering EOF
+	* src/cksum.c (cksum): Exit the loop upon EOF, too.
+	Patch by Michael Bacarella.
+
+	Test for the bug fixed today in cksum, md5sum, and sha1sum.
+	* tests/misc/cat-tty-eof: Generalize, clean-up, and test for
+	cat, cksum, md5sum, and sha1sum all in the same loop.
+
+2003-02-17  Jim Meyering  <jim@meyering.net>
+
+	* src/cp.c (run): New function, preparing for ...
+	(main): Call it.
+
+2003-02-14  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c: Include "euidaccess.h".
 	Remove declaration of euidaccess.
