@@ -537,7 +537,7 @@ static struct bin_str color_indicator[] =
     { LEN_STR_PAIR ("01;33") },		/* bd: Block device: bright yellow */
     { LEN_STR_PAIR ("01;33") },		/* cd: Char device: bright yellow */
     { 0, NULL },			/* mi: Missing file: undefined */
-    { 0, NULL },			/* or: Orphanned symlink: undefined */
+    { 0, NULL },			/* or: Orphaned symlink: undefined */
     { LEN_STR_PAIR ("01;32") },		/* ex: Executable: bright green */
     { LEN_STR_PAIR ("01;35") }		/* do: Door: bright magenta */
   };
@@ -985,6 +985,16 @@ free_pending_ent (struct pending *p)
   free (p);
 }
 
+static bool
+is_colored (enum indicator_no type)
+{
+  size_t len = color_indicator[type].len;
+  char const *s = color_indicator[type].string;
+  return ! (len == 0
+	    || (len == 1 && strncmp (s, "0", 1) == 0)
+	    || (len == 2 && strncmp (s, "00", 2) == 0));
+}
+
 static void
 restore_default_color (void)
 {
@@ -1104,9 +1114,9 @@ main (int argc, char **argv)
   if (print_with_color)
     {
       /* Avoid following symbolic links when possible.  */
-      if (color_indicator[C_ORPHAN].string != NULL
-	  || (color_indicator[C_MISSING].string != NULL
-	      && format == long_format))
+      if (is_colored (C_ORPHAN)
+	  || is_colored (C_EXEC)
+	  || (is_colored (C_MISSING) && format == long_format))
 	check_symlink_color = true;
 
       /* If the standard output is a controlling terminal, watch out
@@ -2449,7 +2459,9 @@ gobble_file (const char *name, enum filetype type, bool explicit_arg,
 					highlighting files with the executable
 					bit set even when options like -F are
 					not specified.  */
-				     || print_with_color)))))
+				     || (print_with_color
+					 && is_colored (C_EXEC))
+				     )))))
 
     {
       /* `path' is the absolute pathname of this file.  */
