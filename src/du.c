@@ -114,7 +114,7 @@ static struct exclude *exclude;
 static uintmax_t tot_size = 0;
 
 /* Nonzero indicates that du should exit with EXIT_FAILURE upon completion.  */
-int G_fail;
+static int G_fail;
 
 #define IS_DIR_TYPE(Type)	\
   ((Type) == FTS_DP		\
