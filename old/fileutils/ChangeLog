@@ -1,3 +1,21 @@
+1999-12-13  Jim Meyering  <meyering@ascend.com>
+
+	* Version 4.0k.
+
+1999-12-12  Jim Meyering  <meyering@ascend.com>
+
+	Move 120+ lines of stat.h-related macros from system.h (not shared)
+	to sys2.h, which is shared between fileutils, sh-utils, textutils.
+	* src/system.h: Move them from here...
+	* src/sys2.h: ... to here.
+
+	* src/system.h (S_IRUSR, S_IRGRP, S_IWGRP, S_IROTH, S_IWOTH): Define
+	if not defined.  This was necessary on a NeXT Turbostation running
+	Mach 3.3.  Reported by Nelson H. F. Beebe.
+
+	* src/ls.c (usage):
+	Reported by Paul Slootman via Michael Stone.
+
 1999-12-09  Jim Meyering  <meyering@ascend.com>
 
 	* src/df.c (BLOCK_SIZE_OPTION, SYNC_OPTION, NO_SYNC_OPTION): Define

@@ -1,4 +1,6 @@
 Changes in release 4.1:
+[4.0l]
+* `ls -ul' and `ls -uc' sort by name once again, as they should
 [4.0k]
 * mv may now be used to move a file onto a symlink to itself when that
   symlink is on a separate partition.  With fileutils-4.0j, it would
