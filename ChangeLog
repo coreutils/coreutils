@@ -2,7 +2,7 @@
 
 	* Version 4.5.4.
 
-	* Makefile.maint (mail-gpg-sign-cookie): Make optional.
+	* Makefile.maint (mail_gpg_sign_cookie): Make optional.
 	(announcement): Use the new variable.
 
 	* Makefile.maint: Sync with Bison, i.e.:
