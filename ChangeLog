@@ -1,6 +1,13 @@
-2005-01-13  Jim Meyering  <jim@meyering.net>
+2005-01-14  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* tests/chown/separator (id_gn): Exit 77, not 1, for a test-framework
+	failure, so that doesn't cause `make check' to stop.  Nelson Beebe
+	reported that this test would fail with this diagnostic
+	`cannot find name for group ID 10' on one of his systems.
+
+2005-01-13  Jim Meyering  <jim@meyering.net>
 
 	* src/test.c (is_int): Don't overflow when evaluating integer
 	constants.  Before, ./test $(echo 2^64|bc) -eq 0 && echo FAIL
