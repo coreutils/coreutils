@@ -88,7 +88,6 @@ rm_option_init (struct rm_options *x)
 {
   x->unlink_dirs = 0;
 
-  /* FIXME: maybe this should be 1.  The POSIX spec doesn't specify.  */
   x->ignore_missing_files = 0;
 
   x->recursive = 1;
