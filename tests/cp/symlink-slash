@@ -1,0 +1,38 @@
+#!/bin/sh
+# Make sure that cp -dR dereferences a symlink arg if its name is
+# written with a trailing slash.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  cp --version
+fi
+
+tmp=t-cpsymsl.$$
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+mkdir dir || framework_failure=1
+ln -s dir symlink || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+fail=0
+cp -dR symlink/ s || fail=1
+set `ls -l s`
+
+# Prior to fileutils-4.0q, the following would have output ...`s -> dir'
+# because the trailing slash was removed unconditionally (now you have to
+# use the new --strip-trailing-slash option) causing cp to reproduce the
+# symlink.  Now, the trailing slash is interpreted by the stat library
+# call and so cp ends up dereferencing the symlink and copying the directory.
+test "$*" = 'total 0' && : || fail=1
+
+cd ..
+rm -rf $tmp
+
+exit $fail
