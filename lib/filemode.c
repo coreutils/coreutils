@@ -1,5 +1,5 @@
 /* filemode.c -- make a string describing file modes
-   Copyright (C) 1985, 1990, 1993, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1985, 1990, 1993, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -89,6 +89,9 @@
 #if !defined(S_ISNWK) && defined(S_IFNWK) /* HP/UX */
 # define S_ISNWK(m) (((m) & S_IFMT) == S_IFNWK)
 #endif
+#if !defined(S_ISDOOR) && defined(S_IFDOOR) /* Solaris 2.5 and up */
+# define S_ISDOOR(m) (((m) & S_IFMT) == S_IFDOOR)
+#endif
 
 /* Look at read, write, and execute bits in BITS and set
    flags in CHARS accordingly.  */
@@ -142,6 +145,7 @@ setst (short unsigned int bits, char *chars)
 /* Return a character indicating the type of file described by
    file mode BITS:
    'd' for directories
+   'D' for doors
    'b' for block special files
    'c' for character special files
    'm' for multiplexor files
@@ -184,6 +188,10 @@ ftypelet (long int bits)
 #ifdef S_ISNWK
   if (S_ISNWK (bits))
     return 'n';
+#endif
+#ifdef S_ISDOOR
+  if (S_ISDOOR (bits))
+    return 'D';
 #endif
 
   /* The following two tests are for Cray DMF (Data Migration
