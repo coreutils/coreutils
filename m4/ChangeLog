@@ -1,5 +1,9 @@
 2000-01-19  Jim Meyering  <meyering@lucent.com>
 
+	* nanosleep.m4 (jm_FUNC_NANOSLEEP): Include <sys/time.h>, too.
+	Use AC_HEADER_TIME.  Volker Borchert reported that OpenBSD-2.3/sparc
+	defines `struct timespec' in <sys/time.h>
+
 	* c-bs-a.m4: Remove uses of changequote altogether.
 	Thanks to Akim for explaining.
 
