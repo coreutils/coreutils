@@ -254,6 +254,14 @@ fold_file (filename, width)
 		  goto rescan;
 		}
 	    }
+	  else
+	    {
+	      if (offset_out == 0)
+		{
+		  line_out[offset_out++] = c;
+		  continue;
+		}
+	    }
 	  line_out[offset_out++] = '\n';
 	  fwrite (line_out, sizeof (char), offset_out, stdout);
 	  column = offset_out = 0;

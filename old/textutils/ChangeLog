@@ -1,3 +1,12 @@
+Tue Nov 02 00:53:41 1993  Jim Meyering  (meyering@comco.com)
+
+	* fold.c (fold_file): Don't get stuck in an endless loop when
+	width is smaller than 8 and there are TABs in the input.
+
+Sat Oct 30 15:31:28 1993  Jim Meyering  (meyering@comco.com)
+
+	* join.c: Remove now-unused dcls of show_help and show_version.
+
 Fri Oct 29 13:58:50 1993  Jim Meyering  (meyering@comco.com)
 
 	* csplit.c [INT_MAX]: Make sure it's defined.

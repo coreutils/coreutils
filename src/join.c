@@ -105,12 +105,6 @@ static struct outlist *outlist_end;
    tab character. */
 static char tab;
 
-/* If non-zero, display usage information and exit.  */
-static int show_help;
-
-/* If non-zero, print the version on standard output then exit.  */
-static int show_version;
-
 /* When using getopt_long_only, no long option can start with
    a character that is a short option. */
 static struct option const longopts[] =
