@@ -1,6 +1,6 @@
 /* uname -- print system information
 
-   Copyright 1989, 1992, 1993, 1996, 1997, 1999, 2000, 2001, 2002 Free
+   Copyright 1989, 1992, 1993, 1996, 1997, 1999, 2000, 2001, 2002, 2003 Free
    Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -210,8 +210,11 @@ main (int argc, char **argv)
 	}
     }
 
-  if (optind != argc)
-    usage (EXIT_FAILURE);
+  if (argc < optind)
+    {
+      error (0, 0, _("too many arguments"));
+      usage (EXIT_FAILURE);
+    }
 
   if (toprint == 0)
     toprint = PRINT_KERNEL_NAME;
