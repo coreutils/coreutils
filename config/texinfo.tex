@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2003-03-07.10}
+\def\texinfoversion{2003-03-22.08}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
@@ -5799,8 +5799,8 @@ width0pt\relax} \fi
 
 % @node's job is to define \lastnode.
 \def\node{\ENVcheck\parsearg\nodezzz}
-\def\nodezzz#1{\nodexxx [#1,]}
-\def\nodexxx[#1,#2]{\gdef\lastnode{#1}}
+\def\nodezzz#1{\nodexxx #1,\finishnodeparse}
+\def\nodexxx#1,#2\finishnodeparse{\gdef\lastnode{#1}}
 \let\nwnode=\node
 \let\lastnode=\relax
 
@@ -5928,13 +5928,24 @@ width0pt\relax} \fi
      \setbox2 = \hbox{\ignorespaces \refx{#1-snt}{}}%
      \ifdim \wd2 > 0pt \refx{#1-snt}\space\fi
     }%
-    % [mynode],
-    [\printednodename],\space
-    % page 3
+    % output the `[mynode]' via a macro.
+    \xrefprintnodename\printednodename
+    %
+    % But we always want a comma and a space:
+    ,\space
+    %
+    % output the `page 3'.
     \turnoffactive \otherbackslash \putwordpage\tie\refx{#1-pg}{}%
   \fi
   \endlink
 \endgroup}
+
+% This macro is called from \xrefX for the `[nodename]' part of xref
+% output.  It's a separate macro only so it can be changed more easily,
+% since not square brackets don't work in some documents.  Particularly
+% one that Bob is working on :).
+% 
+\def\xrefprintnodename#1{[#1]}
 
 % \dosetq is called from \setref to do the actual \write (\iflinks).
 %
