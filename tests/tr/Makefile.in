@@ -38,8 +38,9 @@ INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 transform = @program_transform_name@
 
-AUTOMAKE_OPTIONS = 1.0
+AUTOMAKE_OPTIONS = 1.1c
 
+x = tr
 in = \
   t1.in t2.in t3.in t4.in t5.in t6.in t7.in t8.in t9.in tA.in tB.in \
   tC.in tD.in tE.in tF.in tG.in tH.in tI.in tR0.0.in tR0.1.in tR1.0.in \
@@ -51,17 +52,17 @@ exp = $(in:.in=.exp)
 out = $(in:.in=.out)
 err = $(in:.in=.err)
 
-EXTRA_DIST = build-script.pl Trtest.pm $(in) $(exp)
-noinst_SCRIPTS = tr-tests
+EXTRA_DIST = build-script.pl Test.pm $(in) $(exp)
+noinst_SCRIPTS = $x-tests
 
 PERL = @PERL@
 editpl = sed -e 's,@''PERL''@,$(PERL),g' -e 's,@''srcdir''@,@srcdir@,g'
 
-TESTS = tr-tests
+TESTS = $x-tests
 
 SUFFIXES = .pl
 
-MAINTAINERCLEANFILES = tr-tests $(in) $(exp)
+MAINTAINERCLEANFILES = $x-tests $(in) $(exp)
 CLEANFILES = $(out) $(err)
 mkinstalldirs = $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
@@ -177,8 +178,8 @@ mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 
-tr-tests: build-script Trtest.pm
-	./build-script > $@.n
+$x-tests: build-script Test.pm
+	./build-script ../../src/$x > $@.n
 	mv $@.n $@
 	chmod 755 $@
 
