@@ -6,7 +6,7 @@
 
 	* ftw.c (FTW_STAT): Rename from `STAT', to avoid conflict
 	with STAT definition from <sys/dir.h> on AIX 5.1.
-	Suggestion from Mike Jetzer.
+	Suggestion from Mike Jetzer and Petter Reinholdtsen.
 
 	* fchown-stub.c (fchown): Put function type on its own line.
 	* readlink-stub.c (readlink): Likewise.
