@@ -1,5 +1,5 @@
 Changes in release 3.14:
- [3.13h]
+ [3.13i]
 * ls -l honors current locale with respect to abbreviated month names (and,
   with --full-time day names) on systems with a locale-sensitive strftime
   function, e.g., ones based on recent versions of the GNU C library
