@@ -1,3 +1,8 @@
+2000-10-25  Jim Meyering  <meyering@lucent.com>
+
+	* src/dirname.c: Include dirname.h.
+	(main): Use dir_name_r rather than open-coding it.
+
 2000-10-23  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.am (EXTRA_DIST): Add .prev-version.
