@@ -1,3 +1,10 @@
+2003-11-24  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (Traversing symlinks, Treating / specially):
+	New sections.
+	(rm invocation, chown invocation, chmod invocation, chgrp invocation):
+	Describe new options, --preserve-root and --no-preserve-root.
+
 2003-11-11  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (chown invocation) [chownchgrpoptions]: New macro
