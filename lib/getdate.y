@@ -682,7 +682,7 @@ RelativeMonth (Start, RelMonth)
   if (RelMonth == 0)
     return 0;
   tm = localtime (&Start);
-  Month = 12 * tm->tm_year + tm->tm_mon + RelMonth;
+  Month = 12 * (1900 + tm->tm_year) + tm->tm_mon + RelMonth;
   Year = Month / 12;
   Month = Month % 12 + 1;
   return DSTcorrect (Start,
@@ -745,7 +745,7 @@ LookupWord (buff)
       return tp->type;
     }
 
-  if (strcmp (buff, "dst") == 0) 
+  if (strcmp (buff, "dst") == 0)
     return tDST;
 
   for (tp = UnitsTable; tp->name; tp++)
@@ -896,7 +896,7 @@ get_date (p, now)
 
     if (! (tm = localtime (&ftz.time)))
       return -1;
-	
+
     ftz.timezone = difftm (&gmt, tm) / 60;
     if (tm->tm_isdst)
       ftz.timezone += 60;
