@@ -30,6 +30,7 @@
 #include "error.h"
 #include "full-write.h"
 #include "getpagesize.h"
+#include "human.h"
 #include "inttostr.h"
 #include "long-options.h"
 #include "quote.h"
@@ -139,6 +140,12 @@ static uintmax_t r_partial = 0;
 
 /* Number of full blocks read. */
 static uintmax_t r_full = 0;
+
+/* Number of bytes written.  */
+static uintmax_t w_bytes = 0;
+
+/* Time that dd started.  */
+static struct timespec start_time;
 
 /* True if input is seekable.  */
 static bool input_seekable;
@@ -402,14 +409,14 @@ Each FLAG symbol may be:\n\
 	fputs (_("  nofollow  do not follow symlinks\n"), stdout);
       fputs (_("\
 \n\
-Note that sending a SIGUSR1 signal to a running `dd' process makes it\n\
-print to standard error the number of records read and written so far,\n\
-then to resume copying.\n\
+Sending a SIGUSR1 signal to a running `dd' process makes it\n\
+print I/O statistics to standard error, then to resume copying.\n\
 \n\
   $ dd if=/dev/zero of=/dev/null& pid=$!\n\
   $ kill -USR1 $pid; sleep 1; kill $pid\n\
-  10899206+0 records in\n\
-  10899206+0 records out\n\
+  10807656+0 records in\n\
+  10807656+0 records out\n\
+  5.5GB copied in 20.8225s (266MB/s)\n\
 \n\
 Options are:\n\
 \n\
@@ -442,7 +449,16 @@ multiple_bits_set (int i)
 static void
 print_stats (void)
 {
-  char buf[2][INT_BUFSIZE_BOUND (uintmax_t)];
+  char buf[2][MAX (INT_BUFSIZE_BOUND (uintmax_t), LONGEST_HUMAN_READABLE + 1)];
+  struct timespec now;
+  int human_opts =
+    human_autoscale | human_round_to_nearest | human_SI | human_B;
+  uintmax_t start_sec = start_time.tv_sec;
+  enum { BILLION = 1000000000 };
+  double delta_s;
+  char const *bytes_per_second;
+
+  gettime (&now);
   fprintf (stderr, _("%s+%s records in\n"),
 	   umaxtostr (r_full, buf[0]), umaxtostr (r_partial, buf[1]));
   fprintf (stderr, _("%s+%s records out\n"),
@@ -455,18 +471,49 @@ print_stats (void)
 		? _("truncated record")
 		: _("truncated records")));
     }
+
+  /* Use integer arithmetic to compute the transfer rate if possible,
+     since that makes it easy to use SI abbreviations; otherwise, fall
+     back on floating-point without abbreviations.  */
+
+  if ((start_time.tv_sec < now.tv_sec
+       || (start_time.tv_sec == now.tv_sec
+	   && start_time.tv_nsec < now.tv_nsec))
+      && now.tv_sec - start_sec < UINTMAX_MAX / BILLION)
+    {
+      uintmax_t delta_ns = (BILLION * (now.tv_sec - start_sec)
+			    + now.tv_nsec - start_time.tv_nsec);
+      delta_s = delta_ns / 1e9;
+      bytes_per_second = human_readable (w_bytes, buf[1], human_opts,
+					 BILLION, delta_ns);
+    }
+  else
+    {
+      delta_s = now.tv_sec;
+      delta_s -= start_time.tv_sec;
+      delta_s += 1e-9 * (now.tv_nsec - start_time.tv_nsec);
+      if (0 < delta_s)
+	sprintf (buf[1], "%gB", w_bytes / delta_s);
+      else
+	sprintf (buf[1], "%s B", _("Infinity"));
+      bytes_per_second = buf[1];
+    }
+
+  fprintf (stderr, _("%s copied in %gs (%s/s)\n"),
+	   human_readable (w_bytes, buf[0], human_opts, 1, 1),
+	   delta_s, bytes_per_second);
 }
 
 static void
 cleanup (void)
 {
-  print_stats ();
   if (close (STDIN_FILENO) < 0)
     error (EXIT_FAILURE, errno,
 	   _("closing input file %s"), quote (input_file));
   if (close (STDOUT_FILENO) < 0)
     error (EXIT_FAILURE, errno,
 	   _("closing output file %s"), quote (output_file));
+  print_stats ();
 }
 
 static inline void
@@ -548,6 +595,7 @@ static void
 write_output (void)
 {
   size_t nwritten = full_write (STDOUT_FILENO, obuf, output_blocksize);
+  w_bytes += nwritten;
   if (nwritten != output_blocksize)
     {
       error (0, errno, _("writing to %s"), quote (output_file));
@@ -1238,6 +1286,7 @@ dd_copy (void)
       if (ibuf == obuf)		/* If not C_TWOBUFS. */
 	{
 	  size_t nwritten = full_write (STDOUT_FILENO, obuf, n_bytes_read);
+	  w_bytes += nwritten;
 	  if (nwritten != n_bytes_read)
 	    {
 	      error (0, errno, _("writing %s"), quote (output_file));
@@ -1297,6 +1346,7 @@ dd_copy (void)
   if (oc != 0)
     {
       size_t nwritten = full_write (STDOUT_FILENO, obuf, oc);
+      w_bytes += nwritten;
       if (nwritten != 0)
 	w_partial++;
       if (nwritten != oc)
@@ -1449,6 +1499,8 @@ main (int argc, char **argv)
   install_handler (SIGQUIT, interrupt_handler);
   install_handler (SIGPIPE, interrupt_handler);
   install_handler (SIGINFO, siginfo_handler);
+
+  gettime (&start_time);
 
   exit_status = dd_copy ();
 
