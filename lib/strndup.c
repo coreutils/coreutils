@@ -31,6 +31,13 @@
 char *malloc ();
 #endif
 
+#ifndef HAVE_DECL_STRNLEN
+"this configure-time declaration test was not run"
+#endif
+#if !HAVE_DECL_STRNLEN
+size_t strnlen ();
+#endif
+
 #undef __strndup
 #undef strndup
 
