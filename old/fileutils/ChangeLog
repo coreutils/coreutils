@@ -1,3 +1,8 @@
+1998-11-05  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/mktime.c (__mktime_internal): Adopt the traditional (and
+	problematic) notion of what to do when tm_isdst doesn't match.
+
 1999-01-17  Jim Meyering  <meyering@ascend.com>
 
 	* tests/cp/Makefile.am (TESTS_ENVIRONMENT): Set PATH here, rather
