@@ -628,6 +628,7 @@ main (argc, argv)
   struct termios new_mode;
   enum output_type output_type = changed;
   int optc;
+  int require_set_attr;
 
   program_name = argv[0];
   opterr = 0;
@@ -683,6 +684,7 @@ done:;
       exit (0);
     }
 
+  require_set_attr = 0;
   while (optind < argc)
     {
       int match_found = 0;
@@ -699,6 +701,7 @@ done:;
 	  if (!strcmp (argv[optind], mode_info[i].name))
 	    {
 	      match_found = set_mode (&mode_info[i], reversed, &mode);
+	      require_set_attr = 1;
 	      break;
 	    }
 	}
@@ -721,6 +724,7 @@ done:;
 		  match_found = 1;
 		  ++optind;
 		  set_control_char (&control_info[i], argv[optind], &mode);
+		  require_set_attr = 1;
 		  break;
 		}
 	    }
@@ -736,6 +740,7 @@ done:;
 		}
 	      ++optind;
 	      set_speed (input_speed, argv[optind], &mode);
+	      require_set_attr = 1;
 	    }
 	  else if (!strcmp (argv[optind], "ospeed"))
 	    {
@@ -746,6 +751,7 @@ done:;
 		}
 	      ++optind;
 	      set_speed (output_speed, argv[optind], &mode);
+	      require_set_attr = 1;
 	    }
 #ifdef TIOCGWINSZ
 	  else if (!strcmp (argv[optind], "rows"))
@@ -782,46 +788,58 @@ done:;
 		}
 	      ++optind;
 	      mode.c_line = integer_arg (argv[optind]);
+	      require_set_attr = 1;
 	    }
 #endif
 	  else if (!strcmp (argv[optind], "speed"))
 	    display_speed (&mode, 0);
 	  else if (string_to_baud (argv[optind]) != (speed_t) -1)
-	    set_speed (both_speeds, argv[optind], &mode);
-	  else if (recover_mode (argv[optind], &mode) == 0)
 	    {
-	      error (0, 0, "invalid argument `%s'", argv[optind]);
-	      usage (1);
+	      set_speed (both_speeds, argv[optind], &mode);
+	      require_set_attr = 1;
+	    }
+	  else
+	    {
+	      if (recover_mode (argv[optind], &mode) == 0)
+		{
+		  error (0, 0, "invalid argument `%s'", argv[optind]);
+		  usage (1);
+		}
+	      require_set_attr = 1;
 	    }
 	}
       optind++;
     }
 
-  if (tcsetattr (0, TCSADRAIN, &mode))
-    error (1, errno, "standard input");
+  if (require_set_attr)
+    {
+      if (tcsetattr (0, TCSADRAIN, &mode))
+	error (1, errno, "standard input");
 
-  /* POSIX (according to Zlotnick's book) tcsetattr returns zero if it
-     performs *any* of the requested operations.  This means it can report
-     `success' when it has actually failed to perform some proper subset
-     of the requested operations.  To detect this partial failure, get the
-     current terminal attributes and compare them to the requested ones.  */
+      /* POSIX (according to Zlotnick's book) tcsetattr returns zero if
+	 it performs *any* of the requested operations.  This means it
+	 can report `success' when it has actually failed to perform
+	 some proper subset of the requested operations.  To detect
+	 this partial failure, get the current terminal attributes and
+	 compare them to the requested ones.  */
 
-  /* Initialize to all zeroes so there is no risk memcmp will report a
-     spurious difference in uninitialized portion of the structure.  */
-  bzero (&new_mode, sizeof (new_mode));
-  if (tcgetattr (0, &new_mode))
-    error (1, errno, "standard input");
+      /* Initialize to all zeroes so there is no risk memcmp will report a
+	 spurious difference in an uninitialized portion of the structure.  */
+      bzero (&new_mode, sizeof (new_mode));
+      if (tcgetattr (0, &new_mode))
+	error (1, errno, "standard input");
 
-  /* Normally, one shouldn't use memcmp to compare structures that
-     may have `holes' containing uninitialized data, but we have been
-     careful to initialize the storage of these two variables to all
-     zeroes.  One might think it more efficient simply to compare the
-     modified fields, but that would require enumerating those fields --
-     and not all systems have the same fields in this structure.  */
+      /* Normally, one shouldn't use memcmp to compare structures that
+	 may have `holes' containing uninitialized data, but we have been
+	 careful to initialize the storage of these two variables to all
+	 zeroes.  One might think it more efficient simply to compare the
+	 modified fields, but that would require enumerating those fields --
+	 and not all systems have the same fields in this structure.  */
 
-  if (memcmp (&mode, &new_mode, sizeof (mode)) != 0)
-    error (1, 0,
-	   "standard input: unable to perform all requested operations");
+      if (memcmp (&mode, &new_mode, sizeof (mode)) != 0)
+	error (1, 0,
+	       "standard input: unable to perform all requested operations");
+    }
 
   exit (0);
 }
