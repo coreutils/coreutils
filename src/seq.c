@@ -1,5 +1,5 @@
 /* seq - print sequence of numbers to standard output.
-   Copyright (C) 1994-2003 Free Software Foundation, Inc.
+   Copyright (C) 1994-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -74,7 +74,7 @@ static struct option const long_options[] =
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -176,7 +176,7 @@ valid_format (const char *fmt)
 
 /* Actually print the sequence of numbers in the specified range, with the
    given or default stepping and format.  */
-static int
+static void
 print_numbers (const char *fmt)
 {
   int i;
@@ -193,8 +193,6 @@ print_numbers (const char *fmt)
 
   if (i)
     fputs (terminator, stdout);
-
-  return 0;
 }
 
 #if HAVE_RINT && HAVE_MODF && HAVE_FLOOR
@@ -297,7 +295,6 @@ get_width_format (void)
 int
 main (int argc, char **argv)
 {
-  int errs;
   int optc;
 
   /* The printf(3) format used for output.  */
@@ -417,7 +414,7 @@ format string may not be specified when printing equal width strings"));
 	format_str = "%g";
     }
 
-  errs = print_numbers (format_str);
+  print_numbers (format_str);
 
-  exit (errs);
+  exit (EXIT_SUCCESS);
 }
