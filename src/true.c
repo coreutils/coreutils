@@ -14,10 +14,11 @@ void
 usage (int status)
 {
   printf (_("\
-Usage: %s\n\
+Usage: %s [ignored command line arguments]\n\
   or:  %s OPTION\n\
 Exit with a status code indicating success.\n\
-These option names may not be abbreviated.
+\n\
+These option names may not be abbreviated.\n\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
