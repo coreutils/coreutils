@@ -2,6 +2,8 @@
 
 	* Version 5.0.92.
 
+	* src/chown-core.c (change_file_owner): Remove set-but-not-used local.
+
 	* src/du.c (du_files): Mark diagnostic for translation.
 
 2003-10-04  Jim Meyering  <jim@meyering.net>
