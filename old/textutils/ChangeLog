@@ -1,3 +1,21 @@
+2001-08-13  Jim Meyering  <meyering@lucent.com>
+
+	* src/cat.c (AUTHORS): Mark string for translation, since it
+	contains the English word `and'.
+	* src/comm.c: Likewise
+	* src/csplit.c: Likewise
+	* src/cut.c: Likewise
+	* src/md5sum.c: Likewise
+	* src/nl.c: Likewise
+	* src/paste.c: Likewise
+	* src/pr.c: Likewise
+	* src/sort.c: Likewise
+	* src/split.c: Likewise
+	* src/sum.c: Likewise
+	* src/tac.c: Likewise
+	* src/uniq.c: Likewise
+	* src/wc.c: Likewise
+
 2001-08-12  Jim Meyering  <meyering@lucent.com>
 
 	* tests/mk-script ($program_name): Define.
