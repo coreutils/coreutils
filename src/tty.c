@@ -99,10 +99,10 @@ main (argc, argv)
       if (tty)
 	puts (tty);
       else
-	puts ("not a tty");
+	puts (_("not a tty"));
 
       if (ferror (stdout) || fclose (stdout) == EOF)
-	error (3, errno, "standard output");
+	error (3, errno, _("standard output"));
     }
 
   exit (isatty (0) ? 0 : 1);
@@ -113,18 +113,18 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]...\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]...\n"), program_name);
+      printf (_("\
 Print the file name of the terminal connected to standard input.\n\
 \n\
   -s, --silent, --quiet   print nothing, only return an exit status\n\
       --help              display this help and exit\n\
       --version           output version information and exit\n\
-");
+"));
     }
   exit (status);
 }

@@ -45,20 +45,20 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [NUMBER]\n\
   or:  %s OPTION\n\
-",
+"),
 	      program_name, program_name);
-      printf ("\
+      printf (_("\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
-");
+"));
     }
   exit (status);
 }
@@ -153,7 +153,7 @@ main (argc, argv)
 
   if (argc > 2)
     {
-      error (0, 0, "too many arguments");
+      error (0, 0, _("too many arguments"));
       usage (1);
     }
 
@@ -165,7 +165,7 @@ main (argc, argv)
     }
   else
     {
-      fprintf (stderr, "Usage: %s [number]\n", argv[0]);
+      fprintf (stderr, _("Usage: %s [number]\n"), argv[0]);
       exit (1);
     }
   exit (0);

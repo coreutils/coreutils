@@ -72,14 +72,14 @@ usage (status)
      int status;
 {
   if (status != 0)
-    (void) fprintf (stderr, "Try `%s --help' for more information.\n",
+    (void) fprintf (stderr, _("Try `%s --help' for more information.\n"),
 		    program_name);
   else
     {
-      (void) printf ("\
+      (void) printf (_("\
 Usage: %s [OPTION]... [from [step]] to\n\
-", program_name);
-      (void) printf ("\
+"), program_name);
+      (void) printf (_("\
 \n\
   -f, --format FORMAT      use printf(3) style FORMAT (default: %%g)\n\
       --help               display this help and exit\n\
@@ -90,7 +90,7 @@ Usage: %s [OPTION]... [from [step]] to\n\
   FROM, STEP, TO are interpreted as floating point.  STEP should be > 0 if\n\
   FROM is smaller than TO and vice versa.  When given, the FORMAT argument\n\
   must contain exactly one of the float output formats %%e, %%f, or %%g.\n\
-");
+"));
     }
   exit (status);
 }
@@ -160,7 +160,7 @@ main (argc, argv)
 
   if (optind >= argc)
     {
-      error (0, 0, "too few arguments");
+      error (0, 0, _("too few arguments"));
       usage (1);
       /* NOTREACHED */
     }
@@ -187,8 +187,8 @@ main (argc, argv)
 
   if (format_str != NULL && equal_width)
     {
-      error (0, 0,
-       "format string may not be specified when printing equal width strings");
+      error (0, 0, _("\
+format string may not be specified when printing equal width strings"));
       usage (1);
     }
 
@@ -201,7 +201,7 @@ main (argc, argv)
     {
       if (!check_format (format_str))
 	{
-	  error (0, 0, "invalid format string: `%s'", format_str);
+	  error (0, 0, _("invalid format string: `%s'"), format_str);
 	  usage (1);
 	}
     }
@@ -233,7 +233,7 @@ scan_double_arg (arg)
   ret_val = strtod (arg, &end_ptr);
   if (end_ptr == arg || *end_ptr != '\0')
     {
-      error (0, 0, "invalid float argument: %s", arg);
+      error (0, 0, _("invalid float argument: %s"), arg);
       usage (1);
       /* NOTREACHED */
     }
@@ -390,7 +390,7 @@ print_numbers (format_str)
     {
       if (step >= 0)
 	{
-	  error (0, 0, "invalid increment: %g", step);
+	  error (0, 0, _("invalid increment: %g"), step);
 	  usage (1);
 	  /* NOTREACHED */
 	}
@@ -411,7 +411,7 @@ print_numbers (format_str)
     {
       if (step <= 0)
 	{
-	  error (0, 0, "invalid increment: %g", step);
+	  error (0, 0, _("invalid increment: %g"), step);
 	  usage (1);
 	  /* NOTREACHED */
 	}

@@ -59,16 +59,16 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... [VARIABLE]...\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]... [VARIABLE]...\n"), program_name);
+      printf (_("\
 If no environment VARIABLE specified, print them all.\n\
 \n\
   --help      display this help and exit\n\
-  --version   output version information and exit\n");
+  --version   output version information and exit\n"));
     }
   exit (status);
 }
@@ -137,7 +137,7 @@ main (argc, argv)
     }
 
   if (ferror (stdout) || fclose (stdout) == EOF)
-    error (2, errno, "standard output");
+    error (2, errno, _("standard output"));
 
   exit (exit_status);
 }

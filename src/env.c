@@ -186,13 +186,14 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... [-] [NAME=VALUE]... [COMMAND [ARG]...]\n",
+      printf (_("\
+Usage: %s [OPTION]... [-] [NAME=VALUE]... [COMMAND [ARG]...]\n"),
 	      program_name);
-      printf ("\
+      printf (_("\
 Set each NAME to VALUE in the environment and run COMMAND.\n\
 \n\
   -u, --unset=NAME           remove variable from the environment\n\
@@ -201,7 +202,7 @@ Set each NAME to VALUE in the environment and run COMMAND.\n\
       --version              output version information and exit\n\
 \n\
 A mere - implies -i.  If no COMMAND, print the resulting environment.\n\
-");
+"));
     }
   exit (status);
 }

@@ -61,19 +61,19 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... [FILE]...\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]... [FILE]...\n"), program_name);
+      printf (_("\
 Copy standard input to each FILE, and also to standard output.\n\
 \n\
   -a, --append              append to the given FILEs, do not overwrite\n\
   -i, --ignore-interrupts   ignore interrupt signals\n\
       --help                display this help and exit\n\
       --version             output version information and exit\n\
-");
+"));
     }
   exit (status);
 }
@@ -136,9 +136,9 @@ main (argc, argv)
 
   errs = tee (argc - optind, (const char **) &argv[optind]);
   if (close (0) != 0)
-    error (1, errno, "standard input");
+    error (1, errno, _("standard input"));
   if (close (1) != 0)
-    error (1, errno, "standard output");
+    error (1, errno, _("standard output"));
   exit (errs);
 }
 
@@ -171,7 +171,7 @@ tee (nfiles, files)
   /* In the array of NFILES + 1 descriptors, make
      the first one correspond to standard output.   */
   descriptors[0] = 1;
-  files[0] = "standard output";
+  files[0] = _("standard output");
 
   for (i = 1; i <= nfiles; i++)
     {
@@ -212,7 +212,7 @@ tee (nfiles, files)
 
   if (bytes_read == -1)
     {
-      error (0, errno, "read error");
+      error (0, errno, _("read error"));
       ret = 1;
     }
 

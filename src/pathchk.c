@@ -151,7 +151,7 @@ main (argc, argv)
 
   if (optind == argc)
     {
-      error (0, 0, "too few arguments");
+      error (0, 0, _("too few arguments"));
       usage (1);
     }
 
@@ -195,7 +195,7 @@ portable_chars_only (path)
   for (p = path; *p; ++p)
     if (portable_chars[(const unsigned char) *p] == 0)
       {
-	error (0, 0, "path `%s' contains nonportable character `%c'",
+	error (0, 0, _("path `%s' contains nonportable character `%c'"),
 	       path, *p);
 	return 0;
       }
@@ -216,7 +216,7 @@ dir_ok (path)
 
   if (!S_ISDIR (stats.st_mode))
     {
-      error (0, 0, "`%s' is not a directory", path);
+      error (0, 0, _("`%s' is not a directory"), path);
       return 0;
     }
 
@@ -227,7 +227,7 @@ dir_ok (path)
   if (access (path, X_OK) != 0)
     {
       if (errno == EACCES)
-	error (0, 0, "directory `%s' is not searchable", path);
+	error (0, 0, _("directory `%s' is not searchable"), path);
       else
 	error (0, errno, "%s", path);
       return 0;
@@ -321,7 +321,7 @@ validate_path (path, portability)
 	name_max = _POSIX_NAME_MAX;
       if (length > name_max)
 	{
-	  error (0, 0, "name `%s' has length %d; exceeds limit of %d",
+	  error (0, 0, _("name `%s' has length %d; exceeds limit of %d"),
 		 start, length, name_max);
 	  free (parent);
 	  return 1;
@@ -347,7 +347,7 @@ validate_path (path, portability)
   free (parent);
   if (strlen (path) > path_max)
     {
-      error (0, 0, "path `%s' has length %d; exceeds limit of %d",
+      error (0, 0, _("path `%s' has length %d; exceeds limit of %d"),
 	     path, strlen (path), path_max);
       return 1;
     }
@@ -360,18 +360,18 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... NAME...\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]... NAME...\n"), program_name);
+      printf (_("\
 Diagnose unportable constructs in NAME.\n\
 \n\
   -p, --portability   check for all POSIX systems, not only this one\n\
       --help          display this help and exit\n\
       --version       output version information and exit\n\
-");
+"));
     }
   exit (status);
 }

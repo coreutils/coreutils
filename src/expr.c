@@ -93,22 +93,22 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s EXPRESSION\n\
   or:  %s OPTION\n\
-",
+"),
 	      program_name, program_name);
-      printf ("\
+      printf (_("\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
 \n\
-");
-      printf ("\
+"));
+      printf (_("\
 Print the value of EXPRESSION to standard output.  A blank line below\n\
 separates increasing precedence groups.  EXPRESSION may be:\n\
 \n\
@@ -138,14 +138,14 @@ separates increasing precedence groups.  EXPRESSION may be:\n\
   length STRING              length of STRING\n\
 \n\
   ( EXPRESSION )             value of EXPRESSION\n\
-");
-      printf ("\
+"));
+      printf (_("\
 \n\
 Beware that many operators need to be escaped or quoted for shells.\n\
 Comparisons are arithmetic if both ARGs are numbers, else lexicographical.\n\
 Pattern matches return the string matched between \\( and \\) or null; if\n\
 \\( and \\) are not used, they return the number of characters matched or 0.\n\
-");
+"));
     }
   exit (status);
 }
@@ -163,7 +163,7 @@ main (argc, argv)
 
   if (argc == 1)
     {
-      error (0, 0, "too few arguments");
+      error (0, 0, _("too few arguments"));
       usage (1);
     }
 
@@ -171,7 +171,7 @@ main (argc, argv)
 
   v = eval ();
   if (!nomoreargs ())
-    error (2, 0, "syntax error");
+    error (2, 0, _("syntax error"));
   printv (v);
 
   exit (null (v));
@@ -374,7 +374,7 @@ static						\
 int name (l, r) VALUE *l; VALUE *r;		\
 {						\
   if (!toarith (l) || !toarith (r))		\
-    error (2, 0, "non-numeric argument");	\
+    error (2, 0, _("non-numeric argument"));	\
   return l->u.i op r->u.i;			\
 }
 
@@ -382,9 +382,9 @@ int name (l, r) VALUE *l; VALUE *r;		\
 int name (l, r) VALUE *l; VALUE *r;		\
 {						\
   if (!toarith (l) || !toarith (r))		\
-    error (2, 0, "non-numeric argument");	\
+    error (2, 0, _("non-numeric argument"));	\
   if (r->u.i == 0)				\
-    error (2, 0, "division by zero");		\
+    error (2, 0, _("division by zero"));		\
   return l->u.i op r->u.i;			\
 }
 
@@ -476,20 +476,20 @@ eval7 ()
   trace ("eval7");
 #endif
   if (nomoreargs ())
-    error (2, 0, "syntax error");
+    error (2, 0, _("syntax error"));
 
   if (nextarg ("("))
     {
       args++;
       v = eval ();
       if (!nextarg (")"))
-	error (2, 0, "syntax error");
+	error (2, 0, _("syntax error"));
       args++;
       return v;
     }
 
   if (nextarg (")"))
-    error (2, 0, "syntax error");
+    error (2, 0, _("syntax error"));
 
   return str_value (*args++);
 }

@@ -234,7 +234,7 @@ advance (f)
 static void
 beyond ()
 {
-  test_syntax_error ("argument expected\n", NULL);
+  test_syntax_error (_("argument expected\n"), NULL);
 }
 
 /* Syntax error for when an integer argument was expected, but
@@ -243,7 +243,7 @@ static void
 integer_expected_error (pch)
      char *pch;
 {
-  test_syntax_error ("integer expression expected %s\n", pch);
+  test_syntax_error (_("integer expression expected %s\n"), pch);
 }
 
 /* Return non-zero if the characters pointed to by STRING constitute a
@@ -369,10 +369,10 @@ term ()
       advance (1);
       value = expr ();
       if (!argv[pos])
-	test_syntax_error ("')' expected\n", NULL);
+	test_syntax_error (_("')' expected\n"), NULL);
       else
         if (argv[pos][0] != ')' || argv[pos][1])
-	  test_syntax_error ("')' expected, found %s\n", argv[pos]);
+	  test_syntax_error (_("')' expected, found %s\n"), argv[pos]);
       advance (0);
       return (TRUE == (value));
     }
@@ -388,7 +388,7 @@ term ()
       if (unop (argv[pos][1]))
 	value = unary_operator ();
       else
-	test_syntax_error ("%s: unary operator expected\n", argv[pos]);
+	test_syntax_error (_("%s: unary operator expected\n"), argv[pos]);
     }
   else
     {
@@ -415,7 +415,7 @@ binary_operator ()
 
       /* Make sure that OP is still a valid binary operator. */
       if ((op >= argc - 1) || (binop (argv[op]) == 0))
-	test_syntax_error ("%s: binary operator expected\n", argv[op]);
+	test_syntax_error (_("%s: binary operator expected\n"), argv[op]);
 
       advance (0);
     }
@@ -450,7 +450,7 @@ binary_operator ()
 	      else
 		{
 		  if (!isint (argv[op - 1], &l))
-		    integer_expected_error ("before -lt");
+		    integer_expected_error (_("before -lt"));
 		}
 
 	      if (r_is_l)
@@ -458,7 +458,7 @@ binary_operator ()
 	      else
 		{
 		  if (!isint (argv[op + 1], &r))
-		    integer_expected_error ("after -lt");
+		    integer_expected_error (_("after -lt"));
 		}
 	      pos += 3;
 	      return (TRUE == (l < r));
@@ -472,14 +472,14 @@ binary_operator ()
 	      else
 		{
 		  if (!isint (argv[op - 1], &l))
-		    integer_expected_error ("before -le");
+		    integer_expected_error (_("before -le"));
 		}
 	      if (r_is_l)
 		r = strlen (argv[op + 2]);
 	      else
 		{
 		  if (!isint (argv[op + 1], &r))
-		    integer_expected_error ("after -le");
+		    integer_expected_error (_("after -le"));
 		}
 	      pos += 3;
 	      return (TRUE == (l <= r));
@@ -495,14 +495,14 @@ binary_operator ()
 	      else
 		{
 		  if (!isint (argv[op - 1], &l))
-		    integer_expected_error ("before -gt");
+		    integer_expected_error (_("before -gt"));
 		}
 	      if (r_is_l)
 		r = strlen (argv[op + 2]);
 	      else
 		{
 		  if (!isint (argv[op + 1], &r))
-		    integer_expected_error ("after -gt");
+		    integer_expected_error (_("after -gt"));
 		}
 	      pos += 3;
 	      return (TRUE == (l > r));
@@ -516,14 +516,14 @@ binary_operator ()
 	      else
 		{
 		  if (!isint (argv[op - 1], &l))
-		    integer_expected_error ("before -ge");
+		    integer_expected_error (_("before -ge"));
 		}
 	      if (r_is_l)
 		r = strlen (argv[op + 2]);
 	      else
 		{
 		  if (!isint (argv[op + 1], &r))
-		    integer_expected_error ("after -ge");
+		    integer_expected_error (_("after -ge"));
 		}
 	      pos += 3;
 	      return (TRUE == (l >= r));
@@ -536,7 +536,7 @@ binary_operator ()
 	      /* nt - newer than */
 	      pos += 3;
 	      if (l_is_l || r_is_l)
-		test_syntax_error ("-nt does not accept -l\n", NULL);
+		test_syntax_error (_("-nt does not accept -l\n"), NULL);
 	      if (age_of (argv[op - 1], &l) && age_of (argv[op + 1], &r))
 		return (TRUE == (l > r));
 	      else
@@ -551,14 +551,14 @@ binary_operator ()
 	      else
 		{
 		  if (!isint (argv[op - 1], &l))
-		    integer_expected_error ("before -ne");
+		    integer_expected_error (_("before -ne"));
 		}
 	      if (r_is_l)
 		r = strlen (argv[op + 2]);
 	      else
 		{
 		  if (!isint (argv[op + 1], &r))
-		    integer_expected_error ("after -ne");
+		    integer_expected_error (_("after -ne"));
 		}
 	      pos += 3;
 	      return (TRUE == (l != r));
@@ -574,14 +574,14 @@ binary_operator ()
 	      else
 		{
 		  if (!isint (argv[op - 1], &l))
-		    integer_expected_error ("before -eq");
+		    integer_expected_error (_("before -eq"));
 		}
 	      if (r_is_l)
 		r = strlen (argv[op + 2]);
 	      else
 		{
 		  if (!isint (argv[op + 1], &r))
-		    integer_expected_error ("after -eq");
+		    integer_expected_error (_("after -eq"));
 		}
 	      pos += 3;
 	      return (TRUE == (l == r));
@@ -592,7 +592,7 @@ binary_operator ()
 	      /* ef - hard link? */
 	      pos += 3;
 	      if (l_is_l || r_is_l)
-		test_syntax_error ("-ef does not accept -l\n", NULL);
+		test_syntax_error (_("-ef does not accept -l\n"), NULL);
 	      if (stat (argv[op - 1], &stat_buf) < 0)
 		return (FALSE);
 	      if (stat (argv[op + 1], &stat_spare) < 0)
@@ -609,14 +609,14 @@ binary_operator ()
 	      /* ot - older than */
 	      pos += 3;
 	      if (l_is_l || r_is_l)
-		test_syntax_error ("-nt does not accept -l\n", NULL);
+		test_syntax_error (_("-nt does not accept -l\n"), NULL);
 	      if (age_of (argv[op - 1], &l) && age_of (argv[op + 1], &r))
 		return (TRUE == (l < r));
 	      return (FALSE);
 	    }
 	  break;
 	}
-      test_syntax_error ("unknown binary operator", argv[op]);
+      test_syntax_error (_("unknown binary operator"), argv[op]);
     }
 
   if (argv[op][0] == '=' && !argv[op][1])
@@ -900,7 +900,7 @@ two_arguments ()
       if (unop (argv[pos][1]))
 	value = unary_operator ();
       else
-	test_syntax_error ("%s: unary operator expected\n", argv[pos]);
+	test_syntax_error (_("%s: unary operator expected\n"), argv[pos]);
     }
   else
     beyond ();
@@ -926,7 +926,7 @@ three_arguments ()
 	   (argv[pos][0] == '('))
     value = expr ();
   else
-    test_syntax_error ("%s: binary operator expected\n", argv[pos+1]);
+    test_syntax_error (_("%s: binary operator expected\n"), argv[pos+1]);
   return (value);
 }
 
@@ -981,25 +981,25 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s EXPRESSION\n\
   or:  [ EXPRESSION ]\n\
   or:  %s OPTION\n\
-",
+"),
 	      program_name, program_name);
-      printf ("\
+      printf (_("\
 Exit with the status determined by EXPRESSION.\n\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
 \n\
 EXPRESSION is true or false and sets exit status.  It is one of:\n\
-");
-      printf ("\
+"));
+      printf (_("\
 \n\
   ( EXPRESSION )               EXPRESSION is true\n\
   ! EXPRESSION                 EXPRESSION is false\n\
@@ -1017,8 +1017,8 @@ EXPRESSION is true or false and sets exit status.  It is one of:\n\
   INTEGER1 -le INTEGER2   INTEGER1 is less than or equal to INTEGER2\n\
   INTEGER1 -lt INTEGER2   INTEGER1 is less than INTEGER2\n\
   INTEGER1 -ne INTEGER2   INTEGER1 is not equal to INTEGER2\n\
-");
-      printf ("\
+"));
+      printf (_("\
 \n\
   FILE1 -ef FILE2   FILE1 and FILE2 have the same device and inode numbers\n\
   FILE1 -nt FILE2   FILE1 is newer (modification date) than FILE2\n\
@@ -1042,12 +1042,12 @@ EXPRESSION is true or false and sets exit status.  It is one of:\n\
   -u FILE     FILE exists and its set-user-ID bit is set\n\
   -w FILE     FILE exists and is writable\n\
   -x FILE     FILE exists and is executable\n\
-");
-      printf ("\
+"));
+      printf (_("\
 \n\
 Beware that parentheses need to be escaped by backslashes for shells.\n\
 INTEGER may also be -l STRING, which evaluates to the length of STRING.\n\
-");
+"));
     }
   exit (status);
 }
@@ -1093,7 +1093,7 @@ test_command (margc, margv)
 	test_exit (SHELL_BOOLEAN (FALSE));
 
       if (margv[margc] && strcmp (margv[margc], "]") != 0)
-	test_syntax_error ("missing `]'\n", NULL);
+	test_syntax_error (_("missing `]'\n"), NULL);
     }
 
   argc = margc;
@@ -1106,7 +1106,7 @@ test_command (margc, margv)
   value = posixtest ();
 
   if (pos != argc)
-    test_syntax_error ("too many arguments\n", NULL);
+    test_syntax_error (_("too many arguments\n"), NULL);
 
   test_exit (SHELL_BOOLEAN (value));
 }

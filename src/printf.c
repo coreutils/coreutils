@@ -86,16 +86,16 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s FORMAT [ARGUMENT]...\n\
   or:  %s OPTION\n\
-",
+"),
 	      program_name, program_name);
-      printf ("\
+      printf (_("\
 Print ARGUMENT(s) according to FORMAT.\n\
 \n\
   --help      display this help and exit\n\
@@ -121,7 +121,7 @@ FORMAT controls the output as in C printf.  Interpreted sequences are:\n\
 \n\
 and all C format specifications ending with one of diouxXfeEgGcs, with\n\
 ARGUMENTs converted to proper type first.  Variable widths are handled.\n\
-");
+"));
     }
   exit (status);
 }
@@ -141,7 +141,7 @@ main (argc, argv)
 
   if (argc == 1)
     {
-      fprintf (stderr, "Usage: %s format [argument...]\n", program_name);
+      fprintf (stderr, _("Usage: %s format [argument...]\n"), program_name);
       exit (1);
     }
 
@@ -254,7 +254,7 @@ print_formatted (format, argc, argv)
 	      ++direc_length;
 	    }
 	  if (!strchr ("diouxXfeEgGcs", *f))
-	    error (1, 0, "%%%c: invalid directive", *f);
+	    error (1, 0, _("%%%c: invalid directive"), *f);
 	  ++direc_length;
 	  if (argc > 0)
 	    {
@@ -300,7 +300,7 @@ print_esc (escstart)
 	   ++esc_length, ++p)
 	esc_value = esc_value * 16 + hextobin (*p);
       if (esc_length == 0)
-	error (1, 0, "missing hexadecimal number in escape");
+	error (1, 0, _("missing hexadecimal number in escape"));
       putchar (esc_value);
     }
   else if (*p == '0')
@@ -314,7 +314,7 @@ print_esc (escstart)
   else if (strchr ("\"\\abcfnrtv", *p))
     print_esc_char (*p++);
   else
-    error (1, 0, "\\%c: invalid escape", *p);
+    error (1, 0, _("\\%c: invalid escape"), *p);
   return p - escstart - 1;
 }
 
@@ -525,9 +525,9 @@ verify (s, end)
   else if (*end)
     {
       if (s == end)
-	error (0, 0, "%s: expected a numeric value", s);
+	error (0, 0, _("%s: expected a numeric value"), s);
       else
-	error (0, 0, "%s: value not completely converted", s);
+	error (0, 0, _("%s: value not completely converted"), s);
       exit_status = 1;
     }
 }

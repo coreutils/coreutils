@@ -57,18 +57,18 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [NAME]\n\
   or:  %s OPTION\n\
 Print the hostname of the current system.\n\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
-"
+")
              , program_name, program_name);
     }
   exit (status);
@@ -98,19 +98,20 @@ main (argc, argv)
     }
 #else
   if (argc == 2)
-    error (1, 0, "cannot set hostname; this system lacks the functionality");
+    error (1, 0,
+	   _("cannot set hostname; this system lacks the functionality"));
 #endif
 
   if (argc == 1)
     {
       hostname = xgethostname ();
       if (hostname == NULL)
-	error (1, errno, "cannot determine hostname");
+	error (1, errno, _("cannot determine hostname"));
       printf ("%s\n", hostname);
     }
   else
     {
-      error (2, 0, "too many arguments");
+      error (2, 0, _("too many arguments"));
       usage (1);
     }
 

@@ -261,7 +261,7 @@ main (argc, argv)
 
   pw = getpwnam (new_user);
   if (pw == 0)
-    error (1, 0, "user %s does not exist", new_user);
+    error (1, 0, _("user %s does not exist"), new_user);
   endpwent ();
 
   /* Make a copy of the password information and point pw at the local
@@ -278,7 +278,7 @@ main (argc, argv)
 #ifdef SYSLOG_FAILURE
       log_su (pw, 0);
 #endif
-      error (1, 0, "incorrect password");
+      error (1, 0, _("incorrect password"));
     }
 #ifdef SYSLOG_SUCCESS
   else
@@ -297,7 +297,7 @@ main (argc, argv)
 	 probably a uucp account or has restricted access.  Don't
 	 compromise the account by allowing access with a standard
 	 shell.  */
-      error (0, 0, "using restricted shell %s", pw->pw_shell);
+      error (0, 0, _("using restricted shell %s"), pw->pw_shell);
       shell = 0;
     }
   if (shell == 0)
@@ -308,7 +308,7 @@ main (argc, argv)
 
   change_identity (pw);
   if (simulate_login && chdir (pw->pw_dir))
-    error (0, errno, "warning: cannot change directory to %s", pw->pw_dir);
+    error (0, errno, _("warning: cannot change directory to %s"), pw->pw_dir);
 
   run_shell (shell, command, additional_args);
 }
@@ -337,10 +337,10 @@ correct_password (pw)
   if (getuid () == 0 || correct == 0 || correct[0] == '\0')
     return 1;
 
-  unencrypted = getpass ("Password:");
+  unencrypted = getpass (_("Password:"));
   if (unencrypted == NULL)
     {
-      error (0, 0, "getpass: cannot open /dev/tty");
+      error (0, 0, _("getpass: cannot open /dev/tty"));
       return 0;
     }
   encrypted = crypt (unencrypted, correct);
@@ -400,13 +400,13 @@ change_identity (pw)
 #ifdef HAVE_INITGROUPS
   errno = 0;
   if (initgroups (pw->pw_name, pw->pw_gid) == -1)
-    error (1, errno, "cannot set groups");
+    error (1, errno, _("cannot set groups"));
   endgrent ();
 #endif
   if (setgid (pw->pw_gid))
-    error (1, errno, "cannot set group id");
+    error (1, errno, _("cannot set group id"));
   if (setuid (pw->pw_uid))
-    error (1, errno, "cannot set user id");
+    error (1, errno, _("cannot set user id"));
 }
 
 /* Run SHELL, or DEFAULT_SHELL if SHELL is empty.
@@ -453,7 +453,7 @@ run_shell (shell, command, additional_args)
       args[argno++] = *additional_args;
   args[argno] = NULL;
   execv (shell, (char **) args);
-  error (1, errno, "cannot run %s", shell);
+  error (1, errno, _("cannot run %s"), shell);
 }
 
 #if defined (SYSLOG_SUCCESS) || defined (SYSLOG_FAILURE)
@@ -543,7 +543,7 @@ xputenv (val)
      char *val;
 {
   if (putenv (val))
-    error (1, 0, "virtual memory exhausted");
+    error (1, 0, _("virtual memory exhausted"));
 }
 
 /* Return a newly-allocated string whose contents concatenate
@@ -569,12 +569,12 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... [-] [USER [ARG]...]\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]... [-] [USER [ARG]...]\n"), program_name);
+      printf (_("\
 Change the effective user id and group id to that of USER.\n\
 \n\
   -, -l, --login               make the shell a login shell\n\
@@ -587,7 +587,7 @@ Change the effective user id and group id to that of USER.\n\
       --version                output version information and exit\n\
 \n\
 A mere - implies -l.   If USER not given, assume root.\n\
-");
+"));
     }
   exit (status);
 }

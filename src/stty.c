@@ -456,16 +456,16 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [SETTING]...\n\
   or:  %s OPTION\n\
-",
+"),
 	      program_name, program_name);
-      printf ("\
+      printf (_("\
 Print or change terminal characteristics.\n\
 \n\
   -a, --all       print all current settings in human-readable form\n\
@@ -475,8 +475,8 @@ Print or change terminal characteristics.\n\
 \n\
 Optional - before SETTING indicates negation.  An * marks non-POSIX\n\
 settings.  The underlying system defines which settings are available.\n\
-");
-      printf ("\
+"));
+      printf (_("\
 \n\
 Special characters:\n\
 * dsusp CHAR    CHAR will send a terminal stop signal once input flushed\n\
@@ -494,8 +494,8 @@ Special characters:\n\
   susp CHAR     CHAR will send a terminal stop signal\n\
 * swtch CHAR    CHAR will switch to a different shell layer\n\
 * werase CHAR   CHAR will erase the last word typed\n\
-");
-      printf ("\
+"));
+      printf (_("\
 \n\
 Special settings:\n\
   N             set the input and output speeds to N bauds\n\
@@ -509,8 +509,8 @@ Special settings:\n\
 * size          print the number of rows and columns according to the kernel\n\
   speed         print the terminal speed\n\
   time N        with -icanon, set read timeout of N tenths of a second\n\
-");
-      printf ("\
+"));
+      printf (_("\
 \n\
 Control settings:\n\
   [-]clocal     disable modem control signals\n\
@@ -522,8 +522,8 @@ Control settings:\n\
   [-]hupcl      same as [-]hup\n\
   [-]parenb     generate parity bit in output and expect parity bit in input\n\
   [-]parodd     set odd parity (even with `-')\n\
-");
-      printf ("\
+"));
+      printf (_("\
 \n\
 Input settings:\n\
   [-]brkint     breaks cause an interrupt signal\n\
@@ -541,8 +541,8 @@ Input settings:\n\
   [-]ixon       enable XON/XOFF flow control\n\
   [-]parmrk     mark parity errors (with a 255-0-character sequence)\n\
   [-]tandem     same as [-]ixoff\n\
-");
-      printf ("\
+"));
+      printf (_("\
 \n\
 Output settings:\n\
 * bsN           backspace delay style, N in [0..1]\n\
@@ -561,8 +561,8 @@ Output settings:\n\
 * tabs          same as tab0\n\
 * -tabs         same as tab3\n\
 * vtN           vertical tab delay style, N in [0..1]\n\
-");
-      printf ("\
+"));
+      printf (_("\
 \n\
 Local settings:\n\
   [-]crterase   echo erase characters as backspace-space-backspace\n\
@@ -583,8 +583,8 @@ Local settings:\n\
 * [-]prterase   same as [-]echoprt\n\
 * [-]tostop     stop background jobs that try to write to the terminal\n\
 * [-]xcase      with icanon, escape with `\\' for uppercase characters\n\
-");
-      printf ("\
+"));
+      printf (_("\
 \n\
 Combination settings:\n\
 * [-]LCASE      same as [-]lcase\n\
@@ -620,14 +620,14 @@ Combination settings:\n\
                 isig icanon iexten echo echoe echok -echonl -noflsh\n\
                 -xcase -tostop -echoprt echoctl echoke, all special\n\
                 characters to their default values.\n\
-");
-      printf ("\
+"));
+      printf (_("\
 \n\
 Handle the tty line connected to standard input.  Without arguments,\n\
 prints baud rate, line discipline, and deviations from stty sane.  In\n\
 settings, CHAR is taken literally, or coded as in ^c, 0x37, 0177 or\n\
 127; special values ^- or undef used to disable special characters.\n\
-");
+"));
     }
   exit (status);
 }
@@ -712,18 +712,18 @@ main (argc, argv)
   /* Specifying both -a and -g gets an error.  */
   if (verbose_output && recoverable_output)
     error (2, 0,
-	   "the options for verbose and stty-readable output styles are\n\
-\tmutually exclusive");
+	   _("the options for verbose and stty-readable output styles are\n\
+\tmutually exclusive"));
 
   /* Specifying any other arguments with -a or -g gets an error.  */
   if (argc - optind > 0 && (verbose_output || recoverable_output))
-    error (2, 0, "when specifying an output style, modes may not be set");
+    error (2, 0, _("when specifying an output style, modes may not be set"));
 
   /* Initialize to all zeroes so there is no risk memcmp will report a
      spurious difference in an uninitialized portion of the structure.  */
   memset (&mode, 0, sizeof (mode));
   if (tcgetattr (0, &mode))
-    error (1, errno, "standard input");
+    error (1, errno, _("standard input"));
 
   if (verbose_output || recoverable_output || argc == 1)
     {
@@ -758,7 +758,7 @@ main (argc, argv)
 	}
       if (match_found == 0 && reversed)
 	{
-	  error (0, 0, "invalid argument `%s'", --argv[k]);
+	  error (0, 0, _("invalid argument `%s'"), --argv[k]);
 	  usage (1);
 	}
       if (match_found == 0)
@@ -769,7 +769,7 @@ main (argc, argv)
 		{
 		  if (k == argc - 1)
 		    {
-		      error (0, 0, "missing argument to `%s'", argv[k]);
+		      error (0, 0, _("missing argument to `%s'"), argv[k]);
 		      usage (1);
 		    }
 		  match_found = 1;
@@ -786,7 +786,7 @@ main (argc, argv)
 	    {
 	      if (k == argc - 1)
 		{
-		  error (0, 0, "missing argument to `%s'", argv[k]);
+		  error (0, 0, _("missing argument to `%s'"), argv[k]);
 		  usage (1);
 		}
 	      ++k;
@@ -798,7 +798,7 @@ main (argc, argv)
 	    {
 	      if (k == argc - 1)
 		{
-		  error (0, 0, "missing argument to `%s'", argv[k]);
+		  error (0, 0, _("missing argument to `%s'"), argv[k]);
 		  usage (1);
 		}
 	      ++k;
@@ -811,7 +811,7 @@ main (argc, argv)
 	    {
 	      if (k == argc - 1)
 		{
-		  error (0, 0, "missing argument to `%s'", argv[k]);
+		  error (0, 0, _("missing argument to `%s'"), argv[k]);
 		  usage (1);
 		}
 	      ++k;
@@ -822,7 +822,7 @@ main (argc, argv)
 	    {
 	      if (k == argc - 1)
 		{
-		  error (0, 0, "missing argument to `%s'", argv[k]);
+		  error (0, 0, _("missing argument to `%s'"), argv[k]);
 		  usage (1);
 		}
 	      ++k;
@@ -840,7 +840,7 @@ main (argc, argv)
 	    {
 	      if (k == argc - 1)
 		{
-		  error (0, 0, "missing argument to `%s'", argv[k]);
+		  error (0, 0, _("missing argument to `%s'"), argv[k]);
 		  usage (1);
 		}
 	      ++k;
@@ -863,7 +863,7 @@ main (argc, argv)
 	    {
 	      if (recover_mode (argv[k], &mode) == 0)
 		{
-		  error (0, 0, "invalid argument `%s'", argv[k]);
+		  error (0, 0, _("invalid argument `%s'"), argv[k]);
 		  usage (1);
 		}
 	      require_set_attr = 1;
@@ -877,7 +877,7 @@ main (argc, argv)
       struct termios new_mode;
 
       if (tcsetattr (0, TCSADRAIN, &mode))
-	error (1, errno, "standard input");
+	error (1, errno, _("standard input"));
 
       /* POSIX (according to Zlotnick's book) tcsetattr returns zero if
 	 it performs *any* of the requested operations.  This means it
@@ -890,7 +890,7 @@ main (argc, argv)
 	 spurious difference in an uninitialized portion of the structure.  */
       memset (&new_mode, 0, sizeof (new_mode));
       if (tcgetattr (0, &new_mode))
-	error (1, errno, "standard input");
+	error (1, errno, _("standard input"));
 
       /* Normally, one shouldn't use memcmp to compare structures that
 	 may have `holes' containing uninitialized data, but we have been
@@ -917,8 +917,8 @@ main (argc, argv)
 	    {
 	    int i;
 	    error (1, 0,
-	      "standard input: unable to perform all requested operations");
-	    printf ("new_mode: mode\n");
+	      _("standard input: unable to perform all requested operations"));
+	    printf (_("new_mode: mode\n"));
 	    for (i=0; i<sizeof(new_mode); i++)
 	      printf ("0x%02x: 0x%02x\n",
 		      *(((unsigned char *) &new_mode) + i),
@@ -1209,7 +1209,7 @@ set_window_size (rows, cols)
   if (get_win_size (&win))
     {
       if (errno != EINVAL)
-	error (1, errno, "standard input");
+	error (1, errno, _("standard input"));
       memset (&win, 0, sizeof (win));
     }
 
@@ -1251,16 +1251,16 @@ set_window_size (rows, cols)
       win.ws_col = 1;
 
       if (ioctl (0, TIOCSWINSZ, (char *) &win))
-	error (1, errno, "standard input");
+	error (1, errno, _("standard input"));
 
       if (ioctl (0, TIOCSSIZE, (char *) &ttysz))
-	error (1, errno, "standard input");
+	error (1, errno, _("standard input"));
       return;
     }
 #endif
 
   if (ioctl (0, TIOCSWINSZ, (char *) &win))
-    error (1, errno, "standard input");
+    error (1, errno, _("standard input"));
 }
 
 static void
@@ -1272,7 +1272,7 @@ display_window_size (fancy)
   if (get_win_size (&win))
     {
       if (errno != EINVAL)
-	error (1, errno, "standard input");
+	error (1, errno, _("standard input"));
     }
   else
     {
@@ -1295,7 +1295,7 @@ screen_columns ()
       /* With Solaris 2.[123], this ioctl fails and errno is set to
 	 EINVAL for telnet (but not rlogin) sessions.  */
       if (errno != EINVAL)
-	error (1, errno, "standard input");
+	error (1, errno, _("standard input"));
     }
   else if (win.ws_col > 0)
     return win.ws_col;
@@ -1636,7 +1636,7 @@ visible (ch)
   char *bpout = buf;
 
   if (ch == _POSIX_VDISABLE)
-    return "<undef>";
+    return _("<undef>");
 
   if (ch >= 32)
     {
@@ -1720,7 +1720,7 @@ integer_arg (s)
 
   if (*p)
     {
-      error (0, 0, "invalid integer argument `%s'", s);
+      error (0, 0, _("invalid integer argument `%s'"), s);
       usage (1);
     }
   return value;

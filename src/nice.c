@@ -77,7 +77,7 @@ main (argc, argv)
       if (s[0] == '-' && s[1] == '-' && ISDIGIT (s[2]))
 	{
 	  if (!isinteger (&s[2]))
-	    error (1, 0, "invalid option `%s'", s);
+	    error (1, 0, _("invalid option `%s'"), s);
 
 	  minusflag = 1;
 	  adjustment = atoi (&s[2]);
@@ -98,7 +98,7 @@ main (argc, argv)
 
 		case 'n':
 		  if (!isinteger (optarg))
-		    error (1, 0, "invalid priority `%s'", optarg);
+		    error (1, 0, _("invalid priority `%s'"), optarg);
 		  adjustment = atoi (optarg);
 		  adjustment_given = 1;
 		  break;
@@ -133,14 +133,14 @@ main (argc, argv)
     {
       if (adjustment_given)
 	{
-	  error (0, 0, "a command must be given with an adjustment");
+	  error (0, 0, _("a command must be given with an adjustment"));
 	  usage (1);
 	}
       /* No command given; print the priority. */
       errno = 0;
       current_priority = GET_PRIORITY ();
       if (current_priority == -1 && errno != 0)
-	error (1, errno, "cannot get priority");
+	error (1, errno, _("cannot get priority"));
       printf ("%d\n", current_priority);
       exit (0);
     }
@@ -149,12 +149,12 @@ main (argc, argv)
   errno = 0;
   current_priority = GET_PRIORITY ();
   if (current_priority == -1 && errno != 0)
-    error (1, errno, "cannot get priority");
+    error (1, errno, _("cannot get priority"));
   if (setpriority (PRIO_PROCESS, 0, current_priority + adjustment))
 #else
   if (nice (adjustment) == -1)
 #endif
-    error (1, errno, "cannot set priority");
+    error (1, errno, _("cannot set priority"));
 
   execvp (argv[optind], &argv[optind]);
   error (errno == ENOENT ? 127 : 126, errno, "%s", argv[optind]);
@@ -185,12 +185,12 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... [COMMAND [ARG]...]\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]... [COMMAND [ARG]...]\n"), program_name);
+      printf (_("\
 Run COMMAND with an adjusted scheduling priority.\n\
 With no COMMAND, print the current scheduling priority.  ADJUST is 10\n\
 by default.  Range goes from -20 (highest priority) to 19 (lowest).\n\
@@ -198,7 +198,7 @@ by default.  Range goes from -20 (highest priority) to 19 (lowest).\n\
   -ADJUST                   increment priority by ADJUST first\n\
   -n, --adjustment=ADJUST   same as -ADJUST\n\
       --help                display this help and exit\n\
-      --version             output version information and exit\n");
+      --version             output version information and exit\n"));
     }
   exit (status);
 }

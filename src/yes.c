@@ -32,16 +32,16 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... [STRING]...\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]... [STRING]...\n"), program_name);
+      printf (_("\
 Repeatedly output a line with all specified STRING(s), or `y'.\n\
 \n\
   --help      display this help and exit\n\
-  --version   output version information and exit\n");
+  --version   output version information and exit\n"));
     }
   exit (status);
 }

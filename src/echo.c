@@ -68,12 +68,12 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... [STRING]...\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]... [STRING]...\n"), program_name);
+      printf (_("\
 Echo the STRING(s) to standard output.\n\
 \n\
   -n              do not output the trailing newline\n\
@@ -94,7 +94,7 @@ Without -E, the following sequences are recognized and interpolated:\n\
   \\r     carriage return\n\
   \\t     horizontal tab\n\
   \\v     vertical tab\n\
-");
+"));
     }
   exit (status);
 }

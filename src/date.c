@@ -92,7 +92,7 @@ batch_convert (input_filename, format)
 
   if (strcmp (input_filename, "-") == 0)
     {
-      input_filename = "standard input";
+      input_filename = _("standard input");
       in_stream = stdin;
       have_read_stdin = 1;
     }
@@ -123,7 +123,7 @@ batch_convert (input_filename, format)
 	{
 	  if (line[line_length - 1] == '\n')
 	    line[line_length - 1] = '\0';
-	  error (0, 0, "invalid date `%s'", line);
+	  error (0, 0, _("invalid date `%s'"), line);
 	  status = 1;
 	}
       else
@@ -133,7 +133,7 @@ batch_convert (input_filename, format)
     }
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    error (2, errno, "standard input");
+    error (2, errno, _("standard input"));
 
   if (line != NULL)
     free (line);
@@ -196,22 +196,22 @@ main (argc, argv)
   if (set_date && print_date)
     {
       error (0, 0,
-	  "the options to print and set the time may not be used together");
+	  _("the options to print and set the time may not be used together"));
       usage (1);
     }
 
   if (n_args > 1)
     {
-      error (0, 0, "too many non-option arguments");
+      error (0, 0, _("too many non-option arguments"));
       usage (1);
     }
 
   if ((set_date || print_date || batch_file != NULL)
       && n_args == 1 && argv[optind][0] != '+')
     {
-      error (0, 0, "\
+      error (0, 0, _("\
 when using the print, set time, or batch options, any\n\
-non-option argument must be a format string beginning with `+'");
+non-option argument must be a format string beginning with `+'"));
       usage (1);
     }
 
@@ -219,8 +219,8 @@ non-option argument must be a format string beginning with `+'");
     {
       if (set_date || print_date)
 	{
-	  error (0, 0, "\
-neither print nor set options may be used when reading dates from a file");
+	  error (0, 0, _("\
+neither print nor set options may be used when reading dates from a file"));
 	  usage (1);
 	}
       status = batch_convert (batch_file,
@@ -245,7 +245,7 @@ neither print nor set options may be used when reading dates from a file");
 	    {
 	      /* Prepare to print the current date/time.  */
 	      print_date = 1;
-	      datestr = "undefined";
+	      datestr = _("undefined");
 	      time (&when);
 	      format = (n_args == 1 ? argv[optind] + 1 : NULL);
 	    }
@@ -258,21 +258,21 @@ neither print nor set options may be used when reading dates from a file");
 	}
 
       if (when == -1)
-	error (1, 0, "invalid date `%s'", datestr);
+	error (1, 0, _("invalid date `%s'"), datestr);
 
       if (set_date)
 	{
 	  /* Set the system clock to the specified date, then regardless of
 	     the success of that operation, format and print that date.  */
 	  if (stime (&when) == -1)
-	    error (0, errno, "cannot set date");
+	    error (0, errno, _("cannot set date"));
 	}
 
       show_date (format, when);
     }
 
   if (fclose (stdout) == EOF)
-    error (2, errno, "write error");
+    error (2, errno, _("write error"));
 
   exit (status);
 }
@@ -323,16 +323,16 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... [+FORMAT]\n\
   or:  %s [OPTION] [MMDDhhmm[[CC]YY][.ss]]\n\
-",
+"),
 	      program_name, program_name);
-      printf ("\
+      printf (_("\
 Display the current time in the given FORMAT, or set the system date.\n\
 \n\
   -d, --date=STRING        display time described by STRING, not `now'\n\
@@ -341,8 +341,8 @@ Display the current time in the given FORMAT, or set the system date.\n\
   -u, --utc, --universal   print or set Coordinated Universal Time\n\
       --help               display this help and exit\n\
       --version            output version information and exit\n\
-");
-      printf ("\
+"));
+      printf (_("\
 \n\
 FORMAT controls the output.  The only valid option for the second form\n\
 specifies Coordinated Universal Time.  Interpreted sequences are:\n\
@@ -384,7 +384,7 @@ the following modifiers between `%%' and a numeric directive.\n\
 \n\
   `-' (hyphen) do not pad the field\n\
   `_' (underscore) pad the field with spaces\n\
-");
+"));
     }
   exit (status);
 }

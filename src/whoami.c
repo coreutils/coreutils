@@ -48,17 +48,17 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]...\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]...\n"), program_name);
+      printf (_("\
 Print the user name associated with the current effective user id.\n\
 Same as id -un.\n\
 \n\
   --help      display this help and exit\n\
-  --version   output version information and exit\n");
+  --version   output version information and exit\n"));
     }
   exit (status);
 }
@@ -106,7 +106,7 @@ main (argc, argv)
       puts (pw->pw_name);
       exit (0);
     }
-  fprintf (stderr, "%s: cannot find username for UID %u\n",
+  fprintf (stderr, _("%s: cannot find username for UID %u\n"),
 	   program_name, (unsigned) uid);
   exit (1);
 }

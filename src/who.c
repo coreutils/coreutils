@@ -183,7 +183,7 @@ idle_string (when)
 	       (int) ((seconds_idle % (60 * 60)) / 60));
       return (const char *) idle;
     }
-  return " old ";
+  return _(" old ");
 }
 
 /* Display a line of information about entry THIS. */
@@ -282,7 +282,7 @@ list_entries_who (n)
 	}
       this++;
     }
-  printf ("\n# users=%u\n", entries);
+  printf (_("\n# users=%u\n"), entries);
 }
 
 #endif /* WHO */
@@ -352,12 +352,12 @@ print_heading ()
 {
   printf ("%-8s ", "USER");
   if (include_mesg)
-    printf ("MESG ");
-  printf ("%-8s ", "LINE");
-  printf ("LOGIN-TIME   ");
+    printf (_("MESG "));
+  printf ("%-8s ", _("LINE"));
+  printf (_("LOGIN-TIME   "));
   if (include_idle)
-    printf ("IDLE  ");
-  printf ("FROM\n");
+    printf (_("IDLE  "));
+  printf (_("FROM\n"));
 }
 
 /* Display `utmp_contents', which should have N entries. */
@@ -506,12 +506,12 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... [ FILE | ARG1 ARG2 ]\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]... [ FILE | ARG1 ARG2 ]\n"), program_name);
+      printf (_("\
 \n\
   -H, --heading     print line of column headings\n\
   -T, -w, --mesg    add user's message status as +, - or ?\n\
@@ -526,7 +526,7 @@ usage (status)
 \n\
 If FILE not given, uses /etc/utmp.  /etc/wtmp as FILE is common.\n\
 If ARG1 ARG2 given, -m presumed: `am i' or `mom likes' are usual.\n\
-");
+"));
     }
   exit (status);
 }
@@ -538,17 +538,17 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... [ FILE ]\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]... [ FILE ]\n"), program_name);
+      printf (_("\
 Output who is currently logged in according to FILE.\n\
 If FILE not given, uses /etc/utmp.  /etc/wtmp as FILE is common.\n\
 \n\
       --help        display this help and exit\n\
-      --version     output version information and exit\n");
+      --version     output version information and exit\n"));
     }
   exit (status);
 }
@@ -606,7 +606,7 @@ main (argc, argv)
 #endif /* WHO */
 
 	default:
-	  error (0, 0, "too many arguments");
+	  error (0, 0, _("too many arguments"));
 	  usage (1);
 	}
     }

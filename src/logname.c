@@ -44,17 +44,17 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]...\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]...\n"), program_name);
+      printf (_("\
 Print the name of the current user.\n\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
-");
+"));
     }
   exit (status);
 }
@@ -101,6 +101,6 @@ main (argc, argv)
       exit (0);
     }
   /* POSIX.2 prohibits using a fallback technique.  */
-  fprintf (stderr,"%s: no login name\n", argv[0]);
+  fprintf (stderr,_("%s: no login name\n"), argv[0]);
   exit (1);
 }

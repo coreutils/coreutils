@@ -36,17 +36,17 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]\n"), program_name);
+      printf (_("\
 Print the full filename of the current working directory.\n\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
-");
+"));
     }
   exit (status);
 }
@@ -63,11 +63,11 @@ main (argc, argv)
   parse_long_options (argc, argv, "pwd", version_string, usage);
 
   if (argc != 1)
-    error (0, 0, "ignoring non-option arguments");
+    error (0, 0, _("ignoring non-option arguments"));
 
   wd = xgetcwd ();
   if (wd == NULL)
-    error (1, errno, "cannot get current directory");
+    error (1, errno, _("cannot get current directory"));
   printf ("%s\n", wd);
 
   exit (0);

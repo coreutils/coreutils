@@ -36,22 +36,22 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s NAME\n\
   or:  %s OPTION\n\
-",
+"),
 	      program_name, program_name);
-      printf ("\
+      printf (_("\
 Print NAME with its trailing /component removed; if NAME contains no /'s,\n\
 output `.' (meaning the current directory).\n\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
-");
+"));
     }
   exit (status);
 }
@@ -70,7 +70,7 @@ main (argc, argv)
 
   if (argc != 2)
     {
-      error (0, 0, "too %s arguments", argc < 2 ? "few" : "many");
+      error (0, 0, _("too %s arguments"), argc < 2 ? _("few") : _("many"));
       usage (1);
     }
 

@@ -148,10 +148,10 @@ main (argc, argv)
     usage (0);
 
   if (just_user + just_group + just_group_list > 1)
-    error (1, 0, "cannot print only user and only group");
+    error (1, 0, _("cannot print only user and only group"));
 
   if (just_user + just_group + just_group_list == 0 && (use_real || use_name))
-    error (1, 0, "cannot print only names or real IDs in default format");
+    error (1, 0, _("cannot print only names or real IDs in default format"));
 
   if (argc - optind > 1)
     usage (1);
@@ -160,7 +160,7 @@ main (argc, argv)
     {
       struct passwd *pwd = getpwnam (argv[optind]);
       if (pwd == NULL)
-	error (1, 0, "%s: No such user", argv[optind]);
+	error (1, 0, _("%s: No such user"), argv[optind]);
       ruid = euid = pwd->pw_uid;
       rgid = egid = pwd->pw_gid;
     }
@@ -253,7 +253,7 @@ print_group_list (username)
       ngroups = getugroups (NGROUPS_MAX, groups, username);
     if (ngroups < 0)
       {
-	error (0, errno, "cannot get supplemental group list");
+	error (0, errno, _("cannot get supplemental group list"));
 	problems++;
 	free (groups);
 	return;
@@ -326,14 +326,14 @@ print_full_info (username)
       ngroups = getugroups (NGROUPS_MAX, groups, username);
     if (ngroups < 0)
       {
-	error (0, errno, "cannot get supplemental group list");
+	error (0, errno, _("cannot get supplemental group list"));
 	problems++;
 	free (groups);
 	return;
       }
 
     if (ngroups > 0)
-      fputs (" groups=", stdout);
+      fputs (_(" groups="), stdout);
     for (i = 0; i < ngroups; i++)
       {
 	if (i > 0)
@@ -355,12 +355,12 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... [USERNAME]\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]... [USERNAME]\n"), program_name);
+      printf (_("\
 Print information for USERNAME, or the current user.\n\
 \n\
   -g, --group     print only the group ID\n\
@@ -372,7 +372,7 @@ Print information for USERNAME, or the current user.\n\
       --version   output version information and exit\n\
 \n\
 Without any OPTION, print some useful set of identified information.\n\
-");
+"));
     }
   exit (status);
 }

@@ -47,17 +47,17 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... NUMBER[SUFFIX]\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]... NUMBER[SUFFIX]\n"), program_name);
+      printf (_("\
 Pause for NUMBER seconds.\n\
 SUFFIX may be s to keep seconds, m for minutes, h for hours or d for days.\n\
 \n\
   --help      display this help and exit\n\
-  --version   output version information and exit\n");
+  --version   output version information and exit\n"));
     }
   exit (status);
 }
@@ -96,7 +96,7 @@ main (argc, argv)
 
   if (argc == 1)
     {
-      error (0, 0, "too few arguments");
+      error (0, 0, _("too few arguments"));
       usage (1);
     }
 
@@ -138,6 +138,6 @@ argdecode (s)
     }
 
   if (*p)
-    error (1, 0, "invalid time interval `%s'", s);
+    error (1, 0, _("invalid time interval `%s'"), s);
   return value;
 }

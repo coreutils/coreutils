@@ -146,7 +146,7 @@ main (argc, argv)
     toprint = PRINT_SYSNAME;
 
   if (uname (&name) == -1)
-    error (1, errno, "cannot get system name");
+    error (1, errno, _("cannot get system name"));
 
   print_element (PRINT_SYSNAME, name.sysname);
   print_element (PRINT_NODENAME, name.nodename);
@@ -178,12 +178,12 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]...\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]...\n"), program_name);
+      printf (_("\
 Print certain system information.  With no OPTION, same as -s.\n\
 \n\
   -a, --all        print all information\n\
@@ -193,7 +193,7 @@ Print certain system information.  With no OPTION, same as -s.\n\
   -s, --sysname    print the operating system name\n\
   -v               print the operating system version\n\
       --help       display this help and exit\n\
-      --version    output version information and exit\n");
+      --version    output version information and exit\n"));
     }
   exit (status);
 }
