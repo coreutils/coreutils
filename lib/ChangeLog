@@ -1,3 +1,7 @@
+2001-11-01  Jim Meyering  <meyering@lucent.com>
+
+	* hash.c (hash_print) [TESTING]: Clean up.
+
 2001-10-22  Paul Eggert  <eggert@twinsun.com>
 
 	* hard-locale.c (alloca): Define to __builtin_alloca if __GNUC__,

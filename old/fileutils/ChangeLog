@@ -2,6 +2,8 @@
 
 	* Version 4.1.1.
 
+	* tests/ls/infloop: Redirect cmp's stderr to /dev/null.
+
 	* src/ls.c (struct pending) [st_ino, st_dev]: Remove members.
 	(queue_directory): Remove just-added 3rd parameter
 	and associated code, and update callers.
