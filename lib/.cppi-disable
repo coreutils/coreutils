@@ -18,9 +18,10 @@ printf-parse.h
 regex.c
 regex.h
 stdbool_.h
-strndup.h
 strdup.h
+strndup.h
+strtoul.c
 time_r.h
+utimecmp.h
 vasnprintf.h
 vasprintf.h
-strtoul.c
