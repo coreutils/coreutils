@@ -119,14 +119,6 @@ gid_t getgid ();
 /* Number of bytes of a file to copy at a time. */
 #define READ_SIZE (32 * 1024)
 
-#ifndef UID_T_MAX
-# define UID_T_MAX TYPE_MAXIMUM (uid_t)
-#endif
-
-#ifndef GID_T_MAX
-# define GID_T_MAX TYPE_MAXIMUM (gid_t)
-#endif
-
 char *base_name ();
 int full_write ();
 int isdir ();
