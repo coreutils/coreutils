@@ -130,7 +130,7 @@ canonicalize_file_name (const char *name)
     {
       char *wd;
 
-      if (!(wd = xgetcwd ()));
+      if (!(wd = xgetcwd ()))
 	return NULL;
 
       extra_buf = path_concat (wd, name, NULL);
