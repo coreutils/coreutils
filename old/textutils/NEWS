@@ -1,4 +1,7 @@
 Changes in release 2.1
+[2.0.20]
+* wc recognizes all locale-defined white-space characters, not just those
+    in the "C" locale.
 [2.0.19]
 * portability tweak to make lib/regex.c compile
 * split translatable strings only in the middle of sentences
