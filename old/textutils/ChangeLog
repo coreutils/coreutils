@@ -1,4 +1,9 @@
-Fri Jan  5 18:30:28  Jim Meyering  (meyering@na-net.ornl.gov)
+Wed Jan 31 23:26:13 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* tail.c (dump_remainder): Flush stdout when tailing-forever on
+	multiple files.  From Carlos Canau <Carlos.Canau@relay.puug.pt>.
+
+Fri Jan  5 18:30:28  1996 Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* aclocal.m4: For SVR4 systems, use -Xc -D_POSIX_C_SOURCE in CFLAGS,
 	not just -Xc.  From Franc,ois Pinard.
