@@ -1,9 +1,19 @@
+Thu Jul  6 23:44:20 1995  Jim Meyering  (meyering@comco.com)
+
+	* od.c (dump): Correct loop-termination criterion.
+	Before, running `printf 1234| ./od --width=4 --read-bytes=4'
+	printed output for 8 bytes -- the last four were garbage.
+ 	This happened only when the dump limit, N, was specified (with
+	--read-bytes=N) and N was a multiple of bytes_per_block
+	(usually 16, but 4 in this example).  From Andreas Schwab.
+
 Sun Jul  2 22:12:40 1995  Jim Meyering  (meyering@comco.com)
 
 	* lib/Makefile.in (check): Depend on libtu.a.
 
 	* md5sum.c (split_3): Rewrite to parse Plumb/Lankester format as well.
-	(main): Write (de facto) standard Plumb/Lankester format.
+	(main): Print each sum line in (de facto) standard Plumb/Lankester
+	format.
 	New option: --quiet.
 	Check option no longer takes an argument.
 	When checking, exit status reflects success.
