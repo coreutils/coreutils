@@ -38,9 +38,9 @@ char *alloca ();
 
 #if defined _LIBC
 # include <dirent.h>
-# define NAMLEN(dirent) _D_EXACT_NAMLEN(dirent)
+# define NAMLEN(dirent) _D_EXACT_NAMLEN (dirent)
 #else
-# if HAVE_DIRENT_H || defined _LIBC
+# if HAVE_DIRENT_H
 #  include <dirent.h>
 #  define NAMLEN(dirent) strlen ((dirent)->d_name)
 # else
@@ -93,32 +93,29 @@ char *stpcpy ();
 # define __closedir closedir
 # undef __fchdir
 # define __fchdir fchdir
+# undef __getcwd
+# define __getcwd(P, N) xgetcwd ()
+extern char *xgetcwd (void);
+# undef __mempcpy
+# define __mempcpy mempcpy
 # undef __opendir
 # define __opendir opendir
 # undef __readdir64
 # define __readdir64 readdir
+# undef __stpcpy
+# define __stpcpy stpcpy
 # undef __tdestroy
 # define __tdestroy tdestroy
 # undef __tfind
 # define __tfind tfind
 # undef __tsearch
 # define __tsearch tsearch
-# undef __stpcpy
-# define __stpcpy stpcpy
-# undef __mempcpy
-# define __mempcpy mempcpy
 # undef internal_function
 # define internal_function /* empty */
 # undef dirent64
 # define dirent64 dirent
 # undef MAX
 # define MAX(a, b) ((a) > (b) ? (a) : (b))
-#endif
-
-#ifndef _LIBC
-# undef __getcwd
-# define __getcwd(P, N) xgetcwd ()
-extern char *xgetcwd (void);
 #endif
 
 /* Arrange to make lstat calls go through the wrapper function
@@ -430,7 +427,7 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 
 	      if (result == 0 && (data->flags & FTW_CHDIR))
 		{
-		  /* Change back to parent directory.  */
+		  /* Change back to the parent directory.  */
 		  int done = 0;
 		  if (dir->stream != NULL)
 		    if (__fchdir (dirfd (dir->stream)) == 0)
@@ -773,7 +770,7 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
   /* Return to the start directory (if necessary).  */
   if (cwd != NULL)
     {
-      int save_err = errno;
+      save_err = errno;
       __chdir (cwd);
       free (cwd);
       __set_errno (save_err);
