@@ -1,4 +1,4 @@
-#serial 2
+#serial 4
 
 dnl autoconf tests required for use of mbswidth.c
 dnl From Bruno Haible.
