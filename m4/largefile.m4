@@ -20,17 +20,13 @@ AC_DEFUN(AC_SYS_LARGEFILE_FLAGS,
 	ifelse($1, CFLAGS,
 	  [case "$host_os" in
 	   # HP-UX 10.20 requires -D__STDC_EXT__ with gcc 2.95.1.
-changequote(, )dnl
-	   hpux10.[2-9][0-9]* | hpux1[1-9]* | hpux[2-9][0-9]*)
-changequote([, ])dnl
+[	   hpux10.[2-9][0-9]* | hpux1[1-9]* | hpux[2-9][0-9]*)]
 	     if test "$GCC" = yes; then
 	       ac_cv_sys_largefile_CFLAGS=-D__STDC_EXT__
 	     fi
 	     ;;
 	   # IRIX 6.2 and later require cc -n32.
-changequote(, )dnl
-	   irix6.[2-9]* | irix6.1[0-9]* | irix[7-9].* | irix[1-9][0-9]*)
-changequote([, ])dnl
+[	   irix6.[2-9]* | irix6.1[0-9]* | irix[7-9].* | irix[1-9][0-9]*)]
 	     if test "$GCC" != yes; then
 	       ac_cv_sys_largefile_CFLAGS=-n32
 	     fi
@@ -61,17 +57,15 @@ dnl AC_SYS_LARGEFILE_MACRO_VALUE(C-MACRO, CACHE-VAR, COMMENT, CODE-TO-SET-DEFAUL
 AC_DEFUN(AC_SYS_LARGEFILE_MACRO_VALUE,
   [AC_CACHE_CHECK([for $1], $2,
      [$2=no
-changequote(, )dnl
       $4
       for ac_flag in $ac_cv_sys_largefile_CFLAGS no; do
 	case "$ac_flag" in
 	-D$1)
 	  $2=1 ;;
 	-D$1=*)
-	  $2=`expr " $ac_flag" : '[^=]*=\(.*\)'` ;;
+	  $2=`expr " $ac_flag" : '[[^=]]*=\(.*\)'` ;;
 	esac
       done
-changequote([, ])dnl
       ])
    if test "[$]$2" != no; then
      AC_DEFINE_UNQUOTED([$1], [$]$2, [$3])
@@ -106,7 +100,7 @@ AC_DEFUN(AC_SYS_LARGEFILE,
        [Number of bits in a file offset, on hosts where this is settable.],
        [case "$host_os" in
 	# HP-UX 10.20 and later
-	hpux10.[2-9][0-9]* | hpux1[1-9]* | hpux[2-9][0-9]*)
+[	hpux10.[2-9][0-9]* | hpux1[1-9]* | hpux[2-9][0-9]*)]
 	  ac_cv_sys_file_offset_bits=64 ;;
 	esac])
      AC_SYS_LARGEFILE_MACRO_VALUE(_LARGEFILE_SOURCE,
@@ -114,7 +108,7 @@ AC_DEFUN(AC_SYS_LARGEFILE,
        [Define to make fseeko etc. visible, on some hosts.],
        [case "$host_os" in
 	# HP-UX 10.20 and later
-	hpux10.[2-9][0-9]* | hpux1[1-9]* | hpux[2-9][0-9]*)
+[	hpux10.[2-9][0-9]* | hpux1[1-9]* | hpux[2-9][0-9]*)]
 	  ac_cv_sys_largefile_source=1 ;;
 	esac])
      AC_SYS_LARGEFILE_MACRO_VALUE(_LARGE_FILES,
@@ -122,7 +116,7 @@ AC_DEFUN(AC_SYS_LARGEFILE,
        [Define for large files, on AIX-style hosts.],
        [case "$host_os" in
 	# AIX 4.2 and later
-	aix4.[2-9]* | aix4.1[0-9]* | aix[5-9].* | aix[1-9][0-9]*)
+[	aix4.[2-9]* | aix4.1[0-9]* | aix[5-9].* | aix[1-9][0-9]*)]
 	  ac_cv_sys_large_files=1 ;;
 	esac])
    fi
