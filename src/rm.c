@@ -1,5 +1,5 @@
 /* `rm' file deletion utility for GNU.
-   Copyright (C) 88, 90, 91, 1994-2002 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1994-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,8 +31,7 @@
    It does this by using chdir to change to each directory in turn before
    removing the entries in that directory.
 
-   RM detects directory cycles by maintaining a table of the currently
-   active directories.  See the description of active_dir_map in remove.c.
+   RM detects directory cycles lazily.  See lib/cycle-check.c.
 
    RM is careful to avoid forming full file names whenever possible.
    A full file name is formed only when it is about to be used -- e.g.
