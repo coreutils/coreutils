@@ -1,9 +1,16 @@
+2001-05-11  Paul Eggert  <eggert@twinsun.com>
+
+	* src/chmod.c (mode_changed, change_file_mode):
+	There's no need to invoke both lstat and stat here, so call just
+	one of the two functions.
+
 2001-05-11  Jim Meyering  <meyering@lucent.com>
 
 	* doc/omni-utils.texi: New file.  The union of fileutils.texi,
 	sh-utils.texi, and textutils.texi.  Merged by Brian Youmans.
 
-	* doc/omni-utils.texi (shred invocation): Warn about backups.
+	* src/shred.c (usage): Warn about backups and mirrors.
+	* doc/omni-utils.texi (shred invocation): Likewise.
 	From Nelson Beebe.
 
 2001-05-09  Jim Meyering  <meyering@lucent.com>
@@ -26,7 +33,14 @@
 	* src/chown.c (main): Fix thinko that made --from=... fail:
 	s/argv[optind]/optarg/.  Reported by Andrew Pham.
 
-	FIXME: add a test for the above.
+	* tests/chown: New directory.
+	* tests/chown/basic: New (root-only) test for the above.
+	* tests/cp/special-bits: Factor out the root-only test into this ...
+	* tests/root-only: ... new file.
+	* tests/Makefile.am (EXTRA_DIST): Add root-only.
+	(SUBDIRS): Add chown.
+	* tests/chown/Makefile.am: New file.
+	* configure.in (AC_OUTPUT): Add tests/chown/Makefile.
 
 2001-05-05  Jim Meyering  <meyering@lucent.com>
 
