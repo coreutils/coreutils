@@ -148,6 +148,7 @@ main (int argc, char **argv)
   if (show_version)
     {
       (void) printf ("seq - %s\n", version_string);
+      exit (0);
     }
 
   if (show_help)
