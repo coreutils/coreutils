@@ -1,4 +1,4 @@
-#serial 2
+#serial 3
 
 AC_DEFUN(jm_CHECK_DECLARATION,
 [
@@ -10,24 +10,7 @@ AC_DEFUN(jm_CHECK_DECLARATION,
   test -z "$ac_cv_header_unistd_h" && AC_CHECK_HEADERS(unistd.h)
   AC_MSG_CHECKING([whether $1 is declared])
   AC_CACHE_VAL(jm_cv_func_decl_$1,
-    [AC_TRY_COMPILE([
-#include <stdio.h>
-#ifdef HAVE_STRING_H
-# if !STDC_HEADERS && HAVE_MEMORY_H
-#  include <memory.h>
-# endif
-# include <string.h>
-#else
-# ifdef HAVE_STRINGS_H
-#  include <strings.h>
-# endif
-#endif
-#ifdef HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
-#ifdef HAVE_UNISTD_H
-# include <unistd.h>
-#endif],
+    [AC_TRY_COMPILE($2,
       [
 #ifndef $1
 char *(*pfn) = (char *(*)) $1
@@ -38,23 +21,23 @@ char *(*pfn) = (char *(*)) $1
 
   if eval "test \"`echo '$jm_cv_func_decl_'$1`\" = yes"; then
     AC_MSG_RESULT(yes)
-    ifelse([$2], , :, [$2])
+    ifelse([$3], , :, [$3])
   else
     AC_MSG_RESULT(no)
-    ifelse([$3], , , [$3
+    ifelse([$4], , , [$4
 ])dnl
   fi
 ])dnl
 
-dnl jm_CHECK_DECLARATIONS(FUNCTION... [, ACTION-IF-DECLARED
+dnl jm_CHECK_DECLARATIONS(INCLUDES, FUNCTION... [, ACTION-IF-DECLARED
 dnl                       [, ACTION-IF-NOT-DECLARED]])
 AC_DEFUN(jm_CHECK_DECLARATIONS,
 [
-  for jm_func in $1
+  for jm_func in $2
   do
-    jm_CHECK_DECLARATION($jm_func,
+    jm_CHECK_DECLARATION($jm_func, $1,
     [
       jm_tr_func=HAVE_DECL_`echo $jm_func | tr abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ`
-      AC_DEFINE_UNQUOTED($jm_tr_func) $2], $3)dnl
+      AC_DEFINE_UNQUOTED($jm_tr_func) $3], $4)dnl
   done
 ])
