@@ -108,7 +108,7 @@ md5_stream (stream, resblock)
       /* Read block.  Take care for partial reads.  */
       do
 	{
-	  n = fread (buffer, 1, BLOCKSIZE - sum, stream);
+	  n = fread (buffer + sum, 1, BLOCKSIZE - sum, stream);
 
 	  sum += n;
 	}
