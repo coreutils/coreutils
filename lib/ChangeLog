@@ -1,5 +1,10 @@
 2003-06-06  Jim Meyering  <jim@meyering.net>
 
+	* backupfile.c: Update from gnulib.
+
+	* md5.c: Include <string.h> and <stdlib.h> unconditionally.
+	(memcpy): Remove definition.
+
 	* posixtm.c: Include <stdbool.h> unconditionally.
 
 2003-06-05  Jim Meyering  <jim@meyering.net>
