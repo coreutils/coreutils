@@ -28,6 +28,10 @@
 #include "error.h"
 #include "getdate.h"
 
+#ifndef HAVE_MEMPCPY
+# define mempcpy(D, S, N) ((void *) ((char *) memcpy (D, S, N) + (N)))
+#endif
+
 #ifndef STDC_HEADERS
 size_t strftime ();
 time_t time ();
@@ -140,8 +144,9 @@ batch_convert (const char *input_filename, const char *format)
 	}
       else
 	{
-	  char *buf = xmalloc (3 + strlen (initial_TZ) + 1);
-	  stpcpy (stpcpy (buf, "TZ="), initial_TZ);
+	  size_t tz_len = strlen (initial_TZ);
+	  char *buf = xmalloc (3 + tz_len + 1);
+	  mempcpy (mempcpy (buf, "TZ=", 3), initial_TZ, tz_len + 1);
 	  initial_TZ = buf;
 	}
     }
