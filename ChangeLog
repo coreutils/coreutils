@@ -1,6 +1,11 @@
-2003-02-10  Jim Meyering  <jim@meyering.net>
+2003-02-12  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.8.
+
+	* src/pathchk.c (portable_chars_only): Remove unnecessary `const'
+	in cast to avoid warning from icc.  Reported by Alexandre Duret-Lutz.
+
+2003-02-10  Jim Meyering  <jim@meyering.net>
 
 	* src/test.c: Don't include group-member.h.
 	Include euidaccess.h.
