@@ -1,3 +1,8 @@
+Tue Feb 25 20:34:51 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/Makefile.am (noinst_HEADERS): Add obstack.h.
+	(libtu_a_SOURCES): Add obstack.c.
+
 Sun Feb 16 08:30:29 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* tests/Makefile.am (SUBDIRS): Add tac.
