@@ -1,3 +1,10 @@
+2000-03-12  Jim Meyering  <meyering@lucent.com>
+
+	Merge from textutils.
+	* src/system.h: (O_BINARY, O_TEXT): Define if necessary.
+	(SET_BINARY, SET_BINARY2): Define.
+	(DEV_BSIZE): Define to BBSIZE if appropriate.
+
 2000-03-10  Jim Meyering  <meyering@lucent.com>
 
 	* tests/mv/mv-special-1: Make the message more like that in the
