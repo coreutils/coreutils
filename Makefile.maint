@@ -188,7 +188,7 @@ sc_sun_os_names:
 	@( cvsu --list ) > /dev/null 2>&1 || : && \
 	grep -Ei \
 	    'solaris[^[:alnum:]]*2\.(7|8|9|[1-9][0-9])|sunos[^[:alnum:]][6-9]' \
-	  $$(cvsu --list | grep -vEf .x-$@ ) &&			\
+	  $$(cvsu --list | grep -vEf .x-$@ ) &&				\
 	  { echo '$(ME): found misuse of Sun OS version numbers' 1>&2;	\
 	    exit 1; } || :
 
@@ -352,14 +352,14 @@ my-distcheck: $(local-check)
 	-rm -rf $(t)
 	mkdir -p $(t)
 	GZIP=$(GZIP_ENV) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
-	cd $(t)/$(distdir) \
-	  && ./configure --disable-nls \
-	  && $(MAKE) CFLAGS='-Wformat -Werror' \
-	      AM_MAKEFLAGS='$(null_AM_MAKEFLAGS)' \
-	  && $(MAKE) dvi \
-	  && $(MAKE) check \
+	cd $(t)/$(distdir)				\
+	  && ./configure --disable-nls			\
+	  && $(MAKE) CFLAGS='-Wformat -Werror'		\
+	      AM_MAKEFLAGS='$(null_AM_MAKEFLAGS)'	\
+	  && $(MAKE) dvi				\
+	  && $(MAKE) check				\
 	  && $(MAKE) distclean
-	(cd $(t) && mv $(distdir) $(distdir).old \
+	(cd $(t) && mv $(distdir) $(distdir).old	\
 	  && $(AMTAR) -zxf - ) < $(distdir).tar.gz
 	diff -ur $(t)/$(distdir).old $(t)/$(distdir)
 	-rm -rf $(t)
