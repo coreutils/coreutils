@@ -110,10 +110,6 @@
 #include "quotearg.h"		/* For quotearg_colon */
 #include "quote.h"		/* For quotearg_colon */
 
-#ifndef O_NOCTTY
-# define O_NOCTTY 0  /* This is a very optional frill */
-#endif
-
 #define DEFAULT_PASSES 25	/* Default */
 
 /* How many seconds to wait before checking whether to output another
