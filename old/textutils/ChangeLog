@@ -1,6 +1,11 @@
-2001-11-18  Jim Meyering  <meyering@lucent.com>
+2001-11-19  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.17.
+
+	* src/tail.c (xlseek): New function.
+	Call it instead of lseek, in most cases, so any failure is reported.
+
+2001-11-18  Jim Meyering  <meyering@lucent.com>
 
 	* config.sub: Update from master repository.
 	* config.guess: Likewise.
