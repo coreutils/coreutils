@@ -307,18 +307,19 @@ EOF1
 	      print <<EOF;
 $e_cmd$cmd
 code=\$?
-if test \$code != $e_ret_code ; then
+if test \$code != $e_ret_code; then
   \$echo "Test $t_name failed: $xx return code \$code differs from expected value $e_ret_code" 1>&2
   errors=`expr \$errors + 1`
 else
   cmp $out $exp_name > /dev/null 2>&1
   case \$? in
-    0) if test "\$VERBOSE" ; then \$echo "passed $t_name"; fi ;;
-    1) \$echo "Test $t_name failed: files $out and $exp_name differ" 1>&2;
-       errors=`expr \$errors + 1` ;;
-    2) \$echo "Test $t_name may have failed." 1>&2;
-       \$echo The command \"cmp $out $exp_name\" failed. 1>&2 ;
-       errors=`expr \$errors + 1` ;;
+    0) if test "\$VERBOSE"; then \$echo "passed $t_name"; fi;;
+    1) \$echo "Test $t_name failed: files $out and $exp_name differ" 1>&2
+       (diff -c $out $exp_name) 2> /dev/null
+       errors=`expr \$errors + 1`;;
+    2) \$echo "Test $t_name may have failed." 1>&2
+       \$echo The command \"cmp $out $exp_name\" failed. 1>&2
+       errors=`expr \$errors + 1`;;
   esac
 fi
 test -s $err_output || rm -f $err_output
@@ -326,8 +327,8 @@ EOF
 	    }
 	}
     }
-  print <<EOF3 ;
-if test \$errors = 0 ; then
+  print <<EOF3
+if test \$errors = 0; then
   \$echo Passed all $n_tests tests. 1>&2
 else
   \$echo Failed \$errors tests. 1>&2
