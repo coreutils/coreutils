@@ -1,3 +1,15 @@
+1998-06-27  Jim Meyering  <meyering@ascend.com>
+
+	* tests/pr/Test.pm: Add two tests for double spacing.
+	* src/pr.c (print_page): If cols_ready_to_print is zero,
+	break out of loop just before the double-space test.
+	Reported by Michael Stutz.
+
+1998-06-18  Jim Meyering  <meyering@ascend.com>
+
+	* tests/Makefile.am.in (check): Depend on $(maint_gen) so
+	`make maintainer-clean; ./configure; make check' works.
+
 1998-05-25  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.22f.
