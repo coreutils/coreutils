@@ -1,6 +1,13 @@
-2004-01-22  Jim Meyering  <jim@meyering.net>
+2004-01-23  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.2.
+
+	* src/paste.c (paste_parallel): Declare local, chr, to be of type
+	`int', not `char', since it must hold EOF.  This bug would make
+	paste infloop on some systems.  Reported by Nelson H. F. Beebe
+	and Christian Krackowizer.
+
+2004-01-22  Jim Meyering  <jim@meyering.net>
 
 	* tests/rmdir/fail-perm: New file.  Test for just-fixed rmdir bug.
 	* tests/rmdir/Makefile.am (TESTS): Add fail-perm.
