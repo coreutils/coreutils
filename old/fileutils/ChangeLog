@@ -1,3 +1,34 @@
+2001-05-02  Jim Meyering  <meyering@lucent.com>
+
+	* doc/texinfo.tex: Update from master repository.
+	* config.sub: Likewise.
+	* config.guess: Likewise.
+
+2001-05-01  Jim Meyering  <meyering@lucent.com>
+
+	* Makefile.maint (tgz-size, xd-size): Compute sizes.
+	(announcement): Include sizes of .tar.gz and .xdelta files
+	in the announcement.
+
+	* src/ls.c (print_owner): New global variable.
+	(usage): Update the descriptions of -g.
+	(decode_switches): Honor the -g option (omit owner information),
+	now that POSIX specifies it.
+	(print_long_format): Don't print owner name if -g was specified.
+	Move declaration of `user_name' into the scope where it's used.
+	(print_group): Rename global from `inhibit_group'.  Update all
+	uses accordingly.
+	* doc/fileutils.texi (What information is listed): Describe -g.
+	* TODO: Remove item for ls -g.
+
+	* src/ls.c (decode_switches): Make -n work just like -l, except
+	with numeric IDs, per POSIX.  Before, to have any effect, -n had
+	to be used with -l.  Reported by Dale Scheetz.
+	(usage): Update the description of -n.
+	Separate the descriptions of -n and --numeric-uid-gid.
+	Split string in --help output that had exceeded my limit of
+	2048 bytes.
+
 2001-04-29  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.
