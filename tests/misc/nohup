@@ -100,4 +100,8 @@ EOF
 # cmp exp err || fail=1
 # test $fail = 1 && diff exp err 2> /dev/null
 
+# Make sure it fails with exit status of 127 when given too few arguments.
+nohup >/dev/null 2>&1
+test $? = 127 || fail=1
+
 (exit $fail); exit $fail
