@@ -127,7 +127,9 @@ struct buffer
   char *buf;			/* Dynamically allocated buffer. */
   int used;			/* Number of bytes used. */
   int alloc;			/* Number of bytes allocated. */
-  int left;			/* Number of bytes left after line parsing. */
+  int left;			/* Number of bytes left from previous reads. */
+  int newline_free;		/* Number of left bytes that are known
+                                   to be newline-free.  */
 };
 
 struct keyfield
@@ -534,7 +536,7 @@ initbuf (struct buffer *buf, int alloc)
 {
   buf->alloc = alloc;
   buf->buf = xmalloc (buf->alloc);
-  buf->used = buf->left = 0;
+  buf->used = buf->left = buf->newline_free = 0;
 }
 
 /* Fill BUF reading from FP, moving buf->left bytes from the end
@@ -575,6 +577,11 @@ fillbuf (struct buffer *buf, FILE *fp)
     {
       if (buf->used == buf->alloc)
 	{
+	  /* If the buffer isn't parsed yet, don't increase the buffer
+	     size to append a newline, as this won't be needed unless
+	     the buffer turns out to be newline-free.  */
+	  if (buf->newline_free != buf->used)
+	    return buf->used;
 	  buf->alloc *= 2;
 	  buf->buf = xrealloc (buf->buf, buf->alloc);
 	}
@@ -795,7 +802,7 @@ findlines (struct buffer *buf, struct lines *lines)
       beg = ptr + 1;
     }
 
-  buf->left = lim - beg;
+  buf->newline_free = buf->left = lim - beg;
 }
 
 /* Compare strings A and B containing decimal fractions < 1.  Each string
