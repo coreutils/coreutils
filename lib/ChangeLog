@@ -1,5 +1,8 @@
 2003-06-07  Jim Meyering  <jim@meyering.net>
 
+	* readtokens.c: Put `Free Software Foundation, Inc.' in place of
+	my name in the copyright comment.
+
 	Update from gnulib.
 	* xmemcoll.h: Include <stddef.h>.
 
