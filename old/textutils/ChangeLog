@@ -1,5 +1,7 @@
 2000-10-22  Jim Meyering  <meyering@lucent.com>
 
+	* Version 2.0.8.
+
 	* tests/Makefile.am (SUBDIRS): Add sha1sum.
 	* tests/sha1sum/basic-1: New file.
 	* configure.in (AC_OUTPUT): Add tests/sha1sum/Makefile.
