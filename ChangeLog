@@ -1,3 +1,40 @@
+2004-04-08  Jim Meyering  <jim@meyering.net>
+
+	* src/dd.c (set_fd_flags): Don't OR in -1 when fcntl fails.
+	Rename parameter, flags, to avoid shadowing global.
+
+2004-04-07  Paul Eggert  <eggert@twinsun.com>
+
+	* NEWS: New dd conv= symbols nocreat, excl, fdatasync, fsync,
+	and new dd options iflag= and oflag=.
+	* src/dd.c (usage): Likewise.
+	* src/Makefile.am (dd_LDADD, shred_LDADD): Add fdatasync's lib.
+	* src/dd.c (fdatasync) [!HAVE_FDATASYNC]: New macro.
+	(C_NOCREAT, C_EXCL, C_FDATASYNC, C_FSYNC): New macros.
+	(input_flags, output_flags): New vars.
+	(LONGEST_SYMBOL): New macro.
+	(struct symbol_value): Renamed from struct conversion.  Members
+	symbol and value renamed from convname and conversion.  The
+	symbol value is now an array instead of a pointer; this saves
+	a bit of space and time in practice.  All uses changed.
+	(conversions): Add nocreat, excl, fdatasync, fsync.  Now const.
+	(flags): New constant array.
+	(iflag_error_msgid, oflag_error_msgid): New constants.
+	(parse_symbols): Renamed from parse_conversion and generalized
+	to handle either conversion or flag symbols.
+	(scanargs): Adjust uses of parse_symbols accodingly.  Add
+	support for iflag= and oflag=.  Reject attempts to use
+	both excl and nocreat.
+	(set_fd_flags): New function.
+	(dd_copy): Just return X rather than calling quit (X), since our
+	caller invokes quit with the returned value.  Add support for
+	fdatasync and fsync.
+	(main): Add support for iflag=, oflag=, and new conv= symbols.
+	* src/system.h (O_DIRECT, O_DSYNC, O_NDELAY, O_NOFOLLOW,
+	O_RSYNC, O_SYNC): Define to 0 if not already defined.
+
+	* NEWS: Remove duplicate mention of BLOCKSIZE.
+
 2004-04-02  Andreas Schwab  <schwab@suse.de>
 
 	* src/stty.c: Add support for IUTF8 input flag.
