@@ -63,14 +63,14 @@ for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' 'foo hardlink'; do
     (
       (
 	# echo 1>&2 cp $options $args
-	cp $options $args 2>.err
+	cp $options $args 2>_err
 	echo $? $options
 
 	# Normalize the program name in the error output,
 	# and put brackets around the output.
-	test -s .err && echo "[`sed 's/^[^:][^:]*:/cp:/' .err`]"
+	test -s _err && echo "[`sed 's/^[^:][^:]*:/cp:/' _err`]"
 	# Strip off all but the file names.
-	ls="`ls -lG --ignore=.err . \
+	ls="`ls -lG --ignore=_err . \
 	    | sed \
 	        -e '/^total /d' \
 		-e 's/^...............................................//'`"
