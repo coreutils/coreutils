@@ -117,12 +117,15 @@ void *memrchr (const void *, int, size_t);
 extern int errno;
 #endif
 
-/* Some systems don't define ENOSYS.  */
+/* Some systems don't define the following symbols.  */
 #ifndef ENOSYS
 # define ENOSYS (-1)
 #endif
 #ifndef ENOTSUP
 # define ENOTSUP (-1)
+#endif
+#ifndef EISDIR
+# define EISDIR (-1)
 #endif
 
 #include <stdbool.h>
@@ -169,6 +172,18 @@ extern int errno;
   /* For MSC-compatible compilers.  */
 # define O_BINARY _O_BINARY
 # define O_TEXT _O_TEXT
+#endif
+
+#if !defined O_NDELAY
+# define O_NDELAY 0
+#endif
+
+#if !defined O_NONBLOCK
+# define O_NONBLOCK O_NDELAY
+#endif
+
+#if !defined O_NOCTTY
+# define O_NOCTTY 0
 #endif
 
 #ifdef __BEOS__
