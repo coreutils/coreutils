@@ -1,0 +1,19 @@
+# ./tr a '[c*]b'
+# ./tr -s abc zy
+# ./tr abc zy
+tr a '[:not-a-class:]' < /dev/null
+tr a '[:digit:]' < /dev/null
+tr '[c*]' k < /dev/null
+tr a '[=c=]' < /dev/null
+tr a '[c*][c*]' < /dev/null
+tr -ds abd '[c*]' < /dev/null
+tr -c '[:lower:]' '[:upper:]' < /dev/null
+tr '[:lower:]' '[:lower:]' < /dev/null
+tr '0-9[:lower:]' '[:upper:]' < /dev/null
+tr a '' < /dev/null
+tr -s '\432' < /dev/null
+tr a 'abc\' < /dev/null
+tr a '\x' < /dev/null
+tr -s < /dev/null
+
+# And make sure tr does the right thing when POSIXLY_... is set.

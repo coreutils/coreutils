@@ -1,0 +1,18 @@
+[]*]     # What about this?!  valid
+[:*096]  # invalid: 096 isn't a valid octal number
+a [:*0]  # as many colons as string1 was long (not to be confused
+	 # with a character class)
+[:*]     # ditto
+[:*016]  # 14 colons
+[=]=]    # valid: equivalence class containing ']'
+[-a      # valid, assuming `[' is before 'a' in collating sequence
+ -]      # valid, assuming ` ' is before ']' in collating sequence
+--]      # valid, assuming `-' is before ']' in collating sequence
+\0-\377  # valid
+[\0-\377]# valid, (but brackets will be mapped to corresponding chars
+	 # in other string)
+abcde[:* # valid, but none of the characters is considered special
+abc xyzdef # Should this (str2 longer than str1) evoke a warning?
+           # Probably so if we're only translating, but if also deleting or
+	   # squeezing this makes sense.
+abcdef : # Map abcdef all to `:', as if str2 had been [:*]
