@@ -1,3 +1,20 @@
+Thu Oct 19 17:38:28 1995  Jim Meyering  (meyering@comco.com)
+
+        * od.c: Indent cpp directives.
+
+	* tr.c (BEGIN_STATE): Use INT_MAX - 1 so as not to interfere
+	with large repeat counts.
+	(struct E_string): New struct.
+	(find_closing_delim): Take E_string arg rather than char* and length.
+	(find_bracketed_repeat): Likewise.
+	(star_digits_closebracket): New function.
+	(append_char_class): No longer give diagnostic.
+	(append_equiv_class): Likewise.
+	(build_spec_list): Give them here instead, allowing string1 like
+	[:*][:upper:] that got errors before.
+	Take E_string arg rather than char*.
+	Convert switch stmts into if-then so as to use ES_MATCH.
+
 Tue Oct 17 22:48:00 1995  Jim Meyering  (meyering@comco.com)
 
 	* cat.c: Protoize.  Reorder functions to obviate forward dcls.
