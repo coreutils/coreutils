@@ -736,16 +736,6 @@ recheck (struct File_spec *f)
 	  error (0, errno, "%s", pretty_name (f));
 	}
     }
-  else if (!S_ISREG (new_stats.st_mode)
-	   && !S_ISFIFO (new_stats.st_mode))
-    {
-      fail = 1;
-      f->errnum = -1;
-      error (0, 0,
-	     _("`%s' has been replaced with a non-regular file;  \
-cannot follow end of non-regular file"),
-	     pretty_name (f));
-    }
   else
     {
       f->errnum = 0;
@@ -1121,13 +1111,7 @@ tail_file (struct File_spec *f, off_t n_units)
 	      errors = 1;
 	      f->errnum = errno;
 	    }
-	  else if (!S_ISREG (stats.st_mode) && !S_ISFIFO (stats.st_mode))
-	    {
-	      error (0, 0, _("%s: cannot follow end of non-regular file"),
-		     pretty_name (f));
-	      errors = 1;
-	      f->errnum = -1;
-	    }
+
 	  if (errors)
 	    {
 	      close_fd (fd, pretty_name (f));
