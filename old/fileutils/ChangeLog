@@ -1,6 +1,26 @@
-1999-05-22  Jim Meyering  <meyering@ascend.com>
+1999-05-23  Jim Meyering  <meyering@ascend.com>
 
 	* Version 4.0i.
+
+	* tests/cp/same-file: Correct erroneous expected output from
+	the `cp -f foo foo' tests.
+	* lib/same.h: New file.
+	* lib/same.c: New file (function extracted from ln.c).
+	* lib/Makefile.am (libfu_a_SOURCES): Add same.c.
+	(noinst_HEADERS): Add same.h.
+	* src/copy.c: Include same.h.
+	* src/ln.c (same_name): Remove function.
+	<same.h>: Include this instead.
+	<dirname.h>: No longer include this.
+	* tests/mv/force: Be sure we still allow `mv -f FILE LINK-TO-FILE'.
+
+	* src/copy.c (copy_internal): Make it so `cp/mv -f FILE FILE' does not
+	remove FILE.  Suggestion from Chris Yeo.
+	* tests/mv/force: New test, for the above fix.
+	* tests/mv/Makefile.am (TESTS): Add force.
+	(TESTS_ENVIRONMENT): Change PATH to be absolute.
+
+	* tests/mv/force (mv): New test.
 
 1999-05-17  Paul Eggert  <eggert@twinsun.com>
 
