@@ -88,8 +88,26 @@ AC_DEFUN([jm_INCLUDED_REGEX],
 		    jm_with_regex=$ac_use_included_regex)
 	if test "$jm_with_regex" = yes; then
 	  AC_LIBOBJ(regex)
+	  jm_PREREQ_REGEX
 	fi
       ],
     )
   ]
 )
+
+# Prerequisites of lib/regex.c.
+AC_DEFUN([jm_PREREQ_REGEX],
+[
+  dnl FIXME: Maybe provide a btowc replacement someday: solaris-2.5.1 lacks it.
+  dnl FIXME: Check for wctype and iswctype, and and add -lw if necessary
+  dnl to get them.
+
+  dnl Persuade glibc <string.h> to declare mempcpy().
+  AC_REQUIRE([AC_GNU_SOURCE])
+
+  AC_REQUIRE([AC_FUNC_ALLOCA])
+  AC_REQUIRE([AC_HEADER_STDC])
+  AC_CHECK_HEADERS_ONCE(limits.h string.h wchar.h wctype.h)
+  AC_CHECK_FUNCS_ONCE(isascii mempcpy)
+  AC_CHECK_FUNCS(btowc)
+])
