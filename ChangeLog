@@ -1,6 +1,11 @@
-2005-01-12  Jim Meyering  <jim@meyering.net>
+2005-01-13  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* tests/Fetish.pm (run_tests): Add code (if-0'd out) to detect
+	names of temporary files that would clash on 8.3 file systems.
+
+2005-01-12  Jim Meyering  <jim@meyering.net>
 
 	* tests/dd/skip-seek: Shorten test names to accommodate 8.3 systems.
 
