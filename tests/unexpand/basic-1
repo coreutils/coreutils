@@ -30,14 +30,14 @@ my @Tests =
      ['a7', {IN=> ' 'x 7 ."y\n"}, {OUT=> ' 'x 7 ."y\n"}],
      ['a8', {IN=> ' 'x 8 ."y\n"}, {OUT=> "\ty\n"}],
 
-     ['at-1', '-a', {IN=> 'w'.' 'x 1 ."y\n"}, {OUT=> 'w'.' 'x 1 ."y\n"}],
-     ['at-2', '-a', {IN=> 'w'.' 'x 2 ."y\n"}, {OUT=> 'w'.' 'x 2 ."y\n"}],
-     ['at-3', '-a', {IN=> 'w'.' 'x 3 ."y\n"}, {OUT=> 'w'.' 'x 3 ."y\n"}],
-     ['at-4', '-a', {IN=> 'w'.' 'x 4 ."y\n"}, {OUT=> 'w'.' 'x 4 ."y\n"}],
-     ['at-5', '-a', {IN=> 'w'.' 'x 5 ."y\n"}, {OUT=> 'w'.' 'x 5 ."y\n"}],
-     ['at-6', '-a', {IN=> 'w'.' 'x 6 ."y\n"}, {OUT=> 'w'.' 'x 6 ."y\n"}],
-     ['at-7', '-a', {IN=> 'w'.' 'x 7 ."y\n"}, {OUT=> "w\ty\n"}],
-     ['at-8', '-a', {IN=> 'w'.' 'x 8 ."y\n"}, {OUT=> "w\t y\n"}],
+     ['aa-1', '-a', {IN=> 'w'.' 'x 1 ."y\n"}, {OUT=> 'w'.' 'x 1 ."y\n"}],
+     ['aa-2', '-a', {IN=> 'w'.' 'x 2 ."y\n"}, {OUT=> 'w'.' 'x 2 ."y\n"}],
+     ['aa-3', '-a', {IN=> 'w'.' 'x 3 ."y\n"}, {OUT=> 'w'.' 'x 3 ."y\n"}],
+     ['aa-4', '-a', {IN=> 'w'.' 'x 4 ."y\n"}, {OUT=> 'w'.' 'x 4 ."y\n"}],
+     ['aa-5', '-a', {IN=> 'w'.' 'x 5 ."y\n"}, {OUT=> 'w'.' 'x 5 ."y\n"}],
+     ['aa-6', '-a', {IN=> 'w'.' 'x 6 ."y\n"}, {OUT=> 'w'.' 'x 6 ."y\n"}],
+     ['aa-7', '-a', {IN=> 'w'.' 'x 7 ."y\n"}, {OUT=> "w\ty\n"}],
+     ['aa-8', '-a', {IN=> 'w'.' 'x 8 ."y\n"}, {OUT=> "w\t y\n"}],
 
      ['b-1', '-t', '2,4', {IN=> "      ."}, {OUT=>"\t\t  ."}],
      # These would infloop prior to textutils-2.0d.
