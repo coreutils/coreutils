@@ -1,5 +1,7 @@
 Changes in release 4.01:
 [4.0.34]
+* `ls -L dangling-symlink' now fails (per POSIX) rather than printing the
+    link name
 * dd no longer honors the just-added `B' suffix on skip= and seek= arguments.
 * `mkdir no-such-dir/' no longer fails on NetBSD systems
 [4.0.33]
