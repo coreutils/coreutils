@@ -647,7 +647,8 @@ main (argc, argv)
 
   /* Recognize the long options only.  */
   opterr = 0;
-  while ((optc = getopt_long (argc, argv, "", longopts, (int *) 0)) != EOF)
+  while ((optc = getopt_long_only (argc, argv, "ag", longopts, (int *) 0))
+	 != EOF)
     {
       switch (optc)
 	{
@@ -717,8 +718,8 @@ main (argc, argv)
 
   if (verbose_output || recoverable_output || argc == 1)
     {
-  max_col = screen_columns ();
-  current_col = 0;
+      max_col = screen_columns ();
+      current_col = 0;
       display_settings (output_type, &mode);
       exit (0);
     }

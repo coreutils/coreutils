@@ -1,5 +1,11 @@
 Sat Feb 19 14:23:14 1994  Jim Meyering  (meyering@comco.com)
 
+	* Version 1.9.4.
+
+	* stty.c (main): Use getopt_long_only with "ag" instead of
+	getopt_long with "".  The latter incremented optind so the
+	-a and -g options weren't recognized.
+
 	* Version 1.9.3.
 
 Tue Feb 15 18:28:28 1994  Jim Meyering  (meyering@comco.com)
