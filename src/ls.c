@@ -1,5 +1,5 @@
 /* `dir', `vdir' and `ls' directory listing programs for GNU.
-   Copyright (C) 85, 88, 90, 91, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 85, 88, 90, 91, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -215,10 +215,6 @@ struct bin_str
     size_t len;			/* Number of bytes */
     const char *string;		/* Pointer to the same */
   };
-
-#ifndef STDC_HEADERS
-time_t time ();
-#endif
 
 char *getgroup ();
 char *getuser ();
@@ -3100,17 +3096,14 @@ get_current_time (void)
 #if HAVE_GETTIMEOFDAY
   {
     struct timeval timeval;
-    if (gettimeofday (&timeval, NULL) == 0)
-      {
-	current_time = timeval.tv_sec;
-	current_time_ns = timeval.tv_usec * 1000 + 999;
-	return;
-      }
+    gettimeofday (&timeval, NULL);
+    current_time = timeval.tv_sec;
+    current_time_ns = timeval.tv_usec * 1000 + 999;
   }
-#endif
-
+#else
   current_time = time (NULL);
   current_time_ns = 999999999;
+#endif
 }
 
 /* Print the user or group name NAME, with numeric id ID, using a
