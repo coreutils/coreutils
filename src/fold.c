@@ -19,10 +19,7 @@
 
 /* Get isblank from GNU libc.  */
 #define _GNU_SOURCE
-#include <ctype.h>
-#ifndef isblank
-#define isblank(c) ((c) == ' ' || (c) == '\t')
-#endif
+
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
@@ -169,7 +166,7 @@ fold_file (filename, width)
 
 	      for (logical_end = offset_out - 1; logical_end >= 0;
 		   logical_end--)
-		if (isblank (line_out[logical_end]))
+		if (ISBLANK (line_out[logical_end]))
 		  break;
 	      if (logical_end >= 0)
 		{

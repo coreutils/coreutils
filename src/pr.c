@@ -93,20 +93,12 @@
 
    -w width	Set the page width to WIDTH characters. */
 
+
 #include <stdio.h>
 #include <getopt.h>
-#include <ctype.h>
 #include <sys/types.h>
 #include <time.h>
 #include "system.h"
-
-#ifdef isascii
-#define ISPRINT(c) (isascii (c) && isprint (c))
-#define ISDIGIT(c) (isascii (c) && isdigit (c))
-#else
-#define ISPRINT(c) isprint (c)
-#define ISDIGIT(c) isdigit (c)
-#endif
 
 char *xmalloc ();
 char *xrealloc ();

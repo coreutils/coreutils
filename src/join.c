@@ -19,22 +19,11 @@
 
 /* Get isblank from GNU libc.  */
 #define _GNU_SOURCE
-#include <ctype.h>
-#ifndef isblank
-#define isblank(c) ((c) == ' ' || (c) == '\t')
-#endif
+
 #include <stdio.h>
 #include <sys/types.h>
 #include <getopt.h>
 #include "system.h"
-
-#ifdef isascii
-#define ISSPACE(c) (isascii(c) && isspace(c))
-#define ISDIGIT(c) (isascii(c) && isdigit(c))
-#else
-#define ISSPACE(c) isspace(c)
-#define ISDIGIT(c) isdigit(c)
-#endif
 
 char *xmalloc ();
 char *xrealloc ();
@@ -526,7 +515,7 @@ add_field_list (str)
 
   for (; *str; str++)
     {
-      if (*str == ',' || isblank (*str))
+      if (*str == ',' || ISBLANK (*str))
 	{
 	  added += add_field (file, field);
 	  file = field = -1;

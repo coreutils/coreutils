@@ -59,20 +59,11 @@
 
 /* Get isblank from GNU libc.  */
 #define _GNU_SOURCE
-#include <ctype.h>
-#ifndef isblank
-#define isblank(c) ((c) == ' ' || (c) == '\t')
-#endif
+
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
-
-#ifdef isascii
-#define ISDIGIT(c) (isascii ((c)) && isdigit ((c)))
-#else
-#define ISDIGIT(c) (isdigit ((c)))
-#endif
 
 char *xmalloc ();
 char *xrealloc ();
@@ -286,7 +277,7 @@ set_fields (fieldstr)
 	  else
 	    initial = 1;
 	}
-      else if (*fieldstr == ',' || isblank (*fieldstr) || *fieldstr == '\0')
+      else if (*fieldstr == ',' || ISBLANK (*fieldstr) || *fieldstr == '\0')
 	{
 	  /* Ending the string, or this field/byte sublist. */
 	  if (dash_found)

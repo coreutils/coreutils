@@ -19,10 +19,7 @@
 
 /* Get isblank from GNU libc.  */
 #define _GNU_SOURCE
-#include <ctype.h>
-#ifndef isblank
-#define isblank(c) ((c) == ' ' || (c) == '\t')
-#endif
+
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
@@ -249,9 +246,9 @@ find_field (line)
 
   for (count = 0; count < skip_fields && i < size; count++)
     {
-      while (i < size && isblank (lp[i]))
+      while (i < size && ISBLANK (lp[i]))
 	i++;
-      while (i < size && !isblank (lp[i]))
+      while (i < size && !ISBLANK (lp[i]))
 	i++;
     }
 

@@ -23,7 +23,6 @@
 
 #include <stdio.h>
 #include <getopt.h>
-#include <ctype.h>
 #include <sys/types.h>
 #include "system.h"
 
@@ -262,7 +261,7 @@ isdigits (str)
 {
   do
     {
-      if (!isdigit (*str))
+      if (!ISDIGIT (*str))
 	return 0;
       str++;
     }

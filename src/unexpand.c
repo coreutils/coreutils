@@ -37,20 +37,11 @@
 
 /* Get isblank from GNU libc.  */
 #define _GNU_SOURCE
-#include <ctype.h>
-#ifndef isblank
-#define isblank(c) ((c) == ' ' || (c) == '\t')
-#endif
+
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
-
-#ifdef isascii
-#define ISDIGIT(c) (isascii((c)) && isdigit((c)))
-#else
-#define ISDIGIT(c) (isdigit((c)))
-#endif
 
 /* The number of bytes added at a time to the amount of memory
    allocated for the output line. */
@@ -189,7 +180,7 @@ parse_tabstops (stops)
 
   for (; *stops; stops++)
     {
-      if (*stops == ',' || isblank (*stops))
+      if (*stops == ',' || ISBLANK (*stops))
 	{
 	  add_tabstop (tabval);
 	  tabval = -1;

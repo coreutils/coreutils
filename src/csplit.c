@@ -20,7 +20,6 @@
 
 #include <stdio.h>
 #include <getopt.h>
-#include <ctype.h>
 #include <sys/types.h>
 #include <signal.h>
 #include "regex.h"
@@ -1051,7 +1050,7 @@ string_to_number (result, num)
 
   while ((ch = *num++))
     {
-      if (!isdigit (ch))
+      if (!ISDIGIT (ch))
 	return FALSE;
       val = val * 10 + ch - '0';
     }

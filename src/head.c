@@ -35,15 +35,8 @@
 
 #include <stdio.h>
 #include <getopt.h>
-#include <ctype.h>
 #include <sys/types.h>
 #include "system.h"
-
-#ifdef isascii
-#define ISDIGIT(c) (isascii ((c)) && isdigit ((c)))
-#else
-#define ISDIGIT(c) (isdigit ((c)))
-#endif
 
 /* Number of lines/chars/blocks to head. */
 #define DEFAULT_NUMBER 10

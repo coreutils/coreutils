@@ -33,19 +33,10 @@ char *alloca ();
 #endif /* not __GNUC__ */
 
 #include <stdio.h>
-#include <ctype.h>
 #include <assert.h>
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
-
-#ifdef isascii
-#define ISPRINT(c) (isascii (c) && isprint (c))
-#define ISDIGIT(c) (isascii (c) && isdigit (c))
-#else
-#define ISPRINT(c) isprint (c)
-#define ISDIGIT(c) isdigit (c)
-#endif
 
 #if defined(__GNUC__) || defined(STDC_HEADERS)
 #include <float.h>

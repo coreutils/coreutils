@@ -21,10 +21,7 @@
 
 /* Get isblank from GNU libc.  */
 #define _GNU_SOURCE
-#include <ctype.h>
-#ifndef isblank
-#define isblank(c) ((c) == ' ' || (c) == '\t')
-#endif
+
 #include <sys/types.h>
 #include <signal.h>
 #include <stdio.h>
@@ -48,18 +45,6 @@ static void usage ();
 #define min(a, b) ((a) < (b) ? (a) : (b))
 #define UCHAR_LIM (UCHAR_MAX + 1)
 #define UCHAR(c) ((unsigned char) (c))
-
-#ifdef isascii
-#define ISALNUM(c) (isascii(c) && isalnum(c))
-#define ISDIGIT(c) (isascii(c) && isdigit(c))
-#define ISPRINT(c) (isascii(c) && isprint(c))
-#define ISLOWER(c) (isascii(c) && islower(c))
-#else
-#define ISALNUM(c) isalnum(c)
-#define ISDIGIT(c) isdigit(c)
-#define ISPRINT(c) isprint(c)
-#define ISLOWER(c) islower(c)
-#endif
 
 /* The kind of blanks for '-b' to skip in various options. */
 enum blanktype { bl_start, bl_end, bl_both };
@@ -353,13 +338,13 @@ inittables ()
 
   for (i = 0; i < UCHAR_LIM; ++i)
     {
-      if (isblank (i))
+      if (ISBLANK (i))
 	blanks[i] = 1;
       if (ISDIGIT (i))
 	digits[i] = 1;
       if (!ISPRINT (i))
 	nonprinting[i] = 1;
-      if (!ISALNUM (i) && !isblank (i))
+      if (!ISALNUM (i) && !ISBLANK (i))
 	nondictionary[i] = 1;
       if (ISLOWER (i))
 	fold_toupper[i] = toupper (i);
