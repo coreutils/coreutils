@@ -65,19 +65,25 @@
 #include "makepath.h"
 #include "error.h"
 
-#ifdef _POSIX_VERSION
+#if HAVE_SYS_WAIT_H
 #include <sys/wait.h>
-#else
+#endif
+
 struct passwd *getpwnam ();
 struct group *getgrnam ();
+
+#ifndef _POSIX_VERSION
 uid_t getuid ();
 gid_t getgid ();
 int wait ();
 #endif
 
-#ifdef _POSIX_SOURCE
-#define endgrent()
-#define endpwent()
+#ifndef HAVE_ENDGRENT
+# define endgrent() ((void) 0)
+#endif
+
+#ifndef HAVE_ENDPWENT
+# define endpwent() ((void) 0)
 #endif
 
 /* True if C is an ASCII octal digit. */
