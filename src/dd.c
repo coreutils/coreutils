@@ -177,18 +177,18 @@ struct conversion
 
 struct conversion conversions[] =
 {
-  "ascii", C_ASCII | C_TWOBUFS,	/* EBCDIC to ASCII. */
-  "ebcdic", C_EBCDIC | C_TWOBUFS,	/* ASCII to EBCDIC. */
-  "ibm", C_IBM | C_TWOBUFS,	/* Slightly different ASCII to EBCDIC. */
-  "block", C_BLOCK | C_TWOBUFS,	/* Variable to fixed length records. */
-  "unblock", C_UNBLOCK | C_TWOBUFS,	/* Fixed to variable length records. */
-  "lcase", C_LCASE | C_TWOBUFS,	/* Translate upper to lower case. */
-  "ucase", C_UCASE | C_TWOBUFS,	/* Translate lower to upper case. */
-  "swab", C_SWAB | C_TWOBUFS,	/* Swap bytes of input. */
-  "noerror", C_NOERROR,		/* Ignore i/o errors. */
-  "notrunc", C_NOTRUNC,		/* Do not truncate output file. */
-  "sync", C_SYNC,		/* Pad input records to ibs with NULs. */
-  NULL, 0
+  {"ascii", C_ASCII | C_TWOBUFS},	/* EBCDIC to ASCII. */
+  {"ebcdic", C_EBCDIC | C_TWOBUFS},	/* ASCII to EBCDIC. */
+  {"ibm", C_IBM | C_TWOBUFS},	/* Slightly different ASCII to EBCDIC. */
+  {"block", C_BLOCK | C_TWOBUFS},	/* Variable to fixed length records. */
+  {"unblock", C_UNBLOCK | C_TWOBUFS},	/* Fixed to variable length records. */
+  {"lcase", C_LCASE | C_TWOBUFS},	/* Translate upper to lower case. */
+  {"ucase", C_UCASE | C_TWOBUFS},	/* Translate lower to upper case. */
+  {"swab", C_SWAB | C_TWOBUFS},	/* Swap bytes of input. */
+  {"noerror", C_NOERROR},	/* Ignore i/o errors. */
+  {"notrunc", C_NOTRUNC},	/* Do not truncate output file. */
+  {"sync", C_SYNC},		/* Pad input records to ibs with NULs. */
+  {NULL, 0}
 };
 
 /* Translation table formed by applying successive transformations. */
@@ -455,7 +455,7 @@ swab_buffer (buf, nread)
   if (char_is_saved)
     {
       *--bufstart = saved_char;
-      *nread++;
+      (*nread)++;
       char_is_saved = 0;
     }
 
