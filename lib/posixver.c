@@ -1,6 +1,6 @@
 /* Which POSIX version to conform to, for utilities.
 
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -32,13 +32,17 @@
 # define _POSIX2_VERSION 0
 #endif
 
+#ifndef DEFAULT_POSIX2_VERSION
+# define DEFAULT_POSIX2_VERSION _POSIX2_VERSION
+#endif
+
 /* The POSIX version that utilities should conform to.  The default is
    specified by the system.  */
 
 int
 posix2_version (void)
 {
-  long int v = _POSIX2_VERSION;
+  long int v = DEFAULT_POSIX2_VERSION;
   char const *s = getenv ("_POSIX2_VERSION");
 
   if (s && *s)
