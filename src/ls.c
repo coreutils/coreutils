@@ -1886,41 +1886,42 @@ Usage: %s [OPTION]... [PATH]...\n\
 	   program_name);
 
   if (status == 0)
-    fprintf (stdout, "\
+    {
+      fprintf (stdout, "\
   -a, --all                  do not hide entries starting with .\n\
   -b, --escape               print octal escapes for nongraphic characters\n\
-  -c                         sort by change time, list change time if -l\n\
-  -d, --directory            list directory entries, instead of contents\n\
+  -c                         sort by change time; with -l: show ctime\n\
+  -d, --directory            list directory entries instead of contents\n\
   -f                         do not sort, enable -aU, disable -lst\n\
   -g                         (ignored)\n\
   -i, --inode                print index number of each file\n\
   -k, --kilobytes            use 1024 blocks, not 512 despite POSIXLY_CORRECT\n\
-  -l                         make a long listing, with many informations\n\
+  -l                         use a long listing format\n\
   -m                         fill width with a comma separated list of entries\n\
-  -n, --numeric-uid-gid      list numeric UIDs and GIDs, instead of names\n\
+  -n, --numeric-uid-gid      list numeric UIDs and GIDs instead of names\n\
   -p                         append a character for typing each entry\n\
   -q, --hide-control-chars   print ? instead of non graphic characters\n\
   -r, --reverse              reverse order while sorting\n\
   -s, --size                 print block size of each file\n\
-  -t                         sort by modification time, list mod time if -l\n\
-  -u                         sort by last access time, list access time if -l\n\
-  -w, --width COLS           assume screen width, instead of current value\n\
-  -x                         list entries by lines, instead of by columns\n\
-  -A, --almost-all           hide only implied . and ..\n");
+  -t                         sort by modification time; with -l: show mtime\n\
+  -u                         sort by last access time; with -l: show atime\n\
+  -w, --width COLS           assume screen width instead of current value\n\
+  -x                         list entries by lines instead of by columns\n\
+  -A, --almost-all           do not list implied . and ..\n");
 
-    fprintf (stdout, "\
-  -B, --ignore-backups       hide implied entries ending with ~\n\
+      fprintf (stdout, "\
+  -B, --ignore-backups       do not list implied entries ending with ~\n\
   -C                         list entries by columns\n\
   -F, --classify             append a character for typing each entry\n\
   -G, --no-group             inhibit display of group information\n\
-  -I, --ignore PATTERN       hide implied entries matching shell PATTERN\n\
+  -I, --ignore PATTERN       do not list implied entries matching shell PATTERN\n\
   -L, --dereference          list entries pointed to by symbolic links\n\
   -N, --literal              do not quote entry names\n\
   -Q, --quote-name           enclose entry names in double quotes\n\
   -R, --recursive            list subdirectories recursively\n\
   -S                         sort by file size\n\
-  -T, --tabsize COLS         assume tab stops at each COLS, instead of 8\n\
-  -U                         do not sort and list entries in directory order\n\
+  -T, --tabsize COLS         assume tab stops at each COLS instead of 8\n\
+  -U                         do not sort; list entries in directory order\n\
   -X                         sort alphabetically by entry extension\n\
   -1                         list one file per line\n\
       --full-time            list both full date and full time\n\
@@ -1934,6 +1935,7 @@ Usage: %s [OPTION]... [PATH]...\n\
 \n\
 Sort entries alphabetically if none of -cftuSUX nor --sort.\n");
 
+    }
   else
     fprintf (stderr, "Try `%s --help' for more information.\n",
 	     program_name);

@@ -9,6 +9,12 @@ Sat Oct  9 13:30:28 1993  Jim Meyering  (meyering@comco.com)
 	* Makefile.in: Remove comments about -D flags that could be added
 	to DEFS; now (using autoheader) those comments end up in config.h.
 
+	* Makefile.in (configure, config.h.in): Warn that they may not be
+	up to date.  Don't touch them.
+
+	* ls.c (usage): Split long usage string between two fprintf
+	statements to avoid default limit of SGI's cc on string length.
+
 Thu Oct 07 12:57:10 1993  Jim Meyering  (meyering@comco.com)
 
 	* chgrp.c, chmod.c, chown.c, cp-aux.c, cp.c, dd.c, df.c, du.c,
