@@ -1,3 +1,11 @@
+Wed Feb 28 20:32:48 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* src/Makefile.am: Adapt for automake-0.30.
+	(noinst_HEADERS): Rename from HEADERS.
+	(INCLUDES): Remove -I.. and -I$(srcdir).  automake-0.30 adds these
+	to DEFS automatically.
+	* lib/Makefile.am: (noinst_HEADERS): Rename from HEADERS.
+
 Wed Feb 21 18:56:27 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* join.c (xfields) [without -t]: Ignore leading blanks.
