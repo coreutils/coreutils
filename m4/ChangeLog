@@ -1,5 +1,10 @@
 2004-07-27  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* euidaccess.m4 (gl_PREREQ_EUIDACCESS): Don't bother checking for
+	unistd.h, as autoconf does this for us.  Check for libgen.h.
+	Also look for eaccess within -lgen, which is where it is in
+	Solaris.  Set LIB_EACCESS accordingly.
+
 	* backupfile.m4 (gl_BACKUPFILE): AC_REQUIRE
 	gl_CHECK_TYPE_STRUCT_DIRENT_D_INO instead of invoking it directly.
 	Do not require AC_FUNC_CLOSEDIR_VOID.

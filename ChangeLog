@@ -1,5 +1,8 @@
 2004-07-27  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/Makefile.am (cp_LDADD, ginstall_LDADD, mv_LDADD,
+	pathchk_LDADD, rm_LDADD, test_LDADD): New vars, for eaccess.
+
 	* tests/readlink/can-e: Don't assume that we can remove the
 	working directory: this isn't possible under Solaris 8, say.
 	* tests/readlink/can-f: Likewise.

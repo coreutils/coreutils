@@ -1,5 +1,9 @@
 2004-07-27  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* euidaccess.c [HAVE_LIBGEN_H]: Include <libgen.h>, for
+	eaccess on Solaris and SVR4-like systems.
+	(euidaccess): Use HAVE_EACCESS, not HAVE_DECL_EACCESS.
+
 	cycle-check integer overflow fixup.
 
 	* cycle-check.h: Remove now-inaccurate comment about the files
