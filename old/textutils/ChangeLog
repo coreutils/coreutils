@@ -2,6 +2,9 @@
 
 	* Version 1.22i.
 
+	* tests/pr/Test.pm (test_vector): Disable all tests while I wait for
+	an updated suite.
+
 	Fix the problem whereby `yes > k & sleep 1; tail -2c k' would infloop.
 	* src/tail.c (COPY_TO_EOF): Define.
 	(dump_remainder): Add parameter, n_bytes, and rewrite to use it.
