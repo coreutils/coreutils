@@ -2,6 +2,8 @@
 
 	* Version 5.1.1.
 
+	* Makefile.maint (%.sig): Use .sig suffix rather than .asc.
+
 	* Makefile.maint (po-check): Ensure that cvsu works before using it.
 	Reported by Alexandre Duret-Lutz.
 
