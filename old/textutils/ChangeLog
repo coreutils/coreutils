@@ -1,5 +1,8 @@
 Sun Oct 30 01:30:41 1994  Jim Meyering  (meyering@comco.com)
 
+	* (configure.in): Add AC_OFF_T and rearrange by type along the
+	same lines as autoscan.
+
 	* fmt.c, fmt.1: New files.
 	Both from Ross Paterson (rap@doc.ic.ac.uk).
 
