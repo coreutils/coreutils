@@ -146,45 +146,23 @@ split_3 (s, u, binary, w)
       /* The first field has to be the 32-character hexadecimal
 	 representation of the message digest.  If it not immediately
 	 followed by a white space it's an error.  */
-      if (!ISWHITE (s[i + 32]))
+      i += 32;
+      if (!ISWHITE (s[i]))
 	return 1;
 
-      i += 32;
       s[i++] = '\0';
 
-      /* Now we have to look for two possibilities: the line is in the
-	 new format in which case we have the character 'b' or 't' followed
-	 by a white space or we have a ' ' or '*' immediately followed by
-	 the file name.  */
-      if (ISWHITE (s[i + 1]))
-	{
-	  if (s[i] != 'b' && s[i] != 't')
-	    return 1;
-	  *binary = s[i] == 'b';
-	  i += 2;
-	}
-      else
-	{
-	  if (s[i] != ' ' && s[i] != '*')
-	    return 1;
-	  *binary = s[i] == '*';
-	  ++i;
-	}
+      if (s[i] != ' ' && s[i] != '*')
+	return 1;
+      *binary = s[i++] == '*';
 
-      if (s[i])
-	{
-	  *w = &s[i];
-	  /* Skip past the third token.  */
-	  while (s[i] && !ISWHITE (s[i]))
-	    ++i;
-	  if (s[i])
-	    s[i++] = '\0';
-	  /* Allow trailing white space.  */
-	  while (ISWHITE (s[i]))
-	    ++i;
-	  if (!s[i])
-	    return 0;
-	}
+      /* When using the old format, all characters between the type
+	 indicator and end of line are significant -- that includes
+	 leading and trailing white space.  */
+      *w = &s[i];
+      /* So this line is valid as long as there is at least one character
+	 for the filename.  */
+      return (**w ? 0 : 1);
     }
   return 1;
 }
