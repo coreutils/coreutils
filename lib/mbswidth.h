@@ -25,12 +25,12 @@
 
 /* Optional flags to influence mbswidth/mbsnwidth behavior.  */
 
-/* Assume invalid characters have width 0.  If this bit is not set,
-   return -1 upon finding an invalid or incomplete character.  */
+/* If this bit is set, assume invalid characters have width 0.
+   Otherwise, return -1 upon finding an invalid or incomplete character.  */
 #define MBSW_ACCEPT_INVALID 1
 
-/* Assume unprintable characters have width 1.  If this bit is not set,
-   return -1 upon finding a non-printable character.  */
+/* If this bit is set, assume unprintable characters have width 1.
+   Otherwise, return -1 upon finding a non-printable character.  */
 #define MBSW_ACCEPT_UNPRINTABLE	2
 
 /* Returns the number of screen columns needed for STRING.  */
