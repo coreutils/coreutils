@@ -1,5 +1,5 @@
 /* dd -- convert a file while copying it.
-   Copyright (C) 85, 90, 91, 1995-2003 Free Software Foundation, Inc.
+   Copyright (C) 85, 90, 91, 1995-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -279,7 +279,7 @@ static char const ebcdic_to_ascii[] =
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -479,7 +479,7 @@ write_output (void)
       error (0, errno, _("writing to %s"), quote (output_file));
       if (nwritten != 0)
 	w_partial++;
-      quit (1);
+      quit (EXIT_FAILURE);
     }
   else
     w_full++;
@@ -823,7 +823,7 @@ skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
 	  if (nread == SAFE_READ_ERROR)
 	    {
 	      error (0, errno, _("reading %s"), quote (file));
-	      quit (1);
+	      quit (EXIT_FAILURE);
 	    }
 	  /* POSIX doesn't say what to do when dd detects it has been
 	     asked to skip past EOF, so I assume it's non-fatal.
@@ -937,7 +937,7 @@ dd_copy (void)
   char *real_buf;		/* real buffer address before alignment */
   char *real_obuf;
   size_t nread;			/* Bytes read in the current block. */
-  int exit_status = 0;
+  int exit_status = EXIT_SUCCESS;
   size_t page_size = getpagesize ();
   size_t n_bytes_read;
 
@@ -1032,7 +1032,7 @@ dd_copy (void)
 	  else
 	    {
 	      /* Write any partial block. */
-	      exit_status = 2;
+	      exit_status = EXIT_FAILURE;
 	      break;
 	    }
 	}
@@ -1061,7 +1061,7 @@ dd_copy (void)
 	  if (nwritten != n_bytes_read)
 	    {
 	      error (0, errno, _("writing %s"), quote (output_file));
-	      quit (1);
+	      quit (EXIT_FAILURE);
 	    }
 	  else if (n_bytes_read == input_blocksize)
 	    w_full++;
@@ -1122,7 +1122,7 @@ dd_copy (void)
       if (nwritten != oc)
 	{
 	  error (0, errno, _("writing %s"), quote (output_file));
-	  quit (1);
+	  quit (EXIT_FAILURE);
 	}
     }
 
