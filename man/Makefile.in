@@ -309,7 +309,7 @@ mapped_name = `echo $*|sed 's/install/ginstall/; s/test/[/'`
 ASSORT = LC_ALL=C sort
 all_programs = \
       (cd ../src && MAKEFLAGS= $(MAKE) -s all_programs.list)		\
-       | sed -e 's,$(EXEEXT)$$,,' | grep -v '\['
+       | grep -v '\['
 
 all: all-am
 
@@ -616,10 +616,10 @@ yes.1:		$(common_dep)	$(srcdir)/yes.x		../src/yes.c
 	@rm -f $@
 	@echo "Updating man page $@";		\
 	mkdir $t;				\
-	(cd $t && $(LN_S) ../../src/$(mapped_name)$(EXEEXT) $*$(EXEEXT)); \
+	(cd $t && $(LN_S) ../../src/$(mapped_name) $*); \
 	$(PERL) -- $(srcdir)/help2man		\
 	    --include=$(srcdir)/$*.x		\
-	    --output=$@ $t/$*$(EXEEXT)
+	    --output=$@ $t/$*
 	@chmod a-w $@
 	@rm -rf $t
 

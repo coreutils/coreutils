@@ -943,7 +943,7 @@ uninstall-binPROGRAMS:
 	done
 
 clean-binPROGRAMS:
-	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS) > /dev/null 2>&1 || /bin/rm -f $(bin_PROGRAMS)
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 
 installcheck-binPROGRAMS: $(bin_PROGRAMS)
 	bad=0; pid=$$$$; list="$(bin_PROGRAMS)"; for p in $$list; do \
@@ -1640,7 +1640,8 @@ fs.h: stat.c extract-magic
 	mv $@t $@
 
 all_programs.list:
-	@echo $(all_programs) | tr ' ' '\n' | $(ASSORT)
+	@echo $(all_programs) | tr ' ' '\n' | sed -e 's,$(EXEEXT)$$,,' \
+	  | $(ASSORT) -u
 # Ensure that the list of programs in README matches the list
 # of programs we can build.
 check: check-README check-misc check-AUTHORS
