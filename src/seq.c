@@ -93,7 +93,7 @@ Usage: %s [OPTION]... [START [INCREMENT]] LIMIT\n\
   -w, --equal-width        equalize width by padding with leading zeroes\n\
 \n\
   START, INCREMENT, and LIMIT are interpreted as floating point values.\n\
-  INCREMENT should be positive if START is smaller than LIMIT and negative\n\
+  INCREMENT should be positive if START is smaller than LIMIT, and negative\n\
   otherwise.  When given, the FORMAT argument must contain exactly one of\n\
   the printf-style, floating point output formats %%e, %%f, or %%g.\n\
 "));
