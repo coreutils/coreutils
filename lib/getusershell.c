@@ -1,5 +1,5 @@
 /* getusershell.c -- Return names of valid user shells.
-   Copyright (C) 1991, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1997, 2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@
 
 #include <stdio.h>
 #include <ctype.h>
+#include "xalloc.h"
 
 #if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
 # define IN_CTYPE_DOMAIN(c) 1
@@ -36,15 +37,6 @@
 #endif
 
 #define ISSPACE(c) (IN_CTYPE_DOMAIN (c) && isspace (c))
-
-#ifdef STDC_HEADERS
-# include <stdlib.h>
-#else
-char *malloc ();
-char *realloc ();
-#endif
-
-char *xstrdup ();
 
 static int readname ();
 
@@ -124,39 +116,6 @@ endusershell ()
       fclose (shellstream);
       shellstream = NULL;
     }
-}
-
-/* Allocate N bytes of memory dynamically, with error checking.  */
-
-static char *
-xmalloc (n)
-     unsigned n;
-{
-  char *p;
-
-  p = malloc (n);
-  if (p == 0)
-    {
-      fprintf (stderr, "virtual memory exhausted\n");
-      exit (1);
-    }
-  return p;
-}
-
-/* Reallocate space P to size N, with error checking.  */
-
-static char *
-xrealloc (p, n)
-     char *p;
-     unsigned n;
-{
-  p = realloc (p, n);
-  if (p == 0)
-    {
-      fprintf (stderr, "virtual memory exhausted\n");
-      exit (1);
-    }
-  return p;
 }
 
 /* Read a line from STREAM, removing any newline at the end.
