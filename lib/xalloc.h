@@ -46,9 +46,9 @@ extern int xalloc_exit_failure;
 extern void (*xalloc_fail_func) PARAMS ((void));
 
 /* If XALLOC_FAIL_FUNC is undefined or a function that returns, this
-   message must be non-NULL.  It is translated via gettext.
-   The default value is "Memory exhausted".  */
-extern char *const xalloc_msg_memory_exhausted;
+   message is output.  It is translated via gettext.
+   Its value is "memory exhausted".  */
+extern char const xalloc_msg_memory_exhausted[];
 
 /* This function is always triggered when memory is exhausted.  It is
    in charge of honoring the three previous items.  This is the
