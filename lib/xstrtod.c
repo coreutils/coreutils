@@ -1,5 +1,5 @@
 /* xstrtod.c - error-checking interface to strtod
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -68,4 +68,3 @@ xstrtod (str, ptr, result)
   *result = val;
   return fail;
 }
-
