@@ -1,5 +1,6 @@
 /* error-checking interface to strtod-like functions
-   Copyright (C) 1996, 1999, 2000, 2003 Free Software Foundation, Inc.
+
+   Copyright (C) 1996, 1999, 2000, 2003, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -34,36 +35,35 @@
 
 /* An interface to strtod that encapsulates all the error checking
    one should usually perform.  Like strtod, but upon successful
-   conversion put the result in *RESULT and return zero.  Return
-   non-zero and don't modify *RESULT upon any failure.  CONVERT
+   conversion put the result in *RESULT and return true.  Return
+   false and don't modify *RESULT upon any failure.  CONVERT
    specifies the conversion function, e.g., strtod itself.  */
 
-int
+bool
 xstrtod (char const *str, char const **ptr, double *result,
 	 double (*convert) (char const *, char **))
 {
   double val;
   char *terminator;
-  int fail;
+  bool ok = true;
 
-  fail = 0;
   errno = 0;
   val = convert (str, &terminator);
 
   /* Having a non-zero terminator is an error only when PTR is NULL. */
   if (terminator == str || (ptr == NULL && *terminator != '\0'))
-    fail = 1;
+    ok = false;
   else
     {
       /* Allow underflow (in which case strtod returns zero),
 	 but flag overflow as an error. */
       if (val != 0.0 && errno == ERANGE)
-	fail = 1;
+	ok = false;
     }
 
   if (ptr != NULL)
     *ptr = terminator;
 
   *result = val;
-  return fail;
+  return ok;
 }
