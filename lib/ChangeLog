@@ -1,6 +1,7 @@
 2003-06-06  Jim Meyering  <jim@meyering.net>
 
 	Update from gnulib.
+	* quote.c: Don't include <stddef.h> or <sys/types.h>; not needed.
 	* modechange.c: Include <stddef.h>.
 	(NULL): Don't define, since <stddef.h> does that.
 	* memcoll.h: Include <stddef.h>, to get size_t.
