@@ -466,7 +466,14 @@ isaac_seed_start (struct isaac_state *s)
 #endif
   for (i = 0; i < 8; i++)
     s->iv[i] = iv[i];
-  /* We could initialize s->mm to zero, but why bother? */
+
+  /* Enable the following memset if you're worried about used-uninitialized
+     warnings involving code in isaac_refill from tools like valgrind.
+     Since this buffer is used to accumulate pseudo-random data, there's
+     no harm, and maybe even some benefit, in using it uninitialized.  */
+#if AVOID_USED_UNINITIALIZED_WARNINGS
+  memset (s->mm, 0, sizeof s->mm);
+#endif
 
   /* s->c gets used for a data pointer during the seeding phase */
   s->a = s->b = s->c = 0;
