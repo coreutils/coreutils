@@ -1,5 +1,5 @@
 /* Convert a `struct tm' to a time_t value.
-   Copyright (C) 1993-1999, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1993-1999, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Eggert (eggert@twinsun.com).
 
@@ -265,12 +265,6 @@ __mktime_internal (struct tm *tp,
 
   int sec_requested = sec;
 
-  /* Only years after 1970 are defined.
-     If year is 69, it might still be representable due to
-     timezone differences.  */
-  if (year < 69)
-    return -1;
-
 #if LEAP_SECONDS_POSSIBLE
   /* Handle out-of-range seconds specially,
      since ydhms_tm_diff assumes every minute has 60 seconds.  */
@@ -375,14 +369,6 @@ __mktime_internal (struct tm *tp,
       const time_t time_t_min = TIME_T_MIN;
 
       if (time_t_max / 3 - time_t_min / 3 < (dsec < 0 ? - dsec : dsec))
-	return -1;
-    }
-
-  if (year == 69)
-    {
-      /* If year was 69, need to check whether the time was representable
-	 or not.  */
-      if (t < 0 || t > 2 * 24 * 60 * 60)
 	return -1;
     }
 
