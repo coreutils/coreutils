@@ -1,3 +1,8 @@
+2000-05-15  Jim Meyering  <meyering@lucent.com>
+
+	* tests/date/Test.pm (test_vector): Skip the %c test on SunOS4 systems.
+	Suggested by Paul Eggert.  Reported by Volker Borchert.
+
 2000-05-13  Jim Meyering  <meyering@lucent.com>
 
 	* src/groups.sh: Detect and report write failure of --help/--version.
