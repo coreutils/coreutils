@@ -194,6 +194,7 @@ static void print_long_format __P ((const struct fileinfo *f));
 static void print_many_per_line __P ((void));
 static void print_name_with_quoting __P ((const char *p, unsigned int mode,
 					  int linkok));
+static void prep_non_filename_text __P ((void));
 static void print_type_indicator __P ((unsigned int mode));
 static void print_with_commas __P ((void));
 static void queue_directory __P ((const char *name, const char *realname));
@@ -673,7 +674,10 @@ main (int argc, char **argv)
     usage (EXIT_SUCCESS);
 
   if (print_with_color)
-    parse_ls_color ();
+    {
+      parse_ls_color ();
+      prep_non_filename_text ();
+    }
 
   format_needs_stat = sort_type == sort_time || sort_type == sort_size
     || format == long_format
@@ -742,6 +746,13 @@ main (int argc, char **argv)
 
   if (fclose (stdout) == EOF)
     error (EXIT_FAILURE, errno, _("write error"));
+
+  /* Restore default color before exiting */
+  if (print_with_color)
+    {
+      put_indicator (&color_indicator[C_LEFT]);
+      put_indicator (&color_indicator[C_RIGHT]);
+    }
 
   exit (exit_status);
 }
@@ -1285,7 +1296,7 @@ get_funky_string (char **dest, const char **src, int equals_end)
 	      *(q++) = *(p++) & 037;
 	      ++count;
 	    }
-	  else if ( *p == '?' )
+	  else if ( *p == '?')
 	    {
 	      *(q++) = 127;
 	      ++count;
@@ -2137,7 +2148,7 @@ print_long_format (const struct fileinfo *f)
       if (f->linkname)
 	{
 	  FPUTS_LITERAL (" -> ", stdout);
-	  print_name_with_quoting (f->linkname, f->linkmode, f->linkok-1);
+	  print_name_with_quoting (f->linkname, f->linkmode, f->linkok - 1);
 	  if (indicator_style != none)
 	    print_type_indicator (f->linkmode);
 	}
@@ -2300,15 +2311,19 @@ print_name_with_quoting (const char *p, unsigned int mode, int linkok)
     free (quoted);
 
   if (print_with_color)
+    prep_non_filename_text ();
+}
+
+static void
+prep_non_filename_text (void)
+{
+  if (color_indicator[C_END].string != NULL)
+    put_indicator (&color_indicator[C_END]);
+  else
     {
-      if (color_indicator[C_END].string != NULL)
-	put_indicator (&color_indicator[C_END]);
-      else
-	{
-	  put_indicator (&color_indicator[C_LEFT]);
-	  put_indicator (&color_indicator[C_NORM]);
-	  put_indicator (&color_indicator[C_RIGHT]);
-	}
+      put_indicator (&color_indicator[C_LEFT]);
+      put_indicator (&color_indicator[C_NORM]);
+      put_indicator (&color_indicator[C_RIGHT]);
     }
 }
 
