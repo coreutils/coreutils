@@ -811,13 +811,11 @@ substr (p, first_idx, last_idx)
      int last_idx;
 {
   int len = last_idx - first_idx + 1;
-  unsigned char *tmp = (unsigned char *) xmalloc (len + 1);
+  unsigned char *tmp = (unsigned char *) xmalloc (len);
 
   assert (first_idx <= last_idx);
   /* Use memcpy rather than strncpy because `p' may contain zero-bytes.  */
   memcpy (tmp, p + first_idx, len);
-  /* FIXME: then why nul-terminate.  */
-  tmp[len] = '\0';
   return tmp;
 }
 
