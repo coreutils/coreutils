@@ -25,6 +25,7 @@
 
 /* Define the default level of POSIX conformance for these tools. The value is
    of the form YYYYMM, specifying the year and month the standard was adopted.
+   Unless explicitly selected at configure-time, this symbol is not defined.
    */
 #undef DEFAULT_POSIX2_VERSION
 
