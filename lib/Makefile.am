@@ -1,4 +1,7 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-
+
+AUTOMAKE_OPTIONS = ../src/ansi2knr
+
 noinst_LIBRARIES = libfu.a
 
 EXTRA_DIST = chown.c getgroups.c getline.c lstat.c malloc.c mktime.c \
