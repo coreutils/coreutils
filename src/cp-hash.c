@@ -48,6 +48,8 @@ struct htab
 struct htab *htab;
 char new_file;
 
+static char *cph_hash_insert PARAMS ((ino_t ino, dev_t dev, const char *node));
+
 /* Add PATH to the list of files that we have created.
    Return 0 if successful, 1 if not. */
 
@@ -62,7 +64,7 @@ remember_created (const char *path)
       return 1;
     }
 
-  hash_insert (sb.st_ino, sb.st_dev, &new_file);
+  cph_hash_insert (sb.st_ino, sb.st_dev, &new_file);
   return 0;
 }
 
@@ -73,7 +75,7 @@ remember_created (const char *path)
 char *
 remember_copied (const char *node, ino_t ino, dev_t dev)
 {
-  return hash_insert (ino, dev, node);
+  return cph_hash_insert (ino, dev, node);
 }
 
 /* Allocate space for the hash structures, and set the global
@@ -165,8 +167,8 @@ hash_insert2 (struct htab *ht, ino_t ino, dev_t dev, const char *node)
    the same inode and device was not found already.
    Return NULL if inserted, otherwise non-NULL. */
 
-char *
-hash_insert (ino_t ino, dev_t dev, const char *node)
+static char *
+cph_hash_insert (ino_t ino, dev_t dev, const char *node)
 {
   struct htab *htab_r = htab;
 
