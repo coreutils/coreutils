@@ -1,0 +1,181 @@
+/* Determine the number of screen columns needed for a string.
+   Copyright (C) 2000 Free Software Foundation, Inc.
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+
+/* Written by Bruno Haible <haible@clisp.cons.org>.  */
+
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
+/* Tell GNU libc to declare wcwidth().  */
+#ifndef _XOPEN_SOURCE
+# define _XOPEN_SOURCE 500
+#endif
+
+/* Get MB_LEN_MAX.  */
+#if HAVE_LIMITS_H
+# include <limits.h>
+#endif
+
+/* Get MB_CUR_MAX.  */
+#if HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
+
+#if HAVE_STRING_H
+# include <string.h>
+#endif
+
+/* Get isprint().  */
+#include <ctype.h>
+
+/* Get mbstate_t, mbrtowc(), mbsinit(), wcwidth().  */
+#if HAVE_WCHAR_H
+# include <wchar.h>
+#endif
+
+/* Get iswprint().  */
+#if HAVE_WCTYPE_H
+# include <wctype.h>
+#endif
+#if !defined iswprint && !HAVE_ISWPRINT
+# define iswprint(wc) 1
+#endif
+
+/* Some systems, like BeOS, have multibyte encodings but lack mbstate_t.  */
+#if HAVE_MBRTOWC && defined mbstate_t
+# define mbrtowc(pwc, s, n, ps) (mbrtowc) (pwc, s, n, 0)
+# define mbsinit(ps) 1
+#endif
+
+/* If wcwidth() doesn't exist, assume all printable characters have
+   width 1.  */
+#if !defined wcwidth && !HAVE_WCWIDTH
+# define wcwidth(wc) ((wc) == 0 ? 0 : iswprint (wc) ? 1 : -1)
+#endif
+
+/* Get ISPRINT.  */
+#if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
+/* Undefine to protect against the definition in wctype.h of solaris2.6.   */
+# undef ISASCII
+# define ISASCII(c) 1
+#else
+# define ISASCII(c) isascii (c)
+#endif
+/* Undefine to protect against the definition in wctype.h of solaris2.6.   */
+#undef ISPRINT
+#define ISPRINT(c) (ISASCII (c) && isprint (c))
+
+/* Returns the number of columns needed to represent the multibyte
+   character string pointed to by STRING.  If a non-printable character
+   occurs, -1 is returned.
+   This is the multibyte analogon of the wcswidth function.  */
+int
+mbswidth (const char *string)
+{
+  const char *p = string;
+  const char *plimit = p + strlen (p);
+  int width;
+
+  width = 0;
+#if HAVE_MBRTOWC && (MB_LEN_MAX > 1)
+  if (MB_CUR_MAX > 1)
+    {
+      while (p < plimit)
+	switch (*p)
+	  {
+	    case ' ': case '!': case '"': case '#': case '%':
+	    case '&': case '\'': case '(': case ')': case '*':
+	    case '+': case ',': case '-': case '.': case '/':
+	    case '0': case '1': case '2': case '3': case '4':
+	    case '5': case '6': case '7': case '8': case '9':
+	    case ':': case ';': case '<': case '=': case '>':
+	    case '?':
+	    case 'A': case 'B': case 'C': case 'D': case 'E':
+	    case 'F': case 'G': case 'H': case 'I': case 'J':
+	    case 'K': case 'L': case 'M': case 'N': case 'O':
+	    case 'P': case 'Q': case 'R': case 'S': case 'T':
+	    case 'U': case 'V': case 'W': case 'X': case 'Y':
+	    case 'Z':
+	    case '[': case '\\': case ']': case '^': case '_':
+	    case 'a': case 'b': case 'c': case 'd': case 'e':
+	    case 'f': case 'g': case 'h': case 'i': case 'j':
+	    case 'k': case 'l': case 'm': case 'n': case 'o':
+	    case 'p': case 'q': case 'r': case 's': case 't':
+	    case 'u': case 'v': case 'w': case 'x': case 'y':
+	    case 'z': case '{': case '|': case '}': case '~':
+	      /* These characters are printable ASCII characters.  */
+	      p++;
+	      width++;
+	      break;
+	    case '\0':
+	      break;
+	    default:
+	      /* If we have a multibyte sequence, scan it up to its end.  */
+	      {
+		mbstate_t mbstate;
+		memset (&mbstate, 0, sizeof mbstate);
+		do
+		  {
+		    wchar_t wc;
+		    size_t bytes = mbrtowc (&wc, p, plimit - p, &mbstate);
+		    int w;
+
+		    if (bytes == 0)
+		      /* A null wide character was encountered.  */
+		      break;
+
+		    if (bytes == (size_t) -1)
+		      /* An invalid multibyte sequence was encountered.  */
+		      return -1;
+
+		    if (bytes == (size_t) -2)
+		      /* An incomplete multibyte character at the end.  */
+		      return -1;
+
+		    w = wcwidth (wc);
+		    if (w >= 0)
+		      /* A printable multibyte character.  */
+		      width += w;
+		    else
+		      /* An unprintable multibyte character.  */
+		      return -1;
+
+		    p += bytes;
+		  }
+		while (! mbsinit (&mbstate));
+	      }
+	      break;
+	  }
+      return width;
+    }
+#endif
+
+  while (p < plimit)
+    {
+      unsigned char c = (unsigned char) *p++;
+
+      if (c == '\0')
+	break;
+
+      if (ISPRINT (c))
+	width++;
+      else
+	return -1;
+    }
+  return width;
+}
