@@ -1,5 +1,8 @@
 Sun Oct 20 09:03:51 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/Makefile.am (install-root): New rule.
+	Suggestion from François Pinard.
+
 	* src/who-users.c (print_entry): Don't take address of UT_TIME_MEMBER
 	directly.  From Ulrich Drepper.
 
