@@ -148,7 +148,7 @@ static unsigned long max_n_unchanged_stats_between_opens =
    same device/inode-number pair as before.  This option is meaningful only
    when following by name.  --max-n-consecutive-size-changes=N  */
 #define DEFAULT_MAX_N_CONSECUTIVE_SIZE_CHANGES 200
-static unsigned long max_n_consecutive_size_changes =
+static unsigned long max_n_consecutive_size_changes_between_opens =
   DEFAULT_MAX_N_CONSECUTIVE_SIZE_CHANGES;
 
 /* The name this program was run with.  */
@@ -802,7 +802,7 @@ tail_forever (struct File_spec *f, int nfiles)
 	     growing will be recognized as having been renamed.  */
 	  if (follow_mode == Follow_name
 	      && (f[i].n_consecutive_size_changes
-		  > max_n_consecutive_size_changes))
+		  > max_n_consecutive_size_changes_between_opens))
 	    {
 	      f[i].n_consecutive_size_changes = 0;
 	      recheck (&f[i]);
@@ -1289,7 +1289,8 @@ parse_options (int argc, char **argv,
 
 	case CHAR_MAX + 3:
   	  /* --max-consecutive-size-changes=N */
-	  if (xstrtoul (optarg, NULL, 10, &max_n_consecutive_size_changes, "")
+	  if (xstrtoul (optarg, NULL, 10,
+			&max_n_consecutive_size_changes_between_opens, "")
 	      != LONGINT_OK)
 	    {
 	      error (EXIT_FAILURE, 0,
