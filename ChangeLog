@@ -1,6 +1,24 @@
-2003-08-04  Jim Meyering  <jim@meyering.net>
+2003-08-07  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
+
+2003-08-05  Paul Eggert  <eggert@twinsun.com>
+
+	Merge getline from gnulib.
+	* lib/getline.h, lib/getline.c, m4/getline.m4: Merge from gnulib.
+	* lib/getndelim2.h, lib/getndelim2.c, m4/getndelim2.m4, m4/ssize_t.m4:
+	New files, from gnulib.
+	* lib/getdelim2.c, lib/getdelim2.h: Remove.
+	* lib/Makefile.am (libfetish_a_SOURCES): Change getdelim2.c and
+	getdelim2.h to getndelim2.c and getndelim2.h.
+	* m4/jm-macros.m4 (jm_MACROS): Use gl_GETNDELIM2 rather than
+	checking for getdelim.
+	(jm_CHECK_ALL_TYPES): Use gt_TYPE_SSIZE_T for ssize_t rather
+	than rolling our own.
+	* src/cut.c: Include getndelim2.h rather than getdelim2.h.
+	(cut_fields): Invoke getndelim2 rather than getdelim2.
+
+2003-08-04  Jim Meyering  <jim@meyering.net>
 
 	* src/sort.c (main): Use unsigned int instead of int for `nsigs'
 	and for the indices to iterate through nsigs.
