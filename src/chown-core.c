@@ -224,22 +224,9 @@ change_file_owner (FTS *fts, FTSENT *ent,
 	      if (chopt->affect_symlink_referent)
 		{
 		  /* Applying chown to a symlink and expecting it to affect
-		     the referent is not portable.  So instead, open the
-		     file and use fchown on the resulting descriptor.  */
-		  /* FIXME: but on some systems (e.g. Linux-2.1.81 and newer),
-		     using chown is much better, since it *does* follow
-		     symlinks, and the open/fchown approach fails when
-		     the file is not readable.  This looks like a fine case
-		     for another chown wrapper.  In any case, this code can
-		     clobber errno, so fix it or remove it.
-		     Related: with a proper autoconf test -- is this possible,
-		     without root permissions or a guarantee of more than
-		     one group? -- the lchown wrapper may just end up
-		     calling chown on some systems.  */
-		  int fd = open (file, O_RDONLY | O_NONBLOCK | O_NOCTTY);
-		  fail = (fd == -1 ? 1 : fchown (fd, new_uid, new_gid));
-		  if (fd != -1)
-		    close (fd);
+		     the referent is not portable, but here we may be using a
+		     wrapper that tries to correct for unconforming chown.  */
+		  fail = chown (file, new_uid, new_gid);
 		}
 	      else
 		{
