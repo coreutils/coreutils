@@ -1,3 +1,13 @@
+Sun Dec  8 07:22:38 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	=========== Update for automake-1.1k.
+	* configure.in (AM_CONFIG_HEADER): Use it.
+	(AC_OUTPUT): Remove stamp-h timestamping statement.
+	Now, AM_CONFIG_HEADER does it automatically.
+	* lib/Makefile.am (noinst_LIBRARIES): Rename to libtu.a as per
+	new automake requirement.
+	Rename tu_* variables to libtu_a_*.
+
 Wed Dec  4 21:03:18 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/pr.c: Apply big patch from Roland Huebner.
