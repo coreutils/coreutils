@@ -1,5 +1,7 @@
 1997-10-05  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/Makefile.am (noinst_HEADERS): Add savedir.h.
+
 	* src/copy.h (struct cp_options): New field: require_preserve.
 	* src/copy.c (copy_internal): Use require_preserve.
 	* src/cp.c (cp_option_init): Initialize it.
