@@ -1,6 +1,19 @@
-2001-04-22  Jim Meyering  <meyering@lucent.com>
+2001-04-23  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0.45.
+
+2001-04-22  Jim Meyering  <meyering@lucent.com>
+
+	* src/ls.c (decode_switches): Ensure that -1 has no effect when it
+	follows -l.  Reported by Ulrich Drepper.
+
+	* src/dd.c (usage): Mention that sync makes dd pad with spaces (rather
+	than NULs) when used with block or unblock.
+	(dd_copy): When using sync with either block or unblock,
+	pad with spaces.  Reported by Dale Scheetz.
+	* tests/dd/skip-seek (block-sync-1): New test, for this.  Based on
+	report from Dale Scheetz.
+	* doc/fileutils.texi (dd invocation): Document it here, too.
 
 	* configure: Regenerate using a patched copy of autoconf-2.49e to
 	work around a bug in its test for a working memcmp function.
@@ -8,9 +21,6 @@
 	* tests/ls/no-arg: New file.
 	* tests/ls/Makefile.am (TESTS): Add no-arg.
 	* src/ls.c (main): Fix off-by-one error introduced with last change.
-
-	* src/dd.c (usage): Mention that sync makes dd pad with spaces (rather
-	than NULs) when used with block or unblock.  Reported by Dale Scheetz.
 
 2001-04-21  Jim Meyering  <meyering@lucent.com>
 
