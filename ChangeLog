@@ -1,5 +1,9 @@
 2004-09-18  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/md5sum.c (STATUS_OPTION, STRING_OPTION): New enums.
+	(long_options, main): Use them instead of magic numbers 2 and 1.
+	For --string, optarg can't possibly be NULL.
+
 	* src/dd.c (usage): Distinguish between options and operands.
 	(scanargs): Don't mess with argc, argv; getopt_long handles this now.
 	Say "operands" for operands, not "options".
