@@ -211,6 +211,18 @@ static struct option const long_opts[] =
   {NULL, 0, NULL, 0}
 };
 
+static int
+is_ancestor (const struct stat *sb, const struct dir_list *ancestors)
+{
+  while (ancestors != 0)
+    {
+      if (ancestors->ino == sb->st_ino && ancestors->dev == sb->st_dev)
+	return 1;
+      ancestors = ancestors->parent;
+    }
+  return 0;
+}
+
 int
 main (int argc, char **argv)
 {
@@ -570,7 +582,7 @@ is not a directory"),
       usage (1);
     }
 }
-
+
 /* Copy the file SRC_PATH to the file DST_PATH.  The files may be of
    any type.  NEW_DST should be nonzero if the file DST_PATH cannot
    exist because its parent directory was just created; NEW_DST should
