@@ -1,5 +1,9 @@
 2004-06-21  Jim Meyering  <jim@meyering.net>
 
+	* tests/priv-check: When running as root, be sure to propagate
+	PATH through to the process we exec as non-root.
+	Reported by michael@aplatform.com.
+
 	* src/mknod.c (main): Don't segfault when calculating the
 	expected number of operands for `mknod NAME'.
 
