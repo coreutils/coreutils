@@ -1,4 +1,5 @@
 User-visible changes in release 1.12
+* sort properly handles command line arguments like `+7.2n'
 * fmt properly formats paragraphs not terminated by a newline
 * tail -f flushes stdout before sleeping so that it will output partial
   lines sooner
