@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1997, 1998 Free Software Foundation, Inc.
 
    NOTE: The canonical source of this file is maintained with the GNU C
    Library.  Bugs can be reported to bug-glibc@prep.ai.mit.edu.
@@ -28,6 +28,8 @@
    systems like Irix 5.3.  */
 #undef putenv
 
+#include <sys/types.h>
+
 #if defined (__GNU_LIBRARY__) || defined (HAVE_STDLIB_H)
 # include <stdlib.h>
 #endif
@@ -49,6 +51,10 @@
 # define environ __environ
 #else
 extern char **environ;
+#endif
+
+#ifndef NULL
+# define NULL 0
 #endif
 
 
