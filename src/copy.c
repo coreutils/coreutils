@@ -506,7 +506,7 @@ copy_internal (const char *src_path, const char *dst_path,
 			   program_name, dst_path);
 		}
 	      if (!yesno ())
-		return 0;
+		return (move_mode ? 1 : 0);
 	    }
 
 	  /* In move_mode, DEST may not be an existing directory.  */
