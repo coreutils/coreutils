@@ -1,5 +1,7 @@
 2003-06-07  Jim Meyering  <jim@meyering.net>
 
+	* human.c: Include <stdio.h>, once again, for declaration of sprintf.
+
 	Update from gnulib.
 	* tempname.c: Include <stddef.h> unconditionally.
 	Include <inttypes.h> as an alternative to <stdint.h>.
