@@ -1,6 +1,11 @@
-2002-12-02  Jim Meyering  <jim@meyering.net>
+2002-12-03  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.4.
+
+	* src/Makefile.am (AUTOMAKE_OPTIONS): Remove definition (to ansi2knr)
+	since this package no longer panders to K&R compilers.
+
+2002-12-02  Jim Meyering  <jim@meyering.net>
 
 	* tests/du/slink: Skip this test if `.' is on a non-local file system.
 
@@ -15,7 +20,7 @@
 
 2002-11-30  Jim Meyering  <jim@meyering.net>
 
-	(gobble_file): Remove the block of code that caused
+	* ls.c (gobble_file): Remove the block of code that caused
 	`ls --color -F symlink-to-dir' to list the files in
 	`symlink-to-dir/.'.  Now, it prints `symlink-to-dir@', (just
 	like `ls -F symlink-to-dir') but with the addition of highlighting.
