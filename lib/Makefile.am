@@ -42,7 +42,6 @@ libfetish_a_SOURCES = \
   argmatch.c argmatch.h \
   backupfile.c backupfile.h \
   basename.c \
-  bumpalloc.h \
   canon-host.c \
   canonicalize.h \
   closeout.c closeout.h \
