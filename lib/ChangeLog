@@ -2,7 +2,8 @@
 
 	* makepath.c (S_IRWXUGO): Define.
 	(make_path): Always perform explicit chmod if MODE specifies any
-	of the `special' permission bits.
+	of the `special' permission bits.  Prompted by a bug report against
+	install from Mate Wierdl and Joost van Baal.
 
 2000-04-18  Jim Meyering  <meyering@lucent.com>
 
