@@ -258,9 +258,9 @@ print_line (const char *user, const char state, const char *line,
     printf (" %-6s", idle);
   if (!short_output)
     printf (" %10s", pid);
-  /* FIXME: it's not really clear whether the following should be in short_output.
-     a strict reading of SUSv2 would suggest not, but I haven't seen any
-     implementations that actually work that way... */
+  /* FIXME: it's not really clear whether the following should be in
+     short_output.  A strict reading of SUSv2 would suggest not, but
+     I haven't seen any implementations that actually work that way... */
   printf (" %-8s", comment);
   if (include_exit && exitstr && *exitstr)
     printf (" %-12s", exitstr);
