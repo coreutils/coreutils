@@ -1,5 +1,7 @@
 Tue Apr 23 22:05:35 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
+	* src/*.c, src/*.h: Update Copyright years to include 1996.
+
 	* aclocal.m4 (AC_REPLACE_GNU_GETOPT): New macro.
 	* configure.in: Use it.
 	* lib/Makefile.am (fu_SOURCES): Remove getopt.c and getopt1.c.
