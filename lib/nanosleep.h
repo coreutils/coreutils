@@ -42,7 +42,7 @@
 # endif
 
 # if ! HAVE_STRUCT_TIMESPEC
-/* Some systems don't define this struct.  */
+/* Some systems don't define this struct, e.g., AIX 4.1, Ultrix 4.3.  */
 struct timespec
 {
   time_t tv_sec;
