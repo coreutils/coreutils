@@ -1,6 +1,21 @@
-2004-05-14  Jim Meyering  <jim@meyering.net>
+2004-05-16  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* tests/chown/deref: New test for the yesterday's change.
+	* tests/chown/Makefile.am (TESTS): Add deref.
+
+2004-05-15  Jim Meyering  <jim@meyering.net>
+
+	chown --dereference did nothing when the owner/group of a
+	symlink matched the desired owner/group.  Reported by David Malone.
+	Also reported in 1999 as http://bugs.debian.org/39642.
+
+	* src/chown-core.c (change_file_owner): When --dereference has
+	been specified, and when processing a symlink, stat it to get the
+	owner and group of the referent.
+
+2004-05-14  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (AD_pop_and_chdir): Eliminate an unnecessary
 	call to AC_stack_top.
