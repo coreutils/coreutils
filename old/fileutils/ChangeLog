@@ -12,7 +12,7 @@
 	(change_file_mode): Use it to determine accurately when -c should
 	make chmod announce there's been a change.
 	Based on a patch from Michael Stone.
-	Reported by root@khms.westfalen.de as Debian bug #77349.
+	Reported by Kai Henningsen as Debian bug #77349.
 
 	* tests/chmod/c-option: New test for the above fix.
 	* tests/chmod/Makefile.am (TESTS): Add c-option
