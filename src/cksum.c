@@ -1,4 +1,4 @@
-/* cksum -- calculate and print POSIX.2 checksums and sizes of files
+/* cksum -- calculate and print POSIX checksums and sizes of files
    Copyright (C) 92, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
