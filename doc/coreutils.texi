@@ -11911,14 +11911,14 @@ $ mysql -e 'create table home \
 $ mysqlimport --fields-terminated-by=, test home.cs
 @print{} test.home: Records: 4  Deleted: 0  Skipped: 0  Warnings: 0
 $ mysql -e 'select * from home' test
-@print{} +------+------+------+------+---------------------+
-@print{} | d    | u    | g    | o    | name                |
-@print{} +------+------+------+------+---------------------+
-@print{} | d    | rwx  | r-x  | r-x  | /home/fred/CVS      |
-@print{} | d    | rwx  | ---  | ---  | /home/fred/Mail     |
-@print{} | d    | rwx  | r-x  | r-x  | /home/fred/lilypond |
-@print{} | d    | rwx  | r-x  | r-x  | /home/fred/savannah |
-@print{} +------+------+------+------+---------------------+
+@print{} +------+------+------+------+----------+
+@print{} | d    | u    | g    | o    | name     |
+@print{} +------+------+------+------+----------+
+@print{} | d    | rwx  | r-x  | r-x  | CVS      |
+@print{} | d    | rwx  | ---  | ---  | Mail     |
+@print{} | d    | rwx  | r-x  | r-x  | lilypond |
+@print{} | d    | rwx  | r-x  | r-x  | savannah |
+@print{} +------+------+------+------+----------+
 @end example
 
 But beware of assumptions.
