@@ -105,6 +105,12 @@ sub test_vector
      ['sec2date-0', "-d '1970-01-01 UTC 946684800 sec' +'%Y-%m-%d %T %z'", {},
       "2000-01-01 00:00:00 +0000", 0],
 
+     ['this-m', "-d '$d0 $t0 this minute' $fmt", {}, "$d0 $t0", 0],
+     ['this-h', "-d '$d0 $t0 this hour' $fmt", {}, "$d0 $t0", 0],
+     ['this-w', "-d '$d0 $t0 this week' $fmt", {}, "$d0 $t0", 0],
+     ['this-mo', "-d '$d0 $t0 this month' $fmt", {}, "$d0 $t0", 0],
+     ['this-y', "-d '$d0 $t0 this year' $fmt", {}, "$d0 $t0", 0],
+
      # FIXME: add a lot more...
      );
 
