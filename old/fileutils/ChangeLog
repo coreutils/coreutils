@@ -1,3 +1,23 @@
+1999-09-26  Jim Meyering  <meyering@ascend.com>
+
+	* lib/path-concat.c (DIRECTORY_SEPARATOR): Define.
+	(ISSLASH): Define.
+	(path_concat): Allow parameter DIR to be NULL.
+	(xpath_concat): New function.
+	From Akim Demaille.
+
+	* lib/xalloc.h (__attribute__): Define.
+	(ATTRIBUTE_NORETURN): Define.
+	(xalloc_fail_func): Add noreturn attribute.
+	(xalloc_die): Declare.
+	(NEW): Define as yet unused macro.
+	(XFREE): Likewise
+	(CCLONE): Likewise.
+	(CLONE): Likewise.
+	From Akim Demaille.
+
+	* lib/basename.c (base_name): Add prototype.  From Akim Demaille.
+
 1999-09-19  Jim Meyering  <meyering@ascend.com>
 
 	* lib/lchown.c [STAT_MACROS_BROKEN] (S_ISLNK): Undefine.
