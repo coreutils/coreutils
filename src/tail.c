@@ -1697,7 +1697,7 @@ main (int argc, char **argv)
 
   if (forever)
     {
-      /* This fflush appears to be required only on Solaris2.7.  */
+      /* This fflush appears to be required only on Solaris 2.7.  */
       if (fflush (stdout) < 0)
 	error (EXIT_FAILURE, errno, _("write error"));
 
