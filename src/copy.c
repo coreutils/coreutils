@@ -429,9 +429,11 @@ copy_internal (const char *src_path, const char *dst_path,
 	      && ! x->force
 
 	      /* Allow them to be the same (and don't set `same') if
-		 we're in move mode and the target is a symlink.  */
+		 we're in move mode and the target is a symlink
+		 on the same partition.  */
 	      && !(move_mode
-		   && S_ISLNK (dst_sb.st_mode))
+		   && S_ISLNK (dst_sb.st_mode)
+		   && src_sb.st_dev == dst_sb.st_dev)
 
 	      /* If we're making a backup, we'll detect the problem case in
 		 copy_reg because SRC_PATH will no longer exist.  Allowing
