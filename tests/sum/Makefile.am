@@ -9,4 +9,4 @@ TESTS_ENVIRONMENT = \
   PATH=`pwd`/../../src:$$PATH \
   PROG=sum
 
-TESTS = basic-1
+TESTS = basic-1 sysv
