@@ -44,6 +44,7 @@
 #  include "filecntl.h"
 #else /* TEST_STANDALONE */
 #  include "system.h"
+#  include "version.h"
 #  if !defined (S_IXUGO)
 #    define S_IXUGO 0111
 #  endif /* S_IXUGO */
@@ -1135,7 +1136,7 @@ test_command (margc, margv)
 
   if (margv[0] && strcmp (margv[0], "[") == 0)
     {
-      parse_long_options (argc, argv, COMMAND_NAME, usage);
+      parse_long_options (argc, argv, COMMAND_NAME, version_string, usage);
 
       --margc;
 
@@ -1152,7 +1153,7 @@ test_command (margc, margv)
   if (pos >= argc)
     test_exit (SHELL_BOOLEAN (FALSE));
 
-  parse_long_options (argc, argv, COMMAND_NAME, usage);
+  parse_long_options (argc, argv, COMMAND_NAME, version_string, usage);
   value = posixtest ();
 
   if (pos != argc)

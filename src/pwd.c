@@ -32,6 +32,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "version.h"
 #include "long-options.h"
 
 void error ();
@@ -68,7 +69,7 @@ main (argc, argv)
 
   program_name = argv[0];
 
-  parse_long_options (argc, argv, "pwd", usage);
+  parse_long_options (argc, argv, "pwd", version_string, usage);
 
   if (argc != 1)
     error (0, 0, "ignoring non-option arguments");

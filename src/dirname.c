@@ -32,6 +32,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "version.h"
 #include "long-options.h"
 
 void strip_trailing_slashes ();
@@ -72,7 +73,7 @@ main (argc, argv)
 
   program_name = argv[0];
 
-  parse_long_options (argc, argv, "dirname", usage);
+  parse_long_options (argc, argv, "dirname", version_string, usage);
 
   if (argc != 2)
     usage (1);

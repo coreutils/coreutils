@@ -58,6 +58,7 @@
 #endif
 
 #include "system.h"
+#include "version.h"
 #include "long-options.h"
 
 #if defined(GWINSZ_BROKEN)	/* Such as for SCO UNIX 3.2.2. */
@@ -642,7 +643,7 @@ main (argc, argv)
 
   program_name = argv[0];
 
-  parse_long_options (argc, argv, "stty", usage);
+  parse_long_options (argc, argv, "stty", version_string, usage);
 
   output_type = changed;
   verbose_output = 0;

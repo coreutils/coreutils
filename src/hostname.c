@@ -32,6 +32,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "version.h"
 #include "long-options.h"
 
 #if !defined(HAVE_SETHOSTNAME) && defined(HAVE_SYSINFO) && \
@@ -91,7 +92,7 @@ main (argc, argv)
 
   program_name = argv[0];
 
-  parse_long_options (argc, argv, "hostname", usage);
+  parse_long_options (argc, argv, "hostname", version_string, usage);
 
 #ifdef HAVE_SETHOSTNAME
   if (argc == 2)

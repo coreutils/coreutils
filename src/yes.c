@@ -32,6 +32,7 @@
 #include <getopt.h>
 
 #include "long-options.h"
+#include "version.h"
 
 /* The name this program was run with. */
 char *program_name;
@@ -64,7 +65,7 @@ main (argc, argv)
 {
   program_name = argv[0];
 
-  parse_long_options (argc, argv, "yes", usage);
+  parse_long_options (argc, argv, "yes", version_string, usage);
 
   if (argc == 1)
     while (1)

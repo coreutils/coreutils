@@ -40,6 +40,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "version.h"
 #include "long-options.h"
 
 char *basename ();
@@ -82,7 +83,7 @@ main (argc, argv)
 
   program_name = argv[0];
 
-  parse_long_options (argc, argv, "basename", usage);
+  parse_long_options (argc, argv, "basename", version_string, usage);
 
   if (argc == 1 || argc > 3)
     usage (1);
