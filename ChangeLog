@@ -2,6 +2,11 @@
 
 	* Version 5.3.1.
 
+	Don't segfault for a long header date string, e.g.,
+	echo a|pr -D +%9999999A
+	* src/pr.c (init_header): Use x2nrealloc, rather than alloca.
+	Don't bother with fixed-sized initial buffer;  always use x*alloc.
+
 	* src/pr.c (init_header): Use slightly clearer INT_BUFSIZE_BOUND
 	in place of equivalent INT_STRLEN_BOUND + 1.
 	* src/expr.c (tostring, printv): Likewise.
