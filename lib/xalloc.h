@@ -26,19 +26,33 @@
 #  endif
 # endif
 
+# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 7)
+#  define __attribute__(x)
+# endif
+
+# ifndef ATTRIBUTE_NORETURN
+#  define ATTRIBUTE_NORETURN __attribute__ ((__noreturn__))
+# endif
+
 /* Exit value when the requested amount of memory is not available.
    It is initialized to EXIT_FAILURE, but the caller may set it to
    some other value.  */
 extern int xalloc_exit_failure;
 
 /* If this pointer is non-zero, run the specified function upon each
-   allocation failure.  It is initialized to zero.  */
-extern void (*xalloc_fail_func) PARAMS ((void));
+   allocation failure.  It is initialized to zero. */
+extern void (*xalloc_fail_func) PARAMS ((void)) ATTRIBUTE_NORETURN;
 
 /* If XALLOC_FAIL_FUNC is undefined or a function that returns, this
    message must be non-NULL.  It is translated via gettext.
    The default value is "Memory exhausted".  */
 extern char *const xalloc_msg_memory_exhausted;
+
+/* This function is always triggered when memory is exhausted.  It is
+   in charge of honoring the three previous items.  This is the
+   function to call when one wants the program to die because of a
+   memory allocation failure.  */
+extern void xalloc_die PARAMS ((void));
 
 void *xmalloc PARAMS ((size_t n));
 void *xcalloc PARAMS ((size_t n, size_t s));
@@ -49,5 +63,23 @@ char *xstrdup PARAMS ((const char *str));
 # define XCALLOC(Type, N_bytes) ((Type *) xcalloc (sizeof (Type), (N_bytes)))
 # define XREALLOC(Ptr, Type, N_bytes) \
   ((Type *) xrealloc ((void *) (Ptr), sizeof (Type) * (N_bytes)))
+
+/* Declare and alloc memory for VAR of type TYPE. */
+# define NEW(Type, Var)  Type *(Var) = XMALLOC (Type, 1)
+
+/* Free VAR only if non NULL. */
+# define XFREE(Var)	\
+   do {                 \
+      if (Var)          \
+        free (Var);     \
+   } while (0)
+
+/* Return a pointer to a malloc'ed copy of the array SRC of NUM elements. */
+# define CCLONE(Src, Num) \
+  (memcpy (xmalloc (sizeof (*Src) * (Num)), (Src), sizeof (*Src) * (Num)))
+
+/* Return a malloc'ed copy of SRC. */
+# define CLONE(Src) CCLONE (Src, 1)
+
 
 #endif /* !XALLOC_H_ */
