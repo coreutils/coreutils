@@ -117,11 +117,10 @@ typedef long COST;
 
 /* Miscellaneous definitions.  */
 
-typedef unsigned int bool;
 #undef TRUE
-#define TRUE	1
+#define TRUE true
 #undef FALSE
-#define FALSE	0
+#define FALSE false
 
 /* Word descriptor structure.  */
 
