@@ -315,8 +315,671 @@ else
   esac
 fi
 test -s basic-e.E || rm -f basic-e.E
+$xx  $srcdir/basic-f.I > basic-f.O 2> basic-f.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test basic-f(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp basic-f.O $srcdir/basic-f.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed basic-f(F)"; fi ;;
+    1) $echo "Test basic-f(F) failed: files basic-f.O and $srcdir/basic-f.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test basic-f(F) may have failed." 1>&2;
+       $echo The command "cmp basic-f.O $srcdir/basic-f.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s basic-f.E || rm -f basic-f.E
+cat $srcdir/basic-f.I | $xx  > basic-f.O 2> basic-f.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test basic-f(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp basic-f.O $srcdir/basic-f.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed basic-f(|)"; fi ;;
+    1) $echo "Test basic-f(|) failed: files basic-f.O and $srcdir/basic-f.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test basic-f(|) may have failed." 1>&2;
+       $echo The command "cmp basic-f.O $srcdir/basic-f.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s basic-f.E || rm -f basic-f.E
+$xx  < $srcdir/basic-f.I > basic-f.O 2> basic-f.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test basic-f(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp basic-f.O $srcdir/basic-f.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed basic-f(<)"; fi ;;
+    1) $echo "Test basic-f(<) failed: files basic-f.O and $srcdir/basic-f.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test basic-f(<) may have failed." 1>&2;
+       $echo The command "cmp basic-f.O $srcdir/basic-f.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s basic-f.E || rm -f basic-f.E
+$xx  $srcdir/basic-g.I > basic-g.O 2> basic-g.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test basic-g(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp basic-g.O $srcdir/basic-g.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed basic-g(F)"; fi ;;
+    1) $echo "Test basic-g(F) failed: files basic-g.O and $srcdir/basic-g.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test basic-g(F) may have failed." 1>&2;
+       $echo The command "cmp basic-g.O $srcdir/basic-g.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s basic-g.E || rm -f basic-g.E
+cat $srcdir/basic-g.I | $xx  > basic-g.O 2> basic-g.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test basic-g(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp basic-g.O $srcdir/basic-g.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed basic-g(|)"; fi ;;
+    1) $echo "Test basic-g(|) failed: files basic-g.O and $srcdir/basic-g.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test basic-g(|) may have failed." 1>&2;
+       $echo The command "cmp basic-g.O $srcdir/basic-g.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s basic-g.E || rm -f basic-g.E
+$xx  < $srcdir/basic-g.I > basic-g.O 2> basic-g.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test basic-g(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp basic-g.O $srcdir/basic-g.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed basic-g(<)"; fi ;;
+    1) $echo "Test basic-g(<) failed: files basic-g.O and $srcdir/basic-g.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test basic-g(<) may have failed." 1>&2;
+       $echo The command "cmp basic-g.O $srcdir/basic-g.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s basic-g.E || rm -f basic-g.E
+$xx  $srcdir/basic-h.I > basic-h.O 2> basic-h.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test basic-h(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp basic-h.O $srcdir/basic-h.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed basic-h(F)"; fi ;;
+    1) $echo "Test basic-h(F) failed: files basic-h.O and $srcdir/basic-h.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test basic-h(F) may have failed." 1>&2;
+       $echo The command "cmp basic-h.O $srcdir/basic-h.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s basic-h.E || rm -f basic-h.E
+cat $srcdir/basic-h.I | $xx  > basic-h.O 2> basic-h.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test basic-h(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp basic-h.O $srcdir/basic-h.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed basic-h(|)"; fi ;;
+    1) $echo "Test basic-h(|) failed: files basic-h.O and $srcdir/basic-h.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test basic-h(|) may have failed." 1>&2;
+       $echo The command "cmp basic-h.O $srcdir/basic-h.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s basic-h.E || rm -f basic-h.E
+$xx  < $srcdir/basic-h.I > basic-h.O 2> basic-h.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test basic-h(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp basic-h.O $srcdir/basic-h.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed basic-h(<)"; fi ;;
+    1) $echo "Test basic-h(<) failed: files basic-h.O and $srcdir/basic-h.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test basic-h(<) may have failed." 1>&2;
+       $echo The command "cmp basic-h.O $srcdir/basic-h.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s basic-h.E || rm -f basic-h.E
+$xx  $srcdir/basic-i.I > basic-i.O 2> basic-i.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test basic-i(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp basic-i.O $srcdir/basic-i.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed basic-i(F)"; fi ;;
+    1) $echo "Test basic-i(F) failed: files basic-i.O and $srcdir/basic-i.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test basic-i(F) may have failed." 1>&2;
+       $echo The command "cmp basic-i.O $srcdir/basic-i.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s basic-i.E || rm -f basic-i.E
+cat $srcdir/basic-i.I | $xx  > basic-i.O 2> basic-i.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test basic-i(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp basic-i.O $srcdir/basic-i.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed basic-i(|)"; fi ;;
+    1) $echo "Test basic-i(|) failed: files basic-i.O and $srcdir/basic-i.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test basic-i(|) may have failed." 1>&2;
+       $echo The command "cmp basic-i.O $srcdir/basic-i.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s basic-i.E || rm -f basic-i.E
+$xx  < $srcdir/basic-i.I > basic-i.O 2> basic-i.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test basic-i(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp basic-i.O $srcdir/basic-i.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed basic-i(<)"; fi ;;
+    1) $echo "Test basic-i(<) failed: files basic-i.O and $srcdir/basic-i.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test basic-i(<) may have failed." 1>&2;
+       $echo The command "cmp basic-i.O $srcdir/basic-i.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s basic-i.E || rm -f basic-i.E
+$xx  $srcdir/basic-j.I > basic-j.O 2> basic-j.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test basic-j(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp basic-j.O $srcdir/basic-j.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed basic-j(F)"; fi ;;
+    1) $echo "Test basic-j(F) failed: files basic-j.O and $srcdir/basic-j.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test basic-j(F) may have failed." 1>&2;
+       $echo The command "cmp basic-j.O $srcdir/basic-j.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s basic-j.E || rm -f basic-j.E
+cat $srcdir/basic-j.I | $xx  > basic-j.O 2> basic-j.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test basic-j(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp basic-j.O $srcdir/basic-j.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed basic-j(|)"; fi ;;
+    1) $echo "Test basic-j(|) failed: files basic-j.O and $srcdir/basic-j.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test basic-j(|) may have failed." 1>&2;
+       $echo The command "cmp basic-j.O $srcdir/basic-j.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s basic-j.E || rm -f basic-j.E
+$xx  < $srcdir/basic-j.I > basic-j.O 2> basic-j.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test basic-j(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp basic-j.O $srcdir/basic-j.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed basic-j(<)"; fi ;;
+    1) $echo "Test basic-j(<) failed: files basic-j.O and $srcdir/basic-j.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test basic-j(<) may have failed." 1>&2;
+       $echo The command "cmp basic-j.O $srcdir/basic-j.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s basic-j.E || rm -f basic-j.E
+$xx  $srcdir/basic-k.I > basic-k.O 2> basic-k.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test basic-k(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp basic-k.O $srcdir/basic-k.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed basic-k(F)"; fi ;;
+    1) $echo "Test basic-k(F) failed: files basic-k.O and $srcdir/basic-k.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test basic-k(F) may have failed." 1>&2;
+       $echo The command "cmp basic-k.O $srcdir/basic-k.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s basic-k.E || rm -f basic-k.E
+cat $srcdir/basic-k.I | $xx  > basic-k.O 2> basic-k.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test basic-k(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp basic-k.O $srcdir/basic-k.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed basic-k(|)"; fi ;;
+    1) $echo "Test basic-k(|) failed: files basic-k.O and $srcdir/basic-k.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test basic-k(|) may have failed." 1>&2;
+       $echo The command "cmp basic-k.O $srcdir/basic-k.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s basic-k.E || rm -f basic-k.E
+$xx  < $srcdir/basic-k.I > basic-k.O 2> basic-k.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test basic-k(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp basic-k.O $srcdir/basic-k.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed basic-k(<)"; fi ;;
+    1) $echo "Test basic-k(<) failed: files basic-k.O and $srcdir/basic-k.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test basic-k(<) may have failed." 1>&2;
+       $echo The command "cmp basic-k.O $srcdir/basic-k.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s basic-k.E || rm -f basic-k.E
+$xx  $srcdir/b2-e.I > b2-e.O 2> b2-e.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test b2-e(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp b2-e.O $srcdir/b2-e.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed b2-e(F)"; fi ;;
+    1) $echo "Test b2-e(F) failed: files b2-e.O and $srcdir/b2-e.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test b2-e(F) may have failed." 1>&2;
+       $echo The command "cmp b2-e.O $srcdir/b2-e.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s b2-e.E || rm -f b2-e.E
+cat $srcdir/b2-e.I | $xx  > b2-e.O 2> b2-e.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test b2-e(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp b2-e.O $srcdir/b2-e.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed b2-e(|)"; fi ;;
+    1) $echo "Test b2-e(|) failed: files b2-e.O and $srcdir/b2-e.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test b2-e(|) may have failed." 1>&2;
+       $echo The command "cmp b2-e.O $srcdir/b2-e.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s b2-e.E || rm -f b2-e.E
+$xx  < $srcdir/b2-e.I > b2-e.O 2> b2-e.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test b2-e(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp b2-e.O $srcdir/b2-e.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed b2-e(<)"; fi ;;
+    1) $echo "Test b2-e(<) failed: files b2-e.O and $srcdir/b2-e.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test b2-e(<) may have failed." 1>&2;
+       $echo The command "cmp b2-e.O $srcdir/b2-e.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s b2-e.E || rm -f b2-e.E
+$xx  $srcdir/b2-f.I > b2-f.O 2> b2-f.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test b2-f(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp b2-f.O $srcdir/b2-f.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed b2-f(F)"; fi ;;
+    1) $echo "Test b2-f(F) failed: files b2-f.O and $srcdir/b2-f.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test b2-f(F) may have failed." 1>&2;
+       $echo The command "cmp b2-f.O $srcdir/b2-f.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s b2-f.E || rm -f b2-f.E
+cat $srcdir/b2-f.I | $xx  > b2-f.O 2> b2-f.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test b2-f(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp b2-f.O $srcdir/b2-f.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed b2-f(|)"; fi ;;
+    1) $echo "Test b2-f(|) failed: files b2-f.O and $srcdir/b2-f.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test b2-f(|) may have failed." 1>&2;
+       $echo The command "cmp b2-f.O $srcdir/b2-f.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s b2-f.E || rm -f b2-f.E
+$xx  < $srcdir/b2-f.I > b2-f.O 2> b2-f.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test b2-f(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp b2-f.O $srcdir/b2-f.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed b2-f(<)"; fi ;;
+    1) $echo "Test b2-f(<) failed: files b2-f.O and $srcdir/b2-f.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test b2-f(<) may have failed." 1>&2;
+       $echo The command "cmp b2-f.O $srcdir/b2-f.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s b2-f.E || rm -f b2-f.E
+$xx  $srcdir/b2-g.I > b2-g.O 2> b2-g.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test b2-g(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp b2-g.O $srcdir/b2-g.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed b2-g(F)"; fi ;;
+    1) $echo "Test b2-g(F) failed: files b2-g.O and $srcdir/b2-g.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test b2-g(F) may have failed." 1>&2;
+       $echo The command "cmp b2-g.O $srcdir/b2-g.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s b2-g.E || rm -f b2-g.E
+cat $srcdir/b2-g.I | $xx  > b2-g.O 2> b2-g.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test b2-g(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp b2-g.O $srcdir/b2-g.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed b2-g(|)"; fi ;;
+    1) $echo "Test b2-g(|) failed: files b2-g.O and $srcdir/b2-g.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test b2-g(|) may have failed." 1>&2;
+       $echo The command "cmp b2-g.O $srcdir/b2-g.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s b2-g.E || rm -f b2-g.E
+$xx  < $srcdir/b2-g.I > b2-g.O 2> b2-g.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test b2-g(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp b2-g.O $srcdir/b2-g.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed b2-g(<)"; fi ;;
+    1) $echo "Test b2-g(<) failed: files b2-g.O and $srcdir/b2-g.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test b2-g(<) may have failed." 1>&2;
+       $echo The command "cmp b2-g.O $srcdir/b2-g.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s b2-g.E || rm -f b2-g.E
+$xx  $srcdir/b2-h.I > b2-h.O 2> b2-h.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test b2-h(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp b2-h.O $srcdir/b2-h.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed b2-h(F)"; fi ;;
+    1) $echo "Test b2-h(F) failed: files b2-h.O and $srcdir/b2-h.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test b2-h(F) may have failed." 1>&2;
+       $echo The command "cmp b2-h.O $srcdir/b2-h.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s b2-h.E || rm -f b2-h.E
+cat $srcdir/b2-h.I | $xx  > b2-h.O 2> b2-h.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test b2-h(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp b2-h.O $srcdir/b2-h.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed b2-h(|)"; fi ;;
+    1) $echo "Test b2-h(|) failed: files b2-h.O and $srcdir/b2-h.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test b2-h(|) may have failed." 1>&2;
+       $echo The command "cmp b2-h.O $srcdir/b2-h.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s b2-h.E || rm -f b2-h.E
+$xx  < $srcdir/b2-h.I > b2-h.O 2> b2-h.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test b2-h(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp b2-h.O $srcdir/b2-h.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed b2-h(<)"; fi ;;
+    1) $echo "Test b2-h(<) failed: files b2-h.O and $srcdir/b2-h.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test b2-h(<) may have failed." 1>&2;
+       $echo The command "cmp b2-h.O $srcdir/b2-h.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s b2-h.E || rm -f b2-h.E
+$xx  $srcdir/b2-i.I > b2-i.O 2> b2-i.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test b2-i(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp b2-i.O $srcdir/b2-i.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed b2-i(F)"; fi ;;
+    1) $echo "Test b2-i(F) failed: files b2-i.O and $srcdir/b2-i.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test b2-i(F) may have failed." 1>&2;
+       $echo The command "cmp b2-i.O $srcdir/b2-i.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s b2-i.E || rm -f b2-i.E
+cat $srcdir/b2-i.I | $xx  > b2-i.O 2> b2-i.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test b2-i(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp b2-i.O $srcdir/b2-i.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed b2-i(|)"; fi ;;
+    1) $echo "Test b2-i(|) failed: files b2-i.O and $srcdir/b2-i.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test b2-i(|) may have failed." 1>&2;
+       $echo The command "cmp b2-i.O $srcdir/b2-i.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s b2-i.E || rm -f b2-i.E
+$xx  < $srcdir/b2-i.I > b2-i.O 2> b2-i.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test b2-i(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp b2-i.O $srcdir/b2-i.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed b2-i(<)"; fi ;;
+    1) $echo "Test b2-i(<) failed: files b2-i.O and $srcdir/b2-i.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test b2-i(<) may have failed." 1>&2;
+       $echo The command "cmp b2-i.O $srcdir/b2-i.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s b2-i.E || rm -f b2-i.E
+$xx  $srcdir/b2-j.I > b2-j.O 2> b2-j.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test b2-j(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp b2-j.O $srcdir/b2-j.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed b2-j(F)"; fi ;;
+    1) $echo "Test b2-j(F) failed: files b2-j.O and $srcdir/b2-j.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test b2-j(F) may have failed." 1>&2;
+       $echo The command "cmp b2-j.O $srcdir/b2-j.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s b2-j.E || rm -f b2-j.E
+cat $srcdir/b2-j.I | $xx  > b2-j.O 2> b2-j.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test b2-j(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp b2-j.O $srcdir/b2-j.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed b2-j(|)"; fi ;;
+    1) $echo "Test b2-j(|) failed: files b2-j.O and $srcdir/b2-j.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test b2-j(|) may have failed." 1>&2;
+       $echo The command "cmp b2-j.O $srcdir/b2-j.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s b2-j.E || rm -f b2-j.E
+$xx  < $srcdir/b2-j.I > b2-j.O 2> b2-j.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test b2-j(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp b2-j.O $srcdir/b2-j.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed b2-j(<)"; fi ;;
+    1) $echo "Test b2-j(<) failed: files b2-j.O and $srcdir/b2-j.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test b2-j(<) may have failed." 1>&2;
+       $echo The command "cmp b2-j.O $srcdir/b2-j.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s b2-j.E || rm -f b2-j.E
+$xx  $srcdir/b2-k.I > b2-k.O 2> b2-k.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test b2-k(F) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp b2-k.O $srcdir/b2-k.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed b2-k(F)"; fi ;;
+    1) $echo "Test b2-k(F) failed: files b2-k.O and $srcdir/b2-k.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test b2-k(F) may have failed." 1>&2;
+       $echo The command "cmp b2-k.O $srcdir/b2-k.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s b2-k.E || rm -f b2-k.E
+cat $srcdir/b2-k.I | $xx  > b2-k.O 2> b2-k.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test b2-k(|) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp b2-k.O $srcdir/b2-k.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed b2-k(|)"; fi ;;
+    1) $echo "Test b2-k(|) failed: files b2-k.O and $srcdir/b2-k.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test b2-k(|) may have failed." 1>&2;
+       $echo The command "cmp b2-k.O $srcdir/b2-k.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s b2-k.E || rm -f b2-k.E
+$xx  < $srcdir/b2-k.I > b2-k.O 2> b2-k.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test b2-k(<) failed: ../../src/tac return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp b2-k.O $srcdir/b2-k.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed b2-k(<)"; fi ;;
+    1) $echo "Test b2-k(<) failed: files b2-k.O and $srcdir/b2-k.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test b2-k(<) may have failed." 1>&2;
+       $echo The command "cmp b2-k.O $srcdir/b2-k.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s b2-k.E || rm -f b2-k.E
 if test $errors = 0 ; then
-  $echo Passed all 18 tests. 1>&2
+  $echo Passed all 57 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
