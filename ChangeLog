@@ -1,3 +1,7 @@
+2004-08-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/md5sum.c: Adjust to sha->sha1 renaming.
+
 2004-08-07  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/system.h (O_BINARY) [!O_BINARY && defined O_BINARY]:
