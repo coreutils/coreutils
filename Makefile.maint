@@ -310,9 +310,9 @@ rel-check:
 prev-tgz = $(PACKAGE)-$(PREV_VERSION).tar.gz
 xd-delta = $(PACKAGE)-$(PREV_VERSION)-$(VERSION).xdelta
 
-signatures ?= $(distdir).tar.bz2.sig $(distdir).tar.gz.sig
-%.sig: %
-	gpg --detach-sign $<
+signatures ?= $(distdir).tar.bz2.asc $(distdir).tar.gz.asc
+%.asc: %
+	gpg --armor --detach-sign -o $@ $<
 
 rel-files = $(xd-delta) $(distdir).tar.bz2 $(distdir).tar.gz $(signatures)
 announcement: NEWS ChangeLog $(rel-files) $(signatures)
