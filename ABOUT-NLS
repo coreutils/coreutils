@@ -134,7 +134,7 @@ Each translation team has its own mailing list, courtesy of Linux
 International.  You may reach your translation team at the address
 `LL@li.org', replacing LL by the two-letter ISO 639 code for your
 language.  Language codes are *not* the same as the country codes given
-in ISO 3166.  The following translation teams exist, as of August 1996:
+in ISO 3166.  The following translation teams exist, as of October 1996:
 
      Arabic `ar', Chinese `zh', Czech `cs', Danish `da', Dutch `nl',
      English `en', Esperanto `eo', Finnish `fi', French `fr', German
@@ -172,40 +172,41 @@ Available Packages
 
    Languages are not equally supported in all GNU packages.  The
 following matrix shows the current state of GNU internationalization,
-as of August 1996.  The matrix shows, in regard of each package, for
+as of October 1996.  The matrix shows, in regard of each package, for
 which languages PO files have been submitted to translation
 coordination.
 
                        cs de en es fi fr ja ko nl no pl pt sl sv
                      .-------------------------------------------.
      bash            |                []       []                |  2
-     bison           |                []       []                |  2
+     bison           |    []          []       []                |  3
      clisp           |    [] []       []                         |  3
-     cpio            |    []          []             []          |  3
-     diffutils       |                []             []       [] |  3
+     cpio            |    []          []       []    []          |  4
+     diffutils       |          []    []             []       [] |  4
      enscript        |    []       [] []       []          []    |  5
-     fileutils       |    []          []       []    [] []    [] |  6
-     findutils       |    []          []       []    []       [] |  5
+     fileutils       |    []    []    []       []    [] [] [] [] |  8
+     findutils       |    []          []    [] []    []       [] |  6
      flex            |                []                         |  1
-     gcal            |    []                                     |  1
-     gettext         |    []    []    []    [] [] [] []    [] [] | 10
-     glibc           |    []    []          []                   |  3
-     grep            |          []    []    [] []    []    [] [] |  7
-     hello           |    []          []    [] []    [] [] [] [] |  8
+     gcal            |    []          []       []                |  3
+     gettext         |    []    []    []    [] [] [] [] [] [] [] | 11
+     grep            |          []    []    [] [] [] []    [] [] |  8
+     hello           |    []    []    []    [] [] [] [] [] [] [] | 10
+     id-utils        |    []          []                         |  2
+     libc            |    []    []    []    [] []    []          |  6
      m4              |    []          [] []    []             [] |  5
-     make            |                      [] []                |  2
-     mkid            |    []          []                         |  2
+     make            |    []                [] []    []          |  4
      music           |                []                         |  1
-     ptx             |    []          []       []    []       [] |  5
+     ptx             |    []          []       [] [] [] []    [] |  7
      recode          |    []    []    []       []    []    [] [] |  7
-     sh-utils        |    []          []                         |  2
+     sh-utils        |    []          []       []       []    [] |  5
      sharutils       |    []          []       []             [] |  4
-     tar             |    []          []    [] [] []    [] [] [] |  8
-     textutils       |    []          []    [] []    []          |  5
-     wdiff           | [] []          []       []             [] |  5
+     tar             |    []          []    [] [] [] [] [] [] [] |  9
+     texinfo         |                                           |  0
+     textutils       |    []    []    []    [] []    []          |  6
+     wdiff           | [] []    []    []       [] [] []       [] |  8
                      `-------------------------------------------'
                        cs de en es fi fr ja ko nl no pl pt sl sv
-                        1 18  1  4  1 22  1  7 16  3 10  3  6 12  105
+                        1 20  1  9  1 24  1  8 20  7 14  6  7 13  132
 
    Some counters in the preceding matrix are higher than the number of
 visible blocks let us expect.  This is because a few extra PO files are
@@ -218,6 +219,6 @@ distributed as such by its maintainer.  There might be an observable
 lag between the mere existence a PO file and its wide availability in a
 GNU distribution.
 
-   If August 1996 seems to be old, you may fetch a more recent copy of
+   If October 1996 seems to be old, you may fetch a more recent copy of
 this `ABOUT-NLS' file on most GNU archive sites.
 
