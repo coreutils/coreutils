@@ -26,7 +26,7 @@ xalloc.h xstrtol.h xstrtoul.h
 
 BUILT_SOURCES = getdate.c lstat.c stat.c
 
-EXTRA_DIST = xstat.in strcasecmp.cin
+EXTRA_DIST = xstat.in
 lstat.c: xstat.in
 	sed -e '/@IGNORE@/d' -e 's/@xstat@/lstat/g' $(srcdir)/xstat.in > $@-t
 	mv $@-t $@
