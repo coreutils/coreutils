@@ -68,7 +68,7 @@ unsigned int error_message_count;
 # define program_name program_invocation_name
 # include <errno.h>
 
-#else
+#else	/* not _LIBC */
 
 /* The calling program should define program_name and set it to the
    name of the executing program.  */
@@ -92,7 +92,7 @@ private_strerror (errnum)
 }
 #  define strerror private_strerror
 # endif	/* HAVE_STRERROR */
-#endif	/* _LIBC */
+#endif	/* not _LIBC */
 
 /* Print the program name and error message MESSAGE, which is a printf-style
    format string with optional args.
