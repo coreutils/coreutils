@@ -1,3 +1,8 @@
+2002-07-13  Bruno Haible  <bruno@clisp.org>
+
+	* uptime.c: Include sys/sysctl.h.
+	(print_uptime): Add support for determining the boot time on FreeBSD.
+
 2002-07-15  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.13.
