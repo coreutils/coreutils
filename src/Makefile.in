@@ -531,9 +531,7 @@ test_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
 	../lib/libfetish.a
 touch_SOURCES = touch.c
 touch_OBJECTS = touch.$(OBJEXT)
-touch_LDADD = $(LDADD)
-touch_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+touch_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 tr_SOURCES = tr.c
 tr_OBJECTS = tr.$(OBJEXT)
 tr_LDADD = $(LDADD)
@@ -834,14 +832,17 @@ AM_CPPFLAGS = -I.. -I$(srcdir) -I$(top_srcdir)/lib -I../lib
 # But libfetish.a must also follow $(LIBINTL), since libintl uses
 # replacement functions defined in libfetish.a.
 LDADD = ../lib/libfetish.a $(LIBINTL) ../lib/libfetish.a
+
+# for clock_gettime
 dir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 ls_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 shred_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 vdir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 sort_LDADD = $(LDADD) $(POW_LIB)
 
-# for clock_gettime
+# for get_date and gettime
 date_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
+touch_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 
 # For sqrt
 factor_LDADD = $(LDADD) $(SQRT_LIBM)
