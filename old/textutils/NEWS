@@ -1,11 +1,29 @@
 Changes in release 2.1
+[2.0.21]
+* The following obsolete usages are no longer supported on systems conforming
+  to POSIX 1003.1-2001, which prohibits most digit-string options:
+    expand -N	(instead, use expand -t N)
+    head -N	(instead, use head -c N or head -n N)
+    fold -N	(instead, use fold -w N)
+    split -N	(instead, use split -l N)
+    tail -N	(instead, use tail -c N or tail -n N)
+    unexpand -N	(instead, use unexpand --first-only -t N)
+    uniq -N	(instead, use uniq -f N)
+  The following obsolete usages (options without arguments) are no
+  longer supported on systems conforming to POSIX 1003.1-2001, which
+  prohibits most options with optional arguments:
+    od -s	(instead, use od --strings)
+    od -w	(instead, use od --width)
+    pr -S	(instead, use pr --sep-string)
 [2.0.20]
 * tr no longer gets failed a assertion for [==] or [::]
 * The following obsolete usages are no longer supported on systems conforming
-  to POSIX 1003.1-2001:
-  - sort +POS1 -POS2  (Use sort -k instead.)
-  - tail +N  (Use tail -n instead.)
-  - uniq +N  (Use uniq -s instead.)
+  to POSIX 1003.1-2001, which prohibits most options with leading "+":
+    sort +POS1 -POS2	(instead, use sort -k)
+    tail +N		(instead, use tail -c +N or tail -n +N)
+    uniq +N		(instead, use uniq -s N)
+* Warnings are issued for obsolete usages on older hosts,
+  unless POSIXLY_CORRECT is set in the environment.
 * sort -m no longer segfaults when given an empty file
 * sort -S now accepts 'K' as a synonym for 'k'.
 * wc recognizes all locale-defined white-space characters, not just those
