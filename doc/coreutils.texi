@@ -269,9 +269,9 @@ Directory listing
 * ls invocation::               List directory contents
 * dir invocation::              Briefly list directory contents
 * vdir invocation::             Verbosely list directory contents
-* dircolors invocation::        Color setup for @code{ls}
+* dircolors invocation::        Color setup for @command{ls}
 
-@code{ls}:  List directory contents
+@command{ls}:  List directory contents
 
 * Which files are listed::      Which files are listed
 * What information is listed::  What information is listed
@@ -553,8 +553,8 @@ context that requires a file name.
 
 @cindex backup options
 
-Some @sc{gnu} programs (at least @code{cp}, @code{install}, @code{ln}, and
-@code{mv}) optionally make backups of files before writing new versions.
+Some @sc{gnu} programs (at least @command{cp}, @code{install}, @code{ln}, and
+@command{mv}) optionally make backups of files before writing new versions.
 These options control the details of these backups.  The options are also
 briefly mentioned in the descriptions of the particular programs.
 
@@ -633,7 +633,7 @@ It has been replaced with @w{@kbd{--backup}}.
 
 @cindex block size
 
-Some @sc{gnu} programs (at least @code{df}, @code{du}, and @code{ls}) display
+Some @sc{gnu} programs (at least @command{df}, @code{du}, and @code{ls}) display
 file sizes in ``blocks''.  You can adjust the block size to make file
 sizes easier to read.  The block size used for display is independent of
 any filesystem block size.
@@ -655,9 +655,9 @@ variables in turn; the first one that is set determines the block size.
 @table @code
 
 @item DF_BLOCK_SIZE
-This specifies the default block size for the @code{df} command.
-Similarly, @env{DU_BLOCK_SIZE} specifies the default for @code{du} and
-@env{LS_BLOCK_SIZE} for @code{ls}.
+This specifies the default block size for the @command{df} command.
+Similarly, @env{DU_BLOCK_SIZE} specifies the default for @command{du} and
+@env{LS_BLOCK_SIZE} for @command{ls}.
 
 @item BLOCK_SIZE
 This specifies the default block size for all three commands, if the
@@ -783,8 +783,8 @@ equivalent to @option{--block-size=si}.
 
 @cindex target directory
 
-Some @sc{gnu} programs (at least @code{cp}, @code{install}, @code{ln}, and
-@code{mv}) allow you to specify the target directory via this option:
+Some @sc{gnu} programs (at least @command{cp}, @code{install}, @code{ln}, and
+@command{mv}) allow you to specify the target directory via this option:
 
 @table @samp
 
@@ -800,7 +800,7 @@ argument list is either expected to be empty, or is a list of items
 (usually files) that will all be handled identically.  The @code{xargs}
 program is designed to work well with this convention.
 
-The commands in the @code{mv}-family are unusual in that they take
+The commands in the @command{mv}-family are unusual in that they take
 a variable number of arguments with a special case at the @emph{end}
 (namely, the target directory).  This makes it nontrivial to perform some
 operations, e.g., ``move all files from here to ../d/'', because
@@ -810,8 +810,8 @@ invocation of the subject command.  (It can be done by going through a
 shell command, but that requires more human labor and brain power than
 it should.)
 
-The @w{@kbd{--target-directory}} option allows the @code{cp},
-@code{install}, @code{ln}, and @code{mv} programs to be used conveniently
+The @w{@kbd{--target-directory}} option allows the @command{cp},
+@command{install}, @code{ln}, and @code{mv} programs to be used conveniently
 with @code{xargs}.  For example, you can move the files from the
 current directory to a sibling directory, @code{d} like this:
 (However, this doesn't move files whose names begin with @samp{.}.)
@@ -844,7 +844,7 @@ find . -mindepth 1 -maxdepth 1 -print0 \
 
 @cindex trailing slashes
 
-Some @sc{gnu} programs (at least @code{cp} and @code{mv}) allow you to
+Some @sc{gnu} programs (at least @command{cp} and @code{mv}) allow you to
 remove any trailing slashes from each @var{source} argument before
 operating on it.  The @w{@kbd{--strip-trailing-slashes}} option enables
 this behavior.
@@ -853,7 +853,7 @@ This is useful when a @var{source} argument may have a trailing slash and
 specify a symbolic link to a directory.  This scenario is in fact rather
 common because some shells can automatically append a trailing slash when
 performing file name completion on such symbolic links.  Without this
-option, @code{mv}, for example, (via the system's rename function) must
+option, @command{mv}, for example, (via the system's rename function) must
 interpret a trailing slash as a request to dereference the symbolic link
 and so must rename the indirectly referenced @emph{directory} and not
 the symbolic link.  Although it may seem surprising that such behavior
@@ -4772,8 +4772,8 @@ ones, to tabs.
 @node Directory listing
 @chapter Directory listing
 
-This chapter describes the @code{ls} command and its variants @code{dir}
-and @code{vdir}, which list information about files.
+This chapter describes the @command{ls} command and its variants @code{dir}
+and @command{vdir}, which list information about files.
 
 @menu
 * ls invocation::               List directory contents.
@@ -4784,26 +4784,26 @@ and @code{vdir}, which list information about files.
 
 
 @node ls invocation
-@section @code{ls}: List directory contents
+@section @command{ls}: List directory contents
 
 @pindex ls
 @cindex directory listing
 
-The @code{ls} program lists information about files (of any type,
+The @command{ls} program lists information about files (of any type,
 including directories).  Options and file arguments can be intermixed
 arbitrarily, as usual.
 
 For non-option command-line arguments that are directories, by default
-@code{ls} lists the contents of directories, not recursively, and
+@command{ls} lists the contents of directories, not recursively, and
 omitting files with names beginning with @samp{.}.  For other non-option
-arguments, by default @code{ls} lists just the file name.  If no
-non-option argument is specified, @code{ls} operates on the current
+arguments, by default @command{ls} lists just the file name.  If no
+non-option argument is specified, @command{ls} operates on the current
 directory, acting as if it had been invoked with a single argument of @samp{.}.
 
 @vindex LC_ALL
 By default, the output is sorted alphabetically, according to the locale
 settings in effect. @footnote{If you use a non-@sc{posix}
-locale (e.g., by setting @env{LC_ALL} to @samp{en_US}), then @code{ls} may
+locale (e.g., by setting @env{LC_ALL} to @samp{en_US}), then @command{ls} may
 produce output that is sorted differently than you're accustomed to.
 In that case, set the @env{LC_ALL} environment variable to @samp{C}.}
 If standard output is
@@ -4811,11 +4811,11 @@ a terminal, the output is in columns (sorted vertically) and control
 characters are output as question marks; otherwise, the output is listed
 one per line and control characters are output as-is.
 
-Because @code{ls} is such a fundamental program, it has accumulated many
+Because @command{ls} is such a fundamental program, it has accumulated many
 options over the years.  They are described in the subsections below;
 within each section, options are listed alphabetically (ignoring case).
 The division of options into the subsections is not absolute, since some
-options affect more than one aspect of @code{ls}'s operation.
+options affect more than one aspect of @command{ls}'s operation.
 
 Also see @ref{Common options}.
 
@@ -4833,7 +4833,7 @@ Also see @ref{Common options}.
 @node Which files are listed
 @subsection Which files are listed
 
-These options determine which files @code{ls} lists information for.
+These options determine which files @command{ls} lists information for.
 By default, any files and the contents of any directories on the command
 line are shown.
 
@@ -4914,7 +4914,7 @@ List the contents of all directories recursively.
 @node What information is listed
 @subsection What information is listed
 
-These options affect the information that @code{ls} displays.  By
+These options affect the information that @command{ls} displays.  By
 default, only file names are shown.
 
 @table @samp
@@ -4964,7 +4964,7 @@ Produce long format directory listings, but don't display owner information.
 @opindex -G
 @opindex --no-group
 Inhibit display of group information in a long format directory listing.
-(This is the default in some non-@sc{gnu} versions of @code{ls}, so we
+(This is the default in some non-@sc{gnu} versions of @command{ls}, so we
 provide this option for compatibility.)
 
 @item -h
@@ -5004,9 +5004,9 @@ bytes, but this can be overridden (@pxref{Block size}).
 The @var{blocks} computed counts each hard link separately;
 this is arguably a deficiency.
 
-@cindex permissions, output by @code{ls}
+@cindex permissions, output by @command{ls}
 The permissions listed are similar to symbolic mode specifications
-(@pxref{Symbolic Modes}).  But @code{ls} combines multiple bits into the
+(@pxref{Symbolic Modes}).  But @command{ls} combines multiple bits into the
 third character of each set of permissions as follows:
 @table @samp
 @item s
@@ -5066,7 +5066,7 @@ For files that are NFS-mounted from an HP-UX system to a BSD system,
 this option reports sizes that are half the correct values.  On HP-UX
 systems, it reports sizes that are twice the correct values for files
 that are NFS-mounted from BSD systems.  This is due to a flaw in HP-UX;
-it also affects the HP-UX @code{ls} program.
+it also affects the HP-UX @command{ls} program.
 
 @itemx --si
 @opindex --si
@@ -5082,8 +5082,8 @@ you prefer powers of 1024.
 @node Sorting the output
 @subsection Sorting the output
 
-@cindex sorting @code{ls} output
-These options change the order in which @code{ls} sorts the information
+@cindex sorting @command{ls} output
+These options change the order in which @command{ls} sorts the information
 it outputs.  By default, sorting is done by character code (e.g., ASCII
 order).
 
@@ -5153,7 +5153,7 @@ or when not using a long listing format, sort according to the access time.
 @itemx --sort=none
 @opindex -U
 @opindex --sort
-@opindex none@r{, sorting option for @code{ls}}
+@opindex none@r{, sorting option for @command{ls}}
 Do not sort; list the files in whatever order they are
 stored in the directory.  (Do not do any of the other unrelated things
 that @option{-f} does.)  This is especially useful when listing very large
@@ -5163,7 +5163,7 @@ directories, since not doing any sorting can be noticeably faster.
 @itemx --sort=version
 @opindex -v
 @opindex --sort
-@opindex version@r{, sorting option for @code{ls}}
+@opindex version@r{, sorting option for @command{ls}}
 Sort by version name and number, lowest first.  It behaves like a default
 sort, except that each sequence of decimal digits is treated numerically
 as an index/version number.  (@xref{More details about version sort}.)
@@ -5223,7 +5223,7 @@ These options affect the appearance of the overall output.
 @opindex -1
 @opindex --format
 @opindex single-column @r{output of files}
-List one file per line.  This is the default for @code{ls} when standard
+List one file per line.  This is the default for @command{ls} when standard
 output is not a terminal.
 
 @item -C
@@ -5232,9 +5232,9 @@ output is not a terminal.
 @opindex --format
 @opindex vertical @r{sorted files in columns}
 List files in columns, sorted vertically.  This is the default for
-@code{ls} if standard output is a terminal.  It is always the default
-for the @code{dir} and @code{d} programs.
-@sc{gnu} @code{ls} uses variable width columns to display as many files as
+@command{ls} if standard output is a terminal.  It is always the default
+for the @command{dir} and @code{d} programs.
+@sc{gnu} @command{ls} uses variable width columns to display as many files as
 possible in the fewest lines.
 
 @item --color [=@var{when}]
@@ -5327,7 +5327,7 @@ List the files in columns, sorted horizontally.
 @opindex -T
 @opindex --tabsize
 Assume that each tabstop is @var{cols} columns wide.  The default is 8.
-@code{ls} uses tabs where possible in the output, for efficiency.  If
+@command{ls} uses tabs where possible in the output, for efficiency.  If
 @var{cols} is zero, do not use tabs at all.
 
 @item -w
@@ -5450,7 +5450,7 @@ Do not quote file names.
 @opindex --hide-control-chars
 Print question marks instead of nongraphic characters in file names.
 This is the default if the output is a terminal and the program is
-@code{ls}.
+@command{ls}.
 
 @item -Q
 @itemx --quote-name
@@ -5498,50 +5498,50 @@ default may change to @samp{shell} in a future version of this package.
 @opindex --show-control-chars
 Print nongraphic characters as-is in file names.
 This is the default unless the output is a terminal and the program is
-@code{ls}.
+@command{ls}.
 
 @end table
 
 
 @node dir invocation
-@section @code{dir}: Briefly list directory contents
+@section @command{dir}: Briefly list directory contents
 
 @pindex dir
 @cindex directory listing, brief
 
-@code{dir} (also installed as @code{d}) is equivalent to @code{ls -C
+@command{dir} (also installed as @code{d}) is equivalent to @code{ls -C
 -b}; that is, by default files are listed in columns, sorted vertically,
 and special characters are represented by backslash escape sequences.
 
-@xref{ls invocation, @code{ls}}.
+@xref{ls invocation, @command{ls}}.
 
 
 @node vdir invocation
-@section @code{vdir}: Verbosely list directory contents
+@section @command{vdir}: Verbosely list directory contents
 
 @pindex vdir
 @cindex directory listing, verbose
 
-@code{vdir} (also installed as @code{v}) is equivalent to @code{ls -l
+@command{vdir} (also installed as @code{v}) is equivalent to @code{ls -l
 -b}; that is, by default files are listed in long format and special
 characters are represented by backslash escape sequences.
 
 @node dircolors invocation
-@section @code{dircolors}: Color setup for @code{ls}
+@section @command{dircolors}: Color setup for @code{ls}
 
 @pindex dircolors
 @cindex color setup
 @cindex setup for color
 
-@code{dircolors} outputs a sequence of shell commands to set up the
-terminal for color output from @code{ls} (and @code{dir}, etc.).
+@command{dircolors} outputs a sequence of shell commands to set up the
+terminal for color output from @command{ls} (and @code{dir}, etc.).
 Typical usage:
 
 @example
 eval `dircolors [@var{option}]@dots{} [@var{file}]`
 @end example
 
-If @var{file} is specified, @code{dircolors} reads it to determine which
+If @var{file} is specified, @command{dircolors} reads it to determine which
 colors to use for which file types and extensions.  Otherwise, a
 precompiled database is used.  For details on the format of these files,
 run @samp{dircolors --print-database}.
@@ -5550,7 +5550,7 @@ run @samp{dircolors --print-database}.
 @vindex SHELL @r{environment variable, and color}
 The output is a shell command to set the @env{LS_COLORS} environment
 variable.  You can specify the shell syntax to use on the command line,
-or @code{dircolors} will guess it from the value of the @env{SHELL}
+or @command{dircolors} will guess it from the value of the @env{SHELL}
 environment variable.
 
 The program accepts the following options.  Also see @ref{Common options}.
@@ -5612,14 +5612,14 @@ copying, moving (renaming), and deleting (removing).
 
 
 @node cp invocation
-@section @code{cp}: Copy files and directories
+@section @command{cp}: Copy files and directories
 
 @pindex cp
 @cindex copying files and directories
 @cindex files, copying
 @cindex directories, copying
 
-@code{cp} copies files (or, optionally, directories).  The copy is
+@command{cp} copies files (or, optionally, directories).  The copy is
 completely independent of the original.  You can either copy one file to
 another, or copy arbitrarily many files to a destination directory.
 Synopsis:
@@ -5629,7 +5629,7 @@ cp [@var{option}]@dots{} @var{source} @var{dest}
 cp [@var{option}]@dots{} @var{source}@dots{} @var{directory}
 @end example
 
-If the last argument names an existing directory, @code{cp} copies each
+If the last argument names an existing directory, @command{cp} copies each
 @var{source} file into that directory (retaining the same name).
 Otherwise, if only two files are given, it copies the first onto the
 second.  It is an error if the last argument is not a directory and more
@@ -5656,10 +5656,10 @@ when not copying recursively.  This default can be overridden with the
 
 @cindex self-backups
 @cindex backups, making only
-@code{cp} generally refuses to copy a file onto itself, with the
+@command{cp} generally refuses to copy a file onto itself, with the
 following exception: if @option{--force --backup} is specified with
 @var{source} and @var{dest} identical, and referring to a regular file,
-@code{cp} will make a backup file, either regular or numbered, as
+@command{cp} will make a backup file, either regular or numbered, as
 specified in the usual ways (@pxref{Backup options}).  This is useful when
 you simply want to make a backup of an existing file before changing it.
 
@@ -5684,7 +5684,7 @@ Equivalent to @option{-dpPR}.
 @cindex backups, making
 @xref{Backup options}.
 Make a backup of each file that would otherwise be overwritten or removed.
-As a special case, @code{cp} makes a backup of @var{source} when the force
+As a special case, @command{cp} makes a backup of @var{source} when the force
 and backup options are given and @var{source} and @var{dest} are the same
 name for an existing, regular file.  One useful application of this
 combination of options is this tiny Bourne shell script:
@@ -5729,7 +5729,7 @@ Equivalent to @option{--no-dereference --preserve=links}.
 @opindex --force
 When copying without this option and an existing destination file cannot
 be opened for writing, the copy fails.  However, with @option{--force}),
-when a destination file cannot be opened, @code{cp} then unlinks it and
+when a destination file cannot be opened, @command{cp} then unlinks it and
 tries to open it again.  Contrast this behavior with that enabled by
 @option{--link} and @option{--symbolic-link}, whereby the destination file
 is never opened but rather is unlinked unconditionally.  Also see the
@@ -5812,10 +5812,10 @@ has the same form as for @option{--preserve}.
 
 @itemx --parents
 @opindex --parents
-@cindex parent directories and @code{cp}
+@cindex parent directories and @command{cp}
 Form the name of each destination file by appending to the target
 directory a slash and the specified name of the source file.  The last
-argument given to @code{cp} must be the name of an existing directory.
+argument given to @command{cp} must be the name of an existing directory.
 For example, the command:
 
 @example
@@ -5829,12 +5829,12 @@ any missing intermediate directories.
 @itemx @w{@kbd{--reply}[=@var{how}]}
 @opindex --reply
 @cindex interactivity
-Using @option{--reply=yes} makes @code{cp} act as if @samp{yes} were
+Using @option{--reply=yes} makes @command{cp} act as if @samp{yes} were
 given as a response to every prompt about a destination file.  That effectively
 cancels any preceding @option{--interactive} or @option{-i} option.
-Specify @option{--reply=no} to make @code{cp} act as if @samp{no} were
+Specify @option{--reply=no} to make @command{cp} act as if @samp{no} were
 given as a response to every prompt about a destination file.
-Specify @option{--reply=query} to make @code{cp} prompt the user
+Specify @option{--reply=query} to make @command{cp} prompt the user
 about each existing destination file.
 
 @item -R
@@ -5874,7 +5874,7 @@ A @dfn{sparse file} contains @dfn{holes}---a sequence of zero bytes that
 does not occupy any physical disk blocks; the @samp{read} system call
 reads these as zeroes.  This can both save considerable disk space and
 increase speed, since many binary files contain lots of consecutive zero
-bytes.  By default, @code{cp} detects holes in input source files via a crude
+bytes.  By default, @command{cp} detects holes in input source files via a crude
 heuristic and makes the corresponding output file sparse as well.
 
 The @var{when} value can be one of the following:
@@ -5952,12 +5952,12 @@ However, mount point directories @emph{are} copied.
 
 
 @node dd invocation
-@section @code{dd}: Convert and copy a file
+@section @command{dd}: Convert and copy a file
 
 @pindex dd
 @cindex converting while copying a file
 
-@code{dd} copies a file (from standard input to standard output, by
+@command{dd} copies a file (from standard input to standard output, by
 default) with a changeable I/O block size, while optionally performing
 conversions on it.  Synopsis:
 
@@ -5998,7 +5998,7 @@ Read from @var{file} instead of standard input.
 @item of=@var{file}
 @opindex of
 Write to @var{file} instead of standard output.  Unless
-@samp{conv=notrunc} is given, @code{dd} truncates @var{file} to zero
+@samp{conv=notrunc} is given, @command{dd} truncates @var{file} to zero
 bytes (or the size specified with @samp{seek=}).
 
 @item ibs=@var{bytes}
@@ -6080,7 +6080,7 @@ Change lowercase letters to uppercase.
 @item swab
 @opindex swab @r{(byte-swapping)}
 @cindex byte-swapping
-Swap every pair of input bytes.  @sc{gnu} @code{dd}, unlike others, works
+Swap every pair of input bytes.  @sc{gnu} @command{dd}, unlike others, works
 when an odd number of bytes are read---the last byte is simply copied
 (since there is nothing to swap it with).
 
@@ -6105,12 +6105,12 @@ zero bytes.
 
 
 @node install invocation
-@section @code{install}: Copy files and set attributes
+@section @command{install}: Copy files and set attributes
 
 @pindex install
 @cindex copying files and setting attributes
 
-@code{install} copies files while setting their permission modes and, if
+@command{install} copies files while setting their permission modes and, if
 possible, their owner and group.  Synopses:
 
 @example
@@ -6125,7 +6125,7 @@ to the destination @var{directory}.  In the last, each @var{directory}
 (and any missing parent directories) is created.
 
 @cindex Makefiles, installing programs in
-@code{install} is similar to @code{cp}, but allows you to control the
+@command{install} is similar to @code{cp}, but allows you to control the
 attributes of destination files.  It is typically used in Makefiles to
 copy programs into their destination directories.  It refuses to copy
 files onto themselves.
@@ -6145,7 +6145,7 @@ Make a backup of each file that would otherwise be overwritten or removed.
 
 @item -c
 @opindex -c
-Ignored; for compatibility with old Unix versions of @code{install}.
+Ignored; for compatibility with old Unix versions of @command{install}.
 
 @item -d
 @itemx --directory
@@ -6157,7 +6157,7 @@ Ignored; for compatibility with old Unix versions of @code{install}.
 Create each given directory and any missing parent directories, setting
 the owner, group and mode as given on the command line or to the
 defaults.  It also gives any parent directories it creates those
-attributes.  (This is different from the SunOS 4.x @code{install}, which
+attributes.  (This is different from the SunOS 4.x @command{install}, which
 gives directories that it creates the default attributes.)
 
 @item -g @var{group}
@@ -6187,7 +6187,7 @@ and execute for the owner, and read and execute for group and other.
 @cindex ownership of installed files, setting
 @cindex appropriate privileges
 @vindex root @r{as default owner}
-If @code{install} has appropriate privileges (is run as root), set the
+If @command{install} has appropriate privileges (is run as root), set the
 ownership of installed files or directories to @var{owner}. The default
 is @code{root}.  @var{owner} may be either a user name or a numeric user
 ID.
@@ -6246,27 +6246,27 @@ argument can be @samp{none} (or @samp{off}), @samp{numbered} (or
 
 
 @node mv invocation
-@section @code{mv}: Move (rename) files
+@section @command{mv}: Move (rename) files
 
 @pindex mv
 
-@code{mv} moves or renames files (or directories).  Synopsis:
+@command{mv} moves or renames files (or directories).  Synopsis:
 
 @example
 mv [@var{option}]@dots{} @var{source} @var{dest}
 mv [@var{option}]@dots{} @var{source}@dots{} @var{directory}
 @end example
 
-If the last argument names an existing directory, @code{mv} moves each
+If the last argument names an existing directory, @command{mv} moves each
 other given file into a file with the same name in that directory.
 Otherwise, if only two files are given, it renames the first as
 the second.  It is an error if the last argument is not a directory
 and more than two files are given.
 
-@code{mv} can move any type of file from one filesystem to another.
+@command{mv} can move any type of file from one filesystem to another.
 Prior to version @code{4.0} of the fileutils,
-@code{mv} could move only regular files between filesystems.
-For example, now @code{mv} can move an entire directory hierarchy
+@command{mv} could move only regular files between filesystems.
+For example, now @command{mv} can move an entire directory hierarchy
 including special device files from one partition to another.  It first
 uses some of the same code that's used by @code{cp -a} to copy the
 requested directories and files, then (assuming the copy succeeded)
@@ -6277,15 +6277,15 @@ directory succeeded, but the second didn't, the first would be left on
 the destination partition and the second and third would be left on the
 original partition.
 
-@cindex prompting, and @code{mv}
+@cindex prompting, and @command{mv}
 If a destination file exists but is normally unwritable, standard input
 is a terminal, and the @option{-f} or @option{--force} option is not given,
-@code{mv} prompts the user for whether to replace the file.  (You might
+@command{mv} prompts the user for whether to replace the file.  (You might
 own the file, or have write permission on its directory.)  If the
 response does not begin with @samp{y} or @samp{Y}, the file is skipped.
 
 @emph{Warning}: If you try to move a symlink that points to a directory,
-and you specify the symlink with a trailing slash, then @code{mv}
+and you specify the symlink with a trailing slash, then @command{mv}
 doesn't move the symlink but instead moves the directory referenced
 by the symlink.  @xref{Trailing slashes}.
 
@@ -6322,9 +6322,9 @@ of its permissions.  If the response does not begin with @samp{y} or
 @opindex --reply
 @cindex interactivity
 Specifying @option{--reply=yes} is equivalent to using @option{--force}.
-Specify @option{--reply=no} to make @code{mv} act as if @samp{no} were
+Specify @option{--reply=no} to make @command{mv} act as if @samp{no} were
 given as a response to every prompt about a destination file.
-Specify @option{--reply=query} to make @code{mv} prompt the user
+Specify @option{--reply=query} to make @command{mv} prompt the user
 about each existing destination file.
 
 @item -u
@@ -6469,13 +6469,13 @@ predates the development of the getopt standard syntax.
 
 
 @node shred invocation
-@section @code{shred}: Remove files more securely
+@section @command{shred}: Remove files more securely
 
 @pindex shred
 @cindex data, erasing
 @cindex erasing data
 
-@code{shred} overwrites devices or files, to help prevent even
+@command{shred} overwrites devices or files, to help prevent even
 very expensive hardware from recovering the data.
 
 Ordinarily when you remove a file (@pxref{rm invocation}), the data is
@@ -6498,7 +6498,7 @@ even that hard.
 The best way to remove something irretrievably is to destroy the media
 it's on with acid, melt it down, or the like.  For cheap removable media
 like floppy disks, this is the preferred method.  However, hard drives
-are expensive and hard to melt, so the @code{shred} utility tries
+are expensive and hard to melt, so the @command{shred} utility tries
 to achieve a similar effect non-destructively.
 
 This uses many overwrite passes, with the data patterns chosen to
@@ -6510,7 +6510,7 @@ from the proceedings of the Sixth USENIX Security Symposium (San Jose,
 California, 22--25 July, 1996).  The paper is also available online
 @url{http://www.cs.auckland.ac.nz/~pgut001/pubs/secure_del.html}.
 
-@strong{Please note} that @code{shred} relies on a very important assumption:
+@strong{Please note} that @command{shred} relies on a very important assumption:
 that the filesystem overwrites data in place.  This is the traditional
 way to do things, but many modern filesystem designs do not satisfy this
 assumption.  Exceptions include:
@@ -6544,12 +6544,12 @@ Generally speaking, it is more reliable to shred a device than a file,
 since this bypasses the problem of filesystem design mentioned above.
 However, even shredding devices is not always completely reliable.  For
 example, most disks map out bad sectors invisibly to the application; if
-the bad sectors contain sensitive data, @code{shred} won't be able to
+the bad sectors contain sensitive data, @command{shred} won't be able to
 destroy it.
 
-@code{shred} makes no attempt to detect or report this problem, just as
+@command{shred} makes no attempt to detect or report this problem, just as
 it makes no attempt to do anything about backups.  However, since it is
-more reliable to shred devices than files, @code{shred} by default does
+more reliable to shred devices than files, @command{shred} by default does
 not truncate or remove the output file.  This default is more suitable
 for devices, which typically cannot be truncated and should not be
 removed.
@@ -6558,7 +6558,7 @@ Finally, consider the risk of backups and mirrors.
 File system backups and remote mirrors may contain copies of the
 file that cannot be removed, and that will allow a shredded file
 to be recovered later.  So if you keep any data you may later want
-to destroy using @code{shred}, be sure that it is not backed up or mirrored.
+to destroy using @command{shred}, be sure that it is not backed up or mirrored.
 
 @example
 shred [@var{option}]@dots{} @var{file}[@dots{}]
@@ -6581,7 +6581,7 @@ Override file permissions if necessary to allow overwriting.
 @opindex -n @var{NUMBER}
 @opindex --iterations=@var{NUMBER}
 @cindex iterations, selecting the number of
-By default, @code{shred} uses 25 passes of overwrite.  This is enough
+By default, @command{shred} uses 25 passes of overwrite.  This is enough
 for all of the useful overwrite patterns to be used at least once.
 You can reduce this to save time, or increase it if you have a lot of
 time to waste.
@@ -6624,7 +6624,7 @@ shred does not increase the size of the file.
 @itemx --zero
 @opindex -z
 @opindex --zero
-Normally, the last pass that @code{shred} writes is made up of
+Normally, the last pass that @command{shred} writes is made up of
 random data.  If this would be conspicuous on your hard drive (for
 example, because it looks like encrypted data), or you just think
 it's tidier, the @option{--zero} option adds an additional overwrite pass with
@@ -6653,7 +6653,7 @@ exec 3>-
 
 Note that the shell command @samp{shred - >file} does not shred the
 contents of @var{file}, since it truncates @var{file} before invoking
-@code{shred}.  Use the command @samp{shred file} or (if using a
+@command{shred}.  Use the command @samp{shred file} or (if using a
 Bourne-compatible shell) the command @samp{shred - 1<>file} instead.
 
 @end table
@@ -6732,7 +6732,7 @@ must specify a nonexistent entry in an existing directory.
 to create the link.
 
 @node ln invocation
-@section @code{ln}: Make links between files
+@section @command{ln}: Make links between files
 
 @pindex ln
 @cindex links, creating
@@ -6741,7 +6741,7 @@ to create the link.
 @cindex creating links (hard or soft)
 
 @cindex filesystems and hard links
-@code{ln} makes links between files.  By default, it makes hard links;
+@command{ln} makes links between files.  By default, it makes hard links;
 with the @option{-s} option, it makes symbolic (or @dfn{soft}) links.
 Synopses:
 
@@ -6752,21 +6752,21 @@ ln [@var{option}]@dots{} @var{target}@dots{} @var{directory}
 
 @itemize @bullet
 
-@item If the last argument names an existing directory, @code{ln} creates a
+@item If the last argument names an existing directory, @command{ln} creates a
 link to each @var{target} file in that directory, using the
 @var{target}s' names.  (But see the description of the
 @option{--no-dereference} option below.)
 
-@item If two filenames are given, @code{ln} creates a link from the
+@item If two filenames are given, @command{ln} creates a link from the
 second to the first.
 
-@item If one @var{target} is given, @code{ln} creates a link to that
+@item If one @var{target} is given, @command{ln} creates a link to that
 file in the current directory.
 
 @item It is an error if the last argument is not a directory and more
 than two files are given.  Without @option{-f} or @option{-i} (see below),
-@code{ln} will not remove an existing file.  Use the @option{--backup}
-option to make @code{ln} rename existing files.
+@command{ln} will not remove an existing file.  Use the @option{--backup}
+option to make @command{ln} rename existing files.
 
 @end itemize
 
@@ -6824,7 +6824,7 @@ Remove existing destination files.
 @itemx --interactive
 @opindex -i
 @opindex --interactive
-@cindex prompting, and @code{ln}
+@cindex prompting, and @command{ln}
 Prompt whether to remove existing destination files.
 
 @item -n
@@ -6837,10 +6837,10 @@ treat that destination as if it were a normal file.
 When the destination is an actual directory (not a symlink to one),
 there is no ambiguity.  The link is created in that directory.
 But when the specified destination is a symlink to a directory,
-there are two ways to treat the user's request.  @code{ln} can
+there are two ways to treat the user's request.  @command{ln} can
 treat the destination just as it would a normal directory and create
 the link in it.  On the other hand, the destination can be viewed as a
-non-directory---as the symlink itself.  In that case, @code{ln}
+non-directory---as the symlink itself.  In that case, @command{ln}
 must delete or backup that symlink before creating the new link.
 The default is to treat a destination that is a symlink to a directory
 just like a directory.
@@ -6983,13 +6983,13 @@ the bits set in the umask for the point of departure.  @xref{File permissions}.
 
 
 @node mknod invocation
-@section @code{mknod}: Make block or character special files
+@section @command{mknod}: Make block or character special files
 
 @pindex mknod
 @cindex block special files, creating
 @cindex character special files, creating
 
-@code{mknod} creates a FIFO, character special file, or block special
+@command{mknod} creates a FIFO, character special file, or block special
 file with the specified name.  Synopsis:
 
 @example
@@ -7003,7 +7003,7 @@ Unlike the phrase ``special file type'' above, the term @dfn{special
 file} has a technical meaning on Unix: something that can generate or
 receive data.  Usually this corresponds to a physical piece of hardware,
 e.g., a printer or a disk.  (These files are typically created at
-system-configuration time.)  The @code{mknod} command is what creates
+system-configuration time.)  The @command{mknod} command is what creates
 files of this type.  Such devices can be read either a character at a
 time or a ``block'' (many characters) at a time, hence we say there are
 @dfn{block special} files and @dfn{character special} files.
@@ -7460,14 +7460,14 @@ Recursively change permissions of directories and their contents.
 
 
 @node touch invocation
-@section @code{touch}: Change file timestamps
+@section @command{touch}: Change file timestamps
 
 @pindex touch
 @cindex changing file timestamps
 @cindex file timestamps, changing
 @cindex timestamps, changing file
 
-@code{touch} changes the access and/or modification times of the
+@command{touch} changes the access and/or modification times of the
 specified files.  Synopsis:
 
 @example
@@ -7487,11 +7487,11 @@ Any @var{file} that does not exist is created empty.
 
 @cindex permissions, for changing file timestamps
 If changing both the access and modification times to the current
-time, @code{touch} can change the timestamps for files that the user
+time, @command{touch} can change the timestamps for files that the user
 running it does not own but has write permission for.  Otherwise, the
 user must own the files.
 
-Although @code{touch} provides options for changing two of the times --
+Although @command{touch} provides options for changing two of the times --
 the times of last access and modification -- of a file, there is actually
 a third one as well: the inode change time.  This is often referred to
 as a file's @code{ctime}.
@@ -7538,8 +7538,8 @@ time zones, @samp{am} and @samp{pm}, etc.  @xref{Date input formats}.
 
 @item -f
 @opindex -f
-@cindex BSD @code{touch} compatibility
-Ignored; for compatibility with BSD versions of @code{touch}.
+@cindex BSD @command{touch} compatibility
+Ignored; for compatibility with BSD versions of @command{touch}.
 
 @item -m
 @itemx --time=mtime
@@ -7586,21 +7586,21 @@ or some such command.)
 
 
 @node df invocation
-@section @code{df}: Report filesystem disk space usage
+@section @command{df}: Report filesystem disk space usage
 
 @pindex df
 @cindex filesystem disk usage
 @cindex disk usage by filesystem
 
-@code{df} reports the amount of disk space used and available on
+@command{df} reports the amount of disk space used and available on
 filesystems.  Synopsis:
 
 @example
 df [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
-With no arguments, @code{df} reports the space used and available on all
-currently mounted filesystems (of all types).  Otherwise, @code{df}
+With no arguments, @command{df} reports the space used and available on all
+currently mounted filesystems (of all types).  Otherwise, @command{df}
 reports on the filesystem containing each argument @var{file}.
 
 Normally the disk space is printed in units of
@@ -7609,9 +7609,9 @@ Normally the disk space is printed in units of
 @cindex disk device file
 @cindex device file, disk
 If an argument @var{file} is a disk device file containing a mounted
-filesystem, @code{df} shows the space available on that filesystem
+filesystem, @command{df} shows the space available on that filesystem
 rather than on the filesystem containing the device node (i.e., the root
-filesystem).  @sc{gnu} @code{df} does not attempt to determine the disk usage
+filesystem).  @sc{gnu} @command{df} does not attempt to determine the disk usage
 on unmounted filesystems, because on most kinds of systems doing so
 requires extremely nonportable intimate knowledge of filesystem
 structures.
@@ -7687,7 +7687,7 @@ are also listed.
 @opindex --no-sync
 @cindex filesystem space, retrieving old data more quickly
 Do not invoke the @code{sync} system call before getting any usage data.
-This may make @code{df} run significantly faster on systems with many
+This may make @command{df} run significantly faster on systems with many
 disks, but on some systems (notably SunOS) the results may be slightly
 out of date.  This is the default.
 
@@ -7722,7 +7722,7 @@ The labels in the header output line are changed to conform to @sc{posix}.
 @cindex filesystem space, retrieving current data more slowly
 Invoke the @code{sync} system call before getting any usage data.  On
 some systems (notably SunOS), doing this yields more up to date results,
-but in general this option makes @code{df} much slower, especially when
+but in general this option makes @command{df} much slower, especially when
 there are many or very busy filesystems.
 
 @item -t @var{fstype}
@@ -7788,26 +7788,26 @@ Multiple filesystem types can be eliminated by giving multiple
 @option{-x} options.  By default, no filesystem types are omitted.
 
 @item -v
-Ignored; for compatibility with System V versions of @code{df}.
+Ignored; for compatibility with System V versions of @command{df}.
 
 @end table
 
 
 @node du invocation
-@section @code{du}: Estimate file space usage
+@section @command{du}: Estimate file space usage
 
 @pindex du
 @cindex file space usage
 @cindex disk usage for files
 
-@code{du} reports the amount of disk space used by the specified files
+@command{du} reports the amount of disk space used by the specified files
 and for each subdirectory (of directory arguments).  Synopsis:
 
 @example
 du [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
-With no arguments, @code{du} reports the disk space for the current
+With no arguments, @command{du} reports the disk space for the current
 directory.  Normally the disk space is printed in units of
 1024 bytes, but this can be overridden (@pxref{Block size}).
 
@@ -7883,7 +7883,7 @@ This option is equivalent to @option{--block-size=1K}.
 @itemx --count-links
 @opindex -l
 @opindex --count-links
-@cindex hard links, counting in @code{du}
+@cindex hard links, counting in @command{du}
 Count the size of all files, even if they have appeared already (as a
 hard link).
 
@@ -7891,14 +7891,14 @@ hard link).
 @itemx --dereference
 @opindex -L
 @opindex --dereference
-@cindex symbolic links, dereferencing in @code{du}
+@cindex symbolic links, dereferencing in @command{du}
 Dereference symbolic links (show the disk space used by the file
 or directory that the link points to instead of the space used by
 the link).
 
 @item --max-depth=@var{DEPTH}
 @opindex --max-depth=@var{DEPTH}
-@cindex limiting output of @code{du}
+@cindex limiting output of @command{du}
 Show the total for each directory (and file if --all) that is at
 most MAX_DEPTH levels down from the root of the hierarchy.  The root
 is at level 0, so @code{du --max-depth=0} is equivalent to @code{du -s}.
@@ -7920,13 +7920,13 @@ of subdirectories.
 @itemx --one-file-system
 @opindex -x
 @opindex --one-file-system
-@cindex one filesystem, restricting @code{du} to
+@cindex one filesystem, restricting @command{du} to
 Skip directories that are on different filesystems from the one that
 the argument being processed is on.
 
 @item --exclude=@var{PAT}
 @opindex --exclude=@var{PAT}
-@cindex excluding files from @code{du}
+@cindex excluding files from @command{du}
 When recursing, skip subdirectories or files matching @var{PAT}.
 For example, @code{du --exclude='*.o'} excludes files whose names
 end in @samp{.o}.
@@ -7935,7 +7935,7 @@ end in @samp{.o}.
 @itemx --exclude-from=@var{FILE}
 @opindex -X @var{FILE}
 @opindex --exclude-from=@var{FILE}
-@cindex excluding files from @code{du}
+@cindex excluding files from @command{du}
 Like @option{--exclude}, except take the patterns to exclude from @var{FILE},
 one per line.  If @var{FILE} is @samp{-}, take the patterns from standard
 input.
@@ -7943,11 +7943,11 @@ input.
 @end table
 
 @cindex NFS mounts from BSD to HP-UX
-On BSD systems, @code{du} reports sizes that are half the correct
+On BSD systems, @command{du} reports sizes that are half the correct
 values for files that are NFS-mounted from HP-UX systems.  On HP-UX
 systems, it reports sizes that are twice the correct values for
 files that are NFS-mounted from BSD systems.  This is due to a flaw
-in HP-UX; it also affects the HP-UX @code{du} program.
+in HP-UX; it also affects the HP-UX @command{du} program.
 
 
 @node sync invocation
