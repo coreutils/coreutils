@@ -1,5 +1,5 @@
 /* error.h -- declaration for error-reporting function
-   Copyright (C) 1995 Software Foundation, Inc.
+   Copyright (C) 1995 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -13,7 +13,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 
 #ifndef _error_h_
 #define _error_h_
