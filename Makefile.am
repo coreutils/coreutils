@@ -24,7 +24,7 @@ check-root:
 	cd tests && $(MAKE) $@
 
 dist-hook:
-	test -x config/install-sh
+	test -x $(srcdir)/config/install-sh
 
 distcheck-hook:
 	$(MAKE) my-distcheck
