@@ -1,5 +1,17 @@
+
+	* src/Makefile.am: Adapt for automake-0.30.
+	(noinst_HEADERS): Rename from HEADERS.
+	(EXTRA_PROGRAMS): Set to `df mvdir'.
+	(PROGRAMS): Remove definition.
+	(bin_PROGRAMS): Remove hard-coded df.  Use @DF_PROG@ instead.
+	(libexec_PROGRAMS): Remove hard-coded mvdir.  Use @MVDIR_PROG@ instead.
+	* lib/Makefile.am: (noinst_HEADERS): Rename from HEADERS.
+
+	* configure.in (DF_PROG, MVDIR_PROG): Use these instead of bundling
+	both into PROGS.
+
 Mon Feb 26 21:23:58 1996  Jim Meyering  (meyering@na-net.ornl.gov)
-	
+
 	* dd.c (copy): Remove bogus (now that we're using full_write)
 	increment of w_partial.
 	Change sense of the tests (though they're equivalent) that check
