@@ -1,5 +1,7 @@
 2002-09-25  Jim Meyering  <meyering@lucent.com>
 
+	* fsusage.c: Remove unneeded parentheses around operands of `defined'.
+
 	* safe-read.c (safe_read): Make comment more precise:
 	upon error, it returns -1.
 
