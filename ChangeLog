@@ -1,6 +1,25 @@
-2003-06-03  Jim Meyering  <jim@meyering.net>
+2003-06-04  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* man/Makefile.am (check-programs-vs-x): Rename target
+	from check-programs-vs-1.  Adjust rule to check for the
+	primary (.x) file, not the generated one (.1).
+
+2003-06-03  Tim Mooney <mooney@dogbert.cc.ndsu.NoDak.edu>
+
+	* man/kill.x: New file.
+	* man/Makefile.am (dist_man_MANS): Add kill.1.
+	(kill.1): New rule.
+
+2003-06-04  Jim Meyering  <jim@meyering.net>
+
+	Ensure that the .x file for a new program is never forgotten again.
+	* man/Makefile.am (programs): Define.
+	(check-programs-vs-1): New phony target.
+	(check-local): Depend on it.
+
+2003-06-03  Jim Meyering  <jim@meyering.net>
 
 	Avoid unnecessary copying of environment.
 	* src/env.c (main): Rather than clearing the environment and --
