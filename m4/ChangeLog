@@ -1,5 +1,8 @@
 2003-02-27  Jim Meyering  <jim@meyering.net>
 
+	* prereq.m4 (jm_PREREQ_PHYSMEM): Also check for `table' function.
+	Reported by Kaveh Ghazi.
+
 	* prereq.m4 (gl_SYS__SYSTEM_CONFIGURATION): New function.
 	(jm_PREREQ_PHYSMEM): Check for new headers and functions.
 	Use gl_SYS__SYSTEM_CONFIGURATION.
