@@ -167,7 +167,7 @@ TESTS = \
   part-symlink part-rename trailing-slash
 
 
-EXTRA_DIST = $(TESTS) setup
+EXTRA_DIST = $(TESTS) setup vfat
 TESTS_ENVIRONMENT = \
   PERL="$(PERL)" \
   PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
