@@ -1,3 +1,13 @@
+Tue Dec 17 21:03:40 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/cp.c (ROOT_CHOWN_AFFECTS_SYMLINKS): New macro.
+	(DO_CHOWN): Take an additional parameter.
+	(LINK_CHOWN): Remove macro.
+	(copy): When preserving owner and group of a symlink, use
+	chown only if ROOT_CHOWN_AFFECTS_SYMLINKS and EUID == 0.
+	Otherwise, the chown would affect the file referenced through
+	the symlink.
+
 Sat Dec 14 14:51:50 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* acinclude.m4 (jm_SYS_PROC_UPTIME): Fix typo in cache variable
