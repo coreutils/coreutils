@@ -158,7 +158,7 @@ human_readable (uintmax_t n, char *buf,
 		  e *= base;
 		  power++;
 		}
-	      while (e * base <= amt && power < sizeof suffixes - 1);
+	      while (e * base <= damt && power < sizeof suffixes - 1);
 
 	      damt /= e;
 
