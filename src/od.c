@@ -54,8 +54,14 @@ typedef double LONG_DOUBLE;
 #ifndef SCHAR_MAX
 #define SCHAR_MAX 127
 #endif
+#ifndef SCHAR_MIN
+#define SCHAR_MIN (-128)
+#endif
 #ifndef SHRT_MAX
 #define SHRT_MAX 32767
+#endif
+#ifndef SHRT_MIN
+#define SHRT_MIN (-32768)
 #endif
 #ifndef ULONG_MAX
 #define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
@@ -402,7 +408,10 @@ print_s_char (n_bytes, block, fmt_string)
   int i;
   for (i = n_bytes; i > 0; i--)
     {
-      int tmp = (unsigned) *(const signed char *) block;
+      int tmp = (unsigned) *(const unsigned char *) block;
+      if (tmp > SCHAR_MAX)
+	tmp -= SCHAR_MAX - SCHAR_MIN + 1;
+      assert (tmp <= SCHAR_MAX);
       printf (fmt_string, tmp, (i == 1 ? '\n' : ' '));
       block += sizeof (unsigned char);
     }
@@ -432,12 +441,14 @@ print_s_short (n_bytes, block, fmt_string)
   int i;
   for (i = n_bytes / sizeof (unsigned short); i > 0; i--)
     {
-      int tmp = (unsigned) *(const signed short *) block;
+      int tmp = (unsigned) *(const unsigned short *) block;
+      if (tmp > SHRT_MAX)
+	tmp -= SHRT_MAX - SHRT_MIN + 1;
+      assert (tmp <= SHRT_MAX);
       printf (fmt_string, tmp, (i == 1 ? '\n' : ' '));
       block += sizeof (unsigned short);
     }
 }
-
 static void
 print_short (n_bytes, block, fmt_string)
      long unsigned int n_bytes;
@@ -731,7 +742,7 @@ decode_one_format (s, next, tspec)
 	{
 	case 'd':
 	  fmt = SIGNED_DECIMAL;
-	  sprintf (fmt_string, "%%0%u%sd%%c",
+	  sprintf (fmt_string, "%%%u%sd%%c",
 		   bytes_to_signed_dec_digits[size],
 		   (size_spec == LONG ? "l" : ""));
 	  break;
@@ -745,7 +756,7 @@ decode_one_format (s, next, tspec)
 
 	case 'u':
 	  fmt = UNSIGNED_DECIMAL;
-	  sprintf (fmt_string, "%%0%u%su%%c",
+	  sprintf (fmt_string, "%%%u%su%%c",
 		   bytes_to_unsigned_dec_digits[size],
 		   (size_spec == LONG ? "l" : ""));
 	  break;
