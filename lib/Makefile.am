@@ -107,6 +107,7 @@ libfetish_a_SOURCES = \
   sig2str.h \
   stdio-safer.h \
   stripslash.c \
+  strdup.h \
   strndup.h \
   strverscmp.h \
   time_r.c time_r.h \
@@ -126,7 +127,7 @@ libfetish_a_SOURCES = \
   xmemcoll.c xmemcoll.h \
   xnanosleep.c xnanosleep.h \
   xreadlink.c xreadlink.h \
-  xstrdup.c xstrdup.h \
+  xstrdup.c  \
   xstrndup.c xstrndup.h \
   xstrtod.c xstrtod.h \
   xstrtoimax.c \
