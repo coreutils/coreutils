@@ -119,8 +119,15 @@ GNU coreutils NEWS                                    -*- outline -*-
   for some types of errors (e.g., read-only file system, I/O error)
   when first encountering the directory.
 
-  "sort -o -" now writes to a file named "-" instead of to standard
-  output; POSIX requires this.
+  "sort" fixes:
+
+    "sort -o -" now writes to a file named "-" instead of to standard
+    output; POSIX requires this.
+
+    An unlikely race condition has been fixed where "sort" could have
+    mistakenly removed a temporary file belonging to some other process.
+
+    "sort" no longer has O(N**2) behavior when it creates many temporary files.
 
   tac can now handle regular, nonseekable files like Linux's
   /proc/modules.  Before, it would produce no output for such a file.
