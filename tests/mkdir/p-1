@@ -11,14 +11,14 @@ if test "$VERBOSE" = yes; then
   $MKDIR --version
 fi
 
-tmp=$TMPDIR/t-mkdir.$$/a/b/c
-temp_files=$tmp
-rm -rf $temp_files
+temp_dir=$TMPDIR/t-mkdir.$$
+tmp=$temp_dir/a/b/c
+rm -rf $temp_dir
 
 $MKDIR --parents $tmp || fail=1
 
 test -d $tmp || fail=1
 
-rm -rf $temp_files
+rm -rf $temp_dir
 
 exit $fail
