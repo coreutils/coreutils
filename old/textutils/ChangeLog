@@ -1,6 +1,7 @@
 2000-01-22  Jim Meyering  <meyering@lucent.com>
 
 	* configure.in (ALL_LINGUAS): Add Brazilian Portuguese (pt_BR).
+	(AC_CHECK_HEADERS): Move these checks into m4/.
 
 	* src/tr.c ("xstrtol.h"): Include.
 	(Filter): Rename from PFL.
