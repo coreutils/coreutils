@@ -207,24 +207,21 @@ find_field (const struct linebuffer *line)
 static int
 different (const char *old, const char *new, size_t oldlen, size_t newlen)
 {
-  register int order;
-
   if (check_chars < oldlen)
     oldlen = check_chars;
   if (check_chars < newlen)
     newlen = check_chars;
 
+  if (oldlen != newlen)
+    return 1;
+
   /* Use an if-statement here rather than a function variable to
      avoid portability hassles of getting a non-conflicting declaration
      of memcmp.  */
   if (ignore_case)
-    order = memcasecmp (old, new, MIN (oldlen, newlen));
+    return memcasecmp (old, new, oldlen);
   else
-    order = memcmp (old, new, MIN (oldlen, newlen));
-
-  if (order == 0)
-    return oldlen - newlen;
-  return order;
+    return memcmp (old, new, oldlen);
 }
 
 /* Output the line in linebuffer LINE to stream STREAM
