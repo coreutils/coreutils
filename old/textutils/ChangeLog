@@ -1,3 +1,10 @@
+Sat Feb 17 18:54:40 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* sort.c: Add -z option.  Change all occurrences of '\n' to `eolchar'.
+	(usage): Describe it.
+	(main): Set eolchar to 0 for -z.
+	From Mark W. Eichin <eichin@cygnus.com>.
+
 Fri Feb 16 21:44:14 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* join.c (main): Mark two strings for translation.
