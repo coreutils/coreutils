@@ -2,6 +2,31 @@
 
 	* Version 2.0.12.
 
+2002-04-28  Paul Eggert  <eggert@twinsun.com>
+
+	* src/kill.c: Rewrite from scratch.  Support everything
+	required by POSIX 1003.1-2001; when this conflicts with Bash,
+	stick with POSIX.  The conflicts are kill -l output format,
+	and lower case signal names preceded by `-' (e.g., "kill -hup"
+	is no longer supported).  Remove -L or --long-list option.
+	Add -t or --table option.  Rename --sigspec to --signal;
+	remove --signum and do not advertise obsolescent option -n.
+	Use str2sig and str2sig to convert between signal names and
+	numbers.
+
+	* doc/coreutils.texi (kill invocation): Document the above.
+	Document POSIX signals better.
+
+	* lib/sig2str.h, lib/sig2str.c: New files.
+	* configure.ac (AC_CHECK_DECLS): Add str2signal, strtoimax,
+	sys_siglist, _sys_siglist.
+	* lib/Makefile.am (libfetish_a_SOURCES): Add sig2str.h.
+	* m4/jm-macros.m4 (jm_MACROS): Add AC_REPLACE_FUNCS(sig2str).
+	* m4/prereq.m4 (jm_PREREQ): Add jm_PREREQ_SIG2STR.
+	(jm_PREREQ_SIG2STR): New macro.
+
+2002-04-28  Jim Meyering  <meyering@lucent.com>
+
 	* src/test.c (test_syntax_error): Add `const' to paramater
 	declarations to avoid new warning from gcc.
 	(integer_expected_error): Likewise.
