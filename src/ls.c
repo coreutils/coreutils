@@ -316,7 +316,7 @@ int inhibit_group;
 /* Nonzero means print the user and group id's as numbers rather
    than as names.  -n  */
 
-static int numeric_users;
+static int numeric_ids;
 
 /* Nonzero means mention the size in 512 byte blocks of each file.  -s  */
 
@@ -836,7 +836,7 @@ decode_switches (int argc, char **argv)
   full_time = 0;
   sort_type = sort_name;
   sort_reverse = 0;
-  numeric_users = 0;
+  numeric_ids = 0;
   print_block_size = 0;
   kilobyte_blocks = getenv ("POSIXLY_CORRECT") == 0;
   indicator_style = none;
@@ -953,7 +953,7 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'n':
-	  numeric_users = 1;
+	  numeric_ids = 1;
 	  break;
 
 	case 'o':  /* Just like -l, but don't display group info.  */
@@ -2078,6 +2078,7 @@ print_long_format (const struct fileinfo *f)
   char *p;
   time_t when;
   const char *fmt;
+  char *user_name;
 
 #ifdef HAVE_ST_DM_MODE
   mode_string (f->stat.st_dm_mode, modebuf);
@@ -2144,18 +2145,20 @@ print_long_format (const struct fileinfo *f)
   sprintf (p, "%s %3u ", modebuf, (unsigned int) f->stat.st_nlink);
   p += strlen (p);
 
-  if (numeric_users)
-    sprintf (p, "%-8u ", (unsigned int) f->stat.st_uid);
+  user_name = (numeric_ids ? NULL : getuser (f->stat.st_uid));
+  if (user_name)
+    sprintf (p, "%-8.8s ", user_name);
   else
-    sprintf (p, "%-8.8s ", getuser (f->stat.st_uid));
+    sprintf (p, "%-8u ", (unsigned int) f->stat.st_uid);
   p += strlen (p);
 
   if (!inhibit_group)
     {
-      if (numeric_users)
-	sprintf (p, "%-8u ", (unsigned int) f->stat.st_gid);
+      char *group_name = (numeric_ids ? NULL : getgroup (f->stat.st_gid));
+      if (group_name)
+	sprintf (p, "%-8.8s ", group_name);
       else
-	sprintf (p, "%-8.8s ", getgroup (f->stat.st_gid));
+	sprintf (p, "%-8u ", (unsigned int) f->stat.st_gid);
       p += strlen (p);
     }
 
