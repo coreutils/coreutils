@@ -1,3 +1,8 @@
+1998-04-01  Jim Meyering  <meyering@eng.ascend.com>
+
+	* tests/ls/cr-1: New file.
+	* tests/ls/Makefile.am (TESTS): Add cr-1.
+
 1998-03-31  Jim Meyering  <meyering@eng.ascend.com>
 
 	* src/system.h (TYPE_MAXIMUM): Cast result to `(t)' so this macro
@@ -18,6 +23,13 @@
 	would lead to the use of Perl.
 
 	* lib/memcmp.c (rpl_memcmp): Rename from memcmp.
+
+1998-03-30  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* src/ls.c (compare_ctime, rev_cmp_ctime, compare_mtime,
+	rev_cmp_mtime, compare_atime, rev_cmp_atime, compare_size,
+	rev_cmp_size): Use file name as secondary sort key to get
+	consistent sorting.
 
 1998-03-28  Jim Meyering  <meyering@eng.ascend.com>
 
