@@ -1,16 +1,13 @@
 #!/p/bin/perl5.000 -w
 
-$tr = '../tr +io 5';
-$tr = 'tr';
+$join = '/usr/bin/join';
+$join = 'join';
 $test = 0;
 $| = 1;
 
 print ":\nerrors=0\n";
 $expected = '';
-$s1 = '';
-$input = '';
 $flags = '';
-$s1 = '';
 
 while (<>)
   {
@@ -18,26 +15,29 @@ while (<>)
 
     $test++;
     chop;
-    $prog = '($test_name, $input,$flags,$s1,$s2,$expected,$e_ret_code) = ' . $_ . ';';
+    $prog = '($test_name, $flags,$f1,$f2,$expected,$e_ret_code) = ' . $_ . ';';
     eval $prog;
-    $in = "t$test_name.in"; 
+    $in1 = "t$test_name.1"; 
+    $in2 = "t$test_name.2"; 
     $exp_name = 't' . $test_name . '.exp'; 
     $out = "t$test_name.out"; 
 
-    open(IN, ">$in") || die "Couldn't open $in for writing.\n";
-    print IN $input;
+    open(IN, ">$in1") || die "Couldn't open $in1 for writing.\n";
+    print IN $f1;
+    close(IN);
+    open(IN, ">$in2") || die "Couldn't open $in2 for writing.\n";
+    print IN $f2;
     close(IN);
     open(EXP, ">$exp_name")
 	|| die "Couldn't open $exp_name for writing.\n";
     print EXP $expected;
     close(EXP);
-    $arg2 = ($s2 ? "'$s2'" : '');
-    $cmd = "$tr $flags \'$s1\' $arg2 < $in > $out";
+    $cmd = "$join $flags $in1 $in2 > $out";
     print <<EOF ;
 $cmd 2> /dev/null
 code=\$?
 if test \$code != $e_ret_code ; then
-  echo Test $test_name failed: tr return code \$code differs from expected value $e_ret_code 1>&2
+  echo Test $test_name failed: join return code \$code differs from expected value $e_ret_code 1>&2
   errors=`expr \$errors + 1`
 else
   cmp $out $exp_name
