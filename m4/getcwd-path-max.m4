@@ -88,7 +88,11 @@ main ()
 	  break;
 	}
       if ((c = getcwd (buf, PATH_MAX)) == NULL)
-        break;
+        {
+	  /* This allows any failure to indicate there is no bug.
+	     FIXME: check errno?  */
+	  break;
+	}
       if ((len = strlen (c)) != cwd_len)
 	{
 	  fail = 1;
