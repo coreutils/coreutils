@@ -227,6 +227,13 @@ cleanup_fatal (void)
   exit (EXIT_FAILURE);
 }
 
+void
+xalloc_die (void)
+{
+  error (0, 0, "%s", _("memory exhausted"));
+  cleanup_fatal ();
+}
+
 static void
 interrupt_handler (int sig)
 {
@@ -1327,9 +1334,6 @@ main (int argc, char **argv)
   suppress_count = false;
   remove_files = true;
   prefix = DEFAULT_PREFIX;
-
-  /* Change the way xmalloc and xrealloc fail.  */
-  xalloc_fail_func = cleanup;
 
   while ((optc = getopt_long (argc, argv, "f:b:kn:sqz", longopts, NULL)) != -1)
     switch (optc)
