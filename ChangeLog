@@ -1,6 +1,13 @@
-2005-04-04  Dmitry V. Levin  <ldv@altlinux.org>
+2005-04-05  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/nice.c (usage): Mention that some shells provide a
+	built-in function by the same name.
+	* src/nohup.c (usage): Likewise.
+	* src/printenv.c (usage):Likewise.
+
+2005-04-04  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* src/tee.c (tee): When closing files, do not close stdout,
 	leave this job to close_stdout() instead.
