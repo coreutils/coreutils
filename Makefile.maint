@@ -97,7 +97,16 @@ m4-check:
 po-check:
 	if test -f po/POTFILES.in; then \
 	  grep -E -v '^(#|$$)' po/POTFILES.in | sort > $@-1; \
-	  grep -E -l '\b_\(' lib/*.[ch] src/*.[ch] | sort > $@-2; \
+	  files=; \
+	  for file in lib/*.[chly] src/*.[chly]; do \
+	    case $$file in \
+	    *.[ch]) \
+	      base=`expr " $$file" : ' \(.*\)\..'`; \
+	      { test -f $$base.l || test -f $$base.y; } && continue;; \
+	    esac; \
+	    files="$$files $$file"; \
+	  done; \
+	  grep -E -l '\bN?_\([^)"]*("|$$)' $$files | sort > $@-2; \
 	  diff -u $@-1 $@-2 || exit 1; \
 	  rm -f $@-1 $@-2; \
 	fi
