@@ -1,4 +1,15 @@
+1998-07-02  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* gettext.m4 (AM_WITH_NLS): Remove intl/libintl.h if <libintl.h>
+	is to be used.
+
 1998-07-03  Jim Meyering  <meyering@ascend.com>
+
+	* gettext.m4: Add -lintl if it's found to be necessary.
+
+	* gettext.m4: New file -- from gettext-0.10.35.
+	* lcmessage.m4: Likewise.
+	* progtest.m4: Likewise.
 
 	* regex.m4 (jm_WITH_REGEX): New file and macro.
 	* jm-macros.m4: Require the new macro.
