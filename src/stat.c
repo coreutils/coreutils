@@ -534,7 +534,7 @@ print_it (char const *masterformat, char const *filename,
   /* create a working copy of the format string */
   char *format = xstrdup (masterformat);
 
-  char *dest = xmalloc (strlen (format) + 1);
+  char *dest = xmalloc (strlen (format) + 2 + 1);
 
   b = format;
   while (b)
