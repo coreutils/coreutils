@@ -227,17 +227,17 @@ my @tv = (
 # be significant during comparison; but with GNU sort the newline is
 # insignificant.  Here is an example of the bug:
 #
-# 	$ od -c t
-# 	0000000  \n  \t  \n
-# 	0000003
-# 	$ sort t | od -c
-# 	0000000  \n  \t  \n
-# 	0000003
+#	$ od -c t
+#	0000000  \n  \t  \n
+#	0000003
+#	$ sort t | od -c
+#	0000000  \n  \t  \n
+#	0000003
 #
 # The correct output of the latter command should be
 #
-# 	0000000  \t  \n  \n
-# 	0000003
+#	0000000  \t  \n  \n
+#	0000003
 #
 # because \t comes before \n in the collating sequence, and the trailing
 # \n's are part of the input line.
