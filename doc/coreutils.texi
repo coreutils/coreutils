@@ -9069,6 +9069,8 @@ given, it prints @samp{y} followed by a newline forever until killed.
 Upon a write error, @command{yes} exits with status @samp{1}.
 
 The only options are a lone @option{--help} or @option{--version}.
+To output an argument that begins with
+@samp{-}, precede it with @option{--}, e.g., @samp{yes -- --help}.
 @xref{Common options}.
 
 
@@ -9104,11 +9106,7 @@ pipeline.
 @dfn{failure}.  It can be used as a place holder in shell scripts
 where an unsuccessful command is needed.
 
-@vindex POSIXLY_CORRECT
-By default, @command{false} honors the @option{--help} and @option{--version}
-options.  However, that is contrary to @acronym{POSIX}, so when the environment
-variable @env{POSIXLY_CORRECT} is set, @command{false} ignores @emph{all}
-command line arguments, including @option{--help} and @option{--version}.
+@command{false} honors the @option{--help} and @option{--version} options.
 
 This version of @command{false} is implemented as a C program, and is thus
 more secure and faster than a shell script implementation, and may safely
@@ -9136,11 +9134,7 @@ In most modern shells, @command{true} is a built-in command, so when
 you use @samp{true} in a script, you're probably using the built-in
 command, not the one documented here.
 
-@vindex POSIXLY_CORRECT
-By default, @command{true} honors the @option{--help} and @option{--version}
-options.  However, that is contrary to @acronym{POSIX}, so when the environment
-variable @env{POSIXLY_CORRECT} is set, @command{true} ignores @emph{all}
-command line arguments, including @option{--help} and @option{--version}.
+@command{true} honors the @option{--help} and @option{--version} options.
 
 Note, however, that it is possible to cause @command{true}
 to exit with nonzero status: when invoked in non-@acronym{POSIX} mode,
