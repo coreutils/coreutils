@@ -1,3 +1,10 @@
+2004-07-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/remove.c (remove_dir): If we can't save the state of the
+	working directory, pretend we started from "/", not ".".
+	This avoids a bug on hosts like Solaris that don't let you
+	remove the working directory.
+
 2004-07-27  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/printf.c (strtiomax, strtoumax): Declare if not already
