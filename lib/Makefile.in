@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4g from Makefile.am.
+# Makefile.in generated automatically by automake 1.4i from Makefile.am.
 
 # Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
 # Free Software Foundation, Inc.
@@ -119,36 +119,83 @@ INCLUDES = -I.. -I$(srcdir) -I../intl
 DEFS = -DLIBDIR=\"$(libdir)\" @DEFS@
 
 libfetish_a_SOURCES = \
-  getdate.y posixtm.c addext.c argmatch.c backupfile.c basename.c \
-  canon-host.c closeout.c diacrit.c dirname.c dup-safer.c \
-  exclude.c filemode.c fopen-safer.c \
-  full-write.c getopt.c getopt1.c getstr.c getugroups.c hard-locale.c hash.c \
-  human.c idcache.c isdir.c linebuffer.c localcharset.c long-options.c \
-  makepath.c mbswidth.c md5.c memcasecmp.c memcoll.c modechange.c \
-  path-concat.c physmem.c \
-  quote.c quotearg.c readtokens.c safe-read.c same.c save-cwd.c \
-  savedir.c sha.c strftime.c stripslash.c \
-  unicodeio.c userspec.c version-etc.c xgetcwd.c \
-  xgethostname.c xmalloc.c xstrdup.c xstrtod.c xstrtol.c xstrtoul.c \
-  xstrtoumax.c yesno.c
+  getdate.h getdate.y \
+  posixtm.c posixtm.h \
+  strftime.c \
+  getopt.c getopt.h getopt1.c \
+  hash.c hash.h \
+  __fpending.h \
+  addext.c \
+  argmatch.c argmatch.h \
+  backupfile.c backupfile.h \
+  basename.c \
+  bumpalloc.h \
+  canon-host.c \
+  closeout.c closeout.h \
+  diacrit.c diacrit.h \
+  dirname.c dirname.h \
+  dup-safer.c \
+  exclude.c exclude.h \
+  filemode.c filemode.h \
+  fnmatch.h \
+  fopen-safer.c \
+  fsusage.h \
+  full-write.c \
+  getline.h \
+  getpagesize.h \
+  getstr.c getstr.h \
+  getugroups.c \
+  group-member.h \
+  hard-locale.c hard-locale.h \
+  human.c human.h \
+  idcache.c \
+  isdir.c \
+  lchown.h \
+  linebuffer.c linebuffer.h \
+  localcharset.c \
+  long-options.c long-options.h \
+  makepath.c makepath.h \
+  mbswidth.c mbswidth.h \
+  md5.c md5.h \
+  memcasecmp.c memcasecmp.h \
+  memcoll.c memcoll.h \
+  modechange.c modechange.h \
+  mountlist.h \
+  nanosleep.h \
+  path-concat.c path-concat.h \
+  pathmax.h \
+  physmem.c physmem.h \
+  quote.c quote.h \
+  quotearg.c quotearg.h \
+  readtokens.c readtokens.h \
+  readutmp.h \
+  regex.h \
+  safe-read.c safe-read.h \
+  same.c same.h \
+  save-cwd.c save-cwd.h \
+  savedir.c savedir.h \
+  sha.c sha.h \
+  stdio-safer.h \
+  stripslash.c \
+  strverscmp.h \
+  unicodeio.c unicodeio.h \
+  unistd-safer.h \
+  userspec.c \
+  version-etc.c version-etc.h \
+  xalloc.h \
+  xgetcwd.c \
+  xgethostname.c \
+  xmalloc.c \
+  xstrdup.c \
+  xstrtod.c xstrtod.h \
+  xstrtol.c xstrtol.h \
+  xstrtoul.c \
+  xstrtoumax.c \
+  yesno.c
 
 
 libfetish_a_LIBADD = @LIBOBJS@ @ALLOCA@
 libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
-
-noinst_HEADERS = \
-  argmatch.h backupfile.h bumpalloc.h closeout.h diacrit.h dirname.h error.h \
-  exclude.h filemode.h fnmatch.h __fpending.h fsusage.h \
-  getdate.h getline.h getopt.h \
-  getstr.h getpagesize.h group-member.h hard-locale.h hash.h human.h lchown.h \
-  linebuffer.h long-options.h mbswidth.h md5.h memcasecmp.h memcoll.h \
-  makepath.h mbswidth.h modechange.h mountlist.h nanosleep.h obstack.h \
-  path-concat.h pathmax.h physmem.h posixtm.h \
-  quote.h quotearg.h readtokens.h \
-  readutmp.h regex.h safe-read.h same.h save-cwd.h savedir.h sha.h \
-  stdio-safer.h strverscmp.h unicodeio.h unistd-safer.h version-etc.h \
-  xalloc.h xstrtod.h xstrtol.h
-
 
 BUILT_SOURCES = getdate.c lstat.c stat.c
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
@@ -172,13 +219,14 @@ LIBRARIES = $(noinst_LIBRARIES)
 
 libfetish_a_AR = $(AR) cru
 am_libfetish_a_OBJECTS = getdate$U.$(OBJEXT) posixtm$U.$(OBJEXT) \
-	addext$U.$(OBJEXT) argmatch$U.$(OBJEXT) backupfile$U.$(OBJEXT) \
-	basename$U.$(OBJEXT) canon-host$U.$(OBJEXT) \
-	closeout$U.$(OBJEXT) diacrit$U.$(OBJEXT) dirname$U.$(OBJEXT) \
-	dup-safer$U.$(OBJEXT) exclude$U.$(OBJEXT) filemode$U.$(OBJEXT) \
-	fopen-safer$U.$(OBJEXT) full-write$U.$(OBJEXT) \
-	getopt$U.$(OBJEXT) getopt1$U.$(OBJEXT) getstr$U.$(OBJEXT) \
-	getugroups$U.$(OBJEXT) hard-locale$U.$(OBJEXT) hash$U.$(OBJEXT) \
+	strftime$U.$(OBJEXT) getopt$U.$(OBJEXT) getopt1$U.$(OBJEXT) \
+	hash$U.$(OBJEXT) addext$U.$(OBJEXT) argmatch$U.$(OBJEXT) \
+	backupfile$U.$(OBJEXT) basename$U.$(OBJEXT) \
+	canon-host$U.$(OBJEXT) closeout$U.$(OBJEXT) diacrit$U.$(OBJEXT) \
+	dirname$U.$(OBJEXT) dup-safer$U.$(OBJEXT) exclude$U.$(OBJEXT) \
+	filemode$U.$(OBJEXT) fopen-safer$U.$(OBJEXT) \
+	full-write$U.$(OBJEXT) getstr$U.$(OBJEXT) \
+	getugroups$U.$(OBJEXT) hard-locale$U.$(OBJEXT) \
 	human$U.$(OBJEXT) idcache$U.$(OBJEXT) isdir$U.$(OBJEXT) \
 	linebuffer$U.$(OBJEXT) localcharset$U.$(OBJEXT) \
 	long-options$U.$(OBJEXT) makepath$U.$(OBJEXT) \
@@ -187,13 +235,12 @@ am_libfetish_a_OBJECTS = getdate$U.$(OBJEXT) posixtm$U.$(OBJEXT) \
 	path-concat$U.$(OBJEXT) physmem$U.$(OBJEXT) quote$U.$(OBJEXT) \
 	quotearg$U.$(OBJEXT) readtokens$U.$(OBJEXT) \
 	safe-read$U.$(OBJEXT) same$U.$(OBJEXT) save-cwd$U.$(OBJEXT) \
-	savedir$U.$(OBJEXT) sha$U.$(OBJEXT) strftime$U.$(OBJEXT) \
-	stripslash$U.$(OBJEXT) unicodeio$U.$(OBJEXT) \
-	userspec$U.$(OBJEXT) version-etc$U.$(OBJEXT) \
-	xgetcwd$U.$(OBJEXT) xgethostname$U.$(OBJEXT) \
-	xmalloc$U.$(OBJEXT) xstrdup$U.$(OBJEXT) xstrtod$U.$(OBJEXT) \
-	xstrtol$U.$(OBJEXT) xstrtoul$U.$(OBJEXT) xstrtoumax$U.$(OBJEXT) \
-	yesno$U.$(OBJEXT)
+	savedir$U.$(OBJEXT) sha$U.$(OBJEXT) stripslash$U.$(OBJEXT) \
+	unicodeio$U.$(OBJEXT) userspec$U.$(OBJEXT) \
+	version-etc$U.$(OBJEXT) xgetcwd$U.$(OBJEXT) \
+	xgethostname$U.$(OBJEXT) xmalloc$U.$(OBJEXT) \
+	xstrdup$U.$(OBJEXT) xstrtod$U.$(OBJEXT) xstrtol$U.$(OBJEXT) \
+	xstrtoul$U.$(OBJEXT) xstrtoumax$U.$(OBJEXT) yesno$U.$(OBJEXT)
 libfetish_a_OBJECTS = $(am_libfetish_a_OBJECTS)
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 CPPFLAGS = @CPPFLAGS@
@@ -264,20 +311,19 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 CFLAGS = @CFLAGS@
+YACCCOMPILE = $(YACC) $(YFLAGS) $(AM_YFLAGS)
 DIST_SOURCES = $(libfetish_a_SOURCES)
-HEADERS = $(noinst_HEADERS)
-
-DIST_COMMON = README $(noinst_HEADERS) ChangeLog Makefile.am \
-	Makefile.in TODO __fpending.c alloca.c atexit.c chown.c dup2.c \
-	error.c error.h euidaccess.c fileblocks.c fnmatch.c fsusage.c \
-	ftruncate.c getdate.c getgroups.c gethostname.c getline.c \
-	getloadavg.c getpass.c getusershell.c group-member.c lchown.c \
-	malloc.c memchr.c memcmp.c memcpy.c memmove.c memrchr.c \
-	memset.c mkstemp.c mktime.c mountlist.c nanosleep.c obstack.c \
-	obstack.h putenv.c readutmp.c realloc.c regex.c rename.c \
-	rmdir.c rpmatch.c stime.c stpcpy.c strcasecmp.c strcspn.c \
-	strdup.c strncasecmp.c strndup.c strnlen.c strpbrk.c strstr.c \
-	strtod.c strtol.c strtoul.c strtoull.c strtoumax.c strverscmp.c \
+DIST_COMMON = README ChangeLog Makefile.am Makefile.in TODO \
+	__fpending.c alloca.c atexit.c chown.c dup2.c error.c error.h \
+	euidaccess.c fileblocks.c fnmatch.c fsusage.c ftruncate.c \
+	getdate.c getgroups.c gethostname.c getline.c getloadavg.c \
+	getpass.c getusershell.c group-member.c lchown.c malloc.c \
+	memchr.c memcmp.c memcpy.c memmove.c memrchr.c memset.c \
+	mkstemp.c mktime.c mountlist.c nanosleep.c obstack.c obstack.h \
+	putenv.c readutmp.c realloc.c regex.c rename.c rmdir.c \
+	rpmatch.c stime.c stpcpy.c strcasecmp.c strcspn.c strdup.c \
+	strncasecmp.c strndup.c strnlen.c strpbrk.c strstr.c strtod.c \
+	strtol.c strtoul.c strtoull.c strtoumax.c strverscmp.c \
 	tempname.c utime.c
 SOURCES = $(libfetish_a_SOURCES)
 
@@ -285,7 +331,7 @@ all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
-.SUFFIXES: .sed .sin .c .o .obj .y
+.SUFFIXES: .sed .sin .c .h .o .obj .y
 $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnits  lib/Makefile
@@ -293,6 +339,8 @@ Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && \
 	  CONFIG_HEADERS= CONFIG_LINKS= \
 	  CONFIG_FILES=$(subdir)/$@ $(SHELL) ./config.status
+
+AR = ar
 
 clean-noinstLIBRARIES:
 	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
@@ -713,8 +761,9 @@ utime_.$(OBJEXT) version-etc_.$(OBJEXT) xgetcwd_.$(OBJEXT) \
 xgethostname_.$(OBJEXT) xmalloc_.$(OBJEXT) xstrdup_.$(OBJEXT) \
 xstrtod_.$(OBJEXT) xstrtol_.$(OBJEXT) xstrtoul_.$(OBJEXT) \
 xstrtoumax_.$(OBJEXT) yesno_.$(OBJEXT) : $(ANSI2KNR)
+
 .y.c:
-	$(YACC) $(AM_YFLAGS) $(YFLAGS) $< && mv y.tab.c $*.c
+	$(YACCCOMPILE) $< && mv y.tab.c $@
 	if test -f y.tab.h; then \
 	  if cmp -s y.tab.h $*.h; then \
 	    rm -f y.tab.h; \
@@ -722,7 +771,8 @@ xstrtoumax_.$(OBJEXT) yesno_.$(OBJEXT) : $(ANSI2KNR)
 	    mv y.tab.h $*.h; \
 	  fi; \
 	fi
-
+.y.h:
+	@:
 uninstall-info-am:
 
 tags: TAGS
@@ -780,7 +830,7 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LIBRARIES) $(HEADERS) all-local
+all-am: Makefile $(LIBRARIES) all-local
 
 installdirs:
 
@@ -809,7 +859,7 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-	-test -z "getdate.c$(BUILT_SOURCES)$(MAINTAINERCLEANFILES)" || rm -f getdate.c $(BUILT_SOURCES) $(MAINTAINERCLEANFILES)
+	-test -z "$(BUILT_SOURCES)$(MAINTAINERCLEANFILES)" || rm -f $(BUILT_SOURCES) $(MAINTAINERCLEANFILES)
 clean: clean-am
 
 clean-am: clean-generic clean-noinstLIBRARIES mostlyclean-am
@@ -846,8 +896,6 @@ mostlyclean: mostlyclean-am
 mostlyclean-am: mostlyclean-compile mostlyclean-generic mostlyclean-kr
 
 uninstall-am: uninstall-info-am uninstall-local
-
-uninstall-info: uninstall-info-am
 
 .PHONY: all all-am all-local check check-am clean clean-generic \
 	clean-noinstLIBRARIES distclean distclean-compile \
