@@ -1,7 +1,7 @@
 \input texinfo
 @c %**start of header
 @setfilename coreutils.info
-@settitle @sc{gnu} Core-utils
+@settitle @sc{gnu} Coreutils
 
 @c %**end of header
 
@@ -136,7 +136,7 @@ Free Documentation License''.
 @end copying
 
 @titlepage
-@title @sc{gnu} @code{Core-utils}
+@title @sc{gnu} @code{Coreutils}
 @subtitle A set of command line utilities
 @subtitle for version @value{VERSION}, @value{UPDATED}
 @author David MacKenzie et al.
@@ -152,7 +152,7 @@ Free Documentation License''.
 @c the matching @end directive below.
 @ifnottex
 @node Top
-@top GNU Core-utils
+@top GNU Coreutils
 
 @insertcopying
 @end ifnottex
