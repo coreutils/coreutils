@@ -33,6 +33,7 @@
 #include "dirname.h"
 #include "error.h"
 #include "full-write.h"
+#include "getpagesize.h"
 #include "hash.h"
 #include "hash-pjw.h"
 #include "path-concat.h"
@@ -205,7 +206,8 @@ copy_reg (const char *src_path, const char *dst_path,
 	  struct stat const *src_sb)
 {
   char *buf;
-  int buf_size;
+  size_t buf_size;
+  size_t buf_alignment;
   int dest_desc;
   int source_desc;
   struct stat sb;
@@ -316,7 +318,9 @@ copy_reg (const char *src_path, const char *dst_path,
 
   /* Make a buffer with space for a sentinel at the end.  */
 
-  buf = alloca (buf_size + sizeof (int));
+  buf_alignment = lcm (getpagesize (), sizeof (int));
+  buf = alloca (buf_size + sizeof (int) + buf_alignment - 1);
+  buf = ptr_align (buf, buf_alignment);
 
   for (;;)
     {
