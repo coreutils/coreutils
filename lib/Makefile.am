@@ -1,4 +1,4 @@
-## Process this file with automake to produce Makefile.in
+## Process this file with automake to produce Makefile.in -*-Makefile-*-
 noinst_LIBRARIES = libfu.a
 
 EXTRA_DIST = chown.c getgroups.c getline.c lstat.c malloc.c mktime.c \

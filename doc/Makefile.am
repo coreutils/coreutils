@@ -1,4 +1,4 @@
-## Process this file with automake to produce Makefile.in
+## Process this file with automake to produce Makefile.in -*-Makefile-*-
 info_TEXINFOS = fileutils.texi
 
 EXTRA_DIST = perm.texi getdate.texi
