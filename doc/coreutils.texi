@@ -10472,6 +10472,7 @@ GNU extension).
 Note that this value is the number of seconds between the epoch
 and the current date as defined by the localtime system call.
 It isn't changed by the @option{--date} option.
+For examples, @xref{%s-examples}.
 @item %S
 second (00@dots{}60).  The range is [00@dots{}60], and not [00@dots{}59],
 in order to accommodate the occasional positive leap second.
@@ -10830,6 +10831,7 @@ use @samp{date --rfc}.  I just did and saw this:
 Mon, 25 Mar 1996 23:34:17 -0600
 @end example
 
+@anchor{%s-examples}
 @item
 To convert a date string to the number of seconds since the epoch
 (which is 1970-01-01 00:00:00 UTC), use the @option{--date} option with
@@ -10866,6 +10868,17 @@ date --date='2000-01-01 UTC' +%s
 946684800
 @end example
 
+An alternative is to use the @option{--utc} (@option{-u}) option.
+Then you may omit @samp{UTC} from the date string.  Although this
+produces the same result for @samp{%s} and many other format sequences,
+with a time zone offset different from zero, it would give a different
+result for zone-dependent formats like @samp{%z}.
+
+@example
+date -u --date=2000-01-01 +%s
+946684800
+@end example
+
 To convert such an unwieldy number of seconds back to
 a more readable form, use a command like this:
 
@@ -10873,6 +10886,13 @@ a more readable form, use a command like this:
 # local time zone used
 date -d '1970-01-01 UTC 946684800 seconds' +"%Y-%m-%d %T %z"
 1999-12-31 19:00:00 -0500
+@end smallexample
+
+Often it is better to output UTC-relative date and time:
+
+@smallexample
+date -u -d '1970-01-01 946684800 seconds' +"%Y-%m-%d %T %z"
+2000-01-01 00:00:00 +0000
 @end smallexample
 
 @end itemize
