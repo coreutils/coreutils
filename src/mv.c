@@ -125,7 +125,7 @@ static void
 cp_option_init (struct cp_options *x)
 {
   x->copy_as_regular = 0;  /* FIXME: maybe make this an option */
-  x->dereference = 0;
+  x->dereference = DEREF_NEVER;
   x->force = 0;
   x->failed_unlink_is_fatal = 1;
   x->hard_link = 0;
