@@ -1,5 +1,8 @@
 2000-08-21  Jim Meyering  <meyering@lucent.com>
 
+	* install-sh (oIFS): Remove unmatched double quote, left over from
+	my 2000-08-12 change.  From J. David Anglin.
+
 	* Makefile.maint (wget-update): Get the latest version of depcomp.
 
 	* depcomp: Update from automake.
