@@ -1,3 +1,8 @@
+2000-01-10  Jim Meyering  <meyering@lucent.com>
+
+	* src/Makefile.am (sleep_LDADD): Add @POW_LIBM@, for systems that use
+	lib/strtod.c and need -lm to resolve its pow reference.
+
 2000-01-07  Jim Meyering  <meyering@ascend.com>
 
 	* Version 2.0c.
