@@ -111,7 +111,7 @@ int obstack_exit_failure = EXIT_FAILURE;
 # endif
 
 # ifdef _LIBC
-#  if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4
+#  if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4)
 /* A looong time ago (before 1994, anyway; we're not sure) this global variable
    was used by non-GNU-C macros to avoid multiple evaluation.  The GNU C
    library still exports it because somebody might use it.  */
