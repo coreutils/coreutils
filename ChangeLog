@@ -1,3 +1,9 @@
+2003-02-28  Jim Meyering  <jim@meyering.net>
+
+	* tests/mv/Makefile.am (TESTS): Add hard-2.
+	* tests/mv/hard-2: New test for the above-fixed bug.
+	Based on a test case from Iida Yosiaki.
+
 2003-02-26  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.9.
