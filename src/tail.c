@@ -88,7 +88,7 @@
 
 /* Size of atomic reads.  */
 #ifndef BUFSIZ
-#define BUFSIZ (512 * 8)
+# define BUFSIZ (512 * 8)
 #endif
 
 /* If nonzero, interpret the numeric argument as the number of lines.
@@ -875,7 +875,8 @@ parse_obsolescent_option (int argc, const char *const *argv,
   int t_forever;
 
   /* With the obsolescent form, there is one option string and
-     (technically) at most one file argument.  But we allow two or more.  */
+     (technically) at most one file argument.  But we allow two or more
+     by default.  */
   if (argc < 2)
     return 0;
 
@@ -978,6 +979,20 @@ parse_obsolescent_option (int argc, const char *const *argv,
     {
       if (argc > 3)
 	{
+	  int posix_pedantic = (getenv ("POSIXLY_CORRECT") != NULL);
+
+	  /* When POSIXLY_CORRECT is set, enforce the `at most one
+	     file argument' requirement.  */
+	  if (posix_pedantic)
+	    {
+	      error (0, 0, _("\
+too many arguments;  When using tail's obsolescent option syntax (%s)\n\
+there may be no more than one file argument.  Use the equivalent -n or -c\n\
+option instead."), argv[1]);
+	      *fail = 1;
+	      return 1;
+	    }
+
 	  error (0, 0, _("\
 Warning: it is not portable to use two or more file arguments with\n\
 tail's obsolescent option syntax (%s).  Use the equivalent -n or -c\n\
