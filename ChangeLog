@@ -1,4 +1,4 @@
-2004-01-15  Jim Meyering  <jim@meyering.net>
+2004-01-16  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.1.
 
@@ -9,6 +9,11 @@
 	* src/touch.c (flexible_date): Remove static var.
 	(get_reldate): New function.
 	(main): Use it, to implement this new behavior.
+
+2004-01-16  Jim Meyering  <jim@meyering.net>
+
+	* tests/touch/Makefile.am (TESTS): Add relative.
+	* tests/touch/relative: New test for the above.
 
 2004-01-13  Jim Meyering  <jim@meyering.net>
 
