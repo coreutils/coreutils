@@ -4,6 +4,8 @@ Sun Apr  4 09:38:00 1993  Jim Meyering  (meyering@comco.com)
 	(main): Handle flag_help and flag_version before checking for
 	invocation errors.
 
+	* cp.c (copy): Declare to be static.
+
 Sat Apr  3 18:17:23 1993  Jim Meyering  (meyering@comco.com)
 
 	* Makefile.in [Makefile]: Add dependencies and a rule to remake it.
