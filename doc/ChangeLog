@@ -1,3 +1,7 @@
+2004-09-26  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (ls invocation): Document "ls --hide".
+
 2004-09-24  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (chmod invocation): Warn about "chmod -w file".

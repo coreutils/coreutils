@@ -1,6 +1,25 @@
-2004-09-25  Paul Eggert  <eggert@cs.ucla.edu>
+2004-09-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	Add support for ls --hide.  Idea suggested by Bardur Arantsson.
+	* NEWS: Document this.
+	* src/ls.c (file_ignored): Renamed from file_interesting, with
+	inverted return value.  Accept the file name, not a struct dirent *.
+	All uses changed.  Avoid the expense of calling fnmatch if the
+	file is ignorable due to leading '.'.
+	(all_files, really_all_files): Removed; replaced by:
+	(ignore): New variable.  All uses changed.
+	(IGNORE_DEFAULT, IGNORE_DOT_AND_DOTDOT, IGNORE_MINIMAL, HIDE_OPTION):
+	New constants.
+	(hide_patterns): New variable.
+	(long_options, decode_switches, file_ignored, usage):
+	Add support for --hide.
+	(patterns_match): New function.
+	(usage): Replace "hide" with "ignore" in explanation, to avoid
+	confusion.
+
+2004-09-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/ls.c (gobble_file, print_long_format): Don't assume that
 	human-readable output has a byte count equal to its column width;
