@@ -1,5 +1,5 @@
 /* tail -- output the last part of file(s)
-   Copyright (C) 89, 90, 91, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -83,6 +83,10 @@ enum Follow_mode
      it has been renamed or unlinked.  */
   Follow_descriptor = 2
 };
+
+/* The types of files for which tail works.  */
+#define IS_TAILABLE_FILE_TYPE(Mode) \
+  (S_ISREG (Mode) || S_ISFIFO (Mode) || S_ISCHR (Mode))
 
 static char const *const follow_mode_string[] =
 {
@@ -748,6 +752,13 @@ recheck (struct File_spec *f)
 	  error (0, errno, "%s", pretty_name (f));
 	}
     }
+  else if (!IS_TAILABLE_FILE_TYPE (new_stats.st_mode))
+    {
+      fail = 1;
+      f->errnum = -1;
+      error (0, 0, _("`%s' has been replaced with an untailable file"),
+	     pretty_name (f));
+    }
   else
     {
       f->errnum = 0;
@@ -1132,6 +1143,13 @@ tail_file (struct File_spec *f, off_t n_units)
 	      errors = 1;
 	      f->errnum = errno;
 	      error (0, errno, "%s", pretty_name (f));
+	    }
+	  else if (!IS_TAILABLE_FILE_TYPE (stats.st_mode))
+	    {
+	      error (0, 0, _("%s: cannot follow end of this type of file"),
+		     pretty_name (f));
+	      errors = 1;
+	      f->errnum = -1;
 	    }
 
 	  if (errors)
