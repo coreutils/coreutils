@@ -1402,6 +1402,9 @@
 /* Define as rpl_getgroups if getgroups doesn't work right. */
 #undef getgroups
 
+/* Define to a replacement function name for getline(). */
+#undef getline
+
 /* Define to rpl_gettimeofday if the replacement function should be used. */
 #undef gettimeofday
 
@@ -1479,7 +1482,7 @@
 /* Define to `unsigned' if <sys/types.h> does not define. */
 #undef size_t
 
-/* Define to `int' if <sys/types.h> does not define. */
+/* Define as a signed type of the same size as size_t. */
 #undef ssize_t
 
 /* Define to rpl_tzset if the wrapper function should be used. */
