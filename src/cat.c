@@ -37,7 +37,6 @@
 #undef max
 #define max(h,i) ((h) > (i) ? (h) : (i))
 
-char *stpcpy ();
 char *xmalloc ();
 int full_write ();
 int safe_read ();
