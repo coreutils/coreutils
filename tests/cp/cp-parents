@@ -21,11 +21,13 @@ cd $srcdir || framework_failure=1
 abs_srcdir=`pwd`
 cd $pwd || framework_failure=1
 
-. $abs_srcdir/../sticky-check
 . $srcdir/../envvar-check
 
 mkdir $tmp || framework_failure=1
 cd $tmp || framework_failure=1
+
+. $abs_srcdir/../sticky-check
+
 mkdir foo bar || framework_failure=1
 mkdir -p a/b/c d e || framework_failure=1
 
