@@ -2242,9 +2242,14 @@ but lacks following character offset"));
 
   if (checkonly)
     {
+      if (nfiles > 1)
+	error (SORT_FAILURE, 0,
+	       _("too many arguments;  with -c, there may be at most
+ one file argument"));
+
       /* POSIX requires that sort return 1 IFF invoked with -c and the
 	 input is not properly sorted.  */
-      exit (check (files, nfiles) == 0 ? 0 : 1);
+      exit (check (files, nfiles) == 0 ? EXIT_SUCCESS : 1);
     }
 
   if (!STREQ (outfile, "-"))
