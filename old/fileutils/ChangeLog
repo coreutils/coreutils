@@ -1,3 +1,8 @@
+2001-08-06  Paul Eggert  <eggert@twinsun.com>
+
+	* src/ls.c (print_long_format): If a file size is negative, assume
+	the typical case where it has wrapped around from a positive value.
+
 2001-08-07  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.maint (m4-check): New rule.
