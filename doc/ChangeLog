@@ -1,7 +1,7 @@
 2002-12-14  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (mknod invocation): Specify how major and minor
-	mode numbers are interpreted.
+	mode numbers are interpreted.  Reported by Kristin E Thomas.
 
 2002-11-13  Jim Meyering  <jim@meyering.net>
 
