@@ -1,5 +1,10 @@
 Tue Jul 30 23:24:18 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in (AC_CHECK_HEADERS): Add sys/fs/s5param.h.
+	* lib/fsusage.c [HAVE_SYS_FS_S5PARAM_H]: Include sys/fs/s5param.h
+	to work around bug in sys/filsys.h of Fujitsu UXP/V.
+	From by Johan Danielsson.
+
 	* src/cp.c (DO_CHOWN): New macro -- derived from code in copy.
 	(copy): Use DO_CHOWN to assure that any newly-created symbolic
 	links have proper owner and group.
