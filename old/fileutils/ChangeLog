@@ -1,8 +1,22 @@
-2001-01-30  Jim Meyering  <meyering@lucent.com>
+2001-02-03  Jim Meyering  <meyering@lucent.com>
+
+	* Makefile.maint (a_host): Use fencepost.
+	(real_dir): Use the same name for both.
+	(alpha): Print commands for both hosts.
+
+	* src/mv.c (long_options): Use `strip-trailing-slashes',
+	per the documetation, not `strip-trailing-slash'.
+	* src/cp.c (long_opts): Likewise.
+	Reported by Oskar Liljeblad.
 
 	* doc/fileutils.texi (mv invocation): Add a warning about how a trailing
 	slash makes a difference.  Prompted by a report from Oskar Liljeblad
 	via Michael Stone (Debian bug#83991).
+
+2001-01-31  Jim Meyering  <meyering@lucent.com>
+
+	* config.sub: Update from master repository.
+	* config.guess: Likewise.
 
 2001-01-28  Jim Meyering  <meyering@lucent.com>
 
