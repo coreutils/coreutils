@@ -1,4 +1,4 @@
-/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
@@ -23,6 +23,8 @@
 #endif
 
 #include "utimens.h"
+
+#include <errno.h>
 
 #if HAVE_UTIME_H
 # include <utime.h>
@@ -74,7 +76,16 @@ futimens (int fd ATTRIBUTE_UNUSED,
     t = NULL;
 # if HAVE_FUTIMES
   if (0 <= fd)
-    return futimes (fd, t);
+    {
+      if (futimes (fd, t) == 0)
+	return 0;
+
+      /* On GNU/Linux without the futimes syscall and without /proc
+	 mounted, glibc futimes fails with errno == ENOENT.  Fall back
+	 on utimes in this case.  */
+      if (errno != ENOENT)
+	return -1;
+    }
 # endif
   return utimes (file, t);
 
