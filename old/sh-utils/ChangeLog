@@ -1,5 +1,8 @@
 Mon Dec  9 06:58:11 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/getdate.y (Convert): Don't reject all dates in 2038.
+	Some fit in 31 bits.
+
 	* configure.in (jm_FUNC_GNU_STRFTIME): Use it.
 
 	* acinclude.m4 (AC_REPLACE_GNU_GETOPT): Remove unused macro.
