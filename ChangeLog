@@ -1,6 +1,15 @@
-2005-03-30  Paul Eggert  <eggert@cs.ucla.edu>
+2005-04-01  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	Don't let pr treat +1:-1 like +1:18446744073709551615.
+	* src/pr.c (strtoumax): Remove declaration.
+	(first_last_page): Use xstrtoumax in place of strtoumax,
+	so we don't interpret a negative page number (e.g., in an option
+	like --pages=1:-1) as valid.
+	* tests/pr/Test.pm: Add a test for this.
+
+2005-03-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/pinky.c (short_pinky): Adjust to read_utmp signature change.
 	* src/uptime.c (uptime): New arg OPTIONS.  All uses changed.
