@@ -1,3 +1,5 @@
+Changes in release 1.17
+* include texinfo.tex in the distribution
 Changes in release 1.16
 * sort is compatible with Unix sort when a key-end spec refers to the N'th
   character in a field that has fewer than N characters
