@@ -91,7 +91,7 @@
     {						\
       const char *s_ = (S);			\
       size_t len_ = strlen (s_) + 1;		\
-      char *tmp_dest_ = alloca (len_);		\
+      char *tmp_dest_ = (char *) alloca (len_);	\
       DEST = memcpy (tmp_dest_, (s_), len_);	\
     }						\
   while (0)
