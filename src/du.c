@@ -244,7 +244,7 @@ restore_cwd (cwd, dest, current)
 {
   if (cwd->desc >= 0)
     {
-      if (fchdir (cwd->desc) < 0)
+      if (fchdir (cwd->desc))
 	error (1, errno, "cannot return to %s%s%s", dest,
 	       (current ? " from " : ""),
 	       (current ? current : ""));
