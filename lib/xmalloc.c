@@ -70,7 +70,7 @@ xalloc_fail (void)
 {
   if (xalloc_fail_func)
     (*xalloc_fail_func) ();
-  error (xalloc_exit_failure, 0, "%s", xalloc_msg_memory_exhausted);
+  error (xalloc_exit_failure, 0, "%s", _(xalloc_msg_memory_exhausted));
 }
 
 /* Allocate N bytes of memory dynamically, with error checking.  */
