@@ -15,6 +15,13 @@
 	fractional seconds for files on an XFS file system, but that stat's
 	fractional seconds were always zero.
 
+2004-01-28  Paul Eggert  <eggert@twinsun.com>
+
+	* src/seq.c (print_numbers): Use 'double' for loop index, not
+	'int', to avoid problems with integer overflow.  On almost all
+	machines 'double' works in every case where 'int' works, and
+	it works on other cases besides.
+
 2004-01-27  Jim Meyering  <jim@meyering.net>
 
 	* src/seq.c (usage): Mention that if INCREMENT is omitted,
