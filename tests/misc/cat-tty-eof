@@ -1,0 +1,36 @@
+#!/bin/sh
+
+: ${PERL=perl}
+
+case "$PERL" in
+  *'missing perl')
+  echo 1>&2 "$0: configure didn't find a usable version of Perl, so can't run thi
+s test"
+  exit 77
+  ;;
+esac
+
+exec $PERL -w -- - <<\EOF
+
+# Ensure that cat exits upon a single EOF (^D) from a tty.
+# FIXME: do something like `stty eof ^D'.
+use strict;
+
+(my $ME = $0) =~ s|.*/||;
+
+eval { require Expect };
+$@ and (warn "$ME: this script requires Perl's Expect package\n"), exit 77;
+
+{
+  my $exp = new Expect;
+  # $exp->log_user(0);
+  $exp->spawn('cat')
+    or die "$ME: cannot run `cat': $!\n";
+
+  $exp->send('');
+  !defined $exp->exitstatus || $exp->exitstatus
+    or die "$ME: cat didn't exit after ^D from standard input\n";
+  $exp->hard_close();
+  exit 0
+}
+EOF
