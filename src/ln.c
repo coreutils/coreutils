@@ -108,13 +108,13 @@ static int show_version;
 static struct option const long_options[] =
 {
   {"backup", no_argument, NULL, 'b'},
-  {"directory", no_argument, &hard_dir_link, 1},
+  {"directory", no_argument, NULL, 'F'},
   {"no-dereference", no_argument, NULL, 'n'},
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
   {"suffix", required_argument, NULL, 'S'},
-  {"symbolic", no_argument, &symbolic_link, 1},
-  {"verbose", no_argument, &verbose, 1},
+  {"symbolic", no_argument, NULL, 's'},
+  {"verbose", no_argument, NULL, 'v'},
   {"version-control", required_argument, NULL, 'V'},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
