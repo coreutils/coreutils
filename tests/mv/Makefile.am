@@ -2,7 +2,7 @@
 AUTOMAKE_OPTIONS = 1.3 gnits
 
 TESTS = mv-special-1 into-self into-self-2 into-self-3 backup-is-src \
-  i-1 hard-link-1
+  i-1 hard-link-1 force
 
 EXTRA_DIST = $(TESTS) setup
 TESTS_ENVIRONMENT = \
@@ -15,5 +15,5 @@ TESTS_ENVIRONMENT = \
   RM=../../src/rm \
   TOUCH=../../src/touch \
   PERL="@PERL@" \
-  PATH=../../src:$$PATH \
+  PATH=`pwd`/../../src:$$PATH \
   PROG=mv
