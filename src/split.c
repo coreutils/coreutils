@@ -115,40 +115,30 @@ SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
 static void
 next_file_name (void)
 {
-  int x;
-  char *ne;
-  unsigned int i;
+  static unsigned n_digits = 2;
+  char *p;
 
-  static int first_call = 1;
-
-  /* Status for outfile name generation.  */
-  static unsigned outfile_count = 0;
-  static unsigned outfile_name_limit = 25 * 26;
-  static unsigned outfile_name_generation = 1;
-
-  if (!first_call)
-    outfile_count++;
-  first_call = 0;
-  if (outfile_count < outfile_name_limit)
+  /* Change any suffix of `z's to `a's.  */
+  for (p = outfile_end - 1; *p == 'z'; p--)
     {
-      for (ne = outfile_end - 1; ; ne--)
-	{
-	  x = *ne;
-	  if (x != 'z')
-	    break;
-	  *ne = 'a';
-	}
-      *ne = x + 1;
-      return;
+      *p = 'a';
     }
 
-  outfile_count = 0;
-  outfile_name_limit *= 26;
-  outfile_name_generation++;
-  *outfile_mid++ = 'z';
-  for (i = 0; i <= outfile_name_generation; i++)
-    outfile_mid[i] = 'a';
-  outfile_end += 2;
+  /* Increment the rightmost non-`z' character that was present before the
+     above z/a substitutions.  There is guaranteed to be such a character.  */
+  ++(*p);
+
+  /* If the result of that increment operation yielded a `z' and there
+     are only `z's to the left of it, then append two more `a' characters
+     to the end and add 1 (-1 + 2) to the number of digits (we're taking
+     out this `z' and adding two `a's).  */
+  if (*p == 'z' && p == outfile_mid)
+    {
+      ++n_digits;
+      ++outfile_mid;
+      *outfile_end++ = 'a';
+      *outfile_end++ = 'a';
+    }
 }
 
 /* Write BYTES bytes at BP to an output file.
