@@ -576,7 +576,7 @@ show_point (const char *point, const struct stat *statp)
     }
 # else
     resolved = alloca (PATH_MAX + 1);
-    resolved = realpath (abspoint, resolved);
+    resolved = (char *) realpath (abspoint, resolved);
     resolved_len = resolved ? strlen (resolved) : -1;
 # endif
 
