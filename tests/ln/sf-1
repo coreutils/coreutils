@@ -7,6 +7,9 @@ if test "$VERBOSE" = yes; then
   ln --version
 fi
 
+# Make sure we get English translations.
+. $srcdir/../lang-default
+
 tmp=t-ln.$$
 
 test_failure=0
@@ -19,9 +22,6 @@ if test $test_failure = 1; then
   echo 'failure in testing framework'
   exit 1
 fi
-
-# Make sure we get English translations.
-. $srcdir/../lang-default
 
 fail=0
 ln -sf a b > err 2>&1 && fail=1
