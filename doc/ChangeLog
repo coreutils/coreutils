@@ -1,3 +1,10 @@
+2004-09-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (mv invocation, rm invocation): Say "the response
+	is affirmative" rather than "the response begins with y or Y",
+	so that the documentation is accurate in non-English locales.
+	Problem reported by Munzir Taha.
+
 2004-09-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (dd invocation): Distinguish between options
