@@ -76,26 +76,26 @@ enum Format
   TEX_FORMAT			/* output for `TeX' or `LaTeX' */
 };
 
-int gnu_extensions = 1;		/* trigger all GNU extensions */
-int auto_reference = 0;		/* references are `file_name:line_number:' */
-int input_reference = 0;	/* references at beginning of input lines */
-int right_reference = 0;	/* output references after right context  */
-int line_width = 72;		/* output line width in characters */
-int gap_size = 3;		/* number of spaces between output fields */
-const char *truncation_string = "/";
+static int gnu_extensions = 1;	/* trigger all GNU extensions */
+static int auto_reference = 0;	/* references are `file_name:line_number:' */
+static int input_reference = 0;	/* references at beginning of input lines */
+static int right_reference = 0;	/* output references after right context  */
+static int line_width = 72;	/* output line width in characters */
+static int gap_size = 3;	/* number of spaces between output fields */
+static const char *truncation_string = "/";
 				/* string used to mark line truncations */
-const char *macro_name = "xx";	/* macro name for roff or TeX output */
-enum Format output_format = UNKNOWN_FORMAT;
+static const char *macro_name = "xx";	/* macro name for roff or TeX output */
+static enum Format output_format = UNKNOWN_FORMAT;
 				/* output format */
 
-int ignore_case = 0;		/* fold lower to upper case for sorting */
-const char *context_regex_string = NULL;
+static int ignore_case = 0;	/* fold lower to upper case for sorting */
+static const char *context_regex_string = NULL;
 				/* raw regex for end of context */
-const char *word_regex_string = NULL;
+static const char *word_regex_string = NULL;
 				/* raw regex for a keyword */
-const char *break_file = NULL;	/* name of the `Break characters' file */
-const char *only_file = NULL;	/* name of the `Only words' file */
-const char *ignore_file = NULL;	/* name of the `Ignore words' file */
+static const char *break_file = NULL;	/* name of the `Break characters' file */
+static const char *only_file = NULL;	/* name of the `Only words' file */
+static const char *ignore_file = NULL;	/* name of the `Ignore words' file */
 
 /* A BLOCK delimit a region in memory of arbitrary size, like the copy of a
    whole file.  A WORD is something smaller, its length should fit in a
@@ -126,51 +126,51 @@ WORD_TABLE;
 /* Pattern description tables.  */
 
 /* For each character, provide its folded equivalent.  */
-unsigned char folded_chars[CHAR_SET_SIZE];
+static unsigned char folded_chars[CHAR_SET_SIZE];
 
 /* For each character, indicate if it is part of a word.  */
-char syntax_table[CHAR_SET_SIZE];
-char *re_syntax_table = syntax_table;
+static char syntax_table[CHAR_SET_SIZE];
+static char *re_syntax_table = syntax_table;
 
 /* Compiled regex for end of context.  */
-struct re_pattern_buffer *context_regex;
+static struct re_pattern_buffer *context_regex;
 
 /* End of context pattern register indices.  */
-struct re_registers context_regs;
+static struct re_registers context_regs;
 
 /* Compiled regex for a keyword.  */
-struct re_pattern_buffer *word_regex;
+static struct re_pattern_buffer *word_regex;
 
 /* Keyword pattern register indices.  */
-struct re_registers word_regs;
+static struct re_registers word_regs;
 
 /* A word characters fastmap is used only when no word regexp has been
    provided.  A word is then made up of a sequence of one or more characters
    allowed by the fastmap.  Contains !0 if character allowed in word.  Not
    only this is faster in most cases, but it simplifies the implementation
    of the Break files.  */
-char word_fastmap[CHAR_SET_SIZE];
+static char word_fastmap[CHAR_SET_SIZE];
 
 /* Maximum length of any word read.  */
-int maximum_word_length;
+static int maximum_word_length;
 
 /* Maximum width of any reference used.  */
-int reference_max_width;
+static int reference_max_width;
 
 /* Ignore and Only word tables.  */
 
-WORD_TABLE ignore_table;	/* table of words to ignore */
-WORD_TABLE only_table;		/* table of words to select */
+static WORD_TABLE ignore_table;	/* table of words to ignore */
+static WORD_TABLE only_table;		/* table of words to select */
 
 /* Source text table, and scanning macros.  */
 
-int number_input_files;		/* number of text input files */
-int total_line_count;		/* total number of lines seen so far */
-const char **input_file_name;	/* array of text input file names */
-int *file_line_count;		/* array of `total_line_count' values at end */
+static int number_input_files;	/* number of text input files */
+static int total_line_count;	/* total number of lines seen so far */
+static const char **input_file_name;	/* array of text input file names */
+static int *file_line_count;	/* array of `total_line_count' values at end */
 
-BLOCK text_buffer;		/* file to study */
-char *text_buffer_maxend;	/* allocated end of text_buffer */
+static BLOCK text_buffer;	/* file to study */
+static char *text_buffer_maxend;/* allocated end of text_buffer */
 
 /* SKIP_NON_WHITE used only for getting or skipping the reference.  */
 
@@ -240,20 +240,20 @@ OCCURS;
 /* The various OCCURS tables are indexed by the language.  But the time
    being, there is no such multiple language support.  */
 
-OCCURS *occurs_table[1];	/* all words retained from the read text */
-size_t occurs_alloc[1];		/* allocated size of occurs_table */
-size_t number_of_occurs[1];	/* number of used slots in occurs_table */
+static OCCURS *occurs_table[1];	/* all words retained from the read text */
+static size_t occurs_alloc[1];	/* allocated size of occurs_table */
+static size_t number_of_occurs[1]; /* number of used slots in occurs_table */
 
 
 /* Communication among output routines.  */
 
 /* Indicate if special output processing is requested for each character.  */
-char edited_flag[CHAR_SET_SIZE];
+static char edited_flag[CHAR_SET_SIZE];
 
-int half_line_width;		/* half of line width, reference excluded */
-int before_max_width;		/* maximum width of before field */
-int keyafter_max_width;		/* maximum width of keyword-and-after field */
-int truncation_string_length;	/* length of string used to flag truncation */
+static int half_line_width;	/* half of line width, reference excluded */
+static int before_max_width;	/* maximum width of before field */
+static int keyafter_max_width;	/* maximum width of keyword-and-after field */
+static int truncation_string_length;/* length of string used to flag truncation */
 
 /* When context is limited by lines, wraparound may happen on final output:
    the `head' pointer gives access to some supplementary left context which
@@ -261,19 +261,19 @@ int truncation_string_length;	/* length of string used to flag truncation */
    access to some supplementary right context which will be seen at the
    beginning of the output line. */
 
-BLOCK tail;			/* tail field */
-int tail_truncation;		/* flag truncation after the tail field */
+static BLOCK tail;		/* tail field */
+static int tail_truncation;	/* flag truncation after the tail field */
 
-BLOCK before;			/* before field */
-int before_truncation;		/* flag truncation before the before field */
+static BLOCK before;		/* before field */
+static int before_truncation;	/* flag truncation before the before field */
 
-BLOCK keyafter;			/* keyword-and-after field */
-int keyafter_truncation;	/* flag truncation after the keyafter field */
+static BLOCK keyafter;		/* keyword-and-after field */
+static int keyafter_truncation;	/* flag truncation after the keyafter field */
 
-BLOCK head;			/* head field */
-int head_truncation;		/* flag truncation before the head field */
+static BLOCK head;		/* head field */
+static int head_truncation;	/* flag truncation before the head field */
 
-BLOCK reference;		/* reference field for input reference mode */
+static BLOCK reference;		/* reference field for input reference mode */
 
 /* Miscellaneous routines.  */
 
