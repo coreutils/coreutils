@@ -1,3 +1,13 @@
+Sun Jun 29 07:18:25 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (LIB_CRYPT): AC_SUBST new variable.  Use it to add
+	crypt-related library (-lufc or -lcrypt) only for the program that
+	needs it (su), rather than to all executables.
+	* src/Makefile.am (su_LDADD): Set to @LIB_CRYPT@.
+
+	* tests/date/mk-script.pl: Set and export LANGUAGE, LC_ALL, and LANG
+	so tests get english strings.  From Ulrich Drepper.
+
 Mon Jun 16 11:06:57 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* m4/putenv.m4 (jm_FUNC_PUTENV): New file and macro.
