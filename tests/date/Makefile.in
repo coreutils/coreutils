@@ -57,12 +57,17 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+host_alias = @host_alias@
+host_triplet = @host@
+AMTAR = @AMTAR@
+AMTARFLAGS = @AMTARFLAGS@
 CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
 CPP = @CPP@
 DATADIRNAME = @DATADIRNAME@
 GENCAT = @GENCAT@
+GETCONF = @GETCONF@
 GETLOADAVG_LIBS = @GETLOADAVG_LIBS@
 GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
@@ -102,9 +107,25 @@ l = @l@
 
 x = date
 explicit = 
-maint_gen = 1.X 2.X 3.X 4.X 5.X 6.X 7.X 8.X 9.X leap-1.X U95-1.X U95-2.X U95-3.X U92-1.X U92-2.X U92-3.X V92-1.X V92-2.X V92-3.X W92-1.X W92-2.X W92-3.X millen-1.X rel-0.X rel-1a.X rel-1b.X rel-2a.X rel-2b.X rel-2c.X rel-2d.X rel-2e.X rel-2f.X rel-2g.X rel-3a.X next-s.X next-m.X next-h.X next-d.X next-w.X next-mo.X next-y.X utc-0.X utc-0a.X utc-1.I utc-1.X utc-1a.I utc-1a.X date2sec-0.X date2sec-0a.X date2sec-1.X sec2date-0.X
+maint_gen = 1.X 2.X 3.X 4.X 5.X 6.X 7.X 8.X 9.X leap-1.X U95-1.X U95-2.X \
+U95-3.X U92-1.X U92-2.X U92-3.X V92-1.X V92-2.X V92-3.X W92-1.X W92-2.X \
+W92-3.X millen-1.X rel-0.X rel-1a.X rel-1b.X rel-2a.X rel-2b.X rel-2c.X \
+rel-2d.X rel-2e.X rel-2f.X rel-2g.X rel-3a.X next-s.X next-m.X next-h.X \
+next-d.X next-w.X next-mo.X next-y.X utc-0.X utc-0a.X utc-1.I utc-1.X \
+utc-1a.I utc-1a.X date2sec-0.X date2sec-0a.X date2sec-1.X sec2date-0.X
 
-run_gen = 1.O 1.E 2.O 2.E 3.O 3.E 4.O 4.E 5.O 5.E 6.O 6.E 7.O 7.E 8.O 8.E 9.O 9.E leap-1.O leap-1.E U95-1.O U95-1.E U95-2.O U95-2.E U95-3.O U95-3.E U92-1.O U92-1.E U92-2.O U92-2.E U92-3.O U92-3.E V92-1.O V92-1.E V92-2.O V92-2.E V92-3.O V92-3.E W92-1.O W92-1.E W92-2.O W92-2.E W92-3.O W92-3.E millen-1.O millen-1.E rel-0.O rel-0.E rel-1a.O rel-1a.E rel-1b.O rel-1b.E rel-2a.O rel-2a.E rel-2b.O rel-2b.E rel-2c.O rel-2c.E rel-2d.O rel-2d.E rel-2e.O rel-2e.E rel-2f.O rel-2f.E rel-2g.O rel-2g.E rel-3a.O rel-3a.E next-s.O next-s.E next-m.O next-m.E next-h.O next-h.E next-d.O next-d.E next-w.O next-w.E next-mo.O next-mo.E next-y.O next-y.E utc-0.O utc-0.E utc-0a.O utc-0a.E utc-1.O utc-1.E utc-1a.O utc-1a.E date2sec-0.O date2sec-0.E date2sec-0a.O date2sec-0a.E date2sec-1.O date2sec-1.E sec2date-0.O sec2date-0.E
+run_gen = 1.O 1.E 2.O 2.E 3.O 3.E 4.O 4.E 5.O 5.E 6.O 6.E 7.O 7.E 8.O 8.E 9.O \
+9.E leap-1.O leap-1.E U95-1.O U95-1.E U95-2.O U95-2.E U95-3.O U95-3.E U92-1.O \
+U92-1.E U92-2.O U92-2.E U92-3.O U92-3.E V92-1.O V92-1.E V92-2.O V92-2.E \
+V92-3.O V92-3.E W92-1.O W92-1.E W92-2.O W92-2.E W92-3.O W92-3.E millen-1.O \
+millen-1.E rel-0.O rel-0.E rel-1a.O rel-1a.E rel-1b.O rel-1b.E rel-2a.O \
+rel-2a.E rel-2b.O rel-2b.E rel-2c.O rel-2c.E rel-2d.O rel-2d.E rel-2e.O \
+rel-2e.E rel-2f.O rel-2f.E rel-2g.O rel-2g.E rel-3a.O rel-3a.E next-s.O \
+next-s.E next-m.O next-m.E next-h.O next-h.E next-d.O next-d.E next-w.O \
+next-w.E next-mo.O next-mo.E next-y.O next-y.E utc-0.O utc-0.E utc-0a.O \
+utc-0a.E utc-1.O utc-1.E utc-1a.O utc-1a.E date2sec-0.O date2sec-0.E \
+date2sec-0a.O date2sec-0a.E date2sec-1.O date2sec-1.E sec2date-0.O \
+sec2date-0.E
 
 
 EXTRA_DIST = Test.pm $x-tests $(explicit) $(maint_gen)
@@ -124,12 +145,12 @@ CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
 SCRIPTS =  $(noinst_SCRIPTS)
 
+DIST_SOURCES = 
 DIST_COMMON =  Makefile.am Makefile.in
 
 
-DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
-TAR = gtar
 GZIP_ENV = --best
 all: all-redirect
 .SUFFIXES:
@@ -164,25 +185,52 @@ distdir: $(DISTFILES)
 	    || cp -p $$d/$$file $(distdir)/$$file || :; \
 	  fi; \
 	done
+
 check-TESTS: $(TESTS)
-	@failed=0; all=0; \
+	@failed=0; all=0; xfail=0; xpass=0; \
 	srcdir=$(srcdir); export srcdir; \
 	for tst in $(TESTS); do \
-	  if test -f $$tst; then dir=.; \
-	  else dir="$(srcdir)"; fi; \
-	  if $(TESTS_ENVIRONMENT) $$dir/$$tst; then \
+	  if test -f ./$$tst; then dir=./; \
+	  elif test -f $$tst; then dir=; \
+	  else dir="$(srcdir)/"; fi; \
+	  if $(TESTS_ENVIRONMENT) $${dir}$$tst; then \
 	    all=`expr $$all + 1`; \
-	    echo "PASS: $$tst"; \
+	    case " $(XFAIL_TESTS) " in \
+	    *" $$tst "*) \
+	      xpass=`expr $$xpass + 1`; \
+	      failed=`expr $$failed + 1`; \
+	      echo "XPASS: $$tst"; \
+	    ;; \
+	    *) \
+	      echo "PASS: $$tst"; \
+	    ;; \
+	    esac; \
 	  elif test $$? -ne 77; then \
 	    all=`expr $$all + 1`; \
-	    failed=`expr $$failed + 1`; \
-	    echo "FAIL: $$tst"; \
+	    case " $(XFAIL_TESTS) " in \
+	    *" $$tst "*) \
+	      xfail=`expr $$xfail + 1`; \
+	      echo "XFAIL: $$tst"; \
+	    ;; \
+	    *) \
+	      failed=`expr $$failed + 1`; \
+	      echo "FAIL: $$tst"; \
+	    ;; \
+	    esac; \
 	  fi; \
 	done; \
 	if test "$$failed" -eq 0; then \
-	  banner="All $$all tests passed"; \
+	  if test "$$xfail" -eq 0; then \
+	    banner="All $$all tests passed"; \
+	  else \
+	    banner="All $$all tests behaved as expected ($$xfail expected failures)"; \
+	  fi; \
 	else \
-	  banner="$$failed of $$all tests failed"; \
+	  if test "$$xpass" -eq 0; then \
+	    banner="$$failed of $$all tests failed"; \
+	  else \
+	    banner="$$failed of $$all tests did not behave as expected ($$xpass unexpected passes)"; \
+	  fi; \
 	fi; \
 	dashes=`echo "$$banner" | sed s/./=/g`; \
 	echo "$$dashes"; \
@@ -248,7 +296,7 @@ maintainer-clean: maintainer-clean-am
 .PHONY: tags distdir check-TESTS info-am info dvi-am dvi check check-am \
 installcheck-am installcheck install-exec-am install-exec \
 install-data-am install-data install-am install uninstall-am uninstall \
-all-redirect all-am all installdirs mostlyclean-generic \
+all-redirect all-am all install-strip installdirs mostlyclean-generic \
 distclean-generic clean-generic maintainer-clean-generic clean \
 mostlyclean distclean maintainer-clean
 
