@@ -1,0 +1,2 @@
+@value{VERSION}
+@value{RELEASE_DATE}
