@@ -32,6 +32,7 @@
 #include <signal.h>
 
 #include "system.h"
+#include "closeout.h"
 #include "argmatch.h"
 #include "error.h"
 #include "safe-read.h"
@@ -261,7 +262,7 @@ With no FILE, or when FILE is -, read standard input.\n\
                            with --follow=name, reopen a FILE which has not\n\
                              changed size after N (default %d) iterations\n\
                              to see if it has been unlinked or renamed\n\
-                             (this is the usual case of rotated log files)\n
+                             (this is the usual case of rotated log files)\n\
       --pid=PID            with -f, terminate after process ID, PID dies\n\
   -q, --quiet, --silent    never output headers giving file names\n\
   -s, --sleep-interval=S   with -f, each iteration lasts approximately S\n\
@@ -327,13 +328,11 @@ close_fd (int fd, const char *filename)
 }
 
 static void
-write_header (const char *pretty_filename, const char *comment)
+write_header (const char *pretty_filename)
 {
   static int first_file = 1;
 
-  printf ("%s==> %s%s%s <==\n", (first_file ? "" : "\n"), pretty_filename,
-	  (comment ? ": " : ""),
-	  (comment ? comment : ""));
+  printf ("%s==> %s <==\n", (first_file ? "" : "\n"), pretty_filename);
   first_file = 0;
 }
 
@@ -934,7 +933,7 @@ tail_forever (struct File_spec *f, int nfiles)
 
 	  if (stats.st_size < f[i].size)
 	    {
-	      write_header (pretty_name (&f[i]), _("file truncated"));
+	      error (0, 0, _("%s: file truncated"), pretty_name (&f[i]));
 	      last = i;
 	      /* FIXME: check lseek return value  */
 	      lseek (f[i].fd, stats.st_size, SEEK_SET);
@@ -945,7 +944,7 @@ tail_forever (struct File_spec *f, int nfiles)
 	  if (i != last)
 	    {
 	      if (print_headers)
-		write_header (pretty_name (&f[i]), NULL);
+		write_header (pretty_name (&f[i]));
 	      last = i;
 	    }
 	  f[i].size += dump_remainder (pretty_name (&f[i]), f[i].fd,
@@ -1148,7 +1147,7 @@ tail_file (struct File_spec *f, off_t n_units)
   else
     {
       if (print_headers)
-	write_header (pretty_name (f), NULL);
+	write_header (pretty_name (f));
       errors = tail (pretty_name (f), fd, n_units);
       if (forever)
 	{
@@ -1511,6 +1510,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
   have_read_stdin = 0;
 
   {
@@ -1573,7 +1574,5 @@ main (int argc, char **argv)
 
   if (have_read_stdin && close (0) < 0)
     error (EXIT_FAILURE, errno, "-");
-  if (fclose (stdout) == EOF)
-    error (EXIT_FAILURE, errno, _("write error"));
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
