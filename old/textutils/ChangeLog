@@ -1,3 +1,7 @@
+2001-06-10  Jim Meyering  <meyering@lucent.com>
+
+	* tests/sort/Test.pm: Add a test based on a report from Herbert Xu.
+
 2001-05-20  Jim Meyering  <meyering@lucent.com>
 
 	* src/uniq.c: Rename new option values: s/all/precede/ and
