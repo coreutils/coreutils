@@ -234,7 +234,7 @@ main (argc, argv)
 {
   int c;
   char *cwd_only[2];
-
+  
   cwd_only[0] = ".";
   cwd_only[1] = NULL;
 

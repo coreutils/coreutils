@@ -1,4 +1,19 @@
+Thu Aug 18 11:41:16 1994  Jim Meyering  (meyering@comco.com)
+
+	* du.c (du_files) [HAVE_FCHDIR]: Use open (".", ...) and fchdir
+	instead of xgetcwd and chdir.  Otherwise, running du in a subdirectory
+	of an unreadable directory would fail because xgetcwd fails.
+	* configure.in (AC_HAVE_FUNCS): Add fchdir.  AIX-2.3 (for one)
+	doesn't have it.
+
+	* lib/Makefile.in (DISTFILES): Include getdate.c and posixtim.c
+	so one doesn't need $(YACC).
+	Add dependencies on safe-stat.h.
+
 Sat Jul 30 08:08:02 1994  Jim Meyering  (meyering@comco.com)
+
+	* du.c (main): Don't initialize automatic array CWD_ONLY in declaration.
+	Some compilers don't allow that.
 
 	* backupfile.c [DIRENT]: Remove spurious `|| defined(_POSIX_VERSION)'.
 	* savedir.c: Ditto.
