@@ -1,5 +1,12 @@
 2003-03-20  Jim Meyering  <jim@meyering.net>
 
+	* Version 4.5.12.
+
+	* announce-gen (print_changelog_deltas): Ensure that a newline
+	precedes each row of `*'s.
+
+2003-03-20  Jim Meyering  <jim@meyering.net>
+
 	* Version 4.5.11.
 
 	* src/seq.c (valid_format): Also accept ` ' and `'' as valid
