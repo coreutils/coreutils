@@ -136,7 +136,7 @@ Sun Apr  7 11:58:13 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	* strftime.c (mon_week_ISO): New function to implement new %V format.
 	(sun_week): Make TM parameter `const'.
 	(mon_week): Likewise.
-	(mon_week): Rewrite to correctly implement %W format..
+	(mon_week): Rewrite to implement %W format correctly.
 	(strftime): Handle %V format.
 	Reported by Arne Juul.
 
