@@ -17,7 +17,7 @@ AC_DEFUN(jm_FUNC_FPENDING,
 	for ac_expr in						\
 								\
 	    '# glibc2'						\
-	    'fp->_IO_write_ptr - fp->_IO_write_x_base'		\
+	    'fp->_IO_write_ptr - fp->_IO_write_base'		\
 								\
 	    '# traditional Unix'				\
 	    'fp->_ptr - fp->_base'				\
