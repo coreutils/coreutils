@@ -1,6 +1,15 @@
-2003-03-07  Jim Meyering  <jim@meyering.net>
+2003-03-08  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.10.
+
+2003-03-07  John David Anglin  <dave.anglin@nrc-cnrc.gc.ca>
+
+	* expr.c (usage): Use putchar, not fputs, to output a single character.
+	* ls.c (dired_dump_obstack): Likewise.
+	* ptx.c (output_one_tex_line, output_one_dumb_line): Likewise.
+	* stat.c (print_it): Likewise.
+
+2003-03-07  Jim Meyering  <jim@meyering.net>
 
 	* src/cp.c: Remove everything associated with mmap-stack.c.
 	This reverts the two changes of 2003-02-21.
