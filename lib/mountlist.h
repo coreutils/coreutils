@@ -27,15 +27,7 @@ struct mount_entry
   struct mount_entry *me_next;
 };
 
-#ifndef PARAMS
-# if defined PROTOTYPES || (defined __STDC__ && __STDC__)
-#  define PARAMS(Args) Args
-# else
-#  define PARAMS(Args) ()
-# endif
-#endif
-
-struct mount_entry *read_filesystem_list PARAMS ((int need_fs_type));
+struct mount_entry *read_filesystem_list (int need_fs_type);
 
 #ifndef ME_DUMMY
 # define ME_DUMMY(Fs_name, Fs_type) \

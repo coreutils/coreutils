@@ -7,15 +7,6 @@
 # define PDS_CENTURY 4
 # define PDS_SECONDS 8
 
-# ifndef PARAMS
-#  if defined PROTOTYPES || (defined __STDC__ && __STDC__)
-#   define PARAMS(Args) Args
-#  else
-#   define PARAMS(Args) ()
-#  endif
-# endif
-
-bool
-posixtime PARAMS ((time_t *p, const char *s, unsigned int syntax_bits));
+bool posixtime (time_t *p, const char *s, unsigned int syntax_bits);
 
 #endif

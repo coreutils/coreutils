@@ -20,14 +20,6 @@
 #ifndef __READUTMP_H__
 # define __READUTMP_H__
 
-# ifndef PARAMS
-#  if defined PROTOTYPES || (defined __STDC__ && __STDC__)
-#   define PARAMS(Args) Args
-#  else
-#   define PARAMS(Args) ()
-#  endif
-# endif
-
 # include <sys/types.h>
 
 /* AIX 4.3.3 has both utmp.h and utmpx.h, but only struct utmp
@@ -184,15 +176,7 @@ extern int errno;
 #  define WTMP_FILE "/etc/wtmp"
 # endif
 
-# undef PARAMS
-# if defined (__STDC__) && __STDC__
-#  define PARAMS(Args) Args
-# else
-#  define PARAMS(Args) ()
-# endif
-
-extern char *extract_trimmed_name PARAMS ((const STRUCT_UTMP *ut));
-extern int read_utmp PARAMS ((const char *filename,
-			      int *n_entries, STRUCT_UTMP **utmp_buf));
+char *extract_trimmed_name (const STRUCT_UTMP *ut);
+int read_utmp (const char *filename, int *n_entries, STRUCT_UTMP **utmp_buf);
 
 #endif /* __READUTMP_H__ */
