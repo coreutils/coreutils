@@ -145,6 +145,18 @@ is_real_dir (const char *path)
   return lstat (path, &stats) == 0 && S_ISDIR (stats.st_mode);
 }
 
+static int
+strip_trailing_slashes_2 (char *path)
+{
+  char *end_p = path + strlen (path) - 1;
+  char *slash = end_p;
+
+  while (slash > path && *slash == '/')
+    *slash-- = '\0';
+
+  return slash < end_p;
+}
+
 /* Move SOURCE onto DEST.  Handles cross-filesystem moves.
    If SOURCE is a directory, DEST must not exist.
    Return 0 if successful, non-zero if an error occurred.  */
@@ -233,6 +245,11 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
 	  remove_init ();
 
 	  fspec_init_file (&fs, dir_to_remove);
+
+	  /* Remove any trailing slashes.  This is necessary if we
+	     took the else branch of movefile.  */
+	  strip_trailing_slashes_2 (fs.filename);
+
 	  status = rm (&fs, 1, &rm_options);
 	  assert (VALID_STATUS (status));
 	  if (status == RM_ERROR)
@@ -249,18 +266,6 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
     }
 
   return fail;
-}
-
-static int
-strip_trailing_slashes_2 (char *path)
-{
-  char *end_p = path + strlen (path) - 1;
-  char *slash = end_p;
-
-  while (slash > path && *slash == '/')
-    *slash-- = '\0';
-
-  return slash < end_p;
 }
 
 /* Move file SOURCE onto DEST.  Handles the case when DEST is a directory.
