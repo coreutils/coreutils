@@ -6,7 +6,7 @@
 use strict;
 use Getopt::Long;
 
-(my $VERSION = '$Revision: 1.3 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.4 $ ') =~ tr/[0-9].//cd;
 (my $program_name = $0) =~ s|.*/||;
 
 my $debug = 0;
@@ -67,43 +67,35 @@ sub END
 
   my $wheel_size = $ARGV[0];
 
-  sub is_prime ($)
-  {
-    my ($n0) = @_;
-    use integer;
-
-    $n0 == 2
-      and return 1;
-
-    my $n = $n0;
-    my $d = 2;
-    my $w = 1;
-    my $q;
-    while (1)
-      {
-	$q = $n / $d;
-	#print "q=$q n=$n d=$d\n";
-	($n == $q * $d)
-	  and return 0;
-	$d += $w;
-	$q < $d
-	  and last;
-	$w = 2;
-      }
-    return 1;
-  }
-
-  my $prod = 2 * 3 * 5;
-  my $last_prime = 2;
-  my $i;
-  for ($i = 3; $i < 2 * $prod; $i++)
+  my @primes = (2);
+  my $product = $primes[0];
+  my $n_primes = 1;
+  for (my $i = 3; ; $i += 2)
     {
       if (is_prime $i)
 	{
-	  print $i, ' ', $i - $last_prime, "\n";
-	  $last_prime = $i;
+	  push @primes, $i;
+	  $product *= $i;
+	  ++$n_primes == $wheel_size
+	    and last;
+	}
+    }
 
-	  $prod < $i
+  my $prev = 2;
+  for (my $i = 3; ; $i += 2)
+  while (1)
+    {
+      my $rel_prime = 1;
+      foreach my $d (@primes)
+	{
+	  FIXME
+	}
+      if ($rel_prime)
+	{
+	  print $i, ' ', $i - $prev, "\n";
+	  $prev = $i;
+
+	  $product < $i
 	    and last;
 	}
     }
