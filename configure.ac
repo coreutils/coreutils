@@ -230,7 +230,7 @@ AC_CHECK_DECLS([strsignal, strtoimax, sys_siglist, _sys_siglist, __sys_siglist])
 jm_LIB_CHECK
 
 AM_GNU_GETTEXT([external], [need-ngettext])
-AM_GNU_GETTEXT_VERSION(0.11.5)
+AM_GNU_GETTEXT_VERSION(0.13.1)
 
 AC_CONFIG_FILES(
   Makefile
