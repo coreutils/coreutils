@@ -1,3 +1,23 @@
+1998-05-16  Jim Meyering  <meyering@ascend.com>
+
+	* src/tac.c (tac_seekable): Fix error in handling regex separators.
+	* tests/tac/Test.pm (opt-b, opt-s, opt_sb, opt_r): New tests.
+	(opt_br): New test -- exercises above-fixed bug.
+
+	* lib/Makefile.am (EXTRA_DIST): Remove.  Automake groks the `LIBOBJS='
+	lines from the m4/*.m4 macros, so the hack of including some
+	custom-replaced C source file names here is no longer needed.
+
+	* acconfig.h (chown): Add undef.
+	(D_INO_IN_DIRENT): Likewise.
+	(D_TYPE_IN_DIRENT): Likewise.
+	(ssize_t): Likewise.
+
+1998-05-09  Jim Meyering  <meyering@ascend.com>
+
+	* src/tac.c (tac_seekable): Rename from tac_stream.
+	Change `FILE *in' parameter to `int input_fd'.  Adjust callers.
+
 1998-05-03  Jim Meyering  <meyering@ascend.com>
 
 	* po/: Update from gettext-0.10.35.
