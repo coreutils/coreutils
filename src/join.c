@@ -30,7 +30,7 @@
 #include "hard-locale.h"
 #include "linebuffer.h"
 #include "memcasecmp.h"
-#include "memcoll.h"
+#include "xmemcoll.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -322,7 +322,8 @@ delseq (struct seq *seq)
 }
 
 /* Return <0 if the join field in LINE1 compares less than the one in LINE2;
-   >0 if it compares greater; 0 if it compares equal.  */
+   >0 if it compares greater; 0 if it compares equal.
+   Report an error and exit if the comparison fails.  */
 
 static int
 keycmp (struct line *line1, struct line *line2)
@@ -373,7 +374,7 @@ keycmp (struct line *line1, struct line *line2)
     {
 #ifdef ENABLE_NLS
       if (hard_LC_COLLATE)
-	return memcoll ((char *) beg1, len1, (char *) beg2, len2);
+	return xmemcoll ((char *) beg1, len1, (char *) beg2, len2);
 #endif
       diff = memcmp (beg1, beg2, min (len1, len2));
     }

@@ -27,7 +27,7 @@
 #include "linebuffer.h"
 #include "error.h"
 #include "hard-locale.h"
-#include "memcoll.h"
+#include "xmemcoll.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "comm"
@@ -178,8 +178,8 @@ compare_files (char **infiles)
 	{
 #ifdef ENABLE_NLS
 	  if (hard_LC_COLLATE)
-	    order = memcoll (thisline[0]->buffer, thisline[0]->length - 1,
-			     thisline[1]->buffer, thisline[1]->length - 1);
+	    order = xmemcoll (thisline[0]->buffer, thisline[0]->length - 1,
+			      thisline[1]->buffer, thisline[1]->length - 1);
 	  else
 #endif
 	    {
