@@ -142,7 +142,7 @@ struct Word
 /* Forward declarations.  */
 
 /* My AC_PROTOTYPES would be better than __STDC__.  FIXME :-).  */
-#ifdef __STDC__
+#if __STDC__
 #define	_(x) x
 #else
 #define	_(x) ()
