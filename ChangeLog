@@ -8,7 +8,8 @@
 	(my-distcheck): Build in $(TMPDIR), not `.'.
 
 	* src/Makefile.am (false.c): Change all occurrences of
-	`(EXIT_SUCCESS)' to `(EXIT_FAILURE)'.  Reported by Paul Jarc,
+	`(EXIT_SUCCESS)' to `(EXIT_FAILURE)' so that false exits
+	unsuccessfully also with --help.  Reported by Paul Jarc,
 	* tests/misc/false: New test for the above.
 
 2003-03-30  Jim Meyering  <jim@meyering.net>
