@@ -285,6 +285,8 @@ for (@help)
 	$break = '';
     }
 
+    s/\\/\\\\/g;
+
     my $output = '';
     while (length)
     {
