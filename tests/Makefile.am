@@ -21,11 +21,11 @@ check-root:
 	cd touch && $(MAKE) check TESTS=fifo
 	cd mv    && $(MAKE) check TESTS=mv-special-1
 
-check-recursive: envvar-check root-hint
+check-recursive: evar-check root-hint
 
 # Warn when `make check' is run with POSIXLY_CORRECT or CDPATH set.
-.PHONY: envvar-check
-envvar-check:
+.PHONY: evar-check
+evar-check:
 	test "$${POSIXLY_CORRECT+set}" = set \
 	  && sed s/%%/POSIXLY_CORRECT/ $(srcdir)/.env-warn || :
 	test "$${CDPATH+set}" = set \
