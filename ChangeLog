@@ -1,6 +1,8 @@
-2004-04-12  Jim Meyering  <jim@meyering.net>
+2004-04-13  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* configure.ac: Change `jm_' in AC_DEFINE'd names to `gl_'.
 
 2004-03-27  Paul Eggert  <eggert@twinsun.com>
 
