@@ -1,5 +1,5 @@
 /* backupfile.c -- make Emacs style backup file names
-   Copyright (C) 1990-1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1990-1997, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -228,8 +228,11 @@ static const enum backup_type backup_types[] =
 enum backup_type
 get_version (const char *version)
 {
+  enum backup_type type;
   if (version == 0 || *version == 0)
-    return numbered_existing;
-  return XARGCASEMATCH ("version control type", version,
-			backup_args, backup_types);
+    type = numbered_existing;
+  else
+    XARGMATCH (&type, "version control type", version,
+	       backup_args, backup_types, exit (2));
+  return type;
 }
