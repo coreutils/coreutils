@@ -1,6 +1,11 @@
-2001-11-17  Jim Meyering  <meyering@lucent.com>
+2001-11-18  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.17.
+
+	* config.sub: Update from master repository.
+	* config.guess: Likewise.
+
+2001-11-17  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.cfg ($(srcdir)/m4/jm-glibc-io.m4): Use $(move_if_change),
 	not the literal `move-if-change'.
