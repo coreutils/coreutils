@@ -2,6 +2,9 @@
 
 	* Version 5.1.0.
 
+	* src/paste.c (paste_parallel): Use `sizeof *var' rather than
+	hard-coding `sizeof FILE*'.
+
 2003-11-05  Dennis Smit  <ds@nerds-incorporated.org>
 
 	* src/wc.c (main): Free `fstatus' so there is no confusion about
