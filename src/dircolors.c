@@ -292,6 +292,15 @@ dc_parse_stream (FILE *fp, const char *filename)
       if (keywd == NULL)
 	continue;
 
+      if (arg == NULL)
+	{
+	  error (0, 0, _("%s:%lu: invalid line;  missing second token"),
+		 filename, (long unsigned) line_number);
+	  err = 1;
+	  free (keywd);
+	  continue;
+	}
+
       unrecognized = 0;
       if (strcasecmp (keywd, "TERM") == 0)
 	{
