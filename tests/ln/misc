@@ -7,14 +7,9 @@ if test "$VERBOSE" = yes; then
   ln --version
 fi
 
-test_failure=0
-mkdir $tmp || test_failure=1
-cd $tmp || test_failure=1
-
-if test $test_failure = 1; then
-  echo 'failure in testing framework'
-  exit 1
-fi
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
 
 
 t=tln-symlink
@@ -25,52 +20,52 @@ fail=0
 
 # Create a simple symlink with both source and destination files
 # in current directory.
-touch $f || test_failure=1
-rm -f $t || test_failure=1
+touch $f || framework_failure=1
+rm -f $t || framework_failure=1
 ln -s $f $t || fail=1
 test -f $t || fail=1
 rm $t $f
 
 # Create a symlink with source file and explicit destination directory/file.
-touch $f || test_failure=1
-rm -rf $d || test_failure=1
-mkdir $d || test_failure=1
+touch $f || framework_failure=1
+rm -rf $d || framework_failure=1
+mkdir $d || framework_failure=1
 ln -s ../$f $d/$t || fail=1
 test -f $d/$t || fail=1
 rm -rf $d $f
 
 # Create a symlink with source file and destination directory.
-touch $f || test_failure=1
-rm -rf $d || test_failure=1
-mkdir $d || test_failure=1
+touch $f || framework_failure=1
+rm -rf $d || framework_failure=1
+mkdir $d || framework_failure=1
 ln -s ../$f $d || fail=1
 test -f $d/$f || fail=1
 rm -rf $d $f
 
 # Make sure we get a failure with existing dest without -f option
-touch $t || test_failure=1
+touch $t || framework_failure=1
 # FIXME: don't ignore the error message but rather test
 # it to make sure it's the right one.
 ln -s $t $t 2> /dev/null && fail=1
 rm $t
 
 # Make sure -sf fails when src and dest are the same
-touch $t && test_failure=1
+touch $t && framework_failure=1
 ln -sf $t $t 2> /dev/null && fail=1
 rm $t
 
 # Create a symlink with source file and no explicit directory
-rm -rf $d || test_failure=1
-mkdir $d || test_failure=1
-touch $d/$f || test_failure=1
+rm -rf $d || framework_failure=1
+mkdir $d || framework_failure=1
+touch $d/$f || framework_failure=1
 ln -s $d/$f || fail=1
 test -f $f || fail=1
 rm -rf $d $f
 
 # Create a symlink with source file and destination symlink-to-directory.
-rm -rf $d $f $ld || test_failure=1
-touch $f || test_failure=1
-mkdir $d || test_failure=1
+rm -rf $d $f $ld || framework_failure=1
+touch $f || framework_failure=1
+mkdir $d || framework_failure=1
 ln -s $d $ld
 ln -s ../$f $ld || fail=1
 test -f $d/$f || fail=1
@@ -78,9 +73,9 @@ rm -rf $d $f $ld
 
 # Create a symlink with source file and destination symlink-to-directory.
 # BUT use the new --no-dereference option.
-rm -rf $d $f $ld || test_failure=1
-touch $f || test_failure=1
-mkdir $d || test_failure=1
+rm -rf $d $f $ld || framework_failure=1
+touch $f || framework_failure=1
+mkdir $d || framework_failure=1
 ln -s $d $ld
 af=`pwd`/$f
 ln --no-dereference -fs $af $ld || fail=1
@@ -89,8 +84,8 @@ rm -rf $d $f $ld
 
 # Try to create a symlink with backup where the destination file exists
 # and the backup file name is a hard link to the destination file.
-touch a b || test_failure=1
-ln b b~ || test_failure=1
+touch a b || framework_failure=1
+ln b b~ || framework_failure=1
 ln -f --b=simple a b || fail=1
 
 # Create a hard link to a dangling symlink.
@@ -102,7 +97,13 @@ ln -f --b=simple a b || fail=1
 #ln -s /no-such-dir || fail=1
 #ln no-such-dir hard-to-dangle || fail=1
 
+
 cd ..
 ../../src/rm -rf $tmp
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
 
 exit $fail
