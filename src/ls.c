@@ -2030,14 +2030,14 @@ queue_directory (const char *name, const char *realname)
 static void
 print_dir (const char *name, const char *realname)
 {
-  register DIR *reading;
+  register DIR *dirp;
   register struct dirent *next;
   register uintmax_t total_blocks = 0;
   static int first = 1;
 
   errno = 0;
-  reading = opendir (name);
-  if (!reading)
+  dirp = opendir (name);
+  if (!dirp)
     {
       error (0, errno, "%s", quotearg_colon (name));
       exit_status = 1;
@@ -2047,7 +2047,7 @@ print_dir (const char *name, const char *realname)
   if (LOOP_DETECT)
     {
       struct stat dir_stat;
-      int fd = dirfd (reading);
+      int fd = dirfd (dirp);
 
       /* If dirfd failed, endure the overhead of using stat.  */
       if ((0 <= fd
@@ -2077,7 +2077,7 @@ print_dir (const char *name, const char *realname)
 
   clear_files ();
 
-  while ((next = readdir (reading)) != NULL)
+  while ((next = readdir (dirp)) != NULL)
     if (file_interesting (next))
       {
 	enum filetype type = unknown;
@@ -2091,7 +2091,7 @@ print_dir (const char *name, const char *realname)
 	total_blocks += gobble_file (next->d_name, type, 0, name);
       }
 
-  if (CLOSEDIR (reading))
+  if (CLOSEDIR (dirp))
     {
       error (0, errno, "%s", quotearg_colon (name));
       exit_status = 1;
