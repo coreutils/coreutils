@@ -1,7 +1,7 @@
 Sun Jul  7 22:40:08 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/ls.c: Change initial colors for `color_indicator' to match
-	those currently in dircolors.hin.
+	those currently in dircolors.hin.  From Joshua Cowan.
 
 	* src/dircolors.hin: Recognize more filename extensions.
 	From Joshua Cowan.
