@@ -146,7 +146,7 @@ main ()
 	     jm_cv_func_working_gnu_strftime=no)
   ])
   if test $jm_cv_func_working_gnu_strftime = no; then
-    AC_LIBOBJ([strftime])
+    AC_LIBOBJ(strftime)
     AC_DEFINE_UNQUOTED(strftime, gnu_strftime,
       [Define to gnu_strftime if the replacement function should be used.])
   fi

@@ -36,7 +36,7 @@ main ()
    jm_cv_func_memcmp_working=no,
    jm_cv_func_memcmp_working=no)])
 test $jm_cv_func_memcmp_working = no \
-  && AC_LIBOBJ([memcmp])
+  && AC_LIBOBJ(memcmp)
 ])
 
 AC_DEFUN(jm_FUNC_MEMCMP,

@@ -62,7 +62,7 @@ AC_DEFUN(jm_INCLUDED_REGEX,
 		    jm_with_regex=$withval,
 		    jm_with_regex=$ac_use_included_regex)
 	if test "$jm_with_regex" = yes; then
-	  AC_LIBOBJ([regex])
+	  AC_LIBOBJ(regex)
 	fi
       ],
     )

@@ -198,8 +198,8 @@ AC_DEFUN(jm_MACROS,
   jm_FILE_SYSTEM_USAGE([space=yes], [space=no])
   if test $list_mounted_fs = yes && test $space = yes; then
     DF_PROG="df"
-    AC_LIBOBJ([fsusage])
-    AC_LIBOBJ([mountlist])
+    AC_LIBOBJ(fsusage)
+    AC_LIBOBJ(mountlist)
   fi
 
 ])

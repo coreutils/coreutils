@@ -45,7 +45,7 @@ AC_DEFUN(jm_FUNC_NANOSLEEP,
 	 jm_cv_func_nanosleep_works=no)
   ])
   if test $jm_cv_func_nanosleep_works = no; then
-    AC_LIBOBJ([nanosleep])
+    AC_LIBOBJ(nanosleep)
     AC_DEFINE_UNQUOTED(nanosleep, rpl_nanosleep,
       [Define to rpl_nanosleep if the replacement function should be used.])
   fi

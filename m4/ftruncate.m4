@@ -21,7 +21,7 @@ AC_DEFUN(jm_FUNC_FTRUNCATE,
       fu_cv_sys_ftruncate_emulation=no)])
     AC_MSG_RESULT($fu_cv_sys_ftruncate_emulation)
     if test $fu_cv_sys_ftruncate_emulation = yes; then
-      AC_LIBOBJ([ftruncate])
+      AC_LIBOBJ(ftruncate)
     fi
   fi
 ])

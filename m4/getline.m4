@@ -39,6 +39,6 @@ AC_DEFUN(AM_FUNC_GETLINE,
   fi
 
   if test $am_cv_func_working_getline = no; then
-    AC_LIBOBJ([getline])
+    AC_LIBOBJ(getline)
   fi
 ])

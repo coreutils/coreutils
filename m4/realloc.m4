@@ -27,7 +27,7 @@ AC_DEFUN(jm_FUNC_REALLOC,
 	 jm_cv_func_working_realloc=no)
   ])
   if test $jm_cv_func_working_realloc = no; then
-    AC_LIBOBJ([realloc])
+    AC_LIBOBJ(realloc)
     AC_DEFINE_UNQUOTED(realloc, rpl_realloc,
       [Define to rpl_realloc if the replacement function should be used.])
   fi
