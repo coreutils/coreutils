@@ -10935,10 +10935,8 @@ nohup @var{command} [@var{arg}]@dots{}
 @end example
 
 @flindex nohup.out
-@command{nohup} increases the scheduling priority of @var{command} by 5, so
-it has a slightly smaller chance to run.  If standard output is a terminal,
-it and standard error are redirected so that they are appended to the
-file @file{nohup.out}; if that cannot be written to, they are appended
+If standard output is a terminal, it is redirected so that it is appended
+to the file @file{nohup.out}; if that cannot be written to, it is appended
 to the file @file{$HOME/nohup.out}.  If that cannot be written to, the
 command is not run.
 
@@ -10947,12 +10945,26 @@ If @command{nohup} creates either @file{nohup.out} or
 access permissions.  It does not change the permissions if the output
 file already existed.
 
+If standard error is a terminal, it is redirected to the same file
+descriptor as the standard output.
+
 @command{nohup} does not automatically put the command it runs in the
 background; you must do that explicitly, by ending the command line
-with an @samp{&}.
+with an @samp{&}.  Also, @command{nohup} does not change the
+scheduling priority of @var{command}; use @command{nice} for that,
+e.g., @samp{nohup nice @var{command}}.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
+
+@cindex exit status of @command{nohup}
+Exit status:
+
+@display
+126 if @var{command} was found but could not be invoked
+127 if @command{nohup} itself failed or if @var{command} could not be found
+the exit status of @var{command} otherwise
+@end display
 
 
 @node su invocation
