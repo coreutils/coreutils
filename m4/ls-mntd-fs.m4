@@ -1,12 +1,10 @@
-#serial 6
+#serial 7
 
 dnl From Jim Meyering.
 dnl
 dnl This is not pretty.  I've just taken the autoconf code and wrapped
 dnl it in an AC_DEFUN.
 dnl
-
-AC_PREREQ(2.14a)
 
 # jm_LIST_MOUNTED_FILESYSTEMS([ACTION-IF-FOUND[, ACTION-IF-NOT-FOUND]])
 AC_DEFUN(jm_LIST_MOUNTED_FILESYSTEMS,
@@ -239,6 +237,6 @@ if test -z "$ac_list_mounted_fs"; then
   # Can't build mountlist.c or anything that needs its functions
 fi
 
-AS_IFELSE([test $ac_list_mounted_fs = found], [$1], [$2])dnl
+AS_IF([test $ac_list_mounted_fs = found], [$1], [$2])dnl
 
   ])
