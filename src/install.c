@@ -173,6 +173,7 @@ cp_option_init (struct cp_options *x)
   x->update = 0;
   x->verbose = 0;
   x->xstat = stat;
+  x->dest_info = NULL;
 }
 
 int
@@ -337,7 +338,7 @@ is not a directory"),
 	      usage (1);
 	    }
 
-	  dest_info_init ();
+	  dest_info_init (&x);
 	  for (i = 0; i < n_files - 1; i++)
 	    {
 	      errors |= install_file_in_dir (file[i], dest, &x);
