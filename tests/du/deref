@@ -16,9 +16,8 @@ framework_failure=0
 mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 mkdir -p a/sub || framework_failure=1
+ln -s a/sub slink || framework_failure=1
 touch b || framework_failure=1
-ln -s a/sub A || framework_failure=1
-ln -s b B || framework_failure=1
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
@@ -28,7 +27,7 @@ fi
 fail=0
 
 # This used to fail with the following diagnostic:
-# du: `B': No such file or directory
-du -sD A B > /dev/null 2>&1 || fail=1
+# du: `b': No such file or directory
+du -sD slink b > /dev/null 2>&1 || fail=1
 
 (exit $fail); exit $fail
