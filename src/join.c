@@ -26,6 +26,8 @@
 
 #include "system.h"
 #include "error.h"
+#include "hard-locale.h"
+#include "linebuffer.h"
 #include "memcasecmp.h"
 #include "xstrtol.h"
 
@@ -63,11 +65,10 @@ struct field
     size_t len;			/* The length of the field.  */
   };
 
-/* A line read from an input file.  Newlines are not stored.  */
+/* A line read from an input file.  */
 struct line
   {
-    unsigned char *beg;		/* First character in line.  */
-    unsigned char *lim;		/* Character after last character in line.  */
+    struct linebuffer buf;	/* The line itself.  */
     int nfields;		/* Number of elements in `fields'.  */
     int nfields_allocated;	/* Number of elements in `fields'.  */
     struct field *fields;
@@ -84,6 +85,11 @@ struct seq
 
 /* The name this program was run with.  */
 char *program_name;
+
+#ifdef ENABLE_NLS
+/* Nonzero if the LC_COLLATE locale is hard.  */
+static int hard_LC_COLLATE;
+#endif
 
 /* If nonzero, print unpairable lines in file 1 or 2.  */
 static int print_unpairables_1, print_unpairables_2;
@@ -191,11 +197,12 @@ static void
 xfields (struct line *line)
 {
   int i;
+  unsigned char *ptr0 = (unsigned char *) line->buf.buffer;
   unsigned char *ptr;
   unsigned char *lim;
 
-  ptr = line->beg;
-  lim = line->lim;
+  ptr = ptr0;
+  lim = ptr0 + line->buf.length - 1;
 
   if (!tab)
     {
@@ -230,7 +237,7 @@ xfields (struct line *line)
 	}
     }
 
-  if (ptr > line->beg && ((!tab && ISBLANK (ptr[-1])) || ptr[-1] == tab))
+  if (ptr != ptr0 && ((!tab && ISBLANK (ptr[-1])) || ptr[-1] == tab))
     {
       /* Add one more (empty) field because the last character of the
 	 line was a delimiter.  */
@@ -244,33 +251,15 @@ xfields (struct line *line)
 static int
 get_line (FILE *fp, struct line *line)
 {
-  static int linesize = 80;
-  int c, i;
-  unsigned char *ptr;
+  initbuffer (&line->buf);
 
-  if (feof (fp))
-    return 0;
-
-  ptr = xmalloc (linesize);
-
-  for (i = 0; (c = getc (fp)) != EOF && c != '\n'; ++i)
+  if (! readline (&line->buf, fp))
     {
-      if (i == linesize)
-	{
-	  linesize *= 2;
-	  ptr = xrealloc (ptr, linesize);
-	}
-      ptr[i] = c;
-    }
-
-  if (c == EOF && i == 0)
-    {
-      free (ptr);
+      free (line->buf.buffer);
+      line->buf.buffer = NULL;
       return 0;
     }
 
-  line->beg = ptr;
-  line->lim = line->beg + i;
   line->nfields_allocated = 0;
   line->nfields = 0;
   line->fields = NULL;
@@ -282,8 +271,8 @@ static void
 freeline (struct line *line)
 {
   free ((char *) line->fields);
-  free (line->beg);
-  line->beg = NULL;
+  free (line->buf.buffer);
+  line->buf.buffer = NULL;
 }
 
 static void
@@ -319,7 +308,7 @@ delseq (struct seq *seq)
 {
   int i;
   for (i = 0; i < seq->count; i++)
-    if (seq->lines[i].beg)
+    if (seq->lines[i].buf.buffer)
       freeline (&seq->lines[i]);
   free ((char *) seq->lines);
 }
@@ -367,9 +356,19 @@ keycmp (struct line *line1, struct line *line2)
      avoid portability hassles of getting a non-conflicting declaration
      of memcmp.  */
   if (ignore_case)
-    diff = memcasecmp (beg1, beg2, min (len1, len2));
+    {
+      /* FIXME: ignore_case does not work with NLS (in particular,
+         with multibyte chars).  */
+      diff = memcasecmp (beg1, beg2, min (len1, len2));
+    }
   else
-    diff = memcmp (beg1, beg2, min (len1, len2));
+    {
+#ifdef ENABLE_NLS
+      if (hard_LC_COLLATE)
+	return memcoll ((char *) beg1, len1, (char *) beg2, len2);
+#endif
+      diff = memcmp (beg1, beg2, min (len1, len2));
+    }
 
   if (diff)
     return diff;
@@ -708,17 +707,20 @@ void
 make_blank (struct line *blank, int count)
 {
   int i;
+  char *buffer;
+  struct field *fields;
   blank->nfields = count;
-  blank->beg = xmalloc (blank->nfields + 1);
-  blank->fields = (struct field *) xmalloc (sizeof (struct field) * count);
-  for (i = 0; i < blank->nfields; i++)
+  blank->buf.size = blank->buf.length = count + 1;
+  blank->buf.buffer = buffer = xmalloc (blank->buf.size);
+  blank->fields = fields =
+    (struct field *) xmalloc (sizeof (struct field) * count);
+  for (i = 0; i < count; i++)
     {
-      blank->beg[i] = '\t';
-      blank->fields[i].beg = &blank->beg[i];
-      blank->fields[i].len = 0;
+      buffer[i] = '\t';
+      fields[i].beg = &buffer[i];
+      fields[i].len = 0;
     }
-  blank->beg[i] = '\0';
-  blank->lim = &blank->beg[i];
+  buffer[i] = '\n';
 }
 
 int
@@ -732,6 +734,10 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+#ifdef ENABLE_NLS
+  hard_LC_COLLATE = hard_locale (LC_COLLATE);
+#endif
 
   /* Initialize this before parsing options.  In parsing options,
      it may be increased.  */
