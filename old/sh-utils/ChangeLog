@@ -1,3 +1,10 @@
+	* configure.in [INSTALL]: When AC_PROG_INSTALL resorts to setting
+	this to `./install.sh', make it `../install.sh' instead since that
+	script will be invoked only from subdirectories.
+	[WINSIZE_IN_PTEM]: Check for this unconditionally, rather than
+	only when TIOCGWINSZ is not defined through termios.h.  The old
+	method loses on SCO ODT 3.0 systems.
+
 Sat Feb 19 14:23:14 1994  Jim Meyering  (meyering@comco.com)
 
 	* Version 1.9.4.
