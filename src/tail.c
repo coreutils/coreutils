@@ -26,9 +26,7 @@
    -f, --follow		Loop forever trying to read more characters at the
 			end of the file, on the assumption that the file
 			is growing.  Ignored if reading from a pipe.
-   -k			Tail by N kilobytes.
-   -N, -l, -n, --lines=N	Tail by N lines.
-   -m			Tail by N megabytes.
+   -n, --lines=N	Tail by N lines.
    -q, --quiet, --silent	Never print filename headers.
    -v, --verbose		Always print filename headers.
 
@@ -71,7 +69,7 @@
   while (0)
 
 /* Number of items to tail.  */
-#define DEFAULT_NUMBER 10
+#define DEFAULT_N_LINES 10
 
 /* Size of atomic reads.  */
 #ifndef BUFSIZ
@@ -290,7 +288,7 @@ main (argc, argv)
     usage (0);
 
   if (n_units == -1)
-    n_units = DEFAULT_NUMBER;
+    n_units = DEFAULT_N_LINES;
 
   /* To start printing with item N_UNITS from the start of the file, skip
      N_UNITS - 1 items.  `tail +0' is actually meaningless, but for Unix
@@ -338,7 +336,7 @@ main (argc, argv)
 
 static int
 tail_file (filename, n_units, filenum)
-     char *filename;
+     const char *filename;
      off_t n_units;
      int filenum;
 {
@@ -447,7 +445,7 @@ write_header (filename, comment)
 
 static int
 tail (filename, fd, n_units)
-     char *filename;
+     const char *filename;
      int fd;
      off_t n_units;
 {
@@ -457,18 +455,18 @@ tail (filename, fd, n_units)
     return tail_bytes (filename, fd, n_units);
 }
 
-/* Display the last part of file FILENAME, open for reading in FD,
-   using N_BYTES bytes.
+/* Output the last N_BYTES bytes of file FILENAME open for reading in FD.
    Return 0 if successful, 1 if an error occurred.  */
 
 static int
 tail_bytes (filename, fd, n_bytes)
-     char *filename;
+     const char *filename;
      int fd;
      off_t n_bytes;
 {
   struct stat stats;
 
+  /* FIXME: resolve this like in dd.c.  */
   /* Use fstat instead of checking for errno == ESPIPE because
      lseek doesn't work on some special files but doesn't return an
      error, either.  */
@@ -505,13 +503,12 @@ tail_bytes (filename, fd, n_bytes)
   return 0;
 }
 
-/* Display the last part of file FILENAME, open for reading on FD,
-   using N_LINES lines.
+/* Output the last N_LINES lines of file FILENAME open for reading in FD.
    Return 0 if successful, 1 if an error occurred.  */
 
 static int
 tail_lines (filename, fd, n_lines)
-     char *filename;
+     const char *filename;
      int fd;
      long n_lines;
 {
@@ -555,7 +552,7 @@ tail_lines (filename, fd, n_lines)
 
 static int
 file_lines (filename, fd, n_lines, pos)
-     char *filename;
+     const char *filename;
      int fd;
      long n_lines;
      off_t pos;
@@ -628,7 +625,7 @@ file_lines (filename, fd, n_lines, pos)
 
 static int
 pipe_lines (filename, fd, n_lines)
-     char *filename;
+     const char *filename;
      int fd;
      long n_lines;
 {
@@ -750,7 +747,7 @@ free_lbuffers:
 
 static int
 pipe_bytes (filename, fd, n_bytes)
-     char *filename;
+     const char *filename;
      int fd;
      off_t n_bytes;
 {
@@ -847,7 +844,7 @@ free_cbuffers:
 
 static int
 start_bytes (filename, fd, n_bytes)
-     char *filename;
+     const char *filename;
      int fd;
      off_t n_bytes;
 {
@@ -872,7 +869,7 @@ start_bytes (filename, fd, n_bytes)
 
 static int
 start_lines (filename, fd, n_lines)
-     char *filename;
+     const char *filename;
      int fd;
      long n_lines;
 {
@@ -906,7 +903,7 @@ start_lines (filename, fd, n_lines)
 
 static long
 dump_remainder (filename, fd)
-     char *filename;
+     const char *filename;
      int fd;
 {
   char buffer[BUFSIZ];
@@ -1012,20 +1009,21 @@ Usage: %s [OPTION]... [FILE]...\n\
 	      program_name);
       printf ("\
 \n\
-  -c, --bytes=SIZE         print last SIZE bytes\n\
-  -f, --follow             print files as they grow\n\
-  -l, -n, --lines=NUMBER   print last NUMBER lines, instead of last 10\n\
-  -q, --quiet, --silent    never print headers giving file names\n\
-  -v, --verbose            always print headers giving file names\n\
+  -c, --bytes=N            output the last N bytes\n\
+  -f, --follow             output appended data as the file grows\n\
+  -n, --lines=N            output the last N lines, instead of last 10\n\
+  -q, --quiet, --silent    never output headers giving file names\n\
+  -v, --verbose            always output headers giving file names\n\
       --help               display this help and exit\n\
       --version            output version information and exit\n\
 \n\
-SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
-If SIZE is prefixed by +, prints all except the first SIZE bytes.  If\n\
-NUMBER is prefixed by +, prints all except the first NUMBER lines.  If\n\
--VALUE or +VALUE is used as first OPTION, read -c VALUE or -c +VALUE\n\
-when one of multipliers bkm follows concatenated, else read -n VALUE\n\
-or -n +VALUE.  With no FILE, or when FILE is -, read standard input.\n\
+If the first character of N (the number of bytes or lines) is a `+',\n\
+print beginning with the Nth item from the start of each file, otherwise,\n\
+print the last N items in the file.  N may have a multiplier suffix:\n\
+b for 512, k for 1024, m for 1048576 (1 Meg).  A first OPTION of -VALUE\n\
+or +VALUE is treated like -n VALUE or -n +VALUE unless VALUE has one of\n\
+the [bkm] suffix multipliers, in which case it is treated like -c VALUE\n\
+or -c +VALUE.  With no FILE, or when FILE is -, read standard input.\n\
 ");
     }
   exit (status);
