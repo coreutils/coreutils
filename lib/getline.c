@@ -41,6 +41,8 @@ getline (char **lineptr, size_t *n, FILE *stream)
 
 #else /* ! have getdelim */
 
+# include "getstr.h"
+
 int
 getline (char **lineptr, size_t *n, FILE *stream)
 {
