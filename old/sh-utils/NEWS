@@ -1,3 +1,6 @@
+Major changes in release 1.9:
+* fix bug in stty
+
 Major changes in release 1.8:
 * add echo command
 * fix some incorrect warnings in pathchk
