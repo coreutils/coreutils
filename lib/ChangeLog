@@ -1,6 +1,24 @@
+2003-02-27  Jim Meyering  <jim@meyering.net>
+
+	* physmem.c: Merge in portability changes from gcc/libiberty
+	to support AIX, Tru64, and Windows.  See the ChangeLog there
+	for credits and details.  Thanks to Kaveh Ghazi for helping
+	to keep these files in sync.
+
 2003-02-24  Jim Meyering  <jim@meyering.net>
 
+	* fts_.h [__USE_FILE_OFFSET64]: Remove #error directive.
+
+	(fts_open): Initialize local, tmp, to pacify gcc.
+
 	* fts_.h [struct FTS] (fts_dir_signatures): New, opaque member.
+	* fts.c: Include <search.h>.
+	(struct known_object): Define.
+	(object_compare, add_object, find_object): New functions, like
+	those in ftw.c.
+	(fts_open): Initialize new member.
+	(fts_close): Free memory allocated for new member.
+	(fts_stat): Detect a cycle in O(logN) time per directory processed.
 
 	* fts.c [HAVE_CONFIG_H]: Include <config.h>.
 	Conditionalize inclusion of <sys/param.h>.
@@ -15,8 +33,6 @@
 	[!_LIBC] (internal_function): Define.
 	[! _LIBC && ! LSTAT_FOLLOWS_SLASHED_SYMLINK]: Define lstat.
 	(__set_errno): Define if not already defined.
-
-	(fts_open): Initialize local, tmp, to pacify gcc.
 
 	* fts.c: (fts_open): If fts_alloc returns NULL, don't dereference it.
 	(fts_read): If fts_safe_changedir fails because it is not
