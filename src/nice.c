@@ -30,8 +30,8 @@
 
 #include <stdio.h>
 
+#define NDEBUG
 #include <assert.h>
-/* FIXME: define NDEBUG here.  */
 
 #include <getopt.h>
 #include <sys/types.h>
