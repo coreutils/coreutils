@@ -466,6 +466,39 @@ fmt (FILE *f)
     }
 }
 
+/* Set the global variable `other_indent' according to SAME_PARAGRAPH
+   and other global variables.  */
+
+static void
+set_other_indent (bool same_paragraph)
+{
+  if (split)
+    other_indent = first_indent;
+  else if (crown)
+    {
+      other_indent = (same_paragraph ? in_column : first_indent);
+    }
+  else if (tagged)
+    {
+      if (same_paragraph && in_column != first_indent)
+	{
+	  other_indent = in_column;
+	}
+
+      /* Only one line: use the secondary indent from last time if it
+         splits, or 0 if there have been no multi-line paragraphs in the
+         input so far.  But if these rules make the two indents the same,
+         pick a new secondary indent.  */
+
+      else if (other_indent == first_indent)
+	other_indent = first_indent == 0 ? DEF_INDENT : 0;
+    }
+  else
+    {
+      other_indent = first_indent;
+    }
+}
+
 /* Read a paragraph from input file F.  A paragraph consists of a
    maximal number of non-blank (excluding any prefix) lines subject to:
    * In split mode, a paragraph is a single non-blank line.
@@ -512,48 +545,38 @@ get_paragraph (FILE *f)
   wptr = parabuf;
   word_limit = word;
   c = get_line (f, c);
+  set_other_indent (same_para (c));
 
   /* Read rest of paragraph (unless split is specified).  */
 
   if (split)
-    other_indent = first_indent;
+    {
+      /* empty */
+    }
   else if (crown)
     {
       if (same_para (c))
 	{
-	  other_indent = in_column;
 	  do
 	    {			/* for each line till the end of the para */
 	      c = get_line (f, c);
 	    }
 	  while (same_para (c) && in_column == other_indent);
 	}
-      else
-	other_indent = first_indent;
     }
   else if (tagged)
     {
       if (same_para (c) && in_column != first_indent)
 	{
-	  other_indent = in_column;
 	  do
 	    {			/* for each line till the end of the para */
 	      c = get_line (f, c);
 	    }
 	  while (same_para (c) && in_column == other_indent);
 	}
-
-      /* Only one line: use the secondary indent from last time if it
-         splits, or 0 if there have been no multi-line paragraphs in the
-         input so far.  But if these rules make the two indents the same,
-         pick a new secondary indent.  */
-
-      else if (other_indent == first_indent)
-	other_indent = first_indent == 0 ? DEF_INDENT : 0;
     }
   else
     {
-      other_indent = first_indent;
       while (same_para (c) && in_column == other_indent)
 	c = get_line (f, c);
     }
@@ -627,7 +650,10 @@ get_line (FILE *f, register int c)
       do
 	{
 	  if (wptr == end_of_parabuf)
-	    flush_paragraph ();
+	    {
+	      set_other_indent (true);
+	      flush_paragraph ();
+	    }
 	  *wptr++ = c;
 	  c = getc (f);
 	}
@@ -646,7 +672,10 @@ get_line (FILE *f, register int c)
       if (c == '\n' || c == EOF || uniform)
 	word_limit->space = word_limit->final ? 2 : 1;
       if (word_limit == end_of_word)
-	flush_paragraph ();
+	{
+	  set_other_indent (true);
+	  flush_paragraph ();
+	}
       word_limit++;
       if (c == EOF)
 	return EOF;
