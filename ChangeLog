@@ -10,6 +10,7 @@
 	as well as the loop around nanosleep.  Now that's in xnanosleep.c.
 
 	Allow S (in --sleep-interval=S) to be a floating point value.
+	Prompted by a patch from Augey Mikus.
 	* src/tail.c: Include xnanosleep.h and xstrtod.h.
 	Move declaration of global variable, sleep_interval, to ...
 	(main): ...here.
