@@ -2139,6 +2139,7 @@ print_long_format (const struct fileinfo *f)
      locale-dependent names for the weekday (%a) and month (%b).  */
   p += strftime (p, TIMEBUF_SIZE, fmt, localtime (&when));
   *p++ = ' ';
+  *p = '\0';
 
   DIRED_INDENT ();
   FPUTS (bigbuf, stdout, p - bigbuf);
