@@ -1,32 +1,56 @@
-%% TeX macros to handle Texinfo files.
-%% $Id: texinfo.tex,v 1.16 1997/12/25 18:00:21 meyering Exp $
-
-%  Copyright (C) 1985, 86, 88, 90, 91, 92, 93,
-%                94, 95, 96, 97 Free Software Foundation, Inc.
-
-%This texinfo.tex file is free software; you can redistribute it and/or
-%modify it under the terms of the GNU General Public License as
-%published by the Free Software Foundation; either version 2, or (at
-%your option) any later version.
-
-%This texinfo.tex file is distributed in the hope that it will be
-%useful, but WITHOUT ANY WARRANTY; without even the implied warranty
-%of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-%General Public License for more details.
-
-%You should have received a copy of the GNU General Public License
-%along with this texinfo.tex file; see the file COPYING.  If not, write
-%to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-%Boston, MA 02111-1307, USA.
-
-
-%In other words, you are welcome to use, share and improve this program.
-%You are forbidden to forbid anyone else to use, share and improve
-%what you give them.   Help stamp out software-hoarding!
-
-
-% Send bug reports to bug-texinfo@prep.ai.mit.edu.
-% Please include a *precise* test case in each bug report.
+% texinfo.tex -- TeX macros to handle Texinfo files.
+% $Id: texinfo.tex,v 1.17 1998/04/11 15:03:51 meyering Exp $
+%
+% Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98
+% Free Software Foundation, Inc.
+%
+% This texinfo.tex file is free software; you can redistribute it and/or
+% modify it under the terms of the GNU General Public License as
+% published by the Free Software Foundation; either version 2, or (at
+% your option) any later version.
+%
+% This texinfo.tex file is distributed in the hope that it will be
+% useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+% of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+% General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this texinfo.tex file; see the file COPYING.  If not, write
+% to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+% Boston, MA 02111-1307, USA.
+%
+% In other words, you are welcome to use, share and improve this program.
+% You are forbidden to forbid anyone else to use, share and improve
+% what you give them.   Help stamp out software-hoarding!
+%
+% Please try the latest version of texinfo.tex before submitting bug
+% reports; you can get the latest version from:
+% /home/gd/gnu/doc/texinfo.tex on the GNU machines.
+% ftp://ftp.gnu.org/pub/gnu/texinfo.tex
+% (and all GNU mirrors)
+% ftp://tug.org/tex/texinfo.tex
+% ftp://ctan.org/macros/texinfo/texinfo.tex
+% (and all CTAN mirrors, finger ctan@tug.org for a list).
+% 
+% Send bug reports to bug-texinfo@gnu.org.
+% Please include a precise test case in each bug report,
+% including a complete document with which we can reproduce the problem.
+% 
+% Texinfo macros (with @macro) are *not* supported by texinfo.tex.  You
+% have to run makeinfo -E to expand macros first; the texi2dvi script
+% does this.
+% 
+% To process a Texinfo manual with TeX, it's most reliable to use the
+% texi2dvi shell script that comes with the distribution.  For simple
+% manuals, you can get away with:
+%   tex foo.texi
+%   texindex foo.??
+%   tex foo.texi
+%   tex foo.texi
+%   dvips foo.dvi -o # or whatever, to process the dvi file.
+% The extra runs of TeX get the cross-reference information correct.
+% Sometimes one run after texindex suffices, and sometimes you need more
+% than two; texi2dvi does it as many times as necessary.
 
 
 % Make it possible to create a .fmt file just by loading this file:
@@ -36,7 +60,7 @@
 
 % This automatically updates the version number based on RCS.
 \def\deftexinfoversion$#1: #2 ${\def\texinfoversion{#2}}
-\deftexinfoversion$Revision: 1.16 $
+\deftexinfoversion$Revision: 1.17 $
 \message{Loading texinfo package [Version \texinfoversion]:}
 
 % If in a .fmt file, print the version number
@@ -54,24 +78,17 @@
 \let\ptexdot=\.
 \let\ptexdots=\dots
 \let\ptexend=\end
-\let\ptexequiv = \equiv
+\let\ptexequiv=\equiv
+\let\ptexexclam=\!
 \let\ptexi=\i
 \let\ptexlbrace=\{
 \let\ptexrbrace=\}
 \let\ptexstar=\*
 \let\ptext=\t
 
-% Be sure we're in horizontal mode when doing a tie, since we make space
-% equivalent to this in @example-like environments. Otherwise, a space
-% at the beginning of a line will start with \penalty -- and
-% since \penalty is valid in vertical mode, we'd end up putting the
-% penalty on the vertical list instead of in the new paragraph.
-{\catcode`@ = 11
- % Avoid using \@M directly, because that causes trouble
- % if the definition is written into an index file.
- \global\let\tiepenalty = \@M
- \gdef\tie{\leavevmode\penalty\tiepenalty\ }
-}
+% We never want plain's outer \+ definition in Texinfo.
+% For @tex, we can use \tabalign.
+\let\+ = \relax
 
 
 \message{Basics,}
@@ -384,7 +401,7 @@
 
 % @@ prints an @
 % Kludge this until the fonts are right (grr).
-\def\@{{\tt \char '100}}
+\def\@{{\tt\char64}}
 
 % This is turned off because it was never documented
 % and you can use @w{...} around a quote to suppress ligatures.
@@ -394,8 +411,8 @@
 %\def\'{{'}}
 
 % Used to generate quoted braces.
-\def\mylbrace {{\tt \char '173}}
-\def\myrbrace {{\tt \char '175}}
+\def\mylbrace {{\tt\char123}}
+\def\myrbrace {{\tt\char125}}
 \let\{=\mylbrace
 \let\}=\myrbrace
 \begingroup
@@ -430,6 +447,18 @@
   \else\ifx\temp\jmacro \j
   \else \errmessage{@dotless can be used only with i or j}%
   \fi\fi
+}
+
+% Be sure we're in horizontal mode when doing a tie, since we make space
+% equivalent to this in @example-like environments. Otherwise, a space
+% at the beginning of a line will start with \penalty -- and
+% since \penalty is valid in vertical mode, we'd end up putting the
+% penalty on the vertical list instead of in the new paragraph.
+{\catcode`@ = 11
+ % Avoid using \@M directly, because that causes trouble
+ % if the definition is written into an index file.
+ \global\let\tiepenalty = \@M
+ \gdef\tie{\leavevmode\penalty\tiepenalty\ }
 }
 
 % @: forces normal size whitespace following.
@@ -763,6 +792,7 @@ where each line of input produces a line of output.}
 % Also ignore @macro ... @end macro.  The user must run texi2dvi,
 % which runs makeinfo to do macro expansion.  Ignore @unmacro, too.
 \def\macro{\doignore{macro}}
+\def\macrocsname{macro}
 \let\unmacro = \comment
 
 
@@ -777,7 +807,9 @@ where each line of input produces a line of output.}
   \ignoresections
   %
   % Define a command to swallow text until we reach `@end #1'.
-  \long\def\doignoretext##1\end #1{\enddoignore}%
+  % This @ is a catcode 12 token (that is the normal catcode of @ in
+  % this texinfo.tex file).  We change the catcode of @ below to match.
+  \long\def\doignoretext##1@end #1{\enddoignore}%
   %
   % Make sure that spaces turn into tokens that match what \doignoretext wants.
   \catcode32 = 10
@@ -785,6 +817,22 @@ where each line of input produces a line of output.}
   % Ignore braces, too, so mismatched braces don't cause trouble.
   \catcode`\{ = 9
   \catcode`\} = 9
+  %
+  % We must not have @c interpreted as a control sequence.
+  \catcode`\@ = 12
+  %
+  % Make the letter c a comment character so that the rest of the line
+  % will be ignored. This way, the document can have (for example)
+  %   @c @end ifinfo
+  % and the @end ifinfo will be properly ignored.
+  % (We've just changed @ to catcode 12.)
+  % 
+  % But we can't do this if #1 is `macro', since that actually contains a c.
+  % Happily, none of the other conditionals have the letter `c' in their names!
+  \def\temp{#1}%
+  \ifx\temp\macrocsname \else
+    \catcode`\c = 14
+  \fi
   %
   % And now expand that command.
   \doignoretext
@@ -1278,6 +1326,10 @@ where each line of input produces a line of output.}
 %
 \textfonts
 
+% Define these so they can be easily changed for other fonts.
+\def\angleleft{$\langle$}
+\def\angleright{$\rangle$}
+
 % Count depth in font-changes, for error checks
 \newcount\fontdepth \fontdepth=0
 
@@ -1315,15 +1367,15 @@ where each line of input produces a line of output.}
   \null
 }
 \let\ttfont=\t
-\def\samp #1{`\tclose{#1}'\null}
+\def\samp#1{`\tclose{#1}'\null}
 \setfont\smallrm\rmshape{8}{1000}
 \font\smallsy=cmsy9
 \def\key#1{{\smallrm\textfont2=\smallsy \leavevmode\hbox{%
-  \raise0.4pt\hbox{$\langle$}\kern-.08em\vtop{%
+  \raise0.4pt\hbox{\angleleft}\kern-.08em\vtop{%
     \vbox{\hrule\kern-0.4pt
-     \hbox{\raise0.4pt\hbox{\vphantom{$\langle$}}#1}}%
+     \hbox{\raise0.4pt\hbox{\vphantom{\angleleft}}#1}}%
     \kern-0.4pt\hrule}%
-  \kern-.06em\raise0.4pt\hbox{$\rangle$}}}}
+  \kern-.06em\raise0.4pt\hbox{\angleright}}}}
 % The old definition, with no lozenge:
 %\def\key #1{{\ttsl \nohyphenation \uppercase{#1}}\null}
 \def\ctrl #1{{\tt \rawbackslash \hat}#1}
@@ -1436,7 +1488,7 @@ where each line of input produces a line of output.}
 
 % rms does not like the angle brackets --karl, 17may97.
 % So now @email is just like @uref.
-%\def\email#1{$\langle${\tt #1}$\rangle$}
+%\def\email#1{\angleleft{\tt #1}\angleright}
 \let\email=\uref
 
 % Check if we are currently using a typewriter font.  Since all the
@@ -1689,18 +1741,6 @@ July\or August\or September\or October\or November\or December\fi
 
 
 \message{tables,}
-
-% @tabs -- simple alignment
-
-% These don't work.  For one thing, \+ is defined as outer.
-% So these macros cannot even be defined.
-
-%\def\tabs{\parsearg\tabszzz}
-%\def\tabszzz #1{\settabs\+#1\cr}
-%\def\tabline{\parsearg\tablinezzz}
-%\def\tablinezzz #1{\+#1\cr}
-%\def\&{&}
-
 % Tables -- @table, @ftable, @vtable, @item(x), @kitem(x), @xitem(x).
 
 % default indentation of table text
@@ -2058,10 +2098,7 @@ July\or August\or September\or October\or November\or December\fi
 % @multitablelinespace is space to leave between table items, baseline
 %                                                            to baseline.
 %   0pt means it depends on current normal line spacing.
-
-%%%%
-% Dimensions
-
+%
 \newskip\multitableparskip
 \newskip\multitableparindent
 \newdimen\multitablecolspace
@@ -2071,15 +2108,15 @@ July\or August\or September\or October\or November\or December\fi
 \multitablecolspace=12pt
 \multitablelinespace=0pt
 
-%%%%
 % Macros used to set up halign preamble:
+% 
 \let\endsetuptable\relax
 \def\xendsetuptable{\endsetuptable}
 \let\columnfractions\relax
 \def\xcolumnfractions{\columnfractions}
 \newif\ifsetpercent
 
-%% 2/1/96, to allow fractions to be given with more than one digit.
+% 2/1/96, to allow fractions to be given with more than one digit.
 \def\pickupwholefraction#1 {\global\advance\colcount by1 %
 \expandafter\xdef\csname col\the\colcount\endcsname{.#1\hsize}%
 \setuptable}
@@ -2105,80 +2142,84 @@ July\or August\or September\or October\or November\or December\fi
 \ifx\go\pickupwholefraction\else\let\go\setuptable\fi%
 \fi\go}
 
-%%%%
 % multitable syntax
 \def\tab{&\hskip1sp\relax} % 2/2/96
                            % tiny skip here makes sure this column space is
                            % maintained, even if it is never used.
 
-
-%%%%
 % @multitable ... @end multitable definitions:
 
 \def\multitable{\parsearg\dotable}
-
 \def\dotable#1{\bgroup
-\let\item\cr
-\tolerance=9500
-\hbadness=9500
-\setmultitablespacing
-\parskip=\multitableparskip
-\parindent=\multitableparindent
-\overfullrule=0pt
-\global\colcount=0\relax%
-\def\Emultitable{\global\setpercentfalse\global\everycr{}\cr\egroup\egroup}%
- % To parse everything between @multitable and @item :
-\setuptable#1 \endsetuptable
- % Need to reset this to 0 after \setuptable.
-\global\colcount=0\relax%
- %
- % This preamble sets up a generic column definition, which will
- % be used as many times as user calls for columns.
- % \vtop will set a single line and will also let text wrap and
- % continue for many paragraphs if desired.
-\halign\bgroup&\global\advance\colcount by 1\relax%
-\multistrut\vtop{\hsize=\expandafter\csname col\the\colcount\endcsname
- % In order to keep entries from bumping into each other
- % we will add a \leftskip of \multitablecolspace to all columns after
- % the first one.
- %  If a template has been used, we will add \multitablecolspace
- % to the width of each template entry.
- %  If user has set preamble in terms of percent of \hsize
- % we will use that dimension as the width of the column, and
- % the \leftskip will keep entries from bumping into each other.
- % Table will start at left margin and final column will justify at
- % right margin.
-\ifnum\colcount=1
-\else
-  \ifsetpercent
+  \vskip\parskip
+  \let\item\crcr
+  \tolerance=9500
+  \hbadness=9500
+  \setmultitablespacing
+  \parskip=\multitableparskip
+  \parindent=\multitableparindent
+  \overfullrule=0pt
+  \global\colcount=0
+  \def\Emultitable{\global\setpercentfalse\cr\egroup\egroup}%
+  %
+  % To parse everything between @multitable and @item:
+  \setuptable#1 \endsetuptable
+  %
+  % \everycr will reset column counter, \colcount, at the end of
+  % each line. Every column entry will cause \colcount to advance by one.
+  % The table preamble
+  % looks at the current \colcount to find the correct column width.
+  \everycr{\noalign{%
+  %
+  % \filbreak%% keeps underfull box messages off when table breaks over pages.
+  % Maybe so, but it also creates really weird page breaks when the table
+  % breaks over pages. Wouldn't \vfil be better?  Wait until the problem
+  % manifests itself, so it can be fixed for real --karl.
+    \global\colcount=0\relax}}%
+  %
+  % This preamble sets up a generic column definition, which will
+  % be used as many times as user calls for columns.
+  % \vtop will set a single line and will also let text wrap and
+  % continue for many paragraphs if desired.
+  \halign\bgroup&\global\advance\colcount by 1\relax
+    \multistrut\vtop{\hsize=\expandafter\csname col\the\colcount\endcsname
+  %
+  % In order to keep entries from bumping into each other
+  % we will add a \leftskip of \multitablecolspace to all columns after
+  % the first one.
+  % 
+  % If a template has been used, we will add \multitablecolspace
+  % to the width of each template entry.
+  % 
+  % If the user has set preamble in terms of percent of \hsize we will
+  % use that dimension as the width of the column, and the \leftskip
+  % will keep entries from bumping into each other.  Table will start at
+  % left margin and final column will justify at right margin.
+  % 
+  % Make sure we don't inherit \rightskip from the outer environment.
+  \rightskip=0pt
+  \ifnum\colcount=1
+    % The first column will be indented with the surrounding text.
+    \advance\hsize by\leftskip
   \else
-   % If user has <not> set preamble in terms of percent of \hsize
-   % we will advance \hsize by \multitablecolspace
-  \advance\hsize by \multitablecolspace
+    \ifsetpercent \else
+      % If user has not set preamble in terms of percent of \hsize
+      % we will advance \hsize by \multitablecolspace.
+      \advance\hsize by \multitablecolspace
+    \fi
+   % In either case we will make \leftskip=\multitablecolspace:
+  \leftskip=\multitablecolspace
   \fi
- % In either case we will make \leftskip=\multitablecolspace:
-\leftskip=\multitablecolspace
-\fi
- % Ignoring space at the beginning and end avoids an occasional spurious
- % blank line, when TeX decides to break the line at the space before the
- % box from the multistrut, so the strut ends up on a line by itself.
- % For example:
- % @multitable @columnfractions .11 .89
- % @item @code{#}
- % @tab Legal holiday which is valid in major parts of the whole country.
- % Is automatically provided with highlighting sequences respectively marking
- % characters.
- \noindent\ignorespaces##\unskip\multistrut}\cr
- % \everycr will reset column counter, \colcount, at the end of
- % each line. Every column  entry will cause \colcount to advance by one.
- % The table preamble
- % looks at the current \colcount to find the correct column width.
-\global\everycr{\noalign{%
-% \filbreak%% keeps underfull box messages off when table breaks over pages.
-% Maybe so, but it also creates really weird page breaks when the table
-% breaks over pages Wouldn't \vfil be better?  Wait until the problem
-% manifests itself, so it can be fixed for real --karl.
-\global\colcount=0\relax}}
+  % Ignoring space at the beginning and end avoids an occasional spurious
+  % blank line, when TeX decides to break the line at the space before the
+  % box from the multistrut, so the strut ends up on a line by itself.
+  % For example:
+  % @multitable @columnfractions .11 .89
+  % @item @code{#}
+  % @tab Legal holiday which is valid in major parts of the whole country.
+  % Is automatically provided with highlighting sequences respectively marking
+  % characters.
+  \noindent\ignorespaces##\unskip\multistrut}\cr
 }
 
 \def\setmultitablespacing{% test to see if user has set \multitablelinespace.
@@ -2246,20 +2287,24 @@ width0pt\relax} \fi
 
 % @synindex foo bar    makes index foo feed into index bar.
 % Do this instead of @defindex foo if you don't want it as a separate index.
-\def\synindex #1 #2 {%
-\expandafter\let\expandafter\synindexfoo\expandafter=\csname#2indfile\endcsname
-\expandafter\let\csname#1indfile\endcsname=\synindexfoo
-\expandafter\xdef\csname#1index\endcsname{%     % Define \xxxindex
-\noexpand\doindex {#2}}%
+% The \closeout helps reduce unnecessary open files; the limit on the
+% Acorn RISC OS is a mere 16 files.
+\def\synindex#1 #2 {%
+  \expandafter\let\expandafter\synindexfoo\expandafter=\csname#2indfile\endcsname
+  \expandafter\closeout\csname#1indfile\endcsname
+  \expandafter\let\csname#1indfile\endcsname=\synindexfoo
+  \expandafter\xdef\csname#1index\endcsname{% define \xxxindex
+    \noexpand\doindex{#2}}%
 }
 
 % @syncodeindex foo bar   similar, but put all entries made for index foo
 % inside @code.
-\def\syncodeindex #1 #2 {%
-\expandafter\let\expandafter\synindexfoo\expandafter=\csname#2indfile\endcsname
-\expandafter\let\csname#1indfile\endcsname=\synindexfoo
-\expandafter\xdef\csname#1index\endcsname{%     % Define \xxxindex
-\noexpand\docodeindex {#2}}%
+\def\syncodeindex#1 #2 {%
+  \expandafter\let\expandafter\synindexfoo\expandafter=\csname#2indfile\endcsname
+  \expandafter\closeout\csname#1indfile\endcsname
+  \expandafter\let\csname#1indfile\endcsname=\synindexfoo
+  \expandafter\xdef\csname#1index\endcsname{% define \xxxindex
+    \noexpand\docodeindex{#2}}%
 }
 
 % Define \doindex, the driver for all \fooindex macros.
@@ -2525,6 +2570,11 @@ width0pt\relax} \fi
   \indexbreaks
   %
   % See if the index file exists and is nonempty.
+  % Change catcode of @ here so that if the index file contains
+  % \initial {@}
+  % as its first line, TeX doesn't complain about mismatched braces
+  % (because it thinks @} is a control sequence).
+  \catcode`\@ = 11
   \openin 1 \jobname.#1s
   \ifeof 1
     % \enddoublecolumns gets confused if there is no text in the index,
@@ -2546,7 +2596,6 @@ width0pt\relax} \fi
       % to make right now.
       \def\indexbackslash{\rawbackslashxx}%
       \catcode`\\ = 0
-      \catcode`\@ = 11
       \escapechar = `\\
       \begindoublecolumns
       \input \jobname.#1s
@@ -3442,11 +3491,12 @@ width0pt\relax} \fi
 % the index entries, but we want to suppress hyphenation here.  (We
 % can't do that in the \entry macro, since index entries might consist
 % of hyphenated-identifiers-that-do-not-fit-on-a-line-and-nothing-else.)
-%
-% \turnoffactive is for the sake of @" used for umlauts.
 \def\tocentry#1#2{\begingroup
   \vskip 0pt plus1pt % allow a little stretch for the sake of nice page breaks
-  \entry{\turnoffactive #1}{\turnoffactive #2}%
+  % Do not use \turnoffactive in these arguments.  Since the toc is
+  % typeset in cmr, so characters such as _ would come out wrong; we
+  % have to do the usual translation tricks.
+  \entry{#1}{#2}%
 \endgroup}
 
 % Space between chapter (or whatever) number and the title.
@@ -3512,30 +3562,36 @@ width0pt\relax} \fi
 % But \@ or @@ will get a plain tex @ character.
 
 \def\tex{\begingroup
-\catcode `\\=0 \catcode `\{=1 \catcode `\}=2
-\catcode `\$=3 \catcode `\&=4 \catcode `\#=6
-\catcode `\^=7 \catcode `\_=8 \catcode `\~=13 \let~=\tie
-\catcode `\%=14
-\catcode 43=12 % plus
-\catcode`\"=12
-\catcode`\==12
-\catcode`\|=12
-\catcode`\<=12
-\catcode`\>=12
-\escapechar=`\\
-%
-\let\,=\ptexcomma
-\let\{=\ptexlbrace
-\let\}=\ptexrbrace
-\let\.=\ptexdot
-\let\*=\ptexstar
-\let\dots=\ptexdots
-\def\endldots{\mathinner{\ldots\ldots\ldots\ldots}}%
-\def\enddots{\relax\ifmmode\endldots\else$\mathsurround=0pt \endldots\,$\fi}%
-\def\@{@}%
-\let\bullet=\ptexbullet
-\let\b=\ptexb \let\c=\ptexc \let\i=\ptexi \let\t=\ptext
-%
+  \catcode `\\=0 \catcode `\{=1 \catcode `\}=2
+  \catcode `\$=3 \catcode `\&=4 \catcode `\#=6
+  \catcode `\^=7 \catcode `\_=8 \catcode `\~=13 \let~=\tie
+  \catcode `\%=14
+  \catcode 43=12 % plus
+  \catcode`\"=12
+  \catcode`\==12
+  \catcode`\|=12
+  \catcode`\<=12
+  \catcode`\>=12
+  \escapechar=`\\
+  %
+  \let\b=\ptexb
+  \let\bullet=\ptexbullet
+  \let\c=\ptexc
+  \let\,=\ptexcomma
+  \let\.=\ptexdot
+  \let\dots=\ptexdots
+  \let\equiv=\ptexequiv
+  \let\!=\ptexexclam
+  \let\i=\ptexi
+  \let\{=\ptexlbrace
+  \let\+=\tabalign
+  \let\}=\ptexrbrace
+  \let\*=\ptexstar
+  \let\t=\ptext
+  %
+  \def\endldots{\mathinner{\ldots\ldots\ldots\ldots}}%
+  \def\enddots{\relax\ifmmode\endldots\else$\mathsurround=0pt \endldots\,$\fi}%
+  \def\@{@}%
 \let\Etex=\endgroup}
 
 % Define @lisp ... @endlisp.
@@ -3580,8 +3636,8 @@ width0pt\relax} \fi
 % \nonarrowing is a flag.  If "set", @lisp etc don't narrow margins.
 \let\nonarrowing=\relax
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \cartouche: draw rectangle w/rounded corners around argument
+% @cartouche ... @end cartouche: draw rectangle w/rounded corners around
+% environment contents.
 \font\circle=lcircle10
 \newdimen\circthick
 \newdimen\cartouter\newdimen\cartinner
@@ -3608,9 +3664,9 @@ width0pt\relax} \fi
         \cartinner=\hsize \advance\cartinner by-\lskip
                           \advance\cartinner by-\rskip
         \cartouter=\hsize
-        \advance\cartouter by 18pt % allow for 3pt kerns on either
+        \advance\cartouter by 18.4pt % allow for 3pt kerns on either
 %                                    side, and for 6pt waste from
-%                                    each corner char
+%                                    each corner char, and rule thickness
         \normbskip=\baselineskip \normpskip=\parskip \normlskip=\lineskip
         % Flag to tell @lisp, etc., not to narrow margin.
         \let\nonarrowing=\comment
@@ -4246,18 +4302,17 @@ width0pt\relax} \fi
 
 
 \message{cross reference,}
-% Define cross-reference macros
-\newwrite \auxfile
+\newwrite\auxfile
 
-\newif\ifhavexrefs  % True if xref values are known.
+\newif\ifhavexrefs    % True if xref values are known.
 \newif\ifwarnedxrefs  % True if we warned once that they aren't known.
 
-% @inforef is simple.
+% @inforef is relatively simple.
 \def\inforef #1{\inforefzzz #1,,,,**}
 \def\inforefzzz #1,#2,#3,#4**{\putwordSee{} \putwordInfo{} \putwordfile{} \file{\ignorespaces #3{}},
   node \samp{\ignorespaces#1{}}}
 
-% \setref{foo} defines a cross-reference point named foo.
+% @setref{foo} defines a cross-reference point named foo.
 
 \def\setref#1{%
 \dosetq{#1-title}{Ytitle}%
@@ -4325,7 +4380,7 @@ width0pt\relax} \fi
     % into the usual \leavevmode...\vrule stuff for purposes of
     % printing. So we \turnoffactive for the \refx-snt, back on for the
     % printing, back off for the \refx-pg.
-    {\turnoffactive \refx{#1-snt}{}}%
+    {\normalturnoffactive \refx{#1-snt}{}}%
     \space [\printednodename],\space
     \turnoffactive \putwordpage\tie\refx{#1-pg}{}%
   \fi
@@ -4333,11 +4388,15 @@ width0pt\relax} \fi
 
 % \dosetq is the interface for calls from other macros
 
-% Use \turnoffactive so that punctuation chars such as underscore
-% work in node names.
-\def\dosetq #1#2{{\let\folio=0 \turnoffactive
-\edef\next{\write\auxfile{\internalsetq {#1}{#2}}}%
-\next}}
+% Use \normalturnoffactive so that punctuation chars such as underscore
+% and backslash work in node names.  (\turnoffactive doesn't do \.)
+\def\dosetq#1#2{%
+  {\let\folio=0
+   \normalturnoffactive
+   \edef\next{\write\auxfile{\internalsetq{#1}{#2}}}%
+   \next
+  }%
+}
 
 % \internalsetq {foo}{page} expands into
 % CHARACTERS 'xrdef {foo}{...expansion of \Ypage...}
@@ -4388,7 +4447,7 @@ width0pt\relax} \fi
 \def\refx#1#2{%
   \expandafter\ifx\csname X#1\endcsname\relax
     % If not defined, say something at least.
-    $\langle$un\-de\-fined$\rangle$%
+    \angleleft un\-de\-fined\angleright
     \ifhavexrefs
       \message{\linenumber Undefined cross reference `#1'.}%
     \else
@@ -4405,10 +4464,13 @@ width0pt\relax} \fi
 }
 
 % This is the macro invoked by entries in the aux file.
-\def\xrdef #1#2{{%
-  \catcode`\'=\other
-  \expandafter\gdef\csname X#1\endcsname{#2}%
-}}
+% 
+\def\xrdef#1{\begingroup
+  % Reenable \ as an escape while reading the second argument.
+  \catcode`\\ = 0
+  \afterassignment\endgroup
+  \expandafter\gdef\csname X#1\endcsname
+}
 
 % Read the last existing aux file, if any.  No error if none exists.
 \def\readauxfile{\begingroup
@@ -4465,8 +4527,7 @@ width0pt\relax} \fi
   \catcode`\$=\other
   \catcode`\#=\other
   \catcode`\&=\other
-  % `\+ does not work, so use 43.
-  \catcode43=\other
+  \catcode`+=\other % avoid \+ for paranoia even though we've turned it off
   % Make the characters 128-255 be printing characters
   {%
     \count 1=128
@@ -4837,10 +4898,10 @@ width0pt\relax} \fi
 % use math or other variants that look better in normal text.
 
 \catcode`\"=\active
-\def\activedoublequote{{\tt \char '042}}
+\def\activedoublequote{{\tt\char34}}
 \let"=\activedoublequote
 \catcode`\~=\active
-\def~{{\tt \char '176}}
+\def~{{\tt\char126}}
 \chardef\hat=`\^
 \catcode`\^=\active
 \def^{{\tt \hat}}
@@ -4851,7 +4912,7 @@ width0pt\relax} \fi
 \def\_{\leavevmode \kern.06em \vbox{\hrule width.3em height.1ex}}
 
 \catcode`\|=\active
-\def|{{\tt \char '174}}
+\def|{{\tt\char124}}
 \chardef \less=`\<
 \catcode`\<=\active
 \def<{{\tt \less}}
@@ -4938,8 +4999,8 @@ width0pt\relax} \fi
 @gdef@fixbackslash{@ifx\@eatinput @let\ = @normalbackslash @fi
   @catcode`+=@active @catcode`@_=@active}
 
-%% These look ok in all fonts, so just make them not special.  The @rm below
-%% makes sure that the current font starts out as the newly loaded cmr10
+% These look ok in all fonts, so just make them not special.  The @rm below
+% makes sure that the current font starts out as the newly loaded cmr10
 @catcode`@$=@other @catcode`@%=@other @catcode`@&=@other @catcode`@#=@other
 
 @textfonts
