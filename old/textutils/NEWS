@@ -1,5 +1,6 @@
 Changes in release 1.23
 [1.22k]
+* sort: fix bug in how `-n' works when configured/compiled with --enable-nls
 * head accepts byte and line counts of type uintmax_t (so up to 2^64 - 1)
 [1.22j]
 * tail: fix bug introduced in 1.22i
