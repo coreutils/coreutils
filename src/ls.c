@@ -707,8 +707,25 @@ static int format_needs_type;
 /* strftime formats for non-recent and recent files, respectively, in
    -l output.  */
 
-static char const *long_time_format[2] = { N_("%b %e  %Y"),
-					   N_("%b %e %H:%M") };
+static char const *long_time_format[2] =
+  {
+    /* strftime format for non-recent files (older than 6 months), in
+       -l output when --time-style=locale is specified.  This should
+       contain the year, month and day (at least), in an order that is
+       understood by people in your locale's territory.
+       Please try to keep the number of used screen columns small,
+       because many people work in windows with only 80 columns.  But
+       make this as wide as the other string below, for recent files.  */
+    N_("%b %e  %Y"),
+    /* strftime format for recent files (younger than 6 months), in
+       -l output when --time-style=locale is specified.  This should
+       contain the month, day and time (at least), in an order that is
+       understood by people in your locale's territory.
+       Please try to keep the number of used screen columns small,
+       because many people work in windows with only 80 columns.  But
+       make this as wide as the other string above, for non-recent files.  */
+    N_("%b %e %H:%M")
+  };
 
 /* The exit status to use if we don't get any fatal errors. */
 
