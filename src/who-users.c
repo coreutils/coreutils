@@ -1,4 +1,4 @@
-/* GNU's users/who.
+/* GNU's uptime/users/who.
    Copyright (C) 92, 93, 94, 95, 1996 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -80,7 +80,11 @@
 #ifdef USERS
 #define COMMAND_NAME "users"
 #else
- error You must define one of WHO and USERS.
+#ifdef UPTIME
+#define COMMAND_NAME "uptime"
+#else
+ error You must define one of WHO, UPTIME or USERS.
+#endif /* UPTIME */
 #endif /* USERS */
 #endif /* WHO */
 
@@ -132,6 +136,75 @@ static struct option const longopts[] =
 };
 
 static STRUCT_UTMP *utmp_contents;
+
+#ifdef UPTIME
+static void
+print_uptime (int n)
+{
+  register STRUCT_UTMP *this = utmp_contents;
+  register int entries = 0;
+  time_t boot_time=0,time_now,uptime,updays,uphours,upmins;
+  struct tm *tmn;
+  double avg[3];
+  int loads;
+
+  /* Loop through all the utmp entries we just read and count up the valid
+     ones, also in the process possibly gleaning boottime. */
+  while (n--)
+  {
+    if (this->ut_name[0]
+#ifdef USER_PROCESS
+	&& this->ut_type == USER_PROCESS
+#endif
+	)
+    {
+      entries++;
+    }
+    /* If BOOT_MSG is defined, we can get boottime from utmp.  This avoids
+       possibly needing special privs to read /dev/kmem. */
+#ifdef BOOT_MSG
+#ifdef HAVE_UTMPX_H
+    if (!strcmp (this->ut_line, BOOT_MSG)) boot_time = this->ut_tv.tv_sec;
+#else
+    if (!strcmp (this->ut_line, BOOT_MSG)) boot_time = this->ut_time;
+#endif
+#endif /* BOOT_MSG */
+    this++;
+  }
+  if (boot_time == 0)
+    error (1, errno, "couldn't get boot time");
+  time_now = time (0);
+  uptime = time_now - boot_time;
+  updays = uptime / 86400;
+  uphours = (uptime - (updays * 86400)) / 3600;
+  upmins = (uptime - (updays * 86400) - (uphours*3600)) / 60;
+  tmn = localtime (&time_now);
+  printf (" %2d:%02d%s  up ", ((tmn->tm_hour % 12) == 0
+			       ? 12 : tmn->tm_hour % 12),
+	  tmn->tm_min, (tmn->tm_hour < 12 ? "am" : "pm"));
+  if (updays>0)
+    printf ("%d %s,", updays, (updays == 1 ? "days" : "day"));
+  printf (" %2d:%02d,  %d %s", uphours, upmins, entries,
+	  (entries == 1) ? "user" : "users");
+
+  loads = getloadavg (avg, 3);
+  if (loads == -1)
+    putchar ('\n');
+  else
+    {
+      if (loads > 0)
+	printf (",  load average: %.2f", avg[0]);
+      if (loads > 1)
+	printf (", %.2f", avg[1]);
+      if (loads > 2)
+	printf (", %.2f", avg[2]);
+      if (loads > 0)
+	putchar ('\n');
+    }
+}
+#endif /* UPTIME */
+
+
 
 #if defined (WHO) || defined (USERS)
 
@@ -451,6 +524,10 @@ who (char *filename)
 #else
 #ifdef USERS
   list_entries_users (users);
+#else
+#ifdef UPTIME
+  print_uptime (users);
+#endif /* UPTIME */
 #endif /* USERS */
 #endif /* WHO */
 }
@@ -542,7 +619,7 @@ If ARG1 ARG2 given, -m presumed: `am i' or `mom likes' are usual.\n\
 }
 #endif /* WHO */
 
-#ifdef USERS
+#if defined(USERS) || defined(UPTIME)
 static void
 usage (int status)
 {
@@ -561,7 +638,7 @@ If FILE not given, uses /etc/utmp.  /etc/wtmp as FILE is common.\n\
     }
   exit (status);
 }
-#endif /* USERS */
+#endif /* USERS || UPTIME */
 
 void
 main (int argc, char **argv)
