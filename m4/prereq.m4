@@ -12,7 +12,7 @@ AC_DEFUN(jm_PREREQ,
 dnl FIXME: maybe put this in a separate file
 AC_DEFUN(jm_PREREQ_REGEX,
 [
-  dnl FIXME: maybe provide a btowc replacement someday
+  dnl FIXME: maybe provide a btowc replacement someday: solaris-2.5.1 lacks it
   AC_CHECK_FUNCS(bzero bcopy isascii btowc)
   AC_CHECK_HEADERS(alloca.h libintl.h wctype.h wchar.h)
   AC_HEADER_STDC
