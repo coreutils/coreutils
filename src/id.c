@@ -1,5 +1,5 @@
 /* id -- print real and effective UIDs and GIDs
-   Copyright (C) 1989-2003 Free Software Foundation, Inc.
+   Copyright (C) 1989-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ static int use_name = 0;
 static uid_t ruid, euid;
 static gid_t rgid, egid;
 
-/* The number of errors encountered so far. */
+/* Nonzero if errors have been encountered.  */
 static int problems = 0;
 
 static struct option const longopts[] =
@@ -78,7 +78,7 @@ static struct option const longopts[] =
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -194,7 +194,7 @@ main (int argc, char **argv)
     print_full_info (argv[optind]);
   putchar ('\n');
 
-  exit (problems != 0);
+  exit (problems == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /* Print the name or value of user ID UID. */
@@ -210,7 +210,7 @@ print_user (uid_t uid)
       if (pwd == NULL)
 	{
 	  error (0, 0, _("cannot find name for user ID %u"), uid);
-	  problems++;
+	  problems = 1;
 	}
     }
 
@@ -233,7 +233,7 @@ print_group (gid_t gid)
       if (grp == NULL)
 	{
 	  error (0, 0, _("cannot find name for group ID %u"), gid);
-	  problems++;
+	  problems = 1;
 	}
     }
 
@@ -293,7 +293,7 @@ print_group_list (const char *username)
 
   pwd = getpwuid (ruid);
   if (pwd == NULL)
-    problems++;
+    problems = 1;
 
   print_group (rgid);
   if (egid != rgid)
@@ -311,7 +311,7 @@ print_group_list (const char *username)
     if (xgetgroups (username, (pwd ? pwd->pw_gid : (gid_t) -1),
 		    &n_groups, &groups))
       {
-	++problems;
+	problems = 1;
 	return;
       }
 
@@ -337,14 +337,14 @@ print_full_info (const char *username)
   printf ("uid=%u", (unsigned) ruid);
   pwd = getpwuid (ruid);
   if (pwd == NULL)
-    problems++;
+    problems = 1;
   else
     printf ("(%s)", pwd->pw_name);
 
   printf (" gid=%u", (unsigned) rgid);
   grp = getgrgid (rgid);
   if (grp == NULL)
-    problems++;
+    problems = 1;
   else
     printf ("(%s)", grp->gr_name);
 
@@ -353,7 +353,7 @@ print_full_info (const char *username)
       printf (" euid=%u", (unsigned) euid);
       pwd = getpwuid (euid);
       if (pwd == NULL)
-	problems++;
+	problems = 1;
       else
 	printf ("(%s)", pwd->pw_name);
     }
@@ -363,7 +363,7 @@ print_full_info (const char *username)
       printf (" egid=%u", (unsigned) egid);
       grp = getgrgid (egid);
       if (grp == NULL)
-	problems++;
+	problems = 1;
       else
 	printf ("(%s)", grp->gr_name);
     }
@@ -377,7 +377,7 @@ print_full_info (const char *username)
     if (xgetgroups (username, (pwd ? pwd->pw_gid : (gid_t) -1),
 		    &n_groups, &groups))
       {
-	++problems;
+	problems = 1;
 	return;
       }
 
@@ -390,7 +390,7 @@ print_full_info (const char *username)
 	printf ("%u", (unsigned) groups[i]);
 	grp = getgrgid (groups[i]);
 	if (grp == NULL)
-	  problems++;
+	  problems = 1;
 	else
 	  printf ("(%s)", grp->gr_name);
       }
