@@ -1,6 +1,13 @@
+2003-08-15  Jim Meyering  <jim@meyering.net>
+
+	* utimes.m4 (gl_FUNC_UTIMES): Use `conftest.utimes' as the test
+	file name, not `x'.  The former will be removed automatically.
+
 2003-08-13  Jim Meyering  <jim@meyering.net>
 
+	* README: Remove file.
 	* Makefile.am.in: Simplify.
+	(Makefile.am): Remove README.
 
 2003-08-10  Jim Meyering  <jim@meyering.net>
 
