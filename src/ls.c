@@ -810,13 +810,13 @@ decode_switches (int argc, char **argv)
     case LS_MULTI_COL:
       /* This is for the `dir' program.  */
       format = many_per_line;
-      set_quoting_style (&quotearg_quoting_options, escape_quoting_style);
+      set_quoting_style (NULL, escape_quoting_style);
       break;
 
     case LS_LONG_FORMAT:
       /* This is for the `vdir' program.  */
       format = long_format;
-      set_quoting_style (&quotearg_quoting_options, escape_quoting_style);
+      set_quoting_style (NULL, escape_quoting_style);
       break;
 
     case LS_LS:
@@ -855,7 +855,7 @@ decode_switches (int argc, char **argv)
 
   if ((p = getenv ("QUOTING_STYLE"))
       && 0 <= (i = argmatch (p, quoting_style_args)))
-    set_quoting_style (&quotearg_quoting_options, (enum quoting_style) i);
+    set_quoting_style (NULL, (enum quoting_style) i);
 
   if ((p = getenv ("BLOCKSIZE"))
       && strncmp (p, "HUMAN", sizeof ("HUMAN") - 1) == 0)
@@ -921,7 +921,7 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'b':
-	  set_quoting_style (&quotearg_quoting_options, escape_quoting_style);
+	  set_quoting_style (NULL, escape_quoting_style);
 	  break;
 
 	case 'c':
@@ -1058,11 +1058,11 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'N':
-	  set_quoting_style (&quotearg_quoting_options, literal_quoting_style);
+	  set_quoting_style (NULL, literal_quoting_style);
 	  break;
 
 	case 'Q':
-	  set_quoting_style (&quotearg_quoting_options, c_quoting_style);
+	  set_quoting_style (NULL, c_quoting_style);
 	  break;
 
 	case 'R':
@@ -1171,8 +1171,7 @@ decode_switches (int argc, char **argv)
 	      invalid_arg (_("quoting style"), optarg, i);
 	      usage (EXIT_FAILURE);
 	    }
-	  set_quoting_style (&quotearg_quoting_options,
-			     (enum quoting_style) i);
+	  set_quoting_style (NULL, (enum quoting_style) i);
 	  break;
 
 	case 16:
@@ -1187,12 +1186,12 @@ decode_switches (int argc, char **argv)
   if (human_readable_base)
     output_units = 1;
 
-  filename_quoting_options = clone_quoting_options (&quotearg_quoting_options);
+  filename_quoting_options = clone_quoting_options (NULL);
   if (indicator_style != none)
     for (p = "*=@|" + (int) indicator_style - 1;  *p;  p++)
       set_char_quoting (filename_quoting_options, *p, 1);
 
-  dirname_quoting_options = clone_quoting_options (&quotearg_quoting_options);
+  dirname_quoting_options = clone_quoting_options (NULL);
   set_char_quoting (dirname_quoting_options, ':', 1);
 
   return optind;
