@@ -38,7 +38,7 @@ modechange.c mountlist.c obstack.c safe-read.c savedir.c \
 stripslash.c xgetcwd.c xmalloc.c xstrdup.c userspec.c yesno.c \
 fileblocks.c fnmatch.c ftruncate.c mkdir.c mktime.c rename.c rmdir.c \
 save-cwd.c stpcpy.c \
-strdup.c strstr.c strtol.c alloca.c long-options.c \
+strdup.c strstr.c strtol.c strtoul.c alloca.c long-options.c \
 memcmp.c memcpy.c memset.c xstrtol.c xstrtoul.c
 
 OBJECTS = getdate.o posixtm.o \
