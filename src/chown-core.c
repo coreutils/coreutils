@@ -1,5 +1,5 @@
 /* chown-core.c -- core functions for changing ownership.
-   Copyright (C) 2000 Free Software Foundation.
+   Copyright (C) 2000, 2002 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,7 +29,6 @@
 #include "quote.h"
 #include "savedir.h"
 #include "chown-core.h"
-#include "xalloc.h"
 
 /* The number of decimal digits required to represent the largest value of
    type `unsigned int'.  This is enough for an 8-byte unsigned int type.  */
