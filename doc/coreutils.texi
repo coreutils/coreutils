@@ -626,13 +626,13 @@ operands even if they begin with @samp{-}.  For example, @samp{sort --
 
 @cindex standard input
 @cindex standard output
-A single @samp{-} is not really an option, though it looks like one.  It
+A single @samp{-} operand is not really an option, though it looks like one.  It
 stands for standard input, or for standard output if that is clear from
-the context, and it can be used either as an operand or as an
-option-argument.  For example, @samp{sort -o - -} outputs to standard
-output and reads from standard input, and is equivalent to plain
-@samp{sort}.  Unless otherwise specified, @samp{-} can appear in any
-context that requires a file name.
+the context.  For example, @samp{sort -} reads from standard input,
+and is equivalent to plain @samp{sort}, and @samp{tee -} writes an
+extra copy of its input to standard output.  Unless otherwise
+specified, @samp{-} can appear as any operand that requires a file
+name.
 
 @menu
 * Exit status::                 Indicating program success or failure.
@@ -7309,31 +7309,6 @@ it's tidier, the @option{--zero} option adds an additional overwrite pass with
 all zero bits.  This is in addition to the number of passes specified
 by the @option{--iterations} option.
 
-@item -
-@opindex -
-Shred standard output.
-
-This argument is considered an option.  If the common @samp{--} option has
-been used to indicate the end of options on the command line, then @samp{-}
-will be interpreted as an ordinary file name.
-
-The intended use of this is to shred a removed temporary file.
-For example
-
-@example
-i=`tempfile -m 0600`
-exec 3<>"$i"
-rm -- "$i"
-echo "Hello, world" >&3
-shred - >&3
-exec 3>-
-@end example
-
-Note that the shell command @samp{shred - >file} does not shred the
-contents of @var{file}, since it truncates @var{file} before invoking
-@command{shred}.  Use the command @samp{shred file} or (if using a
-Bourne-compatible shell) the command @samp{shred - 1<>file} instead.
-
 @end table
 
 You might use the following command to erase all trace of the
@@ -7351,6 +7326,24 @@ your hard disk, you could give a command like this:
 @example
 shred --verbose /dev/sda5
 @end example
+
+A @var{file} of @samp{-} denotes standard output.
+The intended use of this is to shred a removed temporary file.
+For example:
+
+@example
+i=`tempfile -m 0600`
+exec 3<>"$i"
+rm -- "$i"
+echo "Hello, world" >&3
+shred - >&3
+exec 3>-
+@end example
+
+However, the command @samp{shred - >file} does not shred the contents
+of @var{file}, since the shell truncates @var{file} before invoking
+@command{shred}.  Use the command @samp{shred file} or (if using a
+Bourne-compatible shell) the command @samp{shred - 1<>file} instead.
 
 @exitstatus
 
@@ -9894,6 +9887,10 @@ tee [@var{option}]@dots{} [@var{file}]@dots{}
 If a file being written to does not already exist, it is created.  If a
 file being written to already exists, the data it previously contained
 is overwritten unless the @option{-a} option is used.
+
+A @var{file} of @samp{-} causes @command{tee} to send another copy of
+input to standard output, but this is typically not that useful as the
+copies are interleaved.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
