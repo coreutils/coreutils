@@ -828,10 +828,10 @@ direct_mode (int fd, bool enable)
 	}
     }
 
-#if HAVE_DIRECTIO && defined DIRECTIO_ON
+#if HAVE_DIRECTIO && defined DIRECTIO_ON && defined DIRECTIO_OFF
   /* This is Solaris-specific.  See the following for details:
      http://docs.sun.com/db/doc/816-0213/6m6ne37so?q=directio&a=view  */
-  directio (fd, DIRECTIO_ON);
+  directio (fd, enable ? DIRECTIO_ON : DIRECTIO_OFF);
 #endif
 }
 
