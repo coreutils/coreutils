@@ -282,8 +282,9 @@ static int open_file __P ((char *name, COLUMN *p));
 static int skip_to_page __P ((int page));
 static void print_header __P ((void));
 static void pad_across_to __P ((int position));
-static void number __P ((COLUMN *p));
-static void getoptarg __P ((char *arg, char switch_char, char *character, int *number));
+static void add_line_number __P ((COLUMN *p));
+static void getoptarg __P ((char *arg, char switch_char, char *character,
+			    int *number));
 static void usage __P ((int status));
 static void print_files __P ((int number_of_files, char **av));
 static void init_parameters __P ((int number_of_files));
@@ -1489,7 +1490,7 @@ align_column (COLUMN *p)
     print_sep_string ();
 
   if (p->numbered)
-    number (p);
+    add_line_number (p);
 }
 
 /* Print one page.
@@ -1757,7 +1758,7 @@ store_char (int c)
 }
 
 static void
-number (COLUMN *p)
+add_line_number (COLUMN *p)
 {
   int i;
   char *s;
@@ -2174,7 +2175,7 @@ read_line (COLUMN *p)
     }
 
   if (p->numbered)
-    number (p);
+    add_line_number (p);
 
   empty_line = FALSE;
   if (c == '\n')
