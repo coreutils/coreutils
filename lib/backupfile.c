@@ -105,7 +105,7 @@ static int version_number ();
 
 char *
 find_backup_file_name (file)
-     char *file;
+     const char *file;
 {
   char *dir;
   char *base_versions;
@@ -137,7 +137,8 @@ find_backup_file_name (file)
 
 static int
 max_backup_version (file, dir)
-     char *file, *dir;
+     const char *file;
+     const char *dir;
 {
   DIR *dirp;
   struct dirent *dp;
@@ -171,7 +172,7 @@ max_backup_version (file, dir)
 
 static char *
 make_version_name (file, version)
-     char *file;
+     const char *file;
      int version;
 {
   char *backup_name;
@@ -189,12 +190,12 @@ make_version_name (file, version)
 
 static int
 version_number (base, backup, base_length)
-     char *base;
-     char *backup;
+     const char *base;
+     const char *backup;
      int base_length;
 {
   int version;
-  char *p;
+  const char *p;
 
   version = 0;
   if (!strncmp (base, backup, base_length) && ISDIGIT (backup[base_length]))
@@ -212,7 +213,8 @@ version_number (base, backup, base_length)
 
 static char *
 concat (str1, str2)
-     char *str1, *str2;
+     const char *str1;
+     const char *str2;
 {
   char *newstr;
   int str1_length = strlen (str1);
