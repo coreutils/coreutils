@@ -1,3 +1,6 @@
+
+	* doc/Makefile.in (mostlyclean): Also remove *.info.
+
 Thu Oct 19 17:38:28 1995  Jim Meyering  (meyering@comco.com)
 
         * od.c: Indent cpp directives.
