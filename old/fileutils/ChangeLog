@@ -1,6 +1,17 @@
 1997-09-15  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/rm.c: Use hash.c (chaining) functions, not those of oa-hash.c
+	(open addressing).  The latter implementation is wonderful when
+	deletions are rare, but doen't support the frequent deletions
+	required to implement the active directory set.
+
+	* lib/hash.c: New file -- replaces oa-hash.c.
+	* lib/hash.h: New file.
+	* lib/oa-hash.c: Remove.
+	* lib/oa-hash.h: Remove.
+
 	* src/ln.c (do_link): Perform S_ISLNK test only if lstat succeeded.
+	Otherwise, dest_stats could be used uninitialized.
 
 1997-09-14  Jim Meyering  <meyering@na-net.ornl.gov>
 
