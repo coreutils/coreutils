@@ -1,5 +1,6 @@
 Changes in release 4.1:
 [4.0x]
+* Fix cp so that `cp -r DIR1/ DIR2' works properly once again.
 * New ls option --quoting-style=clocale acts like --quoting-style=locale,
   except that it quotes "like this" by default instead of `like this'.
 [4.0w]

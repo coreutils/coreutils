@@ -1,5 +1,7 @@
 2000-07-23  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.0x.
+
 	* src/dd.c (main): Give a better diagnostic for e.g.,
 	`dd if=/dev/fd0 seek=100000000000'.
 	Convert "`%s'" in format strings to "%s", and wrap each
