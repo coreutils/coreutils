@@ -5803,9 +5803,10 @@ any missing intermediate directories.
 @cindex recursively copying directories
 @cindex non-directories, copying as special files
 Copy directories recursively, copying any non-directories and special
-files (e.g., symbolic links, FIFOs and device files) as if they were
-regular files.  This means trying to read the data in each source
-file and writing it to the destination.  It is usually a mistake to
+files (e.g., FIFOs and device files) as if they were regular files.
+This means trying to read the data in each source file and writing it to
+the destination.  However, contrary to most other implementations,
+GNU @code{cp -r} preserves symbolic links.  It is usually a mistake to
 apply @code{cp -r} to special files like FIFOs and the ones typically
 found in the @file{/dev} directory.  In most cases, @code{cp -r}
 will hang indefinitely trying to read from FIFOs and special files
@@ -5814,6 +5815,8 @@ if you use it to copy @file{/dev/zero}.
 Use the @option{--recursive} (@option{-R}) option instead if you want
 to copy special files, preserving their special nature
 rather than reading from them to copy their contents.
+It is not portable to use @code{cp -r} to preserve symbolic links.
+On most non-GNU systems, @code{cp -r} does @emph{not} preserve symbolic links.
 
 @itemx @w{@kbd{--reply}[=@var{how}]}
 @opindex --reply
