@@ -22,10 +22,10 @@ fi
 
 fail=0
 
-echo abc > in
+echo abcde > in
 (dd skip=1 count=1 bs=1; dd skip=1 bs=1) < in > out 2> /dev/null || fail=1
 case `cat out` in
-  b) ;;
+  bde) ;;
   *) fail=1 ;;
 esac
 
