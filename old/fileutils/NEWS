@@ -1,4 +1,7 @@
 Changes in release 4.1:
+[4.0r]
+* `ls -e' fails with a more useful diagnostic
+* df produces better output for loop file system mount points
 [4.0q]
 * install -D bug is fixed
 * chown now works properly when the specified login name contains a period
