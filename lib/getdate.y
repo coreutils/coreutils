@@ -880,14 +880,14 @@ get_date (const char *p, const time_t *now)
     for (quarter = 1; quarter <= 3; quarter++)
       {
 	time_t probe = Start + quarter * (90 * 24 * 60 * 60);
-	struct tm *tm = localtime (&probe);
-	if (tm && tm->tm_zone
-	    && tm->tm_isdst != pc.local_time_zone_table[0].value)
+	struct tm *probe_tm = localtime (&probe);
+	if (probe_tm && probe_tm->tm_zone
+	    && probe_tm->tm_isdst != pc.local_time_zone_table[0].value)
 	  {
 	      {
-		pc.local_time_zone_table[1].name = tm->tm_zone;
+		pc.local_time_zone_table[1].name = probe_tm->tm_zone;
 		pc.local_time_zone_table[1].type = tLOCAL_ZONE;
-		pc.local_time_zone_table[1].value = tm->tm_isdst;
+		pc.local_time_zone_table[1].value = probe_tm->tm_isdst;
 		pc.local_time_zone_table[2].name = 0;
 	      }
 	    break;
