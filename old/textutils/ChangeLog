@@ -2,6 +2,8 @@
 
 	* Version 2.0.15.
 
+	* Makefile.am (AUTOMAKE_OPTIONS): Require automake-1.5.
+
 	* man/Makefile.am: Revamp this file, as for fileutils.
 
 	* src/md5sum.c (digest_check): On systems for which setmode actually

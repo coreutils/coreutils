@@ -2,6 +2,8 @@
 
 	* Version 2.0.12.
 
+	* Makefile.am (AUTOMAKE_OPTIONS): Require automake-1.5.
+
 	* man/Makefile.am: Revamp this file, as for fileutils.
 
 2001-09-11  Jim Meyering  <meyering@lucent.com>

@@ -2,6 +2,8 @@
 
 	* Version 4.1.1.
 
+	* Makefile.am (AUTOMAKE_OPTIONS): Require automake-1.5.
+
 	* man/Makefile.am (*.1): Depend on *source* files, not binaries.
 	(.x.1): Add code to work around ginstall vs. install exception.
 
