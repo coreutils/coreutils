@@ -39,6 +39,15 @@
 extern int errno;
 #endif
 
+#if HAVE_WCHAR_H
+# include <wchar.h>
+#endif
+
+/* Some systems, like BeOS, have multibyte encodings but lack mbstate_t.  */
+#if HAVE_WCRTOMB && defined mbstate_t
+# define wcrtomb(s, wc, ps) (wcrtomb) (s, wc, 0)
+#endif
+
 #if HAVE_ICONV
 # include <iconv.h>
 #endif
@@ -53,6 +62,39 @@ extern int errno;
 #endif
 
 #include "unicodeio.h"
+
+#if __STDC_ISO_10646__ && HAVE_WCRTOMB
+
+/* Values of type wchar_t are Unicode code points.  */
+
+/* Outputs the Unicode character CODE to the output stream STREAM.
+   Assumes that the locale doesn't change between two calls.  */
+void
+print_unicode_char (FILE *stream, unsigned int code)
+{
+  wchar_t wc = (wchar_t) code;
+
+  /* Test for truncation.  */
+  if (wc == code)
+    {
+      /* Convert from wide character to multibyte representation.  */
+      char buf[64]; /* Assume MB_LEN_MAX <= 64.  */
+      mbstate_t state;
+      size_t res;
+
+      memset (&state, 0, sizeof (mbstate_t));
+      res = wcrtomb (buf, wc, &state);
+      if (res != (size_t)(-1))
+	fwrite (buf, 1, res, stream);
+      else
+	error (1, errno,
+	       _("cannot convert U+%04X to local character set"), code);
+    }
+  else
+    error (1, 0, _("cannot convert U+%04X to local character set"), code);
+}
+
+#else
 
 /* When we pass a Unicode character to iconv(), we must pass it in a
    suitable encoding. The standardized Unicode encodings are
@@ -103,7 +145,7 @@ utf8_wctomb (unsigned char *r, unsigned int wc)
 }
 
 /* Luckily, the encoding's name is platform independent.  */
-#define UTF8_NAME "UTF-8"
+# define UTF8_NAME "UTF-8"
 
 /* Outputs the Unicode character CODE to the output stream STREAM.
    Assumes that the locale doesn't change between two calls.  */
@@ -112,9 +154,9 @@ print_unicode_char (FILE *stream, unsigned int code)
 {
   static int initialized;
   static int is_utf8;
-#if HAVE_ICONV
+# if HAVE_ICONV
   static iconv_t utf8_to_local;
-#endif
+# endif
 
   char inbuf[6];
   int count;
@@ -125,7 +167,7 @@ print_unicode_char (FILE *stream, unsigned int code)
       const char *charset = locale_charset ();
 
       is_utf8 = (charset != NULL && !strcmp (charset, UTF8_NAME));
-#if HAVE_ICONV
+# if HAVE_ICONV
       if (!is_utf8)
 	{
 	  utf8_to_local = (charset != NULL
@@ -141,7 +183,7 @@ print_unicode_char (FILE *stream, unsigned int code)
 		       code);
 	    }
 	}
-#endif
+# endif
       initialized = 1;
     }
 
@@ -156,7 +198,7 @@ print_unicode_char (FILE *stream, unsigned int code)
     }
   else
     {
-#if HAVE_ICONV
+# if HAVE_ICONV
       char outbuf[25];
       const char *inptr;
       size_t inbytesleft;
@@ -173,15 +215,15 @@ print_unicode_char (FILE *stream, unsigned int code)
       res = iconv (utf8_to_local, &inptr, &inbytesleft, &outptr, &outbytesleft);
       if (inbytesleft > 0 || res == (size_t)(-1)
 	  /* Irix iconv() inserts a NUL byte if it cannot convert. */
-# if !defined _LIBICONV_VERSION && (defined sgi || defined __sgi)
+#  if !defined _LIBICONV_VERSION && (defined sgi || defined __sgi)
 	  || (res > 0 && code != 0 && outptr - outbuf == 1 && *outbuf == '\0')
-# endif
+#  endif
          )
 	error (1, res == (size_t)(-1) ? errno : 0,
 	       _("cannot convert U+%04X to local character set"), code);
 
       /* Avoid glibc-2.1 bug and Solaris 2.7 bug.  */
-# if defined _LIBICONV_VERSION \
+#  if defined _LIBICONV_VERSION \
     || !((__GLIBC__ - 0 == 2 && __GLIBC_MINOR__ - 0 <= 1) || defined __sun)
 
       /* Get back to the initial shift state.  */
@@ -189,12 +231,14 @@ print_unicode_char (FILE *stream, unsigned int code)
       if (res == (size_t)(-1))
 	error (1, errno, _("cannot convert U+%04X to local character set"),
 	       code);
-# endif
+#  endif
 
       fwrite (outbuf, 1, outptr - outbuf, stream);
-#else
+# else
       error (1, 0, _("cannot output U+%04X: iconv function not available"),
 	     code);
-#endif
+# endif
     }
 }
+
+#endif
