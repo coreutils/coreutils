@@ -2,6 +2,11 @@
 
 	* Version 5.0.1.
 
+	* tests/head/Test.pm: Remove tests of --bytes=-N; using that framework
+	caused the addition of thousands of small files to the tar archive.
+	* tests/misc/head-elide-tail: New file.  Add them here instead.
+	* tests/misc/Makefile.am (TESTS): Add head-elide-tail.
+
 2003-05-04  Paul Eggert  <eggert@twinsun.com>
 
 	* src/remove.c (HAVE_WORKING_READDIR): Define to 0 if not defined.
