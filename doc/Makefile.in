@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 0.28 from Makefile.am
+# Makefile.in generated automatically by automake 0.29 from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -30,22 +30,26 @@ pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
 
+top_builddir = ..
+
 INSTALL = @INSTALL@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 transform = @program_transform_name@
 
-TEXINFOS = fileutils.texi
+info_TEXINFOS = fileutils.texi
 DIST_OTHER = perm.texi getdate.texi
+CONFIG_HEADER = ../config.h
 
 MAKEINFO = makeinfo
 TEXI2DVI = texi2dvi
 INFOS = fileutils.info*
 INFO_DEPS = fileutils.info
 DVIS = fileutils.dvi
+TEXINFOS = fileutils.texi
 
-DIST_COMMON = Makefile.am mdate-sh Makefile.in texinfo.tex stamp-vti \
+DIST_COMMON = Makefile.am Makefile.in mdate-sh stamp-vti texinfo.tex \
 version.texi
 
 
@@ -62,25 +66,25 @@ default: all
 $(srcdir)/Makefile.in: Makefile.am
 	cd $(top_srcdir) && automake $(subdir)/Makefile
 
-Makefile: ../config.status Makefile.in
-	cd .. && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
+Makefile: $(top_builddir)/config.status Makefile.in
+	cd $(top_builddir) && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
 
 version.texi: stamp-vti
 
 stamp-vti: fileutils.texi $(top_srcdir)/configure.in
 	echo "@set UPDATED `cd $(srcdir) && $(SHELL) mdate-sh fileutils.texi`" \
-	  > version.tmp
-	echo "@set EDITION $(VERSION)" >> version.tmp
-	echo "@set VERSION $(VERSION)" >> version.tmp
-	if cmp -s version.tmp $(srcdir)/version.texi; then \
-	  rm version.tmp;			\
+	  > vti.tmp
+	echo "@set EDITION $(VERSION)" >> vti.tmp
+	echo "@set VERSION $(VERSION)" >> vti.tmp
+	if cmp -s vti.tmp $(srcdir)/version.texi; then \
+	  rm vti.tmp;			\
 	else					\
-	  mv version.tmp $(srcdir)/version.texi; \
+	  mv vti.tmp $(srcdir)/version.texi; \
 	fi
 	echo timestamp > $(srcdir)/stamp-vti
 
 mostlyclean-vti:
-	rm -f version.tmp
+	rm -f vti.tmp
 
 clean-vti:
 
@@ -88,6 +92,7 @@ distclean-vti:
 
 maintainer-clean-vti:
 	rm -f stamp-vti version.texi
+
 fileutils.info: fileutils.texi version.texi
 
 
@@ -100,10 +105,8 @@ fileutils.info: fileutils.texi version.texi
 install-info: $(INFO_DEPS)
 	$(top_srcdir)/mkinstalldirs $(infodir)
 	for file in $(INFO_DEPS); do		\
-	  if [ -r ./$$file ]; then dir=.; else dir=$(srcdir); fi; \
-	  for ifile in $$dir/$$file*; do	\
-	    basename=`echo $$ifile|sed 's,.*/,,'`; \
-	    $(INSTALL_DATA) $$dir/$$ifile $(infodir)/$$basename; \
+	  for ifile in `cd $(srcdir) && echo $$file*`; do \
+	    $(INSTALL_DATA) $(srcdir)/$$ifile $(infodir)/$$ifile; \
 	  done;					\
 	done
 
@@ -114,8 +117,8 @@ uninstall-info:
 
 mostlyclean-info:
 	rm -f fileutils.aux fileutils.cp fileutils.cps fileutils.dvi \
-	  fileutils.fn fileutils.fns fileutils.ky fileutils.log \
-	  fileutils.pg fileutils.toc fileutils.tp fileutils.vr fileutils.op
+	  fileutils.fn fileutils.fns fileutils.ky fileutils.log fileutils.pg \
+	  fileutils.toc fileutils.tp fileutils.vr fileutils.op
 
 clean-info:
 
@@ -128,9 +131,9 @@ TAGS:
 
 
 subdir = doc
-distdir = ../$(PACKAGE)-$(VERSION)/$(subdir)
+distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
 dist: $(DEP_DISTFILES)
-	@for file in $(DISTFILES); do		\
+	@for file in `cd $(srcdir) && echo $(DISTFILES)`; do \
 	  test -f $(distdir)/$$file \
 	  || ln $(srcdir)/$$file $(distdir)/$$file 2> /dev/null \
 	  || cp -p $(srcdir)/$$file $(distdir)/$$file; \
