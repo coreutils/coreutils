@@ -1,4 +1,5 @@
 Changes in release 2.1
+ [2.0.14]
 * nohup's behavior is changed as follows, to conform to POSIX 1003.1-2001:
   - nohup no longer adjusts scheduling priority; use "nice" for that.
   - nohup now redirects stderr to stdout, if stderr is not a terminal.
