@@ -1,3 +1,7 @@
+2004-06-26  Jim Meyering  <jim@meyering.net>
+
+	* LINGUAS: Add Basque (eu).
+
 2004-04-16  Jim Meyering  <jim@meyering.net>
 
 	* fr.po: Correct typo in the french rendition of date's --help output:
