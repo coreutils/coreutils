@@ -27,13 +27,13 @@
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
-#else
-# if !defined __STDC__ || !__STDC__
+#endif
+
+#if !defined __STDC__ || !__STDC__
 /* This is a separate conditional since some stdc systems
    reject `defined (const)'.  */
-#  ifndef const
-#   define const
-#  endif
+# ifndef const
+#  define const
 # endif
 #endif
 
@@ -671,7 +671,9 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 		pfound = p;
 		indfound = option_index;
 	      }
-	    else
+	    else if (pfound->has_arg != p->has_arg
+		     || pfound->flag != p->flag
+		     || pfound->val != p->val)
 	      /* Second or later nonexact match found.  */
 	      ambig = 1;
 	  }
