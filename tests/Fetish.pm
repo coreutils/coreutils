@@ -12,12 +12,12 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.1 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.2 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
-my @Types = qw (IN OUT ERR EXIT);
+my @Types = qw (IN OUT ERR EXIT PRE POST);
 my %Types = map {$_ => 1} @Types;
-my %Zero_one_type = map {$_ => 1} qw (OUT ERR EXIT);
+my %Zero_one_type = map {$_ => 1} qw (OUT ERR EXIT PRE POST);
 my $srcdir = $ENV{srcdir};
 my $Global_count = 1;
 
@@ -127,6 +127,7 @@ sub run_tests ($$$$$)
     {
       my $test_name = shift @$t;
       my $expect = {};
+      my ($pre, $post);
 
       # FIXME: maybe don't reset this.
       $Global_count = 1;
@@ -155,6 +156,12 @@ sub run_tests ($$$$$)
 	  # Make sure there's no more than one of OUT, ERR, EXIT.
 	  die "$program_name: $test_name: more than one $type spec\n"
 	    if $Zero_one_type{$type} and $seen_type{$type}++;
+
+	  if ($type eq 'PRE' or $type eq 'POST')
+	    {
+	      $expect->{$type} = $val;
+	      next;
+	    }
 
 	  if ($type eq 'EXIT')
 	    {
@@ -229,6 +236,7 @@ sub run_tests ($$$$$)
       # in OUT or ERR spec?
 
       warn "$test_name...\n" if $verbose;
+      &{$expect->{PRE}} if $expect->{PRE};
       my %tmp;
       $tmp{OUT} = "$test_name-out";
       $tmp{ERR} = "$test_name-err";
@@ -242,7 +250,7 @@ sub run_tests ($$$$$)
 	  warn "$program_name: test $test_name failed: command failed:\n"
 	    . "  `$cmd_str': $!\n";
 	  $fail = 1;
-	  next;
+	  goto cleanup;
 	}
       $rc >>= 8 if $rc > 0x80;
       if ($expect->{EXIT} != $rc)
@@ -250,7 +258,7 @@ sub run_tests ($$$$$)
 	  warn "$program_name: test $test_name failed: exit status mismatch:"
 	    . "  expected $expect->{EXIT}, got $rc\n";
 	  $fail = 1;
-	  next;
+	  goto cleanup;
 	}
 
       foreach $eo (qw (OUT ERR))
@@ -263,6 +271,10 @@ sub run_tests ($$$$$)
 	      $fail = 1;
 	    }
 	}
+
+    cleanup:
+      &{$expect->{POST}} if $expect->{POST};
+
     }
 
   # FIXME: maybe unlink files inside the big foreach loop?
