@@ -1,6 +1,22 @@
-2001-10-06  Jim Meyering  <meyering@lucent.com>
+2001-10-07  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.1.
+
+	Allow cp -a (and mv when it resorts to copying) to preserve
+	hard links that span command line arguments.
+
+	* src/cp.c (do_copy): Don't clear the hash table after processing
+	each command line argument.
+	* tests/cp/link-preserve: New test for the above.
+	* tests/cp/Makefile.am (TESTS): Add link-preserve.
+
+	* src/cp-hash.c (remember_copied): Make a local copy of the file name.
+	(src_to_dest_free): New function (to free the above).
+	(hash_init): Register src_to_dest_free.
+	* src/copy.c (copy_dir): Now that remember_copied copies the
+	file name, free the temporary `dst_path' allocated here.
+
+2001-10-06  Jim Meyering  <meyering@lucent.com>
 
 	Convert du.c to use the functions in lib/hash.c, not private,
 	slightly-modified copies of those that used to be in cp-hash.c.
