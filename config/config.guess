@@ -3,7 +3,7 @@
 #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
 #   2000, 2001, 2002, 2003 Free Software Foundation, Inc.
 
-timestamp='2003-10-16'
+timestamp='2003-10-20'
 
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
@@ -997,6 +997,9 @@ EOF
     i*86:atheos:*:*)
 	echo ${UNAME_MACHINE}-unknown-atheos
 	exit 0 ;;
+	i*86:syllable:*:*)
+	echo ${UNAME_MACHINE}-pc-syllable
+	exit 0 ;;
     i*86:LynxOS:2.*:* | i*86:LynxOS:3.[01]*:* | i*86:LynxOS:4.0*:*)
 	echo i386-unknown-lynxos${UNAME_RELEASE}
 	exit 0 ;;
@@ -1226,6 +1229,9 @@ EOF
 	exit 0 ;;
     SEI:*:*:SEIUX)
         echo mips-sei-seiux${UNAME_RELEASE}
+	exit 0 ;;
+    *:DRAGONFLY:*:*)
+	echo ${UNAME_MACHINE}-unknown-dragonfly${UNAME_RELEASE}
 	exit 0 ;;
 esac
 
