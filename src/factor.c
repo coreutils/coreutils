@@ -19,27 +19,7 @@
 
 #include <stdio.h>
 
-void do_stdin ();
-void factor ();
-
-void
-main (argc, argv)
-     int argc;
-     char **argv;
-{
-  if (argc == 1)
-    do_stdin ();
-  else if (argc == 2)
-    factor ((unsigned) atoi (argv[1]));
-  else
-    {
-      fprintf (stderr, "Usage: %s [number]\n", argv[0]);
-      exit (1);
-    }
-  exit (0);
-}
-
-void
+static void
 factor (n0)
      unsigned long n0;
 {
@@ -64,23 +44,42 @@ factor (n0)
     {
       while (n % d == 0)
 	{
-	  printf ("\t%d\n", d);
+	  printf ("\t%ld\n", d);
 	  n /= d;
 	}
     }
   if (n != 1 || n0 == 1)
-    printf ("\t%d\n", n);
+    printf ("\t%ld\n", n);
 }
 
-void
+static void
 do_stdin ()
 {
   char buf[1000];
 
   for (;;)
     {
+      /* FIXME: Use getline.  */
       if (fgets (buf, sizeof buf, stdin) == 0)
 	exit (0);
+      /* FIXME: Use strtoul.  */
       factor ((unsigned long) atoi (buf));
     }
+}
+
+void
+main (argc, argv)
+     int argc;
+     char **argv;
+{
+  if (argc == 1)
+    do_stdin ();
+  else if (argc == 2)
+    factor ((unsigned) atoi (argv[1]));
+  else
+    {
+      fprintf (stderr, "Usage: %s [number]\n", argv[0]);
+      exit (1);
+    }
+  exit (0);
 }
