@@ -128,8 +128,8 @@ print_human_type (mode_t mode)
   fputs (type, stdout);
 }
 
-static void
-print_human_fstype (struct statfs const *statfsbuf)
+static char *
+human_fstype (struct statfs const *statfsbuf)
 {
   char const *type;
 
@@ -312,9 +312,14 @@ print_human_fstype (struct statfs const *statfsbuf)
     }
 
   if (type)
-    fputs (type, stdout);
-  else
-    printf ("UNKNOWN (0x%x)\n", statfsbuf->f_type);
+    return (char *) type;
+
+  {
+    static char buf[sizeof "UNKNOWN (0x%x)" - 2
+		    + 2 * sizeof (statfsbuf->f_type)];
+    sprintf (buf, "UNKNOWN (0x%x)", statfsbuf->f_type);
+    return buf;
+  }
 }
 
 static void
@@ -376,8 +381,8 @@ print_statfs (char *pformat, char m, char const *filename,
       printf (pformat, (long int) (statfsbuf->f_type));
       break;
     case 'T':
-/*	    print_human_fstype(statfsbuf, pformat);*/
-      print_human_fstype (statfsbuf);
+      strcat (pformat, "s");
+      printf (pformat, human_fstype (statfsbuf));
       break;
     case 'b':
       strcat (pformat, PRIdMAX);
