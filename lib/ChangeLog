@@ -1,3 +1,12 @@
+2004-03-28  Paul Eggert  <eggert@twinsun.com>
+
+	Fix some gotchas encountered when porting to Solaris 8, using
+	the Forte 6u2 compiler.
+
+	* canonicalize.c [HAVE_UNISTD_H]: Include <unistd.h>,
+	for resolvepath declaration.
+	* fts.c: Include dirfd.h, for dirfd.
+
 2004-02-25  Paul Eggert  <eggert@twinsun.com>
 
 	* human.c (humblock): Support BLOCKSIZE as well as BLOCK_SIZE.
