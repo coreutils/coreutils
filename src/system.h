@@ -766,3 +766,43 @@ enum
 			  ? fseek (s, o, w)		\
 			  : (errno = EOVERFLOW, -1))
 #endif
+
+/* Compute the greatest common divisor of U and V using Euclid's
+   algorithm.  U and V must be nonzero.  */
+
+static inline size_t
+gcd (size_t u, size_t v)
+{
+  do
+    {
+      size_t t = u % v;
+      u = v;
+      v = t;
+    }
+  while (v);
+
+  return u;
+}
+
+/* Compute the least common multiple of U and V.  U and V must be
+   nonzero.  There is no overflow checking, so callers should not
+   specify outlandish sizes.  */
+
+static inline size_t
+lcm (size_t u, size_t v)
+{
+  return u * (v / gcd (u, v));
+}
+
+/* Return PTR, aligned upward to the next multiple of ALIGNMENT.
+   ALIGNMENT must be nonzero.  The caller must arrange for ((char *)
+   PTR) through ((char *) PTR + ALIGNMENT - 1) to be addressable
+   locations.  */
+
+static inline void *
+ptr_align (void *ptr, size_t alignment)
+{
+  char *p0 = ptr;
+  char *p1 = p0 + alignment - 1;
+  return p1 - (uintptr_t) p1 % alignment;
+}
