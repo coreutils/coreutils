@@ -1731,9 +1731,9 @@
 
 1997-10-16  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* src/sort.c (look_for_fraction): Patch from Orn Hansen.
+	* src/sort.c (look_for_fraction): Patch from Ørn Hansen.
 	(getmonth): Compare the two month names only to the length of the
-	string in the month table.  Patch from Orn Hansen.
+	string in the month table.  Patch from Ørn Hansen.
 	(NLS_STRNCMP): New macro.
 	(strncoll_s2_readonly): New function.
 	(inittables): Don't use temporary `comp' to hide type of
