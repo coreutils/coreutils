@@ -1,5 +1,8 @@
 2003-01-03  Jim Meyering  <jim@meyering.net>
 
+	* src/true.c: Add copyright.
+	(AUTHORS): I suppose I've written it.
+
 	* src/Makefile.am (false.c): Make the generated file be read-only.
 
 2003-01-04  Jim Meyering  <meyering@lucent.com>
