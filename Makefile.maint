@@ -78,15 +78,16 @@ my-distcheck: writable-files po-check
 	echo "$(distdir).tar.gz is ready for distribution"; \
 	echo "========================"
 
-a_host = alpha.gnu.org
+a_host = fencepost.gnu.org
 b_host = freefriends.org
 
 alpha_subdir = gnu/fetish
 a_url_dir = $(alpha_subdir)
 b_url_dir = $(alpha_subdir)
 
-a_real_dir = /fs/share/ftp/$(alpha_subdir)
-b_real_dir = fetish-ftp
+# This must be the same name on both hosts.
+# Make it a symlink that points to the right place.
+real_dir = fetish-ftp
 
 url_dir_list = $(foreach x,a b,ftp://$($(x)_host)/$($(x)_url_dir))
 
@@ -172,8 +173,9 @@ alpha: writable-files po-check
 	cvs ci -m. $(prev_version_file)
 	@echo =====================================
 	@echo =====================================
-	@echo 'rsync -e ssh --pro -av $(xd-delta) $(distdir).tar.gz \'
-	@echo '  $(b_host):$(b_real_dir)'
+	@echo 'for host in $(a_host) $(b_host); do \'
+	@echo '  rsync -e ssh --pro -av $(xd-delta) $(distdir).tar.gz \'
+	@echo '    $(b_host):$(b_real_dir); done'
 	@echo '# send the /tmp/announcement e-mail'
 	@echo =====================================
 	@echo =====================================
