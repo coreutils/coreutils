@@ -85,6 +85,7 @@
 #include <stdio.h>
 #include <setjmp.h>
 #include <signal.h>
+#include <sys/types.h>
 
 #if HAVE_CONFIG_H
 /* Default fileutils build */
