@@ -2,6 +2,34 @@
 
 	* Version 4.5.5.
 
+	* README: Add readlink.
+
+2002-08-27  Dmitry V. Levin  <ldv@altlinux.org>
+
+	New program: readlink.
+
+	* src/Makefile.am (bin_PROGRAMS): Add readlink.
+	* src/readlink.c: New file.
+
+	* man/Makefile.am: Add readlink.
+	* man/readlink.x: New file.
+
+2003-01-09  Jim Meyering  <jim@meyering.net>
+
+	When selecting ranges of byte offsets (as opposed to ranges of fields)
+	and when --output-delimiter=STRING is specified, output STRING between
+	ranges of selected bytes.
+	* src/cut.c (RANGE_START_SENTINEL): Define.
+	(output_delimiter_specified): New global.
+	(print_kth): Add parameter.  Adjust all callers.
+	(set_fields): Mark each range-start index with RANGE_START_SENTINEL.
+	(cut_bytes): When requested, output STRING between ranges of
+	selected bytes.
+	(main): Make a diagnostic a little clearer.
+	Based on a patch from Jan Nieuwenhuizen.
+
+	* tests/cut/Test.pm: New tests for the above.
+
 	* src/cut.c (set_fields): Make code agree with comment:
 	Don't merge abutting ranges like 4- and 2-3.  This makes no
 	difference currently, but is required to support an upcoming change.
