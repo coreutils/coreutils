@@ -106,7 +106,7 @@ alpha:
 	chmod a-w $(distdir).tar.gz
 	@echo =====================================
 	@for url in $(real_dir_list); do \
-	  echo "ncftp -u $$url"; \
+	  echo "ncftp -u $$url/"; \
 	done
 	@echo '#   put $(distdir).tar.gz'
 	@echo '# send the /tmp/announcement e-mail'
