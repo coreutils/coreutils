@@ -1372,6 +1372,9 @@
 /* Define to `int' if <sys/types.h> doesn't define. */
 #undef gid_t
 
+/* Define to rpl_gmtime if the replacement function should be used. */
+#undef gmtime
+
 /* Define as `__inline' if that's what the C compiler calls it, or to nothing
    if it is not supported. */
 #undef inline

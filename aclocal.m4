@@ -3561,9 +3561,14 @@ main ()
     [Define to 1 if you have run the test for working tzset.])
 
   if test $gl_cv_func_tzset_clobber = yes; then
+    # Caution: the following few lines should be the same
+    # as those in gettimeofday.m4.
     AC_LIBOBJ(gettimeofday)
+    AC_DEFINE(gmtime, rpl_gmtime,
+      [Define to rpl_gmtime if the replacement function should be used.])
     AC_DEFINE(localtime, rpl_localtime,
       [Define to rpl_localtime if the replacement function should be used.])
+
     AC_DEFINE(tzset, rpl_tzset,
       [Define to rpl_tzset if the wrapper function should be used.])
     AC_DEFINE(TZSET_CLOBBERS_LOCALTIME_BUFFER, 1,
@@ -3913,9 +3918,14 @@ main ()
 	 jm_cv_func_gettimeofday_clobber=yes)
   ])
   if test $jm_cv_func_gettimeofday_clobber = yes; then
+    # Caution: the following few lines should be the same
+    # as those in gettimeofday.m4.
     AC_LIBOBJ(gettimeofday)
+    AC_DEFINE(gmtime, rpl_gmtime,
+      [Define to rpl_gmtime if the replacement function should be used.])
     AC_DEFINE(localtime, rpl_localtime,
       [Define to rpl_localtime if the replacement function should be used.])
+
     AC_DEFINE(gettimeofday, rpl_gettimeofday,
       [Define to rpl_gettimeofday if the replacement function should be used.])
     AC_DEFINE(GETTIMEOFDAY_CLOBBERS_LOCALTIME_BUFFER, 1,
