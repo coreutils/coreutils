@@ -1,4 +1,5 @@
 [4.5.3]
+* `ln --target-dir=DIR' no longer fails when given a single argument
 [4.5.2]
 * `rm -i dir' (without --recursive (-r)) no longer recurses into dir
 * `tail -c N FILE' now works with files of size >= 4GB
