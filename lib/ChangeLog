@@ -436,7 +436,7 @@
 2003-03-17  Jim Meyering  <jim@meyering.net>
 
 	* raise.c (raise): Rename from rpl_raise.
-	Without that change, systems lacking raise (SunOS4) would not be
+	Without that change, systems lacking raise (SunOS 4) would not be
 	able to link programs using raise.  Reported by Volker Borchert.
 
 	* ftw.c (FTW_STAT): Rename from `STAT', to avoid conflict
@@ -531,7 +531,7 @@
 	* save-cwd.h (restore_cwd): Update prototype.
 	* save-cwd.c (restore_cwd): Remove two parameters.
 	Simplify.  Don't call error upon failure.  Let callers do that.
-	(save_cwd): Mention that Irix 5.3 has the same problem as SunOS4
+	(save_cwd): Mention that Irix 5.3 has the same problem as SunOS 4
 	when auditing is enabled.  But don't bother updating the #if.
 
 	* xgetcwd.c (xgetcwd): Improve comment.
@@ -1331,7 +1331,7 @@
 2002-06-22  Jim Meyering  <jim@meyering.net>
 
 	* fnmatch.c (ISASCII, ISPRINT): Undefine, to avoid warning about
-	redefinition due to Solaris5.6's definition in /usr/include/sys/euc.h.
+	redefinition due to Solaris 2.6's definition in /usr/include/sys/euc.h.
 
 2002-06-22  Paul Eggert  <eggert@twinsun.com>
 
@@ -1672,7 +1672,7 @@
 2001-11-18  Jim Meyering  <jim@meyering.net>
 
 	* tempname.c [!HAVE_DECL_GETENV]: Declare getenv to avoid warning
-	on SunOS4.
+	on SunOS 4.
 
 	* Makefile.am (Makefile): Depend on $(BUILT_SOURCES), so those
 	files will be created before anything else.
@@ -1903,7 +1903,7 @@
 	* Makefile.am (libfetish_a_SOURCES): Add xreadlink.c and xreadlink.h.
 
 	* regex.c (uintptr_t) [!_LIBC]: Define to private_uintptr_t, so it
-	doesn't conflict with sparc-sun-solaris2.7's definition in
+	doesn't conflict with sparc Solaris 7's definition in
 	/usr/include/sys/int_types.h.
 
 	* exclude.c: Use `""', not `<>' to #include non-system header files.
@@ -2372,7 +2372,7 @@
 
 2001-01-16  Jim Meyering  <jim@meyering.net>
 
-	* basename.c: Include <stdio.h>, needed by assert on SunOS4.
+	* basename.c: Include <stdio.h>, needed by assert on SunOS 4.
 	From Bruno Haible.
 
 2001-01-14  Jim Meyering  <jim@meyering.net>
@@ -2924,7 +2924,7 @@
 
 2000-07-05  Bruno Haible  <haible@clisp.cons.org>
 
-	* xgethostname.c (xgethostname): Protect against the SunOS5.5 bug
+	* xgethostname.c (xgethostname): Protect against the SunOS 5.5 bug
 	by allocating a larger buffer. Test the gethostname return value for
 	being >= 0, not == 0, for BeOS.  Don't exhaust memory if gethostname
 	returns an error and ENAMETOOLONG isn't defined.
@@ -3119,7 +3119,7 @@
 2000-06-04  Jim Meyering  <jim@meyering.net>
 
 	* getugroups.c (getugroups): Cast -1 to gid_t, for systems like
-	SunOS4.1.4 for which gid_t is an unsigned type.
+	SunOS 4.1.4 for which gid_t is an unsigned type.
 
 2000-06-03  Jim Meyering  <jim@meyering.net>
 
@@ -3492,7 +3492,7 @@
 	Reported by Christian Krackowizer.
 
 	* quotearg.c (ISASCII): Add #undef and move definition to follow
-	inclusion of wctype.h to work around solaris2.6 namespace pollution.
+	inclusion of wctype.h to work around Solaris 2.6 namespace pollution.
 	(ISPRINT): Likewise.
 	Reported by Tom Tromey.
 
