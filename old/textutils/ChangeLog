@@ -1,3 +1,22 @@
+Sat Nov 11 08:20:40 1995  Jim Meyering  (meyering@comco.com)
+
+	* cat.c (main): Don't die when dev/ino of input and output are
+	the same and the file descriptors correspond to stdin and stdout.
+	This is necessary on at least Digital UNIX (aka OSF1) 3.2C.
+	Otherwise, running `cat << X > $$' would fail with `cat: -: input
+	file is output file'.  From Jarkko Hietaniemi <jhi@epsilon.hut.fi>.
+
+	* Makefile.in (DISTFILES): Add @README_ALPHA@.
+	(config.status) Depend on .version.
+	* configure.in: Set README_ALPHA if the version number ends in [a-z].
+
+Fri Nov 10 21:13:42 1995  Jim Meyering  (meyering@comco.com)
+
+	* fold.c (usage): Clarify meaning of --spaces.  From Karl Berry.
+
+	src/Makefile.in (.c._c): Don't redirect directly to $@.
+	(._c._o, .c._o): Remove temporary src file.
+
 Tue Nov  7 23:55:24 1995  Jim Meyering  (meyering@comco.com)
 
 	* .version: New file.
@@ -8,6 +27,8 @@ Tue Nov  7 23:55:24 1995  Jim Meyering  (meyering@comco.com)
 	(distdir): Use @PACKAGE@-@VERSION@, not distname.
 	Remove all references to distname.
 	* src/Makefile.in (version.c): Generate it.
+	(SOURCES): Remove now-generated version.c.
+	(distclean): Delete version.c.
 	* doc/Makefile.in (version.texi): Use @PACKAGE@-@VERSION@,
 	not version.c
 
