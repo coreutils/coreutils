@@ -1,3 +1,10 @@
+2000-08-11  J. David Anglin  <dave@hiauly1.hia.nrc.ca>
+
+	Improve fileutils installation on systems where running
+	programs (like install) can't be unlinked.
+	* unlink-busy.m4 (jm_FUNC_UNLINK_BUSY_TEXT): New file/macro.
+	* jm-macros.m4: Use jm_FUNC_UNLINK_BUSY_TEXT.
+
 2000-08-06  Paul Eggert  <eggert@twinsun.com>
 
 	* m4/mbstate_t.m4 (AC_MBSTATE_T): Define mbstate_t to be int,
