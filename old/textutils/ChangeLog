@@ -1,3 +1,7 @@
+2000-11-06  Paul Eggert  <eggert@twinsun.com>
+
+	* src/od.c (skip): st_size is not defined for directories.
+
 2000-11-03  Jim Meyering  <meyering@lucent.com>
 
 	* tests/sha1sum/sample-vec: New file, with tests derived from
