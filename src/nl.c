@@ -27,11 +27,7 @@
 #include "linebuffer.h"
 #include "system.h"
 
-#if WITH_REGEX
-# include <regex.h>
-#else
-# include <rx.h>
-#endif
+#include <regex.h>
 
 #include "error.h"
 #include "xstrtol.h"

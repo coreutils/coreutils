@@ -42,11 +42,7 @@ tac -r -s '.\|
 #include <sys/types.h>
 #include "system.h"
 
-#if WITH_REGEX
-# include <regex.h>
-#else
-# include <rx.h>
-#endif
+#include <regex.h>
 
 #include "error.h"
 #include "safe-read.h"
