@@ -1,5 +1,6 @@
 Changes in release 2.1
 [2.0d]
+* preliminary sort performance improvements
 * tsort now works more like the traditional UNIX tsort.  Before it would
   exit when it found a loop.  Now it continues and outputs all items.
 * unexpand no longer infloops on certain sequences of white space
