@@ -31,6 +31,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "argmatch.h"
 #include "xstrtoul.h"
 #include "error.h"
 #include "safe-read.h"
@@ -51,13 +52,30 @@
 # define BUFSIZ (512 * 8)
 #endif
 
+/* FIXME: make Follow_name the default?  */
+#define DEFAULT_FOLLOW_MODE Follow_descriptor
+
 enum Follow_mode
 {
-  /* FIXME: describe */
-  follow_name,
+  /* Follow the name of each file: if the file is renamed, try to reopen
+     that name and track the end of the new file if/when it's recreated.
+     This is useful for tracking logs that are occasionally rotated.  */
+  Follow_name = 1,
 
-  /* FIXME: describe */
-  follow_descriptor,
+  /* Follow each descriptor obtained upon opening a file.
+     That means we'll continue to follow the end of a file even after
+     it has been renamed or unlinked.  */
+  Follow_descriptor = 2,
+};
+
+static char const *const follow_mode_string[] =
+{
+  "descriptor", "name", 0
+};
+
+static enum Follow_mode const follow_mode_map[] =
+{
+  Follow_descriptor, Follow_name,
 };
 
 struct File_spec
@@ -82,6 +100,9 @@ struct File_spec
   unsigned int n_unchanged_stats;
 
   /* FIXME: describe */
+  unsigned int n_consecutive_size_changes;
+
+  /* FIXME: describe */
   int missing;
 };
 
@@ -94,8 +115,7 @@ static int count_lines;
 
 /* Whether we follow the name of each file or the file descriptor
    that is initially associated with each name.  */
-/* FIXME: make follow_name the default? */
-static enum Follow_mode follow_mode;
+static enum Follow_mode follow_mode = Follow_descriptor;
 
 /* If nonzero, read from the ends of all specified files until killed.  */
 static int forever;
@@ -113,7 +133,10 @@ enum header_mode
 };
 
 /* FIXME: describe -- add option */
-static unsigned long max_n_unchanged_stats = 5;
+static unsigned long max_n_unchanged_stats_between_opens = 5;
+
+/* FIXME: describe -- add option */
+static unsigned long max_n_consecutive_size_changes = 200;
 
 /* The name this program was run with.  */
 char *program_name;
@@ -132,11 +155,9 @@ static int show_version;
 
 static struct option const long_options[] =
 {
-  {"allow-missing", required_argument, NULL, CHAR_MAX + 1},
+  {"allow-missing", no_argument, NULL, CHAR_MAX + 1},
   {"bytes", required_argument, NULL, 'c'},
-  {"follow", no_argument, NULL, 'f'},
-  {"follow-descriptor", no_argument, NULL, CHAR_MAX + 2},
-  {"follow-name", no_argument, NULL, CHAR_MAX + 3},
+  {"follow", optional_argument, NULL, 'f'},
   {"lines", required_argument, NULL, 'n'},
   {"quiet", no_argument, NULL, 'q'},
   {"silent", no_argument, NULL, 'q'},
@@ -164,8 +185,9 @@ Print last 10 lines of each FILE to standard output.\n\
 With more than one FILE, precede each with a header giving the file name.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
+      --allow-missing      FIXME\n\
   -c, --bytes=N            output the last N bytes\n\
-  -f, --follow             output appended data as the file grows\n\
+  -f, --follow[={name|descriptor}] output appended data as the file grows\n\
   -n, --lines=N            output the last N lines, instead of last 10\n\
   -q, --quiet, --silent    never output headers giving file names\n\
   -s, --sleep-interval=S   with -f, sleep S seconds between iterations\n\
@@ -180,6 +202,7 @@ b for 512, k for 1024, m for 1048576 (1 Meg).  A first OPTION of -VALUE\n\
 or +VALUE is treated like -n VALUE or -n +VALUE unless VALUE has one of\n\
 the [bkm] suffix multipliers, in which case it is treated like -c VALUE\n\
 or -c +VALUE.\n\
+FIXME: describe name vs descriptor\n\
 "));
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
@@ -563,7 +586,7 @@ start_lines (const char *pretty_filename, int fd, long int n_lines)
   return 0;
 }
 
-/* Display file FILENAME from the current position in FD to the end.
+/* Display file PRETTY_FILENAME from the current position in FD to the end.
    Return the number of bytes read from the file.  */
 
 static long
@@ -593,12 +616,12 @@ dump_remainder (const char *pretty_filename, int fd)
 static void
 recheck (struct File_spec *f)
 {
-  /* open/fstat the file and announce if dev/ino
-     have changed */
+  /* open/fstat the file and announce if dev/ino have changed */
   struct stat new_stats;
   int fd;
   int fail = 0;
   int is_stdin = (STREQ (f->name, "-"));
+  int was_missing = f->missing;
 
   fd = (is_stdin ? STDIN_FILENO : open (f->name, O_RDONLY));
 
@@ -609,14 +632,26 @@ recheck (struct File_spec *f)
   if (fd == -1 || fstat (fd, &new_stats) < 0)
     {
       fail = 1;
-      error (0, errno, "%s", pretty_name (f));
+      if (f->missing)
+	{
+	  if (!was_missing)
+	    error (0, 0, "`%s' has been removed", pretty_name (f));
+	  else
+	    {
+	      /* say nothing... it's still missing */
+	    }
+	}
+      else
+	{
+	  error (0, errno, "%s", pretty_name (f));
+	}
     }
   else if (!S_ISREG (new_stats.st_mode)
 	   && !S_ISFIFO (new_stats.st_mode))
     {
       fail = 1;
       error (0, 0,
-	     _("%s has been replaced with a non-regular file;  \
+	     _("`%s' has been replaced with a non-regular file;  \
 cannot follow end of non-regular file"),
 	     pretty_name (f));
     }
@@ -629,26 +664,36 @@ cannot follow end of non-regular file"),
     }
   else if (f->ino != new_stats.st_ino || f->dev != new_stats.st_dev)
     {
-      /* Close the old one.  */
-      close_fd (f->fd, pretty_name (f));
+      if (f->fd == -1)
+	{
+	  error (0, 0,
+		 _("`%s' has appeared;  following end of new file"),
+		 pretty_name (f));
+	}
+      else
+	{
+	  /* Close the old one.  */
+	  close_fd (f->fd, pretty_name (f));
 
-      /* File has been replaced (e.g., via log rotation) --
-         tail the new one.  */
-      error (0, 0,
-	     _("%s has been replaced;  following end of new file"),
-	     pretty_name (f));
+	  /* File has been replaced (e.g., via log rotation) --
+	     tail the new one.  */
+	  error (0, 0,
+		 _("`%s' has been replaced;  following end of new file"),
+		 pretty_name (f));
+	}
 
       f->fd = fd;
       f->size = new_stats.st_size;
       f->dev = new_stats.st_dev;
       f->ino = new_stats.st_ino;
       f->n_unchanged_stats = 0;
+      f->n_consecutive_size_changes = 0;
       /* FIXME: check lseek return value  */
       lseek (f->fd, new_stats.st_size, SEEK_SET);
     }
   else if (f->missing)
     {
-      error (0, 0, _("%s has reappeared"), pretty_name (f));
+      error (0, 0, _("`%s' has reappeared"), pretty_name (f));
       f->missing = 0;
 
       f->fd = fd;
@@ -656,6 +701,7 @@ cannot follow end of non-regular file"),
       f->dev = new_stats.st_dev;
       f->ino = new_stats.st_ino;
       f->n_unchanged_stats = 0;
+      f->n_consecutive_size_changes = 0;
       /* FIXME: check lseek return value  */
       lseek (f->fd, new_stats.st_size, SEEK_SET);
     }
@@ -663,6 +709,22 @@ cannot follow end of non-regular file"),
     {
       close_fd (fd, pretty_name (f));
     }
+}
+
+/* FIXME: describe */
+
+static unsigned int
+n_live_files (const struct File_spec *f, int n_files)
+{
+  int i;
+  unsigned int n_live = 0;
+
+  for (i = 0; i < n_files; i++)
+    {
+      if (f[i].fd >= 0)
+	++n_live;
+    }
+  return n_live;
 }
 
 /* Tail NFILES files forever, or until killed.
@@ -683,18 +745,18 @@ tail_forever (struct File_spec *f, int nfiles)
     {
       int i;
       int any_changed;
-      int any_live_files;
 
-      any_live_files = 0;
       any_changed = 0;
       for (i = 0; i < nfiles; i++)
 	{
 	  struct stat stats;
 
-	  if (f[i].fd < 0 && !f[i].missing)
-	    continue;
-
-	  any_live_files = 1;
+	  if (f[i].fd < 0)
+	    {
+	      if (f[i].missing)
+		recheck (&f[i]);
+	      continue;
+	    }
 
 	  if (fstat (f[i].fd, &stats) < 0)
 	    {
@@ -705,8 +767,9 @@ tail_forever (struct File_spec *f, int nfiles)
 
 	  if (stats.st_size == f[i].size)
 	    {
-	      if (++f[i].n_unchanged_stats > max_n_unchanged_stats
-		  && follow_mode == follow_name)
+	      f[i].n_consecutive_size_changes = 0;
+	      if (++f[i].n_unchanged_stats > max_n_unchanged_stats_between_opens
+		  && follow_mode == Follow_name)
 		{
 		  recheck (&f[i]);
 		  f[i].n_unchanged_stats = 0;
@@ -715,9 +778,18 @@ tail_forever (struct File_spec *f, int nfiles)
 	      continue;
 	    }
 
-	  /* FIXME-now:
-	     Otherwise, a file that's unlinked or moved aside, yet always
-	     growing will never be recognized has having been renamed.  */
+	  /* Size changed.  */
+	  ++f[i].n_consecutive_size_changes;
+
+	  /* Ensure that a file that's unlinked or moved aside, yet always
+	     growing will be recognized has having been renamed.  */
+	  if (follow_mode == Follow_name
+	      && (f[i].n_consecutive_size_changes
+		  > max_n_consecutive_size_changes))
+	    {
+	      f[i].n_consecutive_size_changes = 0;
+	      recheck (&f[i]);
+	    }
 
 	  /* This file has changed size.  Print out what we can, and
 	     then keep looping.  */
@@ -746,7 +818,7 @@ tail_forever (struct File_spec *f, int nfiles)
 	  f[i].size += dump_remainder (pretty_name (&f[i]), f[i].fd);
 	}
 
-      if (!any_live_files /* FIXME-now: && ! allow_missing */ )
+      if (n_live_files (f, nfiles) == 0 && ! allow_missing)
 	{
 	  error (0, 0, _("no files remaining"));
 	  break;
@@ -951,6 +1023,7 @@ tail_file (struct File_spec *f, off_t n_units)
 	      f->dev = stats.st_dev;
 	      f->ino = stats.st_ino;
 	      f->n_unchanged_stats = 0;
+	      f->n_consecutive_size_changes = 0;
 	    }
 	}
       else
@@ -1127,7 +1200,8 @@ parse_options (int argc, char **argv,
   count_lines = 1;
   forever = from_start = print_headers = 0;
 
-  while ((c = getopt_long (argc, argv, "c:n:fqs:v", long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "c:n:f::qs:v", long_options, NULL))
+	 != -1)
     {
       switch (c)
 	{
@@ -1166,18 +1240,22 @@ parse_options (int argc, char **argv,
 
 	case 'f':
 	  forever = 1;
+	  if (optarg == NULL)
+	    follow_mode = DEFAULT_FOLLOW_MODE;
+	  else
+	    {
+	      int i = argmatch (optarg, follow_mode_string);
+	      if (i < 0)
+		{
+		  invalid_arg (_("follow mode"), optarg, i);
+		  usage (1);
+		}
+	      follow_mode = follow_mode_map[i];
+	    }
 	  break;
 
 	case CHAR_MAX + 1:
 	  allow_missing = 1;
-	  break;
-
-	case CHAR_MAX + 2:
-	  follow_mode = follow_descriptor;
-	  break;
-
-	case CHAR_MAX + 3:
-	  follow_mode = follow_name;
 	  break;
 
 	case 'q':
