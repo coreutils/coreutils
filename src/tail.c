@@ -1,4 +1,4 @@
-/* tail -- output last part of file(s)
+/* tail -- output the last part of file(s)
    Copyright (C) 1989, 1990, 1991 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -26,7 +26,6 @@
    -f, --follow		Loop forever trying to read more characters at the
 			end of the file, on the assumption that the file
 			is growing.  Ignored if reading from a pipe.
-			Cannot be used if more than one file is given.
    -k			Tail by N kilobytes.
    -N, -l, -n, --lines=N	Tail by N lines.
    -m			Tail by N megabytes.
@@ -43,12 +42,14 @@
    By default, prints the last 10 lines (tail -n 10).
 
    Original version by Paul Rubin <phr@ocf.berkeley.edu>.
-   Extensions by David MacKenzie <djm@ai.mit.edu>. */
+   Extensions by David MacKenzie <djm@gnu.ai.mit.edu>.
+   tail -f for multiple files by Ian Lance Taylor <ian@cygnus.com>.  */
 
 #include <stdio.h>
 #include <getopt.h>
 #include <ctype.h>
 #include <sys/types.h>
+#include <signal.h>
 #include "system.h"
 
 #ifdef isascii
@@ -67,8 +68,14 @@
    If 0, tail in lines. */
 static int unit_size;
 
-/* If nonzero, read from end of file until killed. */
+/* If nonzero, read from the end of one file until killed. */
 static int forever;
+
+/* If nonzero, read from the end of multiple files until killed.  */
+static int forever_multiple;
+
+/* Array of file descriptors if forever_multiple is 1.  */
+static int *file_descs;
 
 /* If nonzero, count from start of file instead of end. */
 static int from_start;
@@ -97,6 +104,7 @@ static int tail_file ();
 static int tail_lines ();
 static long atou();
 static void dump_remainder ();
+static void tail_forever ();
 static void parse_unit ();
 static void usage ();
 static void write_header ();
@@ -130,11 +138,12 @@ main (argc, argv)
      means the value has not been set. */
   long number = -1;
   int c;			/* Option character. */
+  int fileind;			/* Index in ARGV of first file name.  */
 
   program_name = argv[0];
   have_read_stdin = 0;
   unit_size = 0;
-  forever = from_start = print_headers = 0;
+  forever = forever_multiple = from_start = print_headers = 0;
 
   if (argc > 1
       && ((argv[1][0] == '-' && ISDIGIT (argv[1][1]))
@@ -254,18 +263,27 @@ main (argc, argv)
   if (unit_size > 1)
     number *= unit_size;
 
+  fileind = optind;
+
   if (optind < argc - 1 && forever)
-    error (1, 0, "cannot follow the ends of multiple files");
+    {
+      forever_multiple = 1;
+      forever = 0;
+      file_descs = (int *) xmalloc ((argc - optind) * sizeof (int));
+    }
 
   if (header_mode == always
       || (header_mode == multiple_files && optind < argc - 1))
     print_headers = 1;
 
   if (optind == argc)
-    exit_status |= tail_file ("-", number);
+    exit_status |= tail_file ("-", number, 0);
 
   for (; optind < argc; ++optind)
-    exit_status |= tail_file (argv[optind], number);
+    exit_status |= tail_file (argv[optind], number, optind - fileind);
+
+  if (forever_multiple)
+    tail_forever (argv + fileind, argc - fileind);
 
   if (have_read_stdin && close (0) < 0)
     error (1, errno, "-");
@@ -276,14 +294,16 @@ main (argc, argv)
 
 /* Display the last NUMBER units of file FILENAME.
    "-" for FILENAME means the standard input.
+   FILENUM is this file's index in the list of files the user gave.
    Return 0 if successful, 1 if an error occurred. */
 
 static int
-tail_file (filename, number)
+tail_file (filename, number, filenum)
      char *filename;
      long number;
+     int filenum;
 {
-  int fd;
+  int fd, errors;
 
   if (!strcmp (filename, "-"))
     {
@@ -291,24 +311,48 @@ tail_file (filename, number)
       filename = "standard input";
       if (print_headers)
 	write_header (filename);
-      return tail (filename, 0, number);
+      errors = tail (filename, 0, number);
+      if (forever_multiple)
+	file_descs[filenum] = errors ? -1 : 0;
     }
   else
     {
+      /* Not standard input.  */
       fd = open (filename, O_RDONLY);
-      if (fd >= 0)
+      if (fd == -1)
 	{
-	  int errors;
-
+	  if (forever_multiple)
+	    file_descs[filenum] = -1;
+	  error (0, errno, "%s", filename);
+	  errors = 1;
+	}
+      else
+	{
 	  if (print_headers)
 	    write_header (filename);
 	  errors = tail (filename, fd, number);
-	  if (close (fd) == 0)
-	    return errors;
+	  if (forever_multiple)
+	    {
+	      if (errors)
+		{
+		  close (fd);
+		  file_descs[filenum] = -1;
+		}
+	      else
+		file_descs[filenum] = fd;
+	    }
+	  else
+	    {
+	      if (close (fd))
+		{
+		  error (0, errno, "%s", filename);
+		  errors = 1;
+		}
+	    }
 	}
-      error (0, errno, "%s", filename);
-      return 1;
     }
+
+  return errors;
 }
 
 static void
@@ -806,6 +850,161 @@ output:
       sleep (1);
       goto output;
     }
+}
+
+#ifndef SIGUSR1
+#define SIGUSR1 SIGSYS
+#endif
+
+/* To support tail_forever we use a signal handler that just quietly
+   exits.  We are going to fork once for each file; we send a SIGUSR1
+   to kill the children if an error occurs.  */
+
+static RETSIGTYPE
+sigusr1 (sig)
+     int sig;
+{
+  exit (0);
+}
+
+/* Print error message MESSAGE for errno ERRNUM;
+   send SIGUSR1 to the KIDS processes in PIDS;
+   exit with status 1.  */
+
+static void
+kill_kids (errnum, message, pids, kids)
+     int errnum;
+     char *message;
+     int *pids;
+     int kids;
+{
+  int i;
+
+  error (0, errnum, message);
+  for (i = 0; i < kids; i++)
+    kill (pids[i], SIGUSR1);
+  exit (1);
+}
+
+/* The number of bytes that a pipe can hold (atomic read or write).  */
+#ifndef PIPE_BUF
+#define PIPE_BUF 512
+#endif
+
+/* Tail NFILES (>1) files forever until killed.  The file names are in NAMES.
+   The open file descriptors are in `file_descs'.  Fork a process for each
+   file, let all the processes write to a single pipe, and then read
+   the pipe.  */
+/* Should we reap the zombies with wait?  */
+
+static void
+tail_forever (names, nfiles)
+     char **names;
+     int nfiles;
+{
+  int pipe_descs[2];
+  int *pids;
+  int i;
+  char *buffer = xmalloc (PIPE_BUF); /* malloc assures `int' alignment.  */
+  int bytes_read;
+  int ilast;
+
+  if (pipe (pipe_descs) < 0)
+    error (1, errno, "cannot make pipe");
+
+  pids = (int *) xmalloc (nfiles * sizeof (int));
+
+  /* fork once for each file.  If this is too ugly for you, don't use
+     tail -f on multiple files.  Maybe we could use select as an
+     alternative, though it's less portable.  Is it worth the bother?  */
+
+  signal (SIGUSR1, sigusr1);
+
+  for (i = 0; i < nfiles; i++)
+    {
+      if (file_descs[i] == -1)
+	continue;
+      
+      pids[i] = fork ();
+      if (pids[i] == -1)
+	kill_kids (errno, "cannot fork", pids, i);
+      if (pids[i] == 0)
+	{
+	  /* Child.  */
+	  int offset;
+
+	  close (pipe_descs[0]);
+
+	  /* Each child reads continually from a file and writes to
+	     the pipe.  Each write to a pipe is the index of the file
+	     being read, followed by the number of bytes read from the
+	     file, followed by the actual bytes.  Each child is
+	     careful to write no more than PIPE_BUF bytes to the pipe,
+	     so that the data from the various children does not get
+	     intermixed.  */
+
+	  /* The file index for this child is always the same.  */
+	  *(int *) buffer = i;
+
+	  offset = sizeof i + sizeof bytes_read;
+
+	  while (1)
+	    {
+	      while ((bytes_read = read (file_descs[i], buffer + offset,
+					 PIPE_BUF - offset)) > 0)
+		{
+		  *(int *) (buffer + sizeof i) = bytes_read;
+		  if (write (pipe_descs[1], buffer, offset + bytes_read)
+		      != offset + bytes_read)
+		    _exit (0);	/* Somebody killed our parent?  */
+		}
+	      if (bytes_read == -1)
+		{
+		  error (0, errno, "%s", names[i]);
+		  _exit (1);
+		}
+	      sleep (1);
+	    }
+	}
+    }
+
+  /* Parent.  */
+
+  close (pipe_descs[1]);
+
+  /* Wait for input to come in on the pipe.  Read the file index
+     and the number of bytes.  Then read that many bytes and print
+     them out.  Repeat until all the children have closed the pipe.  */
+
+  ilast = -1;
+
+  while ((bytes_read = read (pipe_descs[0], buffer,
+			     sizeof i + sizeof bytes_read)) > 0)
+    {
+      int igot;			/* Index of latest process that wrote.  */
+
+      if (bytes_read != sizeof i + sizeof bytes_read)
+	kill_kids (errno, "read error", pids, nfiles); /* Yikes.  */
+
+      /* Extract the file index and the number of bytes.  */
+      igot = *(int *) buffer;
+      bytes_read = *(int *) (buffer + sizeof i);
+
+      if (print_headers && igot != ilast)
+	write_header (names[igot]);
+      ilast = igot;
+
+      errno = 0;
+      if (read (pipe_descs[0], buffer, bytes_read) != bytes_read)
+	kill_kids (errno, "read error", pids, nfiles);
+      if (write (1, buffer, bytes_read) != bytes_read)
+	kill_kids (errno, "write error", pids, nfiles);
+    }
+	
+  for (i = 0; i < nfiles; i++)
+    kill (pids[i], SIGUSR1);
+
+  free (buffer);
 }
 
 static void

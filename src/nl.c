@@ -16,7 +16,7 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
 /* Written by Scott Bartram (nancy!scott@uunet.uu.net)
-   Revised by David MacKenzie (djm@ai.mit.edu) */
+   Revised by David MacKenzie (djm@gnu.ai.mit.edu) */
 
 #include <stdio.h>
 #include <sys/types.h>

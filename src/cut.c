@@ -20,7 +20,7 @@
    possible.  -David Ihnat (312) 784-4544 ignatz@homebru.chi.il.us
 
    POSIX changes, bug fixes, long-named options, and cleanup
-   by David MacKenzie <djm@ai.mit.edu>.
+   by David MacKenzie <djm@gnu.ai.mit.edu>.
 
    Options:
    --bytes=byte-list
@@ -57,6 +57,7 @@
 
    A FILE of `-' means standard input. */
 
+/* Get isblank from GNU libc.  */
 #define _GNU_SOURCE
 #include <ctype.h>
 #ifndef isblank
@@ -527,7 +528,7 @@ cut_fields (stream)
       if (fieldfound)
 	{
 	  /* Something was found. Print it. */
-	  if (outbufptr[-1] == delim)
+	  if ((unsigned char) outbufptr[-1] == delim)
 	    --outbufptr;	/* Suppress trailing delimiter. */
 
 	  fwrite (outbuf, sizeof (char), outbufptr - outbuf, stdout);

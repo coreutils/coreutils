@@ -31,7 +31,7 @@
    is given.
    By default, prints the first 10 lines (head -n 10).
 
-   David MacKenzie <djm@ai.mit.edu> */
+   David MacKenzie <djm@gnu.ai.mit.edu> */
 
 #include <stdio.h>
 #include <getopt.h>

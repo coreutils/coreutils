@@ -43,7 +43,7 @@ char *alloca ();
 #include <float.h>
 #endif
 
-#ifdef __GNUC__
+#ifdef __STDC__
 typedef long double LONG_DOUBLE;
 #else
 typedef double LONG_DOUBLE;
@@ -541,7 +541,7 @@ print_double (n_bytes, block, fmt_string)
     error (2, errno, "standard output");
 }
 
-#ifdef __GNUC__
+#ifdef __STDC__
 static void
 print_long_double (n_bytes, block, fmt_string)
      long unsigned int n_bytes;
@@ -861,9 +861,10 @@ decode_one_format (s, next, tspec)
 
       switch (size_spec)
 	{
+	  /* Don't use %#e; not all systems support it.  */
 	case FP_SINGLE:
 	  print_function = print_float;
-	  pre_fmt_string = "%%%d.%d#e%%c";
+	  pre_fmt_string = "%%%d.%de%%c";
 	  fmt_string = xmalloc (strlen (pre_fmt_string));
 	  sprintf (fmt_string, pre_fmt_string,
 		   FLT_DIG + 8, FLT_DIG);
@@ -871,16 +872,16 @@ decode_one_format (s, next, tspec)
 
 	case FP_DOUBLE:
 	  print_function = print_double;
-	  pre_fmt_string = "%%%d.%d#e%%c";
+	  pre_fmt_string = "%%%d.%de%%c";
 	  fmt_string = xmalloc (strlen (pre_fmt_string));
 	  sprintf (fmt_string, pre_fmt_string,
 		   DBL_DIG + 8, DBL_DIG);
 	  break;
 
-#ifdef __GNUC__
+#ifdef __STDC__
 	case FP_LONG_DOUBLE:
 	  print_function = print_long_double;
-	  pre_fmt_string = "%%%d.%d#le%%c";
+	  pre_fmt_string = "%%%d.%dle%%c";
 	  fmt_string = xmalloc (strlen (pre_fmt_string));
 	  sprintf (fmt_string, pre_fmt_string,
 		   LDBL_DIG + 8, LDBL_DIG);
@@ -1569,25 +1570,11 @@ main (argc, argv)
 	  /* The next several cases map the old, pre-POSIX format
 	     specification options to the corresponding POSIX format
 	     specs.  GNU od accepts any combination of old- and
-	     new-style options.  If only POSIX format specs are used
-	     and more than one is used, they are accumulated.  If only
-	     old-style options are used, all but the last are ignored.
-	     If both types of specs are used in the same command, the
-	     last old-style option and any POSIX specs following it
-	     are accumulated.  To illustrate, `od -c -t a' is the same
-	     as `od -t ca', but `od -t a -c' is the same as `od -c'.  */
+	     new-style options.  Format specification options accumulate.  */
 
 #define CASE_OLD_ARG(old_char,new_string)				\
 	case old_char:							\
-	  {								\
-	    const char *next;						\
-	    int tmp;							\
-	    assert (n_specs_allocated >= 1);				\
-	    tmp = decode_one_format (new_string, &next, &(spec[0]));	\
-	    n_specs = 1;						\
-	    assert (tmp == 0);						\
-	    assert (*next == '\0');					\
-	  }								\
+	  assert (decode_format_string (new_string) == 0);		\
 	  break
 
 	  CASE_OLD_ARG ('a', "a");

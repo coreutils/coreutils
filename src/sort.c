@@ -16,9 +16,10 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
    Written December 1988 by Mike Haertel.
-   The author may be reached (Email) at the address mike@ai.mit.edu,
+   The author may be reached (Email) at the address mike@gnu.ai.mit.edu,
    or (US mail) as Mike Haertel c/o Free Software Foundation. */
 
+/* Get isblank from GNU libc.  */
 #define _GNU_SOURCE
 #include <ctype.h>
 #ifndef isblank

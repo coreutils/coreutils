@@ -17,6 +17,7 @@
 
    Written by Mike Haertel, mike@gnu.ai.mit.edu. */
 
+/* Get isblank from GNU libc.  */
 #define _GNU_SOURCE
 #include <ctype.h>
 #ifndef isblank

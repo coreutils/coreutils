@@ -17,6 +17,7 @@
 
 /* Written by Richard Stallman and David MacKenzie. */
 
+/* Get isblank from GNU libc.  */
 #define _GNU_SOURCE
 #include <ctype.h>
 #ifndef isblank

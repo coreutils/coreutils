@@ -16,7 +16,7 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
 /* Written by Jay Lepreau (lepreau@cs.utah.edu).
-   GNU enhancements by David MacKenzie (djm@ai.mit.edu). */
+   GNU enhancements by David MacKenzie (djm@gnu.ai.mit.edu). */
 
 /* Copy each FILE, or the standard input if none are given or when a
    FILE name of "-" is encountered, to the standard output with the

@@ -33,8 +33,9 @@
    -a			Use tabs wherever they would replace 2 or more spaces,
 			not just at the beginnings of lines.
 
-   David MacKenzie <djm@ai.mit.edu> */
+   David MacKenzie <djm@gnu.ai.mit.edu> */
 
+/* Get isblank from GNU libc.  */
 #define _GNU_SOURCE
 #include <ctype.h>
 #ifndef isblank

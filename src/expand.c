@@ -31,8 +31,9 @@
    --initial
    -i			Only convert initial tabs on each line to spaces.
 
-   David MacKenzie <djm@ai.mit.edu> */
+   David MacKenzie <djm@gnu.ai.mit.edu> */
 
+/* Get isblank from GNU libc.  */
 #define _GNU_SOURCE
 #include <ctype.h>
 #ifndef isblank

@@ -24,7 +24,7 @@
    version, to include \b, \f, \r, and \v.
  
    POSIX changes, bug fixes, long-named options, and cleanup
-   by David MacKenzie <djm@ai.mit.edu>.
+   by David MacKenzie <djm@gnu.ai.mit.edu>.
  
    Options:
    --serial
