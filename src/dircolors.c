@@ -1,5 +1,5 @@
 /* dircolors - output commands to set the LS_COLOR environment variable
-   Copyright (C) 1994, 1995, 1997, 1998, 1999 H. Peter Anvin
+   Copyright (C) 1994, 1995, 1997, 1998, 1999, 2000 H. Peter Anvin
    Copyright (C) 1996-1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -38,8 +38,6 @@
 
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
-
-char *strndup();
 
 enum Shell_syntax
 {
