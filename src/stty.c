@@ -1069,13 +1069,29 @@ set_speed (type, arg, mode)
 }
 
 #ifdef TIOCGWINSZ
+
+/* Get window size information.  First try getting the information
+   associated with standard output and if that fails, try standard input.
+   Return zero for success, non-zero if both ioctl's failed.  */
+
+static int
+get_win_size (struct winsize *win)
+{
+  int err;
+
+  err = ioctl (1, TIOCGWINSZ, (char *) win);
+  if (err != 0)
+    err = ioctl (0, TIOCGWINSZ, (char *) win);
+  return err;
+}
+
 static void
 set_window_size (rows, cols)
      int rows, cols;
 {
   struct winsize win;
 
-  if (ioctl (0, TIOCGWINSZ, (char *) &win))
+  if (get_win_size (&win))
     {
       if (errno != EINVAL)
 	error (1, errno, "standard input");
@@ -1140,7 +1156,7 @@ display_window_size (fancy)
 {
   struct winsize win;
 
-  if (ioctl (0, TIOCGWINSZ, (char *) &win))
+  if (get_win_size (&win))
     {
       if (errno != EINVAL)
 	error (1, errno, "standard input");
@@ -1161,7 +1177,7 @@ screen_columns ()
 #ifdef TIOCGWINSZ
   struct winsize win;
 
-  if (ioctl (0, TIOCGWINSZ, (char *) &win))
+  if (get_win_size (&win))
     {
       /* With Solaris 2.[123], this ioctl fails and errno is set to
 	 EINVAL for telnet (but not rlogin) sessions.  */
