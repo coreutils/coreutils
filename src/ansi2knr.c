@@ -1,6 +1,6 @@
 /* Copyright (C) 1989, 1997, 1998 Aladdin Enterprises.  All rights reserved. */
 
-/*$Id: ansi2knr.c,v 1.9 1999/01/13 05:40:42 meyering Exp $*/
+/*$Id: ansi2knr.c,v 1.10 1999/01/25 00:34:26 meyering Exp $*/
 /* Convert ANSI C function definitions to K&R ("traditional C") syntax */
 
 /*
@@ -190,6 +190,7 @@ main(argc, argv)
 {	FILE *in = stdin;
 	FILE *out = stdout;
 	char *filename = 0;
+	char *program_name = argv[0];
 #define bufsize 5000			/* arbitrary size */
 	char *buf;
 	char *line;
@@ -300,8 +301,13 @@ wl:			fputs(buf, out);
 	if ( line != buf )
 	  fputs(buf, out);
 	free(buf);
-	if ( out != stdout )
-	  fclose(out);
+
+	if (ferror (out) || fclose (out) != 0)
+	  {
+	    fprintf (stderr, "%s: write error\n", program_name);
+	    exit (1);
+	  }
+
 	if ( in != stdin )
 	  fclose(in);
 	return 0;
