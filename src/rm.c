@@ -124,15 +124,8 @@ struct File_spec
   ino_t inum;
 };
 
-#ifndef STDC_HEADERS
-void free ();
-char *malloc ();
-char *realloc ();
-#endif
-
 char *base_name ();
 int euidaccess ();
-char *stpcpy ();
 void strip_trailing_slashes ();
 char *xmalloc ();
 int yesno ();
