@@ -1,5 +1,5 @@
 /* Permuted index for GNU, with keywords in their context.
-   Copyright (C) 1990, 1991, 1993, 1998-2003 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1991, 1993, 1998-2004 Free Software Foundation, Inc.
    François Pinard <pinard@iro.umontreal.ca>, 1988.
 
    This program is free software; you can redistribute it and/or modify
@@ -27,7 +27,9 @@
 #include "argmatch.h"
 #include "diacrit.h"
 #include "error.h"
+#include "quotearg.h"
 #include "regex.h"
+#include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "ptx"
@@ -2027,8 +2029,15 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"),
 	  break;
 
 	case 'g':
-	  gap_size = atoi (optarg);
-	  break;
+	  {
+	    unsigned long int tmp_ulong;
+	    if (xstrtoul (optarg, NULL, 0, &tmp_ulong, NULL) != LONGINT_OK
+		|| ! (0 < tmp_ulong && tmp_ulong <= INT_MAX))
+	      error (EXIT_FAILURE, 0, _("invalid gap width: %s"),
+		     quotearg (optarg));
+	    gap_size = tmp_ulong;
+	    break;
+	  }
 
 	case 'i':
 	  ignore_file = optarg;
@@ -2048,6 +2057,15 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"),
 
 	case 'w':
 	  line_width = atoi (optarg);
+	  {
+	    unsigned long int tmp_ulong;
+	    if (xstrtoul (optarg, NULL, 0, &tmp_ulong, NULL) != LONGINT_OK
+		|| ! (0 < tmp_ulong && tmp_ulong <= INT_MAX))
+	      error (EXIT_FAILURE, 0, _("invalid line width: %s"),
+		     quotearg (optarg));
+	    line_width = tmp_ulong;
+	    break;
+	  }
 	  break;
 
 	case 'A':
