@@ -13,8 +13,14 @@ rm -rf $tmp
 mkfifo $tmp || framework_failure=1
 
 if test $framework_failure = 1; then
-  echo 'failure in testing framework'
-  exit 1
+  # Make an exception of this case -- usually we interpret framework-creation
+  # failure as a test failure.  However, in this case, when running on a SunOS
+  # system using a disk NFS mounted from OpenBSD, the above fails like this:
+  # mkfifo: cannot make fifo `fifo-10558': Not owner
+  echo '********************************************'
+  echo 'NOTICE: unable to create test prerequisites'
+  echo '********************************************'
+  exit 77
 fi
 
 fail=0
