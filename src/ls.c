@@ -518,7 +518,7 @@ enum Dereference_symlink
   {
     DEREF_UNDEFINED = 1,
     DEREF_NEVER,
-    DEREF_COMMAND_LINE_ARGUMENTS,	/* -H */
+    DEREF_COMMAND_LINE_SYMLINK_TO_DIR,	/* -H */
     DEREF_ALWAYS			/* -L */
   };
 
@@ -722,7 +722,7 @@ static struct option const long_options[] =
   {"classify", no_argument, 0, 'F'},
   {"file-type", no_argument, 0, 'p'},
   {"si", no_argument, 0, SI_OPTION},
-  {"dereference-command-line", no_argument, 0, 'H'},
+  {"dereference-command-line-symlink-to-dir", no_argument, 0, 'H'},
   {"ignore", required_argument, 0, 'I'},
   {"indicator-style", required_argument, 0, INDICATOR_STYLE_OPTION},
   {"dereference", no_argument, 0, 'L'},
@@ -1100,7 +1100,7 @@ main (int argc, char **argv)
 		    || indicator_style == classify
 		    || format == long_format)
 		   ? DEREF_NEVER
-		   : DEREF_COMMAND_LINE_ARGUMENTS);
+		   : DEREF_COMMAND_LINE_SYMLINK_TO_DIR);
 
   /* When using -R, initialize a data structure we'll use to
      detect any directory cycles.  */
@@ -1513,7 +1513,7 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'H':
-	  dereference = DEREF_COMMAND_LINE_ARGUMENTS;
+	  dereference = DEREF_COMMAND_LINE_SYMLINK_TO_DIR;
 	  break;
 
 	case 'I':
@@ -3742,7 +3742,9 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -G, --no-group             inhibit display of group information\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
       --si                   likewise, but use powers of 1000 not 1024\n\
-  -H, --dereference-command-line  follow symbolic links on the command line\n\
+  -H, --dereference-command-line-symlink-to-dir\n\
+                             follow each command line symbolic link\n\
+                               that points to a directory\n\
 "), stdout);
       fputs (_("\
       --indicator-style=WORD append indicator with style WORD to entry names:\n\
