@@ -52,7 +52,6 @@ link-follow.m4 \
 longlong.m4 \
 ls-mntd-fs.m4 \
 lstat.m4 \
-malloc.m4 \
 mbrtowc.m4 \
 mbstate_t.m4 \
 mbswidth.m4 \
@@ -65,7 +64,6 @@ prereq.m4 \
 progtest.m4 \
 putenv.m4 \
 readdir.m4 \
-realloc.m4 \
 regex.m4 \
 rename.m4 \
 rmdir-errno.m4 \
