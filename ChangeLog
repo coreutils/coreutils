@@ -1,6 +1,15 @@
-2002-08-25  Jim Meyering  <meyering@lucent.com>
+2002-08-26  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.1.
+
+	* src/cat.c (close_stdout_wrapper): New, kludgey, function and
+	file-scoped global.
+	(main): Register it with atexit.
+	Close STDOUT_FILENO, to avoid a problem when writing to
+	/dev/audio on at least Solaris 2.7 and 2.8 systems.
+	Reported by Shing-Shong Shei.
+
+2002-08-25  Jim Meyering  <meyering@lucent.com>
 
 	* src/cat.c (main): Close STDIN_FILENO rather than a literal `0'.
 	* src/tac.c (main): Likewise.
