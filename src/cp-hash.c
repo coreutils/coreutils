@@ -128,7 +128,7 @@ remember_copied (const char *name, ino_t ino, dev_t dev)
      return the `name' from the table entry.  */
   if (ent_from_table != ent)
     {
-      free (ent);
+      src_to_dest_free (ent);
       return (char *) ent_from_table->name;
     }
 
