@@ -2,6 +2,24 @@
 
 	* Version 5.0.90.
 
+	* tests/touch/not-owner: Update to use newer framework.
+
+	* tests/rm/fail-eperm: Use $srcdir/../priv-check, create a temporary
+	directory, and remove Perl-coded `you may not run as root' test.
+	* tests/cp/fail-perm: Use $srcdir/../priv-check, rather than
+	hard-coding something not quite equivalent.
+	Paul Jarc reported the inconsistent diagnostics.
+
+	* src/sort.c (main): Use close_stdout via atexit.
+	Now `sort --version' and `sort --help' fail, as they should
+	when their output is redirected to /dev/full.
+
+	* src/su.c (usage): Don't call close_stdout here.
+	(main): Use close_stdout via atexit.
+	Now `su --version > /dev/full' fails, as it should.
+	Somehow, the change of 2000-05-07 that purports to fix this
+	was not checked in.
+
 	* tests/help-version (--help/--version vs. /dev/full): Special-case
 	`[' to protect it from expected_failure_status-`eval'.
 
