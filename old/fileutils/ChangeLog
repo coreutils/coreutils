@@ -9,10 +9,14 @@
 
 2000-12-24  Jim Meyering  <meyering@lucent.com>
 
-	ln --backup=simple --suffix=SUFFIX doesn't use SUFFIX
+	For both ln and install, when using `--backup=simple --suffix=S',
+	the suffix `S' wasn't used.
+	
 	* src/ln.c (main): Actually use the local variable,
-	`backup_suffix_string'.  Nelson Beebe reported the unused variable.
-	* tests/ln/misc: Add a test for this.
+	`backup_suffix_string'.
+	* src/install.c (main): Likewise.
+	Nelson Beebe reported the unused variables.
+	* tests/ln/misc: Add a test for this (for all of cp, mv, ln, install).
 
 	* man/help2man: Update to version 1.24.
 
