@@ -1,5 +1,5 @@
 /* tee - read from standard input and write to standard output and files.
-   Copyright (C) 85,1990-2000 Free Software Foundation, Inc.
+   Copyright (C) 85,1990-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,8 +31,6 @@
 #define PROGRAM_NAME "tee"
 
 #define AUTHORS N_ ("Mike Parker, Richard M. Stallman, and David MacKenzie")
-
-int full_write ();
 
 static int tee PARAMS ((int nfiles, const char **files));
 
