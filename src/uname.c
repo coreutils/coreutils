@@ -240,19 +240,20 @@ main (int argc, char **argv)
   if (toprint & PRINT_PROCESSOR)
     {
       char const *element = unknown;
-      char processor[257];
-#if defined (HAVE_SYSINFO) && defined (SI_ARCHITECTURE)
-      if (0 <= sysinfo (SI_ARCHITECTURE, processor, sizeof processor))
-	element = processor;
+#if HAVE_SYSINFO && defined SI_ARCHITECTURE
+      {
+	static char processor[257];
+	if (0 <= sysinfo (SI_ARCHITECTURE, processor, sizeof processor))
+	  element = processor;
+      }
 #endif
 #ifdef UNAME_PROCESSOR
       if (element == unknown)
 	{
+	  static char processor[257];
 	  size_t s = sizeof processor;
-	  int mib[2];
-	  mib[0] = CTL_HW;
-	  mib[1] = UNAME_PROCESSOR;
-	  if (sysctl (mib, 2, processor, &s, 0, 0) == 0)
+	  static int mib[] = { CTL_HW, UNAME_PROCESSOR };
+	  if (sysctl (mib, 2, processor, &s, 0, 0) >= 0)
 	    element = processor;
 	}
 #endif
@@ -262,20 +263,21 @@ main (int argc, char **argv)
   if (toprint & PRINT_HARDWARE_PLATFORM)
     {
       char const *element = unknown;
-      char hardware_platform[257];
-#if defined (HAVE_SYSINFO) && defined (SI_PLATFORM)
-      if (0 <= sysinfo (SI_PLATFORM,
-			hardware_platform, sizeof hardware_platform))
-	element = hardware_platform;
+#if HAVE_SYSINFO && defined SI_PLATFORM
+      {
+	static char hardware_platform[257];
+	if (0 <= sysinfo (SI_PLATFORM,
+			  hardware_platform, sizeof hardware_platform))
+	  element = hardware_platform;
+      }
 #endif
 #ifdef UNAME_HARDWARE_PLATFORM
       if (element == unknown)
 	{
+	  static char hardware_platform[257];
 	  size_t s = sizeof hardware_platform;
-	  int mib[2];
-	  mib[0] = CTL_HW;
-	  mib[1] = UNAME_HARDWARE_PLATFORM;
-	  if (sysctl (mib, 2, hardware_platform, &s, 0, 0) == 0)
+	  static int mib[] = { CTL_HW, UNAME_HARDWARE_PLATFORM };
+	  if (sysctl (mib, 2, hardware_platform, &s, 0, 0) >= 0)
 	    element = hardware_platform;
 	}
 #endif
