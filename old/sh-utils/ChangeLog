@@ -1,3 +1,8 @@
+2000-10-27  Jim Meyering  <meyering@lucent.com>
+
+	* src/date.c (usage): Mention the time zone, UTC, and write the date
+	in ISO format in the description of %s.  Suggestion from Karl Berry.
+
 2000-10-25  Jim Meyering  <meyering@lucent.com>
 
 	* src/dirname.c: Include dirname.h.
