@@ -1,3 +1,9 @@
+Wed Dec 18 23:09:19 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/ls.c (gobble_file): Stat symlinks also when printing with
+	color and set linkok to reflect existence of referent.
+	Patches from Joakim Rosqvist, James Antill, and Jesse Thilo.
+
 Tue Dec 17 21:03:40 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/system.h (ISDIGIT): Replace with smaller, faster edition
