@@ -70,11 +70,6 @@
 #include <pwd.h>
 #include <getopt.h>
 
-/* Get MB_LEN_MAX.  */
-#if HAVE_LIMITS_H
-# include <limits.h>
-#endif
-
 /* Get MB_CUR_MAX.  */
 #if HAVE_STDLIB_H
 # include <stdlib.h>
@@ -2644,7 +2639,7 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options)
 
   if (qmark_funny_chars)
     {
-#if HAVE_MBRTOWC && (MB_LEN_MAX > 1)
+#if HAVE_MBRTOWC
       if (MB_CUR_MAX > 1)
 	{
 	  const char *p = buf;
@@ -2765,7 +2760,7 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options)
   else
     {
       /* Assume unprintable characters have a displayed_width of 1.  */
-#if HAVE_MBRTOWC && (MB_LEN_MAX > 1)
+#if HAVE_MBRTOWC
       if (MB_CUR_MAX > 1)
 	displayed_width = mbsnwidth (buf, len,
 				     (MBSW_ACCEPT_INVALID
