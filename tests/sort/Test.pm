@@ -194,6 +194,9 @@ my @tv = (
 ["21f", '-fs', "A\na\n_\n", "A\na\n_\n", 0],
 ["21g", '-fu', "a\n_\n", "a\n_\n", 0],
 
+# This test failed until 1.22f.  From Zvi Har'El.
+["22a", '-k 2,2fd -k 1,1r', "3 b\n4 B\n", "4 B\n3 b\n", 0],
+
 );
 
 sub test_vector
