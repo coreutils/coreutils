@@ -28,7 +28,7 @@
 
    Options:
    -p, --portability	Instead of performing length checks on the
-			underlying filesystem, test the length of the
+			underlying file system, test the length of the
 			pathname and its components against the POSIX
 			minimum limits for portability, _POSIX_NAME_MAX
 			and _POSIX_PATH_MAX in 2.9.2.  Also check that

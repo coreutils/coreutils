@@ -1158,7 +1158,7 @@ copy_internal (const char *src_path, const char *dst_path,
 
   if (earlier_file)
     {
-      /* Avoid damaging the destination filesystem by refusing to preserve
+      /* Avoid damaging the destination file system by refusing to preserve
 	 hard-linked directories (which are found at least in Netapp snapshot
 	 directories).  */
       if (S_ISDIR (src_type))

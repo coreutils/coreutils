@@ -244,7 +244,7 @@ cat (
 
 #ifdef FIONREAD
   /* If nonzero, use the FIONREAD ioctl, as an optimization.
-     (On Ultrix, it is not supported on NFS filesystems.)  */
+     (On Ultrix, it is not supported on NFS file systems.)  */
   int use_fionread = 1;
 #endif
 

@@ -170,7 +170,7 @@ target_directory_operand (char const *file)
   return is_a_dir;
 }
 
-/* Move SOURCE onto DEST.  Handles cross-filesystem moves.
+/* Move SOURCE onto DEST.  Handles cross-file-system moves.
    If SOURCE is a directory, DEST must not exist.
    Return 0 if successful, 1 if an error occurred.  */
 

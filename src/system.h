@@ -319,7 +319,7 @@ initialize_exit_failure (int status)
 			      ? (statbuf).st_blksize : DEV_BSIZE)
 # if defined hpux || defined __hpux__ || defined __hpux
 /* HP-UX counts st_blocks in 1024-byte units.
-   This loses when mixing HP-UX and BSD filesystems with NFS.  */
+   This loses when mixing HP-UX and BSD file systems with NFS.  */
 #  define ST_NBLOCKSIZE 1024
 # else /* !hpux */
 #  if defined _AIX && defined _I386

@@ -97,7 +97,7 @@ struct cp_options
   uid_t myeuid;
 
   /* If nonzero, when copying recursively, skip any subdirectories that are
-     on different filesystems from the one we started on. */
+     on different file systems from the one we started on.  */
   int one_file_system;
 
   /* If nonzero, attempt to give the copies the original files' permissions,
