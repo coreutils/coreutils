@@ -4,7 +4,7 @@
 
 	* src/mv.c (main): Give the correct diagnostic when using the
 	--target-dir=DIR option, but no arguments.
-	Patch from Michael Stone.  Reported by herbert@gondor.apana.org.au.
+	Patch from Michael Stone.  Reported by Herbert Xu.
 	* tests/mv/diag: New test for this.
 	* tests/mv/Makefile.am (TESTS): Add diag.
 
