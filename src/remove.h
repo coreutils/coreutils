@@ -38,8 +38,10 @@ struct File_spec
   char *filename;
   unsigned int have_filetype_mode:1;
   unsigned int have_full_mode:1;
+  unsigned int have_device:1;
   mode_t mode;
-  ino_t inum;
+  ino_t st_ino;
+  dev_t st_dev;
 };
 
 enum RM_status rm PARAMS ((struct File_spec *fs, int user_specified_name,
