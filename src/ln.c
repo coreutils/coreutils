@@ -149,8 +149,7 @@ same_name (const char *source, const char *dest)
   free (source_dirname);
   free (dest_dirname);
 
-  return (source_dir_stats.st_dev == dest_dir_stats.st_dev
-	  && source_dir_stats.st_ino == dest_dir_stats.st_ino
+  return (SAME_INODE (source_dir_stats, dest_dir_stats)
 	  && STREQ (base_name (source), base_name (dest)));
 }
 
