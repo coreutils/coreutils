@@ -12,36 +12,51 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #include <config.h>
 #include <stdio.h>
 
 #include "system.h"
 #include "long-options.h"
-#include "version.h"
-
-void error ();
-
-static void usage ();
+#include "error.h"
 
 /* The name this program was run with, for error messages. */
 char *program_name;
 
-int
-main (argc, argv)
-     int argc;
-     char **argv;
+static void
+usage (int status)
 {
-  int c;
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("Usage: %s [OPTION] NEWROOT [COMMAND...]\n", program_name);
+      printf ("\
+\n\
+      --help       display this help and exit\n\
+      --version    output version information and exit\n\
+\n\
+If no command is given, run ``${SHELL} -i'' (default: /bin/sh).\n\
+");
+    }
+  exit (status);
+}
 
+int
+main (int argc, char **argv)
+{
   program_name = argv[0];
 
-  parse_long_options (argc, argv, "chroot", version_string, usage);
+  parse_long_options (argc, argv, "chroot", PACKAGE_VERSION, usage);
 
   if (argc == 1)
-    usage (1);
+    {
+      error (0, 0, _("too few arguments"));
+      usage (1);
+    }
 
   if (chroot (argv[1]))
     error (1, errno, "cannot change root directory to %s", argv[1]);
@@ -65,25 +80,4 @@ main (argc, argv)
 
   exit (1);
   return 1;
-}
-
-static void
-usage (status)
-     int status;
-{
-  if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
-	     program_name);
-  else
-    {
-      printf ("Usage: %s [OPTION] NEWROOT [COMMAND...]\n", program_name);
-      printf ("\
-\n\
-      --help       display this help and exit\n\
-      --version    output version information and exit\n\
-\n\
-If no command is given, runs ``${SHELL} -i'' (default: /bin/sh).\n\
-");
-    }
-  exit (status);
 }
