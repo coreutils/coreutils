@@ -1,0 +1,82 @@
+#!/bin/sh
+# test nohup
+
+if test "$VERBOSE" = yes; then
+  set -x
+  nohup --version
+fi
+
+. $srcdir/../envvar-check
+. $srcdir/../lang-default
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+fi
+
+fail=0
+
+nohup sh -c 'echo stdout; echo stderr 1>&2' 2>err || fail=1
+test `cat nohup.out` = stdout || fail=1
+
+cat <<\EOF > exp || fail=1
+nohup: appending output to `nohup.out'
+stderr
+EOF
+cmp exp err || fail=1
+test $fail = 1 && diff exp err 2> /dev/null
+rm -f nohup.out err exp
+# ----------------------
+
+nohup sh -c 'echo stdout; echo stderr 1>&2' >out || fail=1
+test `cat out|tr '\n' -` = stdout-stderr- || fail=1
+# It must *not* exist.
+test -f nohup.out && fail=1
+rm -f nohup.out err
+# ----------------------
+
+nohup no-such-command 2> err
+errno=$?
+test $errno = 127 || fail=1
+# It must exist.
+test -f nohup.out || fail=1
+# It must be empty.
+test -s nohup.out && fail=1
+
+cat <<\EOF > exp || fail=1
+nohup: appending output to `nohup.out'
+nohup: cannot run command `no-such-command': No such file or directory
+EOF
+# Disable these comparisons.  Too much variation in 2nd line.
+# cmp exp err || fail=1
+# test $fail = 1 && diff exp err 2> /dev/null
+rm -f nohup.out err exp
+# ----------------------
+
+touch k; chmod 0 k
+nohup ./k 2> err
+errno=$?
+test $errno = 126 || fail=1
+# It must exist.
+test -f nohup.out || fail=1
+# It must be empty.
+test -s nohup.out && fail=1
+
+cat <<\EOF > exp || fail=1
+nohup: appending output to `nohup.out'
+nohup: cannot run command `./k': Permission denied
+EOF
+# Disable these comparisons.  Too much variation in 2nd line.
+# cmp exp err || fail=1
+# test $fail = 1 && diff exp err 2> /dev/null
+
+(exit $fail); exit $fail
