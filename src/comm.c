@@ -177,13 +177,13 @@ compare_files (char **infiles)
 	{
 #ifdef ENABLE_NLS
 	  if (hard_LC_COLLATE)
-	    order = memcoll (thisline[0]->buffer, thisline[0]->length,
-			     thisline[1]->buffer, thisline[1]->length);
+	    order = memcoll (thisline[0]->buffer, thisline[0]->length - 1,
+			     thisline[1]->buffer, thisline[1]->length - 1);
 	  else
 #endif
 	    {
-	      order = memcmp (thisline[0]->buffer, thisline[1]->buffer,
-			      min (thisline[0]->length, thisline[1]->length));
+	      size_t len = min (thisline[0]->length, thisline[1]->length) - 1;
+	      order = memcmp (thisline[0]->buffer, thisline[1]->buffer, len);
 	      if (order == 0)
 		order = thisline[0]->length - thisline[1]->length;
 	    }
