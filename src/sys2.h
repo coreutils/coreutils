@@ -269,6 +269,10 @@ char *alloca ();
 #define _(msgid) gettext (msgid)
 #define N_(msgid) msgid
 
+#ifndef HAVE_SETLOCALE
+# define HAVE_SETLOCALE 0
+#endif
+
 #define STREQ(a, b) (strcmp ((a), (b)) == 0)
 
 #if !HAVE_DECL_FREE
