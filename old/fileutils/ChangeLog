@@ -1,5 +1,7 @@
 Fri Apr 19 00:06:02 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
+	* df.c: No longer call sync by default.
+
 	* cp.c (copy_reg): Rearrange arithmetic in conditional to avoid
 	integer overflow with large files.
 

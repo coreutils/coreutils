@@ -1,4 +1,6 @@
 Changes in release 3.13:
+* df no longer invokes the sync system call by default.
+  Use --sync to invoke sync before getting file system sizes.
 * internationalized diagnostic messages
 * mkdir accepts new option: --verbose
 * cp has been fixed so that the full file name it uses for the destination
@@ -39,7 +41,7 @@ User-visible changes in release 3.10:
 * Fix bug in cp that made the commands `mkdir dir; touch foo; cp -P foo dir'
   incorrectly change the permissions on directory, dir.
 * df accepts a new option, --no-sync, that inhibits the default invocation
-  of the sync system call.  FIXME.
+  of the sync system call.
 * ls accepts a new option, --dired, that makes emacs' dired mode more efficient
 * skeletal texinfo documentation (mainly just the `invoking' nodes)
 * ln accepts a new option: --no-dereference (-n).  With this option,
