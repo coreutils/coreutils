@@ -1,3 +1,8 @@
+2000-12-17  Jim Meyering  <meyering@lucent.com>
+
+	* dos.m4 (jm_AC_DOS): New file and macro.
+	* jm-macros.m4 (jm_MACROS): Require jm_AC_DOS.
+
 2000-12-06  Paul Eggert  <eggert@twinsun.com>
 
 	* off_t-format.m4: Remove this file.
