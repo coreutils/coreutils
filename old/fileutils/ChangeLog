@@ -1,5 +1,14 @@
+2001-09-22  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.1.
+
+	Mostly clean-up (modulo the better diagnostic).
+	* src/copy.c (copy_internal): Rename parameter, move_mode, to
+	command_line_arg, and adjust caller.  Now, move_mode is a local
+	that is derived from command_line_arg.
+	Factor some involved code to produce something slightly more readable.
+	Use x->move_mode, not move_mode in determining which diagnostic
+	to give (`backing up %s would destroy source;  %s not moved').
 
 2001-09-16  Paul Eggert  <eggert@twinsun.com>
 
