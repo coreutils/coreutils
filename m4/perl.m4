@@ -33,9 +33,9 @@ AC_DEFUN(jm_PERL,
 
   AC_MSG_RESULT($found)
   test $found = no && AC_MSG_WARN([
-*** You don't seem to have perl5.003 or newer installed, or you lack
-*** a usable version of the Perl File::Compare module.  As a result,
-*** you may be unable to run a few tests or to regenerate certain
-*** files if you modify the sources from which they are derived.
+WARNING: You don't seem to have perl5.003 or newer installed, or you lack
+         a usable version of the Perl File::Compare module.  As a result,
+         you may be unable to run a few tests or to regenerate certain
+         files if you modify the sources from which they are derived.
 ] )
 ])
