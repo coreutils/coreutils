@@ -2390,6 +2390,7 @@ input.  This is useful when you have many dates to process, because the
 system overhead of starting up the @code{date} executable many times can
 be considerable.
 
+@item -R
 @itemx --rfc-822
 @opindex -R
 @opindex --rfc-822
