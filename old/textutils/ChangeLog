@@ -1,3 +1,18 @@
+2001-12-03  Jim Meyering  <meyering@lucent.com>
+
+	* src/od.c, src/tail.c, src/tr.c (usage): I will not split translatable
+	strings in the middle of a sentence.  I will not split translatable
+	strings in the middle of a sentence.  I will not split translatable
+	strings in the middle of a sentence.  ...
+	* src/join.c (usage): Merge lone "\n" into adjacent string.
+	* src/md5sum.c (usage): Likewise.
+	* src/paste.c (usage): Likewise.
+	Reported by Karl Eichwalder.
+
+2001-12-02  Jim Meyering  <meyering@lucent.com>
+
+	* Makefile.maint (emit-upload-commands): Fix typo: s/distdir/PACKAGE/.
+
 2001-12-01  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.18.
