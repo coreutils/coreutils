@@ -21,8 +21,7 @@
 # include <config.h>
 #endif
 
-#include <stdio.h>
-#include <sys/types.h>
+#include "__fpending.h"
 
 size_t
 __fpending (FILE *fp)

@@ -1,3 +1,9 @@
+2000-08-26  Jim Meyering  <meyering@lucent.com>
+
+	* Makefile.am (noinst_HEADERS): Add __fpending.h.
+	* __fpending.c: New file.
+	* __fpending.h: New file.
+
 2000-08-07  Paul Eggert  <eggert@twinsun.com>
 
 	Standardize on "memory exhausted" instead of "Memory exhausted"
