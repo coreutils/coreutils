@@ -1,6 +1,12 @@
-2001-09-20  Jim Meyering  <meyering@lucent.com>
+2001-09-22  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.15.
+
+	* tests/od/od-N: New test for the fix of 2001-09-19.
+	* tests/od/Makefile.am: New file.
+	* tests/od: New directory.
+	* tests/Makefile.am (SUBDIRS): Add od.
+	* configure.in (AC_OUTPUT): Add tests/od/Makefile.
 
 2001-09-19  Paul Eggert  <eggert@twinsun.com>
 
