@@ -373,6 +373,7 @@ copy_internal (const char *src_path, const char *dst_path,
   int backup_succeeded = 0;
   int fix_mode = 0;
   int rename_errno;
+  int delayed_fail;
 
   if (move_mode && rename_succeeded)
     *rename_succeeded = 0;
@@ -692,6 +693,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	}
     }
 
+  delayed_fail = 0;
   if (S_ISDIR (src_type))
     {
       struct dir_list *dir;
@@ -744,7 +746,12 @@ copy_internal (const char *src_path, const char *dst_path,
 
       if (copy_dir (src_path, dst_path, new_dst, &src_sb, dir, x,
 		    copy_into_self))
-	return 1;
+	{
+	  /* Don't just return here -- otherwise, the failure to read a
+	     single file in a source directory would cause the containing
+	     destination directory not to have owner/perms set properly.  */
+	  delayed_fail = 1;
+	}
     }
 #ifdef S_ISLNK
   else if (x->symbolic_link)
@@ -975,7 +982,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	}
     }
 
-  return 0;
+  return delayed_fail;
 
 un_backup:
   if (dst_backup)
