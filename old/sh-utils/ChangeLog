@@ -5,6 +5,7 @@
 	* config.guess: Likewise.
 
 	* djgpp: New directory.
+	* djgpp/*: New files.
 	* Makefile.am (SUBDIRS): Add djgpp.
 	* configure.in (AC_OUTPUT): Add djgpp/Makefile.
 
