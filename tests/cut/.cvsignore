@@ -1,8 +1,8 @@
-cut-tests
-t*.out
-t*.in
-t*.exp
-t*.err
+*.I
+*.E
+*.X
+*.O
+*-tests
 build-script
 Makefile
 mk-script

@@ -1,7 +1,8 @@
+*.I
+*.E
+*.X
+*.O
+*-tests
+build-script
 Makefile
-join-tests
 mk-script
-t*.exp
-t*.in
-t*.log
-t*.out

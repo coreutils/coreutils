@@ -44,31 +44,24 @@ CC = @CC@
 
 x = tr
 explicit =
-maint_gen = t1.in t1.exp t2.in t2.exp t3.in t3.exp t4.in t4.exp t5.in t5.exp \
-t6.in t6.exp t7.in t7.exp t8.in t8.exp t9.in t9.exp ta.in ta.exp tb.in tb.exp \
-tc.in tc.exp td.in td.exp te.in te.exp tf.in tf.exp tg.in tg.exp th.in th.exp \
-ti.in ti.exp tj.in tj.exp tk.in tk.exp tl.in tl.exp tm.in tm.exp tn.in tn.exp \
-to.in to.exp tp.in tp.exp tq.in tq.exp tr.in tr.exp ts.in ts.exp tt.in tt.exp \
-tu.in tu.exp tv.in tv.exp tw.in tw.exp tx.in tx.exp ty.in ty.exp tz.in tz.exp \
-trange-a-a.in trange-a-a.exp tnull.in tnull.exp tupcase.in tupcase.exp \
-tdncase.in tdncase.exp trep-cclass.in trep-cclass.exp trep-1.in trep-1.exp \
-trep-2.in trep-2.exp trep-3.in trep-3.exp tesc.in tesc.exp tross-0a.in \
-tross-0a.exp tross-0b.in tross-0b.exp tross-1a.in tross-1a.exp tross-1b.in \
-tross-1b.exp tross-2.in tross-2.exp tross-3.in tross-3.exp tross-4.in \
-tross-4.exp tross-5.in tross-5.exp tross-6.in tross-6.exp
-run_gen = t1.out t1.err t2.out t2.err t3.out t3.err t4.out t4.err t5.out \
-t5.err t6.out t6.err t7.out t7.err t8.out t8.err t9.out t9.err ta.out ta.err \
-tb.out tb.err tc.out tc.err td.out td.err te.out te.err tf.out tf.err tg.out \
-tg.err th.out th.err ti.out ti.err tj.out tj.err tk.out tk.err tl.out tl.err \
-tm.out tm.err tn.out tn.err to.out to.err tp.out tp.err tq.out tq.err tr.out \
-tr.err ts.out ts.err tt.out tt.err tu.out tu.err tv.out tv.err tw.out tw.err \
-tx.out tx.err ty.out ty.err tz.out tz.err trange-a-a.out trange-a-a.err \
-tnull.out tnull.err tupcase.out tupcase.err tdncase.out tdncase.err \
-trep-cclass.out trep-cclass.err trep-1.out trep-1.err trep-2.out trep-2.err \
-trep-3.out trep-3.err tesc.out tesc.err tross-0a.out tross-0a.err \
-tross-0b.out tross-0b.err tross-1a.out tross-1a.err tross-1b.out tross-1b.err \
-tross-2.out tross-2.err tross-3.out tross-3.err tross-4.out tross-4.err \
-tross-5.out tross-5.err tross-6.out tross-6.err
+maint_gen = 1.I 1.X 2.I 2.X 3.I 3.X 4.I 4.X 5.I 5.X 6.I 6.X 7.I 7.X 8.I 8.X \
+9.I 9.X a.I a.X b.I b.X c.I c.X d.I d.X e.I e.X f.I f.X g.I g.X h.I h.X i.I \
+i.X j.I j.X k.I k.X l.I l.X m.I m.X n.I n.X o.I o.X p.I p.X q.I q.X r.I r.X \
+s.I s.X t.I t.X u.I u.X v.I v.X w.I w.X x.I x.X y.I y.X z.I z.X range-a-a.I \
+range-a-a.X null.I null.X upcase.I upcase.X dncase.I dncase.X rep-cclass.I \
+rep-cclass.X rep-1.I rep-1.X rep-2.I rep-2.X rep-3.I rep-3.X esc.I esc.X \
+ross-0a.I ross-0a.X ross-0b.I ross-0b.X ross-1a.I ross-1a.X ross-1b.I \
+ross-1b.X ross-2.I ross-2.X ross-3.I ross-3.X ross-4.I ross-4.X ross-5.I \
+ross-5.X ross-6.I ross-6.X
+run_gen = 1.O 1.E 2.O 2.E 3.O 3.E 4.O 4.E 5.O 5.E 6.O 6.E 7.O 7.E 8.O 8.E 9.O \
+9.E a.O a.E b.O b.E c.O c.E d.O d.E e.O e.E f.O f.E g.O g.E h.O h.E i.O i.E \
+j.O j.E k.O k.E l.O l.E m.O m.E n.O n.E o.O o.E p.O p.E q.O q.E r.O r.E s.O \
+s.E t.O t.E u.O u.E v.O v.E w.O w.E x.O x.E y.O y.E z.O z.E range-a-a.O \
+range-a-a.E null.O null.E upcase.O upcase.E dncase.O dncase.E rep-cclass.O \
+rep-cclass.E rep-1.O rep-1.E rep-2.O rep-2.E rep-3.O rep-3.E esc.O esc.E \
+ross-0a.O ross-0a.E ross-0b.O ross-0b.E ross-1a.O ross-1a.E ross-1b.O \
+ross-1b.E ross-2.O ross-2.E ross-3.O ross-3.E ross-4.O ross-4.E ross-5.O \
+ross-5.E ross-6.O ross-6.E
 
 EXTRA_DIST = mk-script.pl Test.pm $x-tests $(explicit) $(maint_gen)
 noinst_SCRIPTS = $x-tests

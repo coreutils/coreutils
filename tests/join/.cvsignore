@@ -1,9 +1,9 @@
-t*.log
-t*.out
-t*.in1
-t*.in2
-t*.exp
-join-tests
+*.I1
+*.I2
+*.E
+*.X
+*.O
+*-tests
 build-script
 Makefile
 mk-script

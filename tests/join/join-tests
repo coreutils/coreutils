@@ -9,601 +9,601 @@ $echo testing program: $xx
 errors=0
 test "$srcdir" || srcdir=.
 test "$VERBOSE" && $xx --version 2> /dev/null
-$xx -a1 $srcdir/t1a.in1 $srcdir/t1a.in2 > t1a.out 2> t1a.err
+$xx -a1 $srcdir/1a.I1 $srcdir/1a.I2 > 1a.O 2> 1a.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 1a failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t1a.out $srcdir/t1a.exp
+  cmp 1a.O $srcdir/1a.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 1a"; fi ;;
-    1) $echo "Test 1a failed: files t1a.out and $srcdir/t1a.exp differ" 1>&2;
+    1) $echo "Test 1a failed: files 1a.O and $srcdir/1a.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 1a may have failed." 1>&2;
-       $echo The command "cmp t1a.out $srcdir/t1a.exp" failed. 1>&2 ;
+       $echo The command "cmp 1a.O $srcdir/1a.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t1a.err || rm -f t1a.err
-$xx -a2 $srcdir/t1b.in1 $srcdir/t1b.in2 > t1b.out 2> t1b.err
+test -s 1a.E || rm -f 1a.E
+$xx -a2 $srcdir/1b.I1 $srcdir/1b.I2 > 1b.O 2> 1b.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 1b failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t1b.out $srcdir/t1b.exp
+  cmp 1b.O $srcdir/1b.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 1b"; fi ;;
-    1) $echo "Test 1b failed: files t1b.out and $srcdir/t1b.exp differ" 1>&2;
+    1) $echo "Test 1b failed: files 1b.O and $srcdir/1b.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 1b may have failed." 1>&2;
-       $echo The command "cmp t1b.out $srcdir/t1b.exp" failed. 1>&2 ;
+       $echo The command "cmp 1b.O $srcdir/1b.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t1b.err || rm -f t1b.err
-$xx -a1 -a2 $srcdir/t1c.in1 $srcdir/t1c.in2 > t1c.out 2> t1c.err
+test -s 1b.E || rm -f 1b.E
+$xx -a1 -a2 $srcdir/1c.I1 $srcdir/1c.I2 > 1c.O 2> 1c.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 1c failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t1c.out $srcdir/t1c.exp
+  cmp 1c.O $srcdir/1c.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 1c"; fi ;;
-    1) $echo "Test 1c failed: files t1c.out and $srcdir/t1c.exp differ" 1>&2;
+    1) $echo "Test 1c failed: files 1c.O and $srcdir/1c.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 1c may have failed." 1>&2;
-       $echo The command "cmp t1c.out $srcdir/t1c.exp" failed. 1>&2 ;
+       $echo The command "cmp 1c.O $srcdir/1c.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t1c.err || rm -f t1c.err
-$xx -a1 $srcdir/t1d.in1 $srcdir/t1d.in2 > t1d.out 2> t1d.err
+test -s 1c.E || rm -f 1c.E
+$xx -a1 $srcdir/1d.I1 $srcdir/1d.I2 > 1d.O 2> 1d.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 1d failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t1d.out $srcdir/t1d.exp
+  cmp 1d.O $srcdir/1d.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 1d"; fi ;;
-    1) $echo "Test 1d failed: files t1d.out and $srcdir/t1d.exp differ" 1>&2;
+    1) $echo "Test 1d failed: files 1d.O and $srcdir/1d.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 1d may have failed." 1>&2;
-       $echo The command "cmp t1d.out $srcdir/t1d.exp" failed. 1>&2 ;
+       $echo The command "cmp 1d.O $srcdir/1d.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t1d.err || rm -f t1d.err
-$xx -a2 $srcdir/t1e.in1 $srcdir/t1e.in2 > t1e.out 2> t1e.err
+test -s 1d.E || rm -f 1d.E
+$xx -a2 $srcdir/1e.I1 $srcdir/1e.I2 > 1e.O 2> 1e.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 1e failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t1e.out $srcdir/t1e.exp
+  cmp 1e.O $srcdir/1e.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 1e"; fi ;;
-    1) $echo "Test 1e failed: files t1e.out and $srcdir/t1e.exp differ" 1>&2;
+    1) $echo "Test 1e failed: files 1e.O and $srcdir/1e.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 1e may have failed." 1>&2;
-       $echo The command "cmp t1e.out $srcdir/t1e.exp" failed. 1>&2 ;
+       $echo The command "cmp 1e.O $srcdir/1e.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t1e.err || rm -f t1e.err
-$xx -a2 $srcdir/t1f.in1 $srcdir/t1f.in2 > t1f.out 2> t1f.err
+test -s 1e.E || rm -f 1e.E
+$xx -a2 $srcdir/1f.I1 $srcdir/1f.I2 > 1f.O 2> 1f.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 1f failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t1f.out $srcdir/t1f.exp
+  cmp 1f.O $srcdir/1f.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 1f"; fi ;;
-    1) $echo "Test 1f failed: files t1f.out and $srcdir/t1f.exp differ" 1>&2;
+    1) $echo "Test 1f failed: files 1f.O and $srcdir/1f.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 1f may have failed." 1>&2;
-       $echo The command "cmp t1f.out $srcdir/t1f.exp" failed. 1>&2 ;
+       $echo The command "cmp 1f.O $srcdir/1f.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t1f.err || rm -f t1f.err
-$xx -a1 -e . $srcdir/t2a.in1 $srcdir/t2a.in2 > t2a.out 2> t2a.err
+test -s 1f.E || rm -f 1f.E
+$xx -a1 -e . $srcdir/2a.I1 $srcdir/2a.I2 > 2a.O 2> 2a.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 2a failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t2a.out $srcdir/t2a.exp
+  cmp 2a.O $srcdir/2a.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 2a"; fi ;;
-    1) $echo "Test 2a failed: files t2a.out and $srcdir/t2a.exp differ" 1>&2;
+    1) $echo "Test 2a failed: files 2a.O and $srcdir/2a.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 2a may have failed." 1>&2;
-       $echo The command "cmp t2a.out $srcdir/t2a.exp" failed. 1>&2 ;
+       $echo The command "cmp 2a.O $srcdir/2a.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t2a.err || rm -f t2a.err
-$xx -a1 -e . -o 2.1,2.2,2.3 $srcdir/t2b.in1 $srcdir/t2b.in2 > t2b.out 2> t2b.err
+test -s 2a.E || rm -f 2a.E
+$xx -a1 -e . -o 2.1,2.2,2.3 $srcdir/2b.I1 $srcdir/2b.I2 > 2b.O 2> 2b.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 2b failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t2b.out $srcdir/t2b.exp
+  cmp 2b.O $srcdir/2b.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 2b"; fi ;;
-    1) $echo "Test 2b failed: files t2b.out and $srcdir/t2b.exp differ" 1>&2;
+    1) $echo "Test 2b failed: files 2b.O and $srcdir/2b.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 2b may have failed." 1>&2;
-       $echo The command "cmp t2b.out $srcdir/t2b.exp" failed. 1>&2 ;
+       $echo The command "cmp 2b.O $srcdir/2b.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t2b.err || rm -f t2b.err
-$xx -a1 -e . -o 2.1,2.2,2.3 $srcdir/t2c.in1 $srcdir/t2c.in2 > t2c.out 2> t2c.err
+test -s 2b.E || rm -f 2b.E
+$xx -a1 -e . -o 2.1,2.2,2.3 $srcdir/2c.I1 $srcdir/2c.I2 > 2c.O 2> 2c.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 2c failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t2c.out $srcdir/t2c.exp
+  cmp 2c.O $srcdir/2c.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 2c"; fi ;;
-    1) $echo "Test 2c failed: files t2c.out and $srcdir/t2c.exp differ" 1>&2;
+    1) $echo "Test 2c failed: files 2c.O and $srcdir/2c.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 2c may have failed." 1>&2;
-       $echo The command "cmp t2c.out $srcdir/t2c.exp" failed. 1>&2 ;
+       $echo The command "cmp 2c.O $srcdir/2c.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t2c.err || rm -f t2c.err
-$xx -t: $srcdir/t3a.in1 $srcdir/t3a.in2 > t3a.out 2> t3a.err
+test -s 2c.E || rm -f 2c.E
+$xx -t: $srcdir/3a.I1 $srcdir/3a.I2 > 3a.O 2> 3a.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 3a failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t3a.out $srcdir/t3a.exp
+  cmp 3a.O $srcdir/3a.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 3a"; fi ;;
-    1) $echo "Test 3a failed: files t3a.out and $srcdir/t3a.exp differ" 1>&2;
+    1) $echo "Test 3a failed: files 3a.O and $srcdir/3a.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 3a may have failed." 1>&2;
-       $echo The command "cmp t3a.out $srcdir/t3a.exp" failed. 1>&2 ;
+       $echo The command "cmp 3a.O $srcdir/3a.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t3a.err || rm -f t3a.err
-$xx -v 1 $srcdir/t4a.in1 $srcdir/t4a.in2 > t4a.out 2> t4a.err
+test -s 3a.E || rm -f 3a.E
+$xx -v 1 $srcdir/4a.I1 $srcdir/4a.I2 > 4a.O 2> 4a.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 4a failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t4a.out $srcdir/t4a.exp
+  cmp 4a.O $srcdir/4a.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 4a"; fi ;;
-    1) $echo "Test 4a failed: files t4a.out and $srcdir/t4a.exp differ" 1>&2;
+    1) $echo "Test 4a failed: files 4a.O and $srcdir/4a.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 4a may have failed." 1>&2;
-       $echo The command "cmp t4a.out $srcdir/t4a.exp" failed. 1>&2 ;
+       $echo The command "cmp 4a.O $srcdir/4a.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t4a.err || rm -f t4a.err
-$xx -v 2 $srcdir/t4b.in1 $srcdir/t4b.in2 > t4b.out 2> t4b.err
+test -s 4a.E || rm -f 4a.E
+$xx -v 2 $srcdir/4b.I1 $srcdir/4b.I2 > 4b.O 2> 4b.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 4b failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t4b.out $srcdir/t4b.exp
+  cmp 4b.O $srcdir/4b.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 4b"; fi ;;
-    1) $echo "Test 4b failed: files t4b.out and $srcdir/t4b.exp differ" 1>&2;
+    1) $echo "Test 4b failed: files 4b.O and $srcdir/4b.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 4b may have failed." 1>&2;
-       $echo The command "cmp t4b.out $srcdir/t4b.exp" failed. 1>&2 ;
+       $echo The command "cmp 4b.O $srcdir/4b.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t4b.err || rm -f t4b.err
-$xx -v 1 $srcdir/t4c.in1 $srcdir/t4c.in2 > t4c.out 2> t4c.err
+test -s 4b.E || rm -f 4b.E
+$xx -v 1 $srcdir/4c.I1 $srcdir/4c.I2 > 4c.O 2> 4c.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 4c failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t4c.out $srcdir/t4c.exp
+  cmp 4c.O $srcdir/4c.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 4c"; fi ;;
-    1) $echo "Test 4c failed: files t4c.out and $srcdir/t4c.exp differ" 1>&2;
+    1) $echo "Test 4c failed: files 4c.O and $srcdir/4c.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 4c may have failed." 1>&2;
-       $echo The command "cmp t4c.out $srcdir/t4c.exp" failed. 1>&2 ;
+       $echo The command "cmp 4c.O $srcdir/4c.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t4c.err || rm -f t4c.err
-$xx -v 2 $srcdir/t4d.in1 $srcdir/t4d.in2 > t4d.out 2> t4d.err
+test -s 4c.E || rm -f 4c.E
+$xx -v 2 $srcdir/4d.I1 $srcdir/4d.I2 > 4d.O 2> 4d.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 4d failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t4d.out $srcdir/t4d.exp
+  cmp 4d.O $srcdir/4d.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 4d"; fi ;;
-    1) $echo "Test 4d failed: files t4d.out and $srcdir/t4d.exp differ" 1>&2;
+    1) $echo "Test 4d failed: files 4d.O and $srcdir/4d.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 4d may have failed." 1>&2;
-       $echo The command "cmp t4d.out $srcdir/t4d.exp" failed. 1>&2 ;
+       $echo The command "cmp 4d.O $srcdir/4d.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t4d.err || rm -f t4d.err
-$xx -v 2 $srcdir/t4e.in1 $srcdir/t4e.in2 > t4e.out 2> t4e.err
+test -s 4d.E || rm -f 4d.E
+$xx -v 2 $srcdir/4e.I1 $srcdir/4e.I2 > 4e.O 2> 4e.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 4e failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t4e.out $srcdir/t4e.exp
+  cmp 4e.O $srcdir/4e.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 4e"; fi ;;
-    1) $echo "Test 4e failed: files t4e.out and $srcdir/t4e.exp differ" 1>&2;
+    1) $echo "Test 4e failed: files 4e.O and $srcdir/4e.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 4e may have failed." 1>&2;
-       $echo The command "cmp t4e.out $srcdir/t4e.exp" failed. 1>&2 ;
+       $echo The command "cmp 4e.O $srcdir/4e.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t4e.err || rm -f t4e.err
-$xx -a1 -e - -o 1.1 2.2 $srcdir/t5a.in1 $srcdir/t5a.in2 > t5a.out 2> t5a.err
+test -s 4e.E || rm -f 4e.E
+$xx -a1 -e - -o 1.1 2.2 $srcdir/5a.I1 $srcdir/5a.I2 > 5a.O 2> 5a.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 5a failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t5a.out $srcdir/t5a.exp
+  cmp 5a.O $srcdir/5a.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 5a"; fi ;;
-    1) $echo "Test 5a failed: files t5a.out and $srcdir/t5a.exp differ" 1>&2;
+    1) $echo "Test 5a failed: files 5a.O and $srcdir/5a.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 5a may have failed." 1>&2;
-       $echo The command "cmp t5a.out $srcdir/t5a.exp" failed. 1>&2 ;
+       $echo The command "cmp 5a.O $srcdir/5a.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t5a.err || rm -f t5a.err
-$xx -a1 -e - -o 1.1 2.2 $srcdir/t5b.in1 $srcdir/t5b.in2 > t5b.out 2> t5b.err
+test -s 5a.E || rm -f 5a.E
+$xx -a1 -e - -o 1.1 2.2 $srcdir/5b.I1 $srcdir/5b.I2 > 5b.O 2> 5b.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 5b failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t5b.out $srcdir/t5b.exp
+  cmp 5b.O $srcdir/5b.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 5b"; fi ;;
-    1) $echo "Test 5b failed: files t5b.out and $srcdir/t5b.exp differ" 1>&2;
+    1) $echo "Test 5b failed: files 5b.O and $srcdir/5b.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 5b may have failed." 1>&2;
-       $echo The command "cmp t5b.out $srcdir/t5b.exp" failed. 1>&2 ;
+       $echo The command "cmp 5b.O $srcdir/5b.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t5b.err || rm -f t5b.err
-$xx -a1 -e - -o 1.1 2.2 $srcdir/t5c.in1 $srcdir/t5c.in2 > t5c.out 2> t5c.err
+test -s 5b.E || rm -f 5b.E
+$xx -a1 -e - -o 1.1 2.2 $srcdir/5c.I1 $srcdir/5c.I2 > 5c.O 2> 5c.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 5c failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t5c.out $srcdir/t5c.exp
+  cmp 5c.O $srcdir/5c.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 5c"; fi ;;
-    1) $echo "Test 5c failed: files t5c.out and $srcdir/t5c.exp differ" 1>&2;
+    1) $echo "Test 5c failed: files 5c.O and $srcdir/5c.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 5c may have failed." 1>&2;
-       $echo The command "cmp t5c.out $srcdir/t5c.exp" failed. 1>&2 ;
+       $echo The command "cmp 5c.O $srcdir/5c.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t5c.err || rm -f t5c.err
-$xx -a1 -e - -o 1.1 2.2 $srcdir/t5d.in1 $srcdir/t5d.in2 > t5d.out 2> t5d.err
+test -s 5c.E || rm -f 5c.E
+$xx -a1 -e - -o 1.1 2.2 $srcdir/5d.I1 $srcdir/5d.I2 > 5d.O 2> 5d.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 5d failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t5d.out $srcdir/t5d.exp
+  cmp 5d.O $srcdir/5d.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 5d"; fi ;;
-    1) $echo "Test 5d failed: files t5d.out and $srcdir/t5d.exp differ" 1>&2;
+    1) $echo "Test 5d failed: files 5d.O and $srcdir/5d.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 5d may have failed." 1>&2;
-       $echo The command "cmp t5d.out $srcdir/t5d.exp" failed. 1>&2 ;
+       $echo The command "cmp 5d.O $srcdir/5d.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t5d.err || rm -f t5d.err
-$xx -a2 -e - -o 1.1 2.2 $srcdir/t5e.in1 $srcdir/t5e.in2 > t5e.out 2> t5e.err
+test -s 5d.E || rm -f 5d.E
+$xx -a2 -e - -o 1.1 2.2 $srcdir/5e.I1 $srcdir/5e.I2 > 5e.O 2> 5e.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 5e failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t5e.out $srcdir/t5e.exp
+  cmp 5e.O $srcdir/5e.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 5e"; fi ;;
-    1) $echo "Test 5e failed: files t5e.out and $srcdir/t5e.exp differ" 1>&2;
+    1) $echo "Test 5e failed: files 5e.O and $srcdir/5e.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 5e may have failed." 1>&2;
-       $echo The command "cmp t5e.out $srcdir/t5e.exp" failed. 1>&2 ;
+       $echo The command "cmp 5e.O $srcdir/5e.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t5e.err || rm -f t5e.err
-$xx -a2 -e - -o 2.2 1.1 $srcdir/t5f.in1 $srcdir/t5f.in2 > t5f.out 2> t5f.err
+test -s 5e.E || rm -f 5e.E
+$xx -a2 -e - -o 2.2 1.1 $srcdir/5f.I1 $srcdir/5f.I2 > 5f.O 2> 5f.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 5f failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t5f.out $srcdir/t5f.exp
+  cmp 5f.O $srcdir/5f.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 5f"; fi ;;
-    1) $echo "Test 5f failed: files t5f.out and $srcdir/t5f.exp differ" 1>&2;
+    1) $echo "Test 5f failed: files 5f.O and $srcdir/5f.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 5f may have failed." 1>&2;
-       $echo The command "cmp t5f.out $srcdir/t5f.exp" failed. 1>&2 ;
+       $echo The command "cmp 5f.O $srcdir/5f.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t5f.err || rm -f t5f.err
-$xx -a1 -e - -o 2.2 1.1 $srcdir/t5g.in1 $srcdir/t5g.in2 > t5g.out 2> t5g.err
+test -s 5f.E || rm -f 5f.E
+$xx -a1 -e - -o 2.2 1.1 $srcdir/5g.I1 $srcdir/5g.I2 > 5g.O 2> 5g.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 5g failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t5g.out $srcdir/t5g.exp
+  cmp 5g.O $srcdir/5g.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 5g"; fi ;;
-    1) $echo "Test 5g failed: files t5g.out and $srcdir/t5g.exp differ" 1>&2;
+    1) $echo "Test 5g failed: files 5g.O and $srcdir/5g.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 5g may have failed." 1>&2;
-       $echo The command "cmp t5g.out $srcdir/t5g.exp" failed. 1>&2 ;
+       $echo The command "cmp 5g.O $srcdir/5g.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t5g.err || rm -f t5g.err
-$xx -a1 -e - -o 2.2 1.1 $srcdir/t5h.in1 $srcdir/t5h.in2 > t5h.out 2> t5h.err
+test -s 5g.E || rm -f 5g.E
+$xx -a1 -e - -o 2.2 1.1 $srcdir/5h.I1 $srcdir/5h.I2 > 5h.O 2> 5h.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 5h failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t5h.out $srcdir/t5h.exp
+  cmp 5h.O $srcdir/5h.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 5h"; fi ;;
-    1) $echo "Test 5h failed: files t5h.out and $srcdir/t5h.exp differ" 1>&2;
+    1) $echo "Test 5h failed: files 5h.O and $srcdir/5h.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 5h may have failed." 1>&2;
-       $echo The command "cmp t5h.out $srcdir/t5h.exp" failed. 1>&2 ;
+       $echo The command "cmp 5h.O $srcdir/5h.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t5h.err || rm -f t5h.err
-$xx -a1 -e - -o 1.1 2.2 $srcdir/t5i.in1 $srcdir/t5i.in2 > t5i.out 2> t5i.err
+test -s 5h.E || rm -f 5h.E
+$xx -a1 -e - -o 1.1 2.2 $srcdir/5i.I1 $srcdir/5i.I2 > 5i.O 2> 5i.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 5i failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t5i.out $srcdir/t5i.exp
+  cmp 5i.O $srcdir/5i.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 5i"; fi ;;
-    1) $echo "Test 5i failed: files t5i.out and $srcdir/t5i.exp differ" 1>&2;
+    1) $echo "Test 5i failed: files 5i.O and $srcdir/5i.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 5i may have failed." 1>&2;
-       $echo The command "cmp t5i.out $srcdir/t5i.exp" failed. 1>&2 ;
+       $echo The command "cmp 5i.O $srcdir/5i.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t5i.err || rm -f t5i.err
-$xx -a2 -e - -o 2.2 1.1 $srcdir/t5j.in1 $srcdir/t5j.in2 > t5j.out 2> t5j.err
+test -s 5i.E || rm -f 5i.E
+$xx -a2 -e - -o 2.2 1.1 $srcdir/5j.I1 $srcdir/5j.I2 > 5j.O 2> 5j.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 5j failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t5j.out $srcdir/t5j.exp
+  cmp 5j.O $srcdir/5j.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 5j"; fi ;;
-    1) $echo "Test 5j failed: files t5j.out and $srcdir/t5j.exp differ" 1>&2;
+    1) $echo "Test 5j failed: files 5j.O and $srcdir/5j.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 5j may have failed." 1>&2;
-       $echo The command "cmp t5j.out $srcdir/t5j.exp" failed. 1>&2 ;
+       $echo The command "cmp 5j.O $srcdir/5j.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t5j.err || rm -f t5j.err
-$xx -a2 -e - -o 2.2 1.1 $srcdir/t5k.in1 $srcdir/t5k.in2 > t5k.out 2> t5k.err
+test -s 5j.E || rm -f 5j.E
+$xx -a2 -e - -o 2.2 1.1 $srcdir/5k.I1 $srcdir/5k.I2 > 5k.O 2> 5k.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 5k failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t5k.out $srcdir/t5k.exp
+  cmp 5k.O $srcdir/5k.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 5k"; fi ;;
-    1) $echo "Test 5k failed: files t5k.out and $srcdir/t5k.exp differ" 1>&2;
+    1) $echo "Test 5k failed: files 5k.O and $srcdir/5k.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 5k may have failed." 1>&2;
-       $echo The command "cmp t5k.out $srcdir/t5k.exp" failed. 1>&2 ;
+       $echo The command "cmp 5k.O $srcdir/5k.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t5k.err || rm -f t5k.err
-$xx -a1 -e - -o 2.2 1.1 $srcdir/t5l.in1 $srcdir/t5l.in2 > t5l.out 2> t5l.err
+test -s 5k.E || rm -f 5k.E
+$xx -a1 -e - -o 2.2 1.1 $srcdir/5l.I1 $srcdir/5l.I2 > 5l.O 2> 5l.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 5l failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t5l.out $srcdir/t5l.exp
+  cmp 5l.O $srcdir/5l.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 5l"; fi ;;
-    1) $echo "Test 5l failed: files t5l.out and $srcdir/t5l.exp differ" 1>&2;
+    1) $echo "Test 5l failed: files 5l.O and $srcdir/5l.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 5l may have failed." 1>&2;
-       $echo The command "cmp t5l.out $srcdir/t5l.exp" failed. 1>&2 ;
+       $echo The command "cmp 5l.O $srcdir/5l.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t5l.err || rm -f t5l.err
-$xx -a2 -e - -o 2.2 1.1 $srcdir/t5m.in1 $srcdir/t5m.in2 > t5m.out 2> t5m.err
+test -s 5l.E || rm -f 5l.E
+$xx -a2 -e - -o 2.2 1.1 $srcdir/5m.I1 $srcdir/5m.I2 > 5m.O 2> 5m.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 5m failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t5m.out $srcdir/t5m.exp
+  cmp 5m.O $srcdir/5m.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 5m"; fi ;;
-    1) $echo "Test 5m failed: files t5m.out and $srcdir/t5m.exp differ" 1>&2;
+    1) $echo "Test 5m failed: files 5m.O and $srcdir/5m.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 5m may have failed." 1>&2;
-       $echo The command "cmp t5m.out $srcdir/t5m.exp" failed. 1>&2 ;
+       $echo The command "cmp 5m.O $srcdir/5m.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t5m.err || rm -f t5m.err
-$xx -e - $srcdir/t6a.in1 $srcdir/t6a.in2 > t6a.out 2> t6a.err
+test -s 5m.E || rm -f 5m.E
+$xx -e - $srcdir/6a.I1 $srcdir/6a.I2 > 6a.O 2> 6a.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 6a failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t6a.out $srcdir/t6a.exp
+  cmp 6a.O $srcdir/6a.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 6a"; fi ;;
-    1) $echo "Test 6a failed: files t6a.out and $srcdir/t6a.exp differ" 1>&2;
+    1) $echo "Test 6a failed: files 6a.O and $srcdir/6a.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 6a may have failed." 1>&2;
-       $echo The command "cmp t6a.out $srcdir/t6a.exp" failed. 1>&2 ;
+       $echo The command "cmp 6a.O $srcdir/6a.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t6a.err || rm -f t6a.err
-$xx -a1 -e - $srcdir/t6b.in1 $srcdir/t6b.in2 > t6b.out 2> t6b.err
+test -s 6a.E || rm -f 6a.E
+$xx -a1 -e - $srcdir/6b.I1 $srcdir/6b.I2 > 6b.O 2> 6b.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 6b failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t6b.out $srcdir/t6b.exp
+  cmp 6b.O $srcdir/6b.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 6b"; fi ;;
-    1) $echo "Test 6b failed: files t6b.out and $srcdir/t6b.exp differ" 1>&2;
+    1) $echo "Test 6b failed: files 6b.O and $srcdir/6b.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 6b may have failed." 1>&2;
-       $echo The command "cmp t6b.out $srcdir/t6b.exp" failed. 1>&2 ;
+       $echo The command "cmp 6b.O $srcdir/6b.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t6b.err || rm -f t6b.err
-$xx -a1 -e - $srcdir/t6c.in1 $srcdir/t6c.in2 > t6c.out 2> t6c.err
+test -s 6b.E || rm -f 6b.E
+$xx -a1 -e - $srcdir/6c.I1 $srcdir/6c.I2 > 6c.O 2> 6c.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 6c failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t6c.out $srcdir/t6c.exp
+  cmp 6c.O $srcdir/6c.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 6c"; fi ;;
-    1) $echo "Test 6c failed: files t6c.out and $srcdir/t6c.exp differ" 1>&2;
+    1) $echo "Test 6c failed: files 6c.O and $srcdir/6c.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 6c may have failed." 1>&2;
-       $echo The command "cmp t6c.out $srcdir/t6c.exp" failed. 1>&2 ;
+       $echo The command "cmp 6c.O $srcdir/6c.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t6c.err || rm -f t6c.err
-$xx -a1 -e . -o 2.7 $srcdir/t7a.in1 $srcdir/t7a.in2 > t7a.out 2> t7a.err
+test -s 6c.E || rm -f 6c.E
+$xx -a1 -e . -o 2.7 $srcdir/7a.I1 $srcdir/7a.I2 > 7a.O 2> 7a.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 7a failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t7a.out $srcdir/t7a.exp
+  cmp 7a.O $srcdir/7a.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 7a"; fi ;;
-    1) $echo "Test 7a failed: files t7a.out and $srcdir/t7a.exp differ" 1>&2;
+    1) $echo "Test 7a failed: files 7a.O and $srcdir/7a.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 7a may have failed." 1>&2;
-       $echo The command "cmp t7a.out $srcdir/t7a.exp" failed. 1>&2 ;
+       $echo The command "cmp 7a.O $srcdir/7a.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t7a.err || rm -f t7a.err
-$xx -a1 -e . -o 0,1.2 $srcdir/t8a.in1 $srcdir/t8a.in2 > t8a.out 2> t8a.err
+test -s 7a.E || rm -f 7a.E
+$xx -a1 -e . -o 0,1.2 $srcdir/8a.I1 $srcdir/8a.I2 > 8a.O 2> 8a.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 8a failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t8a.out $srcdir/t8a.exp
+  cmp 8a.O $srcdir/8a.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 8a"; fi ;;
-    1) $echo "Test 8a failed: files t8a.out and $srcdir/t8a.exp differ" 1>&2;
+    1) $echo "Test 8a failed: files 8a.O and $srcdir/8a.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 8a may have failed." 1>&2;
-       $echo The command "cmp t8a.out $srcdir/t8a.exp" failed. 1>&2 ;
+       $echo The command "cmp 8a.O $srcdir/8a.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t8a.err || rm -f t8a.err
-$xx -a1 -a2 -e . -o 0,1.2 $srcdir/t8b.in1 $srcdir/t8b.in2 > t8b.out 2> t8b.err
+test -s 8a.E || rm -f 8a.E
+$xx -a1 -a2 -e . -o 0,1.2 $srcdir/8b.I1 $srcdir/8b.I2 > 8b.O 2> 8b.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 8b failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t8b.out $srcdir/t8b.exp
+  cmp 8b.O $srcdir/8b.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 8b"; fi ;;
-    1) $echo "Test 8b failed: files t8b.out and $srcdir/t8b.exp differ" 1>&2;
+    1) $echo "Test 8b failed: files 8b.O and $srcdir/8b.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 8b may have failed." 1>&2;
-       $echo The command "cmp t8b.out $srcdir/t8b.exp" failed. 1>&2 ;
+       $echo The command "cmp 8b.O $srcdir/8b.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t8b.err || rm -f t8b.err
-$xx  $srcdir/t9a.in1 $srcdir/t9a.in2 > t9a.out 2> t9a.err
+test -s 8b.E || rm -f 8b.E
+$xx  $srcdir/9a.I1 $srcdir/9a.I2 > 9a.O 2> 9a.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 9a failed: ../../src/join return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t9a.out $srcdir/t9a.exp
+  cmp 9a.O $srcdir/9a.X
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 9a"; fi ;;
-    1) $echo "Test 9a failed: files t9a.out and $srcdir/t9a.exp differ" 1>&2;
+    1) $echo "Test 9a failed: files 9a.O and $srcdir/9a.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 9a may have failed." 1>&2;
-       $echo The command "cmp t9a.out $srcdir/t9a.exp" failed. 1>&2 ;
+       $echo The command "cmp 9a.O $srcdir/9a.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
-test -s t9a.err || rm -f t9a.err
+test -s 9a.E || rm -f 9a.E
 if test $errors = 0 ; then
   $echo Passed all 35 tests. 1>&2
 else

@@ -44,44 +44,32 @@ CC = @CC@
 
 x = sort
 explicit =
-maint_gen = t01a.in t01a.exp t02a.in t02a.exp t02b.in t02b.exp t02c.in \
-t02c.exp t02d.in t02d.exp t02e.in t02e.exp t02f.in t02f.exp t03a.in t03a.exp \
-t03b.in t03b.exp t03c.in t03c.exp t03d.in t03d.exp t03e.in t03e.exp t03f.in \
-t03f.exp t03g.in t03g.exp t03h.in t03h.exp t03i.in t03i.exp t04a.in t04a.exp \
-t04b.in t04b.exp t04c.in t04c.exp t04d.in t04d.exp t04e.in t04e.exp t05a.in \
-t05a.exp t05b.in t05b.exp t05c.in t05c.exp t05d.in t05d.exp t05e.in t05e.exp \
-t05f.in t05f.exp t06a.in t06a.exp t06b.in t06b.exp t06c.in t06c.exp t06d.in \
-t06d.exp t06e.in t06e.exp t06f.in t06f.exp t07a.in t07a.exp t07b.in t07b.exp \
-t07c.in t07c.exp t07d.in t07d.exp t08a.in t08a.exp t08b.in t08b.exp t09a.in \
-t09a.exp t09b.in t09b.exp t09c.in t09c.exp t09d.in t09d.exp t10a.in t10a.exp \
-t10b.in t10b.exp t10c.in t10c.exp t10d.in t10d.exp t10a0.in t10a0.exp \
-t10a1.in t10a1.exp t10a2.in t10a2.exp t10e.in t10e.exp t10f.in t10f.exp \
-t10g.in t10g.exp t11a.in t11a.exp t11b.in t11b.exp t11c.in t11c.exp t11d.in \
-t11d.exp t12a.in t12a.exp t12b.in t12b.exp t12c.in t12c.exp t12d.in t12d.exp \
-t13a.in t13a.exp t13b.in t13b.exp t14a.in t14a.exp t14b.in t14b.exp t15a.in \
-t15a.exp t15b.in t15b.exp t15c.in t15c.exp t15d.in t15d.exp t15e.in t15e.exp \
-t16a.in t16a.exp t17.in t17.exp t18a.in t18a.exp t18b.in t18b.exp t18c.in \
-t18c.exp t18d.in t18d.exp t18e.in t18e.exp
-run_gen = t01a.out t01a.err t02a.out t02a.err t02b.out t02b.err t02c.out \
-t02c.err t02d.out t02d.err t02e.out t02e.err t02f.out t02f.err t03a.out \
-t03a.err t03b.out t03b.err t03c.out t03c.err t03d.out t03d.err t03e.out \
-t03e.err t03f.out t03f.err t03g.out t03g.err t03h.out t03h.err t03i.out \
-t03i.err t04a.out t04a.err t04b.out t04b.err t04c.out t04c.err t04d.out \
-t04d.err t04e.out t04e.err t05a.out t05a.err t05b.out t05b.err t05c.out \
-t05c.err t05d.out t05d.err t05e.out t05e.err t05f.out t05f.err t06a.out \
-t06a.err t06b.out t06b.err t06c.out t06c.err t06d.out t06d.err t06e.out \
-t06e.err t06f.out t06f.err t07a.out t07a.err t07b.out t07b.err t07c.out \
-t07c.err t07d.out t07d.err t08a.out t08a.err t08b.out t08b.err t09a.out \
-t09a.err t09b.out t09b.err t09c.out t09c.err t09d.out t09d.err t10a.out \
-t10a.err t10b.out t10b.err t10c.out t10c.err t10d.out t10d.err t10a0.out \
-t10a0.err t10a1.out t10a1.err t10a2.out t10a2.err t10e.out t10e.err t10f.out \
-t10f.err t10g.out t10g.err t11a.out t11a.err t11b.out t11b.err t11c.out \
-t11c.err t11d.out t11d.err t12a.out t12a.err t12b.out t12b.err t12c.out \
-t12c.err t12d.out t12d.err t13a.out t13a.err t13b.out t13b.err t14a.out \
-t14a.err t14b.out t14b.err t15a.out t15a.err t15b.out t15b.err t15c.out \
-t15c.err t15d.out t15d.err t15e.out t15e.err t16a.out t16a.err t17.out \
-t17.err t18a.out t18a.err t18b.out t18b.err t18c.out t18c.err t18d.out \
-t18d.err t18e.out t18e.err
+maint_gen = 01a.I 01a.X 02a.I 02a.X 02b.I 02b.X 02c.I 02c.X 02d.I 02d.X 02e.I \
+02e.X 02f.I 02f.X 03a.I 03a.X 03b.I 03b.X 03c.I 03c.X 03d.I 03d.X 03e.I 03e.X \
+03f.I 03f.X 03g.I 03g.X 03h.I 03h.X 03i.I 03i.X 04a.I 04a.X 04b.I 04b.X 04c.I \
+04c.X 04d.I 04d.X 04e.I 04e.X 05a.I 05a.X 05b.I 05b.X 05c.I 05c.X 05d.I 05d.X \
+05e.I 05e.X 05f.I 05f.X 06a.I 06a.X 06b.I 06b.X 06c.I 06c.X 06d.I 06d.X 06e.I \
+06e.X 06f.I 06f.X 07a.I 07a.X 07b.I 07b.X 07c.I 07c.X 07d.I 07d.X 08a.I 08a.X \
+08b.I 08b.X 09a.I 09a.X 09b.I 09b.X 09c.I 09c.X 09d.I 09d.X 10a.I 10a.X 10b.I \
+10b.X 10c.I 10c.X 10d.I 10d.X 10a0.I 10a0.X 10a1.I 10a1.X 10a2.I 10a2.X 10e.I \
+10e.X 10f.I 10f.X 10g.I 10g.X 11a.I 11a.X 11b.I 11b.X 11c.I 11c.X 11d.I 11d.X \
+12a.I 12a.X 12b.I 12b.X 12c.I 12c.X 12d.I 12d.X 13a.I 13a.X 13b.I 13b.X 14a.I \
+14a.X 14b.I 14b.X 15a.I 15a.X 15b.I 15b.X 15c.I 15c.X 15d.I 15d.X 15e.I 15e.X \
+16a.I 16a.X 17.I 17.X 18a.I 18a.X 18b.I 18b.X 18c.I 18c.X 18d.I 18d.X 18e.I \
+18e.X
+run_gen = 01a.O 01a.E 02a.O 02a.E 02b.O 02b.E 02c.O 02c.E 02d.O 02d.E 02e.O \
+02e.E 02f.O 02f.E 03a.O 03a.E 03b.O 03b.E 03c.O 03c.E 03d.O 03d.E 03e.O 03e.E \
+03f.O 03f.E 03g.O 03g.E 03h.O 03h.E 03i.O 03i.E 04a.O 04a.E 04b.O 04b.E 04c.O \
+04c.E 04d.O 04d.E 04e.O 04e.E 05a.O 05a.E 05b.O 05b.E 05c.O 05c.E 05d.O 05d.E \
+05e.O 05e.E 05f.O 05f.E 06a.O 06a.E 06b.O 06b.E 06c.O 06c.E 06d.O 06d.E 06e.O \
+06e.E 06f.O 06f.E 07a.O 07a.E 07b.O 07b.E 07c.O 07c.E 07d.O 07d.E 08a.O 08a.E \
+08b.O 08b.E 09a.O 09a.E 09b.O 09b.E 09c.O 09c.E 09d.O 09d.E 10a.O 10a.E 10b.O \
+10b.E 10c.O 10c.E 10d.O 10d.E 10a0.O 10a0.E 10a1.O 10a1.E 10a2.O 10a2.E 10e.O \
+10e.E 10f.O 10f.E 10g.O 10g.E 11a.O 11a.E 11b.O 11b.E 11c.O 11c.E 11d.O 11d.E \
+12a.O 12a.E 12b.O 12b.E 12c.O 12c.E 12d.O 12d.E 13a.O 13a.E 13b.O 13b.E 14a.O \
+14a.E 14b.O 14b.E 15a.O 15a.E 15b.O 15b.E 15c.O 15c.E 15d.O 15d.E 15e.O 15e.E \
+16a.O 16a.E 17.O 17.E 18a.O 18a.E 18b.O 18b.E 18c.O 18c.E 18d.O 18d.E 18e.O \
+18e.E
 
 EXTRA_DIST = mk-script.pl Test.pm $x-tests $(explicit) $(maint_gen)
 noinst_SCRIPTS = $x-tests

@@ -22,60 +22,40 @@ ta3-FF tb3-0FF tb3-FF tn w20l17f-lm w25l17f-lm w26l17f-lm w35a3l17f-lm \
 w35b3l17f-lm w35ja3l17f-lm w35jb3l17f-lm w35jml17f-lm-lo w35ml17f-lm-lo \
 w48l17f-lm w72j-0FF
 maint_gen =
-run_gen = t1a.out t1a.err t1b.out t1b.err t1c.out t1c.err t1d.out t1d.err \
-t1e.out t1e.err t1f.out t1f.err t1g.out t1g.err t1h.out t1h.err t1i.out \
-t1i.err t1j.out t1j.err t1k.out t1k.err t1l.out t1l.err t2a.out t2a.err \
-t2b.out t2b.err t2c.out t2c.err t2d.out t2d.err t2e.out t2e.err t2f.out \
-t2f.err t2g.out t2g.err t2h.out t2h.err t2i.out t2i.err t2j.out t2j.err \
-t3a.out t3a.err t3b.out t3b.err t3c.out t3c.err t3d.out t3d.err t3e.out \
-t3e.err t3f.out t3f.err t3g.out t3g.err t3h.out t3h.err t3i.out t3i.err \
-t3j.out t3j.err t3k.out t3k.err t3l.out t3l.err t3m.out t3m.err t3la.out \
-t3la.err t3lb.out t3lb.err t3lc.out t3lc.err t3ld.out t3ld.err t3le.out \
-t3le.err t3lf.out t3lf.err t3aa.out t3aa.err t3ab.out t3ab.err t3ac.out \
-t3ac.err t3ad.out t3ad.err t3ae.out t3ae.err t3af.out t3af.err t3ag.out \
-t3ag.err t3ah.out t3ah.err t3ai.out t3ai.err t3aj.out t3aj.err t3ak.out \
-t3ak.err t3ba.out t3ba.err t3bb.out t3bb.err t3bc.out t3bc.err t3bd.out \
-t3bd.err t3be.out t3be.err t3bf.out t3bf.err t3bg.out t3bg.err t3bh.out \
-t3bh.err t3bi.out t3bi.err t3bj.out t3bj.err t3bk.out t3bk.err t3Pa.out \
-t3Pa.err t3Pb.out t3Pb.err t3Pc.out t3Pc.err t3Pd.out t3Pd.err t3Pe.out \
-t3Pe.err t3Pf.out t3Pf.err t3Pg.out t3Pg.err t3Paa.out t3Paa.err t3Pab.out \
-t3Pab.err t3Pac.out t3Pac.err t3Pad.out t3Pad.err t3Pae.out t3Pae.err \
-t3Paf.out t3Paf.err t3Pba.out t3Pba.err t3Pbb.out t3Pbb.err t3Pbc.out \
-t3Pbc.err t3Pbd.out t3Pbd.err t3Pbe.out t3Pbe.err t3Pbf.out t3Pbf.err t4a.out \
-t4a.err t4b.out t4b.err t4c.out t4c.err t4d.out t4d.err t4e.out t4e.err \
-t4f.out t4f.err t4g.out t4g.err t4h.out t4h.err t4i.out t4i.err t4j.out \
-t4j.err t4k.out t4k.err t4l.out t4l.err t4m.out t4m.err t5a.out t5a.err \
-t5b.out t5b.err t5c.out t5c.err t5d.out t5d.err t5e.out t5e.err t5f.out \
-t5f.err t5g.out t5g.err t5ma.out t5ma.err t5mb.out t5mb.err t5mc.out t5mc.err \
-t5md.out t5md.err t5Pma.out t5Pma.err t5Pmb.out t5Pmb.err t5Pmc.out t5Pmc.err \
-t6a.out t6a.err t6b.out t6b.err t6c.out t6c.err t6d.out t6d.err t6e.out \
-t6e.err t6f.out t6f.err t6g.out t6g.err t6aa.out t6aa.err t6ab.out t6ab.err \
-t6ac.out t6ac.err t6ba.out t6ba.err t6bb.out t6bb.err t6bc.out t6bc.err \
-t7a.out t7a.err t7b.out t7b.err t7c.out t7c.err t7d.out t7d.err t7e.out \
-t7e.err t7f.out t7f.err t7g.out t7g.err t7aa.out t7aa.err t7ab.out t7ab.err \
-t7ac.out t7ac.err t7ba.out t7ba.err t7bb.out t7bb.err t7bc.out t7bc.err \
-t9a.out t9a.err t9b.out t9b.err t9Pa.out t9Pa.err t9Pb.out t9Pb.err t9Pc.out \
-t9Pc.err t9Pe.out t9Pe.err t9Pf.out t9Pf.err t9Pg.out t9Pg.err t9Ph.out \
-t9Ph.err t9Pi.out t9Pi.err t9Pj.out t9Pj.err t9Pk.out t9Pk.err t9Pl.out \
-t9Pl.err t9Pm.out t9Pm.err t9Pn.out t9Pn.err t9Po.out t9Po.err t9Pp.out \
-t9Pp.err t9Pq.out t9Pq.err t9Pr.out t9Pr.err t9Ps.out t9Ps.err t9Pt.out \
-t9Pt.err t9Paa.out t9Paa.err t9Pab.out t9Pab.err t9Pac.out t9Pac.err \
-t9Pad.out t9Pad.err t9Pae.out t9Pae.err t9Paf.out t9Paf.err t9Pag.out \
-t9Pag.err t9Pah.out t9Pah.err t9Pai.out t9Pai.err t9Paj.out t9Paj.err \
-t9Pak.out t9Pak.err t9Pba.out t9Pba.err t9Pbb.out t9Pbb.err t9Pbc.out \
-t9Pbc.err t9Pbd.out t9Pbd.err t9Pbe.out t9Pbe.err t9Pbf.out t9Pbf.err \
-t9Pbg.out t9Pbg.err t9Pbh.out t9Pbh.err t9Pbi.out t9Pbi.err t9Pbj.out \
-t9Pbj.err t9Pbk.out t9Pbk.err t9Pma.out t9Pma.err t9Pmb.out t9Pmb.err \
-t9Pmc.out t9Pmc.err t10a.out t10a.err t10b.out t10b.err t10c.out t10c.err \
-t10d.out t10d.err t10e.out t10e.err t10ma.out t10ma.err t10mb.out t10mb.err \
-t10mc.out t10mc.err t10md.out t10md.err t10me.out t10me.err t10mf.out \
-t10mf.err t10aa.out t10aa.err t10ab.out t10ab.err t10ac.out t10ac.err \
-t10ad.out t10ad.err t10ba.out t10ba.err t10bb.out t10bb.err t10bc.out \
-t10bc.err t10bd.out t10bd.err t11a.out t11a.err t11b.out t11b.err t11e.out \
-t11e.err t11f.out t11f.err t11g.out t11g.err t11h.out t11h.err t12aa.out \
-t12aa.err t12ab.out t12ab.err t12ac.out t12ac.err t12ba.out t12ba.err \
-t12bb.out t12bb.err t12bc.out t12bc.err t12ma.out t12ma.err t12mb.out \
-t12mb.err t12mc.out t12mc.err t12md.out t12md.err
+run_gen = 1a.O 1a.E 1b.O 1b.E 1c.O 1c.E 1d.O 1d.E 1e.O 1e.E 1f.O 1f.E 1g.O \
+1g.E 1h.O 1h.E 1i.O 1i.E 1j.O 1j.E 1k.O 1k.E 1l.O 1l.E 2a.O 2a.E 2b.O 2b.E \
+2c.O 2c.E 2d.O 2d.E 2e.O 2e.E 2f.O 2f.E 2g.O 2g.E 2h.O 2h.E 2i.O 2i.E 2j.O \
+2j.E 3a.O 3a.E 3b.O 3b.E 3c.O 3c.E 3d.O 3d.E 3e.O 3e.E 3f.O 3f.E 3g.O 3g.E \
+3h.O 3h.E 3i.O 3i.E 3j.O 3j.E 3k.O 3k.E 3l.O 3l.E 3m.O 3m.E 3la.O 3la.E 3lb.O \
+3lb.E 3lc.O 3lc.E 3ld.O 3ld.E 3le.O 3le.E 3lf.O 3lf.E 3aa.O 3aa.E 3ab.O 3ab.E \
+3ac.O 3ac.E 3ad.O 3ad.E 3ae.O 3ae.E 3af.O 3af.E 3ag.O 3ag.E 3ah.O 3ah.E 3ai.O \
+3ai.E 3aj.O 3aj.E 3ak.O 3ak.E 3ba.O 3ba.E 3bb.O 3bb.E 3bc.O 3bc.E 3bd.O 3bd.E \
+3be.O 3be.E 3bf.O 3bf.E 3bg.O 3bg.E 3bh.O 3bh.E 3bi.O 3bi.E 3bj.O 3bj.E 3bk.O \
+3bk.E 3Pa.O 3Pa.E 3Pb.O 3Pb.E 3Pc.O 3Pc.E 3Pd.O 3Pd.E 3Pe.O 3Pe.E 3Pf.O 3Pf.E \
+3Pg.O 3Pg.E 3Paa.O 3Paa.E 3Pab.O 3Pab.E 3Pac.O 3Pac.E 3Pad.O 3Pad.E 3Pae.O \
+3Pae.E 3Paf.O 3Paf.E 3Pba.O 3Pba.E 3Pbb.O 3Pbb.E 3Pbc.O 3Pbc.E 3Pbd.O 3Pbd.E \
+3Pbe.O 3Pbe.E 3Pbf.O 3Pbf.E 4a.O 4a.E 4b.O 4b.E 4c.O 4c.E 4d.O 4d.E 4e.O 4e.E \
+4f.O 4f.E 4g.O 4g.E 4h.O 4h.E 4i.O 4i.E 4j.O 4j.E 4k.O 4k.E 4l.O 4l.E 4m.O \
+4m.E 5a.O 5a.E 5b.O 5b.E 5c.O 5c.E 5d.O 5d.E 5e.O 5e.E 5f.O 5f.E 5g.O 5g.E \
+5ma.O 5ma.E 5mb.O 5mb.E 5mc.O 5mc.E 5md.O 5md.E 5Pma.O 5Pma.E 5Pmb.O 5Pmb.E \
+5Pmc.O 5Pmc.E 6a.O 6a.E 6b.O 6b.E 6c.O 6c.E 6d.O 6d.E 6e.O 6e.E 6f.O 6f.E \
+6g.O 6g.E 6aa.O 6aa.E 6ab.O 6ab.E 6ac.O 6ac.E 6ba.O 6ba.E 6bb.O 6bb.E 6bc.O \
+6bc.E 7a.O 7a.E 7b.O 7b.E 7c.O 7c.E 7d.O 7d.E 7e.O 7e.E 7f.O 7f.E 7g.O 7g.E \
+7aa.O 7aa.E 7ab.O 7ab.E 7ac.O 7ac.E 7ba.O 7ba.E 7bb.O 7bb.E 7bc.O 7bc.E 9a.O \
+9a.E 9b.O 9b.E 9Pa.O 9Pa.E 9Pb.O 9Pb.E 9Pc.O 9Pc.E 9Pe.O 9Pe.E 9Pf.O 9Pf.E \
+9Pg.O 9Pg.E 9Ph.O 9Ph.E 9Pi.O 9Pi.E 9Pj.O 9Pj.E 9Pk.O 9Pk.E 9Pl.O 9Pl.E 9Pm.O \
+9Pm.E 9Pn.O 9Pn.E 9Po.O 9Po.E 9Pp.O 9Pp.E 9Pq.O 9Pq.E 9Pr.O 9Pr.E 9Ps.O 9Ps.E \
+9Pt.O 9Pt.E 9Paa.O 9Paa.E 9Pab.O 9Pab.E 9Pac.O 9Pac.E 9Pad.O 9Pad.E 9Pae.O \
+9Pae.E 9Paf.O 9Paf.E 9Pag.O 9Pag.E 9Pah.O 9Pah.E 9Pai.O 9Pai.E 9Paj.O 9Paj.E \
+9Pak.O 9Pak.E 9Pba.O 9Pba.E 9Pbb.O 9Pbb.E 9Pbc.O 9Pbc.E 9Pbd.O 9Pbd.E 9Pbe.O \
+9Pbe.E 9Pbf.O 9Pbf.E 9Pbg.O 9Pbg.E 9Pbh.O 9Pbh.E 9Pbi.O 9Pbi.E 9Pbj.O 9Pbj.E \
+9Pbk.O 9Pbk.E 9Pma.O 9Pma.E 9Pmb.O 9Pmb.E 9Pmc.O 9Pmc.E 10a.O 10a.E 10b.O \
+10b.E 10c.O 10c.E 10d.O 10d.E 10e.O 10e.E 10ma.O 10ma.E 10mb.O 10mb.E 10mc.O \
+10mc.E 10md.O 10md.E 10me.O 10me.E 10mf.O 10mf.E 10aa.O 10aa.E 10ab.O 10ab.E \
+10ac.O 10ac.E 10ad.O 10ad.E 10ba.O 10ba.E 10bb.O 10bb.E 10bc.O 10bc.E 10bd.O \
+10bd.E 11a.O 11a.E 11b.O 11b.E 11e.O 11e.E 11f.O 11f.E 11g.O 11g.E 11h.O \
+11h.E 12aa.O 12aa.E 12ab.O 12ab.E 12ac.O 12ac.E 12ba.O 12ba.E 12bb.O 12bb.E \
+12bc.O 12bc.E 12ma.O 12ma.E 12mb.O 12mb.E 12mc.O 12mc.E 12md.O 12md.E
 ##test-files-end
 
 EXTRA_DIST = mk-script.pl Test.pm $x-tests $(explicit) $(maint_gen)
