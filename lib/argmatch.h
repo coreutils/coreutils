@@ -18,8 +18,8 @@
 /* Written by David MacKenzie <djm@ai.mit.edu>
    Modified by Akim Demaille <demaille@inf.enst.fr> */
 
-#ifndef _ARGMATCH_H_
-# define _ARGMATCH_H_ 1
+#ifndef ARGMATCH_H_
+# define ARGMATCH_H_ 1
 
 # if HAVE_CONFIG_H
 #  include <config.h>
@@ -106,4 +106,4 @@ const char *argmatch_to_argument
    argmatch_to_argument ((char *) &Value, Arglist, 	\
 			 (const char *) Vallist, sizeof (*Vallist))
 
-#endif /* _ARGMATCH_H_ */
+#endif /* ARGMATCH_H_ */
