@@ -1,5 +1,7 @@
 2001-01-28  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.0.37.
+
 	* src/ls.c (gobble_file): Add a FIXME comment.
 
 	* TODO: Add a few items.
@@ -7,6 +9,7 @@
 	* src/ls.c (enum) [FULL_TIME]: Define.
 	(long_options): Use it.
 	(decode_switches): Make --full-time imply -l.
+	Prompted by a report from Karl Eichwalder.
 
 2001-01-22  Jim Meyering  <meyering@lucent.com>
 
