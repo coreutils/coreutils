@@ -2337,7 +2337,7 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 
     {
       /* `path' is the absolute pathname of this file. */
-      int val;
+      int err;
 
       if (name[0] == '/' || dirname[0] == 0)
 	path = (char *) name;
@@ -2347,11 +2347,37 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 	  attach (path, dirname, name);
 	}
 
-      val = (DEREF_ALWAYS <= dereference + explicit_arg
-	     ? stat (path, &files[files_index].stat)
-	     : lstat (path, &files[files_index].stat));
+      switch (dereference)
+	{
+	case DEREF_ALWAYS:
+	  err = stat (path, &files[files_index].stat);
+	  break;
 
-      if (val < 0)
+	case DEREF_COMMAND_LINE_SYMLINK_TO_DIR:
+	  if (explicit_arg)
+	    {
+	      int need_lstat;
+	      err = stat (path, &files[files_index].stat);
+	      /* If stat failed because of ENOENT (maybe indicating a
+		 dangling symlink), or if it succeeded and PATH refers
+		 to a non-directory (hence PATH may be a symlink to a
+		 non-directory and we may not dereference it), fall
+		 through so that we call lstat instead.  */
+	      need_lstat = (err < 0
+			    ? errno == ENOENT
+			    : ! S_ISDIR (files[files_index].stat.st_mode));
+	      if (!need_lstat)
+		break;
+	    }
+
+	  /* fall through. */
+
+	default: /* DEREF_NEVER */
+	  err = lstat (path, &files[files_index].stat);
+	  break;
+	}
+
+      if (err < 0)
 	{
 	  error (0, errno, "%s", quotearg_colon (path));
 	  exit_status = 1;
