@@ -25,6 +25,7 @@
 
 #include "system.h"
 #include "version.h"
+#include "xstrtoul.h"
 #include "error.h"
 
 #ifndef _POSIX_VERSION
@@ -42,7 +43,6 @@ char *xrealloc ();
 
 static int change_file_group ();
 static int change_dir_group ();
-static int isnumber ();
 static void describe_change ();
 static void parse_group ();
 static void usage ();
@@ -159,9 +159,15 @@ parse_group (name, g)
   grp = getgrnam (name);
   if (grp == NULL)
     {
-      if (!isnumber (name))
-	error (1, 0, "invalid group `%s'", name);
-      *g = atoi (name);
+      strtol_error s_err;
+      unsigned long int tmp_long;
+
+      s_err = xstrtoul (name, NULL, 0, &tmp_long, NULL);
+      *g = tmp_long;
+      if (s_err == LONGINT_OVERFLOW || tmp_long > INT_MAX)
+	{
+	  STRTOL_FATAL_ERROR (name, "group number", s_err);
+	}
     }
   else
     *g = grp->gr_gid;
@@ -204,6 +210,12 @@ change_file_group (file, group)
 		  error (0, errno, "you are not a member of group `%s'",
 			 groupname);
 		}
+#ifdef MAXUID
+	      else if (errno == EINVAL && group > MAXUID)
+		{
+		  error (0, 0, "%s: invalid group number", groupname);
+		}
+#endif
 	      else
 		{
 		  error (0, errno, "%s", file);
@@ -286,19 +298,6 @@ describe_change (file, changed)
     printf ("group of %s changed to %s\n", file, groupname);
   else
     printf ("group of %s retained as %s\n", file, groupname);
-}
-
-/* Return nonzero if STR represents an unsigned decimal integer,
-   otherwise return 0. */
-
-static int
-isnumber (str)
-     char *str;
-{
-  for (; *str; str++)
-    if (!ISDIGIT (*str))
-      return 0;
-  return 1;
 }
 
 static void
