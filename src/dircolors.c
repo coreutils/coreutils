@@ -1,3 +1,4 @@
+/* FIXME: why no error for BERM?  */
 /* FIXME: dircolors - parse a Slackware-style DIR_COLORS file.
    Copyright (C) 1994, 1995 H. Peter Anvin
    Copyright (C) 1996 Free Software Foundation, Inc.
@@ -325,7 +326,7 @@ dc_parse_stream (FILE *fp, const char *filename, char **result)
 		    }
 		  else
 		    {
-		      error (0, 0, _("%s:%lu: unrecognized keyword %s\n"),
+		      error (0, 0, _("%s:%lu: unrecognized keyword %s"),
 			     filename, (long unsigned) line_number, keywd);
 		      err = 1;
 		    }
@@ -366,13 +367,6 @@ dc_parse_file (const char *filename, char **ls_color_string)
     }
 
   err = dc_parse_stream (fp, filename, ls_color_string);
-  if (err)
-    {
-      error (0, errno, "%s", filename);
-      if (fp != stdin)
-	fclose (fp);
-      return 1;
-    }
 
   if (fp != stdin && fclose (fp) == EOF)
     {
@@ -380,7 +374,7 @@ dc_parse_file (const char *filename, char **ls_color_string)
       return 1;
     }
 
-  return 0;
+  return err;
 }
 
 int
