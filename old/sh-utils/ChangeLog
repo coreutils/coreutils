@@ -1,3 +1,7 @@
+Sun Oct 13 07:34:15 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (ALL_LINGUAS): Add swedish (sv).
+
 Fri Oct 11 22:51:50 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/who-users.c (print_uptime): Change #ifdef guard on getloadavg
