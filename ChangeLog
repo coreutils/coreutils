@@ -2,6 +2,9 @@
 
 	* Version 5.1.2.
 
+	* tests/touch/relative: Remove `command' syntax.
+	Thanks to Nelson H. F. Beebe and Paul Eggert.
+
 	* tests/touch/relative: Test only year/month/day, not hours/min/sec,
 	so as to avoid problems with systems using TAI clocks.
 	Although it's no longer necessary, set TZ=UTC0 also for the
