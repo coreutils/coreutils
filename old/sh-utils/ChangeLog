@@ -1,3 +1,12 @@
+2000-04-01  Jochen Hein  <jochen@jochen.org>
+
+	* src/date.c: Use the "C" locale when using --rfc-822 (-R), as
+	required by rfc822.  Before, in the de_DE locale, date would
+	print the German weekday and month abbreviations.
+
+	* tests/date/Test.pm: Add test for rfc822 format and foreign
+	locale settings.
+
 2000-04-04  Jim Meyering  <meyering@lucent.com>
 
 	* man/Makefile.am (man_MANS): Add uptime.1.
