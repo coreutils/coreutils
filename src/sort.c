@@ -225,8 +225,17 @@ static int const linelength = 30;
 /* Maximum number of elements for the array(s) of struct line's, in bytes.  */
 #define LINEALLOC (SORTALLOC / 2)
 
-/* Directory in which any temporary files are to be created. */
-static char *temp_dir;
+/* Array of directory names in which any temporary files are to be created. */
+static char const **temp_dirs;
+
+/* Number of temporary directory names used.  */
+static size_t temp_dir_count;
+
+/* Number of allocated slots in temp_dirs.  */
+static size_t temp_dir_alloc;
+
+/* Our process ID.  */
+static pid_t process_id;
 
 /* Flag to reverse the order of all comparisons. */
 static int reverse;
@@ -286,6 +295,7 @@ Write sorted concatenation of all FILE(s) to standard output.\n\
   -s               stabilize sort by disabling last resort comparison\n\
   -t SEP           use SEParator instead of non- to whitespace transition\n\
   -T DIRECTORY     use DIRECTORY for temporary files, not $TMPDIR or %s\n\
+		     multiple -T options specify multiple directories\n\
   -u               with -c, check for strict ordering;\n\
                    with -m, only output the first of an equal sequence\n\
   -z               end lines with 0 byte, not newline, for find -print0\n\
@@ -412,37 +422,46 @@ write_bytes (const char *buf, size_t n_bytes, FILE *fp, const char *output_file)
     }
 }
 
+/* Append DIR to the array of temporary directory names.  */
+static void
+add_temp_dir (char const *dir)
+{
+  if (temp_dir_count == temp_dir_alloc)
+    {
+      temp_dir_alloc = temp_dir_alloc ? temp_dir_alloc * 2 : 16;
+      temp_dirs = xrealloc (temp_dirs, sizeof (temp_dirs) * temp_dir_alloc);
+    }
+
+  temp_dirs[temp_dir_count++] = dir;
+}
+
 /* Return a name for a temporary file. */
 
 static char *
 tempname (void)
 {
-  static unsigned int seq;
-  int len = strlen (temp_dir);
-  char *name = xmalloc (len + 1 + sizeof ("sort") - 1 + 5 + 5 + 1);
+  static unsigned long sequence_number;
+
+  unsigned long seq = sequence_number++;
+  unsigned long pid = process_id;
+  char const *temp_dir = temp_dirs[seq % temp_dir_count];
+  size_t len = strlen (temp_dir);
+  char const *slash = "/" + (len == 0 || temp_dir[len - 1] == '/');
+  char *name = xmalloc (len + 1 + sizeof "sort" - 1
+			+ sizeof pid * CHAR_BIT / 3 + 1
+			+ sizeof seq * CHAR_BIT / 3 + 1);
   int long_file_names = NAME_MAX_IN_DIR (temp_dir) > 12;
   struct tempnode *node;
 
-  /* If long filenames aren't supported, we cannot use filenames
-     longer than 8+3 and still assume they are unique.  */
   if (long_file_names)
-    sprintf (name,
-	     "%s%ssort%5.5d%5.5d",
-	     temp_dir,
-	     (len && temp_dir[len - 1] != '/') ? "/" : "",
-	     (unsigned int) getpid () & 0xffff, seq);
+    sprintf (name, "%s%ssort%lu.%.5lu", temp_dir, slash, pid, seq);
   else
-    sprintf (name, "%s%ss%5.5d%2.2d.%3.3d",
-	     temp_dir,
-	     (len && temp_dir[len - 1] != '/') ? "/" : "",
-	     (unsigned int) getpid () & 0xffff, seq / 1000, seq % 1000);
-
-  ++seq;
-
-  /* Make sure that SEQ's value fits in 5 digits if temp_dir is on
-     an 8.3 filesystem.  */
-  if (!long_file_names && seq >= 100000)
-    seq = 0;
+    {
+      /* Make sure the file name is safe for an 8.3 filesystem.  */
+      sprintf (name, "%s%ss%.5d%.2d.%.3d", temp_dir, slash,
+	       (int) (pid % 100000), (int) (seq / 1000 % 100),
+	       (int) (seq % 1000));
+    }
 
   node = (struct tempnode *) xmalloc (sizeof (struct tempnode));
   node->name = name;
@@ -1779,7 +1798,7 @@ sighandler (int sig)
   signal (sig, SIG_DFL);
 #endif
   cleanup ();
-  kill (getpid (), sig);
+  kill (process_id, sig);
 }
 
 /* Set the ordering options for KEY specified in S.
@@ -1851,6 +1870,7 @@ main (int argc, char **argv)
 #endif
 
   program_name = argv[0];
+  process_id = getpid ();
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
@@ -1889,10 +1909,6 @@ main (int argc, char **argv)
 
   have_read_stdin = 0;
   inittables ();
-
-  temp_dir = getenv ("TMPDIR");
-  if (temp_dir == NULL)
-    temp_dir = DEFAULT_TMPDIR;
 
   /* Change the way xmalloc and xrealloc fail.  */
   xalloc_exit_failure = SORT_FAILURE;
@@ -2146,11 +2162,11 @@ but lacks following character offset"));
 		    break;
 		  case 'T':
 		    if (s[1])
-		      temp_dir = ++s;
+		      add_temp_dir (++s);
 		    else
 		      {
 			if (i < argc - 1)
-			  temp_dir = argv[++i];
+			  add_temp_dir (argv[++i]);
 			else
 			  error (SORT_FAILURE, 0,
 				 _("option `-T' requires an argument"));
@@ -2207,6 +2223,12 @@ but lacks following character offset"));
 		   || gkey.general_numeric))
     insertkey (&gkey);
   reverse = gkey.reverse;
+
+  if (temp_dir_count == 0)
+    {
+      char const *t = getenv ("TMPDIR");
+      add_temp_dir (t ? t : DEFAULT_TMPDIR);
+    }
 
   if (nfiles == 0)
     {
