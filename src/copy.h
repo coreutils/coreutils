@@ -25,8 +25,9 @@ enum Sparse_type
 /* This type is used to help mv (via copy.c) distinguish these cases.  */
 enum Interactive
 {
-  I_OFF = 1,
-  I_ON,
+  I_ALWAYS_YES = 1,
+  I_ALWAYS_NO,
+  I_ASK_USER,
   I_UNSPECIFIED
 };
 
