@@ -35,13 +35,23 @@ my @Tests =
 				{OUT=>"57edf4a22be3c955ac49da2e2107b67a  f\n"}],
      ['backslash', {IN=> {".\\foo"=> ''}},
 				{OUT=>"\\$degenerate  .\\\\foo\n"}],
+     ['check-1', '--check', {AUX=> {f=> ''}},
+				{IN=> {'f.md5' => "$degenerate  f\n"}},
+				{OUT=>"f: OK\n"}],
+     ['check-2', '--check', '--status', {IN=>{'f.md5' => "$degenerate  f\n"}},
+				{AUX=> {f=> 'foo'}}, {EXIT=> 1}],
+     ['check-bsd', '--check', {IN=> {'f.md5' => "MD5 (f) = $degenerate\n"}},
+				{AUX=> {f=> ''}}, {OUT=>"f: OK\n"}],
+     ['check-bsd2', '--check', '--status',
+				{IN=> {'f.md5' => "MD5 (f) = $degenerate\n"}},
+				{AUX=> {f=> 'bar'}}, {EXIT=> 1}],
     );
 
 # Insert the `--text' argument for each test.
 my $t;
 foreach $t (@Tests)
   {
-    splice @$t, 1, 0, '--text';
+    splice @$t, 1, 0, '--text' unless @$t[1] =~ /--check/;
   }
 
 my $save_temps = $ENV{DEBUG};
