@@ -480,7 +480,7 @@ cut_fields (FILE *stream)
 	    {
 	      if (feof (stream))
 		break;
-	      FATAL_ERROR (_("Memory exhausted"));
+	      FATAL_ERROR (_("virtual memory exhausted"));
 	    }
 
 	  assert (len != 0);
