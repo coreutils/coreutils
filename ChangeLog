@@ -8,6 +8,9 @@
 	original POSIX 1003.2-1992, as SUSv2 corrected the case of
 	"tail -c".  Add support for the SUSv2 "b" modifier.
 	* NEWS: Mention the above.
+	* tests/tail/Test.pm: New test case obs-b to check the above.
+	err-[134] no longer need _POSIX2_VERSION=199209.
+	Fix comments to match revised behavior.
 
 2004-09-22  Jim Meyering  <jim@meyering.net>
 
