@@ -22,6 +22,11 @@
 #include <time.h>
 #include <getopt.h>
 
+#define USE_CLOCK_GETTIME (defined CLOCK_REALTIME && HAVE_CLOCK_GETTIME)
+#if ! USE_CLOCK_GETTIME
+# include <sys/time.h>
+#endif
+
 #ifndef TIME_T_MAX
 # define TIME_T_MAX TYPE_MAXIMUM (time_t)
 #endif
@@ -104,6 +109,59 @@ apply_suffix (double *s, char suffix_char)
   return 0;
 }
 
+/* Subtract the `struct timespec' values X and Y,
+   storing the difference in DIFF.
+   Return 1 if the difference is negative, otherwise 0.
+   From the GNU libc manual.  */
+
+static int
+timespec_subtract (struct timespec *diff,
+		   const struct timespec *x, struct timespec *y)
+{
+  /* Perform the carry for the later subtraction by updating Y. */
+  if (x->tv_nsec < y->tv_nsec)
+    {
+      int nsec = (y->tv_nsec - x->tv_nsec) / 1000000000 + 1;
+      y->tv_nsec -= 1000000000 * nsec;
+      y->tv_sec += nsec;
+    }
+
+  if (x->tv_nsec - y->tv_nsec > 1000000000)
+    {
+      int nsec = (y->tv_nsec - x->tv_nsec) / 1000000000;
+      y->tv_nsec += 1000000000 * nsec;
+      y->tv_sec -= nsec;
+    }
+
+  /* Compute the time remaining to wait.
+     `tv_nsec' is certainly positive. */
+  diff->tv_sec = x->tv_sec - y->tv_sec;
+  diff->tv_nsec = x->tv_nsec - y->tv_nsec;
+
+  /* Return 1 if result is negative. */
+  return x->tv_sec < y->tv_sec;
+}
+
+static void
+clock_get_realtime (struct timespec *ts)
+{
+  int fail;
+#if USE_CLOCK_GETTIME
+  fail = clock_gettime (CLOCK_REALTIME, &ts);
+#else
+  struct timeval tv;
+  fail = gettimeofday (&tv, NULL);
+  if (!fail)
+    {
+      ts->tv_sec = tv.tv_sec;
+      ts->tv_nsec = 1000 * tv.tv_usec;
+    }
+#endif
+
+  if (fail)
+    error (1, errno, _("cannot read realtime clock"));
+}
+
 int
 main (int argc, char **argv)
 {
@@ -111,8 +169,12 @@ main (int argc, char **argv)
   double seconds = 0.0;
   int c;
   int fail = 0;
-  int interrupted;
-  struct timespec ts;
+  struct timespec ts_start;
+  struct timespec ts_stop;
+  struct timespec ts_sleep;
+
+  /* Record start time.  */
+  clock_get_realtime (&ts_start);
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -170,17 +232,24 @@ main (int argc, char **argv)
   seconds += .0000000005;
 
   /* Separate whole seconds from nanoseconds.  */
-  ts.tv_sec = seconds;
-  ts.tv_nsec = (seconds - ts.tv_sec) * 1000000000;
+  ts_sleep.tv_sec = seconds;
+  ts_sleep.tv_nsec = (seconds - ts_sleep.tv_sec) * 1000000000;
+
+  ts_stop.tv_sec = ts_start.tv_sec + ts_sleep.tv_sec;
+  ts_stop.tv_nsec = ts_start.tv_nsec + ts_sleep.tv_nsec;
 
   while (1)
     {
       struct timespec remaining;
-      interrupted = nanosleep (&ts, &remaining);
-      /* assert (!interrupted || errno == EINTR); */
+      struct timespec ts_now;
+      int negative;
+      int interrupted = nanosleep (&ts_sleep, &remaining);
       if (!interrupted)
 	break;
-      ts = remaining;
+      clock_get_realtime (&ts_now);
+      negative = timespec_subtract (&ts_sleep, &ts_stop, &ts_now);
+      if (negative)
+	break;
     }
 
   exit (0);
