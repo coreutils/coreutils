@@ -654,7 +654,7 @@ unary_operator (void)
       value = -1 != eaccess (argv[pos - 1], R_OK);
       return (TRUE == value);
 
-    case 'w':			/* File is writeable? */
+    case 'w':			/* File is writable? */
       unary_advance ();
       value = -1 != eaccess (argv[pos - 1], W_OK);
       return (TRUE == value);
