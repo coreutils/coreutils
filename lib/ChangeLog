@@ -1,3 +1,8 @@
+2003-09-14  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am (libfetish_a_SOURCES): Add exit.h, strndup.h,
+	time_r.c, time_r.h.
+
 2003-09-13  Jim Meyering  <jim@meyering.net>
 
 	* setenv.c, strcspn.c, strdup.c, strndup.c, strnlen.c, strpbrk.c:
