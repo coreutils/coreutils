@@ -1,6 +1,12 @@
-2003-06-10  Jim Meyering  <jim@meyering.net>
+2003-06-12  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* src/wc.c (usage): Correct wording: wc prints counts in the order
+	`newline, word, byte'.  Reported by Keith M. Briggs.
+	* man/wc.x: Fix it here, too.  And change `lines' to `newlines'.
+
+2003-06-10  Jim Meyering  <jim@meyering.net>
 
 	* tests/date/Test.pm: Add a test for the new format, e.g., May-23-2003.
 
