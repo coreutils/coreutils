@@ -3318,14 +3318,14 @@ if test $code != 0; then
   $echo "Test 10wc failed: ../../src/pr return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 10wc.O $srcdir/W72l17f-ll > /dev/null 2>&1
+  cmp 10wc.O $srcdir/W-72l17f-ll > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE"; then $echo "passed 10wc"; fi;;
-    1) $echo "Test 10wc failed: files 10wc.O and $srcdir/W72l17f-ll differ" 1>&2
-       (diff -c 10wc.O $srcdir/W72l17f-ll) 2> /dev/null
+    1) $echo "Test 10wc failed: files 10wc.O and $srcdir/W-72l17f-ll differ" 1>&2
+       (diff -c 10wc.O $srcdir/W-72l17f-ll) 2> /dev/null
        errors=`expr $errors + 1`;;
     2) $echo "Test 10wc may have failed." 1>&2
-       $echo The command "cmp 10wc.O $srcdir/W72l17f-ll" failed. 1>&2
+       $echo The command "cmp 10wc.O $srcdir/W-72l17f-ll" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
@@ -4254,14 +4254,14 @@ if test $code != 0; then
   $echo "Test 14g failed: ../../src/pr return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 14g.O $srcdir/2Sf-t_notab > /dev/null 2>&1
+  cmp 14g.O $srcdir/2-Sf-t_notab > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE"; then $echo "passed 14g"; fi;;
-    1) $echo "Test 14g failed: files 14g.O and $srcdir/2Sf-t_notab differ" 1>&2
-       (diff -c 14g.O $srcdir/2Sf-t_notab) 2> /dev/null
+    1) $echo "Test 14g failed: files 14g.O and $srcdir/2-Sf-t_notab differ" 1>&2
+       (diff -c 14g.O $srcdir/2-Sf-t_notab) 2> /dev/null
        errors=`expr $errors + 1`;;
     2) $echo "Test 14g may have failed." 1>&2
-       $echo The command "cmp 14g.O $srcdir/2Sf-t_notab" failed. 1>&2
+       $echo The command "cmp 14g.O $srcdir/2-Sf-t_notab" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
@@ -4290,14 +4290,14 @@ if test $code != 0; then
   $echo "Test 14i failed: ../../src/pr return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 14i.O $srcdir/2S_f-t_notab > /dev/null 2>&1
+  cmp 14i.O $srcdir/2-S_f-t_notab > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE"; then $echo "passed 14i"; fi;;
-    1) $echo "Test 14i failed: files 14i.O and $srcdir/2S_f-t_notab differ" 1>&2
-       (diff -c 14i.O $srcdir/2S_f-t_notab) 2> /dev/null
+    1) $echo "Test 14i failed: files 14i.O and $srcdir/2-S_f-t_notab differ" 1>&2
+       (diff -c 14i.O $srcdir/2-S_f-t_notab) 2> /dev/null
        errors=`expr $errors + 1`;;
     2) $echo "Test 14i may have failed." 1>&2
-       $echo The command "cmp 14i.O $srcdir/2S_f-t_notab" failed. 1>&2
+       $echo The command "cmp 14i.O $srcdir/2-S_f-t_notab" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
