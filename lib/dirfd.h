@@ -22,6 +22,6 @@
 #ifndef HAVE_DECL_DIRFD
 "this configure-time declaration test was not run"
 #endif
-#if !HAVE_DECL_DIRFD
+#if !HAVE_DECL_DIRFD && !defined dirfd
 int dirfd (DIR const *);
 #endif
