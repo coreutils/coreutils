@@ -30,7 +30,7 @@
 char *xmalloc ();
 int full_write ();
 
-static int tee ();
+static int tee __P ((int nfiles, const char **files));
 
 /* If nonzero, append to output files rather than truncating them. */
 static int append;
@@ -57,8 +57,7 @@ static struct option const long_options[] =
 };
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -79,9 +78,7 @@ Copy standard input to each FILE, and also to standard output.\n\
 }
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int errs;
   int optc;
@@ -147,9 +144,7 @@ main (argc, argv)
    Return 0 if successful, 1 if any errors occur. */
 
 static int
-tee (nfiles, files)
-     int nfiles;
-     const char **files;
+tee (int nfiles, const char **files)
 {
   int *descriptors;
   char buffer[BUFSIZ];

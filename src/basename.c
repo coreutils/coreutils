@@ -34,17 +34,16 @@
 #include "long-options.h"
 #include "error.h"
 
-char *basename ();
+char *basename __P ((char *));
 void strip_trailing_slashes ();
 
-static void remove_suffix ();
+static void remove_suffix __P ((register char *name, register char *suffix));
 
 /* The name this program was run with. */
 char *program_name;
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",
@@ -68,9 +67,7 @@ If specified, also remove a trailing SUFFIX.\n\
 }
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   char *name;
 
@@ -100,8 +97,7 @@ main (argc, argv)
    consists entirely of SUFFIX. */
 
 static void
-remove_suffix (name, suffix)
-     register char *name, *suffix;
+remove_suffix (register char *name, register char *suffix)
 {
   register char *np, *sp;
 

@@ -64,8 +64,7 @@ on System V systems with the -E option.
 char *program_name;
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -103,9 +102,7 @@ Without -E, the following sequences are recognized and interpolated:\n\
    `-n', then don't print a trailing newline.  We also support the
    echo syntax from Version 9 unix systems. */
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int display_return = 1, do_v9 = 0;
 

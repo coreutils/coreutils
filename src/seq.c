@@ -25,10 +25,10 @@
 #include "error.h"
 #include "version.h"
 
-static double scan_double_arg ();
-static int check_format ();
-static char *get_width_format ();
-static int print_numbers ();
+static double scan_double_arg __P ((char *arg));
+static int check_format __P ((char *format_string));
+static char *get_width_format __P ((void));
+static int print_numbers __P ((char *format_str));
 
 /* If nonzero print all number with equal width. */
 static int equal_width;
@@ -68,8 +68,7 @@ static struct option const long_options[] =
 };
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     (void) fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -96,9 +95,7 @@ Usage: %s [OPTION]... [from [step]] to\n\
 }
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int errs;
   int optc;
@@ -223,8 +220,7 @@ format string may not be specified when printing equal width strings"));
    Return if the string is correct else signal error.  */
 
 static double
-scan_double_arg (arg)
-     char *arg;
+scan_double_arg (char *arg)
 {
   char *end_ptr;
   double ret_val;
@@ -246,8 +242,7 @@ scan_double_arg (arg)
    Return 0 if not, 1 if correct.  */
 
 static int
-check_format (format_string)
-     char *format_string;
+check_format (char *format_string)
 {
   while (*format_string != '\0')
     {
@@ -371,7 +366,7 @@ get_width_format ()
 #else	/* one of the math functions rint, modf, floor is missing.  */
 
 static char *
-get_width_format ()
+get_width_format (void)
 {
   /* We cannot compute the needed information to determine the correct
      answer.  So we simply return a value that works for all cases.  */
@@ -383,8 +378,7 @@ get_width_format ()
 /* Actually print the sequence of numbers in the specified range, with the
    given or default stepping and format.  */
 static int
-print_numbers (format_str)
-     char *format_str;
+print_numbers (char *format_str)
 {
   if (from > last)
     {

@@ -38,8 +38,8 @@
 #include "version.h"
 #include "error.h"
 
-static void print_element ();
-static void usage ();
+static void print_element __P ((unsigned char mask, char *element));
+static void usage __P ((int status));
 
 /* Values that are bitwise or'd into `toprint'. */
 /* Operating system name. */
@@ -82,9 +82,7 @@ static struct option const long_options[] =
 };
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   struct utsname name;
   int c;
@@ -162,9 +160,7 @@ main (argc, argv)
    be printed, in which case print a newline. */
 
 static void
-print_element (mask, element)
-     unsigned char mask;
-     char *element;
+print_element (unsigned char mask, char *element)
 {
   if (toprint & mask)
     {
@@ -174,8 +170,7 @@ print_element (mask, element)
 }
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),

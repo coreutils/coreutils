@@ -32,8 +32,7 @@ char *xgetcwd ();
 char *program_name;
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -52,9 +51,7 @@ Print the full filename of the current working directory.\n\
 }
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   char *wd;
 

@@ -70,8 +70,8 @@ extern int errno;
 #  define member(c, s) ((c) ? (strchr ((s), (c)) ? 1 : 0) : 0)
 #endif /* !member */
 
-extern gid_t getgid (), getegid ();
-extern uid_t geteuid ();
+extern gid_t getgid (void), getegid (void);
+extern uid_t geteuid (void);
 
 #if !defined (R_OK)
 #define R_OK 4
@@ -110,18 +110,18 @@ static int pos;		/* The offset of the current argument in ARGV. */
 static int argc;	/* The number of arguments present in ARGV. */
 static char **argv;	/* The argument list. */
 
-static int unop ();
-static int binop ();
-static int unary_operator ();
-static int binary_operator ();
-static int two_arguments ();
-static int three_arguments ();
-static int posixtest ();
+static int unop __P ((int op));
+static int binop __P ((char *s));
+static int unary_operator __P ((void));
+static int binary_operator __P ((void));
+static int two_arguments __P ((void));
+static int three_arguments __P ((void));
+static int posixtest __P ((void));
 
-static int expr ();
-static int term ();
-static int and ();
-static int or ();
+static int expr __P ((void));
+static int term __P ((void));
+static int and __P ((void));
+static int or __P ((void));
 
 #if __GNUC__ >= 2 && defined (__GNUC_MINOR__) \
     && __GNUC_MINOR__ >= 5 && !defined (__STRICT_ANSI__)
@@ -130,12 +130,11 @@ static int or ();
 #define NO_RETURN_ATTRIBUTE /* empty */
 #endif
 
-static void test_syntax_error () NO_RETURN_ATTRIBUTE;
-static void beyond () NO_RETURN_ATTRIBUTE;
+static void test_syntax_error (char *format, char *arg) NO_RETURN_ATTRIBUTE;
+static void beyond (void) NO_RETURN_ATTRIBUTE;
 
 static void
-test_syntax_error (format, arg)
-     char *format, *arg;
+test_syntax_error (char *format, char *arg)
 {
   fprintf (stderr, "%s: ", argv[0]);
   fprintf (stderr, format, arg);
@@ -145,9 +144,7 @@ test_syntax_error (format, arg)
 
 /* A wrapper for stat () which disallows pathnames that are empty strings. */
 static int
-test_stat (path, finfo)
-     char *path;
-     struct stat *finfo;
+test_stat (char *path, struct stat *finfo)
 {
   if (*path == '\0')
     {
@@ -161,9 +158,7 @@ test_stat (path, finfo)
    and don't make the mistake of telling root that any file is executable.
    But this loses when the containing filesystem is mounted e.g. read-only.  */
 static int
-eaccess (path, mode)
-     char *path;
-     int mode;
+eaccess (char *path, int mode)
 {
   struct stat st;
   static int euid = -1;
@@ -234,7 +229,7 @@ advance (f)
  *	error condition)
  */
 static void
-beyond ()
+beyond (void)
 {
   test_syntax_error (_("argument expected\n"), NULL);
 }
@@ -242,8 +237,7 @@ beyond ()
 /* Syntax error for when an integer argument was expected, but
    something else was found. */
 static void
-integer_expected_error (pch)
-     char *pch;
+integer_expected_error (char *pch)
 {
   test_syntax_error (_("integer expression expected %s\n"), pch);
 }
@@ -252,9 +246,7 @@ integer_expected_error (pch)
    valid number.  Stuff the converted number into RESULT if RESULT is
    a non-null pointer to a long. */
 static int
-isint (string, result)
-     register char *string;
-     long *result;
+isint (register char *string, long int *result)
 {
   int sign;
   long value;
@@ -311,9 +303,7 @@ isint (string, result)
 /* Find the modification time of FILE, and stuff it into AGE, a pointer
    to a long.  Return nonzero if successful, else zero. */
 static int
-age_of (filename, age)
-     char *filename;
-     long *age;
+age_of (char *filename, long int *age)
 {
   struct stat finfo;
 
@@ -345,7 +335,7 @@ age_of (filename, age)
  *	positive and negative integers
  */
 static int
-term ()
+term (void)
 {
   int value;
 
@@ -402,7 +392,7 @@ term ()
 }
 
 static int
-binary_operator ()
+binary_operator (void)
 {
   register int op;
   struct stat stat_buf, stat_spare;
@@ -640,7 +630,7 @@ binary_operator ()
 }
 
 static int
-unary_operator ()
+unary_operator (void)
 {
   long r, value;
   struct stat stat_buf;
@@ -824,7 +814,7 @@ unary_operator ()
  *	term '-a' and
  */
 static int
-and ()
+and (void)
 {
   int value;
 
@@ -843,7 +833,7 @@ and ()
  *	and '-o' or
  */
 static int
-or ()
+or (void)
 {
   int value;
 
@@ -863,7 +853,7 @@ or ()
  *	or
  */
 static int
-expr ()
+expr (void)
 {
   if (pos >= argc)
     beyond ();
@@ -873,8 +863,7 @@ expr ()
 
 /* Return TRUE if S is one of the test command's binary operators. */
 static int
-binop (s)
-     char *s;
+binop (char *s)
 {
   return ((STREQ (s,   "=")) || (STREQ (s,  "!=")) || (STREQ (s, "-nt")) ||
 	  (STREQ (s, "-ot")) || (STREQ (s, "-ef")) || (STREQ (s, "-eq")) ||
@@ -884,14 +873,13 @@ binop (s)
 
 /* Return nonzero if OP is one of the test command's unary operators. */
 static int
-unop (op)
-     int op;
+unop (int op)
 {
   return (member (op, "abcdefgkLhprsStuwxOGnz"));
 }
 
 static int
-two_arguments ()
+two_arguments (void)
 {
   int value;
 
@@ -910,7 +898,7 @@ two_arguments ()
 }
 
 static int
-three_arguments ()
+three_arguments (void)
 {
   int value;
 
@@ -934,7 +922,7 @@ three_arguments ()
 
 /* This is an implementation of a Posix.2 proposal by David Korn. */
 static int
-posixtest ()
+posixtest (void)
 {
   int value;
 
@@ -979,8 +967,7 @@ posixtest ()
 #include "long-options.h"
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),

@@ -93,8 +93,8 @@
 
 char *xstrdup ();
 
-static int validate_path ();
-static void usage ();
+static int validate_path __P ((char *path, int portability));
+static void usage __P ((int status));
 
 /* The name this program was run with. */
 char *program_name;
@@ -114,9 +114,7 @@ static struct option const longopts[] =
 };
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int exit_status = 0;
   int check_portability = 0;
@@ -187,8 +185,7 @@ static char const portable_chars[256] =
 /* If PATH contains only portable characters, return 1, else 0.  */
 
 static int
-portable_chars_only (path)
-     const char *path;
+portable_chars_only (const char *path)
 {
   const char *p;
 
@@ -206,8 +203,7 @@ portable_chars_only (path)
    2 if it doesn't exist.  */
 
 static int
-dir_ok (path)
-     const char *path;
+dir_ok (const char *path)
 {
   struct stat stats;
 
@@ -251,9 +247,7 @@ dir_ok (path)
    Return 0 if all of these tests are successful, 1 if any fail. */
 
 static int
-validate_path (path, portability)
-     char *path;
-     int portability;
+validate_path (char *path, int portability)
 {
   int path_max;
   int last_elem;		/* Nonzero if checking last element of path. */
@@ -356,8 +350,7 @@ validate_path (path, portability)
 }
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),

@@ -89,7 +89,7 @@
 
 int putenv ();
 
-static void usage ();
+static void usage __P ((int status));
 
 extern char **environ;
 
@@ -112,10 +112,7 @@ static struct option const longopts[] =
 };
 
 void
-main (argc, argv, envp)
-     register int argc;
-     register char **argv;
-     char **envp;
+main (register int argc, register char **argv, char **envp)
 {
   char *dummy_environ[1];
   int optc;
@@ -182,8 +179,7 @@ main (argc, argv, envp)
 }
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),

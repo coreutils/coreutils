@@ -44,8 +44,7 @@ static struct option const long_options[] =
 };
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -64,9 +63,7 @@ Same as id -un.\n\
 }
 
 void
-main (argc, argv)
-     int argc;
-     char *argv[];
+main (int argc, char **argv)
 {
   register struct passwd *pw;
   register uid_t uid;

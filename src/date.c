@@ -45,8 +45,8 @@ char *xrealloc ();
 time_t get_date ();
 time_t posixtime ();
 
-static void show_date ();
-static void usage ();
+static void show_date __P ((const char *format, time_t when));
+static void usage __P (int status));
 
 /* The name this program was run with, for error messages. */
 char *program_name;
@@ -77,9 +77,7 @@ static struct option const long_options[] =
    If any line cannot be parsed, return nonzero;  otherwise return zero.  */
 
 static int
-batch_convert (input_filename, format)
-     const char *input_filename;
-     const char *format;
+batch_convert (const char *input_filename, const char *format)
 {
   int status;
   FILE *in_stream;
@@ -138,9 +136,7 @@ batch_convert (input_filename, format)
 }
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int optc;
   const char *datestr = NULL;
@@ -301,9 +297,7 @@ non-option argument must be a format string beginning with `+'"));
    standard output format (ctime style but with a timezone inserted). */
 
 static void
-show_date (format, when)
-     const char *format;
-     time_t when;
+show_date (const char *format, time_t when)
 {
   struct tm *tm;
   char *out = NULL;
@@ -336,8 +330,7 @@ show_date (format, when)
 }
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),

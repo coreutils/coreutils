@@ -55,8 +55,7 @@ static struct option const long_options[] =
 extern char **environ;
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -74,9 +73,7 @@ If no environment VARIABLE specified, print them all.\n\
 }
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   char **env;
   char *ep, *ap;

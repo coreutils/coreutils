@@ -65,15 +65,15 @@ unsigned long strtoul ();
 
 char *xmalloc ();
 
-static double xstrtod ();
-static int print_esc ();
-static int print_formatted ();
-static long xstrtol ();
-static unsigned long xstrtoul ();
-static void print_direc ();
-static void print_esc_char ();
-static void print_esc_string ();
-static void verify ();
+static double xstrtod __P ((char *s));
+static int print_esc __P ((char *escstart));
+static int print_formatted __P ((char *format, int argc, char **argv));
+static long xstrtol __P ((char *s));
+static unsigned long xstrtoul __P ((char *s));
+static void print_direc __P ((char *start, size_t length, int field_width, int precision, char *argument));
+static void print_esc_char __P ((char c));
+static void print_esc_string __P ((char *str));
+static void verify __P ((char *s, char *end));
 
 /* The value to return to the calling program.  */
 static int exit_status;
@@ -82,8 +82,7 @@ static int exit_status;
 char *program_name;
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -127,9 +126,7 @@ ARGUMENTs converted to proper type first.  Variable widths are handled.\n\
 }
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   char *format;
   int args_used;
@@ -165,10 +162,7 @@ main (argc, argv)
    Return the number of elements of ARGV used.  */
 
 static int
-print_formatted (format, argc, argv)
-     char *format;
-     int argc;
-     char **argv;
+print_formatted (char *format, int argc, char **argv)
 {
   int save_argc = argc;		/* Preserve original value.  */
   char *f;			/* Pointer into `format'.  */
@@ -285,8 +279,7 @@ print_formatted (format, argc, argv)
    besides the backslash. */
 
 static int
-print_esc (escstart)
-     char *escstart;
+print_esc (char *escstart)
 {
   register char *p = escstart + 1;
   int esc_value = 0;		/* Value of \nnn escape. */
@@ -321,8 +314,7 @@ print_esc (escstart)
 /* Output a single-character \ escape.  */
 
 static void
-print_esc_char (c)
-     char c;
+print_esc_char (char c)
 {
   switch (c)
     {
@@ -359,8 +351,7 @@ print_esc_char (c)
 /* Print string STR, evaluating \ escapes. */
 
 static void
-print_esc_string (str)
-     char *str;
+print_esc_string (char *str)
 {
   for (; *str; str++)
     if (*str == '\\')
@@ -375,12 +366,7 @@ print_esc_string (str)
    '*' values in those fields. */
 
 static void
-print_direc (start, length, field_width, precision, argument)
-     char *start;
-     size_t length;
-     int field_width;
-     int precision;
-     char *argument;
+print_direc (char *start, size_t length, int field_width, int precision, char *argument)
 {
   char *p;		/* Null-terminated copy of % directive. */
 
@@ -475,8 +461,7 @@ print_direc (start, length, field_width, precision, argument)
 }
 
 static unsigned long
-xstrtoul (s)
-     char *s;
+xstrtoul (char *s)
 {
   char *end;
   unsigned long val;
@@ -488,8 +473,7 @@ xstrtoul (s)
 }
 
 static long
-xstrtol (s)
-     char *s;
+xstrtol (char *s)
 {
   char *end;
   long val;
@@ -501,8 +485,7 @@ xstrtol (s)
 }
 
 static double
-xstrtod (s)
-     char *s;
+xstrtod (char *s)
 {
   char *end;
   double val;
@@ -514,8 +497,7 @@ xstrtod (s)
 }
 
 static void
-verify (s, end)
-     char *s, *end;
+verify (char *s, char *end)
 {
   if (errno)
     {

@@ -24,7 +24,7 @@
 #include "system.h"
 #include "error.h"
 
-static long argdecode ();
+static long argdecode __P ((char *s));
 
 /* The name by which this program was run. */
 char *program_name;
@@ -43,8 +43,7 @@ static struct option const long_options[] =
 };
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -63,9 +62,7 @@ SUFFIX may be s to keep seconds, m for minutes, h for hours or d for days.\n\
 }
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int i;
   unsigned seconds = 0;
@@ -109,8 +106,7 @@ main (argc, argv)
 }
 
 static long
-argdecode (s)
-     char *s;
+argdecode (char *s)
 {
   long value;
   register char *p = s;

@@ -29,8 +29,7 @@
 char *program_name;
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -48,9 +47,7 @@ Repeatedly output a line with all specified STRING(s), or `y'.\n\
 }
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   program_name = argv[0];
 

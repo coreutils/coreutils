@@ -41,8 +41,8 @@
 #define GET_PRIORITY() getpriority (PRIO_PROCESS, 0)
 #endif
 
-static int isinteger ();
-static void usage ();
+static int isinteger __P ((char *s));
+static void usage __P ((int status));
 
 /* The name this program was run with. */
 char *program_name;
@@ -54,9 +54,7 @@ static struct option const longopts[] =
 };
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int current_priority;
   int adjustment = 0;
@@ -164,8 +162,7 @@ main (argc, argv)
    zero if not. */
 
 static int
-isinteger (s)
-     char *s;
+isinteger (char *s)
 {
   if (*s == '-' || *s == '+')
     ++s;
@@ -181,8 +178,7 @@ isinteger (s)
 }
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),

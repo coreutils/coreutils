@@ -32,8 +32,7 @@ void strip_trailing_slashes ();
 char *program_name;
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -57,9 +56,7 @@ output `.' (meaning the current directory).\n\
 }
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   register char *path;
   register char *slash;

@@ -46,11 +46,11 @@ gid_t getegid ();
 char *xmalloc ();
 int getugroups ();
 
-static void print_user ();
-static void print_group ();
-static void print_group_list ();
-static void print_full_info ();
-static void usage ();
+static void print_user __P ((int uid));
+static void print_group __P ((int gid));
+static void print_group_list __P ((char *username));
+static void print_full_info __P ((char *username));
+static void usage __P ((int status));
 
 /* The name this program was run with. */
 char *program_name;
@@ -96,9 +96,7 @@ static struct option const longopts[] =
 };
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int optc;
 
@@ -181,8 +179,7 @@ main (argc, argv)
 /* Print the name or value of user ID UID. */
 
 static void
-print_user (uid)
-     int uid;
+print_user (int uid)
 {
   struct passwd *pwd = NULL;
 
@@ -202,8 +199,7 @@ print_user (uid)
 /* Print the name or value of group ID GID. */
 
 static void
-print_group (gid)
-     int gid;
+print_group (int gid)
 {
   struct group *grp = NULL;
 
@@ -223,8 +219,7 @@ print_group (gid)
 /* Print all of the distinct groups the user is in . */
 
 static void
-print_group_list (username)
-     char *username;
+print_group_list (char *username)
 {
   print_group (rgid);
   if (egid != rgid)
@@ -269,8 +264,7 @@ print_group_list (username)
 /* Print all of the info about the user's user and group IDs. */
 
 static void
-print_full_info (username)
-     char *username;
+print_full_info (char *username)
 {
   struct passwd *pwd;
   struct group *grp;
@@ -349,8 +343,7 @@ print_full_info (username)
 }
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
