@@ -3,6 +3,20 @@
        leave it in and see who complains
    - use consistent non-capitalization in error messages
    - add standard GNU copyleft comment
+
+   - Add -s --size=N option, to force a size.  I want this for wiping
+     damaged floppies that would otherwise bobm out at the first I/O
+     error.  It should take -k and -M
+  - Add -r/-R/--recursive
+  - Add -i/--interactive
+  - Reserve -d
+  - Add -L
+  - Move the _() into error() and replace it with N() everywhere.
+    Error messages are by definition not performance-critical.
+  - Deal with the amazing variety of gettimeofday() implementation bugs.
+    (Sone systems use a one-arg form; still others insist that the timezone
+    either be NULL or be non-NULL.  Whee.)
+  - Add an unlink-all option to emulate rm.
  */
 
 /*
@@ -34,11 +48,11 @@
  * assumption out, and the assumption that you want the data processed
  * as fast as the hard drive can spin, you can do better.
  *
- * If asked to wipe a file, this also deletes it, renaming it to in a
+ * If asked to wipe a file, this also unlinks it, renaming it to in a
  * clever way to try to leave no trace of the original filename.
  *
- * Copyright 1997-1999 Colin Plumb <colin@nyx.net>.  This program may
- * be freely distributed under the terms of the GNU GPL, the BSD license,
+ * Copyright 1997, 1998, 1999 Colin Plumb <colin@nyx.net>.  This program
+ * may be freely distributed under the terms of the GNU GPL, the BSD license,
  * or Larry Wall's "Artistic License"   Even if you use the BSD license,
  * which does not require it, I'd really like to get improvements back.
  *
@@ -50,51 +64,363 @@
  * but I've rewritten everything here so completely that no trace of
  * the original remains.
  *
+ * Thanks to:
+ * Bob Jenkins, for his good RNG work and patience with the FSF copyright
+ * paperwork.
+ * Jim Meyering, for his work merging this into the GNU fileutils while
+ * still letting me feel a sense of ownership and pride.  Getting me to
+ * tolerate the GNU brace style was quite a feat of diplomacy.
+ * Paul Eggert, for lots of useful discussion and code.  I disagree with
+ * an awful lot of his suggestions, but they're disagreements worth having.
+ *
  * Things to think about:
  * - Security: Is there any risk to the race
  *   between overwriting and unlinking a file?  Will it do anything
- *   drastically bad if told to attack a named pipes or a sockets?
+ *   drastically bad if told to attack a named pipe or socket?
  */
-
-
-#include <config.h>
-#include <getopt.h>
-#include <stdio.h>
-#include <stdarg.h>		/* Used by pferror */
-
-#include "system.h"
-#include "error.h"
-#include "xstrtoul.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "shred"
 
 #define AUTHORS "Colin Plumb"
 
+#include <getopt.h>
+#include <stdio.h>
+#include <string.h>		/* For memcpy(), strerror() */
+#include <stdarg.h>		/* Used by pferror */
+#include <setjmp.h>
+#include <signal.h>
+
+#if HAVE_CONFIG_H
+/* Default fileutils build */
+# include <config.h>
+
+# include "system.h"
+# include "xstrtoul.h"
+# include "closeout.h"
+# include "error.h"
+# include "quotearg.h"		/* For quotearg_colon */
+
+/*
+ * error.h #defines __attribute__, but this is safer, because someone else's
+ * preprocessor could decide that it would make a great reserved word.
+ */
+# if __GNUC__ < 2
+#  define attribute(x)
+# else
+#  define attribute __attribute__
+# endif
+
+#else /* !HAVE_CONFIG_H */
+/*
+ * Standalone build - this file compiles by itself without autoconf and
+ * the like.  No i18n, and I still have to write a stub for getopt_long,
+ * but it's a lot less intertwingled than the usual GNU utilities.
+ */
+
+# include <limits.h>	/* For ULONG_MAX etc. */
+# include <stdlib.h>	/* For strtoul, EXIT_FAILURE */
+# include <errno.h>
+# include <fcntl.h>	/* For O_RDONLY etc. */
+# include <unistd.h>	/* For getpid(), etc. */
+# include <sys/time.h>	/* For struct timeval */
+# include <sys/stat.h>	/* For struct stat */
+
+# define GNU_PACKAGE "standalone"
+# define VERSION "2.0" /* Kind of arbitrary... */
+
+# if __GNUC__ < 2 || __GNUC__ == 2 && __GNUC_MINOR__ < 5 || __STRICT_ANSI__
+#  define attribute(x)
+# else
+#  define attribute __attribute__
+#  if __GNUC__ == 2 && __GNUC_MINOR__ < 7
+   /* The __-protected forms were introduced in GCC 2.6.4 */
+#   define __format__ format
+#   define __printf__ printf
+#  endif
+# endif
+
+/* Reasonable default assumptions for time-getting */
+# ifndef HAVE_GETTIMEOFDAY
+#  define HAVE_GETTIMEOFDAY 1 /* Most systems have it these days */
+# endif
+
+# ifdef CLOCK_REALTIME
+#  ifndef HAVE_CLOCK_GETTIME
+#   define HAVE_CLOCK_GETTIME 1
+#  endif
+# endif
+
+# ifndef O_NOCTTY
+#  define O_NOCTTY 0  /* This is a very optional frill */
+# endif
+# ifndef S_IWUSR
+#  ifdef S_IWRITE
+#   define S_IWUSR S_IWRITE
+#  else
+#   define S_IWUSR 0200
+#  endif
+# endif
+
+/* Variant convert-to-unsigned-long function that accepts metric suffixes */
+enum strtol_error
+  {
+    LONGINT_OK, LONGINT_INVALID, LONGINT_INVALID_SUFFIX_CHAR, LONGINT_OVERFLOW
+  };
+static int
+xstrtoul(char const *ptr, char const **end, int base, unsigned long *res,
+         char const *valid_suffixes)
+{
+  char *end_ptr;
+  char const *p;
+  static char const metric_suffixes[] = "kMGTPEZY";
+  int decimal_flag;
+  unsigned long n;
+  char c;
+
+  errno = 0;
+  *res = n = strtoul(ptr, &end_ptr, base);
+  if (end)
+    *end = end_ptr;
+  if (errno)
+    return LONGINT_OVERFLOW;
+  if (ptr == end_ptr)
+    return LONGINT_INVALID;
+  c = *end_ptr;
+  if (!c)
+    return LONGINT_OK;
+  /* Now deal with metric-style suffixes */
+  if (!valid_suffixes)
+    valid_suffixes = "";
+  if (!strchr (valid_suffixes, c))
+    return LONGINT_INVALID_SUFFIX_CHAR;
+
+  decimal_flag = 0;
+  switch (c)
+    {
+    case 'b':
+      if (n > ULONG_MAX/512)
+	return LONGINT_OVERFLOW;
+      n *= 512;
+      break;
+
+    case 'B':
+      if (n > ULONG_MAX/102412)
+	return LONGINT_OVERFLOW;
+      n *= 1024;
+      break;
+
+    case 'c':
+      break;
+
+    case 'K':
+      c = 'k';
+      goto def;
+
+    case 'm':
+      c = 'M';
+      /*FALLTHROUGH*/
+def:default:
+      p = strchr (metric_suffixes, c);
+      if (!p)
+	return LONGINT_INVALID_SUFFIX_CHAR;
+      /*
+       * If valid_suffixes contains '0', then xD (decimal) and xB (binary)
+       * are allowed as "supersuffixes".  Binary is the default.
+       */
+      if (strchr (valid_suffixes, '0'))
+        {
+	  if (end_ptr[1] == 'B')
+	    end_ptr++;
+	  else if (end_ptr[1] == 'D')
+	    {
+	      decimal_flag = 1;
+	      end_ptr++;
+	    }
+	}
+      /* Now do the scaling */
+      p++;
+      if (decimal_flag)
+	do {
+	  if (n > ULONG_MAX/1000)
+	    return LONGINT_OVERFLOW;
+	  n *= 1000;
+	} while (--p > metric_suffixes);
+      else
+	do {
+	  if (n > ULONG_MAX/1024)
+	    return LONGINT_OVERFLOW;
+	  n *= 1024;
+	} while (--p > metric_suffixes);
+    }
+
+  /* Final wrapup */
+  if (end)
+    *end = end_ptr+1;	/* Extra suffix is allowed if it's expected */
+  else if (end_ptr[1])
+    return LONGINT_INVALID_SUFFIX_CHAR;
+  *res = n;
+  return LONGINT_OK;
+}
+
+/* Dummy i18n stubs */
+# define _(x) x
+# define N_(x) x
+# define setlocale(x,y) (void)0
+# define bindtextdomain(x,y) (void)0
+# define textdomain(x) (void)0
+
+/*
+ * Print a message with `fprintf (stderr, FORMAT, ...)';
+ *    if ERRNUM is nonzero, follow it with ": " and strerror (ERRNUM).
+ *       If STATUS is nonzero, terminate the program with `exit (STATUS)'.
+ */
+static void error (int status, int errnum, const char *format, ...)
+	attribute ((__format__ (__printf__, 3, 4)));
+
+static void flushstatus (void);
+extern char const *program_name;
+static void
+error (int status, int errnum, const char *format, ...)
+{
+  va_list ap;
+
+  if (!errnum)
+    errnum = errno;
+
+  flushstatus();  /* Make it look pretty */
+
+  if (program_name)
+    {
+      fputs(program_name, stderr);
+      fputs(": ", stderr);
+    }
+  va_start(ap, format);
+  vfprintf(stderr, format, ap);
+  va_end(ap);
+  if (errnum)
+    {
+      fputs(": ", stderr);
+      fputs(strerror(errnum), stderr);
+    }
+  putc('\n', stderr);
+
+  if (status)
+    exit(status);
+}
+
+/*
+ * GNU programs actually check for failure closing standard output.
+ * This seems unnecessary, until your shell script starts hitting
+ * ENOSPC and doing bizarre things with zero-length files.
+ */
+static void
+close_stdout (void)
+{
+  if (ferror (stdout))
+    error (EXIT_FAILURE, 0, _("write error"));
+  if (fclose (stdout) != 0)
+    error (EXIT_FAILURE, errno, _("write error"));
+}
+
+/*
+ * Quote the argument (including colon characters) into the buffer.
+ * Return the buffer size used (including trailing null byte.)
+ * If this is larger than the bufsize, it is an estimate of the space
+ * needed.
+ */
+static size_t
+quotearg_colon_buf(char const *arg, char *buf, size_t bufsize)
+{
+  /* Some systems don't have \a or \e, so this is ASCII-dependent */
+  static char const escaped[] = "\7\b\33\f\n\r\t\v";
+  static char const escapes[] = "abefnrtv";
+  int c;
+  size_t pos = 0;
+  char const *p;
+
+  while ((c = (unsigned char)*arg++) != 0)
+    {
+      if (isprint(c))
+        {
+	  if (strchr("\\:", c))	/* Anything else we should quote? */
+	    if (pos++ < bufsize) *buf++ = '\\';
+	}
+      else
+	{
+	  if (pos++ < bufsize) *buf++ = '\\';
+	  p = strchr(escaped, c); /* c is never 0, so this is okay */
+	  if (p)
+	    {
+	      c = escapes[p-escaped];
+	    }
+	  else
+	    {
+	      if (isdigit((unsigned char)*arg))
+		c += 256; /* Force 3-digit form if followed by a digit */
+	      if (c > 077)
+		if (pos++ < bufsize) *buf++ = "0123"[c>>6 & 3];
+	      if (c > 07)
+		if (pos++ < bufsize) *buf++ = "01234567"[c>>3 & 7];
+	      c = "01234567"[c & 7];
+	    }
+	}
+	if (pos++ < bufsize) *buf++ = c;
+    }
+    if (pos++ < bufsize) *buf++ = 0;
+    return pos;
+}
+
+/* Quote metacharacters in a filename */
+char const *
+quotearg_colon(char const *arg)
+{
+  static char *buf = 0;
+  size_t bufsize = 0;
+  size_t newsize;
+
+  while ((newsize = quotearg_colon_buf(arg, buf, bufsize)) > bufsize)
+    {
+      buf = realloc(buf, newsize);
+      if (!buf)
+	error(EXIT_FAILURE, 0, _("out of memory"));
+      bufsize = newsize;
+    }
+  return buf;
+}
+
+#endif /* ! HAVE_CONFIG_H */
+
+/* Some systems don't support symbolic links */
+#ifndef S_ISLNK
+# define S_ISLNK(mode) 0
+#endif
+
 #define DEFAULT_PASSES 25	/* Default */
 
 /* How often to update wiping display */
-#define VERBOSE_UPDATE	100*1024
+#define VERBOSE_UPDATE	150*1024
 
-/* FIXME: add comments */
 struct Options
 {
-  int allow_devices;
-  int force;
-  unsigned int n_iterations;
-  int remove_file;
-  int verbose;
-  int exact;
-  int zero_fill;
+  int allow_devices;	/* -d flag: Allow operations on devices */
+  int force;		/* -f flag: chmod() files if necessary */
+  size_t n_iterations;	/* -n flag: Number of iterations */
+  int remove_file;	/* -p flag (inverted): remove file after shredding */
+  off_t size;		/* -s flag: size of file */
+  int verbose;		/* -v flag: Print progress (goes to 2) */
+  int exact;		/* -x flag: Do not round up file size */
+  int zero_fill;	/* -z flag: Add a final zero pass */
 };
 
 static struct option const long_opts[] =
 {
-  {"device", no_argument, NULL, 'd'},
+  {"device", no_argument, NULL, 'D'},
   {"exact", required_argument, NULL, 'x'},
   {"force", no_argument, NULL, 'f'},
   {"iterations", required_argument, NULL, 'n'},
   {"preserve", no_argument, NULL, 'p'},
+  {"size", required_argument, NULL, 's'},
   {"verbose", no_argument, NULL, 'v'},
   {"zero", required_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
@@ -103,7 +429,7 @@ static struct option const long_opts[] =
 };
 
 /* Global variable for error printing purposes */
-char const *program_name;
+char const *program_name; /* Initialized before any possible use */
 
 void
 usage (int status)
@@ -117,20 +443,19 @@ usage (int status)
       printf (_("\
 Delete a file securely, first overwriting it to hide its contents.\n\
 \n\
-  -d, --device   allow operation on devices (devices are never deleted)\n\
+  -D, --device   allow operation on devices (devices are never removed)\n\
   -f, --force    change permissions to allow writing if necessary\n\
-  -n, --iterations=N  Overwrite N times instead of the default (25)\n\
-  -p, --preserve do not delete file after overwriting\n\
-  -v, --verbose  indicate progress (-vv to leave progress on screen)\n\
+  -n, --iterations=N  Overwrite N times instead of the default (%d)\n\
+  -p, --preserve do not remove file after overwriting\n\
+  -s, --size=N   shred this many bytes (suffixes like k, M accepted)\n\
+  -v, --verbose  show progress (-vv to leave progress on screen)\n\
   -x, --exact    do not round file sizes up to the next full block\n\
   -z, --zero     add a final overwrite with zeros to hide shredding\n\
-  -              shred standard input (but don't delete it);\n\
-                   this will fail unless you use <>file, a safety feature\n\
+  -              shred standard output (NOTE: conflicts with -v)\n\
       --help     display this help and exit\n\
       --version  print version information and exit\n\
 \n\
-FIXME maybe add more discussion here?\n\
-"));
+FIXME maybe add more discussion here?"), DEFAULT_PASSES);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
       close_stdout ();
     }
@@ -138,7 +463,7 @@ FIXME maybe add more discussion here?\n\
 }
 
 #if ! HAVE_FDATASYNC
-# define fdatasync(Fd) fsync (Fd)
+# define fdatasync(fd) -1
 #endif
 
 /*
@@ -302,6 +627,7 @@ isaac_mix (struct isaac_state *s, word32 const seed[ISAAC_WORDS])
   s->iv[7] = h;
 }
 
+#if 0 /* Provided for reference only; not used in this code */
 /*
  * Initialize the ISAAC RNG with the given seed material.
  * Its size MUST be a multiple of ISAAC_BYTES, and may be
@@ -320,13 +646,13 @@ isaac_init (struct isaac_state *s, word32 const *seed, size_t seedsize)
     0xd92a4a78, 0xa51a3c49, 0xc4efea1b, 0x30609119};
   int i;
 
-#if 0
+# if 0
   /* The initialization of iv is a precomputed form of: */
   for (i = 0; i < 7; i++)
     iv[i] = 0x9e3779b9;		/* the golden ratio */
   for (i = 0; i < 4; ++i)	/* scramble it */
     mix (iv[0], iv[1], iv[2], iv[3], iv[4], iv[5], iv[6], iv[7]);
-#endif
+# endif
   s->a = s->b = s->c = 0;
 
   for (i = 0; i < 8; i++)
@@ -355,6 +681,137 @@ isaac_init (struct isaac_state *s, word32 const *seed, size_t seedsize)
   /* Final pass */
   isaac_mix (s, s->mm);
 }
+#endif
+
+/* Start seeding an ISAAC structire */
+static void
+isaac_seed_start(struct isaac_state *s)
+{
+  static word32 const iv[8] =
+    {
+      0x1367df5a, 0x95d90059, 0xc3163e4b, 0x0f421ad8,
+      0xd92a4a78, 0xa51a3c49, 0xc4efea1b, 0x30609119
+    };
+  int i;
+
+#if 0
+  /* The initialization of iv is a precomputed form of: */
+  for (i = 0; i < 7; i++)
+    iv[i] = 0x9e3779b9;		/* the golden ratio */
+  for (i = 0; i < 4; ++i)	/* scramble it */
+    mix (iv[0], iv[1], iv[2], iv[3], iv[4], iv[5], iv[6], iv[7]);
+#endif
+  for (i = 0; i < 8; i++)
+    s->iv[i] = iv[i];
+  /* We cound initialize s->mm to zero, but why bother? */
+
+  /* s->c gets used for a data pointer during the seeding phase */
+  s->a = s->b = s->c = 0;
+}
+
+/* Add a buffer of seed material */
+static void
+isaac_seed_data(struct isaac_state *s, void const *buf, size_t size)
+{
+  unsigned char *p;
+  size_t avail;
+  size_t i;
+
+  avail = sizeof(s->mm) - (size_t)s->c;	/* s->c is used as a write pointer */
+
+  /* Do any full buffers that are necessary */
+  while (size > avail)
+    {
+      p = (unsigned char *)s->mm + s->c;
+      for (i = 0; i < avail; i++)
+	p[i] ^= ((unsigned char const *)buf)[i];
+      buf = (char const *)buf + avail;
+      size -= avail;
+      isaac_mix(s, s->mm);
+      s->c = 0;
+      avail = sizeof(s->mm);
+    }
+
+  /* And the final partial block */
+  p = (unsigned char *)s->mm + s->c;
+  for (i = 0; i < size; i++)
+    p[i] ^= ((unsigned char const *)buf)[i];
+  s->c = (word32)size;
+}
+
+
+/* End of seeding phase; get everything ready to prodice output. */
+static void
+isaac_seed_finish(struct isaac_state *s)
+{
+  isaac_mix (s, s->mm);
+  isaac_mix (s, s->mm);
+  /* Now reinitialize c to start things off right */
+  s->c = 0;
+}
+#define ISAAC_SEED(s,x) isaac_seed_data(s, &(x), sizeof(x))
+
+
+#if __GNUC__ >= 2 && (__i386__ || __alpha__ || _ARCH_PPC)
+/*
+ * Many processors have very-high-resolution timer registers,
+ * The timer registers can be made inaccessible, so we have to deal with the
+ * possibility of SIGILL while we're working.
+ */
+static jmp_buf env;
+static void sigill_handler(int signum)
+{
+  (void)signum;
+  longjmp(env, 1);  /* Trivial, just return an indication that it happened */
+}
+
+static void
+isaac_seed_machdep(struct isaac_state *s)
+{
+  void (*oldhandler)(int);
+
+  /* This is how one does try/except in C */
+  oldhandler = signal(SIGILL, sigill_handler);
+  if (setjmp(env))  /* ANSI: Must be entire controlling expression */
+    {
+      (void)signal(SIGILL, oldhandler);
+    }
+  else
+    {
+# if __i386__
+      word32 t[2];
+      __asm__ __volatile__ ("rdtsc" : "=a" (t[0]), "=d" (t[1]));
+# endif
+# if __alpha__
+      unsigned long t;
+      __asm__ __volatile__ ("rpcc %0" : "=r" (t));
+# endif
+# if _ARCH_PPC
+      word32 t;
+      __asm__ __volatile__ ("mfspr %0,22" : "=r" (t));
+# endif
+# if __mips
+      /* Code not used because this is not accessible from userland */
+      word32 t;
+      __asm__ __volatile__ ("mfc0\t%0,$9" : "=r" (t));
+# endif
+# if __sparc__
+      /* This doesn't compile on all platforms yet.  How to fix? */
+      unsigned long t;
+      __asm__ __volatile__ ("rd	%%tick, %0" : "=r" (t));
+# endif
+     (void)signal(SIGILL, oldhandler);
+     isaac_seed_data(s, &t, sizeof(t));
+  }
+}
+
+#else /* !(__i386__ || __alpha__ || _ARCH_PPC) */
+
+/* Do-nothing stub */
+# define isaac_seed_machdep(s) (void)0
+
+#endif /* !(__i386__ || __alpha__ || _ARCH_PPC) */
+
 
 /*
  * Get seed material.  16 bytes (128 bits) is plenty, but if we have
@@ -363,87 +820,59 @@ isaac_init (struct isaac_state *s, word32 const *seed, size_t seedsize)
 static void
 isaac_seed (struct isaac_state *s)
 {
-  s->mm[0] = getpid ();
-  s->mm[1] = getppid ();
+  isaac_seed_start(s);
+
+  { pid_t t = getpid ();   ISAAC_SEED (s, t); }
+  { pid_t t = getppid ();  ISAAC_SEED (s, t); }
+  { uid_t t = getuid ();   ISAAC_SEED (s, t); }
+  { gid_t t = getgid ();   ISAAC_SEED (s, t); }
 
   {
-#ifdef HAVE_CLOCK_GETTIME		/* POSIX ns-resolution */
-    struct timespec ts;
-    clock_gettime (CLOCK_REALTIME, &ts);
-    s->mm[2] = ts.tv_sec;
-    s->mm[3] = ts.tv_nsec;
+#if HAVE_GETHRTIME
+    hrtime_t t = gethrtime ();
+    ISAAC_SEED (s, t);
 #else
-    struct timeval tv;
-    gettimeofday (&tv, (struct timezone *) 0);
-    s->mm[2] = tv.tv_sec;
-    s->mm[3] = tv.tv_usec;
+# if HAVE_CLOCK_GETTIME		/* POSIX ns-resolution */
+    struct timespec t;
+    clock_gettime (CLOCK_REALTIME, &t);
+# else
+#  if HAVE_GETTIMEOFDAY
+    struct timeval t;
+    gettimeofday (&t, (struct timezone *) 0);
+#  else
+    time_t t;
+    t = time((time_t *)0);
+#  endif
+# endif
 #endif
+    ISAAC_SEED (s, t);
   }
 
+  isaac_seed_machdep(s);
+
   {
-    int fd = open ("/dev/urandom", O_RDONLY);
+    char buf[32];
+    int fd = open ("/dev/urandom", O_RDONLY | O_NOCTTY);
     if (fd >= 0)
       {
-	read (fd, (char *) (s->mm + 4), 32);
+	read (fd, buf, 32);
 	close (fd);
+	isaac_seed_data(s, buf, 32);
       }
     else
       {
-	fd = open ("/dev/random", O_RDONLY | O_NONBLOCK);
+	fd = open ("/dev/random", O_RDONLY | O_NONBLOCK | O_NOCTTY);
 	if (fd >= 0)
 	  {
 	    /* /dev/random is more precious, so use less */
-	    read (fd, (char *) (s->mm + 4), 16);
+	    read (fd, buf, 16);
 	    close (fd);
+	    isaac_seed_data(s, buf, 16);
 	  }
       }
   }
 
-  isaac_init (s, s->mm, sizeof (s->mm));
-}
-
-/*
- * Read up to "size" bytes from the given fd and use them as additional
- * ISAAC seed material.  Returns the number of bytes actually read.
- */
-static off_t
-isaac_seedfd (struct isaac_state *s, int fd, off_t size)
-{
-  off_t sizeleft = size;
-  size_t lim, soff;
-  ssize_t ssize;
-  int i;
-  word32 seed[ISAAC_WORDS];
-
-  while (sizeleft)
-    {
-      lim = sizeof (seed);
-      if ((off_t) lim > sizeleft)
-	lim = (size_t) sizeleft;
-      soff = 0;
-      do
-	{
-	  ssize = read (fd, (char *) seed + soff, lim - soff);
-	}
-      while (ssize > 0 && (soff += (size_t) ssize) < lim);
-      /* Mix in what was read */
-      if (soff)
-	{
-	  /* Garbage after the sofff position is harmless */
-	  for (i = 0; i < ISAAC_WORDS; i++)
-	    s->mm[i] += seed[i];
-	  isaac_mix (s, s->mm);
-	  sizeleft -= soff;
-	}
-      if (ssize <= 0)
-	break;
-    }
-  /* Wipe the copy of the file in "seed" */
-  memset (seed, 0, sizeof (seed));
-
-  /* Final mix, as in isaac_init */
-  isaac_mix (s, s->mm);
-  return size - sizeleft;
+  isaac_seed_finish(s);
 }
 
 /* Single-word RNG built on top of ISAAC */
@@ -507,24 +936,21 @@ irand_mod (struct irand_state *r, word32 n)
 }
 
 /*
- * Like perror() but fancier.  (And fmt is not allowed to be NULL)
- * This apparent use of features specific to GNU C is actually portable;
- * see the definitions in error.h.
- */
-static void pfstatus (char const *,...)
-     __attribute__ ((__format__ (__printf__, 1, 2)));
-
-/*
  * Maintain a status line on stdout.  This is done by using CR and
  * overprinting a new line when it changes, padding with trailing blanks
  * as needed to hide all of the previous line.  (Assuming that the return
  * value of printf is an accurate width.)
- FIXME: we can't assume that
+ * FIXME: we can't assume that
  */
 static int status_visible = 0;	/* Number of visible characters */
 static int status_pos = 0;	/* Current position, including padding */
 
-/* Print a new status line, overwriting the previous one. */
+/*
+ * Print a new status line, overwriting the previous one.
+ * attribute() expands to nothing on non-gcc compilers.
+ */
+static void pfstatus (char const *,...)
+     attribute ((__format__ (__printf__, 1, 2)));
 static void
 pfstatus (char const *fmt,...)
 {
@@ -566,60 +992,6 @@ flushstatus (void)
       fflush (stdout);
       status_pos = 0;
     }
-}
-
-/*
- * Get the size of a file that doesn't want to cooperate (such as a
- * device) by doing a binary search for the last readable byte.  The size
- * of the file is the least offset at which it is not possible to read
- * a byte.
- *
- * This is also a nice example of using loop invariants to correctly
- * implement an algorithm that is potentially full of fencepost errors.
- * We assume that if it is possible to read a byte at offset x, it is
- * also possible at all offsets <= x.
- */
-static off_t
-sizefd (int fd)
-{
-  off_t hi, lo, mid;
-  char c;			/* One-byte buffer for dummy reads */
-
-  /* Binary doubling upwards to find the right range */
-  lo = 0;
-  hi = 0;		/* Any number, preferably 2^x-1, is okay here. */
-
-  /*
-   * Loop invariant: we have verified that it is possible to read a
-   * byte at all offsets < lo.  Probe at offset hi >= lo until it
-   * is not possible to read a byte at that offset, establishing
-   * the loop invariant for the following loop.
-   */
-  for (;;)
-    {
-      if (lseek (fd, hi, SEEK_SET) == (off_t) -1
-	  || read (fd, &c, 1) < 1)
-	break;
-      lo = hi + 1;		/* This preserves the loop invariant. */
-      hi += lo;			/* Exponential doubling. */
-    }
-  /*
-   * Binary search to find the exact endpoint.
-   * Loop invariant: it is not possible to read a byte at hi,
-   * but it is possible at all offsets < lo.  Thus, the
-   * offset we seek is between lo and hi inclusive.
-   */
-  while (hi > lo)
-    {
-      mid = (hi + lo) / 2;	/* Rounded down, so lo <= mid < hi */
-      if (lseek (fd, mid, SEEK_SET) == (off_t) -1
-	  || read (fd, &c, 1) < 1)
-	hi = mid;		/* mid < hi, so this makes progress */
-      else
-	lo = mid + 1;		/* Because mid < hi, lo <= hi */
-    }
-  /* lo == hi, so we have an exact answer */
-  return hi;
 }
 
 /*
@@ -665,7 +1037,10 @@ fillrand (struct isaac_state *s, word32 *r, size_t size)
     }
 }
 
-/* Generate a 6-character (+ nul) pass name string */
+/*
+ * Generate a 6-character (+ nul) pass name string
+ * FIXME: allow translation of "random".
+ */
 #define PASS_NAME_SIZE 7
 static void
 passname (unsigned char const *data, char name[PASS_NAME_SIZE])
@@ -680,13 +1055,17 @@ passname (unsigned char const *data, char name[PASS_NAME_SIZE])
  * Do pass number k of n, writing "size" bytes of the given pattern "type"
  * to the file descriptor fd.   Name, k and n are passed in only for verbose
  * progress message purposes.  If n == 0, no progress messages are printed.
+ *
+ * If *sizep == -1, the size is unknown, and it will be filled in as soon
+ * as writing fails.
  */
 static int
-dopass (int fd, char const *name, off_t size, int type,
+dopass (int fd, char const *qname, off_t *sizep, int type,
 	struct isaac_state *s, unsigned long k, unsigned long n)
 {
-  off_t cursize;		/* Amount of file remaining to wipe (counts down) */
-  off_t thresh;			/* cursize at which next status update is printed */
+  off_t size = *sizep;
+  off_t offset;			/* Current file posiiton */
+  off_t thresh;			/* Offset to print next status update */
   size_t lim;			/* Amount of data to try writing */
   size_t soff;			/* Offset into buffer for next write */
   ssize_t ssize;		/* Return value from write() */
@@ -697,9 +1076,9 @@ dopass (int fd, char const *name, off_t size, int type,
 #endif
   char pass_string[PASS_NAME_SIZE];	/* Name of current pass */
 
-  if (lseek (fd, 0, SEEK_SET) < 0)
+  if (lseek (fd, 0, SEEK_SET) == (off_t)-1)
     {
-      error (0, 0, _("Error seeking `%s'"), name);
+      error (0, errno, _("%s: cannot rewind"), qname);
       return -1;
     }
 
@@ -707,7 +1086,7 @@ dopass (int fd, char const *name, off_t size, int type,
   if (type >= 0)
     {
       lim = sizeof (r);
-      if ((off_t) lim > size)
+      if ((off_t) lim > size && size != (off_t)-1)
 	{
 	  lim = (size_t) size;
 	}
@@ -723,57 +1102,97 @@ dopass (int fd, char const *name, off_t size, int type,
   thresh = 0;
   if (n)
     {
-      pfstatus (_("%s: pass %lu/%lu (%s)...)"), name, k, n, pass_string);
-      if (size > VERBOSE_UPDATE)
-	thresh = size - VERBOSE_UPDATE;
+      pfstatus (_("%s: pass %lu/%lu (%s)..."), qname, k, n, pass_string);
+      thresh = VERBOSE_UPDATE;
+      if (thresh > size && size != (off_t)-1)
+	thresh = size;
     }
 
-  for (cursize = size; cursize;)
+  offset = 0;
+  for (;;)
     {
       /* How much to write this time? */
       lim = sizeof (r);
-      if ((off_t) lim > cursize)
-	lim = (size_t) cursize;
+      if ((off_t) lim > size - offset && size != (off_t)-1)
+	{
+	  lim = (size_t) (size - offset);
+	  if (!lim)
+	    break;
+	}
       if (type < 0)
 	fillrand (s, r, lim);
       /* Loop to retry partial writes. */
       for (soff = 0; soff < lim; soff += ssize)
 	{
 	  ssize = write (fd, (char *) r + soff, lim - soff);
-	  if (ssize < 0)
-	    {
-	      int e = errno;
-	      error (0, 0, _("Error writing `%s' at %lu"),
-		     name, size - cursize + soff);
-	      /* FIXME: this is slightly fragile in that some systems
-		 may fail with a different errno.  */
-	      /* This error confuses people. */
-	      if (e == EBADF && fd == 0)
-		fputs (_("(Did you remember to open stdin read/write with \"<>file\"?)\n"),
-			stderr);
-	      return -1;
-	    }
+	  if (ssize <= 0)
+	    if ((ssize == 0 || errno == EIO || errno == ENOSPC)
+	       	&& size == (off_t)-1)
+	      {
+		/* Ah, we have found the end of the file */
+		*sizep = thresh = size = offset + soff;
+		break;
+	      }
+	    else
+	      {
+		error (0, errno, _("%s: error writing at offset %lu"),
+		       qname, (unsigned long)(offset+soff));
+		/*
+		 * I sometimes use shred on bad media, before throwing it
+		 * out.  Thus, I don't want it to give up on bad blocks.
+		 * This code assumes 512-byte blocks and tries to skip
+		 * over them.  It works because lim is always a multiple
+		 * of 512, except at the end.
+		 */
+		if (errno == EIO && soff % 512 == 0 && lim >= soff+512
+		    && size != (off_t)-1)
+		  {
+		    if (lseek (fd, SEEK_CUR, 512) != (off_t)-1)
+		      {
+			soff += 512;
+			continue;
+		      }
+		    error (0, errno, _("%s: lseek"), qname);
+		  }
+		return -1;
+	      }
 	}
 
       /* Okay, we have written "lim" bytes. */
-      cursize -= lim;
+      offset += soff;
 
       /* Time to print progress? */
-      if (cursize <= thresh && n)
+      if (offset >= thresh && n)
 	{
-	  pfstatus (_("%s: pass %lu/%lu (%s)...%lu/%lu K"),
-		    name, k, n, pass_string,
-		    (size - cursize + 1023) / 1024, (size + 1023) / 1024);
-	  if (thresh > VERBOSE_UPDATE)
-	    thresh -= VERBOSE_UPDATE;
+	  if (size != (off_t)-1)
+	    pfstatus (_("%s: pass %lu/%lu (%s)...%lu/%lu K"), qname, k, n,
+		      pass_string, (unsigned long)((offset+1023) / 1024),
+		      (unsigned long)((size+1023) / 1024));
 	  else
-	    thresh = 0;
+	    pfstatus (_("%s: pass %lu/%lu (%s)...%lu K"), qname, k, n,
+		      pass_string, (unsigned long)((offset+1023) / 1024));
+	  thresh += VERBOSE_UPDATE;
+	  if (thresh > size && size != (off_t)-1)
+	    thresh = size;
+	  /*
+	   * Force periodic syncs to keep displayed progress accurate
+	   * FIXME: Should these be present even if -v is not enabled,
+	   * to keep the buffer cache from filling with dirty pages?
+	   * It's a common problem with programs that do lots of writes,
+	   * like mkfs.
+	   */
+	  if (fdatasync (fd) < 0 && fsync (fd) < 0)
+	    {
+	      error (0, errno, _("%s: fsync" ), qname);
+	      return -1;
+	    }
 	}
     }
+
   /* Force what we just wrote to hit the media. */
-  if (fdatasync (fd) < 0)
+  if (fdatasync (fd) < 0 && fsync (fd) < 0)
     {
-      error (0, 0, _("Error syncing `%s'"), name);
+      error (0, errno, _("%s: fsync" ), qname);
       return -1;
     }
   return 0;
@@ -789,7 +1208,7 @@ dopass (int fd, char const *name, off_t size, int type,
  * First, all possible 1-bit patterns.  There are two of them.
  * Then, all possible 2-bit patterns.  There are four, but the two
  * which are also 1-bit patterns can be omitted.
- * Then, all possible 3-bit patterns.  Again, 8-2 = 6.
+ * Then, all possible 3-bit patterns.  Likewise, 8-2 = 6.
  * Then, all possible 4-bit patterns.  16-4 = 12.
  *
  * The basic passes are:
@@ -927,8 +1346,7 @@ genpattern (int *dest, size_t num, struct isaac_state *s)
 	}
     }
   top = num - randpasses;	/* Top of initialized data */
-
-  /* assert(d == dest+top); */
+  /* assert (d == dest+top); */
 
   /*
    * We now have fixed patterns in the dest buffer up to
@@ -950,7 +1368,6 @@ genpattern (int *dest, size_t num, struct isaac_state *s)
    *   entry at random between here and top-1 (inclusive)
    *   and swap the current entry with that one.
    */
-
   randpasses--;			/* To speed up later math */
   accum = randpasses;		/* Bresenham DDA accumulator */
   for (n = 0; n < num; n++)
@@ -970,7 +1387,7 @@ genpattern (int *dest, size_t num, struct isaac_state *s)
 	}
       accum -= randpasses;
     }
-  /* assert(top == num); */
+  /* assert (top == num); */
 
   memset (&r, 0, sizeof (r));	/* Wipe this on general principles */
 }
@@ -981,8 +1398,8 @@ genpattern (int *dest, size_t num, struct isaac_state *s)
  * regular files, and 1 on success with non-regular files.
  */
 static int
-wipefd (int fd, char const *name, struct isaac_state *s,
-	size_t passes, struct Options const *flags)
+do_wipefd (int fd, char const *qname, struct isaac_state *s,
+	struct Options const *flags)
 {
   size_t i;
   struct stat st;
@@ -990,75 +1407,53 @@ wipefd (int fd, char const *name, struct isaac_state *s,
   unsigned long n;		/* Number of passes for printing purposes */
   int *passarray;
 
-  if (!passes)
-    passes = DEFAULT_PASSES;
-
   n = 0;		/* dopass takes n -- 0 to mean "don't print progress" */
   if (flags->verbose)
-    n = passes + ((flags->zero_fill) != 0);
+    n = flags->n_iterations + ((flags->zero_fill) != 0);
 
   if (fstat (fd, &st))
     {
-      error (0, 0, _("Can't fstat file `%s'"), name);
+      error (0, errno, _("%s: fstat"), qname);
       return -1;
     }
 
   /* Check for devices */
-  if (!S_ISREG (st.st_mode) && !(flags->allow_devices))
+  if (!S_ISREG (st.st_mode) && !flags->allow_devices)
     {
       error (0, 0,
-	     _("`%s' is not a regular file: use -d to enable operations on devices"),
-	     name);
-      return -1;
+	  _("%s: not a regular file; use -D to enable operations on devices"),
+	             qname);
+	      return -1;
     }
 
   /* Allocate pass array */
-  passarray = malloc (passes * sizeof (int));
+  passarray = malloc (flags->n_iterations * sizeof (int));
   if (!passarray)
     {
       error (0, 0, _("unable to allocate storage for %lu passes"),
-	     (unsigned long) passes);
+	     (unsigned long) flags->n_iterations);
       return -1;
     }
 
-  seedsize = size = st.st_size;
-  if (!size)
+  size = flags->size;
+  if (size == (off_t)-1)
     {
-      /* Reluctant to talk?  Apply thumbscrews. */
-      seedsize = size = sizefd (fd);
-    }
-  else if (st.st_blksize && !(flags->exact))
-    {
-      /* Round up to the next st_blksize to include "slack" */
-      size += st.st_blksize - 1 - (size - 1) % st.st_blksize;
-    }
-
-  /*
-   * Use the file itself as seed material.  Avoid wasting "lots"
-   * of time (>10% of the write time) reading "large" (>16K)
-   * files for seed material if there aren't many passes.
-   *
-   * Note that "seedsize*passes/10" risks overflow, while
-   * "seedsize/10*passes is slightly inaccurate.  The hack
-   * here manages perfection with no overflow.
-   */
-  if (passes < 10 && seedsize > 16384)
-    {
-      seedsize -= 16384;
-      seedsize = seedsize / 10 * passes + seedsize % 10 * passes / 10;
-      seedsize += 16384;
-    }
-  (void) isaac_seedfd (s, fd, seedsize);
+      size = st.st_size;
+      if (!size && !S_ISREG(st.st_mode))
+	size = (off_t)-1;	/* "Unknown size" */
+      else if (st.st_blksize && !(flags->exact))
+	size += st.st_blksize - 1 - (size-1) % st.st_blksize; /* round up */
+   }
 
   /* Schedule the passes in random order. */
-  genpattern (passarray, passes, s);
+  genpattern (passarray, flags->n_iterations, s);
 
   /* Do the work */
-  for (i = 0; i < passes; i++)
+  for (i = 0; i < flags->n_iterations; i++)
     {
-      if (dopass (fd, name, size, passarray[i], s, i + 1, n) < 0)
+      if (dopass (fd, qname, &size, passarray[i], s, i + 1, n) < 0)
 	{
-	  memset (passarray, 0, passes * sizeof (int));
+	  memset (passarray, 0, flags->n_iterations * sizeof (int));
 	  free (passarray);
 	  return -1;
 	}
@@ -1066,15 +1461,57 @@ wipefd (int fd, char const *name, struct isaac_state *s,
 	flushstatus ();
     }
 
-  memset (passarray, 0, passes * sizeof (int));
+  memset (passarray, 0, flags->n_iterations * sizeof (int));
   free (passarray);
 
   if (flags->zero_fill)
-    if (dopass (fd, name, size, 0, s, passes + 1, n) < 0)
+    if (dopass (fd, qname, &size, 0, s, flags->n_iterations + 1, n) < 0)
       return -1;
+
+  if (!S_ISREG (st.st_mode))
+    return 1; /* Not a regular flag, maybe don't unlink */
+
+  /* Okay, now deallocate the data */
+  if (flags->remove_file && ftruncate (fd, 0) < 0)
+    {
+      error (0, errno, _("%s: error truncating"), qname);
+      return -1;
+    }
+  return 0; /* Regular file */
 
   return !S_ISREG (st.st_mode);
 }
+
+/* A wrapper with a little more checking for fds on the command line */
+static int
+wipefd (int fd, char const *qname, struct isaac_state *s,
+	struct Options const *flags)
+{
+  int fd_flags = fcntl (fd, F_GETFL);
+
+  if (fd_flags < 0)
+    {
+      error (0, errno, _("%s: fcntl"), qname);
+      return -1;
+    }
+  /* Ugly, but I think it's portable... */
+  if (fd_flags & (O_RDONLY | O_WRONLY | O_RDWR) == O_RDONLY)
+    {
+      error (0, 0, _("%s: cannot shred read-only file descriptor"), qname);
+      return -1;
+    }
+  if (fd_flags & O_APPEND)
+    {
+      error (0, 0, _("%s: cannot shred append-only file descriptor"), qname);
+      return -1;
+    }
+  if (fd == 1 && flags->verbose)
+      error (EXIT_FAILURE, 0,
+	  _("%s: can't wipe stdout and print verbose messages to it"), qname);
+  return do_wipefd (fd, qname, s, flags);
+}
+
+/* --- Name-wiping code --- */
 
 /* Characters allowed in a file name - a safe universal set. */
 static char const nameset[] =
@@ -1120,9 +1557,9 @@ incname (char *name, unsigned len)
  * Repeatedly rename a file with shorter and shorter names,
  * to obliterate all traces of the file name on any system that
  * adds a trailing delimiter to on-disk file names and reuses
- * the same directory slot.  Finally, delete it.
+ * the same directory slot.  Finally, unlink it.
  * The passed-in filename is modified in place to the new filename.
- * (Which is deleted if this function succeeds, but is still present if
+ * (Which is unlinked if this function succeeds, but is still present if
  * it fails for some reason.)
  *
  * The main loop is written carefully to not get stuck if all possible
@@ -1130,28 +1567,26 @@ incname (char *name, unsigned len)
  * the original to 0.  While the length is non-zero, it tries to find an
  * unused file name of the given length.  It continues until either the
  * name is available and the rename succeeds, or it runs out of names
- * to try (incname() wraps and returns 1).  Finally, it deletes the file.
+ * to try (incname() wraps and returns 1).  Finally, it unlinks the file.
  *
- * Note that rename() and remove() are both in the ANSI C standard,
- * so that part, at least, is NOT Unix-specific.
+ * The unlink() is Unix-specific, as ANSI-standard remove() has more
+ * portability problems with C libraries making it "safe".  rename()
+ * is ANSI-standard.
  *
- * FIXME: update this comment.
  * To force the directory data out, we try to open() the directory and
  * invoke fdatasync() on it.  This is rather non-standard, so we don't
  * insist that it works, just fall back to a global sync() in that case.
- * Unfortunately, this code is Unix-specific.
+ * This is fairly significantly Unix-specific.  Of course, on any
+ * filesystem with synchronous metadata updates, this is unnecessary.
  */
-int
+static int
 wipename (char *oldname, struct Options const *flags)
 {
-  char *newname, *origname = 0;
-  char *base;			/* Pointer to filename component, after directories. */
+  char *newname, *base;	  /* Base points to filename part of newname */
+  char const *qname = 0;
   unsigned len;
   int err;
   int dir_fd;			/* Try to open directory to sync *it* */
-
-  if (flags->verbose)
-    pfstatus (_("%s: deleting"), oldname);
 
   newname = strdup (oldname);	/* This is a malloc */
   if (!newname)
@@ -1161,13 +1596,8 @@ wipename (char *oldname, struct Options const *flags)
     }
   if (flags->verbose)
     {
-      origname = strdup (oldname);
-      if (!origname)
-	{
-	  error (0, 0, _("malloc failed"));
-	  free (newname);
-	  return -1;
-	}
+      qname = quotearg_colon(oldname);
+      pfstatus (_("%s: removing"), qname);
     }
 
   /* Find the file name portion */
@@ -1176,12 +1606,12 @@ wipename (char *oldname, struct Options const *flags)
   if (base)
     {
       *base = '\0';
-      dir_fd = open (newname, O_RDONLY);
+      dir_fd = open (newname, O_RDONLY | O_NOCTTY);
       *base = '/';
     }
   else
     {
-      dir_fd = open (".", O_RDONLY);
+      dir_fd = open (".", O_RDONLY | O_NOCTTY);
     }
   base = base ? base + 1 : newname;
   len = strlen (base);
@@ -1192,18 +1622,19 @@ wipename (char *oldname, struct Options const *flags)
       base[len] = 0;
       do
 	{
-	  if (access (newname, F_OK) < 0
-	      && !rename (oldname, newname))
+	  struct stat st;
+	  if (lstat (newname, &st) < 0 && rename (oldname, newname) == 0)
 	    {
-	      if (dir_fd < 0 || fdatasync (dir_fd) < 0)
+	      if (dir_fd < 0 || (fdatasync (dir_fd) < 0 && fsync (dir_fd) < 0))
 		sync ();	/* Force directory out */
-	      if (origname)
+	      if (qname)
 		{
-		  /* The use of origname (rather than oldname) here is
-		     deliberate.  It makes the -v output more intelligible
-		     at the expense of making the `renamed to ...' messages
-		     use the logical (original) file name.  */
-		  pfstatus (_("%s: renamed to `%s'"), origname, newname);
+		  /*
+		   * People seem to understand this better than talking
+		   * about renaming oldname.  newname doesn't need
+		   * quoting because we picked it.
+		   */
+		  pfstatus (_("%s: renamed to `%s'"), qname, newname);
 		  if (flags->verbose > 1)
 		    flushstatus ();
 		}
@@ -1215,15 +1646,14 @@ wipename (char *oldname, struct Options const *flags)
       len--;
     }
   free (newname);
-  err = remove (oldname);
-  if (dir_fd < 0 || fdatasync (dir_fd) < 0)
+  err = unlink (oldname);
+  if (dir_fd < 0 || (fdatasync (dir_fd) < 0 && fsync (dir_fd) < 0))
     sync ();
   close (dir_fd);
-  if (origname)
+  if (qname)
     {
       if (!err && flags->verbose)
-	pfstatus (_("%s: deleted"), origname);
-      free (origname);
+	pfstatus (_("%s: removed"), qname);
     }
   return err;
 }
@@ -1235,28 +1665,46 @@ wipename (char *oldname, struct Options const *flags)
  * FIXME
  * Detail to note: since we do not restore errno to EACCES after
  * a failed chmod, we end up printing the error code from the chmod.
- * This is probably either EACCES again or EPERM, which both give
- * reasonable error messages.  But it might be better to change that.
+ * This is actually the error that stopped us from proceeding, so
+ * it's arguably the right one, and in practice it'll be either EACCESS
+ * again or EPERM, which both give similar error messages.
+ * Does anyone disagree?
  */
 static int
-wipefile (char *name, struct isaac_state *s, size_t passes,
-	  struct Options const *flags)
+wipefile (char *name, struct isaac_state *s, struct Options const *flags)
 {
   int err, fd;
 
-  fd = open (name, O_RDWR);
-  if (fd < 0 && errno == EACCES && flags->force)
+  fd = open (name, O_WRONLY | O_NOCTTY);
+  if (fd < 0)
     {
-      if (chmod (name, 0600) >= 0)
-	fd = open (name, O_RDWR);
+      if (errno == EACCES && flags->force)
+	{
+	  if (chmod (name, S_IWUSR) >= 0) /* 0200, user-write-only */
+	    fd = open (name, O_WRONLY | O_NOCTTY);
+	}
+      else if (errno == ENOENT && memcmp (name, "/dev/fd/", 8) == 0)
+	{
+	  /* We accept /dev/fd/# even if the OS doesn't support it */
+	  unsigned long num;
+	  char *p;
+	  num = strtoul (name+8, &p, 10);
+	  /* If it's completely decimal with no leading zeros... */
+	  if (!*p && num < INT_MAX && ((num && name[8] != '0') || !name[9]))
+	    {
+	      return wipefd ((int)num, quotearg_colon (name), s, flags);
+	    }
+	}
     }
   if (fd < 0)
     {
-      error (0, 0, _("Unable to open `%s'"), name);
+      if (!flags->force)
+	return 0;
+      error (0, errno, _("Unable to open `%s'"), name);
       return -1;
     }
 
-  err = wipefd (fd, name, s, passes, flags);
+  err = do_wipefd (fd, quotearg_colon (name), s, flags);
   close (fd);
   /*
    * Wipe the name and unlink - regular files only, no devices!
@@ -1277,7 +1725,6 @@ main (int argc, char **argv)
   struct isaac_state s;
   int err = 0;
   struct Options flags;
-  unsigned long n_passes = 0;
   char **file;
   int n_files;
   int c;
@@ -1294,15 +1741,17 @@ main (int argc, char **argv)
 
   /* By default, remove each file after sanitization.  */
   flags.remove_file = 1;
+  flags.n_iterations = DEFAULT_PASSES;
+  flags.size = (off_t)-1;
 
-  while ((c = getopt_long (argc, argv, "dfn:pvxz", long_opts, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "Dfn:ps:vxz", long_opts, NULL)) != -1)
     {
       switch (c)
 	{
 	case 0:
 	  break;
 
-	case 'd':
+	case 'D':
 	  flags.allow_devices = 1;
 	  break;
 
@@ -1312,20 +1761,30 @@ main (int argc, char **argv)
 
 	case 'n':
 	  {
-	    unsigned long int tmp_ulong;
-	    if (xstrtoul (optarg, NULL, 10, &tmp_ulong, NULL) != LONGINT_OK
-		|| (word32) tmp_ulong != tmp_ulong
-		|| ((size_t) (tmp_ulong * sizeof (int)) / sizeof (int)
-		    != tmp_ulong))
+	    unsigned long int tmp;
+	    if (xstrtoul (optarg, NULL, 10, &tmp, NULL) != LONGINT_OK
+		|| (word32) tmp != tmp
+		|| ((size_t) (tmp * sizeof (int)) / sizeof (int) != tmp))
 	      {
 		error (1, 0, _("invalid number of passes: %s"), optarg);
 	      }
-	    n_passes = tmp_ulong;
+	    flags.n_iterations = (size_t)tmp;
 	  }
 	  break;
 
 	case 'p':
 	  flags.remove_file = 0;
+	  break;
+
+	case 's':
+	  {
+	    unsigned long int tmp;
+	    if (xstrtoul (optarg, NULL, 0, &tmp, "cbBkMG0") != LONGINT_OK)
+	      {
+		error (1, 0, _("invalid file size: %s"), optarg);
+	      }
+	    flags.size = tmp;
+	  }
 	  break;
 
 	case 'v':
@@ -1360,15 +1819,15 @@ main (int argc, char **argv)
 
   for (i = 0; i < n_files; i++)
     {
-      if (STREQ (file[i], "-"))
+      if (strcmp (file[i], "-") == 0)
 	{
-	  if (wipefd (0, file[i], &s, (size_t) n_passes, &flags) < 0)
+	  if (wipefd (1, quotearg_colon (file[i]), &s, &flags) < 0)
 	    err = 1;
 	}
       else
 	{
 	  /* Plain filename - Note that this overwrites *argv! */
-	  if (wipefile (file[i], &s, (size_t) n_passes, &flags) < 0)
+	  if (wipefile (file[i], &s, &flags) < 0)
 	    err = 1;
 	}
       flushstatus ();
@@ -1381,3 +1840,6 @@ main (int argc, char **argv)
 
   exit (err);
 }
+/*
+ * vim:sw=2:sts=2:
+ */
