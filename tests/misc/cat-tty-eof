@@ -32,7 +32,7 @@ $@ and (warn "$ME: this script requires Perl's Expect package\n"), exit 77;
       $exp->send('');  # FIXME: it'd be better not to hard-code ^D here
       $exp->expect (0, '-re', "^foo\\r?\$");
       my $found = $exp->expect (1, '-re', "^.+\$");
-      $found and warn "F: $found: " . $exp->exp_match () . "\n";
+      # $found and warn "F: $found: " . $exp->exp_match () . "\n";
       $exp->expect(0, 'eof');
       # defined $exp->exitstatus and warn "E: " . $exp->exitstatus . "\n";
       defined $found && defined $exp->exitstatus && $exp->exitstatus == 0
