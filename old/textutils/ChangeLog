@@ -1,5 +1,10 @@
-1998-04-17  Jim Meyering  <meyering@ascend.com>
+1998-04-26  Jim Meyering  <meyering@ascend.com>
 
+	* src/md5sum.c (md5_check): Declare local, `md5num' as _unsigned_ char*.
+	(hex_digits): Declare parameter `s' as _unsigned_ char*.
+	(split_3): Declare parameter `u' as _unsigned_ char**.
+
+1998-04-17  Jim Meyering  <meyering@ascend.com>
 
 	* src/fmt.c (check_punctuation): Used unsigned char* pointers to avoid
 	new warning.
