@@ -1,5 +1,5 @@
 /* du -- summarize disk usage
-   Copyright (C) 88, 89, 90, 91, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 88, 89, 90, 91, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -550,7 +550,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 
       for (namep = name_space; *namep; namep += strlen (namep) + 1)
 	{
-	  if (!excluded_filename (exclude, namep))
+	  if (!excluded_filename (exclude, namep, 0))
 	    {
 	      str_concatc (path, namep);
 	      size += count_entry (namep, 0, dir_dev, depth + 1);
@@ -742,7 +742,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'X':
-	  if (add_exclude_file (exclude, optarg, '\n') != 0)
+	  if (add_exclude_file (add_exclude, exclude, optarg, '\n') != 0)
 	    error (1, errno, "%s", optarg);
 	  break;
 
