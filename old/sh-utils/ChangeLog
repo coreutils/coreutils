@@ -1,27 +1,26 @@
-Fri Mar 21 23:57:30 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+Sat Mar 22 00:03:02 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Makefile.am (AUTOMAKE_OPTIONS): Require automake-1.1l.
+	(aclocal.m4): Use aclocal's new -I option.
 
 Thu Mar 20 21:10:44 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* m4/ccstdc.m4
-	* m4/init.m4
-	* m4/sanity.m4
-	* m4/protos.m4
-Files ./dmalloc.m4 and /tmp/am/share/aclocal/dmalloc.m4 are identical
-Files ./error.m4 and /tmp/am/share/aclocal/error.m4 are identical
-Files ./header.m4 and /tmp/am/share/aclocal/header.m4 are identical
-Files ./install.m4 and /tmp/am/share/aclocal/install.m4 are identical
-Files ./lispdir.m4 and /tmp/am/share/aclocal/lispdir.m4 are identical
-Files ./maintainer.m4 and /tmp/am/share/aclocal/maintainer.m4 are identical
-Files ./obstack.m4 and /tmp/am/share/aclocal/obstack.m4 are identical
-Files ./ptrdiff.m4 and /tmp/am/share/aclocal/ptrdiff.m4 are identical
-Files ./regex.m4 and /tmp/am/share/aclocal/regex.m4 are identical
-Files ./strtod.m4 and /tmp/am/share/aclocal/strtod.m4 are identical
-Files ./termios.m4 and /tmp/am/share/aclocal/termios.m4 are identical
-Files ./winsz.m4 and /tmp/am/share/aclocal/winsz.m4 are identical
-
-
+	* m4/ccstdc.m4: Remove file.
+	* m4/init.m4: Likewise.
+	* m4/sanity.m: Likewise.
+	* m4/protos.m: Likewise.
+	* m4/dmalloc.m4: Likewise.
+	* m4/error.m4: Likewise.
+	* m4/header.m4: Likewise.
+	* m4/install.m4: Likewise.
+	* m4/lispdir.m4: Likewise.
+	* m4/maintainer.m4: Likewise.
+	* m4/obstack.m4: Likewise.
+	* m4/ptrdiff.m4: Likewise.
+	* m4/regex.m4: Likewise.
+	* m4/strtod.m4: Likewise.
+	* m4/termios.m4: Likewise.
+	* m4/winsz.m4: Likewise.
 
 Tue Mar 18 06:46:54 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
