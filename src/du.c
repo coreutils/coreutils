@@ -1,5 +1,5 @@
 /* du -- summarize disk usage
-   Copyright (C) 1988-1991, 1995-2003 Free Software Foundation, Inc.
+   Copyright (C) 1988-1991, 1995-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -185,7 +185,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
-  -H, --si              likewise, but use powers of 1000 not 1024\n\
+  -H, --si              likewise, but use powers of 1000 not 1024 (deprecated)\n\
   -k                    like --block-size=1K\n\
   -l, --count-links     count sizes many times if hard linked\n\
 "), stdout);
