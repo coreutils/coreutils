@@ -34,6 +34,12 @@
 #include <regex.h>
 #include "system.h"
 
+#ifndef isascii
+#define isascii(c) 1
+#endif
+
+#define ISDIGIT(c) (isascii (c) && isdigit (c))
+
 #if !__STDC__
 #define const
 #endif
@@ -236,7 +242,7 @@ toarith (v)
 	cp++;
       for (; *cp; cp++)
 	{
-	  if (isdigit (*cp))
+	  if (ISDIGIT (*cp))
 	    i = i * 10 + *cp - '0';
 	  else
 	    return 0;
