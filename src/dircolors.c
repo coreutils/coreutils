@@ -1,6 +1,8 @@
 /* FIXME: accept, but ignore EIGHTBIT option
    FIXME: embed contents of default mapping file
    FIXME: add option to print that default mapping?
+
+   Only distinction necessary: Bourne vs. C-shell
  */
 /* dircolors - parse a Slackware-style DIR_COLORS file.
    Copyright (C) 1994, 1995 H. Peter Anvin
@@ -66,15 +68,12 @@ static const char *const ls_codes[] =
   "so", "bd", "bd", "cd", "cd", "ex", "lc", "lc", "rc", "rc", "ec", "ec"
 };
 
-enum color_opts { col_yes, col_no, col_tty };
-
 static struct option const long_options[] =
   {
     {"ash", no_argument, NULL, 'a'},
     {"bash", no_argument, NULL, 'b'},
     {"csh", no_argument, NULL, 'c'},
     {"help", no_argument, NULL, 'h'},
-    {"no-path", no_argument, NULL, 'P'},
     {"sh", no_argument, NULL, 's'},
     {"tcsh", no_argument, NULL, 't'},
     {"version", no_argument, NULL, 'v'},
@@ -94,7 +93,6 @@ usage (int status)
       printf (_("Usage: %s [OPTION]... [FILE]\n"), program_name);
       printf (_("\
   -h, --help        display this help and exit\n\
-  -P, --no-path     do not look for shell in PATH\n\
       --version     output version information and exit\n\
 Determine format of output:\n\
   -a, --ash         assume ash shell\n\
@@ -107,6 +105,9 @@ Determine format of output:\n\
 
   exit (status);
 }
+
+/* If SHELL is csh or tcsh, assume C-shell.  Else Bourne shell.  */
+/* FIXME: rename functon.  */
 
 static int
 figure_mode (void)
@@ -208,7 +209,7 @@ put_seq (const char *str, char follow)
 int
 main (int argc, char *argv[])
 {
-  char *p, *q;
+  char *p;
   int optc;
   int mode = MO_UNKNOWN;
   FILE *fp = NULL;
@@ -219,13 +220,9 @@ main (int argc, char *argv[])
   char useropts[2048] = "";
   char *keywd, *arg;
 
-  int color_opt = col_no;	/* Assume --color=no */
-
-  int no_path = 0;		/* Do not search PATH */
   int do_help = 0;
   int do_version = 0;
 
-  const char *copt;
   char *input_file;
 
   program_name = argv[0];
@@ -260,10 +257,6 @@ main (int argc, char *argv[])
 
       case 'z':
 	mode = MO_ZSH;
-	break;
-
-      case 'P':
-	no_path = 1;
 	break;
 
       case 'v':
@@ -378,27 +371,7 @@ setenv LS_COLORS \':");
 		    }
 		  else if (strcasecmp (keywd, "COLOR") == 0)
 		    {
-		      switch (arg[0])
-			{
-			case 'a':
-			case 'y':
-			case '1':
-			  color_opt = col_yes;
-			  break;
-
-			case 'n':
-			case '0':
-			  color_opt = col_no;
-			  break;
-
-			case 't':
-			  color_opt = col_tty;
-			  break;
-
-			default:
-			  error (0, 0, _("Unknown COLOR option `%s'\n"), arg);
-			  break;
-			}
+		       /* FIXME: ignored now.  */
 		    }
 		  else
 		    {
@@ -423,149 +396,21 @@ setenv LS_COLORS \':");
 
   fclose (fp);
 
-  /* Decide on the options.  */
-  switch (color_opt)
-    {
-    case col_yes:
-      copt = "--color=yes";
-      break;
-
-    case col_no:
-      copt = "--color=no";
-      break;
-
-    case col_tty:
-      copt = "--color=tty";
-      break;
-    }
-
-  /* Find ls in the path.  */
-  if (no_path == 0)
-    {
-      no_path = 1;		/* Assume we won't find one.  */
-
-      p = getenv ("PATH");
-      if (p != NULL && *p != '\0')
-	{
-	  while (*p != '\0')
-	    {
-	      while (*p == ':')
-		++p;
-
-	      if (*p != '/')	/* Skip relative path entries.  */
-		while (*p != '\0' && *p != ':')
-		  ++p;
-	      else
-		{
-		  q = line;
-		  while (*p != '\0' && *p != ':')
-		    *q++ = *p++;
-		  /* Make sure it ends in slash.  */
-		  if (*(q - 1) != '/' )
-		    *q++ = '/';
-
-		  strcpy (q, "ls");
-		  if (access (line, X_OK) == 0)
-		    {
-		      no_path = 0; /* Found it.  */
-		      break;
-		    }
-		}
-	    }
-	}
-    }
-
   /* Write it out.  */
   switch (mode)
     {
     case MO_SH:
-      if (no_path)
-	printf ("\';\n\
-export LS_COLORS;\n\
-LS_OPTIONS='%s%s';\n\
-export LS_OPTIONS;\n\
-ls () { ( exec ls $LS_OPTIONS \"$@\" ) };\n\
-dir () { ( exec dir $LS_OPTIONS \"$@\" ) };\n\
-vdir () { ( exec vdir $LS_OPTIONS \"$@\" ) };\n\
-d () { dir \"$@\" ; };\n\
-v () { vdir \"$@\" ; };\n", copt, useropts);
-      else
-	printf ("\';\n\
-export LS_COLORS;\n\
-LS_OPTIONS='%s%s';\n\
-ls () { %s $LS_OPTIONS \"$@\" ; };\n\
-dir () { %s $LS_OPTIONS --format=vertical \"$@\" ; };\n\
-vdir () { %s $LS_OPTIONS --format=long \"$@\" ; };\n\
-d () { dir \"$@\" ; };\n\
-v () { vdir \"$@\" ; };\n", copt, useropts, line, line, line);
+    case MO_KSH:
+    case MO_ZSH:
+      printf ("\';\nexport LS_COLORS;\n");
       break;
 
     case MO_CSH:
-      if (no_path)
-	printf ("\';\n\
-setenv LS_OPTIONS '%s%s';\n\
-alias ls \'ls $LS_OPTIONS\';\n\
-alias dir \'dir $LS_OPTIONS\';\n\
-alias vdir \'vdir $LS_OPTIONS\';\n\
-alias d dir;\n\
-alias v vdir;\n\
-unset noglob;\n", copt, useropts);
-      else
-	printf ("\';\n\
-setenv LS_OPTIONS '%s%s';\n\
-alias ls \'%s $LS_OPTIONS\';\n\
-alias dir \'%s $LS_OPTIONS --format=vertical\';\n\
-alias vdir \'%s $LS_OPTIONS --format=long\';\n\
-alias d dir;\n\
-alias v vdir;\n\
-unset noglob;\n", copt, useropts, line, line, line);
+      printf ("\';\nunset noglob;\n");
       break;
 
-    case MO_KSH:
-      if (no_path)
-	printf ("\';\n\
-export LS_COLORS;\n\
-LS_OPTIONS='%s%s';\n\
-export LS_OPTIONS;\n\
-alias ls=\'ls $LS_OPTIONS\';\n\
-alias dir=\'dir $LS_OPTIONS\';\n\
-alias vdir=\'vdir $LS_OPTIONS\';\n\
-alias d=dir;\n\
-alias v=vdir;\n", copt, useropts);
-      else
-	printf ("\';\n\
-export LS_COLORS;\n\
-LS_OPTIONS='%s%s';\n\
-export LS_OPTIONS;\n\
-alias ls=\'%s $LS_OPTIONS\';\n\
-alias dir=\'%s $LS_OPTIONS --format=vertical\';\n\
-alias vdir=\'%s $LS_OPTIONS --format=long\';\n\
-alias d=dir;\n\
-alias v=vdir;\n", copt, useropts, line, line, line);
-      break;
-
-    case MO_ZSH:
-      if (no_path)
-	printf ("\';\n\
-export LS_COLORS;\n\
-LS_OPTIONS=(%s%s);\n\
-export LS_OPTIONS;\n\
-alias ls=\'ls $LS_OPTIONS\';\n\
-alias dir=\'dir $LS_OPTIONS\';\n\
-alias vdir=\'vdir $LS_OPTIONS\';\n\
-alias d=dir;\n\
-alias v=vdir;\n", copt, useropts);
-      else
-	printf ("\';\n\
-export LS_COLORS;\n\
-LS_OPTIONS=(%s%s);\n\
-export LS_OPTIONS;\n\
-alias ls=\'%s $LS_OPTIONS\';\n\
-alias dir=\'%s $LS_OPTIONS --format=vertical\';\n\
-alias vdir=\'%s $LS_OPTIONS --format=long\';\n\
-alias d=dir;\n\
-alias v=vdir;\n", copt, useropts, line, line, line);
-      break;
+    default:
+      abort ();
     }
 
   exit (0);
