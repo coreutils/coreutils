@@ -110,18 +110,18 @@ TAR = tar
 DEP_FILES =  .deps/alloca.P .deps/argmatch.P .deps/backupfile.P \
 .deps/basename.P .deps/dirname.P .deps/error.P .deps/euidaccess.P \
 .deps/fileblocks.P .deps/filemode.P .deps/fnmatch.P .deps/fsusage.P \
-.deps/ftruncate.P .deps/full-write.P .deps/getdate.P .deps/getline.P \
-.deps/getopt.P .deps/getopt1.P .deps/getversion.P .deps/group-member.P \
-.deps/idcache.P .deps/isdir.P .deps/long-options.P .deps/makepath.P \
-.deps/memcmp.P .deps/memcpy.P .deps/memset.P .deps/mkdir.P \
-.deps/mktime.P .deps/modechange.P .deps/mountlist.P .deps/obstack.P \
-.deps/path-concat.P .deps/posixtm.P .deps/regex.P .deps/rename.P \
-.deps/rmdir.P .deps/rpmatch.P .deps/rx.P .deps/safe-read.P \
-.deps/save-cwd.P .deps/savedir.P .deps/stpcpy.P .deps/strcasecmp.P \
-.deps/strdup.P .deps/stripslash.P .deps/strndup.P .deps/strstr.P \
-.deps/strtol.P .deps/strtoul.P .deps/userspec.P .deps/xgetcwd.P \
-.deps/xmalloc.P .deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P \
-.deps/yesno.P
+.deps/ftruncate.P .deps/full-write.P .deps/getdate.P .deps/getgroups.P \
+.deps/getline.P .deps/getopt.P .deps/getopt1.P .deps/getversion.P \
+.deps/group-member.P .deps/idcache.P .deps/isdir.P .deps/long-options.P \
+.deps/makepath.P .deps/memcmp.P .deps/memcpy.P .deps/memset.P \
+.deps/mkdir.P .deps/mktime.P .deps/modechange.P .deps/mountlist.P \
+.deps/obstack.P .deps/path-concat.P .deps/posixtm.P .deps/regex.P \
+.deps/rename.P .deps/rmdir.P .deps/rpmatch.P .deps/rx.P \
+.deps/safe-read.P .deps/save-cwd.P .deps/savedir.P .deps/stpcpy.P \
+.deps/strcasecmp.P .deps/strdup.P .deps/stripslash.P .deps/strndup.P \
+.deps/strstr.P .deps/strtol.P .deps/strtoul.P .deps/userspec.P \
+.deps/xgetcwd.P .deps/xmalloc.P .deps/xstrdup.P .deps/xstrtol.P \
+.deps/xstrtoul.P .deps/yesno.P
 SOURCES = $(libfu_a_SOURCES)
 OBJECTS = $(libfu_a_OBJECTS)
 
