@@ -1,7 +1,7 @@
 ## Process this file with automake to produce Makefile.in.
 
 ##test-files-begin
-x = tail
+x = ls
 explicit =
 maint_gen = obs-c1.I obs-c1.X obs-c2.I obs-c2.X obs-c3.I obs-c3.X obs-c4.I \
 obs-c4.X obs-c5.I obs-c5.X obs-l1.I obs-l1.X obs-l2.I obs-l2.X obs-l3.I \
