@@ -25,6 +25,7 @@
 #include "version.h"
 #include "long-options.h"
 
+void error ();
 void strip_trailing_slashes ();
 
 /* The name this program was run with. */
@@ -66,7 +67,10 @@ main (argc, argv)
   parse_long_options (argc, argv, "dirname", version_string, usage);
 
   if (argc != 2)
-    usage (1);
+    {
+      error (0, 0, "too %s arguments", argc < 2 ? "few" : "many");
+      usage (1);
+    }
 
   path = argv[1];
   strip_trailing_slashes (path);

@@ -34,6 +34,7 @@
 #include "long-options.h"
 
 char *basename ();
+void error ();
 void strip_trailing_slashes ();
 
 static void remove_suffix ();
@@ -76,7 +77,10 @@ main (argc, argv)
   parse_long_options (argc, argv, "basename", version_string, usage);
 
   if (argc == 1 || argc > 3)
-    usage (1);
+    {
+      error (0, 0, "too %s arguments", argc == 1 ? "few" : "many");
+      usage (1);
+    }
 
   strip_trailing_slashes (argv[1]);
 

@@ -1,3 +1,9 @@
+Fri Oct 21 00:57:23 1994  Jim Meyering  (meyering@comco.com)
+
+	* basename.c, dirname.c, expr.c, pathchk.c, sleep.c (main): Diagnose
+	wrong number of argument -- usually too few -- instead of just
+	referring the user to the --help option.  Reported by Karl Berry.
+
 Mon Oct 17 23:55:41 1994  Jim Meyering  (meyering@comco.com)
 
 	* doc/Makefile.in (install): Install the info files from either

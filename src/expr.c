@@ -162,7 +162,11 @@ main (argc, argv)
   parse_long_options (argc, argv, "expr", version_string, usage);
 
   if (argc == 1)
-    usage (1);
+    {
+      error (0, 0, "too few arguments");
+      usage (1);
+    }
+
   args = argv + 1;
 
   v = eval ();

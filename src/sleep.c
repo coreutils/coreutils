@@ -98,8 +98,8 @@ main (argc, argv)
 
   if (argc == 1)
     {
-      fprintf (stderr, "Usage: %s number[smhd]...\n", argv[0]);
-      exit (1);
+      error (0, 0, "too few arguments");
+      usage (1);
     }
 
   for (i = 1; i < argc; i++)
