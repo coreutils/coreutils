@@ -4612,7 +4612,7 @@ directory, acting as if it had been invoked with a single argument of @samp{.}.
 
 @vindex LC_ALL
 By default, the output is sorted alphabetically, according to the locale
-settings in effect. @footnote{If you have arranged to use a non-@sc{posix}
+settings in effect. @footnote{If you use a non-@sc{posix}
 locale (e.g., by setting @env{LC_ALL} to @samp{en_US}), then @code{ls} may
 produce output that is sorted differently than you're accustomed to.
 In that case, set the @env{LC_ALL} environment variable to @samp{C}.}
