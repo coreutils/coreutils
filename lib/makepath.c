@@ -1,5 +1,5 @@
 /* makepath.c -- Ensure that a directory path exists.
-   Copyright (C) 1990, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -255,7 +255,7 @@ make_path (const char *argpath,
 	      return 1;
 	    }
 
-	  if (re_protect)
+	  if (newly_created_dir && re_protect)
 	    {
 	      struct ptr_list *new = (struct ptr_list *)
 		alloca (sizeof (struct ptr_list));
