@@ -1,5 +1,6 @@
 Changes in release 1.22
 * Fix a bug in tail when invoked with an argument like `+NUMBERc'
+* Add test suite for tail
 
 Changes in release 1.21
 * Using --program-prefix no longer applies the prefix twice
