@@ -506,11 +506,8 @@ irand_mod (struct irand_state *r, word32 n)
  * Like perror() but fancier.  (And fmt is not allowed to be NULL)
  */
 #if __GNUC__ >= 2
-static void
-pfstatus (char const *,...)
-__attribute__ ((format (printf, 1, 2)));
-     static void pferror (char const *,...) __attribute__ ((format (printf, 1,
-								    2)));
+static void pfstatus (char const *,...) __attribute__ ((format (printf, 1, 2)));
+static void pferror (char const *,...) __attribute__ ((format (printf, 1, 2)));
 #endif
 
 /*
@@ -720,7 +717,7 @@ dopass (int fd, char const *name, off_t size, int type,
 
   if (lseek (fd, 0, SEEK_SET) < 0)
     {
-      pferror ("Error seeking \"%s\"", name);
+      pferror ("Error seeking `%s'", name);
       return -1;
     }
 
@@ -764,7 +761,7 @@ dopass (int fd, char const *name, off_t size, int type,
 	  if (ssize < 0)
 	    {
 	      int e = errno;
-	      pferror ("Error writing \"%s\" at %lu",
+	      pferror ("Error writing `%s' at %lu",
 		       name, size - cursize + soff);
 	      /* FIXME: this is slightly fragile in that some systems
 		 may fail with a different errno.  */
@@ -795,7 +792,7 @@ dopass (int fd, char const *name, off_t size, int type,
   /* Force what we just wrote to hit the media. */
   if (fdatasync (fd) < 0)
     {
-      pferror ("Error syncing \"%s\"", name);
+      pferror ("Error syncing `%s'", name);
       return -1;
     }
   return 0;
@@ -1021,7 +1018,7 @@ wipefd (int fd, char const *name, struct isaac_state *s,
 
   if (fstat (fd, &st))
     {
-      pferror ("Can't fstat file \"%s\"", name);
+      pferror ("Can't fstat file `%s'", name);
       return -1;
     }
 
@@ -1029,7 +1026,7 @@ wipefd (int fd, char const *name, struct isaac_state *s,
   if (!S_ISREG (st.st_mode) && !(flags->allow_devices))
     {
       fprintf (stderr,
-	       "\"%s\" is not a regular file: use -d to enable operations on devices\n",
+	       "`%s' is not a regular file: use -d to enable operations on devices\n",
 	       name);
       return -1;
     }
@@ -1219,7 +1216,7 @@ wipename (char *oldname, struct Options const *flags)
 		sync ();	/* Force directory out */
 	      if (origname)
 		{
-		  pfstatus ("%s: renamed to \"%s\"",
+		  pfstatus ("%s: renamed to `%s'",
 			    origname, newname);
 		  if (flags->verbose > 1)
 		    flushstatus ();
@@ -1269,7 +1266,7 @@ wipefile (char *name, struct isaac_state *s, size_t passes,
     }
   if (fd < 0)
     {
-      pferror ("Unable to open \"%s\"", name);
+      pferror ("Unable to open `%s'", name);
       return -1;
     }
 
@@ -1283,7 +1280,7 @@ wipefile (char *name, struct isaac_state *s, size_t passes,
     {
       err = wipename (name, flags);
       if (err < 0)
-	pferror ("Unable to delete file \"%s\"", name);
+	pferror ("Unable to delete file `%s'", name);
     }
   return err;
 }
