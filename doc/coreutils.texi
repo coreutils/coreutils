@@ -10161,18 +10161,21 @@ pathchk [@var{option}]@dots{} @var{name}@dots{}
 
 For each @var{name}, @command{pathchk} prints a message if any of
 these conditions is true:
+
 @enumerate
 @item
-one of the existing directories in @var{name} does not have search
+One of the existing directories in @var{name} does not have search
 (execute) permission,
 @item
-the length of @var{name} is larger than its file system's maximum
-file name length,
+The length of @var{name} is larger than the maximum supported by the
+operating system.
 @item
-the length of one component of @var{name}, corresponding to an
-existing directory name, is larger than its file system's maximum
-length for a file name component.
+The length of one component of @var{name} is longer than
+its file system's maximum.
 @end enumerate
+
+A nonexistent @var{name} is not an error, so long a file with that
+name could be created under the above conditions.
 
 The program accepts the following option.  Also see @ref{Common options}.
 
@@ -10182,10 +10185,12 @@ The program accepts the following option.  Also see @ref{Common options}.
 @itemx --portability
 @opindex -p
 @opindex --portability
-Instead of performing length checks on the underlying file system,
-test the length of each file name and its components against the
+Do not perform checks based on the underlying file system.  Instead,
+check the length of each file name and its components against the
 @acronym{POSIX} minimum limits for portability.  Also check that the file
-name contains no characters not in the portable file name character set.
+name contains only characters that are in the portable file name
+character set, namely, the ASCII letters and digits, @samp{-},
+@samp{.}, @samp{/}, and @samp{_}.
 
 @end table
 
@@ -10193,7 +10198,7 @@ name contains no characters not in the portable file name character set.
 Exit status:
 
 @display
-0 if all specified file names passed all of the tests,
+0 if all specified file names passed all checks,
 1 otherwise.
 @end display
 
