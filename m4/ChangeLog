@@ -4,6 +4,14 @@
 
 	* getpass.m4 (gl_PREREQ_GETPASS): Check for stdio_ext.h.
 
+2003-08-26  Bruno Haible  <bruno@clisp.org>
+
+	Merge from gnulib.
+
+	* fnmatch.m4 (_AC_LIBOBJ_FNMATCH): Remove AC_DEFINE of fnmatch here.
+	This avoids havoc on compilers for which '#define fnmatch rpl_fnmatch'
+	followed by '#define fnmatch fnmatch_posix' gives an error.
+
 2004-01-14  Paul Eggert  <eggert@twinsun.com>
 
 	* posixv.m4 (gl_POSIXVER): Require gl_DEFAULT_POSIX2_VERSION.
