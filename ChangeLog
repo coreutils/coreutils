@@ -2,6 +2,8 @@
 
 	* Version 5.0.92.
 
+	* src/du.c (du_files): Ignore any failure of fts_close.
+
 	* src/du.c (du_files): Give better diagnostics for failed fts_open.
 
 	* src/du.c (MAX_N_DESCRIPTORS): Remove now-unused definition.
