@@ -1,6 +1,11 @@
-2002-12-09  Jim Meyering  <jim@meyering.net>
+2002-12-11  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.4.
+
+	* src/pathchk.c (NEED_PATHCONF_WRAPPER): Undefine before defining,
+	in case it's already defined.
+
+2002-12-09  Jim Meyering  <jim@meyering.net>
 
 	* tests/touch/fail-diag: Don't get a test failure if /no exists.
 	Instead, evoke a framework failure if /no-$$ exists.
