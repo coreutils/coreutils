@@ -1,3 +1,7 @@
+2003-06-06  Jim Meyering  <jim@meyering.net>
+
+	* stdbool.m4: Update from gnulib.
+
 2003-06-04  Paul Eggert  <eggert@twinsun.com>
 
 	Merge human.c etc. from gnulib.
