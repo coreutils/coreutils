@@ -2,6 +2,8 @@
 
 	* Version 5.0.1.
 
+	* tests/du/slink: Skip this test if `.' is on an XFS file system.
+
 	* tests/du/fd-leak: New file.  Test for the bug in du that
 	was fixed by the 2003-05-12 change to lib/ftw.c.
 	* tests/du/Makefile.am (TESTS): Add fd-leak.
