@@ -1543,6 +1543,8 @@ If you specify a @var{pid} that is not in use or that does not correspond
 to the process that is writing to the tailed files, then @code{tail}
 may terminate long before any @var{file}s stop growing or it may not
 terminate until long after the real writer has terminated.
+Note that @samp{--pid} cannot be supported on some systems; @code{tail}
+will print a warning if this is the case.
 
 @itemx --max-consecutive-size-changes=@var{n}
 @opindex --max-consecutive-size-changes
