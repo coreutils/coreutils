@@ -226,29 +226,6 @@
 # define RETSIGTYPE void
 #endif
 
-#if __GNUC__
-# ifndef alloca
-#  define alloca __builtin_alloca
-# endif
-#else
-# if HAVE_ALLOCA_H
-#  include <alloca.h>
-# else
-#  ifdef _AIX
- #  pragma alloca
-#  else
-#   ifdef _WIN32
-#    include <malloc.h>
-#    include <io.h>
-#   else
-#    ifndef alloca
-char *alloca ();
-#    endif
-#   endif
-#  endif
-# endif
-#endif
-
 #ifdef __DJGPP__
   /* We need the declaration of setmode.  */
 # include <io.h>
