@@ -41,6 +41,7 @@
 #include "system.h"
 #include "closeout.h"
 #include "error.h"
+#include "posixver.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "expand"
@@ -89,12 +90,6 @@ static int have_read_stdin;
 /* Status to return to the system. */
 static int exit_status;
 
-static char const shortopts[] = "it:"
-#if POSIX2_VERSION < 200112
-",0123456789"
-#endif
-;
-
 static struct option const longopts[] =
 {
   {"tabs", required_argument, NULL, 't'},
@@ -133,11 +128,6 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
-      if (POSIX2_VERSION < 200112)
-	fputs (_("\
-\n\
-(obsolete) Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.\n\
-"), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
@@ -360,14 +350,14 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((c = getopt_long (argc, argv, shortopts, longopts, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "it:,0123456789", longopts, NULL)) != -1)
     {
       switch (c)
 	{
 	case 0:
 	  break;
 
-	default:
+	case '?':
 	  usage (1);
 	case 'i':
 	  convert_entire_line = 0;
@@ -375,38 +365,27 @@ main (int argc, char **argv)
 	case 't':
 	  parse_tabstops (optarg);
 	  break;
-	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-
-#if POSIX2_VERSION < 200112
 	case ',':
 	  add_tabstop (tabval);
 	  tabval = -1;
 	  obsolete_tablist = true;
 	  break;
-	case '0':
-	case '1':
-	case '2':
-	case '3':
-	case '4':
-	case '5':
-	case '6':
-	case '7':
-	case '8':
-	case '9':
+	case_GETOPT_HELP_CHAR;
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+	default:
 	  if (tabval == -1)
 	    tabval = 0;
 	  tabval = tabval * 10 + c - '0';
 	  obsolete_tablist = true;
 	  break;
-#endif
 	}
     }
 
-  if (OBSOLETE_OPTION_WARNINGS
-      && obsolete_tablist && ! getenv ("POSIXLY_CORRECT"))
-    error (0, 0,
-	   _("warning: `expand -TABLIST' is obsolete; use `expand -t TABLIST'"));
+  if (obsolete_tablist && 200112 <= posix2_version ())
+    {
+      error (0, 0, _("`-LIST' option is obsolete; use `-t LIST'"));
+      usage (EXIT_FAILURE);
+    }
 
   add_tabstop (tabval);
 
