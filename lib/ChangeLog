@@ -36,7 +36,8 @@
 
 2003-02-02  Jim Meyering  <jim@meyering.net>
 
-	* ftw.c (lstat) [LSTAT_FOLLOWS_SLASHED_SYMLINK]: Define to rpl_lstat.
+	* ftw.c (lstat) [!_LIBC && !LSTAT_FOLLOWS_SLASHED_SYMLINK]:
+	Define to rpl_lstat.
 
 2003-01-25  Jim Meyering  <jim@meyering.net>
 
