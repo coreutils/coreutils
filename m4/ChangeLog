@@ -1,3 +1,11 @@
+2004-08-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* jm-macros.m4 (gl_CHECK_ALL_TYPES):
+	Require gl_AC_TYPE_UINTPTR_T instead of using AC_CHECK_TYPE
+	on uintptr_t.  Require gl_AC_TYPE_UINT32_T.
+	* md5.m4 (gl_MD5): Require gl_AC_TYPE_UINT32_T.
+	* uint32_t.m4, uintptr_t.m4: New files.
+
 2004-07-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* md5.m4 (gl_MD5): Do not require AC_C_INLINE, since it doesn't

@@ -1,5 +1,14 @@
 2004-08-01  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/cut.c (hash_int) [!defined UINTPTR_MAX]: Use size_t
+	instead of uintptr_t.
+	* src/shred.c (UINT_MAX_32_BITS): Remove.
+	(word32): Remove.  All uses changed to uint32_t.
+	(isaac_seed_data): Remove unnecessary cast.
+	* src/system.h (ptr_align): Use size_t; in practice, this is just as
+	good as uintptr_t in checking for alignments, and has fewer
+	configuration hassles.
+
 	* src/Makefile.am (localedir.h): Make it readonly; this
 	undoes part of the 2004-07-27 patch.
 

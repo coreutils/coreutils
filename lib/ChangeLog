@@ -1,3 +1,18 @@
+2004-08-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* md5.c (UNALIGNED_P): Use size_t; in practice, this is just as
+	good as uintptr_t in checking for alignments, and has fewer
+	configuration hassles.
+	* sha1.c (UNALIGNED_P): Likewise.
+	* md5.h: Don't include <limits.h>.  Include <inttypes.h> if available,
+	as it defines symbols like UINT32_MAX on Solaris 8.
+	(md5_uint32): Assume uint32_t exists; Autoconf will define it
+	otherwise (if the host has a 32-bit unsigned type, anyway).
+	* memchr.c: Don't include inttypes.h or stdint.h.
+	(UNALIGNED_P): Remove.
+	(__memchr): Use size_t, not uintptr_t, to test alignment.
+	* memrchr.c: Likewise, for __memrchr.
+
 2004-07-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* makepath.h: Include <stdbool.h>.
