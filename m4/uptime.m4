@@ -1,4 +1,6 @@
-#serial 1
+#serial 2
+
+AC_PREREQ(2.13)
 
 AC_DEFUN(jm_SYS_PROC_UPTIME,
 [ dnl Require AC_PROG_CC to see if we're cross compiling.
@@ -10,6 +12,7 @@ AC_DEFUN(jm_SYS_PROC_UPTIME,
       && cat < /proc/uptime >/dev/null 2>/dev/null \
       && jm_cv_have_proc_uptime=yes])
   if test $jm_cv_have_proc_uptime = yes; then
-    AC_DEFINE(HAVE_PROC_UPTIME)
+    AC_DEFINE(HAVE_PROC_UPTIME, 1,
+	      [  Define if your system has the /proc/uptime special file.])
   fi
 ])
