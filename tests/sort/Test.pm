@@ -206,6 +206,11 @@ my @tv = (
 # From Paul Eggert.  This was fixed in textutils-1.22k.
 ["neg-nls", '-n', "-1\n-9\n", "-9\n-1\n", 0],
 
+# From Paul Eggert.  This was fixed in textutils-1.22m.
+# The bug was visible only when using the internationalized sorting code
+# (i.e., not when configured with --disable-nls).
+["nul-nls", '', "\0b\n\0a\n", "\0a\n\0b\n", 0],
+
 );
 
 sub test_vector
