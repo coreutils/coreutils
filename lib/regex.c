@@ -295,12 +295,6 @@ init_syntax_once ()
 
 # endif /* emacs */
 
-/* Integer type for pointers.  */
-# if !defined _LIBC
-#define uintptr_t private_uintptr_t
-typedef unsigned long int uintptr_t;
-# endif
-
 /* Should we use malloc or alloca?  If REGEX_MALLOC is not defined, we
    use `alloca' instead of `malloc'.  This is because using malloc in
    re_search* or re_match* could cause memory leaks when C-g is used in
