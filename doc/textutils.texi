@@ -118,16 +118,17 @@ This manual minimally documents version @value{VERSION} of the GNU text
 utilities.  
 
 @menu
-* Introduction::                        Caveats, overview, and authors.
-* Common options::                      Common options.
-* Output of entire files::		cat tac nl od
-* Formatting file contents::	        fmt pr fold
-* Output of parts of files::		head tail split csplit
-* Summarizing files::			wc sum cksum
-* Operating on sorted files::		sort uniq comm
-* Operating on fields within a line::	cut paste join
-* Operating on characters::		tr expand unexpand
-* Index::				General index.
+* Introduction::                Caveats, overview, and authors.
+* Common options::              Common options.
+* Output of entire files::      cat tac nl od
+* Formatting file contents::    fmt pr fold
+* Output of parts of files::    head tail split csplit
+* Summarizing files::           wc sum cksum
+* Operating on sorted files::   sort uniq comm
+* Operating on fields within a line::  cut paste join
+* Operating on characters::     tr expand unexpand
+* Opening the software toolbox::  The software tools philosophy.
+* Index::                       General index.
 @end menu
 @end ifinfo
 
@@ -2478,6 +2479,564 @@ Convert all strings of two or more spaces or tabs, not just initial
 ones, to tabs.
 
 @end table
+
+
+@c		What's GNU?
+@c		Arnold Robbins
+@node Opening the software toolbox
+@chapter Opening the software toolbox
+
+This chapter originally appeared in @cite{Linux Journal}, volume 1,
+number 2, in the @cite{What's GNU?} column. It was written by Arnold
+Robbins.
+
+@menu
+* Toolbox introduction::        
+* I/O redirection::             
+* The @code{who} command::      
+* The @code{cut} command::      
+* The @code{sort} command::     
+* The @code{uniq} command::     
+* Putting the tools together::  
+@end menu
+
+@node Toolbox introduction
+@unnumberedsec Toolbox introduction
+
+This month's column is only peripherally related to the GNU Project, in
+that it describes a number of the GNU tools on your Linux system and how they
+might be used.  What it's really about is the ``Software Tools'' philosophy
+of program development and usage.
+
+The software tools philosophy was an important and integral concept
+in the initial design and development of Unix (of which Linux and GNU are
+essentially clones).  Unfortunately, in the modern day press of
+Internetworking and flashy GUIs, it seems to have fallen by the
+wayside.  This is a shame, since it provides a powerful mental model
+for solving many kinds of problems.
+
+Many people carry a Swiss Army knife around in their pants pockets (or
+purse).  A Swiss Army knife is a handy tool to have: it has several knife
+blades, a screwdriver, tweezers, toothpick, nail file, corkscrew, and perhaps
+a number of other things on it.  For the everyday, small miscellaneous jobs
+where you need a simple, general purpose tool, it's just the thing.
+
+On the other hand, an experienced carpenter doesn't build a house using
+a Swiss Army knife.  Instead, he has a toolbox chock full of specialized
+tools---a saw, a hammer, a screwdriver, a plane, and so on.  And he knows
+exactly when and where to use each tool; you won't catch him hammering nails
+with the handle of his screwdriver.
+
+The Unix developers at Bell Labs were all professional programmers and trained
+computer scientists.  They had found that while a one-size-fits-all program
+might appeal to a user because there's only one program to use, in practice
+such programs are
+
+@enumerate a
+@item
+difficult to write,
+
+@item
+difficult to maintain and
+debug, and
+
+@item
+difficult to extend to meet new situations.
+@end enumerate
+
+Instead, they felt that programs should be specialized tools.  In short, each
+program ``should do one thing well.''  No more and no less.  Such programs are
+simpler to design, write, and get right---they only do one thing.
+
+Furthermore, they found that with the right machinery for hooking programs
+together, that the whole was greater than the sum of the parts.  By combining
+several special purpose programs, you could accomplish a specific task
+that none of the programs was designed for, and accomplish it much more
+quickly and easily than if you had to write a special purpose program.
+We will see some (classic) examples of this further on in the column.
+(An important additional point was that, if necessary, take a detour
+and build any software tools you may need first, if you don't already
+have something appropriate in the toolbox.)
+
+@node I/O redirection
+@unnumberedsec I/O redirection
+
+Hopefully, you are familiar with the basics of I/O redirection in the
+shell, in particular the concepts of ``standard input,'' ``standard output,''
+and ``standard error''.  Briefly, ``standard input'' is a data source, where
+data comes from.  A program should not need to either know or care if the
+data source is a disk file, a keyboard, a magnetic tape, or even a punched
+card reader.  Similarly, ``standard output'' is a data sink, where data goes
+to.  The program should neither know nor care where this might be.
+Programs that only read their standard input, do something to the data,
+and then send it on, are called ``filters'', by analogy to filters in a
+water pipeline.
+
+With the Unix shell, it's very easy to set up data pipelines:
+
+@example
+program_to_create_data | filter1 | .... | filterN > final.pretty.data
+@end example
+
+We start out by creating the raw data; each filter applies some successive
+transformation to the data, until by the time it comes out of the pipeline,
+it is in the desired form.
+
+This is fine and good for standard input and standard output.  Where does the
+standard error come in to play?  Well, think about @code{filter1} in
+the pipeline above.  What happens if it encounters an error in the data it
+sees?  If it writes an error message to standard output, it will just
+disappear down the pipeline into @code{filter2}'s input, and the
+user will probably never see it.  So programs need a place where they can send
+error messages so that the user will notice them.  This is standard error,
+and it is usually connected to your console or window, even if you have
+redirected standard output of your program away from your screen.
+
+For filter programs to work together, the format of the data has to be
+agreed upon.  The most straightforward and easiest format to use is simply
+lines of text.  Unix data files are generally just streams of bytes, with
+lines delimited by the @sc{ASCII} @sc{LF} (Line Feed) character,
+conventionally called a ``newline'' in the Unix literature. (This is
+@code{'\n'} if you're a C programmer.)  This is the format used by all
+the traditional filtering programs.  (Many earlier operating systems
+had elaborate facilities and special purpose programs for managing
+binary data.  Unix has always shied away from such things, under the
+philosophy that it's easiest to simply be able to view and edit your
+data with a text editor.)
+
+OK, enough introduction. Let's take a look at some of the tools, and then
+we'll see how to hook them together in interesting ways.   In the following
+discussion, we will only present those command line options that interest
+us.  As you should always do, double check your system documentation
+for the full story.
+
+@node The @code{who} command
+@unnumberedsec The @code{who} command
+
+The first program is the @code{who} command.  By itself, it generates a
+list of the users who are currently logged in.  Although I'm writing
+this on a single-user system, we'll pretend that several people are
+logged in:
+
+@example
+$ who
+arnold   console Jan 22 19:57
+miriam   ttyp0   Jan 23 14:19(:0.0)
+bill     ttyp1   Jan 21 09:32(:0.0)
+arnold   ttyp2   Jan 23 20:48(:0.0)
+@end example
+
+Here, the @samp{$} is the usual shell prompt, at which I typed @code{who}.
+There are three people logged in, and I am logged in twice.  On traditional
+Unix systems, user names are never more than eight characters long.  This
+little bit of trivia will be useful later.  The output of @code{who} is nice,
+but the data is not all that particularly exciting.
+
+@node The @code{cut} command
+@unnumberedsec The @code{cut} command
+
+The next program we'll look at is the @code{cut} command.  This program
+cuts out columns or fields of input data.  For example, we can tell it
+to print just the login name and full name from the @file{/etc/passwd
+file}.  The @file{/etc/passwd} file has seven fields, separated by
+colons:
+
+@example
+arnold:xyzzy:2076:10:Arnold D. Robbins:/home/arnold:/bin/ksh
+@end example
+
+To get the first and fifth fields, we would use cut like this:
+
+@example
+$ cut -d: -f1,5 /etc/passwd
+root:Operator
+@dots{}
+arnold:Arnold D. Robbins
+miriam:Miriam A. Robbins
+@dots{}
+@end example
+
+With the @samp{-c} option, @code{cut} will cut out specific characters
+(i.e., columns) in the input lines.  This command looks like it might be
+useful for data filtering.
+
+
+@node The @code{sort} command
+@unnumberedsec The @code{sort} command
+
+Next we'll look at the @code{sort} command.  This is one of the most
+powerful commands on a Unix-style system; one that you will often find
+yourself using when setting up fancy data plumbing. The @code{sort}
+command reads and sorts each file named on the command line.  It then
+merges the sorted data and writes it to standard output.  It will read
+standard input if no files are given on the command line (thus
+making it into a filter).  The sort is based on the machine collating
+sequence (@sc{ASCII}) or based on  user-supplied ordering criteria.
+
+
+@node The @code{uniq} command
+@unnumberedsec The @code{uniq} command
+
+Finally (at least for now), we'll look at the @code{uniq} program.  When
+sorting data, you will often end up with duplicate lines, lines that
+are identical.  Usually, all you need is one instance of each line.
+This is where @code{uniq} comes in. The @code{uniq} program reads its
+standard input, which it expects to be sorted.  It only prints out one
+copy of each duplicated line.  It does have several options.  Later on,
+we'll use the @samp{-c} option, which prints each unique line, preceded
+by a count of the number of times that line occurred in the input.
+
+
+@node Putting the tools together
+@unnumberedsec Putting the tools together
+
+Now, let's suppose this is a large BBS system with dozens of users
+logged in.  The management wants the SysOp to write a program that will
+generate a sorted list of logged in users.  Furthermore, even if a user
+is logged in multiple times, his or her name should only show up in the
+output once.
+
+The SysOp could sit down with the system documentation and write a C
+program that did this. It would take perhaps a couple of hundred lines
+of code and about two hours to write it, test it, and debug it.
+However, knowing the software toolbox, the SysOp can instead start out
+by generating just a list of logged on users:
+
+@example
+$ who | cut -c1-8
+arnold
+miriam
+bill
+arnold
+@end example
+
+Next, sort the list:
+
+@example
+$ who | cut -c1-8 | sort
+arnold
+arnold
+bill
+miriam
+@end example
+
+Finally, run the sorted list through @code{uniq}, to weed out duplicates:
+
+@example
+$ who | cut -c1-8 | sort | uniq
+arnold
+bill
+miriam
+@end example
+
+The @code{sort} command actually has a @samp{-u} option that does what
+@code{uniq} does. However, @code{uniq} has other uses for which one
+cannot substitute @samp{sort -u}.
+
+The SysOp puts this pipeline into a shell script, and makes it available for
+all the users on the system:
+
+@example
+# cat > /usr/local/bin/listusers
+who | cut -c1-8 | sort | uniq
+^D
+# chmod +x /usr/local/bin/listusers
+@end example
+
+There are four major points to note here.  First, with just four
+programs, on one command line, the SysOp was able to save about two
+hours worth of work.  Furthermore, the shell pipeline is just about as
+efficient as the C program would be, and it is much more efficient in
+terms of programmer time.  People time is much more expensive than
+computer time, and in our modern ``there's never enough time to do
+everything'' society, saving two hours of programmer time is no mean
+feat.
+
+Second, it is also important to emphasize that with the
+@emph{combination} of the tools, it is possible to do a special
+purpose job never imagined by the authors of the individual programs.
+
+Third, it is also valuable to build up your pipeline in stages, as we did here.
+This allows you to view the data at each stage in the pipeline, which helps
+you acquire the confidence that you are indeed using these tools correctly.
+
+Finally, by bundling the pipeline in a shell script, other users can use
+your command, without having to remember the fancy plumbing you set up for
+them. In terms of how you run them, shell scripts and compiled programs are
+indistinguishable.
+
+After the previous warm-up exercise, we'll look at two additional, more
+complicated pipelines.  For them, we need to introduce two more tools.
+
+The first is the @code{tr} command, which stands for ``transliterate.''
+The @code{tr} command works on a character-by-character basis, changing
+characters. Normally it is used for things like mapping upper case to
+lower case:
+
+@example
+$ echo ThIs ExAmPlE HaS MIXED case! | tr '[A-Z]' '[a-z]'
+this example has mixed case!
+@end example
+
+There are several options of interest:
+
+@table @samp
+@item -c
+work on the complement of the listed characters, i.e.,
+operations apply to characters not in the given set
+
+@item -d
+delete characters in the first set from the output
+
+@item -s
+squeeze repeated characters in the output into just one character.
+@end table
+
+We will be using all three options in a moment.
+
+The other command we'll look at is @code{comm}.  The @code{comm}
+command takes two sorted input files as input data, and prints out the
+files' lines in three columns.  The output columns are the data lines
+unique to the first file, the data lines unique to the second file, and
+the data lines that are common to both.  The @samp{-1}, @samp{-2}, and
+@samp{-3} command line options omit the respective columns. (This is
+non-intuitive and takes a little getting used to.)  For example:
+
+@example
+$ cat f1
+11111
+22222
+33333
+44444
+$ cat f2
+00000
+22222
+33333
+55555
+$ comm f1 f2
+        00000
+11111
+                22222
+                33333
+44444
+        55555
+@end example
+
+A single dash as a file name tells @code{comm} to read standard input
+instead of a regular file.
+
+Now we're ready to build a fancy pipeline.  The first application is a word
+frequency counter.  This helps an author determine if he or she is over-using
+certain words.
+
+The first step is to change the case of all the letters in our input file
+to one case.  ``The'' and ``the'' are the same word when doing counting.
+
+@example
+$ tr '[A-Z]' '[a-z]' < whats.gnu | ...
+@end example
+
+The next step is to get rid of punctuation.  Quoted words and unquoted words
+should be treated identically; it's easiest to just get the punctuation out of
+the way.
+
+@example
+$ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' | ...
+@end example
+
+The second @code{tr} command operates on the complement of the listed
+characters, which are all the letters, the digits, the underscore, and
+the blank.  The @samp{\012} represents the newline character; it has to
+be left alone.  (The ASCII TAB character should also be included for
+good measure in a production script.)
+
+At this point, we have data consisting of words separated by blank space.
+The words only contain alphanumeric characters (and the underscore).  The
+next step is break the data apart so that we have one word per line. This
+makes the counting operation much easier, as we will see shortly.
+
+@example
+$ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' |
+> tr -s '[ ]' '\012' | ...
+@end example
+
+This command turns blanks into newlines.  The @samp{-s} option squeezes
+multiple newline characters in the output into just one.  This helps us
+avoid blank lines. (The @samp{>} is the shell's ``secondary prompt.''
+This is what the shell prints when it notices you haven't finished
+typing in all of a command.)
+
+We now have data consisting of one word per line, no punctuation, all one
+case.  We're ready to count each word:
+
+@example
+$ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' |
+> tr -s '[ ]' '\012' | sort | uniq -c | ...
+@end example
+
+At this point, the data might look something like this:
+
+@example
+  60 a
+   2 able
+   6 about
+   1 above
+   2 accomplish
+   1 acquire
+   1 actually
+   2 additional
+@end example
+
+The output is sorted by word, not by count!  What we want is the most
+frequently used words first.  Fortunately, this is easy to accomplish,
+with the help of two more @code{sort} options:
+
+@table @samp
+@item -n
+do a numeric sort, not an ASCII one
+
+@item -r
+reverse the order of the sort
+@end table
+
+The final pipeline looks like this:
+
+@example
+$ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' |
+> tr -s '[ ]' '\012' | sort | uniq -c | sort -nr
+ 156 the
+  60 a
+  58 to
+  51 of
+  51 and
+ ...
+@end example
+
+Whew!  That's a lot to digest.  Yet, the same principles apply. With six
+commands, on two lines (really one long one split for convenience), we've
+created a program that does something interesting and useful, in much
+less time than we could have written a C program to do the same thing.
+
+A minor modification to the above pipeline can give us a simple spelling
+checker!  To determine if you've spelled a word correctly, all you have to
+do is look it up in a dictionary.  If it is not there, then chances are
+that your spelling is incorrect.  So, we need a dictionary.  If you
+have the Slackware Linux distribution, you have the file
+@file{/usr/lib/ispell/ispell.words}, which is a sorted, 38,400 word
+dictionary.
+
+Now, how to compare our file with the dictionary?  As before, we generate
+a sorted list of words, one per line:
+
+@example
+$ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' |
+> tr -s '[ ]' '\012' | sort -u | ...
+@end example
+
+Now, all we need is a list of words that are @emph{not} in the
+dictionary.  Here is where the @code{comm} command comes in.
+
+@example
+$ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' |
+> tr -s '[ ]' '\012' | sort -u |
+> comm -23 - /usr/lib/ispell/ispell.words
+@end example
+
+The @samp{-2} and @samp{-3} options eliminate lines that are only in the
+dictionary (the second file), and lines that are in both files.  Lines
+only in the first file (standard input, our stream of words), are
+words that are not in the dictionary.  These are likely candidates for
+spelling errors.  This pipeline was the first cut at a production
+spelling checker on Unix.
+
+There are some other tools that deserve brief mention.
+
+@table @code
+@item grep
+search files for text that matches a regular expression
+
+@item egrep
+like @code{grep}, but with more powerful regular expressions
+
+@item wc
+count lines, words, characters
+
+@item tee
+a T-fitting for data pipes, copies data to files and to standard output
+
+@item sed
+the stream editor, an advanced tool
+
+@item awk
+a data manipulation language, another advanced tool
+@end table
+
+The software tools philosophy also espoused the following bit of
+advice: ``Let someone else do the hard part.'' This means, take
+something that gives you most of what you need, and then massage it the
+rest of the way until it's in the form that you want.
+
+To summarize:
+
+@enumerate 1
+@item
+Each program should do one thing well. No more, no less.
+
+@item
+Combining programs with appropriate plumbing leads to results where
+the whole is greater than the sum of the parts.  It also leads to novel
+uses of programs that the authors might never have imagined.
+
+@item
+Programs should never print extraneous header or trailer data, since these
+could get sent on down a pipeline. (A point we didn't mention earlier.)
+
+@item
+Let someone else do the hard part.
+
+@item
+Know your toolbox! Use each program appropriately. If you don't have an
+appropriate tool, build one.
+@end enumerate
+
+As of this writing, all the programs we've discussed are available via
+anonymous @code{ftp} from @code{prep.ai.mit.edu} as
+@file{/pub/gnu/textutils-1.9.tar.gz} directory.@footnote{Version 1.9 was
+current when this column was written. Check the nearest GNU archive for
+the current version.}
+
+None of what I have presented in this column is new. The Software Tools
+philosophy was first introduced in the book @cite{Software Tools},
+by Brian Kernighan and P.J. Plauger (Addison-Wesley, ISBN
+0-201-03669-X).   This book showed how to write and use software
+tools.   It was written in 1976, using a preprocessor for FORTRAN named
+@code{ratfor} (RATional FORtran).  At the time, C was not as ubiquitous
+as it is now; FORTRAN was.  The last chapter presented a @code{ratfor}
+to FORTRAN processor, written in @code{ratfor}. @code{ratfor} looks an
+awful lot like C; if you know C, you won't have any problem following
+the code.
+
+In 1981, the book was updated and made available as @cite{Software
+Tools in Pascal} (Addison-Wesley, ISBN 0-201-10342-7).  Both books
+remain in print, and are well worth reading if you're a programmer.
+They certainly made a major change in how I view programming.
+
+Initially, the programs in both books were available (on 9-track tape)
+from Addison-Wesley.  Unfortunately, this is no longer the case,
+although you might be able to find copies floating around the Internet.
+For a number of years, there was an active Software Tools Users Group,
+whose members had ported the original @code{ratfor} programs to essentially
+every computer system with a FORTRAN compiler.  The popularity of the
+group waned in the middle '80s as Unix began to spread beyond universities.
+
+With the current proliferation of GNU code and other clones of Unix programs,
+these programs now receive little attention; modern C versions are
+much more efficient and do more than these programs do.  Nevertheless, as
+exposition of good programming style, and evangelism for a still-valuable
+philosophy, these books are unparalleled, and I recommend them highly.
+
+Acknowledgement: I would like to express my gratitude to Brian Kernighan
+of Bell Labs, the original Software Toolsmith, for reviewing this column.
 
 
 @node Index
