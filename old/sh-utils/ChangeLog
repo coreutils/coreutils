@@ -1,3 +1,8 @@
+2001-02-24  Paul Eggert  <eggert@twinsun.com>
+
+	* doc/sh-utils.texi: Fix typo: '-d=1may' -> '-d 1may'.
+	Fix and clarify time zone usage in 'date' examples.
+
 2001-02-04  Jim Meyering  <meyering@lucent.com>
 
 	* src/factor.c (usage): Tweak --help output: it prints the _prime_
