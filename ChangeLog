@@ -6,13 +6,13 @@
 
 2003-08-07  Paul Eggert  <eggert@twinsun.com>
 
-        * doc/coreutils.texi (split invocation):
+	* doc/coreutils.texi (split invocation):
 	Add -d or --numeric-suffixes option to 'split'.
-        From a suggestion by Jesse Kornblum.
+	From a suggestion by Jesse Kornblum.
 	* src/split.c (suffix_alphabet): New var.
-        (longopts, usage, next_file_name, main): Support -d.
-        (next_file_name, main): Allow -a0, as POSIX requires.
-        (next_file_name): Don't assume ASCII-like encoding;
+	(longopts, usage, next_file_name, main): Support -d.
+	(next_file_name, main): Allow -a0, as POSIX requires.
+	(next_file_name): Don't assume ASCII-like encoding;
 	'a' through 'z' are not contiguous in EBCDIC.
 
 2003-08-05  Paul Eggert  <eggert@twinsun.com>
