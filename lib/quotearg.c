@@ -17,6 +17,8 @@
 
 /* Written by Paul Eggert <eggert@twinsun.com> */
 
+/* FIXME: Multibyte characters are not supported yet.  */
+
 #if HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -35,6 +37,13 @@
 # define ISGRAPH(c) (ISASCII (c) && isgraph (c))
 #else
 # define ISGRAPH(c) (ISASCII (c) && isprint (c) && !isspace (c))
+#endif
+
+#if ENABLE_NLS
+# include <libintl.h>
+# define _(text) gettext (text)
+#else
+# define _(text) text
 #endif
 
 #if HAVE_LIMITS_H
@@ -76,6 +85,7 @@ char const *const quoting_style_args[] =
   "shell-always",
   "c",
   "escape",
+  "locale",
   0
 };
 
@@ -86,7 +96,8 @@ enum quoting_style const quoting_style_vals[] =
   shell_quoting_style,
   shell_always_quoting_style,
   c_quoting_style,
-  escape_quoting_style
+  escape_quoting_style,
+  locale_quoting_style
 };
 
 /* The default quoting options.  */
@@ -150,8 +161,9 @@ quotearg_buffer (char *buffer, size_t buffersize,
 {
   unsigned char c;
   size_t i;
-  size_t len;
-  int quote_mark;
+  size_t len = 0;
+  char const *quote_string;
+  size_t quote_string_len;
   struct quoting_options const *p = o ? o : &default_quoting_options;
   enum quoting_style quoting_style = p->style;
 #define STORE(c) \
@@ -174,7 +186,6 @@ quotearg_buffer (char *buffer, size_t buffersize,
 	      break;
 
 	    default:
-	      len = 0;
 	      for (i = 0; ; i++)
 		{
 		  if (argsize == (size_t) -1 ? arg[i] == '\0' : i == argsize)
@@ -199,30 +210,38 @@ quotearg_buffer (char *buffer, size_t buffersize,
 
 		  STORE (c);
 		}
-
 	    needs_quoting:;
+
+	      len = 0;
 	      break;
 	    }
 	}
       /* Fall through.  */
 
     case shell_always_quoting_style:
-      quote_mark = '\'';
+      STORE ('\'');
+      quote_string = "'";
+      quote_string_len = 1;
       break;
 
     case c_quoting_style:
-      quote_mark = '"';
+      STORE ('"');
+      quote_string = "\"";
+      quote_string_len = 1;
+      break;
+
+    case locale_quoting_style:
+      for (quote_string = _("`"); *quote_string; quote_string++)
+	STORE (*quote_string);
+      quote_string = _("'");
+      quote_string_len = strlen (quote_string);
       break;
 
     default:
-      quote_mark = 0;
+      quote_string = 0;
+      quote_string_len = 0;
       break;
     }
-
-  len = 0;
-
-  if (quote_mark)
-    STORE (quote_mark);
 
   for (i = 0;  ! (argsize == (size_t) -1 ? arg[i] == '\0' : i == argsize);  i++)
     {
@@ -245,6 +264,7 @@ quotearg_buffer (char *buffer, size_t buffersize,
 
 	case c_quoting_style:
 	case escape_quoting_style:
+	case locale_quoting_style:
 	  switch (c)
 	    {
 	    case '?': /* Do not generate trigraphs.  */
@@ -258,16 +278,12 @@ quotearg_buffer (char *buffer, size_t buffersize,
 	    case '\t': c = 't'; goto store_escape;
 	    case '\v': c = 'v'; goto store_escape;
 
-	    case '"':
-	      if (quoting_style == c_quoting_style)
-		goto store_escape;
-	      break;
+	    case ' ': break;
 
-	    case ' ':
-	      if (quoting_style == c_quoting_style)
-		goto store_c;
-	      /* Fall through.  */
 	    default:
+	      if (quote_string_len
+		  && strncmp (arg + i, quote_string, quote_string_len) == 0)
+		goto store_escape;
 	      if (!ISGRAPH (c))
 		{
 		  STORE ('\\');
@@ -290,8 +306,9 @@ quotearg_buffer (char *buffer, size_t buffersize,
       STORE (c);
     }
 
-  if (quote_mark)
-    STORE (quote_mark);
+  if (quote_string)
+    for (; *quote_string; quote_string++)
+      STORE (*quote_string);
 
  done:
   if (len < buffersize)
@@ -353,6 +370,21 @@ char *
 quotearg (char const *arg)
 {
   return quotearg_n (0, arg);
+}
+
+char *
+quotearg_n_style (unsigned int n, enum quoting_style s, char const *arg)
+{
+  struct quoting_options o;
+  o.style = s;
+  memset (o.quote_these_too, 0, sizeof o.quote_these_too);
+  return quotearg_n_options (n, arg, &o);
+}
+
+char *
+quotearg_style (enum quoting_style s, char const *arg)
+{
+  return quotearg_n_style (0, s, arg);
 }
 
 char *
