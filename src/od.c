@@ -54,37 +54,37 @@ typedef double LONG_DOUBLE;
 #endif
 
 #if HAVE_LIMITS_H
-#include <limits.h>
+# include <limits.h>
 #endif
 #ifndef SCHAR_MAX
-#define SCHAR_MAX 127
+# define SCHAR_MAX 127
 #endif
 #ifndef SCHAR_MIN
-#define SCHAR_MIN (-128)
+# define SCHAR_MIN (-128)
 #endif
 #ifndef SHRT_MAX
-#define SHRT_MAX 32767
+# define SHRT_MAX 32767
 #endif
 #ifndef SHRT_MIN
-#define SHRT_MIN (-32768)
+# define SHRT_MIN (-32768)
 #endif
 #ifndef ULONG_MAX
-#define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
+# define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
 #endif
 #ifndef OFF_T_MAX
 /* FIXME: is there a way to do this without relying on the
    `8 bits per byte' assumption?  */
-#define OFF_T_MAX (~((off_t)1 << (sizeof (off_t) * 8 - 1)))
+# define OFF_T_MAX (~((off_t)1 << (sizeof (off_t) * 8 - 1)))
 #endif
 
 #define STREQ(a,b) (strcmp((a), (b)) == 0)
 
 #ifndef MAX
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
+# define MAX(a, b) ((a) > (b) ? (a) : (b))
 #endif
 
 #ifndef MIN
-#define MIN(a,b) (((a) < (b)) ? (a) : (b))
+# define MIN(a,b) (((a) < (b)) ? (a) : (b))
 #endif
 
 /* The default number of input bytes per output line.  */
@@ -92,17 +92,17 @@ typedef double LONG_DOUBLE;
 
 /* The number of decimal digits of precision in a float.  */
 #ifndef FLT_DIG
-#define FLT_DIG 7
+# define FLT_DIG 7
 #endif
 
 /* The number of decimal digits of precision in a double.  */
 #ifndef DBL_DIG
-#define DBL_DIG 15
+# define DBL_DIG 15
 #endif
 
 /* The number of decimal digits of precision in a long double.  */
 #ifndef LDBL_DIG
-#define LDBL_DIG DBL_DIG
+# define LDBL_DIG DBL_DIG
 #endif
 
 char *xmalloc ();
