@@ -1,3 +1,7 @@
+2001-11-04  Jim Meyering  <meyering@lucent.com>
+
+	* fpending.m4: Remove unused cruft that saved, set, and restored $DEFS.
+
 2001-11-03  Jim Meyering  <meyering@lucent.com>
 
 	* jm-glibc-io.m4n (jm_FUNC_GLIBC_UNLOCKED_IO): Quote first arg
