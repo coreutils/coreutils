@@ -2,10 +2,10 @@
 # This Makefile fragment is shared between fileutils, sh-utils, textutils.
 
 maintainer-check:
-	if head ChangeLog| grep 'Version @VERSION@' > /dev/null; then \
+	if head ChangeLog| grep 'Version $(VERSION)' > /dev/null; then \
 	  :; \
 	else \
-	  echo "@VERSION@ not in ChangeLog; not tagging" 1>&2; \
+	  echo "$(VERSION) not in ChangeLog; not tagging" 1>&2; \
 	  exit 1; \
 	fi
 	$(MAKE) distcheck
@@ -14,8 +14,8 @@ maintainer-check:
 # Tag before making distribution.  Also, don't make a distribution if
 # checks fail.  Also, make sure the NEWS file is up-to-date.
 cvs-dist: maintainer-check
-	pkg=`echo "@PACKAGE@" | tr a-z A-Z`; \
-	ver=`echo "@VERSION@" | sed 's/\./_/g'`; \
+	pkg=`echo "$(PACKAGE)" | tr a-z A-Z`; \
+	ver=`echo "$(VERSION)" | sed 's/\./_/g'`; \
 	tag="$$pkg-$$ver"; \
 	echo tag=$$tag; \
 	if cvs -n log -h README| grep -e $$tag > /dev/null; then \
