@@ -13,6 +13,7 @@ TESTS_ENVIRONMENT = \
 TESTS = \
   paste-no-nl \
   stat-fmt \
+  expand \
   fold \
   nohup \
   readlink \
