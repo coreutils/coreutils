@@ -31,7 +31,9 @@
 #include <stddef.h>
 #include <string.h>
 
-#include "unlocked-io.h"
+#if USE_UNLOCKED_IO
+# include "unlocked-io.h"
+#endif
 
 /*
   Not-swap is a macro that does an endian swap on architectures that are

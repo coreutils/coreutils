@@ -39,7 +39,10 @@
 #include "exit.h"
 #include "quotearg.h"
 #include "quote.h"
-#include "unlocked-io.h"
+
+#if USE_UNLOCKED_IO
+# include "unlocked-io.h"
+#endif
 
 /* When reporting an invalid argument, show nonprinting characters
    by using the quoting style ARGMATCH_QUOTING_STYLE.  Do not use

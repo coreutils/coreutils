@@ -1,3 +1,14 @@
+2004-10-04  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Sync from gnulib.
+	* argmatch.c, closeout.c, error.c, exclude.c, getdate.y,
+	getndelim2.c, getpass.c, getusershell.c, linebuffer.c,
+	md5.c, mountlist.c, posixtm.c, readtokens.c, readutmp.c,
+	regex.c, sha1.c, version-etc.c, yesno.c:
+	Include "unlocked-io.h" only if USE_UNLOCKED_IO.
+	* unlocked-io.h: Don't worry about USE_UNLOCKED_IO; that's now
+	the includer's responsibility.
+
 2004-10-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Sync from gnulib.

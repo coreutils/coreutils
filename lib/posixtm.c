@@ -38,7 +38,10 @@
 #endif
 
 #include "posixtm.h"
-#include "unlocked-io.h"
+
+#if USE_UNLOCKED_IO
+# include "unlocked-io.h"
+#endif
 
 /* ISDIGIT differs from isdigit, as follows:
    - Its arg may be any int or unsigned int; it need not be an unsigned char.

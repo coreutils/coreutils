@@ -1,4 +1,4 @@
-/* Copyright (C) 1992-2001, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1992-2001, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    This program is free software; you can redistribute it and/or modify
@@ -55,7 +55,7 @@
 #if _LIBC
 # define flockfile(s) _IO_flockfile (s)
 # define funlockfile(s) _IO_funlockfile (s)
-#else
+#elif USE_UNLOCKED_IO
 # include "unlocked-io.h"
 #endif
 

@@ -1,3 +1,9 @@
+2004-10-04  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Sync from gnulib.
+	* unlocked-io.m4: Add copyright notice.
+	(gl_FUNC_GLIBC_UNLOCKED_IO): Define USE_UNLOCKED_IO.
+
 2004-10-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Sync from gnulib.

@@ -77,7 +77,9 @@
 
 #include <string.h>
 
-#include "unlocked-io.h"
+#if USE_UNLOCKED_IO
+# include "unlocked-io.h"
+#endif
 
 #if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 8) || __STRICT_ANSI__
 # define __attribute__(x)

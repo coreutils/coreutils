@@ -27,7 +27,10 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "unlocked-io.h"
+
+#if USE_UNLOCKED_IO
+# include "unlocked-io.h"
+#endif
 
 #include "gettext.h"
 #define _(msgid) gettext (msgid)

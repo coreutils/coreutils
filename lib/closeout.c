@@ -32,8 +32,11 @@
 #include "error.h"
 #include "exitfail.h"
 #include "quotearg.h"
-#include "unlocked-io.h"
 #include "__fpending.h"
+
+#if USE_UNLOCKED_IO
+# include "unlocked-io.h"
+#endif
 
 static const char *file_name;
 

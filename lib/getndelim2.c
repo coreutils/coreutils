@@ -29,7 +29,9 @@
 #include <stdlib.h>
 #include <stddef.h>
 
-#include "unlocked-io.h"
+#if USE_UNLOCKED_IO
+# include "unlocked-io.h"
+#endif
 
 #include <limits.h>
 #if HAVE_INTTYPES_H

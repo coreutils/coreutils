@@ -35,8 +35,11 @@
 
 #include "exclude.h"
 #include "fnmatch.h"
-#include "unlocked-io.h"
 #include "xalloc.h"
+
+#if USE_UNLOCKED_IO
+# include "unlocked-io.h"
+#endif
 
 #if STDC_HEADERS || (! defined isascii && ! HAVE_ISASCII)
 # define IN_CTYPE_DOMAIN(c) true

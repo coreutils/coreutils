@@ -27,8 +27,11 @@
 #include <stdlib.h>
 
 #include "readutmp.h"
-#include "unlocked-io.h"
 #include "xalloc.h"
+
+#if USE_UNLOCKED_IO
+# include "unlocked-io.h"
+#endif
 
 /* Copy UT->ut_name into storage obtained from malloc.  Then remove any
    trailing spaces from the copy, NUL terminate it, and return the copy.  */

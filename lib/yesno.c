@@ -24,7 +24,10 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "unlocked-io.h"
+
+#if USE_UNLOCKED_IO
+# include "unlocked-io.h"
+#endif
 
 /* Read one line from standard input
    and return nonzero if that line begins with y or Y,

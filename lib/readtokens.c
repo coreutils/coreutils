@@ -32,8 +32,11 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "unlocked-io.h"
 #include "xalloc.h"
+
+#if USE_UNLOCKED_IO
+# include "unlocked-io.h"
+#endif
 
 #define STREQ(a,b) ((a) == (b) || ((a) && (b) && *(a) == *(b) \
 				   && strcmp(a, b) == 0))
