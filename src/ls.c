@@ -114,15 +114,6 @@ int wcwidth ();
 # endif
 #endif
 
-#if HAVE_LANGINFO_H
-# include <langinfo.h>
-#endif
-#ifdef _DATE_FMT
-# define DATE_FMT_LANGINFO() nl_langinfo (_DATE_FMT)
-#else
-# define DATE_FMT_LANGINFO() ""
-#endif
-
 #include "system.h"
 #include <fnmatch.h>
 
@@ -2379,8 +2370,7 @@ print_long_format (const struct fileinfo *f)
 
   if (full_time)
     {
-      char *date_fmt = DATE_FMT_LANGINFO ();
-      fmt = *date_fmt ? date_fmt : "%a %b %e %H:%M:%S %Z %Y";
+      fmt = _("%a %b %d %H:%M:%S %Y");
     }
   else
     {
@@ -2393,11 +2383,11 @@ print_long_format (const struct fileinfo *f)
 	     Allow a 1 hour slop factor for what is considered "the future",
 	     to allow for NFS server/client clock disagreement.
 	     Show the year instead of the time of day.  */
-	  fmt = "%b %e  %Y";
+	  fmt = _("%b %e  %Y");
 	}
       else
 	{
-	  fmt = "%b %e %H:%M";
+	  fmt = _("%b %e %H:%M");
 	}
     }
 
