@@ -247,9 +247,10 @@ re_protect (const char *const_dst_path, int src_offset,
 	    }
 
 	  /* If non-root uses -p, it's ok if we can't preserve ownership.
-	     But root probably wants to know, e.g. if NFS disallows it.  */
+	     But root probably wants to know, e.g. if NFS disallows it,
+	     or if the target system doesn't support file ownership.  */
 	  if (chown (dst_path, src_sb.st_uid, src_sb.st_gid)
-	      && (errno != EPERM || myeuid == 0))
+	      && ((errno != EPERM && errno != EINVAL) || myeuid == 0))
 	    {
 	      error (0, errno, _("preserving ownership for %s"), dst_path);
 	      return 1;
