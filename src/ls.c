@@ -3396,7 +3396,9 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\n\
   -k, --kilobytes            like --block-size=1024\n\
   -l                         use a long listing format\n\
-  -L, --dereference          list entries pointed to by symbolic links\n\
+  -L, --dereference          when showing file information for a symbolic\n\
+                               link, show information for the file the link\n\
+                               references rather than for the link itself\n\
   -m                         fill width with a comma separated list of entries\n"));
 
       printf (_("\
