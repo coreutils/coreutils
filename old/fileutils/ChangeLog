@@ -1,5 +1,11 @@
 2000-12-01  Paul Eggert  <eggert@twinsun.com>
 
+	* src/dd.c (skip, dd_copy): Use ssize_t to store result of
+	safe_read, to avoid overflow e.g. on 64-bit Solaris sparc.
+	(dd_copy): Remove unnecessary cast.
+
+2000-12-01  Paul Eggert  <eggert@twinsun.com>
+
 	* doc/fileutils.texi: Remove B suffix.  Document how to have
 	the desired effect without it.
 
