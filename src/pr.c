@@ -1360,12 +1360,10 @@ init_header (char *filename, int desc)
   int chars_per_middle, chars_free, lhs_blanks, rhs_blanks;
   char *f = filename;
   char *no_middle = "";
-  char *header_text, *fmt, *t_buf;
+  char *header_text, *t_buf;
   struct tm *tmptr;
   struct stat st;
   char *datim = "- Date/Time --";
-
-  fmt = "%y-%m-%d %H:%M";	/* date/time short format */
 
   if (filename == 0)
     f = "";
@@ -1384,6 +1382,8 @@ init_header (char *filename, int desc)
 
       {
 	size_t t_buf_size = 15;
+	cons tchar *fmt = "%y-%m-%d %H:%M";	/* date/time short format */
+
 	t_buf = (char *) xmalloc (t_buf_size);
 	tmptr = localtime (&st.st_mtime);
 	strftime (t_buf, t_buf_size, fmt, tmptr);
