@@ -800,10 +800,10 @@ buffer_linelim (struct buffer const *buf)
 static char *
 begfield (const struct line *line, const struct keyfield *key)
 {
-  register char *ptr = line->text, *lim = ptr + line->length - 1;
-  register size_t sword = key->sword;
-  register size_t schar = key->schar;
-  register size_t remaining_bytes;
+  char *ptr = line->text, *lim = ptr + line->length - 1;
+  size_t sword = key->sword;
+  size_t schar = key->schar;
+  size_t remaining_bytes;
 
   /* The leading field separator itself is included in a field when -t
      is absent.  */
@@ -845,9 +845,9 @@ begfield (const struct line *line, const struct keyfield *key)
 static char *
 limfield (const struct line *line, const struct keyfield *key)
 {
-  register char *ptr = line->text, *lim = ptr + line->length - 1;
-  register size_t eword = key->eword, echar = key->echar;
-  register size_t remaining_bytes;
+  char *ptr = line->text, *lim = ptr + line->length - 1;
+  size_t eword = key->eword, echar = key->echar;
+  size_t remaining_bytes;
 
   /* Move PTR past EWORD fields or to one past the last byte on LINE,
      whichever comes first.  If there are more than EWORD fields, leave
@@ -948,7 +948,7 @@ limfield (const struct line *line, const struct keyfield *key)
    Return true if some input was read.  */
 
 static bool
-fillbuf (struct buffer *buf, register FILE *fp, char const *file)
+fillbuf (struct buffer *buf, FILE *fp, char const *file)
 {
   struct keyfield const *key = keylist;
   char eol = eolchar;
@@ -1085,7 +1085,7 @@ fillbuf (struct buffer *buf, register FILE *fp, char const *file)
    return 0 */
 
 static int
-fraccompare (register const char *a, register const char *b)
+fraccompare (const char *a, const char *b)
 {
   if (*a == decimal_point && *b == decimal_point)
     {
@@ -1122,7 +1122,7 @@ fraccompare (register const char *a, register const char *b)
    hideously fast. */
 
 static int
-numcompare (register const char *a, register const char *b)
+numcompare (const char *a, const char *b)
 {
   char tmpa;
   char tmpb;
@@ -1341,17 +1341,17 @@ keycompare (const struct line *a, const struct line *b)
 
   /* For the first iteration only, the key positions have been
      precomputed for us. */
-  register char *texta = a->keybeg;
-  register char *textb = b->keybeg;
-  register char *lima = a->keylim;
-  register char *limb = b->keylim;
+  char *texta = a->keybeg;
+  char *textb = b->keybeg;
+  char *lima = a->keylim;
+  char *limb = b->keylim;
 
   int diff;
 
   for (;;)
     {
-      register char const *translate = key->translate;
-      register bool const *ignore = key->ignore;
+      char const *translate = key->translate;
+      bool const *ignore = key->ignore;
 
       /* Find the lengths. */
       size_t lena = lima <= texta ? 0 : lima - texta;
@@ -1509,7 +1509,7 @@ keycompare (const struct line *a, const struct line *b)
    depending on whether A compares less than, equal to, or greater than B. */
 
 static int
-compare (register const struct line *a, register const struct line *b)
+compare (const struct line *a, const struct line *b)
 {
   int diff;
   size_t alen, blen;
@@ -2226,8 +2226,7 @@ sighandler (int sig)
    BLANKTYPE is the kind of blanks that 'b' should skip. */
 
 static char *
-set_ordering (register const char *s, struct keyfield *key,
-	      enum blanktype blanktype)
+set_ordering (const char *s, struct keyfield *key, enum blanktype blanktype)
 {
   while (*s)
     {

@@ -1087,8 +1087,8 @@ process_signals (void)
 int
 main (int argc, char **argv)
 {
-  register int i;
-  register struct pending *thispend;
+  int i;
+  struct pending *thispend;
   int n_files;
 
   /* The signals that are trapped, and the number of such signals.  */
@@ -2244,9 +2244,9 @@ queue_directory (char const *name, char const *realname, bool command_line_arg)
 static void
 print_dir (char const *name, char const *realname, bool command_line_arg)
 {
-  register DIR *dirp;
-  register struct dirent *next;
-  register uintmax_t total_blocks = 0;
+  DIR *dirp;
+  struct dirent *next;
+  uintmax_t total_blocks = 0;
   static bool first = true;
 
   errno = 0;
@@ -2377,7 +2377,7 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
 static void
 add_ignore_pattern (const char *pattern)
 {
-  register struct ignore_pattern *ignore;
+  struct ignore_pattern *ignore;
 
   ignore = xmalloc (sizeof *ignore);
   ignore->pattern = pattern;
@@ -2428,7 +2428,7 @@ unsigned_file_size (off_t size)
 static void
 clear_files (void)
 {
-  register size_t i;
+  size_t i;
 
   for (i = 0; i < files_index; i++)
     {
@@ -2457,9 +2457,9 @@ static uintmax_t
 gobble_file (char const *name, enum filetype type, bool command_line_arg,
 	     char const *dirname)
 {
-  register uintmax_t blocks;
-  register char *path;
-  register struct fileinfo *f;
+  uintmax_t blocks;
+  char *path;
+  struct fileinfo *f;
 
   if (files_index == nfiles)
     {
@@ -2751,8 +2751,8 @@ basename_is_dot_or_dotdot (const char *name)
 static void
 extract_dirs_from_files (char const *dirname, bool command_line_arg)
 {
-  register size_t i;
-  register size_t j;
+  size_t i;
+  size_t j;
   bool ignore_dot_and_dot_dot = (dirname != NULL);
 
   if (dirname && LOOP_DETECT)
@@ -3001,7 +3001,7 @@ sort_files (void)
 static void
 print_current_files (void)
 {
-  register size_t i;
+  size_t i;
 
   switch (format)
     {
@@ -3716,8 +3716,8 @@ print_color_indicator (const char *name, mode_t mode, int linkok)
 static void
 put_indicator (const struct bin_str *ind)
 {
-  register size_t i;
-  register const char *p;
+  size_t i;
+  const char *p;
 
   p = ind->string;
 
@@ -3728,7 +3728,7 @@ put_indicator (const struct bin_str *ind)
 static size_t
 length_of_file_name_and_frills (const struct fileinfo *f)
 {
-  register size_t len = 0;
+  size_t len = 0;
   size_t name_width;
   char buf[MAX (LONGEST_HUMAN_READABLE + 1, INT_BUFSIZE_BOUND (uintmax_t))];
 

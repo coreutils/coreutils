@@ -1,5 +1,5 @@
 /* sum -- checksum and count the blocks in a file
-   Copyright (C) 86, 89, 91, 1995-2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 86, 89, 91, 1995-2002, 2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -86,10 +86,10 @@ With no FILE, or when FILE is -, read standard input.\n\
 static bool
 bsd_sum_file (const char *file, int print_name)
 {
-  register FILE *fp;
-  register int checksum = 0;	/* The checksum mod 2^16. */
-  register uintmax_t total_bytes = 0;	/* The number of bytes. */
-  register int ch;		/* Each character read. */
+  FILE *fp;
+  int checksum = 0;	/* The checksum mod 2^16. */
+  uintmax_t total_bytes = 0;	/* The number of bytes. */
+  int ch;		/* Each character read. */
   char hbuf[LONGEST_HUMAN_READABLE + 1];
 
   if (STREQ (file, "-"))
