@@ -117,10 +117,16 @@ extern int errno;
 	 Restore working directory.  */			\
       if (do_chdir)					\
 	{						\
-	  int _fail = restore_cwd (&cwd, NULL, NULL);	\
+	  if (restore_cwd (&cwd) != 0)			\
+	    {						\
+	      int _saved_errno = errno;			\
+	      error (0, errno,				\
+		_("failed to return to initial working directory")); \
+	      free_cwd (&cwd);				\
+	      errno = _saved_errno;			\
+	      return 1;					\
+	    }						\
 	  free_cwd (&cwd);				\
-	  if (_fail)					\
-	    return 1;					\
 	}						\
     }							\
   while (0)
