@@ -228,8 +228,12 @@ xd-delta = $(PACKAGE)-$(PREV_VERSION)-$(VERSION).xdelta
 news-r1 = /^[^ ].*$(THIS_VERSION_REGEXP)[]:]/
 news-r2 = /^[^ ].*$(PREV_VERSION_REGEXP)[]:]/
 
+signatures = $(distdir).tar.bz2.sig $(distdir).tar.gz.sig
+%.sig: %
+	gpg --detach-sign $<
+
 rel-files = $(xd-delta) $(distdir).tar.bz2 $(distdir).tar.gz
-announcement: NEWS ChangeLog $(rel-files)
+announcement: NEWS ChangeLog $(rel-files) $(signatures)
 	@( \
 	  echo Subject: $(my_distdir) released; \
 	  echo; \
