@@ -60,7 +60,14 @@ void strip_trailing_slashes ();
 char *xmalloc ();
 char *xrealloc ();
 
-static int change_dir_owner __P ((char *dir, uid_t user, gid_t group,
+enum Change_status
+{
+  CH_SUCCEEDED,
+  CH_FAILED,
+  CH_NO_CHANGE_REQUESTED
+};
+
+static int change_dir_owner __P ((const char *dir, uid_t user, gid_t group,
 				  struct stat *statp));
 
 /* The name the program was run with. */
@@ -112,16 +119,28 @@ static struct option const long_options[] =
   {0, 0, 0, 0}
 };
 
-/* Tell the user the user and group names to which ownership of FILE
-   has been given; if CHANGED is zero, FILE had those owners already. */
+/* Tell the user how/if the user and group of FILE have been changed.
+   CHANGED describes what (if anything) has happened. */
 
 static void
-describe_change (char *file, int changed)
+describe_change (const char *file, enum Change_status changed)
 {
-  if (changed)
-    printf (_("owner of %s changed to "), file);
-  else
-    printf (_("owner of %s retained as "), file);
+  const char *fmt;
+  switch (changed)
+    {
+    case CH_SUCCEEDED:
+      fmt = _("owner of %s changed to ");
+      break;
+    case CH_FAILED:
+      fmt = _("failed to change owner of %s to ");
+      break;
+    case CH_NO_CHANGE_REQUESTED:
+      fmt = _("owner of %s retained as ");
+      break;
+    default:
+      abort ();
+    }
+  printf (fmt, file);
   if (groupname)
     printf ("%s.%s\n", username, groupname);
   else
@@ -133,7 +152,7 @@ describe_change (char *file, int changed)
    Return 0 if successful, 1 if errors occurred. */
 
 static int
-change_file_owner (char *file, uid_t user, gid_t group)
+change_file_owner (const char *file, uid_t user, gid_t group)
 {
   struct stat file_stats;
   uid_t newuser;
@@ -153,13 +172,13 @@ change_file_owner (char *file, uid_t user, gid_t group)
     {
       int fail;
 
-      if (verbose)
-	describe_change (file, 1);
-
       if (change_symlinks)
 	fail = LCHOWN (file, newuser, newgroup);
       else
 	fail = chown (file, newuser, newgroup);
+
+      if (verbose || (changes_only && !fail))
+	describe_change (file, (fail ? CH_FAILED : CH_SUCCEEDED));
 
       if (fail)
 	{
@@ -169,7 +188,9 @@ change_file_owner (char *file, uid_t user, gid_t group)
 	}
     }
   else if (verbose && changes_only == 0)
-    describe_change (file, 0);
+    {
+      describe_change (file, CH_NO_CHANGE_REQUESTED);
+    }
 
   if (recurse && S_ISDIR (file_stats.st_mode))
     errors |= change_dir_owner (file, user, group, &file_stats);
@@ -182,7 +203,7 @@ change_file_owner (char *file, uid_t user, gid_t group)
    Return 0 if successful, 1 if errors occurred. */
 
 static int
-change_dir_owner (char *dir, uid_t user, gid_t group, struct stat *statp)
+change_dir_owner (const char *dir, uid_t user, gid_t group, struct stat *statp)
 {
   char *name_space, *namep;
   char *path;			/* Full path of each entry to process. */
