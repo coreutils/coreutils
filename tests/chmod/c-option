@@ -9,7 +9,7 @@ fi
 . $srcdir/../lang-default
 
 pwd=`pwd`
-tmp=eq-x-$$
+tmp=c-option.$$
 trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
 trap '(exit $?); exit' 1 2 13 15
 
