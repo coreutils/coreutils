@@ -15,7 +15,7 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-/* Usage: df [-aikP] [-t fstype] [-x fstype] [--all] [--inodes]
+/* Usage: df [-aikPT] [-t fstype] [-x fstype] [--all] [--inodes] [--print-type]
    [--type fstype] [--exclude-type fstype] [--kilobytes] [--portability]
    [path...]
 
@@ -24,6 +24,7 @@
    -i, --inodes		List inode usage information instead of block usage.
    -k, --kilobytes	Print sizes in 1K blocks instead of 512-byte blocks.
    -P, --portability	Use the POSIX output format (one line per filesystem).
+   -T, --print-type	Print filesystem type.
    -t, --type fstype	Limit the listing to filesystems of type `fstype'.
    -x, --exclude-type=fstype
 			Limit the listing to filesystems not of type `fstype'.
@@ -125,12 +126,16 @@ static int show_help;
 /* If non-zero, print the version on standard output and exit.  */
 static int show_version;
 
+/* If non-zero, print filesystem type as well.  */
+static int print_type;
+
 static struct option const long_options[] =
 {
   {"all", no_argument, &show_all_fs, 1},
   {"inodes", no_argument, &inode_format, 1},
   {"kilobytes", no_argument, &kilobyte_blocks, 1},
   {"portability", no_argument, &posix_format, 1},
+  {"print-type", no_argument, &print_type, 1},
   {"type", required_argument, 0, 't'},
   {"exclude-type", required_argument, 0, 'x'},
   {"help", no_argument, &show_help, 1},
@@ -153,10 +158,11 @@ main (argc, argv)
   show_all_fs = 0;
   show_listed_fs = 0;
   kilobyte_blocks = getenv ("POSIXLY_CORRECT") == 0;
+  print_type = 0;
   posix_format = 0;
   exit_status = 0;
 
-  while ((i = getopt_long (argc, argv, "aikPt:vx:", long_options, (int *) 0))
+  while ((i = getopt_long (argc, argv, "aikPTt:vx:", long_options, (int *) 0))
 	 != EOF)
     {
       switch (i)
@@ -171,6 +177,9 @@ main (argc, argv)
 	  break;
 	case 'k':
 	  kilobyte_blocks = 1;
+	  break;
+	case 'T':
+	  print_type = 1;
 	  break;
 	case 'P':
 	  posix_format = 1;
@@ -240,10 +249,17 @@ main (argc, argv)
 static void
 print_header ()
 {
-  if (inode_format)
-    printf ("Filesystem            Inodes   IUsed   IFree  %%IUsed");
+  printf ("Filesystem ");
+
+  if (print_type)
+    printf ("   Type");
   else
-    printf ("Filesystem         %s  Used Available Capacity",
+    printf ("       ");
+  
+  if (inode_format)
+    printf ("   Inodes   IUsed   IFree  %%IUsed");
+  else
+    printf (" %s  Used Available Capacity",
 	    kilobyte_blocks ? "1024-blocks" : " 512-blocks");
   printf (" Mounted on\n");
 }
@@ -394,9 +410,12 @@ show_dev (disk, mount_point, fstype)
 	(inodes_used * 100.0 / fsu.fsu_files + 0.5);
     }
 
-  printf ("%-20s", disk);
-  if (strlen (disk) > 20 && !posix_format)
-    printf ("\n                    ");
+  printf ((print_type ? "%-13s" : "%-20s"), disk);
+  if (strlen (disk) > (print_type ? 13 : 20) && !posix_format)
+    printf ((print_type ? "\n%13s" : "\n%20s"), "");
+
+  if (print_type)
+    printf (" %-5s ", fstype);
 
   if (inode_format)
     printf (" %7ld %7ld %7ld %5ld%%",
@@ -492,6 +511,7 @@ usage (status)
   -x, --exclude-type=TYPE   limit the listing to not TYPE filesystems type\n\
   -v                        (ignored)\n\
   -P, --portability         use the POSIX output format\n\
+  -T, --print-type          print filesystem type\n\
       --help                display this help and exit\n\
       --version             output version information and exit\n\
 \n\

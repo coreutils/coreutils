@@ -405,9 +405,19 @@ main (argc, argv)
       sigact.sa_flags = 0;
       sigaction (SIGINT, &sigact, NULL);
     }
+  sigaction (SIGPIPE, NULL, &sigact);
+  if (sigact.sa_handler != SIG_IGN)
+    {
+      sigact.sa_handler = interrupt_handler;
+      sigemptyset (&sigact.sa_mask);
+      sigact.sa_flags = 0;
+      sigaction (SIGPIPE, &sigact, NULL);
+    }
 #else				/* !_POSIX_VERSION */
   if (signal (SIGINT, SIG_IGN) != SIG_IGN)
     signal (SIGINT, interrupt_handler);
+  if (signal (SIGPIPE, SIG_IGN) != SIG_IGN)
+    signal (SIGPIPE, interrupt_handler); 
 #endif				/* !_POSIX_VERSION */
   copy ();
 }
