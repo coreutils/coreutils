@@ -217,7 +217,7 @@ print_entry (this)
       line[DEV_DIR_LEN + sizeof (this->ut_line)] = '\0';
     }
 
-  if (SAFE_STAT (line, &stats) == 0)
+  if (safe_stat (line, &stats) == 0)
     {
       mesg = (stats.st_mode & S_IWGRP) ? '+' : '-';
       last_change = stats.st_atime;
