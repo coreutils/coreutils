@@ -1,6 +1,12 @@
-2004-09-28  Jim Meyering  <jim@meyering.net>
+2004-10-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* src/expr.c (NEW, OLD): Remove, partly to avoid
+	reference to obsolescent macro XMALLOC.
+	All uses replaced by xmalloc and free.
+
+2004-09-28  Jim Meyering  <jim@meyering.net>
 
 	* src/tail.c (usage): Clarify: --retry works only with --follow=name.
 	Reported by Nik A. Melchior in http://bugs.debian.org/273781.
