@@ -2,6 +2,9 @@
 
 	* Version 5.3.1.
 
+	* build-aux: New directory.  Renamed from config.
+	* configure.ac: Reflect renaming: config -> build-aux.
+
 	* src/ls.c (get_funky_string): Use '\a', rather than 7, for
 	portability to EBCDIC hosts.
 
