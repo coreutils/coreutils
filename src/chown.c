@@ -105,8 +105,8 @@ main (argc, argv)
      int argc;
      char **argv;
 {
-  uid_t user = -1;		/* New uid; -1 if not to be changed. */
-  gid_t group = -1;		/* New gid; -1 if not to be changed. */
+  uid_t user = (uid_t) -1;	/* New uid; -1 if not to be changed. */
+  gid_t group = (uid_t) -1;	/* New gid; -1 if not to be changed. */
   int errors = 0;
   int optc;
   char *e;
