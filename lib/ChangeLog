@@ -1,5 +1,11 @@
 2000-07-23  Paul Eggert  <eggert@twinsun.com>
 
+	* mbswidth.c (_XOPEN_SOURCE):
+	Don't define; this causes problems on Solaris 7.
+	(wcwidth) [!HAVE_DECL_WCWIDTH]: Declare.
+
+2000-07-23  Paul Eggert  <eggert@twinsun.com>
+
 	* lib/quotearg.c:
 	Include <wchar.h> even if ! (HAVE_MBRTOWC && 1 < MB_LEN_MAX),
 	so that mbstate_t is always defined.
