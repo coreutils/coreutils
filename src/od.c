@@ -39,6 +39,14 @@ char *alloca ();
 #include <sys/types.h>
 #include "system.h"
 
+#ifdef isascii
+#define ISPRINT(c) (isascii (c) && isprint (c))
+#define ISDIGIT(c) (isascii (c) && isdigit (c))
+#else
+#define ISPRINT(c) isprint (c)
+#define ISDIGIT(c) isdigit (c)
+#endif
+
 #if defined(__GNUC__) || defined(STDC_HEADERS)
 #include <float.h>
 #endif
@@ -615,7 +623,7 @@ print_ascii (n_bytes, block, unused_fmt_string)
 	  break;
 
 	default:
-	  sprintf (buf, (isascii (c) && isprint (c) ? "  %c" : "%03o"), c);
+	  sprintf (buf, (ISPRINT (c) ? "  %c" : "%03o"), c);
 	  s = (const char *) buf;
 	}
 
@@ -641,7 +649,7 @@ simple_strtoul (s, p, val)
   unsigned long int sum;
 
   sum = 0;
-  while (isdigit (*s))
+  while (ISDIGIT (*s))
     {
       unsigned int c = *s++ - '0';
       if (sum > (ULONG_MAX - c) / 10)
@@ -1422,7 +1430,7 @@ dump_strings ()
 	      free (buf);
 	      return err;
 	    }
-	  if (!(isascii (c) && isprint (c)))
+	  if (!ISPRINT (c))
 	    /* Found a non-printing.  Try again starting with next char.  */
 	    goto tryline;
 	  buf[i] = c;
@@ -1447,7 +1455,7 @@ dump_strings ()
 	    }
 	  if (c == '\0')
 	    break;		/* It is; print this string.  */
-	  if (!(isascii (c) && isprint (c)))
+	  if (!ISPRINT (c))
 	    goto tryline;	/* It isn't; give up on this string.  */
 	  buf[i++] = c;		/* String continues; store it all.  */
 	}
