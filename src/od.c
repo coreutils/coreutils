@@ -1,5 +1,5 @@
 /* od -- dump files in octal and other formats
-   Copyright (C) 92, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 92, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -163,11 +163,8 @@ static const int width_bytes[] =
 
 /* Ensure that for each member of `enum size_spec' there is an
    initializer in the width_bytes array.  */
-struct dummy
-{
-  int assert_width_bytes_matches_size_spec_decl
-    [sizeof width_bytes / sizeof width_bytes[0] == N_SIZE_SPECS ? 1 : -1];
-};
+VERIFY (assert_width_bytes_matches_size_spec_decl,
+	sizeof width_bytes / sizeof width_bytes[0] == N_SIZE_SPECS);
 
 /* Names for some non-printing characters.  */
 static const char *const charname[33] =
