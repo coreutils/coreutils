@@ -54,10 +54,10 @@ char *malloc ();
 
 #include "hash.h"
 
-/* An hash table contains many internal entries, each holding a pointer to
+/* A hash table contains many internal entries, each holding a pointer to
    some user provided data (also called a user entry).  An entry indistinctly
    refers to both the internal entry and its associated user entry.  A user
-   entry contents may be hashed by a randomisation function (the hashing
+   entry contents may be hashed by a randomization function (the hashing
    function, or just `hasher' for short) into a number (or `slot') between 0
    and the current table size.  At each slot position in the hash table,
    starts a linked chain of entries for which the user data all hash to this
@@ -66,30 +66,30 @@ char *malloc ();
    A good `hasher' function will distribute entries rather evenly in buckets.
    In the ideal case, the length of each bucket is roughly the number of
    entries divided by the table size.  Finding the slot for a data is usually
-   done at constant speed by the `hasher', and the later finding of a precise
+   done in constant time by the `hasher', and the later finding of a precise
    entry is linear in time with the size of the bucket.  Consequently, a
-   bigger hash table size (that is, a bigger number of buckets) is prone to
-   yielding shorter buckets, *given* the `hasher' function behaves properly.
+   larger hash table size (that is, a larger number of buckets) is prone to
+   yielding shorter chains, *given* the `hasher' function behaves properly.
 
    Long buckets slow down the lookup algorithm.  One might use big hash table
    sizes in hope to reduce the average length of buckets, but this might
    become inordinate, as unused slots in the hash table take some space.  The
    best bet is to make sure you are using a good `hasher' function (beware
-   that those are not that easy to write! :-), and to use a table size at
-   least bigger than the actual number of entries.  */
+   that those are not that easy to write! :-), and to use a table size
+   larger than the actual number of entries.  */
 
-/* If, while adding an to a bucket which was empty, the ratio of used buckets
-   over table size goes over the growth threshold (a number between 0.0 and
-   1.0), then reorganise the table size bigger by the growth factor (a number
-   greater than 1.0).  The growth threshold defaults to 0.8, and the growth
-   factor defaults to 1.414, meaning that the table will have doubled its size
+/* If an insertion makes the ratio of nonempty buckets to table size larger
+   than the growth threshold (a number between 0.0 and 1.0), then increase
+   the table size by multiplying by the growth factor (a number greater than
+   1.0).  The growth threshold defaults to 0.8, and the growth factor
+   defaults to 1.414, meaning that the table will have doubled its size
    every second time 80% of the buckets get used.  */
 #define DEFAULT_GROWTH_THRESHOLD 0.8
 #define DEFAULT_GROWTH_FACTOR 1.414
 
-/* If, while emptying a bucket, the ratio of used buckets over table size
-   drops below the shrink threshold (a number between 0.0 and 1.0), then
-   reorganise the table size smaller through the usage of a shrink factor (a
+/* If a deletion empties a bucket and causes the ratio of used buckets to
+   table size to become smaller than the shrink threshold (a number between
+   0.0 and 1.0), then shrink the table by multiplying by the shrink factor (a
    number greater than the shrink threshold but smaller than 1.0).  The shrink
    threshold and factor default to 0.0 and 1.0, meaning that the table never
    shrinks.  */
@@ -110,7 +110,7 @@ static const Hash_tuning default_tuning =
 /* Information and lookup.  */
 
 /* The following few functions provide information about the overall hash
-   table organisation: the number of entries, number of buckets and maximum
+   table organization: the number of entries, number of buckets and maximum
    length of buckets.  */
 
 /* Return the number of buckets in the hash table.  The table size, the total
@@ -139,7 +139,7 @@ hash_get_n_entries (const Hash_table *table)
   return table->n_entries;
 }
 
-/* Return the length of the most lenghty chain (bucket).  */
+/* Return the length of the longest chain (bucket).  */
 
 unsigned
 hash_get_max_bucket_length (const Hash_table *table)
@@ -165,7 +165,7 @@ hash_get_max_bucket_length (const Hash_table *table)
   return max_bucket_length;
 }
 
-/* Do a mild validation of an hash table, by traversing it and checking two
+/* Do a mild validation of a hash table, by traversing it and checking two
    statistics.  */
 
 bool
@@ -212,8 +212,8 @@ hash_print_statistics (const Hash_table *table, FILE *stream)
   fprintf (stream, "max bucket length: %u\n", max_bucket_length);
 }
 
-/* Return the user entry from the hash table, if some entry in the hash table
-   compares equally with ENTRY, or NULL otherwise. */
+/* If ENTRY matches an entry already in the hash table, return the
+   entry from the table.  Otherwise, return NULL.  */
 
 void *
 hash_lookup (const Hash_table *table, const void *entry)
@@ -255,7 +255,7 @@ hash_get_first (const Hash_table *table)
     if (bucket->data)
       return bucket->data;
 
-  abort ();
+  assert (0);
 }
 
 /* Return the user data for the entry following ENTRY, where ENTRY has been
@@ -313,7 +313,7 @@ hash_get_entries (const Hash_table *table, void **buffer,
   return counter;
 }
 
-/* Call a PROCESSOR function for each entry of an hash table, and return the
+/* Call a PROCESSOR function for each entry of a hash table, and return the
    number of entries for which the processor function returned success.  A
    pointer to some PROCESSOR_DATA which will be made available to each call to
    the processor function.  The PROCESSOR accepts two arguments: the first is
@@ -446,7 +446,7 @@ hash_reset_tuning (Hash_tuning *tuning)
 /* For the given hash TABLE, check the user supplied tuning structure for
    reasonable values, and return true if there is no gross error with it.
    Otherwise, definitvely reset the TUNING field to some acceptable default in
-   the hash table (that is, the user looses the right of further modifying
+   the hash table (that is, the user loses the right of further modifying
    tuning arguments), and return false.  */
 
 static bool
@@ -468,21 +468,22 @@ check_tuning (Hash_table *table)
   return false;
 }
 
-/* Allocate and return a new hash table, or NULL if an error is met.  The
-   initial number of buckets is automatically selected so to _guarantee_ that
+/* Allocate and return a new hash table, or NULL upon failure.  The
+   initial number of buckets is automatically selected so as to _guarantee_ that
    you may insert at least CANDIDATE different user entries before any growth
-   of the hash table size occurs.  So, if you happen to know beforehand the
+   of the hash table size occurs.  So, if have a reasonably tight a-priori
+   upper bound on the
    number of entries you intend to insert in the hash table, you may save some
    table memory and insertion time, by specifying it here.  If the
    IS_N_BUCKETS field of the TUNING structure is true, the CANDIDATE argument
    has its meaning changed to the wanted number of buckets.
 
    TUNING points to a structure of user-supplied values, in case some fine
-   tuning is wanted over the default behaviour of the hasher.  If TUNING is
-   NULL, proper defaults are used instead.
+   tuning is wanted over the default behavior of the hasher.  If TUNING is
+   NULL, the default tuning parameters are used instead.
 
    The user-supplied HASHER function should be provided.  It accepts two
-   arguments ENTRY and TABLE_SIZE.  It computes, by hasing ENTRY contents, a
+   arguments ENTRY and TABLE_SIZE.  It computes, by hashing ENTRY contents, a
    slot number for that entry which should be in the range 0..TABLE_SIZE-1.
    This slot number is then returned.
 
@@ -519,10 +520,11 @@ hash_initialize (unsigned candidate, const Hash_tuning *tuning,
   table->tuning = tuning;
   if (!check_tuning (table))
     {
-      /* Abort initialisation if tuning arguments are improper.  This is the
-	 only occasion when the user gets some feedback about it.  Later on,
-	 if the user modifies the tuning wrongly, it gets restored to some
-	 proper default, and the user looses the right of tuning further.  */
+      /* Fail if the tuning options are invalid.  This is the only occasion
+	 when the user gets some feedback about it.  Once the table is created,
+	 if the user provides invalid tuning options, we silently revert to
+	 using the defaults, and ignore further request to change the tuning
+	 options.  */
       free (table);
       return NULL;
     }
@@ -598,7 +600,7 @@ hash_clear (Hash_table *table)
   table->n_entries = 0;
 }
 
-/* Reclaim all storage associated with an hash table.  If a data_freer
+/* Reclaim all storage associated with a hash table.  If a data_freer
    function has been supplied by the user when the hash table was created,
    this function applies it to the data of each entry before freeing that
    entry.  */
@@ -767,12 +769,11 @@ hash_find_entry (Hash_table *table, const void *entry,
 
 /* For an already existing hash table, change the number of buckets through
    specifying CANDIDATE.  The contents of the hash table are preserved.  The
-   new number of buckets is automatically selected so to _guarantee_ that the
+   new number of buckets is automatically selected so as to _guarantee_ that the
    table may receive at least CANDIDATE different user entries, including
    those already in the table, before any other growth of the hash table size
-   occurs.  If the IS_N_BUCKETS field of the TUNING structure is true, the
-   CANDIDATE argument has its meaning changed to the wanted number of buckets.
-   */
+   occurs.  If TUNING->IS_N_BUCKETS is true, then CANDIDATE specifies the
+   exact number of buckets desired.  */
 
 bool
 hash_rehash (Hash_table *table, unsigned candidate)
@@ -807,26 +808,28 @@ hash_rehash (Hash_table *table, unsigned candidate)
 	  next = cursor->next;
 
 	  if (new_bucket->data)
-	    if (cursor == bucket)
-	      {
-		/* Allocate or recycle an entry, when moving from a bucket
-		   header into a bucket overflow.  */
-		struct hash_entry *new_entry = allocate_entry (new_table);
+	    {
+	      if (cursor == bucket)
+		{
+		  /* Allocate or recycle an entry, when moving from a bucket
+		     header into a bucket overflow.  */
+		  struct hash_entry *new_entry = allocate_entry (new_table);
 
-		if (new_entry == NULL)
-		  return false;
+		  if (new_entry == NULL)
+		    return false;
 
-		new_entry->data = data;
-		new_entry->next = new_bucket->next;
-		new_bucket->next = new_entry;
-	      }
-	    else
-	      {
-		/* Merely relink an existing entry, when moving from a
-		   bucket overflow into a bucket overflow.  */
-		cursor->next = new_bucket->next;
-		new_bucket->next = cursor;
-	      }
+		  new_entry->data = data;
+		  new_entry->next = new_bucket->next;
+		  new_bucket->next = new_entry;
+		}
+	      else
+		{
+		  /* Merely relink an existing entry, when moving from a
+		     bucket overflow into a bucket overflow.  */
+		  cursor->next = new_bucket->next;
+		  new_bucket->next = cursor;
+		}
+	    }
 	  else
 	    {
 	      /* Free an existing entry, when moving from a bucket
@@ -894,16 +897,16 @@ hash_insert (Hash_table *table, const void *entry)
   table->n_entries++;
   table->n_buckets_used++;
 
-  /* If the growth threshold of the buckets in use has been reached, rehash
-     the table bigger.  It's no real use checking the number of entries, as
-     if the hashing function is ill-conditioned, rehashing is not likely to
-     improve it.  */
+  /* If the growth threshold of the buckets in use has been reached, increase
+     the table size and rehash.  There's no point in checking the number of
+     entries:  if the hashing function is ill-conditioned, rehashing is not
+     likely to improve it.  */
 
   if (table->n_buckets_used
       > table->tuning->growth_threshold * table->n_buckets)
     {
-      /* Check more fully, before starting real work.  If tuning arguments got
-	 improper, the second check will rely on proper defaults.  */
+      /* Check more fully, before starting real work.  If tuning arguments
+	 became invalid, the second check will rely on proper defaults.  */
       check_tuning (table);
       if (table->n_buckets_used
 	  > table->tuning->growth_threshold * table->n_buckets)
@@ -943,13 +946,13 @@ hash_delete (Hash_table *table, const void *entry)
       table->n_buckets_used--;
 
       /* If the shrink threshold of the buckets in use has been reached,
-	 rehash the table smaller.  */
+	 rehash into a smaller table.  */
 
       if (table->n_buckets_used
 	  < table->tuning->shrink_threshold * table->n_buckets)
 	{
 	  /* Check more fully, before starting real work.  If tuning arguments
-	     got improper, the second check will rely on proper defaults.  */
+	     became invalid, the second check will rely on proper defaults.  */
 	  check_tuning (table);
 	  if (table->n_buckets_used
 	      < table->tuning->shrink_threshold * table->n_buckets)
