@@ -882,6 +882,11 @@ Use `--parents' for the old meaning, and `--no-dereference' for the new."));
       x.xstat = stat;
     }
 
+  /* If --force (-f) was specified and we're in link-creation mode,
+     first remove any existing destination file.  */
+  if (x.unlink_dest_after_failed_open && (x.hard_link || x.symbolic_link))
+    x.unlink_dest_before_opening = 1;
+
   /* Allocate space for remembering copied and created files.  */
 
   hash_init (INITIAL_HASH_MODULE, INITIAL_ENTRY_TAB_SIZE);
