@@ -1,5 +1,5 @@
 /* system-dependent definitions for fileutils programs.
-   Copyright (C) 1989, 1990, 1991 Free Software Foundation, Inc.
+   Copyright (C) 89, 91, 92, 93, 1994 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -32,8 +32,8 @@
 #undef S_ISSOCK
 #endif /* STAT_MACROS_BROKEN.  */
 
-#ifndef S_ISREG			/* Doesn't have POSIX.1 stat stuff. */
-#define mode_t unsigned short
+#ifndef S_IFMT
+#define S_IFMT 0170000
 #endif
 #if !defined(S_ISBLK) && defined(S_IFBLK)
 #define S_ISBLK(m) (((m) & S_IFMT) == S_IFBLK)
@@ -67,7 +67,7 @@
 #define mkfifo(path, mode) (mknod ((path), (mode) | S_IFIFO, 0))
 #endif
 
-#ifndef _POSIX_SOURCE
+#ifdef HAVE_SYS_PARAM_H
 #include <sys/param.h>
 #endif
 
@@ -91,6 +91,7 @@
 
 #include "pathmax.h"
 
+/* FIXME: Don't use _POSIX_VERSION.  */
 #ifndef _POSIX_VERSION
 off_t lseek ();
 #endif
@@ -121,15 +122,15 @@ off_t lseek ();
 #endif
 #undef HAVE_MAJOR
 
-#ifdef _POSIX_VERSION
+#ifdef HAVE_UTIME_H
 #include <utime.h>
-#else /* not _POSIX_VERSION */
+#else
 struct utimbuf
 {
   long actime;
   long modtime;
 };
-#endif /* _POSIX_VERSION */
+#endif
 
 #if defined(STDC_HEADERS) || defined(HAVE_STRING_H)
 #include <string.h>
@@ -159,7 +160,7 @@ char *getenv ();
 extern int errno;
 #endif /* STDC_HEADERS */
 
-#if defined(HAVE_FCNTL_H) || defined(_POSIX_VERSION)
+#ifdef HAVE_FCNTL_H
 #include <fcntl.h>
 #else
 #include <sys/file.h>
@@ -177,24 +178,24 @@ extern int errno;
 #define R_OK 4
 #endif
 
-#if defined(DIRENT) || defined(_POSIX_VERSION)
-#include <dirent.h>
-#define NLENGTH(direct) (strlen((direct)->d_name))
-#else /* not (DIRENT or _POSIX_VERSION) */
-#define dirent direct
-#define NLENGTH(direct) ((direct)->d_namlen)
-#ifdef SYSNDIR
-#include <sys/ndir.h>
-#endif /* SYSNDIR */
-#ifdef SYSDIR
-#include <sys/dir.h>
-#endif /* SYSDIR */
-#ifdef NDIR
-#include <ndir.h>
-#endif /* NDIR */
-#endif /* DIRENT or _POSIX_VERSION */
+#ifdef HAVE_DIRENT_H
+# include <dirent.h>
+# define NLENGTH(direct) (strlen((direct)->d_name))
+#else /* not HAVE_DIRENT_H */
+# define dirent direct
+# define NLENGTH(direct) ((direct)->d_namlen)
+# ifdef HAVE_SYS_NDIR_H
+#  include <sys/ndir.h>
+# endif /* HAVE_SYS_NDIR_H */
+# ifdef HAVE_SYS_DIR_H
+#  include <sys/dir.h>
+# endif /* HAVE_SYS_DIR_H */
+# ifdef HAVE_NDIR_H
+#  include <ndir.h>
+# endif /* HAVE_NDIR_H */
+#endif /* HAVE_DIRENT_H */
 
-#ifdef VOID_CLOSEDIR
+#ifdef CLOSEDIR_VOID
 /* Fake a return value. */
 #define CLOSEDIR(d) (closedir (d), 0)
 #else

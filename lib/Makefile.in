@@ -23,14 +23,12 @@ VPATH = @srcdir@
 CC = @CC@
 AR = ar
 RANLIB = @RANLIB@
-DEFS = -DCONFIG_BROKETS -Dlint @DEFS@
+DEFS = -Dlint @DEFS@
 CFLAGS = @CFLAGS@
 YACC = @YACC@
 
-prefix = @prefix@
-exec_prefix = $(prefix)
+exec_prefix = @exec_prefix@
 libdir = $(exec_prefix)/lib
-
 SOURCES = getdate.y posixtm.y \
 argmatch.c backupfile.c basename.c dirname.c eaccess.c \
 error.c filemode.c fsusage.c full-write.c getopt.c getopt1.c \
@@ -49,19 +47,21 @@ stripslash.o xgetcwd.o xmalloc.o xstrdup.o userspec.o yesno.o \
 @LIBOBJS@ @ALLOCA@
 
 DISTFILES = Makefile.in backupfile.h getopt.h modechange.h \
-fnmatch.h fsusage.h mountlist.h pathmax.h safe-xstat.c.in safe-xstat.h.in \
+fnmatch.h fsusage.h mountlist.h pathmax.h safe-xstat.cin safe-xstat.hin \
 getdate.c posixtm.c $(SOURCES)
 
 all: libfu.a
 
-.SUFFIXES =
-.SUFFIXES = .c .o
+.SUFFIXES:
+.SUFFIXES: .c .o
 
 .c.o:
 	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I.. -I$(srcdir) $(CFLAGS) $<
 
 Makefile: ../config.status Makefile.in
-	CONFIG_FILES=$@ CONFIG_HEADERS= ../config.status
+	cd ..; CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
+
+installdirs:
 
 install: all
 
@@ -78,12 +78,13 @@ clean:
 mostlyclean: clean
 
 distclean: clean
-	rm -f Makefile *.tab.c getdate.c *posixtm.c
+	rm -f Makefile *.tab.c getdate.c *posixtm.c \
+	  safe-stat.c safe-stat.h safe-lstat.c safe-lstat.h
 
 realclean: distclean
-	rm -f TAGS safe-stat.c safe-stat.h safe-lstat.c safe-lstat.h 
+	rm -f TAGS
 
-distdir = ../`cat ../.fname`/lib 
+distdir = ../`cat ../distname`/$(subdir)
 dist: $(DISTFILES)
 	for file in $(DISTFILES); do \
 	  ln $$file $(distdir) \
@@ -98,21 +99,21 @@ libfu.a: $(OBJECTS)
 extract_stat = sed -e 's/@l@//g' -e 's/@L@//g'
 extract_lstat = sed -e 's/@l@/l/g' -e 's/@L@/L/g'
 
-safe-lstat.c: safe-xstat.c.in
-	$(extract_lstat) $(srcdir)/safe-xstat.c.in > $@-tmp
-	mv $@-tmp $@
+safe-lstat.c: safe-xstat.cin
+	$(extract_lstat) $(srcdir)/safe-xstat.cin > $@-t
+	mv $@-t $@
 
-safe-lstat.h: safe-xstat.h.in
-	$(extract_lstat) $(srcdir)/safe-xstat.h.in > $@-tmp
-	mv $@-tmp $@
+safe-lstat.h: safe-xstat.hin
+	$(extract_lstat) $(srcdir)/safe-xstat.hin > $@-t
+	mv $@-t $@
 
-safe-stat.c: safe-xstat.c.in
-	$(extract_stat) $(srcdir)/safe-xstat.c.in > $@-tmp
-	mv $@-tmp $@
+safe-stat.c: safe-xstat.cin
+	$(extract_stat) $(srcdir)/safe-xstat.cin > $@-t
+	mv $@-t $@
 
-safe-stat.h: safe-xstat.h.in
-	$(extract_stat) $(srcdir)/safe-xstat.h.in > $@-tmp
-	mv $@-tmp $@
+safe-stat.h: safe-xstat.hin
+	$(extract_stat) $(srcdir)/safe-xstat.hin > $@-t
+	mv $@-t $@
 
 safe-stat.o: safe-stat.h
 safe-lstat.o: safe-lstat.h

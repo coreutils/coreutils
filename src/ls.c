@@ -36,17 +36,7 @@
  #pragma alloca
 #endif
 
-#ifdef HAVE_CONFIG_H
-#if defined (CONFIG_BROKETS)
-/* We use <config.h> instead of "config.h" so that a compilation
-   using -I. -I$srcdir will use ./config.h rather than $srcdir/config.h
-   (which it would do because it found this file in $srcdir).  */
 #include <config.h>
-#else
-#include "config.h"
-#endif
-#endif
-
 #include <sys/types.h>
 #if !defined(_POSIX_SOURCE) || defined(_AIX)
 #include <sys/ioctl.h>
@@ -58,17 +48,25 @@
 #include "system.h"
 #include <fnmatch.h>
 
+#if HAVE_LIMITS_H
+#include <limits.h>
+#endif
+
 #include "ls.h"
 #include "version.h"
 #include "safe-stat.h"
 #include "safe-lstat.h"
+
+#ifndef INT_MAX
+#define INT_MAX (((unsigned int) ~(unsigned int) 0) >> 1)
+#endif
 
 #ifndef S_IEXEC
 #define S_IEXEC S_IXUSR
 #endif
 
 /* Return an int indicating the result of comparing two longs. */
-#if SIZEOF_INT == 2
+#if (INT_MAX <= 65535)
 #define longdiff(a, b) ((a) < (b) ? -1 : (a) > (b) ? 1 : 0)
 #else
 #define longdiff(a, b) ((a) - (b))

@@ -1,4 +1,4 @@
-/* mkdir.c -- BSD compatible directory functions for System V
+/* mkdir.c -- BSD compatible make directory function for System V
    Copyright (C) 1988, 1990 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -28,14 +28,15 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+
 #include <errno.h>
-#ifndef STDC_HEADERS
+#ifndef errno
 extern int errno;
 #endif
 
 #ifdef STAT_MACROS_BROKEN
 #undef S_ISDIR
-#endif /* STAT_MACROS_BROKEN.  */
+#endif
 
 #if !defined(S_ISDIR) && defined(S_IFDIR)
 #define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
@@ -43,7 +44,7 @@ extern int errno;
 
 #include "safe-stat.h"
 
-/* mkdir and rmdir adapted from GNU tar.  */
+/* mkdir adapted from GNU tar.  */
 
 /* Make directory DPATH, with permission mode DMODE.
 
@@ -66,7 +67,7 @@ mkdir (dpath, dmode)
 
   if (SAFE_STAT (dpath, &statbuf) == 0)
     {
-      errno = EEXIST;		/* stat worked, so it already exists.  */
+      errno = EEXIST;		/* stat worked, it already exists */
       return -1;
     }
 
@@ -77,70 +78,36 @@ mkdir (dpath, dmode)
   cpid = fork ();
   switch (cpid)
     {
-    case -1:			/* Cannot fork.  */
-      return -1;		/* errno is set already.  */
+    case -1:			/* cannot fork */
+      return -1;		/* errno already set */
 
-    case 0:			/* Child process.  */
+    case 0:			/* child process */
+
       /* Cheap hack to set mode of new directory.  Since this child
-	 process is going away anyway, we zap its umask.
-	 This won't suffice to set SUID, SGID, etc. on this
-	 directory, so the parent process calls chmod afterward.  */
-      status = umask (0);	/* Get current umask.  */
-      umask (status | (0777 & ~dmode));	/* Set for mkdir.  */
+	 process is going away anyway, we zap its umask.  This won't
+	 suffice to set SUID, SGID, etc. on this directory, so the parent
+	 process calls chmod afterward.  */
+
+      status = umask (0);
+      umask (status | (0777 & ~dmode));
       execl ("/bin/mkdir", "mkdir", dpath, (char *) 0);
       _exit (1);
 
-    default:			/* Parent process.  */
-      while (wait (&status) != cpid) /* Wait for kid to finish.  */
+    default:			/* parent process */
+
+      /* Wait for kid to finish.  */
+
+      while (wait (&status) != cpid)
 	/* Do nothing.  */ ;
 
       if (status & 0xFFFF)
 	{
-	  errno = EIO;		/* /bin/mkdir failed.  */
+
+	  /* /bin/mkdir failed.  */
+
+	  errno = EIO;
 	  return -1;
 	}
       return chmod (dpath, dmode);
-    }
-}
-
-/* Remove directory DPATH.
-   Return 0 if successful, -1 if not.  */
-
-int
-rmdir (dpath)
-     char *dpath;
-{
-  int cpid, status;
-  struct stat statbuf;
-
-  if (SAFE_STAT (dpath, &statbuf) != 0)
-    return -1;			/* stat set errno.  */
-
-  if (!S_ISDIR (statbuf.st_mode))
-    {
-      errno = ENOTDIR;
-      return -1;
-    }
-
-  cpid = fork ();
-  switch (cpid)
-    {
-    case -1:			/* Cannot fork.  */
-      return -1;		/* errno is set already.  */
-
-    case 0:			/* Child process.  */
-      execl ("/bin/rmdir", "rmdir", dpath, (char *) 0);
-      _exit (1);
-
-    default:			/* Parent process.  */
-      while (wait (&status) != cpid) /* Wait for kid to finish.  */
-	/* Do nothing.  */ ;
-
-      if (status & 0xFFFF)
-	{
-	  errno = EIO;		/* /bin/rmdir failed.  */
-	  return -1;
-	}
-      return 0;
     }
 }
