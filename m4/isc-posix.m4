@@ -1,4 +1,4 @@
-#serial 2
+#serial 1
 # This test replaces the one in autoconf.
 # Currently this macro should have the same name as the autoconf macro
 # because gettext's gettext.m4 (distributed in the automake package)
