@@ -132,7 +132,7 @@ Usage: %s [OPTION]... SOURCE DEST\n\
   or:  %s [OPTION]... SOURCE... DIRECTORY\n\
   or:  %s [OPTION]... --target-directory=DIRECTORY SOURCE...\n\
 "),
-	      program_name, program_name);
+	      program_name, program_name, program_name);
       printf (_("\
 Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
 \n\
