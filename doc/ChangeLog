@@ -1,3 +1,7 @@
+2004-03-03  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (du invocation): Document new option: --file0-from=F.
+
 2004-02-29  Paul Eggert  <eggert@twinsun.com>
 
 	* coreutils.texi (touch invocation):
