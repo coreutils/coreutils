@@ -11,10 +11,15 @@ maintainer-check:
 	$(MAKE) distcheck
 	$(MAKE) my-distcheck
 
-prev-version := $(shell echo $(VERSION)|tr a-z Xa-y)
+prev_version_file = .prev-version
+
+THIS_VERSION_REGEXP = $(subst .,\.,$(VERSION))
+PREV_VERSION := $(shell cat $(prev_version_file))
+PREV_VERSION_REGEXP := $(shell echo $(PREV_VERSION)|sed 's/\./\\./g')
+
 tag-package = $(shell echo "$(PACKAGE)" | tr a-z A-Z)
 tag-this-version = $(subst .,_,$(VERSION))
-tag-prev-version = $(subst .,_,$(prev-version))
+tag-prev-version = $(subst .,_,$(PREV_VERSION))
 this-cvs-tag = $(tag-package)-$(tag-this-version)
 prev-cvs-tag = $(tag-package)-$(tag-prev-version)
 
@@ -69,14 +74,6 @@ my-distcheck: writable-files po-check
 	@echo "========================"; \
 	echo "$(distdir).tar.gz is ready for distribution"; \
 	echo "========================"
-
-prev_version_file = .prev-version
-
-THIS_VERSION_REGEXP = $(subst .,\.,$(VERSION))
-# FIXME: this works only for Gnits-style test releases.
-PREV_VERSION := $(shell cat $(prev_version_file))
-PREV_VERSION_REGEXP := $(shell echo $(PREV_VERSION)|sed 's/\./\\./g')
-v = Version
 
 a_host = alpha.gnu.org
 b_host = freefriends.org
