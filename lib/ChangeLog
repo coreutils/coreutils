@@ -1,5 +1,12 @@
 2000-10-28  Jim Meyering  <meyering@lucent.com>
 
+	* memchr.c: Update from libc.
+	Adjust for portability:
+	[HAVE_STDLIB_H]: Include stdlib.h.
+	[HAVE_BP_SYM_H || _LIBC]: Guard inclusion of bp-sym.h.
+	Undef __memchr, too.
+	[!weak_alias]: Define __memchr to memchr.
+
 	* regex.c: Update from libc.
 	* regex.h: Likewise.
 	* getopt1.c: Likewise.
