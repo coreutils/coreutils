@@ -2480,7 +2480,12 @@ standard input.  Synopsis:
 comm [@var{option}]@dots{} @var{file1} @var{file2}
 @end example
 
-The input files must be sorted before @code{comm} can be used.
+@vindex LC_COLLATE
+Before @code{comm} can be used, the input files must be sorted using the
+collating sequence specified by the @env{LC_COLLATE} locale, with
+trailing newlines significant.  If an input file ends in a non-newline
+character, a newline is silently appended.  The @code{sort} command with
+no options always outputs a file that is suitable input to @code{comm}.
 
 @cindex differing lines
 @cindex common lines
@@ -3153,10 +3158,12 @@ lines that have identical join fields.  Synopsis:
 join [@var{option}]@dots{} @var{file1} @var{file2}
 @end example
 
+@vindex LC_COLLATE
 Either @var{file1} or @var{file2} (but not both) can be @samp{-},
 meaning standard input.  @var{file1} and @var{file2} should be already
-sorted in increasing order (not numerically) on the join fields; unless
-the @samp{-t} option is given, they should be sorted ignoring blanks at
+sorted in increasing textual order on the join fields, using the
+collating sequence specified by the @env{LC_COLLATE} locale.  Unless
+the @samp{-t} option is given, the input should be sorted ignoring blanks at
 the start of the join field, as in @code{sort -b}.  If the
 @samp{--ignore-case} option is given, lines should be sorted without
 regard to the case of characters in the join field, as in @code{sort -f}.
