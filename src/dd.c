@@ -57,10 +57,14 @@
 			   + ROUND_UP_OFFSET ((char *)(Ptr) - (char *)0, (M)))
 
 #define max(a, b) ((a) > (b) ? (a) : (b))
-#define output_char(c) \
-  do { \
-  obuf[oc++] = (c); if (oc >= output_blocksize) write_output (); \
-  } while (0)
+#define output_char(c)				\
+  do						\
+    {						\
+      obuf[oc++] = (c);				\
+      if (oc >= output_blocksize)		\
+	write_output ();			\
+    }						\
+  while (0)
 
 /* Default input and output blocksize. */
 #define DEFAULT_BLOCKSIZE 512
