@@ -1,6 +1,6 @@
-# Makefile.in generated automatically by automake 1.2d from Makefile.am
+# Makefile.in generated automatically by automake 1.2f from Makefile.am
 
-# Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -66,8 +66,6 @@ CPP = @CPP@
 DATADIRNAME = @DATADIRNAME@
 DF_PROG = @DF_PROG@
 GENCAT = @GENCAT@
-GETHOSTBYNAME_LIB = @GETHOSTBYNAME_LIB@
-GETLOADAVG_LIBS = @GETLOADAVG_LIBS@
 GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
 GT_NO = @GT_NO@

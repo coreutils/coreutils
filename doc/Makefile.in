@@ -1,6 +1,6 @@
-# Makefile.in generated automatically by automake 1.2d from Makefile.am
+# Makefile.in generated automatically by automake 1.2f from Makefile.am
 
-# Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -114,7 +114,7 @@ GZIP = --best
 default: all
 
 .SUFFIXES:
-.SUFFIXES: .dvi .info .ps .texi .texinfo
+.SUFFIXES: .dvi .info .ps .texi .texinfo .txi
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --gnits doc/Makefile
 
@@ -179,6 +179,20 @@ DVIPS = dvips
 .texinfo.dvi:
 	TEXINPUTS=$(srcdir):$$TEXINPUTS \
 	  MAKEINFO='$(MAKEINFO) -I $(srcdir)' $(TEXI2DVI) $<
+
+.txi.info:
+	@cd $(srcdir) && rm -f $@ $@-[0-9] $@-[0-9][0-9]
+	cd $(srcdir) \
+	  && $(MAKEINFO) `echo $< | sed 's,.*/,,'`
+
+.txi.dvi:
+	TEXINPUTS=$(srcdir):$$TEXINPUTS \
+	  MAKEINFO='$(MAKEINFO) -I $(srcdir)' $(TEXI2DVI) $<
+
+.txi:
+	@cd $(srcdir) && rm -f $@ $@-[0-9] $@-[0-9][0-9]
+	cd $(srcdir) \
+	  && $(MAKEINFO) `echo $< | sed 's,.*/,,'`
 .dvi.ps:
 	$(DVIPS) $< -o $@
 
@@ -211,7 +225,7 @@ uninstall-info:
 	  test -z "$ii" \
 	    || install-info --info-dir=$(infodir) --remove $$file; \
 	done
-	$(NORMAL_UNINSTALL)
+	@$(NORMAL_UNINSTALL)
 	for file in $(INFO_DEPS); do \
 	  (cd $(infodir) && rm -f $$file $$file-[0-9] $$file-[0-9][0-9]); \
 	done
