@@ -2,6 +2,12 @@
 
 	* Version 4.0q.
 
+	* tests/install/Makefile.am (TESTS): Add create-leading.
+	* tests/install/create-leading: New file.
+
+	* tests/install/basic-1: Clean up.
+	* tests/install/Makefile.am (TESTS_ENVIRONMENT): Add PATH. Remove cruft.
+
 2000-02-26  Jim Meyering  <meyering@lucent.com>
 
 	Tranform the generated src/Makefile.in file so it falls back on
