@@ -63,14 +63,16 @@ print_uptime (int n, const STRUCT_UTMP *this)
     {
       char buf[BUFSIZ];
       int res;
-      fgets (buf, BUFSIZ, fp);
-
-      /* The following sscanf must use the C locale.  */
-      setlocale (LC_NUMERIC, "C");
-      res = sscanf (buf, "%lf", &upsecs);
-      setlocale (LC_NUMERIC, "");
-      if (res == 1)
-	uptime = (time_t) upsecs;
+      char *b = fgets (buf, BUFSIZ, fp);
+      if (b == buf)
+	{
+	  /* The following sscanf must use the C locale.  */
+	  setlocale (LC_NUMERIC, "C");
+	  res = sscanf (buf, "%lf", &upsecs);
+	  setlocale (LC_NUMERIC, "");
+	  if (res == 1)
+	    uptime = (time_t) upsecs;
+	}
 
       fclose (fp);
     }
