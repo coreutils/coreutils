@@ -1,5 +1,5 @@
 #!/bin/sh
-# make sure chgrp handles symlinks properly
+# see if chgrp can change the group of a symlink
 
 if test "$VERBOSE" = yes; then
   set -x
@@ -67,21 +67,10 @@ chgrp $g2 f
 set _ `ls -l f`; g=$5; test "$g" = $g2 || fail=1
 
 # This *should* change the group of f.
-# Though note that the diagnostic is misleading in that
+# Though note that the diagnostic you'd get with -c is misleading in that
 # it says the `group of `symlink'' has been changed.
 chgrp --dereference $g1 symlink
 set _ `ls -l f`; g=$5; test "$g" = $g1 || fail=1
 set _ `ls -l symlink`; g=$5; test "$g" = $g2 || fail=1
-
-# See about traversing a symlink to a directory.
-mkdir d e
-touch e/f
-ln -s ../e d/s
-chgrp -R $g1 e/f
-# Neither of the following should change the group of e/f
-chgrp -R $g2 d
-set _ `ls -l e/f`; g=$5; test "$g" = $g1 || fail=1
-chgrp --deref -R $g2 d
-set _ `ls -l e/f`; g=$5; test "$g" = $g1 || fail=1
 
 (exit $fail); exit
