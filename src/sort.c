@@ -2808,14 +2808,6 @@ but lacks following character offset"));
     outer:;
     }
 
-  {
-    char *x = getenv ("SORT_INITIAL_LINE_LENGTH");
-    if (x != NULL && *x)
-      {
-	linelength = atoi (x);
-      }
-  }
-
   if (key)
     insertkey (key);
 
