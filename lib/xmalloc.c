@@ -23,7 +23,6 @@
 
 #include "xalloc.h"
 
-#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -49,15 +48,6 @@
 /* If non NULL, call this function when memory is exhausted. */
 void (*xalloc_fail_func) (void) = 0;
 
-/* Return true if array of N objects, each of size S, cannot exist due
-   to arithmetic overflow.  S must be nonzero.  */
-
-static inline bool
-array_size_overflow (size_t n, size_t s)
-{
-  return SIZE_MAX / s < n;
-}
-
 /* If XALLOC_FAIL_FUNC is NULL, or does return, display this message
    before exiting when memory is exhausted.  Goes through gettext. */
 char const xalloc_msg_memory_exhausted[] = N_("memory exhausted");
@@ -77,13 +67,19 @@ xalloc_die (void)
 /* Allocate an array of N objects, each with S bytes of memory,
    dynamically, with error checking.  S must be nonzero.  */
 
-inline void *
-xnmalloc (size_t n, size_t s)
+static inline void *
+xnmalloc_inline (size_t n, size_t s)
 {
   void *p;
-  if (array_size_overflow (n, s) || ! (p = malloc (n * s)))
+  if (xalloc_oversized (n, s) || ! (p = malloc (n * s)))
     xalloc_die ();
   return p;
+}
+
+void *
+xnmalloc (size_t n, size_t s)
+{
+  return xnmalloc_inline (n, s);
 }
 
 /* Allocate N bytes of memory dynamically, with error checking.  */
@@ -91,18 +87,24 @@ xnmalloc (size_t n, size_t s)
 void *
 xmalloc (size_t n)
 {
-  return xnmalloc (n, 1);
+  return xnmalloc_inline (n, 1);
 }
 
 /* Change the size of an allocated block of memory P to an array of N
    objects each of S bytes, with error checking.  S must be nonzero.  */
 
-inline void *
-xnrealloc (void *p, size_t n, size_t s)
+static inline void *
+xnrealloc_inline (void *p, size_t n, size_t s)
 {
-  if (array_size_overflow (n, s) || ! (p = realloc (p, n * s)))
+  if (xalloc_oversized (n, s) || ! (p = realloc (p, n * s)))
     xalloc_die ();
   return p;
+}
+
+void *
+xnrealloc (void *p, size_t n, size_t s)
+{
+  return xnrealloc_inline (p, n, s);
 }
 
 /* Change the size of an allocated block of memory P to N bytes,
@@ -111,7 +113,111 @@ xnrealloc (void *p, size_t n, size_t s)
 void *
 xrealloc (void *p, size_t n)
 {
-  return xnrealloc (p, n, 1);
+  return xnrealloc_inline (p, n, 1);
+}
+
+
+/* If P is null, allocate a block of at least *PN such objects;
+   otherwise, reallocate P so that it contains more than *PN objects
+   each of S bytes.  *PN must be nonzero unless P is null, and S must
+   be nonzero.  Set *PN to the new number of objects, and return the
+   pointer to the new block.  *PN is never set to zero, and the
+   returned pointer is never null.
+
+   Repeated reallocations are guaranteed to make progress, either by
+   allocating an initial block with a nonzero size, or by allocating a
+   larger block.
+
+   In the following implementation, nonzero sizes are doubled so that
+   repeated reallocations have O(N log N) overall cost rather than
+   O(N**2) cost, but the specification for this function does not
+   guarantee that sizes are doubled.
+
+   Here is an example of use:
+
+     int *p = NULL;
+     size used = 0;
+     size allocated = 0;
+
+     void
+     append_int (int value)
+       {
+	 if (used == allocated)
+	   p = x2nrealloc (p, &allocated, sizeof *p);
+	 p[used++] = value;
+       }
+
+   This causes x2nrealloc to allocate a block of some nonzero size the
+   first time it is called.
+
+   To have finer-grained control over the initial size, set *PN to a
+   nonzero value before calling this function with P == NULL.  For
+   example:
+
+     int *p = NULL;
+     size used = 0;
+     size allocated = 0;
+     size allocated1 = 1000;
+
+     void
+     append_int (int value)
+       {
+	 if (used == allocated)
+	   {
+	     p = x2nrealloc (p, &allocated1, sizeof *p);
+	     allocated = allocated1;
+	   }
+	 p[used++] = value;
+       }
+
+   */
+
+static inline void *
+x2nrealloc_inline (void *p, size_t *pn, size_t s)
+{
+  size_t n = *pn;
+
+  if (! p)
+    {
+      if (! n)
+	{
+	  /* The approximate size to use for initial small allocation
+	     requests, when the invoking code specifies an old size of
+	     zero.  64 bytes is the largest "small" request for the
+	     GNU C library malloc.  */
+	  enum { DEFAULT_MXFAST = 64 };
+
+	  n = DEFAULT_MXFAST / s;
+	  n += !n;
+	}
+    }
+  else
+    {
+      if (SIZE_MAX / 2 / s < n)
+	xalloc_die ();
+      n *= 2;
+    }
+
+  *pn = n;
+  return xrealloc (p, n * s);
+}
+
+void *
+x2nrealloc (void *p, size_t *pn, size_t s)
+{
+  return x2nrealloc_inline (p, pn, s);
+}
+
+/* If P is null, allocate a block of at least *PN bytes; otherwise,
+   reallocate P so that it contains more than *PN bytes.  *PN must be
+   nonzero unless P is null.  Set *PN to the new block's size, and
+   return the pointer to the new block.  *PN is never set to zero, and
+   the returned pointer is never null.  */
+
+void *
+x2realloc (void *p, size_t *pn)
+{
+  return x2nrealloc_inline (p, pn, 1);
 }
 
 /* Allocate S bytes of zeroed memory dynamically, with error checking.
@@ -133,7 +239,7 @@ xcalloc (size_t n, size_t s)
   void *p;
   /* Test for overflow, since some calloc implementations don't have
      proper overflow checks.  */
-  if (array_size_overflow (n, s) || ! (p = calloc (n, s)))
+  if (xalloc_oversized (n, s) || ! (p = calloc (n, s)))
     xalloc_die ();
   return p;
 }
