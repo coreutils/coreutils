@@ -669,6 +669,7 @@ enum
   INDICATOR_STYLE_OPTION,
   QUOTING_STYLE_OPTION,
   SHOW_CONTROL_CHARS_OPTION,
+  SI_OPTION,
   SORT_OPTION,
   TIME_OPTION
 };
@@ -693,7 +694,7 @@ static struct option const long_options[] =
   {"ignore-backups", no_argument, 0, 'B'},
   {"classify", no_argument, 0, 'F'},
   {"file-type", no_argument, 0, 'p'},
-  {"si", no_argument, 0, 'H'},
+  {"si", no_argument, 0, SI_OPTION},
   {"ignore", required_argument, 0, 'I'},
   {"indicator-style", required_argument, 0, INDICATOR_STYLE_OPTION},
   {"dereference", no_argument, 0, 'L'},
@@ -1127,6 +1128,12 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'H':
+	  error (0, 0,
+		 _("\
+Warning: the meaning of `-H' will change in the future to conform to POSIX.\n\
+Use `--si' for the old meaning."));
+	  /* Fall through.  */
+	case SI_OPTION:
 	  output_block_size = -1000;
 	  break;
 
@@ -3274,7 +3281,9 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -g                         (ignored)\n\
   -G, --no-group             inhibit display of group information\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
-  -H, --si                   likewise, but use powers of 1000 not 1024\n\
+      --si                   likewise, but use powers of 1000 not 1024\n\
+  -H                         same as `--si' for now; soon to change\n\
+                               to conform to POSIX\n\
       --indicator-style=WORD append indicator with style WORD to entry names:\n\
                                none (default), classify (-F), file-type (-p)\n\
   -i, --inode                print index number of each file\n\
