@@ -2,6 +2,11 @@
 
 	* Version 2.0.17.
 
+	Avoid compiler warnings.
+	* src/fmt.c: Remove `unsigned' attribute from type of global `prefix'.
+	(copy_rest): Cast to (unsigned char *) before dereferencing.
+	(get_prefix): Likewise.
+
 	* configure.ac: Replace use of the one-arg form of AC_INIT
 	with a use of the 3-arg form and a use of AC_CONFIG_SRCDIR.
 
