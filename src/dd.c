@@ -322,7 +322,7 @@ Each KEYWORD may be:\n\
 static void
 translate_charset (const unsigned char *new_trans)
 {
-  int i;
+  unsigned int i;
 
   for (i = 0; i < 256; i++)
     trans_table[i] = new_trans[trans_table[i]];
@@ -396,7 +396,7 @@ interrupt_handler (int sig)
 }
 
 static RETSIGTYPE
-siginfo_handler (int sig)
+siginfo_handler (int sig ATTRIBUTE_UNUSED)
 {
   print_stats ();
 }
@@ -469,7 +469,7 @@ static void
 parse_conversion (char *str)
 {
   char *new;
-  int i;
+  unsigned int i;
 
   do
     {
@@ -614,7 +614,7 @@ scanargs (int argc, char **argv)
 static void
 apply_translations (void)
 {
-  int i;
+  unsigned int i;
 
 #define MX(a) (bit_count (conversions_mask & (a)))
   if ((MX (C_ASCII | C_EBCDIC | C_IBM) > 1)
@@ -663,10 +663,10 @@ only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, {unblock,sy
    to the NREAD bytes in BUF.  */
 
 static void
-translate_buffer (unsigned char *buf, int nread)
+translate_buffer (unsigned char *buf, size_t nread)
 {
-  register unsigned char *cp;
-  register int i;
+  unsigned char *cp;
+  size_t i;
 
   for (i = nread, cp = buf; i; i--, cp++)
     *cp = trans_table[*cp];
@@ -684,7 +684,7 @@ static unsigned char saved_char;
    next call.   Return the new start of the BUF buffer.  */
 
 static unsigned char *
-swab_buffer (unsigned char *buf, int *nread)
+swab_buffer (unsigned char *buf, size_t *nread)
 {
   unsigned char *bufstart = buf;
   register unsigned char *cp;
@@ -781,9 +781,9 @@ copy_simple (unsigned char *buf, int nread)
    replacing the newline with trailing spaces).  */
 
 static void
-copy_with_block (unsigned char *buf, int nread)
+copy_with_block (unsigned char *buf, size_t nread)
 {
-  register int i;
+  size_t i;
 
   for (i = nread; i; i--, buf++)
     {
@@ -813,10 +813,10 @@ copy_with_block (unsigned char *buf, int nread)
    with a newline).  */
 
 static void
-copy_with_unblock (unsigned char *buf, int nread)
+copy_with_unblock (unsigned char *buf, size_t nread)
 {
-  register int i;
-  register unsigned char c;
+  size_t i;
+  unsigned char c;
   static int pending_spaces = 0;
 
   for (i = 0; i < nread; i++)
@@ -856,6 +856,7 @@ dd_copy (void)
   int nread;			/* Bytes read in the current block. */
   int exit_status = 0;
   size_t page_size = getpagesize ();
+  size_t n_bytes_read;
 
   /* Leave at least one extra byte at the beginning and end of `ibuf'
      for conv=swab, but keep the buffer address even.  But some peculiar
@@ -952,15 +953,18 @@ dd_copy (void)
 	    }
 	}
 
-      if (nread < input_blocksize)
+      n_bytes_read = (size_t) nread;
+
+      if (n_bytes_read < input_blocksize)
 	{
 	  r_partial++;
 	  if (conversions_mask & C_SYNC)
 	    {
 	      if (!(conversions_mask & C_NOERROR))
 		/* If C_NOERROR, we zeroed the block before reading. */
-		memset ((char *) (ibuf + nread), 0, input_blocksize - nread);
-	      nread = input_blocksize;
+		memset ((char *) (ibuf + n_bytes_read), 0,
+			input_blocksize - n_bytes_read);
+	      n_bytes_read = input_blocksize;
 	    }
 	}
       else
@@ -968,13 +972,13 @@ dd_copy (void)
 
       if (ibuf == obuf)		/* If not C_TWOBUFS. */
 	{
-	  int nwritten = full_write (STDOUT_FILENO, obuf, nread);
+	  int nwritten = full_write (STDOUT_FILENO, obuf, n_bytes_read);
 	  if (nwritten < 0)
 	    {
 	      error (0, errno, "%s", output_file);
 	      quit (1);
 	    }
-	  else if (nread == input_blocksize)
+	  else if (n_bytes_read == input_blocksize)
 	    w_full++;
 	  else
 	    w_partial++;
@@ -984,19 +988,19 @@ dd_copy (void)
       /* Do any translations on the whole buffer at once.  */
 
       if (translation_needed)
-	translate_buffer (ibuf, nread);
+	translate_buffer (ibuf, n_bytes_read);
 
       if (conversions_mask & C_SWAB)
-	bufstart = swab_buffer (ibuf, &nread);
+	bufstart = swab_buffer (ibuf, &n_bytes_read);
       else
 	bufstart = ibuf;
 
       if (conversions_mask & C_BLOCK)
-        copy_with_block (bufstart, nread);
+        copy_with_block (bufstart, n_bytes_read);
       else if (conversions_mask & C_UNBLOCK)
-	copy_with_unblock (bufstart, nread);
+	copy_with_unblock (bufstart, n_bytes_read);
       else
-	copy_simple (bufstart, nread);
+	copy_simple (bufstart, n_bytes_read);
     }
 
   /* If we have a char left as a result of conv=swab, output it.  */
@@ -1014,7 +1018,7 @@ dd_copy (void)
     {
       /* If the final input line didn't end with a '\n', pad
 	 the output block to `conversion_blocksize' chars.  */
-      size_t i;
+      unsigned int i;
       for (i = col; i < conversion_blocksize; i++)
 	output_char (space_character);
     }
