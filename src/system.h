@@ -117,11 +117,7 @@ void *memrchr (const void *, int, size_t);
 extern int errno;
 #endif
 
-#if HAVE_STDBOOL_H
-# include <stdbool.h>
-#else
-typedef enum {false = 0, true = 1} bool;
-#endif
+#include <stdbool.h>
 
 #if HAVE_STDLIB_H
 # define getopt system_getopt
