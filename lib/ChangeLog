@@ -1,6 +1,8 @@
 2003-04-11  Jim Meyering  <jim@meyering.net>
 
 	* xalloc.h (PARAMS): Remove definitions and uses.
+	(XMALLOC, XCALLOC, XREALLOC): Remove unnecessary casts.
+
 	* xmalloc.c: Remove use of PARAMS.
 
 2003-04-10  Jim Meyering  <jim@meyering.net>
