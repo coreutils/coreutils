@@ -40,8 +40,8 @@ set - $tests
 IFS=$old_IFS
 
 while :; do
-  set -x
   case $# in 0|1|2) break;; esac
+
   umask=$1 mode=$2 expected_perms=$3
   shift; shift; shift
   umask $umask
@@ -52,6 +52,5 @@ while :; do
     || { fail=1; echo expected $expected_perms, got $actual_perms; }
   rmdir d || fail=1
 done
-
 
 (exit $fail); exit
