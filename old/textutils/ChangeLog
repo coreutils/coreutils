@@ -1,3 +1,10 @@
+2000-09-07  Jim Meyering  <meyering@lucent.com>
+
+	* src/cut.c: Remove obsolete comment block.
+	(usage): Note that when using -f, lines with no delimiters are
+	also printed.
+	* doc/textutils.texi (cut invocation): Likewise.
+
 2000-08-23  Jim Meyering  <meyering@lucent.com>
 
 	* src/md5sum.c: Include <config.h> unconditionally, to be consistent
