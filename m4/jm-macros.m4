@@ -4,7 +4,7 @@ dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
 AC_DEFUN(jm_MACROS,
 [
-  AC_PREREQ(2.13)               dnl Minimum Autoconf version required.
+  AC_PREREQ(2.14.1)               dnl Minimum Autoconf version required.
 
   GNU_PACKAGE="GNU $PACKAGE"
   AC_DEFINE_UNQUOTED(GNU_PACKAGE, "$GNU_PACKAGE",
