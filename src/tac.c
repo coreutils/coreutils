@@ -90,15 +90,15 @@ static int sentinel_length;
 static int match_length;
 
 /* The input buffer. */
-static char *buffer;
+static char *G_buffer;
 
 /* The number of bytes to read at once into `buffer'. */
 static unsigned read_size;
 
 /* The size of `buffer'.  This is read_size * 2 + sentinel_length + 2.
    The extra 2 bytes allow `past_end' to have a value beyond the
-   end of `buffer' and `match_start' to run off the front of `buffer'. */
-static unsigned buffer_size;
+   end of `G_buffer' and `match_start' to run off the front of `G_buffer'. */
+static unsigned G_buffer_size;
 
 /* The compiled regular expression representing `separator'. */
 static struct re_pattern_buffer compiled_separator;
@@ -258,13 +258,13 @@ output (const char *start, const char *past_end)
 static int
 tac (int fd, const char *file)
 {
-  /* Pointer to the location in `buffer' where the search for
+  /* Pointer to the location in `G_buffer' where the search for
      the next separator will begin. */
   char *match_start;
-  /* Pointer to one past the rightmost character in `buffer' that
+  /* Pointer to one past the rightmost character in `G_buffer' that
      has not been printed yet. */
   char *past_end;
-  unsigned saved_record_size;	/* Length of the record growing in `buffer'. */
+  unsigned saved_record_size;	/* Length of the record growing in `G_buffer'. */
   off_t file_pos;		/* Offset in the file of the next read. */
   /* Nonzero if `output' has not been called yet for any file.
      Only used when the separator is attached to the preceding record. */
@@ -292,33 +292,33 @@ tac (int fd, const char *file)
      in the input file. */
 
   lseek (fd, file_pos, SEEK_SET);
-  if (safe_read (fd, buffer, saved_record_size) != saved_record_size)
+  if (safe_read (fd, G_buffer, saved_record_size) != saved_record_size)
     {
       error (0, errno, "%s", file);
       return 1;
     }
 
-  match_start = past_end = buffer + saved_record_size;
+  match_start = past_end = G_buffer + saved_record_size;
   /* For non-regexp search, move past impossible positions for a match. */
   if (sentinel_length)
     match_start -= match_length1;
 
   for (;;)
     {
-      /* Search backward from `match_start' - 1 to `buffer' for a match
+      /* Search backward from `match_start' - 1 to `G_buffer' for a match
 	 with `separator'; for speed, use strncmp if `separator' contains no
 	 metacharacters.
 	 If the match succeeds, set `match_start' to point to the start of
 	 the match and `match_length' to the length of the match.
-	 Otherwise, make `match_start' < `buffer'. */
+	 Otherwise, make `match_start' < `G_buffer'. */
       if (sentinel_length == 0)
 	{
-	  int i = match_start - buffer;
+	  int i = match_start - G_buffer;
 	  int ret;
 
-	  ret = re_search (&compiled_separator, buffer, i, i - 1, -i, &regs);
+	  ret = re_search (&compiled_separator, G_buffer, i, i - 1, -i, &regs);
 	  if (ret == -1)
-	    match_start = buffer - 1;
+	    match_start = G_buffer - 1;
 	  else if (ret == -2)
 	    {
 	      error (0, 0, _("error in regular expression search"));
@@ -326,7 +326,7 @@ tac (int fd, const char *file)
 	    }
 	  else
 	    {
-	      match_start = buffer + regs.start[0];
+	      match_start = G_buffer + regs.start[0];
 	      match_length = regs.end[0] - regs.start[0];
 	    }
 	}
@@ -339,34 +339,34 @@ tac (int fd, const char *file)
 	    /* Do nothing. */ ;
 	}
 
-      /* Check whether we backed off the front of `buffer' without finding
+      /* Check whether we backed off the front of `G_buffer' without finding
          a match for `separator'. */
-      if (match_start < buffer)
+      if (match_start < G_buffer)
 	{
 	  if (file_pos == 0)
 	    {
 	      /* Hit the beginning of the file; print the remaining record. */
-	      output (buffer, past_end);
+	      output (G_buffer, past_end);
 	      return 0;
 	    }
 
-	  saved_record_size = past_end - buffer;
+	  saved_record_size = past_end - G_buffer;
 	  if (saved_record_size > read_size)
 	    {
-	      /* `buffer_size' is about twice `read_size', so since
+	      /* `G_buffer_size' is about twice `read_size', so since
 		 we want to read in another `read_size' bytes before
-		 the data already in `buffer', we need to increase
-		 `buffer_size'. */
+		 the data already in `G_buffer', we need to increase
+		 `G_buffer_size'. */
 	      char *newbuffer;
 	      int offset = sentinel_length ? sentinel_length : 1;
 
 	      read_size *= 2;
-	      buffer_size = read_size * 2 + sentinel_length + 2;
-	      newbuffer = xrealloc (buffer - offset, buffer_size) + offset;
+	      G_buffer_size = read_size * 2 + sentinel_length + 2;
+	      newbuffer = xrealloc (G_buffer - offset, G_buffer_size) + offset;
 	      /* Adjust the pointers for the new buffer location.  */
-	      match_start += newbuffer - buffer;
-	      past_end += newbuffer - buffer;
-	      buffer = newbuffer;
+	      match_start += newbuffer - G_buffer;
+	      past_end += newbuffer - G_buffer;
+	      G_buffer = newbuffer;
 	    }
 
 	  /* Back up to the start of the next bufferfull of the file.  */
@@ -381,15 +381,15 @@ tac (int fd, const char *file)
 
 	  /* Shift the pending record data right to make room for the new.
 	     The source and destination regions probably overlap.  */
-	  memmove (buffer + read_size, buffer, saved_record_size);
-	  past_end = buffer + read_size + saved_record_size;
+	  memmove (G_buffer + read_size, G_buffer, saved_record_size);
+	  past_end = G_buffer + read_size + saved_record_size;
 	  /* For non-regexp searches, avoid unneccessary scanning. */
 	  if (sentinel_length)
-	    match_start = buffer + read_size;
+	    match_start = G_buffer + read_size;
 	  else
 	    match_start = past_end;
 
-	  if (safe_read (fd, buffer, read_size) != read_size)
+	  if (safe_read (fd, G_buffer, read_size) != read_size)
 	    {
 	      error (0, errno, "%s", file);
 	      return 1;
@@ -468,8 +468,8 @@ save_stdin (void)
       error (0, errno, "%s", tempfile);
       cleanup_fatal ();
     }
-  while ((bytes_read = safe_read (0, buffer, read_size)) > 0)
-    if (full_write (fd, buffer, bytes_read) < 0)
+  while ((bytes_read = safe_read (0, G_buffer, read_size)) > 0)
+    if (full_write (fd, G_buffer, bytes_read) < 0)
       {
 	error (0, errno, "%s", tempfile);
 	cleanup_fatal ();
@@ -647,15 +647,15 @@ main (int argc, char **argv)
   /* A precaution that will probably never be needed. */
   while (sentinel_length * 2 >= read_size)
     read_size *= 2;
-  buffer_size = read_size * 2 + sentinel_length + 2;
-  buffer = xmalloc (buffer_size);
+  G_buffer_size = read_size * 2 + sentinel_length + 2;
+  G_buffer = xmalloc (G_buffer_size);
   if (sentinel_length)
     {
-      strcpy (buffer, separator);
-      buffer += sentinel_length;
+      strcpy (G_buffer, separator);
+      G_buffer += sentinel_length;
     }
   else
-    ++buffer;
+    ++G_buffer;
 
   if (optind == argc)
     {
