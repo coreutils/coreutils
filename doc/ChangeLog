@@ -1,3 +1,10 @@
+2004-09-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (tail invocation): Fix bugs in the description of
+	the obsolete syntax (e.g., it does not support -k or -m).  Warn
+	about usages like "tail -" and "tail -c 4" that are ambigous on
+	older systems.
+
 2004-09-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (mv invocation, rm invocation): Say "the response
