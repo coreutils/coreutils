@@ -1,4 +1,5 @@
 Changes in release 2.1
+ [2.0c]
  [2.0b]
 * Regenerate lib/Makefile.in so that nanosleep.c is distributed.
  [2.0a]
