@@ -1,5 +1,5 @@
 /* copy.c -- core functions for copying files and directories
-   Copyright (C) 89, 90, 91, 1995-1999 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2000 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -370,6 +370,7 @@ copy_internal (const char *src_path, const char *dst_path,
   int src_type;
   char *earlier_file;
   char *dst_backup = NULL;
+  int backup_succeeded = 0;
   int fix_mode = 0;
   int rename_errno;
 
@@ -546,13 +547,13 @@ copy_internal (const char *src_path, const char *dst_path,
 		      return 1;
 		    }
 		  else
-		    dst_backup = NULL;
+		    {
+		      dst_backup = NULL;
+		    }
 		}
 	      else
 		{
-		  /* rename succeeded */
-		  if (x->verbose)
-		    printf (_("%s -> %s (backup)\n"), dst_path, dst_backup);
+		  backup_succeeded = 1;
 		}
 	      new_dst = 1;
 	    }
@@ -594,7 +595,12 @@ copy_internal (const char *src_path, const char *dst_path,
      directory.  So --verbose should not announce anything until we're
      sure we'll create a directory. */
   if (x->verbose && !S_ISDIR (src_type))
-    printf ("%s -> %s\n", src_path, dst_path);
+    {
+      printf ("%s -> %s", src_path, dst_path);
+      if (backup_succeeded)
+	printf (_(" (backup: %s)"), dst_backup);
+      putchar ('\n');
+    }
 
   /* Did we copy this inode somewhere else (in this command line argument)
      and therefore this is a second hard link to the inode?  */
