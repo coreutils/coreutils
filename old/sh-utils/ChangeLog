@@ -1,3 +1,8 @@
+Mon Aug  7 23:27:54 1995  Jim Meyering  (meyering@comco.com)
+
+	* Makefile.in (DISTFILES): Don't distribute unneeded COPYING.LIB.
+	From Franc,ois.
+
 Fri Jun 23 23:04 1995  Jim Meyering  (meyering@comco.com)
 
 	* configure.in: (AC_REPLACE_FUNCS): Add memcpy and memset.

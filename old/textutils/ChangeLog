@@ -1,4 +1,9 @@
-Mon Aug  7 00:02:59 1995  Jim Meyering  (meyering@comco.com)
+Mon Aug  7 23:27:54 1995  Jim Meyering  (meyering@comco.com)
+
+	* Makefile.in (DISTFILES): Don't distribute unneeded COPYING.LIB.
+	From Franc,ois.
+
+Mon Aug  7 00:02:59 1995
 
 	* system.h (_): Define macro -- as empty for now.
 	* src/*.c: Annotate localizable strings with _(...).  From Franc,ois.

@@ -1,3 +1,8 @@
+Mon Aug  7 23:27:54 1995  Jim Meyering  (meyering@comco.com)
+
+	* Makefile.in (DISTFILES): Don't distribute unneeded COPYING.LIB.
+	From Franc,ois.
+
 Fri Aug  4 22:11:06 1995  Jim Meyering  (meyering@comco.com)
 
 	* install.c (isnumber): Rename to is_number to avoid conflict with
