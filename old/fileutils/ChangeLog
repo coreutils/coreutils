@@ -1,3 +1,10 @@
+2001-01-01  Jim Meyering  <meyering@lucent.com>
+
+	* tests/chmod/Makefile.am (TESTS): Add setgid.
+
+	* tests/chmod/setgid: Test for this change.
+	Based on a report from Paul Eggert.
+
 2000-12-29  Paul Eggert  <eggert@twinsun.com>
 
 	Clean up the terminology a tad: some directories were called "sticky"
