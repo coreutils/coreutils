@@ -1,3 +1,8 @@
+2004-09-22  Jim Meyering  <jim@meyering.net>
+
+	* POTFILES.in: Remove lib/xmalloc.c.
+	Add lib/xalloc-die.c.
+
 2004-06-26  Jim Meyering  <jim@meyering.net>
 
 	* LINGUAS: Add Basque (eu).
