@@ -1,6 +1,11 @@
-2004-06-15  Paul Eggert  <eggert@cs.ucla.edu>
+2004-06-17  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/tr.c (to_uchar): Rename function from `uchar'.  The latter
+	would clash with a typedef in Tru64's <sys/types.h>.  From Albert Chin.
+
+2004-06-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: Remove more special cases for POSIXLY_CORRECT when POSIX
 	allows the GNU behavior.  "--" is now supported by chroot, hostid,
