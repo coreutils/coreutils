@@ -246,8 +246,8 @@ define emit-rsync-commands
 	echo =====================================
 	echo =====================================
 	echo 'for host in $(a_host) $(b_host); do \'
-	echo '  rsync -e ssh --pro -av $(xd-delta) $(my_distdir).tar.gz \'
-	echo '    $$host:$(real_dir); done'
+	echo '  rsync -e ssh --pro -av $(xd-delta) $(my_distdir).tar.bz2 \'
+	echo '    $(my_distdir).tar.gz $$host:$(real_dir); done'
 	echo '# send the /tmp/announcement e-mail'
 	echo =====================================
 	echo =====================================
