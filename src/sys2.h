@@ -249,3 +249,25 @@ off_t lseek ();
 #endif
 
 char *base_name PARAMS ((char const *));
+
+/* Factor out some of the common --help and --version processing code.  */
+
+#define GETOPT_HELP_CHAR 250
+#define GETOPT_VERSION_CHAR 251
+
+#define GETOPT_HELP_OPTION_DECL \
+  "help", no_argument, 0, GETOPT_HELP_CHAR
+#define GETOPT_VERSION_OPTION_DECL \
+  "version", no_argument, 0, GETOPT_VERSION_CHAR
+
+#define case_GETOPT_HELP_CHAR			\
+  case GETOPT_HELP_CHAR:			\
+    usage (EXIT_SUCCESS);			\
+    break;
+
+#define case_GETOPT_VERSION_CHAR(Program_name, Authors)			\
+  case GETOPT_VERSION_CHAR:						\
+    version_etc (stdout, Program_name, GNU_PACKAGE, VERSION, Authors);	\
+    close_stdout ();							\
+    exit (EXIT_SUCCESS);						\
+    break;
