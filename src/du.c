@@ -234,7 +234,7 @@ main (argc, argv)
   char *cwd_only[2];
 
   cwd_only[0] = ".";
-  cwd_only[1] = "NULL";
+  cwd_only[1] = NULL;
 
   program_name = argv[0];
   xstat = safe_lstat;

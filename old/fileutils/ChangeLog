@@ -1,3 +1,58 @@
+Sat Jul 30 08:08:02 1994  Jim Meyering  (meyering@comco.com)
+
+	* backupfile.c [DIRENT]: Remove spurious `|| defined(_POSIX_VERSION)'.
+	* savedir.c: Ditto.
+
+	* safe-xstat.c.in, safe-xstat.h.in: New files.
+	* lib/Makefile.in: Add rules and dependencies for building safe-stat.c,
+	safe-stat.h, safe-lstat.c, and safe-lstat.h from them.
+
+	* eaccess.c (eaccess): Use SAFE_STAT instead of stat
+	(and/or SAFE_LSTAT instead of lstat) to avoid unnecessary failure
+	on systems for which stat (lstat) can return EINTR.
+	* fsusage.c (statfs): Ditto.
+	* isdir.c (isdir): Ditto.
+	* makepath.c (make_path): Ditto.
+	* rename.c (rename): Ditto.
+	* chgrp.c (change_file_group): Ditto.
+	* chmod.c (change_file_mode): Ditto.
+	* chown.c (change_file_owner): Ditto.
+	* cp-hash.c (remember_created): Ditto.
+	* cp.c (main, do_copy): Ditto.
+	* df.c (main, show_point): Ditto.
+	* du.c (main, du_files, count_entry): Ditto.
+	* install.c (copy_file): Ditto.
+	* ln.c (main, do_link): Ditto.
+	* ls.c (gobble_file): Ditto.
+	* mv.c (is_real_dir, do_move): Ditto.
+	* mvdir.c (main): Ditto.
+	* rm.c (rm): Ditto.
+	* touch.c (main, touch): Ditto.
+
+	* Makefile.in (install): Tell GNU make that this target is .PHONY
+	so it doesn't unnecessarily build ./install from install.sh.
+
+Tue Jul 26 11:33:53 1994  Jim Meyering  (meyering@comco.com)
+
+	* system.h: Remove `|| defined(_POSIX_VERSION)' from test that
+	decides whether to include <fcntl.h>.  From Francois Pinard.
+
+Sun Jul 03 08:44:00 1994  Jim Meyering  (meyering@comco.com)
+
+	* configure.in [AC_HAVE_HEADERS]: Add sys/param.h, for definition
+	of HAVE_SYS_PARAM_H, now tested in pathmax.h.
+
+	* makepath.c (make_path): Avoid spurious failure for file names
+	that contain `/.' or `/..'.  From Andreas Schwab
+	<schwab@issan.informatik.uni-dortmund.de>.
+
+	* dd.c (main): Handle SIGPIPE like other interrupts.
+	From Scott L. Burson <gyro@zeta-soft.com>.
+
+	* df.c (main, show_dev, usage): New option --print-type=fstype.
+	From Arne Henrik Juul.
+	* df.1: Update.
+
 Thu Jun 30 10:28:32 1994  Jim Meyering  (meyering@comco.com)
 
 	* ls.c (longdiff) [SIZEOF_INT == 2]: Choose which version of this
