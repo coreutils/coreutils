@@ -1,6 +1,12 @@
-2002-11-11  Jim Meyering  <jim@meyering.net>
+2002-11-12  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.4.
+
+	* src/ls.c (HAVE_SYMLINKS): Remove unnecessary macro definition.
+	Replace sole use with equivalent `#ifdef S_ISLNK'.
+	Inconsistency reported by Dmitry V. Levin.
+
+2002-11-11  Jim Meyering  <jim@meyering.net>
 
 	* src/ls.c (gobble_file): Make `ls -dF --color symlink-to-dir' work
 	properly.  Reported by Jeff Sheinberg as Debian bug #168203.
