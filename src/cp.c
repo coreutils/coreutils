@@ -32,6 +32,7 @@
 #include "dirname.h"
 #include "path-concat.h"
 #include "quote.h"
+#include "quotearg.h"
 #include "utimens.h"
 
 #define ASSIGN_BASENAME_STRDUPA(Dest, File_name)	\
@@ -532,16 +533,17 @@ do_copy (int n_files, char **file, const char *target_directory,
     {
       if (target_directory || 1 < n_files)
 	{
-	  char const *msg;
 	  if (new_dst)
-	    msg = N_("%s: specified destination directory does not exist");
+	    error (0, 0, _("%s: destination directory does not exist"),
+		   quotearg_colon (dest));
 	  else if (target_directory)
-	    msg = N_("%s: specified target is not a directory");
+	    error (0, 0, _("%s: specified target is not a directory"),
+		   quotearg_colon (dest));
 	  else /* n_files > 1 */
-	    msg =
-	  N_("copying multiple files, but last argument %s is not a directory");
+	    error (0, 0,
+	   _("copying multiple files, but last argument %s is not a directory"),
+		   quote (dest));
 
-	  error (0, 0, _(msg), quote (dest));
 	  usage (EXIT_FAILURE);
 	}
     }
