@@ -1,6 +1,19 @@
-2004-11-14  Jim Meyering  <jim@meyering.net>
+2004-11-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* NEWS: dd now outputs total bytes, seconds, and bytes per second.
+	* src/Makefile.am (dd_LDADD): Add $(LIB_CLOCK_GETTIME).
+	* src/dd.c: Include "human.h".
+	(w_bytes, start_time): New vars.
+	(usage): Document new I/O statistics output
+	(print_stats): Output new I/O statistics.
+	(cleanup): Do statistics after closing stdin and stdout, so that
+	the times are more accurate.
+	(write_output, dd_copy): Count output bytes.
+	(main): Get initial value of clock.
+
+2004-11-14  Jim Meyering  <jim@meyering.net>
 
 	Backslash-escape `-'s in email addresses, so that they are
 	rendered properly in UTF-locales.
