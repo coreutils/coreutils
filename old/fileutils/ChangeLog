@@ -1,14 +1,17 @@
 2002-06-02  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.1.9.
+
 	`rm' no longer uses explicit recursion, and as such is now able
 	to remove hierarchies of effectively unlimited depth.  Prior to
 	this change, on typical systems, rm would fail (segfault) to remove
 	hierarchies of depth greater than about 25,000.
 
-	* src/remove.c: Merge in all changes from no-recursion branch.  See below.
+	* src/remove.c: Merge in all changes from no-recursion branch.
+	See below for details.
 	* src/remove.h: Likewise.
-	* src/rm.c: Likewise.
-	* src/mv.c: Likewise.
+	* src/mv.c (do_move): Adapt to new calling sequence for rm.
+	* src/rm.c (main): Likewise.
 
 2002-06-02  Jim Meyering  <meyering@lucent.com>
 
@@ -86,6 +89,10 @@
 	* src/remove.c (remove_entry): Add support for prompting (e.g., -i).
 
 	* src/remove.h (UPDATE_STATUS): New macro.
+	Include save-cwd.h.
+	(struct File_spec): Remove declaration.
+	Update prototypes.
+
 	* src/remove.c [AD_ent] (status): New member.  This lets us propagate
 	the status from a subdirectory to its parent via AD_pop_and_chdir.
 	(AD_push_initial): Set it.
@@ -125,9 +132,6 @@
 
 	* src/remove.c (rm_1): Remove now useless (always true)
 	user_specified_name parameter.  Adjust sole caller.
-
-	* src/mv.c (do_move): Adapt to new calling sequence for rm.
-	* src/rm.c (main): Likewise.
 
 	* src/remove.c (rm): New function.  This interface allows
 	one to remove multiple arguments at a time.  This is important in
