@@ -343,7 +343,7 @@ Set LC_ALL=C to get the traditional sort order that uses native byte values.\n\
 static struct tempnode
 {
   char *name;
-  struct tempnode *next;
+  struct tempnode * volatile next;
 } temphead;
 
 /* Clean up any remaining temporary files. */
@@ -503,8 +503,8 @@ zaptemp (const char *name)
     {
       temp = node->next;
       unlink (temp->name);
-      free (temp->name);
       node->next = temp->next;
+      free (temp->name);
       free ((char *) temp);
     }
 }
