@@ -1,4 +1,7 @@
-Sat Mar 23 20:21:40 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+Sat Mar 23 23:14:40 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* system.h [EXIT_FAILURE]: Undefine and define to 1 also if it
+	is defined to zero.  Suggested by Paul Eggert.
 
 	* sort.c [SORT_FAILURE]: New macro.
 	Be careful to exit with 1 only when -c is used and the
