@@ -1,6 +1,12 @@
-2000-12-02  Jim Meyering  <meyering@lucent.com>
+2000-12-08  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* src/dirname.c: Include xalloc.h.
+	(main): Use dir_name rather than the underlying dir_name_r.
+	The former now handles cwd-relative names with drive-letter prefixes.
+
+2000-12-02  Jim Meyering  <meyering@lucent.com>
 
 	* src/seq.c (valid_format): Move pre-increment to a separate statement
 	to avoid a warning.
