@@ -1,5 +1,16 @@
 Sat May 20 06:44:14 1995  Jim Meyering  (meyering@comco.com)
 
+	* join.c (ADD_FIELD): Declare in K&R style, not ANSI.
+	From Kaveh Ghazi.
+
+	* xstrtol.c: Define NDEBUG for systems with losing assert.h.
+	(__strtol): Add __unsigned to prototype and use __P.
+	Move inclusion of xstrtol.h to precede prototype.
+	From Kaveh Ghazi.
+
+	* memmove.c: Include config.h for definition of const.
+	From Kaveh Ghazi.
+
 	* All Makefile.in (install-exec, install-exec): New targets.
 	From Karl Berry.
 

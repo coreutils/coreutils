@@ -3,6 +3,10 @@
    In the public domain.
    By David MacKenzie <djm@gnu.ai.mit.edu>.  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 void
 memmove (dest, source, length)
      char *dest;

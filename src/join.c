@@ -113,7 +113,10 @@ static struct line blank1;
 static struct line blank2;
 
 static void
-ADD_FIELD (struct line *line, const char *field, size_t len)
+ADD_FIELD (line, field, len)
+     struct line *line;
+     const char *field;
+     size_t len;
 {
   if (line->nfields >= line->nfields_allocated)
     {

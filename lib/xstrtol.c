@@ -2,10 +2,12 @@
 #include <config.h>
 #endif
 
+#include "xstrtol.h" /* Get definition for __P before use. */
+
 #ifdef STDC_HEADERS
 #include <stdlib.h>
 #else
-long int __strtol (const char *, char **, int base);
+__unsigned long int __strtol __P ((const char *, char **, int base));
 #endif
 
 #ifdef HAVE_STRING_H
@@ -17,8 +19,8 @@ long int __strtol (const char *, char **, int base);
 # endif
 #endif
 
+#define NDEBUG
 #include <assert.h>
-/* FIXME: define NDEBUG before release.  */
 
 #include <errno.h>
 #ifndef errno
@@ -36,8 +38,6 @@ extern int errno;
 #ifndef LONG_MAX
 #define LONG_MAX ((long int) (ULONG_MAX >> 1))
 #endif
-
-#include "xstrtol.h"
 
 #define BKM_SCALE(x, scale_factor, error_return)			\
       do								\
