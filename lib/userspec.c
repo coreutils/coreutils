@@ -66,7 +66,19 @@ struct group *getgrgid ();
 #define isdigit(c) ((c) >= '0' && (c) <= '9')
 
 char *strdup ();
-static int isnumber ();
+
+/* Return nonzero if STR represents an unsigned decimal integer,
+   otherwise return 0. */
+
+static int
+isnumber (str)
+     const char *str;
+{
+  for (; *str; str++)
+    if (!isdigit (*str))
+      return 0;
+  return 1;
+}
 
 /* Extract from NAME, which has the form "[user][:.][group]",
    a USERNAME, UID U, GROUPNAME, and GID G.
@@ -77,115 +89,176 @@ static int isnumber ();
    USERNAME and GROUPNAME will be in newly malloc'd memory.
    Either one might be NULL instead, indicating that it was not
    given and the corresponding numeric ID was left unchanged.
-   Might write NULs into NAME.
 
    Return NULL if successful, a static error message string if not.  */
 
-char *
-parse_user_spec (name, uid, gid, username, groupname)
-     char *name;
+const char *
+parse_user_spec (spec_arg, uid, gid, username, groupname)
+     const char *spec_arg;
      uid_t *uid;
      gid_t *gid;
      char **username, **groupname;
 {
-  static char *tired = "virtual memory exhausted";
+  static const char *tired = "virtual memory exhausted";
+  const char *error_msg;
+  char *spec;			/* A copy we can write on.  */
+  int spec_len;
   struct passwd *pwd;
   struct group *grp;
-  char *cp;
-  int use_login_group = 0;
+  char *g, *u, *separator;
 
+  error_msg = NULL;
   *username = *groupname = NULL;
 
-  /* Check whether a group is given.  */
-  cp = index (name, ':');
-  if (cp == NULL)
-    cp = index (name, '.');
-  if (cp != NULL)
+  spec_len = strlen (spec_arg);
+  spec = (char *) alloca (strlen (spec_arg) + 1);
+  strcpy (spec, spec_arg);
+
+  /* Find the separator if there is one.  */
+  separator = index (spec, ':');
+  if (separator == NULL)
+    separator = index (spec, '.');
+
+  /* Replace separator with a NUL.  */
+  if (separator != NULL)
+    *separator = '\0';
+
+  /* Set U and G to non-zero length strings corresponding to user and
+     group specifiers or to NULL.  */
+  u = (*spec == '\0' ? NULL : spec);
+
+  g = (separator == NULL || *(separator + 1) == '\0'
+       ? NULL
+       : separator + 1);
+
+  if (u == NULL && g == NULL)
+    return "can not omit both user and group";
+
+  if (u != NULL)
     {
-      *cp++ = '\0';
-      if (*cp == '\0')
+      pwd = getpwnam (u);
+      if (pwd == NULL)
 	{
-	  if (cp == name + 1)
-	    /* Neither user nor group given, just "." or ":".  */
-	    return "can not omit both user and group";
+
+	  if (!isnumber (u))
+	    error_msg = "invalid user";
 	  else
-	    /* "user.".  */
-	    use_login_group = 1;
+	    {
+	      int use_login_group;
+	      use_login_group = (separator != NULL && g == NULL);
+	      if (use_login_group)
+		error_msg = "cannot get the login group of a numeric UID";
+	      else
+		*uid = atoi (u);
+	    }
 	}
       else
 	{
-	  /* Explicit group.  */
-	  *groupname = strdup (cp);
+	  *uid = pwd->pw_uid;
+	  if (g == NULL && separator != NULL)
+	    {
+	      /* A separator was given, but a group was not specified,
+	         so get the login group.  */
+	      *gid = pwd->pw_gid;
+	      grp = getgrgid (pwd->pw_gid);
+	      if (grp == NULL)
+		{
+		  /* This is enough room to hold the unsigned decimal
+		     representation of any 32-bit quantity and the trailing
+		     zero byte.  */
+		  char uint_buf[21];
+		  sprintf (uint_buf, "%u", (unsigned) (pwd->pw_gid));
+		  *groupname = strdup (uint_buf);
+		}
+	      else
+		{
+		  *groupname = strdup (grp->gr_name);
+		}
+	      if (*groupname == NULL)
+		error_msg = tired;
+	      endgrent ();
+	    }
+	}
+      endpwent ();
+
+      if (error_msg == NULL)
+	{
+	  *username = strdup (u);
+	  if (*username == NULL)
+	    error_msg = tired;
+	}
+    }
+
+  if (g != NULL)
+    {
+      /* Explicit group.  */
+      grp = getgrnam (g);
+      if (grp == NULL)
+	{
+	  if (!isnumber (g))
+	    error_msg = "invalid group";
+	  else
+	    *gid = atoi (g);
+	}
+      else
+	*gid = grp->gr_gid;
+      endgrent ();		/* Save a file descriptor.  */
+
+      if (error_msg == NULL)
+	{
+	  *groupname = strdup (g);
 	  if (*groupname == NULL)
 	    return tired;
-	  grp = getgrnam (cp);
-	  if (grp == NULL)
-	    {
-	      if (!isnumber (cp))
-		return "invalid group";
-	      *gid = atoi (cp);
-	    }
-	  else
-	    *gid = grp->gr_gid;
-	  endgrent ();		/* Save a file descriptor.  */
 	}
     }
 
-  /* Parse the user name, now that any group has been removed.  */
-
-  if (name[0] == '\0')
-    /* No user name was given, just a group.  */
-    return NULL;
-
-  *username = strdup (name);
-  if (*username == NULL)
-    return tired;
-
-  pwd = getpwnam (name);
-  if (pwd == NULL)
+  if (error_msg)
     {
-      if (!isnumber (name))
-	return "invalid user";
-      if (use_login_group)
-	return "cannot get the login group of a numeric UID";
-      *uid = atoi (name);
-    }
-  else
-    {
-      *uid = pwd->pw_uid;
-      if (use_login_group)
+      if (*groupname != NULL)
 	{
-	  *gid = pwd->pw_gid;
-	  grp = getgrgid (pwd->pw_gid);
-	  if (grp == NULL)
-	    {
-	      *groupname = malloc (15);
-	      if (*groupname == NULL)
-		return tired;
-	      sprintf (*groupname, "%u", (unsigned) (pwd->pw_gid));
-	    }
-	  else
-	    {
-	      *groupname = strdup (grp->gr_name);
-	      if (*groupname == NULL)
-		return tired;
-	    }
-	  endgrent ();
+	  free (*groupname);
+	  *groupname = NULL;
+	}
+      if (*username != NULL)
+	{
+	  free (*username);
+	  *username = NULL;
 	}
     }
-  endpwent ();
-  return NULL;
+
+  return error_msg;
 }
 
-/* Return nonzero if STR represents an unsigned decimal integer,
-   otherwise return 0. */
+#ifdef TESTING
 
-static int
-isnumber (str)
-     char *str;
+#define NULL_CHECK(s) ((s) == NULL ? "(null)" : (s))
+
+int
+main (int argc, char **argv)
 {
-  for (; *str; str++)
-    if (!isdigit (*str))
-      return 0;
-  return 1;
+  int i;
+
+  for (i = 1; i < argc; i++)
+    {
+      const char *e;
+      char *username, *groupname;
+      uid_t uid;
+      gid_t gid;
+      char *tmp;
+
+      tmp = strdup (argv[i]);
+      e = parse_user_spec (tmp, &uid, &gid, &username, &groupname);
+      free (tmp);
+      printf ("%s: %u %u %s %s %s\n",
+	      argv[i],
+	      (unsigned int) uid,
+	      (unsigned int) gid,
+	      NULL_CHECK (username),
+	      NULL_CHECK (groupname),
+	      NULL_CHECK (e));
+    }
+
+  exit (0);
 }
+
+#endif
