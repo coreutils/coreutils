@@ -1,5 +1,5 @@
 /* system-dependent definitions for fileutils, textutils, and sh-utils packages.
-   Copyright (C) 1989, 1991-2002 Free Software Foundation, Inc.
+   Copyright (C) 1989, 1991-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,32 +31,6 @@
    of _POSIX_VERSION.  */
 #if HAVE_UNISTD_H
 # include <unistd.h>
-#endif
-
-#ifndef _POSIX2_VERSION
-# define _POSIX2_VERSION 0
-#endif
-
-/* The POSIX version that our programs should conform to.  The default
-   is the same as for system programs.  If the system does not specify
-   a version, assume the latest version, whatever it is.  */
-#ifndef POSIX2_VERSION
-# define POSIX2_VERSION (_POSIX2_VERSION ? _POSIX2_VERSION : 2147483647)
-#endif
-
-/* "::" if a short option can take an optional argument, ":" if the
-   argument is required.  "::" is mostly obsolete with POSIX
-   1003.1-2001, which in most cases does not allow short options with
-   optional arguments.  */
-#if POSIX2_VERSION < 200112
-# define OPTARG_POSIX "::"
-#else
-# define OPTARG_POSIX ":"
-#endif
-
-/* If nonzero, warn when obsolete options are detected.  */
-#ifndef OBSOLETE_OPTION_WARNINGS
-# define OBSOLETE_OPTION_WARNINGS 1
 #endif
 
 #ifndef STDIN_FILENO
