@@ -1,3 +1,7 @@
+1998-10-11  Jim Meyering  <meyering@ascend.com>
+
+	* Version 4.0-b3.
+
 1998-10-08  Paul Eggert  <eggert@twinsun.com>
 
         * mktime.c (__mktime_internal): When the requested time falls
