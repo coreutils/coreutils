@@ -291,7 +291,7 @@ Write sorted concatenation of all FILE(s) to standard output.\n\
 \n\
   +POS1 [-POS2]    start a key at POS1, end it *before* POS2 (obsolescent)\n\
 		     field numbers and character offsets are numbered\n\
-                     starting with zero (contrast with the -k option)\n
+                     starting with zero (contrast with the -k option)\n\
   -b               ignore leading blanks in sort fields or keys\n\
   -c               check if given files already sorted, do not sort\n\
   -d               consider only [a-zA-Z0-9 ] characters in keys\n\
