@@ -1,5 +1,11 @@
 2000-01-16  Jim Meyering  <meyering@lucent.com>
 
+	* lib/Makefile.am: Sync with sh-utils/lib/Makefile.am.
+
+	* configure.in: Remove AM_FUNC_ERROR_AT_LINE, jm_FUNC_GNU_STRFTIME,
+	jm_FUNC_GROUP_MEMBER, jm_FUNC_GETGROUPS, AC_FUNC_VPRINTF, and
+	AC_FUNC_ALLOCA.  They're now in m4/.
+
 	* tests/ls-2/tests: Adapt to work with recently updated quotearg.c.
 
 	Sync with the version from emacs-20.5.
