@@ -199,6 +199,7 @@ change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group,
 	{
 	  int fail;
 	  int symlink_changed = 1;
+	  int saved_errno;
 
 	  if (S_ISLNK (file_stats.st_mode) && change_symlinks)
 	    {
@@ -216,6 +217,7 @@ change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group,
 	    {
 	      fail = chown (file, newuser, newgroup);
 	    }
+	  saved_errno = errno;
 
 	  if (verbosity == V_high || (verbosity == V_changes_only && !fail))
 	    {
@@ -229,7 +231,7 @@ change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group,
 	  if (fail)
 	    {
 	      if (force_silent == 0)
-		error (0, errno, "%s", file);
+		error (0, saved_errno, "%s", file);
 	      errors = 1;
 	    }
 	}
