@@ -24,7 +24,7 @@ AC_DEFUN([gl_FUNC_MKSTEMP],
 	      int i;
 	      for (i = 0; i < 70; i++)
 		{
-		  char template[] = "conftest.mkstemp/coXXXXXX.tmp";
+		  char template[] = "conftest.mkstemp/coXXXXXX";
 		  int fd = mkstemp (template);
 		  if (fd == -1)
 		    exit (1);
