@@ -138,8 +138,8 @@ euidaccess.c fileblocks.c fnmatch.c fsusage.c ftruncate.c getdate.c \
 getgroups.c getline.c group-member.c lstat.c memcmp.c memcpy.c memset.c \
 mkdir.c mktime.c mountlist.c obstack.c obstack.h posixtm.c realloc.c \
 regex.c regex.h rename.c rmdir.c rpmatch.c rx.c rx.h stat.c stpcpy.c \
-stpncpy.c strcasecmp.c strdup.c strftime.c strndup.c strstr.c strtol.c \
-strtoul.c strverscmp.c ylwrap
+strcasecmp.c strdup.c strftime.c strndup.c strstr.c strtol.c strtoul.c \
+strverscmp.c ylwrap
 
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
@@ -158,11 +158,11 @@ DEP_FILES =  .deps/addext.P .deps/alloca.P .deps/argmatch.P \
 .deps/path-concat.P .deps/posixtm.P .deps/realloc.P .deps/regex.P \
 .deps/rename.P .deps/rmdir.P .deps/rpmatch.P .deps/rx.P \
 .deps/safe-read.P .deps/save-cwd.P .deps/savedir.P .deps/stat.P \
-.deps/stpcpy.P .deps/stpncpy.P .deps/strcasecmp.P .deps/strdup.P \
-.deps/strftime.P .deps/stripslash.P .deps/strndup.P .deps/strstr.P \
-.deps/strtol.P .deps/strtoul.P .deps/strverscmp.P .deps/userspec.P \
-.deps/xgetcwd.P .deps/xmalloc.P .deps/xstrdup.P .deps/xstrtol.P \
-.deps/xstrtoul.P .deps/yesno.P
+.deps/stpcpy.P .deps/strcasecmp.P .deps/strdup.P .deps/strftime.P \
+.deps/stripslash.P .deps/strndup.P .deps/strstr.P .deps/strtol.P \
+.deps/strtoul.P .deps/strverscmp.P .deps/userspec.P .deps/xgetcwd.P \
+.deps/xmalloc.P .deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P \
+.deps/yesno.P
 SOURCES = $(libfu_a_SOURCES)
 OBJECTS = $(libfu_a_OBJECTS)
 
