@@ -1,3 +1,21 @@
+2003-10-18  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.1.0.
+
+	* basename.c, cat.c, chroot.c, cksum.c, comm.c, cp.c, csplit.c, cut.c:
+	* dd.c, df.c, dirname.c, du.c, echo.c, env.c, expr.c, factor.c, head.c:
+	* hostid.c, hostname.c, id.c, link.c, ln.c, logname.c, ls.c, md5sum.c:
+	* mv.c, nice.c, nl.c, nohup.c, paste.c, pathchk.c, pinky.c, pr.c:
+	* printenv.c, printf.c, pwd.c, rm.c, setuidgid.c, sleep.c, sort.c:
+	* split.c, stty.c, sum.c, sync.c, tac.c, tail.c, tee.c, test.c:
+	* touch.c, tsort.c, uniq.c, unlink.c, uptime.c, users.c, wc.c:
+	* who.c, whoami.c, yes.c (AUTHORS): Revert the WRITTEN_BY/AUTHORS change
+	of 2003-09-19.  Now, AUTHORS is a comma-separated list of strings.
+	Update the call to parse_long_options so that `AUTHORS, NULL' are the
+	last parameters.
+	* src/true.c (main): Append NULL to version_etc argument list.
+	* src/sys2.h (case_GETOPT_VERSION_CHAR): Likewise.
+
 2003-10-17  Andreas Schwab  <schwab@suse.de>
 
 	* tests/mk-script: Get $srcdir from first parameter instead of
@@ -8,14 +26,10 @@
 	first argument of mk-script.
 	($(srcdir)/Makefile.am): Likewise.  Prepend $(srcdir) to target.
 
-2003-10-18  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.1.0.
+2003-10-17  Jim Meyering  <jim@meyering.net>
 
 	* src/mv.c (usage): Tweak descriptions of -i and -f so that the
 	generated `man' page is more readable.  Suggestion from Dan Jacobson.
-
-2003-10-17  Jim Meyering  <jim@meyering.net>
 
 	* src/chown-core.c (change_file_owner): Handle the cases in
 	which fts_info indicates an error with the given entry.
