@@ -1,6 +1,12 @@
-2002-04-28  Jim Meyering  <meyering@lucent.com>
+2002-04-29  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.22.
+
+	* src/tail.c (parse_obsolescent_option): Do not limit the maximum
+	line/byte count (when specified via obsolete option syntax) to be
+	less than ULONG_MAX on systems where OFF_T_MAX is larger.
+
+2002-04-28  Jim Meyering  <meyering@lucent.com>
 
 	Avoid new warnings from gcc.
 	* src/pr.c [struct COLUMN] <name>: Declare member to be const.
