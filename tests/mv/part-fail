@@ -38,7 +38,7 @@ fail=0
 
 mv -f k $other_partition_tmpdir 2> out && fail=1
 cat <<EOF > exp
-mv: inter-device move failed: \`k' to \`$other_partition_tmpdir/k';  unable to remove target: Permission denied
+mv: inter-device move failed: \`k' to \`$other_partition_tmpdir/k'; unable to remove target: Permission denied
 EOF
 
 cmp out exp || fail=1
