@@ -44,8 +44,16 @@ struct File_spec
   dev_t st_dev;
 };
 
-enum RM_status rm PARAMS ((struct File_spec *fs, int user_specified_name,
-			   const struct rm_options *x));
+struct dev_ino
+{
+  ino_t st_ino;
+  dev_t st_dev;
+};
+
+enum RM_status rm PARAMS ((struct File_spec *fs,
+			   int user_specified_name,
+			   struct rm_options const *x,
+			   struct dev_ino const *cwd_dev_ino));
 void fspec_init_file PARAMS ((struct File_spec *fs, const char *filename));
 void remove_init PARAMS ((void));
 void remove_fini PARAMS ((void));
