@@ -48,6 +48,19 @@
 
 extern char *program_name;
 
+/* Non failing version of argmatch call this function after failing. */
+#ifndef ARGMATCH_DIE
+# define ARGMATCH_DIE exit (2)
+#endif
+
+static void
+__argmatch_die (void)
+{
+  ARGMATCH_DIE;
+}
+
+argmatch_exit_fn argmatch_exit_failure = __argmatch_exit_failure;
+
 /* If ARG is an unambiguous match for an element of the
    null-terminated array ARGLIST, return the index in ARGLIST
    of the matched element, else -1 if it does not match any element
@@ -122,12 +135,12 @@ argcasematch (const char *arg, const char *const *arglist,
 }
 
 /* Error reporting for argmatch.
-   KIND is a description of the type of entity that was being matched.
+   CONTEXT is a description of the type of entity that was being matched.
    VALUE is the invalid value that was given.
    PROBLEM is the return value from argmatch.  */
 
 void
-argmatch_invalid (const char *kind, const char *value, int problem)
+argmatch_invalid (const char *context, const char *value, int problem)
 {
   enum quoting_style saved_quoting_style;
   char const *format;
@@ -141,7 +154,7 @@ argmatch_invalid (const char *kind, const char *value, int problem)
 	    ? _("%s: invalid argument `%s' for `%s'\n")
 	    : _("%s: ambiguous argument `%s' for `%s'\n"));
 
-  fprintf (stderr, format, program_name, quotearg (value), kind);
+  fprintf (stderr, format, program_name, quotearg (value), context);
 
   set_quoting_style (NULL, saved_quoting_style);
 }
@@ -174,6 +187,34 @@ argmatch_valid (const char *const *arglist,
   putc ('\n', stderr);
 }
 
+/* Never failing versions of the previous functions.
+
+   CONTEXT is the context for which argmatch is called (e.g.,
+   "--version-control", or "$VERSION_CONTROL" etc.).  Upon failure,
+   calls the (supposed never to return) function EXIT_FN. */
+
+int
+__xargmatch_internal (const char *context,
+		      const char *arg, const char *const *arglist,
+		      const char *vallist, size_t valsize,
+		      int case_sensitive,
+		      argmatch_exit_fn exit_fn)
+{
+  int res = __argmatch_internal (arg, arglist,
+				 vallist, valsize,
+				 case_sensitive);
+  if (res >= 0)
+    /* Success. */
+    return res;
+
+  /* We failed.  Explain why. */
+  argmatch_invalid (context, arg, res);
+  argmatch_valid (arglist, vallist, valsize);
+  (*exit_fn) ();
+
+  return -1; /* To please the compilers. */
+}
+
 /* Look for VALUE in VALLIST, an array of objects of size VALSIZE and
    return the first corresponding argument in ARGLIST */
 const char *
@@ -193,7 +234,7 @@ argmatch_to_argument (const char *value,
 /*
  * Based on "getversion.c" by David MacKenzie <djm@gnu.ai.mit.edu>
  */
-char *rogram_name;
+char *program_name;
 extern const char *getenv ();
 
 /* When to make backup files.  */
