@@ -1,3 +1,8 @@
+2000-04-05  Jim Meyering  <meyering@lucent.com>
+
+	* strftime.m4: Back out the 2000-04-02 change.
+	Instead of that change, simply undefine putenv in the test program.
+
 2000-04-03  Jim Meyering  <meyering@lucent.com>
 
 	* gettext.m4: Fix typo in comment.
