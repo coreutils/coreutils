@@ -1,3 +1,18 @@
+2001-10-20  Paul Eggert  <eggert@twinsun.com>
+
+	* error.m4 (jm_PREREQ_ERROR):
+	Do not invoke AC_CHECK_FUNCS with strerror_r, as
+	AC_FUNC_STRERROR_R does that.
+	Check for strerror declaration.
+
+	* strerror_r.m4: Add copyright notice, as nontrivial m4 files
+	are supposed to have them these days.
+	(AC_FUNC_STRERROR_R): Always do char* test, so that it gets cached.
+	Merge changes from latest Autoconf CVS.
+	Rename ac_cv_func_strerror_r_works to ac_cv_func_strerror_r_char_p,
+	and rename HAVE_WORKING_STRERROR_R to STRERROR_R_CHAR_P, since
+	POSIX decided to standardize on the int flavor of strerror_r.
+
 2001-09-30  Jim Meyering  <meyering@lucent.com>
 
 	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): See if
