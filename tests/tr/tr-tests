@@ -9,7 +9,7 @@ $echo testing program: $xx
 errors=0
 test "$srcdir" || srcdir=.
 test "$VERBOSE" && $xx --version 2> /dev/null
-$xx  'abcd' '[]*]' < $srcdir/t1.in > t1.out 2> t1.err
+$xx 'abcd' '[]*]' < $srcdir/t1.in > t1.out 2> t1.err
 code=$?
 if test $code != 0 ; then
   $echo Test 1 failed: ../../src/tr return code $code differs from expected value 0 1>&2
@@ -26,7 +26,7 @@ else
   esac
 fi
 test -s t1.err || rm -f t1.err
-$xx  'abc' '[%*]xyz' < $srcdir/t2.in > t2.out 2> t2.err
+$xx 'abc' '[%*]xyz' < $srcdir/t2.in > t2.out 2> t2.err
 code=$?
 if test $code != 0 ; then
   $echo Test 2 failed: ../../src/tr return code $code differs from expected value 0 1>&2
@@ -43,7 +43,7 @@ else
   esac
 fi
 test -s t2.err || rm -f t2.err
-$xx  '' '[.*]' < $srcdir/t3.in > t3.out 2> t3.err
+$xx '' '[.*]' < $srcdir/t3.in > t3.out 2> t3.err
 code=$?
 if test $code != 0 ; then
   $echo Test 3 failed: ../../src/tr return code $code differs from expected value 0 1>&2
@@ -77,7 +77,7 @@ else
   esac
 fi
 test -s t4.err || rm -f t4.err
-$xx  'abcd' 'xy' < $srcdir/t5.in > t5.out 2> t5.err
+$xx 'abcd' 'xy' < $srcdir/t5.in > t5.out 2> t5.err
 code=$?
 if test $code != 0 ; then
   $echo Test 5 failed: ../../src/tr return code $code differs from expected value 0 1>&2
@@ -94,7 +94,7 @@ else
   esac
 fi
 test -s t5.err || rm -f t5.err
-$xx  'abcd' 'x[y*]' < $srcdir/t6.in > t6.out 2> t6.err
+$xx 'abcd' 'x[y*]' < $srcdir/t6.in > t6.out 2> t6.err
 code=$?
 if test $code != 0 ; then
   $echo Test 6 failed: ../../src/tr return code $code differs from expected value 0 1>&2
@@ -604,7 +604,7 @@ else
   esac
 fi
 test -s tz.err || rm -f tz.err
-$xx  'a-a' 'z' < $srcdir/tA.in > tA.out 2> tA.err
+$xx 'a-a' 'z' < $srcdir/tA.in > tA.out 2> tA.err
 code=$?
 if test $code != 0 ; then
   $echo Test A failed: ../../src/tr return code $code differs from expected value 0 1>&2
@@ -621,7 +621,7 @@ else
   esac
 fi
 test -s tA.err || rm -f tA.err
-$xx  'a' '''' < $srcdir/tB.in > tB.out 2> tB.err
+$xx 'a' '''' < $srcdir/tB.in > tB.out 2> tB.err
 code=$?
 if test $code != 1 ; then
   $echo Test B failed: ../../src/tr return code $code differs from expected value 1 1>&2
@@ -638,7 +638,7 @@ else
   esac
 fi
 test -s tB.err || rm -f tB.err
-$xx  '[:lower:]' '[:upper:]' < $srcdir/tC.in > tC.out 2> tC.err
+$xx '[:lower:]' '[:upper:]' < $srcdir/tC.in > tC.out 2> tC.err
 code=$?
 if test $code != 0 ; then
   $echo Test C failed: ../../src/tr return code $code differs from expected value 0 1>&2
@@ -655,7 +655,7 @@ else
   esac
 fi
 test -s tC.err || rm -f tC.err
-$xx  '[:upper:]' '[:lower:]' < $srcdir/tD.in > tD.out 2> tD.err
+$xx '[:upper:]' '[:lower:]' < $srcdir/tD.in > tD.out 2> tD.err
 code=$?
 if test $code != 0 ; then
   $echo Test D failed: ../../src/tr return code $code differs from expected value 0 1>&2
@@ -672,7 +672,7 @@ else
   esac
 fi
 test -s tD.err || rm -f tD.err
-$xx  'a[=*2][=c=]' 'xyyz' < $srcdir/tE.in > tE.out 2> tE.err
+$xx 'a[=*2][=c=]' 'xyyz' < $srcdir/tE.in > tE.out 2> tE.err
 code=$?
 if test $code != 0 ; then
   $echo Test E failed: ../../src/tr return code $code differs from expected value 0 1>&2
@@ -689,7 +689,7 @@ else
   esac
 fi
 test -s tE.err || rm -f tE.err
-$xx  '[:*3][:digit:]' 'a-m' < $srcdir/tF.in > tF.out 2> tF.err
+$xx '[:*3][:digit:]' 'a-m' < $srcdir/tF.in > tF.out 2> tF.err
 code=$?
 if test $code != 0 ; then
   $echo Test F failed: ../../src/tr return code $code differs from expected value 0 1>&2
@@ -706,7 +706,7 @@ else
   esac
 fi
 test -s tF.err || rm -f tF.err
-$xx  'a[b*512]c' '1[x*]2' < $srcdir/tG.in > tG.out 2> tG.err
+$xx 'a[b*512]c' '1[x*]2' < $srcdir/tG.in > tG.out 2> tG.err
 code=$?
 if test $code != 0 ; then
   $echo Test G failed: ../../src/tr return code $code differs from expected value 0 1>&2
@@ -723,7 +723,7 @@ else
   esac
 fi
 test -s tG.err || rm -f tG.err
-$xx  'a[b*513]c' '1[x*]2' < $srcdir/tH.in > tH.out 2> tH.err
+$xx 'a[b*513]c' '1[x*]2' < $srcdir/tH.in > tH.out 2> tH.err
 code=$?
 if test $code != 0 ; then
   $echo Test H failed: ../../src/tr return code $code differs from expected value 0 1>&2
@@ -740,7 +740,7 @@ else
   esac
 fi
 test -s tH.err || rm -f tH.err
-$xx  'a\-z' 'A-Z' < $srcdir/tI.in > tI.out 2> tI.err
+$xx 'a\-z' 'A-Z' < $srcdir/tI.in > tI.out 2> tI.err
 code=$?
 if test $code != 0 ; then
   $echo Test I failed: ../../src/tr return code $code differs from expected value 0 1>&2
