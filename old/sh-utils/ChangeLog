@@ -1,8 +1,8 @@
 1999-08-04  Jim Meyering  <meyering@ascend.com>
 
 	false and true once again generate --help and --version output
-	* src/true.c: Honor --help and --version once again, though now
-	only if POSIXLY_CORRECT is set.
+	* src/true.c: Honor --help and --version once again, bug ignore
+	those options when POSIXLY_CORRECT is set.
 	* src/false.c: Fail even for --help and --version.
 	* src/Makefile.am (false.c): Generate automatically from true.c.
 	(BUILT_SOURCES): Add false.c.
