@@ -37,8 +37,8 @@ extern char *program_name;
 
 int
 argmatch (arg, optlist)
-     char *arg;
-     char **optlist;
+     const char *arg;
+     const char *const *optlist;
 {
   int i;			/* Temporary index in OPTLIST.  */
   size_t arglen;		/* Length of ARG.  */
@@ -76,8 +76,8 @@ argmatch (arg, optlist)
 
 void
 invalid_arg (kind, value, problem)
-     char *kind;
-     char *value;
+     const char *kind;
+     const char *value;
      int problem;
 {
   fprintf (stderr, "%s: ", program_name);
