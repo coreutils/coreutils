@@ -2563,8 +2563,8 @@ Fold lower case letters to upper case for sorting.
 @item -b @var{file}
 @item --break-file=@var{file}
 
-This option is an alternative way to option @samp{-W} for describing
-which characters make up words.  This option introduces the name of a
+This option provides an alternative (to @samp{-W}) method of describing
+which characters make up words.  It introduces the name of a
 file which contains a list of characters which can@emph{not} be part of
 one word, this file is called the @dfn{Break file}.  Any character which
 is not part of the Break file is a word constituent.  If both options
