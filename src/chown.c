@@ -104,9 +104,9 @@ static void
 describe_change (char *file, int changed)
 {
   if (changed)
-    printf ("owner of %s changed to ", file);
+    printf (_("owner of %s changed to "), file);
   else
-    printf ("owner of %s retained as ", file);
+    printf (_("owner of %s retained as "), file);
   if (groupname)
     printf ("%s.%s\n", username, groupname);
   else
@@ -179,7 +179,7 @@ change_dir_owner (char *dir, uid_t user, gid_t group, struct stat *statp)
 	  return 1;
 	}
       else
-	error (1, 0, "virtual memory exhausted");
+	error (1, 0, _("virtual memory exhausted"));
     }
 
   dirlength = strlen (dir) + 1;	/* + 1 is for the trailing '/'. */
@@ -209,16 +209,16 @@ static void
 usage (int status)
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... OWNER[.[GROUP]] FILE...\n\
   or:  %s [OPTION]... .[GROUP] FILE...\n\
-",
+"),
 	      program_name, program_name);
-      printf ("\
+      printf (_("\
 Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
 \n\
   -c, --changes           be verbose whenever change occurs\n\
@@ -229,7 +229,7 @@ Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
       --version           output version information and exit\n\
 \n\
 Owner is unchanged if missing.  Group is unchanged if missing, but changed\n\
-to login group if implied by a period.  A colon may replace the period.\n");
+to login group if implied by a period.  A colon may replace the period.\n"));
     }
   exit (status);
 }
@@ -282,7 +282,7 @@ main (int argc, char **argv)
 
   if (optind >= argc - 1)
     {
-      error (0, 0, "too few arguments");
+      error (0, 0, _("too few arguments"));
       usage (1);
     }
 

@@ -134,14 +134,14 @@ copy_reg (char *source, char *dest)
 
   if (!S_ISREG (source_stats.st_mode))
     {
-      error (0, 0, "cannot move `%s' across filesystems: Not a regular file",
+      error (0, 0, _("cannot move `%s' across filesystems: Not a regular file"),
 	     source);
       return 1;
     }
 
   if (unlink (dest) && errno != ENOENT)
     {
-      error (0, errno, "cannot remove `%s'", dest);
+      error (0, errno, _("cannot remove `%s'"), dest);
       return 1;
     }
 
@@ -245,13 +245,13 @@ do_move (char *source, char *dest)
       if (source_stats.st_dev == dest_stats.st_dev
 	  && source_stats.st_ino == dest_stats.st_ino)
 	{
-	  error (0, 0, "`%s' and `%s' are the same file", source, dest);
+	  error (0, 0, _("`%s' and `%s' are the same file"), source, dest);
 	  return 1;
 	}
 
       if (S_ISDIR (dest_stats.st_mode))
 	{
-	  error (0, 0, "%s: cannot overwrite directory", dest);
+	  error (0, 0, _("%s: cannot overwrite directory"), dest);
 	  return 1;
 	}
 
@@ -262,7 +262,7 @@ do_move (char *source, char *dest)
       if (!override_mode && (interactive || stdin_tty)
 	  && euidaccess (dest, W_OK))
 	{
-	  fprintf (stderr, "%s: replace `%s', overriding mode %04o? ",
+	  fprintf (stderr, _("%s: replace `%s', overriding mode %04o? "),
 		   program_name, dest,
 		   (unsigned int) (dest_stats.st_mode & 07777));
 	  if (!yesno ())
@@ -270,7 +270,7 @@ do_move (char *source, char *dest)
 	}
       else if (interactive)
 	{
-	  fprintf (stderr, "%s: replace `%s'? ", program_name, dest);
+	  fprintf (stderr, _("%s: replace `%s'? "), program_name, dest);
 	  if (!yesno ())
 	    return 0;
 	}
@@ -279,7 +279,7 @@ do_move (char *source, char *dest)
 	{
 	  char *tmp_backup = find_backup_file_name (dest);
 	  if (tmp_backup == NULL)
-	    error (1, 0, "virtual memory exhausted");
+	    error (1, 0, _("virtual memory exhausted"));
 	  dest_backup = (char *) alloca (strlen (tmp_backup) + 1);
 	  strcpy (dest_backup, tmp_backup);
 	  free (tmp_backup);
@@ -287,7 +287,7 @@ do_move (char *source, char *dest)
 	    {
 	      if (errno != ENOENT)
 		{
-		  error (0, errno, "cannot backup `%s'", dest);
+		  error (0, errno, _("cannot backup `%s'"), dest);
 		  return 1;
 		}
 	      else
@@ -311,7 +311,7 @@ do_move (char *source, char *dest)
 
   if (errno != EXDEV)
     {
-      error (0, errno, "cannot move `%s' to `%s'", source, dest);
+      error (0, errno, _("cannot move `%s' to `%s'"), source, dest);
       goto un_backup;
     }
 
@@ -322,7 +322,7 @@ do_move (char *source, char *dest)
 
   if (unlink (source))
     {
-      error (0, errno, "cannot remove `%s'", source);
+      error (0, errno, _("cannot remove `%s'"), source);
       return 1;
     }
 
@@ -332,7 +332,7 @@ do_move (char *source, char *dest)
   if (dest_backup)
     {
       if (rename (dest_backup, dest))
-	error (0, errno, "cannot un-backup `%s'", dest);
+	error (0, errno, _("cannot un-backup `%s'"), dest);
     }
   return 1;
 }
@@ -368,16 +368,16 @@ static void
 usage (int status)
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... SOURCE DEST\n\
   or:  %s [OPTION]... SOURCE... DIRECTORY\n\
-",
+"),
 	      program_name, program_name);
-      printf ("\
+      printf (_("\
 Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n\
 \n\
   -b, --backup                 make backup before removal\n\
@@ -395,7 +395,7 @@ version control may be set with VERSION_CONTROL, values are:\n\
 \n\
   t, numbered     make numbered backups\n\
   nil, existing   numbered if numbered backups exist, simple otherwise\n\
-  never, simple   always make simple backups  \n");
+  never, simple   always make simple backups  \n"));
     }
   exit (status);
 }
@@ -463,7 +463,7 @@ main (int argc, char **argv)
 
   if (argc < optind + 2)
     {
-      error (0, 0, "missing file argument%s", argc == optind ? "s" : "");
+      error (0, 0, _("missing file argument%s"), argc == optind ? "s" : "");
       usage (1);
     }
 
@@ -474,7 +474,7 @@ main (int argc, char **argv)
 
   if (argc > optind + 2 && !isdir (argv[argc - 1]))
     error (1, 0,
-	   "when moving multiple files, last argument must be a directory");
+	   _("when moving multiple files, last argument must be a directory"));
 
   /* Move each arg but the last onto the last. */
   for (; optind < argc - 1; ++optind)

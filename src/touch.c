@@ -242,12 +242,12 @@ static void
 usage (int status)
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... FILE...\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]... FILE...\n"), program_name);
+      printf (_("\
 Update the access and modification times of each FILE to the current time.\n\
 \n\
   -a                     change only the access time\n\
@@ -261,7 +261,7 @@ Update the access and modification times of each FILE to the current time.\n\
       --time=WORD        access -a, atime -a, mtime -m, modify -m, use -a\n\
       --version          output version information and exit\n\
 \n\
-STAMP may be used without -t if none of -drt, nor --, are used.\n");
+STAMP may be used without -t if none of -drt, nor --, are used.\n"));
     }
   exit (status);
 }
@@ -297,7 +297,7 @@ main (int argc, char **argv)
 	  flexible_date++;
 	  newtime = get_date (optarg, NULL);
 	  if (newtime == (time_t) -1)
-	    error (1, 0, "invalid date format `%s'", optarg);
+	    error (1, 0, _("invalid date format `%s'"), optarg);
 	  date_set++;
 	  break;
 
@@ -317,7 +317,7 @@ main (int argc, char **argv)
 	  posix_date++;
 	  newtime = posixtime (optarg);
 	  if (newtime == (time_t) -1)
-	    error (1, 0, "invalid date format `%s'", optarg);
+	    error (1, 0, _("invalid date format `%s'"), optarg);
 	  date_set++;
 	  break;
 
@@ -325,7 +325,7 @@ main (int argc, char **argv)
 	  i = argmatch (optarg, time_args);
 	  if (i < 0)
 	    {
-	      invalid_arg ("time selector", optarg, i);
+	      invalid_arg (_("time selector"), optarg, i);
 	      usage (1);
 	    }
 	  change_times |= time_masks[i];
@@ -351,7 +351,7 @@ main (int argc, char **argv)
   if ((use_ref && (posix_date || flexible_date))
       || (posix_date && flexible_date))
     {
-      error (0, 0, "cannot specify times from more than one source");
+      error (0, 0, _("cannot specify times from more than one source"));
       usage (1);
     }
 
@@ -381,7 +381,7 @@ main (int argc, char **argv)
 
   if (optind == argc)
     {
-      error (0, 0, "file arguments missing");
+      error (0, 0, _("file arguments missing"));
       usage (1);
     }
 

@@ -167,7 +167,7 @@ main (int argc, char **argv)
 	exit (0);
       else
 	{
-	  error (0, 0, "too few arguments");
+	  error (0, 0, _("too few arguments"));
 	  usage (1);
 	}
     }
@@ -207,7 +207,7 @@ rm (void)
   if (base[0] == '.' && (base[1] == '\0'
 			     || (base[1] == '.' && base[2] == '\0')))
     {
-      error (0, 0, "cannot remove `.' or `..'");
+      error (0, 0, _("cannot remove `.' or `..'"));
       return 1;
     }
 
@@ -239,9 +239,9 @@ remove_file (struct stat *statp)
 #endif
       )
     {
-      fprintf (stderr, "%s: remove %s`%s', overriding mode %04o? ",
+      fprintf (stderr, _("%s: remove %s`%s', overriding mode %04o? "),
 	       program_name,
-	       S_ISDIR (statp->st_mode) ? "directory " : "",
+	       S_ISDIR (statp->st_mode) ? _("directory ") : "",
 	       pathname,
 	       (unsigned int) (statp->st_mode & 07777));
       if (!yesno ())
@@ -249,8 +249,8 @@ remove_file (struct stat *statp)
     }
   else if (interactive)
     {
-      fprintf (stderr, "%s: remove %s`%s'? ", program_name,
-	       S_ISDIR (statp->st_mode) ? "directory " : "",
+      fprintf (stderr, _("%s: remove %s`%s'? "), program_name,
+	       S_ISDIR (statp->st_mode) ? _("directory ") : "",
 	       pathname);
       if (!yesno ())
 	return 1;
@@ -279,7 +279,7 @@ remove_dir (struct stat *statp)
 
   if (!recursive)
     {
-      error (0, 0, "%s: is a directory", pathname);
+      error (0, 0, _("%s: is a directory"), pathname);
       return 1;
     }
 
@@ -287,7 +287,7 @@ remove_dir (struct stat *statp)
       && euidaccess (pathname, W_OK))
     {
       fprintf (stderr,
-	       "%s: descend directory `%s', overriding mode %04o? ",
+	       _("%s: descend directory `%s', overriding mode %04o? "),
 	       program_name, pathname,
 	       (unsigned int) (statp->st_mode & 07777));
       if (!yesno ())
@@ -295,7 +295,7 @@ remove_dir (struct stat *statp)
     }
   else if (interactive)
     {
-      fprintf (stderr, "%s: descend directory `%s'? ",
+      fprintf (stderr, _("%s: descend directory `%s'? "),
 	       program_name, pathname);
       if (!yesno ())
 	return 1;
@@ -309,10 +309,10 @@ remove_dir (struct stat *statp)
   if (interactive)
     {
       if (err)
-	fprintf (stderr, "%s: remove directory `%s' (might be nonempty)? ",
+	fprintf (stderr, _("%s: remove directory `%s' (might be nonempty)? "),
 		 program_name, pathname);
       else
-	fprintf (stderr, "%s: remove directory `%s'? ",
+	fprintf (stderr, _("%s: remove directory `%s'? "),
 		 program_name, pathname);
       if (!yesno ())
 	return 1;
@@ -487,19 +487,19 @@ duplicate_entry (struct pathstack *stack, ino_t inum)
     {
       if (p->inum == inum)
 	{
-	  fprintf (stderr, "\
+	  fprintf (stderr, _("\
 %s: WARNING: Circular directory structure.\n\
 This almost certainly means that you have a corrupted file system.\n\
 NOTIFY YOUR SYSTEM MANAGER.\n\
 Cycle detected:\n\
 %s\n\
-is the same file as\n", program_name, pathname);
+is the same file as\n"), program_name, pathname);
 	  *p->pathp = '\0';	/* Truncate pathname.  */
 	  fprintf (stderr, "%s\n", pathname);
 	  *p->pathp = '/';	/* Put it back.  */
 	  if (interactive)
 	    {
-	      fprintf (stderr, "%s: continue? ", program_name);
+	      fprintf (stderr, _("%s: continue? "), program_name);
 	      if (!yesno ())
 		exit (1);
 	      return 1;
@@ -516,12 +516,12 @@ static void
 usage (int status)
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... FILE...\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]... FILE...\n"), program_name);
+      printf (_("\
 Remove (unlink) the FILE(s).\n\
 \n\
   -d, --directory       unlink directory, even if non-empty (super-user only)\n\
@@ -530,7 +530,7 @@ Remove (unlink) the FILE(s).\n\
   -v, --verbose         explain what is being done\n\
   -r, -R, --recursive   remove the contents of directories recursively\n\
       --help            display this help and exit\n\
-      --version         output version information and exit\n");
+      --version         output version information and exit\n"));
     }
   exit (status);
 }

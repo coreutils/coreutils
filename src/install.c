@@ -208,11 +208,11 @@ main (int argc, char **argv)
   /* Check for invalid combinations of arguments. */
   if (dir_arg && strip_files)
     error (1, 0,
-	   "the strip option may not be used when installing a directory");
+	   _("the strip option may not be used when installing a directory"));
 
   if (optind == argc || (optind == argc - 1 && !dir_arg))
     {
-      error (0, 0, "too few arguments");
+      error (0, 0, _("too few arguments"));
       usage (1);
     }
 
@@ -220,9 +220,9 @@ main (int argc, char **argv)
     {
       struct mode_change *change = mode_compile (symbolic_mode, 0);
       if (change == MODE_INVALID)
-	error (1, 0, "invalid mode `%s'", symbolic_mode);
+	error (1, 0, _("invalid mode `%s'"), symbolic_mode);
       else if (change == MODE_MEMORY_EXHAUSTED)
-	error (1, 0, "virtual memory exhausted");
+	error (1, 0, _("virtual memory exhausted"));
       mode = mode_adjust (0, change);
     }
 
@@ -323,20 +323,20 @@ copy_file (char *from, char *to, int *to_created)
     }
   if (!S_ISREG (from_stats.st_mode))
     {
-      error (0, 0, "`%s' is not a regular file", from);
+      error (0, 0, _("`%s' is not a regular file"), from);
       return 1;
     }
   if (stat (to, &to_stats) == 0)
     {
       if (!S_ISREG (to_stats.st_mode))
 	{
-	  error (0, 0, "`%s' is not a regular file", to);
+	  error (0, 0, _("`%s' is not a regular file"), to);
 	  return 1;
 	}
       if (from_stats.st_dev == to_stats.st_dev
 	  && from_stats.st_ino == to_stats.st_ino)
 	{
-	  error (0, 0, "`%s' and `%s' are the same file", from, to);
+	  error (0, 0, _("`%s' and `%s' are the same file"), from, to);
 	  return 1;
 	}
       /* If unlink fails, try to proceed anyway.  */
@@ -449,11 +449,11 @@ strip (char *path)
   switch (pid)
     {
     case -1:
-      error (1, errno, "cannot fork");
+      error (1, errno, _("cannot fork"));
       break;
     case 0:			/* Child. */
       execlp ("strip", "strip", path, (char *) NULL);
-      error (1, errno, "cannot run strip");
+      error (1, errno, _("cannot run strip"));
       break;
     default:			/* Parent. */
       /* Parent process. */
@@ -491,7 +491,7 @@ get_ids (void)
       if (pw == NULL)
 	{
 	  if (!is_number (owner_name))
-	    error (1, 0, "invalid user `%s'", owner_name);
+	    error (1, 0, _("invalid user `%s'"), owner_name);
 	  /* FIXME: atoi won't warn about overflow.  Use xstrtoul.  */
 	  /* FIXME: eliminate is_number altogether!  */
 	  owner_id = atoi (owner_name);
@@ -509,7 +509,7 @@ get_ids (void)
       if (gr == NULL)
 	{
 	  if (!is_number (group_name))
-	    error (1, 0, "invalid group `%s'", group_name);
+	    error (1, 0, _("invalid group `%s'"), group_name);
 	  /* FIXME: atoi won't warn about overflow.  Use xstrtoul.  */
 	  group_id = atoi (group_name);
 	}
@@ -525,17 +525,17 @@ static void
 usage (int status)
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... SOURCE DEST           (1st format)\n\
   or:  %s [OPTION]... SOURCE... DIRECTORY   (2nd format)\n\
   or:  %s -d [OPTION]... DIRECTORY...       (3nd format)\n\
-",
+"),
 	      program_name, program_name, program_name);
-      printf ("\
+      printf (_("\
 In first two formats, copy SOURCE to DEST or multiple SOURCE(s) to\n\
 DIRECTORY, while setting permission modes and owner/group.  In third\n\
 format, make all components of the given DIRECTORY(ies).\n\
@@ -547,7 +547,7 @@ format, make all components of the given DIRECTORY(ies).\n\
   -o, --owner=OWNER   set ownership (super-user only)\n\
   -s, --strip         strip symbol tables, only for 1st and 2nd formats\n\
       --help          display this help and exit\n\
-      --version       output version information and exit\n");
+      --version       output version information and exit\n"));
     }
   exit (status);
 }

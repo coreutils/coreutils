@@ -86,10 +86,10 @@ describe_change (char *file, short unsigned int mode, int changed)
   mode_string (mode, perms);
   perms[10] = '\0';		/* `mode_string' does not null terminate. */
   if (changed)
-    printf ("mode of %s changed to %04o (%s)\n",
+    printf (_("mode of %s changed to %04o (%s)\n"),
 	    file, mode & 07777, &perms[1]);
   else
-    printf ("mode of %s retained as %04o (%s)\n",
+    printf (_("mode of %s retained as %04o (%s)\n"),
 	    file, mode & 07777, &perms[1]);
 }
 
@@ -173,7 +173,7 @@ change_dir_mode (char *dir, struct mode_change *changes, struct stat *statp)
 	  return 1;
 	}
       else
-	error (1, 0, "virtual memory exhausted");
+	error (1, 0, _("virtual memory exhausted"));
     }
 
   dirlength = strlen (dir) + 1;	/* + 1 is for the trailing '/'. */
@@ -203,16 +203,16 @@ static void
 usage (int status)
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... MODE[,MODE]... FILE...\n\
   or:  %s [OPTION]... OCTAL_MODE FILE...\n\
-",
+"),
 	      program_name, program_name);
-      printf ("\
+      printf (_("\
 \n\
   -c, --changes           like verbose but report only when a change is made\n\
   -f, --silent, --quiet   suppress most error messages\n\
@@ -222,7 +222,7 @@ Usage: %s [OPTION]... MODE[,MODE]... FILE...\n\
       --version           output version information and exit\n\
 \n\
 Each MODE is one or more of the letters ugoa, one of the symbols +-= and\n\
-one or more of the letters rwxXstugo.\n");
+one or more of the letters rwxXstugo.\n"));
     }
   exit (status);
 }
@@ -270,7 +270,7 @@ main (int argc, char **argv)
 	case '-':
 	case '=':
 	  if (modeind != 0 && modeind != thisind)
-	    error (1, 0, "invalid mode");
+	    error (1, 0, _("invalid mode"));
 	  modeind = thisind;
 	  break;
 	case 'R':
@@ -305,16 +305,16 @@ main (int argc, char **argv)
 
   if (optind >= argc)
     {
-      error (0, 0, "too few arguments");
+      error (0, 0, _("too few arguments"));
       usage (1);
     }
 
   changes = mode_compile (argv[modeind],
 			  MODE_MASK_EQUALS | MODE_MASK_PLUS | MODE_MASK_MINUS);
   if (changes == MODE_INVALID)
-    error (1, 0, "invalid mode");
+    error (1, 0, _("invalid mode"));
   else if (changes == MODE_MEMORY_EXHAUSTED)
-    error (1, 0, "virtual memory exhausted");
+    error (1, 0, _("virtual memory exhausted"));
 
   for (; optind < argc; ++optind)
     {

@@ -33,17 +33,17 @@ static void
 usage (int status)
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]\n"), program_name);
+      printf (_("\
 Force changed blocks to disk, update the super block.\n\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
-");
+"));
     }
   exit (status);
 }
@@ -56,7 +56,7 @@ main (int argc, char **argv)
   parse_long_options (argc, argv, "sync", version_string, usage);
 
   if (argc != 1)
-    error (0, 0, "ignoring all arguments");
+    error (0, 0, _("ignoring all arguments"));
 
   sync ();
   exit (0);

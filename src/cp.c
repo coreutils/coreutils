@@ -240,7 +240,7 @@ main (int argc, char **argv)
 #ifdef S_ISLNK
 	  flag_symbolic_link = 1;
 #else
-	  error (1, 0, "symbolic links are not supported on this system");
+	  error (1, 0, _("symbolic links are not supported on this system"));
 #endif
 	  break;
 
@@ -279,7 +279,7 @@ main (int argc, char **argv)
     usage (0, NULL);
 
   if (flag_hard_link && flag_symbolic_link)
-    usage (2, "cannot make both hard and symbolic links");
+    usage (2, _("cannot make both hard and symbolic links"));
 
   if (make_backups)
     backup_type = get_version (version);
@@ -316,9 +316,9 @@ do_copy (int argc, char **argv)
   int ret = 0;
 
   if (optind >= argc)
-    usage (2, "missing file arguments");
+    usage (2, _("missing file arguments"));
   if (optind >= argc - 1)
-    usage (2, "missing file argument");
+    usage (2, _("missing file argument"));
 
   dest = argv[argc - 1];
 
@@ -422,7 +422,7 @@ do_copy (int argc, char **argv)
       struct stat source_stats;
 
       if (flag_path)
-	usage (2, "when preserving paths, last argument must be a directory");
+	usage (2, _("when preserving paths, last argument must be a directory"));
 
       source = argv[optind];
 
@@ -455,7 +455,7 @@ do_copy (int argc, char **argv)
     }
   else
     usage (2,
-	   "when copying multiple files, last argument must be a directory");
+	   _("when copying multiple files, last argument must be a directory"));
 }
 
 /* Copy the file SRC_PATH to the file DST_PATH.  The files may be of
@@ -505,7 +505,7 @@ copy (char *src_path, char *dst_path, int new_dst, dev_t device,
 
   if (S_ISDIR (src_type) && !flag_recursive)
     {
-      error (0, 0, "%s: omitting directory", src_path);
+      error (0, 0, _("%s: omitting directory"), src_path);
       return 1;
     }
 
@@ -530,7 +530,7 @@ copy (char *src_path, char *dst_path, int new_dst, dev_t device,
 	      if (flag_hard_link)
 		return 0;
 
-	      error (0, 0, "`%s' and `%s' are the same file",
+	      error (0, 0, _("`%s' and `%s' are the same file"),
 		     src_path, dst_path);
 	      return 1;
 	    }
@@ -540,7 +540,7 @@ copy (char *src_path, char *dst_path, int new_dst, dev_t device,
 	      if (S_ISDIR (dst_sb.st_mode))
 		{
 		  error (0, 0,
-			 "%s: cannot overwrite directory with non-directory",
+			 _("%s: cannot overwrite directory with non-directory"),
 			 dst_path);
 		  return 1;
 		}
@@ -555,11 +555,11 @@ copy (char *src_path, char *dst_path, int new_dst, dev_t device,
 		{
 		  if (euidaccess (dst_path, W_OK) != 0)
 		    fprintf (stderr,
-			     "%s: overwrite `%s', overriding mode %04o? ",
+			     _("%s: overwrite `%s', overriding mode %04o? "),
 			     program_name, dst_path,
 			     (unsigned int) (dst_sb.st_mode & 07777));
 		  else
-		    fprintf (stderr, "%s: overwrite `%s'? ",
+		    fprintf (stderr, _("%s: overwrite `%s'? "),
 			     program_name, dst_path);
 		  if (!yesno ())
 		    return 0;
@@ -570,7 +570,7 @@ copy (char *src_path, char *dst_path, int new_dst, dev_t device,
 	    {
 	      char *tmp_backup = find_backup_file_name (dst_path);
 	      if (tmp_backup == NULL)
-		error (1, 0, "virtual memory exhausted");
+		error (1, 0, _("virtual memory exhausted"));
 	      dst_backup = (char *) alloca (strlen (tmp_backup) + 1);
 	      strcpy (dst_backup, tmp_backup);
 	      free (tmp_backup);
@@ -578,7 +578,7 @@ copy (char *src_path, char *dst_path, int new_dst, dev_t device,
 		{
 		  if (errno != ENOENT)
 		    {
-		      error (0, errno, "cannot backup `%s'", dst_path);
+		      error (0, errno, _("cannot backup `%s'"), dst_path);
 		      return 1;
 		    }
 		  else
@@ -606,7 +606,7 @@ copy (char *src_path, char *dst_path, int new_dst, dev_t device,
 		{
 		  if (unlink (dst_path) && errno != ENOENT)
 		    {
-		      error (0, errno, "cannot remove old link to `%s'",
+		      error (0, errno, _("cannot remove old link to `%s'"),
 			     dst_path);
 		      return 1;
 		    }
@@ -646,7 +646,7 @@ copy (char *src_path, char *dst_path, int new_dst, dev_t device,
 
       if (is_ancestor (&src_sb, ancestors))
 	{
-	  error (0, 0, "%s: cannot copy cyclic symbolic link", src_path);
+	  error (0, 0, _("%s: cannot copy cyclic symbolic link"), src_path);
 	  goto un_backup;
 	}
 
@@ -664,7 +664,7 @@ copy (char *src_path, char *dst_path, int new_dst, dev_t device,
 
 	  if (mkdir (dst_path, (src_mode & umask_kill) | 0700))
 	    {
-	      error (0, errno, "cannot create directory `%s'", dst_path);
+	      error (0, errno, _("cannot create directory `%s'"), dst_path);
 	      goto un_backup;
 	    }
 
@@ -701,7 +701,7 @@ copy (char *src_path, char *dst_path, int new_dst, dev_t device,
       else
 	{
 	  error (0, 0,
-		 "%s: can only make relative symbolic links in current directory", dst_path);
+		 _("%s: can only make relative symbolic links in current directory"), dst_path);
 	  goto un_backup;
 	}
     }
@@ -710,7 +710,7 @@ copy (char *src_path, char *dst_path, int new_dst, dev_t device,
     {
       if (link (src_path, dst_path))
 	{
-	  error (0, errno, "cannot create link `%s'", dst_path);
+	  error (0, errno, _("cannot create link `%s'"), dst_path);
 	  goto un_backup;
 	}
       return 0;
@@ -731,7 +731,7 @@ copy (char *src_path, char *dst_path, int new_dst, dev_t device,
     {
       if (mkfifo (dst_path, src_mode & umask_kill))
 	{
-	  error (0, errno, "cannot create fifo `%s'", dst_path);
+	  error (0, errno, _("cannot create fifo `%s'"), dst_path);
 	  goto un_backup;
 	}
     }
@@ -745,7 +745,7 @@ copy (char *src_path, char *dst_path, int new_dst, dev_t device,
     {
       if (mknod (dst_path, src_mode & umask_kill, src_sb.st_rdev))
 	{
-	  error (0, errno, "cannot create special file `%s'", dst_path);
+	  error (0, errno, _("cannot create special file `%s'"), dst_path);
 	  goto un_backup;
 	}
     }
@@ -760,14 +760,14 @@ copy (char *src_path, char *dst_path, int new_dst, dev_t device,
       link_size = readlink (src_path, link_val, PATH_MAX + 1);
       if (link_size < 0)
 	{
-	  error (0, errno, "cannot read symbolic link `%s'", src_path);
+	  error (0, errno, _("cannot read symbolic link `%s'"), src_path);
 	  goto un_backup;
 	}
       link_val[link_size] = '\0';
 
       if (symlink (link_val, dst_path))
 	{
-	  error (0, errno, "cannot create symbolic link `%s'", dst_path);
+	  error (0, errno, _("cannot create symbolic link `%s'"), dst_path);
 	  goto un_backup;
 	}
       return 0;
@@ -775,7 +775,7 @@ copy (char *src_path, char *dst_path, int new_dst, dev_t device,
   else
 #endif
     {
-      error (0, 0, "%s: unknown file type", src_path);
+      error (0, 0, _("%s: unknown file type"), src_path);
       goto un_backup;
     }
 
@@ -833,7 +833,7 @@ un_backup:
   if (dst_backup)
     {
       if (rename (dst_backup, dst_path))
-	error (0, errno, "cannot un-backup `%s'", dst_path);
+	error (0, errno, _("cannot un-backup `%s'"), dst_path);
     }
   return 1;
 }
@@ -910,7 +910,7 @@ make_path_private (char *const_dirpath, int src_offset, int mode,
 	      new->is_new_dir = 1;
 	      if (mkdir (dirpath, mode))
 		{
-		  error (0, errno, "cannot make directory `%s'", dirpath);
+		  error (0, errno, _("cannot make directory `%s'"), dirpath);
 		  return 1;
 		}
 	      else
@@ -921,7 +921,7 @@ make_path_private (char *const_dirpath, int src_offset, int mode,
 	    }
 	  else if (!S_ISDIR (stats.st_mode))
 	    {
-	      error (0, 0, "`%s' exists but is not a directory", dirpath);
+	      error (0, 0, _("`%s' exists but is not a directory"), dirpath);
 	      return 1;
 	    }
 	  else
@@ -942,7 +942,7 @@ make_path_private (char *const_dirpath, int src_offset, int mode,
 
   else if (!S_ISDIR (stats.st_mode))
     {
-      error (0, 0, "`%s' exists but is not a directory", dst_dirname);
+      error (0, 0, _("`%s' exists but is not a directory"), dst_dirname);
       return 1;
     }
   else
@@ -1062,7 +1062,7 @@ copy_dir (char *src_path_in, char *dst_path_in, int new_dst,
 	  return -1;
 	}
       else
-	error (1, 0, "virtual memory exhausted");
+	error (1, 0, _("virtual memory exhausted"));
     }
 
   namep = name_space;
@@ -1125,7 +1125,7 @@ copy_reg (char *src_path, char *dst_path)
   dest_desc = open (dst_path, O_WRONLY | O_CREAT | O_TRUNC, 0600);
   if (dest_desc < 0)
     {
-      error (0, errno, "cannot create regular file `%s'", dst_path);
+      error (0, errno, _("cannot create regular file `%s'"), dst_path);
       return_val = -1;
       goto ret2;
     }

@@ -193,12 +193,12 @@ usage (int status, char *reason)
 	     program_name, reason);
 
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... [FILE]...\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]... [FILE]...\n"), program_name);
+      printf (_("\
 Summarize disk usage of each FILE, recursively for directories.\n\
 \n\
   -a, --all                write counts for all files, not just directories\n\
@@ -212,7 +212,7 @@ Summarize disk usage of each FILE, recursively for directories.\n\
   -L, --dereference        dereference all symbolic links\n\
   -S, --separate-dirs      do not include size of subdirectories\n\
       --help               display this help and exit\n\
-      --version            output version information and exit\n");
+      --version            output version information and exit\n"));
     }
   exit (status);
 }
@@ -293,7 +293,7 @@ main (int argc, char **argv)
     usage (0, NULL);
 
   if (opt_all && opt_summarize_only)
-    usage (2, "cannot both summarize and show all entries");
+    usage (2, _("cannot both summarize and show all entries"));
 
   /* Initialize the hash structure for inode numbers.  */
   hash_init (INITIAL_HASH_MODULE, INITIAL_ENTRY_TAB_SIZE);
@@ -321,7 +321,7 @@ du_files (char **files)
 
   /* Remember the inode and device number of the current directory.  */
   if (stat (".", &stat_buf))
-    error (1, errno, "current directory");
+    error (1, errno, _("current directory"));
   initial_ino = stat_buf.st_ino;
   initial_dev = stat_buf.st_dev;
 
@@ -356,14 +356,14 @@ du_files (char **files)
 	error (1, errno, ".");
       if (stat_buf.st_ino != initial_ino || stat_buf.st_dev != initial_dev)
 	{
-	  if (restore_cwd (&cwd, "starting directory", NULL))
+	  if (restore_cwd (&cwd, _("starting directory"), NULL))
 	    exit (1);
 	}
     }
 
   if (opt_combined_arguments)
     {
-      printf ("%ld\ttotal\n", output_size == size_bytes ? tot_size
+      printf (_("%ld\ttotal\n"), output_size == size_bytes ? tot_size
 	      : convert_blocks (tot_size, output_size == size_kilobytes));
       fflush (stdout);
     }
@@ -432,7 +432,7 @@ count_entry (char *ent, int top, dev_t last_dev)
 
       if (chdir (ent) < 0)
 	{
-	  error (0, errno, "cannot change to directory %s", path->text);
+	  error (0, errno, _("cannot change to directory %s"), path->text);
 	  exit_status = 1;
 	  return 0;
 	}
@@ -451,13 +451,13 @@ count_entry (char *ent, int top, dev_t last_dev)
 		  free_cwd (&cwd);
 		}
 	      else if (chdir ("..") < 0)
-		  error (1, errno, "cannot change to `..' from directory %s",
+		  error (1, errno, _("cannot change to `..' from directory %s"),
 			 path->text);
 	      exit_status = 1;
 	      return 0;
 	    }
 	  else
-	    error (1, 0, "virtual memory exhausted");
+	    error (1, 0, _("virtual memory exhausted"));
 	}
 
       /* Remember the current path.  */
@@ -483,7 +483,7 @@ count_entry (char *ent, int top, dev_t last_dev)
 	}
       else if (chdir ("..") < 0)
         error (1, errno,
-	       "cannot change to `..' from directory %s", path->text);
+	       _("cannot change to `..' from directory %s"), path->text);
 
       str_trunc (path, pathlen - 1); /* Remove the "/" we added.  */
       if (!opt_summarize_only || top)

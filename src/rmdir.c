@@ -80,17 +80,17 @@ static void
 usage (int status)
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... DIRECTORY...\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]... DIRECTORY...\n"), program_name);
+      printf (_("\
 Remove the DIRECTORY(ies), if they are empty.\n\
 \n\
   -p, --parents   remove explicit parent directories if being emptied\n\
       --help      display this help and exit\n\
-      --version   output version information and exit\n");
+      --version   output version information and exit\n"));
     }
   exit (status);
 }
@@ -129,7 +129,7 @@ main (int argc, char **argv)
 
   if (optind == argc)
     {
-      error (0, 0, "too few arguments");
+      error (0, 0, _("too few arguments"));
       usage (1);
     }
 

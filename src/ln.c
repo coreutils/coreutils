@@ -141,7 +141,7 @@ do_link (char *source, char *dest)
 	}
       if (!hard_dir_link && S_ISDIR (source_stats.st_mode))
 	{
-	  error (0, 0, "%s: hard link not allowed for directory", source);
+	  error (0, 0, _("%s: hard link not allowed for directory"), source);
 	  return 1;
 	}
     }
@@ -186,18 +186,18 @@ do_link (char *source, char *dest)
     {
       if (S_ISDIR (dest_stats.st_mode))
 	{
-	  error (0, 0, "%s: cannot overwrite directory", dest);
+	  error (0, 0, _("%s: cannot overwrite directory"), dest);
 	  return 1;
 	}
       if (interactive)
 	{
-	  fprintf (stderr, "%s: replace `%s'? ", program_name, dest);
+	  fprintf (stderr, _("%s: replace `%s'? "), program_name, dest);
 	  if (!yesno ())
 	    return 0;
 	}
       else if (!remove_existing_files)
 	{
-	  error (0, 0, "%s: File exists", dest);
+	  error (0, 0, _("%s: File exists"), dest);
 	  return 1;
 	}
 
@@ -205,7 +205,7 @@ do_link (char *source, char *dest)
 	{
 	  char *tmp_backup = find_backup_file_name (dest);
 	  if (tmp_backup == NULL)
-	    error (1, 0, "virtual memory exhausted");
+	    error (1, 0, _("virtual memory exhausted"));
 	  dest_backup = (char *) alloca (strlen (tmp_backup) + 1);
 	  strcpy (dest_backup, tmp_backup);
 	  free (tmp_backup);
@@ -213,7 +213,7 @@ do_link (char *source, char *dest)
 	    {
 	      if (errno != ENOENT)
 		{
-		  error (0, errno, "cannot backup `%s'", dest);
+		  error (0, errno, _("cannot backup `%s'"), dest);
 		  return 1;
 		}
 	      else
@@ -222,7 +222,7 @@ do_link (char *source, char *dest)
 	}
       else if (unlink (dest) && errno != ENOENT)
 	{
-	  error (0, errno, "cannot remove `%s'", dest);
+	  error (0, errno, _("cannot remove `%s'"), dest);
 	  return 1;
 	}
     }
@@ -240,9 +240,9 @@ do_link (char *source, char *dest)
       return 0;
     }
 
-  error (0, errno, "cannot %slink `%s' to `%s'",
+  error (0, errno, _("cannot %slink `%s' to `%s'"),
 #ifdef S_ISLNK
-	 symbolic_link ? "symbolic " : "",
+	 symbolic_link ? _("symbolic ") : "",
 #else
 	 "",
 #endif
@@ -251,7 +251,7 @@ do_link (char *source, char *dest)
   if (dest_backup)
     {
       if (rename (dest_backup, dest))
-	error (0, errno, "cannot un-backup `%s'", dest);
+	error (0, errno, _("cannot un-backup `%s'"), dest);
     }
   return 1;
 }
@@ -260,16 +260,16 @@ static void
 usage (int status)
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... SOURCE [DEST]\n\
   or:  %s [OPTION]... SOURCE... DIRECTORY\n\
-",
+"),
 	      program_name, program_name);
-      printf ("\
+      printf (_("\
 Link SOURCE to DEST (. by default), or multiple SOURCE(s) to DIRECTORY.\n\
 Makes hard links by default, symbolic links with -s.\n\
 \n\
@@ -291,7 +291,7 @@ version control may be set with VERSION_CONTROL, values are:\n\
 \n\
   t, numbered     make numbered backups\n\
   nil, existing   numbered if numbered backups exist, simple otherwise\n\
-  never, simple   always make simple backups\n");
+  never, simple   always make simple backups\n"));
     }
   exit (status);
 }
@@ -344,7 +344,7 @@ main (int argc, char **argv)
 #ifdef S_ISLNK
 	  symbolic_link = 1;
 #else
-	  error (1, 0, "symbolic links are not supported on this system");
+	  error (1, 0, _("symbolic links are not supported on this system"));
 #endif
 	  break;
 	case 'v':
@@ -373,7 +373,7 @@ main (int argc, char **argv)
 
   if (optind == argc)
     {
-      error (0, 0, "missing file argument");
+      error (0, 0, _("missing file argument"));
       usage (1);
     }
 
@@ -420,7 +420,7 @@ main (int argc, char **argv)
 
       to = argv[argc - 1];
       if (!isdir (to))
-	error (1, 0, "when making multiple links, last argument must be a directory");
+	error (1, 0, _("when making multiple links, last argument must be a directory"));
       for (; optind < argc - 1; ++optind)
 	errors += do_link (argv[optind], to);
     }

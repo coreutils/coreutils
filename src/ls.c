@@ -796,7 +796,7 @@ decode_switches (int argc, char **argv)
   if (tabsize < 1)
     {
       error (0, 0,
-	     "ignoring invalid tab size in enironment variable TABSIZE: %s",
+	     _("ignoring invalid tab size in enironment variable TABSIZE: %s"),
 	     optarg);
       tabsize = 8;
     }
@@ -870,7 +870,7 @@ decode_switches (int argc, char **argv)
 	      i = argmatch (optarg, color_args);
 	      if (i < 0)
 		{
-		  invalid_arg ("colorization criterion", optarg, i);
+		  invalid_arg (_("colorization criterion"), optarg, i);
 		  usage (1);
 		}
 	      i = color_types[i];
@@ -920,7 +920,7 @@ decode_switches (int argc, char **argv)
 	case 'w':
 	  line_length = atoi (optarg);
 	  if (line_length < 1)
-	    error (1, 0, "invalid line width: %s", optarg);
+	    error (1, 0, _("invalid line width: %s"), optarg);
 	  break;
 
 	case 'x':
@@ -982,7 +982,7 @@ decode_switches (int argc, char **argv)
 	case 'T':
 	  tabsize = atoi (optarg);
 	  if (tabsize < 1)
-	    error (1, 0, "invalid tab size: %s", optarg);
+	    error (1, 0, _("invalid tab size: %s"), optarg);
 	  break;
 
 	case 'U':
@@ -1009,7 +1009,7 @@ decode_switches (int argc, char **argv)
 	  i = argmatch (optarg, sort_args);
 	  if (i < 0)
 	    {
-	      invalid_arg ("sort type", optarg, i);
+	      invalid_arg (_("sort type"), optarg, i);
 	      usage (1);
 	    }
 	  sort_type = sort_types[i];
@@ -1019,7 +1019,7 @@ decode_switches (int argc, char **argv)
 	  i = argmatch (optarg, time_args);
 	  if (i < 0)
 	    {
-	      invalid_arg ("time type", optarg, i);
+	      invalid_arg (_("time type"), optarg, i);
 	      usage (1);
 	    }
 	  time_type = time_types[i];
@@ -1029,7 +1029,7 @@ decode_switches (int argc, char **argv)
 	  i = argmatch (optarg, format_args);
 	  if (i < 0)
 	    {
-	      invalid_arg ("format type", optarg, i);
+	      invalid_arg (_("format type"), optarg, i);
 	      usage (1);
 	    }
 	  format = formats[i];
@@ -1288,7 +1288,7 @@ parse_ls_color (void)
 
       if (state < 0)
 	{
-	  error (0, 0, "bad %s variable\n", whichvar);
+	  error (0, 0, _("bad %s variable\n"), whichvar);
 	  print_with_color = 0;
 	}
     }
@@ -2530,12 +2530,12 @@ static void
 usage (int status)
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... [FILE]...\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]... [FILE]...\n"), program_name);
+      printf (_("\
 List information about the FILEs (the current directory by default).\n\
 Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
 \n\
@@ -2551,9 +2551,9 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -f                         do not sort, enable -aU, disable -lst\n\
       --format=WORD          across -x, commas -m, horizontal -x, long -l,\n\
                                single-column -1, verbose -l, vertical -C\n\
-      --full-time            list both full date and full time\n");
+      --full-time            list both full date and full time\n"));
 
-      printf ("\
+      printf (_("\
   -G, --no-group             inhibit display of group information\n\
   -g                         (ignored)\n\
   -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\n\
@@ -2571,9 +2571,9 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -q, --hide-control-chars   print ? instead of non graphic characters\n\
   -R, --recursive            list subdirectories recursively\n\
   -r, --reverse              reverse order while sorting\n\
-  -S                         sort by file size\n");
+  -S                         sort by file size\n"));
 
-      printf ("\
+      printf (_("\
   -s, --size                 print block size of each file\n\
       --sort=WORD            ctime -c, extension -X, none -U, size -S,\n\
                                status -c, time -t\n\
@@ -2589,7 +2589,7 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -7, --7bit                 allow only 7-bit ASCII characters to be printed\n\
   -8, --8bit                 allow 8-bit ISO 8859 characters to be printed\n\
       --help                 display this help and exit\n\
-      --version              output version information and exit");
+      --version              output version information and exit"));
     }
   exit (status);
 }

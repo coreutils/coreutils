@@ -54,17 +54,17 @@ static void
 usage (int status)
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION] NAME...\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION] NAME...\n"), program_name);
+      printf (_("\
 Create named pipes (FIFOs) with the given NAMEs.\n\
 \n\
   -m, --mode=MODE   set permission mode (as in chmod), not 0666 - umask\n\
       --help        display this help and exit\n\
-      --version     output version information and exit\n");
+      --version     output version information and exit\n"));
     }
   exit (status);
 }
@@ -83,7 +83,7 @@ main (int argc, char **argv)
   symbolic_mode = NULL;
 
 #ifndef S_ISFIFO
-  error (4, 0, "fifo files not supported");
+  error (4, 0, _("fifo files not supported"));
 #else
   while ((optc = getopt_long (argc, argv, "m:", longopts, (int *) 0)) != EOF)
     {
@@ -110,7 +110,7 @@ main (int argc, char **argv)
 
   if (optind == argc)
     {
-      error (0, 0, "too few arguments");
+      error (0, 0, _("too few arguments"));
       usage (1);
     }
 
@@ -119,9 +119,9 @@ main (int argc, char **argv)
     {
       change = mode_compile (symbolic_mode, 0);
       if (change == MODE_INVALID)
-	error (1, 0, "invalid mode");
+	error (1, 0, _("invalid mode"));
       else if (change == MODE_MEMORY_EXHAUSTED)
-	error (1, 0, "virtual memory exhausted");
+	error (1, 0, _("virtual memory exhausted"));
       newmode = mode_adjust (newmode, change);
     }
 
@@ -129,7 +129,7 @@ main (int argc, char **argv)
     {
       if (mkfifo (argv[optind], newmode))
 	{
-	  error (0, errno, "cannot make fifo `%s'", argv[optind]);
+	  error (0, errno, _("cannot make fifo `%s'"), argv[optind]);
 	  errors = 1;
 	}
     }

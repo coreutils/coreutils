@@ -59,12 +59,12 @@ static void
 usage (int status)
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... NAME TYPE [MAJOR MINOR]\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]... NAME TYPE [MAJOR MINOR]\n"), program_name);
+      printf (_("\
 Create the special file NAME of the given TYPE.\n\
 \n\
   -m, --mode=MODE   set permission mode (as in chmod), not 0666 - umask\n\
@@ -75,7 +75,7 @@ MAJOR MINOR are forbidden for TYPE p, mandatory otherwise.  TYPE may be:\n\
 \n\
   b      create a block (buffered) special file\n\
   c, u   create a character (unbuffered) special file   \n\
-  p      create a FIFO\n");
+  p      create a FIFO\n"));
     }
   exit (status);
 }
@@ -122,9 +122,9 @@ main (int argc, char **argv)
     {
       change = mode_compile (symbolic_mode, 0);
       if (change == MODE_INVALID)
-	error (1, 0, "invalid mode");
+	error (1, 0, _("invalid mode"));
       else if (change == MODE_MEMORY_EXHAUSTED)
-	error (1, 0, "virtual memory exhausted");
+	error (1, 0, _("virtual memory exhausted"));
       newmode = mode_adjust (newmode, change);
     }
 
@@ -132,11 +132,11 @@ main (int argc, char **argv)
     {
       const char *msg;
       if (argc - optind < 2)
-	msg = "too few arguments";
+	msg = _("too few arguments");
       else if (argc - optind > 4)
-	msg = "too many arguments";
+	msg = _("too many arguments");
       else
-	msg = "wrong number of arguments";
+	msg = _("wrong number of arguments");
       error (0, 0, msg);
       usage (1);
     }
@@ -148,23 +148,23 @@ main (int argc, char **argv)
     {
     case 'b':			/* `block' or `buffered' */
 #ifndef S_IFBLK
-      error (4, 0, "block special files not supported");
+      error (4, 0, _("block special files not supported"));
 #else
       if (argc - optind != 4)
 	{
-	  error (0, 0, "\
+	  error (0, 0, _("\
 when creating block special files, major and minor device\n\
-numbers must be specified");
+numbers must be specified"));
 	  usage (1);
 	}
 
       s = argv[optind + 2];
       if (xstrtol (s, NULL, 0, &tmp_major, NULL) != LONGINT_OK)
-	error (1, 0, "invalid major device number `%s'", s);
+	error (1, 0, _("invalid major device number `%s'"), s);
 
       s = argv[optind + 3];
       if (xstrtol (s, NULL, 0, &tmp_minor, NULL) != LONGINT_OK)
-	error (1, 0, "invalid minor device number `%s'", s);
+	error (1, 0, _("invalid minor device number `%s'"), s);
 
       i_major = (int) tmp_major;
       i_minor = (int) tmp_minor;
@@ -177,23 +177,23 @@ numbers must be specified");
     case 'c':			/* `character' */
     case 'u':			/* `unbuffered' */
 #ifndef S_IFCHR
-      error (4, 0, "character special files not supported");
+      error (4, 0, _("character special files not supported"));
 #else
       if (argc - optind != 4)
 	{
-	  error (0, 0, "\
+	  error (0, 0, _("\
 when creating character special files, major and minor device\n\
-numbers must be specified");
+numbers must be specified"));
 	  usage (1);
 	}
 
       s = argv[optind + 2];
       if (xstrtol (s, NULL, 0, &tmp_major, NULL) != LONGINT_OK)
-	error (1, 0, "invalid major device number `%s'", s);
+	error (1, 0, _("invalid major device number `%s'"), s);
 
       s = argv[optind + 3];
       if (xstrtol (s, NULL, 0, &tmp_minor, NULL) != LONGINT_OK)
-	error (1, 0, "invalid minor device number `%s'", s);
+	error (1, 0, _("invalid minor device number `%s'"), s);
 
       i_major = (int) tmp_major;
       i_minor = (int) tmp_minor;
@@ -205,12 +205,12 @@ numbers must be specified");
 
     case 'p':			/* `pipe' */
 #ifndef S_ISFIFO
-      error (4, 0, "fifo files not supported");
+      error (4, 0, _("fifo files not supported"));
 #else
       if (argc - optind != 2)
 	{
-	  error (0, 0, "\
-major and minor device numbers may not be specified for fifo files");
+	  error (0, 0, _("\
+major and minor device numbers may not be specified for fifo files"));
 	  usage (1);
 	}
       if (mkfifo (argv[optind], newmode))

@@ -353,10 +353,12 @@ main (int argc, char **argv)
 	error (1, errno, "%s", input_file);
     }
   else
-    input_file = "standard input";
+    input_file = _("standard input");
 
   if (input_fd == output_fd)
-    error (1, 0, "standard %s is closed", input_fd == 0 ? "input" : "output");
+    error (1, 0, _("%s is closed"), (input_fd == 0
+				     ? _("standard input")
+				     : _("standard output")));
 
   if (output_file != NULL)
     {
@@ -376,7 +378,7 @@ main (int argc, char **argv)
 #endif
     }
   else
-    output_file = "standard output";
+    output_file = _("standard output");
 
 #ifdef _POSIX_VERSION
   sigaction (SIGINT, NULL, &sigact);
@@ -826,7 +828,7 @@ scanargs (int argc, char **argv)
       val = strchr (name, '=');
       if (val == NULL)
 	{
-	  error (0, 0, "unrecognized option `%s'", name);
+	  error (0, 0, _("unrecognized option `%s'"), name);
 	  usage (1);
 	}
       *val++ = '\0';
@@ -841,7 +843,7 @@ scanargs (int argc, char **argv)
 	{
 	  n = parse_integer (val);
 	  if (n < 0)
-	    error (1, 0, "invalid number `%s'", val);
+	    error (1, 0, _("invalid number `%s'"), val);
 
 	  if (equal (name, "ibs"))
 	    {
@@ -865,7 +867,7 @@ scanargs (int argc, char **argv)
 	    max_records = n;
 	  else
 	    {
-	      error (0, 0, "unrecognized option `%s=%s'", name, val);
+	      error (0, 0, _("unrecognized option `%s=%s'"), name, val);
 	      usage (1);
 	    }
 	}
@@ -951,7 +953,7 @@ parse_conversion (char *str)
 	  }
       if (conversions[i].convname == NULL)
 	{
-	  error (0, 0, "%s: invalid conversion", str);
+	  error (0, 0, _("%s: invalid conversion"), str);
 	  usage (1);
 	}
       str = new;
@@ -971,8 +973,8 @@ apply_translations (void)
       || (MX (C_LCASE | C_UCASE) > 1)
       || (MX (C_UNBLOCK | C_SYNC) > 1))
     {
-      error (1, 0, "\
-only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, {unblock,sync}");
+      error (1, 0, _("\
+only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, {unblock,sync}"));
     }
 #undef MX
 
@@ -1033,10 +1035,10 @@ bit_count (register unsigned int i)
 static void
 print_stats (void)
 {
-  fprintf (stderr, "%u+%u records in\n", r_full, r_partial);
-  fprintf (stderr, "%u+%u records out\n", w_full, w_partial);
+  fprintf (stderr, _("%u+%u records in\n"), r_full, r_partial);
+  fprintf (stderr, _("%u+%u records out\n"), w_full, w_partial);
   if (r_truncate > 0)
-    fprintf (stderr, "%u truncated record%s\n", r_truncate,
+    fprintf (stderr, _("%u truncated record%s\n"), r_truncate,
 	     r_truncate == 1 ? "" : "s");
 }
 
@@ -1062,12 +1064,12 @@ static void
 usage (int status)
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]...\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]...\n"), program_name);
+      printf (_("\
 Copy a file, converting and formatting according to the options.\n\
 \n\
   bs=BYTES        force ibs=BYTES and obs=BYTES\n\
@@ -1095,7 +1097,7 @@ by w for x2, by b for x512, by k for x1024.  Each KEYWORD may be:\n\
   ucase     change lower case to upper case\n\
   swab      swap every pair of input bytes\n\
   noerror   continue after read errors\n\
-  sync      pad every input block with NULs to ibs-size\n");
+  sync      pad every input block with NULs to ibs-size\n"));
     }
   exit (status);
 }

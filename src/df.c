@@ -223,7 +223,7 @@ main (int argc, char **argv)
 	    if (strcmp (i->fs_name, j->fs_name) == 0)
 	      {
 		error (0, 0,
-		       "file system type `%s' both selected and excluded",
+		       _("file system type `%s' both selected and excluded"),
 		       i->fs_name);
 		match = 1;
 		break;
@@ -261,7 +261,7 @@ main (int argc, char **argv)
 			  show_all_fs);
 
   if (mount_list == NULL)
-    error (1, errno, "cannot read table of mounted filesystems");
+    error (1, errno, _("cannot read table of mounted filesystems"));
 
   print_header ();
   if (require_sync)
@@ -377,7 +377,7 @@ show_point (char *point, struct stat *statp)
 	  return;
 	}
     }
-  error (0, 0, "cannot find mount point for %s", point);
+  error (0, 0, _("cannot find mount point for %s"), point);
   exit_status = 1;
 }
 
@@ -525,12 +525,12 @@ static void
 usage (int status)
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION]... [FILE]...\n", program_name);
-      printf ("\
+      printf (_("Usage: %s [OPTION]... [FILE]...\n"), program_name);
+      printf (_("\
 Show information about the filesystem on which each FILE resides,\n\
 or all filesystems by default.\n\
 \n\
@@ -545,7 +545,7 @@ or all filesystems by default.\n\
   -P, --portability         use the POSIX output format\n\
   -T, --print-type          print filesystem type\n\
       --help                display this help and exit\n\
-      --version             output version information and exit\n");
+      --version             output version information and exit\n"));
     }
   exit (status);
 }
