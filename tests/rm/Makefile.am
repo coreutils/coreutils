@@ -2,6 +2,7 @@
 AUTOMAKE_OPTIONS = 1.1 gnits
 
 TESTS = \
+  no-give-up \
   dir-no-w \
   fail-2eperm \
   cycle i-no-r fail-eperm \
