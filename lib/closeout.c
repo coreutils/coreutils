@@ -1,5 +1,5 @@
 /* closeout.c - close standard output
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -42,6 +42,17 @@ extern int errno;
 #include "closeout.h"
 #include "error.h"
 
+static int default_exit_status = EXIT_FAILURE;
+
+/* Set the value to be used for the exit status when close_stdout is called.
+   This is useful when it is not convenient to call close_stdout_status,
+   e.g., when close_stdout is called via atexit.  */
+void
+close_stdout_set_status (int status)
+{
+  default_exit_status = status;
+}
+
 /* Close standard output, exiting with status STATUS on failure.
    If a program writes *anything* to stdout, that program should `fflush'
    stdout and make sure that it succeeds before exiting.  Otherwise,
@@ -77,5 +88,5 @@ close_stdout_status (int status)
 void
 close_stdout (void)
 {
-  close_stdout_status (EXIT_FAILURE);
+  close_stdout_status (default_exit_status);
 }
