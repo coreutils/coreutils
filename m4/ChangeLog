@@ -1,5 +1,9 @@
 2002-09-16  Jim Meyering  <meyering@lucent.com>
 
+	* prereq.m4: Forbid symbols matching ^jm_[A-Z].
+	(jm_PREREQ_QUOTEARG): Add jm_FUNC_MEMCMP.
+	From Akim Demaille.
+
 	* error.m4 (jm_PREREQ_ERROR): Check for libintl.h.
 	Reported by Akim Demaille.
 
