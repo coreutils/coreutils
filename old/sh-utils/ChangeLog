@@ -1,3 +1,10 @@
+Wed Oct 26 23:40:07 1994  Jim Meyering  (meyering@comco.com)
+
+	* Makefile.in (All actions invoking $(MAKE) from within compound
+	(e.g. `for') sh statements): Exit non-zero if the sub-make fails.
+	Otherwise, the top-level make may exit successfully when it should
+	fail.  From Jim Kingdon (kingdon@cygnus.com).
+
 Sun Oct 23 23:36:26 1994  Jim Meyering  (meyering@comco.com)
 
 	* safe-xstat.hin: Don't use a statement expression here.

@@ -24,7 +24,7 @@
 
 % This automatically updates the version number based on RCS.
 \def\deftexinfoversion$#1: #2 ${\def\texinfoversion{#2}}
-\deftexinfoversion$Revision: 1.5 $
+\deftexinfoversion$Revision: 1.6 $
 \message{Loading texinfo package [Version \texinfoversion]:}
 
 % Print the version number if in a .fmt file.
@@ -899,28 +899,37 @@ where each line of input produces a line of output.}
 %% Try out Computer Modern fonts at \magstephalf
 \let\mainmagstep=\magstephalf
 
+% Set the font macro #1 to the font named #2, adding on the
+% specified font prefix (normally `cm').
+\def\fontprefix{cm}
+\def\setfont#1#2{\font#1=\fontprefix#2}
+
+% Enter `@setfontprefix dc' to use the dc fonts instead of the cm fonts.
+\def\setfontprefix{\parsearg\\setfontprefixzzz}
+\def\setfontprefixzzz#1{\gdef\fontprefix{#1}}
+
 \ifx\bigger\relax
 \let\mainmagstep=\magstep1
-\font\textrm=cmr12
-\font\texttt=cmtt12
+\setfont\textrm{r12}
+\setfont\texttt{tt12}
 \else
-\font\textrm=cmr10 scaled \mainmagstep
-\font\texttt=cmtt10 scaled \mainmagstep
+\setfont\textrm{r10 scaled \mainmagstep}
+\setfont\texttt{tt10 scaled \mainmagstep}
 \fi
 % Instead of cmb10, you many want to use cmbx10.
 % cmbx10 is a prettier font on its own, but cmb10
 % looks better when embedded in a line with cmr10.
-\font\textbf=cmb10 scaled \mainmagstep
-\font\textit=cmti10 scaled \mainmagstep
-\font\textsl=cmsl10 scaled \mainmagstep
-\font\textsf=cmss10 scaled \mainmagstep
-\font\textsc=cmcsc10 scaled \mainmagstep
-\font\texti=cmmi10 scaled \mainmagstep
-\font\textsy=cmsy10 scaled \mainmagstep
+\setfont\textbf{b10 scaled \mainmagstep}
+\setfont\textit{ti10 scaled \mainmagstep}
+\setfont\textsl{sl10 scaled \mainmagstep}
+\setfont\textsf{ss10 scaled \mainmagstep}
+\setfont\textsc{csc10 scaled \mainmagstep}
+\setfont\texti{mi10 scaled \mainmagstep}
+\setfont\textsy{sy10 scaled \mainmagstep}
 
 % A few fonts for @defun, etc.
-\font\defbf=cmbx10 scaled \magstep1 %was 1314
-\font\deftt=cmtt10 scaled \magstep1
+\setfont\defbf{bx10 scaled \magstep1 %was 1314}
+\setfont\deftt{tt10 scaled \magstep1}
 \def\df{\let\tentt=\deftt \let\tenbf = \defbf \bf}
 
 % Fonts for indices and small examples.
@@ -928,66 +937,66 @@ where each line of input produces a line of output.}
 % because texinfo normally uses the slanted fonts for that.
 % Do not make many font distinctions in general in the index, since they
 % aren't very useful.
-\font\ninett=cmtt9
-\font\indrm=cmr9
-\font\indit=cmsl9
+\setfont\ninett{tt9}
+\setfont\indrm{r9}
+\setfont\indit{sl9}
 \let\indsl=\indit
 \let\indtt=\ninett
 \let\indsf=\indrm
 \let\indbf=\indrm
 \let\indsc=\indrm
-\font\indi=cmmi9
-\font\indsy=cmsy9
+\setfont\indi{mi9}
+\setfont\indsy{sy9}
 
 % Fonts for headings
-\font\chaprm=cmbx12 scaled \magstep2
-\font\chapit=cmti12 scaled \magstep2
-\font\chapsl=cmsl12 scaled \magstep2
-\font\chaptt=cmtt12 scaled \magstep2
-\font\chapsf=cmss12 scaled \magstep2
+\setfont\chaprm{bx12 scaled \magstep2}
+\setfont\chapit{ti12 scaled \magstep2}
+\setfont\chapsl{sl12 scaled \magstep2}
+\setfont\chaptt{tt12 scaled \magstep2}
+\setfont\chapsf{ss12 scaled \magstep2}
 \let\chapbf=\chaprm
-\font\chapsc=cmcsc10 scaled\magstep3
-\font\chapi=cmmi12 scaled \magstep2
-\font\chapsy=cmsy10 scaled \magstep3
+\setfont\chapsc{csc10 scaled\magstep3}
+\setfont\chapi{mi12 scaled \magstep2}
+\setfont\chapsy{sy10 scaled \magstep3}
 
-\font\secrm=cmbx12 scaled \magstep1
-\font\secit=cmti12 scaled \magstep1
-\font\secsl=cmsl12 scaled \magstep1
-\font\sectt=cmtt12 scaled \magstep1
-\font\secsf=cmss12 scaled \magstep1
-\font\secbf=cmbx12 scaled \magstep1
-\font\secsc=cmcsc10 scaled\magstep2
-\font\seci=cmmi12 scaled \magstep1
-\font\secsy=cmsy10 scaled \magstep2
+\setfont\secrm{bx12 scaled \magstep1}
+\setfont\secit{ti12 scaled \magstep1}
+\setfont\secsl{sl12 scaled \magstep1}
+\setfont\sectt{tt12 scaled \magstep1}
+\setfont\secsf{ss12 scaled \magstep1}
+\setfont\secbf{bx12 scaled \magstep1}
+\setfont\secsc{csc10 scaled\magstep2}
+\setfont\seci{mi12 scaled \magstep1}
+\setfont\secsy{sy10 scaled \magstep2}
 
-% \font\ssecrm=cmbx10 scaled \magstep1    % This size an font looked bad.
-% \font\ssecit=cmti10 scaled \magstep1    % The letters were too crowded.
-% \font\ssecsl=cmsl10 scaled \magstep1
-% \font\ssectt=cmtt10 scaled \magstep1
-% \font\ssecsf=cmss10 scaled \magstep1
+% \setfont\ssecrm{bx10 scaled \magstep1}    % This size an font looked bad.
+% \setfont\ssecit{cmti10 scaled \magstep1}    % The letters were too crowded.
+% \setfont\ssecsl{sl10 scaled \magstep1}
+% \setfont\ssectt{tt10 scaled \magstep1}
+% \setfont\ssecsf{ss10 scaled \magstep1}
 
-%\font\ssecrm=cmb10 scaled 1315	% Note the use of cmb rather than cmbx.
-%\font\ssecit=cmti10 scaled 1315	% Also, the size is a little larger than
-%\font\ssecsl=cmsl10 scaled 1315	% being scaled magstep1.
-%\font\ssectt=cmtt10 scaled 1315
-%\font\ssecsf=cmss10 scaled 1315
+%\setfont\ssecrm{b10 scaled 1315}	% Note the use of cmb rather than cmbx.
+%\setfont\ssecit{ti10 scaled 1315}	% Also, the size is a little larger than
+%\setfont\ssecsl{sl10 scaled 1315}	% being scaled magstep1.
+%\setfont\ssectt{tt10 scaled 1315}
+%\setfont\ssecsf{ss10 scaled 1315}
 
 %\let\ssecbf=\ssecrm
 
-\font\ssecrm=cmbx12 scaled \magstephalf
-\font\ssecit=cmti12 scaled \magstephalf
-\font\ssecsl=cmsl12 scaled \magstephalf
-\font\ssectt=cmtt12 scaled \magstephalf
-\font\ssecsf=cmss12 scaled \magstephalf
-\font\ssecbf=cmbx12 scaled \magstephalf
-\font\ssecsc=cmcsc10 scaled \magstep1
-\font\sseci=cmmi12 scaled \magstephalf
-\font\ssecsy=cmsy10 scaled \magstep1
+\setfont\ssecrm{bx12 scaled \magstephalf}
+\setfont\ssecit{ti12 scaled \magstephalf}
+\setfont\ssecsl{sl12 scaled \magstephalf}
+\setfont\ssectt{tt12 scaled \magstephalf}
+\setfont\ssecsf{ss12 scaled \magstephalf}
+\setfont\ssecbf{bx12 scaled \magstephalf}
+\setfont\ssecsc{csc10 scaled \magstep1}
+\setfont\sseci{mi12 scaled \magstephalf}
+\setfont\ssecsy{sy10 scaled \magstep1}
 % The smallcaps and symbol fonts should actually be scaled \magstep1.5,
 % but that is not a standard magnification.
 
 % Fonts for title page:
-\font\titlerm = cmbx12 scaled \magstep3
+\setfont\titlerm ={bx12 scaled \magstep3}
 \let\authorrm = \secrm
 
 % In order for the font changes to affect most math symbols and letters,
@@ -1043,9 +1052,9 @@ where each line of input produces a line of output.}
 \newcount\fontdepth \fontdepth=0
 
 % Fonts for short table of contents.
-\font\shortcontrm=cmr12
-\font\shortcontbf=cmbx12
-\font\shortcontsl=cmsl12
+\setfont\shortcontrm{r12}
+\setfont\shortcontbf{bx12}
+\setfont\shortcontsl{sl12}
 
 %% Add scribe-like font environments, plus @l for inline lisp (usually sans
 %% serif) and @ii for TeX italic
