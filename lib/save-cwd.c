@@ -41,8 +41,9 @@
 # define O_DIRECTORY 0
 #endif
 
-#include "chdir.h"
 #include "save-cwd.h"
+
+#include "chdir-long.h"
 #include "xgetcwd.h"
 
 /* Record the location of the current working directory in CWD so that
@@ -128,7 +129,7 @@ restore_cwd (const struct saved_cwd *cwd)
   if (0 <= cwd->desc)
     return fchdir (cwd->desc);
   else
-    return chdir (cwd->name);
+    return chdir_long (cwd->name);
 }
 
 void
