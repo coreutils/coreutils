@@ -1,8 +1,13 @@
 2003-05-04  Jim Meyering  <jim@meyering.net>
 
+	* setenv.c (__set_errno, LOCK, UNLOCK): Define.
+	(unsetenv): Update from GNU libc.
+	Ifdef-out this function, since the only caller
+	is putenv.c and that file now has its own copy.
+
 	This avoids a core dump on systems without GNU putenv,
 	when running `env -u SOME_ALREADY_UNSET_VARIABLE'.
-	* putenv.c (unsetenv): New static function, from libc.
+	* putenv.c (unsetenv): New static function, from GNU libc.
 	(rpl_putenv): Use it.
 
 2003-05-02  Jim Meyering  <jim@meyering.net>
