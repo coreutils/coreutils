@@ -1,5 +1,8 @@
 2004-01-22  Jim Meyering  <jim@meyering.net>
 
+	* tests/rmdir/fail-perm: New file.  Test for just-fixed rmdir bug.
+	* tests/rmdir/Makefile.am (TESTS): Add fail-perm.
+
 	* man/help2man: Fix it so using --info-page='coreutils PROG' works.
 	* man/Makefile.am (.x.1): Invoke our own (tweaked) copy of help2man.
 	Use --info-page='coreutils PROG' option.
