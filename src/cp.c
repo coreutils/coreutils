@@ -73,7 +73,8 @@ enum
   TARGET_DIRECTORY_OPTION = CHAR_MAX + 1,
   SPARSE_OPTION,
   STRIP_TRAILING_SLASHES_OPTION,
-  PARENTS_OPTION
+  PARENTS_OPTION,
+  UNLINK_DEST_BEFORE_OPENING
 };
 
 int stat ();
@@ -134,6 +135,7 @@ static struct option const long_opts[] =
   {"path", no_argument, NULL, PARENTS_OPTION},   /* Deprecated.  */
   {"preserve", no_argument, NULL, 'p'},
   {"recursive", no_argument, NULL, 'R'},
+  {"remove-destination", no_argument, NULL, UNLINK_DEST_BEFORE_OPENING},
   {"strip-trailing-slash", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
   {"suffix", required_argument, NULL, 'S'},
   {"symbolic-link", no_argument, NULL, 's'},
@@ -167,7 +169,8 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
       --backup[=CONTROL]       make a backup of each existing destination file\n\
   -b                           like --backup but does not accept an argument\n\
   -d, --no-dereference         preserve links\n\
-  -f, --force                  remove existing destinations\n\
+  -f, --force                  if a preexisting destination file cannot be\n\
+                                   opened, then unlink it and try again\n\
   -i, --interactive            prompt before overwrite\n\
   -H                           follow symbolic links that are explicitly\n\
                                  specified in the command line, but do not\n\
@@ -182,6 +185,8 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
   -r                           copy recursively, non-directories as files\n\
                                  WARNING: use -R instead when you might copy\n\
                                  special files like FIFOs or /dev/zero\n\
+      --remove-destination     unlink each preexisting destination file before\n\
+                                 attempting to open it (contrast with --force)\n\
       --sparse=WHEN            control creation of sparse files\n\
   -R, --recursive              copy directories recursively\n\
       --strip-trailing-slashes remove any trailing slashes from each SOURCE\n\
@@ -603,7 +608,7 @@ do_copy (int n_files, char **file, const char *target_directory,
 	 `cp --force --backup foo foo' to `cp --force foo fooSUFFIX'
 	 where SUFFIX is determined by any version control options used.  */
 
-      if (x->force
+      if (x->unlink_dest_after_failed_open
 	  && x->backup_type != none
 	  && STREQ (source, dest)
 	  && !new_dst && S_ISREG (sb.st_mode))
@@ -658,7 +663,8 @@ cp_option_init (struct cp_options *x)
 {
   x->copy_as_regular = 1;
   x->dereference = DEREF_UNDEFINED;
-  x->force = 0;
+  x->unlink_dest_before_opening = 0;
+  x->unlink_dest_after_failed_open = 0;
   x->failed_unlink_is_fatal = 1;
   x->hard_link = 0;
   x->interactive = 0;
@@ -752,7 +758,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'f':
-	  x.force = 1;
+	  x.unlink_dest_after_failed_open = 1;
 	  break;
 
 	case 'H':
@@ -793,6 +799,10 @@ main (int argc, char **argv)
 	case 'R':
 	  x.recursive = 1;
 	  x.copy_as_regular = 0;
+	  break;
+
+	case UNLINK_DEST_BEFORE_OPENING:
+	  x.unlink_dest_before_opening = 1;
 	  break;
 
 	case STRIP_TRAILING_SLASHES_OPTION:
