@@ -1,3 +1,7 @@
+2003-08-04  Paul Eggert  <eggert@twinsun.com>
+
+	* error.m4: Sync from gnulib.
+
 2003-07-23  Jim Meyering  <jim@meyering.net>
 
 	* lstat.m4, mkstemp.m4, regex.m4, stat.m4: Normalize naming of Sun
