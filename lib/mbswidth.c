@@ -69,7 +69,6 @@ int wcwidth ();
 /* wcwidth doesn't exist, so assume all printable characters have
    width 1.  */
 #  define wcwidth(wc) ((wc) == 0 ? 0 : iswprint (wc) ? 1 : -1)
-# else
 # endif
 #endif
 
@@ -85,15 +84,27 @@ int wcwidth ();
 #undef ISPRINT
 #define ISPRINT(c) (ISASCII (c) && isprint (c))
 
+#include "mbswidth.h"
+
 /* Returns the number of columns needed to represent the multibyte
    character string pointed to by STRING.  If a non-printable character
-   occurs, -1 is returned.
-   This is the multibyte analogon of the wcswidth function.  */
+   occurs, -1 is returned, unless MBSW_ACCEPT_UNPRINTABLE is specified.
+   With flags = 0, this is the multibyte analogon of the wcswidth function.  */
 int
-mbswidth (const char *string)
+mbswidth (const char *string, int flags)
+{
+  return mbsnwidth (string, strlen (string), flags);
+}
+
+/* Returns the number of columns needed to represent the multibyte
+   character string pointed to by STRING of length NBYTES.  If a
+   non-printable character occurs, -1 is returned, unless
+   MBSW_ACCEPT_UNPRINTABLE is specified.  */
+int
+mbsnwidth (const char *string, size_t nbytes, int flags)
 {
   const char *p = string;
-  const char *plimit = p + strlen (p);
+  const char *plimit = p + nbytes;
   int width;
 
   width = 0;
@@ -127,8 +138,6 @@ mbswidth (const char *string)
 	      p++;
 	      width++;
 	      break;
-	    case '\0':
-	      break;
 	    default:
 	      /* If we have a multibyte sequence, scan it up to its end.  */
 	      {
@@ -137,20 +146,32 @@ mbswidth (const char *string)
 		do
 		  {
 		    wchar_t wc;
-		    size_t bytes = mbrtowc (&wc, p, plimit - p, &mbstate);
+		    size_t bytes;
 		    int w;
 
-		    if (bytes == 0)
-		      /* A null wide character was encountered.  */
-		      break;
+		    bytes = mbrtowc (&wc, p, plimit - p, &mbstate);
 
 		    if (bytes == (size_t) -1)
 		      /* An invalid multibyte sequence was encountered.  */
-		      return -1;
+		      {
+			if (flags & MBSW_ACCEPT_INVALID)
+			  break;
+			else
+			  return -1;
+		      }
 
 		    if (bytes == (size_t) -2)
 		      /* An incomplete multibyte character at the end.  */
-		      return -1;
+		      {
+			if (flags & MBSW_ACCEPT_INVALID)
+			  break;
+			else
+			  return -1;
+		      }
+
+		    if (bytes == 0)
+		      /* A null wide character was encountered.  */
+		      bytes = 1;
 
 		    w = wcwidth (wc);
 		    if (w >= 0)
@@ -158,7 +179,10 @@ mbswidth (const char *string)
 		      width += w;
 		    else
 		      /* An unprintable multibyte character.  */
-		      return -1;
+		      if (flags & MBSW_ACCEPT_UNPRINTABLE)
+			width += 1;
+		      else
+			return -1;
 
 		    p += bytes;
 		  }
@@ -174,10 +198,7 @@ mbswidth (const char *string)
     {
       unsigned char c = (unsigned char) *p++;
 
-      if (c == '\0')
-	break;
-
-      if (ISPRINT (c))
+      if ((flags & MBSW_ACCEPT_UNPRINTABLE) || ISPRINT (c))
 	width++;
       else
 	return -1;
