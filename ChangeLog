@@ -1,3 +1,23 @@
+2003-05-10  Jim Meyering  <jim@meyering.net>
+
+	* src/uname.c (main): When failing due to too many arguments, also say
+	that rather than just "Try `uname --help' for more information.".
+
+	* src/uniq.c (main): Don't segfault when argc < optind.
+	* src/who.c (main): Handle argc < optind.
+
+	* src/logname.c (main): Use error, rather than fprintf, for the sake
+	of consistency.
+
+	* src/ln.c (main): Test for `missing argument' before computing n_files.
+	* src/tail.c (main): Test for the case of no arguments before
+	computing n_files.
+
+	* src/logname.c: Include error.h.
+	(main): Say why we're failing
+
+	* src/rm.c (main): Don't overrun array bound if argc is 0.
+
 2003-05-09  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
