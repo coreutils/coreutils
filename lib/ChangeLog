@@ -1,3 +1,8 @@
+2003-12-03  Paul Eggert  <eggert@twinsun.com>
+
+	* getgroups.c (getgroups): xmalloc takes one argument, not two.
+	Bug reported by Alfred M. Szmidt.
+
 2003-12-02  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (libfetish_a_SOURCES): Reflect sha -> sha1 renaming.
