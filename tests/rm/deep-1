@@ -36,7 +36,7 @@ k_deep=$k200$k200
 
 # Create a directory in $tmp with lots of `k' components.
 deep=$tmp$k_deep
-echo 'creating a hierarchy 400 deep in $tmp...'
+echo "creating a hierarchy 400 deep in $tmp..."
 $MKDIR -p $deep || fail=1
 
 find $tmp > k
