@@ -30,23 +30,22 @@
 # MIME charset name is preferred.
 # The current list of GNU canonical charset names is as follows.
 #
-#       name                         used by which systems
+#       name                         used by which systems         a MIME name?
 #   ASCII                     glibc solaris
-#   ISO-8859-1                glibc aix hpux irix osf solaris
-#   ISO-8859-2                glibc aix hpux irix solaris
-#   ISO-8859-4                solaris
-#   ISO-8859-5                glibc aix hpux irix solaris
-#   ISO-8859-6                aix hpux solaris
-#   ISO-8859-7                glibc aix hpux irix osf solaris
-#   ISO-8859-8                glibc aix hpux solaris
-#   ISO-8859-9                glibc aix hpux irix osf solaris
+#   ISO-8859-1                glibc aix hpux irix osf solaris           yes
+#   ISO-8859-2                glibc aix hpux irix solaris               yes
+#   ISO-8859-4                solaris                                   yes
+#   ISO-8859-5                glibc aix hpux irix solaris               yes
+#   ISO-8859-6                aix hpux solaris                          yes
+#   ISO-8859-7                glibc aix hpux irix osf solaris           yes
+#   ISO-8859-8                glibc aix hpux solaris                    yes
+#   ISO-8859-9                glibc aix hpux irix osf solaris           yes
 #   ISO-8859-13               glibc
 #   ISO-8859-15               aix solaris
-#   KOI8-R                    glibc solaris
-#   KOI8-U                    glibc
+#   KOI8-R                    glibc solaris                             yes
+#   KOI8-U                    glibc                                     yes
 #   CP850                     aix osf
 #   CP856                     aix
-#   CP921                     aix
 #   CP922                     aix
 #   CP932                     aix
 #   CP943                     aix
@@ -55,10 +54,10 @@
 #   CP1129                    aix
 #   CP1252                    aix
 #   EUC-CN                    aix hpux solaris
-#   EUC-JP                    aix hpux solaris
-#   EUC-KR                    aix hpux solaris
+#   EUC-JP                    aix hpux solaris                          yes
+#   EUC-KR                    aix hpux solaris                          yes
 #   EUC-TW                    aix hpux solaris
-#   BIG5                      aix hpux solaris
+#   BIG5                      aix hpux solaris                          yes
 #   GBK                       aix
 #   SJIS                      hpux solaris
 #   TIS-620                   aix hpux solaris
@@ -68,7 +67,10 @@
 #   HP-HEBREW8                hpux
 #   HP-TURKISH8               hpux
 #   HP-KANA8                  hpux
-#   UTF-8                     glibc aix hpux solaris
+#   UTF-8                     glibc aix hpux solaris                    yes
+#
+# Note: Names which are not marked as being a MIME name should not be used in
+# Internet protocols for information interchange (mail, news, etc.).
 #
 # The first argument passed to this file is the canonical host specification,
 #    CPU_TYPE-MANUFACTURER-OPERATING_SYSTEM
@@ -99,7 +101,7 @@ case "$os" in
 	echo "ISO8859-15 ISO-8859-15"
 	echo "IBM-850 CP850"
 	echo "IBM-856 CP856"
-	echo "IBM-921 CP921"
+	echo "IBM-921 ISO-8859-13"
 	echo "IBM-922 CP922"
 	echo "IBM-932 CP932"
 	echo "IBM-943 CP943"
