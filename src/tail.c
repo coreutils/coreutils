@@ -83,21 +83,50 @@
 # define BUFSIZ (512 * 8)
 #endif
 
+enum Follow_mode
+{
+  /* FIXME */
+  follow_name,
+
+  /* FIXME */
+  follow_descriptor,
+};
+
+struct File_spec
+{
+  /* The actual file name, or "-" for stdin.  */
+  char *name;
+
+  /* The actual file name, or "standard input" for stdin.  */
+  char *pretty_name;
+
+  /* File descriptor on which the file is open; -1 if it's not open.  */
+  int fd;
+
+  /* The size of the file the last time we checked.  */
+  off_t size;
+
+  /* The device and inode of the file the last time we checked.  */
+  dev_t dev;
+  ino_t ino;
+
+  unsigned int no_change_counter;
+};
+
 /* If nonzero, interpret the numeric argument as the number of lines.
    Otherwise, interpret it as the number of bytes.  */
 static int count_lines;
+
+/* Whether we follow the name of each file or the file descriptor
+   that is initially associated with each name.  */
+/* FIXME: make follow_name the default? */
+static enum Follow_mode follow_mode;
 
 /* If nonzero, read from the end of one file until killed.  */
 static int forever;
 
 /* If nonzero, read from the end of multiple files until killed.  */
 static int forever_multiple;
-
-/* Array of file descriptors if forever_multiple is 1.  */
-static int *file_descs;
-
-/* Array of file sizes if forever_multiple is 1.  */
-static off_t *file_sizes;
 
 /* If nonzero, count from start of file instead of end.  */
 static int from_start;
@@ -110,6 +139,9 @@ enum header_mode
 {
   multiple_files, always, never
 };
+
+/* FIXME: rename, document, and use this -- add option */
+static unsigned long max_no_change_count = 5;
 
 int safe_read ();
 
@@ -132,6 +164,8 @@ static struct option const long_options[] =
 {
   {"bytes", required_argument, NULL, 'c'},
   {"follow", no_argument, NULL, 'f'},
+  {"follow-descriptor", no_argument, NULL, 12},
+  {"follow-name", no_argument, NULL, 13},
   {"lines", required_argument, NULL, 'n'},
   {"quiet", no_argument, NULL, 'q'},
   {"silent", no_argument, NULL, 'q'},
@@ -566,15 +600,14 @@ output:
   return total;
 }
 
-/* Tail NFILES (>1) files forever until killed.  The file names are in
-   NAMES.  The open file descriptors are in `file_descs', and the size
-   at which we stopped tailing them is in `file_sizes'.  We loop over
-   each of them, doing an fstat to see if they have changed size.  If
-   none of them have changed size in one iteration, we sleep for a
-   second and try again.  We do this until the user interrupts us.  */
+/* Tail NFILES (>1) files forever until killed.
+   The pertinent information for each file is stored in an entry of F.
+   Loop over each of them, doing an fstat to see if they have changed size.
+   If none of them have changed size in one iteration, sleep for a
+   while and try again.  Continue until the user interrupts us.  */
 
 static void
-tail_forever (char **names, int nfiles)
+tail_forever (struct File_spec *f, int nfiles)
 {
   int last;
 
@@ -590,38 +623,99 @@ tail_forever (char **names, int nfiles)
 	{
 	  struct stat stats;
 
-	  if (file_descs[i] < 0)
+	  if (f[i].fd < 0)
 	    continue;
-	  if (fstat (file_descs[i], &stats) < 0)
+	  if (fstat (f[i].fd, &stats) < 0)
 	    {
-	      error (0, errno, "%s", names[i]);
-	      file_descs[i] = -1;
+	      error (0, errno, "%s", f[i].pretty_name);
+	      f[i].fd = -1;
 	      continue;
 	    }
-	  if (stats.st_size == file_sizes[i])
-	    continue;
+
+	  if (stats.st_size == f[i].size)
+	    {
+	      if (++f[i].no_change_counter > max_no_change_count
+		  && follow_mode == follow_name)
+		{
+		  /* open/fstat the file and announce if dev/ino
+		     have changed */
+		  struct stat new_stats;
+		  int fd = open (f[i].name, O_RDONLY);
+		  int fail = 0;
+
+		  if (fd == -1 || fstat (fd, &new_stats) < 0)
+		    {
+		      fail = 1;
+		      error (0, errno, "%s", f[i].pretty_name);
+		    }
+		  else if (!S_ISREG (new_stats.st_mode))
+		    {
+		      fail = 1;
+		      error (0, 0,
+			     _("%s has been replaced with a non-regular file;  \
+cannot follow end of non-regular file"),
+			     f[i].pretty_name);
+		    }
+
+		  if (fail)
+		    {
+		      if (f[i].fd != STDIN_FILENO)
+			close (f[i].fd);
+		      f[i].fd = -1;
+		    }
+		  else if (f[i].ino != new_stats.st_ino
+			   || f[i].dev != new_stats.st_dev)
+		    {
+		      /* Close the old one.  */
+		      if (f[i].fd != STDIN_FILENO)
+			close (f[i].fd);
+
+		      /* File has been replaced (e.g., via log rotation) --
+			 tail the new one.  */
+		      error (0, 0,
+			     _("%s has been replaced;  follow end of new file"),
+			     f[i].pretty_name);
+		      f[i].fd = fd;
+		      f[i].size = new_stats.st_size;
+		      f[i].dev = new_stats.st_dev;
+		      f[i].ino = new_stats.st_ino;
+		      f[i].no_change_counter = 0;
+		    }
+
+		  /* NEW options: --follow-fd vs. --follow-file */
+		  /* File has been removed -- continue tailing?.  */
+		  /* File has been replaced (e.g., log rotation) --
+		     continue tailing old or open the new one?.  */
+
+		  f[i].no_change_counter = 0;
+		};
+	      continue;
+	    }
 
 	  /* This file has changed size.  Print out what we can, and
 	     then keep looping.  */
 
 	  changed = 1;
 
-	  if (stats.st_size < file_sizes[i])
+	  /* reset counter */
+	  f[i].no_change_counter = 0;
+
+	  if (stats.st_size < f[i].size)
 	    {
-	      write_header (names[i], _("file truncated"));
+	      write_header (f[i].pretty_name, _("file truncated"));
 	      last = i;
-	      lseek (file_descs[i], stats.st_size, SEEK_SET);
-	      file_sizes[i] = stats.st_size;
+	      lseek (f[i].fd, stats.st_size, SEEK_SET);
+	      f[i].size = stats.st_size;
 	      continue;
 	    }
 
 	  if (i != last)
 	    {
 	      if (print_headers)
-		write_header (names[i], NULL);
+		write_header (f[i].pretty_name, NULL);
 	      last = i;
 	    }
-	  file_sizes[i] += dump_remainder (names[i], file_descs[i]);
+	  f[i].size += dump_remainder (f[i].pretty_name, f[i].fd);
 	}
 
       /* If none of the files changed size, sleep.  */
@@ -755,73 +849,75 @@ tail (const char *pretty_filename, int fd, off_t n_units)
     return tail_bytes (pretty_filename, fd, n_units);
 }
 
-/* Display the last N_UNITS units of file FILENAME.
-   "-" for FILENAME means the standard input.
-   FILENUM is this file's index in the list of files the user gave.
+/* Display the last N_UNITS units of the file described by F.
    Return 0 if successful, 1 if an error occurred.  */
 
 static int
-tail_file (const char *filename, off_t n_units, int filenum)
+tail_file (struct File_spec *f, off_t n_units)
 {
   int fd, errors;
   struct stat stats;
-  int is_stdin = (STREQ (filename, "-"));
-  char const *pretty_filename;
+
+  int is_stdin = (STREQ (f->name, "-"));
 
   if (is_stdin)
     {
       have_read_stdin = 1;
-      pretty_filename = _("standard input");
+      f->pretty_name = _("standard input");
       fd = STDIN_FILENO;
     }
   else
     {
-      pretty_filename = filename;
-      fd = open (filename, O_RDONLY);
+      f->pretty_name = f->name;
+      fd = open (f->name, O_RDONLY);
     }
 
   if (fd == -1)
     {
       if (forever_multiple)
-	file_descs[filenum] = -1;
-      error (0, errno, "%s", pretty_filename);
+	f->fd = -1;
+      error (0, errno, "%s", f->pretty_name);
       errors = 1;
     }
   else
     {
       if (print_headers)
-	write_header (pretty_filename, NULL);
-      errors = tail (pretty_filename, fd, n_units);
+	write_header (f->pretty_name, NULL);
+      errors = tail (f->pretty_name, fd, n_units);
       if (forever_multiple)
 	{
+	  /* FIXME: duplicate code */
 	  if (fstat (fd, &stats) < 0)
 	    {
-	      error (0, errno, "%s", pretty_filename);
+	      error (0, errno, "%s", f->pretty_name);
 	      errors = 1;
 	    }
 	  else if (!S_ISREG (stats.st_mode))
 	    {
 	      error (0, 0, _("%s: cannot follow end of non-regular file"),
-		     pretty_filename);
+		     f->pretty_name);
 	      errors = 1;
 	    }
 	  if (errors)
 	    {
 	      if (!is_stdin)
 		close (fd);
-	      file_descs[filenum] = -1;
+	      f->fd = -1;
 	    }
 	  else
 	    {
-	      file_descs[filenum] = fd;
-	      file_sizes[filenum] = stats.st_size;
+	      f->fd = fd;
+	      f->size = stats.st_size;
+	      f->dev = stats.st_dev;
+	      f->ino = stats.st_ino;
+	      f->no_change_counter = 0;
 	    }
 	}
       else
 	{
 	  if (!is_stdin && close (fd))
 	    {
-	      error (0, errno, "%s", pretty_filename);
+	      error (0, errno, "%s", f->pretty_name);
 	      errors = 1;
 	    }
 	}
@@ -1032,6 +1128,14 @@ parse_options (int argc, char **argv,
 	  forever = 1;
 	  break;
 
+	case 12:
+	  follow_mode = follow_descriptor;
+	  break;
+
+	case 13:
+	  follow_mode = follow_name;
+	  break;
+
 	case 'q':
 	  *header_mode = never;
 	  break;
@@ -1071,6 +1175,8 @@ main (int argc, char **argv)
   off_t n_units = DEFAULT_N_LINES;
   int n_files;
   char **file;
+  struct File_spec *F;
+  int i;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -1122,27 +1228,28 @@ main (int argc, char **argv)
     {
       forever_multiple = 1;
       forever = 0;
-      file_descs = (int *) xmalloc (n_files * sizeof (int));
-      file_sizes = (off_t *) xmalloc (n_files * sizeof (off_t));
     }
+
+  if (n_files == 0)
+    {
+      static char *dummy_stdin = "-";
+      n_files = 1;
+      file = &dummy_stdin;
+    }
+
+  F = (struct File_spec *) xmalloc (n_files * sizeof (F[0]));
+  for (i = 0; i < n_files; i++)
+    F[i].name = file[i];
 
   if (header_mode == always
       || (header_mode == multiple_files && n_files > 1))
     print_headers = 1;
 
-  if (n_files == 0)
-    {
-      exit_status |= tail_file ("-", n_units, 0);
-    }
-  else
-    {
-      int i;
-      for (i = 0; i < n_files; i++)
-	exit_status |= tail_file (file[i], n_units, i);
+  for (i = 0; i < n_files; i++)
+    exit_status |= tail_file (&F[i], n_units);
 
-      if (forever_multiple)
-	tail_forever (file, n_files);
-    }
+  if (forever_multiple)
+    tail_forever (F, n_files);
 
   if (have_read_stdin && close (0) < 0)
     error (EXIT_FAILURE, errno, "-");
