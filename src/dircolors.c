@@ -174,7 +174,7 @@ parse_line (unsigned char const *line, char **keyword, char **arg)
       ++p;
     }
 
-  *keyword = xstrndup (keyword_start, p - keyword_start);
+  *keyword = xstrndup ((const char *) keyword_start, p - keyword_start);
   if (*p  == '\0')
     return;
 
@@ -198,7 +198,7 @@ parse_line (unsigned char const *line, char **keyword, char **arg)
     }
   ++p;
 
-  *arg = xstrndup (arg_start, p - arg_start);
+  *arg = xstrndup ((const char *) arg_start, p - arg_start);
 }
 
 /* FIXME: Write a string to standard out, while watching for "dangerous"
@@ -287,7 +287,7 @@ dc_parse_stream (FILE *fp, const char *filename)
 	    break;
 	}
 
-      parse_line (line, &keywd, &arg);
+      parse_line ((unsigned char *) line, &keywd, &arg);
 
       if (keywd == NULL)
 	continue;
