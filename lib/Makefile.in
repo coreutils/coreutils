@@ -33,18 +33,18 @@ libdir = $(exec_prefix)/lib
 
 SOURCES = getdate.y posixtm.y \
 argmatch.c backupfile.c basename.c dirname.c eaccess.c \
-error.c filemode.c fsusage.c getopt.c getopt1.c \
+error.c filemode.c fsusage.c full-write.c getopt.c getopt1.c \
 getversion.c idcache.c isdir.c makepath.c \
-modechange.c mountlist.c savedir.c \
+modechange.c mountlist.c safe-read.c savedir.c \
 stripslash.c xgetcwd.c xmalloc.c xstrdup.c userspec.c yesno.c \
 fileblocks.c fnmatch.c ftruncate.c mkdir.c mktime.c rename.c stpcpy.c \
 strdup.c strstr.c alloca.c
 
 OBJECTS = getdate.o posixtm.o \
 argmatch.o backupfile.o basename.o dirname.o eaccess.o \
-error.o filemode.o getopt.o getopt1.o \
+error.o filemode.o full-write.o getopt.o getopt1.o \
 getversion.o idcache.o isdir.o makepath.o \
-modechange.o savedir.o \
+modechange.o safe-read.o savedir.o \
 stripslash.o xgetcwd.o xmalloc.o xstrdup.o userspec.o yesno.o \
 @LIBOBJS@ @ALLOCA@
 
