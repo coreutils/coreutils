@@ -1,5 +1,15 @@
 1999-11-07  Jim Meyering  <meyering@ascend.com>
 
+	* tests/ln/misc: Add hard-link-to-symlink test.
+	Move framework_failure test to the end.
+	Fix a typo: s/||/&&/.
+
+	* src/ln.c (do_link): Warn that making a hard link to a symbolic link
+	is not portable.
+
+	* tests/ln/misc: Use --b=simple, not the now-deprecated `-V simple'.
+	* tests/ln/backup-1: Likewise.
+
 	* configure.in (AC_OUTPUT): Add tests/dd/Makefile.
 	* tests/Makefile.am (SUBDIRS): Add rmdir.
 	* tests/rmdir: New directory
@@ -12,9 +22,10 @@
 
 1999-11-06  Jim Meyering  <meyering@ascend.com>
 
-	* src/ln.c (XSTAT_THAT_FOLLOWS_SYMLINKS_THE_WAY_LINK_DOES): Define.
-	(do_link): Use XSTAT_THAT_FOLLOWS_SYMLINKS_THE_WAY_LINK_DOES, rather
-	than bare `stat'.
+	Allow hard links to symlinks on systems that support it.
+	* src/ln.c (STAT_LIKE_LINK): Define.
+	(do_link): Use STAT_LIKE_LINK, rather than bare `stat', and perform
+	the extra lstat only on systems where LINK_FOLLOWS_SYMLINKS.
 
 	* src/ls.c (long_options): Correct typo (s/'F'/'p'/) so that `-p' is
 	accepted as the short form of --file-type, per the documentation.
