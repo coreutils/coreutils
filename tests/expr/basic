@@ -32,6 +32,10 @@ my @Tests =
      ['d', '100 / 6', {OUT => '16'}],
      ['e', '100 % 6', {OUT => '4'}],
 
+     # This evoked a syntax error diagnostic before 2.0.12.
+     ['minus2', '-- 2 + 2', {OUT => '4'}],
+
+     # This erroneously succeeded and output `3' before 2.0.12.
      ['fail-a', '3 + -', {ERR => "$prog: non-numeric argument\n"},
       {EXIT => 2}],
     );
