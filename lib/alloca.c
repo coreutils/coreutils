@@ -171,7 +171,7 @@ alloca (size)
 #endif
 
   /* Reclaim garbage, defined as all alloca'd storage that
-     was allocated from deeper in the stack than currently. */
+     was allocated from deeper in the stack than currently.  */
 
   {
     register header *hp;	/* Traverses linked list.  */
@@ -338,7 +338,7 @@ struct stk_trailer
 
 #ifdef CRAY2
 /* Determine a "stack measure" for an arbitrary ADDRESS.
-   I doubt that "lint" will like this much. */
+   I doubt that "lint" will like this much.  */
 
 static long
 i00afunc (long *address)
