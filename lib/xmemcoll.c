@@ -28,12 +28,8 @@ extern int errno;
 
 #include <stdlib.h>
 
-#if ENABLE_NLS
-# include <libintl.h>
-# define _(Text) gettext (Text)
-#else
-# define _(Text) Text
-#endif
+#include "gettext.h"
+#define _(msgid) gettext (msgid)
 
 #include "error.h"
 #include "memcoll.h"
