@@ -16,7 +16,8 @@
 
 # Copyright (C) 1995-2004 Free Software Foundation, Inc.
 
-SOURCES = $(libfetish_a_SOURCES)
+
+SOURCES = $(libfetish_a_SOURCES) t-fpending.c
 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
@@ -40,6 +41,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+noinst_PROGRAMS = t-fpending$(EXEEXT)
 subdir = lib
 DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	ChangeLog TODO __fpending.c alloca.c asnprintf.c asprintf.c \
@@ -203,6 +205,10 @@ am_libfetish_a_OBJECTS = acl.$(OBJEXT) getdate.$(OBJEXT) \
 	xstrtoimax.$(OBJEXT) xstrtol.$(OBJEXT) xstrtoul.$(OBJEXT) \
 	xstrtoumax.$(OBJEXT) yesno.$(OBJEXT)
 libfetish_a_OBJECTS = $(am_libfetish_a_OBJECTS)
+PROGRAMS = $(noinst_PROGRAMS)
+t_fpending_SOURCES = t-fpending.c
+t_fpending_OBJECTS = t-fpending.$(OBJEXT)
+t_fpending_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
@@ -211,8 +217,8 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 YACCCOMPILE = $(YACC) $(YFLAGS) $(AM_YFLAGS)
-SOURCES = $(libfetish_a_SOURCES)
-DIST_SOURCES = $(libfetish_a_SOURCES)
+SOURCES = $(libfetish_a_SOURCES) t-fpending.c
+DIST_SOURCES = $(libfetish_a_SOURCES) t-fpending.c
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -434,6 +440,12 @@ libfetish.a: $(libfetish_a_OBJECTS) $(libfetish_a_DEPENDENCIES)
 	$(libfetish_a_AR) libfetish.a $(libfetish_a_OBJECTS) $(libfetish_a_LIBADD)
 	$(RANLIB) libfetish.a
 
+clean-noinstPROGRAMS:
+	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
+t-fpending$(EXEEXT): $(t_fpending_OBJECTS) $(t_fpending_DEPENDENCIES) 
+	@rm -f t-fpending$(EXEEXT)
+	$(LINK) $(t_fpending_LDFLAGS) $(t_fpending_OBJECTS) $(t_fpending_LDADD) $(LIBS)
+
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 
@@ -585,6 +597,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strftime.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stripslash.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-fpending.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/time_r.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/umaxtostr.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/unicodeio.Po@am__quote@
@@ -722,7 +735,7 @@ distdir: $(DISTFILES)
 check-am: all-am
 check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
-all-am: Makefile $(LIBRARIES) all-local
+all-am: Makefile $(LIBRARIES) $(PROGRAMS) all-local
 installdirs:
 install: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) install-am
@@ -756,7 +769,8 @@ maintainer-clean-generic:
 	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
 clean: clean-am
 
-clean-am: clean-generic clean-noinstLIBRARIES mostlyclean-am
+clean-am: clean-generic clean-noinstLIBRARIES clean-noinstPROGRAMS \
+	mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf $(DEPDIR) ./$(DEPDIR)
@@ -804,15 +818,16 @@ ps-am:
 uninstall-am: uninstall-info-am uninstall-local
 
 .PHONY: CTAGS GTAGS all all-am all-local check check-am clean \
-	clean-generic clean-noinstLIBRARIES ctags distclean \
-	distclean-compile distclean-generic distclean-tags distdir dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-data install-data-am install-exec install-exec-am \
-	install-exec-local install-info install-info-am install-man \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-info-am uninstall-local
+	clean-generic clean-noinstLIBRARIES clean-noinstPROGRAMS ctags \
+	distclean distclean-compile distclean-generic distclean-tags \
+	distdir dvi dvi-am html html-am info info-am install \
+	install-am install-data install-data-am install-exec \
+	install-exec-am install-exec-local install-info \
+	install-info-am install-man install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
+	uninstall-am uninstall-info-am uninstall-local
 
 
 # We need the following in order to install a simple file in $(libdir)
@@ -873,6 +888,11 @@ all-local $(lib_OBJECTS): $(FNMATCH_H)
 fnmatch.h: fnmatch_.h
 	cp $(srcdir)/fnmatch_.h $@-t
 	mv $@-t $@
+
+check: unit-test
+
+unit-test:
+	./t-fpending > /dev/null
 
 # We need the following in order to create an <getopt.h> when the system
 # doesn't have one that works with the given compiler.
