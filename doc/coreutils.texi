@@ -6823,7 +6823,7 @@ multiple of the filesystem block size to fully erase the last block of the file.
 Use @option{--exact} to suppress that behavior.
 Thus, by default if you shred a 10-byte regular file on a system with 512-byte
 blocks, the resulting file will be 512 bytes long.  With this option,
-shred does not increase the size of the file.
+shred does not increase the apparent size of the file.
 
 @item -z
 @itemx --zero
