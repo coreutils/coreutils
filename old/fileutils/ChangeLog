@@ -1,3 +1,52 @@
+1999-04-02  Paul Eggert  <eggert@shade.twinsun.com>
+
+	* configure.in (AC_CHECK_FUNCS): Add gethrtime.
+
+	* src/shred.c (isaac_seed): Don't overrun the s->mm buffer.
+	Use gethrtime if available.  Don't assume that clock_gettime succeeds.
+	Put most random sources first.
+
+1999-04-02  Paul Eggert  <eggert@twinsun.com>
+
+	shred: Add new options -bcCklL and fix some porting problems.
+	Remove options -dp.  Do not read output files.
+
+	* src/shred.c (long_opts, usage, main, wipefile): Adjust to
+	new options.
+	("human.h", "quotearg.h"): New includes.
+	(struct Options): New members contents, links, n_iterations.
+	Remove allow_devices, remove_file.  Change n_iterations to size_t.
+	All uses changed.
+	(output_block_size): New var.
+	(usage): Declare __noreturn__ attribute.
+	(fdatasync): Define to -1 if not present, since we need to invoke both
+	fdatasync and fsync if both are present.  All invokers of fdatasync
+	now try fdatasync, then fsync.
+	(MIXIN): New macro.
+	(isaac_seed): Use it to mix in values.  Add uid, gid to mix.
+	Don't use gettimeofday, as it has too many porting problems.
+	(isaac_seedfd): Remove, since we no longer read the output files.
+	(sizefd): Remove; we now determine size by writing sequentially.
+	(dopass, wipename, wipefile, main): Clean up error messages.
+	(dopass): Keep track of offset relative to start of file, not
+	end, since we may not know how large the file is.  If size is
+	negative, write until we fall off the end of the file.
+	(wipefd): Do not read output file.
+	Return 0 if successful, -1 if not; do not make a special case for
+	non-regular files, since our callers have that info now.
+	(wipename): Now static.  Return errno if error.
+	(main): "-" now stands for standard output.
+	Do not shred append-only standard output.
+	(wipefile): Do not grant read permission to file when wiping it.
+	Use symbolic permission (S_IWUSR), not octal.
+
+	* src/system.h (S_IWUSR): Define if not already defined.
+
+	* configure.in (AC_SEARCH_LIBS): Prefer rt to posix4, for Solaris 7.
+	(AC_CHECK_FUNCS): Remove gettimeofday.
+
+	* doc/fileutils.texi: Document recent changes.
+
 1999-04-01  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in (AC_CHECK_FUNCS): Add acl.
