@@ -157,6 +157,16 @@ my @tv = (
 # more-intuitive POSIX-style -k options.
 ["19b", '-k1,1 -k2nr', "b 2\nb 1\nb 3\n", "b 3\nb 2\nb 1\n", 0],
 
+# This test failed when sort-1.22 was compiled on a Next x86 system
+# without optimization.  Without optimization gcc uses the buggy version
+# of memcmp in the Next C library.  With optimization, gcc uses its
+# (working) builtin version.  Test case form William Lewis.
+["20a", '',
+ "_________U__free\n_________U__malloc\n_________U__abort\n_________U__memcpy\n_________U__memset\n_________U_dyld_stub_binding_helper\n_________U__malloc\n_________U___iob\n_________U__abort\n_________U__fprintf\n",
+ "_________U___iob\n_________U__abort\n_________U__abort\n_________U__fprintf\n_________U__free\n_________U__malloc\n_________U__malloc\n_________U__memcpy\n_________U__memset\n_________U_dyld_stub_binding_helper\n",
+ 0],
+
+
 );
 
 sub test_vector
