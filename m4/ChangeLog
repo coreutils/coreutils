@@ -1,3 +1,7 @@
+2003-02-09  Jim Meyering  <jim@meyering.net>
+
+	* check-decl.m4 (jm_CHECK_DECLS): Add euidaccess.
+
 2003-02-03  Jim Meyering  <jim@meyering.net>
 
 	* c-stack.m4: Include <unistd.h>.  On some systems,
