@@ -524,7 +524,6 @@ pipe_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
   };
   typedef struct linebuffer LBUFFER;
   LBUFFER *first, *last, *tmp;
-  size_t i;			/* Index into buffers.  */
   size_t total_lines = 0;	/* Total number of newlines in all buffers.  */
   int errors = 0;
   size_t n_read;		/* Size in bytes of most recent read */
@@ -614,21 +613,24 @@ pipe_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
     total_lines -= tmp->nlines;
 
   /* Find the correct beginning, then print the rest of the file.  */
-  if (total_lines > n_lines)
-    {
-      const char *cp;
+  {
+    char const *beg = tmp->buffer;
+    char const *buffer_end = tmp->buffer + tmp->nbytes;
+    if (total_lines > n_lines)
+      {
+	/* Skip `total_lines' - `n_lines' newlines.  We made sure that
+	   `total_lines' - `n_lines' <= `tmp->nlines'.  */
+	size_t j;
+	for (j = total_lines - n_lines; j; --j)
+	  {
+	    beg = memchr (beg, '\n', buffer_end - beg);
+	    assert (beg);
+	    ++beg;
+	  }
+      }
 
-      /* Skip `total_lines' - `n_lines' newlines.  We made sure that
-         `total_lines' - `n_lines' <= `tmp->nlines'.  */
-      cp = tmp->buffer;
-      for (i = total_lines - n_lines; i; --i)
-	while (*cp++ != '\n')
-	  /* Do nothing.  */ ;
-      i = cp - tmp->buffer;
-    }
-  else
-    i = 0;
-  xwrite (STDOUT_FILENO, &tmp->buffer[i], tmp->nbytes - i);
+    xwrite (STDOUT_FILENO, beg, buffer_end - beg);
+  }
 
   for (tmp = tmp->next; tmp; tmp = tmp->next)
     xwrite (STDOUT_FILENO, tmp->buffer, tmp->nbytes);
