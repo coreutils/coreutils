@@ -51,9 +51,8 @@ userid_compare (const void *v_a, const void *v_b)
 }
 
 static void
-list_entries_users (int n)
+list_entries_users (int n, const STRUCT_UTMP *this)
 {
-  register STRUCT_UTMP *this = utmp_contents;
   char **u;
   int i;
   int n_entries;
@@ -66,7 +65,7 @@ list_entries_users (int n)
 #ifdef USER_PROCESS
 	  && this->ut_type == USER_PROCESS
 #endif
-	 )
+	  )
 	{
 	  char *trimmed_name;
 
@@ -98,8 +97,14 @@ list_entries_users (int n)
 static void
 users (const char *filename)
 {
-  int n_users = read_utmp (filename);
-  list_entries_users (n_users);
+  int n_users;
+  STRUCT_UTMP *utmp_buf;
+  int fail = read_utmp (filename, &n_users, &utmp_buf);
+
+  if (fail)
+    error (1, errno, "%s", filename);
+
+  list_entries_users (n_users, utmp_buf);
 }
 
 static void
