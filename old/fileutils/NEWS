@@ -1,8 +1,9 @@
 Changes in release 4.1:
 [4.0j]
+* rm no longer dumps core after warning about directory cycles
 * mv now refuses to move a file onto a symlink to itself when that symlink
   is on a separate partition.  Before, it would remove the file and leave
-  the symlink.
+  only the symlink.
 * `install -d -g foo 1/2' now sets the `group' of the final component as well
   as that of the leading one.
 * under certain conditions, chgrp would fail to affect files referenced
