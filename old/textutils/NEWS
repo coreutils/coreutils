@@ -1,4 +1,5 @@
 User-visible changes in release 1.13
+* md5sum: with --check, distinguish between open/read failure and bad checksum
 * md5sum: remove -h, -s, -v short options
 * md5sum: rename --verbose to --warn, --quiet to --status
 * md5sum --check fails if it finds no properly formatted checksum lines

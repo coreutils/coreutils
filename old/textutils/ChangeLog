@@ -4,6 +4,9 @@ Sat Sep 23 14:52:24 1995  Jim Meyering  (meyering@comco.com)
 	(OBJECTS): Use them instead of hardcoding object file names.
 	Suggested by Ulrich Drepper.
 
+	* md5sum.c (md5_check): Distinguish between open/read failure
+	and checksum mismatch.
+
 Mon Sep 18 23:15:05 1995  Jim Meyering  (meyering@comco.com)
 
 	* md5sum.c: Protoize.
