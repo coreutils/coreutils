@@ -17,7 +17,7 @@ AC_DEFUN(jm_FUNC_NANOSLEEP,
       struct timespec ts_sleep, ts_remaining;
       ts_sleep.tv_sec = 0;
       ts_sleep.tv_nsec = 1;
-      exit (nanosleep (&ts_sleep, &ts_remaining) == 0 ? 1 : 0);
+      exit (nanosleep (&ts_sleep, &ts_remaining) == 0 ? 0 : 1);
     }
 	  ],
 	 jm_cv_func_nanosleep_works=yes,
