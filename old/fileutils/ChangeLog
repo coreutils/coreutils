@@ -1,12 +1,32 @@
+2000-05-20  Jim Meyering  <meyering@lucent.com>
+
+	* tests/rm/r-2: Clean up.
+	* tests/ls/time-1 (LC_ALL): Set it unconditionally.
+
+2000-05-19  Jim Meyering  <meyering@lucent.com>
+
+	Save device number as well as inode number for each directory.
+	* src/remove.c (struct active_dir_ent) [st_dev]: New member.
+	[st_ino]: Rename from `inum'.
+	(make_active_dir_ent) [device]: New parameter.
+	(hash_compare_active_dir_ents): Compare using SAME_INODE macro.
+	(fspec_init_common): New function, factored out.
+	(fspec_init_file): Initialize have_device member.
+	(fspec_get_full_mode): Remove parameter.  Update caller.
+	Set have_device and st_dev members.
+	* src/remove.h (struct File_spec) [have_device, st_dev]:  New members
+
 2000-05-18  Jim Meyering  <meyering@lucent.com>
+
+	* src/remove.c (rm): Combine adjacent fputc and fprintf.
 
 	* tests/rm/Makefile.am (TESTS): Add hash.
 	* tests/rm/hash: New test for the fix in lib/hash.c.
 
 2000-05-17  Jim Meyering  <meyering@lucent.com>
 
-	* src/remove.c (remove_dir): FIXME
-	Reported by Morten Welinder.
+	* src/remove.c (remove_dir): Detect (and fail upon) attempt to subvert
+	a running `rm -r'.  Reported by Morten Welinder.
 
 2000-05-15  Jim Meyering  <meyering@lucent.com>
 
