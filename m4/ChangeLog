@@ -1,3 +1,11 @@
+2002-06-22  Jim Meyering  <meyering@lucent.com>
+
+	Update to latest tools.  Suggestions from Paul Eggert.
+	* stdbool.m4: New file, from diffutils-2.8.2.
+	* gnu-source.m4: Update from diffutils-2.8.2.
+	* prereq.m4: Change each use of AC_CHECK_HEADERS(stdbool.h)
+	to AC_HEADER_STDBOOL
+
 2002-06-21  Jim Meyering  <meyering@lucent.com>
 
 	* c-bs-a.m4: Add comment, from diffutils-2.8.2.
