@@ -1,4 +1,9 @@
 Changes in release 1.23
+[1.22n]
+* use lib/memchr.c only if it's not provided by the system -- this means
+  that on systems with a fast library memchr function you may notice an
+  improvement.  If you use a system with a buggy or signifcantly slower
+  memchr, please report it.
 [1.22m]
 * sort now considers newlines to be part of the line, as required by POSIX.2.
   E.g. a line starting with a tab now sorts before an empty line,
