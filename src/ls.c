@@ -1081,7 +1081,7 @@ get_link_name (filename, f)
 
   /* Some automounters give incorrect st_size for mount points.
      I can't think of a good workaround for it, though.  */
-  linksize = readlink (filename, linkbuf, sizeof (linkbuf));
+  linksize = readlink (filename, linkbuf, sizeof (linkbuf) - 1);
   if (linksize < 0)
     {
       error (0, errno, "%s", filename);

@@ -133,6 +133,7 @@ static struct option const long_opts[] =
   {"link", no_argument, NULL, 'l'},
   {"no-dereference", no_argument, &flag_dereference, 0},
   {"one-file-system", no_argument, &flag_one_file_system, 1},
+  {"parents", no_argument, &flag_path, 1},
   {"path", no_argument, &flag_path, 1},
   {"preserve", no_argument, &flag_preserve, 1},
   {"recursive", no_argument, NULL, 'R'},
@@ -358,7 +359,7 @@ do_copy (argc, argv)
 	      dst_path = xmalloc (strlen (dest) + strlen (arg) + 2);
 	      stpcpy (stpcpy (stpcpy (dst_path, dest), "/"), arg);
 
-	      /* For --path, we have to make sure that the directory
+	      /* For --parents, we have to make sure that the directory
 	         dirname (dst_path) exists.  We may have to create a few
 	         leading directories. */
 	      parent_exists = !make_path (dst_path,
@@ -407,9 +408,32 @@ do_copy (argc, argv)
     }
   else if (argc - optind == 2)
     {
+      char *dst_path;
+      char *source;
+      struct stat source_stats;
+
       if (flag_path)
 	usage ("when preserving paths, last argument must be a directory");
-      return copy (argv[optind], dest, new_dst, 0, (struct dir_list *) 0);
+
+      source = argv[optind];
+
+      if (dest[strlen (dest) - 1] == '/'
+	  && lstat (source, &source_stats) == 0
+	  && !S_ISDIR (source_stats.st_mode))
+	{
+	  char *base;
+
+	  strip_trailing_slashes (source);
+	  base = basename (source);
+	  dst_path = (char *) alloca (strlen (dest) + 1 + strlen (base) + 1);
+	  stpcpy (stpcpy (stpcpy (dst_path, dest), "/"), base);
+	}
+      else
+	{
+	  dst_path = dest;
+	}
+
+      return copy (argv[optind], dst_path, new_dst, 0, (struct dir_list *) 0);
     }
   else
     usage ("when copying multiple files, last argument must be a directory");
@@ -711,17 +735,12 @@ copy (src_path, dst_path, new_dst, device, ancestors)
     }
   else
 #ifdef S_ISLNK
-#ifdef _AIX
-#define LINK_BUF PATH_MAX
-#else
-#define LINK_BUF src_sb.st_size
-#endif
   if (S_ISLNK (src_type))
     {
-      char *link_val = (char *) alloca (LINK_BUF + 1);
+      char link_val[PATH_MAX + 1];
       int link_size;
 
-      link_size = readlink (src_path, link_val, LINK_BUF);
+      link_size = readlink (src_path, link_val, sizeof (link_val) - 1);
       if (link_size < 0)
 	{
 	  error (0, errno, "cannot read symbolic link `%s'", src_path);
@@ -801,7 +820,7 @@ un_backup:
 }
 
 /* Ensure that the parent directory of CONST_DIRPATH exists, for
-   the --path option.
+   the --parents option.
 
    SRC_OFFSET is the index in CONST_DIRPATH (which is a destination
    path) of the beginning of the source directory name.
@@ -870,7 +889,7 @@ make_path (const_dirpath, src_offset, mode, verbose_fmt_string,
 	    {
 	      /* This element of the path does not exist.  We must set
 		 *new_dst and new->is_new_dir inside this loop because,
-		 for example, in the command `cp --path ../a/../b/c e_dir',
+		 for example, in the command `cp --parents ../a/../b/c e_dir',
 		 make_path creates only e_dir/../a if ./b already exists. */
 	      *new_dst = 1;
 	      new->is_new_dir = 1;
@@ -924,7 +943,7 @@ make_path (const_dirpath, src_offset, mode, verbose_fmt_string,
 }
 
 /* Ensure that the parent directories of CONST_DST_PATH have the
-   correct protections, for the --path option.  This is done
+   correct protections, for the --parents option.  This is done
    after all copying has been completed, to allow permissions
    that don't include user write/execute.
 
@@ -934,7 +953,7 @@ make_path (const_dirpath, src_offset, mode, verbose_fmt_string,
    ATTR_LIST is a null-terminated linked list of structures that
    indicates the end of the filename of each intermediate directory
    in CONST_DST_PATH that may need to have its attributes changed.
-   The command `cp --path --preserve a/b/c d/e_dir' changes the
+   The command `cp --parents --preserve a/b/c d/e_dir' changes the
    attributes of the directories d/e_dir/a and d/e_dir/a/b to match
    the corresponding source directories regardless of whether they
    existed before the `cp' command was given.

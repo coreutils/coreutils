@@ -346,7 +346,8 @@ clear_directory (statp)
   int pathname_length;		/* Length of `pathname'. */
   ino_t *inode_space;		/* Copy of directory's inodes. */
   ino_t *inodep;		/* Current entry in `inode_space'. */
-  unsigned inode_size;		/* Bytes allocated for `inode_space'. */
+  unsigned n_inodes_allocated;	/* There is space for this many inodes
+					  in `inode_space'. */
   int err = 0;			/* Return status. */
   struct pathstack pathframe;	/* New top of stack. */
   struct pathstack *pp;		/* Temporary. */
@@ -354,8 +355,8 @@ clear_directory (statp)
   name_size = statp->st_size;
   name_space = (char *) xmalloc (name_size);
 
-  inode_size = statp->st_size;
-  inode_space = (ino_t *) xmalloc (inode_size);
+  n_inodes_allocated = (statp->st_size + sizeof (ino_t) - 1) / sizeof (ino_t);
+  inode_space = (ino_t *) xmalloc (n_inodes_allocated * sizeof (ino_t));
 
   do
     {
@@ -398,12 +399,13 @@ clear_directory (statp)
 		}
 	      namep = stpcpy (namep, dp->d_name) + 1;
 
-	      if (inodep == inode_space + inode_size)
+	      if (inodep == inode_space + n_inodes_allocated)
 		{
 		  ino_t *new_inode_space;
 
-		  inode_size += 1024;
-		  new_inode_space = (ino_t *) xrealloc (inode_space, inode_size);
+		  n_inodes_allocated += 1024;
+		  new_inode_space = (ino_t *) xrealloc (inode_space,
+					n_inodes_allocated * sizeof (ino_t));
 		  inodep += new_inode_space - inode_space;
 		  inode_space = new_inode_space;
 		}

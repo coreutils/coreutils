@@ -58,6 +58,7 @@ int yesno ();
 void error ();
 void strip_trailing_slashes ();
 int eaccess_stat ();
+char *stpcpy ();
 
 static int copy_reg ();
 static int do_move ();
@@ -188,6 +189,17 @@ main (argc, argv)
   exit (errors);
 }
 
+/* If PATH is an existing directory, return nonzero, else 0.  */
+
+static int
+is_real_dir (path)
+     char *path;
+{
+  struct stat stats;
+
+  return lstat (path, &stats) == 0 && S_ISDIR (stats.st_mode);
+}
+
 /* Move file SOURCE onto DEST.  Handles the case when DEST is a directory.
    Return 0 if successful, 1 if an error occurred.  */
 
@@ -198,7 +210,8 @@ movefile (source, dest)
 {
   strip_trailing_slashes (source);
 
-  if (isdir (dest))
+  if ((dest[strlen (dest) - 1] == '/' && !is_real_dir (source))
+      || isdir (dest))
     {
       /* Target is a directory; build full target filename. */
       char *base;
@@ -206,7 +219,7 @@ movefile (source, dest)
 
       base = basename (source);
       new_dest = (char *) alloca (strlen (dest) + 1 + strlen (base) + 1);
-      sprintf (new_dest, "%s/%s", dest, base);
+      stpcpy (stpcpy (stpcpy (new_dest, dest), "/"), base);
       return do_move (source, new_dest);
     }
   else

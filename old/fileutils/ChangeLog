@@ -1,9 +1,36 @@
+Wed Aug 25 21:40:00 EDT 1993
+
+	* cp.c: Add --parents as synonym for --path.  Change --path to
+	--parents in comments.  --path is deprecated.
+
+	* rm.c (clear_directory): Fix incorrect test for determining when
+	to reallocate buffer.  Thanks to Ric Anderson <ric@CS.Arizona.EDU>.
+
+Fri Aug 13 17:19:52 1993  Jim Meyering  (meyering@comco.com)
+
+	* fsusage (adjust_blocks): Round away from zero -- this matters
+	when computing the negative free-block count for disks that are
+	more than 100% full.
+
+        * mv.c (movefile): Use nested calls to stpcpy instead of sprintf.
+        (is_real_dir): New function.
+        (movefile): In addition to when dest is a directory, if dest has
+        a trailing `/' and source is not a directory, presume the target
+        is dest/`basename source`.  This converts `mv a b/' to `mv a b/a'
+	when a is not a directory -- so the command will fail when a is a
+	non-directory and (b doesn't exist or b isn't a directory or a
+	symlink to a directory).
+
+	* ls.c (do_copy): Similarly, convert `cp a b/' to cp a b/a when
+	a is not a directory.
+
 Wed Aug  4 17:43:18 1993  Jim Meyering  (meyering@comco.com)
 
         * ls.c (get_link_name): Don't ever use the stat field st_size as a
 	buffer size.  Too many systems don't set it properly for mount points.
         Instead, use a fixed-length buffer.  From Michael Joosten
         <joost@ori.CAdlab.DE>.
+	* cp.c (copy): Ditto.
 
 Mon Jul 19 17:39:01 1993  Jim Meyering  (meyering@comco.com)
 

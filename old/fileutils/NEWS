@@ -1,3 +1,8 @@
+Major changes in release 3.9:
+* ls and cp can handle mount points on more systems
+* cp, mkdir, and rmdir long option --path renamed to --parents;  --path
+  will still work for a while
+
 Major changes in release 3.8:
 * install isn't as likely to produce spurious errors 
 * avoid redundant compilations for `dir' and `vdir';
