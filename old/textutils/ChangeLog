@@ -8,7 +8,7 @@ Thu Jan  4 20:32:52 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	works again.  Reported by François Pinard and Kaveh Ghazi.
 
 	* rx.c [SYNTAX]: Rename from SYNTAX_TABLE.
-	[SYNTAX_TABLE]: Remove extern dcl or re_syntax_table.
+	[SYNTAX_TABLE]: Remove extern dcl of re_syntax_table.
 	(RE_SEARCH_2_FN): Cast string1 and string2 to avoid pointer type
 	mismatch errors from e.g. SunOS's /bin/cc.
 	Reported by Kaveh Ghazi.
