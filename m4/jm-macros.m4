@@ -41,6 +41,10 @@ AC_DEFUN(jm_MACROS,
   AC_REQUIRE([jm_AC_PREREQ_XSTRTOUMAX])
   AC_REPLACE_FUNCS(strcasecmp strncasecmp)
   AC_REPLACE_FUNCS(dup2)
+
+  dnl used by e.g. intl/*domain.c and lib/canon-host.c
+  AC_REPLACE_FUNCS(strdup)
+
   AC_REPLACE_FUNCS(memchr)
   AC_REPLACE_FUNCS(memmove)
   AC_CHECK_FUNCS(getpagesize)
