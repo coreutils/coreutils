@@ -103,7 +103,23 @@ sub run_tests ($$$$$)
 	    }
 
 	  my $file_spec = $val;
-	  my ($filename, $contents) = each %$file_spec;
+	  my ($filename, $contents);
+	  if (!ref $io_spec)
+	    {
+	      ($filename, $contents) = (undef, $io_spec);
+	    }
+	  elsif (ref $io_spec eq 'HASH')
+	    {
+	      my $n = keys %$file_spec;
+	      die "$program_name: $test_name: $type spec has $n elements --"
+		. " expected 1\n"
+		  if $n != 1;
+	      ($filename, $contents) = each %$file_spec;
+	    }
+	  else
+	    {
+	      die "$program_name: $test_name: invalid RHS in $type-spec\n"
+	    }
 
 	  if ($type =~ /_FILE$/ || $type =~ /_DATA$/)
 	    {
