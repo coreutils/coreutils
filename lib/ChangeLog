@@ -1,5 +1,8 @@
 2004-12-19  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* c-strtod.c (STRTOD): Depend on HAVE_C99_STRTOLD, not
+	HAVE_DECL_STRTOLD.
+
 	* alloca_.h: Conditionalize on _GNULIB_ALLOCA_H, not _ALLOCA_H.
 	Remove now-obsolete comment about AIX.
 	* getdate.y: Include <alloca.h> only if HAVE_ALLOCA.
