@@ -18,6 +18,7 @@ framework_failure=0
 mkdir $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 mkdir foo bar || framework_failure=1
+mkdir -p a/b/c d || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
@@ -29,5 +30,12 @@ fail=0
 # With 4.0.37 and earlier (back to when?), this would fail
 # with the failed assertion from dirname.c.
 cp -R --parents foo/ bar || fail=1
+
+# Exercise the make_path and re_protect code in cp.c.
+# FIXME: compare verbose output with expected output.
+cp --verbose -a --parents a/b/c d > /dev/null 2>&1 || fail=1
+test -d d/a/b/c || fail=1
+
+# FIXME: add tests to check that re_protect works
 
 (exit $fail); exit
