@@ -1,3 +1,8 @@
+2000-06-17  Bruno Haible  <haible@clisp.cons.org>
+
+	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): Rename BeOS specific
+	macro from MOUNTED_NEXT_DEV to MOUNTED_FS_STAT_DEV.
+
 2000-07-01  Jim Meyering  <meyering@lucent.com>
 
 	* uptime.m4: Put double quotes around use of $cross_compiling.
