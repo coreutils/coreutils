@@ -1,3 +1,8 @@
+2004-04-03  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* doc/coreutils.texi (readlink invocation): Document new
+	"readlink -f" behaviour and new canonicalize options, -e and -m.
+
 2004-07-02  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (check-texinfo): Disallow `filename' in .texi files.
