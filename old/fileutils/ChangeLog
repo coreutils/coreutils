@@ -1,5 +1,8 @@
 Sat Jun 29 00:33:31 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in (PACKAGE_VERSION): Add `GNU ' prefix so we see
+	it in the output of --version.  Reported by RMS.
+
 	* src/Makefile.am (BUILT_SOURCES): Guard dependency on dircolors.h
 	with @MAINT@ so it won't be removed with a casual disctlean.
 	(EXTRA_DIST): Add dcgen.pl and dircolors.hin.
