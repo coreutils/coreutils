@@ -1,5 +1,8 @@
 1999-08-22  Jim Meyering  <meyering@ascend.com>
 
+	* src/su.c (run_shell): Declare with noreturn attribute.
+	Use an explicit exit(1) rather than doing that through error.
+
 	* src/sys2.h (IF_LINT): Define new macro.
 	* src/date.c (batch_convert): Use IF_LINT macro instead of #ifdef lint.
 	* src/pathchk.c (validate_path): Likewise.
