@@ -344,16 +344,18 @@ wget-update: $(get-targets)
 
 .PHONY: cvs-update
 cvs-update:
+	fail=;								\
 	for f in $(cvs_files); do					\
 	  test -f $$f || { echo "*** skipping $$f" 1>&2; continue; };	\
 	  cvs diff $$f > /dev/null					\
 	    || { echo "*** $$f is locally modified; skipping it" 1>&2;	\
-		 continue; };						\
+		 fail=yes; continue; };					\
 	  file=$$(basename $$f);					\
 	  echo checking out $$file...;					\
 	  $(CVS) -d $(automake_repo) co -p automake/lib/$$file> $$f.t	\
 	    && $(move_if_change) $$f.t $$f;				\
-	done
+	done;								\
+	test "$$fail" && exit 1
 
 define emit-upload-commands
 	echo =====================================
