@@ -87,7 +87,6 @@ libfetish_a_SOURCES = \
   md5.c md5.h \
   memcasecmp.c memcasecmp.h \
   memcoll.c memcoll.h \
-  mmap-stack.h \
   modechange.c modechange.h \
   mountlist.h \
   offtostr.c \
