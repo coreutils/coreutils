@@ -70,7 +70,7 @@ getndelim2 (char **lineptr, size_t *linesize, size_t nmax,
     {
       /* Here always *lineptr + *linesize == read_pos + nbytes_avail.  */
 
-      register int c = getc (stream);
+      register int c;
 
       /* We always want at least one char left in the buffer, since we
 	 always (unless we get an error while reading the first char)
@@ -95,7 +95,8 @@ getndelim2 (char **lineptr, size_t *linesize, size_t nmax,
 	    }
 	}
 
-      if (c == EOF || ferror (stream))
+      c = getc (stream);
+      if (c == EOF)
 	{
 	  /* Return partial line, if any.  */
 	  if (read_pos == *lineptr)
