@@ -1,3 +1,13 @@
+	* aclocal.m4 (ud_WITH_REGEX): New macro.
+	* configure.in: Use it.
+	* lib/Makefile.in (REGEX): Set to @REGEXOBJ@, not regex.o.
+	(SOURCES, DISTFILES): Add rx.c, rx.h.
+	* acconfig.h (WITH_REGEX): Add it.
+	* csplit.c [!WITH_REGEX]: Include rx.h.
+	* nl.c [!WITH_REGEX]: Likewise.
+	* tac.c [!WITH_REGEX]: Likewise.
+	From Ulrich Drepper.
+
 Tue Dec  5 17:49:53 1995  Jim Meyering  (meyering@comco.com)
 
 	* sort.c (main): Diagnose invalid arguments to -k, then fail.
