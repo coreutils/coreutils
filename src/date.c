@@ -44,9 +44,6 @@
 #include <sys/types.h>
 #include "system.h"
 
-/* This is portable and avoids bringing in all of the ctype stuff. */
-#define isdigit(c) ((c) >= '0' && (c) <= '9')
-
 #ifdef TM_IN_SYS_TIME
 #include <sys/time.h>
 #else
