@@ -220,6 +220,7 @@ EOF1
 
   validate ();
 
+  my $n_tests = 0;
   my $test_vector;
   foreach $test_vector (Test::test_vector ())
     {
@@ -285,6 +286,7 @@ EOF1
 	      $msg = "($msg)" if $msg;
 	      my $t_name = "$test_name$msg";
 	      my $e_cmd = ($e ? "$e " : '');
+	      ++$n_tests;
 	      print <<EOF;
 $e_cmd$cmd
 code=\$?
@@ -307,7 +309,6 @@ EOF
 	    }
 	}
     }
-  my $n_tests = Test::test_vector ();
   print <<EOF3 ;
 if test \$errors = 0 ; then
   \$echo Passed all $n_tests tests. 1>&2
