@@ -16,7 +16,7 @@ tmp=$TMPDIR/t-rm.$$
 trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
 trap 'exit $?' 1 2 13 15
 
-test_failure=0
+framework_failure=0
 
 mkdir $tmp || framework_failure=1
 mkdir $tmp/a $tmp/a/a || framework_failure=1
