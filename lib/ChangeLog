@@ -1,5 +1,9 @@
 2003-02-28  Jim Meyering  <jim@meyering.net>
 
+	* ftw.c (ftw_startup): Return -1 if alloca fails.
+
+2003-02-28  Jim Meyering  <jim@meyering.net>
+
 	* fts.c (fts_children): If opening `.' fails, set the fts_child
 	member to NULL before returning.  From NetBSD.
 
