@@ -159,8 +159,13 @@ main (argc, argv)
   if (flag_help)
     usage ();
 
-  while (optind < argc && argv[optind][0] == '+')
-    skip_chars = atoi (argv[optind++]);
+  if (optind >= 2 && strcmp (argv[optind - 1], "--") != 0)
+    {
+      /* Interpret non-option arguments with leading `+' only
+	 if we haven't seen `--'.  */
+      while (optind < argc && argv[optind][0] == '+')
+	skip_chars = atoi (argv[optind++]);
+    }
 
   if (optind < argc)
     infile = argv[optind++];

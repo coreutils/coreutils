@@ -543,6 +543,8 @@ print_partial_compiled_pattern (start, end)
   /* Loop over pattern commands.  */
   while (p < pend)
     {
+      printf ("%d:\t", p - start);
+
       switch ((re_opcode_t) *p++)
 	{
         case no_op:
@@ -581,27 +583,45 @@ print_partial_compiled_pattern (start, end)
 	case charset:
         case charset_not:
           {
-            register int c;
+            register int c, last = -100;
+	    register int in_range = 0;
 
-            printf ("/charset%s",
-	            (re_opcode_t) *(p - 1) == charset_not ? "_not" : "");
+	    printf ("/charset [%s",
+	            (re_opcode_t) *(p - 1) == charset_not ? "^" : "");
             
             assert (p + *p < pend);
 
-            for (c = 0; c < *p; c++)
+            for (c = 0; c < 256; c++)
+	      if (c / 8 < *p
+		  && (p[1 + (c/8)] & (1 << (c % 8))))
+		{
+		  /* Are we starting a range?  */
+		  if (last + 1 == c && ! in_range)
+		    {
+		      putchar ('-');
+		      in_range = 1;
+		    }
+		  /* Have we broken a range?  */
+		  else if (last + 1 != c && in_range)
               {
-                unsigned bit;
-                unsigned char map_byte = p[1 + c];
+		      printchar (last);
+		      in_range = 0;
+		    }
                 
-                putchar ('/');
+		  if (! in_range)
+		    printchar (c);
 
-		for (bit = 0; bit < BYTEWIDTH; bit++)
-                  if (map_byte & (1 << bit))
-                    printchar (c * BYTEWIDTH + bit);
+		  last = c;
               }
+
+	    if (in_range)
+	      printchar (last);
+
+	    putchar (']');
+
 	    p += 1 + *p;
-	    break;
 	  }
+	  break;
 
 	case begline:
 	  printf ("/begline");
@@ -613,17 +633,17 @@ print_partial_compiled_pattern (start, end)
 
 	case on_failure_jump:
           extract_number_and_incr (&mcnt, &p);
-  	  printf ("/on_failure_jump/0/%d", mcnt);
+  	  printf ("/on_failure_jump to %d", p + mcnt - start);
           break;
 
 	case on_failure_keep_string_jump:
           extract_number_and_incr (&mcnt, &p);
-  	  printf ("/on_failure_keep_string_jump/0/%d", mcnt);
+  	  printf ("/on_failure_keep_string_jump to %d", p + mcnt - start);
           break;
 
 	case dummy_failure_jump:
           extract_number_and_incr (&mcnt, &p);
-  	  printf ("/dummy_failure_jump/0/%d", mcnt);
+  	  printf ("/dummy_failure_jump to %d", p + mcnt - start);
           break;
 
 	case push_dummy_failure:
@@ -632,40 +652,40 @@ print_partial_compiled_pattern (start, end)
           
         case maybe_pop_jump:
           extract_number_and_incr (&mcnt, &p);
-  	  printf ("/maybe_pop_jump/0/%d", mcnt);
+  	  printf ("/maybe_pop_jump to %d", p + mcnt - start);
 	  break;
 
         case pop_failure_jump:
 	  extract_number_and_incr (&mcnt, &p);
-  	  printf ("/pop_failure_jump/0/%d", mcnt);
+  	  printf ("/pop_failure_jump to %d", p + mcnt - start);
 	  break;          
           
         case jump_past_alt:
 	  extract_number_and_incr (&mcnt, &p);
-  	  printf ("/jump_past_alt/0/%d", mcnt);
+  	  printf ("/jump_past_alt to %d", p + mcnt - start);
 	  break;          
           
         case jump:
 	  extract_number_and_incr (&mcnt, &p);
-  	  printf ("/jump/0/%d", mcnt);
+  	  printf ("/jump to %d", p + mcnt - start);
 	  break;
 
         case succeed_n: 
           extract_number_and_incr (&mcnt, &p);
           extract_number_and_incr (&mcnt2, &p);
- 	  printf ("/succeed_n/0/%d/0/%d", mcnt, mcnt2);
+	  printf ("/succeed_n to %d, %d times", p + mcnt - start, mcnt2);
           break;
         
         case jump_n: 
           extract_number_and_incr (&mcnt, &p);
           extract_number_and_incr (&mcnt2, &p);
- 	  printf ("/jump_n/0/%d/0/%d", mcnt, mcnt2);
+	  printf ("/jump_n to %d, %d times", p + mcnt - start, mcnt2);
           break;
         
         case set_number_at: 
           extract_number_and_incr (&mcnt, &p);
           extract_number_and_incr (&mcnt2, &p);
- 	  printf ("/set_number_at/0/%d/0/%d", mcnt, mcnt2);
+	  printf ("/set_number_at location %d to %d", p + mcnt - start, mcnt2);
           break;
         
         case wordbound:
@@ -728,8 +748,11 @@ print_partial_compiled_pattern (start, end)
         default:
           printf ("?%d", *(p-1));
 	}
+
+      putchar ('\n');
     }
-  printf ("/\n");
+
+  printf ("%d:\tend of pattern.\n", p - start);
 }
 
 
@@ -2058,7 +2081,7 @@ regex_compile (pattern, size, syntax, bufp)
 #ifdef DEBUG
   if (debug)
     {
-      DEBUG_PRINT1 ("\nCompiled pattern: ");
+      DEBUG_PRINT1 ("\nCompiled pattern: \n");
       print_compiled_pattern (bufp);
     }
 #endif /* DEBUG */

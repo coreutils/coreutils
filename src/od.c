@@ -43,7 +43,7 @@ char *alloca ();
 #include <float.h>
 #endif
 
-#ifdef __STDC__
+#if defined (__GNUC__) || defined (HAVE_LONG_DOUBLE)
 typedef long double LONG_DOUBLE;
 #else
 typedef double LONG_DOUBLE;
@@ -553,7 +553,7 @@ print_double (n_bytes, block, fmt_string)
     }
 }
 
-#ifdef __STDC__
+#if defined (__GNUC__) || defined (HAVE_LONG_DOUBLE)
 static void
 print_long_double (n_bytes, block, fmt_string)
      long unsigned int n_bytes;
@@ -885,7 +885,7 @@ decode_one_format (s, next, tspec)
 		   DBL_DIG + 8, DBL_DIG);
 	  break;
 
-#ifdef __STDC__
+#if defined (__GNUC__) || defined (HAVE_LONG_DOUBLE)
 	case FP_LONG_DOUBLE:
 	  print_function = print_long_double;
 	  pre_fmt_string = "%%%d.%dle%%c";
@@ -1348,7 +1348,8 @@ get_lcm ()
    return the offset it denotes.  Otherwise, return -1.  */
 
 long int
-parse_old_offset (const char *s)
+parse_old_offset (s)
+     const char *s;
 {
   int radix;
   char *suffix;
@@ -1362,13 +1363,13 @@ parse_old_offset (const char *s)
     ++s;
 
   /* Determine the radix we'll use to interpret S.  If there is a `.',
-     it's decimal, otherwise, if the string begins with `0x', it's
-     hexadecimal, else octal.  */
+     it's decimal, otherwise, if the string begins with `0X'or `0x',
+     it's hexadecimal, else octal.  */
   if (index (s, '.') != NULL)
     radix = 10;
   else
     {
-      if (strlen (s) >= 2 && s[0] == '0' && (s[1] == 'x' || s[1] == 'X'))
+      if (s[0] == '0' && (s[1] == 'x' || s[1] == 'X'))
 	radix = 16;
       else
 	radix = 8;

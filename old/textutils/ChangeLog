@@ -1,3 +1,22 @@
+Sat May  1 09:03:19 1993  Jim Meyering  (meyering@comco.com)
+
+	* uniq.c (main.c): Interpret non-option arguments with a leading `+'
+	only if we haven't seen `--'.
+
+Fri Apr 30 20:16:03 1993  Jim Meyering  (meyering@comco.com)
+
+	* configure.in [AC_HAVE_HEADERS]: Add limits.h and unistd.h.
+
+	* configure.in [CFLAGS, LDFLAGS]: Assign reasonable defaults.
+
+	* od.c (parse_old_offset): Don't use prototype in function
+	definition.  Remove unnecessary conjunct from test for hexadecimal
+	prefix.
+
+	* od.c: Depend on __GNUC__ || HAVE_LONG_DOUBLE rather than __STDC__
+	for long double support;  there are compilers (Stardent Vistra svr4)
+	without long double but still define __STDC__.
+
 Thu Apr 29 02:01:27 1993  Jim Meyering  (meyering@comco.com)
 
 	* src/*.c and man/*.c except for sort: Add --help and --version
