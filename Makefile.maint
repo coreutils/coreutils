@@ -105,7 +105,7 @@ v_etc_file = lib/version-etc.c
 # Make sure that the copyright date in $(v_etc_file) is up to date.
 copyright-check:
 	@if test -f $(v_etc_file); then \
-	  grep '^#define COPYRIGHT_YEAR "$(shell date +%Y)"' $(v_etc_file) \
+	  grep '"Copyright (C) $(shell date +%Y) Free' $(v_etc_file) \
 	    >/dev/null \
 	  || { echo 'out of date copyright in $(v_etc_file); update it' 1>&2; \
 	       exit 1; }; \
