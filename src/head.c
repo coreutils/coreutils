@@ -28,7 +28,6 @@
 
 #include <stdio.h>
 #include <getopt.h>
-#include <assert.h>
 #include <sys/types.h>
 
 #include "system.h"
@@ -221,7 +220,8 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0)
 
   /* If we're eliding no more than this many bytes, then it's ok to allocate
      more memory in order to use a more time-efficient algorithm.
-     FIXME: use a fraction of available memory instead, as in sort.  */
+     FIXME: use a fraction of available memory instead, as in sort.
+     FIXME: is this even worthwhile?  */
 #ifndef HEAD_TAIL_PIPE_BYTECOUNT_THRESHOLD
 # define HEAD_TAIL_PIPE_BYTECOUNT_THRESHOLD 1024 * 1024
 #endif
@@ -565,19 +565,19 @@ elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide)
     }
 
   /* Print the first `total_lines - n_elide' lines of tmp->buffer.  */
-  assert (n_elide <= total_lines);
-  {
-    size_t n = total_lines - n_elide;
-    char const *buffer_end = tmp->buffer + tmp->nbytes;
-    char const *p = tmp->buffer;
-    while (n && (p = memchr (p, '\n', buffer_end - p)))
-      {
-	++p;
-	++tmp->nlines;
-	--n;
-      }
-    fwrite (tmp->buffer, 1, p - tmp->buffer, stdout);
-  }
+  if (n_elide < total_lines)
+    {
+      size_t n = total_lines - n_elide;
+      char const *buffer_end = tmp->buffer + tmp->nbytes;
+      char const *p = tmp->buffer;
+      while (n && (p = memchr (p, '\n', buffer_end - p)))
+	{
+	  ++p;
+	  ++tmp->nlines;
+	  --n;
+	}
+      fwrite (tmp->buffer, 1, p - tmp->buffer, stdout);
+    }
 
 free_lbuffers:
   while (first)
