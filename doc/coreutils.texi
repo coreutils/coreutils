@@ -9973,13 +9973,13 @@ input.  This is useful when you have many dates to process, because the
 system overhead of starting up the @code{date} executable many times can
 be considerable.
 
-@item -I[@var{timespec}]
+@item -I @var{timespec}
 @itemx --iso-8601[=@var{timespec}]
-@opindex -I[@var{timespec}]
+@opindex -I @var{timespec}
 @opindex --iso-8601[=@var{timespec}]
 Display the date using the ISO 8601 format, @samp{%Y-%m-%d}.
 
-The optional argument @var{timespec} specifies the number of additional
+The argument @var{timespec} specifies the number of additional
 terms of the time to include.  It can be one of the following:
 @table @samp
 @item auto
@@ -9997,6 +9997,12 @@ Append the hours, minutes, and seconds.
 
 If showing any time terms, then include the time zone using the format
 @samp{%z}.
+
+If @var{timespec} is omitted with @option{--iso-8601}, the default is
+@samp{auto}.  On older systems, @sc{gnu} @command{date} instead
+supports an obsolete option @option{-I[@var{timespec}]}, where
+@var{timespec} defaults to @samp{auto}.  Newer systems do not support
+@option{-I} without an argument; use @option{--iso-8601} instead.
 
 @item -R
 @itemx --rfc-822
@@ -10472,12 +10478,15 @@ The program accepts the following option.  Also see @ref{Common options}.
 
 @table @samp
 @item -n @var{adjustment}
-@itemx -@var{adjustment}
 @itemx --adjustment=@var{adjustment}
 @opindex -n
 @opindex --adjustment
-@opindex -@var{adjustment}
 Add @var{adjustment} instead of 10 to the command's priority.
+
+On older systems, @command{nice} supports an obsolete option
+@option{-@var{adjustment}}.  Newer systems do not support this; use
+@option{-n @var{adjustment}} instead.
+
 @end table
 
 
