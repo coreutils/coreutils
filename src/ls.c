@@ -69,7 +69,7 @@
 #include "argmatch.h"
 #include "xstrtol.h"
 
-#define obstack_chunk_alloc xmalloc
+#define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
 
 #ifndef INT_MAX
