@@ -462,7 +462,7 @@ make_path_private (const char *const_dirpath, int src_offset, int mode,
 
 static int
 do_copy (int n_files, char **file, const char *target_directory,
-	 const struct cp_options *x)
+	 struct cp_options *x)
 {
   const char *dest;
   struct stat sb;
@@ -493,7 +493,7 @@ do_copy (int n_files, char **file, const char *target_directory,
      The problem it is used to detect can arise only if there are
      two or more files to copy.  */
   if (n_files >= 2)
-    dest_info_init ();
+    dest_info_init (x);
 
   if (lstat (dest, &sb))
     {
@@ -726,6 +726,7 @@ cp_option_init (struct cp_options *x)
 
   x->update = 0;
   x->verbose = 0;
+  x->dest_info = NULL;
 }
 
 /* Given a string, ARG, containing a comma-separated list of arguments
