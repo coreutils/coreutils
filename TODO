@@ -16,3 +16,7 @@ ls: add --format=FORMAT option that controls how each line is printed.
 
 cp --no-preserve=X should not attempt to preserve attribute X
   reported by Andreas Schwab
+
+printf: support %b -- consider adapting builtins/printf.def from bash
+
+copy.c: Address the FIXME-maybe comment in copy_internal.
