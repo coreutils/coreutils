@@ -13,10 +13,8 @@
 	* tests/root-only: Remove *all* write access, not just that
 	of the owner.
 
-	* src/copy.c (copy_internal):
+	* src/copy.c (copy_internal): FIXME
 	Reported by Vin Shelton.
-
-	* src/copy.c: FIXME
 
 	* tests/mv/i-3: New test for the above fix.
 	* tests/mv/Makefile.am (TESTS): Add i-3.
