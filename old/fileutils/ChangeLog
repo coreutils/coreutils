@@ -1,3 +1,16 @@
+1999-10-30  Jim Meyering  <meyering@ascend.com>
+
+	* src/ln.c: Convert --backup to take an optional argument.
+	Deprecate --version-control (-V) in comments.
+	(usage): Remove mention of --version-control.
+	(main): Make -V warn then fall through into --backup case.
+	[--backup case]: Handle optional arg.
+
+1999-10-24  Jim Meyering  <meyering@ascend.com>
+
+	* src/cp.c (do_copy): Constify `dest', and cast-away the new
+	const in assignment to new_dest.
+
 1999-10-23  Jim Meyering  <meyering@ascend.com>
 
 	* tests/touch/Makefile.am (TESTS): Add dangling-symlink.
