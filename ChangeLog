@@ -1,12 +1,98 @@
 2004-05-30  Jim Meyering  <jim@meyering.net>
 
-	Work around HPUX /bin/cc compiler bug.
+	Work around HPUX /bin/cc compiler bug that is exposed, now that
+	sets are arrays of type `bool'.
+
 	* src/tr.c (card_of_complement): Use cleaner `sizeof in_set'
 	rather than `N_CHARS * sizeof(in_set[0])'.  Using HPUX's /bin/cc
 	(aC++/ANSI C B3910B A.05.55 [Dec 04 2003]) on an ia64-hp-hpux11.22
 	system, those two expressions are not the same (256 vs. 1024).
 	The effect of this problem was that `tr -c x y' would fail:
 	tr: when not truncating set1, string2 must be non-empty
+	(set_initialize): Remove unnecessary initialization of the `in_set'
+	buffer; that initialization triggered the same compiler bug as above.
+
+2004-05-29  Paul Eggert  <eggert@cs.ucla.edu>
+
+	tr cleanup, mostly having to do with integer type ranges.
+	Remove all casts.
+
+	* tests/tr/Test.pm: Add a few tests for the below.  Alas, most of
+	the test cases wouldn't be portable, or would take too much CPU
+	time, or both.
+
+	* src/tr.c (N_CHARS, N_CHAR_CLASSES): Now an enum, not a macro.
+	This is safe since the code already assumes N_CHARS fits in int.
+	(Filter): Remove: we want to prototype everything.
+	(ORD, CHR): Remove.  All uses removed.  Some replaced with:
+	(uchar): New function.  All places where a char must be converted
+	to an unsigned char are now done this way, not by ad-hoc methods.
+	(count): New type.  Use it whenever counts or states are needed.
+	(BEGIN_STATE): Increase from INT_MAX - 1 (which was bogus, anyway,
+	since we used it in an unsigned int context) to UINTMAX_MAX - 1.
+	(REPEAT_COUNT_MAXIMUM): New macro.  Use it in place of BEGIN_STATE
+	whenever appropriate.
+	(NOT_A_CHAR): Remove global macro; now a local enum.
+	(UL_LOWER, UL_UPPER, UL_NONE): No longer specify values, since
+	the rest of the code no longer depends on them.
+	(class_ok): Remove; all uses changed to use inline comparisons.
+	(RE_NO_TYPE): Remove; wasn't used or needed.
+	(struct List_element): normal_char and equiv_code are now unsigned
+	char, not int.
+	first_char, last_char, and the_repeated_char are now unsigned char,
+	not unsigned int.  repeat_count is now count, not size_t.
+	All uses changed.
+	(struct Spec_list): state is now count, not unsigned int.
+	lengthis now count, not size_t.
+	n_indefinite_repeats is now size_t, not int.
+	has_equiv_class, has_char_class, and has_restricted_char_class
+	are now bool, not int.  All uses changed.
+	(struct E_string): s is now char *, not unsigned char *.
+	escaped is now bool *, not int *.  All uses changed.
+	(ES_MATCH): Remove macro, replacing with:
+	(es_match): New inline function.  All uses changed.
+	(squeeze_repeats, complement, posix_pedantic, truncate_set1,
+	translating): Now bool, not int.
+	(io_buf): Now char array, not unsigned char.
+	(SET_TYPE): Remove.  All uses replaced with bool.
+	(is_equiv_class_member, unquote, append_range, append_char_class,
+	append_equiv_class, find_closing_delim, star_digits_closebracket,
+	build_spec_list, parse_str, homogeneous_spec_list):
+	Now returns bool, not int.  All uses changed.
+	(is_equiv_class_member): Now inline.
+	(is_equiv_class_member, is_char_class_member, make_printable_str,
+	append_normal_char, append_range, append_repeated_char,
+	get_s2_spec_stats):
+	Args are now of proper integer type.
+	(unquote, look_up_char_class, make_printable_str,
+	append_equiv_class, build_spec_list, squeeze_filter):
+	Avoid unsigned char *p; gently convert *p to unsigned char instead.
+	(unquote, get_spec_stats): Do not jump past declarations and then
+	use them; C doesn't allow this in portable programs.
+	(make_printable_str): Check for overflow in size calculations.
+	(xmemdup): Remove.  All uses rewritten.
+	(find_bracketed_repeat): Args are now of proper pointer-to-integer
+	type.  Do not reject [c*0].  Use xstrtoumax, not xstrtoul.
+	(find_bracketed_repeat, star_digits_closebracket): Check that the
+	digits are not escaped.
+	(build_spec_list): Don't bother to copy opnd_str; not needed.
+	(build_spec_list, get_next): Simplify internal logic a bit.
+	(card_of_complement): Fix bug due to char overflow.
+	(get_spec_stats): Don't assume len fits into int.
+	Check for integer overflow.  Use abort() rather than assert(0).
+	(string2_extend): Fix subscript error: is_char_class_member (..., 255)
+	was being invoked.
+	(squeeze_filter): READER is never null now; simplify code.
+	READER arg now has a simpler type.  Remove unnecessary casts.
+	(squeeze_filter, main): Calls to fwrite improperly checked result
+	against zero, rather than against requested size.
+	(plain_read): New function.
+	(read_and_delete, read_and_xlate):
+	Remove unused filter arg, and don't worry about hit_eof.
+	Simplify by using plain_read.
+	(set_initialize): Args are bool and bool *, not int and SET_TYPE *.
+	(main): Always pass a non-null procedure to squeeze_filter.
+	Rewrite so that class_ok isn't needed.
 
 2004-05-29  Paul Eggert  <eggert@cs.ucla.edu>
 
