@@ -3,26 +3,6 @@
 	* obstack.h: Update from GNU libc.
 	* obstack.c: Likewise.
 
-2000-11-09  Paul Eggert  <eggert@twinsun.com>
-
-	* unicodeio.c (ENOTSUP): Define to EINVAL if not defined.
-
-2000-11-09  Paul Eggert  <eggert@twinsun.com>
-
-	* unicodeio.c (MB_LEN_MAX): Make sure it's at least 6,
-	to avoid buggy C libraries.
-
-2000-11-08  Paul Eggert  <eggert@twinsun.com>
-
-	* unicodeio.c (<wchar.h>): Do not include; no longer needed,
-	since we no longer use wcrtomb.
-	(<limits.h>): Include if HAVE_LIMITS_H.
-	(MB_LEN_MAX): Define if limits.h doesn't.
-	(convert_unicode_char): New function, with the conversion part of the
-	old print_unicode_char.  Use wctomb, not wcrtomb.  Depend on
-	HAVE_WCTOMB, not HAVE_WCRTOMB.
-	(print_unicode_char): Use convert_unicode_char to do the conversion.
-
 2000-11-03  Bruno Haible  <haible@clisp.cons.org>
 
 	* unicodeio.c: Include wchar.h.
