@@ -105,6 +105,7 @@ libfetish_a_SOURCES = \
   settime.c \
   sha1.c sha1.h \
   sig2str.h \
+  stat-macros.h \
   stdio-safer.h \
   stripslash.c \
   strdup.h \
