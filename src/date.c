@@ -182,7 +182,7 @@ batch_convert (const char *input_filename, const char *format)
 
   free (initial_TZ);
 
-  if (FCLOSE (in_stream) == EOF)
+  if (fclose (in_stream) == EOF)
     error (2, errno, input_filename);
 
   if (line != NULL)
@@ -353,7 +353,7 @@ argument must be a format string beginning with `+'."),
       show_date (format, when);
     }
 
-  if (FCLOSE (stdout) == EOF)
+  if (fclose (stdout) == EOF)
     error (2, errno, _("write error"));
 
   exit (status);

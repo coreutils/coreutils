@@ -134,7 +134,7 @@ test_syntax_error (char *format, char *arg)
 {
   fprintf (stderr, "%s: ", argv[0]);
   fprintf (stderr, format, arg);
-  FFLUSH (stderr);
+  fflush (stderr);
   test_exit (SHELL_BOOLEAN (FALSE));
 }
 

@@ -137,7 +137,7 @@ print_factors (const char *s)
   printf ("%lu:", n);
   for (i = 0; i < n_factors; i++)
     printf (" %lu", factors[i]);
-  PUTCHAR ('\n');
+  putchar ('\n');
   return 0;
 }
 

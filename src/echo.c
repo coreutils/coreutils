@@ -205,15 +205,15 @@ just_echo:
 			    c = c * 8 + (*s++ - '0');
 			  break;
 			case '\\': break;
-			default:  PUTCHAR ('\\'); break;
+			default:  putchar ('\\'); break;
 			}
 		    }
-		  PUTCHAR(c);
+		  putchar(c);
 		}
 	      argc--;
 	      argv++;
 	      if (argc > 0)
-		PUTCHAR(' ');
+		putchar(' ');
 	    }
 	}
       else
@@ -225,11 +225,11 @@ just_echo:
 	      argc--;
 	      argv++;
 	      if (argc > 0)
-		PUTCHAR (' ');
+		putchar (' ');
 	    }
 	}
     }
   if (display_return)
-    PUTCHAR ('\n');
+    putchar ('\n');
   exit (0);
 }

@@ -408,7 +408,7 @@ trace (fxn)
   printf ("%s:", fxn);
   for (a = args; *a; a++)
     printf (" %s", *a);
-  PUTCHAR ('\n');
+  putchar ('\n');
 }
 #endif
 

@@ -102,7 +102,7 @@ main (int argc, char **argv)
       else
 	puts (_("not a tty"));
 
-      if (FERROR (stdout) || fclose (stdout) == EOF)
+      if (ferror (stdout) || fclose (stdout) == EOF)
 	error (3, errno, _("standard output"));
     }
 

@@ -70,7 +70,7 @@ main (int argc, char **argv)
       for (i = 1; i < argc; i++)
 	{
 	  fputs (argv[i], stdout);
-	  PUTCHAR (i == argc - 1 ? '\n' : ' ');
+	  putchar (i == argc - 1 ? '\n' : ' ');
 	}
     }
 }

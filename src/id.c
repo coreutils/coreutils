@@ -170,7 +170,7 @@ main (int argc, char **argv)
     print_group_list (argv[optind]);
   else
     print_full_info (argv[optind]);
-  PUTCHAR ('\n');
+  putchar ('\n');
 
   exit (problems != 0);
 }
@@ -261,7 +261,7 @@ print_group_list (const char *username)
   print_group (rgid);
   if (egid != rgid)
     {
-      PUTCHAR (' ');
+      putchar (' ');
       print_group (egid);
     }
 
@@ -280,7 +280,7 @@ print_group_list (const char *username)
     for (i = 0; i < n_groups; i++)
       if (groups[i] != rgid && groups[i] != egid)
 	{
-	  PUTCHAR (' ');
+	  putchar (' ');
 	  print_group (groups[i]);
 	}
     free (groups);
@@ -347,7 +347,7 @@ print_full_info (const char *username)
     for (i = 0; i < n_groups; i++)
       {
 	if (i > 0)
-	  PUTCHAR (',');
+	  putchar (',');
 	printf ("%u", (unsigned) groups[i]);
 	grp = getgrgid (groups[i]);
 	if (grp == NULL)
