@@ -165,7 +165,14 @@ do_link (const char *source, const char *dest)
 	     if SOURCE is a dangling symlink.  */
 	  if (errno == ENOENT && lstat (source, &source_stats) == 0)
 	    {
-	      /* FIXME: Consider giving a warning that this is not portable.  */
+	      /* Allow a hard link to a dangling symlink.  */
+	      /* But here's a little explanation before I remove the whole
+		 enclosing #if block:
+
+		 On systems where LINK_FOLLOWS_SYMLINKS, it is not possible
+		 to create a hard link to a dangling symlink, so the test above
+		 would be pointless.
+	      */
 	    }
 	  else
 #endif
