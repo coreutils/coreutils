@@ -1,5 +1,7 @@
 2004-06-22  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.3.0.
+
 	* src/test.c (usage): Correct description of `-t FD'.  The file
 	descriptor, FD, is no longer optional.  Reported by Ton Nijkes.
 
@@ -50,8 +52,6 @@
 	* src/dd.c (input_seek_errno): Declare file-scoped variable as static.
 
 2004-06-20  Paul Eggert  <eggert@cs.ucla.edu>
-
-	* Version 5.3.0.
 
 	* src/basename.c (main):
 	Standardize on the diagnostics given when someone gives
