@@ -1,3 +1,14 @@
+2000-01-11  Jim Meyering  <meyering@lucent.com>
+
+	* lib/memcpy.c (memcpy): Protoize.
+
+	Prepare to sync lib/ directories of fileutils, sh-utils, and textutils.
+	* lib/Makefile.am: s/fu/fetish/
+	* src/Makefile.am: s/libfu/libfetish/
+
+	* lib/hash.c (hash_initialize): Fix typo in comment.
+	From François Pinard.
+
 2000-01-10  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0o.
