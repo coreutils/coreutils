@@ -1,5 +1,5 @@
 /* makepath.c -- Ensure that a directory path exists.
-   Copyright (C) 1990 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1997 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 #  include <alloca.h>
 # else
 #  ifdef _AIX
- #pragma alloca
+ #  pragma alloca
 #  else
 char *alloca ();
 #  endif
@@ -76,9 +76,34 @@ typedef int uid_t;
 typedef int gid_t;
 #endif
 
+#include "save-cwd.h"
 #include "makepath.h"
+#include "error.h"
 
-void error ();
+void strip_trailing_slashes ();
+
+#define CLEANUP_CWD					\
+  do							\
+    {							\
+      /* We're done operating on basename_dir.		\
+	 Restore working directory.  */			\
+      if (saved_cwd)					\
+	{						\
+	  int fail = restore_cwd (&cwd, NULL, NULL);	\
+	  free_cwd (&cwd);				\
+	  if (fail)					\
+	    return 1;					\
+	}						\
+    }							\
+  while (0)
+
+#define CLEANUP						\
+  do							\
+    {							\
+      umask (oldmask);					\
+      CLEANUP_CWD;					\
+    }							\
+  while (0)
 
 /* Ensure that the directory ARGPATH exists.
    Remove any trailing slashes from ARGPATH before calling this function.
@@ -120,17 +145,10 @@ make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
      const char *verbose_fmt_string;
 #endif
 {
-  char *dirpath;		/* A copy we can scribble NULs on.  */
   struct stat stats;
   int retval = 0;
-  int oldmask = umask (0);
 
-  /* FIXME: move this alloca and strcpy into the if-block.
-     Set dirpath to argpath in the else-block.  */
-  dirpath = (char *) alloca (strlen (argpath) + 1);
-  strcpy (dirpath, argpath);
-
-  if (stat (dirpath, &stats))
+  if (stat (argpath, &stats))
     {
       char *slash;
       int tmp_mode;		/* Initial perms for leading dirs.  */
@@ -141,6 +159,19 @@ make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
 	struct ptr_list *next;
       };
       struct ptr_list *p, *leading_dirs = NULL;
+      int saved_cwd = 0;
+      struct saved_cwd cwd;
+      char *basename_dir;
+      int first_subdir = 1;
+      char *dirpath;
+
+      /* Temporarily relax umask in case it's overly restrictive.  */
+      int oldmask = umask (0);
+
+      /* Make a copy of ARGPATH that we can scribble NULs on.  */
+      dirpath = (char *) alloca (strlen (argpath) + 1);
+      strcpy (dirpath, argpath);
+      strip_trailing_slashes (dirpath);
 
       /* If leading directories shouldn't be writable or executable,
 	 or should have set[ug]id or sticky bits set and we are setting
@@ -159,17 +190,36 @@ make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
 	}
 
       slash = dirpath;
+
+      /* Skip over leading slashes.  */
       while (*slash == '/')
 	slash++;
-      while ((slash = strchr (slash, '/')))
+
+      while (1)
 	{
-	  *slash = '\0';
-	  if (stat (dirpath, &stats))
+	  /* slash points to the leftmost unprocessed component of dirpath.  */
+	  basename_dir = slash;
+
+	  slash = strchr (slash, '/');
+	  if (slash == NULL)
+	    break;
+
+	  if (first_subdir)
 	    {
-	      if (mkdir (dirpath, tmp_mode))
+	      first_subdir = 0;
+	      saved_cwd = !save_cwd (&cwd);
+	    }
+
+	  if (!saved_cwd)
+	    basename_dir = dirpath;
+
+	  *slash = '\0';
+	  if (stat (basename_dir, &stats))
+	    {
+	      if (mkdir (basename_dir, tmp_mode))
 		{
 		  error (0, errno, "cannot create directory `%s'", dirpath);
-		  umask (oldmask);
+		  CLEANUP;
 		  return 1;
 		}
 	      else
@@ -178,15 +228,17 @@ make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
 		    error (0, 0, verbose_fmt_string, dirpath);
 
 		  if (owner != (uid_t) -1 && group != (gid_t) -1
-		      && chown (dirpath, owner, group)
+		      && chown (basename_dir, owner, group)
 #if defined(AFS) && defined (EPERM)
 		      && errno != EPERM
 #endif
 		      )
 		    {
 		      error (0, errno, "%s", dirpath);
-		      retval = 1;
+		      CLEANUP;
+		      return 1;
 		    }
+
 		  if (re_protect)
 		    {
 		      struct ptr_list *new = (struct ptr_list *)
@@ -200,7 +252,14 @@ make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
 	  else if (!S_ISDIR (stats.st_mode))
 	    {
 	      error (0, 0, "`%s' exists but is not a directory", dirpath);
-	      umask (oldmask);
+	      CLEANUP;
+	      return 1;
+	    }
+
+	  if (saved_cwd && chdir (basename_dir) < 0)
+	    {
+	      error (0, errno, "cannot chdir to directory, %s", dirpath);
+	      CLEANUP;
 	      return 1;
 	    }
 
@@ -212,39 +271,48 @@ make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
 	    slash++;
 	}
 
+      if (!saved_cwd)
+	basename_dir = dirpath;
+
       /* We're done making leading directories.
 	 Create the final component of the path.  */
 
       /* The path could end in "/." or contain "/..", so test
 	 if we really have to create the directory.  */
 
-      if (stat (dirpath, &stats) && mkdir (dirpath, mode))
+      if (stat (basename_dir, &stats) && mkdir (basename_dir, mode))
 	{
 	  error (0, errno, "cannot create directory `%s'", dirpath);
-	  umask (oldmask);
+	  CLEANUP;
 	  return 1;
 	}
+
+      /* Done creating directories.  Restore original umask.  */
+      umask (oldmask);
+
       if (verbose_fmt_string != NULL)
 	error (0, 0, verbose_fmt_string, dirpath);
 
       if (owner != (uid_t) -1 && group != (gid_t) -1)
 	{
-	  if (chown (dirpath, owner, group)
+	  if (chown (basename_dir, owner, group)
 #ifdef AFS
 	      && errno != EPERM
 #endif
 	      )
 	    {
-	      error (0, errno, "%s", dirpath);
+	      error (0, errno, "cannot chown %s", dirpath);
 	      retval = 1;
 	    }
 	  /* chown may have turned off some permission bits we wanted.  */
-	  if ((mode & 07000) != 0 && chmod (dirpath, mode))
+	  if ((mode & 07000) != 0 && chmod (basename_dir, mode))
 	    {
-	      error (0, errno, "%s", dirpath);
+	      error (0, errno, "cannot chmod %s", dirpath);
 	      retval = 1;
 	    }
 	}
+
+      CLEANUP_CWD;
 
       /* If the mode for leading directories didn't include owner "wx"
 	 privileges, we have to reset their protections to the correct
@@ -263,10 +331,11 @@ make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
     {
       /* We get here if the entire path already exists.  */
 
+      const char *dirpath = argpath;
+
       if (!S_ISDIR (stats.st_mode))
 	{
 	  error (0, 0, "`%s' exists but is not a directory", dirpath);
-	  umask (oldmask);
 	  return 1;
 	}
 
@@ -296,6 +365,5 @@ make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
 	}
     }
 
-  umask (oldmask);
   return retval;
 }
