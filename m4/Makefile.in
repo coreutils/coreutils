@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4k from Makefile.am.
+# Makefile.in generated automatically by automake 1.5 from Makefile.am.
 
 # Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
 # Free Software Foundation, Inc.
@@ -177,7 +177,6 @@ stat.m4 \
 strerror_r.m4 \
 strftime.m4 \
 timespec.m4 \
-uintmax_t.m4 \
 unlink-busy.m4 \
 uptime.m4 \
 utimbuf.m4 \
@@ -197,7 +196,7 @@ all: all-am
 .SUFFIXES:
 $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  m4/Makefile
+	  $(AUTOMAKE) --gnits  m4/Makefile
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && \
 	  CONFIG_HEADERS= CONFIG_LINKS= \

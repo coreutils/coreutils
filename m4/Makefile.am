@@ -65,7 +65,6 @@ stat.m4 \
 strerror_r.m4 \
 strftime.m4 \
 timespec.m4 \
-uintmax_t.m4 \
 unlink-busy.m4 \
 uptime.m4 \
 utimbuf.m4 \
