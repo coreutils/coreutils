@@ -1,7 +1,7 @@
 /* Get the system load averages.
 
    Copyright (C) 1985, 1986, 1987, 1988, 1989, 1991, 1992, 1993, 1994,
-   1995, 1997, 1999, 2000, 2003, 2004 Free Software Foundation, Inc.
+   1995, 1997, 1999, 2000, 2003, 2004, 2005 Free Software Foundation, Inc.
 
    NOTE: The canonical source of this file is maintained with gnulib.
    Bugs can be reported to bug-gnulib@gnu.org.
@@ -104,6 +104,7 @@
 
 # include "c-strtod.h"
 # include "cloexec.h"
+# include "intprops.h"
 # include "xalloc.h"
 
 /* The existing Emacs configuration files define a macro called
@@ -349,8 +350,6 @@
 #  include <unistd.h>
 # endif
 
-# include <limits.h>
-
 /* LOAD_AVE_TYPE should only get defined if we're going to use the
    nlist method.  */
 # if !defined (LOAD_AVE_TYPE) && (defined (BSD) || defined (LDAV_CVT) || defined (KERNEL_FILE) || defined (LDAV_SYMBOL))
@@ -577,11 +576,6 @@ getloadavg (double loadavg[], int nelem)
 #  ifndef LINUX_LDAV_FILE
 #   define LINUX_LDAV_FILE "/proc/loadavg"
 #  endif
-
-/* Upper bound on the string length of an integer converted to string.
-   302 / 1000 is ceil (log10 (2.0)).  Subtract 1 for the sign bit;
-   add 1 for integer division truncation; add 1 more for a minus sign.  */
-#  define INT_STRLEN_BOUND(t) ((sizeof (t) * CHAR_BIT - 1) * 302 / 1000 + 2)
 
   char ldavgbuf[3 * (INT_STRLEN_BOUND (long int) + sizeof ".00")];
   char const *ptr = ldavgbuf;
