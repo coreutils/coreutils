@@ -1,3 +1,8 @@
+2000-05-15  Jim Meyering  <meyering@lucent.com>
+
+	* version-etc.c (version_etc_copyright): Update the copyright string
+	used in all --version output.
+
 2000-05-10  Jim Meyering  <meyering@lucent.com>
 
 	* closeout.c [default_exit_status]: New file-scoped variable.
