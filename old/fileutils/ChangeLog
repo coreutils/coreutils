@@ -2,6 +2,9 @@
 
 	* Version 4.0.45.
 
+	* configure: Regenerate using a patched copy of autoconf-2.49e to
+	work around a bug in its test for a working memcmp function.
+
 	* tests/ls/no-arg: New file.
 	* tests/ls/Makefile.am (TESTS): Add no-arg.
 	* src/ls.c (main): Fix off-by-one error introduced with last change.
