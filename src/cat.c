@@ -38,6 +38,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "cat"
 
+#define AUTHORS "Torbjorn Granlund and Richard M. Stallman"
+
 /* Undefine, to avoid warning about redefinition on some systems.  */
 #undef max
 #define max(h,i) ((h) > (i) ? (h) : (i))

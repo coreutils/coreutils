@@ -34,6 +34,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "fmt"
 
+#define AUTHORS "Ross Paterson"
+
 /* The following parameters represent the program's idea of what is
    "best".  Adjust to taste, subject to the caveats given.  */
 

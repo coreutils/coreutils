@@ -38,6 +38,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "head"
 
+#define AUTHORS "David MacKenzie"
+
 /* FIXME: someday, make this really *be* `long long'.  */
 typedef long int U_LONG_LONG;
 

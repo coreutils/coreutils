@@ -30,6 +30,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "comm"
 
+#define AUTHORS "Richard Stallman and David MacKenzie"
+
 /* Undefine, to avoid warning about redefinition on some systems.  */
 #undef min
 #define min(x, y) ((x) < (y) ? (x) : (y))

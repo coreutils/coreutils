@@ -35,6 +35,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "md5sum"
 
+#define AUTHORS "Ulrich Drepper"
+
 /* Most systems do not distinguish between external and internal
    text representations.  */
 /* FIXME: This begs for an autoconf test.  */

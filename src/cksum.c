@@ -45,6 +45,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "cksum"
 
+#define AUTHORS "Q. Frank Xia"
+
 #ifdef CRCTAB
 
 # include <stdio.h>

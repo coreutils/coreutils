@@ -36,6 +36,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "sort"
 
+#define AUTHORS "Mike Haertel"
+
 #if defined ENABLE_NLS && HAVE_LANGINFO_H
 # include <langinfo.h>
 #endif

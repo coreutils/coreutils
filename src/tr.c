@@ -33,6 +33,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "tr"
 
+#define AUTHORS "Jim Meyering"
+
 #define N_CHARS (UCHAR_MAX + 1)
 
 /* A pointer to a function that returns an int.  */

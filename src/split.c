@@ -36,6 +36,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "split"
 
+#define AUTHORS "Torbjorn Granlund and Richard M. Stallman"
+
 int full_write ();
 
 /* The name this program was run with. */

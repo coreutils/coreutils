@@ -31,6 +31,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "fold"
 
+#define AUTHORS "David MacKenzie"
+
 /* The name this program was run with. */
 char *program_name;
 

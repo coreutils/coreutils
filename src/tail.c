@@ -40,6 +40,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "tail"
 
+#define AUTHORS "Paul Rubin, David MacKenzie, Ian Lance Taylor, and Jim Meyering"
+
 #ifndef OFF_T_MIN
 # define OFF_T_MIN TYPE_MINIMUM (off_t)
 #endif

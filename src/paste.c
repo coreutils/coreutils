@@ -50,6 +50,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "paste"
 
+#define AUTHORS "David M. Ihnat"
+
 /* Indicates that no delimiter should be added in the current position. */
 #define EMPTY_DELIM '\0'
 

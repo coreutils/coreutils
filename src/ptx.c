@@ -34,6 +34,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "ptx"
 
+#define AUTHORS "François Pinard"
+
 /* Number of possible characters in a byte.  */
 #define CHAR_SET_SIZE 256
 

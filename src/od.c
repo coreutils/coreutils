@@ -31,6 +31,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "od"
 
+#define AUTHORS "Jim Meyering"
+
 #if defined(__GNUC__) || defined(STDC_HEADERS)
 # include <float.h>
 #endif

@@ -36,6 +36,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "nl"
 
+#define AUTHORS "Scott Bartram and David MacKenzie"
+
 #ifndef TRUE
 # define TRUE   1
 # define FALSE  0
