@@ -263,7 +263,7 @@ validate_path (char *path, int portability)
 {
   int path_max;
   int last_elem;		/* Nonzero if checking last element of path. */
-  int exists;			/* 2 if the path element exists.  */
+  int exists IF_LINT (= 0);	/* 2 if the path element exists.  */
   char *slash;
   char *parent;			/* Last existing leading directory so far.  */
 
@@ -272,11 +272,6 @@ validate_path (char *path, int portability)
 
   if (*path == '\0')
     return 0;
-
-#ifdef lint
-  /* Suppress `used before initialized' warning.  */
-  exists = 0;
-#endif
 
   /* Figure out the parent of the first element in PATH.  */
   parent = xstrdup (*path == '/' ? "/" : ".");
