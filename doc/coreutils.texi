@@ -2552,15 +2552,20 @@ Always print file name headers.
 @end table
 
 On older systems, @command{tail} supports an obsolete option
-@option{-@var{count}@var{options}}, which is recognized only if it is
-specified first.  @var{count} is a decimal number optionally followed
-by a size letter (@samp{b}, @samp{k}, @samp{m}) as in @option{-c}, or
-@samp{l} to mean count by lines, or other option letters
-(@samp{cfqv}).  Some older @command{tail} implementations also support
-an obsolete option @option{+@var{count}} with the same meaning as
-@option{-+@var{count}}.  @acronym{POSIX} 1003.1-2001 (@pxref{Standards
-conformance}) does not allow these options; use @option{-c
-@var{count}} or @option{-n @var{count}} instead.
+@option{-@var{count}[bcl][f]}, which is recognized only if it is
+specified first.  @var{count} is an optional decimal number optionally
+followed by a size letter (@samp{b}, @samp{c}, @samp{l}) to mean count
+by 512-byte blocks, bytes, or lines, optionally followed by @samp{f}
+which has the same meaning as @option{-f}.  Also, the leading @samp{-}
+can be replaced by @samp{+} with the same meaning as in counts.
+@acronym{POSIX} 1003.1-2001 (@pxref{Standards conformance}) does not
+allow most of these obsolete usages; use @option{-c @var{count}[b]},
+@option{-n @var{count}}, and/or @option{-f} instead.
+
+On older systems, obsolete usage overrides normal usage, so portable
+shell scripts should avoid commands that can be interpreted either
+way.  For example, use @samp{tail -- - file} rather than @samp{tail -
+file}, and use @samp{tail -c4} rather than @samp{tail -c 4}.
 
 @exitstatus
 
