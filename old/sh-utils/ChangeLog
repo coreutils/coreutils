@@ -1,17 +1,21 @@
+2001-06-20  Paul Eggert  <eggert@twinsun.com>
 
-	* Version 2.0.11.
+	* src/test.c (isint, binary_operator, unary_operator):
+	Use intmax_t for argument integers, not long.
+	(age_of, binary_operator): Use time_t for times, not long.
+	(unary_operator): If N is out of int range, -t N now returns false.
+
+2001-06-20  Paul Eggert  <eggert@twinsun.com>
+
+	* src/expr.c (main): Handle a leading "--" option as POSIX requires.
+
+2001-08-18  Jim Meyering  <meyering@lucent.com>
+
+	* tests/expr/basic: Add a test for the above.
 
 2001-06-20  Paul Eggert  <eggert@twinsun.com>
 
 	* src/expr.c (toarith): Don't accept plain "-" as a valid integer.
-
-2001-08-18  Jim Meyering  <meyering@lucent.com>
-
-	* tests/expr/basic: New test for the above.
-	* tests/expr/Makefile.am: New file.
-	* tests/expr: New directory.
-	* tests/Makefile.am (SUBDIRS): Add expr.
-	* configure.in (AC_OUTPUT): Add tests/expr/Makefile.
 
 2001-06-20  Paul Eggert  <eggert@twinsun.com>
 
@@ -24,6 +28,14 @@
 	(int_value, printv, tostring, toarith, arithf, arithdivf, docolon,
 	eval6, eval4, eval3): Do integer arithmetic using intmax_t, not int.
 	(docolon): Don't assume size_t fits in int.
+
+2001-08-18  Jim Meyering  <meyering@lucent.com>
+
+	* tests/expr/basic: New test for the above.
+	* tests/expr/Makefile.am: New file.
+	* tests/expr: New directory.
+	* tests/Makefile.am (SUBDIRS): Add expr.
+	* configure.in (AC_OUTPUT): Add tests/expr/Makefile.
 
 2001-08-18  Jim Meyering  <meyering@lucent.com>
 
