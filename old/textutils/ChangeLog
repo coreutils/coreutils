@@ -1,5 +1,10 @@
 Sun Dec 22 08:11:27 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* acinclude.m4: Move macros to individual files in new directory, m4/.
+	See ChangeLog entries in sh-utils for the details.
+
+	* configure.in: Increment version to 1.20a.
+
 	* tests/md5sum-test/Makefile.am: Use same framework as other tests.
 	* tests/md5sum-test/Test.pm: New file.
 
