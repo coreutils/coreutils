@@ -1,6 +1,12 @@
-2004-02-07  Jim Meyering  <jim@meyering.net>
+2004-02-08  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.3.
+
+	* tests/rm/rm5: Avoid triggering a bug in OSF/Tru64's sed
+	that would cause an unwarranted test failure.
+	* tests/rm/rm3: Likewise.
+
+2004-02-07  Jim Meyering  <jim@meyering.net>
 
 	Remove xstat function pointer member.  The way it was used was not
 	portable, since some systems (OSF V5.1, Solaris 2.5.1) provide static
