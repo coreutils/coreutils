@@ -160,9 +160,6 @@ static unsigned last_line_number = 0;
 /* Number of the line currently being examined. */
 static unsigned current_line = 0;
 
-/* Number of the last line in the input file. */
-static unsigned last_line_in_file = 0;
-
 /* If TRUE, we have read EOF. */
 static boolean have_read_eof = FALSE;
 
@@ -429,7 +426,6 @@ record_line_starts (b)
 	{
 	  keep_new_line (b, line_start, bytes_left);
 	  lines++;
-	  last_line_in_file = last_line_number + lines;
 	}
       else
 	save_to_hold_area (line_start, bytes_left);
