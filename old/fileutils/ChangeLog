@@ -1,3 +1,31 @@
+1998-07-28  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/mountlist.c (read_filesystem_list): Remove all_fs
+	argument, but put the necessary information into the result so
+	that the caller can ignore filesystems that he's not
+	interested in.
+
+	* lib/mountlist.h (struct mount_entry):
+	New members me_dummy, me_remote.
+	(read_filesystem_list): Remove all_fs argument.
+	(REMOTE_FS_TYPE): Remove.
+	(ME_DUMMY, ME_REMOTE): New macros.
+
+	* lib/xstrtol.c: Remove duplicate include of <stdio.h>.
+
+	* src/df.c (show_all_fs):
+	Revert to boolean value; the old negative value is
+	now in show_local_fs.
+	(show_local_fs): New variable.
+	(show_dev): New args me_dummy and me_class.  Use show_local_fs
+	and boolean show_all_fs in combination with these new args
+	to decide whether to show a device.
+	(show_disk): Pass flags to show_dev.
+	(show_point): Use a non-dummy mount entry if possible.
+	(show_all_entries): Pass flags to show_dev.
+	(main): --local sets show_local_fs now.  Ask for file system types if
+	show_local_fs is nonzero, since ME_REMOTE might need them.
+
 1998-07-27  Jim Meyering  <meyering@ascend.com>
 
 	* tests/install/Makefile.am (TESTS_ENVIRONMENT): Set LS, MKDIR, and RM.
