@@ -65,3 +65,21 @@
 ("10c", '-t : -k 2.2,2.2', ":ab\n:ba\n", ":ba\n:ab\n", 0);
 # Equivalent to above, but using obsolescent `+pos -pos' option syntax.
 ("10d", '-t : +1.1 -1.2', ":ab\n:ba\n", ":ba\n:ab\n", 0);
+# Try without -t...
+# But note that we have to count the delimiting space at the beginning
+# of each field that has it.
+("10a0", '-k 2.3,2.3', "z ba\nz ab\n", "z ba\nz ab\n", 0);
+("10a1", '-k 1.2,1.2', "ba\nab\n", "ba\nab\n", 0);
+("10a2", '-b -k 2.2,2.2', "z ba\nz ab\n", "z ba\nz ab\n", 0);
+#
+# An even simpler example demonstrating the bug.
+("10e", '-k 1.2,1.2', "ab\nba\n", "ba\nab\n", 0);
+#
+("10f", '-t : -k 1.3,1.3', ":ab\n:ba\n", ":ab\n:ba\n", 0);
+("10g", '-k 1.4,1.4', "a ab\nb ba\n", "a ab\nb ba\n", 0);
+#
+# Exercise bug re using -b to skip trailing blanks.
+("11a", '-t: -k1,1b -k2,2', "a\t:a\na :b\n", "a\t:a\na :b\n", 0);
+("11b", '-t: -k1,1b -k2,2', "a :b\na\t:a\n", "a\t:a\na :b\n", 0);
+("11c", '-t: -k2,2b -k3,3', "z:a\t:a\na :b\n", "z:a\t:a\na :b\n", 0);
+("11d", '-t: -k2,2b -k3,3', "z:a :b\na\t:a\n", "a\t:a\nz:a :b\n", 0);
