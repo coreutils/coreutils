@@ -1,0 +1,6 @@
+t*.out
+t*.in
+t*.exp
+t*.err
+Makefile
+mk-script
