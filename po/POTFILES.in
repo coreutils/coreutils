@@ -3,7 +3,6 @@
 
 # These are nominally temporary...
 lib/argmatch.c
-lib/c-stack.c
 lib/closeout.c
 lib/error.c
 lib/file-type.c
