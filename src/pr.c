@@ -580,6 +580,27 @@ static struct option const long_options[] =
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
   {"test", no_argument, &test_suite, 1},
+  {"pages", required_argument, NULL, 128},
+  {"columns", required_argument, NULL, 129},
+  {"across", no_argument, NULL, 'a'},
+  {"show-control-chars", no_argument, NULL, 'c'},
+  {"double-space", no_argument, NULL, 'd'},
+  {"expand-tabs", optional_argument, NULL, 'e'},
+  {"form-feed", no_argument, NULL, 'f'},
+  {"header", required_argument, NULL, 'h'},
+  {"output-tabs", optional_argument, NULL, 'i'},
+  {"join-lines", no_argument, NULL, 'j'},
+  {"length", required_argument, NULL, 'l'},
+  {"merge", no_argument, NULL, 'm'},
+  {"number-lines", optional_argument, NULL, 'n'},
+  {"first-line-number", required_argument, NULL, 'N'},
+  {"indent", required_argument, NULL, 'o'},
+  {"no-file-warnings", no_argument, NULL, 'r'},
+  {"separator", optional_argument, NULL, 's'},
+  {"omit-header", no_argument, NULL, 't'},
+  {"omit-pagination", no_argument, NULL, 'T'},
+  {"show-nonprinting", no_argument, NULL, 'v'},
+  {"width", required_argument, NULL, 'w'},
   {0, 0, 0, 0}
 };
 
@@ -721,6 +742,24 @@ main (int argc, char **argv)
 	{
 	case 0:		/* getopt long option */
 	  break;
+
+	case 128:	/* --pages=FIRST_PAGE[:LAST_PAGE] */
+	  first_last_page (optarg);
+	  break;
+
+	case 129:	/* --columns=COLUMN */
+	  {
+	    long int tmp_long;
+	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
+		|| tmp_long <= 0 || tmp_long > INT_MAX)
+	      {
+		error (EXIT_FAILURE, 0,
+		       _("`--columns=COLUMN' invalid number of columns: `%s'"),
+		       optarg);
+	      }
+	    columns = (int) tmp_long;
+	    break;
+	  }
 
 	case 'a':
 	  print_across_flag = TRUE;
@@ -2416,44 +2455,68 @@ Usage: %s [OPTION]... [FILE]...\n\
 Paginate or columnate FILE(s) for printing.\n\
 \n\
   +FIRST_PAGE[:LAST_PAGE]\n\
+  --pages=FIRST_PAGE[:LAST_PAGE]\n\
                     begin [stop] printing with page FIRST_[LAST_]PAGE\n\
-  -COLUMN           produce COLUMN-column output and print columns down,\n\
+  -COLUMN\n\
+  --columns=COLUMN  produce COLUMN-column output and print columns down,\n\
                     unless -a is used. Balance number of lines in the\n\
                     columns on each page.\n\
-  -a                print columns across rather than down, used together\n\
+  -a, --across      print columns across rather than down, used together\n\
                     with -COLUMN\n\
-  -c                use hat notation (^G) and octal backslash notation\n\
-  -d                double space the output\n\
-  -e[CHAR[WIDTH]]   expand input CHARs (TABs) to tab WIDTH (8)\n\
-  -F, -f            use form feeds instead of newlines to separate pages\n\
+  -c, --show-control-chars\n\
+                    use hat notation (^G) and octal backslash notation\n\
+  -d, --double-space\n\
+                    double space the output\n\
+  -e[CHAR[WIDTH]]\n\
+  --expand-tabs[=CHAR[WIDTH]]\n\
+                    expand input CHARs (TABs) to tab WIDTH (8)\n\
+  -F, -f, --form-feed\n\
+                    use form feeds instead of newlines to separate pages\n\
                     (by a 3-line page header with -f or a 5-line header\n\
                     and trailer without -f)\n\
-  -h HEADER         use a centered HEADER instead of filename in page headers\n\
+  -h HEADER\n\
+  --header=HEADER   use a centered HEADER instead of filename in page headers\n\
                     with long headers left-hand-side truncation may occur\n\
                     -h \"\" prints a blank line. Don't use -h\"\"\n\
-  -i[CHAR[WIDTH]]   replace spaces with CHARs (TABs) to tab WIDTH (8)\n\
-  -j                merge full lines, turns off -w line truncation, no column\n\
+  -i[CHAR[WIDTH]]\n\
+  --output-tabs[=CHAR[WIDTH]]\n\
+                    replace spaces with CHARs (TABs) to tab WIDTH (8)\n\
+  -j, --join-lines  merge full lines, turns off -w line truncation, no column\n\
                     alignment, -s[STRING] sets separators\n\
-  -l PAGE_LENGTH    set the page length to PAGE_LENGTH (66) lines\n\
+  -l PAGE_LENGTH\n\
+  --length PAGE_LENGTH\n\
+                    set the page length to PAGE_LENGTH (66) lines\n\
                     (default number of lines of text 56, with -f 63)\n"));
       printf (_("\
-  -m                print all files in parallel, one in each column,\n\
+  -m, --merge       print all files in parallel, one in each column,\n\
                     truncate lines, but join lines of full length with -j\n\
-  -n[SEP[DIGITS]]   number lines, use DIGITS (5) digits, then SEP (TAB)\n\
+  -n[SEP[DIGITS]]\n\
+  --number-lines[=SEP[DIGITS]]\n\
+                    number lines, use DIGITS (5) digits, then SEP (TAB)\n\
                     default counting starts with 1st line of input file\n\
-  -N NUMBER         start counting with NUMBER at 1st line of first\n\
+  -N NUMBER\n\
+  --first-line-number=NUMBER\n\
+                    start counting with NUMBER at 1st line of first\n\
                     page printed (see +FIRST_PAGE)\n\
-  -o MARGIN         offset each line with MARGIN spaces (do not affect -w)\n\
-  -r                inhibit warning when a file cannot be opened\n\
-  -s[STRING]        separate columns by an optional STRING, don't use\n\
+  -o MARGIN\n\
+  --indent=MARGIN   offset each line with MARGIN spaces (do not affect -w)\n\
+  -r, --no-file-warnings\n\
+                    inhibit warning when a file cannot be opened\n\
+  -s[STRING]\n\
+  --separator[=STRING]\n\
+                    separate columns by an optional STRING, don't use\n\
                     -s \"STRING\", -s only: No separator used (same as -s\"\"),\n\
                     without -s: Default separator \'TAB\' with -j and \'space\'\n\
                     otherwise (same as -s\" \")\n\
-  -t                inhibit page headers and trailers\n\
-  -T                inhibit page headers and trailers, eliminate any page\n\
+  -t, --omit-header inhibit page headers and trailers\n\
+  -T, --omit-pagination\n\
+                    inhibit page headers and trailers, eliminate any page\n\
                     layout by form feeds set in input files\n\
-  -v                use octal backslash notation\n\
-  -w PAGE_WIDTH     set page width to PAGE_WIDTH (72) columns, truncate\n\
+  -v, --show-nonprinting\n\
+                    use octal backslash notation\n\
+  -w PAGE_WIDTH\n\
+  --width=PAGE_WIDTH\n\
+                    set page width to PAGE_WIDTH (72) columns, truncate\n\
                     lines (see also -j option)\n\
   --help            display this help and exit\n\
   --version         output version information and exit\n\
