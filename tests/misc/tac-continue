@@ -1,0 +1,75 @@
+#!/bin/sh
+# Ensure that tac processes all command line arguments, even
+# when it encounters an error with say the first one.
+# With coreutils-5.2.1 and earlier, this test would fail.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  tac --version
+fi
+
+. $srcdir/../lang-default
+
+# See if the envvar is defined.
+if test x = "x$FULL_PARTITION_TMPDIR"; then
+  echo "$0: FULL_PARTITION_TMPDIR not defined; skipping this test" 1>&2
+  (exit 77); exit 77
+fi
+
+if ! test -d "$FULL_PARTITION_TMPDIR"; then
+  echo "$0: $FULL_PARTITION_TMPDIR:" \
+    "\$FULL_PARTITION_TMPDIR does not specify a directory" 1>&2
+  (exit 1); exit 1
+fi
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+fp_tmp="$FULL_PARTITION_TMPDIR/tac-cont-$$"
+t0="$t0 $fp_tmp"
+# Make sure we can create an empty file there (i.e. no shortage of inodes).
+if ! touch $fp_tmp; then
+  echo "$0: $fp_tmp: cannot create empty file" 1>&2
+  (exit 1); exit 1
+fi
+
+# Make sure that we fail when trying to create a file large enough
+# to consume a non-inode block.
+if seq 1000 > $fp_tmp 2>/dev/null; then
+  echo "$0: $FULL_PARTITION_TMPDIR: not a full partition" 1>&2
+  (exit 1); exit 1
+fi
+
+seq 5 > in
+
+if test $framework_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+fi
+
+fail=0
+
+# Give tac a fifo command line argument.
+# This makes it try to create a temporary file in $TMPDIR.
+mkfifo fifo
+seq 1000 > fifo &
+TMPDIR=$FULL_PARTITION_TMPDIR tac fifo in >out 2>err && fail=1
+
+cat <<\EOF > exp || fail=1
+5
+4
+3
+2
+1
+EOF
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
+(exit $fail); exit $fail
