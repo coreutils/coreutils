@@ -35,7 +35,6 @@
 # include <features.h>
 # include <sys/types.h>
 
-
 typedef struct {
 	struct _ftsent *fts_cur;	/* current node */
 	struct _ftsent *fts_child;	/* linked list of children */
@@ -43,7 +42,7 @@ typedef struct {
 	dev_t fts_dev;			/* starting device # */
 	char *fts_path;			/* path for this descent */
 	int fts_rfd;			/* fd for root */
-	int fts_pathlen;		/* sizeof(path) */
+	size_t fts_pathlen;		/* sizeof(path) */
 	int fts_nitems;			/* elements in the sort array */
 	int (*fts_compar) (const void *, const void *); /* compare fn */
 
@@ -75,8 +74,7 @@ typedef struct _ftsent {
 	char *fts_path;			/* root path */
 	int fts_errno;			/* errno for this node */
 	int fts_symfd;			/* fd for symlink */
-	u_short fts_pathlen;		/* strlen(fts_path) */
-	u_short fts_namelen;		/* strlen(fts_name) */
+	size_t fts_pathlen;		/* strlen(fts_path) */
 
 	ino_t fts_ino;			/* inode */
 	dev_t fts_dev;			/* device */
@@ -84,15 +82,17 @@ typedef struct _ftsent {
 
 # define FTS_ROOTPARENTLEVEL	-1
 # define FTS_ROOTLEVEL		 0
-	short fts_level;		/* depth (-1 to N) */
+	int fts_level;			/* depth (-1 to N) */
+
+	u_short fts_namelen;		/* strlen(fts_name) */
 
 # define FTS_D		 1		/* preorder directory */
 # define FTS_DC		 2		/* directory that causes cycles */
 # define FTS_DEFAULT	 3		/* none of the above */
-# define FTS_DNR		 4		/* unreadable directory */
-# define FTS_DOT		 5		/* dot or dot-dot */
+# define FTS_DNR	 4		/* unreadable directory */
+# define FTS_DOT	 5		/* dot or dot-dot */
 # define FTS_DP		 6		/* postorder directory */
-# define FTS_ERR		 7		/* error; errno is set */
+# define FTS_ERR	 7		/* error; errno is set */
 # define FTS_F		 8		/* regular file */
 # define FTS_INIT	 9		/* initialized only */
 # define FTS_NS		10		/* stat(2) failed */
