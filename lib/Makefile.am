@@ -43,7 +43,6 @@ libfetish_a_SOURCES = \
   linebuffer.c linebuffer.h \
   localcharset.c localcharset.h \
   mbswidth.c mbswidth.h \
-  memcasecmp.c memcasecmp.h \
   offtostr.c \
   open-safer.c \
   readtokens0.c readtokens0.h \
