@@ -1,6 +1,21 @@
-2002-10-18  Jim Meyering  <meyering@lucent.com>
+2002-10-19  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.4.
+
+	* src/pinky.c (print_heading): Align TTY and Name headings.
+	Who reported this?
+
+2002-10-18  Jim Meyering  <meyering@lucent.com>
+
+	* src/split.c (cwrite): Change type of `bytes' parameter to size_t
+	Remove now-useless cast.
+	(stdread): Remove function.
+	(bytes_split): Use size_t instead of int.
+	Use safe_read, not stdread.
+	(lines_split): Likewise.
+	Use memchr rather than a `while' loop.
+	(line_bytes_split): Use size_t instead of int.
+	Use safe_read, not stdread.
 
 	* src/system.h (ST_BLKSIZE): Correct comment describing how to
 	reproduce HPUX-11 cat failure.  From Petter Reinholdtsen.
