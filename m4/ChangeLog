@@ -1,3 +1,8 @@
+2003-08-19  Jim Meyering  <jim@meyering.net>
+
+	* lib-ld.m4: Revert yesterday's change, per Bruno's request here:
+	http://mail.gnu.org/archive/html/bug-gnulib/2003-08/msg00155.html
+
 2003-08-18  Paul Eggert <eggert@twinsun.com>
 
 	* same.m4 (gl_SAME): Do not check for stdlib.h or string.h or free.
