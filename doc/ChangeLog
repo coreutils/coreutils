@@ -4,8 +4,8 @@
 
 2001-06-21  Paul Eggert  <eggert@twinsun.com>
 
-	* doc/coreutils.texi: 'expr' now requires '+' rather
-	than 'quote' to quote tokens.
+	* coreutils.texi: 'expr' now requires '+' rather than 'quote'
+	to quote tokens.
 
 2001-07-14  Jim Meyering  <meyering@lucent.com>
 
