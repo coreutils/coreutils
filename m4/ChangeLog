@@ -1,18 +1,23 @@
 2003-08-18  Paul Eggert <eggert@twinsun.com>
 
 	* same.m4 (gl_SAME): Do not check for stdlib.h or string.h or free.
-        Check for pathconf.
+	Check for pathconf.
 
 2003-08-18  Jim Meyering  <jim@meyering.net>
-
-	* gettextext.m4 (AM_PO_SUBDIRS, AM_NLS): Don't define as no-ops.
-	Their absence provoked a failure due to non-creation of po/Makefile.
 
 	* getloadavg.m4: Use [\t ], not [ \t] (where \t is a literal TAB).
 	* lib-ld.m4: Likewise.
 	* po.m4: Likewise.
 
-	* nls.m4, po.m4: New files, from gnulib.
+2003-08-18  Paul Eggert  <eggert@twinsun.com>
+	and Jim Meyering  <jim@meyering.net>
+
+	It turns out that we need AM_NLS and AM_PO_SUBDIRS after all;
+	otherwise po/POTFILES and po/Makefile aren't built by 'configure'.
+	I'm not sure why I didn't catch this earlier; most likely some
+	leftover build files.  Sorry about that.
+	* gettextext.m4 (AM_NLS, AM_PO_SUBDIRS): Remove definitions.
+	* nls.m4, po.m4: New files, taken from gnulib / gettext.
 
 2003-08-16  Paul Eggert  <eggert@twinsun.com>
 
