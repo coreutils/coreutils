@@ -72,7 +72,7 @@ static int oatoi ();
 
 struct mode_change *
 mode_compile (mode_string, masked_ops)
-     register char *mode_string;
+     const char *mode_string;
      unsigned masked_ops;
 {
   struct mode_change *head;	/* First element of the linked list. */
@@ -244,7 +244,7 @@ invalid:
 unsigned short
 mode_adjust (oldmode, changes)
      unsigned oldmode;
-     register struct mode_change *changes;
+     const struct mode_change *changes;
 {
   unsigned short newmode;	/* The adjusted mode and one operand. */
   unsigned short value;		/* The other operand. */
