@@ -50,6 +50,7 @@
    %S	second (00..61)
    %T	time, 24-hour (hh:mm:ss)
    %X	locale's time representation (%H:%M:%S)
+   %z  RFC-822 style numeric timezone (-0500) (a nonstandard extension)
    %Z	time zone (EDT), or nothing if no time zone is determinable
 
    Date fields:
@@ -200,6 +201,35 @@ add_num_time_t (string, max, num)
     abort ();
   sprintf (buf, "%lu", (unsigned long) num);
   length = add_str (string, buf, max);
+  return length;
+}
+
+/* Convert MINUTES_EAST into a string suitable for use as the RFC-822
+   timezone indicator.  Write no more than MAX bytes into STRING.
+    Return the number of bytes written into STRING.  */
+
+static int
+add_num_tz (string, max, minutes_east)
+     char *string;
+     int max;
+     int minutes_east;
+{
+  int length;
+
+  if (max < 1)
+    return 0;
+
+  if (minutes_east < 0)
+    {
+      *string = '-';
+      minutes_east = -minutes_east;
+    }
+  else
+    *string = '+';
+
+  length = 1 + add_num2 (&string[1], (minutes_east / 60) % 24, max - 1, zero);
+  length += add_num2 (&string[length], minutes_east % 60, max - length, zero);
+
   return length;
 }
 
@@ -369,6 +399,37 @@ strftime (string, max, format, tm)
 	    case 'X':
 	      length +=
 		strftime (&string[length], max - length, "%H:%M:%S", tm);
+	      break;
+	    case 'z':
+	      {
+		time_t t;
+		struct tm tml, tmg;
+		int diff;
+
+		tml = *tm;
+		t = mktime (&tml);
+		tml = *localtime (&t); /* Canonicalize the local time */
+		tmg = *gmtime (&t);
+
+		/* Compute the difference */
+
+		diff = tml.tm_min - tmg.tm_min;
+		diff += 60 * (tml.tm_hour - tmg.tm_hour);
+
+		if (tml.tm_mon != tmg.tm_mon)
+		  {
+		    /* We assume no timezone differs from UTC by more than
+		       +- 23 hours.  This should be safe. */
+		    if (tmg.tm_mday == 1)
+		      tml.tm_mday = 0;
+		    else /* tml.tm_mday == 1 */
+		      tmg.tm_mday = 0;
+		  }
+
+		diff += 1440 * (tml.tm_mday - tmg.tm_mday);
+
+		length += add_num_tz (&string[length], max - length, diff);
+	      }
 	      break;
 	    case 'Z':
 #ifdef HAVE_TM_ZONE
