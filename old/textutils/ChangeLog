@@ -1,8 +1,17 @@
-Thu Jun 15 22:09:14 1995  Jim Meyering  (meyering@comco.com)
+Sun Jun 18 09:15:57 1995  Jim Meyering  (meyering@comco.com)
 
 	* Version 1.12.
 
-	* md5sum.c Remove unnecessary uses of `defined' in #if* tests.
+	* md5sum.c (process_buffer): Copy values from struct into
+	individual local variables before performing computation on them,
+	then copy results back into returned struct.  Solely for better
+	optimization by compilers that can't keep struct members in
+	registers.  From Ulrich Drepper.
+
+Thu Jun 15 22:09:14 1995  Jim Meyering  (meyering@comco.com)
+
+
+	* md5sum.c: Remove unnecessary uses of `defined' in #if* tests.
 	Don't use #elif.  Some older compilers don't grok it.
 	(split_3): New function to parse out sum, flag, and filename
 	when reading check file.
