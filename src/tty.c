@@ -36,8 +36,8 @@ static int silent;
 
 static struct option const longopts[] =
 {
-  {"silent", 0, NULL, 's'},
-  {"quiet", 0, NULL, 's'},
+  {"silent", no_argument, NULL, 's'},
+  {"quiet", no_argument, NULL, 's'},
   {NULL, 0, NULL, 0}
 };
 

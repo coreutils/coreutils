@@ -63,12 +63,12 @@ char *program_name;
 
 static struct option const long_options[] =
 {
-  {"sysname", 0, NULL, 's'},
-  {"nodename", 0, NULL, 'n'},
-  {"release", 0, NULL, 'r'},
-  {"version", 0, NULL, 'v'},
-  {"machine", 0, NULL, 'm'},
-  {"all", 0, NULL, 'a'},
+  {"sysname", no_argument, NULL, 's'},
+  {"nodename", no_argument, NULL, 'n'},
+  {"release", no_argument, NULL, 'r'},
+  {"version", no_argument, NULL, 'v'},
+  {"machine", no_argument, NULL, 'm'},
+  {"all", no_argument, NULL, 'a'},
   {NULL, 0, NULL, 0}
 };
 

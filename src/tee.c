@@ -40,8 +40,8 @@ char *program_name;
 
 static struct option const long_options[] =
 {
-  {"append", 0, NULL, 'a'},
-  {"ignore-interrupts", 0, NULL, 'i'},
+  {"append", no_argument, NULL, 'a'},
+  {"ignore-interrupts", no_argument, NULL, 'i'},
   {NULL, 0, NULL, 0}
 };
 

@@ -36,7 +36,7 @@ char *program_name;
 
 static struct option const longopts[] =
 {
-  {"adjustment", 1, NULL, 'n'},
+  {"adjustment", required_argument, NULL, 'n'},
   {NULL, 0, NULL, 0}
 };
 

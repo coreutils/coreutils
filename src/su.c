@@ -164,11 +164,11 @@ static int change_environment;
 
 static struct option const longopts[] =
 {
-  {"command", 1, 0, 'c'},
-  {"fast", 0, &fast_startup, 1},
-  {"login", 0, &simulate_login, 1},
-  {"preserve-environment", 0, &change_environment, 0},
-  {"shell", 1, 0, 's'},
+  {"command", required_argument, 0, 'c'},
+  {"fast", no_argument, &fast_startup, 1},
+  {"login", no_argument, &simulate_login, 1},
+  {"preserve-environment", no_argument, &change_environment, 0},
+  {"shell", required_argument, 0, 's'},
   {0, 0, 0, 0}
 };
 

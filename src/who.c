@@ -94,12 +94,12 @@ static int include_mesg;
 
 static struct option const longopts[] =
 {
-  {"count", 0, NULL, 'q'},
-  {"idle", 0, NULL, 'u'},
-  {"heading", 0, NULL, 'H'},
-  {"message", 0, NULL, 'T'},
-  {"mesg", 0, NULL, 'T'},
-  {"writable", 0, NULL, 'T'},
+  {"count", no_argument, NULL, 'q'},
+  {"idle", no_argument, NULL, 'u'},
+  {"heading", no_argument, NULL, 'H'},
+  {"message", no_argument, NULL, 'T'},
+  {"mesg", no_argument, NULL, 'T'},
+  {"writable", no_argument, NULL, 'T'},
   {NULL, 0, NULL, 0}
 };
 

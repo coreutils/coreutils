@@ -94,8 +94,8 @@ char *program_name;
 
 static struct option const longopts[] =
 {
-  {"ignore-environment", 0, NULL, 'i'},
-  {"unset", 1, NULL, 'u'},
+  {"ignore-environment", no_argument, NULL, 'i'},
+  {"unset", required_argument, NULL, 'u'},
   {NULL, 0, NULL, 0}
 };
 

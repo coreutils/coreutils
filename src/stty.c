@@ -361,8 +361,8 @@ static int current_col;
 
 static struct option longopts[] =
 {
-  {"all", 0, NULL, 'a'},
-  {"save", 0, NULL, 'g'},
+  {"all", no_argument, NULL, 'a'},
+  {"save", no_argument, NULL, 'g'},
   {NULL, 0, NULL, 0}
 };
 

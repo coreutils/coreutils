@@ -92,11 +92,11 @@ static int problems = 0;
 
 static struct option const longopts[] =
 {
-  {"group", 0, NULL, 'g'},
-  {"name", 0, NULL, 'n'},
-  {"real", 0, NULL, 'r'},
-  {"user", 0, NULL, 'u'},
-  {"groups", 0, NULL, 'G'},
+  {"group", no_argument, NULL, 'g'},
+  {"name", no_argument, NULL, 'n'},
+  {"real", no_argument, NULL, 'r'},
+  {"user", no_argument, NULL, 'u'},
+  {"groups", no_argument, NULL, 'G'},
   {NULL, 0, NULL, 0}
 };
 
