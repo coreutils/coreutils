@@ -1,3 +1,12 @@
+2002-04-29  Jim Meyering  <meyering@lucent.com>
+
+	* jm-macros.m4 (jm_MACROS): Remove use of AC_FUNC_STRNLEN.
+	* prereq.m4: Add jm_PREREQ_STRNLEN.
+	Use AC_FUNC_STRNLEN here instead.
+
+	* jm-macros.m4: Don't AC_REQUIRE([AC_PROG_CC_STDC]).
+	With autoconf-2.53a, it's part of AC_PROG_CC.
+
 2002-04-28  Paul Eggert  <eggert@twinsun.com>
 
 	* jm-macros.m4 (jm_MACROS): Add AC_REPLACE_FUNCS(sig2str).
