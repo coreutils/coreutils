@@ -25,12 +25,8 @@
 # include <config.h>
 #endif
 
-#if HAVE_STRING_H
-# include <string.h>
-#endif
-#if HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
+#include <string.h>
+#include <stdlib.h>
 
 #ifdef emacs
 # include "lisp.h"
@@ -77,19 +73,6 @@ long i00afunc ();
 #   define ADDRESS_FUNCTION(arg) &(arg)
 #  endif
 
-#  ifndef POINTER_TYPE
-#   ifdef __STDC__
-#    define POINTER_TYPE void
-#   else
-#    define POINTER_TYPE char
-#   endif
-#  endif
-typedef POINTER_TYPE *pointer;
-
-#  ifndef NULL
-#   define NULL 0
-#  endif
-
 /* Define STACK_DIRECTION if you know the direction of stack
    growth for your system; otherwise it will be automatically
    deduced at run-time.
@@ -112,7 +95,7 @@ static int stack_dir;		/* 1 or -1 once known.  */
 #   define STACK_DIR	stack_dir
 
 static void
-find_stack_direction ()
+find_stack_direction (void)
 {
   static char *addr = NULL;	/* Address of first `dummy', once known.  */
   auto char dummy;		/* To get stack address.  */
@@ -165,9 +148,8 @@ static header *last_alloca_header = NULL;	/* -> last alloca header.  */
    caller, but that method cannot be made to work for some
    implementations of C, for example under Gould's UTX/32.  */
 
-pointer
-alloca (size)
-     size_t size;
+void *
+alloca (size_t size)
 {
   auto char probe;		/* Probes stack depth: */
   register char *depth = ADDRESS_FUNCTION (probe);
@@ -214,7 +196,7 @@ alloca (size)
 
   {
     /* Address of header.  */
-    register pointer new;
+    register void *new;
 
     size_t combined_size = sizeof (header) + size;
     if (combined_size < sizeof (header))
@@ -232,7 +214,7 @@ alloca (size)
 
     /* User storage begins just after header.  */
 
-    return (pointer) ((char *) new + sizeof (header));
+    return (void *) ((char *) new + sizeof (header));
   }
 }
 
