@@ -1,5 +1,5 @@
 /* xmalloc.c -- malloc with out of memory checking
-   Copyright (C) 1990-1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1990-1999, 2000, 2002, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@ void free ();
 int xalloc_exit_failure = EXIT_FAILURE;
 
 /* If non NULL, call this function when memory is exhausted. */
-void (*xalloc_fail_func) PARAMS ((void)) = 0;
+void (*xalloc_fail_func) (void) = 0;
 
 /* If XALLOC_FAIL_FUNC is NULL, or does return, display this message
    before exiting when memory is exhausted.  Goes through gettext. */
