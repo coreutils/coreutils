@@ -2,7 +2,8 @@
 
 	* src/ls.c (DT_INIT): Define.
 	[enum filetype]: Remove the #ifdef, and use DT_INIT on the
-	initializers instead.  Reported by John David Anglin.
+	initializers instead.  `unknown' was undefined for some systems.
+	Reported by John David Anglin.
 
 	* tests/lang-default (LC_COLLATE): Set it to the empty string and
 	export it.  Otherwise, tests/cp/cp-mv-backup would fail e.g., when
