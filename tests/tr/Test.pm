@@ -112,6 +112,9 @@ my @tv = (
 ['repeat-compl', '-c ' . q|'[a*65536]\n' '[b*]'|, 'abcd', 'abbb', 0],
 ['repeat-Compl', '-C ' . q|'[a*65536]\n' '[b*]'|, 'abcd', 'abbb', 0],
 
+# From Glenn Fowler.
+['fowler-1', q|ah -H|, 'aha', '-H-', 0],
+
 );
 
 sub test_vector
