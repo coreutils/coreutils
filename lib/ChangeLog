@@ -5,6 +5,12 @@
 	Assign to *pwc, and return 1 only if result is nonzero.
 	(iswprint): Use ISPRINT when substituting our own mbrtowc.
 
+2000-07-03  Jim Meyering  <meyering@lucent.com>
+
+	* readutmp.h: [HAVE_UTMPX_H]: Include <utmp.h> if HAVE_UTMP_H.
+	This is necessary to get a definition of e.g., UTMP_FILE on HP-UX 10.20.
+	From Bob Proulx.
+
 2000-07-02  Jim Meyering  <meyering@lucent.com>
 
 	* quotearg.c (mbstate_t): Don't define here.
