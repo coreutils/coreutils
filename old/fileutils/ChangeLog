@@ -1,6 +1,14 @@
-2002-07-03  Jim Meyering  <meyering@lucent.com>
+2002-07-04  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.10.
+
+	* src/remove.c (prompt): Fix test for write-protectedness to also
+	check errno == EACCES.  Otherwise, `rm dangling-symlink' would
+	mistakenly prompt.
+	* tests/rm/Makefile.am (TESTS): Add dangling-symlink.
+	* tests/rm/dangling-symlink: New file/test, for the above fix.
+
+2002-07-03  Jim Meyering  <meyering@lucent.com>
 
 	* src/stat.c (usage): Rename --link/-l to --dereference/-L.
 	Describe --secure.
