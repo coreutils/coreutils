@@ -20,6 +20,7 @@
 	* src/install.c (cp_option_init): Likewise.
 	* src/cp.c (main): Adjust initialization(s) of `interactive',
 	* src/mv.c (main): Likewise.
+	* tests/mv/i-1: Change expected exit status to reflect the above.
 
 2001-08-12  Jim Meyering  <meyering@lucent.com>
 
