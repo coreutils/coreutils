@@ -38,15 +38,18 @@ u3='1998-01-14 13:00'
 
 $TOUCH -m -d "$t3" a || test_failure=1
 $TOUCH -m -d "$t2" b || test_failure=1
-$TOUCH -m -d "$t1" d || test_failure=1
+$TOUCH -m -d "$t1" c || test_failure=1
 
 $TOUCH -a -d "$u1" a || test_failure=1
 $TOUCH -a -d "$u2" b || test_failure=1
-$TOUCH -a -d "$u3" d || test_failure=1
+$TOUCH -a -d "$u3" c || test_failure=1
 
+# Sleep so long in an attempt to avoid spurious failures
+# due to NFS caching and/or clock skew.
 sleep 5
 
-mv d c || test_failure=1
+# Create a link, updating c's ctime.
+ln c d || test_failure=1
 
 if test $test_failure = 1; then
   echo 'failure in testing framework'
@@ -63,7 +66,16 @@ test "$*" = 'a b c' && : || fail=1
 
 # C has newer ctime.
 set `$LS -c a c`
-test "$*" = 'c a' && : || fail=1
+if test "$*" = 'c a'; then
+  : ok
+else
+  if test "$VERBOSE" = yes; then
+    # In spite of documentation, (e.g., stat(2)), neither link nor chmod
+    # update a file's st_ctime on SunOS4.1.4.
+    echo "failed ls ctime test -- this is expected at least for SunOS4.1.4" >&2
+  fi
+  fail=1
+fi
 
 cd ..
 rm -rf $tmp
