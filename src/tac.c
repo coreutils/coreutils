@@ -1,5 +1,5 @@
 /* tac - concatenate and print files in reverse
-   Copyright (C) 1988-1991, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 1988-1991, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -71,8 +71,6 @@ tac -r -s '.\|
 
 /* The number of bytes per atomic write. */
 #define WRITESIZE 8192
-
-char *mktemp ();
 
 /* The name this program was run with. */
 char *program_name;
@@ -414,7 +412,7 @@ save_stdin (FILE **g_tmp, char **g_tempfile)
 {
   static char *template = NULL;
   static char *tempdir;
-  static char *tempfile;
+  char *tempfile;
   FILE *tmp;
   ssize_t bytes_read;
   int fd;
@@ -427,11 +425,8 @@ save_stdin (FILE **g_tmp, char **g_tempfile)
       template = xmalloc (strlen (tempdir) + 11);
     }
   sprintf (template, "%s/tacXXXXXX", tempdir);
-  tempfile = mktemp (template);
-
-  /*  Open temporary file exclusively, to foil a common
-      denial-of-service attack.  */
-  fd = open (tempfile, O_RDWR | O_CREAT | O_TRUNC | O_EXCL, 0600);
+  tempfile = template;
+  fd = mkstemp (template);
   if (fd == -1)
     error (EXIT_FAILURE, errno, "%s", tempfile);
 
