@@ -1,3 +1,7 @@
+2004-04-23  Jim Meyering  <jim@meyering.net>
+
+	* jm-macros.m4: Don't check for values.h; it's no longer used.
+
 2004-04-20  Jim Meyering  <jim@meyering.net>
 
 	Change UTILS_ to gl_ in AC_DEFINE'd names.
