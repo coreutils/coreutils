@@ -37,8 +37,9 @@ my-distcheck: dist
 	  && $(MAKE) dvi \
 	  && $(MAKE) check \
 	  && $(MAKE) distclean
-	cd $(t) && $(TAR) -zxf ../$(distdir).tar.gz
-	diff -ur $(t) $(t)/$(distdir)
+	cd $(t) && mv $(distdir) $(distdir).old \
+	  && $(TAR) -zxf ../$(distdir).tar.gz
+	diff -ur $(t)/$(distdir).old $(t)/$(distdir)
 	-rm -rf $(t)
 	@echo "========================"; \
 	echo "$(distdir).tar.gz is ready for distribution"; \
