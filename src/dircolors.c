@@ -1,3 +1,7 @@
+/* FIXME: accept, but ignore EIGHTBIT option
+   FIXME: embed contents of default mapping file
+   FIXME: add option to print that default mapping?
+ */
 /* dircolors - parse a Slackware-style DIR_COLORS file.
    Copyright (C) 1994, 1995 H. Peter Anvin
    Copyright (C) 1996 Free Software Foundation, Inc.
@@ -27,25 +31,82 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 #include "system.h"
 #include "error.h"
 
+char *xmalloc ();
+
 #define USER_FILE ".dir_colors"	/* Versus user's home directory */
-#define SYSTEM_FILE "/DIR_COLORS" /* System-wide file in directory SYSTEM_DIR
+#define SYSTEM_FILE "DIR_COLORS" /* System-wide file in directory SYSTEM_DIR
 				     (defined on the cc command line).  */
 
 #define STRINGLEN 2048		/* Max length of a string */
 
-enum modes { mo_sh, mo_csh, mo_ksh, mo_zsh, mo_unknown, mo_err };
+enum modes { MO_SH, MO_CSH, MO_KSH, MO_ZSH, MO_UNKNOWN, MO_ERR };
 
-const char *shells[] = { "sh", "ash", "csh", "tcsh", "bash", "ksh",
-			 "zsh", NULL };
+/* FIXME: associate these arrays? */
+static const char *const shells[] =
+{ "sh", "ash", "csh", "tcsh", "bash", "ksh", "zsh", NULL };
 
-const int shell_mode[] = { mo_sh, mo_sh, mo_csh, mo_csh,
-			   mo_ksh, mo_ksh, mo_zsh };
+static const int shell_mode[] =
+{ MO_SH, MO_SH, MO_CSH, MO_CSH, MO_KSH, MO_KSH, MO_ZSH };
+
+/* Parser needs these state variables.  */
+enum states { ST_TERMNO, ST_TERMYES, ST_TERMSURE, ST_GLOBAL };
+
+/* FIXME: associate with ls_codes? */
+static const char *const slack_codes[] =
+{
+  "NORMAL", "NORM", "FILE", "DIR", "LNK", "LINK",
+  "SYMLINK", "ORPHAN", "MISSING", "FIFO", "PIPE", "SOCK", "BLK", "BLOCK",
+  "CHR", "CHAR", "EXEC", "LEFT", "LEFTCODE", "RIGHT", "RIGHTCODE", "END",
+  "ENDCODE", NULL
+};
+
+static const char *const ls_codes[] =
+{
+  "no", "no", "fi", "di", "ln", "ln", "ln", "or", "mi", "pi", "pi",
+  "so", "bd", "bd", "cd", "cd", "ex", "lc", "lc", "rc", "rc", "ec", "ec"
+};
+
+enum color_opts { col_yes, col_no, col_tty };
+
+static struct option const long_options[] =
+  {
+    {"ash", no_argument, NULL, 'a'},
+    {"bash", no_argument, NULL, 'b'},
+    {"csh", no_argument, NULL, 'c'},
+    {"help", no_argument, NULL, 'h'},
+    {"no-path", no_argument, NULL, 'P'},
+    {"sh", no_argument, NULL, 's'},
+    {"tcsh", no_argument, NULL, 't'},
+    {"version", no_argument, NULL, 'v'},
+    {"zsh", no_argument, NULL, 'z'},
+  };
 
 char *program_name;
 
+static void
+usage (int status)
+{
+  if (status != 0)
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+             program_name);
+  else
+    {
+      printf (_("Usage: %s [OPTION]... [FILE]\n"), program_name);
+      printf (_("\
+  -h, --help        display this help and exit\n\
+  -P, --no-path     do not look for shell in PATH\n\
+      --version     output version information and exit\n\
+Determine format of output:\n\
+  -a, --ash         assume ash shell\n\
+  -b, --bash        assume bash shell\n\
+  -c, --csh         assume csh shell\n\
+  -s, --sh          assume Bourne shell\n\
+  -t, --tcsh        assume tcsh shell\n\
+  -z, --zsh         assume zsh shell\n"));
+    }
 
-static void usage __P ((int status));
-
+  exit (status);
+}
 
 static int
 figure_mode (void)
@@ -114,7 +175,7 @@ parse_line (char **keyword, char **arg, char *line)
    sequences like unescaped : and = characters.  */
 
 static void
-put_seq (char *str, char follow)
+put_seq (const char *str, char follow)
 {
   int danger = 1;
 
@@ -144,42 +205,12 @@ put_seq (char *str, char follow)
   putchar (follow);		/* The character that ends the sequence.  */
 }
 
-/* Parser needs these state variables.  */
-enum states { st_termno, st_termyes, st_termsure, st_global };
-
-const char *slack_codes[] = {"NORMAL", "NORM", "FILE", "DIR", "LNK", "LINK",
-"SYMLINK", "ORPHAN", "MISSING", "FIFO", "PIPE", "SOCK", "BLK", "BLOCK",
-"CHR", "CHAR", "EXEC", "LEFT", "LEFTCODE", "RIGHT", "RIGHTCODE", "END",
-"ENDCODE", NULL};
-
-const char *ls_codes[] = {"no", "no", "fi", "di", "ln", "ln", "ln",
-"or", "mi", "pi", "pi", "so", "bd", "bd", "cd", "cd", "ex", "lc", "lc", "rc",
-"rc", "ec", "ec"};
-
-enum color_opts { col_yes, col_no, col_tty };
-
-
-static struct option long_options[] =
-  {
-    {"ash", no_argument, NULL, 'a'},
-    {"bash", no_argument, NULL, 'b'},
-    {"csh", no_argument, NULL, 'c'},
-    {"help", no_argument, NULL, 'h'},
-    {"no-path", no_argument, NULL, 'P'},
-    {"sh", no_argument, NULL, 's'},
-    {"tcsh", no_argument, NULL, 't'},
-    {"version", no_argument, NULL, 'v'},
-    {"zsh", no_argument, NULL, 'z'},
-  };
-
-
 int
 main (int argc, char *argv[])
 {
   char *p, *q;
-  char *file = NULL;
   int optc;
-  int mode = mo_unknown;
+  int mode = MO_UNKNOWN;
   FILE *fp = NULL;
   char *term;
   int state;
@@ -194,7 +225,7 @@ main (int argc, char *argv[])
   int do_help = 0;
   int do_version = 0;
 
-  char *copt;
+  const char *copt;
   char *input_file;
 
   program_name = argv[0];
@@ -210,17 +241,17 @@ main (int argc, char *argv[])
       {
       case 'a':
       case 's':	/* Plain sh mode */
-	mode = mo_sh;
+	mode = MO_SH;
 	break;
 
       case 'c':
       case 't':
-	mode = mo_csh;
+	mode = MO_CSH;
 	break;
 
       case 'b':
       case 'k':
-	mode = mo_ksh;
+	mode = MO_KSH;
 	break;
 
       case 'h':
@@ -228,7 +259,7 @@ main (int argc, char *argv[])
 	break;
 
       case 'z':
-	mode = mo_zsh;
+	mode = MO_ZSH;
 	break;
 
       case 'P':
@@ -243,19 +274,17 @@ main (int argc, char *argv[])
 	usage (1);
       }
 
-  /* If version information is wanted show it.  */
   if (do_version)
     {
       printf ("%s - %s\n", program_name, PACKAGE_VERSION);
       exit (0);
     }
 
-  /* If help is wanted show the screen.  */
   if (do_help)
     usage (0);
 
   /* Use shell to determine mode, if not already done. */
-  if (mode == mo_unknown)
+  if (mode == MO_UNKNOWN)
     mode = figure_mode ();
 
   /* Open dir_colors file */
@@ -264,14 +293,20 @@ main (int argc, char *argv[])
       p = getenv ("HOME");
       if (p != NULL && *p != '\0')
 	{
-	  chdir (p);
-	  input_file = USER_FILE;
+	  /* Note: deliberate leak.  It's not worth freeing this.  */
+	  input_file = xmalloc (strlen (p) + 1
+				+ strlen (USER_FILE) + 1);
+	  stpcpy (stpcpy (stpcpy (input_file, p), "/"), USER_FILE);
 	  fp = fopen (input_file, "r");
 	}
 
       if (fp == NULL)
 	{
-	  input_file = SHAREDIR SYSTEM_FILE;
+	  /* Note: deliberate leak.  It's not worth freeing this.  */
+	  input_file = xmalloc (strlen (SHAREDIR) + 1
+				+ strlen (USER_FILE) + 1);
+	  stpcpy (stpcpy (stpcpy (input_file, SHAREDIR), "/"),
+		  USER_FILE);
 	  fp = fopen (input_file, "r");
 	}
     }
@@ -292,20 +327,20 @@ main (int argc, char *argv[])
   /* Write out common start */
   switch (mode)
     {
-    case mo_csh:
+    case MO_CSH:
       puts ("set noglob;\n\
 setenv LS_COLORS \':");
       break;
-    case mo_sh:
-    case mo_ksh:
-    case mo_zsh:
+    case MO_SH:
+    case MO_KSH:
+    case MO_ZSH:
       puts ("LS_COLORS=\'");
       break;
     }
 
-  /* Start parsing that sucker */
-  state = st_global;
+  state = ST_GLOBAL;
 
+  /* FIXME: use getline */
   while (fgets (line, STRINGLEN, fp) != NULL )
     {
       parse_line (&keywd, &arg, line);
@@ -314,16 +349,16 @@ setenv LS_COLORS \':");
 	  if (strcasecmp (keywd, "TERM") == 0)
 	    {
 	      if (strcmp (arg, term) == 0)
-		state = st_termsure;
-	      else if (state != st_termsure)
-		state = st_termno;
+		state = ST_TERMSURE;
+	      else if (state != ST_TERMSURE)
+		state = ST_TERMNO;
 	    }
 	  else
 	    {
-	      if (state == st_termsure)
-		state = st_termyes; /* Another TERM can cancel */
+	      if (state == ST_TERMSURE)
+		state = ST_TERMYES; /* Another TERM can cancel */
 
-	      if (state != st_termno)
+	      if (state != ST_TERMNO)
 		{
 		  if (keywd[0] == '.')
 		    {
@@ -405,7 +440,7 @@ setenv LS_COLORS \':");
     }
 
   /* Find ls in the path.  */
-  if (no_path == NULL)
+  if (no_path == 0)
     {
       no_path = 1;		/* Assume we won't find one.  */
 
@@ -443,7 +478,7 @@ setenv LS_COLORS \':");
   /* Write it out.  */
   switch (mode)
     {
-    case mo_sh:
+    case MO_SH:
       if (no_path)
 	printf ("\';\n\
 export LS_COLORS;\n\
@@ -465,7 +500,7 @@ d () { dir \"$@\" ; };\n\
 v () { vdir \"$@\" ; };\n", copt, useropts, line, line, line);
       break;
 
-    case mo_csh:
+    case MO_CSH:
       if (no_path)
 	printf ("\';\n\
 setenv LS_OPTIONS '%s%s';\n\
@@ -486,7 +521,7 @@ alias v vdir;\n\
 unset noglob;\n", copt, useropts, line, line, line);
       break;
 
-    case mo_ksh:
+    case MO_KSH:
       if (no_path)
 	printf ("\';\n\
 export LS_COLORS;\n\
@@ -509,7 +544,7 @@ alias d=dir;\n\
 alias v=vdir;\n", copt, useropts, line, line, line);
       break;
 
-    case mo_zsh:
+    case MO_ZSH:
       if (no_path)
 	printf ("\';\n\
 export LS_COLORS;\n\
@@ -534,30 +569,4 @@ alias v=vdir;\n", copt, useropts, line, line, line);
     }
 
   exit (0);
-}
-
-
-static void
-usage (int status)
-{
-  if (status != 0)
-    fprintf (stderr, _("Try `%s --help' for more information.\n"),
-             program_name);
-  else
-    {
-      printf (_("Usage: %s [OPTION]... [FILE]\n"), program_name);
-      printf (_("\
-  -h, --help        display this help and exit\n\
-  -P, --no-path     do not look for shell in PATH\n\
-      --version     output version information and exit\n\
-Determine format of output:\n\
-  -a, --ash         assume ash shell\n\
-  -b, --bash        assume bash shell\n\
-  -c, --csh         assume csh shell\n\
-  -s, --sh          assume Bourne shell\n\
-  -t, --tcsh        assume tcsh shell\n\
-  -z, --zsh         assume zsh shell\n"));
-    }
-
-  exit (status);
 }
