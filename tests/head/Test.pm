@@ -26,6 +26,11 @@ my @tv = (
 ['obs-1', '-1c', "", "", 0],
 ['obs-2', '-1c', "12", "1", 0],
 ['obs-3', '-14c', "1234567890abcdefg", "1234567890abcd", 0],
+['obs-4', '-2b', [\'in'], [\'in-1024'], 0], #'
+['obs-5', '-1k', [\'in'], [\'in-1024'], 0], #'
+
+# This test fails for textutils-1.22, because head didn't fail.
+['fail-0', '-n 4096m', 'a\n', '', 1], #'
 
 );
 
