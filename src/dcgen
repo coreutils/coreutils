@@ -5,7 +5,7 @@ eval 'exec /p/bin/perl -S $0 ${1+"$@"}'
     if 0;
 
 # dcgen -- generate C declarations of arrays of lines and line lengths
-# Copyright (C) 1996, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1998, 2004 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,16 +38,38 @@ local @line;
 while (<>)
   {
     chop;
-    push (@line, $_);
+    s/[[:blank:]]*#.*//;
+    if ($_)
+      {
+	push (@line, $_);
+      }
   }
 
 local $n = @line;
 print "#define ${prefix}N_LINES $n\n\n";
 
 local $indent = '  ';
-print "const size_t ${prefix}line_length[${prefix}N_LINES] =\n{\n$indent";
-local $ind = $indent;
 local $i;
+
+local $max_line_length = 0;
+for ($i = 0; $i < @line; $i++)
+  {
+    local $len = length ($line[$i]);
+    $max_line_length = $len if $max_line_length < $len;
+  }
+
+local $line_length_type = 'unsigned char';
+if ((1 << 8) <= $max_line_length)
+  {
+    $line_length_type = 'unsigned short int';
+    if ((1 << 16) <= $max_line_length)
+      {
+        $line_length_type = 'unsigned int';
+      }
+  }
+
+print "static $line_length_type const ${prefix}line_length[${prefix}N_LINES] =\n{\n$indent";
+local $ind = $indent;
 for ($i = 0; $i < @line; $i++)
   {
     local $comma = ($i < @line - 1 ? ',' : '');
@@ -57,7 +79,7 @@ for ($i = 0; $i < @line; $i++)
   }
 print "};\n\n";
 
-print "const char *const ${prefix}line[${prefix}N_LINES] =\n{\n";
+print "static char const *const ${prefix}line[${prefix}N_LINES] =\n{\n";
 while (1)
   {
     $_ = shift (@line);
