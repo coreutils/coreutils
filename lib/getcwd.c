@@ -79,6 +79,12 @@
 
 #include <limits.h>
 
+#ifdef ENAMETOOLONG
+# define is_ENAMETOOLONG(x) ((x) == ENAMETOOLONG)
+#else
+# define is_ENAMETOOLONG(x) 0
+#endif
+
 #ifndef MAX
 # define MAX(a, b) ((a) < (b) ? (b) : (a))
 #endif
@@ -144,8 +150,21 @@ __getcwd (char *buf, size_t size)
   char *path;
   register char *pathp;
   struct stat st;
-  int prev_errno = errno;
   size_t allocated = size;
+  size_t used;
+
+#if HAVE_PARTLY_WORKING_GETCWD && !defined AT_FDCWD
+  /* The system getcwd works, except it sometimes fails when it
+     shouldn't, setting errno to ERANGE, ENAMETOOLONG, or ENOENT.  If
+     AT_FDCWD is not defined, the algorithm below is O(N**2) and this
+     is much slower than the system getcwd (at least on GNU/Linux).
+     So trust the system getcwd's results unless they look
+     suspicious.  */
+# undef getcwd
+  path = getcwd (buf, size);
+  if (path || (errno != ERANGE && !is_ENAMETOOLONG (errno) && errno != ENOENT))
+    return path;
+#endif
 
   if (size == 0)
     {
@@ -158,14 +177,14 @@ __getcwd (char *buf, size_t size)
       allocated = BIG_FILE_NAME_LENGTH + 1;
     }
 
-  if (buf != NULL)
-    path = buf;
-  else
+  if (buf == NULL)
     {
       path = malloc (allocated);
       if (path == NULL)
 	return NULL;
     }
+  else
+    path = buf;
 
   pathp = path + allocated;
   *--pathp = '\0';
@@ -350,12 +369,19 @@ __getcwd (char *buf, size_t size)
     free (dotlist);
 #endif
 
-  memmove (path, pathp, path + allocated - pathp);
+  used = path + allocated - pathp;
+  memmove (path, pathp, used);
 
-  /* Restore errno on successful return.  */
-  __set_errno (prev_errno);
+  if (buf == NULL && size == 0)
+    /* Ensure that the buffer is only as large as necessary.  */
+    buf = realloc (path, used);
 
-  return path;
+  if (buf == NULL)
+    /* Either buf was NULL all along, or `realloc' failed but
+       we still have the original string.  */
+    buf = path;
+
+  return buf;
 
  memory_exhausted:
   __set_errno (ENOMEM);
