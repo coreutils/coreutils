@@ -15,4 +15,4 @@ prompts the user for whether to remove the file.  If the response
 does not begin with `y' or `Y', the file is skipped.
 .SH OPTIONS
 [SEE ALSO]
-shred(1)
+chattr(1), shred(1)
