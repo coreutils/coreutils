@@ -1,6 +1,10 @@
-2002-11-14  Jim Meyering  <jim@meyering.net>
+2002-11-15  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.4.
+
+	* Makefile.maint (signatures): Define with ?=, so it's easy to override.
+
+2002-11-14  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (mail_gpg_sign_cookie): Make optional.
 	(announcement): Use the new variable.
