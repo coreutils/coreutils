@@ -38,7 +38,7 @@
 
 char *xmalloc ();
 void error ();
-void xwrite ();
+int safe_write ();
 
 static int tee ();
 
@@ -164,8 +164,8 @@ tee (nfiles, files)
   char buffer[BUFSIZ];
   register int bytes_read, i, ret = 0, mode;
 
-  if (nfiles)
-    descriptors = (int *) xmalloc (nfiles * sizeof (int));
+  descriptors = (int *) xmalloc ((nfiles + 1) * sizeof (int));
+
   mode = O_WRONLY | O_CREAT;
   if (append)
     mode |= O_APPEND;
@@ -182,6 +182,12 @@ tee (nfiles, files)
 	}
     }
 
+  /* In the array of NFILES + 1 descriptors, make
+     the last one correspond to standard output.   */
+  descriptors[nfiles] = 1;
+  /* This writes into argv[argc].  */
+  files[nfiles] = "standard output";
+
   while (1)
     {
       bytes_read = read (0, buffer, sizeof buffer);
@@ -191,11 +197,22 @@ tee (nfiles, files)
 #endif
       if (bytes_read <= 0)
 	break;
-      xwrite (1, buffer, bytes_read);
-      for (i = 0; i < nfiles; i++)
-	if (descriptors[i] != -1)
-	  xwrite (descriptors[i], buffer, bytes_read);
+
+      /* Write to all NFILES + 1 descriptors.
+	 Standard output is the last one.  */
+      for (i = 0; i <= nfiles; i++)
+	{
+	  if (descriptors[i] != -1
+	      && safe_write (descriptors[i], buffer, bytes_read))
+	    {
+	      error (0, errno, "%s", files[i]);
+	      close (descriptors[i]);
+	      descriptors[i] = -1;
+	      ret = 1;
+	    }
+	}
     }
+
   if (bytes_read == -1)
     {
       error (0, errno, "read error");
@@ -209,8 +226,7 @@ tee (nfiles, files)
 	ret = 1;
       }
 
-  if (nfiles)
-    free (descriptors);
+  free (descriptors);
 
   return ret;
 }
