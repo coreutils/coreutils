@@ -1,13 +1,12 @@
-#serial 3
+#serial 4
 
 dnl A replacement for autoconf's AC_FUNC_MEMCMP that detects
 dnl the losing memcmp on some x86 Next systems.
 AC_DEFUN(jm_AC_FUNC_MEMCMP,
 [AC_CACHE_CHECK([for working memcmp], jm_cv_func_memcmp_working,
 [AC_TRY_RUN(
-changequote(<<, >>)dnl
-<<
-main()
+[int
+main ()
 {
   /* Some versions of memcmp are not 8-bit clean.  */
   char c0 = 0x40, c1 = 0x80, c2 = 0x81;
@@ -32,9 +31,7 @@ main()
       }
     exit (0);
   }
-}
->>,
-changequote([, ])dnl
+}],
    jm_cv_func_memcmp_working=yes,
    jm_cv_func_memcmp_working=no,
    jm_cv_func_memcmp_working=no)])
