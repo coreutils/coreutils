@@ -1,11 +1,20 @@
 Tue May 27 06:08:06 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/basename.c: Don't include backupfile.h.
+
+	* lib/Makefile.am (noinst_HEADERS): Add backupfile.h.
+
 	* src/basename.c: Use base_name, not basename.
 	* src/su.c: Use base_name, not basename.
 
 	* configure.in: Don't replace basename.  Now it's always required.
 
 	* lib/Makefile.am (libsu_a_SOURCES): Add basename.c.
+
+	* lib/getopt.c: Update from glibc via patch-2.2.93.
+	* lib/getopt1.c: Likewise.
+	* lib/getopt.h: Likewise.
+	* lib/basename.c: Likewise.
 
 Sat May 24 13:26:04 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
