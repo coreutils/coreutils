@@ -71,6 +71,16 @@ extern int errno;
 # endif
 #endif
 
+#ifndef S_IWUSR
+# define S_IWUSR 0200
+#endif
+
+#ifndef S_IXUSR
+# define S_IXUSR 0100
+#endif
+
+#define WX_USR (S_IWUSR | S_IXUSR)
+
 #ifdef __MSDOS__
 typedef int uid_t;
 typedef int gid_t;
@@ -162,8 +172,8 @@ make_path (const char *argpath,
       /* If leading directories shouldn't be writable or executable,
 	 or should have set[ug]id or sticky bits set and we are setting
 	 their owners, we need to fix their permissions after making them.  */
-      if (((parent_mode & 0300) != 0300)
-	  || (owner != (uid_t) -1 && group != (gid_t) -1
+      if (((parent_mode & WX_USR) != WX_USR)
+	  || ((owner != (uid_t) -1 || group != (gid_t) -1)
 	      && (parent_mode & 07000) != 0))
 	{
 	  tmp_mode = 0700;
@@ -232,7 +242,8 @@ make_path (const char *argpath,
 	  if (newly_created_dir && verbose_fmt_string != NULL)
 	    fprintf (stderr, verbose_fmt_string, dirpath);
 
-	  if (owner != (uid_t) -1 && group != (gid_t) -1
+	  if (newly_created_dir
+	      && (owner != (uid_t) -1 || group != (gid_t) -1)
 	      && chown (basename_dir, owner, group)
 #if defined(AFS) && defined (EPERM)
 	      && errno != EPERM
@@ -348,7 +359,7 @@ make_path (const char *argpath,
 	     On System V, users can give away files with chown and then not
 	     be able to chmod them.  So don't give files away.  */
 
-	  if (owner != (uid_t) -1 && group != (gid_t) -1
+	  if ((owner != (uid_t) -1 || group != (gid_t) -1)
 	      && chown (dirpath, owner, group)
 #ifdef AFS
 	      && errno != EPERM
