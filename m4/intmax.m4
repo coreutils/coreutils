@@ -16,7 +16,7 @@ AC_DEFUN([gt_TYPE_INTMAX_T],
   AC_REQUIRE([jm_AC_HEADER_STDINT_H])
   AC_CACHE_CHECK(for intmax_t, gt_cv_c_intmax_t,
     [AC_TRY_COMPILE([
-#include <stddef.h> 
+#include <stddef.h>
 #include <stdlib.h>
 #if HAVE_STDINT_H_WITH_UINTMAX
 #include <stdint.h>
