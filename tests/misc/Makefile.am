@@ -8,4 +8,4 @@ TESTS_ENVIRONMENT = \
   PERL="@PERL@" \
   PATH=`pwd`/../../src:$$PATH
 
-TESTS = head-c
+TESTS = head-c csplit
