@@ -29,7 +29,6 @@
 #include "system.h"
 #include "error.h"
 #include "human.h"
-#include "long-options.h"
 #include "safe-read.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -66,6 +65,8 @@ static struct option const longopts[] =
   {"lines", no_argument, NULL, 'l'},
   {"words", no_argument, NULL, 'w'},
   {"max-line-length", no_argument, NULL, 'L'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -302,9 +303,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
-
   exit_status = 0;
   print_lines = print_words = print_chars = print_linelength = 0;
   total_lines = total_words = total_chars = max_line_length = 0;
@@ -330,6 +328,10 @@ main (int argc, char **argv)
       case 'L':
 	print_linelength = 1;
 	break;
+
+      case_GETOPT_HELP_CHAR;
+
+      case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
       default:
 	usage (1);

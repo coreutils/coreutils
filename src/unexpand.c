@@ -42,7 +42,6 @@
 #include <sys/types.h>
 #include "system.h"
 
-#include "long-options.h"
 #include "error.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -96,6 +95,8 @@ static struct option const longopts[] =
 {
   {"tabs", required_argument, NULL, 't'},
   {"all", no_argument, NULL, 'a'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -389,9 +390,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
-
   have_read_stdin = 0;
   exit_status = 0;
   convert_entire_line = 0;
@@ -418,6 +416,8 @@ main (int argc, char **argv)
 	  add_tabstop (tabval);
 	  tabval = -1;
 	  break;
+	case_GETOPT_HELP_CHAR;
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
 	  if (tabval == -1)
 	    tabval = 0;

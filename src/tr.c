@@ -27,7 +27,6 @@
 
 #include "system.h"
 #include "error.h"
-#include "long-options.h"
 #include "safe-read.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -310,6 +309,8 @@ static struct option const long_options[] =
   {"delete", no_argument, NULL, 'd'},
   {"squeeze-repeats", no_argument, NULL, 's'},
   {"truncate-set1", no_argument, NULL, 't'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -1803,9 +1804,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
-
   while ((c = getopt_long (argc, argv, "cdst", long_options, NULL)) != -1)
     {
       switch (c)
@@ -1828,6 +1826,10 @@ main (int argc, char **argv)
 	case 't':
 	  truncate_set1 = 1;
 	  break;
+
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  usage (2);

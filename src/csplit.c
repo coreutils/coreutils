@@ -31,7 +31,6 @@
 #include <regex.h>
 
 #include "error.h"
-#include "long-options.h"
 #include "safe-read.h"
 #include "xstrtoul.h"
 #include "xalloc.h"
@@ -217,6 +216,8 @@ static struct option const longopts[] =
   {"elide-empty-files", no_argument, NULL, 'z'},
   {"prefix", required_argument, NULL, 'f'},
   {"suffix-format", required_argument, NULL, 'b'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -1377,9 +1378,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
-
   global_argv = argv;
   controls = NULL;
   control_used = 0;
@@ -1454,6 +1452,10 @@ main (int argc, char **argv)
       case 'z':
 	elide_empty_files = TRUE;
 	break;
+
+      case_GETOPT_HELP_CHAR;
+
+      case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
       default:
 	usage (1);

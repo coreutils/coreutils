@@ -26,7 +26,6 @@
 #include <getopt.h>
 #include "system.h"
 #include "error.h"
-#include "long-options.h"
 #include "safe-read.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -46,6 +45,8 @@ static int have_read_stdin;
 static struct option const longopts[] =
 {
   {"sysv", no_argument, NULL, 's'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -214,9 +215,6 @@ main (int argc, char **argv)
 
   have_read_stdin = 0;
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
-
   while ((optc = getopt_long (argc, argv, "rs", longopts, NULL)) != -1)
     {
       switch (optc)
@@ -231,6 +229,10 @@ main (int argc, char **argv)
 	case 's':
 	  sum_func = sysv_sum_file;
 	  break;
+
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  usage (1);

@@ -26,7 +26,6 @@
 #include <stdio.h>
 #include <sys/types.h>
 
-#include "long-options.h"
 #include "md5.h"
 #include "getline.h"
 #include "system.h"
@@ -95,6 +94,8 @@ static const struct option long_options[] =
   { "string", required_argument, 0, 1 },
   { "text", no_argument, 0, 't' },
   { "warn", no_argument, 0, 'w' },
+  { GETOPT_HELP_OPTION_DECL },
+  { GETOPT_VERSION_OPTION_DECL },
   { NULL, 0, NULL, 0 }
 };
 
@@ -477,9 +478,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
-
   while ((opt = getopt_long (argc, argv, "bctw", long_options, NULL)) != -1)
     switch (opt)
       {
@@ -514,6 +512,8 @@ main (int argc, char **argv)
 	status_only = 0;
 	warn = 1;
 	break;
+      case_GETOPT_HELP_CHAR;
+      case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
       default:
 	usage (EXIT_FAILURE);
       }

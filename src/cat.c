@@ -32,7 +32,6 @@
 #endif
 #include "system.h"
 #include "error.h"
-#include "long-options.h"
 #include "safe-read.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -528,6 +527,8 @@ main (int argc, char **argv)
 #if O_BINARY
     {"binary", no_argument, NULL, 'B'},
 #endif
+    {GETOPT_HELP_OPTION_DECL},
+    {GETOPT_VERSION_OPTION_DECL},
     {NULL, 0, NULL, 0}
   };
 
@@ -535,9 +536,6 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
-
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
 
   /* Parse command line options.  */
 
@@ -614,6 +612,10 @@ main (int argc, char **argv)
 	  ++options;
 	  output_tabs = 0;
 	  break;
+
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  usage (EXIT_FAILURE);

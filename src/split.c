@@ -29,7 +29,6 @@
 
 #include "system.h"
 #include "error.h"
-#include "long-options.h"
 #include "safe-read.h"
 #include "xstrtol.h"
 
@@ -72,6 +71,8 @@ static struct option const longopts[] =
   {"lines", required_argument, NULL, 'l'},
   {"line-bytes", required_argument, NULL, 'C'},
   {"verbose", no_argument, NULL, 2},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -347,9 +348,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
-
   /* Parse command line options.  */
 
   infile = "-";
@@ -444,6 +442,10 @@ main (int argc, char **argv)
 	case 2:
 	  verbose = 1;
 	  break;
+
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  usage (EXIT_FAILURE);

@@ -31,7 +31,6 @@
 #include <sys/types.h>
 #include "system.h"
 #include "error.h"
-#include "long-options.h"
 #include "xstrtoul.h"
 #include "safe-read.h"
 
@@ -71,6 +70,8 @@ static struct option const long_options[] =
   {"quiet", no_argument, NULL, 'q'},
   {"silent", no_argument, NULL, 'q'},
   {"verbose", no_argument, NULL, 'v'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -266,9 +267,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
-
   have_read_stdin = 0;
 
   print_headers = 0;
@@ -367,6 +365,10 @@ main (int argc, char **argv)
 	case 'v':
 	  header_mode = always;
 	  break;
+
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  usage (1);

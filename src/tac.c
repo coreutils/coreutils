@@ -45,7 +45,6 @@ tac -r -s '.\|
 #include <regex.h>
 
 #include "error.h"
-#include "long-options.h"
 #include "safe-read.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -113,6 +112,8 @@ static struct option const longopts[] =
   {"before", no_argument, NULL, 'b'},
   {"regex", no_argument, NULL, 'r'},
   {"separator", required_argument, NULL, 's'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -614,9 +615,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
-
   errors = 0;
   separator = "\n";
   sentinel_length = 1;
@@ -639,6 +637,8 @@ main (int argc, char **argv)
 	  if (*separator == 0)
 	    error (EXIT_FAILURE, 0, _("separator cannot be empty"));
 	  break;
+	case_GETOPT_HELP_CHAR;
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
 	  usage (1);
 	}

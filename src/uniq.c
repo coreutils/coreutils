@@ -25,7 +25,6 @@
 
 #include "system.h"
 #include "linebuffer.h"
-#include "long-options.h"
 #include "error.h"
 #include "xstrtol.h"
 #include "memcasecmp.h"
@@ -85,6 +84,8 @@ static struct option const longopts[] =
   {"skip-fields", required_argument, NULL, 'f'},
   {"skip-chars", required_argument, NULL, 's'},
   {"check-chars", required_argument, NULL, 'w'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -289,9 +290,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
-
   skip_chars = 0;
   skip_fields = 0;
   check_chars = 0;
@@ -374,6 +372,10 @@ main (int argc, char **argv)
 	    check_chars = (int) tmp_long;
 	  }
 	  break;
+
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  usage (1);

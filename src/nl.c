@@ -30,7 +30,6 @@
 
 #include "error.h"
 #include "linebuffer.h"
-#include "long-options.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -158,6 +157,8 @@ static struct option const longopts[] =
   {"number-width", required_argument, NULL, 'w'},
   {"number-format", required_argument, NULL, 'n'},
   {"section-delimiter", required_argument, NULL, 'd'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -450,9 +451,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
-
   have_read_stdin = 0;
 
   while ((c = getopt_long (argc, argv, "h:b:f:v:i:pl:s:w:n:d:", longopts,
@@ -554,6 +552,8 @@ main (int argc, char **argv)
 	case 'd':
 	  section_del = optarg;
 	  break;
+	case_GETOPT_HELP_CHAR;
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
 	  usage (2);
 	  break;

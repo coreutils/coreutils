@@ -25,7 +25,6 @@
 #include <sys/types.h>
 #include "system.h"
 #include "error.h"
-#include "long-options.h"
 #include "xstrtoul.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -258,6 +257,9 @@ static struct option const long_options[] =
   {"strings", optional_argument, NULL, 's'},
   {"traditional", no_argument, NULL, 'B'},
   {"width", optional_argument, NULL, 'w'},
+
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -1598,9 +1600,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
-
   err = 0;
 
   for (i = 0; i <= MAX_INTEGRAL_TYPE_SIZE; i++)
@@ -1760,6 +1759,10 @@ the maximum\nrepresentable value of type `long'"), optarg);
 		STRTOL_FATAL_ERROR (optarg, _("width specification"), s_err);
 	    }
 	  break;
+
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  usage (1);

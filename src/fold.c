@@ -25,7 +25,6 @@
 
 #include "system.h"
 #include "error.h"
-#include "long-options.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -50,6 +49,8 @@ static struct option const longopts[] =
   {"bytes", no_argument, NULL, 'b'},
   {"spaces", no_argument, NULL, 's'},
   {"width", required_argument, NULL, 'w'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -241,9 +242,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
-
   break_spaces = count_bytes = have_read_stdin = 0;
 
   /* Turn any numeric options into -w options.  */
@@ -286,6 +284,10 @@ main (int argc, char **argv)
 	    width = (int) tmp_long;
 	  }
 	  break;
+
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  usage (1);

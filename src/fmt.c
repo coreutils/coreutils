@@ -28,7 +28,6 @@
 
 #include "system.h"
 #include "error.h"
-#include "long-options.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -302,6 +301,8 @@ static const struct option long_options[] =
   {"tagged-paragraph", no_argument, NULL, 't'},
   {"uniform-spacing", no_argument, NULL, 'u'},
   {"width", required_argument, NULL, 'w'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {0, 0, 0, 0},
 };
 
@@ -314,9 +315,6 @@ main (register int argc, register char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
-
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
 
   crown = tagged = split = uniform = FALSE;
   max_width = WIDTH;
@@ -380,6 +378,10 @@ main (register int argc, register char **argv)
       case 'p':
 	set_prefix (optarg);
 	break;
+
+      case_GETOPT_HELP_CHAR;
+
+      case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
       }
 

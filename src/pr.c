@@ -302,7 +302,6 @@
 #include <time.h>
 #include "system.h"
 #include "error.h"
-#include "long-options.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -735,6 +734,8 @@ static struct option const long_options[] =
   {"show-nonprinting", no_argument, NULL, 'v'},
   {"width", required_argument, NULL, 'w'},
   {"page-width", required_argument, NULL, 'W'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {0, 0, 0, 0}
 };
 
@@ -826,9 +827,6 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
-
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
 
   n_files = 0;
   file_names = (argc > 1

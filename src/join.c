@@ -31,10 +31,9 @@
 #endif
 
 #include "system.h"
-#include "long-options.h"
-#include "xstrtol.h"
 #include "error.h"
 #include "memcasecmp.h"
+#include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "join"
@@ -123,6 +122,8 @@ static struct option const longopts[] =
   {"j", required_argument, NULL, 'j'},
   {"j1", required_argument, NULL, '1'},
   {"j2", required_argument, NULL, '2'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -742,9 +743,6 @@ main (int argc, char **argv)
      it may be increased.  */
   uni_blank.nfields = 1;
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
-
   nfiles = 0;
   print_pairables = 1;
 
@@ -832,7 +830,11 @@ main (int argc, char **argv)
 	  names[nfiles++] = optarg;
 	  break;
 
-	case '?':
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+
+	default:
 	  usage (1);
 	}
       prev_optc = optc;

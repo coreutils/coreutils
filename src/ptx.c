@@ -28,7 +28,6 @@
 #include "bumpalloc.h"
 #include "diacrit.h"
 #include "error.h"
-#include "long-options.h"
 #include "regex.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -1938,6 +1937,8 @@ static const struct option long_options[] =
   {"typeset-mode", no_argument, NULL, 't'},
   {"width", required_argument, NULL, 'w'},
   {"word-regexp", required_argument, NULL, 'W'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {0, 0, 0, 0},
 };
 
@@ -1967,9 +1968,6 @@ main (int argc, char **argv)
 #if HAVE_SETCHRCLASS
   setchrclass (NULL);
 #endif
-
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
 
   while (optchar = getopt_long (argc, argv, "ACF:GM:ORS:TW:b:i:fg:o:trw:",
 				long_options, NULL),
@@ -2073,6 +2071,9 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"),
 	case 10:
 	  output_format = XARGMATCH ("--format", optarg,
 				     format_args, format_vals);
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	}
     }
 

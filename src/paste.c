@@ -45,7 +45,6 @@
 #include <sys/types.h>
 #include "system.h"
 #include "error.h"
-#include "long-options.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "paste"
@@ -83,6 +82,8 @@ static struct option const longopts[] =
 {
   {"serial", no_argument, 0, 's'},
   {"delimiters", required_argument, 0, 'd'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {0, 0, 0, 0}
 };
 
@@ -436,9 +437,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
-
   have_read_stdin = 0;
   serial_merge = 0;
   delims = default_delims;
@@ -462,6 +460,10 @@ main (int argc, char **argv)
 	case 's':
 	  serial_merge++;
 	  break;
+
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  usage (1);
