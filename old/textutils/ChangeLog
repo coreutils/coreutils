@@ -1,6 +1,6 @@
 Fri May 31 22:04:51 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* Version 1.16.
+	* Version 1.17.
 
 	* Makefile.am (EXTRA_DIST): Set to texinfo.tex so that file is
 	distributed.
