@@ -1,6 +1,11 @@
-2004-11-16  Paul Eggert  <eggert@cs.ucla.edu>
+2004-11-18  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/pwd.c (robust_getcwd): Correct the comment: this function
+	constructs the directory name.  The caller prints it.
+
+2004-11-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/stat.c (STATFS): New macro, for portability to Solaris 9.
 	(do_statfs): Use it.
