@@ -1,7 +1,7 @@
 #!/bin/sh
 # -*- perl -*-
 # Ensure that rm gives the expected diagnostic when failing to remove a file
-# owned by some other user in a directory with theh stick bit set.
+# owned by some other user in a directory with the sticky bit set.
 
 : ${PERL=perl}
 : ${srcdir=.}
