@@ -1,6 +1,11 @@
-2003-07-08  Jim Meyering  <jim@meyering.net>
+2003-07-09  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* src/tail.c (xlseek): Avoid warning about ``return without value
+	from function returning non-void''.
+
+2003-07-08  Jim Meyering  <jim@meyering.net>
 
 	* man/help2man: Update to version 1.29.
 
