@@ -620,7 +620,7 @@ enum
 
 #define case_GETOPT_VERSION_CHAR(Program_name, Authors)			\
   case GETOPT_VERSION_CHAR:						\
-    version_etc (stdout, Program_name, PACKAGE, VERSION, Authors,	\
+    version_etc (stdout, Program_name, GNU_PACKAGE, VERSION, Authors,	\
                  (char *) NULL);					\
     exit (EXIT_SUCCESS);						\
     break;
