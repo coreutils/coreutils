@@ -73,11 +73,11 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/eealloc.m4 $(top_srcdir)/m4/error.m4 \
 	$(top_srcdir)/m4/euidaccess.m4 $(top_srcdir)/m4/exclude.m4 \
 	$(top_srcdir)/m4/exitfail.m4 $(top_srcdir)/m4/extensions.m4 \
-	$(top_srcdir)/m4/file-type.m4 $(top_srcdir)/m4/fileblocks.m4 \
-	$(top_srcdir)/m4/filemode.m4 $(top_srcdir)/m4/fnmatch.m4 \
-	$(top_srcdir)/m4/fpending.m4 $(top_srcdir)/m4/free.m4 \
-	$(top_srcdir)/m4/fstypename.m4 $(top_srcdir)/m4/fsusage.m4 \
-	$(top_srcdir)/m4/ftruncate.m4 \
+	$(top_srcdir)/m4/fcntl-safer.m4 $(top_srcdir)/m4/file-type.m4 \
+	$(top_srcdir)/m4/fileblocks.m4 $(top_srcdir)/m4/filemode.m4 \
+	$(top_srcdir)/m4/fnmatch.m4 $(top_srcdir)/m4/fpending.m4 \
+	$(top_srcdir)/m4/free.m4 $(top_srcdir)/m4/fstypename.m4 \
+	$(top_srcdir)/m4/fsusage.m4 $(top_srcdir)/m4/ftruncate.m4 \
 	$(top_srcdir)/m4/getcwd-path-max.m4 $(top_srcdir)/m4/getcwd.m4 \
 	$(top_srcdir)/m4/getdate.m4 $(top_srcdir)/m4/getgroups.m4 \
 	$(top_srcdir)/m4/gethostname.m4 $(top_srcdir)/m4/getline.m4 \
@@ -182,19 +182,20 @@ am_libfetish_a_OBJECTS = acl.$(OBJEXT) getdate.$(OBJEXT) \
 	localcharset.$(OBJEXT) long-options.$(OBJEXT) \
 	makepath.$(OBJEXT) mbswidth.$(OBJEXT) md5.$(OBJEXT) \
 	memcasecmp.$(OBJEXT) memcoll.$(OBJEXT) modechange.$(OBJEXT) \
-	offtostr.$(OBJEXT) path-concat.$(OBJEXT) physmem.$(OBJEXT) \
-	quote.$(OBJEXT) quotearg.$(OBJEXT) readtokens0.$(OBJEXT) \
-	readtokens.$(OBJEXT) root-dev-ino.$(OBJEXT) \
-	safe-read.$(OBJEXT) safe-write.$(OBJEXT) same.$(OBJEXT) \
-	save-cwd.$(OBJEXT) savedir.$(OBJEXT) settime.$(OBJEXT) \
-	sha1.$(OBJEXT) stripslash.$(OBJEXT) time_r.$(OBJEXT) \
-	umaxtostr.$(OBJEXT) unicodeio.$(OBJEXT) userspec.$(OBJEXT) \
-	utimecmp.$(OBJEXT) utimens.$(OBJEXT) version-etc.$(OBJEXT) \
-	xfts.$(OBJEXT) xgetcwd.$(OBJEXT) xgethostname.$(OBJEXT) \
-	xmalloc.$(OBJEXT) xmemcoll.$(OBJEXT) xnanosleep.$(OBJEXT) \
-	xreadlink.$(OBJEXT) xstrdup.$(OBJEXT) xstrndup.$(OBJEXT) \
-	xstrtod.$(OBJEXT) xstrtoimax.$(OBJEXT) xstrtol.$(OBJEXT) \
-	xstrtoul.$(OBJEXT) xstrtoumax.$(OBJEXT) yesno.$(OBJEXT)
+	offtostr.$(OBJEXT) open-safer.$(OBJEXT) path-concat.$(OBJEXT) \
+	physmem.$(OBJEXT) quote.$(OBJEXT) quotearg.$(OBJEXT) \
+	readtokens0.$(OBJEXT) readtokens.$(OBJEXT) \
+	root-dev-ino.$(OBJEXT) safe-read.$(OBJEXT) \
+	safe-write.$(OBJEXT) same.$(OBJEXT) save-cwd.$(OBJEXT) \
+	savedir.$(OBJEXT) settime.$(OBJEXT) sha1.$(OBJEXT) \
+	stripslash.$(OBJEXT) time_r.$(OBJEXT) umaxtostr.$(OBJEXT) \
+	unicodeio.$(OBJEXT) userspec.$(OBJEXT) utimecmp.$(OBJEXT) \
+	utimens.$(OBJEXT) version-etc.$(OBJEXT) xfts.$(OBJEXT) \
+	xgetcwd.$(OBJEXT) xgethostname.$(OBJEXT) xmalloc.$(OBJEXT) \
+	xmemcoll.$(OBJEXT) xnanosleep.$(OBJEXT) xreadlink.$(OBJEXT) \
+	xstrdup.$(OBJEXT) xstrndup.$(OBJEXT) xstrtod.$(OBJEXT) \
+	xstrtoimax.$(OBJEXT) xstrtol.$(OBJEXT) xstrtoul.$(OBJEXT) \
+	xstrtoumax.$(OBJEXT) yesno.$(OBJEXT)
 libfetish_a_OBJECTS = $(am_libfetish_a_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
@@ -262,10 +263,11 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/makepath.Po ./$(DEPDIR)/mbswidth.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/md5.Po ./$(DEPDIR)/memcasecmp.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/memcoll.Po ./$(DEPDIR)/modechange.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/offtostr.Po ./$(DEPDIR)/path-concat.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/physmem.Po ./$(DEPDIR)/posixtm.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/posixver.Po ./$(DEPDIR)/quote.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/quotearg.Po ./$(DEPDIR)/readtokens.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/offtostr.Po ./$(DEPDIR)/open-safer.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/path-concat.Po ./$(DEPDIR)/physmem.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/posixtm.Po ./$(DEPDIR)/posixver.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/quote.Po ./$(DEPDIR)/quotearg.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/readtokens.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/readtokens0.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/root-dev-ino.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/safe-read.Po ./$(DEPDIR)/safe-write.Po \
@@ -444,6 +446,7 @@ libfetish_a_SOURCES = \
   exclude.c exclude.h \
   exit.h \
   exitfail.c exitfail.h \
+  fcntl-safer.h \
   filemode.c filemode.h \
   file-type.c file-type.h \
   fopen-safer.c \
@@ -474,6 +477,7 @@ libfetish_a_SOURCES = \
   modechange.c modechange.h \
   mountlist.h \
   offtostr.c \
+  open-safer.c \
   path-concat.c path-concat.h \
   pathmax.h \
   physmem.c physmem.h \
@@ -715,6 +719,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memcoll.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/modechange.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/offtostr.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/open-safer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/path-concat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/physmem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/posixtm.Po@am__quote@
