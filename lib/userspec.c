@@ -261,7 +261,6 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
 		  if (xstrtoul (u, NULL, 0, &tmp_long, NULL) != LONGINT_OK
 		      || tmp_long > MAXUID)
 		    return _(E_invalid_user);
-		  printf ("MAXUID: %u\n", (uid_t) MAXUID);
 		  *uid = tmp_long;
 		}
 	    }
