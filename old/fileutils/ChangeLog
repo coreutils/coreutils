@@ -1,3 +1,13 @@
+2000-12-29  Paul Eggert  <eggert@twinsun.com>
+
+	Clean up the terminology a tad: some directories were called "sticky"
+	when they were really setgid.
+	* tests/Makefile.am (EXTRA_DIST): sticky-check -> setgid-check
+	* tests/chmod/c-option, tests/cp/cp-parents, tests/mkdir/parents,
+	tests/mkdir/perm: Likewise.
+	* tests/setgid-check: File renamed from tests/sticky-check.
+	All uses of "sticky" changed to "setgid".
+
 2000-12-31  Jim Meyering  <meyering@lucent.com>
 
 	* tests/cp/Makefile.am (TESTS): Add deref-slink.
