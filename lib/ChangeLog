@@ -1,3 +1,36 @@
+2003-02-24  Jim Meyering  <jim@meyering.net>
+
+	* fts_.h [struct FTS] (fts_dir_signatures): New, opaque member.
+
+	* fts.c [HAVE_CONFIG_H]: Include <config.h>.
+	Conditionalize inclusion of <sys/param.h>.
+	Conditionalize inclusion of <include/sys/stat.h> vs <sys/stat.h>.
+	Include autoconf-recommended block of dirent/NAMELEN-related
+	definitions and includes.  Use NAMLEN throughout, rather than
+	_D_EXACT_NAMLEN.
+	[_LIBC] (close, closedir, fchdir, open, opendir): Define.
+	[_LIBC] (readdir, tdestroy, tfind, tsearch): Define.
+	Remove `__' prefix from all uses of the above.  This will help
+	to merge *BSD changes.
+	[!_LIBC] (internal_function): Define.
+	[! _LIBC && ! LSTAT_FOLLOWS_SLASHED_SYMLINK]: Define lstat.
+	(__set_errno): Define if not already defined.
+
+	(fts_open): Initialize local, tmp, to pacify gcc.
+
+	* fts.c: (fts_open): If fts_alloc returns NULL, don't dereference it.
+	(fts_read): If fts_safe_changedir fails because it is not
+	able to chdir into a subdirectory, then inform the caller.
+
+	* fts.c, fts_.h: New files, directly from glibc.
+
+2003-02-23  Jim Meyering  <jim@meyering.net>
+
+	* fts_.h (struct _ftsent) [fts_level]: Change type from short to int,
+	so it can handle a root-relative file name longer than 32K bytes.
+	[fts_pathlen, fts_namelen]: Rearrange members to decrease size of
+	this struct from 84 to 80 bytes.
+
 2003-02-21  Jim Meyering  <jim@meyering.net>
 
 	* mmap-stack.h: Undefine HAVE_MMAP_STACK, thus disabling
