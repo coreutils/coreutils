@@ -1,5 +1,5 @@
 /* readtokens.c  -- Functions for reading tokens from an input stream.
-   Copyright (C) 1990-1991 Jim Meyering.
+   Copyright (C) 1990-1991, 1999 Jim Meyering.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -77,11 +77,10 @@ init_tokenbuffer (tokenbuffer)
    and on files that aren't newline-terminated.  */
 
 long
-readtoken (stream, delim, n_delim, tokenbuffer)
-     FILE *stream;
-     const char *delim;
-     int n_delim;
-     token_buffer *tokenbuffer;
+readtoken (FILE *stream,
+	   const char *delim,
+	   int n_delim,
+	   token_buffer *tokenbuffer)
 {
   char *p;
   int c, i, n;
@@ -164,14 +163,12 @@ readtoken (stream, delim, n_delim, tokenbuffer)
    %%% realloc() of `tokens' just before returning? */
 
 int
-readtokens (stream, projected_n_tokens, delim, n_delim,
-	    tokens_out, token_lengths)
-     FILE *stream;
-     int projected_n_tokens;
-     const char *delim;
-     int n_delim;
-     char ***tokens_out;
-     long **token_lengths;
+readtokens (FILE *stream,
+	    int projected_n_tokens,
+	    const char *delim,
+	    int n_delim,
+	    char ***tokens_out,
+	    long **token_lengths)
 {
   token_buffer tb, *token = &tb;
   int token_length;
