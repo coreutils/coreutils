@@ -36,10 +36,12 @@ _POSIX2_VERSION=199209 split -1 in 2> /dev/null || fail=1
 # Then make sure that -0 evokes a failure.
 _POSIX2_VERSION=199209 split -0 in 2> /dev/null && fail=1
 
-# Ensure that split --lines=N and --bytes=N work for N=2^32.
-_4gb=4294967296
-split --lines=$_4gb in || fail=1
-split --bytes=$_4gb in || fail=1
+# Ensure that split --lines=N and --bytes=N work for N=2^32,
+# assuming our host supports integers that wide.
+if _4gb=`expr 4294967296 + 0 2>/dev/null`; then
+  split --lines=$_4gb in || fail=1
+  split --bytes=$_4gb in || fail=1
+fi
 
 # Currently (coreutils-5.0.1) split --line-bytes=M fails
 # with `invalid number of bytes' for M=2^32 or larger.  Actually,
@@ -55,7 +57,7 @@ env -u _POSIX2_VERSION split -99999999999999999991 2> out && fail=1
 #   split: line count option -9999999999... is too large
 # while on most, we get this:
 #   split: line count option -99999999999999999991... is too large
-# so map them both to -99*1...
+# so map them both to -99*.
 sed 's/99[19]*/99*/' out > out-t
 mv -f out-t out
 
