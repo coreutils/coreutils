@@ -172,8 +172,8 @@ operand2sig (char const *operand, char *signame)
    maximum name width is NAME_WIDTH, and SIGNAME is the name to print.  */
 
 static void
-print_table_row (int num_width, int signum,
-		 int name_width, char const *signame)
+print_table_row (unsigned int num_width, int signum,
+		 unsigned int name_width, char const *signame)
 {
   char const *description = strsignal (signum);
   printf ("%*d %-*s %s\n", num_width, signum, name_width, signame,
@@ -193,10 +193,10 @@ list_signals (bool table, char *const *argv)
 
   if (table)
     {
-      int name_width = 0;
+      unsigned int name_width = 0;
 
       /* Compute the maximum width of a signal number.  */
-      int num_width = 1;
+      unsigned int num_width = 1;
       for (signum = 1; signum <= SIGNUM_BOUND / 10; signum *= 10)
 	num_width++;
 
