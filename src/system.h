@@ -68,6 +68,18 @@
 # define S_ISDOOR(m) (((m) & S_IFMT) == S_IFDOOR)
 #endif
 
+#if !S_ISUID
+# define S_ISUID 04000
+#endif
+#if !S_ISGID
+# define S_ISGID 02000
+#endif
+
+/* S_ISVTX is a common extension to POSIX.1.  */
+#ifndef S_ISVTX
+# define S_ISVTX 01000
+#endif
+
 #if !S_IWUSR
 # if S_IWRITE
 #  define S_IWUSR S_IWRITE
@@ -97,9 +109,25 @@
 #ifndef S_IXOTH
 # define S_IXOTH (S_IEXEC >> 6)
 #endif
+
+#ifndef S_IRWXU
+# define S_IRWXU (S_IRUSR | S_IWUSR | S_IXUSR)
+#endif
+#ifndef S_IRWXG
+# define S_IRWXG (S_IRGRP | S_IWGRP | S_IXGRP)
+#endif
+#ifndef S_IRWXO
+# define S_IRWXO (S_IROTH | S_IWOTH | S_IXOTH)
+#endif
+
+/* S_IXUGO is a common extension to POSIX.1.  */
 #ifndef S_IXUGO
 # define S_IXUGO (S_IXUSR | S_IXGRP | S_IXOTH)
 #endif
+
+/* All the mode bits that can be affected by chmod.  */
+#define CHMOD_MODE_BITS \
+  (S_ISUID | S_ISGID | S_ISVTX | S_IRWXU | S_IRWXG | S_IRWXO)
 
 #ifdef ST_MTIM_NSEC
 # define ST_TIME_CMP_NS(a, b, ns) ((a).ns < (b).ns ? -1 : (a).ns > (b).ns)
