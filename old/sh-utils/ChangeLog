@@ -1,3 +1,8 @@
+Thu Mar 25 22:41:01 1993  Jim Meyering  (meyering@comco.com)
+
+	* configure.in: Add AC_IRIX_SUN to get -lsun because Irix-4.0.5's
+	libc.a doesn't have yp/NIS entrypoints.
+
 Sun Dec  6 23:17:09 1992  Jim Meyering  (meyering@comco.com)
 
 	* date.c: Remove unused definition of isdigit.
