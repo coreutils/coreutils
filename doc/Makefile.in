@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.1g from Makefile.am
+# Makefile.in generated automatically by automake 1.1k from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -78,13 +78,15 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) \
 TAR = tar
 default: all
 
+.SUFFIXES:
+.SUFFIXES: .texi .texinfo .info .dvi
+$(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in 
+	cd $(top_srcdir) && automake --gnu Makefile
 
-$(srcdir)/Makefile.in: @MAINT@Makefile.am $(top_srcdir)/configure.in
-	cd $(top_srcdir) && automake --strictness=gnu $(subdir)/Makefile
-
-Makefile: $(top_builddir)/config.status $(srcdir)/Makefile.in $(BUILT_SOURCES)
+Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+
 
 version.texi: @MAINT@stamp-vti
 
@@ -111,6 +113,8 @@ fileutils.info: fileutils.texi version.texi
 fileutils.dvi: fileutils.texi version.texi
 
 
+DVIPS = dvips
+
 .texi.info:
 	cd $(srcdir) \
 	  && $(MAKEINFO) `echo $< | sed 's,.*/,,'`
@@ -125,6 +129,8 @@ fileutils.dvi: fileutils.texi version.texi
 
 .texinfo.dvi:
 	TEXINPUTS=$(srcdir):$$TEXINPUTS $(TEXI2DVI) $<
+.dvi.ps:
+	$(DVIPS) $< -o $@
 
 install-info-am: $(INFO_DEPS)
 	$(NORMAL_INSTALL)
@@ -139,7 +145,7 @@ install-info-am: $(INFO_DEPS)
 	$(POST_INSTALL)
 	if $(SHELL) -c 'install-info --version' >/dev/null 2>&1; then \
 	  for file in $(INFO_DEPS); do \
-	    install-info --info-dir=$(infodir) $$file; :;\
+	    install-info --info-dir=$(infodir) $(infodir)/$$file; :;\
 	  done; \
 	else : ; fi
 
@@ -173,7 +179,7 @@ clean-info:
 distclean-info:
 
 maintainer-clean-info:
-	for i in $(INFO_DEPS); do rm `eval echo $i*`; done
+	for i in $(INFO_DEPS); do rm `eval echo $$i*`; done
 tags: TAGS
 TAGS:
 
@@ -192,6 +198,7 @@ distdir: $(DISTFILES)
 info: $(INFO_DEPS)
 dvi: $(DVIS)
 check: all
+	$(MAKE)
 installcheck:
 install-exec: 
 	$(NORMAL_INSTALL)
@@ -228,25 +235,23 @@ maintainer-clean-generic:
 	test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 mostlyclean:  mostlyclean-vti mostlyclean-info mostlyclean-generic
 
-clean:  clean-vti clean-info clean-generic mostlyclean 
+clean:  clean-vti clean-info clean-generic mostlyclean
 
-distclean:  distclean-vti distclean-info distclean-generic clean 
+distclean:  distclean-vti distclean-info distclean-generic clean
 	rm -f config.status
 
 maintainer-clean:  maintainer-clean-vti maintainer-clean-info \
-		maintainer-clean-generic distclean 
+		maintainer-clean-generic distclean
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
 .PHONY: default mostlyclean-vti distclean-vti clean-vti \
 maintainer-clean-vti install-info-am uninstall-info mostlyclean-info \
 distclean-info clean-info maintainer-clean-info tags distdir info dvi \
-check installcheck install-exec install-data install uninstall all \
+installcheck install-exec install-data install uninstall all \
 installdirs mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
-.SUFFIXES:
-.SUFFIXES: .texi .texinfo .info .dvi
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

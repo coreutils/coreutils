@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.1g from Makefile.am
+# Makefile.in generated automatically by automake 1.1k from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -47,21 +47,21 @@ MVDIR_PROG = @MVDIR_PROG@
 LN = @LN@
 RM = @RM@
 
-noinst_LIBRARIES = fu
+noinst_LIBRARIES = libfu.a
 
 EXTRA_DIST = mkdir.c rmdir.c getline.c
 
 INCLUDES = -I.. -I$(srcdir) -I../intl
 
-fu_SOURCES = getdate.y posixtm.y getopt.c getopt1.c \
+libfu_a_SOURCES = getdate.y posixtm.y getopt.c getopt1.c \
 argmatch.c backupfile.c dirname.c filemode.c \
 full-write.c getversion.c idcache.c \
 isdir.c long-options.c makepath.c modechange.c path-concat.c \
 safe-read.c save-cwd.c savedir.c stripslash.c userspec.c xgetcwd.c \
 xmalloc.c xstrdup.c xstrtol.c xstrtoul.c yesno.c
 
-fu_LIBADD = @LIBOBJS@ @ALLOCA@
-fu_DEPENDENCIES = $(fu_LIBADD)
+libfu_a_LIBADD = @LIBOBJS@ @ALLOCA@
+libfu_a_DEPENDENCIES = $(libfu_a_LIBADD)
 
 noinst_HEADERS = argmatch.h backupfile.h error.h fnmatch.h fsusage.h \
 getline.h getopt.h group-member.h long-options.h makepath.h modechange.h \
@@ -74,20 +74,16 @@ CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
 LIBRARIES =  $(noinst_LIBRARIES)
 
-noinst_LIBFILES =  libfu.a
 
 DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
-fu_OBJECTS =  getdate.o posixtm.o getopt.o getopt1.o argmatch.o \
+libfu_a_OBJECTS =  getdate.o posixtm.o getopt.o getopt1.o argmatch.o \
 backupfile.o dirname.o filemode.o full-write.o getversion.o idcache.o \
 isdir.o long-options.o makepath.o modechange.o path-concat.o \
 safe-read.o save-cwd.o savedir.o stripslash.o userspec.o xgetcwd.o \
 xmalloc.o xstrdup.o xstrtol.o xstrtoul.o yesno.o
-EXTRA_fu_SOURCES = 
-LIBFILES  =  $(pkglib_LIBFILES) $(noinst_LIBFILES) $(check_LIBFILES) \
-$(lib_LIBFILES)
 AR = ar
 INTERLOCK = ./interlock
 YLWRAP = ./ylwrap
@@ -125,23 +121,25 @@ DEP_FILES =  .deps/alloca.P .deps/argmatch.P .deps/backupfile.P \
 .deps/strstr.P .deps/strtol.P .deps/strtoul.P .deps/userspec.P \
 .deps/xgetcwd.P .deps/xmalloc.P .deps/xstrdup.P .deps/xstrtol.P \
 .deps/xstrtoul.P .deps/yesno.P
-SOURCES = $(fu_SOURCES)
-OBJECTS = $(fu_OBJECTS)
+SOURCES = $(libfu_a_SOURCES)
+OBJECTS = $(libfu_a_OBJECTS)
 
 default: all
 
+.SUFFIXES:
+.SUFFIXES: .c .o .y
+$(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in 
+	cd $(top_srcdir) && automake --gnu Makefile
 
-$(srcdir)/Makefile.in: @MAINT@Makefile.am $(top_srcdir)/configure.in
-	cd $(top_srcdir) && automake --strictness=gnu $(subdir)/Makefile
-
-Makefile: $(top_builddir)/config.status $(srcdir)/Makefile.in $(BUILT_SOURCES)
+Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+
 
 mostlyclean-noinstLIBRARIES:
 
 clean-noinstLIBRARIES:
-	test -z "$(noinst_LIBFILES)" || rm -f $(noinst_LIBFILES)
+	test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
 
 distclean-noinstLIBRARIES:
 
@@ -159,22 +157,28 @@ distclean-compile:
 	rm -f *.tab.c
 
 maintainer-clean-compile:
-$(fu_OBJECTS): ../config.h
+$(libfu_a_OBJECTS): ../config.h
 
-libfu.a: $(fu_OBJECTS) $(fu_DEPENDENCIES)
+libfu.a: $(libfu_a_OBJECTS) $(libfu_a_DEPENDENCIES)
 	rm -f libfu.a
-	$(AR) cru libfu.a $(fu_OBJECTS) $(fu_LIBADD)
+	$(AR) cru libfu.a $(libfu_a_OBJECTS) $(libfu_a_LIBADD)
 	$(RANLIB) libfu.a
 .y.c:
 	$(SHELL) $(INTERLOCK) =yacclockdir $(YLWRAP) "$(YACC)" y.tab.c $*.c y.tab.h $*.h -- $(YFLAGS) $<
 
+tags: TAGS
+
 ID: $(HEADERS) $(SOURCES)
 	here=`pwd` && cd $(srcdir) && mkid -f$$here/ID $(SOURCES) $(HEADERS)
 
-tags: TAGS
-
-TAGS: $(HEADERS) $(SOURCES) $(TAGS_DEPENDENCIES)
-	here=`pwd` && cd $(srcdir) && etags $(ETAGS_ARGS) $(SOURCES) $(HEADERS) -o $$here/TAGS
+TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES)
+	tags=; \
+	here=`pwd`; \
+	list="$(SUBDIRS)"; for subdir in $$list; do \
+	  test -f $$subdir/TAGS && tags="$$tags -i $$here/$$subdir/TAGS"; \
+	done; \
+	test -z "$(ETAGS_ARGS)$(SOURCES)$(HEADERS)$$tags" \
+	  || cd $(srcdir) && etags $(ETAGS_ARGS) $$tags  $(SOURCES) $(HEADERS) -o $$here/TAGS
 
 mostlyclean-tags:
 
@@ -215,17 +219,15 @@ distclean-depend:
 maintainer-clean-depend:
 	rm -rf .deps
 
-.deps/%.P: $(srcdir)/%.c
-	$(MKDEP) $< > $@-tmp
-	if test -n "$o"; then			\
-	  sed 's/\.o:/$$o:/' $@-tmp > $@;	\
-	  rm $@-tmp;				\
-	else					\
-	  mv $@-tmp $@;				\
-	fi
+.deps/%.P: $(srcdir)/%@EXT@
+	@echo "Computing dependencies for $<..."
+	@o='o';				\
+ONLYC	test -n "$o" && o='$$o';	\
+	$(@MKDEP@) $< | sed "s/^\(.*\)\.o:/\1.$$o \1.l$$o:/" > $@
 info:
 dvi:
 check: all
+	$(MAKE)
 installcheck:
 install-exec: 
 	$(NORMAL_INSTALL)
@@ -238,7 +240,7 @@ install: install-exec install-data all
 
 uninstall: 
 
-all: $(LIBFILES) $(BUILT_SOURCES) $(HEADERS) Makefile
+all: $(LIBRARIES) $(BUILT_SOURCES) $(HEADERS) Makefile
 
 install-strip:
 	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' install
@@ -263,16 +265,16 @@ mostlyclean:  mostlyclean-noinstLIBRARIES mostlyclean-compile \
 		mostlyclean-tags mostlyclean-depend mostlyclean-generic
 
 clean:  clean-noinstLIBRARIES clean-compile clean-tags clean-depend \
-		clean-generic mostlyclean 
+		clean-generic mostlyclean
 
 distclean:  distclean-noinstLIBRARIES distclean-compile distclean-tags \
-		distclean-depend distclean-generic clean 
+		distclean-depend distclean-generic clean
 	rm -f config.status
 
 maintainer-clean:  maintainer-clean-noinstLIBRARIES \
 		maintainer-clean-compile maintainer-clean-tags \
 		maintainer-clean-depend maintainer-clean-generic \
-		distclean 
+		distclean
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
@@ -281,13 +283,11 @@ clean-noinstLIBRARIES maintainer-clean-noinstLIBRARIES \
 mostlyclean-compile distclean-compile clean-compile \
 maintainer-clean-compile tags mostlyclean-tags distclean-tags \
 clean-tags maintainer-clean-tags distdir mostlyclean-depend \
-distclean-depend clean-depend maintainer-clean-depend info dvi check \
+distclean-depend clean-depend maintainer-clean-depend info dvi \
 installcheck install-exec install-data install uninstall all \
 installdirs mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
-.SUFFIXES:
-.SUFFIXES: .c .o .y
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
