@@ -18,6 +18,8 @@
 #ifndef CHOWN_CORE_H
 # define CHOWN_CORE_H
 
+# include "dev-ino.h"
+
 enum Change_status
 {
   CH_NOT_APPLIED = 1,
@@ -45,6 +47,10 @@ struct Chown_option
 
   /* If nonzero, change the ownership of directories recursively. */
   bool recurse;
+
+  /* Pointer to the device and inode numbers of `/', when --recursive.
+     Need not be freed.  Otherwise NULL.  */
+  struct dev_ino *root_dev_ino;
 
   /* This corresponds to the --dereference (opposite of -h) option.  */
   bool affect_symlink_referent;
