@@ -7977,10 +7977,10 @@ of subdirectories.
 Skip directories that are on different filesystems from the one that
 the argument being processed is on.
 
-@item --exclude=@var{PAT}
-@opindex --exclude=@var{PAT}
+@item --exclude=@var{PATTERN}
+@opindex --exclude=@var{PATTERN}
 @cindex excluding files from @command{du}
-When recursing, skip subdirectories or files matching @var{PAT}.
+When recursing, skip subdirectories or files matching @var{PATTERN}.
 For example, @code{du --exclude='*.o'} excludes files whose names
 end in @samp{.o}.
 
