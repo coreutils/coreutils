@@ -78,8 +78,6 @@ su_LDADD = $(LDADD) $(LIB_CRYPT)
 
 $(PROGRAMS): ../lib/libfetish.a
 
-$(SCRIPTS): Makefile
-
 SUFFIXES = .sh
 
 .sh:
@@ -163,11 +161,8 @@ editpl = sed -e 's,@''PERL''@,$(PERL),g'
 localedir = $(datadir)/locale
 BUILT_SOURCES = localedir.h
 DISTCLEANFILES = localedir.h
-localedir.h: Makefile
-	@rm -f $@-t
-	echo '#define LOCALEDIR "$(localedir)"' >$@-t
-	@chmod a-w $@-t
-	cmp $@-t $@ > /dev/null 2>&1 && rm -f $@-t || { rm -f $@; mv $@-t $@; }
+localedir.h:
+	echo '#define LOCALEDIR "$(localedir)"' >$@
 
 BUILT_SOURCES += dircolors.h
 dircolors.h: dcgen dircolors.hin
