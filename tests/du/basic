@@ -8,6 +8,7 @@ fi
 
 # DU_BLOCK_SIZE could cause problems
 . $srcdir/../envvar-check
+. $srcdir/../lang-default
 
 pwd=`pwd`
 t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
@@ -18,9 +19,9 @@ framework_failure=0
 mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 mkdir -p a/b d d/sub || framework_failure=1
-printf 'make-sure-the-file-is-non-empty\n' > a/b/c || framework_failure=1
+printf 'make-sure-the-file-is-non-empty\n' > a/b/F || framework_failure=1
 echo nonempty-file > d/1
-echo nonempty-file > d/sub/1
+echo nonempty-file > d/sub/2
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
@@ -46,27 +47,34 @@ echo === >> out
 du -a -S a >> out || fail=1
 echo === >> out
 du -s a >> out || fail=1
-cat <<\EOF > exp
-4	a/b/c
+cat <<\EOF | sed 's/ *#.*//' > exp
+4	a/b/F
 8	a/b
 12	a
 ===
-4	a/b/c
-4	a/b
-4	a
+4	a/b/F   # size of file, a/b/F
+8	a/b     # size of dir entry, a/b, + size of file, a/b/F
+4	a       # size of dir entry, a
 ===
 12	a
 EOF
 
 cmp out exp || fail=1
-test $fail = 1 && diff out exp 2> /dev/null
+test $fail = 1 && diff -u out exp 2> /dev/null
 
 rm -f out exp
-du -S d > out || fail=1
+du -a d | sort -r -k2,2 > out || fail=1
+echo === >> out
+du -S d | sort -r -k2,2 >> out || fail=1
 
-cat <<\EOF > exp
+cat <<\EOF | sed 's/ *#.*//' > exp
+4	d/sub/2
 8	d/sub
-8	d
+4	d/1
+16	d
+===
+8	d/sub
+8	d           # d + d/1; don't count the dir. entry for d/sub
 EOF
 
 cmp out exp || fail=1
