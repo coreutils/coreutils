@@ -1,4 +1,4 @@
-## Process this file with automake to produce Makefile.in -*-Makefile-*-.
+## Process this file with automake to produce Makefile.in.
 
 ##test-files-begin
 x = join
