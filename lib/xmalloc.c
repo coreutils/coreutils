@@ -65,12 +65,16 @@ void (*xalloc_fail_func) PARAMS ((void)) = 0;
    before exiting when memory is exhausted.  Goes through gettext. */
 char *const xalloc_msg_memory_exhausted = N_("Memory exhausted");
 
-static void
-xalloc_fail (void)
+void
+xalloc_die (void)
 {
   if (xalloc_fail_func)
     (*xalloc_fail_func) ();
   error (xalloc_exit_failure, 0, "%s", _(xalloc_msg_memory_exhausted));
+  /* The `noreturn' cannot be given to error, since it may return if
+     its first argument is 0.  To help compilers understand the
+     xalloc_die does terminate, call exit. */
+  exit (EXIT_FAILURE);
 }
 
 /* Allocate N bytes of memory dynamically, with error checking.  */
@@ -82,7 +86,7 @@ xmalloc (size_t n)
 
   p = malloc (n);
   if (p == 0)
-    xalloc_fail ();
+    xalloc_die ();
   return p;
 }
 
@@ -95,7 +99,7 @@ xrealloc (void *p, size_t n)
 {
   p = realloc (p, n);
   if (p == 0)
-    xalloc_fail ();
+    xalloc_die ();
   return p;
 }
 
@@ -108,6 +112,6 @@ xcalloc (size_t n, size_t s)
 
   p = calloc (n, s);
   if (p == 0)
-    xalloc_fail ();
+    xalloc_die ();
   return p;
 }
