@@ -83,9 +83,8 @@ main (int argc, char **argv)
   char **env;
   char *ep, *ap;
   int i;
-  int matches = 0;
   int c;
-  int exit_status;
+  bool ok;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -115,12 +114,16 @@ main (int argc, char **argv)
     {
       for (env = environ; *env != NULL; ++env)
 	puts (*env);
-      exit_status = EXIT_SUCCESS;
+      ok = true;
     }
   else
     {
+      int matches = 0;
+
       for (i = optind; i < argc; ++i)
 	{
+	  bool matched = false;
+
 	  for (env = environ; *env; ++env)
 	    {
 	      ep = *env;
@@ -130,14 +133,17 @@ main (int argc, char **argv)
 		  if (*ep == '=' && *ap == '\0')
 		    {
 		      puts (ep + 1);
-		      ++matches;
+		      matched = true;
 		      break;
 		    }
 		}
 	    }
+
+	  matches += matched;
 	}
-      exit_status = (matches != argc - optind);
+
+      ok = (matches == argc - optind);
     }
 
-  exit (exit_status);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
