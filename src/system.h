@@ -153,6 +153,9 @@ struct utimbuf
    memcpy otherwise.  */
 
 #ifdef HAVE_STRING_H
+# if !STDC_HEADERS && HAVE_MEMORY_H
+#  include <memory.h>
+# endif
 # include <string.h>
 #else
 # include <strings.h>
