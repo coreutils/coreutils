@@ -1,3 +1,8 @@
+2002-12-15  Jim Meyering  <jim@meyering.net>
+
+	* strftime.h: New file, for declaration of nstrftime.
+	* Makefile.am (libfetish_a_SOURCES): Add strftime.h.
+
 2002-12-09  Jim Meyering  <jim@meyering.net>
 
 	* unlocked-io.h: Sync from gnulib.
