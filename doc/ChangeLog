@@ -1,3 +1,8 @@
+2003-04-02  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am (check-texinfo): Don't fail if perl is missing.
+	Reported by Nelson Beebe.
+
 2003-03-27  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (printf invocation): Fix formatting bugs.
