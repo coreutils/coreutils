@@ -791,7 +791,6 @@ copy_internal (const char *src_path, const char *dst_path,
   char *earlier_file = NULL;
   char *dst_backup = NULL;
   int backup_succeeded = 0;
-  int rename_errno;
   int delayed_fail;
   int copied_as_regular = 0;
   int ran_chown = 0;
@@ -1213,16 +1212,14 @@ copy_internal (const char *src_path, const char *dst_path,
 	  return 1;
 	}
 
-      /* Save this value of errno to use in case the unlink fails.  */
-      rename_errno = errno;
-
       /* The rename attempt has failed.  Remove any existing destination
 	 file so that a cross-device `mv' acts as if it were really using
 	 the rename syscall.  */
       if (unlink (dst_path) && errno != ENOENT)
 	{
 	  /* Use the value of errno from the failed rename.  */
-	  error (0, rename_errno, _("cannot move %s to %s"),
+	  error (0, errno,
+	     _("inter-device move failed: %s to %s;  unable to remove target"),
 		 quote_n (0, src_path), quote_n (1, dst_path));
 	  return 1;
 	}
