@@ -51,6 +51,19 @@ AC_DEFUN(jm_PREREQ_READUTMP,
   AC_CHECK_HEADERS(string.h utmpx.h sys/param.h)
   AC_CHECK_FUNCS(utmpname)
   AM_C_PROTOTYPES
+
+  utmp_includes="\
+$ac_includes_default
+#ifdef HAVE_UTMPX_H
+# include <utmpx.h>
+#else
+# include <utmp.h>
+#endif
+"
+  AC_CHECK_MEMBERS((struct utmpx.ut_user),,,[$utmp_includes])
+  AC_CHECK_MEMBERS((struct utmp.ut_user),,,[$utmp_includes])
+  AC_CHECK_MEMBERS((struct utmpx.ut_name),,,[$utmp_includes])
+  AC_CHECK_MEMBERS((struct utmp.ut_name),,,[$utmp_includes])
 ])
 
 AC_DEFUN(jm_PREREQ_REGEX,
