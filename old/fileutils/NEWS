@@ -15,7 +15,8 @@ Changes in release 3.13:
   --version-control=WORD (-V WORD) options just as cp, ln, and mv do.
 * ln --verbose output is less prone to misinterpretation
 * ls -o works like -lG;  for compatibility with other versions of ls
-* cp has a new option to control creation of sparse files
+* cp has a new option to control creation of sparse files:
+  --sparse={auto,always,never}.  --sparse=auto is the default.
 * rm -rf '' behaves properly on SunOS 4 systems
 * touch: rename long option name, --file, to --reference.
   `touch --file' will continue to work a little longer.
