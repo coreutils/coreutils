@@ -2,6 +2,9 @@
 
 	* Version 4.5.4.
 
+	* tests/misc/printf: Be careful to test the code in this package,
+	not the shell built-in function.
+
 	* src/printf.c (print_esc): A hexadecimal escape sequence has
 	at most two hex. digits, not three.  Reported by Padraig Brady.
 	* tests/misc/printf-hex: New file/test, for the above fix.
