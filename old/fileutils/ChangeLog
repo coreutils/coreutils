@@ -1,7 +1,11 @@
-2001-05-21  Jim Meyering  <meyering@lucent.com>
+2001-05-24  Jim Meyering  <meyering@lucent.com>
 
-	* doc/Makefile.am ($(DVIS), $(INFO_DEPS)): Depend on $(EXTRA_DIST).
-	(DISABLED_constants.texi): New rule -- disabled for now.
+	* src/mkfifo.c (main): Remove quotes around %s.
+	The argument is already quoted via the quote function.
+	* src/mknod.c (main): Likewise.
+	Reported by Göran Uddeborg.
+
+2001-05-21  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.maint (wget-update): depcomp and missing are now in
 	automake's lib/ subdirectory.
