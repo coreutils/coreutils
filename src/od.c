@@ -1085,7 +1085,7 @@ skip (n_skip)
 	   - the file must be seekable.
 	   - before seeking to the specified position, make sure
 	     that the new position is in the current file.
-	     Try to do that by getting file's size using stat().
+	     Try to do that by getting file's size using fstat().
 	     But that will work only for regular files and dirs.  */
 
       if (fstat (fileno (in_stream), &file_stats))
