@@ -1,3 +1,9 @@
+2001-01-20  Jim Meyering  <meyering@lucent.com>
+
+	The configure-time check for stdbool.h was missing.
+	* prereq.m4 (jm_PREREQ): Add jm_PREREQ_HASH.
+	(jm_PREREQ_HASH): New function.
+
 2001-01-17  Jim Meyering  <meyering@lucent.com>
 
 	* fsusage.m4 (jm_FILE_SYSTEM_USAGE): Use AS_IF, not AS_IFELSE,
