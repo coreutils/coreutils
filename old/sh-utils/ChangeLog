@@ -1,5 +1,7 @@
 Mon Oct  7 18:46:28 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/getloadavg.c [__hpux]: Define hpux. From Eric Backus.
+
 	* lib/Makefile.am (EXTRA_DIST): Remove alloca.c, error.c, and mktime.
 	(su_SOURCES): Remove memcmp.c.
 	Automake automatically includes at least these, now.
