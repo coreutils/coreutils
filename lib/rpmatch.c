@@ -20,12 +20,19 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 # include <config.h>
 #endif
 
-#include <stdlib.h>
+#if STDC_HEADERS || _LIBC
+# include <stdlib.h>
+#endif
+
 #include <regex.h>
 
+#ifndef _
+# define _(String) String
+#endif
 
 static int
-try (tag, match, nomatch, lastp, re)
+try (response, pattern, match, nomatch, lastp, re)
+     const char *response;
      const char *pattern;
      const int match;
      const int nomatch;
@@ -47,7 +54,7 @@ try (tag, match, nomatch, lastp, re)
       *lastp = pattern;
     }
 
-  /* Try the pattern.  */
+  /* See if the regular expression matches RESPONSE.  */
   return regexec (re, response, 0, NULL, 0) == 0 ? match : nomatch;
 }
 
@@ -64,7 +71,8 @@ rpmatch (response)
   static regex_t yesre, nore;
   int result;
 
-  return ((result = try (_("[yY][[:alpha:]]"), 1, 0, &yesexpr, &yesre))
+  return ((result = try (response, _("^[yY]"), 1, 0,
+			 &yesexpr, &yesre))
 	  ? result
-	  : try (_("[nN][[:alpha:]]"), 0, -1, &noexpr, &nore));
+	  : try (response, _("^[nN]"), 0, -1, &noexpr, &nore));
 }
