@@ -541,6 +541,8 @@ strncoll (unsigned char *s1, unsigned char *s2, int len)
 {
   register int diff;
 
+  assert (len == min (strlen (s1), strlen (s2)));
+
   if (need_locale)
     {
       /* Emulate a strncoll function, by forcing strcoll to compare
@@ -569,6 +571,7 @@ strncoll_s2_readonly (unsigned char *s1, const unsigned char *s2, int len)
 {
   register int diff;
 
+  assert (len == strlen (s2));
   assert (len <= strlen (s1));
 
   if (need_locale)
