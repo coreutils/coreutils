@@ -1,9 +1,12 @@
-Convert Makefile.am files:
-  find tests -name Makefile.am \
-    | xargs grep -wl PATH|xargs perl -pi -e 's,src:\$\$PATH,src/vg:\$\$PATH,'
+#! /bin/bash
 
-Create src/vg:
+# Convert Makefile.am files:
+#  find tests -name Makefile.am \
+#    | xargs grep -wl PATH|xargs perl -pi -e 's,src:\$\$PATH,src/vg:\$\$PATH,'
 
+# Create src/vg:
+
+coreutils=$(echo 'spy:;@echo $(all_programs)'| make -f Makefile -f - spy)
 mkdir src/vg
 cat <<EOF > src/vg/gen
 n=9
@@ -12,7 +15,7 @@ up=`dirname $pwd`
 path='export PATH='$up':${PATH#*:}'
 pre='#!/bin/sh\n'"$path"'\n'
 vg='exec /p/bin/valgrind --quiet --num-callers='$n
-for i in $(fileutils); do
+for i in $coreutils; do
   printf "$pre$vg $i"' "$@"\n' > $i
   chmod a+x $i
 done
