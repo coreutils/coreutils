@@ -545,8 +545,6 @@ initbuf (struct buffer *buf, int alloc)
 static int
 fillbuf (struct buffer *buf, FILE *fp)
 {
-  int cc;
-
   if (buf->used != buf->left)
     {
       memmove (buf->buf, buf->buf + buf->used - buf->left, buf->left);
@@ -555,6 +553,7 @@ fillbuf (struct buffer *buf, FILE *fp)
 
   while (!feof (fp))
     {
+      int cc;
       if (buf->used == buf->alloc)
 	{
 	  buf->alloc *= 2;
