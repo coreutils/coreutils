@@ -1,4 +1,4 @@
-/* mountlist.c -- return a list of mounted filesystems
+/* mountlist.c -- return a list of mounted file systems
    Copyright (C) 1991, 1992, 1997-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -296,13 +296,13 @@ fstype_to_string (int t)
 }
 #endif /* MOUNTED_VMOUNT */
 
-/* Return a list of the currently mounted filesystems, or NULL on error.
+/* Return a list of the currently mounted file systems, or NULL on error.
    Add each entry to the tail of the list so that they stay in order.
-   If NEED_FS_TYPE is nonzero, ensure that the filesystem type fields in
+   If NEED_FS_TYPE is nonzero, ensure that the file system type fields in
    the returned list are valid.  Otherwise, they might not be.  */
 
 struct mount_entry *
-read_filesystem_list (int need_fs_type)
+read_file_system_list (int need_fs_type)
 {
   struct mount_entry *mount_list;
   struct mount_entry *me;
@@ -438,14 +438,14 @@ read_filesystem_list (int need_fs_type)
 #if defined MOUNTED_FS_STAT_DEV /* BeOS */
   {
     /* The next_dev() and fs_stat_dev() system calls give the list of
-       all filesystems, including the information returned by statvfs()
+       all file systems, including the information returned by statvfs()
        (fs type, total blocks, free blocks etc.), but without the mount
-       point. But on BeOS all filesystems except / are mounted in the
+       point. But on BeOS all file systems except / are mounted in the
        rootfs, directly under /.
        The directory name of the mount point is often, but not always,
        identical to the volume name of the device.
        We therefore get the list of subdirectories of /, and the list
-       of all filesystems, and match the two lists.  */
+       of all file systems, and match the two lists.  */
 
     DIR *dirp;
     struct rootdir_entry
@@ -744,12 +744,12 @@ read_filesystem_list (int need_fs_type)
     int n_entries;
     int i;
 
-    /* Ask how many bytes to allocate for the mounted filesystem info.  */
+    /* Ask how many bytes to allocate for the mounted file system info.  */
     if (mntctl (MCTL_QUERY, sizeof bufsize, (struct vmount *) &bufsize) != 0)
       return NULL;
     entries = xmalloc (bufsize);
 
-    /* Get the list of mounted filesystems.  */
+    /* Get the list of mounted file systems.  */
     n_entries = mntctl (MCTL_QUERY, bufsize, (struct vmount *) entries);
     if (n_entries < 0)
       {
