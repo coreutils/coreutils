@@ -26,7 +26,7 @@ obs45.E 50.O 50.E 51.O 51.E 52.O 52.E 53.O 53.E 54.O 54.E 55.O 55.E 56.O 56.E \
 EXTRA_DIST = Test.pm $x-tests $(explicit) $(maint_gen)
 noinst_SCRIPTS = $x-tests
 
-PERL = @PERL@
+PERL = $(PERL)
 editpl = sed -e 's,@''PERL''@,$(PERL),g' -e 's,@''srcdir''@,@srcdir@,g'
 
 TESTS = $x-tests

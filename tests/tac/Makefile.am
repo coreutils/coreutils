@@ -22,7 +22,7 @@ opt-br.O opt-br.E opt-br2.O opt-br2.E
 EXTRA_DIST = Test.pm $x-tests $(explicit) $(maint_gen)
 noinst_SCRIPTS = $x-tests
 
-PERL = @PERL@
+PERL = $(PERL)
 editpl = sed -e 's,@''PERL''@,$(PERL),g' -e 's,@''srcdir''@,@srcdir@,g'
 
 TESTS = $x-tests

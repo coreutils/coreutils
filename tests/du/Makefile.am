@@ -6,4 +6,4 @@ TESTS = \
   exclude no-x no-deref trailing-slash deref two-args slink
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
-  PATH="`pwd`/../../src@PATH_SEPARATOR@$$PATH"
+  PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH"

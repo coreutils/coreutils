@@ -3,7 +3,7 @@
 EXTRA_PROGRAMS = chroot df hostid nice pinky stty su uname uptime users who
 EXTRA_SCRIPTS = nohup
 
-bin_SCRIPTS = groups @OPTIONAL_BIN_ZCRIPTS@
+bin_SCRIPTS = groups $(OPTIONAL_BIN_ZCRIPTS)
 bin_PROGRAMS = chgrp chown chmod cp dd dircolors du \
   ginstall link ln dir vdir ls mkdir \
   mkfifo mknod mv readlink rm rmdir shred stat sync touch unlink \
@@ -12,7 +12,7 @@ bin_PROGRAMS = chgrp chown chmod cp dd dircolors du \
   basename date dirname echo env expr factor false \
   hostname id kill logname pathchk printenv printf pwd seq sleep tee \
   test true tty whoami yes \
-  @OPTIONAL_BIN_PROGS@ @DF_PROG@
+  $(OPTIONAL_BIN_PROGS) $(DF_PROG)
 
 noinst_HEADERS = \
   system.h sys2.h checksum.h copy.h cp-hash.h ls.h dircolors.h remove.h \
@@ -24,45 +24,45 @@ CLEANFILES = $(SCRIPTS) su
 
 INCLUDES = -I.. -I$(srcdir) -I$(top_srcdir)/lib -I../lib
 
-# Sometimes, the expansion of @LIBINTL@ includes -lc which may
+# Sometimes, the expansion of $(LIBINTL) includes -lc which may
 # include modules defining variables like `optind', so libfetish.a
-# must precede @LIBINTL@ in order to ensure we use GNU getopt.
-# But libfetish.a must also follow @LIBINTL@, since libintl uses
+# must precede $(LIBINTL) in order to ensure we use GNU getopt.
+# But libfetish.a must also follow $(LIBINTL), since libintl uses
 # replacement functions defined in libfetish.a.
-LDADD = ../lib/libfetish.a @LIBINTL@ ../lib/libfetish.a
+LDADD = ../lib/libfetish.a $(LIBINTL) ../lib/libfetish.a
 
-dir_LDADD = $(LDADD) @LIB_CLOCK_GETTIME@
-ls_LDADD = $(LDADD) @LIB_CLOCK_GETTIME@
-shred_LDADD = $(LDADD) @LIB_CLOCK_GETTIME@
-vdir_LDADD = $(LDADD) @LIB_CLOCK_GETTIME@
+dir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
+ls_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
+shred_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
+vdir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 
 ## If necessary, add -lm to resolve use of pow in lib/strtod.c.
-sort_LDADD = $(LDADD) @POW_LIB@
+sort_LDADD = $(LDADD) $(POW_LIB)
 
 # for clock_gettime
-date_LDADD = $(LDADD) @LIB_CLOCK_GETTIME@
+date_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 
 # For sqrt
-factor_LDADD = $(LDADD) @SQRT_LIBM@
+factor_LDADD = $(LDADD) $(SQRT_LIBM)
 
 # If necessary, add -lm to resolve use of pow in lib/strtod.c.
 # If necessary, add -liconv to resolve use of iconv in lib/unicodeio.c.
-printf_LDADD = $(LDADD) @POW_LIB@ @LIBICONV@
+printf_LDADD = $(LDADD) $(POW_LIB) $(LIBICONV)
 
 # If necessary, add -lm to resolve use of floor, rint, modf.
-seq_LDADD = $(LDADD) @SEQ_LIBM@
+seq_LDADD = $(LDADD) $(SEQ_LIBM)
 
 # If necessary, add -lm to resolve the `pow' reference in lib/strtod.c
 # or for the fesetround reference in programs using nanosec.c.
 nanosec_libs = \
-  $(LDADD) @FESETROUND_LIBM@ @POW_LIB@ @LIB_CLOCK_GETTIME@ @LIB_NANOSLEEP@
+  $(LDADD) $(FESETROUND_LIBM) $(POW_LIB) $(LIB_CLOCK_GETTIME) $(LIB_NANOSLEEP)
 
 sleep_LDADD = $(nanosec_libs)
 tail_LDADD = $(nanosec_libs)
 
-uptime_LDADD = $(LDADD) @GETLOADAVG_LIBS@
+uptime_LDADD = $(LDADD) $(GETLOADAVG_LIBS)
 
-su_LDADD = $(LDADD) @LIB_CRYPT@
+su_LDADD = $(LDADD) $(LIB_CRYPT)
 
 $(PROGRAMS): ../lib/libfetish.a
 
@@ -74,9 +74,9 @@ SUFFIXES = .sh
 	rm -f $@ $@-t
 	sed \
 	  -e 's!@''bindir''@!$(bindir)!' \
-	  -e 's/@''GNU_PACKAGE''@/@GNU_PACKAGE@/' \
-	  -e 's/@''PACKAGE_BUGREPORT''@/@PACKAGE_BUGREPORT@/' \
-	  -e 's/@''VERSION''@/@VERSION@/' $< > $@-t
+	  -e 's/@''GNU_PACKAGE''@/$(GNU_PACKAGE)/' \
+	  -e 's/@''PACKAGE_BUGREPORT''@/$(PACKAGE_BUGREPORT)/' \
+	  -e 's/@''VERSION''@/$(VERSION)/' $< > $@-t
 	chmod +x $@-t
 	mv $@-t $@
 
@@ -118,7 +118,7 @@ install-exec-local: su$(EXEEXT)
 
 uninstall-local:
 # Remove su only if it's one we installed.
-	@if grep '@GNU_PACKAGE@' $(installed_su) > /dev/null 2>&1; then \
+	@if grep '$(GNU_PACKAGE)' $(installed_su) > /dev/null 2>&1; then \
 	  echo "  rm -f $(installed_su)"; \
 	  rm -f $(installed_su); \
 	else :; fi
