@@ -1,3 +1,19 @@
+2003-10-13  Paul Eggert  <eggert@twinsun.com>
+
+	Fix to avoid a denial-of-service attack if the display width is
+	enormous.  Also, clean up the code a bit by removing duplicate code.
+
+	* src/ls.c (init_column_info): Remove forward decl; no longer needed.
+	(calculate_columns): New function, that contains code that used
+	to be common to print_many_per_line and print_horizontal.
+	(print_many_per_line, print_horizontal): Use it.
+	(decode_switches): Set max_idx here, not in calculate_columns.
+	(print_current_files): Don't call init_column_info; calculate_columns
+	now does that.
+	(init_column_info): Don't allocate a lot more space than is needed
+	to represent the current set of files.  Allocate all the new
+	size_t cells in one call to xnmalloc, rather than a row at a time.
+
 2003-10-14  Jim Meyering  <jim@meyering.net>
 
 	* tests/chgrp/posix-H: New tests for the above.
