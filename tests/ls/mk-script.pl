@@ -13,11 +13,14 @@ sub validate
 {
   my %seen;
   my $test_vector;
-  foreach $test_vector (@Test::t)
+  foreach $test_vector (Test::test_vector ())
     {
       my ($test_name, $flags, $in_spec, $expected, $e_ret_code, $rest) =
-	@{$test_vector};
-      assert (defined $e_ret_code && !defined $rest);
+	@$test_vector;
+      if (!defined $e_ret_code || defined $rest)
+	{
+	  die "wrong number of elements in test $test_name\n";
+	}
       assert (!ref $test_name);
       assert (!ref $flags);
       assert (!ref $expected);
@@ -150,10 +153,10 @@ sub wrap
       my @exp;
       my @maint;
       my @run;
-      foreach $test_vector (@Test::t)
+      foreach $test_vector (Test::test_vector ())
 	{
 	  my ($test_name, $flags, $in_spec, $exp_spec, $e_ret_code)
-	    = @{$test_vector};
+	    = @$test_vector;
 
 	  push (@run, ("t$test_name.out", "t$test_name.err"));
 
@@ -191,10 +194,10 @@ EOF
 validate ();
 
 my $test_vector;
-foreach $test_vector (@Test::t)
+foreach $test_vector (Test::test_vector ())
 {
   my ($test_name, $flags, $in_spec, $exp_spec, $e_ret_code)
-    = @{$test_vector};
+    = @$test_vector;
 
   my $in = spec_to_list ($in_spec, $test_name, 'in');
 
