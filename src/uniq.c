@@ -134,8 +134,8 @@ find_field (const struct linebuffer *line)
 {
   register int count;
   register char *lp = line->buffer;
-  register int size = line->length;
-  register int i = 0;
+  register size_t size = line->length;
+  register size_t i = 0;
 
   for (count = 0; count < skip_fields && i < size; count++)
     {
@@ -157,7 +157,7 @@ find_field (const struct linebuffer *line)
    OLDLEN and NEWLEN are their lengths. */
 
 static int
-different (const char *old, const char *new, int oldlen, int newlen)
+different (const char *old, const char *new, size_t oldlen, size_t newlen)
 {
   register int order;
 
@@ -199,7 +199,6 @@ writeline (const struct linebuffer *line, FILE *stream, int linecount)
     fprintf (stream, "%7d\t", linecount + 1);
 
   fwrite (line->buffer, sizeof (char), line->length, stream);
-  putc ('\n', stream);
 }
 
 /* Process input file INFILE with output to OUTFILE.
@@ -213,7 +212,7 @@ check_file (const char *infile, const char *outfile)
   struct linebuffer lb1, lb2;
   struct linebuffer *thisline, *prevline, *exch;
   char *prevfield, *thisfield;
-  int prevlen, thislen;
+  size_t prevlen, thislen;
   int match_count = 0;
 
   if (STREQ (infile, "-"))
