@@ -1,5 +1,5 @@
 /* Declarations for GNU's read utmp module.
-   Copyright (C) 92, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 92, 93, 94, 95, 96, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,6 +19,14 @@
 
 #ifndef __READUTMP_H__
 # define __READUTMP_H__
+
+# ifndef PARAMS
+#  if defined PROTOTYPES || (defined __STDC__ && __STDC__)
+#   define PARAMS(Args) Args
+#  else
+#   define PARAMS(Args) ()
+#  endif
+# endif
 
 # include <stdio.h>
 # include <sys/types.h>
