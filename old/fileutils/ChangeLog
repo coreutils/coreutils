@@ -1,3 +1,10 @@
+2000-10-19  Jim Meyering  <meyering@lucent.com>
+
+	* doc/texinfo.tex: Update from master repository.
+	* config.sub: Likewise.
+	* config.guess: Likewise.
+	* depcomp: Likewise.
+
 2000-10-18  Jim Meyering  <meyering@lucent.com>
 
 	* tests/mv/part-symlink: Make sure the programs use C-locale formats
