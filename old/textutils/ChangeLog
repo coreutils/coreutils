@@ -1,6 +1,12 @@
-2000-01-14  Jim Meyering  <meyering@lucent.com>
+2000-01-15  Jim Meyering  <meyering@lucent.com>
 
-	* tests/unexpand/basic-1: New test exposes infloop bug.
+	unexpand could infloop
+	* src/unexpand.c (TAB_STOP_SENTINEL): Define.
+	(unexpand): Use it instead of INT_MAX.
+	Declare column and pending to be `unsigned'.
+	Increment pending and column counters only if column is smaller
+	than TAB_STOP_SENTINEL.
+	* tests/unexpand/basic-1: New tests for the above-fixed bug.
 	Reported by John Kodis.
 
 2000-01-12  Paul Eggert  <eggert@twinsun.com>

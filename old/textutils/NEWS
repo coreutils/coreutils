@@ -1,4 +1,6 @@
 Changes in release 2.1
+[2.0d]
+* unexpand no longer infloops on certain sequences of white space
 [2.0c]
 * include lib/nanosleep.h.
 [2.0b]
