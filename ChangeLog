@@ -1,6 +1,14 @@
-2003-12-24  Jim Meyering  <jim@meyering.net>
+2003-12-26  Jim Meyering  <meyering@lucent.com>
 
 	* Version 5.1.1.
+
+	fold -s didn't work on e.g., alpha-based systems.
+	* src/fold.c (fold_file): Adjust types (int->size_t) so that using
+	x2nrealloc works properly on systems with differing sizes for int
+	and size_t.  Reported by Nelson Beebe.
+
+	* src/fold.c: Use `bool' (not int) as the type for a few
+	global variables.
 
 2003-12-23  Paul Eggert  <eggert@twinsun.com>
 
