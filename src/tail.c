@@ -1730,7 +1730,7 @@ main (int argc, char **argv)
 		     " indefinitely is ineffective"));
   }
 
-  F = xmalloc (n_files * sizeof (F[0]));
+  F = xnmalloc (n_files, sizeof *F);
   for (i = 0; i < n_files; i++)
     F[i].name = file[i];
 
