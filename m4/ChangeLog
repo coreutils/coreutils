@@ -1,3 +1,8 @@
+1999-05-04  Paul Eggert  <eggert@twinsun.com>
+
+	* lfs.m4 (AC_LFS): -n32, -o32, and -n64 should be in CFLAGS,
+	not CPPFLAGS, so that linking works correctly in IRIX.
+
 1999-04-30  Paul Eggert  <eggert@twinsun.com>
 
 	* jm-macros.m4 (AC_REPLACE_FUNCS): Add dup2.
