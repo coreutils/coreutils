@@ -1,5 +1,8 @@
 1998-06-28  Jim Meyering  <meyering@ascend.com>
 
+	* ls-mntd-fs.m4: New file.
+	* fstypename.m4: New file.
+
 	* jm-macros.m4: Require the new macro.
 	* jm-glibc-io.m4: New file.
 
