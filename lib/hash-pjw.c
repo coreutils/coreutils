@@ -1,5 +1,5 @@
 /* hash-pjw.c -- compute a hash value from a NUL-terminated string.
-   Copyright 2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,25 +21,22 @@
 
 #include "hash-pjw.h"
 
+#include <limits.h>
+
+#define SIZE_BITS (sizeof (size_t) * CHAR_BIT)
+
 /* A hash function for NUL-terminated char* strings using
-   the method described in Aho, Sethi, & Ullman, p 436.
-   Note that this hash function produces a lot of collisions when used
-   with short strings with very varied bit patterns.
+   the method described by Bruno Haible.
    See http://www.haible.de/bruno/hashfunc.html.  */
 
-unsigned int
-hash_pjw (const void *x, unsigned int tablesize)
+size_t
+hash_pjw (const void *x, size_t tablesize)
 {
-  const char *s = x;
-  unsigned int h = 0;
-  unsigned int g;
+  const char *s;
+  size_t h = 0;
 
-  while (*s != 0)
-    {
-      h = (h << 4) + *s++;
-      if ((g = h & (unsigned int) 0xf0000000) != 0)
-        h = (h ^ (g >> 24)) ^ g;
-    }
+  for (s = x; *s; s++)
+    h = *s + ((h << 9) | (h >> (SIZE_BITS - 9)));
 
-  return (h % tablesize);
+  return h % tablesize;
 }
