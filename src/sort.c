@@ -289,14 +289,18 @@ Usage: %s [OPTION]... [FILE]...\n\
       printf (_("\
 Write sorted concatenation of all FILE(s) to standard output.\n\
 \n\
-  +POS1 [-POS2]    start a key at POS1, end it before POS2\n\
+  +POS1 [-POS2]    start a key at POS1, end it *before* POS2 (obsolescent)\n\
+		     field numbers and character offsets are numbered\n\
+                     starting with zero (contrast with the -k option)\n
   -b               ignore leading blanks in sort fields or keys\n\
   -c               check if given files already sorted, do not sort\n\
   -d               consider only [a-zA-Z0-9 ] characters in keys\n\
   -f               fold lower case to upper case characters in keys\n\
   -g               compare according to general numerical value, imply -b\n\
   -i               consider only [\\040-\\0176] characters in keys\n\
-  -k POS1[,POS2]   same as +POS1 [-POS2], but all positions counted from 1\n\
+  -k POS1[,POS2]   start a key at POS1, end it *at* POS2\n\
+		     field numbers and character offsets are numbered\n\
+                     starting with one (contrast with zero-based +POS form)\n
   -m               merge already sorted files, do not sort\n\
   -M               compare (unknown) < `JAN' < ... < `DEC', imply -b\n\
   -n               compare according to string numerical value, imply -b\n\
@@ -311,11 +315,11 @@ Write sorted concatenation of all FILE(s) to standard output.\n\
       --help       display this help and exit\n\
       --version    output version information and exit\n\
 \n\
-POS is F[.C][OPTS], where F is the field number and C the character\n\
-position in the field, both counted from zero.  OPTS is made up of one\n\
-or more of Mbdfinr, this effectively disable global -Mbdfinr settings\n\
-for that key.  If no key given, use the entire line as key.  With no\n\
-FILE, or when FILE is -, read standard input.\n\
+POS is F[.C][OPTS], where F is the field number and C the character position\n\
+in the field, both counted from one with -k, from zero with the obsolescent\n\
+form.  OPTS is made up of one or more of Mbdfinr, this effectively disables\n\
+global -Mbdfinr settings for that key.  If no key is given, use the entire\n\
+line as the key.  With no FILE, or when FILE is -, read standard input.\n\
 ")
 	      , DEFAULT_TMPDIR);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
