@@ -125,6 +125,7 @@ libfetish_a_SOURCES = \
   xstrdup.c \
   xstrndup.c xstrndup.h \
   xstrtod.c xstrtod.h \
+  xstrtoimax.c \
   xstrtol.c xstrtol.h \
   xstrtoul.c \
   xstrtoumax.c \
