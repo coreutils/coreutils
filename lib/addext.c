@@ -37,11 +37,7 @@
 #endif
 
 #include <stddef.h>
-#if HAVE_STRING_H
-# include <string.h>
-#else
-# include <strings.h>
-#endif
+#include <string.h>
 
 #if HAVE_UNISTD_H
 # include <unistd.h>
