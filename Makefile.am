@@ -1,8 +1,16 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-
 
-SUBDIRS = lib src doc man m4 po tests old
+SUBDIRS = lib src doc man m4 po tests
 EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
-  .kludge-stamp .prev-version THANKS-to-translators THANKStt.in
+  .kludge-stamp .prev-version THANKS-to-translators THANKStt.in \
+  old/fileutils/ChangeLog \
+  old/fileutils/ChangeLog-1997 \
+  old/sh-utils/ChangeLog \
+  old/sh-utils/ChangeLog.0 \
+  old/textutils/ChangeLog \
+  old/fileutils/NEWS \
+  old/sh-utils/NEWS \
+  old/textutils/NEWS
 
 install-root:
 	cd src && $(MAKE) $@
