@@ -13,6 +13,7 @@ case "$PERL" in
   exit 77
   ;;
 esac
+
 ARGV_0=$0
 export ARGV_0
 
@@ -22,7 +23,8 @@ use strict;
 
 (my $ME = $ENV{ARGV_0}) =~ s|.*/||;
 
-$ENV{VERBOSE} && $ENV{VERBOSE} eq 'yes'
+my $verbose = $ENV{VERBOSE} && $ENV{VERBOSE} eq 'yes';
+$verbose
   and system qw (rm --version);
 
 # Ensure that the diagnostics are in English.
@@ -46,13 +48,15 @@ foreach my $dir (@dir_list)
       {
 	$found_dir = 1;
 
-	# Find a non-directory there that's owned by someone else.
+	# Find a non-directory there that is owned by some other user.
 	opendir DIR_HANDLE, $dir
 	  or die "$ME: couldn't open $dir: $!\n";
 
 	foreach my $f (readdir DIR_HANDLE)
 	  {
 	    my $target_file = "$dir/$f";
+	    $verbose
+	      and warn "$ME: considering $target_file\n";
 
 	    # Skip files owned by self, symlinks, and directories.
 	    # It's not technically necessary to skip symlinks, but it's simpler.
@@ -75,7 +79,11 @@ foreach my $dir (@dir_list)
 	      or die "$ME: unexpected exit status from `$cmd';\n"
 		. "  got $status, expected 1\n";
 
-	    my $exp = "rm: cannot remove `$dir/$f':";
+	    my $exp = "rm: cannot remove `$target_file':";
+	    $line
+	      or die "$ME: no output from `$cmd';\n"
+		. "expected something like `$exp ...'\n";
+
 	    my $regex = quotemeta $exp;
 	    $line =~ /^$regex/
 	      or die "$ME: unexpected dignostic from `$cmd';\n"
