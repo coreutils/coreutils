@@ -1,6 +1,21 @@
-2005-03-11  Paul Eggert  <eggert@cs.ucla.edu>
+2005-03-12  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	Add a little infrastructure to help prevent future bugs like the
+	one fixed below.
+	* src/stat.c (xstrcat): New function.
+	(print_statfs, print_stat): Add buf_len parameter and convert all
+	uses of strcat to xstrcat.  Update callers.
+	(print_it): Call print_func with buf_len parameter.
+
+	Invoking stat -c FMT with a lone format directive of %s, %f, %h, %s,
+	could cause a buffer overrun error.
+	* src/stat.c (print_it): Allocate 2 more bytes, to accommodate our
+	conversion of the stat %s format string to the longer printf %llu one.
+	Patch from Guochun Shi.
+
+2005-03-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/ls.c (TIME_STAMP_LEN_MAXIMUM): New constant.
 	(long_time_expected_width, print_long_format): Use it, to avoid
