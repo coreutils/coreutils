@@ -1,3 +1,8 @@
+2003-07-28  Jim Meyering  <jim@meyering.net>
+
+	* stdbool_.h: Renamed from stdbool.hin.
+	* Makefile.am: Reflect renaming: stdbool.hin -> stdbool_.h.
+
 2003-07-28  Paul Eggert  <eggert@twinsun.com>
 
 	* stdbool.hin (_Bool): Make it signed char, instead of
