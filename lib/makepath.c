@@ -239,29 +239,31 @@ make_path (const char *argpath,
 		}
 	    }
 
-	  if (newly_created_dir && verbose_fmt_string != NULL)
-	    fprintf (stderr, verbose_fmt_string, dirpath);
+	  if (newly_created_dir)
+	    {
+	      if (verbose_fmt_string)
+		fprintf (stderr, verbose_fmt_string, dirpath);
 
-	  if (newly_created_dir
-	      && (owner != (uid_t) -1 || group != (gid_t) -1)
-	      && chown (basename_dir, owner, group)
+	      if ((owner != (uid_t) -1 || group != (gid_t) -1)
+		  && chown (basename_dir, owner, group)
 #if defined(AFS) && defined (EPERM)
-	      && errno != EPERM
+		  && errno != EPERM
 #endif
-	      )
-	    {
-	      error (0, errno, "%s", dirpath);
-	      CLEANUP;
-	      return 1;
-	    }
+		  )
+		{
+		  error (0, errno, "%s", dirpath);
+		  CLEANUP;
+		  return 1;
+		}
 
-	  if (newly_created_dir && re_protect)
-	    {
-	      struct ptr_list *new = (struct ptr_list *)
-		alloca (sizeof (struct ptr_list));
-	      new->dirname_end = slash;
-	      new->next = leading_dirs;
-	      leading_dirs = new;
+	      if (re_protect)
+		{
+		  struct ptr_list *new = (struct ptr_list *)
+		    alloca (sizeof (struct ptr_list));
+		  new->dirname_end = slash;
+		  new->next = leading_dirs;
+		  leading_dirs = new;
+		}
 	    }
 
 	  /* If we were able to save the initial working directory,
