@@ -2,6 +2,8 @@
 
 	* Version 5.1.0.
 
+	* tests/du/hard-link: Minor tweak: use mkdir -p.
+
 	Fix read-from-free'd-buffer error detected by valgrind.
 	* src/csplit.c (remove_line): Don't return a pointer to data in
 	a freed buffer.  Instead, arrange to free the buffer on the
