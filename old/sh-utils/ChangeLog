@@ -1,5 +1,11 @@
 Tue Dec 10 06:36:57 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* acinclude.m4 (jm_SYS_PROC_UPTIME): New macro.  Derived from the
+	code in configure.in, except now it punts when cross compiling.
+	Suggestion from Karl Heuer.
+	* configure.in (jm_SYS_PROC_UPTIME): Use it instead of open-coded
+	version.
+
 	* lib/Makefile.am (EXTRA_DIST): Add mktime.c.
 	Reported by Thomas Bushnell.
 
