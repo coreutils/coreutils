@@ -1,5 +1,8 @@
 2000-12-02  Jim Meyering  <meyering@lucent.com>
 
+	* src/od.c:
+	Reported by Mark Nudelman, via Andreas Jaeger.
+
 	* src/sort.c (NONZERO): Define and use it to make the code a tiny
 	bit more readable.
 
