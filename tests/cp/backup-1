@@ -1,10 +1,8 @@
 #!/bin/sh
 
-: ${CP=cp}
-
 if test "$VERBOSE" = yes; then
   set -x
-  $CP --version
+  cp --version
 fi
 
 suffix=.b
@@ -18,7 +16,7 @@ echo test > $tmp || fail=1
 
 # Specify both version control and suffix so the environment variables
 # (possibly set by the user running these tests) aren't used.
-$CP --force --backup --version-control=simple --suffix=$suffix $tmp $tmp \
+cp --force --backup --version-control=simple --suffix=$suffix $tmp $tmp \
   || fail=1
 
 test -f $tmp || fail=1

@@ -2,21 +2,15 @@
 # Test some of cp's options and how cp handles situations in
 # which a naive implementation might overwrite the source file.
 
-# FIXME: punt for now
-CP=cp
-
 if test "$VERBOSE" = yes; then
   set -x
-  $CP --version
+  cp --version
 fi
 
 LANGUAGE=C; export LANGUAGE
 LANG=C; export LANG
 
 VERSION_CONTROL=numbered; export VERSION_CONTROL
-
-pwd=`pwd`
-PATH=$pwd/../../src:$PATH
 
 actual=actual-$$
 expected=expected-$$
@@ -51,8 +45,8 @@ for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' 'foo hardlink'; do
     case "$args" in *sl2*) ln -s foo sl2;; esac
     (
       (
-	# echo 1>&2 $CP $options $args
-	$CP $options $args 2>.err
+	# echo 1>&2 cp $options $args
+	cp $options $args 2>.err
 	echo $? $options
 
 	# Normalize the program name in the error output,

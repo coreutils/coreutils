@@ -1,15 +1,12 @@
 #!/bin/sh
 
-: ${CP=cp}
-: ${RM=rm}
-
 if test "$VERBOSE" = yes; then
   set -x
-  $CP --version
+  cp --version
 fi
 
 framework_failure=0
-$RM -f a a~ || framework_failure=1
+rm -f a a~ || framework_failure=1
 echo a > a || framework_failure=1
 echo a-tilde > a~ || framework_failure=1
 
@@ -27,9 +24,9 @@ LANG=C
 export LANG
 
 # This cp command should exit nonzero.
-$CP -b -V simple a~ a > out 2>&1 && fail=1
+cp -b -V simple a~ a > out 2>&1 && fail=1
 
-sed "s,$CP:,XXX:," out > out2
+sed "s,cp:,XXX:," out > out2
 
 cat > exp <<\EOF
 XXX: backing up `a' would destroy source;  `a~' not copied
@@ -37,6 +34,6 @@ EOF
 
 cmp out2 exp || fail=1
 
-$RM -f out out2 exp a a~
+rm -f out out2 exp a a~
 
 exit $fail
