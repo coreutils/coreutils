@@ -66,6 +66,9 @@ my @tv = (
 ['n-5',  '-n -0', "y\n" x 5, '', 0],
 ['n-5a', '-n -1', "y\n" x 5, "y\n", 0],
 ['n-5b', '-n  0', "y\n" x 5, '', 0],
+
+# With textutils-1.22, this failed.
+['f-1', '-f -n 1', "a\nb\n", "b\n", 0],
 );
 
 sub test_vector
@@ -79,6 +82,11 @@ sub test_vector
       if ($test_name =~ /^minus/)
 	{
 	  $Test::input_via{$test_name} = {REDIR => 0, PIPE => 0};
+	}
+      elsif ($test_name eq 'f-1')
+	{
+	  # Using redirection or a file would make this hang.
+	  $Test::input_via{$test_name} = {PIPE => 0};
 	}
       else
 	{
