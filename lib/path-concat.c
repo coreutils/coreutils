@@ -1,6 +1,6 @@
 /* path-concat.c -- concatenate two arbitrary pathnames
 
-   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002 Free
+   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free
    Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -28,29 +28,11 @@
 #endif
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-#if HAVE_STRING_H
-# if !STDC_HEADERS && HAVE_MEMORY_H
-#  include <memory.h>
-# endif
-# include <string.h>
-#else
-# if HAVE_STRINGS_H
-#  include <strings.h>
-# endif
-#endif
-#if HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
 #if HAVE_UNISTD_H
 # include <unistd.h>
-#endif
-
-#ifndef HAVE_DECL_MALLOC
-"this configure-time declaration test was not run"
-#endif
-#if !HAVE_DECL_MALLOC
-char *malloc ();
 #endif
 
 #ifndef strdup
