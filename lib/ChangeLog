@@ -1,3 +1,8 @@
+2000-11-22  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/strftime.c (my_strftime): Do not invoke mbrlen with a
+	size of (size_t) -1; it's not portable.
+
 2000-11-17  Akim Demaille  <akim@epita.fr>
 
 	* lib/obstack.h: Formatting changes.
