@@ -265,7 +265,7 @@ cat (
 	      unsigned char *wp = outbuf;
 	      do
 		{
-		  if (full_write (STDOUT_FILENO, wp, outsize) < 0)
+		  if (full_write (STDOUT_FILENO, wp, outsize) != outsize)
 		    error (EXIT_FAILURE, errno, _("write error"));
 		  wp += outsize;
 		}
@@ -318,7 +318,7 @@ cat (
 		{
 		  int n_write = bpout - outbuf;
 
-		  if (full_write (STDOUT_FILENO, outbuf, n_write) < 0)
+		  if (full_write (STDOUT_FILENO, outbuf, n_write) != n_write)
 		    error (EXIT_FAILURE, errno, _("write error"));
 		  bpout = outbuf;
 		}
