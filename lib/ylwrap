@@ -1,0 +1,62 @@
+#! /bin/sh
+# ylwrap - wrapper for lex/yacc invocations.
+# Written by Tom Tromey <tromey@cygnus.com>, Aug 11 1996
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+# Usage:
+#     ylwrap PROG [OUTPUT DESIRED]... -- [ARGS]...
+# * PROG is program to run.
+# * OUTPUT is file PROG generates
+# * DESIRED is file we actually want
+# * ARGS are passed to PROG
+# Any number of OUTPUT,DESIRED pairs may be used.
+
+# The program to run.
+prog="$1"
+shift
+
+pairlist=
+while test "$#" -ne 0; do
+   if test "$1" = "--"; then
+      break
+   fi
+   pairlist="$pairlist $1"
+   shift
+done
+
+$prog ${1+"$@"} || exit $?
+
+set X $pairlist
+shift
+status=0
+first=yes
+while "$#" -ne 0; do
+   if test -f "$1"; then
+      mv "$1" "$2" || status=$?
+   else
+      # A missing file is only an error for the first file.  This is a
+      # blatant hack to let us support using "yacc -d".  If -d is not
+      # specified, we don't want an error when the header file is
+      # "missing".
+      if test $first = yes; then
+	 status=1
+      fi
+   fi
+   shift
+   shift
+   first=no
+done
+exit $status
