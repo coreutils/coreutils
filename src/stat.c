@@ -698,7 +698,7 @@ The valid format sequences for files (without --filesystem):\n\
   %A   Access rights in human readable form\n\
   %a   Access rights in octal\n\
   %B   The size of each block reported by `%b'\n\
-  %b   Number of blocks allocated\n\
+  %b   Number of blocks allocated (see %B)\n\
 "), stdout);
       fputs (_("\
   %D   Device number in hex\n\
