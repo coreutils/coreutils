@@ -410,7 +410,7 @@ read_utmp (char *filename)
 {
   FILE *utmp;
   struct stat file_stats;
-  int n_read;
+  size_t n_read;
   size_t size;
 
   utmp = fopen (filename, "r");
