@@ -25,12 +25,12 @@ export LC_ALL
 
 # FIXME: if this fails, it's a framework failure
 cat <<EOF | sort > t/E || framework_failure=1
-removing all entries of directory t/a
-removing all entries of directory t/a/b
-removing t/a/b/g
-removing the directory itself: t/a/b
-removing t/a/f
-removing the directory itself: t/a
+removing all entries of directory \`t/a'
+removing all entries of directory \`t/a/b'
+removing \`t/a/b/g'
+removing the directory itself: \`t/a/b'
+removing \`t/a/f'
+removing the directory itself: \`t/a'
 EOF
 
 if test $framework_failure = 1; then

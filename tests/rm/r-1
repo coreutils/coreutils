@@ -23,11 +23,11 @@ mkdir $tmp/a $tmp/a/a || framework_failure=1
 > $tmp/b || framework_failure=1
 
 cat <<EOF > $tmp/$test.E || framework_failure=1
-removing all entries of directory $tmp/a
-removing all entries of directory $tmp/a/a
-removing the directory itself: $tmp/a/a
-removing the directory itself: $tmp/a
-removing $tmp/b
+removing all entries of directory \`$tmp/a'
+removing all entries of directory \`$tmp/a/a'
+removing the directory itself: \`$tmp/a/a'
+removing the directory itself: \`$tmp/a'
+removing \`$tmp/b'
 EOF
 
 if test $framework_failure = 1; then

@@ -47,33 +47,33 @@ test -d $other_partition_tmpdir/$dir/a/b/c || fail=1
 sed "s,$other_partition_tmpdir,XXX," out > out2
 
 cat > exp <<EOF
-$null -> XXX/$null
-removing $null
-$dir -> XXX/$dir
-$dir/a -> XXX/$dir/a
-$dir/a/b -> XXX/$dir/a/b
-$dir/a/b/c -> XXX/$dir/a/b/c
-$dir/a/b/c/file1 -> XXX/$dir/a/b/c/file1
-$dir/d -> XXX/$dir/d
-$dir/d/e -> XXX/$dir/d/e
-$dir/d/e/f -> XXX/$dir/d/e/f
-$dir/d/e/f/file2 -> XXX/$dir/d/e/f/file2
-removing all entries of directory $dir
-removing all entries of directory $dir/a
-removing all entries of directory $dir/a/b
-removing all entries of directory $dir/a/b/c
-removing $dir/a/b/c/file1
-removing the directory itself: $dir/a/b/c
-removing the directory itself: $dir/a/b
-removing the directory itself: $dir/a
-removing all entries of directory $dir/d
-removing all entries of directory $dir/d/e
-removing all entries of directory $dir/d/e/f
-removing $dir/d/e/f/file2
-removing the directory itself: $dir/d/e/f
-removing the directory itself: $dir/d/e
-removing the directory itself: $dir/d
-removing the directory itself: $dir
+\`$null' -> \`XXX/$null'
+removing \`$null'
+\`$dir' -> \`XXX/$dir'
+\`$dir/a' -> \`XXX/$dir/a'
+\`$dir/a/b' -> \`XXX/$dir/a/b'
+\`$dir/a/b/c' -> \`XXX/$dir/a/b/c'
+\`$dir/a/b/c/file1' -> \`XXX/$dir/a/b/c/file1'
+\`$dir/d' -> \`XXX/$dir/d'
+\`$dir/d/e' -> \`XXX/$dir/d/e'
+\`$dir/d/e/f' -> \`XXX/$dir/d/e/f'
+\`$dir/d/e/f/file2' -> \`XXX/$dir/d/e/f/file2'
+removing all entries of directory \`$dir'
+removing all entries of directory \`$dir/a'
+removing all entries of directory \`$dir/a/b'
+removing all entries of directory \`$dir/a/b/c'
+removing \`$dir/a/b/c/file1'
+removing the directory itself: \`$dir/a/b/c'
+removing the directory itself: \`$dir/a/b'
+removing the directory itself: \`$dir/a'
+removing all entries of directory \`$dir/d'
+removing all entries of directory \`$dir/d/e'
+removing all entries of directory \`$dir/d/e/f'
+removing \`$dir/d/e/f/file2'
+removing the directory itself: \`$dir/d/e/f'
+removing the directory itself: \`$dir/d/e'
+removing the directory itself: \`$dir/d'
+removing the directory itself: \`$dir'
 EOF
 
 cmp out2 exp || fail=1
