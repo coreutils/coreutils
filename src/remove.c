@@ -508,34 +508,37 @@ AD_is_removable (Dirstack_state const *ds, char const *file)
   return ! (top->unremovable && hash_lookup (top->unremovable, file));
 }
 
+/* A wrapper for readdir so that callers don't see entries for `.' or `..'.  */
+static struct dirent *
+readdir_ignoring_dotdirs (DIR *dirp)
+{
+  while (1)
+    {
+      struct dirent *dp = readdir (dirp);
+      if (dp == NULL || ! DOT_OR_DOTDOT (dp->d_name))
+	return dp;
+    }
+}
+
+/* Return nonzero if DIR is determined to be an empty directory
+   or if opendir or readdir fails.  */
 static bool
 is_empty_dir (char const *dir)
 {
   DIR *dirp = opendir (dir);
+  struct dirent *dp;
+  int saved_errno;
+
   if (dirp == NULL)
     return false;
 
-  while (1)
-    {
-      struct dirent *dp;
-      const char *f;
-
-      errno = 0;
-      dp = readdir (dirp);
-      if (dp == NULL)
-	{
-	  int saved_errno = errno;
-	  closedir (dirp);
-	  return saved_errno == 0 ? true : false;
-	}
-
-      f = dp->d_name;
-      if ( ! DOT_OR_DOTDOT (f))
-	{
-	  closedir (dirp);
-	  return false;
-	}
-    }
+  errno = 0;
+  dp = readdir_ignoring_dotdirs (dirp);
+  saved_errno = errno;
+  closedir (dirp);
+  if (dp != NULL)
+    return false;
+  return saved_errno == 0 ? true : false;
 }
 
 /* Prompt whether to remove FILENAME, if required via a combination of
@@ -824,7 +827,7 @@ remove_cwd_entries (Dirstack_state *ds, char **subdir, struct stat *subdir_sb,
       /* Set errno to zero so we can distinguish between a readdir failure
 	 and when readdir simply finds that there are no more entries.  */
       errno = 0;
-      if ((dp = readdir (dirp)) == NULL)
+      if ((dp = readdir_ignoring_dotdirs (dirp)) == NULL)
 	{
 	  if (errno)
 	    {
@@ -840,8 +843,6 @@ remove_cwd_entries (Dirstack_state *ds, char **subdir, struct stat *subdir_sb,
 	}
 
       f = dp->d_name;
-      if (DOT_OR_DOTDOT (f))
-	continue;
 
       /* Skip files we've already tried/failed to remove.  */
       if ( ! AD_is_removable (ds, f))
