@@ -23,7 +23,7 @@ chmod u-w file || framework_failure=1
   echo "$0: NOTICE: This test must be run as root."
   echo "You can do the following as \`root' to run just this test:"
   echo ""
-  echo "cd $pwd && make check TESTS=special-bits"
+  echo "cd $pwd && $MAKE check TESTS=special-bits"
   echo ""
   echo '********************************************'
   exit 77
