@@ -29,6 +29,7 @@
 #include "hard-locale.h"
 #include "linebuffer.h"
 #include "memcasecmp.h"
+#include "quote.h"
 #include "xmemcoll.h"
 #include "xstrtol.h"
 
@@ -39,12 +40,6 @@
 
 #define join system_join
 
-/* Undefine, to avoid warning about redefinition on some systems.  */
-#undef min
-#undef max
-#define min(A, B) ((A) < (B) ? (A) : (B))
-#define max(A, B) ((A) > (B) ? (A) : (B))
-
 /* An element of the list identifying which fields to print for each
    output line.  */
 struct outlist
@@ -54,7 +49,7 @@ struct outlist
     int file;
 
     /* Field index (zero-based), specified only when FILE is 1 or 2.  */
-    int field;
+    size_t field;
 
     struct outlist *next;
   };
@@ -70,8 +65,8 @@ struct field
 struct line
   {
     struct linebuffer buf;	/* The line itself.  */
-    int nfields;		/* Number of elements in `fields'.  */
-    int nfields_allocated;	/* Number of elements in `fields'.  */
+    size_t nfields;		/* Number of elements in `fields'.  */
+    size_t nfields_allocated;	/* Number of elements allocated for `fields'. */
     struct field *fields;
   };
 
@@ -91,16 +86,16 @@ char *program_name;
 static int hard_LC_COLLATE;
 
 /* If nonzero, print unpairable lines in file 1 or 2.  */
-static int print_unpairables_1, print_unpairables_2;
+static bool print_unpairables_1, print_unpairables_2;
 
 /* If nonzero, print pairable lines.  */
-static int print_pairables;
+static bool print_pairables;
 
 /* Empty output field filler.  */
 static char *empty_filler;
 
 /* Field to join on.  */
-static int join_field_1, join_field_2;
+static size_t join_field_1, join_field_2;
 
 /* List of fields to print.  */
 static struct outlist outlist_head;
@@ -130,7 +125,7 @@ static struct option const longopts[] =
 static struct line uni_blank;
 
 /* If nonzero, ignore case when comparing join fields.  */
-static int ignore_case;
+static bool ignore_case;
 
 void
 usage (int status)
@@ -202,7 +197,7 @@ ADD_FIELD (struct line *line, const unsigned char *field, size_t len)
 static void
 xfields (struct line *line)
 {
-  int i;
+  size_t i;
   unsigned char *ptr0 = (unsigned char *) line->buf.buffer;
   unsigned char *ptr;
   unsigned char *lim;
@@ -310,7 +305,7 @@ getseq (FILE *fp, struct seq *seq)
 static void
 delseq (struct seq *seq)
 {
-  int i;
+  size_t i;
   for (i = 0; i < seq->count; i++)
     if (seq->lines[i].buf.buffer)
       freeline (&seq->lines[i]);
@@ -322,12 +317,13 @@ delseq (struct seq *seq)
    Report an error and exit if the comparison fails.  */
 
 static int
-keycmp (struct line *line1, struct line *line2)
+keycmp (struct line const *line1, struct line const *line2)
 {
   /* Start of field to compare in each file.  */
   const unsigned char *beg1, *beg2;
 
-  size_t len1, len2;		/* Length of fields to compare.  */
+  size_t len1;
+  size_t len2;		/* Length of fields to compare.  */
   int diff;
 
   if (join_field_1 < line1->nfields)
@@ -364,13 +360,13 @@ keycmp (struct line *line1, struct line *line2)
     {
       /* FIXME: ignore_case does not work with NLS (in particular,
          with multibyte chars).  */
-      diff = memcasecmp (beg1, beg2, min (len1, len2));
+      diff = memcasecmp (beg1, beg2, MIN (len1, len2));
     }
   else
     {
       if (HAVE_SETLOCALE && hard_LC_COLLATE)
 	return xmemcoll ((char *) beg1, len1, (char *) beg2, len2);
-      diff = memcmp (beg1, beg2, min (len1, len2));
+      diff = memcmp (beg1, beg2, MIN (len1, len2));
     }
 
   if (diff)
@@ -382,7 +378,7 @@ keycmp (struct line *line1, struct line *line2)
    `empty_filler' if it is nonempty.  */
 
 static void
-prfield (int n, struct line *line)
+prfield (size_t n, struct line const *line)
 {
   size_t len;
 
@@ -401,7 +397,7 @@ prfield (int n, struct line *line)
 /* Print the join of LINE1 and LINE2.  */
 
 static void
-prjoin (struct line *line1, struct line *line2)
+prjoin (struct line const *line1, struct line const *line2)
 {
   const struct outlist *outlist;
 
@@ -413,8 +409,8 @@ prjoin (struct line *line1, struct line *line2)
       o = outlist;
       while (1)
 	{
-	  int field;
-	  struct line *line;
+	  size_t field;
+	  struct line const *line;
 
 	  if (o->file == 0)
 	    {
@@ -432,7 +428,6 @@ prjoin (struct line *line1, struct line *line2)
 	  else
 	    {
 	      line = (o->file == 1 ? line1 : line2);
-	      assert (o->field >= 0);
 	      field = o->field;
 	    }
 	  prfield (field, line);
@@ -445,11 +440,11 @@ prjoin (struct line *line1, struct line *line2)
     }
   else
     {
-      int i;
+      size_t i;
 
       if (line1 == &uni_blank)
 	{
-	  struct line *t;
+	  struct line const *t;
 	  t = line1;
 	  line1 = line2;
 	  line2 = t;
@@ -487,7 +482,8 @@ join (FILE *fp1, FILE *fp2)
 {
   struct seq seq1, seq2;
   struct line line;
-  int diff, i, j, eof1, eof2;
+  int diff;
+  bool eof1, eof2;
 
   /* Read the first line of each file.  */
   initseq (&seq1);
@@ -497,6 +493,7 @@ join (FILE *fp1, FILE *fp2)
 
   while (seq1.count && seq2.count)
     {
+      size_t i;
       diff = keycmp (&seq1.lines[0], &seq2.lines[0]);
       if (diff < 0)
 	{
@@ -519,11 +516,11 @@ join (FILE *fp1, FILE *fp2)
 
       /* Keep reading lines from file1 as long as they continue to
          match the current line from file2.  */
-      eof1 = 0;
+      eof1 = false;
       do
 	if (!getseq (fp1, &seq1))
 	  {
-	    eof1 = 1;
+	    eof1 = true;
 	    ++seq1.count;
 	    break;
 	  }
@@ -531,11 +528,11 @@ join (FILE *fp1, FILE *fp2)
 
       /* Keep reading lines from file2 as long as they continue to
          match the current line from file1.  */
-      eof2 = 0;
+      eof2 = false;
       do
 	if (!getseq (fp2, &seq2))
 	  {
-	    eof2 = 1;
+	    eof2 = true;
 	    ++seq2.count;
 	    break;
 	  }
@@ -544,8 +541,11 @@ join (FILE *fp1, FILE *fp2)
       if (print_pairables)
 	{
 	  for (i = 0; i < seq1.count - 1; ++i)
-	    for (j = 0; j < seq2.count - 1; ++j)
-	      prjoin (&seq1.lines[i], &seq2.lines[j]);
+	    {
+	      size_t j;
+	      for (j = 0; j < seq2.count - 1; ++j)
+		prjoin (&seq1.lines[i], &seq2.lines[j]);
+	    }
 	}
 
       for (i = 0; i < seq1.count - 1; ++i)
@@ -598,12 +598,12 @@ join (FILE *fp1, FILE *fp2)
 /* Add a field spec for field FIELD of file FILE to `outlist'.  */
 
 static void
-add_field (int file, int field)
+add_field (int file, size_t field)
 {
   struct outlist *o;
 
   assert (file == 0 || file == 1 || file == 2);
-  assert (file == 0 ? field < 0 : field >= 0);
+  assert (file != 0 || field == 0);
 
   o = xmalloc (sizeof *o);
   o->file = file;
@@ -615,15 +615,42 @@ add_field (int file, int field)
   outlist_end = o;
 }
 
+/* Convert a string of decimal digits, STR (the 1-based join field number),
+   to an integral value.  Upon successful conversion, return one less
+   (the zero-based field number).  If it cannot be converted, give a
+   diagnostic and exit.  */
+
+size_t
+string_to_join_field (char const *str, char const *err_msg_fmt)
+{
+  size_t result;
+  uintmax_t val;
+
+  strtol_error s_err = xstrtoumax (str, NULL, 10, &val, "");
+  if (s_err == LONGINT_OVERFLOW || SIZE_MAX < val)
+    {
+      error (EXIT_FAILURE, 0,
+	     _("value %s is so large that it is not representable"),
+	     quote (str));
+    }
+
+  if (s_err != LONGINT_OK || val == 0)
+    error (EXIT_FAILURE, 0, err_msg_fmt, quote (str));
+
+  result = val - 1;
+
+  return result;
+}
+
 /* Convert a single field specifier string, S, to a *FILE_INDEX, *FIELD_INDEX
    pair.  In S, the field index string is 1-based; *FIELD_INDEX is zero-based.
-   If S is valid, return zero.  Otherwise, give a diagnostic, don't update
-   *FILE_INDEX or *FIELD_INDEX, and return nonzero.  */
+   If S is valid, return false.  Otherwise, give a diagnostic, don't update
+   *FILE_INDEX or *FIELD_INDEX, and return true.  */
 
-static int
-decode_field_spec (const char *s, int *file_index, int *field_index)
+static bool
+decode_field_spec (const char *s, int *file_index, size_t *field_index)
 {
-  int invalid = 1;
+  bool invalid = true;
 
   /* The first character must be 0, 1, or 2.  */
   switch (s[0])
@@ -632,9 +659,10 @@ decode_field_spec (const char *s, int *file_index, int *field_index)
       if (s[1] == '\0')
 	{
 	  *file_index = 0;
-	  /* Give *field_index an invalid value.  */
-	  *field_index = -1;
-	  invalid = 0;
+	  /* Give *field_index a value that won't affect things,
+	     e.g. in `uni_blank.nfields = MAX (...'.  */
+	  *field_index = 0;
+	  invalid = false;
 	}
       else
         {
@@ -647,21 +675,10 @@ decode_field_spec (const char *s, int *file_index, int *field_index)
     case '2':
       if (s[1] == '.' && s[2] != '\0')
         {
-	  strtol_error s_err;
-	  long int tmp_long;
-
-	  s_err = xstrtol (s + 2, NULL, 10, &tmp_long, "");
-	  if (s_err != LONGINT_OK || tmp_long <= 0 || tmp_long > INT_MAX)
-	    {
-	      error (0, 0, _("invalid field number: `%s'"), s + 2);
-	    }
-	  else
-	    {
-	      *file_index = s[0] - '0';
-	      /* Convert to a zero-based index.  */
-	      *field_index = (int) tmp_long - 1;
-	      invalid = 0;
-	    }
+	  *field_index
+	    = string_to_join_field (s + 2, _("invalid field number: %s"));
+	  *file_index = s[0] - '0';
+	  invalid = false;
 	}
       break;
 
@@ -687,8 +704,9 @@ add_field_list (const char *c_str)
   p = str;
   do
     {
-      int invalid;
-      int file_index, field_index;
+      bool invalid;
+      int file_index;
+      size_t field_index;
       char *spec_item = p;
 
       p = strpbrk (p, ", \t");
@@ -698,7 +716,7 @@ add_field_list (const char *c_str)
       if (invalid)
 	return 1;
       add_field (file_index, field_index);
-      uni_blank.nfields = max (uni_blank.nfields, field_index);
+      uni_blank.nfields = MAX (uni_blank.nfields, field_index);
     }
   while (p);
   return 0;
@@ -707,16 +725,16 @@ add_field_list (const char *c_str)
 /* Create a blank line with COUNT fields separated by tabs.  */
 
 static void
-make_blank (struct line *blank, int count)
+make_blank (struct line *blank, size_t count)
 {
-  int i;
+  size_t i;
   unsigned char *buffer;
   struct field *fields;
   blank->nfields = count;
   blank->buf.size = blank->buf.length = count + 1;
   blank->buf.buffer = xmalloc (blank->buf.size);
   buffer = (unsigned char *) blank->buf.buffer;
-  blank->fields = fields = xmalloc (count * sizeof *fields);
+  blank->fields = fields = xnmalloc (count, sizeof *fields);
   for (i = 0; i < count; i++)
     {
       buffer[i] = '\t';
@@ -747,7 +765,7 @@ main (int argc, char **argv)
   uni_blank.nfields = 1;
 
   nfiles = 0;
-  print_pairables = 1;
+  print_pairables = true;
 
   while ((optc = getopt_long_only (argc, argv, "-a:e:i1:2:o:t:v:", longopts,
 				   NULL)) != -1)
@@ -760,7 +778,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'v':
-	    print_pairables = 0;
+	    print_pairables = false;
 	    /* Fall through.  */
 
 	case 'a':
@@ -768,9 +786,9 @@ main (int argc, char **argv)
 	      || (val != 1 && val != 2))
 	    error (EXIT_FAILURE, 0, _("invalid field number: `%s'"), optarg);
 	  if (val == 1)
-	    print_unpairables_1 = 1;
+	    print_unpairables_1 = true;
 	  else
-	    print_unpairables_2 = 1;
+	    print_unpairables_2 = true;
 	  break;
 
 	case 'e':
@@ -778,32 +796,25 @@ main (int argc, char **argv)
 	  break;
 
 	case 'i':
-	  ignore_case = 1;
+	  ignore_case = true;
 	  break;
 
 	case '1':
-	  if (xstrtol (optarg, NULL, 10, &val, "") != LONGINT_OK
-	      || val <= 0 || val > INT_MAX)
-	    {
-	      error (EXIT_FAILURE, 0,
-		     _("invalid field number for file 1: `%s'"), optarg);
-	    }
-	  join_field_1 = (int) val - 1;
+	  join_field_1 =
+	    string_to_join_field (optarg,
+				  _("invalid field number for file 1: `%s'"));
 	  break;
 
 	case '2':
-	  if (xstrtol (optarg, NULL, 10, &val, "") != LONGINT_OK
-	      || val <= 0 || val > INT_MAX)
-	    error (EXIT_FAILURE, 0,
-		   _("invalid field number for file 2: `%s'"), optarg);
-	  join_field_2 = (int) val - 1;
+	  join_field_2 =
+	    string_to_join_field (optarg,
+				  _("invalid field number for file 2: `%s'"));
 	  break;
 
 	case 'j':
-	  if (xstrtol (optarg, NULL, 10, &val, "") != LONGINT_OK
-	      || val <= 0 || val > INT_MAX)
-	    error (EXIT_FAILURE, 0, _("invalid field number: `%s'"), optarg);
-	  join_field_1 = join_field_2 = (int) val - 1;
+	  join_field_1 = join_field_2 =
+	    string_to_join_field (optarg,
+				  _("invalid field number: `%s'"));
 	  break;
 
 	case 'o':
