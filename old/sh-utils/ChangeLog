@@ -3,7 +3,7 @@
 
 2001-06-21  Paul Eggert  <eggert@twinsun.com>
 
-	* NEWS, doc/coreutils.texi: 'expr' now requires '+' rather
+	* NEWS: 'expr' now requires '+' rather
 	than 'quote' to quote tokens.
 
 	* src/expr.c (posixly_correct): Remove; no longer needed.
