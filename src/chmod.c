@@ -38,8 +38,9 @@ void strip_trailing_slashes ();
 char *xmalloc ();
 char *xrealloc ();
 
-static int change_dir_mode __P ((char *dir, struct mode_change *changes,
-				 struct stat *statp));
+static int change_dir_mode __P ((const char *dir,
+				 const struct mode_change *changes,
+				 const struct stat *statp));
 
 /* The name the program was run with. */
 char *program_name;
@@ -78,7 +79,7 @@ static struct option const long_options[] =
    if CHANGED is zero, FILE had that mode already. */
 
 static void
-describe_change (char *file, short unsigned int mode, int changed)
+describe_change (const char *file, short unsigned int mode, int changed)
 {
   char perms[11];		/* "-rwxrwxrwx" ls-style modes. */
 
@@ -98,7 +99,8 @@ describe_change (char *file, short unsigned int mode, int changed)
    links.  Return 0 if successful, 1 if errors occurred. */
 
 static int
-change_file_mode (char *file, struct mode_change *changes, int deref_symlink)
+change_file_mode (const char *file, const struct mode_change *changes,
+		  const int deref_symlink)
 {
   struct stat file_stats;
   unsigned short newmode;
@@ -152,7 +154,8 @@ change_file_mode (char *file, struct mode_change *changes, int deref_symlink)
    Return 0 if successful, 1 if errors occurred. */
 
 static int
-change_dir_mode (char *dir, struct mode_change *changes, struct stat *statp)
+change_dir_mode (const char *dir, const struct mode_change *changes,
+		 const struct stat *statp)
 {
   char *name_space, *namep;
   char *path;			/* Full path of each entry to process. */
