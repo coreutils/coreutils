@@ -1,6 +1,6 @@
 /* md5.c - Functions to compute MD5 message digest of files or memory blocks
    according to the definition of MD5 in RFC 1321 from April 1992.
-   Copyright (C) 1995, 1996, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 2001, 2003 Free Software Foundation, Inc.
    NOTE: The canonical source of this file is maintained with the GNU C
    Library.  Bugs can be reported to bug-glibc@prep.ai.mit.edu.
 
@@ -52,6 +52,12 @@
 # define SWAP(n) (n)
 #endif
 
+#define BLOCKSIZE 4096
+/* Ensure that BLOCKSIZE is a multiple of 64.  */
+#if BLOCKSIZE % 64 != 0
+/* FIXME-someday (soon?): use #error instead of this kludge.  */
+"invalid BLOCKSIZE"
+#endif
 
 /* This array contains the bytes used to pad the buffer to the next
    64-byte boundary.  (RFC 1321, 3.1: Step 1)  */
@@ -132,8 +138,6 @@ md5_stream (stream, resblock)
      FILE *stream;
      void *resblock;
 {
-  /* Important: BLOCKSIZE must be a multiple of 64.  */
-#define BLOCKSIZE 4096
   struct md5_ctx ctx;
   char buffer[BLOCKSIZE + 72];
   size_t sum;
@@ -151,19 +155,31 @@ md5_stream (stream, resblock)
       sum = 0;
 
       /* Read block.  Take care for partial reads.  */
-      do
+      while (1)
 	{
 	  n = fread (buffer + sum, 1, BLOCKSIZE - sum, stream);
 
 	  sum += n;
-	}
-      while (sum < BLOCKSIZE && n != 0);
-      if (n == 0 && ferror (stream))
-        return 1;
 
-      /* If end of file is reached, end the loop.  */
-      if (n == 0)
-	break;
+	  if (sum == BLOCKSIZE)
+	    break;
+
+	  if (n == 0)
+	    {
+	      /* Check for the error flag IFF N == 0, so that we don't
+		 exit the loop after a partial read due to e.g., EAGAIN
+		 or EWOULDBLOCK.  */
+	      if (ferror (stream))
+		return 1;
+	      goto process_partial_block;
+	    }
+
+	  /* We've read at least one byte, so ignore errors.  But always
+	     check for EOF, since feof may be true even though N > 0.
+	     Otherwise, we could end up calling fread after EOF.  */
+	  if (feof (stream))
+	    goto process_partial_block;
+	}
 
       /* Process buffer with BLOCKSIZE bytes.  Note that
 			BLOCKSIZE % 64 == 0
@@ -171,7 +187,9 @@ md5_stream (stream, resblock)
       md5_process_block (buffer, BLOCKSIZE, &ctx);
     }
 
-  /* Add the last bytes if necessary.  */
+ process_partial_block:;
+
+  /* Process any remaining bytes.  */
   if (sum > 0)
     md5_process_bytes (buffer, sum, &ctx);
 
