@@ -200,6 +200,7 @@ Common Options
 * Block size::                  Block size
 * Target directory::            Target directory
 * Trailing slashes::            Trailing slashes
+* Standards conformance::       Standards conformance
 
 Output of entire files
 
@@ -539,6 +540,7 @@ context that requires a file name.
 * Block size::                  BLOCK_SIZE and --block-size, in some programs.
 * Target directory::            --target-directory, in some programs.
 * Trailing slashes::            --strip-trailing-slashes, in some programs.
+* Standards conformance::       Conformance to the @sc{posix} standard.
 @end menu
 
 
@@ -853,6 +855,37 @@ and so must rename the indirectly referenced @emph{directory} and not
 the symbolic link.  Although it may seem surprising that such behavior
 be the default, it is required by @sc{posix} and is consistent with
 other parts of that standard.
+
+@node Standards conformance
+@section Standards conformance
+
+@vindex POSIXLY_CORRECT
+In a few cases, the @sc{gnu} utilities' default behavior is
+incompatible with the @sc{posix} standard.  To suppress these
+incompatibilities, define the @env{POSIXLY_CORRECT} environment
+variable.  Unless you are checking for @sc{posix} conformance, you
+probably do not need to define @env{POSIXLY_CORRECT}.
+
+Newer versions of @sc{posix} are occasionally incompatible with older
+versions.  For example, older versions of @sc{posix} required the
+command @samp{sort +1} to sort based on the second and succeeding
+fields in each input line, but starting with @sc{posix} 1003.1-2001
+the same command is required to sort the file named @file{+1}, and you
+must instead use the command @samp{sort -k 2} to get the field-based
+sort.
+
+@vindex _POSIX2_VERSION
+The @sc{gnu} utilities normally conform to the version of @sc{posix}
+that is standard for your your system.  To cause them to conform to a
+different version of @sc{posix}, define the @env{_POSIX2_VERSION}
+environment variable to a value of the form @var{yyyymm} specifying
+the year and month the standard was adopted.  Two values are currently
+supported for @env{_POSIX2_VERSION}: @samp{199209} stands for
+@sc{posix} 1003.2-1992, and @samp{200112} stands for @sc{posix}
+1003.1-2001.  For example, if you are running older software that
+assumes an older version of @sc{posix} and uses @samp{sort +1}, you
+can work around the compatibility problems by setting
+@samp{_POSIX2_VERSION=199209} in your environment.
 
 @node Output of entire files
 @chapter Output of entire files
@@ -1259,9 +1292,9 @@ followed by a null (zero) byte.
 
 If @var{n} is omitted with @option{--strings}, the default is 3.  On
 older systems, @sc{gnu} @command{od} instead supports an obsolete
-option @option{-s[@var{n}]}, where @var{n} also defaults to 3.  Newer
-systems do not support @option{-s} without an argument; use
-@option{--strings} instead.
+option @option{-s[@var{n}]}, where @var{n} also defaults to 3.
+@sc{posix} 1003.1-2001 (@pxref{Standards conformance}) does not allow
+@option{-s} without an argument; use @option{--strings} instead.
 
 @item -t @var{type}
 @itemx --format=@var{type}
@@ -1350,9 +1383,9 @@ output types.
 If this option is not given at all, the default is 16.  If @var{n} is
 omitted with @option{--width}, the default is 32.  On older systems,
 @sc{gnu} @command{od} instead supports an obsolete option
-@option{-w[@var{n}]}, where @var{n} also defaults to 32.  Newer
-systems do not support @option{-w} without an argument; use
-@option{--width} instead.
+@option{-w[@var{n}]}, where @var{n} also defaults to 32.  @sc{posix}
+1003.1-2001 (@pxref{Standards conformance}) does not allow @option{-w}
+without an argument; use @option{--width} instead.
 
 @end table
 
@@ -1844,9 +1877,9 @@ Without @option{-S} or @option{-J}, @code{pr} uses a @samp{space}
 @var{string} is equivalent to @option{--sep-string=""}.
 
 On older systems, @command{pr} instead supports an obsolete option
-@option{-S[@var{string}]}, where @var{string} is optional.  This usage
-conflicts with newer systems, where @option{-S} always has an
-argument.  To specify an empty @var{string} portably, use
+@option{-S[@var{string}]}, where @var{string} is optional.  @sc{posix}
+1003.1-2001 (@pxref{Standards conformance}) does not allow this older
+usage.  To specify an empty @var{string} portably, use
 @option{--sep-string}.
 
 @item -t
@@ -1953,8 +1986,9 @@ is broken at the maximum line length as usual.
 Use a maximum line length of @var{width} columns instead of 80.
 
 On older systems, @command{fold} supports an obsolete option
-@option{-@var{width}}.  Newer systems do not support this; use
-@option{-w @var{width}} instead.
+@option{-@var{width}}.  @sc{posix} 1003.1-2001 (@pxref{Standards
+conformance}) does not allow this; use @option{-w @var{width}}
+instead.
 
 @end table
 
@@ -2036,8 +2070,8 @@ On older systems, @command{head} supports an obsolete option
 specified first.  @var{count} is a decimal number optionally followed
 by a size letter (@samp{b}, @samp{k}, @samp{m}) as in @code{-c}, or
 @samp{l} to mean count by lines, or other option letters (@samp{cqv}).
-Newer systems do not support this; use @option{-c @var{count}} or
-@option{-n @var{count}} instead.
+@sc{posix} 1003.1-2001 (@pxref{Standards conformance}) does not allow
+this; use @option{-c @var{count}} or @option{-n @var{count}} instead.
 
 @node tail invocation
 @section @code{tail}: Output the last part of files
@@ -2208,8 +2242,9 @@ by a size letter (@samp{b}, @samp{k}, @samp{m}) as in @code{-c}, or
 @samp{l} to mean count by lines, or other option letters
 (@samp{cfqv}).  Some older @command{tail} implementations also support
 an obsolete option @option{+@var{count}} with the same meaning as
-@option{-+@var{count}}.  Newer systems do not support these options;
-use @option{-c @var{count}} or @option{-n @var{count}} instead.
+@option{-+@var{count}}.  @sc{posix} 1003.1-2001 (@pxref{Standards
+conformance}) does not allow these options; use @option{-c
+@var{count}} or @option{-n @var{count}} instead.
 
 @node split invocation
 @section @code{split}: Split a file into fixed-size pieces
@@ -2254,8 +2289,9 @@ Use suffixes of length @var{length}.  The default @var{length} is 2.
 Put @var{lines} lines of @var{input} into each output file.
 
 On older systems, @command{split} supports an obsolete option
-@option{-@var{lines}}.  Newer systems do not support this; use
-@option{-l @var{lines}} instead.
+@option{-@var{lines}}.  @sc{posix} 1003.1-2001 (@pxref{Standards
+conformance}) does not allow this; use @option{-l @var{lines}}
+instead.
 
 @item -b @var{bytes}
 @itemx --bytes=@var{bytes}
@@ -3057,7 +3093,8 @@ Keys may span multiple fields.
 
 On older systems, @command{sort} supports an obsolete origin-zero
 syntax @samp{+@var{pos1} [-@var{pos2}]} for specifying sort keys.
-Newer systems do not support this; use @option{-k} instead.
+@sc{posix} 1003.1-2001 (@pxref{Standards conformance}) does not allow
+this; use @option{-k} instead.
 
 Here are some examples to illustrate various combinations of options.
 
@@ -3194,8 +3231,8 @@ are sequences of non-space non-tab characters that are separated from
 each other by at least one space or tab.
 
 On older systems, @command{uniq} supports an obsolete option
-@option{-@var{n}}.  Newer systems do not support this; use @option{-f
-@var{n}} instead.
+@option{-@var{n}}.  @sc{posix} 1003.1-2001 (@pxref{Standards conformance})
+does not allow this; use @option{-f @var{n}} instead.
 
 @item -s @var{n}
 @itemx --skip-chars=@var{n}
@@ -3205,8 +3242,8 @@ Skip @var{n} characters before checking for uniqueness.  If you use both
 the field and character skipping options, fields are skipped over first.
 
 On older systems, @command{uniq} supports an obsolete option
-@option{+@var{n}}.  Newer systems do not support this; use @option{-s
-@var{n}} instead.
+@option{+@var{n}}.  @sc{posix} 1003.1-2001 (@pxref{Standards conformance})
+does not allow this; use @option{-s @var{n}} instead.
 
 @item -c
 @itemx --count
@@ -4552,8 +4589,9 @@ blanks as well as by commas.
 
 On older systems, @command{expand} supports an obsolete option
 @option{-@var{tab1}[,@var{tab2}]@dots{}}, where tabstops must be
-separated by commas.  Newer systems do not support this; use
-@option{-t @var{tab1}[,@var{tab2}]@dots{}} instead.
+separated by commas.  @sc{posix} 1003.1-2001 (@pxref{Standards
+conformance}) does not allow this; use @option{-t
+@var{tab1}[,@var{tab2}]@dots{}} instead.
 
 @item -i
 @itemx --initial
@@ -4604,8 +4642,9 @@ blanks as well as by commas.  This option implies the @option{-a} option.
 On older systems, @command{unexpand} supports an obsolete option
 @option{-@var{tab1}[,@var{tab2}]@dots{}}, where tabstops must be
 separated by commas.  (Unlike @option{-t}, this obsolete option does
-not imply @option{-a}.)  Newer systems do not support this; use
-@option{--first-only -t @var{tab1}[,@var{tab2}]@dots{}} instead.
+not imply @option{-a}.)  @sc{posix} 1003.1-2001 (@pxref{Standards
+conformance}) does not allow this; use @option{--first-only -t
+@var{tab1}[,@var{tab2}]@dots{}} instead.
 
 @item -a
 @itemx --all
@@ -7240,8 +7279,8 @@ If the first @var{file} would be a valid argument to the @option{-t}
 option and no timestamp is given with any of the @option{-d}, @option{-r},
 or @option{-t} options and the @samp{--} argument is not given, that
 argument is interpreted as the time for the other files instead of
-as a file name.  Newer systems do not support this; use @option{-t}
-instead.
+as a file name.  @sc{posix} 1003.1-2001 (@pxref{Standards conformance})
+does not allow this; use @option{-t} instead.
 
 @cindex empty files, creating
 Any @var{file} that does not exist is created empty.
@@ -10008,8 +10047,9 @@ If showing any time terms, then include the time zone using the format
 If @var{timespec} is omitted with @option{--iso-8601}, the default is
 @samp{auto}.  On older systems, @sc{gnu} @command{date} instead
 supports an obsolete option @option{-I[@var{timespec}]}, where
-@var{timespec} defaults to @samp{auto}.  Newer systems do not support
-@option{-I} without an argument; use @option{--iso-8601} instead.
+@var{timespec} defaults to @samp{auto}.  @sc{posix} 1003.1-2001
+(@pxref{Standards conformance}) does not allow @option{-I} without an
+argument; use @option{--iso-8601} instead.
 
 @item -R
 @itemx --rfc-822
@@ -10491,8 +10531,9 @@ The program accepts the following option.  Also see @ref{Common options}.
 Add @var{adjustment} instead of 10 to the command's priority.
 
 On older systems, @command{nice} supports an obsolete option
-@option{-@var{adjustment}}.  Newer systems do not support this; use
-@option{-n @var{adjustment}} instead.
+@option{-@var{adjustment}}.  @sc{posix} 1003.1-2001 (@pxref{Standards
+conformance}) does not allow this; use @option{-n @var{adjustment}}
+instead.
 
 @end table
 
