@@ -1,5 +1,12 @@
 2004-11-30  Jim Meyering  <jim@meyering.net>
 
+	Change the name of the robust chdir function from chdir to chdir_long.
+	* save-cwd.c: Include chdir-long.h rather than chdir.h.
+	(restore_cwd): Use chdir_long, not chdir.
+	* chdir-long.c: Renamed from chdir.c.
+	* chdir-long.h: Renamed from chdir.h.
+	[!defined PATH_MAX]: Define chdir_long to chdir on systems like the Hurd.
+
 	* chdir.c (O_DIRECTORY): Define, if necessary.
 	(memchrcspn): Tiny wrapper around memchr.
 	(rpl_chdir): Use memchrcspn rather than strcspn.
