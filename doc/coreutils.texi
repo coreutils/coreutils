@@ -9925,6 +9925,8 @@ hour ( 0@dots{}23)
 hour ( 1@dots{}12)
 @item %M
 minute (00@dots{}59)
+@item %N
+nanoseconds (000000000@dots{}999999999)
 @item %p
 locale's AM or PM
 @item %r
