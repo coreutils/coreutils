@@ -30,7 +30,7 @@ test -n "$id_gn" || framework_failure=1
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit 1
+  (exit 77); exit 77
 fi
 
 fail=0
