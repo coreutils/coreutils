@@ -94,12 +94,9 @@
 # undef SYSLOG_NON_ROOT
 #endif
 
-#ifndef _POSIX_VERSION
-struct passwd *getpwuid ();
-struct group *getgrgid ();
-uid_t getuid ();
+#if HAVE_SYS_PARAM_H
 # include <sys/param.h>
-#endif /* not _POSIX_VERSION */
+#endif
 
 #ifndef HAVE_ENDGRENT
 # define endgrent() ((void) 0)
