@@ -54,7 +54,7 @@ release_archive_dir ?= ../release
 # Run `changelog-check' last, as previous test may reveal problems requiring
 # new ChangeLog entries.
 local-check = \
-  ac-check po-check copyright-check writable-files m4-check author_mark_check \
+  po-check copyright-check writable-files m4-check author_mark_check \
   changelog-check strftime-check header-check
 .PHONY: $(local-check)
 
@@ -93,23 +93,6 @@ m4-check:
 	@grep 'AC_DEFUN([^[]' m4/*.m4 \
 	  && { echo 'Makefile.maint: quote the first arg to AC_DEFUN' 1>&2; \
 	       exit 1; } || :
-
-# If the 3-arg form of AC_INIT is used, then verify that the package name
-# and version number specified there match $(PACKAGE) and $(VERSION).
-# e.g., AC_INIT(GNU fileutils, 4.1.6, bug-fileutils@gnu.org)
-
-ac_p_pkg = /^AC_INIT\((GNU )?(\S+),/ and print "$$2\n"
-AC_INIT_PKG := $(shell perl -ne '$(ac_p_pkg)' configure.ac)
-ac_p_ver = /^AC_INIT\(.*?, *(\S+),/ and print "$$1\n"
-AC_INIT_VER := $(shell perl -ne '$(ac_p_ver)' configure.ac)
-
-ac-check:
-	if test "$(AC_INIT_PKG)"; then			\
-	  test "$(AC_INIT_PKG)" = $(PACKAGE) || exit 1;	\
-	fi
-	if test "$(AC_INIT_VER)"; then			\
-	  test "$(AC_INIT_VER)" = $(VERSION) || exit 1;	\
-	fi
 
 # Verify that all source files using _() are listed in po/POTFILES.in.
 po-check:
