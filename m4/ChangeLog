@@ -1,3 +1,8 @@
+2000-01-12  Jim Meyering  <meyering@lucent.com>
+
+	* prereq.m4 (jm_PREREQ_CANON_HOST): New macro.
+	(jm_PREREQ): Use it.
+
 2000-01-11  Paul Eggert  <eggert@twinsun.com>
 
 	Quote multibyte characters correctly.
