@@ -2,6 +2,9 @@
 
 	* Version 5.0.90.
 
+	* src/fmt.c (flush_paragraph): Cast field width to `int' to
+	avoid warning on 64-bit systems.
+
 	* src/ls.c (sort_files): Make `func' volatile, so it can't be
 	clobbered by a `longjmp' into this function.
 
