@@ -228,10 +228,13 @@ distdir: $(DISTFILES)
 	  if test -f $$file || test -d $$file; then d=.; else d=$(srcdir); fi; \
 	  dir=`echo "$$file" | sed -e 's,/[^/]*$$,,'`; \
 	  if test "$$dir" != "$$file" && test "$$dir" != "."; then \
-	    $(mkinstalldirs) "$(distdir)/$$dir"; \
+	    dir="/$$dir"; \
+	    $(mkinstalldirs) "$(distdir)$$dir"; \
+	  else \
+	    dir=''; \
 	  fi; \
 	  if test -d $$d/$$file; then \
-	    cp -pR $$d/$$file $(distdir) \
+	    cp -pR $$d/$$file $(distdir)$$dir \
 	    || exit 1; \
 	  else \
 	    test -f $(distdir)/$$file \

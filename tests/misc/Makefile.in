@@ -120,10 +120,11 @@ TESTS_ENVIRONMENT = \
   top_srcdir=$(top_srcdir) \
   srcdir=$(srcdir) \
   PERL="@PERL@" \
-  PATH=`pwd`/../../src:$$PATH
+  PATH=`pwd`/../../src:$$PATH \
+  PROG=$$tst
 
 
-TESTS = head-c csplit
+TESTS = sort head-c csplit
 subdir = tests/misc
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
@@ -207,10 +208,13 @@ distdir: $(DISTFILES)
 	  if test -f $$file || test -d $$file; then d=.; else d=$(srcdir); fi; \
 	  dir=`echo "$$file" | sed -e 's,/[^/]*$$,,'`; \
 	  if test "$$dir" != "$$file" && test "$$dir" != "."; then \
-	    $(mkinstalldirs) "$(distdir)/$$dir"; \
+	    dir="/$$dir"; \
+	    $(mkinstalldirs) "$(distdir)$$dir"; \
+	  else \
+	    dir=''; \
 	  fi; \
 	  if test -d $$d/$$file; then \
-	    cp -pR $$d/$$file $(distdir) \
+	    cp -pR $$d/$$file $(distdir)$$dir \
 	    || exit 1; \
 	  else \
 	    test -f $(distdir)/$$file \
