@@ -1,3 +1,24 @@
+2001-05-20  Alexandre Duret-Lutz  <duret_g@epita.fr>
+
+	* dirname.c (dir_name): Compute append_dot using path, not newpath
+	which is not yet declared.
+
+2001-05-11  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/Makefile.am (libfetish_a_SOURCES):
+	Add strftime.c, since we now compile it on all hosts.
+
+	* lib/strftime.c (my_strftime):
+	Define to nstrftime if emacs, but only if my_strftime is not defined.
+	(extra_args, extra_args_spec, extra_args_spec_iso): Rename from
+	ut_argument, ut_argument_spec, ut_argument_spec_iso, respectively.
+	Add one more extra argument: a nanoseconds value.
+	All uses changed.
+	(ns): New macro.
+	(my_strftime function): Add %N format.
+	(emacs_strftimeu): Renamed from emacs_strftime,
+	with extra ut argument.
+
 2001-05-11  Paul Eggert  <eggert@twinsun.com>
 
 	dirname code cleanup.  base_name now behaves more compatibly
