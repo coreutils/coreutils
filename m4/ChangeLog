@@ -1,3 +1,7 @@
+2000-07-01  Jim Meyering  <meyering@lucent.com>
+
+	* uptime.m4: Put double quotes around use of $cross_compiling.
+
 2000-06-28  Jim Meyering  <meyering@lucent.com>
 
 	* mbstate_t.m4: Use stdlib.h, not stdio.h.  The latter is not included
