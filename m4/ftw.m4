@@ -1,7 +1,9 @@
 #serial 1
 # Use the replacement ftw.c if the one in the C library is inadequate or buggy.
 # For now, we always use the code in lib/ because libc doesn't have the FTW_DCH
-# or FTW_DCHP that we need.
+# or FTW_DCHP that we need.  Arrange to use lib/ftw.h.  And since that
+# implementation uses tsearch.c/tdestroy, add tsearch.o to the list of
+# objects and arrange to use lib/search.h if necessary.
 # From Jim Meyering
 
 AC_DEFUN([AC_FUNC_FTW],
