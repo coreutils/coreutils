@@ -1,3 +1,11 @@
+Tue Jul  2 22:56:03 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/system.h [!EXIT_SUCCESS]: Define it.
+	[!EXIT_FAILURE]: Define it.
+
+	* lib/strndup.c (strndup): Include stdio.h and sys/types.h to
+	get definition of NULL and size_t on SunOS4.1.3.
+
 Mon Jul  1 23:47:29 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/ln.c (do_link): Update messages to ease translation.
