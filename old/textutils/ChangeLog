@@ -1,6 +1,11 @@
-1999-01-17  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.22h.
+
+1999-01-18  Akim Demaille  <demaille@inf.enst.fr>
+
+	* doc/textutils.texi: Harmonization of @samp use for options.
+
+1999-01-17  Jim Meyering  <meyering@ascend.com>
 
 	* Makefile.am (SUBDIRS): Add djgpp.
 	* configure.in (AC_OUTPUT): Add djgpp/Makefile.
