@@ -11669,6 +11669,53 @@ Exit status:
 the exit status of @var{command} otherwise
 @end display
 
+It is sometimes useful to run non-interactive programs with reduced priority.
+
+@example
+$ nice factor `echo '2^997 - 1'|bc`
+@end example
+
+Since @command{nice} prints the current priority,
+we can invoke it through itself to demonstrate how it works:
+
+The default behavior is to reduce priority by @samp{10}.
+
+@example
+$ nice nice
+10
+@end example
+
+@example
+$ nice -n 10 nice
+10
+@end example
+
+The @var{adjustment} is relative to the current priority.
+Here, the first @command{nice} invocation runs the second one at priority
+@samp{10}, and it in turn runs the final one at a priority lowered by
+@samp{3} more.
+
+@example
+$ nice nice -n 3 nice
+13
+@end example
+
+Specifying a priority larger than @samp{19} is the same as specifying @samp{19}.
+
+@example
+$ nice -n 30 nice
+19
+@end example
+
+Only a privileged user may run a process with higher priority.
+
+@example
+$ nice -n -1 nice
+nice: cannot set priority: Permission denied
+$ sudo nice -n -1 nice
+-1
+@end example
+
 
 @node nohup invocation
 @section @command{nohup}: Run a command immune to hangups
@@ -12126,12 +12173,19 @@ options}.
 The algorithm it uses is not very sophisticated, so for some inputs
 @command{factor} runs for a long time.  The hardest numbers to factor are
 the products of large primes.  Factoring the product of the two largest 32-bit
-prime numbers takes over 10 minutes of CPU time on a 400MHz Pentium II.
+prime numbers takes about 80 seconds of CPU time on a 1.6 GHz Athlon.
 
 @example
 $ p=`echo '4294967279 * 4294967291'|bc`
 $ factor $p
 18446743979220271189: 4294967279 4294967291
+@end example
+
+Similarly, it takes about 80 seconds for GNU factor (from coreutils-5.1.2)
+to ``factor'' the largest 64-bit prime:
+@example
+$ factor 18446744073709551557
+  18446744073709551557: 18446744073709551557
 @end example
 
 In contrast, @command{factor} factors the largest 64-bit number in just
