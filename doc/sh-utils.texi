@@ -2296,6 +2296,8 @@ locale's abbreviated month name (Jan@dots{}Dec)
 locale's full month name, variable length (January@dots{}December)
 @item %c
 locale's date and time (Sat Nov 04 12:02:33 EST 1989)
+@item %C
+century (year divided by 100 and truncated to an integer) (00@dots{}99)
 @item %d
 day of month (01@dots{}31)
 @item %D
