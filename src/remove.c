@@ -871,7 +871,11 @@ remove_cwd_entries (char **subdir, struct stat *subdir_sb,
 	break;
     }
 
-  closedir (dirp);
+  if (CLOSEDIR (dirp) != 0)
+    {
+      error (0, errno, _("reading directory %s"), quote (full_filename (".")));
+      status = RM_ERROR;
+    }
 
   return status;
 }
