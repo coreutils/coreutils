@@ -77,8 +77,8 @@ uintmax_t strtoumax ();
 /* The value to return to the calling program.  */
 static int exit_status;
 
-/* Non-zero if the POSIXLY_CORRECT environment variable is set.  */
-static int posixly_correct;
+/* True if the POSIXLY_CORRECT environment variable is set.  */
+static bool posixly_correct;
 
 /* This message appears in N_() here rather than just in _() below because
    the sole use would have been in a #define.  */
@@ -152,7 +152,7 @@ verify (const char *s, const char *end)
   if (errno)
     {
       error (0, errno, "%s", s);
-      exit_status = 1;
+      exit_status = EXIT_FAILURE;
     }
   else if (*end)
     {
@@ -160,7 +160,7 @@ verify (const char *s, const char *end)
 	error (0, 0, _("%s: expected a numeric value"), s);
       else
 	error (0, 0, _("%s: value not completely converted"), s);
-      exit_status = 1;
+      exit_status = EXIT_FAILURE;
     }
 }
 
@@ -173,7 +173,8 @@ FUNC_NAME (char const *s)						 \
 									 \
   if (*s == '\"' || *s == '\'')						 \
     {									 \
-      val = *(unsigned char *) ++s;					 \
+      unsigned char ch = *++s;						 \
+      val = ch;								 \
       /* If POSIXLY_CORRECT is not set, then give a warning that there	 \
 	 are characters following the character constant and that GNU	 \
 	 printf is ignoring those characters.  If POSIXLY_CORRECT *is*	 \
@@ -197,7 +198,7 @@ STRTOX (long double, vstrtold,   c_strtold (s, &end))
 /* Output a single-character \ escape.  */
 
 static void
-print_esc_char (int c)
+print_esc_char (char c)
 {
   switch (c)
     {
@@ -647,7 +648,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  exit_status = 0;
+  exit_status = EXIT_SUCCESS;
 
   posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
 
