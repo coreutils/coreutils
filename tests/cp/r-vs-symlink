@@ -1,5 +1,8 @@
 #!/bin/sh
 # cp -r should not create symlinks.  Fixed in fileutils-4.1.5.
+# Restored old behavior (whereby cp -r preserves symlinks) in 4.1.6,
+# though now such usage evokes a warning:
+# cp: `slink': WARNING: using -r to copy symbolic links is not portable
 
 if test "$VERBOSE" = yes; then
   set -x
@@ -27,13 +30,14 @@ fi
 
 fail=0
 
-# This must fail.
-cp -r no-file junk 2>/dev/null && fail=1
+# This would fail in 4.1.5, not in 4.1.6.
+cp -r no-file junk 2>/dev/null || fail=1
 
-cp -r slink bar || fail=1
+cp -r slink bar 2>/dev/null || fail=1
 set x `ls -l bar`; shift; mode=$1
 case $mode in
-  l*) fail=1;;
+  l*) ;;
+  *) fail=1;;
 esac
 
 (exit $fail); exit
