@@ -7,7 +7,15 @@
 	when nohup.sh used the vendor /bin/sh, it would exit with status
 	of `1' rather than the required 126 or 127 upon failure to exec
 	the specified program.
+
+	* src/Makefile.am (EXTRA_SCRIPTS): Remove definition.
+	(bin_PROGRAMS): Add nohup.
+	(EXTRA_DIST): Remove nohup.sh.
+	(all_programs): Remove use of $(EXTRA_SCRIPTS).
+	* src/nohup.sh: Remove file.
+
 	* tests/misc/nohup: Tests for the above.
+	* tests/misc/Makefile.am (TESTS): Add nohup.
 
 	* src/head.c (diagnose_copy_fd_failure): New function, renamed from
 	the macro, COPY_FD_DIAGNOSE.
