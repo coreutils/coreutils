@@ -1,3 +1,19 @@
+1999-09-09  Jim Meyering  <meyering@ascend.com>
+
+	* src/Makefile.am (EXTRAdir): Remove unused variable.
+	(installed_su): Use `$(DESTDIR)$(bindir)' in place of $(bindir).
+	(install-exec-local): Likewise.
+	(.sh): Substitute `$(bindir)' rather than @bindir@.
+	Based on a patch from Andreas Schwab.
+
+1999-09-08  Andreas Schwab  <schwab@suse.de>
+
+	* tests/nice: Instead of failing, exit with 77 if running niced.
+
+1999-09-08  Jim Meyering  <meyering@ascend.com>
+
+	* src/su.c: Remove declaration of xstrdup.
+
 1999-09-02  Jim Meyering  <meyering@ascend.com>
 
 	* src/expr.c: Remove xstrdup declaration.
