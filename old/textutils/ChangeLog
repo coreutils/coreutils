@@ -1,3 +1,16 @@
+Sat Nov 23 16:07:08 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* cat.c (usage): Alphabetize option descriptions the way sort -f would.
+	* fmt.c (usage): Likewise.
+	* join.c (usage): Likewise.
+	* md5sum.c (usage): Likewise.
+	* od.c (usage): Likewise.
+	* pr.c (usage): Likewise.
+	* sort.c (usage): Likewise.
+	* split.c (usage): Likewise.
+	* wc.c (usage): Likewise.
+	From Karl Berry.
+
 Fri Nov 22 20:20:37 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/csplit.c (process_regexp): Update CURRENT_LINE only if
