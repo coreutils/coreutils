@@ -2,6 +2,9 @@
 
 	* Version 5.0.1.
 
+	* src/head.c (AUTHORS): Enclose string in N_(...), now that it
+	includes `and'.
+
 	* src/dd.c (usage): Don't use `,' as the thousands separator
 	in e.g. 1,000,000 and 1,048,576.  Instead, do this:
 	`SIZE may be ..., MB 1000*1000, M 1024*1024 and so on...'
