@@ -18,6 +18,7 @@ regex.c
 regex.h
 stdbool_.h
 strndup.h
+strdup.h
 time_r.h
 vasnprintf.h
 vasprintf.h
