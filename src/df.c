@@ -128,7 +128,7 @@ static struct option const long_options[] =
 {
   {"all", no_argument, &show_all_fs, 1},
   {"inodes", no_argument, &inode_format, 1},
-  {"human", no_argument, 0, 'h'},
+  {"human-readable", no_argument, 0, 'h'},
   {"kilobytes", no_argument, 0, 'k'},
   {"megabytes", no_argument, 0, 'm'},
   {"portability", no_argument, &posix_format, 1},
@@ -645,7 +645,7 @@ Show information about the filesystem on which each FILE resides,\n\
 or all filesystems by default.\n\
 \n\
   -a, --all             include filesystems having 0 blocks\n\
-  -h, --human           print sizes in human readable format (e.g. 1K 234M 2G)\n\
+  -h, --human-readable  print sizes in human readable format (e.g. 1K 234M 2G)\n\
   -i, --inodes          list inode information instead of block usage\n\
   -k, --kilobytes       use 1024-byte blocks, not 512 despite POSIXLY_CORRECT\n\
   -m, --megabytes       use 1024K-byte blocks, not 512 despite POSIXLY_CORRECT\n\
