@@ -6,7 +6,7 @@ use Getopt::Long;
 use Digest::MD5;
 use Digest::SHA1;
 
-(my $VERSION = '$Revision: 1.10 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.11 $ ') =~ tr/[0-9].//cd;
 (my $ME = $0) =~ s|.*/||;
 
 my %valid_release_types = map {$_ => 1} qw (alpha beta major);
@@ -46,6 +46,7 @@ sub usage ($)
     }
   else
     {
+      my @types = sort keys %valid_release_types;
       print $STREAM <<EOF;
 Usage: $ME [OPTIONS]
 
@@ -55,13 +56,13 @@ OPTIONS:
 
   FIXME: describe the following
 
-   --release-type=TYPE
+   --release-type=TYPE          TYPE must be one of @types
    --package-name=PACKAGE_NAME
    --previous-version=VER
    --current-version=VER
    --release-archive-directory=DIR
    --url-directory=URL_DIR
-   --news=NEWS_FILE
+   --news=NEWS_FILE             optional
 
    --help             display this help and exit
    --version          output version information and exit
@@ -69,6 +70,88 @@ OPTIONS:
 EOF
     }
   exit $exit_code;
+}
+
+sub print_changelog_deltas ($$)
+{
+  my ($package_name, $prev_version) = @_;
+
+  # Print new ChangeLog entries.
+
+  # First find all CVS-controlled ChangeLog files.
+  use File::Find;
+  my @changelog;
+  find ({wanted => sub {$_ eq 'ChangeLog' && -d 'CVS'
+			  and push @changelog, $File::Find::name}},
+	'.');
+
+  # If there are no ChangeLog files, we're done.
+  @changelog
+    or return;
+  my %changelog = map {$_ => 1} @changelog;
+
+  # Reorder the list of files so that if there are ChangeLog
+  # files in the specified directories, they're listed first,
+  # in this order:
+  my @dir = qw ( . src lib m4 config doc );
+
+  # A typical @changelog array might look like this:
+  # ./ChangeLog
+  # ./po/ChangeLog
+  # ./m4/ChangeLog
+  # ./lib/ChangeLog
+  # ./doc/ChangeLog
+  # ./config/ChangeLog
+  my @reordered;
+  foreach my $d (@dir)
+    {
+      my $dot_slash = $d eq '.' ? $d : "./$d";
+      my $target = "$dot_slash/ChangeLog";
+      delete $changelog{$target}
+	and push @reordered, $target;
+    }
+
+  # Append any remaining ChangeLog files.
+  push @reordered, sort keys %changelog;
+
+  # Remove leading `./'.
+  @reordered = map { s!^\./!!; $_ } @reordered;
+
+  print "ChangeLog entries:\n";
+  # print join ("\n", @reordered), "\n";
+
+  $prev_version =~ s/\./_/g;
+  my $prev_cvs_tag = "\U$package_name\E-$prev_version";
+
+  my $cmd = "cvs -n diff -u -r$prev_cvs_tag -rHEAD @reordered";
+  open DIFF, '-|', $cmd
+    or die "$ME: cannot run `$cmd': $!\n";
+  # Print two types of lines, making minor changes:
+  # Lines starting with `+++ ', e.g.,
+  # +++ ChangeLog   22 Feb 2003 16:52:51 -0000      1.247
+  # and those starting with `+'.
+  # Don't print the others.
+  while (defined (my $line = <DIFF>))
+    {
+      if ($line =~ /^\+\+\+ /)
+	{
+	  my $separator = "*"x70 ."\n";
+	  $line =~ s///;
+	  $line =~ s/\s.*//;
+	  print $separator, $line, $separator;
+	}
+      elsif ($line =~ /^\+/)
+	{
+	  $line =~ s///;
+	  print $line;
+	}
+    }
+  close DIFF;
+
+  # The exit code should be 1.
+  # Allow in case there are no modified ChangeLog entries.
+  $? == 256 || $? == 128
+    or warn "$ME: warning: `cmd' had unexpected exit code or signal ($?)\n";
 }
 
 {
@@ -236,11 +319,8 @@ EOF
 	or die "$ME: $news_file: no matching lines\n";
     }
 
-  # FIXME: Print ChangeLog entries only for test releases
-  # echo ChangeLog entries:;
-  # find . -name ChangeLog -maxdepth 2
-  #   | xargs $(CVS) diff -up -r$(prev-cvs-tag) -rHEAD
-  #   | sed -n 's/^+//p'
-  #   | perl -ne 'm!^\+\+ (\./)?! or print,next;'
-  #     -e 'print "\n"."*"x70 ."\n"; s///; print; print "*"x70 ."\n"';
+  $release_type eq 'major'
+    or print_changelog_deltas ($package_name, $prev_version);
+
+  exit 0;
 }
