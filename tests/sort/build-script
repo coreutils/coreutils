@@ -1,11 +1,11 @@
 #!/p/bin/perl -w
 
-$sort = './sort';
+$xx = './sort';
 $test = 0;
 $| = 1;
 
-print "#! /bin/sh\nsort='$sort'\necho testing with sort=\$sort\nerrors=0\n";
-print "$sort --version 2> /dev/null\n";
+print "#! /bin/sh\nxx='$xx'\necho testing with $xx=\$xx\nerrors=0\n";
+print "$xx --version 2> /dev/null\n";
 $expected = '';
 $input = '';
 $options = '';
@@ -35,12 +35,12 @@ while (<>)
     print EXP $expected;
     close(EXP);
     $err_output = "t$test_name.err";
-    $cmd = "\$sort $options $in > $out 2> $err_output";
+    $cmd = "\$xx $options $in > $out 2> $err_output";
     print <<EOF ;
 $cmd
 code=\$?
 if test \$code != $e_ret_code ; then
-  echo Test $test_name failed: sort return code \$code differs from expected value $e_ret_code 1>&2
+  echo Test $test_name failed: $xx return code \$code differs from expected value $e_ret_code 1>&2
   errors=`expr \$errors + 1`
 else
   cmp $out $exp_name

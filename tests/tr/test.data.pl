@@ -61,7 +61,7 @@
 ("B", "",       '',  'a',"''",          "",                  1);
 ("C", "abcxyzABCXYZ", '', '[:lower:]', '[:upper:]', "ABCXYZABCXYZ", 0);
 ("D", "abcxyzABCXYZ", '', '[:upper:]', '[:lower:]', "abcxyzabcxyz", 0);
-
+#
 ("E", "a=c", '', 'a[=*2][=c=]', 'xyyz', "xyz", 0);
 ("F", ":1239", '', '[:*3][:digit:]', 'a-m', "cefgm", 0);
 ("G", "abc", '', 'a[b*512]c', '1[x*]2', "1x2", 0);
