@@ -1,3 +1,9 @@
+2000-06-17  Bruno Haible  <haible@clisp.cons.org>
+
+	* mountlist.c: Use MOUNTED_FS_STAT_DEV instead of MOUNTED_NEXT_DEV,
+	per change in ../m4/ls-mntd-fs.m4.
+	(read_filesystem_list): Ignore symbolic links.
+
 2000-06-29  Jim Meyering  <meyering@lucent.com>
 
 	* same.c: Include <string.h> or <strings.h>, as appropriate,
