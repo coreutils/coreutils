@@ -74,9 +74,16 @@ static int input_desc;
 /* Descriptor on which output file is open.  */
 static int output_desc;
 
-/* If nonzero, print a diagnostic on standard error just before each
+/* If true, print a diagnostic on standard error just before each
    output file is opened. */
-static int verbose;
+static bool verbose;
+
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  VERBOSE_OPTION = CHAR_MAX + 1
+};
 
 static struct option const longopts[] =
 {
@@ -85,7 +92,7 @@ static struct option const longopts[] =
   {"line-bytes", required_argument, NULL, 'C'},
   {"suffix-length", required_argument, NULL, 'a'},
   {"numeric-suffixes", no_argument, NULL, 'd'},
-  {"verbose", no_argument, &verbose, 1},
+  {"verbose", no_argument, NULL, VERBOSE_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -404,9 +411,6 @@ main (int argc, char **argv)
 
       switch (c)
 	{
-	case 0:
-	  break;
-
 	case 'a':
 	  {
 	    unsigned long tmp;
@@ -489,6 +493,10 @@ main (int argc, char **argv)
 
 	case 'd':
 	  suffix_alphabet = "0123456789";
+	  break;
+
+	case VERBOSE_OPTION:
+	  verbose = true;
 	  break;
 
 	case_GETOPT_HELP_CHAR;
