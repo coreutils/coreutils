@@ -119,55 +119,55 @@ char *canon_host ();
 /* The name this program was run with. */
 char *program_name;
 
-/* If nonzero, attempt to canonicalize hostnames via a DNS lookup. */
-static int do_lookup;
+/* If true, attempt to canonicalize hostnames via a DNS lookup. */
+static bool do_lookup;
 
-/* If nonzero, display only a list of usernames and count of
+/* If true, display only a list of usernames and count of
    the users logged on.
-   Ignored for `who am i'. */
-static int short_list;
+   Ignored for `who am i'.  */
+static bool short_list;
 
-/* If nonzero, display only name, line, and time fields */
-static int short_output;
+/* If true, display only name, line, and time fields.  */
+static bool short_output;
 
-/* If nonzero, display the hours:minutes since each user has touched
+/* If true, display the hours:minutes since each user has touched
    the keyboard, or "." if within the last minute, or "old" if
-   not within the last day. */
-static int include_idle;
+   not within the last day.  */
+static bool include_idle;
 
-/* If nonzero, display a line at the top describing each field. */
-static int include_heading;
+/* If true, display a line at the top describing each field.  */
+static bool include_heading;
 
-/* If nonzero, display a `+' for each user if mesg y, a `-' if mesg n,
+/* If true, display a `+' for each user if mesg y, a `-' if mesg n,
    or a `?' if their tty cannot be statted. */
-static int include_mesg;
+static bool include_mesg;
 
-/* If nonzero, display process termination & exit status */
-static int include_exit;
+/* If true, display process termination & exit status.  */
+static bool include_exit;
 
-/* If nonzero, display the last boot time */
-static int need_boottime;
+/* If true, display the last boot time.  */
+static bool need_boottime;
 
-/* If nonzero, display dead processes */
-static int need_deadprocs;
+/* If true, display dead processes.  */
+static bool need_deadprocs;
 
-/* If nonzero, display processes waiting for user login */
-static int need_login;
+/* If true, display processes waiting for user login.  */
+static bool need_login;
 
-/* If nonzero, display processes started by init */
-static int need_initspawn;
+/* If true, display processes started by init.  */
+static bool need_initspawn;
 
-/* If nonzero, display the last clock change */
-static int need_clockchange;
+/* If true, display the last clock change.  */
+static bool need_clockchange;
 
-/* If nonzero, display the current runlevel */
-static int need_runlevel;
+/* If true, display the current runlevel.  */
+static bool need_runlevel;
 
-/* If nonzero, display user processes */
-static int need_users;
+/* If true, display user processes.  */
+static bool need_users;
 
-/* If nonzero, display info only for the controlling tty */
-static int my_line_only;
+/* If true, display info only for the controlling tty.  */
+static bool my_line_only;
 
 /* The strftime format to use for login times, and its expected
    output width.  */
@@ -515,8 +515,8 @@ static void
 print_runlevel (const STRUCT_UTMP *utmp_ent)
 {
   static char *runlevline, *comment;
-  int last = UT_PID (utmp_ent) / 256;
-  int curr = UT_PID (utmp_ent) % 256;
+  unsigned char last = UT_PID (utmp_ent) / 256;
+  unsigned char curr = UT_PID (utmp_ent) % 256;
 
   if (!runlevline)
     runlevline = xmalloc (strlen (_("run-level")) + 3);
@@ -535,9 +535,9 @@ print_runlevel (const STRUCT_UTMP *utmp_ent)
 /* Print the username of each valid entry and the number of valid entries
    in UTMP_BUF, which should have N elements. */
 static void
-list_entries_who (int n, const STRUCT_UTMP *utmp_buf)
+list_entries_who (size_t n, const STRUCT_UTMP *utmp_buf)
 {
-  int entries = 0;
+  unsigned long int entries = 0;
   char const *separator = "";
 
   while (n--)
@@ -555,7 +555,7 @@ list_entries_who (int n, const STRUCT_UTMP *utmp_buf)
 	}
       utmp_buf++;
     }
-  printf (_("\n# users=%u\n"), entries);
+  printf (_("\n# users=%lu\n"), entries);
 }
 
 static void
@@ -567,7 +567,7 @@ print_heading (void)
 
 /* Display UTMP_BUF, which should have N entries. */
 static void
-scan_entries (int n, const STRUCT_UTMP *utmp_buf)
+scan_entries (size_t n, const STRUCT_UTMP *utmp_buf)
 {
   char *ttyname_b IF_LINT ( = NULL);
   time_t boottime = TYPE_MINIMUM (time_t);
@@ -620,11 +620,10 @@ scan_entries (int n, const STRUCT_UTMP *utmp_buf)
 static void
 who (const char *filename)
 {
-  int n_users;
+  size_t n_users;
   STRUCT_UTMP *utmp_buf;
-  int fail = read_utmp (filename, &n_users, &utmp_buf);
 
-  if (fail)
+  if (read_utmp (filename, &n_users, &utmp_buf) != 0)
     error (EXIT_FAILURE, errno, "%s", filename);
 
   if (short_list)
@@ -688,8 +687,8 @@ If ARG1 ARG2 given, -m presumed: `am i' or `mom likes' are usual.\n\
 int
 main (int argc, char **argv)
 {
-  int optc, longind;
-  int assumptions = 1;
+  int optc;
+  bool assumptions = true;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -699,8 +698,8 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "abdilmpqrstuwHT", longopts,
-			      &longind)) != -1)
+  while ((optc = getopt_long (argc, argv, "abdilmpqrstuwHT", longopts, NULL))
+	 != -1)
     {
       switch (optc)
 	{
@@ -708,72 +707,72 @@ main (int argc, char **argv)
 	  break;
 
 	case 'a':
-	  need_boottime = 1;
-	  need_deadprocs = 1;
-	  need_login = 1;
-	  need_initspawn = 1;
-	  need_runlevel = 1;
-	  need_clockchange = 1;
-	  need_users = 1;
-	  include_mesg = 1;
-	  include_idle = 1;
-	  include_exit = 1;
-	  assumptions = 0;
+	  need_boottime = true;
+	  need_deadprocs = true;
+	  need_login = true;
+	  need_initspawn = true;
+	  need_runlevel = true;
+	  need_clockchange = true;
+	  need_users = true;
+	  include_mesg = true;
+	  include_idle = true;
+	  include_exit = true;
+	  assumptions = false;
 	  break;
 
 	case 'b':
-	  need_boottime = 1;
-	  assumptions = 0;
+	  need_boottime = true;
+	  assumptions = false;
 	  break;
 
 	case 'd':
-	  need_deadprocs = 1;
-	  include_idle = 1;
-	  include_exit = 1;
-	  assumptions = 0;
+	  need_deadprocs = true;
+	  include_idle = true;
+	  include_exit = true;
+	  assumptions = false;
 	  break;
 
 	case 'H':
-	  include_heading = 1;
+	  include_heading = true;
 	  break;
 
 	case 'l':
-	  need_login = 1;
-	  include_idle = 1;
-	  assumptions = 0;
+	  need_login = true;
+	  include_idle = true;
+	  assumptions = false;
 	  break;
 
 	case 'm':
-	  my_line_only = 1;
+	  my_line_only = true;
 	  break;
 
 	case 'p':
-	  need_initspawn = 1;
-	  assumptions = 0;
+	  need_initspawn = true;
+	  assumptions = false;
 	  break;
 
 	case 'q':
-	  short_list = 1;
+	  short_list = true;
 	  break;
 
 	case 'r':
-	  need_runlevel = 1;
-	  include_idle = 1;
-	  assumptions = 0;
+	  need_runlevel = true;
+	  include_idle = true;
+	  assumptions = false;
 	  break;
 
 	case 's':
-	  short_output = 1;
+	  short_output = true;
 	  break;
 
 	case 't':
-	  need_clockchange = 1;
-	  assumptions = 0;
+	  need_clockchange = true;
+	  assumptions = false;
 	  break;
 
 	case 'T':
 	case 'w':
-	  include_mesg = 1;
+	  include_mesg = true;
 	  break;
 
 	case 'i':
@@ -782,13 +781,13 @@ main (int argc, char **argv)
   use -u instead"));
 	  /* Fall through.  */
 	case 'u':
-	  need_users = 1;
-	  include_idle = 1;
-	  assumptions = 0;
+	  need_users = true;
+	  include_idle = true;
+	  assumptions = false;
 	  break;
 
 	case LOOKUP_OPTION:
-	  do_lookup = 1;
+	  do_lookup = true;
 	  break;
 
 	  case_GETOPT_HELP_CHAR;
@@ -802,13 +801,13 @@ main (int argc, char **argv)
 
   if (assumptions)
     {
-      need_users = 1;
-      short_output = 1;
+      need_users = true;
+      short_output = true;
     }
 
   if (include_exit)
     {
-      short_output = 0;
+      short_output = false;
     }
 
   if (hard_locale (LC_TIME))
@@ -834,7 +833,7 @@ main (int argc, char **argv)
       break;
 
     case 2:			/* who <blurf> <glop> */
-      my_line_only = 1;
+      my_line_only = true;
       who (UTMP_FILE);
       break;
 
