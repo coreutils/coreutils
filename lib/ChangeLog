@@ -1,3 +1,11 @@
+2003-07-18  Paul Eggert  <eggert@twinsun.com>
+
+	* closeout.h (close_stdout_set_status, close_stdout_status): Remove.
+	* closeout.c: Likewise.  Include "closeout.h" right after config.h,
+	to test that it can stand by itself.  Include "exitfail.h".
+	Clients should set exit_failure instead.
+	(EXIT_FAILURE): Remove; no longer needed.  Do not include <stdlib.h>.
+
 2003-07-18  Andreas Schwab  <schwab@suse.de>
 
 	* memcoll.c (memcoll) [!HAVE_STRCOLL]: Clear errno.
