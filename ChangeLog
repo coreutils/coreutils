@@ -806,7 +806,7 @@
 	* src/cut.c (cut_fields): Add a temporary size_t variable, n_bytes,
 	to avoid warnings.
 
-	* src/pinky.cdereference-command-line-symlink-to-dir (print_long_entry): fread returns size_t.
+	* src/pinky.c (print_long_entry): fread returns size_t.
 	Declare local `bytes' accordingly, to avoid warning.
 
 	tail -c +N would perform an extra read after encountering EOF
