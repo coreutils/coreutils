@@ -190,11 +190,19 @@ do_link (const char *source, const char *dest)
       return 1;
     }
 
-  /* If --force (-f) has been specified, before making a link ln must
-     remove the destination file if it exists.  But if the source and
-     destination are the same, don't remove anything and fail right here.  */
+  /* If --force (-f) has been specified without --backup, then before
+     making a link ln must remove the destination file if it exists.
+     (with --backup, it just renames any existing destination file)
+     But if the source and destination are the same, don't remove
+     anything and fail right here.  */
   if (remove_existing_files
       && lstat_status == 0
+      /* Allow `ln -sf --backup k k' to succeed in creating the
+	 self-referential symlink, but don't allow the hard-linking
+	 equivalent: `ln -f k k' (with or without --backup) to get
+	 beyond this point, because the error message you'd get is
+	 misleading.  */
+      && (backup_type == none || !symlink)
       && (!symlink || stat (source, &source_stats) == 0)
       && source_stats.st_dev == dest_stats.st_dev
       && source_stats.st_ino == dest_stats.st_ino
