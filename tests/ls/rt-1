@@ -1,52 +1,54 @@
 #!/bin/sh
 # Make sure name is used as secondary key when sorting on mtime or ctime.
 
-: ${LS=ls}
-: ${TOUCH=touch}
+. $srcdir/../envvar-check
+. $srcdir/../lang-default
 
 if test "$VERBOSE" = yes; then
   set -x
-  $LS --version
+  ls --version
+  touch --version
 fi
 
+pwd=`pwd`
 tmp=t-ls.$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
 
-# We're going to run LS from a subdir.
-# Prepend ../ if $LS is a relative file name.
-case $LS in
-  /*) ;;
-  */*) LS=../$LS
-esac
-
-case $TOUCH in
-  /*) ;;
-  */*) TOUCH=../$TOUCH
-esac
-
-test_failure=0
-mkdir $tmp || test_failure=1
-cd $tmp || test_failure=1
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
 
 date=1998-01-15
 
-$TOUCH -d "$date" c || test_failure=1
-$TOUCH -d "$date" a || test_failure=1
-$TOUCH -d "$date" b || test_failure=1
+touch -d "$date" c || framework_failure=1
+touch -d "$date" a || framework_failure=1
+touch -d "$date" b || framework_failure=1
 
-if test $test_failure = 1; then
-  echo 'failure in testing framework'
-  exit 1
+if test $framework_failure = 1; then
+  echo '$0: failure in testing framework' 1>&2
+  (exit 1); exit
 fi
 
 fail=0
 
-set `$LS -t a b c`
-test "$*" = 'a b c' && : || fail=1
+ls -1t a b c > out || fail=1
+cat <<EOF > exp
+a
+b
+c
+EOF
+cmp out exp || fail=1
+test $fail = 1 && diff -u out exp 2> /dev/null
 
-set `$LS -rt a b c`
-test "$*" = 'c b a' && : || fail=1
+rm -rf out exp
+ls -1rt a b c > out || fail=1
+cat <<EOF > exp
+c
+b
+a
+EOF
+cmp out exp || fail=1
+test $fail = 1 && diff -u out exp 2> /dev/null
 
-cd ..
-rm -rf $tmp
-
-exit $fail
+(exit $fail); exit
