@@ -226,12 +226,14 @@ static FILE *in_stream;
 static int have_read_stdin;
 
 #if HAVE_UNSIGNED_LONG_LONG
-# define LONGEST_INTEGRAL_TYPE unsigned long long
+typedef unsigned long long ulonglong_t;
 #else
-# define LONGEST_INTEGRAL_TYPE long int
+/* This is just a place-holder to avoid a few `#if' directives.
+   In this case, the type isn't actually used.  */
+typedef unsigned long int ulonglong_t;
 #endif
 
-#define MAX_INTEGRAL_TYPE_SIZE sizeof(LONGEST_INTEGRAL_TYPE)
+#define MAX_INTEGRAL_TYPE_SIZE sizeof (ulonglong_t)
 static enum size_spec integral_type_size[MAX_INTEGRAL_TYPE_SIZE + 1];
 
 #define MAX_FP_TYPE_SIZE sizeof(LONG_DOUBLE)
@@ -435,19 +437,17 @@ print_long (off_t n_bytes, const char *block, const char *fmt_string)
     }
 }
 
-#if HAVE_UNSIGNED_LONG_LONG
 static void
 print_long_long (off_t n_bytes, const char *block, const char *fmt_string)
 {
   off_t i;
-  for (i = n_bytes / sizeof (unsigned long long); i > 0; i--)
+  for (i = n_bytes / sizeof (ulonglong_t); i > 0; i--)
     {
-      unsigned long long tmp = *(const unsigned long long *) block;
+      ulonglong_t tmp = *(const ulonglong_t *) block;
       printf (fmt_string, tmp);
-      block += sizeof (unsigned long long);
+      block += sizeof (ulonglong_t);
     }
 }
-#endif
 
 static void
 print_float (off_t n_bytes, const char *block, const char *fmt_string)
@@ -764,9 +764,7 @@ this system doesn't provide a %lu-byte integral type"), s_orig, size);
 	  break;
 
 	case LONG_LONG:
-#if HAVE_UNSIGNED_LONG_LONG
 	  print_function = print_long_long;
-#endif
 	  break;
 
 	default:
@@ -1636,7 +1634,7 @@ main (int argc, char **argv)
   integral_type_size[sizeof (int)] = INT;
   integral_type_size[sizeof (long int)] = LONG;
 #if HAVE_UNSIGNED_LONG_LONG
-  integral_type_size[sizeof (long long)] = LONG_LONG;
+  integral_type_size[sizeof (ulonglong_t)] = LONG_LONG;
 #endif
 
   for (i = 0; i <= MAX_FP_TYPE_SIZE; i++)
