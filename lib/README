@@ -1,0 +1,6 @@
+The files in this directory are shared between the fileutils, sh-utils,
+and textutils packages.  Not all files are used by each package.
+The autoconf tests required for these files are in ../m4.
+
+The library name, fetish, is a permutation of the first two
+letters of each of the package names: FIleutils, TExtutils, SH-utils.
