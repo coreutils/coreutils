@@ -2,7 +2,7 @@
 
 /* Modified to run with the GNU shell by bfox. */
 
-/* Copyright (C) 1987-2004 Free Software Foundation, Inc.
+/* Copyright (C) 1987-2005 Free Software Foundation, Inc.
 
    This file is part of GNU Bash, the Bourne Again SHell.
 
@@ -148,6 +148,7 @@ is_int (register char *string, intmax_t *result)
 {
   int sign;
   intmax_t value;
+  char const *orig_string;
 
   sign = 1;
   value = 0;
@@ -161,6 +162,9 @@ is_int (register char *string, intmax_t *result)
 
   if (!*string)
     return false;
+
+  /* Save a pointer to the start, for diagnostics.  */
+  orig_string = string;
 
   /* We allow leading `-' or `+'. */
   if (*string == '-' || *string == '+')
@@ -177,7 +181,17 @@ is_int (register char *string, intmax_t *result)
   while (digit (*string))
     {
       if (result)
-	value = (value * 10) + digit_value (*string);
+	{
+	  intmax_t new_v = 10 * value + sign * (*string - '0');
+	  if (0 < sign
+	      ? (INTMAX_MAX / 10 < value || new_v < 0)
+	      : (value < INTMAX_MIN / 10 || 0 < new_v))
+	    test_syntax_error ((0 < sign
+				? _("integer is too large: %s\n")
+				: _("integer is too small: %s\n")),
+			       orig_string);
+	  value = new_v;
+	}
       string++;
     }
 
@@ -190,10 +204,7 @@ is_int (register char *string, intmax_t *result)
     return false;
 
   if (result)
-    {
-      value *= sign;
-      *result = value;
-    }
+    *result = value;
 
   return true;
 }
