@@ -3,6 +3,7 @@
 	* Version 5.0.1.
 
 	* tests/misc/readlink: New file.  Test the --canonicalize option.
+	* tests/misc/Makefile.am (TESTS): Add readlink.
 
 2003-04-11  Jim Meyering  <jim@meyering.net>
 
