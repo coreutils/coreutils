@@ -478,9 +478,9 @@ cut_fields (FILE *stream)
 			delim, '\n', 0);
 	  if (len < 0)
 	    {
-	      if (feof (stream))
+	      if (ferror (stream) || feof (stream))
 		break;
-	      FATAL_ERROR (_("virtual memory exhausted"));
+	      xalloc_die ();
 	    }
 
 	  assert (len != 0);
