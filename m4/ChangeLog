@@ -1,3 +1,8 @@
+2000-01-03  Paul Eggert  <eggert@twinsun.com>
+
+	* nanosleep.m4 (jm_FUNC_NANOSLEEP): Search for nanosleep in -lrt
+	(for Solaris 7) and in -lposix4 (for Solaris 2.5.1).
+
 2000-01-02  Jim Meyering  <meyering@ascend.com>
 
 	* search-libs.m4: Escape `$' in $3 of dnl comment.  I no longer
