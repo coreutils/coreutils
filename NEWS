@@ -1,4 +1,22 @@
 GNU coreutils NEWS                                    -*- outline -*-
+
+* Major changes in release 5.3.0 (2004-03-17) [unstable]
+
+** Bug fixes
+
+** New features
+
+  `date -d' and `touch -d' now accept integer counts of seconds since
+  1970 when prefixed by `@'.  For example, `@321' represents
+  1970-01-01 00:05:21 UTC.
+
+  `date -d', `date -f' and `touch -d' now handle fractional time
+  stamps like 2004-02-27 14:19:13.489392193.
+
+  `date' has a new option --iso-8601=ns that outputs
+  nanosecond-resolution time stamps.
+
+
 * Major changes in release 5.2.1 (2004-03-12) [stable]
 
 ** Bug fixes
