@@ -132,6 +132,7 @@ ftruncate.m4 \
 getgroups.m4 \
 getline.m4 \
 getloadavg.m4 \
+gettimeofday.m4 \
 glibc.m4 \
 glibc21.m4 \
 gnu-source.m4 \
@@ -311,22 +312,6 @@ Makefile.am: Makefile.am.in
 	  >> $@t
 	sed -n '/^##m4-files-end/,$$p' $< >> $@t
 	chmod a-w $@t
-	mv $@t $@
-
-unlocked-io.h: unlocked-io.hin Makefile.am.in
-	tmp=t$$$$;							\
-	echo						> $$tmp;	\
-	for f in $(base_functions); do					\
-	  u=`echo $$f|tr '[:lower:]' '[:upper:]'`;			\
-	  echo "#  if HAVE_$${u}_UNLOCKED"		>> $$tmp;	\
-	  echo "#   undef $$f"				>> $$tmp;	\
-	  echo "#   define $$f(S) $${f}_unlocked (S)"	>> $$tmp;	\
-	  echo '#endif'					>> $$tmp;	\
-	done;								\
-	sed "/^@replace_this@$$/r$$tmp" $<				\
-	  | sed "/^@replace_this@$$/d"					\
-	  $< > $@t;							\
-	rm -f $$tmp;							\
 	mv $@t $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
