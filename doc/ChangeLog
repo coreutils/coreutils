@@ -1,3 +1,7 @@
+2004-04-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (dd invocation): Remove noctty flag from dd.
+
 2004-04-07  Paul Eggert  <eggert@twinsun.com>
 
 	New dd conv= symbols nocreat, excl, fdatasync, fsync,

@@ -1,6 +1,14 @@
-2004-04-08  Jim Meyering  <jim@meyering.net>
+2004-04-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* NEWS: Remove noctty flag from dd.  Suggested by Philippe Troin.
+	* doc/coreutils.texi (dd invocation): Likewise.
+	* src/shred.c (O_NOCTTY): Remove redundant decl.
+	* src/dd.c (flags, usage): Remove noctty flag.
+	(main): Always use O_NOCTTY when opening files.
+
+2004-04-08  Jim Meyering  <jim@meyering.net>
 
 	* src/dd.c (dd_copy): Mark two diagnostics for translations.
 	(set_fd_flags): Undo part of today's change: it's a little
