@@ -51,12 +51,17 @@ enum backup_type get_version ();
 int euidaccess ();
 int full_write ();
 
-static int do_copy (int argc, char **argv);
-static int copy (char *src_path, char *dst_path, int new_dst, dev_t device, struct dir_list *ancestors);
-static int copy_dir (char *src_path_in, char *dst_path_in, int new_dst, struct stat *src_sb, struct dir_list *ancestors);
-static int make_path_private (char *const_dirpath, int src_offset, int mode, char *verbose_fmt_string, struct dir_attr **attr_list, int *new_dst);
-static int copy_reg (char *src_path, char *dst_path);
-static int re_protect (char *const_dst_path, int src_offset, struct dir_attr *attr_list);
+static int do_copy __P ((int argc, char **argv));
+static int copy __P ((char *src_path, char *dst_path, int new_dst,
+		      dev_t device, struct dir_list *ancestors));
+static int copy_dir __P ((char *src_path_in, char *dst_path_in, int new_dst,
+			  struct stat *src_sb, struct dir_list *ancestors));
+static int make_path_private __P ((char *const_dirpath, int src_offset,
+				   int mode, char *verbose_fmt_string,
+				   struct dir_attr **attr_list, int *new_dst));
+static int copy_reg __P ((char *src_path, char *dst_path));
+static int re_protect __P ((char *const_dst_path, int src_offset,
+			    struct dir_attr *attr_list));
 
 /* Initial number of entries in each hash table entry's table of inodes.  */
 #define INITIAL_HASH_MODULE 100

@@ -95,22 +95,23 @@ char *xmalloc ();
 int safe_read ();
 int full_write ();
 
-static RETSIGTYPE interrupt_handler (void);
-static int bit_count (register unsigned int i);
-static int parse_integer (char *str);
-static void apply_translations (void);
-static void copy (void);
-static void copy_simple (unsigned char *buf, int nread);
-static void copy_with_block (unsigned char *buf, int nread);
-static void copy_with_unblock (unsigned char *buf, int nread);
-static void parse_conversion (char *str);
-static void print_stats (void);
-static void translate_charset (const unsigned char *new_trans);
-static void quit (int code);
-static void scanargs (int argc, char **argv);
-static void skip (int fdesc, char *file, long int records, long int blocksize, char *buf);
-static void usage (int status);
-static void write_output (void);
+static RETSIGTYPE interrupt_handler __P ((void));
+static int bit_count __P ((register unsigned int i));
+static int parse_integer __P ((char *str));
+static void apply_translations __P ((void));
+static void copy __P ((void));
+static void copy_simple __P ((unsigned char *buf, int nread));
+static void copy_with_block __P ((unsigned char *buf, int nread));
+static void copy_with_unblock __P ((unsigned char *buf, int nread));
+static void parse_conversion __P ((char *str));
+static void print_stats __P ((void));
+static void translate_charset __P ((const unsigned char *new_trans));
+static void quit __P ((int code));
+static void scanargs __P ((int argc, char **argv));
+static void skip __P ((int fdesc, char *file, long int records,
+		       long int blocksize, char *buf));
+static void usage __P ((int status));
+static void write_output __P ((void));
 
 /* The name this program was run with. */
 char *program_name;

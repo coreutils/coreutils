@@ -47,17 +47,17 @@
 char *xmalloc ();
 char *xstrdup ();
 
-static int selected_fstype (char *fstype);
-static int excluded_fstype (char *fstype);
-static void add_excluded_fs_type (char *fstype);
-static void add_fs_type (char *fstype);
-static void print_header (void);
-static void show_entry (char *path, struct stat *statp);
-static void show_all_entries (void);
-static void show_dev (char *disk, char *mount_point, char *fstype);
-static void show_disk (char *disk);
-static void show_point (char *point, struct stat *statp);
-static void usage (int status);
+static int selected_fstype __P ((char *fstype));
+static int excluded_fstype __P ((char *fstype));
+static void add_excluded_fs_type __P ((char *fstype));
+static void add_fs_type __P ((char *fstype));
+static void print_header __P ((void));
+static void show_entry __P ((char *path, struct stat *statp));
+static void show_all_entries __P ((void));
+static void show_dev __P ((char *disk, char *mount_point, char *fstype));
+static void show_disk __P ((char *disk));
+static void show_point __P ((char *point, struct stat *statp));
+static void usage __P ((int status));
 
 /* Name this program was run with. */
 char *program_name;

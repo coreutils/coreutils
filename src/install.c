@@ -99,13 +99,13 @@ int safe_read ();
 int full_write ();
 int isdir ();
 
-static int change_attributes (char *path, int no_need_to_chown);
-static int copy_file (char *from, char *to, int *to_created);
-static int install_file_in_dir (char *from, char *to_dir);
-static int install_file_in_file (char *from, char *to);
-static void get_ids (void);
-static void strip (char *path);
-static void usage (int status);
+static int change_attributes __P ((char *path, int no_need_to_chown));
+static int copy_file __P ((char *from, char *to, int *to_created));
+static int install_file_in_dir __P ((char *from, char *to_dir));
+static int install_file_in_file __P ((char *from, char *to));
+static void get_ids __P ((void));
+static void strip __P ((char *path));
+static void usage __P ((int status));
 
 /* The name this program was run with, for error messages. */
 char *program_name;

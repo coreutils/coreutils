@@ -90,23 +90,24 @@ typedef struct
   char *text;			/* Pointer to the text.  */
 } *string, stringstruct;
 
-int stat (const char *, struct stat *);
-int lstat (const char *, struct stat *);
+int stat ();
+int lstat ();
 
 char *savedir ();
 char *xmalloc ();
 char *xrealloc ();
 
-static int hash_insert (ino_t ino, dev_t dev);
-static int hash_insert2 (struct htab *htab, ino_t ino, dev_t dev);
-static long count_entry (char *ent, int top, dev_t last_dev);
-static void du_files (char **files);
-static void hash_init (unsigned int modulus, unsigned int entry_tab_size);
-static void hash_reset (void);
-static void str_concatc (string s1, char *cstr);
-static void str_copyc (string s1, char *cstr);
-static void str_init (string *s1, unsigned int size);
-static void str_trunc (string s1, unsigned int length);
+static int hash_insert __P ((ino_t ino, dev_t dev));
+static int hash_insert2 __P ((struct htab *htab, ino_t ino, dev_t dev));
+static long count_entry __P ((char *ent, int top, dev_t last_dev));
+static void du_files __P ((char **files));
+static void hash_init __P ((unsigned int modulus,
+			    unsigned int entry_tab_size));
+static void hash_reset __P ((void));
+static void str_concatc __P ((string s1, char *cstr));
+static void str_copyc __P ((string s1, char *cstr));
+static void str_init __P ((string *s1, unsigned int size));
+static void str_trunc __P ((string s1, unsigned int length));
 
 /* Name under which this program was invoked.  */
 char *program_name;
@@ -153,7 +154,7 @@ static struct stat stat_buf;
 
 /* A pointer to either lstat or stat, depending on whether
    dereferencing of all symbolic links is to be done. */
-static int (*xstat) ();
+static int __P ((*xstat) ());
 
 /* The exit status to use if we don't get any fatal errors. */
 static int exit_status;
