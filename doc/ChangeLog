@@ -1,3 +1,15 @@
+2002-03-03  Paul Eggert  <eggert@twinsun.com>
+
+	Make cp -r equivalent to cp -R.  Add a new cp option --copy-contents
+	for people who want to emulate the traditional (and rarely desirable)
+	cp -r behavior.
+
+	* coreutils.texi (cp invocation): Document this.
+	Fix some related minor bugs: --no-dereference is no longer
+	equivalent to -d, and --archive (-a) can override the other
+	symlink options.  Warn that cp -R is not portable on symbolic
+	links unless you also specify -P.
+
 2002-03-02  Jim Meyering  <meyering@lucent.com>
 
 	* coreutils.texi (cp invocation): Document that cp -r
