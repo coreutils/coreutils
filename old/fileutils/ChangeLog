@@ -1,3 +1,7 @@
+1999-05-22  Jim Meyering  <meyering@ascend.com>
+
+	* Version 4.0i.
+
 1999-05-17  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/getdate.y (get_date): Let mktime deduce tm_isdst if we
