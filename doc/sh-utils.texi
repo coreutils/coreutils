@@ -4,6 +4,8 @@
 @settitle GNU shell utilities
 @c %**end of header
 
+@include version.texi
+
 @c Define new indices for commands, filenames, and options.
 @defcodeindex cm
 @defcodeindex fl
@@ -56,9 +58,9 @@ by the Foundation.
 @end ifinfo
 
 @titlepage
-@title GNU sh-utils, version 1.10
+@title GNU sh-utils, version @value{VERSION}
 @subtitle A set of shell utilities
-@subtitle for version 1.10, August 1994
+@subtitle for version @value{VERSION}, August 1994
 @author Jim Meyering
 
 @page
@@ -88,7 +90,7 @@ by the Foundation.
 @cindex shell utilities
 @cindex utilities for shell programming
 
-This manual documents GNU shell utilities.  It covers release 1.10.
+This manual documents version @value{VERSION} of the GNU shell utilities.
 
 @cindex POSIX.2
 The GNU shell utilities are mostly compatible with the POSIX.2 standard.
