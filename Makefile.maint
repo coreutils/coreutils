@@ -501,7 +501,7 @@ define emit-upload-commands
 	echo "$(srcdir)/gnupload $(GNUPLOADFLAGS) \\"
 	echo "    --to fetish.sf.net:fetish-ftp \\"
 	echo "    --to $(gnu_rel_host):coreutils \\"
-	echo "  $(rel-files)
+	echo "  $(rel-files)"
 	echo '# send the /tmp/announcement e-mail'
 	echo =====================================
 	echo =====================================
