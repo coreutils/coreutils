@@ -4,6 +4,8 @@
 
 	* src/dd.c (apply_translations): Don't prohibit conv=unblock,sync.
 	Reported by Volker Paul.
+	* tests/dd/Makefile.am (TESTS): Add unblock-sync.
+	* tests/dd/unblock-sync: New test for the above.
 
 2003-12-19  Jim Meyering  <jim@meyering.net>
 
