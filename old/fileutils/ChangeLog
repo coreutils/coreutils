@@ -2,6 +2,8 @@
 
 	* tests/cp/backup-is-src: Remove use of cp's now-deprecated -V option.
 	Use --b=simple instead of -b -V simple.
+	* tests/cp/backup-1: Replace use of cp's now-deprecated
+	--version-control option with use of --backup=simple.
 
 	* src/cp.c: Convert --backup to take an optional argument.
 	Deprecate --version-control (-V) in comments.
