@@ -180,3 +180,17 @@ false.c: true.c
 	  -e 's/^  exit (EXIT_SUCCESS/  exit (EXIT_FAILURE/g' \
 	  $(srcdir)/true.c > $@-t
 	mv $@-t $@
+
+pm = progs-makefile
+pr = progs-readme
+# Ensure that the list of programs in ../README matches the list
+# of programs we can build.
+check: check-README
+.PHONY: check-README
+check-README:
+	rm -rf $(pr) $(pm)
+	echo $(EXTRA_PROGRAMS) $(EXTRA_SCRIPTS) $(bin_SCRIPTS) $(bin_PROGRAMS) \
+	  | tr -s ' ' '\n' | sort -u > $(pm)
+	sed -n '/^The programs .* are:/,/^[a-zA-Z]/p' $(top_srcdir)/README \
+	  | sed -n '/^   */s///p' | tr -s ' ' '\n' > $(pr)
+	diff $(pm) $(pr) && rm -rf $(pr) $(pm)
