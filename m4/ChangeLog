@@ -1,5 +1,8 @@
 2004-11-30  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* getcwd-path-max.m4 (gl_FUNC_GETCWD_PATH_MAX):
+	Define HAVE_PARTLY_WORKING_GETCWD if getcwd is partly working.
+
 	* readutmp.m4 (gl_READUTMP): Don't check for sys/param.h.
 
 2004-11-30  Jim Meyering  <jim@meyering.net>
