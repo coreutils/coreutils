@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2002-09-29.15}
+\def\texinfoversion{2002-10-01.17}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
@@ -2411,19 +2411,20 @@ width0pt\relax} \fi
   \let\item = \relax
 }
 
-% Ignore @ignore, @ifhtml, @ifinfo, @ifplaintext, @ifnottex, @html, @menu,
-% @direntry, and @documentdescription.
+% Ignore @ignore, @ifhtml, @ifinfo, and the like.
 %
-\def\ignore{\doignore{ignore}}
+\def\direntry{\doignore{direntry}}
+\def\documentdescriptionword{documentdescription}
+\def\documentdescription{\doignore{documentdescription}}
+\def\html{\doignore{html}}
 \def\ifhtml{\doignore{ifhtml}}
 \def\ifinfo{\doignore{ifinfo}}
-\def\ifplaintext{\doignore{ifplaintext}}
 \def\ifnottex{\doignore{ifnottex}}
-\def\html{\doignore{html}}
+\def\ifplaintext{\doignore{ifplaintext}}
+\def\ifxml{\doignore{ifxml}}
+\def\ignore{\doignore{ignore}}
 \def\menu{\doignore{menu}}
-\def\direntry{\doignore{direntry}}
-\def\documentdescription{\doignore{documentdescription}}
-\def\documentdescriptionword{documentdescription}
+\def\xml{\doignore{xml}}
 
 % @dircategory CATEGORY  -- specify a category of the dir file
 % which this file should belong to.  Ignore this in TeX.
@@ -2505,7 +2506,7 @@ width0pt\relax} \fi
   % We must actually expand the ignored text to look for the @end
   % command, so that nested ignore constructs work.  Thus, we put the
   % text into a \vbox and then do nothing with the result.  To minimize
-  % the change of memory overflow, we follow the approach outlined on
+  % the chance of memory overflow, we follow the approach outlined on
   % page 401 of the TeXbook: make the current font be a dummy font.
   %
   \setbox0 = \vbox\bgroup
@@ -2557,7 +2558,7 @@ width0pt\relax} \fi
     % Do minimal line-breaking.
     \pretolerance = 10000
     %
-    % Do not execute instructions in @tex
+    % Do not execute instructions in @tex.
     \def\tex{\doignore{tex}}%
     % Do not execute macro definitions.
     % `c' is a comment character, so the word `macro' will get cut off.
@@ -4618,26 +4619,65 @@ width0pt\relax} \fi
 }
 
 % @copying ... @end copying.
-% Save the text away for @insertcopying later.
+% Save the text away for @insertcopying later.  Many commands won't be
+% allowed in this context, but that's ok.
 % 
-\newbox\copyingbox
-%
+% We save the uninterpreted tokens, rather than creating a box.
+% Saving the text in a box would be much easier, but then all the
+% typesetting commands (@smallbook, font changes, etc.) have to be done
+% beforehand -- and a) we want @copying to be done first in the source
+% file; b) letting users define the frontmatter in as flexible order as
+% possible is very desirable.
+% 
 \def\copying{\begingroup
-  \parindent = 0pt  % looks wrong on title page
-  \def\Ecopying{\egroup\endgroup}%
-  \global\setbox\copyingbox = \vbox\bgroup
+  % Define a command to swallow text until we reach `@end copying'.
+  % \ is the escape char in this texinfo.tex file, so it is the
+  % delimiter for the command; @ will be the escape char when we read
+  % it, but that doesn't matter.
+  \long\def\docopying##1\end copying{\gdef\copyingtext{##1}\enddocopying}%
+  %
+  % We must preserve ^^M's in the input file; see \insertcopying below.
+  \catcode`\^^M = \active
+  \docopying
 }
 
-% @insertcopying.
-% 
-\def\insertcopying{\unvcopy\copyingbox}
+% What we do to finish off the copying text.
+%
+\def\enddocopying{\endgroup\ignorespaces}
 
+% @insertcopying.  Here we must play games with ^^M's.  On the one hand,
+% we need them to delimit commands such as `@end quotation', so they
+% must be active.  On the other hand, we certainly don't want every
+% end-of-line to be a \par, as would happen with the normal active
+% definition of ^^M.  On the third hand, two ^^M's in a row should still
+% generate a \par.
+% 
+% Our approach is to make ^^M insert a space and a penalty1 normally;
+% then it can also check if \lastpenalty=1.  If it does, then manually
+% do \par.
+% 
+% Seems pretty fragile, but for the limited use of getting the copying
+% text (which should be quite simple) inserted, we can hope it's ok.
+% % 
+{\catcode`\^^M=\active %
+\gdef\insertcopying{\begingroup %
+  \parindent = 0pt  % looks wrong on title page
+  \def^^M{%
+    \ifnum \lastpenalty=1 %
+      \par %
+    \else %
+      \space \penalty 1 %
+    \fi %
+  }%
+  \copyingtext %
+\endgroup}%
+}
 
 \message{defuns,}
 % @defun etc.
 
 % Allow user to change definition object font (\df) internally
-\def\setdeffont #1 {\csname DEF#1\endcsname}
+\def\setdeffont#1 {\csname DEF#1\endcsname}
 
 \newskip\defbodyindent \defbodyindent=.4in
 \newskip\defargsindent \defargsindent=50pt
@@ -6033,11 +6073,13 @@ should work if nowhere else does.}
 }
 
 % Parameters in order: 1) textheight; 2) textwidth; 3) voffset;
-% 4) hoffset; 5) binding offset; 6) topskip.  We also call
-% \setleading{\textleading}, so the caller should define \textleading.
-% The caller should also set \parskip.
+% 4) hoffset; 5) binding offset; 6) topskip; 7) physical page height; 8)
+% physical page width.
+% 
+% We also call \setleading{\textleading}, so the caller should define
+% \textleading.  The caller should also set \parskip.
 %
-\def\internalpagesizes#1#2#3#4#5#6{%
+\def\internalpagesizes#1#2#3#4#5#6#7#8{%
   \voffset = #3\relax
   \topskip = #6\relax
   \splittopskip = \topskip
@@ -6055,6 +6097,11 @@ should work if nowhere else does.}
   %
   \normaloffset = #4\relax
   \bindingoffset = #5\relax
+  %
+  \ifpdf
+    \pdfpageheight #7\relax
+    \pdfpagewidth #8\relax
+  \fi
   %
   \setleading{\textleading}
   %
@@ -6077,7 +6124,10 @@ should work if nowhere else does.}
   \textleading = 13.2pt
   %
   % If page is nothing but text, make it come out even.
-  \internalpagesizes{46\baselineskip}{6in}{\voffset}{.25in}{\bindingoffset}{36pt}%
+  \internalpagesizes{46\baselineskip}{6in}%
+                    {\voffset}{.25in}%
+                    {\bindingoffset}{36pt}%
+                    {11in}{8.5in}%
 }}
 
 % Use @smallbook to reset parameters for 7x9.5 (or so) format.
@@ -6085,7 +6135,10 @@ should work if nowhere else does.}
   \parskip = 2pt plus 1pt
   \textleading = 12pt
   %
-  \internalpagesizes{7.5in}{5.in}{\voffset}{.25in}{\bindingoffset}{16pt}%
+  \internalpagesizes{7.5in}{5in}%
+                    {\voffset}{.25in}%
+                    {\bindingoffset}{16pt}%
+                    {9.25in}{7in}%
   %
   \lispnarrowing = 0.3in
   \tolerance = 700
@@ -6111,8 +6164,10 @@ should work if nowhere else does.}
   % \global\normaloffset = -6mm
   % \global\bindingoffset = 10mm
   % @end tex
-  \internalpagesizes{51\baselineskip}{160mm}{\voffset}{\hoffset}%
+  \internalpagesizes{51\baselineskip}{160mm}
+                    {\voffset}{\hoffset}%
                     {\bindingoffset}{44pt}%
+                    {297mm}{210mm}%
   %
   \tolerance = 700
   \hfuzz = 1pt
@@ -6128,7 +6183,10 @@ should work if nowhere else does.}
   \parskip = 2pt plus 1pt minus 0.1pt
   \textleading = 12.5pt
   %
-  \internalpagesizes{160mm}{120mm}{\voffset}{\hoffset}{\bindingoffset}{8pt}%
+  \internalpagesizes{160mm}{120mm}%
+                    {\voffset}{\hoffset}%
+                    {\bindingoffset}{8pt}%
+                    {210mm}{148mm}%
   %
   \lispnarrowing = 0.2in
   \tolerance = 800
@@ -6144,16 +6202,22 @@ should work if nowhere else does.}
 % A specific text layout, 24x15cm overall, intended for A4 paper.  
 \def\afourlatex{{\globaldefs = 1
   \afourpaper
-  \internalpagesizes{237mm}{150mm}{\voffset}{4.6mm}{\bindingoffset}{7mm}%
+  \internalpagesizes{237mm}{150mm}%
+                    {\voffset}{4.6mm}%
+                    {\bindingoffset}{7mm}%
+                    {297mm}{210mm}%
   %
   % Must explicitly reset to 0 because we call \afourpaper.
   \globaldefs = 0
 }}
 
-% Use @afourwide to print on A4 paper in wide format.
+% Use @afourwide to print on A4 paper in landscape format.
 \def\afourwide{{\globaldefs = 1
   \afourpaper
-  \internalpagesizes{241mm}{165mm}{\voffset}{-2.95mm}{\bindingoffset}{7mm}%
+  \internalpagesizes{241mm}{165mm}%
+                    {\voffset}{-2.95mm}%
+                    {\bindingoffset}{7mm}%
+                    {297mm}{210mm}%
   \globaldefs = 0
 }}
 
@@ -6170,7 +6234,16 @@ should work if nowhere else does.}
   \parskip = 3pt plus 2pt minus 1pt
   \setleading{\textleading}%
   %
-  \internalpagesizes{#1}{\hsize}{\voffset}{\normaloffset}{\bindingoffset}{44pt}%
+  \dimen0 = #1
+  \advance\dimen0 by \voffset
+  %
+  \dimen2 = \hsize
+  \advance\dimen2 by \normaloffset
+  %
+  \internalpagesizes{#1}{\hsize}%
+                    {\voffset}{\normaloffset}%
+                    {\bindingoffset}{44pt}%
+                    {\dimen0}{\dimen2}%
 }}
 
 % Set default to letter.
