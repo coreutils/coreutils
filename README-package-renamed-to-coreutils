@@ -1,0 +1,13 @@
+As of 2002-09-01, the GNU fileutils, textutils, and sh-utils packages
+have been merged into one, called the GNU coreutils.
+See ftp://alpha.gnu.org/gnu/coreutils/ .
+
+For information on the mailing lists associated with the
+coreutils package, see these:
+
+  http://mail.gnu.org/mailman/listinfo/coreutils-announce
+  http://mail.gnu.org/mailman/listinfo/bug-coreutils
+
+mailing list archives are here:
+
+  http://mail.gnu.org/pipermail/bug-coreutils/
