@@ -1,3 +1,13 @@
+2003-11-11  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (chown invocation) [chownchgrpoptions]: New macro
+	describing -H, -L, -P options.  Use it here.
+	(chgrp invocation): And here.
+
+2003-11-09  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (dd invocation): Fix typo in example.
+
 2003-10-15  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (ln invocation): Note that --directory, -d, -F
