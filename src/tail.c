@@ -847,7 +847,9 @@ main (int argc, char **argv)
   off_t n_units = -1;
   long int tmp_long;
   int c;			/* Option character.  */
-  int fileind;			/* Index in ARGV of first file name.  */
+  int i;
+  int n_files;
+  char **file;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -988,28 +990,29 @@ main (int argc, char **argv)
 	--n_units;
     }
 
-  fileind = optind;
+  n_files = argc - optind;
+  file = argv + optind;
 
-  if (optind < argc - 1 && forever)
+  if (n_files > 1 && forever)
     {
       forever_multiple = 1;
       forever = 0;
-      file_descs = (int *) xmalloc ((argc - optind) * sizeof (int));
-      file_sizes = (off_t *) xmalloc ((argc - optind) * sizeof (off_t));
+      file_descs = (int *) xmalloc (n_files * sizeof (int));
+      file_sizes = (off_t *) xmalloc (n_files * sizeof (off_t));
     }
 
   if (header_mode == always
-      || (header_mode == multiple_files && optind < argc - 1))
+      || (header_mode == multiple_files && n_files > 1))
     print_headers = 1;
 
-  if (optind == argc)
+  if (n_files == 0)
     exit_status |= tail_file ("-", n_units, 0);
 
-  for (; optind < argc; ++optind)
-    exit_status |= tail_file (argv[optind], n_units, optind - fileind);
+  for (i = 0; i < n_files; i++)
+    exit_status |= tail_file (file[i], n_units, i);
 
   if (forever_multiple)
-    tail_forever (argv + fileind, argc - fileind);
+    tail_forever (file, n_files);
 
   if (have_read_stdin && close (0) < 0)
     error (EXIT_FAILURE, errno, "-");
