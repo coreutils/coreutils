@@ -1,4 +1,4 @@
-#serial 2
+#serial 3
 
 dnl SunOS's readdir is broken in such a way that rm.c has to add extra code
 dnl to test whether a NULL return value really means there are no more files
@@ -23,9 +23,7 @@ AC_CACHE_CHECK([for working readdir], jm_cv_func_working_readdir,
   ac_clean_files="$ac_clean_files conf-dir"
 
   AC_TRY_RUN(
-  changequote(<<, >>)dnl
-  <<
-#   include <stdio.h>
+[#   include <stdio.h>
 #   include <sys/types.h>
 #   if HAVE_STRING_H
 #    include <string.h>
@@ -119,9 +117,7 @@ AC_CACHE_CHECK([for working readdir], jm_cv_func_working_readdir,
       create_300_file_dir (dir);
       remove_dir (dir);
       exit (0);
-    }
-  >>,
-  changequote([, ])dnl
+    }],
   jm_cv_func_working_readdir=yes,
   jm_cv_func_working_readdir=no,
   jm_cv_func_working_readdir=no)])
