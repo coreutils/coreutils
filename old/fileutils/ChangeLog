@@ -1,6 +1,16 @@
 Tue Jun 18 20:54:05 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* system.h (STREQ): New macro.
+	* aclocal.m4: Update from gettext-0.10.20.
+	* ABOUT-NLS: Likewise.
+	* intl/*: Likewise.
+
+	* cp.c (do_copy): Change message from `missing file argument' to
+	more precise `missing destination file'.  From Karl Berry.
+
+	* ln.c (STREQ): Remove macro definition
+	* system.h (STREQ): Add it here instead.
+	* cp.c (do_copy): Use STREQ here instead of strcmp(...) == 0.
+	Declare pointer parameters const as appropriate.
 
 	* cp.c (do_copy): When the force and backup options have been
 	specified and the source and destination are the same name for an
