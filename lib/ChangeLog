@@ -4,6 +4,13 @@
 	Reported by Bruce Becker; see:
 	http://mail.gnu.org/archive/html/bug-bison/2003-03/msg00017.html
 
+2003-03-03  Paul Eggert  <eggert@twinsun.com>
+            Bruno Haible  <bruno@clisp.org>
+
+	* mbswidth.h: Include <wchar.h>. Needed for UnixWare 7.1.1.
+	Reported by John Hughes, see
+	http://mail.gnu.org/archive/html/bug-bison/2003-02/msg00030.html
+
 2003-03-09  Jim Meyering  <jim@meyering.net>
 
 	* ftw.c: Include "save-cwd.h".
