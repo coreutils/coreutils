@@ -75,13 +75,13 @@ Non-numeric data in the input is ignored.
 /* #define DOUBLE	*/
 
 #ifdef	DOUBLE
-#define	double	real; 		/* Type used for data storage. */
-#define	IFMT	"%F"		/* Input format. */
-#define	OFMT	"%18.14g %18.14g\n"	/* Output format. */
+# define	double	real; 		/* Type used for data storage. */
+# define	IFMT	"%F"		/* Input format. */
+# define	OFMT	"%18.14g %18.14g\n"	/* Output format. */
 #else
-#define	float	real;		/* Type used for data storage. */
-#define	IFMT	"%f"		/* Input format. */
-#define	OFMT	"%8.5g %8.5g\n"	/* Output format. */
+# define	float	real;		/* Type used for data storage. */
+# define	IFMT	"%f"		/* Input format. */
+# define	OFMT	"%8.5g %8.5g\n"	/* Output format. */
 #endif
 
 /* Numerical constants: These may be machine and/or precision dependent. */

@@ -30,7 +30,7 @@
 #include "error.h"
 
 #ifdef _POSIX_VERSION
-#include <limits.h>
+# include <limits.h>
 
 #else /* not _POSIX_VERSION */
 struct passwd *getpwuid ();
@@ -39,7 +39,7 @@ uid_t getuid ();
 gid_t getgid ();
 uid_t geteuid ();
 gid_t getegid ();
-#include <sys/param.h>
+# include <sys/param.h>
 #endif /* not _POSIX_VERSION */
 
 char *xmalloc ();

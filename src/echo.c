@@ -48,13 +48,13 @@ on System V systems with the -E option.
 #define V9_DEFAULT
 
 #if defined (V9_ECHO)
-#  if defined (V9_DEFAULT)
-#    define VALID_ECHO_OPTIONS "neE"
-#  else
-#    define VALID_ECHO_OPTIONS "ne"
-#  endif /* !V9_DEFAULT */
+# if defined (V9_DEFAULT)
+#  define VALID_ECHO_OPTIONS "neE"
+# else
+#  define VALID_ECHO_OPTIONS "ne"
+# endif /* !V9_DEFAULT */
 #else /* !V9_ECHO */
-#  define VALID_ECHO_OPTIONS "n"
+# define VALID_ECHO_OPTIONS "n"
 #endif /* !V9_ECHO */
 
 /* The name this program was run with. */
@@ -152,10 +152,10 @@ main (int argc, char **argv)
 #if defined (V9_ECHO)
 	  else if (*temp == 'e')
 	    do_v9 = 1;
-#if defined (V9_DEFAULT)
+# if defined (V9_DEFAULT)
 	  else if (*temp == 'E')
 	    do_v9 = 0;
-#endif /* V9_DEFAULT */
+# endif /* V9_DEFAULT */
 #endif /* V9_ECHO */
 	  else
 	    goto just_echo;

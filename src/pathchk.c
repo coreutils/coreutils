@@ -47,47 +47,47 @@
 #include "error.h"
 
 #ifdef _POSIX_VERSION
-#include <limits.h>
-#ifndef PATH_MAX
-#define PATH_MAX_FOR(p) pathconf ((p), _PC_PATH_MAX)
-#endif /* not PATH_MAX */
-#ifndef NAME_MAX
-#define NAME_MAX_FOR(p) pathconf ((p), _PC_NAME_MAX);
-#endif /* not NAME_MAX */
+# include <limits.h>
+# ifndef PATH_MAX
+#  define PATH_MAX_FOR(p) pathconf ((p), _PC_PATH_MAX)
+# endif /* not PATH_MAX */
+# ifndef NAME_MAX
+#  define NAME_MAX_FOR(p) pathconf ((p), _PC_NAME_MAX);
+# endif /* not NAME_MAX */
 
 #else /* not _POSIX_VERSION */
 
-#include <sys/param.h>
-#ifndef PATH_MAX
-#ifdef MAXPATHLEN
-#define PATH_MAX MAXPATHLEN
-#else /* not MAXPATHLEN */
-#define PATH_MAX _POSIX_PATH_MAX
-#endif /* not MAXPATHLEN */
-#endif /* not PATH_MAX */
+# include <sys/param.h>
+# ifndef PATH_MAX
+#  ifdef MAXPATHLEN
+#   define PATH_MAX MAXPATHLEN
+#  else /* not MAXPATHLEN */
+#   define PATH_MAX _POSIX_PATH_MAX
+#  endif /* not MAXPATHLEN */
+# endif /* not PATH_MAX */
 
-#ifndef NAME_MAX
-#ifdef MAXNAMLEN
-#define NAME_MAX MAXNAMLEN
-#else /* not MAXNAMLEN */
-#define NAME_MAX _POSIX_NAME_MAX
-#endif /* not MAXNAMLEN */
-#endif /* not NAME_MAX */
+# ifndef NAME_MAX
+#  ifdef MAXNAMLEN
+#   define NAME_MAX MAXNAMLEN
+#  else /* not MAXNAMLEN */
+#   define NAME_MAX _POSIX_NAME_MAX
+#  endif /* not MAXNAMLEN */
+# endif /* not NAME_MAX */
 
 #endif /* not _POSIX_VERSION */
 
 #ifndef _POSIX_PATH_MAX
-#define _POSIX_PATH_MAX 255
+# define _POSIX_PATH_MAX 255
 #endif
 #ifndef _POSIX_NAME_MAX
-#define _POSIX_NAME_MAX 14
+# define _POSIX_NAME_MAX 14
 #endif
 
 #ifndef PATH_MAX_FOR
-#define PATH_MAX_FOR(p) PATH_MAX
+# define PATH_MAX_FOR(p) PATH_MAX
 #endif
 #ifndef NAME_MAX_FOR
-#define NAME_MAX_FOR(p) NAME_MAX
+# define NAME_MAX_FOR(p) NAME_MAX
 #endif
 
 char *xstrdup ();

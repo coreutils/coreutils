@@ -26,7 +26,7 @@
 #define NDEBUG 1
 
 #ifdef HAVE_LIMITS_H
-#include <limits.h>
+# include <limits.h>
 #endif /* HAVE_LIMITS_H */
 
 #ifndef UINT_MAX

@@ -119,14 +119,14 @@ void free();
  * Compensate for this here.
  */
 #ifdef isascii
-#  undef HAVE_ISASCII		/* just in case */
-#  define HAVE_ISASCII 1
+# undef HAVE_ISASCII		/* just in case */
+# define HAVE_ISASCII 1
 #else
 #endif
 #if STDC_HEADERS || !HAVE_ISASCII
-#  define is_ascii(c) 1
+# define is_ascii(c) 1
 #else
-#  define is_ascii(c) isascii(c)
+# define is_ascii(c) isascii(c)
 #endif
 
 #define is_space(c) (is_ascii(c) && isspace(c))

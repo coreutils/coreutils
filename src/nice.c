@@ -26,8 +26,8 @@
 #include <getopt.h>
 #include <sys/types.h>
 #ifndef NICE_PRIORITY
-#include <sys/time.h>
-#include <sys/resource.h>
+# include <sys/time.h>
+# include <sys/resource.h>
 #endif
 
 #include "system.h"
@@ -35,9 +35,9 @@
 #include "error.h"
 
 #ifdef NICE_PRIORITY
-#define GET_PRIORITY() nice (0)
+# define GET_PRIORITY() nice (0)
 #else
-#define GET_PRIORITY() getpriority (PRIO_PROCESS, 0)
+# define GET_PRIORITY() getpriority (PRIO_PROCESS, 0)
 #endif
 
 static int isinteger __P ((char *s));

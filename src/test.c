@@ -31,29 +31,29 @@
 #define TEST_STANDALONE 1
 
 #if !defined (TEST_STANDALONE)
-#  include "shell.h"
-#  include "posixstat.h"
-#  include "filecntl.h"
+# include "shell.h"
+# include "posixstat.h"
+# include "filecntl.h"
 #else /* TEST_STANDALONE */
-#  include "system.h"
-#  include "group-member.h"
-#  include "error.h"
-#  if !defined (S_IXUGO)
-#    define S_IXUGO 0111
-#  endif /* S_IXUGO */
-#  if defined (_POSIX_VERSION)
-#    include <limits.h>
-#  else /* !_POSIX_VERSION */
-#    include <sys/param.h>
-#  endif /* _POSIX_VERSION */
-#define whitespace(c) (((c) == ' ') || ((c) == '\t'))
-#define digit(c)  ((c) >= '0' && (c) <= '9')
-#define digit_value(c) ((c) - '0')
+# include "system.h"
+# include "group-member.h"
+# include "error.h"
+# if !defined (S_IXUGO)
+#  define S_IXUGO 0111
+# endif /* S_IXUGO */
+# if defined (_POSIX_VERSION)
+#  include <limits.h>
+# else /* !_POSIX_VERSION */
+#  include <sys/param.h>
+# endif /* _POSIX_VERSION */
+# define whitespace(c) (((c) == ' ') || ((c) == '\t'))
+# define digit(c)  ((c) >= '0' && (c) <= '9')
+# define digit_value(c) ((c) - '0')
 char *program_name;
 #endif /* TEST_STANDALONE */
 
 #if !defined (_POSIX_VERSION)
-#  include <sys/file.h>
+# include <sys/file.h>
 #endif /* !_POSIX_VERSION */
 
 #include <errno.h>
@@ -62,21 +62,21 @@ extern int errno;
 #endif
 
 #if !defined (STREQ)
-#  define STREQ(a, b) ((a)[0] == (b)[0] && strcmp (a, b) == 0)
+# define STREQ(a, b) ((a)[0] == (b)[0] && strcmp (a, b) == 0)
 #endif /* !STREQ */
 
 #if !defined (member)
-#  define member(c, s) ((c) ? (strchr ((s), (c)) ? 1 : 0) : 0)
+# define member(c, s) ((c) ? (strchr ((s), (c)) ? 1 : 0) : 0)
 #endif /* !member */
 
 extern gid_t getegid ();
 extern uid_t geteuid ();
 
 #if !defined (R_OK)
-#define R_OK 4
-#define W_OK 2
-#define X_OK 1
-#define F_OK 0
+# define R_OK 4
+# define W_OK 2
+# define X_OK 1
+# define F_OK 0
 #endif /* R_OK */
 
 /* This name is used solely when printing --version information.  */
@@ -96,11 +96,11 @@ extern uid_t geteuid ();
 #define TRUTH_AND(a, b) ((a) & (b))
 
 #if defined (TEST_STANDALONE)
-#  define test_exit(val) exit (val)
+# define test_exit(val) exit (val)
 #else
    static jmp_buf test_exit_buf;
    static int test_error_return = 0;
-#  define test_exit(val) test_error_return = val, longjmp (test_exit_buf, 1)
+# define test_exit(val) test_error_return = val, longjmp (test_exit_buf, 1)
 #endif /* !TEST_STANDALONE */
 
 char *xrealloc ();
@@ -124,9 +124,9 @@ static int or __P ((void));
 
 #if __GNUC__ >= 2 && defined (__GNUC_MINOR__) \
     && __GNUC_MINOR__ >= 5 && !defined (__STRICT_ANSI__)
-#define NO_RETURN_ATTRIBUTE __attribute__ ((noreturn))
+# define NO_RETURN_ATTRIBUTE __attribute__ ((noreturn))
 #else
-#define NO_RETURN_ATTRIBUTE /* empty */
+# define NO_RETURN_ATTRIBUTE /* empty */
 #endif
 
 static void test_syntax_error __P ((char *format, char *arg)) NO_RETURN_ATTRIBUTE;
@@ -962,7 +962,7 @@ posixtest (void)
 }
 
 #if defined (TEST_STANDALONE)
-#include "long-options.h"
+# include "long-options.h"
 
 static void
 usage (int status)

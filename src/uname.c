@@ -61,7 +61,7 @@ static void usage __P ((int status));
 #define PRINT_MACHINE 16
 
  /* Host processor type. */
-# define PRINT_PROCESSOR 32
+#define PRINT_PROCESSOR 32
 
 /* Mask indicating which elements of the name to print. */
 static unsigned char toprint;

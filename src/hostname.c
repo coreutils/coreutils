@@ -27,8 +27,8 @@
 
 #if !defined(HAVE_SETHOSTNAME) && defined(HAVE_SYSINFO) && \
      defined (HAVE_SYS_SYSTEMINFO_H) && defined(HAVE_LIMITS_H)
-#include <limits.h>
-#include <sys/systeminfo.h>
+# include <limits.h>
+# include <sys/systeminfo.h>
 
 int
 sethostname (name, namelen)
@@ -43,7 +43,7 @@ sethostname (name, namelen)
   return (result == -1 ? result : 0);
 }
 
-#define HAVE_SETHOSTNAME 1  /* Now we have it... */
+# define HAVE_SETHOSTNAME 1  /* Now we have it... */
 #endif
 
 char *xgethostname ();
