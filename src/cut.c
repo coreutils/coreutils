@@ -1,5 +1,5 @@
 /* cut - remove parts of lines of files
-   Copyright (C) 1984 by David M. Ihnat
+   Copyright (C) 1984, 1997 by David M. Ihnat
 
    This program is a total rewrite of the Bell Laboratories Unix(Tm)
    command of the same name, as of System V.  It contains no proprietary
@@ -92,7 +92,7 @@
       if (n_rp >= n_rp_allocated)					\
 	{								\
 	  n_rp_allocated *= 2;						\
-	  (rp) = (struct range_pair *) xrealloc ((rp),			\
+	  (rp) = (struct range_pair *) xrealloc ((char *) (rp),		\
 				   n_rp_allocated * sizeof (*(rp)));	\
 	}								\
       rp[n_rp].lo = (low);						\
@@ -106,9 +106,6 @@ struct range_pair
     unsigned int lo;
     unsigned int hi;
   };
-
-char *xmalloc ();
-char *xrealloc ();
 
 /* This buffer is used to support the semantics of the -s option
    (or lack of same) when the specified field list includes (does
@@ -253,7 +250,7 @@ getstr (char **lineptr, int *n, FILE *stream, char terminator)
   if (!*lineptr)
     {
       *n = MIN_CHUNK;
-      *lineptr = xmalloc (*n);
+      *lineptr = (char *) xmalloc (*n);
       if (!*lineptr)
 	return -1;
     }
