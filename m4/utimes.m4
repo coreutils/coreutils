@@ -15,7 +15,9 @@ struct stat s, t;
 exit(!(stat ("conftestdata", &s) == 0 && utimes("conftestdata", (long *)0) == 0
 && stat("conftestdata", &t) == 0 && t.st_mtime >= s.st_mtime
 && t.st_mtime - s.st_mtime < 120));
-}], ac_cv_func_utimes_null=yes, ac_cv_func_utimes_null=no,
+}],
+  ac_cv_func_utimes_null=yes,
+  ac_cv_func_utimes_null=no,
   ac_cv_func_utimes_null=no)
 rm -f core core.* *.core])
 
