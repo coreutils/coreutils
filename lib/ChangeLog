@@ -1,3 +1,11 @@
+2003-02-06  Jim Meyering  <jim@meyering.net>
+
+	* search_.h (__restrict): Define to `restrict' or to nothing.
+
+	* fsusage.c: Remove declaration of statfs.
+	It conflicted with one from OSF/1 5.1 in <sys/mount.h>.
+	Reported by Nelson Beebe.
+
 2003-02-05  Jim Meyering  <jim@meyering.net>
 
 	Fix a heap-corruption bug that affected Solaris systems.
