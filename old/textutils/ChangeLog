@@ -1,3 +1,8 @@
+Fri Dec 27 17:29:02 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in: AC_REQUIRE version 2.12 of autoconf.
+	AC_OUTPUT: Add tests/pr-test/Makefile.
+
 Sun Dec 22 08:11:27 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* acinclude.m4: Move macros to individual files in new directory, m4/.
