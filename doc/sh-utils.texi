@@ -2479,16 +2479,14 @@ Append the hours, minutes, and seconds.
 @end table
 
 If showing any time terms, then include the time zone using the format
-@samp{%z}.  If @samp{--utc} is also specified, use @samp{%Z} in place of
 @samp{%z}.
 
 @item -R
 @itemx --rfc-822
 @opindex -R
 @opindex --rfc-822
-Display the time and date using the RFC-822-specified
+Display the time and date using the RFC-822-conforming
 format, @samp{%a, %_d %b %Y %H:%M:%S %z}.
-If @samp{--utc} is also specified, use @samp{GMT} in place of @samp{%z}.
 
 @item -r @var{file}
 @itemx --reference=@var{file}
@@ -2509,11 +2507,16 @@ Set the time and date to @var{datestr},  See @samp{-d} above.
 @opindex -u
 @opindex --utc
 @opindex --universal
-@cindex coordinated universal time
+@cindex Coordinated Universal Time
+@cindex UTC
 @cindex Greenwich Mean Time
-Print or set the time and date in Universal Coordinated Time instead of
-in local (wall clock) time.
-
+@cindex GMT
+Use Coordinated Universal Time (@sc{utc}) by operating as if the
+@env{TZ} environment variable was set to the string @samp{UTC0}.
+Normally, @command{date} operates in the time zone indicated by
+@env{TZ}, or the system default if @env{TZ} is not set.  Coordinated
+Universal Time is often called ``Greenwich Mean Time'' (@sc{gmt}) for
+historical reasons.
 @end table
 
 
