@@ -7994,28 +7994,29 @@ also give information about the files the links point to.
 Report information about the filesystems where the given files are located
 instead of information about the files themselves.
 
-@item -l
-@itemx --link
-@opindex -l
-@opindex --link
-@cindex link
-With this option, @command{stat} works normally for all type of files except for
-symbolic links. For symbolic links information about the files that are
-obtained by tracing the links is displayed.
+@item -L
+@itemx --dereference
+@opindex -L
+@opindex --dereference
+@cindex symbolic links, dereferencing in @command{stat}
+Change how @command{stat} treats symbolic links.
+With this option, @command{stat} acts on the file referenced
+by each symbolic link argument.
+Without it, @command{stat} acts on any symbolic link argument directly.
 
 @item -t
 @itemx --terse
 @opindex -t
 @opindex --terse
 @cindex terse output
-Prints the information in terse form, suitable for parsing by other programs
+Print the information in terse form, suitable for parsing by other programs.
 
 @item -s
 @itemx --secure
 @opindex -s
 @opindex --secure
 @cindex security output
-Displays security context on SE Linux.
+Display security context on SE Linux.
 
 @item -c
 @itemx --format
