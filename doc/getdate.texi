@@ -91,7 +91,7 @@ zeros on numbers are ignored.
 
 A @dfn{calendar date item} specifies a day of the year.  It is 
 specified differently, depending on whether the month is specified
-numerically or literally. All these strings specify the same calendar date:
+numerically or literally.  All these strings specify the same calendar date:
 
 @example
 1970-9-17            # ISO 8601.
@@ -124,7 +124,7 @@ any positive number, @var{month} is a number between 1 and 12, and
 @var{day} is a number between 1 and 31.  If @var{year} is less than 100,
 then 1900 is added to it to force a date in this century.  The construct
 @samp{@var{month}/@var{day}/@var{year}}, popular in the United States,
-is accepted. Also @samp{@var{month}/@var{day}}, omitting the year.
+is accepted.  Also @samp{@var{month}/@var{day}}, omitting the year.
 
 @cindex month names in date strings
 @cindex abbreviations for months
@@ -378,7 +378,7 @@ A comma following a day of the week item is ignored.
 @cindex displacement of dates
 
 @dfn{Relative items} adjust a date (or the current date if none) forward
-or backward.  The effect of relative items accumulate.  Here are some
+or backward.  The effects of relative items accumulate.  Here are some
 examples:
 
 @example
