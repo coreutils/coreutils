@@ -1,4 +1,10 @@
+2000-01-21  Jim Meyering  <meyering@lucent.com>
+
+	* configure.in (ALL_LINGUAS): Add Galician (gl).
+
 2000-01-16  Jim Meyering  <meyering@lucent.com>
+
+	* lib/Makefile.am: Sync with fileutils/lib/Makefile.am.
 
 	* src/date.c (usage): Correct error in %V description.
 	From Wolfram Kleff.
