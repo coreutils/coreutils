@@ -193,7 +193,7 @@ enum
 
 static struct option const long_options[] =
 {
-  /* --allow-missing is deprecated; use --retry instead */
+  /* FIXME: remove in 2005 --allow-missing is deprecated; use --retry instead */
   {"allow-missing", no_argument, NULL, ALLOW_MISSING_OPTION},
   {"bytes", required_argument, NULL, 'c'},
   {"follow", optional_argument, NULL, LONG_FOLLOW_OPTION},
@@ -236,7 +236,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
      fputs (_("\
       --retry              keep trying to open a file even if it is\n\
                            inaccessible when tail starts or if it becomes\n\
-                           inaccessible later -- useful only with -f\n\
+                           inaccessible later; useful when following by name,\n\
+                           i.e., with --follow=name\n\
   -c, --bytes=N            output the last N bytes\n\
 "), stdout);
      fputs (_("\
