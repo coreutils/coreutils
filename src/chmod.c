@@ -30,7 +30,6 @@
 #include "modechange.h"
 #include "quote.h"
 #include "root-dev-ino.h"
-#include "savedir.h"
 #include "xfts.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
