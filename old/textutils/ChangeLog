@@ -21,6 +21,7 @@ Sat Mar  9 13:30:12 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	gettext distribution.
 	* acconfig.h (ENABLE_NLS, HAVE_CATGETS, HAVE_GETTEXT, HAVE_LC_MESSAGES,
 	HAVE_STPCPY): New macros.
+	Add PACKAGE and VERSION.
 	* configure.in (PACKAGE): Define with AC_DEFINE_UNQUOTED.
 	(VERSION): Likewise.
 	(ALL_LINGUAS): Define.
