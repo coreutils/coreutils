@@ -42,6 +42,7 @@ libfetish_a_SOURCES = \
   getline.h \
   getpagesize.h \
   getstr.c getstr.h \
+  gettime.c \
   getugroups.c \
   group-member.h \
   hard-locale.c hard-locale.h \
@@ -59,7 +60,6 @@ libfetish_a_SOURCES = \
   memcoll.c memcoll.h \
   modechange.c modechange.h \
   mountlist.h \
-  nanosleep.h \
   path-concat.c path-concat.h \
   pathmax.h \
   physmem.c physmem.h \
@@ -72,10 +72,12 @@ libfetish_a_SOURCES = \
   same.c same.h \
   save-cwd.c save-cwd.h \
   savedir.c savedir.h \
+  settime.c \
   sha.c sha.h \
   stdio-safer.h \
   stripslash.c \
   strverscmp.h \
+  timespec.h \
   unicodeio.c unicodeio.h \
   unistd-safer.h \
   userspec.c \
