@@ -260,7 +260,7 @@ static char *
 fsp_to_string (const struct statfs *fsp)
 {
 # if defined HAVE_F_FSTYPENAME_IN_STATFS
-  return fsp->f_fstypename;
+  return (char *) (fsp->f_fstypename);
 # else
   return fstype_to_string (fsp->f_type);
 # endif
