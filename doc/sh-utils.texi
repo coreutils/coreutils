@@ -3159,14 +3159,66 @@ Print all numbers with the same width, by padding with leading zeroes.
 
 @end table
 
-Note: The @var{format} string can only produce decimal numbers. If you
-want decimal numbers without exponent and without decimal point to be
-output, use the format @samp{%1.f}. If you want hexadecimal or octal
-output, use the command
-@code{printf @var{format}'\n' `seq -f %1.f @var{first} @var{step} @var{last}`}
-or the command
-@code{seq -f %1.f @var{first} @var{step} @var{last} | xargs -n 1000 printf @var{format}'\n'}
-with @samp{%x} or @samp{%o} as @var{format} string.
+If you want to use @code{seq} to print sequences of large integer values,
+you should not use the default @samp{%g} format since it can result in
+loss of precision:
+
+@example
+$ seq 1000000 1000001
+1e+06
+1e+06
+@end example
+
+Instead, you can use the format, @samp{%1.f},
+to print large decimal numbers with no exponent and no decimal point.
+
+@example
+$ seq --format=%1.f 1000000 1000001
+1000000
+1000001
+@end example
+
+If you want hexadecimal output, you can use @code{printf}
+to perform the conversion:
+
+@example
+$ printf %x'\n' `seq -f %1.f 1048575 1024 1050623`
+fffff
+1003ff
+1007ff
+@end example
+
+For very long lists of numbers, use xargs to avoid
+system limitations on the length of an argument list:
+
+@example
+$ seq -f %1.f 1000000 | xargs printf %x'\n' |tail -3
+f423e
+f423f
+f4240
+@end example
+
+To generate octal output, use the printf @code{%o} format instead
+of @code{%x}.  Note however that using printf works only for numbers
+smaller than @code{2^32}:
+
+@example
+$ printf "%x\n" `seq -f %1.f 4294967295 4294967296`
+ffffffff
+bash: printf: 4294967296: Numerical result out of range
+@end example
+
+On most systems, seq can produce whole-number output for values up to
+@code{2^53}, so here's a more general approach to base conversion that
+also happens to be more robust for such large numbers.  It works by
+using @code{bc} and setting its output radix variable, @var{obase},
+to @samp{16} in this case to produce hexadecimal output.
+
+@example
+$ (echo obase=16; seq -f %1.f 4294967295 4294967296)|bc
+FFFFFFFF
+100000000
+@end example
 
 @node Index
 @unnumbered Index
