@@ -1,6 +1,13 @@
-2002-02-17  Jim Meyering  <meyering@lucent.com>
+2002-02-20  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.6.
+
+	* src/touch.c: Include posixver.h.
+	(usage): Document only the intersection of the old and new behaviors,
+	to encourage portability.
+	(main): Use `posix2_version ()' in place of POSIX2_VERSION.
+
+2002-02-17  Jim Meyering  <meyering@lucent.com>
 
 	* ABOUT-NLS, intl/*: Update to Gettext 0.11.
 	* INSTALL: Update to Autoconf 2.52h.
