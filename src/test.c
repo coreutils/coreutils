@@ -2,7 +2,7 @@
 
 /* Modified to run with the GNU shell by bfox. */
 
-/* Copyright (C) 1987, 1988, 1989, 1990, 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1987-1993, 1994 Free Software Foundation, Inc.
 
    This file is part of GNU Bash, the Bourne Again SHell.
 
