@@ -1,6 +1,10 @@
-2005-03-25  Jim Meyering  <jim@meyering.net>
+2005-03-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* src/dircolors.hin: Add "TERM cygwin".
+
+2005-03-25  Jim Meyering  <jim@meyering.net>
 
 	* src/system.h (DECIMAL_DIGIT_ACCUMULATE): Reverse the sense of
 	the return value, and update callers:
