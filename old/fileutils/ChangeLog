@@ -1,4 +1,15 @@
-2000-01-04  Jim Meyering  <meyering@ascend.com>
+2000-01-06  Paul Eggert  <eggert@set.twinsun.com>
+
+	* tar/lib/getdate.y: Sync tm_diff with the GNU C Library.
+	(TM_YEAR_BASE): Renamed from TM_YEAR_ORIGIN.  All uses changed.
+	(tm_diff): Renamed from difftm.  All uses changed.
+	Replace body with that taken from GNU C Library 2.1.3pre1.
+	(get_date): Prefer tm_gmtoff to tm_diff if available.
+
+2000-01-04  Paul Eggert  <eggert@twinsun.com>
+
+	* savedir.c (savedir): Don't store past the end of an array if
+	name_size is zero and the directory is empty.
 
 	* Makefile.maint (PREV_VERSION): Tweak so it handles e.g., 2.0a -> 2.0.
 	(alpha): Create xdelta diffs.

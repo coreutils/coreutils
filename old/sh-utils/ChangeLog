@@ -1,3 +1,17 @@
+2000-01-06  Paul Eggert  <eggert@set.twinsun.com>
+
+	* tar/lib/getdate.y: Sync tm_diff with the GNU C Library.
+	(TM_YEAR_BASE): Renamed from TM_YEAR_ORIGIN.  All uses changed.
+	(tm_diff): Renamed from difftm.  All uses changed.
+	Replace body with that taken from GNU C Library 2.1.3pre1.
+	(get_date): Prefer tm_gmtoff to tm_diff if available.
+
+2000-01-05  Paul Eggert  <eggert@twinsun.com>
+
+	Minor code cleanup.
+	* src/sleep.c (clock_get_realtime): Return argument, for convenience.
+	(main): Use this to simplify main sleep loop.
+
 2000-01-05  Jim Meyering  <meyering@ascend.com>
 
 	Some systems lack a definition of struct timespec (AIX, Ultrix)
