@@ -1,6 +1,13 @@
-2004-12-21  Jim Meyering  <jim@meyering.net>
+2005-01-03  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/system.h: If PRIdMAX, PRIoMAX, PRIuMAX, and PRIxMAX are
+	not all defined and either ULONG_MAX or ULLONG_MAX is not defined,
+	then fail at compile-time rather than let tools like od produce
+	invalid results at run time.
+
+2004-12-21  Jim Meyering  <jim@meyering.net>
 
 	* src/csplit.c (usage): Say the default names are `xx00, xx01, ...',
 	not `xx01, xx02, ...'.
