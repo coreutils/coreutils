@@ -2,6 +2,7 @@
 AUTOMAKE_OPTIONS = 1.4 gnits
 
 TESTS = \
+  deref-args \
   slash \
   fd-leak \
   hard-link 8gb basic restore-wd \
