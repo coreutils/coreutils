@@ -1,3 +1,69 @@
+2003-01-04  Jim Meyering  <meyering@lucent.com>
+
+	* src/ls.c: Include "dev-ino.h".
+	[struct dev_ino]: Remove declaration.
+
+2003-01-03  Jim Meyering  <meyering@lucent.com>
+
+	Don't include trailing /. in diagnostics about directories.
+	* src/remove.c (full_filename_): When FILENAME is just `.'
+	and there is a nonempty directory-name part, don't append `/.'.
+	* tests/rm/unread2: Remove trailing /. from diagnostic.
+	* tests/rm/rm2: Likewise.
+
+	When rm detects a cycle, don't abort the entire command,
+	but rather just the affected command line argument.
+	* src/remove.c: Include <setjmp.h>
+	(struct dirstack_state) [current_arg_jumpbuf]: New member.
+	(remove_cwd_entries): Call longjmp if we detect a cycle.
+	(rm): Call setjmp here.
+
+2003-01-02  Jim Meyering  <meyering@lucent.com>
+
+	rm could be tricked into mistakenly reporting a cycle.
+
+	* src/remove.c: Include cycle-check.h.
+	[cycle_check_state]: New global.
+	(remove_cwd_entries): Adapt to new semantics of cycle_check.
+	(rm): Call cycle_check_init and cycle_check_free for each file.
+	* tests/rm/cycle (rm): New test, for the above fix.
+	* tests/rm/Makefile.am (TESTS): Add cycle.
+
+	* src/cp.c (do_copy): Tweak diagnostic to be consistent with the one
+	from mv: s/missing file arguments/missing file argument/.
+	With --target-directory=DIR, cp and mv work with a single file argument.
+	Reported by Karl Berry.
+
+	* tests/rm/isatty: Enable this test.
+
+2003-01-01  Jim Meyering  <meyering@lucent.com>
+
+	* src/remove.c (cycle_check): Remove function.
+	Instead, include cycle-check.h and use it.
+
+2002-12-31  Jim Meyering  <meyering@lucent.com>
+
+	* src/remove.c (AD_push_initial): Don't set status to RM_OK here.
+	(AD_push): Likewise.
+	(AD_INIT_OTHER_MEMBERS): Define.
+	(remove_dir): Define the `status' member manually after each
+	call to AD_push or AD_push_initial.
+
+	* src/ls.c [struct dev_ino]: Remove definition.
+	Include "dev-ino.h" instead.
+
+2002-12-28  Jim Meyering  <meyering@lucent.com>
+
+	* tests/du/Makefile.am (TESTS): Add no-deref.
+	* tests/du/no-deref: New script.
+
+2002-12-23  Jim Meyering  <meyering@lucent.com>
+
+	* src/remove.c (remove_cwd_entries): Fix typo in comment.
+
+	* src/du.c (count_entry) [S_ISLNK]: Don't define.
+	It's already defined in sys2.h.
+
 2002-12-21  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.5.
