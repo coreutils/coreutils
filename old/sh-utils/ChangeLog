@@ -6,8 +6,9 @@
 
 	* who-users.c (print_entry): Use strchr, not index.
 
+	* configure.in (AC_CHECK_HEADERS): Add sys/socket.h.
 	* canon-host.c [HAVE_SYS_SOCKET_H]: Include <sys/socket.h> for
-	definition of AF_INET on at least SunOS.
+	definition of AF_INET on at least SunOS 4.
 
 Tue Feb 13 23:49:16 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
