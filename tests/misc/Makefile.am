@@ -10,6 +10,7 @@ TESTS_ENVIRONMENT = \
   PROG=$$tst
 
 TESTS = \
+  nohup \
   readlink \
   head-elide-tail \
   split-fail \
