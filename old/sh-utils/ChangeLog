@@ -1,5 +1,8 @@
 Sun Jul 21 09:47:55 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in (AC_REPLACE_FUNCS): Replace getline.c.
+	Add related check for the getdelim function.
+
 	* src/stty.c (usage): Correct typo (-iucl -> -iuclc) in usage message.
 	From Thomas Olsson <d95to@efd.lth.se>.
 
