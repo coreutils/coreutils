@@ -1,5 +1,5 @@
 /* system-dependent definitions for fileutils, textutils, and sh-utils packages.
-   Copyright (C) 1989, 1991-2000 Free Software Foundation, Inc.
+   Copyright (C) 1989, 1991-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -114,6 +114,12 @@ struct utimbuf
 #include <errno.h>
 #ifndef errno
 extern int errno;
+#endif
+
+#if HAVE_STDBOOL_H
+# include <stdbool.h>
+#else
+typedef enum {false = 0, true = 1} bool;
 #endif
 
 #if HAVE_STDLIB_H

@@ -26,12 +26,6 @@
 #include <sys/types.h>
 #include <assert.h>
 
-#if HAVE_STDBOOL_H
-# include <stdbool.h>
-#else
-typedef enum {false = 0, true = 1} bool;
-#endif
-
 #include "save-cwd.h"
 #include "system.h"
 #include "dirname.h"
