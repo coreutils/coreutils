@@ -1,5 +1,5 @@
 /* Declaration for error-reporting function
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 2003 Free Software Foundation, Inc.
 
 
    NOTE: The canonical source of this file is maintained with the GNU C Library.
@@ -40,8 +40,6 @@
 extern "C" {
 #endif
 
-#if defined (__STDC__) && __STDC__
-
 /* Print a message with `fprintf (stderr, FORMAT, ...)';
    if ERRNUM is nonzero, follow it with ": " and strerror (ERRNUM).
    If STATUS is nonzero, terminate the program with `exit (STATUS)'.  */
@@ -57,12 +55,6 @@ extern void error_at_line (int status, int errnum, const char *fname,
    name, a colon and a space.  Otherwise, error will call this
    function without parameters instead.  */
 extern void (*error_print_progname) (void);
-
-#else
-void error ();
-void error_at_line ();
-extern void (*error_print_progname) ();
-#endif
 
 /* This variable is incremented each time `error' is called.  */
 extern unsigned int error_message_count;
