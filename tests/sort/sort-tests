@@ -1199,6 +1199,23 @@ else
   esac
 fi
 test -s t15e.err || rm -f t15e.err
+$xx -f $srcdir/t16a.in > t16a.out 2> t16a.err
+code=$?
+if test $code != 0 ; then
+  $echo Test 16a failed: ../../src/sort return code $code differs from expected value 0 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp t16a.out $srcdir/t16a.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo passed 16a; fi ;; # equal files
+    1) $echo Test 16a failed: files t16a.out and $srcdir/t16a.exp differ 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo Test 16a may have failed. 1>&2;
+       $echo The command "cmp t16a.out $srcdir/t16a.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s t16a.err || rm -f t16a.err
 if test $errors = 0 ; then
   $echo Passed all tests. 1>&2
 else
