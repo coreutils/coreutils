@@ -60,8 +60,8 @@ my @Tests =
 
      ['slink-dir-F',     '-F d', {OUT => "d@\n"}, $slink_d, $unlink_d],
      ['slink-dir-dF',   '-dF d', {OUT => "d@\n"}, $slink_d, $unlink_d],
-     ['slink-dir-dFH', '-dFH d', {OUT => "d/\n"}, $slink_d, $unlink_d],
-     ['slink-dir-dFL', '-dFL d', {OUT => "d/\n"}, $slink_d, $unlink_d],
+     ['slinkdir-dFH',  '-dFH d', {OUT => "d/\n"}, $slink_d, $unlink_d],
+     ['slinkdir-dFL',  '-dFL d', {OUT => "d/\n"}, $slink_d, $unlink_d],
 
      # From Stéphane Chazelas.
      ['no-a-isdir-b', 'no-dir d',
