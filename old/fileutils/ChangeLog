@@ -1,3 +1,18 @@
+2002-04-14  Jim Meyering  <meyering@lucent.com>
+
+	* src/stat.c [HAVE_SYS_VFS_H]: Guard incluion of sys/vfs.h.
+	Constify many parameters.
+	(print_statfs): Fix typo: Use %u (to match %lu) for namelen, not %d.
+	(verbose_usage): Remove function.  Move contents into usage.
+	Remove lots of #if directives involving FLASK_LINUX
+	[!FLASK_LINUX] (is_flask_enabled): Define.
+	(stat_secure, lstat_secure): Define.
+	(print_statfs): Remove lots of nested #if directives.
+	Instead, rely on support fo %llu and %lld printf formats --
+	but that is only temporary, since it's not porable enough.
+	(main): Hoist is_flask_enabled test to be done here, rather
+	than in each of do_stat and do_statfs for every argument.
+
 2002-04-13  Jim Meyering  <meyering@lucent.com>
 
 	* src/stat.c: Include system.h, error.h, and many other headers.
