@@ -1,3 +1,22 @@
+1999-11-09  Jim Meyering  <meyering@ascend.com>
+
+	* src/expr.c (NEW): Undefine to avoid warning about redefinition.
+	(NEW): Redefine in terms of XMALLOC.
+
+	* lib/xalloc.h (XMALLOC): Correct misnamed macro parameter name:
+	s/N_bytes/N_items/.
+	(XCALLOC): Likewise.
+	(XREALLOC): Likewise.
+
+1999-11-05  Jim Meyering  <meyering@ascend.com>
+
+	* src/system.h: Use HAVE_STRUCT_STAT_ST_BLOCKS, not deprecated
+	HAVE_ST_BLOCKS.
+
+	* configure.in: Move some type/header/member tests into
+	m4/jm-macros.m4 (jm_CHECK_ALL_TYPES) so they are shared by all of
+	fileutils, textutils, and sh-utils.
+
 1999-11-01  Jim Meyering  <meyering@ascend.com>
 
 	* lib/Makefile.am (MAINTAINERCLEANFILES): Set to $(BUILT_SOURCES).
