@@ -106,10 +106,10 @@ int lstat ();
 static int hash_insert PARAMS ((ino_t ino, dev_t dev));
 static int hash_insert2 PARAMS ((struct htab *_htab, ino_t ino, dev_t dev));
 static uintmax_t count_entry PARAMS ((const char *ent, int top, dev_t last_dev,
-				   int depth));
+				      int depth));
 static void du_files PARAMS ((char **files));
 static void hash_init PARAMS ((unsigned int modulus,
-			    unsigned int entry_tab_size));
+			       unsigned int entry_tab_size));
 static void hash_reset PARAMS ((void));
 static void str_concatc PARAMS ((String *s1, char *cstr));
 static void str_copyc PARAMS ((String *s1, char *cstr));
@@ -539,9 +539,8 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
       through_symlink = (xstat == stat
 			 && lstat (ent, &e_buf) == 0
 			 && S_ISLNK (e_buf.st_mode));
-      if (through_symlink)
-	if (save_cwd (&cwd))
-	  exit (1);
+      if (through_symlink && save_cwd (&cwd))
+	exit (1);
 
       if (chdir (ent) < 0)
 	{
@@ -579,12 +578,15 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
       pathlen = path->length;
 
       for (namep = name_space; *namep; namep += strlen (namep) + 1)
-	if (!excluded_filename (exclude, namep))
-	  {
-	    str_concatc (path, namep);
-	    size += count_entry (namep, 0, dir_dev, depth + 1);
-	    str_trunc (path, pathlen);
-	  }
+	{
+	  if (!excluded_filename (exclude, namep))
+	    {
+	      str_concatc (path, namep);
+	      size += count_entry (namep, 0, dir_dev, depth + 1);
+	      str_trunc (path, pathlen);
+	    }
+	}
+
       free (name_space);
       if (through_symlink)
 	{
@@ -592,8 +594,10 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 	  free_cwd (&cwd);
 	}
       else if (chdir ("..") < 0)
-        error (1, errno,
-	       _("cannot change to `..' from directory %s"), path->text);
+	{
+	  error (1, errno,
+		 _("cannot change to `..' from directory %s"), path->text);
+	}
 
       str_trunc (path, pathlen - 1); /* Remove the "/" we added.  */
       if (depth <= max_depth || top)
@@ -686,7 +690,7 @@ hash_insert (ino_t ino, dev_t dev)
 
       htab_r->entry_tab = (struct entry *)
 	xrealloc ((char *) htab_r->entry_tab,
-		 sizeof (struct entry) * entry_tab_size);
+		  sizeof (struct entry) * entry_tab_size);
 
       /* Increase the size of htab again.  */
 
@@ -774,7 +778,7 @@ str_init (String **s1, unsigned int size)
 }
 
 static void
-ensure_space (String * s, unsigned int size)
+ensure_space (String *s, unsigned int size)
 {
   if (s->alloc < size)
     {
