@@ -1,3 +1,10 @@
+2001-12-18  Paul Eggert  <eggert@twinsun.com>
+
+	See the big note in ../ChangeLog.
+	* human.c (suffixes): Prefer K to k for 1024.
+	(generate_suffix_backwards): New function.
+	(human_readable_inexact): Use it.
+
 2001-12-15  Jim Meyering  <meyering@lucent.com>
 
 	* regex.h (__restrict_arr): Update from libc.
