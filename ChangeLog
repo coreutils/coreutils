@@ -2,6 +2,9 @@
 
 	* Version 4.5.2.
 
+	* src/Makefile.am (nanosec_libs): Define.
+	(sleep_LDADD, tail_LDADD): Use it here.
+
 	Factor nanosleep-related code into ../lib/xnanosleep.c.
 	* src/sleep.c: Include xnanosleep.h.
 	Factor out fenv.h-related code.
