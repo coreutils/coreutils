@@ -1,5 +1,7 @@
 2003-01-11  Jim Meyering  <jim@meyering.net>
 
+	* makepath.c: Don't test HAVE_ERRNO_H.  It's not necessary.
+
 	* canonicalize.c: Don't test HAVE_ERRNO_H.  It's not necessary.
 	Don't test HAVE_STDDEF_H.  It's not necessary.
 	Use definition of PTR_INT_TYPE from obstack.h.
