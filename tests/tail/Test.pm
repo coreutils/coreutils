@@ -32,21 +32,25 @@ my @tv = (
 # With no number, this is like -10l
 ['obs-l', '-l', "x\n" . ("y\n" x 10) . 'z', ("y\n" x 9) . 'z', 0],
 
-# This should get `tail: +cl: No such file or directory'
+['obs-b', '-b', "x\n" x (512 * 10 / 2 + 1), "x\n" x (512 * 10 / 2), 0],
+
+# This should get
+# `tail: cannot open `+cl' for reading: No such file or directory'
 ['err-1', '+cl', '', '', 1],
 
 # This should get `tail: l: invalid number of bytes'
 ['err-2', '-cl', '', '', 1],
 
-# This should get `tail: z: invalid suffix character in obsolescent option'
+# This should get
+# `tail: cannot open `+2cz' for reading: No such file or directory'
 ['err-3', '+2cz', '', '', 1],
 
-# This should get `tail: X: invalid suffix character in obsolescent option'
+# This should get `tail: invalid option -- 2'
 ['err-4', '-2cX', '', '', 1],
 
 # Since the number is larger than 2^64, this should provoke
-# the diagnostic: `tail: 99999999999999999999: number of bytes is so large \
-# that it is not representable' on all systems... probably, for now, maybe.
+# the diagnostic: `tail: 99999999999999999999: invalid number of bytes'
+# on all systems... probably, for now, maybe.
 ['err-5', '-c99999999999999999999', '', '', 1],
 ['err-6', '-c', '', '', 1],
 
@@ -79,7 +83,7 @@ sub test_vector
     {
       my ($test_name, $flags, $in, $exp, $ret) = @$t;
 
-      $test_name =~ /^(obs|err-[134]|minus-)/
+      $test_name =~ /^(obs|minus-)/
 	and $Test::env{$test_name} = ['_POSIX2_VERSION=199209'];
 
       # If you run the minus* tests with a FILE arg they'd hang.
