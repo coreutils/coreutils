@@ -2,6 +2,10 @@
 
 	* Version 4.5.5.
 
+	* src/system.h [! HAVE_DECL_MEMRCHR]: Declare memrchr.
+	This is necessary at least for Irix6.5 when using c89.
+	Reported by Nelson Beebe.
+
 	* tests/misc/Makefile.am (TESTS): Add cat-tty-eof.
 
 	* tests/misc/cat-tty-eof: New test.
