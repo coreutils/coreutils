@@ -1338,7 +1338,7 @@ init_fps (int number_of_files, char **av)
   total_files = 0;
 
   if (column_vector != NULLCOL)
-    free ((char *) column_vector);
+    free (column_vector);
   column_vector = xmalloc (columns * sizeof (COLUMN));
 
   if (parallel_files)
@@ -1907,12 +1907,12 @@ init_store_cols (void)
   int chars_if_truncate = total_lines * (chars_per_column + 1);
 
   if (line_vector != NULL)
-    free ((int *) line_vector);
+    free (line_vector);
   /* FIXME: here's where it was allocated.  */
   line_vector = xmalloc ((total_lines + 1) * sizeof (int *));
 
   if (end_vector != NULL)
-    free ((int *) end_vector);
+    free (end_vector);
   end_vector = xmalloc (total_lines * sizeof (int *));
 
   if (buff != NULL)
