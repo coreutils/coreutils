@@ -1,5 +1,12 @@
 Fri May 13 09:45:23 1994  Jim Meyering  (meyering@comco.com)
 
+	* pwd.c: Include <sys/types.h> before "system.h".
+	From Kaveh Ghazi.
+
+	* {lib,man,src}/Makefile.in (Makefile): Use ../config.status
+	instead of $(srcdir)/../config.status.  The latter didn't work
+	for builddir != srcdir.  From Kaveh Ghazi.
+
 	* Makefile.in (Makefile): Remove dependencies on */Makefile.in.
 	Change the rule so running config.status creates only Makefile.
 	(stamp-config): Have config.status generate only config.h.
@@ -10,6 +17,7 @@ Fri May 13 09:45:23 1994  Jim Meyering  (meyering@comco.com)
 	* hostname.c: New program.
 	* hostname.1: New file.
 	* Makefile.in (PROGS): Add hostname.
+	(SOURCES): Add hostname.c
 	* src/Makefile.in: Add rules and dependencies for hostname.
 	* configure.in (AC_HAVE_FUNCS): Add sethostname.
 
