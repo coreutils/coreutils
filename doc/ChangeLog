@@ -1,3 +1,11 @@
+2004-01-15  Alfred M. Szmidt  <ams@kemisten.nu>
+
+	Factor out some common options.
+	* coreutils.texi (Common options): Define macros here.
+	(What information is listed, cp invocation): Use the macro(s).
+	(install invocation, mv invocation, ln invocation): Likewise.
+	(df invocation, du invocation): Likewise.
+
 2004-01-09  Jim Meyering  <jim@meyering.net>
 
 	Document the exit status of each and every program.
