@@ -163,8 +163,7 @@ extract_trimmed_name (const STRUCT_UTMP *ut)
    that this function is first run. */
 
 static const char *
-idle_string (when)
-     time_t when;
+idle_string (time_t when)
 {
   static time_t now = 0;
   static char idle[10];
@@ -189,8 +188,7 @@ idle_string (when)
 /* Display a line of information about entry THIS. */
 
 static void
-print_entry (this)
-     STRUCT_UTMP *this;
+print_entry (struct utmp *this)
 {
   struct stat stats;
   time_t last_change;
@@ -257,8 +255,7 @@ print_entry (this)
    in `utmp_contents', which should have N elements. */
 
 static void
-list_entries_who (n)
-     int n;
+list_entries_who (int n)
 {
   register STRUCT_UTMP *this = utmp_contents;
   int entries;
@@ -290,9 +287,7 @@ list_entries_who (n)
 #ifdef USERS
 
 static int
-userid_compare (v_a, v_b)
-     const void *v_a;
-     const void *v_b;
+userid_compare (const void *v_a, const void *v_b)
 {
   char **a = (char **) v_a;
   char **b = (char **) v_b;
@@ -300,8 +295,7 @@ userid_compare (v_a, v_b)
 }
 
 static void
-list_entries_users (n)
-     int n;
+list_entries_users (int n)
 {
   register STRUCT_UTMP *this = utmp_contents;
   char **u;
@@ -348,7 +342,7 @@ list_entries_users (n)
 #ifdef WHO
 
 static void
-print_heading ()
+print_heading (void)
 {
   printf ("%-8s ", "USER");
   if (include_mesg)
@@ -363,8 +357,7 @@ print_heading ()
 /* Display `utmp_contents', which should have N entries. */
 
 static void
-scan_entries (n)
-     int n;
+scan_entries (int n)
 {
   register STRUCT_UTMP *this = utmp_contents;
 
@@ -389,8 +382,7 @@ scan_entries (n)
    number of entries it contains. */
 
 static int
-read_utmp (filename)
-     char *filename;
+read_utmp (char *filename)
 {
   FILE *utmp;
   struct stat file_stats;
@@ -423,8 +415,7 @@ read_utmp (filename)
 /* Display a list of who is on the system, according to utmp file FILENAME. */
 
 static void
-who (filename)
-     char *filename;
+who (char *filename)
 {
   int users;
 
@@ -449,9 +440,7 @@ who (filename)
    is no matching entry. */
 
 static STRUCT_UTMP *
-search_entries (n, line)
-     int n;
-     char *line;
+search_entries (int n, char *line)
 {
   register STRUCT_UTMP *this = utmp_contents;
 
@@ -472,8 +461,7 @@ search_entries (n, line)
    or nothing if there is no entry for it. */
 
 static void
-who_am_i (filename)
-     char *filename;
+who_am_i (char *filename)
 {
   register STRUCT_UTMP *utmp_entry;
   char hostname[MAXHOSTNAMELEN + 1];
@@ -502,8 +490,7 @@ who_am_i (filename)
 }
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -534,8 +521,7 @@ If ARG1 ARG2 given, -m presumed: `am i' or `mom likes' are usual.\n\
 
 #ifdef USERS
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -555,9 +541,7 @@ If FILE not given, uses /etc/utmp.  /etc/wtmp as FILE is common.\n\
 #endif /* USERS */
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int optc, longind;
 #ifdef WHO
