@@ -1667,7 +1667,7 @@ main (int argc, char **argv)
 
   n_specs = 0;
   n_specs_allocated = 5;
-  spec = xmalloc (n_specs_allocated * sizeof (struct tspec));
+  spec = xmalloc (n_specs_allocated * sizeof *spec);
 
   format_address = format_address_std;
   address_base = 8;
