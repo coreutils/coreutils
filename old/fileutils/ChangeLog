@@ -1,5 +1,8 @@
 Sun May 21 07:20:55 1995  Jim Meyering  (meyering@comco.com)
 
+	* all source files (usage): Include one- or two-line synopsis
+	in --help output.  From Karl Berry.
+
 	* Makefile.in (.PHONY): TAGS is not a phony target.  From Franc,ois.
 
 	* All Makefile.in (install-exec, install-exec): New targets.
