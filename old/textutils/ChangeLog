@@ -7,6 +7,7 @@
 	(usage): Update.
 	(check_file): Implement it.
 	(main): Handle new, optional arguments.
+	* tests/uniq/Test.pm: New tests for the above.
 	Patch by Padraig Brady.
 
 2001-05-12  Bruno Haible  <haible@clisp.cons.org>
