@@ -175,17 +175,24 @@ change_file_owner (FTS *fts, FTSENT *ent,
 		   struct Chown_option const *chopt)
 {
   const char *file_full_name = ent->fts_path;
-  struct stat const *file_stats = ent->fts_statp;
-  struct stat const *target_stats;
+  struct stat const *file_stats IF_LINT (= NULL);
   struct stat stat_buf;
   int errors = 0;
-
-  /* This is the second time we've seen this directory.  */
-  if (ent->fts_info == FTS_DP)
-    return 0;
+  bool do_chown = true;
+  bool symlink_changed = true;
 
   switch (ent->fts_info)
     {
+    case FTS_D:
+      if (chopt->recurse)
+	return 0;
+      break;
+
+    case FTS_DP:
+      if (! chopt->recurse)
+	return 0;
+      break;
+
     case FTS_NS:
       error (0, ent->fts_errno, _("cannot access %s"), quote (file_full_name));
       return 1;
@@ -203,104 +210,85 @@ change_file_owner (FTS *fts, FTSENT *ent,
       break;
     }
 
-  if (ROOT_DEV_INO_CHECK (chopt->root_dev_ino, file_stats))
+  if (old_uid != (uid_t) -1 || old_gid != (gid_t) -1
+      || (chopt->root_dev_ino && chopt->affect_symlink_referent))
     {
-      ROOT_DEV_INO_WARN (file_full_name);
-      return 1;
+      file_stats = ent->fts_statp;
+
+      /* If this is a symlink and we're dereferencing them,
+	 stat it to get the permissions of the referent.  */
+      if (S_ISLNK (file_stats->st_mode) && chopt->affect_symlink_referent)
+	{
+	  if (stat (ent->fts_accpath, &stat_buf) != 0)
+	    {
+	      error (0, errno, _("cannot dereference %s"),
+		     quote (file_full_name));
+	      return 1;
+	    }
+
+	  file_stats = &stat_buf;
+	}
+
+      do_chown = ((old_uid == (uid_t) -1
+		   || file_stats->st_uid == old_uid)
+		  && (old_gid == (gid_t) -1
+		      || file_stats->st_gid == old_gid));
     }
 
-  /* If this is a symlink and we're dereferencing them,
-     stat it to get the permissions of the referent.  */
-  if (S_ISLNK (file_stats->st_mode) && chopt->affect_symlink_referent)
+  if (do_chown)
     {
-      if (stat (ent->fts_accpath, &stat_buf) != 0)
+      const char *file = ent->fts_accpath;
+
+      if (ROOT_DEV_INO_CHECK (chopt->root_dev_ino, file_stats))
 	{
-	  error (0, errno, _("cannot dereference %s"), quote (file_full_name));
+	  ROOT_DEV_INO_WARN (file_full_name);
 	  return 1;
 	}
-      target_stats = &stat_buf;
-    }
-  else
-    {
-      target_stats = file_stats;
-    }
 
-  if ((old_uid == (uid_t) -1 || target_stats->st_uid == old_uid)
-      && (old_gid == (gid_t) -1 || target_stats->st_gid == old_gid))
-    {
-      uid_t new_uid = (uid == (uid_t) -1 ? target_stats->st_uid : uid);
-      gid_t new_gid = (gid == (gid_t) -1 ? target_stats->st_gid : gid);
-      if (new_uid != target_stats->st_uid || new_gid != target_stats->st_gid)
+      if (chopt->affect_symlink_referent)
 	{
-	  const char *file = ent->fts_accpath;
-	  int fail;
-	  int symlink_changed = 1;
-	  int saved_errno;
+	  /* Applying chown to a symlink and expecting it to affect
+	     the referent is not portable, but here we may be using a
+	     wrapper that tries to correct for unconforming chown.  */
+	  errors = chown (file, uid, gid);
+	}
+      else
+	{
+	  errors = lchown (file, uid, gid);
 
-	  if (S_ISLNK (file_stats->st_mode))
+	  /* Ignore any error due to lack of support; POSIX requires
+	     this behavior for top-level symbolic links with -h, and
+	     implies that it's required for all symbolic links.  */
+	  if (errors && errno == EOPNOTSUPP)
 	    {
-	      if (chopt->affect_symlink_referent)
-		{
-		  /* Applying chown to a symlink and expecting it to affect
-		     the referent is not portable, but here we may be using a
-		     wrapper that tries to correct for unconforming chown.  */
-		  fail = chown (file, new_uid, new_gid);
-		}
-	      else
-		{
-		  bool is_command_line_argument = (ent->fts_level == 1);
-		  fail = lchown (file, new_uid, new_gid);
-
-		  /* Ignore the failure if it's due to lack of support (ENOSYS)
-		     and this is not a command line argument.  */
-		  if (!is_command_line_argument && fail && errno == ENOSYS)
-		    {
-		      fail = 0;
-		      symlink_changed = 0;
-		    }
-		}
-	    }
-	  else
-	    {
-	      fail = chown (file, new_uid, new_gid);
-	    }
-	  saved_errno = errno;
-
-	  if (chopt->verbosity == V_high
-	      || (chopt->verbosity == V_changes_only && !fail))
-	    {
-	      enum Change_status ch_status = (! symlink_changed
-					      ? CH_NOT_APPLIED
-					      : (fail
-						 ? CH_FAILED : CH_SUCCEEDED));
-	      describe_change (file_full_name, ch_status,
-			       chopt->user_name, chopt->group_name);
-	    }
-
-	  if (fail)
-	    {
-	      if ( ! chopt->force_silent)
-		error (0, saved_errno, (uid != (uid_t) -1
-					? _("changing ownership of %s")
-					: _("changing group of %s")),
-		       quote (file_full_name));
-	      errors = 1;
-	    }
-	  else
-	    {
-	      /* The change succeeded.  On some systems (e.g., Linux-2.4.x),
-		 the chown function resets the `special' permission bits.
-		 Do *not* restore those bits;  doing so would open a window in
-		 which a malicious user, M, could subvert a chown command run
-		 by some other user and operating on files in a directory
-		 where M has write access.  */
+	      errors = 0;
+	      symlink_changed = false;
 	    }
 	}
-      else if (chopt->verbosity == V_high)
-	{
-	  describe_change (file_full_name, CH_NO_CHANGE_REQUESTED,
-			   chopt->user_name, chopt->group_name);
-	}
+
+      /* On some systems (e.g., Linux-2.4.x),
+	 the chown function resets the `special' permission bits.
+	 Do *not* restore those bits;  doing so would open a window in
+	 which a malicious user, M, could subvert a chown command run
+	 by some other user and operating on files in a directory
+	 where M has write access.  */
+
+      if (errors && ! chopt->force_silent)
+	error (0, errno, (uid != (uid_t) -1
+			  ? _("changing ownership of %s")
+			  : _("changing group of %s")),
+	       quote (file_full_name));
+    }
+
+  if (chopt->verbosity == V_high
+      || (chopt->verbosity == V_changes_only && !errors))
+    {
+      enum Change_status ch_status = (!do_chown ? CH_NO_CHANGE_REQUESTED
+				      : !symlink_changed ? CH_NOT_APPLIED
+				      : errors ? CH_FAILED
+				      : CH_SUCCEEDED);
+      describe_change (file_full_name, ch_status,
+		       chopt->user_name, chopt->group_name);
     }
 
   if ( ! chopt->recurse)
@@ -326,7 +314,14 @@ chown_files (char **files, int bit_flags,
 {
   int fail = 0;
 
-  FTS *fts = xfts_open (files, bit_flags, NULL);
+  /* Use lstat and stat only if they're needed.  */
+  int stat_flags = ((chopt->root_dev_ino
+		     || required_uid != (uid_t) -1
+		     || required_gid != (gid_t) -1)
+		    ? 0
+		    : FTS_NOSTAT);
+
+  FTS *fts = xfts_open (files, bit_flags | stat_flags, NULL);
 
   while (1)
     {
