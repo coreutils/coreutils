@@ -1,4 +1,4 @@
-#test   options   input   expected-output   return-code
+#test   options   input   expected-output   expected-return-code
 #
 ("1a", '', "A\nB\nC\n", "A\nB\nC\n", 0);
 #
@@ -23,3 +23,17 @@
 ("4c", '-k1n', "11\n2\n", "2\n11\n", 0);
 ("4d", '-k1', "11\n2\n", "11\n2\n", 0);
 ("4e", '-k2', "ignored B\nz-ig A\n", "z-ig A\nignored B\n", 0);
+#
+("5a", '-k1,2', "A B\nA A\n", "A A\nA B\n", 0);
+("5b", '-k1,2', "A B A\nA A Z\n", "A A Z\nA B A\n", 0);
+("5c", '-k1 -k2', "A B A\nA A Z\n", "A A Z\nA B A\n", 0);
+("5d", '-k2,2', "A B A\nA A Z\n", "A A Z\nA B A\n", 0);
+("5e", '-k2,2', "A B Z\nA A A\n", "A A A\nA B Z\n", 0);
+("5f", '-k2,2', "A B A\nA A Z\n", "A A Z\nA B A\n", 0);
+#
+("6a", '-k 1,2', "A B\nA A\n", "A A\nA B\n", 0);
+("6b", '-k 1,2', "A B A\nA A Z\n", "A A Z\nA B A\n", 0);
+("6c", '-k 1 -k 2', "A B A\nA A Z\n", "A A Z\nA B A\n", 0);
+("6d", '-k 2,2', "A B A\nA A Z\n", "A A Z\nA B A\n", 0);
+("6e", '-k 2,2', "A B Z\nA A A\n", "A A A\nA B Z\n", 0);
+("6f", '-k 2,2', "A B A\nA A Z\n", "A A Z\nA B A\n", 0);
