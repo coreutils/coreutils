@@ -818,6 +818,12 @@ ptr_align (void *ptr, size_t alignment)
 #define VERIFY_EXPR(assertion) \
   (void)((struct {char a[(assertion) ? 1 : -1]; } *) 0)
 
+#ifdef __GNUC__
+# define VERIFY_GCC_EXPR(assertion) VERIFY_EXPR (expression)
+#else
+# define VERIFY_GCC_EXPR(assertion) (void)0
+#endif
+
 /* If 10*Accum+Digit_val is larger than Type_max, then don't update Accum
    and return nonzero.  Otherwise, set Accum to that new value and
    return zero.  When compiling with gcc, perform a compile-time check
@@ -826,7 +832,7 @@ ptr_align (void *ptr, size_t alignment)
 #define DECIMAL_DIGIT_ACCUMULATE(Accum, Digit_val, Type_max)		\
   (									\
    /* Ensure that Type_max is the maximum value of Accum.  */		\
-   VERIFY_EXPR (TYPE_MAXIMUM (__typeof__ (Accum)) == (Type_max)),	\
+   VERIFY_GCC_EXPR (TYPE_MAXIMUM (__typeof__ (Accum)) == (Type_max)),	\
    /* If the result would overflow, return 1.				\
       Otherwise update Accum and return 0.  */				\
    ((Type_max) / 10 < Accum || Accum * 10 + (Digit_val) < Accum		\
