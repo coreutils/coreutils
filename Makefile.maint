@@ -51,14 +51,21 @@ THIS_VERSION_REGEXP = $(subst .,\.,$(VERSION))
 PREV_VERSION := $(shell echo $(VERSION)|tr a-z Xa-y)
 PREV_VERSION_REGEXP := $(shell echo $(PREV_VERSION)|sed 's/\./\\./g')
 v = Version
-url_list = \
-  ftp://alpha.gnu.org/gnu/fetish/$(distdir).tar.gz \
-  ftp://tug.org/pub/gnu/fetish/$(distdir).tar.gz \
-  ftp://ftp.enst.fr/pub/gnu/gnits/fetish/$(distdir).tar.gz
-dir_list = \
-  /fs/share/ftp/gnu/fetish \
-  /home/ftp/pub/gnu/fetish \
-  /pub/gnu/gnits/fetish
+
+a_host=alpha.gnu.org
+b_host=tug.org/pub
+c_host=ftp.enst.fr
+
+a_url_dir=gnu/fetish
+b_url_dir=gnu/fetish
+c_url_dir=pub/gnu/gnits/fetish
+
+a_real_dir=/fs/share/ftp/gnu/fetish
+b_real_dir=/home/ftp/pub/gnu/fetish
+c_real_dir=/pub/gnu/gnits/fetish
+
+url_dir_list = $(foreach x,a b c,ftp://$($(x)_host)/$($(x)_url_dir))
+real_dir_list = $(foreach x,a b c,ftp://$($(x)_host)$($(x)_real_dir))
 
 md5 = $(shell md5sum < $(distdir).tar.gz|sed 's/  -//')
 
@@ -77,8 +84,8 @@ announcement: NEWS ChangeLog $(distdir).tar.gz
 	  echo; \
 	  echo FIXME: put comments here; \
 	  echo; \
-	  for url in $(url_list); do \
-	    echo "  $$url"; \
+	  for url in $(url_dir_list); do \
+	    echo "  $$url/$(distdir).tar.gz"; \
 	  done; \
 	  echo; \
 	  echo "$(md5)  $(distdir).tar.gz"; \
@@ -98,7 +105,7 @@ alpha:
 	ln $(distdir).tar.gz ../release
 	chmod a-w $(distdir).tar.gz
 	@echo =====================================
-	@for url in $(dir_list); do \
+	@for url in $(real_dir_list); do \
 	  echo "ncftp -u $$url"; \
 	done
 	@echo '#   put $(distdir).tar.gz'
