@@ -1,5 +1,7 @@
 2004-01-22  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.1.2.
+
 	* tests/rmdir/fail-perm: New file.  Test for just-fixed rmdir bug.
 	* tests/rmdir/Makefile.am (TESTS): Add fail-perm.
 
@@ -146,8 +148,6 @@
 	(expected_failure_status_nohup): New var.
 
 2004-01-21  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.1.2.
 
 	* tests/touch/relative: Remove `command' syntax.
 	Thanks to Nelson H. F. Beebe and Paul Eggert.
