@@ -1,2 +1,2 @@
-#define STRTOUXMAX_UNSIGNED
-#include "strtoxmax.c"
+#define UNSIGNED 1
+#include "strtoimax.c"
