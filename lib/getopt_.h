@@ -67,14 +67,14 @@
    but it caused redefinition warnings if both unistd.h and getopt.h were
    included, since unistd.h includes getopt.h having previously defined
    __need_getopt.
-   
+
    The only place where __getopt_argv_const is used is in definitions
    of getopt_long and getopt_long_only below, but these are visible
    only if __need_getopt is not defined, so it is quite safe to rewrite
    the conditional as follows:
 */
 #if !defined __need_getopt
-# if defined __GETOPT_PREFIX 
+# if defined __GETOPT_PREFIX
 #  define __getopt_argv_const /* empty */
 # else
 #  define __getopt_argv_const const
