@@ -110,7 +110,7 @@ PREFIX is `x'.  With no INPUT, or when INPUT is -, read standard input.\n\
   -l, --lines=NUMBER      put NUMBER lines per output file\n\
   -NUMBER                 same as -l NUMBER\n\
       --verbose           print a diagnostic to standard error just\n\
-			    before each output file is opened\n\
+                            before each output file is opened\n\
       --help              display this help and exit\n\
       --version           output version information and exit\n\
 \n\
