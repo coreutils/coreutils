@@ -1,4 +1,4 @@
-#!/p/bin/perl -w
+#! @PERL@ -w
 require 5.002;
 use strict;
 
@@ -7,6 +7,7 @@ $| = 1;
 
 print <<EOF;
 #! /bin/sh
+# run-test generated automatically by automake 1.0 from Makefile.am
 case \$# in
   0) xx='$xx';;
   *) xx="\$1";;
@@ -72,6 +73,6 @@ if test \$errors = 0 ; then
 else
   \$echo Failed \$errors tests. 1>&2
 fi
-test \$errors = 0 && \$errors=1
+test \$errors = 0 && $errors=1
 exit \$errors
 EOF2
