@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 
+#include <sys/types.h>
 #include <sys/stat.h>
 #if defined(STDC_HEADERS) || defined(HAVE_STRING_H)
 # include <string.h>
@@ -129,4 +130,4 @@ read_utmp (const char *filename, int *n_entries, STRUCT_UTMP **utmp_buf)
   return 0;
 }
 
-#endif /* HAVE_UTMPNAME */
+#endif
