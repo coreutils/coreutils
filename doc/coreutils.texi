@@ -3123,10 +3123,21 @@ works.
 
 @vindex LC_ALL
 @vindex LC_COLLATE
-A pair of lines is compared as follows: if any key fields have
-been specified, @command{sort} compares each pair of fields, in the
+@cindex sort stability
+@cindex sort's last-resort comparison
+A pair of lines is compared as follows:
+@command{sort} compares each pair of fields, in the
 order specified on the command line, according to the associated
 ordering options, until a difference is found or no fields are left.
+If no key fields are specified, @command{sort} uses a default key of
+the entire line.  Finally, as a last resort when all keys compare
+equal, @command{sort} compares entire lines as if no ordering options
+other than @option{--reverse} (@option{-r}) were specified.  The
+@option{--stable} (@option{-s}) option disables this @dfn{last-resort
+comparison} so that lines in which all fields compare equal are left
+in their original relative order.  The @option{--unique}
+(@option{-u}) option also disables the last-resort comparison.
+
 Unless otherwise specified, all comparisons use the character collating
 sequence specified by the @env{LC_COLLATE} locale.@footnote{If you
 use a non-@acronym{POSIX} locale (e.g., by setting @env{LC_ALL}
@@ -3138,18 +3149,6 @@ Second, it has undefined behavior if @env{LC_CTYPE} (or @env{LANG}, if
 @env{LC_CTYPE} is unset) is set to an incompatible value.  For example,
 you get undefined behavior if @env{LC_CTYPE} is @code{ja_JP.PCK} but
 @env{LC_COLLATE} is @code{en_US.UTF-8}. }
-
-If any of the global options @samp{bdfgiMnr} are given but no key fields
-are specified, @command{sort} compares the entire lines according to the
-global options.
-
-Finally, as a last resort when all keys compare equal (or if no ordering
-options were specified at all), @command{sort} compares the entire lines.
-The last resort comparison honors the @option{--reverse} (@option{-r})
-global option.  The @option{--stable} (@option{-s}) option disables this
-last-resort comparison so that lines in which all fields compare equal
-are left in their original relative order.  If no fields or global
-options are specified, @option{--stable} (@option{-s}) has no effect.
 
 @sc{gnu} @command{sort} (as specified for all @sc{gnu} utilities) has no
 limit on input line length or restrictions on bytes allowed within lines.
@@ -3349,18 +3348,11 @@ files.
 @opindex -s
 @opindex --stable
 @cindex sort stability
-@cindex disabling sort's last-resort comparison
+@cindex sort's last-resort comparison
 
-Make @command{sort} stable by disabling the last-resort
-comparison that is performed in some cases.
-By default, when lines compare equal based on command line options
-that affect ordering, those lines are ordered using
-a @dfn{last-resort comparison} that takes the entire
-line as the key and acts as if no ordering options were specified.
-But if @option{--reverse} (@option{-r}) was specified along with other
-ordering options, then the last-resort comparison does use @option{--reverse}.
-In any case, when no ordering option is specified or when only
-@option{--reverse} is specified, the last-resort comparison is not performed.
+Make @command{sort} stable by disabling its last-resort comparison.
+This option has no effect if no fields or global ordering options
+other than @option{--reverse} (@option{-R}) are specified.
 
 @item -S @var{size}
 @itemx --buffer-size=@var{size}
@@ -3425,6 +3417,8 @@ disks and controllers.
 Normally, output only the first of a sequence of lines that compare
 equal.  For the @option{--check} (@option{-c}) option,
 check that no pair of consecutive lines compares equal.
+
+This option also disables the default last-resort comparison.
 
 The commands @code{sort -u} and @code{sort | uniq} are equivalent, but
 this equivalence does not extend to arbitrary @command{sort} options.
