@@ -55,5 +55,5 @@ enum RM_status rm PARAMS ((struct File_spec *fs,
 			   struct rm_options const *x,
 			   struct dev_ino const *cwd_dev_ino));
 void fspec_init_file PARAMS ((struct File_spec *fs, const char *filename));
-void remove_init PARAMS ((void));
+void remove_init PARAMS ((struct rm_options const *x));
 void remove_fini PARAMS ((void));
