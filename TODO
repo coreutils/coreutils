@@ -99,3 +99,6 @@ sort: Add an ordering option -R that causes 'sort' to sort according
 unexpand: [http://www.opengroup.org/onlinepubs/007908799/xcu/unexpand.html]
   printf 'x\t \t y\n'|unexpand -t 8,9 should print its input, unmodified.
   printf 'x\t \t y\n'|unexpand -t 5,8 should print "x\ty\n"
+
+
+cut: when stdin is a tty, one has to hit EOF *twice* to get it to stop
