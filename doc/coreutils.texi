@@ -122,7 +122,7 @@
 This manual documents version @value{VERSION} of the @sc{gnu} core
 utilities, including the standard programs for text and file manipulation.
 
-Copyright @copyright{} 1994, 1995, 1996, 2000, 2001, 2002, 2003
+Copyright @copyright{} 1994, 1995, 1996, 2000, 2001, 2002, 2003, 2004
 Free Software Foundation, Inc.
 
 @quotation
@@ -632,19 +632,23 @@ context that requires a file name.
 
 @macro exitstatus
 An exit status of zero indicates success,
-and a value of @samp{1} indicates failure.
+and a nonzero value indicates failure.
 @end macro
 
 Nearly every command invocation yields an integral @dfn{exit status}
 that can be used to change how other commands work.
 For the vast majority of commands, an exit status of zero indicates
-success, and a value of @samp{1} indicates failure.
+success.  Failure is indicated by a nonzero value---typically
+@samp{1}, though it may differ on unusual platforms as @acronym{POSIX}
+requires only that it be nonzero.
+
 However, some of the programs documented here do produce
 other exit status values and a few associate different
 meanings with the values @samp{0} and @samp{1}.
 Here are some of the exceptions:
-@command{expr}, @command{false}, @command{nohup}, @command{printenv},
-@command{sort}, @command{test}, @command{true}, @command{tty}.
+@command{chroot}, @command{env}, @command{expr},
+@command{nice}, @command{nohup}, @command{printenv},
+@command{sort}, @command{su}, @command{test}, @command{tty}.
 
 
 @node Backup options
@@ -3069,7 +3073,14 @@ In addition, if the final byte of an input file is not a newline, @sc{gnu}
 @command{sort} silently supplies one.  A line's trailing newline is not
 part of the line for comparison purposes.
 
-Upon any error, @command{sort} exits with a status of @samp{2}.
+@cindex exit status of @command{sort}
+Exit status:
+
+@display
+0 if no error occurred
+1 if invoked with @option{-c} and the input is not properly sorted
+2 if an error occurred
+@end display
 
 @vindex TMPDIR
 If the environment variable @env{TMPDIR} is set, @command{sort} uses its
@@ -11529,10 +11540,8 @@ device files), copy them into place, too.
 Exit status:
 
 @display
-1   if there are invalid options, if the chroot syscall fails,
-    or if the subsequent @samp{chdir ("/")} fails
+1   if @command{chroot} itself fails
 126 if @var{command} is found but cannot be invoked
-127 if @var{command} cannot be found
 127 if @var{command} cannot be found
 the exit status of @var{command} otherwise
 @end display
@@ -11595,9 +11604,8 @@ Start with an empty environment, ignoring the inherited environment.
 Exit status:
 
 @display
-0   if no @var{command} was specified and the environment was output
-1   if no @var{command} was specified and there was a write error while
-    printing the environment
+0   if no @var{command} is specified and the environment is output
+1   if @command{env} itself fails
 126 if @var{command} is found but cannot be invoked
 127 if @var{command} cannot be found
 the exit status of @var{command} otherwise
@@ -11654,9 +11662,8 @@ instead.
 Exit status:
 
 @display
-0   if no @var{command} was specified and the current priority was output
-1   if there are invalid options or if no @var{command} was specified and
-      there was a write error
+0   if no @var{command} is specified and the current priority is output
+1   if @command{nice} itself fails
 126 if @var{command} is found but cannot be invoked
 127 if @var{command} cannot be found
 the exit status of @var{command} otherwise
@@ -11834,6 +11841,16 @@ unless the user running @command{su} is not the superuser and @var{user}'s
 shell is restricted (see @option{-m} just above).
 
 @end table
+
+@cindex exit status of @command{su}
+Exit status:
+
+@display
+1   if @command{su} itself fails
+126 if subshell is found but cannot be invoked
+127 if subshell cannot be found
+the exit status of the subshell otherwise
+@end display
 
 @cindex wheel group, not supported
 @cindex group wheel, not supported
