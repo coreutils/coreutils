@@ -570,7 +570,7 @@ pipe_lines (const char *pretty_filename, int fd, uintmax_t n_lines)
 	}
     }
 
-  free ((char *) tmp);
+  free (tmp);
 
   if (n_read == SAFE_READ_ERROR)
     {
@@ -722,7 +722,7 @@ free_cbuffers:
   while (first)
     {
       tmp = first->next;
-      free ((char *) first);
+      free (first);
       first = tmp;
     }
   return errors;
