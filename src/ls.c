@@ -38,13 +38,16 @@
 
 #include <config.h>
 #include <sys/types.h>
-#if !defined(_POSIX_SOURCE) || defined(_AIX)
-#include <sys/ioctl.h>
+
+#if HAVE_SYS_IOCTL_H
+# include <sys/ioctl.h>
 #endif
+
 #include <stdio.h>
 #include <grp.h>
 #include <pwd.h>
 #include <getopt.h>
+
 #if HAVE_LIMITS_H
 /* limits.h must come before system.h because limits.h on some systems
    undefs PATH_MAX, whereas system.h includes pathmax.h which sets
