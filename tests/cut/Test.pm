@@ -71,6 +71,10 @@ my @tv = (
 
 );
 
+# Don't use a pipe for these tests to avoid `Broken pipe' message.
+$Test::input_via{'y'} = {REDIR => 0, FILE => 0};
+$Test::input_via{'z'} = {REDIR => 0, FILE => 0};
+
 sub test_vector
 {
   return @tv;
