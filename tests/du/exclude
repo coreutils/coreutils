@@ -24,24 +24,24 @@ fi
 fail=0
 
 du --exclude=x a | sed 's/^[0-9][0-9]*	//' | sort > out || fail=1
-printf '===\n'
+printf '===\n' >> out
 printf 'b\n' > excl
-du --exclude-from=excl a | sed 's/^[0-9][0-9]*	//' | sort > out || fail=1
+du --exclude-from=excl a | sed 's/^[0-9][0-9]*	//' | sort >> out || fail=1
 cat <<\EOF > exp
-a/b/c
+a
 a/b
-a/u/v
+a/b/c
 a/u
-a
+a/u/v
 ===
-a/x/y
-a/x
-a/u/v
-a/u
 a
+a/u
+a/u/v
+a/x
+a/x/y
 EOF
 
 cmp out exp || fail=1
-test $fail = 1 && diff out exp 2> /dev/null
+test $fail = 1 && diff -u out exp 2> /dev/null
 
 (exit $fail); exit $fail
