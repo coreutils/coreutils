@@ -252,7 +252,7 @@ xgetgroups (const char *username, int *n_groups, GETGROUPS_T **groups)
   return fail;
 }
 
-/* Print all of the distinct groups the user is in . */
+/* Print all of the distinct groups the user is in. */
 
 static void
 print_group_list (char *username)
