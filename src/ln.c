@@ -260,7 +260,8 @@ main (argc, argv)
   exit (errors != 0);
 }
 
-/* Make a link DEST to existing file SOURCE.
+/* Make a link DEST to the (usually) existing file SOURCE.
+   Symbolic links to nonexistent files are allowed.
    If DEST is a directory, put the link to SOURCE in that directory.
    Return 1 if there is an error, otherwise 0.  */
 
@@ -273,14 +274,24 @@ do_link (source, dest)
   char *dest_backup = NULL;
   int lstat_status;
 
-  /* isdir uses stat instead of lstat.
+  /* Use stat here instead of lstat.
      On SVR4, link does not follow symlinks, so this check disallows
      making hard links to symlinks that point to directories.  Big deal.
      On other systems, link follows symlinks, so this check is right.  */
-  if (!symbolic_link && !hard_dir_link && isdir (source))
+  if (!symbolic_link)
     {
-      error (0, 0, "%s: hard link not allowed for directory", source);
-      return 1;
+      struct stat source_stats;
+
+      if (SAFE_STAT (source, &source_stats) != 0)
+	{
+	  error (0, errno, "%s", source);
+	  return 1;
+	}
+      if (!hard_dir_link && S_ISDIR (source_stats.st_mode))
+	{
+	  error (0, 0, "%s: hard link not allowed for directory", source);
+	  return 1;
+	}
     }
 
   if (SAFE_LSTAT (dest, &dest_stats) != 0 && errno != ENOENT)
@@ -301,8 +312,8 @@ do_link (source, dest)
       return 1;
     }
 
-  if (lstat_status == 0
-      && S_ISDIR (dest_stats.st_mode)
+  if ((lstat_status == 0
+       && S_ISDIR (dest_stats.st_mode))
 #ifdef S_ISLNK
       || (dereference_dest_dir_symlinks
 	  && (S_ISLNK (dest_stats.st_mode)
@@ -359,7 +370,7 @@ do_link (source, dest)
 	}
       else if (unlink (dest) && errno != ENOENT)
 	{
-	  error (0, errno, "cannot remove old link to `%s'", dest);
+	  error (0, errno, "cannot remove `%s'", dest);
 	  return 1;
 	}
     }
@@ -379,11 +390,11 @@ do_link (source, dest)
 
   error (0, errno, "cannot %slink `%s' to `%s'",
 #ifdef S_ISLNK
-	     linkfunc == symlink ? "symbolic " : "",
+	 symbolic_link ? "symbolic " : "",
 #else
-	     "",
+	 "",
 #endif
-	     source, dest);
+	 source, dest);
 
   if (dest_backup)
     {
