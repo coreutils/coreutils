@@ -93,6 +93,7 @@ libfetish_a_SOURCES = \
   readtokens.c readtokens.h \
   readutmp.h \
   regex.h \
+  root-dev-ino.c root-dev-ino.h \
   safe-read.c safe-read.h \
   safe-write.c safe-write.h \
   same.c same.h \
