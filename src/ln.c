@@ -1,5 +1,5 @@
 /* `ln' program to create links between files.
-   Copyright (C) 86, 89, 90, 91, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 86, 89, 90, 91, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -151,6 +151,7 @@ do_link (const char *source, const char *dest)
   struct stat dest_stats;
   char *dest_backup = NULL;
   int lstat_status;
+  int backup_succeeded = 0;
 
   /* Use stat here instead of lstat.
      On SVR4, link does not follow symlinks, so this check disallows
@@ -276,6 +277,10 @@ do_link (const char *source, const char *dest)
 	      else
 		dest_backup = NULL;
 	    }
+	  else
+	    {
+	      backup_succeeded = 1;
+	    }
 	}
 
       /* Try to unlink DEST even if we may have renamed it.  In some unusual
@@ -295,7 +300,12 @@ do_link (const char *source, const char *dest)
     }
 
   if (verbose)
-    printf (_("create %s %s to %s\n"), link_type_string, dest, source);
+    {
+      printf (_("create %s %s to %s"), link_type_string, dest, source);
+      if (backup_succeeded)
+	printf (_(" (backup: %s)"), dest_backup);
+      putchar ('\n');
+    }
 
   if ((*linkfunc) (source, dest) == 0)
     {
