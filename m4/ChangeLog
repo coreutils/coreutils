@@ -1,5 +1,15 @@
 2003-08-05  Paul Eggert  <eggert@twinsun.com>
 
+	* gnu-source.m4: New file, taken from gnulib, with support
+	added for __EXTENSIONS__ a la Solaris.
+	* jm-macros.m4 (jm_CHECK_ALL_TYPES): Call gl_TIMESPEC rather
+	than jm_CHECK_TYPE_STRUCT_TIMESPEC.
+	* st_mtim.m4: Sync with gnulib (white space change only).
+	* timespec.m4: Sync with gnulib, except also require
+	AC_GNU_SOURCE.
+
+2003-08-05  Paul Eggert  <eggert@twinsun.com>
+
 	* prereq.m4 (jm_PREREQ_PHYSMEM, jm_PREREQ_STAT): Ignore headers
 	that are present but cannot be compiled.  This avoids spurious warnings
 	on Solaris 9 sparc with Forte Developer 7 C 5.4.
@@ -623,7 +633,7 @@
 
 2002-02-15  Paul Eggert  <eggert@twinsun.com>
 
-	* m4/prereq.m4 (jm_PREREQ_POSIXVER): New macro.
+	* prereq.m4 (jm_PREREQ_POSIXVER): New macro.
 	(jm_PREREQ): Use it.
 
 2002-01-26  Jim Meyering  <jim@meyering.net>
