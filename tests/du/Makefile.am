@@ -2,6 +2,7 @@
 AUTOMAKE_OPTIONS = 1.4 gnits
 
 TESTS = \
+  inaccessible-cwd \
   deref-args \
   slash \
   fd-leak \
