@@ -825,7 +825,7 @@ decode_switches (int argc, char **argv)
   quote_as_string = 0;
 
   line_length = 80;
-  if ((p = getenv ("COLUMNS")))
+  if ((p = getenv ("COLUMNS")) && *p)
     {
       if (xstrtol (p, NULL, 0, &tmp_long, NULL) == LONGINT_OK
 	  && 0 < tmp_long && tmp_long <= INT_MAX)
