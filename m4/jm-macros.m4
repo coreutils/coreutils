@@ -99,6 +99,7 @@ AC_DEFUN([gl_MACROS],
     strrchr \
     sysctl \
     sysinfo \
+    tcgetpgrp \
     wcrtomb \
     tzset \
   )
