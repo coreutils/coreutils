@@ -1,3 +1,12 @@
+2003-08-09  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am: Use the e.g., `$(FNMATCH_H)' notation for AC_REPLACED
+	variable names, rather than @FNMATCH_H@.
+	Likewise for $(ALLOCA_H).
+	(fnmatch.h): Use `$@' in the commands, in place of the three copies
+	of the literal target, `fnmatch.h'.
+	(alloca.h): Likewise.
+
 2003-08-08  Paul Eggert  <eggert@twinsun.com>
 
 	* Makefile.am (libfetish_a_SOURCES): Remove fnmatch_.h.
