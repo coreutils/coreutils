@@ -10,7 +10,6 @@ check-decl.m4 \
 chown.m4 \
 d-ino.m4 \
 d-type.m4 \
-decl.m4 \
 error.m4 \
 fnmatch.m4 \
 fstypename.m4 \
