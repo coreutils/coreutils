@@ -1,5 +1,5 @@
 /* Formatted output to strings.
-   Copyright (C) 1999-2000, 2002-2003 Free Software Foundation, Inc.
+   Copyright (C) 1999-2000, 2002-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -20,7 +20,11 @@
 #endif
 
 /* Specification.  */
-#include "printf-parse.h"
+#if WIDE_CHAR_VERSION
+# include "wprintf-parse.h"
+#else
+# include "printf-parse.h"
+#endif
 
 /* Get size_t, NULL.  */
 #include <stddef.h>
@@ -36,22 +40,38 @@
 /* malloc(), realloc(), free().  */
 #include <stdlib.h>
 
+#ifndef SIZE_MAX
+# define SIZE_MAX ((size_t) -1)
+#endif
+
+#if WIDE_CHAR_VERSION
+# define PRINTF_PARSE wprintf_parse
+# define CHAR_T wchar_t
+# define DIRECTIVE wchar_t_directive
+# define DIRECTIVES wchar_t_directives
+#else
+# define PRINTF_PARSE printf_parse
+# define CHAR_T char
+# define DIRECTIVE char_directive
+# define DIRECTIVES char_directives
+#endif
+
 #ifdef STATIC
 STATIC
 #endif
 int
-printf_parse (const char *format, char_directives *d, arguments *a)
+PRINTF_PARSE (const CHAR_T *format, DIRECTIVES *d, arguments *a)
 {
-  const char *cp = format;		/* pointer into format */
-  int arg_posn = 0;		/* number of regular arguments consumed */
-  unsigned int d_allocated;		/* allocated elements of d->dir */
-  unsigned int a_allocated;		/* allocated elements of a->arg */
-  unsigned int max_width_length = 0;
-  unsigned int max_precision_length = 0;
+  const CHAR_T *cp = format;		/* pointer into format */
+  size_t arg_posn = 0;		/* number of regular arguments consumed */
+  size_t d_allocated;			/* allocated elements of d->dir */
+  size_t a_allocated;			/* allocated elements of a->arg */
+  size_t max_width_length = 0;
+  size_t max_precision_length = 0;
 
   d->count = 0;
   d_allocated = 1;
-  d->dir = malloc (d_allocated * sizeof (char_directive));
+  d->dir = malloc (d_allocated * sizeof (DIRECTIVE));
   if (d->dir == NULL)
     /* Out of memory.  */
     return -1;
@@ -62,16 +82,22 @@ printf_parse (const char *format, char_directives *d, arguments *a)
 
 #define REGISTER_ARG(_index_,_type_) \
   {									\
-    unsigned int n = (_index_);						\
+    size_t n = (_index_);						\
     if (n >= a_allocated)						\
       {									\
+	size_t memory_size;						\
 	argument *memory;						\
-	a_allocated = 2 * a_allocated;					\
+									\
+	a_allocated *= 2;						\
 	if (a_allocated <= n)						\
 	  a_allocated = n + 1;						\
+	if (SIZE_MAX / sizeof (argument) < a_allocated)			\
+	  /* Overflow, would lead to out of memory.  */			\
+	  goto error;							\
+	memory_size = a_allocated * sizeof (argument);			\
 	memory = (a->arg						\
-		  ? realloc (a->arg, a_allocated * sizeof (argument))	\
-		  : malloc (a_allocated * sizeof (argument)));		\
+		  ? realloc (a->arg, memory_size)			\
+		  : malloc (memory_size));				\
 	if (memory == NULL)						\
 	  /* Out of memory.  */						\
 	  goto error;							\
@@ -88,36 +114,40 @@ printf_parse (const char *format, char_directives *d, arguments *a)
 
   while (*cp != '\0')
     {
-      char c = *cp++;
+      CHAR_T c = *cp++;
       if (c == '%')
 	{
-	  int arg_index = -1;
-	  char_directive *dp = &d->dir[d->count];/* pointer to next directive */
+	  size_t arg_index = ARG_NONE;
+	  DIRECTIVE *dp = &d->dir[d->count];/* pointer to next directive */
 
 	  /* Initialize the next directive.  */
 	  dp->dir_start = cp - 1;
 	  dp->flags = 0;
 	  dp->width_start = NULL;
 	  dp->width_end = NULL;
-	  dp->width_arg_index = -1;
+	  dp->width_arg_index = ARG_NONE;
 	  dp->precision_start = NULL;
 	  dp->precision_end = NULL;
-	  dp->precision_arg_index = -1;
-	  dp->arg_index = -1;
+	  dp->precision_arg_index = ARG_NONE;
+	  dp->arg_index = ARG_NONE;
 
 	  /* Test for positional argument.  */
 	  if (*cp >= '0' && *cp <= '9')
 	    {
-	      const char *np;
+	      const CHAR_T *np;
 
 	      for (np = cp; *np >= '0' && *np <= '9'; np++)
 		;
 	      if (*np == '$')
 		{
-		  unsigned int n = 0;
+		  size_t n = 0;
 
 		  for (np = cp; *np >= '0' && *np <= '9'; np++)
-		    n = 10 * n + (*np - '0');
+		    if (n < SIZE_MAX / 10)
+		      n = 10 * n + (*np - '0');
+		    else
+		      /* n too large for memory.  */
+		      goto error;
 		  if (n == 0)
 		    /* Positional argument 0.  */
 		    goto error;
@@ -175,16 +205,20 @@ printf_parse (const char *format, char_directives *d, arguments *a)
 	      /* Test for positional argument.  */
 	      if (*cp >= '0' && *cp <= '9')
 		{
-		  const char *np;
+		  const CHAR_T *np;
 
 		  for (np = cp; *np >= '0' && *np <= '9'; np++)
 		    ;
 		  if (*np == '$')
 		    {
-		      unsigned int n = 0;
+		      size_t n = 0;
 
 		      for (np = cp; *np >= '0' && *np <= '9'; np++)
-			n = 10 * n + (*np - '0');
+			if (n < SIZE_MAX / 10)
+			  n = 10 * n + (*np - '0');
+			else
+			  /* n too large for memory.  */
+			  goto error;
 		      if (n == 0)
 			/* Positional argument 0.  */
 			goto error;
@@ -192,13 +226,18 @@ printf_parse (const char *format, char_directives *d, arguments *a)
 		      cp = np + 1;
 		    }
 		}
-	      if (dp->width_arg_index < 0)
-		dp->width_arg_index = arg_posn++;
+	      if (dp->width_arg_index == ARG_NONE)
+		{
+		  dp->width_arg_index = arg_posn++;
+		  if (dp->width_arg_index == ARG_NONE)
+		    /* arg_posn wrapped around.  */
+		    goto error;
+		}
 	      REGISTER_ARG (dp->width_arg_index, TYPE_INT);
 	    }
 	  else if (*cp >= '0' && *cp <= '9')
 	    {
-	      unsigned int width_length;
+	      size_t width_length;
 
 	      dp->width_start = cp;
 	      for (; *cp >= '0' && *cp <= '9'; cp++)
@@ -224,16 +263,20 @@ printf_parse (const char *format, char_directives *d, arguments *a)
 		  /* Test for positional argument.  */
 		  if (*cp >= '0' && *cp <= '9')
 		    {
-		      const char *np;
+		      const CHAR_T *np;
 
 		      for (np = cp; *np >= '0' && *np <= '9'; np++)
 			;
 		      if (*np == '$')
 			{
-			  unsigned int n = 0;
+			  size_t n = 0;
 
 			  for (np = cp; *np >= '0' && *np <= '9'; np++)
-			    n = 10 * n + (*np - '0');
+			    if (n < SIZE_MAX / 10)
+			      n = 10 * n + (*np - '0');
+			    else
+			      /* n too large for memory.  */
+			      goto error;
 			  if (n == 0)
 			    /* Positional argument 0.  */
 			    goto error;
@@ -241,13 +284,18 @@ printf_parse (const char *format, char_directives *d, arguments *a)
 			  cp = np + 1;
 			}
 		    }
-		  if (dp->precision_arg_index < 0)
-		    dp->precision_arg_index = arg_posn++;
+		  if (dp->precision_arg_index == ARG_NONE)
+		    {
+		      dp->precision_arg_index = arg_posn++;
+		      if (dp->precision_arg_index == ARG_NONE)
+			/* arg_posn wrapped around.  */
+			goto error;
+		    }
 		  REGISTER_ARG (dp->precision_arg_index, TYPE_INT);
 		}
 	      else
 		{
-		  unsigned int precision_length;
+		  size_t precision_length;
 
 		  dp->precision_start = cp - 1;
 		  for (; *cp >= '0' && *cp <= '9'; cp++)
@@ -439,8 +487,13 @@ printf_parse (const char *format, char_directives *d, arguments *a)
 	    if (type != TYPE_NONE)
 	      {
 		dp->arg_index = arg_index;
-		if (dp->arg_index < 0)
-		  dp->arg_index = arg_posn++;
+		if (dp->arg_index == ARG_NONE)
+		  {
+		    dp->arg_index = arg_posn++;
+		    if (dp->arg_index == ARG_NONE)
+		      /* arg_posn wrapped around.  */
+		      goto error;
+		  }
 		REGISTER_ARG (dp->arg_index, type);
 	      }
 	    dp->conversion = c;
@@ -450,10 +503,13 @@ printf_parse (const char *format, char_directives *d, arguments *a)
 	  d->count++;
 	  if (d->count >= d_allocated)
 	    {
-	      char_directive *memory;
+	      DIRECTIVE *memory;
 
-	      d_allocated = 2 * d_allocated;
-	      memory = realloc (d->dir, d_allocated * sizeof (char_directive));
+	      if (SIZE_MAX / (2 * sizeof (DIRECTIVE)) < d_allocated)
+		/* Overflow, would lead to out of memory.  */
+		goto error;
+	      d_allocated *= 2;
+	      memory = realloc (d->dir, d_allocated * sizeof (DIRECTIVE));
 	      if (memory == NULL)
 		/* Out of memory.  */
 		goto error;
@@ -474,3 +530,8 @@ error:
     free (d->dir);
   return -1;
 }
+
+#undef DIRECTIVES
+#undef DIRECTIVE
+#undef CHAR_T
+#undef PRINTF_PARSE

@@ -1,6 +1,6 @@
-#serial 1
+#serial 2
 
-# Determine whether calloc (N, S) works when N*S is zero.
+# Determine whether calloc (N, S) returns non-NULL when N*S is zero.
 # If so, define HAVE_CALLOC.  Otherwise, define calloc to rpl_calloc
 # and arrange to use a calloc wrapper function that does work in that case.
 

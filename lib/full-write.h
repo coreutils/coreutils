@@ -1,6 +1,6 @@
 /* An interface to write() that writes all it is asked to write.
 
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,7 +18,18 @@
 
 #include <stddef.h>
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 /* Write COUNT bytes at BUF to descriptor FD, retrying if interrupted
    or if partial writes occur.  Return the number of bytes successfully
    written, setting errno if that is less than COUNT.  */
 extern size_t full_write (int fd, const void *buf, size_t count);
+
+
+#ifdef __cplusplus
+}
+#endif

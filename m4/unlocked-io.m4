@@ -1,4 +1,4 @@
-#serial 9 -*- autoconf -*-
+#serial 9
 
 dnl From Jim Meyering.
 dnl

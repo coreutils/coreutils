@@ -1,5 +1,5 @@
 /* vsprintf with automatic memory allocation.
-   Copyright (C) 1999, 2002-2003 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,10 +25,16 @@
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
-#include <alloca.h>
+#ifndef IN_LIBINTL
+# include <alloca.h>
+#endif
 
 /* Specification.  */
-#include "vasnprintf.h"
+#if WIDE_CHAR_VERSION
+# include "vasnwprintf.h"
+#else
+# include "vasnprintf.h"
+#endif
 
 #include <stdio.h>	/* snprintf(), sprintf() */
 #include <stdlib.h>	/* abort(), malloc(), realloc(), free() */
@@ -36,15 +42,14 @@
 #include <errno.h>	/* errno */
 #include <limits.h>	/* CHAR_BIT */
 #include <float.h>	/* DBL_MAX_EXP, LDBL_MAX_EXP */
-#include "printf-parse.h"
-
-/* For those losing systems which don't have 'alloca' we have to add
-   some additional code emulating it.  */
-#ifdef HAVE_ALLOCA
-# define freea(p) /* nothing */
+#if WIDE_CHAR_VERSION
+# include "wprintf-parse.h"
 #else
-# define alloca(n) malloc (n)
-# define freea(p) free (p)
+# include "printf-parse.h"
+#endif
+
+#ifndef SIZE_MAX
+# define SIZE_MAX ((size_t) -1)
 #endif
 
 #ifdef HAVE_WCHAR_T
@@ -52,7 +57,11 @@
 #  define local_wcslen wcslen
 # else
    /* Solaris 2.5.1 has wcslen() in a separate library libw.so. To avoid
-      a dependency towards this library, here is a local substitute.  */
+      a dependency towards this library, here is a local substitute.
+      Define this substitute only once, even if this file is included
+      twice in the same compilation unit.  */
+#  ifndef local_wcslen_defined
+#   define local_wcslen_defined 1
 static size_t
 local_wcslen (const wchar_t *s)
 {
@@ -62,16 +71,48 @@ local_wcslen (const wchar_t *s)
     ;
   return ptr - s;
 }
+#  endif
 # endif
 #endif
 
-char *
-vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
+#if WIDE_CHAR_VERSION
+# define VASNPRINTF vasnwprintf
+# define CHAR_T wchar_t
+# define DIRECTIVE wchar_t_directive
+# define DIRECTIVES wchar_t_directives
+# define PRINTF_PARSE wprintf_parse
+# define USE_SNPRINTF 1
+# if HAVE_DECL__SNWPRINTF
+   /* On Windows, the function swprintf() has a different signature than
+      on Unix; we use the _snwprintf() function instead.  */
+#  define SNPRINTF _snwprintf
+# else
+   /* Unix.  */
+#  define SNPRINTF swprintf
+# endif
+#else
+# define VASNPRINTF vasnprintf
+# define CHAR_T char
+# define DIRECTIVE char_directive
+# define DIRECTIVES char_directives
+# define PRINTF_PARSE printf_parse
+# define USE_SNPRINTF (HAVE_DECL__SNPRINTF || HAVE_SNPRINTF)
+# if HAVE_DECL__SNPRINTF
+   /* Windows.  */
+#  define SNPRINTF _snprintf
+# else
+   /* Unix.  */
+#  define SNPRINTF snprintf
+# endif
+#endif
+
+CHAR_T *
+VASNPRINTF (CHAR_T *resultbuf, size_t *lengthp, const CHAR_T *format, va_list args)
 {
-  char_directives d;
+  DIRECTIVES d;
   arguments a;
 
-  if (printf_parse (format, &d, &a) < 0)
+  if (PRINTF_PARSE (format, &d, &a) < 0)
     {
       errno = EINVAL;
       return NULL;
@@ -90,15 +131,36 @@ vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
     }
 
   {
-    char *buf =
-      (char *) alloca (7 + d.max_width_length + d.max_precision_length + 6);
-    const char *cp;
-    unsigned int i;
-    char_directive *dp;
+    size_t buf_neededlength;
+    CHAR_T *buf;
+    CHAR_T *buf_malloced;
+    const CHAR_T *cp;
+    size_t i;
+    DIRECTIVE *dp;
     /* Output string accumulator.  */
-    char *result;
+    CHAR_T *result;
     size_t allocated;
     size_t length;
+
+    /* Allocate a small buffer that will hold a directive passed to
+       sprintf or snprintf.  */
+    buf_neededlength = 7 + d.max_width_length + d.max_precision_length + 6;
+#if HAVE_ALLOCA
+    if (buf_neededlength < 4000 / sizeof (CHAR_T))
+      {
+	buf = (CHAR_T *) alloca (buf_neededlength * sizeof (CHAR_T));
+	buf_malloced = NULL;
+      }
+    else
+#endif
+      {
+	if (SIZE_MAX / sizeof (CHAR_T) < buf_neededlength)
+	  goto out_of_memory_1;
+	buf = (CHAR_T *) malloc (buf_neededlength * sizeof (CHAR_T));
+	if (buf == NULL)
+	  goto out_of_memory_1;
+	buf_malloced = buf;
+      }
 
     if (resultbuf != NULL)
       {
@@ -115,32 +177,35 @@ vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
        result is either == resultbuf or == NULL or malloc-allocated.
        If length > 0, then result != NULL.  */
 
-#define ENSURE_ALLOCATION(needed) \
-    if ((needed) > allocated)						\
-      {									\
-	char *memory;							\
-									\
-	allocated = (allocated > 0 ? 2 * allocated : 12);		\
-	if ((needed) > allocated)					\
-	  allocated = (needed);						\
-	if (result == resultbuf || result == NULL)			\
-	  memory = (char *) malloc (allocated);				\
-	else								\
-	  memory = (char *) realloc (result, allocated);		\
-									\
-	if (memory == NULL)						\
-	  {								\
-	    if (!(result == resultbuf || result == NULL))		\
-	      free (result);						\
-	    freea (buf);						\
-	    CLEANUP ();							\
-	    errno = ENOMEM;						\
-	    return NULL;						\
-	  }								\
-	if (result == resultbuf && length > 0)				\
-	  memcpy (memory, result, length);				\
-	result = memory;						\
-      }
+    /* Ensures that allocated >= length + extra.  Aborts through a jump to
+       out_of_memory if size is too big.  */
+#define ENSURE_ALLOCATION(extra) \
+  {									     \
+    size_t needed = length + (extra);					     \
+    if (needed < length)						     \
+      goto out_of_memory;						     \
+    if (needed > allocated)						     \
+      {									     \
+	size_t memory_size;						     \
+	CHAR_T *memory;							     \
+									     \
+	allocated = (allocated > 0 ? 2 * allocated : 12);		     \
+	if (needed > allocated)						     \
+	  allocated = needed;						     \
+	if (SIZE_MAX / sizeof (CHAR_T) < allocated)			     \
+	  goto out_of_memory;						     \
+	memory_size = allocated * sizeof (CHAR_T);			     \
+	if (result == resultbuf || result == NULL)			     \
+	  memory = (CHAR_T *) malloc (memory_size);			     \
+	else								     \
+	  memory = (CHAR_T *) realloc (result, memory_size);		     \
+	if (memory == NULL)						     \
+	  goto out_of_memory;						     \
+	if (result == resultbuf && length > 0)				     \
+	  memcpy (memory, result, length * sizeof (CHAR_T));		     \
+	result = memory;						     \
+      }									     \
+  }
 
     for (cp = format, i = 0, dp = &d.dir[0]; ; cp = dp->dir_end, i++, dp++)
       {
@@ -148,8 +213,8 @@ vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
 	  {
 	    size_t n = dp->dir_start - cp;
 
-	    ENSURE_ALLOCATION (length + n);
-	    memcpy (result + length, cp, n);
+	    ENSURE_ALLOCATION (n);
+	    memcpy (result + length, cp, n * sizeof (CHAR_T));
 	    length += n;
 	  }
 	if (i == d.count)
@@ -158,15 +223,15 @@ vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
 	/* Execute a single directive.  */
 	if (dp->conversion == '%')
 	  {
-	    if (!(dp->arg_index < 0))
+	    if (!(dp->arg_index == ARG_NONE))
 	      abort ();
-	    ENSURE_ALLOCATION (length + 1);
+	    ENSURE_ALLOCATION (1);
 	    result[length] = '%';
 	    length += 1;
 	  }
 	else
 	  {
-	    if (!(dp->arg_index >= 0))
+	    if (!(dp->arg_index != ARG_NONE))
 	      abort ();
 
 	    if (dp->conversion == 'n')
@@ -197,38 +262,42 @@ vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
 	    else
 	      {
 		arg_type type = a.arg[dp->arg_index].type;
-		char *p;
+		CHAR_T *p;
 		unsigned int prefix_count;
 		int prefixes[2];
-#if !HAVE_SNPRINTF
-		unsigned int tmp_length;
-		char tmpbuf[700];
-		char *tmp;
+#if !USE_SNPRINTF
+		size_t tmp_length;
+		CHAR_T tmpbuf[700];
+		CHAR_T *tmp;
 
 		/* Allocate a temporary buffer of sufficient size for calling
 		   sprintf.  */
 		{
-		  unsigned int width;
-		  unsigned int precision;
+		  size_t width;
+		  size_t precision;
 
 		  width = 0;
 		  if (dp->width_start != dp->width_end)
 		    {
-		      if (dp->width_arg_index >= 0)
+		      if (dp->width_arg_index != ARG_NONE)
 			{
 			  int arg;
 
 			  if (!(a.arg[dp->width_arg_index].type == TYPE_INT))
 			    abort ();
 			  arg = a.arg[dp->width_arg_index].a.a_int;
-			  width = (arg < 0 ? -arg : arg);
+			  width = (arg < 0 ? (unsigned int) (-arg) : arg);
 			}
 		      else
 			{
-			  const char *digitp = dp->width_start;
+			  const CHAR_T *digitp = dp->width_start;
 
 			  do
-			    width = width * 10 + (*digitp++ - '0');
+			    {
+			      if (SIZE_MAX / 10 <= width)
+				goto out_of_memory;
+			      width = width * 10 + (*digitp++ - '0');
+			    }
 			  while (digitp != dp->width_end);
 			}
 		    }
@@ -236,7 +305,7 @@ vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
 		  precision = 6;
 		  if (dp->precision_start != dp->precision_end)
 		    {
-		      if (dp->precision_arg_index >= 0)
+		      if (dp->precision_arg_index != ARG_NONE)
 			{
 			  int arg;
 
@@ -247,12 +316,16 @@ vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
 			}
 		      else
 			{
-			  const char *digitp = dp->precision_start + 1;
+			  const CHAR_T *digitp = dp->precision_start + 1;
 
 			  precision = 0;
-			  do
-			    precision = precision * 10 + (*digitp++ - '0');
-			  while (digitp != dp->precision_end);
+			  while (digitp != dp->precision_end)
+			    {
+			      size_t p1 = 10 * precision + (*digitp++ - '0');
+			      precision = ((SIZE_MAX / 10 < precision
+					    || p1 < precision)
+					   ? SIZE_MAX : p1);
+			    }
 			}
 		    }
 
@@ -352,7 +425,6 @@ vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
 					  * 2 /* estimate for FLAG_GROUP */
 					 )
 			  + 1 /* turn floor into ceil */
-			  + precision
 			  + 10; /* sign, decimal point etc. */
 		      else
 # endif
@@ -362,19 +434,23 @@ vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
 					  * 2 /* estimate for FLAG_GROUP */
 					 )
 			  + 1 /* turn floor into ceil */
-			  + precision
 			  + 10; /* sign, decimal point etc. */
+		      tmp_length += precision;
+		      if (tmp_length < precision)
+			goto out_of_memory;
 		      break;
 
 		    case 'e': case 'E': case 'g': case 'G':
 		    case 'a': case 'A':
 		      tmp_length =
-			precision
-			+ 12; /* sign, decimal point, exponent etc. */
+			12; /* sign, decimal point, exponent etc. */
+		      tmp_length += precision;
+		      if (tmp_length < precision)
+			goto out_of_memory;
 		      break;
 
 		    case 'c':
-# ifdef HAVE_WINT_T
+# if defined HAVE_WINT_T && !WIDE_CHAR_VERSION
 		      if (type == TYPE_WIDE_CHAR)
 			tmp_length = MB_CUR_MAX;
 		      else
@@ -385,9 +461,16 @@ vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
 		    case 's':
 # ifdef HAVE_WCHAR_T
 		      if (type == TYPE_WIDE_STRING)
-			tmp_length =
-			  local_wcslen (a.arg[dp->arg_index].a.a_wide_string)
-			  * MB_CUR_MAX;
+			{
+			  tmp_length =
+			    local_wcslen (a.arg[dp->arg_index].a.a_wide_string);
+
+#  if !WIDE_CHAR_VERSION
+			  if (SIZE_MAX / MB_CUR_MAX < tmp_length)
+			    goto out_of_memory;
+			  tmp_length *= MB_CUR_MAX;
+#  endif
+			}
 		      else
 # endif
 			tmp_length = strlen (a.arg[dp->arg_index].a.a_string);
@@ -410,23 +493,21 @@ vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
 		    tmp_length = width;
 
 		  tmp_length++; /* account for trailing NUL */
+		  if (!tmp_length)
+		    goto out_of_memory;
 		}
 
-		if (tmp_length <= sizeof (tmpbuf))
+		if (tmp_length <= sizeof (tmpbuf) / sizeof (CHAR_T))
 		  tmp = tmpbuf;
 		else
 		  {
-		    tmp = (char *) malloc (tmp_length);
+		    if (SIZE_MAX / sizeof (CHAR_T) < tmp_length)
+		      /* Overflow, would lead to out of memory.  */
+		      goto out_of_memory;
+		    tmp = (CHAR_T *) malloc (tmp_length * sizeof (CHAR_T));
 		    if (tmp == NULL)
-		      {
-			/* Out of memory.  */
-			if (!(result == resultbuf || result == NULL))
-			  free (result);
-			freea (buf);
-			CLEANUP ();
-			errno = ENOMEM;
-			return NULL;
-		      }
+		      /* Out of memory.  */
+		      goto out_of_memory;
 		  }
 #endif
 
@@ -449,13 +530,13 @@ vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
 		if (dp->width_start != dp->width_end)
 		  {
 		    size_t n = dp->width_end - dp->width_start;
-		    memcpy (p, dp->width_start, n);
+		    memcpy (p, dp->width_start, n * sizeof (CHAR_T));
 		    p += n;
 		  }
 		if (dp->precision_start != dp->precision_end)
 		  {
 		    size_t n = dp->precision_end - dp->precision_start;
-		    memcpy (p, dp->precision_start, n);
+		    memcpy (p, dp->precision_start, n * sizeof (CHAR_T));
 		    p += n;
 		  }
 
@@ -486,7 +567,7 @@ vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
 		    break;
 		  }
 		*p = dp->conversion;
-#if HAVE_SNPRINTF
+#if USE_SNPRINTF
 		p[1] = '%';
 		p[2] = 'n';
 		p[3] = '\0';
@@ -496,23 +577,23 @@ vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
 
 		/* Construct the arguments for calling snprintf or sprintf.  */
 		prefix_count = 0;
-		if (dp->width_arg_index >= 0)
+		if (dp->width_arg_index != ARG_NONE)
 		  {
 		    if (!(a.arg[dp->width_arg_index].type == TYPE_INT))
 		      abort ();
 		    prefixes[prefix_count++] = a.arg[dp->width_arg_index].a.a_int;
 		  }
-		if (dp->precision_arg_index >= 0)
+		if (dp->precision_arg_index != ARG_NONE)
 		  {
 		    if (!(a.arg[dp->precision_arg_index].type == TYPE_INT))
 		      abort ();
 		    prefixes[prefix_count++] = a.arg[dp->precision_arg_index].a.a_int;
 		  }
 
-#if HAVE_SNPRINTF
+#if USE_SNPRINTF
 		/* Prepare checking whether snprintf returns the count
 		   via %n.  */
-		ENSURE_ALLOCATION (length + 1);
+		ENSURE_ALLOCATION (1);
 		result[length] = '\0';
 #endif
 
@@ -526,20 +607,20 @@ vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
 		    count = -1;
 		    retcount = 0;
 
-#if HAVE_SNPRINTF
+#if USE_SNPRINTF
 # define SNPRINTF_BUF(arg) \
 		    switch (prefix_count)				    \
 		      {							    \
 		      case 0:						    \
-			retcount = snprintf (result + length, maxlen, buf,  \
+			retcount = SNPRINTF (result + length, maxlen, buf,  \
 					     arg, &count);		    \
 			break;						    \
 		      case 1:						    \
-			retcount = snprintf (result + length, maxlen, buf,  \
+			retcount = SNPRINTF (result + length, maxlen, buf,  \
 					     prefixes[0], arg, &count);	    \
 			break;						    \
 		      case 2:						    \
-			retcount = snprintf (result + length, maxlen, buf,  \
+			retcount = SNPRINTF (result + length, maxlen, buf,  \
 					     prefixes[0], prefixes[1], arg, \
 					     &count);			    \
 			break;						    \
@@ -681,7 +762,7 @@ vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
 			abort ();
 		      }
 
-#if HAVE_SNPRINTF
+#if USE_SNPRINTF
 		    /* Portability: Not all implementations of snprintf()
 		       are ISO C 99 compliant.  Determine the number of
 		       bytes that snprintf() has produced or would have
@@ -707,23 +788,24 @@ vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
 			    p[1] = '\0';
 			    continue;
 			  }
-			else if (retcount < 0)
+			else
 			  {
-			    /* The system's snprintf is sorely deficient:
-			       it doesn't recognize the `%n' directive, and it
-			       returns -1 (rather than the length that would
-			       have been required) when the buffer is too small.
-			       This is the case at with least HPUX 10.20.
-			       Double the memory allocation.  */
-			    size_t n = allocated;
-			    if (n < 2 * allocated)
+			    /* Look at the snprintf() return value.  */
+			    if (retcount < 0)
 			      {
-				n = 2 * allocated;
-				ENSURE_ALLOCATION (n);
+				/* HP-UX 10.20 snprintf() is doubly deficient:
+				   It doesn't understand the '%n' directive,
+				   *and* it returns -1 (rather than the length
+				   that would have been required) when the
+				   buffer is too small.  */
+				size_t bigger_need =
+				  (allocated > 12 ? allocated : 12);
+				ENSURE_ALLOCATION (bigger_need);
 				continue;
 			      }
+			    else
+			      count = retcount;
 			  }
-			count = retcount;
 		      }
 #endif
 
@@ -732,13 +814,14 @@ vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
 		      {
 			if (!(result == resultbuf || result == NULL))
 			  free (result);
-			freea (buf);
+			if (buf_malloced != NULL)
+			  free (buf_malloced);
 			CLEANUP ();
 			errno = EINVAL;
 			return NULL;
 		      }
 
-#if !HAVE_SNPRINTF
+#if !USE_SNPRINTF
 		    if (count >= tmp_length)
 		      /* tmp_length was incorrectly calculated - fix the
 			 code above!  */
@@ -751,22 +834,18 @@ vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
 			/* Need at least count bytes.  But allocate
 			   proportionally, to avoid looping eternally if
 			   snprintf() reports a too small count.  */
-			size_t n = length + count;
-
-			if (n < 2 * allocated)
-			  n = 2 * allocated;
-
-			ENSURE_ALLOCATION (n);
-#if HAVE_SNPRINTF
+			ENSURE_ALLOCATION (count < allocated
+					   ? allocated : count);
+#if USE_SNPRINTF
 			continue;
 #endif
 		      }
 
-#if HAVE_SNPRINTF
+#if USE_SNPRINTF
 		    /* The snprintf() result did fit.  */
 #else
 		    /* Append the sprintf() result.  */
-		    memcpy (result + length, tmp, count);
+		    memcpy (result + length, tmp, count * sizeof (CHAR_T));
 		    if (tmp != tmpbuf)
 		      free (tmp);
 #endif
@@ -779,22 +858,41 @@ vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
       }
 
     /* Add the final NUL.  */
-    ENSURE_ALLOCATION (length + 1);
+    ENSURE_ALLOCATION (1);
     result[length] = '\0';
 
     if (result != resultbuf && length + 1 < allocated)
       {
 	/* Shrink the allocated memory if possible.  */
-	char *memory;
+	CHAR_T *memory;
 
-	memory = (char *) realloc (result, length + 1);
+	memory = (CHAR_T *) realloc (result, (length + 1) * sizeof (CHAR_T));
 	if (memory != NULL)
 	  result = memory;
       }
 
-    freea (buf);
+    if (buf_malloced != NULL)
+      free (buf_malloced);
     CLEANUP ();
     *lengthp = length;
     return result;
+
+  out_of_memory:
+    if (!(result == resultbuf || result == NULL))
+      free (result);
+    if (buf_malloced != NULL)
+      free (buf_malloced);
+  out_of_memory_1:
+    CLEANUP ();
+    errno = ENOMEM;
+    return NULL;
   }
 }
+
+#undef SNPRINTF
+#undef USE_SNPRINTF
+#undef PRINTF_PARSE
+#undef DIRECTIVES
+#undef DIRECTIVE
+#undef CHAR_T
+#undef VASNPRINTF

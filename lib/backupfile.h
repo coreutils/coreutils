@@ -21,6 +21,11 @@
 #ifndef BACKUPFILE_H_
 # define BACKUPFILE_H_
 
+# ifdef __cplusplus
+extern "C" {
+# endif
+
+
 /* When to make backup files. */
 enum backup_type
 {
@@ -49,5 +54,11 @@ extern char const *simple_backup_suffix;
 char *find_backup_file_name (char const *, enum backup_type);
 enum backup_type get_version (char const *context, char const *arg);
 enum backup_type xget_version (char const *context, char const *arg);
+void addext (char *, char const *, int);
+
+
+# ifdef __cplusplus
+}
+# endif
 
 #endif /* ! BACKUPFILE_H_ */

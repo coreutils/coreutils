@@ -1,3 +1,28 @@
+2004-08-05  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Merge with gnulib and deal with some minor cleanups resulting.
+
+	* .cppi-disable: Change fnmatch.h to fnmatch_.h.
+	* .cvs-ignore: Add fnmatch.h, poll.h, stdbool.h, sysexit.h.
+	Remove safe-lstat.c, safe-lstat.h, safe-stat.c, safe-stat.h.
+
+	* backupfile.h, closeout.h, full-write.h, mbswidth.h, xalloc.h:
+	Add extern "C" wrappers for C++.
+
+	* dirname.h (IS_ABSOLUTE_FILE_NAME): Port to DOS.
+
+	* gettime.c (gettime): Fall back on `time' if `gettimeofday'
+	doesn't work.
+	* settime.c: Include <unistd.h>, for stime (on Solaris 8, anyway).
+	(ENOSYS): Define if not defined.
+	(settime): Fall back on stime if it exists and settimeofday fails.
+	But don't bother with fallbacks if a method fails with errno == EPERM.
+
+	* obstack.h: Add white space.
+
+	* printf-parse.c, printf-parse.h, vasnprintf.c: Merge changes from
+	gnulib, but rewrite to avoid "xsize.h".
+
 2004-08-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* mountlist.c (SIZE_MAX): Define after including files, to avoid

@@ -1,4 +1,4 @@
-# backupfile.m4 serial 4
+# backupfile.m4 serial 5
 dnl Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General

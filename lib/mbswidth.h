@@ -30,6 +30,11 @@
 #endif
 
 
+#ifdef	__cplusplus
+extern "C" {
+#endif
+
+
 /* Optional flags to influence mbswidth/mbsnwidth behavior.  */
 
 /* If this bit is set, return -1 upon finding an invalid or incomplete
@@ -49,3 +54,8 @@ extern int mbswidth (const char *string, int flags);
 /* Returns the number of screen columns needed for the NBYTES bytes
    starting at BUF.  */
 extern int mbsnwidth (const char *buf, size_t nbytes, int flags);
+
+
+#ifdef	__cplusplus
+}
+#endif

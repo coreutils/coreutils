@@ -1,4 +1,4 @@
-# uintmax_t.m4 serial 8
+# uintmax_t.m4 serial 9
 dnl Copyright (C) 1997-2004 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -17,7 +17,7 @@ AC_DEFUN([gl_AC_TYPE_UINTMAX_T],
 [
   AC_REQUIRE([gl_AC_HEADER_INTTYPES_H])
   AC_REQUIRE([gl_AC_HEADER_STDINT_H])
-  if test $jm_ac_cv_header_inttypes_h = no && test $jm_ac_cv_header_stdint_h = no; then
+  if test $gl_cv_header_inttypes_h = no && test $gl_cv_header_stdint_h = no; then
     AC_REQUIRE([gl_AC_TYPE_UNSIGNED_LONG_LONG])
     test $ac_cv_type_unsigned_long_long = yes \
       && ac_type='unsigned long long' \

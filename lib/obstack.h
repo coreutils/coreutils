@@ -206,7 +206,7 @@ extern int obstack_exit_failure;
    Note that this might not be the final address of the object
    because a new chunk might be needed to hold the final size.  */
 
-#define obstack_base(h) ((void *)(h)->object_base)
+#define obstack_base(h) ((void *) (h)->object_base)
 
 /* Size for allocating ordinary chunks.  */
 

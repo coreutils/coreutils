@@ -1,5 +1,5 @@
-# strtoimax.m4 serial 3
-dnl Copyright (C) 2002-2004 Free Software Foundation, Inc.
+# strtoimax.m4 serial 4
+dnl Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program

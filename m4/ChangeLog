@@ -1,3 +1,24 @@
+2004-08-05  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Merge from gnulib.
+
+	* alloca.m4 (gl_FUNC_ALLOCA): Define HAVE_ALLOCA_H always,
+	for backward compatibility with older code.  We need our own
+	alloca.h if _AIX is defined.  Define HAVE_ALLOCA if we discover
+	it under some other name, and our alloca.h will define it.
+	* backupfile.m4, calloc.m4, strtoimax.m4, strtoumax.m4:
+	Bump serial number only.
+	* dirfd.m4, intmax_t.m4, inttypes_h.m4, mbrtowc.m4, stdint_h.m4,
+	uintmax_t.m4: Finish renaming jm_ to gl_.
+	* dos.m4 (gl_AC_DOS): Check for _WIN32, __WIN32__, and __MSDOS__.
+	* host-os.m4: s/KNetBSD/kNetBSD/g and s/KFreeBSD/kFreeBSD/g.
+	* prereq.m4 (gl_PREREQ): Add gl_GETTIME, AC_FUNC_CALLOC.
+	* gettime.m4: New file.
+	* settime.m4: Require gl_TIMESPEC; check for settimeofday, stime.
+	* unlocked-io.m4: Remove -*- autoconf -*-.
+	* xalloc.m4: No longer require AC_FUNC_CALLOC, AC_FUNC_MALLOC,
+	AC_FUNC_REALLOC.
+
 2004-08-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	OpenBSD porting fixes.

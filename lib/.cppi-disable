@@ -2,7 +2,7 @@ alloca_.h
 allocsa.h
 error.h
 exit.h
-fnmatch.h
+fnmatch_.h
 fts.c
 fts_.h
 getndelim2.h

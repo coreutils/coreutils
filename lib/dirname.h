@@ -34,8 +34,8 @@
 #  define FILE_SYSTEM_PREFIX_LEN(Filename) 0
 # endif
 
-# define IS_ABSOLUTE_FILE_NAME(Name) (ISSLASH (*Name))
-# define IS_RELATIVE_FILE_NAME(Name) ( ! IS_ABSOLUTE_FILE_NAME (Name))
+# define IS_ABSOLUTE_FILE_NAME(F) ISSLASH ((F)[FILE_SYSTEM_PREFIX_LEN (F)])
+# define IS_RELATIVE_FILE_NAME(F) (! IS_ABSOLUTE_FILE_NAME (F))
 
 char *base_name (char const *path);
 char *dir_name (char const *path);

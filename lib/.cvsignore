@@ -4,12 +4,12 @@ alloca.h
 charset.alias
 getdate.c
 getdate.tab.c
+fnmatch.h
 lstat.c
+poll.h
 ref-add.sed
 ref-del.sed
-safe-lstat.c
-safe-lstat.h
-safe-stat.c
-safe-stat.h
 stat.c
+stdbool.h
+sysexit.h
 unlocked-io.h

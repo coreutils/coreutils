@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2004-03-21.11}
+\def\texinfoversion{2004-07-31.11}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004 Free Software
@@ -608,7 +608,7 @@
 % The \TeX{} logo, as in plain, but resetting the spacing so that a
 % period following counts as ending a sentence.  (Idea found in latex.)
 %
-\edef\TeX{\TeX \spacefactor=3000 }
+\edef\TeX{\TeX \spacefactor=1000 }
 
 % @LaTeX{} logo.  Not quite the same results as the definition in
 % latex.ltx, since we use a different font for the raised A; it's most
@@ -1715,6 +1715,7 @@ where each line of input produces a line of output.}
 \def\cite#1{{\sl #1}\futurelet\next\smartitalicx}
 
 \let\i=\smartitalic
+\let\slanted=\smartslanted
 \let\var=\smartslanted
 \let\dfn=\smartslanted
 \let\emph=\smartitalic
@@ -1851,8 +1852,8 @@ where each line of input produces a line of output.}
 \else{\tclose{\kbdfont\look}}\fi
 \else{\tclose{\kbdfont\look}}\fi}
 
-% For @url, @env, @command quotes seem unnecessary, so use \code.
-\let\url=\code
+% For @indicateurl, @env, @command quotes seem unnecessary, so use \code.
+\let\indicateurl=\code
 \let\env=\code
 \let\command=\code
 
@@ -1883,6 +1884,10 @@ where each line of input produces a line of output.}
   \fi
   \endlink
 \endgroup}
+
+% @url synonym for @uref, since that's how everyone uses it.
+%
+\let\url=\uref
 
 % rms does not like angle brackets --karl, 17may97.
 % So now @email is just like @uref, unless we are pdf.
@@ -1925,6 +1930,10 @@ where each line of input produces a line of output.}
 \def\sc#1{{\smallcaps#1}}       % smallcaps font
 \def\ii#1{{\it #1}}             % italic font
 
+% @acronym for "FBI", "NATO", and the like.
+% We print this one point size smaller, since it's intended for
+% all-uppercase.
+% 
 \def\acronym#1{\doacronym #1,,\finish}
 \def\doacronym#1,#2,#3\finish{%
   {\selectfonts\lsize #1}%
@@ -1934,7 +1943,19 @@ where each line of input produces a line of output.}
   \fi
 }
 
-% @pounds{} is a sterling sign, which is in the CM italic font.
+% @abbr for "Comput. J." and the like.
+% No font change, but don't do end-of-sentence spacing.
+% 
+\def\abbr#1{\doabbr #1,,\finish}
+\def\doabbr#1,#2,#3\finish{%
+  {\frenchspacing #1}%
+  \def\temp{#2}%
+  \ifx\temp\empty \else
+    \space ({\unsepspaces \ignorespaces \temp \unskip})%
+  \fi
+}
+
+% @pounds{} is a sterling sign, which Knuth put in the CM italic font.
 %
 \def\pounds{{\it\$}}
 
@@ -1947,6 +1968,14 @@ where each line of input produces a line of output.}
                \hfil\crcr\Orb}}%
     }$%
 }
+
+% Laurent Siebenmann reports \Orb undefined with:
+%  Textures 1.7.7 (preloaded format=plain 93.10.14)  (68K)  16 APR 2004 02:38
+% so we'll define it if necessary.
+% 
+\ifx\Orb\undefined
+\def\Orb{\mathhexbox20D}
+\fi
 
 
 \message{page headings,}
@@ -2253,17 +2282,13 @@ where each line of input produces a line of output.}
     % \parskip glue -- logically it's part of the @item we just started.
     \nobreak \vskip-\parskip
     %
-    % Stop a page break at the \parskip glue coming up.  (Unfortunately
-    % we can't prevent a possible page break at the following
-    % \baselineskip glue.)  However, if what follows is an environment
-    % such as @example, there will be no \parskip glue; then
-    % the negative vskip we just would cause the example and the item to
-    % crash together.  So we use this bizarre value of 10001 as a signal
-    % to \aboveenvbreak to insert \parskip glue after all.
-    % (Possibly there are other commands that could be followed by
-    % @example which need the same treatment, but not section titles; or
-    % maybe section titles are the only special case and they should be
-    % penalty 10001...)
+    % Stop a page break at the \parskip glue coming up.  However, if
+    % what follows is an environment such as @example, there will be no
+    % \parskip glue; then the negative vskip we just inserted would
+    % cause the example and the item to crash together.  So we use this
+    % bizarre value of 10001 as a signal to \aboveenvbreak to insert
+    % \parskip glue after all.  Section titles are handled this way also.
+    % 
     \penalty 10001
     \endgroup
     \itemxneedsnegativevskipfalse
@@ -2774,14 +2799,14 @@ width0pt\relax} \fi
   \doignorecount = 0
   %
   % Swallow text until we reach the matching `@end #1'.
-  \dodoignore {#1}%
+  \dodoignore{#1}%
 }
 
 { \catcode`_=11 % We want to use \_STOP_ which cannot appear in texinfo source.
   \obeylines %
   %
   \gdef\dodoignore#1{%
-    % #1 contains the string `ifinfo'.
+    % #1 contains the command name as a string, e.g., `ifinfo'.
     %
     % Define a command to find the next `@end #1', which must be on a line
     % by itself.
@@ -3050,6 +3075,7 @@ width0pt\relax} \fi
   \def\definedummyletter##1{%
     \expandafter\def\csname ##1\endcsname{\realbackslash ##1}%
   }%
+  \let\definedummyaccent\definedummyletter
   %
   % Do the redefinitions.
   \commondummies
@@ -3072,6 +3098,7 @@ width0pt\relax} \fi
   \def\definedummyletter##1{%
     \expandafter\def\csname ##1\endcsname{@##1}%
   }%
+  \let\definedummyaccent\definedummyletter
   %
   % Do the redefinitions.
   \commondummies
@@ -3120,6 +3147,7 @@ width0pt\relax} \fi
   %
   % Assorted special characters.
   \definedummyword{bullet}%
+  \definedummyword{comma}%
   \definedummyword{copyright}%
   \definedummyword{registeredsymbol}%
   \definedummyword{dots}%
@@ -3152,18 +3180,18 @@ width0pt\relax} \fi
   \gdef\commondummiesnofonts{%
     % Control letters and accents.
     \definedummyletter{!}%
-    \definedummyletter{"}%
-    \definedummyletter{'}%
+    \definedummyaccent{"}%
+    \definedummyaccent{'}%
     \definedummyletter{*}%
-    \definedummyletter{,}%
+    \definedummyaccent{,}%
     \definedummyletter{.}%
     \definedummyletter{/}%
     \definedummyletter{:}%
-    \definedummyletter{=}%
+    \definedummyaccent{=}%
     \definedummyletter{?}%
-    \definedummyletter{^}%
-    \definedummyletter{`}%
-    \definedummyletter{~}%
+    \definedummyaccent{^}%
+    \definedummyaccent{`}%
+    \definedummyaccent{~}%
     \definedummyword{u}%
     \definedummyword{v}%
     \definedummyword{H}%
@@ -3211,13 +3239,16 @@ width0pt\relax} \fi
 % would be for a given command (usually its argument).
 %
 \def\indexnofonts{%
-  \def\definedummyword##1{%
+  % Accent commands should become @asis.
+  \def\definedummyaccent##1{%
     \expandafter\let\csname ##1\endcsname\asis
   }%
-  % We can just ignore the accent commands and other control letters.
+  % We can just ignore other control letters.
   \def\definedummyletter##1{%
     \expandafter\def\csname ##1\endcsname{}%
   }%
+  % Hopefully, all control words can become @asis.
+  \let\definedummyword\definedummyaccent
   %
   \commondummiesnofonts
   %
@@ -3254,6 +3285,7 @@ width0pt\relax} \fi
   % Assorted special characters.
   % (The following {} will end up in the sort string, but that's ok.)
   \def\bullet{bullet}%
+  \def\comma{,}%
   \def\copyright{copyright}%
   \def\registeredsymbol{R}%
   \def\dots{...}%
@@ -3266,6 +3298,9 @@ width0pt\relax} \fi
   \def\point{.}%
   \def\print{-|}%
   \def\result{=>}%
+  %
+  % Don't write macro names.
+  \emptyusermacros
 }
 
 \let\indexbackslash=0  %overridden during \printindex.
@@ -3386,17 +3421,18 @@ width0pt\relax} \fi
   \dosubindwrite
   %
   \ifx\lastskipmacro\zeroskipmacro
-    % if \lastskip was zero, perhaps the last item was a
-    % penalty, and perhaps it was >=10000, e.g., a \nobreak.
-    % In that case, we want to re-insert the penalty; since we
-    % just inserted a non-discardable item, any following glue
-    % (such as a \parskip) would be a breakpoint.  For example:
+    % If \lastskip was zero, perhaps the last item was a penalty, and
+    % perhaps it was >=10000, e.g., a \nobreak.  In that case, we want
+    % to re-insert the same penalty (values >10000 are used for various
+    % signals); since we just inserted a non-discardable item, any
+    % following glue (such as a \parskip) would be a breakpoint.  For example:
+    % 
     %   @deffn deffn-whatever
     %   @vindex index-whatever
     %   Description.
     % would allow a break between the index-whatever whatsit
     % and the "Description." paragraph.
-    \ifnum\count255>9999 \nobreak \fi
+    \ifnum\count255>9999 \penalty\count255 \fi
   \else
     % On the other hand, if we had a nonzero \lastskip,
     % this make-up glue would be preceded by a non-discardable item
@@ -4328,14 +4364,14 @@ width0pt\relax} \fi
   % glue accumulate.  (Not a breakpoint because it's preceded by a
   % discardable item.)
   \vskip-\parskip
-  %
-  % This \nobreak is purely so the last item on the list is a \penalty
-  % of 10000.  This is so other code, for instance \parsebodycommon, can
-  % check for and avoid allowing breakpoints.  Otherwise, it would
-  % insert a valid breakpoint between:
+  % 
+  % This is purely so the last item on the list is a known \penalty >
+  % 10000.  This is so \startdefun can avoid allowing breakpoints after
+  % section headings.  Otherwise, it would insert a valid breakpoint between:
+  % 
   %   @section sec-whatever
   %   @deffn def-whatever
-  \nobreak
+  \penalty 10001
 }
 
 
@@ -4680,7 +4716,8 @@ width0pt\relax} \fi
 % start of the next paragraph will insert \parskip.
 %
 \def\aboveenvbreak{{%
-  % =10000 instead of <10000 because of a special case in \itemzzz, q.v.
+  % =10000 instead of <10000 because of a special case in \itemzzz and
+  % \sectionheading, q.v.
   \ifnum \lastpenalty=10000 \else
     \advance\envskipamount by \parskip
     \endgraf
@@ -5041,8 +5078,7 @@ width0pt\relax} \fi
 }
 
 % @copying ... @end copying.
-% Save the text away for @insertcopying later.  Many commands won't be
-% allowed in this context, but that's ok.
+% Save the text away for @insertcopying later.
 %
 % We save the uninterpreted tokens, rather than creating a box.
 % Saving the text in a box would be much easier, but then all the
@@ -5051,62 +5087,14 @@ width0pt\relax} \fi
 % file; b) letting users define the frontmatter in as flexible order as
 % possible is very desirable.
 %
-\def\copying{\begingroup
-  % Define a command to swallow text until we reach `@end copying'.
-  % \ is the escape char in this texinfo.tex file, so it is the
-  % delimiter for the command; @ will be the escape char when we read
-  % it, but that doesn't matter.
-  \long\def\docopying##1\end copying{\gdef\copyingtext{##1}\enddocopying}%
-  %
-  % We must preserve ^^M's in the input file; see \insertcopying below.
-  \catcode`\^^M = \active
-  \docopying
-}
-
-% What we do to finish off the copying text.
+\def\copying{\checkenv{}\begingroup\scanargctxt\docopying}
+\def\docopying#1@end copying{\endgroup\def\copyingtext{#1}}
 %
-\def\enddocopying{\endgroup\ignorespaces}
-
-% @insertcopying.  Here we must play games with ^^M's.  On the one hand,
-% we need them to delimit commands such as `@end quotation', so they
-% must be active.  On the other hand, we certainly don't want every
-% end-of-line to be a \par, as would happen with the normal active
-% definition of ^^M.  On the third hand, two ^^M's in a row should still
-% generate a \par.
-%
-% Our approach is to make ^^M insert a space and a penalty1 normally;
-% then it can also check if \lastpenalty=1.  If it does, then manually
-% do \par.
-%
-% This messes up the normal definitions of @c[omment], so we redefine
-% it.  Similarly for @ignore.  (These commands are used in the gcc
-% manual for man page generation.)
-%
-% Seems pretty fragile, most line-oriented commands will presumably
-% fail, but for the limited use of getting the copying text (which
-% should be quite simple) inserted, we can hope it's ok.
-%
-{\catcode`\^^M=\active %
-\gdef\insertcopying{\begingroup %
-  \parindent = 0pt  % looks wrong on title page
-  \def^^M{%
-    \ifnum \lastpenalty=1 %
-      \par %
-    \else %
-      \space \penalty 1 %
-    \fi %
-  }%
-  %
-  % Fix @c[omment] for catcode 13 ^^M's.
-  \def\c##1^^M{\ignorespaces}%
-  \let\comment = \c %
-  %
-  % Don't bother jumping through all the hoops that \doignore does, it
-  % would be very hard since the catcodes are already set.
-  \long\def\ignore##1\end ignore{\ignorespaces}%
-  %
-  \copyingtext %
-\endgroup}%
+\def\insertcopying{%
+  \begingroup
+    \parindent = 0pt  % paragraph indentation looks wrong on title page
+    \scanexp\copyingtext
+  \endgroup
 }
 
 \message{defuns,}
@@ -5124,10 +5112,11 @@ width0pt\relax} \fi
     % If there are two @def commands in a row, we'll have a \nobreak,
     % which is there to keep the function description together with its
     % header.  But if there's nothing but headers, we need to allow a
-    % break somewhere.  Check for penalty 10002 (inserted by
-    % \defargscommonending) instead of 10000, since the sectioning
-    % commands insert a \penalty10000, and we don't want to allow a break
-    % between a section heading and a defun.
+    % break somewhere.  Check specifically for penalty 10002, inserted
+    % by \defargscommonending, instead of 10000, since the sectioning
+    % commands also insert a nobreak penalty, and we don't want to allow
+    % a break between a section heading and a defun.
+    % 
     \ifnum\lastpenalty=10002 \penalty2000 \fi
     %
     % Similarly, after a section heading, do not allow a break.
@@ -5451,7 +5440,7 @@ width0pt\relax} \fi
 \ifx\eTeXversion\undefined
   \newwrite\macscribble
   \def\scantokens#1{%
-    \toks0={#1\endinput}%
+    \toks0={#1}%
     \immediate\openout\macscribble=\jobname.tmp
     \immediate\write\macscribble{\the\toks0}%
     \immediate\closeout\macscribble
@@ -5474,6 +5463,11 @@ width0pt\relax} \fi
     %							--kasal, 29nov03
     \scantokens{#1\endinput}%
   \endgroup
+}
+
+\def\scanexp#1{%
+  \edef\temp{\noexpand\scanmacro{#1}}%
+  \temp
 }
 
 \newcount\paramno   % Count of parameters
@@ -5516,7 +5510,7 @@ width0pt\relax} \fi
 % done by  making ^^M (\endlinechar) catcode 12 when reading the macro
 % body, and then making it the \newlinechar in \scanmacro.
 
-\def\macrobodyctxt{%
+\def\scanctxt{%
   \catcode`\~=\other
   \catcode`\^=\other
   \catcode`\_=\other
@@ -5524,22 +5518,27 @@ width0pt\relax} \fi
   \catcode`\<=\other
   \catcode`\>=\other
   \catcode`\+=\other
+  \catcode`\@=\other
+}
+
+\def\scanargctxt{%
+  \scanctxt
+  \catcode`\\=\other
+  \catcode`\^^M=\other
+}
+
+\def\macrobodyctxt{%
+  \scanctxt
   \catcode`\{=\other
   \catcode`\}=\other
-  \catcode`\@=\other
   \catcode`\^^M=\other
-  \usembodybackslash}
+  \usembodybackslash
+}
 
 \def\macroargctxt{%
-  \catcode`\~=\other
-  \catcode`\^=\other
-  \catcode`\_=\other
-  \catcode`\|=\other
-  \catcode`\<=\other
-  \catcode`\>=\other
-  \catcode`\+=\other
-  \catcode`\@=\other
-  \catcode`\\=\other}
+  \scanctxt
+  \catcode`\\=\other
+}
 
 % \mbodybackslash is the definition of \ in @macro bodies.
 % It maps \foo\ => \csname macarg.foo\endcsname => #N
@@ -5721,9 +5720,23 @@ width0pt\relax} \fi
     \expandafter\parsearg
   \fi \next}
 
-% We mant to disable all macros during \shipout so that they are not
+% We want to disable all macros during \shipout so that they are not
 % expanded by \write.
 \def\turnoffmacros{\begingroup \def\do##1{\let\noexpand##1=\relax}%
+  \edef\next{\macrolist}\expandafter\endgroup\next}
+
+% For \indexnofonts, we need to get rid of all macros, leaving only the
+% arguments (if present).  Of course this is not nearly correct, but it
+% is the best we can do for now.  makeinfo does not expand macros in the
+% argument to @deffn, which ends up writing an index entry, and texindex
+% isn't prepared for an index sort entry that starts with \.
+% 
+% Since macro invocations are followed by braces, we can just redefine them
+% to take a single TeX argument.  The case of a macro invocation that
+% goes to end-of-line is not handled.
+% 
+\def\emptyusermacros{\begingroup
+  \def\do##1{\let\noexpand##1=\noexpand\asis}%
   \edef\next{\macrolist}\expandafter\endgroup\next}
 
 
@@ -5754,9 +5767,18 @@ width0pt\relax} \fi
   node \samp{\ignorespaces#1{}}}
 
 % @node's only job in TeX is to define \lastnode, which is used in
-% cross-references.
-\parseargdef\node{\checkenv{}\nodexxx #1,\finishnodeparse}
-\def\nodexxx#1,#2\finishnodeparse{\gdef\lastnode{#1}}
+% cross-references.  The @node line might or might not have commas, and
+% might or might not have spaces before the first comma, like:
+% @node foo , bar , ...
+% We don't want such trailing spaces in the node name.
+%
+\parseargdef\node{\checkenv{}\donode #1 ,\finishnodeparse}
+%
+% also remove a trailing comma, in case of something like this:
+% @node Help-Cross,  ,  , Cross-refs
+\def\donode#1 ,#2\finishnodeparse{\dodonode #1,\finishnodeparse}
+\def\dodonode#1,#2\finishnodeparse{\gdef\lastnode{#1}}
+
 \let\nwnode=\node
 \let\lastnode=\empty
 
@@ -6322,11 +6344,14 @@ width0pt\relax} \fi
 \endgroup}
 
 
-% @float FLOATTYPE,LOC ... @end float for displayed figures, tables, etc.
-% We don't actually implement floating yet, we just plop the float "here".
-% But it seemed the best name for the future.
+% @float FLOATTYPE,LABEL,LOC ... @end float for displayed figures, tables,
+% etc.  We don't actually implement floating yet, we always include the
+% float "here".  But it seemed the best name for the future.
 %
-\envparseargdef\float{\dofloat #1,,,\finish}
+\envparseargdef\float{\eatcommaspace\eatcommaspace\dofloat#1, , ,\finish}
+
+% There may be a space before second and/or third parameter; delete it.
+\def\eatcommaspace#1, {#1,}
 
 % #1 is the optional FLOATTYPE, the text label for this float, typically
 % "Figure", "Table", "Example", etc.  Can't contain commas.  If omitted,
@@ -6347,6 +6372,10 @@ width0pt\relax} \fi
   \let\thisshortcaption=\empty
   %
   % don't lose footnotes inside @float.
+  %
+  % BEWARE: when the floats start float, we have to issue warning whenever an
+  % insert appears inside a float which could possibly float. --kasal, 26may04
+  %
   \startsavinginserts
   %
   % We can't be used inside a paragraph.
@@ -6431,7 +6460,7 @@ width0pt\relax} \fi
       \fi
       %
       % caption text.
-      \appendtomacro\captionline\thiscaption
+      \appendtomacro\captionline{\scanexp\thiscaption}%
     \fi
     %
     % If we have anything to print, print it, with space before.
@@ -6463,23 +6492,27 @@ width0pt\relax} \fi
     % Space below caption, if we printed anything.
     \ifx\printedsomething\empty \else \vskip\parskip \fi
   \egroup  % end of \vtop
+  %
+  % place the captured inserts
+  %
+  % BEWARE: when the floats start float, we have to issue warning whenever an
+  % insert appears inside a float which could possibly float. --kasal, 26may04
+  %
   \checkinserts
 }
 
 % Append the tokens #2 to the definition of macro #1, not expanding either.
 %
-\newtoks\appendtomacroAtoks
-\newtoks\appendtomacroBtoks
 \def\appendtomacro#1#2{%
-  \appendtomacroAtoks = \expandafter{#1}%
-  \appendtomacroBtoks = {#2}%
-  \edef#1{\the\appendtomacroAtoks \the\appendtomacroBtoks}%
+  \expandafter\def\expandafter#1\expandafter{#1#2}%
 }
 
-% @caption, @shortcaption are easy.
+% @caption, @shortcaption
 %
-\long\def\caption#1{\checkenv\float \def\thiscaption{#1}}
-\def\shortcaption#1{\checkenv\float \def\thisshortcaption{#1}}
+\def\caption{\docaption\thiscaption}
+\def\shortcaption{\docaption\thisshortcaption}
+\def\docaption{\checkenv\float \bgroup\scanargctxt\defcaption}
+\def\defcaption#1#2{\egroup \def#1{#2}}
 
 % The parameter is the control sequence identifying the counter we are
 % going to use.  Create it if it doesn't exist and assign it to \floatno.

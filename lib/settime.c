@@ -1,5 +1,5 @@
 /* settime -- set the system clock
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,21 +23,52 @@
 
 #include "timespec.h"
 
+#if HAVE_UNISTD_H
+# include <unistd.h>
+#endif
+
+#include <errno.h>
+
+/* Some systems don't have ENOSYS.  */
+#ifndef ENOSYS
+# ifdef ENOTSUP
+#  define ENOSYS ENOTSUP
+# else
+/* Some systems don't have ENOTSUP either.  */
+#  define ENOSYS EINVAL
+# endif
+#endif
+
 /* Set the system time.  */
 
 int
 settime (struct timespec const *ts)
 {
 #if defined CLOCK_REALTIME && HAVE_CLOCK_SETTIME
-  if (clock_settime (CLOCK_REALTIME, ts) == 0)
-    return 0;
+  {
+    int r = clock_settime (CLOCK_REALTIME, ts);
+    if (r == 0 || errno == EPERM)
+      return r;
+  }
 #endif
 
+#if HAVE_SETTIMEOFDAY
   {
     struct timeval tv;
+    int r;
 
     tv.tv_sec = ts->tv_sec;
     tv.tv_usec = ts->tv_nsec / 1000;
-    return settimeofday (&tv, 0);
+    r = settimeofday (&tv, 0);
+    if (r == 0 || errno == EPERM)
+      return r;
   }
+#endif
+
+#if HAVE_STIME
+  return stime (&ts->tv_sec);
+#endif
+
+  errno = ENOSYS;
+  return -1;
 }

@@ -1,5 +1,5 @@
 /* Parse printf format string.
-   Copyright (C) 1999, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,6 +29,9 @@
 #define FLAG_ALT	16	/* # flag */
 #define FLAG_ZERO	32
 
+/* arg_index value indicating that no argument is consumed.  */
+#define ARG_NONE	(~(size_t)0)
+
 /* A parsed directive.  */
 typedef struct
 {
@@ -37,22 +40,22 @@ typedef struct
   int flags;
   const char* width_start;
   const char* width_end;
-  int width_arg_index;
+  size_t width_arg_index;
   const char* precision_start;
   const char* precision_end;
-  int precision_arg_index;
+  size_t precision_arg_index;
   char conversion; /* d i o u x X f e E g G c s p n U % but not C S */
-  int arg_index;
+  size_t arg_index;
 }
 char_directive;
 
 /* A parsed format string.  */
 typedef struct
 {
-  unsigned int count;
+  size_t count;
   char_directive *dir;
-  unsigned int max_width_length;
-  unsigned int max_precision_length;
+  size_t max_width_length;
+  size_t max_precision_length;
 }
 char_directives;
 

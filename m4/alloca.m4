@@ -1,5 +1,5 @@
-# alloca.m4 serial 3
-dnl Copyright (C) 2002-2003 Free Software Foundation, Inc.
+# alloca.m4 serial 4
+dnl Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -18,15 +18,25 @@ AC_DEFUN([gl_FUNC_ALLOCA],
   fi
 
   # Define an additional variable used in the Makefile substitution.
-
-  AC_EGREP_CPP([Need own alloca], [
-#if defined __GNUC__ || defined _MSC_VER || !HAVE_ALLOCA_H
-  Need own alloca
+  if test $ac_cv_working_alloca_h = yes; then
+    AC_EGREP_CPP([Need own alloca], [
+#if defined __GNUC__ || defined _AIX || defined _MSC_VER
+	Need own alloca
 #endif
-    ],
-    ALLOCA_H=alloca.h,
-    ALLOCA_H=)
+      ],
+      [AC_DEFINE(HAVE_ALLOCA, 1,
+	    [Define to 1 if you have `alloca' after including <alloca.h>,
+	     a header that may be supplied by this distribution.])
+       ALLOCA_H=alloca.h],
+      [ALLOCA_H=])
+  else
+    ALLOCA_H=alloca.h
+  fi
   AC_SUBST([ALLOCA_H])
+
+  AC_DEFINE(HAVE_ALLOCA_H, 1,
+    [Define HAVE_ALLOCA_H for backward compatibility with older code
+     that includes <alloca.h> only if HAVE_ALLOCA_H is defined.])
 ])
 
 # Prerequisites of lib/alloca.c.
