@@ -1,3 +1,9 @@
+2001-01-30  Jim Meyering  <meyering@lucent.com>
+
+	* doc/fileutils.texi (mv invocation): Add a warning about how a trailing
+	slash makes a difference.  Prompted by a report from Oskar Liljeblad
+	via Michael Stone (Debian bug#83991).
+
 2001-01-28  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0.38.
