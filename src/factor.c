@@ -17,22 +17,59 @@
 
 /* Written by Paul Rubin <phr@ocf.berkeley.edu>.  */
 
+#include <config.h>
 #include <stdio.h>
+#include <sys/types.h>
+
+#include "system.h"
+#include "version.h"
+#include "long-options.h"
+#include "error.h"
+
+/* The name this program was run with. */
+char *program_name;
 
 static void
-factor (n0)
+usage (status)
+     int status;
+{
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
+Usage: %s [NUMBER]\n\
+  or:  %s OPTION\n\
+",
+	      program_name, program_name);
+      printf ("\
+\n\
+  --help      display this help and exit\n\
+  --version   output version information and exit\n\
+");
+    }
+  exit (status);
+}
+
+static int
+factor (n0, max_n_factors, factors)
      unsigned long n0;
+     int max_n_factors;
+     unsigned long *factors;
 {
   register unsigned long n = n0, d;
+  int n_factors = 0;
 
   if (n < 1)
-    return;
+    return n_factors;
 
   while (n % 2 == 0)
     {
-      printf ("\t2\n");
+      factors[n_factors++] = 2;
       n /= 2;
     }
+
   /* The exit condition in the following loop is correct because
      any time it is tested one of these 3 conditions holds:
       (1) d divides n
@@ -44,12 +81,27 @@ factor (n0)
     {
       while (n % d == 0)
 	{
-	  printf ("\t%ld\n", d);
+	  factors[n_factors++] = d;
 	  n /= d;
 	}
     }
   if (n != 1 || n0 == 1)
-    printf ("\t%ld\n", n);
+    factors[n_factors++] = n;
+
+  return n_factors;
+}
+
+static void
+print_factors (n)
+     unsigned long int n;
+{
+  unsigned long int factors[64];
+  int n_factors;
+  int i;
+
+  n_factors = factor (n, 64, factors);
+  for (i=0; i<n_factors; i++)
+    printf ("\t%lu\n", factors[i]);
 }
 
 static void
@@ -63,7 +115,7 @@ do_stdin ()
       if (fgets (buf, sizeof buf, stdin) == 0)
 	exit (0);
       /* FIXME: Use strtoul.  */
-      factor ((unsigned long) atoi (buf));
+      print_factors ((unsigned long) atoi (buf));
     }
 }
 
@@ -72,10 +124,22 @@ main (argc, argv)
      int argc;
      char **argv;
 {
+  program_name = argv[0];
+
+  parse_long_options (argc, argv, "factor", version_string, usage);
+
+  if (argc > 2)
+    {
+      error (0, 0, "too many arguments");
+      usage (1);
+    }
+
   if (argc == 1)
     do_stdin ();
   else if (argc == 2)
-    factor ((unsigned) atoi (argv[1]));
+    {
+      print_factors ((unsigned long) atoi (argv[1]));
+    }
   else
     {
       fprintf (stderr, "Usage: %s [number]\n", argv[0]);
