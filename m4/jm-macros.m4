@@ -1,4 +1,4 @@
-#serial 9
+#serial 10
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -69,6 +69,24 @@ AC_DEFUN(jm_MACROS,
 
 AC_DEFUN(jm_CHECK_ALL_TYPES,
 [
+  dnl Checks for typedefs, structures, and compiler characteristics.
+  AC_C_BIGENDIAN
+  AC_C_CONST
+  AC_C_INLINE
+  AC_C_LONG_DOUBLE
+
+  AC_HEADER_DIRENT
+  AC_HEADER_STDC
+  AC_STRUCT_ST_BLKSIZE
+x AC_STRUCT_ST_BLOCKS
+
+  AC_STRUCT_TM
+  AC_HEADER_TIME
+x AC_STRUCT_TIMEZONE
+  AC_HEADER_STAT
+x AC_STRUCT_ST_MTIM_NSEC
+x AC_STRUCT_ST_DM_MODE
+
   AC_TYPE_GETGROUPS
   AC_TYPE_MODE_T
   AC_TYPE_OFF_T
