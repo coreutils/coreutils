@@ -1,3 +1,9 @@
+1998-02-13  Jim Meyering  <meyering@eng.ascend.com>
+
+	* src/mv.c (cp_option_init): Set copy_as_regular to 0, not 1.
+	Otherwise, mv tries to open special files.
+	Reported by Kjetil Torgrim Homme.
+
 1998-02-08  Jim Meyering  <meyering@eng.ascend.com>
 
 	* Version 3.16m.
@@ -2206,7 +2212,7 @@ Tue Jul  9 20:19:44 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	* src/install.c (UID_T_MAX): Use `(unsigned long)1' rather than
 	`(uid_t)1' to avoid problems on systems where uid_t is signed.
 	(GID_T_MAX): Likewise for gid_t.
-	From Kjetil Torgrim Homme <kjetilho@ifi.uio.no>.
+	From Kjetil Torgrim Homme.
 
 Sun Jul  7 22:40:08 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
@@ -3744,7 +3750,7 @@ Mon Jun 20 23:45:34 1994  Jim Meyering  (meyering@comco.com)
 Sat Jun 18 15:45:34 1994  Jim Meyering  (meyering@comco.com)
 
 	* du.c (count_entry): Print "/" instead of zero-length string.
-	From Kjetil Torgrim Homme <kjetilho@ifi.uio.no>.
+	From Kjetil Torgrim Homme.
 
 Sun May 29 13:43:50 1994  Jim Meyering  (meyering@comco.com)
 
