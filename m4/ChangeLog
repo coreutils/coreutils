@@ -1,8 +1,11 @@
 1999-04-20  Jim Meyering  <meyering@ascend.com>
 
+	* jm-macros.m4 (jm_CHECK_ALL_TYPES): Require
+	jm_AC_TYPE_UNSIGNED_LONG_LONG.
+
 	* xstrtoumax.m4: Require jm_AC_TYPE_UNSIGNED_LONG_LONG.
-	Replace xstroull if necessary.
-	From Paul Eggert.
+	AC_REPLACE xstroull if necessary.  From Paul Eggert.
+	(AC_CHECK_FUNCS): Remove strtoull, strtoumax, strtouq.
 
 1999-04-20  Paul Eggert  <eggert@twinsun.com>
 
