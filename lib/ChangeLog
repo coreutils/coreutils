@@ -4,6 +4,12 @@
 	* xstrndup.c: New file, factored out of dircolors.c from coreutils.
 	* Makefile.am (libfetish_a_SOURCES): Add xstrndup.c and xstrndup.h.
 
+2003-07-23  Jim Meyering  <jim@meyering.net>
+
+	* lstat.c, save-cwd.c, stat.c, utime.c, xgethostname.c: Normalize
+	naming of Sun operating systems, e.g., SunOS4 -> SunOS 4,
+	Solaris5.9 -> Solaris 9.  From Paul Eggert.
+
 2003-07-22  Paul Eggert  <eggert@twinsun.com>
 
 	* xalloc.h (XCALLOC, XREALLOC, CCLONE): Fix under- and
