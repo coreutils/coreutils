@@ -101,12 +101,14 @@ writable-files:
 	done;								\
 	test "$$fail" && exit 1 || :
 
-# Make sure that the copyright date in lib/version-etc.c is up to date.
+v_etc_file = lib/version-etc.c
+# Make sure that the copyright date in $(v_etc_file) is up to date.
 copyright-check:
-	@if test -f lib/version-etc.c; then \
-	  grep 'N_("Copyright (C) $(shell date +%Y) Free' lib/version-etc.c \
+	@if test -f $(v_etc_file); then \
+	  grep 'N_("Copyright (C) $(shell date +%Y) Free' $(v_etc_file) \
 	    >/dev/null \
-	  || { echo 'out of date copyright in $<; update it' 1>&2; exit 1; }; \
+	  || { echo 'out of date copyright in $(v_etc_file); update it' 1>&2; \
+	       exit 1; }; \
 	fi
 
 
@@ -156,7 +158,7 @@ null_AM_MAKEFLAGS = \
 # and building with CFLAGS='-Wformat -Werror' causes any format warning to be
 # treated as a failure.
 t=./=test
-my-distcheck: writable-files po-check
+my-distcheck: local-check
 	-rm -rf $(t)
 	mkdir $(t)
 	GZIP=$(GZIP_ENV) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
