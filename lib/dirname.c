@@ -53,7 +53,7 @@ char *
 dir_name (char const *path)
 {
   size_t length = dir_len (path);
-  int append_dot = (length == FILE_SYSTEM_PREFIX_LEN (path));
+  bool append_dot = (length == FILE_SYSTEM_PREFIX_LEN (path));
   char *newpath = xmalloc (length + append_dot + 1);
   memcpy (newpath, path, length);
   if (append_dot)
