@@ -172,19 +172,25 @@ sgi)
 
 aix)
   # The C for AIX Compiler uses -M and outputs the dependencies
-  # in a .u file.  This file always lives in the current directory.
-  # Also, the AIX compiler puts `$object:' at the start of each line;
-  # $object doesn't have directory information.
-  stripped=`echo "$object" | sed -e 's,^.*/,,' -e 's/\(.*\)\..*$/\1/'`
+  # in a .u file.  In older versions, this file always lives in the
+  # current directory.  Also, the AIX compiler puts `$object:' at the
+  # start of each line; $object doesn't have directory information.
+  # Version 6 uses the directory in both cases.
+  stripped=`echo "$object" | sed 's/\(.*\)\..*$/\1/'`
   tmpdepfile="$stripped.u"
-  outname="$stripped.o"
   if test "$libtool" = yes; then
     "$@" -Wc,-M
   else
     "$@" -M
   fi
-
   stat=$?
+
+  if test -f "$tmpdepfile"; then :
+  else
+    stripped=`echo "$stripped" | sed 's,^.*/,,'`
+    tmpdepfile="$stripped.u"
+  fi
+
   if test $stat -eq 0; then :
   else
     rm -f "$tmpdepfile"
@@ -192,6 +198,7 @@ aix)
   fi
 
   if test -f "$tmpdepfile"; then
+    outname="$stripped.o"
     # Each line is of the form `foo.o: dependent.h'.
     # Do two passes, one to just change these to
     # `$object: dependent.h' and one to simply `dependent.h:'.
