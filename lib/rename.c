@@ -30,8 +30,8 @@
 # include <strings.h>
 #endif
 
-#include <dirname.h>
-#include <xalloc.h>
+#include "dirname.h"
+#include "xalloc.h"
 
 #ifndef HAVE_DECL_FREE
 "this configure-time declaration test was not run"

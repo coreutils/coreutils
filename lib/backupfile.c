@@ -107,9 +107,9 @@ char *malloc ();
 # define REAL_DIR_ENTRY(dp) 1
 #endif
 
-#include <argmatch.h>
-#include <backupfile.h>
-#include <dirname.h>
+#include "argmatch.h"
+#include "backupfile.h"
+#include "dirname.h"
 
 /* The extension added to file names to produce a simple (as opposed
    to numbered) backup file name. */
