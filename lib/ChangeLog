@@ -1,6 +1,9 @@
 2002-08-31  Jim Meyering  <meyering@lucent.com>
 
 	* mktime.c: Update from GNU libc.
+	* obstack.c: Likewise.
+	* getopt.c: Likewise.
+	* getopt1.c: Likewise.
 
 2002-08-05  Paul Eggert  <eggert@twinsun.com>
 
