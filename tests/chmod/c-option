@@ -33,7 +33,7 @@ if test $framework_failure = 1; then
   (exit 1); exit
 fi
 
-. $abs_srcdir/../sticky-check
+. $abs_srcdir/../setgid-check
 
 fail=0
 
