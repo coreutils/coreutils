@@ -84,8 +84,11 @@ main (int argc, char **argv)
 	  adjustment_given = 1;
 	  ++optind;
 	}
-      else if (s[0] == '-' && ISDIGIT (s[1]))
+      else if (s[0] == '-' && (ISDIGIT (s[1])
+			       || (s[1] == '+' && ISDIGIT (s[2]))))
 	{
+	  if (s[1] == '+')
+	    ++s;
 	  if (!isinteger (&s[1]))
 	    error (1, 0, _("invalid option `%s'"), s);
 
