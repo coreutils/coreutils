@@ -1,3 +1,9 @@
+Sat Jan 25 21:01:13 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/date/mk-script.pl: Generated script now reflects
+	specification (in Test.pm) of default and per-test environment
+	settings.
+
 Fri Jan 24 23:36:00 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/long-options.c (parse_long_options): Reset optind to zero
