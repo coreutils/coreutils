@@ -1,4 +1,5 @@
 Changes in release 2.1
+ [2.0j]
  [2.0i]
 * fixed a bug introduced in 2.0h that made many programs fail with a
  `write error' when invoked with the --version option
