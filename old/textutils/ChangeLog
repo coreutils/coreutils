@@ -1,6 +1,13 @@
-2001-08-25  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.15.
+
+2001-08-08  Charles Randall <crandall@matchlogic.com>
+
+	* src/sort.c (mergefps): Do not allocate at least sort_size
+	bytes for each merge buffer.  Instead, allocate at least
+	sort_size bytes total.
+
+2001-08-25  Jim Meyering  <meyering@lucent.com>
 
 	* tests/uniq/Test.pm: Re-enable some commented-out tests.
 
