@@ -623,7 +623,7 @@ free_lbuffers:
   while (first)
     {
       tmp = first->next;
-      free ((char *) first);
+      free (first);
       first = tmp;
     }
   return errors;
