@@ -1059,15 +1059,19 @@ mutually exclusive"));
 	  if (speed_was_set || memcmp (&mode, &new_mode, sizeof (mode)) != 0)
 #endif
 	    {
-	      size_t i;
 	      error (1, 0,
 		     _("%s: unable to perform all requested operations"),
 		     device_name);
-	      printf (_("new_mode: mode\n"));
-	      for (i = 0; i < sizeof (new_mode); i++)
-		printf ("0x%02x: 0x%02x\n",
-			*(((unsigned char *) &new_mode) + i),
-			*(((unsigned char *) &mode) + i));
+#ifdef TESTING
+	      {
+		size_t i;
+		printf (_("new_mode: mode\n"));
+		for (i = 0; i < sizeof (new_mode); i++)
+		  printf ("0x%02x: 0x%02x\n",
+			  *(((unsigned char *) &new_mode) + i),
+			  *(((unsigned char *) &mode) + i));
+	      }
+#endif
 	    }
 	}
     }
