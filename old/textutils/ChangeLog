@@ -3,7 +3,7 @@
 	* man/help2man: Escape backslashes so tr's manual comes out right.
 	Reported by Andreas Schwab.
 
-	* src/tsort.c (usage): Correct bug-reporting email address.
+	* src/tsort.c (usage): Correct address for bug reports.
 	(tsort): Remove trailing `\n' in error format.
 
 	* src/md5sum.c (md5_check): Remove trailing `\n' in error format.
