@@ -4,10 +4,8 @@ use strict;
 
 (my $program_name = $0) =~ s|.*/||;
 
-# Make sure the tools use the expected locale.
-$ENV{LANGUAGE} = 'C';
-$ENV{LC_ALL} = 'C';
-$ENV{LANG} = 'C';
+# Turn off localisation of executable's ouput.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
 my $q_bell = {IN => {"q\a" => ''}};
 my @Tests =
