@@ -1,3 +1,16 @@
+2004-07-02  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* canonicalize.c (canonicalize_file_name): Assume that path_concat
+	never returns NULL.
+	* path-concat.c (mempcpy): Don't define if a system header defines it.
+	Don't include stdio.h, stdlib.h, unistd.h, strdup.h.
+	(longest_relative_suffix): New function.
+	(path_concat): Use it.  Assume first argument is not NULL.
+	Port to DOS.  Omit redundant separators.
+	Report an error instead of returning NULL.
+	Use mempcpy instead of memcpy.
+	(xpath_concat): Remove: not declared or used.
+
 2004-06-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* dirname.h (FILE_SYSTEM_PREFIX_LEN): Renamed from
