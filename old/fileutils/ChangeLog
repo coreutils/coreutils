@@ -1,5 +1,10 @@
 1998-07-25  Jim Meyering  <meyering@ascend.com>
 
+	* src/rmdir.c (main): rmdir fails with EEXIST on some systems.
+	Handle that, so --ignore-fail-on-non-empty works.
+	(EEXIST): Define to zero if not defined.
+	(ENOTEMPTY): Likewise.
+
 	* tests/cp/same-file: Remove `diff' I'd put in for debugging.
 	Exit with the status from cmp.
 
