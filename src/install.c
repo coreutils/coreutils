@@ -339,6 +339,8 @@ is not a directory"),
 		     quote (dest));
 	      usage (1);
 	    }
+
+	  dest_info_init ();
 	  for (i = 0; i < n_files - 1; i++)
 	    {
 	      errors |= install_file_in_dir (file[i], dest, &x);
