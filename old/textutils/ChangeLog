@@ -1,3 +1,30 @@
+2001-02-25  Paul Eggert  <eggert@twinsun.com>
+
+	'sort' race condition fixes.
+
+	Defend against a DoS attack where someone else creates a
+	temporary file with the same name as ours.  Use mkstemp to do
+	this, supplying our own mkstemp if the system doesn't have one.
+
+	Also, fix a race condition during cleanup on hosts without
+	sigaction.
+
+	* src/sort.c (NAME_MAX_IN_DIR): Remove.
+	(sigprocmask, sigset_t): New macros, defined only on older hosts.
+	(caught_signals): New var.
+	(xtmpfopen, tempname): Removed.
+	(create_temp_file): New function, combining the functions of the old
+	xtmpfopen and tempname.  All callers changed.
+	Use mkstemp to create the file.
+	(sighandler): On hosts without sigaction, ignore signals while
+	cleaning up, instead of letting them interrupt cleanup.
+	(main): Initialize caught_signals.  On hosts with sigaction, block all
+	caught signals while handling one.  Remove duplicate code.
+
+	* m4/jm-macros.m4 (jm_MACROS): Use mkstemp replacement if the system
+	lacks mkstemp.  Compile our own tempname.c if we compile our own
+	mkstemp.c, as mkstemp relies on tempname.
+
 2001-02-22  Jim Meyering  <meyering@lucent.com>
 
 	* src/sort.c (keycompare): Move declarations of locals, lena and lenb,
