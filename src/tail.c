@@ -172,6 +172,10 @@ char *program_name;
 /* FIXME: allow fractional seconds */
 static unsigned int sleep_interval = 1;
 
+/* The process ID of the process (presumably on the current host)
+   that is writing to all followed files.  */
+static pid_t pid;
+
 /* Nonzero if we have ever read standard input.  */
 static int have_read_stdin;
 
@@ -185,6 +189,7 @@ static struct option const long_options[] =
   {"lines", required_argument, NULL, 'n'},
   {"max-unchanged-stats", required_argument, NULL, CHAR_MAX + 2},
   {"max-consecutive-size-changes", required_argument, NULL, CHAR_MAX + 3},
+  {"pid", required_argument, NULL, CHAR_MAX + 4},
   {"quiet", no_argument, NULL, 'q'},
   {"retry", no_argument, NULL, CHAR_MAX + 1},
   {"silent", no_argument, NULL, 'q'},
@@ -224,6 +229,7 @@ With no FILE, or when FILE is -, read standard input.\n\
                              (the default is %d)\n\
       --max-consecutive-size-changes=N see the texinfo documentation\n\
                              (the default is %d)\n\
+      --pid=PID            with -f, terminate after process ID, PID dies\n\
   -q, --quiet, --silent    never output headers giving file names\n\
   -s, --sleep-interval=S   with -f, sleep S seconds between iterations\n\
   -v, --verbose            always output headers giving file names\n\
@@ -818,6 +824,7 @@ static void
 tail_forever (struct File_spec *f, int nfiles)
 {
   int last;
+  int writer_is_dead = 0;
 
   last = nfiles - 1;
 
@@ -907,7 +914,15 @@ tail_forever (struct File_spec *f, int nfiles)
 
       /* If none of the files changed size, sleep.  */
       if (!any_changed)
-	sleep (sleep_interval);
+	{
+	  if (writer_is_dead)
+	    break;
+	  sleep (sleep_interval);
+
+	  /* Once the writer is dead, read the files once more to
+	     avoid a race condition.  */
+	  writer_is_dead = (kill (pid, 0) != 0);
+	}
     }
 }
 
@@ -1362,6 +1377,19 @@ parse_options (int argc, char **argv,
 		   _("%s: invalid maximum number of consecutive size changes"),
 		     optarg);
 	    }
+	  break;
+
+	case CHAR_MAX + 4:
+	  {
+	    strtol_error s_err;
+	    unsigned long int tmp_ulong;
+	    s_err = xstrtoul (optarg, NULL, 10, &tmp_ulong, "");
+	    if (s_err != LONGINT_OK || tmp_ulong > PID_T_MAX)
+	      {
+		error (EXIT_FAILURE, 0, _("%s: invalid PID"), optarg);
+	      }
+	    pid = tmp_ulong;
+	  }
 	  break;
 
 	case 'q':
