@@ -4,7 +4,7 @@
 
 	* src/uname.c [__APPLE__]: Include <mach/machine.h> and <mach-o/arch.h>.
 	(main) [__APPLE__]: Get the processor type via syscall rather than
-	hard-coding "powerpc".  From toby@opendarwin.org.
+	hard-coding "powerpc".  From Toby Peterson.
 
 	* src/sort.c (merge): Remove declarations of now-unused variables.
 
