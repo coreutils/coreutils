@@ -281,13 +281,10 @@ fstype_to_string (int t)
 /* Return a list of the currently mounted filesystems, or NULL on error.
    Add each entry to the tail of the list so that they stay in order.
    If NEED_FS_TYPE is nonzero, ensure that the filesystem type fields in
-   the returned list are valid.  Otherwise, they might not be.
-   If ALL_FS is positive, return all entries; if zero, omit entries
-   for filesystems that are automounter (dummy) entries; if negative,
-   also omit non-local filesystems.  */
+   the returned list are valid.  Otherwise, they might not be.  */
 
 struct mount_entry *
-read_filesystem_list (int need_fs_type, int all_fs)
+read_filesystem_list (int need_fs_type)
 {
   struct mount_entry *mount_list;
   struct mount_entry *me;
@@ -308,12 +305,12 @@ read_filesystem_list (int need_fs_type, int all_fs)
       return NULL;
     for (p = mntlist; p; p = p->next) {
       mnt = p->ment;
-      if (all_fs < 0 && REMOTE_FS_TYPE (mnt->mnt_type))
-	continue;
       me = (struct mount_entry*) xmalloc(sizeof (struct mount_entry));
       me->me_devname = xstrdup(mnt->mnt_fsname);
       me->me_mountdir = xstrdup(mnt->mnt_dir);
       me->me_type = xstrdup(mnt->mnt_type);
+      me->me_dummy = ME_DUMMY (me->me_devname, me->me_type);
+      me->me_remote = ME_REMOTE (me->me_devname, me->me_type);
       me->me_dev = -1;
       *mtail = me;
       mtail = &me->me_next;
@@ -335,16 +332,12 @@ read_filesystem_list (int need_fs_type, int all_fs)
 
     while ((mnt = getmntent (fp)))
       {
-	if (all_fs <= 0 && (!strcmp (mnt->mnt_type, "ignore")
-			    || !strcmp (mnt->mnt_type, "auto")))
-	  continue;
-	if (all_fs < 0 && REMOTE_FS_TYPE (mnt->mnt_type))
-	  continue;
-
 	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
 	me->me_devname = xstrdup (mnt->mnt_fsname);
 	me->me_mountdir = xstrdup (mnt->mnt_dir);
 	me->me_type = xstrdup (mnt->mnt_type);
+	me->me_dummy = ME_DUMMY (me->me_devname, me->me_type);
+	me->me_remote = ME_REMOTE (me->me_devname, me->me_type);
 	devopt = strstr (mnt->mnt_opts, "dev=");
 	if (devopt)
 	  {
@@ -377,13 +370,13 @@ read_filesystem_list (int need_fs_type, int all_fs)
     for (; entries-- > 0; fsp++)
       {
 	char *fs_type = fsp_to_string (fsp);
-	if (all_fs < 0 && REMOTE_FS_TYPE (fs_type))
-	  continue;
 
 	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
 	me->me_devname = xstrdup (fsp->f_mntfromname);
 	me->me_mountdir = xstrdup (fsp->f_mntonname);
 	me->me_type = fs_type;
+	me->me_dummy = ME_DUMMY (me->me_devname, me->me_type);
+	me->me_remote = ME_REMOTE (me->me_devname, me->me_type);
 	me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
 
 	/* Add to the linked list. */
@@ -403,13 +396,12 @@ read_filesystem_list (int need_fs_type, int all_fs)
 	   0 <= (val = getmnt (&offset, &fsd, sizeof (fsd), NOSTAT_MANY,
 			       (char *) 0)))
       {
-	if (all_fs < 0 && REMOTE_FS_TYPE (gt_names[fsd.fd_req.fstype]))
-	  continue;
-
 	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
 	me->me_devname = xstrdup (fsd.fd_req.devname);
 	me->me_mountdir = xstrdup (fsd.fd_req.path);
 	me->me_type = gt_names[fsd.fd_req.fstype];
+	me->me_dummy = ME_DUMMY (me->me_devname, me->me_type);
+	me->me_remote = ME_REMOTE (me->me_devname, me->me_type);
 	me->me_dev = fsd.fd_req.dev;
 
 	/* Add to the linked list. */
@@ -442,13 +434,12 @@ read_filesystem_list (int need_fs_type, int all_fs)
 
     for (counter = 0; counter < numsys; counter++)
       {
-	if (all_fs < 0 && REMOTE_FS_TYPE (mnt_names[stats[counter].f_type]))
-	  continue;
-
 	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
 	me->me_devname = xstrdup (stats[counter].f_mntfromname);
 	me->me_mountdir = xstrdup (stats[counter].f_mntonname);
 	me->me_type = mnt_names[stats[counter].f_type];
+	me->me_dummy = ME_DUMMY (me->me_devname, me->me_type);
+	me->me_remote = ME_REMOTE (me->me_devname, me->me_type);
 	me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
 
 	/* Add to the linked list. */
@@ -472,24 +463,6 @@ read_filesystem_list (int need_fs_type, int all_fs)
 
     while (fread (&mnt, sizeof mnt, 1, fp) > 0)
       {
-	char *fs_type = "";
-
-# ifdef GETFSTYP			/* SVR3.  */
-	if (need_fs_type || all_fs < 0)
-	  {
-	    struct statfs fsd;
-	    char typebuf[FSTYPSZ];
-
-	    if (statfs (mnt.mt_filsys, &fsd, sizeof fsd, 0) != -1
-		&& sysfs (GETFSTYP, fsd.f_fstyp, typebuf) != -1)
-	      {
-		if (all_fs < 0 && REMOTE_FS_TYPE (typebuf))
-		  continue;
-		fs_type = xstrdup (typebuf);
-	      }
-	  }
-# endif
-
 	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
 # ifdef GETFSTYP			/* SVR3.  */
 	me->me_devname = xstrdup (mnt.mt_dev);
@@ -500,7 +473,20 @@ read_filesystem_list (int need_fs_type, int all_fs)
 # endif
 	me->me_mountdir = xstrdup (mnt.mt_filsys);
 	me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
-	me->me_type = fs_type;
+	me->me_type = "";
+# ifdef GETFSTYP			/* SVR3.  */
+	if (need_fs_type)
+	  {
+	    struct statfs fsd;
+	    char typebuf[FSTYPSZ];
+
+	    if (statfs (me->me_mountdir, &fsd, sizeof fsd, 0) != -1
+		&& sysfs (GETFSTYP, fsd.f_fstyp, typebuf) != -1)
+	      me->me_type = xstrdup (typebuf);
+	  }
+# endif
+	me->me_dummy = ME_DUMMY (me->me_devname, me->me_type);
+	me->me_remote = ME_REMOTE (me->me_devname, me->me_type);
 
 	/* Add to the linked list. */
 	*mtail = me;
@@ -525,13 +511,12 @@ read_filesystem_list (int need_fs_type, int all_fs)
     struct mntent **mnttbl=getmnttbl(),**ent;
     for (ent=mnttbl;*ent;ent++)
       {
-	if (all_fs < 0 && REMOTE_FS_TYPE ((*ent)->mt_fstype))
-	  continue;
-
 	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
 	me->me_devname = xstrdup ( (*ent)->mt_resource);
 	me->me_mountdir = xstrdup( (*ent)->mt_directory);
 	me->me_type =  xstrdup ((*ent)->mt_fstype);
+	me->me_dummy = ME_DUMMY (me->me_devname, me->me_type);
+	me->me_remote = ME_REMOTE (me->me_devname, me->me_type);
 	me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
 
 	/* Add to the linked list. */
@@ -587,17 +572,12 @@ read_filesystem_list (int need_fs_type, int all_fs)
       {
 	while ((ret = getmntent (fp, &mnt)) == 0)
 	  {
-	    /* Don't show automounted filesystems twice on e.g., Solaris.  */
-	    if (all_fs <= 0 && MNT_IGNORE (&mnt))
-	      continue;
-
-	    if (all_fs < 0 && REMOTE_FS_TYPE (mnt.mnt_fstype))
-	      continue;
-
 	    me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
 	    me->me_devname = xstrdup (mnt.mnt_special);
 	    me->me_mountdir = xstrdup (mnt.mnt_mountp);
 	    me->me_type = xstrdup (mnt.mnt_fstype);
+	    me->me_dummy = MNT_IGNORE (&mnt) != 0;
+	    me->me_remote = ME_REMOTE (me->me_devname, me->me_type);
 	    me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
 
 	    /* Add to the linked list. */
@@ -636,13 +616,12 @@ read_filesystem_list (int need_fs_type, int all_fs)
 	 thisent += vmp->vmt_length)
       {
 	vmp = (struct vmount *) thisent;
-	if (all_fs < 0 && vmp->vmt_flags & MNT_REMOTE)
-	  continue;
 	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
 	if (vmp->vmt_flags & MNT_REMOTE)
 	  {
 	    char *host, *path;
 
+	    me->me_remote = 1;
 	    /* Prepend the remote pathname.  */
 	    host = thisent + vmp->vmt_data[VMT_HOSTNAME].vmt_off;
 	    path = thisent + vmp->vmt_data[VMT_OBJECT].vmt_off;
@@ -653,11 +632,13 @@ read_filesystem_list (int need_fs_type, int all_fs)
 	  }
 	else
 	  {
+	    me->me_remote = 0;
 	    me->me_devname = xstrdup (thisent +
 				      vmp->vmt_data[VMT_OBJECT].vmt_off);
 	  }
 	me->me_mountdir = xstrdup (thisent + vmp->vmt_data[VMT_STUB].vmt_off);
 	me->me_type = xstrdup (fstype_to_string (vmp->vmt_gfstype));
+	me->me_dummy = ME_DUMMY (me->me_devname, me->me_type);
 	me->me_dev = (dev_t) -1; /* vmt_fsid might be the info we want.  */
 
 	/* Add to the linked list. */
