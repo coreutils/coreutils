@@ -1,3 +1,9 @@
+2005-01-14  Jim Meyering  <jim@meyering.net>
+
+	* utimes.m4: Work around tests/touch/empty-file failure on a system
+	(sparc64, Linux-2.4.28, glibc-2.3.3) that didn't honor utime's
+	NULL-means-set-to-current-time semantics.
+
 2005-01-04  Jim Meyering  <jim@meyering.net>
 
 	* chown.m4 (gl_FUNC_CHOWN): When cross-compiling, assume that chown
