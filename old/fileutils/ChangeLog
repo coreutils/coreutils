@@ -1,4 +1,13 @@
+2000-08-22  Jim Meyering  <meyering@lucent.com>
+
+	Don't even try to use lseek on character devices.
+	* src/dd.c (buggy_lseek_support): New function.
+	(skip): Use it.
+	Reported by Martin Gallant via Michael Stone.
+
 2000-08-21  Jim Meyering  <meyering@lucent.com>
+
+	* tests/cp/same-file: Clean up traps.  Create files in a subdir.
 
 	* install-sh (oIFS): Remove unmatched double quote, left over from
 	my 2000-08-12 change.  From J. David Anglin.
