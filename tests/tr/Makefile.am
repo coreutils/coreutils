@@ -6,12 +6,12 @@ EXTRA_DIST = build-script.pl Trtest.pm
 noinst_SCRIPTS = tr-tests
 
 PERL = @PERL@
-editpl = sed -e 's,@''PERL''@,$(PERL),g'
+editpl = sed -e 's,@''PERL''@,$(PERL),g' -e 's,@''srcdir''@,@srcdir@,g'
 
 TESTS = tr-tests
 
 tr-tests: build-script Trtest.pm
-	./build-script Trtest.pm > $@.n
+	./build-script > $@.n
 	mv $@.n $@
 	chmod 755 $@
 
