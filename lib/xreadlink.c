@@ -46,7 +46,9 @@
 char *
 xreadlink (char const *filename, size_t *link_length_arg)
 {
-  size_t buf_size = 128;  /* must be a power of 2 */
+  /* The initial buffer size for the link value.  A power of 2
+     detects arithmetic overflow earlier, but is not required.  */
+  size_t buf_size = 128;
   char *buffer = NULL;
 
   while (1)
