@@ -1,5 +1,5 @@
 /* logname -- print user's login name
-   Copyright (C) 1990-1997, 1999-2002 Free Software Foundation, Inc.
+   Copyright (C) 1990-1997, 1999-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 
 #include "system.h"
 #include "closeout.h"
+#include "error.h"
 #include "long-options.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -85,8 +86,11 @@ main (int argc, char **argv)
 	}
     }
 
-  if (argc - optind != 0)
-    usage (EXIT_FAILURE);
+  if (optind < argc)
+    {
+      error (0, 0, _("too many arguments"));
+      usage (EXIT_FAILURE);
+    }
 
   /* POSIX requires using getlogin (or equivalent code).  */
   cp = getlogin ();
