@@ -2,6 +2,9 @@
 
 	* Version 4.5.9.
 
+	* Makefile.maint (rel-files): Include $(signatures), so that
+	those files are also copied into $(release_archive_dir).
+
 	* src/df.c (find_mount_point): Call error here, now that restore_cwd
 	no longer does it.
 	* src/remove.c (AD_pop_and_chdir): Likewise.
