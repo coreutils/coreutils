@@ -282,7 +282,6 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   change_times = no_create = use_ref = posix_date = flexible_date = 0;
-  newtime = (time_t) -1;
 
   while ((c = getopt_long (argc, argv, "acd:fmr:t:", longopts, NULL)) != -1)
     {
@@ -321,9 +320,8 @@ main (int argc, char **argv)
 
 	case 't':
 	  posix_date++;
-	  newtime = posixtime (optarg,
-			       PDS_LEADING_YEAR | PDS_CENTURY | PDS_SECONDS);
-	  if (newtime == (time_t) -1)
+	  if (! posixtime (&newtime, optarg,
+			   PDS_LEADING_YEAR | PDS_CENTURY | PDS_SECONDS))
 	    error (1, 0, _("invalid date format %s"), quote (optarg));
 	  date_set++;
 	  break;
@@ -364,12 +362,11 @@ main (int argc, char **argv)
   if (!date_set && 2 <= argc - optind && !STREQ (argv[optind - 1], "--")
       && posix2_version () < 200112)
     {
-      newtime = posixtime (argv[optind], PDS_TRAILING_YEAR);
-      if (newtime != (time_t) -1)
+      if (posixtime (&newtime, argv[optind], PDS_TRAILING_YEAR))
 	{
 	  if (! getenv ("POSIXLY_CORRECT"))
 	    {
-	      struct tm const *tm = posixtm (argv[optind], PDS_TRAILING_YEAR);
+	      struct tm const *tm = localtime (&newtime);
 	      error (0, 0,
 		     _("warning: `touch %s' is obsolete; use `touch -t %04d%02d%02d%02d%02d.%02d'"),
 		     argv[optind],
