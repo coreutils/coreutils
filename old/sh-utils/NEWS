@@ -1,4 +1,5 @@
-Changes in release 1.17
+Changes in release 2.0
+* disable stty tests (otherwise they fail) when `make check' is run via rsh
  [1.16m]
 * false and true now ignore --help and --version when POSIXLY_CORRECT is set
  [1.16l]
