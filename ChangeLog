@@ -1,3 +1,10 @@
+2003-02-21  Jim Meyering  <jim@meyering.net>
+
+	* Version 4.5.8.
+
+	* src/du.c (process_file): Always reset size_to_propagate_to_parent
+	for --separate-dirs (-S).
+
 2003-02-20  Jim Meyering  <jim@meyering.net>
 
 	* Use automake-1.7.3.  Regenerate dependent files.
@@ -7,11 +14,9 @@
 	(usage) [%B]: Describe it.
 	[%b]: Refer to %B.
 
-	* Version 4.5.8.
-
 	* src/du.c (process_file): Reorganize the code to use only
-	one array and to make -S
-	Patch by Bruno Haible.
+	one `sum' array, and change how -S works back to the way it was
+	before 2003-01-31.  Patch by Bruno Haible.
 
 	* tests/du/basic: New test.
 
