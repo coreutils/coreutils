@@ -1,3 +1,26 @@
+
+	* configure.in (AC_REPLACE_FUNCS): Remove memcmp (again!) since
+	AC_FUNC_MEMCMP already handles it.  This avoids warnings from
+	ranlib on nextstep systems.  From Kaveh Ghazi.
+
+	* csplit.c (interrupt_handler): Declare to have a single integer
+	parameter.  Otherwise, some compilers fail with a type mismatch
+	error in sa_handler assignment.
+
+	* fmt.c [word]: Redefine.  Otherwise, systems (Unicos for one) with
+	headers that define `word' to be a type get syntax errors because
+	of the variable by the same name.
+	* join.c [join]: Redefine.  Also for Unicos.
+
+	* md5sum.c (main): Remove spurious colon in getopt spec string.
+	From Ken Pizzini <kenp@spry.com>.
+
+Tue Jun 20 06:59:16 1995  Jim Meyering  (meyering@comco.com)
+
+	* md5sum.c (md5_file): Initialize two elements of LEN portably,
+	rather than with ANSI aggregate initialization.  Reported by
+	Edzer Pebesma <Edzer.Pebesma@rivm.nl>.
+
 Sun Jun 18 09:15:57 1995  Jim Meyering  (meyering@comco.com)
 
 	* Version 1.12.
@@ -827,7 +850,7 @@ Tue Oct 19 22:37:58 1993  Jim Meyering  (meyering@comco.com)
 
 	* csplit.1: Updated.
 	From Ronald F. Guilmette.
-	
+
 	* csplit.c: Remove register keyword (replace with `int' in two cases).
 
 	* csplit.c: [MAX]: Macro renamed from max and moved to top of file.
@@ -1311,7 +1334,7 @@ Tue Feb 18 20:29:45 1992  Randall Smith  (randy at geech.gnu.ai.mit.edu)
 Mon Feb 17 10:35:58 1992  David J. MacKenzie  (djm at wookumz.gnu.ai.mit.edu)
 
 	* sum.c (sysv_sum_file): Use %lu instead of %u to print a
-	long.  Not that it matters for GNU . . .	
+	long.  Not that it matters for GNU . . .
 
 	* tr.c (unquote, make_printable_str): Use \007 instead of ANSI \a.
 	(append_normal_char, append_range, append_char_class,
@@ -1544,7 +1567,7 @@ Mon Sep  2 04:00:37 1991  David J. MacKenzie  (djm at apple-gunkies)
 Sun Sep  1 01:18:38 1991  David J. MacKenzie  (djm at apple-gunkies)
 
 	* fold.c (fold_file): Read in an int, not a char, for EOF
-	comparison. 
+	comparison.
 
 	* configure: Check whether st_blksize is missing.
 
@@ -1806,7 +1829,7 @@ Sun Aug  5 11:51:12 1990  David J. MacKenzie  (djm at pogo.ai.mit.edu)
 Sat Aug  4 10:11:30 1990  David J. MacKenzie  (djm at pogo.ai.mit.edu)
 
 	* cat.c: Remove -c option added for POSIX draft 9, since POSIX
-	draft 10 removed it. 
+	draft 10 removed it.
 
 	* tac.c (tac_stdin): Use fstat instead of lseek to determine
 	whether stdin is seekable, because lseek silently fails on
@@ -1841,7 +1864,7 @@ Tue Jul 17 12:36:11 EDT 1990  Jay Fenlason (hack@ai.mit.edu)
 Sun Jul  8 00:39:31 1990  David J. MacKenzie  (djm at apple-gunkies)
 
 	* cmp.c (main, usage): Rename -L option to -c and don't have
-	it imply -l. 
+	it imply -l.
 	(printc): Take an arg to specify number of chars to pad to,
 	for column alignment.
 	(cmp): Respect flag_print_chars in default output format.
@@ -1890,11 +1913,11 @@ Sat May 12 01:16:42 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 	* cat.c (main): Allow input file to be output file for devices
 	(ttys, etc.).  Check whether input file is output file when
 	reading standard input.  Print any error messages for standard
-	input. 
+	input.
 
 	* cmp.c (bcmp_cnt): Handle int comparisons correctly on 16 bit
 	machines as well as 32 bit ones.
-	* cmp.c, tail.c: Use longs instead of ints for file offsets. 
+	* cmp.c, tail.c: Use longs instead of ints for file offsets.
 
 Fri May 11 02:11:03 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 
@@ -1962,7 +1985,7 @@ Mon Mar  5 00:34:36 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 
 	* head.c: Move global `errors' into main and have the various
 	functions return an error status instead of setting it in
-	nonfatal_perror. 
+	nonfatal_perror.
 
 Sat Mar  3 11:27:27 1990  Torbj|rn Granlund  (tege at echnaton)
 
