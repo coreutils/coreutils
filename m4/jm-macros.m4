@@ -4,6 +4,8 @@ dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
 AC_DEFUN(jm_MACROS,
 [
+  AC_PREREQ(2.13)               dnl Minimum Autoconf version required.
+
   dnl This macro actually runs replacement code.  See isc-posix.m4.
   AC_REQUIRE([AC_ISC_POSIX])dnl
 
