@@ -170,7 +170,7 @@ copy_reg (const char *src_path, const char *dst_path,
 
   buf_size = ST_BLKSIZE (sb);
 
-#ifdef HAVE_ST_BLOCKS
+#if HAVE_ST_BLOCKS
   if (sparse_mode == SPARSE_AUTO && S_ISREG (sb.st_mode))
     {
       /* Use a heuristic to determine whether SRC_PATH contains any
@@ -267,7 +267,7 @@ copy_reg (const char *src_path, const char *dst_path,
 
   if (last_write_made_hole)
     {
-#ifdef HAVE_FTRUNCATE
+#if HAVE_FTRUNCATE
       /* Write a null character and truncate it again.  */
       if (full_write (dest_desc, "", 1) < 0
 	  || ftruncate (dest_desc, n_read_total) < 0)
@@ -659,7 +659,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	{
 	  /* Preserve the owner and group of the just-`copied'
 	     symbolic link, if possible.  */
-# ifdef HAVE_LCHOWN
+# if HAVE_LCHOWN
 	  if (DO_CHOWN (lchown, dst_path, src_sb.st_uid, src_sb.st_gid))
 	    {
 	      error (0, errno, _("preserving ownership for %s"), dst_path);

@@ -47,7 +47,7 @@
 # include <inttypes.h>
 #endif
 
-#ifdef HAVE_TERMIOS_H
+#if HAVE_TERMIOS_H
 # include <termios.h>
 #endif
 
@@ -2167,7 +2167,7 @@ print_long_format (const struct fileinfo *f)
   const char *fmt;
   char *user_name;
 
-#ifdef HAVE_ST_DM_MODE
+#if HAVE_ST_DM_MODE
   mode_string (f->stat.st_dm_mode, modebuf);
 #else
   mode_string (f->stat.st_mode, modebuf);

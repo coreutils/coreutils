@@ -95,11 +95,11 @@ uid_t getuid ();
 gid_t getgid ();
 #endif
 
-#ifndef HAVE_ENDGRENT
+#if ! HAVE_ENDGRENT
 # define endgrent() ((void) 0)
 #endif
 
-#ifndef HAVE_ENDPWENT
+#if ! HAVE_ENDPWENT
 # define endpwent() ((void) 0)
 #endif
 

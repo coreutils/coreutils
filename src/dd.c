@@ -1106,7 +1106,7 @@ main (int argc, char **argv)
       output_fd = open (output_file, omode, 0666);
       if (output_fd < 0)
 	error (1, errno, "%s", output_file);
-#ifdef HAVE_FTRUNCATE
+#if HAVE_FTRUNCATE
       if (seek_record != 0 && !(conversions_mask & C_NOTRUNC))
 	{
 	  off_t o = seek_record * output_blocksize;

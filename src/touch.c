@@ -52,7 +52,7 @@ int safe_read ();
 int full_write ();
 void invalid_arg ();
 
-#ifndef HAVE_UTIME_NULL
+#if ! HAVE_UTIME_NULL
 static int utime_now ();
 #endif
 
@@ -171,7 +171,7 @@ touch (char *file)
 
   if (amtime_now)
     {
-#ifndef HAVE_UTIME_NULL
+#if ! HAVE_UTIME_NULL
       status = utime_now (file, sbuf.st_size);
 #else
       /* Pass NULL to utime so it will not fail if we just have
@@ -209,7 +209,7 @@ touch (char *file)
   return 0;
 }
 
-#ifndef HAVE_UTIME_NULL
+#if ! HAVE_UTIME_NULL
 /* Emulate utime (file, NULL) for systems (like 4.3BSD) that do not
    interpret it to set the access and modification times of FILE to
    the current time.  FILESIZE is the correct size of FILE, used to

@@ -46,11 +46,11 @@ struct group *getgrnam ();
 struct group *getgrgid ();
 #endif
 
-#ifndef HAVE_ENDPWENT
+#if ! HAVE_ENDPWENT
 # define endpwent() ((void) 0)
 #endif
 
-#ifdef HAVE_LCHOWN
+#if HAVE_LCHOWN
 # define LCHOWN(FILE, OWNER, GROUP) lchown (FILE, OWNER, GROUP)
 #else
 # define LCHOWN(FILE, OWNER, GROUP) 1
@@ -356,7 +356,7 @@ main (int argc, char **argv)
       usage (1);
     }
 
-#ifndef HAVE_LCHOWN
+#if ! HAVE_LCHOWN
   if (change_symlinks)
     {
       error (1, 0, _("--no-dereference (-h) is not supported on this system"));

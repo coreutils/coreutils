@@ -60,7 +60,7 @@
 #include "remove.h"
 #include "error.h"
 
-#ifdef HAVE_LCHOWN
+#if HAVE_LCHOWN
 # define chown(PATH, OWNER, GROUP) lchown(PATH, OWNER, GROUP)
 #endif
 
