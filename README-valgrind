@@ -1,24 +1,11 @@
 #! /bin/bash
 
-# Tue 2003-11-11 18:45:50 +0100
-# $ df > k
-# --6741-- FATAL: unhandled syscall: 268
-# Also 265 (__NR_clock_gettime), 271(__NR_utimes)
-# $ chgrp meyering .
-# ==6859== discard syms in /lib/libnss_compat-2.3.2.so due to munmap()
-# ==6859== discard syms in /lib/libnss_nis-2.3.2.so due to munmap()
-# ==6859== discard syms in /lib/libnsl-2.3.2.so due to munmap()
-# ==6859== discard syms in /lib/libnss_files-2.3.2.so due to munmap()
-
-
-
 # Convert Makefile.am files:
 #  find tests -name Makefile.am | xargs grep -wl PATH|xargs perl -pi -e \
 #    's,src(\$\(PATH_SEPARATOR\)\$\$PATH),src/vg$1,'
 #
 # Create this symlink for suppressions:
 # ln -s $PWD/.vg-suppressions /tmp/cu-vg
-
 
 # Create src/vg:
 
@@ -29,7 +16,7 @@ srcdir=$pwd/src
 path='export PATH='$srcdir':${PATH#*:}'
 pre='#!/bin/sh\n'"$path"'\n'
 n=9
-vg='exec /p/bin/valgrind --suppressions=/tmp/cu-vg --gen-suppressions=yes --leak-check=yes --quiet --num-callers='$n
+vg='exec /usr/bin/valgrind --suppressions=/tmp/cu-vg --gen-suppressions=yes --leak-check=yes --quiet --num-callers='$n
 cat <<EOF > src/vg/gen
 for i in $coreutils; do
   printf "$pre$vg \$i"' "\$@"\n' > \$i
