@@ -1,3 +1,31 @@
+2000-01-12  Jim Meyering  <meyering@lucent.com>
+
+	* tests/shred/remove: Make the warning that this shred test may not
+	be run as root more prominent.  Suggestion from Volker Borchert.
+
+2000-01-11  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/modechange.c (mode_compile): Use uintmax_t, not unsigned
+	long, to parse numeric modes.  Check for any unknown bits, not
+	just unknown bits left of the leftmost known bit.
+
+2000-01-11  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/getdate.y: Update copyright notice.
+
+2000-01-11  Paul Eggert  <eggert@twinsun.com>
+
+	* COPYING: Sync with latest FSF version (fixing a minor Y2k problem).
+
+2000-01-11  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/exclude.c, lib/exclude.h: Sync to the slightly more
+	general version of GNU tar.
+
+	* src/du.c (count_entry):
+	Adjust to new calling convention for excluded_filename.
+	(main): Likewise, for add_exclude_file.
+
 2000-01-11  Jim Meyering  <meyering@lucent.com>
 
 	* lib/memcpy.c (memcpy): Protoize.
