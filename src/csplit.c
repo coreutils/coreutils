@@ -49,6 +49,7 @@
 #include "system.h"
 #include "error.h"
 #include "xstrtoul.h"
+#include "xalloc.h"
 
 #ifdef STDC_HEADERS
 # include <stdlib.h>
@@ -274,46 +275,6 @@ interrupt_handler (int sig)
 #endif				/* SA_INTERRUPT */
   cleanup ();
   kill (getpid (), sig);
-}
-
-/* Allocate N bytes of memory dynamically, with error checking.  */
-
-static char *
-xmalloc (unsigned int n)
-{
-  char *p;
-
-  p = malloc (n);
-  if (p == NULL)
-    {
-      error (0, 0, _("virtual memory exhausted"));
-      cleanup_fatal ();
-    }
-  return p;
-}
-
-/* Change the size of an allocated block of memory P to N bytes,
-   with error checking.
-   If P is NULL, run xmalloc.
-   If N is 0, run free and return NULL.  */
-
-static char *
-xrealloc (char *p, unsigned int n)
-{
-  if (p == NULL)
-    return xmalloc (n);
-  if (n == 0)
-    {
-      free (p);
-      return 0;
-    }
-  p = realloc (p, n);
-  if (p == NULL)
-    {
-      error (0, 0, _("virtual memory exhausted"));
-      cleanup_fatal ();
-    }
-  return p;
 }
 
 /* Keep track of NUM chars of a partial line in buffer START.
@@ -1441,6 +1402,9 @@ main (int argc, char **argv)
   suppress_count = FALSE;
   remove_files = TRUE;
   prefix = DEFAULT_PREFIX;
+
+  /* Change the way xmalloc and xrealloc fail.  */
+  xalloc_fail_func = cleanup;
 
 #ifdef SA_INTERRUPT
   newact.sa_handler = interrupt_handler;
