@@ -1,5 +1,7 @@
 2001-03-17  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.0.42.
+
 	* doc/fileutils.texi (touch invocation): Mention the obsolescent usage.
 	* src/touch.c (usage): Tweak the obsolescent usage line so that
 	help2man recognizes it as such.  Reported by Dan Jacobson.
