@@ -11,6 +11,20 @@
 	* stat.m4: Likewise.
 	* strftime.m4: Likewise.
 
+	* chown.m4: Use `.$ac_objext', not `.o'.
+	* fnmatch.m4: Likewise.
+	* getgroups.m4: Likewise.
+	* getline.m4: Likewise.
+	* lstat.m4: Likewise.
+	* malloc.m4: Likewise.
+	* memcmp.m4: Likewise.
+	* putenv.m4: Likewise.
+	* realloc.m4: Likewise.
+	* regex.m4: Likewise.
+	* stat.m4: Likewise.
+	* strftime.m4: Likewise.
+	Suggestion from Alain Magloire.
+
 	* jm-macros.m4: Actually invoke jm_WITH_REGEX now that it requires
 	an argument.
 
