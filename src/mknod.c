@@ -132,7 +132,12 @@ main (int argc, char **argv)
       newmode = mode_adjust (newmode, change);
     }
 
-  expected_operands = (argv[optind + 1][0] == 'p' ? 2 : 4);
+  /* If the number of arguments is 0 or 1,
+     or (if it's 2 or more and the second one starts with `p'), then there
+     must be exactly two operands.  Otherwise, there must be four.  */
+  expected_operands = (argc <= optind
+		       || (optind + 1 < argc && argv[optind + 1][0] == 'p')
+		       ? 2 : 4);
 
   if (argc - optind < expected_operands)
     {
