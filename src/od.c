@@ -402,10 +402,7 @@ print_s_char (n_bytes, block, fmt_string)
   int i;
   for (i = n_bytes; i > 0; i--)
     {
-      int tmp = (unsigned) *(const unsigned char *) block;
-      if (tmp > SCHAR_MAX)
-	tmp = (SCHAR_MAX - tmp);
-      assert (tmp <= SCHAR_MAX);
+      int tmp = (unsigned) *(const signed char *) block;
       printf (fmt_string, tmp, (i == 1 ? '\n' : ' '));
       block += sizeof (unsigned char);
     }
@@ -435,10 +432,7 @@ print_s_short (n_bytes, block, fmt_string)
   int i;
   for (i = n_bytes / sizeof (unsigned short); i > 0; i--)
     {
-      int tmp = (unsigned) *(const unsigned short *) block;
-      if (tmp > SHRT_MAX)
-	tmp = (SHRT_MAX - tmp);
-      assert (tmp <= SHRT_MAX);
+      int tmp = (unsigned) *(const signed short *) block;
       printf (fmt_string, tmp, (i == 1 ? '\n' : ' '));
       block += sizeof (unsigned short);
     }
