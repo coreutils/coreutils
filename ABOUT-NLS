@@ -468,7 +468,7 @@ library, whereas only free software can use `libintl' as a static
 library or use modified versions of `libintl'.
 
    Once the sources are changed appropriately and the setup can handle
-the use of `gettext' the only thing missing are the translations.  The
+to use of `gettext' the only thing missing are the translations.  The
 Free Translation Project is also available for packages which are not
 developed inside the GNU project.  Therefore the information given above
 applies also for every other Free Software Project.  Contact
