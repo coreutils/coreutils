@@ -1288,7 +1288,6 @@ keycompare (const struct line *a, const struct line *b)
   register char *limb = b->keylim;
 
   int diff;
-  size_t lena, lenb;
 
   for (;;)
     {
@@ -1296,8 +1295,8 @@ keycompare (const struct line *a, const struct line *b)
       register int *ignore = key->ignore;
 
       /* Find the lengths. */
-      lena = lima <= texta ? 0 : lima - texta;
-      lenb = limb <= textb ? 0 : limb - textb;
+      size_t lena = lima <= texta ? 0 : lima - texta;
+      size_t lenb = limb <= textb ? 0 : limb - textb;
 
       if (key->skipeblanks)
 	{
