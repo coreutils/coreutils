@@ -323,3 +323,21 @@ char *alloca ();
 #define __P(args) ()
 #endif  /* GCC.  */
 #endif  /* Not __P.  */
+
+/* Take care of NLS matters.  */
+
+#if HAVE_LOCALE_H
+# include <locale.h>
+#endif
+#if !HAVE_SETLOCALE
+# define setlocale(Category, Locale) /* empty */
+#endif
+
+#if ENABLE_NLS
+# include <libintl.h>
+# define _(Text) gettext (Text)
+#else
+# define bindtextdomain(Domain, Directory) /* empty */
+# define textdomain(Domain) /* empty */
+# define _(Text) Text
+#endif
