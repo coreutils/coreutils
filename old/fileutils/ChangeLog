@@ -1,5 +1,7 @@
 Sun Sep 29 22:00:44 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in (ALL_LINGUAS): Add slovenian (sl).
+
 	* src/cp-aux.c (usage): Take only one argument -- like all the other
 	usage functions.
 
