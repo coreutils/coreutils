@@ -1055,7 +1055,8 @@ copy_internal (const char *src_path, const char *dst_path,
 		  return 1;
 		}
 
-	      /* Using alloca for a pathname that may be (in theory) arbitrarily
+	      /* FIXME: use fts:
+		 Using alloca for a pathname that may be (in theory) arbitrarily
 		 long is not recommended.  In fact, even forming such a name
 		 should be discouraged.  Eventually, this code will be rewritten
 		 to use fts, so using alloca here will be less of a problem.  */
