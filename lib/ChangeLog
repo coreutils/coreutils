@@ -1,6 +1,8 @@
 2003-10-25  Jim Meyering  <jim@meyering.net>
 
-	* obstack.c, obstack.h: Update from gnulib.
+	* hash.c, hash.h: Update from gnulib.
+	* hash-pjw.c, hash-pjw.h: Likewise.
+	* obstack.c, obstack.h: Likewise.
 
 2003-10-25  Jim Meyering  <meyering@lucent.com>
 
