@@ -1382,7 +1382,7 @@ init_header (char *filename, int desc)
 
       {
 	size_t t_buf_size = 15;
-	cons tchar *fmt = "%y-%m-%d %H:%M";	/* date/time short format */
+	const char *fmt = "%y-%m-%d %H:%M";	/* date/time short format */
 
 	t_buf = (char *) xmalloc (t_buf_size);
 	tmptr = localtime (&st.st_mtime);
