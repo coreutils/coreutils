@@ -195,7 +195,7 @@ copy_reg (const char *src_path, const char *dst_path,
   /* Create the new regular file with small permissions initially,
      to not create a security hole.  */
 
-  dest_desc = open (dst_path, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+  dest_desc = open (dst_path, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
   if (dest_desc < 0)
     {
       error (0, errno, _("cannot create regular file `%s'"), dst_path);
@@ -488,9 +488,9 @@ copy_internal (const char *src_path, const char *dst_path,
 	      if (euidaccess (dst_path, W_OK) != 0)
 		{
 		  fprintf (stderr,
-			   _("%s: overwrite `%s', overriding mode %04o? "),
+			   _("%s: overwrite `%s', overriding mode %04lo? "),
 			   program_name, dst_path,
-			   (unsigned int) (dst_sb.st_mode & 07777));
+			   (unsigned long) (dst_sb.st_mode & CHMOD_MODE_BITS));
 		}
 	      else
 		{
@@ -558,7 +558,7 @@ copy_internal (const char *src_path, const char *dst_path,
 		  /* Temporarily change mode to allow overwriting. */
 		  if (euidaccess (dst_path, W_OK | X_OK) != 0)
 		    {
-		      if (chmod (dst_path, 0700))
+		      if (chmod (dst_path, S_IRWXU))
 			{
 			  error (0, errno, "%s", dst_path);
 			  return 1;
@@ -682,7 +682,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	  /* Create the new directory writable and searchable, so
              we can create new entries in it.  */
 
-	  if (mkdir (dst_path, (src_mode & x->umask_kill) | 0700))
+	  if (mkdir (dst_path, (src_mode & x->umask_kill) | S_IRWXU))
 	    {
 	      error (0, errno, _("cannot create directory `%s'"), dst_path);
 	      goto un_backup;
