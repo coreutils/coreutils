@@ -85,27 +85,6 @@ enum Copy_fd_status
     COPY_FD_UNEXPECTED_EOF
   };
 
-#define COPY_FD_DIAGNOSE(Err, Filename)					\
-  do									\
-    {									\
-      switch (Err)							\
-	{								\
-	case COPY_FD_READ_ERROR:					\
-	  error (0, errno, "error reading %s", quote (Filename));	\
-	  break;							\
-	case COPY_FD_WRITE_ERROR:					\
-	  error (0, errno, "error writing %s", quote (Filename));	\
-	  break;							\
-	case COPY_FD_UNEXPECTED_EOF:					\
-	  error (0, errno, "%s: file has shrunk too much",		\
-		 quote (Filename));					\
-	  break;							\
-	default:							\
-	  abort ();							\
-	}								\
-    }									\
-  while (0)
-
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
@@ -169,6 +148,25 @@ N may have a multiplier suffix: b 512, k 1024, m 1024*1024.\n\
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+}
+
+static void
+diagnose_copy_fd_failure (enum Copy_fd_status err, char const *filename)
+{
+  switch (err)
+    {
+    case COPY_FD_READ_ERROR:
+      error (0, errno, _("error reading %s"), quote (filename));
+      break;
+    case COPY_FD_WRITE_ERROR:
+      error (0, errno, _("error writing %s"), quote (filename));
+      break;
+    case COPY_FD_UNEXPECTED_EOF:
+      error (0, errno, _("%s: file has shrunk too much"), quote (filename));
+      break;
+    default:
+      abort ();
+    }
 }
 
 static void
@@ -464,7 +462,7 @@ elide_tail_bytes_file (const char *filename, int fd, uintmax_t n_elide)
       if (err == COPY_FD_OK)
 	return 0;
 
-      COPY_FD_DIAGNOSE (err, filename);
+      diagnose_copy_fd_failure (err, filename);
       return 1;
     }
 }
@@ -672,7 +670,7 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
 		  err = copy_fd (fd, stdout, pos - start_pos);
 		  if (err != COPY_FD_OK)
 		    {
-		      COPY_FD_DIAGNOSE (err, pretty_filename);
+		      diagnose_copy_fd_failure (err, pretty_filename);
 		      return 1;
 		    }
 		}
@@ -867,7 +865,7 @@ head_file (const char *filename, uintmax_t n_units, int count_lines,
       fd = open (filename, O_RDONLY);
       if (fd < 0)
 	{
-	  error (0, errno, "cannot open %s for reading", quote (filename));
+	  error (0, errno, _("cannot open %s for reading"), quote (filename));
 	  return 1;
 	}
     }
@@ -875,7 +873,7 @@ head_file (const char *filename, uintmax_t n_units, int count_lines,
   fail = head (filename, fd, n_units, count_lines, elide_from_end);
   if (fd != STDIN_FILENO && close (fd) == -1)
     {
-      error (0, errno, "closing %s", quote (filename));
+      error (0, errno, _("closing %s"), quote (filename));
       fail = 1;
     }
   return fail;
