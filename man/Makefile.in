@@ -607,6 +607,7 @@ yes.1:		$(common_dep)	$(srcdir)/yes.x		../src/yes.c
 	mkdir $t;				\
 	(cd $t && $(LN_S) ../../src/$(mapped_name)$(EXEEXT) $*$(EXEEXT)); \
 	$(PERL) -- $(srcdir)/help2man		\
+	    --program-name=$*			\
 	    --include=$(srcdir)/$*.x		\
 	    --output=$@ $t/$*$(EXEEXT)
 	@chmod a-w $@
