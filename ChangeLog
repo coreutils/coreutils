@@ -1,3 +1,7 @@
+2004-04-12  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.3.0.
+
 2004-03-27  Paul Eggert  <eggert@twinsun.com>
 
 	* NEWS: cp -pu and mv -u (when copying) now take the destination
