@@ -6,10 +6,14 @@ if test "$VERBOSE" = yes; then
   ls --version
 fi
 
-# Date output in ls -l is locale-sensitive, so this test fails if the
-# current locale produces a date that doesn't match the embedded value
-# here (Jan 15 23:00:00 1998), which is in the C (POSIX) locale.
-. $srcdir/../lang-default
+# Avoid any possible glitches due to daylight-saving changes near the
+# time stamps used during the test.
+TZ=UTC0
+export TZ
+
+# Avoid glitches due to the environment specifying `ls' styles.
+unset QUOTING_STYLE
+unset TIME_STYLE
 
 tmp=t-ls.$$
 
@@ -51,15 +55,15 @@ ln c d || framework_failure=1
 # Before we go any further, verify that touch's -m option works.
 set -- `ls --full -l a`
 case "$*" in
-  *'Jan 15 23:00:00 1998 a') ;;
+  *" $t3:00.000000000 +0000 a") ;;
   *)
   # This might be what's making HPUX 11 systems fail this test.
-  cat >&2 << \EOF
-A basic test of touch -a has just failed, so the subsequent
+  cat >&2 << EOF
+A basic test of touch -m has just failed, so the subsequent
 tests in this file will not be run.
 
-In the output below, the date of last modification for `a' should
-have been Jan 15 23:00:00 1998.
+In the output below, the date of last modification for \`a' should
+have been $t3.
 EOF
   #`
   ls --full -l a
@@ -70,15 +74,15 @@ esac
 # Now test touch's -a option.
 set -- `ls --full -lu a`
 case "$*" in
-  *'Jan 14 11:00:00 1998 a') ;;
+  *" $u1:00.000000000 +0000 a") ;;
   *)
   # This might be what's making HPUX 11 systems fail this test.
-  cat >&2 << \EOF
-A basic test of touch -m has just failed, so the subsequent
+  cat >&2 << EOF
+A basic test of touch -a has just failed, so the subsequent
 tests in this file will not be run.
 
-In the output below, the date of last access for `a' should
-have been Jan 14 11:00:00 1998.
+In the output below, the date of last access for \`a' should
+have been $u1.
 EOF
   ls --full -lu a
   framework_failure=1
