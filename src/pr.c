@@ -107,25 +107,6 @@
 char *xmalloc ();
 char *xrealloc ();
 
-static int char_to_clump ();
-static int read_line ();
-static int print_page ();
-static int print_stored ();
-static int open_file ();
-static int skip_to_page ();
-static void getoptarg ();
-static void usage ();
-static void print_files ();
-static void init_header ();
-static void init_store_cols ();
-static void store_columns ();
-static void balance ();
-static void store_char ();
-static void pad_down ();
-static void read_rest_of_line ();
-static void print_char ();
-static void cleanup ();
-
 #ifndef TRUE
 #define TRUE	1
 #define FALSE	0
@@ -197,6 +178,25 @@ struct COLUMN
 typedef struct COLUMN COLUMN;
 
 #define NULLCOL (COLUMN *)0
+
+static int char_to_clump (int c);
+static int read_line (COLUMN *p);
+static int print_page (void);
+static int print_stored (COLUMN *p);
+static int open_file (char *name, COLUMN *p);
+static int skip_to_page (int page);
+static void getoptarg (char *arg, char switch_char, char *character, int *number);
+static void usage (int status);
+static void print_files (int number_of_files, char **av);
+static void init_header (char *filename, int desc);
+static void init_store_cols (void);
+static void store_columns (void);
+static void balance (int total_stored);
+static void store_char (int c);
+static void pad_down (int lines);
+static void read_rest_of_line (COLUMN *p);
+static void print_char (int c);
+static void cleanup (void);
 
 /* The name under which this program was invoked. */
 char *program_name;
@@ -444,7 +444,7 @@ static struct option const long_options[] =
    stored lines. */
 
 static int
-cols_ready_to_print ()
+cols_ready_to_print (void)
 {
   COLUMN *q;
   int i;
@@ -459,9 +459,7 @@ cols_ready_to_print ()
 }
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int c;
   int accum = 0;
@@ -671,9 +669,7 @@ main (argc, argv)
    a number. */
 
 static void
-getoptarg (arg, switch_char, character, number)
-     char *arg, switch_char, *character;
-     int *number;
+getoptarg (char *arg, char switch_char, char *character, int *number)
 {
   if (!ISDIGIT (*arg))
     *character = *arg++;
@@ -694,8 +690,7 @@ getoptarg (arg, switch_char, character, number)
 /* Set parameters related to formatting. */
 
 static void
-init_parameters (number_of_files)
-     int number_of_files;
+init_parameters (int number_of_files)
 {
   int chars_used_by_number = 0;
 
@@ -775,9 +770,7 @@ init_parameters (number_of_files)
    0 otherwise.  */
 
 static int
-init_fps (number_of_files, av)
-     int number_of_files;
-     char **av;
+init_fps (int number_of_files, char **av)
 {
   int i, files_left;
   COLUMN *p;
@@ -844,7 +837,7 @@ init_fps (number_of_files, av)
    printing a column (p->start_position). */
 
 static void
-init_funcs ()
+init_funcs (void)
 {
   int i, h, h_next;
   COLUMN *p;
@@ -923,9 +916,7 @@ init_funcs ()
 /* Open a file.  Return nonzero if successful, zero if failed. */
 
 static int
-open_file (name, p)
-     char *name;
-     COLUMN *p;
+open_file (char *name, COLUMN *p)
 {
   if (!strcmp (name, "-"))
     {
@@ -956,8 +947,7 @@ open_file (name, p)
    the status of all columns in the column list to reflect the close. */
 
 static void
-close_file (p)
-     COLUMN *p;
+close_file (COLUMN *p)
 {
   COLUMN *q;
   int i;
@@ -996,8 +986,7 @@ close_file (p)
    status of all columns in the column list. */
 
 static void
-hold_file (p)
-     COLUMN *p;
+hold_file (COLUMN *p)
 {
   COLUMN *q;
   int i;
@@ -1015,7 +1004,7 @@ hold_file (p)
    ON_HOLD columns to OPEN.  Used at the end of each page. */
 
 static void
-reset_status ()
+reset_status (void)
 {
   int i = columns;
   COLUMN *p;
@@ -1038,9 +1027,7 @@ reset_status ()
    Print the file(s). */
 
 static void
-print_files (number_of_files, av)
-     int number_of_files;
-     char **av;
+print_files (int number_of_files, char **av)
 {
   init_parameters (number_of_files);
   if (init_fps (number_of_files, av))
@@ -1080,9 +1067,7 @@ print_files (number_of_files, av)
    pr -h "" still prints the date and page number. */
 
 static void
-init_header (filename, desc)
-     char *filename;
-     int desc;
+init_header (char *filename, int desc)
 {
   int chars_per_header;
   char *f = filename;
@@ -1121,7 +1106,7 @@ init_header (filename, desc)
      Keep track of this total so we know when to stop printing */
 
 static void
-init_page ()
+init_page (void)
 {
   int j;
   COLUMN *p;
@@ -1173,7 +1158,7 @@ init_page ()
      of formfeeds are now put back into the lineup. */
 
 static int
-print_page ()
+print_page (void)
 {
   int j;
   int lines_left_on_page;
@@ -1270,7 +1255,7 @@ print_page ()
    which we need to know in order to print the last line in buff. */
 
 static void
-init_store_cols ()
+init_store_cols (void)
 {
   int total_lines = lines_per_body * columns;
   int chars_if_truncate = total_lines * (chars_per_column + 1);
@@ -1303,7 +1288,7 @@ init_store_cols ()
      current line. */
 
 static void
-store_columns ()
+store_columns (void)
 {
   int i, j;
   int line = 0;
@@ -1354,8 +1339,7 @@ store_columns ()
 }
 
 static void
-balance (total_stored)
-     int total_stored;
+balance (int total_stored)
 {
   COLUMN *p;
   int i, lines;
@@ -1377,8 +1361,7 @@ balance (total_stored)
 /* Store a character in the buffer. */
 
 static void
-store_char (c)
-     int c;
+store_char (int c)
 {
   if (buff_current >= buff_allocated)
     {
@@ -1390,8 +1373,7 @@ store_char (c)
 }
 
 static void
-number (p)
-     COLUMN *p;
+number (COLUMN *p)
 {
   int i;
   char *s;
@@ -1418,8 +1400,7 @@ number (p)
    is position. */
 
 static void
-pad_across_to (position)
-     int position;
+pad_across_to (int position)
 {
   register int h = output_position;
 
@@ -1439,8 +1420,7 @@ pad_across_to (position)
    Otherwise, use newlines. */
 
 static void
-pad_down (lines)
-     int lines;
+pad_down (int lines)
 {
   register int i;
 
@@ -1458,8 +1438,7 @@ pad_down (lines)
    to print or store its characters. */
 
 static void
-read_rest_of_line (p)
-     COLUMN *p;
+read_rest_of_line (COLUMN *p)
 {
   register int c;
   FILE *f = p->fp;
@@ -1486,7 +1465,7 @@ read_rest_of_line (p)
    until this function is called. */
 
 static void
-print_white_space ()
+print_white_space (void)
 {
   register int h_new;
   register int h_old = output_position;
@@ -1511,7 +1490,7 @@ print_white_space ()
    then print_separators() is called. */
 
 static void
-print_separators ()
+print_separators (void)
 {
   for (; separators_not_printed > 0; --separators_not_printed)
     print_char (column_separator);
@@ -1521,10 +1500,7 @@ print_separators ()
    characters. */
 
 static void
-print_clump (p, n, clump)
-     COLUMN *p;
-     int n;
-     int *clump;
+print_clump (COLUMN *p, int n, int *clump)
 {
   while (n--)
     (p->char_func) (*clump++);
@@ -1538,8 +1514,7 @@ print_clump (p, n, clump)
    required number of tabs and spaces. */
 
 static void
-print_char (c)
-     int c;
+print_char (int c)
 {
   if (tabify_output)
     {
@@ -1566,8 +1541,7 @@ print_char (c)
 /* Skip to page PAGE before printing. */
 
 static int
-skip_to_page (page)
-     int page;
+skip_to_page (int page)
 {
   int n, i, j;
   COLUMN *p;
@@ -1590,7 +1564,7 @@ skip_to_page (page)
    the page. */
 
 static void
-print_header ()
+print_header (void)
 {
   if (!use_form_feed)
     fprintf (stdout, "\n\n");
@@ -1627,8 +1601,7 @@ print_header ()
      an end of line character, TRUE otherwise. */
 
 static int
-read_line (p)
-     COLUMN *p;
+read_line (COLUMN *p)
 {
   register int c, chars;
   int last_input_position;
@@ -1723,8 +1696,7 @@ read_line (p)
    Return TRUE, meaning there is no need to call read_rest_of_line. */
 
 static int
-print_stored (p)
-     COLUMN *p;
+print_stored (COLUMN *p)
 {
   int line = p->current_line++;
   register char *first = &buff[line_vector[line]];
@@ -1766,8 +1738,7 @@ print_stored (p)
    number of characters is 1.) */
 
 static int
-char_to_clump (c)
-     int c;
+char_to_clump (int c)
 {
   register int *s = clump_buff;
   register int i;
@@ -1852,7 +1823,7 @@ char_to_clump (c)
    Free everything we've xmalloc'ed, except `header'. */
 
 static void
-cleanup ()
+cleanup (void)
 {
   if (number_buff)
     free (number_buff);
@@ -1871,8 +1842,7 @@ cleanup ()
 /* Complain, print a usage message, and die. */
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
