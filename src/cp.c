@@ -367,23 +367,33 @@ main (int argc, char **argv)
 
 /* Concatenate two pathname components, DIR and BASE, in newly-allocated
    storage and return the result.  Be careful that in the result they are
-   separated by a slash.  That is, if DIR ends with a slash or if BASE
-   begins with one, don't add a separating slash.  Otherwise, add one.  */
+   separated by a slash.  That is, if DIR ends with a slash and BASE
+   begins with one, elide one slash at the end of DIR.  If DIR doesn't end
+   with a slash and BASE doesn't begin with one, insert a slash between
+   them in the concatenation.  Otherwise, simply concatenate DIR and BASE.
+   In any case, if BASE_IN_RESULT is non-NULL, set *BASE_IN_RESULT to point
+   to the copy of BASE in the returned concatenation.  */
 
 static char *
-path_concat (const char *dir, const char *base)
+path_concat (const char *dir, const char *base, char **base_in_result)
 {
-  char *dir_end;
+  char *p;
   char *p_concat;
 
   assert (strlen (dir) > 0);
   p_concat = xmalloc (strlen (dir) + strlen (base) + 2);
-  dir_end = stpcpy (p_concat, dir);
-  if (*(dir_end - 1) == '/')
-    --dir_end;
-  else if (*base == '/')
-    ++base;
-  stpcpy (stpcpy (dir_end, "/"), base);
+  p = stpcpy (p_concat, dir);
+
+  if (*(p - 1) == '/' && *base == '/')
+    --p;
+  else if (*(p - 1) != '/' && *base != '/')
+    p = stpcpy (p, "/");
+
+  if (base_in_result)
+    *base_in_result = p;
+
+  stpcpy (p, base);
+
   return p_concat;
 }
 
@@ -439,6 +449,7 @@ do_copy (int argc, char **argv)
 	  char *dst_path;
 	  int parent_exists = 1; /* True if dirname (dst_path) exists. */
 	  struct dir_attr *attr_list;
+	  char *arg_in_concat = NULL;
 
 	  arg = argv[optind];
 
@@ -447,13 +458,14 @@ do_copy (int argc, char **argv)
 	  if (flag_path)
 	    {
 	      /* Append all of `arg' to `dest'.  */
-	      dst_path = path_concat (dest, arg);
+	      dst_path = path_concat (dest, arg, &arg_in_concat);
 
 	      /* For --parents, we have to make sure that the directory
 	         dirname (dst_path) exists.  We may have to create a few
 	         leading directories. */
 	      parent_exists = !make_path_private (dst_path,
-						  strlen (dest) + 1, 0700,
+						  arg_in_concat - dst_path,
+						  0700,
 						  (flag_verbose
 						   ? "%s -> %s\n" : NULL),
 						  &attr_list, &new_dst);
@@ -466,7 +478,7 @@ do_copy (int argc, char **argv)
 	      /* For `cp -R source/.. dest', don't copy into `dest/..'. */
 	      dst_path = (STREQ (ap, "..")
 			  ? xstrdup (dest)
-			  : path_concat (dest, ap));
+			  : path_concat (dest, ap, NULL));
 	    }
 
 	  if (!parent_exists)
@@ -481,7 +493,8 @@ do_copy (int argc, char **argv)
 
 	      if (flag_path)
 		{
-		  ret |= re_protect (dst_path, strlen (dest) + 1, attr_list);
+		  ret |= re_protect (dst_path, arg_in_concat - dst_path,
+				     attr_list);
 		}
 	    }
 
