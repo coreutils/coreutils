@@ -77,9 +77,9 @@ char *program_name;
 /* The string that separates the records of the file. */
 static char *separator;
 
-/* If nonzero, print `separator' along with the record preceding it
+/* If true, print `separator' along with the record preceding it
    in the file; otherwise with the record following it. */
-static int separator_ends_record;
+static bool separator_ends_record;
 
 /* 0 if `separator' is to be matched as a regular expression;
    otherwise, the length of `separator', used as a sentinel to
@@ -89,7 +89,7 @@ static size_t sentinel_length;
 /* The length of a match with `separator'.  If `sentinel_length' is 0,
    `match_length' is computed every time a match succeeds;
    otherwise, it is simply the length of `separator'. */
-static int match_length;
+static size_t match_length;
 
 /* The input buffer. */
 static char *G_buffer;
@@ -100,7 +100,7 @@ static size_t read_size;
 /* The size of `buffer'.  This is read_size * 2 + sentinel_length + 2.
    The extra 2 bytes allow `past_end' to have a value beyond the
    end of `G_buffer' and `match_start' to run off the front of `G_buffer'. */
-static unsigned G_buffer_size;
+static size_t G_buffer_size;
 
 /* The compiled regular expression representing `separator'. */
 static struct re_pattern_buffer compiled_separator;
@@ -181,9 +181,9 @@ output (const char *start, const char *past_end)
 }
 
 /* Print in reverse the file open on descriptor FD for reading FILE.
-   Return 0 if ok, 1 if an error occurs. */
+   Return true if successful.  */
 
-static int
+static bool
 tac_seekable (int input_fd, const char *file)
 {
   /* Pointer to the location in `G_buffer' where the search for
@@ -200,18 +200,18 @@ tac_seekable (int input_fd, const char *file)
   /* Offset in the file of the next read. */
   off_t file_pos;
 
-  /* Nonzero if `output' has not been called yet for any file.
+  /* True if `output' has not been called yet for any file.
      Only used when the separator is attached to the preceding record. */
-  int first_time = 1;
+  bool first_time = true;
   char first_char = *separator;	/* Speed optimization, non-regexp. */
   char *separator1 = separator + 1; /* Speed optimization, non-regexp. */
-  int match_length1 = match_length - 1; /* Speed optimization, non-regexp. */
+  size_t match_length1 = match_length - 1; /* Speed optimization, non-regexp. */
   struct re_registers regs;
 
   /* Find the size of the input file. */
   file_pos = lseek (input_fd, (off_t) 0, SEEK_END);
   if (file_pos < 1)
-    return 0;			/* It's an empty file. */
+    return true;			/* It's an empty file. */
 
   /* Arrange for the first read to lop off enough to leave the rest of the
      file a multiple of `read_size'.  Since `read_size' can change, this may
@@ -231,7 +231,7 @@ tac_seekable (int input_fd, const char *file)
   if (safe_read (input_fd, G_buffer, saved_record_size) != saved_record_size)
     {
       error (0, errno, "%s", file);
-      return 1;
+      return false;
     }
 
   match_start = past_end = G_buffer + saved_record_size;
@@ -249,8 +249,11 @@ tac_seekable (int input_fd, const char *file)
 	 Otherwise, make `match_start' < `G_buffer'. */
       if (sentinel_length == 0)
 	{
-	  int i = match_start - G_buffer;
+	  ptrdiff_t i = match_start - G_buffer;
 	  int ret;
+
+	  if (! (INT_MIN < i && i <= INT_MAX))
+	    error (EXIT_FAILURE, 0, _("record too large"));
 
 	  ret = re_search (&compiled_separator, G_buffer, i, i - 1, -i, &regs);
 	  if (ret == -1)
@@ -283,7 +286,7 @@ tac_seekable (int input_fd, const char *file)
 	    {
 	      /* Hit the beginning of the file; print the remaining record. */
 	      output (G_buffer, past_end);
-	      return 0;
+	      return true;
 	    }
 
 	  saved_record_size = past_end - G_buffer;
@@ -294,15 +297,20 @@ tac_seekable (int input_fd, const char *file)
 		 the data already in `G_buffer', we need to increase
 		 `G_buffer_size'. */
 	      char *newbuffer;
-	      int offset = sentinel_length ? sentinel_length : 1;
+	      size_t offset = sentinel_length ? sentinel_length : 1;
+	      ptrdiff_t match_start_offset = match_start - G_buffer;
+	      ptrdiff_t past_end_offset = past_end - G_buffer;
+	      size_t old_G_buffer_size = G_buffer_size;
 
 	      read_size *= 2;
 	      G_buffer_size = read_size * 2 + sentinel_length + 2;
+	      if (G_buffer_size < old_G_buffer_size)
+		xalloc_die ();
 	      newbuffer = xrealloc (G_buffer - offset, G_buffer_size);
 	      newbuffer += offset;
 	      /* Adjust the pointers for the new buffer location.  */
-	      match_start += newbuffer - G_buffer;
-	      past_end += newbuffer - G_buffer;
+	      match_start = newbuffer + match_start_offset;
+	      past_end = newbuffer + past_end_offset;
 	      G_buffer = newbuffer;
 	    }
 
@@ -330,7 +338,7 @@ tac_seekable (int input_fd, const char *file)
 	  if (safe_read (input_fd, G_buffer, read_size) != read_size)
 	    {
 	      error (0, errno, "%s", file);
-	      return 1;
+	      return false;
 	    }
 	}
       else
@@ -342,10 +350,10 @@ tac_seekable (int input_fd, const char *file)
 
 	      /* If this match of `separator' isn't at the end of the
 	         file, print the record. */
-	      if (first_time == 0 || match_end != past_end)
+	      if (!first_time || match_end != past_end)
 		output (match_end, past_end);
 	      past_end = match_end;
-	      first_time = 0;
+	      first_time = false;
 	    }
 	  else
 	    {
@@ -361,28 +369,28 @@ tac_seekable (int input_fd, const char *file)
 }
 
 /* Print FILE in reverse.
-   Return 0 if ok, 1 if an error occurs. */
+   Return true if successful.  */
 
-static int
+static bool
 tac_file (const char *file)
 {
-  int errors;
+  bool ok;
   FILE *in;
 
   in = fopen (file, "r");
   if (in == NULL)
     {
       error (0, errno, "%s", file);
-      return 1;
+      return false;
     }
   SET_BINARY (fileno (in));
-  errors = tac_seekable (fileno (in), file);
+  ok = tac_seekable (fileno (in), file);
   if (fclose (in) != 0)
     {
       error (0, errno, "%s", file);
-      return 1;
+      return false;
     }
-  return errors;
+  return ok;
 }
 
 #if DONT_UNLINK_WHILE_OPEN
@@ -466,12 +474,11 @@ save_stdin (FILE **g_tmp, char **g_tempfile)
 
 /* Print the standard input in reverse, saving it to temporary
    file first if it is a pipe.
-   Return 0 if ok, 1 if an error occurs. */
+   Return true if successful.  */
 
-static int
+static bool
 tac_stdin (void)
 {
-  int errors;
   struct stat stats;
 
   /* No tempfile is needed for "tac < file".
@@ -481,22 +488,20 @@ tac_stdin (void)
   if (fstat (STDIN_FILENO, &stats))
     {
       error (0, errno, _("standard input"));
-      return 1;
+      return false;
     }
 
   if (S_ISREG (stats.st_mode))
     {
-      errors = tac_seekable (fileno (stdin), _("standard input"));
+      return tac_seekable (STDIN_FILENO, _("standard input"));
     }
   else
     {
       FILE *tmp_stream;
       char *tmp_file;
       save_stdin (&tmp_stream, &tmp_file);
-      errors = tac_seekable (fileno (tmp_stream), tmp_file);
+      return tac_seekable (fileno (tmp_stream), tmp_file);
     }
-
-  return errors;
 }
 
 #if 0
@@ -548,7 +553,7 @@ tac_mem (const char *buf, size_t n_bytes, FILE *out)
 
 /* FIXME: describe */
 
-static int
+static bool
 tac_stdin_to_mem (void)
 {
   char *buf = NULL;
@@ -586,7 +591,7 @@ tac_stdin_to_mem (void)
 
   tac_mem (buf, n_bytes, stdout);
 
-  return 0;
+  return true;
 }
 #endif
 
@@ -594,8 +599,10 @@ int
 main (int argc, char **argv)
 {
   const char *error_message;	/* Return value from re_compile_pattern. */
-  int optc, errors;
-  int have_read_stdin = 0;
+  int optc;
+  bool ok;
+  bool have_read_stdin = false;
+  size_t half_buffer_size;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -605,10 +612,9 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  errors = 0;
   separator = "\n";
   sentinel_length = 1;
-  separator_ends_record = 1;
+  separator_ends_record = true;
 
   while ((optc = getopt_long (argc, argv, "brs:", longopts, NULL)) != -1)
     {
@@ -617,7 +623,7 @@ main (int argc, char **argv)
 	case 0:
 	  break;
 	case 'b':
-	  separator_ends_record = 0;
+	  separator_ends_record = false;
 	  break;
 	case 'r':
 	  sentinel_length = 0;
@@ -637,8 +643,7 @@ main (int argc, char **argv)
   if (sentinel_length == 0)
     {
       compiled_separator.allocated = 100;
-      compiled_separator.buffer = (unsigned char *)
-	xmalloc (compiled_separator.allocated);
+      compiled_separator.buffer = xmalloc (compiled_separator.allocated);
       compiled_separator.fastmap = xmalloc (256);
       compiled_separator.translate = 0;
       error_message = re_compile_pattern (separator, strlen (separator),
@@ -650,10 +655,16 @@ main (int argc, char **argv)
     match_length = sentinel_length = strlen (separator);
 
   read_size = INITIAL_READSIZE;
-  /* A precaution that will probably never be needed. */
-  while (sentinel_length * 2 >= read_size)
-    read_size *= 2;
-  G_buffer_size = read_size * 2 + sentinel_length + 2;
+  while (sentinel_length >= read_size / 2)
+    {
+      if (SIZE_MAX / 2 < read_size)
+	xalloc_die ();
+      read_size *= 2;
+    }
+  half_buffer_size = read_size + sentinel_length + 1;
+  G_buffer_size = 2 * half_buffer_size;
+  if (! (read_size < half_buffer_size && half_buffer_size < G_buffer_size))
+    xalloc_die ();
   G_buffer = xmalloc (G_buffer_size);
   if (sentinel_length)
     {
@@ -667,21 +678,22 @@ main (int argc, char **argv)
 
   if (optind == argc)
     {
-      have_read_stdin = 1;
+      have_read_stdin = true;
       /* We need binary I/O, since `tac' relies
 	 on `lseek' and byte counts.  */
       SET_BINARY2 (STDIN_FILENO, STDOUT_FILENO);
-      errors = tac_stdin ();
+      ok = tac_stdin ();
     }
   else
     {
+      ok = true;
       for (; optind < argc; ++optind)
 	{
 	  if (STREQ (argv[optind], "-"))
 	    {
-	      have_read_stdin = 1;
+	      have_read_stdin = true;
 	      SET_BINARY2 (STDIN_FILENO, STDOUT_FILENO);
-	      errors |= tac_stdin ();
+	      ok &= tac_stdin ();
 	    }
 	  else
 	    {
@@ -691,7 +703,7 @@ main (int argc, char **argv)
 		 text mode has no visible effect on console output,
 		 since two CRs in a row are just like one CR.  */
 	      SET_BINARY (STDOUT_FILENO);
-	      errors |= tac_file (argv[optind]);
+	      ok &= tac_file (argv[optind]);
 	    }
 	}
     }
@@ -701,5 +713,5 @@ main (int argc, char **argv)
 
   if (have_read_stdin && close (STDIN_FILENO) < 0)
     error (EXIT_FAILURE, errno, "-");
-  exit (errors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
