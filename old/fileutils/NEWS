@@ -1,5 +1,8 @@
 Changes in release 4.1:
 [4.0l]
+* ls -l honors a trailing slash on a symlink argument, per POSIX.
+* shred no longer appears to infloop when asked to remove files in
+  unwritable directories
 * `ls -ul' and `ls -uc' sort by name once again, as they should
 [4.0k]
 * mv may now be used to move a file onto a symlink to itself when that
