@@ -1,6 +1,12 @@
+2005-02-09  Jim Meyering  <jim@meyering.net>
+
+	* getcwd.m4 (gl_FUNC_GETCWD_NULL): Use AC_LIBSOURCES to list the
+	required source files.
+
 2005-02-08  Jim Meyering  <jim@meyering.net>
 
 	* memcasecmp.m4 (gl_FUNC_MEMCASECMP): New file and macro.
+	* prereq.m4: Require gl_FUNC_MEMCASECMP.
 
 2005-02-07  Jim Meyering  <jim@meyering.net>
 
