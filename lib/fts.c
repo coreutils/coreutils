@@ -76,6 +76,17 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 #if HAVE_STDINT_H
 # include <stdint.h>
 #endif
+#if ULONG_MAX < ULLONG_MAX
+# define LONGEST_MODIFIER "ll"
+#else
+# define LONGEST_MODIFIER "l"
+#endif
+#if PRI_MACROS_BROKEN
+# undef PRIuMAX
+#endif
+#ifndef PRIuMAX
+# define PRIuMAX LONGEST_MODIFIER "u"
+#endif
 
 #if defined _LIBC
 # include <dirent.h>
@@ -1103,13 +1114,13 @@ find_matching_ancestor (FTSENT const *e_curr, struct Active_dir const *ad)
   printf ("active dirs:\n");
   for (ent = e_curr;
        ent->fts_level >= FTS_ROOTLEVEL; ent = ent->fts_parent)
-    printf ("  %s(%lu/%lu) to %s(%lu/%lu)...\n",
+    printf ("  %s(%"PRIuMAX"/%"PRIuMAX") to %s(%"PRIuMAX"/%"PRIuMAX")...\n",
 	    ad->fts_ent->fts_accpath,
-	    (unsigned long int) ad->dev,
-	    (unsigned long int) ad->ino,
+	    (uintmax_t) ad->dev,
+	    (uintmax_t) ad->ino,
 	    ent->fts_accpath,
-	    (unsigned long int) ent->fts_statp->st_dev,
-	    (unsigned long int) ent->fts_statp->st_ino);
+	    (uintmax_t) ent->fts_statp->st_dev,
+	    (uintmax_t) ent->fts_statp->st_ino);
 }
 
 void
