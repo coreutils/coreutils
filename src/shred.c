@@ -378,7 +378,7 @@ quotearg_colon (char const *arg)
     {
       buf = realloc (buf, newsize);
       if (!buf)
-	error (EXIT_FAILURE, 0, _("virtual memory exhausted"));
+	error (EXIT_FAILURE, 0, _("memory exhausted"));
       bufsize = newsize;
     }
   return buf;
@@ -389,7 +389,7 @@ xmalloc (size_t n)
 {
   void *p = malloc (n);
   if (!p)
-    error (EXIT_FAILURE, 0, _("virtual memory exhausted"));
+    error (EXIT_FAILURE, 0, _("memory exhausted"));
   return p;
 }
 
