@@ -50,8 +50,8 @@ AC_CACHE_CHECK([for working readdir], jm_cv_func_working_readdir,
      (Basename[0] == '.' && (Basename[1] == '\0' \
 			     || (Basename[1] == '.' && Basename[2] == '\0')))
 
-/* Don't try to use replacement rmdir; it wouldn't resolve at link time.  */
-#   undef rmdir
+/* Don't try to use replacement mkdir; it wouldn't resolve at link time.  */
+#   undef mkdir
 
     static void
     create_300_file_dir (const char *dir)
