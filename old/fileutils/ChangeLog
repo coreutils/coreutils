@@ -1,3 +1,28 @@
+1999-08-10  Jim Meyering  <meyering@ascend.com>
+
+	* po/POTFILES.in: Add lib/quotearg.c.
+
+1999-08-09  Paul Eggert  <eggert@twinsun.com>
+
+	* NEWS, doc/fileutils.texi, src/ls.c (usage):
+	Add ls --quoting-style=locale.
+
+	* lib/argmatch.c (ARGMATCH_QUOTING_STYLE):
+	Change from escape_quoting_style to locale_quoting_style.
+	(argmatch_invalid): Use new quotearg_style primitive for simplicity.
+	Also, use ARGMATCH_QUOTING_STYLE to quote, instead of quoting ourselves.
+
+	* lib/quotearg.h (locale_quoting_style): New enum value.
+	(quotearg_n_style, quotearg_style): New decls.
+
+	* lib/quotearg.c: Include <libintl.h> if ENABLE_NLS.
+	(_): New macro.
+	(quoting_style_args, quoting_style_v, quotearg_buffer): Add support
+	for locale_quoting_style, using _("`") and _("'") for open and close
+	quote symbols.
+	Do not quote spaces in escape_quoting_style.
+	(quotearg_n_style, quotearg_style): New functions.
+
 1999-08-08  Jim Meyering  <meyering@ascend.com>
 
 	* src/touch.c (usage): Clarify description of --time=WORD.
