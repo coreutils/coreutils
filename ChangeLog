@@ -2,6 +2,8 @@
 
 	* Version 5.3.1.
 
+	Don't segfault for a very long date format string, e.g.,
+	ls -ld --time-style=+%99999999H .
 	* src/ls.c (long_time_expected_width): Use x2nrealloc, not alloca,
 	so format string abuse cannot provoke stack overflow.
 	(print_long_format): Likewise.
