@@ -23,8 +23,6 @@
 	(usage): Say that --dereference-... changes how ls treats
 	only symlinks to directories specified on the command line.
 
-	FIXME: update .texi
-
 2003-01-14  Jim Meyering  <jim@meyering.net>
 
 	* tests/ls/dangle: New file/test, for the above fix.
