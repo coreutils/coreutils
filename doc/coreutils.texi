@@ -20,21 +20,23 @@
 @syncodeindex pg cp
 @syncodeindex vr cp
 
-@ifinfo
-@format
-START-INFO-DIR-ENTRY
-* GNU Utilities: (coreutils).                   @sc{gnu} Utilities.
-* Common options: (coreutils)Common options.    Common options.
-* File permissions: (coreutils)File permissions. Access modes.
+@dircategory Basics
+@direntry
+* Coreutils: (coreutils).                         Core GNU utilities.
+* Common options: (coreutils)Common options.      Common options.
+* File permissions: (coreutils)File permissions.  Access modes.
 * Date input formats: (coreutils)Date input formats.
+@end direntry
 
+@dircategory Individual utilities
+@direntry
 * basename: (coreutils)basename invocation.     Strip directory and suffix.
 * cat: (coreutils)cat invocation.               Concatenate and write files.
 * chgrp: (coreutils)chgrp invocation.           Change file groups.
 * chmod: (coreutils)chmod invocation.           Change file permissions.
 * chown: (coreutils)chown invocation.           Change file owners/groups.
 * chroot: (coreutils)chroot invocation.         Specify the root directory.
-* cksum: (coreutils)cksum invocation.           Print @acronym{POSIX} CRC checksum.
+* cksum: (coreutils)cksum invocation.           Print CRC checksum.
 * comm: (coreutils)comm invocation.             Compare sorted files by line.
 * cp: (coreutils)cp invocation.                 Copy files.
 * csplit: (coreutils)csplit invocation.         Split by context.
@@ -82,7 +84,7 @@ START-INFO-DIR-ENTRY
 * printf: (coreutils)printf invocation.         Format and print data.
 * ptx: (coreutils)ptx invocation.               Produce permuted indexes.
 * pwd: (coreutils)pwd invocation.               Print working directory.
-* readlink: (coreutils)readlink invocation.     Display value of a symbolic link.
+* readlink: (coreutils)readlink invocation.     Print referent of a symlink.
 * rm: (coreutils)rm invocation.                 Remove files.
 * rmdir: (coreutils)rmdir invocation.           Remove empty directories.
 * seq: (coreutils)seq invocation.               Print numeric sequences
@@ -90,7 +92,7 @@ START-INFO-DIR-ENTRY
 * sleep: (coreutils)sleep invocation.           Delay for a specified time.
 * sort: (coreutils)sort invocation.             Sort text files.
 * split: (coreutils)split invocation.           Split into fixed-size pieces.
-* stat: (coreutils)stat invocation.             Report file or filesystem status.
+* stat: (coreutils)stat invocation.             Report file(system) status.
 * stty: (coreutils)stty invocation.             Print/change terminal settings.
 * su: (coreutils)su invocation.                 Modify user and group id.
 * sum: (coreutils)sum invocation.               Print traditional checksum.
@@ -106,23 +108,21 @@ START-INFO-DIR-ENTRY
 * tty: (coreutils)tty invocation.               Print terminal name.
 * uname: (coreutils)uname invocation.           Print system information.
 * unexpand: (coreutils)unexpand invocation.     Convert spaces to tabs.
-* unlink: (coreutils)unlink invocation.         Remove files via unlink syscall.
 * uniq: (coreutils)uniq invocation.             Uniquify files.
+* unlink: (coreutils)unlink invocation.         Removal via unlink(2).
 * users: (coreutils)users invocation.           Print current user names.
 * vdir: (coreutils)vdir invocation.             List directories verbosely.
 * wc: (coreutils)wc invocation.                 Byte, word, and line counts.
 * who: (coreutils)who invocation.               Print who is logged in.
 * whoami: (coreutils)whoami invocation.         Print effective user id.
 * yes: (coreutils)yes invocation.               Print a string indefinitely.
-END-INFO-DIR-ENTRY
-@end format
-@end ifinfo
+@end direntry
 
 @copying
 This manual documents version @value{VERSION} of the @sc{gnu} core
 utilities, including the standard programs for text and file manipulation.
 
-Copyright @copyright{} 1994, 1995, 1996, 2000, 2001, 2002
+Copyright @copyright{} 1994, 1995, 1996, 2000, 2001, 2002, 2003
 Free Software Foundation, Inc.
 
 @quotation
@@ -137,7 +137,7 @@ Free Documentation License''.
 
 @titlepage
 @title @sc{gnu} @code{Coreutils}
-@subtitle A set of command line utilities
+@subtitle Core GNU utilities
 @subtitle for version @value{VERSION}, @value{UPDATED}
 @author David MacKenzie et al.
 
@@ -147,9 +147,6 @@ Free Documentation License''.
 @end titlepage
 
 
-@c If your makeinfo doesn't grok this @ifnottex directive, then either
-@c get a newer version of makeinfo or do s/ifnottex/ifinfo/ here and on
-@c the matching @end directive below.
 @ifnottex
 @node Top
 @top GNU Coreutils
@@ -157,6 +154,7 @@ Free Documentation License''.
 @insertcopying
 @end ifnottex
 
+@cindex core utilities
 @cindex text utilities
 @cindex shell utilities
 @cindex file utilities
@@ -298,7 +296,7 @@ Special file types
 * mkdir invocation::            Make directories
 * mkfifo invocation::           Make FIFOs (named pipes)
 * mknod invocation::            Make block or character special files
-* readlink invocation::         Display value of a symbolic link
+* readlink invocation::         Print the referent of a symbolic link
 * rmdir invocation::            Remove empty directories
 * unlink invocation::           Remove files via unlink syscall
 
@@ -6890,7 +6888,7 @@ Besides directories, other special file types include named pipes
 * mkdir invocation::            Make directories.
 * mkfifo invocation::           Make FIFOs (named pipes).
 * mknod invocation::            Make block or character special files.
-* readlink invocation::         Display value of a symbolic link.
+* readlink invocation::         Print the referent of a symbolic link.
 * rmdir invocation::            Remove empty directories.
 * unlink invocation::           Remove files via the unlink syscall
 @end menu
@@ -7240,7 +7238,7 @@ of departure.  @xref{File permissions}.
 
 
 @node readlink invocation
-@section @command{readlink}: Display value of a symbolic link
+@section @command{readlink}: Print the referent of a symbolic link
 
 @pindex readlink
 @cindex displaying value of a symbolic link
