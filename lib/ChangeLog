@@ -1,3 +1,9 @@
+2003-05-13  Jim Meyering  <jim@meyering.net>
+
+	* setenv.c (setenv): Don't apply cast to argument of free.
+	* putenv.c (rpl_putenv): Likewise.
+	* alloca.c (alloca): Likewise.
+
 2003-05-12  Jim Meyering  <jim@meyering.net>
 
 	* ftw.c (ftw_startup): Always call free_cwd after restore_cwd.
