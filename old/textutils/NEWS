@@ -1,5 +1,8 @@
 Changes in release 2.1
 [2.0.18]
+* sort could segfault on systems without a working mkstemp function and
+    with a gettimeofday function that clobbers the static buffer that
+    localtime uses for it's return value -- introduced in 2.0.17
 [2.0.17]
 * csplit no longer gets a failed assertion for this:
     printf 'a\n\n'|csplit - '/^$/' 2
