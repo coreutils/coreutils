@@ -21,79 +21,11 @@
 # include <config.h>
 #endif
 
-#if HAVE_STRTOUMAX
-# define __strtol strtoumax
-#else
-# define __strtol my_strtoumax
-
-  /* Define a temporary implementation, intended to hold the fort only
-     until glibc has an implementation of the C9x standard function
-     strtoumax.  When glibc implements strtoumax, we can remove the
-     following function in favor of a replacement file strtoumax.c taken
-     from glibc.  */
-
-# if HAVE_INTTYPES_H
-#  include <inttypes.h>
-# endif
-
-# if HAVE_STDLIB_H
-#  include <stdlib.h>
-# endif
-
-# ifndef PARAMS
-#  if defined PROTOTYPES || defined __STDC__
-#   define PARAMS(Args) Args
-#  else
-#   define PARAMS(Args) ()
-#  endif
-# endif
-
-static uintmax_t my_strtoumax PARAMS ((char const *, char **, int));
+#if HAVE_INTTYPES_H
+# include <inttypes.h>
 #endif
 
+#define __strtol strtoumax
 #define __strtol_t uintmax_t
 #define __xstrtol xstrtoumax
 #include "xstrtol.c"
-
-#if !HAVE_STRTOUMAX
-
-static uintmax_t
-my_strtoumax (char const *ptr, char **endptr, int base)
-{
-# define USE_IF_EQUIVALENT(function) \
-    if (sizeof (uintmax_t) == sizeof function (ptr, endptr, base)) \
-      return function (ptr, endptr, base);
-
-  USE_IF_EQUIVALENT (strtoul)
-
-# if HAVE_STRTOULL
-    USE_IF_EQUIVALENT (strtoull)
-# endif
-
-# if HAVE_STRTOUQ
-    USE_IF_EQUIVALENT (strtouq)
-# endif
-
-  {
-    /* An implementation with uintmax_t longer than long, but with no
-       known way to convert it.  Do it by hand.  Assume base 10.  */
-    uintmax_t n = 0;
-    uintmax_t overflow = 0;
-    for (;  '0' <= *ptr && *ptr <= '9';  ptr++)
-      {
-	uintmax_t n10 = n * 10;
-	int digit = *ptr - '0';
-	overflow |= n ^ (n10 + digit) / 10;
-	n = n10 + digit;
-      }
-    if (endptr)
-      *endptr = (char *) ptr;
-    if (overflow)
-      {
-	errno = ERANGE;
-	n = (uintmax_t) -1;
-      }
-    return n;
-  }
-}
-#endif /* HAVE_STRTOUMAX */
