@@ -1,4 +1,9 @@
 Changes in release 4.1:
+[4.1-b3]
+* portability fixes for copy.c's code to detect move-directory-into-self
+* upgrade to automake-1.3b
+* upgrade to autoconf-2.13, and...
+* remove some of the kludges in m4/*.m4 that permitted
 [4.1-b2]
 * concurrent `mkdir -p' processes no longer fail when creating the
   same hierarchy
