@@ -1,5 +1,5 @@
 /* Provide a stub lchown function for systems that lack it.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -26,6 +26,10 @@
 extern int errno;
 #endif
 #include "lchown.h"
+
+/* Declare chown to avoid a warning.  Don't include unistd.h,
+   because it may have a conflicting prototype for lchown.  */
+int chown ();
 
 /* Work just like chown, except when FILE is a symbolic link.
    In that case, set errno to ENOSYS and return -1.  */
