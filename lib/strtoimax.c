@@ -1,5 +1,7 @@
 /* Convert string representation of a number into an intmax_t value.
-   Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.
+
+   Copyright (C) 1999, 2001, 2002, 2003, 2004 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
