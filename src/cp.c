@@ -478,14 +478,13 @@ do_copy (int n_files, char **file, const char *target_directory,
   int ret = 0;
   int dest_is_dir = 0;
 
-  if (n_files <= 0)
+  if (n_files <= !target_directory)
     {
-      error (0, 0, _("missing file argument"));
-      usage (EXIT_FAILURE);
-    }
-  if (n_files == 1 && !target_directory)
-    {
-      error (0, 0, _("missing destination file"));
+      if (n_files == 0)
+	error (0, 0, _("missing file operand"));
+      else
+	error (0, 0, _("missing destination file operand after %s"),
+	       quote (file[0]));
       usage (EXIT_FAILURE);
     }
 
