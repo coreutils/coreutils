@@ -42,6 +42,7 @@
 #include "linebuffer.h"
 #include "error.h"
 #include "xstrtol.h"
+#include "memcasecmp.h"
 
 /* Undefine, to avoid warning about redefinition on some systems.  */
 #undef min
@@ -79,6 +80,9 @@ enum output_mode
 /* Which lines to output. */
 static enum output_mode mode;
 
+/* If nonzero, ignore case when comparing.  */
+static int ignore_case;
+
 /* If nonzero, display usage information and exit.  */
 static int show_help;
 
@@ -89,6 +93,7 @@ static struct option const longopts[] =
 {
   {"count", no_argument, NULL, 'c'},
   {"repeated", no_argument, NULL, 'd'},
+  {"ignore-case", no_argument, NULL, 'i'},
   {"unique", no_argument, NULL, 'u'},
   {"skip-fields", required_argument, NULL, 'f'},
   {"skip-chars", required_argument, NULL, 's'},
@@ -117,6 +122,7 @@ standard input), writing to OUTPUT (or standard output).\n\
   -c, --count           prefix lines by the number of occurrences\n\
   -d, --repeated        only print duplicate lines\n\
   -f, --skip-fields=N   avoid comparing the first N fields\n\
+  -i, --ignore-case     ignore differences in case when comparing\n\
   -s, --skip-chars=N    avoid comparing the first N characters\n\
   -u, --unique          only print unique lines\n\
   -w, --check-chars=N   compare no more than N characters in lines\n\
@@ -174,12 +180,20 @@ different (const char *old, const char *new, int oldlen, int newlen)
       if (newlen > check_chars)
 	newlen = check_chars;
     }
-  order = memcmp (old, new, min (oldlen, newlen));
+
+  /* Use an if-statement here rather than a function variable to
+     avoid portability hassles of getting a non-conflicting declaration
+     of memcmp.  */
+  if (ignore_case)
+    order = memcasecmp (old, new, min (oldlen, newlen));
+  else
+    order = memcmp (old, new, min (oldlen, newlen));
+
   if (order == 0)
     return oldlen - newlen;
   return order;
 }
-
+
 /* Output the line in linebuffer LINE to stream STREAM
    provided that the switches say it should be output.
    If requested, print the number of times it occurred, as well;
@@ -289,7 +303,7 @@ main (int argc, char **argv)
   mode = output_all;
   countmode = count_none;
 
-  while ((optc = getopt_long (argc, argv, "0123456789cdf:s:uw:", longopts,
+  while ((optc = getopt_long (argc, argv, "0123456789cdf:is:uw:", longopts,
 			      (int *) 0)) != EOF)
     {
       switch (optc)
@@ -328,6 +342,10 @@ main (int argc, char **argv)
 		     optarg);
 	    skip_fields = (int) tmp_long;
 	  }
+	  break;
+
+	case 'i':
+	  ignore_case = 1;
 	  break;
 
 	case 's':		/* Like '+#'. */
