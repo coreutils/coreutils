@@ -28,7 +28,7 @@
    If ls_mode is LS_LS,
    the output format depends on whether the output
    device is a terminal.
-   This is for the `ls' program. */
+   This is for the `ls' program.  */
 
 /* Written by Richard Stallman and David MacKenzie.  */
 
@@ -174,16 +174,16 @@ enum filetype
 
 struct fileinfo
   {
-    /* The file name. */
+    /* The file name.  */
     char *name;
 
     struct stat stat;
 
-    /* For symbolic link, name of the file linked to, otherwise zero. */
+    /* For symbolic link, name of the file linked to, otherwise zero.  */
     char *linkname;
 
     /* For symbolic link and long listing, st_mode of file linked to, otherwise
-       zero. */
+       zero.  */
     mode_t linkmode;
 
     /* For symbolic link and color printing, true if linked-to file
@@ -264,7 +264,7 @@ static void sort_files (void);
 static void parse_ls_color (void);
 void usage (int status);
 
-/* The name the program was run with, stripped of any leading path. */
+/* The name the program was run with, stripped of any leading path.  */
 char *program_name;
 
 /* Initial size of hash table.
@@ -317,7 +317,7 @@ struct pending
     char *name;
     /* If the directory is actually the file pointed to by a symbolic link we
        were told to list, `realname' will contain the name of the symbolic
-       link, otherwise zero. */
+       link, otherwise zero.  */
     char *realname;
     struct pending *next;
   };
@@ -399,7 +399,7 @@ enum time_type
 
 static enum time_type time_type;
 
-/* The file characteristic to sort by.  Controlled by -t, -S, -U, -X, -v. */
+/* The file characteristic to sort by.  Controlled by -t, -S, -U, -X, -v.  */
 
 enum sort_type
   {
@@ -585,7 +585,7 @@ static enum
 
   /* Ignore only files specified by --ignore.  */
   IGNORE_MINIMAL
-} ignore;
+} ignore_mode;
 
 /* A linked list of shell-style globbing patterns.  If a non-argument
    file name matches any of these patterns, it is ignored.
@@ -634,7 +634,7 @@ static bool print_dir_name;
 static size_t line_length;
 
 /* If true, the file listing format requires that stat be called on
-   each file. */
+   each file.  */
 
 static bool format_needs_stat;
 
@@ -1360,7 +1360,7 @@ decode_switches (int argc, char **argv)
   dereference = DEREF_UNDEFINED;
   recursive = false;
   immediate_dirs = false;
-  ignore = IGNORE_DEFAULT;
+  ignore_mode = IGNORE_DEFAULT;
   ignore_patterns = NULL;
   hide_patterns = NULL;
 
@@ -1444,7 +1444,7 @@ decode_switches (int argc, char **argv)
       switch (c)
 	{
 	case 'a':
-	  ignore = IGNORE_MINIMAL;
+	  ignore_mode = IGNORE_MINIMAL;
 	  break;
 
 	case 'b':
@@ -1461,7 +1461,7 @@ decode_switches (int argc, char **argv)
 
 	case 'f':
 	  /* Same as enabling -a -U and disabling -l -s.  */
-	  ignore = IGNORE_MINIMAL;
+	  ignore_mode = IGNORE_MINIMAL;
 	  sort_type = sort_none;
 	  sort_type_specified = true;
 	  /* disable -l */
@@ -1554,8 +1554,8 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'A':
-	  if (ignore == IGNORE_DEFAULT)
-	    ignore = IGNORE_DOT_AND_DOTDOT;
+	  if (ignore_mode == IGNORE_DEFAULT)
+	    ignore_mode = IGNORE_DOT_AND_DOTDOT;
 	  break;
 
 	case 'B':
@@ -2115,8 +2115,8 @@ parse_ls_color (void)
 	  break;
 
 	case 3:		/* Equal sign after indicator label */
-	  state = -1;	/* Assume failure... */
-	  if (*(p++) == '=')/* It *should* be... */
+	  state = -1;	/* Assume failure...  */
+	  if (*(p++) == '=')/* It *should* be...  */
 	    {
 	      for (ind_no = 0; indicator_name[ind_no] != NULL; ++ind_no)
 		{
@@ -2192,7 +2192,7 @@ queue_directory (const char *name, const char *realname)
 
 /* Read directory `name', and list the files in it.
    If `realname' is nonzero, print its name instead of `name';
-   this is used for symbolic links to directories. */
+   this is used for symbolic links to directories.  */
 
 static void
 print_dir (const char *name, const char *realname)
@@ -2286,7 +2286,7 @@ print_dir (const char *name, const char *realname)
     {
       error (0, errno, _("reading directory %s"), quotearg_colon (name));
       exit_status = EXIT_FAILURE;
-      /* Don't return; print whatever we got. */
+      /* Don't return; print whatever we got.  */
     }
 
   /* Sort the directory contents.  */
@@ -2340,7 +2340,7 @@ add_ignore_pattern (const char *pattern)
 
   ignore = xmalloc (sizeof *ignore);
   ignore->pattern = pattern;
-  /* Add it to the head of the linked list. */
+  /* Add it to the head of the linked list.  */
   ignore->next = ignore_patterns;
   ignore_patterns = ignore;
 }
@@ -2362,10 +2362,10 @@ patterns_match (struct ignore_pattern const *patterns, char const *file)
 static bool
 file_ignored (char const *name)
 {
-  return ((ignore != IGNORE_MINIMAL
+  return ((ignore_mode != IGNORE_MINIMAL
 	   && name[0] == '.'
-	   && (ignore == IGNORE_DEFAULT || ! name[1 + (name[1] == '.')]))
-	  || (ignore == IGNORE_DEFAULT
+	   && (ignore_mode == IGNORE_DEFAULT || ! name[1 + (name[1] == '.')]))
+	  || (ignore_mode == IGNORE_DEFAULT
 	      && patterns_match (hide_patterns, name))
 	  || patterns_match (ignore_patterns, name));
 }
@@ -2382,7 +2382,7 @@ unsigned_file_size (off_t size)
 
 /* Enter and remove entries in the table `files'.  */
 
-/* Empty the table of files. */
+/* Empty the table of files.  */
 
 static void
 clear_files (void)
@@ -2452,7 +2452,7 @@ gobble_file (const char *name, enum filetype type, bool explicit_arg,
 				     || print_with_color)))))
 
     {
-      /* `path' is the absolute pathname of this file. */
+      /* `path' is the absolute pathname of this file.  */
       int err;
 
       if (name[0] == '/' || dirname[0] == 0)
@@ -2523,7 +2523,7 @@ gobble_file (const char *name, enum filetype type, bool explicit_arg,
 	  linkpath = make_link_path (path, f->linkname);
 
 	  /* Avoid following symbolic links when possible, ie, when
-	     they won't be traced and when no indicator is needed. */
+	     they won't be traced and when no indicator is needed.  */
 	  if (linkpath
 	      && (indicator_style != none || check_symlink_color)
 	      && stat (linkpath, &linkstats) == 0)
@@ -2645,7 +2645,7 @@ gobble_file (const char *name, enum filetype type, bool explicit_arg,
 #ifdef S_ISLNK
 
 /* Put the name of the file that `filename' is a symbolic link to
-   into the `linkname' field of `f'. */
+   into the `linkname' field of `f'.  */
 
 static void
 get_link_name (const char *filename, struct fileinfo *f)
@@ -2662,7 +2662,7 @@ get_link_name (const char *filename, struct fileinfo *f)
 /* If `linkname' is a relative path and `path' contains one or more
    leading directories, return `linkname' with those directories
    prepended; otherwise, return a copy of `linkname'.
-   If `linkname' is zero, return zero. */
+   If `linkname' is zero, return zero.  */
 
 static char *
 make_link_path (const char *path, const char *linkname)
@@ -2677,7 +2677,7 @@ make_link_path (const char *path, const char *linkname)
     return xstrdup (linkname);
 
   /* The link is to a relative path.  Prepend any leading path
-     in `path' to the link name. */
+     in `path' to the link name.  */
   linkbuf = strrchr (path, '/');
   if (linkbuf == 0)
     return xstrdup (linkname);
@@ -2778,7 +2778,7 @@ xstrcoll (char const *a, char const *b)
   return diff;
 }
 
-/* Comparison routines for sorting the files. */
+/* Comparison routines for sorting the files.  */
 
 typedef void const *V;
 
@@ -2850,7 +2850,7 @@ static int rev_cmp_name (V a, V b) { return compare_name (b, a); }
 static int rev_str_name (V a, V b) { return compstr_name (b, a); }
 
 /* Compare file extensions.  Files with no extension are `smallest'.
-   If extensions are the same, compare by filenames instead. */
+   If extensions are the same, compare by filenames instead.  */
 
 static inline int
 cmp_extension (struct fileinfo const *a, struct fileinfo const *b,
@@ -3732,12 +3732,12 @@ length_of_file_name_and_frills (const struct fileinfo *f)
 static void
 print_many_per_line (void)
 {
-  size_t row;			/* Current row. */
+  size_t row;			/* Current row.  */
   size_t cols = calculate_columns (true);
   struct column_info const *line_fmt = &column_info[cols - 1];
 
   /* Calculate the number of rows that will be in each column except possibly
-     for a short column on the right. */
+     for a short column on the right.  */
   size_t rows = files_index / cols + (files_index % cols != 0);
 
   for (row = 0; row < rows; row++)
@@ -3857,7 +3857,7 @@ indent (size_t from, size_t to)
     }
 }
 
-/* Put DIRNAME/NAME into DEST, handling `.' and `/' properly. */
+/* Put DIRNAME/NAME into DEST, handling `.' and `/' properly.  */
 /* FIXME: maybe remove this function someday.  See about using a
    non-malloc'ing version of path_concat.  */
 
@@ -3866,12 +3866,12 @@ attach (char *dest, const char *dirname, const char *name)
 {
   const char *dirnamep = dirname;
 
-  /* Copy dirname if it is not ".". */
+  /* Copy dirname if it is not ".".  */
   if (dirname[0] != '.' || dirname[1] != 0)
     {
       while (*dirnamep)
 	*dest++ = *dirnamep++;
-      /* Add '/' if `dirname' doesn't already end with it. */
+      /* Add '/' if `dirname' doesn't already end with it.  */
       if (dirnamep > dirname && dirnamep[-1] != '/')
 	*dest++ = '/';
     }
@@ -3955,8 +3955,8 @@ init_column_info (void)
 static size_t
 calculate_columns (bool by_columns)
 {
-  size_t filesno;		/* Index into files. */
-  size_t cols;			/* Number of files across. */
+  size_t filesno;		/* Index into files.  */
+  size_t cols;			/* Number of files across.  */
 
   /* Normally the maximum number of columns is determined by the
      screen width.  But if few files are available this might limit it
