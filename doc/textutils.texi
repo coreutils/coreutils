@@ -150,8 +150,10 @@ expected, what you got, and why it is wrong.  Diffs are welcome, but
 please include a description of the problem as well, since this is
 sometimes difficult to infer. @xref{Bugs, , , gcc, GNU CC}.
 
-This manual is based on the Unix man pages in the distribution, which
-were originally written by David MacKenzie and updated by Jim Meyering.
+This manual was originally derived from the Unix man pages in the
+distribution, which were written by David MacKenzie and updated by Jim
+Meyering.  What you are reading now is the authoritative documentation
+for these utilities;  the man pages are no longer being maintained.
 The original @code{fmt} man page was written by Ross Paterson.
 Fran@,{c}ois Pinard did the initial conversion to Texinfo format.
 Karl Berry did the indexing, some reorganization, and editing of the results.

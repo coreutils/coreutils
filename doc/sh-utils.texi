@@ -182,8 +182,10 @@ sometimes difficult to infer. @xref{Bugs, , , gcc, GNU CC}.
 @cindex Pinard, @value{Francois}
 @cindex Berry, Karl
 @cindex Stallman, Richard
-This manual is based on the Unix man pages in the distribution, which
-were originally written by David MacKenzie and updated by Jim Meyering.
+This manual was originally derived from the Unix man pages in the
+distribution, which were written by David MacKenzie and updated by Jim
+Meyering.  What you are reading now is the authoritative documentation
+for these utilities;  the man pages are no longer being maintained.
 @value{Francois} Pinard did the initial conversion to Texinfo format.
 Karl Berry did the indexing, some reorganization, and editing of the results.
 Richard Stallman contributed his usual invaluable insights to the
