@@ -1,3 +1,9 @@
+Tue Jul  9 18:07:23 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* po/Makefile.in.in (install-data): Don't install NLS files when
+	they're not requested.  From Ulrich Drepper.  Reported by
+	Kjetil Torgrim Homme <kjetilho@ifi.uio.no>.
+
 Fri Jul  5 21:55:58 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* po/Makefile.in.in ($(PACKAGE).pot): Merge from gettext-0.10.23.
