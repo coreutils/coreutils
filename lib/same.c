@@ -1,5 +1,5 @@
 /* Determine whether two file names refer to the same file.
-   Copyright (C) 1997-2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997-2000, 2002-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -64,37 +64,43 @@ void free ();
 int
 same_name (const char *source, const char *dest)
 {
-  struct stat source_dir_stats;
-  struct stat dest_dir_stats;
-  char *source_dirname, *dest_dirname;
   char *source_basename, *dest_basename;
   size_t source_baselen, dest_baselen;
 
-  source_dirname = dir_name (source);
-  dest_dirname = dir_name (dest);
-
-  if (stat (source_dirname, &source_dir_stats))
-    {
-      /* Shouldn't happen.  */
-      error (1, errno, "%s", source_dirname);
-    }
-
-  if (stat (dest_dirname, &dest_dir_stats))
-    {
-      /* Shouldn't happen.  */
-      error (1, errno, "%s", dest_dirname);
-    }
-
-  free (source_dirname);
-  free (dest_dirname);
-
-  if (! SAME_INODE (source_dir_stats, dest_dir_stats))
-    return 0;
-
+  /* Compare the basenames.  */
   source_basename = base_name (source);
   dest_basename = base_name (dest);
   source_baselen = base_len (source_basename);
   dest_baselen = base_len (dest_basename);
-  return (source_baselen == dest_baselen
-	  && memcmp (source_basename, dest_basename, dest_baselen) == 0);
+  if (source_baselen == dest_baselen
+      && memcmp (source_basename, dest_basename, dest_baselen) == 0)
+    {
+      struct stat source_dir_stats;
+      struct stat dest_dir_stats;
+      char *source_dirname, *dest_dirname;
+
+      /* Compare the parent directories (via the device and inode numbers).  */
+      source_dirname = dir_name (source);
+      dest_dirname = dir_name (dest);
+
+      if (stat (source_dirname, &source_dir_stats))
+	{
+	  /* Shouldn't happen.  */
+	  error (1, errno, "%s", source_dirname);
+	}
+
+      if (stat (dest_dirname, &dest_dir_stats))
+	{
+	  /* Shouldn't happen.  */
+	  error (1, errno, "%s", dest_dirname);
+	}
+
+      free (source_dirname);
+      free (dest_dirname);
+
+      if (SAME_INODE (source_dir_stats, dest_dir_stats))
+	return 1;
+    }
+
+  return 0;
 }
