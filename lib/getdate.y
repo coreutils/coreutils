@@ -396,39 +396,47 @@ relunit	: tUNUMBER tYEAR_UNIT {
 	}
 	;
 
-number	: tUNUMBER {
+number	: tUNUMBER
+          {
 	    if (yyHaveTime && yyHaveDate && !yyHaveRel)
-		yyYear = $1;
-	    else {
-		if ($1>10000) {
+	      yyYear = $1;
+	    else
+	      {
+		if ($1>10000)
+		  {
 		    yyHaveDate++;
 		    yyDay= ($1)%100;
 		    yyMonth= ($1/100)%100;
 		    yyYear = $1/10000;
-		}
-		else {
+		  }
+		else
+		  {
 		    yyHaveTime++;
-		    if ($1 < 100) {
+		    if ($1 < 100)
+		      {
 			yyHour = $1;
 			yyMinutes = 0;
-		    }
-		    else {
+		      }
+		    else
+		      {
 		    	yyHour = $1 / 100;
 		    	yyMinutes = $1 % 100;
-		    }
+		      }
 		    yySeconds = 0;
 		    yyMeridian = MER24;
-	        }
-	    }
-	}
+		  }
+	      }
+	  }
 	;
 
-o_merid	: /* NULL */ {
+o_merid	: /* NULL */
+	  {
 	    $$ = MER24;
-	}
-	| tMERIDIAN {
+	  }
+	| tMERIDIAN
+	  {
 	    $$ = $1;
-	}
+	  }
 	;
 
 %%
@@ -623,44 +631,43 @@ static TABLE const MilitaryTable[] = {
 /* ARGSUSED */
 static int
 yyerror (s)
-    char	*s;
+     char *s;
 {
   return 0;
 }
 
-
 static int
 ToHour (Hours, Meridian)
-    int		Hours;
-    MERIDIAN	Meridian;
+     int Hours;
+     MERIDIAN Meridian;
 {
-  switch (Meridian) {
-  case MER24:
-    if (Hours < 0 || Hours > 23)
-      return -1;
-    return Hours;
-  case MERam:
-    if (Hours < 1 || Hours > 12)
-      return -1;
-    if (Hours == 12)
-      Hours = 0;
-    return Hours;
-  case MERpm:
-    if (Hours < 1 || Hours > 12)
-      return -1;
-    if (Hours == 12)
-      Hours = 0;
-    return Hours + 12;
-  default:
-    abort ();
-  }
+  switch (Meridian)
+    {
+    case MER24:
+      if (Hours < 0 || Hours > 23)
+	return -1;
+      return Hours;
+    case MERam:
+      if (Hours < 1 || Hours > 12)
+	return -1;
+      if (Hours == 12)
+	Hours = 0;
+      return Hours;
+    case MERpm:
+      if (Hours < 1 || Hours > 12)
+	return -1;
+      if (Hours == 12)
+	Hours = 0;
+      return Hours + 12;
+    default:
+      abort ();
+    }
   /* NOTREACHED */
 }
 
-
 static int
 ToYear (Year)
-    int		Year;
+     int Year;
 {
   if (Year < 0)
     Year = -Year;
@@ -675,95 +682,108 @@ ToYear (Year)
   return Year;
 }
 
-
 static int
 LookupWord (buff)
-    char		*buff;
+     char *buff;
 {
-  register char	*p;
-  register char	*q;
-  register const TABLE	*tp;
-  int			i;
-  int			abbrev;
+  register char *p;
+  register char *q;
+  register const TABLE *tp;
+  int i;
+  int abbrev;
 
   /* Make it lowercase. */
   for (p = buff; *p; p++)
     if (ISUPPER (*p))
       *p = tolower (*p);
 
-  if (strcmp (buff, "am") == 0 || strcmp (buff, "a.m.") == 0) {
-    yylval.Meridian = MERam;
-    return tMERIDIAN;
-  }
-  if (strcmp (buff, "pm") == 0 || strcmp (buff, "p.m.") == 0) {
-    yylval.Meridian = MERpm;
-    return tMERIDIAN;
-  }
+  if (strcmp (buff, "am") == 0 || strcmp (buff, "a.m.") == 0)
+    {
+      yylval.Meridian = MERam;
+      return tMERIDIAN;
+    }
+  if (strcmp (buff, "pm") == 0 || strcmp (buff, "p.m.") == 0)
+    {
+      yylval.Meridian = MERpm;
+      return tMERIDIAN;
+    }
 
   /* See if we have an abbreviation for a month. */
   if (strlen (buff) == 3)
     abbrev = 1;
-  else if (strlen (buff) == 4 && buff[3] == '.') {
-    abbrev = 1;
-    buff[3] = '\0';
-  }
+  else if (strlen (buff) == 4 && buff[3] == '.')
+    {
+      abbrev = 1;
+      buff[3] = '\0';
+    }
   else
     abbrev = 0;
 
-  for (tp = MonthDayTable; tp->name; tp++) {
-    if (abbrev) {
-      if (strncmp (buff, tp->name, 3) == 0) {
+  for (tp = MonthDayTable; tp->name; tp++)
+    {
+      if (abbrev)
+	{
+	  if (strncmp (buff, tp->name, 3) == 0)
+	    {
+	      yylval.Number = tp->value;
+	      return tp->type;
+	    }
+	}
+      else if (strcmp (buff, tp->name) == 0)
+	{
+	  yylval.Number = tp->value;
+	  return tp->type;
+	}
+    }
+
+  for (tp = TimezoneTable; tp->name; tp++)
+    if (strcmp (buff, tp->name) == 0)
+      {
 	yylval.Number = tp->value;
 	return tp->type;
       }
-    }
-    else if (strcmp (buff, tp->name) == 0) {
-      yylval.Number = tp->value;
-      return tp->type;
-    }
-  }
-
-  for (tp = TimezoneTable; tp->name; tp++)
-    if (strcmp (buff, tp->name) == 0) {
-      yylval.Number = tp->value;
-      return tp->type;
-    }
 
   if (strcmp (buff, "dst") == 0)
     return tDST;
 
   for (tp = UnitsTable; tp->name; tp++)
-    if (strcmp (buff, tp->name) == 0) {
-      yylval.Number = tp->value;
-      return tp->type;
-    }
+    if (strcmp (buff, tp->name) == 0)
+      {
+	yylval.Number = tp->value;
+	return tp->type;
+      }
 
   /* Strip off any plural and try the units table again. */
   i = strlen (buff) - 1;
-  if (buff[i] == 's') {
-    buff[i] = '\0';
-    for (tp = UnitsTable; tp->name; tp++)
-      if (strcmp (buff, tp->name) == 0) {
-	yylval.Number = tp->value;
-	return tp->type;
-      }
-    buff[i] = 's';		/* Put back for "this" in OtherTable. */
-  }
-
-  for (tp = OtherTable; tp->name; tp++)
-    if (strcmp (buff, tp->name) == 0) {
-      yylval.Number = tp->value;
-      return tp->type;
+  if (buff[i] == 's')
+    {
+      buff[i] = '\0';
+      for (tp = UnitsTable; tp->name; tp++)
+	if (strcmp (buff, tp->name) == 0)
+	  {
+	    yylval.Number = tp->value;
+	    return tp->type;
+	  }
+      buff[i] = 's';		/* Put back for "this" in OtherTable. */
     }
 
-  /* Military timezones. */
-  if (buff[1] == '\0' && ISALPHA (*buff)) {
-    for (tp = MilitaryTable; tp->name; tp++)
-      if (strcmp (buff, tp->name) == 0) {
+  for (tp = OtherTable; tp->name; tp++)
+    if (strcmp (buff, tp->name) == 0)
+      {
 	yylval.Number = tp->value;
 	return tp->type;
       }
-  }
+
+  /* Military timezones. */
+  if (buff[1] == '\0' && ISALPHA (*buff))
+    {
+      for (tp = MilitaryTable; tp->name; tp++)
+	if (strcmp (buff, tp->name) == 0)
+	  {
+	    yylval.Number = tp->value;
+	    return tp->type;
+	  }
+    }
 
   /* Drop out any periods and try the timezone table again. */
   for (i = 0, p = q = buff; *q; q++)
@@ -774,65 +794,71 @@ LookupWord (buff)
   *p = '\0';
   if (i)
     for (tp = TimezoneTable; tp->name; tp++)
-      if (strcmp (buff, tp->name) == 0) {
-	yylval.Number = tp->value;
-	return tp->type;
-      }
+      if (strcmp (buff, tp->name) == 0)
+	{
+	  yylval.Number = tp->value;
+	  return tp->type;
+	}
 
   return tID;
 }
 
-
 static int
 yylex ()
 {
-  register char	c;
-  register char	*p;
-  char		buff[20];
-  int			Count;
-  int			sign;
+  register char c;
+  register char *p;
+  char buff[20];
+  int Count;
+  int sign;
 
-  for ( ; ; ) {
-    while (ISSPACE (*yyInput))
-      yyInput++;
+  for (;;)
+    {
+      while (ISSPACE (*yyInput))
+	yyInput++;
 
-    if (ISDIGIT (c = *yyInput) || c == '-' || c == '+') {
-      if (c == '-' || c == '+') {
-	sign = c == '-' ? -1 : 1;
-	if (!ISDIGIT (*++yyInput))
-	  /* skip the '-' sign */
-	  continue;
-      }
-      else
-	sign = 0;
-      for (yylval.Number = 0; ISDIGIT (c = *yyInput++); )
-	yylval.Number = 10 * yylval.Number + c - '0';
-      yyInput--;
-      if (sign < 0)
-	yylval.Number = -yylval.Number;
-      return sign ? tSNUMBER : tUNUMBER;
+      if (ISDIGIT (c = *yyInput) || c == '-' || c == '+')
+	{
+	  if (c == '-' || c == '+')
+	    {
+	      sign = c == '-' ? -1 : 1;
+	      if (!ISDIGIT (*++yyInput))
+		/* skip the '-' sign */
+		continue;
+	    }
+	  else
+	    sign = 0;
+	  for (yylval.Number = 0; ISDIGIT (c = *yyInput++);)
+	    yylval.Number = 10 * yylval.Number + c - '0';
+	  yyInput--;
+	  if (sign < 0)
+	    yylval.Number = -yylval.Number;
+	  return sign ? tSNUMBER : tUNUMBER;
+	}
+      if (ISALPHA (c))
+	{
+	  for (p = buff; (c = *yyInput++, ISALPHA (c)) || c == '.';)
+	    if (p < &buff[sizeof buff - 1])
+	      *p++ = c;
+	  *p = '\0';
+	  yyInput--;
+	  return LookupWord (buff);
+	}
+      if (c != '(')
+	return *yyInput++;
+      Count = 0;
+      do
+	{
+	  c = *yyInput++;
+	  if (c == '\0')
+	    return c;
+	  if (c == '(')
+	    Count++;
+	  else if (c == ')')
+	    Count--;
+	}
+      while (Count > 0);
     }
-    if (ISALPHA (c)) {
-      for (p = buff; (c = *yyInput++, ISALPHA (c)) || c == '.'; )
-	if (p < &buff[sizeof buff - 1])
-	  *p++ = c;
-      *p = '\0';
-      yyInput--;
-      return LookupWord (buff);
-    }
-    if (c != '(')
-      return *yyInput++;
-    Count = 0;
-    do {
-      c = *yyInput++;
-      if (c == '\0')
-	return c;
-      if (c == '(')
-	Count++;
-      else if (c == ')')
-	Count--;
-    } while (Count > 0);
-  }
 }
 
 #define TM_YEAR_ORIGIN 1900
@@ -845,24 +871,24 @@ difftm (a, b)
   int ay = a->tm_year + (TM_YEAR_ORIGIN - 1);
   int by = b->tm_year + (TM_YEAR_ORIGIN - 1);
   long days = (
-	       /* difference in day of year */
-	       a->tm_yday - b->tm_yday
-	       /* + intervening leap days */
-	       +  ((ay >> 2) - (by >> 2))
-	       -  (ay/100 - by/100)
-	       +  ((ay/100 >> 2) - (by/100 >> 2))
-	       /* + difference in years * 365 */
-	       +  (long)(ay-by) * 365
-	       );
-  return (60*(60*(24*days + (a->tm_hour - b->tm_hour))
-	      + (a->tm_min - b->tm_min))
+  /* difference in day of year */
+		a->tm_yday - b->tm_yday
+  /* + intervening leap days */
+		+ ((ay >> 2) - (by >> 2))
+		- (ay / 100 - by / 100)
+		+ ((ay / 100 >> 2) - (by / 100 >> 2))
+  /* + difference in years * 365 */
+		+ (long) (ay - by) * 365
+  );
+  return (60 * (60 * (24 * days + (a->tm_hour - b->tm_hour))
+		+ (a->tm_min - b->tm_min))
 	  + (a->tm_sec - b->tm_sec));
 }
 
 time_t
 get_date (p, now)
-    const char *p;
-    const time_t *now;
+     const char *p;
+     const time_t *now;
 {
   struct tm tm, tm0, *tmp;
   time_t Start;
@@ -896,15 +922,18 @@ get_date (p, now)
   tm.tm_year = ToYear (yyYear) - TM_YEAR_ORIGIN + yyRelYear;
   tm.tm_mon = yyMonth - 1 + yyRelMonth;
   tm.tm_mday = yyDay + yyRelDay;
-  if (yyHaveTime || (yyHaveRel && !yyHaveDate && !yyHaveDay)) {
-    tm.tm_hour = ToHour (yyHour, yyMeridian);
-    if (tm.tm_hour < 0)
-      return -1;
-    tm.tm_min = yyMinutes;
-    tm.tm_sec = yySeconds;
-  } else {
-    tm.tm_hour = tm.tm_min = tm.tm_sec = 0;
-  }
+  if (yyHaveTime || (yyHaveRel && !yyHaveDate && !yyHaveDay))
+    {
+      tm.tm_hour = ToHour (yyHour, yyMeridian);
+      if (tm.tm_hour < 0)
+	return -1;
+      tm.tm_min = yyMinutes;
+      tm.tm_sec = yySeconds;
+    }
+  else
+    {
+      tm.tm_hour = tm.tm_min = tm.tm_sec = 0;
+    }
   tm.tm_hour += yyRelHour;
   tm.tm_min += yyRelMinutes;
   tm.tm_sec += yyRelSeconds;
@@ -913,76 +942,83 @@ get_date (p, now)
 
   Start = mktime (&tm);
 
-  if (Start == (time_t) -1) {
+  if (Start == (time_t) -1)
+    {
 
-    /* Guard against falsely reporting errors near the time_t boundaries
-       when parsing times in other time zones.  For example, if the min
-       time_t value is 1970-01-01 00:00:00 UTC and we are 8 hours ahead
-       of UTC, then the min localtime value is 1970-01-01 08:00:00; if
-       we apply mktime to 1970-01-01 00:00:00 we will get an error, so
-       we apply mktime to 1970-01-02 08:00:00 instead and adjust the time
-       zone by 24 hours to compensate.  This algorithm assumes that
-       there is no DST transition within a day of the time_t boundaries.  */
-    if (yyHaveZone) {
-      tm = tm0;
-      if (tm.tm_year <= EPOCH - TM_YEAR_ORIGIN) {
-	tm.tm_mday++;
-	yyTimezone -= 24 * 60;
-      } else {
-	tm.tm_mday--;
-	yyTimezone += 24 * 60;
-      }
-      Start = mktime (&tm);
+      /* Guard against falsely reporting errors near the time_t boundaries
+         when parsing times in other time zones.  For example, if the min
+         time_t value is 1970-01-01 00:00:00 UTC and we are 8 hours ahead
+         of UTC, then the min localtime value is 1970-01-01 08:00:00; if
+         we apply mktime to 1970-01-01 00:00:00 we will get an error, so
+         we apply mktime to 1970-01-02 08:00:00 instead and adjust the time
+         zone by 24 hours to compensate.  This algorithm assumes that
+         there is no DST transition within a day of the time_t boundaries.  */
+      if (yyHaveZone)
+	{
+	  tm = tm0;
+	  if (tm.tm_year <= EPOCH - TM_YEAR_ORIGIN)
+	    {
+	      tm.tm_mday++;
+	      yyTimezone -= 24 * 60;
+	    }
+	  else
+	    {
+	      tm.tm_mday--;
+	      yyTimezone += 24 * 60;
+	    }
+	  Start = mktime (&tm);
+	}
+
+      if (Start == (time_t) -1)
+	return Start;
     }
 
-    if (Start == (time_t) -1)
-      return Start;
-  }
+  if (yyHaveDay && !yyHaveDate)
+    {
+      tm.tm_mday += ((yyDayNumber - tm.tm_wday + 7) % 7
+		     + 7 * (yyDayOrdinal - (0 < yyDayOrdinal)));
+      Start = mktime (&tm);
+      if (Start == (time_t) -1)
+	return Start;
+    }
 
-  if (yyHaveDay && !yyHaveDate) {
-    tm.tm_mday += ((yyDayNumber - tm.tm_wday + 7) % 7
-		   + 7 * (yyDayOrdinal - (0 < yyDayOrdinal)));
-    Start = mktime (&tm);
-    if (Start == (time_t) -1)
-      return Start;
-  }
-
-  if (yyHaveZone) {
-    long delta = yyTimezone * 60L + difftm (&tm, gmtime (&Start));
-    if ((Start + delta < Start) != (delta < 0))
-      return -1; /* time_t overflow */
-    Start += delta;
-  }
+  if (yyHaveZone)
+    {
+      long delta = yyTimezone * 60L + difftm (&tm, gmtime (&Start));
+      if ((Start + delta < Start) != (delta < 0))
+	return -1;		/* time_t overflow */
+      Start += delta;
+    }
 
   return Start;
 }
-
 
 #if	defined (TEST)
 
 /* ARGSUSED */
 int
 main (ac, av)
-    int		ac;
-    char	*av[];
+     int ac;
+     char *av[];
 {
   char buff[MAX_BUFF_LEN + 1];
   time_t d;
 
-  (void)printf ("Enter date, or blank line to exit.\n\t> ");
-  (void)fflush (stdout);
+  (void) printf ("Enter date, or blank line to exit.\n\t> ");
+  (void) fflush (stdout);
 
   buff[MAX_BUFF_LEN] = 0;
-  while (fgets (buff, MAX_BUFF_LEN, stdin) && buff[0]) {
-    d = get_date (buff, (time_t *)NULL);
-    if (d == -1)
-      (void)printf ("Bad format - couldn't convert.\n");
-    else
-      (void)printf ("%s", ctime (&d));
-    (void)printf ("\t> ");
-    (void)fflush (stdout);
-  }
+  while (fgets (buff, MAX_BUFF_LEN, stdin) && buff[0])
+    {
+      d = get_date (buff, (time_t *) NULL);
+      if (d == -1)
+	(void) printf ("Bad format - couldn't convert.\n");
+      else
+	(void) printf ("%s", ctime (&d));
+      (void) printf ("\t> ");
+      (void) fflush (stdout);
+    }
   exit (0);
   /* NOTREACHED */
 }
-#endif	/* defined (TEST) */
+#endif /* defined (TEST) */
