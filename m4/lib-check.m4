@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 
 dnl Misc lib-related macros for fileutils, sh-utils, textutils.
 
@@ -42,8 +42,10 @@ AC_DEFUN(jm_LIB_CHECK,
   # shadow passwords.
   AC_SEARCH_LIBS(getspnam, [shadow sec])
 
-  AC_EGREP_HEADER(sp_pwdp, shadow.h,
-		  AC_CHECK_FUNC(getspnam, AC_DEFINE(HAVE_SHADOW_H)))
+  # Requirements for su.c.
+  AC_CHECK_MEMBERS(struct passwd.sp_pwdp)
+  AC_CHECK_FUNCS(getspnam)
+  AC_CHECK_HEADERS(shadow.h)
 
   # SCO-ODT-3.0 is reported to need -lufc for crypt.
   # NetBSD needs -lcrypt for crypt.
