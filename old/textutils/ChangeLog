@@ -36,7 +36,7 @@ Thu Dec  7 19:55:03 1995  Jim Meyering  (meyering@comco.com)
 	* csplit.c [!WITH_REGEX]: Include rx.h.
 	* nl.c [!WITH_REGEX]: Likewise.
 	* tac.c [!WITH_REGEX]: Likewise.
-	From Ulrich Drepper.
+	From Ulrich Drepper and François Pinard.
 
 Tue Dec  5 17:49:53 1995  Jim Meyering  (meyering@comco.com)
 
