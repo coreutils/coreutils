@@ -1,5 +1,5 @@
 #serial 1
-# Use replacement ftw.c if the one in the C library is inadequate or buggy.
+# Use the replacement ftw.c if the one in the C library is inadequate or buggy.
 # From Jim Meyering
 
 AC_DEFUN([AC_FUNC_FTW],
@@ -8,7 +8,11 @@ AC_DEFUN([AC_FUNC_FTW],
   AC_REQUIRE([AC_HEADER_DIRENT])
   AC_CHECK_HEADERS(sys/param.h)
   AC_CHECK_DECLS([stpcpy])
+
+  # In the event that we have to use the replacement ftw.c,
+  # see if we'll also need the replacement tsearch.c.
   AC_CHECK_FUNC([tdestroy], , [need_tdestroy=1])
+
   AC_CACHE_CHECK([for working GNU ftw], ac_cv_func_ftw_working,
   [
   # The following test would fail prior to glibc-2.3.2, because `depth'
@@ -45,6 +49,8 @@ main ()
                [ac_cv_func_ftw_working=no])])
   if test $ac_cv_func_ftw_working = no; then
     AC_LIBOBJ([ftw])
+    AC_DEFINE(ftw, rpl_ftw,
+      [Define to rpl_ftw if the replacement function should be used.])
     # Add tsearch.o IFF we have to use the replacement ftw.c.
     if test -n "$need_tdestroy"; then
       AC_LIBOBJ([tsearch])
