@@ -12,6 +12,7 @@
 	chmod step.  copy_reg now sets permissions of such files upon creation.
 	Use get_dest_mode, so there's just one chmod call here.
 
+	* tests/cp/Makefile.am (TESTS): Add perm.
 	* tests/cp/perm: New tests, to help ensure the above didn't
 	change anything.
 
@@ -27,9 +28,6 @@
 
 	* tests/Makefile.am (EXTRA_DIST): Add envvar-check.
 	* tests/envvar-check: New file.
-
-	* tests/cp/Makefile.am (TESTS): Add perm.
-	* tests/cp/perm: New tests.
 
 	* install-sh: Remove trailing blanks.
 	Output diagnostics to stderr, not stdout.
