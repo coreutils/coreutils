@@ -48,9 +48,9 @@ longest_relative_suffix (char const *f)
 
 /* Concatenate two pathname components, DIR and ABASE, in
    newly-allocated storage and return the result.
-   The resulting file name is equivalent to what you would get by
-   running (cd DIR; cat BASE), where BASE is ABASE with any file system
-   prefixes and leading separators removed.
+   The resulting file name F is such that the commands "ls F" and "(cd
+   DIR; ls BASE)" refer to the same file, where BASE is ABASE with any
+   file system prefixes and leading separators removed.
    Arrange for a directory separator if necessary between DIR and BASE
    in the result, removing any redundant separators.
    In any case, if BASE_IN_RESULT is non-NULL, set
