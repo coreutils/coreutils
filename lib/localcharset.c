@@ -1,6 +1,6 @@
 /* Determine a canonical name for the current locale's character encoding.
 
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU Library General Public License as published
@@ -191,7 +191,7 @@ get_charset_aliases ()
    into one of the canonical names listed in config.charset.
    The result must not be freed; it is statically allocated.
    If the canonical name cannot be determined, the result is a non-canonical
-   name or NULL.  */
+   name.  */
 
 #ifdef STATIC
 STATIC
@@ -211,10 +211,14 @@ locale_charset ()
 
 # else
 
-  /* On old systems which lack it, use setlocale and getenv.  */
+  /* On old systems which lack it, use setlocale or getenv.  */
   const char *locale = NULL;
 
-#  if HAVE_SETLOCALE
+  /* But most old systems don't have a complete set of locales.  Some
+     (like SunOS 4 or DJGPP) have only the C locale.  Therefore we don't
+     use setlocale here; it would return "C" when it doesn't support the
+     locale name the user has set.  */
+#  if HAVE_SETLOCALE && 0
   locale = setlocale (LC_CTYPE, NULL);
 #  endif
   if (locale == NULL || locale[0] == '\0')
@@ -245,7 +249,10 @@ locale_charset ()
 
 #endif
 
-  if (codeset != NULL && codeset[0] != '\0')
+  if (codeset == NULL)
+    /* The canonical name cannot be determined.  */
+    codeset = "";
+  else if (codeset[0] != '\0')
     {
       /* Resolve alias. */
       for (aliases = get_charset_aliases ();
