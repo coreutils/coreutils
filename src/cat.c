@@ -654,7 +654,8 @@ main (int argc, char **argv)
 	 files cannot be redirected to themselves.  */
 
       if (check_redirection
-	  && stat_buf.st_dev == out_dev && stat_buf.st_ino == out_ino)
+	  && stat_buf.st_dev == out_dev && stat_buf.st_ino == out_ino
+	  && (input_desc != fileno (stdin) || output_desc != fileno (stdout)))
 	{
 	  error (0, 0, _("%s: input file is output file"), infile);
 	  exit_stat = 1;
