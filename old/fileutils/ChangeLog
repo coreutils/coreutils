@@ -1,4 +1,13 @@
+1997-07-13  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* doc/Makefile.am (EXTRA_DIST): Remove explicit mention of texinfo.texi.
+	Now, automake includes it automatically.
+
 1997-07-09  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/mkdir: New directory and associated files.
+	* tests/cp: New directory and associated files.
+	* tests/Makefile.am (SUBDIRS): Add cp and mkdir.
 
 	* lib/makepath.c (make_path): Chdir to `/' before starting if necessary.
 	Call save_cwd before while loop rather than from first iteration
@@ -12,6 +21,8 @@
 	* lib/idcache.c (getuidbyname): Declare parameter to be const.
 	(getgidbyname): Declare parameter to be const.
 
+1997-07-06 Jean-François Bignolles <bignolle@ecoledoc.ibp.fr>
+
 	* lib/modechange.h (mode_create_from_ref): Add prototype.
 	(MODE_MASK_ALL): New define.
 	(MODE_BAD_REFERENCE): New define.
@@ -22,7 +33,6 @@
 
 	* configure.in (AC_REPLACE_FUNCS): Add strverscmp.
 
-	1997-05-30 Jean-François Bignolles <bignolle@ecoledoc.ibp.fr>
 	* src/ls.c: Add new option: --sort=version (-v).
 	* src/chgrp.c: Add new option: --reference=FILE.
 	* src/chown.c: Add new option: --reference=FILE.
