@@ -1,4 +1,4 @@
-#serial 2
+#serial 3
 
 # From fileutils/configure.in
 
@@ -11,7 +11,7 @@
 AC_DEFUN(jm_FILE_SYSTEM_USAGE,
 [
 
-AC_MSG_CHECKING(how to get filesystem space usage)
+AC_CHECKING(how to get filesystem space usage)
 ac_fsusage_space=no
 
 # Perform only the link test since it seems there are no variants of the
