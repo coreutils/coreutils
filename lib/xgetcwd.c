@@ -28,10 +28,8 @@ extern int errno;
 #endif
 
 #include <sys/types.h>
+#include <stdlib.h>
 
-#if HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
 #if HAVE_UNISTD_H
 # include <unistd.h>
 #endif

@@ -22,10 +22,7 @@
 #endif
 
 #include <stdio.h>
-
-#ifdef STDC_HEADERS
-# include <stdlib.h>
-#endif
+#include <stdlib.h>
 
 #if HAVE_UNISTD_H
 # include <unistd.h>
