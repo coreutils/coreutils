@@ -1,3 +1,10 @@
+2001-09-06  Paul Eggert  <eggert@twinsun.com>
+
+	* strtoimax.c (HAVE_LONG_LONG):
+	Redefine to HAVE_UNSIGNED_LONG_LONG if unsigned.
+	(strtoimax): Use sizeof (long), not sizeof strtol (ptr, endptr, base),
+	to work around bug in IBM C compiler.
+
 2001-09-16  Jim Meyering  <meyering@lucent.com>
 
 	* mkdir.c: New file.
