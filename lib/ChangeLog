@@ -1,5 +1,8 @@
 2003-06-07  Jim Meyering  <jim@meyering.net>
 
+	Update from gnulib.
+	* xmemcoll.h: Include <stddef.h>.
+
 	* Makefile.am (MOSTLYCLEANFILES): Add alloca.h and alloca.ht.
 	(MOSTLYCLEANFILES): Add stdbool.ht.
 
