@@ -1,7 +1,7 @@
 Changes in release 1.13
  [1.12r]
 * date --date=DATE accepts dates like those in an RCS log listing, e.g.,
-  `11/01/1992 05:44:34'.
+  `1992/11/01 05:44:34'.
 * printf now warns if excess arguments are ignored.
 * tee no longer fails immediately upon receipt of SIGPIPE
  [1.12q]
