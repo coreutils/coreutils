@@ -1,3 +1,7 @@
+Fri Nov 04 17:27:55 1994  Jim Meyering  (meyering@comco.com)
+
+	Version 3.10.
+
 Thu Nov 03 12:59:34 1994  Jim Meyering  (meyering@comco.com)
 
 	* makepath.h: New file.
