@@ -57,7 +57,7 @@ set_cloexec_flag (int desc, bool value)
 
 #else
 
-  return false;
+  return true;
 
 #endif
 }
