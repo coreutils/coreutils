@@ -73,7 +73,7 @@ AC_DEFUN(AC_LFS,
 	 -D_FILE_OFFSET_BITS=*) ;;
 	 -D_LARGEFILE_SOURCE | -D_LARGEFILE_SOURCE=*) ;;
 	 -D_LARGE_FILES | -D_LARGE_FILES=*) ;;
-	 -[[DI]]?* | -[[no]]32 | -n64)
+	 -[[DI]]?*)
 	   AC_LFS_SPACE_APPEND(CPPFLAGS, "$ac_flag") ;;
 	 *)
 	   AC_LFS_SPACE_APPEND(CFLAGS, "$ac_flag") ;;
