@@ -1,5 +1,8 @@
 2000-05-06  Jim Meyering  <meyering@lucent.com>
 
+	* rmdir-errno.m4 (fetish_FUNC_RMDIR_NOTEMPTY): New macro and file.
+	* jm-macros.m4: Require fetish_FUNC_RMDIR_NOTEMPTY.
+
 	* nanosleep.m4: (jm_FUNC_NANOSLEEP): Save and restore LIBS around
 	AC_SEARCH_LIBS call for nanosleep.
 	(LIB_NANOSLEEP): Set and AC_SUBST.
