@@ -1,5 +1,7 @@
 2000-08-21  Jim Meyering  <meyering@lucent.com>
 
+	* Makefile.maint (wget-update): Get the latest version of depcomp.
+
 	* depcomp: Update from automake.
 
 2000-08-20  Jim Meyering  <meyering@lucent.com>
