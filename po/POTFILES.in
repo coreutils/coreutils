@@ -16,8 +16,8 @@ lib/rpmatch.c
 lib/unicodeio.c
 lib/userspec.c
 lib/version-etc.c
+lib/xalloc-die.c
 lib/xfts.c
-lib/xmalloc.c
 lib/xmemcoll.c
 
 # Package source files
