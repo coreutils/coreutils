@@ -120,6 +120,7 @@ int wcwidth ();
 #include "strverscmp.h"
 #include "xstrtol.h"
 #include "gtod.h"
+#include "xreadlink.h"
 
 /* Use access control lists only under all the following conditions.
    Some systems (OSF4, Irix5, Irix6) have the acl function, but not
@@ -2137,23 +2138,9 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 static void
 get_link_name (const char *filename, struct fileinfo *f)
 {
-  char *linkbuf;
-  register ssize_t linksize;
+  size_t link_val_len;
 
-  linkbuf = (char *) alloca (PATH_MAX + 2);
-  /* Some automounters give incorrect st_size for mount points.
-     I can't think of a good workaround for it, though.  */
-  linksize = readlink (filename, linkbuf, PATH_MAX + 1);
-  if (linksize < 0)
-    {
-      error (0, errno, "%s", quotearg_colon (filename));
-      exit_status = 1;
-    }
-  else
-    {
-      linkbuf[linksize] = '\0';
-      f->linkname = xstrdup (linkbuf);
-    }
+  f->linkname = xreadlink (filename, &link_val_len);
 }
 
 /* If `linkname' is a relative path and `path' contains one or more
