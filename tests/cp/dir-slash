@@ -26,8 +26,13 @@ fi
 
 fail=0
 cp -R dir1/ dir2 || fail=1
-test -d dir2/dir1/file || fail=1
-test -d dir1/file || fail=1
+
+# This file should not exist, but it did with fileutils-4.0w.
+test -r dir2/file && fail=1
+
+# These two should.
+test -r dir2/dir1/file || fail=1
+test -r dir1/file || fail=1
 
 (exit $fail)
 exit $fail
