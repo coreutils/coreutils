@@ -15,6 +15,17 @@ framework_failure=0
 mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 
+# Determine if `.' is on a local (would non-NFS be sufficient?) file system.
+# On at least some NFS implementations, symlinks never take up space,
+df --local . > tmp
+# So if this is a non-local file system, skip the test.
+if grep '^/' tmp > /dev/null; then
+  # Ok.
+else
+  echo "$0: skipping this test, since \`.' is on a non-local file system" 1>&2
+  (exit 77); exit
+fi
+
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
   (exit 1); exit 1
