@@ -1,6 +1,13 @@
-2003-09-06  Jim Meyering  <jim@meyering.net>
+2003-09-07  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
+
+	* Makefile.maint (po-check): Use cvsu, so that a temporary source
+	file in lib/ or src/ doesn't induce an unwarranted failure.
+	Add a kludge to filter out the sole generated source file that
+	also has translatable messages: false.c.
+
+2003-09-06  Jim Meyering  <jim@meyering.net>
 
 	* src/tail.c (enum): Add ALLOW_MISSING_OPTION.
 	(parse_options): Give a diagnostic for (but still accept) the
