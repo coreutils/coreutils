@@ -32,6 +32,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 #include <stdio.h>
 
 #include "system.h"
+#include "long-options.h"
 #include "error.h"
 
 char *xmalloc ();
@@ -42,14 +43,7 @@ char *xmalloc ();
 
 #define STRINGLEN 2048		/* Max length of a string */
 
-enum modes { MO_SH, MO_CSH, MO_KSH, MO_ZSH, MO_UNKNOWN, MO_ERR };
-
-/* FIXME: associate these arrays? */
-static const char *const shells[] =
-{ "sh", "ash", "csh", "tcsh", "bash", "ksh", "zsh", NULL };
-
-static const int shell_mode[] =
-{ MO_SH, MO_SH, MO_CSH, MO_CSH, MO_KSH, MO_KSH, MO_ZSH };
+enum modes { MO_SH, MO_CSH, MO_UNKNOWN, MO_ERR };
 
 /* Parser needs these state variables.  */
 enum states { ST_TERMNO, ST_TERMYES, ST_TERMSURE, ST_GLOBAL };
@@ -71,14 +65,10 @@ static const char *const ls_codes[] =
 
 static struct option const long_options[] =
   {
-    {"ash", no_argument, NULL, 'a'},
-    {"bash", no_argument, NULL, 'b'},
+    {"sh", no_argument, NULL, 'b'},
     {"csh", no_argument, NULL, 'c'},
     {"help", no_argument, NULL, 'h'},
-    {"sh", no_argument, NULL, 's'},
-    {"tcsh", no_argument, NULL, 't'},
     {"version", no_argument, NULL, 'v'},
-    {"zsh", no_argument, NULL, 'z'},
   };
 
 char *program_name;
@@ -96,30 +86,23 @@ usage (int status)
   -h, --help        display this help and exit\n\
       --version     output version information and exit\n\
 Determine format of output:\n\
-  -a, --ash         assume ash shell\n\
-  -b, --bash        assume bash shell\n\
-  -c, --csh         assume csh shell\n\
-  -s, --sh          assume Bourne shell\n\
-  -t, --tcsh        assume tcsh shell\n\
-  -z, --zsh         assume zsh shell\n"));
+  -b, --sh          assume Bourne shell\n\
+  -c, --csh         assume C-shell\n"));
     }
 
   exit (status);
 }
 
 /* If SHELL is csh or tcsh, assume C-shell.  Else Bourne shell.  */
-/* FIXME: rename functon.  */
 
 static int
 figure_mode (void)
 {
   char *shell, *shellv;
-  int i;
 
   shellv = getenv ("SHELL");
   if (shellv == NULL || *shellv == '\0')
-    error (1, 0, _("\
-No SHELL variable, and no mode option specified"));
+    return MO_UNKNOWN;
 
   shell = strrchr (shellv, '/');
   if (shell != NULL)
@@ -127,12 +110,11 @@ No SHELL variable, and no mode option specified"));
   else
     shell = shellv;
 
-  for (i = 0; shells[i]; ++i)
-    if (strcmp (shell, shells[i]) == 0)
-      return shell_mode[i];
+  if (strcmp (shell, "csh") == 0
+      || strcmp (shell, "tcsh") == 0)
+    return MO_CSH;
 
-  error (1, 0, _("Unknown shell `%s'\n"), shell);
-  /* NOTREACHED */
+  return MO_SH;
 }
 
 static void
@@ -218,11 +200,7 @@ main (int argc, char *argv[])
   int state;
 
   char line[STRINGLEN];
-  char useropts[2048] = "";
   char *keywd, *arg;
-
-  int do_help = 0;
-  int do_version = 0;
 
   char *input_file;
 
@@ -231,55 +209,34 @@ main (int argc, char *argv[])
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  /* Parse command line.  */
+  parse_long_options (argc, argv, "dircolors", PACKAGE_VERSION, usage);
 
-  while ((optc = getopt_long (argc, argv, "abhckPstz", long_options, NULL))
+  while ((optc = getopt_long (argc, argv, "bc", long_options, NULL))
 	 != EOF)
     switch (optc)
       {
-      case 'a':
-      case 's':	/* Plain sh mode */
+      case 'b':	/* Bourne shell mode.  */
 	mode = MO_SH;
 	break;
 
-      case 'c':
-      case 't':
+      case 'c':	/* Bourne shell mode.  */
 	mode = MO_CSH;
-	break;
-
-      case 'b':
-      case 'k':
-	mode = MO_KSH;
-	break;
-
-      case 'h':
-	do_help = 1;
-	break;
-
-      case 'z':
-	mode = MO_ZSH;
-	break;
-
-      case 'v':
-	do_version = 1;
 	break;
 
       default:
 	usage (1);
       }
 
-  if (do_version)
-    {
-      printf ("%s - %s\n", program_name, PACKAGE_VERSION);
-      exit (0);
-    }
-
-  if (do_help)
-    usage (0);
-
   /* Use shell to determine mode, if not already done. */
   if (mode == MO_UNKNOWN)
-    mode = figure_mode ();
+    {
+      mode = figure_mode ();
+      if (mode == MO_UNKNOWN)
+	{
+	  error (1, 0, _("\
+no SHELL environment variable, and no shell type option given"));
+	}
+    }
 
   /* Open dir_colors file */
   if (optind == argc)
@@ -321,12 +278,10 @@ main (int argc, char *argv[])
   switch (mode)
     {
     case MO_CSH:
-      puts ("set noglob;\n\
-setenv LS_COLORS \':");
+      puts ("set noglob;\nsetenv LS_COLORS \':");
       break;
+
     case MO_SH:
-    case MO_KSH:
-    case MO_ZSH:
       fputs ("LS_COLORS=\'", stdout);
       break;
     }
@@ -366,8 +321,7 @@ setenv LS_COLORS \':");
 		    }
 		  else if (strcasecmp (keywd, "OPTIONS") == 0)
 		    {
-		      strcat (useropts, " ");
-		      strcat (useropts, arg);
+		      /* Ignore.  */
 		    }
 		  else if (strcasecmp (keywd, "COLOR") == 0)
 		    {
@@ -400,13 +354,11 @@ setenv LS_COLORS \':");
   switch (mode)
     {
     case MO_SH:
-    case MO_KSH:
-    case MO_ZSH:
-      printf ("\';\nexport LS_COLORS;\n");
+      printf ("\'\nexport LS_COLORS\n");
       break;
 
     case MO_CSH:
-      printf ("\';\nunset noglob;\n");
+      printf ("\'\nunset noglob\n");
       break;
 
     default:
