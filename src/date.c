@@ -1,5 +1,5 @@
 /* date - print or set the system date and time
-   Copyright (C) 1989-2001 Free Software Foundation, Inc.
+   Copyright (C) 1989-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -159,6 +159,11 @@ specifies Coordinated Universal Time.  Interpreted sequences are:\n\
   %e   day of month, blank padded ( 1..31)\n\
 "), stdout);
       fputs (_("\
+  %F   same as %Y-%m-%d\n\
+  %g   the 2-digit year corresponding to the %V week number\n\
+  %G   the 4-digit year corresponding to the %V week number\n\
+"), stdout);
+      fputs (_("\
   %h   same as %b\n\
   %H   hour (00..23)\n\
   %I   hour (01..12)\n\
@@ -172,8 +177,10 @@ specifies Coordinated Universal Time.  Interpreted sequences are:\n\
 "), stdout);
       fputs (_("\
   %n   a newline\n\
-  %p   locale's AM or PM\n\
+  %p   locale's upper case AM or PM indicator\n\
+  %P   locale's lower case am or pm indicator\n\
   %r   time, 12-hour (hh:mm:ss [AP]M)\n\
+  %R   time, 24-hour (hh:mm)\n\
   %s   seconds since `00:00:00 1970-01-01 UTC' (a GNU extension)\n\
 "), stdout);
       fputs (_("\
