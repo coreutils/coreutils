@@ -13,7 +13,7 @@
 2001-01-01  Jim Meyering  <meyering@lucent.com>
 
 	* tests/chmod/Makefile.am (TESTS): Add setgid.
-	* tests/chmod/setgid: Test for this change.
+	* tests/chmod/setgid: Test for chmod's existing behavior.
 	Based on a report from Paul Eggert.
 
 2000-12-29  Paul Eggert  <eggert@twinsun.com>
