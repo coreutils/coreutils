@@ -21,9 +21,10 @@ fi
 fail=0
 
 # This would infloop with the version from fileutils-4.0k.
-shred -u $tmp/file
+# Expect it to fail.
+shred -u $tmp/file > /dev/null 2>&1 && fail=1
 
-cd ..
+chmod u+w $tmp
 rm -rf $tmp
 
 exit $fail
