@@ -1,5 +1,5 @@
 /* sum -- checksum and count the blocks in a file
-   Copyright (C) 86, 89, 91, 95, 96, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 86, 89, 91, 1995-1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -106,6 +106,8 @@ bsd_sum_file (const char *file, int print_name)
 	  return -1;
 	}
     }
+  /* Need binary I/O, or else byte counts and checksums are incorrect.  */
+  SET_BINARY (fileno(fp));
 
   while ((ch = getc (fp)) != EOF)
     {
@@ -165,6 +167,8 @@ sysv_sum_file (const char *file, int print_name)
 	  return -1;
 	}
     }
+  /* Need binary I/O, or else byte counts and checksums are incorrect.  */
+  SET_BINARY (fd);
 
   while ((bytes_read = safe_read (fd, buf, sizeof buf)) > 0)
     {
@@ -256,4 +260,3 @@ main (int argc, char **argv)
     error (EXIT_FAILURE, errno, "-");
   exit (errors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
-
