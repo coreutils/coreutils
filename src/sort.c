@@ -1252,8 +1252,8 @@ checkfp (FILE *fp)
       if (prev_line->length + 1 > alloc)
 	{
 	  do
-	{
-	    alloc *= 2;
+	    {
+	      alloc *= 2;
 	    }
 	  while (alloc < prev_line->length + 1);
 	  temp.text = xrealloc (temp.text, alloc);
