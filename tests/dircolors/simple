@@ -9,9 +9,9 @@ use strict;
 
 my @Tests =
     (
-     # test-name options input expected-output
-     #
-     ['a', {IN => {k => "exec\n"}}, {ERR => "dircolors: k:1: invalid line;  missing second token\n"}, {EXIT => 1}],
+     ['a', {IN => {k => "exec\n"}},
+      {ERR => "dircolors: k:1: invalid line;  missing second token\n"},
+      {EXIT => 1}],
     );
 
 my $save_temps = $ENV{DEBUG};
