@@ -1,4 +1,6 @@
 #!/bin/sh
+# Test basic --backup functionality -- initially do it just for cp.
+# It won't be hard to adapt this script to work for mv, too.
 
 if test "$VERBOSE" = yes; then
   set -x
