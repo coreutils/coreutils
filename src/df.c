@@ -504,12 +504,14 @@ done:
 }
 
 /* Identify the directory, if any, that device
-   DISK is mounted on, and show its disk usage.  */
+   DISK is mounted on, and show its disk usage.
+   STATP must be the result of `stat (DISK, STATP)'.  */
 
 static void
-show_disk (const char *disk)
+show_disk (const char *disk, const struct stat *statp)
 {
   struct mount_entry *me;
+  char *mount_point;
 
   for (me = mount_list; me; me = me->me_next)
     if (STREQ (disk, me->me_devname))
@@ -518,13 +520,23 @@ show_disk (const char *disk)
 		  me->me_dummy, me->me_remote);
 	return;
       }
+
+  mount_point = find_mount_point (disk, statp);
+  if (!mount_point)
+    {
+      error (0, errno, "%s", quote (disk));
+      exit_status = EXIT_FAILURE;
+    }
+
   /* No filesystem is mounted on DISK. */
-  show_dev (disk, (char *) NULL, (char *) NULL, 0, 0);
+  show_dev (disk, mount_point, NULL, 0, 0);
+  if (mount_point)
+    free (mount_point);
 }
 
 /* Figure out which device file or directory POINT is mounted on
    and show its disk usage.
-   STATP is the results of `stat' on POINT.  */
+   STATP must be the result of `stat (POINT, STATP)'.  */
 static void
 show_point (const char *point, const struct stat *statp)
 {
