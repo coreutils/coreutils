@@ -182,6 +182,7 @@ st_mtim.m4 \
 stat.m4 \
 strerror_r.m4 \
 strftime.m4 \
+strnlen.m4 \
 timespec.m4 \
 unlink-busy.m4 \
 uptime.m4 \
