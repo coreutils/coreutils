@@ -13,7 +13,7 @@ Wed Jun 26 21:35:10 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	Suggested by Tom Tromey.
 
 	* po/Makefile.in.in (install-data): Add `else true;' to avoid
-	letting failing if-condition cause make to fail.
+	letting failing if-condition cause make failure.
 	From Fred Fish (fnf@ninemoons.com).
 
 Tue Jun 25 21:55:18 1996  Jim Meyering  <meyering@na-net.ornl.gov>
