@@ -1,3 +1,25 @@
+2003-10-02  Jim Meyering  <jim@meyering.net>
+
+	Don't require that the maximum length of a file name
+	encountered in a traversal fit in an `unsigned short',
+	and fix some portability bugs (don't depend on gcc).
+
+	* fts.c: Include "fts_.h", not <fts.h>.
+	(ALIGNBYTES) [!(__GNUC__ >= 2)]: Add a definition that works with
+	compilers that don't have __alignof__.
+	(MAX): Use a definition that doesn't depend on gcc.
+	(fts_build): Make `len' and `maxlen' be of type size_t, not int.
+	Test for overflow in a less type-dependent manner.
+	Test HAVE_STRUCT_DIRENT_D_TYPE, rather than
+	defined DT_DIR && defined _DIRENT_HAVE_D_TYPE.
+	(fts_palloc): Test for overflow in a less type-dependent manner.
+	(fts_safe_changedir): Use stat, not stat64.
+	Use fstat, not __fxstat64(_STAT_VER.
+
+	* fts_.h [FTS] (fts_pathlen): Change type from int to size_t.
+	[FTSENT] (fts_pathlen): Change type from u_short to size_t.
+	(fts_level): Change type from u_short to int.
+
 2003-09-29  Paul Eggert  <eggert@twinsun.com>
 
 	* strftime.c (tm_diff) [! HAVE_TM_GMTOFF]:
