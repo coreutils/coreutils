@@ -1,8 +1,14 @@
 Changes in release 3.15:
 [3.14b]:
+* ls --color properly restores color attributes upon completion when the
+  normal (`no') color attribute is not the default color.
+* with ls -s --color, the `total' and size of the first file are printed
+* ls --color stats symlinks and distinguishes between regular symlinks
+  and orphan ones.
 * cp --preserve preserves owner and group of symlinks on Linux when run
   with EUID == 0
-[3.14a]:
+* dircolors no longer accepts --print-data-base (alternate spelling of
+  --print-database)
 Changes in release 3.14:
 * ls --color highlights based on suffix rules only for regular files
 * touch --date=DATE accepts dates like those in an RCS log listing, e.g.,
@@ -11,7 +17,6 @@ Changes in release 3.14:
 * df accepts -F as a synonym for -t for compatibility with Solaris
 * cp -i /dev/null existing-file now prompts before overwriting the target
 * ls --color highlights orphaned symlinks text on terminals that support it
- [3.13i]
 * ls -l honors current locale with respect to abbreviated month names (and,
   with --full-time day names) on systems with a locale-supporting strftime
   function, e.g., ones based on recent versions of the GNU C library
