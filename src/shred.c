@@ -98,6 +98,7 @@
 # include "quotearg.h"		/* For quotearg_colon */
 # include "quote.h"		/* For quotearg_colon */
 # include "xalloc.h"
+# include "gtod.h"
 char *xstrdup PARAMS ((char const *));
 
 #else /* !HAVE_CONFIG_H */
