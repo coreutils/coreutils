@@ -1,3 +1,15 @@
+2004-03-05  Jim Meyering  <jim@meyering.net>
+
+	* readtokens.c: Include <stdbool.h>.
+	(readtoken): Use `size_t' rather than int/long.
+	All callers adjusted.
+	Use `bool' rather than `int' where appropriate.
+	Use memset rather than an explicit loop.
+	Use x2nrealloc rather than xrealloc.
+	Allow the use of `\0' as a delimiter.
+	(readtokens): Likewise.
+	* readtokens.h (readtoken, readtokens): Update prototypes.
+
 2004-02-29  Paul Eggert  <eggert@twinsun.com>
 
 	* getdate.h: Include stdbool.h, and timespec.h instead of
