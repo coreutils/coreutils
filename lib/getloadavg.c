@@ -1,7 +1,7 @@
 /* Get the system load averages.
 
    Copyright (C) 1985, 1986, 1987, 1988, 1989, 1991, 1992, 1993, 1994,
-   1995, 1997, 2003 Free Software Foundation, Inc.
+   1995, 1997, 1999, 2000, 2003 Free Software Foundation, Inc.
 
    NOTE: The canonical source of this file is maintained with gnulib.
    Bugs can be reported to bug-gnulib@gnu.org.
@@ -505,9 +505,7 @@ static kvm_t *kd;
    or -1 if an error occurred.  */
 
 int
-getloadavg (loadavg, nelem)
-     double loadavg[];
-     int nelem;
+getloadavg (double loadavg[], int nelem)
 {
   int elem = 0;			/* Return value.  */
 
@@ -999,9 +997,7 @@ getloadavg (loadavg, nelem)
 
 #ifdef TEST
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int naptime = 0;
 
