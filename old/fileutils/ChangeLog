@@ -3,6 +3,8 @@
 	* tests/touch/dangling-symlink: Warn about the problem rather
 	than failing, on some very recent (at least 2.3.99) versions of
 	the Linux kernel.  Suggestion from Ulrich Drepper.
+	* tests/touch/Makefile.am (TESTS_ENVIRONMENT): Define host_triplet
+	for use in the dangling-symlink test.
 
 2000-06-28  Jim Meyering  <meyering@lucent.com>
 
