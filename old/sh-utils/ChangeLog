@@ -1,6 +1,7 @@
 Thu Sep 19 07:47:18 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/regex.c: Merge with FSF version.
+	* lib/getloadavg.c: Replace with FSF version.
 
 Mon Sep 16 23:13:04 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
