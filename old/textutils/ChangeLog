@@ -1,3 +1,11 @@
+1997-07-13  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/wc: New directory.
+	* tests/head: New directory.
+	* tests/Makefile.am (SUBDIRS): Add head and wc.
+	* configure.in (AC_OUTPUT): Add tests/head/Makefile and
+	tests/wc/Makefile.
+
 1997-07-05  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/tail.c (parse_obsolescent_option): If POSIXLY_CORRECT is set, give
