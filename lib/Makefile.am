@@ -21,7 +21,7 @@
 noinst_LIBRARIES = libfetish.a
 
 INCLUDES = -I.. -I$(srcdir)
-DEFS = -DLIBDIR=\"$(libdir)\" @DEFS@
+DEFS += -DLIBDIR=\"$(libdir)\"
 
 ## Put relatively complex files at the beginning of the list so
 ## that parallel compiles finish a tiny bit sooner.  I don't see
@@ -129,7 +129,7 @@ libfetish_a_SOURCES = \
   xstrtoumax.c \
   yesno.c
 
-libfetish_a_LIBADD = @LIBOBJS@ @ALLOCA@
+libfetish_a_LIBADD = $(LIBOBJS) $(ALLOCA)
 libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
 
 
@@ -182,7 +182,7 @@ charset.alias: config.charset
 
 SUFFIXES = .sed .sin
 .sin.sed:
-	sed -e '/^#/d' -e 's/@''PACKAGE''@/@PACKAGE@/g' $< > t-$@
+	sed -e '/^#/d' -e 's/@''PACKAGE''@/$(PACKAGE)/g' $< > t-$@
 	mv t-$@ $@
 
 CLEANFILES = charset.alias ref-add.sed ref-del.sed
