@@ -31,8 +31,8 @@ extern int errno;
 #include <stdio.h>
 #include <sys/types.h>
 
-void *xmalloc __EXCLUDE_P ((size_t));
-void *xrealloc __EXCLUDE_P ((void *, size_t));
+void *xmalloc PARAMS ((size_t));
+void *xrealloc PARAMS ((void *, size_t));
 
 /* Keep track of excluded file name patterns.  */
 
