@@ -1,3 +1,12 @@
+1999-05-27  Volker Borchert  <bt@teknon.de>
+
+	* tests/Makefile.am: Qualify .env-warn with $(srcdir)/ prefix.
+
+1999-05-25  Jim Meyering  <meyering@ascend.com>
+
+	* doc/textutils.texi (Squeezing): Remove misleading square brackets
+	from SET1 in the one-word-per-line example.
+
 1999-05-22  Jim Meyering  <meyering@ascend.com>
 
 	* lib/Makefile.am (libtu_a_SOURCES): Remove memchr.c.

@@ -1,4 +1,13 @@
+1999-05-27  Volker Borchert  <bt@teknon.de>
+
+	* tests/Makefile.am: Qualify .env-warn with $(srcdir)/ prefix.
+
 1999-05-23  Jim Meyering  <meyering@ascend.com>
+
+	FIXME: add a test for this
+	* src/copy.c (copy_internal): Don't apply the umask in move_mode.
+	Otherwise, `mv' would not preserve the permissions when copying
+	between partitions.  Reported by David Godfrey
 
 	* Version 4.0i.
 
