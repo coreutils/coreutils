@@ -1,4 +1,4 @@
-#serial 10
+#serial 11
 # Determine whether we need the chown wrapper.  chown should accept
 # arguments of -1 for uid and gid, and it should dereference symlinks.
 # If it doesn't, arrange to use the replacement function.
@@ -57,7 +57,7 @@ AC_DEFUN([gl_FUNC_CHOWN_FOLLOWS_SYMLINK],
 	]])],
 	[gl_cv_func_chown_follows_symlink=yes],
 	[gl_cv_func_chown_follows_symlink=no],
-	[gl_cv_func_chown_follows_symlink=no]
+	[gl_cv_func_chown_follows_symlink=yes]
       )
     ]
   )
