@@ -1,3 +1,7 @@
+Changes in release 1.19
+* md5sum can verify digests of files with names containing newline characters
+* update from gettext-0.10.20.
+
 Changes in release 1.18
 * when building sort, link with -lm on systems that use the replacement strtod
 * update from gettext-0.10.17.
