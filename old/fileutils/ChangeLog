@@ -2,6 +2,11 @@
 
 	* Version 4.1.7.
 
+	* src/ln.c (main): Change wording in diagnostic.
+	* src/cp.c (do_copy): Likewise.
+	* src/install.c (strip): Likewise.
+	Suggestions from Santiago Vila.
+
 	* Use autoconf-2.53.  Regenerate dependent files.
 
 	* Makefile.maint (GZIP, BZIP2): Remove definitions.
