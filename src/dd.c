@@ -1039,8 +1039,10 @@ print_stats (void)
   fprintf (stderr, _("%u+%u records in\n"), r_full, r_partial);
   fprintf (stderr, _("%u+%u records out\n"), w_full, w_partial);
   if (r_truncate > 0)
-    fprintf (stderr, _("%u %s\n"), r_truncate,
-	     r_truncate == 1 ? _("truncated record") : _("truncated records"));
+    fprintf (stderr, "%u %s\n", r_truncate,
+	     (r_truncate == 1
+	      ? _("truncated record")
+	      : _("truncated records")));
 }
 
 static void
