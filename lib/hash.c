@@ -76,10 +76,36 @@ char *malloc ();
    become inordinate, as unused slots in the hash table take some space.  The
    best bet is to make sure you are using a good `hasher' function (beware
    that those are not that easy to write! :-), and to use a table size at
-   least bigger than the actual number of entries.
+   least bigger than the actual number of entries.  */
 
-   Currently, whenever the addition of an entry gets 80% of buckets to be
-   non-empty, this package automatically doubles the number of buckets.  */
+/* If, while adding an to a bucket which was empty, the ratio of used buckets
+   over table size goes over the growth threshold (a number between 0.0 and
+   1.0), then reorganise the table size bigger by the growth factor (a number
+   greater than 1.0).  The growth threshold defaults to 0.8, and the growth
+   factor defaults to 1.414, meaning that the table will have doubled its size
+   every second time 80% of the buckets get used.  */
+#define DEFAULT_GROWTH_THRESHOLD 0.8
+#define DEFAULT_GROWTH_FACTOR 1.414
+
+/* If, while emptying a bucket, the ratio of used buckets over table size
+   drops below the shrink threshold (a number between 0.0 and 1.0), then
+   reorganise the table size smaller through the usage of a shrink factor (a
+   number greater than the shrink threshold but smaller than 1.0).  The shrink
+   threshold and factor default to 0.0 and 1.0, meaning that the table never
+   shrinks.  */
+#define DEFAULT_SHRINK_THRESHOLD 0.0
+#define DEFAULT_SHRINK_FACTOR 1.0
+
+/* Use this to initialize or reset a TUNING structure to
+   some sensible values. */
+static const Hash_tuning default_tuning =
+  {
+    DEFAULT_SHRINK_THRESHOLD,
+    DEFAULT_SHRINK_FACTOR,
+    DEFAULT_GROWTH_THRESHOLD,
+    DEFAULT_GROWTH_FACTOR,
+    false
+  };
 
 /* Information and lookup.  */
 
@@ -91,7 +117,7 @@ char *malloc ();
    number of buckets (used plus unused), or the maximum number of slots, are
    the same quantity.  */
 
-unsigned int
+unsigned
 hash_get_n_buckets (const Hash_table *table)
 {
   return table->n_buckets;
@@ -99,7 +125,7 @@ hash_get_n_buckets (const Hash_table *table)
 
 /* Return the number of slots in use (non-empty buckets).  */
 
-unsigned int
+unsigned
 hash_get_n_buckets_used (const Hash_table *table)
 {
   return table->n_buckets_used;
@@ -107,7 +133,7 @@ hash_get_n_buckets_used (const Hash_table *table)
 
 /* Return the number of active entries.  */
 
-unsigned int
+unsigned
 hash_get_n_entries (const Hash_table *table)
 {
   return table->n_entries;
@@ -115,18 +141,18 @@ hash_get_n_entries (const Hash_table *table)
 
 /* Return the length of the most lenghty chain (bucket).  */
 
-unsigned int
+unsigned
 hash_get_max_bucket_length (const Hash_table *table)
 {
   struct hash_entry *bucket;
-  unsigned int max_bucket_length = 0;
+  unsigned max_bucket_length = 0;
 
   for (bucket = table->bucket; bucket < table->bucket_limit; bucket++)
     {
       if (bucket->data)
 	{
 	  struct hash_entry *cursor = bucket;
-	  unsigned int bucket_length = 1;
+	  unsigned bucket_length = 1;
 
 	  while (cursor = cursor->next, cursor)
 	    bucket_length++;
@@ -146,8 +172,8 @@ bool
 hash_table_ok (const Hash_table *table)
 {
   struct hash_entry *bucket;
-  unsigned int n_buckets_used = 0;
-  unsigned int n_entries = 0;
+  unsigned n_buckets_used = 0;
+  unsigned n_entries = 0;
 
   for (bucket = table->bucket; bucket < table->bucket_limit; bucket++)
     {
@@ -174,10 +200,10 @@ hash_table_ok (const Hash_table *table)
 void
 hash_print_statistics (const Hash_table *table, FILE *stream)
 {
-  unsigned int n_entries = hash_get_n_entries (table);
-  unsigned int n_buckets = hash_get_n_buckets (table);
-  unsigned int n_buckets_used = hash_get_n_buckets_used (table);
-  unsigned int max_bucket_length = hash_get_max_bucket_length (table);
+  unsigned n_entries = hash_get_n_entries (table);
+  unsigned n_buckets = hash_get_n_buckets (table);
+  unsigned n_buckets_used = hash_get_n_buckets_used (table);
+  unsigned max_bucket_length = hash_get_max_bucket_length (table);
 
   fprintf (stream, "# entries:         %u\n", n_entries);
   fprintf (stream, "# buckets:         %u\n", n_buckets);
@@ -186,8 +212,8 @@ hash_print_statistics (const Hash_table *table, FILE *stream)
   fprintf (stream, "max bucket length: %u\n", max_bucket_length);
 }
 
-/* If an entry from table, TABLE, matches ENTRY, return the one from
-   the table.  Otherwise, return NULL. */
+/* Return the user entry from the hash table, if some entry in the hash table
+   compares equally with ENTRY, or NULL otherwise. */
 
 void *
 hash_lookup (const Hash_table *table, const void *entry)
@@ -263,11 +289,11 @@ hash_get_next (const Hash_table *table, const void *entry)
    return the number of pointers copied.  Do not copy more than BUFFER_SIZE
    pointers.  */
 
-unsigned int
+unsigned
 hash_get_entries (const Hash_table *table, void **buffer,
-		  unsigned int buffer_size)
+		  unsigned buffer_size)
 {
-  unsigned int counter = 0;
+  unsigned counter = 0;
   struct hash_entry *bucket;
   struct hash_entry *cursor;
 
@@ -295,11 +321,11 @@ hash_get_entries (const Hash_table *table, void **buffer,
    as received.  The walking continue for as long as the PROCESSOR function
    returns nonzero.  When it returns zero, the walking is interrupted.  */
 
-unsigned int
+unsigned
 hash_do_for_each (const Hash_table *table, Hash_processor processor,
 		  void *processor_data)
 {
-  unsigned int counter = 0;
+  unsigned counter = 0;
   struct hash_entry *bucket;
   struct hash_entry *cursor;
 
@@ -332,8 +358,8 @@ hash_do_for_each (const Hash_table *table, Hash_processor processor,
    algorithms tend to be domain-specific, so what's good for [diffutils'] io.c
    may not be good for your application."  */
 
-unsigned int
-hash_string (const char *string, unsigned int n_buckets)
+unsigned
+hash_string (const char *string, unsigned n_buckets)
 {
 # ifndef CHAR_BIT
 #  define CHAR_BIT 8
@@ -360,8 +386,8 @@ hash_string (const char *string, unsigned int n_buckets)
    very old Cyber `snoop', itself written in typical Greg Mansfield style.
    (By the way, what happened to this excellent man?  Is he still alive?)  */
 
-unsigned int
-hash_string (const char *string, unsigned int n_buckets)
+unsigned
+hash_string (const char *string, unsigned n_buckets)
 {
   unsigned value = 0;
 
@@ -393,12 +419,14 @@ is_prime (unsigned long candidate)
 }
 
 /* Round a given CANDIDATE number up to the nearest prime, and return that
-   prime.  CANDIDATE should be at least equal to 10.  */
+   prime.  Primes lower than 10 are merely skipped.  */
 
 static unsigned long
 next_prime (unsigned long candidate)
 {
-  assert (candidate >= 10);
+  /* Skip small primes.  */
+  if (candidate < 10)
+    candidate = 10;
 
   /* Make it definitely odd.  */
   candidate |= 1;
@@ -409,33 +437,72 @@ next_prime (unsigned long candidate)
   return candidate;
 }
 
+void
+hash_reset_tuning (Hash_tuning *tuning)
+{
+  *tuning = default_tuning;
+}
+
+/* For the given hash TABLE, check the user supplied tuning structure for
+   reasonable values, and return true if there is no gross error with it.
+   Otherwise, definitvely reset the TUNING field to some acceptable default in
+   the hash table (that is, the user looses the right of further modifying
+   tuning arguments), and return false.  */
+
+static bool
+check_tuning (Hash_table *table)
+{
+  const Hash_tuning *tuning = table->tuning;
+
+  if (tuning->growth_threshold > 0.0
+      && tuning->growth_threshold < 1.0
+      && tuning->growth_factor > 1.0
+      && tuning->shrink_threshold >= 0.0
+      && tuning->shrink_threshold < 1.0
+      && tuning->shrink_factor > tuning->shrink_threshold
+      && tuning->shrink_factor <= 1.0
+      && tuning->shrink_threshold < tuning->growth_threshold)
+    return true;
+
+  table->tuning = &default_tuning;
+  return false;
+}
+
 /* Allocate and return a new hash table, or NULL if an error is met.  The
-   initial number of buckets would be at least CANDIDATE (which need not be
-   prime).
+   initial number of buckets is automatically selected so to _guarantee_ that
+   you may insert at least CANDIDATE different user entries before any growth
+   of the hash table size occurs.  So, if you happen to know beforehand the
+   number of entries you intend to insert in the hash table, you may save some
+   table memory and insertion time, by specifying it here.  If the
+   IS_N_BUCKETS field of the TUNING structure is true, the CANDIDATE argument
+   has its meaning changed to the wanted number of buckets.
 
-   If DATA_FREER is not NULL, this function may be later called with the data
-   as an argument, just before they entry containing the data gets freed.  The
-   HASHER function should be supplied, and FIXME.  The COMPARATOR function
-   should also be supplied, and FIXME.  */
+   TUNING points to a structure of user-supplied values, in case some fine
+   tuning is wanted over the default behaviour of the hasher.  If TUNING is
+   NULL, proper defaults are used instead.
 
-    /* User-supplied function for freeing datas.  It is specified in
-       hash_initialize.  If non-null, it is used by hash_free and hash_clear.
-       You should specify `free' here only if you want these functions to free
-       all of your `data' data.  This is typically the case when your data is
-       simply an auxilliary struct that you have malloc'd to aggregate several
-       values.  */
+   The user-supplied HASHER function should be provided.  It accepts two
+   arguments ENTRY and TABLE_SIZE.  It computes, by hasing ENTRY contents, a
+   slot number for that entry which should be in the range 0..TABLE_SIZE-1.
+   This slot number is then returned.
 
-    /* User-supplied hash function that hashes entry ENTRY to an integer in
-       the range 0..TABLE_SIZE-1.  */
+   The user-supplied COMPARATOR function should be provided.  It accepts two
+   arguments pointing to user data, it then returns true for a pair of entries
+   that compare equal, or false otherwise.  This function is internally called
+   on entries which are already known to hash to the same bucket index.
 
-    /* User-supplied function that determines whether a new entry is unique by
-       comparing the new entry to entries that hashed to the same bucket
-       index.  It should return zero for a pair of entries that compare equal,
-       non-zero otherwise.  */
+   The user-supplied DATA_FREER function, when not NULL, may be later called
+   with the user data as an argument, just before the entry containing the
+   data gets freed.  This happens from within `hash_free' or `hash_clear'.
+   You should specify this function only if you want these functions to free
+   all of your `data' data.  This is typically the case when your data is
+   simply an auxiliary struct that you have malloc'd to aggregate several
+   values.  */
 
 Hash_table *
-hash_initialize (unsigned int candidate, Hash_hasher hasher,
-		 Hash_comparator comparator, Hash_data_freer data_freer)
+hash_initialize (unsigned candidate, const Hash_tuning *tuning,
+		 Hash_hasher hasher, Hash_comparator comparator,
+		 Hash_data_freer data_freer)
 {
   Hash_table *table;
   struct hash_entry *bucket;
@@ -447,7 +514,23 @@ hash_initialize (unsigned int candidate, Hash_hasher hasher,
   if (table == NULL)
     return NULL;
 
-  table->n_buckets = next_prime (candidate < 10 ? 10 : candidate);
+  if (!tuning)
+    tuning = &default_tuning;
+  table->tuning = tuning;
+  if (!check_tuning (table))
+    {
+      /* Abort initialisation if tuning arguments are improper.  This is the
+	 only occasion when the user gets some feedback about it.  Later on,
+	 if the user modifies the tuning wrongly, it gets restored to some
+	 proper default, and the user looses the right of tuning further.  */
+      free (table);
+      return NULL;
+    }
+
+  table->n_buckets
+    = next_prime (tuning->is_n_buckets ? candidate
+		  : (unsigned) (candidate / tuning->growth_threshold));
+
   table->bucket = (struct hash_entry *)
     malloc (table->n_buckets * sizeof (struct hash_entry));
   if (table->bucket == NULL)
@@ -682,21 +765,24 @@ hash_find_entry (Hash_table *table, const void *entry,
   return NULL;
 }
 
-/* For an already existing hash table, change the number of buckets and make
-   it NEW_TABLE_SIZE.  The contents of the hash table are preserved.  */
+/* For an already existing hash table, change the number of buckets through
+   specifying CANDIDATE.  The contents of the hash table are preserved.  The
+   new number of buckets is automatically selected so to _guarantee_ that the
+   table may receive at least CANDIDATE different user entries, including
+   those already in the table, before any other growth of the hash table size
+   occurs.  If the IS_N_BUCKETS field of the TUNING structure is true, the
+   CANDIDATE argument has its meaning changed to the wanted number of buckets.
+   */
 
 bool
-hash_rehash (Hash_table *table, unsigned int new_n_buckets)
+hash_rehash (Hash_table *table, unsigned candidate)
 {
   Hash_table *new_table;
   struct hash_entry *bucket;
   struct hash_entry *cursor;
   struct hash_entry *next;
 
-  if (table->n_buckets <= 0 || new_n_buckets == 0)
-    return false;
-
-  new_table = hash_initialize (new_n_buckets, table->hasher,
+  new_table = hash_initialize (candidate, table->tuning, table->hasher,
 			       table->comparator, table->data_freer);
   if (new_table == NULL)
     return false;
@@ -709,43 +795,50 @@ hash_rehash (Hash_table *table, unsigned int new_n_buckets)
   new_table->free_entry_list = table->free_entry_list;
 
   for (bucket = table->bucket; bucket < table->bucket_limit; bucket++)
-    {
-      if (bucket->data)
+    if (bucket->data)
+      for (cursor = bucket; cursor; cursor = next)
 	{
-	  for (cursor = bucket; cursor; cursor = next)
+	  void *data = cursor->data;
+	  struct hash_entry *new_bucket
+	    = (new_table->bucket
+	       + new_table->hasher (data, new_table->n_buckets));
+
+	  assert (new_bucket < new_table->bucket_limit);
+	  next = cursor->next;
+
+	  if (new_bucket->data)
+	    if (cursor == bucket)
+	      {
+		/* Allocate or recycle an entry, when moving from a bucket
+		   header into a bucket overflow.  */
+		struct hash_entry *new_entry = allocate_entry (new_table);
+
+		if (new_entry == NULL)
+		  return false;
+
+		new_entry->data = data;
+		new_entry->next = new_bucket->next;
+		new_bucket->next = new_entry;
+	      }
+	    else
+	      {
+		/* Merely relink an existing entry, when moving from a
+		   bucket overflow into a bucket overflow.  */
+		cursor->next = new_bucket->next;
+		new_bucket->next = cursor;
+	      }
+	  else
 	    {
-	      void *data = cursor->data;
-	      struct hash_entry *new_bucket
-		= new_table->bucket + new_table->hasher (data, new_n_buckets);
-
-	      assert (new_bucket < new_table->bucket_limit);
-
-	      /* Free overflow entries as soon as possible, moving them from the
-		 old hash table into the new one, as they may be needed now.  */
-	      next = cursor->next;
+	      /* Free an existing entry, when moving from a bucket
+		 overflow into a bucket header.  Also take care of the
+		 simple case of moving from a bucket header into a bucket
+		 header.  */
+	      new_bucket->data = data;
+	      new_table->n_buckets_used++;
 	      if (cursor != bucket)
 		free_entry (new_table, cursor);
-
-	      /* Insert the entry into the new hash table.  */
-	      if (new_bucket->data)
-		{
-		  struct hash_entry *new_entry = allocate_entry (new_table);
-
-		  if (new_entry == NULL)
-		    return false;
-
-		  new_entry->data = data;
-		  new_entry->next = new_bucket->next;
-		  new_bucket->next = new_entry;
-		}
-	      else
-		{
-		  new_bucket->data = data;
-		  new_table->n_buckets_used++;
-		}
 	    }
 	}
-    }
 
   free (table->bucket);
   table->bucket = new_table->bucket;
@@ -801,18 +894,31 @@ hash_insert (Hash_table *table, const void *entry)
   table->n_entries++;
   table->n_buckets_used++;
 
-  /* If more than 80% of the buckets are in use, rehash the table so it's two
-     times bigger.  There's no point in checking the number of entries,
-     because if the hashing function is ill-conditioned, rehashing is not
-     likely to improve it.  */
+  /* If the growth threshold of the buckets in use has been reached, rehash
+     the table bigger.  It's no real use checking the number of entries, as
+     if the hashing function is ill-conditioned, rehashing is not likely to
+     improve it.  */
 
-  if (5 * table->n_buckets_used > 4 * table->n_buckets)
+  if (table->n_buckets_used
+      > table->tuning->growth_threshold * table->n_buckets)
     {
-      unsigned int new_n_buckets = next_prime (2 * table->n_buckets + 1);
+      /* Check more fully, before starting real work.  If tuning arguments got
+	 improper, the second check will rely on proper defaults.  */
+      check_tuning (table);
+      if (table->n_buckets_used
+	  > table->tuning->growth_threshold * table->n_buckets)
+	{
+	  const Hash_tuning *tuning = table->tuning;
+	  unsigned candidate
+	    = (unsigned) (tuning->is_n_buckets
+			  ? (table->n_buckets * tuning->growth_factor)
+			  : (table->n_buckets * tuning->growth_factor
+			     * tuning->growth_threshold));
 
-      /* If the rehash fails, arrange to return NULL.  */
-      if (!hash_rehash (table, new_n_buckets))
-	entry = NULL;
+	  /* If the rehash fails, arrange to return NULL.  */
+	  if (!hash_rehash (table, candidate))
+	    entry = NULL;
+	}
     }
 
   return (void *) entry;
@@ -831,9 +937,34 @@ hash_delete (Hash_table *table, const void *entry)
   if (data = hash_find_entry (table, entry, &bucket, true), !data)
     return NULL;
 
-  if (!bucket->data)
-    table->n_buckets_used--;
   table->n_entries--;
+  if (!bucket->data)
+    {
+      table->n_buckets_used--;
+
+      /* If the shrink threshold of the buckets in use has been reached,
+	 rehash the table smaller.  */
+
+      if (table->n_buckets_used
+	  < table->tuning->shrink_threshold * table->n_buckets)
+	{
+	  /* Check more fully, before starting real work.  If tuning arguments
+	     got improper, the second check will rely on proper defaults.  */
+	  check_tuning (table);
+	  if (table->n_buckets_used
+	      < table->tuning->shrink_threshold * table->n_buckets)
+	    {
+	      const Hash_tuning *tuning = table->tuning;
+	      unsigned candidate
+		= (unsigned) (tuning->is_n_buckets
+			      ? table->n_buckets * tuning->shrink_factor
+			      : (table->n_buckets * tuning->shrink_factor
+				 * tuning->growth_threshold));
+
+	      hash_rehash (table, candidate);
+	    }
+	}
+    }
 
   return data;
 }
