@@ -1,3 +1,9 @@
+2004-07-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* Makefile.am (libfetish_a_SOURCES): Add fcntl-safer.h,
+	open-safer.c.
+	* fcntl-safer.h, open-safer.c: New files.
+
 2004-07-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* c-strtod.c (STRTOD_L): New macro.
