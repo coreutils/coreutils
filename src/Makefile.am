@@ -6,7 +6,7 @@ EXTRA_SCRIPTS = nohup
 bin_SCRIPTS = groups @OPTIONAL_BIN_ZCRIPTS@
 bin_PROGRAMS = chgrp chown chmod cp dd dircolors du \
   ginstall link ln dir vdir ls mkdir \
-  mkfifo mknod mv rm rmdir shred stat sync touch unlink \
+  mkfifo mknod mv readlink rm rmdir shred stat sync touch unlink \
   cat cksum comm csplit cut expand fmt fold head join md5sum \
   nl od paste pr ptx sha1sum sort split sum tac tail tr tsort unexpand uniq wc \
   basename date dirname echo env expr factor false \
