@@ -3,6 +3,7 @@
 	* Version 2.0c.
 
 	* Makefile.maint (announcement): Include URLs for xdelta files.
+	(alpha): Use scp, not ncftp.
 
 	* lib/Makefile.am (noinst_HEADERS): Add nanosleep.h.
 
