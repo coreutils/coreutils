@@ -1,122 +1,117 @@
-## This is a template from which Makefile.am is generated. -*-Makefile-*-
-
-##m4-files-begin
-EXTRA_DIST = \
-  README Makefile.am.in \
-acl.m4 \
-afs.m4 \
-alloca.m4 \
-assert.m4 \
-bison.m4 \
-boottime.m4 \
-c-stack.m4 \
-canonicalize.m4 \
-check-decl.m4 \
-chown.m4 \
-codeset.m4 \
-d-ino.m4 \
-d-type.m4 \
-dirfd.m4 \
-dos.m4 \
-error.m4 \
-extensions.m4 \
-fnmatch.m4 \
-fpending.m4 \
-fstypename.m4 \
-fsusage.m4 \
-ftruncate.m4 \
-ftw.m4 \
-getcwd-path-max.m4 \
-getcwd.m4 \
-getgroups.m4 \
-getline.m4 \
-getndelim2.m4 \
-gettext.m4 \
-gettimeofday.m4 \
-glibc.m4 \
-glibc21.m4 \
-group-member.m4 \
-host-os.m4 \
-human.m4 \
-iconv.m4 \
-intdiv0.m4 \
-intmax_t.m4 \
-inttypes-pri.m4 \
-inttypes.m4 \
-inttypes_h.m4 \
-isc-posix.m4 \
-jm-macros.m4 \
-jm-mktime.m4 \
-jm-winsz1.m4 \
-jm-winsz2.m4 \
-lchown.m4 \
-lcmessage.m4 \
-lib-check.m4 \
-lib-ld.m4 \
-lib-link.m4 \
-lib-prefix.m4 \
-link-follow.m4 \
-longdouble.m4 \
-longlong.m4 \
-ls-mntd-fs.m4 \
-lstat.m4 \
-mbrtowc.m4 \
-mbswidth.m4 \
-memcmp.m4 \
-memcoll.m4 \
-mkdir-slash.m4 \
-mkstemp.m4 \
-mktime.m4 \
-nanosleep.m4 \
-onceonly.m4 \
-open-max.m4 \
-perl.m4 \
-prereq.m4 \
-progtest.m4 \
-putenv.m4 \
-readdir.m4 \
-regex.m4 \
-rename.m4 \
-restrict.m4 \
-rmdir-errno.m4 \
-search-libs.m4 \
-signed.m4 \
-ssize_t.m4 \
-st_dm_mode.m4 \
-st_mtim.m4 \
-stat.m4 \
-stdbool.m4 \
-stdint_h.m4 \
-strftime.m4 \
-timespec.m4 \
-tm_gmtoff.m4 \
-tzset.m4 \
-uintmax_t.m4 \
-unlink-busy.m4 \
-unlocked-io.m4 \
-uptime.m4 \
-utimbuf.m4 \
-utime.m4 \
-utimens.m4 \
-utimes-null.m4 \
-utimes.m4 \
-vasnprintf.m4 \
-vasprintf.m4 \
-wchar_t.m4 \
-wint_t.m4 \
-xstrtoimax.m4 \
-xstrtoumax.m4
-##m4-files-end
+## Process this file with automake to produce Makefile.in.
+EXTRA_DIST =
+EXTRA_DIST += README Makefile.am.in
+EXTRA_DIST += acl.m4
+EXTRA_DIST += afs.m4
+EXTRA_DIST += alloca.m4
+EXTRA_DIST += assert.m4
+EXTRA_DIST += bison.m4
+EXTRA_DIST += boottime.m4
+EXTRA_DIST += c-stack.m4
+EXTRA_DIST += canonicalize.m4
+EXTRA_DIST += check-decl.m4
+EXTRA_DIST += chown.m4
+EXTRA_DIST += codeset.m4
+EXTRA_DIST += d-ino.m4
+EXTRA_DIST += d-type.m4
+EXTRA_DIST += dirfd.m4
+EXTRA_DIST += dos.m4
+EXTRA_DIST += error.m4
+EXTRA_DIST += extensions.m4
+EXTRA_DIST += fnmatch.m4
+EXTRA_DIST += fpending.m4
+EXTRA_DIST += fstypename.m4
+EXTRA_DIST += fsusage.m4
+EXTRA_DIST += ftruncate.m4
+EXTRA_DIST += ftw.m4
+EXTRA_DIST += getcwd-path-max.m4
+EXTRA_DIST += getcwd.m4
+EXTRA_DIST += getgroups.m4
+EXTRA_DIST += getline.m4
+EXTRA_DIST += getndelim2.m4
+EXTRA_DIST += gettext.m4
+EXTRA_DIST += gettimeofday.m4
+EXTRA_DIST += glibc.m4
+EXTRA_DIST += glibc21.m4
+EXTRA_DIST += group-member.m4
+EXTRA_DIST += host-os.m4
+EXTRA_DIST += human.m4
+EXTRA_DIST += iconv.m4
+EXTRA_DIST += intdiv0.m4
+EXTRA_DIST += intmax_t.m4
+EXTRA_DIST += inttypes-pri.m4
+EXTRA_DIST += inttypes.m4
+EXTRA_DIST += inttypes_h.m4
+EXTRA_DIST += isc-posix.m4
+EXTRA_DIST += jm-macros.m4
+EXTRA_DIST += jm-mktime.m4
+EXTRA_DIST += jm-winsz1.m4
+EXTRA_DIST += jm-winsz2.m4
+EXTRA_DIST += lchown.m4
+EXTRA_DIST += lcmessage.m4
+EXTRA_DIST += lib-check.m4
+EXTRA_DIST += lib-ld.m4
+EXTRA_DIST += lib-link.m4
+EXTRA_DIST += lib-prefix.m4
+EXTRA_DIST += link-follow.m4
+EXTRA_DIST += longdouble.m4
+EXTRA_DIST += longlong.m4
+EXTRA_DIST += ls-mntd-fs.m4
+EXTRA_DIST += lstat.m4
+EXTRA_DIST += mbrtowc.m4
+EXTRA_DIST += mbswidth.m4
+EXTRA_DIST += memcmp.m4
+EXTRA_DIST += memcoll.m4
+EXTRA_DIST += mkdir-slash.m4
+EXTRA_DIST += mkstemp.m4
+EXTRA_DIST += mktime.m4
+EXTRA_DIST += nanosleep.m4
+EXTRA_DIST += onceonly.m4
+EXTRA_DIST += open-max.m4
+EXTRA_DIST += perl.m4
+EXTRA_DIST += prereq.m4
+EXTRA_DIST += progtest.m4
+EXTRA_DIST += putenv.m4
+EXTRA_DIST += readdir.m4
+EXTRA_DIST += regex.m4
+EXTRA_DIST += rename.m4
+EXTRA_DIST += restrict.m4
+EXTRA_DIST += rmdir-errno.m4
+EXTRA_DIST += search-libs.m4
+EXTRA_DIST += signed.m4
+EXTRA_DIST += ssize_t.m4
+EXTRA_DIST += st_dm_mode.m4
+EXTRA_DIST += st_mtim.m4
+EXTRA_DIST += stat.m4
+EXTRA_DIST += stdbool.m4
+EXTRA_DIST += stdint_h.m4
+EXTRA_DIST += strftime.m4
+EXTRA_DIST += timespec.m4
+EXTRA_DIST += tm_gmtoff.m4
+EXTRA_DIST += tzset.m4
+EXTRA_DIST += uintmax_t.m4
+EXTRA_DIST += unlink-busy.m4
+EXTRA_DIST += unlocked-io.m4
+EXTRA_DIST += uptime.m4
+EXTRA_DIST += utimbuf.m4
+EXTRA_DIST += utime.m4
+EXTRA_DIST += utimens.m4
+EXTRA_DIST += utimes-null.m4
+EXTRA_DIST += utimes.m4
+EXTRA_DIST += vasnprintf.m4
+EXTRA_DIST += vasprintf.m4
+EXTRA_DIST += wchar_t.m4
+EXTRA_DIST += wint_t.m4
+EXTRA_DIST += xstrtoimax.m4
+EXTRA_DIST += xstrtoumax.m4
 
 Makefile.am: Makefile.am.in
 	rm -f $@ $@t
-	sed -n '1,/^##m4-files-begin/p' $< > $@t
-	(((echo EXTRA_DIST =; \
-	   echo "  README Makefile.am.in" \
-	  ) | tr '\012' @); \
-	  (echo *.m4|tr ' ' @) ) \
-	  |sed 's/@$$/%/;s/@/ \\@/g' |tr @% '\012\012' \
+	(echo "## Process this file with automake to produce Makefile.in."; \
+	 echo EXTRA_DIST =;				\
+	 echo "EXTRA_DIST += README Makefile.am.in";	\
+	 ls -1 *.m4 | sed 's/^/EXTRA_DIST += /'; echo )	\
 	  >> $@t
-	sed -n '/^##m4-files-end/,$$p' $< >> $@t
+	sed -n '/^Makefile\.am:/,$$p' $< >> $@t
 	chmod a-w $@t
 	mv $@t $@
