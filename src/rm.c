@@ -191,7 +191,7 @@ main (int argc, char **argv)
 	}
     }
 
-  if (optind == argc)
+  if (argc <= optind)
     {
       if (x.ignore_missing_files)
 	exit (EXIT_SUCCESS);
