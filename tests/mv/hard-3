@@ -34,7 +34,7 @@ fail=0
 
 # ======================================
 # This must fail -- because x/b cannot be unlinked.
-cp --preserve=link --parents a x/b c dst && fail=1
+cp --preserve=link --parents a x/b c dst 2> /dev/null && fail=1
 
 # Source files must remain.
 test -f a || fail=1
@@ -54,6 +54,6 @@ test $ia = $ic || fail=1
 
 # The i-node number of x/b must be different.
 ib=`ls -i x/b|sed 's/ .*//'`
-test $ia = $ib || fail=1
+test $ia = $ib && fail=1
 
 (exit $fail); exit $fail
