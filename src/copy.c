@@ -424,12 +424,22 @@ close_src_desc:
    making the `copy' operation remove both copies of the file
    in that case, while still allowing the user to e.g., move or
    copy a regular file onto a symlink that points to it.
-   Try to minimize the cost of this function in the common case.  */
+   Try to minimize the cost of this function in the common case.
+   Set *RETURN_NOW if we've determined that the caller has no more
+   work to do and should return successfully, right away.
+
+   Set *UNLINK_SRC if we've determined that the caller wants to do
+   `rename (a, b)' where `a' and `b' are hard links to the same file.
+   In that case, the caller should try to unlink `a' and then return
+   successfully.  Ideally, we wouldn't have to do that, and we'd be
+   able to rely on rename to remove the source file.  However, POSIX
+   mistakenly requires that such a rename call do *nothing* and return
+   successfully.  */
 
 static int
 same_file_ok (const char *src_path, const struct stat *src_sb,
 	      const char *dst_path, const struct stat *dst_sb,
-	      const struct cp_options *x, int *return_now)
+	      const struct cp_options *x, int *return_now, int *unlink_src)
 {
   const struct stat *src_sb_link;
   const struct stat *dst_sb_link;
@@ -440,6 +450,7 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
   int same = (SAME_INODE (*src_sb, *dst_sb));
 
   *return_now = 0;
+  *unlink_src = 0;
 
   /* FIXME: this should (at the very least) be moved into the following
      if-block.  More likely, it should be removed, because it inhibits
@@ -548,10 +559,21 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
      destination file before opening it -- via `rename' if they're on
      the same file system, via `unlink (DST_PATH)' otherwise.
      It's also ok if they're distinct hard links to the same file.  */
-  if ((x->move_mode || x->unlink_dest_before_opening)
-      && (S_ISLNK (dst_sb_link->st_mode)
-	  || (same_link && !same_name (src_path, dst_path))))
-    return 1;
+  if (x->move_mode || x->unlink_dest_before_opening)
+    {
+      if (S_ISLNK (dst_sb_link->st_mode))
+	return 1;
+
+      if (same_link && !same_name (src_path, dst_path))
+	{
+	  if (x->move_mode)
+	    {
+	      *unlink_src = 1;
+	      *return_now = 1;
+	    }
+	  return 1;
+	}
+    }
 
   /* If neither is a symlink, then it's ok as long as they aren't
      hard links to the same file.  */
@@ -856,8 +878,21 @@ copy_internal (const char *src_path, const char *dst_path,
       else
 	{
 	  int return_now;
+	  int unlink_src;
 	  int ok = same_file_ok (src_path, &src_sb, dst_path, &dst_sb,
-				 x, &return_now);
+				 x, &return_now, &unlink_src);
+	  if (unlink_src)
+	    {
+	      if (unlink (src_path))
+		{
+		  error (0, errno, _("cannot remove %s"), quote (src_path));
+		  return 1;
+		}
+	      /* Tell the caller that there's no need to remove src_path.  */
+	      if (rename_succeeded)
+		*rename_succeeded = 1;
+	    }
+
 	  if (return_now)
 	    return 0;
 
