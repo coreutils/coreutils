@@ -1,3 +1,7 @@
+2002-09-25  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* Makefile.in.in: Upgrade to gettext-0.11.5.
+
 2002-09-16  Jim Meyering  <meyering@lucent.com>
 
 	* LINGUAS: Add be (Belarusian).
