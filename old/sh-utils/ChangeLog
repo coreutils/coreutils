@@ -1,6 +1,17 @@
-2000-11-18  Jim Meyering  <meyering@lucent.com>
+2000-12-02  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* src/seq.c (valid_format): Move pre-increment to a separate statement
+	to avoid a warning.
+
+	* src/id.c: Move dcls of globals used only in main...
+	(main): ...to here.
+	(usage): Clarify option descriptions.
+
+2000-11-18  Jim Meyering  <meyering@lucent.com>
+
+	* po/Makefile.in.in: Sync with the one from fileutils.
 
 	* configure, config.h.in, Makefile.in, etc.: Regenerate using the
 	very latest version (in CVS) of autoconf.
