@@ -1,19 +1,20 @@
 #!/usr/bin/perl -w
-# -*- perl -*-
 
 eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
-    if 0;
+  if 0;
 
 use strict;
-(my $program_name = $0) =~ s|.*/||;
+(my $ME = $0) =~ s|.*/||;
 
+# A global destructor to close standard output with error checking.
 sub END
 {
-  use POSIX qw (_exit);
-  # This is required if the code might send any output to stdout
-  # E.g., even --version or --help.  So it's best to do it unconditionally.
+  defined fileno STDOUT
+    or return;
   close STDOUT
-    or (warn "$program_name: closing standard output: $!\n"), _exit (1);
+    and return;
+  warn "$ME: closing standard output: $!\n";
+  $? ||= 1;
 }
 
 sub is_prime ($)
@@ -41,7 +42,7 @@ sub is_prime ($)
 
 {
   @ARGV == 1
-    or die "$program_name: missing argument\n";
+    or die "$ME: missing argument\n";
 
   my $wheel_size = $ARGV[0];
 
