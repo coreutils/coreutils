@@ -1,5 +1,5 @@
 /* yesno.c -- read a yes/no response from stdin
-   Copyright (C) 1990, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1998, 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 # include <stdlib.h>
 #endif
 #include <stdio.h>
+#include "unlocked-io.h"
 
 /* Read one line from standard input
    and return nonzero if that line begins with y or Y,

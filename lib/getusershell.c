@@ -1,5 +1,5 @@
 /* getusershell.c -- Return names of valid user shells.
-   Copyright (C) 1991, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1997, 2000, 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@
 # include <stdlib.h>
 #endif
 #include <ctype.h>
+#include "unlocked-io.h"
 #include "xalloc.h"
 
 #if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))

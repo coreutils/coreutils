@@ -448,6 +448,7 @@ o_merid:
    may define-away `const'.  We want the prototype for get_date to have
    the same signature as the function definition.  */
 #include "getdate.h"
+#include "unlocked-io.h"
 
 #ifndef gmtime
 struct tm *gmtime ();

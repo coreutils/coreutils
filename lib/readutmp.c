@@ -1,5 +1,5 @@
 /* GNU's read utmp module.
-   Copyright (C) 1992-2000 Free Software Foundation, Inc.
+   Copyright (C) 1992-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@
 #endif /* STDC_HEADERS || HAVE_STRING_H */
 
 #include "readutmp.h"
+#include "unlocked-io.h"
 
 char *xmalloc ();
 char *realloc ();

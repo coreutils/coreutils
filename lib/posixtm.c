@@ -1,5 +1,5 @@
 /* Parse dates for touch and date.
-   Copyright (C) 1989, 1990, 1991, 1998, 2000 Free Software Foundation Inc.
+   Copyright (C) 1989, 1990, 1991, 1998, 2000, 2001 Free Software Foundation Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -40,6 +40,7 @@
 #endif
 
 #include "posixtm.h"
+#include "unlocked-io.h"
 
 /* ISDIGIT differs from isdigit, as follows:
    - Its arg may be any int or unsigned int; it need not be an unsigned char.

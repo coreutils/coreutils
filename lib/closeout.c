@@ -1,5 +1,5 @@
 /* closeout.c - close standard output
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -43,6 +43,7 @@ extern int errno;
 #include "closeout.h"
 #include "error.h"
 #include "quotearg.h"
+#include "unlocked-io.h"
 #include "__fpending.h"
 
 static int default_exit_status = EXIT_FAILURE;

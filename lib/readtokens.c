@@ -1,5 +1,5 @@
 /* readtokens.c  -- Functions for reading tokens from an input stream.
-   Copyright (C) 1990-1991, 1999 Jim Meyering.
+   Copyright (C) 1990-1991, 1999, 2001 Jim Meyering.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -49,6 +49,7 @@
 #endif /* not STDC_HEADERS and not HAVE_STRING_H */
 
 #include "readtokens.h"
+#include "unlocked-io.h"
 void *xmalloc ();
 void *xrealloc ();
 

@@ -631,6 +631,7 @@ typedef enum
 #  undef INSIDE_RECURSION
 # endif
 #endif
+#include "unlocked-io.h"
 
 #ifdef INSIDE_RECURSION
 /* Common operations on the compiled pattern.  */

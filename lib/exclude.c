@@ -57,6 +57,7 @@ extern int errno;
 
 #include "exclude.h"
 #include "fnmatch.h"
+#include "unlocked-io.h"
 #include "xalloc.h"
 
 #ifndef SIZE_MAX

@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include "mountlist.h"
+#include "unlocked-io.h"
 
 #ifdef STDC_HEADERS
 # include <stdlib.h>

@@ -35,6 +35,7 @@ extern char *program_name;
 #endif
 
 #include "fatal.h"
+#include "unlocked-io.h"
 
 /* Like error, but always exit with EXIT_FAILURE.  */
 

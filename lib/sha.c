@@ -1,7 +1,7 @@
 /* sha.c - Functions to compute the SHA1 hash (message-digest) of files
    or blocks of memory.  Complies to the NIST specification FIPS-180-1.
 
-   Copyright (C) 2000 Scott G. Miller
+   Copyright (C) 2000, 2001 Scott G. Miller
 
    Credits:
       Robert Klep <robert@ilse.nl>  -- Expansion function fix
@@ -24,6 +24,7 @@
 
 #include "md5.h"
 #include "sha.h"
+#include "unlocked-io.h"
 
 /*
   Not-swap is a macro that does an endian swap on architectures that are

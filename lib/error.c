@@ -54,6 +54,7 @@ void exit ();
 #endif
 
 #include "error.h"
+#include "unlocked-io.h"
 
 #ifndef _
 # define _(String) String

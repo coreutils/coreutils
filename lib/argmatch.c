@@ -39,6 +39,7 @@
 #include "error.h"
 #include "quotearg.h"
 #include "quote.h"
+#include "unlocked-io.h"
 
 /* When reporting an invalid argument, show nonprinting characters
    by using the quoting style ARGMATCH_QUOTING_STYLE.  Do not use

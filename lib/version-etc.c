@@ -22,6 +22,7 @@
 #endif
 
 #include <stdio.h>
+#include "unlocked-io.h"
 #include "version-etc.h"
 
 #if ENABLE_NLS

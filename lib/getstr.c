@@ -1,6 +1,6 @@
 /* getstr.c -- core function for GNU C library getline replacement function
 
-   Copyright (C) 1993, 1996-2000 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1996-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -32,6 +32,8 @@
 #else
 char *malloc (), *realloc ();
 #endif
+
+#include "unlocked-io.h"
 
 /* Always add at least this many bytes when extending the buffer.  */
 #define MIN_CHUNK 64
