@@ -1,6 +1,6 @@
 /* Host name canonicalization
 
-   Copyright (C) 1995, 1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
 
    Written by Miles Bader <miles@gnu.ai.mit.edu>
 
@@ -26,12 +26,8 @@
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
 #endif
-#ifdef HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
-#ifdef HAVE_STRING_H
-# include <string.h>
-#endif
+#include <stdlib.h>
+#include <string.h>
 #ifdef HAVE_NETDB_H
 # include <netdb.h>
 #endif
