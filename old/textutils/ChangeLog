@@ -1,5 +1,12 @@
 2001-08-18  Jim Meyering  <meyering@lucent.com>
 
+	* Makefile.maint: Merge in changes from autoconf.
+
+	* Makefile.maint ($(v_etc_file)): Define.
+	(copyright-check): Use the new variable.
+	(my-distcheck): Depend on local-check so those checks are once
+	again run by `make distcheck'.
+
 	* src/head.c (head_bytes): Read no more than the specified
 	number of bytes.  Patch by Ian Bruce.
 
