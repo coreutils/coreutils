@@ -2,6 +2,8 @@
 * df and `readlink --canonicalize' no longer corrupt the heap on
   non-glibc, non-solaris systems
 * `env -u SOME_ALREADY_UNSET_VARIABLE' no longer dumps core on non-glibc systems
+* fmt now diagnose invalid obsolescent width specifications like `-72x'
+* fmt now exits nonzero when unable to open an input file
 * tail's byte and line counts are no longer limited to OFF_T_MAX.
   Now the limit is UINTMAX_MAX (usually 2^64).
 * tsort now fails when given an odd number of input tokens.
