@@ -1,3 +1,13 @@
+Sat Jun  1 12:44:51 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* ls.c: Rename options and internal variables to reflect change to
+	--color=WHEN where WHEN is never, always, or auto (for consistency
+	with e.g. cp --sparse=WHEN.  For at least a while, the original
+	slackware-supported arguments `none', `force', `yes', etc will be
+	supported but deprecated by lack of documentation.
+	(decode_switches): Use STDOUT_FILENO instead of `1' in isatty test.
+	(usage): Update/add description of the --color option.
+
 Tue May 28 18:39:49 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* dd.c (print_stats): Don't mark "%u %s" as a translatable string.
