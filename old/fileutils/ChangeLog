@@ -1,6 +1,10 @@
-2001-11-09  Jim Meyering  <meyering@lucent.com>
+2001-11-12  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.2.
+
+	* tests/rm/r-3: Clean up.
+
+2001-11-09  Jim Meyering  <meyering@lucent.com>
 
 	* configure.ac: Use AC_CONFIG_FILES(...) and call AC_OUTPUT with no
 	arguments.
@@ -336,7 +340,7 @@
 	This mv command should fail (likewise for cp), rather than
 	silently clobbering one of the source files.
 	  rm -rf a b c; mkdir a b c; touch a/f b/f; mv a/f b/f c
-	Reported by from Dan Jacobson.
+	Reported by Dan Jacobson.
 
 	* src/cp.c (do_copy): Call dest_info_init if necessary.
 	* src/install.c (main): Likewise.
