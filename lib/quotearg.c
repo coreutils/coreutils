@@ -63,6 +63,7 @@
 #endif
 
 #if HAVE_MBRTOWC && HAVE_WCHAR_H
+size_t mbrtowc ();
 # if !HAVE_MBSTATE_T_OBJECT
 #  define mbrtowc(pwc, s, n, ps) (mbrtowc) (pwc, s, n, 0)
 # endif
