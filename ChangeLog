@@ -1,6 +1,10 @@
-2004-11-19  Jim Meyering  <jim@meyering.net>
+2004-11-19  Alfred M. Szmidt  <ams@gnu.org>
 
-	* Version 5.3.0.
+	* src/ls.c (usage): Clarified description of --no-group (-G),
+        --human-readable (-h), --inode (-i), --size (-s), --time,
+        and --time-style.
+
+2004-11-19  Jim Meyering  <jim@meyering.net>
 
 	* src/ls.c (usage): Clarify description of --author.
 	Tweak indentation so that help2man creates better nroff.
