@@ -32,6 +32,7 @@
 #include "error.h"
 #include "obstack.h"
 #include "hash.h"
+#include "hash-pjw.h"
 #include "quote.h"
 #include "remove.h"
 
@@ -172,26 +173,6 @@ hash_compare_active_dir_ents (void const *x, void const *y)
   struct active_dir_ent const *a = x;
   struct active_dir_ent const *b = y;
   return SAME_INODE (*a, *b) ? true : false;
-}
-
-/* A hash function for null-terminated char* strings using
-   the method described in Aho, Sethi, & Ullman, p 436. */
-
-static unsigned int
-hash_pjw (const void *x, unsigned int tablesize)
-{
-  const char *s = x;
-  unsigned int h = 0;
-  unsigned int g;
-
-  while (*s != 0)
-    {
-      h = (h << 4) + *s++;
-      if ((g = h & (unsigned int) 0xf0000000) != 0)
-        h = (h ^ (g >> 24)) ^ g;
-    }
-
-  return (h % tablesize);
 }
 
 static bool

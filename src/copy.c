@@ -33,6 +33,7 @@
 #include "copy.h"
 #include "cp-hash.h"
 #include "hash.h"
+#include "hash-pjw.h"
 #include "same.h"
 #include "dirname.h"
 #include "full-write.h"
@@ -585,27 +586,6 @@ overwrite_prompt (char const *dst_path, struct stat const *dst_sb)
       fprintf (stderr, _("%s: overwrite %s? "),
 	       program_name, quote (dst_path));
     }
-}
-
-/* A hash function for null-terminated char* strings using
-   the method described in Aho, Sethi, & Ullman, p 436. */
-/* FIXME: this is copied from remove.c */
-
-static unsigned int
-hash_pjw (const void *x, unsigned int tablesize)
-{
-  const char *s = x;
-  unsigned int h = 0;
-  unsigned int g;
-
-  while (*s != 0)
-    {
-      h = (h << 4) + *s++;
-      if ((g = h & (unsigned int) 0xf0000000) != 0)
-        h = (h ^ (g >> 24)) ^ g;
-    }
-
-  return (h % tablesize);
 }
 
 /* Hash a dest_info entry.  */
