@@ -268,6 +268,7 @@ AC_CONFIG_FILES(
   tests/mv/Makefile
   tests/od/Makefile
   tests/pr/Makefile
+  tests/readlink/Makefile
   tests/rm/Makefile
   tests/rmdir/Makefile
   tests/seq/Makefile
