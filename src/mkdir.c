@@ -52,9 +52,9 @@ static int show_version;
 static struct option const longopts[] =
 {
   {"mode", required_argument, NULL, 'm'},
-  {"path", no_argument, &path_mode, 1},
   {"parents", no_argument, &path_mode, 1},
   {"help", no_argument, &show_help, 1},
+  {"verbose", no_argument, NULL, 2},
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
@@ -73,6 +73,7 @@ Create the DIRECTORY(ies), if they do not already exist.\n\
 \n\
   -p, --parents     no error if existing, make parent directories as needed\n\
   -m, --mode=MODE   set permission mode (as in chmod), not rwxrwxrwx - umask\n\
+      --verbose     print a message for each created directory\n\
       --help        display this help and exit\n\
       --version     output version information and exit\n"));
     }
@@ -85,6 +86,7 @@ main (int argc, char **argv)
   unsigned int newmode;
   unsigned int parent_mode;
   char *symbolic_mode = NULL;
+  const char *verbose_fmt_string = NULL;
   int errors = 0;
   int optc;
 
@@ -106,6 +108,9 @@ main (int argc, char **argv)
 	  break;
 	case 'm':
 	  symbolic_mode = optarg;
+	  break;
+	case 2: /* --verbose  */
+	  verbose_fmt_string = _("created directory `%s'");
 	  break;
 	default:
 	  usage (1);
@@ -144,12 +149,16 @@ main (int argc, char **argv)
       if (path_mode)
 	{
 	  errors |= make_path (argv[optind], newmode, parent_mode,
-			       -1, -1, 1, NULL);
+			       -1, -1, 1, _("created directory `%s'"));
 	}
       else if (mkdir (argv[optind], newmode))
 	{
 	  error (0, errno, _("cannot make directory `%s'"), argv[optind]);
 	  errors = 1;
+	}
+      else if (verbose_fmt_string)
+	{
+	  error (0, 0, verbose_fmt_string, argv[optind]);
 	}
     }
 
