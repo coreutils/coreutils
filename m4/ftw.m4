@@ -9,6 +9,7 @@
 AC_DEFUN([AC_FUNC_FTW],
 [
   # prerequisites
+  AC_REQUIRE([jm_FUNC_LSTAT])
   AC_REQUIRE([AC_HEADER_DIRENT])
   AC_CHECK_HEADERS(sys/param.h)
   AC_CHECK_DECLS([stpcpy])
