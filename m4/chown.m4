@@ -1,4 +1,4 @@
-#serial 5
+#serial 6
 
 dnl From Jim Meyering.
 dnl Determine whether chown accepts arguments of -1 for uid and gid.
@@ -21,7 +21,7 @@ AC_DEFUN(jm_FUNC_CHOWN,
     int
     main ()
     {
-      char *f = "conftestchown";
+      char *f = "conftest.chown";
       struct stat before, after;
 
       if (creat (f, 0600) < 0)
