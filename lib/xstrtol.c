@@ -1,5 +1,7 @@
 /* A more useful interface to strtol.
-   Copyright (C) 1995, 1996, 1998-2001 Free Software Foundation, Inc.
+
+   Copyright (C) 1995, 1996, 1998, 1999, 2000, 2001, 2003 Free
+   Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -52,21 +54,10 @@
 extern int errno;
 #endif
 
-#if HAVE_LIMITS_H
-# include <limits.h>
-#endif
-
-#ifndef CHAR_BIT
-# define CHAR_BIT 8
-#endif
+#include <limits.h>
 
 /* The extra casts work around common compiler bugs.  */
 #define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
-/* The outer cast is needed to work around a bug in Cray C 5.0.3.0.
-   It is necessary at least when t == time_t.  */
-#define TYPE_MINIMUM(t) ((t) (TYPE_SIGNED (t) \
-			      ? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) : (t) 0))
-#define TYPE_MAXIMUM(t) (~ (t) 0 - TYPE_MINIMUM (t))
 
 #if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
 # define IN_CTYPE_DOMAIN(c) 1
