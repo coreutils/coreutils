@@ -16,9 +16,13 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /* Written by David MacKenzie <djm@gnu.ai.mit.edu>.
-   --human-readable and --megabyte options added by lm@sgi.com.  */
+   --human-readable and --megabyte options added by lm@sgi.com.
+   --si and large file support added by eggert@twinsun.com.  */
 
 #include <config.h>
+#if HAVE_INTTYPES_H
+# include <inttypes.h>
+#endif
 #include <stdio.h>
 #include <sys/types.h>
 #include <getopt.h>
@@ -29,17 +33,12 @@
 #include "system.h"
 #include "save-cwd.h"
 #include "error.h"
+#include "human.h"
 
 char *dirname ();
 void strip_trailing_slashes ();
 char *xstrdup ();
 char *xgetcwd ();
-
-/* The maximum length of a human-readable string.  Be pessimistic
-   and assume `int' is 64-bits wide.  Converting 2^63 - 1 gives the
-   14-character string, 8796093022208G.  The number being converted
-   is the number of 1024-byte blocks, so we divide by 1024 * 1024.  */
-#define LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS 14
 
 /* Name this program was run with. */
 char *program_name;
@@ -55,14 +54,11 @@ static int show_all_fs;
    command line argument -- even if it's a dummy (automounter) entry.  */
 static int show_listed_fs;
 
-/* If nonzero, use variable sized printouts instead of 512-byte blocks. */
-static int human_blocks;
+/* base used for human style output */
+static int human_readable_base;
 
-/* If nonzero, use 1K blocks instead of 512-byte blocks. */
-static int kilobyte_blocks;
-
-/* If nonzero, use 1M blocks instead of 512-byte blocks. */
-static int megabyte_blocks;
+/* The units to count in.  */
+static int output_units;
 
 /* If nonzero, use the POSIX output format.  */
 static int posix_format;
@@ -119,6 +115,7 @@ static struct option const long_options[] =
   {"all", no_argument, &show_all_fs, 1},
   {"inodes", no_argument, &inode_format, 1},
   {"human-readable", no_argument, 0, 'h'},
+  {"si", no_argument, 0, 'H'},
   {"kilobytes", no_argument, 0, 'k'},
   {"megabytes", no_argument, 0, 'm'},
   {"portability", no_argument, &posix_format, 1},
@@ -145,64 +142,14 @@ print_header (void)
   if (inode_format)
     printf ("   Inodes   IUsed   IFree  %%IUsed");
   else
-    if (megabyte_blocks)
+    if (output_units == 1024 * 1024)
       printf (" MB-blocks    Used Available Capacity");
-    else if (human_blocks)
+    else if (human_readable_base)
       printf ("    Size  Used  Avail  Capacity");
     else
       printf (" %s  Used Available Capacity",
-	    kilobyte_blocks ? "1024-blocks" : " 512-blocks");
+	      output_units == 1024 ? "1024-blocks" : " 512-blocks");
   printf (" Mounted on\n");
-}
-
-/* Convert N_1K_BYTE_BLOCKS to a more readable string than %d would.
-   Most people visually process strings of 3-4 digits effectively,
-   but longer strings of digits are more prone to misinterpretation.
-   Hence, converting to an abbreviated form usually improves readability.
-   Use a suffix indicating multiples of 1024 (M) and 1024*1024 (G).
-   For example, 8500 would be converted to 8.3M, 133456345 to 127G,
-   and so on.  Numbers smaller than 1024 get the `K' suffix.  */
-
-static char *
-human_readable_1k_blocks (int n_1k_byte_blocks, char *buf, int buf_len)
-{
-  const char *suffix;
-  double amt;
-  char *p;
-
-  assert (buf_len > LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS);
-
-  p = buf;
-  amt = n_1k_byte_blocks;
-
-  if (amt >= 1024 * 1024)
-    {
-      amt /= (1024 * 1024);
-      suffix = "G";
-    }
-  else if (amt >= 1024)
-    {
-      amt /= 1024;
-      suffix = "M";
-    }
-  else
-    {
-      suffix = "K";
-    }
-
-  if (amt >= 10)
-    {
-      sprintf (p, "%4.0f%s", amt, suffix);
-    }
-  else if (amt == 0)
-    {
-      strcpy (p, "0");
-    }
-  else
-    {
-      sprintf (p, "%4.1f%s", amt, suffix);
-    }
-  return (p);
 }
 
 /* If FSTYPE is a type of filesystem that should be listed,
@@ -248,10 +195,10 @@ static void
 show_dev (const char *disk, const char *mount_point, const char *fstype)
 {
   struct fs_usage fsu;
-  long blocks_used;
-  long blocks_percent_used;
-  long inodes_used;
-  long inodes_percent_used;
+  uintmax_t blocks_used;
+  double blocks_percent_used;
+  uintmax_t inodes_used;
+  double inodes_percent_used;
   const char *stat_file;
 
   if (!selected_fstype (fstype) || excluded_fstype (fstype))
@@ -270,19 +217,6 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
       return;
     }
 
-  if (megabyte_blocks)
-    {
-      fsu.fsu_blocks /= 2*1024;
-      fsu.fsu_bfree /= 2*1024;
-      fsu.fsu_bavail /= 2*1024;
-    }
-  else if (kilobyte_blocks)
-    {
-      fsu.fsu_blocks /= 2;
-      fsu.fsu_bfree /= 2;
-      fsu.fsu_bavail /= 2;
-    }
-
   if (fsu.fsu_blocks == 0)
     {
       if (!show_all_fs && !show_listed_fs)
@@ -292,8 +226,8 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
   else
     {
       blocks_used = fsu.fsu_blocks - fsu.fsu_bfree;
-      blocks_percent_used = (long)
-	(blocks_used * 100.0 / (blocks_used + fsu.fsu_bavail) + 0.5);
+      blocks_percent_used =
+	blocks_used * 100.0 / (blocks_used + fsu.fsu_bavail);
     }
 
   if (fsu.fsu_files == 0)
@@ -303,8 +237,7 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
   else
     {
       inodes_used = fsu.fsu_files - fsu.fsu_ffree;
-      inodes_percent_used = (long)
-	(inodes_used * 100.0 / fsu.fsu_files + 0.5);
+      inodes_percent_used = inodes_used * 100.0 / fsu.fsu_files;
     }
 
   if (! disk)
@@ -320,23 +253,27 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
     printf (" %-5s ", fstype);
 
   if (inode_format)
-    printf (" %7ld %7ld %7ld %5ld%%",
-	    fsu.fsu_files, inodes_used, fsu.fsu_ffree, inodes_percent_used);
-  else if (human_blocks)
     {
-      char buf[3][LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS + 1];
-      printf (" %4s %4s  %5s  %5ld%% ",
-	      human_readable_1k_blocks (fsu.fsu_blocks, buf[0],
-				    LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS + 1),
-	      human_readable_1k_blocks (blocks_used, buf[1],
-				    LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS + 1),
-	      human_readable_1k_blocks (fsu.fsu_bavail, buf[2],
-				    LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS + 1),
-	      blocks_percent_used);
+      char buf[3][LONGEST_HUMAN_READABLE + 1];
+      printf (" %7s %7s %7s %5.0f%%",
+	      human_readable (fsu.fsu_files, buf[0], 1, 1, 0),
+	      human_readable (inodes_used, buf[1], 1, 1, 0),
+	      human_readable (fsu.fsu_ffree, buf[2], 1, 1, 0),
+	      inodes_percent_used);
     }
   else
-    printf (" %7ld %7ld  %7ld  %5ld%% ",
-	    fsu.fsu_blocks, blocks_used, fsu.fsu_bavail, blocks_percent_used);
+    {
+      int w = human_readable_base ? 5 : 7;
+      char buf[3][LONGEST_HUMAN_READABLE + 1];
+      printf (" %*s %*s  %*s  %5.0f%% ",
+	      w, human_readable (fsu.fsu_blocks, buf[0], fsu.fsu_blocksize,
+				 output_units, human_readable_base),
+	      w, human_readable (blocks_used, buf[1], fsu.fsu_blocksize,
+				 output_units, human_readable_base),
+	      w, human_readable (fsu.fsu_bavail, buf[2], fsu.fsu_blocksize,
+				 output_units, human_readable_base),
+	      blocks_percent_used);
+    }
 
   if (mount_point)
     {
@@ -559,9 +496,10 @@ or all filesystems by default.\n\
 \n\
   -a, --all             include filesystems having 0 blocks\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
+  -H, --si              likewise, but use powers of 1000 not 1024\n\
   -i, --inodes          list inode information instead of block usage\n\
-  -k, --kilobytes       use 1024-byte blocks, not 512 despite POSIXLY_CORRECT\n\
-  -m, --megabytes       use 1024K-byte blocks, not 512 despite POSIXLY_CORRECT\n\
+  -k, --kilobytes       use 1024-byte blocks\n\
+  -m, --megabytes       use 1048576-byte blocks\n\
       --no-sync         do not invoke sync before getting usage info (default)\n\
   -P, --portability     use the POSIX output format\n\
       --sync            invoke sync before getting usage info\n\
@@ -595,21 +533,30 @@ main (int argc, char **argv)
   show_listed_fs = 0;
 
   if (getenv ("POSIXLY_CORRECT"))
-    kilobyte_blocks = 0;
+    output_units = 512;
   else
     {
       char *bs;
-      kilobyte_blocks = 1;
       if ((bs = getenv ("BLOCKSIZE"))
 	  && strncmp (bs, "HUMAN", sizeof ("HUMAN") - 1) == 0)
-	human_blocks = 1;
+	{
+	  human_readable_base = 1024;
+	  output_units = 1;
+	}
+      else if (bs && strcmp (bs, "SI") == 0)
+	{
+	  human_readable_base = 1000;
+	  output_units = 1;
+	}
+      else
+	output_units = 1024;
     }
 
   print_type = 0;
   posix_format = 0;
   exit_status = 0;
 
-  while ((c = getopt_long (argc, argv, "aiF:hkmPTt:vx:", long_options, NULL))
+  while ((c = getopt_long (argc, argv, "aiF:hHkmPTt:vx:", long_options, NULL))
 	 != -1)
     {
       switch (c)
@@ -623,19 +570,20 @@ main (int argc, char **argv)
 	  inode_format = 1;
 	  break;
 	case 'h':
-	  human_blocks = 1;
-	  kilobyte_blocks = 1;
-	  megabyte_blocks = 0;
+	  human_readable_base = 1024;
+	  output_units = 1;
+	  break;
+	case 'H':
+	  human_readable_base = 1000;
+	  output_units = 1;
 	  break;
 	case 'k':
-	  human_blocks = 0;
-	  kilobyte_blocks = 1;
-	  megabyte_blocks = 0;
+	  human_readable_base = 0;
+	  output_units = 1024;
 	  break;
 	case 'm':
-	  human_blocks = 0;
-	  kilobyte_blocks = 0;
-	  megabyte_blocks = 1;
+	  human_readable_base = 0;
+	  output_units = 1024 * 1024;
 	  break;
 	case 'T':
 	  print_type = 1;
@@ -676,11 +624,11 @@ main (int argc, char **argv)
   if (show_help)
     usage (0);
 
-  if (posix_format && megabyte_blocks)
+  if (posix_format && output_units == 1024 * 1024)
     error (1, 0, _("the option for counting 1MB blocks may not be used\n\
 with the portable output format"));
 
-  if (posix_format && human_blocks)
+  if (posix_format && human_readable_base)
     error (1, 0,
 	   _("the option for printing with adaptive units may not be used\n\
 with the portable output format"));
