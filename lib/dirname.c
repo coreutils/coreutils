@@ -33,15 +33,6 @@ char *malloc ();
 # endif
 #endif
 
-#include <ctype.h>
-
-#if defined STDC_HEADERS || (!defined isascii && !defined HAVE_ISASCII)
-# define IN_CTYPE_DOMAIN(c) 1
-#else
-# define IN_CTYPE_DOMAIN(c) isascii(c)
-#endif
-#define ISALPHA(Ch) (IN_CTYPE_DOMAIN (Ch) && isalpha (Ch))
-
 /* Return the leading directories part of PATH,
    allocated with malloc.  If out of memory, return 0.
    Assumes that trailing slashes have already been
@@ -64,13 +55,6 @@ dirname (path)
     }
   else
     {
-      char *lim = path;
-
-#ifdef MSDOS
-      /* If canonicalized "d:/path", leave alone the root case "d:/".  */
-      lim = (ISALPHA (path[0]) && path[1] == ':') ? path + 2 : path;
-#endif
-
       /* Remove any trailing slashes from the result.  */
       while (slash > path && *slash == '/')
 	--slash;
