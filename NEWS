@@ -1,4 +1,5 @@
 [4.5.4]
+* ls is much more efficient on directories with valid dirent.d_type.
 * stty supports all baud rates defined in linux-2.4.19.
 * `du symlink-to-dir/' would improperly remove the trailing slash
 * `du ""' would evoke a bounds violation.
