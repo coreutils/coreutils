@@ -1,6 +1,15 @@
-2002-04-19  Jim Meyering  <meyering@lucent.com>
+2002-04-22  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.9.
+
+	* src/remove.c (rm, remove_init, remove_fini): Don't use or even
+	initialize the active_dir_map unless --recursive (-r) is specified.
+	Suggestion from Andi Kleen
+	* src/remove.h (remove_init): Adjust prototype.
+	* src/mv.c (do_move): Adjust caller of remove_init.
+	* src/rm.c (main): Likewise.
+
+2002-04-19  Jim Meyering  <meyering@lucent.com>
 
 	* tests/cp/*: Clean up.
 
