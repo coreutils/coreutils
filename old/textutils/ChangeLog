@@ -1,8 +1,11 @@
 1999-03-07  Jim Meyering  <meyering@ascend.com>
 
+	The newline test would always fail on MSDOS/Windows systems --
+	so move it to a separate file where we can test for that.
 	* tests/md5sum/basic-1: Remove newline test.
 	* tests/md5sum/newline-1: New file.
 	* tests/md5sum/Makefile.am (TESTS): Add newline-1.
+	Pointed out by Eli Zaretskii.
 
 	1999-02-13  Roland Huebner  <rh@pelikan.cologne.de>
 	* src/pr.c
