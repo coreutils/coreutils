@@ -1,3 +1,7 @@
+2004-02-25  Paul Eggert  <eggert@twinsun.com>
+
+	* human.c (humblock): Support BLOCKSIZE as well as BLOCK_SIZE.
+
 2004-03-23  Paul Eggert  <eggert@twinsun.com>
 
 	* readtokens0.c (readtokens0): Return true on success rather
