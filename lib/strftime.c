@@ -100,7 +100,7 @@ extern char *tzname[];
 #endif
 
 #ifndef __P
-# if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
+# if defined __GNUC__ || (defined __STDC__ && __STDC__)
 #  define __P(args) args
 # else
 #  define __P(args) ()
