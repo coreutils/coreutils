@@ -209,7 +209,7 @@ push_dir (Dirstack_state *ds, const char *dir_name)
 static inline char *
 top_dir (Dirstack_state const *ds)
 {
-  int n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
+  size_t n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
   size_t *length = obstack_base (&ds->len_stack);
   size_t top_len = length[n_lengths - 1];
   char const *p = obstack_next_free (&ds->dir_stack) - top_len;
@@ -222,7 +222,7 @@ top_dir (Dirstack_state const *ds)
 static inline void
 pop_dir (Dirstack_state *ds)
 {
-  int n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
+  size_t n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
   size_t *length = obstack_base (&ds->len_stack);
   size_t top_len;
 
@@ -241,13 +241,13 @@ pop_dir (Dirstack_state *ds)
 
 /* Copy the SRC_LEN bytes of data beginning at SRC into the DST_LEN-byte
    buffer, DST, so that the last source byte is at the end of the destination
-   buffer.  If SRC_LEN is longer than DST_LEN, then set *TRUNCATED to non-zero.
+   buffer.  If SRC_LEN is longer than DST_LEN, then set *TRUNCATED.
    Set *RESULT to point to the beginning of (the portion of) the source data
    in DST.  Return the number of bytes remaining in the destination buffer.  */
 
 static size_t
 right_justify (char *dst, size_t dst_len, const char *src, size_t src_len,
-	       char **result, int *truncated)
+	       char **result, bool *truncated)
 {
   const char *sp;
   char *dp;
@@ -256,14 +256,14 @@ right_justify (char *dst, size_t dst_len, const char *src, size_t src_len,
     {
       sp = src;
       dp = dst + (dst_len - src_len);
-      *truncated = 0;
+      *truncated = false;
     }
   else
     {
       sp = src + (src_len - dst_len);
       dp = dst;
       src_len = dst_len;
-      *truncated = 1;
+      *truncated = true;
     }
 
   *result = memcpy (dp, sp, src_len);
@@ -282,7 +282,7 @@ full_filename_ (Dirstack_state const *ds, const char *filename)
   static char *buf = NULL;
   static size_t n_allocated = 0;
 
-  int dir_len = obstack_object_size (&ds->dir_stack);
+  size_t dir_len = obstack_object_size (&ds->dir_stack);
   char *dir_name = obstack_base (&ds->dir_stack);
   size_t n_bytes_needed;
   size_t filename_len;
@@ -305,7 +305,7 @@ full_filename_ (Dirstack_state const *ds, const char *filename)
 #define SBUF_SIZE 512
 #define ELLIPSES_PREFIX "[...]"
 	  static char static_buf[SBUF_SIZE];
-	  int truncated;
+	  bool truncated;
 	  size_t len;
 	  char *p;
 
@@ -372,8 +372,8 @@ AD_stack_pop (Dirstack_state *ds)
    dev/ino numbers for `.' match the saved ones.
    Set *PREV_DIR to the name (in malloc'd storage) of the
    directory (usually now empty) from which we're coming.
-   Return nonzero upon failure of restore_cwd.  Otherwise, return 0. */
-static int
+   Return true if successful.  */
+static bool
 AD_pop_and_chdir (Dirstack_state *ds, char **prev_dir)
 {
   enum RM_status old_status = AD_stack_top(ds)->status;
@@ -417,11 +417,11 @@ AD_pop_and_chdir (Dirstack_state *ds, char **prev_dir)
       if (restore_cwd (&top->u.saved_cwd) != 0)
 	{
 	  /* failed to return to initial working directory */
-	  return 1;
+	  return false;
 	}
     }
 
-  return 0;
+  return true;
 }
 
 /* Initialize *HT if it is NULL.
@@ -510,7 +510,7 @@ AD_push (Dirstack_state *ds, char const *dir,
   top->unremovable = NULL;
 }
 
-static int
+static bool
 AD_is_removable (Dirstack_state const *ds, char const *file)
 {
   struct AD_ent *top = AD_stack_top (ds);
@@ -573,14 +573,14 @@ prompt (Dirstack_state const *ds, char const *filename,
 	struct rm_options const *x, enum Prompt_action mode,
 	Ternary *is_dir, Ternary *is_empty)
 {
-  int write_protected = 0;
+  bool write_protected = false;
   struct stat *sbuf = NULL;
   struct stat buf;
 
   *is_empty = T_UNKNOWN;
   *is_dir = T_UNKNOWN;
 
-  if ((!x->ignore_missing_files && (x->interactive || x->stdin_tty)
+  if (((!x->ignore_missing_files & (x->interactive | x->stdin_tty))
        && (write_protected = write_protected_non_symlink (filename,
 							  &sbuf, &buf)))
       || x->interactive)
@@ -609,7 +609,7 @@ prompt (Dirstack_state const *ds, char const *filename,
 	{
 	  if ( ! x->interactive)
 	    return RM_OK;
-	  write_protected = 0;
+	  write_protected = false;
 	}
 
       /* Issue the prompt.  */
@@ -1101,7 +1101,7 @@ remove_dir (Dirstack_state *ds, char const *dir, struct cwd_state **cwd_state,
 	   returned from, after nominally removing all of its contents.  */
 	char *empty_dir;
 
-	if (AD_pop_and_chdir (ds, &empty_dir) != 0)
+	if (! AD_pop_and_chdir (ds, &empty_dir))
 	  (*cwd_state)->saved_errno = errno;
 
 	/* Note: the above may have failed due to restore_cwd failure.
