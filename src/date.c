@@ -212,12 +212,7 @@ batch_convert (const char *input_filename, const char *format)
   int line_length;
   size_t buflen;
   time_t when;
-  char *initial_TZ;
-
-#ifdef lint
-  /* Suppress `may be used before initialized' warning.  */
-  initial_TZ = NULL;
-#endif
+  char *initial_TZ IF_LINT (= NULL);
 
   if (strcmp (input_filename, "-") == 0)
     {
