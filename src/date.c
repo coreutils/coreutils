@@ -1,5 +1,6 @@
 /* date - print or set the system date and time
-   Copyright (C) 89, 90, 91, 92, 93, 94, 95, 1996 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 92, 93, 94, 95, 96, 1997
+   Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,12 +26,7 @@
 #include "system.h"
 #include "getline.h"
 #include "error.h"
-
-#ifdef TM_IN_SYS_TIME
-#include <sys/time.h>
-#else
-#include <time.h>
-#endif
+#include "getdate.h"
 
 #ifndef STDC_HEADERS
 size_t strftime ();
@@ -41,7 +37,6 @@ int putenv ();
 int stime ();
 
 char *xrealloc ();
-time_t get_date ();
 time_t posixtime ();
 
 static void show_date __P ((const char *format, time_t when));
