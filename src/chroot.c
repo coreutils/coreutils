@@ -1,5 +1,5 @@
 /* chroot -- run command or shell with special root directory
-   Copyright (C) 1995 Free Software Foundation, Inc.
+   Copyright (C) 1995, 96 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,18 +31,22 @@ static void
 usage (int status)
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION] NEWROOT [COMMAND...]\n", program_name);
-      printf ("\
+      printf (_("\
+Usage: %s [OPTION] NEWROOT [COMMAND...]\n
+   or:  %s OPTION\n\
+", program_name, program_name);
+      printf (_"\
+Run COMMAND with root directory set to NEWROOT.\n\
 \n\
       --help       display this help and exit\n\
       --version    output version information and exit\n\
 \n\
 If no command is given, run ``${SHELL} -i'' (default: /bin/sh).\n\
-");
+"));
     }
   exit (status);
 }
