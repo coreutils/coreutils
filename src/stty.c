@@ -1,5 +1,5 @@
 /* stty -- change and print terminal line settings
-   Copyright (C) 1990-2003 Free Software Foundation, Inc.
+   Copyright (C) 1990-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -481,7 +481,7 @@ wrapf (const char *message,...)
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -776,7 +776,7 @@ main (int argc, char **argv)
 
 	case 'F':
 	  if (file_name)
-	    error (2, 0, _("only one device may be specified"));
+	    error (EXIT_FAILURE, 0, _("only one device may be specified"));
 	  file_name = optarg;
 	  break;
 
@@ -870,13 +870,14 @@ main (int argc, char **argv)
 
   /* Specifying both -a and -g gets an error.  */
   if (verbose_output && recoverable_output)
-    error (2, 0,
+    error (EXIT_FAILURE, 0,
 	   _("the options for verbose and stty-readable output styles are\n\
 mutually exclusive"));
 
   /* Specifying any other arguments with -a or -g gets an error.  */
   if (!noargs && (verbose_output || recoverable_output))
-    error (2, 0, _("when specifying an output style, modes may not be set"));
+    error (EXIT_FAILURE, 0,
+	   _("when specifying an output style, modes may not be set"));
 
   /* FIXME: it'd be better not to open the file until we've verified
      that all arguments are valid.  Otherwise, we could end up doing
