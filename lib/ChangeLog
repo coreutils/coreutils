@@ -1,11 +1,17 @@
+2001-08-12  Paul Eggert  <eggert@sic.twinsun.com>
+
+	* lib/addext.c (<errno.h>): Include.
+	(errno): Declare if not defined.
+	(addext): Work correctly when pathconf returns -1 and leaves
+	errno alone because there is no limit.  Also, work even if
+	pathconf returns a value greater than SIZE_MAX.
+
 2001-08-12  Jim Meyering  <meyering@lucent.com>
 
 	* xgetcwd.c (xgetcwd) [defined __GLIBC__ && __GLIBC__ >= 2]:
 	Simply `return getcwd (NULL, 0);'.
 	[! (defined __GLIBC__ && __GLIBC__ >= 2)]:
 	Use 1300 as initial value for length, not PATH_MAX.
-
-2001-08-12  Jim Meyering  <meyering@lucent.com>
 
 	* pathmax.h: Clean up cpp syntax.
 
