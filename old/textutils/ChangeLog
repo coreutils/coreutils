@@ -1,3 +1,8 @@
+Sat Jun 29 18:59:07 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (PACKAGE_VERSION): Add `GNU ' prefix so we see
+	it in the output of --version.  Reported by RMS.
+
 Wed Jun 26 21:35:10 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/Makefile.am (LDADD): Remove sort-specific hack to link
@@ -1085,7 +1090,6 @@ Tue Jul 11 21:56:02 1995  Jim Meyering  (meyering@comco.com)
 
 	* md5sum.c Add #else block after #ifdef VMS.
 	(main): Rename local variable.
-	Add FIXME: allow newlines in filenames.
 	Detect and report failed fclose calls on stdout and checkfile_stream.
 
 	* tr.c (unqote): Comment out unreachable break stmts.
