@@ -22,6 +22,9 @@ use strict;
 my $mkdir = {PRE => sub {mkdir 'd',0755 or die "d: $!\n"}};
 my $rmdir = {POST => sub {rmdir 'd' or die "d: $!\n"}};
 
+my $slink_d = {PRE => sub {symlink '/', 'd' or die "d: $!\n"}};
+my $unlink_d = {POST => sub {unlink 'd' or die "d: $!\n"}};
+
 my $q_bell = {IN => {"q\a" => ''}};
 my @Tests =
     (
@@ -51,9 +54,10 @@ my @Tests =
       $mkdir, $rmdir],
 
      # FIXME: change the trailing `/' to be a `@'.
-     ['slink-dir', '-Fd d', {OUT => "d/\n"},
-	 {PRE => sub {symlink '/', 'd' or die "d: $!\n"}},
-	 {POST => sub {unlink 'd' or die "d: $!\n"}} ],
+     ['slink-dir', '-Fd d', {OUT => "d/\n"}, $slink_d, $unlink_d],
+
+     # FIXME: uncomment the following once ls has been fixed
+     # ['slink-dir2', '-F d', {OUT => "d\@/\n"}, $slink_d, $unlink_d],
     );
 
 my $save_temps = $ENV{SAVE_TEMPS};
