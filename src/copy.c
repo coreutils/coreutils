@@ -507,6 +507,7 @@ copy_internal (const char *src_path, const char *dst_path,
 		 ? _("backing up `%s' would destroy source;  `%s' not moved")
 		 : _("backing up `%s' would destroy source;  `%s' not copied"));
 		  error (0, 0, fmt, dst_path, src_path);
+		  free (tmp_backup);
 		  return 1;
 		}
 
