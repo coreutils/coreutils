@@ -1,3 +1,7 @@
+Sat Sep  7 12:25:42 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/system.h: Add comments justifying IS* versions of ctype.h macros.
+
 Thu Sep  5 18:12:44 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/chmod.c (main): Don't set verbose flag for --changes.

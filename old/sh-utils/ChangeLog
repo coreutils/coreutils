@@ -1,3 +1,10 @@
+Sat Sep  7 12:41:39 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/system.h: Add comments justifying IS* versions of ctype.h macros.
+
+	* lib/getdate.y: Define and use upper case variants of ctype.h
+	is* macros.  From Bruno Haible.
+
 Thu Sep  5 22:12:20 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/strftime.c: New version from glibc.
