@@ -1,6 +1,12 @@
-1998-05-16  Jim Meyering  <meyering@ascend.com>
+1998-05-25  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.22f.
+
+	* configure.in (_GNU_SOURCE): AC_DEFINE it here.
+	* acconfig.h (_GNU_SOURCE): Remove definition from @TOP@ section.
+	[!_GNU_SOURCE]: Add #undef instead.
+
+1998-05-16  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in (jm_MACROS): New wrapper macro.
 	Remove uses of most jm_* macros.
