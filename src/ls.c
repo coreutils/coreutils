@@ -132,7 +132,7 @@ int wcwidth ();
 		      : (ls_mode == LS_MULTI_COL \
 			 ? "dir" : "vdir"))
 
-#define AUTHORS "Richard Stallman and David MacKenzie"
+#define AUTHORS N_ ("Richard Stallman and David MacKenzie")
 
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free

@@ -42,7 +42,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "dd"
 
-#define AUTHORS "Paul Rubin, David MacKenzie, and Stuart Kemp"
+#define AUTHORS N_ ("Paul Rubin, David MacKenzie, and Stuart Kemp")
 
 #ifndef SIGINFO
 # define SIGINFO SIGUSR1
