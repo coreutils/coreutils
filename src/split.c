@@ -26,9 +26,23 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+
+#if HAVE_LIMITS_H
+# include <limits.h>
+#endif
+
+#ifndef UINT_MAX
+# define UINT_MAX ((unsigned int) ~(unsigned int) 0)
+#endif
+
+#ifndef INT_MAX
+# define INT_MAX ((int) (UINT_MAX >> 1))
+#endif
+
 #include "system.h"
 #include "version.h"
 #include "error.h"
+#include "xstrtol.h"
 
 char *xmalloc ();
 int full_write ();
@@ -102,56 +116,6 @@ SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
 "));
     }
   exit (status);
-}
-
-/* Return nonzero if the string STR is composed entirely of decimal digits.  */
-
-static int
-isdigits (const char *str)
-{
-  do
-    {
-      if (!ISDIGIT (*str))
-	return 0;
-      str++;
-    }
-  while (*str);
-  return 1;
-}
-
-/* Put the value of the number in STR into *VAL.
-   STR can specify a positive integer, optionally ending in `k'
-   to mean kilo or `m' to mean mega.
-   Return 0 if STR is valid, -1 if not. */
-
-static int
-convint (const char *str, int *val)
-{
-  int multiplier = 1;
-  int arglen = strlen (str);
-
-  if (arglen > 1)
-    {
-      switch (str[arglen - 1])
-	{
-	case 'b':
-	  multiplier = 512;
-	  str[arglen - 1] = '\0';
-	  break;
-	case 'k':
-	  multiplier = 1024;
-	  str[arglen - 1] = '\0';
-	  break;
-	case 'm':
-	  multiplier = 1048576;
-	  str[arglen - 1] = '\0';
-	  break;
-	}
-    }
-  if (!isdigits (str))
-    return -1;
-  *val = atoi (str) * multiplier;
-  return 0;
 }
 
 /* Compute the next sequential output file name suffix and store it
@@ -407,6 +371,7 @@ main (int argc, char **argv)
     {
       /* This is the argv-index of the option we will read next.  */
       int this_optind = optind ? optind : 1;
+      long int tmp_long;
 
       c = getopt_long (argc, argv, "0123456789b:l:C:", longopts, (int *) 0);
       if (c == EOF)
@@ -421,28 +386,30 @@ main (int argc, char **argv)
 	  if (split_type != type_undef)
 	    usage (2, _("cannot split in more than one way"));
 	  split_type = type_bytes;
-	  /* FIXME: use xstrtoul */
-	  if (convint (optarg, &accum) == -1)
+	  if (xstrtol (optarg, NULL, 10, &tmp_long, "bkm") != LONGINT_OK
+	      || tmp_long < 0 || tmp_long > INT_MAX)
 	    usage (2, _("invalid number of bytes"));
+	  accum = (int) tmp_long;
 	  break;
 
 	case 'l':
 	  if (split_type != type_undef)
 	    usage (2, _("cannot split in more than one way"));
 	  split_type = type_lines;
-	  if (!isdigits (optarg))
+	  if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
+	      || tmp_long < 0 || tmp_long > INT_MAX)
 	    usage (2, _("invalid number of lines"));
-	  /* FIXME: use xstrtoul */
-	  accum = atoi (optarg);
+	  accum = (int) tmp_long;
 	  break;
 
 	case 'C':
 	  if (split_type != type_undef)
 	    usage (2, _("cannot split in more than one way"));
 	  split_type = type_byteslines;
-	  /* FIXME: use xstrtoul */
-	  if (convint (optarg, &accum) == -1)
+	  if (xstrtol (optarg, NULL, 10, &tmp_long, "bkm") != LONGINT_OK
+	      || tmp_long < 0 ||  tmp_long > INT_MAX)
 	    usage (2, _("invalid number of bytes"));
+	  accum = (int) tmp_long;
 	  break;
 
 	case '0':
