@@ -2,6 +2,10 @@
 
 	* Version 5.1.2.
 
+2004-01-20  Diego Biurrun  <diego@biurrun.de>
+
+        * src/dircolors.hin: Add .mov to the list of media files.
+
 2004-01-19  Paul Eggert  <eggert@twinsun.com>
 
 	* tests/touch/relative: Use TZ=UTC0, not TZ=utc (which isn't
