@@ -3,6 +3,7 @@ Changes in release 1.17
 * `basename /' now prints `/', per the single unix spec
 * `who --lookup' no longer erroneously reports `localhost' for IP addresses
   for which it could not do a reverse lookup.
+* `id user' wouldn't report a group id in some situations.  Now it always does.
  [1.16f]
 * chroot now calls chdir ("/") after chroot.
 * `date -s' now exits with nonzero status upon failure
