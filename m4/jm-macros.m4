@@ -35,6 +35,8 @@ AC_DEFUN(jm_MACROS,
   AC_REPLACE_FUNCS(strcasecmp strncasecmp)
 
   # By default, argmatch should fail calling usage (1).
-  AC_DEFINE(ARGMATCH_EXIT_FAILURE, [usage (1)],
+  AC_DEFINE(ARGMATCH_DIE, [usage (1)],
 	    [Define to the function xargmatch calls on failures.])
+  AC_DEFINE(ARGMATCH_DIE_DECL, [extern void usage ()],
+	    [Define to the declaration of the xargmatch failure function.])
 ])
