@@ -38,15 +38,15 @@ TERM Eterm
 # Background color codes:
 # 40=black 41=red 42=green 43=yellow 44=blue 45=magenta 46=cyan 47=white
 NORMAL 00	# global default, although everything should be something.
-FILE 00 	# normal file
-DIR 01;34 	# directory
-LINK 01;36 	# symbolic link.  (If you set this to 'target' instead of a
-           	# numerical value, the color is as for the file pointed to.)
+FILE 00		# normal file
+DIR 01;34	# directory
+LINK 01;36	# symbolic link.  (If you set this to 'target' instead of a
+		# numerical value, the color is as for the file pointed to.)
 FIFO 40;33	# pipe
 SOCK 01;35	# socket
 DOOR 01;35	# door
 BLK 40;33;01	# block device driver
-CHR 40;33;01 	# character device driver
+CHR 40;33;01	# character device driver
 ORPHAN 40;31;01 # symlink to nonexistent file
 
 # This is for files with execute permission:
