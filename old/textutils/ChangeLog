@@ -2,7 +2,16 @@
 
 	* Version 2.0.21.
 
+	* tests/misc/head-pos: New file/test for the change of 2002-02-08.
+
 	* src/tr.c (unquote): Make comment a little clearer.
+
+2002-02-08  Paul Eggert  <eggert@twinsun.com>
+
+	* src/head.c (head_lines): If we have read too much data, try
+	to seek back to the position we would have gotten to had we
+	been reading one byte at a time.  POSIX currently doesn't
+	require this, but it's easy to do and some software relies on it.
 
 2002-02-02  Jim Meyering  <meyering@lucent.com>
 
