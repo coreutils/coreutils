@@ -816,7 +816,7 @@ main (int argc, char **argv)
 	  {
 	    long int tmp_long;
 	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
-		|| tmp_long <= 0 || tmp_long > INT_MAX)
+		|| tmp_long < 0 || tmp_long > INT_MAX)
 	      error (EXIT_FAILURE, 0,
 		     _("`-o MARGIN' invalid line offset: `%s'"), optarg);
 	    chars_per_margin = (int) tmp_long;
