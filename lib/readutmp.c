@@ -31,6 +31,7 @@
 #include "readutmp.h"
 
 char *xmalloc ();
+char *realloc ();
 
 /* Copy UT->ut_name into storage obtained from malloc.  Then remove any
    trailing spaces from the copy, NUL terminate it, and return the copy.  */
@@ -51,71 +52,39 @@ extract_trimmed_name (const STRUCT_UTMP *ut)
   return trimmed_name;
 }
 
-/* Read the utmp file FILENAME into *UTMP_BUF, set *N_ENTRIES to the
-   number of entries read, and return zero.  If there is any error,
+/* Read the utmp entries corresponding to file FILENAME into freshly-
+   malloc'd storage, set *UTMP_BUF to that pointer, set *N_ENTRIES to
+   the number of entries, and return zero.  If there is any error,
    return non-zero and don't modify the parameters.  */
 
-/* FIXME: use `#if HAVE_UTMPNAME' instead...  */
-#if 0
+#if HAVE_UTMPNAME
 
 int
 read_utmp (const char *filename, int *n_entries, STRUCT_UTMP **utmp_buf)
 {
-  int count_utmp = 0;
   int n_read;
   STRUCT_UTMP *u;
-  STRUCT_UTMP *uptr;
-  STRUCT_UTMP *utmp_contents;
+  STRUCT_UTMP *utmp = NULL;
 
   if (utmpname (filename))
-    {
-      return 1;
-    }
+    return 1;
 
-  /* FIXME: going through the list twice is wasteful. */
-
-  /* count the entries in utmp */
-  setutent ();
-  while ((u = getutent ()) != NULL)
-    ++count_utmp;
-
-  if (count_utmp == 0)
-    return 0;
-
-  utmp_contents = (STRUCT_UTMP *) xmalloc (count_utmp * sizeof (STRUCT_UTMP));
-
-  /* read the entries in utmp */
-
-  /* FIXME: can this fail? */
   setutent ();
 
   n_read = 0;
-  uptr = utmp_contents;
   while ((u = getutent ()) != NULL)
     {
       ++n_read;
-      if (n_read > count_utmp)
-	{
-	  STRUCT_UTMP *old_utmp_contents = utmp_contents;
-	  ++count_utmp;
-	  utmp_contents = (STRUCT_UTMP *) xrealloc (utmp_contents,
-						    (count_utmp
-						     * sizeof (STRUCT_UTMP)));
-	  uptr = utmp_contents + (uptr - old_utmp_contents);
-	}
-      *uptr = *u;
-      ++uptr;
+      utmp = (STRUCT_UTMP *) realloc (utmp, n_read * sizeof (STRUCT_UTMP));
+      if (utmp == NULL)
+	return 1;
+      utmp[n_read - 1] = *u;
     }
 
-  if (n_read != count_utmp)
-    utmp_contents = (STRUCT_UTMP *) xrealloc (utmp_contents,
-					      n_read * sizeof (STRUCT_UTMP));
-
-  /* FIXME: can this fail? */
   endutent ();
 
   *n_entries = n_read;
-  *utmp_buf = utmp_contents;
+  *utmp_buf = utmp;
 
   return 0;
 }
