@@ -1,5 +1,5 @@
 /* touch -- change modification and access times of files
-   Copyright (C) 87, 1989-1991, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 87, 1989-1991, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -38,10 +38,6 @@
 
 #define AUTHORS \
 "Paul Rubin", "Arnold Robbins, Jim Kingdon, David MacKenzie", "Randy Smith"
-
-#ifndef STDC_HEADERS
-time_t time ();
-#endif
 
 /* Bitmasks for `change_times'. */
 #define CH_ATIME 1
@@ -396,8 +392,7 @@ main (int argc, char **argv)
 	amtime_now = true;
       else
 	{
-	  if (gettime (&newtime[0]) != 0)
-	    error (EXIT_FAILURE, errno, _("cannot get time of day"));
+	  gettime (&newtime[0]);
 	  newtime[1] = newtime[0];
 	}
     }
