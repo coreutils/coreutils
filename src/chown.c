@@ -1,5 +1,5 @@
 /* chown -- change user and group ownership of files
-   Copyright (C) 89, 90, 91, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -295,8 +295,8 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION]... OWNER[.[GROUP]] FILE...\n\
-  or:  %s [OPTION]... .GROUP FILE...\n\
+Usage: %s [OPTION]... OWNER[:[GROUP]] FILE...\n\
+  or:  %s [OPTION]... :GROUP FILE...\n\
   or:  %s [OPTION]... --reference=RFILE FILE...\n\
 "),
 	      program_name, program_name, program_name);
@@ -311,14 +311,14 @@ Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
                          ownership of a symlink)\n\
   -f, --silent, --quiet  suppress most error messages\n\
       --reference=RFILE  use RFILE's owner and group rather than\n\
-                         the specified OWNER.GROUP values\n\
+                         the specified OWNER:GROUP values\n\
   -R, --recursive        operate on files and directories recursively\n\
   -v, --verbose          output a diagnostic for every file processed\n\
       --help             display this help and exit\n\
       --version          output version information and exit\n\
 \n\
 Owner is unchanged if missing.  Group is unchanged if missing, but changed\n\
-to login group if implied by a period.  A colon may replace the period.\n\
+to login group if implied by a `:'.\n\
 "));
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
       close_stdout ();
