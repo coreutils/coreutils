@@ -155,7 +155,7 @@ static const char *output_address_fmt_string;
 
 /* The number of octal digits required to represent the largest off_t value.  */
 #define MAX_ADDRESS_LENGTH \
-  ((sizeof (off_t) * BITSPERBYTE + BITSPERBYTE - 1) / 3)
+  ((sizeof (off_t) * CHAR_BIT + CHAR_BIT - 1) / 3)
 
 /* Space for a normal address, a space, a pseudo address, parentheses
    around the pseudo address, and a trailing zero byte. */
