@@ -415,7 +415,7 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 		  && (result = add_object (data, &st)) == 0))
 	    {
 	      /* When processing a directory as part of a depth-first traversal,
-		 invoke the users callback function with type=FTW_DPRE
+		 invoke the user's callback function with type=FTW_DPRE
 		 just before processing any entry in that directory.
 		 And if the callback sets ftw.skip, then don't process
 		 any entries of the directory.  */
