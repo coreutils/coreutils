@@ -120,11 +120,18 @@ sub spec_to_list ($$$)
       ++$i;
     }
 
+  my $n_fail = 0;
   foreach $i (@explicit_file, @maint_gen_file)
     {
-      die "$0: $i: generated test file name would be longer than 14 characters"
-	if (length ($i) > 14);
+      my $max_len = 14;
+      if (length ($i) > $max_len)
+	{
+	  warn "$0: $i: generated test file name would be longer than"
+	    . " $max_len characters\n";
+	  ++$n_fail;
+	}
     }
+  exit (1) if $n_fail;
 
   my %h = (
     EXPLICIT => \@explicit_file,
