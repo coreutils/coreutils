@@ -45,6 +45,7 @@ void free ();
 #include <errno.h>
 
 #include "path-concat.h"
+#include "stat-macros.h"
 #include "xalloc.h"
 #include "xgetcwd.h"
 
@@ -258,7 +259,6 @@ canonicalize_filename_mode (const char *name, canonicalize_mode_t can_mode)
 	      st.st_mode = 0;
 	    }
 
-# ifdef S_ISLNK
 	  if (S_ISLNK (st.st_mode)) do
 	    {
 	      char *buf;
@@ -313,11 +313,12 @@ canonicalize_filename_mode (const char *name, canonicalize_mode_t can_mode)
 	      free (buf);
 	    } while (0);
 	  else
-# endif /* S_ISLNK */
-	  if (!S_ISDIR (st.st_mode) && *end && (can_mode != CAN_MISSING))
 	    {
-	      errno = ENOTDIR;
-	      goto error;
+	      if (!S_ISDIR (st.st_mode) && *end && (can_mode != CAN_MISSING))
+		{
+		  errno = ENOTDIR;
+		  goto error;
+		}
 	    }
 	}
     }
