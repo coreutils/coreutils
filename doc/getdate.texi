@@ -371,8 +371,8 @@ the day that @var{day} by itself would represent.
 A comma following a day of the week item is ignored.
 
 
-@node Relative item in date strings
-@section Relative item in date strings
+@node Relative items in date strings
+@section Relative items in date strings
 
 @cindex relative items in date strings
 @cindex displacement of dates
@@ -443,7 +443,7 @@ The precise intepretation of a pure decimal number depends
 the context in the date string.
 
 If the decimal number is of the form @var{yyyy}@var{mm}@var{dd} and no
-other calendar date item (@pxref{Calendar date item}) appears before it
+other calendar date item (@pxref{Calendar date items}) appears before it
 in the date string, then @var{yyyy} is read as the year, @var{mm} as the
 month number and @var{dd} as the day of the month, for the specified
 calendar date.
