@@ -1,8 +1,14 @@
-# Makefile.in generated automatically by automake 1.2 from Makefile.am
+# Makefile.in generated automatically by automake 1.2a from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
-# gives unlimited permission to copy, distribute and modify it.
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
 
 
 SHELL = /bin/sh
@@ -222,17 +228,22 @@ dist-info: $(INFO_DEPS)
 
 mostlyclean-aminfo:
 	rm -f fileutils.aux fileutils.cp fileutils.cps fileutils.dvi \
-	  fileutils.fn fileutils.fns fileutils.ky fileutils.log \
-	  fileutils.pg fileutils.toc fileutils.tp fileutils.tps \
-	  fileutils.vr fileutils.vrs fileutils.op fileutils.tr \
-	  fileutils.cv
+	  fileutils.fn fileutils.fns fileutils.ky fileutils.kys \
+	  fileutils.ps fileutils.log fileutils.pg fileutils.toc \
+	  fileutils.tp fileutils.tps fileutils.vr fileutils.vrs \
+	  fileutils.op fileutils.tr fileutils.cv fileutils.cn
 
 clean-aminfo:
 
 distclean-aminfo:
 
 maintainer-clean-aminfo:
-	for i in $(INFO_DEPS); do rm -f `eval echo $$i*`; done
+	for i in $(INFO_DEPS); do \
+	  rm -f $$i; \
+	  if test "`echo $$i-[0-9]*`" != "$$i-[0-9]*"; then \
+	    rm -f $$i-[0-9]*; \
+	  fi; \
+	done
 tags: TAGS
 TAGS:
 
