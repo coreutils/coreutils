@@ -145,7 +145,7 @@ sub test_vector
 
   $Test::env{'date2sec-0'} = ['TZ=UTC+2'];
 
-  $Test::env{'rfc822-1'} = ['LC_ALL=de_DE TZ=UTC'];
+  $Test::env{'rfc822-1'} = ['LC_ALL=de_DE TZ=UTC0'];
 
   return @tv;
 }
