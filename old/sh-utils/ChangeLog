@@ -1,5 +1,9 @@
 Tue Dec 10 06:36:57 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in: Bump version to 1.12t.
+
+	* Regenerate all Makefile.in using a patched version of automake-1.1l.
+
 	* acconfig.h (strftime): Add #undef.
 	From Karl Heuer.
 
