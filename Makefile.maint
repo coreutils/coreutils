@@ -130,6 +130,7 @@ makefile_path_separator_check:
 	@grep 'PATH=.*:' `find $(srcdir) -name Makefile.am` \
 	  && { echo $(msg) 1>&2; exit 1; } || :
 
+# Check that `make alpha' will not fail at the end of the process.
 writable-files:
 	if test -d $(release_archive_dir); then :; else			\
 	  mkdir $(release_archive_dir);					\
@@ -277,6 +278,7 @@ announcement: NEWS ChangeLog $(rel-files) $(signatures)
 
 WGET = wget
 ftp-gnu = ftp://ftp.gnu.org/gnu
+www-gnu = http://www.gnu.org
 
 # Use mv, if you don't have/want move-if-change.
 move_if_change ?= move-if-change
@@ -331,8 +333,8 @@ ansi2knr.c-url_prefix = ftp://ftp.cs.wisc.edu/ghost/
 
 texinfo.tex-url_prefix = $(ftp-gnu)/texinfo/
 
-standards.texi-url_prefix = $(ftp-gnu)/GNUinfo/
-make-stds.texi-url_prefix = $(ftp-gnu)/GNUinfo/
+standards.texi-url_prefix = $(www-gnu)/prep/
+make-stds.texi-url_prefix = $(standards.texi-url_prefix)
 
 target = $(patsubst get-%, %, $@)
 url = $($(notdir $(target))-url_prefix)$(notdir $(target))
