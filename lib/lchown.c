@@ -1,5 +1,5 @@
 /* Provide a stub lchown function for systems that lack it.
-   Copyright (C) 1998, 1999, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2002, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,11 +44,16 @@ extern int errno;
 int chown ();
 
 /* Work just like chown, except when FILE is a symbolic link.
-   In that case, set errno to ENOSYS and return -1.  */
+   In that case, set errno to ENOSYS and return -1.
+   But if autoconf tests determined that chown modifies
+   symlinks, then just call chown.  */
 
 int
 lchown (const char *file, uid_t uid, gid_t gid)
 {
+#if CHOWN_MODIFIES_SYMLINK
+  return chown (file, uid, gid);
+#else
   struct stat stats;
 
   if (lstat (file, &stats) == 0 && S_ISLNK (stats.st_mode))
@@ -58,4 +63,5 @@ lchown (const char *file, uid_t uid, gid_t gid)
     }
 
   return chown (file, uid, gid);
+#endif
 }
