@@ -98,7 +98,8 @@ EXTRA_DIST = chown.c getgroups.c getline.c lstat.c malloc.c mktime.c \
 INCLUDES = -I.. -I$(srcdir) -I../intl
 
 libfu_a_SOURCES = getdate.y posixtm.y getopt.c getopt1.c \
-addext.c argmatch.c backupfile.c basename.c dirname.c exclude.c filemode.c \
+addext.c argmatch.c backupfile.c basename.c \
+closeout.c dirname.c exclude.c filemode.c \
 full-write.c human.c idcache.c \
 isdir.c long-options.c makepath.c modechange.c hash.c path-concat.c \
 safe-read.c save-cwd.c savedir.c stripslash.c userspec.c xgetcwd.c \
@@ -107,7 +108,8 @@ xmalloc.c xstrdup.c xstrtol.c xstrtoul.c yesno.c
 libfu_a_LIBADD = @LIBOBJS@ @ALLOCA@
 libfu_a_DEPENDENCIES = $(libfu_a_LIBADD)
 
-noinst_HEADERS = argmatch.h backupfile.h error.h exclude.h fnmatch.h fsusage.h \
+noinst_HEADERS = argmatch.h backupfile.h closeout.h \
+error.h exclude.h fnmatch.h fsusage.h \
 getdate.h getline.h getopt.h group-member.h human.h long-options.h \
 makepath.h modechange.h mountlist.h hash.h path-concat.h pathmax.h \
 save-cwd.h savedir.h strverscmp.h xalloc.h xstrtol.h xstrtoul.h
@@ -125,11 +127,12 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 ANSI2KNR = ../src/ansi2knr
 libfu_a_OBJECTS =  getdate$U.o posixtm$U.o getopt$U.o getopt1$U.o \
-addext$U.o argmatch$U.o backupfile$U.o basename$U.o dirname$U.o \
-exclude$U.o filemode$U.o full-write$U.o human$U.o idcache$U.o isdir$U.o \
-long-options$U.o makepath$U.o modechange$U.o hash$U.o path-concat$U.o \
-safe-read$U.o save-cwd$U.o savedir$U.o stripslash$U.o userspec$U.o \
-xgetcwd$U.o xmalloc$U.o xstrdup$U.o xstrtol$U.o xstrtoul$U.o yesno$U.o
+addext$U.o argmatch$U.o backupfile$U.o basename$U.o closeout$U.o \
+dirname$U.o exclude$U.o filemode$U.o full-write$U.o human$U.o \
+idcache$U.o isdir$U.o long-options$U.o makepath$U.o modechange$U.o \
+hash$U.o path-concat$U.o safe-read$U.o save-cwd$U.o savedir$U.o \
+stripslash$U.o userspec$U.o xgetcwd$U.o xmalloc$U.o xstrdup$U.o \
+xstrtol$U.o xstrtoul$U.o yesno$U.o
 AR = ar
 YLWRAP = $(srcdir)/ylwrap
 CFLAGS = @CFLAGS@
@@ -151,15 +154,15 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 TAR = tar
 GZIP = --best
 DEP_FILES =  .deps/addext.P .deps/alloca.P .deps/argmatch.P \
-.deps/backupfile.P .deps/basename.P .deps/chown.P .deps/dirname.P \
-.deps/error.P .deps/euidaccess.P .deps/exclude.P .deps/fileblocks.P \
-.deps/filemode.P .deps/fnmatch.P .deps/fsusage.P .deps/ftruncate.P \
-.deps/full-write.P .deps/getdate.P .deps/getgroups.P .deps/getline.P \
-.deps/getopt.P .deps/getopt1.P .deps/group-member.P .deps/hash.P \
-.deps/human.P .deps/idcache.P .deps/isdir.P .deps/long-options.P \
-.deps/lstat.P .deps/makepath.P .deps/malloc.P .deps/memcmp.P \
-.deps/memcpy.P .deps/memset.P .deps/mkdir.P .deps/mktime.P \
-.deps/modechange.P .deps/mountlist.P .deps/obstack.P \
+.deps/backupfile.P .deps/basename.P .deps/chown.P .deps/closeout.P \
+.deps/dirname.P .deps/error.P .deps/euidaccess.P .deps/exclude.P \
+.deps/fileblocks.P .deps/filemode.P .deps/fnmatch.P .deps/fsusage.P \
+.deps/ftruncate.P .deps/full-write.P .deps/getdate.P .deps/getgroups.P \
+.deps/getline.P .deps/getopt.P .deps/getopt1.P .deps/group-member.P \
+.deps/hash.P .deps/human.P .deps/idcache.P .deps/isdir.P \
+.deps/long-options.P .deps/lstat.P .deps/makepath.P .deps/malloc.P \
+.deps/memcmp.P .deps/memcpy.P .deps/memset.P .deps/mkdir.P \
+.deps/mktime.P .deps/modechange.P .deps/mountlist.P .deps/obstack.P \
 .deps/path-concat.P .deps/posixtm.P .deps/realloc.P .deps/regex.P \
 .deps/rename.P .deps/rmdir.P .deps/rpmatch.P .deps/rx.P \
 .deps/safe-read.P .deps/save-cwd.P .deps/savedir.P .deps/stat.P \
@@ -243,6 +246,8 @@ basename_.c: basename.c $(ANSI2KNR)
 	$(ANSI2KNR) `if test -f $(srcdir)/basename.c; then echo $(srcdir)/basename.c; else echo basename.c; fi` basename_.c
 chown_.c: chown.c $(ANSI2KNR)
 	$(ANSI2KNR) `if test -f $(srcdir)/chown.c; then echo $(srcdir)/chown.c; else echo chown.c; fi` chown_.c
+closeout_.c: closeout.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/closeout.c; then echo $(srcdir)/closeout.c; else echo closeout.c; fi` closeout_.c
 dirname_.c: dirname.c $(ANSI2KNR)
 	$(ANSI2KNR) `if test -f $(srcdir)/dirname.c; then echo $(srcdir)/dirname.c; else echo dirname.c; fi` dirname_.c
 error_.c: error.c $(ANSI2KNR)
@@ -366,8 +371,8 @@ xstrtoul_.c: xstrtoul.c $(ANSI2KNR)
 yesno_.c: yesno.c $(ANSI2KNR)
 	$(ANSI2KNR) `if test -f $(srcdir)/yesno.c; then echo $(srcdir)/yesno.c; else echo yesno.c; fi` yesno_.c
 addext_.o alloca_.o argmatch_.o backupfile_.o basename_.o chown_.o \
-dirname_.o error_.o euidaccess_.o exclude_.o fileblocks_.o filemode_.o \
-fnmatch_.o fsusage_.o ftruncate_.o full-write_.o getdate_.o \
+closeout_.o dirname_.o error_.o euidaccess_.o exclude_.o fileblocks_.o \
+filemode_.o fnmatch_.o fsusage_.o ftruncate_.o full-write_.o getdate_.o \
 getgroups_.o getline_.o getopt_.o getopt1_.o group-member_.o hash_.o \
 human_.o idcache_.o isdir_.o long-options_.o lstat_.o makepath_.o \
 malloc_.o memcmp_.o memcpy_.o memset_.o mkdir_.o mktime_.o \
