@@ -33,7 +33,7 @@ my-distcheck: dist
 	GZIP=$(GZIP) $(TAR) -C $(t) -zxf $(distdir).tar.gz
 	cd $(t)/$(distdir) \
 	  && ./configure --disable-nls \
-	  && $(MAKE) \
+	  && $(MAKE) CFLAGS='-Wformat -Werror' \
 	  && $(MAKE) dvi \
 	  && $(MAKE) check \
 	  && $(MAKE) distclean
