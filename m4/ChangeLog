@@ -1,3 +1,8 @@
+2005-03-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* xnanosleep.m4 (gl_XNANOSLEEP): Remove configuration attempting
+	to detect nanosleep bug.
+
 2005-02-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* gettext.m4, inttypes-pri.m4, lib-link.m4, lib-prefix.m4, nls.m4,
