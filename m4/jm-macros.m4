@@ -186,9 +186,7 @@ AC_DEFUN([jm_MACROS],
   AC_CHECK_FUNCS(setreuid setregid)
 
   AM_FUNC_GETLINE
-  if test $am_cv_func_working_getline != yes; then
-    AC_CHECK_FUNCS(getdelim)
-  fi
+  gl_GETNDELIM2
   AC_FUNC_OBSTACK
 
   AC_FUNC_STRTOD
@@ -334,9 +332,10 @@ AC_DEFUN([jm_CHECK_ALL_TYPES],
   AC_REQUIRE([AC_TYPE_UID_T])
   AC_CHECK_TYPE(ino_t, unsigned long)
 
+  gt_TYPE_SSIZE_T
+
   dnl This relies on the fact that autoconf 2.14a's implementation of
   dnl AC_CHECK_TYPE checks includes unistd.h.
-  AC_CHECK_TYPE(ssize_t, int)
   AC_CHECK_TYPE(major_t, unsigned int)
   AC_CHECK_TYPE(minor_t, unsigned int)
 
