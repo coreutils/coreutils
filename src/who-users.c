@@ -176,20 +176,20 @@ print_uptime (int n)
       ++this;
   }
   if (boot_time == 0)
-    error (1, errno, "couldn't get boot time");
+    error (1, errno, _("couldn't get boot time"));
   time_now = time (0);
   uptime = time_now - boot_time;
   updays = uptime / 86400;
   uphours = (uptime - (updays * 86400)) / 3600;
   upmins = (uptime - (updays * 86400) - (uphours * 3600)) / 60;
   tmn = localtime (&time_now);
-  printf (" %2d:%02d%s  up ", ((tmn->tm_hour % 12) == 0
+  printf (_(" %2d:%02d%s  up "), ((tmn->tm_hour % 12) == 0
 			       ? 12 : tmn->tm_hour % 12),
-	  tmn->tm_min, (tmn->tm_hour < 12 ? "am" : "pm"));
+	  tmn->tm_min, (tmn->tm_hour < 12 ? _("am") : _("pm")));
   if (updays > 0)
-    printf ("%d %s,", updays, (updays == 1 ? "days" : "day"));
+    printf ("%d %s,", updays, (updays == 1 ? _("days") : _("day")));
   printf (" %2d:%02d,  %d %s", uphours, upmins, entries,
-	  (entries == 1) ? "user" : "users");
+	  (entries == 1) ? _("user") : _("users"));
 
   loads = getloadavg (avg, 3);
   if (loads == -1)
@@ -197,7 +197,7 @@ print_uptime (int n)
   else
     {
       if (loads > 0)
-	printf (",  load average: %.2f", avg[0]);
+	printf (_(",  load average: %.2f"), avg[0]);
       if (loads > 1)
 	printf (", %.2f", avg[1]);
       if (loads > 2)
@@ -439,7 +439,7 @@ list_entries_users (int n)
 static void
 print_heading (void)
 {
-  printf ("%-8s ", "USER");
+  printf ("%-8s ", _("USER"));
   if (include_mesg)
     printf (_("MESG "));
   printf ("%-8s ", _("LINE"));
