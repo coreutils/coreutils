@@ -128,8 +128,9 @@ char *xstrdup PARAMS ((char const *));
 
 #define DEFAULT_PASSES 25	/* Default */
 
-/* How often to update wiping display */
-#define VERBOSE_UPDATE	150*1024
+/* How many seconds to wait before checking whether to output another
+   verbose output line.  */
+#define VERBOSE_UPDATE 10
 
 /* If positive, the units to use when printing sizes;
    if negative, the human-readable base.  */
@@ -800,7 +801,8 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 {
   off_t size = *sizep;
   off_t offset;			/* Current file posiiton */
-  off_t thresh;			/* Offset to print next status update */
+  time_t thresh IF_LINT (= 0);	/* Time to maybe print next status update */
+  time_t now = 0;		/* Current time */
   size_t lim;			/* Amount of data to try writing */
   size_t soff;			/* Offset into buffer for next write */
   ssize_t ssize;		/* Return value from write */
@@ -810,6 +812,10 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   word32 r[1024 * 3];		/* Multiple of 4K and of pattern size */
 #endif
   char pass_string[PASS_NAME_SIZE];	/* Name of current pass */
+
+  /* Printable previous offset into the file */
+  char previous_offset_buf[LONGEST_HUMAN_READABLE + 1];
+  char const *previous_human_offset IF_LINT (= 0);
 
   if (lseek (fd, (off_t) 0, SEEK_SET) == -1)
     {
@@ -834,13 +840,11 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
     }
 
   /* Set position if first status update */
-  thresh = 0;
   if (n)
     {
       error (0, 0, _("%s: pass %lu/%lu (%s)..."), qname, k, n, pass_string);
-      thresh = VERBOSE_UPDATE;
-      if (thresh > size && size != -1)
-	thresh = size;
+      thresh = time ((time_t *) 0) + VERBOSE_UPDATE;
+      previous_human_offset = "";
     }
 
   offset = 0;
@@ -868,7 +872,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 		  && size == -1)
 		{
 		  /* Ah, we have found the end of the file */
-		  *sizep = thresh = size = offset + soff;
+		  *sizep = size = offset + soff;
 		  break;
 		}
 	      else
@@ -902,47 +906,63 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 	    }
 	}
 
-      /* Okay, we have written "lim" bytes. */
+      /* Okay, we have written "soff" bytes. */
 
-      if (offset + lim < offset)
+      if (offset + soff < offset)
 	{
 	  error (0, 0, _("%s: file too large"), qname);
 	  return -1;
 	}
 
-      offset += lim;
+      offset += soff;
 
       /* Time to print progress? */
-      if (offset >= thresh && n)
+      if (n
+	  && ((offset == size && *previous_human_offset)
+	      || thresh <= (now = time ((time_t *) 0))))
 	{
 	  char offset_buf[LONGEST_HUMAN_READABLE + 1];
 	  char size_buf[LONGEST_HUMAN_READABLE + 1];
 	  char const *human_offset
 	    = human_readable ((uintmax_t) offset, offset_buf, 1,
 			      OUTPUT_BLOCK_SIZE);
-	  if (size != -1)
-	    error (0, 0, _("%s: pass %lu/%lu (%s)...%s/%s"), qname, k, n,
-		   pass_string, human_offset,
-		   human_readable ((uintmax_t) size, size_buf, 1,
-				   OUTPUT_BLOCK_SIZE));
-	  else
-	    error (0, 0, _("%s: pass %lu/%lu (%s)...%s"), qname, k, n,
-		   pass_string, human_offset);
 
-	  thresh += VERBOSE_UPDATE;
-	  if (thresh > size && size != -1)
-	    thresh = size;
-	  /*
-	   * Force periodic syncs to keep displayed progress accurate
-	   * FIXME: Should these be present even if -v is not enabled,
-	   * to keep the buffer cache from filling with dirty pages?
-	   * It's a common problem with programs that do lots of writes,
-	   * like mkfs.
-	   */
-	  if (fdatasync (fd) < 0 && fsync (fd) < 0)
+	  if (offset == size
+	      || strcmp (previous_human_offset, human_offset) != 0)
 	    {
-	      error (0, errno, "%s: fsync", qname);
-	      return -1;
+	      if (size == -1)
+		error (0, 0, _("%s: pass %lu/%lu (%s)...%s"),
+		       qname, k, n, pass_string, human_offset);
+	      else
+		{
+		  int percent = (size == 0
+				 ? 100
+				 : offset <= TYPE_MAXIMUM (uintmax_t) / 100
+				 ? offset * (uintmax_t) 100 / size
+				 : offset / (size / 100));
+		  error (0, 0, _("%s: pass %lu/%lu (%s)...%s/%s %d%%"),
+			 qname, k, n, pass_string, human_offset,
+			 human_readable ((uintmax_t) size, size_buf, 1,
+					 OUTPUT_BLOCK_SIZE),
+			 percent);
+		}
+
+	      strcpy (previous_offset_buf, human_offset);
+	      previous_human_offset = previous_offset_buf;
+	      thresh = now + VERBOSE_UPDATE;
+
+	      /*
+	       * Force periodic syncs to keep displayed progress accurate
+	       * FIXME: Should these be present even if -v is not enabled,
+	       * to keep the buffer cache from filling with dirty pages?
+	       * It's a common problem with programs that do lots of writes,
+	       * like mkfs.
+	       */
+	      if (fdatasync (fd) < 0 && fsync (fd) < 0)
+		{
+		  error (0, errno, "%s: fsync", qname);
+		  return -1;
+		}
 	    }
 	}
     }
