@@ -29,8 +29,6 @@
 #include "system.h"
 #include "backupfile.h"
 #include "version.h"
-#include "safe-lstat.h"
-#include "safe-stat.h"
 #include "error.h"
 
 int link ();			/* Some systems don't declare this anywhere. */
@@ -226,7 +224,7 @@ main (argc, argv)
 	 `ln source dest/' to `ln source dest/basename(source)'.  */
 
       if (dest[strlen (dest) - 1] == '/'
-	  && safe_lstat (source, &source_stats) == 0
+	  && lstat (source, &source_stats) == 0
 	  && !S_ISDIR (source_stats.st_mode))
 	{
 	  PATH_BASENAME_CONCAT (new_dest, dest, source);
@@ -274,7 +272,7 @@ do_link (source, dest)
     {
       struct stat source_stats;
 
-      if (safe_stat (source, &source_stats) != 0)
+      if (stat (source, &source_stats) != 0)
 	{
 	  error (0, errno, "%s", source);
 	  return 1;
@@ -286,7 +284,7 @@ do_link (source, dest)
 	}
     }
 
-  if (safe_lstat (dest, &dest_stats) != 0 && errno != ENOENT)
+  if (lstat (dest, &dest_stats) != 0 && errno != ENOENT)
     {
       error (0, errno, "%s", dest);
       return 1;
@@ -296,7 +294,7 @@ do_link (source, dest)
      and the user has not specified --no-dereference), then form the
      actual destination name by appending basename (source) to the
      specified destination directory.  */
-  lstat_status = safe_lstat (dest, &dest_stats);
+  lstat_status = lstat (dest, &dest_stats);
 
   if (lstat_status != 0 && errno != ENOENT)
     {
@@ -317,12 +315,12 @@ do_link (source, dest)
       char *new_dest;
       PATH_BASENAME_CONCAT (new_dest, dest, source);
       dest = new_dest;
-      /* Set this to non-zero to force another call to safe_lstat
+      /* Set this to non-zero to force another call to lstat
 	 with the new destination.  */
       lstat_status = 1;
     }
 
-  if (lstat_status == 0 || safe_lstat (dest, &dest_stats) == 0)
+  if (lstat_status == 0 || lstat (dest, &dest_stats) == 0)
     {
       if (S_ISDIR (dest_stats.st_mode))
 	{

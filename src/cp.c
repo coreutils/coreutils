@@ -27,8 +27,6 @@
 #include "cp.h"
 #include "backupfile.h"
 #include "version.h"
-#include "safe-stat.h"
-#include "safe-lstat.h"
 
 #ifndef _POSIX_VERSION
 uid_t geteuid ();
@@ -287,9 +285,9 @@ main (argc, argv)
      of `stat' to call.  */
 
   if (flag_dereference)
-    xstat = safe_stat;
+    xstat = stat;
   else
-    xstat = safe_lstat;
+    xstat = lstat;
 
   /* Allocate space for remembering copied and created files.  */
 
@@ -320,7 +318,7 @@ do_copy (argc, argv)
 
   dest = argv[argc - 1];
 
-  if (safe_lstat (dest, &sb))
+  if (lstat (dest, &sb))
     {
       if (errno != ENOENT)
 	{
@@ -337,7 +335,7 @@ do_copy (argc, argv)
       /* If `dest' is not a symlink to a nonexistent file, use
 	 the results of stat instead of lstat, so we can copy files
 	 into symlinks to directories. */
-      if (safe_stat (dest, &sbx) == 0)
+      if (stat (dest, &sbx) == 0)
 	sb = sbx;
     }
 
@@ -429,7 +427,7 @@ do_copy (argc, argv)
 	 `cp source dest/' to `cp source dest/basename(source)'.  */
 
       if (dest[strlen (dest) - 1] == '/'
-	  && safe_lstat (source, &source_stats) == 0
+	  && lstat (source, &source_stats) == 0
 	  && !S_ISDIR (source_stats.st_mode))
 	{
 	  char *source_base;

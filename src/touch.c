@@ -39,7 +39,6 @@
 
 #include "system.h"
 #include "version.h"
-#include "safe-stat.h"
 #include "error.h"
 
 #ifndef STDC_HEADERS
@@ -218,7 +217,7 @@ main (argc, argv)
 
   if (use_ref)
     {
-      if (safe_stat (ref_file, &ref_stats))
+      if (stat (ref_file, &ref_stats))
 	error (1, errno, "%s", ref_file);
       date_set++;
     }
@@ -263,7 +262,7 @@ touch (file)
   struct stat sbuf;
   int fd;
 
-  if (safe_stat (file, &sbuf))
+  if (stat (file, &sbuf))
     {
       if (errno != ENOENT)
 	{

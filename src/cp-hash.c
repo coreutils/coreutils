@@ -20,7 +20,6 @@
 #include <config.h>
 #include <stdio.h>
 #include "cp.h"
-#include "safe-stat.h"
 
 char *hash_insert ();
 char *hash_insert2 ();
@@ -37,7 +36,7 @@ remember_created (path)
 {
   struct stat sb;
 
-  if (safe_stat (path, &sb) < 0)
+  if (stat (path, &sb) < 0)
     {
       error (0, errno, "%s", path);
       return 1;

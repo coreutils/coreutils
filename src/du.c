@@ -47,8 +47,6 @@
 
 #include "system.h"
 #include "version.h"
-#include "safe-stat.h"
-#include "safe-lstat.h"
 #include "error.h"
 
 /* Initial number of entries in each hash table entry's table of inodes.  */
@@ -295,12 +293,12 @@ main (argc, argv)
 {
   int c;
   char *cwd_only[2];
-  
+
   cwd_only[0] = ".";
   cwd_only[1] = NULL;
 
   program_name = argv[0];
-  xstat = safe_lstat;
+  xstat = lstat;
   output_size = getenv ("POSIXLY_CORRECT") ? size_blocks : size_kilobytes;
 
   while ((c = getopt_long (argc, argv, "abcklsxDLS", long_options, (int *) 0))
@@ -344,7 +342,7 @@ main (argc, argv)
 	  break;
 
 	case 'L':
-	  xstat = safe_stat;
+	  xstat = stat;
 	  break;
 
 	case 'S':
@@ -393,7 +391,7 @@ du_files (files)
   save_cwd (&cwd);
 
   /* Remember the inode and device number of the current directory.  */
-  if (safe_stat (".", &stat_buf))
+  if (stat (".", &stat_buf))
     error (1, errno, "current directory");
   initial_ino = stat_buf.st_ino;
   initial_dev = stat_buf.st_dev;
@@ -425,7 +423,7 @@ du_files (files)
       count_entry (arg, 1, 0);
 
       /* chdir if `count_entry' has changed the working directory.  */
-      if (safe_stat (".", &stat_buf))
+      if (stat (".", &stat_buf))
 	error (1, errno, ".");
       if (stat_buf.st_ino != initial_ino || stat_buf.st_dev != initial_dev)
 	{
@@ -458,7 +456,7 @@ count_entry (ent, top, last_dev)
   long size;
 
   if (((top && opt_dereference_arguments)
-       ? safe_stat (ent, &stat_buf)
+       ? stat (ent, &stat_buf)
        : (*xstat) (ent, &stat_buf)) < 0)
     {
       error (0, errno, "%s", path->text);
@@ -499,8 +497,8 @@ count_entry (ent, top, last_dev)
       /* If we're dereferencing symlinks and we're about to chdir through
 	 a symlink, remember the current directory so we can return to it
 	 later.  In other cases, chdir ("..") works fine.  */
-      through_symlink = (xstat == safe_stat
-			 && safe_lstat (ent, &e_buf) == 0
+      through_symlink = (xstat == stat
+			 && lstat (ent, &e_buf) == 0
 			 && S_ISLNK (e_buf.st_mode));
       if (through_symlink)
 	save_cwd (&cwd);

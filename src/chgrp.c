@@ -25,7 +25,6 @@
 
 #include "system.h"
 #include "version.h"
-#include "safe-lstat.h"
 #include "error.h"
 
 #ifndef _POSIX_VERSION
@@ -181,7 +180,7 @@ change_file_group (file, group)
   struct stat file_stats;
   int errors = 0;
 
-  if (safe_lstat (file, &file_stats))
+  if (lstat (file, &file_stats))
     {
       if (force_silent == 0)
 	error (0, errno, "%s", file);

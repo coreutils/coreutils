@@ -42,7 +42,6 @@
 #include "fsusage.h"
 #include "system.h"
 #include "version.h"
-#include "safe-stat.h"
 #include "error.h"
 
 char *xmalloc ();
@@ -228,7 +227,7 @@ main (argc, argv)
       stats = (struct stat *)
 	xmalloc ((argc - optind) * sizeof (struct stat));
       for (i = optind; i < argc; ++i)
-	if (safe_stat (argv[i], &stats[i - optind]))
+	if (stat (argv[i], &stats[i - optind]))
 	  {
 	    error (0, errno, "%s", argv[i]);
 	    exit_status = 1;
@@ -271,7 +270,7 @@ print_header ()
     printf ("   Type");
   else
     printf ("       ");
-  
+
   if (inode_format)
     printf ("   Inodes   IUsed   IFree  %%IUsed");
   else
@@ -341,7 +340,7 @@ show_point (point, statp)
     {
       if (me->me_dev == (dev_t) -1)
 	{
-	  if (safe_stat (me->me_mountdir, &disk_stats) == 0)
+	  if (stat (me->me_mountdir, &disk_stats) == 0)
 	    me->me_dev = disk_stats.st_dev;
 	  else
 	    {

@@ -24,7 +24,6 @@
 
 #include "system.h"
 #include "version.h"
-#include "safe-lstat.h"
 #include "error.h"
 
 #ifdef D_INO_IN_DIRENT
@@ -199,7 +198,7 @@ rm ()
       return 1;
     }
 
-  if (safe_lstat (pathname, &path_stats))
+  if (lstat (pathname, &path_stats))
     {
       if (errno == ENOENT && ignore_missing_files)
 	return 0;

@@ -58,8 +58,6 @@
 #include "obstack.h"
 #include "ls.h"
 #include "version.h"
-#include "safe-stat.h"
-#include "safe-lstat.h"
 #include "error.h"
 
 #define obstack_chunk_alloc xmalloc
@@ -1471,14 +1469,14 @@ gobble_file (name, explicit_arg, dirname)
 
       if (trace_links)
 	{
-	  val = safe_stat (path, &files[files_index].stat);
+	  val = stat (path, &files[files_index].stat);
 	  if (val < 0)
 	    /* Perhaps a symbolically-linked to file doesn't exist; stat
 	       the link instead. */
-	    val = safe_lstat (path, &files[files_index].stat);
+	    val = lstat (path, &files[files_index].stat);
 	}
       else
-	val = safe_lstat (path, &files[files_index].stat);
+	val = lstat (path, &files[files_index].stat);
       if (val < 0)
 	{
 	  error (0, errno, "%s", path);
@@ -1501,7 +1499,7 @@ gobble_file (name, explicit_arg, dirname)
 	  if (linkpath
 	      && ((explicit_arg && format != long_format)
 		  || indicator_style != none || print_with_color)
-	      && safe_stat (linkpath, &linkstats) == 0)
+	      && stat (linkpath, &linkstats) == 0)
 	    {
 	      /* Symbolic links to directories that are mentioned on the
 	         command line are automatically traced if not being

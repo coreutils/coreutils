@@ -31,8 +31,6 @@
 #include "modechange.h"
 #include "system.h"
 #include "version.h"
-#include "safe-stat.h"
-#include "safe-lstat.h"
 #include "error.h"
 
 void mode_string ();
@@ -194,7 +192,7 @@ change_file_mode (file, changes, deref_symlink)
   unsigned short newmode;
   int errors = 0;
 
-  if (safe_lstat (file, &file_stats))
+  if (lstat (file, &file_stats))
     {
       if (force_silent == 0)
 	error (0, errno, "%s", file);
@@ -205,8 +203,8 @@ change_file_mode (file, changes, deref_symlink)
     {
       if (! deref_symlink)
 	return 0;
-      else 
-	if (safe_stat (file, &file_stats))
+      else
+	if (stat (file, &file_stats))
 	  {
 	    if (force_silent == 0)
 	      error (0, errno, "%s", file);

@@ -49,7 +49,6 @@
 #include "system.h"
 #include "backupfile.h"
 #include "version.h"
-#include "safe-lstat.h"
 #include "error.h"
 
 #ifndef _POSIX_VERSION
@@ -206,7 +205,7 @@ is_real_dir (path)
 {
   struct stat stats;
 
-  return safe_lstat (path, &stats) == 0 && S_ISDIR (stats.st_mode);
+  return lstat (path, &stats) == 0 && S_ISDIR (stats.st_mode);
 }
 
 /* Move file SOURCE onto DEST.  Handles the case when DEST is a directory.
@@ -251,13 +250,13 @@ do_move (source, dest)
 {
   char *dest_backup = NULL;
 
-  if (safe_lstat (source, &source_stats) != 0)
+  if (lstat (source, &source_stats) != 0)
     {
       error (0, errno, "%s", source);
       return 1;
     }
 
-  if (safe_lstat (dest, &dest_stats) == 0)
+  if (lstat (dest, &dest_stats) == 0)
     {
       if (source_stats.st_dev == dest_stats.st_dev
 	  && source_stats.st_ino == dest_stats.st_ino)
