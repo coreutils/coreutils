@@ -81,3 +81,4 @@ Reported by Ed Avis: http://article.gmane.org/gmane.comp.gnu.fileutils.bugs/686
 document that `true --version' can fail, e.g., like this:
   ./true --version >&-
   ./true: write error: Bad file number
+  Reported by Paul Eggert
