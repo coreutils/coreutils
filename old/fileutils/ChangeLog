@@ -1,3 +1,20 @@
+2000-08-12  Jim Meyering  <meyering@lucent.com>
+
+	* install-sh: Remove trailing blanks.
+	Output diagnostics to stderr, not stdout.
+	Remove many useless curly braces and double quotes.
+
+2000-08-11  J. David Anglin  <dave@hiauly1.hia.nrc.ca>
+
+	* install-sh: Improve error handling.
+	Do the job even when the target file is `busy' on systems
+	that don't allow such files to be unlinked.
+
+2000-08-12  Jim Meyering  <meyering@lucent.com>
+
+	* README: Remove note about how installation can fail and the
+	work-around, now that it's all automated.
+
 2000-08-07  Paul Eggert  <eggert@twinsun.com>
 
 	* src/cp.c (usage, main): For cp -P messages, mention the new
