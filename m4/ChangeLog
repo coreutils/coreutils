@@ -1,3 +1,8 @@
+2003-11-08  Jim Meyering  <jim@meyering.net>
+
+	* inttypes.m4: Sync from gnulib (this file was previously empty,
+	to work around some sort of problem).
+
 2003-11-08  Alexandre Duret-Lutz  <adl@gnu.org>
 
 	* nanosleep.m4 (jm_FUNC_NANOSLEEP): Do not set LIB_NANOSLEEP to the
