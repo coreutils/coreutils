@@ -35,7 +35,7 @@ libfetish_a_SOURCES = \
   getdate.h getdate.y \
   posixtm.c posixtm.h \
   posixver.c posixver.h \
-  strftime.c \
+  strftime.c strftime.h \
   getopt.c getopt.h getopt1.c \
   hash.c hash.h \
   hash-pjw.c hash-pjw.h \
