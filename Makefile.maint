@@ -178,7 +178,7 @@ sc_sun_os_names:
 	@( cvsu --list ) > /dev/null 2>&1 || : && \
 	grep -Ei \
 	    'solaris[^[:alnum:]]*2\.(7|8|9|[1-9][0-9])|sunos[^[:alnum:]][6-9]' \
-	  $$(cvsu --list | grep -vE 'ChangeLog|config\.guess') && \
+	  $$(cvsu --list | grep -vEf .x-$@ ) &&			\
 	  { echo '$(ME): found misuse of Sun OS version numbers' 1>&2;	\
 	    exit 1; } || :
 
