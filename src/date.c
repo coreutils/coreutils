@@ -76,7 +76,7 @@ char *program_name;
 /* If nonzero, display an ISO 8601 format date/time string */
 static int iso_8601_format = 0;
 
-/* If non-zero, display time in RFC-822 format for mail or news. */
+/* If non-zero, display time in RFC-(2)822 format for mail or news. */
 static int rfc_format = 0;
 
 static struct option const long_options[] =
@@ -466,7 +466,7 @@ show_date (const char *format, time_t when)
 	 RFC time format outside the continental United States and GMT. */
 
       if (rfc_format)
-	format = "%a, %_d %b %Y %H:%M:%S %z";
+	format = "%a, %d %b %Y %H:%M:%S %z";
       else if (iso_8601_format)
 	format = iso_format_string[iso_8601_format - 1];
       else
@@ -489,7 +489,7 @@ show_date (const char *format, time_t when)
     }
 
   if (rfc_format)
-    setlocale (LC_ALL, "C");
+    setlocale (LC_TIME, "C");
 
   do
     {
