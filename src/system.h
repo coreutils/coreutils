@@ -68,7 +68,6 @@
 #define S_IEXEC S_IXUSR
 #endif
 
-#ifdef S_IEXEC
 #ifndef S_IXUSR
 #define S_IXUSR S_IEXEC
 #endif
@@ -78,7 +77,9 @@
 #ifndef S_IXOTH
 #define S_IXOTH (S_IEXEC >> 6)
 #endif
-#endif /* S_IEXEC */
+#ifndef S_IXUGO
+#define S_IXUGO (S_IXUSR | S_IXGRP | S_IXOTH)
+#endif
 
 #if !defined(HAVE_MKFIFO)
 #define mkfifo(path, mode) (mknod ((path), (mode) | S_IFIFO, 0))
