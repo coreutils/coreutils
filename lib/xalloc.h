@@ -48,31 +48,23 @@ extern char const xalloc_msg_memory_exhausted[];
    memory allocation failure.  */
 extern void xalloc_die (void) ATTRIBUTE_NORETURN;
 
-void *xmalloc (size_t n);
+void *xmalloc (size_t s);
+void *xnmalloc (size_t n, size_t s);
+void *xzalloc (size_t s);
 void *xcalloc (size_t n, size_t s);
-void *xrealloc (void *p, size_t n);
+void *xrealloc (void *p, size_t s);
+void *xnrealloc (void *p, size_t n, size_t s);
+void *xclone (void const *p, size_t s);
 char *xstrdup (const char *str);
 
-# define XMALLOC(Type, N_items) xmalloc (sizeof (Type) * (N_items))
-# define XCALLOC(Type, N_items) xcalloc (sizeof (Type), N_items)
-# define XREALLOC(Ptr, Type, N_items) xrealloc (Ptr, sizeof (Type) * (N_items))
-
-/* Declare and alloc memory for VAR of type TYPE. */
-# define NEW(Type, Var)  Type *(Var) = XMALLOC (Type, 1)
-
-/* Free VAR only if non NULL. */
-# define XFREE(Var)	\
-   do {                 \
-      if (Var)          \
-        free (Var);     \
-   } while (0)
-
-/* Return a pointer to a malloc'ed copy of the array SRC of NUM elements. */
-# define CCLONE(Src, Num) \
-  (memcpy (xmalloc (sizeof *(Src) * (Num)), Src, sizeof *(Src) * (Num)))
-
-/* Return a malloc'ed copy of SRC. */
-# define CLONE(Src) CCLONE (Src, 1)
-
+/* These macros are deprecated; they will go away soon, and are retained
+   temporarily only to ease conversion to the functions described above.  */
+# define CCLONE(p, n) xclone (p, (n) * sizeof *(p))
+# define CLONE(p) xclone (p, sizeof *(p))
+# define NEW(type, var) type *var = xmalloc (sizeof (type))
+# define XCALLOC(type, n) xcalloc (n, sizeof (type))
+# define XMALLOC(type, n) xnmalloc (n, sizeof (type))
+# define XREALLOC(p, type, n) xnrealloc (p, n, sizeof (type))
+# define XFREE(p) free (p)
 
 #endif /* !XALLOC_H_ */
