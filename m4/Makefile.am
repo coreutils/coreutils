@@ -3,7 +3,7 @@
 # Generate this list with
 # find . -type f -name '*.m4' -printf '%f\n'|sort |fmt |tr '\012' @ \
 #   |sed 's/@$/%/;s/@/ \\@/g' |tr @% '\012\012'
-EXTRA_DIST = \
+EXTRA_DIST = README \
 ccstdc.m4 dmalloc.m4 error.m4 getgroups.m4 getline.m4 getloadavg.m4 \
 gettext.m4 header.m4 init.m4 install.m4 jm-mktime.m4 jm-winsz1.m4 \
 jm-winsz2.m4 lcmessage.m4 lispdir.m4 maintainer.m4 memcmp.m4 mktime.m4 \
