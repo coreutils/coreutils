@@ -1,6 +1,17 @@
-2004-11-03  Paul Eggert  <eggert@cs.ucla.edu>
+2004-11-05  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* src/sort.c (inittables, sort_buffer_size, getmonth, mergefps,
+	first_same_file, merge, sort, main): Use size_t for indexes into arrays.
+	This fixes some unlikely havoc-wreaking bugs (e.g., more than INT_MAX
+	temporary files).
+	(getmonth, keycompare, compare): Rewrite to avoid need for alloca,
+	thus avoiding unchecked stack overflow in some cases.  As a side
+	effect this improve the performance of "sort -M" by a factor of 4
+	on my benchmarks.
+	
+2004-11-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/stty.c: Include "vasprintf.h" since we use vasprintf now.
 
