@@ -38,6 +38,7 @@ libfetish_a_SOURCES = \
   hash-pjw.c hash-pjw.h \
   __fpending.h \
   addext.c \
+  allocsa.c allocsa.h \
   argmatch.c argmatch.h \
   backupfile.c backupfile.h \
   basename.c \
@@ -125,7 +126,7 @@ libfetish_a_SOURCES = \
   xmemcoll.c xmemcoll.h \
   xnanosleep.c xnanosleep.h \
   xreadlink.c xreadlink.h \
-  xstrdup.c \
+  xstrdup.c xstrdup.h \
   xstrndup.c xstrndup.h \
   xstrtod.c xstrtod.h \
   xstrtoimax.c \
