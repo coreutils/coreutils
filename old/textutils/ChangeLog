@@ -1,3 +1,13 @@
+Sun Feb 18 12:07:27 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* join.c [TOLOWER]: Define.
+	(usage): Briefly describe new --ignore-case (-i) option.
+	(memcasecmp): New function.
+	(main): Set IGNORE_CASE for -i.
+	(keycmp): Compare with memcasecmp if IGNORE_CASE is set.
+	Suggestion and an initial patch from Alberto Accomazzi
+	<alberto@cfa0.harvard.edu>.
+
 Sat Feb 17 18:54:40 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* sort.c: Add -z option.  Change all occurrences of '\n' to `eolchar'.
