@@ -5,10 +5,7 @@
 # current locale considers to be equal.
 ASSORT = LC_ALL=C sort
 
-all_programs =								\
-  echo 'spy:;@echo $$(all_programs)'					\
-    | MAKEFLAGS= $(MAKE) -s -C ../src -f Makefile -f - spy		\
-    | ../src/tr -s ' ' '\n' | $(ASSORT) -u
+all_programs = (cd ../src && MAKEFLAGS= $(MAKE) -s all_programs.list)
 
 TESTS = help-version
 TESTS_ENVIRONMENT = \
