@@ -1,7 +1,7 @@
 /* Work around the bug in some systems whereby gettimeofday clobbers the
    static buffer that localtime uses for it's return value.  The gettimeofday
    function from Mac OS X 10.0.4, i.e. Darwin 1.3.7 has this problem.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,9 +21,10 @@
 
 #include <config.h>
 
-/* Disable the definition of gettimeofday (from config.h) so we can use
-   the library version.  */
+/* Disable the definitions of gettimeofday and localtime (from config.h)
+   so we can use the library versions here.  */
 #undef gettimeofday
+#undef localtime
 
 #include <sys/types.h>
 
@@ -41,6 +42,23 @@
 #include <stdlib.h>
 
 static struct tm *localtime_buffer_addr;
+
+/* This is a wrapper for localtime.  It is used only on systems for which
+   gettimeofday clobbers the static buffer used for localtime's result.
+
+   On the first call, record the address of the static buffer that
+   localtime uses for its result.  */
+
+struct tm *
+rpl_localtime (const time_t *timep)
+{
+  struct tm *tm = localtime (timep);
+
+  if (! localtime_buffer_addr)
+    localtime_buffer_addr = tm;
+
+  return tm;
+}
 
 /* This is a wrapper for gettimeofday.  It is used only on systems for which
    gettimeofday clobbers the static buffer used for localtime's result.
