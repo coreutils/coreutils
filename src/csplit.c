@@ -1338,9 +1338,6 @@ main (int argc, char **argv)
   while ((optc = getopt_long (argc, argv, "f:b:kn:sqz", longopts, NULL)) != -1)
     switch (optc)
       {
-      case 0:
-	break;
-
       case 'f':
 	prefix = optarg;
 	break;

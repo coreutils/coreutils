@@ -189,9 +189,6 @@ main (int argc, char **argv)
     {
       switch (optc)
 	{
-	case 0:
-	  break;
-
 	case 'H': /* Traverse command-line symlinks-to-directories.  */
 	  bit_flags = FTS_COMFOLLOW | FTS_PHYSICAL;
 	  break;

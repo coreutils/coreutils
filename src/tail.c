@@ -1478,9 +1478,6 @@ parse_options (int argc, char **argv,
     {
       switch (c)
 	{
-	case 0:
-	  break;
-
 	case 'F':
 	  forever = true;
 	  follow_mode = Follow_name;

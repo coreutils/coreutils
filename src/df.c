@@ -781,8 +781,6 @@ main (int argc, char **argv)
     {
       switch (c)
 	{
-	case 0:			/* Long option. */
-	  break;
 	case 'a':
 	  show_all_fs = true;
 	  break;

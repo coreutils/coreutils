@@ -1685,9 +1685,6 @@ main (int argc, char **argv)
     {
       switch (c)
 	{
-	case 0:
-	  break;
-
 	case 'c':
 	case 'C':
 	  complement = true;

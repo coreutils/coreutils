@@ -615,9 +615,6 @@ main (int argc, char **argv)
   while ((optc = getopt_long (argc, argv, "clLmw", longopts, NULL)) != -1)
     switch (optc)
       {
-      case 0:
-	break;
-
       case 'c':
 	print_bytes = true;
 	break;

@@ -185,8 +185,6 @@ main (int argc, char **argv)
     {
       switch (optc)
 	{
-	case 0:			/* Long option. */
-	  break;
 	case 'p':
 	  empty_paths = true;
 	  break;

@@ -460,9 +460,6 @@ main (int argc, char **argv)
     {
       switch (optc)
 	{
-	case 0:
-	  break;
-
 	case 'd':
 	  /* Delimiter character(s). */
 	  if (optarg[0] == '\0')

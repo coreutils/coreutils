@@ -1027,9 +1027,6 @@ main (int argc, char **argv)
     {
       switch (c)
 	{
-	case 0:
-	  break;
-
 	case PRESUME_INPUT_PIPE_OPTION:
 	  presume_input_pipe = true;
 	  break;

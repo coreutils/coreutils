@@ -166,9 +166,6 @@ main (int argc, char **argv)
     {
       switch (c)
 	{
-	case 0:
-	  break;
-
 	case 'a':
 	  toprint = -1;
 	  break;

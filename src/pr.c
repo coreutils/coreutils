@@ -888,9 +888,6 @@ main (int argc, char **argv)
 
       switch (c)
 	{
-	case 0:			/* getopt long option */
-	  break;
-
 	case 1:			/* Non-option argument. */
 	  if (*optarg == '+')
 	    {

@@ -232,9 +232,6 @@ main (int argc, char **argv)
     {
       switch (optc)
 	{
-	case 0:
-	  break;
-
 	case 'V':  /* FIXME: this is deprecated.  Remove it in 2001.  */
 	  error (0, 0,
 		 _("warning: --version-control (-V) is obsolete;  support for\

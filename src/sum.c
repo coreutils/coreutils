@@ -236,9 +236,6 @@ main (int argc, char **argv)
     {
       switch (optc)
 	{
-	case 0:
-	  break;
-
 	case 'r':		/* For SysV compatibility. */
 	  sum_func = bsd_sum_file;
 	  break;

@@ -1985,9 +1985,6 @@ main (int argc, char **argv)
 	default:
 	  usage (EXIT_FAILURE);
 
-	case 0:
-	  break;
-
 	case 'C':
 	  fputs (_("\
 This program is free software; you can redistribute it and/or modify\n\

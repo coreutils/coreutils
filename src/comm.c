@@ -262,9 +262,6 @@ main (int argc, char **argv)
   while ((c = getopt_long (argc, argv, "123", long_options, NULL)) != -1)
     switch (c)
       {
-      case 0:
-	break;
-
       case '1':
 	only_file_1 = false;
 	break;

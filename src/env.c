@@ -154,8 +154,6 @@ main (register int argc, register char **argv)
     {
       switch (optc)
 	{
-	case 0:
-	  break;
 	case 'i':
 	  ignore_environment = true;
 	  break;

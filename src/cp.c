@@ -823,9 +823,6 @@ main (int argc, char **argv)
     {
       switch (c)
 	{
-	case 0:
-	  break;
-
 	case SPARSE_OPTION:
 	  x.sparse_mode = XARGMATCH ("--sparse", optarg,
 				     sparse_type_string, sparse_type);

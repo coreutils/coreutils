@@ -558,9 +558,6 @@ main (int argc, char **argv)
     {
       switch (optc)
 	{
-	case 0:
-	  break;
-
 	case 's':
 	  do_short_format = true;
 	  break;

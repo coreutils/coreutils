@@ -132,8 +132,6 @@ main (int argc, char **argv)
     {
       switch (optc)
 	{
-	case 0:
-	  break;
 	case 'a':
 	  /* Ignore -a, for compatibility with SVR4.  */
 	  break;

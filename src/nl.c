@@ -460,9 +460,6 @@ main (int argc, char **argv)
     {
       switch (c)
 	{
-	case 0:
-	  break;
-
 	case 'h':
 	  if (! build_type_arg (&header_type, &header_regex))
 	    {

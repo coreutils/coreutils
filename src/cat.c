@@ -581,9 +581,6 @@ main (int argc, char **argv)
     {
       switch (c)
 	{
-	case 0:
-	  break;
-
 	case 'b':
 	  number = true;
 	  number_nonblank = true;

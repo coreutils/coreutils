@@ -284,9 +284,6 @@ main (int argc, char **argv)
     {
       switch (optc)
 	{
-	case 0:
-	  break;
-
 	case 'b':		/* Count bytes rather than columns. */
 	  count_bytes = true;
 	  break;

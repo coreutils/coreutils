@@ -755,9 +755,6 @@ main (int argc, char **argv)
     {
       switch (optc)
 	{
-	case 0:
-	  break;
-
 	case 'b':
 	case 'c':
 	  /* Build the byte list. */

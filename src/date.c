@@ -313,8 +313,6 @@ main (int argc, char **argv)
 	 != -1)
     switch (optc)
       {
-      case 0:
-	break;
       case 'd':
 	datestr = optarg;
 	break;

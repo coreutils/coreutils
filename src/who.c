@@ -703,9 +703,6 @@ main (int argc, char **argv)
     {
       switch (optc)
 	{
-	case 0:
-	  break;
-
 	case 'a':
 	  need_boottime = true;
 	  need_deadprocs = true;

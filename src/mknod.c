@@ -108,8 +108,6 @@ main (int argc, char **argv)
     {
       switch (optc)
 	{
-	case 0:
-	  break;
 	case 'm':
 	  specified_mode = optarg;
 	  break;

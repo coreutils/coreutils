@@ -1431,9 +1431,6 @@ decode_switches (int argc, char **argv)
     {
       switch (c)
 	{
-	case 0:
-	  break;
-
 	case 'a':
 	  all_files = true;
 	  really_all_files = true;
