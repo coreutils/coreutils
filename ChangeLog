@@ -1,6 +1,10 @@
-2005-03-12  Jim Meyering  <jim@meyering.net>
+2005-03-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* NEWS: Restate why ls limits time stamp lengths.
+
+2005-03-12  Jim Meyering  <jim@meyering.net>
 
 	Add a little infrastructure to help prevent future bugs like the
 	one fixed below.
