@@ -1,4 +1,5 @@
 [4.1.1]
+* `ln -f --backup k k' gives a clearer diagnostic
 * ls no longer truncates user names or group names that are longer
     than 8 characters.
 * ls's new --dereference-command-line option causes it to dereference
