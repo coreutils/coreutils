@@ -1,4 +1,4 @@
-#serial 9
+#serial 10
 
 dnl These are the prerequisite macros for files in the lib/
 dnl directories of the fileutils, sh-utils, and textutils packages.
@@ -67,12 +67,13 @@ AC_DEFUN(jm_PREREQ_QUOTEARG,
 AC_DEFUN(jm_PREREQ_READUTMP,
 [
   AC_HEADER_STDC
-  AC_CHECK_HEADERS(string.h utmpx.h sys/param.h)
+  AC_CHECK_HEADERS(string.h utmp.h utmpx.h sys/param.h)
   AC_CHECK_FUNCS(utmpname)
   AC_CHECK_FUNCS(utmpxname)
   AM_C_PROTOTYPES
 
-  utmp_includes="\
+  if test $ac_cv_header_utmp_h = yes || test $ac_cv_header_utmpx_h = yes; then
+    utmp_includes="\
 $ac_includes_default
 #ifdef HAVE_UTMPX_H
 # include <utmpx.h>
@@ -80,10 +81,12 @@ $ac_includes_default
 # include <utmp.h>
 #endif
 "
-  AC_CHECK_MEMBERS([struct utmpx.ut_user],,,[$utmp_includes])
-  AC_CHECK_MEMBERS([struct utmp.ut_user],,,[$utmp_includes])
-  AC_CHECK_MEMBERS([struct utmpx.ut_name],,,[$utmp_includes])
-  AC_CHECK_MEMBERS([struct utmp.ut_name],,,[$utmp_includes])
+    AC_CHECK_MEMBERS([struct utmpx.ut_user],,,[$utmp_includes])
+    AC_CHECK_MEMBERS([struct utmp.ut_user],,,[$utmp_includes])
+    AC_CHECK_MEMBERS([struct utmpx.ut_name],,,[$utmp_includes])
+    AC_CHECK_MEMBERS([struct utmp.ut_name],,,[$utmp_includes])
+    AC_LIBOBJ(readutmp)
+  fi
 ])
 
 AC_DEFUN(jm_PREREQ_REGEX,
