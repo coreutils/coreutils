@@ -8239,7 +8239,7 @@ on the values of the environment variables @code{LC_ALL}, @code{LC_CTYPE},
 
 The processing of @samp{\u} and @samp{\U} requires a full-featured
 @code{iconv} facility. It is activated on systems with glibc 2.2 (or newer),
-or when @code{libiconv} is installed prior to the sh-utils. Otherwise the
+or when @code{libiconv} is installed prior to this package. Otherwise the
 use of @samp{\u} and @samp{\U} will give an error message.
 
 @kindex \c
