@@ -1,3 +1,17 @@
+2001-02-17  Paul Eggert  <eggert@twinsun.com>
+
+	Stop trying to support hosts that have nonstandard declarations for
+	mbrtowc and/or mbstate_t.  It's not worth the portability hassle.
+
+	* m4/mbrtowc.m4: New file, defining jm_FUNC_MBRTOWC.
+	* m4/mbswidth.m4 (jm_PREREQ_MBSWIDTH):
+	Use jm_FUNC_MBRTOWC, not AC_CHECK_FUNCS(mbrtowc).
+	* m4/prereq.m4 (jm_PREREQ_QUOTEARG): Likewise.
+	* lib/mbswidth.c, lib/quotearg.c, src/ls.c (mbrtowc, mbsinit):
+	Remove workaround macros for hosts that have mbrtowc but not
+	mbstate_t, as we now insist on proper declarations for both
+	before using mbrtowc.
+
 2001-02-17  Jim Meyering  <meyering@lucent.com>
 
 	* config.sub: Update from master repository.
