@@ -207,7 +207,7 @@ separated by CHAR.\n\
 static int
 memcasecmp (const void *vs1, const void *vs2, size_t n)
 {
-  int i;
+  unsigned int i;
   unsigned char *s1 = (unsigned char *) vs1;
   unsigned char *s2 = (unsigned char *) vs2;
   for (i = 0; i < n; i++)
