@@ -1,5 +1,8 @@
 2000-05-06  Jim Meyering  <meyering@lucent.com>
 
+	* strnlen.c: Undefine __strnlen and strnlen.
+	[!weak_alias]: Define __strnlen to strnlen.
+
 	* atexit.c: New file, from libiberty.
 
 2000-05-06  Jim Meyering  <meyering@lucent.com>
