@@ -1,3 +1,10 @@
+2004-06-19  Jim Meyering  <jim@meyering.net>
+
+	Add S_IS* definitions from filemode.c.
+	* stat-macros.h (S_ISCTG): Define to zero if not already defined.
+	(S_ISOFD): Likewise.
+	(S_ISOFL): Likewise.
+
 2004-06-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* readutmp.c (extract_trimmed_name): Don't apply strchr to a
