@@ -85,10 +85,6 @@
 #endif
 #undef HAVE_MAJOR
 
-#ifndef NODEV
-# define NODEV ((dev_t) -1)
-#endif
-
 #if HAVE_UTIME_H
 # include <utime.h>
 #endif
