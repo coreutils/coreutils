@@ -208,7 +208,7 @@ sed_filter = s/^ *//;s/N_ (//;s/^"//;s/")*$$//
 s1 = '/^\#define AUTHORS \([^\\]\)/{;s//\1/;$(sed_filter);p;q;}'
 # Sometimes the string is on the backslash-continued line after the #define.
 s2 = '/^\#define AUTHORS \\\\/{;n;$(sed_filter);p;q;}'
-# FIXME: handle *.sh
+# FIXME: handle *.sh;  and use $(all_programs), not $(SOURCES)
 ../AUTHORS: $(SOURCES)
 	rm -f $@-t
 	(						\
