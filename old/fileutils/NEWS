@@ -1,4 +1,6 @@
 Changes in release 4.1:
+* `ls --color' no longer segfaults
+* dd works once again
 [4.0e]
 * shred --devices option renamed to -D so that -d, -i and -r can be
   compatible with rm.
