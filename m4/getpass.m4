@@ -1,4 +1,4 @@
-# getpass.m4 serial 2
+# getpass.m4 serial 3
 dnl Copyright (C) 2002-2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -31,6 +31,6 @@ AC_DEFUN([gl_FUNC_GETPASS_GNU],
 
 # Prerequisites of lib/getpass.c.
 AC_DEFUN([gl_PREREQ_GETPASS], [
+  AC_CHECK_HEADERS_ONCE(stdio_ext.h)
   :
 ])
-
