@@ -404,8 +404,6 @@
 
 2003-10-08  Jim Meyering  <jim@meyering.net>
 
-	* Version 5.0.92.
-
 	* src/csplit.c (main): Remove obsolete FIXME.
 
 2003-10-07  Jim Meyering  <jim@meyering.net>
