@@ -1,5 +1,11 @@
 2000-07-23  Jim Meyering  <meyering@lucent.com>
 
+	* src/dd.c (main): Give a better diagnostic for e.g.,
+	`dd if=/dev/fd0 seek=100000000000'.
+	Convert "`%s'" in format strings to "%s", and wrap each
+	corresponding argument in a `quote (...)' call.
+	Add many, more precise diagnostics.
+
 	* src/remove.c (ASSIGN_STRDUPA): Remove macro definition.
 	* src/sys2.h (ASSIGN_STRDUPA): New macro (moved here from remove.c).
 
