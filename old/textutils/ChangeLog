@@ -2,6 +2,8 @@
 
 	* Version 2.0a.
 
+	* lib/Makefile.am (lstat.c): Adapt rule to handle new parts of xstat.in.
+
 1999-12-12  Jim Meyering  <meyering@ascend.com>
 
 	Move 120+ lines of stat.h-related macros from system.h (not shared)
