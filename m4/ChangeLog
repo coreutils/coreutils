@@ -18,6 +18,12 @@
 	definition of HAVE_PATHCONF: s/AC_CHECK_FUNC/AC_CHECK_FUNCS/.
 	Reported by Eli Zaretskii.
 
+2000-01-31  Jim Meyering  <meyering@lucent.com>
+
+	* check-decl.m4 (jm_CHECK_DECLS): Add nanosleep to the list of
+	functions.  Add the time.h and sys/time.h headers along with the
+	AC_REQUIRE'ment of AC_HEADER_TIME.
+
 2000-01-30  Jim Meyering  <meyering@lucent.com>
 
 	* lib-check.m4: Clean up some kludgy old shadow password tests.
