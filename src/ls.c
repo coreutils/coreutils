@@ -14,7 +14,7 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
-
+
 /* If the macro MULTI_COL is defined,
    the multi-column format is the default regardless
    of the type of output device.
@@ -213,10 +213,9 @@ static void print_type_indicator __P ((unsigned int mode));
 static void print_with_commas __P ((void));
 static void queue_directory __P ((char *name, char *realname));
 static void sort_files __P ((void));
-int get_funky_string __P ((char **dest, const char **src, int equals_end));
 static void parse_ls_color __P ((void));
 static void usage __P ((int status));
-
+
 /* The name the program was run with, stripped of any leading path. */
 char *program_name;
 
@@ -261,7 +260,7 @@ static time_t current_time;
    4, or more if needed for bigger numbers.  */
 
 static int block_size_size;
-
+
 /* Option flags */
 
 /* long_format for lots of info, one per line.
@@ -612,7 +611,7 @@ static enum color_type const color_types[] =
     color_yes, color_yes, color_no, color_if_tty, color_if_tty
   };
 
-
+
 /* Write to standard output the string PREFIX followed by a space-separated
    list of the integers stored in OS all on one line.  */
 
@@ -733,7 +732,7 @@ main (int argc, char **argv)
 
   exit (exit_status);
 }
-
+
 /* Set all the option flags according to the switches specified.
    Return the index of the first non-option argument.  */
 
@@ -1080,127 +1079,6 @@ decode_switches (int argc, char **argv)
 
   return optind;
 }
-
-
-static void
-parse_ls_color (void)
-{
-  const char *p;		/* Pointer to character being parsed */
-  char *whichvar;		/* LS_COLORS or LS_COLOURS? */
-  char *buf;			/* color_buf buffer pointer */
-  int state;			/* State of parser */
-  int ind_no;			/* Indicator number */
-  char label[3] = "??";		/* Indicator label */
-  struct col_ext_type *ext;	/* Extension we are working on */
-  struct col_ext_type *ext2;	/* Extra pointer */
-
-  if (((p = getenv (whichvar = "LS_COLORS")) != NULL && *p != '\0')
-      || ((p = getenv (whichvar = "LS_COLOURS")) != NULL && *p != '\0'))
-    {
-      buf = color_buf = xstrdup (p);
-      /* This is an overly conservative estimate, but any possible
-	 LS_COLORS string will *not* generate a color_buf longer than
-	 itself, so it is a safe way of allocating a buffer in
-	 advance.  */
-
-      state = 1;
-      while (state > 0)
-	{
-	  switch (state)
-	    {
-	    case 1:		/* First label character */
-	      switch (*p)
-		{
-		case ':':
-		  ++p;
-		  break;
-
-		case '*':
-		  /* Allocate new extension block and add to head of
-		     linked list (this way a later definition will
-		     override an earlier one, which can be useful for
-		     having terminal-specific defs override global).  */
-
-		  ext = (struct col_ext_type *)
-		    xmalloc (sizeof (struct col_ext_type));
-		  ext->next = col_ext_list;
-		  col_ext_list = ext;
-
-		  ++p;
-		  ext->ext.string = buf;
-
-		  state = (ext->ext.len =
-			   get_funky_string (&buf, &p, 1)) < 0 ? -1 : 4;
-		  break;
-
-		case '\0':
-		  state = 0;	/* Done! */
-		  break;
-
-		default:	/* Assume it is file type label */
-		  label[0] = *(p++);
-		  state = 2;
-		  break;
-		}
-	      break;
-
-	    case 2:		/* Second label character */
-	      if (*p)
-		{
-		  label[1] = *(p++);
-		  state = 3;
-		}
-	      else
-		state = -1;	/* Error */
-	      break;
-
-	    case 3:		/* Equal sign after indicator label */
-	      state = -1;	/* Assume failure... */
-	      if (*(p++) == '=')/* It *should* be... */
-		{
-		  for (ind_no = 0; indicator_name[ind_no] != NULL; ++ind_no)
-		    {
-		      if (strcmp (label, indicator_name[ind_no]) == 0)
-			{
-			  color_indicator[ind_no].string = buf;
-			  state = ((color_indicator[ind_no].len =
-				    get_funky_string (&buf, &p, 0)) < 0 ?
-				   -1 : 1);
-			  break;
-			}
-		    }
-		  if (state == -1)
-		    fprintf (stderr, _("Unknown prefix: %s\n"), label);
-		}
-             break;
-
-	    case 4:		/* Equal sign after *.ext */
-	      if (*(p++) == '=')
-		{
-		  ext->seq.string = buf;
-		  state = (ext->seq.len =
-			   get_funky_string (&buf, &p, 0)) < 0 ? -1 : 1;
-		}
-	      else
-		state = -1;
-	      break;
-	    }
-	}
-
-      if (state < 0)
-	{
-	  fprintf (stderr, _("Bad %s variable\n"), whichvar);
-	  free (color_buf);
-	  for (ext = col_ext_list; ext != NULL ; )
-	    {
-	      ext2 = ext;
-	      ext = ext->next;
-	      free (ext2);
-	    }
-	  print_with_color = 0;
-	}
-    }
-}
 
 /* Parse a string as part of the LS_COLO(U)RS variable; this may involve
    decoding all kinds of escape characters.  If equals_end is set an
@@ -1214,7 +1092,7 @@ parse_ls_color (void)
    the first free byte after the array and the character that ended
    the input string, respectively.  */
 
-int
+static int
 get_funky_string (char **dest, const char **src, int equals_end)
 {
   int num;			/* For numerical codes */
@@ -1404,7 +1282,126 @@ get_funky_string (char **dest, const char **src, int equals_end)
   return state == ST_ERROR ? -1 : count;
 }
 
-
+static void
+parse_ls_color (void)
+{
+  const char *p;		/* Pointer to character being parsed */
+  char *whichvar;		/* LS_COLORS or LS_COLOURS? */
+  char *buf;			/* color_buf buffer pointer */
+  int state;			/* State of parser */
+  int ind_no;			/* Indicator number */
+  char label[3] = "??";		/* Indicator label */
+  struct col_ext_type *ext;	/* Extension we are working on */
+  struct col_ext_type *ext2;	/* Extra pointer */
+
+  if (((p = getenv (whichvar = "LS_COLORS")) != NULL && *p != '\0')
+      || ((p = getenv (whichvar = "LS_COLOURS")) != NULL && *p != '\0'))
+    {
+      buf = color_buf = xstrdup (p);
+      /* This is an overly conservative estimate, but any possible
+	 LS_COLORS string will *not* generate a color_buf longer than
+	 itself, so it is a safe way of allocating a buffer in
+	 advance.  */
+
+      state = 1;
+      while (state > 0)
+	{
+	  switch (state)
+	    {
+	    case 1:		/* First label character */
+	      switch (*p)
+		{
+		case ':':
+		  ++p;
+		  break;
+
+		case '*':
+		  /* Allocate new extension block and add to head of
+		     linked list (this way a later definition will
+		     override an earlier one, which can be useful for
+		     having terminal-specific defs override global).  */
+
+		  ext = (struct col_ext_type *)
+		    xmalloc (sizeof (struct col_ext_type));
+		  ext->next = col_ext_list;
+		  col_ext_list = ext;
+
+		  ++p;
+		  ext->ext.string = buf;
+
+		  state = (ext->ext.len =
+			   get_funky_string (&buf, &p, 1)) < 0 ? -1 : 4;
+		  break;
+
+		case '\0':
+		  state = 0;	/* Done! */
+		  break;
+
+		default:	/* Assume it is file type label */
+		  label[0] = *(p++);
+		  state = 2;
+		  break;
+		}
+	      break;
+
+	    case 2:		/* Second label character */
+	      if (*p)
+		{
+		  label[1] = *(p++);
+		  state = 3;
+		}
+	      else
+		state = -1;	/* Error */
+	      break;
+
+	    case 3:		/* Equal sign after indicator label */
+	      state = -1;	/* Assume failure... */
+	      if (*(p++) == '=')/* It *should* be... */
+		{
+		  for (ind_no = 0; indicator_name[ind_no] != NULL; ++ind_no)
+		    {
+		      if (strcmp (label, indicator_name[ind_no]) == 0)
+			{
+			  color_indicator[ind_no].string = buf;
+			  state = ((color_indicator[ind_no].len =
+				    get_funky_string (&buf, &p, 0)) < 0 ?
+				   -1 : 1);
+			  break;
+			}
+		    }
+		  if (state == -1)
+		    fprintf (stderr, _("Unknown prefix: %s\n"), label);
+		}
+             break;
+
+	    case 4:		/* Equal sign after *.ext */
+	      if (*(p++) == '=')
+		{
+		  ext->seq.string = buf;
+		  state = (ext->seq.len =
+			   get_funky_string (&buf, &p, 0)) < 0 ? -1 : 1;
+		}
+	      else
+		state = -1;
+	      break;
+	    }
+	}
+
+      if (state < 0)
+	{
+	  fprintf (stderr, _("Bad %s variable\n"), whichvar);
+	  free (color_buf);
+	  for (ext = col_ext_list; ext != NULL ; )
+	    {
+	      ext2 = ext;
+	      ext = ext->next;
+	      free (ext2);
+	    }
+	  print_with_color = 0;
+	}
+    }
+}
+
 /* Request that the directory named `name' have its contents listed later.
    If `realname' is nonzero, it will be used instead of `name' when the
    directory name is printed.  This allows symbolic links to directories
@@ -1498,7 +1495,7 @@ print_dir (const char *name, const char *realname)
   if (pending_dirs)
     PUTCHAR ('\n');
 }
-
+
 /* Add `pattern' to the list of patterns for which files that match are
    not listed.  */
 
@@ -1534,7 +1531,7 @@ file_interesting (register struct dirent *next)
 
   return 0;
 }
-
+
 /* Enter and remove entries in the table `files'.  */
 
 /* Empty the table of files. */
@@ -1783,7 +1780,7 @@ extract_dirs_from_files (const char *dirname, int recursive)
       files[j++] = files[i];
   files_index = j;
 }
-
+
 /* Return nonzero if `name' doesn't end in `.' or `..'
    This is so we don't try to recurse on `././././. ...' */
 
@@ -1803,7 +1800,7 @@ is_not_dot_or_dotdot (char *name)
 
   return 1;
 }
-
+
 /* Sort the files now in the table.  */
 
 static void
@@ -1951,7 +1948,7 @@ rev_cmp_extension (struct fileinfo *file2, struct fileinfo *file1)
     return strcmp (file1->name, file2->name);
   return cmp;
 }
-
+
 /* List all the files now in the table.  */
 
 static void
@@ -2107,7 +2104,7 @@ print_long_format (struct fileinfo *f)
   else if (indicator_style != none)
     print_type_indicator (f->stat.st_mode);
 }
-
+
 /* Set QUOTED_LENGTH to strlen(P) and return NULL if P == quoted(P).
    Otherwise, return xmalloc'd storage containing the quoted version
    of P and set QUOTED_LENGTH to the length of the quoted P.  */
@@ -2271,7 +2268,7 @@ print_name_with_quoting (register char *p, unsigned int mode, int linkok)
 	put_indicator (&color_indicator[C_RIGHT]);
       }
 }
-
+
 /* Print the file name of `f' with appropriate quoting.
    Also print file size, inode number, and filetype indicator character,
    as requested by switches.  */
@@ -2474,7 +2471,7 @@ length_of_file_name_and_frills (struct fileinfo *f)
 
   return len;
 }
-
+
 static void
 print_many_per_line (void)
 {
@@ -2528,7 +2525,7 @@ print_many_per_line (void)
       putchar ('\n');
     }
 }
-
+
 static void
 print_horizontal (void)
 {
@@ -2579,7 +2576,7 @@ print_horizontal (void)
     }
   putchar ('\n');
 }
-
+
 static void
 print_with_commas (void)
 {
@@ -2611,7 +2608,7 @@ print_with_commas (void)
     }
   putchar ('\n');
 }
-
+
 /* Assuming cursor is at position FROM, indent up to position TO.
    Use a TAB character instead of two or more spaces whenever possible.  */
 
