@@ -103,7 +103,7 @@ CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
 SCRIPTS =  $(noinst_SCRIPTS)
 
-DIST_COMMON =  Makefile.am Makefile.in TODO
+DIST_COMMON =  Makefile.am Makefile.in
 
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
