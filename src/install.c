@@ -188,7 +188,7 @@ static void
 cp_option_init (struct cp_options *x)
 {
   x->copy_as_regular = 1;
-  x->dereference = 1;
+  x->dereference = DEREF_ALWAYS;
   x->force = 1;
 
   /* If unlink fails, try to proceed anyway.  */
