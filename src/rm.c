@@ -53,7 +53,7 @@
 #include "system.h"
 #include "error.h"
 #include "obstack.h"
-#include "oa-hash.h"
+#include "hash.h"
 
 #ifndef PARAMS
 # if defined (__GNUC__) || __STDC__
@@ -191,7 +191,7 @@ static struct obstack len_stack;
    A directory specified on the command line has depth zero.
    This construct is used to detect directory cycles so that RM can warn
    about them rather than iterating endlessly.  */
-static struct hash_table *active_dir_map;
+static struct HT *active_dir_map;
 
 /* An entry in the active_dir_map.  */
 struct active_dir_ent
@@ -246,18 +246,11 @@ make_active_dir_ent (ino_t inum, unsigned int depth)
   return ent;
 }
 
-static unsigned long
-hash_active_dir_ent_1 (void const *x)
+static unsigned int
+hash_active_dir_ent (void const *x, unsigned int table_size)
 {
   struct active_dir_ent const *ade = x;
-  return_INTEGER_HASH_1 (ade->inum);
-}
-
-static unsigned long
-hash_active_dir_ent_2 (void const *x)
-{
-  struct active_dir_ent const *ade = x;
-  return_INTEGER_HASH_2 (ade->inum);
+  return ade->inum % table_size;
 }
 
 static int
@@ -265,19 +258,27 @@ hash_compare_active_dir_ents (void const *x, void const *y)
 {
   struct active_dir_ent const *a = x;
   struct active_dir_ent const *b = y;
-  return_INTEGER_COMPARE (a->inum, b->inum);
+  return (a->inum == b->inum ? 0 : 1);
 }
 
-static unsigned long
-hash_string_1 (void const *x)
-{
-  return_STRING_HASH_1 (x);
-}
+/* A hash function for null-terminated char* strings using
+   the method described in Aho, Sethi, & Ullman, p 436. */
 
-static unsigned long
-hash_string_2 (void const *x)
+static unsigned int
+hash_pjw (const void *x, unsigned int tablesize)
 {
-  return_STRING_HASH_2 (x);
+  const char *s = x;
+  unsigned int h = 0;
+  unsigned int g;
+
+  while (*s != 0)
+    {
+      h = (h << 4) + *s++;
+      if ((g = h & 0xf0000000U) != 0)
+        h = (h ^ (g >> 24)) ^ g;
+    }
+
+  return (h % tablesize);
 }
 
 static int
@@ -530,7 +531,7 @@ remove_cwd_entries (void)
   /* NULL or a malloc'd and initialized hash table of entries in the
      current directory that have been processed but not removed --
      due either to an error or to an interactive `no' response.  */
-  struct hash_table *ht = NULL;
+  struct HT *ht = NULL;
 
   struct dirent *dp;
   enum RM_status status = RM_OK;
@@ -572,7 +573,7 @@ remove_cwd_entries (void)
 
 	  /* Skip this entry if it's in the table of ones we've already
 	     processed.  */
-	  if (ht && hash_find_item (ht, (dp)->d_name))
+	  if (ht && hash_query_in_table (ht, (dp)->d_name))
 	    continue;
 
 	  fspec_init_dp (&fs, dp);
@@ -596,19 +597,16 @@ remove_cwd_entries (void)
 	     we don't consider it again if we reopen this directory later.  */
 	  if (status != RM_OK)
 	    {
-	      void *old_item;
 	      int fail;
 
 	      if (ht == NULL)
 		{
-		  ht = hash_init_table (NULL, HT_INITIAL_CAPACITY, 0, 0,
-					hash_string_1, hash_string_2,
-					hash_compare_strings);
+		  ht = hash_initialize (HT_INITIAL_CAPACITY, free,
+					hash_pjw, hash_compare_strings);
 		  if (ht == NULL)
 		    error (1, 0, _("Memory exhausted"));
 		}
-	      fail = hash_insert_item (ht, entry_name, &old_item);
-	      assert (old_item == NULL);
+	      HASH_INSERT_NEW_ITEM (ht, entry_name, &fail);
 	      if (fail)
 		error (1, 0, _("Memory exhausted"));
 	    }
@@ -628,8 +626,7 @@ remove_cwd_entries (void)
 
   if (ht)
     {
-      hash_free_table (ht);
-      free (ht);
+      hash_free (ht);
     }
 
   return status;
@@ -830,9 +827,10 @@ rm (struct File_spec *fs, int user_specified_name)
 	 other.  But since people don't often try to delete hierarchies
 	 containing mount points, and when they do, duplicate inode
 	 numbers are not that likely, this isn't worth detecting.  */
-      fail = hash_insert_item (active_dir_map,
-			       make_active_dir_ent (fs->inum, current_depth ()),
-			       (void **) &old_ent);
+      old_ent = hash_insert_if_absent (active_dir_map,
+				       make_active_dir_ent (fs->inum,
+							    current_depth ()),
+				       &fail);
       if (fail)
 	error (1, 0, _("Memory exhausted"));
 
@@ -843,6 +841,7 @@ WARNING: Circular directory structure.\n\
 This almost certainly means that you have a corrupted file system.\n\
 NOTIFY YOUR SYSTEM MANAGER.\n\
 The following two directories have the same inode number:\n"));
+	  /* FIXME: test this!!  */
 	  print_nth_dir (stderr, current_depth ());
 	  fputc ('\n', stderr);
 	  print_nth_dir (stderr, old_ent->depth);
@@ -879,7 +878,7 @@ The following two directories have the same inode number:\n"));
 
       /* Remove this directory from the active_dir_map.  */
       tmp.inum = fs->inum;
-      hash_delete_item (active_dir_map, &tmp, (void **) &old_ent);
+      old_ent = hash_delete_if_present (active_dir_map, &tmp);
       assert (old_ent != NULL);
       free (old_ent);
 
@@ -956,9 +955,8 @@ main (int argc, char **argv)
   obstack_init (&dir_stack);
   obstack_init (&len_stack);
 
-  active_dir_map = hash_init_table (NULL, ACTIVE_DIR_INITIAL_CAPACITY, 0, 0,
-				    hash_active_dir_ent_1,
-				    hash_active_dir_ent_2,
+  active_dir_map = hash_initialize (ACTIVE_DIR_INITIAL_CAPACITY, free,
+				    hash_active_dir_ent,
 				    hash_compare_active_dir_ents);
 
   for (; optind < argc; optind++)
@@ -975,6 +973,8 @@ main (int argc, char **argv)
       if (status == RM_ERROR)
 	fail = 1;
     }
+
+  hash_free (active_dir_map);
 
   exit (fail);
 }
