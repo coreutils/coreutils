@@ -234,23 +234,23 @@ wc (fd, file)
 }
 
 static void
-write_counts (lc, wc, cc, file)
-     unsigned long lc, wc, cc;
+write_counts (lines, words, chars, file)
+     unsigned long lines, words, chars;
      char *file;
 {
   if (print_lines)
-    printf ("%7lu", lc);
+    printf ("%7lu", lines);
   if (print_words)
     {
       if (print_lines)
 	putchar (' ');
-      printf ("%7lu", wc);
+      printf ("%7lu", words);
     }
   if (print_chars)
     {
       if (print_lines || print_words)
 	putchar (' ');
-      printf ("%7lu", cc);
+      printf ("%7lu", chars);
     }
   if (*file)
     printf (" %s", file);

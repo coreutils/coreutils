@@ -371,7 +371,7 @@ is_char_class_member (char_class, c)
     case CC_XDIGIT:
       return ISXDIGIT (c);
       break;
-    case CC_NO_CLASS:
+    default:
       abort ();
       break;
     }
@@ -1759,15 +1759,15 @@ deleting and squeezing repeats");
 	    {
 	      if (!in_s1[i])
 		{
-		  int c = get_next (s2, NULL);
-		  assert (c != -1 || truncate_set1);
-		  if (c == -1)
+		  int ch = get_next (s2, NULL);
+		  assert (ch != -1 || truncate_set1);
+		  if (ch == -1)
 		    {
 		      /* This will happen when tr is invoked like e.g.
 			 tr -cs A-Za-z0-9 '\012'.  */
 		      break;
 		    }
-		  xlate[i] = c;
+		  xlate[i] = ch;
 		}
 	    }
 	  assert (get_next (s2, NULL) == -1 || truncate_set1);

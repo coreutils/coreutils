@@ -74,12 +74,8 @@ static int newlines2 = 0;
 static int exit_stat = 0;
 
 static void
-usage (reason)
-     char *reason;
+usage ()
 {
-  if (reason != NULL)
-    fprintf (stderr, "%s: %s\n", program_name, reason);
-
   fprintf (stderr, "\
 Usage: %s [-benstuvAET] [--number] [--number-nonblank] [--squeeze-blank]\n\
        [--show-nonprinting] [--show-ends] [--show-tabs] [--show-all]\n\
@@ -224,7 +220,7 @@ main (argc, argv)
 	  break;
 
 	default:
-	  usage ((char *) 0);
+	  usage ();
 	}
     }
 

@@ -1,7 +1,34 @@
+Mon May  3 23:57:47 1993  Jim Meyering  (meyering@comco.com)
+
+	* Version 1.5.
+
+	* od.c (main): Remove set-but-not-used variable, `usage_error'.
+
+	* split.c (main): Call usage with an argument.
+
+Sun May  2 16:05:04 1993  Jim Meyering  (meyering@comco.com)
+
+	* configure.in: Reverse if-else branches in AC_TEST_PROGRAM test
+	for 8-bit clean memcmp.
+
+	* cat.c (usage, main): Remove unused argument.
+
+	* csplit.c (remove_line): Remove set-but-not-used variable, `line_got.'
+	(check_for_offset): Remove unused argument `argnum.'
+
+	* configure.in: Add AC_SIZE_T.
+
 Sat May  1 09:03:19 1993  Jim Meyering  (meyering@comco.com)
 
-	* uniq.c (main.c): Interpret non-option arguments with a leading `+'
+	* uniq.c (main): Interpret non-option arguments with a leading `+'
 	only if we haven't seen `--'.
+
+	* tr.c (main): Change variable name to avoid shadowed dcl.
+	* wc.c (write_counts): Ditto.
+
+	* sum.1: Make documentation agree with the code.
+
+	* od.c: Depend only on HAVE_LONG_DOUBLE for long double support.
 
 Fri Apr 30 20:16:03 1993  Jim Meyering  (meyering@comco.com)
 

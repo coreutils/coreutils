@@ -43,7 +43,7 @@ char *alloca ();
 #include <float.h>
 #endif
 
-#if defined (__GNUC__) || defined (HAVE_LONG_DOUBLE)
+#ifdef HAVE_LONG_DOUBLE
 typedef long double LONG_DOUBLE;
 #else
 typedef double LONG_DOUBLE;
@@ -553,7 +553,7 @@ print_double (n_bytes, block, fmt_string)
     }
 }
 
-#if defined (__GNUC__) || defined (HAVE_LONG_DOUBLE)
+#ifdef HAVE_LONG_DOUBLE
 static void
 print_long_double (n_bytes, block, fmt_string)
      long unsigned int n_bytes;
@@ -885,7 +885,7 @@ decode_one_format (s, next, tspec)
 		   DBL_DIG + 8, DBL_DIG);
 	  break;
 
-#if defined (__GNUC__) || defined (HAVE_LONG_DOUBLE)
+#ifdef HAVE_LONG_DOUBLE
 	case FP_LONG_DOUBLE:
 	  print_function = print_long_double;
 	  pre_fmt_string = "%%%d.%dle%%c";
@@ -1808,7 +1808,6 @@ main (argc, argv)
   if (flag_compatibility)
     {
       long int offset;
-      int usage_error = 0;
 
       if (n_files == 1)
 	{
@@ -1840,7 +1839,6 @@ main (argc, argv)
 	    }
 	  else
 	    {
-	      usage_error = 1;
 	      error (0, 0,
 		     "invalid second operand in compatibility mode `%s'",
 		     argv[optind + 1]);

@@ -188,7 +188,7 @@ main (argc, argv)
     fprintf (stderr, "%s\n", version_string);
 
   if (flag_help)
-    usage ();
+    usage ((char *)0);
 
   /* Handle default case.  */
   if (split_type == type_undef)

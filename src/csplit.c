@@ -599,7 +599,6 @@ static struct cstring *
 remove_line ()
 {
   struct cstring *line;		/* Return value. */
-  unsigned line_got;		/* Number of the line retrieved. */
   struct line *l;		/* For convenience. */
 
   if (head == NULL && !load_buffer ())
@@ -608,7 +607,7 @@ remove_line ()
   if (current_line < head->first_available)
     current_line = head->first_available;
 
-  line_got = head->first_available++;
+  ++(head->first_available);
 
   l = head->curr_line;
 
@@ -1076,13 +1075,11 @@ string_to_number (result, num)
 
 /* Check if there is a numeric offset after a regular expression.
    STR is the entire command line argument.
-   ARGNUM is the index in ARGV of STR.
    P is the control record for this regular expression.
    NUM is the numeric part of STR. */
 
 static void
-check_for_offset (argnum, p, str, num)
-     int argnum;
+check_for_offset (p, str, num)
      struct control *p;
      char *str;
      char *num;
@@ -1163,7 +1160,7 @@ extract_regexp (argnum, ignore, str)
     }
 
   if (closing_delim[1])
-    check_for_offset (argnum, p, str, closing_delim + 1);
+    check_for_offset (p, str, closing_delim + 1);
 
   return p;
 }

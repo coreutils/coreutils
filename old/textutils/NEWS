@@ -1,5 +1,6 @@
 Major changes in release 1.5:
 * sort is 8-bit clean
+* sort's -n and -M options no longer imply -b
 * several bugs in sort have been fixed
 * all programs accept --help and --version options
 * od --compatible accepts pre-POSIX arguments
