@@ -259,6 +259,7 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 AUTOMAKE_OPTIONS = 1.4 gnits
 TESTS = \
+  files0-from \
   inaccessible-cwd \
   deref-args \
   slash \
