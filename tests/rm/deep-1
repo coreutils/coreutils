@@ -1,0 +1,39 @@
+#!/bin/sh
+
+# This is a bit of a torture test for mkdir -p, too.
+
+: ${RM=rm}
+: ${MKDIR=mkdir}
+
+test=deep-1
+
+: ${TMPDIR=.}
+
+if test "$VERBOSE" = yes; then
+  set -x
+  $RM --version
+fi
+
+umask 022
+
+fail=0
+
+tmp=$TMPDIR/t-rm.$$
+
+k20=/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k
+k200=$k20$k20$k20$k20$k20$k20$k20$k20$k20$k20
+k400=$k200$k200
+
+# Create a directory in $tmp with 400 `k' components.
+deep=$tmp/$k400
+$MKDIR -p $deep || fail=1
+
+# Make sure the deep dir was created.
+test -d $deep || fail=1
+
+$RM -r $tmp > $tmp/$test.O || fail=1
+
+# Make sure it was deleted.
+test -d $deep && fail=1
+
+exit $fail
