@@ -2,6 +2,12 @@
 
 	* Version 2.0.9.
 
+2000-11-16  John David Anglin  <dave@hiauly1.hia.nrc.ca>
+
+	* tsort.c: Include sys/types.h before system.h.
+
+2000-11-16  Jim Meyering  <meyering@lucent.com>
+
 	* src/join.c: Declare global `tab' to be of type *unsigned* char,
 	so join works with 8-bit delimiter characters.
 	Reported by Antonio Rendas.
