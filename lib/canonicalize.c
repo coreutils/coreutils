@@ -1,5 +1,5 @@
 /* Return the canonical absolute name of a given file.
-   Copyright (C) 1996-2004 Free Software Foundation, Inc.
+   Copyright (C) 1996-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -73,7 +73,6 @@ void free ();
 
 #include "canonicalize.h"
 #include "pathmax.h"
-#include "stat-macros.h"
 #include "xreadlink.h"
 
 #if !HAVE_CANONICALIZE_FILE_NAME
