@@ -75,7 +75,7 @@ extern int errno;
 #endif /* !STREQ */
 
 #if !defined (member)
-#  define member(c, s) (int)((c) ? index ((s), (c)) : 0)
+#  define member(c, s) ((c) ? (index ((s), (c)) ? 1 : 0) : 0)
 #endif /* !member */
 
 extern gid_t getgid (), getegid ();
