@@ -1,4 +1,6 @@
 User visible changes in release 1.13
+* date accepts new %V format
+* date's %U and %W formats work properly
 * nice option handling works with 2-digit old-style-option adjustments.
   Now, `nice -18 -- nice' now prints `18'.  Before it printed `8'.
 * New program: chroot.
