@@ -1,6 +1,11 @@
-2001-11-06  Jim Meyering  <meyering@lucent.com>
+2001-11-09  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.2.
+
+	* configure.ac: Use AC_CONFIG_FILES(...) and call AC_OUTPUT with no
+	arguments.
+
+2001-11-06  Jim Meyering  <meyering@lucent.com>
 
 	* src/dircolors.hin: Remove duplicate entry for .png.
 	Reported by Frédéric L. W. Meunier.
