@@ -7954,6 +7954,7 @@ chown -R --from=OLDUSER NEWUSER /
 @cindex symbolic links, changing owner
 @findex lchown
 Do not act on symbolic links themselves but rather on what they point to.
+This is the default.
 
 @item -h
 @itemx --no-dereference
@@ -7962,7 +7963,6 @@ Do not act on symbolic links themselves but rather on what they point to.
 @cindex symbolic links, changing owner
 @findex lchown
 Act on symbolic links themselves instead of what they point to.
-This is the default.
 This mode relies on the @code{lchown} system call.
 On systems that do not provide the @code{lchown} system call,
 @command{chown} fails when a file specified on the command line
@@ -8063,6 +8063,7 @@ changed.
 @cindex symbolic links, changing owner
 @findex lchown
 Do not act on symbolic links themselves but rather on what they point to.
+This is the default.
 
 @item -h
 @itemx --no-dereference
@@ -8071,7 +8072,6 @@ Do not act on symbolic links themselves but rather on what they point to.
 @cindex symbolic links, changing group
 @findex lchown
 Act on symbolic links themselves instead of what they point to.
-This is the default.
 This mode relies on the @code{lchown} system call.
 On systems that do not provide the @code{lchown} system call,
 @command{chgrp} fails when a file specified on the command line
