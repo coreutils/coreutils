@@ -888,6 +888,10 @@ remove_dir (char const *dir, struct saved_cwd **cwd_state,
   enum RM_status status;
   struct stat dir_sb;
 
+  /* Save any errno (from caller's failed remove_entry call), in case DIR
+     is not a directory, so that we can give a reasonable diagnostic.  */
+  int saved_errno = errno;
+
   if (*cwd_state == NULL)
     {
       *cwd_state = XMALLOC (struct saved_cwd, 1);
@@ -911,9 +915,21 @@ remove_dir (char const *dir, struct saved_cwd **cwd_state,
 
   if (chdir (dir))
     {
-      error (0, errno,
-	     _("cannot chdir from %s to %s"),
-	     quote_n (0, full_filename (".")), quote_n (1, dir));
+      if (! S_ISDIR (dir_sb.st_mode))
+	{
+	  /* This happens on Linux-2.4.18 when a non-privileged user tries
+	     to delete a file that is owned by another user in a directory
+	     like /tmp that has the S_ISVTX flag set.  */
+	  assert (saved_errno == EPERM);
+	  error (0, saved_errno,
+		 _("cannot remove %s"), quote (full_filename (dir)));
+	}
+      else
+	{
+	  error (0, errno,
+		 _("cannot chdir from %s to %s"),
+		 quote_n (0, full_filename (".")), quote_n (1, dir));
+	}
       return RM_ERROR;
     }
 
