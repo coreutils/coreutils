@@ -1,3 +1,10 @@
+2000-03-12  Jim Meyering  <meyering@lucent.com>
+
+	Merge from textutils.
+	* src/system.h: (O_BINARY, O_TEXT): Define if necessary.
+	(SET_BINARY, SET_BINARY2): Define.
+	(DEV_BSIZE): Define to BBSIZE if appropriate.
+
 2000-03-11  Jim Meyering  <meyering@lucent.com>
 
 	* tests/date/Test.pm: Set the default TZ value to UTC0, not UTC.
