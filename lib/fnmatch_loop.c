@@ -999,7 +999,7 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
      bool no_leading_period, int flags)
 {
   const CHAR *startp;
-  ptrdiff_t level;
+  size_t level;
   struct patternlist
   {
     struct patternlist *next;
@@ -1013,7 +1013,7 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 
   /* Parse the pattern.  Store the individual parts in the list.  */
   level = 0;
-  for (startp = p = pattern + 1; level >= 0; ++p)
+  for (startp = p = pattern + 1; ; ++p)
     if (*p == L('\0'))
       /* This is an invalid pattern.  */
       return -1;
@@ -1066,6 +1066,7 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 	    *lastp = newp;						      \
 	    lastp = &newp->next
 	    NEW_PATTERN;
+	    break;
 	  }
       }
     else if (*p == L('|'))
