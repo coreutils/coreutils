@@ -1,3 +1,10 @@
+2003-06-04  Paul Eggert  <eggert@twinsun.com>
+
+	Merge human.c etc. from gnulib.
+	* human.m4: New file, from gnulib.
+	* prereq.m4 (jm_PREREQ): Use gl_HUMAN, not jm_PREREQ_HUMAN.
+	(jm_prereq_HUMAN): Remove.
+
 2003-06-02  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (jm_MACROS): Require AM_STDBOOL_H.
