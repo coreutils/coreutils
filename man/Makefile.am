@@ -128,10 +128,10 @@ mapped_name = `echo $*|sed 's/install/ginstall/; s/test/[/'`
 	@rm -f $@
 	@echo "Updating man page $@";		\
 	mkdir $t;				\
-	(cd $t && $(LN_S) ../../src/$(mapped_name)$(EXEEXT) $*$(EXEEXT)); \
+	(cd $t && $(LN_S) ../../src/$(mapped_name) $*); \
 	$(PERL) -- $(srcdir)/help2man		\
 	    --include=$(srcdir)/$*.x		\
-	    --output=$@ $t/$*$(EXEEXT)
+	    --output=$@ $t/$*
 	@chmod a-w $@
 	@rm -rf $t
 
@@ -155,7 +155,7 @@ check-x-vs-1:
 
 all_programs =								\
       (cd ../src && MAKEFLAGS= $(MAKE) -s all_programs.list)		\
-       | sed -e 's,$(EXEEXT)$$,,' | grep -v '\['
+       | grep -v '\['
 
 .PHONY: check-programs-vs-x
 check-programs-vs-x:
