@@ -1118,7 +1118,7 @@ rm_1 (Dirstack_state *ds, char const *filename,
 
 /* Remove all files and/or directories specified by N_FILES and FILE.
    Apply the options in X.  */
-enum RM_status
+extern enum RM_status
 rm (size_t n_files, char const *const *file, struct rm_options const *x)
 {
   struct saved_cwd *cwd_state = NULL;
