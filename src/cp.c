@@ -461,7 +461,7 @@ do_copy (int argc, char **argv, const struct cp_options *x)
 	         leading directories. */
 	      parent_exists = !make_path_private (dst_path,
 						  arg_in_concat - dst_path,
-						  0700,
+						  S_IRWXU,
 						  (x->verbose
 						   ? "%s -> %s\n" : NULL),
 						  &attr_list, &new_dst,
@@ -617,7 +617,7 @@ cp_option_init (struct cp_options *x)
      when using chmod.  The creation mask is set to be liberal, so
      that created directories can be written, even if it would not
      have been allowed with the mask this process was started with.  */
-  x->umask_kill = 0777777 ^ umask (0);
+  x->umask_kill = ~ umask (0);
 
   x->update = 0;
   x->verbose = 0;
@@ -759,7 +759,7 @@ main (int argc, char **argv)
 		   : none);
 
   if (x.preserve_chmod_bits == 1)
-    x.umask_kill = 0777777;
+    x.umask_kill = ~ (mode_t) 0;
 
   /* The key difference between -d (--no-dereference) and not is the version
      of `stat' to call.  */
