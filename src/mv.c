@@ -1,5 +1,5 @@
 /* mv -- move or rename files
-   Copyright (C) 86, 89, 90, 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 86, 89, 90, 91, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -445,7 +445,7 @@ main (int argc, char **argv)
 	}
     }
 
-  n_files = argc - optind;
+  n_files = (optind < argc ? argc - optind : 0);
   file = argv + optind;
 
   target_directory_specified = (target_directory != NULL);
