@@ -1,3 +1,13 @@
+1999-01-28  Jim Meyering  <meyering@ascend.com>
+
+	* po/POTFILES.in: Add src/shred.c.
+
+	* src/system.h: Use TIME_WITH_SYS_TIME-based #if test rather than
+	TM_IN_SYS_TIME based one (for shred).
+
+	* acconfig.h: Remove lots of `#undef's, now that we use the
+	3-argument forms of AC_DEFINE* macros.
+
 1999-01-25  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in (fdatasync): Use AC_CHECK_FUNCS instead of
