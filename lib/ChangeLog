@@ -1,3 +1,46 @@
+2004-02-29  Paul Eggert  <eggert@twinsun.com>
+
+	* getdate.h: Include stdbool.h, and timespec.h instead of
+	the usual <time.h> dance.
+	(get_date): Change signature to support fractional time stamps.
+	All callers changed.
+	* getdate.y: Include "getdate.h" first, as we can now
+	assume C89 and don't need to worry about 'const'.
+	Similarly, include "unlocked-io.h" near start, not in middle.
+	Include <limits.h>.
+	(textint.value): Use long int rather than int.
+	(textint.digits): Use size_t rather than int.
+	(BILLION, LOG10_BILLION): New constants.
+	(parser_control): New member rel_ns.  Members day_ordinal,
+	time_zone, month, day, hour, minutes, rel_year, rel_month,
+	rel_day, rel_hour, rel_minutes, rel_seconds
+	are now long int, not int.  Member seconds is now struct timespec,
+	not int.  New member timespec_seen.  Members dates_seen, days_seen,
+	local_zones_seen, rels_seen, times_seen, zones_seen are now size_t,
+	not int.
+	(%union.intval): Now long int, not int.
+	New member timespec.
+	(tSDECIMAL_NUMBER, tUDECIMAL_NUMBER): New tokens.
+	(seconds, signed_seconds, unsigned_seconds): New nonterminals.
+	(spec): Now is a timespec or an item list.
+	(timespec, items): New nonterminals.
+	(time, rel, relunit, number, get_date):
+	Add support for fractional seconds.
+	(time): Fix bug: seconds weren't cleared in "00:00 +0000" syntax.
+	(gmtime, localtime, mktime): Remove decls; not needed with C89.
+	(to_hour): First arg is now long int, not int.
+	(to_year): Returns long int, not int.
+	Don't treat year -70 like 70.
+	(tm_diff): Returns long int, not int.
+	(lookup_word): Use bool instead of int when appropriate.
+	(yylex): Use size_t for count, not int.
+	Detect overflow when parsing large integer constants.
+	Add support for fractions.
+	(get_date): Make pointers 'const' if possible.
+	Use more-portable code to detect integer overflow.
+	(main) [TEST]: Adjust to above changes.  Test for localtime failure.
+	Don't use ctime; it's not reliable if the year has >4 digits.
+
 2004-03-15  Jim Meyering  <jim@meyering.net>
 
 	`date --date="21:04 +0100" +%S' would print the seconds value
