@@ -3,6 +3,12 @@
 	* coreutils.texi (Time directives): The %s value *is* changed by the
 	--date=DATE option; don't say otherwise.  Patch from Padraig Brady.
 
+2004-02-10  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi (Formatting the file names):
+	Improve wording for --quoting-style documentation.
+	Suggestions by Bruno Haible.
+
 2004-02-02  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (nice invocation): Add examples.
