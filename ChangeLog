@@ -1,6 +1,12 @@
-2003-07-13  Jim Meyering  <jim@meyering.net>
+2003-07-14  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* Makefile.maint (%.asc): Renamed from %.sig.
+	Generate and use ascii-armored signatures.
+	Use gpg's -o option.
+
+2003-07-13  Jim Meyering  <jim@meyering.net>
 
 	* src/nohup.c (NOHUP_FAILURE, NOHUP_FOUND_BUT_CANNOT_INVOKE): Define.
 	(main): Use them.
