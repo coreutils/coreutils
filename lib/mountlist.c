@@ -26,10 +26,6 @@
 
 #include "xalloc.h"
 
-#ifndef SIZE_MAX
-# define SIZE_MAX ((size_t) -1)
-#endif
-
 #ifndef strstr
 char *strstr ();
 #endif
@@ -139,6 +135,10 @@ char *strstr ();
 
 #include "mountlist.h"
 #include "unlocked-io.h"
+
+#ifndef SIZE_MAX
+# define SIZE_MAX ((size_t) -1)
+#endif
 
 #if MOUNTED_GETMNTINFO
 
