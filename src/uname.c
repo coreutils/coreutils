@@ -1,5 +1,5 @@
 /* uname -- print system information
-   Copyright (C) 89,90,91,92,93,94,95,96,1997 Free Software Foundation, Inc.
+   Copyright (C) 1989-1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -42,7 +42,6 @@
 #include "error.h"
 
 static void print_element PARAMS ((unsigned int mask, char *element));
-static void usage PARAMS ((int status));
 
 /* Values that are bitwise or'd into `toprint'. */
 /* Operating system name. */
@@ -87,6 +86,32 @@ static struct option const long_options[] =
   {"all", no_argument, NULL, 'a'},
   {NULL, 0, NULL, 0}
 };
+
+void
+usage (int status)
+{
+  if (status != 0)
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+	     program_name);
+  else
+    {
+      printf (_("Usage: %s [OPTION]...\n"), program_name);
+      printf (_("\
+Print certain system information.  With no OPTION, same as -s.\n\
+\n\
+  -a, --all        print all information\n\
+  -m, --machine    print the machine (hardware) type\n\
+  -n, --nodename   print the machine's network node hostname\n\
+  -r, --release    print the operating system release\n\
+  -s, --sysname    print the operating system name\n\
+  -p, --processor  print the host processor type\n\
+  -v               print the operating system version\n\
+      --help       display this help and exit\n\
+      --version    output version information and exit\n"));
+      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
+    }
+  exit (status);
+}
 
 int
 main (int argc, char **argv)
@@ -190,30 +215,4 @@ print_element (unsigned int mask, char *element)
       toprint &= ~mask;
       printf ("%s%c", element, toprint ? ' ' : '\n');
     }
-}
-
-static void
-usage (int status)
-{
-  if (status != 0)
-    fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
-  else
-    {
-      printf (_("Usage: %s [OPTION]...\n"), program_name);
-      printf (_("\
-Print certain system information.  With no OPTION, same as -s.\n\
-\n\
-  -a, --all        print all information\n\
-  -m, --machine    print the machine (hardware) type\n\
-  -n, --nodename   print the machine's network node hostname\n\
-  -r, --release    print the operating system release\n\
-  -s, --sysname    print the operating system name\n\
-  -p, --processor  print the host processor type\n\
-  -v               print the operating system version\n\
-      --help       display this help and exit\n\
-      --version    output version information and exit\n"));
-      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
-    }
-  exit (status);
 }
