@@ -1,5 +1,10 @@
 2001-03-09  Jim Meyering  <meyering@lucent.com>
 
+	* config.guess: Update from master repository.
+
+	* Makefile.maint (my_distdir): Define new variable, and use this
+	in place of most old uses of $(distdir).
+
 	* src/Makefile.am (Makefile): Don't depend on $(BUILT_SOURCES).
 	Reported by Akim Demaille.
 
