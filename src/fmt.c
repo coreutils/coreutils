@@ -184,7 +184,7 @@ static bool split;
 static bool uniform;
 
 /* Prefix minus leading and trailing spaces (default "").  */
-static const unsigned char *prefix;
+static const char *prefix;
 
 /* User-supplied maximum line width (default WIDTH).  The only output
    lines longer than this will each comprise a single word.  */
@@ -571,7 +571,7 @@ copy_rest (FILE *f, register int c)
     {
       put_space (next_prefix_indent);
       for (s = prefix; out_column != in_column && *s; out_column++)
-	putchar (*s++);
+	putchar (*(unsigned char *)s++);
       put_space (in_column - out_column);
     }
   while (c != '\n' && c != EOF)
@@ -656,7 +656,6 @@ static int
 get_prefix (FILE *f)
 {
   register int c;
-  register const unsigned char *p;
 
   in_column = 0;
   c = get_space (f, getc (f));
@@ -665,10 +664,11 @@ get_prefix (FILE *f)
       prefix_lead_space : in_column;
   else
     {
+      const char *p;
       next_prefix_indent = in_column;
       for (p = prefix; *p != '\0'; p++)
 	{
-	  if (c != *p)
+	  if (c != *(unsigned char *)p)
 	    return c;
 	  in_column++;
 	  c = getc (f);
