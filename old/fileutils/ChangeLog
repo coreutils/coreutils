@@ -1,3 +1,40 @@
+Fri Apr 30 02:21:48 1993  Jim Meyering (meyering@comco.com)
+
+	* ls.c (main): Make `-f' work like on standard Unix ls, instead
+	of as a short equivalent of --full-time.
+	* ls.1: Document it.
+
+Thu Apr 29 00:46:46 1993  Jim Meyering (meyering@comco.com)
+
+	* src/Makefile.in [dir.o, vdir.o]: Make ordering of CFLAGS etc
+	in compilation rules consistent with that in .c.o rule.
+
+	* Makefile.in (dist): Depend on Makefile so that changes to
+	Makefile.in (like adding new files to DISTRIB) are reflected
+	in the new distribution.
+
+Tue Apr 27 21:35:11 1993  Jim Meyering (meyering@comco.com)
+
+	* configure.in: Remove unnecessary AC_PROG_INSTALL.
+
+Fri Apr 23 23:39:16 1993  Jim Meyering (meyering@comco.com)
+
+	* {lib,src}/Makefile.in [.c.o]: Make CPPFLAGS and CFLAGS follow
+	other options so users can use them to override DEFS.
+
+	* lib/mktime.c: Use new version from glibc instead of one from
+	libc-subst.  `touch' built with the latter didn't set proper
+	time unless given a specific --date option.
+
+Thu Apr 22 00:22:25 1993  Jim Meyering (meyering@comco.com)
+
+	* makepath.c: Decouple inclusion of errno.h from definition of
+	STDC_HEADERS; many systems have errno.h, yet shouldn't define
+	STDC_HEADERS.
+	* makepath.c (make_path): Add EPERM clause only if both AFS and
+	EPERM are defined.
+	* configure.in: Test for errno.h header file.
+
 Mon Apr 19 11:21:14 1993  Jim Meyering (meyering@comco.com)
 
 	* Version 3.5.

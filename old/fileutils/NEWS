@@ -1,3 +1,6 @@
+Major changes in release 3.6:
+* GNU ls -f works like Unix ls -f
+
 Major changes in release 3.5:
 * adds support for DEC Alpha under OSF/1
 * configuring with gcc uses CFLAGS='-g -O' by default

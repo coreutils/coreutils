@@ -214,7 +214,7 @@ enum time_type
 
 static enum time_type time_type;
 
-/* print the full time, -f, otherwise the standard unix heuristics. */
+/* print the full time, otherwise the standard unix heuristics. */
 
 int full_time;
 
@@ -367,7 +367,7 @@ static struct option const long_options[] =
   {"all", no_argument, 0, 'a'},
   {"escape", no_argument, 0, 'b'},
   {"directory", no_argument, 0, 'd'},
-  {"full-time", no_argument, 0, 'f'},
+  {"full-time", no_argument, &full_time, 1},
   {"inode", no_argument, 0, 'i'},
   {"kilobytes", no_argument, 0, 'k'},
   {"numeric-uid-gid", no_argument, 0, 'n'},
@@ -605,7 +605,14 @@ decode_switches (argc, argv)
 	  break;
 
 	case 'f':
-	  full_time = 1;
+	  /* Same as enabling -a -U and disabling -l -s.  */
+	  all_files = 1;
+	  really_all_files = 1;
+	  sort_type = sort_none;
+	  /* disable -l */
+	  if (format == long_format)
+	    format = (isatty (1) ? many_per_line : one_per_line);
+	  print_block_size = 0;  /* disable -s */
 	  break;
 
 	case 'g':

@@ -43,8 +43,11 @@ char *alloca ();
 #endif
 
 #ifdef STDC_HEADERS
-#include <errno.h>
 #include <stdlib.h>
+#endif
+
+#if defined (STDC_HEADERS) || defined (HAVE_ERRNO_H)
+#include <errno.h>
 #else
 extern int errno;
 #endif
@@ -147,7 +150,7 @@ make_path (argpath, mode, parent_mode, owner, group, verbose_fmt_string)
 
 		  if (owner != (uid_t) -1 && group != (gid_t) -1
 		      && chown (dirpath, owner, group)
-#ifdef AFS
+#if defined(AFS) && defined (EPERM)
 		      && errno != EPERM
 #endif
 		      )
