@@ -1,3 +1,9 @@
+2003-03-04  Jim Meyering  <jim@meyering.net>
+
+	* xgetcwd.c: Improve comment.
+
+	* getcwd.c: New file.
+
 2003-02-28  Jim Meyering  <jim@meyering.net>
 
 	* ftw.c (ftw_startup): Return -1 if alloca fails.
