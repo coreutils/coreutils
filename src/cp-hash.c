@@ -1,5 +1,5 @@
 /* cp-hash.c  -- file copying (hash search routines)
-   Copyright (C) 89, 90, 91, 1995-2001 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2002 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -82,6 +82,23 @@ src_to_dest_free (void *x)
   struct Src_to_dest *a = x;
   free ((char *) (a->name));
   free (x);
+}
+
+/* Remove the entry matching INO/DEV from the table
+   that maps source ino/dev to destination file name.  */
+void
+forget_created (ino_t ino, dev_t dev)
+{
+  struct Src_to_dest probe;
+  struct Src_to_dest *ent;
+
+  probe.st_ino = ino;
+  probe.st_dev = dev;
+  probe.name = NULL;
+
+  ent = hash_delete (src_to_dest, &probe);
+  if (ent)
+    src_to_dest_free (ent);
 }
 
 /* Add PATH to the list of files that we have created.
