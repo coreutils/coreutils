@@ -37,6 +37,7 @@ void free ();
 #define N_(msgid) msgid
 
 #include "error.h"
+#include "exitfail.h"
 #include "xalloc.h"
 
 #ifndef EXIT_FAILURE
@@ -53,10 +54,6 @@ void free ();
 "you must run the autoconf test for a GNU libc compatible realloc"
 #endif
 
-/* Exit value when the requested amount of memory is not available.
-   The caller may set it to some other value.  */
-int xalloc_exit_failure = EXIT_FAILURE;
-
 /* If non NULL, call this function when memory is exhausted. */
 void (*xalloc_fail_func) (void) = 0;
 
@@ -69,7 +66,7 @@ xalloc_die (void)
 {
   if (xalloc_fail_func)
     (*xalloc_fail_func) ();
-  error (xalloc_exit_failure, 0, "%s", _(xalloc_msg_memory_exhausted));
+  error (exit_failure, 0, "%s", _(xalloc_msg_memory_exhausted));
   /* The `noreturn' cannot be given to error, since it may return if
      its first argument is 0.  To help compilers understand the
      xalloc_die does terminate, call exit. */
