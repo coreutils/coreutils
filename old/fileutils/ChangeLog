@@ -1,5 +1,8 @@
 2001-02-21  Jim Meyering  <meyering@lucent.com>
 
+	* src/mkdir.c (main): Remove assignment-in-if-expression.
+	In fact, remove t_errno altogether.  Reported by Nelson Beebe.
+
 	* tests/ls-2/tests: Add two tests of existing behavior -- both will
 	have to be changed (soon after release), once ls is fixed.
 
