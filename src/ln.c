@@ -203,7 +203,7 @@ do_link (const char *source, const char *dest, bool dest_is_dir)
       dest = new_dest;
     }
 
-  if (remove_existing_files || interactive || backup_type != none)
+  if (remove_existing_files || interactive || backup_type != no_backups)
     {
       lstat_ok = (lstat (dest, &dest_stats) == 0);
       if (!lstat_ok && errno != ENOENT)
@@ -225,7 +225,7 @@ do_link (const char *source, const char *dest, bool dest_is_dir)
 	 equivalent: `ln -f k k' (with or without --backup) to get
 	 beyond this point, because the error message you'd get is
 	 misleading.  */
-      && (backup_type == none || !symbolic_link)
+      && (backup_type == no_backups || !symbolic_link)
       && (!symbolic_link || stat (source, &source_stats) == 0)
       && SAME_INODE (source_stats, dest_stats)
       /* The following detects whether removing DEST will also remove
@@ -253,7 +253,7 @@ do_link (const char *source, const char *dest, bool dest_is_dir)
 	    return true;
 	}
 
-      if (backup_type != none)
+      if (backup_type != no_backups)
 	{
 	  char *tmp_backup = find_backup_file_name (dest, backup_type);
 	  size_t buf_len = strlen (tmp_backup) + 1;
@@ -548,7 +548,7 @@ main (int argc, char **argv)
 
   backup_type = (make_backups
 		 ? xget_version (_("backup type"), version_control_string)
-		 : none);
+		 : no_backups);
 
   if (target_directory)
     {

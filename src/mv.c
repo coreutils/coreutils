@@ -486,7 +486,7 @@ main (int argc, char **argv)
   x.backup_type = (make_backups
 		   ? xget_version (_("backup type"),
 				   version_control_string)
-		   : none);
+		   : no_backups);
 
   hash_init ();
 
