@@ -14,7 +14,7 @@
 	New macros.
 
 	Before, this command would make uniq skip 11 fields and print
-	only the first line.
+	only the first line:
 	$ _POSIX2_VERSION=1 ./uniq -f1 -1 <(seq --format='1 %g' 2)
 	1 1
 	1 2
