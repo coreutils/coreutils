@@ -1,3 +1,10 @@
+Thu Sep 28 23:16:05 1995  Jim Meyering  (meyering@comco.com)
+
+	* Version 1.13.
+
+	* od.c (decode_one_format): Remove spurious semicolon.
+	From John Kodis (kodis@daacdev1.stx.com).
+
 Tue Sep 26 23:05:01 1995  Jim Meyering  (meyering@comco.com)
 
 	* man/Makefile.in (install-data, uninstall): Use sed not basename.
