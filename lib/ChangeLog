@@ -1,3 +1,7 @@
+2003-10-13  Paul Eggert  <eggert@twinsun.com>
+
+	* xalloc.h, xmalloc.c, xstrdup.c: Import latest version from gnulib.
+
 2003-09-29  Paul Eggert  <eggert@twinsun.com>
 
 	* Makefile.am (libfetish_a_SOURCES): Add xstrtoimax.c.
