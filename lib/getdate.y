@@ -908,7 +908,7 @@ get_date (const char *p, const time_t *now)
   pc.local_zones_seen = 0;
   pc.zones_seen = 0;
 
-#if HAVE_TM_ZONE
+#if HAVE_STRUCT_TM_TM_ZONE
   pc.local_time_zone_table[0].name = tmp->tm_zone;
   pc.local_time_zone_table[0].type = tLOCAL_ZONE;
   pc.local_time_zone_table[0].value = tmp->tm_isdst;
