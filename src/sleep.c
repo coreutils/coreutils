@@ -165,8 +165,8 @@ main (int argc, char **argv)
   if (fail)
     usage (1);
 
-  /* Round to the nearest nanosecond here so that tv_nsec will be
-     no larger than 999,999,999.  */
+  /* Add this here so we end up rounding to the nearest nanosecond.
+     This ensures that that tv_nsec will be no larger than 999,999,999.  */
   seconds += .0000000005;
 
   /* Separate whole seconds from nanoseconds.  */
