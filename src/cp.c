@@ -119,9 +119,6 @@ static int const reply_vals[] =
   I_ALWAYS_YES, I_ALWAYS_NO, I_ASK_USER
 };
 
-/* The error code to return to the system. */
-static int exit_status = 0;
-
 static struct option const long_opts[] =
 {
   {"archive", no_argument, NULL, 'a'},
@@ -826,6 +823,25 @@ decode_preserve_arg (char const *arg, struct cp_options *x, int on_off)
   free (arg_writable);
 }
 
+static void run (size_t, char **, char const *, struct cp_options *)
+     ATTRIBUTE_NORETURN;
+/* Encapsulate the `copy-and-exit' functionality.  */
+static void
+run (size_t n_files, char **files, char const *target_directory,
+     struct cp_options *x)
+{
+  int fail;
+
+  /* Allocate space for remembering copied and created files.  */
+  hash_init ();
+
+  fail = do_copy (n_files, files, target_directory, x);
+
+  forget_all ();
+
+  exit (fail ? EXIT_FAILURE : EXIT_SUCCESS);
+}
+
 int
 main (int argc, char **argv)
 {
@@ -1050,13 +1066,5 @@ main (int argc, char **argv)
   if (x.unlink_dest_after_failed_open && (x.hard_link || x.symbolic_link))
     x.unlink_dest_before_opening = 1;
 
-  /* Allocate space for remembering copied and created files.  */
-
-  hash_init ();
-
-  exit_status |= do_copy (argc - optind, argv + optind, target_directory, &x);
-
-  forget_all ();
-
-  exit (exit_status);
+  run (argc - optind, argv + optind, target_directory, &x);
 }
