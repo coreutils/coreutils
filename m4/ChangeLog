@@ -3,6 +3,8 @@
 	* jm-macros.m4 (AC_CHECK_HEADERS): Add checks from fileutils'
 	configure.in
 	(AC_CHECK_HEADERS): Likewise for sh-utils.
+	(AC_CHECK_HEADERS): Likewise for textutils.
+	Merge the three lists of headers.
 
 	* prereq.m4 (jm_PREREQ_ADDEXT): New macro.  Parts moved here
 	from fileutils' configure.in.
