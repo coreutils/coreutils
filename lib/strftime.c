@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
 
    NOTE: The canonical source of this file is maintained with the GNU C Library.
    Bugs can be reported to bug-glibc@prep.ai.mit.edu.
@@ -10,8 +10,8 @@
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
@@ -1025,7 +1025,6 @@ my_strftime (char *s, size_t maxsize, const char *format, const struct tm *tp
 	  add (1, *p = '\t');
 	  break;
 
-	case 'f':
 	case 'u':		/* POSIX.2 extension.  */
 	  DO_NUMBER (1, (tp->tm_wday - 1 + 7) % 7 + 1);
 
@@ -1220,7 +1219,7 @@ my_strftime (char *s, size_t maxsize, const char *format, const struct tm *tp
 	}
     }
 
-  if (p && i < maxsize)
+  if (p && maxsize != 0)
     *p = '\0';
   return i;
 }
