@@ -1,6 +1,11 @@
-2002-05-30  Jim Meyering  <meyering@lucent.com>
+2002-06-01  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.9.
+
+	* src/ls.c: Remove use of D_TYPE_IN_DIRENT, now that that symbol
+	has been renamed.
+
+2002-05-30  Jim Meyering  <meyering@lucent.com>
 
 	* src/copy.c (copy_reg): Use a temporary to avoid a warning
 	from gcc -W about comparison between signed and unsigned.
