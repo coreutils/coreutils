@@ -1,5 +1,8 @@
 1999-12-23  Jim Meyering  <meyering@ascend.com>
 
+	* configure.in: Remove clock_gettime tests.
+	Now they're in m4/jm-macros.m4.
+
 	* src/ln.c (usage): Correct typos.
 	List new --target-directory=... usage.
 	Reported by Göran Uddeborg
