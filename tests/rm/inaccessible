@@ -27,7 +27,9 @@ fi
 fail=0
 
 p=$pwd/$tmp
+set +x
 (cd no-access; chmod 0 . && rm -r $p/abs1 rel $p/abs2) 2> out && fail=1
+test "$VERBOSE" = yes && set -x
 test -d $p/abs1 && fail=1
 test -d $p/abs2 && fail=1
 
