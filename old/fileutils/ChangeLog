@@ -1,5 +1,7 @@
 2001-11-23  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.1.2.
+
 	* cp.c, df.c, du.c, install.c, ln.c, ls.c, mkdir.c (usage):
 	* mkfifo.c, mknod.c, mv.c, shred.c, touch.c (usage):
 	Note that ``Mandatory arguments to long options are mandatory
@@ -12,13 +14,6 @@
 	* du.c, install.c, ln.c, ls.c, rm.c, rmdir.c, shred.c, touch.c (usage):
 	Split --help output into smaller pieces.
 	Use fputs, not printf.
-
-	* cp-hash.c, du.c, remove.c:
-	Use opaque type, Hash_table, not `struct hash_table'.
-
-2001-11-23  Jim Meyering  <meyering@lucent.com>
-
-	* Version 4.1.2.
 
 	* src/cp-hash.c: Use opaque type, Hash_table, not `struct hash_table'.
 	* src/du.c: Likewise.
