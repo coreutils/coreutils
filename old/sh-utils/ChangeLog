@@ -1,6 +1,17 @@
-2002-08-05  Jim Meyering  <meyering@lucent.com>
+2002-08-08  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.15.
+
+2002-08-05  Paul Eggert  <eggert@twinsun.com>
+
+	Fix some minor time-related bugs with POSIX time arguments.
+	Some valid time stamps were being rejected (notably -1, and
+	time stamps before 1900 on 64-bit hosts).  And some invalid
+	time stamps were being accepted, e.g. September 31.
+
+	* src/date.c (main): Adjust to posixtime signature change.
+
+2002-08-05  Jim Meyering  <meyering@lucent.com>
 
 	* configure.ac: Change $am_cv_sys_posix_termios to
 	$ac_cv_sys_posix_termios.  From Andreas Schwab.
