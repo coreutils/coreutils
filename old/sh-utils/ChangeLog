@@ -1,3 +1,9 @@
+2000-06-21  Jim Meyering  <meyering@lucent.com>
+
+	* tests/stty/basic-1: New test for that.
+	* src/stty.c (valid_options): Don't segfault on `stty erase -'.
+	Patch from Harry Liu.
+
 2000-06-15  Jim Meyering  <meyering@lucent.com>
 
 	* tests/date/Test.pm: Add tests for getdate.y fix.
