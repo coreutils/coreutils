@@ -232,3 +232,5 @@ off_t lseek ();
 #define DOT_OR_DOTDOT(Basename) \
   (Basename[0] == '.' && (Basename[1] == '\0' \
 			  || (Basename[1] == '.' && Basename[2] == '\0')))
+
+char *base_name PARAMS ((char const *));
