@@ -1151,10 +1151,7 @@ remove_dir (Dirstack_state *ds, char const *dir, struct cwd_state **cwd_state,
 	free (empty_dir);
 
 	if (AD_stack_height (ds) == 1)
-	  {
-	    free_cwd (&AD_stack_top(ds)->u.saved_cwd);
-	    break;
-	  }
+	  break;
       }
     }
 
@@ -1234,6 +1231,9 @@ rm (size_t n_files, char const *const *file, struct rm_options const *x)
     }
 
   ds_free (ds);
+
+  if (cwd_state && cwd_state->saved_errno == 0)
+    free_cwd (&cwd_state->saved_cwd);
 
   free (cwd_state);
 
