@@ -237,6 +237,14 @@ static const int ftw_arr[] =
   FTW_F, FTW_D, FTW_DNR, FTW_NS, FTW_DCH, FTW_DCHP, FTW_DPRE, FTW_F, FTW_D, FTW_NS
 };
 
+/* Ensure that each of the above arrays has the number of
+   initializers corresponding to enum Ftw_option.  */
+struct dummy
+{
+  int p1 [sizeof nftw_arr / sizeof nftw_arr[0] == FTW_N_MEMBERS ? 1 : -1];
+  int p2 [sizeof nftw_arr / sizeof  ftw_arr[0] == FTW_N_MEMBERS ? 1 : -1];
+};
+
 
 /* Forward declarations of local functions.  */
 static int ftw_dir (struct ftw_data *data, struct FTW_STAT *st)
