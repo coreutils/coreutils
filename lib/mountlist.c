@@ -712,6 +712,7 @@ read_filesystem_list (int need_fs_type)
   {
     int bufsize;
     char *entries, *thisent;
+    struct vmount *vmp;
 
     /* Ask how many bytes to allocate for the mounted filesystem info.  */
     mntctl (MCTL_QUERY, sizeof bufsize, (struct vmount *) &bufsize);
@@ -724,7 +725,6 @@ read_filesystem_list (int need_fs_type)
 	 thisent += vmp->vmt_length)
       {
 	char *options, *ignore;
-	struct vmount *vmp;
 
 	vmp = (struct vmount *) thisent;
 	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
