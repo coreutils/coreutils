@@ -14,7 +14,7 @@
 * Fix a bug introduced in 4.5.4 that made it so that ls --color would no
   longer highlight the names of files with the execute bit set when not
   specified on the command line.
-* shred's --zero (-z) option no longer gobbles up any following string
+* shred's --zero (-z) option no longer gobbles up any following argument.
   Before, `shred --zero file' would produce `shred: missing file argument',
   and worse, `shred --zero f1 f2 ...' would appear to work, but would leave
   the first file untouched.
@@ -24,7 +24,7 @@
   output STRING between ranges of selected bytes.
 * rm -r can no longer be tricked into mistakenly reporting a cycle.
 * when rm detects a directory cycle, it no longer aborts the entire command,
-  but rather just the affected command line argument.
+  but rather merely stops processing the affected command line argument.
 
 [4.5.4]
 * cp no longer fails to parse options like this: --preserve=mode,ownership
