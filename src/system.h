@@ -81,16 +81,16 @@
 # define S_IXUGO (S_IXUSR | S_IXGRP | S_IXOTH)
 #endif
 
-#ifdef HAVE_ST_MTIM
+#ifdef ST_MTIM_NSEC
 # define ST_TIME_CMP_NS(a, b, ns) ((a).ns < (b).ns ? -1 : (a).ns > (b).ns)
 #else
 # define ST_TIME_CMP_NS(a, b, ns) 0
 #endif
 #define ST_TIME_CMP(a, b, s, ns) \
   ((a).s < (b).s ? -1 : (a).s > (b).s ? 1 : ST_TIME_CMP_NS(a, b, ns))
-#define ATIME_CMP(a, b) ST_TIME_CMP (a, b, st_atime, st_atim.tv_nsec)
-#define CTIME_CMP(a, b) ST_TIME_CMP (a, b, st_ctime, st_ctim.tv_nsec)
-#define MTIME_CMP(a, b) ST_TIME_CMP (a, b, st_mtime, st_mtim.tv_nsec)
+#define ATIME_CMP(a, b) ST_TIME_CMP (a, b, st_atime, st_atim.ST_MTIM_NSEC)
+#define CTIME_CMP(a, b) ST_TIME_CMP (a, b, st_ctime, st_ctim.ST_MTIM_NSEC)
+#define MTIME_CMP(a, b) ST_TIME_CMP (a, b, st_mtime, st_mtim.ST_MTIM_NSEC)
 
 #if !defined(HAVE_MKFIFO)
 # define mkfifo(path, mode) (mknod ((path), (mode) | S_IFIFO, 0))
