@@ -186,9 +186,9 @@ struct fileinfo
        zero. */
     mode_t linkmode;
 
-    /* For symbolic link and color printing, 1 if linked-to file
-       exists, otherwise 0.  */
-    int linkok;
+    /* For symbolic link and color printing, true if linked-to file
+       exists, otherwise false.  */
+    bool linkok;
 
     enum filetype filetype;
 
@@ -232,16 +232,16 @@ static size_t quote_name (FILE *out, const char *name,
 			  size_t *width);
 static char *make_link_path (const char *path, const char *linkname);
 static int decode_switches (int argc, char **argv);
-static int file_interesting (const struct dirent *next);
+static bool file_interesting (const struct dirent *next);
 static uintmax_t gobble_file (const char *name, enum filetype type,
-			      int explicit_arg, const char *dirname);
+			      bool explicit_arg, const char *dirname);
 static void print_color_indicator (const char *name, mode_t mode, int linkok);
 static void put_indicator (const struct bin_str *ind);
 static void add_ignore_pattern (const char *pattern);
 static void attach (char *dest, const char *dirname, const char *name);
 static void clear_files (void);
 static void extract_dirs_from_files (const char *dirname,
-				     int ignore_dot_and_dot_dot);
+				     bool ignore_dot_and_dot_dot);
 static void get_link_name (const char *filename, struct fileinfo *f);
 static void indent (size_t from, size_t to);
 static size_t calculate_columns (bool by_columns);
@@ -297,16 +297,16 @@ static size_t nfiles;  /* FIXME: rename this to e.g. cwd_n_alloc */
 /* Index of first unused in `files'.  */
 static size_t files_index;  /* FIXME: rename this to e.g. cwd_n_used */
 
-/* When nonzero, in a color listing, color each symlink name according to the
+/* When true, in a color listing, color each symlink name according to the
    type of file it points to.  Otherwise, color them according to the `ln'
    directive in LS_COLORS.  Dangling (orphan) symlinks are treated specially,
    regardless.  This is set when `ln=target' appears in LS_COLORS.  */
 
-static int color_symlink_as_referent;
+static bool color_symlink_as_referent;
 
 /* mode of appropriate file for colorization */
 #define FILE_OR_LINK_MODE(File) \
-    ((color_symlink_as_referent && (File)->linkok) \
+    ((color_symlink_as_referent & (File)->linkok) \
      ? (File)->linkmode : (File)->stat.st_mode)
 
 
@@ -414,33 +414,33 @@ enum sort_type
 static enum sort_type sort_type;
 
 /* Direction of sort.
-   0 means highest first if numeric,
+   false means highest first if numeric,
    lowest first if alphabetic;
    these are the defaults.
-   1 means the opposite order in each case.  -r  */
+   true means the opposite order in each case.  -r  */
 
-static int sort_reverse;
+static bool sort_reverse;
 
-/* Nonzero means to display owner information.  -g turns this off.  */
+/* True means to display owner information.  -g turns this off.  */
 
-static int print_owner = 1;
+static bool print_owner = true;
 
-/* Nonzero means to display author information.  */
+/* True means to display author information.  */
 
 static bool print_author;
 
-/* Nonzero means to display group information.  -G and -o turn this off.  */
+/* True means to display group information.  -G and -o turn this off.  */
 
-static int print_group = 1;
+static bool print_group = true;
 
-/* Nonzero means print the user and group id's as numbers rather
+/* True means print the user and group id's as numbers rather
    than as names.  -n  */
 
-static int numeric_ids;
+static bool numeric_ids;
 
-/* Nonzero means mention the size in blocks of each file.  -s  */
+/* True means mention the size in blocks of each file.  -s  */
 
-static int print_block_size;
+static bool print_block_size;
 
 /* Human-readable options for output.  */
 static int human_output_opts;
@@ -451,12 +451,10 @@ static uintmax_t output_block_size;
 /* Likewise, but for file sizes.  */
 static uintmax_t file_output_block_size = 1;
 
-/* Precede each line of long output (per file) with a string like `m,n:'
-   where M is the number of characters after the `:' and before the
-   filename and N is the length of the filename.  Using this format,
+/* Follow the output with a special string.  Using this format,
    Emacs' dired mode starts up twice as fast, and can handle all
    strange characters in file names.  */
-static int dired;
+static bool dired;
 
 /* `none' means don't mention the type of files.
    `classify' means mention file types and mark executables.
@@ -484,11 +482,11 @@ static enum indicator_style const indicator_style_types[]=
   none, classify, file_type
 };
 
-/* Nonzero means use colors to mark types.  Also define the different
+/* True means use colors to mark types.  Also define the different
    colors as well as the stuff for the LS_COLORS environment variable.
    The LS_COLORS variable is now in a termcap-like format.  */
 
-static int print_with_color;
+static bool print_with_color;
 
 enum color_type
   {
@@ -550,38 +548,38 @@ static struct color_ext_type *color_ext_list = NULL;
 /* Buffer for color sequences */
 static char *color_buf;
 
-/* Nonzero means to check for orphaned symbolic link, for displaying
+/* True means to check for orphaned symbolic link, for displaying
    colors.  */
 
-static int check_symlink_color;
+static bool check_symlink_color;
 
-/* Nonzero means mention the inode number of each file.  -i  */
+/* True means mention the inode number of each file.  -i  */
 
-static int print_inode;
+static bool print_inode;
 
 /* What to do with symbolic links.  Affected by -d, -F, -H, -l (and
    other options that imply -l), and -L.  */
 
 static enum Dereference_symlink dereference;
 
-/* Nonzero means when a directory is found, display info on its
+/* True means when a directory is found, display info on its
    contents.  -R  */
 
-static int recursive;
+static bool recursive;
 
-/* Nonzero means when an argument is a directory name, display info
+/* True means when an argument is a directory name, display info
    on it itself.  -d  */
 
-static int immediate_dirs;
+static bool immediate_dirs;
 
-/* Nonzero means don't omit files whose names start with `.'.  -A */
+/* True means don't omit files whose names start with `.'.  -A  */
 
-static int all_files;
+static bool all_files;
 
-/* Nonzero means don't omit files `.' and `..'
+/* True means don't omit files `.' and `..'
    This flag implies `all_files'.  -a  */
 
-static int really_all_files;
+static bool really_all_files;
 
 /* A linked list of shell-style globbing patterns.  If a non-argument
    file name matches any of these patterns, it is omitted.
@@ -596,7 +594,7 @@ struct ignore_pattern
 
 static struct ignore_pattern *ignore_patterns;
 
-/* Nonzero means output nongraphic chars in file names as `?'.
+/* True means output nongraphic chars in file names as `?'.
    (-q, --hide-control-chars)
    qmark_funny_chars and the quoting style (-Q, --quoting-style=WORD) are
    independent.  The algorithm is: first, obey the quoting style to get a
@@ -605,7 +603,7 @@ static struct ignore_pattern *ignore_patterns;
    to replace nonprintable chars even in quoted strings, because we don't
    want to mess up the terminal if control chars get sent to it, and some
    quoting methods pass through control chars as-is.  */
-static int qmark_funny_chars;
+static bool qmark_funny_chars;
 
 /* Quoting options for file and dir name output.  */
 
@@ -616,29 +614,24 @@ static struct quoting_options *dirname_quoting_options;
    inhibits the use of TAB characters for separating columns.  -T */
 static size_t tabsize;
 
-/* Nonzero means we are listing the working directory because no
-   non-option arguments were given. */
+/* True means print each directory name before listing it.  */
 
-static int dir_defaulted;
-
-/* Nonzero means print each directory name before listing it. */
-
-static int print_dir_name;
+static bool print_dir_name;
 
 /* The line length to use for breaking lines in many-per-line format.
    Can be set with -w.  */
 
 static size_t line_length;
 
-/* If nonzero, the file listing format requires that stat be called on
+/* If true, the file listing format requires that stat be called on
    each file. */
 
-static int format_needs_stat;
+static bool format_needs_stat;
 
 /* Similar to `format_needs_stat', but set if only the file type is
    needed.  */
 
-static int format_needs_type;
+static bool format_needs_type;
 
 /* strftime formats for non-recent and recent files, respectively, in
    -l output.  */
@@ -675,7 +668,7 @@ static sig_atomic_t volatile interrupt_signal;
 
 static sig_atomic_t volatile stop_signal_count;
 
-/* Nonzero if a non-fatal error has occurred.  */
+/* Desired exit status.  */
 
 static int exit_status;
 
@@ -936,15 +929,15 @@ dev_ino_free (void *x)
 }
 
 /* Add the device/inode pair (P->st_dev/P->st_ino) to the set of
-   active directories.  Return nonzero if there is already a matching
-   entry in the table.  Otherwise, return zero.  */
+   active directories.  Return true if there is already a matching
+   entry in the table.  */
 
-static int
+static bool
 visit_dir (dev_t dev, ino_t ino)
 {
   struct dev_ino *ent;
   struct dev_ino *ent_from_table;
-  int found_match;
+  bool found_match;
 
   ent = xmalloc (sizeof *ent);
   ent->st_ino = ino;
@@ -1063,7 +1056,7 @@ main (int argc, char **argv)
 {
   register int i;
   register struct pending *thispend;
-  unsigned int n_files;
+  int n_files;
 
   /* The signals that are trapped, and the number of such signals.  */
   static int const sig[] = { SIGHUP, SIGINT, SIGPIPE,
@@ -1085,9 +1078,8 @@ main (int argc, char **argv)
 #define N_ENTRIES(Array) (sizeof Array / sizeof *(Array))
   assert (N_ENTRIES (color_indicator) + 1 == N_ENTRIES (indicator_name));
 
-  exit_status = 0;
-  dir_defaulted = 1;
-  print_dir_name = 1;
+  exit_status = EXIT_SUCCESS;
+  print_dir_name = true;
   pending_dirs = 0;
 
   i = decode_switches (argc, argv);
@@ -1103,7 +1095,7 @@ main (int argc, char **argv)
       if (color_indicator[C_ORPHAN].string != NULL
 	  || (color_indicator[C_MISSING].string != NULL
 	      && format == long_format))
-	check_symlink_color = 1;
+	check_symlink_color = true;
 
       /* If the standard output is a controlling terminal, watch out
          for signals, so that the colors can be restored to the
@@ -1170,7 +1162,7 @@ main (int argc, char **argv)
     || format == long_format
     || dereference == DEREF_ALWAYS
     || print_block_size || print_inode;
-  format_needs_type = (format_needs_stat == 0
+  format_needs_type = (!format_needs_stat
 		       && (recursive || print_with_color
 			   || indicator_style != none));
 
@@ -1187,27 +1179,24 @@ main (int argc, char **argv)
   clear_files ();
 
   n_files = argc - i;
-  if (0 < n_files)
-    dir_defaulted = 0;
 
-  for (; i < argc; i++)
-    {
-      gobble_file (argv[i], unknown, 1, "");
-    }
-
-  if (dir_defaulted)
+  if (n_files <= 0)
     {
       if (immediate_dirs)
-	gobble_file (".", directory, 1, "");
+	gobble_file (".", directory, true, "");
       else
 	queue_directory (".", 0);
     }
+  else
+    do
+      gobble_file (argv[i++], unknown, true, "");
+    while (i < argc);
 
   if (files_index)
     {
       sort_files ();
       if (!immediate_dirs)
-	extract_dirs_from_files ("", 0);
+	extract_dirs_from_files ("", false);
       /* `files_index' might be zero now.  */
     }
 
@@ -1222,7 +1211,7 @@ main (int argc, char **argv)
 	DIRED_PUTCHAR ('\n');
     }
   else if (n_files <= 1 && pending_dirs && pending_dirs->next == 0)
-    print_dir_name = 0;
+    print_dir_name = false;
 
   while (pending_dirs)
     {
@@ -1250,7 +1239,7 @@ main (int argc, char **argv)
       print_dir (thispend->name, thispend->realname);
 
       free_pending_ent (thispend);
-      print_dir_name = 1;
+      print_dir_name = true;
     }
 
   if (print_with_color)
@@ -1297,7 +1286,7 @@ main (int argc, char **argv)
       hash_free (active_dir_set);
     }
 
-  exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (exit_status);
 }
 
 /* Set all the option flags according to the switches specified.
@@ -1310,9 +1299,9 @@ decode_switches (int argc, char **argv)
   char *time_style_option = 0;
 
   /* Record whether there is an option specifying sort type.  */
-  int sort_type_specified = 0;
+  bool sort_type_specified = false;
 
-  qmark_funny_chars = 0;
+  qmark_funny_chars = false;
 
   /* initialize all switches to default settings */
 
@@ -1336,12 +1325,12 @@ decode_switches (int argc, char **argv)
 	{
 	  format = many_per_line;
 	  /* See description of qmark_funny_chars, above.  */
-	  qmark_funny_chars = 1;
+	  qmark_funny_chars = true;
 	}
       else
 	{
 	  format = one_per_line;
-	  qmark_funny_chars = 0;
+	  qmark_funny_chars = false;
 	}
       break;
 
@@ -1351,16 +1340,16 @@ decode_switches (int argc, char **argv)
 
   time_type = time_mtime;
   sort_type = sort_name;
-  sort_reverse = 0;
-  numeric_ids = 0;
-  print_block_size = 0;
+  sort_reverse = false;
+  numeric_ids = false;
+  print_block_size = false;
   indicator_style = none;
-  print_inode = 0;
+  print_inode = false;
   dereference = DEREF_UNDEFINED;
-  recursive = 0;
-  immediate_dirs = 0;
-  all_files = 0;
-  really_all_files = 0;
+  recursive = false;
+  immediate_dirs = false;
+  all_files = false;
+  really_all_files = false;
   ignore_patterns = 0;
 
   /* FIXME: put this in a function.  */
@@ -1411,7 +1400,7 @@ decode_switches (int argc, char **argv)
     struct winsize ws;
 
     if (ioctl (STDOUT_FILENO, TIOCGWINSZ, &ws) != -1
-	&& 0 < ws.ws_col /* && ws.ws_col <= SIZE_MAX */ )
+	&& 0 < ws.ws_col && ws.ws_col <= SIZE_MAX)
       line_length = ws.ws_col;
   }
 #endif
@@ -1446,8 +1435,8 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'a':
-	  all_files = 1;
-	  really_all_files = 1;
+	  all_files = true;
+	  really_all_files = true;
 	  break;
 
 	case 'b':
@@ -1459,25 +1448,25 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'd':
-	  immediate_dirs = 1;
+	  immediate_dirs = true;
 	  break;
 
 	case 'f':
 	  /* Same as enabling -a -U and disabling -l -s.  */
-	  all_files = 1;
-	  really_all_files = 1;
+	  all_files = true;
+	  really_all_files = true;
 	  sort_type = sort_none;
-	  sort_type_specified = 1;
+	  sort_type_specified = true;
 	  /* disable -l */
 	  if (format == long_format)
 	    format = (isatty (STDOUT_FILENO) ? many_per_line : one_per_line);
-	  print_block_size = 0;	/* disable -s */
-	  print_with_color = 0;	/* disable --color */
+	  print_block_size = false;	/* disable -s */
+	  print_with_color = false;	/* disable --color */
 	  break;
 
 	case 'g':
 	  format = long_format;
-	  print_owner = 0;
+	  print_owner = false;
 	  break;
 
 	case 'h':
@@ -1486,7 +1475,7 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'i':
-	  print_inode = 1;
+	  print_inode = true;
 	  break;
 
 	case 'k':
@@ -1503,13 +1492,13 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'n':
-	  numeric_ids = 1;
+	  numeric_ids = true;
 	  format = long_format;
 	  break;
 
 	case 'o':  /* Just like -l, but don't display group info.  */
 	  format = long_format;
-	  print_group = 0;
+	  print_group = false;
 	  break;
 
 	case 'p':
@@ -1517,20 +1506,20 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'q':
-	  qmark_funny_chars = 1;
+	  qmark_funny_chars = true;
 	  break;
 
 	case 'r':
-	  sort_reverse = 1;
+	  sort_reverse = true;
 	  break;
 
 	case 's':
-	  print_block_size = 1;
+	  print_block_size = true;
 	  break;
 
 	case 't':
 	  sort_type = sort_time;
-	  sort_type_specified = 1;
+	  sort_type_specified = true;
 	  break;
 
 	case 'u':
@@ -1539,7 +1528,7 @@ decode_switches (int argc, char **argv)
 
 	case 'v':
 	  sort_type = sort_version;
-	  sort_type_specified = 1;
+	  sort_type_specified = true;
 	  break;
 
 	case 'w':
@@ -1558,8 +1547,8 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'A':
-	  really_all_files = 0;
-	  all_files = 1;
+	  really_all_files = false;
+	  all_files = true;
 	  break;
 
 	case 'B':
@@ -1572,7 +1561,7 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'D':
-	  dired = 1;
+	  dired = true;
 	  break;
 
 	case 'F':
@@ -1580,7 +1569,7 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'G':		/* inhibit display of group info */
-	  print_group = 0;
+	  print_group = false;
 	  break;
 
 	case 'H':
@@ -1608,12 +1597,12 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'R':
-	  recursive = 1;
+	  recursive = true;
 	  break;
 
 	case 'S':
 	  sort_type = sort_size;
-	  sort_type_specified = 1;
+	  sort_type_specified = true;
 	  break;
 
 	case 'T':
@@ -1629,12 +1618,12 @@ decode_switches (int argc, char **argv)
 
 	case 'U':
 	  sort_type = sort_none;
-	  sort_type_specified = 1;
+	  sort_type_specified = true;
 	  break;
 
 	case 'X':
 	  sort_type = sort_extension;
-	  sort_type_specified = 1;
+	  sort_type_specified = true;
 	  break;
 
 	case '1':
@@ -1649,7 +1638,7 @@ decode_switches (int argc, char **argv)
 
 	case SORT_OPTION:
 	  sort_type = XARGMATCH ("--sort", optarg, sort_args, sort_types);
-	  sort_type_specified = 1;
+	  sort_type_specified = true;
 	  break;
 
 	case TIME_OPTION:
@@ -1707,7 +1696,7 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case SHOW_CONTROL_CHARS_OPTION:
-	  qmark_funny_chars = 0;
+	  qmark_funny_chars = false;
 	  break;
 
 	case BLOCK_SIZE_OPTION:
@@ -1737,7 +1726,7 @@ decode_switches (int argc, char **argv)
   if (indicator_style != none)
     {
       char const *p;
-      for (p = "*=@|" + (int) indicator_style - 1;  *p;  p++)
+      for (p = "*=@|" + indicator_style - 1;  *p;  p++)
 	set_char_quoting (filename_quoting_options, *p, 1);
     }
 
@@ -1748,7 +1737,7 @@ decode_switches (int argc, char **argv)
      Otherwise, ignore it.  FIXME: warn about this?
      Alternatively, make --dired imply --format=long?  */
   if (dired && format != long_format)
-    dired = 0;
+    dired = false;
 
   /* If -c or -u is specified and not -l (or any other option that implies -l),
      and no sort-type was specified, then sort by the ctime (-c) or atime (-u).
@@ -1818,7 +1807,7 @@ decode_switches (int argc, char **argv)
 	  case locale_time_style:
 	    if (hard_locale (LC_TIME))
 	      {
-		unsigned int i;
+		int i;
 		for (i = 0; i < 2; i++)
 		  long_time_format[i] =
 		    dcgettext (NULL, long_time_format[i], LC_TIME);
@@ -1846,7 +1835,7 @@ static bool
 get_funky_string (char **dest, const char **src, bool equals_end,
 		  size_t *output_count)
 {
-  int num;			/* For numerical codes */
+  char num;			/* For numerical codes */
   size_t count;			/* Something to count with */
   enum {
     ST_GND, ST_BACKSLASH, ST_OCTAL, ST_HEX, ST_CARET, ST_END, ST_ERROR
@@ -2156,12 +2145,12 @@ parse_ls_color (void)
 	  e = e->next;
 	  free (e2);
 	}
-      print_with_color = 0;
+      print_with_color = false;
     }
 
   if (color_indicator[C_LINK].len == 6
       && !strncmp (color_indicator[C_LINK].string, "target", 6))
-    color_symlink_as_referent = 1;
+    color_symlink_as_referent = true;
 }
 
 /* Request that the directory named NAME have its contents listed later.
@@ -2195,14 +2184,14 @@ print_dir (const char *name, const char *realname)
   register DIR *dirp;
   register struct dirent *next;
   register uintmax_t total_blocks = 0;
-  static int first = 1;
+  static bool first = true;
 
   errno = 0;
   dirp = opendir (name);
   if (!dirp)
     {
       error (0, errno, "%s", quotearg_colon (name));
-      exit_status = 1;
+      exit_status = EXIT_FAILURE;
       return;
     }
 
@@ -2218,7 +2207,7 @@ print_dir (const char *name, const char *realname)
 	{
 	  error (0, errno, _("cannot determine device and inode of %s"),
 		 quotearg_colon (name));
-	  exit_status = 1;
+	  exit_status = EXIT_FAILURE;
 	  return;
 	}
 
@@ -2273,14 +2262,14 @@ print_dir (const char *name, const char *realname)
 	      || next->d_type == DT_SOCK)
 	    type = next->d_type;
 #endif
-	  total_blocks += gobble_file (next->d_name, type, 0, name);
+	  total_blocks += gobble_file (next->d_name, type, false, name);
 	}
     }
 
   if (dirp == NULL || CLOSEDIR (dirp))
     {
       error (0, errno, _("reading directory %s"), quotearg_colon (name));
-      exit_status = 1;
+      exit_status = EXIT_FAILURE;
       /* Don't return; print whatever we got. */
     }
 
@@ -2291,13 +2280,13 @@ print_dir (const char *name, const char *realname)
      contents listed rather than being mentioned here as files.  */
 
   if (recursive)
-    extract_dirs_from_files (name, 1);
+    extract_dirs_from_files (name, true);
 
-  if (recursive || print_dir_name)
+  if (recursive | print_dir_name)
     {
       if (!first)
 	DIRED_PUTCHAR ('\n');
-      first = 0;
+      first = false;
       DIRED_INDENT ();
       PUSH_CURRENT_DIRED_POS (&subdired_obstack);
       dired_pos += quote_name (stdout, realname ? realname : name,
@@ -2340,25 +2329,25 @@ add_ignore_pattern (const char *pattern)
   ignore_patterns = ignore;
 }
 
-/* Return nonzero if the file in `next' should be listed. */
+/* Return true if the file in `next' should be listed.  */
 
-static int
+static bool
 file_interesting (const struct dirent *next)
 {
   register struct ignore_pattern *ignore;
 
   for (ignore = ignore_patterns; ignore; ignore = ignore->next)
     if (fnmatch (ignore->pattern, next->d_name, FNM_PERIOD) == 0)
-      return 0;
+      return false;
 
   if (really_all_files
       || next->d_name[0] != '.'
       || (all_files
 	  && next->d_name[1] != '\0'
 	  && (next->d_name[1] != '.' || next->d_name[2] != '\0')))
-    return 1;
+    return true;
 
-  return 0;
+  return false;
 }
 
 /* POSIX requires that a file size be printed without a sign, even
@@ -2404,7 +2393,7 @@ clear_files (void)
    Return the number of blocks that the file occupies.  */
 
 static uintmax_t
-gobble_file (const char *name, enum filetype type, int explicit_arg,
+gobble_file (const char *name, enum filetype type, bool explicit_arg,
 	     const char *dirname)
 {
   register uintmax_t blocks;
@@ -2420,7 +2409,7 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
   f = &files[files_index];
   f->linkname = 0;
   f->linkmode = 0;
-  f->linkok = 0;
+  f->linkok = false;
 
   if (explicit_arg
       || format_needs_stat
@@ -2464,7 +2453,7 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 	case DEREF_COMMAND_LINE_SYMLINK_TO_DIR:
 	  if (explicit_arg)
 	    {
-	      int need_lstat;
+	      bool need_lstat;
 	      err = stat (path, &f->stat);
 
 	      if (dereference == DEREF_COMMAND_LINE_ARGUMENTS)
@@ -2490,7 +2479,7 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
       if (err < 0)
 	{
 	  error (0, errno, "%s", quotearg_colon (path));
-	  exit_status = 1;
+	  exit_status = EXIT_FAILURE;
 	  return 0;
 	}
 
@@ -2519,7 +2508,7 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 	      && (indicator_style != none || check_symlink_color)
 	      && stat (linkpath, &linkstats) == 0)
 	    {
-	      f->linkok = 1;
+	      f->linkok = true;
 
 	      /* Symbolic links to directories that are mentioned on the
 	         command line are automatically traced if not being
@@ -2530,7 +2519,7 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 		  /* Get the linked-to file's mode for the filetype indicator
 		     in long listings.  */
 		  f->linkmode = linkstats.st_mode;
-		  f->linkok = 1;
+		  f->linkok = true;
 		}
 	    }
 	  if (linkpath)
@@ -2541,7 +2530,7 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 	f->filetype = symbolic_link;
       else if (S_ISDIR (f->stat.st_mode))
 	{
-	  if (explicit_arg && !immediate_dirs)
+	  if (explicit_arg & !immediate_dirs)
 	    f->filetype = arg_directory;
 	  else
 	    f->filetype = directory;
@@ -2644,7 +2633,7 @@ get_link_name (const char *filename, struct fileinfo *f)
     {
       error (0, errno, _("cannot read symbolic link %s"),
 	     quotearg_colon (filename));
-      exit_status = 1;
+      exit_status = EXIT_FAILURE;
     }
 }
 
@@ -2659,8 +2648,8 @@ make_link_path (const char *path, const char *linkname)
   char *linkbuf;
   size_t bufsiz;
 
-  if (linkname == 0)
-    return 0;
+  if (!linkname)
+    return NULL;
 
   if (*linkname == '/')
     return xstrdup (linkname);
@@ -2679,10 +2668,10 @@ make_link_path (const char *path, const char *linkname)
 }
 #endif
 
-/* Return nonzero if base_name (NAME) ends in `.' or `..'
+/* Return true if base_name (NAME) ends in `.' or `..'
    This is so we don't try to recurse on `././././. ...' */
 
-static int
+static bool
 basename_is_dot_or_dotdot (const char *name)
 {
   char const *base = base_name (name);
@@ -2693,11 +2682,11 @@ basename_is_dot_or_dotdot (const char *name)
    and queue them to be listed as directories instead.
    `dirname' is the prefix to prepend to each dirname
    to make it correct relative to ls's working dir.
-   If IGNORE_DOT_AND_DOT_DOT is nonzero don't treat `.' and `..' as dirs.
+   If IGNORE_DOT_AND_DOT_DOT don't treat `.' and `..' as dirs.
    This is desirable when processing directories recursively.  */
 
 static void
-extract_dirs_from_files (const char *dirname, int ignore_dot_and_dot_dot)
+extract_dirs_from_files (const char *dirname, bool ignore_dot_and_dot_dot)
 {
   register size_t i;
   register size_t j;
@@ -2761,7 +2750,7 @@ xstrcoll (char const *a, char const *b)
     {
       error (0, errno, _("cannot compare file names %s and %s"),
 	     quote_n (0, a), quote_n (1, b));
-      exit_status = 1;
+      exit_status = EXIT_FAILURE;
       longjmp (failed_strcoll, 1);
     }
   return diff;
@@ -3258,7 +3247,7 @@ print_long_format (const struct fileinfo *f)
   if ((when_local = localtime (&when)))
     {
       time_t six_months_ago;
-      int recent;
+      bool recent;
       char const *fmt;
 
       /* If the file appears to be in the future, update the current
@@ -3471,7 +3460,7 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options,
 
 	  while (p < plimit)
 	    {
-	      if (! ISPRINT ((unsigned char) *p))
+	      if (! ISPRINT (to_uchar (*p)))
 		*p = '?';
 	      p++;
 	    }
@@ -3492,7 +3481,7 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options,
 	  displayed_width = 0;
 	  while (p < plimit)
 	    {
-	      if (ISPRINT ((unsigned char) *p))
+	      if (ISPRINT (to_uchar (*p)))
 		displayed_width++;
 	      p++;
 	    }
@@ -3568,7 +3557,7 @@ print_file_name_and_frills (const struct fileinfo *f)
 static void
 print_type_indicator (mode_t mode)
 {
-  int c;
+  char c;
 
   if (S_ISREG (mode))
     {
