@@ -146,7 +146,7 @@ main (int argc, char **argv)
 	  const char *parents = dir_name (argv[optind]);
 	  fail = make_path (parents, parent_mode, parent_mode,
 			    -1, -1, 1, verbose_fmt_string);
-	  free (dir_name);
+	  free (parents);
 	}
 
       if (fail == 0)
