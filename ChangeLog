@@ -1,6 +1,12 @@
-2003-08-20  Jim Meyering  <jim@meyering.net>
+2003-08-22  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
+
+	* src/stat.c (do_stat): For link count at end of line, use %h format,
+	instead of %-5h.  The latter would make stat emit trailing spaces.
+	Reported by Dan Jacobson.
+
+2003-08-20  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (EXTRA_DIST): Add .x-sc_space_tab .x-sc_sun_os_names
 
