@@ -1,5 +1,8 @@
 2004-07-29  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* modechange.c: Include <stdbool.h>.
+	(mode_compile): Use bool when appropriate.
+
 	* memchr.c (UNALIGNED_P): Use sizeof, not alignof, for better
 	performance on m68k-linux.  Reported by Andreas Schwab in
 	<http://lists.gnu.org/archive/html/bug-coreutils/2004-07/msg00104.html>.
