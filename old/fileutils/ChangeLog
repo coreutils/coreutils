@@ -1,4 +1,13 @@
+Sun Jul 21 11:58:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (AC_REPLACE_FUNCS): Replace getline.c.
+	Add related check for the getdelim function.
+	From Ulrich Drepper -- as done in gettext.
+
 Sat Jul 20 17:01:56 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/Makefile.am (fu_SOURCES): Remove error.c, and obstack.c.
+	(EXTRA_DIST): Add error.c, and obstack.c.
 
 	* configure.in (PACKAGE_VERSION): Use space instead of hyphen to
 	separate PACKAGE and VERSION.
