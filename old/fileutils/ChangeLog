@@ -2,6 +2,13 @@
 
 	* Version 4.1.1.
 
+	* tests/priv-check: Change usage not to use $1.
+	That's not portable to e.g., Solaris2.6's /bin/sh.
+	Communicate via an envvar instead.
+	* tests/mv/i-3: Don't pass an argument to a sourced script.
+	* tests/cp/special-bits: Likewise.
+	* tests/chown/basic: Likewise.
+
 	* Makefile.maint (alpha): Depend on local-check so that they run
 	a little earlier.
 
