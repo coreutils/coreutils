@@ -362,6 +362,13 @@ uninstall-info: uninstall-info-am
 	mostlyclean-aminfo mostlyclean-generic mostlyclean-vti \
 	uninstall uninstall-am uninstall-info-am
 
+
+# List words/regexps here that should not appear in the texinfo documentation.
+check-texinfo:
+	grep timezone $(srcdir)/*.texi && exit 1 || :
+	grep -w POSIX $(srcdir)/*.texi && exit 1 || :
+
+check: check-texinfo
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

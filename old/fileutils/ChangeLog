@@ -1,3 +1,14 @@
+2001-05-20  Jim Meyering  <meyering@lucent.com>
+
+	* doc/Makefile.am (EXTRA_DIST): Add constants.texi and doclicense.texi.
+	(info_TEXINFOS): s/fileutils/omni-utils/.
+	(check-texinfo): New rule.
+	(check): Depend on check-texinfo.
+
+	* doc/omni-utils.texi (uniq invocation): Document the new optional
+	arguments to the --all-repeated option.
+	Make all references to POSIX use @sc{posix}.
+
 2001-05-19  Jim Meyering  <meyering@lucent.com>
 
 	* doc/fileutils.texi: Remove.
