@@ -1,3 +1,34 @@
+2003-10-13  Paul Eggert  <eggert@twinsun.com>
+
+	Fix address-arithmetic bug in 'ls', reported by Georgi Guninski.
+	Remove several arbitrary limits on hosts where int cannot represent
+	all size_t values.
+
+	* src/ls.c (struct bin_str.len, length_of_file_name_and_frills, indent,
+	nfiles, files_index, tabsize, line_length, struct column_info.line_len,
+	struct column_info.col_arr[0], max_idx):
+	Now size_t, not int.
+	(get_funky_string): Return bool indicating success, instead of
+	a negative count to indicate failure.  Store number of columns
+	through new parameter OUTPUT_COUNT; that way, they can never
+	go negative.  Change equals_end from int to bool.  All uses
+	changed.
+	(struct column_info.valid_len): Now bool, not int.  All uses changed.
+	(dired_dump_obstack, get_funky_string, clear_files,
+	extract_dirs_from_files, print_current_files,
+	print_many_per_line, print_horizontal, init_column_info,
+	put_indicator, length_of_file_name_and_frills,
+	print_with_commas): Use size_t, not int, for local variables
+	that count sizes.
+	(decode_switches): Decode sizes using xstrtoul, not xstrtol.
+	Check for TIOCGWINSZ returing negative values (or values greater
+	than SIZE_MAX!).
+	(visit_dir, main, parse_ls_color, queue_directory, add_ignore_pattern,
+	init_column_info):
+	Use xmalloc and xnmalloc, not XMALLOC.
+	(gobble_file): Use xnrealloc, not XREALLOC.
+	(print_color_indicator): Remove now-unnecessary cast to size_t.
+
 2003-10-12  Paul Eggert  <eggert@twinsun.com>
 
 	* tests/du/no-x: Change wording of diagnostic to match latest du.c.

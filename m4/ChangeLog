@@ -1,3 +1,7 @@
+2003-10-13  Paul Eggert  <eggert@twinsun.com>
+
+	* xalloc.m4: Import latest version from gnulib.
+
 2003-10-06  Jim Meyering  <jim@meyering.net>
 
 	* ftw.m4: Remove now-unused file.
