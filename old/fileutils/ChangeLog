@@ -1,4 +1,14 @@
+1998-10-08  Paul Eggert  <eggert@twinsun.com>
+
+	* mktime.c (my_mktime_localtime_r): Renamed from localtime_r.
+	Define also if HAVE_LOCALTIME_R && defined (localtime_r), with
+	a body that merely expands localtime_r; this works around a
+	bug in Digital Unix 4.0A and 4.0D.
+
 1998-10-05  Jim Meyering  <meyering@ascend.com>
+
+	* po/Makefile.in.in (uninstall): Remove (historical?) command that
+	removed po-Makefile.in.in.  From Akim Demaille.
 
 	* src/install.c (long_options): Add entry for --suffix=SUFFIX option.
 	From aldomel.
