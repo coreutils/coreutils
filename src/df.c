@@ -433,7 +433,8 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
 }
 
 /* Return the root mountpoint of the filesystem on which FILE exists, in
-   malloced storage.  FILE_STAT should be the result of stating FILE.  */
+   malloced storage.  FILE_STAT should be the result of stating FILE.
+   Return NULL if unable to determine the mount point.  */
 static char *
 find_mount_point (const char *file, const struct stat *file_stat)
 {
@@ -455,11 +456,13 @@ find_mount_point (const char *file, const struct stat *file_stat)
     /* FILE is some other kind of file, we need to use its directory.  */
     {
       char *dir = dir_name (file);
-      int rv = chdir (dir);
-      free (dir);
-
-      if (rv < 0)
-	return NULL;
+      if (chdir (dir) < 0)
+	{
+	  int saved_errno = errno;
+	  free (dir);
+	  errno = saved_errno;
+	  return NULL;
+	}
 
       if (stat (".", &last_stat) < 0)
 	goto done;
