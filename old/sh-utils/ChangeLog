@@ -5,6 +5,8 @@
 	* src/seq.c (usage): Mention that --format=FORMAT must be
 	a *floating-point* format, also in description of that option.
 	Reported by Karl Eichwalder.
+	(usage): Also add the `=' signs here: --format=FORMAT,
+	--separator=STRING.
 
 2002-03-16  Jim Meyering  <meyering@lucent.com>
 
