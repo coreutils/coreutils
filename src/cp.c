@@ -172,7 +172,7 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
   -p, --preserve               preserve file attributes if possible\n\
       --parents                append source path to DIRECTORY\n\
   -P                           same as `--parents' for now; soon to change to\n\
-                                 produce the POSIX-mandated behavior\n\
+                                 `--no-dereference' to conform to POSIX\n\
   -r                           copy recursively, non-directories as files\n\
                                  WARNING: use -R instead when you might copy\n\
                                  special files like FIFOs or /dev/zero\n\
@@ -833,9 +833,9 @@ main (int argc, char **argv)
   if (used_P_option)
     {
       error (0, 0,
-	     _("warning: the meaning of `-P' will change to conform with\
- the POSIX\nspecification in an upcoming release;  if you want the old\
- behavior,\nuse the `--parents' option instead."));
+	     _("\
+Warning: the meaning of `-P' will change in the future to conform to POSIX.\n\
+Use `--parents' for the old meaning, and `--no-dereference' for the new."));
     }
 
   if (backup_suffix_string)
