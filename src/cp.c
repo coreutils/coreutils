@@ -581,6 +581,9 @@ is not a directory"),
 	     dest);
       usage (1);
     }
+
+  /* unreachable */
+  return 0;
 }
 
 static void
