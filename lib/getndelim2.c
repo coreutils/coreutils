@@ -27,6 +27,7 @@
 #include "getndelim2.h"
 
 #include <stdlib.h>
+#include <stddef.h>
 
 #include "unlocked-io.h"
 
