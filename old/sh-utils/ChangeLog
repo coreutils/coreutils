@@ -1,5 +1,8 @@
 1997-09-17  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/yes.c (main): Call parse_long_options only if POSIXLY_CORRECT
+	is *not* set.  Reported by Frank T Lofaro.
+
 	* src/hostid.c: New file.
 	* src/Makefile.am (EXTRA_PROGRAMS): Add hostid.
 	* configure.in (OPTIONAL_BIN_PROGS): Check for gethostid,
