@@ -779,7 +779,7 @@ isaac_seed_finish (struct isaac_state *s)
 #define ISAAC_SEED(s,x) isaac_seed_data (s, &(x), sizeof (x))
 
 
-#if __GNUC__ >= 2 && (__i386__ || __alpha__ || _ARCH_PPC)
+#if __GNUC__ >= 2 && (__i386__ || __alpha__)
 /*
  * Many processors have very-high-resolution timer registers,
  * The timer registers can be made inaccessible, so we have to deal with the
@@ -815,6 +815,8 @@ isaac_seed_machdep (struct isaac_state *s)
       __asm__ __volatile__ ("rpcc %0" : "=r" (t));
 # endif
 # if _ARCH_PPC
+      /* Code not used because this instruction is available only on first-
+	 generation PPCs and evokes a SIGBUS on some Linux 2.4 kernels.  */
       word32 t;
       __asm__ __volatile__ ("mfspr %0,22" : "=r" (t));
 # endif
@@ -833,12 +835,12 @@ isaac_seed_machdep (struct isaac_state *s)
   }
 }
 
-#else /* !(__i386__ || __alpha__ || _ARCH_PPC) */
+#else /* !(__i386__ || __alpha__) */
 
 /* Do-nothing stub */
 # define isaac_seed_machdep(s) (void) 0
 
-#endif /* !(__i386__ || __alpha__ || _ARCH_PPC) */
+#endif /* !(__i386__ || __alpha__) */
 
 
 /*
