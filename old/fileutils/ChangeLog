@@ -1,6 +1,18 @@
-2002-07-20  Jim Meyering  <meyering@lucent.com>
+2002-07-22  Jim Meyering  <meyering@lucent.com>
+
+	This test might remove a file owned by the person running `make check'.
+	* tests/rm/fail-eperm: Hoist definition of $target_file, and use
+	that (not $f) in test for owner/dir/symlink.  Patch by Michael Stone.
+
+	* tests/rm/fail-eperm: Handle the case in which rm produces no output.
 
 	* Version 4.1.11.
+
+	rm would prompt for non-dangling symlinks
+	* src/remove.c (prompt): When not interactive, don't prompt
+	for a symlink.  Reported by Dave Beckett.  Patch by Michael Stone.
+
+2002-07-20  Jim Meyering  <meyering@lucent.com>
 
 	* src/copy.c (copy_internal): Use file_name_lookup, not getdport.
 	Patch by Alfred M. Szmidt.
