@@ -403,3 +403,5 @@ char *stpcpy ();
 #ifndef HAVE_DECLARATION_STRSTR
 char *strstr ();
 #endif
+
+#include "xalloc.h"
