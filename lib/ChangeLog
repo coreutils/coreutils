@@ -1,3 +1,9 @@
+2000-07-15  Jim Meyering  <meyering@lucent.com>
+
+	* quote.c (quote, quote_n): New file.  Two functions taken verbatim
+	from tar's src/misc.c.
+	* quote.h: New file.  Prototypes for same.
+
 2000-07-10  Paul Eggert  <eggert@twinsun.com>
 
 	From a suggestion by Bruno Haible.
