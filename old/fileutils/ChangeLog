@@ -1,5 +1,9 @@
 Tue Jun 18 20:54:05 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* cp.c (copy_reg): Cast both sides of comparison to size_t
+	to avoid warning about `comparison between signed and unsigned'
+	from gcc -Wall.
+
 	* ln.c (do_link): Refine last change so we don't disallow commands
 	like `ln --force A B' when A and B are hard links to the same file.
 	See comments in the source.  Reported by Erik Naggum <erik@naggum.no>.
@@ -25,6 +29,7 @@ Tue Jun 18 20:54:05 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	existing, regular file, convert the user's command, e.g.
 	`cp --force --backup foo foo' to `cp --force foo fooSUFFIX'
 	where SUFFIX is determined by any version control options used.
+	(usage): Update --help message.
 	At urging of (most recently) Karl Berry.
 
 Sun Jun 16 13:40:22 1996  Jim Meyering  <meyering@na-net.ornl.gov>
