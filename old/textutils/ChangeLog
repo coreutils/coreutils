@@ -1,3 +1,7 @@
+Tue Oct  1 06:54:22 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/md5sum-test/md5-rfc (md5sum): Use ../src/md5sum.
+
 Mon Sep 30 23:35:46 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* tests/md5sum-test/md5-rfc (md5sum): Set to $srcdir/md5sum.
