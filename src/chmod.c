@@ -39,10 +39,8 @@ void strip_trailing_slashes ();
 char *xmalloc ();
 char *xrealloc ();
 
-static int change_file_mode (char *file, struct mode_change *changes, int deref_symlink);
-static int change_dir_mode (char *dir, struct mode_change *changes, struct stat *statp);
-static void describe_change (char *file, short unsigned int mode, int changed);
-static void usage (int status);
+static int change_dir_mode __P ((char *dir, struct mode_change *changes,
+			    struct stat *statp));
 
 /* The name the program was run with. */
 char *program_name;
@@ -77,102 +75,22 @@ static struct option const long_options[] =
   {0, 0, 0, 0}
 };
 
-/* Parse the ASCII mode given on the command line into a linked list
-   of `struct mode_change' and apply that to each file argument. */
+/* Tell the user the mode MODE that file FILE has been set to;
+   if CHANGED is zero, FILE had that mode already. */
 
-void
-main (int argc, char **argv)
+static void
+describe_change (char *file, short unsigned int mode, int changed)
 {
-  struct mode_change *changes;
-  int errors = 0;
-  int modeind = 0;		/* Index of the mode argument in `argv'. */
-  int thisind;
-  int c;
+  char perms[11];		/* "-rwxrwxrwx" ls-style modes. */
 
-  program_name = argv[0];
-  recurse = force_silent = verbose = changes_only = 0;
-
-  while (1)
-    {
-      thisind = optind ? optind : 1;
-
-      c = getopt_long (argc, argv, "RcfvrwxXstugoa,+-=", long_options,
-		       (int *) 0);
-      if (c == EOF)
-	break;
-
-      switch (c)
-	{
-	case 0:
-	  break;
-	case 'r':
-	case 'w':
-	case 'x':
-	case 'X':
-	case 's':
-	case 't':
-	case 'u':
-	case 'g':
-	case 'o':
-	case 'a':
-	case ',':
-	case '+':
-	case '-':
-	case '=':
-	  if (modeind != 0 && modeind != thisind)
-	    error (1, 0, "invalid mode");
-	  modeind = thisind;
-	  break;
-	case 'R':
-	  recurse = 1;
-	  break;
-	case 'c':
-	  verbose = 1;
-	  changes_only = 1;
-	  break;
-	case 'f':
-	  force_silent = 1;
-	  break;
-	case 'v':
-	  verbose = 1;
-	  break;
-	default:
-	  usage (1);
-	}
-    }
-
-  if (show_version)
-    {
-      printf ("chmod - %s\n", version_string);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
-
-  if (modeind == 0)
-    modeind = optind++;
-
-  if (optind >= argc)
-    {
-      error (0, 0, "too few arguments");
-      usage (1);
-    }
-
-  changes = mode_compile (argv[modeind],
-			  MODE_MASK_EQUALS | MODE_MASK_PLUS | MODE_MASK_MINUS);
-  if (changes == MODE_INVALID)
-    error (1, 0, "invalid mode");
-  else if (changes == MODE_MEMORY_EXHAUSTED)
-    error (1, 0, "virtual memory exhausted");
-
-  for (; optind < argc; ++optind)
-    {
-      strip_trailing_slashes (argv[optind]);
-      errors |= change_file_mode (argv[optind], changes, 1);
-    }
-
-  exit (errors);
+  mode_string (mode, perms);
+  perms[10] = '\0';		/* `mode_string' does not null terminate. */
+  if (changed)
+    printf ("mode of %s changed to %04o (%s)\n",
+	    file, mode & 07777, &perms[1]);
+  else
+    printf ("mode of %s retained as %04o (%s)\n",
+	    file, mode & 07777, &perms[1]);
 }
 
 /* Change the mode of FILE according to the list of operations CHANGES.
@@ -281,24 +199,6 @@ change_dir_mode (char *dir, struct mode_change *changes, struct stat *statp)
   return errors;
 }
 
-/* Tell the user the mode MODE that file FILE has been set to;
-   if CHANGED is zero, FILE had that mode already. */
-
-static void
-describe_change (char *file, short unsigned int mode, int changed)
-{
-  char perms[11];		/* "-rwxrwxrwx" ls-style modes. */
-
-  mode_string (mode, perms);
-  perms[10] = '\0';		/* `mode_string' does not null terminate. */
-  if (changed)
-    printf ("mode of %s changed to %04o (%s)\n",
-	    file, mode & 07777, &perms[1]);
-  else
-    printf ("mode of %s retained as %04o (%s)\n",
-	    file, mode & 07777, &perms[1]);
-}
-
 static void
 usage (int status)
 {
@@ -325,4 +225,102 @@ Each MODE is one or more of the letters ugoa, one of the symbols +-= and\n\
 one or more of the letters rwxXstugo.\n");
     }
   exit (status);
+}
+
+/* Parse the ASCII mode given on the command line into a linked list
+   of `struct mode_change' and apply that to each file argument. */
+
+void
+main (int argc, char **argv)
+{
+  struct mode_change *changes;
+  int errors = 0;
+  int modeind = 0;		/* Index of the mode argument in `argv'. */
+  int thisind;
+  int c;
+
+  program_name = argv[0];
+  recurse = force_silent = verbose = changes_only = 0;
+
+  while (1)
+    {
+      thisind = optind ? optind : 1;
+
+      c = getopt_long (argc, argv, "RcfvrwxXstugoa,+-=", long_options,
+		       (int *) 0);
+      if (c == EOF)
+	break;
+
+      switch (c)
+	{
+	case 0:
+	  break;
+	case 'r':
+	case 'w':
+	case 'x':
+	case 'X':
+	case 's':
+	case 't':
+	case 'u':
+	case 'g':
+	case 'o':
+	case 'a':
+	case ',':
+	case '+':
+	case '-':
+	case '=':
+	  if (modeind != 0 && modeind != thisind)
+	    error (1, 0, "invalid mode");
+	  modeind = thisind;
+	  break;
+	case 'R':
+	  recurse = 1;
+	  break;
+	case 'c':
+	  verbose = 1;
+	  changes_only = 1;
+	  break;
+	case 'f':
+	  force_silent = 1;
+	  break;
+	case 'v':
+	  verbose = 1;
+	  break;
+	default:
+	  usage (1);
+	}
+    }
+
+  if (show_version)
+    {
+      printf ("chmod - %s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage (0);
+
+  if (modeind == 0)
+    modeind = optind++;
+
+  if (optind >= argc)
+    {
+      error (0, 0, "too few arguments");
+      usage (1);
+    }
+
+  changes = mode_compile (argv[modeind],
+			  MODE_MASK_EQUALS | MODE_MASK_PLUS | MODE_MASK_MINUS);
+  if (changes == MODE_INVALID)
+    error (1, 0, "invalid mode");
+  else if (changes == MODE_MEMORY_EXHAUSTED)
+    error (1, 0, "virtual memory exhausted");
+
+  for (; optind < argc; ++optind)
+    {
+      strip_trailing_slashes (argv[optind]);
+      errors |= change_file_mode (argv[optind], changes, 1);
+    }
+
+  exit (errors);
 }
