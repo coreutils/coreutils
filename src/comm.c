@@ -118,7 +118,6 @@ writeline (struct linebuffer *line, FILE *stream, int class)
     }
 
   fwrite (line->buffer, sizeof (char), line->length, stream);
-  putc ('\n', stream);
 }
 
 /* Compare INFILES[0] and INFILES[1].
