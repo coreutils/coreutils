@@ -1850,7 +1850,7 @@ sortlines (struct line *lines, size_t nlines, struct line *temp)
 	sortlines_temp (lo, nlo, sorted_lo);
       else
 	sorted_lo[-1] = lo[-1];
-  
+
       mergelines (lines, sorted_lo, nlo, hi, nhi);
     }
 }
