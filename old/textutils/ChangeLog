@@ -2,6 +2,8 @@
 
 	* Version 2.0.17.
 
+	* src/tail.c (tail_forever): Add a cast.
+
 	Avoid compiler warnings.
 	* src/fmt.c: Remove `unsigned' attribute from type of global `prefix'.
 	(copy_rest): Cast to (unsigned char *) before dereferencing.
