@@ -124,7 +124,7 @@ static struct option const long_opts[] =
   {"preserve", no_argument, NULL, 'p'},
   {"recursive", no_argument, NULL, 'R'},
   {"remove-destination", no_argument, NULL, UNLINK_DEST_BEFORE_OPENING},
-  {"strip-trailing-slash", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
+  {"strip-trailing-slashes", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
   {"suffix", required_argument, NULL, 'S'},
   {"symbolic-link", no_argument, NULL, 's'},
   {"target-directory", required_argument, NULL, TARGET_DIRECTORY_OPTION},
