@@ -1,6 +1,6 @@
 /* utimecmp.c -- compare file time stamps
 
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include "hash.h"
+#include "intprops.h"
 #include "timespec.h"
 #include "utimens.h"
 #include "xalloc.h"
@@ -49,14 +50,6 @@
 #ifndef SIZE_MAX
 # define SIZE_MAX ((size_t) -1)
 #endif
-
-/* The extra casts work around common compiler bugs.  */
-#define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
-/* The outer cast is needed to work around a bug in Cray C 5.0.3.0.
-   It is necessary at least when t == time_t.  */
-#define TYPE_MINIMUM(t) ((t) (TYPE_SIGNED (t) \
-			      ? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) : (t) 0))
-#define TYPE_MAXIMUM(t) ((t) (~ (t) 0 - TYPE_MINIMUM (t)))
 
 enum { BILLION = 1000 * 1000 * 1000 };
 
@@ -140,8 +133,8 @@ utimecmp (char const *dst_name,
 
      time_t might be unsigned.  */
 
-  verify (time_t_is_integer, (time_t) 0.5 == 0);
-  verify (twos_complement_arithmetic, -1 == ~1 + 1);
+  verify (time_t_is_integer, TYPE_IS_INTEGER (time_t));
+  verify (twos_complement_arithmetic, TYPE_TWOS_COMPLEMENT (int));
 
   /* Destination and source time stamps.  */
   time_t dst_s = dst_stat->st_mtime;
