@@ -5,7 +5,7 @@
 	(copy_reg): New 4th parameter, dst_mode.  Pass it as 3rd arg. to open.
 	(copy_internal): Change type of locals `src_mode' and `src_type' from
 	int to mode_t.
-	Remove unnecessary local `fix_mode'.
+	Remove unnecessary local, `fix_mode'.
 	Combine two if-stmts into one.
 	Pass `src_mode' as 4th arg to copy_reg.
 	If we've just created a new regular file, return early, skipping the
