@@ -42,24 +42,3 @@ my-distcheck: dist
 	@echo "========================"; \
 	echo "$(distdir).tar.gz is ready for distribution"; \
 	echo "========================"
-
-acdir = m4
-aclocal-files: configure.in m4/Makefile.am
-	echo "acfiles = \\" > $@-tmp
-	(cd $(srcdir) && find $(acdir) -type f -name '*.m4' -print)	\
-	  | sed 's!^!$(top_srcdir)/!'					\
-	  | tr '\012' ' '						\
-	  | fmt								\
-	  | sed -e 's/$$/ \\/' -e '$$s/..$$//'				\
-	  >> $@-tmp
-	echo >> $@-tmp
-	mv $@-tmp $@
-
--include aclocal-files
-
-# Regenerate aclocal.m4 any time one of the m4/*.m4 files changes.
-$(ACLOCAL_M4): $(acfiles)
-
-# Make aclocal use `-I m4'.
-# This is used in Makefile.maint.
-ACLOCAL := $(ACLOCAL) -I $(acdir)
