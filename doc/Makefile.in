@@ -111,7 +111,7 @@ _am_quote = @_am_quote@
 install_sh = @install_sh@
 l = @l@
 
-info_TEXINFOS = omni-utils.texi
+info_TEXINFOS = coreutils.texi
 
 EXTRA_DIST = perm.texi getdate.texi constants.texi doclicense.texi
 
@@ -132,8 +132,8 @@ CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 DIST_SOURCES =
 INFO_DEPS = omni-utils.info
-DVIS = omni-utils.dvi
-TEXINFOS = omni-utils.texi
+DVIS = coreutils.dvi
+TEXINFOS = coreutils.texi
 DIST_COMMON = ChangeLog Makefile.am Makefile.in mdate-sh stamp-vti \
 	texinfo.tex version.texi
 all: all-am
@@ -150,8 +150,8 @@ Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 
 $(srcdir)/version.texi:  $(srcdir)/stamp-vti
 	@:
-$(srcdir)/stamp-vti: omni-utils.texi $(top_srcdir)/configure.in
-	@(set `$(SHELL) $(srcdir)/mdate-sh $(srcdir)/omni-utils.texi`; \
+$(srcdir)/stamp-vti: coreutils.texi $(top_srcdir)/configure.in
+	@(set `$(SHELL) $(srcdir)/mdate-sh $(srcdir)/coreutils.texi`; \
 	echo "@set UPDATED $$1 $$2 $$3"; \
 	echo "@set UPDATED-MONTH $$2 $$3"; \
 	echo "@set EDITION $(VERSION)"; \
@@ -168,8 +168,8 @@ mostlyclean-vti:
 maintainer-clean-vti:
 	-rm -f $(srcdir)/stamp-vti $(srcdir)/version.texi
 
-omni-utils.info: omni-utils.texi $(srcdir)/version.texi
-omni-utils.dvi: omni-utils.texi $(srcdir)/version.texi
+omni-utils.info: coreutils.texi $(srcdir)/version.texi
+coreutils.dvi: coreutils.texi $(srcdir)/version.texi
 
 .texi.info:
 	@cd $(srcdir) && rm -f $@ $@-[0-9] $@-[0-9][0-9]
@@ -219,10 +219,10 @@ dist-info: $(INFO_DEPS)
 	done
 
 mostlyclean-aminfo:
-	-rm -f omni-utils.aux omni-utils.cp omni-utils.cps omni-utils.dvi \
-	  omni-utils.fl omni-utils.fn omni-utils.ky omni-utils.log \
-	  omni-utils.op omni-utils.pg omni-utils.ps omni-utils.toc \
-	  omni-utils.tp omni-utils.vr
+	-rm -f coreutils.aux coreutils.cp coreutils.cps coreutils.dvi coreutils.fl \
+	  coreutils.fn coreutils.ky coreutils.log coreutils.op \
+	  coreutils.pg coreutils.ps coreutils.toc coreutils.tp \
+	  coreutils.vr
 
 maintainer-clean-aminfo:
 	cd $(srcdir) && \
