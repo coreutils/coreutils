@@ -7,21 +7,15 @@
 : ${DF=df}
 : ${MKDIR=mkdir}
 
-# Try these:
-candidate_tmp_dirs="
- $TMPDIR
- /tmp
- /var/tmp
- /usr/tmp
- $HOME
-"
+# Try these
+: ${CANDIDATE_TMP_DIRS="$TMPDIR /tmp /var/tmp /usr/tmp $HOME"}
 
 other_partition_tmpdir=
 
 # WARNING: using sed like this to extract the mount point will fail
 # if the mount point name contains `% '.
 dot_mount_point=`$DF --no-sync -P . | sed -n '2s/.*%  *//p'`
-for d in $candidate_tmp_dirs; do
+for d in $CANDIDATE_TMP_DIRS; do
   d_mount_point=`$DF --no-sync -P $d | sed -n '2s/.*%  *//p'`
 
   # Same partition?  Skip it.
@@ -34,3 +28,13 @@ for d in $candidate_tmp_dirs; do
   fi
 
 done
+
+if test -z $other_partition_tmpdir; then
+  cat <<EOF 1>&2
+This test requires a writable directory on a different disk partition,
+and I couldn\'t find one.  I tried these defaults:
+  $CANDIDATE_TMP_DIRS
+Set your environment variable CANDIDATE_TMP_DIRS to make this test use
+use a different list.
+EOF
+fi
