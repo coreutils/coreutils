@@ -453,7 +453,7 @@ in a way suitable for novices.  Thus, if you are interested, please get
 involved in improving this manual.  The entire @sc{gnu} community will
 benefit.
 
-@cindex POSIX.2
+@cindex @sc{posix.2}
 The @sc{gnu} utilities documented here are mostly compatible with the
 @sc{posix.2} standard.
 @cindex bugs, reporting
@@ -7245,7 +7245,7 @@ out of date.  This is the default.
 @opindex -P
 @opindex --portability
 @cindex one-line output format
-@cindex POSIX output format
+@cindex @sc{posix} output format
 @cindex portable output format
 @cindex output format, portable
 Use the @sc{posix} output format.  This is like the default format except
@@ -7263,7 +7263,7 @@ Non-integer values are rounded up, instead of being rounded down or
 rounded to the nearest integer.
 
 @item
-The labels in the header output line are changed to conform to POSIX.
+The labels in the header output line are changed to conform to @sc{posix}.
 @end enumerate
 
 @item --sync
@@ -8130,7 +8130,7 @@ expression operators.
 In the regular expression, @code{\+}, @code{\?}, and @code{\|} are
 operators which respectively match one or more, zero or one, or separate
 alternatives.  SunOS and other @code{expr}'s treat these as regular
-characters.  (POSIX allows either behavior.)
+characters.  (@sc{posix} allows either behavior.)
 @xref{Top, , Regular Expression Library, regex, Regex}, for details of
 regular expression syntax.  Some examples are in @ref{Examples of expr}.
 
@@ -8439,7 +8439,7 @@ The program accepts the following option.  Also see @ref{Common options}.
 @opindex --portability
 Instead of performing length checks on the underlying filesystem,
 test the length of each file name and its components against the
-POSIX.1 minimum limits for portability.  Also check that the file
+@sc{posix.1} minimum limits for portability.  Also check that the file
 name contains no characters not in the portable file name character set.
 
 @end table
@@ -8536,8 +8536,8 @@ be used in combination with any line settings.
 @opindex --file
 Set the line opened by the filename specified in @var{device} instead of
 the tty line connected to standard input.  This option is necessary
-because opening a POSIX tty requires use of the @code{O_NONDELAY} flag to
-prevent a POSIX tty from blocking until the carrier detect line is high if
+because opening a @sc{posix} tty requires use of the @code{O_NONDELAY} flag to
+prevent a @sc{posix} tty from blocking until the carrier detect line is high if
 the @code{clocal} flag is not set.  Hence, it is not always possible
 to allow the shell to open the device in the traditional manner.
 
@@ -8558,9 +8558,9 @@ description.  The descriptions themselves refer to the positive
 case, that is, when @emph{not} negated (unless stated otherwise,
 of course).
 
-Some settings are not available on all POSIX systems, since they use
-extensions.  Such arguments are marked below with ``Non-POSIX'' in their
-description.  On non-POSIX systems, those or other settings also may not
+Some settings are not available on all @sc{posix} systems, since they use
+extensions.  Such arguments are marked below with ``Non-@sc{posix}'' in their
+description.  On non-@sc{posix} systems, those or other settings also may not
 be available, but it's not feasible to document all the variations: just
 try it and see.
 
@@ -8628,7 +8628,7 @@ Disable modem control signals.  May be negated.
 @cindex hardware flow control
 @cindex flow control, hardware
 @cindex RTS/CTS flow control
-Enable RTS/CTS flow control.  Non-POSIX.  May be negated.
+Enable RTS/CTS flow control.  Non-@sc{posix}.  May be negated.
 @end table
 
 
@@ -8702,19 +8702,19 @@ empty again.  May be negated.
 @item iuclc
 @opindex iuclc
 @cindex uppercase, translating to lowercase
-Translate uppercase characters to lowercase.  Non-POSIX.  May be
+Translate uppercase characters to lowercase.  Non-@sc{posix}.  May be
 negated.
 
 @item ixany
 @opindex ixany
 Allow any character to restart output (only the start character
-if negated).  Non-POSIX.  May be negated.
+if negated).  Non-@sc{posix}.  May be negated.
 
 @item imaxbel
 @opindex imaxbel
 @cindex beeping at input buffer full
 Enable beeping and not flushing input buffer if a character arrives
-when the input buffer is full.  Non-POSIX.  May be negated.
+when the input buffer is full.  Non-@sc{posix}.  May be negated.
 @end table
 
 
@@ -8732,74 +8732,74 @@ Postprocess output.  May be negated.
 @item olcuc
 @opindex olcuc
 @cindex lowercase, translating to output
-Translate lowercase characters to uppercase.  Non-POSIX.  May be
+Translate lowercase characters to uppercase.  Non-@sc{posix}.  May be
 negated.
 
 @item ocrnl
 @opindex ocrnl
 @cindex return, translating to newline
-Translate carriage return to newline.  Non-POSIX.  May be negated.
+Translate carriage return to newline.  Non-@sc{posix}.  May be negated.
 
 @item onlcr
 @opindex onlcr
 @cindex newline, translating to crlf
-Translate newline to carriage return-newline.  Non-POSIX.  May be
+Translate newline to carriage return-newline.  Non-@sc{posix}.  May be
 negated.
 
 @item onocr
 @opindex onocr
-Do not print carriage returns in the first column.  Non-POSIX.
+Do not print carriage returns in the first column.  Non-@sc{posix}.
 May be negated.
 
 @item onlret
 @opindex onlret
-Newline performs a carriage return.  Non-POSIX.  May be negated.
+Newline performs a carriage return.  Non-@sc{posix}.  May be negated.
 
 @item ofill
 @opindex ofill
 @cindex pad instead of timing for delaying
-Use fill (padding) characters instead of timing for delays.  Non-POSIX.
+Use fill (padding) characters instead of timing for delays.  Non-@sc{posix}.
 May be negated.
 
 @item ofdel
 @opindex ofdel
 @cindex pad character
-Use delete characters for fill instead of null characters.  Non-POSIX.
+Use delete characters for fill instead of null characters.  Non-@sc{posix}.
 May be negated.
 
 @item nl1
 @itemx nl0
 @opindex nl@var{n}
-Newline delay style.  Non-POSIX.
+Newline delay style.  Non-@sc{posix}.
 
 @item cr3
 @itemx cr2
 @itemx cr1
 @itemx cr0
 @opindex cr@var{n}
-Carriage return delay style.  Non-POSIX.
+Carriage return delay style.  Non-@sc{posix}.
 
 @item tab3
 @itemx tab2
 @itemx tab1
 @itemx tab0
 @opindex tab@var{n}
-Horizontal tab delay style.  Non-POSIX.
+Horizontal tab delay style.  Non-@sc{posix}.
 
 @item bs1
 @itemx bs0
 @opindex bs@var{n}
-Backspace delay style.  Non-POSIX.
+Backspace delay style.  Non-@sc{posix}.
 
 @item vt1
 @itemx vt0
 @opindex vt@var{n}
-Vertical tab delay style.  Non-POSIX.
+Vertical tab delay style.  Non-@sc{posix}.
 
 @item ff1
 @itemx ff0
 @opindex ff@var{n}
-Form feed delay style.  Non-POSIX.
+Form feed delay style.  Non-@sc{posix}.
 @end table
 
 
@@ -8821,7 +8821,7 @@ special characters.  May be negated.
 
 @item iexten
 @opindex iexten
-Enable non-POSIX special characters.  May be negated.
+Enable non-@sc{posix} special characters.  May be negated.
 
 @item echo
 @opindex echo
@@ -8855,12 +8855,12 @@ characters.  May be negated.
 @cindex case translation
 Enable input and output of uppercase characters by preceding their
 lowercase equivalents with @samp{\}, when @code{icanon} is set.
-Non-POSIX.  May be negated.
+Non-@sc{posix}.  May be negated.
 
 @item tostop
 @opindex tostop
 @cindex background jobs, stopping at terminal write
-Stop background jobs that try to write to the terminal.  Non-POSIX.
+Stop background jobs that try to write to the terminal.  Non-@sc{posix}.
 May be negated.
 
 @item echoprt
@@ -8868,7 +8868,7 @@ May be negated.
 @opindex echoprt
 @opindex prterase
 Echo erased characters backward, between @samp{\} and @samp{/}.
-Non-POSIX.  May be negated.
+Non-@sc{posix}.  May be negated.
 
 @item echoctl
 @itemx ctlecho
@@ -8877,7 +8877,7 @@ Non-POSIX.  May be negated.
 @cindex control characters, using @samp{^@var{c}}
 @cindex hat notation for control characters
 Echo control characters in hat notation (@samp{^@var{c}}) instead
-of literally.  Non-POSIX.  May be negated.
+of literally.  Non-@sc{posix}.  May be negated.
 
 @item echoke
 @itemx crtkill
@@ -8885,7 +8885,7 @@ of literally.  Non-POSIX.  May be negated.
 @opindex crtkill
 Echo the @code{kill} special character by erasing each character on
 the line as indicated by the @code{echoprt} and @code{echoe} settings,
-instead of by the @code{echoctl} and @code{echok} settings.  Non-POSIX.
+instead of by the @code{echoctl} and @code{echok} settings.  Non-@sc{posix}.
 May be negated.
 @end table
 
@@ -8967,18 +8967,18 @@ If negated, same as @code{parenb istrip opost cs7}.
 
 @item decctlq
 @opindex decctlq
-Same as @code{-ixany}.  Non-POSIX.  May be negated.
+Same as @code{-ixany}.  Non-@sc{posix}.  May be negated.
 
 @item tabs
 @opindex tabs
-Same as @code{tab0}.  Non-POSIX.  May be negated.  If negated, same
+Same as @code{tab0}.  Non-@sc{posix}.  May be negated.  If negated, same
 as @code{tab3}.
 
 @item lcase
 @itemx LCASE
 @opindex lcase
 @opindex LCASE
-Same as @code{xcase iuclc olcuc}.  Non-POSIX.  May be negated.
+Same as @code{xcase iuclc olcuc}.  Non-@sc{posix}.  May be negated.
 
 @item crt
 @opindex crt
@@ -9039,11 +9039,11 @@ End the line.
 
 @item eol2
 @opindex eol2
-Alternate character to end the line.  Non-POSIX.
+Alternate character to end the line.  Non-@sc{posix}.
 
 @item swtch
 @opindex swtch
-Switch to a different shell layer.  Non-POSIX.
+Switch to a different shell layer.  Non-@sc{posix}.
 
 @item start
 @opindex start
@@ -9059,20 +9059,20 @@ Send a terminal stop signal.
 
 @item dsusp
 @opindex dsusp
-Send a terminal stop signal after flushing the input.  Non-POSIX.
+Send a terminal stop signal after flushing the input.  Non-@sc{posix}.
 
 @item rprnt
 @opindex rprnt
-Redraw the current line.  Non-POSIX.
+Redraw the current line.  Non-@sc{posix}.
 
 @item werase
 @opindex werase
-Erase the last word typed.  Non-POSIX.
+Erase the last word typed.  Non-@sc{posix}.
 
 @item lnext
 @opindex lnext
 Enter the next character typed literally, even if it is a special
-character.  Non-POSIX.
+character.  Non-@sc{posix}.
 @end table
 
 
@@ -9102,13 +9102,13 @@ Set the output speed to @var{n}.
 
 @item rows @var{n}
 @opindex rows
-Tell the tty kernel driver that the terminal has @var{n} rows.  Non-POSIX.
+Tell the tty kernel driver that the terminal has @var{n} rows.  Non-@sc{posix}.
 
 @item cols @var{n}
 @itemx columns @var{n}
 @opindex cols
 @opindex columns
-Tell the kernel that the terminal has @var{n} columns.  Non-POSIX.
+Tell the kernel that the terminal has @var{n} columns.  Non-@sc{posix}.
 
 @item size
 @opindex size
@@ -9118,11 +9118,11 @@ Print the number of rows and columns that the kernel thinks the
 terminal has.  (Systems that don't support rows and columns in the kernel
 typically use the environment variables @env{LINES} and @env{COLUMNS}
 instead; however, GNU @code{stty} does not know anything about them.)
-Non-POSIX.
+Non-@sc{posix}.
 
 @item line @var{n}
 @opindex line
-Use line discipline @var{n}.  Non-POSIX.
+Use line discipline @var{n}.  Non-@sc{posix}.
 
 @item speed
 @opindex speed
