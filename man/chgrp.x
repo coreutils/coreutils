@@ -1,4 +1,4 @@
 [NAME]
 chgrp \- change group ownership
 [DESCRIPTION]
-." Add any additional description here
+.\" Add any additional description here
