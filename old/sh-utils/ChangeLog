@@ -1,3 +1,12 @@
+1999-08-07  Jim Meyering  <meyering@ascend.com>
+
+	* lib/getdate.y (OtherTable[]): Use tDAY_UNIT for `tomorrow,'
+	`yesterday,' `today,' and `now' rather than tMINUTE_UNIT.  Of course
+	with correspondingly smaller numbers for tomrrow and yesterday.
+	This change does not change the way the code works, since the
+	grammar rules for the two symbols are analogous.
+	From Tadayoshi Funaba.
+
 1999-08-04  Jim Meyering  <meyering@ascend.com>
 
 	false and true once again generate --help and --version output
