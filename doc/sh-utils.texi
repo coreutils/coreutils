@@ -866,7 +866,8 @@ the environment variable, @var{POSIXLY_CORRECT} is set.
 
 @end table
 
-The keywords cannot be used as strings.
+To make @code{expr} interpret keywords as strings, you must use the
+@code{quote} operator.
 
 
 @node Examples of expr
@@ -893,6 +894,8 @@ expr index abcdef cz
 @result{} 3
 expr index index a
 @error{} expr: syntax error
+expr index quote index a
+@result{} 0
 
 @end example
 
