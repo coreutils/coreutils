@@ -1,3 +1,24 @@
+Mon Nov  4 20:24:31 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in: Check for -linet library before checking for the
+	gethostbyname function.  Suggested by Karl Heuer.
+	Use AM_FUNC_GETLINE.
+
+	* acinclude.m4 (AM_FUNC_GETLINE): Add run-time test for getline.
+	Based on a test from Karl Heuer.
+
+Sun Nov  3 14:57:09 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* acinclude.m4 (GETLOADAVG_LIBS): Unanchor the sed regexp that removes
+	am_cv_saved_LIBS from LIBS.  From Karl Heuer.
+
+	* src/stty.c (recover_mode): Fail also if there are too many fields.
+	From Karl Heuer.
+
+	* lib/canon-host.c: Include sys/types.h for the definitions
+	(otherwise missing on some systems) of caddr_t (used by
+	sys/socket.h) and ushort (used by netinet/in.h).  From Karl Heuer.
+
 Sat Nov  2 00:16:16 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* doc/Makefile.am (MAKEINFO): Set to makeinfo --no-split.
