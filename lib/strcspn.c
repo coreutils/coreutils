@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1996, 1997 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 # endif
 #endif
 
-/* Return the length of the maximum inital segment of S
+/* Return the length of the maximum initial segment of S
    which contains no characters from REJECT.  */
 int
 strcspn (s, reject)
