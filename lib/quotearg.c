@@ -299,9 +299,10 @@ quotearg_buffer (char *buffer, size_t buffersize,
    OPTIONS specifies the quoting options.
    The returned value points to static storage that can be
    reused by the next call to this function with the same value of N.
-   N must be nonnegative.  */
+   N must be nonnegative.  N is deliberately declared with type `int'
+   to allow for future extensions (using negative values).  */
 static char *
-quotearg_n_options (unsigned int n, char const *arg,
+quotearg_n_options (int n, char const *arg,
 		    struct quoting_options const *options)
 {
   static unsigned int nslots;
@@ -313,7 +314,7 @@ quotearg_n_options (unsigned int n, char const *arg,
 
   if (nslots <= n)
     {
-      unsigned int n1 = n + 1;
+      int n1 = n + 1;
       size_t s = n1 * sizeof (struct slotvec);
       if (! (0 < n1 && n1 == s / sizeof (struct slotvec)))
 	abort ();
