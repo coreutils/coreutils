@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,10 +25,7 @@
    Return DESTADDR. */
 
 char *
-memcpy (destaddr, srcaddr, len)
-     char *destaddr;
-     const char *srcaddr;
-     int len;
+memcpy (char *destaddr, const char *srcaddr, int len)
 {
   char *dest = destaddr;
 
