@@ -59,7 +59,7 @@
 uid_t geteuid ();
 #endif
 
-char *basename ();
+char *base_name ();
 enum backup_type get_version ();
 int isdir ();
 int yesno ();
@@ -357,7 +357,7 @@ movefile (const char *source, const char *dest)
       char *new_dest;
       int fail;
 
-      base = basename (source);
+      base = base_name (source);
       new_dest = path_concat (dest, base, NULL);
       if (new_dest == NULL)
 	error (1, 0, _("virtual memory exhausted"));

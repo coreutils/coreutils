@@ -1,5 +1,5 @@
 /* dircolors - output commands to set the LS_COLOR environment variable
-   Copyright (C) 1994, 1995 H. Peter Anvin
+   Copyright (C) 1994, 1995, 1997 H. Peter Anvin
    Copyright (C) 96, 1997 Free Software Foundation, Inc.
 
 This program is free software; you can redistribute it and/or modify
@@ -40,7 +40,7 @@ void free ();
 #endif
 
 char *xmalloc ();
-char *basename ();
+char *base_name ();
 char *strndup();
 
 enum Shell_syntax
@@ -145,7 +145,7 @@ guess_shell_syntax (void)
   if (shell == NULL || *shell == '\0')
     return SHELL_SYNTAX_UNKNOWN;
 
-  shell = basename (shell);
+  shell = base_name (shell);
 
   if (STREQ (shell, "csh") || STREQ (shell, "tcsh"))
     return SHELL_SYNTAX_C;

@@ -42,7 +42,7 @@ struct pathstack
   ino_t inum;
 };
 
-char *basename ();
+char *base_name ();
 char *stpcpy ();
 char *xmalloc ();
 char *xrealloc ();
@@ -205,7 +205,7 @@ static int
 rm (void)
 {
   struct stat path_stats;
-  char *base = basename (pathname);
+  char *base = base_name (pathname);
 
   if (base[0] == '.' && (base[1] == '\0'
 			     || (base[1] == '.' && base[2] == '\0')))

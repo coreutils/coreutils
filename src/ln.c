@@ -48,7 +48,7 @@ int symlink ();
 	tmp_source = (char *) alloca (strlen ((source)) + 1);		\
 	strcpy (tmp_source, (source));					\
 	strip_trailing_slashes (tmp_source);				\
-	source_base = basename (tmp_source);				\
+	source_base = base_name (tmp_source);				\
 									\
 	(new_dest) = (char *) alloca (strlen ((dest)) + 1		\
 				      + strlen (source_base) + 1);	\
@@ -56,7 +56,7 @@ int symlink ();
       }									\
     while (0)
 
-char *basename ();
+char *base_name ();
 char *dirname ();
 enum backup_type get_version ();
 int isdir ();
@@ -146,7 +146,7 @@ same_name (const char *source, const char *dest)
 
   return (source_dir_stats.st_dev == dest_dir_stats.st_dev
 	  && source_dir_stats.st_ino == dest_dir_stats.st_ino
-	  && STREQ (basename (source), basename (dest)));
+	  && STREQ (base_name (source), base_name (dest)));
 }
 
 /* Make a link DEST to the (usually) existing file SOURCE.
@@ -216,7 +216,7 @@ do_link (const char *source, const char *dest)
 
   /* If the destination is a directory or (it is a symlink to a directory
      and the user has not specified --no-dereference), then form the
-     actual destination name by appending basename (source) to the
+     actual destination name by appending base_name (source) to the
      specified destination directory.  */
   if ((lstat_status == 0
        && S_ISDIR (dest_stats.st_mode))

@@ -114,7 +114,7 @@ gid_t getgid ();
 						    * BITSPERBYTE - 1)))))
 #endif
 
-char *basename ();
+char *base_name ();
 char *stpcpy ();
 char *xmalloc ();
 int safe_read ();
@@ -338,7 +338,7 @@ install_file_in_dir (char *from, char *to_dir)
   char *to;
   int ret;
 
-  from_base = basename (from);
+  from_base = base_name (from);
   to = xmalloc ((unsigned) (strlen (to_dir) + strlen (from_base) + 2));
   stpcpy (stpcpy (stpcpy (to, to_dir), "/"), from_base);
   ret = install_file_in_file (from, to);
