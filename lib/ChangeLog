@@ -1,5 +1,7 @@
 2003-10-31  Jim Meyering  <jim@meyering.net>
 
+	* linebuffer.c: Include <string.h> for declaration of memset.
+
 	* alloca.c, linebuffer.c, xmalloc.c, xalloc.h: Update from gnulib.
 	* exclude.c, getgroups.c, quotearg.c, stdbool_.h: Update from gnulib.
 
