@@ -134,7 +134,7 @@ main (argc, argv)
       if (ignore_missing_files)
 	exit (0);
       else
-    usage ();
+	usage ();
     }
 
   stdin_tty = isatty (0);
@@ -320,7 +320,7 @@ clear_directory (statp)
      struct stat *statp;
 {
   DIR *dirp;
-  struct direct *dp;
+  struct dirent *dp;
   char *name_space;		/* Copy of directory's filenames. */
   char *namep;			/* Current entry in `name_space'. */
   unsigned name_size;		/* Bytes allocated for `name_space'. */

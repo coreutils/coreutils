@@ -1,7 +1,14 @@
+Sun Mar 28 21:22:30 1993  Jim Meyering  (meyering@comco.com)
+
+	* Makefile.in (dist): Use cp when hard link fails.
+	Use tar-1.11.2's -z option instead of -Z.
+
+	* makepath.c [index]: Don't redefine.
+
 Fri Mar 26 00:32:39 1993  Jim Meyering  (meyering@comco.com)
 
-	* df.c (add_omitted_fs_type, fs_to_omit): New functions adding
-	support for --exclude-type option.  From Kaveh R. Ghazi
+	* df.c (add_excluded_fs_type, excluded_fs_type): New functions adding
+	support for --exclude-type option.  Derived from Kaveh R. Ghazi
 	<ghazi@caip.rutgers.edu>.
 
 	* ls.c (decode_switches, print_long_format): New option: --full-time.
@@ -57,6 +64,35 @@ Wed Dec  2 12:28:10 1992  Jim Meyering  (meyering@idefix.comco.com)
 	struct option to use new macros from getopt.h: no_argument,
 	required_argument, and optional_argument.
 
+Tue Nov 24 07:54:45 1992  David J. MacKenzie  (djm@goldman.gnu.ai.mit.edu)
+
+	* system.h: Use HAVE_FCNTL_H instead of USG.
+
+	* xgetcwd.c: Use HAVE_GETCWD instead of USG.
+
+	* backupfile.c, basename.c, dirname.c, idcache.c, makepath.c,
+	mountlist.c, stripslash.c, userspec.c, xstrdup.c, system.h:
+	Use HAVE_STRING_H instead of USG.
+
+	* system.h: Use SYSDIR and NDIR instead of USG.
+	Define direct as dirent, not vice-versa.
+	* ls.c, rm.c, backupfile.c, savedir.c: Use `struct dirent',
+	not `struct direct'.
+
+Thu Nov 12 23:10:56 1992  David J. MacKenzie  (djm@goldman.gnu.ai.mit.edu)
+
+	* system.h: If dirent is #defined, don't define direct as dirent;
+	for Sinix.  Derived from Heinfried Korn (korn@med-in.uni-sb.de).
+
+Mon Nov  9 14:13:57 1992  Jim Meyering  (meyering@idefix.comco.com)
+
+	* fsusage.c (adjust_blocks): Reverse Oct 31 change --
+	the function is more readable than the macro.
+
+	* All files in src: Make all functions and extern variables static.
+	Make all longopts arrays const as well as static.
+	Make a couple statically initialized aggregates `const.'
+
 Sat Oct 31 16:32:17 1992  Jim Meyering  (meyering@idefix.comco.com)
 
 	* fsusage.c (adjust_blocks): Convert to a macro.  The static
@@ -67,6 +103,11 @@ Sat Oct 31 16:32:17 1992  Jim Meyering  (meyering@idefix.comco.com)
 
 	* dd.c (swab_buffer): Fix typo that incremented pointer instead
 	of counter.  Add braces around static struct initializers.
+
+Fri Oct 30 11:40:58 1992  David J. MacKenzie  (djm@goldman.gnu.ai.mit.edu)
+
+	* ln.c, cp.c (main): Make -s on systems without symlinks an
+	error, not a warning.
 
 Thu Oct 29 14:57:21 1992  David J. MacKenzie  (djm@kropotkin.gnu.ai.mit.edu)
 

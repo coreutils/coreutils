@@ -122,7 +122,7 @@ main (argc, argv)
 #ifdef S_ISLNK
 	  symbolic_link = 1;
 #else
-	  error (0, 0, "symbolic links not supported; making hard links");
+	  error (1, 0, "symbolic links are not supported on this system");
 #endif
 	  break;
 	case 'v':

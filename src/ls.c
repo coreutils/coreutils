@@ -214,7 +214,7 @@ enum time_type
 
 static enum time_type time_type;
 
-/* print the full time, -T, otherwise the standard unix heuristics. */
+/* print the full time, -f, otherwise the standard unix heuristics. */
 
 int full_time;
 
@@ -777,7 +777,7 @@ print_dir (name, realname)
      char *realname;
 {
   register DIR *reading;
-  register struct direct *next;
+  register struct dirent *next;
   register int total_blocks = 0;
 
   errno = 0;
@@ -852,7 +852,7 @@ add_ignore_pattern (pattern)
 
 static int
 file_interesting (next)
-     register struct direct *next;
+     register struct dirent *next;
 {
   register struct ignore_pattern *ignore;
 

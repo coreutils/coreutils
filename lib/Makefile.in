@@ -64,7 +64,10 @@ realclean: distclean
 	rm -f TAGS
 
 dist:
-	ln $(DISTFILES) ../`cat ../.fname`/lib
+	for file in $(DISTFILES); do \
+	  ln $$file ../`cat ../.fname`/lib \
+	    || cp $$file ../`cat ../.fname`/lib; \
+	done
 
 libfu.a: $(OBJECTS)
 	rm -f $@
