@@ -2582,8 +2582,14 @@ extract_dirs_from_files (const char *dirname, int ignore_dot_and_dot_dot)
      entries.  */
 
   for (i = 0, j = 0; i < files_index; i++)
-    if (files[i].filetype != arg_directory)
-      files[j++] = files[i];
+    {
+      if (files[i].filetype != arg_directory)
+	{
+	  if (j < i)
+	    files[j] = files[i];
+	  ++j;
+	}
+    }
   files_index = j;
 }
 
