@@ -1041,7 +1041,7 @@ AC_DEFUN([jm_MACROS],
 
   AC_FUNC_STRTOD
   AC_REQUIRE([UTILS_SYS_OPEN_MAX])
-  AC_REQUIRE([GL_FUNC_GETCWD_ROBUST])
+  AC_REQUIRE([GL_FUNC_GETCWD_PATH_MAX])
 
   # See if linking `seq' requires -lm.
   # It does on nearly every system.  The single exception (so far) is
@@ -3845,14 +3845,20 @@ AC_DEFUN([UTILS_SYS_OPEN_MAX],
 ])
 
 #serial 1
-# Check whether getcwd can return a path longer than PATH_MAX.
-# If not, arrange to compile the wrapper function.
+# Check whether getcwd has the bug that it succeeds for a working directory
+# longer than PATH_MAX, yet returns a truncated directory name.
+# If so, arrange to compile the wrapper function.
+
+# This is necessary for at least GNU libc on linux-2.4.19 and 2.4.20.
+# I've heard that this is due to a Linux kernel bug, and that it has
+# been fixed between 2.4.21-pre3 and 2.4.21-pre4.  */
+
 # From Jim Meyering
 
-AC_DEFUN([GL_FUNC_GETCWD_ROBUST],
+AC_DEFUN([GL_FUNC_GETCWD_PATH_MAX],
 [
-  AC_CACHE_CHECK([whether getcwd can return a path longer than PATH_MAX],
-                 utils_cv_func_getcwd_robust,
+  AC_CACHE_CHECK([whether getcwd properly handles paths longer than PATH_MAX],
+                 gl_cv_func_getcwd_vs_path_max,
   [
   # Arrange for deletion of the temporary directory this test creates.
   ac_clean_files="$ac_clean_files confdir3"
@@ -3917,10 +3923,12 @@ main ()
       size_t len;
 
       cwd_len += 1 + strlen (DIR_NAME);
+      /* If mkdir or chdir fails, be pessimistic and consider that
+	 as a failure, too.  */
       if (mkdir (DIR_NAME, 0700) < 0
 	  || chdir (DIR_NAME) < 0
-	  || (c = getcwd (buf, PATH_MAX)) == NULL
-	  || (len = strlen (c)) != cwd_len)
+	  || ((c = getcwd (buf, PATH_MAX)) != NULL
+	      && (len = strlen (c)) != cwd_len))
 	{
 	  fail = 1;
 	  break;
@@ -3950,11 +3958,11 @@ main ()
 #endif
 }
   ]])],
-       [utils_cv_func_getcwd_robust=yes],
-       [utils_cv_func_getcwd_robust=no],
-       [utils_cv_func_getcwd_robust=no])])
+       [gl_cv_func_getcwd_vs_path_max=yes],
+       [gl_cv_func_getcwd_vs_path_max=no],
+       [gl_cv_func_getcwd_vs_path_max=no])])
 
-  if test $utils_cv_func_getcwd_robust = yes; then
+  if test $gl_cv_func_getcwd_vs_path_max = yes; then
     AC_LIBOBJ(getcwd)
     AC_DEFINE(getcwd, rpl_getcwd,
       [Define to rpl_getcwd if the wrapper function should be used.])
