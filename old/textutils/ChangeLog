@@ -1,3 +1,20 @@
+Fri Oct  4 07:20:37 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (GNU_PACKAGE): New variable.
+	(PACKAGE_VERSION): Remove it.
+
+	* acconfig.h (GNU_PACKAGE): New variable.
+	(PACKAGE_VERSION): Remove now-unused variable.
+
+	* lib/long-options.c (parse_long_options): Separate package name
+	and version number to accomodate new --version output requirement.
+	* lib/long-options.h: Update prototype.
+
+Thu Oct  3 23:27:31 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/md5sum.c (main): Remove dead code that used to print --version
+	output.
+
 Tue Oct  1 06:54:22 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in: Use result of AM_FUNC_STRTOD to set POW_LIBM.
