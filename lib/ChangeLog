@@ -1,3 +1,13 @@
+2001-08-26  Jim Meyering  <meyering@lucent.com>
+
+	* xstrtoimax.c: New file.
+
+	* strtoumax.c: New file.  Simply include "strtoumax.c".
+	* strtoimax.c: New file.  Likewise, but first define STRTOUXMAX_SIGNED.
+
+	* strtoumax.c: Factor to work both for unsigned and signed types, ...
+	* strtouxmax.c: ... then renamed to this.
+
 2001-08-13  Paul Eggert  <eggert@twinsun.com>
 
 	* Makefile.am (unlocked-io.h): Do not append "_unlocked" twice.
