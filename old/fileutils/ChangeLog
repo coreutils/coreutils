@@ -1,6 +1,9 @@
 2000-11-18  Jim Meyering  <meyering@lucent.com>
 
-	* Version 4.0.32.
+	* Version 4.0.33.
+
+	* src/mkdir.c (main): When failing to create a directory, give only
+	one diagnostic, not two.  Reported by Volker Borchert.
 
 	* src/mkdir.c (main): With --parents, remove any trailing slashes
 	from the argument to the final mkdir call.  Required for NetBSD.

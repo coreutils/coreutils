@@ -1,4 +1,7 @@
 Changes in release 4.01:
+[4.0.33]
+* mkdir now gives one diagnostic (rather than two) for certain failures
+* mkdir portability fix for NetBSD
 [4.0.32]
 * touch now interprets a lone numeric argument of 8 or 10 digits as a file name,
   rather than as a date/time in the obsolescent `MMDDhhmm[YY]' format.
