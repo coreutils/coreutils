@@ -1,3 +1,8 @@
+Tue Oct  8 21:32:17 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/error.c: Include error.h to align with libit --
+	under protest, François :-).
+
 Sun Oct  6 08:02:28 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* acinclude.m4 (AC_HEADER_SYS_TIME_H, AM_FUNC_MKTIME,
