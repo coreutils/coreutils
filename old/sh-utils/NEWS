@@ -1,5 +1,7 @@
 Changes in release 1.17
  [1.16g]
+* factor now uses uintmax_t, so the largest number it can factor is now 2^64 - 1
+  on systems with type `long long'.
 * nohup no longer modifies the shell's search path
 * `basename /' now prints `/', per the single unix spec
 * `who --lookup' no longer erroneously reports `localhost' for IP addresses
