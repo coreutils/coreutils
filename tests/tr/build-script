@@ -33,9 +33,10 @@ while (<>)
     print EXP $expected;
     close(EXP);
     $arg2 = ($s2 ? " '$s2'" : '');
-    $cmd = "$tr $flags \'$s1\'$arg2 < $in > $out";
+    $err_output = "t$test_name.err";
+    $cmd = "$tr $flags \'$s1\'$arg2 < $in > $out 2> $err_output";
     print <<EOF ;
-$cmd 2> /dev/null
+$cmd
 code=\$?
 if test \$code != $e_ret_code ; then
   echo Test $test_name failed: tr return code \$code differs from expected value $e_ret_code 1>&2
@@ -51,6 +52,7 @@ else
        errors=`expr \$errors + 1` ;;
   esac
 fi
+test -s $err_output || rm -f $err_output
 EOF
   }
 print <<EOF2 ;
