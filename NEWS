@@ -7,6 +7,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   them made an effort to avoid using the shell's built-in kill.
 - [ invoked with no arguments no longer evokes a segfault
 
+
 * Major changes in release 5.0.1:
 
 ** New programs
