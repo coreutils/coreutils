@@ -1,3 +1,16 @@
+1999-11-27  Jim Meyering  <meyering@ascend.com>
+
+	Rewrite to allow fractional seconds and to handle SIGCONT.
+	* src/sleep.c (main): Rewrite.
+	(sighandler): New function.
+	(apply_suffix): New function.
+	(timeval_subtract): New function.
+	Reported by Raul Miller.
+
+	* src/sleep.c (argdecode): Move definition to precede use.
+	Remove prototype.
+	(usage): Add elipses to show that sleep allows more than one argument.
+
 1999-11-22  Jim Meyering  <meyering@ascend.com>
 
 	* lib/Makefile.am (DISTCLEANFILES): Add lstat.c and stat.c.
