@@ -372,7 +372,7 @@ print_user (const STRUCT_UTMP *utmp_ent)
       ut_host[sizeof (utmp_ent->ut_host)] = '\0';
 
       /* Look for an X display.  */
-      display = strrchr (ut_host, ':');
+      display = strchr (ut_host, ':');
       if (display)
 	*display++ = '\0';
 
