@@ -173,9 +173,9 @@ different (const char *old, const char *new, size_t oldlen, size_t newlen)
      avoid portability hassles of getting a non-conflicting declaration
      of memcmp.  */
   if (ignore_case)
-    order = memcasecmp (old, new, min (oldlen, newlen));
+    order = memcasecmp (old, new, MIN (oldlen, newlen));
   else
-    order = memcmp (old, new, min (oldlen, newlen));
+    order = memcmp (old, new, MIN (oldlen, newlen));
 
   if (order == 0)
     return oldlen - newlen;
@@ -210,9 +210,9 @@ check_file (const char *infile, const char *outfile)
   FILE *istream;
   FILE *ostream;
   struct linebuffer lb1, lb2;
-  struct linebuffer *thisline, *prevline, *exch;
-  char *prevfield, *thisfield;
-  size_t prevlen, thislen;
+  struct linebuffer *thisline, *prevline;
+  char *prevfield;
+  size_t prevlen;
   int match_count = 0;
 
   if (STREQ (infile, "-"))
@@ -243,6 +243,8 @@ check_file (const char *infile, const char *outfile)
   while (!feof (istream))
     {
       int match;
+      char *thisfield;
+      size_t thislen;
       if (readline (thisline, istream) == 0)
 	break;
       thisfield = find_field (thisline);
@@ -254,10 +256,11 @@ check_file (const char *infile, const char *outfile)
 
       if (!match || mode == output_all_repeated)
 	{
+	  struct linebuffer *tmp;
 	  writeline (prevline, ostream, match_count);
-	  exch = prevline;
+	  tmp = prevline;
 	  prevline = thisline;
-	  thisline = exch;
+	  thisline = tmp;
 	  prevfield = thisfield;
 	  prevlen = thislen;
 	  if (!match)
