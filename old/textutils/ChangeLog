@@ -2,6 +2,15 @@
 
 	* Version 1.22e.
 
+	* src/tail.c (parse_obsolescent_option): Do not interpret `-f -n 1 ...'
+	as obsolescent options.
+	Accept new option: --sleep-interval=SECONDS (-s).
+	(parse_options): Recognize it.
+	(usage): Describe it.
+	(tail_forever): Use it.
+	(dump_remainder): Use it.
+	* tests/tail/Test.pm (f-1): Add test for option-processing of `-f -n 1'.
+
 	* tests/cut/: Rename directory to remove `-test' suffix.
 	* tests/join/: Likewise.
 	* tests/md5sum/: Likewise.
