@@ -1,7 +1,17 @@
+Sat Nov 23 16:15:37 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* env.c (usage): Alphabetize option descriptions the way sort -f would.
+	* test.c (usage): Likewise.
+	* who-users.c (usage): Likewise.
+
 Fri Nov 22 20:33:26 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (AC_REPLACE_FUNCS): Don't try to replace getline this
 	way.  AM_FUNC_GETLINE does it now.
+
+	* configure.in New test to check for TIOCGWINSZ in sys/pty.h.
+	* config.h.in (GWINSZ_IN_SYS_PTY): Add #undef.
+	From Karl Heuer.
 
 	* src/printf.c (main): Warn if excess arguments are ignored.
 	E.g., printf foo bar now warns that it is ignoring the single
