@@ -31,16 +31,13 @@
 #include <sys/types.h>
 #include "system.h"
 #include "error.h"
-#include "xstrtoul.h"
+#include "xstrtol.h"
 #include "safe-read.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "head"
 
 #define AUTHORS "David MacKenzie"
-
-/* FIXME: someday, make this really *be* `long long'.  */
-typedef long int U_LONG_LONG;
 
 /* Number of lines/chars/blocks to head. */
 #define DEFAULT_NUMBER 10
@@ -118,7 +115,7 @@ write_header (const char *filename)
 }
 
 static int
-head_bytes (const char *filename, int fd, U_LONG_LONG bytes_to_write)
+head_bytes (const char *filename, int fd, uintmax_t bytes_to_write)
 {
   char buffer[BUFSIZE];
   int bytes_read;
@@ -146,18 +143,18 @@ head_bytes (const char *filename, int fd, U_LONG_LONG bytes_to_write)
 }
 
 static int
-head_lines (const char *filename, int fd, U_LONG_LONG lines_to_write)
+head_lines (const char *filename, int fd, uintmax_t lines_to_write)
 {
   char buffer[BUFSIZE];
-  int bytes_read;
-  int bytes_to_write;
 
   /* Need BINARY I/O for the byte counts to be accurate.  */
   SET_BINARY2 (fd, fileno (stdout));
 
   while (lines_to_write)
     {
-      bytes_read = safe_read (fd, buffer, BUFSIZE);
+      int bytes_read = safe_read (fd, buffer, BUFSIZE);
+      int bytes_to_write = 0;
+
       if (bytes_read < 0)
 	{
 	  error (0, errno, "%s", filename);
@@ -165,7 +162,6 @@ head_lines (const char *filename, int fd, U_LONG_LONG lines_to_write)
 	}
       if (bytes_read == 0)
 	break;
-      bytes_to_write = 0;
       while (bytes_to_write < bytes_read)
 	if (buffer[bytes_to_write++] == '\n' && --lines_to_write == 0)
 	  break;
@@ -176,7 +172,7 @@ head_lines (const char *filename, int fd, U_LONG_LONG lines_to_write)
 }
 
 static int
-head (const char *filename, int fd, U_LONG_LONG n_units, int count_lines)
+head (const char *filename, int fd, uintmax_t n_units, int count_lines)
 {
   if (count_lines)
     return head_lines (filename, fd, n_units);
@@ -185,7 +181,7 @@ head (const char *filename, int fd, U_LONG_LONG n_units, int count_lines)
 }
 
 static int
-head_file (const char *filename, U_LONG_LONG n_units, int count_lines)
+head_file (const char *filename, uintmax_t n_units, int count_lines)
 {
   int fd;
 
@@ -221,13 +217,13 @@ head_file (const char *filename, U_LONG_LONG n_units, int count_lines)
    COUNT_LINES indicates whether N_STRING is a number of bytes or a number
    of lines.  It is used solely to give a more specific diagnostic.  */
 
-static U_LONG_LONG
-string_to_ull (int count_lines, const char *n_string)
+static uintmax_t
+string_to_integer (int count_lines, const char *n_string)
 {
   strtol_error s_err;
-  unsigned long int tmp_ulong;
+  uintmax_t n;
 
-  s_err = xstrtoul (n_string, NULL, 0, &tmp_ulong, "bkm");
+  s_err = xstrtoumax (n_string, NULL, 0, &n, "bkm");
 
   if (s_err == LONGINT_INVALID)
     {
@@ -244,7 +240,7 @@ string_to_ull (int count_lines, const char *n_string)
 	     count_lines ? _("number of lines") : _("number of bytes"));
     }
 
-  return tmp_ulong;
+  return n;
 }
 
 int
@@ -256,7 +252,7 @@ main (int argc, char **argv)
   int c;
 
   /* Number of items to print. */
-  U_LONG_LONG n_units = DEFAULT_NUMBER;
+  uintmax_t n_units = DEFAULT_NUMBER;
 
   /* If nonzero, interpret the numeric argument as the number of lines.
      Otherwise, interpret it as the number of bytes.  */
@@ -330,7 +326,7 @@ main (int argc, char **argv)
       if (multiplier_char)
 	*(++end_n_string) = 0;
 
-      n_units = string_to_ull (count_lines, n_string);
+      n_units = string_to_integer (count_lines, n_string);
 
       /* Make the options we just parsed invisible to getopt. */
       argv[1] = argv[0];
@@ -350,12 +346,12 @@ main (int argc, char **argv)
 
 	case 'c':
 	  count_lines = 0;
-	  n_units = string_to_ull (count_lines, optarg);
+	  n_units = string_to_integer (count_lines, optarg);
 	  break;
 
 	case 'n':
 	  count_lines = 1;
-	  n_units = string_to_ull (count_lines, optarg);
+	  n_units = string_to_integer (count_lines, optarg);
 	  break;
 
 	case 'q':
