@@ -1,6 +1,30 @@
+1998-07-18  Jim Meyering  <meyering@ascend.com>
+
+	* src/copy.c (copy_internal): Add another exclusion from the
+	sameness test: when --force has been specified, the destination
+	is unlinked before any copy.
+	(copy_internal): Add yet another: when both src and dest are symlinks.
+
+	* tests/touch: New subdir.
+	* tests/Makefile.am (SUBDIRS): Add touch.
+	* configure.in (AC_OUTPUT): Add tests/touch/Makefile.
+
+	* tests/mv/into-self-2: New test.
+	* tests/mv/Makefile.am (TESTS): Add into-self-2.
+
+1998-07-06  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* lib/mountlist.c (read_filesystem_list): Fix more memory leaks on
+	failure.
+
 1998-07-16  Jim Meyering  <meyering@ascend.com>
 
-	* lib/lchown.c [!ENOSYS] (ENOSYS): Define to ENOTSUP or ENOMSG.
+	Work around failure of chown calls on m68k-motorola-sysv systems.
+	* src/chown.c: Include lchown.h.
+	* lib/Makefile.am (noinst_HEADERS): Add lchown.h.
+	* lib/lchown.h: New file, just to define ENOSYS on systems that lack it.
+	* lib/lchown.c: Include lchown.h.
+	Reported by and with suggestions from Manfred Hollstein.
 
 1998-07-12  Paul Eggert  <eggert@twinsun.com>
 
