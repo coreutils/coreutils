@@ -1,5 +1,7 @@
 1997-07-04  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in (ALL_LINGUAS): Add Norwegian (no).
+
 	* Makefile.am (aclocal-files): Look in source directory, not build dir.
 	From Andreas Schwab.
 
