@@ -33,6 +33,7 @@
 #include "copy.h"
 #include "cp-hash.h"
 #include "dirname.h"
+#include "full-write.h"
 #include "path-concat.h"
 #include "quote.h"
 #include "same.h"
@@ -55,7 +56,6 @@ struct dir_list
   dev_t dev;
 };
 
-int full_write ();
 int euidaccess ();
 int yesno ();
 
@@ -285,7 +285,7 @@ copy_reg (const char *src_path, const char *dst_path,
 
   for (;;)
     {
-      int n_read = read (source_desc, buf, buf_size);
+      ssize_t n_read = read (source_desc, buf, buf_size);
       if (n_read < 0)
 	{
 #ifdef EINTR
@@ -338,7 +338,7 @@ copy_reg (const char *src_path, const char *dst_path,
 	}
       if (ip == 0)
 	{
-	  if (full_write (dest_desc, buf, n_read) < 0)
+	  if (full_write (dest_desc, buf, n_read) != n_read)
 	    {
 	      error (0, errno, _("writing %s"), quote (dst_path));
 	      return_val = -1;
@@ -356,12 +356,12 @@ copy_reg (const char *src_path, const char *dst_path,
     {
 #if HAVE_FTRUNCATE
       /* Write a null character and truncate it again.  */
-      if (full_write (dest_desc, "", 1) < 0
+      if (full_write (dest_desc, "", 1) != 1
 	  || ftruncate (dest_desc, n_read_total) < 0)
 #else
       /* Seek backwards one character and write a null.  */
       if (lseek (dest_desc, (off_t) -1, SEEK_CUR) < 0L
-	  || full_write (dest_desc, "", 1) < 0)
+	  || full_write (dest_desc, "", 1) != 1)
 #endif
 	{
 	  error (0, errno, _("writing %s"), quote (dst_path));
