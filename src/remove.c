@@ -1,5 +1,5 @@
 /* remove.c -- core functions for removing files and directories
-   Copyright (C) 88, 90, 91, 1994-1999 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1994-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -700,6 +700,38 @@ remove_dir (struct File_spec *fs, int need_save_cwd, const struct rm_options *x)
 	free_cwd (&cwd);
       return RM_ERROR;
     }
+
+  /* Verify that the inode number of `.' is the same as the one we had
+     for dir_name before we cd'd into it.  This detects the scenario
+     in which an attacker tries to make Bob's rm command remove some
+     other directory belonging to Bob.  The method would be to replace
+     an existing lstat'd but-not-yet-removed directory with a symlink
+     to the target directory.  */
+  {
+    struct stat sb;
+    if (lstat (".", &sb))
+      error (EXIT_FAILURE, errno,
+	     _("cannot lstat `.' in `%s'"), full_filename (dir_name));
+
+    /* You might wonder whether it's safe to compare only the inode numbers
+       and not also the device numbers.  The risk is that the attacker might
+       find a Bob-writable directory (on another device) with the same inode
+       number as one Bob intends to be removed with `rm -r'.  The selected
+       directory must itself be in a directory that is writable by the attacker.
+       In order to eliminate this small risk, we'd have to add a device number
+       member to struct File_spec and compare it to st_dev here.  */
+    if (sb.st_ino != fs->inum)
+      {
+	error (EXIT_FAILURE, 0,
+	       _("ERROR: the directory `%s' initially had inode number %lu,\n\
+but now (after a chdir into it), the inode number of `.' is %lu.\n\
+That means the directory was replaced with either another directory\n\
+or a link to another directory."),
+	       full_filename (dir_name),
+	       (unsigned long)(fs->inum),
+	       (unsigned long)(sb.st_ino));
+      }
+  }
 
   push_dir (dir_name);
 
