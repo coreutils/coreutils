@@ -1,3 +1,28 @@
+Fri Mar 21 23:57:30 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* Makefile.am (AUTOMAKE_OPTIONS): Require automake-1.1l.
+
+Thu Mar 20 21:10:44 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* m4/ccstdc.m4
+	* m4/init.m4
+	* m4/sanity.m4
+	* m4/protos.m4
+Files ./dmalloc.m4 and /tmp/am/share/aclocal/dmalloc.m4 are identical
+Files ./error.m4 and /tmp/am/share/aclocal/error.m4 are identical
+Files ./header.m4 and /tmp/am/share/aclocal/header.m4 are identical
+Files ./install.m4 and /tmp/am/share/aclocal/install.m4 are identical
+Files ./lispdir.m4 and /tmp/am/share/aclocal/lispdir.m4 are identical
+Files ./maintainer.m4 and /tmp/am/share/aclocal/maintainer.m4 are identical
+Files ./obstack.m4 and /tmp/am/share/aclocal/obstack.m4 are identical
+Files ./ptrdiff.m4 and /tmp/am/share/aclocal/ptrdiff.m4 are identical
+Files ./regex.m4 and /tmp/am/share/aclocal/regex.m4 are identical
+Files ./strtod.m4 and /tmp/am/share/aclocal/strtod.m4 are identical
+Files ./termios.m4 and /tmp/am/share/aclocal/termios.m4 are identical
+Files ./winsz.m4 and /tmp/am/share/aclocal/winsz.m4 are identical
+
+
+
 Tue Mar 18 06:46:54 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/su.c: Indent cpp-directives to reflect nesting.
