@@ -1,3 +1,10 @@
+2002-10-07  Paul Eggert  <eggert@twinsun.com>
+
+	* prereq.m4 (jm_PREREQ_HUMAN): Check for locale.h, localeconv,
+	AC_HEADER_STDBOOL.  No need to check for limits.h since it's in
+	freestanding C89.  No need to check for stdlib.h or string.h since
+	autoconf does this now.
+
 2002-10-12  Paul Eggert  <eggert@twionsun.com>
 
 	* jm-macros.m4 (jm_CHECK_ALL_HEADERS): Remove fenv.h.
