@@ -206,8 +206,7 @@ eaccess (char *path, int mode)
 
 #if !defined (advance)
 static int
-advance (f)
-     int f;
+advance (int f)
 {
   ++pos;
 
