@@ -1,5 +1,4 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-
-AUTOMAKE_OPTIONS = ansi2knr
 
 EXTRA_PROGRAMS = chroot df hostid nice pinky stty su uname uptime users who
 EXTRA_SCRIPTS = nohup
