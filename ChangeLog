@@ -1,5 +1,40 @@
 2004-07-29  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/mkfifo.c (main): Use EXIT_SUCCESS and EXIT_FAILURE, not 0 and 1.
+
+	* src/chmod.c (recurse, force_silent, process_file, process_files,
+	main): Use bool when appropriate.
+	* src/cksum.c (cksum, main): Likewise.
+	* src/comm.c (hard_LC_COLLATE, only_file_1, only_file_2, both,
+	compare_files, main): Likewise.
+
+	* src/copy.h (struct cp_options): Likewise.
+	* src/copy.c (copy_internal, is_ancestor, copy_dir, copy_reg,
+	same_file_ok, seen_file, copy_internal, valid_options, copy): Likewise.
+	* src/cp-hash.h (remember_created): Likewise.
+	* src/cp-hash.c (remember_created): Likewise.
+	* src/cp.c (struct dir_attr, flag_path, remove_trailing_slashes,
+	re_protect, make_path_private, target_directory_operand, do_copy,
+	cp_option_init, decode_preserve_arg, main): Likewise.
+	* src/install.c (isdir, change_timestamps, change_attributes,
+	copy_file, install_file_to_path, install_file_in_dir,
+	install_file_in_file, strip_files, dir_arg, cp_option_init, main,
+	change_attributes, change_timestamps): Likewise.
+	* src/mv.c (remove_trailing_slashes, rm_option_init,
+	cp_option_init, do_move, movefile, main): Likewise.
+	* src/remove.c (right_justify), full_filename_, AD_pop_and_chdir,
+	AD_push, prompt, remove_dir): Likewise.
+	* src/rm.c (rm_option_init, main): Likewise.
+
+	* src/remove.c (top_dir, pop_dir, full_filename_):
+	Use size_t for sizes.
+	* src/cp.c (target_directory_operand): Do not clear *NEW_DST if stat
+	succeeds.  It's not necessary in that case, as *NEW_DST is always
+	false already.
+	(do_copy): Rewrite slightly to avoid need for "unreachable" comment.
+	(main): Use EXIT_SUCCESS, EXIT_FAILURE instead of 0, 1.
+	* src/rm.c (main): Likewise.
+	
 	md5sum, sha1sum integer cleanups.
 
 	* src/checksum.h: Don't include config.h, sys/types.h, stdio.h:
