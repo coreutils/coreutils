@@ -1431,7 +1431,7 @@ keycompare (const struct line *a, const struct line *b)
 	      ++textb;							\
 	    }								\
 									\
-	  diff = (lima - texta) - (limb - textb);			\
+	  diff = (texta < lima) - (textb < limb);			\
     }									\
   while (0)
 
