@@ -1,5 +1,6 @@
 Changes in release 4.1:
 [4.0u]
+* give proper diagnostic for mv usage error
 * fix compile problem with lib/strnlen.c
 [4.0t]
 * `cp -d -u' no longer fails with certain existing destination symlinks
