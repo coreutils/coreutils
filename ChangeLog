@@ -17,6 +17,7 @@
 	(EXTRA_DIST): Remove nohup.sh.
 	(all_programs): Remove use of $(EXTRA_SCRIPTS).
 	* src/nohup.sh: Remove file.
+	* man/Makefile.am (nohup.1): Depend on nohup.c, rather than nohup.sh.
 
 	* tests/misc/nohup: Tests for the above.
 	* tests/misc/Makefile.am (TESTS): Add nohup.
