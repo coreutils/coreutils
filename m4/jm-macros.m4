@@ -168,6 +168,11 @@ AC_DEFUN(jm_MACROS,
     AC_CHECK_FUNCS(getdelim)
   fi
   AM_FUNC_OBSTACK
+
+  AM_FUNC_STRTOD
+  AC_SUBST(POW_LIBM)
+  test $am_cv_func_strtod_needs_libm = yes && POW_LIBM=-lm
+
 ])
 
 AC_DEFUN(jm_CHECK_ALL_TYPES,
