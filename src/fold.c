@@ -25,8 +25,22 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+
+#if HAVE_LIMITS_H
+# include <limits.h>
+#endif
+
+#ifndef UINT_MAX
+# define UINT_MAX ((unsigned int) ~(unsigned int) 0)
+#endif
+
+#ifndef INT_MAX
+# define INT_MAX ((int) (UINT_MAX >> 1))
+#endif
+
 #include "system.h"
 #include "version.h"
+#include "xstrtol.h"
 #include "error.h"
 
 char *xrealloc ();
@@ -120,9 +134,9 @@ fold_file (char *filename, int width)
   FILE *istream;
   register int c;
   int column = 0;		/* Screen column where next char will go. */
-  size_t offset_out = 0;	/* Index in `line_out' for next char. */
+  int offset_out = 0;	/* Index in `line_out' for next char. */
   static char *line_out = NULL;
-  static size_t allocated_out = 0;
+  static int allocated_out = 0;
 
   if (!strcmp (filename, "-"))
     {
@@ -149,7 +163,7 @@ fold_file (char *filename, int width)
       if (c == '\n')
 	{
 	  line_out[offset_out++] = c;
-	  fwrite (line_out, sizeof (char), offset_out, stdout);
+	  fwrite (line_out, sizeof (char), (size_t) offset_out, stdout);
 	  column = offset_out = 0;
 	  continue;
 	}
@@ -177,7 +191,8 @@ fold_file (char *filename, int width)
 
 		  /* Found a blank.  Don't output the part after it. */
 		  logical_end++;
-		  fwrite (line_out, sizeof (char), logical_end, stdout);
+		  fwrite (line_out, sizeof (char), (size_t) logical_end,
+			  stdout);
 		  putchar ('\n');
 		  /* Move the remainder to the beginning of the next line.
 		     The areas being copied here might overlap. */
@@ -198,7 +213,7 @@ fold_file (char *filename, int width)
 		}
 	    }
 	  line_out[offset_out++] = '\n';
-	  fwrite (line_out, sizeof (char), offset_out, stdout);
+	  fwrite (line_out, sizeof (char), (size_t) offset_out, stdout);
 	  column = offset_out = 0;
 	  goto rescan;
 	}
@@ -207,7 +222,7 @@ fold_file (char *filename, int width)
     }
 
   if (offset_out)
-    fwrite (line_out, sizeof (char), offset_out, stdout);
+    fwrite (line_out, sizeof (char), (size_t) offset_out, stdout);
 
   if (ferror (istream))
     {
@@ -274,9 +289,13 @@ main (int argc, char **argv)
 	  break;
 
 	case 'w':		/* Line width. */
-	  width = atoi (optarg);
-	  if (width < 1)
-	    error (1, 0, _("%s: invalid line width"), optarg);
+	  {
+	    long int tmp_long;
+	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
+		|| tmp_long <= 0 || tmp_long > INT_MAX)
+	      error (1, 0, _("invalid number of columns: `%s'"), optarg);
+	    width = (int) tmp_long;
+	  }
 	  break;
 
 	default:
