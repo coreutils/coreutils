@@ -175,7 +175,7 @@ alpha: writable-files po-check
 	@echo =====================================
 	@echo 'for host in $(a_host) $(b_host); do \'
 	@echo '  rsync -e ssh --pro -av $(xd-delta) $(distdir).tar.gz \'
-	@echo '    $(b_host):$(b_real_dir); done'
+	@echo '    $$host/$(real_dir); done'
 	@echo '# send the /tmp/announcement e-mail'
 	@echo =====================================
 	@echo =====================================
