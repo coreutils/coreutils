@@ -2,6 +2,11 @@
 
 	* Version 4.0.36.
 
+	* src/shred.c (UINT_MAX_32_BITS): Define.
+	Use UINT_MAX_32_BITS in the cpp conditions that determine
+	the `word32' typedef.  Using a literal `0xffffffff' failed with
+	HPUX10.20's /bin/cc.
+
 	* config.sub: Update from master repository.
 	* config.guess: Likewise.
 
