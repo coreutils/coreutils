@@ -154,7 +154,8 @@ char *xstrdup ();
 
 extern char **environ;
 
-static void run_shell (const char *, const char *, char **) ATTRIBUTE_NORETURN;
+static void run_shell (const char *, const char *, char **)
+     ATTRIBUTE_NORETURN;
 
 /* The name this program was run with.  */
 char *program_name;
