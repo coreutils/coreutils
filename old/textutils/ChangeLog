@@ -1,4 +1,15 @@
-2000-01-21  Jim Meyering  <meyering@lucent.com>
+2000-01-22  Jim Meyering  <meyering@lucent.com>
+
+	* configure.in (ALL_LINGUAS): Add Brazilian Portuguese (pt_BR).
+
+	* src/tr.c ("xstrtol.h"): Include.
+	(Filter): Rename from PFL.
+	(non_neg_strtol): Remove function.
+	(find_bracketed_repeat): Use xstrtoul instead of non_neg_strtol.
+	(squeeze_filter, set_initialize, main): Use size_t and ssize_t in
+	place of long and int in several decls.
+	(read_and_delete, read_and_xlate): Likewise, and remove assertion.
+	* tests/tr/Test.pm: (o-rep-1, o-rep-2): New tests.
 
 	* src/cut.c: Correct copying notice to use GPL, per author's request.
 	* src/paste.c: Likewise.
