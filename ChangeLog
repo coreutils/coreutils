@@ -2,6 +2,11 @@
 
 	* Version 4.5.2.
 
+	* src/split.c (FAIL_ONLY_ONE_WAY): New macro.
+	Factor out some duplication.
+	(main): Use it.
+	[case 'a']: Use strtoul rather than strtol to avoid compiler warnings.
+
 	* src/sort.c (begfield, limfield): Rearrange comparisons to avoid
 	compiler warnings.
 	(fillbuf, keycompare): Cast literal `-1' to size_t in comparisons,
