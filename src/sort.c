@@ -1,5 +1,5 @@
 /* sort - sort lines of text (with all kinds of options).
-   Copyright (C) 88, 91, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+   Copyright (C) 88, 91-97, 98 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -567,7 +567,7 @@ inittables (void)
 	fold_toupper[i] = i;
     }
 
-#ifdef ENABLE_NLS
+#if defined ENABLE_NLS && HAVE_NL_LANGINFO
   /* If We're not in the "C" locale, read in different names for months. */
   if (need_locale)
     {
@@ -578,12 +578,12 @@ inittables (void)
 	  size_t s_len;
 	  int j;
 
-	  s = nl_langinfo (ABMON_1 + us_monthtab[i].val - 1);
+	  s = (unsigned char *) nl_langinfo (ABMON_1 + us_monthtab[i].val - 1);
 	  s_len = strlen (s);
 	  nls_monthtab[i].name = (char *) xmalloc (s_len + 1);
 	  nls_monthtab[i].val = us_monthtab[i].val;
 
-	  /* It has been pointed out, that abreviated month names
+	  /* Be careful: abreviated month names
 	     may be longer than the usual 3 characters.  */
 	  for (j = 0; j < s_len; j++)
 	    nls_monthtab[i].name[j] = fold_toupper[s[j]];
@@ -2100,8 +2100,8 @@ nls_numeric_format (const struct line *line, int nlines)
       int iter;
       for (iter = 0; !nls_fraction_found; iter++)
 	{
-	  unsigned char *text;
-	  unsigned char *lim;
+	  char *text;
+	  char *lim;
 	  struct keyfield *key = n_key->key;
 
 	  /* text = {}, lim = {}, key = first key */
@@ -2492,7 +2492,7 @@ main (int argc, char **argv)
 
     decimal_point = *lconvp->decimal_point;
     th_sep        = *lconvp->thousands_sep;
-    nls_grouping  =  lconvp->grouping;
+    nls_grouping  =  (unsigned char *) (lconvp->grouping);
   }
 
   /* if locale doesn't define a decimal point, we'll use the
