@@ -1,5 +1,6 @@
 Changes in release 4.1:
 [4.0y]
+* du would fail when given `.' or `..' followed by other command line arguments
 * Using cp's short-named `-P' option evokes the warning that that the
    meaning of `-P' will soon change.  Use `--parents' instead.
 * chgrp, chmod, and chown: when used with the --verbose option, might give an
