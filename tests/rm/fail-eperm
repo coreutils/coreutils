@@ -52,9 +52,9 @@ foreach my $dir (@dir_list)
 
 	foreach my $f (readdir DIR_HANDLE)
 	  {
-	    # Skip files owned by self, and symlinks.
+	    # Skip files owned by self, symlinks, and directories.
 	    # It's not technically necessary to skip symlinks, but it's simpler.
-	    -l $f || -o _
+	    -l $f || -o _ || -d _
 	      and next;
 
 	    $found_file = 1;
