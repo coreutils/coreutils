@@ -246,7 +246,7 @@ char *alloca ();
    destination)
 
 /* No need to do anything to free, after alloca.  */
-#define REGEX_FREE(arg) (0)
+#define REGEX_FREE(arg) while (0)
 
 #endif /* not REGEX_MALLOC */
 
@@ -2865,7 +2865,9 @@ re_compile_fastmap (bufp)
 
   /* This holds the pointer to the failure stack, when
      it is allocated relocatably.  */
+#ifdef REL_ALLOC_STMT
   fail_stack_elt_t *failure_stack_ptr;
+#endif
 
   /* Assume that each path through the pattern can be null until
      proven otherwise.  We set this false at the bottom of switch
@@ -3516,7 +3518,9 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
 
   /* This holds the pointer to the failure stack, when
      it is allocated relocatably.  */
+#ifdef REL_ALLOC_STMT
   fail_stack_elt_t *failure_stack_ptr;
+#endif
 
   /* We fill all the registers internally, independent of what we
      return, for use in backreferences.  The number here includes
