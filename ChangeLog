@@ -2,6 +2,14 @@
 
 	* Version 5.3.1.
 
+	The test, tests/tail/f-1, failed on powerpc-apple-darwin7.7.0.
+	* src/tail.c (IS_TAILABLE_FILE_TYPE): Adjust definition also to include
+	sockets, since that's what you get when reading from a command-line-
+	supplied pipe on Darwin 7.7.
+	(IS_PIPE_LIKE_FILE_TYPE): Define.
+	(main): Use new IS_PIPE_LIKE_FILE_TYPE rather than simply S_ISFIFO.
+	Reported by Nelson Beebe.
+
 	* src/expr.c (toarith): Rewrite to detect/diagnose integer overflow,
 	rather than suffering silently.
 	Before, expr would silently overflow and wrap around:
