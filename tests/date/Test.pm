@@ -142,6 +142,8 @@ sub test_vector
      # due to a bug in strftime.c.
      ['wide-fmt', "-d '1999-06-01' +%3004Y", {}, '0' x 3000 . '1999', 0],
 
+     # Ensure that we can parse MONTHNAME-DAY-YEAR.
+     ['moname-d-y', '--iso -d May-23-2003', {}, '2003-05-23', 0],
      # FIXME: add a lot more...
      );
 
