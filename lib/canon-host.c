@@ -46,10 +46,6 @@
 # include <arpa/inet.h>
 #endif
 
-#ifndef strdup
-char *strdup ();
-#endif
-
 /* Returns the canonical hostname associated with HOST (allocated in a static
    buffer), or 0 if it can't be determined.  */
 char *
