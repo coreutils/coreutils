@@ -13,17 +13,26 @@ fi
 
 umask 022
 
-pwd=`pwd`
-dir=cpmvbak-$$
-actual=$dir/actual
-expected=$dir/expected
-
 # Be careful to close $actual before removing the containing directory.
 # Use `1>&2' rather than `1<&-' since the latter appears not to work
 # with /bin/sh from powerpc-ibm-aix4.2.0.0.
-trap "cd $pwd; exec 1>&2; rm -rf $dir" 0 1 2 3 15
 
-mkdir $dir
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; exec 1>&2; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo '$0: failure in testing framework' 1>&2
+  (exit 1); exit
+fi
+
+actual=actual
+expected=expected
 
 exec 1> $actual
 
@@ -31,9 +40,9 @@ fail=0
 for prog in cp mv; do
   for initial_files in 'x' 'x y' 'x y y~' 'x y y.~1~' 'x y y~ y.~1~'; do
     for opt in none off  numbered t  existing nil  simple never; do
-      ( cd $dir; touch $initial_files )
-	$prog --backup=$opt $dir/x $dir/y || fail=1
-      ( cd $dir; echo $initial_files $opt: `ls [xy]*`; rm -f x y y~ y.~?~ )
+      touch $initial_files
+	$prog --backup=$opt x y || fail=1
+      echo $initial_files $opt: `ls [xy]*`; rm -f x y y~ y.~?~
     done
   done
 done
