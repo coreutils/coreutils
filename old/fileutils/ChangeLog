@@ -1,3 +1,27 @@
+Sat Feb 11 07:52:01 1995  Jim Meyering  (meyering@comco.com)
+
+        * configure.in (AC_REPLACE_FUNCS): Add memcmp, memcpy, and memset.
+        (AC_CHECK_FUNCS): Add strchr and strrchr.
+        * lib/Makefile.in (SOURCES): Add memcmp.c, memcpy.c, and memset.c.
+
+	* system.h: Remove index/rindex and bcmp/bcopy/bzero references.
+	Separate errno declaration from STDC_HEADERS.
+
+	* dd.c (copy): Use memset, not bzero.
+	(copy_simple): Use memcpy, not bcopy.
+
+	* fsusage.c (get_fs_usage, statfs): Use safe_read, and safe_stat
+	rather than bare read and stat.  From Bruno Haible.
+
+        * lib/Makefile.in (DISTFILES): Add error.h.
+
+	* chgrp.c, chmod.c, chown.c, cp-hash.c, cp.c, df.c, du.c, install.c, 
+	ln.c, ls.c, mv.c, mvdir.c, rm.c, touch.c: Rename SAFE_STAT and
+	SAFE_LSTAT to safe_stat and safe_lstat.
+
+	* basename.c (basename): Use strrchr, not rindex.
+	[!STDC_HEADERS && !HAVE_STRING_H]: Define strrchr to rindex.
+
 Tue Dec 27 07:07:53 1994  Jim Meyering  (meyering@comco.com)
 
 	* src/*.c: Include "error.h" rather than simply declaring
