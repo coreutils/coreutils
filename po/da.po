@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: coreutils 4.5.11\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2003-12-20 13:52+0100\n"
+"POT-Creation-Date: 2004-01-15 21:30+0100\n"
 "PO-Revision-Date: 2003-03-30 19:53+0200\n"
 "Last-Translator: Keld Jørn Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -28,12 +28,13 @@ msgid "ambiguous argument %s for %s"
 msgstr "flertydigt argument %s til %s"
 
 #: lib/argmatch.c:152
+#, c-format
 msgid "Valid arguments are:"
 msgstr "Gyldige argumenter er: "
 
 #: lib/closeout.c:88 src/cat.c:188 src/cat.c:271 src/cat.c:322 src/cksum.c:268
 #: src/head.c:304 src/head.c:354 src/head.c:774 src/head.c:819 src/od.c:1013
-#: src/tail.c:327 src/tail.c:1730 src/tr.c:1659 src/tr.c:1906 src/tr.c:2014
+#: src/tail.c:327 src/tail.c:1748 src/tr.c:1659 src/tr.c:1906 src/tr.c:2014
 msgid "write error"
 msgstr "fejl ved skrivning"
 
@@ -152,12 +153,12 @@ msgstr "blokstørrelse"
 msgid "failed to return to initial working directory"
 msgstr "Mislykkedes med at returnere til oprindeligt arbejdskatalog"
 
-#: lib/makepath.c:152 src/copy.c:1321 src/mkdir.c:171
+#: lib/makepath.c:152 src/copy.c:1324 src/mkdir.c:171
 #, c-format
 msgid "cannot create directory %s"
 msgstr "kan ikke oprette katalog %s"
 
-#: lib/makepath.c:158 lib/makepath.c:400 src/cp.c:440 src/cp.c:462
+#: lib/makepath.c:158 lib/makepath.c:400 src/cp.c:438 src/cp.c:460
 #, c-format
 msgid "%s exists but is not a directory"
 msgstr "%s eksisterer, men er ikke et katalog"
@@ -368,22 +369,22 @@ msgid "The strings compared were %s and %s."
 msgstr "De sammenlignede strenge var '%s' og '%s'."
 
 #: src/basename.c:49 src/cat.c:87 src/chgrp.c:115 src/chmod.c:266
-#: src/chown.c:90 src/chroot.c:40 src/cksum.c:277 src/comm.c:68 src/cp.c:157
-#: src/csplit.c:1404 src/cut.c:177 src/date.c:115 src/dd.c:283 src/df.c:723
+#: src/chown.c:90 src/chroot.c:51 src/cksum.c:277 src/comm.c:68 src/cp.c:157
+#: src/csplit.c:1401 src/cut.c:177 src/date.c:115 src/dd.c:283 src/df.c:723
 #: src/dircolors.c:100 src/dirname.c:41 src/du.c:163 src/echo.c:72
-#: src/env.c:114 src/expand.c:107 src/expr.c:99 src/factor.c:69 src/fmt.c:267
+#: src/env.c:114 src/expand.c:104 src/expr.c:99 src/factor.c:69 src/fmt.c:267
 #: src/fold.c:62 src/head.c:109 src/hostid.c:40 src/hostname.c:62 src/id.c:82
-#: src/install.c:589 src/join.c:139 src/kill.c:90 src/link.c:47 src/ln.c:341
-#: src/logname.c:44 src/ls.c:3898 src/md5sum.c:120 src/mkdir.c:57
+#: src/install.c:589 src/join.c:154 src/kill.c:90 src/link.c:47 src/ln.c:341
+#: src/logname.c:44 src/ls.c:3907 src/md5sum.c:120 src/mkdir.c:57
 #: src/mkfifo.c:51 src/mknod.c:51 src/mv.c:302 src/nice.c:65 src/nl.c:172
-#: src/nohup.c:52 src/od.c:282 src/paste.c:405 src/pathchk.c:136
+#: src/nohup.c:52 src/od.c:282 src/paste.c:391 src/pathchk.c:136
 #: src/pinky.c:464 src/pr.c:2748 src/printenv.c:59 src/printf.c:91
 #: src/ptx.c:1870 src/pwd.c:41 src/readlink.c:63 src/rm.c:103 src/rmdir.c:142
 #: src/seq.c:78 src/setuidgid.c:46 src/shred.c:155 src/sleep.c:48
 #: src/sort.c:270 src/split.c:96 src/stat.c:691 src/stty.c:485 src/su.c:432
 #: src/sum.c:55 src/sync.c:40 src/tac.c:122 src/tail.c:234 src/tee.c:58
-#: src/test.c:972 src/touch.c:234 src/tr.c:316 src/tsort.c:92 src/tty.c:58
-#: src/uname.c:105 src/unexpand.c:372 src/uniq.c:130 src/unlink.c:47
+#: src/test.c:972 src/touch.c:244 src/tr.c:316 src/tsort.c:92 src/tty.c:58
+#: src/uname.c:105 src/unexpand.c:373 src/uniq.c:130 src/unlink.c:47
 #: src/uptime.c:186 src/users.c:115 src/wc.c:131 src/who.c:616 src/whoami.c:47
 #: src/yes.c:42
 #, c-format
@@ -410,22 +411,22 @@ msgstr ""
 "\n"
 
 #: src/basename.c:65 src/cat.c:123 src/chgrp.c:163 src/chmod.c:298
-#: src/chown.c:152 src/chroot.c:58 src/cksum.c:292 src/comm.c:85 src/cp.c:254
-#: src/csplit.c:1446 src/cut.c:222 src/date.c:217 src/dd.c:341 src/df.c:762
+#: src/chown.c:152 src/chroot.c:69 src/cksum.c:292 src/comm.c:85 src/cp.c:254
+#: src/csplit.c:1443 src/cut.c:222 src/date.c:217 src/dd.c:341 src/df.c:762
 #: src/dircolors.c:121 src/dirname.c:57 src/du.c:214 src/echo.c:104
-#: src/env.c:133 src/expand.c:132 src/expr.c:162 src/factor.c:89
+#: src/env.c:133 src/expand.c:129 src/expr.c:162 src/factor.c:89
 #: src/false.c:43 src/fmt.c:297 src/fold.c:85 src/head.c:144 src/hostid.c:53
-#: src/hostname.c:75 src/id.c:103 src/install.c:644 src/join.c:182
-#: src/kill.c:120 src/link.c:59 src/ln.c:398 src/logname.c:55 src/ls.c:4032
+#: src/hostname.c:75 src/id.c:103 src/install.c:644 src/join.c:195
+#: src/kill.c:120 src/link.c:59 src/ln.c:398 src/logname.c:55 src/ls.c:4041
 #: src/md5sum.c:156 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:82 src/mv.c:356
-#: src/nice.c:79 src/nl.c:227 src/nohup.c:68 src/od.c:369 src/paste.c:429
+#: src/nice.c:79 src/nl.c:227 src/nohup.c:68 src/od.c:369 src/paste.c:415
 #: src/pathchk.c:148 src/pinky.c:491 src/pr.c:2860 src/printenv.c:72
 #: src/printf.c:140 src/ptx.c:1917 src/pwd.c:52 src/readlink.c:80 src/rm.c:141
 #: src/rmdir.c:162 src/seq.c:104 src/setuidgid.c:66 src/shred.c:219
 #: src/sleep.c:64 src/sort.c:341 src/split.c:129 src/stat.c:762 src/stty.c:699
 #: src/su.c:453 src/sum.c:75 src/sync.c:51 src/tac.c:145 src/tail.c:304
-#: src/tee.c:71 src/test.c:1051 src/touch.c:265 src/tr.c:389 src/true.c:43
-#: src/tsort.c:104 src/tty.c:70 src/uname.c:127 src/unexpand.c:396
+#: src/tee.c:71 src/test.c:1051 src/touch.c:275 src/tr.c:389 src/true.c:43
+#: src/tsort.c:104 src/tty.c:70 src/uname.c:127 src/unexpand.c:397
 #: src/uniq.c:169 src/unlink.c:58 src/uptime.c:201 src/users.c:128
 #: src/wc.c:153 src/who.c:657 src/whoami.c:59 src/yes.c:58
 #, c-format
@@ -437,7 +438,7 @@ msgstr ""
 "Rapportér fejl til <%s>.\n"
 
 #: src/basename.c:114 src/chgrp.c:246 src/chmod.c:395 src/chown.c:264
-#: src/chroot.c:78 src/comm.c:280 src/csplit.c:1376 src/dirname.c:89
+#: src/chroot.c:89 src/comm.c:280 src/csplit.c:1373 src/dirname.c:89
 #: src/expr.c:202 src/install.c:282 src/link.c:88 src/mkdir.c:125
 #: src/mkfifo.c:114 src/mknod.c:138 src/nohup.c:101 src/pathchk.c:189
 #: src/readlink.c:128 src/rm.c:231 src/rmdir.c:207 src/seq.c:375
@@ -625,7 +626,7 @@ msgid ""
 msgstr ""
 
 #: src/chgrp.c:254 src/chmod.c:408 src/chmod.c:416 src/chown.c:272
-#: src/chown.c:299 src/cp.c:300 src/rm.c:241 src/touch.c:154 src/touch.c:360
+#: src/chown.c:299 src/cp.c:299 src/rm.c:241 src/touch.c:164 src/touch.c:366
 #, c-format
 msgid "failed to get attributes of %s"
 msgstr "Kunne ikke hente attributter for %s"
@@ -860,7 +861,7 @@ msgstr ""
 "er\n"
 "angivet med et ':'. EJER og GRUPPE kan være numerisk eller symbolsk.\n"
 
-#: src/chroot.c:44
+#: src/chroot.c:55
 #, c-format
 msgid ""
 "Usage: %s NEWROOT [COMMAND...]\n"
@@ -869,7 +870,7 @@ msgstr ""
 "Brug:  %s NYROD [KOMMANDO...]\n"
 "eller: %s FLAG\n"
 
-#: src/chroot.c:48
+#: src/chroot.c:59
 msgid ""
 "Run COMMAND with root directory set to NEWROOT.\n"
 "\n"
@@ -877,7 +878,7 @@ msgstr ""
 "Kør KOMMANDO med rod-kataloget sat til NYROD.\n"
 "\n"
 
-#: src/chroot.c:54
+#: src/chroot.c:65
 msgid ""
 "\n"
 "If no command is given, run ``${SHELL} -i'' (default: /bin/sh).\n"
@@ -885,14 +886,19 @@ msgstr ""
 "\n"
 "Hvis ingen kommando er angivet, kør '${SHELL} -i' (default: /bin/sh).\n"
 
-#: src/chroot.c:84
+#: src/chroot.c:95
 #, c-format
 msgid "cannot change root directory to %s"
 msgstr "kan ikke ændre rod-kataloget til %s"
 
-#: src/chroot.c:87
+#: src/chroot.c:98
 msgid "cannot chdir to root directory"
 msgstr "kan ikke ændre til rod-katalog"
+
+#: src/chroot.c:122 src/nohup.c:190 src/setuidgid.c:132
+#, fuzzy, c-format
+msgid "cannot run command %s"
+msgstr "kan ikke aflænke %s"
 
 #: src/cksum.c:233
 #, c-format
@@ -951,7 +957,7 @@ msgstr "kan ikke udføre fstat() %s"
 msgid "skipping file %s, as it was replaced while being copied"
 msgstr "overspringer fil %s, da den blev erstattet mens den blev kopieret"
 
-#: src/copy.c:258 src/copy.c:886 src/copy.c:1067 src/copy.c:1157 src/ln.c:297
+#: src/copy.c:258 src/copy.c:886 src/copy.c:1070 src/copy.c:1160 src/ln.c:297
 #: src/remove.c:727 src/remove.c:781 src/remove.c:902 src/remove.c:1009
 #, c-format
 msgid "cannot remove %s"
@@ -1047,122 +1053,122 @@ msgstr "sikkerhedskopi af %s vil overskrive kildefil; %s er ikke flyttet"
 msgid "backing up %s would destroy source;  %s not copied"
 msgstr "sikkerhedskopi af %s vil overskrive kildefil; %s er ikke kopieret"
 
-#: src/copy.c:1046 src/ln.c:279
+#: src/copy.c:1049 src/ln.c:279
 #, c-format
 msgid "cannot backup %s"
 msgstr "kan ikke sikkerhedskopiere %s"
 
-#: src/copy.c:1082 src/ln.c:314
+#: src/copy.c:1085 src/ln.c:314
 #, c-format
 msgid " (backup: %s)"
 msgstr " (sikkerhedskopi: %s)"
 
-#: src/copy.c:1132
+#: src/copy.c:1135
 #, c-format
 msgid "cannot copy a directory, %s, into itself, %s"
 msgstr "kan ikke kopiere et katalog %s til sig selv %s"
 
-#: src/copy.c:1139
+#: src/copy.c:1142
 #, c-format
 msgid "will not create hard link %s to directory %s"
 msgstr "vil ikke oprette hård lænke %s til katalog %s"
 
-#: src/copy.c:1165
+#: src/copy.c:1168
 #, c-format
 msgid "cannot create hard link %s to %s"
 msgstr "kan ikke oprette hård lænke %s til %s"
 
-#: src/copy.c:1219
+#: src/copy.c:1222
 #, c-format
 msgid "cannot move %s to a subdirectory of itself, %s"
 msgstr "kan ikke flytte %s til et underkatalog af sig selv, %s"
 
-#: src/copy.c:1262
+#: src/copy.c:1265
 #, c-format
 msgid "cannot move %s to %s"
 msgstr "kan ikke flytte %s til %s"
 
-#: src/copy.c:1274
+#: src/copy.c:1277
 #, c-format
 msgid "inter-device move failed: %s to %s; unable to remove target"
 msgstr "flytning mellem enheder mislykkedes: %s til %s; kan ikke fjerne målet"
 
-#: src/copy.c:1302
+#: src/copy.c:1305
 #, c-format
 msgid "cannot copy cyclic symbolic link %s"
 msgstr "kan ikke kopiere cyklisk symbolsk lænke %s"
 
-#: src/copy.c:1379
+#: src/copy.c:1382
 #, c-format
 msgid "%s: can make relative symbolic links only in current directory"
 msgstr "%s: kan kun oprette relative symbolske lænker i aktuelt katalog"
 
-#: src/copy.c:1386
+#: src/copy.c:1389
 #, c-format
 msgid "cannot create symbolic link %s to %s"
 msgstr "kan ikke oprette symbolsk lænke %s til %s"
 
-#: src/copy.c:1397
+#: src/copy.c:1400
 #, c-format
 msgid "cannot create link %s"
 msgstr "kan ikke oprette lænke %s"
 
-#: src/copy.c:1419 src/mkfifo.c:134
+#: src/copy.c:1422 src/mkfifo.c:134
 #, c-format
 msgid "cannot create fifo %s"
 msgstr "kan ikke oprette fifo %s"
 
-#: src/copy.c:1430
+#: src/copy.c:1433
 #, c-format
 msgid "cannot create special file %s"
 msgstr "kan ikke oprette specialfil %s"
 
-#: src/copy.c:1442 src/ls.c:2561 src/stat.c:436
+#: src/copy.c:1445 src/ls.c:2560 src/stat.c:436
 #, c-format
 msgid "cannot read symbolic link %s"
 msgstr "kan ikke læse symbolsk lænke %s"
 
-#: src/copy.c:1467
+#: src/copy.c:1470
 #, c-format
 msgid "cannot create symbolic link %s"
 msgstr "kan ikke oprette symbolsk lænke %s"
 
-#: src/copy.c:1483 src/copy.c:1544 src/cp.c:334
+#: src/copy.c:1486 src/copy.c:1547 src/cp.c:333
 #, c-format
 msgid "failed to preserve ownership for %s"
 msgstr "kunne ikke bevare ejerskab for %s"
 
-#: src/copy.c:1498
+#: src/copy.c:1501
 #, c-format
 msgid "%s has unknown file type"
 msgstr "%s har ukendt filtype"
 
-#: src/copy.c:1531
+#: src/copy.c:1534
 #, c-format
 msgid "preserving times for %s"
 msgstr "beholder tider for %s"
 
-#: src/copy.c:1556
+#: src/copy.c:1559
 #, fuzzy, c-format
 msgid "failed to lookup file %s"
 msgstr "kunne ikke beholde tider for %s"
 
-#: src/copy.c:1561
+#: src/copy.c:1564
 #, c-format
 msgid "failed to preserve authorship for %s"
 msgstr "kunne ikke bevare forfatter af %s"
 
-#: src/copy.c:1580
+#: src/copy.c:1583
 #, c-format
 msgid "setting permissions for %s"
 msgstr "sætter adgangsrettigheder på %s"
 
-#: src/copy.c:1602 src/ln.c:332
+#: src/copy.c:1605 src/ln.c:332
 #, c-format
 msgid "cannot un-backup %s"
 msgstr "kan ikke genoprette sikkerhedskopi af %s"
 
-#: src/copy.c:1606
+#: src/copy.c:1609
 #, c-format
 msgid "%s -> %s (unbackup)\n"
 msgstr "%s -> %s (genopret sikkerhedskopi)\n"
@@ -1186,12 +1192,12 @@ msgstr ""
 "Kopiér KILDE til MÅL eller en eller flere KILDE'r til KATALOG.\n"
 "\n"
 
-#: src/cp.c:171 src/csplit.c:1417 src/cut.c:189 src/df.c:733 src/du.c:172
-#: src/expand.c:120 src/fmt.c:277 src/fold.c:75 src/head.c:123
-#: src/install.c:605 src/kill.c:104 src/ln.c:360 src/ls.c:3908 src/mkdir.c:66
-#: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:316 src/nl.c:185 src/paste.c:419
+#: src/cp.c:171 src/csplit.c:1414 src/cut.c:189 src/df.c:733 src/du.c:172
+#: src/expand.c:117 src/fmt.c:277 src/fold.c:75 src/head.c:123
+#: src/install.c:605 src/kill.c:104 src/ln.c:360 src/ls.c:3917 src/mkdir.c:66
+#: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:316 src/nl.c:185 src/paste.c:405
 #: src/pr.c:2761 src/ptx.c:1882 src/shred.c:165 src/sort.c:284 src/split.c:109
-#: src/tac.c:135 src/tail.c:248 src/touch.c:243 src/unexpand.c:385
+#: src/tac.c:135 src/tail.c:248 src/touch.c:253 src/unexpand.c:386
 #: src/uniq.c:143
 msgid ""
 "Mandatory arguments to long options are mandatory for short options too.\n"
@@ -1380,54 +1386,54 @@ msgstr ""
 "eksisterende,\n"
 "regulær fil.\n"
 
-#: src/cp.c:320
+#: src/cp.c:319
 #, c-format
 msgid "failed to preserve times for %s"
 msgstr "kunne ikke beholde tider for %s"
 
-#: src/cp.c:344
+#: src/cp.c:343
 #, c-format
 msgid "failed to preserve permissions for %s"
 msgstr "kan ikke beholde adgangsrettigheder på %s"
 
-#: src/cp.c:428
+#: src/cp.c:426
 #, c-format
 msgid "cannot make directory %s"
 msgstr "kan ikke oprette katalog %s"
 
-#: src/cp.c:487 src/ln.c:496 src/mv.c:455 src/shred.c:1601
+#: src/cp.c:485 src/ln.c:496 src/mv.c:455 src/shred.c:1601
 msgid "missing file argument"
 msgstr "manglende fil-argument"
 
-#: src/cp.c:492
+#: src/cp.c:490
 msgid "missing destination file"
 msgstr "manglende målfil"
 
-#: src/cp.c:517 src/ln.c:165 src/ln.c:188 src/ln.c:215 src/ln.c:303
+#: src/cp.c:515 src/ln.c:165 src/ln.c:188 src/ln.c:215 src/ln.c:303
 #, c-format
 msgid "accessing %s"
 msgstr "tilgår %s"
 
-#: src/cp.c:542
+#: src/cp.c:540
 #, fuzzy, c-format
 msgid "%s: specified destination directory does not exist"
 msgstr "%s: angivet målkatalog er ikke et katalog"
 
-#: src/cp.c:544
+#: src/cp.c:542
 #, c-format
 msgid "%s: specified target is not a directory"
 msgstr "%s: angivet mål er ikke et katalog"
 
-#: src/cp.c:547
+#: src/cp.c:545
 #, c-format
 msgid "copying multiple files, but last argument %s is not a directory"
 msgstr "kopierer flere filer, men sidste argument, %s, er ikke et katalog"
 
-#: src/cp.c:646
+#: src/cp.c:644
 msgid "when preserving paths, the destination must be a directory"
 msgstr "når stier beholdes, skal målet være et katalog"
 
-#: src/cp.c:872 src/install.c:217 src/ln.c:443 src/mv.c:401
+#: src/cp.c:870 src/install.c:217 src/ln.c:443 src/mv.c:401
 #, c-format
 msgid ""
 "warning: --version-control (-V) is obsolete;  support for it\n"
@@ -1436,19 +1442,19 @@ msgstr ""
 "advarsel: --version-control (-V) er forældet;  understøttelse for det\n"
 "vil blive fjernet i en fremtidig udgave. Brug --backup=%s i stedet."
 
-#: src/cp.c:966 src/ln.c:473
+#: src/cp.c:964 src/ln.c:473
 msgid "symbolic links are not supported on this system"
 msgstr "symbolske lænker understøttes ikke på dette system"
 
-#: src/cp.c:1002
+#: src/cp.c:1000
 msgid "cannot make both hard and symbolic links"
 msgstr "kan ikke lave både hårde og symbolske lænker"
 
-#: src/cp.c:1010 src/install.c:273 src/ln.c:539 src/mv.c:479
+#: src/cp.c:1008 src/install.c:273 src/ln.c:539 src/mv.c:479
 msgid "backup type"
 msgstr "type af sikkerhedskopi"
 
-#: src/csplit.c:267 src/csplit.c:1393 src/join.c:265 src/tac-pipe.c:57
+#: src/csplit.c:267 src/csplit.c:1390 src/join.c:276 src/tac-pipe.c:57
 #: src/tee.c:223 src/tr.c:1602 src/tr.c:1704 src/tr.c:1747
 msgid "read error"
 msgstr "læsefejl"
@@ -1486,96 +1492,96 @@ msgstr "fejl i søgning med regulært udtryk"
 msgid "write error for `%s'"
 msgstr "skrivefejl for \"%s\""
 
-#: src/csplit.c:1010
+#: src/csplit.c:1007
 #, fuzzy, c-format
 msgid "%s: integer expected after delimiter"
 msgstr "%s: heltal forventedes efter \"%c\""
 
-#: src/csplit.c:1026
+#: src/csplit.c:1023
 #, c-format
 msgid "%s: `}' is required in repeat count"
 msgstr "%s: '}' er nødvendig i gentagelsesantal"
 
-#: src/csplit.c:1036
+#: src/csplit.c:1033
 #, c-format
 msgid "%s}: integer required between `{' and `}'"
 msgstr "%s}: heltal kræves mellem '{' og '}'"
 
-#: src/csplit.c:1063
+#: src/csplit.c:1060
 #, fuzzy, c-format
 msgid "%s: closing delimiter `%c' missing"
 msgstr "%s: afslutningende skilletegn '%c' mangler"
 
-#: src/csplit.c:1079
+#: src/csplit.c:1076
 #, c-format
 msgid "%s: invalid regular expression: %s"
 msgstr "%s: ugyldigt regulært udtryk: %s"
 
-#: src/csplit.c:1112
+#: src/csplit.c:1109
 #, c-format
 msgid "%s: invalid pattern"
 msgstr "%s: ugyldigt mønster"
 
-#: src/csplit.c:1115
+#: src/csplit.c:1112
 #, c-format
 msgid "%s: line number must be greater than zero"
 msgstr "%s: linjenummeret skal være større end nul"
 
-#: src/csplit.c:1121
+#: src/csplit.c:1118
 #, c-format
 msgid "line number `%s' is smaller than preceding line number, %s"
 msgstr "linjenummer '%s' er mindre end foregående linjenummer, %s"
 
-#: src/csplit.c:1127
+#: src/csplit.c:1124
 #, c-format
 msgid "warning: line number `%s' is the same as preceding line number"
 msgstr "advarsel: linjenummer '%s' er det samme som foregående"
 
-#: src/csplit.c:1180
+#: src/csplit.c:1177
 #, fuzzy
 msgid "invalid format width"
 msgstr "ugyldigt datoformat %s"
 
-#: src/csplit.c:1201
+#: src/csplit.c:1198
 #, fuzzy
 msgid "invalid format precision"
 msgstr "ugyldig præcision: %s"
 
-#: src/csplit.c:1222
+#: src/csplit.c:1219
 msgid "missing conversion specifier in suffix"
 msgstr "manglende konverteringsspecifikator i suffiks"
 
-#: src/csplit.c:1228
+#: src/csplit.c:1225
 #, c-format
 msgid "invalid conversion specifier in suffix: %c"
 msgstr "ugyldig konverteringsspecifikator i suffiks: %c"
 
-#: src/csplit.c:1231
+#: src/csplit.c:1228
 #, c-format
 msgid "invalid conversion specifier in suffix: \\%.3o"
 msgstr "ugyldig konverteringsspecifikator i suffiks: \\%.3o"
 
-#: src/csplit.c:1254
+#: src/csplit.c:1251
 #, c-format
 msgid "too many %% conversion specifications in suffix"
 msgstr "for mange %%-konverteringsspecifikationer i suffiks"
 
-#: src/csplit.c:1269
+#: src/csplit.c:1266
 #, c-format
 msgid "missing %% conversion specification in suffix"
 msgstr "manglende %%-konverteringsspecifikation i suffiks"
 
-#: src/csplit.c:1353
+#: src/csplit.c:1350
 #, c-format
 msgid "%s: invalid number"
 msgstr "%s: ugyldigt tal"
 
-#: src/csplit.c:1408
+#: src/csplit.c:1405
 #, c-format
 msgid "Usage: %s [OPTION]... FILE PATTERN...\n"
 msgstr "Brug: %s [FLAG]... FIL MØNSTER...\n"
 
-#: src/csplit.c:1412
+#: src/csplit.c:1409
 msgid ""
 "Output pieces of FILE separated by PATTERN(s) to files `xx01', `xx02', ...,\n"
 "and output byte counts of each piece to standard output.\n"
@@ -1585,7 +1591,7 @@ msgstr ""
 "og vis antal byte for hver del på standard-ud.\n"
 "\n"
 
-#: src/csplit.c:1420
+#: src/csplit.c:1417
 #, fuzzy, c-format
 msgid ""
 "  -b, --suffix-format=FORMAT use sprintf FORMAT instead of %02d\n"
@@ -1596,7 +1602,7 @@ msgstr ""
 "  -f, --prefix=PRÆFIKS       brug PRÆFIKS i stedet for 'xx'\n"
 "  -k, --keep-files           fjern ikke udfiler ved fejl\n"
 
-#: src/csplit.c:1425
+#: src/csplit.c:1422
 msgid ""
 "  -n, --digits=DIGITS        use specified number of digits instead of 2\n"
 "  -s, --quiet, --silent      do not print counts of output file sizes\n"
@@ -1606,7 +1612,7 @@ msgstr ""
 "  -s, --quiet, --silent      vis ikke størrelsen af udfilerne\n"
 "  -z, --elide-empty-files    fjern tomme udfiler\n"
 
-#: src/csplit.c:1432
+#: src/csplit.c:1429
 msgid ""
 "\n"
 "Read standard input if FILE is -.  Each PATTERN may be:\n"
@@ -1614,7 +1620,7 @@ msgstr ""
 "\n"
 "Læs standard-ind når FIL er '-'. Hvert MØNSTER kan være:\n"
 
-#: src/csplit.c:1436
+#: src/csplit.c:1433
 msgid ""
 "\n"
 "  INTEGER            copy up to but not including specified line number\n"
@@ -1634,10 +1640,10 @@ msgstr ""
 "\n"
 "En linje-POSITION skal være '+' eller '-' fulgt af et positivt heltal\n"
 
-#: src/cut.c:181 src/df.c:727 src/du.c:167 src/expand.c:111 src/fold.c:66
-#: src/head.c:113 src/ls.c:3902 src/nl.c:176 src/paste.c:409 src/pr.c:2752
+#: src/cut.c:181 src/df.c:727 src/du.c:167 src/expand.c:108 src/fold.c:66
+#: src/head.c:113 src/ls.c:3911 src/nl.c:176 src/paste.c:395 src/pr.c:2752
 #: src/sort.c:274 src/sum.c:59 src/tac.c:126 src/tail.c:238 src/tee.c:62
-#: src/unexpand.c:376 src/wc.c:135
+#: src/unexpand.c:377 src/wc.c:135
 #, c-format
 msgid "Usage: %s [OPTION]... [FILE]...\n"
 msgstr "Brug: %s [FLAG]... [FIL]...\n"
@@ -1996,7 +2002,7 @@ msgstr "en formatstreng kan ikke angives når tilvalget --rfc-822 bruges"
 msgid "undefined"
 msgstr "ikke-defineret"
 
-#: src/date.c:438 src/touch.c:402
+#: src/date.c:438 src/touch.c:423
 msgid "cannot get time of day"
 msgstr "kan ikke bestemme klokkeslæt"
 
@@ -2225,6 +2231,7 @@ msgid " %4s-blocks      Used Available Use%%"
 msgstr " %4s-blokke     Brugt   Tilbage Brug%%"
 
 #: src/df.c:198
+#, c-format
 msgid " Mounted on\n"
 msgstr " Monteret på\n"
 
@@ -2296,7 +2303,7 @@ msgstr ""
 "  -x, --exclude-type=TYPE  vis kun filsystemer som ikke er af typen TYPE\n"
 "  -v                    (ignoreret)\n"
 
-#: src/df.c:758 src/du.c:210 src/ls.c:4020
+#: src/df.c:758 src/du.c:210 src/ls.c:4029
 #, fuzzy
 msgid ""
 "\n"
@@ -2446,10 +2453,12 @@ msgstr ""
 "  -D, --dereference-args  følg FIL'er når de er symbolske lænker\n"
 
 #: src/du.c:186
+#, fuzzy
 msgid ""
 "  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M "
 "2G)\n"
-"  -H, --si              likewise, but use powers of 1000 not 1024\n"
+"  -H, --si              likewise, but use powers of 1000 not 1024 "
+"(deprecated)\n"
 "  -k                    like --block-size=1K\n"
 "  -l, --count-links     count sizes many times if hard linked\n"
 msgstr ""
@@ -2497,7 +2506,7 @@ msgstr ""
 "                        argumentet;  --max-depth=0 er det samme som\n"
 "                        --summarize\n"
 
-#: src/du.c:524 src/ls.c:2231 src/wc.c:674
+#: src/du.c:524 src/ls.c:2230 src/wc.c:674
 msgid "total"
 msgstr "totalt"
 
@@ -2605,7 +2614,7 @@ msgstr ""
 "En - for sig selv implicerer -i.  Hvis ingen KOMMANDO er angivet, udskriv\n"
 "det resulterende miljø.\n"
 
-#: src/expand.c:115
+#: src/expand.c:112
 msgid ""
 "Convert tabs in each FILE to spaces, writing to standard output.\n"
 "With no FILE, or when FILE is -, read standard input.\n"
@@ -2615,7 +2624,7 @@ msgstr ""
 "Hvis ingen FIL er angivet, eller FIL er -, læses fra standard-ind.\n"
 "\n"
 
-#: src/expand.c:123
+#: src/expand.c:120
 msgid ""
 "  -i, --initial       do not convert TABs after non whitespace\n"
 "  -t, --tabs=NUMBER   have tabs NUMBER characters apart, not 8\n"
@@ -2623,30 +2632,30 @@ msgstr ""
 "  -i, --initial       konvertér ikke tabulatorer efter ikke-blanke tegn\n"
 "  -t, --tabs=TAL      hav tabulatorer TAL tegn fra hinanden, ikke 8\n"
 
-#: src/expand.c:127
+#: src/expand.c:124
 msgid ""
 "  -t, --tabs=LIST     use comma separated list of explicit tab positions\n"
 msgstr "  -t, --tabs=LISTE    brug komma-separeret LISTE med tab-positioner\n"
 
-#: src/expand.c:184
+#: src/expand.c:180
 #, fuzzy, c-format
 msgid "tab stop is too large %s"
 msgstr "%s er for stor"
 
-#: src/expand.c:193
+#: src/expand.c:189
 #, fuzzy, c-format
 msgid "tab size contains invalid character(s): %s"
 msgstr "tabulatorstørrelsen indeholder et ugyldigt tegn"
 
-#: src/expand.c:218 src/unexpand.c:169
+#: src/expand.c:214 src/unexpand.c:170
 msgid "tab size cannot be 0"
 msgstr "tabulatorstørrelse kan ikke være 0"
 
-#: src/expand.c:220 src/unexpand.c:171
+#: src/expand.c:216 src/unexpand.c:172
 msgid "tab sizes must be ascending"
 msgstr "tabulatorstørrelser skal være stigende"
 
-#: src/expand.c:414
+#: src/expand.c:410
 msgid "`-LIST' option is obsolete; use `-t LIST'"
 msgstr "'-LIST'-flaget er forældet; brug '-t LIST'"
 
@@ -2919,12 +2928,12 @@ msgstr ""
 "  -s, --spaces        ombryd ved mellemrum\n"
 "  -w, --width=BREDDE  brug BREDDE kolonner i stedet for 80\n"
 
-#: src/fold.c:266
+#: src/fold.c:274
 #, c-format
 msgid "`%s' option is obsolete; use `%s'"
 msgstr "'%s'-flag er forældet; brug '%s'"
 
-#: src/fold.c:294
+#: src/fold.c:302
 #, c-format
 msgid "invalid number of columns: `%s'"
 msgstr "ugyldigt antal kolonner: \"%s\""
@@ -3298,12 +3307,12 @@ msgstr ""
 "er:\n"
 "\n"
 
-#: src/join.c:143
+#: src/join.c:158
 #, c-format
 msgid "Usage: %s [OPTION]... FILE1 FILE2\n"
 msgstr "Brug: %s [FLAG]... FIL1 FIL2\n"
 
-#: src/join.c:147
+#: src/join.c:162
 msgid ""
 "For each pair of input lines with identical join fields, write a line to\n"
 "standard output.  The default join field is the first, delimited\n"
@@ -3322,12 +3331,11 @@ msgstr ""
 "                      hvor FILNR er 1 eller 2 svarende til FIL1 eller FIL2\n"
 "  -e TOM            erstat manglende ind-felter med TOM\n"
 
-#: src/join.c:156
+#: src/join.c:171
+#, fuzzy
 msgid ""
 "  -i, --ignore-case ignore differences in case when comparing fields\n"
-"  -j FIELD          (obsolescent) equivalent to `-1 FIELD -2 FIELD'\n"
-"  -j1 FIELD         (obsolescent) equivalent to `-1 FIELD'\n"
-"  -j2 FIELD         (obsolescent) equivalent to `-2 FIELD'\n"
+"  -j FIELD          equivalent to `-1 FIELD -2 FIELD'\n"
 "  -o FORMAT         obey FORMAT while constructing output line\n"
 "  -t CHAR           use CHAR as input and output field separator\n"
 msgstr ""
@@ -3339,7 +3347,7 @@ msgstr ""
 "  -o FORMAT         følg FORMAT når udlinjen laves\n"
 "  -t TEGN           brug TEGN som feltseparator for ind og ud\n"
 
-#: src/join.c:164
+#: src/join.c:177
 msgid ""
 "  -v FILENUM        like -a FILENUM, but suppress joined output lines\n"
 "  -1 FIELD          join on this FIELD of file 1\n"
@@ -3349,7 +3357,7 @@ msgstr ""
 "  -1 FELT           flet ved dette FELT fra fil 1\n"
 "  -2 FELT           flet ved dette FELT fra fil 2\n"
 
-#: src/join.c:171
+#: src/join.c:184
 #, fuzzy
 msgid ""
 "\n"
@@ -3371,40 +3379,50 @@ msgstr ""
 "flettefeltet, resten af felterne fra FIL1 og resten af felterne fra\n"
 "FIL2, alle adskilt med TEGN.\n"
 
-#: src/join.c:642
+#: src/join.c:648
+#, fuzzy, c-format
+msgid "value %s is so large that it is not representable"
+msgstr "%s: %s er så stor at den ikke kan repræsenteres"
+
+#: src/join.c:683
 #, c-format
 msgid "invalid field specifier: `%s'"
 msgstr "ugyldig specifikation af felt: \"%s\""
 
-#: src/join.c:656 src/join.c:769 src/join.c:805
-#, c-format
-msgid "invalid field number: `%s'"
+#: src/join.c:692
+#, fuzzy, c-format
+msgid "invalid field number: %s"
 msgstr "ugyldigt feltnummer: \"%s\""
 
-#: src/join.c:669
+#: src/join.c:699
 #, c-format
 msgid "invalid file number in field spec: `%s'"
 msgstr "ugyldigt filnummer i feltspec: \"%s\""
 
-#: src/join.c:789
+#: src/join.c:739
+msgid "too many non-option arguments"
+msgstr "for mange argumenter, der ikke er flag"
+
+#: src/join.c:781 src/join.c:811
+#, c-format
+msgid "invalid field number: `%s'"
+msgstr "ugyldigt feltnummer: \"%s\""
+
+#: src/join.c:799
 #, c-format
 msgid "invalid field number for file 1: `%s'"
 msgstr "ugyldigt feltnummer for fil 1: \"%s\""
 
-#: src/join.c:798
+#: src/join.c:805
 #, c-format
 msgid "invalid field number for file 2: `%s'"
 msgstr "ugyldigt feltnummer for fil 2: \"%s\""
 
-#: src/join.c:830
-msgid "too many non-option arguments"
-msgstr "for mange argumenter, der ikke er flag"
-
-#: src/join.c:852
+#: src/join.c:851
 msgid "too few non-option arguments"
 msgstr "for få argumenter, der ikke er flag"
 
-#: src/join.c:863
+#: src/join.c:862
 msgid "both files cannot be standard input"
 msgstr "begge filer kan ikke være standard-ind"
 
@@ -3664,84 +3682,84 @@ msgstr "%s: ikke noget login-navn\n"
 # Disse to format skal expandera til samme længd.  (Det findes en
 # kommentar omedelbart inden dem i koden om det.  Hur får man xgettext
 # at tage med kommentarer?)
-#: src/ls.c:655
+#: src/ls.c:654
 msgid "%b %e  %Y"
 msgstr "%e %b  %Y"
 
-#: src/ls.c:663
+#: src/ls.c:662
 msgid "%b %e %H:%M"
 msgstr "%e %b %H:%M"
 
-#: src/ls.c:1290
+#: src/ls.c:1289
 #, c-format
 msgid "ignoring invalid value of environment variable QUOTING_STYLE: %s"
 msgstr "ignorerer ugyldig værdi af miljøvariabelen QUOTING_STYLE: %s"
 
-#: src/ls.c:1317
+#: src/ls.c:1316
 #, c-format
 msgid "ignoring invalid width in environment variable COLUMNS: %s"
 msgstr "ignorerer ugyldig længde i miljøvariabelen COLUMNS: %s"
 
-#: src/ls.c:1349
+#: src/ls.c:1348
 #, c-format
 msgid "ignoring invalid tab size in environment variable TABSIZE: %s"
 msgstr "ignorerer ugyldig tabulatorstørrelse i miljøvariabelen TABSIZE: %s"
 
-#: src/ls.c:1466
+#: src/ls.c:1465
 #, c-format
 msgid "invalid line width: %s"
 msgstr "ugyldig linjelængde: %s"
 
-#: src/ls.c:1540
+#: src/ls.c:1539
 #, c-format
 msgid "invalid tab size: %s"
 msgstr "ugyldig tabulatorstørrelse %s"
 
-#: src/ls.c:1708
+#: src/ls.c:1707
 #, c-format
 msgid "invalid time style format %s"
 msgstr "ugyldig tidsstílsformat %s"
 
-#: src/ls.c:2044
+#: src/ls.c:2043
 #, c-format
 msgid "unrecognized prefix: %s"
 msgstr "ukendt præfiks: %s"
 
-#: src/ls.c:2067
+#: src/ls.c:2066
 msgid "unparsable value for LS_COLORS environment variable"
 msgstr "uforståelig værdi i miljøvariabelen LS_COLORS"
 
-#: src/ls.c:2135
+#: src/ls.c:2134
 #, c-format
 msgid "cannot determine device and inode of %s"
 msgstr "kan ikke bestemme enhed og inode for %s"
 
-#: src/ls.c:2145
+#: src/ls.c:2144
 #, c-format
 msgid "not listing already-listed directory: %s"
 msgstr "viser ikke allerede vist katalog: %s"
 
-#: src/ls.c:2198 src/remove.c:938
+#: src/ls.c:2197 src/remove.c:938
 #, c-format
 msgid "reading directory %s"
 msgstr "læser katalog %s"
 
-#: src/ls.c:2678
+#: src/ls.c:2677
 #, c-format
 msgid "cannot compare file names %s and %s"
 msgstr "kan ikke sammenligne filnavnene %s og %s"
 
-#: src/ls.c:3020
+#: src/ls.c:3019
 #, fuzzy
 msgid "User name too long"
 msgstr "%s: fil for lang"
 
-#: src/ls.c:3041
+#: src/ls.c:3040
 #, fuzzy
 msgid "Group name too long"
 msgstr "%s: fil for lang"
 
-#: src/ls.c:3903
+#: src/ls.c:3912
 msgid ""
 "List information about the FILEs (the current directory by default).\n"
 "Sort entries alphabetically if none of -cftuSUX nor --sort.\n"
@@ -3752,7 +3770,7 @@ msgstr ""
 "er givet.\n"
 "\n"
 
-#: src/ls.c:3911
+#: src/ls.c:3920
 msgid ""
 "  -a, --all                  do not hide entries starting with .\n"
 "  -A, --almost-all           do not list implied . and ..\n"
@@ -3764,7 +3782,7 @@ msgstr ""
 "      --author               skriv forfatter for hver fil\n"
 "  -b, --escape               skriv oktale koder for ikke-grafiske tegn\n"
 
-#: src/ls.c:3917
+#: src/ls.c:3926
 msgid ""
 "      --block-size=SIZE      use SIZE-byte blocks\n"
 "  -B, --ignore-backups       do not list implied entries ending with ~\n"
@@ -3781,7 +3799,7 @@ msgstr ""
 "                               med -l: vis ctime og sortér efter navn\n"
 "                               ellers: sortér efter ctime\n"
 
-#: src/ls.c:3925
+#: src/ls.c:3934
 msgid ""
 "  -C                         list entries by columns\n"
 "      --color[=WHEN]         control whether color is used to distinguish "
@@ -3800,7 +3818,7 @@ msgstr ""
 "                               og behold symbolske lænker\n"
 "  -D, --dired                lav uddata for Emacs' dired-tilstand\n"
 
-#: src/ls.c:3933
+#: src/ls.c:3942
 msgid ""
 "  -f                         do not sort, enable -aU, disable -lst\n"
 "  -F, --classify             append indicator (one of */=@|) to entries\n"
@@ -3816,7 +3834,7 @@ msgstr ""
 "C\n"
 "      --full-time            ligesom -l --time-style=full-iso\n"
 
-#: src/ls.c:3940
+#: src/ls.c:3949
 msgid ""
 "  -g                         like -l, but do not list owner\n"
 "  -G, --no-group             inhibit display of group information\n"
@@ -3841,7 +3859,7 @@ msgstr ""
 "                               følg symbolske lænker på kommandolinjen,\n"
 "                               der peger til et katalog\n"
 
-#: src/ls.c:3951
+#: src/ls.c:3960
 msgid ""
 "      --indicator-style=WORD append indicator with style WORD to entry "
 "names:\n"
@@ -3860,7 +3878,7 @@ msgstr ""
 "                               skal-MØNSTER\n"
 "  -k, --kilobytes            ligesom --block-size=1024\n"
 
-#: src/ls.c:3958
+#: src/ls.c:3967
 msgid ""
 "  -l                         use a long listing format\n"
 "  -L, --dereference          when showing file information for a symbolic\n"
@@ -3874,7 +3892,7 @@ msgstr ""
 "  -m                         brug hele skærmbredden med en liste adskilt af\n"
 "                               kommaer\n"
 
-#: src/ls.c:3965
+#: src/ls.c:3974
 msgid ""
 "  -n, --numeric-uid-gid      like -l, but list numeric UIDs and GIDs\n"
 "  -N, --literal              print raw entry names (don't treat e.g. "
@@ -3889,7 +3907,7 @@ msgstr ""
 "  -o                         ligesom -l, men vís ikke gruppeinformation\n"
 "  -p  --file-type            tilføj indikator (/=@|) for filtype\n"
 
-#: src/ls.c:3972
+#: src/ls.c:3981
 msgid ""
 "  -q, --hide-control-chars   print ? instead of non graphic characters\n"
 "      --show-control-chars   show non graphic characters as-is (default\n"
@@ -3909,7 +3927,7 @@ msgstr ""
 "                               literal, locale, shell, shell-always, c\n"
 "                               eller escape\n"
 
-#: src/ls.c:3980
+#: src/ls.c:3989
 msgid ""
 "  -r, --reverse              reverse order while sorting\n"
 "  -R, --recursive            list subdirectories recursively\n"
@@ -3919,7 +3937,7 @@ msgstr ""
 "  -R, --recursive            vis underkataloger rekursivt\n"
 "  -s, --size                 skriv blokstørrelse for hver fil\n"
 
-#: src/ls.c:3985
+#: src/ls.c:3994
 #, fuzzy
 msgid ""
 "  -S                         sort by file size\n"
@@ -3943,7 +3961,7 @@ msgstr ""
 "                               angivet tid som sorteringsnøgle hvis --"
 "sort=tid\n"
 
-#: src/ls.c:3994
+#: src/ls.c:4003
 msgid ""
 "      --time-style=STYLE     show times using style STYLE:\n"
 "                               full-iso, long-iso, iso, locale, +FORMAT\n"
@@ -3965,7 +3983,7 @@ msgstr ""
 "  -T, --tabsize=KOLONNER     brug KOLONNER som tabulatorlængde i stedet for "
 "8\n"
 
-#: src/ls.c:4005
+#: src/ls.c:4014
 msgid ""
 "  -u                         with -lt: sort by, and show, access time\n"
 "                               with -l: show access time and sort by name\n"
@@ -3980,7 +3998,7 @@ msgstr ""
 "kataloget\n"
 "  -v                         sortér efter version\n"
 
-#: src/ls.c:4012
+#: src/ls.c:4021
 msgid ""
 "  -w, --width=COLS           assume screen width instead of current value\n"
 "  -x                         list entries by lines instead of by columns\n"
@@ -3992,7 +4010,7 @@ msgstr ""
 "  -X                         sortér alfabetisk efter endelser\n"
 "  -1                         list én fil per linje\n"
 
-#: src/ls.c:4024
+#: src/ls.c:4033
 msgid ""
 "\n"
 "By default, color is not used to distinguish types of files.  That is\n"
@@ -4573,11 +4591,6 @@ msgstr "ændrer gruppe for %s"
 msgid "failed to redirect standard error"
 msgstr ""
 
-#: src/nohup.c:190 src/setuidgid.c:132
-#, fuzzy, c-format
-msgid "cannot run command %s"
-msgstr "kan ikke aflænke %s"
-
 #: src/od.c:286
 #, c-format
 msgid ""
@@ -4840,11 +4853,11 @@ msgstr "advarsel: ugyldig bredde %lu; bruger %d i stedet"
 msgid "%d: fmt=\"%s\" width=%d\n"
 msgstr "%d: fmt=\"%s\" bredde=%d\n"
 
-#: src/paste.c:206
+#: src/paste.c:188
 msgid "standard input is closed"
 msgstr "standard-ind er lukket"
 
-#: src/paste.c:413
+#: src/paste.c:399
 msgid ""
 "Write lines consisting of the sequentially corresponding lines from\n"
 "each FILE, separated by TABs, to standard output.\n"
@@ -4856,7 +4869,7 @@ msgstr ""
 "Hvis ingen FIL er angivet, eller FIL er -, læses fra standard-ind.\n"
 "\n"
 
-#: src/paste.c:422
+#: src/paste.c:408
 msgid ""
 "  -d, --delimiters=LIST   reuse characters from LIST instead of TABs\n"
 "  -s, --serial            paste one file at a time instead of in parallel\n"
@@ -4905,10 +4918,12 @@ msgid "path `%s' has length %lu; exceeds limit of %ld"
 msgstr "stien '%s' har længde %d; overstiger grænsen på %ld"
 
 #: src/pinky.c:291
+#, c-format
 msgid "Login name: "
 msgstr "Login-navn: "
 
 #: src/pinky.c:294
+#, c-format
 msgid "In real life: "
 msgstr "I virkeligheden: "
 
@@ -4917,18 +4932,22 @@ msgid "???\n"
 msgstr "???\n"
 
 #: src/pinky.c:317
+#, c-format
 msgid "Directory: "
 msgstr "Katalog: "
 
 #: src/pinky.c:319
+#, c-format
 msgid "Shell: "
 msgstr "Skal: "
 
 #: src/pinky.c:340
+#, c-format
 msgid "Project: "
 msgstr "Projekt: "
 
 #: src/pinky.c:366
+#, c-format
 msgid "Plan:\n"
 msgstr "Plan:\n"
 
@@ -5707,7 +5726,7 @@ msgstr ""
 msgid "cannot remove `.' or `..'"
 msgstr "kan ikke slette '.' eller '..'"
 
-#: src/rm.c:108 src/touch.c:238
+#: src/rm.c:108 src/touch.c:248
 #, c-format
 msgid "Usage: %s [OPTION]... FILE...\n"
 msgstr "Brug: %s [FLAG]... [FIL]...\n"
@@ -6284,7 +6303,7 @@ msgstr "kan ikke oprette midlertidig fil %s"
 msgid "open failed"
 msgstr "fejl ved åbning af filen"
 
-#: src/sort.c:485 src/sort.c:2580
+#: src/sort.c:485 src/sort.c:2574
 msgid "close failed"
 msgstr "fejl ved lukning af filen"
 
@@ -6292,89 +6311,89 @@ msgstr "fejl ved lukning af filen"
 msgid "write failed"
 msgstr "fejl ved skrivning"
 
-#: src/sort.c:639
+#: src/sort.c:636
 msgid "sort size"
 msgstr "sorteringsstørrelse"
 
-#: src/sort.c:718
+#: src/sort.c:715
 msgid "stat failed"
 msgstr "stat() mislykkedes"
 
-#: src/sort.c:992
+#: src/sort.c:989
 msgid "read failed"
 msgstr "læsefejl"
 
-#: src/sort.c:1589
+#: src/sort.c:1583
 #, c-format
 msgid "%s: %s:%s: disorder: "
 msgstr "%s: %s:%s: uorden: "
 
-#: src/sort.c:1593
+#: src/sort.c:1587
 msgid "standard error"
 msgstr "standardfejl"
 
-#: src/sort.c:2091
+#: src/sort.c:2085
 #, c-format
 msgid "%s: invalid field specification `%s'"
 msgstr "%s: ugyldig feltangivelse '%s'"
 
-#: src/sort.c:2118
+#: src/sort.c:2112
 #, c-format
 msgid "%s: count `%.*s' too large"
 msgstr "%s: antallet `%.*s' er for stort"
 
-#: src/sort.c:2124
+#: src/sort.c:2118
 #, c-format
 msgid "%s: invalid count at start of `%s'"
 msgstr "%s: ugyldigt antal ved starten af '%s'"
 
-#: src/sort.c:2366
+#: src/sort.c:2360
 msgid "invalid number after `-'"
 msgstr "ugyldigt tal efter '-'"
 
-#: src/sort.c:2369 src/sort.c:2415 src/sort.c:2442
+#: src/sort.c:2363 src/sort.c:2409 src/sort.c:2436
 msgid "invalid number after `.'"
 msgstr "ugyldigt tal efter '.'"
 
-#: src/sort.c:2372 src/sort.c:2451
+#: src/sort.c:2366 src/sort.c:2445
 msgid "stray character in field spec"
 msgstr "forvildet tegn i feltangivelse"
 
-#: src/sort.c:2406
+#: src/sort.c:2400
 msgid "invalid number at field start"
 msgstr "ugyldigt tal ved feltbegyndelsen"
 
-#: src/sort.c:2410 src/sort.c:2438
+#: src/sort.c:2404 src/sort.c:2432
 msgid "field number is zero"
 msgstr "felt-nummeret er nul"
 
-#: src/sort.c:2419
+#: src/sort.c:2413
 msgid "character offset is zero"
 msgstr "tegnafsæt er nul"
 
-#: src/sort.c:2434
+#: src/sort.c:2428
 msgid "invalid number after `,'"
 msgstr "ugyldigt tal efter ','"
 
-#: src/sort.c:2461
+#: src/sort.c:2455
 #, fuzzy
 msgid "multiple output files specified"
 msgstr "flere -l eller -t-flag angivet"
 
-#: src/sort.c:2477
+#: src/sort.c:2471
 msgid "empty tab"
 msgstr ""
 
-#: src/sort.c:2488
+#: src/sort.c:2482
 #, c-format
 msgid "multi-character tab `%s'"
 msgstr "flertegns-tabulator '%s'"
 
-#: src/sort.c:2493
+#: src/sort.c:2487
 msgid "incompatible tabs"
 msgstr ""
 
-#: src/sort.c:2563
+#: src/sort.c:2557
 #, c-format
 msgid "extra operand `%s' not allowed with -c"
 msgstr "ekstra operand '%s' er ikke tilladt med -c"
@@ -7082,6 +7101,7 @@ msgid "%s: unable to perform all requested operations"
 msgstr "%s: ikke i stand til at udføre alle forespurgte operationer"
 
 #: src/stty.c:1114
+#, c-format
 msgid "new_mode: mode\n"
 msgstr "new_mode: tilstand\n"
 
@@ -7190,11 +7210,11 @@ msgstr ""
 msgid "ignoring all arguments"
 msgstr "ignorerer alle argumenter"
 
-#: src/sys2.h:470
+#: src/system.h:777
 msgid "      --help     display this help and exit\n"
 msgstr "      --help     vis denne hjælpetekst og afslut\n"
 
-#: src/sys2.h:472
+#: src/system.h:779
 msgid "      --version  output version information and exit\n"
 msgstr "      --version  vis versionsinformation og afslut\n"
 
@@ -7479,6 +7499,15 @@ msgstr "advarsel: PID ignoreret; --pid=PID er kun brugbart ved følgning"
 msgid "warning: --pid=PID is not supported on this system"
 msgstr "advarsel: --pid=PID er ikke understøttet på dette system"
 
+#: src/tail.c:1723
+#, fuzzy, c-format
+msgid "cannot follow %s by name"
+msgstr "kan ikke finde ud af systemnavnet"
+
+#: src/tail.c:1729
+msgid "warning: following standard input indefinitely is ineffective"
+msgstr ""
+
 #: src/tee.c:63
 msgid ""
 "Copy standard input to each FILE, and also to standard output.\n"
@@ -7747,22 +7776,27 @@ msgstr "manglende ']'\n"
 msgid "too many arguments\n"
 msgstr "for mange argumenter\n"
 
-#: src/touch.c:149 src/touch.c:165
+#: src/touch.c:121 src/touch.c:334
+#, c-format
+msgid "invalid date format %s"
+msgstr "ugyldigt datoformat %s"
+
+#: src/touch.c:159 src/touch.c:175
 #, c-format
 msgid "creating %s"
 msgstr "opretter %s"
 
-#: src/touch.c:216
+#: src/touch.c:226
 #, c-format
 msgid "cannot touch %s"
 msgstr "kan ikke røre %s"
 
-#: src/touch.c:222
+#: src/touch.c:232
 #, c-format
 msgid "setting times of %s"
 msgstr "sætter tider for %s"
 
-#: src/touch.c:239
+#: src/touch.c:249
 msgid ""
 "Update the access and modification times of each FILE to the current time.\n"
 "\n"
@@ -7770,7 +7804,7 @@ msgstr ""
 "Opdatér læsnings- og ændringstider for FIL(er) til nuværende tid og dato.\n"
 "\n"
 
-#: src/touch.c:246
+#: src/touch.c:256
 #, fuzzy
 msgid ""
 "  -a                     change only the access time\n"
@@ -7786,7 +7820,7 @@ msgstr ""
 "  -f                     (ignoreret)\n"
 "  -m                     ændr kun ændringstidspunkt\n"
 
-#: src/touch.c:253
+#: src/touch.c:263
 msgid ""
 "  -r, --reference=FILE   use this file's times instead of current time\n"
 "  -t STAMP               use [[CC]YY]MMDDhhmm[.ss] instead of current time\n"
@@ -7801,7 +7835,7 @@ msgstr ""
 "      --time=ORD         ORD er tidsformat: access, atime, use (ligesom -a)\n"
 "                           mtime, modify (ligesom -m)\n"
 
-#: src/touch.c:261
+#: src/touch.c:271
 msgid ""
 "\n"
 "Note that the -d and -t options accept different time-date formats.\n"
@@ -7809,23 +7843,18 @@ msgstr ""
 "\n"
 "Bemærk at -d og -t flagene tager forskellige tidspunkts- og dato-formater.\n"
 
-#: src/touch.c:307 src/touch.c:327
-#, c-format
-msgid "invalid date format %s"
-msgstr "ugyldigt datoformat %s"
-
-#: src/touch.c:352
+#: src/touch.c:358
 msgid "cannot specify times from more than one source"
 msgstr "kan ikke angive tidspunkter fra mere end én kilde"
 
-#: src/touch.c:376
+#: src/touch.c:397
 #, c-format
 msgid ""
 "warning: `touch %s' is obsolete; use `touch -t %04d%02d%02d%02d%02d.%02d'"
 msgstr ""
 "advarsel: 'touch %s' er forældet; brug 'touch -t %04d%02d%02d%02d%02d.%02d'"
 
-#: src/touch.c:410
+#: src/touch.c:431
 msgid "file arguments missing"
 msgstr "filargumenter mangler"
 
@@ -8171,11 +8200,11 @@ msgstr ""
 msgid "cannot get system name"
 msgstr "kan ikke finde ud af systemnavnet"
 
-#: src/unexpand.c:151
+#: src/unexpand.c:152
 msgid "tab size contains an invalid character"
 msgstr "tabulatorstørrelsen indeholder et ugyldigt tegn"
 
-#: src/unexpand.c:380
+#: src/unexpand.c:381
 msgid ""
 "Convert spaces in each FILE to tabs, writing to standard output.\n"
 "With no FILE, or when FILE is -, read standard input.\n"
@@ -8184,7 +8213,7 @@ msgstr ""
 "Konvertér mellemrum i hver FIL til tabulatorer, med uddata til standard-ud.\n"
 "Uden en FIL, eller når FIL er -, læses standard-ind.\n"
 
-#: src/unexpand.c:388
+#: src/unexpand.c:389
 msgid ""
 "  -a, --all        convert all whitespace, instead of just initial "
 "whitespace\n"
@@ -8201,7 +8230,7 @@ msgstr ""
 "  -t, --tabs=LISTE    brug en kommasepareret liste med eksplicitte "
 "tabulatorpositioner\n"
 
-#: src/unexpand.c:466
+#: src/unexpand.c:467
 msgid "`-LIST' option is obsolete; use `--first-only -t LIST'"
 msgstr "'-LIST' flaget er forældet; brug '--first-only -t LIST'"
 
