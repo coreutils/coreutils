@@ -1462,28 +1462,6 @@ parse_obsolescent_option (int argc, const char *const *argv,
 
   if (!*fail)
     {
-      if (argc > 3)
-	{
-	  /* When POSIXLY_CORRECT is set, enforce the `at most one
-	     file argument' requirement.  */
-	  if (getenv ("POSIXLY_CORRECT"))
-	    {
-	      error (0, 0, _("\
-too many arguments;  When using tail's obsolescent option syntax (%s)\n\
-there may be no more than one file argument.  Use the equivalent -n or -c\n\
-option instead."), argv[1]);
-	      *fail = 1;
-	      return 1;
-	    }
-
-#if DISABLED  /* FIXME: enable or remove this warning.  */
-	  error (0, 0, _("\
-Warning: it is not portable to use two or more file arguments with\n\
-tail's obsolescent option syntax (%s).  Use the equivalent -n or -c\n\
-option instead."), argv[1]);
-#endif
-	}
-
       if (! obsolete_usage)
 	{
 	  error (0, 0, _("`%s' option is obsolete; use `%s-%c %.*s'"),
