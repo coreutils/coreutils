@@ -35,7 +35,9 @@
 
 #include <stdio.h>
 #include <sys/types.h>
-#include <termios.h>
+#if HAVE_TERMIOS_H
+# include <termios.h>
+#endif
 #ifdef GWINSZ_IN_SYS_IOCTL
 # include <sys/ioctl.h>
 #endif
