@@ -475,7 +475,18 @@ main (int argc, char **argv)
 	  printf ("  \"%s\"\n", string[i]);
 	}
     }
-  else if (do_check == 0)
+  else if (do_check)
+    {
+      if (optind + 1 < argc)
+	{
+	  error (0, 0,
+		 _("only one argument may be specified when using --check"));
+	  usage (EXIT_FAILURE);
+	}
+
+      err = md5_check ((optind == argc) ? "-" : argv[optind], binary);
+    }
+  else
     {
       if (optind == argc)
 	argv[argc++] = "-";
@@ -495,17 +506,6 @@ main (int argc, char **argv)
 	      printf (" %c%s\n", binary ? '*' : ' ', argv[optind]);
 	    }
 	}
-    }
-  else
-    {
-      if (optind + 1 < argc)
-	{
-	  error (0, 0,
-		 _("only one argument may be specified when using --check"));
-	  usage (EXIT_FAILURE);
-	}
-
-      err = md5_check ((optind == argc) ? "-" : argv[optind], binary);
     }
 
   if (fclose (stdout) == EOF)
