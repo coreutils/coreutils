@@ -1950,7 +1950,7 @@ get_funky_string (char **dest, const char **src, bool equals_end,
 	      num = 0;
 	      break;
 	    case 'a':		/* Bell */
-	      num = 7;		/* Not all C compilers know what \a means */
+	      num = '\a';
 	      break;
 	    case 'b':		/* Backspace */
 	      num = '\b';
