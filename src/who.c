@@ -1,5 +1,5 @@
 /* GNU's who.
-   Copyright (C) 1992-2001 Free Software Foundation, Inc.
+   Copyright (C) 1992-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,8 +31,9 @@
 #include <sys/types.h>
 #include "system.h"
 
-#include "error.h"
+#include "xalloc.h"
 #include "readutmp.h"
+#include "error.h"
 #include "closeout.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -360,17 +361,16 @@ print_deadprocs (const STRUCT_UTMP *utmp_ent)
   PIDSTR_DECL_AND_INIT (pidstr);
 
   if (!comment)
-    comment =
-      (char *) malloc (sizeof (_("id=")) + sizeof (utmp_ent->ut_id) + 1);
+    comment = xmalloc (sizeof (_("id=")) + sizeof (utmp_ent->ut_id) + 1);
   sprintf (comment, "%s%.*s", _("id="), sizeof utmp_ent->ut_id,
 	   utmp_ent->ut_id);
 
   if (!exitstr)
-    exitstr = (char *) malloc (sizeof (_("term="))
-			       + INT_STRLEN_BOUND (utmp_ent->ut_exit.e_termination) + 1
-			       + sizeof (_("exit="))
-			       + INT_STRLEN_BOUND (utmp_ent->ut_exit.e_exit)
-			       + 1);
+    exitstr = xmalloc (sizeof (_("term="))
+		       + INT_STRLEN_BOUND (utmp_ent->ut_exit.e_termination) + 1
+		       + sizeof (_("exit="))
+		       + INT_STRLEN_BOUND (utmp_ent->ut_exit.e_exit)
+		       + 1);
   sprintf (exitstr, "%s%d %s%d", _("term="), utmp_ent->ut_exit.e_termination,
 	   _("exit="), utmp_ent->ut_exit.e_exit);
 
@@ -387,8 +387,7 @@ print_login (const STRUCT_UTMP *utmp_ent)
   PIDSTR_DECL_AND_INIT (pidstr);
 
   if (!comment)
-    comment =
-      (char *) malloc (sizeof (_("id=")) + sizeof (utmp_ent->ut_id) + 1);
+    comment = xmalloc (sizeof (_("id=")) + sizeof (utmp_ent->ut_id) + 1);
   sprintf (comment, "%s%s", _("id="), utmp_ent->ut_id);
 
   /* FIXME: add idle time? */
@@ -404,8 +403,7 @@ print_initspawn (const STRUCT_UTMP *utmp_ent)
   PIDSTR_DECL_AND_INIT (pidstr);
 
   if (!comment)
-    comment =
-      (char *) malloc (sizeof (_("id=")) + sizeof (utmp_ent->ut_id) + 1);
+    comment = xmalloc (sizeof (_("id=")) + sizeof (utmp_ent->ut_id) + 1);
   sprintf (comment, "%s%s", _("id="), utmp_ent->ut_id);
 
   print_line ("", ' ', utmp_ent->ut_line,
@@ -433,11 +431,11 @@ print_runlevel (const STRUCT_UTMP *utmp_ent)
 #endif
 
   if (!runlevline)
-    runlevline = (char *) malloc (sizeof (_("run-level")) + 3);
+    runlevline = xmalloc (sizeof (_("run-level")) + 3);
   sprintf (runlevline, "%s %c", _("run-level"), curr);
 
   if (!comment)
-    comment = (char *) malloc (sizeof (_("last=")) + 2);
+    comment = xmalloc (sizeof (_("last=")) + 2);
   sprintf (comment, "%s%c", _("last="), (last == 'N') ? 'S' : last);
 
   print_line ("", ' ', runlevline, time_string (utmp_ent),
