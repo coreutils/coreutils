@@ -1,5 +1,6 @@
 Changes in release 1.23
 [1.22e]
+* remove maintainer mode
 [1.22d]
 * wc accepts new option: --max-line-length (-L)
 * sort can sort according to your locale if your C library supports that
