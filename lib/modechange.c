@@ -1,5 +1,5 @@
 /* modechange.c -- file mode manipulation
-   Copyright (C) 1989, 1990 Free Software Foundation, Inc.
+   Copyright (C) 1989, 1990, 1997 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -234,6 +234,41 @@ mode_compile (mode_string, masked_ops)
 invalid:
   mode_free (head);
   return MODE_INVALID;
+}
+
+/* Return a file mode change operation created from the reference REF_FILE
+   Don't affect special permissions, use umask, affect 'x' if any 'x', for
+   maximum security
+
+   Return MODE_BAD_REFERENCE if REF_FILE can't be accessed */
+
+struct mode_change *
+mode_create_from_ref (ref_file)
+     const char *ref_file;
+{
+  struct mode_change *change;	/* the only change element */
+  struct stat ref_stats;
+  int i;
+  int umask_value;
+
+  if (stat (ref_file, &ref_stats))
+    return MODE_BAD_REFERENCE;
+
+  change = talloc (struct mode_change);
+
+  if (change == NULL)
+    return MODE_MEMORY_EXHAUSTED;
+
+  umask_value = umask (0);
+  umask (umask_value);
+
+  change->op = '=';
+  change->flags = MODE_X_IF_ANY_X;
+  change->affected = 0777 & ~umask_value;
+  change->value = ref_stats.st_mode;
+  change->next = NULL;
+
+  return change;
 }
 
 /* Return file mode OLDMODE, adjusted as indicated by the list of change
