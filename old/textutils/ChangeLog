@@ -1,3 +1,9 @@
+Wed Nov 22 23:12:47 1995  Jim Meyering  (meyering@comco.com)
+
+	* Makefile.in (all et. al.): If make was invoked with -k and a
+	sub-make fails, fail after the loop rather than exiting right away.
+	Otherwise, make's -k option could be ineffective.
+
 Sat Nov 18 12:04:30 1995  Jim Meyering  (meyering@comco.com)
 
 	* src/Makefile.in (version.c): Depend on ../.version, not Makefile.
@@ -12,8 +18,8 @@ Sat Nov 18 12:04:30 1995  Jim Meyering  (meyering@comco.com)
 
 Thu Nov 16 21:25:45 1995  Jim Meyering  (meyering@comco.com)
 
-	* Makefile.in (_all): New default target.  Depend on `all' to work
-	around bug in AIX-3.2.5's /bin/make   Reported by Andreas Luik
+	* Makefile.in (default): New default target.  Depend on `all' to
+	work around bug in AIX-3.2.5's /bin/make   Reported by Andreas Luik
 	<luik@isa.de>.
 
 Wed Nov 15 23:48:31 1995  Jim Meyering  (meyering@comco.com)
