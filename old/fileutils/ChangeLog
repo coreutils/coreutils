@@ -1,3 +1,10 @@
+2000-07-13  Paul Eggert  <eggert@twinsun.com>
+
+	* NEWS: Describe --quoting-style=clocale.
+
+	* doc/fileutils.texi: New clocale quoting style.
+	Undo the previous change to the locale quoting style.
+
 2000-07-09  Jim Meyering  <meyering@lucent.com>
 
 	* config.guess: Update from FSF.
