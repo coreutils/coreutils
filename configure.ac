@@ -178,7 +178,7 @@ GNULIB_BOOT_TIME(
 AM_SYS_POSIX_TERMIOS
 jm_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL
 
-if test $am_cv_sys_posix_termios = yes; then
+if test $ac_cv_sys_posix_termios = yes; then
   OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS stty" MAN="$MAN stty.1"
 
   AC_MSG_CHECKING(whether termios.h needs _XOPEN_SOURCE)
