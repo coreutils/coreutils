@@ -1,3 +1,13 @@
+2004-10-18  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.3.0.
+
+	* src/sleep.c (main): Remove declaration of unused local, c.
+	* src/printenv.c (main): Likewise.
+	* src/logname.c (main): Likewise.
+	* src/uptime.c (main): Likewise, for optc.
+	* src/tsort.c (main): Likewise, for opt.
+
 2004-10-17  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* AUTHORS: Add self to pathchk.
@@ -24,12 +34,14 @@
 	Don't use euidaccess several times to test searchability;
 	just use lstat once.  Reword diagnostic to put the (often very long)
 	file names last.
-	
+
 2004-10-15  Paul Eggert  <eggert@cs.ucla.edu>
 
-	* Version 5.3.0.
-
 	* src/printf.c (usage): Mention Unicode, and use H for hex digits.
+
+2004-10-13  Jim Meyering  <jim@meyering.net>
+
+	* NEWS: Mention today's fts.c fix.
 
 2004-10-13  Paul Eggert  <eggert@cs.ucla.edu>
 
