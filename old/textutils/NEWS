@@ -1,4 +1,6 @@
 Changes in release 1.20
+* tr '[:lower:]' '[:upper:]' no longer fails when LC_CTYPE is set to
+  iso_8859_1 on Solaris
 * split and tail diagnose unrecognized multiplier suffixes, in e.g.,
   `split --bytes=1M' (should be `-b 1m' or `--bytes=1m')
 * fix bug in md5sum's handling of partial reads
