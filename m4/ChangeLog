@@ -1,3 +1,8 @@
+2004-11-30  Jim Meyering  <jim@meyering.net>
+
+	* chdir-long.m4: Rename from chdir.m4.
+	* jm-macros.m4 (gl_MACROS): Reflect renaming.
+
 2004-11-28  Jim Meyering  <jim@meyering.net>
 
 	* chdir.m4: New file.
