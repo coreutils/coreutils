@@ -44,10 +44,6 @@
 
 #define AUTHORS "Mike Parker"
 
-#undef NEW
-#define NEW(Type) XMALLOC (Type, 1)
-#define OLD(x) free (x)
-
 /* Exit statuses.  */
 enum
   {
@@ -215,9 +211,7 @@ main (int argc, char **argv)
 static VALUE *
 int_value (intmax_t i)
 {
-  VALUE *v;
-
-  v = NEW (VALUE);
+  VALUE *v = xmalloc (sizeof *v);
   v->type = integer;
   v->u.i = i;
   return v;
@@ -228,9 +222,7 @@ int_value (intmax_t i)
 static VALUE *
 str_value (char *s)
 {
-  VALUE *v;
-
-  v = NEW (VALUE);
+  VALUE *v = xmalloc (sizeof *v);
   v->type = string;
   v->u.s = xstrdup (s);
   return v;
@@ -243,7 +235,7 @@ freev (VALUE *v)
 {
   if (v->type == string)
     free (v->u.s);
-  OLD (v);
+  free (v);
 }
 
 /* Print VALUE V.  */
@@ -554,7 +546,7 @@ eval6 (bool evaluate)
 	v = str_value ("");
       else
 	{
-	  v = NEW (VALUE);
+	  v = xmalloc (sizeof *v);
 	  v->type = string;
 	  v->u.s = strncpy (xmalloc (i2->u.i + 1),
 			    l->u.s + i1->u.i - 1, i2->u.i);
