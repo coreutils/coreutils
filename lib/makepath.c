@@ -15,8 +15,7 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-/* Written by David MacKenzie <djm@gnu.ai.mit.edu> and
-   Jim Meyering <meyering@cs.utexas.edu>.  */
+/* Written by David MacKenzie <djm@gnu.ai.mit.edu> and Jim Meyering.  */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
