@@ -20,9 +20,9 @@ mkdir $tmp $tmp/a $tmp/a/b
 cat <<EOF > $tmp/$test.E
 removing all entries of directory $tmp/a
 removing all entries of directory $tmp/a/b
-removing non-directory $tmp/a/b/g
+removing $tmp/a/b/g
 removing the directory itself: $tmp/a/b
-removing non-directory $tmp/a/f
+removing $tmp/a/f
 removing the directory itself: $tmp/a
 EOF
 
