@@ -213,7 +213,7 @@ beyond (void)
 static void
 integer_expected_error (char const *pch)
 {
-  test_syntax_error (_("integer expression expected %s\n"), pch);
+  test_syntax_error (_("%s: integer expression expected\n"), pch);
 }
 
 /* Return nonzero if the characters pointed to by STRING constitute a
@@ -582,7 +582,9 @@ binary_operator (void)
 	    }
 	  break;
 	}
-      test_syntax_error (_("unknown binary operator"), argv[op]);
+
+      /* FIXME: is this dead code? */
+      test_syntax_error (_("unknown binary operator\n"), argv[op]);
     }
 
   if (argv[op][0] == '=' && !argv[op][1])
