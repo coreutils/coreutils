@@ -1,3 +1,7 @@
+1999-08-04  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in: Remove getline-testing code.  Now it's in m4/.
+
 1999-08-01  Jim Meyering  <meyering@ascend.com>
 
 	* src/date.c (usage): Correct description of %S; (00..60, not 00..61).
