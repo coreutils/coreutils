@@ -49,9 +49,10 @@
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  TARGET_DIRECTORY_OPTION = CHAR_MAX + 1,
+  NO_TARGET_DIRECTORY_OPTION = CHAR_MAX + 1,
+  REPLY_OPTION,
   STRIP_TRAILING_SLASHES_OPTION,
-  REPLY_OPTION
+  TARGET_DIRECTORY_OPTION
 };
 
 /* The name this program was run with. */
@@ -77,6 +78,7 @@ static struct option const long_options[] =
   {"backup", optional_argument, NULL, 'b'},
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
+  {"no-target-directory", no_argument, NULL, NO_TARGET_DIRECTORY_OPTION},
   {"reply", required_argument, NULL, REPLY_OPTION},
   {"strip-trailing-slashes", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
   {"suffix", required_argument, NULL, 'S'},
@@ -329,6 +331,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
       --target-directory=DIRECTORY  move all SOURCE arguments into DIRECTORY\n\
+      --no-target-directory    treat DEST as a normal file\n\
   -u, --update                 move only when the SOURCE file is newer\n\
                                  than the destination file or when the\n\
                                  destination file is missing\n\
@@ -364,6 +367,7 @@ main (int argc, char **argv)
   char *version_control_string = NULL;
   struct cp_options x;
   char *target_directory = NULL;
+  bool no_target_directory = false;
   int n_files;
   char **file;
 
@@ -407,6 +411,9 @@ main (int argc, char **argv)
 	  break;
 	case 'i':
 	  x.interactive = I_ASK_USER;
+	  break;
+	case NO_TARGET_DIRECTORY_OPTION:
+	  no_target_directory = true;
 	  break;
 	case REPLY_OPTION:
 	  x.interactive = XARGMATCH ("--reply", optarg,
@@ -459,7 +466,19 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  if (!target_directory)
+  if (no_target_directory)
+    {
+      if (target_directory)
+	error (EXIT_FAILURE, 0,
+	       _("Cannot combine --target-directory "
+		 "and --no-target-directory"));
+      if (2 < n_files)
+	{
+	  error (0, 0, _("extra operand %s"), quote (file[2]));
+	  usage (EXIT_FAILURE);
+	}
+    }
+  else if (!target_directory)
     {
       if (2 <= n_files && target_directory_operand (file[n_files - 1]))
 	target_directory = file[--n_files];
