@@ -1,3 +1,8 @@
+Thu Nov 03 23:23:08 1994  Jim Meyering  (meyering@comco.com)
+
+	* linebuffer.h: Use __P instead of _P since the latter conflicts
+	with a definition in some <ctype.h>.  From Kaveh Ghazi.
+
 Wed Nov 02 17:36:34 1994  Jim Meyering  (meyering@comco.com)
 
 	* tr.c: Add const attribute where appropriate.
