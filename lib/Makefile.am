@@ -7,35 +7,89 @@ noinst_LIBRARIES = libfetish.a
 INCLUDES = -I.. -I$(srcdir) -I../intl
 DEFS = -DLIBDIR=\"$(libdir)\" @DEFS@
 
+## Put relatively complex files at the beginning of the list so
+## that parallel compiles finish a tiny bit sooner.  I don't see
+## a way to make regex.c appear earlier in the list, since it's
+## added by automake, but on systems with an up to date GNU libc,
+## regex.c isn't even compiled.
 libfetish_a_SOURCES = \
-  getdate.y posixtm.c addext.c argmatch.c backupfile.c basename.c \
-  canon-host.c closeout.c diacrit.c dirname.c dup-safer.c \
-  exclude.c filemode.c fopen-safer.c \
-  full-write.c getopt.c getopt1.c getstr.c getugroups.c hard-locale.c hash.c \
-  human.c idcache.c isdir.c linebuffer.c localcharset.c long-options.c \
-  makepath.c mbswidth.c md5.c memcasecmp.c memcoll.c modechange.c \
-  path-concat.c physmem.c \
-  quote.c quotearg.c readtokens.c safe-read.c same.c save-cwd.c \
-  savedir.c sha.c strftime.c stripslash.c \
-  unicodeio.c userspec.c version-etc.c xgetcwd.c \
-  xgethostname.c xmalloc.c xstrdup.c xstrtod.c xstrtol.c xstrtoul.c \
-  xstrtoumax.c yesno.c
+  getdate.h getdate.y \
+  posixtm.c posixtm.h \
+  strftime.c \
+  getopt.c getopt.h getopt1.c \
+  hash.c hash.h \
+  __fpending.h \
+  addext.c \
+  argmatch.c argmatch.h \
+  backupfile.c backupfile.h \
+  basename.c \
+  bumpalloc.h \
+  canon-host.c \
+  closeout.c closeout.h \
+  diacrit.c diacrit.h \
+  dirname.c dirname.h \
+  dup-safer.c \
+  exclude.c exclude.h \
+  filemode.c filemode.h \
+  fnmatch.h \
+  fopen-safer.c \
+  fsusage.h \
+  full-write.c \
+  getline.h \
+  getpagesize.h \
+  getstr.c getstr.h \
+  getugroups.c \
+  group-member.h \
+  hard-locale.c hard-locale.h \
+  human.c human.h \
+  idcache.c \
+  isdir.c \
+  lchown.h \
+  linebuffer.c linebuffer.h \
+  localcharset.c \
+  long-options.c long-options.h \
+  makepath.c makepath.h \
+  mbswidth.c mbswidth.h \
+  md5.c md5.h \
+  memcasecmp.c memcasecmp.h \
+  memcoll.c memcoll.h \
+  modechange.c modechange.h \
+  mountlist.h \
+  nanosleep.h \
+  path-concat.c path-concat.h \
+  pathmax.h \
+  physmem.c physmem.h \
+  quote.c quote.h \
+  quotearg.c quotearg.h \
+  readtokens.c readtokens.h \
+  readutmp.h \
+  regex.h \
+  safe-read.c safe-read.h \
+  same.c same.h \
+  save-cwd.c save-cwd.h \
+  savedir.c savedir.h \
+  sha.c sha.h \
+  stdio-safer.h \
+  stripslash.c \
+  strverscmp.h \
+  unicodeio.c unicodeio.h \
+  unistd-safer.h \
+  userspec.c \
+  version-etc.c version-etc.h \
+  xalloc.h \
+  xgetcwd.c \
+  xgethostname.c \
+  xmalloc.c \
+  xstrdup.c \
+  xstrtod.c xstrtod.h \
+  xstrtol.c xstrtol.h \
+  xstrtoul.c \
+  xstrtoumax.c \
+  yesno.c
 
 libfetish_a_LIBADD = @LIBOBJS@ @ALLOCA@
 libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
 
-noinst_HEADERS = \
-  argmatch.h backupfile.h bumpalloc.h closeout.h diacrit.h dirname.h error.h \
-  exclude.h filemode.h fnmatch.h __fpending.h fsusage.h \
-  getdate.h getline.h getopt.h \
-  getstr.h getpagesize.h group-member.h hard-locale.h hash.h human.h lchown.h \
-  linebuffer.h long-options.h mbswidth.h md5.h memcasecmp.h memcoll.h \
-  makepath.h mbswidth.h modechange.h mountlist.h nanosleep.h obstack.h \
-  path-concat.h pathmax.h physmem.h posixtm.h \
-  quote.h quotearg.h readtokens.h \
-  readutmp.h regex.h safe-read.h same.h save-cwd.h savedir.h sha.h \
-  stdio-safer.h strverscmp.h unicodeio.h unistd-safer.h version-etc.h \
-  xalloc.h xstrtod.h xstrtol.h
 
 BUILT_SOURCES = getdate.c lstat.c stat.c
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
