@@ -51,32 +51,34 @@
 # define S_IWGRP 020
 #endif
 
-#ifndef USER_PROCESS
-# define USER_PROCESS INT_MAX
+#ifdef RUN_LVL
+# define UT_TYPE_RUN_LVL(U) UT_TYPE_EQ (U, RUN_LVL)
+#else
+# define UT_TYPE_RUN_LVL(U) false
 #endif
 
-#ifndef RUN_LVL
-# define RUN_LVL INT_MAX
+#ifdef INIT_PROCESS
+# define UT_TYPE_INIT_PROCESS(U) UT_TYPE_EQ (U, INIT_PROCESS)
+#else
+# define UT_TYPE_INIT_PROCESS(U) false
 #endif
 
-#ifndef INIT_PROCESS
-# define INIT_PROCESS INT_MAX
+#ifdef LOGIN_PROCESS
+# define UT_TYPE_LOGIN_PROCESS(U) UT_TYPE_EQ (U, LOGIN_PROCESS)
+#else
+# define UT_TYPE_LOGIN_PROCESS(U) false
 #endif
 
-#ifndef LOGIN_PROCESS
-# define LOGIN_PROCESS INT_MAX
+#ifdef DEAD_PROCESS
+# define UT_TYPE_DEAD_PROCESS(U) UT_TYPE_EQ (U, DEAD_PROCESS)
+#else
+# define UT_TYPE_DEAD_PROCESS(U) false
 #endif
 
-#ifndef DEAD_PROCESS
-# define DEAD_PROCESS INT_MAX
-#endif
-
-#ifndef BOOT_TIME
-# define BOOT_TIME 0
-#endif
-
-#ifndef NEW_TIME
-# define NEW_TIME 0
+#ifdef NEW_TIME
+# define UT_TYPE_NEW_TIME(U) UT_TYPE_EQ (U, NEW_TIME)
+#else
+# define UT_TYPE_NEW_TIME(U) false
 #endif
 
 #define IDLESTR_LEN 6
@@ -98,21 +100,6 @@
 # define UT_ID(U) "??"
 #endif
 
-#define UT_TYPE_UNDEF 255
-
-#if HAVE_STRUCT_XTMP_UT_TYPE
-# define UT_TYPE(U) ((U)->ut_type)
-#else
-# define UT_TYPE(U) UT_TYPE_UNDEF
-#endif
-
-#define IS_USER_PROCESS(U)			\
-  (UT_USER (utmp_buf)[0]			\
-   && (UT_TYPE (utmp_buf) == USER_PROCESS	\
-       || (UT_TYPE (utmp_buf) == UT_TYPE_UNDEF	\
-	   && UT_TIME_MEMBER (utmp_buf) != 0)))
-
-int gethostname ();
 char *ttyname ();
 char *canon_host ();
 
@@ -545,7 +532,7 @@ list_entries_who (size_t n, const STRUCT_UTMP *utmp_buf)
 
   while (n--)
     {
-      if (UT_USER (utmp_buf)[0] && UT_TYPE (utmp_buf) == USER_PROCESS)
+      if (IS_USER_PROCESS (utmp_buf))
 	{
 	  char *trimmed_name;
 
@@ -595,24 +582,24 @@ scan_entries (size_t n, const STRUCT_UTMP *utmp_buf)
 	{
 	  if (need_users && IS_USER_PROCESS (utmp_buf))
 	    print_user (utmp_buf, boottime);
-	  else if (need_runlevel && UT_TYPE (utmp_buf) == RUN_LVL)
+	  else if (need_runlevel && UT_TYPE_RUN_LVL (utmp_buf))
 	    print_runlevel (utmp_buf);
-	  else if (need_boottime && UT_TYPE (utmp_buf) == BOOT_TIME)
+	  else if (need_boottime && UT_TYPE_BOOT_TIME (utmp_buf))
 	    print_boottime (utmp_buf);
 	  /* I've never seen one of these, so I don't know what it should
 	     look like :^)
 	     FIXME: handle OLD_TIME also, perhaps show the delta? */
-	  else if (need_clockchange && UT_TYPE (utmp_buf) == NEW_TIME)
+	  else if (need_clockchange && UT_TYPE_NEW_TIME (utmp_buf))
 	    print_clockchange (utmp_buf);
-	  else if (need_initspawn && UT_TYPE (utmp_buf) == INIT_PROCESS)
+	  else if (need_initspawn && UT_TYPE_INIT_PROCESS (utmp_buf))
 	    print_initspawn (utmp_buf);
-	  else if (need_login && UT_TYPE (utmp_buf) == LOGIN_PROCESS)
+	  else if (need_login && UT_TYPE_LOGIN_PROCESS (utmp_buf))
 	    print_login (utmp_buf);
-	  else if (need_deadprocs && UT_TYPE (utmp_buf) == DEAD_PROCESS)
+	  else if (need_deadprocs && UT_TYPE_DEAD_PROCESS (utmp_buf))
 	    print_deadprocs (utmp_buf);
 	}
 
-      if (UT_TYPE (utmp_buf) == BOOT_TIME)
+      if (UT_TYPE_BOOT_TIME (utmp_buf))
 	boottime = UT_TIME_MEMBER (utmp_buf);
 
       utmp_buf++;
