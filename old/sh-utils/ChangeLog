@@ -1,5 +1,12 @@
 1999-12-23  Jim Meyering  <meyering@ascend.com>
 
+	* src/sleep.c (USE_CLOCK_GETTIME): Define.
+	[USE_CLOCK_GETTIME]: Include sys/time.h.
+	(timespec_subtract): New function.
+	(clock_get_realtime): New function.
+	(sighandler): Remove function.
+	(main): Reimplement again, using nanosleep and clock_gettime.
+
 	* configure.in: Remove check for gettimeofday.
 	Now it's in m4/jm-macros.m4
 
