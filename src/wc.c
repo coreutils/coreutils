@@ -208,7 +208,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
   size_t bytes_read;
   uintmax_t lines, words, chars, bytes, linelength;
   int count_bytes, count_chars, count_complicated;
-  char const *file = file_x == NULL ? _("standard input") : file;
+  char const *file = file_x ? file_x : _("standard input");
 
   lines = words = chars = bytes = linelength = 0;
 
