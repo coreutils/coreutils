@@ -90,6 +90,13 @@ static void get_ids (void);
 static void strip (const char *path);
 void usage (int status);
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  TARGET_DIRECTORY_OPTION = CHAR_MAX + 1
+};
+
 /* The name this program was run with, for error messages. */
 char *program_name;
 
@@ -127,6 +134,7 @@ static struct option const long_options[] =
   {"preserve-timestamps", no_argument, NULL, 'p'},
   {"strip", no_argument, NULL, 's'},
   {"suffix", required_argument, NULL, 'S'},
+  {"target-directory", required_argument, NULL, TARGET_DIRECTORY_OPTION},
   {"version-control", required_argument, NULL, 'V'}, /* Deprecated. FIXME. */
   {"verbose", no_argument, NULL, 'v'},
   {GETOPT_HELP_OPTION_DECL},
@@ -170,6 +178,27 @@ cp_option_init (struct cp_options *x)
   x->src_info = NULL;
 }
 
+/* FILE is the last operand of this command.  Return true if FILE is a
+   directory.  But report an error there is a problem accessing FILE,
+   or if FILE does not exist but would have to refer to an existing
+   directory if it referred to anything at all.  */
+
+static bool
+target_directory_operand (char const *file)
+{
+  char const *b = base_name (file);
+  size_t blen = strlen (b);
+  bool looks_like_a_dir = (blen == 0 || ISSLASH (b[blen - 1]));
+  struct stat st;
+  int err = (stat (file, &st) == 0 ? 0 : errno);
+  bool is_a_dir = !err && S_ISDIR (st.st_mode);
+  if (err && err != ENOENT)
+    error (EXIT_FAILURE, err, _("accessing %s"), quote (file));
+  if (is_a_dir < looks_like_a_dir)
+    error (EXIT_FAILURE, err, _("target %s is not a directory"), quote (file));
+  return is_a_dir;
+}
+
 int
 main (int argc, char **argv)
 {
@@ -181,6 +210,7 @@ main (int argc, char **argv)
   char *version_control_string = NULL;
   int mkdir_and_install = 0;
   struct cp_options x;
+  char const *target_directory = NULL;
   int n_files;
   char **file;
 
@@ -258,6 +288,21 @@ main (int argc, char **argv)
 	  make_backups = 1;
 	  backup_suffix_string = optarg;
 	  break;
+	case TARGET_DIRECTORY_OPTION:
+	  if (target_directory)
+	    error (EXIT_FAILURE, 0,
+		   _("multiple target directories specified"));
+	  else
+	    {
+	      struct stat st;
+	      if (stat (optarg, &st) != 0)
+		error (EXIT_FAILURE, errno, _("accessing %s"), quote (optarg));
+	      if (! S_ISDIR (st.st_mode))
+		error (EXIT_FAILURE, 0, _("target %s is not a directory"),
+		       quote (optarg));
+	    }
+	  target_directory = optarg;
+	  break;
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
@@ -269,6 +314,9 @@ main (int argc, char **argv)
   if (dir_arg && strip_files)
     error (EXIT_FAILURE, 0,
 	   _("the strip option may not be used when installing a directory"));
+  if (dir_arg && target_directory)
+    error (EXIT_FAILURE, 0,
+	   _("target directory not allowed when installing a directory"));
 
   if (backup_suffix_string)
     simple_backup_suffix = xstrdup (backup_suffix_string);
@@ -281,13 +329,23 @@ main (int argc, char **argv)
   n_files = argc - optind;
   file = argv + optind;
 
-  if (argc <= optind || (n_files == 1 && !dir_arg))
+  if (n_files <= !target_directory)
     {
-      if (argc <= optind)
-	error (0, 0, _("missing operand"));
+      if (n_files <= 0)
+	error (0, 0, _("missing file operand"));
       else
-	error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
+	error (0, 0, _("missing destination file operand after %s"),
+	       quote (file[0]));
       usage (EXIT_FAILURE);
+    }
+
+  if (!target_directory)
+    {
+      if (2 <= n_files && target_directory_operand (file[n_files - 1]))
+	target_directory = file[--n_files];
+      else if (2 < n_files)
+	error (EXIT_FAILURE, 0, _("target %s is not a directory"),
+	       quote (file[n_files - 1]));
     }
 
   if (specified_mode)
@@ -318,32 +376,20 @@ main (int argc, char **argv)
 	 required by copy.c::copy. */
       hash_init ();
 
-      if (n_files == 2)
+      if (!target_directory)
         {
           if (mkdir_and_install)
 	    errors = install_file_to_path (file[0], file[1], &x);
-	  else if (!isdir (file[1]))
-	    errors = install_file_in_file (file[0], file[1], &x);
 	  else
-	    errors = install_file_in_dir (file[0], file[1], &x);
+	    errors = install_file_in_file (file[0], file[1], &x);
 	}
       else
 	{
 	  int i;
-	  const char *dest = file[n_files - 1];
-	  if (!isdir (dest))
-	    {
-	      error (0, 0,
-		     _("installing multiple files, but last argument, %s \
-is not a directory"),
-		     quote (dest));
-	      usage (EXIT_FAILURE);
-	    }
-
 	  dest_info_init (&x);
-	  for (i = 0; i < n_files - 1; i++)
+	  for (i = 0; i < n_files; i++)
 	    {
-	      errors |= install_file_in_dir (file[i], dest, &x);
+	      errors |= install_file_in_dir (file[i], target_directory, &x);
 	    }
 	}
     }
@@ -598,15 +644,16 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION]... SOURCE DEST           (1st format)\n\
-  or:  %s [OPTION]... SOURCE... DIRECTORY   (2nd format)\n\
-  or:  %s -d [OPTION]... DIRECTORY...       (3rd format)\n\
+Usage: %s [OPTION]... SOURCE DEST                            (1st format)\n\
+  or:  %s [OPTION]... SOURCE... DIRECTORY                    (2nd format)\n\
+  or:  %s [OPTION]... --target-directory=DIRECTORY SOURCE... (3rd format)\n\
+  or:  %s -d [OPTION]... DIRECTORY...                        (4th format)\n\
 "),
-	      program_name, program_name, program_name);
+	      program_name, program_name, program_name, program_name);
       fputs (_("\
-In the first two formats, copy SOURCE to DEST or multiple SOURCE(s) to\n\
+In the first three formats, copy SOURCE to DEST or multiple SOURCE(s) to\n\
 the existing DIRECTORY, while setting permission modes and owner/group.\n\
-In the third format, create all components of the given DIRECTORY(ies).\n\
+In the fourth format, create all components of the given DIRECTORY(ies).\n\
 \n\
 "), stdout);
       fputs (_("\
@@ -631,6 +678,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                         to corresponding destination files\n\
   -s, --strip         strip symbol tables, only for 1st and 2nd formats\n\
   -S, --suffix=SUFFIX override the usual backup suffix\n\
+      --target-directory=DIRECTORY  copy all SOURCE arguments into DIRECTORY\n\
   -v, --verbose       print the name of each directory as it is created\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
