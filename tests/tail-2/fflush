@@ -1,10 +1,10 @@
 #!/bin/sh
-# This test would fail on solaris2.7 with tail from pre-1.22k textutils.
-# The problem was that using the solaris2.7 setvbuf function to turn off
+# This test would fail on solaris5.7 with tail from pre-1.22k textutils.
+# The problem was that using the solaris5.7 setvbuf function to turn off
 # buffering doesn't flush stdout.
 
 # FIXME: actually, I couldn't find a way to write the test (without resorting
-# to use of expect) so that it would provoke the failure on solaris2.7.
+# to use of expect) so that it would provoke the failure on solaris5.7.
 # To exercise the bug, cat's stdout seems to have to be directed
 # to a terminal.
 
