@@ -11,6 +11,10 @@
 	non-seekable /proc/modules to the full partition.  Now it still
 	reports the failure but continues on with the remaining file.
 	(tac_nonseekable): Return false also if copy_to_temp fails.
+	[DONT_UNLINK_WHILE_OPEN]: Add a FIXME comment explaining that
+	using atexit like this is wrong.
+	* tests/misc/tac-continue: New test for this.
+	* tests/misc/Makefile.am (TESTS): Add tac-continue.
 
 2004-12-13  Paul Eggert  <eggert@cs.ucla.edu>
 
