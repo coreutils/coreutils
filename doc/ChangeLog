@@ -1,3 +1,8 @@
+2003-03-27  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (printf invocation): Fix formatting bugs.
+	From Paul Eggert.
+
 2003-03-13  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (shred invocation): Mention that --exact
