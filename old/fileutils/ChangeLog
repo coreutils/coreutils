@@ -1,8 +1,22 @@
+2000-09-19  Jim Meyering  <meyering@lucent.com>
+
+	* src/cp.c (main): When used with --force, each of the --link and
+	--symbolic-link options now implies --remove-destination.
+	Reported by Miles Bader via Mike Stone.
+	* tests/cp/link: New file.  Test for the above fix.
+	* tests/cp/same-file: Adjust for this change in behavior.
+
+2000-09-15  Volker Borchert  <bt@teknon.de>
+
+	* tests/Makefile.am (check-root, root-hint): New targets.
+	(check-recursive): Depend on root-hint.
+	* Makefile.am (check-root): New target.
+
 2000-09-16  Jim Meyering  <meyering@lucent.com>
 
 	* doc/perm.texi (Changing Special Permissions): Remove this statement:
-	`a' in the USERS part of a symbolic mode does not cause the special
-	permissions to be affected...  It doesn't reflect what the code does
+	``a' in the USERS part of a symbolic mode does not cause the special
+	permissions to be affected'...  It doesn't reflect what the code does
 	and isn't required by POSIX.  Reported by aldomel@ix.netcom.com via
 	Mike Stone.
 
