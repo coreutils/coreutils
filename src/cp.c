@@ -72,7 +72,8 @@ enum
 {
   TARGET_DIRECTORY_OPTION = CHAR_MAX + 1,
   SPARSE_OPTION,
-  STRIP_TRAILING_SLASHES_OPTION
+  STRIP_TRAILING_SLASHES_OPTION,
+  PARENTS_OPTION
 };
 
 int stat ();
@@ -128,8 +129,8 @@ static struct option const long_opts[] =
   {"link", no_argument, NULL, 'l'},
   {"no-dereference", no_argument, NULL, 'd'},
   {"one-file-system", no_argument, NULL, 'x'},
-  {"parents", no_argument, NULL, 'P'},
-  {"path", no_argument, NULL, 'P'},
+  {"parents", no_argument, NULL, PARENTS_OPTION},
+  {"path", no_argument, NULL, PARENTS_OPTION},   /* Deprecated.  */
   {"preserve", no_argument, NULL, 'p'},
   {"recursive", no_argument, NULL, 'R'},
   {"strip-trailing-slash", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
@@ -169,7 +170,9 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
   -i, --interactive            prompt before overwrite\n\
   -l, --link                   link files instead of copying\n\
   -p, --preserve               preserve file attributes if possible\n\
-  -P, --parents                append source path to DIRECTORY\n\
+      --parents                append source path to DIRECTORY\n\
+  -P                           same as `--parents' for now; soon to change to\n\
+                                 produce the POSIX-mandated behavior\n\
   -r                           copy recursively, non-directories as files\n\
                                  WARNING: use -R instead when you might copy\n\
                                  special files like FIFOs or /dev/zero\n\
@@ -687,6 +690,7 @@ main (int argc, char **argv)
   char *version_control_string = NULL;
   struct cp_options x;
   char *target_directory = NULL;
+  int used_P_option = 0;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -761,6 +765,9 @@ main (int argc, char **argv)
 	  break;
 
 	case 'P':
+	  used_P_option = 1;
+	  /* fall through */
+	case PARENTS_OPTION:
 	  flag_path = 1;
 	  break;
 
@@ -771,6 +778,7 @@ main (int argc, char **argv)
 
 	case 'R':
 	  x.recursive = 1;
+	  x.dereference = 0;
 	  x.copy_as_regular = 0;
 	  break;
 
@@ -820,6 +828,14 @@ main (int argc, char **argv)
     {
       error (0, 0, _("cannot make both hard and symbolic links"));
       usage (1);
+    }
+
+  if (used_P_option)
+    {
+      error (0, 0,
+	     _("warning: the meaning of `-P' will change to conform with\
+ the POSIX\nspecification in an upcoming release;  if you want the old\
+ behavior,\nuse the `--parents' option instead."));
     }
 
   if (backup_suffix_string)
