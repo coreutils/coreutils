@@ -385,19 +385,24 @@ static const char *visible __P ((unsigned int ch));
 static unsigned long baud_to_value __P ((speed_t speed));
 static int recover_mode __P ((char *arg, struct termios *mode));
 static int screen_columns __P ((void));
-static int set_mode __P ((struct mode_info *info, int reversed, struct termios *mode));
-static long integer_arg __P ((char *s));
-static speed_t string_to_baud __P ((char *arg));
-static tcflag_t *mode_type_flag __P ((enum mode_type type, struct termios *mode));
+static int set_mode __P ((struct mode_info *info, int reversed,
+			  struct termios *mode));
+static long integer_arg __P ((const char *s));
+static speed_t string_to_baud __P ((const char *arg));
+static tcflag_t *mode_type_flag __P ((enum mode_type type,
+				      struct termios *mode));
 static void display_all __P ((struct termios *mode));
 static void display_changed __P ((struct termios *mode));
 static void display_recoverable __P ((struct termios *mode));
-static void display_settings __P ((enum output_type output_type, struct termios *mode));
+static void display_settings __P ((enum output_type output_type,
+				   struct termios *mode));
 static void display_speed __P ((struct termios *mode, int fancy));
 static void display_window_size __P ((int fancy));
 static void sane_mode __P ((struct termios *mode));
-static void set_control_char __P ((struct control_info *info, char *arg, struct termios *mode));
-static void set_speed __P ((enum speed_setting type, char *arg, struct termios *mode));
+static void set_control_char __P ((struct control_info *info, const char *arg,
+				   struct termios *mode));
+static void set_speed __P ((enum speed_setting type, const char *arg,
+			    struct termios *mode));
 static void set_window_size __P ((int rows, int cols));
 
 /* The width of the screen, for output wrapping. */
@@ -1137,7 +1142,8 @@ set_mode (struct mode_info *info, int reversed, struct termios *mode)
 }
 
 static void
-set_control_char (struct control_info *info, char *arg, struct termios *mode)
+set_control_char (struct control_info *info, const char *arg,
+		  struct termios *mode)
 {
   unsigned char value;
 
@@ -1160,7 +1166,7 @@ set_control_char (struct control_info *info, char *arg, struct termios *mode)
 }
 
 static void
-set_speed (enum speed_setting type, char *arg, struct termios *mode)
+set_speed (enum speed_setting type, const char *arg, struct termios *mode)
 {
   speed_t baud;
 
@@ -1546,7 +1552,7 @@ struct speed_map speeds[] =
 };
 
 static speed_t
-string_to_baud (char *arg)
+string_to_baud (const char *arg)
 {
   int i;
 
@@ -1653,7 +1659,7 @@ visible (unsigned int ch)
 /* From `od' by Richard Stallman.  */
 
 static long
-integer_arg (char *s)
+integer_arg (const char *s)
 {
   long value;
   if (xstrtol (s, NULL, 0, &value, "bB") != LONGINT_OK)
