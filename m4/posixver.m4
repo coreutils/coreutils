@@ -25,34 +25,21 @@ AC_DEFUN([gl_DEFAULT_POSIX2_VERSION],
     gl_default_posix2_version=$ac_cv_env_DEFAULT_POSIX2_VERSION_value
     AC_DEFINE_UNQUOTED(DEFAULT_POSIX2_VERSION,
       $gl_default_posix2_version,
-      [Define the default level of POSIX conformance for these tools.
-       The value is of the form YYYYMM, specifying the year and month the
-       standard was adopted.  Unless explicitly selected at configure-time,
-       this symbol is not defined.])
+      [Define the default level of POSIX conformance. The value is of
+       the form YYYYMM, specifying the year and month the standard was
+       adopted. If not defined here, it defaults to the value of
+       _POSIX2_VERSION in <unistd.h>. Define to 199209 to default to
+       POSIX 1003.2-1992, which makes standard programs like `head',
+       `tail', and `sort' accept obsolete options like `+10' and
+       `-10'. Define to 200112 to default to POSIX 1003.1-2001, which
+       makes these standard programs treat leading-`+' operands as
+       file names and require modern usages like `-n 10' instead of
+       `-10'. Whether defined here or not, the default can be
+       overridden at run time via the _POSIX2_VERSION environment
+       variable.])
   fi
   AC_MSG_RESULT($gl_default_posix2_version)
   AC_ARG_VAR(
     [DEFAULT_POSIX2_VERSION],
-    [These tools normally conform to the version of POSIX that is standard
-     for your system, as determined by the value of _POSIX2_VERSION from
-     the C system header, <unistd.h>.  Use this option to compile-in
-     a different default.
-     Regardless of the compiled-in default, the desired behavior may be
-     selected at tool run time via the _POSIX2_VERSION environment variable.
-
-     Use `DEFAULT_POSIX2_VERSION=199209' to
-     enable option handling that is compatible with POSIX 1003.2-1992.
-     CAUTION: this makes tools like head, tail, uniq, and sort accept
-     options that start with `+'; but such `options' must be treated
-     as files, according to the more recent POSIX 1003.1-2001 standard.
-     This option also makes head, tail, etc. accept options like -1
-     and -30.  Use of this build-time option merely sets the default.
-
-     Use `DEFAULT_POSIX2_VERSION=200112' to
-     enable option handling that is compatible with POSIX 1003.1-2001.
-     CAUTION: this makes tools like head, tail, uniq, and sort treat
-     as files arguments that start with `+'.  This also makes options
-     like -1 and -30 (to e.g. head, tail) invalid.  Instead you must
-     use the -n 1 or -n 30 form.
-    ])
+    [POSIX version to default to; see 'config.hin'.])
 ])
