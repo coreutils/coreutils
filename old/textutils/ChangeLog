@@ -1,6 +1,46 @@
-2002-04-29  Jim Meyering  <meyering@lucent.com>
+2002-04-30  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.22.
+
+2002-04-29  Paul Eggert  <eggert@twinsun.com>
+
+	Use ENABLE_NLS only for gettext-related stuff, not also for
+	setlocale-related stuff.  From a patch suggested by Bruno
+	Haible.
+
+	Since setlocale is now almost universal, this patch also
+	removes some of the optimizations that clutter up the code and
+	which don't help all that much even on hosts that lack
+	setlocale.
+
+	* lib/hard-locale.c: Upgrade to version used in GNU Diffutils 2.8.1.
+	* m4/prereq.m4 (jm_PREREQ_HARD_LOCALE): Check for stdlib.h.
+	Do not check for alloca.h (no longer used) or stdbool.h (was never
+	used?).  Add AM_C_PROTOTYPES since hard-locale.h uses it.
+
+	* src/sys2.h (HAVE_SETLOCALE): Define to 0 if not defined.
+	* src/comm.c (compare_files): Replace #ifdef ENABLE_NLS
+	with if (HAVE_SETLOCALE).
+	* src/join.c (keycmp): Likewise.
+	* src/sort.c (keycompare, compare): Likewise.
+
+	* src/comm.c (hard_LC_COLLATE): Define even if ! ENABLE_NLS.
+	* src/join.c (hard_LC_COLLATE): Likewise.
+	* src/sort.c (hard_LC_COLLATE): Likewise.
+
+	* src/comm.c (main): Always initialize hard_LC_COLLATE.
+	Put initialization next to other locale-related stuff.
+	* src/join.c (main): Likewise.
+	* src/sort.c (main): Likewise.
+
+	* src/sort.c: Include <langinfo.h> even if ! ENABLE_NLS.
+	(decimal_point, th_sep): Depend on HAVE_SETLOCALE, not ENABLE_NLS.
+	(main): Likewise.
+	(MONTHTAB_CONST): Remove; all uses removed.
+	(struct_month_cmp, inittables): Do not depend on ENABLE_NLS.
+	(main): hard_LC_TIME locale does not depend on ENABLE_NLS.
+
+2002-04-29  Jim Meyering  <meyering@lucent.com>
 
 	* src/tail.c (parse_obsolescent_option): Do not limit the maximum
 	line/byte count (when specified via obsolete option syntax) to be
