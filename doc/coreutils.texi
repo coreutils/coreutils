@@ -1500,15 +1500,30 @@ Use @var{number} characters for line numbers (default 6).
 (@samp{-} means standard input), or standard input if none are given.
 Synopses:
 
-@example
+@smallexample
 od [@var{option}]@dots{} [@var{file}]@dots{}
-od --traditional [@var{file}] [[+]@var{offset} [[+]@var{label}]]
-@end example
+od [-abcdfilosx]@dots{} [@var{file}] [[+]@var{offset}[.][b]]
+od [@var{option}]@dots{} --traditional [@var{file}] [[+]@var{offset}[.][b] [[+]@var{label}[.][b]]]
+@end smallexample
 
 Each line of output consists of the offset in the input, followed by
 groups of data from the file.  By default, @command{od} prints the offset in
-octal, and each group of file data is two bytes of input printed as a
-single octal number.
+octal, and each group of file data is a C @code{short int}'s worth of input
+printed as a single octal number.
+
+If @var{offset} is given, it specifies how many input bytes to skip
+before formatting and writing.  By default, it is interpreted as an
+octal number, but the optional trailing decimal point causes it to be
+interpretated as decimal.  If no decimal is specified and the offset
+begins with @samp{0x} or @samp{0X} it is interpreted as a hexadecimal
+number.  If there is a trailing @samp{b}, the number of bytes skipped
+will be @var{offset} multiplied by 512.
+
+If a command is of both the first and second forms, the second form is
+assumed if the last operand begins with @samp{+} or (if there are two
+operands) a digit.  For example, in @samp{od foo 10} and @samp{od +10}
+the @samp{10} is an offset, whereas in @samp{od 10} the @samp{10} is a
+file name.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -1553,20 +1568,16 @@ by 1024, and @samp{m} by 1048576.
 Output at most @var{bytes} bytes of the input.  Prefixes and suffixes on
 @code{bytes} are interpreted as for the @option{-j} option.
 
-@item -s @var{n}
+@item -S @var{n}
 @itemx --strings[=@var{n}]
-@opindex -s
+@opindex -S
 @opindex --strings
 @cindex string constants, outputting
 Instead of the normal output, output only @dfn{string constants}: at
 least @var{n} consecutive @acronym{ASCII} graphic characters,
 followed by a null (zero) byte.
 
-If @var{n} is omitted with @option{--strings}, the default is 3.  On
-older systems, @sc{gnu} @command{od} instead supports an obsolete
-option @option{-s[@var{n}]}, where @var{n} also defaults to 3.
-@acronym{POSIX} 1003.1-2001 (@pxref{Standards conformance}) does not allow
-@option{-s} without an argument; use @option{--strings} instead.
+If @var{n} is omitted with @option{--strings}, the default is 3.
 
 @item -t @var{type}
 @itemx --format=@var{type}
@@ -1669,48 +1680,48 @@ specification options.  These options accumulate.
 
 @item -a
 @opindex -a
-Output as named characters.  Equivalent to @option{-ta}.
+Output as named characters.  Equivalent to @samp{-t a}.
 
 @item -b
 @opindex -b
-Output as octal bytes.  Equivalent to @option{-toC}.
+Output as octal bytes.  Equivalent to @samp{-t o1}.
 
 @item -c
 @opindex -c
 Output as @acronym{ASCII} characters or backslash escapes.  Equivalent to
-@option{-tc}.
+@samp{-t c}.
 
 @item -d
 @opindex -d
-Output as unsigned decimal shorts.  Equivalent to @option{-tu2}.
+Output as unsigned decimal two-byte units.  Equivalent to @samp{-t u2}.
 
 @item -f
 @opindex -f
-Output as floats.  Equivalent to @option{-tfF}.
-
-@item -h
-@opindex -h
-Output as hexadecimal shorts.  Equivalent to @option{-tx2}.
+Output as floats.  Equivalent to @samp{-t fF}.
 
 @item -i
 @opindex -i
-Output as decimal shorts.  Equivalent to @option{-td2}.
+Output as decimal ints.  Equivalent to @samp{-t dI}.
 
 @item -l
 @opindex -l
-Output as decimal longs.  Equivalent to @option{-td4}.
+Output as decimal long ints.  Equivalent to @samp{-t dL}.
 
 @item -o
 @opindex -o
-Output as octal shorts.  Equivalent to @option{-to2}.
+Output as octal two-byte units.  Equivalent to @option{-t o2}.
+
+@item -s
+@opindex -s
+Output as decimal two-byte units.  Equivalent to @option{-t d2}.
 
 @item -x
 @opindex -x
-Output as hexadecimal shorts.  Equivalent to @option{-tx2}.
+Output as hexadecimal two-byte units.  Equivalent to @samp{-t x2}.
 
 @item --traditional
 @opindex --traditional
-Recognize the non-option arguments that traditional @command{od}
+Recognize the non-option label argument that traditional @command{od}
 accepted.  The following syntax:
 
 @smallexample
@@ -1719,14 +1730,8 @@ od --traditional [@var{file}] [[+]@var{offset}[.][b] [[+]@var{label}[.][b]]]
 
 @noindent
 can be used to specify at most one file and optional arguments
-specifying an offset and a pseudo-start address, @var{label}.  By
-default, @var{offset} is interpreted as an octal number specifying how
-many input bytes to skip before formatting and writing.  The optional
-trailing decimal point forces the interpretation of @var{offset} as a
-decimal number.  If no decimal is specified and the offset begins with
-@samp{0x} or @samp{0X} it is interpreted as a hexadecimal number.  If
-there is a trailing @samp{b}, the number of bytes skipped will be
-@var{offset} multiplied by 512.  The @var{label} argument is interpreted
+specifying an offset and a pseudo-start address, @var{label}.
+The @var{label} argument is interpreted
 just like @var{offset}, but it specifies an initial pseudo-address.  The
 pseudo-addresses are displayed in parentheses following any normal
 address.
