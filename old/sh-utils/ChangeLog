@@ -1,3 +1,22 @@
+1999-03-09  Jim Meyering  <meyering@ascend.com>
+
+	Running `id USER' doesn't report any groups if there is no
+	entry for USER in /etc/group.  Make it report the one from /etc/passwd.
+	* src/id.c: (xgetgroups): Take new parameter, gid, and pass
+	it to getugroups.
+	(print_group_list): Call getpwuid and adjust calls to xgetgroups
+	to include new parameter.
+	* lib/getugroups.c (getugroups): Take new parameter, gid.
+	Add gid to the list of groups.
+	From Ulrich Drepper.
+	* lib/getgroups.c (getgroups): Protoize.
+
+1999-03-08  Jim Meyering  <meyering@ascend.com>
+
+	* tests/basename: New directory and tests.
+	* tests/Makefile.am (SUBDIRS): Add basename.
+	* configure.in (AC_OUTPUT): Add tests/basename/Makefile.
+
 1999-03-06  Jim Meyering  <meyering@ascend.com>
 
 	* src/date.c (batch_convert): Use a `%s' format in error call,
