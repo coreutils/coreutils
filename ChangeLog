@@ -2,6 +2,14 @@
 
 	* Version 4.5.2.
 
+	* src/sort.c (begfield, limfield): Rearrange comparisons to avoid
+	compiler warnings.
+	(fillbuf, keycompare): Cast literal `-1' to size_t in comparisons,
+	to avoid compiler warnings.
+
+	* src/shred.c (dopass): Use a uintmax_t temporary to avoid bogus
+	compiler warnings.
+
 	Fix things so `mkdir -p' can create very deep directories, e.g.,
 	mkdir -p $(perl -e 'print "a/" x 40000') now works.
 	* src/mkdir.c (main): For --parents (-p), call make_path with the
@@ -9,6 +17,11 @@
 	like stat or chmod be performed on the entire command line argument.
 	* makepath.c (make_path): Restore umask *before* creating the final
 	component.
+
+2002-09-27  Andreas Schwab  <schwab@suse.de>
+
+	* src/tail.c (tail_bytes): Change type of bytes_remaining to off_t
+	to avoid overflow.  Reported by Hans Lermen.
 
 2002-09-26  Jim Meyering  <meyering@lucent.com>
 
