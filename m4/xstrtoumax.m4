@@ -8,7 +8,7 @@ AC_DEFUN(jm_AC_PREREQ_XSTRTOUMAX,
   AC_REQUIRE([jm_AC_HEADER_INTTYPES_H])
   AC_REQUIRE([jm_AC_TYPE_UNSIGNED_LONG_LONG])
   AC_CHECK_DECLS([strtoul, strtoull])
-  AC_CHECK_HEADERS(stdlib.h)
+  AC_CHECK_HEADERS(limits.h stdlib.h)
 
   AC_CACHE_CHECK([whether <inttypes.h> defines strtoumax as a macro],
     jm_cv_func_strtoumax_macro,
@@ -29,13 +29,13 @@ AC_DEFUN(jm_AC_PREREQ_XSTRTOUMAX,
   dnl so we need the replacement strtoull only if strtoumax does not exist.
   case "$ac_cv_type_unsigned_long_long,$jm_cv_func_strtoumax_macro,$ac_cv_func_strtoumax" in
     yes,no,no)
-      AC_REPLACE_FUNCS(strtoull)
+      AC_REPLACE_FUNCS(strtoull strtol)
       ;;
   esac
 
   case "$jm_cv_func_strtoumax_macro,$ac_cv_func_strtoumax" in
     no,no)
-      AC_REPLACE_FUNCS(strtoul)
+      AC_REPLACE_FUNCS(strtoul strtol)
       ;;
   esac
 
