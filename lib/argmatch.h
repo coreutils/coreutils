@@ -30,7 +30,7 @@
 
 /* Assert there are as many real arguments as there are values
    (argument list ends with a NULL guard).  ARGMATCH_VERIFY is
-   preferred, since it is guaranteed to be chedk at compile-time.
+   preferred, since it is guaranteed to be checked at compile-time.
    ARGMATCH_ASSERT is for backward compatibility only.  */
 
 # define ARGMATCH_VERIFY(Arglist, Vallist)				  \
@@ -49,14 +49,9 @@
 
 int argmatch (char const *arg, char const *const *arglist,
 	      char const *vallist, size_t valsize);
-int argcasematch (char const *arg, char const *const *arglist,
-		  char const *vallist, size_t valsize);
 
 # define ARGMATCH(Arg, Arglist, Vallist) \
   argmatch (Arg, Arglist, (char const *) (Vallist), sizeof *(Vallist))
-
-# define ARGCASEMATCH(Arg, Arglist, Vallist) \
-  argcasematch (Arg, Arglist, (char const *) (Vallist), sizeof *(Vallist))
 
 /* xargmatch calls this function when it fails.  This function should not
    return.  By default, this is a function that calls ARGMATCH_DIE which
@@ -91,7 +86,7 @@ void argmatch_valid (char const *const *arglist,
 int __xargmatch_internal (char const *context,
 			  char const *arg, char const *const *arglist,
 			  char const *vallist, size_t valsize,
-			  int case_sensitive, argmatch_exit_fn exit_fn);
+			  argmatch_exit_fn exit_fn);
 
 /* Programmer friendly interface to __xargmatch_internal. */
 
@@ -99,13 +94,7 @@ int __xargmatch_internal (char const *context,
   ((Vallist) [__xargmatch_internal (Context, Arg, Arglist,	\
 				    (char const *) (Vallist),	\
 				    sizeof *(Vallist),		\
-				    1, argmatch_die)])
-
-# define XARGCASEMATCH(Context, Arg, Arglist, Vallist)		\
-  ((Vallist) [__xargmatch_internal (Context, Arg, Arglist,	\
-				    (char const *) (Vallist),	\
-				    sizeof *(Vallist),		\
-				    0, argmatch_die)])
+				    argmatch_die)])
 
 /* Convert a value into a corresponding argument. */
 
