@@ -1,5 +1,10 @@
 2001-03-01  Paul Eggert  <eggert@twinsun.com>
 
+	* src/sort.c (xfclose): Add FILE arg, and report the file name
+	on error.  All callers changed.
+
+2001-03-01  Paul Eggert  <eggert@twinsun.com>
+
 	* src/sort.c (main): When fclose (stdin) fails, do not mention
 	the output file in the error message; mention "-" instead.
 
