@@ -1,5 +1,5 @@
 /* print the hexadecimal identifier for the current host
-   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -70,6 +70,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      AUTHORS, usage);
 
@@ -81,8 +83,6 @@ main (int argc, char **argv)
 
   id = gethostid ();
   printf ("%lx\n", id);
-
-  close_stdout ();
 
   exit (EXIT_SUCCESS);
 }

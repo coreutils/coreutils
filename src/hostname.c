@@ -88,6 +88,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      AUTHORS, usage);
 
@@ -114,7 +116,6 @@ main (int argc, char **argv)
       if (hostname == NULL)
 	error (1, errno, _("cannot determine hostname"));
       printf ("%s\n", hostname);
-      close_stdout ();
     }
   else
     {
