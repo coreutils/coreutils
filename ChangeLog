@@ -2,6 +2,10 @@
 
 	* Version 4.5.1.
 
+	* Makefile.am (THANKS-to-translators): New rule.
+	(EXTRA_DIST): Add both THANKS-to-translators and THANKStt.in.
+	* THANKStt.in: New file.
+
 	* src/cat.c (close_stdout_wrapper): New, kludgey, function and
 	file-scoped global.
 	(main): Register it with atexit.
