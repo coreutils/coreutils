@@ -2,6 +2,10 @@
 
 	* Version 5.0.90.
 
+	* man/Makefile.am (.x.1): Substitute 's,$t/$*,$*,' on output of
+	help2man, to avoid having `rm.td/rm' appear in rm.1.  Reported by
+	Thomas Luzat.  See http://bugs.debian.org/202413 for details.
+
 	* src/cut.c (main) [lint]: Initialize spec_list_string to avoid warning.
 
 	* src/hostid.c: Don't include <unistd.h>.  system.h already does that.
