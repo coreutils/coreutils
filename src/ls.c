@@ -3059,12 +3059,20 @@ long_time_expected_width (void)
 	  len = nstrftime (buf, bufsize, fmt, tm, 0, 0);
 	  if (len || ! *buf)
 	    break;
-	  buf = alloca (bufsize *= 2);
+	  if (buf == initbuf)
+	    {
+	      buf = NULL;
+	      bufsize *= 2;
+	    }
+	  buf = x2nrealloc (buf, &bufsize, sizeof *buf);
 	}
 
       width = mbsnwidth (buf, len, 0);
       if (width < 0)
 	width = 0;
+
+      if (buf != initbuf)
+	free (buf);
     }
 
   return width;
@@ -3349,8 +3357,16 @@ print_long_format (const struct fileinfo *f)
 			 when_local, 0, when_ns);
 	  if (s || ! *p)
 	    break;
-	  newbuf = alloca (bufsize *= 2);
-	  memcpy (newbuf, buf, p - buf);
+	  if (buf == init_bigbuf)
+	    {
+	      bufsize *= 2;
+	      newbuf = xmalloc (bufsize);
+	      memcpy (newbuf, buf, p - buf);
+	    }
+	  else
+	    {
+	      newbuf = x2nrealloc (buf, &bufsize, sizeof *buf);
+	    }
 	  p = newbuf + (p - buf);
 	  buf = newbuf;
 	}
@@ -3374,6 +3390,8 @@ print_long_format (const struct fileinfo *f)
     }
 
   DIRED_FPUTS (buf, stdout, p - buf);
+  if (buf != init_bigbuf)
+    free (buf);
   print_name_with_quoting (f->name, FILE_OR_LINK_MODE (f), f->linkok,
 			   &dired_obstack);
 
