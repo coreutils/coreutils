@@ -1,6 +1,6 @@
 AC_DEFUN(jm_CHECK_DECLARATION,
 [
-  AC_REQUIRE(AC_HEADER_STDC)
+  AC_REQUIRE([AC_HEADER_STDC])dnl
   test -z "$ac_cv_header_memory_h" && AC_CHECK_HEADERS(memory.h)
   test -z "$ac_cv_header_string_h" && AC_CHECK_HEADERS(string.h)
   test -z "$ac_cv_header_strings_h" && AC_CHECK_HEADERS(strings.h)
@@ -25,22 +25,22 @@ AC_DEFUN(jm_CHECK_DECLARATION,
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
 #endif],
-[
+      [
 #ifndef $1
 char *(*pfn) = (char *(*)) $1
 #endif
-],
-  eval "jm_cv_func_decl_$1=yes",
-  eval "jm_cv_func_decl_$1=no")])
+      ],
+      eval "jm_cv_func_decl_$1=yes",
+      eval "jm_cv_func_decl_$1=no")])
 
-if eval "test \"`echo '$jm_cv_func_decl_'$1`\" = yes"; then
-  AC_MSG_RESULT(yes)
-  ifelse([$2], , :, [$2])
-else
-  AC_MSG_RESULT(no)
-  ifelse([$3], , , [$3
+  if eval "test \"`echo '$jm_cv_func_decl_'$1`\" = yes"; then
+    AC_MSG_RESULT(yes)
+    ifelse([$2], , :, [$2])
+  else
+    AC_MSG_RESULT(no)
+    ifelse([$3], , , [$3
 ])dnl
-fi
+  fi
 ])dnl
 
 dnl jm_CHECK_DECLARATIONS(FUNCTION... [, ACTION-IF-DECLARED
