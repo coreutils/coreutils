@@ -1,3 +1,18 @@
+Thu May  4 23:15:58 1995  Jim Meyering  (meyering@comco.com)
+
+	* sort.c (main): Use stat, not safe_stat.  The latter was unnecessary.
+	Don't include safe-stat.h.
+
+	* lib/Makefile.in (DISTFILES): Remove safe-xstat.hin.
+	Remove all associated rules.  safe-l?stat.h are no longer used.
+
+	* sort.c Don't hard-code /tmp.
+	[DEFAULT_TMPDIR]: Use this instead.
+
+	* (set_ordering): Properly parse arguments like `+x.yn'.
+	Reported by John Salmon (johns@mullet.anu.edu.au).
+	Patch from Mike Haertel.
+
 Wed Apr 26 23:48:13 1995  Jim Meyering  (meyering@comco.com)
 
 	* sort.c (tempname): AND-off high bits of pid so that its decimal
