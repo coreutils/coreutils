@@ -1,5 +1,5 @@
 /* GNU's pinky.
-   Copyright (C) 1992-1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1992-1997, 1999, 2000, 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -469,7 +469,7 @@ usage (int status)
       printf (_("Usage: %s [OPTION]... [USER]...\n"), program_name);
       printf (_("\
 \n\
-  -l              do long format output\n\
+  -l              do long format output (you must specify at least one USER)\n\
   -b              omit the user's home directory and shell in long format\n\
   -h              omit the user's project file in long format\n\
   -p              omit the user's plan file in long format\n\
