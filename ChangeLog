@@ -1,3 +1,83 @@
+2002-11-06  Jim Meyering  <jim@meyering.net>
+
+	* src/printf.c (print_esc): Hexadecimal \xhh escapes may have
+	at most two hex. digits, not three.  Reported by Padraig Brady.
+
+2002-10-07  Paul Eggert  <eggert@twinsun.com>
+
+	Add support for locale-specific size indications (e.g.,
+	thousands-separators) and for explicit size suffixes on output.
+
+	* doc/coreutils.texi (Block size): Say that:
+	This affects display format as well as block size.
+	Fractional block counts are rounded up.
+	ls file size blocksize defaults to 1.
+	A block size spec preceded by ' generates thousands separators.
+	A suffix without a preceding integer generates suffixes.
+	(tail invocation): 32k -> 32 KiB.
+	(What information is listed): ls -h is now equivalent to
+	ls --block-size=human, and ls -H is now equivalent to
+	ls --block-size=si.  Displayed file size is now always affected by
+	--block-size.
+
+	* lib/inttostr.c, lib/inttostr.h, lib/imaxtostr.c, lib/offtostr.c,
+	lib/umaxtostr.c: New files, taken from GNU tar.
+
+	* lib/Makefile.am (libfetish_a_SOURCES): Add imaxtostr.c, offtostr.c,
+	umaxtostr.c.
+	(EXTRA_DIST): Add inttostr.c.
+
+	* lib/human.c, lib/human.h: Rewrite to support locale-specific
+	notations like thousands separators.
+	Specify what includer of include.h must include beforehand.
+	(human_group_digits, human_suppress_point_zero, human_autoscale,
+	human_base_1024, human_SI, human_B): New enum values.
+	(human_readable): Rename from human_readable_inexact; put the
+	options before the sizes.  All uses changed.  The old human_readable
+	function has been removed; use inttostr.h instead.
+	(human_options): Renamed from human_block_size, with new signature
+	that allows block sizes up to UINTMAX_MAX.  All callers changed.
+
+	* m4/prereq.m4 (jm_PREREQ_HUMAN): Check for locale.h, localeconv,
+	AC_HEADER_STDBOOL.  No need to check for limits.h since it's in
+	freestanding C89.  No need to check for stdlib.h or string.h since
+	autoconf does this now.
+
+	* src/cksum.c (cksum): Use primitives from inttostr.h, not
+	human.h, to print large numbers simply.
+	* src/csplit.c (handle_line_error, parse_patterns): Likewise.
+	* src/dd.c (print_stats, main): Likewise.
+	* src/df.c (print_header): Likewise.
+	* src/factor.c (print_factors): Likewise.
+	* src/ls.c (print_long_format, print_file_name_and_frills): Likewise.
+	* src/shred.c (dopass): Likewise.
+	* src/sort.c (checkfp): Likewise.
+	* src/sum.c (bsd_sum_file, sysv_sym_file): Likewise.
+	* src/tail.c (xlseek): Likewise.
+	* src/wc.c (write_counts, wc): Likewise.
+
+	* src/df.c (human_output_opts): New var.
+	(output_block_size): Now uintmax_t, not int, to handle larger
+	block sizes.  All uses changed.
+	* src/du.c: Likewise.
+	* src/ls.c: Likewise.
+
+	* src/df.c (print_header): In the header line, prefer SI to human
+	representation if it's shorter; if neither is shorter, try to
+	intuit what the user would prefer.
+
+	* src/expr.c (inttostr): Remove; use new imaxtostr library
+	function instead.
+
+	* src/ls.c (file_output_block_size): New var, to distinguish
+	file sizes from other sizes.
+	(decode_switches): Set it.
+
+	* src/shred.c (OUTPUT_BLOCK_SIZE): remove.
+	(dopass): When printing progress, use floor for what has been done
+	so far (since we should be conservative there), and ceiling for
+	what needs to be done (since that's what other programs use).
+
 2002-10-19  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.4.
@@ -105,7 +185,7 @@
 
 2002-10-08  Dmitry V. Levin  <ldv@altlinux.org>
 
- 	* src/ln.c (main): Fix target_directory parsing when n_files == 1.
+	* src/ln.c (main): Fix target_directory parsing when n_files == 1.
 
 2002-10-08  Jim Meyering  <meyering@lucent.com>
 

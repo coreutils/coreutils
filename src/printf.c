@@ -240,11 +240,11 @@ print_esc (const char *escstart)
   int esc_value = 0;		/* Value of \nnn escape. */
   int esc_length;		/* Length of \nnn escape. */
 
-  /* \0ooo and \xhhh escapes have maximum length of 3 chars. */
   if (*p == 'x')
     {
+      /* A hexadecimal \xhh escape sequence must have 1 or 2 hex. digits.  */
       for (esc_length = 0, ++p;
-	   esc_length < 3 && ISXDIGIT (*p);
+	   esc_length < 2 && ISXDIGIT (*p);
 	   ++esc_length, ++p)
 	esc_value = esc_value * 16 + hextobin (*p);
       if (esc_length == 0)
@@ -253,6 +253,8 @@ print_esc (const char *escstart)
     }
   else if (*p == '0')
     {
+      /* An octal \0ooo escape sequence has 0 to 3 octal digits
+	 after the leading \0.  */
       for (esc_length = 0, ++p;
 	   esc_length < 3 && isodigit (*p);
 	   ++esc_length, ++p)
