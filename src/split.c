@@ -555,6 +555,7 @@ next_file_name ()
 {
   int x;
   char *ne;
+  unsigned int i;
 
   outfile_count++;
   if (outfile_count < outfile_name_limit)
@@ -574,7 +575,7 @@ next_file_name ()
   outfile_name_limit *= 26;
   outfile_name_generation++;
   *outfile_mid++ = 'z';
-  for (x = 0; x <= outfile_name_generation; x++)
-    outfile_mid[x] = 'a';
+  for (i = 0; i <= outfile_name_generation; i++)
+    outfile_mid[i] = 'a';
   outfile_end += 2;
 }
