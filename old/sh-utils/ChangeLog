@@ -1,6 +1,7 @@
-2001-08-18  Jim Meyering  <meyering@lucent.com>
+2001-06-21  Paul Eggert  <eggert@twinsun.com>
 
-	* Version 2.0.12.
+	* src/expr.c (nextarg): Advance ARGS by one if the next token matches.
+	All callers changed.
 
 2001-06-21  Paul Eggert  <eggert@twinsun.com>
 
