@@ -1,3 +1,4 @@
+Wed Nov 15 23:48:31 1995  Jim Meyering  (meyering@comco.com)
 
 	* mkdep-Makefile (.deps/empty.P): Depend on BUILT-HEADERS.
 
