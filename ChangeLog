@@ -1,9 +1,11 @@
-2003-04-13  Jim Meyering  <jim@meyering.net>
+2003-04-15  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
 
 	* Makefile.maint: Remove (or replace-with-TAB(s) to retain alignment)
 	each sequence of spaces before a TAB character.
+
+2003-04-13  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (is_empty_dir): Don't closedir (NULL).
 
