@@ -34,6 +34,11 @@
 #include "safe-read.h"
 #include "xstrtol.h"
 
+#ifndef SA_NOCLDSTOP
+# define sigprocmask(How, Set, Oset) /* empty */
+# define sigset_t int
+#endif
+
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "csplit"
 
@@ -139,19 +144,19 @@ static uintmax_t current_line = 0;
 static bool have_read_eof = false;
 
 /* Name of output files. */
-static char *filename_space = NULL;
+static char * volatile filename_space = NULL;
 
 /* Prefix part of output file names. */
-static char *prefix = NULL;
+static char * volatile prefix = NULL;
 
 /* Suffix part of output file names. */
-static char *suffix = NULL;
+static char * volatile suffix = NULL;
 
 /* Number of digits to use in output file names. */
-static int digits = 2;
+static int volatile digits = 2;
 
 /* Number of files created so far. */
-static unsigned int files_created = 0;
+static unsigned int volatile files_created = 0;
 
 /* Number of bytes written to current file. */
 static uintmax_t bytes_written;
@@ -169,7 +174,7 @@ static char **global_argv;
 static bool suppress_count;
 
 /* If true, remove output files on error. */
-static bool remove_files;
+static bool volatile remove_files;
 
 /* If true, remove all output files which have a zero length. */
 static bool elide_empty_files;
@@ -180,6 +185,9 @@ static struct control *controls;
 
 /* Number of elements in `controls'. */
 static size_t control_used;
+
+/* The set of signals that are caught.  */
+static sigset_t caught_signals;
 
 static struct option const longopts[] =
 {
@@ -201,12 +209,16 @@ static struct option const longopts[] =
 static void
 cleanup (void)
 {
+  sigset_t oldset;
+
   close_output_file ();
 
-  if (remove_files)
-    delete_all_files ();
+  sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
+  delete_all_files ();
+  sigprocmask (SIG_SETMASK, &oldset, NULL);
 }
 
+static void cleanup_fatal (void) ATTRIBUTE_NORETURN;
 static void
 cleanup_fatal (void)
 {
@@ -214,20 +226,16 @@ cleanup_fatal (void)
   exit (EXIT_FAILURE);
 }
 
-static RETSIGTYPE
+static void
 interrupt_handler (int sig)
 {
-#ifdef SA_NOCLDSTOP
-  struct sigaction sigact;
-
-  sigact.sa_handler = SIG_DFL;
-  sigemptyset (&sigact.sa_mask);
-  sigact.sa_flags = 0;
-  sigaction (sig, &sigact, NULL);
-#else
-  signal (sig, SIG_DFL);
+#ifndef SA_NOCLDSTOP
+  signal (sig, SIG_IGN);
 #endif
-  cleanup ();
+
+  delete_all_files ();
+
+  signal (sig, SIG_DFL);
   raise (sig);
 }
 
@@ -681,6 +689,8 @@ dump_rest_of_file (void)
 /* Handle an attempt to read beyond EOF under the control of record P,
    on iteration REPETITION if nonzero. */
 
+static void handle_line_error (const struct control *, uintmax_t)
+     ATTRIBUTE_NORETURN;
 static void
 handle_line_error (const struct control *p, uintmax_t repetition)
 {
@@ -728,6 +738,7 @@ process_line_count (const struct control *p, uintmax_t repetition)
     handle_line_error (p, repetition);
 }
 
+static void regexp_error (struct control *, uintmax_t, bool) ATTRIBUTE_NORETURN;
 static void
 regexp_error (struct control *p, uintmax_t repetition, bool ignore)
 {
@@ -902,23 +913,38 @@ make_filename (unsigned int num)
 static void
 create_output_file (void)
 {
+  sigset_t oldset;
+  bool fopen_ok;
+  int fopen_errno;
+
   output_filename = make_filename (files_created);
+
+  /* Create the output file in a critical section, to avoid races.  */
+  sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
   output_stream = fopen (output_filename, "w");
-  if (output_stream == NULL)
+  fopen_ok = (output_stream != NULL);
+  fopen_errno = errno;
+  files_created += fopen_ok;
+  sigprocmask (SIG_SETMASK, &oldset, NULL);
+
+  if (! fopen_ok)
     {
-      error (0, errno, "%s", output_filename);
+      error (0, fopen_errno, "%s", output_filename);
       cleanup_fatal ();
     }
-  files_created++;
   bytes_written = 0;
 }
 
-/* Delete all the files we have created. */
+/* If requested, delete all the files we have created.  This function
+   must be called only from critical sections.  */
 
 static void
 delete_all_files (void)
 {
   unsigned int i;
+
+  if (! remove_files)
+    return;
 
   for (i = 0; i < files_created; i++)
     {
@@ -926,6 +952,8 @@ delete_all_files (void)
       if (unlink (name))
 	error (0, errno, "%s", name);
     }
+
+  files_created = 0;
 }
 
 /* Close the current output file and print the count
@@ -950,9 +978,19 @@ close_output_file (void)
 	}
       if (bytes_written == 0 && elide_empty_files)
 	{
-	  if (unlink (output_filename))
-	    error (0, errno, "%s", output_filename);
-	  files_created--;
+	  sigset_t oldset;
+	  bool unlink_ok;
+	  int unlink_errno;
+
+	  /* Remove the output file in a critical section, to avoid races.  */
+	  sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
+	  unlink_ok = (unlink (output_filename) == 0);
+	  unlink_errno = errno;
+	  files_created -= unlink_ok;
+	  sigprocmask (SIG_SETMASK, &oldset, NULL);
+
+	  if (! unlink_ok)
+	    error (0, unlink_errno, "%s", output_filename);
 	}
       else
 	{
@@ -1273,9 +1311,6 @@ main (int argc, char **argv)
 {
   int optc;
   unsigned long int val;
-#ifdef SA_NOCLDSTOP
-  struct sigaction oldact, newact;
-#endif
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -1294,37 +1329,6 @@ main (int argc, char **argv)
 
   /* Change the way xmalloc and xrealloc fail.  */
   xalloc_fail_func = cleanup;
-
-#ifdef SA_NOCLDSTOP
-  newact.sa_handler = interrupt_handler;
-  sigemptyset (&newact.sa_mask);
-  newact.sa_flags = 0;
-
-  sigaction (SIGHUP, NULL, &oldact);
-  if (oldact.sa_handler != SIG_IGN)
-    sigaction (SIGHUP, &newact, NULL);
-
-  sigaction (SIGINT, NULL, &oldact);
-  if (oldact.sa_handler != SIG_IGN)
-    sigaction (SIGINT, &newact, NULL);
-
-  sigaction (SIGQUIT, NULL, &oldact);
-  if (oldact.sa_handler != SIG_IGN)
-    sigaction (SIGQUIT, &newact, NULL);
-
-  sigaction (SIGTERM, NULL, &oldact);
-  if (oldact.sa_handler != SIG_IGN)
-    sigaction (SIGTERM, &newact, NULL);
-#else
-  if (signal (SIGHUP, SIG_IGN) != SIG_IGN)
-    signal (SIGHUP, interrupt_handler);
-  if (signal (SIGINT, SIG_IGN) != SIG_IGN)
-    signal (SIGINT, interrupt_handler);
-  if (signal (SIGQUIT, SIG_IGN) != SIG_IGN)
-    signal (SIGQUIT, interrupt_handler);
-  if (signal (SIGTERM, SIG_IGN) != SIG_IGN)
-    signal (SIGTERM, interrupt_handler);
-#endif
 
   while ((optc = getopt_long (argc, argv, "f:b:kn:sqz", longopts, NULL)) != -1)
     switch (optc)
@@ -1382,6 +1386,36 @@ main (int argc, char **argv)
   set_input_file (argv[optind++]);
 
   parse_patterns (argc, optind, argv);
+
+  {
+    int i;
+    static int const sig[] = { SIGHUP, SIGINT, SIGQUIT, SIGTERM };
+    enum { nsigs = sizeof sig / sizeof sig[0] };
+
+#ifdef SA_NOCLDSTOP
+    struct sigaction act;
+
+    sigemptyset (&caught_signals);
+    for (i = 0; i < nsigs; i++)
+      {
+	sigaction (sig[i], NULL, &act);
+	if (act.sa_handler != SIG_IGN)
+	  sigaddset (&caught_signals, sig[i]);
+      }
+
+    act.sa_handler = interrupt_handler;
+    act.sa_mask = caught_signals;
+    act.sa_flags = 0;
+
+    for (i = 0; i < nsigs; i++)
+      if (sigismember (&caught_signals, sig[i]))
+	sigaction (sig[i], &act, NULL);
+#else
+    for (i = 0; i < nsigs; i++)
+      if (signal (sig[i], SIG_IGN) != SIG_IGN)
+	signal (sig[i], interrupt_handler);
+#endif
+  }
 
   split_file ();
 
