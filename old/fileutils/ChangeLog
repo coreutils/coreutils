@@ -1,5 +1,8 @@
 2001-03-23  Jim Meyering  <meyering@lucent.com>
 
+	* Makefile.maint (check-copyright): New target and rule.
+	(alpha): Depend on it.
+
 	* missing: Handle shell built-ins (only `:' and `cd' for now) to work
 	around brain damage in Ultrix's /bin/sh.
 
