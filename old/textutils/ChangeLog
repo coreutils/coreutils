@@ -1,5 +1,14 @@
 Sat Jan 25 00:12:29 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/csplit.c: Reflect changes to xstrtol and xstrtoul interfaces.
+	* src/fold.c: Likewise.
+	* src/head.c: Likewise.
+	* src/join.c: Likewise.
+	* src/nl.c: Likewise.
+	* src/od.c: Likewise.
+	* src/pr.c: Likewise.
+	* src/uniq.c: Likewise.
+
 	* lib/xstrtoul.h (XSTRTOL_H): Undefine it.
 
 	* lib/xstrtol.h [!_STRTOL_ERROR]: Define the type `enum strtol_error'
@@ -15,6 +24,7 @@ Fri Jan 24 23:36:00 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 	* lib/long-options.c (parse_long_options): Reset optind to zero
 	before just returning so that getopt internals get initialized from
 	the probably-new parameters when/if getopt is called later.
+	From Ulrich Drepper.
 
 Thu Jan 23 19:17:03 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
