@@ -1,5 +1,11 @@
 2002-04-14  Jim Meyering  <meyering@lucent.com>
 
+	* src/stat.c (statfs_secure): Define.
+	(print_stat): Remove another #ifdef.
+	(do_statfs): Likewise.
+	(print_statfs): Prefer/use fputs over printf.
+	(print_stat): Likewise.
+
 	* src/Makefile.am (bin_PROGRAMS): Add stat.
 	(noinst_HEADERS): Add fs.h.
 
