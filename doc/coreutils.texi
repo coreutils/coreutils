@@ -1183,7 +1183,7 @@ supported for @env{_POSIX2_VERSION}: @samp{199209} stands for
 @acronym{POSIX} 1003.2-1992, and @samp{200112} stands for @acronym{POSIX}
 1003.1-2001.  For example, if you are running older software that
 assumes an older version of @acronym{POSIX} and uses @samp{sort +1},
-@samp{head -1}, or @samp{tail +1}, you
+@samp{head -10}, or @samp{tail +10}, you
 can work around the compatibility problems by setting
 @samp{_POSIX2_VERSION=199209} in your environment.
 
