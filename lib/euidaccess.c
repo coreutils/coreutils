@@ -37,6 +37,10 @@
 # include <unistd.h>
 #endif
 
+#if HAVE_LIBGEN_H
+# include <libgen.h>
+#endif
+
 #ifndef _POSIX_VERSION
 uid_t getuid ();
 gid_t getgid ();
@@ -93,7 +97,7 @@ euidaccess (const char *path, int mode)
   return access (path, mode | EFF_ONLY_OK);
 #elif defined ACC_SELF
   return accessx (path, mode, ACC_SELF);
-#elif HAVE_DECL_EACCESS
+#elif HAVE_EACCESS
   return eaccess (path, mode);
 #else
 
