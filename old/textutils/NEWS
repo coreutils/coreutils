@@ -1,5 +1,27 @@
 Changes in release 1.20
  Changes in test release 1.19r
+* fix pr: -l now uses total number of lines per page also with -f
+* fix pr: use left-hand-side truncation of header string to avoid line
+  overflow
+* fix pr: it now accepts `form feeds set in input files', also with -m
+  and multiple form feeds at different pages in each file
+* pr now accepts: -h "", print a blank line header
+* pr: when skipping pages (+FIRST_PAGE option) line counting (-n option)
+  starts with 1st line of input file (not of 1st page printed) by default
+* pr accepts new option: -N, start printing with an optional line number
+* pr -t retains `form feeds set in input files' (`don't destroy page layout')
+* pr accepts new option: -T, equivalent to -t, but eliminate also form feeds
+  (`clear file')
+* pr accepts the extension: +FIRST_PAGE[:LAST_PAGE]
+* pr -w and -s option disentangled (`use a separator' no longer destroys
+  column alignment)
+* pr accepts new option: -j, merge lines of full length
+* pr accepts the extension: -s[STRING], use separator string instead of
+  character only
+* pr -b is no longer an independent option, balancing is always used
+  with -COLUMN (a requirement of unrestricted use of form feeds)
+* pr accepts new option: --test, to run the pr tests with a constant
+  header string
 * join passes all of its test on Alpha OSF 4.0.
 * sort no longer improperly ignores blanks in determining starting and ending
   positions for keys with explicit character offsets
