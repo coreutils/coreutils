@@ -352,6 +352,10 @@ show_point (point, statp)
 
       if (statp->st_dev == me->me_dev)
 	{
+	  /* Skip bogus mtab entries.  */
+	  if (stat (me->me_mountdir, &disk_stats) != 0 ||
+	      disk_stats.st_dev != me->me_dev)
+	    continue;
 	  show_dev (me->me_devname, me->me_mountdir, me->me_type);
 	  return;
 	}
