@@ -48,7 +48,7 @@
 
 #include "closeout.h"
 #include "error.h"
-#include "human.h"
+#include "inttostr.h"
 #include "safe-read.h"
 
 /* Some systems, like BeOS, have multibyte encodings but lack mbstate_t.  */
@@ -153,34 +153,34 @@ write_counts (uintmax_t lines,
 	      uintmax_t linelength,
 	      const char *file)
 {
-  char buf[LONGEST_HUMAN_READABLE + 1];
+  char buf[INT_BUFSIZE_BOUND (uintmax_t)];
   char const *space = "";
   char const *format_int = (posixly_correct ? "%s" : "%7s");
   char const *format_sp_int = (posixly_correct ? "%s%s" : "%s%7s");
 
   if (print_lines)
     {
-      printf (format_int, human_readable (lines, buf, 1, 1));
+      printf (format_int, umaxtostr (lines, buf));
       space = " ";
     }
   if (print_words)
     {
-      printf (format_sp_int, space, human_readable (words, buf, 1, 1));
+      printf (format_sp_int, space, umaxtostr (words, buf));
       space = " ";
     }
   if (print_chars)
     {
-      printf (format_sp_int, space, human_readable (chars, buf, 1, 1));
+      printf (format_sp_int, space, umaxtostr (chars, buf));
       space = " ";
     }
   if (print_bytes)
     {
-      printf (format_sp_int, space, human_readable (bytes, buf, 1, 1));
+      printf (format_sp_int, space, umaxtostr (bytes, buf));
       space = " ";
     }
   if (print_linelength)
     {
-      printf (format_sp_int, space, human_readable (linelength, buf, 1, 1));
+      printf (format_sp_int, space, umaxtostr (linelength, buf));
     }
   if (*file)
     printf (" %s", file);
@@ -338,11 +338,11 @@ wc (int fd, const char *file)
 		  if (!(lines + 1 == last_error_line
 			&& errno == last_error_errno))
 		    {
-		      char hr_buf[LONGEST_HUMAN_READABLE + 1];
+		      char line_number_buf[INT_BUFSIZE_BOUND (uintmax_t)];
 		      last_error_line = lines + 1;
 		      last_error_errno = errno;
 		      error (0, errno, "%s:%s", file,
-			     human_readable (lines + 1, hr_buf, 1, 1));
+			     umaxtostr (last_error_line, line_number_buf));
 		    }
 		  p++;
 		  bytes_read--;
