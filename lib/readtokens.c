@@ -111,13 +111,14 @@ readtoken (FILE *stream,
   i = 0;
   for (;;)
     {
+      if (c < 0 && i == 0)
+	return -1;
+
       if (i == n)
 	p = x2nrealloc (p, &n, sizeof *p);
 
       if (c < 0)
 	{
-	  if (i == 0)
-	    return -1;
 	  p[i] = 0;
 	  break;
 	}
