@@ -11,6 +11,9 @@
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
 
+@SET_MAKE@
+
+
 SHELL = @SHELL@
 
 srcdir = @srcdir@
@@ -59,9 +62,6 @@ POST_UNINSTALL = :
 
 host_alias = @host_alias@
 host_triplet = @host@
-
-@SET_MAKE@
-AMDEP = @AMDEP@
 AMTAR = @AMTAR@
 AWK = @AWK@
 CATALOGS = @CATALOGS@
@@ -114,13 +114,9 @@ USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 YACC = @YACC@
 _am_include = @_am_include@
+_am_quote = @_am_quote@
 install_sh = @install_sh@
 l = @l@
-
-
-info_TEXINFOS = fileutils.texi
-
-EXTRA_DIST = perm.texi getdate.texi
 
 # The following is necessary if the package name is 8 characters or longer.
 # If the info documentation would be split into 10 or more separate files,
@@ -131,6 +127,10 @@ EXTRA_DIST = perm.texi getdate.texi
 # and those names all map to one 14-byte name (<package>.info-) on some crufty
 # old systems.
 MAKEINFO = makeinfo --no-split
+
+info_TEXINFOS = omni-utils.texi
+
+EXTRA_DIST = perm.texi getdate.texi
 EXEEXT =
 OBJEXT = o
 subdir = doc
@@ -139,31 +139,30 @@ CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 DIST_SOURCES =
 TEXI2DVI = texi2dvi
-INFO_DEPS = fileutils.info
-DVIS = fileutils.dvi
-TEXINFOS = fileutils.texi
+INFO_DEPS = omni-utils.info
+DVIS = omni-utils.dvi
+TEXINFOS = omni-utils.texi
 DIST_COMMON = Makefile.am Makefile.in mdate-sh stamp-vti texinfo.tex \
-version.texi
-
+	version.texi
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .dvi .info .ps .texi .texinfo .txi
+.SUFFIXES: .dvi .info .ps .texi
 
-$(srcdir)/Makefile.in: Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
+$(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnits  doc/Makefile
 
-Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && \
 	  CONFIG_HEADERS= CONFIG_LINKS= \
 	  CONFIG_FILES=$(subdir)/$@ $(SHELL) ./config.status
 
-$(srcdir)/version.texi: $(srcdir)/stamp-vti
+$(srcdir)/version.texi:  $(srcdir)/stamp-vti
 	@:
 
-$(srcdir)/stamp-vti: fileutils.texi $(top_srcdir)/configure.in
-	@(set `$(SHELL) $(srcdir)/mdate-sh $(srcdir)/fileutils.texi`; \
+$(srcdir)/stamp-vti: omni-utils.texi $(top_srcdir)/configure.in
+	@(set `$(SHELL) $(srcdir)/mdate-sh $(srcdir)/omni-utils.texi`; \
 	echo "@set UPDATED $$1 $$2 $$3"; \
 	echo "@set UPDATED-MONTH $$2 $$3"; \
 	echo "@set EDITION $(VERSION)"; \
@@ -180,8 +179,8 @@ mostlyclean-vti:
 maintainer-clean-vti:
 	-rm -f $(srcdir)/stamp-vti $(srcdir)/version.texi
 
-fileutils.info: fileutils.texi $(srcdir)/version.texi
-fileutils.dvi: fileutils.texi $(srcdir)/version.texi
+omni-utils.info: omni-utils.texi $(srcdir)/version.texi
+omni-utils.dvi: omni-utils.texi $(srcdir)/version.texi
 
 .texi.info:
 	@cd $(srcdir) && rm -f $@ $@-[0-9] $@-[0-9][0-9]
@@ -203,7 +202,7 @@ DVIPS = dvips
 
 uninstall-info-am:
 	$(PRE_UNINSTALL)
-	@if $(SHELL) -c 'install-info --version | sed 1q | fgrep -s -v -i debian' >/dev/null 2>&1; then \
+	@if $(SHELL) -c 'install-info --version 2>&1 | sed 1q | fgrep -s -v -i debian' >/dev/null 2>&1; then \
 	  list='$(INFO_DEPS)'; \
 	  for file in $$list; do \
 	    echo " install-info --info-dir=$(DESTDIR)$(infodir) --remove $(DESTDIR)$(infodir)/$$file"; \
@@ -230,9 +229,10 @@ dist-info: $(INFO_DEPS)
 	done
 
 mostlyclean-aminfo:
-	-rm -f fileutils.aux fileutils.cp fileutils.cps fileutils.dvi fileutils.fn \
-	  fileutils.ky fileutils.log fileutils.op fileutils.pg \
-	  fileutils.ps fileutils.toc fileutils.tp fileutils.vr
+	-rm -f omni-utils.aux omni-utils.cp omni-utils.cps omni-utils.dvi \
+	  omni-utils.fl omni-utils.fn omni-utils.ky omni-utils.log \
+	  omni-utils.op omni-utils.pg omni-utils.ps omni-utils.toc \
+	  omni-utils.tp omni-utils.vr
 
 maintainer-clean-aminfo:
 	cd $(srcdir) && \
@@ -254,6 +254,10 @@ distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
 distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
+	  dir=`echo "$$file" | sed -e 's,/[^/]*$$,,'`; \
+	  if test "$$dir" != "$$file" && test "$$dir" != "."; then \
+	    $(mkinstalldirs) "$(distdir)/$$dir"; \
+	  fi; \
 	  if test -d $$d/$$file; then \
 	    cp -pR $$d/$$file $(distdir) \
 	    || exit 1; \
@@ -335,7 +339,7 @@ install-info-am: $(INFO_DEPS)
 	  done; \
 	done
 	@$(POST_INSTALL)
-	@if $(SHELL) -c 'install-info --version | sed 1q | fgrep -s -v -i debian' >/dev/null 2>&1; then \
+	@if $(SHELL) -c 'install-info --version 2>&1 | sed 1q | fgrep -s -v -i debian' >/dev/null 2>&1; then \
 	  list='$(INFO_DEPS)'; \
 	  for file in $$list; do \
 	    echo " install-info --info-dir=$(DESTDIR)$(infodir) $(DESTDIR)$(infodir)/$$file";\
