@@ -2,6 +2,10 @@
 
 	* Version 5.0.92.
 
+	* src/paste.c (paste_serial): Save errno after input error,
+	to report proper errno value.
+	Based on a patch from Paul Eggert.
+
 	* src/tee.c (tee): Adjust fwrite arguments so that the return
 	value is the number of bytes written.
 
@@ -16,7 +20,6 @@
 	to report proper errno value.
 	* src/fold.c (fold_file): Likewise.
 	* src/od.c (check_and_close, skip, read_char, read_block): Likewise.
-	* src/paste.c (paste_serial): Likewise.
 	* src/unexpand.c (unexpand): Likewise.
 
 	* src/csplit.c (close_output_file): Don't report bogus errno value
