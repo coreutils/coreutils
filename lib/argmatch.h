@@ -41,69 +41,69 @@
    to the same values in VALLIST).  */
 
 int argmatch
-	PARAMS ((const char *arg, const char *const *arglist,
-		 const char *vallist, size_t valsize));
+  PARAMS ((const char *arg, const char *const *arglist,
+	   const char *vallist, size_t valsize));
 int argcasematch
-	PARAMS ((const char *arg, const char *const *arglist,
-		 const char *vallist, size_t valsize));
+  PARAMS ((const char *arg, const char *const *arglist,
+	   const char *vallist, size_t valsize));
 
-# define ARGMATCH(ARG,ARGLIST,VALLIST) \
-  argmatch (ARG, ARGLIST, (const char *) VALLIST, sizeof (*VALLIST))
+# define ARGMATCH(Arg, ARGLIST, Vallist) \
+  argmatch (Arg, Arglist, (const char *) Vallist, sizeof (*Vallist))
 
-# define ARGCASEMATCH(ARG,ARGLIST,VALLIST) \
-  argcasematch (ARG, ARGLIST, (const char *) VALLIST, sizeof (*VALLIST))
+# define ARGCASEMATCH(Arg, Arglist, Vallist) \
+  argcasematch (Arg, Arglist, (const char *) Vallist, sizeof (*Vallist))
 
 
 
 /* Report on stderr why argmatch failed.  Report correct values. */
 
 void argmatch_invalid
-	PARAMS ((const char *kind, const char *value, int problem));
+  PARAMS ((const char *kind, const char *value, int problem));
 
 /* Left for compatibility with the old name invalid_arg */
 
-# define invalid_arg(KIND,VALUE,PROBLEM) \
-	argmatch_invalid (KIND, VALUE, PROBLEM)
+# define invalid_arg(Kind, Value, Problem) \
+	argmatch_invalid (Kind, Value, Problem)
 
 
 
 /* Report on stderr the list of possible arguments.  */
 
 void argmatch_valid
-	PARAMS ((const char *const *arglist,
-		 const char *vallist, size_t valsize));
+  PARAMS ((const char *const *arglist,
+	   const char *vallist, size_t valsize));
 
-# define ARGMATCH_VALID(ARGLIST,VALLIST) \
-  valid_args (ARGLIST, (const char *) VALLIST, sizeof (*VALLIST))
+# define ARGMATCH_VALID(Arglist, Vallist) \
+  valid_args (Arglist, (const char *) Vallist, sizeof (*Vallist))
 
 
 /* Returns matches, or, upon error, report explanatory message and
    exit.  */
 
 int __xargmatch_internal
-	PARAMS ((const char *kind,
-		 const char *arg, const char *const *arglist,
-		 const char *vallist, size_t valsize,
-		 int sensitive));
+  PARAMS ((const char *kind,
+	   const char *arg, const char *const *arglist,
+	   const char *vallist, size_t valsize,
+	   int sensitive));
 
-# define XARGMATCH(KIND,ARG,ARGLIST,VALLIST) \
-  VALLIST [__xargmatch_internal (KIND, ARG, ARGLIST, \
-                        (const char *) VALLIST, sizeof (*VALLIST), 1)]
+# define XARGMATCH(Kind, Arg, Arglist, Vallist) \
+  Vallist [__xargmatch_internal (Kind, Arg, Arglist, \
+                        (const char *) Vallist, sizeof (*Vallist), 1)]
 
-# define XARGCASEMATCH(KIND,ARG,ARGLIST,VALLIST) \
-  VALLIST [__xargmatch_internal (KIND, ARG, ARGLIST, \
-                        (const char *) VALLIST, sizeof (*VALLIST), 0)]
+# define XARGCASEMATCH(Kind, Arg, Arglist, Vallist) \
+  Vallist [__xargmatch_internal (Kind, Arg, Arglist, \
+                        (const char *) Vallist, sizeof (*Vallist), 0)]
 
 
 
 /* Convert a value into a corresponding argument. */
 
-const char * argmatch_to_argument
-	PARAMS ((char * value, const char *const *arglist,
-		 const char *vallist, size_t valsize));
+const char *argmatch_to_argument
+  PARAMS ((char *value, const char *const *arglist,
+	   const char *vallist, size_t valsize));
 
-# define ARGMATCH_TO_ARGUMENT(VALUE,ARGLIST,VALLIST) 	\
-   argmatch_to_argument ((char *) &VALUE, ARGLIST, 	\
-			 (const char *) VALLIST, sizeof (*VALLIST))
+# define ARGMATCH_TO_ARGUMENT(Value, Arglist, Vallist) 	\
+   argmatch_to_argument ((char *) &Value, Arglist, 	\
+			 (const char *) Vallist, sizeof (*Vallist))
 
 #endif /* _ARGMATCH_H_ */
