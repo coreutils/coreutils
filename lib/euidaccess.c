@@ -122,7 +122,7 @@ euidaccess (const char *path, int mode)
     {
       int result;
       int saved_errno;
-      
+
       if (uid != euid)
 	setreuid (euid, uid);
       if (gid != egid)
@@ -130,7 +130,7 @@ euidaccess (const char *path, int mode)
 
       result = access (path, mode);
       saved_errno = errno;
-      
+
       /* Restore them.  */
       if (uid != euid)
 	setreuid (uid, euid);
