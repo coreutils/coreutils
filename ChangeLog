@@ -2,6 +2,11 @@
 
 	* Version 4.5.8.
 
+	* src/df.c (print_header): Rather than using a hard-coded literal
+	string of spaces matching the length of the English `...Type' header,
+	output the right number of spaces to match the selected translation.
+	Reported by Yann Dirson and Jean Charles Delepine as Debian bug 131113.
+
 	* src/split.c (bytes_split): Remove unnecessary `else' after break.
 	(lines_split): Likewise.  and correct misleading indentation.
 
