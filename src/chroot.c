@@ -1,5 +1,5 @@
 /* chroot -- run command or shell with special root directory
-   Copyright (C) 95, 96, 1997, 1999-2003 Free Software Foundation, Inc.
+   Copyright (C) 95, 96, 1997, 1999-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -22,13 +22,24 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "long-options.h"
 #include "error.h"
+#include "long-options.h"
+#include "quote.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "chroot"
 
 #define AUTHORS "Roland McGrath"
+
+/* Exit statuses.  */
+enum
+  {
+    /* found the specified command but failed to invoke it.  */
+    CHROOT_FOUND_BUT_CANNOT_INVOKE = 126,
+
+    /* `chroot' itself failed, or did not find the specified command.  */
+    CHROOT_FAILURE = 127
+  };
 
 /* The name this program was run with, for error messages. */
 char *program_name;
@@ -76,15 +87,15 @@ main (int argc, char **argv)
   if (argc <= 1)
     {
       error (0, 0, _("too few arguments"));
-      usage (EXIT_FAILURE);
+      usage (CHROOT_FAILURE);
     }
 
   if (chroot (argv[1]))
-    error (EXIT_FAILURE, errno,
+    error (CHROOT_FAILURE, errno,
 	   _("cannot change root directory to %s"), argv[1]);
 
   if (chdir ("/"))
-    error (EXIT_FAILURE, errno, _("cannot chdir to root directory"));
+    error (CHROOT_FAILURE, errno, _("cannot chdir to root directory"));
 
   if (argc == 2)
     {
@@ -105,8 +116,10 @@ main (int argc, char **argv)
   execvp (argv[0], argv);
 
   {
-    int exit_status = (errno == ENOENT ? 127 : 126);
-    error (0, errno, "%s", argv[0]);
+    int exit_status = (errno == ENOENT
+		       ? CHROOT_FAILURE
+		       : CHROOT_FOUND_BUT_CANNOT_INVOKE);
+    error (0, errno, _("cannot run command %s"), quote (argv[0]));
     exit (exit_status);
   }
 }
