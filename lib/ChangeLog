@@ -1,3 +1,8 @@
+2002-11-08  Paul Eggert  <eggert@twinsun.com>
+
+	* human.c (human_readable): Revamp to avoid warning about unused
+	variable 'amt'.  Unfortunately this means using some gotos.
+
 2002-11-08  Jim Meyering  <jim@meyering.net>
 
 	* human.c (human_readable): Avoid warnings from gcc -Wshadow.
