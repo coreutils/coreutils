@@ -1,4 +1,4 @@
-#serial 3
+#serial 2
 
 # Test for the GNU C Library, version 2.1 or newer.
 # From Bruno Haible.
