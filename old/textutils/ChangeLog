@@ -7,6 +7,7 @@ Fri Nov  1 21:33:16 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	the command, perl -e "print 'x' x 30, \"\n\";"|sort -c
 	would provoke the memory overrun (though not necessarily the failure).
 	Add an assertion.
+	Reported by Risto Kankkunen.
 
 Thu Oct 31 17:48:24 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
