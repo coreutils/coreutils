@@ -46,7 +46,9 @@
 #include "error.h"
 #include "xalloc.h"
 
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
+#ifndef MIN
+# define MIN(a, b) ((a) < (b) ? (a) : (b))
+#endif
 
 #define SAME_INODE(Stat_buf_1, Stat_buf_2) \
   ((Stat_buf_1).st_ino == (Stat_buf_2).st_ino \
