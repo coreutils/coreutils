@@ -1,4 +1,4 @@
-# mountlist.m4 serial 3
+# mountlist.m4 serial 4
 dnl Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -9,7 +9,7 @@ dnl the same distribution terms as the rest of that program.
 AC_DEFUN([gl_MOUNTLIST],
 [
   gl_LIST_MOUNTED_FILE_SYSTEMS([gl_cv_list_mounted_fs=yes],
-                       	       [gl_cv_list_mounted_fs=no])
+			       [gl_cv_list_mounted_fs=no])
   if test $gl_cv_list_mounted_fs = yes; then
     AC_LIBOBJ(mountlist)
     gl_PREREQ_MOUNTLIST_EXTRA
