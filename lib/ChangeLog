@@ -1,4 +1,4 @@
-2005-03-29  Paul Eggert  <eggert@cs.ucla.edu>
+2005-03-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* readutmp.h (read_utmp): New arg OPTIONS.  All uses changed.
 	* readutmp.c: Likewise.  Include signal.h, stdbool.h.
@@ -6,7 +6,7 @@
 	(read_utmp) [defined UTMP_NAME_FUNCTION]: Redo memory allocation
 	using x2nrealloc, to simplify logic.
 	(read_utmp) [!defined UTMP_NAME_FUNCTION]: Check for overflow in
-	size calculation.
+	size calculation.  Do not assume utmp file is a regular file.
 	* readutmp.h (UT_PID): Moved here from ../src/who.c.
 	(READ_UTMP_CHECK_PIDS): New constant.
 
