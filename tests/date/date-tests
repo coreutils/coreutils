@@ -400,8 +400,195 @@ else
   esac
 fi
 test -s millen-1.E || rm -f millen-1.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0 now' '+%Y-%m-%d %T'  > rel-0.O 2> rel-0.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test rel-0(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp rel-0.O $srcdir/rel-0.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed rel-0(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test rel-0(LANG=C TZ=UTC) failed: files rel-0.O and $srcdir/rel-0.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test rel-0(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp rel-0.O $srcdir/rel-0.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s rel-0.E || rm -f rel-0.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0 yesterday' '+%Y-%m-%d %T'  > rel-1a.O 2> rel-1a.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test rel-1a(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp rel-1a.O $srcdir/rel-1a.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed rel-1a(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test rel-1a(LANG=C TZ=UTC) failed: files rel-1a.O and $srcdir/rel-1a.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test rel-1a(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp rel-1a.O $srcdir/rel-1a.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s rel-1a.E || rm -f rel-1a.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0 tomorrow' '+%Y-%m-%d %T'  > rel-1b.O 2> rel-1b.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test rel-1b(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp rel-1b.O $srcdir/rel-1b.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed rel-1b(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test rel-1b(LANG=C TZ=UTC) failed: files rel-1b.O and $srcdir/rel-1b.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test rel-1b(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp rel-1b.O $srcdir/rel-1b.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s rel-1b.E || rm -f rel-1b.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0 6 years ago' '+%Y-%m-%d %T'  > rel-2a.O 2> rel-2a.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test rel-2a(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp rel-2a.O $srcdir/rel-2a.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed rel-2a(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test rel-2a(LANG=C TZ=UTC) failed: files rel-2a.O and $srcdir/rel-2a.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test rel-2a(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp rel-2a.O $srcdir/rel-2a.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s rel-2a.E || rm -f rel-2a.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0 7 months ago' '+%Y-%m-%d %T'  > rel-2b.O 2> rel-2b.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test rel-2b(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp rel-2b.O $srcdir/rel-2b.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed rel-2b(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test rel-2b(LANG=C TZ=UTC) failed: files rel-2b.O and $srcdir/rel-2b.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test rel-2b(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp rel-2b.O $srcdir/rel-2b.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s rel-2b.E || rm -f rel-2b.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0 8 weeks ago' '+%Y-%m-%d %T'  > rel-2c.O 2> rel-2c.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test rel-2c(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp rel-2c.O $srcdir/rel-2c.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed rel-2c(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test rel-2c(LANG=C TZ=UTC) failed: files rel-2c.O and $srcdir/rel-2c.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test rel-2c(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp rel-2c.O $srcdir/rel-2c.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s rel-2c.E || rm -f rel-2c.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0 1 day ago' '+%Y-%m-%d %T'  > rel-2d.O 2> rel-2d.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test rel-2d(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp rel-2d.O $srcdir/rel-2d.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed rel-2d(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test rel-2d(LANG=C TZ=UTC) failed: files rel-2d.O and $srcdir/rel-2d.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test rel-2d(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp rel-2d.O $srcdir/rel-2d.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s rel-2d.E || rm -f rel-2d.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0 2 hours ago' '+%Y-%m-%d %T'  > rel-2e.O 2> rel-2e.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test rel-2e(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp rel-2e.O $srcdir/rel-2e.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed rel-2e(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test rel-2e(LANG=C TZ=UTC) failed: files rel-2e.O and $srcdir/rel-2e.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test rel-2e(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp rel-2e.O $srcdir/rel-2e.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s rel-2e.E || rm -f rel-2e.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0 3 minutes ago' '+%Y-%m-%d %T'  > rel-2f.O 2> rel-2f.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test rel-2f(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp rel-2f.O $srcdir/rel-2f.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed rel-2f(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test rel-2f(LANG=C TZ=UTC) failed: files rel-2f.O and $srcdir/rel-2f.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test rel-2f(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp rel-2f.O $srcdir/rel-2f.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s rel-2f.E || rm -f rel-2f.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0 4 seconds ago' '+%Y-%m-%d %T'  > rel-2g.O 2> rel-2g.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test rel-2g(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp rel-2g.O $srcdir/rel-2g.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed rel-2g(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test rel-2g(LANG=C TZ=UTC) failed: files rel-2g.O and $srcdir/rel-2g.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test rel-2g(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp rel-2g.O $srcdir/rel-2g.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s rel-2g.E || rm -f rel-2g.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0 4 seconds ago' '+%Y-%m-%d %T'  > rel-3a.O 2> rel-3a.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test rel-3a(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp rel-3a.O $srcdir/rel-3a.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed rel-3a(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test rel-3a(LANG=C TZ=UTC) failed: files rel-3a.O and $srcdir/rel-3a.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test rel-3a(LANG=C TZ=UTC) may have failed." 1>&2;
+       $echo The command "cmp rel-3a.O $srcdir/rel-3a.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s rel-3a.E || rm -f rel-3a.E
 if test $errors = 0 ; then
-  $echo Passed all 23 tests. 1>&2
+  $echo Passed all 34 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
