@@ -190,18 +190,15 @@ main (int argc, char **argv)
 	  break;
 
 	case 'H': /* Traverse command-line symlinks-to-directories.  */
-	  bit_flags |= FTS_COMFOLLOW;
+	  bit_flags = FTS_COMFOLLOW;
 	  break;
 
 	case 'L': /* Traverse all symlinks-to-directories.  */
-	  bit_flags &= ~FTS_PHYSICAL;
-	  bit_flags |= FTS_LOGICAL;
+	  bit_flags = FTS_LOGICAL;
 	  break;
 
 	case 'P': /* Traverse no symlinks-to-directories.  */
-	  bit_flags |= FTS_PHYSICAL;
-	  bit_flags &= ~FTS_LOGICAL;
-	  bit_flags &= ~FTS_COMFOLLOW;
+	  bit_flags = FTS_PHYSICAL;
 	  break;
 
 	case 'h': /* --no-dereference: affect symlinks */
