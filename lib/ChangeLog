@@ -1,6 +1,6 @@
 2003-03-04  Jim Meyering  <jim@meyering.net>
 
-	* xgetcwd.c: Improve comment.
+	* xgetcwd.c (xgetcwd): Improve comment.
 
 	* getcwd.c: New file.
 
