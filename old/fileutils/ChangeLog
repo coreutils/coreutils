@@ -1,5 +1,8 @@
 1999-01-02  Jim Meyering  <meyering@ascend.com>
 
+	* configure.in (AC_REPLACE_FUNCS): Remove strcasecmp (now it's
+	done in m4/jm-macros.m4).
+
 	* lib/backupfile.c (get_version): Adapt to use new interface to
 	XARGMATCH.
 	* src/cp.c: Likewise.
