@@ -1,6 +1,15 @@
-2005-03-17  Jim Meyering  <jim@meyering.net>
+2005-03-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* NEWS: nohup now ignores the umask when creating nohup.out.
+	nohup now closes stderr if it is a terminal and stdout is closed.
+	* src/nohup.c (main): Likewise.  Be a little more paranoid about
+	return values; e.g., check for any negative return from open.
+	Assume free (NULL) works.
+	Close file descriptor leak when redirecting standard output to a file.
+
+2005-03-17  Jim Meyering  <jim@meyering.net>
 
 	* src/cut.c (set_fields): Use DECIMAL_DIGIT_ACCUMULATE macro,
 	in place of functionally-equivalent code.
