@@ -1,5 +1,8 @@
 2000-10-22  Jim Meyering  <meyering@lucent.com>
 
+	* md5.c (md5_process_block) [OP]: Use `rol', not CYCLIC.
+	[CYCLIC]: Remove now-unused definition.
+
 	* save-cwd.c (O_DIRECTORY): Define, if needed.
 	(save_cwd) [HAVE_FCHDIR]: Use O_DIRECTORY when opening ".".
 	Suggestion from Ulrich Drepper.
