@@ -1,3 +1,7 @@
+2004-09-22  Jim Meyering  <jim@meyering.net>
+
+	* backupfile.c: Remove trailing blank.
+
 2004-09-13  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* backupfile.h (enum backuptype): Rename none -> no_backups,
