@@ -183,7 +183,7 @@ mapped_name = `echo $*|sed 's/install/ginstall/'`
 programs = \
   echo 'spy:;@echo $$(all_programs)'					\
     | MAKEFLAGS= $(MAKE) -s -C $(srcdir)/../src -f Makefile -f - spy	\
-    | fmt -1 | sort -u
+    | fmt -1 | sort -u | grep -v '\['
 
 subdir = man
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
