@@ -3,6 +3,8 @@
 	* Version 5.0.1.
 
 	* src/Makefile.am (fs.h): New rule to generate fs.h from stat.c.
+	(BUILT_SOURCES): Add fs.h, now that it's generated.
+	(EXTRA_DIST): Add extract-magic.
 	* src/extract-magic: New script to extract fs.h definitions from stat.c.
 	* src/stat.c (human_fstype) [__linux__]: Append each hex constant from
 	fs.h in a comment after the corresponding `case S_MAGIC_...:' statement.
