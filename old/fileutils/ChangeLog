@@ -1,7 +1,7 @@
 Tue Jun 25 00:03:43 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* getline.c: New file.
-	* getline.h: New file.
+	* lib/getline.c: New file.
+	* lib/getline.h: New file.
 	* lib/Makefile.am (fu_SOURCES): Add getline.c.
 	(noinst_HEADERS): Add getline.h.
 
