@@ -81,6 +81,17 @@ sub test_vector
 	}
     }
 
+  # Generate a negated and a double-negated version of each test.
+  # There are a few exceptions.
+  my %not_invertible = map {$_ => 1} qw (1a inv-1 t1);
+  foreach $t (@tvec)
+    {
+      my ($test_name, $flags, $in, $exp, $ret) = @$t;
+      next if $not_invertible{$test_name};
+      push (@tv, ["N-$test_name", "! '(' $flags ')'", $in, $exp, 1 - $ret]);
+      push (@tv, ["NN-$test_name", "! ! '(' $flags ')'", $in, $exp, $ret]);
+    }
+
   return (@tv, @tvec);
 }
 
