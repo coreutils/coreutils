@@ -34,7 +34,6 @@
 	automake test releases started including the latest version.
 	But now automake no longer includes mktime.m4, and since
 	autoconf hasn't yet included it, we're back to including the
-
 	very same file all over again. -- Jim ]]
 
 1999-07-20  Jim Meyering  <meyering@ascend.com>
