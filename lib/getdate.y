@@ -527,10 +527,10 @@ static table const time_units_table[] =
 /* Assorted relative-time words. */
 static table const relative_time_table[] =
 {
-  { "TOMORROW",	tMINUTE_UNIT,	24 * 60 },
-  { "YESTERDAY",tMINUTE_UNIT,	- (24 * 60) },
-  { "TODAY",	tMINUTE_UNIT,	 0 },
-  { "NOW",	tMINUTE_UNIT,	 0 },
+  { "TOMORROW",	tDAY_UNIT,	 1 },
+  { "YESTERDAY",tDAY_UNIT,	-1 },
+  { "TODAY",	tDAY_UNIT,	 0 },
+  { "NOW",	tDAY_UNIT,	 0 },
   { "LAST",	tUNUMBER,	-1 },
   { "THIS",	tUNUMBER,	 0 },
   { "NEXT",	tUNUMBER,	 1 },
