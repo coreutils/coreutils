@@ -58,8 +58,10 @@ all: libfu.a
 .SUFFIXES:
 .SUFFIXES: .c .o
 
+COMPILE = $(CC) -c $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+INCLUDES = -I.. -I$(srcdir)
 .c.o:
-	$(CC) -c $(CPPFLAGS) $(DEFS) -I.. -I$(srcdir) $(CFLAGS) $<
+	$(COMPILE) $<
 
 subdir = lib
 Makefile: ../config.status Makefile.in
@@ -140,3 +142,8 @@ installdirs maintainer-clean mostlyclean uninstall
 # Tell versions [3.59,3.63) of GNU make not to export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
+
+# The following include directive is uncommented automatically
+# when this package is configured with the --with-autodep option.
+# You need GNU make and a C compiler that can generate dependencies.
+@AUTODEP_COMMENT@include @top_srcdir@/mkdep-Makefile
