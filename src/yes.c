@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <getopt.h>
 
+#include "system.h"
 #include "long-options.h"
 #include "version.h"
 
