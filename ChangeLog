@@ -17,6 +17,10 @@
 	(print_formatted): Allow multiple flags.  Avoid buffer overrun
 	if the format is incomplete.
 
+2003-03-24  Jim Meyering  <jim@meyering.net>
+
+	* tests/misc/printf: Add tests for the above fixes and changes.
+
 2003-03-26  Jim Meyering  <jim@meyering.net>
 
 	* src/copy.h (struct cp_options): Add a comment.
