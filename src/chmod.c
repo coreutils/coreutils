@@ -95,6 +95,31 @@ static struct option const long_options[] =
   {0, 0, 0, 0}
 };
 
+static int
+mode_changed (const char *file, mode_t old_mode)
+{
+  struct stat new_stats;
+
+  if (lstat (file, &new_stats))
+    {
+      if (force_silent == 0)
+	error (0, errno, _("getting new attributes of %s"), quote (file));
+      return 0;
+    }
+
+#ifdef S_ISLNK
+  if (S_ISLNK (new_stats.st_mode)
+      && stat (file, &new_stats))
+    {
+      if (force_silent == 0)
+	error (0, errno, _("getting new attributes of %s"), quote (file));
+      return 0;
+    }
+#endif
+
+  return old_mode != new_stats.st_mode;
+}
+
 /* Tell the user how/if the MODE of FILE has been changed.
    CHANGED describes what (if anything) has happened. */
 
@@ -166,7 +191,9 @@ change_file_mode (const char *file, const struct mode_change *changes,
   fail = chmod (file, newmode);
   saved_errno = errno;
 
-  if (verbosity == V_high || (verbosity == V_changes_only && !fail))
+  if (verbosity == V_high
+      || (verbosity == V_changes_only
+	  && !fail && mode_changed (file, file_stats.st_mode)))
     describe_change (file, newmode, (fail ? CH_FAILED : CH_SUCCEEDED));
 
   if (fail)
