@@ -10,10 +10,6 @@
 
 	* NEWS, doc/coreutils.texi: Document _POSIX2_VERSION.
 	* doc/coreutils.texi (Standards Conformance): New section.
-	* lib/posixver.c, lib/posixver.h: New files.
-	* lib/Makefile.am (libfetish_a_SOURCES): Add them.
-	* m4/prereq.m4 (jm_PREREQ_POSIXVER): New macro.
-	(jm_PREREQ): Use it.
 
 	* src/expand.c: Include posixver.h.
 	(usage): Document only the intersection of the old and new behaviors,
