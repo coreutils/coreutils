@@ -5,6 +5,8 @@ if test "$VERBOSE" = yes; then
   set -x
 fi
 
+. $srcdir/../lang-default
+
 pwd=`pwd`
 tmp=r2-$$
 trap 'status=$?; cd $pwd; rm -rf $tmp || exit $?; exit $status' 0
@@ -17,8 +19,6 @@ cd $tmp
 mkdir t t/a t/a/b || framework_failure=1
 > t/a/f || framework_failure=1
 > t/a/b/g || framework_failure=1
-
-. $srcdir/../lang-default
 
 # FIXME: if this fails, it's a framework failure
 cat <<EOF | sort > t/E || framework_failure=1
