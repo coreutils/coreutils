@@ -1,3 +1,7 @@
+2003-10-03  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (du invocation): Describe -P, --no-dereference.
+
 2003-09-28  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (Translating): Correct typo in menu description.
