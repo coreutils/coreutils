@@ -1,3 +1,10 @@
+2002-07-27  Jim Meyering  <meyering@lucent.com>
+
+	* prereq.m4 (jm_PREREQ_READUTMP): Don't check just
+	`struct utmpx.ut_exit' and `struct utmp.ut_exit'.  Instead, check
+	all combinations of utmp/utmpx and ut_termination/e_termination
+	and ut_exit/e_exit.
+
 2002-07-23  Jim Meyering  <meyering@lucent.com>
 
 	* c-bs-a.m4 (AC_C_BACKSLASH_A): Remove file, now that autoconf
