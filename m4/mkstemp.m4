@@ -57,7 +57,6 @@ AC_DEFUN([gl_PREREQ_MKSTEMP],
 # Prerequisites of lib/tempname.c.
 AC_DEFUN([jm_PREREQ_TEMPNAME],
 [
-  AC_REQUIRE([AC_HEADER_STDC])
   AC_REQUIRE([AC_HEADER_STAT])
   AC_CHECK_HEADERS_ONCE(fcntl.h sys/time.h unistd.h)
   AC_CHECK_HEADERS(stdint.h)
