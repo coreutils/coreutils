@@ -250,7 +250,7 @@ writeline (struct linebuffer const *line, FILE *stream,
     return;
 
   if (countmode == count_occurrences)
-    fprintf (stream, "%7d\t", linecount + 1);
+    fprintf (stream, "%7d ", linecount + 1);
 
   fwrite (line->buffer, sizeof (char), line->length, stream);
 }
