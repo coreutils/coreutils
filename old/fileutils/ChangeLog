@@ -1,3 +1,38 @@
+1998-07-03  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (AM_WITH_REGEX): Remove.  Now the replacement
+	macro, jm_WITH_REGEX, is bundled with the rest in jm_MACROS.
+
+	* acconfig.h (WITH_REGEX): Remove undef.
+
+	* lib/rpmatch.c: Change guard on <regex.h> inclusion to use new
+	symbol `! HAVE_LIBC_REGEX' defined in m4/regex.m4.
+
+	* lib/rx.c: Remove file.
+	* lib/rx.h: Remove file.
+
+	* src/df.c (df_readable): Rename local so as not to shadow global.
+
+	* src/copy.c (SAME_INODE): New macro.
+	Use it to replace open-coded equivalents.
+	(copy_internal): Rename variable and reverse sense of tests
+	to make the code a little clearer.
+
+1998-07-02  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* src/copy.c (copy_internal): Try harder identifying a relative
+	symbolic link in the current directory.
+
+	* src/copy.c (copy_internal): Don't skip test for same file if
+	creating a hardlink from symlink over a non-symlink while making
+	backups.
+	* tests/cp/same-file: Skip tests that depend on link(2) not
+	following symlinks.
+
+1998-07-02  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* src/copy.c (copy_internal): Don't call chown on a symlink.
+
 1998-07-01  Jim Meyering  <meyering@ascend.com>
 
 	* lib/xstrtol.c: Don't define NDEBUG here, now that it's done via
