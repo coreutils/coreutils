@@ -3,11 +3,6 @@ package Test;
 require 5.002;
 use strict;
 
-$Test::env{1} = {
-  LANG => 'C',
-  TZ => 'UTC',
-};
-
 sub test_vector
 {
 
