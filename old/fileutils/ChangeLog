@@ -19,6 +19,7 @@
 	If it's not yet defined, set x.dereference to DEREF_NEVER
 	if -R was specified, else set it to DEREF_ALWAYS.
 	Set x.xstat accordingly for -H.
+	* doc/fileutils.texi (cp invocation): Describe -H and -L.
 	* src/mv.c (cp_option_init): Initialize to DEREF_NEVER, not `0'.
 	* src/install.c (cp_option_init): Initialize to DEREF_ALWAYS, not `1'.
 
