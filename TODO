@@ -27,3 +27,10 @@ in the hash table.
 Apply suggestion from Paul Jarc to use something along the
 lines of http://cr.yp.to/daemontools/setuidgid.html to avoid
 kludges (as in tests/rm/fail-2eperm) when running tests as root.
+
+See if we can be consistent about where --verbose sends its output:
+  These all send --verbose output to stdout:
+    head, tail, rm, cp, mv, ln, chmod, chown, chgrp, install, ln
+  These send it to stderr:
+    shred mkdir split
+  readlink is different
