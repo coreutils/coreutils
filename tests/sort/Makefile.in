@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.1f from Makefile.am
+# Makefile.in generated automatically by automake 1.1g from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -37,6 +37,9 @@ INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 transform = @program_transform_name@
+RANLIB = @RANLIB@
+POW_LIBM = @POW_LIBM@
+CC = @CC@
 
 AUTOMAKE_OPTIONS = 1.1
 
@@ -65,7 +68,7 @@ SUFFIXES = .pl
 
 MAINTAINERCLEANFILES = $x-tests $(in) $(exp)
 CLEANFILES = $(out) $(err)
-mkinstalldirs = $(top_srcdir)/mkinstalldirs
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
 SCRIPTS =  $(noinst_SCRIPTS)
@@ -77,19 +80,18 @@ PACKAGE = @PACKAGE@
 VERSION = @VERSION@
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) \
-	$(TEXINFOS) $(INFOS) $(MANS) $(EXTRA_DIST)
-DEP_DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) \
-	$(TEXINFOS) $(INFO_DEPS) $(MANS) $(EXTRA_DIST)
+	$(TEXINFOS) $(MANS) $(EXTRA_DIST)
 
 TAR = tar
 default: all
 
 
 $(srcdir)/Makefile.in: @MAINT@Makefile.am $(top_srcdir)/configure.in
-	cd $(top_srcdir) && automake $(subdir)/Makefile
+	cd $(top_srcdir) && automake --strictness=gnu $(subdir)/Makefile
 
 Makefile: $(top_builddir)/config.status $(srcdir)/Makefile.in $(BUILT_SOURCES)
-	cd $(top_builddir) && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
 tags: TAGS
 TAGS:
 
@@ -97,11 +99,12 @@ TAGS:
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
 
 subdir = tests/sort-test
-distdir: $(DEP_DISTFILES)
-	@for file in `cd $(srcdir) && echo $(DISTFILES)`; do \
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  d=$(srcdir); \
 	  test -f $(distdir)/$$file \
-	  || ln $(srcdir)/$$file $(distdir)/$$file 2> /dev/null \
-	  || cp -p $(srcdir)/$$file $(distdir)/$$file; \
+	  || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	  || cp -p $$d/$$file $(distdir)/$$file; \
 	done
 check-TESTS: $(TESTS)
 	@failed=0; all=0; \
