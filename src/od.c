@@ -28,6 +28,9 @@
 #include "long-options.h"
 #include "xstrtoul.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "od"
+
 #if defined(__GNUC__) || defined(STDC_HEADERS)
 # include <float.h>
 #endif

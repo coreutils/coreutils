@@ -45,6 +45,9 @@
 #include "long-options.h"
 #include "error.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "unexpand"
+
 /* The number of bytes added at a time to the amount of memory
    allocated for the output line. */
 #define OUTPUT_BLOCK 256

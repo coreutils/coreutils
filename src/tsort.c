@@ -34,6 +34,9 @@
 #include "error.h"
 #include "readtokens.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "tsort"
+
 /* Token delimiters when reading from a file.  */
 #define DELIM " \t\n"
 

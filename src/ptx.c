@@ -31,6 +31,9 @@
 #include "long-options.h"
 #include "regex.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "ptx"
+
 /* Number of possible characters in a byte.  */
 #define CHAR_SET_SIZE 256
 

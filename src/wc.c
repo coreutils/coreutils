@@ -32,6 +32,9 @@
 #include "long-options.h"
 #include "safe-read.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "wc"
+
 /* Size of atomic reads. */
 #define BUFFER_SIZE (16 * 1024)
 

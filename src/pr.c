@@ -305,6 +305,9 @@
 #include "long-options.h"
 #include "xstrtol.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "pr"
+
 #ifndef TRUE
 # define TRUE	1
 # define FALSE	0

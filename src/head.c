@@ -35,6 +35,9 @@
 #include "xstrtoul.h"
 #include "safe-read.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "head"
+
 /* FIXME: someday, make this really *be* `long long'.  */
 typedef long int U_LONG_LONG;
 

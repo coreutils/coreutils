@@ -32,6 +32,9 @@
 #include "system.h"
 #include "error.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "md5sum"
+
 /* Most systems do not distinguish between external and internal
    text representations.  */
 /* FIXME: This begs for an autoconf test.  */

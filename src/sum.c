@@ -29,6 +29,9 @@
 #include "long-options.h"
 #include "safe-read.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "sum"
+
 /* The name this program was run with. */
 char *program_name;
 

@@ -28,6 +28,9 @@
 #include "long-options.h"
 #include "xstrtol.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "fold"
+
 /* The name this program was run with. */
 char *program_name;
 

@@ -30,6 +30,9 @@
 #include "xstrtol.h"
 #include "memcasecmp.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "uniq"
+
 /* Undefine, to avoid warning about redefinition on some systems.  */
 #undef min
 #define min(x, y) ((x) < (y) ? (x) : (y))

@@ -36,6 +36,9 @@
 #include "xstrtoul.h"
 #include "xalloc.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "csplit"
+
 #ifdef STDC_HEADERS
 # include <stdlib.h>
 #endif

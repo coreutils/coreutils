@@ -33,6 +33,9 @@
 #include "safe-read.h"
 #include "xstrtol.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "split"
+
 int full_write ();
 
 /* The name this program was run with. */

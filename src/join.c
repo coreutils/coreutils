@@ -36,6 +36,9 @@
 #include "error.h"
 #include "memcasecmp.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "join"
+
 #define join system_join
 
 /* Undefine, to avoid warning about redefinition on some systems.  */

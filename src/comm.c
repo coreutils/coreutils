@@ -27,6 +27,9 @@
 #include "long-options.h"
 #include "error.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "comm"
+
 /* Undefine, to avoid warning about redefinition on some systems.  */
 #undef min
 #define min(x, y) ((x) < (y) ? (x) : (y))

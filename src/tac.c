@@ -48,6 +48,9 @@ tac -r -s '.\|
 #include "long-options.h"
 #include "safe-read.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "tac"
+
 #if defined __MSDOS__ || defined _WIN32
 /* Define this to non-zero on systems for which the regular mechanism
    (of unlinking an open file and expecting to be able to write, seek

@@ -37,6 +37,9 @@
 #include "safe-read.h"
 #include "xstrtoul.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "tail"
+
 #ifndef OFF_T_MIN
 # define OFF_T_MIN TYPE_MINIMUM (off_t)
 #endif

@@ -33,6 +33,9 @@
 #include "xstrtod.h"
 #include "xalloc.h"
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "sort"
+
 #if defined ENABLE_NLS && HAVE_LANGINFO_H
 # include <langinfo.h>
 #endif
