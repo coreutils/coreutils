@@ -1,3 +1,20 @@
+Mon Sep 18 23:15:05 1995  Jim Meyering  (meyering@comco.com)
+
+	* md5sum.c: Protoize.
+	* src/Makefile.in (OBJECTS): Change md5sum.o to md5sum$O.
+	(join.o, md5sum$O, sort.o) Depend on ../lib/long-options.h.
+	(md5sum): Depend on md5sum$O.
+
+	* md5sum.c (main, usage): Remove -h, -s, -v short options.
+	Rename --verbose to --warn, --quiet to --status.
+	(main): Handle --help and --version using parse_long_options.
+	(md5_check): Check ferror.
+
+	* sort.c (tempname): Replace `16' with a more readable expansion.
+	Make sure that counter never exceeds 99999.
+	(checkfp): Rearrange loop to avoid duplicate test.
+	Move a couple dcls from function scope into inner block.
+
 Tue Aug  8 21:49:27 1995  Jim Meyering  (meyering@comco.com)
 
 	* md5sum.c (main): Fail if either --verbose or --quiet is specified
