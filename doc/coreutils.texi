@@ -7980,8 +7980,8 @@ stat [@var{option}]@dots{} [@var{file}]@dots{}
 
 With no option, @command{stat} reports all information about the given files.
 But it also can be used to report the information of the filesystems the
-given files are located on. If the files are links, stat can also give
-information about the files the links point to.
+given files are located on. If the files are links, @command{stat} can
+also give information about the files the links point to.
 
 
 @table @samp
@@ -7999,7 +7999,7 @@ instead of information about the files themselves.
 @opindex -l
 @opindex --link
 @cindex link
-With this option stat works normally for all type of files except for
+With this option, @command{stat} works normally for all type of files except for
 symbolic links. For symbolic links information about the files that are
 obtained by tracing the links is displayed.
 
@@ -8055,7 +8055,7 @@ Interpreted sequences for file stat are:
 @item %C - Security context in SE-Linux
 @end itemize
 
-  Interpreted sequences for filesystem stat are:
+Interpreted sequences for filesystem stat are:
 @itemize @bullet
 @item %n - File name
 @item %i - File System id in hex
