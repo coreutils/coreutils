@@ -1,5 +1,10 @@
 2004-08-01  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* safe-read.c (errno): Remove decl; we now assume C89 or better.
+	(safe_rw): Don't work around Tru64 bug unless the bug symptoms
+	manifest themselves.  This allows us to do proper reads and writes
+	on other hosts, e.g., "dd" with a block size greater than 2**31.
+
 	* md5.c (UNALIGNED_P): Use size_t; in practice, this is just as
 	good as uintptr_t in checking for alignments, and has fewer
 	configuration hassles.
