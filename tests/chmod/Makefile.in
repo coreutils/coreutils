@@ -102,7 +102,6 @@ PACKAGE = @PACKAGE@
 PERL = @PERL@
 POFILES = @POFILES@
 POSUB = @POSUB@
-POW_LIBM = @POW_LIBM@
 RANLIB = @RANLIB@
 SEQ_LIBM = @SEQ_LIBM@
 SQRT_LIBM = @SQRT_LIBM@
@@ -117,7 +116,7 @@ install_sh = @install_sh@
 
 AUTOMAKE_OPTIONS = 1.4 gnits
 
-TESTS = equal-x c-option setgid
+TESTS = equals equal-x c-option setgid
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
   PATH=`pwd`/../../src:$$PATH
