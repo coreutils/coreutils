@@ -227,31 +227,6 @@ df_readable (int negative, uintmax_t n, char *buf,
     }
 }
 
-/* Return the ceiling of N * 100 / D.  Avoid the ceil function, so that
-   we needn't link the math library.  */
-static double
-ceil_percent (uintmax_t n, uintmax_t d)
-{
-  if (n <= (uintmax_t) -1 / 100)
-    {
-      uintmax_t n100 = n * 100;
-      return n100 / d + (n100 % d != 0);
-    }
-  else
-    {
-      /* Avoid integer overflow.  We should use multiple precision
-	 arithmetic here, but we'll be lazy and resort to floating
-	 point.  This can yield answers that are slightly off.  In
-	 practice it is quite rare to overflow uintmax_t, so this is
-	 good enough for now.  */
-      double pct = n * 100.0 / d;
-      double ipct = (int) pct;
-      if (ipct - 1 < pct && pct <= ipct + 1)
-	pct = ipct + (ipct < pct);
-      return pct;
-    }
-}
-
 /* Display a space listing for the disk device with absolute path DISK.
    If MOUNT_POINT is non-NULL, it is the path of the root of the
    filesystem on DISK.
@@ -277,7 +252,7 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
   uintmax_t available_to_root;
   uintmax_t used;
   int negate_used;
-  uintmax_t nonroot_total;
+  double pct = -1;
 
   if (me_remote && show_local_fs)
     return;
@@ -373,15 +348,36 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
 	  width, df_readable (negate_available, available,
 			      buf[2], input_units, output_units));
 
-  if (used == -1 || available == -1
-      || ! (nonroot_total = ((negate_used ? - used : used)
-			     + (negate_available ? - available : available))))
-    printf ("%*s", use_width, "- ");
+  if (used != -1 && available != -1)
+    {
+      /* The following floating-point calculations can suffer from
+	 minor rounding errors, but making them precise requires
+	 multiple precision arithmetic, and it's not worth the
+	 aggravation.  */
+
+      double u = used;
+      double a = available;
+      double nonroot_total = ((negate_used ? - u : u)
+			      + (negate_available ? - a : a));
+      if (nonroot_total)
+	{
+	  pct = u * 100 / nonroot_total;
+
+	  if (posix_format)
+	    {
+	      /* Like `pct = ceil (pct);', but avoid ceil so that
+		 the math library needn't be linked.  */
+	      double ipct = (long) pct;
+	      if (ipct - 1 < pct && pct <= ipct + 1)
+		pct = ipct + (ipct < pct);
+	    }
+	}
+    }
+
+  if (0 <= pct)
+    printf ("%*.0f%%", use_width - 1, pct);
   else
-    printf ("%*.0f%%", use_width - 1,
-	    (posix_format
-	     ? ceil_percent (used, nonroot_total)
-	     : used * 100.0 / nonroot_total));
+    printf ("%*s", use_width, "- ");
 
   if (mount_point)
     {
