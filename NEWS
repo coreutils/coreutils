@@ -41,6 +41,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   expr now reports trouble if string comparison fails due to a collation error.
 
+** Fewer arbitrary limitations
+
+  cut requires significantly less memory for very large field numbers
+  or byte offsets.
+
 
 * Major changes in release 5.0.1:
 
