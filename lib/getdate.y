@@ -1,5 +1,5 @@
 %{
-/* $Revision: 1.1.1.1 $
+/* $Revision: 2.1 $
 **
 **  Originally written by Steven M. Bellovin <smb@research.att.com> while
 **  at the University of North Carolina at Chapel Hill.  Later tweaked by
@@ -7,17 +7,21 @@
 **  <rsalz@bbn.com> and Jim Berets <jberets@bbn.com> in August, 1990;
 **  send any email to Rich.
 **
-**  This grammar has eight shift/reduce conflicts.
+**  This grammar has nine shift/reduce conflicts.
 **
 **  This code is in the public domain and has no copyright.
 */
 /* SUPPRESS 287 on yaccpar_sccsid *//* Unusd static variable */
 /* SUPPRESS 288 on yyerrlab *//* Label unused */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #ifdef __GNUC__
 #define alloca __builtin_alloca
 #else
-#ifdef sparc
+#ifdef HAVE_ALLOCA_H
 #include <alloca.h>
 #else
 #ifdef _AIX /* for Bison */
@@ -36,10 +40,6 @@ char *alloca ();
    tricks are need, but defaults to using the gettimeofday system call.
    Include <sys/time.h> if that will be used.  */
 
-#if !defined (USG) && !defined (sgi) && !defined (__386BSD__)
-#include <sys/time.h>
-#endif
-
 #if	defined(vms)
 
 #include <types.h>
@@ -48,6 +48,12 @@ char *alloca ();
 #else
 
 #include <sys/types.h>
+
+#if !(defined (USG) || !defined (sgi) || !defined (__386BSD__)) || defined(BSD4_2) || defined(BSD4_1C) || (defined (hp9000) && !defined (hpux)) || defined(_AIX) 
+#include <sys/time.h>
+#else
+#include <time.h>
+#endif
 
 #if	defined(USG) || !defined(HAVE_FTIME)
 /*
@@ -67,15 +73,6 @@ struct timeb {
 
 #endif	/* defined(USG) && !defined(HAVE_FTIME) */
 
-#if	defined(BSD4_2) || defined(BSD4_1C) || (defined (hp9000) && !defined (hpux))
-#include <sys/time.h>
-#else
-#if defined(_AIX)
-#include <sys/time.h>
-#endif
-#include <time.h>
-#endif	/* defined(BSD4_2) */
-
 #endif	/* defined(vms) */
 
 #if defined (STDC_HEADERS) || defined (USG)
@@ -88,13 +85,16 @@ struct timeb {
 
 extern struct tm	*localtime();
 
+static int yylex ();
+static int yyerror ();
+
 #define yyparse getdate_yyparse
 #define yylex getdate_yylex
 #define yyerror getdate_yyerror
 
 #if	!defined(lint) && !defined(SABER)
 static char RCS[] =
-	"$Header: /w/src/cvsroot/shellutils/lib/getdate.y,v 1.1.1.1 1992/11/01 05:44:32 meyering Exp $";
+	"$Header: str2date.y,v 2.1 90/09/06 08:15:06 cronan Exp $";
 #endif	/* !defined(lint) && !defined(SABER) */
 
 
