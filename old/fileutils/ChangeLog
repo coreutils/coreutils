@@ -1,5 +1,7 @@
 Thu Oct 27 00:02:45 1994  Jim Meyering  (meyering@comco.com)
 
+	* fsusage.c: Include <sys/stat.h> before safe-stat.h.
+
 	* cp.c (make_path): Don't change protections on existing directory.
 	Reported by Andreas Schwab.
 

@@ -79,8 +79,9 @@ static int kilobyte_blocks;
 /* If nonzero, use the POSIX output format.  */
 static int posix_format;
 
-/* If nonzero, invoke the `sync' system call.  Using this option
-   can make df very slow, especially with many or very busy disks.  */
+/* If nonzero, invoke the `sync' system call before getting any usage data.
+   Using this option can make df very slow, especially with many or very
+   busy disks.  */
 static int require_sync;
 
 /* Nonzero if errors have occurred. */
