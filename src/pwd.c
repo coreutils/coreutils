@@ -15,21 +15,42 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Jim Meyering <meyering@comco.com> */
-
 #include <config.h>
 #include <stdio.h>
 #include <sys/types.h>
 
 #include "system.h"
-#include "long-options.h"
+#include "dirfd.h"
 #include "error.h"
+#include "long-options.h"
+#include "quote.h"
+#include "root-dev-ino.h"
+#include "pathmax.h"
 #include "xgetcwd.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "pwd"
 
 #define AUTHORS "Jim Meyering"
+
+struct Path
+{
+  char *buf;
+  size_t n_alloc;
+  char *start;
+};
+
+enum
+{
+  NOT_AN_INODE_NUMBER = 0
+};
+
+#ifdef D_INO_IN_DIRENT
+# define D_INO(dp) ((dp)->d_ino)
+#else
+/* Some systems don't have inodes, so fake them to avoid lots of ifdefs.  */
+# define D_INO(dp) NOT_AN_INODE_NUMBER
+#endif
 
 /* The name this program was run with. */
 char *program_name;
@@ -54,6 +75,222 @@ Print the full filename of the current working directory.\n\
   exit (status);
 }
 
+static void
+path_free (struct Path *p)
+{
+  free (p->buf);
+  free (p);
+}
+
+static struct Path *
+path_init (void)
+{
+  struct Path *p = xmalloc (sizeof *p);
+
+  /* Start with a buffer larger than PATH_MAX, but beware of systems
+     on which PATH_MAX is very large -- e.g., INT_MAX.  */
+  p->n_alloc = MIN (2 * PATH_MAX, 32 * 1024);
+
+  p->buf = xmalloc (p->n_alloc);
+  p->start = p->buf + (p->n_alloc - 1);
+  p->start[0] = '\0';
+  return p;
+}
+
+/* Prepend the name S of length S_LEN, to the growing path, P.  */
+static void
+path_prepend (struct Path *p, char const *s, size_t s_len)
+{
+  size_t n_free = p->start - p->buf;
+  if (n_free < 1 + s_len)
+    {
+      size_t half = p->n_alloc + 1 + s_len;
+      /* Use xnmalloc+free rather than xnrealloc, since with the latter
+	 we'd end up copying the data twice: once via realloc, then again
+	 to align it with the end of the new buffer.  With xnmalloc, we
+	 copy it only once.  */
+      char *q = xnmalloc (2, half);
+      size_t n_used = p->n_alloc - n_free;
+      p->start = q + 2 * half - n_used;
+      memcpy (p->start, p->buf + n_free, n_used);
+      free (p->buf);
+      p->buf = q;
+      p->n_alloc = 2 * half;
+    }
+
+  p->start -= 1 + s_len;
+  p->start[0] = '/';
+  memcpy (p->start + 1, s, s_len);
+}
+
+/* Return a string (malloc'd) consisting of N `/'-separated ".." components.  */
+static char *
+nth_parent (size_t n)
+{
+  char *buf = xnmalloc (3, n);
+  char *p = buf;
+  size_t i;
+
+  for (i = 0; i < n; i++)
+    {
+      memcpy (p, "../", 3);
+      p += 3;
+    }
+  p[-1] = '\0';
+  return buf;
+}
+
+/* Return the basename of the current directory, where DOT_SB is the
+   result of lstat'ing ".".
+   Find the directory entry in `..' that matches the dev/i-node of DOT_SB.
+   Upon success, update *DOT_SB with stat information of `..', chdir to `..',
+   and prepend "/basename" to PATH.
+   Otherwise, exit with a diagnostic.
+   PARENT_HEIGHT is the number of levels `..' is above the starting directory.
+   The first time this function is called (from the initial directory),
+   PARENT_HEIGHT is 1.  This is solely for diagnostics.  */
+
+static void
+find_dir_entry (struct stat *dot_sb, struct Path *path, size_t parent_height)
+{
+  DIR *dirp;
+  int fd;
+  struct stat parent_sb;
+  bool use_lstat;
+  bool found;
+
+  dirp = opendir ("..");
+  if (dirp == NULL)
+    error (EXIT_FAILURE, errno, _("cannot open directory %s"),
+	   quote (nth_parent (parent_height)));
+
+  fd = dirfd (dirp);
+  if ((0 <= fd ? fchdir (fd) : chdir ("..")) < 0)
+    error (EXIT_FAILURE, errno, _("failed to chdir to %s"),
+	   quote (nth_parent (parent_height)));
+
+  if ((0 <= fd ? fstat (fd, &parent_sb) : stat (".", &parent_sb)) < 0)
+    error (EXIT_FAILURE, errno, _("failed to stat %s"),
+	   quote (nth_parent (parent_height)));
+
+  /* If parent and child directory are on different devices, then we
+     can't rely on d_ino for useful i-node numbers; use lstat instead.  */
+  use_lstat = (parent_sb.st_dev != dot_sb->st_dev);
+
+  found = false;
+  while (1)
+    {
+      struct dirent const *dp;
+      struct stat ent_sb;
+      ino_t ino;
+      bool ent_sb_valid;
+
+      errno = 0;
+      if ((dp = readdir_ignoring_dot_and_dotdot (dirp)) == NULL)
+	{
+	  if (errno)
+	    {
+	      /* Save/restore errno across closedir call.  */
+	      int e = errno;
+	      closedir (dirp);
+	      errno = e;
+
+	      /* Arrange to give a diagnostic after exiting this loop.  */
+	      dirp = NULL;
+	    }
+	  break;
+	}
+
+      ino = D_INO (dp);
+
+      ent_sb_valid = false;
+      if (ino == NOT_AN_INODE_NUMBER || use_lstat)
+	{
+	  if (lstat (dp->d_name, &ent_sb) < 0)
+	    {
+	      /* Skip any entry we can't stat.  */
+	      continue;
+	    }
+	  ino = ent_sb.st_ino;
+	  ent_sb_valid = true;
+	}
+
+      if (ino != dot_sb->st_ino)
+	continue;
+
+      /* If we're not crossing a device boundary, then a simple i-node
+	 match is enough.  */
+      if ( ! use_lstat || ent_sb.st_dev == dot_sb->st_dev)
+	{
+	  path_prepend (path, dp->d_name, NLENGTH (dp));
+	  found = true;
+	  break;
+	}
+    }
+
+  if (dirp == NULL || CLOSEDIR (dirp) != 0)
+    {
+      /* Note that this diagnostic serves for both readdir
+	 and closedir failures.  */
+      error (EXIT_FAILURE, errno, _("reading directory %s"),
+	     quote (nth_parent (parent_height)));
+    }
+
+  if ( ! found)
+    error (EXIT_FAILURE, 0,
+	   _("couldn't find directory entry in %s with matching i-node"),
+	     quote (nth_parent (parent_height)));
+
+  *dot_sb = parent_sb;
+}
+
+/* Print the full, absolute name of the current working directory.
+   The getcwd function does nearly the same task, but is typically
+   unable to handle names longer than PATH_MAX.  This function has
+   no such limitation.  However, this function *can* fail due to
+   permission problems or a lack of memory, while Linux's getcwd
+   function works regardless of restricted permissions on parent
+   directories.  Upon failure, give a diagnostic and exit nonzero.
+
+   Note: although this function is similar to getcwd, it has a fundamental
+   difference in that it gives a diagnostic and exits upon failure.
+   I would have liked a function that did not exit, and that could be
+   used as a getcwd replacement.  Unfortunately, considering all of
+   the information the caller would require in order to produce good
+   diagnostics, it doesn't seem worth the added complexity.
+
+   FIXME-maybe: if find_dir_entry fails due to permissions, try getcwd,
+   in case the unreadable directory is close enough to the root that
+   getcwd works from there.  */
+
+static void
+robust_getcwd (struct Path *path)
+{
+  size_t height = 1;
+  struct dev_ino dev_ino_buf;
+  struct dev_ino *root_dev_ino = get_root_dev_ino (&dev_ino_buf);
+  struct stat dot_sb;
+
+  if (root_dev_ino == NULL)
+    error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
+	   quote ("/"));
+
+  if (stat (".", &dot_sb) < 0)
+    error (EXIT_FAILURE, errno, _("failed to stat %s"), quote ("."));
+
+  while (1)
+    {
+      /* If we've reached the root, we're done.  */
+      if (SAME_INODE (dot_sb, *root_dev_ino))
+	break;
+
+      find_dir_entry (&dot_sb, path, height++);
+    }
+
+  if (path->start[0] == '\0')
+    path_prepend (path, "/", 1);
+}
+
 int
 main (int argc, char **argv)
 {
@@ -74,9 +311,18 @@ main (int argc, char **argv)
     error (0, 0, _("ignoring non-option arguments"));
 
   wd = xgetcwd ();
-  if (wd == NULL)
-    error (EXIT_FAILURE, errno, _("cannot get current directory"));
-  printf ("%s\n", wd);
+  if (wd != NULL)
+    {
+      puts (wd);
+      free (wd);
+    }
+  else
+    {
+      struct Path *path = path_init ();
+      robust_getcwd (path);
+      puts (path->start);
+      path_free (path);
+    }
 
   exit (EXIT_SUCCESS);
 }
