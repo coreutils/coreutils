@@ -481,7 +481,7 @@ for even very expensive hardware probing to recover the data.\n\
 "), stdout);
       fputs (_("\
       --help     display this help and exit\n\
-      --version  print version information and exit\n\
+      --version  output version information and exit\n\
 "), stdout);
       fputs (_("\
 \n\
