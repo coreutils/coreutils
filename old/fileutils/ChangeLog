@@ -56,11 +56,7 @@
 	new jm_LIST_MOUNTED_FILESYSTEMS macro.
 	Use new jm_FSTYPENAME macro.
 
-	* src/df.c, src/dircolors.c, src/du.c, src/ls.c, src/remove.c:
-	Change all uses of unlocked-wrapped functions to their upper case
-	wrapper names.
-	* src/sys2.h: Add macro definitions for GNU libc unlocked wrappers
-	(e.g. FFLUSH for fflush_unlocked).
+	* src/sys2.h: Add macro definitions for GNU libc *_unlocked wrappers.
 	* src/ls.c: Add DIRED_ prefix to the macros: PUTCHAR, FPUTS, and
 	FPUTS_LITERAL
 
