@@ -80,6 +80,15 @@ static void usage ();
 /* The name this program was run with, for error messages. */
 char *program_name;
 
+static struct option const long_options[] =
+{
+  {"date", required_argument, NULL, 'd'},
+  {"set", required_argument, NULL, 's'},
+  {"universal", no_argument, NULL, 'u'},
+  {"uct", no_argument, NULL, 'u'},
+  {NULL, 0, NULL, 0}
+};
+
 void
 main (argc, argv)
      int argc;
@@ -93,7 +102,8 @@ main (argc, argv)
 
   program_name = argv[0];
 
-  while ((optc = getopt (argc, argv, "d:s:u")) != EOF)
+  while ((optc = getopt_long (argc, argv, "d:s:u", long_options, (int *) 0))
+	 != EOF)
     switch (optc)
       {
       case 'd':
