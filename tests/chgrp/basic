@@ -8,6 +8,7 @@ fi
 
 . $srcdir/../envvar-check
 . $srcdir/../lang-default
+. $srcdir/../group-names
 
 pwd=`pwd`
 tmp=basic.$$
@@ -24,17 +25,6 @@ if test $framework_failure = 1; then
 fi
 
 fail=0
-
-groups=`id -nG 2>/dev/null`
-case "$groups" in
-  *' '*) ;;
-  *) cat <<EOF 1>&2
-$0: this test requires that you be a member of more than one group,
-but running \`id -nG' either failed or found just one.
-EOF
-     (exit 77); exit
-     ;;
-esac
 
 set _ $groups; shift
 g1=$1
