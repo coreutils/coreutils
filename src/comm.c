@@ -108,7 +108,7 @@ writeline (const struct linebuffer *line, FILE *stream, int class)
     case 2:
       if (!only_file_2)
 	return;
-      /* Print a TAB if we printing lines from file 1.  */
+      /* Print a TAB if we are printing lines from file 1.  */
       if (only_file_1)
 	putc ('\t', stream);
       break;
@@ -116,10 +116,10 @@ writeline (const struct linebuffer *line, FILE *stream, int class)
     case 3:
       if (!both)
 	return;
-      /* Print a TAB if we printing lines from file 1.  */
+      /* Print a TAB if we are printing lines from file 1.  */
       if (only_file_1)
 	putc ('\t', stream);
-      /* Print a TAB if we printing lines from file 2.  */
+      /* Print a TAB if we are printing lines from file 2.  */
       if (only_file_2)
 	putc ('\t', stream);
       break;
