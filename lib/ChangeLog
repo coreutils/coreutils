@@ -1,3 +1,7 @@
+2003-07-12  Jim Meyering  <jim@meyering.net>
+
+	* makepath.c (make_path): Enclose diagnostic in _(...).
+
 2003-07-10  Jim Meyering  <jim@meyering.net>
 
 	* userspec.c: Include "posixver.h".
