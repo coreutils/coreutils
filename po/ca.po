@@ -19,7 +19,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: coreutils 4.5.1\n"
-"POT-Creation-Date: 2002-10-05 21:56+0200\n"
+"POT-Creation-Date: 2002-10-13 16:06+0200\n"
 "PO-Revision-Date: 2002-09-06 17:37+0200\n"
 "Last-Translator: Jordi Mallach <jordi@sindominio.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -68,9 +68,9 @@ msgstr "error del programa"
 msgid "stack overflow"
 msgstr "desbordament de pila"
 
-#: lib/closeout.c:107 src/cat.c:189 src/cat.c:271 src/cat.c:324
-#: src/cksum.c:267 src/head.c:152 src/head.c:195 src/tail.c:323
-#: src/tail.c:1648 src/tr.c:1667 src/tr.c:1913 src/tr.c:2021
+#: lib/closeout.c:107 src/cat.c:189 src/cat.c:272 src/cat.c:326
+#: src/cksum.c:267 src/head.c:152 src/head.c:196 src/tail.c:323
+#: src/tail.c:1664 src/tr.c:1666 src/tr.c:1912 src/tr.c:2020
 msgid "write error"
 msgstr "error d'escriptura"
 
@@ -520,7 +520,7 @@ msgstr "Les cadenes comparades eren %s i %s."
 
 #: src/basename.c:50 src/cat.c:88 src/chgrp.c:122 src/chmod.c:239
 #: src/chown.c:95 src/chroot.c:41 src/cksum.c:276 src/comm.c:69 src/cp.c:160
-#: src/csplit.c:1489 src/cut.c:163 src/date.c:115 src/dd.c:284 src/df.c:747
+#: src/csplit.c:1492 src/cut.c:163 src/date.c:115 src/dd.c:284 src/df.c:747
 #: src/dircolors.c:100 src/dirname.c:42 src/du.c:181 src/echo.c:73
 #: src/env.c:115 src/expand.c:106 src/expr.c:85 src/factor.c:70 src/fmt.c:267
 #: src/fold.c:63 src/head.c:84 src/hostid.c:44 src/hostname.c:63 src/id.c:83
@@ -567,7 +567,7 @@ msgstr ""
 
 #: src/basename.c:66 src/cat.c:124 src/chgrp.c:152 src/chmod.c:265
 #: src/chown.c:139 src/chroot.c:59 src/cksum.c:291 src/comm.c:86 src/cp.c:257
-#: src/csplit.c:1531 src/cut.c:208 src/date.c:217 src/dd.c:331 src/df.c:786
+#: src/csplit.c:1534 src/cut.c:208 src/date.c:217 src/dd.c:331 src/df.c:786
 #: src/dircolors.c:121 src/dirname.c:58 src/du.c:226 src/echo.c:105
 #: src/env.c:134 src/expand.c:131 src/expr.c:148 src/factor.c:90
 #: src/false.c:28 src/fmt.c:297 src/fold.c:86 src/head.c:115 src/hostid.c:57
@@ -596,7 +596,7 @@ msgstr ""
 "Informeu sobre els errors a <%s>.\n"
 
 #: src/basename.c:114 src/chgrp.c:210 src/chmod.c:353 src/chown.c:211
-#: src/chroot.c:78 src/csplit.c:1461 src/dirname.c:89 src/expr.c:177
+#: src/chroot.c:78 src/csplit.c:1464 src/dirname.c:89 src/expr.c:177
 #: src/install.c:284 src/link.c:87 src/mkdir.c:124 src/mkfifo.c:113
 #: src/mknod.c:141 src/pathchk.c:193 src/rm.c:200 src/rmdir.c:206
 #: src/seq.c:411 src/sleep.c:150 src/stat.c:827 src/unlink.c:88
@@ -612,7 +612,7 @@ msgstr ""
 
 #: src/basename.c:115 src/dircolors.c:483 src/dirname.c:90 src/hostid.c:79
 #: src/hostname.c:122 src/link.c:93 src/mknod.c:143 src/seq.c:417
-#: src/split.c:525 src/tr.c:1849 src/unlink.c:94 src/uptime.c:244
+#: src/split.c:525 src/tr.c:1848 src/unlink.c:94 src/uptime.c:244
 #: src/users.c:169 src/who.c:764
 #, fuzzy
 msgid "too many arguments"
@@ -683,12 +683,12 @@ msgstr ""
 "  -B, --binary             usa escriptura binària al dispositiu de consola.\n"
 "\n"
 
-#: src/cat.c:312
+#: src/cat.c:314
 #, c-format
 msgid "cannot do ioctl on `%s'"
 msgstr "no s'ha pogut executar la funció ioctl a `%s'"
 
-#: src/cat.c:667 src/dd.c:1219 src/od.c:1013 src/tee.c:181
+#: src/cat.c:669 src/dd.c:1225 src/od.c:1013 src/tee.c:181
 #, fuzzy
 msgid "standard output"
 msgstr ""
@@ -699,17 +699,17 @@ msgstr ""
 "#-#-#-#-#  ca.po (fileutils 4.1.11)  #-#-#-#-#\n"
 "eixida estàndard"
 
-#: src/cat.c:798
+#: src/cat.c:800
 #, c-format
 msgid "%s: input file is output file"
 msgstr "%s: el fitxer d'entrada i el de sortida són el mateix"
 
-#: src/cat.c:856
+#: src/cat.c:858
 #, fuzzy
 msgid "closing standard input"
 msgstr "entrada estàndard"
 
-#: src/cat.c:859
+#: src/cat.c:861
 #, fuzzy
 msgid "closing standard output"
 msgstr ""
@@ -1049,7 +1049,7 @@ msgstr "no es pot accedir a %s"
 msgid "cannot open %s for reading"
 msgstr "no es obrir %s per a lectura"
 
-#: src/copy.c:232 src/copy.c:286 src/copy.c:301 src/dd.c:1195
+#: src/copy.c:232 src/copy.c:286 src/copy.c:301 src/dd.c:1201
 #, c-format
 msgid "cannot fstat %s"
 msgstr "no es pot fer «fstat» en %s"
@@ -1070,7 +1070,7 @@ msgstr "no es pot eliminar %s"
 msgid "cannot create regular file %s"
 msgstr "no es pot crear el fitxer ordinari %s"
 
-#: src/copy.c:328 src/dd.c:812 src/dd.c:1006
+#: src/copy.c:328 src/dd.c:818 src/dd.c:1012
 #, c-format
 msgid "reading %s"
 msgstr "s'està llegint %s"
@@ -1080,7 +1080,7 @@ msgstr "s'està llegint %s"
 msgid "cannot lseek %s"
 msgstr "no es pot fer «lseek» en %s"
 
-#: src/copy.c:377 src/copy.c:401 src/dd.c:1050 src/dd.c:1111
+#: src/copy.c:377 src/copy.c:401 src/dd.c:1056 src/dd.c:1117
 #, c-format
 msgid "writing %s"
 msgstr "s'està escrivint %s"
@@ -1297,7 +1297,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/cp.c:174 src/csplit.c:1502 src/cut.c:175 src/df.c:757 src/du.c:190
+#: src/cp.c:174 src/csplit.c:1505 src/cut.c:175 src/df.c:757 src/du.c:190
 #: src/expand.c:119 src/fmt.c:277 src/fold.c:76 src/head.c:98
 #: src/install.c:609 src/kill.c:103 src/ln.c:354 src/ls.c:3624 src/mkdir.c:66
 #: src/mkfifo.c:60 src/mknod.c:70 src/mv.c:324 src/nl.c:185 src/paste.c:413
@@ -1506,130 +1506,130 @@ msgstr "tipus de còpia de seguretat"
 msgid "Stuart Kemp and David MacKenzie"
 msgstr "Stuart Kemp i David MacKenzie"
 
-#: src/csplit.c:286 src/csplit.c:1478 src/tac-pipe.c:57 src/tee.c:220
-#: src/tr.c:1609 src/tr.c:1712 src/tr.c:1755
+#: src/csplit.c:289 src/csplit.c:1481 src/tac-pipe.c:57 src/tee.c:220
+#: src/tr.c:1609 src/tr.c:1711 src/tr.c:1754
 msgid "read error"
 msgstr "error de lectura"
 
-#: src/csplit.c:580
+#: src/csplit.c:583
 msgid "input disappeared"
 msgstr "l'entrada ha desaparegut"
 
-#: src/csplit.c:702 src/csplit.c:713
+#: src/csplit.c:705 src/csplit.c:716
 #, c-format
 msgid "%s: line number out of range"
 msgstr "%s: nombre de línia inabastable"
 
-#: src/csplit.c:740
+#: src/csplit.c:743
 #, c-format
 msgid "%s: `%s': line number out of range"
 msgstr "%s: `%s': nombre de línia inabastable"
 
-#: src/csplit.c:743 src/csplit.c:789
+#: src/csplit.c:746 src/csplit.c:792
 #, c-format
 msgid " on repetition %d\n"
 msgstr " a la %da repetició\n"
 
-#: src/csplit.c:785
+#: src/csplit.c:788
 #, c-format
 msgid "%s: `%s': match not found"
 msgstr "%s: `%s': no s'ha trobat cap ocurrència"
 
-#: src/csplit.c:846 src/csplit.c:886 src/tac.c:262
+#: src/csplit.c:849 src/csplit.c:889 src/tac.c:262
 msgid "error in regular expression search"
 msgstr "s'ha produït un error en la recerca de l'expressió regular"
 
-#: src/csplit.c:989
+#: src/csplit.c:992
 #, c-format
 msgid "write error for `%s'"
 msgstr "s'ha produït un error en l'escriptura de `%s'"
 
-#: src/csplit.c:1061
+#: src/csplit.c:1064
 #, c-format
 msgid "%s: `+' or `-' expected after delimeter"
 msgstr "%s: s'esperava `+' o `-' després del delimitador"
 
-#: src/csplit.c:1065
+#: src/csplit.c:1068
 #, c-format
 msgid "%s: integer expected after `%c'"
 msgstr "%s: s'esperava un nombre enter després de `%c'"
 
-#: src/csplit.c:1085
+#: src/csplit.c:1088
 #, c-format
 msgid "%s: `}' is required in repeat count"
 msgstr "%s: el nombre de repeticions requereix un `}'"
 
-#: src/csplit.c:1095
+#: src/csplit.c:1098
 #, c-format
 msgid "%s}: integer required between `{' and `}'"
 msgstr "%s: entre `{' i `}' heu d'especificar un nombre enter"
 
-#: src/csplit.c:1122
+#: src/csplit.c:1125
 #, c-format
 msgid "%s: closing delimeter `%c' missing"
 msgstr "%s: falta el delimitador `%c' de tancament"
 
-#: src/csplit.c:1138
+#: src/csplit.c:1141
 #, c-format
 msgid "%s: invalid regular expression: %s"
 msgstr "%s: l'expressió regular no és vàlida: %s"
 
-#: src/csplit.c:1171
+#: src/csplit.c:1174
 #, c-format
 msgid "%s: invalid pattern"
 msgstr "%s: el patró no és vàlid"
 
-#: src/csplit.c:1174
+#: src/csplit.c:1177
 #, c-format
 msgid "%s: line number must be greater than zero"
 msgstr "%s: el nombre de línia ha de ser més gran que zero"
 
-#: src/csplit.c:1180
+#: src/csplit.c:1183
 #, c-format
 msgid "line number `%s' is smaller than preceding line number, %s"
 msgstr "el nombre de línia `%s' és menor que el de la línia anterior, `%s'"
 
-#: src/csplit.c:1186
+#: src/csplit.c:1189
 #, c-format
 msgid "warning: line number `%s' is the same as preceding line number"
 msgstr ""
 "atenció: el nombre de línia `%s' és el mateix que el de la línia anterior"
 
-#: src/csplit.c:1311
+#: src/csplit.c:1314
 msgid "missing conversion specifier in suffix"
 msgstr "falta l'especificació de conversió en el sufix"
 
-#: src/csplit.c:1317
+#: src/csplit.c:1320
 #, c-format
 msgid "invalid conversion specifier in suffix: %c"
 msgstr "l'especificació de conversió en el sufix no és vàlida: %c"
 
-#: src/csplit.c:1320
+#: src/csplit.c:1323
 #, c-format
 msgid "invalid conversion specifier in suffix: \\%.3o"
 msgstr "l'especificació de conversió en el sufix no és vàlida: \\%.3o"
 
-#: src/csplit.c:1352
+#: src/csplit.c:1355
 #, c-format
 msgid "missing %% conversion specification in suffix"
 msgstr "falta l'especificació de conversió %% en el sufix"
 
-#: src/csplit.c:1355
+#: src/csplit.c:1358
 #, c-format
 msgid "too many %% conversion specifications in suffix"
 msgstr "sobren especificacions de conversió %% en el sufix"
 
-#: src/csplit.c:1438
+#: src/csplit.c:1441
 #, c-format
 msgid "%s: invalid number"
 msgstr "%s: nombre no vàlid"
 
-#: src/csplit.c:1493
+#: src/csplit.c:1496
 #, c-format
 msgid "Usage: %s [OPTION]... FILE PATTERN...\n"
 msgstr "Sintaxi: %s [OPCIÓ]... FITXER PATRÓ...\n"
 
-#: src/csplit.c:1497
+#: src/csplit.c:1500
 msgid ""
 "Output pieces of FILE separated by PATTERN(s) to files `xx01', `xx02', ...,\n"
 "and output byte counts of each piece to standard output.\n"
@@ -1640,7 +1640,7 @@ msgstr ""
 "i mostra el tamany en bytes de cada tros a la sortida estàndard.\n"
 "\n"
 
-#: src/csplit.c:1505
+#: src/csplit.c:1508
 #, c-format
 msgid ""
 "  -b, --suffix-format=FORMAT use sprintf FORMAT instead of %d\n"
@@ -1651,7 +1651,7 @@ msgstr ""
 "  -f, --prefix=PREFIX        usa PREFIX en lloc de `xx'\n"
 "  -k, --keep-files           no esborra els fitxer generats, en cas d'error\n"
 
-#: src/csplit.c:1510
+#: src/csplit.c:1513
 msgid ""
 "  -n, --digits=DIGITS        use specified number of digits instead of 2\n"
 "  -s, --quiet, --silent      do not print counts of output file sizes\n"
@@ -1662,7 +1662,7 @@ msgstr ""
 "  -s, --quite, --silent      no mostra el tamany dels fitxers resultants\n"
 "  -z, --elide-empty-files    esborra els fitxers resultants que estan buits\n"
 
-#: src/csplit.c:1517
+#: src/csplit.c:1520
 msgid ""
 "\n"
 "Read standard input if FILE is -.  Each PATTERN may be:\n"
@@ -1670,7 +1670,7 @@ msgstr ""
 "\n"
 "Si FITXER és -, llegeix l'entrada estàndard. Cada PATRÓ pot ser:\n"
 
-#: src/csplit.c:1521
+#: src/csplit.c:1524
 msgid ""
 "\n"
 "  INTEGER            copy up to but not including specified line number\n"
@@ -1779,31 +1779,31 @@ msgstr ""
 msgid "invalid byte or field list"
 msgstr "la llista de bytes o camps no és vàlida"
 
-#: src/cut.c:624 src/cut.c:633
+#: src/cut.c:626 src/cut.c:635
 msgid "only one type of list may be specified"
 msgstr "només podeu especificar un únic tipus de llista"
 
-#: src/cut.c:627
+#: src/cut.c:629
 msgid "missing list of positions"
 msgstr "falta la llista de posicions"
 
-#: src/cut.c:636
+#: src/cut.c:638
 msgid "missing list of fields"
 msgstr "falta la llista de camps"
 
-#: src/cut.c:643
+#: src/cut.c:645
 msgid "the delimiter must be a single character"
 msgstr "el delimitador ha de ser un únic caràcter"
 
-#: src/cut.c:673
+#: src/cut.c:675
 msgid "you must specify a list of bytes, characters, or fields"
 msgstr "heu d'especificar una llista de bytes, caràcters, o camps"
 
-#: src/cut.c:676
+#: src/cut.c:678
 msgid "a delimiter may be specified only when operating on fields"
 msgstr "només podeu especificar un delimitador quan opereu amb camps"
 
-#: src/cut.c:679
+#: src/cut.c:681
 msgid ""
 "suppressing non-delimited lines makes sense\n"
 "\tonly when operating on fields"
@@ -1961,10 +1961,10 @@ msgid ""
 "  `_' (underscore) pad the field with spaces\n"
 msgstr ""
 
-#: src/date.c:239 src/dd.c:1169 src/dircolors.c:540 src/head.c:220
+#: src/date.c:239 src/dd.c:1175 src/dircolors.c:540 src/head.c:221
 #: src/md5sum.c:340 src/md5sum.c:681 src/od.c:959 src/od.c:2001 src/pr.c:1164
-#: src/pr.c:1371 src/pr.c:1493 src/stty.c:912 src/tac.c:484 src/tac.c:490
-#: src/tee.c:151 src/tr.c:2028 src/tsort.c:585
+#: src/pr.c:1371 src/pr.c:1493 src/stty.c:912 src/tac.c:483 src/tac.c:489
+#: src/tee.c:151 src/tr.c:2027 src/tsort.c:585
 msgid "standard input"
 msgstr "entrada estàndard"
 
@@ -2118,19 +2118,19 @@ msgstr "la conversió no és vàlida: %s"
 msgid "unrecognized option %s"
 msgstr "no es reconeix l'opció %s"
 
-#: src/dd.c:606
+#: src/dd.c:612
 #, c-format
 msgid "unrecognized option %s=%s"
 msgstr "no es reconeix l'opció %s=%s"
 
-#: src/dd.c:612
+#: src/dd.c:618
 #, c-format
 msgid "invalid number %s"
 msgstr "el número %s no és vàlid"
 
 # És clar que «conv» és «conversió», però ho deixe així perquè «conv» és
 # precisament el nom de l'opció.  iv
-#: src/dd.c:642
+#: src/dd.c:648
 msgid ""
 "only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, "
 "{unblock,sync}"
@@ -2138,24 +2138,24 @@ msgstr ""
 "sols un «conv» de {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, "
 "{unblock,sync}"
 
-#: src/dd.c:777
+#: src/dd.c:783
 #, c-format
 msgid ""
 "warning: working around lseek kernel bug for file (%s)\n"
 "  of mt_type=0x%0lx -- see <sys/mtio.h> for the list of types"
 msgstr ""
 
-#: src/dd.c:1166 src/dd.c:1184
+#: src/dd.c:1172 src/dd.c:1190
 #, c-format
 msgid "opening %s"
 msgstr "s'està obrint %s"
 
-#: src/dd.c:1192
+#: src/dd.c:1198
 msgid "file offset out of range"
 msgstr "el desplaçament del fitxer està fora de rang"
 
 # A aquesta frase no li veig el sentit. jm
-#: src/dd.c:1210
+#: src/dd.c:1216
 #, c-format
 msgid "advancing past %s bytes in output file %s"
 msgstr "s'està avançant %s passats en el fitxer d'eixida %s"
@@ -2371,7 +2371,7 @@ msgid ""
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
 "  -b, --bytes           print size in bytes\n"
 "  -c, --total           produce a grand total\n"
-"  -D, --dereference-args  dereference PATHs when symbolic link\n"
+"  -D, --dereference-args  dereference FILEs that are symbolic links\n"
 msgstr ""
 
 #: src/du.c:200
@@ -2408,30 +2408,30 @@ msgstr ""
 msgid "cannot change to `..' from directory %s"
 msgstr "no es pot canviar a «..» des del directori %s"
 
-#: src/du.c:464
+#: src/du.c:468
 #, c-format
 msgid "cannot change to directory %s"
 msgstr "no es pot canviar al directori %s"
 
-#: src/du.c:554 src/ls.c:2145 src/wc.c:586
+#: src/du.c:558 src/ls.c:2145 src/wc.c:591
 msgid "total"
 msgstr "total"
 
-#: src/du.c:618
+#: src/du.c:622
 #, c-format
 msgid "invalid maximum depth %s"
 msgstr "profunditat màxima %s no vàlida"
 
-#: src/du.c:677
+#: src/du.c:681
 msgid "cannot both summarize and show all entries"
 msgstr "no es pot mostrar totes les entrades i un total per cadascuna"
 
-#: src/du.c:684
+#: src/du.c:688
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr "avís: fer resums és el mateix que utilitzar --max-depth=0"
 
 # conflicts -> no compatible? jm
-#: src/du.c:690
+#: src/du.c:694
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr "avís: fer resums no és compatible amb --max-depth=%d"
@@ -2839,38 +2839,38 @@ msgstr ""
 "\n"
 "MIDA pot tenir un sufix multiplicador: b per 512, k per 1 kB, m per 1 MB.\n"
 
-#: src/head.c:189
+#: src/head.c:190
 #, c-format
 msgid "cannot reposition file pointer for %s"
 msgstr "no s'ha pogut recol·locar el punter del fitxer per a %s"
 
-#: src/head.c:255 src/tail.c:1377
+#: src/head.c:256 src/tail.c:1393
 #, c-format
 msgid "%s: %s is so large that it is not representable"
 msgstr "%s: %s és tan gran que no es pot representar"
 
-#: src/head.c:256 src/tail.c:1379
+#: src/head.c:257 src/tail.c:1395
 msgid "number of lines"
 msgstr "el nombre de línies"
 
-#: src/head.c:256 src/tail.c:1380
+#: src/head.c:257 src/tail.c:1396
 msgid "number of bytes"
 msgstr "el nombre de bytes"
 
-#: src/head.c:263 src/tail.c:1467
+#: src/head.c:264 src/tail.c:1483
 msgid "invalid number of lines"
 msgstr "el nombre de línies no és vàlid"
 
-#: src/head.c:264 src/tail.c:1468
+#: src/head.c:265 src/tail.c:1484
 msgid "invalid number of bytes"
 msgstr "el nombre de bytes no és vàlid"
 
-#: src/head.c:340
+#: src/head.c:341
 #, c-format
 msgid "unrecognized option `-%c'"
 msgstr "opció no reconeguda `-%c'"
 
-#: src/head.c:347
+#: src/head.c:348
 #, c-format
 msgid "`-%s' option is obsolete; use `-%c %.*s%.*s%s'"
 msgstr "l'opció `-%s' és obsoleta; useu `-%c %.*s%.*s%s'"
@@ -5579,7 +5579,7 @@ msgstr ""
 msgid "invalid time interval `%s'"
 msgstr "l'interval de temps «%s» no és vàlid"
 
-#: src/sleep.c:177 src/tail.c:1024
+#: src/sleep.c:177 src/tail.c:1036
 msgid "cannot read realtime clock"
 msgstr "no s'ha pogut llegir el rellotge de temps real"
 
@@ -5718,7 +5718,7 @@ msgstr "no s'ha pogut crear el fitxer temporal"
 msgid "open failed"
 msgstr "error d'obertura"
 
-#: src/sort.c:490 src/sort.c:2490
+#: src/sort.c:490 src/sort.c:2495
 msgid "close failed"
 msgstr "error de tancament"
 
@@ -5734,68 +5734,68 @@ msgstr "mida de l'ordenació"
 msgid "stat failed"
 msgstr "error en l'estat"
 
-#: src/sort.c:970
+#: src/sort.c:975
 msgid "read failed"
 msgstr "error de lectura"
 
-#: src/sort.c:1568
+#: src/sort.c:1573
 #, c-format
 msgid "%s: %s:%s: disorder: "
 msgstr "%s: %s:%s: desordre: "
 
-#: src/sort.c:1572
+#: src/sort.c:1577
 msgid "standard error"
 msgstr "error estàndard"
 
-#: src/sort.c:2030
+#: src/sort.c:2035
 #, c-format
 msgid "%s: invalid field specification `%s'"
 msgstr "%s: l'especifiació de camp no és vàlida: `%s'"
 
-#: src/sort.c:2056
+#: src/sort.c:2061
 #, c-format
 msgid "%s: count `%.*s' too large"
 msgstr "%s: el comptador `%.*s' és massa gran"
 
-#: src/sort.c:2062
+#: src/sort.c:2067
 #, c-format
 msgid "%s: invalid count at start of `%s'"
 msgstr "%s: comptador no vàlid a l'inici de `%s'"
 
-#: src/sort.c:2292
+#: src/sort.c:2297
 msgid "invalid number after `-'"
 msgstr "nombre no vàlid després de `-'"
 
-#: src/sort.c:2295 src/sort.c:2341 src/sort.c:2368
+#: src/sort.c:2300 src/sort.c:2346 src/sort.c:2373
 msgid "invalid number after `.'"
 msgstr "nombre no vàlid després de `.'"
 
-#: src/sort.c:2298 src/sort.c:2377
+#: src/sort.c:2303 src/sort.c:2382
 msgid "stray character in field spec"
 msgstr "caràcter extraviat a l'especificació del camp"
 
-#: src/sort.c:2332
+#: src/sort.c:2337
 msgid "invalid number at field start"
 msgstr "nombre no vàlid a l'inici del camp"
 
-#: src/sort.c:2336 src/sort.c:2364
+#: src/sort.c:2341 src/sort.c:2369
 msgid "field number is zero"
 msgstr "el nombre del camp és zero"
 
-#: src/sort.c:2345
+#: src/sort.c:2350
 msgid "character offset is zero"
 msgstr "el desplaçament de caràcter és zero"
 
-#: src/sort.c:2360
+#: src/sort.c:2365
 msgid "invalid number after `,'"
 msgstr "nombre no vàlid després de `,'"
 
-#: src/sort.c:2405
+#: src/sort.c:2410
 #, c-format
 msgid "multi-character tab `%s'"
 msgstr "tabulació multicaràcter `%s'"
 
-#: src/sort.c:2473
+#: src/sort.c:2478
 #, c-format
 msgid "extra operand `%s' not allowed with -c"
 msgstr "l'operand `%s' no està permès amb -c"
@@ -6476,11 +6476,11 @@ msgstr ""
 "regular\n"
 "  -s, --separator=CADENA   usa CADENA com a separador; no un salt de línia\n"
 
-#: src/tac.c:454 src/tac.c:593
+#: src/tac.c:453 src/tac.c:592
 msgid "stdin: read error"
 msgstr "stdin: error de lectura"
 
-#: src/tac.c:639
+#: src/tac.c:638
 msgid "separator cannot be empty"
 msgstr "el separador no pot ser nul"
 
@@ -6625,56 +6625,56 @@ msgstr "%s: no s'ha pogut arribar al desplaçament relatiu %s%s"
 msgid "%s: cannot seek to end-relative offset %s%s"
 msgstr "%s: no s'ha pogut arribar al desplaçament %s%s relatiu al final"
 
-#: src/tail.c:811
+#: src/tail.c:823
 #, c-format
 msgid "`%s' has become inaccessible"
 msgstr "`%s' ha esdevingut inaccessible"
 
 # tailable = cuable? ;)
-#: src/tail.c:828
+#: src/tail.c:840
 #, c-format
 msgid "`%s' has been replaced with an untailable file; giving up on this name"
 msgstr ""
 "`%s' ha estat substituït per un fitxer inoperable; s'abandona la pista "
 "d'aquest nom"
 
-#: src/tail.c:849
+#: src/tail.c:861
 #, c-format
 msgid "`%s' has become accessible"
 msgstr "`%s' ha esdevingut accessible"
 
-#: src/tail.c:857
+#: src/tail.c:869
 #, c-format
 msgid "`%s' has appeared;  following end of new file"
 msgstr "`%s' ha aparegut; es segueix el final del nou fitxer"
 
-#: src/tail.c:868
+#: src/tail.c:880
 #, c-format
 msgid "`%s' has been replaced;  following end of new file"
 msgstr "`%s' ha estat substituït; es segueix el final del nou fitxer"
 
-#: src/tail.c:993
+#: src/tail.c:1005
 #, c-format
 msgid "%s: file truncated"
 msgstr "%s: fitxer trencat"
 
-#: src/tail.c:1013
+#: src/tail.c:1025
 msgid "no files remaining"
 msgstr "no queda cap fitxer"
 
-#: src/tail.c:1225
+#: src/tail.c:1241
 #, c-format
 msgid "%s: cannot follow end of this type of file; giving up on this name"
 msgstr ""
 "%s: no es pot seguir el final d'aquest tipus de fitxer; s'abandona la pista "
 "d'aquest nom"
 
-#: src/tail.c:1345
+#: src/tail.c:1361
 #, c-format
 msgid "%c: invalid suffix character in obsolescent option"
 msgstr "%c: sufix no vàlid en una opció obsoleta"
 
-#: src/tail.c:1394
+#: src/tail.c:1410
 #, c-format
 msgid ""
 "too many arguments;  When using tail's obsolescent option syntax (%s)\n"
@@ -6684,7 +6684,7 @@ msgstr ""
 "massa arguments; Quan useu la sintaxi en desús (%s) no hi pot haver\n"
 "més d'un fitxer com a argument. Useu les opcions equivalents -n o -c."
 
-#: src/tail.c:1403
+#: src/tail.c:1419
 #, c-format
 msgid ""
 "Warning: it is not portable to use two or more file arguments with\n"
@@ -6694,46 +6694,46 @@ msgstr ""
 "Atenció: l'ús de dos o més arguments de fitxer amb la sintaxi d'opcions\n"
 "obsoleta (%s) no és portable. Useu les opcions equivalents -n o -c."
 
-#: src/tail.c:1412
+#: src/tail.c:1428
 #, c-format
 msgid "`%s' option is obsolete; use `%s-%c %.*s'"
 msgstr "l'opció `%s' és obsoleta; useu `%s-%c %.*s'"
 
-#: src/tail.c:1473
+#: src/tail.c:1489
 #, c-format
 msgid "%s is larger than the maximum file size on this system"
 msgstr "%s és més gran que el tamany de fitxer màxim d'aquest sistema"
 
-#: src/tail.c:1499
+#: src/tail.c:1515
 #, c-format
 msgid "%s: invalid maximum number of unchanged stats between opens"
 msgstr ""
 "%s: el nombre màxim d'estats sense alteracions entre obertures no és vàlid"
 
-#: src/tail.c:1511
+#: src/tail.c:1527
 #, c-format
 msgid "%s: invalid maximum number of consecutive size changes"
 msgstr "%s: el nombre màxim de canvis de tamany consecutius no és vàlid"
 
-#: src/tail.c:1523
+#: src/tail.c:1539
 #, c-format
 msgid "%s: invalid PID"
 msgstr "%s: PID no vàlid"
 
-#: src/tail.c:1538
+#: src/tail.c:1554
 #, c-format
 msgid "%s: invalid number of seconds"
 msgstr "%s: el nombre de segons no és vàlid"
 
-#: src/tail.c:1557
+#: src/tail.c:1573
 msgid "warning: --retry is useful only when following by name"
 msgstr "atenció: --retry només és útil quan es segueix la pista d'un nom"
 
-#: src/tail.c:1561
+#: src/tail.c:1577
 msgid "warning: PID ignored; --pid=PID is useful only when following"
 msgstr "atenció: s'ignora el PID; --pid=PID només és util en seguiments"
 
-#: src/tail.c:1564
+#: src/tail.c:1580
 msgid "warning: --pid=PID is not supported on this system"
 msgstr "atenció: aquest sistema no soporta l'opció --pid=PID"
 
@@ -7274,28 +7274,28 @@ msgstr ""
 msgid "the [c*] construct may appear in string2 only when translating"
 msgstr "la construcció [c*] només pot aparèxier a la cadena2 quan es tradueix"
 
-#: src/tr.c:1854
+#: src/tr.c:1853
 msgid "two strings must be given when translating"
 msgstr "heu d'especificar dues cadenes quan es tradueix"
 
-#: src/tr.c:1857
+#: src/tr.c:1856
 msgid "two strings must be given when both deleting and squeezing repeats"
 msgstr "heu d'especificar dues cadenes quan s'eliminen i redueixen repeticions"
 
-#: src/tr.c:1871
+#: src/tr.c:1870
 msgid "only one string may be given when deleting without squeezing repeats"
 msgstr ""
 "només podeu especificar una cadena quan s'eliminen sense reduir repeticions"
 
-#: src/tr.c:1877
+#: src/tr.c:1876
 msgid "at least one string must be given when squeezing repeats"
 msgstr "heu d'especificar com a mínim una cadena quan es redueixen repeticions"
 
-#: src/tr.c:1968
+#: src/tr.c:1967
 msgid "misaligned [:upper:] and/or [:lower:] construct"
 msgstr "la construcció [:upper:] i/o [:lower:] està desalineada"
 
-#: src/tr.c:1991
+#: src/tr.c:1990
 msgid ""
 "invalid identity mapping;  when translating, any [:lower:] or [:upper:]\n"
 "construct in string1 must be aligned with a corresponding construct\n"
