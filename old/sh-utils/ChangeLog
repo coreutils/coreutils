@@ -1,3 +1,13 @@
+Sun Aug  4 09:14:28 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* checks/: New directory.
+	* checks/Makefile.am: New file.
+	* checks/nice: New file.  Derived from tests from Eric Backus.
+	* configure.in (AC_OUTPUT): Add new directory: checks.
+	* Makefile.am (SUBDIRS): Likewise.
+
+	* src/nice.c (main): Allow `+' in options like -+8 and -+13.
+
 Fri Aug  2 21:45:06 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/nice.c (main): Set minus_flag to zero in two places.
