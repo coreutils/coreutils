@@ -134,10 +134,10 @@ main (argc, argv)
   int options = 0;
 
   /* If non-zero, display usage information and exit.  */
-  static int flag_help;
+  static int show_help;
 
-  /* If non-zero, print the version on standard error.  */
-  static int flag_version;
+  /* If non-zero, print the version on standard output then exit.  */
+  static int show_version;
 
   static struct option const long_options[] =
   {
@@ -148,8 +148,8 @@ main (argc, argv)
     {"show-ends", no_argument, NULL, 'E'},
     {"show-tabs", no_argument, NULL, 'T'},
     {"show-all", no_argument, NULL, 'A'},
-    {"help", no_argument, &flag_help, 1},
-    {"version", no_argument, &flag_version, 1},
+    {"help", no_argument, &show_help, 1},
+    {"version", no_argument, &show_version, 1},
     {NULL, 0, NULL, 0}
   };
 
@@ -224,13 +224,13 @@ main (argc, argv)
 	}
     }
 
-  if (flag_version)
+  if (show_version)
     {
-      fprintf (stderr, "%s\n", version_string);
+      printf ("%s\n", version_string);
       exit (0);
     }
 
-  if (flag_help)
+  if (show_help)
     usage ();
 
   output_desc = 1;
@@ -511,8 +511,12 @@ cat (inbuf, insize, outbuf, outsize, quote,
 		  && ioctl (input_desc, FIONREAD, &n_to_read) < 0)
 		{
 		  /* Ultrix returns EOPNOTSUPP on NFS;
-		     HP-UX returns ENOTTY on pipes. */
-		  if (errno == EOPNOTSUPP || errno == ENOTTY)
+		     HP-UX returns ENOTTY on pipes.
+		     SunOS returns EINVAL and
+		     More/BSD returns ENODEV on special files
+		     like /dev/null.  */
+		  if (errno == EOPNOTSUPP || errno == ENOTTY
+		      || errno == EINVAL || errno == ENODEV)
 		    use_fionread = 0;
 		  else
 		    {

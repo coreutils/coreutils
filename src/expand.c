@@ -96,17 +96,17 @@ static int have_read_stdin;
 static int exit_status;
 
 /* If non-zero, display usage information and exit.  */
-static int flag_help;
+static int show_help;
 
-/* If non-zero, print the version on standard error.  */
-static int flag_version;
+/* If non-zero, print the version on standard output then exit.  */
+static int show_version;
 
 static struct option const longopts[] =
 {
   {"tabs", required_argument, NULL, 't'},
   {"initial", no_argument, NULL, 'i'},
-  {"help", no_argument, &flag_help, 1},
-  {"version", no_argument, &flag_version, 1},
+  {"help", no_argument, &show_help, 1},
+  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -153,13 +153,13 @@ main (argc, argv)
 	}
     }
 
-  if (flag_version)
+  if (show_version)
     {
-      fprintf (stderr, "%s\n", version_string);
+      printf ("%s\n", version_string);
       exit (0);
     }
 
-  if (flag_help)
+  if (show_help)
     usage ();
 
   add_tabstop (tabval);

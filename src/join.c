@@ -94,10 +94,10 @@ static struct outlist *outlist_end;
 static char tab;
 
 /* If non-zero, display usage information and exit.  */
-static int flag_help;
+static int show_help;
 
-/* If non-zero, print the version on standard error.  */
-static int flag_version;
+/* If non-zero, print the version on standard output then exit.  */
+static int show_version;
 
 /* When using getopt_long_only, no long option can start with
    a character that is a short option. */
@@ -106,8 +106,8 @@ static struct option const longopts[] =
   {"j", required_argument, NULL, 'j'},
   {"j1", required_argument, NULL, '1'},
   {"j2", required_argument, NULL, '2'},
-  {"help", no_argument, &flag_help, 1},
-  {"version", no_argument, &flag_version, 1},
+  {"help", no_argument, &show_help, 1},
+  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -660,13 +660,13 @@ main (argc, argv)
       prev_optc = optc;
     }
 
-  if (flag_version)
+  if (show_version)
     {
-      fprintf (stderr, "%s\n", version_string);
+      printf ("%s\n", version_string);
       exit (0);
     }
 
-  if (flag_help)
+  if (show_help)
     usage ();
   
   if (nfiles != 2)

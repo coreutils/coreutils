@@ -77,10 +77,10 @@ char *program_name;
 static int have_read_stdin;
 
 /* If non-zero, display usage information and exit.  */
-static int flag_help;
+static int show_help;
 
-/* If non-zero, print the version on standard error.  */
-static int flag_version;
+/* If non-zero, print the version on standard output then exit.  */
+static int show_version;
 
 static struct option const long_options[] =
 {
@@ -89,8 +89,8 @@ static struct option const long_options[] =
   {"quiet", no_argument, NULL, 'q'},
   {"silent", no_argument, NULL, 'q'},
   {"verbose", no_argument, NULL, 'v'},
-  {"help", no_argument, &flag_help, 1},
-  {"version", no_argument, &flag_version, 1},
+  {"help", no_argument, &show_help, 1},
+  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -193,13 +193,13 @@ main (argc, argv)
 	}
     }
 
-  if (flag_version)
+  if (show_version)
     {
-      fprintf (stderr, "%s\n", version_string);
+      printf ("%s\n", version_string);
       exit (0);
     }
 
-  if (flag_help)
+  if (show_help)
     usage ();
 
   if (number == -1)

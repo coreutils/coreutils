@@ -103,18 +103,18 @@ static unsigned buffer_size;
 static struct re_pattern_buffer compiled_separator;
 
 /* If non-zero, display usage information and exit.  */
-static int flag_help;
+static int show_help;
 
-/* If non-zero, print the version on standard error.  */
-static int flag_version;
+/* If non-zero, print the version on standard output then exit.  */
+static int show_version;
 
 static struct option const longopts[] =
 {
   {"before", no_argument, &separator_ends_record, 0},
   {"regex", no_argument, &sentinel_length, 0},
   {"separator", required_argument, NULL, 's'},
-  {"help", no_argument, &flag_help, 1},
-  {"version", no_argument, &flag_version, 1},
+  {"help", no_argument, &show_help, 1},
+  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -166,13 +166,13 @@ main (argc, argv)
 	}
     }
 
-  if (flag_version)
+  if (show_version)
     {
-      fprintf (stderr, "%s\n", version_string);
+      printf ("%s\n", version_string);
       exit (0);
     }
 
-  if (flag_help)
+  if (show_help)
     usage ();
 
   if (sentinel_length == 0)
