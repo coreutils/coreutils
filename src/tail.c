@@ -263,7 +263,10 @@ With no FILE, or when FILE is -, read standard input.\n\
       --help               display this help and exit\n\
       --version            output version information and exit\n\
 \n\
-"));
+"),
+	      DEFAULT_N_LINES, DEFAULT_N_LINES,
+	      DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS
+	      );
       printf (_("\
 If the first character of N (the number of bytes or lines) is a `+',\n\
 print beginning with the Nth item from the start of each file, otherwise,\n\
@@ -281,10 +284,7 @@ rotation).  Use --follow=name in that case.  That causes tail to track the\n\
 named file by reopening it periodically to see if it has been removed and\n\
 recreated by some other program.\n\
 \n\
-"),
-	      DEFAULT_N_LINES, DEFAULT_N_LINES,
-	      DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS
-	      );
+"));
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
