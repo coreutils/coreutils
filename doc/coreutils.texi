@@ -1311,6 +1311,16 @@ characters at the end of each line are also visible.
 
 @exitstatus
 
+Examples:
+
+@smallexample
+# Output f's contents, then standard input, then g's contents.
+cat f - g
+
+# Copy standard input to standard output.
+cat
+@end smallexample
+
 
 @node tac invocation
 @section @command{tac}: Concatenate and write files in reverse
@@ -7700,15 +7710,20 @@ Print the name of each file before linking it.
 
 @end table
 
+@exitstatus
+
 Examples:
 
 @smallexample
-ln -s /some/name  # creates link ./name pointing to /some/name
-ln -s /some/name myname  # creates link ./myname pointing to /some/name
-ln -s a b ..      # creates links ../a and ../b pointing to ./a and ./b
-@end smallexample
+# Create link ./name pointing to /some/name.
+ln -s /some/name
 
-@exitstatus
+# Create link ./myname pointing to /some/name.
+ln -s /some/name myname
+
+# Create links ../a and ../b pointing to ./a and ./b.
+ln -s a b ..
+@end smallexample
 
 
 @node mkdir invocation
@@ -8266,6 +8281,19 @@ Recursively change ownership of directories and their contents.
 
 @exitstatus
 
+Examples:
+
+@smallexample
+# Change the owner of /u to "root".
+chown root /u
+
+# Likewise, but also change its group to "staff".
+chown root:staff /u
+
+# Change the owner of /u and subfiles to "root".
+chown -hR root /u
+@end smallexample
+
 
 @node chgrp invocation
 @section @command{chgrp}: Change group ownership
@@ -8373,6 +8401,16 @@ Recursively change the group ownership of directories and their contents.
 @end table
 
 @exitstatus
+
+Examples:
+
+@smallexample
+# Change the group of /u to "staff".
+chgrp staff /u
+
+# Change the group of /u and subfiles to "staff".
+chgrp -hR staff /u
+@end smallexample
 
 
 @node chmod invocation
@@ -10188,6 +10226,16 @@ options}.  Options must precede operands.
 
 @exitstatus
 
+Examples:
+
+@smallexample
+# Output "sort".
+basename /usr/bin/sort
+
+# Output "stdio".
+basename include/stdio.h .h
+@end smallexample
+
 
 @node dirname invocation
 @section @command{dirname}: Strip non-directory suffix from a file name
@@ -10211,6 +10259,16 @@ The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
 @exitstatus
+
+Examples:
+
+@smallexample
+# Output "/usr/bin".
+dirname /usr/bin/sort
+
+# Output ".".
+dirname stdio.h
+@end smallexample
 
 
 @node pathchk invocation
