@@ -674,6 +674,8 @@ main (int argc, char **argv)
 		      max_line_length, _("total"));
     }
 
+  free (fstatus);
+
   if (have_read_stdin && close (STDIN_FILENO) != 0)
     error (EXIT_FAILURE, errno, "-");
 
