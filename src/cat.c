@@ -1,5 +1,5 @@
 /* cat -- concatenate files and print on the standard output.
-   Copyright (C) 88, 90, 91, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 95, 96, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -381,60 +381,76 @@ cat (
       /* If quoting, i.e. at least one of -v, -e, or -t specified,
 	 scan for chars that need conversion.  */
       if (quote)
-	for (;;)
-	  {
-	    if (ch >= 32)
-	      {
-		if (ch < 127)
-		  *bpout++ = ch;
-		else if (ch == 127)
-		  *bpout++ = '^',
-		    *bpout++ = '?';
-		else
-		  {
-		    *bpout++ = 'M',
+	{
+	  for (;;)
+	    {
+	      if (ch >= 32)
+		{
+		  if (ch < 127)
+		    *bpout++ = ch;
+		  else if (ch == 127)
+		    {
+		      *bpout++ = '^';
+		      *bpout++ = '?';
+		    }
+		  else
+		    {
+		      *bpout++ = 'M';
 		      *bpout++ = '-';
-		    if (ch >= 128 + 32)
-		      if (ch < 128 + 127)
-			*bpout++ = ch - 128;
+		      if (ch >= 128 + 32)
+			{
+			  if (ch < 128 + 127)
+			    *bpout++ = ch - 128;
+			  else
+			    {
+			      *bpout++ = '^';
+			      *bpout++ = '?';
+			    }
+			}
 		      else
-			*bpout++ = '^',
-			  *bpout++ = '?';
-		    else
-		      *bpout++ = '^',
-			*bpout++ = ch - 128 + 64;
-		  }
-	      }
-	    else if (ch == '\t' && output_tabs)
-	      *bpout++ = '\t';
-	    else if (ch == '\n')
-	      {
-		newlines = -1;
-		break;
-	      }
-	    else
-	      *bpout++ = '^',
-		*bpout++ = ch + 64;
+			{
+			  *bpout++ = '^';
+			  *bpout++ = ch - 128 + 64;
+			}
+		    }
+		}
+	      else if (ch == '\t' && output_tabs)
+		*bpout++ = '\t';
+	      else if (ch == '\n')
+		{
+		  newlines = -1;
+		  break;
+		}
+	      else
+		{
+		  *bpout++ = '^';
+		  *bpout++ = ch + 64;
+		}
 
-	    ch = *bpin++;
-	  }
+	      ch = *bpin++;
+	    }
+	}
       else
-	/* Not quoting, neither of -v, -e, or -t specified.  */
-	for (;;)
-	  {
-	    if (ch == '\t' && !output_tabs)
-	      *bpout++ = '^',
-		*bpout++ = ch + 64;
-	    else if (ch != '\n')
-	      *bpout++ = ch;
-	    else
-	      {
-		newlines = -1;
-		break;
-	      }
+	{
+	  /* Not quoting, neither of -v, -e, or -t specified.  */
+	  for (;;)
+	    {
+	      if (ch == '\t' && !output_tabs)
+		{
+		  *bpout++ = '^';
+		  *bpout++ = ch + 64;
+		}
+	      else if (ch != '\n')
+		*bpout++ = ch;
+	      else
+		{
+		  newlines = -1;
+		  break;
+		}
 
-	    ch = *bpin++;
-	  }
+	      ch = *bpin++;
+	    }
+	}
     }
 }
 
