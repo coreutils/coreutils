@@ -4,6 +4,7 @@
 	AC_SUBST these here, rather than just in sh-util/configure.in, so
 	that the now-shared-by-fileutils-and-textutils lib/Makefile.am are
 	all the same.
+	(AM_FUNC_OBSTACK): Add (from fileutils/configure.in).
 
 2000-01-22  Jim Meyering  <meyering@lucent.com>
 
