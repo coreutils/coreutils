@@ -1,3 +1,7 @@
+2000-09-15  Jim Meyering  <meyering@lucent.com>
+
+	* config.sub: Update from master repository.
+
 2000-09-10  Jim Meyering  <meyering@lucent.com>
 
 	* tests/cp/cp-mv-backup (LC_ALL): Set to `C' and export to ensure
