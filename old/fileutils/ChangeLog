@@ -1,5 +1,7 @@
 1999-08-29  Jim Meyering  <meyering@ascend.com>
 
+	* configure.in (AC_YACC): Remove use, now that we require bison.
+
 	* src/dircolors.hin: Add .rpm, .png, and .fli.
 	From Andres Soolo.
 
