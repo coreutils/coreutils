@@ -1,5 +1,5 @@
 /* printf - format and print data
-   Copyright (C) 1990-2000, Free Software Foundation, Inc.
+   Copyright (C) 1990-2001, Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -554,7 +554,9 @@ main (int argc, char **argv)
   while (args_used > 0 && argc > 0);
 
   if (argc > 0)
-    error (0, 0, _("warning: excess arguments have been ignored"));
+    error (0, 0,
+	   _("warning: ignoring excess arguments, starting with `%s'"),
+	   argv[0]);
 
   exit (exit_status);
 }
