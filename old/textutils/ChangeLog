@@ -2,6 +2,29 @@
 
 	* Version 2.0.20.
 
+	* po/POTFILES.in: Add lib/xmemcoll.c.
+
+2002-01-22  Paul Eggert  <eggert@twinsun.com>
+
+	* src/tac.c (save_stdin): Report proper errno value after
+	fwrite failures.  Do not bother to rewind the temp file, as
+	it'll be read backwards anyway.
+
+2002-01-22  Paul Eggert  <eggert@twinsun.com>
+
+	* src/ptx.c (swallow_file_in_memory): Work even if `open' returns 0.
+	Check for `close' error.
+
+2002-01-22  Paul Eggert  <eggert@twinsun.com>
+
+	Port to glibc 2.2.5, whose mmap stdio positions the underlying
+	file descriptor at a nonzero offset after an fopen.
+
+	* m4/jm-macros.m4 (jm_MACROS): Require AC_FUNC_FSEEKO.
+	* src/od.c (skip): Use fseeko rather than lseek.
+	(Also, check for overflow when converting uintmax_t to off_t.)
+	* src/sys2.h (EOVERFLOW, fseeko): New macros.
+
 2001-01-21  Paul Eggert  <eggert@twinsun.com>
 
 	* src/comm.c: Include xmemcoll.h, not memcoll.h.

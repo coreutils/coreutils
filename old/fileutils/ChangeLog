@@ -2,6 +2,8 @@
 
 	* Version 4.1.6.
 
+	* po/POTFILES.in: Add lib/xmemcoll.c
+
 	* src/chown-core.c: Don't include "xalloc.h", as system.h already
 	does that via sys2.h.
 	* src/ls.c: Likewise.
