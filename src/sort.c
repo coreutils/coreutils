@@ -2210,7 +2210,7 @@ set_ordering (register const char *s, struct keyfield *key,
 static struct keyfield *
 new_key (void)
 {
-  struct keyfield *key = xcalloc (1, sizeof *key);
+  struct keyfield *key = xzalloc (sizeof *key);
   key->eword = SIZE_MAX;
   return key;
 }
