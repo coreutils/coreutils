@@ -2,6 +2,9 @@
 
 	* Version 5.1.2.
 
+	* man/Makefile.am (EXTRA_DIST): Add help2man.
+	Reported by Nelson H. F. Beebe.
+
 	* man/Makefile.am (.x.1): Prefix help2man invocation with `$(PERL) --'
 	so it works on systems with Perl installed somewhere other than in
 	/usr/bin.
