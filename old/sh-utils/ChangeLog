@@ -1,3 +1,7 @@
+Sun May 19 21:45:49 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* seq.c (usage): Make it a little clearer.
+
 Sat May 18 13:29:46 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* expr.c (main): Don't recognize --help, --h, --he, --version,
