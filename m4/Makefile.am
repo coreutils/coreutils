@@ -37,8 +37,10 @@ host-os.m4 \
 human.m4 \
 iconv.m4 \
 intdiv0.m4 \
+intmax_t.m4 \
 inttypes-pri.m4 \
 inttypes.m4 \
+inttypes_h.m4 \
 isc-posix.m4 \
 jm-glibc-io.m4 \
 jm-macros.m4 \
@@ -78,15 +80,18 @@ st_dm_mode.m4 \
 st_mtim.m4 \
 stat.m4 \
 stdbool.m4 \
+stdint_h.m4 \
 strftime.m4 \
 timespec.m4 \
 tm_gmtoff.m4 \
 tzset.m4 \
+uintmax_t.m4 \
 unlink-busy.m4 \
 uptime.m4 \
 utimbuf.m4 \
 utime.m4 \
 utimes.m4 \
+vasprintf.m4 \
 xstrtoimax.m4 \
 xstrtoumax.m4
 ##m4-files-end
