@@ -172,8 +172,6 @@ by whitespace.  When FILE1 or FILE2 (not both) is -, read standard input.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-"), stdout);
-      fputs (_("\
 Unless -t CHAR is given, leading blanks separate fields and are ignored,\n\
 else fields are separated by CHAR.  Any FIELD is a field number counted\n\
 from 1.  FORMAT is one or more comma or blank separated specifications,\n\
