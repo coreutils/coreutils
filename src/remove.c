@@ -575,12 +575,15 @@ remove_cwd_entries (const struct rm_options *x)
     }
   while (dirp == NULL);
 
-  if (CLOSEDIR (dirp))
+  if (dirp)
     {
-      error (0, errno, "%s", full_filename ("."));
-      status = RM_OK;
+      if (CLOSEDIR (dirp))
+	{
+	  error (0, errno, "%s", full_filename ("."));
+	  status = RM_ERROR;
+	}
+      dirp = NULL;
     }
-  dirp = NULL;
 
   if (ht)
     {
@@ -766,7 +769,7 @@ remove_dir (struct File_spec *fs, int need_save_cwd, const struct rm_options *x)
       return RM_ERROR;
     }
 
-  return RM_OK;
+  return status;
 }
 
 /* Remove the file or directory specified by FS after checking appropriate
