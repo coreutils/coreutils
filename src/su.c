@@ -317,10 +317,6 @@ main (argc, argv)
   if (simulate_login && chdir (pw->pw_dir))
     error (0, errno, "warning: cannot change directory to %s", pw->pw_dir);
 
-  free (pw->pw_name);
-  free (pw->pw_dir);
-  free (pw->pw_shell);
-
   run_shell (shell, command, additional_args);
 }
 
