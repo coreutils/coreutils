@@ -502,18 +502,6 @@ tac_stdin (void)
 #if 0
 /* BUF_END points one byte past the end of the buffer to be searched.  */
 
-static void *
-memrchr (const char *buf_start, const char *buf_end, int c)
-{
-  const char *p = buf_end;
-  while (buf_start <= --p)
-    {
-      if (*(const unsigned char *) p == c)
-	return (void *) p;
-    }
-  return NULL;
-}
-
 /* FIXME: describe */
 
 static void
@@ -571,19 +559,21 @@ tac_stdin_to_mem (void)
   while (1)
     {
       size_t bytes_read;
-      if (buf == NULL)
-	buf = (char *) malloc (bufsiz);
-      else
-	buf = (char *) realloc (buf, bufsiz);
+      char *new_buf = realloc (buf, bufsiz);
 
-      if (buf == NULL)
+      if (new_buf == NULL)
 	{
+	  /* Write contents of buf to a temporary file, ... */
+	  /* FIXME */
+
 	  /* Free the buffer and fall back on the code that relies on a
 	     temporary file.  */
 	  free (buf);
 	  /* FIXME */
 	  abort ();
 	}
+
+      buf = new_buf;
       bytes_read = safe_read (STDIN_FILENO, buf + n_bytes, bufsiz - n_bytes);
       if (bytes_read == 0)
 	break;
