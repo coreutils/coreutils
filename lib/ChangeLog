@@ -1,6 +1,9 @@
 2003-06-06  Jim Meyering  <jim@meyering.net>
 
 	Update from gnulib.
+	* rpmatch.c: Include <limits.h> without checking for HAVE_LIMITS_H.
+	Include <stddefs.h> unconditionally.
+	(NULL): Don't define, since <stddef.h> does that.
 	* rename.c: #undef rename before defining rpl_rename.
 	[HAVE_CONFIG_H]: Guard inclusion of config.h.
 	* putenv.c: Include <stddef.h> rather than <sys/types.h>,
