@@ -1,5 +1,7 @@
 1999-01-30  Jim Meyering  <meyering@ascend.com>
 
+	* check-type.m4: Use 3-arg form of AC_DEFINE.
+
 	* jm-mktime.m4: Make this a wrapper around the official AM_FUNC_MKTIME
 	rather than my private copy, now that the official one is up to date.
 	* mktime.m4: Remove file.
