@@ -1,3 +1,14 @@
+2000-01-11  Paul Eggert  <eggert@twinsun.com>
+
+	Quote multibyte characters correctly.
+	* m4/c-bs-a.m4: New file.
+	* m4/prereq.m4 (jm_PREREQ_QUOTEARG): New macro.
+	(jm_PREREQ): Use it.
+
+2000-01-11  Paul Eggert  <eggert@twinsun.com>
+
+	* m4/uintmax_t.m4: Port to autoconf 2.13.
+
 2000-01-08  Jim Meyering  <meyering@ascend.com>
 
 	* strerror_r.m4 (jm_FUNC_STRERROR_R): New file/macro.
