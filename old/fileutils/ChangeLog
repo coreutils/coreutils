@@ -2,6 +2,9 @@
 
 	* Version 4.1.6.
 
+	* src/cp.c (main): Fail if -r is specified after --archive (-a)
+	on the command line.
+
 	* src/copy.c (copy_reg): Detect abuse of a race condition
 	whereby an unprivileged user could gain read access to otherwise-
 	inaccessible files when root uses cp or mv to copy a hierarchy
