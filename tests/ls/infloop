@@ -40,6 +40,5 @@ loop/sub/sub:
 EOF
 
 cmp out bad && fail=1
-test $fail = 1 && diff out bad 2> /dev/null
 
 (exit $fail); exit
