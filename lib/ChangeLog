@@ -1,5 +1,10 @@
 2005-02-25  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* vasnprintf.c (VASNPRINTF) [!USE_SNPRINTF]: Correct the test for
+	integer overflow again.  Actually, neither this nor the 2005-01-23
+	change fixes any bug on any plausible platform; it's more of a
+	code-clarity thing.
+
 	* config.charset, gettext.h, localcharset.c: Sync from gnulib.
 
 2005-02-23  Paul Eggert  <eggert@cs.ucla.edu>
