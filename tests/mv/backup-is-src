@@ -1,12 +1,9 @@
 #!/bin/sh
 # Force mv to use the copying code.
 
-: ${MV=mv}
-: ${RM=rm}
-
 if test "$VERBOSE" = yes; then
   set -x
-  $MV --version
+  mv --version
 fi
 
 . $srcdir/setup
@@ -19,7 +16,7 @@ a="$other_partition_tmpdir/a"
 a2="$other_partition_tmpdir/a~"
 
 framework_failure=0
-$RM -f $a $a2 || framework_failure=1
+rm -f $a $a2 || framework_failure=1
 echo a > $a || framework_failure=1
 echo a2 > $a2 || framework_failure=1
 
@@ -37,10 +34,10 @@ LANG=C
 export LANG
 
 # This mv command should exit nonzero.
-$MV --b=simple $a2 $a > out 2>&1 && fail=1
+mv --b=simple $a2 $a > out 2>&1 && fail=1
 
 sed \
-   -e "s,$MV:,XXX:," \
+   -e "s,mv:,XXX:," \
    -e "s,$a,YYY," \
    -e "s,$a2,ZZZ," \
   out > out2
@@ -51,6 +48,6 @@ EOF
 
 cmp out2 exp || fail=1
 
-$RM -fr out out2 exp $a $a2 $other_partition_tmpdir
+rm -fr out out2 exp $a $a2 $other_partition_tmpdir
 
 exit $fail
