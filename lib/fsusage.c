@@ -144,6 +144,21 @@ get_fs_usage (path, disk, fsp)
 
   if (statfs (path, &fsd) < 0)
     return -1;
+
+#ifdef STATFS_TRUNCATES_BLOCK_COUNTS
+  /* In SunOS 4.1.2, 4.1.3, and 4.1.3_U1, the block counts in the
+     struct statfs are truncated to 2GB.  These conditions detect that
+     truncation, presumably without botching the 4.1.1 case, in which
+     the values are not truncated.  The correct counts are stored in
+     undocumented spare fields.  */
+  if (fsd.f_blocks == 0x1fffff && fsd.f_spare[0] > 0)
+    {
+      fsd.f_blocks = fsd.f_spare[0];
+      fsd.f_bfree = fsd.f_spare[1];
+      fsd.f_bavail = fsd.f_spare[2];
+    }
+#endif /* STATFS_TRUNCATES_BLOCK_COUNTS */
+
 #define CONVERT_BLOCKS(b) adjust_blocks ((b), fsd.f_bsize, 512)
 #endif
 
