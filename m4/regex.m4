@@ -1,4 +1,4 @@
-#serial 8
+#serial 9
 
 dnl Initially derived from code in GNU grep.
 dnl Mostly written by Jim Meyering.
@@ -28,6 +28,7 @@ AC_DEFUN(jm_INCLUDED_REGEX,
 	  {
 	    static struct re_pattern_buffer regex;
 	    const char *s;
+	    struct re_registers regs;
 	    re_set_syntax (RE_SYNTAX_POSIX_EGREP);
 	    /* Add this third left square bracket, [, to balance the
 	       three right ones below.  Otherwise autoconf-2.14 chokes.  */
@@ -39,7 +40,20 @@ AC_DEFUN(jm_INCLUDED_REGEX,
 	    /* This should succeed, but doesn't for e.g. glibc-2.1.3.  */
 	    s = re_compile_pattern ("{1", 2, &regex);
 
-	    exit (s ? 1 : 0);
+	    if (s)
+	      exit (1);
+
+	    /* The following example is derived from a problem report
+               against gawk from Jorge Stolfi <stolfi@ic.unicamp.br>.  */
+	    s = re_compile_pattern ("[anù]*n", 7, &regex);
+	    if (s)
+	      exit (1);
+
+	    /* This should match, but doesn't for e.g. glibc-2.2.1.  */
+	    if (re_match (&regex, "an", 2, 0, &regs) != 2)
+	      exit (1);
+
+	    exit (0);
 	  }
 	],
 	       jm_cv_func_working_re_compile_pattern=yes,
