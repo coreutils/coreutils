@@ -31,7 +31,7 @@ t=./=test
 my-distcheck:
 	-rm -rf $(t)
 	mkdir $(t)
-	GZIP=$(GZIP) $(TAR) -C $(t) -zxf $(distdir).tar.gz
+	GZIP=$(GZIP) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
 	cd $(t)/$(distdir) \
 	  && ./configure --disable-nls \
 	  && $(MAKE) CFLAGS='-Wformat -Werror' \
@@ -39,7 +39,7 @@ my-distcheck:
 	  && $(MAKE) check \
 	  && $(MAKE) distclean
 	cd $(t) && mv $(distdir) $(distdir).old \
-	  && $(TAR) -zxf ../$(distdir).tar.gz
+	  && $(AMTAR) -zxf ../$(distdir).tar.gz
 	diff -ur $(t)/$(distdir).old $(t)/$(distdir)
 	-rm -rf $(t)
 	@echo "========================"; \
