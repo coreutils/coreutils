@@ -1176,7 +1176,7 @@ Print all current settings in human-readable form.  This option may not
 be used in combination with any line settings.
 
 @item -F @var{device}
-@itemx --file @var{device}
+@itemx --file=@var{device}
 @opindex -F
 @opindex --file
 Set the line opened by the filename specified in @var{device} instead of
