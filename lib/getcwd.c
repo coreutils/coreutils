@@ -44,11 +44,14 @@ extern int errno;
 #define MAX_SAFE_LEN (PATH_MAX - 1 - KLUDGE_POSIX_NAME_MAX - 1)
 
 /* This is a wrapper for getcwd.
-   Some implementations (at least GNU libc 2.3.1) return non-NULL
-   for a working directory name longer than PATH_MAX, yet the returned
-   string is a strict prefix of the desired directory name.
+   Some implementations (at least GNU libc 2.3.1 + linux-2.4.20) return
+   non-NULL for a working directory name longer than PATH_MAX, yet the
+   returned string is a strict prefix of the desired directory name.
    Upon such a failure, free the offending string, set errno to
-   ENAMETOOLONG, and return NULL.  */
+   ENAMETOOLONG, and return NULL.
+
+   I've heard that this is a Linux kernel bug, and that it has
+   been fixed between 2.4.21-pre3 and 2.4.21-pre4.  */
 
 char *
 rpl_getcwd (char *buf, size_t size)
