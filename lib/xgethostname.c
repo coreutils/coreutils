@@ -46,12 +46,12 @@ xgethostname ()
   int err;
 
   size = INITIAL_HOSTNAME_LENGTH;
+  hostname = xmalloc (size);
   while (1)
     {
-      hostname = xmalloc (size);
       hostname[size - 1] = '\0';
       err = gethostname (hostname, size);
-      if (err || hostname[size - 1] == '\0')
+      if (err == 0 && hostname[size - 1] == '\0')
 	break;
       size *= 2;
       hostname = xrealloc (hostname, size);

@@ -1,4 +1,32 @@
+Thu May 19 01:10:20 1994  Jim Meyering  (meyering@comco.com)
+
+	* Version 1.10.
+
+	* lib/Makefile.in (DISTFILES): Add getdate.c and posixtm.c.
+
+	* src/Makefile.in (users.c): Use cp if hard link fails.
+	From Ian Lance Taylor.
+
+	* Makefile.in (dist): Change package name from shellutils to sh-utils.
+	That allows a hyphen and 5-character version number without exceeding
+	the 14-character limit on file name length.  shellutils-1.10 would
+	have been too long.
+	* version.c: Update package name.
+
+	* hostname.c: Include <sys/types.h> before "system.h".
+	From Kaveh Ghazi and Karl Berry.
+
+	* hostname.c (sethostname) [!HAVE_SETHOSTNAME && HAVE_SYSINFO &&
+	HAVE_SYS_SYSTEMINFO_H && HAVE_LIMITS_H]: New function.  SVR4 systems
+	prefer sysinfo over sethostname.
+	* configure.in (AC_HAVE_FUNCS): Add sysinfo.
+	(AC_HAVE_HEADERS): Add sys/systeminfo.h.
+	From Kaveh Ghazi.
+
 Fri May 13 09:45:23 1994  Jim Meyering  (meyering@comco.com)
+
+	* lib/xgethostname.c (xgethostname): Call xmalloc outside the loop.
+	Correct loop termination condition.
 
 	* pwd.c: Include <sys/types.h> before "system.h".
 	From Kaveh Ghazi.

@@ -29,9 +29,31 @@
 #endif
 
 #include <stdio.h>
+#include <sys/types.h>
 
 #include "system.h"
 #include "long-options.h"
+
+#if !defined(HAVE_SETHOSTNAME) && defined(HAVE_SYSINFO) && \
+     defined (HAVE_SYS_SYSTEMINFO_H) && defined(HAVE_LIMITS_H)
+#include <limits.h>
+#include <sys/systeminfo.h>
+
+int
+sethostname (name, namelen)
+     char *name;
+     int namelen;
+{
+  /* Using sysinfo() is the SVR4 mechanism to set a hostname. */
+  int result;
+  
+  result = sysinfo (SI_SET_HOSTNAME, name, namelen);
+  
+  return (result == -1 ? result : 0);
+}
+
+#define HAVE_SETHOSTNAME 1  /* Now we have it... */
+#endif
 
 void error ();
 char *xgethostname ();
