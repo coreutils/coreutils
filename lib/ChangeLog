@@ -1,4 +1,18 @@
+2002-11-21  Jim Meyering  <jim@meyering.net>
+
+	Merge in changes from the coreutils.
+
+	* mountlist.h (ME_DUMMY): Don't count entries of type `auto' as dummy
+	ones.  At least on GNU/Linux systems, `auto' means something else.
+	From Michael Stone.
+
 2002-11-19  Jim Meyering  <jim@meyering.net>
+
+	* quotearg.c (quotearg_buffer_restyled): If mbrtowc returns
+	`(size_t) -1' (at which point it would also set errno to EILSEQ),
+	then restore errno to its previous value.
+	Reported by Phillip Jones via Tim Waugh as
+	https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=76334.
 
 	Avoid a link-time failure on some Linux systems.
 	* mktime.c (STATIC): Define to be empty (_LIBC) or `static' (otherwise).
