@@ -21,8 +21,7 @@
 
 #include <stdio.h>
 #include <sys/types.h>
-#include "mountlist.h"
-#include "unlocked-io.h"
+
 
 #ifdef STDC_HEADERS
 # include <stdlib.h>
@@ -34,13 +33,11 @@ void free ();
 #else
 # include <strings.h>
 #endif
+#include "xalloc.h"
 
 #ifndef strstr
 char *strstr ();
 #endif
-char *xmalloc ();
-char *xrealloc ();
-char *xstrdup ();
 
 #include <errno.h>
 #ifndef errno
@@ -144,6 +141,9 @@ extern int errno;
 #else
 # define MNT_IGNORE(M) 0
 #endif
+
+#include "mountlist.h"
+#include "unlocked-io.h"
 
 #ifdef MOUNTED_GETMNTENT1	/* 4.3BSD, SunOS, HP-UX, Dynix, Irix.  */
 /* Return the value of the hexadecimal number represented by CP.
