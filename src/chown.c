@@ -1,5 +1,5 @@
 /* chown -- change user and group ownership of files
-   Copyright (C) 89, 90, 91, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -126,6 +126,8 @@ Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
       --help             display this help and exit\n\
       --version          output version information and exit\n\
 \n\
+"));
+      printf (_("\
 Owner is unchanged if missing.  Group is unchanged if missing, but changed\n\
 to login group if implied by a `:'.  OWNER and GROUP may be numeric as well\n\
 as symbolic.\n\
