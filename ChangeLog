@@ -2,6 +2,10 @@
 
 	* Version 5.0.90.
 
+	* tests/shred/remove: Don't open-code test for UID != 0.
+	Use priv-check's require-non-root instead.
+	Update to use newer framework.
+
 	* tests/help-version (expected_failure_status_expr): Record that
 	expr exits with status of 3 for e.g., a write error.
 
