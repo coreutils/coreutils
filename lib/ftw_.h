@@ -38,6 +38,13 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 
+/* When compiling stand-alone on a system that does not define
+   __USE_XOPEN_EXTENDED, define that symbol so that all the
+   required declarations appear.  */
+# if ! defined _LIBC && ! defined __USE_XOPEN_EXTENDED
+#  define FTW_H_STANDALONE 1
+#  define __USE_XOPEN_EXTENDED 1
+# endif
 
 __BEGIN_DECLS
 
@@ -53,6 +60,8 @@ enum
 # define FTW_DNR	 FTW_DNR
   FTW_NS,		/* Unstatable file.  */
 # define FTW_NS	 FTW_NS
+  FTW_DCH,		/* Can't chdir to directory.  */
+# define FTW_DCH FTW_DCH
 
 # if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 
@@ -148,6 +157,11 @@ extern int __REDIRECT (nftw, (__const char *__dir, __nftw_func_t __func,
 extern int nftw64 (__const char *__dir, __nftw64_func_t __func,
 		   int __descriptors, int __flag) __THROW;
 #  endif
+# endif
+
+/* If we defined __USE_XOPEN_EXTENDED above, undefine it here.  */
+# ifdef FTW_H_STANDALONE
+#  undef __USE_XOPEN_EXTENDED
 # endif
 
 __END_DECLS
