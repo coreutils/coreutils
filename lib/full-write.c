@@ -34,10 +34,7 @@ extern int errno;
 #endif
 
 /* Write LEN bytes at PTR to descriptor DESC, retrying if interrupted.
-   Return LEN upon success, write's (negative) error code otherwise.
-   As the name implies, this function writes all LEN bytes and returns
-   LEN or it fails and returns the negative value returned by the (final)
-   failing write.  */
+   Return LEN upon success, write's (negative) error code otherwise.  */
 
 int
 full_write (desc, ptr, len)
