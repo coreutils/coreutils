@@ -1,5 +1,5 @@
 /* id -- print real and effective UIDs and GIDs
-   Copyright (C) 1989-1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1989-1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,6 @@ static void print_user PARAMS ((int uid));
 static void print_group PARAMS ((int gid));
 static void print_group_list PARAMS ((const char *username));
 static void print_full_info PARAMS ((const char *username));
-static void usage PARAMS ((int status));
 
 /* The name this program was run with. */
 char *program_name;
@@ -88,6 +87,34 @@ static struct option const longopts[] =
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
+
+void
+usage (int status)
+{
+  if (status != 0)
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+	     program_name);
+  else
+    {
+      printf (_("Usage: %s [OPTION]... [USERNAME]\n"), program_name);
+      printf (_("\
+Print information for USERNAME, or the current user.\n\
+\n\
+  -a              ignore, for compatibility with other versions\n\
+  -g, --group     print only the group ID\n\
+  -G, --groups    print only the supplementary groups\n\
+  -n, --name      print a name instead of a number, for -ugG\n\
+  -r, --real      print the real ID instead of effective ID, for -ugG\n\
+  -u, --user      print only the user ID\n\
+      --help      display this help and exit\n\
+      --version   output version information and exit\n\
+\n\
+Without any OPTION, print some useful set of identified information.\n\
+"));
+      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
+    }
+  exit (status);
+}
 
 int
 main (int argc, char **argv)
@@ -358,32 +385,4 @@ print_full_info (const char *username)
     free (groups);
   }
 #endif /* HAVE_GETGROUPS */
-}
-
-static void
-usage (int status)
-{
-  if (status != 0)
-    fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
-  else
-    {
-      printf (_("Usage: %s [OPTION]... [USERNAME]\n"), program_name);
-      printf (_("\
-Print information for USERNAME, or the current user.\n\
-\n\
-  -a              ignore, for compatibility with other versions\n\
-  -g, --group     print only the group ID\n\
-  -G, --groups    print only the supplementary groups\n\
-  -n, --name      print a name instead of a number, for -ugG\n\
-  -r, --real      print the real ID instead of effective ID, for -ugG\n\
-  -u, --user      print only the user ID\n\
-      --help      display this help and exit\n\
-      --version   output version information and exit\n\
-\n\
-Without any OPTION, print some useful set of identified information.\n\
-"));
-      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
-    }
-  exit (status);
 }
