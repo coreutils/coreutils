@@ -46,22 +46,6 @@ time_t time ();
 #define CH_ATIME 1
 #define CH_MTIME 2
 
-#if !defined O_NDELAY
-# define O_NDELAY 0
-#endif
-
-#if !defined O_NONBLOCK
-# define O_NONBLOCK O_NDELAY
-#endif
-
-#if !defined O_NOCTTY
-# define O_NOCTTY 0
-#endif
-
-#if !defined EISDIR
-# define EISDIR 0
-#endif
-
 /* The name by which this program was run. */
 char *program_name;
 
