@@ -23,6 +23,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "dirname.h"
 #include "error.h"
 #include "filemode.h"
 #include "modechange.h"
@@ -52,8 +53,6 @@ enum Verbosity
   /* Do not be verbose.  This is the default. */
   V_off
 };
-
-void strip_trailing_slashes ();
 
 static int change_dir_mode PARAMS ((const char *dir,
 				    const struct mode_change *changes,

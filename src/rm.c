@@ -50,6 +50,7 @@
 #include <assert.h>
 
 #include "system.h"
+#include "dirname.h"
 #include "error.h"
 #include "remove.h"
 #include "save-cwd.h"
@@ -59,8 +60,6 @@
 
 #define AUTHORS \
   "Paul Rubin, David MacKenzie, Richard Stallman, and Jim Meyering"
-
-void strip_trailing_slashes ();
 
 /* Name this program was run with.  */
 char *program_name;

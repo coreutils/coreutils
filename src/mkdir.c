@@ -34,8 +34,6 @@
 
 #define AUTHORS "David MacKenzie"
 
-void strip_trailing_slashes ();
-
 /* The name this program was run with. */
 char *program_name;
 

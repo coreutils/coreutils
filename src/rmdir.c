@@ -28,6 +28,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "dirname.h"
 #include "error.h"
 #include "quote.h"
 
@@ -43,8 +44,6 @@
 #ifndef ENOTEMPTY
 # define ENOTEMPTY 0
 #endif
-
-void strip_trailing_slashes ();
 
 /* The name this program was run with. */
 char *program_name;

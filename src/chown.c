@@ -34,6 +34,7 @@
 #include <getopt.h>
 
 #include "system.h"
+#include "dirname.h"
 #include "error.h"
 #include "lchown.h"
 #include "quote.h"
@@ -56,7 +57,6 @@ struct group *getgrgid ();
 #endif
 
 char *parse_user_spec ();
-void strip_trailing_slashes ();
 
 /* The name the program was run with. */
 char *program_name;

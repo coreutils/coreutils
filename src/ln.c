@@ -29,6 +29,7 @@
 #include "system.h"
 #include "same.h"
 #include "backupfile.h"
+#include "dirname.h"
 #include "error.h"
 #include "quote.h"
 
@@ -86,7 +87,6 @@ int symlink ();
 
 int isdir ();
 int yesno ();
-void strip_trailing_slashes ();
 
 /* The name by which the program was run, for error messages.  */
 char *program_name;
