@@ -17,7 +17,9 @@ mkdir -p $dir/a/b/c $dir/d/e/f || framework_failure=1
 touch $dir/a/b/c/file1 $dir/d/e/f/file2 || framework_failure=1
 
 if test $framework_failure = 1; then
-  echo 'failure in testing framework'
+  echo '********************************************'
+  echo 'NOTICE: unable to create test prerequisites'
+  echo '********************************************'
   # exit 77 here to indicate that we couldn't run the test.
   # At least running on SunOS 4.1.4, using a directory NFS mounted
   # from an OpenBSD system, the above mknod fails.
