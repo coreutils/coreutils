@@ -2,6 +2,9 @@
 
 	* Version 5.3.0.
 
+	* src/du.c (main): Rearrange filtering loop to be a tiny bit
+	more efficient.
+
 	* src/chown-core.c: Don't include savedir.h -- no longer needed.
 	* src/chmod.c: Likewise.
 
