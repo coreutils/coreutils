@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2002-09-27.13}
+\def\texinfoversion{2002-09-29.15}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
@@ -986,9 +986,6 @@ where each line of input produces a line of output.}
     \openin 1 \jobname.toc
     \ifeof 1\else\begingroup
       \closein 1 
-      \indexnofonts
-      \def\tt{}
-      \let\_ = \normalunderscore
       % Thanh's hack / proper braces in bookmarks  
       \edef\mylbrace{\iftrue \string{\else}\fi}\let\{=\mylbrace
       \edef\myrbrace{\iffalse{\else\string}\fi}\let\}=\myrbrace
@@ -1016,6 +1013,12 @@ where each line of input produces a line of output.}
       \let\unnumbsecentry = \secentry
       \let\unnumbsubsecentry = \subsecentry
       \let\unnumbsubsubsecentry = \subsubsecentry
+      %
+      % Make special characters normal for writing to the pdf file.
+      % 
+      \indexnofonts
+      \let\tt=\relax
+      \turnoffactive
       \input \jobname.toc
     \endgroup\fi
   }}
@@ -6096,12 +6099,26 @@ should work if nowhere else does.}
 % Use @afourpaper to print on European A4 paper.
 \def\afourpaper{{\globaldefs = 1
   \parskip = 3pt plus 2pt minus 1pt
-  \textleading = 12pt
+  \textleading = 13.2pt
   %
-  \internalpagesizes{53\baselineskip}{160mm}{\voffset}{4mm}{\bindingoffset}{44pt}%
+  % Double-side printing via postscript on Laserjet 4050 
+  % prints double-sided nicely when \bindingoffset=10mm and \hoffset=-6mm.
+  % To change the settings for a different printer or situation, adjust
+  % \normaloffset until the front-side and back-side texts align.  Then
+  % do the same for \bindingoffset.  You can set these for testing in
+  % your texinfo source file like this:
+  % @tex
+  % \global\normaloffset = -6mm
+  % \global\bindingoffset = 10mm
+  % @end tex
+  \internalpagesizes{51\baselineskip}{160mm}{\voffset}{\hoffset}%
+                    {\bindingoffset}{44pt}%
   %
   \tolerance = 700
   \hfuzz = 1pt
+  \contentsrightmargin = 0pt
+  \deftypemargin = 0pt
+  \defbodyindent = 5mm
 }}
 
 % Use @afivepaper to print on European A5 paper.
@@ -6111,12 +6128,12 @@ should work if nowhere else does.}
   \parskip = 2pt plus 1pt minus 0.1pt
   \textleading = 12.5pt
   %
-  \internalpagesizes{166mm}{120mm}{\voffset}{-8mm}{\bindingoffset}{8pt}%
+  \internalpagesizes{160mm}{120mm}{\voffset}{\hoffset}{\bindingoffset}{8pt}%
   %
   \lispnarrowing = 0.2in
   \tolerance = 800
   \hfuzz = 1.2pt
-  \contentsrightmargin = 0mm
+  \contentsrightmargin = 0pt
   \deftypemargin = 0pt
   \defbodyindent = 2mm
   \tableindent = 12mm
@@ -6124,24 +6141,21 @@ should work if nowhere else does.}
   \smallenvironments
 }}
 
-% A specific text layout, 24x15cm overall, intended for A4 paper.  Top margin
-% 29mm, hence bottom margin 28mm, nominal side margin 3cm.
+% A specific text layout, 24x15cm overall, intended for A4 paper.  
 \def\afourlatex{{\globaldefs = 1
-  \textleading = 13.6pt
-  %
   \afourpaper
-  \internalpagesizes{237mm}{150mm}{3.6mm}{3.6mm}{3mm}{7mm}%
+  \internalpagesizes{237mm}{150mm}{\voffset}{4.6mm}{\bindingoffset}{7mm}%
   %
-  % Must explicitly reset to 0 because we call \afourpaper, apparently,
-  % although this does not entirely make sense.
+  % Must explicitly reset to 0 because we call \afourpaper.
   \globaldefs = 0
 }}
 
-% Use @afourwide to print on European A4 paper in wide format.
-\def\afourwide{%
+% Use @afourwide to print on A4 paper in wide format.
+\def\afourwide{{\globaldefs = 1
   \afourpaper
-  \internalpagesizes{6.5in}{9.5in}{\hoffset}{\normaloffset}{\bindingoffset}{7mm}%
-}
+  \internalpagesizes{241mm}{165mm}{\voffset}{-2.95mm}{\bindingoffset}{7mm}%
+  \globaldefs = 0
+}}
 
 % @pagesizes TEXTHEIGHT[,TEXTWIDTH]
 % Perhaps we should allow setting the margins, \topskip, \parskip,
@@ -6280,16 +6294,8 @@ should work if nowhere else does.}
 @let+=@normalplus
 @let$=@normaldollar}%$ font-lock fix
 
-@def@normalturnoffactive{@let"=@normaldoublequote
-@let\=@normalbackslash
-@let~=@normaltilde
-@let^=@normalcaret
-@let_=@normalunderscore
-@let|=@normalverticalbar
-@let<=@normalless
-@let>=@normalgreater
-@let+=@normalplus
-@let$=@normaldollar}%$ font-lock fix
+% Same as @turnoffactive except for \.
+@def@normalturnoffactive{@turnoffactive @let\=@normalbackslash}
 
 % Make _ and + \other characters, temporarily.
 % This is canceled by @fixbackslash.
