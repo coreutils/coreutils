@@ -70,13 +70,18 @@ compilation mode is 32-bit and the software compiles fine using the
 default mode.  To build this software in 64-bit mode you will need
 to fix the system /usr/include/inttypes.h header file.  After
 correcting that file the software also compiles fine in 64-bit mode.
-Here is one possible patch to correct the problem.
+Here is one possible patch to correct the problem:
 
 --- /usr/include/inttypes.h.orig	Thu May 30 01:00:00 1996
 +++ /usr/include/inttypes.h	Sun Mar 23 00:20:36 2003
 @@ -489 +489 @@
 -#ifndef __STDC_32_MODE__
 +#ifndef __LP64__
+
+
+**********************
+Running tests as root:
+----------------------
 
 If you run the tests as root, note that a few of them create files
 and/or run programs as a non-root user, `nobody' by default.
@@ -89,12 +94,13 @@ I find that it is best to unpack and build as a non-privileged
 user, and then to run the following command as that user in order
 to run the privilege-requiring tests:
 
-  sudo env NON_ROOT_USERNAME=$USER make check
+  sudo env NON_ROOT_USERNAME=$USER make -k check
 
 If you can run the tests as root, please do so and report any
 problems.  We get much less test coverage in that mode, and it's
 arguably more important that these tools work well when run by
 root than when run by less privileged users.
+
 
 ***************
 Reporting bugs:
