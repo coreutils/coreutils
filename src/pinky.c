@@ -424,7 +424,7 @@ usage (int status)
       --help      display this help and exit\n\
       --version   output version information and exit\n\
 \n\
-A lightweight `finger' program;  print user information.
+A lightweight `finger' program;  print user information.\n\
 The utmp file will be %s.\n\
 "), UTMP_FILE);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
