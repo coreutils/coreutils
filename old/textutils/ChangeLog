@@ -1,3 +1,7 @@
+2001-03-05  Andreas Schwab  <schwab@suse.de>
+
+	* src/tac.c (save_stdin): Use mkstemp to create temporary file.
+
 2001-03-09  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.maint (my_distdir): Define new variable, and use this
