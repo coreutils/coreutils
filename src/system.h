@@ -44,6 +44,21 @@
 # define POSIX2_VERSION (_POSIX2_VERSION ? _POSIX2_VERSION : 2147483647)
 #endif
 
+/* "::" if a short option can take an optional argument, ":" if the
+   argument is required.  "::" is mostly obsolete with POSIX
+   1003.1-2001, which in most cases does not allow short options with
+   optional arguments.  */
+#if POSIX2_VERSION < 200112
+# define OPTARG_POSIX "::"
+#else
+# define OPTARG_POSIX ":"
+#endif
+
+/* If nonzero, warn when obsolete options are detected.  */
+#ifndef OBSOLETE_OPTION_WARNINGS
+# define OBSOLETE_OPTION_WARNINGS 1
+#endif
+
 #ifndef STDIN_FILENO
 # define STDIN_FILENO 0
 #endif
