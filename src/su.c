@@ -287,7 +287,7 @@ correct_password (const struct passwd *pw)
     correct = sp->sp_pwdp;
   else
 #endif
-  correct = pw->pw_passwd;
+    correct = pw->pw_passwd;
 
   if (getuid () == 0 || correct == 0 || correct[0] == '\0')
     return 1;
