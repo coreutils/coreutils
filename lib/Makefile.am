@@ -3,8 +3,8 @@ noinst_LIBRARIES = fu
 
 EXTRA_DIST = alloca.c euidaccess.c fnmatch.c fsusage.c ftruncate.c \
 getdate.y getopt.c getopt1.c memcmp.c memcpy.c memset.c \
-mkdir.c mktime.c mountlist.c \
-posixtm.y rename.c rmdir.c stpcpy.c strdup.c strstr.c strtol.c strtoul.c
+mkdir.c mktime.c mountlist.c posixtm.y rename.c rmdir.c \
+stpcpy.c strcasecmp.c strdup.c strstr.c strtol.c strtoul.c
 
 INCLUDES = -I.. -I$(srcdir)
 
