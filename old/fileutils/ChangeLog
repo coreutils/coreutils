@@ -1,3 +1,8 @@
+Sun Dec 22 23:29:10 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* acinclude.m4: Move macros to individual files in new directory, m4/.
+	See ChangeLog entries in sh-utils for the details.
+
 Wed Dec 18 23:09:19 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/dircolors.hin (ORPHAN): By default, color orphans red on
@@ -7,8 +12,6 @@ Wed Dec 18 23:09:19 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	Now only --print-database remains.  Although it wasn't documented,
 	--print-data-base was still accepted.  But it made `--p', `--print',
 	`--print-data', etc. ambiguous.
-
-	* configure.in: Increment version to 1.15.
 
 	* src/ls.c (gobble_file): Stat symlinks also when printing with
 	color and set linkok to reflect existence of referent.
