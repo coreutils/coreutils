@@ -125,12 +125,14 @@ mapped_name = `echo $*|sed 's/install/ginstall/; s/test/[/'`
 # That is necessary to avoid failures for programs that are also shell built-in
 # functions like echo, false, printf, pwd.
 .x.1:
+	rm -rf $@
 	@echo "Updating man page $@";		\
 	mkdir $t;				\
 	(cd $t && $(LN_S) ../../src/$(mapped_name)$(EXEEXT) $*$(EXEEXT)); \
 	$(HELP2MAN)				\
 	    --include=$(srcdir)/$*.x		\
 	    --output=$@ $t/$*$(EXEEXT);		\
+	chmod a-w $@
 	rm -rf $t
 
 check-local: check-x-vs-1 check-programs-vs-x
