@@ -492,8 +492,9 @@ done:
   /* Restore the original cwd.  */
   {
     int save_errno = errno;
-    if (restore_cwd (&cwd, 0, mp))
-      exit (EXIT_FAILURE);			/* We're scrod.  */
+    if (restore_cwd (&cwd))
+      error (EXIT_FAILURE, errno,
+	     _("failed to return to initial working directory"));
     free_cwd (&cwd);
     errno = save_errno;
   }
