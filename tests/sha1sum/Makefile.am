@@ -9,4 +9,4 @@ TESTS_ENVIRONMENT = \
   PATH=`pwd`/../../src:$$PATH \
   PROG=sha1sum
 
-TESTS = basic-1
+TESTS = basic-1 sample-vec
