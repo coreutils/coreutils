@@ -47,6 +47,15 @@ tac -r -s '.\|
 #include "error.h"
 #include "safe-read.h"
 
+#if defined __MSDOS__ || defined _WIN32
+/* Define this to non-zero on systems for which the regular mechanism
+   (of unlinking an open file and expecting to be able to write, seek
+   back to the beginning, then reread it) doesn't work.  E.g., on Windows
+   and DOS systems.  */
+# define DONT_UNLINK_WHILE_OPEN 1
+#endif
+
+
 #ifndef DEFAULT_TMPDIR
 # define DEFAULT_TMPDIR "/tmp"
 #endif
@@ -374,11 +383,6 @@ tac_file (const char *file)
 }
 
 #if DONT_UNLINK_WHILE_OPEN
-/* FIXME: currently this code is never automatically enabled.
-   Eventually, it will be on systems for which the regular mechanism
-   (of unlinking an open file and expecting to be able to write, seek
-   back to the beginning, then reread it) doesn't work.  E.g., Windows
-   and DOS systems.  */
 
 static const char *file_to_remove;
 static FILE *fp_to_close;
