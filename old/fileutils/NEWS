@@ -1,7 +1,7 @@
 Changes in release 3.17:
 [3.16t]
-* cp -u and ls -t compare time stamps with subsecond resolution when available
-  (e.g., on systems with recent Linux kernels and on Solaris 2.6).
+* cp (with --update) and ls compare time stamps with subsecond resolution when
+  available (e.g., on systems with recent Linux kernels and on Solaris 2.6).
 * install once again does the -m-specified chmod *after* running strip
   (this fixes another bug introduced in 3.16o)
 [3.16s]
