@@ -2,6 +2,18 @@
 
 	* Version 5.0.1.
 
+	Extend head to accept --lines=-N (--bytes=-N) and to print all
+	but the N lines (bytes) at the end of the file.
+	* src/head.c: Include full-write.h, full-read.h, inttostr.h, quote.h.
+	Use quote() in diagnostics, rather than literal `' marks.
+	(copy_fd, elide_tail_bytes_pipe, elide_tail_bytes_file):
+	New functions.
+	(elide_tail_lines_pipe, elide_tail_lines_file): New functions.
+	(head_file): Reorganize so as to call head from only one place.
+	(main): Likewise, for head_file.
+	Handle new, undocumented option, --presume-input-pipe.
+	Handle negative line and byte counts.
+
 	* tests/du/8gb: Skip test if the file system of `.' doesn't support
 	sparse files -- otherwise it'd create a file of size 8GB.
 
@@ -78,13 +90,6 @@
 
 	* tests/misc/tty-eof: Send two tokens, not just one, so we don't
 	make the now-more-picky tsort fail.
-
-2003-04-25  Jim Meyering  <jim@meyering.net>
-
-	* src/head.c (elide_tail_bytes_pipe): FIXME-- in progress..
-	Idea prompted by discussion with David Flynn <dav@chess.plus.com>
-	Extend head to accept --lines=-N (--bytes=-N) and to print all
-	but the N lines (bytes) at the end of the file.
 
 2003-04-24  Jim Meyering  <jim@meyering.net>
 
