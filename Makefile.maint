@@ -1,0 +1,61 @@
+# -*-Makefile-*-
+# This Makefile fragment is shared between fileutils, sh-utils, textutils.
+
+maintainer-check:
+	if head ChangeLog| grep 'Version @VERSION@' > /dev/null; then \
+	  :; \
+	else \
+	  echo "@VERSION@ not in ChangeLog; not tagging" 1>&2; \
+	  exit 1; \
+	fi
+	$(MAKE) distcheck
+	$(MAKE) my-distcheck
+
+# Tag before making distribution.  Also, don't make a distribution if
+# checks fail.  Also, make sure the NEWS file is up-to-date.
+cvs-dist: maintainer-check
+	pkg=`echo "@PACKAGE@" | tr a-z A-Z`; \
+	ver=`echo "@VERSION@" | sed 's/\./_/g'`; \
+	tag="$$pkg-$$ver"; \
+	echo tag=$$tag; \
+	if cvs -n log -h README| grep -e $$tag > /dev/null; then \
+	  echo "VERSION not new; not tagging" 1>&2; \
+	  exit 1; \
+	fi; \
+	cvs tag -c $$tag
+	$(MAKE) dist
+
+t=./=test
+my-distcheck: dist
+	-rm -rf $(t)
+	mkdir $(t)
+	GZIP=$(GZIP) $(TAR) -C $(t) -zxf $(distdir).tar.gz
+	cd $(t)/$(distdir) \
+	  && ./configure --disable-gettext \
+	  && $(MAKE) \
+	  && $(MAKE) dvi \
+	  && $(MAKE) check \
+	  && $(MAKE) distclean
+	cd $(t) && $(TAR) --diff -z -f ../$(distdir).tar.gz
+	-rm -rf $(t)
+	@echo "========================"; \
+	echo "$(distdir).tar.gz is ready for distribution"; \
+	echo "========================"
+
+acdir = m4
+aclocal-files: configure.in m4/Makefile.am
+	echo "acfiles = \\" > $@-tmp
+	(cd $(srcdir) && find $(acdir) -type f -name '*.m4' -print)	\
+	  | sed 's!^!$(top_srcdir)/!'					\
+	  | tr '\012' ' '						\
+	  | fmt								\
+	  | sed -e 's/$$/ \\/' -e '$$s/..$$//'				\
+	  >> $@-tmp
+	echo >> $@-tmp
+	mv $@-tmp $@
+
+include aclocal-files
+
+# Override default rule to use --acdir option
+$(srcdir)/aclocal.m4: configure.in $(acfiles)
+	cd $(srcdir) && aclocal -I $(acdir)
