@@ -27,6 +27,7 @@
 #include "system.h"
 #include "closeout.h"
 #include "error.h"
+#include "human.h"
 #include "safe-read.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -39,9 +40,6 @@ char *program_name;
 
 /* Nonzero if any of the files read were the standard input. */
 static int have_read_stdin;
-
-/* Right-rotate 32-bit integer variable C. */
-#define ROTATE_RIGHT(c) if ((c) & 01) (c) = ((c) >>1) + 0x8000; else (c) >>= 1;
 
 static struct option const longopts[] =
 {
@@ -88,9 +86,10 @@ static int
 bsd_sum_file (const char *file, int print_name)
 {
   register FILE *fp;
-  register unsigned long checksum = 0; /* The checksum mod 2^16. */
-  register long total_bytes = 0; /* The number of bytes. */
+  register int checksum = 0;	/* The checksum mod 2^16. */
+  register uintmax_t total_bytes = 0;	/* The number of bytes. */
   register int ch;		/* Each character read. */
+  char hbuf[LONGEST_HUMAN_READABLE + 1];
 
   if (STREQ (file, "-"))
     {
@@ -112,7 +111,7 @@ bsd_sum_file (const char *file, int print_name)
   while ((ch = getc (fp)) != EOF)
     {
       total_bytes++;
-      ROTATE_RIGHT (checksum);
+      checksum = (checksum >> 1) + ((checksum & 1) << 15);
       checksum += ch;
       checksum &= 0xffff;	/* Keep it within bounds. */
     }
@@ -131,7 +130,8 @@ bsd_sum_file (const char *file, int print_name)
       return -1;
     }
 
-  printf ("%05lu %5ld", checksum, (total_bytes + 1024 - 1) / 1024);
+  printf ("%05d %5s", checksum,
+	  human_readable_inexact (total_bytes, hbuf, 1, 1024, human_ceiling));
   if (print_name > 1)
     printf (" %s", file);
   putchar ('\n');
@@ -150,8 +150,13 @@ sysv_sum_file (const char *file, int print_name)
   int fd;
   unsigned char buf[8192];
   register int bytes_read;
-  register unsigned long checksum = 0;
-  long total_bytes = 0;
+  uintmax_t total_bytes = 0;
+  char hbuf[LONGEST_HUMAN_READABLE + 1];
+  int r;
+  int checksum;
+
+  /* The sum of all the input bytes, modulo (UINT_MAX + 1).  */
+  register unsigned int s = 0;
 
   if (STREQ (file, "-"))
     {
@@ -175,10 +180,7 @@ sysv_sum_file (const char *file, int print_name)
       register int i;
 
       for (i = 0; i < bytes_read; i++)
-	checksum += buf[i];
-      /* Reduce checksum mod 0xffff, to avoid overflow.  */
-      checksum = (checksum & 0xffff) + (checksum >> 16);
-
+	s += buf[i];
       total_bytes += bytes_read;
     }
 
@@ -196,7 +198,11 @@ sysv_sum_file (const char *file, int print_name)
       return -1;
     }
 
-  printf ("%lu %ld", checksum % 0xffff, (total_bytes + 512 - 1) / 512);
+  r = (s & 0xffff) + ((s & 0xffffffff) >> 16);
+  checksum = (r & 0xffff) + (r >> 16);
+
+  printf ("%d %s", checksum,
+	  human_readable_inexact (total_bytes, hbuf, 1, 512, human_ceiling));
   if (print_name)
     printf (" %s", file);
   putchar ('\n');
