@@ -19,7 +19,7 @@ framework_failure=0
 mkdir $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 
-d1=/no-$$
+d1=no-$$
 dir=/$d1/such-dir
 # Ensure that $d1 doesn't already exist.
 ls -d $d1 2> /dev/null && framework_failure=1
@@ -31,25 +31,12 @@ fi
 
 fail=0
 
-# Before fileutils-4.1, we'd get the following misleading
-# diagnostic instead of `Permission denied'.
-# touch: creating `/': Is a directory
-touch / > out 2>&1 && fail=1
-
-touch $dir >> out 2>&1 && fail=1
-
-# On SunOS4, EPERM is `Not owner'.
-# On some *BSD systems it's `Operation not permitted'.
-for msg in 'Not owner' 'Operation not permitted' 'Permission denied'; do
-  cat > exp <<EOF
-  touch: setting times of \`/': $msg
-  touch: creating \`$dir': No such file or directory
+touch $dir > out 2>&1 && fail=1
+cat <<EOF > exp
+touch: cannot touch \`$dir': No such file or directory
 EOF
 
-  cmp out exp > /dev/null 2>&1 && break
-
-done
-
+cmp out exp || fail=1
 test $fail = 1 && diff out exp 2> /dev/null
 
 (exit $fail); exit
