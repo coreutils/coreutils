@@ -270,7 +270,7 @@ str2signum (char const *signame)
     }
   else
     {
-      size_t i;
+      unsigned i;
       for (i = 0; i < NUMNAME_ENTRIES; i++)
 	if (strcmp (numname_table[i].name, signame) == 0)
 	  return numname_table[i].num;
@@ -315,7 +315,7 @@ str2sig (char const *signame, int *signum)
 int
 sig2str (int signum, char *signame)
 {
-  size_t i;
+  unsigned i;
   for (i = 0; i < NUMNAME_ENTRIES; i++)
     if (numname_table[i].num == signum)
       {
