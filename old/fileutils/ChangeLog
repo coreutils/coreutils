@@ -3,6 +3,23 @@
 	* configure.in (GNU_PACKAGE): Remove related code -- now it's in
 	the catch-all for shared autoconf code, m4/jm-macros.m4.
 	(jm_CHECK_ALL_TYPES): Remove explicit AC_TYPE_* macros and use
+	this instead.
+
+1999-03-29  Paul Eggert  <eggert@twinsun.com>
+
+	Minor lint removal in code that forks and execs.
+
+	* lib/mkdir.c (mkdir): Use pid_t instead of int; check status
+	against zero.  This is to improve portability.
+	* lib/rename.c (rename): Likewise.
+	* lib/rmdir.c (rmdir): Likewise.
+
+	* lib/rename.c (rename):
+	(rename): Do not print any error messages, so that the messages
+	are internationalized properly.
+
+	* src/install.c (strip): Use standard "cannot fork" message.
+	Check for strip nonzero exit status.
 
 1999-03-28  Jim Meyering  <meyering@ascend.com>
 
