@@ -20,7 +20,7 @@
 /* Written by Bruno Haible <haible@clisp.cons.org>.  */
 
 /* Note: This file requires the locale_charset() function.  See in
-   libiconv-1.7/libcharset/INTEGRATE for how to obtain it.  */
+   libiconv-1.8/libcharset/INTEGRATE for how to obtain it.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -48,13 +48,9 @@ extern int errno;
 
 #include <error.h>
 
-#if ENABLE_NLS
-# include <libintl.h>
-#else
-# define gettext(Text) Text
-#endif
-#define _(Text) gettext (Text)
-#define N_(Text) Text
+#include "gettext.h"
+#define _(msgid) gettext (msgid)
+#define N_(msgid) msgid
 
 /* Specification.  */
 #include "unicodeio.h"
