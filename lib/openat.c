@@ -1,5 +1,5 @@
 /* provide a replacement openat function
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -88,4 +88,92 @@ rpl_openat (int fd, char const *filename, int flags, ...)
 
   errno = saved_errno;
   return new_fd;
+}
+
+/* Replacement for Solaris' function by the same name.
+   <http://www.google.com/search?q=fdopendir+site:docs.sun.com>
+   Simulate it by doing save_cwd/fchdir/opendir(".")/restore_cwd.
+   If either the save_cwd or the restore_cwd fails (relatively unlikely,
+   and usually indicative of a problem that deserves close attention),
+   then give a diagnostic and exit nonzero.
+   Otherwise, this function works just like Solaris' fdopendir.  */
+DIR *
+fdopendir (int fd)
+{
+  struct saved_cwd saved_cwd;
+  int saved_errno;
+  DIR *dir;
+
+  if (fd == AT_FDCWD)
+    return opendir (".");
+
+  if (save_cwd (&saved_cwd) != 0)
+    error (exit_failure, errno,
+	   _("fdopendir: unable to record current working directory"));
+
+  if (fchdir (fd) != 0)
+    {
+      saved_errno = errno;
+      free_cwd (&saved_cwd);
+      errno = saved_errno;
+      return NULL;
+    }
+
+  dir = opendir (".");
+  saved_errno = errno;
+
+  if (restore_cwd (&saved_cwd) != 0)
+    error (exit_failure, errno,
+	   _("fdopendir: unable to restore working directory"));
+
+  free_cwd (&saved_cwd);
+
+  errno = saved_errno;
+  return dir;
+}
+
+/* Replacement for Solaris' function by the same name.
+   <http://www.google.com/search?q=fstatat+site:docs.sun.com>
+   Simulate it by doing save_cwd/fchdir/(stat|lstat)/restore_cwd.
+   If either the save_cwd or the restore_cwd fails (relatively unlikely,
+   and usually indicative of a problem that deserves close attention),
+   then give a diagnostic and exit nonzero.
+   Otherwise, this function works just like Solaris' fstatat.  */
+int
+fstatat (int fd, char const *filename, struct stat *st, int flag)
+{
+  struct saved_cwd saved_cwd;
+  int saved_errno;
+  int err;
+
+  if (fd == AT_FDCWD)
+    return (flag == AT_SYMLINK_NOFOLLOW
+	    ? lstat (filename, st)
+	    : stat (filename, st));
+
+  if (save_cwd (&saved_cwd) != 0)
+    error (exit_failure, errno,
+	   _("fstatat: unable to record current working directory"));
+
+  if (fchdir (fd) != 0)
+    {
+      saved_errno = errno;
+      free_cwd (&saved_cwd);
+      errno = saved_errno;
+      return -1;
+    }
+
+  err = (flag == AT_SYMLINK_NOFOLLOW
+	 ? lstat (filename, st)
+	 : stat (filename, st));
+  saved_errno = errno;
+
+  if (restore_cwd (&saved_cwd) != 0)
+    error (exit_failure, errno,
+	   _("fstatat: unable to restore working directory"));
+
+  free_cwd (&saved_cwd);
+
+  errno = saved_errno;
+  return err;
 }
