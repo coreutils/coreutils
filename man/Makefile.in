@@ -602,7 +602,8 @@ yes.1:		$(common_dep)	$(srcdir)/yes.x		../src/yes.c
 	@echo "Updating man page $@";		\
 	mkdir $t;				\
 	(cd $t && $(LN_S) ../../src/$(mapped_name)$(EXEEXT) $*$(EXEEXT)); \
-	$(HELP2MAN)				\
+	./help2man				\
+	    --info-page='$(PACKAGE) $*'		\
 	    --include=$(srcdir)/$*.x		\
 	    --output=$@ $t/$*$(EXEEXT)
 	@chmod a-w $@
