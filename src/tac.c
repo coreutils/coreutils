@@ -314,7 +314,8 @@ tac_seekable (int input_fd, const char *file)
 	      read_size = file_pos;
 	      file_pos = 0;
 	    }
-	  lseek (input_fd, file_pos, SEEK_SET);
+	  if (lseek (input_fd, file_pos, SEEK_SET) < 0)
+	    error (0, errno, _("%s: seek failed"), file);
 
 	  /* Shift the pending record data right to make room for the new.
 	     The source and destination regions probably overlap.  */
@@ -376,7 +377,7 @@ tac_file (const char *file)
     }
   SET_BINARY (fileno (in));
   errors = tac_seekable (fileno (in), file);
-  if (ferror (in) || fclose (in) == EOF)
+  if (fclose (in) != 0)
     {
       error (0, errno, "%s", file);
       return 1;
@@ -452,10 +453,10 @@ save_stdin (FILE **g_tmp, char **g_tempfile)
 	error (EXIT_FAILURE, errno, _("stdin: read error"));
 
       if (fwrite (G_buffer, 1, bytes_read, tmp) != bytes_read)
-	break;
+	error (EXIT_FAILURE, errno, "%s", tempfile);
     }
 
-  if (ferror (tmp) || fflush (tmp) == EOF)
+  if (fflush (tmp) != 0)
     error (EXIT_FAILURE, errno, "%s", tempfile);
 
   SET_BINARY (fileno (tmp));
@@ -515,14 +516,14 @@ memrchr (const char *buf_start, const char *buf_end, int c)
 
 /* FIXME: describe */
 
-static int
+static void
 tac_mem (const char *buf, size_t n_bytes, FILE *out)
 {
   const char *nl;
   const char *bol;
 
   if (n_bytes == 0)
-    return 0;
+    return;
 
   nl = memrchr (buf, buf + n_bytes, '\n');
   bol = (nl == NULL ? buf : nl + 1);
@@ -555,7 +556,6 @@ tac_mem (const char *buf, size_t n_bytes, FILE *out)
     fwrite (buf, 1, bol - buf, out);
 
   /* FIXME: this is work in progress.... */
-  return ferror (out);
 }
 
 /* FIXME: describe */
