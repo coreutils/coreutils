@@ -682,36 +682,57 @@ copy_internal (const char *src_path, const char *dst_path,
 		}
 	    }
 
+	  /* When there is an existing destination file, we may end up
+	     returning early, and hence not copying/moving the file.
+	     This may be due to an interactive `negative' reply to the
+	     prompt about the existing file.  It may also be due to the
+	     use of the --reply=no option.  */
 	  if (!S_ISDIR (src_type))
 	    {
 	      /* cp and mv treat -i and -f differently.  */
 	      if (x->move_mode)
 		{
-		  if (x->interactive != I_OFF
-		      && (x->interactive == I_ON
-			  || (x->stdin_tty
-			      /* euidaccess is not meaningful for symlinks */
-			      && ! S_ISLNK (dst_sb.st_mode)
-			      && euidaccess (dst_path, W_OK) != 0)))
+		  int do_move = 1;
+
+		  if (x->interactive == I_ALWAYS_NO)
+		    {
+		      if (! S_ISLNK (dst_sb.st_mode)
+			  && euidaccess (dst_path, W_OK) != 0)
+			{
+			  do_move = 0;
+			}
+		    }
+		  else if (x->interactive == I_ASK_USER
+			   || (x->interactive == I_UNSPECIFIED
+			       && (x->stdin_tty
+				   /* euidaccess is not meaningful for symlinks */
+				   && ! S_ISLNK (dst_sb.st_mode)
+				   && euidaccess (dst_path, W_OK) != 0)))
 		    {
 		      overwrite_prompt (dst_path, &dst_sb);
 		      if (!yesno ())
 			{
-			  /* Pretend the rename succeeded, so the caller (mv)
-			     doesn't end up removing the source file.  */
-			  if (rename_succeeded)
-			    *rename_succeeded = 1;
-			  return 0;
+			  do_move = 0;
 			}
+		    }
+
+		  if ( ! do_move)
+		    {
+		      /* Pretend the rename succeeded, so the caller (mv)
+			 doesn't end up removing the source file.  */
+		      if (rename_succeeded)
+			*rename_succeeded = 1;
+		      return 0;
 		    }
 		}
 	      else
 		{
-		  if (x->interactive == I_ON)
+		  if (x->interactive == I_ALWAYS_NO
+		      || (x->interactive == I_ASK_USER
+			  && (overwrite_prompt (dst_path, &dst_sb), 1)
+			  && ! yesno ()))
 		    {
-		      overwrite_prompt (dst_path, &dst_sb);
-		      if (!yesno ())
-			return 0;
+		      return 0;
 		    }
 		}
 	    }
