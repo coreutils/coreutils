@@ -1,4 +1,5 @@
-/* Copyright (C) 1993, 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* mktime: convert a `struct tm' to a time_t value
+   Copyright (C) 1993-1997, 1998 Free Software Foundation, Inc.
    Contributed by Paul Eggert (eggert@twinsun.com).
 
    NOTE: The canonical source of this file is maintained with the GNU C Library.
