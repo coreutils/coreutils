@@ -1,3 +1,7 @@
+2001-02-07  Jim Meyering  <meyering@lucent.com>
+
+	* regex.m4 (jm_INCLUDED_REGEX): Add a test for the latest bug.
+
 2001-02-05  Jim Meyering  <meyering@lucent.com>
 
 	* jm-macros.m4: Require autoconf-2.14d (not yet released), because
