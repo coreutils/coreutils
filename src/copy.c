@@ -254,7 +254,7 @@ copy_reg (const char *src_path, const char *dst_path,
       goto close_src_desc;
     }
 
-  /* Find out the optimal buffer size.  */
+  /* Determine the optimal buffer size.  */
 
   if (fstat (dest_desc, &sb))
     {
