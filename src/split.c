@@ -259,7 +259,7 @@ main (argc, argv)
   strcpy (outfile, outbase);
   outfile_mid = outfile + strlen (outfile);
   outfile_end = outfile_mid + 2;
-  bzero (outfile_mid, 30);
+  memset (outfile_mid, 0, 30);
   outfile_mid[0] = 'a';
   outfile_mid[1] = 'a' - 1;  /* first call to next_file_name makes it an 'a' */
 
@@ -488,10 +488,11 @@ line_bytes_split (nchars)
       cwrite (1, buf, bp - buf);
 
       /* Discard the chars we just output; move rest of chunk
-	 down to be the start of the next chunk.  */
+	 down to be the start of the next chunk.  Source and
+	 destination probably overlap.  */
       n_buffered -= bp - buf;
       if (n_buffered > 0)
-	bcopy (bp, buf, n_buffered);
+	memmove (buf, bp, n_buffered);
     }
   while (!eof);
   free (buf);
