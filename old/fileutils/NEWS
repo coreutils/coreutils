@@ -1,4 +1,6 @@
 Changes in release 3.17:
+[3.16s]
+* chown now works even on certain SVR3 systems where it used to fail
 [3.16r]
 * include gettext's m4 macros
 * minor cp bug fixed
