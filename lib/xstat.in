@@ -31,6 +31,7 @@
 extern int errno;
 #endif
 @BEGIN_LSTAT_ONLY@
+#include <string.h>
 
 #if HAVE_STDLIB_H
 # include <stdlib.h>
