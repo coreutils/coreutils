@@ -1541,7 +1541,7 @@ main (argc, argv)
 	  key->skipsblanks = key->skipeblanks = 0;
 	  key->numeric = key->month = key->reverse = 0;
 	  s = argv[i] + 1;
-	  if (!digits[UCHAR (*s)])
+	  if (!digits[UCHAR (*s)] && *s != '.')
 	    badfieldspec (argv[i]);
 	  for (t = 0; digits[UCHAR (*s)]; ++s)
 	    t = 10 * t + *s - '0';
@@ -1563,7 +1563,7 @@ main (argc, argv)
       else if (argv[i][0] == '-' && argv[i][1])
 	{
 	  s = argv[i] + 1;
-	  if (digits[UCHAR (*s)])
+	  if (digits[UCHAR (*s)] || *s == '.')
 	    {
 	      if (!key)
 		usage (2);
@@ -1612,7 +1612,7 @@ main (argc, argv)
 		    key->skipsblanks = key->skipeblanks = 0;
 		    key->numeric = key->month = key->reverse = 0;
 		    /* Get POS1. */
-		    if (!digits[UCHAR (*s)])
+		    if (!digits[UCHAR (*s)] && *s != '.')
 		      badfieldspec (argv[i]);
 		    for (t = 0; digits[UCHAR (*s)]; ++s)
 		      t = 10 * t + *s - '0';
