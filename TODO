@@ -100,5 +100,7 @@ unexpand: [http://www.opengroup.org/onlinepubs/007908799/xcu/unexpand.html]
   printf 'x\t \t y\n'|unexpand -t 8,9 should print its input, unmodified.
   printf 'x\t \t y\n'|unexpand -t 5,8 should print "x\ty\n"
 
+Let GNU su use the `wheel' group if appropriate.
+  (there are a couple patches, already)
 
 cut: when stdin is a tty, one has to hit EOF *twice* to get it to stop
