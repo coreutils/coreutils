@@ -63,7 +63,9 @@ static int copy_internal PARAMS ((const char *src_path, const char *dst_path,
 				  int new_dst, dev_t device,
 				  struct dir_list *ancestors,
 				  const struct cp_options *x,
-				  int *copy_into_self));
+				  int move_mode,
+				  int *copy_into_self,
+				  int *rename_succeeded));
 
 /* The invocation name of this program.  */
 extern char *program_name;
@@ -141,7 +143,7 @@ copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
 	error (1, 0, _("virtual memory exhausted"));
 
       ret |= copy_internal (src_path, dst_path, new_dst, src_sb->st_dev,
-			    ancestors, x, &local_copy_into_self);
+			    ancestors, x, 0, &local_copy_into_self, NULL);
       *copy_into_self |= local_copy_into_self;
 
       /* Free the memory for `src_path'.  The memory for `dst_path'
@@ -350,8 +352,13 @@ ret2:
 
 static int
 copy_internal (const char *src_path, const char *dst_path,
-	       int new_dst, dev_t device, struct dir_list *ancestors,
-	       const struct cp_options *x, int *copy_into_self)
+	       int new_dst,
+	       dev_t device,
+	       struct dir_list *ancestors,
+	       const struct cp_options *x,
+	       int move_mode,
+	       int *copy_into_self,
+	       int *rename_succeeded)
 {
   struct stat src_sb;
   struct stat dst_sb;
@@ -360,6 +367,9 @@ copy_internal (const char *src_path, const char *dst_path,
   char *earlier_file;
   char *dst_backup = NULL;
   int fix_mode = 0;
+
+  if (move_mode && rename_succeeded)
+    *rename_succeeded = 0;
 
   *copy_into_self = 0;
   if ((*(x->xstat)) (src_path, &src_sb))
@@ -472,6 +482,13 @@ copy_internal (const char *src_path, const char *dst_path,
 		return 0;
 	    }
 
+	  /* In move_mode, DEST may not be an existing directory.  */
+	  if (move_mode && S_ISDIR (dst_sb.st_mode))
+	    {
+	      error (0, 0, _("%s: cannot overwrite directory"), dst_path);
+	      return 1;
+	    }
+
 	  if (x->backup_type != none && !S_ISDIR (dst_sb.st_mode))
 	    {
 	      char *tmp_backup = find_backup_file_name (dst_path,
@@ -485,12 +502,14 @@ copy_internal (const char *src_path, const char *dst_path,
 		 would leave two zero-length files: a and a~.  */
 	      if (STREQ (tmp_backup, src_path))
 		{
-		  error (0, 0,
-		   _("backing up `%s' would destroy source;  `%s' not copied"),
-			 dst_path, src_path);
+		  const char *fmt;
+		  fmt = (move_mode
+		 ? _("backing up `%s' would destroy source;  `%s' not moved")
+		 : _("backing up `%s' would destroy source;  `%s' not copied"));
+		  error (0, 0, fmt, dst_path, src_path);
 		  return 1;
-
 		}
+
 	      dst_backup = (char *) alloca (strlen (tmp_backup) + 1);
 	      strcpy (dst_backup, tmp_backup);
 	      free (tmp_backup);
@@ -556,6 +575,15 @@ copy_internal (const char *src_path, const char *dst_path,
 	  error (0, errno, "%s", dst_path);
 	  goto un_backup;
 	}
+      return 0;
+    }
+
+  if (move_mode && rename (src_path, dst_path) == 0)
+    {
+      if (x->verbose && S_ISDIR (src_type))
+	printf ("%s -> %s\n", src_path, dst_path);
+      if (rename_succeeded)
+	*rename_succeeded = 1;
       return 0;
     }
 
@@ -849,9 +877,14 @@ valid_options (const struct cp_options *co)
 int
 copy (const char *src_path, const char *dst_path,
       int nonexistent_dst, const struct cp_options *options,
-      int *copy_into_self)
+      int *copy_into_self, int *rename_succeeded)
 {
+  /* move_mode is set to the value from the `options' parameter for the
+     first copy_internal call.  For all subsequent calls (if any), it must
+     be zero.  */
+  int move_mode = options->move_mode;
+
   assert (valid_options (options));
   return copy_internal (src_path, dst_path, nonexistent_dst, 0, NULL,
-			options, copy_into_self);
+			options, move_mode, copy_into_self, rename_succeeded);
 }
