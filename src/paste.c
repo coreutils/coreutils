@@ -399,7 +399,7 @@ paste_serial (int nfiles, char **fnamptr)
   return errors;
 }
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

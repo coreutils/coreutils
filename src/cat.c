@@ -72,7 +72,7 @@ static int newlines2 = 0;
 /* Count of non-fatal error conditions.  */
 static int exit_status = 0;
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

@@ -260,7 +260,7 @@ cksum (char *file, int print_name)
   return 0;
 }
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

@@ -76,7 +76,7 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
-static void
+void
 usage (int status)
 {
   if (status != 0)
@@ -341,7 +341,6 @@ main (int argc, char **argv)
       /* FIXME: allow POSIX options if there were obsolescent ones?  */
 
     }
-
 
   while ((c = getopt_long (argc, argv, "c:n:qv", long_options, NULL)) != -1)
     {

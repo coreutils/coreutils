@@ -165,7 +165,7 @@ static struct option const longopts[] =
 
 /* Print a usage message and quit. */
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

@@ -37,7 +37,6 @@ typedef long double LONG_DOUBLE;
 typedef double LONG_DOUBLE;
 #endif
 
-
 #if HAVE_VALUES_H
 # include <values.h>
 #endif
@@ -264,7 +263,7 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

@@ -269,7 +269,7 @@ static int have_read_stdin;
 /* Lists of key field comparisons to be tried. */
 static struct keyfield keyhead;
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

@@ -176,7 +176,6 @@ int maximum_word_length;
 /* Maximum width of any reference used.  */
 int reference_max_width;
 
-
 /* Ignore and Only word tables.  */
 
 WORD_TABLE ignore_table;	/* table of words to ignore */
@@ -268,7 +267,6 @@ size_t number_of_occurs[1];	/* number of used slots in occurs_table */
 
 #define ALLOC_NEW_OCCURS(language) \
   BUMP_ALLOC (occurs_table[language], number_of_occurs[language], 9, OCCURS)
-
 
 /* Communication among output routines.  */
 
@@ -1810,7 +1808,6 @@ generate_all_output (void)
   int occurs_index;		/* index of keyword entry being processed */
   OCCURS *occurs_cursor;	/* current keyword entry being processed */
 
-
   /* The following assignments are useful to provide default values in case
      line contexts or references are not used, in which case these variables
      would never be computed.  */
@@ -1822,7 +1819,6 @@ generate_all_output (void)
   head.start = NULL;
   head.end = NULL;
   head_truncation = 0;
-
 
   /* Loop over all keyword occurrences.  */
 
@@ -1867,7 +1863,7 @@ generate_all_output (void)
 | Print program identification and options, then exit.  |
 `------------------------------------------------------*/
 
-static void
+void
 usage (int status)
 {
   if (status != EXIT_SUCCESS)
@@ -2064,8 +2060,8 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"),
 	  break;
 
 	case 10:
-	  XARGMATCH (&output_format, "--format", optarg,
-		     format_args, format_vals, usage (1));
+	  output_format = XARGMATCH ("--format", optarg,
+				     format_args, format_vals);
 	}
     }
 

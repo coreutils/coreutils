@@ -183,7 +183,7 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
-static void
+void
 usage (int status)
 {
   if (status != 0)
@@ -1268,8 +1268,8 @@ parse_options (int argc, char **argv,
 	  if (optarg == NULL)
 	    follow_mode = DEFAULT_FOLLOW_MODE;
 	  else
-	    XARGMATCH (&follow_mode, "--follow", optarg,
-		       follow_mode_string, follow_mode_map, usage (1));
+	    follow_mode = XARGMATCH ("--follow", optarg,
+				     follow_mode_string, follow_mode_map);
 	  break;
 
 	case CHAR_MAX + 1:

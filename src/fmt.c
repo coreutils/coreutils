@@ -262,7 +262,7 @@ static int next_prefix_indent;
    paragraphs chosen by fmt_paragraph().  */
 static int last_line_length;
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

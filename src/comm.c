@@ -57,7 +57,7 @@ static struct option const long_options[] =
 
 
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

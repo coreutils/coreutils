@@ -123,7 +123,7 @@ static void close_output_file PARAMS ((void));
 static void create_output_file PARAMS ((void));
 static void delete_all_files PARAMS ((void));
 static void save_line_to_file PARAMS ((const struct cstring *line));
-static void usage PARAMS ((int status));
+void usage PARAMS ((int status));
 
 /* The name this program was run with. */
 char *program_name;
@@ -1496,7 +1496,7 @@ main (int argc, char **argv)
   exit (EXIT_SUCCESS);
 }
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

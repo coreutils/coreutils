@@ -127,7 +127,7 @@ static struct line uni_blank;
 /* If nonzero, ignore case when comparing join fields.  */
 static int ignore_case;
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

@@ -187,7 +187,7 @@ static struct option const longopts[] =
   {0, 0, 0, 0}
 };
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

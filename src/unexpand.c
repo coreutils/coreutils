@@ -351,7 +351,7 @@ unexpand (void)
     }
 }
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

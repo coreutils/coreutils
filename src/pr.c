@@ -29,7 +29,6 @@
 
    Improve the printing of control prefixes.
 
-
    Options:
 
    +FIRST_PAGE[:LAST_PAGE]
@@ -270,7 +269,7 @@ static void pad_across_to PARAMS ((int position));
 static void add_line_number PARAMS ((COLUMN *p));
 static void getoptarg PARAMS ((char *arg, char switch_char, char *character,
 			       int *number));
-static void usage PARAMS ((int status));
+void usage PARAMS ((int status));
 static void print_files PARAMS ((int number_of_files, char **av));
 static void init_parameters PARAMS ((int number_of_files));
 static void init_header PARAMS ((char *filename, int desc));
@@ -2438,7 +2437,7 @@ cleanup (void)
 
 /* Complain, print a usage message, and die. */
 
-static void
+void
 usage (int status)
 {
   if (status != 0)

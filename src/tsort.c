@@ -77,7 +77,7 @@ static struct option const long_options[] =
   { NULL, 0, NULL, 0}
 };
 
-static void
+void
 usage (int status)
 {
   if (status != 0)
@@ -445,7 +445,6 @@ tsort (const char *file)
       error (EXIT_FAILURE, 0, _("could not find loop"));
     }
 }
-
 
 int
 main (int argc, char **argv)
