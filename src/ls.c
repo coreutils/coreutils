@@ -2109,7 +2109,7 @@ compare_ctime (const struct fileinfo *file1, const struct fileinfo *file2)
 {
   int diff = CTIME_CMP (file2->stat, file1->stat);
   if (diff == 0)
-    diff = strcmp (file1->name, file2->name);
+    diff = strcoll (file1->name, file2->name);
   return diff;
 }
 
@@ -2118,7 +2118,7 @@ rev_cmp_ctime (const struct fileinfo *file2, const struct fileinfo *file1)
 {
   int diff = CTIME_CMP (file2->stat, file1->stat);
   if (diff == 0)
-    diff = strcmp (file1->name, file2->name);
+    diff = strcoll (file1->name, file2->name);
   return diff;
 }
 
@@ -2127,7 +2127,7 @@ compare_mtime (const struct fileinfo *file1, const struct fileinfo *file2)
 {
   int diff = MTIME_CMP (file2->stat, file1->stat);
   if (diff == 0)
-    diff = strcmp (file1->name, file2->name);
+    diff = strcoll (file1->name, file2->name);
   return diff;
 }
 
@@ -2136,7 +2136,7 @@ rev_cmp_mtime (const struct fileinfo *file2, const struct fileinfo *file1)
 {
   int diff = MTIME_CMP (file2->stat, file1->stat);
   if (diff == 0)
-    diff = strcmp (file1->name, file2->name);
+    diff = strcoll (file1->name, file2->name);
   return diff;
 }
 
@@ -2145,7 +2145,7 @@ compare_atime (const struct fileinfo *file1, const struct fileinfo *file2)
 {
   int diff = ATIME_CMP (file2->stat, file1->stat);
   if (diff == 0)
-    diff = strcmp (file1->name, file2->name);
+    diff = strcoll (file1->name, file2->name);
   return diff;
 }
 
@@ -2154,7 +2154,7 @@ rev_cmp_atime (const struct fileinfo *file2, const struct fileinfo *file1)
 {
   int diff = ATIME_CMP (file2->stat, file1->stat);
   if (diff == 0)
-    diff = strcmp (file1->name, file2->name);
+    diff = strcoll (file1->name, file2->name);
   return diff;
 }
 
@@ -2163,7 +2163,7 @@ compare_size (const struct fileinfo *file1, const struct fileinfo *file2)
 {
   int diff = longdiff (file2->stat.st_size, file1->stat.st_size);
   if (diff == 0)
-    diff = strcmp (file1->name, file2->name);
+    diff = strcoll (file1->name, file2->name);
   return diff;
 }
 
@@ -2172,7 +2172,7 @@ rev_cmp_size (const struct fileinfo *file2, const struct fileinfo *file1)
 {
   int diff = longdiff (file2->stat.st_size, file1->stat.st_size);
   if (diff == 0)
-    diff = strcmp (file1->name, file2->name);
+    diff = strcoll (file1->name, file2->name);
   return diff;
 }
 
@@ -2191,13 +2191,13 @@ rev_cmp_version (const struct fileinfo *file2, const struct fileinfo *file1)
 static int
 compare_name (const struct fileinfo *file1, const struct fileinfo *file2)
 {
-  return strcmp (file1->name, file2->name);
+  return strcoll (file1->name, file2->name);
 }
 
 static int
 rev_cmp_name (const struct fileinfo *file2, const struct fileinfo *file1)
 {
-  return strcmp (file1->name, file2->name);
+  return strcoll (file1->name, file2->name);
 }
 
 /* Compare file extensions.  Files with no extension are `smallest'.
@@ -2212,14 +2212,14 @@ compare_extension (const struct fileinfo *file1, const struct fileinfo *file2)
   base1 = strrchr (file1->name, '.');
   base2 = strrchr (file2->name, '.');
   if (base1 == 0 && base2 == 0)
-    return strcmp (file1->name, file2->name);
+    return strcoll (file1->name, file2->name);
   if (base1 == 0)
     return -1;
   if (base2 == 0)
     return 1;
-  cmp = strcmp (base1, base2);
+  cmp = strcoll (base1, base2);
   if (cmp == 0)
-    return strcmp (file1->name, file2->name);
+    return strcoll (file1->name, file2->name);
   return cmp;
 }
 
@@ -2232,14 +2232,14 @@ rev_cmp_extension (const struct fileinfo *file2, const struct fileinfo *file1)
   base1 = strrchr (file1->name, '.');
   base2 = strrchr (file2->name, '.');
   if (base1 == 0 && base2 == 0)
-    return strcmp (file1->name, file2->name);
+    return strcoll (file1->name, file2->name);
   if (base1 == 0)
     return -1;
   if (base2 == 0)
     return 1;
-  cmp = strcmp (base1, base2);
+  cmp = strcoll (base1, base2);
   if (cmp == 0)
-    return strcmp (file1->name, file2->name);
+    return strcoll (file1->name, file2->name);
   return cmp;
 }
 
