@@ -1,4 +1,6 @@
 Changes in release 1.17
+ [1.16g]
+* `basename /' now prints `/', per the single unix spec
  [1.16f]
 * chroot now calls chdir ("/") after chroot.
 * `date -s' now exits with nonzero status upon failure
