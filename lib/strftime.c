@@ -1171,13 +1171,17 @@ my_strftime (s, maxsize, format, tp extra_args LOCALE_PARAM)
 	  goto subformat;
 
 	case L_('r'):
-#ifdef _NL_CURRENT
+#if !defined _NL_CURRENT && HAVE_STRFTIME
+	  goto underlying_strftime;
+#else
+# ifdef _NL_CURRENT
 	  if (*(subfmt = (const CHAR_T *) _NL_CURRENT (LC_TIME,
 						       NLW(T_FMT_AMPM)))
 	      == L_('\0'))
-#endif
+# endif
 	    subfmt = L_("%I:%M:%S %p");
 	  goto subformat;
+#endif
 
 	case L_('S'):
 	  if (modifier == L_('E'))
