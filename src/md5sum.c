@@ -1,5 +1,5 @@
 /* Compute MD5 or SHA1 checksum of files or strings
-   Copyright (C) 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -339,6 +339,7 @@ digest_check (const char *checkfile_name, int (*digest_stream)(FILE *, void *))
 	}
     }
 
+  SET_MODE (fileno (checkfile_stream), O_TEXT);
   line_number = 0;
   line = NULL;
   line_chars_allocated = 0;
