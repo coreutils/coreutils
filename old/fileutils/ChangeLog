@@ -2,6 +2,8 @@
 
 	* Version 4.0.40.
 
+	* src/chown.c (main): `quote' the offending argument.
+
 2001-02-17  Paul Eggert  <eggert@twinsun.com>
 
 	Stop trying to support hosts that have nonstandard declarations for
