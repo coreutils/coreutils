@@ -1,3 +1,7 @@
+2002-11-21  Jim Meyering  <jim@meyering.net>
+
+	* README: Update from gnulib.
+
 2002-11-19  Jim Meyering  <jim@meyering.net>
 
 	* quotearg.c (quotearg_buffer_restyled): If mbrtowc returns
