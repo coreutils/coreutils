@@ -575,7 +575,7 @@ main (int argc, char **argv)
       case 1: /* --string */
 	{
 	  if (string == NULL)
-	    string = xmalloc ((argc - 1) * sizeof (char *));
+	    string = xnmalloc (argc - 1, sizeof *string);
 
 	  if (optarg == NULL)
 	    optarg = "";
