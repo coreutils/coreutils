@@ -149,6 +149,14 @@ my @tv = (
 # Equivalent to above, except it ignores both leading and trailing blanks.
 ["18e", '-nb -k1.1,1.2', " 901\n100\n", "100\n 901\n", 0],
 
+# This looks odd, but works properly -- 2nd keyspec is never
+# used because all lines are different.
+["19a", '+0 +1nr', "b 2\nb 1\nb 3\n", "b 1\nb 2\nb 3\n", 0],
+
+# The test *intended* by the author of the above, but using the
+# more-intuitive POSIX-style -k options.
+["19b", '-k1,1 -k2nr', "b 2\nb 1\nb 3\n", "b 3\nb 2\nb 1\n", 0],
+
 );
 
 sub test_vector
