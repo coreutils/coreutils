@@ -1,4 +1,4 @@
-2003-11-06  Dennis Smit  <ds@nerds-incorporated.org>
+2003-11-05  Dennis Smit  <ds@nerds-incorporated.org>
 
 	* src/wc.c (main): Free `fstatus' so there is no confusion about
         whether it's leaked or not.
