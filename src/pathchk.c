@@ -342,7 +342,7 @@ validate_path (char *path, int portability)
   if (path_max < 0)
     path_max = _POSIX_PATH_MAX;
   free (parent);
-  if (strlen (path) > path_max)
+  if (strlen (path) > (size_t) path_max)
     {
       error (0, 0, _("path `%s' has length %d; exceeds limit of %d"),
 	     path, strlen (path), path_max);
