@@ -1,4 +1,4 @@
-#serial 9
+#serial 10
 
 dnl From Jim Meyering.
 dnl Determine whether lstat has the bug that it succeeds when given the
@@ -22,6 +22,5 @@ AC_DEFUN([jm_FUNC_LSTAT],
 AC_DEFUN([gl_PREREQ_LSTAT],
 [
   AC_REQUIRE([AC_HEADER_STAT])
-  AC_CHECK_HEADERS_ONCE(stdlib.h)
-  AC_CHECK_DECLS_ONCE(free)
+  :
 ])
