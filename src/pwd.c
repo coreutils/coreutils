@@ -70,7 +70,7 @@ main (int argc, char **argv)
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      AUTHORS, usage);
 
-  if (argc != 1)
+  if (1 < argc)
     error (0, 0, _("ignoring non-option arguments"));
 
   wd = xgetcwd ();
