@@ -1,0 +1,29 @@
+#!/bin/sh
+# Test some of ls's sorting options.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  shred --version
+fi
+
+tmp=t-shred.$$
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+touch $tmp/file || framework_failure=1
+chmod u-w $tmp || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+fail=0
+
+# This would infloop with the version from fileutils-4.0k.
+shred -u $tmp/file
+
+cd ..
+rm -rf $tmp
+
+exit $fail
