@@ -1,3 +1,9 @@
+2001-02-16  Paul Eggert  <eggert@twinsun.com>
+
+	* doc/getdate.texi: Mention that only English is supported.
+	Show how to use "date" so that the output is acceptable to getdate.
+	Mention Z as an abbreviation for UTC.
+
 2001-02-11  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.maint (emit-rsync-commands): Define.
