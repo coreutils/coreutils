@@ -1,10 +1,17 @@
+2003-10-12  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.0.92.
+
+	* src/copy.c (copy_internal): Don't #ifdef-out simple uses of
+	S_ISLNK or S_ISSOCK.  The S_IS* macros are guaranteed to be defined
+	via system.h.
+	* src/chmod.c (change_file_mode): Likewise.
+
 2003-10-08  Jim Meyering  <jim@meyering.net>
 
 	* src/csplit.c (main): Remove obsolete FIXME.
 
 2003-10-07  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.92.
 
 	* Use automake-1.7.8.  Regenerate dependent files.
 
