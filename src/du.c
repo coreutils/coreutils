@@ -90,6 +90,9 @@ typedef struct
   char *text;			/* Pointer to the text.  */
 } *string, stringstruct;
 
+int stat ();
+int lstat ();
+
 char *savedir ();
 char *xmalloc ();
 char *xrealloc ();
