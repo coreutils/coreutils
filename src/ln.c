@@ -345,7 +345,8 @@ than one TARGET, the last argument must be a directory;  create links\n\
 in DIRECTORY to each TARGET.  Create hard links by default, symbolic\n\
 links with --symbolic.  When creating hard links, each TARGET must exist.\n\
 \n\
-  -b, --backup[=CONTROL]      make a backup of each existing destination file\n\
+      --backup[=CONTROL]      make a backup of each existing destination file\n\
+  -b                          like --backup but does not accept an argument\n\
   -d, -F, --directory         hard link directories (super-user only)\n\
   -f, --force                 remove existing destination files\n\
   -n, --no-dereference        treat destination that is a symlink to a\n\
@@ -515,7 +516,7 @@ main (int argc, char **argv)
     }
 
   backup_type = (make_backups
-		 ? xget_version (_("--version-control"), version_control_string)
+		 ? xget_version (_("backup type"), version_control_string)
 		 : none);
 
   if (target_directory_specified || n_files > 2)

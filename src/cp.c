@@ -1,5 +1,5 @@
 /* cp.c  -- file copying (main routines)
-   Copyright (C) 89, 90, 91, 1995-1999 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2000 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -137,7 +137,8 @@ Usage: %s [OPTION]... SOURCE DEST\n\
 Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
 \n\
   -a, --archive                same as -dpR\n\
-  -b, --backup[=CONTROL]       make a backup of each existing destination file\n\
+      --backup[=CONTROL]       make a backup of each existing destination file\n\
+  -b                           like --backup but does not accept an argument\n\
   -d, --no-dereference         preserve links\n\
   -f, --force                  remove existing destinations, never prompt\n\
   -i, --interactive            prompt before overwrite\n\
@@ -793,7 +794,7 @@ main (int argc, char **argv)
     simple_backup_suffix = xstrdup (backup_suffix_string);
 
   x.backup_type = (make_backups
-		   ? xget_version (_("--version-control"),
+		   ? xget_version (_("backup type"),
 				   version_control_string)
 		   : none);
 

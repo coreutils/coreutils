@@ -353,7 +353,8 @@ Usage: %s [OPTION]... SOURCE DEST\n\
       printf (_("\
 Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n\
 \n\
-  -b, --backup[=CONTROL]       make backup before removal\n\
+      --backup[=CONTROL]       make a backup of each existing destination file\n\
+  -b                           like --backup but does not accept an argument\n\
   -f, --force                  remove existing destinations, never prompt\n\
   -i, --interactive            prompt before overwrite\n\
       --strip-trailing-slashes  remove any trailing slashes from each SOURCE\n\
@@ -506,7 +507,7 @@ main (int argc, char **argv)
     simple_backup_suffix = xstrdup (backup_suffix_string);
 
   x.backup_type = (make_backups
-		   ? xget_version (_("--version-control"),
+		   ? xget_version (_("backup type"),
 				   version_control_string)
 		   : none);
 
