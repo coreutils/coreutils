@@ -2,6 +2,7 @@
 AUTOMAKE_OPTIONS = 1.3 gnits
 
 TESTS = \
+  hard-3 \
   hard-2 \
   perm-1 \
   i-link-no \
