@@ -109,7 +109,7 @@ announcement: NEWS ChangeLog $(distdir).tar.gz
 
 alpha:
 	$(MAKE) cvs-dist
-	$(MAKE) -s announcement > /tmp/announcement
+	$(MAKE) -s announcement > /tmp/announce-$(distdir)
 	ln $(distdir).tar.gz ../release
 	chmod a-w $(distdir).tar.gz
 	@echo =====================================
