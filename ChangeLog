@@ -1,3 +1,8 @@
+2003-06-16  Jim Meyering  <jim@meyering.net>
+
+	* README: Mention the CVS repository.
+	Encourage addition of test cases.
+
 2003-06-12  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
