@@ -672,8 +672,10 @@ default_sort_size (void)
   size /= 2;
 
 #ifdef RLIMIT_RSS
-  if (getrlimit (RLIMIT_RSS, &rlimit) == 0 && rlimit.rlim_cur < size)
-    size = rlimit.rlim_cur;
+  /* Leave a 1/16 margin for RSS to leave room for code, stack, etc.
+     Exceeding RSS is not fatal, but can be quite slow.  */
+  if (getrlimit (RLIMIT_RSS, &rlimit) == 0 && rlimit.rlim_cur / 16 * 15 < size)
+    size = rlimit.rlim_cur / 16 * 15;
 #endif
 
   /* Use no less than the minimum.  */
