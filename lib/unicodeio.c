@@ -121,7 +121,7 @@ print_unicode_char (FILE *stream, unsigned int code)
 
   if (!initialized)
     {
-      extern const char *locale_charset (void);
+      extern const char *locale_charset PARAMS ((void));
       const char *charset = locale_charset ();
 
       is_utf8 = (charset != NULL && !strcmp (charset, UTF8_NAME));
