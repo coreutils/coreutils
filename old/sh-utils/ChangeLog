@@ -1,7 +1,8 @@
 Fri Dec 20 19:28:37 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/who-users.c (usage): Say that UTMP_FILE is the default FILE
-	rather than hard-coding /etc/utmp.
+	rather than hard-coding /etc/utmp.  Replace hard-coded /etc/wtmp
+	with WTMP_FILE.  Suggestion from Eivind.
 
 	* src/seq.c (usage): Tweak --help text.
 
