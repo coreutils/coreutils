@@ -114,11 +114,6 @@ extern int errno;
 # define _(Text) Text
 #endif
 
-#ifdef __MSDOS__
-typedef int uid_t;
-typedef int gid_t;
-#endif
-
 #include "save-cwd.h"
 #include "error.h"
 
