@@ -22,5 +22,5 @@ void parse_long_options (int _argc,
 			 const char *_command_name,
 			 const char *_package,
 			 const char *_version,
-			 const char *_authors,
-			 void (*_usage) (int));
+			 void (*_usage) (int),
+			 /* const char *author1, ...*/ ...);
