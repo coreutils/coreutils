@@ -314,7 +314,8 @@ main (int argc, char **argv)
     = hard_dir_link = 0;
   errors = 0;
 
-  while ((c = getopt_long (argc, argv, "bdfinsvFS:V:", long_options, (int *) 0))
+  while ((c = getopt_long (argc, argv,
+			   "bdfinsvFS:V:", long_options, (int *) 0))
 	 != EOF)
     {
       switch (c)

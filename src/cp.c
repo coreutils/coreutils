@@ -468,7 +468,8 @@ do_copy (int argc, char **argv)
    Return 0 if successful, 1 if an error occurs. */
 
 static int
-copy (char *src_path, char *dst_path, int new_dst, dev_t device, struct dir_list *ancestors)
+copy (char *src_path, char *dst_path, int new_dst, dev_t device,
+      struct dir_list *ancestors)
 {
   struct stat src_sb;
   struct stat dst_sb;
@@ -856,7 +857,9 @@ un_backup:
    permissions when done, otherwise 1. */
 
 static int
-make_path_private (char *const_dirpath, int src_offset, int mode, char *verbose_fmt_string, struct dir_attr **attr_list, int *new_dst)
+make_path_private (char *const_dirpath, int src_offset, int mode,
+		   char *verbose_fmt_string, struct dir_attr **attr_list,
+		   int *new_dst)
 {
   struct stat stats;
   char *dirpath;		/* A copy of CONST_DIRPATH we can change. */
@@ -1040,7 +1043,8 @@ re_protect (char *const_dst_path, int src_offset, struct dir_attr *attr_list)
    Return 0 if successful, -1 if an error occurs. */
 
 static int
-copy_dir (char *src_path_in, char *dst_path_in, int new_dst, struct stat *src_sb, struct dir_list *ancestors)
+copy_dir (char *src_path_in, char *dst_path_in, int new_dst,
+	  struct stat *src_sb, struct dir_list *ancestors)
 {
   char *name_space;
   char *namep;

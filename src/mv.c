@@ -473,7 +473,8 @@ main (int argc, char **argv)
   stdin_tty = isatty (STDIN_FILENO);
 
   if (argc > optind + 2 && !isdir (argv[argc - 1]))
-    error (1, 0, "when moving multiple files, last argument must be a directory");
+    error (1, 0,
+	   "when moving multiple files, last argument must be a directory");
 
   /* Move each arg but the last onto the last. */
   for (; optind < argc - 1; ++optind)

@@ -482,7 +482,8 @@ count_entry (char *ent, int top, dev_t last_dev)
 	  free_cwd (&cwd);
 	}
       else if (chdir ("..") < 0)
-        error (1, errno, "cannot change to `..' from directory %s", path->text);
+        error (1, errno,
+	       "cannot change to `..' from directory %s", path->text);
 
       str_trunc (path, pathlen - 1); /* Remove the "/" we added.  */
       if (!opt_summarize_only || top)
