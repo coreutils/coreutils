@@ -1,3 +1,13 @@
+Sat Mar 23 20:21:40 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* sort.c [SORT_FAILURE]: New macro.
+	Be careful to exit with 1 only when -c is used and the
+	input is not properly sorted.  In all other cases, use
+	SORT_FAILURE as required by POSIX.
+	(main): Change some `error (1, ...' to use SORT_FAILURE.
+	Upon successful termination, exit with EXIT_SUCCESS instead of `0'.
+	Replace all uses of `2' (as exit code) with SORT_FAILURE.
+
 Thu Mar 21 22:47:50 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* csplit.c: Include assert.h, but disable assertions.
