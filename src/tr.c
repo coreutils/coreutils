@@ -201,6 +201,13 @@ struct Spec_list
     int has_restricted_char_class;
   };
 
+struct E_string
+{
+  unsigned char *s;
+  int *escaped;
+  size_t len;
+};
+
 char *xmalloc ();
 char *stpcpy ();
 int safe_read ();
@@ -460,9 +467,17 @@ is_char_class_member (enum Char_class char_class, unsigned int c)
    cannot contain actual (non-escaped) zero bytes.  */
 
 static int
-unquote (unsigned char *s, size_t *len)
+unquote (const unsigned char *s, struct E_string *es)
 {
   size_t i, j;
+  size_t len;
+
+  len = strlen (s);
+
+  es->s = xmalloc (len);
+  es->escaped = (int *) xmalloc (len * sizeof (es->escaped[0]));
+  for (i = 0; i < len; i++)
+    es->escaped[i] = 0;
 
   j = 0;
   for (i = 0; s[i]; i++)
@@ -542,18 +557,26 @@ unquote (unsigned char *s, size_t *len)
 	      return 1;
 
 	    default:
-	      error (0, 0, _("invalid backslash escape `\\%c'"), s[i + 1]);
-	      return 1;
+	      if (posix_pedantic)
+		{
+		  error (0, 0, _("invalid backslash escape `\\%c'"), s[i + 1]);
+		  return 1;
+		}
+	      else
+	        {
+		  c = s[i + 1];
+		  es->escaped[j] = 1;
+		}
 	    }
 	  ++i;
-	  s[j++] = c;
+	  es->s[j++] = c;
 	  break;
 	default:
-	  s[j++] = s[i];
+	  es->s[j++] = s[i];
 	  break;
 	}
     }
-  *len = j;
+  es->len = j;
   return 0;
 }
 
@@ -956,14 +979,13 @@ build_spec_list (const unsigned char *unescaped_string, size_t len,
      less are composed solely of normal characters.  Hence, the index of
      the outer for-loop runs only as far as LEN-2.  */
 
-  for (i = 0; i + 2 < len;)
+  for (i = 0; i + 2 < len; /* empty */)
     {
-      switch (p[i])
+      if (p[i] == '[')
 	{
 	  int fall_through;
 	  int err;
 
-	case '[':
 	  fall_through = 0;
 	  switch (p[i + 1])
 	    {
@@ -1020,26 +1042,26 @@ build_spec_list (const unsigned char *unescaped_string, size_t len,
 		return 1;
 	      break;
 	    }
+
 	  if (!fall_through)
-	    break;
+	    continue;
 
 	  /* Here if we've tried to match [c*n], [:str:], and [=c=]
 	     and none of them fit.  So we still have to consider the
 	     range `[-c' (from `[' to `c').  */
-	default:
-	  /* Look ahead one char for ranges like a-z.  */
-	  if (p[i + 1] == '-')
-	    {
-	      if (append_range (result, p[i], p[i + 2]))
-		return 1;
-	      i += 3;
-	    }
-	  else
-	    {
-	      append_normal_char (result, p[i]);
-	      ++i;
-	    }
-	  break;
+	}
+
+      /* Look ahead one char for ranges like a-z.  */
+      if (p[i + 1] == '-')
+	{
+	  if (append_range (result, p[i], p[i + 2]))
+	    return 1;
+	  i += 3;
+	}
+      else
+	{
+	  append_normal_char (result, p[i]);
+	  ++i;
 	}
     }
 
@@ -1325,13 +1347,13 @@ spec_init (struct Spec_list *spec_list)
    of these passes detects an error, this function returns non-zero.  */
 
 static int
-parse_str (unsigned char *s, struct Spec_list *spec_list)
+parse_str (const unsigned char *s, struct Spec_list *spec_list)
 {
-  size_t len;
+  struct E_string es;
 
-  if (unquote (s, &len))
+  if (unquote (s, &es))
     return 1;
-  if (build_spec_list (s, len, spec_list))
+  if (build_spec_list (es.s, es.len, spec_list))
     return 1;
   return 0;
 }
