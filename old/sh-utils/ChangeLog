@@ -1,7 +1,14 @@
+Sat Jul 27 17:22:14 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/system.h (bindtextdomain) [!ENABLE_NLS]: Undefine to avoid
+	redefinition warnings on solaris.
+	(textdomain) [!ENABLE_NLS]: Likewise.
+
 Sun Jul 21 09:47:55 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (AC_REPLACE_FUNCS): Replace getline.c.
 	Add related check for the getdelim function.
+	From Ulrich Drepper -- as done in gettext.
 
 	* src/stty.c (usage): Correct typo (-iucl -> -iuclc) in usage message.
 	From Thomas Olsson <d95to@efd.lth.se>.

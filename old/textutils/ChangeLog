@@ -1,3 +1,9 @@
+Sat Jul 27 17:22:14 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/system.h (bindtextdomain) [!ENABLE_NLS]: Undefine to avoid
+	redefinition warnings on solaris.
+	(textdomain) [!ENABLE_NLS]: Likewise.
+
 Thu Jul 25 23:06:35 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/unexpand.c (unexpand): Move EOF check to follow code that
