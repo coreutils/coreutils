@@ -19,7 +19,6 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include "system.h"
-#include "version-etc.h"
 
 #define PROGRAM_NAME "true"
 #define AUTHORS "Jim Meyering"
