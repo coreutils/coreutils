@@ -10936,90 +10936,40 @@ might find this idea strange at first.
 
 
 @node kill invocation
-@section @code{kill}: Send a signal to processes
+@section @command{kill}: Send a signal to processes
 
 @pindex kill
 @cindex send a signal to processes
 
-@code{kill} sends a signal to processes, causing the processes to
-terminate or otherwise act upon receiving the signal in some way.
-Synopsis:
+The @command{kill} command sends a signal to processes, causing them
+to terminate or otherwise act upon receiving the signal in some way.
+Alternatively, it lists information about signals.  Synopses:
 
 @example
-kill [-s @var{sigspec} | -@var{sigspec}] @var{pid}@dots{}
-kill [-l | -L] [@var{sigspec}]@dots{}
+kill [-s @var{signal} | --signal @var{signal} | -@var{signal}] @var{pid}@dots{}
+kill [-l | --list | -t | --table] [@var{signal}]@dots{}
 @end example
 
-A signal specification @var{sigspec} is either the symbolic name or
-the number of a signal, and specifes the signal to be sent.  The
-default signal to send if none is specified is @samp{TERM}.  The
-symbolic signal name can be given in canonical form or prefixed by
-@samp{SIG}.  The case of the letters is ignored.  The following signal
-names and numbers are supported on all @sc{posix} compliant systems:
+The first form of the @command{kill} command sends a signal to all
+@var{pid} arguments.  The default signal to send if none is specified
+is @samp{TERM}.  The special signal number @samp{0} does not denote a
+valid signal, but can be used to test whether the @var{pid} arguments
+specify processes to which a signal could be sent.
 
-@table @asis
-@item 1
-@samp{HUP}
-@item 2
-@samp{INT}
-@item 3
-@samp{QUIT}
-@item 6
-@samp{ABRT}
-@item 9
-@samp{KILL}
-@item 14
-@samp{ALRM}
-@item 15
-@samp{TERM}
-@end table
+If @var{pid} is positive, the signal is sent to the process with the
+process id @var{pid}.  If @var{pid} is zero, the signal is sent to all
+processes in the process group of the current process.  If @var{pid}
+is -1, the signal is sent to all processes for which the user has
+permission to send a signal.  If @var{pid} is less than -1, the signal
+is sent to all processes in the process group that equals the absolute
+value of @var{pid}.
 
-Other supported signal names have system-dependent corresponding
-numbers.  All @sc{posix} compliant systems support the signal names
-@samp{FPE}, @samp{ILL}, @samp{BUS}, @samp{CHLD}, @samp{CONT},
-@samp{PIPE}, @samp{SEGV}, @samp{STOP}, @samp{TSTP}, @samp{TTIN},
-@samp{TTOU}, @samp{USR1}, @samp{USR2}, @samp{POLL}, @samp{PROF},
-@samp{SYS}, @samp{TRAP}, @samp{URG}, @samp{VTALRM}, @samp{XCPU} and
-@samp{XFSZ}.
-
-The special signal name @samp{0} does not denote a valid signal, but
-can be used to test if the @var{pid} arguments specify processes to
-which a signal could be sent.
-
-If @code{kill} is invoked in its first form, the specified signal is
-sent to all @var{pid} arguments.  If @var{pid} is greater than 0, the
-signal is sent to the process with the process id @var{pid}.  If
-@var{pid} is 0, the signal is sent to all processes in the process
-group of the current process.  If @var{pid} is -1, the signal is sent
-to all processes for which the user has permission to send a signal.
-If @var{pid} is negative but not -1, the signal is sent to all
-processes in the process group that equals the absolute value of
-@var{pid}.
-
-If @var{pid} is 0 or negative, a system-dependent set of system
+If @var{pid} is not positive, a system-dependent set of system
 processes is excluded from the list of processes to which the signal
 is sent.
 
-The @code{kill} program returns true if every @var{pid} argument
-specified at least one process and for each @var{pid} argument at
-least one signal was sent successfully, or false if an error occurs or
-an invalid option is encountered.
-
-If @code{kill} is invoked with the @samp{-l} or @samp{-L} arguments, a
-list of signal names is printed.  Without any @var{sigspec} argument,
-both lists contain all supported signal names.  The output of
-@samp{-l} is a flat list of the names seperated by spaces and
-newlines.  The option @samp{-L} is a GNU extension and prints a table
-of signal names with their corresponding numbers.  The maximum width
-of either output can be controlled with the @code{COLUMNS} environment
-variable.  If @var{sigspec} arguments are specified, either option
-prints out a list of the corresponding signal names, each in a line of
-its own, in uppercase letters and without the leading @samp{SIG}.  If
-all signal specifiers were valid, @code{kill} returns true.  Otherwise
-false is returned.
-
 If a negative @var{PID} argument is desired as the first one, either a
-signal specification must be provided as well, or the option parsing
+signal must be specified as well, or the option parsing
 must be interrupted with `--' before the first @var{pid} argument.
 The following three commands are equivalent:
 
@@ -11029,8 +10979,109 @@ kill -TERM -1
 kill -- -1
 @end example
 
-GNU @code{kill} also supports the options are @samp{--help} and
-@samp{--version}.  @xref{Common options}.
+The first form of the @command{kill} command succeeds if every @var{pid}
+argument specifies at least one process that the signal was sent to.
+
+The second form of the @command{kill} command lists signal information.
+Either the @option{-l} or @option{--list} option, or the @option{-t}
+or @option{--table} option must be specified.  Without any
+@var{signal} argument, all supported signals are listed.  The output
+of @option{-l} or @option{--list} is a list of the signal names, one
+per line; if @var{signal} is already a name, the signal number is
+printed instead.  The output of @option{-t} or @option{--table} is a
+table of signal numbers, names, and descriptions.  This form of the
+@command{kill} command succeeds if all @var{signal} arguments are valid
+and if there is no output error.
+
+The @command{kill} command also supports the @option{--help} and
+@option{--version} options.  @xref{Common options}.
+
+A @var{signal} may be a signal name like @samp{HUP}, or a signal
+number like @samp{1}, or an exit status of a process terminated by the
+signal.  A signal name can be given in canonical form or prefixed by
+@samp{SIG}.  The case of the letters is ignored, except for the
+@option{-@var{signal}} option which must use upper case to avoid
+ambiguity with lower case option letters.  The following signal names
+and numbers are supported on all @sc{posix} compliant systems:
+
+@table @samp
+@item HUP
+1.  Hangup.
+@item INT
+2.  Terminal interrupt.
+@item QUIT
+3.  Terminal quit.
+@item ABRT
+6.  Process abort.
+@item KILL
+9.  Kill (cannot be caught or ignored).
+@item ALRM
+14.  Alarm Clock.
+@item TERM
+15.  Termination.
+@end table
+
+@noindent
+Other supported signal names have system-dependent corresponding
+numbers.  All systems conforming to @sc{posix} 1003.1-2001 also
+support the following signals:
+
+@table @samp
+@item BUS
+Access to an undefined portion of a memory object.
+@item CHLD
+Child process terminated, stopped, or continued.
+@item CONT
+Continue executing, if stopped.
+@item FPE
+Erroneous arithmetic operation.
+@item ILL
+Illegal Instruction.
+@item PIPE
+Write on a pipe with no one to read it.
+@item SEGV
+Invalid memory reference.
+@item STOP
+Stop executing (cannot be caught or ignored).
+@item TSTP
+Terminal stop.
+@item TTIN
+Background process attempting read.
+@item TTOU
+Background process attempting write.
+@item URG
+High bandwidth data is available at a socket.
+@item USR1
+User-defined signal 1.
+@item USR2
+User-defined signal 2.
+@end table
+
+@noindent
+@sc{posix} 1003.1-2001 systems that support the @sc{xsi} extension
+also support the following signals:
+
+@table @samp
+@item POLL
+Pollable event.
+@item PROF
+Profiling timer expired.
+@item SYS
+Bad system call.
+@item TRAP
+Trace/breakpoint trap.
+@item VTALRM
+Virtual timer expired.
+@item XCPU
+CPU time limit exceeded.
+@item XFSZ
+File size limit exceeded.
+@end table
+
+@noindent
+@sc{posix} 1003.1-2001 systems that support the @sc{xrt} extension
+also support at least eight real-time signals called @samp{RTMIN},
+@samp{RTMIN+1}, @dots{}, @samp{RTMAX-1}, @samp{RTMAX}.
 
 
 @node Delaying
