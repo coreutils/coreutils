@@ -25,7 +25,7 @@
 
 2004-03-07  Jim Meyering  <jim@meyering.net>
 
-	* NEWS: du accepts a new option --from0-file=FILE, where FILE
+	* NEWS: du accepts a new option --files0-from=FILE, where FILE
 	contains a list of NUL-separated file names.
 
 	* src/du.c: Include "readtokens.h".
