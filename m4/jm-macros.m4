@@ -1,4 +1,4 @@
-#serial 58   -*- autoconf -*-
+#serial 59   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -173,6 +173,7 @@ AC_DEFUN([jm_MACROS],
 
   AC_FUNC_STRTOD
   AC_REQUIRE([UTILS_SYS_OPEN_MAX])
+  AC_REQUIRE([GL_FUNC_GETCWD_ROBUST])
 
   # See if linking `seq' requires -lm.
   # It does on nearly every system.  The single exception (so far) is
