@@ -1,3 +1,8 @@
+2000-01-08  Jim Meyering  <meyering@ascend.com>
+
+	* strerror_r.m4 (jm_FUNC_STRERROR_R): New file/macro.
+	* jm-macros.m4 (jm_FUNC_STRERROR_R): Require it.
+
 2000-01-04  Jim Meyering  <meyering@ascend.com>
 
 	* d-type.m4 (jm_CHECK_TYPE_STRUCT_DIRENT_D_TYPE): Rename from
