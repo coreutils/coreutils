@@ -35,7 +35,7 @@
 #include "closeout.h"
 #include "argmatch.h"
 #include "error.h"
-#include "human.h"
+#include "inttostr.h"
 #include "posixver.h"
 #include "safe-read.h"
 #include "xnanosleep.h"
@@ -378,32 +378,27 @@ static void
 xlseek (int fd, off_t offset, int whence, char const *filename)
 {
   off_t new_offset = lseek (fd, offset, whence);
-  char buf[LONGEST_HUMAN_READABLE + 1];
+  char buf[INT_BUFSIZE_BOUND (off_t)];
   char *s;
-  char const *sign;
 
   if (0 <= new_offset)
     return;
 
-  sign = offset < 0 ? "-" : "";
-  if (offset < 0)
-    offset = -offset;
-
-  s = human_readable ((uintmax_t) offset, buf, 1, 1);
+  s = offtostr (offset, buf);
   switch (whence)
     {
     case SEEK_SET:
-      error (EXIT_FAILURE, errno, _("%s: cannot seek to offset %s%s"),
-	     filename, sign, s);
+      error (EXIT_FAILURE, errno, _("%s: cannot seek to offset %s"),
+	     filename, s);
       break;
     case SEEK_CUR:
-      error (EXIT_FAILURE, errno, _("%s: cannot seek to relative offset %s%s"),
-	     filename, sign, s);
+      error (EXIT_FAILURE, errno, _("%s: cannot seek to relative offset %s"),
+	     filename, s);
       break;
     case SEEK_END:
       error (EXIT_FAILURE, errno,
-	     _("%s: cannot seek to end-relative offset %s%s"),
-	     filename, sign, s);
+	     _("%s: cannot seek to end-relative offset %s"),
+	     filename, s);
       break;
     default:
       abort ();
