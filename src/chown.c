@@ -302,8 +302,8 @@ Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
                          (available only on systems that can change the\n\
                          ownership of a symlink)\n\
   -f, --silent, --quiet  suppress most error messages\n\
-      --reference=RFILE  use the owner and group of RFILE instead of using\n\
-                         explicit OWNER.GROUP values\n\
+      --reference=RFILE  use RFILE's owner and group rather than\n\
+                         the specified OWNER.GROUP values\n\
   -R, --recursive        operate on files and directories recursively\n\
   -v, --verbose          output a diagnostic for every file processed\n\
       --help             display this help and exit\n\
