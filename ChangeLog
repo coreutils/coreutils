@@ -1,6 +1,11 @@
-2004-12-07  Paul Eggert  <eggert@cs.ucla.edu>
+2004-12-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* NEWS: Document new UTC+HH:MM date syntax, and put date changes
+	together.
+
+2004-12-07  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/factor.c (factor): Don't list 1 as a factor of 1.
 	Problem reported by Thomas Folz-Donahue.
