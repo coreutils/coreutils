@@ -334,21 +334,24 @@ TYPE is made up of one or more of these specifications:\n\
   o[SIZE]    octal, SIZE bytes per integer\n\
   u[SIZE]    unsigned decimal, SIZE bytes per integer\n\
   x[SIZE]    hexadecimal, SIZE bytes per integer\n\
+"), stdout);
+      fputs (_("\
 \n\
 SIZE is a number.  For TYPE in doux, SIZE may also be C for\n\
 sizeof(char), S for sizeof(short), I for sizeof(int) or L for\n\
-"), stdout);
-      fputs (_("\
 sizeof(long).  If TYPE is f, SIZE may also be F for sizeof(float), D\n\
 for sizeof(double) or L for sizeof(long double).\n\
+"), stdout);
+      fputs (_("\
 \n\
 RADIX is d for decimal, o for octal, x for hexadecimal or n for none.\n\
 BYTES is hexadecimal with 0x or 0X prefix, it is multiplied by 512\n\
-"), stdout);
-      fputs (_("\
 with b suffix, by 1024 with k and by 1048576 with m.  Adding a z suffix to\n\
 any type adds a display of printable characters to the end of each line\n\
-of output.  -s without a number implies 3.  -w without a number implies 32.\n\
+of output.  \
+"), stdout);
+      fputs (_("\
+-s without a number implies 3.  -w without a number implies 32.\n\
 By default, od uses -A o -t d2 -w 16.\n\
 "), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));

@@ -285,19 +285,26 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 If the first character of N (the number of bytes or lines) is a `+',\n\
 print beginning with the Nth item from the start of each file, otherwise,\n\
 print the last N items in the file.  N may have a multiplier suffix:\n\
-b for 512, k for 1024, m for 1048576 (1 Meg).  A first OPTION of -VALUE\n\
+b for 512, k for 1024, m for 1048576 (1 Meg).  \
+"), stdout);
+     fputs (_("\
+A first OPTION of -VALUE\n\
 or +VALUE is treated like -n VALUE or -n +VALUE unless VALUE has one of\n\
 the [bkm] suffix multipliers, in which case it is treated like -c VALUE\n\
+or -c +VALUE.  \
 "), stdout);
      fputs (_("\
-or -c +VALUE.  Warning: a first option of +VALUE is obsolescent, and support\n\
+Warning: a first option of +VALUE is obsolescent, and support\n\
 for it will be withdrawn.\n\
 \n\
-With --follow (-f), tail defaults to following the file descriptor, which\n\
-means that even if a tail'ed file is renamed, tail will continue to track\n\
-its end.  This default behavior is not desirable when you really want to\n\
 "), stdout);
      fputs (_("\
+With --follow (-f), tail defaults to following the file descriptor, which\n\
+means that even if a tail'ed file is renamed, tail will continue to track\n\
+its end.  \
+"), stdout);
+     fputs (_("\
+This default behavior is not desirable when you really want to\n\
 track the actual name of the file, not the file descriptor (e.g., log\n\
 rotation).  Use --follow=name in that case.  That causes tail to track the\n\
 named file by reopening it periodically to see if it has been removed and\n\

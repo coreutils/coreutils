@@ -378,12 +378,16 @@ Interpreted sequences are:\n\
 \n\
 Translation occurs if -d is not given and both SET1 and SET2 appear.\n\
 -t may be used only when translating.  SET2 is extended to length of\n\
-SET1 by repeating its last character as necessary.  Excess characters\n\
-of SET2 are ignored.  Only [:lower:] and [:upper:] are guaranteed to\n\
+SET1 by repeating its last character as necessary.  \
 "), stdout);
      fputs (_("\
+Excess characters\n\
+of SET2 are ignored.  Only [:lower:] and [:upper:] are guaranteed to\n\
 expand in ascending order; used in SET2 while translating, they may\n\
-only be used in pairs to specify case conversion.  -s uses SET1 if not\n\
+only be used in pairs to specify case conversion.  \
+"), stdout);
+     fputs (_("\
+-s uses SET1 if not\n\
 translating nor deleting; else squeezing uses SET2 and occurs after\n\
 translation or deletion.\n\
 "), stdout);
