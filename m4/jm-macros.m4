@@ -31,6 +31,7 @@ AC_DEFUN(jm_MACROS,
     netdb.h \
     paths.h \
     stdlib.h \
+    stddef.h \
     string.h \
     sys/acl.h \
     sys/filsys.h \
@@ -175,6 +176,10 @@ AC_DEFUN(jm_MACROS,
   AC_SUBST(POW_LIBM)
   test $am_cv_func_strtod_needs_libm = yes && POW_LIBM=-lm
 
+  jm_LANGINFO_CODESET
+
+  jm_ICONV
+
   # These tests are for df.
   jm_LIST_MOUNTED_FILESYSTEMS([list_mounted_fs=yes], [list_mounted_fs=no])
   jm_FSTYPENAME
@@ -193,6 +198,7 @@ AC_DEFUN(jm_CHECK_ALL_TYPES,
   AC_REQUIRE([AC_C_BIGENDIAN])
   AC_REQUIRE([AC_PROG_CC_STDC])
   AC_REQUIRE([AC_C_CONST])
+  AC_REQUIRE([AC_C_VOLATILE])
   AC_REQUIRE([AC_C_INLINE])
   AC_REQUIRE([AC_C_LONG_DOUBLE])
 
