@@ -1,3 +1,9 @@
+1997-10-06  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/makepath.c (make_path): Print message IFF the directory was
+	just created and the format string is non-NULL.
+	Print the verbose message using fprintf, not error.
+
 1997-10-05  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/Makefile.am (noinst_HEADERS): Add savedir.h.
