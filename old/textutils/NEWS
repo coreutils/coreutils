@@ -1,5 +1,7 @@
 Changes in release 1.23
 [1.22n]
+* To maintain compatibility with sort, comm and join now obey the LC_COLLATE
+  locale, and comm now considers newlines to be part of the lines.
 * use lib/memchr.c only if it's not provided by the system -- this means
   that on systems with a fast library memchr function you may notice an
   improvement.  If you use a system with a buggy or signifcantly slower
