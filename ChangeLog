@@ -2,6 +2,9 @@
 
 	* Version 5.0.90.
 
+	* tests/help-version (--help/--version vs. /dev/full): Special-case
+	`[' to protect it from expected_failure_status-`eval'.
+
 	* src/uniq.c (writeline): Use a SPACE, not a TAB between the
 	count and the corresponding line, as required by POSIX.
 	Reported by Clement Wang.
