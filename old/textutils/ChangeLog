@@ -1,5 +1,9 @@
 2000-12-03  Jim Meyering  <meyering@lucent.com>
 
+	* src/tail.c (tail_file): Initialize ignore, dev, and ino members,
+	when tailing forever and the open failed.  Otherwise, we could get
+	uninitialized memory references of those fields in recheck.
+
 	* Version 2.0.9.
 
 	Make od print valid addresses for offsets of 2^32 and larger, and
