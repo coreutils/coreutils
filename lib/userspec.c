@@ -63,9 +63,12 @@ struct group *getgrnam ();
 struct group *getgrgid ();
 #endif
 
-#ifdef _POSIX_SOURCE
-#define endpwent()
-#define endgrent()
+#ifndef HAVE_ENDGRENT
+# define endgrent() ((void) 0)
+#endif
+
+#ifndef HAVE_ENDPWENT
+# define endpwent() ((void) 0)
 #endif
 
 /* Perform the equivalent of the statement `dest = strdup (src);',
