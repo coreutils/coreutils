@@ -1101,6 +1101,8 @@ rm (size_t n_files, char const *const *file, struct rm_options const *x)
     {
       enum RM_status s;
       cycle_check_init (&ds->cycle_check_state);
+      /* Arrange to fail, give up on this FILE, but continue on with
+	 any other arguments, in case rm_1 detects a directory cycle.  */
       if (setjmp (ds->current_arg_jumpbuf))
 	s = RM_ERROR;
       else
