@@ -365,6 +365,7 @@ print_deadprocs (const STRUCT_UTMP *utmp_ent)
   sprintf (comment, "%s%.*s", _("id="), sizeof utmp_ent->ut_id,
 	   utmp_ent->ut_id);
 
+  /* FIXME: ut_exit works with GNU/Linux but is probably not portable.  */
   if (!exitstr)
     exitstr = xmalloc (sizeof (_("term="))
 		       + INT_STRLEN_BOUND (utmp_ent->ut_exit.e_termination) + 1
@@ -386,6 +387,7 @@ print_login (const STRUCT_UTMP *utmp_ent)
   static char *comment;
   PIDSTR_DECL_AND_INIT (pidstr);
 
+  /* FIXME: ut_id works with GNU/Linux but is probably not portable.  */
   if (!comment)
     comment = xmalloc (sizeof (_("id=")) + sizeof (utmp_ent->ut_id) + 1);
   sprintf (comment, "%s%s", _("id="), utmp_ent->ut_id);
