@@ -2806,7 +2806,7 @@ total 1023
 
 If you want to use a dynamically linked executable, say @code{bash},
 then first run @samp{ldd bash} to see what shared objects it needs.
-In addition to copying the actual binary, also copy the listed
+Then, in addition to copying the actual binary, also copy the listed
 files to the required positions under your intended new root directory.
 Finally, if the executable requires any other files (e.g., data, state,
 device files), copy them into place, too.
