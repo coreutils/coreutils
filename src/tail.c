@@ -75,7 +75,7 @@ enum Follow_mode
   /* Follow each descriptor obtained upon opening a file.
      That means we'll continue to follow the end of a file even after
      it has been renamed or unlinked.  */
-  Follow_descriptor = 2,
+  Follow_descriptor = 2
 };
 
 static char const *const follow_mode_string[] =
