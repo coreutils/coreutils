@@ -629,6 +629,7 @@ recheck (struct File_spec *f)
   int fail = 0;
   int is_stdin = (STREQ (f->name, "-"));
   int was_missing = f->missing;
+  int new_file;
 
   fd = (is_stdin ? STDIN_FILENO : open (f->name, O_RDONLY));
 
@@ -663,6 +664,7 @@ cannot follow end of non-regular file"),
 	     pretty_name (f));
     }
 
+  new_file = 0;
   if (fail)
     {
       close_fd (fd, pretty_name (f));
@@ -671,6 +673,7 @@ cannot follow end of non-regular file"),
     }
   else if (f->ino != new_stats.st_ino || f->dev != new_stats.st_dev)
     {
+      new_file = 1;
       if (f->fd == -1)
 	{
 	  error (0, 0,
@@ -688,33 +691,29 @@ cannot follow end of non-regular file"),
 		 _("`%s' has been replaced;  following end of new file"),
 		 pretty_name (f));
 	}
-
-      f->fd = fd;
-      f->size = new_stats.st_size;
-      f->dev = new_stats.st_dev;
-      f->ino = new_stats.st_ino;
-      f->n_unchanged_stats = 0;
-      f->n_consecutive_size_changes = 0;
-      /* FIXME: check lseek return value  */
-      lseek (f->fd, new_stats.st_size, SEEK_SET);
     }
   else if (f->missing)
     {
+      new_file = 1;
       error (0, 0, _("`%s' has reappeared"), pretty_name (f));
       f->missing = 0;
-
-      f->fd = fd;
-      f->size = new_stats.st_size;
-      f->dev = new_stats.st_dev;
-      f->ino = new_stats.st_ino;
-      f->n_unchanged_stats = 0;
-      f->n_consecutive_size_changes = 0;
-      /* FIXME: check lseek return value  */
-      lseek (f->fd, new_stats.st_size, SEEK_SET);
     }
   else
     {
       close_fd (fd, pretty_name (f));
+    }
+
+  if (new_file)
+    {
+      /* Record new file info in f.  */
+      f->fd = fd;
+      f->size = 0; /* Start at the beginning of the file...  */
+      f->dev = new_stats.st_dev;
+      f->ino = new_stats.st_ino;
+      f->n_unchanged_stats = 0;
+      f->n_consecutive_size_changes = 0;
+      /* FIXME: check lseek return value  */
+      lseek (f->fd, f->size, SEEK_SET);
     }
 }
 
