@@ -532,7 +532,6 @@ read_filesystem_list (need_fs_type, all_fs)
     FILE *fp;
     int ret;
     int lockfd = -1;
-    int fail = 0;
 
 # if defined F_RDLCK && defined F_SETLKW
     /* MNTTAB_LOCK is a macro name of our own invention; it's not present in
@@ -558,39 +557,35 @@ read_filesystem_list (need_fs_type, all_fs)
 
     fp = fopen (table, "r");
     if (fp == NULL)
+      ret = 1;
+    else
       {
-	/* FIXME maybe: this close could clobber errno from fopen failure.  */
-	if (0 <= lockfd)
-	  close (lockfd);
-	return NULL;
+	while ((ret = getmntent (fp, &mnt)) == 0)
+	  {
+	    /* Don't show automounted filesystems twice on e.g., Solaris.  */
+	    if (!all_fs && MNT_IGNORE (&mnt))
+	      continue;
+
+	    me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
+	    me->me_devname = xstrdup (mnt.mnt_special);
+	    me->me_mountdir = xstrdup (mnt.mnt_mountp);
+	    me->me_type = xstrdup (mnt.mnt_fstype);
+	    me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
+	    me->me_next = NULL;
+
+	    /* Add to the linked list. */
+	    mtail->me_next = me;
+	    mtail = me;
+	  }
+
+	if (fclose (fp) == EOF)
+	  ret = 1;
       }
 
-    while ((ret = getmntent (fp, &mnt)) == 0)
-      {
-	/* Don't show automounted filesystems twice on e.g., Solaris.  */
-	if (!all_fs && MNT_IGNORE (&mnt))
-	  continue;
-
-	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
-	me->me_devname = xstrdup (mnt.mnt_special);
-	me->me_mountdir = xstrdup (mnt.mnt_mountp);
-	me->me_type = xstrdup (mnt.mnt_fstype);
-	me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
-	me->me_next = NULL;
-
-	/* Add to the linked list. */
-	mtail->me_next = me;
-	mtail = me;
-      }
+    if (0 <= lockfd && close (lockfd) != 0)
+      return NULL;
 
     if (ret > 0)
-      fail = 1;
-    if (fclose (fp) == EOF)
-      fail = 1;
-    if (0 <= lockfd && close (lockfd) != 0)
-      fail = 1;
-
-    if (fail)
       return NULL;
   }
 #endif /* MOUNTED_GETMNTENT2.  */
