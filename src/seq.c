@@ -82,7 +82,7 @@ usage (int status)
   else
     {
       (void) printf (_("\
-Usage: %s [OPTION]... [FIRST [step]] LAST\n\
+Usage: %s [OPTION]... [FROM [INCR]] TO\n\
 "), program_name);
       (void) printf (_("\
 \n\
@@ -92,7 +92,7 @@ Usage: %s [OPTION]... [FIRST [step]] LAST\n\
       --version            output version information and exit\n\
   -w, --equal-width        equalize width by padding with leading zeroes\n\
 \n\
-  FROM, STEP, TO are interpreted as floating point.  STEP should be > 0 if\n\
+  FROM, INCR, TO are interpreted as floating point.  INCR should be > 0 if\n\
   FROM is smaller than TO and vice versa.  When given, the FORMAT argument\n\
   must contain exactly one of the float output formats %%e, %%f, or %%g.\n\
 "));
@@ -394,7 +394,8 @@ print_numbers (const char *format_str)
 
       if (step >= 0)
 	{
-	  error (0, 0, _("invalid increment: %g"), step);
+	  error (0, 0,
+		 _("when FROM is larger than TO, INCR must be negative"));
 	  usage (1);
 	  /* NOTREACHED */
 	}
@@ -417,7 +418,8 @@ print_numbers (const char *format_str)
 
       if (step <= 0)
 	{
-	  error (0, 0, _("invalid increment: %g"), step);
+	  error (0, 0,
+		 _("when FROM is smaller than TO, INCR must be positive"));
 	  usage (1);
 	  /* NOTREACHED */
 	}
