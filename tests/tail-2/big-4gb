@@ -21,14 +21,17 @@ cd $tmp || framework_failure=1
 # Create a file of size exactly 4GB (2^32) with 8 bytes
 # at the beginning and another set of 8 bytes at the end.
 # The rest will be NUL bytes.  On most modern systems, the following
-# creates a file that takes up only a few KB.  Here, du -sh says 16KB.
+# creates a file that takes up only a few KB.  Here, du -sh says 16K.
 echo abcdefgh | tr -d '\n' > big || framework_failure=1
 echo 87654321 | tr -d '\n' > tmp || framework_failure=1
 # Seek 4GB - 8
 dd bs=1 seek=4294967288 if=tmp of=big 2> err || dd_failed=1
 if test "$dd_failed" = 1; then
   cat err 1>&2
-  framework_failure=1
+  echo "$0: cannot create a file large enough for this test," 1>&2
+  echo "$0: possibly because this system doesn't support large files;" 1>&2
+  echo "$0: Consider rerunning this test on a different file system." 1>&2
+  (exit 77); exit 77
 fi
 
 if test $framework_failure = 1; then
