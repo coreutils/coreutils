@@ -1,8 +1,5 @@
 Mon Dec  9 06:58:11 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* lib/strftime.c: Declare tzname also if #defined __LIBC.
-	From Ulrich Drepper.
-
 	* configure.in (jm_HEADER_TIOCGWINSZ_IN_TERMIOS_H): Fix typo:
 	Change $am_cv_sys_tiocgwinsz_needs_sys_ioctl_h to
 	$jm_cv_sys_tiocgwinsz_needs_sys_ioctl_h.
