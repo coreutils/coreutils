@@ -91,6 +91,7 @@ Usage: %s [OPTION] [FILE]...\n\
 ",
 	      program_name);
       printf ("\
+Concatenate FILE(s), or standard input, to standard output.\n\
 \n\
   -b, --number-nonblank    number nonblank output lines\n\
   -e                       equivalent to -vE\n\

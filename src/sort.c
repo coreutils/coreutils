@@ -1845,6 +1845,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 ",
 	      program_name);
       printf ("\
+Write sorted concatenation of all FILE(s) to standard output.\n\
 \n\
   +POS1 [-POS2]    start a key at POS1, end it before POS2\n\
   -M               compare (unknown) < `JAN' < ... < `DEC', imply -b\n\

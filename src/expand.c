@@ -398,6 +398,8 @@ Usage: %s [OPTION]... [FILE]...\n\
 ",
 	      program_name);
       printf ("\
+Convert tabs in each FILE to spaces, writing to standard output.\n\
+With no FILE, or when FILE is -, read standard input.\n\
 \n\
   -i, --initial       do not convert TABs after non whitespace\n\
   -t, --tabs=NUMBER   have tabs NUMBER characters apart, not 8\n\
@@ -405,8 +407,7 @@ Usage: %s [OPTION]... [FILE]...\n\
       --help          display this help and exit\n\
       --version       output version information and exit\n\
 \n\
-Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.  With\n\
-no FILE, or when FILE is -, read standard input.\n\
+Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.\n\
 ");
     }
   exit (status);

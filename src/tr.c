@@ -326,6 +326,8 @@ Usage: %s [OPTION]... SET1 [SET2]\n\
 ",
 	      program_name);
       printf ("\
+Translate, squeeze, and/or delete characters from standard input,\n\
+writing to standard output.\n\
 \n\
   -c, --complement        first complement SET1\n\
   -d, --delete            delete characters in SET1, do not translate\n\
@@ -336,8 +338,8 @@ Usage: %s [OPTION]... SET1 [SET2]\n\
 ");
       printf ("\
 \n\
-SETs are specified as strings of characters.  Most represent\n\
-themselves.  Here are the special writings:\n\
+SETs are specified as strings of characters.  Most represent themselves.\n\
+Interpreted sequences are:\n\
 \n\
   \\NNN            character with octal value NNN (1 to 3 octal digits)\n\
   \\\\              backslash\n\

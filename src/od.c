@@ -312,6 +312,8 @@ Usage: %s [OPTION]... [FILE]...\n\
 ",
 	      program_name, program_name);
       printf ("\
+Write an unambiguous representation, octal bytes by default, of FILE\n\
+to standard output.  With no FILE, or when FILE is -, read standard input.\n\
 \n\
   -A, --address-radix=RADIX   decide how file offsets are printed\n\
   -N, --read-bytes=BYTES      limit dump to BYTES input bytes per file\n\
@@ -320,8 +322,8 @@ Usage: %s [OPTION]... [FILE]...\n\
   -t, --format=TYPE           select output format or formats\n\
   -v, --output-duplicates     do not use * to mark line suppression\n\
   -w, --width[=BYTES]         output BYTES bytes per output line\n\
-      --help                  display this help and exit\n\
       --traditional           accept arguments in pre-POSIX form\n\
+      --help                  display this help and exit\n\
       --version               output version information and exit\n\
 \n\
 Pre-POSIX format specifications may be intermixed, they accumulate:\n\
@@ -362,8 +364,7 @@ RADIX is d for decimal, o for octal, x for hexadecimal or n for none.\n\
 BYTES is hexadecimal with 0x or 0X prefix, it is multiplied by 512\n\
 with b suffix, by 1024 with k and by 1048576 with m.  -s without a\n\
 number implies 3.  -w without a number implies 32.  By default, od\n\
-uses -A o -t d2 -w 16.  With no FILE, or when FILE is -, read standard\n\
-input.\n\
+uses -A o -t d2 -w 16.\n\
 ");
     }
   exit (status);

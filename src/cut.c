@@ -201,6 +201,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 ",
 	      program_name);
       printf ("\
+Print selected parts of lines from each FILE to standard output.\n\
 \n\
   -b, --bytes=LIST        output only these bytes\n\
   -c, --characters=LIST   output only these characters\n\

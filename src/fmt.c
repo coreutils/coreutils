@@ -274,8 +274,10 @@ usage (status)
     {
       printf ("Usage: %s [-DIGITS] [OPTION]... [FILE]...\n", program_name);
       fputs ("\
-Mandatory arguments to long options are mandatory for short options too.\n\
+Reformat each paragraph in the FILE(s), writing to standard output.\n\
+If no FILE or if FILE is `-', standard input is read.\n\
 \n\
+Mandatory arguments to long options are mandatory for short options too.\n\
   -c, --crown-margin        preserve indentation of first two lines\n\
   -s, --split-only          split long lines, but do not refill\n\
   -t, --tagged-paragraph    indentation of first line different from second\n\
@@ -285,8 +287,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       --help                display this help and exit\n\
       --version             output version information and exit\n\
 \n\
-In -wNUMBER, the letter `w' may be omitted.  Input FILEs are concatenated.\n\
-If no FILE or if FILE is `-', standard input is read.\n",
+In -wNUMBER, the letter `w' may be omitted.\n",
 	     stdout);
     }
   exit (status);

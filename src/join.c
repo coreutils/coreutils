@@ -753,6 +753,9 @@ Usage: %s [OPTION]... FILE1 FILE2\n\
 ",
 	      program_name);
       printf ("\
+For each pair of input lines with identical join fields, write a line to\n\
+standard output.  The default join field is the first, delimited\n\
+by whitespace.  When FILE1 or FILE2 (not both) is -, read standard input.\n\
 \n\
   -a SIDE          print unpairable lines coming from file SIDE\n\
   -e EMPTY         replace missing input fields with EMPTY\n\
@@ -764,8 +767,7 @@ Usage: %s [OPTION]... FILE1 FILE2\n\
   --help           display this help and exit\n\
   --version        output version information and exit\n\
 \n\
-When FILE1 or FILE2 is -, not both, read standard input.  SIDE is 1\n\
-for FILE1 or 2 for FILE2.  Unless -t CHAR is given, leading blanks\n\
+SIDE is 1 for FILE1 or 2 for FILE2.  Unless -t CHAR is given, leading blanks\n\
 separate fields and are ignored, else fields are separated by CHAR.\n\
 Any FIELD is a field number counted from 1.  FORMAT is one or more\n\
 comma or blank separated specifications, each being `SIDE.FIELD'.\n\

@@ -82,15 +82,14 @@ Usage: %s [OPTION]... [FILE]...\n\
 ",
 	      program_name);
       printf ("\
-\n\
-  -c, --bytes, --chars   print the byte counts\n\
+Print line, word, and byte counts for each FILE, and a total line if\n\
+more than one FILE is specified.  With no FILE, or when FILE is -,\n\
+read standard input.\n\
   -l, --lines            print the newline counts\n\
   -w, --words            print the word counts\n\
+  -c, --bytes, --chars   print the byte counts\n\
       --help             display this help and exit\n\
       --version          output version information and exit\n\
-\n\
-Print lines, words and bytes in that order.  If none of -clw, select\n\
-them all.  With no FILE, or when FILE is -, read standard input.\n\
 ");
     }
   exit (status);

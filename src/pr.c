@@ -1880,6 +1880,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 ",
 	      program_name);
       printf ("\
+Paginate or columnate FILE(s) for printing.\n\
 \n\
   +PAGE             begin printing with page PAGE\n\
   -COLUMN           produce COLUMN-column output and print columns down\n\

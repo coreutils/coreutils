@@ -386,6 +386,9 @@ Usage: %s [OPTION]... [FILE]...\n\
 ",
 	      program_name);
       printf ("\
+Print first 10 lines of each FILE to standard output.\n\
+With more than one FILE, precede each with a header giving the file name.\n\
+With no FILE, or when FILE is -, read standard input.\n\
 \n\
   -c, --bytes=SIZE         print first SIZE bytes\n\
   -n, --lines=NUMBER   print first NUMBER lines instead of first 10\n\
@@ -396,8 +399,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 \n\
 SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
 If -VALUE is used as first OPTION, read -c VALUE when one of\n\
-multipliers bkm follows concatenated, else read -n VALUE.  With no\n\
-FILE, or when FILE is -, read standard input.\n\
+multipliers bkm follows concatenated, else read -n VALUE.\n\
 ");
     }
   exit (status);

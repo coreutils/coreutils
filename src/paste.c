@@ -489,13 +489,15 @@ Usage: %s [OPTION]... [FILE]...\n\
 ",
 	      program_name);
       printf ("\
+Write lines consisting of the sequentially corresponding lines from\n\
+each FILE, separated by TABs, to standard output.\n\
+With no FILE, or when FILE is -, read standard input.\n\
 \n\
   -d, --delimiters=LIST   reuse characters from LIST instead of TABs\n\
   -s, --serial            paste one file at a time instead of in parallel\n\
       --help              display this help and exit\n\
       --version           output version information and exit\n\
 \n\
-With no INPUT, or when INPUT is -, read standard input.\n\
 ");
     }
   exit (status);

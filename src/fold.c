@@ -77,6 +77,8 @@ Usage: %s [OPTION]... [FILE]...\n\
 ",
 	      program_name);
       printf ("\
+Wrap input lines in each FILE (standard input by default), writing to\n\
+standard output.\n\
 \n\
   -b, --bytes         count bytes rather than columns\n\
   -s, --spaces        break at word boundaries\n\

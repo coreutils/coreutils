@@ -1008,6 +1008,9 @@ Usage: %s [OPTION]... [FILE]...\n\
 ",
 	      program_name);
       printf ("\
+Print last 10 lines of each FILE to standard output.\n\
+With more than one FILE, precede each with a header giving the file name.\n\
+With no FILE, or when FILE is -, read standard input.\n\
 \n\
   -c, --bytes=N            output the last N bytes\n\
   -f, --follow             output appended data as the file grows\n\
@@ -1023,7 +1026,7 @@ print the last N items in the file.  N may have a multiplier suffix:\n\
 b for 512, k for 1024, m for 1048576 (1 Meg).  A first OPTION of -VALUE\n\
 or +VALUE is treated like -n VALUE or -n +VALUE unless VALUE has one of\n\
 the [bkm] suffix multipliers, in which case it is treated like -c VALUE\n\
-or -c +VALUE.  With no FILE, or when FILE is -, read standard input.\n\
+or -c +VALUE.\n\
 ");
     }
   exit (status);

@@ -1564,6 +1564,8 @@ Usage: %s [OPTION]... FILE PATTERN...\n\
 ",
 	      program_name);
       printf ("\
+Output pieces of FILE separated by PATTERN(s) to files `xx01', `xx02', ...,\n\
+and output byte counts of each piece to standard output.\n\
 \n\
   -b, --suffix-format=FORMAT use sprintf FORMAT instead of %%d\n\
   -f, --prefix=PREFIX        use PREFIX instead of `xx'\n\

@@ -70,6 +70,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 ",
 	      program_name);
       printf ("\
+Print checksum and block counts for each FILE.\n\
 \n\
   -r              defeat -s, use BSD sum algorithm, use 1K blocks\n\
   -s, --sysv      use System V sum algorithm, use 512 bytes blocks\n\

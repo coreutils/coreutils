@@ -274,6 +274,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 ",
 	      program_name);
       printf ("\
+Print CRC checksum and byte counts of each FILE.\n\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\

@@ -104,6 +104,8 @@ Usage: %s [OPTION] [INPUT [PREFIX]]\n\
 ",
 	      program_name);
     printf ("\
+Output fixed-size pieces of INPUT to PREFIXaa, PREFIXab, ...; default\n\
+PREFIX is `x'.  With no INPUT, or when INPUT is -, read standard input.\n\
 \n\
   -C, --line-bytes=SIZE   put at most SIZE bytes of lines per output file\n\
   -b, --bytes=SIZE        put SIZE bytes per output file\n\
@@ -113,8 +115,6 @@ Usage: %s [OPTION] [INPUT [PREFIX]]\n\
       --version           output version information and exit\n\
 \n\
 SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
-With no PREFIX, use x.  With no INPUT, or when INPUT is -, read\n\
-standard input.\n\
 ");
     }
   exit (status);

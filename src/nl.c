@@ -567,6 +567,8 @@ Usage: %s [OPTION]... [FILE]...\n\
 ",
 	      program_name);
       printf ("\
+Write each FILE to standard output, with line numbers added.\n\
+With no FILE, or when FILE is -, read standard input.\n\
 \n\
   -b, --body-numbering=STYLE      use STYLE for numbering body lines\n\
   -d, --section-delimiter=CC      use CC for separating logical pages\n\
@@ -597,7 +599,6 @@ FORMAT is one of:\n\
   rn   right justified, no leading zeros\n\
   rz   right justified, leading zeros\n\
 \n\
-With no FILE, or when FILE is -, read standard input.\n\
 ");
     }
   exit (status);

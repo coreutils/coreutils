@@ -348,6 +348,8 @@ Usage: %s [OPTION]... [INPUT [OUTPUT]]\n\
 ",
 	      program_name);
       printf ("\
+Discard all but one of successive identical lines from INPUT (or\n\
+standard input), writing to OUTPUT (or standard output).\n\
 \n\
   -c, --count           prefix lines by the number of occurrences\n\
   -d, --repeated        only print duplicate lines\n\
@@ -360,9 +362,8 @@ Usage: %s [OPTION]... [INPUT [OUTPUT]]\n\
       --help            display this help and exit\n\
       --version         output version information and exit\n\
 \n\
-A field is a run of whitespace, than non whitespace characters.\n\
-Fields are skipped before chars.  If OUTPUT not specified, writes to\n\
-standard output.  If INPUT not specified, reads from standard input.\n\
+A field is a run of whitespace, than non-whitespace characters.\n\
+Fields are skipped before chars. \n\
 ");
     }
   exit (status);

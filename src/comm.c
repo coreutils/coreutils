@@ -255,6 +255,7 @@ Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n\
 ",
 	      program_name);
       printf ("\
+Compare sorted files LEFT_FILE and RIGHT_FILE line by line.\n\
 \n\
   -1              suppress lines unique to left file\n\
   -2              suppress lines unique to right file\n\
