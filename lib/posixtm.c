@@ -24,12 +24,29 @@
 
 #include <stdio.h>
 #include <sys/types.h>
+#if HAVE_STRING_H
+# include <string.h>
+#else
+# include <strings.h>
+#endif
 
 #ifdef TM_IN_SYS_TIME
 # include <sys/time.h>
 #else
 # include <time.h>
 #endif
+
+#include "posixtm.h"
+
+/* ISDIGIT differs from isdigit, as follows:
+   - Its arg may be any int or unsigned int; it need not be an unsigned char.
+   - It's guaranteed to evaluate its argument exactly once.
+   - It's typically faster.
+   Posix 1003.2-1992 section 2.5.2.1 page 50 lines 1556-1558 says that
+   only '0' through '9' are digits.  Prefer ISDIGIT to isdigit unless
+   it's important to use the locale's definition of `digit' even when the
+   host does not conform to Posix.  */
+#define ISDIGIT(c) ((unsigned) (c) - '0' <= 9)
 
 /* The return value. */
 static struct tm t;
@@ -52,13 +69,6 @@ time_t mktime ();
     (PDS_TRAILING_YEAR | PDS_CENTURY)
 
 */
-
-/* FIXME: put these in posixtm.h */
-/* POSIX Date Syntax flags.  */
-#define PDS_LEADING_YEAR 1
-#define PDS_TRAILING_YEAR 2
-#define PDS_CENTURY 4
-#define PDS_SECONDS 8
 
 static int
 year (const int *digit_pair, size_t n, int allow_century)
@@ -104,7 +114,7 @@ year (const int *digit_pair, size_t n, int allow_century)
 static int
 posix_time_parse (const char *s, unsigned int syntax_bits)
 {
-  const char *dot;
+  const char *dot = NULL;
   int pair[6];
   int *p;
   int i;
@@ -194,11 +204,11 @@ posix_time_parse (const char *s, unsigned int syntax_bits)
 
 /* Parse a POSIX-style date and return it, or (time_t)-1 for an error.  */
 
-struct tm *
-posixtime (const char *s)
+time_t
+posixtime (const char *s, unsigned int syntax_bits)
 {
   t.tm_isdst = -1;
-  if (posix_time_parse (s))
+  if (posix_time_parse (s, syntax_bits))
     return (time_t)-1;
   else
     return mktime (&t);
@@ -207,9 +217,9 @@ posixtime (const char *s)
 /* Parse a POSIX-style date and return it, or NULL for an error.  */
 
 struct tm *
-posixtm (const char *s)
+posixtm (const char *s, unsigned int syntax_bits)
 {
-  if (posixtime (s) == -1)
+  if (posixtime (s, syntax_bits) == -1)
     return NULL;
   return &t;
 }
