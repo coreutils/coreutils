@@ -63,25 +63,26 @@ stat.c: xstat.in
 all-local: charset.alias ref-add.sed ref-del.sed
 
 charset_alias = $(DESTDIR)$(libdir)/charset.alias
+charset_tmp = $(DESTDIR)$(libdir)/charset.tmp
 install-exec-local: all-local
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
 	test -f $(charset_alias) \
 	  && orig=$(charset_alias) \
 	  || orig=charset.alias; \
-	sed -f ref-add.sed $$orig > $(charset_alias)-t
-	$(INSTALL_DATA) $(charset_alias)-t $(charset_alias)
-	rm -f $(charset_alias)-t
+	sed -f ref-add.sed $$orig > $(charset_tmp)
+	$(INSTALL_DATA) $(charset_tmp) $(charset_alias)
+	rm -f $(charset_tmp)
 
 uninstall-local: all-local
 	if test -f $(charset_alias); then \
-	  sed -f ref-del.sed $(charset_alias) > $(charset_alias)-t; \
-	  if grep '^# Packages using this file: $$' $(charset_alias)-t \
+	  sed -f ref-del.sed $(charset_alias) > $(charset_tmp); \
+	  if grep '^# Packages using this file: $$' $(charset_tmp) \
 	      > /dev/null; then \
 	    rm -f $(charset_alias); \
 	  else \
-	    $(INSTALL_DATA) $(charset_alias)-t $(charset_alias); \
+	    $(INSTALL_DATA) $(charset_tmp) $(charset_alias); \
 	  fi; \
-	  rm -f $(charset_alias)-t; \
+	  rm -f $(charset_tmp); \
 	fi
 
 charset.alias: config.charset
