@@ -86,14 +86,6 @@ extern char *program_name;
 
 /* state initialized by remove_init, freed by remove_fini  */
 
-/* An entry in the active_dir_map.  */
-struct active_dir_ent
-{
-  ino_t st_ino;
-  dev_t st_dev;
-  unsigned int depth;
-};
-
 /* The name of the directory (starting with and relative to a command
    line argument) being processed.  When a subdirectory is entered, a new
    component is appended (pushed).  When RM chdir's out of a directory,
@@ -107,72 +99,16 @@ static struct obstack dir_stack;
    element pushed onto the dir stack may contain slashes.  */
 static struct obstack len_stack;
 
-/* Set of `active' directories from the current command-line argument
-   to the level in the hierarchy at which files are being removed.
-   A directory is added to the active set when RM begins removing it
-   (or its entries), and it is removed from the set just after RM has
-   finished processing it.
-
-   This is actually a map (not a set), implemented with a hash table.
-   For each active directory, it maps the directory's inode number to the
-   depth of that directory relative to the root of the tree being deleted.
-   A directory specified on the command line has depth zero.
-   This construct is used to detect directory cycles so that RM can warn
-   about them rather than iterating endlessly.  */
-#ifdef ENABLE_CYCLE_CHECK
-static Hash_table *active_dir_map;
-#endif
+static inline bool
+is_power_of_two (unsigned int i)
+{
+  return (i & (i - 1)) == 0;
+}
 
 static inline unsigned int
 current_depth (void)
 {
   return obstack_object_size (&len_stack) / sizeof (size_t);
-}
-
-static void
-print_nth_dir (FILE *stream, unsigned int depth)
-{
-  size_t *length = (size_t *) obstack_base (&len_stack);
-  char *dir_name = (char *) obstack_base (&dir_stack);
-  unsigned int sum = 0;
-  unsigned int i;
-
-  assert (depth < current_depth ());
-
-  for (i = 0; i <= depth; i++)
-    {
-      sum += length[i];
-    }
-
-  fwrite (dir_name, 1, sum - 1, stream);
-}
-
-static inline struct active_dir_ent *
-make_active_dir_ent (ino_t inum, dev_t device, unsigned int depth)
-{
-  struct active_dir_ent *ent;
-  ent = (struct active_dir_ent *) xmalloc (sizeof *ent);
-  ent->st_ino = inum;
-  ent->st_dev = device;
-  ent->depth = depth;
-  return ent;
-}
-
-static unsigned int
-hash_active_dir_ent (void const *x, unsigned int table_size)
-{
-  struct active_dir_ent const *ade = x;
-
-  /* Ignoring the device number here should be fine.  */
-  return ade->st_ino % table_size;
-}
-
-static bool
-hash_compare_active_dir_ents (void const *x, void const *y)
-{
-  struct active_dir_ent const *a = x;
-  struct active_dir_ent const *b = y;
-  return SAME_INODE (*a, *b) ? true : false;
 }
 
 static bool
@@ -718,6 +654,45 @@ remove_dir (struct File_spec *fs, int need_save_cwd,
 	       quote (full_filename (dir_name)));
       }
 
+#ifdef ENABLE_CYCLE_CHECK
+    {
+      /* If there is a directory cycle, detect it (lazily) and inform the user.
+	 In interactive mode, the user gets to choose whether to continue
+	 removing any additional command line arguments.  */
+      static struct dev_ino dir_cycle_detect_dev_ino;
+      static unsigned int chdir_counter;
+
+      /* If the current directory ever happens to be the same
+	 as the one we last recorded for the cycle detection,
+	 then it's obviously part of a cycle.  */
+      if (chdir_counter && SAME_INODE (sb, dir_cycle_detect_dev_ino))
+	{
+	  error (0, 0, _("\
+WARNING: Circular directory structure.\n\
+This almost certainly means that you have a corrupted file system.\n\
+NOTIFY YOUR SYSTEM MANAGER.\n\
+The following directory is part of the cycle:\n  %s\n"),
+		 quote (full_filename (dir_name)));
+
+	  if (x->interactive)
+	    {
+	      error (0, 0, _("continue? "));
+	      if (yesno ())
+		return RM_ERROR;
+	    }
+	  exit (EXIT_FAILURE);
+	}
+
+      /* If the number of `descending' chdir calls is a power of two,
+	 record the dev/ino of the current directory.  */
+      if (is_power_of_two (++chdir_counter))
+	{
+	  dir_cycle_detect_dev_ino.st_dev = sb.st_dev;
+	  dir_cycle_detect_dev_ino.st_ino = sb.st_ino;
+	}
+    }
+#endif
+
     tmp_cwd_dev_ino.st_dev = sb.st_dev;
     tmp_cwd_dev_ino.st_ino = sb.st_ino;
   }
@@ -819,8 +794,6 @@ enum RM_status
 rm (struct File_spec *fs, int user_specified_name,
     struct rm_options const *x, struct dev_ino const *cwd_dev_ino)
 {
-  mode_t filetype_mode;
-
   if (user_specified_name)
     {
       /* CAUTION: this use of base_name works only because any
@@ -834,7 +807,12 @@ rm (struct File_spec *fs, int user_specified_name,
 	}
     }
 
-  if (fspec_get_filetype_mode (fs, &filetype_mode))
+  /* FIXME: this makes fspec_get_filetype_mode unused, and in fact,
+     may make the whole fspec_* caching business pointless...
+     I'm finally coming around to Paul's way of thinking:
+     we need a `safe' mode (see rewrite on the no-recursion branch)
+     and a fast-and-unsafe mode.  */
+  if (fspec_get_full_mode (fs))
     {
       if (x->ignore_missing_files && errno == ENOENT)
 	return RM_OK;
@@ -844,50 +822,7 @@ rm (struct File_spec *fs, int user_specified_name,
       return RM_ERROR;
     }
 
-#ifdef ENABLE_CYCLE_CHECK
-  if (x->recursive && S_ISDIR (filetype_mode))
-    {
-      struct active_dir_ent *old_ent;
-      struct active_dir_ent *new_ent;
-
-      /* If there is already a directory in the map with the same device
-	 and inode numbers, then there is a directory cycle.  */
-
-      if (fspec_get_device_number (fs))
-	{
-	  error (0, errno, _("cannot stat %s"),
-		 quote (full_filename (fs->filename)));
-	  return RM_ERROR;
-	}
-      new_ent = make_active_dir_ent (fs->st_ino, fs->st_dev, current_depth ());
-      old_ent = hash_lookup (active_dir_map, new_ent);
-      if (old_ent)
-	{
-	  error (0, 0, _("\
-WARNING: Circular directory structure.\n\
-This almost certainly means that you have a corrupted file system.\n\
-NOTIFY YOUR SYSTEM MANAGER.\n\
-The following two directories have the same inode number:\n"));
-	  print_nth_dir (stderr, old_ent->depth);
-	  fprintf (stderr, "\n%s\n", quote (full_filename (fs->filename)));
-	  fflush (stderr);
-
-	  if (x->interactive)
-	    {
-	      error (0, 0, _("continue? "));
-	      if (yesno ())
-		return RM_ERROR;
-	    }
-	  exit (EXIT_FAILURE);
-	}
-
-      /* Put this directory in the active_dir_map.  */
-      if (! hash_insert (active_dir_map, new_ent))
-	xalloc_die ();
-    }
-#endif
-
-  if (!S_ISDIR (filetype_mode) || x->unlink_dirs)
+  if (!S_ISDIR (fs->mode) || x->unlink_dirs)
     {
       return remove_file (fs, x);
     }
@@ -905,50 +840,21 @@ The following two directories have the same inode number:\n"));
 
       status = remove_dir (fs, need_save_cwd, x, cwd_dev_ino);
 
-#ifdef ENABLE_CYCLE_CHECK
-      if (active_dir_map)
-	{
-	  struct active_dir_ent tmp;
-	  struct active_dir_ent *old_ent;
-
-	  /* Remove this directory from the active_dir_map.  */
-	  tmp.st_ino = fs->st_ino;
-	  assert (fs->have_device);
-	  tmp.st_dev = fs->st_dev;
-	  old_ent = hash_delete (active_dir_map, &tmp);
-	  assert (old_ent != NULL);
-	  free (old_ent);
-	}
-#endif
-
       return status;
     }
 }
 
 void
-remove_init (struct rm_options const *x)
+remove_init (void)
 {
   /* Initialize dir-stack obstacks.  */
   obstack_init (&dir_stack);
   obstack_init (&len_stack);
-
-#ifdef ENABLE_CYCLE_CHECK
-  if (x->recursive)
-    active_dir_map
-      = hash_initialize (ACTIVE_DIR_INITIAL_CAPACITY, NULL,
-			 hash_active_dir_ent,
-			 hash_compare_active_dir_ents, free);
-#endif
 }
 
 void
 remove_fini (void)
 {
-#ifdef ENABLE_CYCLE_CHECK
-  if (active_dir_map)
-    hash_free (active_dir_map);
-#endif
-
   obstack_free (&dir_stack, NULL);
   obstack_free (&len_stack, NULL);
 }
