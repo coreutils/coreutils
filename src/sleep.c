@@ -168,14 +168,19 @@ main (int argc, char **argv)
   if (fail)
     usage (1);
 
+  /* Round to the nearest nanosecond here so that tv_nsec will be
+     no larger than 999,999,999.  */
+  seconds += .0000000005;
+
+  /* Separate whole seconds from nanoseconds.  */
   ts.tv_sec = seconds;
-  ts.tv_nsec = (int) ((seconds - ts.tv_sec) * 1000000000 + .5);
+  ts.tv_nsec = (seconds - ts.tv_sec) * 1000000000;
 
   while (1)
     {
       struct timespec remaining;
       interrupted = nanosleep (&ts, &remaining);
-      assert (!interrupted || errno == EINTR);
+      /* assert (!interrupted || errno == EINTR); */
       if (!interrupted)
 	break;
       ts = remaining;
