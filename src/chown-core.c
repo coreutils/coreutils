@@ -124,19 +124,19 @@ describe_change (const char *file, enum Change_status changed,
   switch (changed)
     {
     case CH_SUCCEEDED:
-      fmt = (user
-	     ? _("changed ownership of %s to %s\n")
-	     : _("changed group of %s to %s\n"));
+      fmt = (user ? _("changed ownership of %s to %s\n")
+	     : group ? _("changed group of %s to %s\n")
+	     : _("no change to ownership of %s\n"));
       break;
     case CH_FAILED:
-      fmt = (user
-	     ? _("failed to change ownership of %s to %s\n")
-	     : _("failed to change group of %s to %s\n"));
+      fmt = (user ? _("failed to change ownership of %s to %s\n")
+	     : group ? _("failed to change group of %s to %s\n")
+	     : _("failed to change ownership of %s\n"));
       break;
     case CH_NO_CHANGE_REQUESTED:
-      fmt = (user
-	     ? _("ownership of %s retained as %s\n")
-	     : _("group of %s retained as %s\n"));
+      fmt = (user ? _("ownership of %s retained as %s\n")
+	     : group ? _("group of %s retained as %s\n")
+	     : _("ownership of %s retained\n"));
       break;
     default:
       abort ();
