@@ -56,9 +56,9 @@ use strict;
 ["07c", '-k 2,3', "y k b\nz k a\n", "z k a\ny k b\n", 0],
 ["07d", '+1 -3', "y k b\nz k a\n", "z k a\ny k b\n", 0],
 #
-# report an error for `.' but missing char spec
+# report an error for `.' without following char spec
 ["08a", '-k 2.,3', "", "", 2],
-# report an error for `,' but missing POS2
+# report an error for `,' without following POS2
 ["08b", '-k 2,', "", "", 2],
 #
 # Test new -g option.
