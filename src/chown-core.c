@@ -20,6 +20,8 @@
 #include <config.h>
 #include <stdio.h>
 #include <sys/types.h>
+#include <pwd.h>
+#include <grp.h>
 
 #include "system.h"
 #include "error.h"
@@ -27,6 +29,12 @@
 #include "quote.h"
 #include "savedir.h"
 #include "chown-core.h"
+#include "xalloc.h"
+
+#ifndef _POSIX_VERSION
+struct group *getgrnam ();
+struct group *getgrgid ();
+#endif
 
 void
 chopt_init (struct Chown_option *chopt)
@@ -37,6 +45,29 @@ chopt_init (struct Chown_option *chopt)
   chopt->force_silent = 0;
   chopt->user_name = 0;
   chopt->group_name = 0;
+}
+
+void
+chopt_free (struct Chown_option *chopt)
+{
+  XFREE (chopt->user_name);
+  XFREE (chopt->group_name);
+}
+
+/* FIXME: describe */
+
+char *
+gid_to_name (gid_t gid)
+{
+  struct group *grp = getgrgid (gid);
+  return xstrdup (grp == NULL ? _("<unknown>") : grp->gr_name);
+}
+
+char *
+uid_to_name (uid_t uid)
+{
+  struct passwd *pwd = getpwuid (uid);
+  return xstrdup (pwd == NULL ? _("<unknown>") : pwd->pw_name);
 }
 
 /* Tell the user how/if the user and group of FILE have been changed.
