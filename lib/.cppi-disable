@@ -9,6 +9,8 @@ getndelim2.h
 getopt.c
 getopt.h
 getopt1.c
+getopt_.h
+getopt_int.h
 getpagesize.h
 gettext.h
 localcharset.h
