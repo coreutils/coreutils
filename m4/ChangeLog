@@ -1,3 +1,12 @@
+2003-07-10  Jim Meyering  <jim@meyering.net>
+
+	* stdint_h.m4: New file.
+	* inttypes_h.m4: New file.
+	* uintmax_t.m4: New file.
+	* intmax_t.m4: New file.
+	* inttypes.m4: Remove file.  Use intmax_t.m4 and uintmax_t.m4
+	from gnulib, instead.
+
 2003-06-09  Jim Meyering  <jim@meyering.net>
 
 	* tzset.m4 (gl_FUNC_TZSET_CLOBBER): Also define gmtime.
