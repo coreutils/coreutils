@@ -106,7 +106,7 @@ ross-0a.O ross-0a.E ross-0b.O ross-0b.E ross-1a.O ross-1a.E ross-1b.O \
 ross-1b.E ross-2.O ross-2.E ross-3.O ross-3.E ross-4.O ross-4.E ross-5.O \
 ross-5.E ross-6.O ross-6.E
 
-EXTRA_DIST = mk-script.pl Test.pm $x-tests $(explicit) $(maint_gen)
+EXTRA_DIST = Test.pm $x-tests $(explicit) $(maint_gen)
 noinst_SCRIPTS = $x-tests
 
 PERL = @PERL@
@@ -114,7 +114,7 @@ editpl = sed -e 's,@''PERL''@,$(PERL),g' -e 's,@''srcdir''@,@srcdir@,g'
 
 TESTS = $x-tests
 
-SUFFIXES = .pl
+mk_script = $(srcdir)/../mk-script
 
 MAINTAINERCLEANFILES = $x-tests $(maint_gen)
 CLEANFILES = $(run_gen)
@@ -133,8 +133,7 @@ GZIP = --best
 default: all
 
 .SUFFIXES:
-.SUFFIXES: .pl
-$(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --gnits tests/tr/Makefile
 
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
@@ -239,28 +238,19 @@ install-exec install-data install uninstall all installdirs \
 mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
-
-$(srcdir)/$x-tests: @MAINT@mk-script Test.pm
-	./mk-script ../../src/$x > $@.n
+$(srcdir)/$x-tests: $(mk_script) Test.pm
+	$(PERL) -w -- $(mk_script) ../../src/$x > $@.n
 	mv $@.n $@
 	chmod 755 $@
 
-mk-script: ../../config.status
-
-.pl:
-	rm -f $@ $@.tmp
-	$(editpl) $< > $@.tmp
-	chmod +x-w $@.tmp
-	mv $@.tmp $@
-
-@MAINT@Makefile.am: ../Makefile.am.in Test.pm mk-script
-@MAINT@	rm -f $@ $@t
-@MAINT@	sed -n '1,/^##test-files-begin/p' $< > $@t
-@MAINT@	tool=`echo $(subdir)|sed 's/^tests.//;s/-test//'`; \
-@MAINT@	  echo "x = $$tool" >> $@t
-@MAINT@	./mk-script --list >> $@t
-@MAINT@	sed -n '/^##test-files-end/,$$p' $< >> $@t
-@MAINT@	mv $@t $@
+Makefile.am: ../Makefile.am.in Test.pm $(mk_script)
+	rm -f $@ $@t
+	sed -n '1,/^##test-files-begin/p' $< > $@t
+	tool=`echo $(subdir)|sed 's/^tests.//;s/-test//'`; \
+	  echo "x = $$tool" >> $@t
+	$(PERL) $(mk_script) --list >> $@t
+	sed -n '/^##test-files-end/,$$p' $< >> $@t
+	mv $@t $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
