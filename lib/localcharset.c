@@ -45,6 +45,8 @@
 # endif
 #endif
 
+#include "path-concat.h"
+
 char *xmalloc ();
 char *xrealloc ();
 
@@ -69,10 +71,10 @@ get_charset_aliases ()
   if (cp == NULL)
     {
       FILE *fp;
+      char *file_name = path_concat (LIBDIR, "charset.alias", NULL);
 
-      fp = fopen (LIBDIR "/" "charset.alias", "r");
-      if (fp == NULL)
-	/* File not found, treat it as empty.  */
+      if (file_name == NULL || (fp = fopen (file_name, "r")) == NULL)
+	/* Out of memory or file not found, treat it as empty.  */
 	cp = "";
       else
 	{
@@ -130,6 +132,7 @@ get_charset_aliases ()
 	}
 
       charset_aliases = cp;
+      free (file_name);
     }
 
   return cp;
