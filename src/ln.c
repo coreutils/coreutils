@@ -493,7 +493,7 @@ main (int argc, char **argv)
 
   if (argc <= optind)
     {
-      error (0, 0, _("missing file argument"));
+      error (0, 0, _("missing file operand"));
       usage (EXIT_FAILURE);
     }
 

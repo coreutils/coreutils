@@ -1685,7 +1685,7 @@ main (int argc, char **argv)
 
   if (n_files == 0)
     {
-      error (0, 0, _("missing file argument"));
+      error (0, 0, _("missing file operand"));
       usage (EXIT_FAILURE);
     }
 

@@ -285,9 +285,12 @@ main (int argc, char **argv)
       chopt.affect_symlink_referent = (dereference != 0);
     }
 
-  if (argc - optind + (reference_file ? 1 : 0) <= 1)
+  if (argc - optind < (reference_file ? 1 : 2))
     {
-      error (0, 0, _("too few arguments"));
+      if (argc <= optind)
+	error (0, 0, _("missing operand"));
+      else
+	error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
       usage (EXIT_FAILURE);
     }
 

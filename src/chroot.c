@@ -86,7 +86,7 @@ main (int argc, char **argv)
 
   if (argc <= 1)
     {
-      error (0, 0, _("too few arguments"));
+      error (0, 0, _("missing operand"));
       usage (EXIT_FAIL);
     }
 

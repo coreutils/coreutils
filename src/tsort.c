@@ -31,6 +31,7 @@
 #include "system.h"
 #include "long-options.h"
 #include "error.h"
+#include "quote.h"
 #include "readtokens.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -573,7 +574,7 @@ main (int argc, char **argv)
 
   if (1 < argc - optind)
     {
-      error (0, 0, _("only one argument may be specified"));
+      error (0, 0, _("extra operand %s"), quote (argv[optind + 1]));
       usage (EXIT_FAILURE);
     }
 

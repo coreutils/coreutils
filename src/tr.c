@@ -26,6 +26,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "quote.h"
 #include "safe-read.h"
 #include "xstrtol.h"
 
@@ -1671,6 +1672,8 @@ main (int argc, char **argv)
 {
   int c;
   int non_option_args;
+  int min_operands;
+  int max_operands;
   struct Spec_list buf1, buf2;
   struct Spec_list *s1 = &buf1;
   struct Spec_list *s2 = &buf2;
@@ -1719,35 +1722,34 @@ main (int argc, char **argv)
 
   non_option_args = argc - optind;
   translating = (non_option_args == 2 && !delete);
+  min_operands = 1 + (delete == squeeze_repeats);
+  max_operands = 1 + (delete <= squeeze_repeats);
 
-  /* Change this test if it is valid to give tr no options and
-     no args at all.  POSIX doesn't specifically say anything
-     either way, but it looks like they implied it's invalid
-     by omission.  If you want to make tr do a slow imitation
-     of `cat' use `tr a a'.  */
-  if (non_option_args > 2)
+  if (non_option_args < min_operands)
     {
-      error (0, 0, _("too many arguments"));
+      if (non_option_args == 0)
+	error (0, 0, _("missing operand"));
+      else
+	{
+	  error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
+	  fprintf (stderr, "%s\n",
+		   _(squeeze_repeats
+		     ? ("Two strings must be given when "
+			"both deleting and squeezing repeats.")
+		     : "Two strings must be given when translating."));
+	}
       usage (EXIT_FAILURE);
     }
 
-  if (!delete && !squeeze_repeats && non_option_args != 2)
-    error (EXIT_FAILURE, 0, _("two strings must be given when translating"));
-
-  if (delete && squeeze_repeats && non_option_args != 2)
-    error (EXIT_FAILURE, 0, _("two strings must be given when both \
-deleting and squeezing repeats"));
-
-  /* If --delete is given without --squeeze-repeats, then
-     only one string argument may be specified.  */
-  if ((delete && !squeeze_repeats) && non_option_args != 1)
-    error (EXIT_FAILURE, 0,
-	   _("only one string may be given when deleting \
-without squeezing repeats"));
-
-  if (squeeze_repeats && non_option_args == 0)
-    error (EXIT_FAILURE, 0,
-	   _("at least one string must be given when squeezing repeats"));
+  if (max_operands < non_option_args)
+    {
+      error (0, 0, _("extra operand %s"), quote (argv[optind + max_operands]));
+      if (non_option_args == 2)
+	fprintf (stderr, "%s\n",
+		 _("Only one string may be given when "
+		   "deleting without squeezing repeats."));
+      usage (EXIT_FAILURE);
+    }
 
   spec_init (s1);
   if (!parse_str (argv[optind], s1))

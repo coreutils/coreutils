@@ -125,7 +125,7 @@ main (int argc, char *const argv[])
 
   if (optind >= argc)
     {
-      error (0, 0, _("too few arguments"));
+      error (0, 0, _("missing operand"));
       usage (EXIT_FAILURE);
     }
 
@@ -133,7 +133,7 @@ main (int argc, char *const argv[])
 
   if (optind < argc)
     {
-      error (0, 0, _("too many arguments"));
+      error (0, 0, _("extra operand %s"), quote (argv[optind]));
       usage (EXIT_FAILURE);
     }
 

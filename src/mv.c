@@ -457,7 +457,11 @@ main (int argc, char **argv)
 
   if (n_files == 0 || (n_files == 1 && !target_directory_specified))
     {
-      error (0, 0, _("missing file argument"));
+      if (n_files == 0)
+	error (0, 0, _("missing file operand"));
+      else
+	error (0, 0, _("missing file operand after %s"),
+	       quote (argv[argc - 1]));
       usage (EXIT_FAILURE);
     }
 

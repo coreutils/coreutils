@@ -26,6 +26,7 @@
 #include "system.h"
 #include "error.h"
 #include "posixver.h"
+#include "quote.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -1873,8 +1874,9 @@ it must be one character from [doxn]"),
 	}
       else if (n_files > 3)
 	{
-	  error (0, 0,
-		 _("compatibility mode supports at most three arguments"));
+	  error (0, 0, _("extra operand %s"), quote (argv[optind + 3]));
+	  fprintf (stderr, "%s\n",
+		   _("Compatibility mode supports at most three operands."));
 	  usage (EXIT_FAILURE);
 	}
 

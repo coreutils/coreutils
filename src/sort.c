@@ -34,6 +34,7 @@
 #include "long-options.h"
 #include "physmem.h"
 #include "posixver.h"
+#include "quote.h"
 #include "stdio-safer.h"
 #include "xmemcoll.h"
 #include "xstrtol.h"
@@ -2511,8 +2512,11 @@ main (int argc, char **argv)
   if (checkonly)
     {
       if (nfiles > 1)
-	error (SORT_FAILURE, 0, _("extra operand `%s' not allowed with -c"),
-	       files[1]);
+	{
+	  error (0, 0, _("extra operand %s not allowed with -c"),
+		 quote (files[1]));
+	  usage (SORT_FAILURE);
+	}
 
       /* POSIX requires that sort return 1 IFF invoked with -c and the
 	 input is not properly sorted.  */

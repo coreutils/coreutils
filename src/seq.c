@@ -26,6 +26,7 @@
 #include "system.h"
 #include "c-strtod.h"
 #include "error.h"
+#include "quote.h"
 #include "xstrtol.h"
 #include "xstrtod.h"
 
@@ -371,13 +372,13 @@ main (int argc, char **argv)
 
   if (argc - optind < 1)
     {
-      error (0, 0, _("too few arguments"));
+      error (0, 0, _("missing operand"));
       usage (EXIT_FAILURE);
     }
 
   if (3 < argc - optind)
     {
-      error (0, 0, _("too many arguments"));
+      error (0, 0, _("extra operand %s"), quote (argv[optind + 3]));
       usage (EXIT_FAILURE);
     }
 

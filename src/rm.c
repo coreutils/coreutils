@@ -231,7 +231,7 @@ main (int argc, char **argv)
 	exit (EXIT_SUCCESS);
       else
 	{
-	  error (0, 0, _("too few arguments"));
+	  error (0, 0, _("missing operand"));
 	  usage (EXIT_FAILURE);
 	}
     }

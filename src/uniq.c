@@ -29,6 +29,7 @@
 #include "error.h"
 #include "hard-locale.h"
 #include "posixver.h"
+#include "quote.h"
 #include "xmemcoll.h"
 #include "xstrtol.h"
 #include "memcasecmp.h"
@@ -435,7 +436,7 @@ main (int argc, char **argv)
 	    break;
 	  if (nfiles == 2)
 	    {
-	      error (0, 0, _("extra operand `%s'"), argv[optind]);
+	      error (0, 0, _("extra operand %s"), quote (argv[optind]));
 	      usage (EXIT_FAILURE);
 	    }
 	  file[nfiles++] = argv[optind++];
@@ -452,7 +453,7 @@ main (int argc, char **argv)
 	      skip_chars = size;
 	    else if (nfiles == 2)
 	      {
-		error (0, 0, _("extra operand `%s'"), optarg);
+		error (0, 0, _("extra operand %s"), quote (optarg));
 		usage (EXIT_FAILURE);
 	      }
 	    else

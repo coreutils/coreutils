@@ -26,6 +26,7 @@
 #include "system.h"
 #include "long-options.h"
 #include "error.h"
+#include "quote.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "hostid"
@@ -83,7 +84,7 @@ main (int argc, char **argv)
 
   if (argc > 1)
     {
-      error (0, 0, _("too many arguments"));
+      error (0, 0, _("extra operand %s"), quote (argv[1]));
       usage (EXIT_FAILURE);
     }
 

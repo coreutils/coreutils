@@ -28,6 +28,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "quote.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "id"
@@ -166,7 +167,10 @@ main (int argc, char **argv)
 	   _("cannot print only names or real IDs in default format"));
 
   if (argc - optind > 1)
-    usage (EXIT_FAILURE);
+    {
+      error (0, 0, _("extra operand %s"), quote (argv[optind + 1]));
+      usage (EXIT_FAILURE);
+    }
 
   if (argc - optind == 1)
     {

@@ -373,8 +373,7 @@ main (int argc, char **argv)
 
   if (n_args > 1)
     {
-      error (0, 0, _("too many non-option arguments: %s%s"),
-	     argv[optind + 1], n_args == 2 ? "" : " ...");
+      error (0, 0, _("extra operand %s"), quote (argv[optind + 1]));
       usage (EXIT_FAILURE);
     }
 

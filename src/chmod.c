@@ -425,7 +425,10 @@ main (int argc, char **argv)
 
   if (optind >= argc)
     {
-      error (0, 0, _("too few arguments"));
+      if (modeind == 0 || modeind != argc - 1)
+	error (0, 0, _("missing operand"));
+      else
+	error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
       usage (EXIT_FAILURE);
     }
 

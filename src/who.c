@@ -34,6 +34,7 @@
 #include "readutmp.h"
 #include "error.h"
 #include "inttostr.h"
+#include "quote.h"
 #include "vasprintf.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -812,7 +813,7 @@ main (int argc, char **argv)
       break;
 
     default:			/* lose */
-      error (0, 0, _("too many arguments"));
+      error (0, 0, _("extra operand %s"), quote (argv[optind + 2]));
       usage (EXIT_FAILURE);
     }
 

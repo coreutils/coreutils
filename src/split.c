@@ -35,6 +35,7 @@
 #include "full-write.h"
 #include "inttostr.h"
 #include "posixver.h"
+#include "quote.h"
 #include "safe-read.h"
 #include "xstrtol.h"
 
@@ -532,7 +533,7 @@ main (int argc, char **argv)
 
   if (optind < argc)
     {
-      error (0, 0, _("too many arguments"));
+      error (0, 0, _("extra operand %s"), quote (argv[optind]));
       usage (EXIT_FAILURE);
     }
 

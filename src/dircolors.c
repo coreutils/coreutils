@@ -462,17 +462,13 @@ to select a shell syntax are mutually exclusive"));
       usage (EXIT_FAILURE);
     }
 
-  if (print_database && argc > 0)
+  if (!print_database < argc)
     {
-      error (0, 0,
-	     _("no FILE arguments may be used with the option to output\n\
-dircolors' internal database"));
-      usage (EXIT_FAILURE);
-    }
-
-  if (!print_database && argc > 1)
-    {
-      error (0, 0, _("too many arguments"));
+      error (0, 0, _("extra operand %s"), quote (argv[!print_database]));
+      if (print_database)
+	fprintf (stderr, "%s\n",
+		 _("File operands cannot be combined with "
+		   "--print-database (-p)."));
       usage (EXIT_FAILURE);
     }
 

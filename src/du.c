@@ -735,9 +735,12 @@ main (int argc, char **argv)
       /* When using --files0-from=F, you may not specify any files
 	 on the command-line.  */
       if (optind < argc)
-	error (EXIT_FAILURE, 0,
-	       _("%s: you may not specify command-line arguments with\
- --files0-from"), quotearg_colon (argv[optind]));
+	{
+	  error (0, 0, _("extra operand %s"), quote (argv[optind]));
+	  fprintf (stderr, "%s\n",
+		   _("File operands cannot be combined with --files0-from."));
+	  usage (EXIT_FAILURE);
+	}
 
       istream = (STREQ (files_from, "-") ? stdin : fopen (files_from, "r"));
       if (istream == NULL)

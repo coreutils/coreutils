@@ -85,13 +85,16 @@ main (int argc, char **argv)
 
   if (argc < 3)
     {
-      error (0, 0, _("too few arguments"));
+      if (argc < 2)
+	error (0, 0, _("missing operand"));
+      else
+	error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
       usage (EXIT_FAILURE);
     }
 
   if (3 < argc)
     {
-      error (0, 0, _("too many arguments"));
+      error (0, 0, _("extra operand %s"), quote (argv[3]));
       usage (EXIT_FAILURE);
     }
 

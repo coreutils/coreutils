@@ -91,6 +91,7 @@ main (int argc, char **argv)
   struct mode_change *change;
   const char *specified_mode;
   int optc;
+  int expected_operands;
   mode_t node_type;
 
   initialize_main (&argc, &argv);
@@ -131,16 +132,27 @@ main (int argc, char **argv)
       newmode = mode_adjust (newmode, change);
     }
 
-  if (argc - optind != 2 && argc - optind != 4)
+  expected_operands = (argv[optind + 1][0] == 'p' ? 2 : 4);
+
+  if (argc - optind < expected_operands)
     {
-      const char *msg;
-      if (argc - optind < 2)
-	msg = _("too few arguments");
-      else if (argc - optind > 4)
-	msg = _("too many arguments");
+      if (argc <= optind)
+	error (0, 0, _("missing operand"));
       else
-	msg = _("wrong number of arguments");
-      error (0, 0, "%s", msg);
+	error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
+      if (expected_operands == 4 && argc - optind == 2)
+	fprintf (stderr, "%s\n",
+		 _("Special files require major and minor device numbers."));
+      usage (EXIT_FAILURE);
+    }
+
+  if (expected_operands < argc - optind)
+    {
+      error (0, 0, _("extra operand %s"),
+	     quote (argv[optind + expected_operands]));
+      if (expected_operands == 2 && argc - optind == 4)
+	fprintf (stderr,
+		 _("Fifos do not have major and minor device numbers."));
       usage (EXIT_FAILURE);
     }
 
@@ -167,14 +179,6 @@ main (int argc, char **argv)
       goto block_or_character;
 
     block_or_character:
-      if (argc - optind != 4)
-	{
-	  error (0, 0, _("\
-when creating special files, major and minor device\n\
-numbers must be specified"));
-	  usage (EXIT_FAILURE);
-	}
-
       {
 	char const *s_major = argv[optind + 2];
 	char const *s_minor = argv[optind + 3];
@@ -206,12 +210,6 @@ numbers must be specified"));
 #ifndef S_ISFIFO
       error (EXIT_FAILURE, 0, _("fifo files not supported"));
 #else
-      if (argc - optind != 2)
-	{
-	  error (0, 0, _("\
-major and minor device numbers may not be specified for fifo files"));
-	  usage (EXIT_FAILURE);
-	}
       if (mkfifo (argv[optind], newmode))
 	error (EXIT_FAILURE, errno, "%s", quote (argv[optind]));
 #endif

@@ -46,6 +46,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "quote.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "uname"
@@ -212,7 +213,7 @@ main (int argc, char **argv)
 
   if (argc != optind)
     {
-      error (0, 0, _("too many arguments"));
+      error (0, 0, _("extra operand %s"), quote (argv[optind]));
       usage (EXIT_FAILURE);
     }
 

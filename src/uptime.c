@@ -30,6 +30,7 @@
 
 #include "error.h"
 #include "long-options.h"
+#include "quote.h"
 #include "readutmp.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -244,7 +245,7 @@ main (int argc, char **argv)
       break;
 
     default:			/* lose */
-      error (0, 0, _("too many arguments"));
+      error (0, 0, _("extra operand %s"), quote (argv[optind + 1]));
       usage (EXIT_FAILURE);
     }
 

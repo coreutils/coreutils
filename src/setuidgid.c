@@ -96,7 +96,10 @@ main (int argc, char **argv)
 
   if (argc <= 2)
     {
-      error (0, 0, _("too few arguments"));
+      if (argc < 2)
+	error (0, 0, _("missing operand"));
+      else
+	error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
       usage (SETUIDGID_FAILURE);
     }
 

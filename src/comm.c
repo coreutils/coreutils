@@ -26,6 +26,7 @@
 #include "linebuffer.h"
 #include "error.h"
 #include "hard-locale.h"
+#include "quote.h"
 #include "xmemcoll.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -283,9 +284,18 @@ main (int argc, char **argv)
 	usage (EXIT_FAILURE);
       }
 
-  if (optind + 2 != argc)
+  if (argc - optind < 2)
     {
-      error (0, 0, _("too few arguments"));
+      if (argc <= optind)
+	error (0, 0, _("missing operand"));
+      else
+	error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
+      usage (EXIT_FAILURE);
+    }
+
+  if (2 < argc - optind)
+    {
+      error (0, 0, _("extra operand %s"), quote (argv[optind + 2]));
       usage (EXIT_FAILURE);
     }
 

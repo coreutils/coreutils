@@ -29,6 +29,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "quote.h"
 
 /* Exit statuses.  */
 enum
@@ -116,7 +117,7 @@ main (int argc, char **argv)
     }
 
   if (optind < argc)
-    error (0, 0, _("ignoring all arguments"));
+    error (0, 0, _("extra operand %s"), quote (argv[optind]));
 
   tty = ttyname (0);
   if (!silent)

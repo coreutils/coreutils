@@ -30,6 +30,7 @@
 #include "checksum.h"
 #include "getline.h"
 #include "error.h"
+#include "quote.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME (algorithm == ALG_MD5 ? "md5sum" : "sha1sum")
@@ -644,7 +645,9 @@ verifying checksums"));
 
       if (optind < argc)
 	{
-	  error (0, 0, _("no files may be specified when using --string"));
+	  error (0, 0, _("extra operand %s"), quote (argv[optind]));
+	  fprintf (stderr, "%s\n",
+		   _("File operands cannot be combined with --string."));
 	  usage (EXIT_FAILURE);
 	}
       for (i = 0; i < n_strings; ++i)
@@ -665,8 +668,9 @@ verifying checksums"));
     {
       if (optind + 1 < argc)
 	{
-	  error (0, 0,
-		 _("only one argument may be specified when using --check"));
+	  error (0, 0, _("extra operand %s"), quote (argv[optind + 1]));
+	  fprintf (stderr, "%s\n",
+		   _("Only one operand may be specified when using --check."));
 	  usage (EXIT_FAILURE);
 	}
 

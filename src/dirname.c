@@ -25,6 +25,7 @@
 #include "long-options.h"
 #include "error.h"
 #include "dirname.h"
+#include "quote.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "dirname"
@@ -84,10 +85,15 @@ main (int argc, char **argv)
       ++argv;
     }
 
-  if (argc != 2)
+  if (argc < 2)
     {
-      error (0, 0, argc < 2 ? _("too few arguments")
-	     : _("too many arguments"));
+      error (0, 0, _("missing operand"));
+      usage (EXIT_FAILURE);
+    }
+
+  if (2 < argc)
+    {
+      error (0, 0, _("extra operand %s"), quote (argv[2]));
       usage (EXIT_FAILURE);
     }
 

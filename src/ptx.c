@@ -27,6 +27,7 @@
 #include "argmatch.h"
 #include "diacrit.h"
 #include "error.h"
+#include "quote.h"
 #include "quotearg.h"
 #include "regex.h"
 #include "xstrtol.h"
@@ -2162,7 +2163,10 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"),
       /* Diagnose any other argument as an error.  */
 
       if (optind < argc)
-	usage (EXIT_FAILURE);
+	{
+	  error (0, 0, _("extra operand %s"), quote (argv[optind]));
+	  usage (EXIT_FAILURE);
+	}
     }
 
   /* If the output format has not been explicitly selected, choose dumb

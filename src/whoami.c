@@ -27,7 +27,9 @@
 #include <getopt.h>
 
 #include "system.h"
+#include "error.h"
 #include "long-options.h"
+#include "quote.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "whoami"
@@ -94,7 +96,10 @@ main (int argc, char **argv)
     }
 
   if (optind != argc)
-    usage (EXIT_FAILURE);
+    {
+      error (0, 0, _("extra operand %s"), quote (argv[optind]));
+      usage (EXIT_FAILURE);
+    }
 
   uid = geteuid ();
   pw = getpwuid (uid);
