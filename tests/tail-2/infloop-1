@@ -1,0 +1,29 @@
+#!/bin/sh
+# This test would fail with tail from pre-1.22i textutils.
+
+tmp=t1-tail.$$
+
+if test "$VERBOSE" = yes; then
+  set -x
+  tail --version
+fi
+
+test_failure=0
+mkdir $tmp || test_failure=1
+cd $tmp || test_failure=1
+
+if test $test_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+yes > t &
+yes_pid=$!
+while :; do
+  test -s t && break
+done
+tail -1 t &
+tail_pid=$!
+kill $yes_pid
+sleep 1
+kill $tail_pid
