@@ -2,6 +2,9 @@
 
 	* Version 3.16q.
 
+	* lib/mountlist.c (fstype_to_string): Guard with
+	#if ! HAVE_F_FSTYPENAME_IN_STATFS.
+
 1998-06-28  Paul Eggert  <eggert@twinsun.com>
 
 	Add support for new --block-size option and

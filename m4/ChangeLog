@@ -1,3 +1,9 @@
+1998-06-29  Jim Meyering  <meyering@ascend.com>
+
+	* fstypename.m4: Include sys/param.h.  NetBSD 1.3.1 requires this
+	for the definition of NGROUPS (used in a system header included
+	by sys/mount.h).
+
 1998-06-28  Jim Meyering  <meyering@ascend.com>
 
 	* ls-mntd-fs.m4: New file.
