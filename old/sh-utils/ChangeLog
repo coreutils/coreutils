@@ -1,3 +1,12 @@
+1997-09-25  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/echo.c: Make echo conform to POSIX.  By default, don't
+	interpret backslash escape sequences.
+	[V9_DEFAULT]: Don't #define.
+	(usage): Document -e option.
+	(main): Recognize options iff POSIXLY_CORRECT is not set.
+	From Bruno Haible.
+
 1997-09-19  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/getusershell.c (IN_CTYPE_DOMAIN): Define.
