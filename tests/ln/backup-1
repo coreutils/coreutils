@@ -19,6 +19,6 @@ if test $framework_failure = 1; then
 fi
 
 ln b b~ || fail=1
-ln -V simple -f -b a b || fail=1
+ln -f --b=simple a b || fail=1
 
 exit $fail

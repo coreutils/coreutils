@@ -91,7 +91,7 @@ rm -rf $d $f $ld
 # and the backup file name is a hard link to the destination file.
 touch a b || test_failure=1
 ln b b~ || test_failure=1
-ln -V simple -f -b a b || fail=1
+ln -f --b=simple a b || fail=1
 
 # Create a hard link to a dangling symlink.
 # This is not portable.  At least sunos4.1.4 and OpenBSD 2.3 fail this test.
