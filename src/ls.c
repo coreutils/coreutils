@@ -109,6 +109,7 @@ int wcwidth ();
 #include "argmatch.h"
 #include "dirname.h"
 #include "error.h"
+#include "hard-locale.h"
 #include "human.h"
 #include "filemode.h"
 #include "ls.h"
@@ -264,6 +265,8 @@ struct bin_str
 time_t time ();
 #endif
 
+size_t nstrftime PARAMS ((char *, size_t, char const *,
+			  struct tm const *, int, int));
 char *getgroup ();
 char *getuser ();
 
@@ -409,6 +412,29 @@ enum format
 
 static enum format format;
 
+/* `full-iso' uses full ISO-style dates and times.  `iso' uses shorter
+   ISO-style time stamps.  `locale' uses locale-dependent time stamps.
+   `posix-iso' uses traditional POSIX-locale-style dates where
+   POSIX requires it, ISO-style dates otherwise.  */
+enum time_style
+  {
+    full_iso_time_style,	/* --time-style=full-iso */
+    iso_time_style,		/* --time-style=iso */
+    locale_time_style,		/* --time-style=locale */
+    posix_iso_time_style	/* --time-style=posix-iso (default) */
+  };
+
+static char const *const time_style_args[] =
+{
+  "full-iso", "iso", "locale", "posix-iso", 0
+};
+
+static enum time_style const time_style_types[] =
+{
+  full_iso_time_style, iso_time_style,
+  locale_time_style, posix_iso_time_style, 0
+};
+
 /* Type of time to print or sort by.  Controlled by -c and -u.  */
 
 enum time_type
@@ -419,10 +445,6 @@ enum time_type
   };
 
 static enum time_type time_type;
-
-/* print the full time, otherwise the standard unix heuristics. */
-
-static int full_time;
 
 /* The file characteristic to sort by.  Controlled by -t, -S, -U, -X, -v. */
 
@@ -658,7 +680,8 @@ static int format_needs_type;
 /* strftime formats for non-recent and recent files, respectively, in
    -l output.  */
 
-static char const *long_time_format[2];
+static char const *long_time_format[2] = { N_("%b %e  %Y"),
+					   N_("%b %e %H:%M") };
 
 /* The exit status to use if we don't get any fatal errors. */
 
@@ -677,7 +700,8 @@ enum
   SHOW_CONTROL_CHARS_OPTION,
   SI_OPTION,
   SORT_OPTION,
-  TIME_OPTION
+  TIME_OPTION,
+  TIME_STYLE_OPTION
 };
 
 static struct option const long_options[] =
@@ -714,6 +738,7 @@ static struct option const long_options[] =
   {"sort", required_argument, 0, SORT_OPTION},
   {"tabsize", required_argument, 0, 'T'},
   {"time", required_argument, 0, TIME_OPTION},
+  {"time-style", required_argument, 0, TIME_STYLE_OPTION},
   {"color", optional_argument, 0, COLOR_OPTION},
   {"block-size", required_argument, 0, BLOCK_SIZE_OPTION},
   {GETOPT_HELP_OPTION_DECL},
@@ -989,6 +1014,7 @@ static int
 decode_switches (int argc, char **argv)
 {
   int c;
+  char const *time_style_option = 0;
 
   /* Record whether there is an option specifying sort type.  */
   int sort_type_specified = 0;
@@ -1031,7 +1057,6 @@ decode_switches (int argc, char **argv)
     }
 
   time_type = time_mtime;
-  full_time = 0;
   sort_type = sort_name;
   sort_reverse = 0;
   numeric_ids = 0;
@@ -1329,7 +1354,7 @@ decode_switches (int argc, char **argv)
 
 	case FULL_TIME_OPTION:
 	  format = long_format;
-	  full_time = 1;
+	  time_style_option = "full-iso";
 	  break;
 
 	case COLOR_OPTION:
@@ -1367,6 +1392,10 @@ decode_switches (int argc, char **argv)
 			     XARGMATCH ("--quoting-style", optarg,
 					quoting_style_args,
 					quoting_style_vals));
+	  break;
+
+	case TIME_STYLE_OPTION:
+	  time_style_option = optarg;
 	  break;
 
 	case SHOW_CONTROL_CHARS_OPTION:
@@ -1419,13 +1448,37 @@ decode_switches (int argc, char **argv)
 
   if (format == long_format)
     {
-      if (full_time)
-	long_time_format[0] = long_time_format[1] =
-	  dcgettext (NULL, "%a %b %d %H:%M:%S %Y", LC_TIME);
-      else
+      if (! time_style_option)
+	time_style_option = getenv ("TIME_STYLE");
+
+      switch (time_style_option
+	      ? XARGMATCH ("time style", time_style_option,
+			   time_style_args,
+			   time_style_types)
+	      : posix_iso_time_style)
 	{
-	  long_time_format[0] = dcgettext (NULL, "%b %e  %Y", LC_TIME);
-	  long_time_format[1] = dcgettext (NULL, "%b %e %H:%M", LC_TIME);
+	case full_iso_time_style:
+	  long_time_format[0] = long_time_format[1] =
+	    "%Y-%m-%d %H:%M:%S.%N %z";
+	  break;
+
+	case posix_iso_time_style:
+	  if (! hard_locale (LC_TIME))
+	    break;
+	  /* Fall through.  */
+	case iso_time_style:
+	  long_time_format[0] = "%Y-%m-%d ";
+	  long_time_format[1] = "%m-%d %H:%M";
+	  break;
+
+	case locale_time_style:
+	  if (hard_locale (LC_TIME))
+	    {
+	      unsigned int i;
+	      for (i = 0; i < 2; i++)
+		long_time_format[i] =
+		  dcgettext (NULL, long_time_format[i], LC_TIME);
+	    }
 	}
     }
 
@@ -2427,7 +2480,7 @@ long_time_expected_width (void)
       for (;;)
 	{
 	  *buf = '\1';
-	  len = strftime (buf, bufsize, fmt, tm);
+	  len = nstrftime (buf, bufsize, fmt, tm, 0, 0);
 	  if (len || ! *buf)
 	    break;
 	  buf = alloca (bufsize *= 2);
@@ -2487,12 +2540,12 @@ print_long_format (const struct fileinfo *f)
 
   /* 7 fields that may require LONGEST_HUMAN_READABLE bytes,
      1 10-byte mode string,
-     1 24-byte time string (may be longer in some locales -- see below)
+     1 35-byte time string (may be longer in some locales -- see below)
        or LONGEST_HUMAN_READABLE integer,
      9 spaces, one following each of these fields, and
      1 trailing NUL byte.  */
   char init_bigbuf[7 * LONGEST_HUMAN_READABLE + 10
-		   + (LONGEST_HUMAN_READABLE < 24 ? 24 : LONGEST_HUMAN_READABLE)
+		   + MAX (35, LONGEST_HUMAN_READABLE)
 		   + 9 + 1];
   char *buf = init_bigbuf;
   size_t bufsize = sizeof (init_bigbuf);
@@ -2614,7 +2667,8 @@ print_long_format (const struct fileinfo *f)
 	{
 	  char *newbuf;
 	  *p = '\1';
-	  s = strftime (p, buf + bufsize - p - 1, fmt, when_local);
+	  s = nstrftime (p, buf + bufsize - p - 1, fmt,
+			 when_local, 0, when_ns);
 	  if (s || ! *p)
 	    break;
 	  newbuf = alloca (bufsize *= 2);
@@ -3323,7 +3377,7 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -F, --classify             append indicator (one of */=@|) to entries\n\
       --format=WORD          across -x, commas -m, horizontal -x, long -l,\n\
                                single-column -1, verbose -l, vertical -C\n\
-      --full-time            list both full date and full time\n"));
+      --full-time            like -l --time-style=full-iso\n"));
 
       printf (_("\
   -g                         -like -l, but do not list owner\n\
@@ -3365,6 +3419,8 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
       --time=WORD            show time as WORD instead of modification time:\n\
                                atime, access, use, ctime or status; use\n\
                                specified time as sort key if --sort=time\n\
+      --time-style=WORD      show times using style WORD:\n\
+                               full-iso, iso, locale, posix-iso\n\
   -t                         sort by modification time\n\
   -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n\
   -u                         with -lt: sort by, and show, access time\n\
