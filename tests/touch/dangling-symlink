@@ -17,4 +17,23 @@ touch t-symlink || fail=1
 test -f touch-target || fail=1
 rm -f touch-target t-symlink
 
+if test $fail = 1; then
+  case $host_triplet in
+    *linux-gnu*)
+      case "`uname -r`" in
+        2.3.9[0-9]*)
+	  cat 1>&2 <<EOF
+====================================================
+$0: WARNING!!!
+This version of the Linux kernel causes touch to fail
+when operating on dangling symlinks.
+====================================================
+EOF
+	  exit 77
+	  ;;
+      esac
+      ;;
+  esac
+fi
+
 exit $fail
