@@ -1,5 +1,8 @@
 1998-10-31  Jim Meyering  <meyering@ascend.com>
 
+	* tests/Makefile.am (EXTRA_DIST): Add Fetish.pm.
+	* tests/Fetish.pm: New file.
+
 	* tests/factor/Makefile.am: Rewrite to use new testing framework.
 	* tests/factor/Test.pm: Remove file.
 	* tests/factor/factor-tests: Remove file.
