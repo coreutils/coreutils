@@ -24,6 +24,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "c-strtod.h"
 #include "error.h"
 #include "xstrtol.h"
 #include "xstrtod.h"
@@ -113,7 +114,7 @@ scan_double_arg (const char *arg)
 {
   double ret_val;
 
-  if (xstrtod (arg, NULL, &ret_val))
+  if (xstrtod (arg, NULL, &ret_val, c_strtod))
     {
       error (0, 0, _("invalid floating point argument: %s"), arg);
       usage (EXIT_FAILURE);
