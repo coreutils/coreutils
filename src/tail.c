@@ -1513,7 +1513,7 @@ parse_options (int argc, char **argv,
 	  break;
 
 	case MAX_CONSECUTIVE_SIZE_CHANGES_OPTION:
-  	  /* --max-consecutive-size-changes=N */
+	  /* --max-consecutive-size-changes=N */
 	  if (xstrtoul (optarg, NULL, 10,
 			&max_n_consecutive_size_changes_between_opens, "")
 	      != LONGINT_OK)
