@@ -296,7 +296,8 @@ print_human_time (time_t const *t)
 
 /* print statfs info */
 static void
-print_statfs (char *pformat, char m, char const *filename, void const *data, SECURITY_ID_T sid)
+print_statfs (char *pformat, char m, char const *filename,
+	      void const *data, SECURITY_ID_T sid)
 {
     struct statfs const *statfsbuf = data;
 #ifdef FLASK_LINUX
@@ -317,7 +318,8 @@ print_statfs (char *pformat, char m, char const *filename, void const *data, SEC
 	    printf(pformat, statfsbuf->f_fsid);
 #else
 	    strcat(pformat, "x %-8x");
-	    printf(pformat, statfsbuf->f_fsid.__val[0], statfsbuf->f_fsid.__val[1]);
+	    printf(pformat, statfsbuf->f_fsid.__val[0],
+		   statfsbuf->f_fsid.__val[1]);
 #endif
 	    break;
 
@@ -363,7 +365,8 @@ print_statfs (char *pformat, char m, char const *filename, void const *data, SEC
 	    printf(pformat, sid);
 	    break;
 	case 'C':
-	    rv = security_sid_to_context(sid, (security_context_t *) &sbuf, &sbuflen);
+	    rv = security_sid_to_context(sid, (security_context_t *) &sbuf,
+					 &sbuflen);
 	    if ( rv < 0 )
 	    	sprintf(sbuf, "<error finding security context %d>", sid);
 	    printf(sbuf);
@@ -378,7 +381,8 @@ print_statfs (char *pformat, char m, char const *filename, void const *data, SEC
 
 /* print stat info */
 static void
-print_stat (char *pformat, char m, char const *filename, void const *data, SECURITY_ID_T sid)
+print_stat (char *pformat, char m, char const *filename,
+	    void const *data, SECURITY_ID_T sid)
 {
     char linkname[256];
     int i;
@@ -452,7 +456,8 @@ print_stat (char *pformat, char m, char const *filename, void const *data, SECUR
 	    printf(pformat, sid);
 	    break;
 	case 'C':
-	    rv = security_sid_to_context(sid, (security_context_t *) &sbuf, &sbuflen);
+	    rv = security_sid_to_context(sid, (security_context_t *) &sbuf,
+					 &sbuflen);
 	    if ( rv < 0 )
 	    	sprintf(sbuf, "<error finding security context %d>", sid);
 	    printf(sbuf);
@@ -535,7 +540,8 @@ print_stat (char *pformat, char m, char const *filename, void const *data, SECUR
 
 static void
 print_it (char const *masterformat, char const *filename,
-	  void (*print_func) (char *, char, char const *, void const *, SECURITY_ID_T),
+	  void (*print_func) (char *, char, char const *,
+			      void const *, SECURITY_ID_T),
 	  void const *data, SECURITY_ID_T sid)
 {
     char *m, *b, *format;
@@ -649,9 +655,13 @@ do_stat (char const *filename, int follow_links, int terse, int secure, char con
   SECURITY_ID_T sid = -1;
 
   if (secure)
-    i = (follow_links == 1) ? stat_secure(filename, &statbuf, &sid) : lstat_secure(filename, &statbuf, &sid);
+    i = ((follow_links == 1)
+	 ? stat_secure(filename, &statbuf, &sid)
+	 : lstat_secure(filename, &statbuf, &sid));
   else
-    i = (follow_links == 1) ? stat(filename, &statbuf) : lstat(filename, &statbuf);
+    i = ((follow_links == 1)
+	 ? stat(filename, &statbuf)
+	 : lstat(filename, &statbuf));
 
   if (i == -1)
     {
@@ -804,55 +814,6 @@ Valid format sequences for file systems:\n\
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);
-}
-
-static void
-verbose_usage(char *progname)
-{
-    fprintf(stderr, "Usage: %s [-l] [-f] [-s] [-v] [-h] [-t] [-c format] file1 [file2 ...]\n", progname);
-    fprintf(stderr, "\tformat interpreted sequences for file stat are:\n");
-    fprintf(stderr, "\t\t%%n - File name\n");
-    fprintf(stderr, "\t\t%%N - Quoted File name with dereference if symbolic link\n");
-    fprintf(stderr, "\t\t%%d - Device number in decimal\n");
-    fprintf(stderr, "\t\t%%D - Device number in hex\n");
-    fprintf(stderr, "\t\t%%i - Inode number\n");
-    fprintf(stderr, "\t\t%%a - Access rights in octal\n");
-    fprintf(stderr, "\t\t%%A - Access rights in human readable form\n");
-    fprintf(stderr, "\t\t%%f - raw mode in hex\n");
-    fprintf(stderr, "\t\t%%F - File type\n");
-    fprintf(stderr, "\t\t%%h - Number of hard links\n");
-    fprintf(stderr, "\t\t%%u - User Id of owner\n");
-    fprintf(stderr, "\t\t%%U - User name of owner\n");
-    fprintf(stderr, "\t\t%%g - Group Id of owner\n");
-    fprintf(stderr, "\t\t%%G - Group name of owner\n");
-    fprintf(stderr, "\t\t%%t - Major device type in hex\n");
-    fprintf(stderr, "\t\t%%T - Minor device type in hex\n");
-    fprintf(stderr, "\t\t%%s - Total size, in bytes\n");
-    fprintf(stderr, "\t\t%%b - Number of blocks allocated\n");
-    fprintf(stderr, "\t\t%%o - IO block size\n");
-    fprintf(stderr, "\t\t%%x - Time of last access\n");
-    fprintf(stderr, "\t\t%%X - Time of last access as seconds since Epoch\n");
-    fprintf(stderr, "\t\t%%y - Time of last modification\n");
-    fprintf(stderr, "\t\t%%Y - Time of last modification as seconds since Epoch\n");
-    fprintf(stderr, "\t\t%%z - Time of last change\n");
-    fprintf(stderr, "\t\t%%Z - Time of last change as seconds since Epoch\n");
-    fprintf(stderr, "\t\t%%S - Security ID in SE-Linux\n");
-    fprintf(stderr, "\t\t%%C - Security context in SE-Linux\n");
-    fprintf(stderr, "\tformat interpreted sequences for filesystem stat are:\n");
-    fprintf(stderr, "\t\t%%n - File name\n");
-    fprintf(stderr, "\t\t%%i - File System id in hex\n");
-    fprintf(stderr, "\t\t%%l - Maximum length of filenames\n");
-    fprintf(stderr, "\t\t%%t - Type in hex\n");
-    fprintf(stderr, "\t\t%%T - Type in human readable form\n");
-    fprintf(stderr, "\t\t%%b - Total data blocks in file system\n");
-    fprintf(stderr, "\t\t%%f - Free blocks in file system\n");
-    fprintf(stderr, "\t\t%%a - Free blocks available to non-superuser\n");
-    fprintf(stderr, "\t\t%%s - Optimal transfer block size\n");
-    fprintf(stderr, "\t\t%%c - Total file nodes in file system\n");
-    fprintf(stderr, "\t\t%%S - Security ID in SE-Linux\n");
-    fprintf(stderr, "\t\t%%C - Security context in SE-Linux\n");
-    fprintf(stderr, "\t\t%%d - Free file nodes in file system\n");
-    exit(1);
 }
 
 int
