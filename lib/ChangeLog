@@ -1,3 +1,8 @@
+2005-03-21  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* Makefile.am (libfetish_a_SOURCES): Remove stat-macros.h, xstrtoul.c,
+	as they are now done by Autoconf macros.
+
 2005-03-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* gettext.h, regex.c, setenv.c, vasprintf.c: Sync from gnulib.
