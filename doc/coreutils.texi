@@ -8303,6 +8303,9 @@ recursive directory traversals.
 
 If used, @var{mode} specifies the new permissions.
 For details, see the section on @ref{File permissions}.
+In the extremely rare cases where @var{mode} has leading @samp{-}, a
+portable script should use @option{--} first, e.g., @samp{chmod -- -w
+file}.  Typically, though, @samp{chmod a-w file} is preferable.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
