@@ -59,6 +59,8 @@ int statfs ();
 int statvfs ();
 #endif
 
+int safe_read ();
+
 /* Return the number of TOSIZE-byte blocks used by
    BLOCKS FROMSIZE-byte blocks, rounding away from zero.
    TOSIZE must be positive.  Return -1 if FROMSIZE is not positive.  */
@@ -124,7 +126,7 @@ get_fs_usage (path, disk, fsp)
   if (fd < 0)
     return -1;
   lseek (fd, (long) SUPERBOFF, 0);
-  if (read (fd, (char *) &fsd, sizeof fsd) != sizeof fsd)
+  if (safe_read (fd, (char *) &fsd, sizeof fsd) != sizeof fsd)
     {
       close (fd);
       return -1;
@@ -206,7 +208,7 @@ statfs (path, fsb)
   struct stat stats;
   struct dustat fsd;
 
-  if (SAFE_STAT (path, &stats))
+  if (safe_stat (path, &stats))
     return -1;
   if (dustat (stats.st_dev, 0, &fsd, sizeof (fsd)))
     return -1;
