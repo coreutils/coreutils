@@ -1,3 +1,9 @@
+1999-10-11  Jim Meyering  <meyering@ascend.com>
+
+	* lib/getopt.c: Merge changes from latest glibc.
+	* lib/getopt.h: Likewise.
+	* lib/getopt1.c: Likewise.
+
 1999-10-09  Jim Meyering  <meyering@ascend.com>
 
 	Accept new option: --target-directory=DIR
