@@ -83,6 +83,31 @@
 #define INODE_DIGITS 7
 #endif
 
+enum filetype
+  {
+    symbolic_link,
+    directory,
+    arg_directory,		/* Directory given as command line arg. */
+    normal			/* All others. */
+  };
+
+struct fileinfo
+  {
+    /* The file name. */
+    char *name;
+
+    struct stat stat;
+
+    /* For symbolic link, name of the file linked to, otherwise zero. */
+    char *linkname;
+
+    /* For symbolic link and long listing, st_mode of file linked to, otherwise
+       zero. */
+    unsigned int linkmode;
+
+    enum filetype filetype;
+  };
+
 #ifndef STDC_HEADERS
 char *ctime ();
 time_t time ();
@@ -116,13 +141,13 @@ static int rev_cmp_extension (struct fileinfo *file2, struct fileinfo *file1);
 static int decode_switches (int argc, char **argv);
 static void parse_ls_color (void);
 static int file_interesting (register struct dirent *next);
-static int gobble_file (char *name, int explicit_arg, char *dirname);
+static int gobble_file (const char *name, int explicit_arg, const char *dirname);
 static int is_not_dot_or_dotdot (char *name);
 static int length_of_file_name_and_frills (struct fileinfo *f);
 static void add_ignore_pattern (char *pattern);
-static void attach (char *dest, char *dirname, char *name);
+static void attach (char *dest, const char *dirname, const char *name);
 static void clear_files (void);
-static void extract_dirs_from_files (char *dirname, int recursive);
+static void extract_dirs_from_files (const char *dirname, int recursive);
 static void get_link_name (char *filename, struct fileinfo *f);
 static void indent (int from, int to);
 static void print_current_files (void);
@@ -142,31 +167,6 @@ static void usage (int status);
 
 /* The name the program was run with, stripped of any leading path. */
 char *program_name;
-
-enum filetype
-  {
-    symbolic_link,
-    directory,
-    arg_directory,		/* Directory given as command line arg. */
-    normal			/* All others. */
-  };
-
-struct fileinfo
-  {
-    /* The file name. */
-    char *name;
-
-    struct stat stat;
-
-    /* For symbolic link, name of the file linked to, otherwise zero. */
-    char *linkname;
-
-    /* For symbolic link and long listing, st_mode of file linked to, otherwise
-       zero. */
-    unsigned int linkmode;
-
-    enum filetype filetype;
-  };
 
 /* The table of files in the current directory:
 
@@ -1435,7 +1435,7 @@ clear_files (void)
    Return the number of blocks that the file occupies.  */
 
 static int
-gobble_file (char *name, int explicit_arg, char *dirname)
+gobble_file (const char *name, int explicit_arg, const char *dirname)
 {
   register int blocks;
   register int val;
@@ -1455,7 +1455,7 @@ gobble_file (char *name, int explicit_arg, char *dirname)
       /* `path' is the absolute pathname of this file. */
 
       if (name[0] == '/' || dirname[0] == 0)
-	path = name;
+	path = (char *) name;
       else
 	{
 	  path = (char *) alloca (strlen (name) + strlen (dirname) + 2);
@@ -1506,10 +1506,10 @@ gobble_file (char *name, int explicit_arg, char *dirname)
 		     save the real name in `linkname' for printing.  */
 		  if (!immediate_dirs)
 		    {
-		      char *tempname = name;
+		      const char *tempname = name;
 		      name = linkpath;
 		      linkpath = files[files_index].linkname;
-		      files[files_index].linkname = tempname;
+		      files[files_index].linkname = (char *) tempname;
 		    }
 		  files[files_index].stat = linkstats;
 		}
@@ -1622,7 +1622,7 @@ make_link_path (char *path, char *linkname)
    This is desirable when processing directories recursively.  */
 
 static void
-extract_dirs_from_files (char *dirname, int recursive)
+extract_dirs_from_files (const char *dirname, int recursive)
 {
   register int i, j;
   register char *path;
@@ -2494,9 +2494,9 @@ indent (int from, int to)
 /* Put DIRNAME/NAME into DEST, handling `.' and `/' properly. */
 
 static void
-attach (char *dest, char *dirname, char *name)
+attach (char *dest, const char *dirname, const char *name)
 {
-  char *dirnamep = dirname;
+  const char *dirnamep = dirname;
 
   /* Copy dirname if it is not ".". */
   if (dirname[0] != '.' || dirname[1] != 0)
