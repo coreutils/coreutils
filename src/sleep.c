@@ -257,6 +257,8 @@ main (int argc, char **argv)
   tv_stop.tv_sec = tv_start.tv_sec + i_sec;
   tv_stop.tv_usec = tv_start.tv_usec + i_usec;
 
+  /* FIXME: use nanosleep!!! then move signal handling into the replacement.  */
+
   while (1)
     {
       struct timeval diff;
