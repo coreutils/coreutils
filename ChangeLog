@@ -2,6 +2,10 @@
 
 	* Version 4.5.8.
 
+	* src/join.c (usage): Change wording in --help output:
+	use FILENUM instead of `SIDE' and say what FILENUM means.
+	Reported by Bernhard Gabler.
+
 	* src/df.c (print_header): Rather than using a hard-coded literal
 	string of spaces matching the length of the English `...Type' header,
 	output the right number of spaces to match the selected translation.
