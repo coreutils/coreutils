@@ -1,6 +1,14 @@
-2003-05-06  Jim Meyering  <jim@meyering.net>
+2003-05-07  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	Implement support so that `head --lines=-N' works on seekable files.
+	* src/head.c (enum Copy_fd_status): Define.
+	(COPY_FD_DIAGNOSE): New macro.
+	(elide_tail_lines_seekable): New funtion.
+	(elide_tail_lines_file): Call it here.
+
+2003-05-06  Jim Meyering  <jim@meyering.net>
 
 	* src/sys2.h (CHAR_BIT): Remove duplicate definition.
 
