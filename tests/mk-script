@@ -15,19 +15,6 @@ use Test;
 
 my $srcdir = '.';
 
-my $sh_copy_args_from_srcdir = <<\EOF;
-new_filename_args=
-for arg in $filename_args; do
-  if test -r $arg; then
-    basename_arg=`echo $arg|sed 's,.*/,,'`
-    test -f $basename_arg || cp -a $arg .
-    arg=$basename_arg
-  fi
-  new_filename_args="$new_filename_args $arg"
-done
-filename_args=$new_filename_args
-EOF
-
 sub validate
 {
   my %seen;
@@ -48,14 +35,6 @@ sub validate
     }
 }
 
-sub write_file ($$)
-{
-  my ($filename, $file_contents) = @_;
-  open F, ">$filename" || die "$0: $filename: $!\n";
-  print F $file_contents;
-  close F || die "$0: $filename: $!\n";
-}
-
 # Given a spec for the input file(s) or expected output file of a single
 # test, create a file for any string.  A file is created for each literal
 # string -- not for named files.  Whether a perl `string' is treated as
@@ -64,10 +43,7 @@ sub write_file ($$)
 # the top level variable to the actual string literal.
 # If $SPEC is a literal Perl string (not a reference), then treat $SPEC
 # as the contents of a file.
-# If $SPEC is a reference to an empty hash, then there are no inputs.
-# If $SPEC is a reference to a nonempty hash, then it must have a single
-# key/value pair (both strings) where the key is the name of the file and
-# the value is contents desired for that file.
+# If $SPEC is a hash reference, then there are no inputs.
 # If $SPEC is an array reference, consider each element of the array.
 # If the element is a string reference, treat the string as the name of
 # an existing file.  Otherwise, the element must be a string and is treated
@@ -89,30 +65,15 @@ sub spec_to_list ($$$)
   my @explicit_file;
   my @maint_gen_file;
   my @content_string;
-  my %file_content_pair;
 
-  # SPEC is a hash reference.
+  # If SPEC is a hash reference, return empty lists.
   if (ref $spec eq 'HASH')
     {
       assert ($type eq $In);
-      if (keys %$spec == 0)
-	{
-	  # It's an empty hash;  return empty lists.
-	}
-      else
-	{
-	  # Currently we don't support lists of FILE,CONTENT pairs.
-	  assert (keys %$spec == 1);
-	  my ($filename, $file_contents) = each %$spec;
-	  $file_content_pair{$filename} = $file_contents;
-	  write_file $filename, $file_contents;
-	  push @maint_gen_file, $filename;
-	}
-
       return {
-	      EXPLICIT => \@explicit_file,
-	      MAINT_GEN => \@maint_gen_file
-	     };
+	EXPLICIT => \@explicit_file,
+	MAINT_GEN => \@maint_gen_file
+	};
     }
 
   if (ref $spec)
@@ -154,7 +115,9 @@ sub spec_to_list ($$$)
       my $suffix = (@content_string > 1 ? $i : '');
       my $maint_gen_file = "$test_name$type$suffix";
       push (@maint_gen_file, $maint_gen_file);
-      write_file "$srcdir/$maint_gen_file", $file_contents;
+      open (F, ">$srcdir/$maint_gen_file") || die "$0: $maint_gen_file: $!\n";
+      print F $file_contents;
+      close (F) || die "$0: $maint_gen_file: $!\n";
       ++$i;
     }
 
@@ -241,9 +204,6 @@ sub wrap
       my %e = map {$_ => 1} @exp;
       @exp = sort keys %e;
 
-      %e = map {$_ => 1} @maint;
-      @maint = sort keys %e;
-
       my $len = 77;
       print join (" \\\n", wrap ($len, 'explicit =', @exp)), "\n";
       print join (" \\\n", wrap ($len, 'maint_gen =', @maint)), "\n";
@@ -254,7 +214,7 @@ sub wrap
 
   print <<EOF1;
 #! /bin/sh
-# This script was generated automatically by $0.
+# This script was generated automatically by build-script.
 case \$# in
   0\) xx='$xx';;
   *\) xx="\$1";;
@@ -320,30 +280,20 @@ EOF1
 
 	  if ($via eq 'FILE')
 	    {
-	      $cmd = "\$xx $flags \$filename_args > $out 2> $err_output";
+	      $cmd = "\$xx $flags $file_args > $out 2> $err_output";
 	    }
 	  elsif ($via eq 'PIPE')
 	    {
 	      $via_msg = "|$val" if $val;
 	      $val ||= 'cat';
-	      $cmd = "$val \$filename_args | \$xx $flags > $out 2> $err_output";
+	      $cmd = "$val $file_args | \$xx $flags > $out 2> $err_output";
 	    }
 	  else
 	    {
 	      assert (@srcdir_rel_in_file == 1);
-	      $cmd = "\$xx $flags < \$filename_args > $out 2> $err_output";
+	      $cmd = "\$xx $flags < $file_args > $out 2> $err_output";
 	    }
 
-	  my $use_fileargs_copying_code =
-	    (defined $Test::copy_fileargs{"$test_name-$via"}
-	     ?       $Test::copy_fileargs{"$test_name-$via"}
-	     : (defined $Test::copy_fileargs{$test_name}
-		?       $Test::copy_fileargs{$test_name}
-		: (defined $Test::copy_fileargs_default
-		   ?       $Test::copy_fileargs_default
-		   : 0)));
-	  my $copy_args = ($use_fileargs_copying_code
-			   ? $sh_copy_args_from_srcdir : '');
 	  my $env = $Test::env{$test_name} || $Test::env_default || [''];
 	  my $e;
 	  foreach $e (@$env)
@@ -355,8 +305,6 @@ EOF1
 	      my $e_cmd = ($e ? "$e " : '');
 	      ++$n_tests;
 	      print <<EOF;
-filename_args="$file_args"
-$copy_args
 $e_cmd$cmd
 code=\$?
 if test \$code != $e_ret_code ; then
