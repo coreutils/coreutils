@@ -1809,6 +1809,7 @@ wc [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
 @cindex total counts
+@vindex POSIXLY_CORRECT
 @code{wc} prints one line of counts for each file, and if the file was
 given as an argument, it prints the file name following the counts.  If
 more than one @var{file} is given, @code{wc} prints a final line
@@ -2142,42 +2143,49 @@ value as the directory for temporary files instead of @file{/tmp}.  The
 @samp{-T @var{tempdir}} option in turn overrides the environment
 variable.
 
-@vindex LC_CTYPE
 The following options affect the ordering of output lines.  They may be
 specified globally or as part of a specific key field.  If no key
 fields are specified, global options apply to comparison of entire
 lines; otherwise the global options are inherited by key fields that do
-not specify any special options of their own.  The @samp{-b}, @samp{-d},
-@samp{-f} and @samp{-i} options classify characters according to
-the @env{LC_CTYPE} locale.
+not specify any special options of their own.  In pre-@sc{posix}
+versions of @command{sort}, global options affect only later key fields,
+so portable shell scripts should specify global options first.
 
 @table @samp
 
 @item -b
 @opindex -b
 @cindex blanks, ignoring leading
+@vindex LC_CTYPE
 Ignore leading blanks when finding sort keys in each line.
+The @env{LC_CTYPE} locale determines character types.
 
 @item -d
 @opindex -d
 @cindex phone directory order
 @cindex telephone directory order
+@vindex LC_CTYPE
 Sort in @dfn{phone directory} order: ignore all characters except
 letters, digits and blanks when sorting.
+The @env{LC_CTYPE} locale determines character types.
 
 @item -f
 @opindex -f
 @cindex case folding
+@vindex LC_CTYPE
 Fold lowercase characters into the equivalent uppercase characters when
 sorting so that, for example, @samp{b} and @samp{B} sort as equal.
+The @env{LC_CTYPE} locale determines character types.
 
 @item -g
 @opindex -g
 @cindex general numeric sort
+@vindex LC_NUMERIC
 Sort numerically, using the standard C function @code{strtod} to convert
 a prefix of each line to a double-precision floating point number.
 This allows floating point numbers to be specified in scientific notation,
 like @code{1.0e-34} and @code{10e100}.
+The @env{LC_NUMERIC} locale determines the decimal-point character.
 Do not report overflow, underflow, or conversion errors.
 Use the following collating sequence:
 
@@ -2201,7 +2209,9 @@ Use this option only if there is no alternative; it is much slower than
 @item -i
 @opindex -i
 @cindex unprintable characters, ignoring
+@vindex LC_CTYPE
 Ignore unprintable characters.
+The @env{LC_CTYPE} locale determines character types.
 
 @item -M
 @opindex -M
@@ -2220,13 +2230,13 @@ determines the month spellings.
 Sort numerically: the number begins each line; specifically, it consists
 of optional whitespace, an optional @samp{-} sign, and zero or more
 digits possibly separated by thousands separators, optionally followed
-by a radix character and zero or more digits.  The @env{LC_NUMERIC}
-locale specifies the radix character and thousands separator.
+by a decimal-point character and zero or more digits.  The @env{LC_NUMERIC}
+locale specifies the decimal-point character and thousands separator.
 
 @code{sort -n} uses what might be considered an unconventional method
 to compare strings representing floating point numbers.  Rather than
 first converting each string to the C @code{double} type and then
-comparing those values, sort aligns the radix characters in the two
+comparing those values, sort aligns the decimal-point characters in the two
 strings and compares the strings a character at a time.  One benefit
 of using this approach is its speed.  In practice this is much more
 efficient than performing the two corresponding string-to-double (or even
@@ -2272,6 +2282,7 @@ following.
 @item -T @var{tempdir}
 @opindex -T
 @cindex temporary directory
+@vindex TMPDIR
 Use directory @var{tempdir} to store temporary files, overriding the
 @env{TMPDIR} environment variable.  If this option is given more than
 once, temporary files are stored in all the directories given.  If you
@@ -2557,8 +2568,8 @@ comm [@var{option}]@dots{} @var{file1} @var{file2}
 
 @vindex LC_COLLATE
 Before @code{comm} can be used, the input files must be sorted using the
-collating sequence specified by the @env{LC_COLLATE} locale, with
-trailing newlines significant.  If an input file ends in a non-newline
+collating sequence specified by the @env{LC_COLLATE} locale.
+If an input file ends in a non-newline
 character, a newline is silently appended.  The @code{sort} command with
 no options always outputs a file that is suitable input to @code{comm}.
 
