@@ -1,4 +1,4 @@
-#serial 32
+#serial 33
 
 dnl We use jm_ for non Autoconf macros.
 m4_pattern_forbid([^jm_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
@@ -21,7 +21,7 @@ AC_DEFUN([jm_PREREQ],
   AC_REQUIRE([jm_PREREQ_GETPAGESIZE])
   AC_REQUIRE([jm_PREREQ_HARD_LOCALE])
   AC_REQUIRE([jm_PREREQ_HASH])
-  AC_REQUIRE([jm_PREREQ_HUMAN])
+  AC_REQUIRE([gl_HUMAN])
   AC_REQUIRE([jm_PREREQ_MBSWIDTH])
   AC_REQUIRE([jm_PREREQ_MEMCHR])
   AC_REQUIRE([jm_PREREQ_PHYSMEM])
@@ -87,17 +87,6 @@ AC_DEFUN([jm_PREREQ_HASH],
   AC_CHECK_HEADERS(stdlib.h)
   AC_REQUIRE([AC_HEADER_STDBOOL])
   AC_REQUIRE([jm_CHECK_DECLS])
-])
-
-# If you use human.c, you need the following files:
-# inttypes.m4 longlong.m4
-AC_DEFUN([jm_PREREQ_HUMAN],
-[
-  AC_CHECK_HEADERS(locale.h)
-  AC_CHECK_DECLS([getenv])
-  AC_CHECK_FUNCS(localeconv)
-  AC_REQUIRE([AC_HEADER_STDBOOL])
-  AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])
 ])
 
 AC_DEFUN([jm_PREREQ_MEMCHR],
