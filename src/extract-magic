@@ -4,7 +4,7 @@ use strict;
 
 use Getopt::Long;
 
-(my $VERSION = '$Revision: 1.1 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.2 $ ') =~ tr/[0-9].//cd;
 (my $ME = $0) =~ s|.*/||;
 
 END
@@ -87,9 +87,9 @@ EOF
   # Fail if there is a `case S_MAGIC_.*' line without
   # a properly formed comment.
 
-  print <<\EOF;
+  print <<EOF;
 /* Define the magic numbers as given by statfs(2).
-   Please send additions to meskes@debian.org.
+   Please send additions to meskes\@debian.org.
    This file is generated automatically from $file. */
 
 #if defined __linux__
