@@ -1,5 +1,5 @@
 /* tail -- output the last part of file(s)
-   Copyright (C) 1989, 90, 91, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 1989, 90, 91, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -263,6 +263,8 @@ With no FILE, or when FILE is -, read standard input.\n\
       --help               display this help and exit\n\
       --version            output version information and exit\n\
 \n\
+"));
+      printf (_("\
 If the first character of N (the number of bytes or lines) is a `+',\n\
 print beginning with the Nth item from the start of each file, otherwise,\n\
 print the last N items in the file.  N may have a multiplier suffix:\n\
