@@ -487,12 +487,10 @@ main (int argc, char **argv)
 	case '8':
 	case '9':
 	  {
-	    size_t s = skip_fields;
 	    if (skip_field_option_type == SFO_NEW)
-	      s = 0;
+	      skip_fields = 0;
 
-	    skip_fields = s * 10 + optc - '0';
-	    if (SIZE_MAX / 10 < s || skip_fields < s)
+	    if (DECIMAL_DIGIT_ACCUMULATE (skip_fields, optc - '0', SIZE_MAX))
 	      error (EXIT_FAILURE, 0, "%s",
 		     _("invalid number of fields to skip"));
 	    skip_field_option_type = SFO_OBSOLETE;
