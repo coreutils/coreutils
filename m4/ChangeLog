@@ -1,5 +1,23 @@
 1999-01-10  Jim Meyering  <meyering@ascend.com>
 
+	* fstypename.m4: Use the new 3-arg form of AC_DEFINE instead of my
+	gross kludge.
+	* inttypes_h.m4: Likewise.
+	* lstat.m4: Likewise.
+	* malloc.m4: Likewise.
+	* readdir.m4: Likewise.
+	* realloc.m4: Likewise.
+	* st_dm_mode.m4: Likewise.
+	* stat.m4: Likewise.
+	* utimbuf.m4: Likewise.
+	* utimes.m4: Likewise.
+
+	* check-decl.m4: Use the new 3-arg form of AC_DEFINE instead of the
+	AC_CHECK_FUNCS hack.  Now, it's still a hack, but at least the
+	comments in config.h.in are meaningful.
+
+	* jm-macros.m4: Require autoconf-2.13 here.
+
 	* regex.m4: By default, don't use the included regex.c on systems
 	with glibc 2.  Suggestion from Uli Drepper.
 
