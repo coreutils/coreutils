@@ -1,3 +1,27 @@
+2003-12-03  Paul Eggert  <eggert@twinsun.com>
+
+	* NEWS: ls -l (and similar options) now adjust all columns to
+	fit the data.  Generalized from a suggestion by Leah Q for file sizes.
+	* src/ls.c (INODE_DIGITS, LOGIN_NAME_MAX, ID_LENGTH_MAX): Remove.
+	(format_user_width, format_group_width, unsigned_file_size,
+	format_group): New functions.
+	(block_size_width): Renamed from block_size_size.
+	(inode_number_width, nlink_width, owner_width, group_width,
+	author_width, major_device_number_width, minor_device_number_width,
+	file_size_width): New vars.
+	(clear_files): Initialize them.
+	(gobble_file): Set them.  Don't ceiling block_size_width to 7.
+	(print_long_file): Use them.
+	(gobble_file): Use a new local variable 'f' to make the code
+	smaller and more consistent with other functions.
+	(format_user): Output to stdout, not to a buffer, so that we
+	don't have to worry about buffer overrun.  Update dired_pos.
+	(print_long_file): Don't put owner, group, author into buffer;
+	just print them directly.  Don't assume link counts and
+	major and minor numbers fit into unsigned long int.
+	* tests/cp/same-file, tests/mv/part-symlink: Don't assume that
+	'ls' output is fixed-width.
+
 2003-12-03  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.0.
