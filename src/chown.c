@@ -211,7 +211,7 @@ change_dir_owner (const char *dir, uid_t user, gid_t group, struct stat *statp)
   int errors = 0;
 
   errno = 0;
-  name_space = savedir (dir, statp->st_size);
+  name_space = savedir (dir, (unsigned int) statp->st_size);
   if (name_space == NULL)
     {
       if (errno)
