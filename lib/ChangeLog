@@ -1,3 +1,8 @@
+2003-01-11  Bruno Haible  <bruno@clisp.org>
+
+	* readtokens.c (readtoken): Cast character to 'unsigned char', not
+	'unsigned int'.
+
 2003-01-14  Jim Meyering  <jim@meyering.net>
 
 	* ftw.c: Merge in Ulrich's and my changes from libc.
