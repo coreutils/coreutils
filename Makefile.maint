@@ -57,6 +57,9 @@ aclocal-files: configure.in m4/Makefile.am
 
 -include aclocal-files
 
-# Override default rule to use --acdir option
-$(srcdir)/aclocal.m4: configure.in $(acfiles)
-	cd $(srcdir) && aclocal -I $(acdir)
+# Regenerate aclocal.m4 any time one of the m4/*.m4 files changes.
+$(ACLOCAL_M4): $(acfiles)
+
+# Make aclocal use `-I m4'.
+# This is used in Makefile.maint.
+ACLOCAL := $(ACLOCAL) -I $(acdir)
