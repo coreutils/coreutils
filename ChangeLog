@@ -1,6 +1,15 @@
-2002-12-11  Jim Meyering  <jim@meyering.net>
+2002-12-12  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.4.
+
+2002-12-11  TAKAI Kousuke  <takai@vlsi.kuee.kyoto-u.ac.jp>
+
+	Fix a bug whereby cp would fail to parse an option like
+	--preserve=mode,ownership.
+	* src/cp.c (decode_preserve_arg): Advance `comma' to
+	point the character following the comma.
+
+2002-12-11  Jim Meyering  <jim@meyering.net>
 
 	* src/pathchk.c (NEED_PATHCONF_WRAPPER): Undefine before defining,
 	in case it's already defined.

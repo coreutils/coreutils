@@ -1,4 +1,5 @@
 [4.5.4]
+* cp no longer fails to parse options like this: --preserve=mode,ownership
 * `ls --color -F symlink-to-dir' works properly
 * ls is much more efficient on directories with valid dirent.d_type.
 * stty supports all baud rates defined in linux-2.4.19.
@@ -23,9 +24,11 @@
 * df now displays the block size using powers of 1000 if the requested
   block size seems to be a multiple of a power of 1000.
 * nl no longer gets a segfault when run like this `yes|nl -s%n'
+
 [4.5.3]
 * du --dereference-args (-D) no longer fails in certain cases
 * `ln --target-dir=DIR' no longer fails when given a single argument
+
 [4.5.2]
 * `rm -i dir' (without --recursive (-r)) no longer recurses into dir
 * `tail -c N FILE' now works with files of size >= 4GB
@@ -34,6 +37,7 @@
 * printf now honors the `--' command line delimiter
 * od's 8-byte formats x8, o8, and u8 now work
 * tail now accepts fractional seconds for its --sleep-interval=S (-s) option
+
 [4.5.1]
 * du and ls now report sizes of symbolic links (before they'd always report 0)
 * uniq now obeys the LC_COLLATE locale, as per POSIX 1003.1-2001 TC1.
