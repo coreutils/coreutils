@@ -1,6 +1,19 @@
-2004-07-01  Paul Eggert  <eggert@cs.ucla.edu>
+2004-07-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* src/copy.c (copy_dir): Assume path_concat returns non-NULL.
+	* src/cp.c (do_copy): Likewise.
+	* src/mv.c (movefile): Likewise.
+
+	* src/cp.c (make_path_private): 2nd arg is now size_t, not int,
+	to avoid problem when path_concat dir name is longer than 2 GiB (!).
+
+	* src/nohup.c (main): Don't pass NULL first argument to path_concat.
+	This cleans up the semantics a bit, as we no longer try to open the
+	same file twice.
+
+2004-07-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: Add short names -t and -T for --target-directory
 	and --no-target-directory options, respectively.
