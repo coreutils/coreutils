@@ -15,7 +15,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Extracted from rm.c and librarified by Jim Meyering.  */
+/* Extracted from rm.c and librarified, then rewritten by Jim Meyering.  */
 
 #ifdef _AIX
  #pragma alloca
@@ -752,6 +752,13 @@ remove_entry (char const *filename, struct rm_options const *x,
 
 
 #else
+
+  if (is_dir == T_YES && ! x->recursive)
+    {
+      error (0, EISDIR, _("cannot remove directory %s"),
+	     quote (full_filename (filename)));
+      return RM_ERROR;
+    }
 
   /* is_empty_directory is set iff it's ok to use rmdir.
      Note that it's set only in interactive mode -- in which case it's
