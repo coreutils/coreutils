@@ -430,7 +430,7 @@ the file to all users.
 @cindex numeric modes
 @cindex file permissions, numeric
 @cindex octal numbers for file modes
-File permissions are stored internally as 16 bit integers.  As an
+File permissions are stored internally as integers.  As an
 alternative to giving a symbolic mode, you can give an octal (base 8)
 number that corresponds to the internal representation of the new mode.
 This number is always interpreted in octal; you do not have to add a
@@ -440,12 +440,13 @@ A numeric mode is usually shorter than the corresponding symbolic
 mode, but it is limited in that it can not take into account a file's
 previous permissions; it can only set them absolutely.
 
-The permissions granted to the user, to other users in the file's group,
+On most systems, the permissions granted to the user,
+to other users in the file's group,
 and to other users not in the file's group are each stored as three
 bits, which are represented as one octal digit.  The three special
 permissions are also each stored as one bit, and they are as a group
-represented as another octal digit.  Here is how the bits are arranged
-in the 16 bit integer, starting with the lowest valued bit:
+represented as another octal digit.  Here is how the bits are arranged,
+starting with the lowest valued bit:
 
 @example
 Value in  Corresponding
