@@ -1,5 +1,6 @@
 2000-07-14  Jim Meyering  <meyering@lucent.com>
 
+	* xstrtoumax.m4 (jm_AC_PREREQ_XSTRTOUMAX): Require jm_AC_TYPE_UINTMAX_T.
 
 2000-07-10  Paul Eggert  <eggert@twinsun.com>
 
