@@ -5,4 +5,5 @@ TESTS = \
   backup-1 no-deref-link1 no-deref-link2 no-deref-link3 backup-is-src \
   same-file
 EXTRA_DIST = $(TESTS)
-TESTS_ENVIRONMENT = CP=../../src/cp RM=../../src/rm
+TESTS_ENVIRONMENT = \
+  PATH=`pwd`/../../src:$$PATH
