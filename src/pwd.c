@@ -45,7 +45,7 @@ Print the full filename of the current working directory.\n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
 "));
-      puts (_("\nReport bugs to <sh-utils-bugs@gnu.org>."));
+      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);
 }

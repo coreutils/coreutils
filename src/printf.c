@@ -118,7 +118,7 @@ FORMAT controls the output as in C printf.  Interpreted sequences are:\n\
 and all C format specifications ending with one of diouxXfeEgGcs, with\n\
 ARGUMENTs converted to proper type first.  Variable widths are handled.\n\
 "));
-      puts (_("\nReport bugs to <sh-utils-bugs@gnu.org>."));
+      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);
 }

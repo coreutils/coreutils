@@ -166,7 +166,7 @@ The GNU shell utilities are mostly compatible with the POSIX.2 standard.
 @c This paragraph appears in all of fileutils.texi, textutils.texi, and
 @c sh-utils.texi too -- so be sure to keep them consistent.
 @cindex bugs, reporting
-Please report bugs to @samp{sh-utils-bugs@@gnu.org}.  Remember
+Please report bugs to @samp{bug-sh-utils@@gnu.org}.  Remember
 to include the version number, machine architecture, input files, and
 any other information needed to reproduce the bug: your input, what you
 expected, what you got, and why it is wrong.  Diffs are welcome, but

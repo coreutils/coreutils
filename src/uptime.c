@@ -170,7 +170,7 @@ If FILE is not specified, use %s.  %s as FILE is common.\n\
       --help        display this help and exit\n\
       --version     output version information and exit\n"),
 	      UTMP_FILE, WTMP_FILE);
-      puts (_("\nReport bugs to <sh-utils-bugs@gnu.org>."));
+      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);
 }

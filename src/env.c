@@ -201,7 +201,7 @@ Set each NAME to VALUE in the environment and run COMMAND.\n\
 \n\
 A mere - implies -i.  If no COMMAND, print the resulting environment.\n\
 "));
-      puts (_("\nReport bugs to <sh-utils-bugs@gnu.org>."));
+      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);
 }

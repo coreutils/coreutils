@@ -63,7 +63,7 @@ Print factors of each NUMBER; read standard input with no arguments.\n\
   Print the prime factors of all specified integer NUMBERs.  If no arguments\n\
   are specified on the command line, they are read from standard input.\n\
 "));
-      puts (_("\nReport bugs to <sh-utils-bugs@gnu.org>."));
+      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);
 }

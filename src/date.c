@@ -481,7 +481,7 @@ the following modifiers between `%%' and a numeric directive.\n\
   `-' (hyphen) do not pad the field\n\
   `_' (underscore) pad the field with spaces\n\
 "));
-      puts (_("\nReport bugs to <sh-utils-bugs@gnu.org>."));
+      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);
 }
