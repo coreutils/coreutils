@@ -1,4 +1,7 @@
 [4.1.6]
+* cp -r once again preserves symlinks (reverting the change in 4.1.5),
+    but now it warns that relying on that behavior is not portable
+* ls now accepts --time-style=+FORMAT, where +FORMAT works like date's format
 * The obsolete usage `touch [-acm] MMDDhhmm[YY] FILE...' is no longer
   supported on systems conforming to POSIX 1003.1-2001.  Use touch -t instead.
 * cp and inter-partition mv no longer give a misleading diagnostic in some
