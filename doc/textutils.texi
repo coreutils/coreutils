@@ -1729,7 +1729,7 @@ input line length or restrictions on bytes allowed within lines.  In
 addition, if the final byte of an input file is not a newline, GNU
 @code{sort} silently supplies one.
 
-Upon any error, @code{sort} exits with status of @samp{2}.
+Upon any error, @code{sort} exits with a status of @samp{2}.
 
 @vindex TMPDIR
 If the environment variable @code{TMPDIR} is set, @code{sort} uses its
