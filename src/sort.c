@@ -910,8 +910,9 @@ limfield (const struct line *line, const struct keyfield *key)
     }
 #endif
 
-  /* If we're skipping leading blanks, don't start counting characters
-     until after skipping past any leading blanks.  */
+  /* If we're ignoring leading blanks when computing the End
+     of the field, don't start counting bytes until after skipping
+     past any leading blanks. */
   if (key->skipeblanks)
     while (ptr < lim && blanks[UCHAR (*ptr)])
       ++ptr;
