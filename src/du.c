@@ -463,8 +463,9 @@ process_file (FTS *fts, FTSENT *ent)
 
 /* Recursively print the sizes of the directories (and, if selected, files)
    named in FILES, the last entry of which is NULL.
-   FTS_FLAGS controls how fts works.
-   Return nonzero upon error.  */
+   BIT_FLAGS controls how fts works.
+   If the fts_open call fails, exit nonzero.
+   Otherwise, return nonzero upon error.  */
 
 static int
 du_files (char **files, int bit_flags)
@@ -474,9 +475,23 @@ du_files (char **files, int bit_flags)
   FTS *fts = fts_open (files, bit_flags, NULL);
   if (fts == NULL)
     {
-      /* FIXME */
-      error (0, errno, "FIXME");
-      return 1;
+      /* This can fail in three ways: out of memory, invalid bit_flags,
+	 and one of the FILES is an empty string.
+	 We could try to decipher that errno==EINVAL means invalid
+	 bit_flags and errno==ENOENT, but that seems wrong.  Ideally
+	 fts_open would return a proper error indicator.  For now,
+	 we'll presume that the bit_flags are valid and just check for
+	 empty strings.  */
+      bool invalid_arg = false;
+      for (; *files; ++files)
+	{
+	  if (**files == '\0')
+	    invalid_arg = true;
+	}
+      if (invalid_arg)
+	error (EXIT_FAILURE, 0, _("invalid argument: %s"), quote (""));
+      else
+	xalloc_die ();
     }
 
   while (1)
