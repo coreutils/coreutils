@@ -2,6 +2,9 @@
 
 	* Version 2.0.22.
 
+	* src/wc.c (usage): Adjust ordering to match that of default output.
+	Suggestion from Gaute Hvoslef Kvalnes.
+
 	* configure.ac (AM_GNU_GETTEXT): Add external arg.
 	(AC_CONFIG_FILES): Remove intl/Makefile.
 	* Makefile.am (SUBDIRS): Remove intl.
