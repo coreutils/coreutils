@@ -1,3 +1,11 @@
+Fri Apr  5 07:33:00 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* nice.c (main): Fix option handling.  Before, FIXME.........
+	Patch from Frank Korz.
+	(main): Use `if' stmt, not while loop, around getopt invocation.
+	Otherwise, `./nice --a=1 -1 ./nice' (in which old-style option
+	follows a long option) gets an error.
+
 Thu Apr  4 20:14:02 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* aclocal.m4 (fp_PROG_CC_STDC): Change -Xc -D_POSIX_C_SOURCE to
