@@ -1,3 +1,8 @@
+2000-05-22  Jim Meyering  <meyering@lucent.com>
+
+	* stat.m4: Require jm_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK.
+	* lstat.m4: Likewise.
+
 2000-05-20  Jim Meyering  <meyering@lucent.com>
 
 	* prereq.m4 (jm_PREREQ_HUMAN): New macro.
