@@ -74,7 +74,8 @@ foreach my $dir (@dir_list)
 	    my $exp = "rm: cannot remove `$dir/$f': Operation not permitted\n";
 	    $line eq $exp
 	      or die "$ME: unexpected dignostic from `$cmd';\n"
-		. "  got      $line  expected $exp";
+		. "  got      $line"
+		. "  expected $exp";
 
 	    last;
 	  }
