@@ -136,6 +136,9 @@ test_args=foo
 # no valid entry in /etc/mtab.
 df_args=/
 
+# This is necessary in the unusual event that getpwuid (getuid ()) fails.
+id_args=-u
+
 sleep 10m &
 kill_args=$!
 
