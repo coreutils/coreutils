@@ -6,7 +6,7 @@ use Getopt::Long;
 use Digest::MD5;
 use Digest::SHA1;
 
-(my $VERSION = '$Revision: 1.4 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.5 $ ') =~ tr/[0-9].//cd;
 (my $ME = $0) =~ s|.*/||;
 
 END
@@ -58,6 +58,7 @@ OPTIONS:
    --current-version=VER
    --release-archive-directory=DIR
    --url-directory=URL_DIR
+   --news=NEWS_FILE
 
    --help             display this help and exit
    --version          output version information and exit
@@ -73,6 +74,7 @@ EOF
   my $curr_version;
   my $release_archive_dir;
   my @url_dir_list;
+  my $news_file;
 
   GetOptions
     (
@@ -81,6 +83,7 @@ EOF
      'current-version=s' => \$curr_version,
      'release-archive-directory=s' => \$release_archive_dir,
      'url-directory=s@' => \@url_dir_list,
+     'news=s@' => \$news_file,
 
      help => sub { usage 0 },
      version => sub { print "$ME version $VERSION\n"; exit },
@@ -187,6 +190,37 @@ EOF
   close OUT
     or die "$ME: $tmp: while writing: $!\n";
   chmod 0400, $tmp;  # ignore failure
+
+  if ($news_file)
+    {
+      print "\nNEWS\n\n";
+
+      # Print all lines from $news_file, starting with the first one
+      # that mentions $curr_version up to but not including
+      # the first occurrence of $prev_version.
+      my $in_items;
+      open NEWS, '<', $news_file
+	or die "$ME: $news_file: cannot open for reading: $!\n";
+      while (defined (my $line = <NEWS>))
+	{
+	  if ( ! $in_items)
+	    {
+	      # FIXME: quote dots
+	      $line =~ /^[^ *].*$curr_version/o
+		or next;
+	      $in_items = 1;
+	      print $line;
+	    }
+	  else
+	    {
+	      # FIXME: quote dots
+	      $line =~ /^[^ *].*$prev_version/o
+		and last;
+	      print $line;
+	    }
+	}
+      close NEWS;
+    }
 
   # FIXME: depend on whether it's a test release
   # sed -n "$news-r1),$news-r2)p" NEWS
