@@ -33,9 +33,8 @@ Thu Sep 19 22:13:31 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	* configure.in (AC_REPLACE_GNU_GETOPT): Remove it -- it's not
 	necessary.
 
-	* acinclude.m4 (AC_DEFUN(AM_SANITY_CHECK_CC,
-	(AC_SYS_POSIX_TERMIOS, AM_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL):
-	Remove definitions.
+	* acinclude.m4 (AM_SANITY_CHECK_CC, AC_SYS_POSIX_TERMIOS,
+	AM_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL): Remove definitions.
 	Now automake's aclocal includes them.
 
 Sun Sep 15 23:08:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
