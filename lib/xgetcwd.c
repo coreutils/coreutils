@@ -48,8 +48,11 @@ char *getwd ();
 #include "xalloc.h"
 #include "xgetcwd.h"
 
-/* Return the current directory, newly allocated, arbitrarily long.
-   Return NULL and set errno on error. */
+/* Return the current directory, newly allocated, assuming it fits
+   within PATH_MAX bytes -- this is a common system-imposed limit
+   on how getcwd works.
+   Upon an out-of-memory error, call xalloc_die.
+   Upon any other type of error, return NULL.  */
 
 char *
 xgetcwd (void)
