@@ -21,63 +21,35 @@
 @ifinfo
 @format
 START-INFO-DIR-ENTRY
-* Shell utilities: (sh-utils).	GNU shell utilities.
-* basename invocation: (sh-utils)basename invocation.
-                        Strip directory and suffix from a file name.
-* date invocation: (sh-utils)date invocation.
-                        Print or set system date and time.
-* dirname invocation: (sh-utils)dirname invocation.
-                        Strip non-directory suffix from a file name.
-* echo invocation: (sh-utils)echo invocation.
-                        Print a line of text.
-* env invocation: (sh-utils)env invocation.
-                        Modify the environment.
-* expr invocation: (sh-utils)expr invocation.
-                        Evaluate expressions.
-* false invocation: (sh-utils)false invocation.
-                        Do nothing, unsuccessfully.
-* groups invocation: (sh-utils)groups invocation.
-                        Print group names a user is in.
-* hostname invocation: (sh-utils)hostname invocation.
-                        Print or set system name.
-* id invocation: (sh-utils)id invocation.
-                        Print real and effective uid and gid.
-* logname invocation: (sh-utils)logname invocation.
-                        Print current login name.
-* nice invocation: (sh-utils)nice invocation.
-                        Modify the scheduling priority.
-* pathchk invocation: (sh-utils)pathchk invocation.
-                        Check file name portability.
-* printenv invocation: (sh-utils)printenv invocation.
-                        Print all or part of the environment.
-* printf invocation: (sh-utils)printf invocation.
-                        Format and print data.
-* pwd invocation: (sh-utils)pwd invocation.
-                        Print working directory.
-* sleep invocation: (sh-utils)sleep invocation.
-                        Delay for a specified time.
-* stty invocation: (sh-utils)stty invocation.
-                        Print or change terminal characteristics.
-* su invocation: (sh-utils)su invocation.
-                        Modify the user and group id.
-* tee invocation: (sh-utils)tee invocation.
-                        Redirect output to multiple files.
-* test invocation: (sh-utils)test invocation.
-                        Check file types and compare values.
-* true invocation: (sh-utils)true invocation.
-                        Do nothing, successfully.
-* tty invocation: (sh-utils)tty invocation.
-                        Print or change terminal characteristics.
-* uname invocation: (sh-utils)uname invocation.
-                        Print system information.
-* users invocation: (sh-utils)users invocation.
-                        Print login names of users currently logged in.
-* who invocation: (sh-utils)who invocation.
-                        Print who is currently logged in.
-* whoami invocation: (sh-utils)whoami invocation.
-                        Print effective user id.
-* yes invocation: (sh-utils)yes invocation.
-                        Print a string until interrupted.
+* Shell utilities: (sh-utils).		GNU shell utilities.
+* basename: (sh-utils)basename invocation.	Strip directory and suffix.
+* date: (sh-utils)date invocation.		Print/set system date and time.
+* dirname: (sh-utils)dirname invocation.	Strip non-directory suffix.
+* echo: (sh-utils)echo invocation.		Print a line of text.
+* env: (sh-utils)env invocation.		Modify the environment.
+* expr: (sh-utils)expr invocation.		Evaluate expressions.
+* false: (sh-utils)false invocation.		Do nothing, unsuccessfully.
+* groups: (sh-utils)groups invocation.		Print group names a user is in.
+* hostname: (sh-utils)hostname invocation.	Print or set system name.
+* id: (sh-utils)id invocation.			Print real/effective uid/gid.
+* logname: (sh-utils)logname invocation.	Print current login name.
+* nice: (sh-utils)nice invocation.		Modify scheduling priority.
+* pathchk: (sh-utils)pathchk invocation.	Check file name portability.
+* printenv: (sh-utils)printenv invocation.	Print environment variables.
+* printf: (sh-utils)printf invocation.	        Format and print data.
+* pwd: (sh-utils)pwd invocation.	        Print working directory.
+* sleep: (sh-utils)sleep invocation.	        Delay for a specified time.
+* stty: (sh-utils)stty invocation.	        Print/change terminal settings.
+* su: (sh-utils)su invocation.	                Modify user and group id.
+* tee: (sh-utils)tee invocation.	        Redirect to multiple files.
+* test: (sh-utils)test invocation.	        File/string tests.
+* true: (sh-utils)true invocation.	        Do nothing, successfully.
+* tty: (sh-utils)tty invocation.	        Print terminal name.
+* uname: (sh-utils)uname invocation.	        Print system information.
+* users: (sh-utils)users invocation.	        Print current user names.
+* who: (sh-utils)who invocation.	        Print who is logged in.
+* whoami: (sh-utils)whoami invocation.		Print effective user id.
+* yes: (sh-utils)yes invocation.		Print a string indefinitely.
 END-INFO-DIR-ENTRY
 @end format
 @end ifinfo
@@ -112,8 +84,8 @@ by the Foundation.
 @titlepage
 @title GNU sh-utils, version @value{VERSION}
 @subtitle A set of shell utilities
-@subtitle for version @value{VERSION}, @value{RELEASE_DATE}
-@author Jim Meyering
+@subtitle for version @value{VERSION}, @value{RELEASE-DATE}
+@author David MacKenzie et al.
 
 @page
 @vskip 0pt plus 1filll
@@ -143,14 +115,10 @@ by the Foundation.
 @cindex utilities for shell programming
 
 This manual minimally documents version @value{VERSION} of the GNU shell
-utilities.  The @code{stty} section, in particular, needs substantial
-reorganization and additional explanatory text before it will be up to
-the standard of other GNU manuals.
-
-@cindex POSIX.2
-The GNU shell utilities are mostly compatible with the POSIX.2 standard.
+utilities.  See the introduction for caveats.
 
 @menu
+* Introduction::		Caveats, overview, and author.
 * Common options::              Common options.
 * Printing text::               echo printf yes
 * Conditions::                  false true test expr
@@ -164,6 +132,39 @@ The GNU shell utilities are mostly compatible with the POSIX.2 standard.
 * Index::                       General index.
 @end menu
 @end ifinfo
+
+
+@node Introduction
+@chapter Introduction
+
+@cindex introduction
+
+First of all, this manual is incomplete.  The @code{stty} section, in
+particular, needs substantial reorganization and additional explanatory
+text before it will be up to the standard of other GNU manuals.
+Explanatory text in general is lacking; the manual presently assumes you
+pretty much know what to do, and just need to be reminded of how.  Thus,
+if you are interested, please get involved in improving this manual.
+The entire GNU community will benefit.
+
+Some of these programs are useful only when writing shell scripts;
+utilities like these are, in fact, the ``language'' of shell scripts (to
+a great extent).  Others are occasionally useful interactively.
+
+@cindex POSIX.2
+The GNU shell utilities are mostly compatible with the POSIX.2 standard.
+
+Please report bugs to @samp{bug-gnu-utils@@prep.ai.mit.edu}.  Remember
+to include the version number, machine architecture, input files, and
+any other information needed to reproduce the bug.  @xref{Bugs, , , gcc,
+GNU CC}.
+
+This manual is based on the Unix man pages in the distribution, which
+were originally written by David MacKenzie and updated by Jim Meyering.
+Francois Pinard did the initial conversion to Texinfo format.  Karl
+Berry did the indexing, some reorganization, and editing of the results.
+Richard Stallman contributed his usual invaluable insights to the
+overall process.
 
 
 @node Common options
@@ -312,8 +313,8 @@ The only options are a lone @samp{--help} or
 followed by a newline, forever until it is killed.  If no arguments are
 given, it prints @samp{y} followed by a newline forever until killed.
 
-The only options are a lone @samp{--help} or
-@samp{--version}.  @xref{Common options}.
+The only options are a lone @samp{--help} or @samp{--version}.
+@xref{Common options}.
 
 
 @node Conditions
@@ -1046,7 +1047,7 @@ so forth.  See also the user-related commands in the next section.
 @menu
 * pwd invocation::              Print working directory.
 * stty invocation::             Print or change terminal characteristics.
-* printenv invocation::         Print all or part of the environment.
+* printenv invocation::         Print environment variables.
 * tty invocation::              Print file name of terminal on standard input.
 @end menu
 
@@ -1695,11 +1696,11 @@ of: 0 50 75 110 134 134.5 150 200 300 600 1200 1800 2400 4800 9600
 
 
 @node printenv invocation
-@section @code{printenv}: Print all or part of the environment
+@section @code{printenv}: Print all or some environment variables
 
 @pindex printenv
-@cindex printing all or part of the environment
-@cindex environment, printing all or part of
+@cindex printing all or some environment variables
+@cindex environment variables, printing
 
 Synopsis:
 
@@ -1707,12 +1708,12 @@ Synopsis:
 printenv [ @var{option} ] [ @var{variable} ]@dots{}
 @end example
 
-If no @var{variable}s are specified, @code{printenv} prints the entire
-environment.  Otherwise, it prints the value of each @var{variable} that
-is set, and nothing for those that are not set.
+If no @var{variable}s are specified, @code{printenv} prints the value of
+every environment variable.  Otherwise, it prints the value of each
+@var{variable} that is set, and nothing for those that are not set.
 
-The only options are a lone @samp{--help} or
-@samp{--version}.  @xref{Common options}.
+The only options are a lone @samp{--help} or @samp{--version}.
+@xref{Common options}.
 
 @cindex exit status of @code{printenv}
 Exit status:
@@ -2254,16 +2255,33 @@ The program accepts the following options.  Also see @ref{Common options}.
 @cindex parsing date strings
 @cindex date strings, parsing
 @cindex arbitrary date strings, parsing
+@opindex yesterday
+@opindex tomorrow
+@opindex next @var{day}
+@opindex last @var{day}
+@flindex getdate.y
 Display the time and date specified in @var{datestr} instead of the
-current time and date.  @var{datestr} can be in almost any common format.
+current time and date.  @var{datestr} can be in almost any common
+format.  It can contain month names, timezones, @samp{am} and @samp{pm},
+@samp{yesterday}, @samp{ago}, @samp{next}, etc.  The source file
+@file{getdate.y} implements this parsing for all GNU routines; we need
+precise documentation!
+
+@item -f @var{datefile}
+@itemx --file=@var{datefile}
+@opindex -f
+@opindex --file
+Parse each line in @var{datefile} as with @samp{-d} and display the
+resulting time and date.  If @var{datefile} is @samp{-}, use standard
+input.  This is useful when you have many dates to process, because the
+system overhead of starting up the @code{date} executable many times can
+be considerable.
 
 @item -s @var{datestr}
 @itemx --set=@var{datestr}
 @opindex -s
 @opindex --set
-Set the time and date to @var{datestr}, which can be in almost any
-common format.  It can contain month names, timezones, @samp{am} and
-@samp{pm}, @samp{yesterday}, @samp{ago}, etc.
+Set the time and date to @var{datestr},  See @samp{-d} above.
 
 @item -u
 @itemx --utc
@@ -2284,12 +2302,14 @@ in local (wall clock) time.
 
 @cindex examples of @code{date}
 
-Here are a few examples.
+Here are a few examples.  Also see the documentation for the @samp{-d}
+option in the previous section.
 
 @itemize @bullet
 
 @item
 To print the date of the day before yesterday:
+
 @example
 date --date='2 days ago'
 @end example
@@ -2314,21 +2334,21 @@ date '+%B %d'
 
 But this may not be what you want because for the first nine days of
 the month, the @samp{%d} expands to a zero-padded two-digit field,
-for example @samp{date -d 1-may '+%B %d'} will print @samp{May 01}.
+for example @samp{date -d 1may '+%B %d'} will print @samp{May 01}.
 
 @item
 To print a date without the leading zero for one-digit days
 of the month, you can use the (GNU extension) @code{-} modifier to suppress
 the padding altogether.
 @example
-date -d=1-may '+%B %-d'
+date -d=1may '+%B %-d'
 @end example
 
 @item
 To print the current date and time in the format required by many
 non-GNU versions of @code{date} when setting the system clock:
 @example
-date +%m%d%H%M%Y.%s
+date +%m%d%H%M%Y.%S
 @end example
 
 @item
@@ -2460,15 +2480,15 @@ different than the current one: a modified environment, as a different
 user, etc.
 
 @menu
-* env invocation::              Modify the environment.
-* nice invocation::             Modify the scheduling priority.
+* env invocation::              Modify environment variables.
+* nice invocation::             Modify scheduling priority.
 * nohup invocation::            Immunize to hangups.
-* su invocation::               Modify the user and group id.
+* su invocation::               Modify user and group id.
 @end menu
 
 
 @node env invocation
-@section @code{env}: Run a program in a modified environment
+@section @code{env}: Run a command in a modified environment
 
 @pindex env
 @cindex environment, running a program in a modified
@@ -2524,7 +2544,7 @@ Start with an empty environment, ignoring the inherited environment.
 
 
 @node nice invocation
-@section @code{nice}: Run a program with modified scheduling priority
+@section @code{nice}: Run a command with modified scheduling priority
 
 @pindex nice
 @cindex modifying scheduling priority
@@ -2566,7 +2586,7 @@ Add @var{adjustment} instead of 10 to the command's priority.
 
 
 @node nohup invocation
-@section @code{nohup}: Run a program immune to hangups
+@section @code{nohup}: Run a command immune to hangups
 
 @pindex nohup
 @cindex hangups, immunity to
@@ -2604,7 +2624,7 @@ options}.
 
 
 @node su invocation
-@section @code{su}: Run a shell with substitute user and group id
+@section @code{su}: Run a command with substitute user and group id
 
 @pindex su
 @cindex substitute user and group IDs
@@ -2642,25 +2662,19 @@ from the password entry for @var{user}, and if @var{user} is not
 the super-user, sets @code{USER} and @code{LOGNAME} to @var{user}.
 By default, the shell is not a login shell.
 
-If one or more @var{arg}s are given, they are passed as additional
-arguments to the shell.
+Any additional @var{arg}s are passed as additional arguments to the
+shell.
 
 @cindex @samp{-su}
-@code{su} does not handle @file{/bin/sh} or any other shells specially
+GNU @code{su} does not treat @file{/bin/sh} or any other shells specially
 (e.g., by setting @code{argv[0]} to @samp{-su}, passing @code{-c} only
 to certain shells, etc.).
 
 @findex syslog
-On systems that have @code{syslog}, @code{su} can be compiled to report
-failed, and optionally successful, @code{su} attempts using
-@code{syslog}.
-
-@cindex wheel group, not supported
-@cindex group wheel, not supported
-@cindex fascism
-This program does not support a ``wheel group'' that restricts who
-can @code{su} to super-user accounts, because that can help fascist
-system administrators hold unwarranted power over other users.
+@code{su} can optionally be compiled to use @code{syslog} to report
+failed, and optionally successful, @code{su} attempts.  (If the system
+supports @code{syslog}.)  However, GNU @code{su} does not check if the
+user is a member of the @code{wheel} group; see below.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -2730,6 +2744,32 @@ unless the user running @code{su} is not the superuser and @var{user}'s
 shell is restricted (see @samp{-m} just above).
 
 @end table
+
+@cindex wheel group, not supported
+@cindex group wheel, not supported
+@cindex fascism
+@heading Why GNU @code{su} does not support the @samp{wheel} group
+
+(This section is by Richard Stallman.)
+
+@cindex Twenex
+@cindex MIT AI lab
+Sometimes a few of the users try to hold total power over all the
+rest.  For example, in 1984, a few users at the MIT AI lab decided to
+seize power by changing the operator password on the Twenex system and
+keeping it secret from everyone else.  (I was able to thwart this coup
+and give power back to the users by patching the kernel, but I
+wouldn't know how to do that in Unix.)
+
+However, occasionally the rulers do tell someone.  Under the usual
+@code{su} mechanism, once someone learns the root password who
+sympathizes with the ordinary users, he or she can tell the rest.  The
+``wheel group'' feature would make this impossible, and thus cement the
+power of the rulers.
+
+I'm on the side of the masses, not that of the rulers.  If you are
+used to supporting the bosses and sysadmins in whatever they do, you
+might find this idea strange at first.
 
 
 @node Delaying
