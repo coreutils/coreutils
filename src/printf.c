@@ -1,5 +1,5 @@
 /* printf - format and print data
-   Copyright (C) 90,91,92,93,94,95,96,1997 Free Software Foundation, Inc.
+   Copyright (C) 90,91,92,93,94,95,96,97,1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -224,7 +224,7 @@ print_esc (const char *escstart)
   if (*p == 'x')
     {
       for (esc_length = 0, ++p;
-	   esc_length < 3 && ISXDIGIT (*p);
+	   esc_length < 3 && ISXDIGIT (*(const unsigned char*)p);
 	   ++esc_length, ++p)
 	esc_value = esc_value * 16 + hextobin (*p);
       if (esc_length == 0)
