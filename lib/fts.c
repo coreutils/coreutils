@@ -45,7 +45,7 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 #endif
 #include <fcntl.h>
 #include <errno.h>
-#include <fts.h>
+#include "fts_.h"
 #include <search.h>
 #include <stdlib.h>
 #include <string.h>
@@ -112,8 +112,10 @@ int rpl_lstat (const char *, struct stat *);
 
 /* Largest alignment size needed, minus one.
    Usually long double is the worst case.  */
-#ifndef ALIGNBYTES
+# if __GNUC__ >= 2
 # define ALIGNBYTES	(__alignof__ (long double) - 1)
+#else
+# define ALIGNBYTES	(sizeof (long double) - 1)
 #endif
 /* Align P to that size.  */
 #ifndef ALIGN
@@ -134,23 +136,21 @@ static int      fts_safe_changedir __P((FTS *, FTSENT *, int, const char *))
      internal_function;
 
 #ifndef MAX
-# define MAX(a, b)	({ __typeof__ (a) _a = (a); \
-			   __typeof__ (b) _b = (b); \
-			   _a > _b ? _a : _b; })
+# define MAX(a,b) ((a) > (b) ? (a) : (b))
 #endif
 
-#define	ISDOT(a)	(a[0] == '.' && (!a[1] || (a[1] == '.' && !a[2])))
+#define ISDOT(a)	(a[0] == '.' && (!a[1] || (a[1] == '.' && !a[2])))
 
 #define CLR(opt)	(sp->fts_options &= ~(opt))
-#define	ISSET(opt)	(sp->fts_options & (opt))
-#define	SET(opt)	(sp->fts_options |= (opt))
+#define ISSET(opt)	(sp->fts_options & (opt))
+#define SET(opt)	(sp->fts_options |= (opt))
 
 #define FCHDIR(sp, fd)	(!ISSET(FTS_NOCHDIR) && fchdir(fd))
 
 /* fts_build flags */
-#define	BCHILD		1		/* fts_children */
-#define	BNAMES		2		/* fts_children, names only */
-#define	BREAD		3		/* fts_read */
+#define BCHILD		1		/* fts_children */
+#define BNAMES		2		/* fts_children, names only */
+#define BREAD		3		/* fts_read */
 
 struct known_object
 {
@@ -392,7 +392,7 @@ fts_close(sp)
  * Special case of "/" at the end of the path so that slashes aren't
  * appended which would cause paths to be written as "....//foo".
  */
-#define	NAPPEND(p)							\
+#define NAPPEND(p)							\
 	(p->fts_path[p->fts_pathlen - 1] == '/'				\
 	    ? p->fts_pathlen - 1 : p->fts_pathlen)
 
@@ -706,8 +706,9 @@ fts_build(sp, type)
 	FTSENT *cur, *tail;
 	DIR *dirp;
 	void *oldaddr;
-	int cderrno, descend, len, level, maxlen, nlinks, saved_errno,
+	int cderrno, descend, level, nlinks, saved_errno,
 	    nostat, doadjust;
+	size_t len, maxlen, new_len;
 	char *cp;
 
 	/* Set current node pointer. */
@@ -843,10 +844,11 @@ mem1:				saved_errno = errno;
 			maxlen = sp->fts_pathlen - len;
 		}
 
-		if (len + NAMLEN (dp) >= USHRT_MAX) {
+		new_len = len + NAMLEN (dp);
+		if (new_len < len) {
 			/*
-			 * In an FTSENT, fts_pathlen is a u_short so it is
-			 * possible to wraparound here.  If we do, free up
+			 * In the unlikely even that we would end up
+			 * with a path longer than SIZE_MAX, free up
 			 * the current structure and the structures already
 			 * allocated, then error out with ENAMETOOLONG.
 			 */
@@ -860,7 +862,7 @@ mem1:				saved_errno = errno;
 		}
 		p->fts_level = level;
 		p->fts_parent = sp->fts_cur;
-		p->fts_pathlen = len + NAMLEN (dp);
+		p->fts_pathlen = new_len;
 
 #if defined FTS_WHITEOUT && 0
 		if (dp->d_type == DT_WHT)
@@ -875,7 +877,7 @@ mem1:				saved_errno = errno;
 				p->fts_info = FTS_NSOK;
 			p->fts_accpath = cur->fts_accpath;
 		} else if (nlinks == 0
-#if defined DT_DIR && defined _DIRENT_HAVE_D_TYPE
+# if HAVE_STRUCT_DIRENT_D_TYPE
 			   || (nostat &&
 			       dp->d_type != DT_DIR && dp->d_type != DT_UNKNOWN)
 #endif
@@ -1147,14 +1149,12 @@ fts_palloc(sp, more)
 	size_t more;
 {
 	char *p;
+	size_t new_len = sp->fts_pathlen + more + 256;
 
-	sp->fts_pathlen += more + 256;
 	/*
-	 * Check for possible wraparound.  In an FTS, fts_pathlen is
-	 * a signed int but in an FTSENT it is an unsigned short.
-	 * We limit fts_pathlen to USHRT_MAX to be safe in both cases.
+	 * See if fts_pathlen would overflow.
 	 */
-	if (sp->fts_pathlen < 0 || sp->fts_pathlen >= USHRT_MAX) {
+	if (new_len < sp->fts_pathlen) {
 		if (sp->fts_path) {
 			free(sp->fts_path);
 			sp->fts_path = NULL;
@@ -1163,6 +1163,7 @@ fts_palloc(sp, more)
 		__set_errno (ENAMETOOLONG);
 		return (1);
 	}
+	sp->fts_pathlen = new_len;
 	p = realloc(sp->fts_path, sp->fts_pathlen);
 	if (p == NULL) {
 		free(sp->fts_path);
@@ -1186,7 +1187,7 @@ fts_padjust(sp, head)
 	FTSENT *p;
 	char *addr = sp->fts_path;
 
-#define	ADJUST(p) do {							\
+#define ADJUST(p) do {							\
 	if ((p)->fts_accpath != (p)->fts_name) {			\
 		(p)->fts_accpath =					\
 		    (char *)addr + ((p)->fts_accpath - (p)->fts_path);	\
@@ -1231,14 +1232,14 @@ fts_safe_changedir(sp, p, fd, path)
 	const char *path;
 {
 	int ret, oerrno, newfd;
-	struct stat64 sb;
+	struct stat sb;
 
 	newfd = fd;
 	if (ISSET(FTS_NOCHDIR))
 		return (0);
 	if (fd < 0 && (newfd = open(path, O_RDONLY, 0)) < 0)
 		return (-1);
-	if (__fxstat64(_STAT_VER, newfd, &sb)) {
+	if (fstat(newfd, &sb)) {
 		ret = -1;
 		goto bail;
 	}
