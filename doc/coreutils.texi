@@ -11267,6 +11267,8 @@ If standard output is a terminal, it is redirected so that it is appended
 to the file @file{nohup.out}; if that cannot be written to, it is appended
 to the file @file{$HOME/nohup.out}.  If that cannot be written to, the
 command is not run.
+If standard output is not a terminal, then the standard output of
+@var{command} will be the same as that of @command{nohup}.
 
 If @command{nohup} creates either @file{nohup.out} or
 @file{$HOME/nohup.out}, it creates it with no ``group'' or ``other''
