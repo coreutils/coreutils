@@ -1,4 +1,30 @@
+Tue Jun  3 15:00:00 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/fileblocks.c [HAVE_UNISTD_H]: Include unistd.h.
+	John Gatewood Ham reported that this is necessary for DJGPP/Win95.
+
+Wed May 28 06:35:56 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/mountlist.c (read_filesystem_list): Add `|| defined (__OpenBSD__)'
+	to the NetBSD #if so OpenBSD also uses the f_fstypename member.
+	(fstype_to_string): Add `&& !defined (__OpenBSD__)' to the NetBSD #if
+	expression to exclude this function definition.  OpenBSD 2.1 beta
+	doesn't need it.  Patch from Hugh Daniel <hugh@ecotone.xanadu.com>
+
 Tue May 27 04:35:17 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/cp.c: Use base_name, not basename.
+	* src/dircolors.c: Likewise.
+	* src/install.c: Likewise.
+	* src/ln.c: Likewise.
+	* src/mv.c: Likewise.
+	* src/mvdir.c: Likewise.
+	* src/rm.c: Likewise.
+
+	* configure.in: Add AC_SYS_LONG_FILE_NAMES.
+	Check for pathconf.
+	Don't replace basename.  Now we use only base_name.
+	Clean up kludge that worked around a bug (now-fixed) in automake.
 
 	* lib/argmatch.h Change dcl of program_name so it doesn't conflict
 	with the ubiquitous char* one.
@@ -15,7 +41,7 @@ Tue May 27 04:35:17 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 	* lib/argmatch.c: Likewise.
 	* lib/backupfile.c: Likewise.
 	* lib/backupfile.h: Likewise.
-	* lib/basename: Likewise.
+	* lib/basename.c: Likewise.
 
 Sun May 25 09:21:01 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
