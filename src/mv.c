@@ -324,7 +324,7 @@ movefile (char *source, char *dest, int dest_is_dir,
       src_basename = base_name (source);
       new_dest = path_concat (dest, src_basename, NULL);
       if (new_dest == NULL)
-	error (1, 0, _("virtual memory exhausted"));
+	xalloc_die ();
       fail = do_move (source, new_dest, x);
 
       /* Do not free new_dest.  It may have been squirreled away by
