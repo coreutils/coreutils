@@ -838,7 +838,7 @@ first_last_page (char const *pages)
 /* Parse column count string S, and if it's valid (1 or larger and
    within range of the type of `columns') set the global variables
    columns and explicit_columns and return true.
-   Otherwise, return false.  */
+   Otherwise, exit with a diagnostic.  */
 static void
 parse_column_count (char const *s)
 {
