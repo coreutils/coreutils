@@ -1,5 +1,5 @@
 /* system-dependent definitions for fileutils, textutils, and sh-utils packages.
-   Copyright (C) 1989, 1991-2002 Free Software Foundation, Inc.
+   Copyright (C) 1989, 1991-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -59,6 +59,7 @@ you must include <sys/types.h> before including this file
 #endif
 
 #include "pathmax.h"
+#include "localedir.h"
 
 #if TIME_WITH_SYS_TIME
 # include <sys/time.h>
