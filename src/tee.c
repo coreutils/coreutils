@@ -38,7 +38,7 @@
 
 char *xmalloc ();
 void error ();
-int safe_write ();
+int full_write ();
 
 static int tee ();
 
@@ -207,7 +207,7 @@ tee (nfiles, files)
       for (i = 0; i <= nfiles; i++)
 	{
 	  if (descriptors[i] != -1
-	      && safe_write (descriptors[i], buffer, bytes_read))
+	      && full_write (descriptors[i], buffer, bytes_read) < 0)
 	    {
 	      error (0, errno, "%s", files[i]);
 	      /* Don't close stdout.  That's done in main.  */

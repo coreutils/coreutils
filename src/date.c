@@ -243,36 +243,36 @@ usage (status)
 FORMAT controls the output.  Interpreted sequences are:\n\
 \n\
   %%%%   a literal %%\n\
-  %%A   locale's full weekday name, variable length (Sunday..Saturday)\n\
-  %%B   locale's full month name, variable length (January..December)\n\
-  %%D   date (mm/dd/yy)\n\
-  %%H   hour (00..23)\n\
-  %%I   hour (01..12)\n\
-  %%M   minute (00..59)\n\
-  %%S   second (00..61)\n\
-  %%T   time, 24-hour (hh:mm:ss)\n\
-  %%U   week number of year with Sunday as first day of week (00..53)\n\
-  %%W   week number of year with Monday as first day of week (00..53)\n\
-  %%X   locale's time representation (%%H:%%M:%%S)\n\
-  %%Y   year (1970...)\n\
-  %%Z   time zone (e.g., EDT), or nothing if no time zone is determinable\n\
   %%a   locale's abbreviated weekday name (Sun..Sat)\n\
+  %%A   locale's full weekday name, variable length (Sunday..Saturday)\n\
   %%b   locale's abbreviated month name (Jan..Dec)\n\
+  %%B   locale's full month name, variable length (January..December)\n\
   %%c   locale's date and time (Sat Nov 04 12:02:33 EST 1989)\n\
   %%d   day of month (01..31)\n\
+  %%D   date (mm/dd/yy)\n\
   %%h   same as %%b\n\
+  %%H   hour (00..23)\n\
+  %%I   hour (01..12)\n\
   %%j   day of year (001..366)\n\
   %%k   hour ( 0..23)\n\
   %%l   hour ( 1..12)\n\
   %%m   month (01..12)\n\
+  %%M   minute (00..59)\n\
   %%n   a newline\n\
   %%p   locale's AM or PM\n\
   %%r   time, 12-hour (hh:mm:ss [AP]M)\n\
   %%s   seconds since 00:00:00, Jan 1, 1970 (a nonstandard extension)\n\
+  %%S   second (00..61)\n\
   %%t   a horizontal tab\n\
+  %%T   time, 24-hour (hh:mm:ss)\n\
+  %%U   week number of year with Sunday as first day of week (00..53)\n\
   %%w   day of week (0..6);  0 represents Sunday\n\
+  %%W   week number of year with Monday as first day of week (00..53)\n\
   %%x   locale's date representation (mm/dd/yy)\n\
+  %%X   locale's time representation (%%H:%%M:%%S)\n\
   %%y   last two digits of year (00..99)\n\
+  %%Y   year (1970...)\n\
+  %%Z   time zone (e.g., EDT), or nothing if no time zone is determinable\n\
 ");
     }
   exit (status);

@@ -1,3 +1,7 @@
+Fri Dec 31 00:22:59 1993  Jim Meyering  (meyering@comco.com)
+
+	* date.c (usage): Reorder listing of % formats in `sort -f' order.
+
 Tue Dec 28 15:49:32 1993  Jim Meyering  (meyering@comco.com)
 
 	* install.sh: New file.
@@ -9,10 +13,12 @@ Tue Dec 28 15:49:32 1993  Jim Meyering  (meyering@comco.com)
 	* tee.c (tee): A POSIX implementation of the read system call
 	may return -1 and set errno to EINTR when it is interrupted.
 	Retry instead of failing with an error.
-	(tee): Don't use xwrite.  Use safe_write instead and include the
+	(tee): Don't use xwrite.  Use full_write instead and include the
 	losing file name in the message reporting a write failure.
 	Don't treat standard output as a special case, so a failed write
 	to stdout doesn't exit immediately.
+
+	* date.c (usage): Note that for %w, 0 corresponds to Sunday.
 
 Sat Dec 25 23:15:58 1993  Jim Meyering  (meyering@comco.com)
 

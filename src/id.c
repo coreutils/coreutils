@@ -373,10 +373,10 @@ usage (status)
       printf ("\
 \n\
   -g, --group     print only the group ID\n\
+  -G, --groups    print only the supplementary groups\n\
   -n, --name      print a name instead of a number, for -ugG\n\
   -r, --real      print the real ID instead of effective ID, for -ugG\n\
   -u, --user      print only the user ID\n\
-  -G, --groups    print only the supplementary groups\n\
       --help      display this help and exit\n\
       --version   output version information and exit\n\
 \n\

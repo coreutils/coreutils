@@ -3,6 +3,8 @@ User visible changes in release 1.10
 * date -d can parse dates like `11-JUL-1991'
 * expr '' == 0 works (before, it printed 1)
 * stty no longer fails on telnet sessions to Solaris systems
+* `cd /etc; who utmp' now works.  Before, any filename argument had to be
+  absolute or relative to /dev.
 
 User visible changes in release 1.9.2:
 * who output is better formatted on Solaris and other SysVr4 systems
