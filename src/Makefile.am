@@ -14,6 +14,8 @@ bin_PROGRAMS = [ chgrp chown chmod cp dd dircolors du \
   test true tty whoami yes \
   $(OPTIONAL_BIN_PROGS) $(DF_PROG)
 
+noinst_PROGRAMS = setuidgid
+
 noinst_HEADERS = \
   system.h sys2.h checksum.h copy.h cp-hash.h ls.h dircolors.h remove.h \
   chown-core.h fs.h \
