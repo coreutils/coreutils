@@ -2,7 +2,7 @@
 
 	* Version 4.5.4.
 
-	Fix a problem that could make cat misbehave on systems which
+	Fix a problem that could make e.g., `cat' misbehave on systems which
 	give invalid (unreasonably large) values for stat.st_blksize.
 	* src/system.h (ST_BLKSIZE): Ensure that the result is in [1..4MB].
 	Reported by Petter Reinholdtsen.
