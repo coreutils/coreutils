@@ -1,4 +1,4 @@
-# inttypes-pri.m4 serial 1 (gettext-0.11.4)
+# inttypes-pri.m4 serial 1001 (based on gettext-0.11.4's `serial 1')
 dnl Copyright (C) 1997-2002 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -13,8 +13,10 @@ dnl From Bruno Haible.
 
 AC_DEFUN([gt_INTTYPES_PRI],
 [
-  AC_REQUIRE([gt_HEADER_INTTYPES_H])
-  if test $gt_cv_header_inttypes_h = yes; then
+  # autoconf-2.52 has a proper check for inttypes.h.
+  AC_PREREQ(2.52)
+
+  if test $ac_cv_header_inttypes_h = yes; then
     AC_CACHE_CHECK([whether the inttypes.h PRIxNN macros are broken],
       gt_cv_inttypes_pri_broken,
       [
