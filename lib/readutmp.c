@@ -31,8 +31,6 @@
 
 char *xmalloc ();
 
-STRUCT_UTMP *utmp_contents = 0;
-
 /* Copy UT->ut_name into storage obtained from malloc.  Then remove any
    trailing spaces from the copy, NUL terminate it, and return the copy.  */
 
@@ -53,43 +51,44 @@ extract_trimmed_name (ut)
   return trimmed_name;
 }
 
-/* Read the utmp file FILENAME into UTMP_CONTENTS and return the
-   number of entries it contains. */
+/* Read the utmp file FILENAME into *UTMP_BUF, set *N_ENTRIES to the
+   number of entries read, and return zero.  If there is any error,
+   return non-zero and don't modify the parameters.  */
 
 int
-read_utmp (filename)
+read_utmp (filename, n_entries, utmp_buf)
   const char *filename;
+  int *n_entries;
+  STRUCT_UTMP **utmp_buf;
 {
   FILE *utmp;
   struct stat file_stats;
   size_t n_read;
   size_t size;
-
-  if (utmp_contents)
-    {
-      free (utmp_contents);
-      utmp_contents = 0;
-    }
+  STRUCT_UTMP *buf;
 
   utmp = fopen (filename, "r");
   if (utmp == NULL)
-    error (1, errno, "%s", filename);
+    return 1;
 
   fstat (fileno (utmp), &file_stats);
   size = file_stats.st_size;
   if (size > 0)
-    utmp_contents = (STRUCT_UTMP *) xmalloc (size);
+    buf = (STRUCT_UTMP *) xmalloc (size);
   else
     {
       fclose (utmp);
-      return 0;
+      return 1;
     }
 
   /* Use < instead of != in case the utmp just grew.  */
-  n_read = fread (utmp_contents, 1, size, utmp);
+  n_read = fread (buf, 1, size, utmp);
   if (ferror (utmp) || fclose (utmp) == EOF
       || n_read < size)
-    error (1, errno, "%s", filename);
+    return 1;
 
-  return size / sizeof (STRUCT_UTMP);
+  *n_entries = size / sizeof (STRUCT_UTMP);
+  *utmp_buf = buf;
+
+  return 0;
 }
