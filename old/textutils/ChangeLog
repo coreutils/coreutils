@@ -1,3 +1,9 @@
+Sun Jul 21 11:58:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (AC_REPLACE_FUNCS): Replace getline.c.
+	Add related check for the getdelim function.
+	From Ulrich Drepper -- as done in gettext.
+
 Sat Jul 20 15:59:36 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (PACKAGE_VERSION): Use space instead of hyphen to
