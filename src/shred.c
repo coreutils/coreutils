@@ -105,6 +105,7 @@
 #include "system.h"
 #include "xstrtol.h"
 #include "error.h"
+#include "getpagesize.h"
 #include "human.h"
 #include "inttostr.h"
 #include "quotearg.h"		/* For quotearg_colon */
@@ -787,11 +788,9 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   size_t lim;			/* Amount of data to try writing */
   size_t soff;			/* Offset into buffer for next write */
   ssize_t ssize;		/* Return value from write */
-#if ISAAC_WORDS > 1024
-  word32 r[ISAAC_WORDS * 3];	/* Multiple of 4K and of pattern size */
-#else
-  word32 r[1024 * 3];		/* Multiple of 4K and of pattern size */
-#endif
+  word32 *r;			/* Fill pattern.  */
+  size_t rsize = 3 * MAX (ISAAC_WORDS, 1024) * sizeof *r; /* Fill size.  */
+  size_t ralign = lcm (getpagesize (), sizeof *r); /* Fill alignment.  */
   char pass_string[PASS_NAME_SIZE];	/* Name of current pass */
 
   /* Printable previous offset into the file */
@@ -804,10 +803,13 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
       return -1;
     }
 
+  r = alloca (rsize + ralign - 1);
+  r = ptr_align (r, ralign);
+
   /* Constant fill patterns need only be set up once. */
   if (type >= 0)
     {
-      lim = sizeof r;
+      lim = rsize;
       if ((off_t) lim > size && size != -1)
 	{
 	  lim = (size_t) size;
@@ -832,7 +834,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   for (;;)
     {
       /* How much to write this time? */
-      lim = sizeof r;
+      lim = rsize;
       if ((off_t) lim > size - offset && size != -1)
 	{
 	  if (size < offset)
@@ -842,7 +844,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 	    break;
 	}
       if (type < 0)
-	fillrand (s, r, sizeof r, lim);
+	fillrand (s, r, rsize, lim);
       /* Loop to retry partial writes. */
       for (soff = 0; soff < lim; soff += ssize)
 	{
