@@ -71,6 +71,11 @@ typedef double LONG_DOUBLE;
 #ifndef ULONG_MAX
 #define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
 #endif
+#ifndef OFF_T_MAX
+/* FIXME: is there a way to do this without relying on the
+   `8 bits per byte' assumption?  */
+#define OFF_T_MAX (~((off_t)1 << (sizeof (off_t) * 8 - 1)))
+#endif
 
 #define STREQ(a,b) (strcmp((a), (b)) == 0)
 
@@ -125,12 +130,6 @@ enum output_format
     NAMED_CHARACTER,
     CHARACTER
   };
-
-enum strtoul_error
-  {
-    UINT_OK, UINT_INVALID, UINT_INVALID_SUFFIX_CHAR, UINT_OVERFLOW
-  };
-typedef enum strtoul_error strtoul_error;
 
 /* Each output format specification (from POSIX `-t spec' or from
    old-style options) is represented by one of these structures.  */
@@ -1327,7 +1326,7 @@ parse_old_offset (s)
 {
   int radix;
   off_t offset;
-  strtol_error s_err;
+  enum strtol_error s_err;
   long unsigned int tmp;
 
   if (*s == '\0')
@@ -1632,7 +1631,7 @@ main (argc, argv)
 	 != EOF)
     {
       unsigned long int tmp;
-      strtoul_error s_err;
+      enum strtol_error s_err;
 
       switch (c)
 	{
@@ -1680,9 +1679,16 @@ main (argc, argv)
 	case 'N':
 	  limit_bytes_to_format = 1;
 
-	  s_err = xstrtoul (optarg, NULL, 0, &max_bytes_to_format, "bkm");
+	  /* FIXME: if off_t is long long and that's an 8-byte type,
+	     use xstrtouq here.  */
+	  s_err = xstrtoul (optarg, NULL, 0, &tmp, "bkm");
+	  max_bytes_to_format = tmp;
 	  if (s_err != LONGINT_OK)
 	    STRTOL_FATAL_ERROR (optarg, "limit argument", s_err);
+
+	  if (tmp > OFF_T_MAX)
+	    error (2, 0, "specified number of bytes `%s' is larger than \
+the maximum\nrepresentable value of type off_t", optarg);
 	  break;
 
 	case 's':
