@@ -1,3 +1,8 @@
+2001-02-16  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/alloca.c (malloc): Undef before defining, since stdlib.h
+	may have defined it.
+
 2001-02-07  Jim Meyering  <meyering@lucent.com>
 
 	* regex.c: Update from libc.
