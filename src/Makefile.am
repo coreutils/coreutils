@@ -209,15 +209,18 @@ fs.h: stat.c extract-magic
 
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 
+# Sort in traditional ASCII order, regardless of the current locale;
+# otherwise we may get into trouble with distinct strings that the
+# current locale considers to be equal.
+ASSORT = LC_ALL=C sort
+
 all_programs = \
     $(bin_PROGRAMS) \
     $(bin_SCRIPTS) \
   $(EXTRA_PROGRAMS)
 
-# Sort in traditional ASCII order, regardless of the current locale;
-# otherwise we may get into trouble with distinct strings that the
-# current locale considers to be equal.
-ASSORT = LC_ALL=C sort
+all_programs.list:
+	@echo $(all_programs) | tr ' ' '\n' | $(ASSORT)
 
 pm = progs-makefile
 pr = progs-readme
