@@ -1,8 +1,13 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-.
 
+all_programs =								\
+  echo 'spy:;@echo $$(all_programs)'					\
+    | MAKEFLAGS= $(MAKE) -s -C $(srcdir)/../src -f Makefile -f - spy	\
+    | fmt -1 | sort -u
+
 TESTS = help-version
 TESTS_ENVIRONMENT = \
-  all_programs="$(bin_SCRIPTS) $(bin_PROGRAMS)"
+  all_programs="`$(all_programs)`"
 
 EXTRA_DIST = \
   $(TESTS) .env-warn Fetish.pm Makefile.am.in README envvar-check \
