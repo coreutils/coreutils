@@ -1,3 +1,7 @@
+2000-09-23  Jim Meyering  <meyering@lucent.com>
+
+	* tests/ls/time-1: Output more information when a test fails.
+
 2000-09-22  Jim Meyering  <meyering@lucent.com>
 
 	* src/install.c (cp_option_init): Once again make it so install always
