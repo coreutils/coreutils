@@ -1,3 +1,14 @@
+1998-08-29  Jim Meyering  <meyering@ascend.com>
+
+	* src/ls.c (print_dir_name): Remove global variable.
+	(print_dir): When trace_dirs is set, always print the directory
+	name header.
+
+1998-08-26  Jim Meyering  <meyering@ascend.com>
+
+	* src/dircolors.c (dc_parse_stream): Don't segfault when a line
+	contains only one token.  Reported by Olav Morkrid.
+
 1998-08-16  Jim Meyering  <meyering@ascend.com>
 
 	* lib/filemode.h (PARAMS): Define and use.
