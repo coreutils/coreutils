@@ -1,6 +1,41 @@
-2000-11-24  Jim Meyering  <meyering@lucent.com>
+2000-11-26  Jim Meyering  <meyering@lucent.com>
+
+
+2000-11-25  Paul Eggert  <eggert@twinsun.com>
 
 	* Version 4.0.33.
+
+	* doc/fileutils.texi: Document seek=nB and skip=nB.
+
+	* src/dd.c (skip_bytes, seek_bytes): Now booleans, not counts.
+	(seek_records): Renamed from seek_record, for consistency with
+	skip_records and max_records.  All uses changed.
+
+	(usage, scanargs): Remove bseek=n and bskip=n; instead, use seek=nB
+	and skip=nB.
+	(enum Unit, Unit): Remove.
+	(skip, dd_copy, main): Undo most recent change.
+	(dd_copy, main): Pass blocksize of 1 as appropriate when
+	skip_bytes or seek_bytes is nonzero.
+	(main): Rework ftruncate failure diagnostic to always use byte count.
+
+2000-11-25  Jim Meyering  <meyering@lucent.com>
+
+	* src/dd.c: Add new options, bskip and bseek.
+	Based on a patch from Chris Sylvain.
+	* tests/dd/skip-seek: New test.
+	* tests/dd/Makefile.am (TESTS): Add skip-seek.
+
+2000-11-24  Paul Eggert  <eggert@green.twinsun.com>
+
+	* src/dd.c (S_TYPEISSHM): New macro.
+	(main): Report failed fstat.
+	Complain only when ftruncate fails on a regular file,
+	a directory, or a shared memory object.
+
+2000-11-24  Jim Meyering  <meyering@lucent.com>
+
+	* src/dd.c: Declare a pointer parameters to be `const' as appropriate.
 
 	* src/dd.c (main): Use ftruncate only on regular files.
 	Based on a patch from Michael Stone.
