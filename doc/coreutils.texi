@@ -3353,7 +3353,7 @@ line as the key and acts as if no ordering options were specified.
 But if @option{--reverse} (@option{-r}) was specified along with other
 ordering options, then the last-resort comparison does use @option{--reverse}.
 In any case, when no ordering option is specified or when only
-@option{--reverse} is specified, the last-resort comparison is not performed
+@option{--reverse} is specified, the last-resort comparison is not performed.
 
 @item -S @var{size}
 @itemx --buffer-size=@var{size}
@@ -3418,6 +3418,12 @@ disks and controllers.
 Normally, output only the first of a sequence of lines that compare
 equal.  For the @option{--check} (@option{-c}) option,
 check that no pair of consecutive lines compares equal.
+
+The commands @code{sort -u} and @code{sort | uniq} are equivalent, but
+this equivalence does not extend to arbitrary @command{sort} options.
+For example, @code{sort -n -u} inspects only the value of the initial
+numeric string when checking for uniqueness, whereas @code{sort -n |
+uniq} inspects the entire line.  @xref{uniq invocation}.
 
 @item -z
 @itemx --zero-terminated
@@ -3618,6 +3624,7 @@ lines that are not repeated, or all repeated lines.
 The input need not be sorted, but repeated input lines are detected
 only if they are adjacent.  If you want to discard non-adjacent
 duplicate lines, perhaps you want to use @code{sort -u}.
+@xref{sort invocation}.
 
 @vindex LC_COLLATE
 Comparisons use the character collating sequence specified by the
