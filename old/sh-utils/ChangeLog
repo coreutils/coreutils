@@ -1,3 +1,8 @@
+1997-10-02  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/date/Test.pm (test_vector): Remove _%Z from test `9'.
+	The timezone string was too system dependent.
+
 1997-09-25  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/echo.c: Make echo conform to POSIX.  By default, don't
