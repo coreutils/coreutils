@@ -6,7 +6,6 @@
 	* tests/tsort/Makefile.am: Rewrite to use Fetish.pm-based framework.
 	* tests/tsort/basic-1: New file.
 	Add a few more tests.
-
 	* tests/tsort/Test.pm: Remove.
 
 	* man/help2man: Escape backslashes so tr's manual comes out right.
