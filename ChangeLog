@@ -2,6 +2,10 @@
 
 	* Version 4.5.5.
 
+	* tests/misc/Makefile.am (TESTS): Add cat-tty-eof.
+
+	* tests/misc/cat-tty-eof: New test.
+
 	* src/mknod.c (usage): Specify how major and minor mode numbers
 	are interpreted.  Report forwarded by Kristin E Thomas.
 	* src/mknod.c: Remove now-redundant usage-specifying comment.
