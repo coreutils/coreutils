@@ -1,3 +1,8 @@
+2004-09-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (sort invocation): Add remarks about sort -u
+	versus sort | uniq.  Prompted by a question from Andrew Noymer.
+
 2004-09-06  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (od invocation): Several changes for POSIX
