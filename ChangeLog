@@ -1,3 +1,50 @@
+2004-02-29  Paul Eggert  <eggert@twinsun.com>
+
+	* NEWS: Add support for a new notation @N to get_date to represent
+	the time stamp with numeric value N.  Improve support for
+	fractional time stamps.  date's -d and -f options now accept them.
+	Likewise for touch -t.  date has a new option --iso-8601=ns.
+
+	* doc/coreutils.texi (touch invocation):
+	Describe use of fractional seconds.
+	(date invocation, Options for date): Likewise.
+	* doc/getdate.texi (General date syntax, Time of day items): Likewise.
+	* doc/coreutils.texi (date invocation): Mention effect of LC_TIME.
+	(Options for date): Describe new --iso-8601=ns option.
+
+	* doc/getdate.texi: Add copyright notice.  Change getdate to
+	get_date when talking about the function name.
+	(Seconds since the Epoch): New section, containing the time_t
+	info moved from Date input formats section, along with new
+	info about the @ syntax.  Mention negative time stamps,
+	fractional time stamps, and leap seconds.
+	(General date syntax): Modernize examples a bit to reflect new
+	features.
+	(General date syntax, Relative items in date strings):
+	Use ' rather than " to quote formats.
+	(Time of day items): Add an example with fractional seconds.
+	Describe fractional-second syntax.
+
+	* src/Makefile.am (touch_LDADD): New macro, since `touch' now
+	needs clock_gettime.
+
+	* src/date.c (enum Time_spec): New enum TIME_SPEC_NS.
+	(time_spec_string, time_spec, show_date): Support it.
+	(usage): Remove description of -ITIMESPEC, as it's obsolete and
+	confusing.  Mention --iso-8601=ns.
+	(batch_convert): getline returns ssize_t, not int.
+
+	* src/touch.c (newtime): Now an array of two timespecs, one
+	for access and one for modification.
+	(ref_stats): Remove.
+	(get_reldate): Use get_date's parameter profile.
+	(touch, main): Adjust to above changes.
+	(main): Work even if tm_year == INT_MAX (so long as long int is wider).
+	Use gettime instead of gettimeofday, for new get_date signature.
+
+	* tests/date/Test.pm (test_vector): New tests epoch, ns-10, ns-max32,
+	ns-relative.
+
 2004-03-15  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (alpha beta major): `Make' the emit_upload_commands
