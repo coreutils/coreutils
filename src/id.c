@@ -54,20 +54,8 @@ static void print_full_info PARAMS ((const char *username));
 /* The name this program was run with. */
 char *program_name;
 
-/* If nonzero, output only the group ID(s). -g */
-static int just_group = 0;
-
 /* If nonzero, output user/group name instead of ID number. -n */
 static int use_name = 0;
-
-/* If nonzero, output real UID/GID instead of default effective UID/GID. -r */
-static int use_real = 0;
-
-/* If nonzero, output only the user ID(s). -u */
-static int just_user = 0;
-
-/* If nonzero, output only the supplementary groups. -G */
-static int just_group_list = 0;
 
 /* The real and effective IDs of the user to print. */
 static uid_t ruid, euid;
@@ -101,11 +89,11 @@ usage (int status)
 Print information for USERNAME, or the current user.\n\
 \n\
   -a              ignore, for compatibility with other versions\n\
-  -g, --group     print only the group ID\n\
-  -G, --groups    print only the supplementary groups\n\
+  -g, --group     print only the effective group ID\n\
+  -G, --groups    print all group IDs\n\
   -n, --name      print a name instead of a number, for -ugG\n\
-  -r, --real      print the real ID instead of effective ID, for -ugG\n\
-  -u, --user      print only the user ID\n\
+  -r, --real      print the real ID instead of the effective ID, with -ugG\n\
+  -u, --user      print only the effective user ID\n\
       --help      display this help and exit\n\
       --version   output version information and exit\n\
 \n\
@@ -120,6 +108,15 @@ int
 main (int argc, char **argv)
 {
   int optc;
+
+  /* If nonzero, output the list of all group IDs. -G */
+  int just_group_list = 0;
+  /* If nonzero, output only the group ID(s). -g */
+  int just_group = 0;
+  /* If nonzero, output real UID/GID instead of default effective UID/GID. -r */
+  int use_real = 0;
+  /* If nonzero, output only the user ID(s). -u */
+  int just_user = 0;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
