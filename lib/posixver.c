@@ -22,6 +22,8 @@
 # include <config.h>
 #endif
 
+#include "posixver.h"
+
 #include <limits.h>
 #include <stdlib.h>
 
