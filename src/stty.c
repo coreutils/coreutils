@@ -712,34 +712,14 @@ settings, CHAR is taken literally, or coded as in ^c, 0x37, 0177 or\n\
   exit (status);
 }
 
-/* Return true if the string contains only valid options.  */
-static bool
-valid_options (char *opt, const char *valid_opts,
-	       const char *valid_arg_opts)
-{
-  char ch;
-
-  if (*opt++ != '-' || *opt == 0)
-    return false;
-
-  while ((ch = *opt))
-    {
-      opt++;
-      if (strchr (valid_opts, ch))
-	continue;
-      if (strchr (valid_arg_opts, ch))
-	return true;
-      return false;
-    }
-  return true;
-}
-
 int
 main (int argc, char **argv)
 {
   struct termios mode;
   enum output_type output_type;
   int optc;
+  int argi = 0;
+  int opti = 1;
   bool require_set_attr;
   bool speed_was_set;
   bool verbose_output;
@@ -749,7 +729,6 @@ main (int argc, char **argv)
   char *file_name = NULL;
   int fd;
   const char *device_name;
-  bool posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -769,9 +748,17 @@ main (int argc, char **argv)
   /* Don't print error messages for unrecognized options.  */
   opterr = 0;
 
-  while ((optc = getopt_long (argc, argv, "agF:", longopts, NULL)) != -1)
+  /* If any new options are ever added to stty, the short options MUST
+     NOT allow any ambiguity with the stty settings.  For example, the
+     stty setting "-gagFork" would not be feasible, since it will be
+     parsed as "-g -a -g -F ork".  If you change anything about how
+     stty parses options, be sure it still works with combinations of
+     short and long options, --, POSIXLY_CORRECT, etc.  */
+
+  while ((optc = getopt_long (argc - argi, argv + argi, "-agF:",
+			      longopts, NULL))
+	 != -1)
     {
-      bool unrecognized_option = false;
       switch (optc)
 	{
 	case 'a':
@@ -791,87 +778,22 @@ main (int argc, char **argv)
 	  break;
 
 	default:
-	  unrecognized_option = true;
-	  break;
-	}
-
-      if (unrecognized_option)
-	break;
-    }
-
-  /* Clear out the options that have been parsed.  This is really
-     gross, but it's needed because stty SETTINGS look like options to
-     getopt(), so we need to work around things in a really horrible
-     way.  If any new options are ever added to stty, the short option
-     MUST NOT be a letter which is the first letter of one of the
-     possible stty settings.  If you change anything about how stty
-     parses options, be sure it still works with combinations of
-     short and long options, --, POSIXLY_CORRECT, etc.  */
-  for (k = 1; k < argc; k++)
-    {
-      size_t len;
-      char *eq;
-
-      if (argv[k] == NULL)
-	continue;
-
-      /* Handle --, and reset noargs if there are arguments following it.  */
-      if (STREQ (argv[k], "--"))
-	{
-	  argv[k] = NULL;
-	  if (k < argc - 1)
-	    noargs = false;
-	  break;
-	}
-
-      /* Handle "--file device" */
-      len = strlen (argv[k]);
-      if (len >= 3 && strstr ("--file", argv[k]))
-	{
-	  argv[k] = NULL;
-	  argv[k + 1] = NULL;
-	  continue;
-	}
-
-      /* Handle "--all" and "--save".  */
-      if (len >= 3
-	  && (strstr ("--all", argv[k])
-	      || strstr ("--save", argv[k])))
-	{
-	  argv[k] = NULL;
-	  continue;
-	}
-
-      /* Handle "--file=device".  */
-      eq = strchr (argv[k], '=');
-      if (eq && eq - argv[k] >= 3)
-	{
-	  *eq = '\0';
-	  if (strstr ("--file", argv[k]))
-	    {
-	      argv[k] = NULL;
-	      continue;
-	    }
-	  /* Put the equals sign back for the error message.  */
-	  *eq = '=';
-	}
-
-      /* Handle "-a", "-ag", "-aF/dev/foo", "-aF /dev/foo", etc.  */
-      if (valid_options (argv[k], "ag", "F"))
-	{
-	  /* FIXME: this loses when the device name ends in `F'.
-	     e.g. `stty -F/dev/BARF nl' would clobber the `nl' argument.  */
-	  if (argv[k][strlen (argv[k]) - 1] == 'F')
-	    argv[k + 1] = NULL;
-	  argv[k] = NULL;
-        }
-      /* Everything else must be a normal, non-option argument.  */
-      else
-	{
 	  noargs = false;
-	  if (posixly_correct)
-	    break;
-        }
+
+	  /* Skip the argument containing this unrecognized option;
+	     the 2nd pass will analyze it.  */
+	  argi += opti;
+
+	  /* Restart getopt_long from the first unskipped argument.  */
+	  opti = 1;
+	  optind = 0;
+
+	  break;
+	}
+
+      /* Clear fully-parsed arguments, so they don't confuse the 2nd pass.  */
+      while (opti < optind)
+	argv[argi + opti++] = NULL;
     }
 
   /* Specifying both -a and -g gets an error.  */
