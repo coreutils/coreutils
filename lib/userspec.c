@@ -1,5 +1,5 @@
 /* userspec.c -- Parse a user and group string.
-   Copyright (C) 1989, 1990, 1991, 1992 Free Software Foundation, Inc.
+   Copyright (C) 1989, 1990, 1991, 1992, 1997 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -16,9 +16,9 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /* Written by David MacKenzie <djm@gnu.ai.mit.edu>.  */
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
+
+#if HAVE_CONFIG_H
+# include <config.h>
 #endif
 
 #ifdef __GNUC__
@@ -28,7 +28,7 @@
 #  include <alloca.h>
 # else
 #  ifdef _AIX
- #pragma alloca
+ #  pragma alloca
 #  else
 char *alloca ();
 #  endif
@@ -40,7 +40,7 @@ char *alloca ();
 #include <pwd.h>
 #include <grp.h>
 
-#ifdef HAVE_STRING_H
+#if HAVE_STRING_H
 # include <string.h>
 #else
 # include <strings.h>
@@ -49,11 +49,11 @@ char *alloca ();
 # endif
 #endif
 
-#ifdef STDC_HEADERS
+#if STDC_HEADERS
 # include <stdlib.h>
 #endif
 
-#ifdef HAVE_UNISTD_H
+#if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
 
@@ -247,7 +247,7 @@ parse_user_spec (spec_arg, uid, gid, username_arg, groupname_arg)
 
 #ifdef TEST
 
-#define NULL_CHECK(s) ((s) == NULL ? "(null)" : (s))
+# define NULL_CHECK(s) ((s) == NULL ? "(null)" : (s))
 
 int
 main (int argc, char **argv)
