@@ -1,3 +1,25 @@
+2004-02-29  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi (touch invocation):
+	Describe use of fractional seconds.
+	(date invocation, Options for date): Likewise.
+	* getdate.texi (General date syntax, Time of day items): Likewise.
+	* coreutils.texi (date invocation): Mention effect of LC_TIME.
+	(Options for date): Describe new --iso-8601=ns option.
+
+	* getdate.texi: Add copyright notice.  Change getdate to
+	get_date when talking about the function name.
+	(Seconds since the Epoch): New section, containing the time_t
+	info moved from Date input formats section, along with new
+	info about the @ syntax.  Mention negative time stamps,
+	fractional time stamps, and leap seconds.
+	(General date syntax): Modernize examples a bit to reflect new
+	features.
+	(General date syntax, Relative items in date strings):
+	Use ' rather than " to quote formats.
+	(Time of day items): Add an example with fractional seconds.
+	Describe fractional-second syntax.
+
 2004-03-15  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (date invocation): Add missing `C' to %[...] range
