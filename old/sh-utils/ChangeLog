@@ -3,6 +3,8 @@ Sun Apr 27 18:30:53 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 	* src/printf.c: (cfcc_msg): File-scope constant.
 	(STRTOX): Use new constant as error message format string in macro.
 	Suggestion from Andreas Schwab.
+	(STRTOX): Don't fail because of extra character(s) following a
+	character constant.  Give the *warning* only if !POSIXLY_CORRECT.
 
 Sun Apr  6 14:29:14 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
