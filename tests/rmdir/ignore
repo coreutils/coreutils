@@ -20,7 +20,10 @@ fi
 
 fail=0
 rmdir -p --ignore-fail-on-non-empty $tmp/a/b || fail=1
+# $tmp/x should remain
 test -d $tmp/x || fail=1
+# $tmp/{a,b} should be gone
+test -d $tmp/a && fail=1
 test -d $tmp/b && fail=1
 
 exit $fail
