@@ -98,11 +98,30 @@ struct flag
   int (*xstat) ();
 };
 
+struct dir_list
+{
+  struct dir_list *parent;
+  ino_t ino;
+  dev_t dev;
+};
+
 int full_write ();
 int euidaccess ();
 
 /* The invocation name of this program.  */
 extern char *program_name;
+
+static int
+is_ancestor (const struct stat *sb, const struct dir_list *ancestors)
+{
+  while (ancestors != 0)
+    {
+      if (ancestors->ino == sb->st_ino && ancestors->dev == sb->st_dev)
+	return 1;
+      ancestors = ancestors->parent;
+    }
+  return 0;
+}
 
 /* Read the contents of the directory SRC_PATH_IN, and recursively
    copy the contents to DST_PATH_IN.  NEW_DST is nonzero if
@@ -113,7 +132,7 @@ extern char *program_name;
 static int
 copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
 	  const struct stat *src_sb, struct dir_list *ancestors,
-	  struct flag *x)
+	  const struct flag *x)
 {
   char *name_space;
   char *namep;
@@ -349,9 +368,10 @@ ret2:
    devices and inodes of parent directories of SRC_PATH.
    Return 0 if successful, 1 if an error occurs. */
 
-int
-copy (const char *src_path, const char *dst_path, int new_dst, dev_t device,
-      struct dir_list *ancestors, struct flag *x)
+static int
+copy_internal (const char *src_path, const char *dst_path,
+	       int new_dst, dev_t device, struct dir_list *ancestors,
+	       const struct flag *x)
 {
   struct stat src_sb;
   struct stat dst_sb;
@@ -764,4 +784,20 @@ un_backup:
 	error (0, errno, _("cannot un-backup `%s'"), dst_path);
     }
   return 1;
+}
+
+/* Copy the file SRC_PATH to the file DST_PATH.  The files may be of
+   any type.  NONEXISTENT_DST should be nonzero if the file DST_PATH is
+   not to exist (e.g., because its parent directory was just created);
+   NONEXISTENT_DST should be zero if DST_PATH might already exist.
+   DEVICE is the device number of the parent directory, or 0 if the
+   parent of this file is not known.  ANCESTORS points to a linked, null
+   terminated list of devices and inodes of parent directories of SRC_PATH.
+   Return 0 if successful, 1 if an error occurs. */
+
+int
+copy (const char *src_path, const char *dst_path, int nonexistent_dst,
+      const struct flag *x)
+{
+  copy_internal (src_path, dst_path, ... , x);
 }
