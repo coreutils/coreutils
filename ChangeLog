@@ -1,3 +1,7 @@
+2003-05-11  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.0.1.
+
 2003-05-10  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (syntax-check): Check for `error (EXIT_SUCCESS,'.
@@ -12,7 +16,7 @@
 	that, rather than just "Try `uname --help' for more information.".
 	* src/comm.c (main): Likewise, but for too few arguments.
 	* src/logname.c: Include error.h.
-	(main): Say why we're failing
+	(main): Say why we're failing.
 
 	* src/uniq.c (main): Don't segfault when argc < optind.
 	* src/who.c (main): Handle argc < optind.
@@ -24,9 +28,13 @@
 	* src/hostname.c: Likewise.
 	* src/du.c (main): Likewise.
 	* src/expand.c (main): Likewise.
+	* src/env.c (main): Likewise.
+	* src/unexpand.c (main): Likewise.
+	* src/printenv.c (main): Likewise.
 	* src/sync.c (main): Handle argc == 0.
 	* src/expr.c (main): Likewise.
 	* src/printf.c (main): Likewise.
+	* src/basename.c (main): Likewise.
 	* src/ln.c (main): Test for `missing argument' before computing n_files.
 	* src/tail.c (main): Test for the case of no arguments before
 	computing n_files.
@@ -40,8 +48,6 @@
 	* src/rm.c (main): Don't overrun array bound if argc is 0.
 
 2003-05-09  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.1.
 
 	* src/sort.c (main): Don't overrun array bound if argc is 0.
 	That would happen when invoked via: execl ("/usr/bin/sort", NULL);
