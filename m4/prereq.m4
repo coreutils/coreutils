@@ -22,6 +22,7 @@ AC_DEFUN([jm_PREREQ],
   jm_PREREQ_READUTMP
   jm_PREREQ_REGEX
   jm_PREREQ_SIG2STR
+  jm_PREREQ_STRNLEN
   jm_PREREQ_TEMPNAME # called by mkstemp
   jm_PREREQ_XGETCWD
   jm_PREREQ_XREADLINK
@@ -165,6 +166,20 @@ AC_DEFUN([jm_PREREQ_REGEX],
 AC_DEFUN([jm_PREREQ_SIG2STR],
 [
   AC_CHECK_HEADERS(sys/wait.h)
+])
+
+AC_DEFUN([jm_PREREQ_STRNLEN],
+[
+  AC_FUNC_STRNLEN
+  AC_HEADER_STDC
+  AC_CHECK_HEADERS(memory.h)
+  AC_CHECK_DECLS([memchr])
+
+  # This is necessary because automake-1.6.1 doens't understand
+  # that the above use of AC_FUNC_STRNLEN means we may have to use
+  # lib/strnlen.c.
+  test $ac_cv_func_strnlen_working = yes \
+    && AC_LIBOBJ(strnlen)
 ])
 
 AC_DEFUN([jm_PREREQ_TEMPNAME],
