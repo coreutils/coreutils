@@ -1,3 +1,19 @@
+1999-11-22  Jim Meyering  <meyering@ascend.com>
+
+	* src/tail.c (recheck): Handle a race condition (including <dev,inode>
+	reuse) that would lead to a failed assertion.
+	Reported by Ken Pizzini.
+	(tail_forever): Record errno before using it in call to `error'
+	which might change it.
+	(tail_file): Likewise.
+
+	New test for the above.
+	* tests/tail-2/assert: New file.
+	* tests/tail-2/Makefile.am: New file.
+	* tests/tail-2: New directory.
+	* tests/Makefile.am (SUBDIRS): Add tail-2.
+	* configure.in (AC_OUTPUT): Add tests/tail-2/Makefile.
+
 1999-11-05  Jim Meyering  <meyering@ascend.com>
 
 	* src/system.h: Use HAVE_STRUCT_STAT_ST_BLKSIZE not HAVE_ST_BLKSIZE.
