@@ -1,3 +1,9 @@
+1999-12-23  Jim Meyering  <meyering@ascend.com>
+
+	* jm-macros.m4: Check for clock_gettime (moved from
+	fileutils/configure.in)
+	Check for gettimeofday.
+
 1999-12-20  Jim Meyering  <meyering@ascend.com>
 
 	* strftime.m4: Remove kludge, now that I'm using the fixed
