@@ -423,7 +423,7 @@ is_prime (unsigned long candidate)
       divisor++;
     }
 
-  return (candidate % divisor ? true : false)
+  return (candidate % divisor ? true : false);
 }
 
 /* Round a given CANDIDATE number up to the nearest prime, and return that
