@@ -24,6 +24,7 @@ SUBDIRS = \
   rm rmdir seq sha1sum shred sort stty sum tac tail tail-2 test touch \
   tr tsort unexpand uniq wc
 
+.PHONY: check-root
 check-root:
 	cd chown && $(MAKE) check TESTS=basic
 	cd cp    && $(MAKE) check TESTS=special-bits
@@ -41,6 +42,7 @@ evar-check:
 	  && sed s/%%/CDPATH/ $(srcdir)/.env-warn || :
 
 # Advertise `check-root' target.
+.PHONY: root-hint
 root-hint:
 	@echo '***********************************************************'
 	@echo "NOTICE: Some tests may be run only as root."
