@@ -1,5 +1,9 @@
 2000-05-20  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.0s.
+
+	* tests/mv/Makefile.am (TESTS): Add i-2.
+
 	* tests/rm/r-2: Clean up.
 	* tests/ls/time-1 (LC_ALL): Set it unconditionally.
 
