@@ -8,12 +8,7 @@ if test "$VERBOSE" = yes; then
   cp --version
 fi
 
-unset VERSION_CONTROL
-if test "${VERSION_CONTROL+set}" = set; then
-  echo '$0: the VERSION_CONTROL envvar is set --' \
-    ' unset it and rerun this test' >&2
-  exit 1
-fi
+. $srcdir/../envvar-check
 
 # Make sure we get English translations.
 LANGUAGE=C
