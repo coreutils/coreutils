@@ -1,5 +1,6 @@
-2003-02-10  Jim Meyering  <jim@meyering.net>
+2003-02-11  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.am (libfetish_a_SOURCES): Add euidaccess.h.
 	* euidaccess.c: Include "euidaccess.h".
 	* euidaccess.h: New file.
 
