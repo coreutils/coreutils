@@ -1,5 +1,7 @@
 2001-08-14  Jim Meyering  <meyering@lucent.com>
 
+	* src/su.c (xputenv): Remove parameter's const qualifier.
+
 	* src/dirname.c, src/env.c, src/id.c, src/pathchk.c, src/pinky.c,
 	* src/printenv.c, src/sleep.c, src/tee.c, src/test.c, src/uptime.c,
 	* src/users.c, src/who.c: (AUTHORS): Mark string for translation,
