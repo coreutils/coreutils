@@ -90,29 +90,29 @@ static enum backup_type backup_type;
    `link' or `symlink'. */
 static int (*linkfunc) ();
 
-/* If nonzero, make symbolic links; otherwise, make hard links.  */
-static int symbolic_link;
+/* If true, make symbolic links; otherwise, make hard links.  */
+static bool symbolic_link;
 
-/* If nonzero, ask the user before removing existing files.  */
-static int interactive;
+/* If true, ask the user before removing existing files.  */
+static bool interactive;
 
-/* If nonzero, remove existing files unconditionally.  */
-static int remove_existing_files;
+/* If true, remove existing files unconditionally.  */
+static bool remove_existing_files;
 
-/* If nonzero, list each file as it is moved. */
-static int verbose;
+/* If true, list each file as it is moved. */
+static bool verbose;
 
-/* If nonzero, allow the superuser to *attempt* to make hard links
+/* If true, allow the superuser to *attempt* to make hard links
    to directories.  However, it appears that this option is not useful
    in practice, since even the superuser is prohibited from hard-linking
    directories on most (all?) existing systems.  */
-static int hard_dir_link;
+static bool hard_dir_link;
 
 /* If nonzero, and the specified destination is a symbolic link to a
    directory, treat it just as if it were a directory.  Otherwise, the
    command `ln --force --no-dereference file symlink-to-dir' deletes
    symlink-to-dir before creating the new link.  */
-static int dereference_dest_dir_symlinks = 1;
+static bool dereference_dest_dir_symlinks = true;
 
 static struct option const long_options[] =
 {
@@ -157,15 +157,15 @@ target_directory_operand (char const *file)
 /* Make a link DEST to the (usually) existing file SOURCE.
    Symbolic links to nonexistent files are allowed.
    If DEST_IS_DIR, put the link to SOURCE in the DEST directory.
-   Return 1 if there is an error, otherwise 0.  */
+   Return true if successful.  */
 
-static int
+static bool
 do_link (const char *source, const char *dest, bool dest_is_dir)
 {
   struct stat source_stats;
   struct stat dest_stats;
   char *dest_backup = NULL;
-  int lstat_status = -1;
+  bool lstat_ok = false;
 
   /* Use stat here instead of lstat.
      On SVR4, link does not follow symlinks, so this check disallows
@@ -176,7 +176,7 @@ do_link (const char *source, const char *dest, bool dest_is_dir)
       if (STAT_LIKE_LINK (source, &source_stats) != 0)
 	{
 	  error (0, errno, _("accessing %s"), quote (source));
-	  return 1;
+	  return false;
 	}
 
       if (ENABLE_HARD_LINK_TO_SYMLINK_WARNING
@@ -191,7 +191,7 @@ do_link (const char *source, const char *dest, bool dest_is_dir)
 	{
 	  error (0, 0, _("%s: hard link not allowed for directory"),
 		 quote (source));
-	  return 1;
+	  return false;
 	}
     }
 
@@ -205,11 +205,11 @@ do_link (const char *source, const char *dest, bool dest_is_dir)
 
   if (remove_existing_files || interactive || backup_type != none)
     {
-      lstat_status = lstat (dest, &dest_stats);
-      if (lstat_status != 0 && errno != ENOENT)
+      lstat_ok = (lstat (dest, &dest_stats) == 0);
+      if (!lstat_ok && errno != ENOENT)
 	{
 	  error (0, errno, _("accessing %s"), quote (dest));
-	  return 1;
+	  return false;
 	}
     }
 
@@ -219,7 +219,7 @@ do_link (const char *source, const char *dest, bool dest_is_dir)
      But if the source and destination are the same, don't remove
      anything and fail right here.  */
   if (remove_existing_files
-      && lstat_status == 0
+      && lstat_ok
       /* Allow `ln -sf --backup k k' to succeed in creating the
 	 self-referential symlink, but don't allow the hard-linking
 	 equivalent: `ln -f k k' (with or without --backup) to get
@@ -236,21 +236,21 @@ do_link (const char *source, const char *dest, bool dest_is_dir)
     {
       error (0, 0, _("%s and %s are the same file"),
 	     quote_n (0, source), quote_n (1, dest));
-      return 1;
+      return false;
     }
 
-  if (lstat_status == 0)
+  if (lstat_ok)
     {
       if (S_ISDIR (dest_stats.st_mode))
 	{
 	  error (0, 0, _("%s: cannot overwrite directory"), quote (dest));
-	  return 1;
+	  return false;
 	}
       if (interactive)
 	{
 	  fprintf (stderr, _("%s: replace %s? "), program_name, quote (dest));
 	  if (!yesno ())
-	    return 0;
+	    return true;
 	}
 
       if (backup_type != none)
@@ -265,7 +265,7 @@ do_link (const char *source, const char *dest, bool dest_is_dir)
 	      if (errno != ENOENT)
 		{
 		  error (0, errno, _("cannot backup %s"), quote (dest));
-		  return 1;
+		  return false;
 		}
 	      else
 		dest_backup = NULL;
@@ -285,9 +285,7 @@ do_link (const char *source, const char *dest, bool dest_is_dir)
     }
 
   if ((*linkfunc) (source, dest) == 0)
-    {
-      return 0;
-    }
+    return true;
 
   /* If the attempt to create a link failed and we are removing or
      backing up destinations, unlink the destination and try again.
@@ -312,11 +310,11 @@ do_link (const char *source, const char *dest, bool dest_is_dir)
       if (unlink (dest) != 0)
 	{
 	  error (0, errno, _("cannot remove %s"), quote (dest));
-	  return 1;
+	  return false;
 	}
 
       if (linkfunc (source, dest) == 0)
-	return 0;
+	return true;
     }
 
   error (0, errno,
@@ -330,7 +328,7 @@ do_link (const char *source, const char *dest, bool dest_is_dir)
       if (rename (dest_backup, dest))
 	error (0, errno, _("cannot un-backup %s"), quote (dest));
     }
-  return 1;
+  return false;
 }
 
 void
@@ -404,8 +402,8 @@ int
 main (int argc, char **argv)
 {
   int c;
-  int errors;
-  int make_backups = 0;
+  bool ok;
+  bool make_backups = false;
   char *backup_suffix_string;
   char *version_control_string = NULL;
   char *target_directory = NULL;
@@ -426,8 +424,7 @@ main (int argc, char **argv)
   backup_suffix_string = getenv ("SIMPLE_BACKUP_SUFFIX");
 
   symbolic_link = remove_existing_files = interactive = verbose
-    = hard_dir_link = 0;
-  errors = 0;
+    = hard_dir_link = false;
 
   while ((c = getopt_long (argc, argv, "bdfinst:vFS:TV:", long_options, NULL))
 	 != -1)
@@ -445,28 +442,28 @@ main (int argc, char **argv)
 	  /* Fall through.  */
 
 	case 'b':
-	  make_backups = 1;
+	  make_backups = true;
 	  if (optarg)
 	    version_control_string = optarg;
 	  break;
 	case 'd':
 	case 'F':
-	  hard_dir_link = 1;
+	  hard_dir_link = true;
 	  break;
 	case 'f':
-	  remove_existing_files = 1;
-	  interactive = 0;
+	  remove_existing_files = true;
+	  interactive = false;
 	  break;
 	case 'i':
-	  remove_existing_files = 0;
-	  interactive = 1;
+	  remove_existing_files = false;
+	  interactive = true;
 	  break;
 	case 'n':
-	  dereference_dest_dir_symlinks = 0;
+	  dereference_dest_dir_symlinks = false;
 	  break;
 	case 's':
 #ifdef S_ISLNK
-	  symbolic_link = 1;
+	  symbolic_link = true;
 #else
 	  error (EXIT_FAILURE, 0,
 		 _("symbolic links are not supported on this system"));
@@ -490,10 +487,10 @@ main (int argc, char **argv)
 	  no_target_directory = true;
 	  break;
 	case 'v':
-	  verbose = 1;
+	  verbose = true;
 	  break;
 	case 'S':
-	  make_backups = 1;
+	  make_backups = true;
 	  backup_suffix_string = optarg;
 	  break;
 	case_GETOPT_HELP_CHAR;
@@ -556,11 +553,12 @@ main (int argc, char **argv)
   if (target_directory)
     {
       int i;
+      ok = true;
       for (i = 0; i < n_files; ++i)
-	errors |= do_link (file[i], target_directory, true);
+	ok &= do_link (file[i], target_directory, true);
     }
   else
-    errors = do_link (file[0], file[1], false);
+    ok = do_link (file[0], file[1], false);
 
-  exit (errors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
