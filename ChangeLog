@@ -1,6 +1,12 @@
-2003-02-25  Jim Meyering  <jim@meyering.net>
+2003-02-26  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.9.
+
+	* tests/du/basic: Don't test du's -b option here.  Directory byte
+	counts are smaller (512 rather than 4096) on at least OSF/1 5.1.
+	Reported by Nelson Beebe.
+
+2003-02-25  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (announcement): Now that ChangeLog entries
 	are output by announce-gen, don't do it here.
