@@ -1,5 +1,5 @@
 /* comm -- compare two sorted files line by line.
-   Copyright (C) 86, 90, 91, 1995-2003 Free Software Foundation, Inc.
+   Copyright (C) 86, 90, 91, 1995-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -64,7 +64,7 @@ static struct option const long_options[] =
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -84,7 +84,7 @@ Compare sorted files LEFT_FILE and RIGHT_FILE line by line.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
-  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (status);
 }
 
 /* Output the line in linebuffer LINE to stream STREAM
