@@ -70,14 +70,22 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n\
+Usage: %s [OPTION]... FILE1 FILE2\n\
 "),
 	      program_name);
       fputs (_("\
-Compare sorted files LEFT_FILE and RIGHT_FILE line by line.\n\
+Compare sorted files FILE1 and FILE2 line by line.\n\
+"), stdout);
+      fputs (_("\
 \n\
-  -1              suppress lines unique to left file\n\
-  -2              suppress lines unique to right file\n\
+With no options, produce three-column output.  Column one contains\n\
+lines unique to FILE1, column two contains lines unique to FILE2,\n\
+and column three contains lines common to both files.\n\
+"), stdout);
+      fputs (_("\
+\n\
+  -1              suppress lines unique to FILE1\n\
+  -2              suppress lines unique to FILE2\n\
   -3              suppress lines that appear in both files\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
