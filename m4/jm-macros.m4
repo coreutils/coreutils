@@ -1,4 +1,4 @@
-#serial 75   -*- autoconf -*-
+#serial 76   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -113,6 +113,7 @@ AC_DEFUN([gl_MACROS],
     memcpy \
     mempcpy \
     mkfifo \
+    mbrlen \
     realpath \
     sethostname \
     strchr \
@@ -263,6 +264,7 @@ AC_DEFUN([gl_CHECK_ALL_TYPES],
   AC_REQUIRE([AC_STRUCT_ST_DM_MODE])
 
   AC_REQUIRE([AC_TYPE_GETGROUPS])
+  AC_REQUIRE([AC_TYPE_MBSTATE_T])
   AC_REQUIRE([AC_TYPE_MODE_T])
   AC_REQUIRE([AC_TYPE_OFF_T])
   AC_REQUIRE([AC_TYPE_PID_T])
