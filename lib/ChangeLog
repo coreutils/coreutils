@@ -3,6 +3,7 @@
 	* Makefile.am (unit-test): New target.
 	(check): Depend on it.
 	(noinst_PROGRAMS): Define.
+	(LDADD): Define.
 
 	* t-fpending.c: New file.  Test the __fpending function.
 	This ensures that if there is an error in the definition of the
