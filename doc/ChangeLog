@@ -1,3 +1,9 @@
+2002-11-09  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (What information is listed) [--dired]:
+	Correct parts of --dired description.  Reported by Andre Spiegel.
+	Include a lot more description, with examples.
+
 2002-11-06  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (printf invocation): Fix typo in index:
