@@ -1,3 +1,20 @@
+2004-07-29  Paul Eggert  <eggert@cs.ucla.edu>
+
+	md5sum, sha1sum integer cleanups.
+
+	* src/checksum.h: Don't include config.h, sys/types.h, stdio.h:
+	not needed.
+	(ALG_UNSPECIFIED): Remove.
+	(ALG_MDT): Don't make it equal to CHAR_MAX + 1; this isn't necessary.
+	* src/md5.c: Don't include any files other than checksum.h.
+	* src/sha1sum.c: Likewise.
+	* src/md5sum.c (OPENOPTS, have_read_stdin, status_only, warn,
+	bsd_split_3, split_3, hex_digits, digest_file, digest_check, main):
+	Use bool when appropriate.
+	(digest_check): Increase limit of number of input lines to
+	UINTMAX_MAX from INT_MAX.  Diagnose any overflows of this counter.
+	Use ngettext instead of hard-to-i18nize hardcoded stuff for plurals.
+	
 2004-07-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/cat.c (exit_status): Remove.  Now done by passing a boolean
