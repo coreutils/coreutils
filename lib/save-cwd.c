@@ -42,6 +42,10 @@
 extern int errno;
 #endif
 
+#ifndef O_DIRECTORY
+# define O_DIRECTORY 0
+#endif
+
 #include "save-cwd.h"
 #include "error.h"
 
@@ -67,7 +71,7 @@ save_cwd (struct saved_cwd *cwd)
   if (have_working_fchdir)
     {
 #if HAVE_FCHDIR
-      cwd->desc = open (".", O_RDONLY);
+      cwd->desc = open (".", O_RDONLY | O_DIRECTORY);
       if (cwd->desc < 0)
 	{
 	  error (0, errno, "cannot open current directory");
