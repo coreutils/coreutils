@@ -210,7 +210,7 @@ main (int argc, char **argv)
 	}
     }
 
-  if (argc < optind)
+  if (argc != optind)
     {
       error (0, 0, _("too many arguments"));
       usage (EXIT_FAILURE);
