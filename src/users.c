@@ -54,11 +54,7 @@ list_entries_users (size_t n, const STRUCT_UTMP *this)
 
   while (n--)
     {
-      if (UT_USER (this) [0]
-#ifdef USER_PROCESS
-	  && this->ut_type == USER_PROCESS
-#endif
-	  )
+      if (IS_USER_PROCESS (this))
 	{
 	  char *trimmed_name;
 
