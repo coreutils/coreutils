@@ -9,8 +9,8 @@ Sat Feb 11 07:31:08 1995  Jim Meyering  (meyering@comco.com)
 	* wc.c (wc): Don't overcount the number of bytes when reading
 	from a regular file on stdin with file pointer not at BOF.
 	From Karl Heuer <karl@gnu.ai.mit.edu>.  Before, the command
-	`(dd ibs=99k skip=1; wc -c) < /etc/group' made wc output the
-	size of the file.  Now it outputs `0'.
+	`(dd ibs=99k skip=1; wc -c) < /etc/group' made wc wrongly output
+	the size of the file.  Now it outputs `0'.
 
 
 Sat Jan 28 07:07:23 1995  Jim Meyering  (meyering@comco.com)
