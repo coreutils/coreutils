@@ -1,5 +1,5 @@
 /* Utility to accept --help and --version options as unobtrusively as possible.
-   Copyright (C) 1993, 1994, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1994, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -37,13 +37,9 @@ static struct option const long_options[] =
    Be careful not to gobble up `--'.  */
 
 void
-parse_long_options (argc, argv, command_name, package, version, usage)
-     int argc;
-     char **argv;
-     const char *command_name;
-     const char *package;
-     const char *version;
-     void (*usage)();
+parse_long_options (int argc, char **argv, const char *command_name,
+		    const char *package, const char *version,
+		    void (*usage_func)())
 {
   int c;
   int saved_opterr;
@@ -59,7 +55,7 @@ parse_long_options (argc, argv, command_name, package, version, usage)
       switch (c)
 	{
 	case 'h':
-	  (*usage) (0);
+	  (*usage_func) (0);
 
 	case 'v':
 	  printf ("%s (%s) %s\n", command_name, package, version);
