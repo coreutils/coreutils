@@ -52,6 +52,10 @@
 
    David MacKenzie <djm@gnu.ai.mit.edu> */
 
+#ifdef _AIX
+ #pragma alloca
+#endif
+
 #include <config.h>
 #include <stdio.h>
 #include <getopt.h>
