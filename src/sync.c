@@ -59,7 +59,7 @@ main (argc, argv)
   parse_long_options (argc, argv, "sync", version_string, usage);
 
   if (argc != 1)
-    error (0, 0, "ignoring non-option arguments");
+    error (0, 0, "ignoring all arguments");
 
   sync ();
   exit (0);
