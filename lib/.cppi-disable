@@ -21,3 +21,4 @@ strndup.h
 time_r.h
 vasnprintf.h
 vasprintf.h
+strtoul.c
