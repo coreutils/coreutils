@@ -1,3 +1,9 @@
+Sun Apr  4 09:38:00 1993  Jim Meyering  (meyering@comco.com)
+
+	* src/*.c (usage): Mention --help and --version.
+	(main): Handle flag_help and flag_version before checking for
+	invocation errors.
+
 Sat Apr  3 18:17:23 1993  Jim Meyering  (meyering@comco.com)
 
 	* Makefile.in [Makefile]: Add dependencies and a rule to remake it.
