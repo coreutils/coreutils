@@ -2075,7 +2075,7 @@ quote_filename (p, quoted_length)
 	break;
     }
 
-  if (!found_quotable)
+  if (!found_quotable && !quote_as_string)
     {
       *quoted_length = p - p0;
       return NULL;
