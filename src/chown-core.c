@@ -245,7 +245,9 @@ change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group,
 	  if (fail)
 	    {
 	      if (chopt->force_silent == 0)
-		error (0, saved_errno, _("changing ownership of %s"),
+		error (0, saved_errno, (user != (uid_t) -1
+					? _("changing ownership of %s")
+					: _("changing group of %s")),
 		       quote (file));
 	      errors = 1;
 	    }
