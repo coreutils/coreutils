@@ -1,5 +1,8 @@
 2002-09-04  Jim Meyering  <meyering@lucent.com>
 
+	* addext.c (addext): Add a cast to avoid gcc's warning about
+	`comparison between signed and unsigned'.
+
 	* sig2str.c (str2signum, sig2str): Declare loop index variables to be
 	of type size_t so that they match type of upper bound, thus avoiding
 	warning about `comparison between signed and unsigned'.
