@@ -48,11 +48,6 @@ enum { PRINTENV_FAILURE = 2 };
 /* The name this program was run with. */
 char *program_name;
 
-static struct option const long_options[] =
-{
-  {0, 0, 0, 0}
-};
-
 extern char **environ;
 
 void
@@ -97,18 +92,8 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
-
-  while ((c = getopt_long (argc, argv, "", long_options, NULL)) != -1)
-    {
-      switch (c)
-	{
-	case 0:
-	  break;
-
-	default:
-	  usage (PRINTENV_FAILURE);
-	}
-    }
+  if (getopt (argc, argv, "+") != -1)
+    usage (PRINTENV_FAILURE);
 
   if (optind >= argc)
     {

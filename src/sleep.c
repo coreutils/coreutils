@@ -36,11 +36,6 @@
 /* The name by which this program was run. */
 char *program_name;
 
-static struct option const long_options[] =
-{
-  {0, 0, 0, 0}
-};
-
 void
 usage (int status)
 {
@@ -119,18 +114,8 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
-
-  while ((c = getopt_long (argc, argv, "", long_options, NULL)) != -1)
-    {
-      switch (c)
-	{
-	case 0:
-	  break;
-
-	default:
-	  usage (EXIT_FAILURE);
-	}
-    }
+  if (getopt (argc, argv, "") != -1)
+    usage (EXIT_FAILURE);
 
   if (argc == 1)
     {

@@ -44,11 +44,6 @@ int getloadavg ();
 /* The name this program was run with. */
 char *program_name;
 
-static struct option const longopts[] =
-{
-  {NULL, 0, NULL, 0}
-};
-
 static void
 print_uptime (size_t n, const STRUCT_UTMP *this)
 {
@@ -225,18 +220,8 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
-
-  while ((optc = getopt_long (argc, argv, "", longopts, NULL)) != -1)
-    {
-      switch (optc)
-	{
-	case 0:
-	  break;
-
-	default:
-	  usage (EXIT_FAILURE);
-	}
-    }
+  if (getopt (argc, argv, "") != -1)
+    usage (EXIT_FAILURE);
 
   switch (argc - optind)
     {

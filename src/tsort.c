@@ -77,11 +77,6 @@ static struct item *loop = NULL;
 
 /* The number of strings to sort.  */
 static size_t n_strings = 0;
-
-static struct option const long_options[] =
-{
-  { NULL, 0, NULL, 0}
-};
 
 void
 usage (int status)
@@ -558,15 +553,8 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
-
-  while ((opt = getopt_long (argc, argv, "", long_options, NULL)) != -1)
-    switch (opt)
-      {
-      case 0:			/* long option */
-	break;
-      default:
-	usage (EXIT_FAILURE);
-      }
+  if (getopt (argc, argv, "") != -1)
+    usage (EXIT_FAILURE);
 
   have_read_stdin = false;
 

@@ -37,11 +37,6 @@
 /* The name this program was run with. */
 char *program_name;
 
-static struct option const longopts[] =
-{
-  {NULL, 0, NULL, 0}
-};
-
 static int
 userid_compare (const void *v_a, const void *v_b)
 {
@@ -130,7 +125,6 @@ If FILE is not specified, use %s.  %s as FILE is common.\n\
 int
 main (int argc, char **argv)
 {
-  int optc;
   initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -141,18 +135,8 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
-
-  while ((optc = getopt_long (argc, argv, "", longopts, NULL)) != -1)
-    {
-      switch (optc)
-	{
-	case 0:
-	  break;
-
-	default:
-	  usage (EXIT_FAILURE);
-	}
-    }
+  if (getopt (argc, argv, "") != -1)
+    usage (EXIT_FAILURE);
 
   switch (argc - optind)
     {

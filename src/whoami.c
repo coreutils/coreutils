@@ -39,11 +39,6 @@
 /* The name this program was run with. */
 char *program_name;
 
-static struct option const long_options[] =
-{
-  {0, 0, 0, 0}
-};
-
 void
 usage (int status)
 {
@@ -70,7 +65,6 @@ main (int argc, char **argv)
 {
   register struct passwd *pw;
   register uid_t uid;
-  int c;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -82,18 +76,8 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
-
-  while ((c = getopt_long (argc, argv, "", long_options, NULL)) != -1)
-    {
-      switch (c)
-	{
-	case 0:
-	  break;
-
-	default:
-	  usage (EXIT_FAILURE);
-	}
-    }
+  if (getopt (argc, argv, "") != -1)
+    usage (EXIT_FAILURE);
 
   if (optind != argc)
     {
