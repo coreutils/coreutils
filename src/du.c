@@ -116,6 +116,7 @@ enum
 {
   APPARENT_SIZE_OPTION = CHAR_MAX + 1,
   EXCLUDE_OPTION,
+  HUMAN_SI_OPTION,
   MAX_DEPTH_OPTION
 };
 
@@ -131,7 +132,7 @@ static struct option const long_options[] =
   {"exclude", required_argument, 0, EXCLUDE_OPTION},
   {"exclude-from", required_argument, 0, 'X'},
   {"human-readable", no_argument, NULL, 'h'},
-  {"si", no_argument, 0, 'H'},
+  {"si", no_argument, 0, HUMAN_SI_OPTION},
   {"kilobytes", no_argument, NULL, 'k'}, /* long form is obsolescent */
   {"max-depth", required_argument, NULL, MAX_DEPTH_OPTION},
   {"megabytes", no_argument, NULL, 'm'}, /* obsolescent */
@@ -584,6 +585,10 @@ main (int argc, char **argv)
 	  break;
 
 	case 'H':
+	  error (0, 0, _("WARNING: use --si, not -H; the meaning of the -H\
+ option will soon\nchange to be the same as that of --dereference-args (-D)"));
+	  /* fall through */
+	case HUMAN_SI_OPTION:
 	  human_output_opts = human_autoscale | human_SI;
 	  output_block_size = 1;
 	  break;
