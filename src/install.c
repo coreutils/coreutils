@@ -337,20 +337,6 @@ main (int argc, char **argv)
   exit (errors);
 }
 
-#ifndef S_ISUID
-# define S_ISUID 0
-#endif
-
-#ifndef S_ISGID
-# define S_ISGID 0
-#endif
-
-#ifndef S_ISVTX
-# define S_ISVTX 0
-#endif
-
-#define SPECIAL_BITS (S_ISUID | S_ISGID | S_ISVTX)
-
 /* Copy file FROM onto file TO, creating any missing parent directories of TO.
    Return 0 if successful, 1 if an error occurs */
 
