@@ -1,4 +1,4 @@
-#serial 80   -*- autoconf -*-
+#serial 81   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -109,7 +109,6 @@ AC_DEFUN([gl_MACROS],
     iswspace \
     lchown \
     listmntent \
-    localeconv \
     memcpy \
     mempcpy \
     mkfifo \
