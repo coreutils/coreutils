@@ -1790,7 +1790,7 @@ output_one_dumb_line (void)
 static void
 generate_all_output (void)
 {
-  int occurs_index;		/* index of keyword entry being processed */
+  size_t occurs_index;		/* index of keyword entry being processed */
   OCCURS *occurs_cursor;	/* current keyword entry being processed */
 
   /* The following assignments are useful to provide default values in case
