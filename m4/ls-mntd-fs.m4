@@ -195,12 +195,7 @@ if test -z "$ac_list_mounted_fs"; then
   AC_MSG_CHECKING([for getmntinfo function])
   AC_CACHE_VAL(fu_cv_sys_mounted_getmntinfo,
     [
-      ok=
-      if test $ac_cv_func_getmntinfo = yes; then
-	AC_EGREP_HEADER(f_type;, sys/mount.h,
-			ok=yes)
-      fi
-      test -n "$ok" \
+      test "$ac_cv_func_getmntinfo" = yes \
 	  && fu_cv_sys_mounted_getmntinfo=yes \
 	  || fu_cv_sys_mounted_getmntinfo=no
     ])
@@ -209,7 +204,7 @@ if test -z "$ac_list_mounted_fs"; then
     ac_list_mounted_fs=found
     AC_DEFINE(MOUNTED_GETMNTINFO, 1,
 	      [Define if there is a function named getmntinfo for reading the
-   list of mounted filesystems.  (4.4BSD)])
+   list of mounted filesystems.  (4.4BSD, Darwin)])
   fi
 fi
 
