@@ -13,6 +13,7 @@ Changes in release 3.15:
   with EUID == 0
 * dircolors no longer accepts --print-data-base (alternate spelling of
   --print-database)
+
 Changes in release 3.14:
 * ls --color highlights based on suffix rules only for regular files
 * touch --date=DATE accepts dates like those in an RCS log listing, e.g.,
