@@ -1,3 +1,10 @@
+2003-07-09  Jim Meyering  <jim@meyering.net>
+
+	Fix the bug that would make `du /' omit the `/' on the last line.
+	E.g., `du --exclude '[^/]*' -x /' would print only "4\t\n" for me.
+	* ftw.c (ftw_dir): Don't clobber the leading `/'.
+	Reported by Chris Lesniewski as http://bugs.debian.org/200542.
+
 2003-07-04  Jim Meyering  <jim@meyering.net>
 
 	Update from gnulib.
