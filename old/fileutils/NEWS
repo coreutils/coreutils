@@ -1,6 +1,7 @@
 Changes in release 4.01:
 [4.0.29]
 * ls.c wouldn't compile on some systems: fix it
+* `cp -R --parents dir1/ dir2' failed on NetBSD, due to a portability problem
 [4.0.28]
 * ls is much more efficient on systems (e.g., linux-2.4.*) that store file
     type information in directory entries.
