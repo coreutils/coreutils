@@ -1,3 +1,8 @@
+Wed Aug  9 00:33:05 1995  Jim Meyering  (meyering@comco.com)
+
+	* mknod.c (my_strtol): Remove function.
+	(main): Use xstrtol instead.
+
 Mon Aug  7 23:27:54 1995  Jim Meyering  (meyering@comco.com)
 
 	* Makefile.in (DISTFILES): Don't distribute unneeded COPYING.LIB.
