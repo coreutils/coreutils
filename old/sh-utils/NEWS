@@ -1,4 +1,5 @@
 Changes in release 1.17
+ [1.16e]
 * pinky: new lightweight finger-style program
  [1.16d]
 * the groups script now exits non-zero and doesn't print anything more
