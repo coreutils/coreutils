@@ -1,6 +1,14 @@
-2000-11-18  Jim Meyering  <meyering@lucent.com>
+2000-11-19  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0.33.
+
+2000-11-18  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sys2.h (GETOPT_HELP_CHAR, GETOPT_VERSION_CHAR): Now enum
+	constants rather than macros.  Use values that cannot conflict
+	with C characters or with -1, CHAR_MAX + 1, etc.
+
+2000-11-18  Jim Meyering  <meyering@lucent.com>
 
 	* src/du.c (count_entry): Don't omit the size of a directory entry
 	merely because we couldn't `chdir' into it.  That would give subtly
