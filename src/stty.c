@@ -134,6 +134,9 @@
 #if defined(VREPRINT) && !defined(CRPRNT)
 # define CRPRNT Control ('r')
 #endif
+#if defined(CREPRINT) && !defined(CRPRNT)
+# define CRPRNT Control ('r')
+#endif
 #if defined(VWERASE) && !defined(CWERASE)
 # define CWERASE Control ('w')
 #endif
@@ -379,6 +382,10 @@ static struct control_info control_info[] =
 #endif
 #ifdef VREPRINT
   {"rprnt", CRPRNT, VREPRINT},
+#else
+# ifdef CREPRINT /* HPUX 10.20 needs this */
+  {"rprnt", CRPRNT, CREPRINT},
+# endif
 #endif
 #ifdef VWERASE
   {"werase", CWERASE, VWERASE},
