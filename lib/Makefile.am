@@ -21,7 +21,7 @@ noinst_HEADERS = argmatch.h backupfile.h closeout.h \
 error.h exclude.h fnmatch.h fsusage.h \
 getdate.h getline.h getopt.h group-member.h human.h long-options.h \
 makepath.h modechange.h mountlist.h hash.h path-concat.h pathmax.h \
-quotearg.h safe-read.h save-cwd.h savedir.h strverscmp.h \
+quotearg.h regex.h safe-read.h save-cwd.h savedir.h strverscmp.h \
 xalloc.h xstrtol.h xstrtoul.h
 
 BUILT_SOURCES = getdate.c posixtm.c
