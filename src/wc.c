@@ -201,19 +201,29 @@ wc (fd, file)
   register int bytes_read;
   register int in_word = 0;
   register unsigned long lines, words, chars;
-  struct stat stats;
 
   lines = words = chars = 0;
 
   /* When counting only bytes, save some line- and word-counting
-     overhead.  If FD is a `regular' Unix file, using fstat is enough
+     overhead.  If FD is a `regular' Unix file, using lseek is enough
      to get its size in bytes.  Otherwise, read blocks of BUFFER_SIZE
-     bytes at a time until EOF.  */
+     bytes at a time until EOF.
+
+     NOTE: using fstat and stats.st_size (and omitting the lseek calls)
+     over counts when the file is not positioned at the beginning.
+     For example the command `(dd skip=9999; wc -c) < /etc/group'
+     should make wc report `0' bytes.  */
+
   if (print_chars && !print_words && !print_lines)
     {
-      if (fstat (fd, &stats) == 0 && S_ISREG (stats.st_mode))
+      struct stat stats;
+      off_t current_pos, end_pos;
+
+      if (fstat (fd, &stats) == 0 && S_ISREG (stats.st_mode)
+	  && (current_pos = lseek (fd, (off_t)0, SEEK_CUR)) != -1
+	  && (end_pos  = lseek (fd, (off_t)0, SEEK_END)) != -1)
 	{
-	  chars = stats.st_size;
+	  chars = end_pos - current_pos;
 	}
       else
 	{
