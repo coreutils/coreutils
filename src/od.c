@@ -855,7 +855,7 @@ decode_one_format (const char *s, const char **next, struct tspec *tspec)
 #ifdef HAVE_LONG_DOUBLE
 	case FLOAT_LONG_DOUBLE:
 	  print_function = print_long_double;
-	  pre_fmt_string = "%%%d.%dle%%c";
+	  pre_fmt_string = "%%%d.%dLe%%c";
 	  fmt_string = xmalloc (strlen (pre_fmt_string));
 	  sprintf (fmt_string, pre_fmt_string,
 		   LDBL_DIG + 8, LDBL_DIG);
