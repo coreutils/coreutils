@@ -635,7 +635,7 @@ static enum color_type const color_types[] =
 /* Information about filling a column.  */
 struct col_info
 {
-  int valid;
+  int valid_len;
   int line_len;
   int *col_arr;
 };
@@ -2643,7 +2643,7 @@ print_many_per_line (void)
 
       for (i = 0; i < max_cols; ++i)
 	{
-	  if (col_info[i].valid)
+	  if (col_info[i].valid_len)
 	    {
 	      int idx = filesno / ((files_index + i) / (i + 1));
 	      int real_length = name_length + (idx == i ? 0 : 2);
@@ -2653,7 +2653,7 @@ print_many_per_line (void)
 		  col_info[i].line_len += (real_length
 					   - col_info[i].col_arr[idx]);
 		  col_info[i].col_arr[idx] = real_length;
-		  col_info[i].valid = col_info[i].line_len < line_length;
+		  col_info[i].valid_len = col_info[i].line_len < line_length;
 		}
 	    }
 	}
@@ -2662,7 +2662,7 @@ print_many_per_line (void)
   /* Find maximum allowed columns.  */
   for (cols = max_cols; cols > 1; --cols)
     {
-      if (col_info[cols - 1].valid)
+      if (col_info[cols - 1].valid_len)
 	break;
     }
 
@@ -2721,7 +2721,7 @@ print_horizontal (void)
 
       for (i = 0; i < max_cols; ++i)
 	{
-	  if (col_info[i].valid)
+	  if (col_info[i].valid_len)
 	    {
 	      int idx = filesno % (i + 1);
 	      int real_length = name_length + (idx == i ? 0 : 2);
@@ -2731,7 +2731,7 @@ print_horizontal (void)
 		  col_info[i].line_len += (real_length
 					   - col_info[i].col_arr[idx]);
 		  col_info[i].col_arr[idx] = real_length;
-		  col_info[i].valid = col_info[i].line_len < line_length;
+		  col_info[i].valid_len = col_info[i].line_len < line_length;
 		}
 	    }
 	}
@@ -2740,7 +2740,7 @@ print_horizontal (void)
   /* Find maximum allowed columns.  */
   for (cols = max_cols; cols > 1; --cols)
     {
-      if (col_info[cols - 1].valid)
+      if (col_info[cols - 1].valid_len)
 	break;
     }
 
@@ -2872,7 +2872,7 @@ init_col_info (void)
     {
       int j;
 
-      col_info[i].valid = 1;
+      col_info[i].valid_len = 1;
       col_info[i].line_len = (i + 1) * MIN_COLUMN_WIDTH;
 
       if (allocate)
