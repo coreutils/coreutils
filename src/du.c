@@ -512,8 +512,9 @@ du_files (char **files, int ftw_flags)
 	  /* Append `/.', but if there's already a trailing slash,
 	     append only the `.'.  */
 	  char const *suffix = (file[len - 1] == '/' ? "." : "/.");
+	  char *new_file;
 	  suffix_length = strlen (suffix);
-	  char *new_file = xmalloc (len + suffix_length + 1);
+	  new_file = xmalloc (len + suffix_length + 1);
 	  memcpy (mempcpy (new_file, file, len), suffix, suffix_length + 1);
 	  arg_length = len;
 	  file = new_file;
