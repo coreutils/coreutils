@@ -1,3 +1,7 @@
+2003-12-12  Jim Meyering  <jim@meyering.net>
+
+	* fts_.h (FTS) [fts_dir_signatures]: Add comment.
+
 2003-12-03  Paul Eggert  <eggert@twinsun.com>
 
 	* getgroups.c (getgroups): xmalloc takes one argument, not two.
