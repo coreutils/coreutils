@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2002-03-26.08}
+\def\texinfoversion{2002-06-04.06}
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99,
 %               2000, 01, 02 Free Software Foundation, Inc.
@@ -4730,56 +4730,60 @@ width0pt\relax} \fi
 {\df #1}\enskip        % Generate function name
 }
 
-% Actually process the body of a definition
-% #1 should be the terminating control sequence, such as \Edefun.
-% #2 should be the "another name" control sequence, such as \defunx.
-% #3 should be the control sequence that actually processes the header,
-%    such as \defunheader.
-
-\def\defparsebody #1#2#3{\begingroup\inENV% Environment for definitionbody
-\medbreak %
-% Define the end token that this defining construct specifies
-% so that it will exit this group.
-\def#1{\endgraf\endgroup\medbreak}%
-\def#2{\begingroup\obeylines\activeparens\spacesplit#3}%
-\parindent=0in
-\advance\leftskip by \defbodyindent
-\exdentamount=\defbodyindent
-\begingroup %
-\catcode 61=\active % 61 is `='
-\obeylines\activeparens\spacesplit#3}
-
+% Common pieces to start any @def...
 % #1 is the \E... control sequence to end the definition (which we define).
-% #2 is the \...x control sequence for consecutive fns (which we define).
-% #3 is the control sequence to call to resume processing.
-% #4, delimited by the space, is the class name.
-%
-\def\defmethparsebody#1#2#3#4 {\begingroup\inENV %
-\medbreak %
-% Define the end token that this defining construct specifies
-% so that it will exit this group.
-\def#1{\endgraf\endgroup\medbreak}%
-\def#2##1 {\begingroup\obeylines\activeparens\spacesplit{#3{##1}}}%
-\parindent=0in
-\advance\leftskip by \defbodyindent
-\exdentamount=\defbodyindent
-\begingroup\obeylines\activeparens\spacesplit{#3{#4}}}
-
-% Used for @deftypemethod and @deftypeivar.
-% #1 is the \E... control sequence to end the definition (which we define).
-% #2 is the \...x control sequence for consecutive fns (which we define).
-% #3 is the control sequence to call to resume processing.
-% #4, delimited by a space, is the class name.
-% #5 is the method's return type.
-%
-\def\deftypemethparsebody#1#2#3#4 #5 {\begingroup\inENV
+% #2 is the \...x control sequence (which our caller defines).
+% #3 is the control sequence to process the header, such as \defunheader.
+% 
+\def\parsebodycommon#1#2#3{%
+  \begingroup\inENV
+  % If there are two @def commands in a row, we'll have a \nobreak,
+  % which is there to keep the function description together with its
+  % header.  But if there's nothing but headers, we want to allow a
+  % break after all.
+  \ifnum\lastpenalty = 10000 \penalty0 \fi
   \medbreak
+  %
+  % Define the \E... end token that this defining construct specifies
+  % so that it will exit this group.
   \def#1{\endgraf\endgroup\medbreak}%
-  \def#2##1 ##2 {\begingroup\obeylines\activeparens\spacesplit{#3{##1}{##2}}}%
+  %
   \parindent=0in
   \advance\leftskip by \defbodyindent
   \exdentamount=\defbodyindent
-  \begingroup\obeylines\activeparens\spacesplit{#3{#4}{#5}}}
+}
+
+% Process body of @defun, @deffn, @defmac, etc.
+%
+\def\defparsebody#1#2#3{%
+  \parsebodycommon{#1}{#2}{#3}%
+  \def#2{\begingroup\obeylines\activeparens\spacesplit#3}%
+  \catcode61=\active % 61 is `='
+  \begingroup\obeylines\activeparens
+  \spacesplit#3%
+}
+
+% #1, #2, #3 are the common arguments (see \defparsebody).
+% #4, delimited by the space, is the class name.
+%
+\def\defmethparsebody#1#2#3#4 {%
+  \parsebodycommon{#1}{#2}{#3}%
+  \def#2##1 {\begingroup\obeylines\activeparens\spacesplit{#3{##1}}}%
+  \begingroup\obeylines\activeparens
+  \spacesplit{#3{#4}}%
+}
+
+% Used for @deftypemethod and @deftypeivar.
+% #1, #2, #3 are the common arguments (see \defparsebody).
+% #4, delimited by a space, is the class name.
+% #5 is the method's return type.
+%
+\def\deftypemethparsebody#1#2#3#4 #5 {%
+  \parsebodycommon{#1}{#2}{#3}%
+  \def#2##1 ##2 {\begingroup\obeylines\activeparens\spacesplit{#3{##1}{##2}}}%
+  \begingroup\obeylines\activeparens
+  \spacesplit{#3{#4}{#5}}%
+}
 
 % Used for @deftypeop.  The change from \deftypemethparsebody is an
 % extra argument at the beginning which is the `category', instead of it
@@ -4788,64 +4792,49 @@ width0pt\relax} \fi
 % input at hand.  Thus also need a control sequence (passed as #5) for
 % the \E... definition to assign the category name to.
 % 
-\def\deftypeopparsebody#1#2#3#4#5 #6 {\begingroup\inENV
-  \medbreak
-  \def#1{\endgraf\endgroup\medbreak}%
+\def\deftypeopparsebody#1#2#3#4#5 #6 {%
+  \parsebodycommon{#1}{#2}{#3}%
   \def#2##1 ##2 ##3 {%
     \def#4{##1}%
     \begingroup\obeylines\activeparens\spacesplit{#3{##2}{##3}}}%
-  \parindent=0in
-  \advance\leftskip by \defbodyindent
-  \exdentamount=\defbodyindent
-  \begingroup\obeylines\activeparens\spacesplit{#3{#5}{#6}}}
+  \begingroup\obeylines\activeparens
+  \spacesplit{#3{#5}{#6}}%
+}
 
-\def\defopparsebody #1#2#3#4#5 {\begingroup\inENV %
-\medbreak %
-% Define the end token that this defining construct specifies
-% so that it will exit this group.
-\def#1{\endgraf\endgroup\medbreak}%
-\def#2##1 ##2 {\def#4{##1}%
-\begingroup\obeylines\activeparens\spacesplit{#3{##2}}}%
-\parindent=0in
-\advance\leftskip by \defbodyindent
-\exdentamount=\defbodyindent
-\begingroup\obeylines\activeparens\spacesplit{#3{#5}}}
+% For @defop.
+\def\defopparsebody #1#2#3#4#5 {%
+  \parsebodycommon{#1}{#2}{#3}%
+  \def#2##1 ##2 {\def#4{##1}%
+    \begingroup\obeylines\activeparens\spacesplit{#3{##2}}}%
+  \begingroup\obeylines\activeparens
+  \spacesplit{#3{#5}}%
+}
 
 % These parsing functions are similar to the preceding ones
 % except that they do not make parens into active characters.
 % These are used for "variables" since they have no arguments.
-
-\def\defvarparsebody #1#2#3{\begingroup\inENV% Environment for definitionbody
-\medbreak %
-% Define the end token that this defining construct specifies
-% so that it will exit this group.
-\def#1{\endgraf\endgroup\medbreak}%
-\def#2{\begingroup\obeylines\spacesplit#3}%
-\parindent=0in
-\advance\leftskip by \defbodyindent
-\exdentamount=\defbodyindent
-\begingroup %
-\catcode 61=\active %
-\obeylines\spacesplit#3}
-
-% This is used for \def{tp,vr}parsebody.  It could probably be used for
-% some of the others, too, with some judicious conditionals.
 %
-\def\parsebodycommon#1#2#3{%
-  \begingroup\inENV %
-  \medbreak %
-  % Define the end token that this defining construct specifies
-  % so that it will exit this group.
-  \def#1{\endgraf\endgroup\medbreak}%
-  \def#2##1 {\begingroup\obeylines\spacesplit{#3{##1}}}%
-  \parindent=0in
-  \advance\leftskip by \defbodyindent
-  \exdentamount=\defbodyindent
+\def\defvarparsebody #1#2#3{%
+  \parsebodycommon{#1}{#2}{#3}%
+  \def#2{\begingroup\obeylines\spacesplit#3}%
+  \catcode61=\active %
   \begingroup\obeylines
+  \spacesplit#3%
+}
+
+% @defopvar.
+\def\defopvarparsebody #1#2#3#4#5 {%
+  \parsebodycommon{#1}{#2}{#3}%
+  \def#2##1 ##2 {\def#4{##1}%
+    \begingroup\obeylines\spacesplit{#3{##2}}}%
+  \begingroup\obeylines
+  \spacesplit{#3{#5}}%
 }
 
 \def\defvrparsebody#1#2#3#4 {%
   \parsebodycommon{#1}{#2}{#3}%
+  \def#2##1 {\begingroup\obeylines\spacesplit{#3{##1}}}%
+  \begingroup\obeylines
   \spacesplit{#3{#4}}%
 }
 
@@ -4860,6 +4849,8 @@ width0pt\relax} \fi
 %
 \def\deftpparsebody #1#2#3#4 {%
   \parsebodycommon{#1}{#2}{#3}%
+  \def#2##1 {\begingroup\obeylines\spacesplit{#3{##1}}}%
+  \begingroup\obeylines
   \spacesplit{\parsetpheaderline{#3{#4}}}\empty
 }
 
@@ -4876,32 +4867,18 @@ width0pt\relax} \fi
   #1{\removeemptybraces#2\relax}{#3}%
 }%
 
-\def\defopvarparsebody #1#2#3#4#5 {\begingroup\inENV %
-\medbreak %
-% Define the end token that this defining construct specifies
-% so that it will exit this group.
-\def#1{\endgraf\endgroup\medbreak}%
-\def#2##1 ##2 {\def#4{##1}%
-\begingroup\obeylines\spacesplit{#3{##2}}}%
-\parindent=0in
-\advance\leftskip by \defbodyindent
-\exdentamount=\defbodyindent
-\begingroup\obeylines\spacesplit{#3{#5}}}
-
 % Split up #2 at the first space token.
 % call #1 with two arguments:
 %  the first is all of #2 before the space token,
 %  the second is all of #2 after that space token.
 % If #2 contains no space token, all of it is passed as the first arg
 % and the second is passed as empty.
-
+%
 {\obeylines
 \gdef\spacesplit#1#2^^M{\endgroup\spacesplitfoo{#1}#2 \relax\spacesplitfoo}%
 \long\gdef\spacesplitfoo#1#2 #3#4\spacesplitfoo{%
 \ifx\relax #3%
 #1{#2}{}\else #1{#2}{#3#4}\fi}}
-
-% So much for the things common to all kinds of definitions.
 
 % Define @defun.
 
