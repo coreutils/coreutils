@@ -7,6 +7,11 @@ AC_DEFUN(jm_AC_FUNC_LINK_FOLLOWS_SYMLINK,
   AC_CACHE_CHECK([whether link(2) follows symlinks],
 		 jm_ac_cv_func_link_follows_symlink,
   [
+    dnl poor-man's AC_REQUIRE: FIXME: repair this once autoconf-3 provides
+    dnl the appropriate framework.
+    test -z "$ac_cv_header_unistd_h" \
+      && AC_CHECK_HEADERS(unistd.h)
+
     # Create a regular file.
     echo > conftest.file
     AC_TRY_RUN(
