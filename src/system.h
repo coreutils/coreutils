@@ -803,11 +803,11 @@ lcm (size_t u, size_t v)
    locations.  */
 
 static inline void *
-ptr_align (void *ptr, size_t alignment)
+ptr_align (void const *ptr, size_t alignment)
 {
-  char *p0 = ptr;
-  char *p1 = p0 + alignment - 1;
-  return p1 - (size_t) p1 % alignment;
+  char const *p0 = ptr;
+  char const *p1 = p0 + alignment - 1;
+  return (void *) (p1 - (size_t) p1 % alignment);
 }
 
 /* Verify a requirement at compile-time (unlike assert, which is runtime).  */
