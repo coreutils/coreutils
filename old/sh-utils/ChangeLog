@@ -1,6 +1,20 @@
-2002-04-15  Jim Meyering  <meyering@lucent.com>
+2002-04-16  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* src/who.c (BOOT_TIME): Define.
+	(NEW_TIME): Define to 0, not INT_MAX.
+	(UT_PID, UT_ID, UT_EXIT_E_TERMINATION, UT_EXIT_E_EXIT): Define.
+	Replace literal uses of ut_pid, ut_id, and ut_exit members with
+	uses through macros.
+	(make_id_equals_comment): New function, factored out of three others.
+	(UT_TYPE_UNDEF, UT_TYPE, IS_USER_PROCESS): Define.
+	(print_line): Use "%-8.8s" for the format: the user name is not
+	always NUL terminated.
+	(scan_entries) [need_users]: Use IS_USER_PROCESS, so that this works
+	even on systems without ut_type.
+
+2002-04-15  Jim Meyering  <meyering@lucent.com>
 
 	* src/who.c: Include xalloc.h.
 	Use xmalloc everywhere, not malloc.
