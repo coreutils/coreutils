@@ -1,3 +1,8 @@
+2000-05-03  Jim Meyering  <meyering@lucent.com>
+
+	* src/sys2.h (!HAVE_DECL_STRNDUP): Declare strndup.
+	Reported by Bruno Haible.
+
 2000-05-02  Jim Meyering  <meyering@lucent.com>
 
 	* src/rm.c (usage): Add the answer to `How do I remove a file named -f?'
