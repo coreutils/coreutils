@@ -334,8 +334,7 @@ static void print_name_with_quoting PARAMS ((const char *p, mode_t mode,
 static void prep_non_filename_text PARAMS ((void));
 static void print_type_indicator PARAMS ((mode_t mode));
 static void print_with_commas PARAMS ((void));
-static void queue_directory PARAMS ((const char *name, const char *realname,
-				     struct fileinfo const *f));
+static void queue_directory PARAMS ((const char *name, const char *realname));
 static void sort_files PARAMS ((void));
 static void parse_ls_color PARAMS ((void));
 void usage PARAMS ((int status));
@@ -402,11 +401,6 @@ struct pending
        were told to list, `realname' will contain the name of the symbolic
        link, otherwise zero. */
     char *realname;
-
-    /* The device and inode numbers of NAME.  */
-    ino_t st_ino;
-    dev_t st_dev;
-
     struct pending *next;
   };
 
@@ -891,6 +885,45 @@ static struct obstack subdired_obstack;
     }									\
   while (0)
 
+/* With -R, this stack is used to help detect directory cycles.
+   The device/inode pairs on this stack mirror the pairs in the
+   active_dir_set hash table.  */
+static struct obstack dev_ino_obstack;
+
+/* Push a pair onto the device/inode stack.  */
+#define DEV_INO_PUSH(Dev, Ino)					\
+  do								\
+    {								\
+      struct dev_ino di;					\
+      di.st_dev = (Dev);					\
+      di.st_ino = (Ino);					\
+      obstack_grow (&dev_ino_obstack, &di, sizeof (di));	\
+    }								\
+  while (0)
+
+/* Pop a dev/ino struct off the global dev_ino_obstack
+   and return that struct.  */
+static struct dev_ino
+dev_ino_pop (void)
+{
+  struct dev_ino di;
+  assert (sizeof di <= obstack_object_size (&dev_ino_obstack));
+  obstack_blank (&dev_ino_obstack, -(sizeof di));
+  di = *(struct dev_ino*) obstack_next_free (&dev_ino_obstack);
+  return di;
+}
+
+#define ASSERT_MATCHING_DEV_INO(Name, Di)	\
+  do						\
+    {						\
+      struct stat sb;				\
+      assert (Name);				\
+      assert (0 <= stat (Name, &sb));		\
+      assert (sb.st_dev == Di.st_dev);		\
+      assert (sb.st_ino == Di.st_ino);		\
+    }						\
+  while (0)
+
 
 /* Write to standard output PREFIX, followed by the quoting style and
    a space-separated list of the integers stored in OS all on one line.  */
@@ -940,15 +973,15 @@ dev_ino_free (void *x)
    entry in the table.  Otherwise, return zero.  */
 
 static int
-visit_dir (struct pending const *p)
+visit_dir (dev_t dev, ino_t ino)
 {
   struct dev_ino *ent;
   struct dev_ino *ent_from_table;
   int found_match;
 
   ent = XMALLOC (struct dev_ino, 1);
-  ent->st_ino = p->st_ino;
-  ent->st_dev = p->st_dev;
+  ent->st_ino = ino;
+  ent->st_dev = dev;
 
   /* Attempt to insert this entry into the table.  */
   ent_from_table = hash_insert (active_dir_set, ent);
@@ -1038,6 +1071,8 @@ main (int argc, char **argv)
 					dev_ino_free);
       if (active_dir_set == NULL)
 	xalloc_die ();
+
+      obstack_init (&dev_ino_obstack);
     }
 
   format_needs_stat = sort_type == sort_time || sort_type == sort_size
@@ -1073,7 +1108,7 @@ main (int argc, char **argv)
       if (immediate_dirs)
 	gobble_file (".", directory, 1, "");
       else
-	queue_directory (".", 0, NULL);
+	queue_directory (".", 0);
     }
 
   if (files_index)
@@ -1100,29 +1135,15 @@ main (int argc, char **argv)
 
       if (LOOP_DETECT)
 	{
-	  if (thispend->name)
-	    {
-	      /* If we've already visited this dev/inode pair, warn that
-		 we've found a loop, and do not process this directory.  */
-	      if (visit_dir (thispend))
-		{
-		  error (0, 0, _("not listing already-listed directory: %s"),
-			 quotearg_colon (thispend->name));
-		  free_pending_ent (thispend);
-		  continue;
-		}
-	    }
-	  else
+	  if (thispend->name == NULL)
 	    {
 	      /* thispend->name == NULL means this is a marker entry
 		 indicating we've finished processing the directory.
 		 Use its dev/ino numbers to remove the corresponding
 		 entry from the active_dir_set hash table.  */
-	      struct dev_ino di;
-	      struct dev_ino *found;
-	      di.st_dev = thispend->st_dev;
-	      di.st_ino = thispend->st_ino;
-	      found = hash_delete (active_dir_set, &di);
+	      struct dev_ino di = dev_ino_pop ();
+	      struct dev_ino *found = hash_delete (active_dir_set, &di);
+	      /* ASSERT_MATCHING_DEV_INO (thispend->realname, di); */
 	      assert (found);
 	      dev_ino_free (found);
 	      free_pending_ent (thispend);
@@ -1981,35 +2002,13 @@ parse_ls_color (void)
    a call to stat -- when doing a recursive (-R) traversal.  */
 
 static void
-queue_directory (const char *name, const char *realname,
-		 struct fileinfo const *f)
+queue_directory (const char *name, const char *realname)
 {
   struct pending *new;
 
   new = XMALLOC (struct pending, 1);
   new->realname = realname ? xstrdup (realname) : NULL;
   new->name = name ? xstrdup (name) : NULL;
-
-  if (LOOP_DETECT)
-    {
-      if (name == NULL)
-	{
-	  assert (realname);
-	  assert (f == NULL);
-	  name = realname;
-	}
-
-      if (!f)
-	{
-	  static struct fileinfo f_tmp;
-	  if (stat (name, &f_tmp.stat))
-	    error (1, errno, _("cannot stat %s"), quotearg_colon (name));
-	  f = &f_tmp;
-	}
-      new->st_ino = f->stat.st_ino;
-      new->st_dev = f->stat.st_dev;
-    }
-
   new->next = pending_dirs;
   pending_dirs = new;
 }
@@ -2032,6 +2031,29 @@ print_dir (const char *name, const char *realname)
       error (0, errno, "%s", quotearg_colon (name));
       exit_status = 1;
       return;
+    }
+
+  if (LOOP_DETECT)
+    {
+      struct stat dir_stat;
+      if (fstat (dirfd (reading), &dir_stat) < 0)
+	{
+	  error (0, errno, _("cannot determine device and inode of %s"),
+		 quotearg_colon (name));
+	  exit_status = 1;
+	  return;
+	}
+
+      /* If we've already visited this dev/inode pair, warn that
+	 we've found a loop, and do not process this directory.  */
+      if (visit_dir (dir_stat.st_dev, dir_stat.st_ino))
+	{
+	  error (0, 0, _("not listing already-listed directory: %s"),
+		 quotearg_colon (name));
+	  return;
+	}
+
+      DEV_INO_PUSH (dir_stat.st_dev, dir_stat.st_ino);
     }
 
   /* Read the directory entries, and insert the subfiles into the `files'
@@ -2373,7 +2395,7 @@ extract_dirs_from_files (const char *dirname, int recursive)
       /* Insert a marker entry first.  When we dequeue this marker entry,
 	 we'll know that DIRNAME has been processed and may be removed
 	 from the set of active directories.  */
-      queue_directory (NULL, dirname, NULL);
+      queue_directory (NULL, dirname);
     }
 
   /* Queue the directories last one first, because queueing reverses the
@@ -2384,12 +2406,12 @@ extract_dirs_from_files (const char *dirname, int recursive)
       {
 	if (files[i].name[0] == '/' || dirname[0] == 0)
 	  {
-	    queue_directory (files[i].name, files[i].linkname, &files[i]);
+	    queue_directory (files[i].name, files[i].linkname);
 	  }
 	else
 	  {
 	    char *path = path_concat (dirname, files[i].name, NULL);
-	    queue_directory (path, files[i].linkname, &files[i]);
+	    queue_directory (path, files[i].linkname);
 	    free (path);
 	  }
 	if (files[i].filetype == arg_directory)
