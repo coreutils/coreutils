@@ -1,5 +1,7 @@
 /* savedir.c -- save the list of files in a directory in a string
-   Copyright (C) 1990, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+
+   Copyright 1990, 1997, 1998, 1999, 2000, 2001 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -64,9 +66,6 @@ extern int errno;
 /* Return a freshly allocated string containing the filenames
    in directory DIR, separated by '\0' characters;
    the end is marked by two '\0' characters in a row.
-   NAME_SIZE is the number of bytes to initially allocate
-   for the string; it will be enlarged as needed.
-   Use NAME_SIZE == -1 if you do not know the size.
    Return NULL (setting errno) if DIR cannot be opened, read, or closed.  */
 
 #ifndef NAME_SIZE_DEFAULT
@@ -74,25 +73,18 @@ extern int errno;
 #endif
 
 char *
-savedir (const char *dir, off_t name_size)
+savedir (const char *dir)
 {
   DIR *dirp;
   struct dirent *dp;
   char *name_space;
-  size_t allocated = name_size; /* Overflow is checked indirectly below.  */
+  size_t allocated = NAME_SIZE_DEFAULT;
   size_t used = 0;
   int save_errno;
 
   dirp = opendir (dir);
   if (dirp == NULL)
     return NULL;
-
-  /* Use the default if the size is not known.  Be sure "allocated"
-     is at least `1' so there's room for the final NUL byte.
-     Do not simply test name_size <= 0, because the initialization
-     of "allocated" might have overflowed.  */
-  if (name_size < 0 || allocated == 0)
-    allocated = NAME_SIZE_DEFAULT;
 
   name_space = xmalloc (allocated);
 
