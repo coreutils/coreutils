@@ -1,4 +1,5 @@
 #! /bin/sh
+# Demonstrate how mv fails when it tries to move a directory into itself.
 
 : ${MV=mv}
 : ${MKDIR=mkdir}
@@ -20,13 +21,37 @@ if test $test_failure = 1; then
 fi
 
 fail=0
-$MV $dir $file $dir || fail=1
+
+# Make sure we get English translations.
+LANGUAGE=C
+export LANGUAGE
+LC_ALL=C
+export LC_ALL
+LANG=C
+export LANG
+
+# This mv command should fail.
+$MV $dir $file $dir > out 2>&1 && fail=1
+
+sed \
+   -e "s,$MV:,XXX:," \
+   -e "s,$dir,SRC," \
+   -e "s,$dir/$dir,DEST," \
+  out > out2
+
+cat > exp <<\EOF
+XXX: cannot move `SRC' to a subdirectory of itself, `DEST'
+EOF
+
+cmp out2 exp || fail=1
+
 # Make sure the file is gone.
 test -f $file && fail=1
-# Make sure the directory is *not* gone.
-test -d $dir/$dir/a/b || fail=1
+# Make sure the directory is *not* moved.
+test -d $dir || fail=1
+test -d $dir/$dir && fail=1
 # Make sure the file has been moved to the right place.
 test -f $dir/$file || fail=1
-$RM -rf $dir $file
+$RM -rf $dir $file out out2 exp
 
 exit $fail
