@@ -250,6 +250,7 @@ With no FILE, or when FILE is -, read standard input.\n\
                            output appended data as the file grows;\n\
                            -f, --follow, and --follow=descriptor are\n\
                            equivalent\n\
+  -F                       same as --follow=name --retry\n\
   -n, --lines=N            output the last N lines, instead of the last %d\n\
       --max-unchanged-stats=N\n\
                            with --follow=name, reopen a FILE which has not\n\
@@ -1365,13 +1366,18 @@ parse_options (int argc, char **argv,
   count_lines = 1;
   forever = from_start = print_headers = 0;
 
-  while ((c = getopt_long (argc, argv, "c:n:fqs:v", long_options, NULL))
+  while ((c = getopt_long (argc, argv, "c:n:fFqs:v", long_options, NULL))
 	 != -1)
     {
       switch (c)
 	{
 	case 0:
 	  break;
+
+	case 'F':
+	  forever = 1;
+	  follow_mode = Follow_name;
+	  reopen_inaccessible_files = 1;
 
 	case 'c':
 	case 'n':
