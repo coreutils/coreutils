@@ -130,6 +130,8 @@ void
 argmatch_invalid (const char *kind, const char *value, int problem)
 {
   enum quoting_style saved_quoting_style;
+  char const *format;
+  char *quoted_arg;
 
   /* Make sure to have a good quoting style to report errors.
      literal is insane here. */
@@ -137,14 +139,17 @@ argmatch_invalid (const char *kind, const char *value, int problem)
   set_quoting_style (NULL, ARGMATCH_QUOTING_STYLE);
 
   /* There is an error */
-  fprintf (stderr, "%s: ", program_name);
-  if (problem == -1)
-    fprintf (stderr, _("invalid argument %s for `%s'"),
-	     quotearg (value), kind);
-  else				/* Assume -2.  */
-    fprintf (stderr, _("ambiguous argument %s for `%s'"),
-	     quotearg (value), kind);
-  putc ('\n', stderr);
+  quoted_arg = quotearg (value);
+
+  /* Skip over the first quote character, and overwrite the last one.  */
+  ++quoted_arg;
+  quoted_arg[strlen (quoted_arg) - 1] = '\0';
+
+  format = (problem == -1
+	    ? _("%s: invalid argument `%s' for `%s'\n")
+	    : _("%s: ambiguous argument `%s' for `%s'\n"));
+
+  fprintf (stderr, format, program_name, quoted_arg, kind);
 
   set_quoting_style (NULL, saved_quoting_style);
 }
