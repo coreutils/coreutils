@@ -1,3 +1,11 @@
+2001-09-30  Jim Meyering  <meyering@lucent.com>
+
+	* mountlist.c [MOUNTED_GETFSSTAT]:
+	Include <sys/ucred.h>, for Apple Darwin.
+	Include sys/mount.h and sys/fs_types.h only if available.
+	(FS_TYPE): Define.
+	(read_filesystem_list): Use FS_TYPE.
+
 2001-09-29  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/exclude.c (excluded_filename): 0 -> false, since it's
