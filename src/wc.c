@@ -156,6 +156,8 @@ read standard input.\n\
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
+/* FILE is the name of the file (or NULL for standard input)
+   associated with the specified counters.  */
 static void
 write_counts (uintmax_t lines,
 	      uintmax_t words,
@@ -197,13 +199,16 @@ write_counts (uintmax_t lines,
   putchar ('\n');
 }
 
+/* FILE_X is the name of the file (or NULL for standard input) that is
+   open on descriptor FD.  */
 static void
-wc (int fd, char const *file, struct fstatus *fstatus)
+wc (int fd, char const *file_x, struct fstatus *fstatus)
 {
   char buf[BUFFER_SIZE + 1];
   size_t bytes_read;
   uintmax_t lines, words, chars, bytes, linelength;
   int count_bytes, count_chars, count_complicated;
+  char const *file = file_x == NULL ? _("standard input") : file;
 
   lines = words = chars = bytes = linelength = 0;
 
@@ -257,7 +262,7 @@ wc (int fd, char const *file, struct fstatus *fstatus)
 	    {
 	      if (bytes_read == SAFE_READ_ERROR)
 		{
-		  error (0, errno, "%s", file ? file : _("standard input"));
+		  error (0, errno, "%s", file);
 		  exit_status = 1;
 		  break;
 		}
@@ -275,7 +280,7 @@ wc (int fd, char const *file, struct fstatus *fstatus)
 
 	  if (bytes_read == SAFE_READ_ERROR)
 	    {
-	      error (0, errno, "%s", file ? file : _("standard input"));
+	      error (0, errno, "%s", file);
 	      exit_status = 1;
 	      break;
 	    }
@@ -494,7 +499,7 @@ wc (int fd, char const *file, struct fstatus *fstatus)
   if (count_chars < print_chars)
     chars = bytes;
 
-  write_counts (lines, words, chars, bytes, linelength, file);
+  write_counts (lines, words, chars, bytes, linelength, file_x);
   total_lines += lines;
   total_words += words;
   total_chars += chars;
@@ -549,9 +554,9 @@ get_input_fstatus (int nfiles, char * const *file)
       int i;
 
       for (i = 0; i < nfiles; i++)
-	fstatus[i].failed = (file[i] && strcmp (file[i], "-") != 0
-			     ? stat (file[i], &fstatus[i].st)
-			     : fstat (STDIN_FILENO, &fstatus[i].st));
+	fstatus[i].failed = (file[i] && STREQ (file[i], "-")
+			     ? fstat (STDIN_FILENO, &fstatus[i].st)
+			     : stat (file[i], &fstatus[i].st));
     }
 
   return fstatus;
