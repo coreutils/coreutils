@@ -1,3 +1,13 @@
+2004-03-30  Paul Eggert  <eggert@twinsun.com>
+
+	* c-stack.m4, getline.m4, getndelim2.m4, mbswidth.m4, po.m4,
+	strdup.m4, xsize.m4: Sync from gnulib.
+
+	* allocsa.m4, cloexec.m4, eealloc.m4, inttostr.m4, mbstate_t.m4:
+	New files, from gnulib.
+
+	* prereq.m4 (jm_PREREQ): Add gl_ALLOCSA, gl_CLOEXEC, gl_INTTOSTR.
+
 2004-03-31  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4: Require AC_FUNC_MALLOC, not jm_FUNC_MALLOC.
