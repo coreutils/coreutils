@@ -1648,14 +1648,16 @@ check: check-README check-misc check-AUTHORS
 check-README:
 	rm -rf $(pr) $(pm)
 	echo $(all_programs) \
-	  | tr -s ' ' '\n' | $(ASSORT) -u > $(pm) && \
+	 | tr -s ' ' '\n' | sed -e 's,$(EXEEXT)$$,,' \
+	 | $(ASSORT) -u > $(pm) && \
 	sed -n '/^The programs .* are:/,/^[a-zA-Z]/p' $(top_srcdir)/README \
 	  | sed -n '/^   */s///p' | tr -s ' ' '\n' > $(pr)
 	diff $(pm) $(pr) && rm -rf $(pr) $(pm)
 .PHONY: check-AUTHORS
 check-AUTHORS: $(all_programs)
 	rm -f $(au_actual) $(au_dotdot)
-	for i in `ls $(all_programs) | $(ASSORT) -u`; do \
+	for i in `ls $(all_programs) | sed -e 's,$(EXEEXT)$$,,' \
+	    | $(ASSORT) -u`; do				\
 	  test "$$i" = '[' && continue;			\
 	  exe=$$i;					\
 	  if test "$$i" = install; then			\

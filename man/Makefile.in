@@ -309,7 +309,7 @@ mapped_name = `echo $*|sed 's/install/ginstall/; s/test/[/'`
 ASSORT = LC_ALL=C sort
 all_programs = \
       (cd ../src && MAKEFLAGS= $(MAKE) -s all_programs.list)		\
-    | grep -v '\['
+       | sed -e 's,$(EXEEXT)$$,,' | grep -v '\['
 
 all: all-am
 
