@@ -102,9 +102,6 @@ static struct option const long_options[] = {
   {NULL, 0, NULL, 0}
 };
 
-/* Nonzero means we should exit with EXIT_FAILURE upon completion.  */
-static int G_fail;
-
 char *program_name;
 
 /* Return the type of the specified file system.
@@ -312,7 +309,7 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
   {
     static char buf[sizeof "UNKNOWN (0x%lx)" - 3
 		    + 2 * sizeof (statfsbuf->f_type)];
-    sprintf (buf, "UNKNOWN (0x%lx)", (unsigned long) statfsbuf->f_type);
+    sprintf (buf, "UNKNOWN (0x%lx)", (unsigned long int) statfsbuf->f_type);
     return buf;
   }
 #endif
@@ -375,7 +372,8 @@ print_statfs (char *pformat, char m, char const *filename,
     case 't':
 #if HAVE_STRUCT_STATXFS_F_TYPE
       strcat (pformat, "lx");
-      printf (pformat, (long int) (statfsbuf->f_type));  /* no equiv. */
+      printf (pformat,
+	      (unsigned long int) (statfsbuf->f_type));  /* no equiv. */
 #else
       fputc ('*', stdout);
 #endif
@@ -397,8 +395,8 @@ print_statfs (char *pformat, char m, char const *filename,
       printf (pformat, (intmax_t) (statfsbuf->f_bavail));
       break;
     case 's':
-      strcat (pformat, "ld");
-      printf (pformat, (long int) (statfsbuf->f_bsize));
+      strcat (pformat, "lu");
+      printf (pformat, (unsigned long int) (statfsbuf->f_bsize));
       break;
     case 'c':
       strcat (pformat, PRIdMAX);
@@ -452,40 +450,41 @@ print_stat (char *pformat, char m, char const *filename, void const *data)
 	}
       break;
     case 'd':
-      strcat (pformat, "d");
-      printf (pformat, (int) statbuf->st_dev);
+      strcat (pformat, "lu");
+      printf (pformat, (unsigned long int) statbuf->st_dev);
       break;
     case 'D':
-      strcat (pformat, "x");
-      printf (pformat, (int) statbuf->st_dev);
+      strcat (pformat, "lx");
+      printf (pformat, (unsigned long int) statbuf->st_dev);
       break;
     case 'i':
-      strcat (pformat, "d");
-      printf (pformat, (int) statbuf->st_ino);
+      strcat (pformat, "lu");
+      printf (pformat, (unsigned long int) statbuf->st_ino);
       break;
     case 'a':
-      strcat (pformat, "o");
-      printf (pformat, statbuf->st_mode & 07777);
+      strcat (pformat, "lo");
+      printf (pformat,
+	      (unsigned long int) (statbuf->st_mode & CHMOD_MODE_BITS));
       break;
     case 'A':
       strcat (pformat, "s");
       printf (pformat, human_access (statbuf));
       break;
     case 'f':
-      strcat (pformat, "x");
-      printf (pformat, statbuf->st_mode);
+      strcat (pformat, "lx");
+      printf (pformat, (unsigned long int) statbuf->st_mode);
       break;
     case 'F':
       strcat (pformat, "s");
       printf (pformat, file_type (statbuf));
       break;
     case 'h':
-      strcat (pformat, "d");
-      printf (pformat, (int) statbuf->st_nlink);
+      strcat (pformat, "lu");
+      printf (pformat, (unsigned long int) statbuf->st_nlink);
       break;
     case 'u':
-      strcat (pformat, "d");
-      printf (pformat, statbuf->st_uid);
+      strcat (pformat, "lu");
+      printf (pformat, (unsigned long int) statbuf->st_uid);
       break;
     case 'U':
       strcat (pformat, "s");
@@ -494,8 +493,8 @@ print_stat (char *pformat, char m, char const *filename, void const *data)
       printf (pformat, (pw_ent != 0L) ? pw_ent->pw_name : "UNKNOWN");
       break;
     case 'g':
-      strcat (pformat, "d");
-      printf (pformat, statbuf->st_gid);
+      strcat (pformat, "lu");
+      printf (pformat, (unsigned long int) statbuf->st_gid);
       break;
     case 'G':
       strcat (pformat, "s");
@@ -504,28 +503,28 @@ print_stat (char *pformat, char m, char const *filename, void const *data)
       printf (pformat, (gw_ent != 0L) ? gw_ent->gr_name : "UNKNOWN");
       break;
     case 't':
-      strcat (pformat, "x");
-      printf (pformat, major (statbuf->st_rdev));
+      strcat (pformat, "lx");
+      printf (pformat, (unsigned long int) major (statbuf->st_rdev));
       break;
     case 'T':
-      strcat (pformat, "x");
-      printf (pformat, minor (statbuf->st_rdev));
+      strcat (pformat, "lx");
+      printf (pformat, (unsigned long int) minor (statbuf->st_rdev));
       break;
     case 's':
       strcat (pformat, PRIuMAX);
       printf (pformat, (uintmax_t) (statbuf->st_size));
       break;
     case 'B':
-      strcat (pformat, "u");
-      printf (pformat, (unsigned int) ST_NBLOCKSIZE);
+      strcat (pformat, "lu");
+      printf (pformat, (unsigned long int) ST_NBLOCKSIZE);
       break;
     case 'b':
-      strcat (pformat, "u");
-      printf (pformat, (unsigned int) ST_NBLOCKS (*statbuf));
+      strcat (pformat, PRIuMAX);
+      printf (pformat, (uintmax_t) ST_NBLOCKS (*statbuf));
       break;
     case 'o':
-      strcat (pformat, "d");
-      printf (pformat, (int) statbuf->st_blksize);
+      strcat (pformat, "lu");
+      printf (pformat, (unsigned long int) statbuf->st_blksize);
       break;
     case 'x':
       strcat (pformat, "s");
@@ -533,8 +532,8 @@ print_stat (char *pformat, char m, char const *filename, void const *data)
 				   TIMESPEC_NS (statbuf->st_atim)));
       break;
     case 'X':
-      strcat (pformat, "d");
-      printf (pformat, (int) statbuf->st_atime);
+      strcat (pformat, TYPE_SIGNED (time_t) ? "ld" : "lu");
+      printf (pformat, (unsigned long int) statbuf->st_atime);
       break;
     case 'y':
       strcat (pformat, "s");
@@ -542,8 +541,8 @@ print_stat (char *pformat, char m, char const *filename, void const *data)
 				   TIMESPEC_NS (statbuf->st_mtim)));
       break;
     case 'Y':
-      strcat (pformat, "d");
-      printf (pformat, (int) statbuf->st_mtime);
+      strcat (pformat, TYPE_SIGNED (time_t) ? "ld" : "lu");
+      printf (pformat, (unsigned long int) statbuf->st_mtime);
       break;
     case 'z':
       strcat (pformat, "s");
@@ -551,8 +550,8 @@ print_stat (char *pformat, char m, char const *filename, void const *data)
 				   TIMESPEC_NS (statbuf->st_ctim)));
       break;
     case 'Z':
-      strcat (pformat, "d");
-      printf (pformat, (int) statbuf->st_ctime);
+      strcat (pformat, TYPE_SIGNED (time_t) ? "ld" : "lu");
+      printf (pformat, (unsigned long int) statbuf->st_ctime);
       break;
     default:
       strcat (pformat, "c");
@@ -614,17 +613,16 @@ print_it (char const *masterformat, char const *filename,
 }
 
 /* Stat the file system and print what we find.  */
-static void
-do_statfs (char const *filename, int terse, char const *format)
+static bool
+do_statfs (char const *filename, bool terse, char const *format)
 {
   STRUCT_STATVFS statfsbuf;
-  int i = statfs (filename, &statfsbuf);
 
-  if (i == -1)
+  if (statfs (filename, &statfsbuf) != 0)
     {
       error (0, errno, _("cannot read file system information for %s"),
 	     quote (filename));
-      return;
+      return false;
     }
 
   if (format == NULL)
@@ -638,35 +636,33 @@ do_statfs (char const *filename, int terse, char const *format)
     }
 
   print_it (format, filename, print_statfs, &statfsbuf);
+  return true;
 }
 
 /* stat the file and print what we find */
-static void
-do_stat (char const *filename, int follow_links, int terse,
+static bool
+do_stat (char const *filename, bool follow_links, bool terse,
 	 char const *format)
 {
   struct stat statbuf;
-  int i = ((follow_links == 1)
-	   ? stat (filename, &statbuf)
-	   : lstat (filename, &statbuf));
 
-  if (i == -1)
+  if ((follow_links ? stat : lstat) (filename, &statbuf) != 0)
     {
       error (0, errno, _("cannot stat %s"), quote (filename));
-      return;
+      return false;
     }
 
   if (format == NULL)
     {
-      if (terse != 0)
+      if (terse)
 	{
 	  format = "%n %s %b %f %u %g %D %i %h %t %T %X %Y %Z %o\n";
 	}
       else
 	{
-	  /* tmp hack to match orignal output until conditional implemented */
-	  i = statbuf.st_mode & S_IFMT;
-	  if (i == S_IFCHR || i == S_IFBLK)
+	  /* Temporary hack to match original output until conditional
+	     implemented.  */
+	  if (S_ISBLK (statbuf.st_mode) || S_ISCHR (statbuf.st_mode))
 	    {
 	      format =
 		"  File: %N\n"
@@ -688,6 +684,7 @@ do_stat (char const *filename, int follow_links, int terse,
 	}
     }
   print_it (format, filename, print_stat, &statbuf);
+  return true;
 }
 
 void
@@ -775,10 +772,11 @@ main (int argc, char *argv[])
 {
   int c;
   int i;
-  int follow_links = 0;
-  int fs = 0;
-  int terse = 0;
+  bool follow_links = false;
+  bool fs = false;
+  bool terse = false;
   char *format = NULL;
+  bool ok = true;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -800,15 +798,15 @@ main (int argc, char *argv[])
 	  error (0, 0, _("Warning: `-l' is deprecated; use `-L' instead"));
 	  /* fall through */
 	case 'L':
-	  follow_links = 1;
+	  follow_links = true;
 	  break;
 
 	case 'f':
-	  fs = 1;
+	  fs = true;
 	  break;
 
 	case 't':
-	  terse = 1;
+	  terse = true;
 	  break;
 
 	case_GETOPT_HELP_CHAR;
@@ -827,12 +825,9 @@ main (int argc, char *argv[])
     }
 
   for (i = optind; i < argc; i++)
-    {
-      if (fs == 0)
-	do_stat (argv[i], follow_links, terse, format);
-      else
-	do_statfs (argv[i], terse, format);
-    }
+    ok &= (fs
+	   ? do_statfs (argv[i], terse, format)
+	   : do_stat (argv[i], follow_links, terse, format));
 
-  exit (G_fail ? EXIT_FAILURE : EXIT_SUCCESS);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
