@@ -630,7 +630,7 @@ static void
 initlines (struct lines *lines, size_t alloc, size_t limit)
 {
   lines->alloc = alloc;
-  if (SIZE_T_MAX / sizeof (struct line) < alloc)
+  if (SIZE_MAX / sizeof (struct line) < alloc)
     xalloc_die ();
   lines->lines = (struct line *) xmalloc (lines->alloc * sizeof (struct line));
   lines->used = 0;
@@ -805,7 +805,7 @@ findlines (struct buffer *buf, struct lines *lines)
       if (lines->used == lines->alloc)
 	{
 	  lines->alloc *= 2;
-	  if (SIZE_T_MAX / sizeof (struct line) < lines->alloc)
+	  if (SIZE_MAX / sizeof (struct line) < lines->alloc)
 	    xalloc_die ();
 	  lines->lines = (struct line *)
 	    xrealloc ((char *) lines->lines,
@@ -1747,7 +1747,7 @@ sort (char **files, int nfiles, FILE *ofp, const char *output_file)
 	      else
 		while ((ntmp *= 2) < lines.used)
 		  continue;
-	      if (SIZE_T_MAX / sizeof (struct line) < ntmp)
+	      if (SIZE_MAX / sizeof (struct line) < ntmp)
 		xalloc_die ();
 	      tmp = (struct line *)
 		xrealloc ((char *) tmp, ntmp * sizeof (struct line));
