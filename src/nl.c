@@ -401,7 +401,7 @@ check_section (void)
 static void
 process_file (FILE *fp)
 {
-  while (readline (&line_buf, fp))
+  while (readlinebuffer (&line_buf, fp))
     {
       switch ((int) check_section ())
 	{

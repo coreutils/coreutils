@@ -302,7 +302,7 @@ check_file (const char *infile, const char *outfile)
 	{
 	  char *thisfield;
 	  size_t thislen;
-	  if (readline (thisline, istream) == 0)
+	  if (readlinebuffer (thisline, istream) == 0)
 	    break;
 	  thisfield = find_field (thisline);
 	  thislen = thisline->length - 1 - (thisfield - thisline->buffer);
@@ -325,7 +325,7 @@ check_file (const char *infile, const char *outfile)
       int match_count = 0;
       int first_delimiter = 1;
 
-      if (readline (prevline, istream) == 0)
+      if (readlinebuffer (prevline, istream) == 0)
 	goto closefiles;
       prevfield = find_field (prevline);
       prevlen = prevline->length - 1 - (prevfield - prevline->buffer);
@@ -335,7 +335,7 @@ check_file (const char *infile, const char *outfile)
 	  bool match;
 	  char *thisfield;
 	  size_t thislen;
-	  if (readline (thisline, istream) == 0)
+	  if (readlinebuffer (thisline, istream) == 0)
 	    break;
 	  thisfield = find_field (thisline);
 	  thislen = thisline->length - 1 - (thisfield - thisline->buffer);

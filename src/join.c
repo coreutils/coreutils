@@ -260,7 +260,7 @@ get_line (FILE *fp, struct line *line)
 {
   initbuffer (&line->buf);
 
-  if (! readline (&line->buf, fp))
+  if (! readlinebuffer (&line->buf, fp))
     {
       free (line->buf.buffer);
       line->buf.buffer = NULL;

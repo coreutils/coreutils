@@ -159,7 +159,7 @@ compare_files (char **infiles)
 	  return 1;
 	}
 
-      thisline[i] = readline (thisline[i], streams[i]);
+      thisline[i] = readlinebuffer (thisline[i], streams[i]);
     }
 
   while (thisline[0] || thisline[1])
@@ -199,9 +199,9 @@ compare_files (char **infiles)
       /* Step the file the line came from.
 	 If the files match, step both files.  */
       if (order >= 0)
-	thisline[1] = readline (thisline[1], streams[1]);
+	thisline[1] = readlinebuffer (thisline[1], streams[1]);
       if (order <= 0)
-	thisline[0] = readline (thisline[0], streams[0]);
+	thisline[0] = readlinebuffer (thisline[0], streams[0]);
     }
 
   /* Free all storage and close all input streams. */
