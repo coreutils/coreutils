@@ -1,3 +1,8 @@
+1998-12-06  Jim Meyering  <meyering@ascend.com>
+
+	* lib/putenv.c: Redefine putenv before including stdlib.h to work
+	around Solaris 2.7's conflicting prototype.  Reported by Karl Berry.
+
 1998-10-31  Jim Meyering  <meyering@ascend.com>
 
 	* tests/Makefile.am (EXTRA_DIST): Add Fetish.pm.
