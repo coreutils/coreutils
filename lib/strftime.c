@@ -67,6 +67,7 @@
    %j	day of year (001..366)
    %m	month (01..12)
    %U	week number of year with Sunday as first day of week (00..53)
+   %V	FIXME
    %w	day of week (0..6)
    %W	week number of year with Monday as first day of week (00..53)
    %x	locale's date representation (mm/dd/yy)
@@ -233,38 +234,63 @@ add_num_tz (string, max, minutes_east)
   return length;
 }
 
-/* Return the week in the year of the time in TM, with the weeks
-   starting on Sundays. */
+/* Implement %U.  Return the week in the year of the time in TM,
+   with the weeks starting on Sundays.  */
 
 static int
 sun_week (tm)
-     struct tm *tm;
+     const struct tm *tm;
 {
   int dl;
 
   /* %U Week of the year (Sunday as the first day of the week) as a decimal
-     number [00-53]. All days in a new year preceding the first Sunday are
+     number [00-53].  All days in a new year preceding the first Sunday are
      considered to be in week 0.  */
 
   dl = tm->tm_yday - tm->tm_wday;
   return dl < 0 ? 0 : dl / 7 + 1;
 }
 
-/* Return the week in the year of the time in TM, with the weeks
-   starting on Mondays. */
+/* Implement %V.  Similar to mon_week (%W), but there is no 0'th week --
+   they're numbered [01-53].  And if the week containing January 1 has
+   four or more days in the new year, then it is considered week 1;
+   otherwise, it is week 53 of the previous year, and the next week is
+   week 1. (See the ISO 8601: 1988 standard.)  */
+
+static int
+mon_week_ISO (tm)
+     const struct tm *tm;
+{
+  int dl, n_days_before_first_monday;
+  int week_num;
+
+  n_days_before_first_monday = (tm->tm_yday + 7 - tm->tm_wday + 1) % 7;
+  dl = tm->tm_yday - n_days_before_first_monday;
+  week_num = dl < 0 ? 0 : dl / 7 + 1;
+  if (n_days_before_first_monday >= 4)
+    {
+      week_num = (week_num + 1) % 54;
+      if (week_num == 0)
+	week_num = 1;
+    }
+  if (week_num == 0)
+    week_num = 53;
+
+  return week_num;
+}
+
+/* Implement %W.  Return the week in the year of the time in TM,
+   with the weeks starting on Mondays.  */
 
 static int
 mon_week (tm)
-     struct tm *tm;
+     const struct tm *tm;
 {
-  int dl, wday;
+  int dl, n_days_before_first_monday;
 
-  if (tm->tm_wday == 0)
-    wday = 6;
-  else
-    wday = tm->tm_wday - 1;
-  dl = tm->tm_yday - wday;
-  return dl <= 0 ? 0 : dl / 7 + (dl % 7 != 0);
+  n_days_before_first_monday = (tm->tm_yday + 7 - tm->tm_wday + 1) % 7;
+  dl = tm->tm_yday - n_days_before_first_monday;
+  return dl < 0 ? 0 : dl / 7 + 1;
 }
 
 #if !defined(HAVE_TM_ZONE) && !defined(HAVE_TZNAME)
@@ -498,6 +524,10 @@ strftime (string, max, format, tm)
 	    case 'U':
 	      length +=
 		add_num2 (&string[length], sun_week (tm), max - length, pad);
+	      break;
+	    case 'V':
+	      length += add_num2 (&string[length], mon_week_ISO (tm),
+				  max - length, pad);
 	      break;
 	    case 'w':
 	      add_char (tm->tm_wday + '0');
