@@ -41,10 +41,8 @@
 /* The name this program was run with. */
 char *program_name;
 
-#ifdef ENABLE_NLS
 /* Nonzero if the LC_COLLATE locale is hard.  */
 static int hard_LC_COLLATE;
-#endif
 
 /* If nonzero, print lines that are found only in file 1. */
 static int only_file_1;
@@ -176,12 +174,10 @@ compare_files (char **infiles)
 	order = -1;
       else
 	{
-#ifdef ENABLE_NLS
-	  if (hard_LC_COLLATE)
+	  if (HAVE_SETLOCALE && hard_LC_COLLATE)
 	    order = xmemcoll (thisline[0]->buffer, thisline[0]->length - 1,
 			      thisline[1]->buffer, thisline[1]->length - 1);
 	  else
-#endif
 	    {
 	      size_t len = min (thisline[0]->length, thisline[1]->length) - 1;
 	      order = memcmp (thisline[0]->buffer, thisline[1]->buffer, len);
@@ -230,12 +226,9 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+  hard_LC_COLLATE = hard_locale (LC_COLLATE);
 
   atexit (close_stdout);
-
-#ifdef ENABLE_NLS
-  hard_LC_COLLATE = hard_locale (LC_COLLATE);
-#endif
 
   only_file_1 = 1;
   only_file_2 = 1;
