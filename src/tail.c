@@ -62,7 +62,7 @@
     {									\
       assert ((fd) == 1);						\
       assert ((n_bytes) >= 0);						\
-      if (fwrite ((buffer), 1, (n_bytes), stdout) == 0)			\
+      if (n_bytes > 0 && fwrite ((buffer), 1, (n_bytes), stdout) == 0)	\
 	error (1, errno, "write error");				\
     }									\
   while (0)
