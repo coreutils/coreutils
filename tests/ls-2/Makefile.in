@@ -89,14 +89,14 @@ VERSION = @VERSION@
 YACC = @YACC@
 l = @l@
 
-EXTRA_DIST = $(TESTS) Fetish.pm quoting
+EXTRA_DIST = $(TESTS) quoting
 
 TESTS_ENVIRONMENT = \
   top_srcdir=$(top_srcdir) \
   srcdir=$(srcdir) \
   PERL="@PERL@" \
   PATH=../../src:$$PATH \
-  LS=ls
+  PROG=ls
 
 TESTS = run-test
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
