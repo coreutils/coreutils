@@ -9,6 +9,7 @@ expected_failure_status_printenv=2
 expected_failure_status_tty=3
 expected_failure_status_sort=2
 expected_failure_status_expr=3
+expected_failure_status_lbracket=2
 
 case "$all_programs" in
   *groups*)
@@ -39,6 +40,9 @@ fail=0
 for lang in C fr da; do
   for i in $all_programs; do
 
+    # Skip `test'; it doesn't accept --help or --version.
+    test $i = test && continue;
+
     # false fails even when invoked with --help or --version.
     if test $i = false; then
       env LC_MESSAGES=$lang ../src/$i --help    >/dev/null && fail=1
@@ -65,8 +69,8 @@ for lang in C fr da; do
 	: # ok
       else
 	fail=1
-	echo "*** $i with --help and/or --version didn't fail with output" \
-	  "redirected to /dev/full" 1>&2
+	echo "*** $i: bad exit status \`$status' (expected $expected)," 1>&2
+	echo "  with --help or --version output redirected to /dev/full" 1>&2
       fi
     fi
   done
