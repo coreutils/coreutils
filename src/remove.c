@@ -157,18 +157,18 @@ DS *
 ds_init ()
 {
   DS *ds = XMALLOC (struct dirstack_state, 1);
-  obstack_init (&(ds->dir_stack));
-  obstack_init (&(ds->len_stack));
-  obstack_init (&(ds->Active_dir));
+  obstack_init (&ds->dir_stack);
+  obstack_init (&ds->len_stack);
+  obstack_init (&ds->Active_dir);
   return ds;
 }
 
 void
 ds_free (DS *ds)
 {
-  obstack_free (&(ds->dir_stack), NULL);
-  obstack_free (&(ds->len_stack), NULL);
-  obstack_free (&(ds->Active_dir), NULL);
+  obstack_free (&ds->dir_stack, NULL);
+  obstack_free (&ds->len_stack, NULL);
+  obstack_free (&ds->Active_dir, NULL);
 }
 
 static void
