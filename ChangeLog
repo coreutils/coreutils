@@ -3,6 +3,7 @@
 	* Version 5.3.0.
 
 	chgrp and chown now dereference symlinks by default, per POSIX.
+	Reported by Michal Politowski as http://bugs.debian.org/249177.
 
 	* src/chown-core.c (chopt_init): Affect each symlink referent by default.
 	* src/chown.c (usage): Update to reflect this.
