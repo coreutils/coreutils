@@ -21,33 +21,31 @@
 #define _GNU_SOURCE
 #include <ctype.h>
 
-#ifdef isascii
-#define CTYPE_PREFIX(c) isascii (c) &&
-#else
-#define CTYPE_PREFIX(c) /* empty */
+#ifndef isascii
+#define isascii(c) 1
 #endif
 
 #ifdef isblank
-#define ISBLANK(c) (CTYPE_PREFIX (c) isblank (c))
+#define ISBLANK(c) (isascii (c) isblank (c))
 #else
 #define ISBLANK(c) ((c) == ' ' || (c) == '\t')
 #endif
 #ifdef isgraph
-#define ISGRAPH(c) (CTYPE_PREFIX (c) isgraph (c))
+#define ISGRAPH(c) (isascii (c) isgraph (c))
 #else
-#define ISGRAPH(c) (CTYPE_PREFIX (c) isprint (c) && !isspace (c))
+#define ISGRAPH(c) (isascii (c) isprint (c) && !isspace (c))
 #endif
 
-#define ISPRINT(c) (CTYPE_PREFIX (c) isprint (c))
-#define ISDIGIT(c) (CTYPE_PREFIX (c) isdigit (c))
-#define ISALNUM(c) (CTYPE_PREFIX (c) isalnum (c))
-#define ISALPHA(c) (CTYPE_PREFIX (c) isalpha (c))
-#define ISCNTRL(c) (CTYPE_PREFIX (c) iscntrl (c))
-#define ISLOWER(c) (CTYPE_PREFIX (c) islower (c))
-#define ISPUNCT(c) (CTYPE_PREFIX (c) ispunct (c))
-#define ISSPACE(c) (CTYPE_PREFIX (c) isspace (c))
-#define ISUPPER(c) (CTYPE_PREFIX (c) isupper (c))
-#define ISXDIGIT(c) (CTYPE_PREFIX (c) isxdigit (c))
+#define ISPRINT(c) (isascii (c) isprint (c))
+#define ISDIGIT(c) (isascii (c) isdigit (c))
+#define ISALNUM(c) (isascii (c) isalnum (c))
+#define ISALPHA(c) (isascii (c) isalpha (c))
+#define ISCNTRL(c) (isascii (c) iscntrl (c))
+#define ISLOWER(c) (isascii (c) islower (c))
+#define ISPUNCT(c) (isascii (c) ispunct (c))
+#define ISSPACE(c) (isascii (c) isspace (c))
+#define ISUPPER(c) (isascii (c) isupper (c))
+#define ISXDIGIT(c) (isascii (c) isxdigit (c))
 
 #include <stdio.h>
 #include <assert.h>
