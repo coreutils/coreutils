@@ -1,3 +1,13 @@
+1998-01-03  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/save-cwd.h: Guard PARAMS-enabling definition with
+	`defined PROTOTYPES || (defined __STDC__ && __STDC__)' to avoid
+	problems with Irix4's cc.  From Kaveh Ghazi.
+	* lib/getdate.h: Likewise, but just to be consistent.
+
+	* configure.in: Convert the .o suffix on files in LIBOBJS to $U.o so
+	those files will be built via the ANSI2KNR-filtering rules if necessary.
+
 1998-01-02  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Version 3.16i.
