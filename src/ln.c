@@ -324,8 +324,9 @@ usage (int status)
       printf (_("\
 Usage: %s [OPTION]... TARGET [LINK_NAME]\n\
   or:  %s [OPTION]... TARGET... DIRECTORY\n\
+  or:  %s [OPTION]... --target-directory=DIRECTORY TARGET...\n\
 "),
-	      program_name, program_name);
+	      program_name, program_name, program_name);
       printf (_("\
 Create a link to the specified TARGET with optional LINK_NAME.  If there is\n\
 more than one TARGET, the last argument must be a directory;  create links\n\
@@ -340,7 +341,8 @@ with --symbolic.  When creating hard links, each TARGET must exist.\n\
   -i, --interactive           prompt whether to remove destinations\n\
   -s, --symbolic              make symbolic links instead of hard links\n\
   -S, --suffix=SUFFIX         override the usual backup suffix\n\
-      --target-directory=DIR   move all SOURCE arguments into directory DIR\n\
+      --target-directory=DIRECTORY  specify the DIRECTORY in which to create\n\
+                                the links\n\
   -v, --verbose               print name of each file before linking\n\
       --help                  display this help and exit\n\
       --version               output version information and exit\n\
