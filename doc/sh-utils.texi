@@ -423,7 +423,7 @@ is also allowed: @code{test} returns true if the argument is not null.
 @menu
 * File type tests::             -[bcdfhLpSt]
 * Access permission tests::     -[gkruwxOG]
-* File characteristics tests::  -e -s -nt -ot -ef 
+* File characteristics tests::  -e -s -nt -ot -ef
 * String tests::                -z -n = !=
 * Numeric tests::               -eq -ne -lt -le -gt -ge
 * Connectives for test::        ! -a -o
@@ -869,7 +869,7 @@ To add 1 to the shell variable @code{foo}, in Bourne-compatible shells:
 foo=`expr $foo + 1`
 @end example
 
-To print the non-directory part of the file name stored in 
+To print the non-directory part of the file name stored in
 @code{$fname}, which need not contain a @code{/}.
 @example
 expr $fname : '.*/\(^.*\)' '^|' $fname
@@ -1591,7 +1591,7 @@ They are set with the syntax @samp{name value}, where the names are
 listed below and the value can be given either literally, in hat
 notation (@samp{^@var{c}}), or as an integer which may start with
 @samp{0x} to indicate hexadecimal, @samp{0} to indicate octal, or
-any other digit to indicate decimal.  
+any other digit to indicate decimal.
 
 @cindex disabling special characters
 @kindex u@r{, and disabling special characters}
@@ -2657,7 +2657,7 @@ Add @var{adjustment} instead of 10 to the command's priority.
 @flindex nohup.out
 @code{nohup} runs the given @var{command} with hangup signals ignored,
 so that the command can continue running in the background after you log
-out.  
+out.
 
 Synopsis:
 
