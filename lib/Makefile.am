@@ -19,7 +19,6 @@ HEADERS = argmatch.h backupfile.h error.h fnmatch.h fsusage.h getopt.h \
 group-member.h long-options.h makepath.h modechange.h mountlist.h \
 obstack.h pathmax.h save-cwd.h xstrtol.h xstrtoul.h
 
-CONFIG_HEADER = ../config.h
 BUILT_SOURCES = getdate.c posixtm.c
 
 # Since this directory contains two parsers, we have to be careful to avoid
