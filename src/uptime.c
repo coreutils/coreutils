@@ -41,9 +41,8 @@ static struct option const longopts[] =
 };
 
 static void
-print_uptime (int n)
+print_uptime (int n, const STRUCT_UTMP *this)
 {
-  register STRUCT_UTMP *this = utmp_contents;
   register int entries = 0;
   time_t boot_time = 0;
   time_t time_now;
@@ -143,8 +142,14 @@ print_uptime (int n)
 static void
 uptime (const char *filename)
 {
-  int n_users = read_utmp (filename);
-  print_uptime (n_users);
+  int n_users;
+  STRUCT_UTMP *utmp_buf;
+  int fail = read_utmp (filename, &n_users, &utmp_buf);
+
+  if (fail)
+    error (1, errno, "%s", filename);
+
+  print_uptime (n_users, utmp_buf);
 }
 
 static void
