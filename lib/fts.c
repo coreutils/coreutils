@@ -1136,19 +1136,14 @@ fts_stat(sp, p, follow)
 	register FTSENT *p;
 	int follow;
 {
-	struct stat *sbp, sb;
+	struct stat *sbp = p->fts_statp;
 	int saved_errno;
-
-	/* If user needs stat info, stat buffer already allocated. */
-	sbp = ISSET(FTS_NOSTAT) ? &sb : p->fts_statp;
 
 #if defined FTS_WHITEOUT && 0
 	/* check for whiteout */
 	if (p->fts_flags & FTS_ISW) {
-		if (sbp != &sb) {
-			memset(sbp, '\0', sizeof (*sbp));
-			sbp->st_mode = S_IFWHT;
-		}
+		memset(sbp, '\0', sizeof (*sbp));
+		sbp->st_mode = S_IFWHT;
 		return (FTS_W);
        }
 #endif
@@ -1247,16 +1242,14 @@ fts_alloc(sp, name, namelen)
 	size_t len;
 
 	/*
-	 * The file name is a variable length array and no stat structure is
-	 * necessary if the user has set the nostat bit.  Allocate the FTSENT
+	 * The file name is a variable length array.  Allocate the FTSENT
 	 * structure, the file name and the stat structure in one chunk, but
 	 * be careful that the stat structure is reasonably aligned.  Since the
 	 * fts_name field is declared to be of size 1, the fts_name pointer is
 	 * namelen + 2 before the first possible address of the stat structure.
 	 */
 	len = sizeof(FTSENT) + namelen;
-	if (!ISSET(FTS_NOSTAT))
-		len += sizeof(struct stat) + ALIGNBYTES;
+	len += sizeof(struct stat) + ALIGNBYTES;
 	if ((p = malloc(len)) == NULL)
 		return (NULL);
 
@@ -1264,8 +1257,7 @@ fts_alloc(sp, name, namelen)
 	memmove(p->fts_name, name, namelen);
 	p->fts_name[namelen] = '\0';
 
-	if (!ISSET(FTS_NOSTAT))
-		p->fts_statp = (struct stat *)ALIGN(p->fts_name + namelen + 2);
+	p->fts_statp = (struct stat *)ALIGN(p->fts_name + namelen + 2);
 	p->fts_namelen = namelen;
 	p->fts_path = sp->fts_path;
 	p->fts_errno = 0;
