@@ -1306,7 +1306,7 @@ copy_internal (const char *src_path, const char *dst_path,
 
       /* Insert the current directory in the list of parents.  */
 
-      dir = alloca (sizeof (struct dir_list));
+      dir = alloca (sizeof *dir);
       dir->parent = ancestors;
       dir->ino = src_sb.st_ino;
       dir->dev = src_sb.st_dev;
