@@ -1,0 +1,46 @@
+#!/bin/sh
+# This variant of `assert' would get a UMR reliably in 2.0.9.
+# Due to a race condition in the test, the `assert' script would get
+# the UMR on Solaris only some of the time, and not at all on Linux/GNU.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  tail --version
+fi
+
+tmp=tail-as2.$$
+pwd=`pwd`
+trap "cd $pwd; rm -rf $tmp" 0 1 2 3 15
+
+test_failure=0
+mkdir $tmp || test_failure=1
+cd $tmp || test_failure=1
+
+if test $test_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+ok='ok ok ok'
+
+touch a
+tail --follow=name a foo > err 2>&1 &
+tail_pid=$!
+# Arrange for the tail process to die after 12 seconds.
+(sleep 12; kill $tail_pid) &
+echo $ok > f
+echo sleeping for 7 seconds...
+sleep 7
+mv f foo
+
+# echo waiting....
+wait
+
+case "`cat err`" in
+  *$ok) fail=0;;
+  *) fail=1;;
+esac
+
+test $fail = 1 && cat err
+
+exit $fail
