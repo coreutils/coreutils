@@ -80,6 +80,7 @@
 #include "makepath.h"
 #include "modechange.h"
 #include "path-concat.h"
+#include "quote.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -330,7 +331,7 @@ main (int argc, char **argv)
     {
       struct mode_change *change = mode_compile (symbolic_mode, 0);
       if (change == MODE_INVALID)
-	error (1, 0, _("invalid mode `%s'"), symbolic_mode);
+	error (1, 0, _("invalid mode %s"), quote (symbolic_mode));
       else if (change == MODE_MEMORY_EXHAUSTED)
 	error (1, 0, _("virtual memory exhausted"));
       mode = mode_adjust (0, change);
@@ -345,7 +346,7 @@ main (int argc, char **argv)
 	{
 	  errors |=
 	    make_path (file[i], mode, mode, owner_id, group_id, 0,
-		       (x.verbose ? "creating directory `%s'" : NULL));
+		       (x.verbose ? _("creating directory %s") : NULL));
 	}
     }
   else
@@ -370,9 +371,9 @@ main (int argc, char **argv)
 	  if (!isdir (dest))
 	    {
 	      error (0, 0,
-		     _("installing multiple files, but last argument (%s) \
+		     _("installing multiple files, but last argument, %s \
 is not a directory"),
-		     dest);
+		     quote (dest));
 	      usage (1);
 	    }
 	  for (i = 0; i < n_files - 1; i++)
@@ -407,7 +408,7 @@ install_file_to_path (const char *from, const char *to,
 	 distribution doesn't provide proper install rules.  */
 #define DIR_MODE (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH)
       fail = make_path (dest_dir, DIR_MODE, DIR_MODE, owner_id, group_id, 0,
-			(x->verbose ? _("creating directory `%s'") : NULL));
+			(x->verbose ? _("creating directory %s") : NULL));
     }
 
   if (fail == 0)
@@ -471,7 +472,7 @@ copy_file (const char *from, const char *to, const struct cp_options *x)
      and that sendmail's installation process relies on the behavior.  */
   if (isdir (from))
     {
-      error (0, 0, _("`%s' is a directory"), from);
+      error (0, 0, _("%s is a directory"), quote (from));
       return 1;
     }
 
@@ -507,13 +508,13 @@ change_attributes (const char *path)
 #endif
       )
     {
-      error (0, errno, "cannot change ownership of `%s'", path);
+      error (0, errno, "cannot change ownership of %s", quote (path));
       err = 1;
     }
 
   if (!err && chmod (path, mode))
     {
-      error (0, errno, "cannot change permissions of `%s'", path);
+      error (0, errno, "cannot change permissions of %s", quote (path));
       err = 1;
     }
 
@@ -531,7 +532,7 @@ change_timestamps (const char *from, const char *to)
 
   if (stat (from, &stb))
     {
-      error (0, errno, "%s", from);
+      error (0, errno, _("cannot obtain time stamps for %s"), quote (from));
       return 1;
     }
 
@@ -543,7 +544,7 @@ change_timestamps (const char *from, const char *to)
   utb.modtime = stb.st_mtime;
   if (utime (to, &utb))
     {
-      error (0, errno, "%s", to);
+      error (0, errno, _("cannot set time stamps for %s"), quote (to));
       return 1;
     }
   return 0;
@@ -596,7 +597,7 @@ get_ids (void)
 	  long int tmp_long;
 	  if (xstrtol (owner_name, NULL, 0, &tmp_long, NULL) != LONGINT_OK
 	      || tmp_long < 0 || tmp_long > UID_T_MAX)
-	    error (1, 0, _("invalid user `%s'"), owner_name);
+	    error (1, 0, _("invalid user %s"), quote (owner_name));
 	  owner_id = (uid_t) tmp_long;
 	}
       else
@@ -614,7 +615,7 @@ get_ids (void)
 	  long int tmp_long;
 	  if (xstrtol (group_name, NULL, 0, &tmp_long, NULL) != LONGINT_OK
 	      || tmp_long < 0 || tmp_long > GID_T_MAX)
-	    error (1, 0, _("invalid group `%s'"), group_name);
+	    error (1, 0, _("invalid group %s"), quote (group_name));
 	  group_id = (gid_t) tmp_long;
 	}
       else
