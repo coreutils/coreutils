@@ -60,6 +60,7 @@
 	* lib/Makefile.am (libfu_a_SOURCES): Add oa-hash.c.
 	(noinst_HEADERS): Add oa-hash.h.
 
+	* lib/stpncpy.c: New file.
 	* configure.in (AC_REPLACE_FUNCS): Add stpncpy.
 
 	* src/rm.c (remove_cwd_entries): Convert to using oa-hash.c.
