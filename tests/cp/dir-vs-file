@@ -18,8 +18,8 @@ framework_failure=0
 mkdir $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 
-mkdir a a/b a/c || framework_failure=1
-touch a/1 a/2 a/3 a/b/b a/b/c || framework_failure=1
+mkdir dir || framework_failure=1
+touch file || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework' 1>&2
@@ -28,11 +28,11 @@ fi
 
 fail=0
 
-cp -al a/* a/b 2>/dev/null && fail=1
+# In 4.0.35, this cp invocation silently succeeded.
+cp -R dir file 2>/dev/null && fail=1
 
-# The files a/b/b and a/b/c must remain as files.
-# In 4.0.35, they were overwritten with directories.
-test -f a/b/b || fail=1
-test -f a/b/c || fail=1
+# Make sure file is not replaced with a directory.
+# In 4.0.35, it was.
+test -f file || fail=1
 
 (exit $fail); exit
