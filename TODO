@@ -163,6 +163,9 @@ Changes expected to go in, post-5.2.1:
   an implicit --NO-dereference-command-line-symlink-to-dir meaning.
   Pointed out by Karl Berry.
 
+  A more efficient version of factor, and possibly one that
+  accepts inputs of size 2^64 and larger.
+
   Re-add a separate test for du's stack space usage (like the one removed
   from tests/rm/deep-1).
 
