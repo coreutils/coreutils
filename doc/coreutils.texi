@@ -4956,7 +4956,7 @@ With the long listing (@option{-l}) format, print an additional line after
 the main output:
 
 @example
-//DIRED// @var{beg1 end1 beg2 end2 @dots{}}
+//DIRED// @var{beg1} @var{end1} @var{beg2} @var{end2} @dots{}
 @end example
 
 @noindent
@@ -4966,9 +4966,9 @@ This makes it easy for Emacs to find the names, even when they contain
 unusual characters such as space or newline, without fancy searching.
 
 If directories are being listed recursively (@code{-R}), output a similar
-line after each subdirectory:
+line with offsets for each subdirectory name:
 @example
-//SUBDIRED// @var{format} @var{beg1 end1 @dots{}}
+//SUBDIRED// @var{beg1} @var{end1} @dots{}
 @end example
 
 Finally, output a line of the form:
@@ -4976,6 +4976,73 @@ Finally, output a line of the form:
 //DIRED-OPTIONS// --quoting-style=@var{word}
 @end example
 where @var{word} is the quoting style (@pxref{Formatting the file names}).
+
+Here is an actual example:
+
+@example
+$ mkdir -p a/sub/deeper a/sub2
+$ touch a/f1 a/f2
+$ touch a/sub/deeper/file
+$ ls -gloRF --dired a
+  a:
+  total 8
+  -rw-r--r--    1        0 Nov  9 18:30 f1
+  -rw-r--r--    1        0 Nov  9 18:30 f2
+  drwxr-xr-x    3     4096 Nov  9 18:30 sub/
+  drwxr-xr-x    2     4096 Nov  9 18:30 sub2/
+
+  a/sub:
+  total 4
+  drwxr-xr-x    2     4096 Nov  9 18:30 deeper/
+
+  a/sub/deeper:
+  total 0
+  -rw-r--r--    1        0 Nov  9 18:30 file
+
+  a/sub2:
+  total 0
+//DIRED// 55 57 98 100 141 144 186 190 252 258 327 331
+//SUBDIRED// 2 3 195 200 263 275 335 341
+//DIRED-OPTIONS// --quoting-style=literal
+@end example
+
+Note that the pairs of offsets on the @samp{//DIRED//} line above delimit
+these names: @file{f1}, @file{f2}, @file{sub}, @file{sub2}, @file{deeper},
+@file{file}.
+The offsets on the @samp{//SUBDIRED//} line delimit the following
+directory names: @file{a}, @file{a/sub}, @file{a/sub/deeper}, @file{a/sub2}.
+
+Here is an example of how to extract the fifth entry name, @samp{deeper},
+corresponding to the pair of offsets, 252 and 258:
+
+@example
+$ ls -gloRF --dired a > out
+$ dd bs=1 skip=252 count=6 < out 2>/dev/null; echo
+deeper
+@end example
+
+Note that although the listing above includes a trailing slash
+for the @samp{deeper} entry, the offsets select the name without
+the trailing slash.  However, if you invoke @command{ls} with @option{--dired}
+along with an option like @option{--escape} (aka @option{-b}) and operate
+on a file whose name contains special characters, notice that the backslash
+@emph{is} included:
+
+@example
+$ touch 'a b'
+$ ls -blog --dired 'a b'
+  -rw-r--r--    1        0 Nov  9 18:41 a\ b
+//DIRED// 40 44
+//DIRED-OPTIONS// --quoting-style=escape
+@end example
+
+If you use a quoting style that adds quote marks
+(e.g., @option{--quoting-style=c}), then the offsets include the quote marks.
+So beware that the user may select the quoting style via the environment
+variable @env{QUOTING_STYLE}.  Hence, applications using @option{--dired}
+should either specify an explicit @option{--quoting-style=literal} option
+(aka @option{-N} or @option{--literal}) on the command line, or else be
+prepared to parse the escaped names.
 
 @item --full-time
 @opindex --full-time
