@@ -9,11 +9,6 @@
 	is invoked (without `$SHELL ' prefix).
 	Reported by Bob Proulx.
 
-2004-02-09  Jim Meyering  <jim@meyering.net>
-
-	* src/comm.c (usage): Tell what comm does when there are no options.
-	Wording from Dan Jacobson.
-
 2004-02-08  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.3.
