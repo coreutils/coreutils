@@ -1,3 +1,7 @@
+2002-09-16  Jim Meyering  <meyering@lucent.com>
+
+	* LINGUAS: Add be (Belarusian).
+
 2002-09-02  Jim Meyering  <meyering@lucent.com>
 
 	* LINGUAS: Add lg (Luganda).
