@@ -65,7 +65,8 @@
    this is either `int' or `gid_t'. */
 #undef GETGROUPS_T
 
-/* Define if the `getloadavg' function needs to be run setuid or setgid. */
+/* Define to 1 if the `getloadavg' function needs to be run setuid or setgid.
+   */
 #undef GETLOADAVG_PRIVILEGED
 
 /* Define if gettimeofday clobbers localtime's static buffer. */
