@@ -32,7 +32,7 @@ fi
 
 fail=0
 
-ls > out || fail=1
+ls -1 > out || fail=1
 
 cmp out exp || fail=1
 test $fail = 1 && diff out exp 2> /dev/null
@@ -51,7 +51,7 @@ subdir
 file2
 EOF
 
-ls -R > out || fail=1
+ls -R1 > out || fail=1
 
 cmp out exp || fail=1
 test $fail = 1 && diff out exp 2> /dev/null
