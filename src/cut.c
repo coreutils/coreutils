@@ -604,7 +604,7 @@ cut_fields (FILE *stream)
 	  /* If the first field extends to the end of line (it is not
 	     delimited) and we are printing all non-delimited lines,
 	     print this one.  */
-	  if ((unsigned char) field_1_buffer[n_bytes - 1] != delim)
+	  if (to_uchar (field_1_buffer[n_bytes - 1]) != delim)
 	    {
 	      if (suppress_non_delimited)
 		{
@@ -688,9 +688,9 @@ cut_stream (FILE *stream)
 }
 
 /* Process file FILE to standard output.
-   Return 0 if successful, 1 if not. */
+   Return true if successful.  */
 
-static int
+static bool
 cut_file (char *file)
 {
   FILE *stream;
@@ -706,7 +706,7 @@ cut_file (char *file)
       if (stream == NULL)
 	{
 	  error (0, errno, "%s", file);
-	  return 1;
+	  return false;
 	}
     }
 
@@ -715,22 +715,23 @@ cut_file (char *file)
   if (ferror (stream))
     {
       error (0, errno, "%s", file);
-      return 1;
+      return false;
     }
   if (STREQ (file, "-"))
     clearerr (stream);		/* Also clear EOF. */
   else if (fclose (stream) == EOF)
     {
       error (0, errno, "%s", file);
-      return 1;
+      return false;
     }
-  return 0;
+  return true;
 }
 
 int
 main (int argc, char **argv)
 {
-  int optc, exit_status = 0;
+  int optc;
+  bool ok;
   bool delim_specified = false;
   char *spec_list_string IF_LINT(= NULL);
 
@@ -850,10 +851,10 @@ main (int argc, char **argv)
     }
 
   if (optind == argc)
-    exit_status |= cut_file ("-");
+    ok = cut_file ("-");
   else
-    for (; optind < argc; optind++)
-      exit_status |= cut_file (argv[optind]);
+    for (ok = true; optind < argc; optind++)
+      ok &= cut_file (argv[optind]);
 
   if (range_start_ht)
     hash_free (range_start_ht);
@@ -861,8 +862,8 @@ main (int argc, char **argv)
   if (have_read_stdin && fclose (stdin) == EOF)
     {
       error (0, errno, "-");
-      exit_status = 1;
+      ok = false;
     }
 
-  exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
