@@ -2204,7 +2204,7 @@ main (int argc, char **argv)
   char *minus = "-", **files;
   char const *outfile = minus;
   static int const sigs[] = { SIGHUP, SIGINT, SIGPIPE, SIGTERM };
-  int nsigs = sizeof sigs / sizeof *sigs;
+  unsigned int nsigs = sizeof sigs / sizeof *sigs;
 #ifdef SA_NOCLDSTOP
   struct sigaction oldact, newact;
 #endif
@@ -2252,7 +2252,7 @@ main (int argc, char **argv)
 
 #ifdef SA_NOCLDSTOP
   {
-    int i;
+    unsigned int i;
     sigemptyset (&caught_signals);
     for (i = 0; i < nsigs; i++)
       sigaddset (&caught_signals, sigs[i]);
@@ -2263,7 +2263,7 @@ main (int argc, char **argv)
 #endif
 
   {
-    int i;
+    unsigned int i;
     for (i = 0; i < nsigs; i++)
       {
 	int sig = sigs[i];
