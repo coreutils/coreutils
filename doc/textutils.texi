@@ -1562,17 +1562,18 @@ options}.
 @dfn{message-digest}) for each specified @var{file}.
 If a @var{file} is specified as @samp{-} or if no files are given
 @code{md5sum} computes the checksum for the standard input.
-@code{md5sum} can also determine whether
-a file's checksum has changed. Synopsis:
+@code{md5sum} can also determine whether a file and checksum are
+consistent. Synopsis:
 
 @example
 md5sum [@var{option}]@dots{} [@var{file}]@dots{}
 md5sum [@var{option}]@dots{} --check [@var{file}]
-md5sum [@var{option}]@dots{} --string=@var{string}@dots{}
+md5sum [@var{option}]@dots{} --string=@var{string} @dots{}
 @end example
 
 For each @var{file}, @samp{md5sum} outputs the MD5 checksum, a flag
 indicating a binary or text input file, and the filename.
+If @var{file} is omitted or specified as @samp{-}, standard input is read.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -1583,9 +1584,10 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex -b
 @opindex --binary
 @cindex binary input files
-Treat input files as binary.  This makes no difference on Unix systems,
-but other systems have different internal and external character
-representations, notably to mark end-of-line.
+Treat all input files as binary.  This option has no effect on Unix
+systems, since they don't distinguish between binary and text files.
+This option is useful on systems that have different internal and
+external character representations.
 
 @item -c
 @itemx --check
@@ -1594,18 +1596,20 @@ Read filenames and checksum information from the single @var{file}
 each named file and the corresponding checksum data are consistent.
 The input to this mode of @code{md5sum} is usually the output of
 a prior, checksum-generating run of @samp{md5sum}.
-Each recognized line of input consists of an MD5 checksum, a binary/text
+Each valid line of input consists of an MD5 checksum, a binary/text
 flag, and then a filename.
-The file will be opened (with each possible relative path) and the its
-message-digest computed.  If this computed message digest is not the
-same as that given in the line, the file will be marked as failed.
+Binary files are marked with @samp{*}, text with @samp{ }.
+For each such line, @code{md5sum} reads the named file and computes its
+MD5 checksum.  Then, if the computed message digest does not match the
+one on the line with the filename, the file is noted as having
+failed the test.  Otherwise, the file passes the test.
 
 @item -s
 @itemx --string=@var{string}
 @opindex -s
 @opindex --string
 Compute the message digest for @var{string}, instead of for a file.  The
-result is the same as for a file with contains exactly @var{string}.
+result is the same as for a file that contains exactly @var{string}.
 
 @item -t
 @itemx --text
@@ -1614,6 +1618,7 @@ result is the same as for a file with contains exactly @var{string}.
 @cindex text input files
 Treat all input files as text files.  This is the reverse of
 @samp{--binary}.
+
 @item -v
 @itemx --verbose
 @opindex -v
