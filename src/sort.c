@@ -236,8 +236,8 @@ Write sorted concatenation of all FILE(s) to standard output.\n\
   -s               stabilize sort by disabling last resort comparison\n\
   -t SEP           use SEParator instead of non- to whitespace transition\n\
   -T DIRECT        use DIRECT for temporary files, not $TMPDIR or %s\n\
-  -u               with -c, check for strict ordering\n\
-  -u               with -m, only output the first of an equal sequence\n\
+  -u               with -c, check for strict ordering;\n\
+                   with -m, only output the first of an equal sequence\n\
   -z               end lines with 0 byte, not newline, for find -print0\n\
       --help       display this help and exit\n\
       --version    output version information and exit\n\
