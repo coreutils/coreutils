@@ -124,94 +124,94 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
   switch (statfsbuf->f_type)
     {
 # if defined __linux__
-    case S_MAGIC_AFFS:
+    case S_MAGIC_AFFS: /* 0xADFF */
       type = "affs";
       break;
-    case S_MAGIC_DEVPTS:
+    case S_MAGIC_DEVPTS: /* 0x1CD1 */
       type = "devpts";
       break;
-    case S_MAGIC_EXT:
+    case S_MAGIC_EXT: /* 0x137D */
       type = "ext";
       break;
-    case S_MAGIC_EXT2_OLD:
+    case S_MAGIC_EXT2_OLD: /* 0xEF51 */
       type = "ext2";
       break;
-    case S_MAGIC_EXT2:
+    case S_MAGIC_EXT2: /* 0xEF53 */
       type = "ext2/ext3";
       break;
-    case S_MAGIC_HPFS:
+    case S_MAGIC_HPFS: /* 0xF995E849 */
       type = "hpfs";
       break;
-    case S_MAGIC_ISOFS:
+    case S_MAGIC_ISOFS: /* 0x9660 */
       type = "isofs";
       break;
-    case S_MAGIC_ISOFS_WIN:
+    case S_MAGIC_ISOFS_WIN: /* 0x4000 */
       type = "isofs";
       break;
-    case S_MAGIC_ISOFS_R_WIN:
+    case S_MAGIC_ISOFS_R_WIN: /* 0x4004 */
       type = "isofs";
       break;
-    case S_MAGIC_MINIX:
+    case S_MAGIC_MINIX: /* 0x137F */
       type = "minix";
       break;
-    case S_MAGIC_MINIX_30:
+    case S_MAGIC_MINIX_30: /* 0x138F */
       type = "minix (30 char.)";
       break;
-    case S_MAGIC_MINIX_V2:
+    case S_MAGIC_MINIX_V2: /* 0x2468 */
       type = "minix v2";
       break;
-    case S_MAGIC_MINIX_V2_30:
+    case S_MAGIC_MINIX_V2_30: /* 0x2478 */
       type = "minix v2 (30 char.)";
       break;
-    case S_MAGIC_MSDOS:
+    case S_MAGIC_MSDOS: /* 0x4d44 */
       type = "msdos";
       break;
-    case S_MAGIC_FAT:
+    case S_MAGIC_FAT: /* 0x4006 */
       type = "fat";
       break;
-    case S_MAGIC_NCP:
+    case S_MAGIC_NCP: /* 0x564c */
       type = "novell";
       break;
-    case S_MAGIC_NFS:
+    case S_MAGIC_NFS: /* 0x6969 */
       type = "nfs";
       break;
-    case S_MAGIC_PROC:
+    case S_MAGIC_PROC: /* 0x9fa0 */
       type = "proc";
       break;
-    case S_MAGIC_SMB:
+    case S_MAGIC_SMB: /* 0x517B */
       type = "smb";
       break;
-    case S_MAGIC_XENIX:
+    case S_MAGIC_XENIX: /* 0x012FF7B4 */
       type = "xenix";
       break;
-    case S_MAGIC_SYSV4:
+    case S_MAGIC_SYSV4: /* 0x012FF7B5 */
       type = "sysv4";
       break;
-    case S_MAGIC_SYSV2:
+    case S_MAGIC_SYSV2: /* 0x012FF7B6 */
       type = "sysv2";
       break;
-    case S_MAGIC_COH:
+    case S_MAGIC_COH: /* 0x012FF7B7 */
       type = "coh";
       break;
-    case S_MAGIC_UFS:
+    case S_MAGIC_UFS: /* 0x00011954 */
       type = "ufs";
       break;
-    case S_MAGIC_XIAFS:
+    case S_MAGIC_XIAFS: /* 0x012FD16D */
       type = "xia";
       break;
-    case S_MAGIC_NTFS:
+    case S_MAGIC_NTFS: /* 0x5346544e */
       type = "ntfs";
       break;
-    case S_MAGIC_TMPFS:
+    case S_MAGIC_TMPFS: /* 0x1021994 */
       type = "tmpfs";
       break;
-    case S_MAGIC_REISERFS:
+    case S_MAGIC_REISERFS: /* 0x52654973 */
       type = "reiserfs";
       break;
-    case S_MAGIC_CRAMFS:
+    case S_MAGIC_CRAMFS: /* 0x28cd3d45 */
       type = "cramfs";
       break;
-    case S_MAGIC_ROMFS:
+    case S_MAGIC_ROMFS: /* 0x7275 */
       type = "romfs";
       break;
 # elif __GNU__
