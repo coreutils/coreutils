@@ -1,3 +1,7 @@
+1999-03-02  Jim Meyering  <meyering@ascend.com>
+
+	* lib/readutmp.c (read_utmp) [HAVE_UTMPNAME]: Rewrite.
+
 1999-02-15  Jim Meyering  <meyering@ascend.com>
 
 	* src/stty.c (main): #ifdef-out unreachable code.
