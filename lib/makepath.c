@@ -115,10 +115,9 @@ extern int errno;
 #endif
 
 #include "save-cwd.h"
+#include "dirname.h"
 #include "error.h"
 #include "quote.h"
-
-void strip_trailing_slashes ();
 
 #define CLEANUP_CWD					\
   do							\
@@ -196,7 +195,6 @@ make_dir (const char *dir, const char *dirpath, mode_t mode, int *created_dir_p)
 }
 
 /* Ensure that the directory ARGPATH exists.
-   Remove any trailing slashes from ARGPATH before calling this function.
 
    Create any leading directories that don't already exist, with
    permissions PARENT_MODE.
