@@ -1,3 +1,18 @@
+2002-12-04  Paul Eggert  <eggert@twinsun.com>
+
+	Do not generate unlocked-io.h automatically, since it's easier to
+	maintain it by hand.
+
+	* unlocked-io.h: New file, from GNU diffutils,
+	but with proper copyright notice and attribution.
+	* gen-uio: Remove.
+	* Makefile.am: Add copyright notice.
+	(libfetish_a_SOURCES): Add unlocked-io.h.
+	(BUILT_SOURCES, all-local): Remove unlocked-io.h.
+	(DISTCLEANFILES, io_functions): Remove macros.
+	(EXTRA_DIST): Remove gen_uio.
+	(unlocked-io.h): Remove rule.
+
 2002-12-05  Paul Eggert  <eggert@twinsun.com>
 
 	* alloca.c [defined emacs]: Include "lisp.h".
