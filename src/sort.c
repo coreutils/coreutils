@@ -549,8 +549,10 @@ begfield (const struct line *line, const struct keyfield *key)
     while (ptr < lim && blanks[UCHAR (*ptr)])
       ++ptr;
 
-  while (ptr < lim && schar--)
-    ++ptr;
+  if (ptr + schar <= lim)
+    ptr += schar;
+  else
+    ptr = lim;
 
   return ptr;
 }
@@ -563,13 +565,25 @@ limfield (const struct line *line, const struct keyfield *key)
 {
   register char *ptr = line->text, *lim = ptr + line->length;
   register int eword = key->eword, echar = key->echar;
+  char *field_start;
 
+  /* Note: from the POSIX spec:
+     The leading field separator itself is included in
+     a field when -t is not used.  */
+
+  /* Move PTR past EWORD fields or to one past the last byte on LINE,
+     whichever comes first.  If there are more than EWORD fields, leave
+     PTR pointing at the beginning of the field having zero-based index,
+     EWORD.  If a delimiter character was specified (via -t), then that
+     `beginning' is the first character following the delimiting TAB.
+     Otherwise, leave PTR pointing at the first `blank' character after
+     the preceding field.  */
   if (tab)
     while (ptr < lim && eword--)
       {
 	while (ptr < lim && *ptr != tab)
 	  ++ptr;
-	if (ptr < lim && (eword || key->skipeblanks))
+	if (ptr < lim)
 	  ++ptr;
       }
   else
@@ -580,13 +594,39 @@ limfield (const struct line *line, const struct keyfield *key)
 	while (ptr < lim && !blanks[UCHAR (*ptr)])
 	  ++ptr;
       }
+  /* Record beginning of field.  */
+  field_start = ptr;
 
+  /* Make LIM point to the end of (one byte past) the current field.  */
+  if (tab)
+    {
+      char *newlim;
+      newlim = memchr (ptr, tab, lim - ptr);
+      if (newlim)
+        lim = newlim;
+    }
+  else
+    {
+      char *newlim;
+      newlim = ptr;
+      while (newlim < lim && !blanks[UCHAR (*newlim)])
+	++newlim;
+      lim = newlim;
+    }
+
+  /* Advance PTR by ECHAR (if possible), but no further than LIM.  */
+  if (ptr + echar <= lim)
+    ptr += echar;
+  else
+    ptr = lim;
+
+  /* Back up over any trailing blanks, possibly back to the beginning
+     of the field.  */
   if (key->skipeblanks)
-    while (ptr < lim && blanks[UCHAR (*ptr)])
-      ++ptr;
-
-  while (ptr < lim && echar--)
-    ++ptr;
+    {
+      while (ptr > field_start && blanks[UCHAR (*(ptr - 1))])
+	--ptr;
+    }
 
   return ptr;
 }
@@ -1729,8 +1769,6 @@ main (int argc, char **argv)
 			  {
 			    for (++s; digits[UCHAR (*s)]; ++s)
 			      t2 = t2 * 10 + *s - '0';
-			    if (t2)
-			      t2--;
 			  }
 			else
 			  {
