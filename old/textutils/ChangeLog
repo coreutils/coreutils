@@ -1,3 +1,8 @@
+1997-10-10  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/sort-test/Test.pm: Add a test.
+	From William Lewis.
+
 1997-10-07  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/*.c: Update bug-reporting address.
