@@ -261,18 +261,14 @@ static int re_match_2_internal ();
 /* These are the command codes that appear in compiled regular
    expressions.  Some opcodes are followed by argument bytes.  A
    command code can specify any interpretation whatsoever for its
-   arguments.  Zero bytes may appear in the compiled regular expression.
-
-   The value of `exactn' is needed in search.c (search_buffer) in Emacs.
-   So regex.h defines a symbol `RE_EXACTN_VALUE' to be 1; the value of
-   `exactn' we use here must also be 1.  */
+   arguments.  Zero bytes may appear in the compiled regular expression.  */
 
 typedef enum
 {
   no_op = 0,
 
         /* Followed by one byte giving n, then by n literal bytes.  */
-  exactn = 1,
+  exactn,
 
         /* Matches any (more or less) character.  */
   anychar,
@@ -904,7 +900,7 @@ static const char *re_error_msg[] =
 #define MATCH_MAY_ALLOCATE
 
 /* The match routines may not allocate if (1) they would do it with malloc
-   and (2) it's not safe for htem to use malloc.  */
+   and (2) it's not safe for them to use malloc.  */
 #if (defined (C_ALLOCA) || defined (REGEX_MALLOC)) && (defined (emacs) || defined (REL_ALLOC))
 #undef MATCH_MAY_ALLOCATE
 #endif

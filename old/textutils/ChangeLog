@@ -1,3 +1,16 @@
+Sat Oct 08 10:44:30 1994  Jim Meyering  (meyering@comco.com)
+
+	* Makefile.in (All of them): Update from the ones in sh-utils.
+	From now on, rules and definitions that are comon to the fileutils,
+	textutils, and sh-utils will get ChangeLog entries only in the
+	sh-utils.
+
+Tue Oct 04 20:42:46 1994  Jim Meyering  (meyering@comco.com)
+
+	* od.c (my_strtoul): Set errno to zero before calling strtoul.
+	Otherwise, od can fail complaining about a valid integer argument.
+	From Andreas Schwab.
+
 Sun Oct 02 17:57:09 1994  Jim Meyering  (meyering@comco.com)
 
 	* tr.c (main): Give an error and fail when squeezing repeats

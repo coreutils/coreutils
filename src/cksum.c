@@ -40,16 +40,7 @@
   except foreign language interface (4.9.5.3 of P1003.2/D11.2) support.
   Any inconsistency with the standard except 4.9.5.3 is a bug.  */
 
-#ifdef HAVE_CONFIG_H
-#if defined (CONFIG_BROKETS)
-/* We use <config.h> instead of "config.h" so that a compilation
-   using -I. -I$srcdir will use ./config.h rather than $srcdir/config.h
-   (which it would do because it found this file in $srcdir).  */
 #include <config.h>
-#else
-#include "config.h"
-#endif
-#endif
 
 #ifdef CRCTAB
 
