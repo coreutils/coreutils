@@ -1,5 +1,6 @@
 2002-04-24  Jim Meyering  <meyering@lucent.com>
 
+	* gettext.h: New file, from Gettext.
 	* Makefile.am (INCLUDES): Remove -I../intl.
 	(libfetish_a_SOURCES): Add gettext.h.
 
