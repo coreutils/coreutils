@@ -646,7 +646,9 @@ main (int argc, char **argv)
 	      errors |= tac_stdin_to_mem ();
 	    }
 	  else
-	    errors |= tac_file (argv[optind]);
+	    {
+	      errors |= tac_file (argv[optind]);
+	    }
 	}
     }
 
