@@ -105,6 +105,9 @@
 #if defined(VLNEXT) && !defined(CLNEXT)
 #define	CLNEXT Control ('v')
 #endif
+#if defined(VFLUSHO) && !defined(CFLUSHO)
+#define	CFLUSHO Control ('o')
+#endif
 
 char *visible ();
 unsigned long baud_to_value ();
@@ -345,6 +348,9 @@ static struct control_info control_info[] =
 #endif
 #ifdef VLNEXT
   {"lnext", CLNEXT, VLNEXT},
+#endif
+#ifdef VFLUSHO
+  {"flush", CFLUSHO, VFLUSHO},
 #endif
 
   /* These must be last because of the display routines. */
