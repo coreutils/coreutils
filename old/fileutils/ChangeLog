@@ -1,5 +1,13 @@
 Sat Jul  6 12:46:27 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/cp-aux.c (usage): Factor out backup-related text into
+	separate string/printf statement so translators deal with only
+	one corresponding string in .pot file.
+	* src/install.c (usage): Likewise.
+	* src/ln.c (usage): Likewise.
+	* src/mv.c (usage): Likewise.
+	Suggestion from Santiago Vila Doncel.
+
 	* configure.in (AC_REPLACE_FUNCS): Add group_member.
 	(AC_LINK_FILES): Create link lib/group_member.c to lib/group-member.c.
 	* lib/Makefile.am (fu_SOURCES): Remove group-member.c.
