@@ -264,6 +264,17 @@ static struct keyfield *keylist;
 
 static void sortlines_temp (struct line *, size_t, struct line *);
 
+/* Report MESSAGE for FILE, then clean up and exit.
+   If FILE is null, it represents standard output.  */
+
+static void die (char const *, char const *) ATTRIBUTE_NORETURN;
+static void
+die (char const *message, char const *file)
+{
+  error (0, errno, "%s: %s", message, file ? file : _("standard output"));
+  exit (SORT_FAILURE);
+}
+
 void
 usage (int status)
 {
@@ -382,8 +393,9 @@ struct tempnode
   char name[1];  /* Actual size is 1 + file name length.  */
 };
 static struct tempnode *volatile temphead;
+static struct tempnode *volatile *temptail = &temphead;
 
-/* Clean up any remaining temporary files. */
+/* Clean up any remaining temporary files.  */
 
 static void
 cleanup (void)
@@ -392,17 +404,6 @@ cleanup (void)
 
   for (node = temphead; node; node = node->next)
     unlink (node->name);
-}
-
-/* Report MESSAGE for FILE, then clean up and exit.
-   If FILE is null, it represents standard output.  */
-
-static void die (char const *, char const *) ATTRIBUTE_NORETURN;
-static void
-die (char const *message, char const *file)
-{
-  error (0, errno, "%s: %s", message, file ? file : _("standard output"));
-  exit (SORT_FAILURE);
 }
 
 /* Create a new temporary file, returning its newly allocated name.
@@ -419,12 +420,12 @@ create_temp_file (FILE **pfp)
   char const *temp_dir = temp_dirs[temp_dir_index];
   size_t len = strlen (temp_dir);
   struct tempnode *node =
-    xmalloc (sizeof node->next + len + sizeof slashbase);
+    xmalloc (offsetof (struct tempnode, name) + len + sizeof slashbase);
   char *file = node->name;
 
   memcpy (file, temp_dir, len);
   memcpy (file + len, slashbase, sizeof slashbase);
-  node->next = temphead;
+  node->next = NULL;
   if (++temp_dir_index == temp_dir_count)
     temp_dir_index = 0;
 
@@ -432,7 +433,10 @@ create_temp_file (FILE **pfp)
   sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
   fd = mkstemp (file);
   if (0 <= fd)
-    temphead = node;
+    {
+      *temptail = node;
+      temptail = &node->next;
+    }
   saved_errno = errno;
   sigprocmask (SIG_SETMASK, &oldset, NULL);
   errno = saved_errno;
@@ -518,12 +522,17 @@ zaptemp (const char *name)
 {
   struct tempnode *volatile *pnode;
   struct tempnode *node;
+  sigset_t oldset;
 
   for (pnode = &temphead; (node = *pnode); pnode = &node->next)
     if (node->name == name)
       {
+	/* Unlink the temporary file in a critical section, to avoid races.  */
+	sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
 	unlink (name);
-	*pnode = node->next;
+	if (! (*pnode = node->next))
+	  temptail = pnode;
+	sigprocmask (SIG_SETMASK, &oldset, NULL);
 	free (node);
 	break;
       }
@@ -1626,14 +1635,17 @@ check (char const *file_name)
   return ordered;
 }
 
-/* Merge lines from FILES onto OFP.  NFILES cannot be greater than
-   NMERGE.  Close input and output files before returning.
+/* Merge lines from FILES onto OFP.  NTEMPS is the number of temporary
+   files (all of which are at the start of the FILES array), and
+   NFILES is the number of files; 0 <= NTEMPS <= NFILES <= NMERGE.
+   Close input and output files before returning.
    OUTPUT_FILE gives the name of the output file.  If it is NULL,
    the output file is standard output.  If OFP is NULL, the output
    file has not been opened yet (or written to, if standard output).  */
 
 static void
-mergefps (char **files, size_t nfiles, FILE *ofp, char const *output_file)
+mergefps (char **files, size_t ntemps, size_t nfiles,
+	  FILE *ofp, char const *output_file)
 {
   FILE *fps[NMERGE];		/* Input streams for each file.  */
   struct buffer buffer[NMERGE];	/* Input buffers for each file. */
@@ -1669,7 +1681,11 @@ mergefps (char **files, size_t nfiles, FILE *ofp, char const *output_file)
 	{
 	  /* fps[i] is empty; eliminate it from future consideration.  */
 	  xfclose (fps[i], files[i]);
-	  zaptemp (files[i]);
+	  if (i < ntemps)
+	    {
+	      ntemps--;
+	      zaptemp (files[i]);
+	    }
 	  free (buffer[i].buf);
 	  --nfiles;
 	  for (j = i; j < nfiles; ++j)
@@ -1751,7 +1767,11 @@ mergefps (char **files, size_t nfiles, FILE *ofp, char const *output_file)
 		  --ord[i];
 	      --nfiles;
 	      xfclose (fps[ord[0]], files[ord[0]]);
-	      zaptemp (files[ord[0]]);
+	      if (ord[0] < ntemps)
+		{
+		  ntemps--;
+		  zaptemp (files[ord[0]]);
+		}
 	      free (buffer[ord[0]].buf);
 	      for (i = ord[0]; i < nfiles; ++i)
 		{
@@ -1897,7 +1917,7 @@ sortlines_temp (struct line *lines, size_t nlines, struct line *temp)
     }
 }
 
-/* Scan through FILES[N_TEMP_FILES .. NFILES-1] looking for a file that is
+/* Scan through FILES[NTEMPS .. NFILES-1] looking for a file that is
    the same as OUTFILE.  If found, merge the found instances (and perhaps
    some other files) into a temporary file so that it can in turn be
    merged into OUTFILE without destroying OUTFILE before it is completely
@@ -1915,14 +1935,14 @@ sortlines_temp (struct line *lines, size_t nlines, struct line *temp)
    common cases.  */
 
 static size_t
-avoid_trashing_input (char **files, size_t n_temp_files, size_t nfiles,
+avoid_trashing_input (char **files, size_t ntemps, size_t nfiles,
 		      char const *outfile)
 {
   size_t i;
   bool got_outstat = false;
   struct stat outstat;
 
-  for (i = n_temp_files; i < nfiles; i++)
+  for (i = ntemps; i < nfiles; i++)
     {
       bool standard_input = STREQ (files[i], "-");
       bool same;
@@ -1953,7 +1973,7 @@ avoid_trashing_input (char **files, size_t n_temp_files, size_t nfiles,
 	{
 	  FILE *tftp;
 	  char *temp = create_temp_file (&tftp);
-	  mergefps (&files[i], nfiles - i, tftp, temp);
+	  mergefps (&files[i], 0, nfiles - i, tftp, temp);
 	  files[i] = temp;
 	  return i + 1;
 	}
@@ -1962,14 +1982,13 @@ avoid_trashing_input (char **files, size_t n_temp_files, size_t nfiles,
   return nfiles;
 }
 
-/* Merge the input FILES.  N_TEMP_FILES is the number of files at the
+/* Merge the input FILES.  NTEMPS is the number of files at the
    start of FILES that are temporary; it is zero at the top level.
    NFILES is the total number of files.  Put the output in
    OUTPUT_FILE; a null OUTPUT_FILE stands for standard output.  */
 
 static void
-merge (char **files, size_t n_temp_files, size_t nfiles,
-       char const *output_file)
+merge (char **files, size_t ntemps, size_t nfiles, char const *output_file)
 {
   while (NMERGE < nfiles)
     {
@@ -1991,7 +2010,9 @@ merge (char **files, size_t n_temp_files, size_t nfiles,
 	{
 	  FILE *tfp;
 	  char *temp = create_temp_file (&tfp);
-	  mergefps (&files[in], NMERGE, tfp, temp);
+	  size_t nt = MIN (ntemps, NMERGE);
+	  ntemps -= nt;
+	  mergefps (&files[in], nt, NMERGE, tfp, temp);
 	  files[out] = temp;
 	}
 
@@ -2003,23 +2024,25 @@ merge (char **files, size_t n_temp_files, size_t nfiles,
 	  /* So many files remain that they can't all be put into the last
 	     NMERGE-sized output window.  Do one more merge.  Merge as few
 	     files as possible, to avoid needless I/O.  */
-	  size_t n_shortmerge = remainder - cheap_slots + 1;
+	  size_t nshortmerge = remainder - cheap_slots + 1;
 	  FILE *tfp;
 	  char *temp = create_temp_file (&tfp);
-	  mergefps (&files[in], n_shortmerge, tfp, temp);
+	  size_t nt = MIN (ntemps, nshortmerge);
+	  ntemps -= nt;
+	  mergefps (&files[in], nt, nshortmerge, tfp, temp);
 	  files[out++] = temp;
-	  in += n_shortmerge;
+	  in += nshortmerge;
 	}
 
       /* Put the remaining input files into the last NMERGE-sized output
 	 window, so they will be merged in the next pass.  */
       memmove(&files[out], &files[in], (nfiles - in) * sizeof *files);
-      n_temp_files = out + (in < n_temp_files ? n_temp_files - in : 0);
+      ntemps += out;
       nfiles -= in - out;
     }
 
-  nfiles = avoid_trashing_input (files, n_temp_files, nfiles, output_file);
-  mergefps (files, nfiles, NULL, output_file);
+  nfiles = avoid_trashing_input (files, ntemps, nfiles, output_file);
+  mergefps (files, ntemps, nfiles, NULL, output_file);
 }
 
 /* Sort NFILES FILES onto OUTPUT_FILE. */
@@ -2028,7 +2051,7 @@ static void
 sort (char * const *files, size_t nfiles, char const *output_file)
 {
   struct buffer buf;
-  size_t n_temp_files = 0;
+  size_t ntemps = 0;
   bool output_file_created = false;
 
   buf.alloc = 0;
@@ -2069,7 +2092,7 @@ sort (char * const *files, size_t nfiles, char const *output_file)
 	  linebase = line - buf.nlines;
 	  if (1 < buf.nlines)
 	    sortlines (line, buf.nlines, linebase);
-	  if (buf.eof && !nfiles && !n_temp_files && !buf.left)
+	  if (buf.eof && !nfiles && !ntemps && !buf.left)
 	    {
 	      xfclose (fp, file);
 	      tfp = xfopen (output_file, "w");
@@ -2078,7 +2101,7 @@ sort (char * const *files, size_t nfiles, char const *output_file)
 	    }
 	  else
 	    {
-	      ++n_temp_files;
+	      ++ntemps;
 	      temp_output = create_temp_file (&tfp);
 	    }
 
@@ -2105,12 +2128,15 @@ sort (char * const *files, size_t nfiles, char const *output_file)
 
   if (! output_file_created)
     {
-      size_t i = n_temp_files;
-      struct tempnode *node;
-      char **tempfiles = xnmalloc (n_temp_files, sizeof *tempfiles);
-      for (node = temphead; i > 0; node = node->next)
-	tempfiles[--i] = node->name;
-      merge (tempfiles, n_temp_files, n_temp_files, output_file);
+      size_t i;
+      struct tempnode *node = temphead;
+      char **tempfiles = xnmalloc (ntemps, sizeof *tempfiles);
+      for (i = 0; node; i++)
+	{
+	  tempfiles[i] = node->name;
+	  node = node->next;
+	}
+      merge (tempfiles, ntemps, ntemps, output_file);
       free (tempfiles);
     }
 }
