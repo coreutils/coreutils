@@ -48,8 +48,6 @@
 				not an array.
    HAVE_STRUCT_NLIST_N_UN_N_NAME `n_un.n_name' is member of `struct nlist'.
    LINUX_LDAV_FILE		[__linux__]: File containing load averages.
-   HAVE_LOCALE_H                locale.h is available.
-   HAVE_SETLOCALE               The `setlocale' function is available.
 
    Specific system predefines this file uses, aside from setting
    default values if not emacs:
@@ -85,39 +83,27 @@
 # include <config.h>
 #endif
 
-#include <sys/types.h>
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+/* Exclude all the code except the test program at the end
+   if the system has its own `getloadavg' function.  */
+
+#ifndef HAVE_GETLOADAVG
+
+# include <sys/types.h>
 
 /* Both the Emacs and non-Emacs sections want this.  Some
    configuration files' definitions for the LOAD_AVE_CVT macro (like
    sparc.h's) use macros like FSCALE, defined here.  */
-#if defined (unix) || defined (__unix)
-# include <sys/param.h>
-#endif
+# if defined (unix) || defined (__unix)
+#  include <sys/param.h>
+# endif
 
-
-/* Exclude all the code except the test program at the end
-   if the system has its own `getloadavg' function.
-
-   The declaration of `errno' is needed by the test program
-   as well as the function itself, so it comes first.  */
-
-#include <errno.h>
-
-#ifndef errno
-extern int errno;
-#endif
-
-#ifdef HAVE_LOCALE_H
-# include <locale.h>
-#endif
-#ifndef HAVE_SETLOCALE
-# define setlocale(Category, Locale) ((char *) NULL)
-#endif
-
-#include "cloexec.h"
-#include "xalloc.h"
-
-#ifndef HAVE_GETLOADAVG
+# include "c-strtod.h"
+# include "cloexec.h"
+# include "xalloc.h"
 
 /* The existing Emacs configuration files define a macro called
    LOAD_AVE_CVT, which accepts a value of type LOAD_AVE_TYPE, and
@@ -362,7 +348,7 @@ extern int errno;
 #  include <unistd.h>
 # endif
 
-# include <stdio.h>
+# include <limits.h>
 
 /* LOAD_AVE_TYPE should only get defined if we're going to use the
    nlist method.  */
@@ -436,7 +422,6 @@ extern int errno;
 # endif /* sgi */
 
 # ifdef UMAX
-#  include <stdio.h>
 #  include <signal.h>
 #  include <sys/time.h>
 #  include <sys/wait.h>
@@ -592,33 +577,37 @@ getloadavg (double loadavg[], int nelem)
 #   define LINUX_LDAV_FILE "/proc/loadavg"
 #  endif
 
-  char ldavgbuf[40];
-  double load_ave[3];
+/* Upper bound on the string length of an integer converted to string.
+   302 / 1000 is ceil (log10 (2.0)).  Subtract 1 for the sign bit;
+   add 1 for integer division truncation; add 1 more for a minus sign.  */
+#  define INT_STRLEN_BOUND(t) ((sizeof (t) * CHAR_BIT - 1) * 302 / 1000 + 2)
+
+  char ldavgbuf[3 * (INT_STRLEN_BOUND (long int) + sizeof ".00")];
+  char const *ptr = ldavgbuf;
   int fd, count;
-  char *old_locale;
 
   fd = open (LINUX_LDAV_FILE, O_RDONLY);
   if (fd == -1)
     return -1;
-  count = read (fd, ldavgbuf, 40);
+  count = read (fd, ldavgbuf, sizeof ldavgbuf - 1);
   (void) close (fd);
   if (count <= 0)
     return -1;
+  ldavgbuf[count] = '\0';
 
-  /* The following sscanf must use the C locale.  */
-  old_locale = setlocale (LC_NUMERIC, NULL);
-  if (old_locale)
-    old_locale = xstrdup (old_locale);
-  setlocale (LC_NUMERIC, "C");
-  count = sscanf (ldavgbuf, "%lf %lf %lf",
-		  &load_ave[0], &load_ave[1], &load_ave[2]);
-  setlocale (LC_NUMERIC, old_locale);
-  free (old_locale);
-  if (count < 1)
-    return -1;
-
-  for (elem = 0; elem < nelem && elem < count; elem++)
-    loadavg[elem] = load_ave[elem];
+  for (elem = 0; elem < nelem; elem++)
+    {
+      char *endptr;
+      double d = c_strtod (ptr, &endptr);
+      if (ptr == endptr)
+	{
+	  if (elem == 0)
+	    return -1;
+	  break;
+	}
+      loadavg[elem] = d;
+      ptr = endptr;
+    }
 
   return elem;
 
@@ -999,7 +988,7 @@ getloadavg (double loadavg[], int nelem)
 #endif /* ! HAVE_GETLOADAVG */
 
 #ifdef TEST
-void
+int
 main (int argc, char **argv)
 {
   int naptime = 0;
@@ -1017,7 +1006,7 @@ main (int argc, char **argv)
       if (loads == -1)
 	{
 	  perror ("Error getting load average");
-	  exit (1);
+	  return EXIT_FAILURE;
 	}
       if (loads > 0)
 	printf ("1-minute: %f  ", avg[0]);
@@ -1033,6 +1022,6 @@ main (int argc, char **argv)
       sleep (naptime);
     }
 
-  exit (0);
+  return EXIT_SUCCESS;
 }
 #endif /* TEST */
