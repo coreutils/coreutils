@@ -198,7 +198,7 @@ advance (int f)
 }
 #endif /* advance */
 
-#define unary_advance() 						\
+#define unary_advance()							\
   do									\
     {									\
       advance (1);							\
@@ -301,7 +301,7 @@ age_of (char *filename, time_t *age)
  * term ::=
  *	'-'('h'|'d'|'f'|'r'|'s'|'w'|'c'|'b'|'p'|'u'|'g'|'k') filename
  *	'-'('L'|'x') filename
- * 	'-t' [ int ]
+ *	'-t' [ int ]
  *	'-'('z'|'n') string
  *	string
  *	string ('!='|'=') string

@@ -233,7 +233,7 @@ unexpand (void)
   int tab_index = 0;		/* For calculating width of pending tabs. */
   int print_tab_index = 0;	/* For printing as many tabs as possible. */
   unsigned int column = 0;	/* Column on screen of next char. */
-  int next_tab_column; 		/* Column the next tab stop is on. */
+  int next_tab_column;		/* Column the next tab stop is on. */
   int convert = 1;		/* If nonzero, perform translations. */
   unsigned int pending = 0;	/* Pending columns of blanks. */
 
