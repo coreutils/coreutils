@@ -11,9 +11,9 @@ The programs that can be built with this package are:
   df dir dircolors dirname du echo env expand expr factor false fmt fold
   ginstall groups head hostid hostname id join kill link ln logname ls
   md5sum mkdir mkfifo mknod mv nice nl nohup od paste pathchk pinky pr
-  printenv printf ptx pwd rm rmdir seq sha1sum shred sleep sort split
-  stat stty su sum sync tac tail tee test touch tr true tsort tty uname
-  unexpand uniq unlink uptime users vdir wc who whoami yes
+  printenv printf ptx pwd readlink rm rmdir seq sha1sum shred sleep sort
+  split stat stty su sum sync tac tail tee test touch tr true tsort tty
+  uname unexpand uniq unlink uptime users vdir wc who whoami yes
 
 See the file NEWS for a list of major changes in the current release.
 
