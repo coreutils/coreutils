@@ -1,3 +1,7 @@
+Wed Dec 11 19:32:18 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* Version 1.20.
+
 Tue Dec 10 00:15:50 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	The file name, `build-script.pl' is longer than 14 characters.
