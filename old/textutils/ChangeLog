@@ -1,5 +1,11 @@
 Sat Jan 25 00:12:29 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* tests/sort-test/mk-script.pl: Interpret `input arg is a hash
+	reference' as meaning that the tested program will read no input.
+	Most of the tests for the date program use this feature.
+	Also for date, the generated script now reflects specification
+	(in Test.pm) of default and per-test environment settings.
+
 	* src/csplit.c: Reflect changes to xstrtol and xstrtoul interfaces.
 	* src/fold.c: Likewise.
 	* src/head.c: Likewise.
