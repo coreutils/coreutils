@@ -6,7 +6,7 @@
 use strict;
 use Getopt::Long;
 
-(my $VERSION = '$Revision: 1.1 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.2 $ ') =~ tr/[0-9].//cd;
 (my $program_name = $0) =~ s|.*/||;
 
 my $debug = 0;
@@ -64,6 +64,9 @@ sub END
 #    {
 #      die "$program_name: FIXME - process $arg here"
 #    }
+
+  my $n = $ARGV[0];
+
   my $is_prime =
     {
      2 => 1,
@@ -72,23 +75,27 @@ sub END
      7 => 1,
      11 => 1,
     };
-  $w = 1;
 
   sub is_prime ($)
   {
     my ($n0) = @_;
-    # FIXME
-    die;
     use integer;
+
+    $n0 == 2
+      and return 1;
+
     my $n = $n0;
     my $d = 2;
+    my $w = 1;
+    my $q;
     while (1)
       {
-	my $q = $n / $d;
+	$q = $n / $d;
+	#print "q=$q n=$n d=$d\n";
 	($n == $q * $d)
 	  and return 0;
 	$d += $w;
-	$d < $q
+	$q < $d
 	  and last;
 	$w = 2;
       }
@@ -96,13 +103,17 @@ sub END
   }
 
   my $prod = 2 * 3 * 5;
-  my $last_prime = 2;
-  for ($i = 3; $i < $prod; $i++)
+  my $last_prime = 1;
+  my $i;
+  for ($i = 2; $i < 2 * $prod; $i++)
     {
       if (is_prime $i)
 	{
-	  print $i - $last_prime, "\n";
+	  print $i, ' ', $i - $last_prime, "\n";
 	  $last_prime = $i;
+
+	  $prod < $i
+	    and last;
 	}
     }
 
