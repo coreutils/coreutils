@@ -762,14 +762,12 @@ remove_entry (Dirstack_state const *ds, char const *filename,
 
   DO_UNLINK (filename, x);
 
-  /* Accept either EISDIR or EPERM as an indication that FILENAME may be
-     a directory.  POSIX says that unlink must set errno to EPERM when it
-     fails to remove a directory, while Linux-2.4.18 sets it to EISDIR.  */
-  if ((errno != EISDIR && errno != EPERM) || ! x->recursive)
+  if (! x->recursive
+      || errno == ENOENT || errno == ENOTDIR
+      || errno == ELOOP || errno == ENAMETOOLONG)
     {
-      /* some other error code.  Report it and fail.
-	 Likewise, if we're trying to remove a directory without
-	 the --recursive option.  */
+      /* Either --recursive is not in effect, or the file cannot be a
+	 directory.  Report the unlink problem and fail.  */
       error (0, errno, _("cannot remove %s"),
 	     quote (full_filename (filename)));
       return RM_ERROR;
@@ -871,8 +869,7 @@ remove_cwd_entries (Dirstack_state *ds, char **subdir, struct stat *subdir_sb,
 	case RM_NONEMPTY_DIR:
 	  {
 	    /* Save a copy of errno, in case the preceding unlink (from
-	       remove_entry's DO_UNLINK) of a non-directory failed due
-	       to EPERM.  */
+	       remove_entry's DO_UNLINK) of a non-directory failed.  */
 	    int saved_errno = errno;
 
 	    /* Record dev/ino of F so that we can compare
@@ -882,7 +879,8 @@ remove_cwd_entries (Dirstack_state *ds, char **subdir, struct stat *subdir_sb,
 	      error (EXIT_FAILURE, errno, _("cannot lstat %s"),
 		     quote (full_filename (f)));
 
-	    if (chdir (f))
+	    errno = ENOTDIR;
+	    if (! S_ISDIR (subdir_sb->st_mode) || chdir (f) != 0)
 	      {
 		/* It is much more common that we reach this point for an
 		   inaccessible directory.  Hence the second diagnostic, below.
@@ -989,14 +987,11 @@ remove_dir (Dirstack_state *ds, char const *dir, struct saved_cwd **cwd_state,
       return RM_ERROR;
     }
 
-  if (chdir (dir))
+  errno = ENOTDIR;
+  if (! S_ISDIR (dir_sb.st_mode) || chdir (dir) != 0)
     {
-      if (! S_ISDIR (dir_sb.st_mode))
+      if (errno == ENOTDIR)
 	{
-	  /* This happens on Linux-2.4.18 when a non-privileged user tries
-	     to delete a file that is owned by another user in a directory
-	     like /tmp that has the S_ISVTX flag set.  */
-	  assert (saved_errno == EPERM);
 	  error (0, saved_errno,
 		 _("cannot remove %s"), quote (full_filename (dir)));
 	}
