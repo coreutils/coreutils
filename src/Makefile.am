@@ -156,7 +156,7 @@ localedir.h: Makefile
 	@rm -f $@-t
 	echo '#define LOCALEDIR "$(localedir)"' >$@-t
 	@chmod a-w $@-t
-	cmp $@-t $@ 2>&1 > /dev/null && rm -f $@-t || { rm -f $@; mv $@-t $@; }
+	cmp $@-t $@ > /dev/null 2>&1 && rm -f $@-t || { rm -f $@; mv $@-t $@; }
 
 BUILT_SOURCES += dircolors.h
 dircolors.h: dcgen dircolors.hin
