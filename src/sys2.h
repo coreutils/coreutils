@@ -124,6 +124,10 @@ void free ();
 char *malloc ();
 #endif
 
+#ifndef HAVE_DECL_MEMCHR
+char *memchr ();
+#endif
+
 #ifndef HAVE_DECL_REALLOC
 char *realloc ();
 #endif
