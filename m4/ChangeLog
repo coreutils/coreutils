@@ -2,6 +2,7 @@
 
 	* xstrtoumax.m4 (jm_AC_PREREQ_XSTRTOUMAX): If we need the replacement
 	strtoull, we may well need the replacement strtoul, too.
+	Check for declarations of strtoul and strtoull.
 
 2000-12-02  Jim Meyering  <meyering@lucent.com>
 
