@@ -1,3 +1,11 @@
+2003-07-20  Jim Meyering  <jim@meyering.net>
+
+	* src/wc.c (write_counts): Add a comment.
+	(wc): Rename `file' parameter.
+	Set new local, `file', to be the file name, or (when it's NULL)
+	_("standard output") so that all uses of `file' use the proper value.
+	Use STREQ, not strcmp.
+
 2003-07-20  Paul Eggert  <eggert@twinsun.com>
 
 	wc count field widths now are heuristically adjusted depending
