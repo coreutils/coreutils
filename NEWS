@@ -1,4 +1,6 @@
 [5.0.1]
+* tail's byte and line counts are no longer limited to OFF_T_MAX.
+  Now the limit is UINTMAX_MAX.
 * tsort now fails when given an odd number of input tokens.
   Before, it would act as if the final token appeared one additional time.
 * readlink's --canonicalize option now works on systems like Solaris that
