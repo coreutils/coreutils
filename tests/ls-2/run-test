@@ -10,4 +10,4 @@ case "$PERL" in
   ;;
 esac
 
-exec $PERL -I. -MT -- $srcdir/quoting
+exec $PERL -w -I. -MT -- $srcdir/quoting
