@@ -4,4 +4,4 @@ AUTOMAKE_OPTIONS = 1.3 gnits
 TESTS = empty-file dir-1 dangling-symlink no-rights
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
-  PATH=../../src:$$PATH
+  PATH=`pwd`/../../src:$$PATH
