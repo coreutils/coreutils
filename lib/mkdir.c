@@ -34,8 +34,6 @@ extern int errno;
 #define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #endif
 
-#include "safe-stat.h"
-
 /* mkdir adapted from GNU tar.  */
 
 /* Make directory DPATH, with permission mode DMODE.

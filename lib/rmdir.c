@@ -35,8 +35,6 @@ extern int errno;
 #define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #endif
 
-#include "safe-stat.h"
-
 /* rmdir adapted from GNU tar.  */
 
 /* Remove directory DPATH.

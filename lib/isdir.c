@@ -22,8 +22,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include "safe-stat.h"
-
 #ifdef STAT_MACROS_BROKEN
 #undef S_ISDIR
 #endif /* STAT_MACROS_BROKEN.  */

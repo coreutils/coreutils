@@ -34,8 +34,6 @@ extern int errno;
 #define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #endif
 
-#include "safe-stat.h"
-
 /* Rename file FROM to file TO.
    Return 0 if successful, -1 if not. */
 

@@ -22,7 +22,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "fsusage.h"
-#include "safe-stat.h"
 
 int statfs ();
 

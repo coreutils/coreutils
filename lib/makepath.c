@@ -78,7 +78,7 @@ typedef int gid_t;
 #endif
 
 #include "makepath.h"
-#include "safe-stat.h"
+
 void error ();
 
 /* Ensure that the directory ARGPATH exists.

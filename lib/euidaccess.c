@@ -74,8 +74,6 @@ extern int errno;
 #define R_OK 4
 #endif
 
-#include "safe-stat.h"
-
 /* The user's real user id. */
 static uid_t uid;
 
