@@ -1,3 +1,10 @@
+2001-05-11  Paul Eggert  <eggert@twinsun.com>
+
+	* m4/strftime.m4 (jm_FUNC_GNU_STRFTIME):
+	Don't bother to check library strftime, since
+	we'll be using our own my_strftime function anyway.
+	Define my_strftime instead of strftime.
+
 2001-05-15  Jim Meyering  <meyering@lucent.com>
 
 	* regex.m4: Use proper quoting so brackets appear in the test program.
