@@ -1,0 +1,54 @@
+#!/bin/sh
+# Exercise chdir-long's sample main program.
+
+gcc -DTEST_CHDIR=1 -DHAVE_CONFIG_H -I.. -g -O -W -Wall chdir-long.c libfetish.a
+
+vg='valgrind --track-fds=yes --leak-check=yes --quiet --num-callers=9'
+vg="$vg --leak-resolution=high"
+
+# Create a directory with name of the specified length.
+# Caveat: assumes the requested length is longer than that of $TMPDIR or /tmp.
+function mkdir_len
+{
+  local n
+  case $# in 1) n=$1;; *) echo "Usage: $FUNCNAME N" 1>&2; return 1;; esac
+  local root=${TMPDIR=/tmp}
+  test -n "$ROOT" && root=$ROOT
+  ( cd $root &&
+    perl -e 'my $len='$n'-length "'$root'";$i=100;$d="z"x$i;
+                  while ($i+2 < $len) {
+		    $len -= $i + 1;
+		    mkdir $d,0700 or die "$!\n";
+		    chdir $d} $d="z"x($len-1);
+		    mkdir $d or die "mkdir_len: $d: $!\n"' )
+}
+
+size_list=
+pow_2=128
+for i in 7 8 9 10 11 12 13 14 15 16 17; do
+  n=$pow_2
+  nm1=`expr $pow_2 - 1`
+  np1=`expr $pow_2 + 1`
+  size_list="$size_list $nm1 $n $np1"
+  pow_2=`expr $pow_2 \* 2`
+done
+
+for t in . /t /tmp /var/tmp; do
+  test -d $t || continue
+  printf "$t\n"
+  export TMPDIR=$t
+  for i in `echo $size_list 99999 11`; do
+    printf "$t\t$i\n"
+    mkdir_len $i
+    find $TMPDIR/zz*|tail -n1 > in
+    tt=`echo $t|tr / -`
+    # strace -o /t/k-$tt-$i ./a.out < in > out
+    ./a.out < in > out
+    # eval "$vg ./a.out no-pwd < in"
+    rm -rf $TMPDIR/zz*
+    if test "$TMPDIR" = . ; then
+      (pwd|tr -d '\n'; sed 's/^\.//' in) > k; rm -f in; mv k in
+    fi
+    diff -u in out > diff || { echo FAIL $t:$i; cut -b 1-35 diff; } && :
+  done
+done
