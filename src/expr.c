@@ -46,7 +46,7 @@
 
 #undef NEW
 #define NEW(Type) XMALLOC (Type, 1)
-#define OLD(x) free ((char *) x)
+#define OLD(x) free (x)
 
 /* The kinds of value we can have.  */
 enum valtype
