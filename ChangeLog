@@ -15,6 +15,8 @@
 	Similarly, cast NULL to `(char *)' in call to variadic function,
 	parse_long_options, so that it works even on systems for which
 	sizeof char* != sizeof int.
+	A similar problem was reported by Harti Brandt in
+	http://mail.gnu.org/archive/html/bug-gnu-utils/2003-10/msg00320.html.
 
 	* src/users.c (users): Free `utmp_buf' explicitly so that people
 	don't mistake this for a real leak.
