@@ -70,10 +70,6 @@ int rpl_lstat PARAMS((const char *, struct stat *));
 # define S_ISLNK(Mode) 0
 #endif
 
-#define DOT_OR_DOTDOT(Basename) \
-  (Basename[0] == '.' && (Basename[1] == '\0' \
-			  || (Basename[1] == '.' && Basename[2] == '\0')))
-
 #if defined strdupa
 # define ASSIGN_STRDUPA(DEST, S)		\
   do { DEST = strdupa(S); } while (0)
