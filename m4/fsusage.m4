@@ -11,7 +11,7 @@
 AC_DEFUN(jm_FILE_SYSTEM_USAGE,
 [
 
-AC_CHECKING(how to get filesystem space usage)
+echo "checking how to get filesystem space usage..."
 ac_fsusage_space=no
 
 # Perform only the link test since it seems there are no variants of the
