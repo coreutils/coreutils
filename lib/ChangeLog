@@ -1,3 +1,9 @@
+2001-03-10  Bruno Haible  <haible@clisp.cons.org>
+
+	* localcharset.c (locale_charset): Allow wildcard syntax. Also resolve
+	alias if codeset is empty.
+	* config.charset (BeOS): Use wildcard syntax.
+
 2001-03-13  Jim Meyering  <meyering@lucent.com>
 
 	* path-concat.c (path_concat) [FILESYSTEM_ACCEPTS_DRIVE_LETTER_PREFIX]:
