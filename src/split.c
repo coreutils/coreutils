@@ -56,11 +56,6 @@ static char *outfile_mid;
 /* Pointer to the end of OUTFILE. */
 static char *outfile_end;
 
-/* Status for outfile name generation.  */
-static unsigned outfile_count = -1;
-static unsigned outfile_name_limit = 25 * 26;
-static unsigned outfile_name_generation = 1;
-
 /* Name of input file.  May be "-".  */
 static char *infile;
 
@@ -557,7 +552,16 @@ next_file_name ()
   char *ne;
   unsigned int i;
 
-  outfile_count++;
+  static int first_call = 1;
+
+  /* Status for outfile name generation.  */
+  static unsigned outfile_count = 0;
+  static unsigned outfile_name_limit = 25 * 26;
+  static unsigned outfile_name_generation = 1;
+
+  if (!first_call)
+    outfile_count++;
+  first_call = 0;
   if (outfile_count < outfile_name_limit)
     {
       for (ne = outfile_end - 1; ; ne--)
