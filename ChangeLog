@@ -1,3 +1,28 @@
+2004-05-08  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.3.0.
+
+	* tests/rm/no-give-up: New file; check for today's fix.
+	* tests/rm/Makefile.am (TESTS): Add no-give-up.
+
+2004-05-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Fix bug where "rm" gave up too easily, reported by Dan Jacobsen in
+	<http://mail.gnu.org/archive/html/bug-coreutils/2004-05/msg00013.html>.
+
+	* src/remove.c (remove_entry): Check for errno values like ENOENT
+	that show the file cannot be directory, instead of for errno
+	values like EPERM that show the file might be a directory.  This
+	is necessary because, when a single unlink() call has multiple
+	reasons to fail, it can set errno to any of those reasons; it's
+	only the rare errno value like ENOENT that excludes all the other
+	possible reasons to fail even when the file is a directory.
+	(remove_cwd_entries): Don't attempt chdir if the file is known
+	to not be a directory.
+	(remove_dir): Use the same method that remove_cwd_entries uses
+	(for some reason they differed).  Don't assert that saved_errno
+	must be EPERM; it might be just about anything.
+
 2004-05-06  Jim Meyering  <jim@meyering.net>
 
 	* src/id.c (xgetgroups): Use xnmalloc, rather than xmalloc.
