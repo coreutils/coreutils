@@ -15,7 +15,7 @@ tmp=$RM_TMPDIR/t-rm.$$
 
 test_failure=0
 mkdir $tmp || test_failure=1
-: > $tmp/a || test_failure=1
+echo > $tmp/a || test_failure=1
 test -f $tmp/a || test_failure=1
 
 if test $test_failure = 1; then
