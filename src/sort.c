@@ -1782,15 +1782,34 @@ main (int argc, char **argv)
 		      badfieldspec (argv[i]);
 		    for (t = 0; digits[UCHAR (*s)]; ++s)
 		      t = 10 * t + *s - '0';
-		    if (t)
-		      t--;
+		    if (t == 0)
+		      {
+			/* Provoke with `sort -k0' */
+			error (0, 0, _("the starting field number argument \
+to the `-k' option must be positive"));
+			badfieldspec (argv[i]);
+		      }
+		    --t;
 		    t2 = 0;
 		    if (*s == '.')
 		      {
+			if (!digits[UCHAR (s[1])])
+			  {
+			    /* Provoke with `sort -k1.' */
+			    error (0, 0, _("starting field spec has `.' but \
+lacks following character offset"));
+			    badfieldspec (argv[i]);
+			  }
 			for (++s; digits[UCHAR (*s)]; ++s)
 			  t2 = 10 * t2 + *s - '0';
-			if (t2)
-			  t2--;
+			if (t2 == 0)
+			  {
+			    /* Provoke with `sort -k1.0' */
+			    error (0, 0, _("starting field character offset \
+argument to the `-k' option\nmust be positive"));
+			    badfieldspec (argv[i]);
+			  }
+			--t2;
 		      }
 		    if (t2 || t)
 		      {
@@ -1800,20 +1819,45 @@ main (int argc, char **argv)
 		    else
 		      key->sword = -1;
 		    s = set_ordering (s, key, bl_start);
-		    if (*s && *s != ',')
-		      badfieldspec (argv[i]);
-		    else if (*s++)
+		    if (*s == 0)
 		      {
+			key->eword = -1;
+			key->echar = 0;
+		      }
+		    else if (*s != ',')
+		      badfieldspec (argv[i]);
+		    else if (*s == ',')
+		      {
+			/* Skip over comma.  */
+			++s;
+			if (*s == 0)
+			  {
+			    /* Provoke with `sort -k1,' */
+			    error (0, 0, _("field specification has `,' but \
+lacks following field spec"));
+			    badfieldspec (argv[i]);
+			  }
 			/* Get POS2. */
 			for (t = 0; digits[UCHAR (*s)]; ++s)
 			  t = t * 10 + *s - '0';
-			if (t)
-			  t--;
+			if (t == 0)
+			  {
+			    /* Provoke with `sort -k1,0' */
+			    error (0, 0, _("ending field number argument \
+to the `-k' option must be positive"));
+			    badfieldspec (argv[i]);
+			  }
+			--t;
 			t2 = 0;
-			/* FIXME: It's an error to specify `.' without a
-			   following char-spec. */
 			if (*s == '.')
 			  {
+			    if (!digits[UCHAR (s[1])])
+			      {
+				/* Provoke with `sort -k1,1.' */
+				error (0, 0, _("ending field spec has `.' \
+but lacks following character offset"));
+				badfieldspec (argv[i]);
+			      }
 			    for (++s; digits[UCHAR (*s)]; ++s)
 			      t2 = t2 * 10 + *s - '0';
 			  }
