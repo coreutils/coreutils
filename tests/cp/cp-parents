@@ -1,5 +1,5 @@
 #!/bin/sh
-# cp -a --parents dir-specified-with-trailing-slash/ other-dir
+# cp -R --parents dir-specified-with-trailing-slash/ other-dir
 # would get a failed assertion.
 
 if test "$VERBOSE" = yes; then
@@ -26,6 +26,8 @@ fi
 
 fail=0
 
-cp --parents foo/ bar || fail=1
+# With 4.0.37 and earlier (back to when?), this would fail
+# with the failed assertion from dirname.c.
+cp -R --parents foo/ bar || fail=1
 
 (exit $fail); exit
