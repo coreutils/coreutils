@@ -13,6 +13,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   timestamps to their full nanosecond resolution; microsecond
   resolution is the best we can do right now.
 
+  sort now supports the zero byte (NUL) as a field separator; use -t '\0'.
+  The -t '' option, which formerly had no effect, is now an error.
+
+  sort option order no longer matters for the options -S, -d, -i, -o, and -t.
+  Stronger options override weaker, and incompatible options are diagnosed.
+
 ** Bug fixes
 
   stat no longer overruns a buffer for format strings ending in `%'
