@@ -88,19 +88,10 @@ parse_group (const char *name, gid_t *g)
   grp = getgrnam (name);
   if (grp == NULL)
     {
-      strtol_error s_err;
       unsigned long int tmp_long;
-
-      if (!ISDIGIT (*name))
-	error (EXIT_FAILURE, 0, _("invalid group name %s"), quote (name));
-
-      s_err = xstrtoul (name, NULL, 0, &tmp_long, NULL);
-      if (s_err != LONGINT_OK)
-	STRTOL_FATAL_ERROR (name, _("group number"), s_err);
-
-      if (tmp_long > GID_T_MAX)
-	error (EXIT_FAILURE, 0, _("invalid group number %s"), quote (name));
-
+      if (! (xstrtoul (name, NULL, 10, &tmp_long, "") == LONGINT_OK
+	     && tmp_long <= GID_T_MAX))
+	error (EXIT_FAILURE, 0, _("invalid group %s"), quote (name));
       *g = tmp_long;
     }
   else
@@ -178,7 +169,7 @@ main (int argc, char **argv)
   int dereference = -1;
 
   struct Chown_option chopt;
-  int fail;
+  bool ok;
   int optc;
 
   initialize_main (&argc, &argv);
@@ -294,11 +285,11 @@ main (int argc, char **argv)
       parse_group (chopt.group_name, &gid);
     }
 
-  fail = chown_files (argv + optind, bit_flags,
-		      (uid_t) -1, gid,
-		      (uid_t) -1, (gid_t) -1, &chopt);
+  ok = chown_files (argv + optind, bit_flags,
+		    (uid_t) -1, gid,
+		    (uid_t) -1, (gid_t) -1, &chopt);
 
   chopt_free (&chopt);
 
-  exit (fail ? EXIT_FAILURE : EXIT_SUCCESS);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
