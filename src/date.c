@@ -86,6 +86,7 @@ static struct option const long_options[] =
   {"iso-8601", optional_argument, NULL, 'I'},
   {"reference", required_argument, NULL, 'r'},
   {"rfc-822", no_argument, NULL, 'R'},
+  {"rfc-2822", no_argument, NULL, 'R'},
   {"set", required_argument, NULL, 's'},
   {"uct", no_argument, NULL, 'u'},
   {"utc", no_argument, NULL, 'u'},
@@ -133,7 +134,7 @@ Display the current time in the given FORMAT, or set the system date.\n\
 "), stdout);
       fputs (_("\
   -r, --reference=FILE      display the last modification time of FILE\n\
-  -R, --rfc-822             output RFC-822 compliant date string\n\
+  -R, --rfc-2822            output RFC-2822 compliant date string\n\
   -s, --set=STRING          set time described by STRING\n\
   -u, --utc, --universal    print or set Coordinated Universal Time\n\
 "), stdout);
@@ -204,7 +205,7 @@ specifies Coordinated Universal Time.  Interpreted sequences are:\n\
   %Y   year (1970...)\n\
 "), stdout);
       fputs (_("\
-  %z   RFC-822 style numeric timezone (-0500) (a nonstandard extension)\n\
+  %z   RFC-2822 style numeric timezone (-0500) (a nonstandard extension)\n\
   %Z   time zone (e.g., EDT), or nothing if no time zone is determinable\n\
 \n\
 By default, date pads numeric fields with zeroes.  GNU date recognizes\n\
@@ -392,12 +393,12 @@ argument must be a format string beginning with `+'."),
       usage (EXIT_FAILURE);
     }
 
-  /* Simply ignore --rfc-822 if specified when setting the date.  */
+  /* Simply ignore --rfc-2822 if specified when setting the date.  */
   if (rfc_format && !set_date && n_args > 0)
     {
       error (0, 0,
 	     _("a format string may not be specified when using\
- the --rfc-822 (-R) option"));
+ the --rfc-2822 (-R) option"));
       usage (EXIT_FAILURE);
     }
 
