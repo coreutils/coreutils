@@ -1,3 +1,14 @@
+Sun Nov 26 15:50:23 1995  Jim Meyering  (meyering@comco.com)
+
+	* csplit.c [!UINT_MAX]: Define.
+	[!INT_MAX]: Define.
+	Include xstrtoul.h.
+	(string_to_number): Remove function.
+	(check_for_offset): Use xstrtoul instead of string_to_number.
+	(parse_repeat_count): Likewise.
+	(parse_patterns): Likewise.
+	(main): Likewise.
+
 Wed Nov 22 23:12:47 1995  Jim Meyering  (meyering@comco.com)
 
 	* Makefile.in (all et. al.): If make was invoked with -k and a
