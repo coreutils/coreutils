@@ -40,7 +40,7 @@
 
 #ifdef ENABLE_NLS
 /* FIXME: this may need some heading.... applies to Debian linux for
-   reading the structure of _NL_ITEM... to get abreviated month names */
+   reading the structure of _NL_ITEM... to get abbreviated month names */
 # include <langinfo.h>
 #endif   /* NLS */
 
@@ -84,7 +84,7 @@ char *xstrdup ();
 #define NEGATIVE_SIGN   '-'
 #define NUMERIC_ZERO    '0'
 
-/* FIXME: what is ABM */
+/* Characters in abbreviated month name.  */
 #define CHARS_IN_ABM 3
 
 #ifdef ENABLE_NLS
@@ -600,8 +600,8 @@ inittables (void)
 	  nls_monthtab[i].name = strdup (s);
 	  nls_monthtab[i].val = us_monthtab[i].val;
 
-	  /* It has been pointed out, that abreviated month names    */
-	  /* may be longer than the usual 3 characters               */
+	  /* Abbreviated month names may be longer than
+	     the usual 3 characters.  */
 	  for (j = 0; j < strlen (s); j++)
 	    nls_monthtab[i].name[j] = fold_toupper[s[j]];
 
@@ -1079,45 +1079,45 @@ nls_set_fraction (register unsigned char ch)
       1.234,00
       1,234.00
    It's easy to tell which is a decimal point, and which isn't.  We use
-   the grouping iformation to find out how many digits are grouped together
-   for thousand seperator.
+   the grouping information to find out how many digits are grouped together
+   for thousand separator.
 
    The idea here, is to use the grouping information... but not to
    spend time with verifying the groups... not too much time, anyway.
    so, a number represented to us as:
       1.234.567,89
-   will be taken and seperated into different groups, seperated by a
-   seperator character (Decimal point or thousands seperator).
+   will be taken and separated into different groups, separated by a
+   separator character (Decimal point or thousands separator).
       {1,234,567}
-   these are the groups of digits that lead to a seperator character,
+   these are the groups of digits that lead to a separator character,
    and with the trailing group is added:
       {1,234,567,89}
    resulting in 4 groups of numbers.  If the resulting number of groups,
    are none, or just 1... this is not enough to decide anything about
    the decimal point.  We need at least two for that.  With two groups
-   we have at least one seperator.  That seperator can be a decimal
-   point, or a thousands seperator... if it is a thousands seperator
+   we have at least one separator.  That separator can be a decimal
+   point, or a thousands separator... if it is a thousands separator
    the number of digits in the last group, will comply with the first
    rule in the grouping rule for numeric values. i.e.
       |{89}| = grouping[0]
    if so, and there are only two groups of numbers, the value cannot
-   be determined.  If there are three or more numbers, the seperator
-   seperating the groups is checked.  If these are the same, the
-   character is determined to be a thousands seperator.  If they are
-   not the same, the last seperator is determined to be a decimal
+   be determined.  If there are three or more numbers, the separator
+   separating the groups is checked.  If these are the same, the
+   character is determined to be a thousands separator.  If they are
+   not the same, the last separator is determined to be a decimal
    point.  If checking the grouping rules, we find out that there
    are no grouping rules defined, either the grouping rules is NULL
    or the first grouping number is 0, then the locale format is used.
 
    We try to take an advantage of a special situation.  If the trailing
    group, the one that normally should be the fractional part, turns
-   out to have the same length as the thousands seperator rule says,
+   out to have the same length as the thousands separator rule says,
    making a doubt on that it may be a decimal point, we look for the
    group before that, i.e. with a two group form:
      {1234,567}
    where the grouping rule is 3;3... we take a look at group 1, and find
    out that |{1234}| > larger of the two first grouping rules, then
-   the seperator has to be a decimal point...
+   the separator has to be a decimal point...
 
    FIXME: change descriptions go in ChangeLog
 Changes:
@@ -1151,8 +1151,8 @@ look_for_fraction (unsigned const char *s, unsigned const char *e)
   /* groups = {}, n = 0 */
   for (; p < e; p++)
     {
-      /* groups[n]={number of digits leading to seperator n}
-         n = number of seperators so far */
+      /* groups[n]={number of digits leading to separator n}
+         n = number of separators so far */
       if (*p == decimal_point || *p == th_sep || *p == FLOATING_POINT)
 	{
 	  if (++n >= max_groups) {  /* WOW! BIG Number... enlarge table */
@@ -1167,15 +1167,15 @@ look_for_fraction (unsigned const char *s, unsigned const char *e)
 	break;
       /* mem[s..p]=digits only */
     }
-  /* n = number of seperators in s..e */
+  /* n = number of separators in s..e */
   groups[++n] = (short) (p - s);
   /* n = groups in the number */
   if (n <= 1)
     return;			/* Only one group of numbers... not enough */
   p = nls_grouping;
   /* p = address of group rules
-     s = address of next character after seperator */
-  s = s - 1;			/* s = address of last seperator */
+     s = address of next character after separator */
+  s = s - 1;			/* s = address of last separator */
   if (p && *p)
     {
       /* a legal trailing group, iff groups[n] == first rule */
@@ -1188,16 +1188,16 @@ look_for_fraction (unsigned const char *s, unsigned const char *e)
 	      return nls_set_fraction (*s);
 	    return;
 	  }
-	/* if the seperators are the same, it's a thousands */
+	/* if the separators are the same, it's a thousands */
 	if (*s != *(s - groups[n]))
 	  nls_set_fraction (*s);
-	/* s[0] = thousands seperator */
+	/* s[0] = thousands separator */
 	else if (*s == FLOATING_COMMA)
 	  nls_set_fraction (FLOATING_POINT);
       }
       nls_fraction_found = 1;
     }
-  else /* no grouping allowed here, last seperator IS decimal point */
+  else /* no grouping allowed here, last separator IS decimal point */
     {
       nls_set_fraction (*s);
     }
@@ -1268,7 +1268,7 @@ numcompare (register const unsigned char *a, register const unsigned char *b)
 	a++, b++;
 
       /* Here, we have either different digits, or possible fractions
-         or thousand seperators. */
+         or thousand separators. */
 
       if (ISDIGIT (*a) && ISDIGIT (*b))
 	{
@@ -1278,7 +1278,7 @@ numcompare (register const unsigned char *a, register const unsigned char *b)
 	  goto continue_thousands;
 	}
 
-      /* now, here either may be a fraction, or a thousand seperator...
+      /* now, here either may be a fraction, or a thousand separator...
          or both.                                                        */
       /* We've decided what are decimal_points, and what are thousands sep */
       if ((th_sep != 0) && (*a == th_sep || *b == th_sep))
