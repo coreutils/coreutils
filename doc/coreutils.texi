@@ -4258,7 +4258,7 @@ disabled, width of references is not taken into account in the output
 line width computations.
 
 @item
-All 256 characters, even @kbd{NUL}s, are always read and processed from
+All 256 characters, even @sc{nul}s, are always read and processed from
 input file with no adverse effect, even if @sc{gnu} extensions are disabled.
 However, System V @command{ptx} does not accept 8-bit characters, a few
 control characters are rejected, and the tilde @kbd{~} is also rejected.
@@ -8477,18 +8477,18 @@ Does not affect other symbolic links.  This is helpful for finding
 out the disk usage of directories, such as @file{/usr/tmp}, which
 are often symbolic links.
 
-@itemx --files0-from=@var{FILE0}
-@opindex --files0-from=@var{FILE0}
+@itemx --files0-from=@var{FILE}
+@opindex --files0-from=@var{FILE}
 @cindex including files from @command{du}
 Rather than processing files named on the command line, process those
-in the NUL-separated list in file @var{FILE0}.
+in the @sc{nul}-terminated list in file @var{FILE}.
 This is useful with the @option{--total} (@option{-c}) option when
 the list of file names is so long that it may exceed a command line
 length limitation.
 In such cases, running @command{du} via @command{xargs} is undesirable
 because it splits the list into pieces and makes @command{du} print a
 total for each sublist rather than for the entire list.
-One way to produce a list of NUL-separated file names is with @sc{gnu}
+One way to produce a list of @sc{nul}-terminated file names is with @sc{gnu}
 @command{find}, using its @option{-print0} predicate.
 Do not specify any @var{FILE} on the command line when using this option.
 
@@ -8544,8 +8544,8 @@ is at level 0, so @code{du --max-depth=0} is equivalent to @code{du -s}.
 @opindex -0
 @itemx --null
 @opindex --null
-@cindex output NUL-terminated lines
-Output the zero byte (@kbd{NUL}) at the end of each line, rather than a newline.
+@cindex output @sc{nul}-terminated lines
+Output the zero byte (@sc{nul}) at the end of each line, rather than a newline.
 This option enables other programs to parse the output of @command{du}
 even when that output would contain file names with embedded newlines.
 
