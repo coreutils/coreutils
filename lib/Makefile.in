@@ -156,9 +156,9 @@ DIST_SOURCES =  $(libfu_a_SOURCES)
 HEADERS =  $(noinst_HEADERS)
 
 DIST_COMMON =  $(noinst_HEADERS) Makefile.am Makefile.in TODO alloca.c \
-chown.c error.c error.h euidaccess.c fileblocks.c fnmatch.c fsusage.c \
-ftruncate.c getdate.c getgroups.c getline.c group-member.c lchown.c \
-lstat.c malloc.c memcmp.c memcpy.c memset.c mkdir.c mktime.c \
+chown.c dup2.c error.c error.h euidaccess.c fileblocks.c fnmatch.c \
+fsusage.c ftruncate.c getdate.c getgroups.c getline.c group-member.c \
+lchown.c lstat.c malloc.c memcmp.c memcpy.c memset.c mkdir.c mktime.c \
 mountlist.c obstack.c obstack.h realloc.c regex.c rename.c rmdir.c \
 rpmatch.c stat.c stpcpy.c strcasecmp.c strdup.c strftime.c \
 strncasecmp.c strndup.c strstr.c strtol.c strtoul.c strtoull.c \
@@ -170,23 +170,24 @@ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 GZIP_ENV = --best
 DEP_FILES =  .deps/addext.P .deps/alloca.P .deps/argmatch.P \
 .deps/backupfile.P .deps/basename.P .deps/chown.P .deps/closeout.P \
-.deps/dirname.P .deps/error.P .deps/euidaccess.P .deps/exclude.P \
-.deps/fileblocks.P .deps/filemode.P .deps/fnmatch.P .deps/fsusage.P \
-.deps/ftruncate.P .deps/full-write.P .deps/getdate.P .deps/getgroups.P \
-.deps/getline.P .deps/getopt.P .deps/getopt1.P .deps/group-member.P \
-.deps/hash.P .deps/human.P .deps/idcache.P .deps/isdir.P .deps/lchown.P \
-.deps/long-options.P .deps/lstat.P .deps/makepath.P .deps/malloc.P \
-.deps/memcmp.P .deps/memcpy.P .deps/memset.P .deps/mkdir.P \
-.deps/mktime.P .deps/modechange.P .deps/mountlist.P .deps/obstack.P \
-.deps/path-concat.P .deps/posixtm.P .deps/quotearg.P .deps/realloc.P \
-.deps/regex.P .deps/rename.P .deps/rmdir.P .deps/rpmatch.P \
-.deps/safe-read.P .deps/save-cwd.P .deps/savedir.P .deps/stat.P \
-.deps/stpcpy.P .deps/strcasecmp.P .deps/strdup.P .deps/strftime.P \
-.deps/stripslash.P .deps/strncasecmp.P .deps/strndup.P .deps/strstr.P \
-.deps/strtol.P .deps/strtoul.P .deps/strtoull.P .deps/strtoumax.P \
-.deps/strverscmp.P .deps/userspec.P .deps/utime.P .deps/version-etc.P \
-.deps/xgetcwd.P .deps/xmalloc.P .deps/xstrdup.P .deps/xstrtol.P \
-.deps/xstrtoul.P .deps/xstrtoumax.P .deps/yesno.P
+.deps/dirname.P .deps/dup2.P .deps/error.P .deps/euidaccess.P \
+.deps/exclude.P .deps/fileblocks.P .deps/filemode.P .deps/fnmatch.P \
+.deps/fsusage.P .deps/ftruncate.P .deps/full-write.P .deps/getdate.P \
+.deps/getgroups.P .deps/getline.P .deps/getopt.P .deps/getopt1.P \
+.deps/group-member.P .deps/hash.P .deps/human.P .deps/idcache.P \
+.deps/isdir.P .deps/lchown.P .deps/long-options.P .deps/lstat.P \
+.deps/makepath.P .deps/malloc.P .deps/memcmp.P .deps/memcpy.P \
+.deps/memset.P .deps/mkdir.P .deps/mktime.P .deps/modechange.P \
+.deps/mountlist.P .deps/obstack.P .deps/path-concat.P .deps/posixtm.P \
+.deps/quotearg.P .deps/realloc.P .deps/regex.P .deps/rename.P \
+.deps/rmdir.P .deps/rpmatch.P .deps/safe-read.P .deps/save-cwd.P \
+.deps/savedir.P .deps/stat.P .deps/stpcpy.P .deps/strcasecmp.P \
+.deps/strdup.P .deps/strftime.P .deps/stripslash.P .deps/strncasecmp.P \
+.deps/strndup.P .deps/strstr.P .deps/strtol.P .deps/strtoul.P \
+.deps/strtoull.P .deps/strtoumax.P .deps/strverscmp.P .deps/userspec.P \
+.deps/utime.P .deps/version-etc.P .deps/xgetcwd.P .deps/xmalloc.P \
+.deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P .deps/xstrtoumax.P \
+.deps/yesno.P
 SOURCES = $(libfu_a_SOURCES)
 OBJECTS = $(am_libfu_a_OBJECTS)
 
@@ -293,6 +294,8 @@ closeout_.c: closeout.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/closeout.c; then echo $(srcdir)/closeout.c; else echo closeout.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > closeout_.c
 dirname_.c: dirname.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/dirname.c; then echo $(srcdir)/dirname.c; else echo dirname.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > dirname_.c
+dup2_.c: dup2.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/dup2.c; then echo $(srcdir)/dup2.c; else echo dup2.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > dup2_.c
 error_.c: error.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/error.c; then echo $(srcdir)/error.c; else echo error.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > error_.c
 euidaccess_.c: euidaccess.c $(ANSI2KNR)
@@ -428,18 +431,19 @@ xstrtoumax_.c: xstrtoumax.c $(ANSI2KNR)
 yesno_.c: yesno.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/yesno.c; then echo $(srcdir)/yesno.c; else echo yesno.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > yesno_.c
 addext_.o alloca_.o argmatch_.o backupfile_.o basename_.o chown_.o \
-closeout_.o dirname_.o error_.o euidaccess_.o exclude_.o fileblocks_.o \
-filemode_.o fnmatch_.o fsusage_.o ftruncate_.o full-write_.o getdate_.o \
-getgroups_.o getline_.o getopt_.o getopt1_.o group-member_.o hash_.o \
-human_.o idcache_.o isdir_.o lchown_.o long-options_.o lstat_.o \
-makepath_.o malloc_.o memcmp_.o memcpy_.o memset_.o mkdir_.o mktime_.o \
-modechange_.o mountlist_.o obstack_.o path-concat_.o posixtm_.o \
-quotearg_.o realloc_.o regex_.o rename_.o rmdir_.o rpmatch_.o \
-safe-read_.o save-cwd_.o savedir_.o stat_.o stpcpy_.o strcasecmp_.o \
-strdup_.o strftime_.o stripslash_.o strncasecmp_.o strndup_.o strstr_.o \
-strtol_.o strtoul_.o strtoull_.o strtoumax_.o strverscmp_.o userspec_.o \
-utime_.o version-etc_.o xgetcwd_.o xmalloc_.o xstrdup_.o xstrtol_.o \
-xstrtoul_.o xstrtoumax_.o yesno_.o : $(ANSI2KNR)
+closeout_.o dirname_.o dup2_.o error_.o euidaccess_.o exclude_.o \
+fileblocks_.o filemode_.o fnmatch_.o fsusage_.o ftruncate_.o \
+full-write_.o getdate_.o getgroups_.o getline_.o getopt_.o getopt1_.o \
+group-member_.o hash_.o human_.o idcache_.o isdir_.o lchown_.o \
+long-options_.o lstat_.o makepath_.o malloc_.o memcmp_.o memcpy_.o \
+memset_.o mkdir_.o mktime_.o modechange_.o mountlist_.o obstack_.o \
+path-concat_.o posixtm_.o quotearg_.o realloc_.o regex_.o rename_.o \
+rmdir_.o rpmatch_.o safe-read_.o save-cwd_.o savedir_.o stat_.o \
+stpcpy_.o strcasecmp_.o strdup_.o strftime_.o stripslash_.o \
+strncasecmp_.o strndup_.o strstr_.o strtol_.o strtoul_.o strtoull_.o \
+strtoumax_.o strverscmp_.o userspec_.o utime_.o version-etc_.o \
+xgetcwd_.o xmalloc_.o xstrdup_.o xstrtol_.o xstrtoul_.o xstrtoumax_.o \
+yesno_.o : $(ANSI2KNR)
 .y.c:
 	$(YACC) $(AM_YFLAGS) $(YFLAGS) $< && mv y.tab.c $*.c
 	if test -f y.tab.h; then \
