@@ -10,6 +10,7 @@
 	(echo invocation): Mention that -- isn't special.
 	(test invocation): Mention that the expression is optional,
 	and that test ! EXPR is like ! test EXPR.
+	Mention that -h and -L don't dereference symlinks.
 	(expr invocation): Mention --help, --version.
 
 	* coreutils.texi (sort invocation): Add remarks about sort -u
