@@ -167,11 +167,6 @@ off_t lseek ();
 # define clearerr(S) clearerr_unlocked (S)
 #endif
 
-#ifdef HAVE_FCLOSE_UNLOCKED
-# undef fclose
-# define fclose(S) fclose_unlocked (S)
-#endif
-
 #ifdef HAVE_FEOF_UNLOCKED
 # undef feof
 # define feof(S) feof_unlocked (S)
