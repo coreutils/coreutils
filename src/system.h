@@ -177,6 +177,7 @@ typedef enum {false = 0, true = 1} bool;
 #  define setmode _setmode
 #  define fileno(_fp) _fileno (_fp)
 # endif /* not DJGPP */
+# define SET_MODE(_f, _m) set_mode (_f, _m)
 # define SET_BINARY(_f) do {if (!isatty(_f)) setmode (_f, O_BINARY);} while (0)
 # define SET_BINARY2(_f1, _f2)		\
   do {					\
@@ -188,6 +189,7 @@ typedef enum {false = 0, true = 1} bool;
       }					\
   } while(0)
 #else
+# define SET_MODE(_f, _m) (void)0
 # define SET_BINARY(f) (void)0
 # define SET_BINARY2(f1,f2) (void)0
 # define O_BINARY 0
