@@ -2,6 +2,9 @@
 
 	Tranform the generated src/Makefile.in file so it falls back on
 	using /bin/rm when necessary.  The old rule didn't always work.
+	This is necessary only on certain losing systems, and because this
+	package builds an `rm' executable and some people put `.' too
+	early in their PATH.
 	* Makefile.am (DISTCLEANFILES): Remove .deps and `FIXME' comment.
 	(EXTRA_DIST): Add .kludge-stamp.
 	(.kludge-stamp): New rule.
