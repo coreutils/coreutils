@@ -21,5 +21,7 @@
 
 #include "strtoul.c"
 
+#ifdef _LIBC
 strong_alias (__strtoull_internal, __strtouq_internal)
 weak_alias (strtoull, strtouq)
+#endif
