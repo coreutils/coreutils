@@ -2,10 +2,13 @@
 
 	* Version 5.3.0.
 
-	`pr --columns=N' was not equivalent to `pr -N'
+	`pr --columns=N' was not equivalent to `pr -N' when also using
+	either -s or -w.
+
 	* src/pr.c (main): Set `explicit_columns' for --columns=N,
 	not just for -N.  This bug has existed since the introduction
 	of the --columns=N option on 1998-08-15.
+	* NEWS: Document this.
 	* tests/pr/Test.pm (test_vector): For each -N test, automatically
 	create a new test vector using --columns=N.
 
