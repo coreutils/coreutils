@@ -1,6 +1,6 @@
 enum
 {
-  ALG_MD5,
+  ALG_MD5 = 1,
   ALG_SHA1
 };
 
