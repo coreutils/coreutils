@@ -64,8 +64,8 @@ libfu_a_LIBADD = @LIBOBJS@ @ALLOCA@
 libfu_a_DEPENDENCIES = $(libfu_a_LIBADD)
 
 noinst_HEADERS = argmatch.h backupfile.h error.h fnmatch.h fsusage.h \
-getline.h getopt.h group-member.h long-options.h makepath.h modechange.h \
-mountlist.h path-concat.h pathmax.h \
+getdate.h getline.h getopt.h group-member.h long-options.h \
+makepath.h modechange.h mountlist.h path-concat.h pathmax.h \
 save-cwd.h xstrtol.h xstrtoul.h
 
 BUILT_SOURCES = getdate.c posixtm.c

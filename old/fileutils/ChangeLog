@@ -1,5 +1,7 @@
 Sat Jan 25 00:34:39 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/cp.h: Remove now-unnecessary prototype for is_ancestor.
+
 	* lib/Makefile.am (noinst_HEADERS): Add getdate.h.
 
 	* src/cp-aux.c (is_ancestor): Remove function.
