@@ -80,12 +80,6 @@ void free ();
    status code greater than 1.  */
 #define SORT_FAILURE 2
 
-/* Some character constants used in the program.  Better do assign */
-/* these globally.  Makes the program a little more readable.      */
-static unsigned char decimal_point = '.';
-static unsigned char th_sep        = ',';
-static unsigned char *nls_grouping = "\003\003";
-
 #define FLOATING_POINT  '.'
 #define FLOATING_COMMA  ','
 #define NEGATIVE_SIGN   '-'
@@ -93,6 +87,12 @@ static unsigned char *nls_grouping = "\003\003";
 
 /* FIXME: what is ABM */
 #define CHARS_IN_ABM 3
+
+#ifdef ENABLE_NLS
+
+static unsigned char decimal_point = '.';
+static unsigned char th_sep = ',';
+static unsigned char *nls_grouping = (unsigned char *) "\003\003";
 
 /* This is "C" locale, need another? */
 static int need_locale = 0;
@@ -102,6 +102,12 @@ static int nls_fraction_found = 1;
 
 /* Look for month notations in text? */
 static int nls_month_found = 1;
+
+#else
+
+# define decimal_point FLOATING_POINT
+
+#endif
 
 /* If native language support is requested, make a 1-1 map to the
    locale character map, otherwise ensure normal behavior.  */
@@ -114,8 +120,8 @@ static int nls_month_found = 1;
 /* 12 months in a year */
 # define NLS_NUM_MONTHS 12
 
-/* FIXME: avoid arbitrary limits -- is this one?  */
-/* Maximum number of groups.  FIXME: what kind of group?  */
+/* FIXME: avoid arbitrary limits  */
+/* Maximum number of groups.  */
 # define NLS_MAX_GROUPS 8
 
 /* A string with one character, to enforce char collation */
@@ -1191,78 +1197,98 @@ look_for_fraction (unsigned char *s, unsigned char *e)
 static int
 numcompare (register const unsigned char *a, register const unsigned char *b)
 {
-  int ret_code = 1;  /* normal return status, see later in code */
-  int diff     = 0;  /* difference between two digits           */
+  int ret_code = 1;		/* normal return status, see later in code */
+  int diff = 0;			/* difference between two digits           */
 
-  while (blanks[*a]) ++a;
-  while (blanks[*b]) ++b;
+  while (blanks[*a])
+    ++a;
+  while (blanks[*b])
+    ++b;
 
   /* next character in a,b is non-blank */
-  if ((*a == NEGATIVE_SIGN || *b == NEGATIVE_SIGN) && *a != *b) {
-    /* a < 0, or b < 0, but not both */
-    if (*a == NEGATIVE_SIGN)      ret_code = -1, ++a; /* a looks < b */
-    else if (*b == NEGATIVE_SIGN) ret_code =  1, ++b; /* b looks < a */
-    /* bypass zeroes, decimal points, and thousand sep in a & b */
-    while (*a == NUMERIC_ZERO ||(th_sep && *a == th_sep)|| *a == decimal_point)
-      ++a;
-    while (*b == NUMERIC_ZERO ||(th_sep && *b == th_sep)|| *b == decimal_point)
-      ++b;
-    if (ISDIGIT(*a) || ISDIGIT(*b))
-      /* here, either a or b or both are digits
-	 if a and b are digits, the signed one is the lesser.
-	 if a is a digit, and not b.. it means b==0, and if b==0
-	 than either is signed if b is signed then -0 < a
-	 or if a is signed then -a < 0.  The ret_code is already set
-	 to mark that the signed number is the lesser, so we just
-	 return that number here.                                    */
-      return ret_code;
+  if ((*a == NEGATIVE_SIGN || *b == NEGATIVE_SIGN) && *a != *b)
+    {
+      /* a < 0, or b < 0, but not both */
+      if (*a == NEGATIVE_SIGN)
+	ret_code = -1, ++a;	/* a looks < b */
+      else if (*b == NEGATIVE_SIGN)
+	ret_code = 1, ++b;	/* b looks < a */
+      /* bypass zeroes, decimal points, and thousand sep in a & b */
+      while (*a == NUMERIC_ZERO || (th_sep && *a == th_sep)
+	     || *a == decimal_point)
+	++a;
 
-    /* *a and *b are neither digits, they are equal -0 == +0 */
-    return 0;
-  } else {
-    /* either both numbers are signed, or both are not-signed */
-    /* FIXME: clean up */
-    if (*a == NEGATIVE_SIGN) ++a, ++b, ret_code=-1;
-    /* if both are signed, then remember -100 < -10 (ret_code reversed!) */
+      while (*b == NUMERIC_ZERO || (th_sep && *b == th_sep)
+	     || *b == decimal_point)
+	++b;
 
-    /* Skip any leading zeroes */
-    while (*a == NUMERIC_ZERO) ++a;
-    while (*b == NUMERIC_ZERO) ++b;
+      if (ISDIGIT (*a) || ISDIGIT (*b))
+	/* here, either a or b or both are digits
+	   if a and b are digits, the signed one is the lesser.
+	   if a is a digit, and not b.. it means b==0, and if b==0
+	   than either is signed if b is signed then -0 < a
+	   or if a is signed then -a < 0.  The ret_code is already set
+	   to mark that the signed number is the lesser, so we just
+	   return that number here.                                    */
+	return ret_code;
 
-continue_thousands:
-
-    /* skip all equal digits */
-    while (ISDIGIT(*a) && ISDIGIT(*b) && *a == *b)
-      a++, b++;
-
-    /* Here, we have either different digits, or possible fractions
-       or thousand seperators. */
-
-    if (ISDIGIT(*a) && ISDIGIT(*b)) {
-      if (diff == 0)
-	diff = ((*a) - (*b));        /* simple, isn't it? not quite */
-      a++, b++;
-      goto continue_thousands;
+      /* *a and *b are neither digits, they are equal -0 == +0 */
+      return 0;
     }
+  else
+    {
+      /* either both numbers are signed, or both are not-signed */
+      /* FIXME: clean up */
+      if (*a == NEGATIVE_SIGN)
+	++a, ++b, ret_code = -1;
+      /* if both are signed, then remember -100 < -10 (ret_code reversed!) */
 
-    /* now, here either may be a fraction, or a thousand seperator...
-       or both.                                                        */
-    /* We've decided what are decimal_points, and what are thousands sep */
-    if ((th_sep != 0) && (*a == th_sep || *b == th_sep)) {
-      if (*a == th_sep) ++a;
-      if (*b == th_sep) ++b;
-      goto continue_thousands;     /* Ugly, but better than a while(1) */
+      /* Skip any leading zeroes */
+      while (*a == NUMERIC_ZERO)
+	++a;
+      while (*b == NUMERIC_ZERO)
+	++b;
+
+    continue_thousands:
+
+      /* skip all equal digits */
+      while (ISDIGIT (*a) && ISDIGIT (*b) && *a == *b)
+	a++, b++;
+
+      /* Here, we have either different digits, or possible fractions
+         or thousand seperators. */
+
+      if (ISDIGIT (*a) && ISDIGIT (*b))
+	{
+	  if (diff == 0)
+	    diff = ((*a) - (*b));	/* simple, isn't it? not quite */
+	  a++, b++;
+	  goto continue_thousands;
+	}
+
+      /* now, here either may be a fraction, or a thousand seperator...
+         or both.                                                        */
+      /* We've decided what are decimal_points, and what are thousands sep */
+      if ((th_sep != 0) && (*a == th_sep || *b == th_sep))
+	{
+	  if (*a == th_sep)
+	    ++a;
+	  if (*b == th_sep)
+	    ++b;
+	  goto continue_thousands;	/* Ugly, but better than a while(1) */
+	}
+
+      if (ISDIGIT (*a))
+	return ret_code * 1;	/* a has more digits than b */
+      if (ISDIGIT (*b))
+	return ret_code * -1;	/* b has more digits than a */
+
+      /* now, we should have the fractions solved */
+      if ((diff == 0) && (*a == decimal_point || *b == decimal_point))
+	return ret_code * fraccompare (a, b);
+
+      return diff;		/* fall through here, and diff decides */
     }
-
-    if (ISDIGIT(*a)) return ret_code *  1; /* a has more digits than b */
-    if (ISDIGIT(*b)) return ret_code * -1; /* b has more digits than a */
-
-    /* now, we should have the fractions solved */
-    if ((diff == 0) && (*a == decimal_point || *b == decimal_point))
-      return ret_code * fraccompare(a, b);
-
-    return diff;               /* fall through here, and diff decides */
-  }
 }
 #else
 static int
