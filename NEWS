@@ -6,16 +6,16 @@ GNU coreutils NEWS                                    -*- outline -*-
   You can select the default level of POSIX conformance at configure-time,
   e.g., by ./configure DEFAULT_POSIX2_VERSION=199209
 
-  touch -r now specifies the origin for any relative times in the -d
-  operand, if both options are given.  For example, "touch -r FOO -d
-  '-5 seconds' BAR" sets BAR's modification time to be five seconds
-  before FOO's.
-
 ** Bug fixes
 
   fold -s works once again on systems with differing sizes for int and size_t
 
 ** New features
+
+  touch -r now specifies the origin for any relative times in the -d
+  operand, if both options are given.  For example, "touch -r FOO -d
+  '-5 seconds' BAR" sets BAR's modification time to be five seconds
+  before FOO's.
 
   join: The obsolete options "-j1 FIELD", "-j2 FIELD", and
   "-o LIST1 LIST2..." are no longer supported on POSIX 1003.1-2001 systems.
