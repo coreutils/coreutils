@@ -1,3 +1,26 @@
+1997-12-21  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (AC_CHECK_HEADERS): Add stdlib.h.
+
+	* src/system.h: Merge in things from fileutils' version of this file.
+	* src/csplit.c: s/__P/PARAMS/.
+	* src/fmt.c: s/__P/PARAMS/.
+	* src/od.c: s/__P/PARAMS/.
+	* src/pr.c: s/__P/PARAMS/.
+
+1997-12-14  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/sys2.h: s/HAVE_DECLARATION_/HAVE_DECL_/g.
+
+1997-12-13  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/fmt.c (main): Add some braces.
+	Check return code from fclose of each input file.
+	Close stdout and check for errors.
+
+	* src/csplit.c (close_output_file): Check ferror before calling fclose.
+	(main): Close stdout and check for errors.
+
 1997-11-15  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* acconfig.h: Add mktime.
