@@ -1,3 +1,8 @@
+2002-07-24  Jim Meyering  <meyering@lucent.com>
+
+	* coreutils.texi (Time directives): Document %P, %R, %e, %F,
+	%g, %G, and %V
+
 2002-07-22  Martin Michlmayr  <tbm@cyrius.com>
 
 	* coreutils.texi (Formatting the file names): Document
