@@ -73,9 +73,6 @@ Here is one possible patch to correct the problem.
 -#ifndef __STDC_32_MODE__
 +#ifndef __LP64__
 
-I've heard that stat.c doesn't compile on Ultrix 4.3.
-Does anyone with access to such a system want to investigate?
-
 On some systems, some of the tests fail when run as root.  All failures
 I've seen appear to be due to problems in the testing framework, not
 in the tools themselves.  I'll address that for the next release by
