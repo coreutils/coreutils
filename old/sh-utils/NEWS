@@ -1,5 +1,6 @@
 Changes in release 1.13
  [1.12r]
+* printf now warns if excess arguments are ignored.
 * tee no longer fails immediately upon receipt of SIGPIPE
  [1.12q]
 * running `make check' runs tests of nice
