@@ -243,7 +243,7 @@ print_esc (const char *escstart)
   int esc_value = 0;		/* Value of \nnn escape. */
   int esc_length;		/* Length of \nnn escape. */
 
-  if (*p == 'x')
+  if (!posixly_correct && *p == 'x')
     {
       /* A hexadecimal \xhh escape sequence must have 1 or 2 hex. digits.  */
       for (esc_length = 0, ++p;
@@ -264,7 +264,7 @@ print_esc (const char *escstart)
 	esc_value = esc_value * 8 + octtobin (*p);
       putchar (esc_value);
     }
-  else if (strchr ("\"\\abcfnrtv", *p))
+  else if (*p && strchr ("\"\\abcfnrtv", *p))
     print_esc_char (*p++);
   else if (!posixly_correct && (*p == 'u' || *p == 'U'))
     {
@@ -295,7 +295,14 @@ print_esc (const char *escstart)
       print_unicode_char (stdout, uni_value, 0);
     }
   else
-    error (EXIT_FAILURE, 0, _("\\%c: invalid escape"), *p);
+    {
+      putchar ('\\');
+      if (*p)
+	{
+	  putchar (*p);
+	  p++;
+	}
+    }
   return p - escstart - 1;
 }
 
@@ -449,7 +456,7 @@ print_formatted (const char *format, int argc, char **argv)
 		}
 	      break;
 	    }
-	  if (strchr ("-+ #", *f))
+	  while (*f == ' ' || *f == '#' || *f == '+' || *f == '-')
 	    {
 	      ++f;
 	      ++direc_length;
@@ -508,7 +515,7 @@ print_formatted (const char *format, int argc, char **argv)
 	      ++f;
 	      ++direc_length;
 	    }
-	  if (!strchr ("diouxXfeEgGcs", *f))
+	  if (! (*f && strchr ("diouxXfeEgGcs", *f)))
 	    error (EXIT_FAILURE, 0, _("%%%c: invalid directive"), *f);
 	  ++direc_length;
 	  if (argc > 0)
