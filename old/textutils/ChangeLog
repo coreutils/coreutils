@@ -11,9 +11,60 @@
 
 	* src/join.c (xfields): Only <blank>s separate fields, not <space>s.
 
+1999-06-01  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/linebuffer.c (readline): Leave room for an extra byte
+	after the newline; comm needs this for memcoll.
+
+1999-06-01  Paul Eggert  <eggert@twinsun.com>
+
+	Add LC_COLLATE support to `join'.
+
+	* doc/textutils.texi: Describe join and LC_COLLATE.
+
+	* src/join.c: Add support for LC_COLLATE locale.
+	Include hard-locale.h, linebuffer.h, memcoll.h.
+	(struct line): New member `buf', replacing `beg' and `lim'.
+	All uses changed.
+	(hard_LC_COLLATE): New var.
+	(main): Initialize it.
+	(get_line): Use readline to read the line,
+	instead of doing it by hand.
+	That way, we get a buffer that we can pass to memcoll.
+	(keycmp): Use memcoll to compare lines if hard_LC_COLLATE is nonzero.
+
 1999-05-27  Volker Borchert  <bt@teknon.de>
 
 	* tests/Makefile.am: Qualify .env-warn with $(srcdir)/ prefix.
+
+1999-05-25  Paul Eggert  <eggert@twinsun.com>
+
+	Add LC_COLLATE support to `comm', so that `comm' is compatible
+	with `sort' in nontrivial locales.
+
+	* doc/textutils.texi: Document locale-specific mode for comm.
+
+	* lib/Makefile.am (libtu_a_SOURCES): Add hard-locale.c, memcoll.c.
+	(noinst_HEADERS): Add hard-locale.h, memcoll.h.
+
+	* src/comm.c: Include hard-locale.h, memcoll.h.
+	(hard_LC_COLLATE): New variable.
+	(compare_files): Use memcoll to compare if hard_LC_COLLATE.
+	(main): Initialize hard_LC_COLLATE from locale.
+
+	* src/sort.c: Include hard-locale.h, memcoll.h.
+	(hard_LC_COLLATE, hard_LC_CTYPE, hard_LC_TIME): New variables,
+	replacing `need_locale'.
+	(memcoll): Move to lib/memcoll.c.
+	(keycompare): No need to alloc (0), since our caller now does it.
+	(compare): alloca (0) before returning.
+	(my_setlocale): Remove; hard_locale now dows this.
+	(main): Invoke setlocale, bindtextdomain, and textdomain before
+	invoking anything that might print an error.
+	Use hard_locale to determine which locales are hard.
+
+	* lib/hard-locale.c, lib/hard-locale.h, lib/memcoll.c, lib/memcoll.h:
+	New files.
 
 1999-05-25  Paul Eggert  <eggert@shade.twinsun.com>
 
