@@ -1,3 +1,8 @@
+Sat Sep 21 13:34:59 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/Makefile.am (check): Remove tests for md5sum.
+	* tests/md5sum-test: New directory.  Put them here instead.
+
 Thu Sep 19 08:54:05 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* tests/: Rename from checks.
