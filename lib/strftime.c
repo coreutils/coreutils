@@ -230,6 +230,11 @@ static const char spaces[16] = "                ";
 # define TOUPPER(Ch) (islower (Ch) ? toupper (Ch) : (Ch))
 # define TOLOWER(Ch) (isupper (Ch) ? tolower (Ch) : (Ch))
 #endif
+/* We don't use `isdigit' here since the locale dependent
+   interpretation is not what we want here.  We only need to accept
+   the arabic digits in the ASCII range.  One day there is perhaps a
+   more reliable way to accept other sets of digits.  */
+#define ISDIGIT(Ch) ((unsigned int) (Ch) - '0' <= 9)
 
 static char *memcpy_lowcase __P ((char *dest, const char *src, size_t len));
 
@@ -511,15 +516,16 @@ strftime (s, maxsize, format, tp)
 	}
 
       /* As a GNU extension we allow to specify the field width.  */
-      if (isdigit (*f))
+      if (ISDIGIT (*f))
 	{
 	  width = 0;
 	  do
 	    {
 	      width *= 10;
 	      width += *f - '0';
+	      ++f;
 	    }
-	  while (isdigit (*++f));
+	  while (ISDIGIT (*f));
 	}
 
       /* Check for modifiers.  */
