@@ -1,3 +1,7 @@
+1999-01-31  Jim Meyering  <meyering@ascend.com>
+
+	* lib/lchown.c: Declare chown manually.
+
 1999-01-30  Jim Meyering  <meyering@ascend.com>
 
 	* acconfig.h: Remove uintmax and STAT* #undefs.
