@@ -90,7 +90,7 @@ usage (int status)
 }
 
 int
-main (int argc, char *const argv[])
+main (int argc, char **argv)
 {
   /* If not -1, use this method to canonicalize.  */
   int can_mode = -1;
