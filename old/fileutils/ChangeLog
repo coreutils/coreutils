@@ -1,3 +1,9 @@
+Fri Nov 29 21:19:13 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/ls.c (main): Close stdout and check result, in case any
+	deferred writes fail.
+	Use EXIT_SUCCESS and EXIT_FAILURE in exit and usage calls.
+
 Thu Nov 28 13:10:22 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/df.c (find_mount_point): Use strip_trailing_slashes and dirname
