@@ -584,6 +584,9 @@ scanargs (int argc, char **argv)
 {
   int i;
 
+  --argc;
+  ++argv;
+
   for (i = optind; i < argc; i++)
     {
       char *name, *val;
