@@ -2830,7 +2830,7 @@ produce empty pages.\n\
   -W PAGE_WIDTH, --page-width=PAGE_WIDTH\n\
                     set page width to PAGE_WIDTH (72) characters always,\n\
                     truncate lines, except -J option is set, no interference\n\
-                    with -S or -s
+                    with -S or -s\n\
   --help            display this help and exit\n\
   --version         output version information and exit\n\
 \n\
