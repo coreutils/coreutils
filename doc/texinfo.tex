@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{1998-11-13}%
+\def\texinfoversion{1998-12-15}%
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98
 % Free Software Foundation, Inc.
@@ -1539,7 +1539,7 @@ where each line of input produces a line of output.}
 \newif\iffinishedtitlepage
 
 % Do an implicit @contents or @shortcontents after @end titlepage if the
-% user says @contentsaftertitlepage or @shortcontentsaftertitlepage.
+% user says @setcontentsaftertitlepage or @setshortcontentsaftertitlepage.
 % 
 \newif\ifsetcontentsaftertitlepage
  \let\setcontentsaftertitlepage = \setcontentsaftertitlepagetrue
@@ -2388,8 +2388,9 @@ width0pt\relax} \fi
 % (Must be a way to avoid doing expansion at all, and thus not have to
 % laboriously list every single command here.)
 \def\@{@}% will be @@ when we switch to @ as escape char.
-%\let\{ = \lbracecmd
-%\let\} = \rbracecmd
+% need these in case \tex is in effect and \{ is a \delimiter again.
+\let\{ = \lbracecmd
+\let\} = \rbracecmd
 \def\_{{\realbackslash _}}%
 \def\w{\realbackslash w }%
 \def\bf{\realbackslash bf }%
