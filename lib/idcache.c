@@ -55,10 +55,13 @@ struct userid
   struct userid *next;
 };
 
+/* The members of this list have already been looked up.
+   If a name is NULL, the corresponding id is not in the password file.  */
 static struct userid *user_alist;
 
 #ifdef NOT_USED
-/* The members of this list have names not in the local passwd file.  */
+/* The members of this list are names not in the local passwd file;
+   their names are always not NULL, and their ids are irrelevant.  */
 static struct userid *nouser_alist;
 #endif /* NOT_USED */
 
@@ -82,7 +85,7 @@ getuser (uid)
   tail->id.u = uid;
   tail->name = (pwent ? xstrdup (pwent->pw_name) : NULL);
 
-  /* Add to the head of the list, so most recently used is first.  */
+  /* Add to the head of the list, so most recently added is first.  */
   tail->next = user_alist;
   user_alist = tail;
   return tail->name;
@@ -104,7 +107,7 @@ getuidbyname (user)
 
   for (tail = user_alist; tail; tail = tail->next)
     /* Avoid a function call for the most common case.  */
-    if (*tail->name == *user && !strcmp (tail->name, user))
+    if (tail->name && *tail->name == *user && !strcmp (tail->name, user))
       return &tail->id.u;
 
   for (tail = nouser_alist; tail; tail = tail->next)
@@ -117,7 +120,7 @@ getuidbyname (user)
   tail = (struct userid *) xmalloc (sizeof (struct userid));
   tail->name = xstrdup (user);
 
-  /* Add to the head of the list, so most recently used is first.  */
+  /* Add to the head of the list, so most recently added is first.  */
   if (pwent)
     {
       tail->id.u = pwent->pw_uid;
@@ -139,8 +142,8 @@ static struct userid *group_alist;
 static struct userid *nogroup_alist;
 #endif
 
-/* Translate GID to a group name or a stringified number,
-   with cache.  */
+/* Translate GID to a group name, with cache.
+   Return NULL if the group has no name.  */
 
 char *
 getgroup (gid)
@@ -180,7 +183,7 @@ getgidbyname (group)
 
   for (tail = group_alist; tail; tail = tail->next)
     /* Avoid a function call for the most common case.  */
-    if (*tail->name == *group && !strcmp (tail->name, group))
+    if (tail->name && *tail->name == *group && !strcmp (tail->name, group))
       return &tail->id.g;
 
   for (tail = nogroup_alist; tail; tail = tail->next)
