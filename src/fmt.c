@@ -433,7 +433,8 @@ main (register int argc, register char **argv)
 		}
 	      else
 		{
-		  error (0, errno, "cannot open %s for reading", quote (file));
+		  error (0, errno, _("cannot open %s for reading"),
+			 quote (file));
 		  fail = 1;
 		}
 	    }
