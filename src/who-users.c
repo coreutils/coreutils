@@ -47,8 +47,12 @@
 #include "system.h"
 #include "error.h"
 
-#if !defined (UTMP_FILE) && defined (_PATH_UTMP)	/* 4.4BSD.  */
+#if !defined (UTMP_FILE) && defined (_PATH_UTMP)
 #define UTMP_FILE _PATH_UTMP
+#endif
+
+#if !defined (WTMP_FILE) && defined (_PATH_WTMP)
+#define WTMP_FILE _PATH_WTMP
 #endif
 
 #if defined (UTMPX_FILE)	/* Solaris, SysVr4 */
@@ -639,9 +643,9 @@ usage (int status)
       --help        display this help and exit\n\
       --version     output version information and exit\n\
 \n\
-If FILE is not specified, use %s.  /etc/wtmp as FILE is common.\n\
+If FILE is not specified, use %s.  %s as FILE is common.\n\
 If ARG1 ARG2 given, -m presumed: `am i' or `mom likes' are usual.\n\
-"), UTMP_FILE);
+"), UTMP_FILE, WTMP_FILE);
       puts (_("\nReport bugs to sh-utils-bugs@gnu.ai.mit.edu"));
     }
   exit (status);
@@ -660,10 +664,11 @@ usage (int status)
       printf (_("Usage: %s [OPTION]... [ FILE ]\n"), program_name);
       printf (_("\
 Output who is currently logged in according to FILE.\n\
-If FILE is not specified, use %s.  /etc/wtmp as FILE is common.\n\
+If FILE is not specified, use %s.  %s as FILE is common.\n\
 \n\
       --help        display this help and exit\n\
-      --version     output version information and exit\n"), UTMP_FILE);
+      --version     output version information and exit\n"),
+	      UTMP_FILE, WTMP_FILE);
       puts (_("\nReport bugs to sh-utils-bugs@gnu.ai.mit.edu"));
     }
   exit (status);
