@@ -280,10 +280,10 @@ Write sorted concatenation of all FILE(s) to standard output.\n\
                      starting with zero (contrast with the -k option)\n\
   -b               ignore leading blanks in sort fields or keys\n\
   -c               check if given files already sorted, do not sort\n\
-  -d               consider only [a-zA-Z0-9 ] characters in keys\n\
+  -d               consider only blanks and alphanumeric characters in keys\n\
   -f               fold lower case to upper case characters in keys\n\
   -g               compare according to general numerical value, imply -b\n\
-  -i               consider only [\\040-\\0176] characters in keys\n\
+  -i               consider only printable characters in keys\n\
   -k POS1[,POS2]   start a key at POS1, end it *at* POS2\n\
 		     field numbers and character offsets are numbered\n\
                      starting with one (contrast with zero-based +POS form)\n\
