@@ -12473,20 +12473,16 @@ nohup @var{command} [@var{arg}]@dots{}
 @end example
 
 @flindex nohup.out
-If standard output is a terminal, it is redirected so that it is appended
+If standard output is a terminal, the command's standard output is appended
 to the file @file{nohup.out}; if that cannot be written to, it is appended
-to the file @file{$HOME/nohup.out}.  If that cannot be written to, the
+to the file @file{$HOME/nohup.out}; and if that cannot be written to, the
 command is not run.
-If standard output is not a terminal, then the standard output of
-@var{command} will be the same as that of @command{nohup}.
-
-If @command{nohup} creates either @file{nohup.out} or
-@file{$HOME/nohup.out}, it creates it with no ``group'' or ``other''
-access permissions.  It does not change the permissions if the output
-file already existed.
+Any @file{nohup.out} or @file{$HOME/nohup.out} file created by
+@command{nohup} is made readable and writable only to the user,
+regardless of the current umask settings.
 
 If standard error is a terminal, it is redirected to the same file
-descriptor as the standard output.
+descriptor as the (possibly-redirected) standard output.
 
 @command{nohup} does not automatically put the command it runs in the
 background; you must do that explicitly, by ending the command line
