@@ -1,3 +1,8 @@
+2003-01-19  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (Which files are listed): Document new option:
+	--dereference-command-line-symlink-to-dir.
+
 2003-01-15  Paul Eggert  <eggert@twinsun.com>
 
 	Change ls -H back to the way it was yesterday, since this is
