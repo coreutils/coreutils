@@ -1,7 +1,11 @@
 Wed Jan  1 17:30:26 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/getgroups.c: New file.
+
 	* configure.in (AC_ARG_PROGRAM): Remove explicit use.
 	It's implicit in AM_INIT_AUTOMAKE.  From Wayne Stewart.
+	(list_mounted_fs): Fix typo (by declaring NUMSYS) in test for
+	getfsstat on osf1.  From hitchens@epa001.enet.dec.com.
 
 Sun Dec 29 21:55:13 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
