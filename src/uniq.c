@@ -472,7 +472,7 @@ main (int argc, char **argv)
 	}
     }
 
-  if (argc - optind >= 2 && !STREQ (argv[optind - 1], "--"))
+  if (optind < argc && !STREQ (argv[optind - 1], "--"))
     {
       /* Interpret non-option arguments with leading `+' only
 	 if we haven't seen `--'.  */
