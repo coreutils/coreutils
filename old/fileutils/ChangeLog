@@ -1,3 +1,11 @@
+	(LIBOBJS): Split assignment into two statements to accomodate automake-0.29.
+	Adapt for automake-0.29.
+	* Makefile.in (CONFIG_HEADER): Don't define.  Automake now does it.
+	* src/Makefile.in: Likewise.
+	* lib/Makefile.in: Likewise.
+	* doc/Makefile.in (info_TEXINFOS): Renamed from TEXINFOS.
+	* man/Makefile.in (man_MANS): Renamed from MANS.
+
 Wed Jan 31 21:50:41 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* dd.c (skip): Change type of parameter #5 from char* to
