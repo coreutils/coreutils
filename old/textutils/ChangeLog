@@ -1,3 +1,9 @@
+2001-05-20  Jim Meyering  <meyering@lucent.com>
+
+	* src/uniq.c: Rename new option values: s/all/precede/ and
+	s/minimum/separate/.
+	* tests/uniq/Test.pm: Reflect the above renamings.
+
 2001-05-19  Jim Meyering  <meyering@lucent.com>
 
 	msgmerge-0.10.37 complains about some `invalid multibyte sequences.'
