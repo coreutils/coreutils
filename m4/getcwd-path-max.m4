@@ -12,7 +12,7 @@
 AC_DEFUN([GL_FUNC_GETCWD_PATH_MAX],
 [
   AC_CACHE_CHECK([whether getcwd properly handles paths longer than PATH_MAX],
-                 utils_cv_func_getcwd_vs_path_max,
+                 gl_cv_func_getcwd_vs_path_max,
   [
   # Arrange for deletion of the temporary directory this test creates.
   ac_clean_files="$ac_clean_files confdir3"
@@ -112,11 +112,11 @@ main ()
 #endif
 }
   ]])],
-       [utils_cv_func_getcwd_vs_path_max=yes],
-       [utils_cv_func_getcwd_vs_path_max=no],
-       [utils_cv_func_getcwd_vs_path_max=no])])
+       [gl_cv_func_getcwd_vs_path_max=yes],
+       [gl_cv_func_getcwd_vs_path_max=no],
+       [gl_cv_func_getcwd_vs_path_max=no])])
 
-  if test $utils_cv_func_getcwd_vs_path_max = yes; then
+  if test $gl_cv_func_getcwd_vs_path_max = yes; then
     AC_LIBOBJ(getcwd)
     AC_DEFINE(getcwd, rpl_getcwd,
       [Define to rpl_getcwd if the wrapper function should be used.])
