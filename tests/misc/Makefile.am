@@ -6,6 +6,7 @@ TESTS_ENVIRONMENT = \
   top_srcdir=$(top_srcdir) \
   srcdir=$(srcdir) \
   PERL="@PERL@" \
-  PATH=`pwd`/../../src:$$PATH
+  PATH=`pwd`/../../src:$$PATH \
+  PROG=$$tst
 
-TESTS = head-c csplit
+TESTS = sort head-c csplit
