@@ -736,7 +736,7 @@ add_file_name (char const *name, char const *names[2], int *nfiles)
 {
   if (*nfiles == 2)
     {
-      error (0, 0, _("too many non-option arguments"));
+      error (0, 0, _("extra operand %s"), quote (name));
       usage (EXIT_FAILURE);
     }
   names[(*nfiles)++] = name;
@@ -848,7 +848,10 @@ main (int argc, char **argv)
 
   if (nfiles != 2)
     {
-      error (0, 0, _("too few non-option arguments"));
+      if (nfiles == 0)
+	error (0, 0, _("missing operand"));
+      else
+	error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
       usage (EXIT_FAILURE);
     }
 
