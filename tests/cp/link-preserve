@@ -1,5 +1,5 @@
 #!/bin/sh
-# ensure that hard-link structure between command line arguments is preserved
+# ensure that `cp -d' preserves hard-links between command line arguments
 
 if test "$VERBOSE" = yes; then
   set -x
@@ -20,7 +20,7 @@ cd $tmp || framework_failure=1
 touch a || framework_failure=1
 ln a b || framework_failure=1
 mkdir c || framework_failure=1
-cp -a a b c || framework_failure=1
+cp -d a b c || framework_failure=1
 test -f c/a || framework_failure=1
 test -f c/b || framework_failure=1
 
