@@ -48,6 +48,12 @@
 char *xmalloc ();
 char *xrealloc ();
 
+/* The following static variable is declared 'volatile' to avoid a
+   possible multithread problem in the function get_charset_aliases. If we
+   are running in a threaded environment, and if two threads initialize
+   'charset_aliases' simultaneously, both will produce the same value,
+   and everything will be ok if the two assignments to 'charset_aliases'
+   are atomic. But I don't know what will happen if the two assignments mix.  */
 /* Pointer to the contents of the charset.alias file, if it has already been
    read, else NULL.  Its format is:
    ALIAS_1 '\0' CANONICAL_1 '\0' ... ALIAS_n '\0' CANONICAL_n '\0' '\0'  */
