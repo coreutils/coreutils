@@ -67,8 +67,8 @@ settime (struct timespec const *ts)
 
 #if HAVE_STIME
   return stime (&ts->tv_sec);
-#endif
-
+#else
   errno = ENOSYS;
   return -1;
+#endif
 }
