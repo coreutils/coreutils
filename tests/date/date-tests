@@ -1098,8 +1098,26 @@ else
   esac
 fi
 test -s wide-fmt.E || rm -f wide-fmt.E
+LANG=C TZ=UTC0 $xx --iso -d May-23-2003  > moname-d-y.O 2> moname-d-y.E
+code=$?
+if test $code != 0; then
+  $echo "Test moname-d-y(LANG=C TZ=UTC0) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp moname-d-y.O $srcdir/moname-d-y.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed moname-d-y(LANG=C TZ=UTC0)"; fi;;
+    1) $echo "Test moname-d-y(LANG=C TZ=UTC0) failed: files moname-d-y.O and $srcdir/moname-d-y.X differ" 1>&2
+       (diff -c moname-d-y.O $srcdir/moname-d-y.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test moname-d-y(LANG=C TZ=UTC0) may have failed." 1>&2
+       $echo The command "cmp moname-d-y.O $srcdir/moname-d-y.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s moname-d-y.E || rm -f moname-d-y.E
 if test $errors = 0; then
-  $echo Passed all 60 tests. 1>&2
+  $echo Passed all 61 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
