@@ -1,5 +1,7 @@
 1999-04-24  Jim Meyering  <meyering@ascend.com>
 
+	* configure.in: Use AC_CANONICAL_HOST.
+
 	* lib/Makefile.am (libtu_a_SOURCES): Add xstrtoumax.c
 	(noinst_HEADERS): Remove xstrtoul.h.
 
