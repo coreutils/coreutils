@@ -1,3 +1,38 @@
+2000-09-03  Jim Meyering  <meyering@lucent.com>
+
+	* src/cp.c (enum): Add UNLINK_DEST_BEFORE_OPENING.
+	[long_options]: Add an entry for --remove-destination.
+	(usage): Describe --remove-destination.
+	(do_copy): Use unlink_dest_after_failed_open member, not `force.'
+	(cp_option_init): Initialize new members.
+	(main): Handle UNLINK_DEST_BEFORE_OPENING (aka --remove-destination).
+
+	* src/mv.c: Remove obsolete comment block.
+	(cp_option_init): Initialize new members.
+	(usage): Reflect the fact that --force (-f) relates only to whether
+	mv prompts.
+	(main): Remove uses of old `force' option member.
+
+	* src/install.c (cp_option_init): Reflect
+
+	`force' no longer means unlink-dest-before-opening
+	* src/copy.h (struct cp_options) [force]: Remove member.
+	[unlink_dest_before_opening]: Add member.  `cp -f' and `mv -f' used to
+	do this.  Now, you must use `cp --remove-destination' to get this
+	behavior.  Now, `cp -f' and `mv -f' work as required by POSIX.
+	[unlink_dest_after_failed_open]: Add member.
+
+	* src/copy.c (same_file_ok): New function, extracted from copy_internal,
+	and partially rewritten.
+	(copy_internal): Unlink destination file when unlink_dest_before_opening
+	option is set, and when the source is neither a regular file nor a
+	directory.
+
+	* tests/mv/Makefile.am (TESTS): Add part-symlink.
+
+	* src/ls.c: Use strcoll (not strcmp) when comparing file names.
+	Suggestion from Ulrich Drepper.
+
 2000-08-27  Jim Meyering  <meyering@lucent.com>
 
 	* src/copy.c (copy_reg): New parameters: X and NEW_DST.
