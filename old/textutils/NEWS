@@ -146,6 +146,7 @@ Changes in release 2.1
   so e.g., `tail -fn 2 file' works again.
 * tail no longer refuses to operate on certain types of files
 * fixed bug in tsort's handling of cycles
+
 Changes in release 2.0
 [1.22q]
 * HPUX portability fix: md5sum would dump core due to use of libc's getline
