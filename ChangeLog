@@ -2,6 +2,14 @@
 
 	* Version 4.5.4.
 
+	* Makefile.cfg (gnu_rel_host): Define.
+	(url_dir_list): Choose from (alpha|ftp).gnu.org depending
+	on whether $(VERSION) looks like a major release number.
+
+	* Makefile.maint (mail_gpg_sign_cookie): Backslash-escape `#'.
+	(release): Rename from `alpha'.
+	(alpha): Depend on release.
+
 	* Makefile.maint (signatures): Define with ?=, so it's easy to override.
 
 2002-11-14  Jim Meyering  <jim@meyering.net>
