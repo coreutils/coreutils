@@ -101,7 +101,7 @@ addext.c argmatch.c backupfile.c basename.c \
 closeout.c dirname.c exclude.c filemode.c \
 full-write.c human.c idcache.c \
 isdir.c long-options.c makepath.c modechange.c hash.c path-concat.c \
-safe-read.c save-cwd.c savedir.c stripslash.c userspec.c xgetcwd.c \
+quotearg.c safe-read.c save-cwd.c savedir.c stripslash.c userspec.c xgetcwd.c \
 xmalloc.c xstrdup.c xstrtol.c xstrtoul.c yesno.c
 
 libfu_a_LIBADD = @LIBOBJS@ @ALLOCA@
@@ -111,7 +111,7 @@ noinst_HEADERS = argmatch.h backupfile.h closeout.h \
 error.h exclude.h fnmatch.h fsusage.h \
 get-date.h getline.h getopt.h group-member.h human.h long-options.h \
 makepath.h modechange.h mountlist.h hash.h path-concat.h pathmax.h \
-save-cwd.h savedir.h strverscmp.h xalloc.h xstrtol.h xstrtoul.h
+quotearg.h save-cwd.h savedir.h strverscmp.h xalloc.h xstrtol.h xstrtoul.h
 
 BUILT_SOURCES = getdate.c posixtm.c
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -129,9 +129,9 @@ libfu_a_OBJECTS =  getdate$U.o posixtm$U.o getopt$U.o getopt1$U.o \
 addext$U.o argmatch$U.o backupfile$U.o basename$U.o closeout$U.o \
 dirname$U.o exclude$U.o filemode$U.o full-write$U.o human$U.o \
 idcache$U.o isdir$U.o long-options$U.o makepath$U.o modechange$U.o \
-hash$U.o path-concat$U.o safe-read$U.o save-cwd$U.o savedir$U.o \
-stripslash$U.o userspec$U.o xgetcwd$U.o xmalloc$U.o xstrdup$U.o \
-xstrtol$U.o xstrtoul$U.o yesno$U.o
+hash$U.o path-concat$U.o quotearg$U.o safe-read$U.o save-cwd$U.o \
+savedir$U.o stripslash$U.o userspec$U.o xgetcwd$U.o xmalloc$U.o \
+xstrdup$U.o xstrtol$U.o xstrtoul$U.o yesno$U.o
 AR = ar
 YLWRAP = $(srcdir)/ylwrap
 CFLAGS = @CFLAGS@
@@ -162,8 +162,8 @@ DEP_FILES =  .deps/addext.P .deps/alloca.P .deps/argmatch.P \
 .deps/long-options.P .deps/lstat.P .deps/makepath.P .deps/malloc.P \
 .deps/memcmp.P .deps/memcpy.P .deps/memset.P .deps/mkdir.P \
 .deps/mktime.P .deps/modechange.P .deps/mountlist.P .deps/obstack.P \
-.deps/path-concat.P .deps/posixtm.P .deps/realloc.P .deps/regex.P \
-.deps/rename.P .deps/rmdir.P .deps/rpmatch.P .deps/rx.P \
+.deps/path-concat.P .deps/posixtm.P .deps/quotearg.P .deps/realloc.P \
+.deps/regex.P .deps/rename.P .deps/rmdir.P .deps/rpmatch.P .deps/rx.P \
 .deps/safe-read.P .deps/save-cwd.P .deps/savedir.P .deps/stat.P \
 .deps/stpcpy.P .deps/strcasecmp.P .deps/strdup.P .deps/strftime.P \
 .deps/stripslash.P .deps/strndup.P .deps/strstr.P .deps/strtol.P \
@@ -315,6 +315,8 @@ path-concat_.c: path-concat.c $(ANSI2KNR)
 	$(ANSI2KNR) `if test -f $(srcdir)/path-concat.c; then echo $(srcdir)/path-concat.c; else echo path-concat.c; fi` path-concat_.c
 posixtm_.c: posixtm.c $(ANSI2KNR)
 	$(ANSI2KNR) `if test -f $(srcdir)/posixtm.c; then echo $(srcdir)/posixtm.c; else echo posixtm.c; fi` posixtm_.c
+quotearg_.c: quotearg.c $(ANSI2KNR)
+	$(ANSI2KNR) `if test -f $(srcdir)/quotearg.c; then echo $(srcdir)/quotearg.c; else echo quotearg.c; fi` quotearg_.c
 realloc_.c: realloc.c $(ANSI2KNR)
 	$(ANSI2KNR) `if test -f $(srcdir)/realloc.c; then echo $(srcdir)/realloc.c; else echo realloc.c; fi` realloc_.c
 regex_.c: regex.c $(ANSI2KNR)
@@ -376,11 +378,11 @@ getgroups_.o getline_.o getopt_.o getopt1_.o group-member_.o hash_.o \
 human_.o idcache_.o isdir_.o long-options_.o lstat_.o makepath_.o \
 malloc_.o memcmp_.o memcpy_.o memset_.o mkdir_.o mktime_.o \
 modechange_.o mountlist_.o obstack_.o path-concat_.o posixtm_.o \
-realloc_.o regex_.o rename_.o rmdir_.o rpmatch_.o rx_.o safe-read_.o \
-save-cwd_.o savedir_.o stat_.o stpcpy_.o strcasecmp_.o strdup_.o \
-strftime_.o stripslash_.o strndup_.o strstr_.o strtol_.o strtoul_.o \
-strverscmp_.o userspec_.o xgetcwd_.o xmalloc_.o xstrdup_.o xstrtol_.o \
-xstrtoul_.o yesno_.o : $(ANSI2KNR)
+quotearg_.o realloc_.o regex_.o rename_.o rmdir_.o rpmatch_.o rx_.o \
+safe-read_.o save-cwd_.o savedir_.o stat_.o stpcpy_.o strcasecmp_.o \
+strdup_.o strftime_.o stripslash_.o strndup_.o strstr_.o strtol_.o \
+strtoul_.o strverscmp_.o userspec_.o xgetcwd_.o xmalloc_.o xstrdup_.o \
+xstrtol_.o xstrtoul_.o yesno_.o : $(ANSI2KNR)
 
 tags: TAGS
 
