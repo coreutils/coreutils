@@ -23,6 +23,10 @@
 
 #include <stdio.h>
 #include <getopt.h>
+#if HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
+
 #include "long-options.h"
 #include "version-etc.h"
 
