@@ -1,5 +1,10 @@
 Sun Jul 21 11:58:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in: Add check for error_at_line so systems with
+	GNU libc don't compile and link with distributed error.c.
+	* lib/Makefile.am (tu_SOURCES): Remove error.c.
+	(EXTRA_DIST): Add error.c.
+
 	* configure.in (AC_REPLACE_FUNCS): Replace getline.c.
 	Add related check for the getdelim function.
 	From Ulrich Drepper -- as done in gettext.
