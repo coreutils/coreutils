@@ -1897,8 +1897,12 @@ sortlines_temp (struct line *lines, size_t nlines, struct line *temp)
     }
 }
 
-/* Return the index of the first of NFILES FILES that is the same file
-   as OUTFILE.  If none can be the same, return NFILES.
+/* Scan through FILES[N_TEMP_FILES .. NFILES-1] looking for a file that is
+   the same as OUTFILE.  If found, merge the found instances (and perhaps
+   some other files) into a temporary file so that it can in turn be
+   merged into OUTFILE without destroying OUTFILE before it is completely
+   read.  Return the new value of NFILES, which differs from the old if
+   some merging occurred.
 
    This test ensures that an otherwise-erroneous use like
    "sort -m -o FILE ... FILE ..." copies FILE before writing to it.
@@ -1911,67 +1915,114 @@ sortlines_temp (struct line *lines, size_t nlines, struct line *temp)
    common cases.  */
 
 static size_t
-first_same_file (char * const *files, size_t nfiles, char const *outfile)
+avoid_trashing_input (char **files, size_t n_temp_files, size_t nfiles,
+		      char const *outfile)
 {
   size_t i;
   bool got_outstat = false;
-  struct stat instat, outstat;
+  struct stat outstat;
 
-  for (i = 0; i < nfiles; i++)
+  for (i = n_temp_files; i < nfiles; i++)
     {
       bool standard_input = STREQ (files[i], "-");
+      bool same;
+      struct stat instat;
 
       if (outfile && STREQ (outfile, files[i]) && ! standard_input)
-	return i;
-
-      if (! got_outstat)
+	same = true;
+      else
 	{
-	  got_outstat = true;
-	  if ((outfile
-	       ? stat (outfile, &outstat)
-	       : fstat (STDOUT_FILENO, &outstat))
-	      != 0)
-	    return nfiles;
+	  if (! got_outstat)
+	    {
+	      if ((outfile
+		   ? stat (outfile, &outstat)
+		   : fstat (STDOUT_FILENO, &outstat))
+		  != 0)
+		break;
+	      got_outstat = true;
+	    }
+
+	  same = (((standard_input
+		    ? fstat (STDIN_FILENO, &instat)
+		    : stat (files[i], &instat))
+		   == 0)
+		  && SAME_INODE (instat, outstat));
 	}
 
-      if (((standard_input
-	    ? fstat (STDIN_FILENO, &instat)
-	    : stat (files[i], &instat))
-	   == 0)
-	  && SAME_INODE (instat, outstat))
-	return i;
+      if (same)
+	{
+	  FILE *tftp;
+	  char *temp = create_temp_file (&tftp);
+	  mergefps (&files[i], nfiles - i, tftp, temp);
+	  files[i] = temp;
+	  return i + 1;
+	}
     }
 
   return nfiles;
 }
 
-/* Merge NFILES FILES onto OUTPUT_FILE.  However, merge at most
-   MAX_MERGE input files directly onto OUTPUT_FILE.  MAX_MERGE cannot
-   exceed NMERGE.  A null OUTPUT_FILE stands for standard output.  */
+/* Merge the input FILES.  N_TEMP_FILES is the number of files at the
+   start of FILES that are temporary; it is zero at the top level.
+   NFILES is the total number of files.  Put the output in
+   OUTPUT_FILE; a null OUTPUT_FILE stands for standard output.  */
 
 static void
-merge (char **files, size_t nfiles, size_t max_merge, char const *output_file)
+merge (char **files, size_t n_temp_files, size_t nfiles,
+       char const *output_file)
 {
-  while (max_merge < nfiles)
-    {
-      FILE *tfp;
-      size_t i;
-      size_t t = 0;
-      char *temp;
-      for (i = 0; i < nfiles / NMERGE; ++i)
-	{
-	  temp = create_temp_file (&tfp);
-	  mergefps (&files[i * NMERGE], NMERGE, tfp, temp);
-	  files[t++] = temp;
-	}
-      temp = create_temp_file (&tfp);
-      mergefps (&files[i * NMERGE], nfiles % NMERGE, tfp, temp);
-      files[t++] = temp;
-      nfiles = t;
-      if (nfiles == 1)
-	break;
-    }
+  size_t i;
+  bool got_outstat = false;
+  struct stat outstat;
 
+  while (NMERGE < nfiles)
+    {
+      /* Number of input files processed so far.  */
+      size_t in;
+
+      /* Number of output files generated so far.  */
+      size_t out;
+
+      /* nfiles % NMERGE; this counts input files that are left over
+	 after all full-sized merges have been done.  */
+      size_t remainder;
+
+      /* Number of easily-available slots at the next loop iteration.  */
+      size_t cheap_slots;
+
+      /* Do as many NMERGE-size merges as possible.  */
+      for (out = in = 0; out < nfiles / NMERGE; out++, in += NMERGE)
+	{
+	  FILE *tfp;
+	  char *temp = create_temp_file (&tfp);
+	  mergefps (&files[in], NMERGE, tfp, temp);
+	  files[out] = temp;
+	}
+
+      remainder = nfiles - in;
+      cheap_slots = NMERGE - out % NMERGE;
+
+      if (cheap_slots < remainder)
+	{
+	  /* So many files remain that they can't all be put into the last
+	     NMERGE-sized output window.  Do one more merge.  Merge as few
+	     files as possible, to avoid needless I/O.  */
+	  size_t n_shortmerge = remainder - cheap_slots + 1;
+	  FILE *tfp;
+	  char *temp = create_temp_file (&tfp);
+	  mergefps (&files[in], n_shortmerge, tfp, temp);
+	  files[out++] = temp;
+	  in += n_shortmerge;
+	}
+
+      /* Put the remaining input files into the last NMERGE-sized output
+	 window, so they will be merged in the next pass.  */
+      memmove(&files[out], &files[in], (nfiles - in) * sizeof *files);
+      n_temp_files = out + (in < n_temp_files ? n_temp_files - in : 0);
+      nfiles -= in - out;
+    }
+  
+  nfiles = avoid_trashing_input (files, n_temp_files, nfiles, output_file);
   mergefps (files, nfiles, NULL, output_file);
 }
 
@@ -2063,7 +2114,7 @@ sort (char * const *files, size_t nfiles, char const *output_file)
       char **tempfiles = xnmalloc (n_temp_files, sizeof *tempfiles);
       for (node = temphead; i > 0; node = node->next)
 	tempfiles[--i] = node->name;
-      merge (tempfiles, n_temp_files, NMERGE, output_file);
+      merge (tempfiles, n_temp_files, n_temp_files, output_file);
       free (tempfiles);
     }
 }
@@ -2568,10 +2619,7 @@ main (int argc, char **argv)
     }
 
   if (mergeonly)
-    {
-      size_t max_merge = first_same_file (files, MIN (nfiles, NMERGE), outfile);
-      merge (files, nfiles, max_merge, outfile);
-    }
+    merge (files, 0, nfiles, outfile);
   else
     sort (files, nfiles, outfile);
 
