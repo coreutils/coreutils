@@ -17,7 +17,7 @@
 
 /* Usage: df [-aikPT] [-t fstype] [-x fstype] [--all] [--inodes] [--print-type]
    [--type fstype] [--exclude-type fstype] [--kilobytes] [--portability]
-   [path...]
+   [file...]
 
    Options:
    -a, --all		List all filesystems, even zero-size ones.
@@ -517,7 +517,7 @@ usage (status)
 	     program_name);
   else
     {
-      printf ("Usage: %s [OPTION] [PATH]...\n", program_name);
+      printf ("Usage: %s [OPTION]... [FILE]...\n", program_name);
       printf ("\
 \n\
   -a, --all                 include filesystems having 0 blocks\n\
@@ -533,7 +533,7 @@ usage (status)
       --help                display this help and exit\n\
       --version             output version information and exit\n\
 \n\
-If no PATHs are given, list all currently mounted filesystems.\n");
+If no FILEs are given, list all currently mounted filesystems.\n");
     }
   exit (status);
 }
