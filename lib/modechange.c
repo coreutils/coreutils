@@ -413,18 +413,18 @@ mode_adjust (mode_t oldmode, const struct mode_change *changes)
 
 	  if (changes->value & S_IRWXU)
 	    /* Copy `u' permissions onto `g' and `o'. */
-	    value |= ((value & S_IRUSR ? S_IRGRP | S_IROTH : 0)
-		      | (value & S_IWUSR ? S_IWGRP | S_IROTH : 0)
+	    value |= (  (value & S_IRUSR ? S_IRGRP | S_IROTH : 0)
+		      | (value & S_IWUSR ? S_IWGRP | S_IWOTH : 0)
 		      | (value & S_IXUSR ? S_IXGRP | S_IXOTH : 0));
 	  else if (changes->value & S_IRWXG)
 	    /* Copy `g' permissions onto `u' and `o'. */
-	    value |= ((value & S_IRGRP ? S_IRUSR | S_IROTH : 0)
-		      | (value & S_IWGRP ? S_IWUSR | S_IROTH : 0)
+	    value |= (  (value & S_IRGRP ? S_IRUSR | S_IROTH : 0)
+		      | (value & S_IWGRP ? S_IWUSR | S_IWOTH : 0)
 		      | (value & S_IXGRP ? S_IXUSR | S_IXOTH : 0));
 	  else
 	    /* Copy `o' permissions onto `u' and `g'. */
-	    value |= ((value & S_IROTH ? S_IRUSR | S_IRGRP : 0)
-		      | (value & S_IWOTH ? S_IWUSR | S_IRGRP : 0)
+	    value |= (  (value & S_IROTH ? S_IRUSR | S_IRGRP : 0)
+		      | (value & S_IWOTH ? S_IWUSR | S_IWGRP : 0)
 		      | (value & S_IXOTH ? S_IXUSR | S_IXGRP : 0));
 
 	  /* In order to change only `u', `g', or `o' permissions,
