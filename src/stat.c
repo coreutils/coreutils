@@ -734,7 +734,7 @@ Display file or filesystem status.\n\
 \n\
   -f, --filesystem      display filesystem status instead of file status\n\
   -c  --format=FORMAT   use the specified FORMAT instead of the default\n\
-  -l, --dereference     follow links\n\
+  -L, --dereference     follow links\n\
   -t, --terse           print the information in terse form\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
