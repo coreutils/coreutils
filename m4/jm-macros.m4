@@ -41,4 +41,8 @@ AC_DEFUN(jm_MACROS,
 	    [Define to the function xargmatch calls on failures.])
   AC_DEFINE(ARGMATCH_DIE_DECL, [extern void usage ()],
 	    [Define to the declaration of the xargmatch failure function.])
+
+  dnl Used to define SETVBUF in sys2.h.
+  AC_FUNC_SETVBUF_REVERSED
+
 ])
