@@ -1,6 +1,11 @@
-2005-03-20  Jim Meyering  <jim@meyering.net>
+2005-03-22  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/ls.c (get_funky_string): Use '\a', rather than 7, for
+	portability to EBCDIC hosts.
+
+2005-03-20  Jim Meyering  <jim@meyering.net>
 
 	* src/pr.c (init_header): Add missing `%' in new format string.
 	(init_header): Use zero-filled `.%09d' format, not space-filled `.%9d'.
