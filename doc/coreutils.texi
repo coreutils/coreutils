@@ -10183,7 +10183,8 @@ Note that this value is the number of seconds between the epoch
 and the current date as defined by the localtime system call.
 It isn't changed by the @option{--date} option.
 @item %S
-second (00@dots{}60)
+second (00@dots{}60).  The range is [00@dots{}60], and not [00@dots{}59],
+in order to accommodate the occasional positive leap second.
 @item %T
 time, 24-hour (hh:mm:ss)
 @item %X
