@@ -28,13 +28,16 @@ char *malloc ();
 char *realloc ();
 
 /* Change the size of an allocated block of memory P to N bytes,
-   with error checking.  If P is NULL, use malloc.  */
+   with error checking.  If N is zero, change it to 1.  If P is NULL,
+   use malloc.  */
 
 char *
 rpl_realloc (p, n)
      char *p;
      size_t n;
 {
+  if (n == 0)
+    n = 1;
   if (p == 0)
     return malloc (n);
   return realloc (p, n);
