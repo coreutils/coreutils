@@ -1,5 +1,14 @@
 2002-10-08  Jim Meyering  <meyering@lucent.com>
 
+	* tests/tail-2/big-4gb: Use double quotes around diagnostic.
+	Reported by Bob Proulx.
+	Change all the rest like this: grep -lR "testing framework'" .\
+	|xargs perl -pi -e 's/'\''(\$0: failure in testing framework)'\''/"$1"/'
+
+	* src/sum.c (sysv_sum_file): Adapt to new safe_read ABI.
+	* src/tr.c (squeeze_filter, read_and_delete, read_and_xlate): Likewise.
+	* src/tac.c (save_stdin, tac_stdin_to_mem): Likewise.
+
 	* Version 4.5.3.
 
 2002-10-07  Paul Eggert  <eggert@twinsun.com>
