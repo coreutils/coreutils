@@ -33,6 +33,10 @@ $MV $null $dir $other_partition_tmpdir || fail=1
 # Make sure the files are gone.
 test -f $null && fail=1
 test -d $dir && fail=1
+# Make sure they were moved.
+# Since `test -e' is not portable, use `ls'.
+$LS $other_partition_tmpdir/$null > /dev/null || fail=1
+test -d $other_partition_tmpdir/$dir/a/b/c || fail=1
 
 # cd $other_partition_tmpdir
 # $LS -l -A -R $other_partition_tmpdir
