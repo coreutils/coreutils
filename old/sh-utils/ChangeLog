@@ -1,5 +1,8 @@
 Wed Feb 28 20:53:24 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
+	* stty.c (wrapf) [!__STDC__]: Indent by one space the first line
+	of the pre-ANSI function definition so ansi2knr doesn't munge it.
+
 	* src/Makefile.am: Adapt for automake-0.30.
 	* lib/Makefile.am: Likewise.
 
