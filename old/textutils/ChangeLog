@@ -1,3 +1,7 @@
+Wed May 24 01:13:44 1995  Jim Meyering  (meyering@comco.com)
+
+	* Version 1.11.3.
+
 Sun May 21 07:50:00 1995  Jim Meyering  (meyering@comco.com)
 
 	* Makefile.in (.PHONY): TAGS is not a phony target.  From Franc,ois.
