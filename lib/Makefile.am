@@ -73,7 +73,6 @@ libfetish_a_SOURCES = \
   hard-locale.c hard-locale.h \
   human.c human.h \
   idcache.c \
-  isdir.c \
   imaxtostr.c \
   lchown.h \
   linebuffer.c linebuffer.h \
