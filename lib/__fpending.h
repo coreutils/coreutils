@@ -10,4 +10,9 @@
 
 #include <sys/types.h>
 
+#ifndef HAVE_DECL___FPENDING
+"this configure-time declaration test was not run"
+#endif
+#if !HAVE_DECL___FPENDING
 size_t __fpending (FILE *);
+#endif
