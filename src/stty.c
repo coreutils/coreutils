@@ -678,7 +678,7 @@ main (argc, argv)
     error (2, 0, "when specifying an output style, modes may not be set");
 
   /* Initialize to all zeroes so there is no risk memcmp will report a
-     spurious difference in uninitialized portion of the structure.  */
+     spurious difference in an uninitialized portion of the structure.  */
   bzero (&mode, sizeof (mode));
   if (tcgetattr (0, &mode))
     error (1, errno, "standard input");
