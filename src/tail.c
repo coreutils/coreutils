@@ -593,7 +593,7 @@ file_lines (filename, fd, number, pos)
 	      /* If this newline wasn't the last character in the buffer,
 	         print the text after it. */
 	      if (i != bytes_read - 1)
-		XWRITE (1, &buffer[i + 1], bytes_read - (i + 1));
+		XWRITE (STDOUT_FILENO, &buffer[i + 1], bytes_read - (i + 1));
 	      return 0;
 	    }
 	}
@@ -724,10 +724,10 @@ pipe_lines (filename, fd, number)
     }
   else
     i = 0;
-  XWRITE (1, &tmp->buffer[i], tmp->nbytes - i);
+  XWRITE (STDOUT_FILENO, &tmp->buffer[i], tmp->nbytes - i);
 
   for (tmp = tmp->next; tmp; tmp = tmp->next)
-    XWRITE (1, tmp->buffer, tmp->nbytes);
+    XWRITE (STDOUT_FILENO, tmp->buffer, tmp->nbytes);
 
 free_lbuffers:
   while (first)
@@ -821,10 +821,10 @@ pipe_bytes (filename, fd, number)
     i = total_bytes - number;
   else
     i = 0;
-  XWRITE (1, &tmp->buffer[i], tmp->nbytes - i);
+  XWRITE (STDOUT_FILENO, &tmp->buffer[i], tmp->nbytes - i);
 
   for (tmp = tmp->next; tmp; tmp = tmp->next)
-    XWRITE (1, tmp->buffer, tmp->nbytes);
+    XWRITE (STDOUT_FILENO, tmp->buffer, tmp->nbytes);
 
 free_cbuffers:
   while (first)
@@ -857,7 +857,7 @@ start_bytes (filename, fd, number)
       return 1;
     }
   else if (number < 0)
-    XWRITE (1, &buffer[bytes_read + number], -number);
+    XWRITE (STDOUT_FILENO, &buffer[bytes_read + number], -number);
   return 0;
 }
 
@@ -888,7 +888,10 @@ start_lines (filename, fd, number)
       return 1;
     }
   else if (bytes_to_skip < bytes_read)
-    XWRITE (1, &buffer[bytes_to_skip], bytes_read - bytes_to_skip);
+    {
+      XWRITE (STDOUT_FILENO, &buffer[bytes_to_skip],
+	      bytes_read - bytes_to_skip);
+    }
   return 0;
 }
 
@@ -909,13 +912,14 @@ dump_remainder (filename, fd)
 output:
   while ((bytes_read = safe_read (fd, buffer, BUFSIZ)) > 0)
     {
-      XWRITE (1, buffer, bytes_read);
+      XWRITE (STDOUT_FILENO, buffer, bytes_read);
       total += bytes_read;
     }
   if (bytes_read == -1)
     error (1, errno, "%s", filename);
   if (forever)
     {
+      fflush (stdout);
       sleep (1);
       goto output;
     }
