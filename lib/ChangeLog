@@ -1,3 +1,28 @@
+2002-11-22  Paul Eggert  <eggert@twinsun.com>
+
+	* quotearg.h: Allow multiple inclusion by surrounding with
+	"#ifndef QUOTEARG_H_".  Include <stddef.h>, for size_t,
+	so that we can be included first.
+	(PARAMS): Remove; we now assume C89 or later.  All uses removed.
+	* quotearg.c: Include quotearg.h immediately after config.h.
+	No need to include stddef.h or sys/types.h any more.
+	Surround local include files with "", not "<>".
+	Assume HAVE_LIMITS_H unconditionally, as we assume C89.
+	Similarly, assume HAVE_C_BACKSLASH_A, CHAR_BIT, UCHAR_MAX, UINT_MAX,
+	HAVE_STDLIB_H, HAVE_STRING_H, STDC_HEADERS.
+	(HAVE_MBSINIT): Undef if !HAVE_MBRTOWC.
+	(mbsinit): Define to 1 if !defined mbsinit && !HAVE_MBSINIT.
+	(ISPRINT): Remove; no longer needed now that we assume C89.
+
+	(clone_quoting_options, quotearg_buffer, quotearg_n_options):
+	Preserve errno.
+
+	(quotearg_buffer_restyled, quotearg_n, quotearg_n_style,
+	quotearg_char): Use SIZE_MAX rather than
+	(size_t) -1 when we are talking about "infinity".
+
+	(quotearg_buffer_restyled): Fix bug when quoting trigraphs.
+
 2002-11-22  Jim Meyering  <jim@meyering.net>
 
 	From gnulib.
