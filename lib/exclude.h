@@ -1,6 +1,6 @@
 /* exclude.h -- declarations for excluding file names
 
-   Copyright (C) 1992, 1993, 1994, 1997, 1999, 2001, 2002 Free
+   Copyright (C) 1992, 1993, 1994, 1997, 1999, 2001, 2002, 2003 Free
    Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -20,14 +20,6 @@
 
 /* Written by Paul Eggert <eggert@twinsun.com>  */
 
-#ifndef PARAMS
-# if defined PROTOTYPES || (defined __STDC__ && __STDC__)
-#  define PARAMS(Args) Args
-# else
-#  define PARAMS(Args) ()
-# endif
-#endif
-
 /* Exclude options, which can be ORed with fnmatch options.  */
 
 /* Patterns must match the start of file names, instead of matching
@@ -43,9 +35,9 @@
 
 struct exclude;
 
-struct exclude *new_exclude PARAMS ((void));
-void free_exclude PARAMS ((struct exclude *));
-void add_exclude PARAMS ((struct exclude *, char const *, int));
-int add_exclude_file PARAMS ((void (*) (struct exclude *, char const *, int),
-			      struct exclude *, char const *, int, char));
-bool excluded_filename PARAMS ((struct exclude const *, char const *));
+struct exclude *new_exclude (void);
+void free_exclude (struct exclude *);
+void add_exclude (struct exclude *, char const *, int);
+int add_exclude_file (void (*) (struct exclude *, char const *, int),
+		      struct exclude *, char const *, int, char);
+bool excluded_filename (struct exclude const *, char const *);
