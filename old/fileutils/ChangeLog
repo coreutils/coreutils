@@ -2,6 +2,15 @@
 
 	* Version 4.0.42.
 
+	* tests/install/create-leading: Use ../envvar-check rather than
+	open-coding the same tests.
+
+	* tests/envvar-check: Set/use $as_unset, for those shells
+	(like Ultrix4's /bin/sh) that don't accept `unset'.
+
+	* missing (--run): Use `eval' to run `"$@"'.  Otherwise, Ultrix4.4's
+	/bin/sh fails and outputs garbage.
+
 	* doc/fileutils.texi (touch invocation): Mention the obsolescent usage.
 	* src/touch.c (usage): Tweak the obsolescent usage line so that
 	help2man recognizes it as such.  Reported by Dan Jacobson.
