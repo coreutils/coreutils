@@ -681,7 +681,7 @@ record_dest (char const *dest, struct stat const *dest_stats)
 	xalloc_die ();
       }
 
-    if (ent_from_table == ent)
+    if (ent_from_table != ent)
       {
 	/* There was alread a matching entry in the table, so ENT was
 	   not inserted.  Free it.  */
