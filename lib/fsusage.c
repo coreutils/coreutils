@@ -26,6 +26,13 @@
 #include <sys/stat.h>
 #include "fsusage.h"
 
+#if HAVE_LIMITS_H
+# include <limits.h>
+#endif
+#ifndef CHAR_BIT
+# define CHAR_BIT 8
+#endif
+
 int statfs ();
 
 #if HAVE_SYS_PARAM_H
@@ -68,8 +75,21 @@ int statvfs ();
 /* Many space usage primitives use all 1 bits to denote a value that is
    not applicable or unknown.  Propagate this information by returning
    a uintmax_t value that is all 1 bits if the argument is all 1 bits,
-   even if the argument is unsigned and smaller than unitmax_t.  */
+   even if the argument is unsigned and smaller than uintmax_t.  */
 #define PROPAGATE_ALL_ONES(x) ((x) == -1 ? (uintmax_t) -1 : (uintmax_t) (x))
+
+/* Extract the top bit of X as an uintmax_t value.  */
+#define EXTRACT_TOP_BIT(x) ((x) \
+			    & ((uintmax_t) 1 << (sizeof (x) * CHAR_BIT - 1)))
+
+/* If a value is negative, many space usage primitives store it into an
+   integer variable by assignment, even if the variable's type is unsigned.
+   So, if a space usage variable X's top bit is set, convert X to the
+   uintmax_t value V such that (- (uintmax_t) V) is the negative of
+   the original value.  If X's top bit is clear, just yield X.
+   Use PROPAGATE_TOP_BIT if the original value might be negative;
+   otherwise, use PROPAGATE_ALL_ONES.  */
+#define PROPAGATE_TOP_BIT(x) ((x) | ~ (EXTRACT_TOP_BIT (x) - 1))
 
 int safe_read ();
 
@@ -107,7 +127,8 @@ get_fs_usage (path, disk, fsp)
   fsp->fsu_blocksize = 1024;
   fsp->fsu_blocks = PROPAGATE_ALL_ONES (fsd.fd_req.btot);
   fsp->fsu_bfree = PROPAGATE_ALL_ONES (fsd.fd_req.bfree);
-  fsp->fsu_bavail = PROPAGATE_ALL_ONES (fsd.fd_req.bfreen);
+  fsp->fsu_bavail = PROPAGATE_TOP_BIT (fsd.fd_req.bfreen);
+  fsp->fsu_bavail_top_bit_set = EXTRACT_TOP_BIT (fsd.fd_req.bfreen) != 0;
   fsp->fsu_files = PROPAGATE_ALL_ONES (fsd.fd_req.gtot);
   fsp->fsu_ffree = PROPAGATE_ALL_ONES (fsd.fd_req.gfree);
 
@@ -141,7 +162,8 @@ get_fs_usage (path, disk, fsp)
   fsp->fsu_blocksize = (fsd.s_type == Fs2b ? 1024 : 512);
   fsp->fsu_blocks = PROPAGATE_ALL_ONES (fsd.s_fsize);
   fsp->fsu_bfree = PROPAGATE_ALL_ONES (fsd.s_tfree);
-  fsp->fsu_bavail = PROPAGATE_ALL_ONES (fsd.s_tfree);
+  fsp->fsu_bavail = PROPAGATE_TOP_BIT (fsd.s_tfree);
+  fsp->fsu_bavail_top_bit_set = EXTRACT_TOP_BIT (fsd.s_tfree) != 0;
   fsp->fsu_files = (fsd.s_isize == -1
 		    ? (uintmax_t) -1
 		    : (fsd.s_isize - 2) * INOPB * (fsd.s_type == Fs2b ? 2 : 1));
@@ -226,7 +248,8 @@ get_fs_usage (path, disk, fsp)
 
   fsp->fsu_blocks = PROPAGATE_ALL_ONES (fsd.f_blocks);
   fsp->fsu_bfree = PROPAGATE_ALL_ONES (fsd.f_bfree);
-  fsp->fsu_bavail = PROPAGATE_ALL_ONES (fsd.f_bavail);
+  fsp->fsu_bavail = PROPAGATE_TOP_BIT (fsd.f_bavail);
+  fsp->fsu_bavail_top_bit_set = EXTRACT_TOP_BIT (fsd.f_bavail) != 0;
   fsp->fsu_files = PROPAGATE_ALL_ONES (fsd.f_files);
   fsp->fsu_ffree = PROPAGATE_ALL_ONES (fsd.f_ffree);
 
