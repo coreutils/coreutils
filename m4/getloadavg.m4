@@ -37,14 +37,14 @@ fi
 AC_REPLACE_FUNCS(getloadavg)
 
 if test $ac_cv_func_getloadavg = yes; then
-  AC_DEFINE(HAVE_GETLOADAVG)
+  AC_DEFINE(HAVE_GETLOADAVG, 1, [FIXME])
   ac_have_func=yes
 else
   AC_DEFINE(C_GETLOADAVG, 1, [Define if using getloadavg.c.])
   # Figure out what our getloadavg.c needs.
   ac_have_func=no
   AC_CHECK_HEADER(sys/dg_sys_info.h,
-  [ac_have_func=yes; AC_DEFINE(DGUX)
+  [ac_have_func=yes; AC_DEFINE(DGUX, 1, [FIXME])
   AC_CHECK_LIB(dgc, dg_sys_info)])
 
   AC_CHECK_HEADER(locale.h)
@@ -54,18 +54,18 @@ else
   # uses stabs), but it is still SVR4.  We cannot check for <elf.h> because
   # Irix 4.0.5F has the header but not the library.
   if test $ac_have_func = no && test $ac_cv_lib_elf_elf_begin = yes; then
-    ac_have_func=yes; AC_DEFINE(SVR4)
+    ac_have_func=yes; AC_DEFINE(SVR4, 1, [FIXME])
   fi
 
   if test $ac_have_func = no; then
     AC_CHECK_HEADER(inq_stats/cpustats.h,
-    [ac_have_func=yes; AC_DEFINE(UMAX)
-    AC_DEFINE(UMAX4_3)])
+    [ac_have_func=yes; AC_DEFINE(UMAX, 1, [FIXME])
+    AC_DEFINE(UMAX4_3, 1, [FIXME])])
   fi
 
   if test $ac_have_func = no; then
     AC_CHECK_HEADER(sys/cpustats.h,
-    [ac_have_func=yes; AC_DEFINE(UMAX)])
+    [ac_have_func=yes; AC_DEFINE(UMAX, 1, [FIXME])])
   fi
 
   if test $ac_have_func = no; then
@@ -73,13 +73,13 @@ else
   fi
 
   AC_CHECK_HEADER(nlist.h,
-  [AC_DEFINE(NLIST_STRUCT)
+  [AC_DEFINE(NLIST_STRUCT, 1, [FIXME])
   AC_CACHE_CHECK([for n_un in struct nlist], ac_cv_struct_nlist_n_un,
   [AC_TRY_COMPILE([#include <nlist.h>],
   [struct nlist n; n.n_un.n_name = 0;],
   ac_cv_struct_nlist_n_un=yes, ac_cv_struct_nlist_n_un=no)])
   if test $ac_cv_struct_nlist_n_un = yes; then
-    AC_DEFINE(NLIST_NAME_UNION)
+    AC_DEFINE(NLIST_NAME_UNION, 1, [FIXME])
   fi
   ])dnl
 fi # Do not have getloadavg in system libraries.
@@ -95,7 +95,7 @@ Yowza Am I SETGID yet
 #endif],
   ac_cv_func_getloadavg_setgid=yes, ac_cv_func_getloadavg_setgid=no)])
 if test $ac_cv_func_getloadavg_setgid = yes; then
-  NEED_SETGID=true; AC_DEFINE(GETLOADAVG_PRIVILEGED)
+  NEED_SETGID=true; AC_DEFINE(GETLOADAVG_PRIVILEGED, 1, [FIXME])
 else
   NEED_SETGID=false
 fi
