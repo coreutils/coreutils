@@ -34,6 +34,13 @@
 
 #define AUTHORS "Jim Meyering"
 
+/* This exit status indicates that `nohup' itself failed.  */
+#define NOHUP_FAILURE 127
+
+/* This exit status indicates that `nohup' found the specified command
+   but failed to invoke it.  */
+#define NOHUP_FOUND_BUT_CANNOT_INVOKE 126
+
 char *program_name;
 
 void
@@ -90,7 +97,7 @@ main (int argc, char **argv)
   if (argc <= 1)
     {
       error (0, 0, _("too few arguments"));
-      usage (EXIT_FAILURE);
+      usage (NOHUP_FAILURE);
     }
 
   /* If standard output is a tty, redirect it (appending) to a file.
@@ -114,14 +121,14 @@ main (int argc, char **argv)
 	      int saved_errno2 = errno;
 	      error (0, saved_errno, _("failed to open %s"), quote (file));
 	      error (0, saved_errno2, _("failed to open %s"), quote (in_home));
-	      exit (EXIT_FAILURE);
+	      exit (NOHUP_FAILURE);
 	    }
 	  file = in_home;
 	}
 
       /* Redirect standard output to the file.  */
       if (dup2 (fd, STDOUT_FILENO) == -1)
-	error (EXIT_FAILURE, errno, _("failed to redirect standard output"));
+	error (NOHUP_FAILURE, errno, _("failed to redirect standard output"));
 
       error (0, 0, _("appending output to %s"), quote (file));
       if (in_home)
@@ -142,7 +149,7 @@ main (int argc, char **argv)
       saved_stderr_fd = dup (STDERR_FILENO);
 
       if (dup2 (fd, STDERR_FILENO) == -1)
-	error (EXIT_FAILURE, errno, _("failed to redirect standard error"));
+	error (NOHUP_FAILURE, errno, _("failed to redirect standard error"));
     }
 
   /* Ignore hang-up signals.  */
@@ -164,7 +171,9 @@ main (int argc, char **argv)
     char **cmd = argv + 1;
 
     execvp (*cmd, cmd);
-    exit_status = (errno == ENOENT ? 127 : 126);
+    exit_status = (errno == ENOENT
+		   ? NOHUP_FAILURE
+		   : NOHUP_FOUND_BUT_CANNOT_INVOKE);
     saved_errno = errno;
 
     /* The execve failed.  Output a diagnostic to stderr only if:
