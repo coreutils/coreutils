@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4e from Makefile.am
+# Makefile.in generated automatically by automake 1.4e from Makefile.am.
 
 # Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
 # Free Software Foundation, Inc.
@@ -47,7 +47,6 @@ INSTALL = @INSTALL@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
-INSTALL_STRIP_FLAG =
 INSTALL_HEADER = $(INSTALL_DATA)
 transform = @program_transform_name@
 
@@ -127,22 +126,27 @@ EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
   PATH=`pwd`/../../src:$$PATH
 
+EXEEXT =
+OBJEXT = o
 subdir = tests/install
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
-CONFIG_CLEAN_FILES = 
-DIST_SOURCES = 
-DIST_COMMON =  Makefile.am Makefile.in
+CONFIG_CLEAN_FILES =
+DIST_SOURCES =
+DIST_COMMON = Makefile.am Makefile.in
 
 all: all-am
+
 .SUFFIXES:
-$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOMAKE) --gnits tests/install/Makefile
+
+$(srcdir)/Makefile.in: Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
+	cd $(top_srcdir) && \
+	  $(AUTOMAKE) --gnits  tests/install/Makefile
 
 Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
-	cd $(top_builddir) \
-	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= CONFIG_LINKS= $(SHELL) ./config.status
-
+	cd $(top_builddir) && \
+	  CONFIG_HEADERS= CONFIG_LINKS= \
+	  CONFIG_FILES=$(subdir)/$@ $(SHELL) ./config.status
 tags: TAGS
 TAGS:
 
@@ -219,32 +223,26 @@ distdir: $(DISTFILES)
 	    || exit 1; \
 	  fi; \
 	done
-info-am:
-info: info-am
-dvi-am:
-dvi: dvi-am
 check-am: all-am
 	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
 check: check-am
-installcheck-am:
-installcheck: installcheck-am
-install-exec-am:
-install-exec: install-exec-am
+all-am: Makefile
 
-install-data-am:
+installdirs:
+
+install: install-am
+install-exec: install-exec-am
 install-data: install-data-am
+uninstall: uninstall-am
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
-install: install-am
-uninstall-am:
-uninstall: uninstall-am
-all-am: Makefile
+
+installcheck: installcheck-am
+
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
 	  INSTALL_PROGRAM_ENV='$(INSTALL_STRIP_PROGRAM_ENV)' install
-installdirs:
-
 
 mostlyclean-generic:
 
@@ -258,28 +256,47 @@ maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
 	-rm -f Makefile.in
+clean: clean-am
+
+clean-am: clean-generic mostlyclean-am
+
+distclean: distclean-am
+
+distclean-am: clean-am distclean-generic
+
+dvi:
+
+dvi-am:
+
+info:
+
+info-am:
+
+install-data-am:
+
+install-exec-am:
+
+install-info:
+
+install-man:
+
+installcheck-am:
+
+maintainer-clean: maintainer-clean-am
+
 maintainer-clean-am: distclean-am maintainer-clean-generic
+
+mostlyclean: mostlyclean-am
+
+mostlyclean-am: mostlyclean-generic
 
 .PHONY: all all-am check check-TESTS check-am clean clean-generic \
 	distclean distclean-generic distdir dvi dvi-am info info-am \
 	install install-am install-data install-data-am install-exec \
-	install-exec-am install-strip installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-generic uninstall uninstall-am
-
-distclean: distclean-am
-
-clean-am: clean-generic mostlyclean-am
-
-distclean-am: clean-am distclean-generic
-
-maintainer-clean: maintainer-clean-am
-
-mostlyclean-am: mostlyclean-generic
-
-mostlyclean: mostlyclean-am
-
-clean: clean-am
+	install-exec-am install-info install-man install-strip \
+	installcheck installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-generic \
+	uninstall uninstall-am
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4e from Makefile.am
+# Makefile.in generated automatically by automake 1.4e from Makefile.am.
 
 # Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
 # Free Software Foundation, Inc.
@@ -47,7 +47,6 @@ INSTALL = @INSTALL@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
-INSTALL_STRIP_FLAG =
 INSTALL_HEADER = $(INSTALL_DATA)
 transform = @program_transform_name@
 
@@ -132,28 +131,33 @@ EXTRA_DIST = perm.texi getdate.texi
 # and those names all map to one 14-byte name (<package>.info-) on some crufty
 # old systems.
 MAKEINFO = makeinfo --no-split
+EXEEXT =
+OBJEXT = o
 subdir = doc
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
-CONFIG_CLEAN_FILES = 
-DIST_SOURCES = 
+CONFIG_CLEAN_FILES =
+DIST_SOURCES =
 TEXI2DVI = texi2dvi
 INFO_DEPS = fileutils.info
 DVIS = fileutils.dvi
 TEXINFOS = fileutils.texi
-DIST_COMMON =  version.texi Makefile.am mdate-sh stamp-vti texinfo.tex \
-Makefile.in
+DIST_COMMON = Makefile.am Makefile.in mdate-sh stamp-vti texinfo.tex \
+version.texi
 
 all: all-am
+
 .SUFFIXES:
 .SUFFIXES: .dvi .info .ps .texi .texinfo .txi
-$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOMAKE) --gnits doc/Makefile
+
+$(srcdir)/Makefile.in: Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
+	cd $(top_srcdir) && \
+	  $(AUTOMAKE) --gnits  doc/Makefile
 
 Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
-	cd $(top_builddir) \
-	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= CONFIG_LINKS= $(SHELL) ./config.status
-
+	cd $(top_builddir) && \
+	  CONFIG_HEADERS= CONFIG_LINKS= \
+	  CONFIG_FILES=$(subdir)/$@ $(SHELL) ./config.status
 
 $(srcdir)/version.texi: $(srcdir)/stamp-vti
 	@:
@@ -179,9 +183,6 @@ maintainer-clean-vti:
 fileutils.info: fileutils.texi $(srcdir)/version.texi
 fileutils.dvi: fileutils.texi $(srcdir)/version.texi
 
-
-DVIPS = dvips
-
 .texi.info:
 	@cd $(srcdir) && rm -f $@ $@-[0-9] $@-[0-9][0-9]
 	cd $(srcdir) \
@@ -196,59 +197,11 @@ DVIPS = dvips
 	cd $(srcdir) \
 	  && $(MAKEINFO) `echo $< | sed 's,.*/,,'`
 
-.texinfo.info:
-	@cd $(srcdir) && rm -f $@ $@-[0-9] $@-[0-9][0-9]
-	cd $(srcdir) \
-	  && $(MAKEINFO) `echo $< | sed 's,.*/,,'`
-
-.texinfo:
-	@cd $(srcdir) && rm -f $@ $@-[0-9] $@-[0-9][0-9]
-	cd $(srcdir) \
-	  && $(MAKEINFO) `echo $< | sed 's,.*/,,'`
-
-.texinfo.dvi:
-	TEXINPUTS=$(srcdir):$$TEXINPUTS \
-	  MAKEINFO='$(MAKEINFO) -I $(srcdir)' $(TEXI2DVI) $<
-
-.txi.info:
-	@cd $(srcdir) && rm -f $@ $@-[0-9] $@-[0-9][0-9]
-	cd $(srcdir) \
-	  && $(MAKEINFO) `echo $< | sed 's,.*/,,'`
-
-.txi.dvi:
-	TEXINPUTS=$(srcdir):$$TEXINPUTS \
-	  MAKEINFO='$(MAKEINFO) -I $(srcdir)' $(TEXI2DVI) $<
-
-.txi:
-	@cd $(srcdir) && rm -f $@ $@-[0-9] $@-[0-9][0-9]
-	cd $(srcdir) \
-	  && $(MAKEINFO) `echo $< | sed 's,.*/,,'`
+DVIPS = dvips
 .dvi.ps:
 	$(DVIPS) $< -o $@
 
-install-info-am: $(INFO_DEPS)
-	@$(NORMAL_INSTALL)
-	$(mkinstalldirs) $(DESTDIR)$(infodir)
-	@list='$(INFO_DEPS)'; \
-	for file in $$list; do \
-	  d=$(srcdir); \
-	  for ifile in `CDPATH=: && cd $$d && echo $$file $$file-[0-9] $$file-[0-9][0-9]`; do \
-	    if test -f $$d/$$ifile; then \
-	      echo " $(INSTALL_DATA) $$d/$$ifile $(DESTDIR)$(infodir)/$$ifile"; \
-	      $(INSTALL_DATA) $$d/$$ifile $(DESTDIR)$(infodir)/$$ifile; \
-	    else : ; fi; \
-	  done; \
-	done
-	@$(POST_INSTALL)
-	@if $(SHELL) -c 'install-info --version | sed 1q | fgrep -s -v -i debian' >/dev/null 2>&1; then \
-	  list='$(INFO_DEPS)'; \
-	  for file in $$list; do \
-	    echo " install-info --info-dir=$(DESTDIR)$(infodir) $(DESTDIR)$(infodir)/$$file";\
-	    install-info --info-dir=$(DESTDIR)$(infodir) $(DESTDIR)$(infodir)/$$file || :;\
-	  done; \
-	else : ; fi
-
-uninstall-info:
+uninstall-info-am:
 	$(PRE_UNINSTALL)
 	@if $(SHELL) -c 'install-info --version | sed 1q | fgrep -s -v -i debian' >/dev/null 2>&1; then \
 	  list='$(INFO_DEPS)'; \
@@ -277,12 +230,9 @@ dist-info: $(INFO_DEPS)
 	done
 
 mostlyclean-aminfo:
-	-rm -f fileutils.aux fileutils.cp fileutils.cps fileutils.dvi \
-	  fileutils.fn fileutils.fns fileutils.pgs fileutils.ky \
-	  fileutils.kys fileutils.ps fileutils.log fileutils.pg \
-	  fileutils.toc fileutils.tp fileutils.tps fileutils.vr \
-	  fileutils.vrs fileutils.op fileutils.tr fileutils.cv \
-	  fileutils.cn fileutils.cm fileutils.ov
+	-rm -f fileutils.aux fileutils.cp fileutils.cps fileutils.dvi fileutils.fn \
+	  fileutils.ky fileutils.log fileutils.op fileutils.pg \
+	  fileutils.ps fileutils.toc fileutils.tp fileutils.vr
 
 maintainer-clean-aminfo:
 	cd $(srcdir) && \
@@ -316,32 +266,26 @@ distdir: $(DISTFILES)
 	$(MAKE) $(AM_MAKEFLAGS) \
 	  top_distdir="${top_distdir}" distdir="$(distdir)" \
 	  dist-info
-info-am: $(INFO_DEPS)
-info: info-am
-dvi-am: $(DVIS)
-dvi: dvi-am
 check-am: all-am
 check: check-am
-installcheck-am:
-installcheck: installcheck-am
-install-exec-am:
-install-exec: install-exec-am
+all-am: Makefile $(INFO_DEPS)
 
-install-data-am: install-info-am
+installdirs:
+	$(mkinstalldirs) $(DESTDIR)$(infodir)
+
+install: install-am
+install-exec: install-exec-am
 install-data: install-data-am
+uninstall: uninstall-am
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
-install: install-am
-uninstall-am: uninstall-info
-uninstall: uninstall-am
-all-am: Makefile $(INFO_DEPS)
+
+installcheck: installcheck-am
+
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
 	  INSTALL_PROGRAM_ENV='$(INSTALL_STRIP_PROGRAM_ENV)' install
-installdirs:
-	$(mkinstalldirs)  $(DESTDIR)$(infodir)
-
 
 mostlyclean-generic:
 
@@ -355,32 +299,75 @@ maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
 	-rm -f Makefile.in
-maintainer-clean-am: distclean-am maintainer-clean-aminfo \
-	maintainer-clean-generic maintainer-clean-vti
-
-.PHONY: all all-am check check-am clean clean-generic distclean \
-	distclean-generic distdir dvi dvi-am info info-am install \
-	install-am install-data install-data-am install-exec \
-	install-exec-am install-info-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-aminfo maintainer-clean-generic \
-	maintainer-clean-vti mostlyclean mostlyclean-aminfo \
-	mostlyclean-generic mostlyclean-vti uninstall uninstall-am \
-	uninstall-info
-
-distclean: distclean-am
+clean: clean-am
 
 clean-am: clean-generic mostlyclean-am
 
+distclean: distclean-am
+
 distclean-am: clean-am distclean-generic
+
+dvi: dvi-am
+
+dvi-am: $(DVIS)
+
+info: info-am
+
+info-am: $(INFO_DEPS)
+
+install-data-am: install-info-am
+
+install-exec-am:
+
+install-info: install-info-am
+
+install-info-am: $(INFO_DEPS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(infodir)
+	@list='$(INFO_DEPS)'; \
+	for file in $$list; do \
+	  d=$(srcdir); \
+	  for ifile in `CDPATH=: && cd $$d && echo $$file $$file-[0-9] $$file-[0-9][0-9]`; do \
+	    if test -f $$d/$$ifile; then \
+	      echo " $(INSTALL_DATA) $$d/$$ifile $(DESTDIR)$(infodir)/$$ifile"; \
+	      $(INSTALL_DATA) $$d/$$ifile $(DESTDIR)$(infodir)/$$ifile; \
+	    else : ; fi; \
+	  done; \
+	done
+	@$(POST_INSTALL)
+	@if $(SHELL) -c 'install-info --version | sed 1q | fgrep -s -v -i debian' >/dev/null 2>&1; then \
+	  list='$(INFO_DEPS)'; \
+	  for file in $$list; do \
+	    echo " install-info --info-dir=$(DESTDIR)$(infodir) $(DESTDIR)$(infodir)/$$file";\
+	    install-info --info-dir=$(DESTDIR)$(infodir) $(DESTDIR)$(infodir)/$$file || :;\
+	  done; \
+	else : ; fi
+install-man:
+
+installcheck-am:
 
 maintainer-clean: maintainer-clean-am
 
-mostlyclean-am: mostlyclean-aminfo mostlyclean-generic mostlyclean-vti
+maintainer-clean-am: distclean-am maintainer-clean-aminfo \
+	maintainer-clean-generic maintainer-clean-vti
 
 mostlyclean: mostlyclean-am
 
-clean: clean-am
+mostlyclean-am: mostlyclean-aminfo mostlyclean-generic mostlyclean-vti
+
+uninstall-am: uninstall-info-am
+
+uninstall-info: uninstall-info-am
+
+.PHONY: all all-am check check-am clean clean-generic dist-info \
+	distclean distclean-generic distdir dvi dvi-am info info-am \
+	install install-am install-data install-data-am install-exec \
+	install-exec-am install-info install-info-am install-man \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-aminfo \
+	maintainer-clean-generic maintainer-clean-vti mostlyclean \
+	mostlyclean-aminfo mostlyclean-generic mostlyclean-vti \
+	uninstall uninstall-am uninstall-info-am
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
