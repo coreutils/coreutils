@@ -132,16 +132,16 @@ static struct option const long_options[] =
 {
   {"all", no_argument, NULL, 'a'},
   {"apparent-size", no_argument, NULL, APPARENT_SIZE_OPTION},
-  {"block-size", required_argument, 0, 'B'},
+  {"block-size", required_argument, NULL, 'B'},
   {"bytes", no_argument, NULL, 'b'},
   {"count-links", no_argument, NULL, 'l'},
   {"dereference", no_argument, NULL, 'L'},
   {"dereference-args", no_argument, NULL, 'D'},
-  {"exclude", required_argument, 0, EXCLUDE_OPTION},
-  {"exclude-from", required_argument, 0, 'X'},
-  {"files0-from", required_argument, 0, FILES0_FROM_OPTION},
+  {"exclude", required_argument, NULL, EXCLUDE_OPTION},
+  {"exclude-from", required_argument, NULL, 'X'},
+  {"files0-from", required_argument, NULL, FILES0_FROM_OPTION},
   {"human-readable", no_argument, NULL, 'h'},
-  {"si", no_argument, 0, HUMAN_SI_OPTION},
+  {"si", no_argument, NULL, HUMAN_SI_OPTION},
   {"kilobytes", no_argument, NULL, 'k'}, /* long form is obsolescent */
   {"max-depth", required_argument, NULL, MAX_DEPTH_OPTION},
   {"null", no_argument, NULL, '0'},
@@ -562,9 +562,6 @@ main (int argc, char **argv)
     {
       switch (c)
 	{
-	case 0:			/* Long option. */
-	  break;
-
 #if DU_DEBUG
 	case 'd':
 	  fts_debug = true;
