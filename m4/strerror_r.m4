@@ -42,6 +42,7 @@ if test $ac_cv_func_strerror_r = yes; then
        [
 #       include <stdio.h>
 #       include <string.h>
+#       include <ctype.h>
 
 	extern char *strerror_r ();
 
