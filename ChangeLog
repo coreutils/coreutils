@@ -2,6 +2,9 @@
 
 	* Version 5.3.1.
 
+	* src/system.h (ptr_align): Declare `ptr' parameter to be a
+	`const' pointer, since this function never writes through it.
+
 	* src/uname.c: Indent cpp directives to reflect nesting.
 
 2005-03-28  Jim Meyering  <jim@meyering.net>
