@@ -1881,7 +1881,17 @@ sortlines_temp (struct line *lines, size_t nlines, struct line *temp)
 }
 
 /* Return the index of the first of NFILES FILES that is the same file
-   as OUTFILE.  If none can be the same, return NFILES.  */
+   as OUTFILE.  If none can be the same, return NFILES.
+
+   This test ensures that an otherwise-erroneous use like
+   "sort -m -o FILE ... FILE ..." copies FILE before writing to it.
+   It's not clear that POSIX requires this nicety.
+   Detect common error cases, but don't try to catch obscure cases like
+   "cat ... FILE ... | sort -m -o FILE"
+   where traditional "sort" doesn't copy the input and where
+   people should know that they're getting into trouble anyway.
+   Catching these obscure cases would slow down performance in
+   common cases.  */
 
 static int
 first_same_file (char * const *files, int nfiles, char const *outfile)
