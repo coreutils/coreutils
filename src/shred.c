@@ -109,7 +109,6 @@
 #include "human.h"
 #include "quotearg.h"		/* For quotearg_colon */
 #include "quote.h"		/* For quotearg_colon */
-#include "xalloc.h"
 char *xstrdup PARAMS ((char const *));
 
 #ifndef O_NOCTTY
