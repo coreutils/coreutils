@@ -1,0 +1,47 @@
+#!/bin/sh
+# -*- perl -*-
+# Ensure that paste properly handles files lacking a final newline.
+
+: ${PERL=perl}
+: ${srcdir=.}
+
+$PERL -e 1 > /dev/null 2>&1 || {
+  echo 1>&2 "$0: configure didn't find a usable version of Perl," \
+    "so can't run this test"
+  exit 77
+}
+
+exec $PERL -w -I$srcdir/.. -MFetish -- - <<\EOF
+#/
+require 5.003;
+use strict;
+
+(my $program_name = $0) =~ s|.*/||;
+
+$ENV{PROG} = 'paste';
+
+# Turn off localization of executable's ouput.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+
+my @Tests =
+  (
+   ['no-nl-1', {IN=>"a"},   {IN=>"b"},   {OUT=>"a\tb\n"}],
+   ['no-nl-2', {IN=>"a\n"}, {IN=>"b"},   {OUT=>"a\tb\n"}],
+   ['no-nl-3', {IN=>"a"},   {IN=>"b\n"}, {OUT=>"a\tb\n"}],
+   ['no-nl-4', {IN=>"a\n"}, {IN=>"b\n"}, {OUT=>"a\tb\n"}],
+
+   # Same as above, but with a two lines in each input file and
+   # the addition of the -d option to make SPACE be the output delimiter.
+   ['no-nla1', '-d" "', {IN=>"1\na"},   {IN=>"2\nb"},   {OUT=>"1 2\na b\n"}],
+   ['no-nla2', '-d" "', {IN=>"1\na\n"}, {IN=>"2\nb"},   {OUT=>"1 2\na b\n"}],
+   ['no-nla3', '-d" "', {IN=>"1\na"},   {IN=>"2\nb\n"}, {OUT=>"1 2\na b\n"}],
+   ['no-nla4', '-d" "', {IN=>"1\na\n"}, {IN=>"2\nb\n"}, {OUT=>"1 2\na b\n"}],
+  );
+
+my $save_temps = $ENV{DEBUG};
+my $verbose = $ENV{VERBOSE};
+
+my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
+my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF
