@@ -1,3 +1,7 @@
+Fri Sep 27 22:22:09 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (ALL_LINGUAS): Add spanish (es).
+
 Thu Sep 26 21:02:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/md5sum.c (usage): Remove references in --help output to
