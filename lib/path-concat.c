@@ -22,7 +22,6 @@
 #if HAVE_CONFIG_H
 # include <config.h>
 #endif
-# include <assert.h>
 
 /* Specification.  */
 #include "path-concat.h"
@@ -56,7 +55,9 @@ longest_relative_suffix (char const *f)
    in the result, removing any redundant separators.
    In any case, if BASE_IN_RESULT is non-NULL, set
    *BASE_IN_RESULT to point to the copy of ABASE in the returned
-   concatenation.
+   concatenation.  However, if ABASE begins with more than one slash,
+   set *BASE_IN_RESULT to point to the sole corresponding slash that
+   is copied into the result buffer.
 
    Report an error if memory is exhausted.  */
 
@@ -84,9 +85,6 @@ path_concat (char const *dir, char const *abase, char **base_in_result)
   p = mempcpy (p, base, baselen);
   *p = '\0';
 
-  assert (!base_in_result
-	  || strcmp (*base_in_result, abase) == 0);
-
   return p_concat;
 }
 
@@ -108,6 +106,7 @@ main ()
       {"/", "/",  "/"},
       {"a", "/",  "a/"},   /* this might deserve a diagnostic */
       {"/a", "/", "/a/"},  /* this might deserve a diagnostic */
+      {"a", "//b",  "a/b"},
     };
   size_t i;
   bool fail = false;
