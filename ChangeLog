@@ -1,6 +1,11 @@
-2003-01-27  Jim Meyering  <jim@meyering.net>
+2003-01-30  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.5.
+
+	* tests/du/trailing-slash: Ensure that du/ftw follows a command-line
+	symlink-to-directory with -L, even without the trailing slash.
+
+2003-01-27  Jim Meyering  <jim@meyering.net>
 
 	* src/Makefile.am (check-misc): Check for st_blocks, too.
 
