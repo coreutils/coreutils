@@ -243,48 +243,23 @@ mail_gpg_sign_cookie ?= echo '<\#secure method=pgpmime mode=sign>'
 
 rel-files = $(xd-delta) $(distdir).tar.bz2 $(distdir).tar.gz
 announcement: NEWS ChangeLog $(rel-files) $(signatures)
-	@( \
-	  echo Subject: $(my_distdir) released; \
-	  echo; \
-	  $(mail_gpg_sign_cookie); \
-	  echo FIXME: put comments here; \
-	  echo; \
-	  for url in $(url_dir_list); do \
-	    echo "  $$url/$(my_distdir).tar.gz   ($(tgz-size))"; \
-	    echo "  $$url/$(my_distdir).tar.bz2  ($(bz2-size))"; \
-	  done; \
-	  echo; \
-	  echo And here are xdelta-style diffs; \
-	  echo; \
-	  for url in $(url_dir_list); do \
-	    echo "  $$url/$(xd-delta)   ($(xd-size))"; \
-	  done; \
-	  echo; \
-	  echo "Here are GPG detached signatures:"; \
-	  echo; \
-	  for url in $(url_dir_list); do \
-	    echo "  $$url/$(my_distdir).tar.gz.sig"; \
-	    echo "  $$url/$(my_distdir).tar.bz2.sig"; \
-	  done; \
-	  echo; \
-	  echo "Here are the MD5 and SHA1 signatures:"; \
-	  echo; \
-	  echo "$(tgz-md5)  $(my_distdir).tar.gz"; \
-	  echo "$(bz2-md5)  $(my_distdir).tar.bz2"; \
-	  echo "$(xdelta-md5)  $(xd-delta)"; \
-	  echo "$(tgz-sha1)  $(my_distdir).tar.gz"; \
-	  echo "$(bz2-sha1)  $(my_distdir).tar.bz2"; \
-	  echo "$(xdelta-sha1)  $(xd-delta)"; \
-	  echo; \
-	  echo NEWS:; \
-	  sed -n "$(news-r1),$(news-r2)p" NEWS \
-	    | grep -v '^\['; \
-	  echo; \
-	  echo ChangeLog entries:; \
-	  find . -name ChangeLog -maxdepth 2 \
-	    | xargs $(CVS) diff -up -r$(prev-cvs-tag) -rHEAD \
-	    | sed -n 's/^+//p' \
-	    | perl -ne 'm!^\+\+ (\./)?! or print,next;' \
+	@(								\
+	  ./announce-gen						\
+	    --package=$(PACKAGE)					\
+	    --prev=$(PREV_VERSION)					\
+	    --curr=$(VERSION)						\
+	    --rel=$(release_archive_dir)				\
+	    $(addprefix --url-dir=, $(url_dir_list));			\
+	  echo;								\
+	  echo NEWS:;							\
+	  sed -n "$(news-r1),$(news-r2)p" NEWS				\
+	    | grep -v '^\[';						\
+	  echo;								\
+	  echo ChangeLog entries:;					\
+	  find . -name ChangeLog -maxdepth 2				\
+	    | xargs $(CVS) diff -up -r$(prev-cvs-tag) -rHEAD		\
+	    | sed -n 's/^+//p'						\
+	    | perl -ne 'm!^\+\+ (\./)?! or print,next;'			\
 	      -e 'print "\n"."*"x70 ."\n"; s///; print; print "*"x70 ."\n"'; \
 	)
 
