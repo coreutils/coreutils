@@ -9,7 +9,7 @@ AC_DEFUN(jm_MACROS,
   dnl This macro actually runs replacement code.  See isc-posix.m4.
   AC_REQUIRE([AC_ISC_POSIX])dnl
 
-  jm_WITH_REGEX([lib/regex.c])
+  jm_INCLUDED_REGEX([lib/regex.c])
 
   AC_REQUIRE([jm_ASSERT])
   AC_REQUIRE([jm_AC_HEADER_INTTYPES_H])
