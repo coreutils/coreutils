@@ -1,10 +1,10 @@
 error.h
 fnmatch.h
-getopt.h
 getopt.c
+getopt.h
 getopt1.c
+getpagesize.h
 md5.h
 obstack.h
-regex.h
 regex.c
-getpagesize.h
+regex.h
