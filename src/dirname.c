@@ -33,8 +33,6 @@
 
 #define AUTHORS "David MacKenzie and Jim Meyering"
 
-void strip_trailing_slashes ();
-
 /* The name this program was run with. */
 char *program_name;
 
@@ -66,7 +64,9 @@ output `.' (meaning the current directory).\n\
 int
 main (int argc, char **argv)
 {
+  static char const dot = '.';
   char *result;
+  size_t len;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -92,11 +92,17 @@ main (int argc, char **argv)
       usage (1);
     }
 
-  result = dir_name (argv[1]);
-  if (result == NULL)
-    xalloc_die ();
-  puts (result);
-  free (result);
+  result = argv[1];
+  len = dir_len (result);
+
+  if (! len)
+    {
+      result = &dot;
+      len = 1;
+    }
+
+  fwrite (result, 1, len, stdout);
+  putchar ('\n');
 
   exit (0);
 }
