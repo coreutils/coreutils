@@ -1,4 +1,21 @@
+Sat Nov 23 16:11:59 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* chgrp.c (usage): Alphabetize option descriptions the way
+	sort -f would.
+	* chown.c (usage): Likewise.
+	* cp-aux.c (usage): Likewise.
+	* df.c (usage): Likewise.
+	* install.c (usage): Likewise.
+	* ln.c (usage): Likewise.
+	* ls.c (usage): Likewise.
+	* mkdir.c (usage): Likewise.
+	* mv.c (usage): Likewise.
+	* rm.c (usage): Likewise.
+
 Fri Nov 22 22:14:10 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (AC_REPLACE_FUNCS): Don't try to replace getline this
+	way.  AM_FUNC_GETLINE does it now.
 
 	* src/cp.c (copy): With -i and not -f, prompt for any type of
 	(non-directory) source file before overwriting an existing target.
