@@ -1,3 +1,8 @@
+2001-02-04  Jim Meyering  <meyering@lucent.com>
+
+	* src/factor.c (usage): Tweak --help output: it prints the _prime_
+	factors, not just any factors.
+
 2001-02-03  Jim Meyering  <meyering@lucent.com>
 
 	Improve the performance of `factor' (more than 2x speed-up for large N).
