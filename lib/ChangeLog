@@ -1,3 +1,25 @@
+2000-06-26  Paul Eggert  <eggert@twinsun.com>
+
+	savedir now sets errno on failure and invokes xmalloc to get memory.
+	Fix a couple of other minor bugs while we're at it.
+
+	* savedir.c (<unistd.h>): Do not include; there's no need.
+	(NAMLEN): Remove macro.
+	(malloc, realloc): Remove decls.
+	(stpcpy): Likewise.
+	("xalloc.h"): Include.
+	(NAME_SIZE_DEFAULT): New macro.
+	(savedir): Use xmalloc / xrealloc to allocate memory.
+	Use NAME_SIZE_DEFAULT if name_size is negative or overflows to zero.
+	Skip "" directory entries.
+	Use strlen to calculate directory entry length, since the old method
+	is rarely used these days and isn't worth supporting.
+	Don't use a pointer after freeing it.
+	Check for integer overflow when calculating allocation size.
+	Use memcpy to copy entries, instead of stpcpy.
+	Set errno properly when returning NULL.
+	Check for readdir error.
+
 2000-06-26  Jim Meyering  <meyering@lucent.com>
 
 	* posixtm.c [HAVE_STDLIB_H]: Include stdlib.h, for decl of abort.
