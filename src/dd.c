@@ -627,14 +627,14 @@ only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, {unblock,sy
     {
       for (i = 0; i < 256; i++)
 	if (ISLOWER (trans_table[i]))
-	  trans_table[i] = toupper (trans_table[i]);
+	  trans_table[i] = TOUPPER (trans_table[i]);
       translation_needed = 1;
     }
   else if (conversions_mask & C_LCASE)
     {
       for (i = 0; i < 256; i++)
 	if (ISUPPER (trans_table[i]))
-	  trans_table[i] = tolower (trans_table[i]);
+	  trans_table[i] = TOLOWER (trans_table[i]);
       translation_needed = 1;
     }
 
