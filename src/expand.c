@@ -42,7 +42,6 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
-#include "version.h"
 #include "error.h"
 
 /* The number of bytes added at a time to the amount of memory
@@ -368,7 +367,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("expand - %s\n", version_string);
+      printf ("expand - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

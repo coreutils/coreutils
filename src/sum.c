@@ -25,7 +25,6 @@
 #include <sys/types.h>
 #include <getopt.h>
 #include "system.h"
-#include "version.h"
 #include "error.h"
 
 int safe_read ();
@@ -235,7 +234,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("sum - %s\n", version_string);
+      printf ("sum - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

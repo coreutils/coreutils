@@ -40,7 +40,6 @@
 
 #include "system.h"
 #include "linebuffer.h"
-#include "version.h"
 #include "error.h"
 #include "xstrtol.h"
 
@@ -363,7 +362,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("uniq - %s\n", version_string);
+      printf ("uniq - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

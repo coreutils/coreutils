@@ -24,7 +24,6 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
-#include "version.h"
 #include "error.h"
 
 /* Size of atomic reads. */
@@ -293,7 +292,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("wc - %s\n", version_string);
+      printf ("wc - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

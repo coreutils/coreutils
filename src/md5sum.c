@@ -31,7 +31,6 @@
 #include "getline.h"
 #include "system.h"
 #include "error.h"
-#include "version.h"
 
 /* Most systems do not distinguish between external and internal
    text representations.  */
@@ -403,7 +402,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "md5sum", version_string, usage);
+  parse_long_options (argc, argv, "md5sum", PACKAGE_VERSION, usage);
 
   while ((opt = getopt_long (argc, argv, "bctw", long_options, NULL))
 	 != EOF)
@@ -444,7 +443,7 @@ main (int argc, char **argv)
 
   if (do_version)
     {
-      printf ("md5sum - %s\n", version_string);
+      printf ("md5sum - %s\n", PACKAGE_VERSION);
       exit (EXIT_SUCCESS);
     }
 

@@ -44,7 +44,6 @@ char *alloca ();
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
-#include "version.h"
 #include "xstrtoul.h"
 #include "error.h"
 
@@ -1758,7 +1757,7 @@ the maximum\nrepresentable value of type off_t"), optarg);
 
   if (show_version)
     {
-      printf ("od - %s\n", version_string);
+      printf ("od - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

@@ -101,7 +101,6 @@
 #include <sys/types.h>
 #include <time.h>
 #include "system.h"
-#include "version.h"
 #include "error.h"
 
 char *xmalloc ();
@@ -617,7 +616,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("pr - %s\n", version_string);
+      printf ("pr - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

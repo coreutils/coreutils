@@ -28,7 +28,6 @@
 #include <signal.h>
 #include <stdio.h>
 #include "system.h"
-#include "version.h"
 #include "long-options.h"
 #include "error.h"
 #include "xstrtod.h"
@@ -1678,7 +1677,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "sort", version_string, usage);
+  parse_long_options (argc, argv, "sort", PACKAGE_VERSION, usage);
 
   have_read_stdin = 0;
   inittables ();

@@ -44,7 +44,6 @@
 
 #include "linebuffer.h"
 #include "system.h"
-#include "version.h"
 #include "error.h"
 #include "xstrtol.h"
 
@@ -578,7 +577,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("nl - %s\n", version_string);
+      printf ("nl - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

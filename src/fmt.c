@@ -40,7 +40,6 @@
 #define word unused_word_type
 
 #include "system.h"
-#include "version.h"
 #include "error.h"
 #include "xstrtol.h"
 
@@ -398,7 +397,7 @@ main (register int argc, register char **argv)
 
   if (show_version)
     {
-      printf ("fmt - %s\n", version_string);
+      printf ("fmt - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

@@ -39,7 +39,6 @@
 #endif
 
 #include "system.h"
-#include "version.h"
 #include "xstrtol.h"
 #include "error.h"
 
@@ -309,7 +308,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("fold - %s\n", version_string);
+      printf ("fold - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

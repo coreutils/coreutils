@@ -108,7 +108,6 @@ main ()
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
-#include "version.h"
 #include "error.h"
 
 /* Number of bytes to read at once.  */
@@ -307,7 +306,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("cksum - %s\n", version_string);
+      printf ("cksum - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

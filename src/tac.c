@@ -47,7 +47,6 @@ tac -r -s '.\|
 # include <rx.h>
 #endif
 #include "system.h"
-#include "version.h"
 #include "error.h"
 
 #ifndef STDC_HEADERS
@@ -622,7 +621,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("tac - %s\n", version_string);
+      printf ("tac - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

@@ -24,7 +24,6 @@
 #include <sys/types.h>
 #include "system.h"
 #include "linebuffer.h"
-#include "version.h"
 #include "error.h"
 
 /* Undefine, to avoid warning about redefinition on some systems.  */
@@ -250,7 +249,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("comm - %s\n", version_string);
+      printf ("comm - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

@@ -51,7 +51,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "version.h"
 #include "xstrtol.h"
 #include "error.h"
 
@@ -970,7 +969,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("tail - %s\n", version_string);
+      printf ("tail - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

@@ -61,7 +61,6 @@ char *alloca ();
 #endif
 
 #include "system.h"
-#include "version.h"
 #include "long-options.h"
 #include "xstrtol.h"
 #include "error.h"
@@ -782,7 +781,7 @@ main (int argc, char **argv)
      it may be increased.  */
   uni_blank.nfields = 1;
 
-  parse_long_options (argc, argv, "join", version_string, usage);
+  parse_long_options (argc, argv, "join", PACKAGE_VERSION, usage);
 
   nfiles = 0;
   print_pairables = 1;

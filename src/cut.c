@@ -72,7 +72,6 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
-#include "version.h"
 #include "error.h"
 
 #define FATAL_ERROR(s)							\
@@ -737,7 +736,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("cut - %s\n", version_string);
+      printf ("cut - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

@@ -34,7 +34,6 @@
 #endif
 
 #include "system.h"
-#include "version.h"
 #include "error.h"
 
 #ifndef ULONG_MAX
@@ -1832,7 +1831,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("tr - %s\n", version_string);
+      printf ("tr - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

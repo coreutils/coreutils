@@ -42,7 +42,6 @@
 # include <rx.h>
 #endif
 #include "system.h"
-#include "version.h"
 #include "error.h"
 #include "xstrtoul.h"
 
@@ -1490,7 +1489,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("csplit - %s\n", version_string);
+      printf ("csplit - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 
