@@ -1,3 +1,8 @@
+2000-07-01  Jim Meyering  <meyering@lucent.com>
+
+	* ls-mntd-fs.m4: Remove a `FIXME' comment and fix the associated
+	problem.
+
 2000-06-17  Bruno Haible  <haible@clisp.cons.org>
 
 	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): Rename BeOS specific
