@@ -1,5 +1,19 @@
 2002-11-21  Bruno Haible  <bruno@clisp.org>
 
+	Remove case insensitive option matching.
+	* argmatch.h (argcasematch): Remove declaration.
+	(ARGCASEMATCH): Remove macro.
+	(__xargmatch_internal): Remove case_sensitive argument.
+	(XARGMATCH): Update.
+	(XARGCASEMATCH): Remove macro.
+	* argmatch.c (argmatch): Renamed from __argmatch_internal. Remove
+	case_sensitive argument.
+	(argcasematch): Remove function.
+	(__xargmatch_internal): Remove case_sensitive argument.
+	(main): Use XARGMATCH instead of XARGCASEMATCH.
+
+2002-11-21  Bruno Haible  <bruno@clisp.org>
+
 	* xmalloc.c: Change compile-time error message. Add comment about
 	required autoconf version.
 	* xmalloc.c: Include gettext.h instead of <libintl.h>.
