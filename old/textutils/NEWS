@@ -1,4 +1,6 @@
 Changes in release 1.20
+* split and tail diagnose unrecognized multiplier suffixes, in e.g.,
+  `split --bytes=1M' (should be `-b 1m' or `--bytes=1m')
 * fix bug in md5sum's handling of partial reads
 * fix bug in treatment by sort -f of bytes with high-bit set
 * update configuration system to use automake's aclocal program
