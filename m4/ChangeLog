@@ -1,3 +1,9 @@
+2000-04-13  Jim Meyering  <meyering@lucent.com>
+
+	* jm-macros.m4 (jm_CHECK_ALL_TYPES) [_GNU_SOURCE]: Use new AH_VERBATIM
+	to insert required #ifndef into config.h.in.
+	Suggestion from Akim Demaille.
+
 2000-04-12  Jim Meyering  <meyering@lucent.com>
 
 	* getloadavg.m4 (AM_FUNC_GETLOADAVG): Use AC_CHECK_HEADERS, not
