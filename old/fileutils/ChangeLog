@@ -1,3 +1,9 @@
+Wed Nov  1 23:11:05 1995  Jim Meyering  (meyering@comco.com)
+
+	* cp.c (copy): Use euidaccess instead of euidaccess_stat.
+	* mv.c (do_move): Likewise.
+	* rm.c (remove_file, remove_dir): Likewise.
+
 Sun Oct 29 06:06:13 1995  Jim Meyering  (meyering@comco.com)
 
 	* aclocal.m4 (jm_WITH_AUTODEPS): New directive.
