@@ -427,9 +427,10 @@ pipeline.
 @dfn{failure}.  It can be used as a place holder in shell scripts
 where an unsuccessful command is needed.
 
-@code{false} ignores @emph{all} command line arguments, even @samp{--help}
-and @samp{--version}, since to do otherwise would change expected
-behavior that some programmers may be relying on.
+By default, @code{false} honors the @samp{--help} and @samp{--version}
+options.  However, that is contrary to @sc{POSIX}, so when the environment
+variable @env{POSIXLY_CORRECT} is set, @code{false} ignores @emph{all}
+command line arguments, including @samp{--help} and @samp{--version}.
 
 This version of @code{false} is implemented as a C program, and is thus
 more secure and faster than a shell script implementation, and may safely
@@ -448,11 +449,15 @@ be used as a dummy shell for the purpose of disabling accounts.
 @code{true} does nothing except return an exit status of 0, meaning
 @dfn{success}.  It can be used as a place holder in shell scripts
 where a successful command is needed, although the shell built-in
-command @code{:} (colon) does the same thing faster.
+command @code{:} (colon) may do the same thing faster.
+In most modern shells, @code{true} is built-in command, so when
+you use @samp{true} in a script, you're probably using the built-in
+command, not the one documented here.
 
-@code{true} ignores @emph{all} command line arguments, even @samp{--help}
-and @samp{--version}, since to do otherwise would change expected
-behavior that some programmers may be relying on.
+By default, @code{true} honors the @samp{--help} and @samp{--version}
+options.  However, that is contrary to @sc{POSIX}, so when the environment
+variable @env{POSIXLY_CORRECT} is set, @code{true} ignores @emph{all}
+command line arguments, including @samp{--help} and @samp{--version}.
 
 This version of @code{true} is implemented as a C program, and is thus
 more secure and faster than a shell script implementation, and may safely
