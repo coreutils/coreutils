@@ -1,3 +1,7 @@
+Tue Jun 25 21:55:18 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* Version 1.18a.
+
 Tue Jun 18 20:43:20 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* aclocal.m4: Update from gettext-0.10.20.
