@@ -1,6 +1,15 @@
-2003-03-27  Jim Meyering  <jim@meyering.net>
+2003-03-28  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.12.
+
+	* tests/du/basic: Use seq, not `yes' to generate 4KB of data.
+	Otherwise, on systems (DJGPP) that emulate pipes using files,
+	this test would never complete, waiting for `yes' to terminate.
+	* tests/du/slink: As above, use seq, not `yes' to generate link target.
+	* tests/rm/hash: As above, use seq, not `yes' to generate dir name.
+	Reported by Rich Dawe.
+
+2003-03-27  Jim Meyering  <jim@meyering.net>
 
 	* src/id.c: Remove Arnold Robbins' obsolete e-mail address
 	from `written by...' comment, at his request.
