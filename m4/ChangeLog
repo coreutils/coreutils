@@ -1,3 +1,8 @@
+2001-11-19  Jim Meyering  <meyering@lucent.com>
+
+	* mkstemp.m4: Close each descriptor immediately so the test
+	doesn't mistakenly hit the max-open-files limit.
+
 2001-11-18  Jim Meyering  <meyering@lucent.com>
 
 	* prereq.m4 (jm_PREREQ_TEMPNAME): Check for declaration of getenv.
