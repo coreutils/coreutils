@@ -33,6 +33,7 @@
 #include "system.h"
 #include "closeout.h"
 #include "error.h"
+#include "full-write.h"
 #include "safe-read.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -43,8 +44,6 @@
 /* Undefine, to avoid warning about redefinition on some systems.  */
 #undef max
 #define max(h,i) ((h) > (i) ? (h) : (i))
-
-int full_write ();
 
 /* Name under which this program was invoked.  */
 char *program_name;
@@ -156,7 +155,7 @@ simple_cat (
      int bufsize)
 {
   /* Actual number of characters read, and therefore written.  */
-  int n_read;
+  ssize_t n_read;
 
   /* Loop until the end of the file.  */
 
@@ -179,7 +178,7 @@ simple_cat (
 
       /* Write this block out.  */
 
-      if (full_write (STDOUT_FILENO, buf, n_read) < 0)
+      if (full_write (STDOUT_FILENO, buf, n_read) != n_read)
 	error (EXIT_FAILURE, errno, _("write error"));
     }
 }
@@ -226,7 +225,7 @@ cat (
   unsigned char *bpout;
 
   /* Number of characters read by the last read call.  */
-  int n_read;
+  ssize_t n_read;
 
   /* Determines how many consecutive newlines there have been in the
      input.  0 newlines makes NEWLINES -1, 1 newline makes NEWLINES 1,
