@@ -1,3 +1,7 @@
+2004-05-03  Jim Meyering  <jim@meyering.net>
+
+	* lchown.c (lchown) [CHOWN_MODIFIES_SYMLINK]: Just call chown.
+
 2004-05-01  Jim Meyering  <jim@meyering.net>
 
 	* chown.c (rpl_chown) [CHOWN_FAILS_TO_HONOR_ID_OF_NEGATIVE_ONE]:
