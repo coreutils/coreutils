@@ -25,12 +25,8 @@
 #include "unlocked-io.h"
 #include "version-etc.h"
 
-#if ENABLE_NLS
-# include <libintl.h>
-# define _(Text) gettext (Text)
-#else
-# define _(Text) Text
-#endif
+#include "gettext.h"
+#define _(msgid) gettext (msgid)
 
 /* Default copyright goes to the FSF. */
 
