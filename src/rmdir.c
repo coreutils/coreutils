@@ -101,11 +101,15 @@ remove_parents (char *path)
 
       if (fail)
 	{
-	  /* Give a diagnostic and set fail if not --ignore.  */
-	  if (!ignore_fail_on_non_empty || errno != ENOTEMPTY)
+	  /* Stop quietly if --ignore-fail-on-non-empty. */
+	  if (ignore_fail_on_non_empty
+	      && (errno == ENOTEMPTY || errno == EEXIST))
+	    {
+	      fail = 0;
+	    }
+	  else
 	    {
 	      error (0, errno, "%s", path);
-	      fail = 1;
 	    }
 	  break;
 	}
