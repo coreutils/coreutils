@@ -84,9 +84,9 @@ l = @l@
 
 AUTOMAKE_OPTIONS = 1.1 gnits
 
-TESTS = r-1
+TESTS = r-1 deep-1
 EXTRA_DIST = $(TESTS)
-TESTS_ENVIRONMENT = RM=../../src/rm
+TESTS_ENVIRONMENT = RM=../../src/rm MKDIR=../../src/mkdir
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
