@@ -1,6 +1,22 @@
-2003-08-27  Jim Meyering  <jim@meyering.net>
+2003-08-30  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
+
+	When source and destination arguments refer to the same file, reside
+	on a partition (e.g. VFAT) on which distinct names may refer to the
+	same directory entry (often due to variations in case), and when the
+	link count for the file is 1, mv no longer unlinks the file.
+	FIXME: this is a band-aid fix.  If the file happens to have a link
+	count of 2 or greater, mv will still unlink it.
+	* src/copy.c (same_file_ok): Invoke same_name (which might still
+	return false for names that refer to the same directory entry)
+	only if the link count is 2 or more.
+
+2003-08-27  Jim Meyering  <jim@meyering.net>
+
+	* src/who.c: Change meaning of -l from --lookup to --login, per POSIX.
+	who's -l option has been eliciting an unconditional warning about
+	this impending change since sh-utils-2.0.12 (April 2002).
 
 	* src/paste.c (paste_parallel): Don't output `EOF' (aka -1) as a `char'.
 	This would happen for nonempty files not ending with a newline.
