@@ -1,5 +1,7 @@
 #serial 1
 # Use the replacement ftw.c if the one in the C library is inadequate or buggy.
+# For now, we always use the code in lib/ because libc doesn't have the FTW_DCH
+# or FTW_DCHP that we need.
 # From Jim Meyering
 
 AC_DEFUN([AC_FUNC_FTW],
@@ -13,10 +15,12 @@ AC_DEFUN([AC_FUNC_FTW],
   # see if we'll also need the replacement tsearch.c.
   AC_CHECK_FUNC([tdestroy], , [need_tdestroy=1])
 
-  AC_CACHE_CHECK([for working GNU ftw], ac_cv_func_ftw_working,
+  AC_CACHE_CHECK([for ftw/FTW_CHDIR that informs callback of failed chdir],
+                 ac_cv_func_ftw_working,
   [
   # The following test would fail prior to glibc-2.3.2, because `depth'
-  # would be 2 rather than 4.
+  # would be 2 rather than 4.  Of course, now that we require FTW_DCH
+  # and FTW_DCHP, this test fails even with GNU libc's fixed ftw.
   mkdir -p conftest.dir/a/b/c
   AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #include <string.h>
