@@ -62,7 +62,7 @@ static char line_buf[13] =
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '0', '\t', '\0'};
 
 /* Position in `line_buf' where printing starts.  This will not change
-   unless the number of lines are more than 999999.  */
+   unless the number of lines is larger than 999999.  */
 static char *line_num_print = line_buf + 5;
 
 /* Position of the first digit in `line_buf'.  */
@@ -550,7 +550,10 @@ cat (inbuf, insize, outbuf, outsize, quote,
 		     Irix-5 returns ENOSYS on pipes.  */
 		  if (errno == EOPNOTSUPP || errno == ENOTTY
 		      || errno == EINVAL || errno == ENODEV
-		      || errno == ENOSYS)
+#ifdef ENOSYS
+		      || errno == ENOSYS
+#endif
+		      )
 		    use_fionread = 0;
 		  else
 		    {
