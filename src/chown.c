@@ -38,6 +38,10 @@
 #include "system.h"
 #include "error.h"
 
+#ifdef HAVE_LCHOWN
+# define chown(PATH, OWNER, GROUP) lchown(PATH, OWNER, GROUP)
+#endif
+
 #ifndef _POSIX_VERSION
 struct passwd *getpwnam ();
 struct group *getgrnam ();
@@ -46,10 +50,6 @@ struct group *getgrgid ();
 
 #ifndef HAVE_ENDPWENT
 # define endpwent() ((void) 0)
-#endif
-
-#ifdef HAVE_LCHOWN
-# define chown(PATH, OWNER, GROUP) lchown(PATH, OWNER, GROUP)
 #endif
 
 char *savedir ();
