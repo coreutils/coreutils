@@ -7,7 +7,7 @@
 #include <config.h>
 #endif
 
-void
+void *
 memmove (dest, source, length)
      char *dest;
      const char *source;
@@ -18,7 +18,11 @@ memmove (dest, source, length)
     for (source += length, dest += length; length; --length)
       *--dest = *--source;
   else if (source != dest)
-    /* Moving from hi mem to low mem; start at beginning.  */
-    for (; length; --length)
-      *dest++ = *source++;
+    {
+      /* Moving from hi mem to low mem; start at beginning.  */
+      for (; length; --length)
+	*dest++ = *source++;
+      --dest;
+    }
+  return (void *) dest;
 }
