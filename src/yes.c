@@ -73,25 +73,19 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
+  if (getopt (argc, argv, "+") != -1)
+    usage (EXIT_FAILURE);
 
-  /* The above handles --help and --version.
-     Since there is no other invocation of getopt, handle `--' here.  */
-  if (1 < argc && STREQ (argv[1], "--"))
+  if (argc <= optind)
     {
-      --argc;
-      ++argv;
-    }
-
-  if (argc == 1)
-    {
-      argv[1] = "y";
-      argc = 2;
+      optind = argc;
+      argv[argc++] = "y";
     }
 
   for (;;)
     {
       int i;
-      for (i = 1; i < argc; i++)
+      for (i = optind; i < argc; i++)
 	if (fputs (argv[i], stdout) == EOF
 	    || putchar (i == argc - 1 ? '\n' : ' ') == EOF)
 	  {

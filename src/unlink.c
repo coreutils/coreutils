@@ -73,29 +73,23 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
+  if (getopt (argc, argv, "") != -1)
+    usage (EXIT_FAILURE);
 
-  /* The above handles --help and --version.
-     Since there is no other invocation of getopt, handle `--' here.  */
-  if (1 < argc && STREQ (argv[1], "--"))
-    {
-      --argc;
-      ++argv;
-    }
-
-  if (argc < 2)
+  if (argc < optind + 1)
     {
       error (0, 0, _("missing operand"));
       usage (EXIT_FAILURE);
     }
 
-  if (2 < argc)
+  if (optind + 1 < argc)
     {
-      error (0, 0, _("extra operand %s"), quote (argv[2]));
+      error (0, 0, _("extra operand %s"), quote (argv[optind + 1]));
       usage (EXIT_FAILURE);
     }
 
-  if (unlink (argv[1]) != 0)
-    error (EXIT_FAILURE, errno, _("cannot unlink %s"), quote (argv[1]));
+  if (unlink (argv[optind]) != 0)
+    error (EXIT_FAILURE, errno, _("cannot unlink %s"), quote (argv[optind]));
 
   exit (EXIT_SUCCESS);
 }
