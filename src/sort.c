@@ -318,7 +318,8 @@ Write sorted concatenation of all FILE(s) to standard output.\n\
       --help       display this help and exit\n\
       --version    output version information and exit\n\
 \n\
-"), DEFAULT_TMPDIR);
+"),
+	      DEFAULT_TMPDIR);
       printf (_("\
 POS is F[.C][OPTS], where F is the field number and C the character position\n\
 in the field, both counted from one with -k, from zero with the obsolescent\n\
@@ -326,7 +327,7 @@ form.  OPTS is made up of one or more of Mbdfinr, this effectively disables\n\
 global -Mbdfinr settings for that key.  If no key is given, use the entire\n\
 line as the key.  With no FILE, or when FILE is -, read standard input.\n\
 ")
-	      , DEFAULT_TMPDIR);
+	      );
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   /* Don't use EXIT_FAILURE here in case it is defined to be 1.
