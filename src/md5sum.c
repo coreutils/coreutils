@@ -1,5 +1,5 @@
 /* Compute MD5 or SHA1 checksum of files or strings
-   Copyright (C) 1995-2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -116,7 +116,7 @@ static const struct option long_options[] =
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -156,7 +156,7 @@ text), and name for each FILE.\n"),
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
 
-  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (status);
 }
 
 #define ISWHITE(c) ((c) == ' ' || (c) == '\t')
@@ -546,7 +546,7 @@ main (int argc, char **argv)
   int opt;
   char **string = NULL;
   size_t n_strings = 0;
-  size_t err = 0;
+  int err = 0;
   int file_type_specified = 0;
 
 #if O_BINARY
