@@ -1,3 +1,7 @@
+Changes in release 1.17
+* add tests for factor and more for date.
+* factor runs a lot faster for large 64-bit inputs
+
 Changes in release 1.16
 * stty -tabs works properly
 * add tests for date
