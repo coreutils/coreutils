@@ -44,7 +44,8 @@ int
 rmdir (dpath)
      char *dpath;
 {
-  int cpid, status;
+  pid_t cpid;
+  int status;
   struct stat statbuf;
 
   if (stat (dpath, &statbuf) != 0)
@@ -73,7 +74,7 @@ rmdir (dpath)
       while (wait (&status) != cpid)
 	/* Do nothing.  */ ;
 
-      if (status & 0xFFFF)
+      if (status)
 	{
 
 	  /* /bin/rmdir failed.  */
