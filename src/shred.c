@@ -174,11 +174,12 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -x, --exact    do not round file sizes up to the next full block;\n\
                    this is the default for non-regular files\n\
   -z, --zero     add a final overwrite with zeros to hide shredding\n\
-  -              shred standard output\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
+\n\
+If FILE is -, shred standard output.\n\
 \n\
 Delete FILE(s) if --remove (-u) is specified.  The default is not to remove\n\
 the files because it is common to operate on device files like /dev/hda,\n\
