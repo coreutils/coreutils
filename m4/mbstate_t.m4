@@ -1,4 +1,4 @@
-# serial 7
+# serial 8
 
 # From Paul Eggert.
 
@@ -24,6 +24,6 @@ AC_DEFUN(AC_MBSTATE_T,
       ac_cv_type_mbstate_t=yes,
       ac_cv_type_mbstate_t=no)])
    if test $ac_cv_type_mbstate_t = no; then
-     AC_DEFINE(mbstate_t, char,
+     AC_DEFINE(mbstate_t, int,
 	       [Define to a type if <wchar.h> does not define.])
    fi])
