@@ -43,7 +43,8 @@
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  TARGET_DIRECTORY_OPTION = CHAR_MAX + 1
+  NO_TARGET_DIRECTORY_OPTION = CHAR_MAX + 1,
+  TARGET_DIRECTORY_OPTION
 };
 
 int link ();			/* Some systems don't declare this anywhere. */
@@ -126,6 +127,7 @@ static struct option const long_options[] =
   {"backup", optional_argument, NULL, 'b'},
   {"directory", no_argument, NULL, 'F'},
   {"no-dereference", no_argument, NULL, 'n'},
+  {"no-target-directory", no_argument, NULL, NO_TARGET_DIRECTORY_OPTION},
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
   {"suffix", required_argument, NULL, 'S'},
@@ -386,6 +388,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -S, --suffix=SUFFIX         override the usual backup suffix\n\
       --target-directory=DIRECTORY  specify the DIRECTORY in which to create\n\
                                 the links\n\
+      --no-target-directory   treat LINK_NAME as a normal file\n\
   -v, --verbose               print name of each file before linking\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
@@ -417,6 +420,7 @@ main (int argc, char **argv)
   char *backup_suffix_string;
   char *version_control_string = NULL;
   char *target_directory = NULL;
+  bool no_target_directory = false;
   int n_files;
   char **file;
 
@@ -471,6 +475,9 @@ main (int argc, char **argv)
 	case 'n':
 	  dereference_dest_dir_symlinks = 0;
 	  break;
+	case NO_TARGET_DIRECTORY_OPTION:
+	  no_target_directory = true;
+	  break;
 	case 's':
 #ifdef S_ISLNK
 	  symbolic_link = 1;
@@ -517,7 +524,24 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  if (!target_directory)
+  if (no_target_directory)
+    {
+      if (target_directory)
+	error (EXIT_FAILURE, 0,
+	       _("Cannot combine --target-directory "
+		 "and --no-target-directory"));
+      if (n_files != 2)
+	{
+	  if (n_files < 2)
+	    error (0, 0,
+		   _("missing destination file operand after %s"),
+		   quote (file[0]));
+	  else
+	    error (0, 0, _("extra operand %s"), quote (file[2]));
+	  usage (EXIT_FAILURE);
+	}
+    }
+  else if (!target_directory)
     {
       if (n_files < 2)
 	target_directory = ".";
