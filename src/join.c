@@ -30,6 +30,8 @@
 #include "long-options.h"
 #include "error.h"
 
+#define join system_join
+
 char *xmalloc ();
 char *xrealloc ();
 static void usage ();
