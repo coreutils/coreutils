@@ -478,7 +478,8 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
       for (nameend = nextchar; *nameend && *nameend != '='; nameend++)
 	/* Do nothing.  */ ;
 
-#ifdef lint		/* Suppress `used before initialized' warning.  */
+#ifdef lint
+      /* Suppress `used before initialized' warning.  */
       indfound = 0;
 #endif
 
