@@ -1,3 +1,7 @@
+2004-06-09  Jim Meyering  <jim@meyering.net>
+
+	* calloc.m4 (AC_FUNC_CALLOC): Remove use of AN_FUNCTION.
+
 2004-06-07  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (gl_MACROS): Check for the directio function.
