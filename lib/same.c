@@ -64,14 +64,12 @@ void free ();
 int
 same_name (const char *source, const char *dest)
 {
-  char *source_basename, *dest_basename;
-  size_t source_baselen, dest_baselen;
-
   /* Compare the basenames.  */
-  source_basename = base_name (source);
-  dest_basename = base_name (dest);
-  source_baselen = base_len (source_basename);
-  dest_baselen = base_len (dest_basename);
+  char const *source_basename = base_name (source);
+  char const *dest_basename = base_name (dest);
+  size_t source_baselen = base_len (source_basename);
+  size_t dest_baselen = base_len (dest_basename);
+
   if (source_baselen == dest_baselen
       && memcmp (source_basename, dest_basename, dest_baselen) == 0)
     {
