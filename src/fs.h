@@ -28,9 +28,9 @@
 # define S_MAGIC_XIAFS		0x012FD16D
 # define S_MAGIC_NTFS 		0x5346544e
 # define S_MAGIC_TMPFS		0x1021994
-# define S_MAGIC_REISERFS        0x52654973
-# define S_MAGIC_CRAMFS          0x28cd3d45
-# define S_MAGIC_ROMFS           0x7275
+# define S_MAGIC_REISERFS	0x52654973
+# define S_MAGIC_CRAMFS		0x28cd3d45
+# define S_MAGIC_ROMFS		0x7275
 #elif defined (__GNU__)
 # include <hurd/hurd_types.h>
 #endif
