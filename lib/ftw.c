@@ -217,7 +217,9 @@ add_object (struct ftw_data *data, struct STAT *st)
 static inline int
 find_object (struct ftw_data *data, struct STAT *st)
 {
-  struct known_object obj = { .dev = st->st_dev, .ino = st->st_ino };
+  struct known_object obj;
+  obj.dev = st->st_dev;
+  obj.ino = st->st_ino;
   return __tfind (&obj, &data->known_objects, object_compare) != NULL;
 }
 
