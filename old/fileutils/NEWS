@@ -1,5 +1,7 @@
-Changes in release 4.1:
+Changes in release 4.01:
 [4.0z]
+* dd's `skip' operator once again works on systems with a buggy lseek
+  function (Linux, at least on SCSI tape devices)
 * fix a typo in install-sh
 [4.0y]
 * cp now accepts the POSIX-mandated -H and -L options.
