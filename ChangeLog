@@ -2,6 +2,11 @@
 
 	* Version 4.5.5.
 
+	* src/du.c (main): Upon processing an invalid option or an invalid
+	--exclude-from or --max-depth option argument, don't exit right away,
+	in case there are others.  Rather record the failure and exit after
+	processing other options.
+
 	* GNUmakefile (TAR_OPTIONS): Set and export, in order to make
 	tar archive easier to reproduce.
 
