@@ -136,6 +136,15 @@ Tue Oct 04 20:38:12 1994  Jim Meyering  (meyering@comco.com)
 	Thomas Koenig (ig25@fg70.rz.uni-karlsruhe.de).
 	* chown.c (main): Likewise.
 
+Thu Oct  2 23:03:32 1994  Jim Meyering  (meyering@comco.com)
+
+	* configure.in: Replace obsolete AC_DIR_HEADER with AC_HEADER_DIRENT
+	and AC_FUNC_CLOSEDIR_VOID.
+
+	* configure.in: Remove AC_SIZEOF_TYPE(int).
+	ls.c: Instead of comparing SIZEOF_INT == 2, compare INT_MAX to 2^16.
+	Suggestion from Roland McGrath.
+
 Sat Oct 01 21:23:27 1994  Jim Meyering  (meyering@comco.com)
 
 	* src/*.c: Remove CONFIG_BROKETS conditional.
