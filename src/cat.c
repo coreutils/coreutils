@@ -159,7 +159,7 @@ simple_cat (
      int bufsize)
 {
   /* Actual number of characters read, and therefore written.  */
-  ssize_t n_read;
+  size_t n_read;
 
   /* Loop until the end of the file.  */
 
@@ -168,7 +168,7 @@ simple_cat (
       /* Read a block of input.  */
 
       n_read = safe_read (input_desc, buf, bufsize);
-      if (n_read < 0)
+      if (n_read == SAFE_READ_ERROR)
 	{
 	  error (0, errno, "%s", infile);
 	  exit_status = 1;
@@ -233,7 +233,7 @@ cat (
   char *bpout;
 
   /* Number of characters read by the last read call.  */
-  ssize_t n_read;
+  size_t n_read;
 
   /* Determines how many consecutive newlines there have been in the
      input.  0 newlines makes NEWLINES -1, 1 newline makes NEWLINES 1,
@@ -328,7 +328,7 @@ cat (
 	      /* Read more input into INBUF.  */
 
 	      n_read = safe_read (input_desc, inbuf, insize);
-	      if (n_read < 0)
+	      if (n_read == SAFE_READ_ERROR)
 		{
 		  error (0, errno, "%s", infile);
 		  exit_status = 1;
