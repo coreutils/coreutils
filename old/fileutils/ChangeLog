@@ -1,5 +1,15 @@
 1997-08-31  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/oa-hash.c: New file.
+	* lib/oa-hash.h: New file.
+
+	* lib/Makefile.am (libfu_a_SOURCES): Add oa-hash.c.
+	(noinst_HEADERS): Add oa-hash.h.
+
+	* configure.in (AC_REPLACE_FUNCS): Add stpncpy.
+
+	* src/rm.c (remove_cwd_entries): Convert to using oa-hash.c.
+
 	* m4/Makefile.am (EXTRA_DIST): Add d-ino.m4 and d-type.m4.
 
 	* tests/rm: New directory and tests.
