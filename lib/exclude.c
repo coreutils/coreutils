@@ -43,8 +43,6 @@ struct exclude
     int exclude_count;
   };
 
-/* FIXME: describe */
-
 struct exclude *
 new_exclude (void)
 {
@@ -54,8 +52,6 @@ new_exclude (void)
   ex->exclude = (char const **) xmalloc (ex->exclude_alloc * sizeof (char *));
   return ex;
 }
-
-/* FIXME: describe */
 
 int
 excluded_filename (struct exclude const *ex, char const *f)
@@ -71,8 +67,6 @@ excluded_filename (struct exclude const *ex, char const *f)
   return 0;
 }
 
-/* FIXME: describe */
-
 void
 add_exclude (struct exclude *ex, char const *pattern)
 {
@@ -83,8 +77,6 @@ add_exclude (struct exclude *ex, char const *pattern)
 
   ex->exclude[ex->exclude_count++] = pattern;
 }
-
-/* FIXME: describe */
 
 int
 add_exclude_file (struct exclude *ex, char const *filename, char line_end)
