@@ -195,7 +195,7 @@ static void
 xfields (struct line *line)
 {
   int i;
-  register char *ptr, *lim;
+  unsigned char *ptr, *lim;
 
   ptr = line->beg;
   lim = line->lim;
@@ -211,7 +211,7 @@ xfields (struct line *line)
     {
       if (tab)
 	{
-	  char *beg;
+	  unsigned char *beg;
 
 	  beg = ptr;
 	  while (ptr < lim && *ptr != tab)
@@ -222,7 +222,7 @@ xfields (struct line *line)
 	}
       else
 	{
-	  char *beg;
+	  unsigned char *beg;
 
 	  beg = ptr;
 	  while (ptr < lim && !ISSPACE (*ptr))
@@ -233,7 +233,8 @@ xfields (struct line *line)
 	}
     }
 
-  if (ptr > line->beg && ((tab && ISSPACE (ptr[-1])) || ptr[-1] == tab))
+  if ((char *) ptr > line->beg
+      && ((tab && ISSPACE (ptr[-1])) || ptr[-1] == tab))
     {
       /* Add one more (empty) field because the last character of the
 	 line was a delimiter.  */
