@@ -43,6 +43,10 @@
 #include <config.h>
 #include <sys/types.h>
 
+#if HAVE_INTTYPES_H
+# include <inttypes.h>
+#endif
+
 #ifdef HAVE_TERMIOS_H
 # include <termios.h>
 #endif
@@ -56,19 +60,13 @@
 #include <pwd.h>
 #include <getopt.h>
 
-#if HAVE_LIMITS_H
-/* limits.h must come before system.h because limits.h on some systems
-   undefs PATH_MAX, whereas system.h includes pathmax.h which sets
-   PATH_MAX.  */
-# include <limits.h>
-#endif
-
 #include "system.h"
 #include <fnmatch.h>
 
 #include "obstack.h"
 #include "ls.h"
 #include "error.h"
+#include "human.h"
 #include "argmatch.h"
 #include "xstrtol.h"
 #include "strverscmp.h"
@@ -76,23 +74,13 @@
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
 
-#ifndef INT_MAX
-# define INT_MAX 2147483647
-#endif
+/* Return an int indicating the result of comparing two integers.
+   Subtracting doesn't always work, due to overflow.  */
+#define longdiff(a, b) ((a) < (b) ? -1 : (a) > (b))
 
-/* Return an int indicating the result of comparing two longs. */
-#if (INT_MAX <= 65535)
-# define longdiff(a, b) ((a) < (b) ? -1 : (a) > (b) ? 1 : 0)
-#else
-# define longdiff(a, b) ((a) - (b))
-#endif
-
-/* Convert B 512-byte blocks to kilobytes if K is nonzero,
-   otherwise return it unchanged. */
-#define convert_blocks(b, k) ((k) ? ((b) + 1) / 2 : (b))
-
-/* The maximum number of digits required to print an inode number
-   in an unsigned format.  */
+/* The field width for inode numbers.  On some hosts inode numbers are
+   64 bits, so columns won't line up exactly when a huge inode number
+   is encountered, but in practice 7 digits is usually enough.  */
 #ifndef INODE_DIGITS
 # define INODE_DIGITS 7
 #endif
@@ -181,8 +169,8 @@ static int rev_cmp_version __P ((const struct fileinfo *file2,
 				   const struct fileinfo *file1));
 static int decode_switches __P ((int argc, char **argv));
 static int file_interesting __P ((const struct dirent *next));
-static int gobble_file __P ((const char *name, int explicit_arg,
-			     const char *dirname));
+static uintmax_t gobble_file __P ((const char *name, int explicit_arg,
+				   const char *dirname));
 static int is_not_dot_or_dotdot __P ((const char *name));
 static void print_color_indicator __P ((const char *name, unsigned int mode,
 					int linkok));
@@ -327,10 +315,9 @@ static int numeric_ids;
 
 static int print_block_size;
 
-/* Nonzero means show file sizes in kilobytes instead of blocks
-   (the size of which is system-dependent).  -k */
+/* The units to count blocks in. */
 
-static int kilobyte_blocks;
+static int output_units;
 
 /* Precede each line of long output (per file) with a string like `m,n:'
    where M is the number of characters after the `:' and before the
@@ -409,6 +396,10 @@ struct col_ext_type *col_ext_list = NULL;
 
 /* Buffer for color sequences */
 static char *color_buf;
+
+/* base used for human style output */
+
+static int human_readable_base;
 
 /* Nonzero means mention the inode number of each file.  -i  */
 
@@ -508,6 +499,7 @@ static struct option const long_options[] =
   {"directory", no_argument, 0, 'd'},
   {"dired", no_argument, 0, 'D'},
   {"full-time", no_argument, &full_time, 1},
+  {"human-readable", no_argument, 0, 'h'},
   {"inode", no_argument, 0, 'i'},
   {"kilobytes", no_argument, 0, 'k'},
   {"numeric-uid-gid", no_argument, 0, 'n'},
@@ -520,6 +512,7 @@ static struct option const long_options[] =
   {"ignore-backups", no_argument, 0, 'B'},
   {"classify", no_argument, 0, 'F'},
   {"file-type", no_argument, 0, 'F'},
+  {"si", no_argument, 0, 'H'},
   {"ignore", required_argument, 0, 'I'},
   {"dereference", no_argument, 0, 'L'},
   {"literal", no_argument, 0, 'N'},
@@ -843,7 +836,7 @@ decode_switches (int argc, char **argv)
   sort_reverse = 0;
   numeric_ids = 0;
   print_block_size = 0;
-  kilobyte_blocks = getenv ("POSIXLY_CORRECT") == 0;
+  output_units = getenv ("POSIXLY_CORRECT") ? 512 : 1024;
   indicator_style = none;
   print_inode = 0;
   trace_links = 0;
@@ -853,6 +846,12 @@ decode_switches (int argc, char **argv)
   really_all_files = 0;
   ignore_patterns = 0;
   quote_as_string = 0;
+
+  if ((p = getenv ("BLOCKSIZE"))
+      && strncmp (p, "HUMAN", sizeof ("HUMAN") - 1) == 0)
+    human_readable_base = 1024;
+  else if (p && strcmp (p, "SI") == 0)
+    human_readable_base = 1000;
 
   line_length = 80;
   if ((p = getenv ("COLUMNS")) && *p)
@@ -898,7 +897,7 @@ decode_switches (int argc, char **argv)
     }
 
   while ((c = getopt_long (argc, argv,
-			   "abcdfgiklmnopqrstuvw:xABCDFGI:LNQRST:UX1",
+			   "abcdfghiklmnopqrstuvw:xABCDFGHI:LNQRST:UX1",
 			   long_options, NULL)) != -1)
     {
       switch (c)
@@ -941,12 +940,20 @@ decode_switches (int argc, char **argv)
 	  /* No effect.  For BSD compatibility. */
 	  break;
 
+	case 'h':
+	  human_readable_base = 1024;
+	  break;
+
+	case 'H':
+	  human_readable_base = 1000;
+	  break;
+
 	case 'i':
 	  print_inode = 1;
 	  break;
 
 	case 'k':
-	  kilobyte_blocks = 1;
+	  output_units = 1024;
 	  break;
 
 	case 'l':
@@ -1505,7 +1512,7 @@ print_dir (const char *name, const char *realname)
 {
   register DIR *reading;
   register struct dirent *next;
-  register int total_blocks = 0;
+  register uintmax_t total_blocks = 0;
 
   errno = 0;
   reading = opendir (name);
@@ -1555,11 +1562,16 @@ print_dir (const char *name, const char *realname)
 
   if (format == long_format || print_block_size)
     {
-      char buf[6 + 20 + 1 + 1];
+      const char *p;
+      char buf[LONGEST_HUMAN_READABLE + 1];
 
       DIRED_INDENT ();
-      sprintf (buf, "total %u\n", total_blocks);
-      FPUTS (buf, stdout, strlen (buf));
+      p = _("total");
+      FPUTS (p, stdout, strlen (p));
+      PUTCHAR (' ');
+      p = human_readable (total_blocks, buf, ST_NBLOCKSIZE, output_units, 0);
+      FPUTS (p, stdout, strlen (p));
+      PUTCHAR ('\n');
     }
 
   if (files_index)
@@ -1629,10 +1641,10 @@ clear_files (void)
    Verify that the file exists, and print an error message if it does not.
    Return the number of blocks that the file occupies.  */
 
-static int
+static uintmax_t
 gobble_file (const char *name, int explicit_arg, const char *dirname)
 {
-  register int blocks;
+  register uintmax_t blocks;
   register int val;
   register char *path;
 
@@ -1741,14 +1753,14 @@ gobble_file (const char *name, int explicit_arg, const char *dirname)
       else
 	files[files_index].filetype = normal;
 
-      blocks = convert_blocks (ST_NBLOCKS (files[files_index].stat),
-			       kilobyte_blocks);
-      if (blocks >= 10000 && block_size_size < 5)
-	block_size_size = 5;
-      if (blocks >= 100000 && block_size_size < 6)
-	block_size_size = 6;
-      if (blocks >= 1000000 && block_size_size < 7)
-	block_size_size = 7;
+      blocks = ST_NBLOCKS (files[files_index].stat);
+      {
+	char buf[LONGEST_HUMAN_READABLE + 1];
+	int len = strlen (human_readable (blocks, buf, ST_NBLOCKSIZE,
+					  output_units, 0));
+	if (block_size_size < len)
+	  block_size_size = len < 7 ? len : 7;
+      }
     }
   else
     blocks = 0;
@@ -2091,17 +2103,21 @@ print_long_format (const struct fileinfo *f)
 {
   char modebuf[11];
 
-  /* 7 fields that may (worst case: 64-bit integral values) require 20 bytes,
+  /* 7 fields that may require LONGEST_HUMAN_READABLE bytes,
      1 10-byte mode string,
-     1 24-byte time string (may be longer in some locales -- see below),
+     1 24-byte time string (may be longer in some locales -- see below)
+       or LONGEST_HUMAN_READABLE integer,
      9 spaces, one following each of these fields, and
      1 trailing NUL byte.  */
-  char init_bigbuf[7 * 20 + 10 + 24 + 9 + 1];
+  char init_bigbuf[7 * LONGEST_HUMAN_READABLE + 10
+		   + (LONGEST_HUMAN_READABLE < 24 ? 24 : LONGEST_HUMAN_READABLE)
+		   + 9 + 1];
   char *buf = init_bigbuf;
   size_t bufsize = sizeof (init_bigbuf);
   size_t s;
   char *p;
   time_t when;
+  struct tm *when_local;
   const char *fmt;
   char *user_name;
 
@@ -2153,15 +2169,18 @@ print_long_format (const struct fileinfo *f)
 
   if (print_inode)
     {
-      sprintf (p, "%*lu ", INODE_DIGITS, (unsigned long) f->stat.st_ino);
+      char buf[LONGEST_HUMAN_READABLE + 1];
+      sprintf (p, "%*s ", INODE_DIGITS,
+	       human_readable ((uintmax_t) f->stat.st_ino, buf, 1, 1, 0));
       p += strlen (p);
     }
 
   if (print_block_size)
     {
-      sprintf (p, "%*u ", block_size_size,
-	       (unsigned) convert_blocks (ST_NBLOCKS (f->stat),
-					  kilobyte_blocks));
+      char buf[LONGEST_HUMAN_READABLE + 1];
+      sprintf (p, "%*s ", block_size_size,
+	       human_readable ((uintmax_t) ST_NBLOCKS (f->stat), buf,
+			       ST_NBLOCKSIZE, output_units, 0));
       p += strlen (p);
     }
 
@@ -2191,25 +2210,53 @@ print_long_format (const struct fileinfo *f)
     sprintf (p, "%3u, %3u ", (unsigned) major (f->stat.st_rdev),
 	     (unsigned) minor (f->stat.st_rdev));
   else
-    sprintf (p, "%8lu ", (unsigned long) f->stat.st_size);
+    {
+      char buf[LONGEST_HUMAN_READABLE + 1];
+      sprintf (p, "%8s ",
+	       human_readable ((uintmax_t) f->stat.st_size,
+			       buf, 1, 1, human_readable_base));
+    }
+
   p += strlen (p);
 
   /* Use strftime rather than ctime, because the former can produce
      locale-dependent names for the weekday (%a) and month (%b).  */
 
-  while (! (s = strftime (p, buf + bufsize - p - 1, fmt, localtime (&when))))
+  if ((when_local = localtime (&when)))
     {
-      char *newbuf = (char *) alloca (bufsize *= 2);
-      memcpy (newbuf, buf, p - buf);
-      p = newbuf + (p - buf);
-      buf = newbuf;
+      while (! (s = strftime (p, buf + bufsize - p - 1, fmt, when_local)))
+	{
+	  char *newbuf = (char *) alloca (bufsize *= 2);
+	  memcpy (newbuf, buf, p - buf);
+	  p = newbuf + (p - buf);
+	  buf = newbuf;
+	}
+
+      p += s;
+      *p++ = ' ';
+
+      /* NUL-terminate the string -- fputs (via FPUTS) requires it.  */
+      *p = '\0';
     }
+  else
+    {
+      /* The time cannot be represented as a local time;
+	 print it as a huge integer number of seconds.  */
+      char buf[LONGEST_HUMAN_READABLE + 1];
+      int width = full_time ? 24 : 12;
 
-  p += s;
-  *p++ = ' ';
+      if (when < 0)
+	{
+	  const char *num = human_readable (- (uintmax_t) when, buf, 1, 1, 0);
+	  int sign_width = width - strlen (num);
+	  sprintf (p, "%*s%s ", sign_width < 0 ? 0 : sign_width, "-", num);
+	}
+      else
+	sprintf (p, "%*s ", width,
+		 human_readable ((uintmax_t) when, buf, 1, 1, 0));
 
-  /* NUL-terminate the string -- fputs (via FPUTS) requires it.  */
-  *p = '\0';
+      p += strlen (p);
+    }
 
   DIRED_INDENT ();
   FPUTS (buf, stdout, p - buf);
@@ -2414,13 +2461,16 @@ prep_non_filename_text (void)
 static void
 print_file_name_and_frills (const struct fileinfo *f)
 {
+  char buf[LONGEST_HUMAN_READABLE + 1];
+
   if (print_inode)
-    printf ("%*lu ", INODE_DIGITS, (unsigned long) f->stat.st_ino);
+    printf ("%*s ", INODE_DIGITS,
+	    human_readable ((uintmax_t) f->stat.st_ino, buf, 1, 1, 0));
 
   if (print_block_size)
-    printf ("%*u ", block_size_size,
-	    (unsigned) convert_blocks (ST_NBLOCKS (f->stat),
-				       kilobyte_blocks));
+    printf ("%*s ", block_size_size,
+	    human_readable ((uintmax_t) ST_NBLOCKS (f->stat), buf,
+			    ST_NBLOCKSIZE, output_units, 0));
 
   print_name_with_quoting (f->name, f->stat.st_mode, f->linkok);
 
@@ -2914,6 +2964,8 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
       printf (_("\
   -g                         (ignored)\n\
   -G, --no-group             inhibit display of group information\n\
+  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
+  -H, --si                   likewise, but use powers of 1000 not 1024\n\
   -i, --inode                print index number of each file\n\
   -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\n\
   -k, --kilobytes            use 1024 blocks, not 512 despite POSIXLY_CORRECT\n\
