@@ -4,6 +4,8 @@
 	component length.  This included changing the parameter to be
 	of type `char *' rather than `char const *'.
 	* chdir-long.h (chdir_long): Update prototype.
+	* t-chdir-long: A test harness to exercize chdir-long.c's
+	sample main program.
 
 	* openat.c (fdopendir, fstatat): New functions.
 	* openat.h: Include headers required for use of DIR and struct stat.
