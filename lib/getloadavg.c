@@ -1,7 +1,7 @@
 /* Get the system load averages.
 
    Copyright (C) 1985, 1986, 1987, 1988, 1989, 1991, 1992, 1993, 1994,
-   1995, 1997, 1999, 2000, 2003 Free Software Foundation, Inc.
+   1995, 1997, 1999, 2000, 2003, 2004 Free Software Foundation, Inc.
 
    NOTE: The canonical source of this file is maintained with gnulib.
    Bugs can be reported to bug-gnulib@gnu.org.
@@ -113,6 +113,8 @@ extern int errno;
 #ifndef HAVE_SETLOCALE
 # define setlocale(Category, Locale) /* empty */
 #endif
+
+#include "cloexec.h"
 
 #ifndef HAVE_GETLOADAVG
 
@@ -924,12 +926,7 @@ getloadavg (double loadavg[], int nelem)
 	{
 	  /* Set the channel to close on exec, so it does not
 	     litter any child's descriptor table.  */
-#   ifdef F_SETFD
-#    ifndef FD_CLOEXEC
-#     define FD_CLOEXEC 1
-#    endif
-	  (void) fcntl (channel, F_SETFD, FD_CLOEXEC);
-#   endif
+	  set_cloexec_flag (channel, 1)
 	  getloadavg_initialized = 1;
 	}
 #  else /* SUNOS_5 */
