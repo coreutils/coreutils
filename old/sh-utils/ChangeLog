@@ -1,3 +1,18 @@
+Mon Sep  9 22:10:45 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in: Improve handling of math library so -lm is used
+	only when it's actually required.  That makes a difference when
+	using dynamic linking.
+	Remove check that added -lm to LIBS.
+	(SQRT_LIBM): Test for and AC_SUBST it.
+	(POW_LIBM): Likewise.
+	(SEQ_LIBM): Likewise.
+	Motivation and suggestions from Ulrich Drepper.
+
+	* src/Makefile.am (factor_LDADD, printf_LDADD, seq_LDADD):
+	Set these using new @SQRT_LIBM@, @POW_LIBM@, and @SEQ_LIBM@ resp.
+	Also set corresponding _DEPENDENCIES variables.
+
 Sat Sep  7 12:41:39 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/system.h: Add comments justifying IS* versions of ctype.h macros.
