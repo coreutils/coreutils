@@ -119,9 +119,6 @@ void *memrchr (const void *, int, size_t);
 #endif
 
 #include <errno.h>
-#ifndef errno
-extern int errno;
-#endif
 
 /* Some systems don't define the following symbols.  */
 #ifndef ENOSYS
@@ -365,29 +362,28 @@ initialize_exit_failure (int status)
 # include <sys/exceptn.h>
 #endif
 
+#if HAVE_INTTYPES_H
+# include <inttypes.h>
+#endif
 #if HAVE_STDINT_H
 # include <stdint.h>
 #endif
 
-#if HAVE_INTTYPES_H
-# include <inttypes.h> /* for the definition of UINTMAX_MAX */
-#endif
-
 #if !defined PRIdMAX || PRI_MACROS_BROKEN
 # undef PRIdMAX
-# define PRIdMAX (sizeof (uintmax_t) == sizeof (long) ? "ld" : "lld")
+# define PRIdMAX (sizeof (uintmax_t) == sizeof (long int) ? "ld" : "lld")
 #endif
 #if !defined PRIoMAX || PRI_MACROS_BROKEN
 # undef PRIoMAX
-# define PRIoMAX (sizeof (uintmax_t) == sizeof (long) ? "lo" : "llo")
+# define PRIoMAX (sizeof (uintmax_t) == sizeof (long int) ? "lo" : "llo")
 #endif
 #if !defined PRIuMAX || PRI_MACROS_BROKEN
 # undef PRIuMAX
-# define PRIuMAX (sizeof (uintmax_t) == sizeof (long) ? "lu" : "llu")
+# define PRIuMAX (sizeof (uintmax_t) == sizeof (long int) ? "lu" : "llu")
 #endif
 #if !defined PRIxMAX || PRI_MACROS_BROKEN
 # undef PRIxMAX
-# define PRIxMAX (sizeof (uintmax_t) == sizeof (long) ? "lx" : "llx")
+# define PRIxMAX (sizeof (uintmax_t) == sizeof (long int) ? "lx" : "llx")
 #endif
 
 #include <ctype.h>
@@ -457,7 +453,12 @@ initialize_exit_failure (int status)
    POSIX says that only '0' through '9' are digits.  Prefer ISDIGIT to
    ISDIGIT_LOCALE unless it's important to use the locale's definition
    of `digit' even when the host does not conform to POSIX.  */
-#define ISDIGIT(c) ((unsigned) (c) - '0' <= 9)
+#define ISDIGIT(c) ((unsigned int) (c) - '0' <= 9)
+
+/* Convert a possibly-signed character to an unsigned character.  This is
+   a bit safer than casting to unsigned char, since it catches some type
+   errors that the cast doesn't.  */
+static inline unsigned char to_uchar (char ch) { return ch; }
 
 /* Take care of NLS matters.  */
 
@@ -633,10 +634,6 @@ enum
 # define MIN(a,b) (((a) < (b)) ? (a) : (b))
 #endif
 
-#ifndef CHAR_BIT
-# define CHAR_BIT 8
-#endif
-
 /* The extra casts work around common compiler bugs.  */
 #define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
 /* The outer cast is needed to work around a bug in Cray C 5.0.3.0.
@@ -691,11 +688,11 @@ enum
 #endif
 
 #ifndef LONG_MAX
-# define LONG_MAX TYPE_MAXIMUM (long)
+# define LONG_MAX TYPE_MAXIMUM (long int)
 #endif
 
 #ifndef ULONG_MAX
-# define ULONG_MAX TYPE_MAXIMUM (unsigned long)
+# define ULONG_MAX TYPE_MAXIMUM (unsigned long int)
 #endif
 
 #ifndef SIZE_MAX
@@ -771,7 +768,7 @@ enum
 #endif
 
 #if ! HAVE_FSEEKO && ! defined fseeko
-# define fseeko(s, o, w) ((o) == (long) (o)		\
+# define fseeko(s, o, w) ((o) == (long int) (o)		\
 			  ? fseek (s, o, w)		\
 			  : (errno = EOVERFLOW, -1))
 #endif
