@@ -1,3 +1,7 @@
+1998-03-27  Jim Meyering  <meyering@eng.ascend.com>
+
+	* Makefile.am (AUTOMAKE_OPTIONS): Require 1.2h.
+
 1998-03-23  Jim Meyering  <meyering@eng.ascend.com>
 
 	* acconfig.h: Remove HAVE_INTTYPES_H, now that m4/inttypes_h.m4
