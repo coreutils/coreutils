@@ -21,15 +21,10 @@
 #endif
 
 #include <stdio.h>
+#include <string.h>
 #include <sys/types.h>
 #include <pwd.h>
 #include <grp.h>
-
-#if STDC_HEADERS || HAVE_STRING_H
-# include <string.h>
-#else
-# include <strings.h>
-#endif
 
 #if HAVE_UNISTD_H
 # include <unistd.h>
