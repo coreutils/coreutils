@@ -1,10 +1,16 @@
 Major changes in release 1.4:
+* od --compatible accepts pre-POSIX arguments
+* pr -2a terminates
+
+Major changes in release 1.4:
 * add od and cksum programs
 * move cmp to GNU diff distribution
+* tail -f works for multiple files
 * pr prints the file name in error messages
 * fix some off by 1 errors in pr and fold
 * optimize wc -c on regular files
 * sort handles `-' argument correctly
+* sort supports -T option
 * tr ranges like a-a work
 * tr x '' fails gracefully
 * default sum output format is BSD compatible
