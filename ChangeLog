@@ -1,6 +1,16 @@
+2005-02-02  Jim Meyering  <jim@meyering.net>
+
+	* tests/du/8gb: Also adjust the test (s/64/128/) to detect
+	systems that don't support sparse files.
+	Check for $2 -ge 128, rather than $2 = 128, in case
+	there is a file system type that doesn't support sparse files,
+	yet for which metadata takes up additional space.
+	Both reported by Andreas Schwab.
+
 2005-02-01  Eric Blake  <ebb9@byu.net>  (tiny change)
 
-	* tests/du/8gb: Detect sparse files on NTFS under cygwin.
+	* tests/du/8gb: Create a larger test file, so we properly
+	detect that sparse files can be created on NTFS under cygwin.
 
 2005-01-30  Jim Meyering  <jim@meyering.net>
 
