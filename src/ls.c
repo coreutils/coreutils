@@ -579,10 +579,10 @@ static enum
   /* Ignore files whose names start with `.', and files specified by
      --hide and --ignore.  */
   IGNORE_DEFAULT,
-  
+
   /* Ignore `.', `..', and files specified by --ignore.  */
   IGNORE_DOT_AND_DOTDOT,
-     
+
   /* Ignore only files specified by --ignore.  */
   IGNORE_MINIMAL
 } ignore;
@@ -3214,7 +3214,7 @@ print_long_format (const struct fileinfo *f)
 	*p++ = ' ';
       while ((*p++ = *blocks++))
 	continue;
-      p[-1] = ' '; 
+      p[-1] = ' ';
     }
 
   /* The last byte of the mode string is the POSIX
