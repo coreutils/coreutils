@@ -1,3 +1,11 @@
+Fri Mar 29 08:58:10 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* configure.in (VERSION): Bump to 1.12f.
+
+	* doc/Makefile.am (EXTRA_DIST): Set to getdate.texi.
+
+	* src/Makefile.am (EXTRAdir): Set to $(bindir).
+
 Thu Mar 28 23:01:48 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* ChangeLog.0: New file.
