@@ -169,7 +169,7 @@ find_field (const struct linebuffer *line)
 {
   register int count;
   register char *lp = line->buffer;
-  register size_t size = line->length;
+  register size_t size = line->length - 1;
   register size_t i = 0;
 
   for (count = 0; count < skip_fields && i < size; count++)
