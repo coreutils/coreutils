@@ -301,7 +301,7 @@ strftime (s, maxsize, format, tp)
 	    size_t len = strftime (p, maxsize - i, subfmt, tp);
 	    if (len == 0 && *subfmt)
 	      return 0;
-	    add(len, );
+	    add(len, (void) 0);
 	  }
 	  break;
 
