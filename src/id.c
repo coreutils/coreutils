@@ -231,6 +231,8 @@ print_group (int gid)
 
 #if HAVE_GETGROUPS
 
+/* FIXME: document */
+
 static int
 xgetgroups (const char *username, gid_t gid, int *n_groups,
 	    GETGROUPS_T **groups)
