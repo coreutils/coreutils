@@ -1,5 +1,5 @@
 /* provide a replacement openat function
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -28,12 +28,7 @@
 
 #ifndef AT_FDCWD
 # define AT_FDCWD (-3041965) /* same value as Solaris 9 */
-
-enum
-{
-  /* FIXME: use same value Solaris uses */
-  AT_SYMLINK_NOFOLLOW = 100
-};
+# define AT_SYMLINK_NOFOLLOW 4096 /* same value as Solaris 9 */
 
 # ifdef __OPENAT_PREFIX
 #  undef openat
