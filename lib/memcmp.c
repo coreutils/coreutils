@@ -49,6 +49,11 @@
 #ifdef _LIBC
 
 # include <memcopy.h>
+# include <endian.h>
+
+# if __BYTE_ORDER == __BIG_ENDIAN
+#  define WORDS_BIGENDIAN
+# endif
 
 #else	/* Not in the GNU C library.  */
 
