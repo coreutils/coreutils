@@ -11,8 +11,19 @@ if test -z $other_partition_tmpdir; then
 fi
 
 null=.mv-null
-$RM -f $null
-$MKNOD $null p
-$MV $null $other_partition_tmpdir
+
+test_failure=0
+
+$RM -f $null || test_failure=1
+$MKNOD $null p || test_failure=1
+if test $test_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+fail=0
+$MV $null $other_partition_tmpdir || fail=1
 
 $RM -rf $null $other_partition_tmpdir
+
+exit $fail
