@@ -19,6 +19,8 @@ use strict;
 # Turn off localisation of executable's ouput.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
+warn "PATH=$ENV{PATH}\n";
+
 my $mkdir = {PRE => sub {mkdir 'd',0755 or die "d: $!\n"}};
 my $rmdir = {POST => sub {rmdir 'd' or die "d: $!\n"}};
 
@@ -27,7 +29,9 @@ my $mkdir2 = {PRE => sub {mkdir 'd',0755 or die "d: $!\n";
 my $rmdir2 = {POST => sub {rmdir 'd/e' or die "d/e: $!\n";
 			   rmdir 'd' or die "d: $!\n" }};
 
-my $slink_d = {PRE => sub {symlink '/', 'd' or die "d: $!\n"}};
+my $slink_d = {PRE => sub {symlink '/', 'd' or die "d: $!\n";
+                           $ENV{LS_COLORS}='ln=01;36:di=01;34:or=40;31;01'
+                           }};
 my $unlink_d = {POST => sub {unlink 'd' or die "d: $!\n"}};
 
 my $q_bell = {IN => {"q\a" => ''}};
@@ -62,6 +66,10 @@ my @Tests =
      ['slink-dir-dF',   '-dF d', {OUT => "d@\n"}, $slink_d, $unlink_d],
      ['slinkdir-dFH',  '-dFH d', {OUT => "d/\n"}, $slink_d, $unlink_d],
      ['slinkdir-dFL',  '-dFL d', {OUT => "d/\n"}, $slink_d, $unlink_d],
+
+     ['sl-dF-color', '-dF --color=always d',
+				 {OUT => "\e[0m\e[01;36md\e[0m\@\n\e[m"},
+				  $slink_d, $unlink_d],
 
      # From Stéphane Chazelas.
      ['no-a-isdir-b', 'no-dir d',
