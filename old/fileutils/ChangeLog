@@ -1,3 +1,12 @@
+2000-08-17  Andreas Gruenbacher  <ag@bestbits.at>
+
+	* src/chmod.c (change_file_mode): Perform the chmod even if the
+	file mode permission bits are the same as those that should be set.
+	Omitting the chmod call would be alright with minimal 1003.1e DS17
+	ACLs, but eventually there will be other permissions in addition to
+	rwx.  E.g., add and delete for directories, and something analogous
+	to NT's take ownership permission.
+
 2000-09-30  Jim Meyering  <meyering@lucent.com>
 
 	* tests/du/two-args: Update to use newer template.
@@ -13,6 +22,13 @@
 	when the containing directory has a default ACL.
 	Patch by Andreas Gruenbacher.
 	(main): Rename local `symbolic_mode' to `specified_mode'.
+	* src/mknod.c (main): Likewise (but `call mknod', not mkdir).
+	Also, when MODE is specified, call chmod to ensure that the
+	permission bits are set as specified even when the containing
+	directory has a default ACL.
+	Patch by Andreas Gruenbacher.
+	* src/mkfifo.c (main): Likewise (but `call mkfifo', not mkdir).
+	Patch by Andreas Gruenbacher.
 
 	* tests/mkdir/perm: New test.
 	* tests/mkdir/Makefile.am (TESTS): Add perm.
