@@ -1,5 +1,6 @@
 Changes in release 4.1:
 [4.0v]
+* df, du, and ls now round disk usage up and disk free space down
 * df, du, ls: --block-size=N now works for values of N that are e.g.,
     not a multiple of the file's block size
 [4.0u]
