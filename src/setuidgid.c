@@ -130,7 +130,7 @@ main (int argc, char **argv)
     char **cmd = argv + 2;
     execvp (*cmd, cmd);
 
-    error (0, errno, "could not run command %s", quote (*cmd));
+    error (0, errno, _("cannot run command %s"), quote (*cmd));
     exit (FAIL_STATUS);
   }
 }
