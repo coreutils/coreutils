@@ -71,9 +71,11 @@ parse_long_options (int argc,
 	case 'v':
 	  printf ("%s (%s) %s\n", command_name, package, version);
 	  printf (_("\
+\n\
 Copyright (C) 1999 Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
+\n\
 "));
 	  printf (_("Written by %s.\n"), authors);
 	  close_stdout (); /* FIXME: output failure exit status
