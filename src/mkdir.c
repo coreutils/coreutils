@@ -37,8 +37,8 @@
 /* The name this program was run with. */
 char *program_name;
 
-/* If nonzero, ensure that all parents of the specified directory exist.  */
-static int create_parents;
+/* If true, ensure that all parents of the specified directory exist.  */
+static bool create_parents;
 
 static struct option const longopts[] =
 {
@@ -85,7 +85,7 @@ main (int argc, char **argv)
   mode_t parent_mode;
   const char *specified_mode = NULL;
   const char *verbose_fmt_string = NULL;
-  int errors = 0;
+  int exit_status = EXIT_SUCCESS;
   int optc;
 
   initialize_main (&argc, &argv);
@@ -96,7 +96,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  create_parents = 0;
+  create_parents = false;
 
   while ((optc = getopt_long (argc, argv, "pm:v", longopts, NULL)) != -1)
     {
@@ -105,7 +105,7 @@ main (int argc, char **argv)
 	case 0:			/* Long option. */
 	  break;
 	case 'p':
-	  create_parents = 1;
+	  create_parents = true;
 	  break;
 	case 'm':
 	  specified_mode = optarg;
@@ -146,20 +146,20 @@ main (int argc, char **argv)
 
   for (; optind < argc; ++optind)
     {
-      int fail = 0;
+      bool ok;
 
       if (create_parents)
 	{
 	  char *dir = argv[optind];
-	  fail = make_path (dir, newmode, parent_mode,
-			    -1, -1, 1, verbose_fmt_string);
+	  ok = make_path (dir, newmode, parent_mode,
+			  -1, -1, true, verbose_fmt_string);
 	}
       else
 	{
 	  const char *dir = argv[optind];
-	  int dir_created;
-	  fail = make_dir (dir, dir, newmode, &dir_created);
-	  if (fail)
+	  bool dir_created;
+	  ok = make_dir (dir, dir, newmode, &dir_created);
+	  if (! ok)
 	    {
 	      /* make_dir already gave a diagnostic.  */
 	    }
@@ -170,7 +170,7 @@ main (int argc, char **argv)
 		 was specified.  */
 	      error (0, EEXIST, _("cannot create directory %s"),
 		     quote (dir));
-	      fail = 1;
+	      ok = false;
 	    }
 	  else if (verbose_fmt_string)
 	    error (0, 0, verbose_fmt_string, quote (dir));
@@ -184,18 +184,18 @@ main (int argc, char **argv)
 	  /* Set the permissions only if this directory has just
 	     been created.  */
 
-	  if (fail == 0 && specified_mode && dir_created)
+	  if (ok && specified_mode && dir_created
+	      && chmod (dir, newmode) != 0)
 	    {
-	      fail = chmod (dir, newmode);
-	      if (fail)
-		error (0, errno, _("cannot set permissions of directory %s"),
-		       quote (dir));
+	      error (0, errno, _("cannot set permissions of directory %s"),
+		     quote (dir));
+	      ok = false;
 	    }
 	}
 
-      if (fail)
-	errors = 1;
+      if (! ok)
+	exit_status = EXIT_FAILURE;
     }
 
-  exit (errors);
+  exit (exit_status);
 }
