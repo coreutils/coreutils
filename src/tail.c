@@ -1725,7 +1725,7 @@ main (int argc, char **argv)
     /* When following forever, warn if any file is `-'.
        This is only a warning, since tail's output (before a failing seek,
        and that from any non-stdin files) might still be useful.  */
-    if (forever && found_hyphen)
+    if (forever && found_hyphen && isatty (STDIN_FILENO))
       error (0, 0, _("warning: following standard input"
 		     " indefinitely is ineffective"));
   }
