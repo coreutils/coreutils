@@ -15,9 +15,9 @@
 
 2000-09-22  Jan Nieuwenhuizen  <janneke@gnu.org>
 
-       * src/cat.c (MAX_LINE_BUF): Fixed size of line number buffer to
-       prevent buffer overrun.  Replaced raw value by #define.
-       (next_line_num): Fixed (now academic) possible line buffer overrun.
+	* src/cat.c (MAX_LINE_BUF): Fixed size of line number buffer to
+	prevent buffer overrun.  Replaced raw value by #define.
+	(next_line_num): Fixed (now academic) possible line buffer overrun.
 
 2000-09-07  Jim Meyering  <meyering@lucent.com>
 
@@ -2181,8 +2181,8 @@
 
 1998-02-16  Jim Meyering  <meyering@eng.ascend.com>
 
-        * configure.in (jm_FUNC_LSTAT): Use it.
-        (jm_FUNC_STAT): Use it.
+	* configure.in (jm_FUNC_LSTAT): Use it.
+	(jm_FUNC_STAT): Use it.
 	* lib/Makefile.am (EXTRA_DIST): Add lstat.c and stat.c.
 
 1998-02-06  Jim Meyering  <meyering@eng.ascend.com>
@@ -2211,8 +2211,8 @@
 
 1998-01-30  Paul Eggert  <eggert@twinsun.com>
 
-        * configure.in (AC_LFS): Put before anything that can affect or use
-        CPPFLAGS, LDFLAGS, or LIBS.
+	* configure.in (AC_LFS): Put before anything that can affect or use
+	CPPFLAGS, LDFLAGS, or LIBS.
 
 1998-01-25  Jim Meyering  <meyering@na-net.ornl.gov>
 
