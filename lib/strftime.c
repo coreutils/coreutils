@@ -457,8 +457,7 @@ static CHAR_T const month_name[][10] =
     return _strftime_copytm (s, maxsize, format, &tmcopy ut_argument);
   }
 # undef my_strftime
-# define my_strftime(S, Maxsize, Format, Tp) \
-  _strftime_copytm (S, Maxsize, Format, Tp)
+# define my_strftime _strftime_copytm
 #endif
 
 
@@ -801,8 +800,10 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	subformat:
 	  {
 	    CHAR_T *old_start = p;
-	    size_t len = my_strftime (NULL, (size_t) -1, subfmt, tp);
-	    add (len, my_strftime (p, maxsize - i, subfmt, tp));
+	    size_t len = my_strftime (NULL, (size_t) -1, subfmt,
+				      tp ut_argument);
+	    add (len, my_strftime (p, maxsize - i, subfmt,
+				   tp ut_argument));
 
 	    if (to_uppcase)
 	      while (old_start < p)
