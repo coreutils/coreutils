@@ -71,6 +71,9 @@ Usage: %s [NUMBER...]\n\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
+\n\
+  Print the prime factors of all specified integer NUMBERs.  If no arguments\n\
+  are specified on the command line, they are read from standard input.\n\
 "));
     }
   exit (status);
@@ -133,7 +136,7 @@ print_factors (const char *s)
 
   if (xstrtoul (s, NULL, 10, &n, NULL) != LONGINT_OK)
     {
-      error (0, 0, _("%s: invalid argument"), s);
+      error (0, 0, _("`%s' is not a valid positive integer"), s);
       return 1;
     }
   n_factors = factor (n, MAX_N_FACTORS, factors);
@@ -188,6 +191,8 @@ main (int argc, char **argv)
       for (i = 1; i < argc; i++)
 	fail |= print_factors (argv[i]);
     }
+  if (fail)
+    usage (1);
 
   exit (fail);
 }
