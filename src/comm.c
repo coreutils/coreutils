@@ -59,8 +59,7 @@ static struct option const long_options[] =
 
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",
@@ -90,10 +89,7 @@ Compare sorted files LEFT_FILE and RIGHT_FILE line by line.\n\
    2 for a line only in file 2, 3 for a line in both. */
 
 static void
-writeline (line, stream, class)
-     struct linebuffer *line;
-     FILE *stream;
-     int class;
+writeline (struct linebuffer *line, FILE *stream, int class)
 {
   switch (class)
     {
@@ -133,8 +129,7 @@ writeline (line, stream, class)
    Return 0 if successful, 1 if any errors occur. */
 
 static int
-compare_files (infiles)
-     char **infiles;
+compare_files (char **infiles)
 {
   /* For each file, we have one linebuffer in lb1.  */
   struct linebuffer lb1[2];
@@ -218,9 +213,7 @@ compare_files (infiles)
 }
 
 void
-main (argc, argv)
-     int argc;
-     char *argv[];
+main (int argc, char **argv)
 {
   int c;
 
