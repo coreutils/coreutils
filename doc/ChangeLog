@@ -1,3 +1,13 @@
+2003-05-13  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi (uniq invocation, squeezing, The uniq command):
+	Use "repeated" rather than "duplicate" to describe adjacent
+	duplicates; this simplifies the description and makes it more
+	consistent with POSIX.
+	(uniq invocation): Make it clear that -d and -u suppress the
+	output of lines, rather than cause some lines to be output.
+	Mention what happens if a line lacks enough fields or characters.
+
 2003-05-13  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (true invocation): Mention that it is possible to
