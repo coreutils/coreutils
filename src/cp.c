@@ -70,6 +70,7 @@ enum
 {
   COPY_CONTENTS_OPTION = CHAR_MAX + 1,
   NO_PRESERVE_ATTRIBUTES_OPTION,
+  NO_TARGET_DIRECTORY_OPTION,
   PARENTS_OPTION,
   PRESERVE_ATTRIBUTES_OPTION,
   REPLY_OPTION,
@@ -128,6 +129,7 @@ static struct option const long_opts[] =
   {"link", no_argument, NULL, 'l'},
   {"no-dereference", no_argument, NULL, 'P'},
   {"no-preserve", required_argument, NULL, NO_PRESERVE_ATTRIBUTES_OPTION},
+  {"no-target-directory", no_argument, NULL, NO_TARGET_DIRECTORY_OPTION},
   {"one-file-system", no_argument, NULL, 'x'},
   {"parents", no_argument, NULL, PARENTS_OPTION},
   {"path", no_argument, NULL, PARENTS_OPTION},   /* Deprecated.  */
@@ -212,6 +214,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -s, --symbolic-link          make symbolic links instead of copying\n\
   -S, --suffix=SUFFIX          override the usual backup suffix\n\
       --target-directory=DIRECTORY  copy all SOURCE arguments into DIRECTORY\n\
+      --no-target-directory    treat DEST as a normal file\n\
 "), stdout);
       fputs (_("\
   -u, --update                 copy only when the SOURCE file is newer\n\
@@ -495,7 +498,7 @@ target_directory_operand (char const *file, struct stat *st, int *errp)
 
 static int
 do_copy (int n_files, char **file, const char *target_directory,
-	 struct cp_options *x)
+	 bool no_target_directory, struct cp_options *x)
 {
   struct stat sb;
   int new_dst = 0;
@@ -511,7 +514,19 @@ do_copy (int n_files, char **file, const char *target_directory,
       usage (EXIT_FAILURE);
     }
 
-  if (!target_directory)
+  if (no_target_directory)
+    {
+      if (target_directory)
+	error (EXIT_FAILURE, 0,
+	       _("Cannot combine --target-directory "
+		 "and --no-target-directory"));
+      if (2 < n_files)
+	{
+	  error (0, 0, _("extra operand %s"), quote (file[2]));
+	  usage (EXIT_FAILURE);
+	}
+    }
+  else if (!target_directory)
     {
       if (2 <= n_files
 	  && target_directory_operand (file[n_files - 1], &sb, &new_dst))
@@ -793,6 +808,7 @@ main (int argc, char **argv)
   struct cp_options x;
   int copy_contents = 0;
   char *target_directory = NULL;
+  bool no_target_directory = false;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -879,6 +895,10 @@ main (int argc, char **argv)
 
 	case NO_PRESERVE_ATTRIBUTES_OPTION:
 	  decode_preserve_arg (optarg, &x, 0);
+	  break;
+
+	case NO_TARGET_DIRECTORY_OPTION:
+	  no_target_directory = true;
 	  break;
 
 	case PRESERVE_ATTRIBUTES_OPTION:
@@ -1014,7 +1034,8 @@ main (int argc, char **argv)
 
   hash_init ();
 
-  exit_status = do_copy (argc - optind, argv + optind, target_directory, &x);
+  exit_status = do_copy (argc - optind, argv + optind,
+			 target_directory, no_target_directory, &x);
 
   forget_all ();
 
