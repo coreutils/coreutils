@@ -36,6 +36,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls now refuses to generate time stamps containing more than 1000 bytes, to
   foil potential denial-of-service attacks on hosts with very large stacks.
 
+  "pr -D FORMAT" now accepts the same formats that "date +FORMAT" does.
+
   test now detects integer overflow when evaluating large integers,
   rather than silently wrapping around.
 
