@@ -1,4 +1,7 @@
 Changes in release 2.1
+ [2.0h]
+* date --rfc-822 now always emits day and month names from the `C' locale
+* portability tweaks for Solaris8, Ultrix, and DOS
  [2.0g]
 * date now handles two-digit years with leading zeros correctly.
 * printf interprets unicode, \uNNNN \UNNNNNNNN, on systems with the
