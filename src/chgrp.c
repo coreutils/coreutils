@@ -53,11 +53,7 @@ char *savedir ();
 char *xmalloc ();
 char *xrealloc ();
 
-static int change_file_group (char *file, int group);
-static int change_dir_group (char *dir, int group, struct stat *statp);
-static void describe_change (char *file, int changed);
-static void parse_group (char *name, int *g);
-static void usage (int status);
+static int change_dir_group __P ((char *dir, int group, struct stat *statp));
 
 /* The name the program was run with. */
 char *program_name;
@@ -95,62 +91,16 @@ static struct option const long_options[] =
   {0, 0, 0, 0}
 };
 
-void
-main (int argc, char **argv)
+/* Tell the user the group name to which ownership of FILE
+   has been given; if CHANGED is zero, FILE was that group already. */
+
+static void
+describe_change (char *file, int changed)
 {
-  int group;
-  int errors = 0;
-  int optc;
-
-  program_name = argv[0];
-  recurse = force_silent = verbose = changes_only = 0;
-
-  while ((optc = getopt_long (argc, argv, "Rcfv", long_options, (int *) 0))
-	 != EOF)
-    {
-      switch (optc)
-	{
-	case 0:
-	  break;
-	case 'R':
-	  recurse = 1;
-	  break;
-	case 'c':
-	  verbose = 1;
-	  changes_only = 1;
-	  break;
-	case 'f':
-	  force_silent = 1;
-	  break;
-	case 'v':
-	  verbose = 1;
-	  break;
-	default:
-	  usage (1);
-	}
-    }
-
-  if (show_version)
-    {
-      printf ("chgrp - %s\n", version_string);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
-
-  if (argc - optind <= 1)
-    {
-      error (0, 0, "too few arguments");
-      usage (1);
-    }
-
-  parse_group (argv[optind++], &group);
-
-  for (; optind < argc; ++optind)
-    errors |= change_file_group (argv[optind], group);
-
-  exit (errors);
+  if (changed)
+    printf ("group of %s changed to %s\n", file, groupname);
+  else
+    printf ("group of %s retained as %s\n", file, groupname);
 }
 
 /* Set *G according to NAME. */
@@ -289,18 +239,6 @@ change_dir_group (char *dir, int group, struct stat *statp)
   return errors;
 }
 
-/* Tell the user the group name to which ownership of FILE
-   has been given; if CHANGED is zero, FILE was that group already. */
-
-static void
-describe_change (char *file, int changed)
-{
-  if (changed)
-    printf ("group of %s changed to %s\n", file, groupname);
-  else
-    printf ("group of %s retained as %s\n", file, groupname);
-}
-
 static void
 usage (int status)
 {
@@ -321,4 +259,62 @@ Change the group membership of each FILE to GROUP.\n\
       --version           output version information and exit\n");
     }
   exit (status);
+}
+
+void
+main (int argc, char **argv)
+{
+  int group;
+  int errors = 0;
+  int optc;
+
+  program_name = argv[0];
+  recurse = force_silent = verbose = changes_only = 0;
+
+  while ((optc = getopt_long (argc, argv, "Rcfv", long_options, (int *) 0))
+	 != EOF)
+    {
+      switch (optc)
+	{
+	case 0:
+	  break;
+	case 'R':
+	  recurse = 1;
+	  break;
+	case 'c':
+	  verbose = 1;
+	  changes_only = 1;
+	  break;
+	case 'f':
+	  force_silent = 1;
+	  break;
+	case 'v':
+	  verbose = 1;
+	  break;
+	default:
+	  usage (1);
+	}
+    }
+
+  if (show_version)
+    {
+      printf ("chgrp - %s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage (0);
+
+  if (argc - optind <= 1)
+    {
+      error (0, 0, "too few arguments");
+      usage (1);
+    }
+
+  parse_group (argv[optind++], &group);
+
+  for (; optind < argc; ++optind)
+    errors |= change_file_group (argv[optind], group);
+
+  exit (errors);
 }

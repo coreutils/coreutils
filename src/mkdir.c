@@ -38,8 +38,6 @@
 #include "version.h"
 #include "error.h"
 
-static void usage (int status);
-
 /* The name this program was run with. */
 char *program_name;
 
@@ -61,6 +59,27 @@ static struct option const longopts[] =
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
+
+static void
+usage (int status)
+{
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("Usage: %s [OPTION] DIRECTORY...\n", program_name);
+      printf ("\
+Create the DIRECTORY(ies), if they do not already exist.\n\
+\n\
+  -p, --parents     no error if existing, make parent directories as needed\n\
+  -m, --mode=MODE   set permission mode (as in chmod), not rwxrwxrwx - umask\n\
+      --help        display this help and exit\n\
+      --version     output version information and exit\n");
+    }
+  exit (status);
+}
+
 
 void
 main (int argc, char **argv)
@@ -134,24 +153,3 @@ main (int argc, char **argv)
 
   exit (errors);
 }
-
-static void
-usage (int status)
-{
-  if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
-	     program_name);
-  else
-    {
-      printf ("Usage: %s [OPTION] DIRECTORY...\n", program_name);
-      printf ("\
-Create the DIRECTORY(ies), if they do not already exist.\n\
-\n\
-  -p, --parents     no error if existing, make parent directories as needed\n\
-  -m, --mode=MODE   set permission mode (as in chmod), not rwxrwxrwx - umask\n\
-      --help        display this help and exit\n\
-      --version     output version information and exit\n");
-    }
-  exit (status);
-}
-
