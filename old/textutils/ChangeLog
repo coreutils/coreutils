@@ -1,3 +1,8 @@
+1999-03-12  Jim Meyering  <meyering@ascend.com>
+
+	* src/sys2.h (SETVBUF): Define new macro.
+	* src/tail.c (main) [if forever]: Make stdout unbuffered.
+
 1999-03-07  Jim Meyering  <meyering@ascend.com>
 
 	* tests/md5sum/newline-1: Test for the actual feature.
