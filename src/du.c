@@ -145,9 +145,6 @@ static String *path;
 /* Pointer to hash structure, used by the hash routines.  */
 static struct htab *htab;
 
-/* Globally used stat buffer.  */
-static struct stat stat_buf;
-
 /* A pointer to either lstat or stat, depending on whether
    dereferencing of all symbolic links is to be done. */
 static int (*xstat) ();
@@ -457,17 +454,41 @@ hash_insert (ino_t ino, dev_t dev)
   return hash_insert2 (htab_r, ino, dev);
 }
 
+/* Restore the previous working directory or exit.
+   If THROUGH_SYMLINK is non-zero, simply call `chdir ("..")'.  Otherwise,
+   use CWD and free it.  CURR_DIR_NAME is the name of the current directory
+   and is used solely in failure diagnostics.  */
+
+static void
+pop_dir (int through_symlink, struct saved_cwd *cwd, const char *curr_dir_name)
+{
+  if (through_symlink)
+    {
+      if (restore_cwd (cwd, "..", curr_dir_name))
+	exit (1);
+      free_cwd (cwd);
+    }
+  else if (chdir ("..") < 0)
+    {
+      error (1, errno, _("cannot change to `..' from directory %s"),
+	     curr_dir_name);
+    }
+}
+
 /* Print (if appropriate) the size (in units determined by `output_block_size')
    of file or directory ENT. Return the size of ENT in units of 512-byte
    blocks.  TOP is one for external calls, zero for recursive calls.
    LAST_DEV is the device that the parent directory of ENT is on.
    DEPTH is the number of levels (in hierarchy) down from a command
-   line argument.  Don't print if DEPTH > max_depth.  */
+   line argument.  Don't print if DEPTH > max_depth.
+   An important invariant is that when this function returns, the current
+   working directory is the same as when it was called.  */
 
 static uintmax_t
 count_entry (const char *ent, int top, dev_t last_dev, int depth)
 {
   uintmax_t size;
+  struct stat stat_buf;
 
   if (((top && opt_dereference_arguments)
        ? stat (ent, &stat_buf)
@@ -527,15 +548,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 	  if (errno)
 	    {
 	      error (0, errno, "%s", path->text);
-	      if (through_symlink)
-		{
-		  if (restore_cwd (&cwd, "..", path->text))
-		    exit (1);
-		  free_cwd (&cwd);
-		}
-	      else if (chdir ("..") < 0)
-		  error (1, errno, _("cannot change to `..' from directory %s"),
-			 path->text);
+	      pop_dir (through_symlink, &cwd, path->text);
 	      exit_status = 1;
 	      return 0;
 	    }
@@ -559,16 +572,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 	}
 
       free (name_space);
-      if (through_symlink)
-	{
-	  restore_cwd (&cwd, "..", path->text);
-	  free_cwd (&cwd);
-	}
-      else if (chdir ("..") < 0)
-	{
-	  error (1, errno,
-		 _("cannot change to `..' from directory %s"), path->text);
-	}
+      pop_dir (through_symlink, &cwd, path->text);
 
       str_trunc (path, pathlen - 1); /* Remove the "/" we added.  */
       if (depth <= max_depth || top)
@@ -592,19 +596,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 static void
 du_files (char **files)
 {
-  struct saved_cwd cwd;
-  ino_t initial_ino;		/* Initial directory's inode. */
-  dev_t initial_dev;		/* Initial directory's device. */
   int i;			/* Index in FILES. */
-
-  if (save_cwd (&cwd))
-    exit (1);
-
-  /* Remember the inode and device number of the current directory.  */
-  if (stat (".", &stat_buf))
-    error (1, errno, _("current directory"));
-  initial_ino = stat_buf.st_ino;
-  initial_dev = stat_buf.st_dev;
 
   for (i = 0; files[i]; i++)
     {
@@ -631,21 +623,10 @@ du_files (char **files)
 	hash_reset ();
 
       count_entry (arg, 1, 0, 0);
-
-      /* chdir if `count_entry' has changed the working directory.  */
-      if (stat (".", &stat_buf))
-	error (1, errno, ".");
-      if (stat_buf.st_ino != initial_ino || stat_buf.st_dev != initial_dev)
-	{
-	  if (restore_cwd (&cwd, _("starting directory"), NULL))
-	    exit (1);
-	}
     }
 
   if (opt_combined_arguments)
     print_size (tot_size, _("total"));
-
-  free_cwd (&cwd);
 }
 
 int
