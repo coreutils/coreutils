@@ -1,0 +1,55 @@
+#!/bin/sh
+# Make sure "chown USER:GROUP FILE" works, and similar tests with separators.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  chown --version
+fi
+
+pwd=`pwd`
+t0=`echo "$0" |sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap 'status=$?; (exit $status); exit $status' 1 2 13 15
+
+framework_failure=0
+
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+id_u=`id -u` || framework_failure=1
+test -n "$id_u" || framework_failure=1
+
+id_un=`id -un` || framework_failure=1
+test -n "$id_un" || framework_failure=1
+
+id_g=`id -g` || framework_failure=1
+test -n "$id_g" || framework_failure=1
+
+id_gn=`id -gn` || framework_failure=1
+test -n "$id_gn" || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+fi
+
+fail=0
+
+chown '' . || fail=1
+
+for u in $id_u $id_un ''; do
+  for g in $id_g $id_gn ''; do
+    case $u$g in
+      *.*) seps=':' ;;
+      *)   seps=': .' ;;
+    esac
+    for sep in $seps; do
+      case $u$sep$g in
+	[0-9]*$sep) chown "$u$sep$g" . 2> /dev/null && fail=1 ;;
+	*) chown "$u$sep$g" . || fail=1 ;;
+      esac
+    done
+  done
+done
+
+(exit $fail); exit $fail
