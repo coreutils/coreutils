@@ -26,22 +26,21 @@ fail=0
 #                         parent        parent/dir
 # umask   -m option   resulting perm  resulting perm
 tests='
-    000  :            :drwxrwxrwx:drwxrwxrwx:
-    000  :   -m 016   :drwxrwxrwx:d-----xrw-:
-    077  :            :drwx------:drwx------:
-    050  :            :drwx-w-rwx:drwx-w-rwx:
-    050  :   -m 312   :drwx-w-rwx:d-wx--x-w-:
-    160  :            :drwx--xrwx:drw---xrwx:
-    160  :   -m 743   :drwx--xrwx:drwxr---wx:
-    -    :   -        :last:last:
+    000  :            : drwxrwxrwx : drwxrwxrwx :
+    000  :   -m 016   : drwxrwxrwx : d-----xrw- :
+    077  :            : drwx------ : drwx------ :
+    050  :            : drwx-w-rwx : drwx-w-rwx :
+    050  :   -m 312   : drwx-w-rwx : d-wx--x-w- :
+    160  :            : drwx--xrwx : drw---xrwx :
+    160  :   -m 743   : drwx--xrwx : drwxr---wx :
+    -    :   -        : last       : last       :
     '
 for p in empty -p; do
   test _$p = _empty && p=
 
   old_IFS=$IFS
-  IFS=':
-'
-  set - $tests
+  IFS=':'
+  set - `echo "$tests"|tr -d '\012'|sed 's/^ *//;s/ *:/:/g;s/: */:/g'`
   IFS=$old_IFS
 
   while :; do
