@@ -1,6 +1,6 @@
 # Enable extensions on systems that normally disable them.
 
-# Copyright (C) 2003 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2005 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -19,7 +19,7 @@ AC_DEFUN([gl_USE_SYSTEM_EXTENSIONS], [
 
   AH_VERBATIM([__EXTENSIONS__],
 [/* Enable extensions on Solaris.  */
-#ifndef __EXTENSIONS__
+#ifdef __EXTENSIONS__
 # undef __EXTENSIONS__
 #endif])
   AC_DEFINE([__EXTENSIONS__])
