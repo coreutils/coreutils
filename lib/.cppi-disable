@@ -17,6 +17,7 @@ printf-parse.h
 regex.c
 regex.h
 stdbool_.h
+strndup.h
 time_r.h
 vasnprintf.h
 vasprintf.h
