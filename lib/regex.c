@@ -1747,29 +1747,51 @@ static reg_errcode_t compile_range _RE_ARGS ((unsigned int range_start,
    reset the pointers that pointed into the old block to point to the
    correct places in the new one.  If extending the buffer results in it
    being larger than MAX_BUF_SIZE, then flag memory exhausted.  */
+#if __BOUNDED_POINTERS__
+# define SET_HIGH_BOUND(P) (__ptrhigh (P) = __ptrlow (P) + bufp->allocated)
+# define MOVE_BUFFER_POINTER(P) \
+  (__ptrlow (P) += incr, SET_HIGH_BOUND (P), __ptrvalue (P) += incr)
+# define ELSE_EXTEND_BUFFER_HIGH_BOUND		\
+  else						\
+    {						\
+      SET_HIGH_BOUND (b);			\
+      SET_HIGH_BOUND (begalt);			\
+      if (fixup_alt_jump)			\
+	SET_HIGH_BOUND (fixup_alt_jump);	\
+      if (laststart)				\
+	SET_HIGH_BOUND (laststart);		\
+      if (pending_exact)			\
+	SET_HIGH_BOUND (pending_exact);		\
+    }
+#else
+# define MOVE_BUFFER_POINTER(P) (P) += incr
+# define ELSE_EXTEND_BUFFER_HIGH_BOUND
+#endif
 #define EXTEND_BUFFER()							\
-  do { 									\
+  do {									\
     unsigned char *old_buffer = bufp->buffer;				\
-    if (bufp->allocated == MAX_BUF_SIZE) 				\
+    if (bufp->allocated == MAX_BUF_SIZE)				\
       return REG_ESIZE;							\
     bufp->allocated <<= 1;						\
     if (bufp->allocated > MAX_BUF_SIZE)					\
-      bufp->allocated = MAX_BUF_SIZE; 					\
+      bufp->allocated = MAX_BUF_SIZE;					\
     bufp->buffer = (unsigned char *) REALLOC (bufp->buffer, bufp->allocated);\
     if (bufp->buffer == NULL)						\
       return REG_ESPACE;						\
     /* If the buffer moved, move all the pointers into it.  */		\
     if (old_buffer != bufp->buffer)					\
       {									\
-        b = (b - old_buffer) + bufp->buffer;				\
-        begalt = (begalt - old_buffer) + bufp->buffer;			\
-        if (fixup_alt_jump)						\
-          fixup_alt_jump = (fixup_alt_jump - old_buffer) + bufp->buffer;\
-        if (laststart)							\
-          laststart = (laststart - old_buffer) + bufp->buffer;		\
-        if (pending_exact)						\
-          pending_exact = (pending_exact - old_buffer) + bufp->buffer;	\
+	int incr = bufp->buffer - old_buffer;				\
+	MOVE_BUFFER_POINTER (b);					\
+	MOVE_BUFFER_POINTER (begalt);					\
+	if (fixup_alt_jump)						\
+	  MOVE_BUFFER_POINTER (fixup_alt_jump);				\
+	if (laststart)							\
+	  MOVE_BUFFER_POINTER (laststart);				\
+	if (pending_exact)						\
+	  MOVE_BUFFER_POINTER (pending_exact);				\
       }									\
+    ELSE_EXTEND_BUFFER_HIGH_BOUND					\
   } while (0)
 
 
