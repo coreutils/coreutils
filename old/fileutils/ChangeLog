@@ -1,5 +1,8 @@
 2002-05-22  Jim Meyering  <meyering@lucent.com>
 
+	* src/sys2.h (S_ISREG, S_ISDIR): Define if not already defined.
+	(S_TYPEISSEM, S_TYPEISSHM, S_TYPEISTMO): Likewise.
+
 	* Version 4.1.9.
 
 	* src/ls.c (S_ISLNK, S_ISFIFO, S_ISSOCK, S_ISCHR, S_ISBLK, S_ISDOOR):
