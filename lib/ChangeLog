@@ -1,3 +1,9 @@
+2000-06-17  Bruno Haible  <haible@clisp.cons.org>
+
+	* getusershell.c (xmalloc, xrealloc): Remove functions.
+	Include xalloc.h.
+	Don't include <stdlib.h>.  Don't declare malloc, realloc.
+
 2000-06-23  Bruno Haible  <haible@clisp.cons.org>
 
 	* unicodeio.c (print_unicode_char): Work around ansi2knr deficiency.
