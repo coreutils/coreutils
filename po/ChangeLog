@@ -1,3 +1,7 @@
+2003-02-16  Jim Meyering  <jim@meyering.net>
+
+	* LINGUAS: Add Finnish (fi).
+
 2003-01-11  Jim Meyering  <jim@meyering.net>
 
 	* POTFILES.in: Add src/readlink.c.
