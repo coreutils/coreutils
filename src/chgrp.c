@@ -75,28 +75,30 @@ static struct option const long_options[] =
   {0, 0, 0, 0}
 };
 
-/* Set *G according to NAME. */
+/* Return the group ID of NAME, or -1 if no name was specified.  */
 
-static void
-parse_group (const char *name, gid_t *g)
+static gid_t
+parse_group (const char *name)
 {
-  struct group *grp;
+  gid_t gid = -1;
 
-  if (*name == '\0')
-    error (EXIT_FAILURE, 0, _("cannot change to null group"));
-
-  grp = getgrnam (name);
-  if (grp == NULL)
+  if (*name)
     {
-      unsigned long int tmp_long;
-      if (! (xstrtoul (name, NULL, 10, &tmp_long, "") == LONGINT_OK
-	     && tmp_long <= GID_T_MAX))
-	error (EXIT_FAILURE, 0, _("invalid group %s"), quote (name));
-      *g = tmp_long;
+      struct group *grp = getgrnam (name);
+      if (grp)
+	gid = grp->gr_gid;
+      else
+	{
+	  unsigned long int tmp;
+	  if (! (xstrtoul (name, NULL, 10, &tmp, "") == LONGINT_OK
+		 && tmp <= GID_T_MAX))
+	    error (EXIT_FAILURE, 0, _("invalid group %s"), quote (name));
+	  gid = tmp;
+	}
+      endgrent ();		/* Save a file descriptor. */
     }
-  else
-    *g = grp->gr_gid;
-  endgrent ();		/* Save a file descriptor. */
+
+  return gid;
 }
 
 void
@@ -281,8 +283,9 @@ main (int argc, char **argv)
     }
   else
     {
-      chopt.group_name = argv[optind++];
-      parse_group (chopt.group_name, &gid);
+      char *group_name = argv[optind++];
+      chopt.group_name = (*group_name ? group_name : NULL);
+      gid = parse_group (group_name);
     }
 
   ok = chown_files (argv + optind, bit_flags,
