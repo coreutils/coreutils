@@ -199,7 +199,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -P                           same as `--no-dereference'\n\
 "), stdout);
       fputs (_("\
-  -r                           copy recursively, non-directories as files\n\
+  -r                           copy recursively, non-directories as files,\n\
+                                 but do preserve symbolic links\n\
                                  WARNING: use -R instead when you might copy\n\
                                  special files like FIFOs or /dev/zero\n\
       --remove-destination     remove each existing destination file before\n\
@@ -947,7 +948,6 @@ main (int argc, char **argv)
 	case 'r':
 	  x.recursive = 1;
 	  x.copy_as_regular = 1;
-	  x.dereference = DEREF_ALWAYS;
 	  if (seen_option_a)
 	    seen_option_a_then_r = true;
 	  break;
