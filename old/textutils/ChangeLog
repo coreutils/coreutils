@@ -1,9 +1,28 @@
 2001-11-11  Jim Meyering  <meyering@lucent.com>
 
+	* src/pr.c (struct COLUMN) [print_func]: Declare with a protype.
+	(struct COLUMN) [char_func]: Declare with a protype.
+
+	* src/od.c (parse_old_offset): Declare to be static.
+
 	* Version 2.0.17.
+
+	* src/join.c (make_blank): Declare to be static.
+	(prfield): Declare local to be of type size_t, not int.
+
+	* src/md5sum.c (usage): Split --help output into smaller pieces.
 
 	* src/wc.c (usage): Split --help output into smaller pieces.
 	Use fputs, not printf.
+	* src/cat.c (usage): Likewise.
+	* src/cut.c (usage): Likewise.
+	* src/csplit.c (usage): Likewise.
+	* src/expand.c (usage): Likewise.
+	* src/head.c (usage): Likewise.
+	* src/join.c (usage): Likewise.
+	* src/nl.c (usage): Likewise.
+	* src/od.c (usage): Likewise.
+	* src/pr.c (usage): Likewise.
 
 	* src/sys2.h (alloca) [__GNUC__]: Define only if not already defined.
 
