@@ -72,6 +72,16 @@ static struct option const longopts[] =
   {NULL, 0, NULL, 0}
 };
 
+/* Return nonzero if ERROR_NUMBER is one of the values associated
+   with a failed rmdir due to non-empty target directory.  */
+
+static int
+errno_rmdir_non_empty (int error_number)
+{
+  return (error_number == ENOTEMPTY
+	  || error_number == EEXIST);
+}
+
 /* Remove any empty parent directories of PATH.
    If PATH contains slash characters, at least one of them
    (beginning with the rightmost) is replaced with a NUL byte.  */
@@ -103,7 +113,7 @@ remove_parents (char *path)
 	{
 	  /* Stop quietly if --ignore-fail-on-non-empty. */
 	  if (ignore_fail_on_non_empty
-	      && (errno == ENOTEMPTY || errno == EEXIST))
+	      && errno_rmdir_non_empty (errno))
 	    {
 	      fail = 0;
 	    }
@@ -204,7 +214,7 @@ main (int argc, char **argv)
       if (fail)
 	{
 	  if (ignore_fail_on_non_empty
-	      && (errno == ENOTEMPTY || errno == EEXIST))
+	      && errno_rmdir_non_empty (errno))
 	    continue;
 
 	  error (0, errno, "%s", dir);
