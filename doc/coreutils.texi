@@ -8295,10 +8295,12 @@ Return its first argument if neither argument is null or 0, otherwise
 @kindex >
 @kindex >=
 @cindex comparison operators
+@vindex LC_COLLATE
 Compare the arguments and return 1 if the relation is true, 0 otherwise.
 @code{==} is a synonym for @code{=}.  @code{expr} first tries to convert
 both arguments to numbers and do a numeric comparison; if either
-conversion fails, it does a lexicographic comparison.
+conversion fails, it does a lexicographic comparison using the character
+collating sequence specified by the @env{LC_COLLATE} locale.
 
 @end table
 
