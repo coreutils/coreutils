@@ -1,3 +1,7 @@
+2001-09-24  Jim Meyering  <meyering@lucent.com>
+
+	* gettext.m4: Use the version from gettext-0.10.40, not CVS.
+
 2001-09-23  Jim Meyering  <meyering@lucent.com>
 
 	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): Add a compile-test
