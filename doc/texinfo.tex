@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2000-10-18.06}
+\def\texinfoversion{2000-10-27.17}
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
 % Free Software Foundation, Inc.
@@ -2602,42 +2602,48 @@ width0pt\relax} \fi
 }
 
 % @defindex foo  ==  \newindex{foo}
-
+%
 \def\defindex{\parsearg\newindex}
 
 % Define @defcodeindex, like @defindex except put all entries in @code.
-
+%
+\def\defcodeindex{\parsearg\newcodeindex}
+%
 \def\newcodeindex#1{%
   \iflinks
     \expandafter\newwrite \csname#1indfile\endcsname
     \openout \csname#1indfile\endcsname \jobname.#1
   \fi
   \expandafter\xdef\csname#1index\endcsname{%
-    \noexpand\docodeindex{#1}}
+    \noexpand\docodeindex{#1}}%
 }
 
-\def\defcodeindex{\parsearg\newcodeindex}
 
 % @synindex foo bar    makes index foo feed into index bar.
 % Do this instead of @defindex foo if you don't want it as a separate index.
-% The \closeout helps reduce unnecessary open files; the limit on the
-% Acorn RISC OS is a mere 16 files.
-\def\synindex#1 #2 {%
-  \expandafter\let\expandafter\synindexfoo\expandafter=\csname#2indfile\endcsname
-  \expandafter\closeout\csname#1indfile\endcsname
-  \expandafter\let\csname#1indfile\endcsname=\synindexfoo
-  \expandafter\xdef\csname#1index\endcsname{% define \xxxindex
-    \noexpand\doindex{#2}}%
-}
-
+% 
 % @syncodeindex foo bar   similar, but put all entries made for index foo
 % inside @code.
-\def\syncodeindex#1 #2 {%
-  \expandafter\let\expandafter\synindexfoo\expandafter=\csname#2indfile\endcsname
-  \expandafter\closeout\csname#1indfile\endcsname
-  \expandafter\let\csname#1indfile\endcsname=\synindexfoo
-  \expandafter\xdef\csname#1index\endcsname{% define \xxxindex
-    \noexpand\docodeindex{#2}}%
+% 
+\def\synindex#1 #2 {\dosynindex\doindex{#1}{#2}}
+\def\syncodeindex#1 #2 {\dosynindex\docodeindex{#1}{#2}}
+
+% #1 is \doindex or \docodeindex, #2 the index getting redefined (foo),
+% #3 the target index (bar).
+\def\dosynindex#1#2#3{%
+  % Only do \closeout if we haven't already done it, else we'll end up
+  % closing the target index.
+  \expandafter \ifx\csname donesynindex#2\endcsname \undefined
+    % The \closeout helps reduce unnecessary open files; the limit on the
+    % Acorn RISC OS is a mere 16 files.
+    \expandafter\closeout\csname#2indfile\endcsname
+    \expandafter\let\csname\donesynindex#2\endcsname = 1
+  \fi
+  % redefine \fooindfile:
+  \expandafter\let\expandafter\temp\expandafter=\csname#3indfile\endcsname
+  \expandafter\let\csname#2indfile\endcsname=\temp
+  % redefine \fooindex:
+  \expandafter\xdef\csname#2index\endcsname{\noexpand#1{#3}}%
 }
 
 % Define \doindex, the driver for all \fooindex macros.
