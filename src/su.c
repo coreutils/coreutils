@@ -94,18 +94,11 @@ static void log_su ();
 
 #ifdef _POSIX_VERSION
 #include <limits.h>
-#ifdef NGROUPS_MAX
-#undef NGROUPS_MAX
-#endif
-#define NGROUPS_MAX sysconf (_SC_NGROUPS_MAX)
 #else /* not _POSIX_VERSION */
 struct passwd *getpwuid ();
 struct group *getgrgid ();
 uid_t getuid ();
 #include <sys/param.h>
-#if !defined(NGROUPS_MAX) && defined(NGROUPS)
-#define NGROUPS_MAX NGROUPS
-#endif
 #endif /* not _POSIX_VERSION */
 
 #ifndef HAVE_ENDGRENT
