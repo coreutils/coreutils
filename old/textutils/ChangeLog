@@ -1,6 +1,18 @@
-2001-11-13  Jim Meyering  <meyering@lucent.com>
+2001-11-14  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.17.
+
+	* src/tail.c (file_lines): Add a parameter, start_pos.
+	Work properly even when the read pointer is not at beginning of file.
+	(tail_lines): Call file_lines for any regular file, as long as lseek
+	can be used to seek to its end, not just when the initial read pointer
+	is at beginning of file.
+
+2001-11-13  Jim Meyering  <meyering@lucent.com>
+
+	* src/tail.c (tail_lines): Move declaration of local `length'
+	into scope where it's used.
+	(tail_file): Likewise for local `stats'.
 
 	* tests/tail-2/Makefile.am (TESTS): Add proc-ksyms and start-middle.
 	* tests/tail-2/start-middle: New test, for the bug fixed on 1995-07-24.
