@@ -1,4 +1,31 @@
+1999-07-12  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (ALL_LINGUAS): Add Slovak (sk).
+
+1999-07-11  Jim Meyering  <meyering@ascend.com>
+
+	* src/tail.c (recheck): Use assert instead of unnecessary close_fd.
+	Remove a couple unnecessary FIXME comments.
+
 1999-07-10  Jim Meyering  <meyering@ascend.com>
+
+	* src/tail.c (struct File_spec) [tailable]: Rename from `missing' and
+	document.  Change all uses and locals like was_missing to was_tailable.
+	Invert expressions as appropriate.
+	(reopen_inaccessible_files): Rename from allow_missing.
+	(sleep_interval): Describe.
+	(--allow-missing): Deprecate.
+	(--retry): New option, equivalent to --allow-missing.
+	(usage): Document name vs. descriptor differences.
+	Refer to manual for descriptions of --max-unchanged-stats=N
+	and --max-consecutive-size-changes=N.
+	(valid_file_spec): New function.
+	(recheck): Assert valid_file_spec.
+	Remove dead else-if block (suggestion from Eli Zaretskii).
+	Adjust stmts that set f->tailable -- unlike for `missing', tailable
+	doesn't depend on errno == ENOENT.
+	(parse_options): Give a warning if --retry is used when not following
+	by name.
 
 	* tests/join/Test.pm: New test case (but commented out) for
 	Paul's 1999-06-01 fix.
@@ -10,6 +37,19 @@
 1999-07-04  Jim Meyering  <meyering@ascend.com>
 
 	* tests/join/Test.pm: New test case for Paul's 1999-06-03 fix.
+
+1999-07-03  Eli Zaretskii  <eliz@is.elta.co.il>
+
+	* src/tail.c (struct File_spec): New member, errnum.
+	(recheck): Record the new value of errno in f->errnum.  Don't
+	output an error message unless the new value of errno differs from
+	the old one.  Output a message if previously-inaccessible file
+	becomes accessible.
+	(tail_forever): Always recheck files whose fd is negative.  If the
+	file cannot be fstat'ed, record the errno value in f[i].errnum.
+	(tail_file): If the file cannot be open, record the errno value in
+	f->errnum.  If it can be opened, initialize f->errnum to zero.  If
+	it's a non-regular non-fifo file, initialize f->errnum to -1.
 
 1999-06-21  Jim Meyering  <meyering@ascend.com>
 
