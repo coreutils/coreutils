@@ -3,7 +3,7 @@
    "Keep this file name-space clean" means, talk to roland@gnu.ai.mit.edu
    before changing it!
 
-   Copyright (C) 1987, 88, 89, 90, 91, 92, 93, 94
+   Copyright (C) 1987, 88, 89, 90, 91, 92, 93, 94, 95
    	Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify it
@@ -383,7 +383,10 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
   optarg = NULL;
 
   if (optind == 0)
-    optstring = _getopt_initialize (optstring);
+    {
+      optstring = _getopt_initialize (optstring);
+      optind = 1;		/* Don't scan ARGV[0], the program name.  */
+    }
 
   if (nextchar == NULL || *nextchar == '\0')
     {

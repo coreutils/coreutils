@@ -2865,7 +2865,7 @@ re_compile_fastmap (bufp)
 
   /* This holds the pointer to the failure stack, when
      it is allocated relocatably.  */
-#ifdef REL_ALLOC_STMT
+#ifdef REL_ALLOC
   fail_stack_elt_t *failure_stack_ptr;
 #endif
 
@@ -3518,7 +3518,7 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
 
   /* This holds the pointer to the failure stack, when
      it is allocated relocatably.  */
-#ifdef REL_ALLOC_STMT
+#ifdef REL_ALLOC
   fail_stack_elt_t *failure_stack_ptr;
 #endif
 
