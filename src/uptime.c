@@ -1,5 +1,5 @@
 /* GNU's uptime.
-   Copyright (C) 1992-2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1992-2002, 2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -100,7 +100,7 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
 	boot_time = UT_TIME_MEMBER (this);
       ++this;
     }
-  time_now = time (0);
+  time_now = time (NULL);
 #if defined HAVE_PROC_UPTIME
   if (uptime == 0)
 #endif
