@@ -687,8 +687,8 @@ remove_file (struct File_spec *fs)
 
 /* If not in recursive mode, print an error message and return RM_ERROR.
    Otherwise, query the user if appropriate, then try to recursively
-   remove directory `pathname', which STATP contains info about.
-   Return 0 if `pathname' is removed, 1 if not.
+   remove the directory specified by FS.  Return RM_OK if it is removed,
+   and RM_ERROR or RM_USER_DECLINED if not.
    FIXME: describe need_save_cwd parameter.  */
 
 static enum RM_status
