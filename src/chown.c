@@ -225,7 +225,7 @@ main (int argc, char **argv)
       const char *e = parse_user_spec (argv[optind], &uid, &gid,
 				       &chopt.user_name, &chopt.group_name);
       if (e)
-        error (1, 0, "%s: %s", argv[optind], e);
+        error (1, 0, "%s: %s", quote (argv[optind]), e);
 
       /* FIXME: set it to the empty string?  */
       if (chopt.user_name == NULL)
