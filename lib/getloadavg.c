@@ -98,8 +98,14 @@
 extern int errno;
 #endif
 
-#ifndef HAVE_GETLOADAVG
+#if HAVE_LOCALE_H
+# include <locale.h>
+#endif
+#if !HAVE_SETLOCALE
+# define setlocale(Category, Locale) /* empty */
+#endif
 
+#ifndef HAVE_GETLOADAVG
 
 /* The existing Emacs configuration files define a macro called
    LOAD_AVE_CVT, which accepts a value of type LOAD_AVE_TYPE, and
@@ -638,8 +644,11 @@ getloadavg (loadavg, nelem)
   if (count <= 0)
     return -1;
 
+  /* The following sscanf must use the C locale.  */
+  setlocale (LC_NUMERIC, "C");
   count = sscanf (ldavgbuf, "%lf %lf %lf",
 		  &load_ave[0], &load_ave[1], &load_ave[2]);
+  setlocale (LC_NUMERIC, "");
   if (count < 1)
     return -1;
 
