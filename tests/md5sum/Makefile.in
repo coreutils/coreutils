@@ -232,7 +232,7 @@ Makefile.am: ../Makefile.am.in Test.pm $(mk_script)
 	sed -n '1,/^##test-files-begin/p' $< > $@t
 	tool=`echo $(subdir)|sed 's/^tests.//;s/-test//'`; \
 	  echo "x = $$tool" >> $@t
-	$(PERL) $(mk_script) --list >> $@t
+	$(PERL) -w -- $(mk_script) --list >> $@t
 	sed -n '/^##test-files-end/,$$p' $< >> $@t
 	mv $@t $@
 
