@@ -1,3 +1,13 @@
+2002-07-29  Paul Eggert  <eggert@twinsun.com>
+
+	* src/nohup.sh: Change behavior to conform to POSIX 1003.1-2001:
+	  - Do not adjust scheduling priority.
+	  - Redirects stderr to stdout, if stderr is not a terminal.
+	  - Exit status is now 126 if command was found but not invoked,
+	    127 if nohup failed or if command was not found.
+	  Fix bug: command was run if nohup.out wasn't writeable.
+	* NEWS, doc/coreutils.texi: Document the above.
+
 2002-07-28  Jim Meyering  <meyering@lucent.com>
 
 	* configure.ac: Require automake-1.6b.

@@ -1,3 +1,12 @@
+2002-07-29  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi (nohup invocation): Change behavior to conform to
+	POSIX 1003.1-2001:
+	  - Do not adjust scheduling priority.
+	  - Redirects stderr to stdout, if stderr is not a terminal.
+	  - Exit status is now 126 if command was found but not invoked,
+	    127 if nohup failed or if command was not found.
+
 2002-07-24  Jim Meyering  <meyering@lucent.com>
 
 	* coreutils.texi (Time directives): Document %P, %R, %e, %F,
