@@ -2,6 +2,9 @@
 
 	* Version 4.1.1.
 
+	* man/chmod.x: Describe sticky files and directories.
+	From Michael Stone.
+
 	* tests/mv/partition-perm: Don't use a umask that removes owner
 	read/write.  Use a stricter test for permissions.
 
