@@ -1400,10 +1400,7 @@ copy_internal (const char *src_path, const char *dst_path,
     }
   else if (S_ISREG (src_type)
 	   || (x->copy_as_regular && !S_ISDIR (src_type)
-#ifdef S_ISLNK
-	       && !S_ISLNK (src_type)
-#endif
-	       ))
+	       && !S_ISLNK (src_type)))
     {
       copied_as_regular = 1;
       /* POSIX says the permission bits of the source file must be
@@ -1426,10 +1423,7 @@ copy_internal (const char *src_path, const char *dst_path,
   else
 #endif
     if (S_ISBLK (src_type) || S_ISCHR (src_type)
-#ifdef S_ISSOCK
-	|| S_ISSOCK (src_type)
-#endif
-	)
+	|| S_ISSOCK (src_type))
     {
       if (mknod (dst_path, get_dest_mode (x, src_mode), src_sb.st_rdev))
 	{
