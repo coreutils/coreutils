@@ -2,16 +2,21 @@
 require 5.002;
 use strict;
 
-my $xx = './tr';
+my $xx = '/usr/bin/tr';
 $| = 1;
 
-print "#! /bin/sh\nxx='$xx'\necho testing with $xx=\$xx\nerrors=0\n";
-print "$xx --version 2> /dev/null\n";
-my $expected = '';
-my $s1 = '';
-my $input = '';
-my $flags = '';
-my $s2 = '';
+print <<EOF;
+#! /bin/sh
+case \$# in
+  0) xx='$xx';;
+  *) xx="\$1";;
+esac
+echo=:
+\$echo testing with $xx=\$xx
+errors=0
+EOF
+
+print "# $xx --version 2> /dev/null\n";
 my %seen;
 
 while (<>)
@@ -19,15 +24,13 @@ while (<>)
     next if (/^\s*#/);
 
     chop;
-    my $test_name;
-    my $e_ret_code;
+    my ($test_name, $input, $flags, $s1, $s2, $expected, $e_ret_code);
     my $prog =
-     '($test_name, $input,$flags,$s1,$s2,$expected,$e_ret_code) = ' . $_ . ';';
+       '($test_name, $input, $flags, $s1, $s2, $expected, $e_ret_code) = '
+       . $_ . ';';
     eval $prog;
-    if (defined ($seen{$test_name}))
-      {
-	die "$0: $.: duplicate test name \`$test_name'\n";
-      }
+    die "$0: $.: duplicate test name \`$test_name'\n"
+      if (defined ($seen{$test_name}));
     $seen{$test_name} = 1;
     my $in = "t$test_name.in";
     my $exp_name = 't' . $test_name . '.exp';
@@ -47,16 +50,16 @@ while (<>)
 $cmd
 code=\$?
 if test \$code != $e_ret_code ; then
-  echo Test $test_name failed: $xx return code \$code differs from expected value $e_ret_code 1>&2
+  \$echo Test $test_name failed: $xx return code \$code differs from expected value $e_ret_code 1>&2
   errors=`expr \$errors + 1`
 else
   cmp $out $exp_name
   case \$? in
-    0) if test "\$verbose" ; then echo passed $test_name; fi ;; # equal files
-    1) echo Test $test_name failed: files $out and $exp_name differ 1>&2;
+    0) if test "\$verbose" ; then \$echo passed $test_name; fi ;; # equal files
+    1) \$echo Test $test_name failed: files $out and $exp_name differ 1>&2;
        errors=`expr \$errors + 1` ;;
-    2) echo Test $test_name may have failed. 1>&2;
-       echo The command \"cmp $out $exp_name\" failed. 1>&2 ;
+    2) \$echo Test $test_name may have failed. 1>&2;
+       \$echo The command \"cmp $out $exp_name\" failed. 1>&2 ;
        errors=`expr \$errors + 1` ;;
   esac
 fi
@@ -65,8 +68,10 @@ EOF
   }
 print <<EOF2 ;
 if test \$errors = 0 ; then
-  echo Passed all tests. 1>&2
+  \$echo Passed all tests. 1>&2
 else
-  echo Failed \$errors tests. 1>&2
+  \$echo Failed \$errors tests. 1>&2
 fi
+test \$errors = 0 && \$errors=1
+exit \$errors
 EOF2
