@@ -18,20 +18,18 @@ sub END
 
 sub is_prime ($)
 {
-  my ($n0) = @_;
+  my ($n) = @_;
   use integer;
 
-  $n0 == 2
+  $n == 2
     and return 1;
 
-  my $n = $n0;
   my $d = 2;
   my $w = 1;
   my $q;
   while (1)
     {
       $q = $n / $d;
-      #print "q=$q n=$n d=$d\n";
       ($n == $q * $d)
         and return 0;
       $d += $w;
