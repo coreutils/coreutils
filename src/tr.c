@@ -494,9 +494,9 @@ unquote (const unsigned char *s, struct E_string *es)
   size_t i, j;
   size_t len;
 
-  len = strlen (s);
+  len = strlen ((char *) s);
 
-  es->s = xmalloc (len);
+  es->s = (unsigned char *) xmalloc (len);
   es->escaped = (int *) xmalloc (len * sizeof (es->escaped[0]));
   for (i = 0; i < len; i++)
     es->escaped[i] = 0;
