@@ -38,6 +38,7 @@ AC_DEFUN([gl_FUNC_MKSTEMP],
 	  gl_cv_func_mkstemp_limitations=yes
 	  )
 	)
+        rm -rf conftest.mkstemp
       ]
     )
   fi
