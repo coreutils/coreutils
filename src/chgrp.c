@@ -215,7 +215,8 @@ main (int argc, char **argv)
     {
       struct stat ref_stats;
       if (stat (reference_file, &ref_stats))
-	error (1, errno, _("getting attributes of %s"), quote (reference_file));
+	error (1, errno, _("failed to get attributes of %s"),
+	       quote (reference_file));
 
       chopt.group_name = gid_to_name (ref_stats.st_gid);
       gid = ref_stats.st_gid;
