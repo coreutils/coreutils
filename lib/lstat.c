@@ -20,6 +20,12 @@
 /* written by Jim Meyering */
 
 #include <config.h>
+
+/* Disable the definition of lstat to rpl_lstat (from config.h) in this
+   file.  Otherwise, we'd get conflicting prototypes for rpl_lstat on
+   most systems.  */
+#undef lstat
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
@@ -30,7 +36,7 @@ extern int errno;
 /* FIXME: describe.  */
 
 int
-lstat (file, sbuf)
+rpl_lstat (file, sbuf)
      const char *file;
      struct stat *sbuf;
 {
@@ -39,8 +45,6 @@ lstat (file, sbuf)
       errno = EINVAL;
       return -1;
     }
-
-#undef lstat
 
   return lstat (file, sbuf);
 }
