@@ -17,19 +17,19 @@ cd $tmp || framework_failure=1
 mkdir -p dir/subdir || framework_failure=1
 ln -s f symlink || framework_failure=1
 
+cat > exp <<\EOF || framework_failure=1
+dir
+exp
+out
+symlink
+EOF
+
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
   (exit 1); exit
 fi
 
 fail=0
-
-cat > exp <<\EOF
-dir
-exp
-out
-symlink
-EOF
 
 ls > out || fail=1
 
