@@ -1,3 +1,7 @@
+2003-01-11  Jim Meyering  <jim@meyering.net>
+
+	* POTFILES.in: Add src/readlink.c.
+
 2002-11-21  Jim Meyering  <jim@meyering.net>
 
 	* LINGUAS: Add ms (Malay).
