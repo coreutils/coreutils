@@ -1,3 +1,25 @@
+2005-02-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi: Adjust to match current strftime.c.
+	(Time directives): Say that %k, %l, and %P are GNU extensions.
+	For %p and %P, mention handling of noon and midnight.
+	For %s, use ISO 8601, and mention handling of leap seconds.
+	For %S, clarify mention of leap seconds.
+	For %T, say that it's the same as %H:%M:%S.
+	For %X, don't say that it must be the same as %H:%M:%S.
+	For %z and %Z, clarify which time zones are used.  These options
+	are now affected by --date, so don't claim that they're not.
+	(Date directives): %C is now all but the last two chars of %Y.
+	For %D, say that it's equivalent to %m/%d/%y.
+	For %e, use blank in example.
+	For %h, use @code for %b.
+	For %Y, mention what happens with outlandish years.
+	(Padding and other flags): Renamed from Padding.
+	Mention that the flags are GNU extensions.
+	Mention the 0 and ^ flags.
+	Mention field widths an modifiers.
+	(Examples of date): - is a flag, not a modifier.
+
 2005-01-07  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (sort invocation): Specify that a string
