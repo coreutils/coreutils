@@ -501,15 +501,15 @@ po-update:
 # with each of the files that belongs to some other package and is
 # regularly updated from the specified URL.
 wget_files ?= \
-  $(srcdir)/config/config.guess \
-  $(srcdir)/config/config.sub \
-  $(srcdir)/config/texinfo.tex \
+  $(srcdir)/build-aux/config.guess \
+  $(srcdir)/build-aux/config.sub \
+  $(srcdir)/build-aux/texinfo.tex \
   $(srcdir)/src/ansi2knr.c
 
 get-targets = $(patsubst %, get-%, $(wget_files))
 
-config.guess-url_prefix = $(ftp-gnu)/config/
-config.sub-url_prefix = $(ftp-gnu)/config/
+config.guess-url_prefix = $(ftp-gnu)/build-aux/
+config.sub-url_prefix = $(ftp-gnu)/build-aux/
 
 ansi2knr.c-url_prefix = ftp://ftp.cs.wisc.edu/ghost/
 
@@ -527,10 +527,10 @@ $(get-targets):
 	  && $(move_if_change) $(target).t $(target)
 
 cvs_files ?= \
-  $(srcdir)/config/depcomp \
-  $(srcdir)/config/install-sh \
-  $(srcdir)/config/missing \
-  $(srcdir)/config/mkinstalldirs \
+  $(srcdir)/build-aux/depcomp \
+  $(srcdir)/build-aux/install-sh \
+  $(srcdir)/build-aux/missing \
+  $(srcdir)/build-aux/mkinstalldirs \
   $(srcdir)/src/ansi2knr.c
 automake_repo=:pserver:anoncvs:anoncvs@sources.redhat.com:/cvs/automake
 .PHONY: wget-update
