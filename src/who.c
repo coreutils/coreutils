@@ -82,7 +82,7 @@
 # define UT_PID(U) ((U)->ut_pid)
 # define PIDSTR_DECL_AND_INIT(Var, Utmp_ent) \
   char Var[INT_STRLEN_BOUND (Utmp_ent->ut_pid) + 1]; \
-  sprintf (Var, "%d", (int) (Utmp_ent->ut_pid))
+  sprintf (Var, "%ld", (long int) (Utmp_ent->ut_pid))
 #else
 # define UT_PID(U) 0
 # define PIDSTR_DECL_AND_INIT(Var, Utmp_ent) \
@@ -92,8 +92,6 @@
 #if HAVE_STRUCT_XTMP_UT_ID
 # define UT_ID(U) ((U)->ut_id)
 #else
-  /* Of course, sizeof "whatever" is the size of a pointer (often 4),
-     but that's ok, since the actual string has a length of only 2.  */
 # define UT_ID(U) "??"
 #endif
 
@@ -257,12 +255,12 @@ print_line (const char *user, const char state, const char *line,
 
   mesg[1] = state;
 
-  if (include_idle && !short_output)
+  if (include_idle && !short_output && strlen (idle) < sizeof x_idle - 1)
     sprintf (x_idle, " %-6s", idle);
   else
     *x_idle = '\0';
 
-  if (!short_output)
+  if (!short_output && strlen (pid) < sizeof x_pid - 1)
     sprintf (x_pid, " %10s", pid);
   else
     *x_pid = '\0';
@@ -319,7 +317,7 @@ print_user (const STRUCT_UTMP *utmp_ent)
   struct stat stats;
   time_t last_change;
   char mesg;
-  char idlestr[IDLESTR_LEN];
+  char idlestr[IDLESTR_LEN + 1];
   static char *hoststr;
   static size_t hostlen;
 
@@ -357,7 +355,7 @@ print_user (const STRUCT_UTMP *utmp_ent)
     }
 
   if (last_change)
-    sprintf (idlestr, "%.6s", idle_string (last_change));
+    sprintf (idlestr, "%.*s", IDLESTR_LEN, idle_string (last_change));
   else
     sprintf (idlestr, "  ?");
 
@@ -368,7 +366,7 @@ print_user (const STRUCT_UTMP *utmp_ent)
       char *host = 0, *display = 0;
 
       /* Copy the host name into UT_HOST, and ensure it's nul terminated. */
-      strncpy (ut_host, utmp_ent->ut_host, (int) sizeof (utmp_ent->ut_host));
+      strncpy (ut_host, utmp_ent->ut_host, sizeof (utmp_ent->ut_host));
       ut_host[sizeof (utmp_ent->ut_host)] = '\0';
 
       /* Look for an X display.  */
@@ -431,9 +429,8 @@ make_id_equals_comment (STRUCT_UTMP const *utmp_ent)
 {
   char *comment = xmalloc (strlen (_("id=")) + sizeof UT_ID (utmp_ent) + 1);
 
-  /* Cast field width argument to `int' to avoid warning from gcc.  */
-  sprintf (comment, "%s%.*s", _("id="), (int) sizeof UT_ID (utmp_ent),
-	   UT_ID (utmp_ent));
+  strcpy (comment, _("id="));
+  strncat (comment, UT_ID (utmp_ent), sizeof UT_ID (utmp_ent));
   return comment;
 }
 
