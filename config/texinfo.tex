@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2003-02-03.16}
+\def\texinfoversion{2003-03-07.10}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
@@ -71,11 +71,11 @@
 \message{Basics,}
 \chardef\other=12
 
-% We never want plain's outer \+ definition in Texinfo.
+% We never want plain's \outer definition of \+ in Texinfo.
 % For @tex, we can use \tabalign.
 \let\+ = \relax
 
-% Save some parts of plain tex whose names we will redefine.
+% Save some plain tex macros whose names we will redefine.
 \let\ptexb=\b
 \let\ptexbullet=\bullet
 \let\ptexc=\c
@@ -92,6 +92,7 @@
 \let\ptexless=<
 \let\ptexplus=+
 \let\ptexrbrace=\}
+\let\ptexslash=\/
 \let\ptexstar=\*
 \let\ptext=\t
 
@@ -164,8 +165,9 @@
 
 % Hyphenation fixes.
 \hyphenation{ap-pen-dix}
-\hyphenation{mini-buf-fer mini-buf-fers}
 \hyphenation{eshell}
+\hyphenation{mini-buf-fer mini-buf-fers}
+\hyphenation{time-stamp}
 \hyphenation{white-space}
 
 % Margin to add to right of even pages, to left of odd pages.
@@ -536,6 +538,9 @@
 % @* forces a line break.
 \def\*{\hfil\break\hbox{}\ignorespaces}
 
+% @/ allows a line break.
+\let\/=\allowbreak
+
 % @. is an end-of-sentence period.
 \def\.{.\spacefactor=3000 }
 
@@ -721,8 +726,7 @@ where each line of input produces a line of output.}
   \spacefactor=3000
 }
 
-
-% @page    forces the start of a new page
+% @page forces the start of a new page.
 %
 \def\page{\par\vfill\supereject}
 
@@ -1658,6 +1662,16 @@ where each line of input produces a line of output.}
 
 % @pounds{} is a sterling sign.
 \def\pounds{{\it\$}}
+
+% @registeredsymbol - R in a circle.  For now, only works in text size;
+% we'd have to redo the font mechanism to change the \scriptstyle and
+% \scriptscriptstyle font sizes to make it look right in headings.
+% Adapted from the plain.tex definition of \copyright.
+% 
+\def\registeredsymbol{%
+  $^{{\ooalign{\hfil\raise.07ex\hbox{$\scriptstyle\rm R$}\hfil\crcr\Orb}}%
+    }$%
+}
 
 
 \message{page headings,}
@@ -4419,6 +4433,7 @@ width0pt\relax} \fi
   \let\{=\ptexlbrace
   \let\+=\tabalign
   \let\}=\ptexrbrace
+  \let\/=\ptexslash
   \let\*=\ptexstar
   \let\t=\ptext
   %
