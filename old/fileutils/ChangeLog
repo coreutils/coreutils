@@ -1,5 +1,21 @@
 Sun Aug 18 09:52:39 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/Makefile.am (noinst_HEADERS): Add path-concat.h.
+	(fu_SOURCES): Add path-concat.c.
+
+	* src/mv.c: Include path-concat.h.
+	(movefile): Use path_concat instead of open-coding its functionality.
+	Declare pointer parameters const as appropriate.
+
+	* src/cp.c: Include path-concat.h.
+	(do_copy): Check path_concat return value.
+	(path_concat): Remove function.
+
+	* lib/path-concat.h: New file.
+	* lib/path-concat.c (path_concat): New file.  Just like the function
+	from cp.c except the stand-alone version uses malloc instead of
+	xmalloc.
+
 	* configure.in (ALL_LINGUAS): Add Dutch (nl).
 
 Fri Aug 16 21:59:24 1996  Jim Meyering  <meyering@na-net.ornl.gov>
