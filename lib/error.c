@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 
-#if HAVE_VPRINTF || HAVE_DOPRNT
+#if HAVE_VPRINTF || HAVE_DOPRNT || _LIBC
 # if __STDC__
 #  include <stdarg.h>
 #  define VA_START(args, lastarg) va_start(args, lastarg)
@@ -36,7 +36,7 @@
 # define va_dcl char *a1, *a2, *a3, *a4, *a5, *a6, *a7, *a8;
 #endif
 
-#if STDC_HEADERS
+#if STDC_HEADERS || _LIBC
 # include <stdlib.h>
 # include <string.h>
 #else
@@ -51,11 +51,15 @@ unsigned int error_message_count;
    function without parameters instead.  */
 void (*error_print_progname) () = NULL;
 
+#ifdef _LIBC
+#define program_name program_invocation_name
+#endif
+
 /* The calling program should define program_name and set it to the
    name of the executing program.  */
 extern char *program_name;
 
-#if HAVE_STRERROR
+#if HAVE_STRERROR || _LIBC
 # ifndef strerror		/* On some systems, strerror is a macro */
 char *strerror ();
 # endif
@@ -105,7 +109,7 @@ error (status, errnum, message, va_alist)
 
 #ifdef VA_START
   VA_START (args, message);
-# if HAVE_VPRINTF
+# if HAVE_VPRINTF || _LIBC
   vfprintf (stderr, message, args);
 # else
   _doprnt (message, args, stderr);
