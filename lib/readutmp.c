@@ -116,7 +116,7 @@ read_utmp (const char *filename, int *n_entries, STRUCT_UTMP **utmp_buf)
   fstat (fileno (utmp), &file_stats);
   size = file_stats.st_size;
   if (size > 0)
-    buf = (STRUCT_UTMP *) xmalloc (size);
+    buf = xmalloc (size);
   else
     {
       fclose (utmp);
