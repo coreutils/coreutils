@@ -150,7 +150,7 @@ main (int argc, char **argv)
       saved_stderr_fd = dup (STDERR_FILENO);
 
       if (saved_stderr_fd != -1
-	  && ! set_cloexec_flag (saved_stderr_fd, true))
+	  && set_cloexec_flag (saved_stderr_fd, true) != 0)
 	error (NOHUP_FAILURE, errno,
 	       _("failed to set the copy of stderr to close on exec"));
 
