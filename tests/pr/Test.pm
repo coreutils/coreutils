@@ -363,6 +363,10 @@ sub test_vector
       my $sep = ($flags ? ' ' : '');
       $flags = "$common_option_prefix$sep$flags";
       push (@new_tv, [$test_name, $flags, $in, $exp, $ret]);
+
+      (my $new_flags = $flags) =~ s/(^| )-(\d+)( |$)/$1--columns=$2$3/g;
+      $new_flags ne $flags
+	and push (@new_tv, ["$test_name.C", $new_flags, $in, $exp, $ret]);
     }
 
   return @new_tv;
