@@ -115,8 +115,8 @@ my @tv = (
 ["11b", '-t: -k1,1b -k2,2', "a :b\na\t:a\n", "a\t:a\na :b\n", 0],
 ["11c", '-t: -k2,2b -k3,3', "z:a\t:a\na :b\n", "z:a\t:a\na :b\n", 0],
 # Before 1.22m, the first key comparison reported equality.
-# With 1.22m, they compare different: "a" sorts before "a\n".
-# And the second key spec isn't even used.
+# With 1.22m, they compare different: "a" sorts before "a\n",
+# and the second key spec isn't even used.
 ["11d", '-t: -k2,2b -k3,3', "z:a :b\na\t:a\n", "z:a :b\na\t:a\n", 0],
 #
 # Exercise bug re comparing `-' and integers.
