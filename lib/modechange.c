@@ -24,6 +24,17 @@
    changing the mode of many files, this probably results in a
    performance gain. */
 
+#ifdef HAVE_CONFIG_H
+#if defined (CONFIG_BROKETS)
+/* We use <config.h> instead of "config.h" so that a compilation
+   using -I. -I$srcdir will use ./config.h rather than $srcdir/config.h
+   (which it would do because it found this file in $srcdir).  */
+#include <config.h>
+#else
+#include "config.h"
+#endif
+#endif
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "modechange.h"
@@ -38,7 +49,13 @@ char *malloc ();
 #define NULL 0
 #endif
 
-#ifndef S_ISDIR
+#ifdef	STAT_MACROS_BROKEN
+#ifdef S_ISDIR
+#undef S_ISDIR
+#endif
+#endif	/* STAT_MACROS_BROKEN.  */
+
+#if !defined(S_ISDIR) && defined(S_IFDIR)
 #define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #endif
 
@@ -95,6 +112,9 @@ mode_compile (mode_string, masked_ops)
   umask (umask_value);		/* Restore the old value. */
 
   head = NULL;
+#ifdef lint
+  change = NULL;
+#endif
   --mode_string;
 
   /* One loop iteration for each "ugoa...=+-rwxXstugo...[=+-rwxXstugo...]". */
