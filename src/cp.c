@@ -23,6 +23,10 @@
 
 #include <config.h>
 #include <stdio.h>
+
+#define NDEBUG
+#include <assert.h>
+
 #include <getopt.h>
 #include "cp.h"
 #include "backupfile.h"
@@ -355,7 +359,29 @@ main (int argc, char **argv)
 
   exit (exit_status);
 }
-
+
+/* Concatenate two pathname components, DIR and BASE, in newly-allocated
+   storage and return the result.  Be careful that in the result they are
+   separated by a slash.  That is, if DIR ends with a slash or if BASE
+   begins with one, don't add a separating slash.  Otherwise, add one.  */
+
+static char *
+path_concat (const char *dir, const char *base)
+{
+  char *dir_end;
+  char *p_concat;
+
+  assert (strlen (dir) > 0);
+  p_concat = xmalloc (strlen (dir) + strlen (base) + 2);
+  dir_end = stpcpy (p_concat, dir);
+  if (*(dir_end - 1) == '/')
+    --dir_end;
+  else if (*base == '/')
+    ++base;
+  stpcpy (stpcpy (dir_end, "/"), base);
+  return p_concat;
+}
+
 /* Scan the arguments, and copy each by calling copy.
    Return 0 if successful, 1 if any errors occur. */
 
@@ -416,17 +442,16 @@ do_copy (int argc, char **argv)
 	  if (flag_path)
 	    {
 	      /* Append all of `arg' to `dest'.  */
-	      dst_path = xmalloc (strlen (dest) + strlen (arg) + 2);
-	      stpcpy (stpcpy (stpcpy (dst_path, dest), "/"), arg);
+	      dst_path = path_concat (dest, arg);
 
 	      /* For --parents, we have to make sure that the directory
 	         dirname (dst_path) exists.  We may have to create a few
 	         leading directories. */
 	      parent_exists = !make_path_private (dst_path,
-					  strlen (dest) + 1, 0700,
-					  flag_verbose ? "%s -> %s\n" :
-					  (char *) NULL,
-					  &attr_list, &new_dst);
+						  strlen (dest) + 1, 0700,
+						  (flag_verbose
+						   ? "%s -> %s\n" : NULL),
+						  &attr_list, &new_dst);
 	    }
   	  else
   	    {
@@ -434,18 +459,14 @@ do_copy (int argc, char **argv)
 
 	      ap = basename (arg);
 	      /* For `cp -R source/.. dest', don't copy into `dest/..'. */
-	      if (!strcmp (ap, ".."))
-		dst_path = xstrdup (dest);
-	      else
-		{
-		  dst_path = xmalloc (strlen (dest) + strlen (ap) + 2);
-		  stpcpy (stpcpy (stpcpy (dst_path, dest), "/"), ap);
-		}
+	      dst_path = (strcmp (ap, "..") == 0
+			  ? xstrdup (dest)
+			  : path_concat (dest, ap));
 	    }
 
 	  if (!parent_exists)
 	    {
-	      /* make_path_private failed, so we shouldn't even attempt the copy. */
+	      /* make_path_private failed, so don't even attempt the copy. */
 	      ret = 1;
   	    }
 	  else
@@ -455,8 +476,7 @@ do_copy (int argc, char **argv)
 
 	      if (flag_path)
 		{
-		  ret |= re_protect (dst_path, strlen (dest) + 1,
-					attr_list);
+		  ret |= re_protect (dst_path, strlen (dest) + 1, attr_list);
 		}
 	    }
 
@@ -1221,6 +1241,7 @@ copy_reg (char *src_path, char *dst_path)
       /* If the file has fewer blocks than would normally
 	 be needed for a file of its size, then
 	 at least one of the blocks in the file is a hole. */
+      /* FIXME: isn't there risk of overflow here?  */
       if (S_ISREG (sb.st_mode) && sb.st_size > sb.st_blocks * DEV_BSIZE)
 	make_holes = 1;
     }
