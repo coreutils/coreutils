@@ -48,7 +48,7 @@ getgroups (int n, GETGROUPS_T *group)
       /* No need to worry about address arithmetic overflow here,
 	 since the ancient systems that we're running on have low
 	 limits on the number of secondary groups.  */
-      gbuf = xmalloc (gbuf, n * sizeof *gbuf);
+      gbuf = xmalloc (n * sizeof *gbuf);
       n_groups = getgroups (n, gbuf);
       if (n_groups < n)
 	break;
