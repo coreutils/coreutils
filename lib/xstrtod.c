@@ -1,5 +1,5 @@
 /* xstrtod.c - error-checking interface to strtod
-   Copyright (C) 1996, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1999, 2000, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,16 +21,12 @@
 # include <config.h>
 #endif
 
-#ifdef STDC_HEADERS
-# include <stdlib.h>
-#else
-double strtod ();
-#endif
+#include "xstrtod.h"
 
 #include <errno.h>
-#include <stdio.h>
 #include <limits.h>
-#include "xstrtod.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 /* Tell the compiler that non-default rounding modes are used.  */
 #if 199901 <= __STDC_VERSION__
@@ -43,10 +39,7 @@ double strtod ();
    non-zero and don't modify *RESULT upon any failure.  */
 
 int
-xstrtod (str, ptr, result)
-     const char *str;
-     const char **ptr;
-     double *result;
+xstrtod (char const *str, char const **ptr, double *result)
 {
   double val;
   char *terminator;
