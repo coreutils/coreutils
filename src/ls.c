@@ -4177,7 +4177,8 @@ By default, color is not used to distinguish types of files.  That is\n\
 equivalent to using --color=none.  Using the --color option without the\n\
 optional WHEN argument is equivalent to using --color=always.  With\n\
 --color=auto, color codes are output only if standard output is connected\n\
-to a terminal (tty).\n\
+to a terminal (tty).  The environment variable LS_COLORS can influence the\n\
+colors, and can be set easily by the dircolors command.\n\
 "), stdout);
       fputs (_("\
 \n\
