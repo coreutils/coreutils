@@ -1,3 +1,13 @@
+2001-05-25  Jim Meyering  <meyering@lucent.com>
+
+	Add definitions that let me factor the wget rule while still letting
+	me accommodate the fact that these files reside in several different
+	directories and come from different places.
+	* Makefile.maint (wget-files): Define.
+	(get-targets, *-local_dir, *-url_prefix): Likewise.
+	(target, url, local_file): Convenience variables.
+	($(get-targets)): The factored rule.
+
 2001-05-24  Jim Meyering  <meyering@lucent.com>
 
 	* src/ansi2knr.c: Update from master source.
