@@ -480,6 +480,12 @@ xfclose (FILE *fp, char const *file)
       if (feof (fp))
 	clearerr (fp);
     }
+  else if (fp == stdout)
+    {
+      /* Don't close stdout just yet.  close_stdout does that.  */
+      if (fflush (fp) != 0)
+	die (_("fflush failed"), file);
+    }
   else
     {
       if (fclose (fp) != 0)
