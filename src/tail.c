@@ -117,7 +117,8 @@ struct File_spec
 
 };
 
-/* FIXME: describe */
+/* Keep trying to open a file even if it is inaccessible when tail starts
+   or if it becomes inaccessible later -- useful only with -f.  */
 static int reopen_inaccessible_files;
 
 /* If nonzero, interpret the numeric argument as the number of lines.
