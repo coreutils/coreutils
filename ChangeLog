@@ -1,3 +1,7 @@
+2003-10-14  Jim Meyering  <jim@meyering.net>
+
+	* tests/chgrp/posix-H: New tests for the above.
+
 2003-10-13  Jim Meyering  <jim@meyering.net>
 
 	* src/ls.c (init_column_info): Add another FIXME comment.
