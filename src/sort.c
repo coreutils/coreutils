@@ -460,7 +460,6 @@ zaptemp (const char *name)
 }
 
 #ifdef ENABLE_NLS
-/* Initialize the character class tables. */
 
 static int
 struct_month_cmp (const void *m1, const void *m2)
@@ -531,6 +530,8 @@ memcoll (char *s1, int s1len, char *s2, int s2len)
 }
 
 #endif /* NLS */
+
+/* Initialize the character class tables. */
 
 static void
 inittables (void)
@@ -1076,21 +1077,21 @@ general_numcompare (const char *sa, const char *sb)
   double a = strtod (sa, &ea);
   double b = strtod (sb, &eb);
 
-  /* Put conversion errors at the end of the collating sequence.  */
+  /* Put conversion errors at the start of the collating sequence.  */
   if (sa == ea)
-    return eb - sb;
+    return sb == eb ? 0 : -1;
   if (sb == eb)
-    return -1;
+    return 1;
 
-  /* Put NaNs after numbers but before conversion errors; sort them by
-     internal bit-pattern, for lack of a more portable alternative.
-     Don't test specially for the case where a is a NaN but b is not,
-     since the conditional at the end of this function does the right
-     thing for that case.  */
-  if (b != b)
-    return a == a ? -1 : memcmp ((char *) &a, (char *) &b, sizeof a);
-
-  return a < b ? -1 : a != b;
+  /* Sort numbers in the usual way, where -0 == +0.  Put NaNs after
+     conversion errors but before numbers; sort them by internal
+     bit-pattern, for lack of a more portable alternative.  */
+  return (a < b ? -1
+	  : a > b ? 1
+	  : a == b ? 0
+	  : b == b ? -1
+	  : a == a ? 1
+	  : memcmp ((char *) &a, (char *) &b, sizeof a));
 }
 
 /* Return an integer in 1..12 of the month name S with length LEN.
