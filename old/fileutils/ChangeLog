@@ -1,3 +1,8 @@
+2000-12-26  Jim Meyering  <meyering@lucent.com>
+
+	* tests/mkdir/perm: Disable the test if the working directory has
+	the sticky bit set.  Reported by Nelson Beebe.
+
 2000-12-25  Jim Meyering  <meyering@lucent.com>
 
 	Clean-up to avoid warnings from Irix's c89.
