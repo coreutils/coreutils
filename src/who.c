@@ -202,29 +202,32 @@ static struct option const longopts[] = {
   {NULL, 0, NULL, 0}
 };
 
-/* Return a string representing the time between WHEN and the time
-   that this function is first run.
+/* Return a string representing the time between WHEN and now.
+   BOOTTIME is the time of last reboot.
    FIXME: locale? */
 static const char *
-idle_string (time_t when)
+idle_string (time_t when, time_t boottime)
 {
-  static time_t now = 0;
-  static char idle_hhmm[IDLESTR_LEN];
-  time_t seconds_idle;
+  static time_t now = TYPE_MINIMUM (time_t);
 
-  if (now == 0)
+  if (now == TYPE_MINIMUM (time_t))
     time (&now);
 
-  seconds_idle = now - when;
-  if (seconds_idle < 60)	/* One minute. */
-    return "  .  ";
-  if (seconds_idle < (24 * 60 * 60))	/* One day. */
+  if (boottime < when && now - 24 * 60 * 60 < when && when <= now)
     {
-      sprintf (idle_hhmm, "%02d:%02d",
-	       (int) (seconds_idle / (60 * 60)),
-	       (int) ((seconds_idle % (60 * 60)) / 60));
-      return (const char *) idle_hhmm;
+      int seconds_idle = now - when;
+      if (seconds_idle < 60)
+	return "  .  ";
+      else
+	{
+	  static char idle_hhmm[IDLESTR_LEN];
+	  sprintf (idle_hhmm, "%02d:%02d",
+		   seconds_idle / (60 * 60),
+		   (seconds_idle % (60 * 60)) / 60);
+	  return idle_hhmm;
+	}
     }
+
   return _(" old ");
 }
 
@@ -325,9 +328,10 @@ print_line (const char *user, const char state, const char *line,
   free (x_exitstr);
 }
 
-/* Send properly parsed USER_PROCESS info to print_line */
+/* Send properly parsed USER_PROCESS info to print_line.  The most
+   recent boot time is BOOTTIME. */
 static void
-print_user (const STRUCT_UTMP *utmp_ent)
+print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
 {
   struct stat stats;
   time_t last_change;
@@ -370,7 +374,7 @@ print_user (const STRUCT_UTMP *utmp_ent)
     }
 
   if (last_change)
-    sprintf (idlestr, "%.*s", IDLESTR_LEN, idle_string (last_change));
+    sprintf (idlestr, "%.*s", IDLESTR_LEN, idle_string (last_change, boottime));
   else
     sprintf (idlestr, "  ?");
 
@@ -563,6 +567,7 @@ static void
 scan_entries (int n, const STRUCT_UTMP *utmp_buf)
 {
   char *ttyname_b IF_LINT ( = NULL);
+  time_t boottime = TYPE_MINIMUM (time_t);
 
   if (include_heading)
     print_heading ();
@@ -583,7 +588,7 @@ scan_entries (int n, const STRUCT_UTMP *utmp_buf)
 		   sizeof (utmp_buf->ut_line)) == 0)
 	{
 	  if (need_users && IS_USER_PROCESS (utmp_buf))
-	    print_user (utmp_buf);
+	    print_user (utmp_buf, boottime);
 	  else if (need_runlevel && UT_TYPE (utmp_buf) == RUN_LVL)
 	    print_runlevel (utmp_buf);
 	  else if (need_boottime && UT_TYPE (utmp_buf) == BOOT_TIME)
@@ -600,6 +605,9 @@ scan_entries (int n, const STRUCT_UTMP *utmp_buf)
 	  else if (need_deadprocs && UT_TYPE (utmp_buf) == DEAD_PROCESS)
 	    print_deadprocs (utmp_buf);
 	}
+
+      if (UT_TYPE (utmp_buf) == BOOT_TIME)
+	boottime = UT_TIME_MEMBER (utmp_buf);
 
       utmp_buf++;
     }
