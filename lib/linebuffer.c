@@ -1,5 +1,5 @@
 /* linebuffer.c -- read arbitrarily long lines
-   Copyright (C) 1986, 1991 Free Software Foundation, Inc.
+   Copyright (C) 1986, 1991, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -13,10 +13,14 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /* Written by Richard Stallman. */
 
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
 #include <stdio.h>
 #include "linebuffer.h"
 
@@ -37,7 +41,8 @@ initbuffer (linebuffer)
 
 /* Read an arbitrarily long line of text from STREAM into LINEBUFFER.
    Remove any newline.  Does not null terminate.
-   Return LINEBUFFER, except at end of file return 0.  */
+   Return zero upon error or upon end of file.
+   Otherwise, return LINEBUFFER.  */
 
 struct linebuffer *
 readline (linebuffer, stream)
@@ -49,7 +54,7 @@ readline (linebuffer, stream)
   char *p = linebuffer->buffer;
   char *end = buffer + linebuffer->size; /* Sentinel. */
 
-  if (feof (stream))
+  if (feof (stream) || ferror (stream))
     {
       linebuffer->length = 0;
       return 0;
