@@ -1,10 +1,63 @@
+2000-12-03  Jim Meyering  <meyering@lucent.com>
+
+	Make od print valid addresses for offsets of 2^32 and larger.
+
+	* src/od.c (MAX_ADDRESS_LENGTH): Don't hard-code as a literal.
+	Rather, define in terms of the type, off_t.
+	(string_min): Declare to be of type size_t.
+	(flag_dump_strings): Declare to be of type int.
+	(print_s_char): Declare the n_bytes parameter and the local, `i',
+	to be of type off_t.
+	(print_char): Likewise.
+	(print_s_short): Likewise.
+	(print_short): Likewise.
+	(print_int): Likewise.
+	(print_long): Likewise.
+	(print_long_long): Likewise.
+	(print_float): Likewise.
+	(print_double): Likewise.
+	(print_long_double): Likewise.
+	(dump_hexl_mode_trailer): Likewise.
+	(print_named_ascii): Likewise.
+	(print_ascii): Likewise.
+	(write_block): Likewise.
+	(print_ascii): Declare local, `print_function' with a prototype.
+	Change a few `>' comparisons to the equivalent `<' form.
+	(parse_options): Declare `tmp' to be of type uintmax_t.
+	Use xstrtoumax, not xstrtoul.
+	Fail if the specified offset if larger than OFF_T_MAX.
+	(dump_strings): Declare local `i' to be of type size_t.
+	Remove the now-unnecessary cast-to-off_t.
+	(main) [IF_LINT]: Initialize desired_width to avoid a warning.
+	Declare `tmp' to be of type uintmax_t.
+	Use xstrtoumax, not xstrtoul.
+	Fail if minimum string length is larger than SIZE_MAX.
+	Fail if specified width is larger than ULONG_MAX.
+
+	* src/od.c (format_address): Use off_t, not long unsigned_int as the
+	parameter type.
+	(format_address_none): Likewise.  Mark parameter as unused.
+	(format_address_std): Likewise.
+	(format_address_label): Likewise.
+	(print_ascii): Mark format string parameter as unused.
+	(write_block): Use off_t, not long unsigned_int as offset type.
+	(expand_address_fmt): New function.
+	(main): Use it to expand each address format string template.
+	Reported by Mark Nudelman, via Andreas Jaeger.
+
+	* src/sys2.h (OFF_T_MIN): Define here instead.
+	(OFF_T_MAX): Likewise.
+
+	* src/tail.c (parse_options): Use xstrtoumax to parse the byte and line
+	offset.  Give a better diagnostic when the requested offset is still
+	representable but larger than OFF_T_MAX.
+	(OFF_T_MIN): Remove definition.
+	(OFF_T_MAX): Likewise.
+
 2000-12-02  Jim Meyering  <meyering@lucent.com>
 
 	* src/sort.c (checkfp): Rename local `buf' to avoid shadowing previous
 	declaration.
-
-	* src/od.c: FIXME
-	Reported by Mark Nudelman, via Andreas Jaeger.
 
 	* src/sort.c (NONZERO): Define and use it to make the code a tiny
 	bit more readable.
