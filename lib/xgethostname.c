@@ -21,6 +21,9 @@
 # include <config.h>
 #endif
 
+/* Specification.  */
+#include "xgethostname.h"
+
 #include <stdlib.h>
 #include <sys/types.h>
 
