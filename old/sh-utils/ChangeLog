@@ -29,6 +29,8 @@ Sat Sep 24 10:13:00 1994  Jim Meyering  (meyering@comco.com)
 	* long-options.h: Prepend underscores to arg names in prototype
 	to avoid warnings about shadowing.
 
+	* src/Makefile.in: Add dependencies on long-options.h.
+
 Sat Sep 17 15:48:10 1994  Jim Meyering  (meyering@comco.com)
 
 	* (doc): New subdirectory with texinfo documentation.
