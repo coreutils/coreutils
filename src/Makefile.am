@@ -155,39 +155,45 @@ localedir.h: Makefile
 	@chmod a-w $@-t
 	cmp $@-t $@ 2>&1 > /dev/null && rm -f $@-t || { rm -f $@; mv $@-t $@; }
 
-MAINTAINERCLEANFILES = dircolors.h \
-  wheel.h wheel-size.h
-
+BUILT_SOURCES += dircolors.h
 dircolors.h: dcgen dircolors.hin
+	@rm -f $@ $@-t
 	$(PERL) -w -- $(srcdir)/dcgen $(srcdir)/dircolors.hin > $@-t
+	@chmod a-w $@-t
 	mv $@-t $@
 
 wheel_size = 5
 
+BUILT_SOURCES += wheel-size.h
 wheel-size.h: Makefile.am
+	@rm -f $@ $@-t
 	echo '#define WHEEL_SIZE $(wheel_size)' > $@-t
+	@chmod a-w $@-t
 	mv $@-t $@
 
+BUILT_SOURCES += wheel.h
 wheel.h: wheel-gen.pl Makefile.am
-	$(srcdir)/wheel-gen.pl $(wheel_size) \
-	  > $@-t
+	@rm -f $@ $@-t
+	$(srcdir)/wheel-gen.pl $(wheel_size) > $@-t
+	@chmod a-w $@-t
 	mv $@-t $@
-
-BUILT_SOURCES += dircolors.h false.c wheel.h wheel-size.h
 
 # false exits nonzero even with --help or --version.
 # Tell automake to exempt it from that installcheck test.
 AM_INSTALLCHECK_STD_OPTIONS_EXEMPT = false
 
+BUILT_SOURCES += false.c
 false.c: true.c
-	rm -f $@
+	@rm -f $@ $@-t
 	sed \
 	  -e s/true/false/g \
 	  -e s/success/failure/g \
 	  -e 's/(EXIT_SUCCESS)/(EXIT_FAILURE)/g' \
 	  $(srcdir)/true.c > $@-t
-	chmod a-w $@-t
+	@chmod a-w $@-t
 	mv $@-t $@
+
+MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 
 all_programs = \
     $(bin_PROGRAMS) \
