@@ -24,7 +24,7 @@
 
 % This automatically updates the version number based on RCS.
 \def\deftexinfoversion$#1: #2 ${\def\texinfoversion{#2}}
-\deftexinfoversion$Revision: 1.1 $
+\deftexinfoversion$Revision: 1.2 $
 \message{Loading texinfo package [Version \texinfoversion]:}
 
 % Print the version number if in a .fmt file.
@@ -3551,7 +3551,7 @@ July\or August\or September\or October\or November\or December\fi
 % #1 is the data type, #2 the name, #3 the args.
 \def\deftypefunheaderx #1#2 #3\relax{%
 \doind {fn}{\code{#2}}% Make entry in function index
-\begingroup\defname {\code{#1} #2}{Function}%
+\begingroup\defname {\defheaderxcond#1\relax$$$#2}{Function}%
 \deftypefunargs {#3}\endgroup %
 \catcode 61=\other % Turn off change made in \defparsebody
 }
@@ -3559,6 +3559,10 @@ July\or August\or September\or October\or November\or December\fi
 % @deftypefn {Library Function} int foobar (int @var{foo}, float @var{bar})
 
 \def\deftypefn{\defmethparsebody\Edeftypefn\deftypefnx\deftypefnheader}
+
+% \defheaderxcond#1\relax$$$
+% puts #1 in @code, followed by a space, but does nothing if #1 is null.
+\def\defheaderxcond#1#2$$${\ifx#1\relax\else\code{#1#2} \fi}
 
 % #1 is the classification.  #2 is the data type.  #3 is the name and args.
 \def\deftypefnheader #1#2#3{\deftypefnheaderx{#1}{#2}#3 \relax}
@@ -3568,7 +3572,7 @@ July\or August\or September\or October\or November\or December\fi
 \begingroup
 \normalparens % notably, turn off `&' magic, which prevents
 %               at least some C++ text from working
-\defname {\code{#2} #3}{#1}%
+\defname {\defheaderxcond#2\relax$$$#3}{#1}%
 \deftypefunargs {#4}\endgroup %
 \catcode 61=\other % Turn off change made in \defparsebody
 }
@@ -3696,7 +3700,7 @@ July\or August\or September\or October\or November\or December\fi
 % #1 is the data type.  #2 is the name.
 \def\deftypevarheader #1#2{%
 \doind {vr}{\code{#2}}% Make entry in variables index
-\begingroup\defname {\code{#1} #2}{Variable}%
+\begingroup\defname {\defheaderxcond#1\relax$$$#2}{Variable}%
 \interlinepenalty=10000
 \endgraf\penalty 10000\vskip -\parskip\penalty 10000
 \endgroup}
@@ -3706,7 +3710,7 @@ July\or August\or September\or October\or November\or December\fi
 \def\deftypevr{\defvrparsebody\Edeftypevr\deftypevrx\deftypevrheader}
 
 \def\deftypevrheader #1#2#3{\doind {vr}{\code{#3}}%
-\begingroup\defname {\code{#2} #3}{#1}
+\begingroup\defname {\defheaderxcond#2\relax$$$#3}{#1}
 \interlinepenalty=10000
 \endgraf\penalty 10000\vskip -\parskip\penalty 10000
 \endgroup}

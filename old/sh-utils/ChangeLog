@@ -1,3 +1,7 @@
+Thu Sep 15 19:10:51 1994  Jim Meyering  (meyering@comco.com)
+
+	* stty.c [VWERSE && !VWERASE]: Define VWERASE for AIX-3.2.5.
+
 Sat Sep 03 00:41:53 1994  Jim Meyering  (meyering@comco.com)
 
 	* lib/Makefile.in (safe-lstat.c, safe-lstat.h, safe-stat.c,
