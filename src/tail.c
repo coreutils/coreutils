@@ -756,6 +756,9 @@ start_lines (const char *pretty_filename, int fd, long int n_lines)
   int bytes_read = 0;
   int bytes_to_skip = 0;
 
+  if (n_lines == 0)
+    return 0;
+
   while (n_lines && (bytes_read = safe_read (fd, buffer, BUFSIZ)) > 0)
     {
       bytes_to_skip = 0;
