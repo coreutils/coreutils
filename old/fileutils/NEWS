@@ -1,5 +1,6 @@
 Changes in release 4.1:
 [4.0u]
+* fix compile problem with lib/strnlen.c
 [4.0t]
 * `cp -d -u' no longer fails with certain existing destination symlinks
 * rmdir and mkdir accept -v as synonym for --verbose
