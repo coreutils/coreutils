@@ -1,3 +1,7 @@
+2003-05-15  Jim Meyering  <jim@meyering.net>
+
+	* getopt.h: Remove a space before a TAB.
+
 2003-05-13  Jim Meyering  <jim@meyering.net>
 
 	* setenv.c (setenv): Don't apply cast to argument of free.
