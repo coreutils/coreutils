@@ -2637,8 +2637,17 @@ print_long_format (const struct fileinfo *f)
   else
     {
       char hbuf[LONGEST_HUMAN_READABLE + 1];
+      uintmax_t size = f->stat.st_size;
+
+      /* POSIX requires that the size be printed without a sign, even
+	 when negative.  Assume the typical case where negative sizes
+	 are actually positive values that have wrapped around.  */
+      if (sizeof f->stat.st_size < sizeof size)
+	size += ((uintmax_t) (f->stat.st_size < 0)
+		 << (sizeof f->stat.st_size * CHAR_BIT));
+
       sprintf (p, "%8s ",
-	       human_readable ((uintmax_t) f->stat.st_size, hbuf, 1,
+	       human_readable (size, hbuf, 1,
 			       output_block_size < 0 ? output_block_size : 1));
     }
 
