@@ -975,7 +975,7 @@ uninstall-binPROGRAMS:
 	done
 
 clean-binPROGRAMS:
-	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS) > /dev/null 2>&1 || /bin/rm -f $(bin_PROGRAMS)
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 
 installcheck-binPROGRAMS: $(bin_PROGRAMS)
 	bad=0; pid=$$$$; list="$(bin_PROGRAMS)"; for p in $$list; do \
@@ -1599,8 +1599,6 @@ uninstall-am: uninstall-binPROGRAMS uninstall-binSCRIPTS \
 
 $(PROGRAMS): ../lib/libfetish.a
 
-$(SCRIPTS): Makefile
-
 .sh:
 	rm -f $@ $@-t
 	sed \
@@ -1638,11 +1636,8 @@ uninstall-local:
 	  echo "  rm -f $(installed_su)"; \
 	  rm -f $(installed_su); \
 	else :; fi
-localedir.h: Makefile
-	@rm -f $@-t
-	echo '#define LOCALEDIR "$(localedir)"' >$@-t
-	@chmod a-w $@-t
-	cmp $@-t $@ > /dev/null 2>&1 && rm -f $@-t || { rm -f $@; mv $@-t $@; }
+localedir.h:
+	echo '#define LOCALEDIR "$(localedir)"' >$@
 dircolors.h: dcgen dircolors.hin
 	@rm -f $@ $@-t
 	$(PERL) -w -- $(srcdir)/dcgen $(srcdir)/dircolors.hin > $@-t
