@@ -1023,7 +1023,7 @@ parse_options (int argc, char **argv,
 	    if (s_err != LONGINT_OK || tmp_ulong > OFF_T_MAX)
 	      {
 		error (EXIT_FAILURE, 0,
-		       _("%s: %s is so large that it is not representable"),
+		       _("%s: `%s' is so large that it is not representable"),
 		       optarg,
 		       c == 'n' ? _("number of lines") : _("number of bytes"));
 	      }
