@@ -1,6 +1,6 @@
 /* Compute MD5 checksum of files or strings according to the definition
    of MD5 in RFC 1321 from April 1992.
-   Copyright (C) 95, 96, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -35,17 +35,18 @@
 /* Most systems do not distinguish between external and internal
    text representations.  */
 /* FIXME: This begs for an autoconf test.  */
-#if UNIX || __UNIX__ || unix || __unix__ || _POSIX_VERSION
-# define OPENOPTS(BINARY) "r"
-#else
+#if O_BINARY
 # define OPENOPTS(BINARY) ((BINARY) != 0 ? TEXT1TO1 : TEXTCNVT)
-# ifdef MSDOS
-#  define TEXT1TO1 "rb"
-#  define TEXTCNVT "r"
+# define TEXT1TO1 "rb"
+# define TEXTCNVT "r"
+#else
+# if defined VMS
+#  define OPENOPTS(BINARY) ((BINARY) != 0 ? TEXT1TO1 : TEXTCNVT)
+#  define TEXT1TO1 "rb", "ctx=stm"
+#  define TEXTCNVT "r", "ctx=stm"
 # else
-#  if defined VMS
-#   define TEXT1TO1 "rb", "ctx=stm"
-#   define TEXTCNVT "r", "ctx=stm"
+#  if UNIX || __UNIX__ || unix || __unix__ || _POSIX_VERSION
+#   define OPENOPTS(BINARY) "r"
 #  else
     /* The following line is intended to evoke an error.
        Using #error is not portable enough.  */
@@ -106,7 +107,7 @@ Usage: %s [OPTION] [FILE]...\n\
 Print or check MD5 checksums.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
-  -b, --binary            read files in binary mode\n\
+  -b, --binary            read files in binary mode (default on DOS/Windows)\n\
   -c, --check             check MD5 sums against given list\n\
   -t, --text              read files in text mode (default)\n\
 \n\
@@ -244,6 +245,12 @@ md5_file (const char *filename, int binary, unsigned char *md5_result)
     {
       have_read_stdin = 1;
       fp = stdin;
+#if O_BINARY
+      /* If we need binary reads from a pipe or redirected stdin, we need
+	 to switch it to BINARY mode here, since stdin is already open.  */
+      if (binary)
+	SET_BINARY (fileno (stdin));
+#endif
     }
   else
     {
@@ -450,8 +457,14 @@ main (int argc, char **argv)
   size_t err = 0;
   int file_type_specified = 0;
 
+#if O_BINARY
+  /* Binary is default on MSDOS, so the actual file contents
+     are used in computation.  */
+  int binary = 1;
+#else
   /* Text is default of the Plumb/Lankester format.  */
   int binary = 0;
+#endif
 
   /* Setting values of global variables.  */
   program_name = argv[0];
