@@ -2,6 +2,9 @@
 
 	* Version 5.0.91.
 
+	* src/sort.c (sortlines): Add description and references.
+	From Paul Eggert.
+
 	* tests/Makefile.am (TESTS_ENVIRONMENT): Set PATH so that
 	the tests in help-version will use the just-built binaries.
 	Reported by Christian Krackowizer.
