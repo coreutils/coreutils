@@ -1,20 +1,19 @@
 /* vsprintf with automatic memory allocation.
    Copyright (C) 1999, 2002-2003 Free Software Foundation, Inc.
 
-   This program is free software; you can redistribute it and/or modify it
-   under the terms of the GNU Library General Public License as published
-   by the Free Software Foundation; either version 2, or (at your option)
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
    any later version.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public
-   License along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
-   USA.  */
+   You should have received a copy of the GNU General Public License along
+   with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /* Tell glibc's <stdio.h> to provide a prototype for snprintf().
    This must come before <config.h> because <config.h> may include
@@ -46,6 +45,24 @@
 #else
 # define alloca(n) malloc (n)
 # define freea(p) free (p)
+#endif
+
+#ifdef HAVE_WCHAR_T
+# ifdef HAVE_WCSLEN
+#  define local_wcslen wcslen
+# else
+   /* Solaris 2.5.1 has wcslen() in a separate library libw.so. To avoid
+      a dependency towards this library, here is a local substitute.  */
+static size_t
+local_wcslen (const wchar_t *s)
+{
+  const wchar_t *ptr;
+
+  for (ptr = s; *ptr != (wchar_t) 0; ptr++)
+    ;
+  return ptr - s;
+}
+# endif
 #endif
 
 char *
@@ -369,7 +386,7 @@ vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)
 # ifdef HAVE_WCHAR_T
 		      if (type == TYPE_WIDE_STRING)
 			tmp_length =
-			  wcslen (a.arg[dp->arg_index].a.a_wide_string)
+			  local_wcslen (a.arg[dp->arg_index].a.a_wide_string)
 			  * MB_CUR_MAX;
 		      else
 # endif
