@@ -1,3 +1,10 @@
+2003-03-18  Jim Meyering  <jim@meyering.net>
+
+	* src/fmt.c [struct Word] (paren, period, punct, final): Change the
+	type of each member from bool <MEMBER>:1 to unsigned int <MEMBER>:1.
+	AIX 5.1's xlc could not compile the former.
+	Patch by Petter Reinholdtsen.  Also reported by Mike Jetzer.
+
 2003-03-16  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.11.
