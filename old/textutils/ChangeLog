@@ -2,6 +2,7 @@
 
 	* lib/memcasecmp.c: Convert to upper case before comparing.
 	This makes join -i work with sort -f.
+	Reported by Arthur Pool.
 
 1997-10-25  Jim Meyering  <meyering@na-net.ornl.gov>
 
