@@ -1,8 +1,8 @@
 # See if we need to work around bugs in glibc's implementation of
-# utimes from around July/August 2003.
+# utimes from 2003-07-12 to 2003-09-17.
 # First, there was a bug that would make utimes set mtime
 # and atime to zero (1970-01-01) unconditionally.
-# Then, there is/was code to round rather than truncate.
+# Then, there was code to round rather than truncate.
 #
 # From Jim Meyering, with suggestions from Paul Eggert.
 
