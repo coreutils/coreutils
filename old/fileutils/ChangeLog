@@ -1,5 +1,10 @@
 Mon Oct  7 23:31:10 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/Makefile.am (EXTRA_DIST): Remove names of several files
+	that automake adds automatically.
+	(fu_SOURCES): Likewise.
+	(fu_DEPENDENCIES): Depend on fu_LIBADD.
+
 	* src/Makefile.am (noinst_HEADERS): Add dircolors.h.
 	(dircolors.h): Always depend on dcgen.
 
