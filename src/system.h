@@ -265,9 +265,13 @@ char *getenv ();
 # else /* !hpux */
 #  if defined(_AIX) && defined(_I386)
 /* AIX PS/2 counts st_blocks in 4K units.  */
-#    define ST_NBLOCKS(statbuf) ((statbuf).st_blocks * 8)
+#   define ST_NBLOCKS(statbuf) ((statbuf).st_blocks * 8)
 #  else /* not AIX PS/2 */
+#   if defined(_CRAY)
+#    define ST_NBLOCKS(statbuf) ((statbuf).st_blocks * ST_BLKSIZE(statbuf)/512)
+#   else /* not AIX PS/2 nor CRAY */
 #    define ST_NBLOCKS(statbuf) ((statbuf).st_blocks)
+#   endif /* not _CRAY */
 #  endif /* not AIX PS/2 */
 # endif /* !hpux */
 #endif /* HAVE_ST_BLOCKS */
