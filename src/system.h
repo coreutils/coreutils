@@ -159,6 +159,13 @@ extern int errno;
 # define O_BINARY _O_BINARY
 # define O_TEXT _O_TEXT
 #endif
+
+#ifdef __BEOS__
+  /* BeOS 5 has O_BINARY and O_TEXT, but they have no effect.  */
+# undef O_BINARY
+# undef O_TEXT
+#endif
+
 #if O_BINARY
 # ifndef __DJGPP__
 #  define setmode _setmode
