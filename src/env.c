@@ -80,6 +80,9 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+#include <getopt.h>
+
+#include "version.h"
 #include "system.h"
 
 int putenv ();
@@ -92,10 +95,18 @@ extern char **environ;
 /* The name by which this program was run. */
 char *program_name;
 
+/* If non-zero, display usage information and exit.  */
+static int show_help;
+
+/* If non-zero, print the version on standard error.  */
+static int show_version;
+
 static struct option const longopts[] =
 {
+  {"help", no_argument, &show_help, 1},
   {"ignore-environment", no_argument, NULL, 'i'},
   {"unset", required_argument, NULL, 'u'},
+  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -115,6 +126,8 @@ main (argc, argv, envp)
     {
       switch (optc)
 	{
+	case 0:
+	  break;
 	case 'i':
 	  ignore_environment = 1;
 	  break;
@@ -124,6 +137,15 @@ main (argc, argv, envp)
 	  usage ();
 	}
     }
+
+  if (show_version)
+    {
+      printf ("%s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage ();
 
   if (optind != argc && !strcmp (argv[optind], "-"))
     ignore_environment = 1;
@@ -162,8 +184,8 @@ static void
 usage ()
 {
   fprintf (stderr, "\
-Usage: %s [-] [-i] [-u name] [--ignore-environment] [--unset=name]\n\
-       [name=value]... [command [args...]]\n",
+Usage: %s [{--help,--version}] [-] [-i] [-u name] [--ignore-environment]\n\
+       [--unset=name] [name=value]... [command [args...]]\n",
 	   program_name);
   exit (2);
 }

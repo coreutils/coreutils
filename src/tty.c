@@ -19,7 +19,7 @@
    Displays nothing if -s option is given.
    Exit status 0 if stdin is a tty, 1 if not, 2 if usage error.
 
- Written by David MacKenzie (djm@ai.mit.edu).  */
+ Written by David MacKenzie <djm@gnu.ai.mit.edu>.  */
 
 #include <stdio.h>
 #include <getopt.h>

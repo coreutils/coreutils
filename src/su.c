@@ -78,7 +78,7 @@
 #ifdef HAVE_SYSLOG_H
 #include <syslog.h>
 static void log_su ();
-#else
+#else /* !HAVE_SYSLOG_H */
 #ifdef SYSLOG_SUCCESS
 #undef SYSLOG_SUCCESS
 #endif
@@ -88,7 +88,7 @@ static void log_su ();
 #ifdef SYSLOG_NON_ROOT
 #undef SYSLOG_NON_ROOT
 #endif
-#endif
+#endif /* !HAVE_SYSLOG_H */
 
 #ifdef _POSIX_VERSION
 #include <limits.h>

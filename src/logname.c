@@ -17,7 +17,34 @@
 
 #include <stdio.h>
 #include <sys/types.h>
+#include <getopt.h>
+
+#include "version.h"
 #include "system.h"
+
+/* The name this program was run with. */
+char *program_name;
+
+/* If non-zero, display usage information and exit.  */
+static int show_help;
+
+/* If non-zero, print the version on standard error.  */
+static int show_version;
+
+static struct option const long_options[] =
+{
+  {"help", no_argument, &show_help, 1},
+  {"version", no_argument, &show_version, 1},
+  {0, 0, 0, 0}
+};
+
+static void
+usage ()
+{
+  fprintf (stderr, "Usage: %s [{--help,--version}]\n",
+	   program_name);
+  exit (1);
+}
 
 void
 main (argc, argv)
@@ -25,19 +52,42 @@ main (argc, argv)
      char **argv;
 {
   register char *cp;
+  int c;
 
-  if (argc != 1)
+  program_name = argv[0];
+
+  while ((c = getopt_long (argc, argv, "", long_options, (int *) 0)) != EOF)
     {
-      fprintf (stderr, "Usage: %s\n", argv[0]);
-      exit (1);
+      switch (c)
+	{
+	case 0:
+	  break;
+
+	default:
+	  usage ();
+	}
     }
 
+  if (show_version)
+    {
+      printf ("%s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage ();
+
+  if (argc - optind != 0)
+    usage ();
+
+  /* POSIX.2 requires using getlogin (or equivalent code).  */
   cp = getlogin ();
   if (cp)
     {
       puts (cp);
       exit (0);
     }
+  /* POSIX.2 prohibits using a fallback technique.  */
   fprintf (stderr,"%s: no login name\n", argv[0]);
   exit (1);
 }

@@ -23,6 +23,9 @@
 #include <sys/types.h>
 #include <pwd.h>
 #include <grp.h>
+#include <getopt.h>
+
+#include "version.h"
 #include "system.h"
 
 #ifdef _POSIX_VERSION
@@ -31,16 +34,6 @@
 #define NGROUPS_MAX sysconf (_SC_NGROUPS_MAX)
 #endif /* !NGROUPS_MAX */
 
-/* Even though SunOS 4, Ultrix 4, and 386BSD are mostly POSIX.1 compliant,
-   their getgroups system call (except in the `System V' environment, which
-   is troublesome in other ways) fills in an array of int, not gid_t
-   (which is `short' on those systems).  Kludge, kludge.  */
-
-#if !defined(sun) && !defined(ultrix) && !defined(__386BSD__)
-#define GETGROUPS_T gid_t
-#else /* sun or ultrix or 386BSD */
-#define GETGROUPS_T int
-#endif /* sun or ultrix or 386BSD */
 #else /* not _POSIX_VERSION */
 struct passwd *getpwuid ();
 struct group *getgrgid ();
@@ -52,7 +45,6 @@ gid_t getegid ();
 #if !defined(NGROUPS_MAX) && defined(NGROUPS)
 #define NGROUPS_MAX NGROUPS
 #endif /* not NGROUPS_MAX and NGROUPS */
-#define GETGROUPS_T int
 #endif /* not _POSIX_VERSION */
 
 char *xmalloc ();
@@ -90,13 +82,21 @@ static gid_t rgid, egid;
 /* The number of errors encountered so far. */
 static int problems = 0;
 
+/* If non-zero, display usage information and exit.  */
+static int show_help;
+
+/* If non-zero, print the version on standard error.  */
+static int show_version;
+
 static struct option const longopts[] =
 {
   {"group", no_argument, NULL, 'g'},
+  {"groups", no_argument, NULL, 'G'},
+  {"help", no_argument, &show_help, 1},
   {"name", no_argument, NULL, 'n'},
   {"real", no_argument, NULL, 'r'},
   {"user", no_argument, NULL, 'u'},
-  {"groups", no_argument, NULL, 'G'},
+  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -114,6 +114,8 @@ main (argc, argv)
     {
       switch (optc)
 	{
+	case 0:
+	  break;
 	case 'g':
 	  just_group = 1;
 	  break;
@@ -133,6 +135,15 @@ main (argc, argv)
 	  usage ();
 	}
     }
+
+  if (show_version)
+    {
+      printf ("%s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage ();
 
   if (just_user + just_group + just_group_list > 1)
     error (1, 0, "cannot print only user and only group");

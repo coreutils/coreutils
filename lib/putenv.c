@@ -18,13 +18,20 @@ Cambridge, MA 02139, USA.  */
 
 #include <sys/types.h>
 #include <errno.h>
-#ifdef STDC_HEADERS
+
+/* This needs to come after some library #include
+   to get __GNU_LIBRARY__ defined.  */
+#ifdef	__GNU_LIBRARY__
+/* Don't include stdlib.h for non-GNU C libraries because some of them
+   contain conflicting prototypes for getopt.  */
 #include <stdlib.h>
-#else
+#endif	/* GNU C library.  */
+
+#ifndef STDC_HEADERS
 extern int errno;
 #endif
 
-#if defined(STDC_HEADERS) || defined(USG)
+#if defined(STDC_HEADERS) || defined(HAVE_STRING_H)
 #include <string.h>
 #ifndef index
 #define index strchr
@@ -32,9 +39,9 @@ extern int errno;
 #ifndef bcopy
 #define bcopy(s, d, n) memcpy((d), (s), (n))
 #endif
-#else /* not (STDC_HEADERS or USG) */
+#else
 #include <strings.h>
-#endif /* STDC_HEADERS or USG */
+#endif
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -42,10 +49,6 @@ extern int errno;
 
 #ifndef NULL
 #define NULL 0
-#endif
-
-#if !__STDC__
-#define const
 #endif
 
 extern char **environ;

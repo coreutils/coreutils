@@ -19,9 +19,35 @@
 
 #include <stdio.h>
 #include <sys/types.h>
+#include <getopt.h>
+
+#include "version.h"
 #include "system.h"
 
 void strip_trailing_slashes ();
+
+/* The name this program was run with. */
+char *program_name;
+
+/* If non-zero, display usage information and exit.  */
+static int show_help;
+
+/* If non-zero, print the version on standard error.  */
+static int show_version;
+
+static struct option const long_options[] =
+{
+  {"help", no_argument, &show_help, 1},
+  {"version", no_argument, &show_version, 1},
+  {0, 0, 0, 0}
+};
+
+static void
+usage ()
+{
+  fprintf (stderr, "Usage: %s [{--help,--version}] path\n", program_name);
+  exit (1);
+}
 
 void
 main (argc, argv)
@@ -30,14 +56,35 @@ main (argc, argv)
 {
   register char *path;
   register char *slash;
+  int c;
 
-  if (argc != 2)
+  program_name = argv[0];
+
+  while ((c = getopt_long (argc, argv, "", long_options, (int *) 0)) != EOF)
     {
-      fprintf (stderr, "Usage: %s path\n", argv[0]);
-      exit (1);
+      switch (c)
+	{
+	case 0:
+	  break;
+
+	default:
+	  usage ();
+	}
     }
 
-  path = argv[1];
+  if (show_version)
+    {
+      printf ("%s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage ();
+
+  if (argc - optind != 1)
+    usage ();
+
+  path = argv[optind];
   strip_trailing_slashes (path);
 
   slash = rindex (path, '/');
@@ -54,4 +101,3 @@ main (argc, argv)
 
   exit (0);
 }
-

@@ -84,10 +84,6 @@
 extern char *tzname[2];
 #endif
 
-#if !__STDC__
-#define const
-#endif
-
 /* Types of padding for numbers in date and time. */
 enum padding
 {

@@ -32,9 +32,12 @@
 #include <ctype.h>
 #include <sys/types.h>
 #include <regex.h>
+
 #include "system.h"
+#include "version.h"
 
 #if !defined (isascii) || defined (STDC_HEADERS)
+#undef isascii
 #define isascii(c) 1
 #endif
 
@@ -95,6 +98,14 @@ static void tostring ();
 static void trace ();
 #endif
 
+static void
+usage ()
+{
+  fprintf (stderr, "Usage: %s [{--help,--version}] expression...\n",
+	   program_name);
+  exit (1);
+}
+
 void
 main (argc, argv)
      int argc;
@@ -104,11 +115,21 @@ main (argc, argv)
 
   program_name = argv[0];
 
-  if (argc == 1)
+  if (argc > 1)
     {
-      fprintf (stderr, "Usage: %s expression...\n", argv[0]);
-      exit (1);
+      if (strcmp (argv[1], "--version") == 0)
+	{
+	  printf ("%s\n", version_string);
+	  exit (0);
+	}
+      else if (strcmp (argv[1], "--help") == 0)
+	{
+	  usage ();
+	}
     }
+
+  if (argc == 1)
+    usage ();
   args = argv + 1;
 
   v = eval ();
@@ -172,6 +193,8 @@ printv (v)
     case string:
       printf ("%s\n", v->u.s);
       break;
+    default:
+      abort ();
     }
 }
 
@@ -186,7 +209,9 @@ null (v)
     case integer:
       return v->u.i == 0;
     case string:
-      return v->u.s[0] == '\0';
+      return v->u.s[0] == '\0' || strcmp(v->u.s, "0") == 0;
+    default:
+      abort ();
     }
 }
 
@@ -217,6 +242,8 @@ tostring (v)
       break;
     case string:
       break;
+    default:
+      abort ();
     }
 }
 
@@ -251,6 +278,8 @@ toarith (v)
       v->u.i = i * (neg ? -1 : 1);
       v->type = integer;
       return 1;
+    default:
+      abort ();
     }
 }
 
@@ -309,13 +338,24 @@ int name (l, r) VALUE *l; VALUE *r;		\
   return l->u.i op r->u.i;			\
 }
 
+#define arithdivf(name, op)			\
+int name (l, r) VALUE *l; VALUE *r;		\
+{						\
+  if (!toarith (l) || !toarith (r))		\
+    error (2, 0, "non-numeric argument");	\
+  if (r->u.i == 0)				\
+    error (2, 0, "division by zero");		\
+  return l->u.i op r->u.i;			\
+}
+
 arithf (plus, +)
 arithf (minus, -)
 arithf (multiply, *)
-arithf (divide, /)
-arithf (mod, %)
+arithdivf (divide, /)
+arithdivf (mod, %)
 
 #undef arithf
+#undef arithdivf
 
 #ifdef EVAL_TRACE
 /* Print evaluation trace and args remaining.  */
@@ -474,6 +514,7 @@ eval6 ()
 	  v->type = string;
 	  v->u.s = strncpy ((char *) xmalloc (i2->u.i + 1),
 			    l->u.s + i1->u.i - 1, i2->u.i);
+	  v->u.s[i2->u.i] = 0;
 	}
       freev (l);
       freev (i1);

@@ -40,14 +40,19 @@ You can explicitly turn off the interpretation of the above characters
 on System V systems with the -E option.
 */
 
+/* If defined, interpret backslash escapes if -e is given.  */
 #define V9_ECHO
 
+/* If defined, interpret backslash escapes unless -E is given.
+   V9_ECHO must also be defined.  */
+#define V9_DEFAULT
+
 #if defined (V9_ECHO)
-#  if defined (USG)
+#  if defined (V9_DEFAULT)
 #    define VALID_ECHO_OPTIONS "neE"
 #  else
 #    define VALID_ECHO_OPTIONS "ne"
-#  endif /* !USG */
+#  endif /* !V9_DEFAULT */
 #else /* !V9_ECHO */
 #  define VALID_ECHO_OPTIONS "n"
 #endif /* !V9_ECHO */
@@ -65,7 +70,7 @@ main (argc, argv)
 /* System V machines already have a /bin/sh with a v9 behaviour.  We
    use the identical behaviour for these machines so that the
    existing system shell scripts won't barf. */
-#if defined (V9_ECHO) && defined (USG)
+#if defined (V9_ECHO) && defined (V9_DEFAULT)
   do_v9 = 1;
 #endif
 
@@ -100,10 +105,10 @@ main (argc, argv)
 #if defined (V9_ECHO)
 	  else if (*temp == 'e')
 	    do_v9 = 1;
-#if defined (USG)
+#if defined (V9_DEFAULT)
 	  else if (*temp == 'E')
 	    do_v9 = 0;
-#endif /* USG */
+#endif /* V9_DEFAULT */
 #endif /* V9_ECHO */
 	  else
 	    goto just_echo;

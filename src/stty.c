@@ -30,8 +30,8 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <termios.h>
-#ifdef _AIX
-#include <sys/ioctl.h>		/* Needed to get window size. */
+#ifdef GWINSZ_IN_SYS_IOCTL
+#include <sys/ioctl.h>
 #endif
 #ifdef WINSIZE_IN_PTEM
 #include <sys/stream.h>

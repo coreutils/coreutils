@@ -27,6 +27,9 @@
 
 #include <stdio.h>
 #include <sys/types.h>
+#include <getopt.h>
+
+#include "version.h"
 #include "system.h"
 
 char *basename ();
@@ -34,25 +37,70 @@ void strip_trailing_slashes ();
 
 static void remove_suffix ();
 
+/* The name this program was run with. */
+char *program_name;
+
+/* If non-zero, display usage information and exit.  */
+static int show_help;
+
+/* If non-zero, print the version on standard error.  */
+static int show_version;
+
+static struct option const long_options[] =
+{
+  {"help", no_argument, &show_help, 1},
+  {"version", no_argument, &show_version, 1},
+  {0, 0, 0, 0}
+};
+
+static void
+usage ()
+{
+  fprintf (stderr, "Usage: %s [{--help,--version}] name [suffix]\n",
+	   program_name);
+  exit (1);
+}
+
 void
 main (argc, argv)
      int argc;
      char **argv;
 {
   char *name;
+  int c;
 
-  if (argc == 1 || argc > 3)
+  program_name = argv[0];
+
+  while ((c = getopt_long (argc, argv, "", long_options, (int *) 0)) != EOF)
     {
-      fprintf (stderr, "Usage: %s name [suffix]\n", argv[0]);
-      exit (1);
+      switch (c)
+	{
+	case 0:
+	  break;
+
+	default:
+	  usage ();
+	}
     }
 
-  strip_trailing_slashes (argv[1]);
+  if (show_version)
+    {
+      printf ("%s\n", version_string);
+      exit (0);
+    }
 
-  name = basename (argv[1]);
+  if (show_help)
+    usage ();
+
+  if (argc - optind == 0 || argc - optind > 2)
+    usage ();
+
+  strip_trailing_slashes (argv[optind]);
+
+  name = basename (argv[optind]);
 
   if (argc == 3)
-    remove_suffix (name, argv[2]);
+    remove_suffix (name, argv[optind + 1]);
 
   puts (name);
 

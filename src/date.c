@@ -42,6 +42,8 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+
+#include "version.h"
 #include "system.h"
 
 #ifdef TM_IN_SYS_TIME
@@ -80,12 +82,20 @@ static void usage ();
 /* The name this program was run with, for error messages. */
 char *program_name;
 
+/* If non-zero, display usage information and exit.  */
+static int show_help;
+
+/* If non-zero, print the version on standard error.  */
+static int show_version;
+
 static struct option const long_options[] =
 {
   {"date", required_argument, NULL, 'd'},
+  {"help", no_argument, &show_help, 1},
   {"set", required_argument, NULL, 's'},
-  {"universal", no_argument, NULL, 'u'},
   {"uct", no_argument, NULL, 'u'},
+  {"universal", no_argument, NULL, 'u'},
+  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -106,6 +116,8 @@ main (argc, argv)
 	 != EOF)
     switch (optc)
       {
+      case 0:
+	break;
       case 'd':
 	datestr = optarg;
 	break;
@@ -119,6 +131,15 @@ main (argc, argv)
       default:
 	usage ();
       }
+
+  if (show_version)
+    {
+      printf ("%s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage ();
 
   if (argc - optind > 1)
     usage ();
@@ -192,7 +213,9 @@ static void
 usage ()
 {
   fprintf (stderr, "\
-Usage: %s [-u] [-d datestr] [-s datestr] [+FORMAT] [MMDDhhmm[[CC]YY][.ss]]\n",
+Usage: %s [{--help,--version}] [-u] [-d datestr] [-s datestr]\n\
+       [--date datestr] [--set datestr] [--uct] [--universal]\n\
+       [+FORMAT] [MMDDhhmm[[CC]YY][.ss]]\n",
 	   program_name);
   exit (1);
 }

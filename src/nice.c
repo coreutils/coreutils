@@ -15,7 +15,7 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-/* David MacKenzie <djm@ai.mit.edu> */
+/* David MacKenzie <djm@gnu.ai.mit.edu> */
 
 #include <stdio.h>
 #include <getopt.h>
@@ -24,6 +24,8 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 #endif
+
+#include "version.h"
 #include "system.h"
 
 void error ();
@@ -34,9 +36,17 @@ static void usage ();
 /* The name this program was run with. */
 char *program_name;
 
+/* If non-zero, display usage information and exit.  */
+static int show_help;
+
+/* If non-zero, print the version on standard error.  */
+static int show_version;
+
 static struct option const longopts[] =
 {
   {"adjustment", required_argument, NULL, 'n'},
+  {"help", no_argument, &show_help, 1},
+  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -60,6 +70,9 @@ main (argc, argv)
 	{
 	case '?':
 	  usage ();
+
+	case 0:
+	  break;
 	  
 	case 'n':
 	  if (!isinteger (optarg))
@@ -77,6 +90,15 @@ main (argc, argv)
 	  adjustment_given = 1;
 	}
     }
+
+  if (show_version)
+    {
+      printf ("%s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage ();
 
   if (minusflag)
     adjustment = -adjustment;

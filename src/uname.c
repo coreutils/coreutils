@@ -26,7 +26,7 @@
 
    The default behavior is equivalent to `-s'.
 
-   David MacKenzie <djm@ai.mit.edu> */
+   David MacKenzie <djm@gnu.ai.mit.edu> */
 
 #include <stdio.h>
 #include <sys/types.h>

@@ -1,3 +1,64 @@
+Wed Sep 08 00:07:36 1993  Jim Meyering (meyering@comco.com)
+
+	* test.c [advance, unary_advance]: Rewrite using do{...}while(0)
+	paradigm instead of comma expressions that make Alpha OSFv1.3
+	C compiler segfault.
+
+Sat Jul 24 08:52:18 1993  Jim Meyering (meyering@comco.com)
+
+	* configure.in: Check for -lshadow.  Linux needs it when using shadow
+	passwords.  Reported by Mattias Olofsson <mattias@lysator.liu.se>.
+
+Thu May 27 20:05:50 1993  Roland McGrath  (roland@churchy.gnu.ai.mit.edu)
+
+	* configure.in (c_line test): Add missing `fi'.
+
+Tue May 18 23:49:26 1993  Jim Meyering (meyering@comco.com)
+
+	* mkinstalldirs: New file.
+	* Makefile.in (installdirs): Use it.
+
+Thu May 13 01:03:16 1993  Jim Meyering (meyering@comco.com)
+
+	* Makefile.in (installdirs): New rules for creating installation
+	directories. (install): depend on it.
+
+Mon May  3 22:09:24 1993  Jim Meyering (meyering@comco.com)
+
+	* configure.in: Add AC_GETGROUPS_T.
+	* id.c, test.c: Don't define GETGROUPS_T.  Now configure does it.
+
+Sun May  2 00:21:05 1993  Jim Meyering  (meyering@comco.com)
+
+	* expr.c (eval6): Terminate result with a zero byte.
+	The command `expr substr xx 1 2' would fail on systems with
+	tight malloc.  From Steve James <smj@cats.COM>.
+
+	* expr.c (null): Recognize the string `0' as zero.
+	(divide, mod): Upon request to divide by zero, give an error
+	message instead of dumping core.
+	From J.T. Conklin <jtc@wimsey.com>.
+
+	* configure.in: Check for sys/time.h; getdate.y needs it for
+	structs timeval and timezone on some systems.
+	* Check for gettimeofday and for `struct tm'.
+	* Add existence tests for memcpy and bcopy.
+
+	* configure.in: Find a parser generator.
+
+	* putenv.c: Include stdlib.h only if __GNU_LIBRARY__ is defined.
+	Many vendor-supplied <stdlib.h> have a declaration of putenv that
+	conflicts with ours.
+
+Tue Apr 20 02:33:24 1993  David J. MacKenzie  (djm@kropotkin.gnu.ai.mit.edu)
+
+	* stty.c: Use GWINSZ_IN_SYS_IOCTL, not _AIX, to determine
+	whether sys/ioctl.h is needed to support `stty size'.
+
+Thu Apr  1 18:03:47 1993  Jim Meyering  (meyering@comco.com)
+
+	* printf.c, expr.c [isascii]: Undefine before redefining.
+
 Sun Mar 28 00:07:45 1993  Jim Meyering  (meyering@comco.com)
 
 	* stty.c: Accept `flush' option.  From Arne H. Juul arnej@lise.unit.no
@@ -17,7 +78,7 @@ Sun Dec  6 23:17:09 1992  Jim Meyering  (meyering@comco.com)
 
 	* date.c: Remove unused definition of isdigit.
 	* expr.c (toarith): Change single use of isdigit to ISDIGIT.
-	* printf.c (print_formatted, print_esc): Define ISXDIGIT and
+	* printf.c (print_formatted, print_esc): Define ISDIGIT and
 	ISXDIGIT and use them instead of isdigit and isxdigit.
 
 Wed Dec  2 12:49:11 1992  Jim Meyering  (meyering@comco.com)
@@ -27,11 +88,19 @@ Wed Dec  2 12:49:11 1992  Jim Meyering  (meyering@comco.com)
 	to use new macros from getopt.h: no_argument, required_argument,
 	and optional_argument.
 
+Tue Nov 24 09:46:02 1992  David J. MacKenzie  (djm@goldman.gnu.ai.mit.edu)
+
+	* echo.c: Use V9_DEFAULT instead of USG.  Define it always.
+
+	* system.h: Use HAVE_FCNTL_H and HAVE_STRING_H instead of USG.
+
 Wed Nov 11 18:19:10 1992  Jim Meyering  (meyering@hal.gnu.ai.mit.edu)
 
 	* All files in src: Make all functions and extern variables static.
 	Make all longopts arrays const as well as static.
 	Make a couple statically initialized aggregates `const.'
+
+	* pathchk.c (portable_chars_only): Cast char used as array index.
 
 	* echo.c (main), su.c (restricted_shell): Add parentheses to
 	assignment statements used in boolean context.

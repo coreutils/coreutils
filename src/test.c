@@ -67,22 +67,6 @@ extern int errno;
 #  define member(c, s) (int)((c) ? index ((s), (c)) : 0)
 #endif /* !member */
 
-#if defined (_POSIX_VERSION)
-
-/* Even though SunOS 4, Ultrix 4, and 386BSD are mostly POSIX.1 compliant,
-   their getgroups system call (except in the `System V' environment, which
-   is troublesome in other ways) fills in an array of int, not gid_t
-   (which is `short' on those systems).  Kludge, kludge.  */
-
-#if !defined(sun) && !defined(ultrix) && !defined(__386BSD__)
-#define GETGROUPS_T gid_t
-#else
-#define GETGROUPS_T int
-#endif
-#else /* !_POSIX_VERSION */
-#define GETGROUPS_T int
-#endif /* !_POSIX_VERSION */
-
 extern gid_t getgid (), getegid ();
 extern uid_t geteuid ();
 
@@ -248,9 +232,14 @@ group_member (gid)
 /* Increment our position in the argument list.  Check that we're not
    past the end of the argument list.  This check is supressed if the
    argument is FALSE.  Made a macro for efficiency. */
-#if !defined (lint)
-#define advance(f)	(++pos, f && (pos < argc ? 0 : beyond()))
-#endif
+#define advance(f)							\
+  do									\
+    {									\
+      ++pos;								\
+      if ((f) && pos >= argc)						\
+	beyond ();							\
+    }									\
+  while (0)
 
 #if !defined (advance)
 static int
@@ -264,7 +253,13 @@ advance (f)
 }
 #endif /* advance */
 
-#define unary_advance() (advance (1),++pos)
+#define unary_advance() 						\
+  do									\
+    {									\
+      advance (1);							\
+      ++pos;								\
+    }									\
+  while (0)
 
 /*
  * beyond - call when we're beyond the end of the argument list (an
