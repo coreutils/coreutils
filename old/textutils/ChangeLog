@@ -1,3 +1,10 @@
+1998-01-10  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/xstrtol.c (bkm_scale): Renamed from BKM_SCALE.
+	Rewrite macro as function.  Return a value.  Update caller.
+	Cast __ZLONG_MAX `__unsigned long int' before casting to double to
+	avoid SunOS /bin/cc compiler bug.
+
 1998-01-08  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/tac-pipe.c: New file.  But not yet used.
