@@ -69,6 +69,9 @@ my @tv = (
 ['nul-odelim', "-d: -f2,3 --out=", "a:b:c\n",	"b\0c\n",		0],
 ['multichar-od', "-d: -f2,3 --out=_._", "a:b:c\n", "b_._c\n",		0],
 
+# Prior to 1.22i, you couldn't use a delimiter that would sign-extend.
+['8bit-delim', "'-d\255' -f2,3 --out=_", "a\255b\255c\n", "b_c\n",	0],
+
 );
 
 # Don't use a pipe for failing tests.  Otherwise, sometimes they
