@@ -1,5 +1,26 @@
 2003-05-01  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.0.1.
+
+	* Makefile.maint (syntax-check): Rename from alloc-check.
+	Also check for SPACE-TAB sequences.
+	Also check for malloc/calloc/realloc casts.
+
+	* src/tail.c (file_lines): Rename parameter, file_length, to end_pos.
+	(pipe_bytes): Handle the case of a read error *after* freeing `tmp'.
+
+2003-04-30  Jim Meyering  <jim@meyering.net>
+
+	* src/tail.c (dump_remainder): Move two declarations `down'
+	into the scope where they are used.
+	(pipe_lines): Don't coerce safe_read return value to `int'.
+	Adapt tests accordingly.
+	(parse_options): Don't fail (here) just because N is larger
+	than the maximum size of a file -- tail may be applied
+	to an input stream (e.g., a pipe) with more data than that.
+
+2003-05-01  Jim Meyering  <jim@meyering.net>
+
 	* src/tail.c (start_lines): Rewrite to use memchr.  Clean up.
 
 2003-04-28  Jim Meyering  <jim@meyering.net>
@@ -9,14 +30,12 @@
 
 2003-04-25  Jim Meyering  <jim@meyering.net>
 
-	* src/head.c (elide_tail_bytes_pipe):
+	* src/head.c (elide_tail_bytes_pipe): FIXME-- in progress..
 	Idea prompted by discussion with David Flynn <dav@chess.plus.com>
 	Extend head to accept --lines=-N (--bytes=-N) and to print all
 	but the N lines (bytes) at the end of the file.
 
 2003-04-24  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.1.
 
 	* src/tsort.c (tsort): Remove unnecessary test of have_read_stdin.
 	(main): Minor syntactic clean-up.
