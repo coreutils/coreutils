@@ -62,7 +62,7 @@ my-distcheck:
 
 THIS_VERSION_REGEXP = $(subst .,\.,$(VERSION))
 # FIXME: this works only for Gnits-style test releases.
-PREV_VERSION := $(shell echo $(VERSION)|tr a-z Xa-y)
+PREV_VERSION := $(shell echo $(VERSION)|tr b-z a-y|sed 's/a$$//')
 PREV_VERSION_REGEXP := $(shell echo $(PREV_VERSION)|sed 's/\./\\./g')
 v = Version
 
