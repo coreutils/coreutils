@@ -51,7 +51,10 @@ struct cp_options
   int unlink_dest_before_opening;
 
   /* If nonzero, first try to open each existing destination nondirectory,
-     then, if the open fails, unlink and try again.  */
+     then, if the open fails, unlink and try again.
+     This option must be set for `cp', in case the destination file
+     exists when the open is attempted.  It is irrelevant to `mv' since
+     any destination is sure to be removed before the open.  */
   int unlink_dest_after_failed_open;
 
   /* Setting this member is meaningful only if FORCE is also set.
