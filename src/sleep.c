@@ -173,7 +173,7 @@ clock_get_realtime (struct timespec *ts)
 #endif
 
   if (fail)
-    error (1, errno, _("cannot read realtime clock"));
+    error (EXIT_FAILURE, errno, _("cannot read realtime clock"));
 
   return ts;
 }

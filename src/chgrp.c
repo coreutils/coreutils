@@ -90,7 +90,7 @@ parse_group (const char *name, gid_t *g)
   struct group *grp;
 
   if (*name == '\0')
-    error (1, 0, _("cannot change to null group"));
+    error (EXIT_FAILURE, 0, _("cannot change to null group"));
 
   grp = getgrnam (name);
   if (grp == NULL)
@@ -99,14 +99,14 @@ parse_group (const char *name, gid_t *g)
       unsigned long int tmp_long;
 
       if (!ISDIGIT (*name))
-	error (1, 0, _("invalid group name %s"), quote (name));
+	error (EXIT_FAILURE, 0, _("invalid group name %s"), quote (name));
 
       s_err = xstrtoul (name, NULL, 0, &tmp_long, NULL);
       if (s_err != LONGINT_OK)
 	STRTOL_FATAL_ERROR (name, _("group number"), s_err);
 
       if (tmp_long > MAXGID)
-	error (1, 0, _("invalid group number %s"), quote (name));
+	error (EXIT_FAILURE, 0, _("invalid group number %s"), quote (name));
 
       *g = tmp_long;
     }
@@ -215,7 +215,7 @@ main (int argc, char **argv)
     {
       struct stat ref_stats;
       if (stat (reference_file, &ref_stats))
-	error (1, errno, _("failed to get attributes of %s"),
+	error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
 	       quote (reference_file));
 
       chopt.group_name = gid_to_name (ref_stats.st_gid);

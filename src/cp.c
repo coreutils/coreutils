@@ -968,7 +968,8 @@ main (int argc, char **argv)
 #ifdef S_ISLNK
 	  x.symbolic_link = 1;
 #else
-	  error (1, 0, _("symbolic links are not supported on this system"));
+	  error (EXIT_FAILURE, 0,
+		 _("symbolic links are not supported on this system"));
 #endif
 	  break;
 

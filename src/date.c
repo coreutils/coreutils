@@ -244,7 +244,7 @@ batch_convert (const char *input_filename, const char *format)
       in_stream = fopen (input_filename, "r");
       if (in_stream == NULL)
 	{
-	  error (1, errno, "`%s'", input_filename);
+	  error (EXIT_FAILURE, errno, "`%s'", input_filename);
 	}
     }
 
@@ -444,7 +444,7 @@ argument must be a format string beginning with `+'."),
 	  if (reference != NULL)
 	    {
 	      if (stat (reference, &refstats))
-		error (1, errno, "%s", reference);
+		error (EXIT_FAILURE, errno, "%s", reference);
 	      when.tv_sec = refstats.st_mtime;
 	      when.tv_nsec = TIMESPEC_NS (refstats.st_mtim);
 	    }
@@ -459,7 +459,7 @@ argument must be a format string beginning with `+'."),
 	}
 
       if (! valid_date)
-	error (1, 0, _("invalid date `%s'"), datestr);
+	error (EXIT_FAILURE, 0, _("invalid date `%s'"), datestr);
 
       if (set_date)
 	{

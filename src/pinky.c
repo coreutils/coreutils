@@ -444,7 +444,7 @@ short_pinky (const char *filename,
   int fail = read_utmp (filename, &n_users, &utmp_buf);
 
   if (fail)
-    error (1, errno, "%s", filename);
+    error (EXIT_FAILURE, errno, "%s", filename);
 
   scan_entries (n_users, utmp_buf, argc_names, argv_names);
 }

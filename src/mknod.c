@@ -1,5 +1,5 @@
 /* mknod -- make special files
-   Copyright (C) 90, 91, 1995-2001 Free Software Foundation, Inc.
+   Copyright (C) 90, 91, 1995-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -128,7 +128,7 @@ main (int argc, char **argv)
       newmode &= ~ umask (0);
       change = mode_compile (specified_mode, 0);
       if (change == MODE_INVALID)
-	error (1, 0, _("invalid mode"));
+	error (EXIT_FAILURE, 0, _("invalid mode"));
       else if (change == MODE_MEMORY_EXHAUSTED)
 	xalloc_die ();
       newmode = mode_adjust (newmode, change);
@@ -186,20 +186,22 @@ numbers must be specified"));
 
 	if (xstrtoumax (s_major, NULL, 0, &i_major, NULL) != LONGINT_OK
 	    || i_major != (major_t) i_major)
-	  error (1, 0, _("invalid major device number %s"), quote (s_major));
+	  error (EXIT_FAILURE, 0,
+		 _("invalid major device number %s"), quote (s_major));
 
 	if (xstrtoumax (s_minor, NULL, 0, &i_minor, NULL) != LONGINT_OK
 	    || i_minor != (minor_t) i_minor)
-	  error (1, 0, _("invalid minor device number %s"), quote (s_minor));
+	  error (EXIT_FAILURE, 0,
+		 _("invalid minor device number %s"), quote (s_minor));
 
 	device = makedev (i_major, i_minor);
 #ifdef NODEV
 	if (device == NODEV)
-	  error (1, 0, _("invalid device %s %s"), s_major, s_minor);
+	  error (EXIT_FAILURE, 0, _("invalid device %s %s"), s_major, s_minor);
 #endif
 
 	if (mknod (argv[optind], newmode | node_type, device) != 0)
-	  error (1, errno, "%s", quote (argv[optind]));
+	  error (EXIT_FAILURE, errno, "%s", quote (argv[optind]));
       }
       break;
 
@@ -214,7 +216,7 @@ major and minor device numbers may not be specified for fifo files"));
 	  usage (1);
 	}
       if (mkfifo (argv[optind], newmode))
-	error (1, errno, "%s", quote (argv[optind]));
+	error (EXIT_FAILURE, errno, "%s", quote (argv[optind]));
 #endif
       break;
 

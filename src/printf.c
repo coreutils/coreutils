@@ -248,7 +248,7 @@ print_esc (const char *escstart)
 	   ++esc_length, ++p)
 	esc_value = esc_value * 16 + hextobin (*p);
       if (esc_length == 0)
-	error (1, 0, _("missing hexadecimal number in escape"));
+	error (EXIT_FAILURE, 0, _("missing hexadecimal number in escape"));
       putchar (esc_value);
     }
   else if (*p == '0')
@@ -272,7 +272,7 @@ print_esc (const char *escstart)
 	   --esc_length, ++p)
 	{
 	  if (!ISXDIGIT (*p))
-	    error (1, 0, _("missing hexadecimal number in escape"));
+	    error (EXIT_FAILURE, 0, _("missing hexadecimal number in escape"));
 	  uni_value = uni_value * 16 + hextobin (*p);
 	}
 
@@ -284,13 +284,13 @@ print_esc (const char *escstart)
       if ((uni_value >= 0x00 && uni_value <= 0x9f
 	   && uni_value != 0x24 && uni_value != 0x40 && uni_value != 0x60)
 	  || (uni_value >= 0xd800 && uni_value <= 0xdfff))
-	error (1, 0, _("invalid universal character name \\%c%0*x"),
+	error (EXIT_FAILURE, 0, _("invalid universal character name \\%c%0*x"),
 	       esc_char, (esc_char == 'u' ? 4 : 8), uni_value);
 
       print_unicode_char (stdout, uni_value, 0);
     }
   else
-    error (1, 0, _("\\%c: invalid escape"), *p);
+    error (EXIT_FAILURE, 0, _("\\%c: invalid escape"), *p);
   return p - escstart - 1;
 }
 
@@ -498,7 +498,7 @@ print_formatted (const char *format, int argc, char **argv)
 	      ++direc_length;
 	    }
 	  if (!strchr ("diouxXfeEgGcs", *f))
-	    error (1, 0, _("%%%c: invalid directive"), *f);
+	    error (EXIT_FAILURE, 0, _("%%%c: invalid directive"), *f);
 	  ++direc_length;
 	  if (argc > 0)
 	    {

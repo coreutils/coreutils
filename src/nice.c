@@ -106,7 +106,7 @@ main (int argc, char **argv)
 	  && posix2_version () < 200112)
 	{
 	  if (xstrtol (&s[2], NULL, 10, &adjustment, "") != LONGINT_OK)
-	    error (1, 0, _("invalid option `%s'"), s);
+	    error (EXIT_FAILURE, 0, _("invalid option `%s'"), s);
 
 	  minusflag = 1;
 	  adjustment_given = 1;
@@ -119,7 +119,7 @@ main (int argc, char **argv)
 	  if (s[1] == '+')
 	    ++s;
 	  if (xstrtol (&s[1], NULL, 10, &adjustment, "") != LONGINT_OK)
-	    error (1, 0, _("invalid option `%s'"), s);
+	    error (EXIT_FAILURE, 0, _("invalid option `%s'"), s);
 
 	  minusflag = 0;
 	  adjustment_given = 1;
@@ -144,7 +144,7 @@ main (int argc, char **argv)
 		case 'n':
 		  if (xstrtol (optarg, NULL, 10, &adjustment, "")
 		      != LONGINT_OK)
-		    error (1, 0, _("invalid priority `%s'"), optarg);
+		    error (EXIT_FAILURE, 0, _("invalid priority `%s'"), optarg);
 
 		  minusflag = 0;
 		  adjustment_given = 1;
@@ -175,7 +175,7 @@ main (int argc, char **argv)
       errno = 0;
       current_priority = GET_PRIORITY ();
       if (current_priority == -1 && errno != 0)
-	error (1, errno, _("cannot get priority"));
+	error (EXIT_FAILURE, errno, _("cannot get priority"));
       printf ("%d\n", current_priority);
       exit (0);
     }
@@ -184,12 +184,12 @@ main (int argc, char **argv)
   errno = 0;
   current_priority = GET_PRIORITY ();
   if (current_priority == -1 && errno != 0)
-    error (1, errno, _("cannot get priority"));
+    error (EXIT_FAILURE, errno, _("cannot get priority"));
   if (setpriority (PRIO_PROCESS, 0, current_priority + adjustment))
 #else
   if (nice (adjustment) == -1)
 #endif
-    error (1, errno, _("cannot set priority"));
+    error (EXIT_FAILURE, errno, _("cannot set priority"));
 
   execvp (argv[i], &argv[i]);
 

@@ -347,13 +347,13 @@ change_identity (const struct passwd *pw)
 #ifdef HAVE_INITGROUPS
   errno = 0;
   if (initgroups (pw->pw_name, pw->pw_gid) == -1)
-    error (1, errno, _("cannot set groups"));
+    error (EXIT_FAILURE, errno, _("cannot set groups"));
   endgrent ();
 #endif
   if (setgid (pw->pw_gid))
-    error (1, errno, _("cannot set group id"));
+    error (EXIT_FAILURE, errno, _("cannot set group id"));
   if (setuid (pw->pw_uid))
-    error (1, errno, _("cannot set user id"));
+    error (EXIT_FAILURE, errno, _("cannot set user id"));
 }
 
 /* Run SHELL, or DEFAULT_SHELL if SHELL is empty.
@@ -526,7 +526,7 @@ main (int argc, char **argv)
 
   pw = getpwnam (new_user);
   if (pw == 0)
-    error (1, 0, _("user %s does not exist"), new_user);
+    error (EXIT_FAILURE, 0, _("user %s does not exist"), new_user);
   endpwent ();
 
   /* Make sure pw->pw_shell is non-NULL.  It may be NULL when NEW_USER
@@ -549,7 +549,7 @@ main (int argc, char **argv)
 #ifdef SYSLOG_FAILURE
       log_su (pw, 0);
 #endif
-      error (1, 0, _("incorrect password"));
+      error (EXIT_FAILURE, 0, _("incorrect password"));
     }
 #ifdef SYSLOG_SUCCESS
   else

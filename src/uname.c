@@ -223,7 +223,7 @@ main (int argc, char **argv)
       struct utsname name;
 
       if (uname (&name) == -1)
-	error (1, errno, _("cannot get system name"));
+	error (EXIT_FAILURE, errno, _("cannot get system name"));
 
       if (toprint & PRINT_KERNEL_NAME)
 	print_element (name.sysname);

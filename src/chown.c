@@ -181,7 +181,7 @@ main (int argc, char **argv)
 					     &old_uid, &old_gid,
 					     &u_dummy, &g_dummy);
 	    if (e)
-	      error (1, 0, "%s: %s", quote (optarg), e);
+	      error (EXIT_FAILURE, 0, "%s: %s", quote (optarg), e);
 	    break;
 	  }
 	case 'R':
@@ -217,7 +217,7 @@ main (int argc, char **argv)
       struct stat ref_stats;
 
       if (stat (reference_file, &ref_stats))
-	error (1, errno, _("failed to get attributes of %s"),
+	error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
 	       quote (reference_file));
 
       uid = ref_stats.st_uid;
@@ -230,7 +230,7 @@ main (int argc, char **argv)
       const char *e = parse_user_spec (argv[optind], &uid, &gid,
 				       &chopt.user_name, &chopt.group_name);
       if (e)
-        error (1, 0, "%s: %s", quote (argv[optind]), e);
+        error (EXIT_FAILURE, 0, "%s: %s", quote (argv[optind]), e);
 
       /* FIXME: set it to the empty string?  */
       if (chopt.user_name == NULL)

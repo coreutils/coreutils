@@ -460,7 +460,8 @@ main (int argc, char **argv)
 #ifdef S_ISLNK
 	  symbolic_link = 1;
 #else
-	  error (1, 0, _("symbolic links are not supported on this system"));
+	  error (EXIT_FAILURE, 0,
+		 _("symbolic links are not supported on this system"));
 #endif
 	  break;
 	case TARGET_DIRECTORY_OPTION:
@@ -537,7 +538,7 @@ main (int argc, char **argv)
 				    : n_files - 2);
 
       if (!target_directory_specified && !dest_is_dir)
-	error (1, 0,
+	error (EXIT_FAILURE, 0,
 	   _("when making multiple links, last argument must be a directory"));
       for (i = 0; i <= last_file_idx; ++i)
 	errors += do_link (file[i], target_directory);

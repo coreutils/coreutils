@@ -101,12 +101,12 @@ main (int argc, char **argv)
       /* Set hostname to argv[1].  */
       err = sethostname (argv[1], strlen (argv[1]));
       if (err != 0)
-	error (1, errno, _("cannot set hostname to `%s'"), argv[1]);
+	error (EXIT_FAILURE, errno, _("cannot set hostname to `%s'"), argv[1]);
       exit (0);
     }
 #else
   if (argc == 2)
-    error (1, 0,
+    error (EXIT_FAILURE, 0,
 	   _("cannot set hostname; this system lacks the functionality"));
 #endif
 
@@ -114,7 +114,7 @@ main (int argc, char **argv)
     {
       hostname = xgethostname ();
       if (hostname == NULL)
-	error (1, errno, _("cannot determine hostname"));
+	error (EXIT_FAILURE, errno, _("cannot determine hostname"));
       printf ("%s\n", hostname);
     }
   else

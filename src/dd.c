@@ -383,9 +383,11 @@ cleanup (void)
 {
   print_stats ();
   if (close (STDIN_FILENO) < 0)
-    error (1, errno, _("closing input file %s"), quote (input_file));
+    error (EXIT_FAILURE, errno,
+	   _("closing input file %s"), quote (input_file));
   if (close (STDOUT_FILENO) < 0)
-    error (1, errno, _("closing output file %s"), quote (output_file));
+    error (EXIT_FAILURE, errno,
+	   _("closing output file %s"), quote (output_file));
 }
 
 static inline void
@@ -610,7 +612,7 @@ scanargs (int argc, char **argv)
 	    }
 
 	  if (invalid)
-	    error (1, 0, _("invalid number %s"), quote (val));
+	    error (EXIT_FAILURE, 0, _("invalid number %s"), quote (val));
 	}
     }
 
@@ -640,7 +642,7 @@ apply_translations (void)
       || (MX (C_LCASE | C_UCASE) > 1)
       || (MX (C_UNBLOCK | C_SYNC) > 1))
     {
-      error (1, 0, _("\
+      error (EXIT_FAILURE, 0, _("\
 only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, {unblock,sync}"));
     }
 #undef MX
@@ -1163,7 +1165,7 @@ main (int argc, char **argv)
   if (input_file != NULL)
     {
       if (open_fd (STDIN_FILENO, input_file, O_RDONLY, 0) < 0)
-	error (1, errno, _("opening %s"), quote (input_file));
+	error (EXIT_FAILURE, errno, _("opening %s"), quote (input_file));
     }
   else
     input_file = _("standard input");
@@ -1181,7 +1183,7 @@ main (int argc, char **argv)
       if ((! seek_records
 	   || open_fd (STDOUT_FILENO, output_file, O_RDWR | opts, perms) < 0)
 	  && open_fd (STDOUT_FILENO, output_file, O_WRONLY | opts, perms) < 0)
-	error (1, errno, _("opening %s"), quote (output_file));
+	error (EXIT_FAILURE, errno, _("opening %s"), quote (output_file));
 
 #if HAVE_FTRUNCATE
       if (seek_records != 0 && !(conversions_mask & C_NOTRUNC))
@@ -1189,10 +1191,10 @@ main (int argc, char **argv)
 	  struct stat stdout_stat;
 	  off_t o = seek_records * output_blocksize;
 	  if (o / output_blocksize != seek_records)
-	    error (1, 0, _("file offset out of range"));
+	    error (EXIT_FAILURE, 0, _("file offset out of range"));
 
 	  if (fstat (STDOUT_FILENO, &stdout_stat) != 0)
-	    error (1, errno, _("cannot fstat %s"), quote (output_file));
+	    error (EXIT_FAILURE, errno, _("cannot fstat %s"), quote (output_file));
 
 	  /* Complain only when ftruncate fails on a regular file, a
 	     directory, or a shared memory object, as the 2000-08
@@ -1205,7 +1207,8 @@ main (int argc, char **argv)
 		  || S_TYPEISSHM (&stdout_stat)))
 	    {
 	      char buf[LONGEST_HUMAN_READABLE + 1];
-	      error (1, errno, _("advancing past %s bytes in output file %s"),
+	      error (EXIT_FAILURE, errno,
+		     _("advancing past %s bytes in output file %s"),
 		     human_readable (o, buf, 1, 1),
 		     quote (output_file));
 	    }

@@ -126,7 +126,7 @@ print_uptime (int n, const STRUCT_UTMP *this)
 #endif
     {
       if (boot_time == 0)
-	error (1, errno, _("couldn't get boot time"));
+	error (EXIT_FAILURE, errno, _("couldn't get boot time"));
       uptime = time_now - boot_time;
     }
   updays = uptime / 86400;
@@ -175,7 +175,7 @@ uptime (const char *filename)
   int fail = read_utmp (filename, &n_users, &utmp_buf);
 
   if (fail)
-    error (1, errno, "%s", filename);
+    error (EXIT_FAILURE, errno, "%s", filename);
 
   print_uptime (n_users, utmp_buf);
 }

@@ -1,5 +1,5 @@
 /* stty -- change and print terminal line settings
-   Copyright (C) 1990-2001 Free Software Foundation, Inc.
+   Copyright (C) 1990-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -900,10 +900,10 @@ mutually exclusive"));
       device_name = file_name;
       fd = open (device_name, O_RDONLY | O_NONBLOCK);
       if (fd < 0)
-	error (1, errno, "%s", device_name);
+	error (EXIT_FAILURE, errno, "%s", device_name);
       if ((fdflags = fcntl (fd, F_GETFL)) == -1
 	  || fcntl (fd, F_SETFL, fdflags & ~O_NONBLOCK) < 0)
-	error (1, errno, _("%s: couldn't reset non-blocking mode"),
+	error (EXIT_FAILURE, errno, _("%s: couldn't reset non-blocking mode"),
 	       device_name);
     }
   else
@@ -916,7 +916,7 @@ mutually exclusive"));
      spurious difference in an uninitialized portion of the structure.  */
   memset (&mode, 0, sizeof (mode));
   if (tcgetattr (fd, &mode))
-    error (1, errno, "%s", device_name);
+    error (EXIT_FAILURE, errno, "%s", device_name);
 
   if (verbose_output || recoverable_output || noargs)
     {
@@ -1078,7 +1078,7 @@ mutually exclusive"));
       struct termios new_mode;
 
       if (tcsetattr (fd, TCSADRAIN, &mode))
-	error (1, errno, "%s", device_name);
+	error (EXIT_FAILURE, errno, "%s", device_name);
 
       /* POSIX (according to Zlotnick's book) tcsetattr returns zero if
 	 it performs *any* of the requested operations.  This means it
@@ -1091,7 +1091,7 @@ mutually exclusive"));
 	 spurious difference in an uninitialized portion of the structure.  */
       memset (&new_mode, 0, sizeof (new_mode));
       if (tcgetattr (fd, &new_mode))
-	error (1, errno, "%s", device_name);
+	error (EXIT_FAILURE, errno, "%s", device_name);
 
       /* Normally, one shouldn't use memcmp to compare structures that
 	 may have `holes' containing uninitialized data, but we have been
@@ -1116,7 +1116,7 @@ mutually exclusive"));
 	  if (speed_was_set || memcmp (&mode, &new_mode, sizeof (mode)) != 0)
 #endif
 	    {
-	      error (1, 0,
+	      error (EXIT_FAILURE, 0,
 		     _("%s: unable to perform all requested operations"),
 		     device_name);
 #ifdef TESTING
@@ -1397,7 +1397,7 @@ set_window_size (int rows, int cols, int fd, const char *device_name)
   if (get_win_size (fd, &win))
     {
       if (errno != EINVAL)
-	error (1, errno, "%s", device_name);
+	error (EXIT_FAILURE, errno, "%s", device_name);
       memset (&win, 0, sizeof (win));
     }
 
@@ -1439,16 +1439,16 @@ set_window_size (int rows, int cols, int fd, const char *device_name)
       win.ws_col = 1;
 
       if (ioctl (fd, TIOCSWINSZ, (char *) &win))
-	error (1, errno, "%s", device_name);
+	error (EXIT_FAILURE, errno, "%s", device_name);
 
       if (ioctl (fd, TIOCSSIZE, (char *) &ttysz))
-	error (1, errno, "%s", device_name);
+	error (EXIT_FAILURE, errno, "%s", device_name);
       return;
     }
 # endif
 
   if (ioctl (fd, TIOCSWINSZ, (char *) &win))
-    error (1, errno, "%s", device_name);
+    error (EXIT_FAILURE, errno, "%s", device_name);
 }
 
 static void
@@ -1459,9 +1459,10 @@ display_window_size (int fancy, int fd, const char *device_name)
   if (get_win_size (fd, &win))
     {
       if (errno != EINVAL)
-	error (1, errno, "%s", device_name);
+	error (EXIT_FAILURE, errno, "%s", device_name);
       if (!fancy)
-	error (1, 0, _("%s: no size information for this device"), device_name);
+	error (EXIT_FAILURE, 0,
+	       _("%s: no size information for this device"), device_name);
     }
   else
     {

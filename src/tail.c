@@ -397,15 +397,16 @@ xlseek (int fd, off_t offset, int whence, char const *filename)
   switch (whence)
     {
     case SEEK_SET:
-      error (1, errno, _("%s: cannot seek to offset %s%s"),
+      error (EXIT_FAILURE, errno, _("%s: cannot seek to offset %s%s"),
 	     filename, sign, s);
       break;
     case SEEK_CUR:
-      error (1, errno, _("%s: cannot seek to relative offset %s%s"),
+      error (EXIT_FAILURE, errno, _("%s: cannot seek to relative offset %s%s"),
 	     filename, sign, s);
       break;
     case SEEK_END:
-      error (1, errno, _("%s: cannot seek to end-relative offset %s%s"),
+      error (EXIT_FAILURE, errno,
+	     _("%s: cannot seek to end-relative offset %s%s"),
 	     filename, sign, s);
       break;
     default:

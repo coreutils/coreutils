@@ -1,5 +1,5 @@
 /* id -- print real and effective UIDs and GIDs
-   Copyright (C) 1989-2001 Free Software Foundation, Inc.
+   Copyright (C) 1989-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -159,10 +159,11 @@ main (int argc, char **argv)
     }
 
   if (just_user + just_group + just_group_list > 1)
-    error (1, 0, _("cannot print only user and only group"));
+    error (EXIT_FAILURE, 0, _("cannot print only user and only group"));
 
   if (just_user + just_group + just_group_list == 0 && (use_real || use_name))
-    error (1, 0, _("cannot print only names or real IDs in default format"));
+    error (EXIT_FAILURE, 0,
+	   _("cannot print only names or real IDs in default format"));
 
   if (argc - optind > 1)
     usage (1);
@@ -171,7 +172,7 @@ main (int argc, char **argv)
     {
       struct passwd *pwd = getpwnam (argv[optind]);
       if (pwd == NULL)
-	error (1, 0, _("%s: No such user"), argv[optind]);
+	error (EXIT_FAILURE, 0, _("%s: No such user"), argv[optind]);
       ruid = euid = pwd->pw_uid;
       rgid = egid = pwd->pw_gid;
     }

@@ -1,5 +1,5 @@
 /* chmod -- change permission modes of files
-   Copyright (C) 89, 90, 91, 1995-2001 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -318,7 +318,7 @@ main (int argc, char **argv)
 	    {
 	      static char char_string[2] = {0, 0};
 	      char_string[0] = c;
-	      error (1, 0, _("invalid character %s in mode string %s"),
+	      error (EXIT_FAILURE, 0, _("invalid character %s in mode string %s"),
 		     quote_n (0, char_string), quote_n (1, argv[thisind]));
 	    }
 	  modeind = thisind;
@@ -358,11 +358,12 @@ main (int argc, char **argv)
 	     : mode_compile (argv[modeind], MODE_MASK_ALL));
 
   if (changes == MODE_INVALID)
-    error (1, 0, _("invalid mode string: %s"), quote (argv[modeind]));
+    error (EXIT_FAILURE, 0,
+	   _("invalid mode string: %s"), quote (argv[modeind]));
   else if (changes == MODE_MEMORY_EXHAUSTED)
     xalloc_die ();
   else if (changes == MODE_BAD_REFERENCE)
-    error (1, errno, _("failed to get attributes of %s"),
+    error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
 	   quote (reference_file));
 
   for (; optind < argc; ++optind)

@@ -302,7 +302,7 @@ main (int argc, char **argv)
 	  flexible_date++;
 	  newtime = get_date (optarg, NULL);
 	  if (newtime == (time_t) -1)
-	    error (1, 0, _("invalid date format %s"), quote (optarg));
+	    error (EXIT_FAILURE, 0, _("invalid date format %s"), quote (optarg));
 	  date_set++;
 	  break;
 
@@ -322,7 +322,7 @@ main (int argc, char **argv)
 	  posix_date++;
 	  if (! posixtime (&newtime, optarg,
 			   PDS_LEADING_YEAR | PDS_CENTURY | PDS_SECONDS))
-	    error (1, 0, _("invalid date format %s"), quote (optarg));
+	    error (EXIT_FAILURE, 0, _("invalid date format %s"), quote (optarg));
 	  date_set++;
 	  break;
 
@@ -353,7 +353,8 @@ main (int argc, char **argv)
   if (use_ref)
     {
       if (stat (ref_file, &ref_stats))
-	error (1, errno, _("failed to get attributes of %s"), quote (ref_file));
+	error (EXIT_FAILURE, errno,
+	       _("failed to get attributes of %s"), quote (ref_file));
       date_set++;
     }
 

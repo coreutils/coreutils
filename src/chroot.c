@@ -1,5 +1,5 @@
 /* chroot -- run command or shell with special root directory
-   Copyright (C) 95, 96, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 95, 96, 1997, 1999-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -80,10 +80,11 @@ main (int argc, char **argv)
     }
 
   if (chroot (argv[1]))
-    error (1, errno, _("cannot change root directory to %s"), argv[1]);
+    error (EXIT_FAILURE, errno,
+	   _("cannot change root directory to %s"), argv[1]);
 
   if (chdir ("/"))
-    error (1, errno, _("cannot chdir to root directory"));
+    error (EXIT_FAILURE, errno, _("cannot chdir to root directory"));
 
   if (argc == 2)
     {

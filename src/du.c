@@ -385,7 +385,7 @@ pop_dir (struct saved_cwd *cwd, const char *curr_dir_name)
     }
   else if (chdir ("..") < 0)
     {
-      error (1, errno, _("cannot change to `..' from directory %s"),
+      error (EXIT_FAILURE, errno, _("cannot change to `..' from directory %s"),
 	     quote (curr_dir_name));
     }
 }
@@ -618,7 +618,7 @@ main (int argc, char **argv)
 	case MAX_DEPTH_OPTION:		/* --max-depth=N */
 	  if (xstrtol (optarg, NULL, 0, &tmp_long, NULL) != LONGINT_OK
 	      || tmp_long < 0 || tmp_long > INT_MAX)
-	    error (1, 0, _("invalid maximum depth %s"), quote (optarg));
+	    error (EXIT_FAILURE, 0, _("invalid maximum depth %s"), quote (optarg));
 
 	  max_depth_specified = 1;
 	  max_depth = (int) tmp_long;
@@ -659,7 +659,7 @@ main (int argc, char **argv)
 	case 'X':
 	  if (add_exclude_file (add_exclude, exclude, optarg,
 				EXCLUDE_WILDCARDS, '\n'))
-	    error (1, errno, "%s", quote (optarg));
+	    error (EXIT_FAILURE, errno, "%s", quote (optarg));
 	  break;
 
 	case EXCLUDE_OPTION:

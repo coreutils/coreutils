@@ -137,7 +137,7 @@ main (int argc, char **argv)
       struct mode_change *change = mode_compile (specified_mode, 0);
       newmode &= ~ umask (0);
       if (change == MODE_INVALID)
-	error (1, 0, _("invalid mode %s"), quote (specified_mode));
+	error (EXIT_FAILURE, 0, _("invalid mode %s"), quote (specified_mode));
       else if (change == MODE_MEMORY_EXHAUSTED)
 	xalloc_die ();
       newmode = mode_adjust (newmode, change);

@@ -148,7 +148,7 @@ main (int argc, char **argv)
 
   errs = tee (argc - optind, (const char **) &argv[optind]);
   if (close (STDIN_FILENO) != 0)
-    error (1, errno, _("standard input"));
+    error (EXIT_FAILURE, errno, _("standard input"));
 
   exit (errs);
 }

@@ -269,7 +269,7 @@ main (int argc, char **argv)
 
   /* Check for invalid combinations of arguments. */
   if (dir_arg && strip_files)
-    error (1, 0,
+    error (EXIT_FAILURE, 0,
 	   _("the strip option may not be used when installing a directory"));
 
   if (backup_suffix_string)
@@ -293,7 +293,7 @@ main (int argc, char **argv)
     {
       struct mode_change *change = mode_compile (specified_mode, 0);
       if (change == MODE_INVALID)
-	error (1, 0, _("invalid mode %s"), quote (specified_mode));
+	error (EXIT_FAILURE, 0, _("invalid mode %s"), quote (specified_mode));
       else if (change == MODE_MEMORY_EXHAUSTED)
 	xalloc_die ();
       mode = mode_adjust (0, change);
@@ -529,18 +529,18 @@ strip (const char *path)
   switch (pid)
     {
     case -1:
-      error (1, errno, _("fork system call failed"));
+      error (EXIT_FAILURE, errno, _("fork system call failed"));
       break;
     case 0:			/* Child. */
       execlp ("strip", "strip", path, NULL);
-      error (1, errno, _("cannot run strip"));
+      error (EXIT_FAILURE, errno, _("cannot run strip"));
       break;
     default:			/* Parent. */
       /* Parent process. */
       while (pid != wait (&status))	/* Wait for kid to finish. */
 	/* Do nothing. */ ;
       if (status)
-	error (1, 0, _("strip failed"));
+	error (EXIT_FAILURE, 0, _("strip failed"));
       break;
     }
 }
@@ -561,7 +561,7 @@ get_ids (void)
 	  long int tmp_long;
 	  if (xstrtol (owner_name, NULL, 0, &tmp_long, NULL) != LONGINT_OK
 	      || tmp_long < 0 || tmp_long > UID_T_MAX)
-	    error (1, 0, _("invalid user %s"), quote (owner_name));
+	    error (EXIT_FAILURE, 0, _("invalid user %s"), quote (owner_name));
 	  owner_id = (uid_t) tmp_long;
 	}
       else
@@ -579,7 +579,7 @@ get_ids (void)
 	  long int tmp_long;
 	  if (xstrtol (group_name, NULL, 0, &tmp_long, NULL) != LONGINT_OK
 	      || tmp_long < 0 || tmp_long > GID_T_MAX)
-	    error (1, 0, _("invalid group %s"), quote (group_name));
+	    error (EXIT_FAILURE, 0, _("invalid group %s"), quote (group_name));
 	  group_id = (gid_t) tmp_long;
 	}
       else

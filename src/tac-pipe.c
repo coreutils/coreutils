@@ -54,7 +54,7 @@ buf_init_from_stdin (Buf *x, int eol_byte)
 	}
       bytes_read = full_read (STDIN_FILENO, buf, BUFFER_SIZE);
       if (bytes_read < 0)
-	error (1, errno, _("read error"));
+	error (EXIT_FAILURE, errno, _("read error"));
 
       {
 	struct B_pair bp;

@@ -102,7 +102,7 @@ users (const char *filename)
   int fail = read_utmp (filename, &n_users, &utmp_buf);
 
   if (fail)
-    error (1, errno, "%s", filename);
+    error (EXIT_FAILURE, errno, "%s", filename);
 
   list_entries_users (n_users, utmp_buf);
 }

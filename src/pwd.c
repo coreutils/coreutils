@@ -76,7 +76,7 @@ main (int argc, char **argv)
 
   wd = xgetcwd ();
   if (wd == NULL)
-    error (1, errno, _("cannot get current directory"));
+    error (EXIT_FAILURE, errno, _("cannot get current directory"));
   printf ("%s\n", wd);
 
   exit (0);

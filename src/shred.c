@@ -1556,7 +1556,7 @@ main (int argc, char **argv)
 		|| (word32) tmp != tmp
 		|| ((size_t) (tmp * sizeof (int)) / sizeof (int) != tmp))
 	      {
-		error (1, 0, _("%s: invalid number of passes"),
+		error (EXIT_FAILURE, 0, _("%s: invalid number of passes"),
 		       quotearg_colon (optarg));
 	      }
 	    flags.n_iterations = (size_t) tmp;
@@ -1573,7 +1573,7 @@ main (int argc, char **argv)
 	    if (xstrtoumax (optarg, NULL, 0, &tmp, "cbBkKMGTPEZY0")
 		!= LONGINT_OK)
 	      {
-		error (1, 0, _("%s: invalid file size"),
+		error (EXIT_FAILURE, 0, _("%s: invalid file size"),
 		       quotearg_colon (optarg));
 	      }
 	    flags.size = tmp;
