@@ -14,7 +14,7 @@
 	and make the two-array approach work.
 
 	* tests/du/basic: Correct/add tests for the above fix.
-	Set LC_ALL, etc, now that we use sort.
+	Set LC_ALL, etc., now that we use sort.
 	Check the block/size of a small file, too.
 	Correct expected results for simple dir1/dir2/file case.
 	Add another test of du -S.
