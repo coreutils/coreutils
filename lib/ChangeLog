@@ -1,3 +1,36 @@
+2001-02-25  Paul Eggert  <eggert@twinsun.com>
+
+	The mkstemp replacement is taken from glibc 2.2.2, with some
+	portability fixes for use outside glibc, as follows:
+
+	* tempname.c (struct_stat64): New macro.
+	(direxists, __gen_tempname): Use it.
+	This avoids a portability problem with Solaris 8.
+
+	* tempname.c (<config.h>): Include if HAVE_CONFIG_H.
+	(<stddef.h>, <stdint.h>, <string.h>):
+	Include only if STDC_HEADERS || _LIBC.
+	(<fcntl.h>): Include only if HAVE_FCNTL_H || _LIBC.
+	(<unistd.h>): Include only if HAVE_UNISTD_H || _LIBC.
+	(<sys/time.h>): Include only if HAVE_SYS_TIME_H || _LIBC.
+	(__set_errno): Define this macro if <errno.h> doesn't.
+	(P_tmpdir, TMP_MAX, __GT_FILE, __GT_BIGFILE, __GT_DIR, __GT_NOCREATE):
+	Define these macros if <stdio.h> doesn't.
+	(S_ISDIR, S_IRUSR, S_IWUSR, S_IXUSR):
+	Define these macros if <sys/stat.h>
+	doesn't.  Ignore <sys/stat.h> S_ISDIR if STAT_MACROS_BROKEN.
+	(stat64, __getpid, __gettimeofday, __mkdir, __open, __open64, lxstat64,
+	__xstat64): Define if not _LIBC.
+	(__secure_getenv): Define if ! (HAVE___SECURE_GETENV || _LIBC).
+	(__gen_tempname): Invoke gettimeofday only if
+	HAVE_GETTIMEOFDAY || _LIBC;
+	otherwise, fall back on plain "time".
+	Use macros like S_IRUSR | S_IWUSR rather than octal values like 0600.
+
+	* mkstemp.c (__GT_FILE): Define to zero if not defined.
+
+	* mkstemp.c, tempname.c: New files, taken from glibc 2.2.2.
+
 2001-02-17  Jim Meyering  <meyering@lucent.com>
 
 	* strtoul.c: Sync from GNU libc.  Use double quotes, not <...>
@@ -24,7 +57,7 @@
 
 2001-02-16  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/alloca.c (malloc): Undef before defining, since stdlib.h
+	* alloca.c (malloc): Undef before defining, since stdlib.h
 	may have defined it.  Needed for Encore Umax-3.0.9.16b systems.
 	Reported by Mark Hounschell via Paul Eggert.
 
@@ -61,7 +94,7 @@
 
 2001-01-03  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/strftime.c: Sync with glibc time/strftime.c 1.81.
+	* strftime.c: Sync with glibc time/strftime.c 1.81.
 
 2001-01-03  Jim Meyering  <meyering@lucent.com>
 
@@ -70,7 +103,7 @@
 
 2000-12-29  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/modechange.c: Do not assume that mode_t uses the
+	* modechange.c: Do not assume that mode_t uses the
 	traditional octal encoding.  E.g. "chmod 1 FOO" should set
 	the other-execute bit of FOO even if S_IXOTH != 1.
 
@@ -170,11 +203,11 @@
 
 2000-12-01  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/memrchr.c: Include <config.h> before any system include file.
+	* memrchr.c: Include <config.h> before any system include file.
 
 2000-11-29  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/dirname.c (dir_name_r): Fix typo: int -> size_t.
+	* dirname.c (dir_name_r): Fix typo: int -> size_t.
 
 2000-11-26  Jim Meyering  <meyering@lucent.com>
 
@@ -182,12 +215,12 @@
 
 2000-11-22  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/strftime.c (my_strftime): Do not invoke mbrlen with a
+	* strftime.c (my_strftime): Do not invoke mbrlen with a
 	size of (size_t) -1; it's not portable.
 
 2000-11-17  Akim Demaille  <akim@epita.fr>
 
-	* lib/obstack.h: Formatting changes.
+	* obstack.h: Formatting changes.
 	(obstack_grow, obstack_grow0): Don't cast WHERE at all: that would
 	prevent type checking.
 	(obstack_ptr_grow, obstack_ptr_grow_fast): When assigning, don't
