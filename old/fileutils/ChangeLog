@@ -1,6 +1,9 @@
 2001-12-29  Jim Meyering  <meyering@lucent.com>
 
-	* tests/cp/r-vs-symlink: New file.
+	* src/cp.c (main): With -r, always dereference symlinks.
+	Reported by Christian Harkort.  Patch by Chris J. Bednar.
+
+	* tests/cp/r-vs-symlink: New file to test for the above fix.
 	* tests/cp/Makefile.am (TESTS): Add r-vs-symlink.
 
 2001-12-21  Jim Meyering  <meyering@lucent.com>
