@@ -10,12 +10,20 @@ fi
 
 tmp=t-ls.$$
 
+# We're going to LS from a subdir.  Prepend ../ if $LS is not an
+# absolute file name.
+case $LS in
+  /*) ;;
+  *) LS=../$LS
+esac
+
 test_failure=0
 mkdir $tmp || test_failure=1
 cd $tmp || test_failure=1
+
 : > a || test_failure=1
+sleep 1
 : > b || test_failure=1
-cat b || test_failure=1
 
 if test $test_failure = 1; then
   echo 'failure in testing framework'
@@ -23,8 +31,8 @@ if test $test_failure = 1; then
 fi
 
 fail=0
-$LS -u a b > out || fail=1
-    cat out
+set `$LS -u a b`
+test "$*" = 'b a' && : || fail=1
 
 cd ..
 rm -rf $tmp
