@@ -2,10 +2,11 @@
 # Source this file at the beginning of a test that works
 # only when run as root or as non-root.
 
-case $1 in
+case "$PRIV_CHECK_ARG" in
   require-root) who='as root';;
   require-non-root) who='by an unprivileged user';;
-  *) echo "Usage: $0 require-root|require-non-root" 1>&2; exit 1;;
+  *) echo "Usage: PRIV_CHECK_ARG={require-root|require-non-root} . priv-check"\
+     1>&2; exit 1;;
 esac
 
 priv_check_temp=priv-check.$$
@@ -15,7 +16,7 @@ chmod a-w $priv_check_temp || framework_failure=1
 (echo foo >> $priv_check_temp) >/dev/null 2>&1
 overwrite_status=$?
 give_msg=no
-case $1:$overwrite_status in
+case $PRIV_CHECK_ARG:$overwrite_status in
   require-root:0) ;;
   require-root:*) give_msg=yes ;;
   require-non-root:0) give_msg=yes ;;
