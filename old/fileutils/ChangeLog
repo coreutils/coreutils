@@ -2,6 +2,8 @@
 
 	* Makefile.maint (tgz-size): Also work for sizes in the kilobyte range.
 
+	* Makefile.maint: More changes from autoconf.
+
 	Changes from autoconf.
 	* Makefile.maint (GZIP_ENV): Add --best.
 	(AMTAR): Define.
