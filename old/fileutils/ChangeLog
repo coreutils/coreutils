@@ -1,5 +1,7 @@
 2002-07-09  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.1.10.
+
 	I added stat.x, but didn't update the definition of dist_man_MANS.
 	* man/Makefile.am (dist_man_MANS): Add stat.1.
 	(stat.1): Add dependency.
@@ -12,10 +14,6 @@
 	* src/mv.c (euidaccess): Remove declaration.  It was unused.
 	From Michael Stone.
 	(yesno): Remove declaration.  It too was unused.
-
-2002-07-08  Jim Meyering  <meyering@lucent.com>
-
-	* Version 4.1.10.
 
 2002-07-08  Paul Eggert  <eggert@twinsun.com:
 
