@@ -1,8 +1,10 @@
-# gethrxtime.m4 serial 1
+# gethrxtime.m4 serial 2
 dnl Copyright (C) 2005 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
+
+dnl Written by Paul Eggert.
 
 AC_DEFUN([gl_GETHRXTIME],
 [
@@ -48,10 +50,27 @@ AC_DEFUN([gl_XTIME],
 # Prerequisites of lib/gethrxtime.c.
 AC_DEFUN([gl_PREREQ_GETHRXTIME],
 [
-  dnl Do not AC_REQUIRE([gl_CLOCK_TIME]), since that would unnecessarily
-  dnl require -lrt on Solaris.  Invocations of clock_gettime should be
-  dnl safe in gethrxtime.c since Solaris has native gethrtime.
   AC_REQUIRE([AC_HEADER_TIME])
+  AC_REQUIRE([gl_CLOCK_TIME])
+  AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
   AC_CHECK_FUNCS_ONCE(gettimeofday microuptime nanouptime)
-  :
+
+  if test $ac_cv_func_nanouptime != yes; then
+    LIB_GETHRXTIME=
+    AC_CACHE_CHECK([whether CLOCK_MONOTONIC is defined],
+      gl_cv_have_CLOCK_MONOTONIC,
+      [AC_EGREP_CPP([have_CLOCK_MONOTONIC],
+	[
+#        include <time.h>
+#        ifdef CLOCK_MONOTONIC
+	  have_CLOCK_MONOTONIC
+#        endif
+	],
+	gl_cv_have_CLOCK_MONOTONIC=yes,
+	gl_cv_have_CLOCK_MONOTONIC=no)])
+    if test $gl_cv_have_CLOCK_MONOTONIC = yes; then
+      LIB_GETHRXTIME=$LIB_CLOCK_GETTIME
+    fi
+    AC_SUBST([LIB_GETHRXTIME])
+  fi
 ])
