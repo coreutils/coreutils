@@ -2,6 +2,8 @@
 
 	* Version 4.1.10.
 
+	* src/dircolors.hin: Add .wav.
+
 	* tests/rm/fail-eperm: Don't expect `ARGV_0=$0 exec ...' to work.
 	It doesn't work with /bin/sh of Solaris5.6.
 	Use an explicit `export ARGV_0' instead.
