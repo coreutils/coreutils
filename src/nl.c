@@ -473,7 +473,7 @@ main (int argc, char **argv)
   have_read_stdin = 0;
 
   while ((c = getopt_long (argc, argv, "h:b:f:v:i:pl:s:w:n:d:", longopts,
-			   (int *) 0)) != EOF)
+			   NULL)) != -1)
     {
       switch (c)
 	{

@@ -993,8 +993,7 @@ parse_options (int argc, char **argv,
   count_lines = 1;
   forever = forever_multiple = from_start = print_headers = 0;
 
-  while ((c = getopt_long (argc, argv, "c:n:fqv", long_options, (int *) 0))
-	 != EOF)
+  while ((c = getopt_long (argc, argv, "c:n:fqv", long_options, NULL)) != -1)
     {
       switch (c)
 	{

@@ -338,8 +338,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  while ((c = getopt_long (argc, argv, "it:,0123456789", longopts, (int *) 0))
-	 != EOF)
+  while ((c = getopt_long (argc, argv, "it:,0123456789", longopts, NULL)) != -1)
     {
       switch (c)
 	{

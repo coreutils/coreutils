@@ -597,8 +597,7 @@ main (int argc, char **argv)
   sentinel_length = 1;
   separator_ends_record = 1;
 
-  while ((optc = getopt_long (argc, argv, "brs:", longopts, (int *) 0))
-	 != EOF)
+  while ((optc = getopt_long (argc, argv, "brs:", longopts, NULL)) != -1)
     {
       switch (optc)
 	{

@@ -353,7 +353,7 @@ main (register int argc, register char **argv)
 
   while ((optchar = getopt_long (argc, argv, "0123456789cstuw:p:",
 				 long_options, NULL))
-	 != EOF)
+	 != -1)
     switch (optchar)
       {
       default:

@@ -1651,8 +1651,7 @@ main (int argc, char **argv)
   flag_dump_strings = 0;
 
   while ((c = getopt_long (argc, argv, "abcdfhilos::xw::A:j:N:t:v",
-			   long_options, (int *) 0))
-	 != EOF)
+			   long_options, NULL)) != -1)
     {
       unsigned long int tmp;
       enum strtol_error s_err;

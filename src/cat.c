@@ -512,8 +512,7 @@ main (int argc, char **argv)
 
   /* Parse command line options.  */
 
-  while ((c = getopt_long (argc, argv, "benstuvAET", long_options, (int *) 0))
-	 != EOF)
+  while ((c = getopt_long (argc, argv, "benstuvAET", long_options, NULL)) != -1)
     {
       switch (c)
 	{

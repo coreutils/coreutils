@@ -317,8 +317,7 @@ main (int argc, char **argv)
       argc--;
     }
 
-  while ((c = getopt_long (argc, argv, "c:n:qv", long_options, (int *) 0))
-	 != EOF)
+  while ((c = getopt_long (argc, argv, "c:n:qv", long_options, NULL)) != -1)
     {
       switch (c)
 	{

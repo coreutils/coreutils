@@ -447,8 +447,7 @@ main (int argc, char **argv)
   strcpy (delims, "\t");
   strcpy (zero_delims, "\\0");
 
-  while ((optc = getopt_long (argc, argv, "d:s", longopts, (int *) 0))
-	 != EOF)
+  while ((optc = getopt_long (argc, argv, "d:s", longopts, NULL)) != -1)
     {
       switch (optc)
 	{

@@ -1476,8 +1476,7 @@ main (int argc, char **argv)
     signal (SIGTERM, interrupt_handler);
 #endif /* not SA_INTERRUPT */
 
-  while ((optc = getopt_long (argc, argv, "f:b:kn:sqz", longopts, (int *) 0))
-	 != EOF)
+  while ((optc = getopt_long (argc, argv, "f:b:kn:sqz", longopts, NULL)) != -1)
     switch (optc)
       {
       case 0:

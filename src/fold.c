@@ -276,8 +276,7 @@ main (int argc, char **argv)
 	}
     }
 
-  while ((optc = getopt_long (argc, argv, "bsw:", longopts, (int *) 0))
-	 != EOF)
+  while ((optc = getopt_long (argc, argv, "bsw:", longopts, NULL)) != -1)
     {
       switch (optc)
 	{

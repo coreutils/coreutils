@@ -226,7 +226,7 @@ main (int argc, char **argv)
   only_file_2 = 1;
   both = 1;
 
-  while ((c = getopt_long (argc, argv, "123", long_options, (int *) 0)) != EOF)
+  while ((c = getopt_long (argc, argv, "123", long_options, NULL)) != -1)
     switch (c)
       {
       case 0:

@@ -773,7 +773,7 @@ main (int argc, char **argv)
   print_pairables = 1;
 
   while ((optc = getopt_long_only (argc, argv, "-a:e:i1:2:o:t:v:", longopts,
-				   (int *) 0)) != EOF)
+				   NULL)) != -1)
     {
       long int val;
 

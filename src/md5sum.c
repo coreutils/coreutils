@@ -448,7 +448,6 @@ main (int argc, char **argv)
   int opt;
   char **string = NULL;
   size_t n_strings = 0;
-  size_t i;
   size_t err = 0;
   int file_type_specified = 0;
 
@@ -463,8 +462,7 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, "md5sum", GNU_PACKAGE, VERSION, usage);
 
-  while ((opt = getopt_long (argc, argv, "bctw", long_options, NULL))
-	 != EOF)
+  while ((opt = getopt_long (argc, argv, "bctw", long_options, NULL)) != -1)
     switch (opt)
       {
       case 0:			/* long option */
@@ -532,6 +530,8 @@ verifying checksums"));
 
   if (n_strings > 0)
     {
+      size_t i;
+
       if (optind < argc)
 	{
 	  error (0, 0, _("no files may be specified when using --string"));

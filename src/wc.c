@@ -269,7 +269,7 @@ main (int argc, char **argv)
   print_lines = print_words = print_chars = 0;
   total_lines = total_words = total_chars = 0;
 
-  while ((optc = getopt_long (argc, argv, "clw", longopts, (int *) 0)) != EOF)
+  while ((optc = getopt_long (argc, argv, "clw", longopts, NULL)) != -1)
     switch (optc)
       {
       case 0:

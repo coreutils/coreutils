@@ -408,8 +408,7 @@ main (int argc, char **argv)
   tab_list = NULL;
   first_free_tab = 0;
 
-  while ((c = getopt_long (argc, argv, "at:,0123456789", longopts, (int *) 0))
-	 != EOF)
+  while ((c = getopt_long (argc, argv, "at:,0123456789", longopts, NULL)) != -1)
     {
       switch (c)
 	{

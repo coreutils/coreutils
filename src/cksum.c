@@ -293,7 +293,7 @@ main (int argc, char **argv)
 
   have_read_stdin = 0;
 
-  while ((c = getopt_long (argc, argv, "", long_options, (int *) 0)) != EOF)
+  while ((c = getopt_long (argc, argv, "", long_options, NULL)) != -1)
     {
       switch (c)
 	{

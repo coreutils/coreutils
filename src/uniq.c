@@ -305,7 +305,7 @@ main (int argc, char **argv)
   countmode = count_none;
 
   while ((optc = getopt_long (argc, argv, "0123456789cdf:is:uw:", longopts,
-			      (int *) 0)) != EOF)
+			      NULL)) != -1)
     {
       switch (optc)
 	{

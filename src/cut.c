@@ -688,8 +688,7 @@ main (int argc, char **argv)
   delim = '\0';
   have_read_stdin = 0;
 
-  while ((optc = getopt_long (argc, argv, "b:c:d:f:ns", longopts, (int *) 0))
-	 != EOF)
+  while ((optc = getopt_long (argc, argv, "b:c:d:f:ns", longopts, NULL)) != -1)
     {
       switch (optc)
 	{
