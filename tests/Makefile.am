@@ -26,7 +26,7 @@ check-recursive: evar-check root-hint
 # Warn when `make check' is run with POSIXLY_CORRECT or CDPATH set.
 .PHONY: evar-check
 evar-check:
-	test "$${POSIXLY_CORRECT+set}" = set \
+	../src/printenv POSIXLY_CORRECT >/dev/null \
 	  && sed s/%%/POSIXLY_CORRECT/ $(srcdir)/.env-warn || :
 	test "$${CDPATH+set}" = set \
 	  && sed s/%%/CDPATH/ $(srcdir)/.env-warn || :
