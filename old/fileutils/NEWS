@@ -1,5 +1,8 @@
 Changes in release 3.16:
 [3.15a]
+* du --megabytes (-m) works
+* ls -l works even on systems with non-POSIX strftime in their C library
+
 Changes in release 3.15:
 * touch --date=DATE bug (due to broken getdate.y) has been fixed
 * ls -l no longer misformats the date when run in a locale for which the
