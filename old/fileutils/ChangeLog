@@ -1,4 +1,36 @@
+Sun Feb  2 09:40:37 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/cp-hash.c (struct entry): Move dcl to this file from cp.h.
+	(struct htab): Likewise.
+	No longer include cp.h.  Instead, include the things it used to
+	include.
+	(hash_insert2): Make function static.  Move function to precede
+	the sole function from which it is called.
+
+	* src/Makefile.am (noinst_HEADERS): Add copy.h, cp-hash.h.
+	Remove cp.h.
+	(EXTRA_DIST): Remove cp-aux.c and cp-hash.c.
+	(cp_SOURCES): Remove cp-aux.c.  Add cp-hash.c.
+	* src/cp-aux.c: Remove file.
+	* src/cp.h: Remove file.
+
+	* src/du.c (hash_insert2): Rename local HTAB to HT to avoid shadowing
+	global.
+
+	* src/dircolors.c [obstack_chunk_alloc]: Define to malloc, not xmalloc
+	to work better with new obstack functions.
+	* src/ls.c (obstack_chunk_alloc): Likewise.
+
+	* src/df.c (main): Rename local I to C to avoid shadowing and to
+	be more consistent.  Declare I in inner scopes.
+
+	* po/Makefile.in.in (POTFILES): Redirect to an intermediate file
+	and write-protect POTFILES.
+
 Fri Jan 31 21:13:04 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/chown.c (usage): Make the parenthetical note on --no-dereference
+	a little more general.
 
 	* src/*.c: Compare getopt_long return value against -1, not EOF.
 	Use NULL, not `(int *) 0' as last parameter in getopt_long call.
