@@ -1,11 +1,11 @@
 Changes in release 2.1
  [2.0.12]
-* date -d 'last friday' print a date/time that was one hour off
+* date -d 'last friday' would print a date/time that was one hour off
     (e.g., 23:00 on *thursday* rather than 00:00 of the preceding friday)
     when run such that the current time and the target date/time fall on
     opposite sides of a daylight savings time transition.
-    This problem arises only with relative date strings like `last monday'.
-    It is not a problem with strings that include absolute dates.
+    This problem arose only with relative date strings like `last monday'.
+    It was not a problem with strings that include absolute dates.
  [2.0.11]
 * setting the date now works properly, even when using -u
 * `date -f - < /dev/null' no longer dumps core
