@@ -1467,12 +1467,7 @@ getmonth (const char *s, int len)
   if (len == 0)
     return 0;
 
-#ifdef HAVE_ALLOCA
   month = (char *) alloca (len + 1);
-#else
-  month = (char *) malloc (len + 1);
-#endif
-
   for (i = 0; i < len; ++i)
     month[i] = fold_toupper[UCHAR (s[i])];
   while (blanks[UCHAR (month[i - 1])])
@@ -1492,10 +1487,6 @@ getmonth (const char *s, int len)
   while (hi - lo > 1);
 
   result = (!strncmp (month, monthtab[lo].name, len) ? monthtab[lo].val : 0);
-
-#ifndef HAVE_ALLOCA
-  free (month);
-#endif
 
   return result;
 }
@@ -1656,32 +1647,43 @@ keycompare (const struct line *a, const struct line *b)
          can select a faster sort that is similar to ascii sort  */
       else if (need_locale)
 	{
-	  /* FIXME: rewrite not to use variable size arrays */
-	  unsigned char copy_a[lena + 1], copy_b[lenb + 1];
-	  int la, lb, i;
+	  /* FIXME: consider making parameters non-const, then when
+	     both ignore and translate are NULL (which should be most
+	     of the time) we could temporarily NUL-terminate them in
+	     place and avoid the copy.  */
 
-	  /* We can't use strcoll directly on the two strings, but rather must
-	     extract the text for the key and do the proper 'ignore' and
-	     'translate' before comparing.   */
-	  for (la = lb = i = 0; i < max (lena, lenb); i++)
+	  unsigned char *copy_a = (unsigned char *) alloca (lena + 1);
+	  unsigned char *copy_b = (unsigned char *) alloca (lenb + 1);
+	  int new_len_a, new_len_b, i;
+
+	  /* We can't use strcoll directly on the two strings,
+	     but rather must extract the text for the key
+	     (to NUL-terminate for strcoll) and handle any
+	     'ignore' and/or 'translate' before comparing.   */
+	  for (new_len_a = new_len_b = i = 0; i < max (lena, lenb); i++)
 	    {
 	      if (i < lena)
 		{
-		  copy_a[la] = translate ? translate[UCHAR (texta[i])] : texta
-		    [i];
-		  la = ignore ? (ignore[UCHAR (texta[i])] ? la : la + 1) : la
-		    + 1;
+		  copy_a[new_len_a] = (translate
+				       ? translate[UCHAR (texta[i])]
+				       : texta[i]);
+		  if (!ignore || !ignore[UCHAR (texta[i])])
+		    ++new_len_a;
 		}
 	      if (i < lenb)
 		{
-		  copy_b[lb] = translate ? translate[UCHAR (textb[i])] : textb
-		    [i];
-		  lb = ignore ? (ignore[UCHAR (textb[i])] ? lb : lb + 1) : lb
-		    + 1;
+		  copy_b[new_len_b] = (translate
+				       ? translate[UCHAR (textb[i])]
+				       : textb [i]);
+		  if (!ignore || !ignore[UCHAR (textb[i])])
+		    ++new_len_b;
 		}
 	    }
-	  copy_a[la] = copy_b[lb] = 0;
+
+	  copy_a[new_len_a] = copy_b[new_len_b] = 0;
+
 	  diff = strcoll (copy_a, copy_b);
+
 	  if (diff)
 	    return key->reverse ? -diff : diff;
 	  continue;
