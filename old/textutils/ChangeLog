@@ -1,3 +1,52 @@
+1999-05-16  Jim Meyering  <meyering@ascend.com>
+
+	* Version 1.22l.
+
+1999-05-11  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sort.c: Don't autodetect the locale of numbers and
+	months, as this conflicts with POSIX.2 and is tricky to boot.
+
+	(FLOATING_COMMA, NLS_STRNCMP, NLS_MAX_GROUPS,
+	NLS_ONE_CHARACTER_STRING): Remove macros no longer used.
+
+	(nls_grouping, nls_fraction_found, nls_month_found, nos_monthtab,
+	nls_months_collide, nls_keyhead, us_monthtab): Remove variables no
+	longer used.
+
+	(struct nls_keyfield): Remove types no longer used.
+
+	(strncoll_s2_readonly, nls_set_fraction, look_for_fraction,
+	nls_month_is_either_locale, nls_numeric_format): Remove functions no
+	longer used.
+
+	(monthtab): Now has the role that us_monthtab had, but it's const only
+	if ENABLE_NLS is not defined.
+
+	(C_DECIMAL_POINT): Renamed from FLOATING_POINT.  All uses changed.
+	(MONTHS_PER_YEAR): Renamed from NLS_NUM_MONTHS.  All uses changed.
+	(struct_month_cmp): Renamed from nls_sort_month_comp.  All uses changed.
+	Use strcmp, not strcoll, since the user doesn't care about collating
+	here.
+
+	(inittables): Read locale data into monthtab, rather than modifying a
+	separate month table and futzing with indirection.  Do not worry about
+	colliding months, since we no longer autodetect month locale.
+
+	(fraccompare): Don't set no-longer-used variable nls_fraction_found.
+
+	(getmonth): Use strncmp to compare months, since user doesn't care
+	about collating here.  Fix bug where code incorrectly assumed that
+	strlen (monthtab[lo].name) == strlen (monthtab[ix].name).
+
+	(keycompare, main): Don't autodetect month locale.
+
+	(compare): Don't use NLS_MEMCP in code that can't be executed if
+	need_locale is false, as NLS_MEMCP is equivalent to memcmp in that
+	case.
+
+	(sort, insertkey, main): Don't autodetect numeric locale.
+
 1999-05-15  Jim Meyering  <meyering@ascend.com>
 
 	* tests/join/Test.pm (trailing-sp): New test for this fix.
