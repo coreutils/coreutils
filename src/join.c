@@ -731,7 +731,7 @@ add_field_list (char *str)
 /* Add NAME to the array of input file NAMES; currently there are
    *NFILES names in the list.  */
 
-void
+static void
 add_file_name (char const *name, char const *names[2], int *nfiles)
 {
   if (*nfiles == 2)
