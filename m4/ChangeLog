@@ -1,3 +1,7 @@
+1999-01-02  Jim Meyering  <meyering@ascend.com>
+
+	* jm-macros.m4: Replace strcasecmp and strncasecmp.
+
 1998-12-18  Jim Meyering  <meyering@ascend.com>
 
 	* Makefile.am.in (Makefile.am): Simplify rule.
