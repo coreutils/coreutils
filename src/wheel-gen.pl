@@ -29,7 +29,7 @@ sub is_prime ($)
   while (1)
     {
       my $q = $n / $d;
-      ($n == $q * $d)
+      $n == $q * $d
         and return 0;
       $d += $w;
       $q < $d
