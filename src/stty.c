@@ -129,6 +129,9 @@
 #if defined(VDISCARD) && !defined(VFLUSHO)
 #define VFLUSHO VDISCARD
 #endif
+#if defined(VFLUSH) && !defined(VFLUSHO) /* Ultrix 4.2 */
+#define VFLUSHO VFLUSH
+#endif
 #if defined(VFLUSHO) && !defined(CFLUSHO)
 #define CFLUSHO Control ('o')
 #endif
