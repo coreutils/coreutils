@@ -1,6 +1,10 @@
-2003-10-04  Jim Meyering  <jim@meyering.net>
+2003-10-05  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.92.
+
+	* src/du.c (du_files): Mark diagnostic for translation.
+
+2003-10-04  Jim Meyering  <jim@meyering.net>
 
 	* src/du.c (du_files): Ignore any failure of fts_close.
 	Give better diagnostics for failed fts_open.
