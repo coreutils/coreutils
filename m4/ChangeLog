@@ -1,3 +1,8 @@
+2005-03-09  Jim Meyering  <jim@meyering.net>
+
+	* argmatch.m4, cycle-check.m4: New files.
+	* prereq.m4: Require their macros.
+
 2005-03-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* xnanosleep.m4 (gl_XNANOSLEEP): Remove configuration attempting
