@@ -1,3 +1,8 @@
+2002-09-30  Akim Demaille  <akim@epita.fr>
+
+	* prereq.m4: Use AC_REQUIRE everywhere it is possible.
+	(jm_PREREQ_CANON_HOST): Remove duplicates.
+
 2002-11-10  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (jm_MACROS): Add AC_REPLACE_FUNCS(raise).
