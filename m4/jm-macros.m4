@@ -129,6 +129,40 @@ AC_DEFUN(jm_MACROS,
   AC_CHECK_FUNCS(clock_gettime)
   AC_CHECK_FUNCS(gettimeofday)
 
+  AC_REQUIRE([AC_FUNC_CLOSEDIR_VOID])
+  AC_REQUIRE([jm_FUNC_UTIME])
+
+  AC_CHECK_FUNCS( \
+    acl \
+    bcopy \
+    endgrent \
+    endpwent \
+    fchdir \
+    fdatasync \
+    fseeko \
+    ftime \
+    ftruncate \
+    getcwd \
+    gethrtime \
+    getmntinfo \
+    hasmntopt \
+    isascii \
+    lchown \
+    listmntent \
+    localeconv \
+    memcpy \
+    mempcpy \
+    mkfifo \
+    realpath \
+    resolvepath \
+    sethostname \
+    strchr \
+    strerror \
+    strrchr \
+    sysinfo \
+    tzset \
+  )
+
   AM_FUNC_GETLINE
   if test $am_cv_func_working_getline != yes; then
     AC_CHECK_FUNCS(getdelim)
