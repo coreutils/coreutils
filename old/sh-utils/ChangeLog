@@ -7,6 +7,8 @@
 	Patch from Tim J. Robbins <tjr@FreeBSD.ORG>
 	* tests/misc/pathchk1: New test for the above.
 	* tests/misc: New directory.
+	* tests/Makefile.am (SUBDIRS): Add misc.
+	* tests/misc/Makefile.am: New file.
 
 2002-05-03  Jim Meyering  <meyering@lucent.com>
 
