@@ -1,7 +1,7 @@
 Changes in release 3.14:
  [3.13i]
 * ls -l honors current locale with respect to abbreviated month names (and,
-  with --full-time day names) on systems with a locale-sensitive strftime
+  with --full-time day names) on systems with a locale-supporting strftime
   function, e.g., ones based on recent versions of the GNU C library
 * ls -l recognizes Cray's migrated dmf files.
 * chgrp no longer aborts when given a group number larger than INT_MAX
