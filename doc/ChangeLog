@@ -1,3 +1,8 @@
+2003-09-28  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (Translating): Correct typo in menu description.
+	From A Costa.
+
 2003-09-02  Paul Eggert  <eggert@twinsun.com>
 
 	* coreutils.texi (sort invocation): -d now overrides -i.
