@@ -4725,6 +4725,10 @@ field specification notation.
 
 The elements in @var{field-list}
 are separated by commas or blanks.
+Blank separators typically need to be quoted for the shell.  For
+example, the commands @samp{join -o 1.2,2.2} and @samp{join -o '1.2
+2.2'} are equivalent.
+
 All output lines---including those printed because of any -a or -v
 option---are subject to the specified @var{field-list}.
 
