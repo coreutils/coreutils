@@ -1,7 +1,14 @@
 2000-05-29  Jim Meyering  <meyering@lucent.com>
 
+	Allow `cp -d -u' to copy one symlink onto another that's identical.
+	* src/copy.c (copy_internal): Change the || to ^ in the big sameness
+	test, so copying one symlink onto another, identical one doesn't fail
+	here.
+	If the symlink call fails, don't report the failure if the destination
+	already exists and is a symlink pointing to the proper name.
 	* tests/cp/slink-2-slink: New test.
 	* tests/cp/Makefile.am (TESTS): Add slink-2-slink.
+	* tests/cp/same-file: Adapt to fit new semantics of `cp -d'.
 
 2000-05-25  Jim Meyering  <meyering@lucent.com>
 
