@@ -163,6 +163,7 @@ Usage: %s [OPTION]... FILE1 FILE2\n\
 For each pair of input lines with identical join fields, write a line to\n\
 standard output.  The default join field is the first, delimited\n\
 by whitespace.  When FILE1 or FILE2 (not both) is -, read standard input.\n\
+FILE1 and FILE2 should be sorted on the join fields.\n\
 \n\
   -a FILENUM        print unpairable lines coming from file FILENUM, where\n\
                       FILENUM is 1 or 2, corresponding to FILE1 or FILE2\n\
