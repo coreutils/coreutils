@@ -1,3 +1,8 @@
+1997-09-27  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/Makefile.am (Makefile): Depend on $(BUILT_SOURCES), per
+	automake manual.
+
 1997-09-20  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/Makefile.am (libfu_a_SOURCES): Use hash.c, not oa-hash.c.
