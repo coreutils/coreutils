@@ -141,7 +141,11 @@ off_t lseek ();
 
 #ifdef HAVE_UTIME_H
 #include <utime.h>
-#else
+#endif
+
+/* Some systems (even some that do have <utime.h>) don't declare this
+   structure anywhere.  */
+#ifndef HAVE_STRUCT_UTIMBUF
 struct utimbuf
 {
   long actime;
