@@ -1,6 +1,12 @@
-2001-09-16  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.1.
+
+2001-09-16  Paul Eggert  <eggert@twinsun.com>
+
+	* src/ls.c (usage): Fix typo in -g usage.
+	-H now means --dereference-command-line.
+
+2001-09-16  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.am (AUTOMAKE_OPTIONS): Require automake-1.5.
 
