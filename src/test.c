@@ -596,7 +596,7 @@ binary_operator (void)
 	      time_t lt, rt;
 	      pos += 3;
 	      if (l_is_l || r_is_l)
-		test_syntax_error (_("-nt does not accept -l\n"), NULL);
+		test_syntax_error (_("-ot does not accept -l\n"), NULL);
 	      if (age_of (argv[op - 1], &lt) && age_of (argv[op + 1], &rt))
 		return (TRUE == (lt < rt));
 	      return (FALSE);
