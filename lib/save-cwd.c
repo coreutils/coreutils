@@ -78,8 +78,8 @@ save_cwd (struct saved_cwd *cwd)
 	}
 
 # if __sun__ || sun
-      /* On SunOS 4, fchdir returns EINVAL if accounting is enabled,
-	 so we have to fall back to chdir.  */
+      /* On SunOS 4 and IRIX 5.3, fchdir returns EINVAL when auditing
+	 is enabled, so we have to fall back to chdir.  */
       if (fchdir (cwd->desc))
 	{
 	  if (errno == EINVAL)
@@ -116,30 +116,16 @@ save_cwd (struct saved_cwd *cwd)
 }
 
 /* Change to recorded location, CWD, in directory hierarchy.
-   If "saved working directory", NULL))
-   */
+   Upon failure, return nonzero (errno is set by chdir or fchdir).
+   Upon success, return zero.  */
 
 int
-restore_cwd (const struct saved_cwd *cwd, const char *dest, const char *from)
+restore_cwd (const struct saved_cwd *cwd)
 {
-  int fail = 0;
-  if (cwd->desc >= 0)
-    {
-      if (fchdir (cwd->desc))
-	{
-	  error (0, errno, "cannot return to %s%s%s",
-		 (dest ? dest : "saved working directory"),
-		 (from ? " from " : ""),
-		 (from ? from : ""));
-	  fail = 1;
-	}
-    }
-  else if (chdir (cwd->name) < 0)
-    {
-      error (0, errno, "%s", cwd->name);
-      fail = 1;
-    }
-  return fail;
+  if (0 <= cwd->desc)
+    return fchdir (cwd->desc) < 0;
+  else
+    return chdir (cwd->name) < 0;
 }
 
 void
