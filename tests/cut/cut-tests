@@ -2049,8 +2049,59 @@ else
   esac
 fi
 test -s empty-f1.E || rm -f empty-f1.E
+$xx -f2 $srcdir/empty-f2.I > empty-f2.O 2> empty-f2.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test empty-f2(F) failed: ../../src/cut return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp empty-f2.O $srcdir/empty-f2.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed empty-f2(F)"; fi ;;
+    1) $echo "Test empty-f2(F) failed: files empty-f2.O and $srcdir/empty-f2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test empty-f2(F) may have failed." 1>&2;
+       $echo The command "cmp empty-f2.O $srcdir/empty-f2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s empty-f2.E || rm -f empty-f2.E
+cat $srcdir/empty-f2.I | $xx -f2 > empty-f2.O 2> empty-f2.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test empty-f2(|) failed: ../../src/cut return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp empty-f2.O $srcdir/empty-f2.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed empty-f2(|)"; fi ;;
+    1) $echo "Test empty-f2(|) failed: files empty-f2.O and $srcdir/empty-f2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test empty-f2(|) may have failed." 1>&2;
+       $echo The command "cmp empty-f2.O $srcdir/empty-f2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s empty-f2.E || rm -f empty-f2.E
+$xx -f2 < $srcdir/empty-f2.I > empty-f2.O 2> empty-f2.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test empty-f2(<) failed: ../../src/cut return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp empty-f2.O $srcdir/empty-f2.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed empty-f2(<)"; fi ;;
+    1) $echo "Test empty-f2(<) failed: files empty-f2.O and $srcdir/empty-f2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test empty-f2(<) may have failed." 1>&2;
+       $echo The command "cmp empty-f2.O $srcdir/empty-f2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s empty-f2.E || rm -f empty-f2.E
 if test $errors = 0 ; then
-  $echo Passed all 120 tests. 1>&2
+  $echo Passed all 123 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
