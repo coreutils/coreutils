@@ -208,7 +208,10 @@ print_user (uid_t uid)
     {
       pwd = getpwuid (uid);
       if (pwd == NULL)
-	problems++;
+	{
+	  error (0, 0, _("cannot find name for user ID %u"), uid);
+	  problems++;
+	}
     }
 
   if (pwd == NULL)
@@ -228,7 +231,10 @@ print_group (gid_t gid)
     {
       grp = getgrgid (gid);
       if (grp == NULL)
-	problems++;
+	{
+	  error (0, 0, _("cannot find name for group ID %u"), gid);
+	  problems++;
+	}
     }
 
   if (grp == NULL)
