@@ -450,7 +450,7 @@ is_char_class_member (enum Char_class char_class, unsigned int c)
       result = ISCNTRL (c);
       break;
     case CC_DIGIT:
-      result = ISDIGIT (c);
+      result = ISDIGIT_LOCALE (c);
       break;
     case CC_GRAPH:
       result = ISGRAPH (c);
