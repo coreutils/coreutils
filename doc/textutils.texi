@@ -317,18 +317,18 @@ Equivalent to @samp{-vET}.
 @opindex -B
 @opindex --binary
 @cindex binary and text I/O in cat
-On MS-DOS and MS-Windows only, causes @code{cat} read and write the
+On MS-DOS and MS-Windows only, read and write the
 files in binary mode.  By default, @code{cat} on MS-DOS/MS-Windows uses
 binary mode only when standard output is redirected to a file or a pipe;
 this option overrides that.  Binary file I/O is used so that the files
 retain their format (Unix text as opposed to DOS text and binary),
-because @code{cat} is frequently used as file copying program.  Some
+because @code{cat} is frequently used as a file-copying program.  Some
 options (see below) cause @code{cat} read and write files in text mode
 because then the original file contents aren't important (e.g., when
 lines are numbered by @code{cat}, or when line endings should be
 marked).  This is so these options work as DOS/Windows users would
 expect; for example, DOS-style text files have their lines end with
-@key{CR-LF} pair of characters which won't be processed as an empty line
+the CR-LF pair of characters which won't be processed as an empty line
 by @samp{-b} unless the file is read in text mode.
 
 @item -b
@@ -375,7 +375,7 @@ Equivalent to @samp{-vT}.
 @itemx --show-tabs
 @opindex -T
 @opindex --show-tabs
-Display @key{TAB} characters as @samp{^I}.
+Display TAB characters as @samp{^I}.
 
 @item -u
 @opindex -u
@@ -385,10 +385,10 @@ Ignored; for Unix compatibility.
 @itemx --show-nonprinting
 @opindex -v
 @opindex --show-nonprinting
-Display control characters except for @key{LFD} and @key{TAB} using
+Display control characters except for LFD and TAB using
 @samp{^} notation and precede characters that have the high bit set with
 @samp{M-}.  On MS-DOS and MS-Windows, this option causes @code{cat} to
-read files and standard input in DOS binary mode, so the @key{CR}
+read files and standard input in DOS binary mode, so the CR
 characters at the end of each line are also visible.
 
 @end table
@@ -583,7 +583,7 @@ Do not reset the line number at the start of a logical page.
 @opindex -s
 @opindex --number-separator
 Separate the line number from the text line in the output with
-@var{string} (default is @key{TAB}).
+@var{string} (default is the TAB character).
 
 @item -v @var{number}
 @itemx --starting-line-number=@var{number}
@@ -1065,7 +1065,7 @@ Double space the output.
 @opindex --expand-tabs
 @cindex input tabs
 Expand @var{tab}s to spaces on input.  Optional argument @var{in-tabchar} is
-the input tab character (default is @key{TAB}).  Second optional
+the input tab character (default is the TAB character).  Second optional
 argument @var{in-tabwidth} is the input tab character's width (default
 is 8).
 
@@ -1097,7 +1097,7 @@ indispensable.
 @opindex --output-tabs
 @cindex output tabs
 Replace spaces with @var{tab}s on output.  Optional argument @var{out-tabchar}
-is the output tab character (default is @key{TAB}).  Second optional
+is the output tab character (default is the TAB character).  Second optional
 argument @var{out-tabwidth} is the output tab character's width (default
 is 8).
 
@@ -1151,7 +1151,7 @@ line of the input file (not the 1st line printed, compare the
 @samp{--page} option and @samp{-N} option).
 Optional argument @var{number-separator} is the character appended to
 the line number to separate it from the text followed.  The default
-separator is a @key{TAB}.  In a strict sense a @key{TAB} is always
+separator is the TAB character.  In a strict sense a TAB is always
 printed with single column output only.  The @var{TAB}-width varies
 with the @var{TAB}-position, e.g. with the left @var{margin} specified
 by @samp{-o} option.  With multicolumn output priority is given to
@@ -1192,7 +1192,7 @@ opened.  (The exit status will still be nonzero, however.)
 @opindex -s
 @opindex --separator
 Separate columns by a single character @var{char}.  Default for @var{char}
-is the @key{TAB} character without @samp{-w} and @samp{no character} with
+is the TAB character without @samp{-w} and @samp{no character} with
 @samp{-w}.  Without @samp{-s} default separator @samp{space} is set.
 @samp{-s[char]} turns off line truncation of all three column options
 (@samp{-COLUMN}|@samp{-a -COLUMN}|@samp{-m}) except @samp{-w} is set.
@@ -1203,16 +1203,19 @@ That is a @var{posix} compliant formulation.
 @itemx --sep-string[=@var{string}]
 @opindex -S
 @opindex --sep-string
-Separate columns by any string @var{string}.  The @samp{-S} option doesn't
-react upon the @samp{-W/-w} option (unlike @samp{-s} option does).  It
-does not affect line truncation or column alignment.  A separator is
-defined, nothing else.  Without @samp{-S}: default separator @key{TAB}
-is used with @samp{-J} and @samp{space} otherwise (same as @samp{-S" "}).
-With @samp{-S} only: no separator is used, same as @samp{-S""}.  Quotes
-should be used with blanks and some shell active characters.  Some of the
-@code{pr} options don't allow the option letter to be separated from its
-argument.  @samp{-S/-s} is one of them.  Don't use @samp{-S "STRING"}.
-That's @var{posix} compliant.
+Use @var{string} to separate output columns.  The @samp{-S} option doesn't
+affect the @samp{-W/-w} option, unlike the @samp{-s} option which does.  It
+does not affect line truncation or column alignment.
+Without @samp{-S}, and with @samp{-J}, @code{pr} uses the default output
+separator, TAB.
+Without @samp{-S} or @samp{-J}, @code{pr} uses a @samp{space}
+(same as @samp{-S" "}).
+Using @samp{-S} with no @var{string} is equivalent to @samp{-S""}.
+Note that for some of @code{pr}'s options the single-letter option
+character must be followed immediately by any corresponding argument;
+there may not be any intervening white space.
+@samp{-S/-s} is one of them.  Don't use @samp{-S "STRING"}.
+@sc{posix} requires this.
 
 @item -t
 @itemx --omit-header
@@ -1222,7 +1225,7 @@ Do not print the usual header [and footer] on each page, and do not fill
 out the bottom of pages (with blank lines or a form feed).  No page
 structure is produced, but form feeds set in the input files are retained.
 The predefined pagination is not changed.  @samp{-t} or @samp{-T} may be
-useful together with other options; e.g.: @samp{-t -e4}, expand @key{TAB}
+useful together with other options; e.g.: @samp{-t -e4}, expand TAB characters
 in the input file to 4 spaces but don't make any other changes.  Use of
 @samp{-t} overrides @samp{-h}.
 
@@ -2526,7 +2529,7 @@ no options always outputs a file that is suitable input to @code{comm}.
 With no options, @code{comm} produces three column output.  Column one
 contains lines unique to @var{file1}, column two contains lines unique
 to @var{file2}, and column three contains lines common to both files.
-Columns are separated by @key{TAB}.
+Columns are separated by a single TAB character.
 @c FIXME: when there's an option to supply an alternative separator
 @c string, append `by default' to the above sentence.
 
@@ -3111,14 +3114,14 @@ take up 1 character.
 @opindex -f
 @opindex --fields
 Print only the fields listed in @var{field-list}.  Fields are
-separated by a @key{TAB} by default.
+separated by a TAB character by default.
 
 @item -d @var{input_delim_byte}
 @itemx --delimiter=@var{input_delim_byte}
 @opindex -d
 @opindex --delimiter
 For @samp{-f}, fields are separated in the input by the first character
-in @var{input_delim_byte} (default is @key{TAB}).
+in @var{input_delim_byte} (default is TAB).
 
 @item -n
 @opindex -n
@@ -3147,7 +3150,7 @@ The default is to use the input delimiter.
 @cindex merging files
 
 @code{paste} writes to standard output lines consisting of sequentially
-corresponding lines of each given file, separated by @key{TAB}.
+corresponding lines of each given file, separated by a TAB character.
 Standard input is used for a file name of @samp{-} or if no input files
 are given.
 
@@ -3173,7 +3176,7 @@ file.
 @opindex -d
 @opindex --delimiters
 Consecutively use the characters in @var{delim-list} instead of
-@key{TAB} to separate merged lines.  When @var{delim-list} is
+TAB to separate merged lines.  When @var{delim-list} is
 exhausted, start again at its beginning.
 
 @end table
