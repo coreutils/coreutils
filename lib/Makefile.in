@@ -145,7 +145,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/mktime.m4 $(top_srcdir)/m4/modechange.m4 \
 	$(top_srcdir)/m4/mountlist.m4 $(top_srcdir)/m4/nanosleep.m4 \
 	$(top_srcdir)/m4/nls.m4 $(top_srcdir)/m4/obstack.m4 \
-	$(top_srcdir)/m4/onceonly.m4 $(top_srcdir)/m4/openat.m4 \
+	$(top_srcdir)/m4/onceonly_2_57.m4 $(top_srcdir)/m4/openat.m4 \
 	$(top_srcdir)/m4/path-concat.m4 $(top_srcdir)/m4/pathmax.m4 \
 	$(top_srcdir)/m4/perl.m4 $(top_srcdir)/m4/physmem.m4 \
 	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/posixtm.m4 \
