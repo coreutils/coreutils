@@ -1,4 +1,4 @@
-#serial 5
+#serial 6
 
 dnl Misc lib-related macros for fileutils, sh-utils, textutils.
 
@@ -57,7 +57,9 @@ $ac_includes_default
   # SCO-ODT-3.0 is reported to need -lufc for crypt.
   # NetBSD needs -lcrypt for crypt.
   ac_su_saved_lib="$LIBS"
-  AC_SEARCH_LIBS(crypt, [ufc crypt], [LIB_CRYPT="$ac_cv_search_crypt"])
+  AC_SEARCH_LIBS(crypt, [ufc crypt],
+		 [test "$ac_cv_search_crypt" = "none required" ||
+		  LIB_CRYPT="$ac_cv_search_crypt"])
   LIBS="$ac_su_saved_lib"
   AC_SUBST(LIB_CRYPT)
 ])
