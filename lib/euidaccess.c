@@ -211,9 +211,7 @@ weak_alias (__euidaccess, euidaccess)
 char *program_name;
 
 int
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   char *file;
   int mode;
