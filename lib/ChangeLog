@@ -1,9 +1,22 @@
 2002-06-15  Jim Meyering  <meyering@lucent.com>
 
+	* file-type.h (FILE_TYPE_H): Guard entire contents with #ifndef.
+	For GNU libc 2.2 and newer, ensure that <sys/types.h> and <sys/stat.h>
+	have been included before this file.
+
+2002-06-13  Richard Dawe  <richdawe@bigfoot.com>
+
+	* Makefile.am (lstat.c, stat.c, .sin.sed): Use t-$@, rather than $@-t,
+	so that each temporary file name is unique and valid in the first
+	8 characters, for operation under DOS.
+
+2002-06-15  Jim Meyering  <meyering@lucent.com>
+
+	Work even with DJGPP 2.03, which lacks support for symlinks.
+	From Richard Dawe.
 	* xstat.in (S_ISLNK): Define to 0 if neither S_ISLNK nor S_IFLNK
 	is defined.
 	* lchown.c (S_ISLNK): Likewise.
-	From Richard Dawe.
 
 2002-06-14  Jim Meyering  <meyering@lucent.com>
 
