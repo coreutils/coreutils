@@ -46,8 +46,8 @@ foreach $test_vector (@Test::t)
     open (EXP, ">$exp_name") || die "$0: $in: $!\n";
     print EXP $expected;
     close (EXP);
-    my $arg2 = ($s2 ? " '$s2'" : '');
     my $err_output = "t$test_name.err";
+    my $arg2 = ($s2 ? " '$s2'" : '');
     my $cmd = "\$xx $flags \'$s1\'$arg2 < \$srcdir/$in > $out 2> $err_output";
     $exp_name = "\$srcdir/$exp_name";
     print <<EOF ;
@@ -57,7 +57,7 @@ if test \$code != $e_ret_code ; then
   \$echo Test $test_name failed: $xx return code \$code differs from expected value $e_ret_code 1>&2
   errors=`expr \$errors + 1`
 else
-  cmp $out \$srcdir/$exp_name
+  cmp $out $exp_name
   case \$? in
     0) if test "\$VERBOSE" ; then \$echo passed $test_name; fi ;; # equal files
     1) \$echo Test $test_name failed: files $out and $exp_name differ 1>&2;
