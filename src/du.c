@@ -623,7 +623,7 @@ main (int argc, char **argv)
 	    }
 	  break;
 
-	case 'm': /* obsolescent */
+	case 'm': /* obsolescent: FIXME: remove in 2005. */
 	  human_output_opts = 0;
 	  output_block_size = 1024 * 1024;
 	  break;
@@ -644,7 +644,7 @@ main (int argc, char **argv)
 	  human_output_opts = human_options (optarg, true, &output_block_size);
 	  break;
 
-	case 'D':
+	case 'D': /* This will eventually be 'H' (-H), too.  */
 	  bit_flags |= FTS_COMFOLLOW;
 	  break;
 
@@ -655,8 +655,8 @@ main (int argc, char **argv)
 	  break;
 
 	case 'L': /* --dereference */
-	  bit_flags &= ~FTS_PHYSICAL;
 	  bit_flags |= FTS_LOGICAL;
+	  bit_flags &= ~FTS_PHYSICAL;
 	  break;
 
 	case 'S':
