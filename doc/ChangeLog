@@ -1,3 +1,8 @@
+2001-09-12  Jim Meyering  <meyering@lucent.com>
+
+	* coreutils.texi (tail invocation): Document new option: -F.
+	From Herbert Xu.
+
 2001-09-04  Paul Eggert  <eggert@twinsun.com>
 
 	* coreutils.texi (join invocation): Describe the GNU
