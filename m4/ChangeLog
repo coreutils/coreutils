@@ -1,3 +1,11 @@
+2002-07-20  Jim Meyering  <meyering@lucent.com>
+
+	* jm-macros.m4: Require autoconf-2.53b.
+	Use new macros AC_FUNC_MALLOC and AC_FUNC_REALLOC,
+	in place of jm_-prefixed ones.  Thanks, Akim!
+	* malloc.m4: Remove file, now that autoconf provides this macro.
+	* realloc.m4: Likewise.
+
 2002-07-18  gettextize  <bug-gnu-gettext@gnu.org>
 
 	* gettext.m4: Upgrade to gettext-0.11.3.
