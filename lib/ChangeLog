@@ -1,3 +1,11 @@
+2000-01-30  Jim Meyering  <meyering@lucent.com>
+
+	* readutmp.c (extract_trimmed_name): Use UT_USER instead of hard-coding
+	uses of ->ut_name.  The latter doesn't work with new Linux header files
+	where only utmpx.ut_user is declared.
+
+	* readutmp.h (UT_USER): Define.
+
 2000-01-23  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.am (libfetish_a_SOURCES): Remove explicit mention of
