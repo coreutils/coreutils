@@ -133,6 +133,7 @@ getgroups.m4 \
 getline.m4 \
 getloadavg.m4 \
 glibc.m4 \
+glibc21.m4 \
 group-member.m4 \
 iconv.m4 \
 inttypes_h.m4 \
