@@ -1,3 +1,8 @@
+1998-03-23  Jim Meyering  <meyering@eng.ascend.com>
+
+	* acconfig.h: Remove HAVE_INTTYPES_H, now that m4/inttypes_h.m4
+	automatically handles it.
+
 1998-03-21  Jim Meyering  <meyering@eng.ascend.com>
 
 	* lib/quotearg.h: Update from patch-2.5.3.
