@@ -238,11 +238,8 @@ main (int argc, char **argv)
 #endif				/* !SA_INTERRUPT */
 
   i_sec = floor (seconds);
-  printf ("sleeping for: %d sec\n", i_sec);
-  if (i_sec > 0)
-    sleep (i_sec);
+  sleep (i_sec);
   i_usec = (int) ((seconds - i_sec) * 1000000);
-  printf ("u-sleeping for: %d usec\n", i_usec);
   usleep (i_usec);
 
   if (!suspended)
