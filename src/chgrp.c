@@ -19,20 +19,12 @@
 
 #include <config.h>
 #include <stdio.h>
-#include <ctype.h>
 #include <sys/types.h>
 #include <grp.h>
 #include <getopt.h>
 #include "system.h"
 #include "version.h"
 #include "safe-lstat.h"
-
-#if !defined (isascii) || defined (STDC_HEADERS)
-#undef isascii
-#define isascii(c) 1
-#endif
-
-#define ISDIGIT(c) (isascii (c) && isdigit (c))
 
 #ifndef _POSIX_VERSION
 struct group *getgrnam ();
