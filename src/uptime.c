@@ -15,7 +15,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Written by jla; revised by djm */
+/* Created by hacking who.c by Kaveh Ghazi ghazi@caip.rutgers.edu.  */
 
 #include <config.h>
 #include <getopt.h>
@@ -29,7 +29,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "uptime"
 
-#define AUTHORS "Joseph Arceneaux and David MacKenzie"
+#define AUTHORS "Joseph Arceneaux, David MacKenzie, and Kaveh Ghazi"
 
 int getloadavg ();
 
