@@ -881,7 +881,7 @@ static char *
 swab_buffer (char *buf, size_t *nread)
 {
   char *bufstart = buf;
-  register char *cp;
+  char *cp;
   size_t i;
 
   /* Is a char left from last time?  */

@@ -1,5 +1,5 @@
 /* env - run a program in a modified environment
-   Copyright (C) 1986, 1991-2004 Free Software Foundation, Inc.
+   Copyright (C) 1986, 1991-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -136,7 +136,7 @@ A mere - implies -i.  If no COMMAND, print the resulting environment.\n\
 }
 
 int
-main (register int argc, register char **argv)
+main (int argc, char **argv)
 {
   int optc;
   bool ignore_environment = false;
