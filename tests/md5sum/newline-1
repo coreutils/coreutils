@@ -5,14 +5,25 @@
 
 case "$PERL" in
   *'missing perl')
-  echo 1>&2 "$0: configure didn't find a usable version of Perl, so can't run this test"
+  echo 1>&2 "$0: configure didn't find a usable version of Perl," \
+    " so can't run this test"
   exit 77
   ;;
 esac
 
-if test -n "$COMSPEC$ComSpec"; then
-  # DOS/Windows
-  echo 1>&2 "$0: This test would always fail on MSDOS/Window systems"
+# See if we can create a filename that contains a newline.
+# Be careful to do it in a subshell so that we can redirect the
+# error output if it fails.
+(> 'a
+b') 2> /dev/null \
+  && filename_may_contain_newline=yes \
+  || filename_may_contain_newline=no
+rm -f 'a
+b'
+
+if test $filename_may_contain_newline = no; then
+  echo 1>&2 "$0: can't create newline-containing file name," \
+    "so can't run this test"
   exit 77
 fi
 
