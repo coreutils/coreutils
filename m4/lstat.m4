@@ -1,4 +1,4 @@
-#serial 4
+#serial 5
 
 dnl From Jim Meyering.
 dnl Determine whether lstat has the bug that it succeeds when given the
