@@ -16,7 +16,7 @@
 	* exclude.c (FNM_CASEFOLD, FNM_LEADING_DIR): Define to 0 if not
 	defined (e.g., a pure POSIX system).
 	(EXCLUDE_macros_do_not_collide_with_FNM_macros): Use FNM_PATHNAME
-	instead of FNM_FILE_NAME, for compatibility with pure POSIX sytems.
+	instead of FNM_FILE_NAME, for compatibility with pure POSIX systems.
 
 	Update from gnulib.
 
