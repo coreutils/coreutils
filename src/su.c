@@ -344,7 +344,7 @@ correct_password (pw)
       return 0;
     }
   encrypted = crypt (unencrypted, correct);
-  bzero (unencrypted, strlen (unencrypted));
+  memset (unencrypted, 0, strlen (unencrypted));
   return strcmp (encrypted, correct) == 0;
 }
 
