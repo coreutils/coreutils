@@ -1,3 +1,17 @@
+1997-10-16  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/sort.c (look_for_fraction): Patch from Orn Hansen.
+	(getmonth): Compare the two month names only to the length of the
+	string in the month table.  Patch from Orn Hansen.
+	(NLS_STRNCMP): New macro.
+	(strncoll_s2_readonly): New function.
+	(inittables): Don't use temporary `comp' to hide type of
+	comparator function.
+	(nls_sort_month_comp): Declare parameters to be void* to match
+	comparator function type required for qsort.
+	(getmonth): Use NLS_STRNCMP rather than #ifdef.
+	Use do-while, rather than while-loop.
+
 1997-10-14  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/sort.c: (_NL_ITEM) [!defined]: Define.
