@@ -24,6 +24,9 @@ AC_DEFUN([GL_FUNC_GETCWD_PATH_MAX],
 #include <sys/stat.h>
 #include <sys/types.h>
 
+/* Don't get link errors because mkdir is redefined to rpl_mkdir.  */
+#undef mkdir
+
 #ifndef CHAR_BIT
 # define CHAR_BIT 8
 #endif
