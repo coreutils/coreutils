@@ -1,5 +1,7 @@
 2003-01-20  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.am (libfetish_a_SOURCES): Use ftw_.h here, too.
+	(libfetish_a_SOURCES): Add search_.h.
 	* ftw_.h: Rename from ftw.h.
 
 	* obstack.h (obstack_object_size): Declare temporary, __o, to be const.
