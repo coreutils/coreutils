@@ -80,35 +80,29 @@ main (argc, argv)
 
   program_name = argv[0];
 
-  /* Inhibit the error message getopt would otherwise give for
-     unrecognized options.  */
-  opterr = 0;
-
   while ((optc = getopt_long (argc, argv, "+0123456789-n:", longopts,
 			      (int *) 0)) != EOF)
     {
       char *s;
 
+      /* Determine whether this is an option like `--5'.
+	 If so, treat it like `-n -5'.  */
+      s = argv[optind];
+      /* Make sure s[1..] is a valid negative integer.
+	 Test/convert `s+1' rather than `s+2' so we reject options
+	 like `---5' as unrecognized.  */
+      if (s[0] == '-' && s[1] == '-' && isinteger (s + 1))
+	{
+	  adjustment = atoi (s + 1);
+	  adjustment_given = 1;
+	  ++optind;
+	  continue;
+	}
+
       switch (optc)
 	{
 	case '?':
-	  /* Determine whether this is an option like `--5'.
-	     If so, treat it like `-n -5'.  */
-	  s = argv[optind - 1];
-	  /* Make sure s[1..] is a valid negative integer.
-	     Test/convert `s+1' rather than `s+2' so we reject options
-	     like `---5' as unrecognized.  */
-	  if (s[1] == '-' && isinteger (s + 1))
-	    {
-	      adjustment = atoi (s + 1);
-	      adjustment_given = 1;
-	    }
-	  else
-	    {
-	      error (0, 0, "unrecognized option `%s'", s);
-	      usage (1);
-	    }
-	  break;
+	  usage (1);
 
 	case 0:
 	  break;
