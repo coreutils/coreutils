@@ -137,13 +137,15 @@ int G_fail;
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  EXCLUDE_OPTION = CHAR_MAX + 1,
+  APPARENT_SIZE_OPTION = CHAR_MAX + 1,
+  EXCLUDE_OPTION,
   MAX_DEPTH_OPTION
 };
 
 static struct option const long_options[] =
 {
   {"all", no_argument, NULL, 'a'},
+  {"apparent-size", no_argument, NULL, APPARENT_SIZE_OPTION},
   {"block-size", required_argument, 0, 'B'},
   {"bytes", no_argument, NULL, 'b'},
   {"count-links", no_argument, NULL, 'l'},
@@ -183,8 +185,12 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -a, --all             write counts for all files, not just directories\n\
+      --apparent-size   print apparent sizes, rather than disk usage; although\n\
+                          the apparent size is usually smaller, it may be\n\
+                          larger due to holes in (`sparse') files, internal\n\
+                          fragmentation, indirect blocks, and the like\n\
   -B, --block-size=SIZE use SIZE-byte blocks\n\
-  -b, --bytes           print size in bytes\n\
+  -b, --bytes           equivalent to `--apparent-size --block-size=1'\n\
   -c, --total           produce a grand total\n\
   -D, --dereference-args  dereference FILEs that are symbolic links\n\
 "), stdout);
@@ -586,7 +592,12 @@ main (int argc, char **argv)
 	  opt_all = 1;
 	  break;
 
+	case APPARENT_SIZE_OPTION:
+	  apparent_size = 1;
+	  break;
+
 	case 'b':
+	  apparent_size = 1;
 	  human_output_opts = 0;
 	  output_block_size = 1;
 	  break;
