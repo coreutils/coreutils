@@ -96,7 +96,7 @@ Print numbers from FIRST to LAST, in steps of INCREMENT.\n\
       fputs (_("\
 \n\
 If FIRST or INCREMENT is omitted, it defaults to 1.  That is, an\n\
-omitted INCREMENT defaults to 1 even when LAST is smaller than FIRST.\n \
+omitted INCREMENT defaults to 1 even when LAST is smaller than FIRST.\n\
 FIRST, INCREMENT, and LAST are interpreted as floating point values.\n\
 INCREMENT is usually positive if FIRST is smaller than LAST, and\n\
 INCREMENT is usually negative if FIRST is greater than LAST.\n\
