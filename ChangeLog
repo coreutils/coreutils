@@ -2,6 +2,8 @@
 
 	* Version 4.5.3.
 
+	* src/du.c (usage): Tweak description of --dereference-args/-D.
+
 	* src/du.c (count_entry): Also save cwd when dereferencing (via
 	--dereference-args, -D) a command-line argument.
 	Reported by Michal Svec.  Based on a patch by Andreas Schwab.
