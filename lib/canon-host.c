@@ -72,8 +72,6 @@ canon_host (host)
       if (he)
 	return (char *) (he->h_name);
     }
-
-#else /* ! HAVE_GETHOSTBYNAME */
-  return 0;
 #endif /* HAVE_GETHOSTBYNAME */
+  return 0;
 }
