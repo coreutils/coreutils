@@ -1,3 +1,8 @@
+2001-04-21  Jim Meyering  <meyering@lucent.com>
+
+	* rmdir-errno.m4: Write to a new file, so that a restrictive umask
+	doesn't interfere.
+
 2001-04-21  Alexandre Duret-Lutz  <duret_g@epita.fr>
 
 	* ftruncate.m4: Check for chsize.
