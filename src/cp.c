@@ -151,7 +151,7 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
   -R, --recursive              copy directories recursively\n\
   -s, --symbolic-link          make symbolic links instead of copying\n\
   -S, --suffix=SUFFIX          override the usual backup suffix\n\
-      --target-directory=DIR   move all SOURCE arguments into directory DIR\n\
+      --target-directory=DIRECTORY  move all SOURCE arguments into DIRECTORY\n\
   -u, --update                 copy only when the SOURCE file is newer\n\
                                  than the destination file or when the\n\
                                  destination file is missing\n\
