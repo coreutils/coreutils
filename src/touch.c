@@ -64,7 +64,9 @@ static int posix_date;
 
 /* If nonzero, the only thing we have to do is change both the
    modification and access time to the current time, so we don't
-   have to own the file, just be able to read and write it.  */
+   have to own the file, just be able to read and write it.
+   On some systems, we can do this if we own the file, even though
+   we have neither read nor write access to it.  */
 static int amtime_now;
 
 /* New time to use when setting time. */
@@ -108,41 +110,28 @@ touch (const char *file)
 {
   int status;
   struct stat sbuf;
-  int fd;
+  int fd IF_LINT (= 99);
+  int valid_fd;
 
   if (no_create)
     {
-      /* Try to open an existing FILE.  */
-      fd = open (file, O_WRONLY);
-      if (fd == -1 && errno == ENOENT)
-	{
-	  /* FILE doesn't exist.  So we're done.  */
-	  return 0;
-	}
+      valid_fd = 0;
     }
   else
     {
+      valid_fd = 1;
       /* Try to open FILE, creating it if necessary.  */
       fd = open (file, O_WRONLY | O_CREAT,
 		 S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
     }
 
-  /* Don't fail if the open failed because FILE is a directory.  */
-  if (fd == -1
-      /* As usual, using E* macros like this is risky...
-         So heads up.  */
-      && errno != EISDIR)
-    {
-      error (0, errno, "%s", file);
-      return 1;
-    }
-
   if (! amtime_now)
     {
       /* We're setting only one of the time values.  stat the target to get
-	 the other one.  If we have the file descriptor already, use fstat,
-	 otherwise, FILE is a directory, so we have to use stat.  */
-      if (fd == -1 ? stat (file, &sbuf) : fstat (fd, &sbuf))
+	 the other one.  If we have the file descriptor already, use fstat.
+	 Otherwise, either we're in no-create mode (and hence didn't call open)
+	 or FILE is inaccessible or a directory, so we have to use stat.  */
+      if ((valid_fd && fd != -1) ? fstat (fd, &sbuf) : stat (file, &sbuf))
 	{
 	  error (0, errno, "%s", file);
 	  close (fd);
@@ -150,7 +139,7 @@ touch (const char *file)
 	}
     }
 
-  if (fd != -1 && close (fd) < 0)
+  if (valid_fd && fd != -1 && close (fd) < 0)
     {
       error (0, errno, "%s", file);
       return 1;
