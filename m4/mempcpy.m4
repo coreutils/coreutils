@@ -1,5 +1,5 @@
-# mempcpy.m4 serial 1
-dnl Copyright (C) 2003 Free Software Foundation, Inc.
+# mempcpy.m4 serial 2
+dnl Copyright (C) 2003, 2004 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -8,6 +8,8 @@ dnl the same distribution terms as the rest of that program.
 
 AC_DEFUN([gl_FUNC_MEMPCPY],
 [
+  AC_LIBSOURCES([mempcpy.c, mempcpy.h])
+
   dnl Persuade glibc <string.h> to declare mempcpy().
   AC_REQUIRE([AC_GNU_SOURCE])
 
