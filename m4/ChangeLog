@@ -1,5 +1,9 @@
 2001-01-01  Jim Meyering  <meyering@lucent.com>
 
+	* prereq.m4 (jm_PREREQ_READUTMP): Include utmp.h (if available), even
+	on systems with utmpx.h.  It's necessary for the declaration of utmp's
+	ut_user member.  Reported by Andreas Jaeger.
+
 	* check-decl.m4 (jm_CHECK_DECLS): Include grp.h and pwd.h if available.
 	They are required for the declarations of getgrgid and getpwuid resp.
 	(_jm_DECL_HEADERS): Check for grp.h and pwd.h.
