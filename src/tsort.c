@@ -1,5 +1,5 @@
 /* tsort - topological sort.
-   Copyright (C) 1998-2004 Free Software Foundation, Inc.
+   Copyright (C) 1998-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -442,7 +442,7 @@ tsort (const char *file)
   struct item *root;
   struct item *j = NULL;
   struct item *k = NULL;
-  register FILE *fp;
+  FILE *fp;
   token_buffer tokenbuffer;
 
   /* Intialize the head of the tree will hold the strings we're sorting.  */

@@ -1,5 +1,5 @@
 /* uniq -- remove duplicate lines from a sorted file
-   Copyright (C) 86, 91, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 86, 91, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -191,10 +191,10 @@ size_opt (char const *opt, char const *msgid)
 static char *
 find_field (const struct linebuffer *line)
 {
-  register size_t count;
-  register char *lp = line->buffer;
-  register size_t size = line->length - 1;
-  register size_t i = 0;
+  size_t count;
+  char *lp = line->buffer;
+  size_t size = line->length - 1;
+  size_t i = 0;
 
   for (count = 0; count < skip_fields && i < size; count++)
     {
