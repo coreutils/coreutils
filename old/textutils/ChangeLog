@@ -1,6 +1,13 @@
-1999-12-05  Jim Meyering  <meyering@ascend.com>
+1999-12-09  Jim Meyering  <meyering@ascend.com>
 
 	* Version 2.0a.
+
+	* configure.in (ALL_LINGUAS): Add Galician (gl).
+
+1999-12-06  Jim Meyering  <meyering@ascend.com>
+
+	* tests/tail-2/fflush: New test for latest change.
+	* tests/tail-2/Makefile.am (TESTS): Add fflush.
 
 1999-10-26  Marc Boucher  <marc@mbsi.ca>
 

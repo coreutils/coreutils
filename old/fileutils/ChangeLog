@@ -1,3 +1,24 @@
+1999-12-09  Jim Meyering  <meyering@ascend.com>
+
+	* src/df.c (BLOCK_SIZE_OPTION, SYNC_OPTION, NO_SYNC_OPTION): Define
+	these and use them instead of `CHAR_MAX + n'.
+	* src/du.c (BLOCK_SIZE_OPTION, EXCLUDE_OPTION, MAX_DEPTH_OPTION):
+	Likewise.
+	* src/touch.c (TIME_OPTION): Likewise.
+	* src/rmdir.c (IGNORE_FAIL_ON_NON_EMPTY_OPTION): Likewise.
+
+	* tests/ls/time-1: Test more of the framework (touch's -a and -m
+	options) before running the actual ls test.
+
+1999-12-07  Jim Meyering  <meyering@ascend.com>
+
+	* tests/cp/cp-mv-backup: Use 1>&2 rather than `1<&-'.
+	Suggestion from Volker Borchert.
+
+1999-12-05  Jim Meyering  <meyering@ascend.com>
+
+	* Makefile.maint: Remove ftp.enst.fr.
+
 1999-12-04  Jim Meyering  <meyering@ascend.com>
 
 	* Version 4.0k.
