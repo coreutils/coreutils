@@ -1,9 +1,12 @@
 1998-04-26  Jim Meyering  <meyering@ascend.com>
 
-	* src/sort.c (keycompare): Don't return 0 from inside the
-	keyspec-iterating loop.  With this change, test 22a passes.
+	* Version 1.22f.
+
+	* src/sort.c (keycompare) (CMP_WITH_IGNORE): Don't return 0 from inside
+	the keyspec-iterating loop.  With this change, test 22a passes.
 	Reported by Zvi Har'El.
 	(strncoll): Remove bogus assertion.
+	* tests/sort/Test.pm: Add tests for the above fix.
 
 	* configure.in: Use jm_ASSERT.
 	* acconfig.h: Add NDEBUG.
