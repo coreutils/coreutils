@@ -1,6 +1,25 @@
-2004-06-19  Jim Meyering  <jim@meyering.net>
+2004-06-19  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	Don't dump core if ctime returns NULL; this is possible on
+	hosts with 64-bit time_t and 32-bit int.
+	* src/who.c: Include "inttostr.h".
+	(time_string): If ctime fails, print the raw time as an integer
+	instead of dumping core.
+	* src/pinky.c: Likewise, as follows:
+	Include "inttostr.h".
+	(time_string): New function, copied from who.c.
+	(print_entry): Use it.
+
+2004-06-19  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/who.c (print_line): Don't truncate user names at 8 bytes.
+	Problem reported by Guido Leenders in:
+	http://lists.gnu.org/archive/html/bug-coreutils/2004-06/msg00056.html
+	* NEWS: document this.
+
+2004-06-19  Jim Meyering  <jim@meyering.net>
 
 	* src/system.h (case_GETOPT_VERSION_CHAR): Switch back to
 	using GNU_PACKAGE (from PACKAGE) once again.  This restores
