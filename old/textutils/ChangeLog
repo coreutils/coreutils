@@ -1,3 +1,8 @@
+2000-08-03  Jim Meyering  <meyering@lucent.com>
+
+	* tests/Makefile.am.in ($(srcdir)/$x-tests): Use -I$(srcdir), not `-I.'.
+	(Makefile.am): Likewise.  Reported by Greg McGary.
+
 2000-08-01  Jim Meyering  <meyering@lucent.com>
 
 	* doc/textutils.texi (tr invocation): Note that ranges are not portable.
