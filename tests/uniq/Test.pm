@@ -70,6 +70,13 @@ my @tv = (
 ['110', '-D',    "a\na\n",          "a\na\n",                   0],
 ['111', '-D -w1',"a a\na b\n",      "a a\na b\n",               0],
 ['112', '-D -c', "a a\na b\n",      "",                         1],
+['113', '--all-repeated=minimum',    "a\na\n",     "a\na\n",            0],
+['114', '--all-repeated=minimum',"a\na\nb\nc\nc\n", "a\na\n\nc\nc\n",   0],
+['115', '--all-repeated=minimum',"a\na\nb\nb\nc\n", "a\na\n\nb\nb\n",   0],
+['116', '--all-repeated=all', "a\na\n",      "\na\na\n",                0],
+['117', '--all-repeated=all', "a\na\nb\nc\nc\n",    "\na\na\n\nc\nc\n", 0],
+['118', '--all-repeated=all', "a\nb\n",      "",                        0],
+['119', '--all-repeated=badoption', "a\n",      "",                     1],
 );
 
 sub test_vector
