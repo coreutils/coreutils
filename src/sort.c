@@ -338,7 +338,8 @@ With no FILE, or when FILE is -, read standard input.\n\
 \n\
 *** WARNING ***\n\
 The locale specified by the environment affects sort order.\n\
-Set LC_ALL=C to get the traditional sort order that uses native byte values.\n\
+Set LC_COLLATE=C to get the traditional sort order that uses\n\
+native byte values.\n\
 ")
 	      );
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
