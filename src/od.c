@@ -1847,14 +1847,14 @@ the maximum\nrepresentable value of type `long'"), optarg);
 	  else
 	    {
 	      error (0, 0,
-	    _("in compatibility mode the last 2 arguments must be offsets"));
+	    _("in compatibility mode, the last two arguments must be offsets"));
 	      usage (1);
 	    }
 	}
       else if (n_files > 3)
 	{
 	  error (0, 0,
-	   _("in compatibility mode there may be no more than 3 arguments"));
+		 _("compatibility mode supports no more than three arguments"));
 	  usage (1);
 	}
 
