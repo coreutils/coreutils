@@ -1,4 +1,4 @@
-#serial 3
+#serial 4
 
 dnl From Jim Meyering
 
@@ -7,8 +7,8 @@ dnl in time.h or sys/time.h.
 
 AC_DEFUN(jm_CHECK_TYPE_STRUCT_TIMESPEC,
 [
+  AC_REQUIRE([AC_HEADER_TIME])
   AC_CACHE_CHECK([for struct timespec], fu_cv_sys_struct_timespec,
-   AC_REQUIRE([AC_HEADER_TIME])
     [AC_TRY_COMPILE(
       [
 #      if TIME_WITH_SYS_TIME
