@@ -1,5 +1,5 @@
 /* filemode.c -- make a string describing file modes
-   Copyright (C) 1985, 1990, 1993, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1985, 1990, 1993, 1998-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
-
+
 #if HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -80,37 +80,42 @@
 # undef S_ISSOCK
 #endif /* STAT_MACROS_BROKEN.  */
 
-#if !defined(S_ISBLK) && defined(S_IFBLK)
+#if !defined S_ISBLK && defined S_IFBLK
 # define S_ISBLK(m) (((m) & S_IFMT) == S_IFBLK)
 #endif
-#if !defined(S_ISCHR) && defined(S_IFCHR)
+#if !defined S_ISCHR && defined S_IFCHR
 # define S_ISCHR(m) (((m) & S_IFMT) == S_IFCHR)
 #endif
-#if !defined(S_ISDIR) && defined(S_IFDIR)
+#if !defined S_ISDIR && defined S_IFDIR
 # define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #endif
-#if !defined(S_ISREG) && defined(S_IFREG)
+#if !defined S_ISREG && defined S_IFREG
 # define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
 #endif
-#if !defined(S_ISFIFO) && defined(S_IFIFO)
+#if !defined S_ISFIFO && defined S_IFIFO
 # define S_ISFIFO(m) (((m) & S_IFMT) == S_IFIFO)
 #endif
-#if !defined(S_ISLNK) && defined(S_IFLNK)
+#if !defined S_ISLNK && defined S_IFLNK
 # define S_ISLNK(m) (((m) & S_IFMT) == S_IFLNK)
 #endif
-#if !defined(S_ISSOCK) && defined(S_IFSOCK)
+#if !defined S_ISSOCK && defined S_IFSOCK
 # define S_ISSOCK(m) (((m) & S_IFMT) == S_IFSOCK)
 #endif
-#if !defined(S_ISMPB) && defined(S_IFMPB) /* V7 */
+#if !defined S_ISMPB && defined S_IFMPB /* V7 */
 # define S_ISMPB(m) (((m) & S_IFMT) == S_IFMPB)
 # define S_ISMPC(m) (((m) & S_IFMT) == S_IFMPC)
 #endif
-#if !defined(S_ISNWK) && defined(S_IFNWK) /* HP/UX */
+#if !defined S_ISNWK && defined S_IFNWK /* HP/UX */
 # define S_ISNWK(m) (((m) & S_IFMT) == S_IFNWK)
 #endif
-#if !defined(S_ISDOOR) && defined(S_IFDOOR) /* Solaris 2.5 and up */
+#if !defined S_ISDOOR && defined S_IFDOOR /* Solaris 2.5 and up */
 # define S_ISDOOR(m) (((m) & S_IFMT) == S_IFDOOR)
 #endif
+#if !defined S_ISCTG && defined S_IFCTG /* MassComp */
+# define S_ISCTG(m) (((m) & S_IFMT) == S_IFCTG)
+#endif
+
+
 
 /* Set the 's' and 't' flags in file attributes string CHARS,
    according to the file mode BITS.  */
@@ -156,11 +161,13 @@ setst (mode_t bits, char *chars)
    'D' for doors
    'b' for block special files
    'c' for character special files
+   'n' for network special files
    'm' for multiplexor files
    'M' for an off-line (regular) file
    'l' for symbolic links
    's' for sockets
    'p' for fifos
+   'C' for contigous data files
    '-' for regular files
    '?' for any other file type.  */
 
@@ -200,6 +207,10 @@ ftypelet (mode_t bits)
 #ifdef S_ISDOOR
   if (S_ISDOOR (bits))
     return 'D';
+#endif
+#ifdef S_ISCTG
+  if (S_ISCTG (bits))
+    return 'C';
 #endif
 
   /* The following two tests are for Cray DMF (Data Migration
