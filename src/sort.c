@@ -28,7 +28,6 @@
 #include <stdio.h>
 #include <assert.h>
 #include "system.h"
-#include "closeout.h"
 #include "long-options.h"
 #include "error.h"
 #include "hard-locale.h"
@@ -417,8 +416,13 @@ xfopen (const char *file, const char *how)
 
   if (STREQ (file, "-"))
     {
-      have_read_stdin = 1;
-      fp = stdin;
+      if (*how == 'r')
+	{
+	  have_read_stdin = 1;
+	  fp = stdin;
+	}
+      else
+	fp = stdout;
     }
   else
     {
@@ -1556,14 +1560,16 @@ checkfp (FILE *fp, char *file_name)
   return disordered;
 }
 
-/* Merge lines from FPS onto OFP.  NFPS cannot be greater than NMERGE.
-   Close FPS before returning.  NAMES and OUTPUT_NAME give the names
-   of the files.  */
+/* Merge lines from FILES onto OFP.  NFILES cannot be greater than
+   NMERGE.  Close input and output files before returning.
+   OUTPUT_FILE gives the name of the output file; if OFP is NULL, the
+   output file has not been opened yet.  */
 
 static void
-mergefps (FILE **fps, char **files, register int nfps,
+mergefps (char **files, register int nfiles,
 	  FILE *ofp, const char *output_file)
 {
+  FILE *fps[NMERGE];		/* Input streams for each file.  */
   struct buffer buffer[NMERGE];	/* Input buffers for each file. */
   struct line saved;		/* Saved line storage for unique check. */
   struct line const *savedline = NULL;
@@ -1579,25 +1585,23 @@ mergefps (FILE **fps, char **files, register int nfps,
   saved.text = NULL;
 
   /* Read initial lines from each input file. */
-  for (i = 0; i < nfps; ++i)
+  for (i = 0; i < nfiles; ++i)
     {
-      size_t mergealloc = sort_buffer_size (&fps[i], 1, &files[i], 1,
-					    sizeof (struct line),
-					    sort_size / nfps);
-      initbuf (&buffer[i], sizeof (struct line), mergealloc);
+      fps[i] = xfopen (files[i], "r");
+      initbuf (&buffer[i], sizeof (struct line),
+	       sort_buffer_size (&fps[i], 1, &files[i], 1,
+				 sizeof (struct line),
+				 sort_size / nfiles));
       /* If a file is empty, eliminate it from future consideration. */
-      while (i < nfps && !fillbuf (&buffer[i], fps[i], files[i]))
+      while (i < nfiles && !fillbuf (&buffer[i], fps[i], files[i]))
 	{
 	  xfclose (fps[i], files[i]);
 	  zaptemp (files[i]);
-	  --nfps;
-	  for (j = i; j < nfps; ++j)
-	    {
-	      fps[j] = fps[j + 1];
-	      files[j] = files[j + 1];
-	    }
+	  --nfiles;
+	  for (j = i; j < nfiles; ++j)
+	    files[j] = files[j + 1];
 	}
-      if (i == nfps)
+      if (i == nfiles)
 	free (buffer[i].buf);
       else
 	{
@@ -1607,17 +1611,20 @@ mergefps (FILE **fps, char **files, register int nfps,
 	}
     }
 
+  if (! ofp)
+    ofp = xfopen (output_file, "w");
+
   /* Set up the ord table according to comparisons among input lines.
      Since this only reorders two items if one is strictly greater than
      the other, it is stable. */
-  for (i = 0; i < nfps; ++i)
+  for (i = 0; i < nfiles; ++i)
     ord[i] = i;
-  for (i = 1; i < nfps; ++i)
+  for (i = 1; i < nfiles; ++i)
     if (0 < compare (cur[ord[i - 1]], cur[ord[i]]))
       t = ord[i - 1], ord[i - 1] = ord[i], ord[i] = t, i = 0;
 
   /* Repeatedly output the smallest line until no input remains. */
-  while (nfps)
+  while (nfiles)
     {
       struct line const *smallest = cur[ord[0]];
 
@@ -1673,14 +1680,14 @@ mergefps (FILE **fps, char **files, register int nfps,
 	  else
 	    {
 	      /* We reached EOF on fps[ord[0]]. */
-	      for (i = 1; i < nfps; ++i)
+	      for (i = 1; i < nfiles; ++i)
 		if (ord[i] > ord[0])
 		  --ord[i];
-	      --nfps;
+	      --nfiles;
 	      xfclose (fps[ord[0]], files[ord[0]]);
 	      zaptemp (files[ord[0]]);
 	      free (buffer[ord[0]].buf);
-	      for (i = ord[0]; i < nfps; ++i)
+	      for (i = ord[0]; i < nfiles; ++i)
 		{
 		  fps[i] = fps[i + 1];
 		  files[i] = files[i + 1];
@@ -1688,7 +1695,7 @@ mergefps (FILE **fps, char **files, register int nfps,
 		  cur[i] = cur[i + 1];
 		  base[i] = base[i + 1];
 		}
-	      for (i = 0; i < nfps; ++i)
+	      for (i = 0; i < nfiles; ++i)
 		ord[i] = ord[i + 1];
 	      continue;
 	    }
@@ -1697,7 +1704,7 @@ mergefps (FILE **fps, char **files, register int nfps,
       /* The new line just read in may be larger than other lines
 	 already in core; push it back in the queue until we encounter
 	 a line larger than it. */
-      for (i = 1; i < nfps; ++i)
+      for (i = 1; i < nfiles; ++i)
 	{
 	  t = compare (cur[ord[0]], cur[ord[i]]);
 	  if (!t)
@@ -1716,6 +1723,8 @@ mergefps (FILE **fps, char **files, register int nfps,
       write_bytes (saved.text, saved.length, ofp, output_file);
       free (saved.text);
     }
+
+  xfclose (ofp, output_file);
 }
 
 /* Sort the array LINES with NLINES members, using TEMP for temporary space.
@@ -1764,6 +1773,46 @@ sortlines (struct line *lines, size_t nlines, struct line *temp)
     *--lo = *--t;
 }
 
+/* Return the index of the first of NFILES FILES that is the same file
+   as OUTFILE.  If none can be the same, return NFILES.  Consider an
+   input pipe to be the same as OUTFILE, since the pipe might be the
+   output of a command like "cat OUTFILE".  */
+
+static int
+first_same_file (char **files, int nfiles, char const *outfile)
+{
+  int i;
+  int got_outstat = 0;
+  struct stat instat, outstat;
+
+  for (i = 0; i < nfiles; i++)
+    {
+      int standard_input = STREQ (files[i], "-");
+
+      if (STREQ (outfile, files[i]) && ! standard_input)
+	return i;
+
+      if (! got_outstat)
+	{
+	  got_outstat = 1;
+	  if ((STREQ (outfile, "-")
+	       ? fstat (STDOUT_FILENO, &outstat)
+	       : stat (outfile, &outstat))
+	      != 0)
+	    return nfiles;
+	}
+
+      if (((standard_input
+	    ? fstat (STDIN_FILENO, &instat)
+	    : stat (files[i], &instat))
+	   == 0)
+	  && (S_ISFIFO (instat.st_mode) || SAME_INODE (instat, outstat)))
+	return i;
+    }
+
+  return nfiles;
+}
+
 /* Check that each of the NFILES FILES is ordered.
    Return a count of disordered files. */
 
@@ -1781,45 +1830,41 @@ check (char **files, int nfiles)
   return disorders;
 }
 
-/* Merge NFILES FILES onto OFP. */
+/* Merge NFILES FILES onto OUTPUT_FILE.  However, merge at most
+   MAX_MERGE input files directly onto OUTPUT_FILE.  MAX_MERGE cannot
+   exceed NMERGE.  */
 
 static void
-merge (char **files, int nfiles, FILE *ofp, const char *output_file)
+merge (char **files, int nfiles, int max_merge, char const *output_file)
 {
-  int i, j, t;
+  int i, t;
   char *temp;
-  FILE *fps[NMERGE], *tfp;
+  FILE *tfp;
 
-  while (nfiles > NMERGE)
+  while (max_merge < nfiles)
     {
       t = 0;
       for (i = 0; i < nfiles / NMERGE; ++i)
 	{
-	  for (j = 0; j < NMERGE; ++j)
-	    fps[j] = xfopen (files[i * NMERGE + j], "r");
 	  temp = create_temp_file (&tfp);
-	  mergefps (fps, &files[i * NMERGE], NMERGE, tfp, temp);
-	  xfclose (tfp, temp);
+	  mergefps (&files[i * NMERGE], NMERGE, tfp, temp);
 	  files[t++] = temp;
 	}
-      for (j = 0; j < nfiles % NMERGE; ++j)
-	fps[j] = xfopen (files[i * NMERGE + j], "r");
       temp = create_temp_file (&tfp);
-      mergefps (fps, &files[i * NMERGE], nfiles % NMERGE, tfp, temp);
-      xfclose (tfp, temp);
+      mergefps (&files[i * NMERGE], nfiles % NMERGE, tfp, temp);
       files[t++] = temp;
       nfiles = t;
+      if (nfiles == 1)
+	break;
     }
 
-  for (i = 0; i < nfiles; ++i)
-    fps[i] = xfopen (files[i], "r");
-  mergefps (fps, files, nfiles, ofp, output_file);
+  mergefps (files, nfiles, NULL, output_file);
 }
 
-/* Sort NFILES FILES onto OFP. */
+/* Sort NFILES FILES onto OUTPUT_FILE. */
 
 static void
-sort (char **files, int nfiles, FILE *ofp, const char *output_file)
+sort (char **files, int nfiles, char const *output_file)
 {
   struct buffer buf;
   FILE *tfp;
@@ -1865,7 +1910,8 @@ sort (char **files, int nfiles, FILE *ofp, const char *output_file)
 	  sortlines (line, buf.nlines, linebase);
 	  if (buf.eof && !nfiles && !n_temp_files && !buf.left)
 	    {
-	      tfp = ofp;
+	      xfclose (fp, file);
+	      tfp = xfopen (output_file, "w");
 	      temp_output = output_file;
 	    }
 	  else
@@ -1884,12 +1930,15 @@ sort (char **files, int nfiles, FILE *ofp, const char *output_file)
 	    }
 	  while (linebase < line);
 
-	  if (tfp != ofp)
-	    xfclose (tfp, temp_output);
+	  xfclose (tfp, temp_output);
+
+	  if (! n_temp_files)
+	    goto finish;
 	}
       xfclose (fp, file);
     }
 
+ finish:
   free (buf.buf);
 
   if (n_temp_files)
@@ -1898,7 +1947,7 @@ sort (char **files, int nfiles, FILE *ofp, const char *output_file)
       tempfiles = (char **) xmalloc (n_temp_files * sizeof (char *));
       for (node = temphead; i > 0; node = node->next)
 	tempfiles[--i] = node->name;
-      merge (tempfiles, n_temp_files, ofp, output_file);
+      merge (tempfiles, n_temp_files, NMERGE, output_file);
       free ((char *) tempfiles);
     }
 }
@@ -2044,9 +2093,8 @@ main (int argc, char **argv)
   char const *s;
   int i;
   int checkonly = 0, mergeonly = 0, nfiles = 0;
-  char *minus = "-", **files, *tmp;
+  char *minus = "-", **files;
   char const *outfile = minus;
-  FILE *ofp;
   static int const sigs[] = { SIGHUP, SIGINT, SIGPIPE, SIGTERM };
   int nsigs = sizeof sigs / sizeof *sigs;
 #ifdef SA_NOCLDSTOP
@@ -2058,9 +2106,6 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
-
-  close_stdout_set_status (SORT_FAILURE);
-  atexit (close_stdout);
 
 #ifdef ENABLE_NLS
 
@@ -2292,7 +2337,6 @@ but lacks following character offset"));
 			else
 			  outfile = argv[++i];
 		      }
-		    close_stdout_set_file_name (outfile);
 		    goto outer;
 		  case 's':
 		    stable = 1;
@@ -2409,86 +2453,13 @@ but lacks following character offset"));
       exit (check (files, nfiles) == 0 ? EXIT_SUCCESS : SORT_OUT_OF_ORDER);
     }
 
-  if (!STREQ (outfile, "-"))
-    {
-      struct stat outstat;
-      if (stat (outfile, &outstat) == 0)
-	{
-	  /* FIXME: warn about this */
-	  /* The following code prevents a race condition when
-	     people use the brain dead shell programming idiom:
-		  cat file | sort -o file
-	     This feature is provided for historical compatibility,
-	     but we strongly discourage ever relying on this in
-	     new shell programs. */
-
-	  /* Temporarily copy each input file that might be another name
-	     for the output file.  When in doubt (e.g. a pipe), copy.  */
-	  for (i = 0; i < nfiles; ++i)
-	    {
-	      char buf[8192];
-	      FILE *in_fp;
-	      FILE *out_fp;
-	      int cc;
-
-	      if (S_ISREG (outstat.st_mode) && !STREQ (outfile, files[i]))
-		{
-		  struct stat instat;
-		  if ((STREQ (files[i], "-")
-		       ? fstat (STDIN_FILENO, &instat)
-		       : stat (files[i], &instat)) != 0)
-		    die (files[i]);
-		  if (S_ISREG (instat.st_mode) && !SAME_INODE (instat, outstat))
-		    {
-		      /* We know the files are distinct.  */
-		      continue;
-		    }
-		}
-
-	      in_fp = xfopen (files[i], "r");
-	      tmp = create_temp_file (&out_fp);
-	      /* FIXME: maybe use copy.c(copy) here. */
-	      while ((cc = fread (buf, 1, sizeof buf, in_fp)) > 0)
-		write_bytes (buf, cc, out_fp, tmp);
-	      if (ferror (in_fp))
-		die (files[i]);
-	      xfclose (out_fp, tmp);
-	      xfclose (in_fp, files[i]);
-	      files[i] = tmp;
-	    }
-	  ofp = xfopen (outfile, "w");
-	}
-      else
-	{
-	  /* A non-`-' outfile was specified, but the file doesn't yet exist.
-	     Before opening it for writing (thus creating it), make sure all
-	     of the input files exist.  Otherwise, creating the output file
-	     could create an otherwise missing input file, making sort succeed
-	     when it should fail.  */
-	  for (i = 0; i < nfiles; ++i)
-	    {
-	      struct stat sb;
-	      if (STREQ (files[i], "-"))
-		continue;
-	      if (stat (files[i], &sb))
-		die (files[i]);
-	    }
-
-	  ofp = xfopen (outfile, "w");
-	}
-    }
-  else
-    {
-      ofp = stdout;
-    }
-
   if (mergeonly)
-    merge (files, nfiles, ofp, outfile);
+    {
+      int max_merge = first_same_file (files, MIN (nfiles, NMERGE), outfile);
+      merge (files, nfiles, max_merge, outfile);
+    }
   else
-    sort (files, nfiles, ofp, outfile);
-
-  if (fclose (ofp) != 0)
-    die (outfile);
+    sort (files, nfiles, outfile);
 
   if (have_read_stdin && fclose (stdin) == EOF)
     die ("-");
