@@ -115,7 +115,8 @@ open_maybe_create (const char *file, int *file_created)
   while (1)
     {
       /* First, see if we can create a new FILE.  */
-      fd = open (file, O_WRONLY | O_CREAT | O_EXCL, 0666);
+      fd = open (file, O_WRONLY | O_CREAT | O_EXCL,
+		 S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
       if (fd != -1)
 	*file_created = 1;
 
