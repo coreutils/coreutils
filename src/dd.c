@@ -946,7 +946,7 @@ dd_copy (void)
     {
       /* FIXME: this loses for
 	 % ./dd if=dd seek=1 |:
-	 ./dd: standard output: Bad file number
+	 ./dd: standard output: Bad file descriptor
 	 0+0 records in
 	 0+0 records out
 	 */
@@ -966,7 +966,9 @@ dd_copy (void)
 	 whatever data we are able to read is followed by zeros.
 	 This minimizes data loss. */
       if ((conversions_mask & C_SYNC) && (conversions_mask & C_NOERROR))
-	memset ((char *) ibuf, 0, input_blocksize);
+	memset ((char *) ibuf,
+		(conversions_mask & (C_BLOCK | C_UNBLOCK)) ? ' ' : '\0',
+		input_blocksize);
 
       nread = safe_read (STDIN_FILENO, ibuf, input_blocksize);
 
@@ -1005,7 +1007,8 @@ dd_copy (void)
 	    {
 	      if (!(conversions_mask & C_NOERROR))
 		/* If C_NOERROR, we zeroed the block before reading. */
-		memset ((char *) (ibuf + n_bytes_read), 0,
+		memset ((char *) (ibuf + n_bytes_read),
+			(conversions_mask & (C_BLOCK | C_UNBLOCK)) ? ' ' : '\0',
 			input_blocksize - n_bytes_read);
 	      n_bytes_read = input_blocksize;
 	    }
