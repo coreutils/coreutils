@@ -12,12 +12,14 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.5 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.6 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my @Types = qw (IN OUT ERR EXIT);
 my %Types = map {$_ => 1} @Types;
 my %Zero_one_type = map {$_ => 1} qw (OUT ERR EXIT);
+
+my $srcdir = $ENV{srcdir};
 
 # A file spec: a scalar or a reference to a single-keyed hash
 # ================
@@ -177,7 +179,8 @@ sub run_tests ($$$$$)
 	      die "$program_name: $test_name: invalid RHS in $type-spec\n"
 	    }
 
-	  my $is_junk_file = (! defined $file_name);
+	  my $is_junk_file = (! defined $file_name
+			      || ($type eq 'IN' && defined $contents));
 	  my $file = _create_file ($program_name, $test_name, $type,
 				   $file_name, $contents);
 	  if ($type eq 'IN')
@@ -198,7 +201,7 @@ sub run_tests ($$$$$)
 	      # FIXME: put $srcdir in here somewhere
 	      warn "$program_name: $test_name: specified file `$file' does"
 		. " not exist\n"
-		  if ! -f $file;
+		  if ! -f "$srcdir/$file";
 	    }
 	}
 
