@@ -14,7 +14,7 @@ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 for more details.
 
 You should have received a copy of the GNU General Public License along
-with Bash; see the file COPYING.  If not, write to the Free Software
+with Bash; see the file COPYING.  If not, write to the Free Software Foundation,
 Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
 #include <config.h>
