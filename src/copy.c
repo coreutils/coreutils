@@ -66,7 +66,7 @@ struct dir_list
 };
 
 /* Describe a just-created or just-renamed destination file.  */
-struct Dest_info
+struct F_triple
 {
   char const* name;
   ino_t st_ino;
@@ -577,11 +577,11 @@ overwrite_prompt (char const *dst_path, struct stat const *dst_sb)
     }
 }
 
-/* Hash a dest_info entry.  */
+/* Hash an F_triple.  */
 static unsigned int
-dest_info_hash (void const *x, unsigned int table_size)
+triple_hash (void const *x, unsigned int table_size)
 {
-  struct Dest_info const *p = x;
+  struct F_triple const *p = x;
 
   /* Also take the name into account, so that when moving N hard links to the
      same file (all listed on the command line) all into the same directory,
@@ -597,88 +597,88 @@ dest_info_hash (void const *x, unsigned int table_size)
   return (tmp | p->st_ino) % table_size;
 }
 
-/* Compare two dest_info entries.  */
+/* Compare two F_triple structs.  */
 static bool
-dest_info_compare (void const *x, void const *y)
+triple_compare (void const *x, void const *y)
 {
-  struct Dest_info const *a = x;
-  struct Dest_info const *b = y;
+  struct F_triple const *a = x;
+  struct F_triple const *b = y;
   return (SAME_INODE (*a, *b) && same_name (a->name, b->name)) ? true : false;
 }
 
-/* Free a dest_info entry.  */
+/* Free an F_triple.  */
 static void
-dest_info_free (void *x)
+triple_free (void *x)
 {
-  struct Dest_info *a = x;
+  struct F_triple *a = x;
   free ((char *) (a->name));
   free (a);
 }
 
-/* Initialize the hash table implementing a set of dest_info entries.  */
+/* Initialize the hash table implementing a set of F_triple entries.  */
 void
 dest_info_init (struct cp_options *x)
 {
   x->dest_info
     = hash_initialize (DEST_INFO_INITIAL_CAPACITY,
 		       NULL,
-		       dest_info_hash,
-		       dest_info_compare,
-		       dest_info_free);
+		       triple_hash,
+		       triple_compare,
+		       triple_free);
 }
 
-/* Return nonzero if the file described by name, DEST, and DEST_STATS
-   has already been created (and hence has an entry in DEST_INFO).
+/* Return nonzero if the file described by name, FILENAME, and STATS
+   has already been created (and hence has an entry in hash table, HT).
    Otherwise, return zero.  */
 static int
-seen_dest (Hash_table const *dest_info, char const *dest,
-	   struct stat dest_stats)
+seen_file (Hash_table const *ht, char const *filename,
+	   struct stat stats)
 {
-  struct Dest_info new_ent;
+  struct F_triple new_ent;
 
-  if (dest_info == NULL)
+  if (ht == NULL)
     return 0;
 
-  new_ent.name = dest;
-  new_ent.st_ino = dest_stats.st_ino;
-  new_ent.st_dev = dest_stats.st_dev;
+  new_ent.name = filename;
+  new_ent.st_ino = stats.st_ino;
+  new_ent.st_dev = stats.st_dev;
 
-  return !!hash_lookup (dest_info, &new_ent);
+  return !!hash_lookup (ht, &new_ent);
 }
 
-/* Record destination filename, DEST, and dev/ino from *DEST_STATS, in
-   the hash table, DEST_INFO, so that if we are asked to overwrite that
-   file again, we can detect it and fail.  If DEST_INFO is NULL, return
-   immediately.  If DEST_STATS is NULL, call lstat on DEST to get device
+/* Record destination filename, FILENAME, and dev/ino from *STATS, in
+   the hash table, HT, so that if we are asked to overwrite that
+   file again, we can detect it and fail.  If HT is NULL, return
+   immediately.  If STATS is NULL, call lstat on FILENAME to get device
    and inode numbers.  If that lstat fails, simply return.  If memory
    allocation fails, exit immediately.  */
 static void
-record_dest (Hash_table *dest_info, char const *dest,
-	     struct stat const *dest_stats)
+record_file (Hash_table *ht, char const *filename,
+	     struct stat const *stats)
 {
-  struct Dest_info *ent;
+  struct F_triple *ent;
 
-  if (dest_info == NULL)
+  if (ht == NULL)
     return;
 
-  ent = (struct Dest_info *) xmalloc (sizeof *ent);
-  ent->name = xstrdup (dest);
-  if (dest_stats)
+  ent = (struct F_triple *) xmalloc (sizeof *ent);
+  ent->name = xstrdup (filename);
+  if (stats)
     {
-      ent->st_ino = dest_stats->st_ino;
-      ent->st_dev = dest_stats->st_dev;
+      ent->st_ino = stats->st_ino;
+      ent->st_dev = stats->st_dev;
     }
   else
     {
-      struct stat stats;
-      if (lstat (dest, &stats))
+      struct stat sb;
+      if (lstat (filename, &sb))
 	return;
-      ent->st_ino = stats.st_ino;
-      ent->st_dev = stats.st_dev;
+      ent->st_ino = sb.st_ino;
+      ent->st_dev = sb.st_dev;
     }
 
   {
-    struct Dest_info *ent_from_table = hash_insert (dest_info, ent);
+    struct F_triple *ent_from_table = hash_insert (ht, ent);
     if (ent_from_table == NULL)
       {
 	/* Insertion failed due to lack of memory.  */
@@ -689,7 +689,7 @@ record_dest (Hash_table *dest_info, char const *dest,
       {
 	/* There was alread a matching entry in the table, so ENT was
 	   not inserted.  Free it.  */
-	dest_info_free (ent);
+	triple_free (ent);
       }
   }
 }
@@ -836,7 +836,7 @@ copy_internal (const char *src_path, const char *dst_path,
 		 Note that it works fine if you use --backup=numbered.  */
 	      if (command_line_arg
 		  && x->backup_type != numbered
-		  && seen_dest (x->dest_info, dst_path, dst_sb))
+		  && seen_file (x->dest_info, dst_path, dst_sb))
 		{
 		  error (0, 0,
 			 _("will not overwrite just-created %s with %s"),
@@ -1055,7 +1055,7 @@ copy_internal (const char *src_path, const char *dst_path,
 		 changed those, and `mv' always uses lstat.
 		 We could limit it further by operating
 		 only on non-directories.  */
-	      record_dest (x->dest_info, dst_path, &src_sb);
+	      record_file (x->dest_info, dst_path, &src_sb);
 	    }
 
 	  return 0;
@@ -1337,7 +1337,7 @@ copy_internal (const char *src_path, const char *dst_path,
     }
 
   if (command_line_arg)
-    record_dest (x->dest_info, dst_path, NULL);
+    record_file (x->dest_info, dst_path, NULL);
 
   if ( ! preserve_metadata)
     return 0;
