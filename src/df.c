@@ -34,9 +34,15 @@
 #include "error.h"
 #include "fsusage.h"
 #include "human.h"
-#include "long-options.h"
 #include "mountlist.h"
 #include "save-cwd.h"
+#include "version-etc.h"
+
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "df"
+
+#define AUTHORS \
+  "Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert"
 
 void strip_trailing_slashes ();
 char *xstrdup ();
@@ -123,6 +129,8 @@ static struct option const long_options[] =
   {"no-sync", no_argument, NULL, CHAR_MAX + 2},
   {"type", required_argument, NULL, 't'},
   {"exclude-type", required_argument, NULL, 'x'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -615,10 +623,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "df", GNU_PACKAGE, VERSION,
-	    "Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert",
-		      usage);
-
   fs_select_list = NULL;
   fs_exclude_list = NULL;
   inode_format = 0;
@@ -688,6 +692,10 @@ main (int argc, char **argv)
 	case 'x':
 	  add_excluded_fs_type (optarg);
 	  break;
+
+	case_GETOPT_HELP_CHAR;
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+
 	default:
 	  usage (1);
 	}
