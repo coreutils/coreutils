@@ -2265,7 +2265,7 @@ main (int argc, char **argv)
 				long_options, NULL))
 	      == -1))
 	{
-	  if (argc < optind)
+	  if (argc <= optind)
 	    break;
 	  files[nfiles++] = argv[optind++];
 	}
