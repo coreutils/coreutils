@@ -16,6 +16,13 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
+
+/* FIXME: disable this, for now.
+   The whole idea feels a bit too kludgey.
+   Although it seems to work just fine on Linux, it doesn't
+   work on Solaris or HPUX.  */
+#undef HAVE_MMAP_STACK
+
 #if HAVE_MMAP_STACK
 # define RUN_WITH_BIG_STACK_2(F, A, B)					\
     do									\
