@@ -222,9 +222,9 @@ comm_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
 	../lib/libfetish.a
 am_cp_OBJECTS = cp.$(OBJEXT) copy.$(OBJEXT) cp-hash.$(OBJEXT)
 cp_OBJECTS = $(am_cp_OBJECTS)
-cp_LDADD = $(LDADD)
-cp_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
+am__DEPENDENCIES_2 = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
 	../lib/libfetish.a
+cp_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 csplit_SOURCES = csplit.c
 csplit_OBJECTS = csplit.$(OBJEXT)
 csplit_LDADD = $(LDADD)
@@ -237,8 +237,6 @@ cut_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
 	../lib/libfetish.a
 date_SOURCES = date.c
 date_OBJECTS = date.$(OBJEXT)
-am__DEPENDENCIES_2 = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
 date_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 dd_SOURCES = dd.c
 dd_OBJECTS = dd.$(OBJEXT)
@@ -307,9 +305,7 @@ fold_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
 am_ginstall_OBJECTS = install.$(OBJEXT) copy.$(OBJEXT) \
 	cp-hash.$(OBJEXT)
 ginstall_OBJECTS = $(am_ginstall_OBJECTS)
-ginstall_LDADD = $(LDADD)
-ginstall_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+ginstall_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 head_SOURCES = head.c
 head_OBJECTS = head.$(OBJEXT)
 head_LDADD = $(LDADD)
@@ -381,9 +377,7 @@ mknod_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
 am_mv_OBJECTS = mv.$(OBJEXT) copy.$(OBJEXT) cp-hash.$(OBJEXT) \
 	remove.$(OBJEXT)
 mv_OBJECTS = $(am_mv_OBJECTS)
-mv_LDADD = $(LDADD)
-mv_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+mv_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 nice_SOURCES = nice.c
 nice_OBJECTS = nice.$(OBJEXT)
 nice_LDADD = $(LDADD)
@@ -411,9 +405,7 @@ paste_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
 	../lib/libfetish.a
 pathchk_SOURCES = pathchk.c
 pathchk_OBJECTS = pathchk.$(OBJEXT)
-pathchk_LDADD = $(LDADD)
-pathchk_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+pathchk_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 pinky_SOURCES = pinky.c
 pinky_OBJECTS = pinky.$(OBJEXT)
 pinky_LDADD = $(LDADD)
@@ -450,9 +442,7 @@ readlink_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
 	../lib/libfetish.a
 am_rm_OBJECTS = rm.$(OBJEXT) remove.$(OBJEXT)
 rm_OBJECTS = $(am_rm_OBJECTS)
-rm_LDADD = $(LDADD)
-rm_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+rm_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 rmdir_SOURCES = rmdir.c
 rmdir_OBJECTS = rmdir.$(OBJEXT)
 rmdir_LDADD = $(LDADD)
@@ -527,9 +517,7 @@ tee_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
 	../lib/libfetish.a
 test_SOURCES = test.c
 test_OBJECTS = test.$(OBJEXT)
-test_LDADD = $(LDADD)
-test_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+test_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 touch_SOURCES = touch.c
 touch_OBJECTS = touch.$(OBJEXT)
 touch_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
@@ -744,6 +732,7 @@ LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIB_CLOCK_GETTIME = @LIB_CLOCK_GETTIME@
 LIB_CRYPT = @LIB_CRYPT@
+LIB_EACCESS = @LIB_EACCESS@
 LIB_FDATASYNC = @LIB_FDATASYNC@
 LIB_NANOSLEEP = @LIB_NANOSLEEP@
 LN_S = @LN_S@
@@ -834,6 +823,14 @@ AM_CPPFLAGS = -I.. -I$(srcdir) -I$(top_srcdir)/lib -I../lib
 # But libfetish.a must also follow $(LIBINTL), since libintl uses
 # replacement functions defined in libfetish.a.
 LDADD = ../lib/libfetish.a $(LIBINTL) ../lib/libfetish.a
+
+# for eaccess in lib/euidaccess.c.
+cp_LDADD = $(LDADD) $(LIB_EACCESS)
+ginstall_LDADD = $(LDADD) $(LIB_EACCESS)
+mv_LDADD = $(LDADD) $(LIB_EACCESS)
+pathchk_LDADD = $(LDADD) $(LIB_EACCESS)
+rm_LDADD = $(LDADD) $(LIB_EACCESS)
+test_LDADD = $(LDADD) $(LIB_EACCESS)
 
 # for clock_gettime and fdatasync
 dd_LDADD = $(LDADD) $(LIB_FDATASYNC)
@@ -978,7 +975,7 @@ uninstall-binPROGRAMS:
 	done
 
 clean-binPROGRAMS:
-	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS) > /dev/null 2>&1 || /bin/rm -f $(bin_PROGRAMS)
 
 installcheck-binPROGRAMS: $(bin_PROGRAMS)
 	bad=0; pid=$$$$; list="$(bin_PROGRAMS)"; for p in $$list; do \

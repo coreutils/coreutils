@@ -160,10 +160,6 @@
    */
 #undef HAVE_DECL_DIRFD
 
-/* Define to 1 if you have the declaration of `eaccess', and to 0 if you
-   don't. */
-#undef HAVE_DECL_EACCESS
-
 /* Define to 1 if you have the declaration of `euidaccess', and to 0 if you
    don't. */
 #undef HAVE_DECL_EUIDACCESS
@@ -376,6 +372,9 @@
 /* Define to 1 if you have the <dustat.h> header file. */
 #undef HAVE_DUSTAT_H
 
+/* Define to 1 if you have the `eaccess' function. */
+#undef HAVE_EACCESS
+
 /* Define to 1 if you have the `endgrent' function. */
 #undef HAVE_ENDGRENT
 
@@ -526,6 +525,9 @@
 
 /* Define to 1 if you have the `dgc' library (-ldgc). */
 #undef HAVE_LIBDGC
+
+/* Define to 1 if you have the <libgen.h> header file. */
+#undef HAVE_LIBGEN_H
 
 /* Define to 1 if you have the `kstat' library (-lkstat). */
 #undef HAVE_LIBKSTAT
