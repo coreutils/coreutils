@@ -1,3 +1,8 @@
+2003-09-19  Jim Meyering  <jim@meyering.net>
+
+	* version-etc.c, version-etc.h: Revert yesterday's changes.
+	* long-options.c, long-options.h: Likewise.
+
 2003-09-18  Jim Meyering  <jim@meyering.net>
 
 	This lets translators provide better translations for the
