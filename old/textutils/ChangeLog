@@ -1,3 +1,19 @@
+Sun Feb 16 08:30:29 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/pr-test/{tt-0FF, tt-bl, tta3-0FF, ttb3-0FF, tt-FF, tt-t,
+	tta3-FF, ttb3-FF}: New files.  Renamed (s/T/tt/) to avoid name clashes
+	on case-independent filesystems.
+	* tests/pr-test/Test.pm (Tests '7.*'): Reflect file-renaming.
+
+	* src/tail.c (parse_obsolescent_option): Reverse order of args in
+	diagnostic.  Remove `' quotes in diagnostic.
+	(parse_options): Remove `' quotes in diagnostic.
+
+Sat Feb  8 22:43:45 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/tail.c (parse_obsolescent_option): Give warning diagnostic for
+	(but now accept) obsolescent usage with more than one file argument.
+
 Sun Feb  2 23:06:59 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/join.c: Move alloca-related preprocessor code into system.h.

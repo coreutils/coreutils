@@ -1630,7 +1630,7 @@ options}.
 If a @var{file} is specified as @samp{-} or if no files are given
 @code{md5sum} computes the checksum for the standard input.
 @code{md5sum} can also determine whether a file and checksum are
-consistent. Synopsis:
+consistent. Synopses:
 
 @example
 md5sum [@var{option}]@dots{} [@var{file}]@dots{}
@@ -1704,7 +1704,7 @@ Treat all input files as text files.  This is the reverse of
 @opindex -w
 @opindex --warn
 @cindex verifying MD5 checksums
-When verifying checksums, warn about improperly formated MD5 checksum lines.
+When verifying checksums, warn about improperly formatted MD5 checksum lines.
 This option is useful only if all but a few lines in the checked input
 are valid.
 
