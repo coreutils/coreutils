@@ -248,7 +248,6 @@ __xstrtol (const char *s, char **ptr, int strtol_base,
 	default:
 	  *val = tmp;
 	  return err | LONGINT_INVALID_SUFFIX_CHAR;
-	  break;
 	}
 
       err |= overflow;
