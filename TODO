@@ -23,4 +23,7 @@ for i in f s t; do
   done
 done
 
-i=t j=zh_TW msgmerge -o k ../../$xu/po/$j.po $j.po && mv k $j.po
+go cu; cd po; export xu=tu j=zh_TW
+go cu; cd po; export xu=su j=ru
+go cu; cd po; export xu=fu j=zh_TW
+msgmerge -o k ../../$xu/po/$j.po $j.po && mv k $j.po
