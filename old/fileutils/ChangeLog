@@ -1,6 +1,15 @@
-2001-12-11  Jim Meyering  <meyering@lucent.com>
+2001-12-15  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.4.
+
+	* tests/touch/fail-diag: Also accept SunOS4's `Not owner' diagnostic.
+	Reported by Volker Borchert.
+
+	* tests/help-version: Fail also if ./$i --version fails.
+	Run each --help and --version test with a few different settings
+	of LC_MESSAGES.  Prompted by a report from Nelson Beebe.
+
+2001-12-11  Jim Meyering  <meyering@lucent.com>
 
 	Include the word `fail' in some diagnostics to make it clearer
 	that they indicate a failure.
