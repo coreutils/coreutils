@@ -46,6 +46,13 @@ BEGIN {
     }
 }
 
+sub escape_hyphens($)
+{
+  my ($s) = @_;
+  $s =~ s/-/\\-/g;
+  return $s;
+}
+
 sub _ { gettext @_ }
 sub N_ { $_[0] }
 
@@ -598,6 +605,9 @@ for my $sect (@pre, (grep ! /^($filter)$/o, @include), @post)
 
 	    # Convert some latin1 chars to troff equivalents
 	    s/\xa0/\\ /g; # non-breaking space
+
+	    # Escape hyphens in <>-enclosed email addresses.
+	    s/(<\S+\@(\S+\.)+\S{2,}>)/escape_hyphens $1/ge;
 
 	    print;
 	}
