@@ -304,19 +304,16 @@ md5_process_block (buffer, len, ctx)
         {								\
 	  a += FF (b, c, d) + (*cwp++ = SWAP (*words)) + T;		\
 	  ++words;							\
-	  CYCLIC (a, s);						\
+	  a = rol (a, s);						\
 	  a += b;							\
         }								\
       while (0)
 
-      /* It is unfortunate that C does not provide an operator for
-	 cyclic rotation.  Hope the C compiler is smart enough.  */
-#define CYCLIC(w, s) (w = (w << s) | (w >> (32 - s)))
-
       /* Before we start, one word to the strange constants.
 	 They are defined in RFC 1321 as
 
-	 T[i] = (int) (4294967296.0 * fabs (sin (i))), i=1..64
+	 T[i] = (int) (4294967296.0 * fabs (sin (i))), i=1..64, or
+	 perl -e 'foreach(1..64){printf "0x%08x\n", int (4294967296 * abs (sin $_))}'
        */
 
       /* Round 1.  */
@@ -345,7 +342,7 @@ md5_process_block (buffer, len, ctx)
       do 								\
 	{								\
 	  a += f (b, c, d) + correct_words[k] + T;			\
-	  CYCLIC (a, s);						\
+	  a = rol (a, s);						\
 	  a += b;							\
 	}								\
       while (0)
