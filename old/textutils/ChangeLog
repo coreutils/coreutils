@@ -1,3 +1,24 @@
+Mon Dec 19 22:13:55 1994  Jim Meyering  (meyering@comco.com)
+
+	* lib/Makefile.in (SOURCES): Remove xwrite.c.  It was no longer used.
+	Add xstrtol.c and xstrtoul.c.
+	(OBJECTS): Likewise for .o files.
+	(DISTFILES): Add error.h and xstrtol.h and xstrtoul.h.
+
+	* lib/Makefile.in (DISTFILES): Remove safe-xstat.cin.
+	Remove all related dependencies.
+
+Thu Dec 15 23:14:04 1994  Jim Meyering  (meyering@comco.com)
+
+	* tail.c (tail_file): Fix call to error with %s in format, but
+	no corresponding argument.
+
+	* src/*.c: Include "error.h" instead of simply declaring
+	`void error ();'.
+	* od.c (main): Use %lu, not %d for unsigned long.
+	(my_strtoul, uint_fatal_error): Remove functions.  Use xstrtoul
+	and STRTOL_FATAL_ERROR instead.
+
 Sun Dec 11 17:24:09 1994  Jim Meyering  (meyering@comco.com)
 
 	* sort.c (main): Fix interpretation of field offsets when specified
