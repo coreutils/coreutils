@@ -1,3 +1,7 @@
+1999-07-10  Jim Meyering  <meyering@ascend.com>
+
+	* man/help2man: Import version 1.012.
+
 1999-07-04  Jim Meyering  <meyering@ascend.com>
 
 	* lib/xstrtol.c [!defined strtoumax]: Declare strtoumax.
