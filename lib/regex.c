@@ -3265,9 +3265,10 @@ re_search_2 (bufp, string1, size1, string2, size2, startpos, range, regs, stop)
     return -1;
     
   /* Fix up RANGE if it might eventually take us outside
-     the virtual concatenation of STRING1 and STRING2.  */
-  if (endpos < -1)
-    range = -1 - startpos;
+     the virtual concatenation of STRING1 and STRING2.
+     Make sure we won't move STARTPOS below 0 or above TOTAL_SIZE.  */ 
+  if (endpos < 0)
+    range = 0 - startpos;
   else if (endpos > total_size)
     range = total_size - startpos;
 
