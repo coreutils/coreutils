@@ -1,6 +1,6 @@
 [4.1.1]
-* ls honors the -g option, per POSIX
-* ls's -n option now implies -l;  before, -n had no effect unless used with -l
+* ls -g now acts like ls -l, except it does not display owner, as per POSIX.
+* ls -n now implies -l, as per POSIX.
 
 Changes in release 4.1:
 [4.0.45]
