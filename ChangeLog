@@ -1,3 +1,10 @@
+2003-08-10  Jim Meyering  <jim@meyering.net>
+
+	* src/nice.c [!NICE_PRIORITY]: Include <sys/resource.h> after
+	system.h so the types from time.h and sys/time.h are available.
+	It appears that this is necessary for OpenBSD, NetBSD, and
+	Darwin 6.5 (MacOS 10.2.5).  Reported by Nelson Beebe.
+
 2003-08-06  Paul Eggert  <eggert@twinsun.com>
 
 	* NEWS: Add support for setting file timestamps to microsecond
