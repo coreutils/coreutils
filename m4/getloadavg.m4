@@ -1,4 +1,4 @@
-#serial 4
+#serial 5
 
 AC_DEFUN(AM_FUNC_GETLOADAVG,
 [ac_have_func=no # yes means we've found a way to get the load average.
@@ -103,9 +103,7 @@ AC_SUBST(NEED_SETGID)dnl
 
 if test $ac_cv_func_getloadavg_setgid = yes; then
   AC_CACHE_CHECK(group of /dev/kmem, ac_cv_group_kmem,
-changequote(<<, >>)dnl
-<<
-  # On Solaris, /dev/kmem is a symlink.  Get info on the real file.
+[  # On Solaris, /dev/kmem is a symlink.  Get info on the real file.
   ac_ls_output=`ls -lgL /dev/kmem 2>/dev/null`
   # If we got an error (system does not support symlinks), try without -L.
   test -z "$ac_ls_output" && ac_ls_output=`ls -lg /dev/kmem`
@@ -113,8 +111,7 @@ changequote(<<, >>)dnl
     | sed -ne 's/[ 	][ 	]*/ /g;
 	       s/^.[sSrwx-]* *[0-9]* *\([^0-9]*\)  *.*/\1/;
 	       / /s/.* //;p;'`
->>
-changequote([, ])dnl
+]
 )
   KMEM_GROUP=$ac_cv_group_kmem
 fi
