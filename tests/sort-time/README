@@ -1,12 +1,27 @@
-determine whether it's worthwhile to add a --line-length=N option to sort.
-Add the option and perform this test:
+# determine whether it's worthwhile to add a --line-length=N option to sort.
+# Add the option and perform this test:
+#
+# Test method:
+# ==============
 
-Test method:
-==============
-for n in 80 200 400 800 3000; do
-  sort a file with $n-char lines using the default of N=30
-  sort the same file with --line-length=$n
-  compare run times
+n_bytes=10000000
+time=/bin/time
+for line_len in 80 200 400 800 3000; do
+
+  echo "line length: $line_len"
+  write-file-of-size --bytes=$n_bytes --line-length=$line_len > in
+
+  # sort a file with $n-char lines using the default of N=30
+  $time sort in > x
+
+  # sort the same file with --line-length=$n
+  SORT_INITIAL_LINE_LENGTH=`expr $line_len + 1` $time sort in > x
+
+  echo
+  # compare run times
 done
 
-do this on at least SunOS, Linux, Solaris
+# do this on at least SunOS, Linux, Solaris
+
+# RESULTS:
+# Solarix x86 dual PPro/200: none
