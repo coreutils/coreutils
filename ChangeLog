@@ -1,6 +1,10 @@
-2003-12-08  Jim Meyering  <jim@meyering.net>
+2003-12-12  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.0.
+
+	* Use automake-1.8.  Regenerate dependent files.
+
+2003-12-08  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (news-date-check): New rule.
 	(alpha beta major): Depend on it.
@@ -28,10 +32,6 @@
 	major and minor numbers fit into unsigned long int.
 	* tests/cp/same-file, tests/mv/part-symlink: Don't assume that
 	'ls' output is fixed-width.
-
-2003-12-03  Jim Meyering  <jim@meyering.net>
-
-	* Use automake-1.7h.  Regenerate dependent files.
 
 2003-12-02  Jim Meyering  <jim@meyering.net>
 
