@@ -51,6 +51,7 @@
 #include "fsusage.h"
 #include "system.h"
 #include "version.h"
+#include "safe-stat.h"
 
 char *xmalloc ();
 char *xstrdup ();
@@ -206,14 +207,21 @@ main (argc, argv)
   if (show_help)
     usage (0);
 
-  if (optind != argc)
+  if (optind == argc)
+    {
+#ifdef lint
+      /* Suppress `used before initialized' warning.  */
+      stats = NULL;
+#endif
+    }
+  else
     {
       /* stat all the given entries to make sure they get automounted,
 	 if necessary, before reading the filesystem table.  */
       stats = (struct stat *)
 	xmalloc ((argc - optind) * sizeof (struct stat));
       for (i = optind; i < argc; ++i)
-	if (stat (argv[i], &stats[i - optind]))
+	if (SAFE_STAT (argv[i], &stats[i - optind]))
 	  {
 	    error (0, errno, "%s", argv[i]);
 	    exit_status = 1;
@@ -325,7 +333,7 @@ show_point (point, statp)
     {
       if (me->me_dev == (dev_t) -1)
 	{
-	  if (stat (me->me_mountdir, &disk_stats) == 0)
+	  if (SAFE_STAT (me->me_mountdir, &disk_stats) == 0)
 	    me->me_dev = disk_stats.st_dev;
 	  else
 	    {

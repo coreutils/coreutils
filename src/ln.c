@@ -38,6 +38,7 @@
 #include "system.h"
 #include "backupfile.h"
 #include "version.h"
+#include "safe-lstat.h"
 
 int link ();			/* Some systems don't declare this anywhere. */
 
@@ -223,7 +224,7 @@ main (argc, argv)
 	 `ln source dest/' to `ln source dest/basename(source)'.  */
 
       if (dest[strlen (dest) - 1] == '/'
-	  && lstat (source, &source_stats) == 0
+	  && SAFE_LSTAT (source, &source_stats) == 0
 	  && !S_ISDIR (source_stats.st_mode))
 	{
 	  PATH_BASENAME_CONCAT (new_dest, dest, source);
@@ -278,7 +279,7 @@ do_link (source, dest)
       dest = new_dest;
     }
 
-  if (lstat (dest, &dest_stats) == 0)
+  if (SAFE_LSTAT (dest, &dest_stats) == 0)
     {
       if (S_ISDIR (dest_stats.st_mode))
 	{

@@ -33,6 +33,7 @@
 #include <sys/types.h>
 #include "system.h"
 #include "version.h"
+#include "safe-lstat.h"
 
 #ifdef _POSIX_SOURCE
 /* POSIX.1 doesn't have inodes, so fake them to avoid lots of ifdefs. */
@@ -205,7 +206,7 @@ rm ()
       return 1;
     }
 
-  if (lstat (pathname, &path_stats))
+  if (SAFE_LSTAT (pathname, &path_stats))
     {
       if (errno == ENOENT && ignore_missing_files)
 	return 0;

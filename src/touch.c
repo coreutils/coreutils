@@ -49,6 +49,7 @@
 #include <sys/types.h>
 #include "system.h"
 #include "version.h"
+#include "safe-stat.h"
 
 #ifndef STDC_HEADERS
 time_t mktime ();
@@ -227,7 +228,7 @@ main (argc, argv)
 
   if (use_ref)
     {
-      if (stat (ref_file, &ref_stats))
+      if (SAFE_STAT (ref_file, &ref_stats))
 	error (1, errno, "%s", ref_file);
       date_set++;
     }
@@ -272,7 +273,7 @@ touch (file)
   struct stat sbuf;
   int fd;
 
-  if (stat (file, &sbuf))
+  if (SAFE_STAT (file, &sbuf))
     {
       if (errno != ENOENT)
 	{

@@ -71,6 +71,7 @@
 #include <grp.h>
 #include "system.h"
 #include "version.h"
+#include "safe-stat.h"
 #include "modechange.h"
 
 #if !defined (isascii) || defined (STDC_HEADERS)
@@ -332,7 +333,7 @@ copy_file (from, to, to_created)
   struct stat from_stats, to_stats;
   int target_created = 1;
 
-  if (stat (from, &from_stats))
+  if (SAFE_STAT (from, &from_stats))
     {
       error (0, errno, "%s", from);
       return 1;
@@ -342,7 +343,7 @@ copy_file (from, to, to_created)
       error (0, 0, "`%s' is not a regular file", from);
       return 1;
     }
-  if (stat (to, &to_stats) == 0)
+  if (SAFE_STAT (to, &to_stats) == 0)
     {
       if (!S_ISREG (to_stats.st_mode))
 	{

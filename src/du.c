@@ -56,9 +56,8 @@
 #include <sys/types.h>
 #include "system.h"
 #include "version.h"
-
-int lstat ();
-int stat ();
+#include "safe-stat.h"
+#include "safe-lstat.h"
 
 /* Initial number of entries in each hash table entry's table of inodes.  */
 #define INITIAL_HASH_MODULE 100
@@ -238,7 +237,7 @@ main (argc, argv)
   cwd_only[1] = "NULL";
 
   program_name = argv[0];
-  xstat = lstat;
+  xstat = safe_lstat;
   output_size = getenv ("POSIXLY_CORRECT") ? size_blocks : size_kilobytes;
 
   while ((c = getopt_long (argc, argv, "abcklsxDLS", long_options, (int *) 0))
@@ -282,7 +281,7 @@ main (argc, argv)
 	  break;
 
 	case 'L':
-	  xstat = stat;
+	  xstat = safe_stat;
 	  break;
 
 	case 'S':
@@ -333,7 +332,7 @@ du_files (files)
     error (1, errno, "cannot get current directory");
 
   /* Remember the inode and device number of the current directory.  */
-  if (stat (".", &stat_buf))
+  if (SAFE_STAT (".", &stat_buf))
     error (1, errno, "current directory");
   initial_ino = stat_buf.st_ino;
   initial_dev = stat_buf.st_dev;
@@ -365,7 +364,7 @@ du_files (files)
       count_entry (arg, 1, 0);
 
       /* chdir if `count_entry' has changed the working directory.  */
-      if (stat (".", &stat_buf))
+      if (SAFE_STAT (".", &stat_buf))
 	error (1, errno, ".");
       if ((stat_buf.st_ino != initial_ino || stat_buf.st_dev != initial_dev)
 	  && chdir (wd) < 0)
@@ -396,7 +395,7 @@ count_entry (ent, top, last_dev)
   long size;
 
   if (((top && opt_dereference_arguments)
-       ? stat (ent, &stat_buf)
+       ? SAFE_STAT (ent, &stat_buf)
        : (*xstat) (ent, &stat_buf)) < 0)
     {
       error (0, errno, "%s", path->text);
