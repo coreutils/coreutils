@@ -1,6 +1,10 @@
-2005-03-08  Paul Eggert  <eggert@cs.ucla.edu>
+2005-03-09  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* TODO: Remove entry about named pipes.  It was fixed in 5.3.0.
+
+2005-03-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/date.c (usage): Redo to match recent documentation changes.
 	Don't bother documenting which usages are GNU extensions; the list
