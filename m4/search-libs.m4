@@ -1,8 +1,8 @@
-#serial 2
+#serial 3
 
 dnl A replacement for autoconf's macro by the same name.  This version
 dnl uses `ac_lib' rather than `i' for the loop variable, but more importantly
-dnl moves the ACTION-IF-FOUND ($3) into the inner `if'-block so that it is
+dnl moves the ACTION-IF-FOUND ([$]3) into the inner `if'-block so that it is
 dnl run only if one of the listed libraries ends up being used (and not in
 dnl the `none required' case.
 dnl I hope it's only temporary while we wait for that version to be fixed.
