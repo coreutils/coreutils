@@ -163,8 +163,8 @@ is_number (const char *str)
    use the given user's login group.
    If SPEC_ARG contains a `:', then use that as the separator, ignoring
    any `.'s.  If there is no `:', but there is a `.', then first look
-   up SPEC_ARG as a login name.  If that look-up fails, then try again
-   interpreting the `.'  as a separator.
+   up the entire SPEC_ARG as a login name.  If that look-up fails, then
+   try again interpreting the `.'  as a separator.
 
    USERNAME and GROUPNAME will be in newly malloc'd memory.
    Either one might be NULL instead, indicating that it was not
