@@ -1,5 +1,5 @@
 /* Utility to help print --version output in a consistent format.
-   Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1999-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@
 
 const char* version_etc_copyright =
   /* Do *not* mark this string for translation.  */
-  "Copyright (C) 2003 Free Software Foundation, Inc.";
+  "Copyright (C) 2004 Free Software Foundation, Inc.";
 
 
 /* Like version_etc, below, but with the NULL-terminated author list
