@@ -2,8 +2,9 @@
 
 	* Version 3.16o.
 
-	* tests/Makefile.am (SUBDIRS): Add install.
 	* tests/install: New subdir, with one basic test.
+	* tests/Makefile.am (SUBDIRS): Add install.
+	* configure.in (AC_OUTPUT): Add tests/install/Makefile.
 
 	* src/dd.c: Include safe-read.h.
 	Don't declare safe_read.
