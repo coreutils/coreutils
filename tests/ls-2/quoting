@@ -5,6 +5,11 @@ use strict;
 my $program_name;
 ($program_name = $0) =~ s|.*/||;
 
+# Make sure the tools use the expected locale.
+$ENV{LANGUAGE} = 'C';
+$ENV{LC_ALL} = 'C';
+$ENV{LANG} = 'C';
+
 # A file spec: a scalar or a reference to a single-keyed hash
 # ================
 # 'contents'               contents only (file name is derived from test name)
@@ -43,6 +48,7 @@ my @Tests =
      ['q-q', '-q', $q_bell, {OUT => "q?\n"}],
      ['q-Q', '-Q', $q_bell, {OUT => "\"q\\a\"\n"}],
 
+     ['q-lit-q', '--quoting=literal -q',     $q_bell, {OUT => "q?\n"}],
      ['q-qs-lit', '--quoting=literal',       $q_bell, {OUT => "q\a\n"}],
      ['q-qs-sh', '--quoting=shell',          $q_bell, {OUT => "q\a\n"}],
      ['q-qs-sh-a', '--quoting=shell-always', $q_bell, {OUT => "'q\a'\n"}],

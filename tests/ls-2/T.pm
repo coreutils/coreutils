@@ -42,6 +42,9 @@ sub _create_file ($$$$$)
   return $file;
 }
 
+# FIXME: cleanup on interrupt
+# FIXME: extract `do_1_test' function
+
 # FIXME: having to include $program_name here is an expedient kludge.
 # Library code doesn't `die'.
 sub run_tests ($$$$$)
