@@ -1,7 +1,14 @@
 2002-10-09  Jim Meyering  <meyering@lucent.com>
 
+	* tests/tail-2/big-4gb: Mark this as an expensive test; it would
+	consume 4GB of disk space on systems without support for sparse files.
+	Fix a logic error that'd make it `cat err' even though dd didn't fail.
+
+	* src/dircolors.hin (.jar): Fix typo: s/01;3/01;31/.
+	Patch by steven@magelico.net, forwarded by Michael Stone.
+
 	* tests/ls/dired: Ensure that ls produces English messages.
-	Patch by Alexey Vyskubov.
+	Patch by Alexey Vyskubov, forwarded by Michael Stone.
 
 2002-10-08  Jim Meyering  <meyering@lucent.com>
 
