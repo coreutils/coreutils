@@ -2,6 +2,10 @@
 
 	* Version 4.0.42.
 
+	* tests/Fetish.pm: If the $DJDIR envvar is defined, set SHELL
+	to $DJDIR/bin/bash.exe.  Patch from Richard Dawe, based on a
+	suggestion from Eli Zaretskii.
+
 2001-03-17  Paul Eggert  <eggert@twinsun.com>
 
 	* doc/fileutils.texi: Warn that touch DATE FILE will be withdrawn.
