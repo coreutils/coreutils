@@ -21,47 +21,43 @@
 # include <config.h>
 #endif
 
-#if HAVE_FCNTL_H
-# include <fcntl.h>
-#endif
+#include "cloexec.h"
 
 #if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
 
-#include "cloexec.h"
+#if HAVE_FCNTL_H
+# include <fcntl.h>
+#endif
 
 #ifndef FD_CLOEXEC
 # define FD_CLOEXEC 1
 #endif
 
-/* Set the `FD_CLOEXEC' flag of DESC if VALUE is nonzero,
-   or clear the flag if VALUE is 0.
-   Return 0 on success, or -1 on error with `errno' set. */
+/* Set the `FD_CLOEXEC' flag of DESC if VALUE is true,
+   or clear the flag if VALUE is false.
+   Return true on success, or false on error with `errno' set. */
 
-int
-set_cloexec_flag (int desc, int value)
+bool
+set_cloexec_flag (int desc, bool value)
 {
 #if defined F_GETFD && defined F_SETFD
 
   int flags = fcntl (desc, F_GETFD, 0);
+  int newflags;
 
-  /* If reading the flags failed, return error indication. */
-  if (flags == -1)
-    return flags;
+  if (flags < 0)
+    return false;
 
-  /* Set just the flag we want to set. */
-  if (value != 0)
-    flags |= FD_CLOEXEC;
-  else
-    flags &= ~FD_CLOEXEC;
+  newflags = (value ? flags | FD_CLOEXEC : flags & ~FD_CLOEXEC);
 
-  /* Store modified flags in the descriptor. */
-  return fcntl (desc, F_SETFD, flags);
+  return (flags == newflags
+	  || fcntl (desc, F_SETFD, newflags) != -1);
 
 #else
 
-  return 0;
+  return false;
 
 #endif
 }
