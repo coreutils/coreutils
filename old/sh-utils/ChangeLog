@@ -1,6 +1,10 @@
 1999-08-22  Jim Meyering  <meyering@ascend.com>
 
-	* src/su.c (run_shell): Declare with noreturn attribute.
+	* src/sys2.h (ATTRIBUTE_NORETURN): Define.
+	* src/test.c: Use ATTRIBUTE_NORETURN instead of NO_RETURN_ATTRIBUTE.
+	(NO_RETURN_ATTRIBUTE): Remove definition.
+
+	* src/su.c (run_shell): Declare with gcc's noreturn attribute.
 	Use an explicit exit(1) rather than doing that through error.
 
 	* src/sys2.h (IF_LINT): Define new macro.
