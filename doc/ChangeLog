@@ -1,3 +1,9 @@
+2003-09-02  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi (sort invocation): -d now overrides -i.
+	"whitespace" -> "blanks"; "whitespace" isn't correct.
+	-t '\0' now specifies a NUL tab.
+
 2003-08-17  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (who invocation): Add an entry for -l, --login.
@@ -47,7 +53,7 @@
 
 2003-07-14  Paul Eggert  <eggert@twinsun.com>
 
-	* doc/coreutils.texi (uname invocation): Explain the POSIX
+	* coreutils.texi (uname invocation): Explain the POSIX
 	terminology behind uname -m and uname -s.
 
 2003-07-13  Jim Meyering  <jim@meyering.net>
@@ -108,7 +114,7 @@
 
 	Fix printf POSIX compatibility bug reported by Ben Harris in
 	<http://mail.gnu.org/archive/html/bug-coreutils/2003-04/msg00070.html>.
-	* doc/coreutils.texi (printf invocation): It's \NNN in the format,
+	* coreutils.texi (printf invocation): It's \NNN in the format,
 	\0NNN in the %b operand.
 
 2003-04-10  Jim Meyering  <jim@meyering.net>
@@ -206,7 +212,7 @@
 	compatible with FreeBSD and the POSIX spec is confusing
 	and somewhat contradictory.
 
-	* doc/coreutils.texi (Which files are listed, General output
+	* coreutils.texi (Which files are listed, General output
 	formatting): Undo last change.
 
 2003-01-15  Jim Meyering  <jim@meyering.net>
