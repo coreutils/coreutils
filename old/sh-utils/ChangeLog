@@ -1,3 +1,25 @@
+
+	* Version 2.0.12.
+
+2001-06-21  Paul Eggert  <eggert@twinsun.com>
+
+	* NEWS, doc/coreutils.texi: 'expr' now requires '+' rather
+	than 'quote' to quote tokens.
+
+	* src/expr.c (posixly_correct): Remove; no longer needed.
+	(main): Do not worry about POSIXLY_CORRECT, as it's OK for
+	expr to have options (so long as they do not begin with digits).
+	(eval6, usage): Use "+" rather than "quote" to quote tokens.
+
+2001-08-19  Jim Meyering  <meyering@lucent.com>
+
+	* src/Makefile.am (bin_PROGRAMS): Add kill.
+	* src/kill.c: New file.
+
+2001-08-19  Jim Meyering  <meyering@lucent.com>
+
+	* po/POTFILES.in: Add src/kill.c
+
 2001-06-21  Paul Eggert  <eggert@twinsun.com>
 
 	* src/expr.c (nextarg): Advance ARGS by one if the next token matches.

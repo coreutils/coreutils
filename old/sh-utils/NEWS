@@ -1,5 +1,7 @@
 Changes in release 2.1
  [2.0.12]
+* 'expr' now requires '+' rather than 'quote' to quote tokens;
+    this removes an incompatibility with POSIX.
 * date -d 'last friday' would print a date/time that was one hour off
     (e.g., 23:00 on *thursday* rather than 00:00 of the preceding friday)
     when run such that the current time and the target date/time fall on
