@@ -169,7 +169,7 @@ hash_get_table_size (const HT *ht)
   return ht->hash_table_size;
 }
 
-/* TABLE_SIZE should be prime.  If WHEN_TO_REHASH is positive, when
+/* CANDIDATE_TABLE_SIZE need not be prime.  If WHEN_TO_REHASH is positive, when
    that percentage of table entries have been used, the table is
    deemed too small;  then a new, larger table (GROW_FACTOR times
    larger than the previous size) is allocated and all entries in
