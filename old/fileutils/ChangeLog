@@ -10,7 +10,7 @@
 	(usage): Correct descriptions of --sort, --time, and -t.
 	Suggestions from Andreas Schwab.
 
-	Add test for the above.
+	Add test for the above fix.
 	* configure.in (AC_OUTPUT): Add tests/ls/Makefile.
 	* tests/Makefile.am (SUBDIRS): Add ls.
 	* tests/ls: New directory.
