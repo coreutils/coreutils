@@ -6,7 +6,7 @@ dnl See if the glibc *_unlocked I/O macros are available.
 dnl Use only those *_unlocked macros that are declared.
 dnl
 
-AC_DEFUN(jm_FUNC_GLIBC_UNLOCKED_IO,
+AC_DEFUN([jm_FUNC_GLIBC_UNLOCKED_IO],
   [
     # Kludge (not executed) to make autoheader do the right thing.
     if test a = b; then
