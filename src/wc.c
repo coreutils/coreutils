@@ -32,6 +32,37 @@
 #include "human.h"
 #include "safe-read.h"
 
+/* Get mbstate_t, mbrtowc(), wcwidth().  */
+#if HAVE_WCHAR_H
+# include <wchar.h>
+#endif
+
+/* Get iswprint().  */
+#if HAVE_WCTYPE_H
+# include <wctype.h>
+#endif
+#if !defined iswprint && !HAVE_ISWPRINT
+# define iswprint(wc) 1
+#endif
+
+/* Some systems, like BeOS, have multibyte encodings but lack mbstate_t.  */
+#if HAVE_MBRTOWC && defined mbstate_t
+# define mbrtowc(pwc, s, n, ps) (mbrtowc) (pwc, s, n, 0)
+#endif
+
+#ifndef HAVE_DECL_WCWIDTH
+"this configure-time declaration test was not run"
+#endif
+#if !HAVE_DECL_WCWIDTH
+extern int wcwidth ();
+#endif
+
+/* If wcwidth() doesn't exist, assume all printable characters have
+   width 1.  */
+#if !defined wcwidth && !HAVE_WCWIDTH
+# define wcwidth(wc) ((wc) == 0 ? 0 : iswprint (wc) ? 1 : -1)
+#endif
+
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "wc"
 
@@ -43,15 +74,17 @@
 /* The name this program was run with. */
 char *program_name;
 
-/* Cumulative number of lines, words, and chars in all files so far.
+/* Cumulative number of lines, words, chars and bytes in all files so far.
    max_line_length is the maximum over all files processed so far.  */
 static uintmax_t total_lines;
 static uintmax_t total_words;
 static uintmax_t total_chars;
+static uintmax_t total_bytes;
 static uintmax_t max_line_length;
 
 /* Which counts to print. */
-static int print_lines, print_words, print_chars, print_linelength;
+static int print_lines, print_words, print_chars, print_bytes;
+static int print_linelength;
 
 /* Nonzero if we have ever read the standard input. */
 static int have_read_stdin;
@@ -66,7 +99,7 @@ static int posixly_correct;
 static struct option const longopts[] =
 {
   {"bytes", no_argument, NULL, 'c'},
-  {"chars", no_argument, NULL, 'c'},
+  {"chars", no_argument, NULL, 'm'},
   {"lines", no_argument, NULL, 'l'},
   {"words", no_argument, NULL, 'w'},
   {"max-line-length", no_argument, NULL, 'L'},
@@ -91,7 +124,8 @@ Usage: %s [OPTION]... [FILE]...\n\
 Print line, word, and byte counts for each FILE, and a total line if\n\
 more than one FILE is specified.  With no FILE, or when FILE is -,\n\
 read standard input.\n\
-  -c, --bytes, --chars   print the byte counts\n\
+  -c, --bytes            print the byte counts\n\
+  -m, --chars            print the character counts\n\
   -l, --lines            print the newline counts\n\
   -L, --max-line-length  print the length of the longest line\n\
   -w, --words            print the word counts\n\
@@ -107,6 +141,7 @@ static void
 write_counts (uintmax_t lines,
 	      uintmax_t words,
 	      uintmax_t chars,
+	      uintmax_t bytes,
 	      uintmax_t linelength,
 	      const char *file)
 {
@@ -130,6 +165,11 @@ write_counts (uintmax_t lines,
       printf (format_sp_int, space, human_readable (chars, buf, 1, 1));
       space = " ";
     }
+  if (print_bytes)
+    {
+      printf (format_sp_int, space, human_readable (bytes, buf, 1, 1));
+      space = " ";
+    }
   if (print_linelength)
     {
       printf (format_sp_int, space, human_readable (linelength, buf, 1, 1));
@@ -144,10 +184,26 @@ wc (int fd, const char *file)
 {
   char buf[BUFFER_SIZE + 1];
   ssize_t bytes_read;
-  int in_word = 0;
-  uintmax_t lines, words, chars, linelength;
+  uintmax_t lines, words, chars, bytes, linelength;
+  int count_bytes, count_chars, count_complicated;
 
-  lines = words = chars = linelength = 0;
+  lines = words = chars = bytes = linelength = 0;
+
+  /* If in the current locale, chars are equivalent to bytes, we prefer
+     counting bytes, because that's easier.  */
+#if HAVE_MBRTOWC && (MB_LEN_MAX > 1)
+  if (MB_CUR_MAX > 1)
+    {
+      count_bytes = print_bytes;
+      count_chars = print_chars;
+    }
+  else
+#endif
+    {
+      count_bytes = print_bytes + print_chars;
+      count_chars = 0;
+    }
+  count_complicated = print_words + print_linelength;
 
   /* We need binary input, since `wc' relies on `lseek' and byte counts.  */
   SET_BINARY (fd);
@@ -162,7 +218,7 @@ wc (int fd, const char *file)
      `(dd ibs=99k skip=1 count=0; ./wc -c) < /etc/group'
      should make wc report `0' bytes.  */
 
-  if (print_chars && !print_words && !print_lines && !print_linelength)
+  if (count_bytes && !count_chars && !print_lines && !count_complicated)
     {
       off_t current_pos, end_pos;
       struct stat stats;
@@ -174,13 +230,13 @@ wc (int fd, const char *file)
 	  off_t diff;
 	  /* Be careful here.  The current position may actually be
 	     beyond the end of the file.  As in the example above.  */
-	  chars = (diff = end_pos - current_pos) < 0 ? 0 : diff;
+	  bytes = (diff = end_pos - current_pos) < 0 ? 0 : diff;
 	}
       else
 	{
 	  while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
 	    {
-	      chars += bytes_read;
+	      bytes += bytes_read;
 	    }
 	  if (bytes_read < 0)
 	    {
@@ -189,10 +245,10 @@ wc (int fd, const char *file)
 	    }
 	}
     }
-  else if (!print_words && !print_linelength)
+  else if (!count_chars && !count_complicated)
     {
       /* Use a separate loop when counting only lines or lines and bytes --
-	 but not words.  */
+	 but not chars or words.  */
       while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
 	{
 	  register char *p = buf;
@@ -202,7 +258,7 @@ wc (int fd, const char *file)
 	      ++p;
 	      ++lines;
 	    }
-	  chars += bytes_read;
+	  bytes += bytes_read;
 	}
       if (bytes_read < 0)
 	{
@@ -210,15 +266,154 @@ wc (int fd, const char *file)
 	  exit_status = 1;
 	}
     }
+#if HAVE_MBRTOWC && (MB_LEN_MAX > 1)
+# define SUPPORT_OLD_MBRTOWC 1
+  else if (MB_CUR_MAX > 1)
+    {
+      int in_word = 0;
+      uintmax_t linepos = 0;
+      mbstate_t state;
+      uintmax_t last_error_line = 0;
+      int last_error_errno = 0;
+# if SUPPORT_OLD_MBRTOWC
+      /* Back-up the state before each multibyte character conversion and
+	 move the last incomplete character of the buffer to the front
+	 of the buffer.  This is needed because we don't know whether
+	 the `mbrtowc' function updates the state when it returns -2, -
+	 this is the ISO C 99 and glibc-2.2 behaviour - or not - amended
+	 ANSI C, glibc-2.1 and Solaris 2.7 behaviour.  We don't have an
+	 autoconf test for this, yet.  */
+      int prev = 0; /* number of bytes carried over from previous round */
+# else
+      const int prev = 0;
+# endif
+
+      memset (&state, 0, sizeof (mbstate_t));
+      while ((bytes_read = safe_read (fd, buf + prev, BUFFER_SIZE - prev)) > 0)
+	{
+	  const char *p;
+# if SUPPORT_OLD_MBRTOWC
+	  mbstate_t backup_state;
+# endif
+
+	  bytes += bytes_read;
+	  p = buf;
+	  bytes_read += prev;
+	  do
+	    {
+	      wchar_t wc;
+	      size_t n;
+
+# if SUPPORT_OLD_MBRTOWC
+	      backup_state = state;
+# endif
+	      n = mbrtowc (&wc, p, bytes_read, &state);
+	      if (n == (size_t) -2)
+		{
+# if SUPPORT_OLD_MBRTOWC
+		  state = backup_state;
+# endif
+		  break;
+		}
+	      if (n == (size_t) -1)
+		{
+		  /* Signal repeated errors only once per line.  */
+		  if (!(lines + 1 == last_error_line
+			&& errno == last_error_errno))
+		    {
+		      char buf[LONGEST_HUMAN_READABLE + 1];
+		      last_error_line = lines + 1;
+		      last_error_errno = errno;
+		      error (0, errno, "%s:%s", file,
+			     human_readable (lines + 1, buf, 1, 1));
+		    }
+		  p++;
+		  bytes_read--;
+		}
+	      else
+		{
+		  if (n == 0)
+		    {
+		      wc = 0;
+		      n = 1;
+		    }
+		  p += n;
+		  bytes_read -= n;
+		  chars++;
+		  switch (wc)
+		    {
+		    case '\n':
+		      lines++;
+		      /* Fall through. */
+		    case '\r':
+		    case '\f':
+		      if (linepos > linelength)
+			linelength = linepos;
+		      linepos = 0;
+		      goto mb_word_separator;
+		    case '\t':
+		      linepos += 8 - (linepos % 8);
+		      goto mb_word_separator;
+		    case ' ':
+		      linepos++;
+		      /* Fall through. */
+		    case '\v':
+		    mb_word_separator:
+		      if (in_word)
+			{
+			  in_word = 0;
+			  words++;
+			}
+		      break;
+		    default:
+		      if (iswprint (wc))
+			{
+			  int width = wcwidth (wc);
+			  if (width > 0)
+			    linepos += width;
+			  in_word = 1;
+			}
+		      break;
+		    }
+		}
+	    }
+	  while (bytes_read > 0);
+
+# if SUPPORT_OLD_MBRTOWC
+	  if (bytes_read > 0)
+	    {
+	      if (bytes_read == BUFFER_SIZE)
+		{
+		  /* Encountered a very long redundant shift sequence.  */
+		  p++;
+		  bytes_read--;
+		}
+	      memmove (buf, p, bytes_read);
+	    }
+	  prev = bytes_read;
+# endif
+	}
+      if (bytes_read < 0)
+	{
+	  error (0, errno, "%s", file);
+	  exit_status = 1;
+	}
+      if (linepos > linelength)
+	linelength = linepos;
+      if (in_word)
+	words++;
+    }
+#endif
   else
     {
+      int in_word = 0;
       uintmax_t linepos = 0;
 
       while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
 	{
 	  const char *p = buf;
 
-	  chars += bytes_read;
+	  bytes += bytes_read;
 	  do
 	    {
 	      switch (*p++)
@@ -247,8 +442,11 @@ wc (int fd, const char *file)
 		    }
 		  break;
 		default:
-		  linepos++;
-		  in_word = 1;
+		  if (ISPRINT ((unsigned char) p[-1]))
+		    {
+		      linepos++;
+		      in_word = 1;
+		    }
 		  break;
 		}
 	    }
@@ -265,10 +463,14 @@ wc (int fd, const char *file)
 	words++;
     }
 
-  write_counts (lines, words, chars, linelength, file);
+  if (count_chars < print_chars)
+    chars = bytes;
+
+  write_counts (lines, words, chars, bytes, linelength, file);
   total_lines += lines;
   total_words += words;
   total_chars += chars;
+  total_bytes += bytes;
   if (linelength > max_line_length)
     max_line_length = linelength;
 }
@@ -314,16 +516,20 @@ main (int argc, char **argv)
 
   exit_status = 0;
   posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
-  print_lines = print_words = print_chars = print_linelength = 0;
-  total_lines = total_words = total_chars = max_line_length = 0;
+  print_lines = print_words = print_chars = print_bytes = print_linelength = 0;
+  total_lines = total_words = total_chars = total_bytes = max_line_length = 0;
 
-  while ((optc = getopt_long (argc, argv, "clLw", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "clLmw", longopts, NULL)) != -1)
     switch (optc)
       {
       case 0:
 	break;
 
       case 'c':
+	print_bytes = 1;
+	break;
+
+      case 'm':
 	print_chars = 1;
 	break;
 
@@ -347,8 +553,9 @@ main (int argc, char **argv)
 	usage (1);
       }
 
-  if (print_lines + print_words + print_chars + print_linelength == 0)
-    print_lines = print_words = print_chars = 1;
+  if (print_lines + print_words + print_chars + print_bytes + print_linelength
+      == 0)
+    print_lines = print_words = print_bytes = 1;
 
   nfiles = argc - optind;
 
@@ -363,8 +570,8 @@ main (int argc, char **argv)
 	wc_file (argv[optind]);
 
       if (nfiles > 1)
-	write_counts (total_lines, total_words, total_chars, max_line_length,
-		      _("total"));
+	write_counts (total_lines, total_words, total_chars, total_bytes,
+		      max_line_length, _("total"));
     }
 
   if (have_read_stdin && close (0))
