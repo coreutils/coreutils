@@ -97,14 +97,6 @@
 # define UT_ID(U) "??"
 #endif
 
-#if HAVE_STRUCT_XTMP_UT_EXIT
-# define UT_EXIT_E_TERMINATION(U) ((U)->ut_exit.e_termination)
-# define UT_EXIT_E_EXIT(U) ((U)->ut_exit.e_exit)
-#else
-# define UT_EXIT_E_TERMINATION(U) 0
-# define UT_EXIT_E_EXIT(U) 0
-#endif
-
 #define UT_TYPE_UNDEF 255
 
 #if HAVE_STRUCT_XTMP_UT_TYPE
@@ -407,7 +399,6 @@ print_deadprocs (const STRUCT_UTMP *utmp_ent)
   char *comment = make_id_equals_comment (utmp_ent);
   PIDSTR_DECL_AND_INIT (pidstr, utmp_ent);
 
-  /* FIXME: ut_exit works with GNU/Linux but is probably not portable.  */
   if (!exitstr)
     exitstr = xmalloc (sizeof (_("term="))
 		       + INT_STRLEN_BOUND (UT_EXIT_E_TERMINATION (utmp_ent)) + 1
