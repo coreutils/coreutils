@@ -1,3 +1,12 @@
+2001-02-28  Paul Eggert  <eggert@twinsun.com>
+
+	* Makefile.am (libfetish_a_SOURCES):
+	Add dup-safer.c, fopen-safer.c.
+	(noinst_HEADERS): Add stdio-safer.h, unistd-safer.h.
+
+	* dup-safer.c, fopen-safer.c, stdio-safer.h,
+	lib/unistd-safer.h: New files.
+
 2001-02-25  Paul Eggert  <eggert@twinsun.com>
 
 	The mkstemp replacement is taken from glibc 2.2.2, with some
