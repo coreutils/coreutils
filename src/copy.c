@@ -632,7 +632,7 @@ dest_info_init (struct cp_options *x)
    Otherwise, return zero.  */
 static int
 seen_file (Hash_table const *ht, char const *filename,
-	   struct stat stats)
+	   struct stat const *stats)
 {
   struct F_triple new_ent;
 
@@ -640,8 +640,8 @@ seen_file (Hash_table const *ht, char const *filename,
     return 0;
 
   new_ent.name = filename;
-  new_ent.st_ino = stats.st_ino;
-  new_ent.st_dev = stats.st_dev;
+  new_ent.st_ino = stats->st_ino;
+  new_ent.st_dev = stats->st_dev;
 
   return !!hash_lookup (ht, &new_ent);
 }
@@ -836,7 +836,7 @@ copy_internal (const char *src_path, const char *dst_path,
 		 Note that it works fine if you use --backup=numbered.  */
 	      if (command_line_arg
 		  && x->backup_type != numbered
-		  && seen_file (x->dest_info, dst_path, dst_sb))
+		  && seen_file (x->dest_info, dst_path, &dst_sb))
 		{
 		  error (0, 0,
 			 _("will not overwrite just-created %s with %s"),
