@@ -17,6 +17,17 @@
 
 /* Written by Brian L. Matthews, blm@6sceng.UUCP. */
 
+#ifdef HAVE_CONFIG_H
+#if defined (CONFIG_BROKETS)
+/* We use <config.h> instead of "config.h" so that a compilation
+   using -I. -I$srcdir will use ./config.h rather than $srcdir/config.h
+   (which it would do because it found this file in $srcdir).  */
+#include <config.h>
+#else
+#include "config.h"
+#endif
+#endif
+
 #if !defined (HAVE_ST_BLOCKS) && !defined(_POSIX_SOURCE)
 #include <sys/types.h>
 #include <sys/param.h>
@@ -24,7 +35,9 @@
 #ifndef NINDIR
 /* Some SysV's, like Irix, seem to lack these.  Hope they're correct. */
 /* Size of a indirect block, in bytes. */
+#ifndef BSIZE
 #define BSIZE 1024
+#endif
 
 /* Number of inode pointers per indirect block. */
 #define NINDIR (BSIZE/sizeof(daddr_t))
