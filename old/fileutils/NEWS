@@ -8,7 +8,8 @@ Changes in release 3.17:
 * rm -r is a lot faster on some systems when removing deep hierarchies
 * chgrp, chmod, and chown no longer give contradictory output when --verbose
   is used and an operation fails
-* ls's multicolumn now uses variable width columns to conserve vertical space
+* ls's multicolumn option now uses variable width columns to conserve
+  vertical space
 * install accepts new option, --preserve-timestamps
 * du --megabytes --total now shows total in megabytes
 * touch -d DATE now works on Unicos
