@@ -15,6 +15,9 @@
 2003-03-10  Jim Meyering  <jim@meyering.net>
 
 	Don't segfault for a negative field width or precision in format string.
+	Note that this is just a stopgap fix.  The longer term solution may
+	involve adapting bash's builtins/printf.def.
+
 	* src/printf.c: (UNSPECIFIED): Define.
 	(print_direc): Use the special value, UNSPECIFIED, to indicate
 	that field_width or precision has not been specified.
