@@ -29,7 +29,8 @@
    and return nonzero if that line begins with y or Y,
    otherwise return 0. */
 
-#ifdef HAVE_RPMATCH
+int rpmatch ();
+
 int
 yesno ()
 {
@@ -49,19 +50,3 @@ yesno ()
 
   return rpmatch (buf) == 1;
 }
-#else
-int
-yesno ()
-{
-  int c;
-  int rv;
-
-  fflush (stderr);
-  c = getchar ();
-  rv = (c == 'y') || (c == 'Y');
-  while (c != EOF && c != '\n')
-    c = getchar ();
-
-  return rv;
-}
-#endif
