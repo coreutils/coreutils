@@ -50,11 +50,6 @@
 char *xmalloc ();
 char *xrealloc ();
 
-static char *collapse_escapes ();
-static int paste_parallel ();
-static int paste_serial ();
-static void usage ();
-
 /* Indicates that no delimiter should be added in the current position. */
 #define EMPTY_DELIM '\0'
 
@@ -97,70 +92,6 @@ static struct option const longopts[] =
   {0, 0, 0, 0}
 };
 
-void
-main (argc, argv)
-     int argc;
-     char **argv;
-{
-  int optc, exit_status;
-  char default_delims[2], zero_delims[3];
-
-  program_name = argv[0];
-  have_read_stdin = 0;
-  serial_merge = 0;
-  delims = default_delims;
-  strcpy (delims, "\t");
-  strcpy (zero_delims, "\\0");
-
-  while ((optc = getopt_long (argc, argv, "d:s", longopts, (int *) 0))
-	 != EOF)
-    {
-      switch (optc)
-	{
-	case 0:
-	  break;
-
-	case 'd':
-	  /* Delimiter character(s). */
-	  if (optarg[0] == '\0')
-	    optarg = zero_delims;
-	  delims = optarg;
-	  break;
-
-	case 's':
-	  serial_merge++;
-	  break;
-
-	default:
-	  usage (1);
-	}
-    }
-
-  if (show_version)
-    {
-      printf ("paste - %s\n", version_string);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
-
-  if (optind == argc)
-    argv[argc++] = "-";
-
-  delim_end = collapse_escapes (delims);
-
-  if (!serial_merge)
-    exit_status = paste_parallel (argc - optind, &argv[optind]);
-  else
-    exit_status = paste_serial (argc - optind, &argv[optind]);
-  if (have_read_stdin && fclose (stdin) == EOF)
-    error (1, errno, "-");
-  if (ferror (stdout) || fclose (stdout) == EOF)
-    error (1, errno, _("write error"));
-  exit (exit_status);
-}
-
 /* Replace backslash representations of special characters in
    STRPTR with their actual values.
    The set of possible backslash characters has been expanded beyond
@@ -169,8 +100,7 @@ main (argc, argv)
    Return a pointer to the character after the new end of STRPTR. */
 
 static char *
-collapse_escapes (strptr)
-     char *strptr;
+collapse_escapes (char *strptr)
 {
   register char *strout;
 
@@ -227,9 +157,7 @@ collapse_escapes (strptr)
    opened or read. */
 
 static int
-paste_parallel (nfiles, fnamptr)
-     int nfiles;
-     char **fnamptr;
+paste_parallel (int nfiles, char **fnamptr)
 {
   int errors = 0;		/* 1 if open or read errors occur. */
   /* Number of files for which space is allocated in `delbuf' and `fileptr'.
@@ -399,9 +327,7 @@ paste_parallel (nfiles, fnamptr)
    opened or read. */
 
 static int
-paste_serial (nfiles, fnamptr)
-     int nfiles;
-     char **fnamptr;
+paste_serial (int nfiles, char **fnamptr)
 {
   int errors = 0;		/* 1 if open or read errors occur. */
   register int charnew, charold; /* Current and previous char read. */
@@ -478,8 +404,7 @@ paste_serial (nfiles, fnamptr)
 }
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -503,4 +428,66 @@ With no FILE, or when FILE is -, read standard input.\n\
 "));
     }
   exit (status);
+}
+
+void
+main (int argc, char **argv)
+{
+  int optc, exit_status;
+  char default_delims[2], zero_delims[3];
+
+  program_name = argv[0];
+  have_read_stdin = 0;
+  serial_merge = 0;
+  delims = default_delims;
+  strcpy (delims, "\t");
+  strcpy (zero_delims, "\\0");
+
+  while ((optc = getopt_long (argc, argv, "d:s", longopts, (int *) 0))
+	 != EOF)
+    {
+      switch (optc)
+	{
+	case 0:
+	  break;
+
+	case 'd':
+	  /* Delimiter character(s). */
+	  if (optarg[0] == '\0')
+	    optarg = zero_delims;
+	  delims = optarg;
+	  break;
+
+	case 's':
+	  serial_merge++;
+	  break;
+
+	default:
+	  usage (1);
+	}
+    }
+
+  if (show_version)
+    {
+      printf ("paste - %s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage (0);
+
+  if (optind == argc)
+    argv[argc++] = "-";
+
+  delim_end = collapse_escapes (delims);
+
+  if (!serial_merge)
+    exit_status = paste_parallel (argc - optind, &argv[optind]);
+  else
+    exit_status = paste_serial (argc - optind, &argv[optind]);
+  if (have_read_stdin && fclose (stdin) == EOF)
+    error (1, errno, "-");
+  if (ferror (stdout) || fclose (stdout) == EOF)
+    error (1, errno, _("write error"));
+  exit (exit_status);
 }
