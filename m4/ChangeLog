@@ -1,3 +1,8 @@
+2003-08-18  Jim Meyering  <jim@meyering.net>
+
+	* getloadavg.m4: Use `[\t ]', not [ \t] (where \t is a literal TAB).
+	* lib-ld.m4: Likewise.
+
 2003-08-16  Paul Eggert  <eggert@twinsun.com>
 
 	Sync with gnulib.
@@ -21,7 +26,7 @@
 	strverscmp.m4, ulonglong.m4, unicodeio.m4, unistd-safer.m4,
 	userspec.m4, xalloc.m4, xgetcwd.m4, xreadlink.m4, xstrtod.m4,
 	xstrtol.m4, yesno.m4: New files, from gnulib.
-	
+
 	* acl.m4, check-decl.m4, chown.m4, c-stack.m4, d-ino.m4,
 	d-type.m4, fileblocks.m4, fsusage.m4, ftruncate.m4, getcwd.m4,
 	getgroups.m4, getline.m4, getndelim2.m4, gettext.m4,
