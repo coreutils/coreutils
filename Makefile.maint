@@ -172,7 +172,7 @@ alpha: writable-files po-check
 	cvs ci -m. $(prev_version_file)
 	@echo =====================================
 	@echo =====================================
-	@echo 'scp $(xd-delta) $(distdir).tar.gz \'
+	@echo 'rsync -e ssh --pro -av $(xd-delta) $(distdir).tar.gz \'
 	@echo '  $(b_host):$(b_real_dir)'
 	@echo '# send the /tmp/announcement e-mail'
 	@echo =====================================
