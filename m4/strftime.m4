@@ -1,4 +1,4 @@
-#serial 19
+#serial 20
 
 dnl This macro is intended to be used solely in this file.
 dnl These are the prerequisite macros for GNU's strftime.c replacement.
@@ -18,6 +18,7 @@ AC_DEFUN([_jm_STRFTIME_PREREQS],
  AC_TYPE_MBSTATE_T
 
  AC_REQUIRE([gl_TM_GMTOFF])
+ AC_REQUIRE([gl_FUNC_TZSET_CLOBBER])
 ])
 
 dnl From Jim Meyering.
