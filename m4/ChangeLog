@@ -1,3 +1,7 @@
+2003-10-05  Jim Meyering  <jim@meyering.net>
+
+	* jm-macros.m4 (jm_MACROS): Don't require AC_FUNC_FTW.
+
 2003-09-17  Paul Eggert  <eggert@twinsun.com>
 
 	Update from gnulib.
