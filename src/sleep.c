@@ -32,20 +32,12 @@
 #endif
 
 #include "system.h"
+#include "closeout.h"
 #include "error.h"
 #include "long-options.h"
 #include "timespec.h"
+#include "xnanosleep.h"
 #include "xstrtod.h"
-#include "closeout.h"
-
-#if HAVE_FENV_H
-# include <fenv.h>
-#endif
-
-/* Tell the compiler that non-default rounding modes are used.  */
-#if 199901 <= __STDC_VERSION__
- #pragma STDC FENV_ACCESS ON
-#endif
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "sleep"
@@ -123,76 +115,13 @@ apply_suffix (double *x, char suffix_char)
   return 0;
 }
 
-/* Subtract the `struct timespec' values X and Y,
-   storing the difference in DIFF.
-   Return 1 if the difference is positive, otherwise 0.
-   Derived from code in the GNU libc manual.  */
-
-static int
-timespec_subtract (struct timespec *diff,
-		   const struct timespec *x, struct timespec *y)
-{
-  /* Perform the carry for the later subtraction by updating Y. */
-  if (x->tv_nsec < y->tv_nsec)
-    {
-      int nsec = (y->tv_nsec - x->tv_nsec) / 1000000000 + 1;
-      y->tv_nsec -= 1000000000 * nsec;
-      y->tv_sec += nsec;
-    }
-
-  if (1000000000 < x->tv_nsec - y->tv_nsec)
-    {
-      int nsec = (y->tv_nsec - x->tv_nsec) / 1000000000;
-      y->tv_nsec += 1000000000 * nsec;
-      y->tv_sec -= nsec;
-    }
-
-  /* Compute the time remaining to wait.
-     `tv_nsec' is certainly positive. */
-  diff->tv_sec = x->tv_sec - y->tv_sec;
-  diff->tv_nsec = x->tv_nsec - y->tv_nsec;
-
-  /* Return 1 if result is positive. */
-  return y->tv_sec < x->tv_sec;
-}
-
-static struct timespec *
-clock_get_realtime (struct timespec *ts)
-{
-  int fail;
-#if USE_CLOCK_GETTIME
-  fail = clock_gettime (CLOCK_REALTIME, ts);
-#else
-  struct timeval tv;
-  fail = gettimeofday (&tv, NULL);
-  if (!fail)
-    {
-      ts->tv_sec = tv.tv_sec;
-      ts->tv_nsec = 1000 * tv.tv_usec;
-    }
-#endif
-
-  if (fail)
-    error (EXIT_FAILURE, errno, _("cannot read realtime clock"));
-
-  return ts;
-}
-
 int
 main (int argc, char **argv)
 {
   int i;
   double seconds = 0.0;
-  double ns;
   int c;
   int fail = 0;
-  int forever;
-  struct timespec ts_start;
-  struct timespec ts_stop;
-  struct timespec ts_sleep;
-
-  /* Record start time.  */
-  clock_get_realtime (&ts_start);
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -222,12 +151,6 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-#ifdef FE_UPWARD
-  /* Always round up, since we must sleep for at least the specified
-     interval.  */
-  fesetround (FE_UPWARD);
-#endif
-
   for (i = optind; i < argc; i++)
     {
       double s;
@@ -250,53 +173,8 @@ main (int argc, char **argv)
   if (fail)
     usage (EXIT_FAILURE);
 
-  /* Separate whole seconds from nanoseconds.
-     Be careful to detect any overflow.  */
-  ts_sleep.tv_sec = seconds;
-  ns = 1e9 * (seconds - ts_sleep.tv_sec);
-  forever = ! (ts_sleep.tv_sec <= seconds && 0 <= ns && ns <= 1e9);
-  ts_sleep.tv_nsec = ns;
-
-  /* Round up to the next whole number, if necessary, so that we
-     always sleep for at least the requested amount of time.  */
-  ts_sleep.tv_nsec += (ts_sleep.tv_nsec < ns);
-
-  /* Normalize the interval length.  nanosleep requires this.  */
-  if (1000000000 <= ts_sleep.tv_nsec)
-    {
-      time_t t = ts_sleep.tv_sec + 1;
-
-      /* Detect integer overflow.  */
-      forever |= (t < ts_sleep.tv_sec);
-
-      ts_sleep.tv_sec = t;
-      ts_sleep.tv_nsec -= 1000000000;
-    }
-
-  ts_stop.tv_sec = ts_start.tv_sec + ts_sleep.tv_sec;
-  ts_stop.tv_nsec = ts_start.tv_nsec + ts_sleep.tv_nsec;
-  if (1000000000 <= ts_stop.tv_nsec)
-    {
-      ++ts_stop.tv_sec;
-      ts_stop.tv_nsec -= 1000000000;
-    }
-
-  /* Detect integer overflow.  */
-  forever |= (ts_stop.tv_sec < ts_start.tv_sec
-	      || (ts_stop.tv_sec == ts_start.tv_sec
-		  && ts_stop.tv_nsec < ts_start.tv_nsec));
-
-  if (forever)
-    {
-      /* Fix ts_sleep and ts_stop, which may be garbage due to overflow.  */
-      ts_sleep.tv_sec = ts_stop.tv_sec = TIME_T_MAX;
-      ts_sleep.tv_nsec = ts_stop.tv_nsec = 999999999;
-    }
-
-  while (nanosleep (&ts_sleep, NULL) != 0
-	 && timespec_subtract (&ts_sleep, &ts_stop,
-			       clock_get_realtime (&ts_start)))
-    continue;
+  if (xnanosleep (seconds))
+    error (EXIT_FAILURE, errno, _("cannot read realtime clock"));
 
   exit (EXIT_SUCCESS);
 }
