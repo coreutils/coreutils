@@ -108,13 +108,13 @@ for copy in cp mv; do
 		  -e '/^total /d' \
 		  -e s,$other_partition_tmpdir/,, \
 		  -e s,$pwd_tmp/,, \
-		  -e 's/^......................................//'`"
+		  -e 's/^[^ ]*  *[^ ]*  *[^ ]*  *[^ ]*  *[^ ]*  *[^ ]*  *//'`"
 	  ls2="`cd $other_partition_tmpdir && ls -gG --ignore=.err . \
 	      | sed \
 		  -e '/^total /d' \
 		  -e s,$other_partition_tmpdir/,, \
 		  -e s,$pwd_tmp/,, \
-		  -e 's/^......................................//'`"
+		  -e 's/^[^ ]*  *[^ ]*  *[^ ]*  *[^ ]*  *[^ ]*  *[^ ]*  *//'`"
 	  echo "($ls) ($ls2)"
 
 	  # If the command failed, then it must not have changed the files.
