@@ -1,6 +1,23 @@
-2003-02-19  Jim Meyering  <jim@meyering.net>
+2003-02-20  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.8.
+
+	Now, df always displays the device file name corresponding to the
+	listed mount point under `Filesystem'.  Before, for an unmounted
+	block- or character-special file argument, it would display the
+	command-line argument instead.
+	* src/df.c (show_disk): Return a value indicating whether
+	there was a match.  Don't try to find a mount point here.
+	(show_entry): If show_disk doesn't find a match, call show_point.
+
+2003-02-19  Jim Meyering  <jim@meyering.net>
+
+	* src/du.c: Include "mmap-stack.h".
+	(du_files): Add prototype with ATTRIBUTE_NORETURN.
+	Exit from this function, not from...
+	(main): ...here.
+	Instead, if possible, invoke du_files through a macro that
+	runs it with a large, mmap'd stack.
 
 	* src/join.c (usage): Change wording in --help output:
 	use FILENUM instead of `SIDE' and say what FILENUM means.
