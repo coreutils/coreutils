@@ -1,3 +1,7 @@
+2000-11-03  Bruno Haible  <haible@clisp.cons.org>
+
+	* jm-macros.m4 (jm_MACROS): Add test for wcrtomb.
+
 2000-11-04  Jim Meyering  <meyering@lucent.com>
 
 	* regex.m4: Use the `m4_' prefix on `syscmd' and `m4_sysval'.
