@@ -2,6 +2,9 @@
 
 	* Version 4.5.2.
 
+	* src/tail.c (parse_options): Give a sensible diagnostic for
+	an invalid byte or line count.  Reported by Mikko Tuumanen.
+
 	* src/touch.c (main): Split a long line.
 
 	* tests/du/Makefile.am (TESTS): Add slink.
