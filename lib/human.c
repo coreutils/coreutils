@@ -355,11 +355,9 @@ human_readable (uintmax_t n, char *buf, int opts,
 	  }
       }
 
-    if (inexact_style == human_ceiling
-	? 0 < tenths + rounding
-	: inexact_style == human_round_to_nearest
-	? 5 < tenths + (2 < rounding + (amt & 1))
-	: /* inexact_style == human_floor */ 0)
+    if (inexact_style == human_round_to_nearest
+	? 5 < tenths + (0 < rounding + (amt & 1))
+	: inexact_style == human_ceiling && 0 < tenths + rounding)
       {
 	amt++;
 
