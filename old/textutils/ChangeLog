@@ -9,6 +9,9 @@ Thu Jun 15 22:09:14 1995  Jim Meyering  (meyering@comco.com)
 	(main): Don't allocate separate arrays for filename and sum
 	when checking.  Get pointers into line buffer with split_3 instead
 	of using sscanf.
+	(main): Treat `no file args' just like `-' when not checking
+	or using strings.
+	(hex_digits): Unprotoize.
 
 	* md5sum.c: Don't include values.h.
 	[__P]: Undefine it.
