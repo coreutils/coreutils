@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
-#if HAVE_LANGINFO_H
+#if HAVE_LANGINFO_CODESET
 # include <langinfo.h>
 #endif
 

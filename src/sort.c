@@ -52,7 +52,7 @@ struct rlimit { size_t rlim_cur; };
 
 #define AUTHORS N_ ("Mike Haertel and Paul Eggert")
 
-#if HAVE_LANGINFO_H
+#if HAVE_LANGINFO_CODESET
 # include <langinfo.h>
 #endif
 
