@@ -34,7 +34,6 @@
 #include <getopt.h>
 
 #include "system.h"
-#include "dirname.h"
 #include "error.h"
 #include "lchown.h"
 #include "quote.h"
@@ -234,11 +233,8 @@ main (int argc, char **argv)
     }
 
   for (; optind < argc; ++optind)
-    {
-      strip_trailing_slashes (argv[optind]);
-      errors |= change_file_owner (1, argv[optind], uid, gid,
-				   old_uid, old_gid, &chopt);
-    }
+    errors |= change_file_owner (1, argv[optind], uid, gid,
+				 old_uid, old_gid, &chopt);
 
   chopt_free (&chopt);
 
