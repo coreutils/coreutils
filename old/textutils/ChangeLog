@@ -1,5 +1,7 @@
 1997-09-14  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/tac.c: Don't include signal.h.
+
 	* src/od.c (main) [--traditional]: Don't give diagnostic about there
 	being more than three arguments if there are *no* arguments specified.
 	Reported by Jochen Hein.
