@@ -197,7 +197,7 @@ wc (fd, file)
      int fd;
      char *file;
 {
-  char buf[BUFFER_SIZE];
+  char buf[BUFFER_SIZE + 1];
   register int bytes_read;
   register int in_word = 0;
   register unsigned long lines, words, chars;
@@ -210,7 +210,7 @@ wc (fd, file)
      bytes at a time until EOF.
 
      NOTE: using fstat and stats.st_size (and omitting the lseek calls)
-     over counts when the file is not positioned at the beginning.
+     overcounts when the file is not positioned at the beginning.
      For example the command `(dd skip=9999; wc -c) < /etc/group'
      should make wc report `0' bytes.  */
 
@@ -246,13 +246,16 @@ wc (fd, file)
 	{
 	  register char *p = buf;
 
+	  buf[bytes_read] = '\n';	/* End of buffer sentinel. */
 	  chars += bytes_read;
+	  --p;
 	  do
 	    {
-	      if (*p++ == '\n')
-		lines++;
+	      p = memchr (p + 1, '\n', bytes_read);
+	      ++lines;
 	    }
-	  while (--bytes_read);
+	  while (p != buf + bytes_read);
+	  --lines;
 	}
       if (bytes_read < 0)
 	{
