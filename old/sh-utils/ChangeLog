@@ -1,5 +1,14 @@
 1999-02-07  Jim Meyering  <meyering@ascend.com>
 
+	* src/pinky.c: Include stdio.h.
+	* src/uptime.c: Likewise.
+	* src/users.c: Likewise.
+	* src/who.c: Likewise.
+
+	* lib/readutmp.c: Include stdio.h here...
+	* lib/readutmp.h: ...not here.
+	From Ulrich Drepper.
+
 	* Version 1.16f.
 
 	* Makefile.maint (my-distcheck): Don't depend on dist, now that this
