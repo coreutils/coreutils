@@ -1,5 +1,7 @@
 2000-08-20  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.0y.
+
 	Add support for cp's new POSIX-mandated -H and -L options.
 	* src/copy.h (enum Dereference_symlink): Define.
 	(struct cp_options) [dereference]: Change type to Dereference_symlink.
