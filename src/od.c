@@ -188,11 +188,30 @@ static const char *output_address_fmt_string;
 
 /* FIXME: make this the number of octal digits in an unsigned long.  */
 #define MAX_ADDRESS_LENGTH 13
-static char address_fmt_buffer[MAX_ADDRESS_LENGTH + 1];
+
+/* Space for a normal address, a space, a pseudo address, parentheses
+   around the pseudo address, and a trailing zero byte. */
+static char address_fmt_buffer[2 * MAX_ADDRESS_LENGTH + 4];
 static char address_pad[MAX_ADDRESS_LENGTH + 1];
 
 static unsigned long int string_min;
 static unsigned long int flag_dump_strings;
+
+/* Non-zero if we should recognize the pre-POSIX non-option arguments
+   that specified at most one file and optional arguments specifying
+   offset and pseudo-start address.  */
+static int flag_compatibility;
+
+/* Non-zero if an old-style `pseudo-address' was specified.  */
+static long int flag_pseudo_start;
+
+/* The difference between the old-style pseudo starting address and
+   the number of bytes to skip.  */
+static long int pseudo_offset;
+
+/* Function to format an address and optionally an additional parenthesized
+   pseudo-address; it returns the formatted string.  */
+static const char *(*format_address) (/* long unsigned int */);
 
 /* The number of input bytes to skip before formatting and writing.  */
 static unsigned long int n_bytes_to_skip = 0;
@@ -258,6 +277,7 @@ static struct option const long_options[] =
   {"output-duplicates", no_argument, NULL, 'v'},
 
   /* non-POSIX options.  */
+  {"compatible", no_argument, NULL, 'C'},
   {"strings", optional_argument, NULL, 's'},
   {"width", optional_argument, NULL, 'w'},
   {NULL, 0, NULL, 0}
@@ -342,25 +362,25 @@ my_strtoul (s, base, val, allow_bkm_suffix)
     case '\0':
       break;
 
-#define BKM_SCALE(x,scale_factor)			\
+#define BKM_SCALE(x,scale_factor,error_return)		\
       do						\
 	{						\
 	  if (x > (double) ULONG_MAX / scale_factor)	\
-	    return UINT_OVERFLOW;			\
+	    return error_return;			\
 	  x *= scale_factor;				\
 	}						\
       while (0)
 
     case 'b':
-      BKM_SCALE (tmp, 512);
+      BKM_SCALE (tmp, 512, UINT_OVERFLOW);
       break;
 
     case 'k':
-      BKM_SCALE (tmp, 1024);
+      BKM_SCALE (tmp, 1024, UINT_OVERFLOW);
       break;
 
     case 'm':
-      BKM_SCALE (tmp, 1024 * 1024);
+      BKM_SCALE (tmp, 1024 * 1024, UINT_OVERFLOW);
       break;
 
     default:
@@ -1047,18 +1067,33 @@ skip (n_skip)
 }
 
 static const char *
-format_address (address)
+format_address_none (address)
+     long unsigned int address;
+{
+  return "";
+}
+
+static const char *
+format_address_std (address)
      long unsigned int address;
 {
   const char *address_string;
 
-  if (output_address_fmt_string == NULL)
-    address_string = "";
-  else
-    {
-      sprintf (address_fmt_buffer, output_address_fmt_string, address);
-      address_string = address_fmt_buffer;
-    }
+  sprintf (address_fmt_buffer, output_address_fmt_string, address);
+  address_string = address_fmt_buffer;
+  return address_string;
+}
+
+static const char *
+format_address_label (address)
+     long unsigned int address;
+{
+  const char *address_string;
+  assert (output_address_fmt_string != NULL);
+
+  sprintf (address_fmt_buffer, output_address_fmt_string,
+	   address, address + pseudo_offset);
+  address_string = address_fmt_buffer;
   return address_string;
 }
 
@@ -1300,6 +1335,63 @@ get_lcm ()
   return l_c_m;
 }
 
+/* If S is a valid pre-POSIX offset specification with an optional leading '+'
+   return the offset it denotes.  Otherwise, return -1.  */
+
+long int
+parse_old_offset (const char *s)
+{
+  int radix;
+  char *suffix;
+  long offset;
+
+  if (*s == '\0')
+    return -1;
+
+  /* Skip over any leading '+'. */
+  if (s[0] == '+')
+    ++s;
+
+  /* Determine the radix we'll use to interpret S.  If there is a `.',
+     it's decimal, otherwise, if the string begins with `0x', it's
+     hexadecimal, else octal.  */
+  if (index (s, '.') != NULL)
+    radix = 10;
+  else
+    {
+      if (strlen (s) >= 2 && s[0] == '0' && s[1] == 'x')
+	radix = 16;
+      else
+	radix = 8;
+    }
+  offset = strtoul (s, &suffix, radix);
+  if (suffix == s || errno != 0)
+    return -1;
+  if (*suffix == '.')
+    ++suffix;
+  switch (*suffix)
+    {
+    case 'b':
+      BKM_SCALE (offset, 512, -1);
+      ++suffix;
+      break;
+
+    case 'B':
+      BKM_SCALE (offset, 1024, -1);
+      ++suffix;
+      break;
+
+    default:
+      /* empty */
+      break;
+    }
+
+  if (*suffix != '\0')
+    return -1;
+  else
+    return offset;
+}
+
 /* Read a chunk of size BYTES_PER_BLOCK from the input files, write the
    formatted block to standard output, and repeat until the specified
    maximum number of bytes has been read or until all input has been
@@ -1525,6 +1617,10 @@ main (argc, argv)
   int width_specified = 0;
   int err;
 
+  /* The old-style `pseudo starting address' to be printed in parentheses
+     after any true address.  */
+  long int pseudo_start;
+
   program_name = argv[0];
   err = 0;
 
@@ -1551,10 +1647,11 @@ main (argc, argv)
   spec = (struct tspec *) xmalloc (n_specs_allocated * sizeof (struct tspec));
 
   output_address_fmt_string = "%07o";
+  format_address = format_address_std;
   address_pad_len = 7;
   flag_dump_strings = 0;
 
-  while ((c = getopt_long (argc, argv, "abcdfhilos::xw::A:j:N:t:v",
+  while ((c = getopt_long (argc, argv, "abcCdfhilos::xw::A:j:N:t:v",
 			   long_options, (int *) 0))
 	 != EOF)
     {
@@ -1567,18 +1664,22 @@ main (argc, argv)
 	    {
 	    case 'd':
 	      output_address_fmt_string = "%07d";
+	      format_address = format_address_std;
 	      address_pad_len = 7;
 	      break;
 	    case 'o':
 	      output_address_fmt_string = "%07o";
+	      format_address = format_address_std;
 	      address_pad_len = 7;
 	      break;
 	    case 'x':
 	      output_address_fmt_string = "%06x";
+	      format_address = format_address_std;
 	      address_pad_len = 6;
 	      break;
 	    case 'n':
 	      output_address_fmt_string = NULL;
+	      format_address = format_address_none;
 	      address_pad_len = 0;
 	      break;
 	    default:
@@ -1622,6 +1723,10 @@ main (argc, argv)
 
 	case 'v':
 	  abbreviate_duplicate_blocks = 0;
+	  break;
+
+	case 'C':
+	  flag_compatibility = 1;
 	  break;
 
 	  /* The next several cases map the old, pre-POSIX format
@@ -1674,6 +1779,103 @@ main (argc, argv)
   if (flag_dump_strings && n_specs > 0)
     error (2, 0, "no type may be specified when dumping strings");
 
+  n_files = argc - optind;
+
+  /* If the --compatible option was used, there may be from 0 to 3
+     remaining command line arguments:
+       [file] [offset [pseudo_start]]
+     The offset and pseudo_start have the same syntax
+     FIXME: elaborate */
+
+  if (flag_compatibility)
+    {
+      long int offset;
+      int usage_error = 0;
+
+      if (n_files == 1)
+	{
+	  if ((offset = parse_old_offset (argv[optind])) >= 0)
+	    {
+	      n_bytes_to_skip = offset;
+	      --n_files;
+	      ++argv;
+	    }
+	}
+      else if (n_files == 2)
+	{
+	  long int o1, o2;
+	  if ((o1 = parse_old_offset (argv[optind])) >= 0
+	      && (o2 = parse_old_offset (argv[optind + 1])) >= 0)
+	    {
+	      n_bytes_to_skip = o1;
+	      flag_pseudo_start = 1;
+	      pseudo_start = o2;
+	      argv += 2;
+	      n_files -= 2;
+	    }
+	  else if ((o2 = parse_old_offset (argv[optind + 1])) >= 0)
+	    {
+	      n_bytes_to_skip = o2;
+	      --n_files;
+	      argv[optind + 1] = argv[optind];
+	      ++argv;
+	    }
+	  else
+	    {
+	      usage_error = 1;
+	      error (0, 0,
+		     "invalid second operand in compatibility mode `%s'",
+		     argv[optind + 1]);
+	      usage ();
+	    }
+	}
+      else if (n_files == 3)
+	{
+	  long int o1, o2;
+	  if ((o1 = parse_old_offset (argv[optind + 1])) >= 0
+	      && (o2 = parse_old_offset (argv[optind + 2])) >= 0)
+	    {
+	      n_bytes_to_skip = o1;
+	      flag_pseudo_start = 1;
+	      pseudo_start = o2;
+	      argv[optind + 2] = argv[optind];
+	      argv += 2;
+	      n_files -= 2;
+	    }
+	  else
+	    {
+	      error (0, 0,
+	      "in compatibility mode the last 2 arguments must be offsets");
+	      usage ();
+	    }
+	}
+      else
+	{
+	  error (0, 0,
+	     "in compatibility mode there may be no more than 3 arguments");
+	  usage ();
+	}
+
+      if (flag_pseudo_start)
+	{
+	  static char buf[10];
+
+	  if (output_address_fmt_string == NULL)
+	    {
+	      output_address_fmt_string = "(%07o)";
+	      format_address = format_address_std;
+	    }
+	  else
+	    {
+	      sprintf (buf, "%s (%s)",
+		       output_address_fmt_string,
+		       output_address_fmt_string);
+	      output_address_fmt_string = buf;
+	      format_address = format_address_label;
+	    }
+	}
+    }
+
   assert (address_pad_len <= MAX_ADDRESS_LENGTH);
   for (i = 0; i < address_pad_len; i++)
     address_pad[i] = ' ';
@@ -1687,7 +1889,6 @@ main (argc, argv)
       n_specs = 1;
     }
 
-  n_files = argc - optind;
   if (n_files > 0)
     file_list = (char const *const *) &argv[optind];
   else
@@ -1701,6 +1902,8 @@ main (argc, argv)
     }
 
   err |= skip (n_bytes_to_skip);
+
+  pseudo_offset = (flag_pseudo_start ? pseudo_start - n_bytes_to_skip : 0);
 
   /* Compute output block length.  */
   l_c_m = get_lcm ();
