@@ -26,6 +26,6 @@ extern char *version_etc_copyright;
 
 void version_etc (FILE *stream,
 		  const char *command_name, const char *package,
-		  const char *version, const char *authors);
+		  const char *version, const char *writen_by);
 
 #endif /* VERSION_ETC_H */
