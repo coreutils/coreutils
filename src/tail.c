@@ -952,7 +952,7 @@ tail_forever (struct File_spec *f, int nfiles)
 	      error (0, 0, _("%s: file truncated"), pretty_name (&f[i]));
 	      last = i;
 	      /* FIXME: check lseek return value  */
-	      lseek (f[i].fd, stats.st_size, SEEK_SET);
+	      lseek (f[i].fd, (off_t) stats.st_size, SEEK_SET);
 	      f[i].size = stats.st_size;
 	      continue;
 	    }
