@@ -52,17 +52,17 @@
 #include <limits.h>
 #endif
 
+#include "obstack.h"
 #include "ls.h"
 #include "version.h"
 #include "safe-stat.h"
 #include "safe-lstat.h"
 
+#define obstack_chunk_alloc xmalloc
+#define obstack_chunk_free free
+
 #ifndef INT_MAX
 #define INT_MAX (((unsigned int) ~(unsigned int) 0) >> 1)
-#endif
-
-#ifndef S_IEXEC
-#define S_IEXEC S_IXUSR
 #endif
 
 /* Return an int indicating the result of comparing two longs. */
@@ -452,12 +452,64 @@ static char const* const time_args[] =
   "atime", "access", "use", "ctime", "status", 0
 };
 
+/* FIXME comment  */
+static size_t dired_pos;
+
+/* FIXME comment  */
+#define PUTCHAR(c) do {putchar ((c)); ++dired_pos;} while (0)
+
+/* FIXME comment  */
+#define FPUTS(s, stream, s_len) \
+    do {fputs ((s), (stream)); dired_pos += s_len;} while (0)
+
+/* FIXME comment  */
+static struct obstack dired_obstack;
+
+/* FIXME comment  */
+#define PUSH_CURRENT_DIRED_POS()					\
+  do									\
+    {									\
+      /* FIXME: remove the `&& format == long_format' clause.  */	\
+      if (dired && format == long_format)				\
+	obstack_grow (&dired_obstack, &dired_pos, sizeof (dired_pos));	\
+    }									\
+  while (0)
+
+/* FIXME comment  */
+#define PUSH_CURRENT_SUBDIRED_POS()					\
+  do									\
+    {									\
+      /* FIXME: remove the `&& format == long_format' clause.  */	\
+      if (dired && format == long_format && trace_dirs)			\
+	obstack_grow (&subdired_obstack, &dired_pos, sizeof (dired_pos));\
+    }									\
+  while (0)
+
+/* FIXME comment  */
+static struct obstack subdired_obstack;
+
 static enum time_type const time_types[] =
 {
   time_atime, time_atime, time_atime, time_ctime, time_ctime
 };
 
 
+static void
+dired_dump_obstack (prefix, os)
+     const char *prefix;
+     struct obstack *os;
+{
+  int i, n_pos;
+  size_t *pos;
+
+  fputs (prefix, stdout);
+  n_pos = obstack_object_size (os) / sizeof (size_t);
+  pos = obstack_finish (os);
+  for (i=0; i<n_pos; i++)
+    printf (" %d", pos[i]);
+  fputs ("\n", stdout);
+}
+
 void
 main (argc, argv)
      int argc;
@@ -489,6 +541,13 @@ main (argc, argv)
     || trace_links || trace_dirs || indicator_style != none
     || print_block_size || print_inode;
 
+  if (dired && format == long_format)
+    {
+      obstack_init (&dired_obstack);
+      if (trace_dirs)
+	obstack_init (&subdired_obstack);
+    }
+
   nfiles = 100;
   files = (struct fileinfo *) xmalloc (sizeof (struct fileinfo) * nfiles);
   files_index = 0;
@@ -519,7 +578,7 @@ main (argc, argv)
     {
       print_current_files ();
       if (pending_dirs)
-	putchar ('\n');
+	PUTCHAR ('\n');
     }
   else if (pending_dirs && pending_dirs->next == 0)
     print_dir_name = 0;
@@ -534,6 +593,14 @@ main (argc, argv)
 	free (thispend->realname);
       free (thispend);
       print_dir_name = 1;
+    }
+
+  if (dired && format == long_format)
+    {
+      /* No need to free these since we're about to exit.  */
+      dired_dump_obstack ("//DIRED//", &dired_obstack);
+      if (trace_dirs)
+	dired_dump_obstack ("//SUBDIRED//", &subdired_obstack);
     }
 
   exit (exit_status);
@@ -853,8 +920,8 @@ queue_directory (name, realname)
 
 static void
 print_dir (name, realname)
-     char *name;
-     char *realname;
+     const char *name;
+     const char *realname;
 {
   register DIR *reading;
   register struct dirent *next;
@@ -896,20 +963,27 @@ print_dir (name, realname)
 
   if (print_dir_name)
     {
-      if (realname)
-	printf ("%s:\n", realname);
-      else
-	printf ("%s:\n", name);
+      const char *dir;
+
+      dir = (realname ? realname : name);
+      PUSH_CURRENT_SUBDIRED_POS ();
+      FPUTS (dir, stdout, strlen (dir));
+      PUSH_CURRENT_SUBDIRED_POS ();
+      FPUTS (":\n", stdout, 2);
     }
 
   if (format == long_format || print_block_size)
-    printf ("total %u\n", total_blocks);
+    {
+      char buf[6 + 20 + 1 + 1];
+      sprintf (buf, "total %u\n", total_blocks);
+      FPUTS (buf, stdout, strlen (buf));
+    }
 
   if (files_index)
     print_current_files ();
 
   if (pending_dirs)
-    putchar ('\n');
+    PUTCHAR ('\n');
 }
 
 /* Add `pattern' to the list of patterns for which files that match are
@@ -1422,11 +1496,133 @@ print_current_files ()
       for (i = 0; i < files_index; i++)
 	{
 	  print_long_format (files + i);
-	  putchar ('\n');
+	  PUTCHAR ('\n');
 	}
       break;
     }
 }
+
+static void
+print_long_format (f)
+     struct fileinfo *f;
+{
+  char modebuf[20];
+  char timebuf[40];
+  int quoted_length;
+
+  /* 7 fields that may (worst case be 64-bit integral values) require 20 bytes,
+     10 character mode field,
+     24 characters for the time,
+     9 spaces following each of these fields,
+     and 1 trailing NUL byte.  */
+  char bigbuf[7 * 20 + 10 + 24 + 9 + 1];
+  char *p;
+  time_t when;
+
+  mode_string (f->stat.st_mode, modebuf);
+  modebuf[10] = '\0';
+
+  switch (time_type)
+    {
+    case time_ctime:
+      when = f->stat.st_ctime;
+      break;
+    case time_mtime:
+      when = f->stat.st_mtime;
+      break;
+    case time_atime:
+      when = f->stat.st_atime;
+      break;
+    }
+
+  strcpy (timebuf, ctime (&when));
+
+  if (full_time)
+    timebuf[24] = '\0';
+  else
+    {
+      if (current_time > when + 6L * 30L * 24L * 60L * 60L /* Old. */
+	  || current_time < when - 60L * 60L) /* In the future. */
+	{
+	  /* The file is fairly old or in the future.
+	     POSIX says the cutoff is 6 months old;
+	     approximate this by 6*30 days.
+	     Allow a 1 hour slop factor for what is considered "the future",
+	     to allow for NFS server/client clock disagreement.
+	     Show the year instead of the time of day.  */
+	  strcpy (timebuf + 11, timebuf + 19);
+	}
+      timebuf[16] = 0;
+    }
+
+  p = bigbuf;
+
+  if (print_inode)
+    {
+      sprintf (p, "%*lu ", INODE_DIGITS, (unsigned long) f->stat.st_ino);
+      p += strlen (p);
+    }
+
+  if (print_block_size)
+    {
+      sprintf (p, "%*u ", block_size_size,
+	       (unsigned) convert_blocks (ST_NBLOCKS (f->stat),
+					  kilobyte_blocks));
+      p += strlen (p);
+    }
+
+  /* The space between the mode and the number of links is the POSIX
+     "optional alternate access method flag". */
+  sprintf (p, "%s %3u ", modebuf, (unsigned int) f->stat.st_nlink);
+  p += strlen (p);
+
+  if (numeric_users)
+    sprintf (p, "%-8u ", (unsigned int) f->stat.st_uid);
+  else
+    sprintf (p, "%-8.8s ", getuser (f->stat.st_uid));
+  p += strlen (p);
+
+  if (!inhibit_group)
+    {
+      if (numeric_users)
+	sprintf (p, "%-8u ", (unsigned int) f->stat.st_gid);
+      else
+	sprintf (p, "%-8.8s ", getgroup (f->stat.st_gid));
+      p += strlen (p);
+    }
+
+  if (S_ISCHR (f->stat.st_mode) || S_ISBLK (f->stat.st_mode))
+    sprintf (p, "%3u, %3u ", (unsigned) major (f->stat.st_rdev),
+	     (unsigned) minor (f->stat.st_rdev));
+  else
+    sprintf (p, "%8lu ", (unsigned long) f->stat.st_size);
+  p += strlen (p);
+
+  sprintf (p, "%s ", full_time ? timebuf : timebuf + 4);
+  p += strlen (p);
+
+  if (dired)
+    FPUTS ("  ", stdout, 2);
+
+  FPUTS (bigbuf, stdout, p - bigbuf);
+  PUSH_CURRENT_DIRED_POS ();
+  print_name_with_quoting (f->name);
+  PUSH_CURRENT_DIRED_POS ();
+
+  if (f->filetype == symbolic_link)
+    {
+      if (f->linkname)
+	{
+	  FPUTS (" -> ", stdout, 4);
+	  print_name_with_quoting (f->linkname);
+	  if (indicator_style != none)
+	    print_type_indicator (f->linkmode);
+	}
+    }
+  else if (indicator_style != none)
+    print_type_indicator (f->stat.st_mode);
+}
+
 
 /* Set QUOTED_LENGTH to strlen(P) and return NULL if P == quoted(P).
    Otherwise, return xmalloc'd storage containing the quoted version
@@ -1435,7 +1631,7 @@ print_current_files ()
 static char *
 quote_filename (p, quoted_length)
      register const char *p;
-     int *quoted_length;
+     size_t *quoted_length;
 {
   register unsigned char c;
   const char *p0 = p;
@@ -1571,197 +1767,16 @@ quote_filename (p, quoted_length)
 }
 
 static void
-print_long_format (f)
-     struct fileinfo *f;
-{
-  char modebuf[20];
-  char timebuf[40];
-  char *quoted;
-  int quoted_length;
-
-  /* 7 fields that may (worst case be 64-bit integral values) require 20 bytes,
-     10 character mode field,
-     24 characters for the time,
-     9 spaces following each of these fields,
-     and 1 trailing NUL byte.  */
-  char bigbuf[7 * 20 + 10 + 24 + 9 + 1];
-  char *p;
-  time_t when;
-
-  mode_string (f->stat.st_mode, modebuf);
-  modebuf[10] = '\0';
-
-  switch (time_type)
-    {
-    case time_ctime:
-      when = f->stat.st_ctime;
-      break;
-    case time_mtime:
-      when = f->stat.st_mtime;
-      break;
-    case time_atime:
-      when = f->stat.st_atime;
-      break;
-    }
-
-  strcpy (timebuf, ctime (&when));
-
-  if (full_time)
-    timebuf[24] = '\0';
-  else
-    {
-      if (current_time > when + 6L * 30L * 24L * 60L * 60L /* Old. */
-	  || current_time < when - 60L * 60L) /* In the future. */
-	{
-	  /* The file is fairly old or in the future.
-	     POSIX says the cutoff is 6 months old;
-	     approximate this by 6*30 days.
-	     Allow a 1 hour slop factor for what is considered "the future",
-	     to allow for NFS server/client clock disagreement.
-	     Show the year instead of the time of day.  */
-	  strcpy (timebuf + 11, timebuf + 19);
-	}
-      timebuf[16] = 0;
-    }
-
-  p = bigbuf;
-
-  if (print_inode)
-    {
-      sprintf (p, "%*lu ", INODE_DIGITS, (unsigned long) f->stat.st_ino);
-      p += strlen (p);
-    }
-
-  if (print_block_size)
-    {
-      sprintf (p, "%*u ", block_size_size,
-	       (unsigned) convert_blocks (ST_NBLOCKS (f->stat),
-					  kilobyte_blocks));
-      p += strlen (p);
-    }
-
-  /* The space between the mode and the number of links is the POSIX
-     "optional alternate access method flag". */
-  sprintf (p, "%s %3u ", modebuf, (unsigned int) f->stat.st_nlink);
-  p += strlen (p);
-
-  if (numeric_users)
-    sprintf (p, "%-8u ", (unsigned int) f->stat.st_uid);
-  else
-    sprintf (p, "%-8.8s ", getuser (f->stat.st_uid));
-  p += strlen (p);
-
-  if (!inhibit_group)
-    {
-      if (numeric_users)
-	sprintf (p, "%-8u ", (unsigned int) f->stat.st_gid);
-      else
-	sprintf (p, "%-8.8s ", getgroup (f->stat.st_gid));
-      p += strlen (p);
-    }
-
-  if (S_ISCHR (f->stat.st_mode) || S_ISBLK (f->stat.st_mode))
-    sprintf (p, "%3u, %3u ", (unsigned) major (f->stat.st_rdev),
-	     (unsigned) minor (f->stat.st_rdev));
-  else
-    sprintf (p, "%8lu ", (unsigned long) f->stat.st_size);
-  p += strlen (p);
-
-  sprintf (p, "%s ", full_time ? timebuf : timebuf + 4);
-  p += strlen (p);
-
-  quoted = quote_filename (f->name, &quoted_length);
-
-  if (dired)
-    {
-      printf ("%d,%d:", p - bigbuf, quoted_length);
-    }
-
-  fputs (bigbuf, stdout);
-  fputs (quoted != NULL ? quoted : f->name, stdout);
-
-  if (f->filetype == symbolic_link)
-    {
-      if (f->linkname)
-	{
-	  fputs (" -> ", stdout);
-	  print_name_with_quoting (f->linkname);
-	  if (indicator_style != none)
-	    print_type_indicator (f->linkmode);
-	}
-    }
-  else if (indicator_style != none)
-    print_type_indicator (f->stat.st_mode);
-}
-
-
-static void
 print_name_with_quoting (p)
      register char *p;
 {
-  register unsigned char c;
+  char *quoted;
+  size_t quoted_length;
 
-  if (quote_as_string)
-    putchar ('"');
-
-  while ((c = *p++))
-    {
-      if (quote_funny_chars)
-	{
-	  switch (c)
-	    {
-	    case '\\':
-	      printf ("\\\\");
-	      break;
-
-	    case '\n':
-	      printf ("\\n");
-	      break;
-
-	    case '\b':
-	      printf ("\\b");
-	      break;
-
-	    case '\r':
-	      printf ("\\r");
-	      break;
-
-	    case '\t':
-	      printf ("\\t");
-	      break;
-
-	    case '\f':
-	      printf ("\\f");
-	      break;
-
-	    case ' ':
-	      printf ("\\ ");
-	      break;
-
-	    case '"':
-	      printf ("\\\"");
-	      break;
-
-	    default:
-	      if (c > 040 && c < 0177)
-		putchar (c);
-	      else
-		printf ("\\%03o", (unsigned int) c);
-	    }
-	}
-      else
-	{
-	  if (c >= 040 && c < 0177)
-	    putchar (c);
-	  else if (!qmark_funny_chars)
-	    putchar (c);
-	  else
-	    putchar ('?');
-	}
-    }
-
-  if (quote_as_string)
-    putchar ('"');
+  quoted = quote_filename (p, &quoted_length);
+  FPUTS (quoted != NULL ? quoted : p, stdout, quoted_length);
+  if (quoted)
+    free (quoted);
 }
 
 /* Print the file name of `f' with appropriate quoting.
@@ -1791,26 +1806,26 @@ print_type_indicator (mode)
      unsigned int mode;
 {
   if (S_ISDIR (mode))
-    putchar ('/');
+    PUTCHAR ('/');
 
 #ifdef S_ISLNK
   if (S_ISLNK (mode))
-    putchar ('@');
+    PUTCHAR ('@');
 #endif
 
 #ifdef S_ISFIFO
   if (S_ISFIFO (mode))
-    putchar ('|');
+    PUTCHAR ('|');
 #endif
 
 #ifdef S_ISSOCK
   if (S_ISSOCK (mode))
-    putchar ('=');
+    PUTCHAR ('=');
 #endif
 
   if (S_ISREG (mode) && indicator_style == all
-      && (mode & (S_IEXEC | S_IEXEC >> 3 | S_IEXEC >> 6)))
-    putchar ('*');
+      && (mode & (S_IEXEC | S_IXGRP | S_IXOTH)))
+    PUTCHAR ('*');
 }
 
 static int
