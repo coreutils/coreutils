@@ -1,3 +1,9 @@
+Sat Nov 30 22:11:42 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* acinclude.m4: (jm_FUNC_MKTIME): New macro.  This is like
+	AM_FUNC_MKTIME, but with one addition: when it replaces the
+	function, it also redefines mktime to gnu_mktime.
+
 Fri Nov 29 21:19:13 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/install.c (copy_file): Allow installation from non-directory
