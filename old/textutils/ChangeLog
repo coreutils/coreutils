@@ -1,3 +1,9 @@
+2000-01-21  Jim Meyering  <meyering@lucent.com>
+
+	* src/cut.c: Correct copying notice to use GPL, per author's request.
+	* src/paste.c: Likewise.
+	(AUTHORS): Add djm.
+
 1999-09-19  Bruno Haible  <haible@clisp.cons.org>
 
 	* src/tr.c (PFI): Return `long', not `int'.
