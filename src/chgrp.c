@@ -1,5 +1,5 @@
 /* chgrp -- change group ownership of files
-   Copyright (C) 89, 90, 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -24,25 +24,18 @@
 #include <getopt.h>
 
 #include "system.h"
+#include "chown-core.h"
 #include "error.h"
-#include "lchown.h"
+#include "fts_.h"
 #include "group-member.h"
+#include "lchown.h"
 #include "quote.h"
 #include "xstrtol.h"
-#include "chown-core.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "chgrp"
 
-#define WRITTEN_BY _("Written by David MacKenzie.")
-
-/* MAXUID may come from limits.h *or* sys/params.h (via system.h) above. */
-#ifndef MAXUID
-# define MAXUID UID_T_MAX
-#endif
-#ifndef MAXGID
-# define MAXGID GID_T_MAX
-#endif
+#define WRITTEN_BY _("Written by David MacKenzie and Jim Meyering.")
 
 #ifndef _POSIX_VERSION
 struct group *getgrnam ();
@@ -63,8 +56,8 @@ static char *reference_file;
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  REFERENCE_FILE_OPTION = CHAR_MAX + 1,
-  DEREFERENCE_OPTION
+  DEREFERENCE_OPTION = CHAR_MAX + 1,
+  REFERENCE_FILE_OPTION
 };
 
 static struct option const long_options[] =
@@ -105,7 +98,7 @@ parse_group (const char *name, gid_t *g)
       if (s_err != LONGINT_OK)
 	STRTOL_FATAL_ERROR (name, _("group number"), s_err);
 
-      if (tmp_long > MAXGID)
+      if (tmp_long > GID_T_MAX)
 	error (EXIT_FAILURE, 0, _("invalid group number %s"), quote (name));
 
       *g = tmp_long;
@@ -129,23 +122,37 @@ Usage: %s [OPTION]... GROUP FILE...\n\
 "),
 	      program_name, program_name);
       fputs (_("\
-Change the group membership of each FILE to GROUP.\n\
+Change the group of each FILE to GROUP.\n\
+With --reference, change the group of each FILE to that of RFILE.\n\
 \n\
   -c, --changes          like verbose but report only when a change is made\n\
       --dereference      affect the referent of each symbolic link, rather\n\
                          than the symbolic link itself\n\
 "), stdout);
       fputs (_("\
-  -h, --no-dereference   affect symbolic links instead of any referenced file\n\
-                         (available only on systems that can change the\n\
+  -h, --no-dereference   affect each symbolic link instead of any referenced\n\
+                         file (useful only on systems that can change the\n\
                          ownership of a symlink)\n\
 "), stdout);
       fputs (_("\
   -f, --silent, --quiet  suppress most error messages\n\
-      --reference=RFILE  use RFILE's group rather than the specified\n\
+      --reference=RFILE  use RFILE's group rather than the specifying\n\
                          GROUP value\n\
   -R, --recursive        operate on files and directories recursively\n\
   -v, --verbose          output a diagnostic for every file processed\n\
+\n\
+"), stdout);
+      fputs (_("\
+The following options modify how a hierarchy is traversed when the -R\n\
+option is also specified.  If more than one is specified, only the final\n\
+one takes effect.\n\
+\n\
+  -H                     if a command line argument is a symbolic link\n\
+                         to a directory, traverse it\n\
+  -L                     traverse every symbolic link to a directory\n\
+                         encountered\n\
+  -P                     do not traverse any symbolic links (default)\n\
+\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -158,9 +165,11 @@ int
 main (int argc, char **argv)
 {
   gid_t gid;
-  int errors = 0;
-  int optc;
+  /* Bit flags that control how fts works.  */
+  int bit_flags = FTS_PHYSICAL;
   struct Chown_option chopt;
+  int fail = 0;
+  int optc;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -172,33 +181,58 @@ main (int argc, char **argv)
 
   chopt_init (&chopt);
 
-  while ((optc = getopt_long (argc, argv, "Rcfhv", long_options, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "HLPRcfhv", long_options, NULL))
+	 != -1)
     {
       switch (optc)
 	{
 	case 0:
 	  break;
+
+	case 'H': /* Traverse command-line symlinks-to-directories.  */
+	  bit_flags |= FTS_COMFOLLOW;
+	  break;
+
+	case 'L': /* Traverse all symlinks-to-directories.  */
+	  bit_flags &= ~FTS_PHYSICAL;
+	  bit_flags |= FTS_LOGICAL;
+	  break;
+
+	case 'P': /* Traverse no symlinks-to-directories.  */
+	  bit_flags |= FTS_PHYSICAL;
+	  bit_flags &= ~FTS_LOGICAL;
+	  bit_flags &= ~FTS_COMFOLLOW;
+	  break;
+
+	case 'h': /* --no-dereference: affect symlinks */
+	  chopt.affect_symlink_referent = false;
+	  break;
+
+	case DEREFERENCE_OPTION: /* --dereference: affect the referent
+				    of each symlink */
+	  chopt.affect_symlink_referent = true;
+	  break;
+
 	case REFERENCE_FILE_OPTION:
 	  reference_file = optarg;
 	  break;
-	case DEREFERENCE_OPTION:
-	  chopt.dereference = DEREF_ALWAYS;
-	  break;
+
 	case 'R':
-	  chopt.recurse = 1;
+	  chopt.recurse = true;
 	  break;
+
 	case 'c':
 	  chopt.verbosity = V_changes_only;
 	  break;
+
 	case 'f':
-	  chopt.force_silent = 1;
+	  chopt.force_silent = true;
 	  break;
-	case 'h':
-	  chopt.dereference = DEREF_NEVER;
-	  break;
+
 	case 'v':
 	  chopt.verbosity = V_high;
 	  break;
+
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
 	default:
@@ -228,11 +262,11 @@ main (int argc, char **argv)
       parse_group (chopt.group_name, &gid);
     }
 
-  for (; optind < argc; ++optind)
-    errors |= change_file_owner (1, argv[optind], (uid_t) -1, gid,
-				 (uid_t) -1, (gid_t) -1, &chopt);
+  fail = chown_files (argv + optind, bit_flags,
+		      (uid_t) -1, gid,
+		      (uid_t) -1, (gid_t) -1, &chopt);
 
   chopt_free (&chopt);
 
-  exit (errors);
+  exit (fail ? EXIT_FAILURE : EXIT_SUCCESS);
 }
