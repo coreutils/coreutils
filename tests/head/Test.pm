@@ -31,7 +31,9 @@ my @tv = (
 
 # This test fails for textutils-1.22, because head let 4096m overflow to 0
 # and did not fail.  Now head fails with a diagnostic.
-['fail-0', '-n 4096m', "a\n", "", 1],
+
+# Disable this test because it fails on systems with 64-bit longs.
+# ['fail-0', '-n 4096m', "a\n", "", 1],
 
 # In spite of its name, this test passes -- just to contrast with the above.
 ['fail-1', '-n 2048m', "a\n", "a\n", 0],
