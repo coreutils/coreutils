@@ -1,3 +1,7 @@
+2000-03-19  Jim Meyering  <meyering@lucent.com>
+
+	* Version 2.0g.
+
 2000-03-18  Jim Meyering  <meyering@lucent.com>
 
 	* src/uptime.c (print_uptime): Use `buf' only if fgets succeeds.
@@ -25,10 +29,6 @@
 	Final merge with fileutils.
 	* src/system.h: Use standard `#if TIME_WITH_SYS_TIME...' block
 	rather than `#if TM_IN_SYS_TIME' one.
-
-2000-03-05  Jim Meyering  <meyering@lucent.com>
-
-	* Version 2.0g.
 
 2000-02-02  Bruno Haible  <haible@clisp.cons.org>
 
