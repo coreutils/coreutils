@@ -3,7 +3,7 @@
 #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
 #   2000, 2001, 2002, 2003 Free Software Foundation, Inc.
 
-timestamp='2003-01-30'
+timestamp='2003-02-22'
 
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
@@ -234,9 +234,6 @@ case "${UNAME_MACHINE}:${UNAME_SYSTEM}:${UNAME_RELEASE}:${UNAME_VERSION}" in
 	exit 0 ;;
     *:OpenBSD:*:*)
 	echo ${UNAME_MACHINE}-unknown-openbsd${UNAME_RELEASE}
-	exit 0 ;;
-    *:MicroBSD:*:*)
-	echo ${UNAME_MACHINE}-unknown-microbsd${UNAME_RELEASE}
 	exit 0 ;;
     alpha:OSF1:*:*)
 	if test $UNAME_RELEASE = "V4.0"; then
