@@ -1,4 +1,6 @@
 Changes in release 3.17:
+[3.16q]
+* fix gettext-related link failures seen when configuring certain ways
 [3.16p]
 * fix install bug introduced in 3.16o
 * build/test changes only
