@@ -731,7 +731,9 @@ Exit status:
 @cindex string expressions
 @cindex expressions, string
 
-String operators.  These have lowest precedence.
+@code{expr} supports pattern matching and other string operators.  These
+have lower precedence than both the numeric and relational operators (in
+the next sections).
 
 @table @samp
 
