@@ -1,6 +1,13 @@
-2003-02-22  Jim Meyering  <jim@meyering.net>
+2003-02-25  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.9.
+
+	* Makefile.maint (announcement): Now that ChangeLog entries
+	are output by announce-gen, don't do it here.
+	* announce-gen (print_changelog_deltas): New function.
+	(main): Use it.
+
+2003-02-22  Jim Meyering  <jim@meyering.net>
 
 	* announce-gen: New option: --release-type=TYPE
 	* Makefile.maint (beta, major): New targets.  Remove `release'.
