@@ -1,3 +1,8 @@
+Sun Sep  8 12:54:31 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/cp.c (do_copy): Set backup_type to `none' only *after*
+	calling to find_backup_file_name.  Reported by Eli Zaretskii.
+
 Sat Sep  7 12:25:42 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/regex.c, lib/regex.h: New files.
