@@ -12,6 +12,11 @@ Tue Apr 23 22:05:35 1996  Jim Meyering  (meyering@na-net.ornl.gov)
         * mv.c [HAVE_LCHOWN]: Likewise.
 	Suggested by François Pinard.
 
+	* backupfile.c (find_backup_file_name, max_backup_version,
+	make_version_name, version_number, concat): Const-ify decls of
+	formal parameters.
+	* backupfile.h: Likewise.
+
 Sun Apr 21 08:04:51 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* df.c (usage): Reflect that now --no-sync is the default.
