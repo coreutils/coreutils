@@ -225,19 +225,19 @@ string_to_integer (int count_lines, const char *n_string)
 
   s_err = xstrtoumax (n_string, NULL, 10, &n, "bkm");
 
-  if (s_err == LONGINT_INVALID)
+  if (s_err == LONGINT_OVERFLOW)
+    {
+      error (EXIT_FAILURE, 0,
+	     _("%s: %s is so large that it is not representable"), n_string,
+	     count_lines ? _("number of lines") : _("number of bytes"));
+    }
+
+  if (s_err != LONGINT_OK)
     {
       error (EXIT_FAILURE, 0, "%s: %s", n_string,
 	     (count_lines
 	      ? _("invalid number of lines")
 	      : _("invalid number of bytes")));
-    }
-
-  if (s_err != LONGINT_OK)
-    {
-      error (EXIT_FAILURE, 0,
-	     _("%s: %s is so large that it is not representable"), n_string,
-	     count_lines ? _("number of lines") : _("number of bytes"));
     }
 
   return n;
