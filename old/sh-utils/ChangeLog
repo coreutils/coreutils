@@ -1,3 +1,8 @@
+Sat May 24 13:26:04 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* man/Makefile.am (EXTRA_DIST): Put man_MANS here so they are
+	distributed.  This seems to be necessary for automake-1.1p.
+
 Thu May  1 00:10:11 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* ansi2knr.c echo.c factor.c hostname.c id.c nice.c pathchk.c
