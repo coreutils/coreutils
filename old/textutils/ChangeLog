@@ -1,5 +1,8 @@
+2001-08-25  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.15.
+
+	* tests/uniq/Test.pm: Add tests for the new functionality below.
 
 2001-08-24  Paul Eggert  <eggert@twinsun.com>
 
