@@ -421,40 +421,49 @@ static CHAR_T const month_name[][10] =
 #endif
 
 
-#ifdef emacs
-# define my_strftime emacs_strftimeu
-# define ut_argument , ut
-# define ut_argument_spec int ut;
-# define ut_argument_spec_iso , int ut
+/* When compiling this file, GNU applications can #define my_strftime
+   to a symbol (typically nstrftime) to get an extended strftime with
+   extra arguments UT and NS.  Emacs is a special case for now, but
+   this Emacs-specific code can be removed once Emacs's config.h
+   defines my_strftime.  */
+#if defined emacs && !defined my_strftime
+# define my_strftime nstrftime
+#endif
+
+#ifdef my_strftime
+# define extra_args , ut, ns
+# define extra_args_spec int ut; int ns;
+# define extra_args_spec_iso , int ut, int ns
 #else
 # ifdef COMPILE_WIDE
 #  define my_strftime wcsftime
 # else
 #  define my_strftime strftime
 # endif
-# define ut_argument
-# define ut_argument_spec
-# define ut_argument_spec_iso
+# define extra_args
+# define extra_args_spec
+# define extra_args_spec_iso
 /* We don't have this information in general.  */
 # define ut 0
+# define ns 0
 #endif
 
 #if !defined _LIBC && HAVE_TZNAME && HAVE_TZSET
   /* Solaris 2.5 tzset sometimes modifies the storage returned by localtime.
      Work around this bug by copying *tp before it might be munged.  */
   size_t _strftime_copytm __P ((char *, size_t, const char *,
-			        const struct tm * ut_argument_spec_iso));
+			        const struct tm * extra_args_spec_iso));
   size_t
-  my_strftime (s, maxsize, format, tp ut_argument)
+  my_strftime (s, maxsize, format, tp extra_args)
       CHAR_T *s;
       size_t maxsize;
       const CHAR_T *format;
       const struct tm *tp;
-      ut_argument_spec
+      extra_args_spec
   {
     struct tm tmcopy;
     tmcopy = *tp;
-    return _strftime_copytm (s, maxsize, format, &tmcopy ut_argument);
+    return _strftime_copytm (s, maxsize, format, &tmcopy extra_args);
   }
 # undef my_strftime
 # define my_strftime _strftime_copytm
@@ -468,12 +477,12 @@ static CHAR_T const month_name[][10] =
    anywhere, so to determine how many characters would be
    written, use NULL for S and (size_t) UINT_MAX for MAXSIZE.  */
 size_t
-my_strftime (s, maxsize, format, tp ut_argument)
+my_strftime (s, maxsize, format, tp extra_args)
       CHAR_T *s;
       size_t maxsize;
       const CHAR_T *format;
       const struct tm *tp;
-      ut_argument_spec
+      extra_args_spec
 {
   int hour12 = tp->tm_hour;
 #ifdef _NL_CURRENT
@@ -810,9 +819,9 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	  {
 	    CHAR_T *old_start = p;
 	    size_t len = my_strftime (NULL, (size_t) -1, subfmt,
-				      tp ut_argument);
+				      tp extra_args);
 	    add (len, my_strftime (p, maxsize - i, subfmt,
-				   tp ut_argument));
+				   tp extra_args));
 
 	    if (to_uppcase)
 	      while (old_start < p)
@@ -1043,6 +1052,21 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	    goto bad_format;
 
 	  DO_NUMBER (2, tp->tm_mon + 1);
+
+	case L_('N'):		/* GNU extension.  */
+	  if (modifier == L_('E'))
+	    goto bad_format;
+
+	  number_value = ns;
+	  if (width != -1)
+	    {
+	      /* Take an explicit width less than 9 as a precision.  */
+	      int j;
+	      for (j = width; j < 9; j++)
+		number_value /= 10;
+	    }
+
+	  DO_NUMBER (9, number_value);
 
 	case L_('n'):		/* POSIX.2 extension.  */
 	  add (1, *p = L_('\n'));
@@ -1368,15 +1392,15 @@ my_strftime (s, maxsize, format, tp ut_argument)
 
 #ifdef emacs
 /* For Emacs we have a separate interface which corresponds to the normal
-   strftime function and does not have the extra information whether the
-   TP arguments comes from a `gmtime' call or not.  */
+   strftime function plus the ut argument, but without the ns argument.  */
 size_t
-emacs_strftime (s, maxsize, format, tp)
+emacs_strftimeu (s, maxsize, format, tp, ut)
       char *s;
       size_t maxsize;
       const char *format;
       const struct tm *tp;
+      int ut;
 {
-  return my_strftime (s, maxsize, format, tp, 0);
+  return my_strftime (s, maxsize, format, tp, ut, 0);
 }
 #endif
