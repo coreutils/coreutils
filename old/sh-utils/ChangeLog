@@ -5,7 +5,7 @@
 2001-04-01  Michael Stone  <mstone@debian.org>
 
 	Add options to make `who' more POSIX compliant.
-	* who.c:
+	* who.c: FIXME: in progress...
 
 2001-05-11  Paul Eggert  <eggert@twinsun.com>
 
