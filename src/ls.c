@@ -474,10 +474,6 @@ static int tabsize;
 
 static int dir_defaulted;
 
-/* Nonzero means print each directory name before listing it. */
-
-static int print_dir_name;
-
 /* The line length to use for breaking lines in many-per-line format.
    Can be set with -w.  */
 
@@ -687,7 +683,6 @@ main (int argc, char **argv)
 
   exit_status = 0;
   dir_defaulted = 1;
-  print_dir_name = 1;
   pending_dirs = 0;
   current_time = time ((time_t *) 0);
 
@@ -758,8 +753,6 @@ main (int argc, char **argv)
       if (pending_dirs)
 	DIRED_PUTCHAR ('\n');
     }
-  else if (pending_dirs && pending_dirs->next == 0)
-    print_dir_name = 0;
 
   while (pending_dirs)
     {
@@ -770,7 +763,6 @@ main (int argc, char **argv)
       if (thispend->realname)
 	free (thispend->realname);
       free (thispend);
-      print_dir_name = 1;
     }
 
   if (dired && format == long_format)
@@ -1589,10 +1581,8 @@ print_dir (const char *name, const char *realname)
      contents listed rather than being mentioned here as files.  */
 
   if (trace_dirs)
-    extract_dirs_from_files (name, 1);
-
-  if (print_dir_name)
     {
+      extract_dirs_from_files (name, 1);
       DIRED_INDENT ();
       PUSH_CURRENT_DIRED_POS (&subdired_obstack);
       dired_pos += quote_name (stdout, realname ? realname : name,
