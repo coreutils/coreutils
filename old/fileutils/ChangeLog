@@ -1,6 +1,10 @@
-2001-01-10  Jim Meyering  <meyering@lucent.com>
+2001-01-11  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0.36.
+
+	* depcomp: Update from automake.
+
+2001-01-10  Jim Meyering  <meyering@lucent.com>
 
 	* src/copy.c (copy_internal): Add a comment.
 	Set *copy_into_self in the new code that detects that.
