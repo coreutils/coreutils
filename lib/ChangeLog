@@ -1,3 +1,7 @@
+2001-11-22  Jim Meyering  <meyering@lucent.com>
+
+	* hash.h: Bracket contents of file with #ifndef HASH_H_ ... #endif.
+
 2001-11-18  Paul Eggert  <eggert@twinsun.com>
 
 	* tempname.c (TMP_MAX): Remove; no longer needed.
