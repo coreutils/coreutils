@@ -47,8 +47,8 @@
 # include <unistd.h>
 #endif
 
-#include <backupfile.h>
-#include <dirname.h>
+#include "backupfile.h"
+#include "dirname.h"
 
 /* Append to FILENAME the extension EXT, unless the result would be too long,
    in which case just append the character E.  */
