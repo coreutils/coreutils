@@ -13,7 +13,7 @@ Thu Jun  6 21:57:08 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 Wed May 29 21:28:53 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* src/expr.c (docolon): Give a warning when the first character
+	* expr.c (docolon): Give a warning when the first character
 	of the basic regular expression is `^'.
 
 Mon May 20 22:56:06 1996  Jim Meyering  (meyering@na-net.ornl.gov)
