@@ -112,7 +112,7 @@ read_utmp (const char *filename, int *n_entries, STRUCT_UTMP **utmp_buf)
       return 1;
     }
   size = file_stats.st_size;
-    buf = xmalloc (size);
+  buf = xmalloc (size);
   n_read = fread (buf, sizeof *buf, size / sizeof *buf, utmp);
   if (ferror (utmp))
     {
@@ -127,7 +127,7 @@ read_utmp (const char *filename, int *n_entries, STRUCT_UTMP **utmp_buf)
       int e = errno;
       free (buf);
       errno = e;
-    return 1;
+      return 1;
     }
 
   *n_entries = n_read;
