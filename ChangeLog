@@ -8,8 +8,8 @@
 
 	* src/paste.c (paste_parallel): Declare local, chr, to be of type
 	`int', not `char', since it must hold EOF.  This bug would make
-	paste infloop on some systems.  Reported by Nelson H. F. Beebe
-	and Christian Krackowizer.
+	paste infloop on some systems.  Test failures reported by
+	Nelson H. F. Beebe and Christian Krackowizer.
 
 2004-01-22  Jim Meyering  <jim@meyering.net>
 
