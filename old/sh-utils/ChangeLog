@@ -1,3 +1,17 @@
+1998-05-16  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (jm_MACROS): New wrapper macro.
+	Remove uses of most jm_* macros.
+
+	* acconfig.h: (chown): Add undef.
+	(D_INO_IN_DIRENT): Likewise.
+	(D_TYPE_IN_DIRENT): Likewise.
+	(ssize_t): Likewise.
+
+	* lib/Makefile.am (EXTRA_DIST): Remove.  Automake groks the `LIBOBJS='
+	lines from the m4/*.m4 macros, so the hack of including some
+	custom-replaced C source file names here is no longer needed.
+
 1998-05-03  Jim Meyering  <meyering@ascend.com>
 
 	* po/: Update from gettext-0.10.35.

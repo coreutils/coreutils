@@ -1,4 +1,6 @@
-1998-05-15  Jim Meyering  <meyering@ascend.com>
+1998-05-16  Jim Meyering  <meyering@ascend.com>
+
+	* Version 3.16o.
 
 	* src/remove.c (hash_compare_strings): Return true or false, not 1/0.
 	(remove_cwd_entries): Use RM_OK, not equivalent literal `1'.
@@ -18,8 +20,6 @@
 	(memcmp): Add #undef.
 
 1998-05-12  Jim Meyering  <meyering@ascend.com>
-
-	* Version 3.16o.
 
 	* configure.in: Use my replacement AC_ISC_POSIX rather than
 	open-coding it.
