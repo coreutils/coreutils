@@ -12,8 +12,8 @@
 	* src/chown-core.c (chopt_init, chopt_free, gid_to_name)
 	(uid_to_name, chown_files): Likewise.
 
-	* src/Makefile.am (sc_src_functions_have_static_scope): New rule.
-	* Makefile.maint (sc_src_functions_have_static_scope): New rule.
+	* src/Makefile.am (sc_tight_scope): New rule.
+	* Makefile.maint (sc_tight_scope): New rule.
 	(syntax-check-rules): Add it.
 
 2004-04-26  Jim Meyering  <jim@meyering.net>
