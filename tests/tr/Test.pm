@@ -2,7 +2,7 @@ package Test;
 require 5.002;
 use strict;
 
-@Trtest::t = (
+@Test::t = (
 # test input    flags  1 or 2 strings   expected output    expected return code
 #
 ['1', 'abcd',   '',    'abcd','[]*]',   ']]]]',              0],
