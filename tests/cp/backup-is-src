@@ -6,6 +6,7 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/../lang-default
+. $srcdir/../envvar-check
 
 pwd=`pwd`
 t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
