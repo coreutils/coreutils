@@ -1,3 +1,10 @@
+2004-09-13  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/id.c (print_full_info): Don't exit with failure status simply
+	because a user or group number can't be turned into a name.
+	Problem reported by Felipe Kellermann in:
+	http://lists.gnu.org/archive/html/bug-coreutils/2004-09/msg00081.html
+
 2004-09-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: "tail" now handles obscure POSIX 1003.2-1992 cases better.
