@@ -99,9 +99,9 @@ forget_created (ino_t ino, dev_t dev)
 }
 
 /* Add PATH to the list of files that we have created.
-   Return 1 if we can't stat PATH, otherwise 0.  */
+   Return true if successful.  */
 
-extern int
+bool
 remember_created (const char *path)
 {
   struct stat sb;
@@ -109,11 +109,11 @@ remember_created (const char *path)
   if (stat (path, &sb) < 0)
     {
       error (0, errno, "%s", quote (path));
-      return 1;
+      return false;
     }
 
   remember_copied (path, sb.st_ino, sb.st_dev);
-  return 0;
+  return true;
 }
 
 /* If INO/DEV correspond to an already-copied source file, return the
