@@ -5,8 +5,16 @@
 
 # FIXME: handle special bits, too.
 
+case $# in
+  1) ;;
+  *) echo "$0: wrong number of arguments" 1>&2
+    echo "Usage: $0 ls-style-mode-string" 1>&2
+    exit 1;;
+esac
+
 rwx=$1
 u=`echo $rwx|sed 's/^.\(...\).*/\1/;s/-//g'`
 g=`echo $rwx|sed 's/^....\(...\).*/\1/;s/-//g'`
 o=`echo $rwx|sed 's/^.......\(...\).*/\1/;s/-//g'`
 echo "=,u=$u,g=$g,o=$o"
+exit 0
