@@ -948,15 +948,22 @@ optionally outputting in multicolumn format; optionally merges all
 pr [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
+@vindex LC_MESSAGES
 By default, a 5-line header is printed at each page: two blank lines;
 a line with the date, the filename, and the page count; and two more
 blank lines.  A footer of five blank lines is also printed.  With the @samp{-F}
 option, a 3-line header is printed: the leading two blank lines are
 omitted; no footer is used.  The default @var{page_length} in both cases is 66
 lines.  The default number of text lines changes from 56 (without @samp{-F})
-to 63 (with @samp{-F}).  The text line of the header takes up the full
-@var{page_width} in the form @samp{yyyy-mm-dd HH:MM string Page nnnn}.
-String is a centered header string.
+to 63 (with @samp{-F}).  The text line of the header takes the form
+@samp{@var{date} @var{string} @var{page}}, with spaces inserted around
+@var{string} so that the line takes up the full @var{page_width}.  Here,
+@var{date} is the date (see the @option{-D} or @option{--date-format}
+option for details), @var{string} is the centered header string, and
+@var{page} identifies the page number.  The @env{LC_MESSAGES} locale
+category affects the spelling of @var{page}; in the default C locale, it
+is @samp{Page @var{number}} where @var{number} is the decimal page
+number.
 
 Form feeds in the input cause page breaks in the output.  Multiple form
 feeds produce empty pages.
@@ -1054,6 +1061,25 @@ unprintable characters are not changed.
 @cindex double spacing
 Double space the output.
 
+@item -D @var{format}
+@itemx --date-format=@var{format}
+@cindex time formats
+@cindex formatting times
+Format header dates using @var{format}, using the same conventions as
+for the the command @samp{date +@var{format}}; @xref{date invocation, ,
+,sh-utils,GNU shell utilities}.  Except for directives, which start with
+@samp{%}, characters in @var{format} are printed unchanged.  You can use
+this option to specify an arbitrary string in place of the header date,
+e.g., @samp{--date-format="Monday morning"}.
+
+@vindex POSIXLY_CORRECT
+@vindex LC_TIME
+If the @env{POSIXLY_CORRECT} environment variable is not set, the date
+format defaults to @samp{%Y-%m-%d %H:%M} (for example, @samp{2001-12-04
+23:59}); otherwise, the format depends on the @env{LC_TIME} locale
+category, with the default being @samp{%b %e %H:%M %Y} (for example,
+@samp{Dec@ @ 4 23:59 2001}.
+
 @item -e[@var{in-tabchar}[@var{in-tabwidth}]]
 @itemx --expand-tabs[=@var{in-tabchar}[@var{in-tabwidth}]]
 @opindex -e
@@ -1079,12 +1105,8 @@ per page changes from default 56 to 63 lines.
 @opindex -h
 @opindex --header
 Replace the filename in the header with the centered string @var{header}.
-Left-hand-side truncation (marked by a @samp{*}) may occur if the total
-header line @samp{yyyy-mm-dd HH:MM HEADER Page nnnn} becomes larger than
-@var{page_width}.  @samp{-h ""} prints a blank line header.  Don't use
-@samp{-h""}.
-A space between the @samp{-h} option and the argument is always
-indispensable.
+When using the shell, @var{header} should be quoted and should be
+separated from @option{-h} by a space.
 
 @item -i[@var{out-tabchar}[@var{out-tabwidth}]]
 @itemx --output-tabs[=@var{out-tabchar}[@var{out-tabwidth}]]
@@ -1130,8 +1152,9 @@ some @var{file}s (form feeds set) produce empty columns, still marked
 by @var{string}.  The result is a continuous line numbering and column
 marking throughout the whole merged file.  Completely empty merged pages
 show no separators or line numbers.  The default header becomes
-@samp{yyyy-mm-dd HH:MM <blanks> Page nnnn}; may be used with
-@samp{-h @var{header}} to fill up the middle blank part.
+@samp{@var{date} @var{page}} with spaces inserted in the middle; this
+may be used with the @option{-h} or @option{--header} option to fill up
+the middle blank part.
 
 @item -n[@var{number-separator}[@var{digits}]]
 @itemx --number-lines[=@var{number-separator}[@var{digits}]]
@@ -1260,9 +1283,8 @@ alignment is always used.  The separator options @samp{-S} or @samp{-s}
 don't affect the @samp{-W} option.  Default is 72 characters.  Without
 @samp{-W @var{page_width}} and without any of the column options NO line
 truncation is used (defined to keep downward compatibility and to meet
-most frequent tasks).  That's equivalent to @samp{-W 72 -J}.  With and
-without @samp{-W @var{page_width}} the header line is always truncated
-to avoid line overflow.
+most frequent tasks).  That's equivalent to @samp{-W 72 -J}.  The header
+line is never truncated.
 
 @end table
 
