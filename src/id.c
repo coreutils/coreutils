@@ -1,5 +1,5 @@
 /* id -- print real and effective UIDs and GIDs
-   Copyright (C) 1989-1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1989-1995, 1996, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -215,6 +215,8 @@ print_group (int gid)
     printf ("%s", grp->gr_name);
 }
 
+#if HAVE_GETGROUPS
+
 static int
 xgetgroups (const char *username, int *n_groups, GETGROUPS_T **groups)
 {
@@ -248,6 +250,8 @@ xgetgroups (const char *username, int *n_groups, GETGROUPS_T **groups)
     }
   return fail;
 }
+
+#endif /* HAVE_GETGROUPS */
 
 /* Print all of the distinct groups the user is in. */
 
