@@ -130,9 +130,11 @@ usage (int status)
 Remove the DIRECTORY(ies), if they are empty.\n\
 \n\
       --ignore-fail-on-non-empty\n\
-                  ignore each failure that is solely because the\n\
-                  directory is non-empty\n\
-  -p, --parents   remove explicit parent directories if being emptied\n\
+                  ignore each failure that is solely because a directory\n\
+                  is non-empty\n\
+  -p, --parents   remove DIRECTORY, then try to remove each directory\n\
+                  component of that path name.  E.g., `rmdir -p a/b/c' is\n\
+                  similar to `rmdir a/b/c a/b a'.\n\
       --verbose   output a diagnostic for every directory processed\n\
       --help      display this help and exit\n\
       --version   output version information and exit\n\
