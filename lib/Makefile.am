@@ -35,7 +35,7 @@ BUILT_SOURCES = getdate.c lstat.c stat.c
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 DISTCLEANFILES = lstat.c stat.c
 
-EXTRA_DIST = xstat.in config.charset
+EXTRA_DIST = xstat.in config.charset ref-add.sed.in ref-del.sed.in
 lstat.c: xstat.in
 	sed \
 	  -e '/@IGNORE@/d' \
@@ -62,36 +62,35 @@ stat.c: xstat.in
 
 all-local: charset.alias ref-add.sed ref-del.sed
 
+charset_alias = $(DESTDIR)$(libdir)/charset.alias
 install-exec-local: all-local
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	if test -f $(DESTDIR)$(libdir)/charset.alias; then \
-	  sed -f ref-add.sed < $(DESTDIR)$(libdir)/charset.alias > $(DESTDIR)$(libdir)/charset.alias-t ; \
-	else \
-	  sed -f ref-add.sed < charset.alias > $(DESTDIR)$(libdir)/charset.alias-t ; \
-	fi
-	$(INSTALL_DATA) $(DESTDIR)$(libdir)/charset.alias-t $(DESTDIR)$(libdir)/charset.alias
-	rm -f $(DESTDIR)$(libdir)/charset.alias-t
+	test -f $(charset_alias) \
+	  && orig=$(charset_alias) \
+	  || orig=charset.alias; \
+	sed -f ref-add.sed $$orig > $(charset_alias)-t
+	$(INSTALL_DATA) $(charset_alias)-t $(charset_alias)
+	rm -f $(charset_alias)-t
 
 uninstall-local: all-local
-	if test -f $(DESTDIR)$(libdir)/charset.alias; then \
-	  sed -f ref-del.sed < $(DESTDIR)$(libdir)/charset.alias > $(DESTDIR)$(libdir)/charset.alias-t ; \
-	  if grep '^# Packages using this file: $$' $(DESTDIR)$(libdir)/charset.alias-t > /dev/null ; then \
-	    rm -f $(DESTDIR)$(libdir)/charset.alias ; \
+	if test -f $(charset_alias); then \
+	  sed -f ref-del.sed $(charset_alias) > $(charset_alias)-t; \
+	  if grep '^# Packages using this file: $$' $(charset_alias)-t \
+	      > /dev/null; then \
+	    rm -f $(charset_alias); \
 	  else \
-	    $(INSTALL_DATA) $(DESTDIR)$(libdir)/charset.alias-t $(DESTDIR)$(libdir)/charset.alias ; \
-	  fi ; \
-	  rm -f $(DESTDIR)$(libdir)/charset.alias-t ; \
+	    $(INSTALL_DATA) $(charset_alias)-t $(charset_alias); \
+	  fi; \
+	  rm -f $(charset_alias)-t; \
 	fi
 
 charset.alias: config.charset
 	$(SHELL) $(srcdir)/config.charset '@host@' > $@-t
 	mv $@-t $@
 
-ref-add.sed: ref-add.sed.in
-	sed -e '/^#/d' -e 's/@''PACKAGE''@/@PACKAGE@/g' < $(srcdir)/ref-add.sed.in > ref-add.sed
+SUFFIXES = .sed .sed.in
+.sed.in.sed:
+	sed -e '/^#/d' -e 's/@''PACKAGE''@/@PACKAGE@/g' $< > $@-t
+	mv $@-t $@
 
-ref-del.sed: ref-del.sed.in
-	sed -e '/^#/d' -e 's/@''PACKAGE''@/@PACKAGE@/g' < $(srcdir)/ref-del.sed.in > ref-del.sed
-
-
-CLEANFILES = charset.alias
+CLEANFILES = charset.alias ref-add.sed ref-del.sed
