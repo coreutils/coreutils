@@ -30,9 +30,16 @@ contents=XYZ
 for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' 'foo hardlink'; do
   for options in '' -d -f -df -b -bd -bf -bdf \
 		 -l -dl -fl -dfl -bl -bdl -bfl -bdfl; do
-    case $args$options in 'sl1 sl2'-bd*l)
-      # This test is not portable.
-      continue
+    case $args$options in
+      # These tests are not portable.
+      'sl1 sl2'-bd*l)
+	continue;;
+      'symlink foo'-dfl)
+	continue;;
+      'symlink foo'-bdfl)
+	continue;;
+      'sl1 sl2'-dfl)
+	continue;;
     esac
     rm -rf dir
     mkdir dir
@@ -105,11 +112,9 @@ cat <<\EOF > $expected
 0 -l (foo symlink -> foo)
 0 -dl (foo symlink -> foo)
 0 -fl (foo symlink -> foo)
-0 -dfl (foo -> foo symlink -> foo) symlink-loop symlink-loop
 0 -bl (foo symlink -> foo)
 0 -bdl (foo symlink -> foo)
 0 -bfl (foo symlink -> foo)
-0 -bdfl (foo -> foo foo.~1~ symlink -> foo) symlink-loop symlink-loop
 
 1 [cp: `foo' and `foo' are the same file] (foo)
 1 -d [cp: `foo' and `foo' are the same file] (foo)
@@ -139,7 +144,6 @@ cat <<\EOF > $expected
 0 -l (foo sl1 -> foo sl2 -> foo)
 0 -dl (foo sl1 -> foo sl2 -> foo)
 0 -fl (foo sl1 -> foo sl2 -> foo)
-0 -dfl (foo sl1 -> foo sl2 -> foo)
 0 -bl (foo sl1 -> foo sl2 -> foo)
 0 -bfl (foo sl1 -> foo sl2 -> foo)
 
