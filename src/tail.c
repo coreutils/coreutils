@@ -1253,7 +1253,7 @@ parse_obsolescent_option (int argc, const char *const *argv,
   n_string_end = p;
 
   t_count_lines = 1;
-  if (*p == 'c')
+  if (*p == 'c' || *p == 'b')
     {
       t_count_lines = 0;
       ++p;
@@ -1296,7 +1296,9 @@ parse_obsolescent_option (int argc, const char *const *argv,
       strtol_error s_err;
       unsigned long int tmp_ulong;
       char *end;
-      s_err = xstrtoul (n_string, &end, 10, &tmp_ulong, NULL);
+
+      s_err = xstrtoul (n_string, &end, 10, &tmp_ulong,
+			*n_string_end == 'b' ? "b" : NULL);
       if (s_err == LONGINT_OK && tmp_ulong <= OFF_T_MAX)
 	*n_units = (off_t) tmp_ulong;
       else
