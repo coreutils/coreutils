@@ -34,7 +34,15 @@ cat <<\EOF > exp
 rm: cannot remove directory `b/a/p': Permission denied
 EOF
 
-cmp out exp || fail=1
+# On some systems, rm doesn't have enough information to
+# say it's a directory.
+cat <<\EOF > exp2
+rm: cannot remove `b/a/p': Permission denied
+EOF
+
+cmp out exp > /dev/null 2>&1 || {
+  cmp out exp2 || fail=1
+  }
 test $fail = 1 && diff out exp 2> /dev/null
 
 test -d b/a/p || fail=1
