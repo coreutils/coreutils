@@ -33,6 +33,11 @@ changelog-check:
 	  exit 1; \
 	fi
 
+m4-check:
+	@grep 'AC_DEFUN([^[]' m4/*.m4 \
+	  && { echo 'Makefile.maint: quote the first arg to AC_DEFUN' 1>&2; \
+	       exit 1; } || :
+
 # Verify that all source files using _() are listed in po/POTFILES.in.
 po-check:
 	if test -f po/POTFILES.in; then \
@@ -57,7 +62,7 @@ writable-files:
 	test "$$fail" && exit 1 || :
 
 # Checks that don't require cvs.
-local-check: changelog-check po-check writable-files check-copyright
+local-check: changelog-check po-check writable-files check-copyright m4-check
 
 
 # Sanity checks with the CVS repository.
