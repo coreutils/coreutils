@@ -1,5 +1,9 @@
 1998-07-22  Paul Eggert  <eggert@twinsun.com>
 
+	* lib/human.c (human_readable): amt -> damt, to fix typo when
+	computing which power to use after overflow occurs during
+	multiplication.
+
 	* lib/xstrtol.c: Include <stdio.h> if NDEBUG is not defined;
 	needed on SunOS 4.
 
