@@ -1,11 +1,12 @@
 Changes in release 1.23
 [1.22i]
+* tail now terminates in `yes > k & sleep 1; tail -2c k'
 * `tail -f' now ensures that stdout is unbuffered
 * fix a bug in cut to allow use of 8-bit delimiters
 * pr accepts POSIX compliant options -s and -w,
-     the new capital letter options -J, -S and _W turn off the
-	 unexpected interferences of the small letter options -s and -w
-	 if used together with the column options.
+  the new capital letter options -J, -S and _W turn off the
+  unexpected interferences of the small letter options -s and -w
+  if used together with the column options.
 * pr output has been adapted to other UNIXes in some cases.
 [1.22h]
 * portability tweaks
