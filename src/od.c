@@ -982,10 +982,11 @@ open_next_file (void)
    it is not standard input.  Return nonzero if there has been an error
    on in_stream or stdout; return zero otherwise.  This function will
    report more than one error only if both a read and a write error
-   have occurred.  */
+   have occurred.  IN_ERRNO, if nonzero, is the error number
+   corresponding to the most recent action for IN_STREAM.  */
 
 static int
-check_and_close (void)
+check_and_close (int in_errno)
 {
   int err = 0;
 
@@ -993,7 +994,7 @@ check_and_close (void)
     {
       if (ferror (in_stream))
 	{
-	  error (0, errno, "%s", input_filename);
+	  error (0, in_errno, _("%s: read error"), input_filename);
 	  if (in_stream != stdin)
 	    fclose (in_stream);
 	  err = 1;
@@ -1009,7 +1010,7 @@ check_and_close (void)
 
   if (ferror (stdout))
     {
-      error (0, errno, _("standard output"));
+      error (0, 0, _("write error"));
       err = 1;
     }
 
@@ -1062,6 +1063,7 @@ static int
 skip (uintmax_t n_skip)
 {
   int err = 0;
+  int in_errno = 0;
 
   if (n_skip == 0)
     return 0;
@@ -1096,7 +1098,7 @@ skip (uintmax_t n_skip)
 		{
 		  if (fseeko (in_stream, n_skip, SEEK_CUR) != 0)
 		    {
-		      error (0, errno, "%s", input_filename);
+		      in_errno = errno;
 		      err = 1;
 		    }
 		  n_skip = 0;
@@ -1118,7 +1120,12 @@ skip (uintmax_t n_skip)
 		  n_bytes_read = fread (buf, 1, n_bytes_to_read, in_stream);
 		  n_skip -= n_bytes_read;
 		  if (n_bytes_read != n_bytes_to_read)
-		    break;
+		    {
+		      in_errno = errno;
+		      err = 1;
+		      n_skip = 0;
+		      break;
+		    }
 		}
 	    }
 
@@ -1132,7 +1139,7 @@ skip (uintmax_t n_skip)
 	  err = 1;
 	}
 
-      err |= check_and_close ();
+      err |= check_and_close (in_errno);
 
       err |= open_next_file ();
     }
@@ -1290,7 +1297,7 @@ read_char (int *c)
       if (*c != EOF)
 	break;
 
-      err |= check_and_close ();
+      err |= check_and_close (errno);
 
       err |= open_next_file ();
     }
@@ -1337,7 +1344,7 @@ read_block (size_t n, char *block, size_t *n_bytes_in_buffer)
       if (n_read == n_needed)
 	break;
 
-      err |= check_and_close ();
+      err |= check_and_close (errno);
 
       err |= open_next_file ();
     }
@@ -1482,7 +1489,7 @@ dump (void)
   format_address (current_offset, '\n');
 
   if (limit_bytes_to_format && current_offset >= end_offset)
-    err |= check_and_close ();
+    err |= check_and_close (0);
 
   return err;
 }
@@ -1602,7 +1609,7 @@ dump_strings (void)
 
   free (buf);
 
-  err |= check_and_close ();
+  err |= check_and_close (0);
   return err;
 }
 
