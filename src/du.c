@@ -321,6 +321,7 @@ process_file (const char *file, const struct stat *sb, int file_type,
   static size_t n_alloc;
   static uintmax_t *sum_ent;
   static uintmax_t *sum_subdir;
+  int print = 1;
 
   /* Always define info->skip before returning.  */
   info->skip = excluded_filename (exclude, file + info->base);
@@ -372,6 +373,7 @@ process_file (const char *file, const struct stat *sb, int file_type,
 	 We still have to update prev_level and maybe propagate
 	 some sums up the hierarchy.  */
       size = 0;
+      print = 0;
     }
   else
     {
@@ -451,6 +453,12 @@ process_file (const char *file, const struct stat *sb, int file_type,
   /* ... but don't print out a total for it, since without the size(s)
      of any potential entries, it could be very misleading.  */
   if (file_type == FTW_DNR || file_type == FTW_DCH)
+    return 0;
+
+  /* If we're not counting an entry, e.g., because it's a hard link
+     to a file we've already counted (and --count-links), then don't
+     print a line for it.  */
+  if (!print)
     return 0;
 
   /* FIXME: This looks suspiciously like it could be simplified.  */
