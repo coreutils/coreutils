@@ -1,6 +1,6 @@
 2000-04-12  Jim Meyering  <meyering@lucent.com>
 
-	More code moved from ../configure.in.
+	More code moved from ../configure.in into (jm_CHECK_ALL_TYPES).
 	* jm-macros.m4 (_GNU_SOURCE): Define.
 	(AC_SYS_LARGEFILE): Require.
 	(AM_C_PROTOTYPES): Require.
