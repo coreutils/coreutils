@@ -1,5 +1,12 @@
 1998-11-29  Jim Meyering  <meyering@ascend.com>
 
+	* src/remove.c (DOT_OR_DOTDOT): Move definition from this file...
+	* src/sys2.h (DOT_OR_DOTDOT): ...to this one.
+
+	* src/dd.c (dd_copy): Rename function from `copy'.
+
+	* src/cp.c (do_copy): Rename local: s/unused/copy_into_self/.
+
 	Per Kristian Hove reported that a certain move-directory-into-self
 	wasn't properly diagnosed.
 
