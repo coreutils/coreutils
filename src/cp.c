@@ -300,7 +300,7 @@ re_protect (const char *const_dst_path, int src_offset,
 
       if ((*(x->xstat)) (src_path, &src_sb))
 	{
-	  error (0, errno, _("getting attributes of %s"),
+	  error (0, errno, _("failed to get attributes of %s"),
 		 quote (src_path));
 	  return 1;
 	}
