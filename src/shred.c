@@ -140,7 +140,7 @@ static struct option const long_opts[] =
   {"size", required_argument, NULL, 's'},
   {"remove", no_argument, NULL, 'u'},
   {"verbose", no_argument, NULL, 'v'},
-  {"zero", required_argument, NULL, 'z'},
+  {"zero", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
