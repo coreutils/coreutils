@@ -110,16 +110,10 @@ touch (const char *file)
 {
   int status;
   struct stat sbuf;
-  int fd IF_LINT (= 99);
-  int valid_fd;
+  int fd = -1;
 
-  if (no_create)
+  if (! no_create)
     {
-      valid_fd = 0;
-    }
-  else
-    {
-      valid_fd = 1;
       /* Try to open FILE, creating it if necessary.  */
       fd = open (file, O_WRONLY | O_CREAT,
 		 S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
@@ -131,7 +125,7 @@ touch (const char *file)
 	 the other one.  If we have the file descriptor already, use fstat.
 	 Otherwise, either we're in no-create mode (and hence didn't call open)
 	 or FILE is inaccessible or a directory, so we have to use stat.  */
-      if ((valid_fd && fd != -1) ? fstat (fd, &sbuf) : stat (file, &sbuf))
+      if (fd != -1 ? fstat (fd, &sbuf) : stat (file, &sbuf))
 	{
 	  error (0, errno, "%s", file);
 	  close (fd);
@@ -139,7 +133,7 @@ touch (const char *file)
 	}
     }
 
-  if (valid_fd && fd != -1 && close (fd) < 0)
+  if (fd != -1 && close (fd) < 0)
     {
       error (0, errno, "%s", file);
       return 1;
