@@ -7,8 +7,9 @@ if test "$VERBOSE" = yes; then
   touch --version
 fi
 
-fail=0
+rm -f touch-target t-symlink
 ln -s touch-target t-symlink
+fail=0
 
 # This used to infloop.
 touch t-symlink || fail=1
