@@ -2,6 +2,15 @@
 
 	* Version 5.3.0.
 
+	Plug a leak that would cause rm or a cross-device mv to fail when
+	operating on too many command-line-specified nonempty directories.
+	* src/remove.c (remove_dir): Destroy the `struct saved_cwd' on the
+	top of the stack before returning.  This usually closes the file
+	descriptor that was used to return to the original working directory.
+	Reported by Cyril Bouthors in
+	http://article.gmane.org/gmane.comp.gnu.core-utils.bugs/3048
+	* NEWS: Mention it here.
+
 	* src/pathchk.c (validate_file_name): Give a more descriptive
 	diagnostic when pathconf fails.  This also avoids an unwarranted
 	warning from gcc-3.3.5 about a format not being a string literal.
