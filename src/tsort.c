@@ -1,5 +1,5 @@
 /* tsort - topological sort.
-   Copyright (C) 1998-2003 Free Software Foundation, Inc.
+   Copyright (C) 1998-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -65,7 +65,7 @@ char *program_name;
 /* Nonzero if any of the input files are the standard input. */
 static int have_read_stdin;
 
-/* The error code to return to the system. */
+/* Nonzero if a nonfatal error has occurred.  */
 static int exit_status;
 
 /* The head of the sorted list.  */
@@ -88,7 +88,7 @@ static struct option const long_options[] =
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -104,7 +104,7 @@ With no FILE, or when FILE is -, read standard input.\n\
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
 
-  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (status);
 }
 
 /* Create a new item/node for STR.  */
