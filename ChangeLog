@@ -21,7 +21,7 @@
 	entry on systems with valid dirent.d_type.
 	* src/ls.c (print_dir): Add DT_LNK and DT_REG.
 	(main): Make --recursive set format_needs_type, not format_needs_stat.
-	(gobble_file): Remove a FIXME comment, now that this is fixed.
+	(gobble_file): Remove a FIXME comment, now that it's fixed.
 
 2002-11-24  Jim Meyering  <jim@meyering.net>
 
