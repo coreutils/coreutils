@@ -1,3 +1,4 @@
+## Process this file with automake to produce Makefile.in -*-Makefile-*-.
 AUTOMAKE_OPTIONS = 1.2 gnits
 
 TESTS = sf-1
