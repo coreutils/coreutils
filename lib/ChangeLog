@@ -3,8 +3,6 @@
 	* readtokens.c (readtoken): Don't leak 64 bytes when reading
 	an empty input stream.
 
-2004-03-05  Jim Meyering  <jim@meyering.net>
-
 	* readtokens.c: Include <stdbool.h>.
 	(readtoken): Use `size_t' rather than int/long.
 	All callers adjusted.
