@@ -57,13 +57,14 @@ There are pretty many tests, but nowhere near as many as we need.
 Additions and corrections are very welcome.
 
 If you see a problem that you've already reported, feel free to re-report
-it -- it won't bother me to get a reminder.  Besides, the more messages
-I get regarding a particular problem the sooner it'll be fixed --
-usually.  If you sent a complete patch and, after a couple weeks you
-haven't received any acknowledgement please ping us.  A complete patch
-includes a well-written ChangeLog entry, unified (diff -u format) diffs,
-an explanation for why the patch is necessary or useful, and if at all
-possible, enough information to reproduce whatever problem prompted it.
+it -- it won't bother me to get a reminder.  Besides, the more messages I
+get regarding a particular problem the sooner it'll be fixed -- usually.
+If you sent a complete patch and, after a couple weeks you haven't
+received any acknowledgement please ping us.  A complete patch includes
+a well-written ChangeLog entry, unified (diff -u format) diffs relative
+to the most recent test release, an explanation for why the patch is
+necessary or useful, and if at all possible, enough information to
+reproduce whatever problem prompted it.
 
 If your patch adds a new feature, please try to get some sort of consensus
 that it is a worthwhile change.  One way to do that is to send mail to
