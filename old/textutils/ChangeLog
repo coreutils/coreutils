@@ -1,6 +1,11 @@
-2000-11-14  Jim Meyering  <meyering@lucent.com>
+2000-11-16  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.9.
+
+	* src/join.c: Declare global `tab' to be of type *unsigned* char,
+	so join works with 8-bit delimiter characters.
+	Reported by Antonio Rendas.
+	* tests/join/Test.pm (8-bit-t): New test for the above fix.
 
 2000-11-13  Paul Eggert  <eggert@twinsun.com>
 
