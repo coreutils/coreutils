@@ -158,6 +158,7 @@ mode_string (mode, str)
    'b' for block special files
    'c' for character special files
    'm' for multiplexor files
+   'M' for an off-line (regular) file
    'l' for symbolic links
    's' for sockets
    'p' for fifos
@@ -199,13 +200,18 @@ ftypelet (bits)
     return 'n';
 #endif
 
+  /* The following two tests are for Cray DMF (Data Migration
+     Facility), which is a HSM file system.  A migrated file has a
+     `st_dm_mode' that is different from the normal `st_mode', so any
+     tests for migrated files should use the former.  */
+
 #ifdef S_ISOFD
-  /* Cray migrated dmf file.  */
   if (S_ISOFD (bits))
+    /* off line, with data  */
     return 'M';
 #endif
 #ifdef S_ISOFL
-  /* Cray migrated dmf file.  */
+  /* off line, with no data  */
   if (S_ISOFL (bits))
     return 'M';
 #endif
