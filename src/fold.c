@@ -80,10 +80,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -s, --spaces        break at spaces\n\
   -w, --width=WIDTH   use WIDTH columns instead of 80\n\
 "), stdout);
-      fputs (_("\
-      --help          display this help and exit\n\
-      --version       output version information and exit\n\
-"), stdout);
+      EMIT_HELP_DESCRIPTION (stdout);
+      EMIT_VERSION_DESCRIPTION (stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);

@@ -145,10 +145,8 @@ The following two options are useful only when verifying checksums:\n\
   -w, --warn              warn about improperly formated checksum lines\n\
 \n\
 "), stdout);
-      fputs (_("\
-      --help              display this help and exit\n\
-      --version           output version information and exit\n\
-"), stdout);
+      EMIT_HELP_DESCRIPTION (stdout);
+      EMIT_VERSION_DESCRIPTION (stdout);
       fputs (_("\
 \n\
 "), stdout);

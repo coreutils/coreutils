@@ -67,10 +67,8 @@ Print checksum and block counts for each FILE.\n\
   -r              defeat -s, use BSD sum algorithm, use 1K blocks\n\
   -s, --sysv      use System V sum algorithm, use 512 bytes blocks\n\
 "), stdout);
-      fputs (_("\
-      --help      display this help and exit\n\
-      --version   output version information and exit\n\
-"), stdout);
+      EMIT_HELP_DESCRIPTION (stdout);
+      EMIT_VERSION_DESCRIPTION (stdout);
       fputs (_("\
 \n\
 With no FILE, or when FILE is -, read standard input.\n\

@@ -286,10 +286,8 @@ Usage: %s [FILE]...\n\
 Print CRC checksum and byte counts of each FILE.\n\
 \n\
 "), stdout);
-      fputs (_("\
-      --help        display this help and exit\n\
-      --version     output version information and exit\n\
-"), stdout);
+      EMIT_HELP_DESCRIPTION (stdout);
+      EMIT_VERSION_DESCRIPTION (stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);

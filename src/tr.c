@@ -337,10 +337,8 @@ writing to standard output.\n\
   -s, --squeeze-repeats   replace sequence of characters with one\n\
   -t, --truncate-set1     first truncate SET1 to length of SET2\n\
 "), stdout);
-      fputs (_("\
-      --help              display this help and exit\n\
-      --version           output version information and exit\n\
-"), stdout);
+      EMIT_HELP_DESCRIPTION (stdout);
+      EMIT_VERSION_DESCRIPTION (stdout);
       fputs (_("\
 \n\
 SETs are specified as strings of characters.  Most represent themselves.\n\

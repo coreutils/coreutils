@@ -330,10 +330,8 @@ Other options:\n\
   +POS1 [-POS2]             start a key at POS1, end it before POS2 (origin 0)\n\
                               Warning: this option is obsolescent\n\
 "), stdout);
-      fputs (_("\
-      --help       display this help and exit\n\
-      --version    output version information and exit\n\
-"), stdout);
+      EMIT_HELP_DESCRIPTION (stdout);
+      EMIT_VERSION_DESCRIPTION (stdout);
       fputs (_("\
 \n\
 POS is F[.C][OPTS], where F is the field number and C the character position\n\

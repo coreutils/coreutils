@@ -1893,10 +1893,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -t, --typeset-mode               - not implemented -\n\
   -w, --width=NUMBER             output width in columns, reference excluded\n\
 "), stdout);
-      fputs (_("\
-      --help                     display this help and exit\n\
-      --version                  output version information and exit\n\
-"), stdout);
+      EMIT_HELP_DESCRIPTION (stdout);
+      EMIT_VERSION_DESCRIPTION (stdout);
       fputs (_("\
 \n\
 With no FILE or if FILE is -, read Standard Input.  `-F /' by default.\n\

@@ -168,10 +168,8 @@ by whitespace.  When FILE1 or FILE2 (not both) is -, read standard input.\n\
   -1 FIELD          join on this FIELD of file 1\n\
   -2 FIELD          join on this FIELD of file 2\n\
 "), stdout);
-      fputs (_("\
-      --help        display this help and exit\n\
-      --version     output version information and exit\n\
-"), stdout);
+      EMIT_HELP_DESCRIPTION (stdout);
+      EMIT_VERSION_DESCRIPTION (stdout);
       fputs (_("\
 \n\
 "), stdout);

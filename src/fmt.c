@@ -288,10 +288,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -u, --uniform-spacing     one space between words, two after sentences\n\
   -w, --width=NUMBER        maximum line width (default of 75 columns)\n\
 "), stdout);
-      fputs (_("\
-      --help                display this help and exit\n\
-      --version             output version information and exit\n\
-"), stdout);
+      EMIT_HELP_DESCRIPTION (stdout);
+      EMIT_VERSION_DESCRIPTION (stdout);
       fputs (_("\
 \n\
 In -wNUMBER, the letter `w' may be omitted.\n"),

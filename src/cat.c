@@ -109,10 +109,8 @@ Concatenate FILE(s), or standard input, to standard output.\n\
   -u                       (ignored)\n\
   -v, --show-nonprinting   use ^ and M- notation, except for LFD and TAB\n\
 "), stdout);
-      fputs (_("\
-      --help               display this help and exit\n\
-      --version            output version information and exit\n\
-"), stdout);
+      EMIT_HELP_DESCRIPTION (stdout);
+      EMIT_VERSION_DESCRIPTION (stdout);
       fputs (_("\
 \n\
 With no FILE, or when FILE is -, read standard input.\n\

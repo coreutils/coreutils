@@ -202,10 +202,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -v, --first-page=NUMBER         first line number on each logical page\n\
   -w, --number-width=NUMBER       use NUMBER columns for line numbers\n\
 "), stdout);
-      fputs (_("\
-      --help                      display this help and exit\n\
-      --version                   output version information and exit\n\
-"), stdout);
+      EMIT_HELP_DESCRIPTION (stdout);
+      EMIT_VERSION_DESCRIPTION (stdout);
       fputs (_("\
 \n\
 By default, selects -v1 -i1 -l1 -sTAB -w6 -nrn -hn -bt -fn.  CC are\n\

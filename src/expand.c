@@ -125,10 +125,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -t, --tabs=LIST     use comma separated list of explicit tab positions\n\
 "), stdout);
-      fputs (_("\
-      --help          display this help and exit\n\
-      --version       output version information and exit\n\
-"), stdout);
+      EMIT_HELP_DESCRIPTION (stdout);
+      EMIT_VERSION_DESCRIPTION (stdout);
       fputs (_("\
 \n\
 Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.\n\

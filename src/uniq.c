@@ -160,10 +160,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -N                    same as -f N\n\
   +N                    same as -s N (obsolescent; will be withdrawn)\n\
 "), stdout);
-     fputs (_("\
-      --help            display this help and exit\n\
-      --version         output version information and exit\n\
-"), stdout);
+     EMIT_HELP_DESCRIPTION (stdout);
+     EMIT_VERSION_DESCRIPTION (stdout);
      fputs (_("\
 \n\
 A field is a run of whitespace, then non-whitespace characters.\n\

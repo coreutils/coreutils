@@ -298,10 +298,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -w, --width[=BYTES]         output BYTES bytes per output line\n\
       --traditional           accept arguments in pre-POSIX form\n\
 "), stdout);
-      fputs (_("\
-      --help                  display this help and exit\n\
-      --version               output version information and exit\n\
-"), stdout);
+      EMIT_HELP_DESCRIPTION (stdout);
+      EMIT_VERSION_DESCRIPTION (stdout);
       fputs (_("\
 \n\
 Pre-POSIX format specifications may be intermixed, they accumulate:\n\

@@ -104,10 +104,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       --verbose           print a diagnostic to standard error just\n\
                             before each output file is opened\n\
 "), stdout);
-      fputs (_("\
-      --help              display this help and exit\n\
-      --version           output version information and exit\n\
-"), stdout);
+      EMIT_HELP_DESCRIPTION (stdout);
+      EMIT_VERSION_DESCRIPTION (stdout);
       fputs (_("\
 \n\
 SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
