@@ -1,3 +1,9 @@
+2004-11-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* Makefile.am (_W, W_): New macros.
+	(check-texinfo): Use them instead of assuming grep -w (which is not
+	portable).
+
 2004-10-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi: Document TZ better, and adjust to new getdate.texi.
