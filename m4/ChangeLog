@@ -5,7 +5,6 @@
 	(AC_SYS_LARGEFILE_MACRO_VALUE): Likewise.
 	(AC_SYS_LARGEFILE): Likewise.
 	* gettext.m4 (AM_GNU_GETTEXT): Likewise.
-
 	* strftime.m4 (jm_FUNC_GNU_STRFTIME): Remove now-unnecessary use
 	of changequote.
 	* regex.m4 (jm_INCLUDED_REGEX): Likewise.
