@@ -560,7 +560,7 @@ that can be used to change how other commands work.
 For the vast majority of commands, an exit status of zero indicates
 success, and a value of @samp{1} indicates failure.
 However, some of the programs documented here do produce
-different exit status values and a few associate different
+other exit status values and a few associate different
 meanings with the values @samp{0} and @samp{1}.
 Here are some of the exceptions:
 @command{expr}, @command{false}, @command{nohup}, @command{printenv},
