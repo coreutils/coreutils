@@ -25,7 +25,7 @@ fi
 
 fail=0
 
-ls -lR --dired dir > out || fail=1
+LC_MESSAGES=C ls -lR --dired dir > out || fail=1
 cat <<EOF > exp
   dir:
   total 0
