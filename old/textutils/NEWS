@@ -1,3 +1,5 @@
+Major changes in release 1.9:
+* cat -v /dev/null works on more systems
 Major changes in release 1.8:
 * added non-ANSIfied version of memchr.c from GNU libc.
 

@@ -46,6 +46,14 @@
 
 #else  /* not emacs */
 
+#ifdef STDC_HEADERS
+#include <stdlib.h>
+#else
+char *malloc ();
+char *realloc ();
+#endif
+
+
 /* We used to test for `BSTRING' here, but only GCC and Emacs define
    `BSTRING', as far as I know, and neither of them use this code.  */
 #if HAVE_STRING_H || STDC_HEADERS
@@ -62,14 +70,6 @@
 #else
 #include <strings.h>
 #endif
-
-#ifdef STDC_HEADERS
-#include <stdlib.h>
-#else
-char *malloc ();
-char *realloc ();
-#endif
-
 
 /* Define the syntax stuff for \<, \>, etc.  */
 
@@ -881,13 +881,22 @@ static const char *re_error_msg[] =
    using the relocating allocator routines, then malloc could cause a
    relocation, which might (if the strings being searched are in the
    ralloc heap) shift the data out from underneath the regexp
-   routines.  */
+   routines.
+
+   Here's another reason to avoid allocation: Emacs insists on
+   processing input from X in a signal handler; processing X input may
+   call malloc; if input arrives while a matching routine is calling
+   malloc, then we're scrod.  But Emacs can't just block input while
+   calling matching routines; then we don't notice interrupts when
+   they come in.  So, Emacs blocks input around all regexp calls
+   except the matching calls, which it leaves unprotected, in the
+   faith that they will not malloc.  */
 
 /* Normally, this is fine.  */
 #define MATCH_MAY_ALLOCATE
 
 /* But under some circumstances, it's not.  */
-#if defined (REL_ALLOC) && defined (C_ALLOCA)
+#if defined (emacs) || (defined (REL_ALLOC) && defined (C_ALLOCA))
 #undef MATCH_MAY_ALLOCATE
 #endif
 
@@ -4130,11 +4139,27 @@ re_match_2 (bufp, string1, size1, string2, size2, pos, regs, stop)
                detect that here, the alternative has put on a dummy
                failure point which is what we will end up popping.  */
 
-	    /* Skip over open/close-group commands.  */
-	    while (p2 + 2 < pend
-		   && ((re_opcode_t) *p2 == stop_memory
-		       || (re_opcode_t) *p2 == start_memory))
-	      p2 += 3;			/* Skip over args, too.  */
+	    /* Skip over open/close-group commands.
+	       If what follows this loop is a ...+ construct,
+	       look at what begins its body, since we will have to
+	       match at least one of that.  */
+	    while (1)
+	      {
+		if (p2 + 2 < pend
+		    && ((re_opcode_t) *p2 == stop_memory
+			|| (re_opcode_t) *p2 == start_memory))
+		  p2 += 3;
+		else if (p2 + 6 < pend
+			 && (re_opcode_t) *p2 == dummy_failure_jump)
+		  p2 += 6;
+		else
+		  break;
+	      }
+
+	    p1 = p + mcnt;
+	    /* p1[0] ... p1[2] are the `on_failure_jump' corresponding
+	       to the `maybe_finalize_jump' of this case.  Examine what 
+	       follows.  */
 
             /* If we're at the end of the pattern, we can change.  */
             if (p2 == pend)
@@ -4152,11 +4177,7 @@ re_match_2 (bufp, string1, size1, string2, size2, pos, regs, stop)
 	      {
 		register unsigned char c
                   = *p2 == (unsigned char) endline ? '\n' : p2[2];
-		p1 = p + mcnt;
 
-                /* p1[0] ... p1[2] are the `on_failure_jump' corresponding
-                   to the `maybe_finalize_jump' of this case.  Examine what 
-                   follows.  */
                 if ((re_opcode_t) p1[3] == exactn && p1[5] != c)
                   {
   		    p[-3] = (unsigned char) pop_failure_jump;
@@ -4176,6 +4197,54 @@ re_match_2 (bufp, string1, size1, string2, size2, pos, regs, stop)
                     /* `not' is equal to 1 if c would match, which means
                         that we can't change to pop_failure_jump.  */
 		    if (!not)
+                      {
+  		        p[-3] = (unsigned char) pop_failure_jump;
+                        DEBUG_PRINT1 ("  No match => pop_failure_jump.\n");
+                      }
+		  }
+	      }
+            else if ((re_opcode_t) *p2 == charset)
+	      {
+		register unsigned char c
+                  = *p2 == (unsigned char) endline ? '\n' : p2[2];
+
+                if ((re_opcode_t) p1[3] == exactn
+		    && ! (p2[1] * BYTEWIDTH > p1[4]
+			  && (p2[1 + p1[4] / BYTEWIDTH]
+			      & (1 << (p1[4] % BYTEWIDTH)))))
+                  {
+  		    p[-3] = (unsigned char) pop_failure_jump;
+                    DEBUG_PRINT3 ("  %c != %c => pop_failure_jump.\n",
+                                  c, p1[5]);
+                  }
+                  
+		else if ((re_opcode_t) p1[3] == charset_not)
+		  {
+		    int idx;
+		    /* We win if the charset_not inside the loop
+		       lists every character listed in the charset after.  */
+		    for (idx = 0; idx < p2[1]; idx++)
+		      if (! (p2[2 + idx] == 0
+			     || (idx < p1[4]
+				 && ((p2[2 + idx] & ~ p1[5 + idx]) == 0))))
+			break;
+
+		    if (idx == p2[1])
+                      {
+  		        p[-3] = (unsigned char) pop_failure_jump;
+                        DEBUG_PRINT1 ("  No match => pop_failure_jump.\n");
+                      }
+		  }
+		else if ((re_opcode_t) p1[3] == charset)
+		  {
+		    int idx;
+		    /* We win if the charset inside the loop
+		       has no overlap with the one after the loop.  */
+		    for (idx = 0; idx < p2[1] && idx < p1[4]; idx++)
+		      if ((p2[2 + idx] & p1[5 + idx]) != 0)
+			break;
+
+		    if (idx == p2[1] || idx == p1[4])
                       {
   		        p[-3] = (unsigned char) pop_failure_jump;
                         DEBUG_PRINT1 ("  No match => pop_failure_jump.\n");

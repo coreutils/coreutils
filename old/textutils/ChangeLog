@@ -1,3 +1,21 @@
+Thu Sep  9 21:52:10 1993  Jim Meyering  (meyering@comco.com)
+
+	* src/*.c: Print version on standard output, not stderr.
+
+	* configure.in: Add AC_LONG_64_BITS.
+	* memchr.c: Use #ifdef LONG_64_BITS instead of
+	`if (sizeof(longword) > 4)'.
+
+Tue Jul 27 22:19:39 1993  Jim Meyering  (meyering@comco.com)
+
+	* cat.c (cat): Don't fail just because ioctl (d, FIONREAD,... can't
+	always handle devices.  Ignore errno == EINVAL and errno == ENODEV.
+	`cat -v /dev/null' was failing on many systems.
+
+	* cut.c (cut_fields): Don't strip off trailing delimiter e.g.
+	`echo 'a:b:c:' | cut -d: -f3-' should print `c:', not just `c'.
+	From William Dowling <will@franklin.com>.
+
 Thu May 27 01:37:51 1993  Jim Meyering  (meyering@comco.com)
 
 	* Version 1.8.
