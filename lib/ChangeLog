@@ -1,3 +1,9 @@
+2001-10-05  Jim Meyering  <meyering@lucent.com>
+
+	* Makefile.am: (libfetish_a_SOURCES): Add hash-pjw.c and hash-pjw.h.
+	* hash-pjw.c: New file (factored out of fileutils' remove.c).
+	* hash-pjw.h: New file.
+
 2001-09-30  Jim Meyering  <meyering@lucent.com>
 
 	* mountlist.c [MOUNTED_GETFSSTAT]:

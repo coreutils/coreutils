@@ -125,6 +125,7 @@ libfetish_a_SOURCES = \
   strftime.c \
   getopt.c getopt.h getopt1.c \
   hash.c hash.h \
+  hash-pjw.c hash-pjw.h \
   __fpending.h \
   addext.c \
   argmatch.c argmatch.h \
@@ -230,28 +231,28 @@ LIBRARIES = $(noinst_LIBRARIES)
 libfetish_a_AR = $(AR) cru
 am_libfetish_a_OBJECTS = getdate$U.$(OBJEXT) posixtm$U.$(OBJEXT) \
 	strftime$U.$(OBJEXT) getopt$U.$(OBJEXT) getopt1$U.$(OBJEXT) \
-	hash$U.$(OBJEXT) addext$U.$(OBJEXT) argmatch$U.$(OBJEXT) \
-	backupfile$U.$(OBJEXT) basename$U.$(OBJEXT) \
-	canon-host$U.$(OBJEXT) closeout$U.$(OBJEXT) diacrit$U.$(OBJEXT) \
-	dirname$U.$(OBJEXT) dup-safer$U.$(OBJEXT) exclude$U.$(OBJEXT) \
-	filemode$U.$(OBJEXT) fopen-safer$U.$(OBJEXT) \
-	full-write$U.$(OBJEXT) getstr$U.$(OBJEXT) \
-	getugroups$U.$(OBJEXT) hard-locale$U.$(OBJEXT) \
-	human$U.$(OBJEXT) idcache$U.$(OBJEXT) isdir$U.$(OBJEXT) \
-	linebuffer$U.$(OBJEXT) localcharset$U.$(OBJEXT) \
-	long-options$U.$(OBJEXT) makepath$U.$(OBJEXT) \
-	mbswidth$U.$(OBJEXT) md5$U.$(OBJEXT) memcasecmp$U.$(OBJEXT) \
-	memcoll$U.$(OBJEXT) modechange$U.$(OBJEXT) \
-	path-concat$U.$(OBJEXT) physmem$U.$(OBJEXT) quote$U.$(OBJEXT) \
-	quotearg$U.$(OBJEXT) readtokens$U.$(OBJEXT) \
-	safe-read$U.$(OBJEXT) same$U.$(OBJEXT) save-cwd$U.$(OBJEXT) \
-	savedir$U.$(OBJEXT) sha$U.$(OBJEXT) stripslash$U.$(OBJEXT) \
-	unicodeio$U.$(OBJEXT) userspec$U.$(OBJEXT) \
-	version-etc$U.$(OBJEXT) xgetcwd$U.$(OBJEXT) \
-	xgethostname$U.$(OBJEXT) xmalloc$U.$(OBJEXT) \
-	xreadlink$U.$(OBJEXT) xstrdup$U.$(OBJEXT) xstrtod$U.$(OBJEXT) \
-	xstrtol$U.$(OBJEXT) xstrtoul$U.$(OBJEXT) xstrtoimax$U.$(OBJEXT) \
-	xstrtoumax$U.$(OBJEXT) yesno$U.$(OBJEXT)
+	hash$U.$(OBJEXT) hash-pjw$U.$(OBJEXT) addext$U.$(OBJEXT) \
+	argmatch$U.$(OBJEXT) backupfile$U.$(OBJEXT) \
+	basename$U.$(OBJEXT) canon-host$U.$(OBJEXT) \
+	closeout$U.$(OBJEXT) diacrit$U.$(OBJEXT) dirname$U.$(OBJEXT) \
+	dup-safer$U.$(OBJEXT) exclude$U.$(OBJEXT) filemode$U.$(OBJEXT) \
+	fopen-safer$U.$(OBJEXT) full-write$U.$(OBJEXT) \
+	getstr$U.$(OBJEXT) getugroups$U.$(OBJEXT) \
+	hard-locale$U.$(OBJEXT) human$U.$(OBJEXT) idcache$U.$(OBJEXT) \
+	isdir$U.$(OBJEXT) linebuffer$U.$(OBJEXT) \
+	localcharset$U.$(OBJEXT) long-options$U.$(OBJEXT) \
+	makepath$U.$(OBJEXT) mbswidth$U.$(OBJEXT) md5$U.$(OBJEXT) \
+	memcasecmp$U.$(OBJEXT) memcoll$U.$(OBJEXT) \
+	modechange$U.$(OBJEXT) path-concat$U.$(OBJEXT) \
+	physmem$U.$(OBJEXT) quote$U.$(OBJEXT) quotearg$U.$(OBJEXT) \
+	readtokens$U.$(OBJEXT) safe-read$U.$(OBJEXT) same$U.$(OBJEXT) \
+	save-cwd$U.$(OBJEXT) savedir$U.$(OBJEXT) sha$U.$(OBJEXT) \
+	stripslash$U.$(OBJEXT) unicodeio$U.$(OBJEXT) \
+	userspec$U.$(OBJEXT) version-etc$U.$(OBJEXT) \
+	xgetcwd$U.$(OBJEXT) xgethostname$U.$(OBJEXT) \
+	xmalloc$U.$(OBJEXT) xreadlink$U.$(OBJEXT) xstrdup$U.$(OBJEXT) \
+	xstrtod$U.$(OBJEXT) xstrtol$U.$(OBJEXT) xstrtoul$U.$(OBJEXT) \
+	xstrtoimax$U.$(OBJEXT) xstrtoumax$U.$(OBJEXT) yesno$U.$(OBJEXT)
 libfetish_a_OBJECTS = $(am_libfetish_a_OBJECTS)
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 CPPFLAGS = @CPPFLAGS@
@@ -278,9 +279,9 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 @AMDEP_TRUE@	$(DEPDIR)/getugroups$U.Po $(DEPDIR)/getusershell.Po \
 @AMDEP_TRUE@	$(DEPDIR)/group-member.Po \
 @AMDEP_TRUE@	$(DEPDIR)/hard-locale$U.Po $(DEPDIR)/hash$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/human$U.Po $(DEPDIR)/idcache$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/isdir$U.Po $(DEPDIR)/lchown.Po \
-@AMDEP_TRUE@	$(DEPDIR)/linebuffer$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/hash-pjw$U.Po $(DEPDIR)/human$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/idcache$U.Po $(DEPDIR)/isdir$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/lchown.Po $(DEPDIR)/linebuffer$U.Po \
 @AMDEP_TRUE@	$(DEPDIR)/localcharset$U.Po \
 @AMDEP_TRUE@	$(DEPDIR)/long-options$U.Po $(DEPDIR)/lstat.Po \
 @AMDEP_TRUE@	$(DEPDIR)/makepath$U.Po $(DEPDIR)/malloc.Po \
@@ -415,6 +416,7 @@ mostlyclean-kr:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/group-member.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/hard-locale$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/hash$U.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/hash-pjw$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/human$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/idcache$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/isdir$U.Po@am__quote@
@@ -591,6 +593,8 @@ hard-locale_.c: hard-locale.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/hard-locale.c; then echo $(srcdir)/hard-locale.c; else echo hard-locale.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > hard-locale_.c || rm -f hard-locale_.c
 hash_.c: hash.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/hash.c; then echo $(srcdir)/hash.c; else echo hash.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > hash_.c || rm -f hash_.c
+hash-pjw_.c: hash-pjw.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/hash-pjw.c; then echo $(srcdir)/hash-pjw.c; else echo hash-pjw.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > hash-pjw_.c || rm -f hash-pjw_.c
 human_.c: human.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/human.c; then echo $(srcdir)/human.c; else echo human.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > human_.c || rm -f human_.c
 idcache_.c: idcache.c $(ANSI2KNR)
@@ -768,13 +772,14 @@ getline_.$(OBJEXT) getloadavg_.$(OBJEXT) getopt_.$(OBJEXT) \
 getopt1_.$(OBJEXT) getpass_.$(OBJEXT) getstr_.$(OBJEXT) \
 gettimeofday_.$(OBJEXT) getugroups_.$(OBJEXT) getusershell_.$(OBJEXT) \
 group-member_.$(OBJEXT) hard-locale_.$(OBJEXT) hash_.$(OBJEXT) \
-human_.$(OBJEXT) idcache_.$(OBJEXT) isdir_.$(OBJEXT) lchown_.$(OBJEXT) \
-linebuffer_.$(OBJEXT) localcharset_.$(OBJEXT) long-options_.$(OBJEXT) \
-lstat_.$(OBJEXT) makepath_.$(OBJEXT) malloc_.$(OBJEXT) \
-mbswidth_.$(OBJEXT) md5_.$(OBJEXT) memcasecmp_.$(OBJEXT) \
-memchr_.$(OBJEXT) memcmp_.$(OBJEXT) memcoll_.$(OBJEXT) \
-memcpy_.$(OBJEXT) memmove_.$(OBJEXT) memrchr_.$(OBJEXT) \
-memset_.$(OBJEXT) mkdir_.$(OBJEXT) mkstemp_.$(OBJEXT) mktime_.$(OBJEXT) \
+hash-pjw_.$(OBJEXT) human_.$(OBJEXT) idcache_.$(OBJEXT) \
+isdir_.$(OBJEXT) lchown_.$(OBJEXT) linebuffer_.$(OBJEXT) \
+localcharset_.$(OBJEXT) long-options_.$(OBJEXT) lstat_.$(OBJEXT) \
+makepath_.$(OBJEXT) malloc_.$(OBJEXT) mbswidth_.$(OBJEXT) \
+md5_.$(OBJEXT) memcasecmp_.$(OBJEXT) memchr_.$(OBJEXT) \
+memcmp_.$(OBJEXT) memcoll_.$(OBJEXT) memcpy_.$(OBJEXT) \
+memmove_.$(OBJEXT) memrchr_.$(OBJEXT) memset_.$(OBJEXT) \
+mkdir_.$(OBJEXT) mkstemp_.$(OBJEXT) mktime_.$(OBJEXT) \
 modechange_.$(OBJEXT) mountlist_.$(OBJEXT) nanosleep_.$(OBJEXT) \
 obstack_.$(OBJEXT) path-concat_.$(OBJEXT) physmem_.$(OBJEXT) \
 posixtm_.$(OBJEXT) putenv_.$(OBJEXT) quote_.$(OBJEXT) \
