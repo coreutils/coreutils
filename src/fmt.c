@@ -575,8 +575,9 @@ copy_rest (FILE *f, register int c)
   if (in_column > next_prefix_indent && c != '\n' && c != EOF)
     {
       put_space (next_prefix_indent);
-      for (s = prefix; out_column != in_column; out_column++)
+      for (s = prefix; out_column != in_column && *s; out_column++)
 	putchar (*s++);
+      put_space (in_column - out_column);
     }
   while (c != '\n' && c != EOF)
     {
