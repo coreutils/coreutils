@@ -44,7 +44,6 @@
 #endif
 
 #include <string.h>
-#include <malloc.h>
 #include <ctype.h>
 
 #if HAVE_INTTYPES_H
