@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 0.32 from Makefile.am
+# Makefile.in generated automatically by automake 0.33 from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -50,7 +50,7 @@ INFO_DEPS = fileutils.info
 DVIS = fileutils.dvi
 TEXINFOS = fileutils.texi
 
-DIST_COMMON = Makefile.am Makefile.in stamp-vti version.texi
+DIST_COMMON = Makefile.am Makefile.in mdate-sh stamp-vti version.texi
 
 
 PACKAGE = @PACKAGE@
