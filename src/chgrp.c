@@ -135,6 +135,10 @@ With --reference, change the group of each FILE to that of RFILE.\n\
                          ownership of a symlink)\n\
 "), stdout);
       fputs (_("\
+      --no-preserve-root do not treat `/' specially (the default)\n\
+      --preserve-root    fail to operate recursively on `/'\n\
+"), stdout);
+      fputs (_("\
   -f, --silent, --quiet  suppress most error messages\n\
       --reference=RFILE  use RFILE's group rather than the specifying\n\
                          GROUP value\n\
