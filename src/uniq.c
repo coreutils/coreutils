@@ -134,13 +134,15 @@ usage (int status)
 Usage: %s [OPTION]... [INPUT [OUTPUT]]\n\
 "),
 	      program_name);
-      printf (_("\
+      fputs (_("\
 Discard all but one of successive identical lines from INPUT (or\n\
 standard input), writing to OUTPUT (or standard output).\n\
 \n\
 Mandatory arguments to long options are mandatory for short options too.\n\
   -c, --count           prefix lines by the number of occurrences\n\
   -d, --repeated        only print duplicate lines\n\
+"), stdout);
+     fputs (_("\
   -D, --all-repeated[=delimit-method] print all duplicate lines\n\
                         delimit-method={none(default),prepend,separate)}\n\
                         Delimiting is done with blank lines.\n\
@@ -148,6 +150,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -i, --ignore-case     ignore differences in case when comparing\n\
   -s, --skip-chars=N    avoid comparing the first N characters\n\
   -u, --unique          only print unique lines\n\
+"), stdout);
+     fputs (_("\
   -w, --check-chars=N   compare no more than N characters in lines\n\
   -N                    same as -f N\n\
   +N                    same as -s N (obsolescent; will be withdrawn)\n\
@@ -156,7 +160,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 \n\
 A field is a run of whitespace, then non-whitespace characters.\n\
 Fields are skipped before chars.\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
