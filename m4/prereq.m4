@@ -1,7 +1,8 @@
-#serial 30
+#serial 31
 
 dnl We use jm_ for non Autoconf macros.
 m4_pattern_forbid([^jm_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
+m4_pattern_forbid([^gl_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
 
 # These are the prerequisite macros for files in the lib/
 # directory of the coreutils package.
@@ -9,7 +10,10 @@ m4_pattern_forbid([^jm_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
 AC_DEFUN([jm_PREREQ],
 [
   AC_REQUIRE([jm_PREREQ_ADDEXT])
-  AC_REQUIRE([jm_PREREQ_C_STACK])
+
+  # We don't yet use c-stack.c.
+  # AC_REQUIRE([jm_PREREQ_C_STACK])
+
   AC_REQUIRE([jm_PREREQ_CANON_HOST])
   AC_REQUIRE([jm_PREREQ_DIRNAME])
   AC_REQUIRE([jm_PREREQ_ERROR])
