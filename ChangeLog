@@ -2,6 +2,13 @@
 
 	* Version 5.0.1.
 
+	* src/dd.c (usage): Don't use `,' as the thousands separator
+	in e.g. 1,000,000 and 1,048,576.  Instead, do this:
+	`SIZE may be ..., MB 1000*1000, M 1024*1024 and so on...'
+	* src/df.c (usage): Likewise.
+	* src/du.c (usage): Likewise.
+	* src/ls.c (usage): Likewise.
+
 	* Makefile.maint (syntax-check): Add another check.
 
 2003-05-13  Paul Eggert  <eggert@twinsun.com>
