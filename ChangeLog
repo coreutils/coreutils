@@ -1,6 +1,19 @@
-2003-01-15  Jim Meyering  <jim@meyering.net>
+2003-01-15  Paul Eggert  <eggert@twinsun.com>
 
 	* Version 4.5.5.
+
+	Change ls -H back to the way it was yesterday, since this is
+	compatible with FreeBSD and the POSIX spec is confusing
+	and somewhat contradictory.
+
+	* src/ls.c (DEREF_COMMAND_LINE_ARGUMENTS): Change name back
+	from DEREF_COMMAND_LINE_SYMLINK_TO_DIR, updating all uses.
+	(long_options): Change the long option name back.
+	(usage): Change the usage back.
+	(gobble_file): When -H is specified, dereference a top-level
+	arg even if it points to a non-directory.
+
+2003-01-15  Jim Meyering  <jim@meyering.net>
 
 	* src/ls.c (gobble_file): Fall back on using lstat when required:
 	when --dereference (-L) is not specified, and
