@@ -166,4 +166,5 @@ cat <<\EOF > $expected
 
 EOF
 
-cmp $expected $actual || diff -u $expected $actual 1>&2
+cmp $expected $actual
+exit $?
