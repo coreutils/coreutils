@@ -1,5 +1,8 @@
 2005-01-19  Jim Meyering  <jim@meyering.net>
 
+	* openat.h (AT_SYMLINK_NOFOLLOW): Define to 4096, so it's the
+	same value as for Solaris 9.
+
 	* chdir-long.c (chdir_long): Rewrite to remove limitation on
 	component length.  This included changing the parameter to be
 	of type `char *' rather than `char const *'.
