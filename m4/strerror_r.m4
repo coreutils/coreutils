@@ -1,12 +1,12 @@
-#serial 1
+#serial 2
 
 dnl From Jim Meyering.
 dnl Determine whether the strerror_r implementation is one of
 dnl the broken ones that returns `int' rather than `char*'.
 dnl Actually, this tests only whether it returns a scalar
 dnl or an array, but that should be enough.
-dnl On at least DEC UNIX 4.0[A-D], strerror_r returns `int'.
-dnl This is used by lib/error.c.
+dnl On at least DEC UNIX 4.0[A-D] and HP-UX B.10.20, strerror_r
+dnl returns `int'.  This is used by lib/error.c.
 
 AC_DEFUN(jm_FUNC_STRERROR_R,
 [
