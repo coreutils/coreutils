@@ -1,6 +1,10 @@
-2001-01-03  Jim Meyering  <meyering@lucent.com>
+2001-01-07  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0.36.
+
+2001-01-07  Karl Eichwalder  <ke@suse.de>
+
+	* src/chgrp.c (parse_group): Normalize spelling.
 
 2001-01-03  Paul Eggert  <eggert@twinsun.com>
 
