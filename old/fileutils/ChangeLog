@@ -1,3 +1,40 @@
+Sat Jan 25 00:34:39 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* m4/getgroups.m4: Move the code from configure.in into
+	this macro that resorts to looking for getgroups in -lbsd.
+	Set new shell variable, GETGROUPS_LIB (that callers should check),
+	if it is found there.
+	* configure.in: Check $GETGROUPS_LIB just after jm_FUNC_GETGROUPS.
+	(AC_CHECK_FUNCS): Remove getgroups.
+	Remove code that resorts to looking for getgroups in -lbsd.
+
+	* configure.in (jm_FUNC_GNU_STRFTIME): Use it -- because ls
+	needs a version of strftime that supports the %e format and
+	pretty many systems lack that: NextStep 3.3, Mips Ultrix ?.?.
+	This is a little bit overkill (for now) in that if the strftime
+	in your C library doesn't have all features of GNU strftime (even
+	though it may support %e) ls will be linked with the version of
+	strftime provided with this package.  But for an upcoming release,
+	GNU ls will provide an option to allow the user to specify the
+	date format string -- and for that I want to make GNU strftime
+	the default in any case.  Think of this as an incentive to use
+	the GNU C library.
+
+Fri Jan 24 23:36:00 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/long-options.c (parse_long_options): Reset optind to zero
+	before just returning so that getopt internals get initialized from
+	the probably-new parameters when/if getopt is called later.
+	From Ulrich Drepper.
+
+Mon Jan 20 06:52:09 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (fu_cv_sys_truncating_statfs): Add preprocessor
+	guard to make sure that this test for Sun brokenness doesn't
+	get a false positive on any other type of system.  Eirik Fuller
+	reported that Linux 2.1.20 <sys/vfs.h> has a f_spare member in
+	the statfs struct.  And that triggered a false positive.
+
 Tue Jan 14 22:40:06 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/dircolors.c [!STDC_HEADERS]: Remove unnecessary declaration
