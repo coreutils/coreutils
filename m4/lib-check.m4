@@ -42,10 +42,17 @@ AC_DEFUN(jm_LIB_CHECK,
   # shadow passwords.  UnixWare 7 needs -lgen.
   AC_SEARCH_LIBS(getspnam, [shadow sec gen])
 
-  # Requirements for su.c.
-  AC_CHECK_MEMBERS((struct spwd.sp_pwdp))
-  AC_CHECK_FUNCS(getspnam)
   AC_CHECK_HEADERS(shadow.h)
+
+  # Requirements for su.c.
+  shadow_includes="\
+$ac_includes_default
+#if HAVE_SHADOW_H
+# include <shadow.h>
+#endif
+"
+  AC_CHECK_MEMBERS((struct spwd.sp_pwdp),,,[$shadow_includes])
+  AC_CHECK_FUNCS(getspnam)
 
   # SCO-ODT-3.0 is reported to need -lufc for crypt.
   # NetBSD needs -lcrypt for crypt.
