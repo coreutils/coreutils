@@ -1,6 +1,6 @@
 #! /bin/sh
 
-md5sum=${MD5SUM:-md5sum}
+md5sum=${MD5SUM:-$srcdir/md5sum}
 
 test "$VERBOSE" = yes && $md5sum --version
 
