@@ -49,10 +49,6 @@
 # include <sys/wait.h>
 #endif
 
-#if HAVE_VALUES_H
-# include <values.h>
-#endif
-
 struct passwd *getpwnam ();
 struct group *getgrnam ();
 
