@@ -65,17 +65,17 @@
 /* Define on systems for which file names may have a so-called `drive letter'
    prefix, define this to compute the length of that prefix, including the
    colon. */
-#undef FILESYSTEM_ACCEPTS_DRIVE_LETTER_PREFIX
+#undef FILE_SYSTEM_ACCEPTS_DRIVE_LETTER_PREFIX
 
 /* Define if the backslash character may also serve as a file name component
    separator. */
-#undef FILESYSTEM_BACKSLASH_IS_FILE_NAME_SEPARATOR
+#undef FILE_SYSTEM_BACKSLASH_IS_FILE_NAME_SEPARATOR
 
-#if FILESYSTEM_ACCEPTS_DRIVE_LETTER_PREFIX
-# define FILESYSTEM_PREFIX_LEN(Filename) \
+#if FILE_SYSTEM_ACCEPTS_DRIVE_LETTER_PREFIX
+# define FILE_SYSTEM_PREFIX_LEN(Filename) \
   ((Filename)[0] && (Filename)[1] == ':' ? 2 : 0)
 #else
-# define FILESYSTEM_PREFIX_LEN(Filename) 0
+# define FILE_SYSTEM_PREFIX_LEN(Filename) 0
 #endif
 
 /* Define to the type of elements in the array set by `getgroups'. Usually
@@ -1162,7 +1162,7 @@
 /* Define as const if the declaration of iconv() needs const. */
 #undef ICONV_CONST
 
-#if FILESYSTEM_BACKSLASH_IS_FILE_NAME_SEPARATOR
+#if FILE_SYSTEM_BACKSLASH_IS_FILE_NAME_SEPARATOR
 # define ISSLASH(C) ((C) == '/' || (C) == '\\')
 #else
 # define ISSLASH(C) ((C) == '/')
@@ -1190,45 +1190,45 @@
 #undef MALLOC_0_IS_NONNULL
 
 /* Define if there is no specific function for reading the list of mounted
-   filesystems. fread will be used to read /etc/mnttab. (SVR2) */
+   file systems. fread will be used to read /etc/mnttab. (SVR2) */
 #undef MOUNTED_FREAD
 
 /* Define if (like SVR2) there is no specific function for reading the list of
-   mounted filesystems, and your system has these header files: <sys/fstyp.h>
+   mounted file systems, and your system has these header files: <sys/fstyp.h>
    and <sys/statfs.h>. (SVR3) */
 #undef MOUNTED_FREAD_FSTYP
 
 /* Define if there are functions named next_dev and fs_stat_dev for reading
-   the list of mounted filesystems. (BeOS) */
+   the list of mounted file systems. (BeOS) */
 #undef MOUNTED_FS_STAT_DEV
 
 /* Define if there is a function named getfsstat for reading the list of
-   mounted filesystems. (DEC Alpha running OSF/1) */
+   mounted file systems. (DEC Alpha running OSF/1) */
 #undef MOUNTED_GETFSSTAT
 
 /* Define if there is a function named getmnt for reading the list of mounted
-   filesystems. (Ultrix) */
+   file systems. (Ultrix) */
 #undef MOUNTED_GETMNT
 
 /* Define if there is a function named getmntent for reading the list of
-   mounted filesystems, and that function takes a single argument. (4.3BSD,
+   mounted file systems, and that function takes a single argument. (4.3BSD,
    SunOS, HP-UX, Dynix, Irix) */
 #undef MOUNTED_GETMNTENT1
 
 /* Define if there is a function named getmntent for reading the list of
-   mounted filesystems, and that function takes two arguments. (SVR4) */
+   mounted file systems, and that function takes two arguments. (SVR4) */
 #undef MOUNTED_GETMNTENT2
 
 /* Define if there is a function named getmntinfo for reading the list of
-   mounted filesystems. (4.4BSD, Darwin) */
+   mounted file systems. (4.4BSD, Darwin) */
 #undef MOUNTED_GETMNTINFO
 
 /* Define if there is a function named listmntent that can be used to list all
-   mounted filesystems. (UNICOS) */
+   mounted file systems. (UNICOS) */
 #undef MOUNTED_LISTMNTENT
 
 /* Define if there is a function named mntctl that can be used to read the
-   list of mounted filesystems, and there is a system header file that
+   list of mounted file systems, and there is a system header file that
    declares `struct vmount.' (AIX) */
 #undef MOUNTED_VMOUNT
 
@@ -1301,7 +1301,7 @@
 /* Define to 1 if the `S_IS*' macros in <sys/stat.h> do not work properly. */
 #undef STAT_MACROS_BROKEN
 
-/* Define if there is no specific function for reading filesystems usage
+/* Define if there is no specific function for reading file systems usage
    information and you have the <sys/filsys.h> header file. (SVR2) */
 #undef STAT_READ_FILSYS
 
