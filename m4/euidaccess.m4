@@ -1,4 +1,4 @@
-# euidaccess.m4 serial 3
+# euidaccess.m4 serial 4
 dnl Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -31,9 +31,21 @@ AC_DEFUN([gl_FUNC_EUIDACCESS],
 
 # Prerequisites of lib/euidaccess.c.
 AC_DEFUN([gl_PREREQ_EUIDACCESS], [
-  AC_CHECK_HEADERS_ONCE(unistd.h)
-  AC_CHECK_DECLS_ONCE(eaccess setregid)
+  AC_CHECK_HEADERS_ONCE(libgen.h)
+  AC_CHECK_DECLS_ONCE(setregid)
   AC_REQUIRE([AC_FUNC_GETGROUPS])
   AC_REQUIRE([AC_HEADER_STAT])
+
+  # Solaris 9 needs -lgen to get the eaccess function.
+  # Save and restore LIBS so -lgen isn't added to it.  Otherwise, *all*
+  # programs in the package would end up linked with that potentially-shared
+  # library, inducing unnecessary run-time overhead.
+  gl_saved_libs=$LIBS
+    AC_SEARCH_LIBS(eaccess, [gen],
+                   [test "$ac_cv_search_eaccess" = "none required" ||
+                    LIB_EACCESS=$ac_cv_search_eaccess])
+    AC_SUBST(LIB_EACCESS)
+    AC_CHECK_FUNCS(eaccess)
+  LIBS=$gl_saved_libs
 ])
 
