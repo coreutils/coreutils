@@ -5474,7 +5474,7 @@ Always follow symbolic links.
 Preserve the original files' owner, group, permissions, and timestamps.
 In the absence of this option, each destination file is created with the
 permissions of the corresponding source file, minus the bits set in the
-umask. @xref{File permissions}.
+umask and minus the set-user-id and set-group-id bits. @xref{File permissions}.
 
 @item -P
 @itemx --parents
