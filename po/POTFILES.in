@@ -10,6 +10,7 @@ lib/getopt.c
 lib/human.c
 lib/makepath.c
 lib/obstack.c
+lib/openat.c
 lib/quotearg.c
 lib/root-dev-ino.h
 lib/rpmatch.c
