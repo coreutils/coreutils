@@ -1,3 +1,11 @@
+Sun May 21 07:20:55 1995  Jim Meyering  (meyering@comco.com)
+
+	* All Makefile.in (install-exec, install-exec): New targets.
+	From Karl Berry.
+
+	* all Makefile.in (maintainer-clean): Renamed from realclean
+	per GNU Standards.
+
 Mon May 15 01:00:08 1995  Jim Meyering  (meyering@comco.com)
 
 	* all source files (usage): Include one- or two-line synopsis

@@ -1,5 +1,11 @@
 Sun May 21 07:20:55 1995  Jim Meyering  (meyering@comco.com)
 
+	* All Makefile.in (install-exec, install-exec): New targets.
+	From Karl Berry.
+
+	* all Makefile.in (maintainer-clean): Renamed from realclean
+	per GNU Standards.
+
 	* euidaccess.c: No longer include safe-l?stat.h.
 	* fsusage.c: Likewise.
 	* isdir.c: Likewise.
