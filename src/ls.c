@@ -501,8 +501,7 @@ static struct option const long_options[] =
   {"time", required_argument, 0, 11},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
-  {"color", optional_argument, 0, 'o'},
-  {"colour", optional_argument, 0, 'o'},
+  {"color", optional_argument, 0, 13},
   {"7bit", no_argument, 0, '7'},
   {"8bit", no_argument, 0, '8'},
   {0, 0, 0, 0}
@@ -864,7 +863,12 @@ decode_switches (int argc, char **argv)
 	  numeric_users = 1;
 	  break;
 
-	case 'o':
+	case 'o':  /* Just like -l, but don't display group info.  */
+	  format = long_format;
+	  inhibit_group = 1;
+	  break;
+
+	case 13: /* --color */
 	  if (optarg)
 	    {
 	      i = argmatch (optarg, color_args);
@@ -876,7 +880,7 @@ decode_switches (int argc, char **argv)
 	      i = color_types[i];
 	    }
 	  else
-	    i = color_yes;	/* -o or --color -> do colorize */
+	    i = color_yes;	/* --color -> do colorize */
 
 	  if (i == color_if_tty)
 	    print_with_color = isatty (1) ? 1 : 0;
@@ -2545,6 +2549,8 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -b, --escape               print octal escapes for nongraphic characters\n\
   -C                         list entries by columns\n\
   -c                         sort by change time; with -l: show ctime\n\
+      --color                colorize entries according to type\n\
+      --color=WORD           yes, no, tty (if output is a terminal)\n\
   -D, --dired                generate output well suited to Emacs' dired mode\n\
   -d, --directory            list directory entries instead of contents\n\
   -F, --classify             append a character for typing each entry\n\
@@ -2564,8 +2570,7 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -m                         fill width with a comma separated list of entries\n\
   -N, --literal              do not quote entry names\n\
   -n, --numeric-uid-gid      list numeric UIDs and GIDs instead of names\n\
-  -o, --color, --colour      colorize entries according to type\n\
-      --colo(u)r=WORD        yes -o, no, tty (if output is a terminal)\n\
+  -o                         use long listing format without group info\n\
   -p                         append a character for typing each entry\n\
   -Q, --quote-name           enclose entry names in double quotes\n\
   -q, --hide-control-chars   print ? instead of non graphic characters\n\
