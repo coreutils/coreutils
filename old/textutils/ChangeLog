@@ -1,3 +1,12 @@
+2001-02-28  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sort.c (xfopen): Set have_read_stdin to 1 only if file is "-".
+	Use fopen_safer, not fopen, to avoid subtle bugs when fopen returns
+	stdin, stdout, or stderr.
+	(xfclose): stdout is no longer a special case.
+	(main): Close output file, don't just flush it; there might be
+	an error on the close.
+
 2001-02-27  Paul Eggert  <eggert@twinsun.com>
 
 	* src/sort.c (initbuf): If the desired size cannot be
