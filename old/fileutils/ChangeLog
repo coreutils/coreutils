@@ -1,3 +1,8 @@
+1997-09-20  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/Makefile.am (libfu_a_SOURCES): Use hash.c, not oa-hash.c.
+	(noinst_HEADERS): Use hash.h, not oa-hash.h.
+
 1997-09-15  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/rm.c: Use hash.c (chaining) functions, not those of oa-hash.c
