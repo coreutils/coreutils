@@ -1,5 +1,7 @@
 2003-03-08  Jim Meyering  <jim@meyering.net>
 
+	* Version 4.5.10.
+
 	* tests/rm/fail-2eperm: Rather than simply using the first non-root
 	username, make sure that the selected user name has a usable shell.
 	Reported by Paul Jarc.
@@ -11,8 +13,6 @@
 	* src/shred.c (do_wipefd): --exact is now the default for non-regular
 	files.  Suggestion from Ben Elliston.
 	(usage): Say it.
-
-	* Version 4.5.10.
 
 	* tests/misc/tty-eof: Also check for the log_user method, to avoid
 	spurious failure when using an old version of Expect.pm (e.g., 1.07).
