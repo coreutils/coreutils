@@ -165,40 +165,25 @@ sc_dd_max_sym_length:
 	  exit 1;						\
 	fi
 
-header_regexp = \
-  alloca\
-  |closeout\
-  |ctype\
-  |dirent\
-  |errno\
-  |exitfail\
-  |fcntl\
-  |file-type\
-  |inttypes\
-  |limits\
-  |locale\
-  |pathmax\
-  |std(lib|bool)\
-  |string\
-  |sys/(stat|dir|time)\
-  |time\
-  |unistd\
-  |utime\
-  |version-etc\
-  |xalloc
-h_re := $(shell echo '$(header_regexp)'|tr -d ' ')
+# Create a list of regular expressions matching the names
+# of files included from system.h.  Exclude a couple.
+.re-list:
+	@sed -n '/^# *include /s///p' $(srcdir)/src/system.h \
+	  | grep -Ev 'sys/(param|file)\.h' \
+	  | sed 's/ .*//;;s/^["<]/^# *include [<"]/;s/\.h[">]$$/\\.h[">]/' \
+	  > $@-t
+	@mv $@-t $@
 
 # Files in src/ should not include directly any of
 # the headers already included via system.h.
-# Get list of candidates with this:
-# grep -h include src/system.h|sed 's/.*include //'|sort -
-sc_system_h_headers:
+sc_system_h_headers: .re-list
 	@if test -f $(srcdir)/src/system.h; then			\
-	  ( cvsu --list ) > /dev/null 2>&1 || : &&			\
-	  grep -E '^# *include ["<]($(h_re))\.h[">]'			\
+	  ( cvsu --list ) > /dev/null 2>&1 || exit 0;			\
+	  trap 'rm -f .re-list' 0 1 2 3 15;				\
+	  grep -E -f .re-list						\
 	      $$(cvsu --list src | grep -Ev 'system\.h$$')		\
 	    && { echo '$(ME): the above are already included via system.h'\
-		  1>&2; exit 1; } || :; \
+		  1>&2;  exit 1; } || :;				\
 	fi
 
 sc_sun_os_names:
