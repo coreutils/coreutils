@@ -294,7 +294,7 @@ check-local: atconfig
 
 testsuite: $(SUITE) atgeneral.m4
 	$(M4) -I $(srcdir) atgeneral.m4 suite.at > $@-t1
-	sed 's/[ 	]*$$//;/^$$/N;/\n$$/D' $@-t1 > $@-tmp
+	sed 's/[	 ]*$$//;/^$$/N;/\n$$/D' $@-t1 > $@-tmp
 	rm -f $@-t1
 	chmod +x $@-tmp
 	mv $@-tmp $@
