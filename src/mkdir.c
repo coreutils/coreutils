@@ -103,7 +103,10 @@ main (argc, argv)
     usage (0);
 
   if (optind == argc)
-    usage (1);
+    {
+      error (0, 0, "too few arguments");
+      usage (1);
+    }
 
   newmode = 0777 & ~umask (0);
   parent_mode = newmode | 0300;	/* u+wx */

@@ -104,7 +104,17 @@ main (argc, argv)
     }
 
   if (argc - optind != 2 && argc - optind != 4)
-    usage (1);
+    {
+      const char *msg;
+      if (argc - optind < 2)
+	msg = "too few arguments";
+      else if (argc - optind > 4)
+	msg = "too many arguments";
+      else
+	msg = "wrong number of arguments";
+      error (0, 0, msg);
+      usage (1);
+    }
 
   /* Only check the first character, to allow mnemonic usage like
      `mknod /dev/rst0 character 18 0'. */
@@ -116,7 +126,12 @@ main (argc, argv)
       error (4, 0, "block special files not supported");
 #else
       if (argc - optind != 4)
-	usage (1);
+	{
+	  error (0, 0, "\
+when creating block special files, major and minor device\n\
+numbers must be specified");
+	  usage (1);
+	}
       if (mknod (argv[optind], newmode | S_IFBLK,
 		 makedev (atoi (argv[optind + 2]), atoi (argv[optind + 3]))))
 	error (1, errno, "%s", argv[optind]);
@@ -129,7 +144,12 @@ main (argc, argv)
       error (4, 0, "character special files not supported");
 #else
       if (argc - optind != 4)
-	usage (1);
+	{
+	  error (0, 0, "\
+when creating character special files, major and minor device\n\
+numbers must be specified");
+	  usage (1);
+	}
       if (mknod (argv[optind], newmode | S_IFCHR,
 		 makedev (atoi (argv[optind + 2]), atoi (argv[optind + 3]))))
 	error (1, errno, "%s", argv[optind]);
@@ -141,7 +161,11 @@ main (argc, argv)
       error (4, 0, "fifo files not supported");
 #else
       if (argc - optind != 2)
-	usage (1);
+	{
+	  error (0, 0, "\
+major and minor device numbers may not be specified for fifo files");
+	  usage (1);
+	}
       if (mkfifo (argv[optind], newmode))
 	error (1, errno, "%s", argv[optind]);
 #endif

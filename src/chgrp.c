@@ -137,8 +137,11 @@ main (argc, argv)
   if (show_help)
     usage (0);
 
-  if (optind >= argc - 1)
-    usage (1);
+  if (argc - optind <= 1)
+    {
+      error (0, 0, "too few arguments");
+      usage (1);
+    }
 
   parse_group (argv[optind++], &group);
 

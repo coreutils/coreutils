@@ -157,7 +157,10 @@ main (argc, argv)
     modeind = optind++;
 
   if (optind >= argc)
-    usage (1);
+    {
+      error (0, 0, "too few arguments");
+      usage (1);
+    }
 
   changes = mode_compile (argv[modeind],
 			  MODE_MASK_EQUALS | MODE_MASK_PLUS | MODE_MASK_MINUS);

@@ -211,10 +211,15 @@ main (argc, argv)
     usage (0);
 
   /* Check for invalid combinations of arguments. */
-  if ((dir_arg && strip_files)
-      || (optind == argc)
-      || (optind == argc - 1 && !dir_arg))
-    usage (1);
+  if (dir_arg && strip_files)
+    error (1, 0,
+	   "the strip option may not be used when installing a directory");
+
+  if (optind == argc || (optind == argc - 1 && !dir_arg))
+    {
+      error (0, 0, "too few arguments");
+      usage (1);
+    }
 
   if (symbolic_mode)
     {

@@ -151,7 +151,10 @@ main (argc, argv)
     usage (0);
 
   if (optind >= argc - 1)
-    usage (1);
+    {
+      error (0, 0, "too few arguments");
+      usage (1);
+    }
 
   e = parse_user_spec (argv[optind], &user, &group, &username, &groupname);
   if (e)

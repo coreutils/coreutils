@@ -153,7 +153,10 @@ main (argc, argv)
       if (ignore_missing_files)
 	exit (0);
       else
-	usage (1);
+	{
+	  error (0, 0, "too few arguments");
+	  usage (1);
+	}
     }
 
   stdin_tty = isatty (STDIN_FILENO);

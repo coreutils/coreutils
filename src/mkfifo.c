@@ -92,7 +92,10 @@ main (argc, argv)
     usage (0);
 
   if (optind == argc)
-    usage (1);
+    {
+      error (0, 0, "too few arguments");
+      usage (1);
+    }
 
   newmode = 0666 & ~umask (0);
   if (symbolic_mode)
