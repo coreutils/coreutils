@@ -1,1 +1,2 @@
-int set_cloexec_flag (int desc, int value);
+#include <stdbool.h>
+bool set_cloexec_flag (int desc, bool value);
