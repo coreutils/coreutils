@@ -1,3 +1,7 @@
+Tue Jan  7 22:50:13 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/getopt.c: New (more POSIX compliant) version from GNU libc.
+
 Thu Jan  2 21:17:50 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/pr.c (init_fps): Initialize lines_stored field in three places.
