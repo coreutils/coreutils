@@ -1,3 +1,14 @@
+2001-08-18  Jim Meyering  <meyering@lucent.com>
+
+	* src/head.c (head_bytes): Read no more than the specified
+	number of bytes.  Patch by Ian Bruce.
+
+	* tests/misc/head-c: New test for the above.
+	* tests/misc/Makefile.am: New file.
+	* tests/misc: New directory.
+	* tests/Makefile.am (SUBDIRS): Add misc.
+	* configure.in (AC_OUTPUT): Add test/misc/Makefile.
+
 2001-08-14  Jim Meyering  <meyering@lucent.com>
 
 	* src/Makefile.am (INCLUDES): Add -I../lib so sys2.h can include
