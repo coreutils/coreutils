@@ -158,7 +158,7 @@ print_unicode_char (FILE *stream, unsigned int code)
     {
 #if HAVE_ICONV
       char outbuf[25];
-      char *inptr;
+      const char *inptr;
       size_t inbytesleft;
       char *outptr;
       size_t outbytesleft;
@@ -170,7 +170,9 @@ print_unicode_char (FILE *stream, unsigned int code)
       outbytesleft = sizeof (outbuf);
 
       /* Convert the character from UTF-8 to the locale's charset.  */
-      res = iconv (utf8_to_local, &inptr, &inbytesleft, &outptr, &outbytesleft);
+      res = iconv (utf8_to_local,
+		   (ICONV_CONST char **)&inptr, &inbytesleft,
+		   &outptr, &outbytesleft);
       if (inbytesleft > 0 || res == (size_t)(-1)
 	  /* Irix iconv() inserts a NUL byte if it cannot convert. */
 # if !defined _LIBICONV_VERSION && (defined sgi || defined __sgi)
