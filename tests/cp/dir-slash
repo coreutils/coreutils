@@ -1,0 +1,33 @@
+#!/bin/sh
+# Make sure that cp -R DIR1 DIR2 does the right thing
+# when DIR1 is written with a trailing slash.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  cp --version
+fi
+
+pwd=`pwd`
+tmp=t-cpdirsl.$$
+trap 'status=$?; cd $pwd; rm -rf $tmp || exit $?; exit $status' 0
+trap 'exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+mkdir dir1 dir2 || framework_failure=1
+touch dir1/file || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+fail=0
+cp -R dir1/ dir2 || fail=1
+test -d dir2/dir1/file || fail=1
+test -d dir1/file || fail=1
+
+(exit $fail)
+exit $fail
