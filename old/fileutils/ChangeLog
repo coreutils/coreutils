@@ -1,3 +1,12 @@
+Thu Jan 13 17:27:38 1994  Jim Meyering  (meyering@comco.com)
+
+	* src/Makefile.in: Change all link commands to use both $(CFLAGS)
+	and $(LDFLAGS).
+
+Mon Jan 10 01:20:38 1994  Jim Meyering  (meyering@comco.com)
+
+	* man/Makefile.in (manprefix): Use binprefix as the default.
+
 Thu Nov 18 00:03:24 1993  Jim Meyering  (meyering@comco.com)
 
 	* configure.in [STAT_STATFS2_FSIZE]: Fix test (that had obsolete
