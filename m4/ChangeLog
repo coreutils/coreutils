@@ -1,3 +1,7 @@
+1998-07-07  Jim Meyering  <meyering@ascend.com>
+
+	* jm-glibc-io.m4: Remove fclose_unlocked.
+
 1998-07-04  Jim Meyering  <meyering@ascend.com>
 
 	* regex.m4: Use syscmd, ifelse, and sysval.  Mainly as an exercise
