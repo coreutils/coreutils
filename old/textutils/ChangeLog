@@ -2,6 +2,15 @@
 
 	* Version 1.22e.
 
+	* tests/cut/: Rename directory to remove `-test' suffix.
+	* tests/join/: Likewise.
+	* tests/md5sum/: Likewise.
+	* tests/pr/: Likewise.
+	* tests/sort/: Likewise.
+	* tests/tr/: Likewise.
+	* configure.in (AC_OUTPUT): Reflect renamings in tests/.
+	* tests/Makefile.am (SUBDIRS): Reflect renamings in tests/.
+
 	* src/system.h (TYPE_MINIMUM): Add extra outer cast to work around
 	bug in Cray C 5.0.3.0 when T == time_t.
 
