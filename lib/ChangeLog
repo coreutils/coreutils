@@ -1,5 +1,9 @@
 2001-01-26  Jim Meyering  <meyering@lucent.com>
 
+	* quotearg.c: Include stddef.h.
+	* quote.c: Include stddef.h.
+	Reported by Axel Kittenberger.
+
 	* xmalloc.c [HAVE_DONE_WORKING_MALLOC_CHECK]: Enclose error-evoking
 	line in double quotes so that it evokes a better diagnostic.
 	[HAVE_DONE_WORKING_REALLOC_CHECK]: Likewise.
