@@ -3928,12 +3928,34 @@ join [@var{option}]@dots{} @var{file1} @var{file2}
 @vindex LC_COLLATE
 Either @var{file1} or @var{file2} (but not both) can be @samp{-},
 meaning standard input.  @var{file1} and @var{file2} should be already
-sorted in increasing textual order on the join fields, using the
+sorted on the join fields.
+
+Normally, the sort order is that of the
 collating sequence specified by the @env{LC_COLLATE} locale.  Unless
-the @option{-t} option is given, the input should be sorted ignoring blanks at
+the @option{-t} option is given, the sort comparison ignores blanks at
 the start of the join field, as in @code{sort -b}.  If the
-@option{--ignore-case} option is given, lines should be sorted without
-regard to the case of characters in the join field, as in @code{sort -f}.
+@option{--ignore-case} option is given, the sort comparison ignores
+the case of characters in the join field, as in @code{sort -f}.
+
+However, as a GNU extension, if the input has no unpairable lines the
+sort order can be any order that considers two fields to be equal if and
+only if the sort comparison described above considers them to be equal.
+For example:
+
+@example
+$ cat file1
+a a1
+c c1
+b b1
+$ cat file2
+a a2
+c c2
+b b2
+$ join file1 file2
+a a1 a2
+c c1 c2
+b b1 b2
+@end example
 
 The defaults are: the join field is the first field in each line;
 fields in the input are separated by one or more blanks, with leading
