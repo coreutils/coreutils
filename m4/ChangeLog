@@ -1,3 +1,8 @@
+2000-12-06  Jim Meyering  <meyering@lucent.com>
+
+	* xstrtoumax.m4 (jm_AC_PREREQ_XSTRTOUMAX): If we need the replacement
+	strtoull, we may well need the replacement strtoul, too.
+
 2000-12-02  Jim Meyering  <meyering@lucent.com>
 
 	* off_t-format.m4 (OFF_T_PRINTF_FORMAT_STRING): New file/macro.
