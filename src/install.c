@@ -370,11 +370,18 @@ main (int argc, char **argv)
       else
 	{
 	  int i;
-	  if (!isdir (file[1]))
-	    usage (1);
+	  const char *dest = file[n_files - 1];
+	  if (!isdir (dest))
+	    {
+	      error (0, 0,
+		     _("installing multiple files, but last argument (%s) \
+is not a directory"),
+		     dest);
+	      usage (1);
+	    }
 	  for (i = 0; i < n_files - 1; i++)
 	    {
-	      errors |= install_file_in_dir (file[i], file[n_files - 1], &x);
+	      errors |= install_file_in_dir (file[i], dest, &x);
 	    }
 	}
     }
