@@ -57,9 +57,12 @@ printf_LDADD = $(LDADD) @POW_LIB@ @LIBICONV@
 seq_LDADD = $(LDADD) @SEQ_LIBM@
 
 # If necessary, add -lm to resolve the `pow' reference in lib/strtod.c
-# or for the fesetround reference in sleep.c.
-sleep_LDADD = $(LDADD) @FESETROUND_LIBM@ @POW_LIB@ \
-  @LIB_CLOCK_GETTIME@ @LIB_NANOSLEEP@
+# or for the fesetround reference in programs using nanosec.c.
+nanosec_libs = \
+  $(LDADD) @FESETROUND_LIBM@ @POW_LIB@ @LIB_CLOCK_GETTIME@ @LIB_NANOSLEEP@
+
+sleep_LDADD = $(nanosec_libs)
+tail_LDADD = $(nanosec_libs)
 
 uptime_LDADD = $(LDADD) @GETLOADAVG_LIBS@
 
