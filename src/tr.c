@@ -879,7 +879,7 @@ find_bracketed_repeat (const struct E_string *es, size_t start_idx,
 	  /* Here, we have found [c*s] where s should be a string
 	     of octal (if it starts with `0') or decimal digits.  */
 	  {
-	    const char *digit_str = &es->s[start_idx + 2];
+	    const char *digit_str = (const char *) &es->s[start_idx + 2];
 	    unsigned long int tmp_ulong;
 	    char *d_end;
 	    int base = 10;
