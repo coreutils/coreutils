@@ -31,7 +31,8 @@ $(INFO_DEPS): $(EXTRA_DIST)
 # List words/regexps here that should not appear in the texinfo documentation.
 check-texinfo:
 	grep timezone $(srcdir)/*.texi && exit 1 || :
-	perl -ne '/\bPOSIX\b/i && !/\@acronym{POSIX}/ and print,exit 1' \
+	@PERL@ -ne \
+	  '/\bPOSIX\b/ && !/\@acronym{POSIX}/ || /{posix}/ and print,exit 1' \
 	  $(srcdir)/*.texi 2> /dev/null && : || exit 1
 
 check: check-texinfo
