@@ -39,28 +39,16 @@ following backslash-escaped characters is turned on:
 	\t	horizontal tab
 	\v	vertical tab
 	\\	backslash
-	\num	the character whose ASCII code is NUM (octal).
+	\0NNN	the character whose ASCII code is NNN (octal).
 
 You can explicitly turn off the interpretation of the above characters
 on System V systems with the -E option.
 */
 
-/* If defined, interpret backslash escapes if -e is given.  */
-#define V9_ECHO
-
-/* If defined, interpret backslash escapes unless -E is given.
-   V9_ECHO must also be defined.  */
-/* #define V9_DEFAULT */
-
-#if defined (V9_ECHO)
-# if defined (V9_DEFAULT)
-#  define VALID_ECHO_OPTIONS "neE"
-# else
-#  define VALID_ECHO_OPTIONS "ne"
-# endif /* !V9_DEFAULT */
-#else /* !V9_ECHO */
-# define VALID_ECHO_OPTIONS "n"
-#endif /* !V9_ECHO */
+/* If true, interpret backslash escapes by default.  */
+#ifndef DEFAULT_ECHO_TO_XPG
+enum { DEFAULT_ECHO_TO_XPG = false };
+#endif
 
 /* The name this program was run with. */
 char *program_name;
@@ -86,9 +74,9 @@ Echo the STRING(s) to standard output.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-Without -E, the following sequences are recognized and interpolated:\n\
+If -e is in effect, the following sequences are recognized:\n\
 \n\
-  \\NNN   the character whose ASCII code is NNN (octal)\n\
+  \\0NNN   the character whose ASCII code is NNN (octal)\n\
   \\\\     backslash\n\
   \\a     alert (BEL)\n\
   \\b     backspace\n\
@@ -106,6 +94,22 @@ Without -E, the following sequences are recognized and interpolated:\n\
   exit (status);
 }
 
+/* Convert C from hexadecimal character to integer.  */
+static int
+hextobin (unsigned char c)
+{
+  switch (c)
+    {
+    default: return c - '0';
+    case 'a': case 'A': return 10;
+    case 'b': case 'B': return 11;
+    case 'c': case 'C': return 12;
+    case 'd': case 'D': return 13;
+    case 'e': case 'E': return 14;
+    case 'f': case 'F': return 15;
+    }
+}
+
 /* Print the words in LIST to standard output.  If the first word is
    `-n', then don't print a trailing newline.  We also support the
    echo syntax from Version 9 unix systems. */
@@ -113,8 +117,15 @@ Without -E, the following sequences are recognized and interpolated:\n\
 int
 main (int argc, char **argv)
 {
-  int display_return = 1, do_v9 = 0;
-  int allow_options = 1;
+  bool display_return = true;
+  bool allow_options =
+    (! getenv ("POSIXLY_CORRECT")
+     || (! DEFAULT_ECHO_TO_XPG && 0 < argc && STREQ (argv[1], "-n")));
+
+  /* System V machines already have a /bin/sh with a v9 behavior.
+     Use the identical behavior for these machines so that the
+     existing system shell scripts won't barf.  */
+  bool do_v9 = DEFAULT_ECHO_TO_XPG;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -124,124 +135,135 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
-  if (getenv ("POSIXLY_CORRECT") == NULL)
+  if (allow_options)
     parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      usage, AUTHORS, (char const *) NULL, NULL);
-  else
-    allow_options = 0;
-
-/* System V machines already have a /bin/sh with a v9 behaviour.  We
-   use the identical behaviour for these machines so that the
-   existing system shell scripts won't barf. */
-#if defined (V9_ECHO) && defined (V9_DEFAULT)
-  do_v9 = allow_options;
-#endif
+			usage, AUTHORS, (char const *) NULL);
 
   --argc;
   ++argv;
 
-  while (argc > 0 && *argv[0] == '-')
-    {
-      register char *temp;
-      register int i;
+  if (allow_options)
+    while (argc > 0 && *argv[0] == '-')
+      {
+	char const *temp = argv[0] + 1;
+	size_t i;
 
-      /* If it appears that we are handling options, then make sure that
-	 all of the options specified are actually valid.  Otherwise, the
-	 string should just be echoed. */
-      temp = argv[0] + 1;
+	/* If it appears that we are handling options, then make sure that
+	   all of the options specified are actually valid.  Otherwise, the
+	   string should just be echoed.  */
 
-      for (i = 0; temp[i]; i++)
-	{
-	  if (strrchr (VALID_ECHO_OPTIONS, temp[i]) == 0)
-	    goto just_echo;
-	}
+	for (i = 0; temp[i]; i++)
+	  switch (temp[i])
+	    {
+	    case 'e': case 'E': case 'n':
+	      break;
+	    default:
+	      goto just_echo;
+	    }
 
-      if (!*temp)
-	goto just_echo;
+	if (i == 0)
+	  goto just_echo;
 
-      /* All of the options in TEMP are valid options to ECHO.
-	 Handle them. */
-      while (*temp)
-	{
-	  if (allow_options && *temp == 'n')
-	    display_return = 0;
-#if defined (V9_ECHO)
-	  else if (allow_options && *temp == 'e')
-	    do_v9 = 1;
-# if defined (V9_DEFAULT)
-	  else if (allow_options && *temp == 'E')
-	    do_v9 = 0;
-# endif /* V9_DEFAULT */
-#endif /* V9_ECHO */
-	  else
-	    goto just_echo;
+	/* All of the options in TEMP are valid options to ECHO.
+	   Handle them. */
+	while (*temp)
+	  switch (*temp++)
+	    {
+	    case 'e':
+	      do_v9 = true;
+	      break;
 
-	  temp++;
-	}
-      argc--;
-      argv++;
-    }
+	    case 'E':
+	      do_v9 = false;
+	      break;
+
+	    case 'n':
+	      display_return = false;
+	      break;
+	    }
+
+	argc--;
+	argv++;
+      }
 
 just_echo:
 
-  if (argc > 0)
+  if (do_v9)
     {
-#if defined (V9_ECHO)
-      if (do_v9)
+      while (argc > 0)
 	{
-	  while (argc > 0)
-	    {
-	      register char *s = argv[0];
-	      register int c;
+	  char const *s = argv[0];
+	  unsigned char c;
 
-	      while ((c = *s++))
-		{
-		  if (c == '\\' && *s)
-		    {
-		      switch (c = *s++)
-			{
-			case 'a': c = '\007'; break;
-			case 'b': c = '\b'; break;
-			case 'c': display_return = 0; continue;
-			case 'f': c = '\f'; break;
-			case 'n': c = '\n'; break;
-			case 'r': c = '\r'; break;
-			case 't': c = '\t'; break;
-			case 'v': c = (int) 0x0B; break;
-			case '0': case '1': case '2': case '3':
-			case '4': case '5': case '6': case '7':
-			  c -= '0';
-			  if (*s >= '0' && *s <= '7')
-			    c = c * 8 + (*s++ - '0');
-			  if (*s >= '0' && *s <= '7')
-			    c = c * 8 + (*s++ - '0');
-			  break;
-			case '\\': break;
-			default:  putchar ('\\'); break;
-			}
-		    }
-		  putchar(c);
-		}
-	      argc--;
-	      argv++;
-	      if (argc > 0)
-		putchar(' ');
-	    }
-	}
-      else
-#endif /* V9_ECHO */
-	{
-	  while (argc > 0)
+	  while ((c = *s++))
 	    {
-	      fputs (argv[0], stdout);
-	      argc--;
-	      argv++;
-	      if (argc > 0)
-		putchar (' ');
+	      if (c == '\\' && *s)
+		{
+		  switch (c = *s++)
+		    {
+		    case 'a': c = '\a'; break;
+		    case 'b': c = '\b'; break;
+		    case 'c': exit (EXIT_SUCCESS);
+		    case 'f': c = '\f'; break;
+		    case 'n': c = '\n'; break;
+		    case 'r': c = '\r'; break;
+		    case 't': c = '\t'; break;
+		    case 'v': c = '\v'; break;
+		    case 'x':
+		      {
+			unsigned char ch = *s;
+			if (! ISXDIGIT (ch))
+			  goto not_an_escape;
+			s++;
+			c = hextobin (ch);
+			ch = *s;
+			if (ISXDIGIT (ch))
+			  {
+			    s++;
+			    c = c * 16 + hextobin (ch);
+			  }
+		      }
+		      break;
+		    case '0':
+		      c = 0;
+		      if (! ('0' <= *s && *s <= '7'))
+			break;
+		      c = *s++;
+		      /* Fall through.  */
+		    case '1': case '2': case '3':
+		    case '4': case '5': case '6': case '7':
+		      c -= '0';
+		      if ('0' <= *s && *s <= '7')
+			c = c * 8 + (*s++ - '0');
+		      if ('0' <= *s && *s <= '7')
+			c = c * 8 + (*s++ - '0');
+		      break;
+		    case '\\': break;
+
+		    not_an_escape:
+		    default:  putchar ('\\'); break;
+		    }
+		}
+	      putchar (c);
 	    }
+	  argc--;
+	  argv++;
+	  if (argc > 0)
+	    putchar (' ');
 	}
     }
+  else
+    {
+      while (argc > 0)
+	{
+	  fputs (argv[0], stdout);
+	  argc--;
+	  argv++;
+	  if (argc > 0)
+	    putchar (' ');
+	}
+    }
+
   if (display_return)
     putchar ('\n');
   exit (EXIT_SUCCESS);
