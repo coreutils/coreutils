@@ -15,7 +15,7 @@ User visible changes in release 1.9.3
 * stty works around SunOS 4.x kernel bug that made `stty rows 0 cols 0' fail.
 * who and tee no longer fail gratuitously when continued after an
   interrupted read or write system call.
-* date accepts new format: %s time in seconds since 00:00:00 1/1/1971
+* date accepts new format: %s time in seconds since 1970-01-01 00:00:00 UCT
 * date -d can parse dates like `11-JUL-1991'
 * expr '' == 0 works (before, it printed 1)
 * stty no longer fails on telnet sessions to Solaris systems
