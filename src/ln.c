@@ -276,8 +276,8 @@ Makes hard links by default, symbolic links with -s.\n\
   -b, --backup                 make backups for removed files\n\
   -d, -F, --directory          hard link directories (super-user only)\n\
   -f, --force                  remove existing destinations\n\
-  -n, --no-dereference         with --force, remove destination that is a\n\
-                                 symlink to a directory\n\
+  -n, --no-dereference         treat destination that is a symlink to a\n\
+                                 directory as if it were a normal file\n\
   -i, --interactive            prompt whether to remove destinations\n\
   -s, --symbolic               make symbolic links instead of hard links\n\
   -v, --verbose                print name of each file before linking\n\
