@@ -346,7 +346,7 @@ struct indicator_type
 
 static struct indicator_type color_indicator[] =
 {
-  {LEN_STR_PAIR ("\033")},	/* lc: Left of color sequence */
+  {LEN_STR_PAIR ("\033[")},	/* lc: Left of color sequence */
   {LEN_STR_PAIR ("m")},		/* rc: Right of color sequence */
   {LEN_STR_PAIR ("\033[0m")},	/* ec: End color */
   {LEN_STR_PAIR ("0")},		/* fi: File: default */
