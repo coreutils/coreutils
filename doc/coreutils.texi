@@ -2078,19 +2078,23 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@item -c @var{bytes}
-@itemx --bytes=@var{bytes}
+@item -c @var{n}
+@itemx --bytes=@var{n}
 @opindex -c
 @opindex --bytes
-Print the first @var{bytes} bytes, instead of initial lines.  Appending
-@samp{b} multiplies @var{bytes} by 512, @samp{k} by 1024, and @samp{m}
+Print the first @var{n} bytes, instead of initial lines.  Appending
+@samp{b} multiplies @var{n} by 512, @samp{k} by 1024, and @samp{m}
 by 1048576.
+However, if @var{n} starts with a @samp{-},
+print all but the last @var{n} bytes of each file.
 
 @itemx -n @var{n}
 @itemx --lines=@var{n}
 @opindex -n
 @opindex --lines
 Output the first @var{n} lines.
+However, if @var{n} starts with a @samp{-},
+print all but the last @var{n} lines of each file.
 
 @item -q
 @itemx --quiet
