@@ -26,3 +26,19 @@
 ('5b', '-a1 -e - -o 1.1 2.2', "apr 15\naug 20\ndec 18\nfeb 05\n",  "apr 06\naug 14\ndate\nfeb 15", "apr 06\naug 14\ndec -\nfeb 15\n", 0);
 ('5c', '-a1 -e - -o 1.1 2.2', "aug 20\ndec 18\n",  "aug 14\ndate\nfeb 15", "aug 14\ndec -\n", 0);
 ('5d', '-a1 -e - -o 1.1 2.2', "dec 18\n",  "", "dec -\n", 0);
+('5e', '-a2 -e - -o 1.1 2.2', "apr 15\naug 20\ndec 18\nfeb 05\n",  "apr 06\naug 14\ndate\nfeb 15\n", "apr 06\naug 14\n- -\nfeb 15\n", 0);
+('5f', '-a2 -e - -o 2.2 1.1', "apr 15\naug 20\ndec 18\nfeb 05\n",  "apr 06\naug 14\ndate\nfeb 15\n", "06 apr\n14 aug\n- -\n15 feb\n", 0);
+('5g', '-a1 -e - -o 2.2 1.1', "apr 15\naug 20\ndec 18\nfeb 05\n",  "apr 06\naug 14\ndate\nfeb 15\n", "06 apr\n14 aug\n- dec\n15 feb\n", 0);
+
+('5h', '-a1 -e - -o 2.2 1.1', "apr 15\naug 20\ndec 18\nfeb 05\n",  "apr 06\naug 14\ndate\n", "06 apr\n14 aug\n- dec\n- feb\n", 0);
+('5i', '-a1 -e - -o 1.1 2.2', "apr 15\naug 20\ndec 18\nfeb 05\n",  "apr 06\naug 14\ndate\n", "apr 06\naug 14\ndec -\nfeb -\n", 0);
+
+('5j', '-a2 -e - -o 2.2 1.1', "apr 15\naug 20\ndec 18\nfeb 05\n",  "apr 06\naug 14\ndate\n", "06 apr\n14 aug\n- -\n", 0);
+('5k', '-a2 -e - -o 2.2 1.1', "apr 15\naug 20\ndec 18\nfeb 05\n",  "apr 06\naug 14\ndate\n", "06 apr\n14 aug\n- -\n", 0);
+
+('5l', '-a1 -e - -o 2.2 1.1', "apr 15\naug 20\ndec 18\n",  "apr 06\naug 14\ndate\nfeb 15\n", "06 apr\n14 aug\n- dec\n", 0);
+('5m', '-a2 -e - -o 2.2 1.1', "apr 15\naug 20\ndec 18\n",  "apr 06\naug 14\ndate\nfeb 15\n", "06 apr\n14 aug\n- -\n15 -\n", 0);
+
+('6a', '-e -', "a 1\nb 2\nd 4\n",  "a 21\nb 22\nc 23\nf 26\n", "a 1 21\nb 2 22\n", 0);
+('6b', '-a1 -e -', "a 1\nb 2\nd 4\n",  "a 21\nb 22\nc 23\nf 26\n", "a 1 21\nb 2 22\nd 4\n", 0);
+('6c', '-a1 -e -', "a 21\nb 22\nc 23\nf 26\n", "a 1\nb 2\nd 4\n", "a 21 1\nb 22 2\nc 23\nf 26\n", 0);
