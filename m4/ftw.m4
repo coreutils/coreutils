@@ -54,6 +54,9 @@ main ()
     # Add tsearch.o IFF we have to use the replacement ftw.c.
     if test -n "$need_tdestroy"; then
       AC_LIBOBJ([tsearch])
+      # Link search.h to search_.h if we use the replacement tsearch.c.
+      AC_CONFIG_LINKS(
+        [$ac_config_libobj_dir/search.h:$ac_config_libobj_dir/search_.h])
     fi
   fi
 ])# AC_FUNC_FTW
