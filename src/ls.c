@@ -236,7 +236,6 @@ static uintmax_t gobble_file (const char *name, enum filetype type,
 static void print_color_indicator (const char *name, mode_t mode, int linkok);
 static void put_indicator (const struct bin_str *ind);
 static int put_indicator_direct (const struct bin_str *ind);
-static size_t length_of_file_name_and_frills (const struct fileinfo *f);
 static void add_ignore_pattern (const char *pattern);
 static void attach (char *dest, const char *dirname, const char *name);
 static void clear_files (void);
@@ -3453,10 +3452,11 @@ print_file_name_and_frills (const struct fileinfo *f)
   char buf[MAX (LONGEST_HUMAN_READABLE + 1, INT_BUFSIZE_BOUND (uintmax_t))];
 
   if (print_inode)
-    printf ("%*s ", inode_number_width, umaxtostr (f->stat.st_ino, buf));
+    printf ("%*s ", format == with_commas ? 0 : inode_number_width,
+	    umaxtostr (f->stat.st_ino, buf));
 
   if (print_block_size)
-    printf ("%*s ", block_size_width,
+    printf ("%*s ", format == with_commas ? 0 : block_size_width,
 	    human_readable (ST_NBLOCKS (f->stat), buf, human_output_opts,
 			    ST_NBLOCKSIZE, output_block_size));
 
@@ -3588,12 +3588,19 @@ length_of_file_name_and_frills (const struct fileinfo *f)
 {
   register size_t len = 0;
   size_t name_width;
+  char buf[MAX (LONGEST_HUMAN_READABLE + 1, INT_BUFSIZE_BOUND (uintmax_t))];
 
   if (print_inode)
-    len += inode_number_width + 1;
+    len += 1 + (format == with_commas
+		? strlen (umaxtostr (f->stat.st_ino, buf))
+		: inode_number_width);
 
   if (print_block_size)
-    len += block_size_width + 1;
+    len += 1 + (format == with_commas
+		? strlen (human_readable (ST_NBLOCKS (f->stat), buf,
+					  human_output_opts, ST_NBLOCKSIZE,
+					  output_block_size))
+		: block_size_width);
 
   quote_name (NULL, f->name, filename_quoting_options, &name_width);
   len += name_width;
@@ -3696,31 +3703,33 @@ static void
 print_with_commas (void)
 {
   size_t filesno;
-  size_t pos;
-  size_t old_pos;
-
-  pos = 0;
+  size_t pos = 0;
 
   for (filesno = 0; filesno < files_index; filesno++)
     {
-      old_pos = pos;
+      size_t len = length_of_file_name_and_frills (files + filesno);
 
-      pos += length_of_file_name_and_frills (files + filesno);
-      if (filesno + 1 < files_index)
-	pos += 2;		/* For the comma and space */
-
-      if (old_pos != 0 && pos >= line_length)
+      if (filesno != 0)
 	{
-	  putchar ('\n');
-	  pos -= old_pos;
+	  char separator;
+
+	  if (pos + len + 2 < line_length)
+	    {
+	      pos += 2;
+	      separator = ' ';
+	    }
+	  else
+	    {
+	      pos = 0;
+	      separator = '\n';
+	    }
+
+	  putchar (',');
+	  putchar (separator);
 	}
 
       print_file_name_and_frills (files + filesno);
-      if (filesno + 1 < files_index)
-	{
-	  putchar (',');
-	  putchar (' ');
-	}
+      pos += len;
     }
   putchar ('\n');
 }
