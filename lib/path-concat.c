@@ -1,5 +1,5 @@
 /* path-concat.c -- concatenate two arbitrary pathnames
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -33,21 +33,49 @@
 
 char *malloc ();
 
-/* Concatenate two pathname components, DIR and BASE, in newly-allocated
-   storage and return the result.  Return 0 if out of memory.  Add a slash
-   between DIR and BASE in the result if neither would contribute one.
-   If each would contribute at least one, elide one from the end of DIR.
-   Otherwise, simply concatenate DIR and BASE.  In any case, if
-   BASE_IN_RESULT is non-NULL, set *BASE_IN_RESULT to point to the copy of
-   BASE in the returned concatenation.  */
+#ifndef DIRECTORY_SEPARATOR
+# define DIRECTORY_SEPARATOR '/'
+#endif
+
+#ifndef ISSLASH
+# define ISSLASH(C) ((C) == DIRECTORY_SEPARATOR)
+#endif
+
+#include "xalloc.h"
+#include "path-concat.h"
+
+/* Concatenate two pathname components, DIR and BASE, in
+   newly-allocated storage and return the result.  Return 0 if out of
+   memory.  Add a slash between DIR and BASE in the result if neither
+   would contribute one.  If each would contribute at least one, elide
+   one from the end of DIR.  Otherwise, simply concatenate DIR and
+   BASE.  In any case, if BASE_IN_RESULT is non-NULL, set
+   *BASE_IN_RESULT to point to the copy of BASE in the returned
+   concatenation.
+
+   DIR may be NULL, BASE must not be.
+
+   Return NULL if memory is exhausted.  */
 
 char *
 path_concat (const char *dir, const char *base, char **base_in_result)
 {
   char *p;
   char *p_concat;
-  size_t base_len = strlen (base);
-  size_t dir_len = strlen (dir);
+  size_t base_len;
+  size_t dir_len;
+
+  if (!dir)
+    {
+      p_concat = strdup (base);
+      if (base_in_result)
+        *base_in_result = p_concat;
+      return p_concat;
+    }
+
+  /* DIR is not empty. */
+  base_len = strlen (base);
+  dir_len = strlen (dir);
 
   p_concat = malloc (dir_len + base_len + 2);
   if (!p_concat)
@@ -55,10 +83,10 @@ path_concat (const char *dir, const char *base, char **base_in_result)
 
   p = mempcpy (p_concat, dir, dir_len);
 
-  if (*(p - 1) == '/' && *base == '/')
+  if (ISSLASH (*(p - 1)) && ISSLASH(*base))
     --p;
-  else if (*(p - 1) != '/' && *base != '/')
-    *p++ = '/';
+  else if (!ISSLASH (*(p - 1)) && !ISSLASH(*base))
+    *p++ = DIRECTORY_SEPARATOR;
 
   if (base_in_result)
     *base_in_result = p;
@@ -66,4 +94,15 @@ path_concat (const char *dir, const char *base, char **base_in_result)
   memcpy (p, base, base_len + 1);
 
   return p_concat;
+}
+
+/* Same, but die when memory is exhausted. */
+
+char *
+xpath_concat (const char *dir, const char *base, char **base_in_result)
+{
+  char *res = path_concat (dir, base, base_in_result);
+  if (res)
+    return res;
+  xalloc_die ();
 }
