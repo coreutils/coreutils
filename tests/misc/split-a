@@ -35,10 +35,43 @@ test -f xaz && fail=1
 rm -f x*
 
 # With a longer suffix, it must succeed.
-split -b 1 -a 2 in 2> err || fail=1
+split --verbose -b 1 -a 2 in 2> err || fail=1
 test -f xaa || fail=1
 test -f xaz || fail=1
 test -f xba || fail=1
 test -f xbb && fail=1
+
+cat <<\EOF > exp
+creating file `xaa'
+creating file `xab'
+creating file `xac'
+creating file `xad'
+creating file `xae'
+creating file `xaf'
+creating file `xag'
+creating file `xah'
+creating file `xai'
+creating file `xaj'
+creating file `xak'
+creating file `xal'
+creating file `xam'
+creating file `xan'
+creating file `xao'
+creating file `xap'
+creating file `xaq'
+creating file `xar'
+creating file `xas'
+creating file `xat'
+creating file `xau'
+creating file `xav'
+creating file `xaw'
+creating file `xax'
+creating file `xay'
+creating file `xaz'
+creating file `xba'
+EOF
+
+cmp err exp || fail=1
+test $fail = 1 && diff err exp 2> /dev/null
 
 (exit $fail); exit
