@@ -1,6 +1,18 @@
-2001-11-11  Jim Meyering  <meyering@lucent.com>
+2001-11-25  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* basename.c, dirname.c, expr.c, factor.c, hostname.c (usage):
+	* logname.c, printenv.c, printf.c, pwd.c, sleep.c, test.c (usage):
+	* true.c, whoami.c, yes.c (usage):
+	Indent --help and --version strings to start in the 7th column.
+
+2001-11-17  Jim Meyering  <meyering@lucent.com>
+
+	* configure.ac: Replace use of the one-arg form of AC_INIT
+	with a use of the 3-arg form and a use of AC_CONFIG_SRCDIR.
+
+2001-11-11  Jim Meyering  <meyering@lucent.com>
 
 	* src/Makefile.am (printf_LDADD): Reflect spelling change:
 	s/POW_LIBM/POW_LIB/.
