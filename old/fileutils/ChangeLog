@@ -1,3 +1,9 @@
+Fri Jun 28 22:56:00 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/ln.c (do_link): Allow `ln -sf --backup k k' to succeed in
+	creating the self-referential symlink, doing so doesn't remove the
+	source but merely renames it.
+
 Wed Jun 26 06:58:58 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* ln.c (same_name): New function.
