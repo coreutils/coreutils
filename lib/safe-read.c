@@ -31,30 +31,35 @@
 extern int errno;
 #endif
 
-/* Read LEN bytes at PTR from descriptor DESC, retrying if interrupted.
-   Return the actual number of bytes read, zero for EOF, or negative
-   for an error.  */
+/* Read LEN bytes at PTR from descriptor DESC, for file FILENAME,
+   retrying if necessary.  Return a negative value if an error occurs,
+   otherwise return the actual number of bytes read,
+   which must be LEN unless end-of-file was reached.  */
 
-int
+   The canonical source for this function is in the gcc distribution
+   in file cccp.c.  So don't make any changes here.  */
+
+static int
 safe_read (desc, ptr, len)
      int desc;
      char *ptr;
      int len;
 {
-  int n_chars;
-
-  if (len <= 0)
-    return len;
-
+  int left = len;
+  while (left > 0) {
+    int nchars = read (desc, ptr, left);
+    if (nchars < 0)
+      {
 #ifdef EINTR
-  do
-    {
-      n_chars = read (desc, ptr, len);
-    }
-  while (n_chars < 0 && errno == EINTR);
-#else
-  n_chars = read (desc, ptr, len);
+	if (errno == EINTR)
+	  continue;
 #endif
-
-  return n_chars;
+	return nchars;
+      }
+    if (nchars == 0)
+      break;
+    ptr += nchars;
+    left -= nchars;
+  }
+  return len - left;
 }
