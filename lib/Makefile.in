@@ -142,11 +142,11 @@ HEADERS =  $(noinst_HEADERS)
 
 DIST_COMMON =  Makefile.am Makefile.in TODO alloca.c chown.c error.c \
 error.h euidaccess.c fileblocks.c fnmatch.c fsusage.c ftruncate.c \
-getdate.c getgroups.c getline.c group-member.c lstat.c malloc.c \
-memcmp.c memcpy.c memset.c mkdir.c mktime.c mountlist.c obstack.c \
-obstack.h posixtm.c realloc.c regex.c regex.h rename.c rmdir.c \
-rpmatch.c rx.c rx.h stat.c stpcpy.c strcasecmp.c strdup.c strftime.c \
-strndup.c strstr.c strtol.c strtoul.c strverscmp.c ylwrap
+getdate.c getgroups.c getline.c group-member.c lchown.c lstat.c \
+malloc.c memcmp.c memcpy.c memset.c mkdir.c mktime.c mountlist.c \
+obstack.c obstack.h posixtm.c realloc.c regex.c regex.h rename.c \
+rmdir.c rpmatch.c rx.c rx.h stat.c stpcpy.c strcasecmp.c strdup.c \
+strftime.c strndup.c strstr.c strtol.c strtoul.c strverscmp.c ylwrap
 
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
@@ -160,17 +160,18 @@ DEP_FILES =  .deps/addext.P .deps/alloca.P .deps/argmatch.P \
 .deps/ftruncate.P .deps/full-write.P .deps/getdate .deps/getdate.P \
 .deps/getgroups.P .deps/getline.P .deps/getopt.P .deps/getopt1.P \
 .deps/group-member.P .deps/hash.P .deps/human.P .deps/idcache.P \
-.deps/isdir.P .deps/long-options.P .deps/lstat.P .deps/makepath.P \
-.deps/malloc.P .deps/memcmp.P .deps/memcpy.P .deps/memset.P \
-.deps/mkdir.P .deps/mktime.P .deps/modechange.P .deps/mountlist.P \
-.deps/obstack.P .deps/path-concat.P .deps/posixtm .deps/posixtm.P \
-.deps/quotearg.P .deps/realloc.P .deps/regex.P .deps/rename.P \
-.deps/rmdir.P .deps/rpmatch.P .deps/rx.P .deps/safe-read.P \
-.deps/save-cwd.P .deps/savedir.P .deps/stat.P .deps/stpcpy.P \
-.deps/strcasecmp.P .deps/strdup.P .deps/strftime.P .deps/stripslash.P \
-.deps/strndup.P .deps/strstr.P .deps/strtol.P .deps/strtoul.P \
-.deps/strverscmp.P .deps/userspec.P .deps/xgetcwd.P .deps/xmalloc.P \
-.deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P .deps/yesno.P
+.deps/isdir.P .deps/lchown.P .deps/long-options.P .deps/lstat.P \
+.deps/makepath.P .deps/malloc.P .deps/memcmp.P .deps/memcpy.P \
+.deps/memset.P .deps/mkdir.P .deps/mktime.P .deps/modechange.P \
+.deps/mountlist.P .deps/obstack.P .deps/path-concat.P .deps/posixtm \
+.deps/posixtm.P .deps/quotearg.P .deps/realloc.P .deps/regex.P \
+.deps/rename.P .deps/rmdir.P .deps/rpmatch.P .deps/rx.P \
+.deps/safe-read.P .deps/save-cwd.P .deps/savedir.P .deps/stat.P \
+.deps/stpcpy.P .deps/strcasecmp.P .deps/strdup.P .deps/strftime.P \
+.deps/stripslash.P .deps/strndup.P .deps/strstr.P .deps/strtol.P \
+.deps/strtoul.P .deps/strverscmp.P .deps/userspec.P .deps/xgetcwd.P \
+.deps/xmalloc.P .deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P \
+.deps/yesno.P
 SOURCES = $(libfu_a_SOURCES)
 OBJECTS = $(libfu_a_OBJECTS)
 
@@ -289,6 +290,8 @@ idcache_.c: idcache.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/idcache.c; then echo $(srcdir)/idcache.c; else echo idcache.c; fi` | $(ANSI2KNR) idcache_.c
 isdir_.c: isdir.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/isdir.c; then echo $(srcdir)/isdir.c; else echo isdir.c; fi` | $(ANSI2KNR) isdir_.c
+lchown_.c: lchown.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/lchown.c; then echo $(srcdir)/lchown.c; else echo lchown.c; fi` | $(ANSI2KNR) lchown_.c
 long-options_.c: long-options.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/long-options.c; then echo $(srcdir)/long-options.c; else echo long-options.c; fi` | $(ANSI2KNR) long-options_.c
 lstat_.c: lstat.c $(ANSI2KNR)
@@ -377,8 +380,8 @@ addext_.o alloca_.o argmatch_.o backupfile_.o basename_.o chown_.o \
 closeout_.o dirname_.o error_.o euidaccess_.o exclude_.o fileblocks_.o \
 filemode_.o fnmatch_.o fsusage_.o ftruncate_.o full-write_.o getdate_.o \
 getgroups_.o getline_.o getopt_.o getopt1_.o group-member_.o hash_.o \
-human_.o idcache_.o isdir_.o long-options_.o lstat_.o makepath_.o \
-malloc_.o memcmp_.o memcpy_.o memset_.o mkdir_.o mktime_.o \
+human_.o idcache_.o isdir_.o lchown_.o long-options_.o lstat_.o \
+makepath_.o malloc_.o memcmp_.o memcpy_.o memset_.o mkdir_.o mktime_.o \
 modechange_.o mountlist_.o obstack_.o path-concat_.o posixtm_.o \
 quotearg_.o realloc_.o regex_.o rename_.o rmdir_.o rpmatch_.o rx_.o \
 safe-read_.o save-cwd_.o savedir_.o stat_.o stpcpy_.o strcasecmp_.o \
