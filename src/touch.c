@@ -278,7 +278,6 @@ Update the access and modification times of each FILE to the current time.\n\
       --help             display this help and exit\n\
       --version          output version information and exit\n\
 \n\
-STAMP may be used without -t if none of -drt, nor --, are used.\n\
 Note that the three time-date formats recognized for the -d and -t options\n\
 and for the obsolescent argument are all different.\n\
 "));
