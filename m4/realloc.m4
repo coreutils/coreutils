@@ -1,13 +1,8 @@
-#serial 2
+#serial 3
 
 dnl From Jim Meyering.
 dnl Determine whether realloc works when both arguments are 0.
 dnl If it doesn't, arrange to use the replacement function.
-dnl
-dnl If you use this macro in a package, you should
-dnl add the following two lines to acconfig.h:
-dnl  /* Define to rpl_realloc if the replacement function should be used.  */
-dnl  #undef realloc
 dnl
 
 AC_DEFUN(jm_FUNC_REALLOC,
@@ -33,6 +28,7 @@ AC_DEFUN(jm_FUNC_REALLOC,
   ])
   if test $jm_cv_func_working_realloc = no; then
     LIBOBJS="$LIBOBJS realloc.o"
-    AC_DEFINE_UNQUOTED(realloc, rpl_realloc)
+    AC_DEFINE_UNQUOTED(realloc, rpl_realloc,
+      [Define to rpl_realloc if the replacement function should be used.])
   fi
 ])

@@ -1,4 +1,4 @@
-#serial 2
+#serial 3
 
 dnl A replacement for autoconf's AC_FUNC_MEMCMP that detects
 dnl the losing memcmp on some x86 Next systems.
@@ -42,14 +42,10 @@ test $jm_cv_func_memcmp_working = no && LIBOBJS="$LIBOBJS memcmp.o"
 AC_SUBST(LIBOBJS)dnl
 ])
 
-dnl If you use this macro in a package, you should
-dnl add the following two lines to acconfig.h:
-dnl   /* Define to rpl_memcmp if the replacement function should be used.  */
-dnl   #undef memcmp
-dnl
 AC_DEFUN(jm_FUNC_MEMCMP,
 [AC_REQUIRE([jm_AC_FUNC_MEMCMP])dnl
  if test $jm_cv_func_memcmp_working = no; then
-   AC_DEFINE_UNQUOTED(memcmp, rpl_memcmp)
+   AC_DEFINE_UNQUOTED(memcmp, rpl_memcmp,
+     [Define to rpl_memcmp if the replacement function should be used.])
  fi
 ])

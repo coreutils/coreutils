@@ -1,14 +1,9 @@
-#serial 1
+#serial 2
 
 dnl From Jim Meyering.
 dnl
 dnl Check whether putenv ("FOO") removes FOO from the environment.
 dnl The putenv in libc on at least SunOS 4.1.4 does *not* do that.
-dnl
-dnl If you use this macro in a package, you should
-dnl add the following two lines to acconfig.h:
-dnl  /* Define to rpl_putenv if the replacement function should be used.  */
-dnl  #undef putenv
 dnl
 
 AC_DEFUN(jm_FUNC_PUTENV,
@@ -39,6 +34,7 @@ AC_DEFUN(jm_FUNC_PUTENV,
   ])
   if test $jm_cv_func_svid_putenv = no; then
     LIBOBJS="$LIBOBJS putenv.o"
-    AC_DEFINE_UNQUOTED(putenv, rpl_putenv)
+    AC_DEFINE_UNQUOTED(putenv, rpl_putenv,
+      [Define to rpl_memcmp if the replacement function should be used.])
   fi
 ])

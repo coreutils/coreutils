@@ -1,13 +1,8 @@
-#serial 3
+#serial 4
 
 dnl From Jim Meyering.
 dnl Determine whether chown accepts arguments of -1 for uid and gid.
 dnl If it doesn't, arrange to use the replacement function.
-dnl
-dnl If you use this macro in a package, you should
-dnl add the following two lines to acconfig.h:
-dnl  /* Define to rpl_chown if the replacement function should be used.  */
-dnl  #undef chown
 dnl
 
 AC_DEFUN(jm_FUNC_CHOWN,
@@ -48,6 +43,7 @@ AC_DEFUN(jm_FUNC_CHOWN,
   ])
   if test $jm_cv_func_working_chown = no; then
     LIBOBJS="$LIBOBJS chown.o"
-    AC_DEFINE_UNQUOTED(chown, rpl_chown)
+    AC_DEFINE_UNQUOTED(chown, rpl_chown,
+      [Define to rpl_chown if the replacement function should be used.])
   fi
 ])

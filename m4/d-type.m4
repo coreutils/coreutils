@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 
 dnl From Jim Meyering.
 dnl
@@ -34,7 +34,9 @@ AC_DEFUN(jm_STRUCT_DIRENT_D_TYPE,
      ]
    )
    if test $jm_cv_struct_dirent_d_type = yes; then
-     AC_DEFINE(D_TYPE_IN_DIRENT)
+     AC_DEFINE(D_TYPE_IN_DIRENT, 1,
+  [Define if there is a member named d_type in the struct describing
+   directory headers.])
    fi
   ]
 )

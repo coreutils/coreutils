@@ -1,4 +1,4 @@
-#serial 5
+#serial 6
 
 dnl This macro is intended to be used solely in this file.
 dnl These are the prerequisite macros for GNU's strftime.c replacement.
@@ -12,11 +12,6 @@ AC_DEFUN(_jm_STRFTIME_PREREQS,
 ])
 
 dnl Determine if the strftime function has all the features of the GNU one.
-dnl
-dnl If you use this macro in a package, you should
-dnl add the following two lines to acconfig.h:
-dnl   /* Define to gnu_strftime if the replacement function should be used.  */
-dnl   #undef strftime
 dnl
 dnl From Jim Meyering.
 dnl
@@ -139,7 +134,8 @@ changequote([, ])dnl
   ])
   if test $jm_cv_func_working_gnu_strftime = no; then
     LIBOBJS="$LIBOBJS strftime.o"
-    AC_DEFINE_UNQUOTED(strftime, gnu_strftime)
+    AC_DEFINE_UNQUOTED(strftime, gnu_strftime,
+      [Define to gnu_strftime if the replacement function should be used.])
   fi
 ])
 

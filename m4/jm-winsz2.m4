@@ -1,4 +1,4 @@
-#serial 2
+#serial 3
 
 AC_DEFUN(jm_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL,
 [AC_REQUIRE([jm_HEADER_TIOCGWINSZ_IN_TERMIOS_H])
@@ -17,6 +17,7 @@ AC_DEFUN(jm_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL,
   fi
   ])
   if test $jm_cv_sys_tiocgwinsz_needs_sys_ioctl_h = yes; then
-    AC_DEFINE(GWINSZ_IN_SYS_IOCTL)
+    AC_DEFINE(GWINSZ_IN_SYS_IOCTL, 1,
+      [Define if your system defines TIOCGWINSZ in sys/ioctl.h.])
   fi
 ])

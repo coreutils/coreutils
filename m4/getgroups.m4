@@ -1,10 +1,6 @@
-#serial 2
+#serial 3
 
 dnl From Jim Meyering.
-dnl If you use this macro in a package, you should
-dnl add the following two lines to acconfig.h:
-dnl  /* Define to rpl_getgroups if the replacement function should be used.  */
-dnl  #undef getgroups
 dnl
 dnl Invoking code should check $GETGROUPS_LIB something like this:
 dnl  jm_FUNC_GETGROUPS
@@ -43,7 +39,8 @@ AC_DEFUN(jm_FUNC_GETGROUPS,
     ])
     if test $jm_cv_func_working_getgroups = no; then
       LIBOBJS="$LIBOBJS getgroups.o"
-      AC_DEFINE_UNQUOTED(getgroups, rpl_getgroups)
+      AC_DEFINE_UNQUOTED(getgroups, rpl_getgroups,
+	[Define as rpl_getgroups if getgroups doesn't work right.])
     fi
   fi
 ])
