@@ -5,6 +5,14 @@
 	Fail if a @footnote directive follows non-punctuation.
 	Fail upon use of @url.  Use @uref instead.
 
+2004-07-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (Common options, Target directory, cp invocation,
+	install invocation, mv invocation, ln invocation): Add -t as a
+	short option for --target-directory, and -T as a short option for
+	--no-target-directory.  Clean up relevant synopses a bit, so that
+	the language is similar for all.
+
 2004-06-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi: Put the right amount of space at sentence ends.
