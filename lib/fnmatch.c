@@ -40,12 +40,12 @@
 
 
 # if defined STDC_HEADERS || !defined isascii
-#  define ISASCII(c) 1
+#  define IN_CTYPE_DOMAIN(c) 1
 # else
-#  define ISASCII(c) isascii(c)
+#  define IN_CTYPE_DOMAIN(c) isascii(c)
 # endif
 
-# define ISUPPER(c) (ISASCII (c) && isupper (c))
+# define ISUPPER(c) (IN_CTYPE_DOMAIN (c) && isupper (c))
 
 
 # ifndef errno
