@@ -3,9 +3,10 @@
 # @configure_input@
 
 require 5.002;
+use strict;
+use POSIX qw (assert);
 
 BEGIN { push @INC, '@srcdir@' if '@srcdir@' ne '.'; }
-use strict;
 use Test;
 
 $| = 1;
@@ -26,36 +27,96 @@ test "\$srcdir" || srcdir=.
 test "\$VERBOSE" && \$xx --version 2> /dev/null
 EOF
 
-my %seen;
+{
+  my %seen;
+
+  my $test_vector;
+
+  foreach $test_vector (@Test::t)
+    {
+      my ($test_name, $flags, $in_spec, $expected, $e_ret_code, $rest) =
+	@{$test_vector};
+      assert (defined $e_ret_code && !defined $rest);
+      assert (!ref $test_name);
+      assert (!ref $flags);
+      assert (!ref $expected);
+      assert (!ref $e_ret_code);
+
+      die "$0: $.: duplicate test name \`$test_name'\n"
+	if (defined $seen{$test_name});
+      $seen{$test_name} = 1;
+    }
+}
 
 my $test_vector;
 foreach $test_vector (@Test::t)
   {
-    my ($test_name, $flags, $file1, $file2, $expected, $e_ret_code)
+    my ($test_name, $flags, $in_spec, $expected, $e_ret_code)
 	= @{$test_vector};
-    die "$0: $.: duplicate test name \`$test_name'\n"
-      if (defined ($seen{$test_name}));
-    $seen{$test_name} = 1;
+
+    my @in_file;
+    if (ref $in_spec)
+      {
+	assert (ref $in_spec eq 'ARRAY');
+	my $i = 0;
+	my $file_spec;
+	foreach $file_spec (@$in_spec)
+	  {
+	    # A file spec may be a string or a reference.
+	    # If it's a string, that string is to be the contents of a
+	    # generated (by this script) file with name derived from the
+	    # name of this test.
+	    # If it's a reference, then it must be the name of an existing
+	    # file.
+	    if (ref $file_spec)
+	      {
+		assert (ref $file_spec eq 'SCALAR');
+		my $existing_file = $$file_spec;
+		# FIXME: make sure $existing_file exists somewhere.
+		push (@in_file, $existing_file);
+	      }
+	    else
+	      {
+		++$i;
+		my $file_contents = $file_spec;
+		my $gen_file = "t$test_name.in$i";
+		push (@in_file, $gen_file);
+		open (IN, ">$gen_file") || die "$0: $gen_file: $!\n";
+		print IN $file_contents;
+		close (IN) || die "$0: $gen_file: $!\n";
+	      }
+	  }
+      }
+    else
+      {
+	my $file_contents = $in_spec;
+	my $gen_file = "t$test_name.in";
+	push (@in_file, $gen_file);
+	open (IN, ">$gen_file") || die "$0: $gen_file: $!\n";
+	print IN $file_contents;
+	close (IN) || die "$0: $gen_file: $!\n";
+      }
 
     my $in1 = "t$test_name.in1";
     my $in2 = "t$test_name.in2";
     my $exp_name = "t$test_name.exp";
     my $out = "t$test_name.out";
 
-    open (IN1, ">$in1") || die "$0: $in1: $!\n";
-    print IN1 $file1;
-    close (IN1) || die "$0: $in1: $!\n";
-
-    open (IN2, ">$in2") || die "$0: $in2: $!\n";
-    print IN2 $file2;
-    close (IN2) || die "$0: $in2: $!\n";
-
     open (EXP, ">$exp_name") || die "$0: $exp_name: $!\n";
     print EXP $expected;
     close (EXP) || die "$0: $exp_name: $!\n";
 
     my $err_output = "t$test_name.err";
-    my $cmd = "\$xx $flags \$srcdir/$in1 \$srcdir/$in2 > $out 2> $err_output";
+
+    my @srcdir_rel_in_file;
+    my $f;
+    foreach $f (@in_file)
+      {
+	push (@srcdir_rel_in_file, "\$srcdir/$f")
+      }
+
+    my $cmd = "\$xx $flags " . join (' ', @srcdir_rel_in_file)
+      . " > $out 2> $err_output";
     $exp_name = "\$srcdir/$exp_name";
     print <<EOF ;
 $cmd
