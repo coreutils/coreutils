@@ -29,17 +29,13 @@
 #include "system.h"
 #include "error.h"
 
-#ifdef _POSIX_VERSION
-# include <limits.h>
-
-#else /* not _POSIX_VERSION */
+#ifndef _POSIX_VERSION
 struct passwd *getpwuid ();
 struct group *getgrgid ();
 uid_t getuid ();
 gid_t getgid ();
 uid_t geteuid ();
 gid_t getegid ();
-# include <sys/param.h>
 #endif /* not _POSIX_VERSION */
 
 int getugroups ();
