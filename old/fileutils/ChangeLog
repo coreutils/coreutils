@@ -1,6 +1,11 @@
-1998-05-30  Jim Meyering  <meyering@ascend.com>
+1998-05-31  Jim Meyering  <meyering@ascend.com>
 
 	* Version 3.16p.
+
+	* src/install.c (main): Fix argv-handling bug in my 1998-05-09 change.
+	Reported by Don Parsons.
+
+1998-05-30  Jim Meyering  <meyering@ascend.com>
 
 	* tests/ls/time-1: Clean up ctime test.  Note that it fails also
 	on Solaris5.5.1 tmpfs file systems.
