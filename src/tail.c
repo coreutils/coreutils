@@ -1359,146 +1359,106 @@ tail_file (struct File_spec *f, uintmax_t n_units)
   return ok;
 }
 
-/* If the command line arguments are of the obsolescent form and the
-   option string is well-formed, set *OK to true, set *N_UNITS, the
-   globals COUNT_LINES, FOREVER, and FROM_START, and return true.
-   Otherwise, if the command line arguments appear to be of the
-   obsolescent form but the option string is malformed, set *OK to
-   false, don't modify any other parameter or global variable, and
-   return true.  Otherwise, return false and don't modify any parameter
-   or global variable.  */
+/* If obsolete usage is allowed, and the command line arguments are of
+   the obsolete form and the option string is well-formed, set
+   *N_UNITS, the globals COUNT_LINES, FOREVER, and FROM_START, and
+   return true.  If the command line arguments are obviously incorrect
+   (e.g., because obsolete usage is not allowed and the arguments are
+   incorrect for non-obsolete usage), report an error and exit.
+   Otherwise, return false and don't modify any parameter or global
+   variable.  */
 
 static bool
-parse_obsolescent_option (int argc, const char *const *argv,
-			  uintmax_t *n_units, bool *ok)
+parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
 {
   const char *p = argv[1];
-  const char *n_string = NULL;
+  const char *n_string;
   const char *n_string_end;
   bool obsolete_usage;
-
   bool t_from_start;
-  bool t_count_lines;
-  bool t_forever;
+  bool t_count_lines = true;
+  bool t_forever = false;
+  int len;
 
-  /* With the obsolescent form, there is one option string and
-     (technically) at most one file argument.  But we allow two or more
-     by default.  */
-  if (argc < 2)
+  /* With the obsolete form, there is one option string and
+     at most one file argument, possibly preceded by "--".  */
+  if (! ((2 <= argc && argc <= 3) || (argc == 4 && STREQ (argv[2], "--"))))
     return false;
 
   obsolete_usage = (posix2_version () < 200112);
 
-  /* If P starts with `+' and the POSIX version predates 1003.1-2001,
-     or if P starts with `-N' (where N is a digit), or `-l', then it
-     is obsolescent.  Return false otherwise.  */
-  if (! ((p[0] == '+' && obsolete_usage)
-	 || (p[0] == '-' && (p[1] == 'l' || ISDIGIT (p[1])))))
-    return false;
-
-  if (*p == '+')
-    t_from_start = true;
-  else if (*p == '-')
-    t_from_start = false;
-  else
-    return false;
-
-  ++p;
-  if (ISDIGIT (*p))
+  switch (*p++)
     {
-      n_string = p;
-      do
-	{
-	  ++p;
-	}
-      while (ISDIGIT (*p));
+    default:
+      return false;
+
+    case '+':
+      /* Leading "+" is a file name in the non-obsolete form.  */
+      if (!obsolete_usage)
+	return false;
+
+      t_from_start = true;
+      break;
+
+    case '-':
+      /* Plain "-" is standard input in the non-obsolete form.  */
+      if (!obsolete_usage && !*p)
+	return false;
+
+      /* Plain "-c" is required to be the non-obsolete option.  For
+         plain "-f" POSIX 1003.2-1992 is ambiguous; assume the
+         non-obsolete form.  */
+      if ((p[0] == 'c' || p[0] == 'f') && !p[1])
+	return false;
+
+      t_from_start = false;
+      break;
     }
+
+  n_string = p;
+  while (ISDIGIT (*p))
+    p++;
   n_string_end = p;
 
-  t_count_lines = true;
-  if (*p == 'c' || *p == 'b')
+  switch (*p)
     {
-      t_count_lines = false;
-      ++p;
-    }
-  else if (*p == 'l')
-    {
-      ++p;
+    case 'c': t_count_lines = false;	/* Fall through.  */
+    case 'l': p++; break;
     }
 
-  t_forever = false;
   if (*p == 'f')
     {
       t_forever = true;
       ++p;
     }
 
-  if (*p != '\0')
-    {
-      /* If (argv[1] begins with a `+' or if it begins with `-' followed
-	 by a digit), but has an invalid suffix character, give a diagnostic
-	 and indicate to caller that this *is* of the obsolescent form,
-	 but that it's an invalid option.  */
-      if (t_from_start || n_string)
-	{
-	  error (0, 0,
-		 _("%c: invalid suffix character in obsolescent option"), *p);
-	  *ok = false;
-	  return true;
-	}
+  if (*p)
+    return false;
 
-      /* Otherwise, it might be a valid non-obsolescent option like -n.  */
-      return false;
-    }
+  len = n_string_end - n_string;
 
-  *ok = true;
-  if (n_string == NULL)
+  if (n_string == n_string_end)
     *n_units = DEFAULT_N_LINES;
-  else
+  else if (xstrtoumax (n_string, NULL, 10, n_units, NULL) != LONGINT_OK)
+    error (EXIT_FAILURE, 0, _("number `%.*s' too large"), len, n_string);
+
+  if (!obsolete_usage)
     {
-      strtol_error s_err;
-      uintmax_t tmp;
-      char *end;
-
-      s_err = xstrtoumax (n_string, &end, 10, &tmp,
-			  *n_string_end == 'b' ? "b" : NULL);
-      if (s_err == LONGINT_OK)
-	*n_units = tmp;
-      else
+      if (len == 0)
 	{
-	  /* Extract a NUL-terminated string for the error message.  */
-	  size_t len = n_string_end - n_string;
-	  char *n_string_tmp = xmalloc (len + 1);
-
-	  strncpy (n_string_tmp, n_string, len);
-	  n_string_tmp[len] = '\0';
-
-	  error (0, 0,
-		 _("%s: %s is so large that it is not representable"),
-		 n_string_tmp, (t_count_lines
-				? _("number of lines")
-				: _("number of bytes")));
-	  free (n_string_tmp);
-	  *ok = false;
+	  len = 2;
+	  n_string = "10";
 	}
+      error (0, 0, _("`%s' option is obsolete; use `%s-%c %.*s'"),
+	     argv[1], t_forever ? "-f " : "", t_count_lines ? 'n' : 'c',
+	     len, n_string);
+      usage (EXIT_FAILURE);
     }
 
-  if (*ok)
-    {
-      if (! obsolete_usage)
-	{
-	  int n_string_len = n_string_end - n_string;
-	  error (0, 0, _("`%s' option is obsolete; use `%s-%c %.*s'"),
-		 argv[1], t_forever ? " -f" : "", t_count_lines ? 'n' : 'c',
-		 n_string_len, n_string);
-	  usage (EXIT_FAILURE);
-	}
-
-      /* Set globals.  */
-      from_start = t_from_start;
-      count_lines = t_count_lines;
-      forever = t_forever;
-    }
+  /* Set globals.  */
+  from_start = t_from_start;
+  count_lines = t_count_lines;
+  forever = t_forever;
 
   return true;
 }
@@ -1665,22 +1625,10 @@ main (int argc, char **argv)
 
   have_read_stdin = false;
 
-  {
-    bool ok;
-
-    if (parse_obsolescent_option (argc,
-				  (const char *const *) argv,
-				  &n_units, &ok))
-      {
-	if (!ok)
-	  exit (EXIT_FAILURE);
-	optind = 2;
-      }
-    else
-      {
-	parse_options (argc, argv, &n_units, &header_mode, &sleep_interval);
-      }
-  }
+  if (parse_obsolete_option (argc, argv, &n_units))
+    optind = 2;
+  else
+    parse_options (argc, argv, &n_units, &header_mode, &sleep_interval);
 
   /* To start printing with item N_UNITS from the start of the file, skip
      N_UNITS - 1 items.  `tail -n +0' is actually meaningless, but for Unix
