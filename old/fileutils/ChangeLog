@@ -1,3 +1,8 @@
+2000-12-29  Paul Eggert  <eggert@twinsun.com>
+
+	* doc/perm.texi: append-only directories -> restricted deletion flag,
+	which is the term that POSIX d5 uses for this notion.
+
 2000-12-28  Paul Eggert  <eggert@twinsun.com>
 
 	* tests/group-names: Try /usr/xpg4/bin/id (Solaris 7) if plain
