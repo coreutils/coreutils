@@ -37,8 +37,16 @@ uid_t geteuid ();
 #endif
 
 #ifdef HAVE_LCHOWN
-# define chown(PATH, OWNER, GROUP) lchown(PATH, OWNER, GROUP)
+# define LINK_CHOWN(FILE, OWNER, GROUP) lchown(FILE, OWNER, GROUP)
+#else
+# define LINK_CHOWN(FILE, OWNER, GROUP) chown(FILE, OWNER, GROUP)
 #endif
+
+#define DO_CHOWN(FILE, NEW_UID, NEW_GID)				\
+  (LINK_CHOWN ((FILE), (myeuid == 0 ? (NEW_UID) : myeuid), (NEW_GID))	\
+   /* If non-root uses -p, it's ok if we can't preserve ownership.	\
+      But root probably wants to know, e.g. if NFS disallows it.  */	\
+   && (errno != EPERM || myeuid == 0))
 
 /* Used by do_copy, make_path_private, and re_protect
    to keep a list of leading directories whose protections
@@ -817,6 +825,18 @@ copy (const char *src_path, const char *dst_path, int new_dst, dev_t device,
 	      error (0, errno, "%s", dst_path);
 	      goto un_backup;
 	    }
+
+	  /* Change the owner and group of the just-created symbolic link
+	     if this system has the lchown function.  */
+#ifdef HAVE_LCHOWN
+	  if (flag_preserve
+	      && DO_CHOWN (dst_path, src_sb.st_uid, src_sb.st_gid))
+	    {
+	      error (0, errno, "%s", dst_path);
+	      goto un_backup;
+	    }
+#endif
+
 	  return 0;
 	}
       else
@@ -892,6 +912,18 @@ copy (const char *src_path, const char *dst_path, int new_dst, dev_t device,
 	  error (0, errno, _("cannot create symbolic link `%s'"), dst_path);
 	  goto un_backup;
 	}
+
+      /* Change the owner and group of the just-created symbolic link
+	 if this system has the lchown function.  */
+#ifdef HAVE_LCHOWN
+      if (flag_preserve
+	  && DO_CHOWN (dst_path, src_sb.st_uid, src_sb.st_gid))
+	{
+	  error (0, errno, "%s", dst_path);
+	  goto un_backup;
+	}
+#endif
+
       return 0;
     }
   else
@@ -918,12 +950,7 @@ copy (const char *src_path, const char *dst_path, int new_dst, dev_t device,
 	  return 1;
 	}
 
-      /* If non-root uses -p, it's ok if we can't preserve ownership.
-	 But root probably wants to know, e.g. if NFS disallows it.  */
-      if (chown (dst_path,
-		 (myeuid == 0 ? src_sb.st_uid : myeuid),
-		 src_sb.st_gid)
-	  && (errno != EPERM || myeuid == 0))
+      if (DO_CHOWN (dst_path, src_sb.st_uid, src_sb.st_gid))
 	{
 	  error (0, errno, "%s", dst_path);
 	  return 1;
