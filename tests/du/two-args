@@ -16,4 +16,9 @@ mkdir -p $tmp/1 $tmp/2
 test -d $tmp || fail=1
 du $tmp/1 $tmp/2 > /dev/null || fail=1
 
+# Make sure `du . $tmp' and `du .. $tmp' work.
+# These would fail prior to fileutils-4.0y.
+du . $tmp > /dev/null || fail=1
+du .. $tmp > /dev/null || fail=1
+
 exit $fail
