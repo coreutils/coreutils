@@ -136,8 +136,6 @@ Adapt these contribution guidelines for coreutils:
 Bug-fix changes expected to go in, right after 5.2.0:
 ====================================================
 
-  POSIX requires that `ls a-dir b-file' list b-file first.
-
   expr patch from Paul Eggert
 
 
