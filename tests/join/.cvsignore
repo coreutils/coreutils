@@ -1,4 +1,5 @@
 t??.[12]
+t*.log
 t*.out
 t*.in
 t*.exp
