@@ -1,22 +1,25 @@
-#serial 4
+#serial 5
 
 dnl SunOS's readdir is broken in such a way that rm.c has to add extra code
 dnl to test whether a NULL return value really means there are no more files
 dnl in the directory.
 dnl
-dnl Detect the problem by creating a directory containing 300 files (254 not
-dnl counting . and .. is the minimum) and see if a loop doing `readdir; unlink'
-dnl removes all of them.
+dnl And the rm from coreutils-5.0 exposes a similar problem when there
+dnl are 338 or more files in a directory on a Darwin-6.5 system
+dnl
+dnl Detect the problem by creating a directory containing 500 files (254 not
+dnl counting . and .. is the minimum for SunOS, 338 for Darwin) and see
+dnl if a loop doing `readdir; unlink' removes all of them.
 dnl
 dnl Define HAVE_WORKING_READDIR if readdir does *not* have this problem.
 
 dnl Written by Jim Meyering.
 
-AC_DEFUN([jm_FUNC_READDIR],
+AC_DEFUN([GL_FUNC_READDIR],
 [dnl
 AC_REQUIRE([AC_HEADER_DIRENT])
 AC_CHECK_HEADERS(string.h)
-AC_CACHE_CHECK([for working readdir], jm_cv_func_working_readdir,
+AC_CACHE_CHECK([for working readdir], gl_cv_func_working_readdir,
   [dnl
   # Arrange for deletion of the temporary directory this test creates, in
   # case the test itself fails to delete everything -- as happens on Sunos.
@@ -54,16 +57,16 @@ AC_CACHE_CHECK([for working readdir], jm_cv_func_working_readdir,
 #   undef mkdir
 
     static void
-    create_300_file_dir (const char *dir)
+    create_N_file_dir (const char *dir, size_t n_files)
     {
-      int i;
+      unsigned int i;
 
       if (mkdir (dir, 0700))
 	abort ();
       if (chdir (dir))
 	abort ();
 
-      for (i = 0; i < 300; i++)
+      for (i = 0; i < n_files; i++)
 	{
 	  char file_name[4];
 	  FILE *out;
@@ -117,15 +120,15 @@ AC_CACHE_CHECK([for working readdir], jm_cv_func_working_readdir,
     main ()
     {
       const char *dir = "conf-dir";
-      create_300_file_dir (dir);
+      create_N_file_dir (dir, 500);
       remove_dir (dir);
       exit (0);
     }],
-  jm_cv_func_working_readdir=yes,
-  jm_cv_func_working_readdir=no,
-  jm_cv_func_working_readdir=no)])
+  gl_cv_func_working_readdir=yes,
+  gl_cv_func_working_readdir=no,
+  gl_cv_func_working_readdir=no)])
 
-  if test $jm_cv_func_working_readdir = yes; then
+  if test $gl_cv_func_working_readdir = yes; then
     AC_DEFINE(HAVE_WORKING_READDIR, 1,
 [Define if readdir is found to work properly in some unusual cases. ])
   fi
