@@ -1,3 +1,10 @@
+2000-04-12  Jim Meyering  <meyering@lucent.com>
+
+	More code moved from ../configure.in.
+	* jm-macros.m4 (_GNU_SOURCE): Define.
+	(AC_SYS_LARGEFILE): Require.
+	(AM_C_PROTOTYPES): Require.
+
 2000-04-05  Paul Eggert  <eggert@twinsun.com>
 
 	* largefile.m4 (AC_SYS_LARGEFILE_FLAGS): Don't use -n32 on
