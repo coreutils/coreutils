@@ -155,5 +155,5 @@ hash_init (void)
 void
 forget_all (void)
 {
-  hash_clear (src_to_dest);
+  hash_free (src_to_dest);
 }
