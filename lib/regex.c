@@ -27,7 +27,7 @@
 #define _GNU_SOURCE
 
 #ifdef HAVE_CONFIG_H
-#if defined (CONFIG_BROKETS)
+#if defined (emacs) || defined (CONFIG_BROKETS)
 /* We use <config.h> instead of "config.h" so that a compilation
    using -I. -I$srcdir will use ./config.h rather than $srcdir/config.h
    (which it would do because it found this file in $srcdir).  */
@@ -256,12 +256,16 @@ char *alloca ();
 
 #define STREQ(s1, s2) ((strcmp (s1, s2) == 0))
 
+#undef MAX
+#undef MIN
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 typedef char boolean;
 #define false 0
 #define true 1
+
+static int re_match_2_internal ();
 
 /* These are the command codes that appear in compiled regular
    expressions.  Some opcodes are followed by argument bytes.  A
@@ -1500,7 +1504,7 @@ regex_compile (pattern, size, syntax, bufp)
      they can be reliably used as array indices.  */
   register unsigned char c, c1;
   
-  /* A random tempory spot in PATTERN.  */
+  /* A random temporary spot in PATTERN.  */
   const char *p1;
 
   /* Points to the end of the buffer, where we should append.  */
@@ -2249,7 +2253,7 @@ regex_compile (pattern, size, syntax, bufp)
                     we're all done, the pattern will look like:
                       set_number_at <jump count> <upper bound>
                       set_number_at <succeed_n count> <lower bound>
-                      succeed_n <after jump addr> <succed_n count>
+                      succeed_n <after jump addr> <succeed_n count>
                       <body of loop>
                       jump_n <succeed_n addr> <jump count>
                     (The upper bound and `jump_n' are omitted if
@@ -2493,12 +2497,7 @@ regex_compile (pattern, size, syntax, bufp)
        is strictly greater than re_max_failures, the largest possible stack
        is 2 * re_max_failures failure points.  */
     fail_stack.size = (2 * re_max_failures * MAX_FAILURE_ITEMS);
-    if (fail_stack.stack)
-      fail_stack.stack =
-	(fail_stack_elt_t *) realloc (fail_stack.stack,
-				      (fail_stack.size
-				       * sizeof (fail_stack_elt_t)));
-    else
+    if (! fail_stack.stack)
       fail_stack.stack =
 	(fail_stack_elt_t *) malloc (fail_stack.size 
 				     * sizeof (fail_stack_elt_t));
@@ -3156,8 +3155,10 @@ re_search_2 (bufp, string1, size1, string2, size2, startpos, range, regs, stop)
           && !bufp->can_be_null)
 	return -1;
 
-      val = re_match_2 (bufp, string1, size1, string2, size2,
-	                startpos, regs, stop);
+      val = re_match_2_internal (bufp, string1, size1, string2, size2,
+				 startpos, regs, stop);
+      alloca (0);
+
       if (val >= 0)
 	return startpos;
         
@@ -3253,8 +3254,8 @@ static boolean alt_match_null_string_p (),
     FREE_VAR (reg_info_dummy);						\
   } while (0)
 #else /* not REGEX_MALLOC */
-/* Some MIPS systems (at least) want this to free alloca'd storage.  */
-#define FREE_VARIABLES() alloca (0)
+/* This used to do alloca (0), but now we do that in the caller.  */
+#define FREE_VARIABLES() /* Nothing */
 #endif /* not REGEX_MALLOC */
 #else
 #define FREE_VARIABLES() /* Do nothing!  */
@@ -3281,8 +3282,11 @@ re_match (bufp, string, size, pos, regs)
      const char *string;
      int size, pos;
      struct re_registers *regs;
- {
-  return re_match_2 (bufp, NULL, 0, string, size, pos, regs, size); 
+{
+  int result = re_match_2_internal (bufp, NULL, 0, string, size,
+				    pos, regs, size);
+  alloca (0);
+  return result;
 }
 #endif /* not emacs */
 
@@ -3309,6 +3313,23 @@ re_match_2 (bufp, string1, size1, string2, size2, pos, regs, stop)
      struct re_registers *regs;
      int stop;
 {
+  int result = re_match_2_internal (bufp, string1, size1, string2, size2,
+				    pos, regs, stop);
+  alloca (0);
+  return result;
+}
+
+/* This is a separate function so that we can force an alloca cleanup
+   afterwards.  */
+static int
+re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
+     struct re_pattern_buffer *bufp;
+     const char *string1, *string2;
+     int size1, size2;
+     int pos;
+     struct re_registers *regs;
+     int stop;
+{
   /* General temporaries.  */
   int mcnt;
   unsigned char *p1;
@@ -3326,6 +3347,10 @@ re_match_2 (bufp, string1, size1, string2, size2, pos, regs, stop)
   /* Where we are in the pattern, and the end of the pattern.  */
   unsigned char *p = bufp->buffer;
   register unsigned char *pend = p + bufp->used;
+
+  /* Mark the opcode just after a start_memory, so we can test for an
+     empty subpattern when we get to the stop_memory.  */
+  unsigned char *just_past_start_mem = 0;
 
   /* We use this to map every character in the string.  */
   char *translate = bufp->translate;
@@ -3807,6 +3832,7 @@ re_match_2 (bufp, string1, size1, string2, size2, pos, regs, stop)
 
           /* Move past the register number and inner group count.  */
           p += 2;
+	  just_past_start_mem = p;
           break;
 
 
@@ -3871,7 +3897,7 @@ re_match_2 (bufp, string1, size1, string2, size2, pos, regs, stop)
              information for this group that we had before trying this
              last match.  */
           if ((!MATCHED_SOMETHING (reg_info[*p])
-               || (re_opcode_t) p[-3] == start_memory)
+               || just_past_start_mem == p - 1)
 	      && (p + 2) < pend)              
             {
               boolean is_a_jump_n = false;
@@ -4461,8 +4487,10 @@ re_match_2 (bufp, string1, size1, string2, size2, pos, regs, stop)
 	  mcnt = (int) Sword;
         matchsyntax:
 	  PREFETCH ();
-	  if (SYNTAX (*d++) != (enum syntaxcode) mcnt)
-            goto fail;
+	  /* Can't use *d++ here; SYNTAX may be an unsafe macro.  */
+	  d++;
+	  if (SYNTAX (d[-1]) != (enum syntaxcode) mcnt)
+	    goto fail;
           SET_REGS_MATCHED ();
 	  break;
 
@@ -4476,8 +4504,10 @@ re_match_2 (bufp, string1, size1, string2, size2, pos, regs, stop)
 	  mcnt = (int) Sword;
         matchnotsyntax:
 	  PREFETCH ();
-	  if (SYNTAX (*d++) == (enum syntaxcode) mcnt)
-            goto fail;
+	  /* Can't use *d++ here; SYNTAX may be an unsafe macro.  */
+	  d++;
+	  if (SYNTAX (d[-1]) == (enum syntaxcode) mcnt)
+	    goto fail;
 	  SET_REGS_MATCHED ();
           break;
 

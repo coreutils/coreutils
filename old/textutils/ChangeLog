@@ -1,7 +1,39 @@
+Fri Mar 25 18:11:19 1994  Jim Meyering  (meyering@comco.com)
+
+	* configure.in: Use AC_VERBOSE, AC_CHECKING, and AC_WARN instead
+	of explicit echo commands.
+	[INSTALL]: When AC_PROG_INSTALL resorts to setting this to
+	`./install.sh', make it `../install.sh' instead since that
+	script will be invoked only from subdirectories.
+	[AC_SIZEOF_TYPE]: Use this instead of deprecated AC_LONG_64_BITS.
+
+	* cat.c (cat): The command `:|cat -s' failed on Irix5 because
+	ioctl (d, FIONREAD,... now returns ENOSYS for pipes -- under Irix4
+	it returned EINVAL.  Detect this.
+	(main) [lint]: Initialize variables to suppress `used before
+	initialized' warnings.
+
+	* csplit.c: Change long option name from --suffix to --suffix-format.
+
+	* od.c (skip): Correct a comment.
+	(main): Don't output anything if the sole input file doesn't exist.
+	Reported by Bauke Jan Douma <bjd@dds.hacktic.nl>.
+	(dump) [lint]: Initialize a variable to suppress `used before
+	initialized' warning.
+	(main) [lint]: Ditto.
+
+	* paste.c (paste_parallel) [lint]: Initialize a variable to suppress
+	`used before initialized' warning.
+
+Fri Jan 28 11:02:21 1994  Jim Meyering  (meyering@comco.com)
+
+	* configure.in: Don't set LDFLAGS since linking now uses both
+	LDFLAGS and CFLAGS.
+
 Wed Jan 18 16:14:00 1994  Jim Meyering  (meyering@comco.com)
 
 	* unexpand.c (unexpand): Don't segfault when given a name of a
-	nonexistent file.
+	nonexistent file.  From Bauke Jan Douma <bjd@dds.hacktic.nl>.
 
 Thu Jan 13 17:27:38 1994  Jim Meyering  (meyering@comco.com)
 
