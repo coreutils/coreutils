@@ -1,3 +1,8 @@
+1998-08-29  Jim Meyering  <meyering@ascend.com>
+
+	* src/su.c (longopts): Use corresponding short-option character
+        in place of `1', and `NULL' in place of pointer in initialization.
+
 1998-08-11  Jim Meyering  <meyering@ascend.com>
 
 	* src/uptime.c (usage): Correct description.  Reported by John Murphy.
