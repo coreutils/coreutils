@@ -620,6 +620,14 @@ copy (char *src_path, char *dst_path, int new_dst, dev_t device,
 	      char *tmp_backup = find_backup_file_name (dst_path);
 	      if (tmp_backup == NULL)
 		error (1, 0, _("virtual memory exhausted"));
+	      if (strcmp (tmp_backup, src_path) == 0)
+		{
+		  error (0, 0,
+		   _("backing up `%s' would destroy source;  `%s' not copied"),
+			 dst_path, src_path);
+		  return 1;
+
+		}
 	      dst_backup = (char *) alloca (strlen (tmp_backup) + 1);
 	      strcpy (dst_backup, tmp_backup);
 	      free (tmp_backup);
