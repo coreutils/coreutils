@@ -1820,8 +1820,25 @@ else
   esac
 fi
 test -s o-no-file1.E || rm -f o-no-file1.E
+$xx -n $srcdir/neg-nls.I > neg-nls.O 2> neg-nls.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test neg-nls failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp neg-nls.O $srcdir/neg-nls.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed neg-nls"; fi ;;
+    1) $echo "Test neg-nls failed: files neg-nls.O and $srcdir/neg-nls.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test neg-nls may have failed." 1>&2;
+       $echo The command "cmp neg-nls.O $srcdir/neg-nls.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s neg-nls.E || rm -f neg-nls.E
 if test $errors = 0 ; then
-  $echo Passed all 106 tests. 1>&2
+  $echo Passed all 107 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
