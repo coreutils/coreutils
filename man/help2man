@@ -546,7 +546,7 @@ unless ($opt_no_info)
     $sect = _('SEE ALSO');
     $include{$sect} ||= '';
     $include{$sect} .= ".PP\n" if $include{$sect};
-    $include{$sect} .= sprintf _(<<'EOT'), $program, $info_page, $info_page;
+    $include{$sect} .= sprintf _(<<'EOT'), $program, $program, $info_page;
 The full documentation for
 .B %s
 is maintained as a Texinfo manual.  If the
