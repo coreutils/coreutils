@@ -467,15 +467,15 @@ year.
 @cindex MacKenzie, David
 @cindex Meyering, Jim
 @code{getdate} was originally implemented by Steven M. Bellovin
-(@samp{smb@@research.att.com}) while at the University of North Carolina
+(@email{smb@@research.att.com}) while at the University of North Carolina
 at Chapel Hill.  The code was later tweaked by a couple of people on
-Usenet, then completely overhauled by Rich $alz (@samp{rsalz@@bbn.com})
-and Jim Berets (@samp{jberets@@bbn.com}) in August, 1990.  Various
+Usenet, then completely overhauled by Rich $alz (@email{rsalz@@bbn.com})
+and Jim Berets (@email{jberets@@bbn.com}) in August, 1990.  Various
 revisions for the GNU system were made by David MacKenzie, Jim Meyering,
 and others.
 
 @cindex Pinard, F.
 @cindex Berry, K.
 This chapter was originally produced by Fran@,{c}ois Pinard
-(@samp{pinard@@iro.umontreal.ca}) from the @file{getdate.y} source code,
-and then edited by K.@: Berry (@samp{kb@@cs.umb.edu}).
+(@email{pinard@@iro.umontreal.ca}) from the @file{getdate.y} source code,
+and then edited by K.@: Berry (@email{kb@@cs.umb.edu}).
