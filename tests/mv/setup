@@ -4,12 +4,8 @@
 # of the current directory.  If one is found, create a temporary directory
 # inside it.
 
-: ${CANDIDATE_TMP_DIRS=not_set}
-
-# Work around a bug in the way Ultrix4.3a's /bin/sh handles multi-word
-# variables set with ${VAR="VALUE"}
-test "$CANDIDATE_TMP_DIRS" = not_set \
-  && CANDIDATE_TMP_DIRS="$TMPDIR /tmp /var/tmp /usr/tmp $HOME"
+test "${CANDIDATE_TMP_DIRS+set}" = set \
+  || CANDIDATE_TMP_DIRS="$TMPDIR /tmp /var/tmp /usr/tmp $HOME"
 
 other_partition_tmpdir=
 
