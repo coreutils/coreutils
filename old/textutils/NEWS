@@ -1,5 +1,8 @@
 Changes in release 2.1
 [2.0e]
+* `tail -f directory' no longer gets a failed assertion
+* sort: big performance improvement when sorting many small files;
+  from Charles Randall
 * configure and portability changes in m4/ and lib/
 [2.0d]
 * preliminary sort performance improvements
