@@ -275,7 +275,7 @@ static int
 correct_password (const struct passwd *pw)
 {
   char *unencrypted, *encrypted, *correct;
-#if HAVE_GETSPNAM && HAVE_STRUCT_PASSWD_SP_PWDP
+#if HAVE_GETSPNAM && HAVE_STRUCT_SPWD_SP_PWDP
   /* Shadow passwd stuff for SVR3 and maybe other systems.  */
   struct spwd *sp = getspnam (pw->pw_name);
 
