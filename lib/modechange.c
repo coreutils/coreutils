@@ -59,7 +59,7 @@ char *malloc;
    octal number S.  If S is not an octal number, return -1.  */
 
 static int
-oatoi (char *s)
+oatoi (const char *s)
 {
   register int i;
 
