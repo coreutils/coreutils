@@ -40,7 +40,7 @@ struct group *getgrnam ();
 struct group *getgrgid ();
 #endif
 
-void
+extern void
 chopt_init (struct Chown_option *chopt)
 {
   chopt->verbosity = V_off;
@@ -52,7 +52,7 @@ chopt_init (struct Chown_option *chopt)
   chopt->group_name = 0;
 }
 
-void
+extern void
 chopt_free (struct Chown_option *chopt)
 {
   /* Deliberately do not free chopt->user_name or ->group_name.
@@ -81,7 +81,7 @@ uint_to_string (unsigned int n)
    and return it.  If there's no corresponding group name, use the decimal
    representation of the ID.  */
 
-char *
+extern char *
 gid_to_name (gid_t gid)
 {
   struct group *grp = getgrgid (gid);
@@ -92,7 +92,7 @@ gid_to_name (gid_t gid)
    and return it.  If there's no corresponding user name, use the decimal
    representation of the ID.  */
 
-char *
+extern char *
 uid_to_name (uid_t uid)
 {
   struct passwd *pwd = getpwuid (uid);
@@ -303,7 +303,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
    If REQUIRED_UID and/or REQUIRED_GID is not -1, then change only
    files with user ID and group ID that match the non-(-1) value(s).
    Return nonzero upon error, zero otherwise.  */
-int
+extern int
 chown_files (char **files, int bit_flags,
 	     uid_t uid, gid_t gid,
 	     uid_t required_uid, gid_t required_gid,
