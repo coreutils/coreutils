@@ -1,5 +1,5 @@
 /* GNU's users/who.
-   Copyright (C) 92, 93, 94, 1995 Free Software Foundation, Inc.
+   Copyright (C) 92, 93, 94, 95, 1996 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -245,7 +245,31 @@ print_entry (struct utmp *this)
     }
 #ifdef HAVE_UT_HOST
   if (this->ut_host[0])
-    printf (" (%-.*s)", (int) sizeof (this->ut_host), this->ut_host);
+    {
+      extern char *canon_host ();
+      char ut_host[sizeof (this->ut_host) + 1];
+      char *host = 0, *display = 0;
+
+      /* Copy the host name into UT_HOST, and ensure it's nul terminated. */
+      strncpy (ut_host, this->ut_host, (int) sizeof (this->ut_host));
+      ut_host[sizeof (this->ut_host)] = '\0';
+
+      /* Look for an X display.  */
+      display = index (ut_host, ':');
+      if (display)
+	*display++ = '\0';
+
+      if (*ut_host)
+	/* See if we can canonicalize it.  */
+	host = canon_host (ut_host);
+      if (! host)
+	host = ut_host;
+
+      if (display)
+	printf (" (%s:%s)", host, display);
+      else
+	printf (" (%s)", host);
+    }
 #endif
 
   putchar ('\n');
