@@ -1,4 +1,5 @@
 User-visible changes in release 1.14
+* sort accepts new option/flag, -g, for sorting numbers in scientific notation
 * join accepts POSIX `-o 0' field specifier.
 * tr 'a[b*512]' '[a*]' < /dev/null terminates
 * tr '[:*3][:digit:]' 'a-m' and tr 'a[=*2][=c=]' 'xyyz' no longer fail

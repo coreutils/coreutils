@@ -1,3 +1,31 @@
+Tue Nov 14 23:10:54 1995  Jim Meyering  (meyering@comco.com)
+
+	* aclocal.m4 (jm_AUTODEPS): Rename from jm_WITH_AUTODEPS.
+  	Revamp, with suggestions from Franc,ois Pinard.
+	(jm_WITH_GNU_MAKE): New macro.
+	(jm_PROG_MKDEP): New macro.
+	* configure.in (jm_PROG_MKDEP): Use it.
+	* src/Makefile.in (MKDEP): Set it.
+	* lib/Makefile.in (MKDEP): Likewise.
+	* mkdep-Makefile: Use MKDEP, not DEP_CC.
+	(DEP_CFLAGS): Remove it.
+
+	* sort.c: Add support for sorting numbers in scientific notation.
+ 	Include xstrtod.h.
+ 	(struct keyfield): Add field: general_numeric.
+	(usage): Describe -g option.
+	(general_numcompare): New function.
+	(keycompare): Use new comparison function when general_numeric
+	flag is set.
+	(set_ordering): Honor `g' flag.
+	(main): Initialize and use new field.
+	From Marcus Daniels <marcus@sysc.pdx.edu>.
+
+	* configure.in (AC_REPLACE_FUNCS): Add strtod.
+	* lib/Makefile.in (SOURCES): Add xstrtod.c.
+	(OBJECTS): Add xstrtod.o.
+	(DISTFILES): Add xstrtod.h.
+
 	* csplit.c (cleanup): Don't exit.
 	(interrupt_handler): Rewrite to reset default signal handler
 	then repost caught signal.
@@ -126,7 +154,8 @@ Sat Oct 28 16:02:39 1995  Jim Meyering  (meyering@comco.com)
 
 	* md5sum.c (md5_check): Use the same message format when there is
  	a single file and it gets a read error or checksum mismatch as when
-	there are more.  Suggestion from Greg Troxel (gdt@b-sgi.bbn.com).
+	there are more.  Write that warning to standard error, not standard
+	output.  Suggestions from Greg Troxel (gdt@b-sgi.bbn.com).
 
 Thu Oct 26 00:11:35 1995  Jim Meyering  (meyering@comco.com)
 
