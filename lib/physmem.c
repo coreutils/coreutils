@@ -78,6 +78,8 @@ typedef WINBOOL (WINAPI *PFN_MS_EX) (lMEMORYSTATUSEX*);
 
 #include "physmem.h"
 
+#define ARRAY_SIZE(a) (sizeof (a) / sizeof ((a)[0]))
+
 /* Return the total amount of physical memory.  */
 double
 physmem_total ()
