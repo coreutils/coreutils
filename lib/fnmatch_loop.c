@@ -1,5 +1,5 @@
-/* Copyright (C) 1991, 1992, 1993, 1996, 1997, 1998, 1999, 2000, 2001,
-   2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1993,1996,1997,1998,1999,2000,2001,2002,2003,2004
+	Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -531,11 +531,13 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 				if (! is_range)
 				  {
 # ifdef WIDE_CHAR_VERSION
-				    for (c1 = 0; c1 < wextra[idx]; ++c1)
+				    for (c1 = 0;
+					 (int32_t) c1 < wextra[idx];
+					 ++c1)
 				      if (n[c1] != wextra[1 + c1])
 					break;
 
-				    if (c1 == wextra[idx])
+				    if ((int32_t) c1 == wextra[idx])
 				      goto matched;
 # else
 				    for (c1 = 0; c1 < extra[idx]; ++c1)
@@ -611,7 +613,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 
 # ifdef WIDE_CHAR_VERSION
 			/* Search in the `names' array for the characters.  */
-			fcollseq = collseq_table_lookup (collseq, fn);
+			fcollseq = __collseq_table_lookup (collseq, fn);
 			if (fcollseq == ~((uint32_t) 0))
 			  /* XXX We don't know anything about the character
 			     we are supposed to match.  This means we are
@@ -621,7 +623,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 			if (is_seqval)
 			  lcollseq = cold;
 			else
-			  lcollseq = collseq_table_lookup (collseq, cold);
+			  lcollseq = __collseq_table_lookup (collseq, cold);
 # else
 			fcollseq = collseq[fn];
 			lcollseq = is_seqval ? cold : collseq[(UCHAR) cold];
@@ -783,7 +785,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 			      {
 # ifdef WIDE_CHAR_VERSION
 				hcollseq =
-				  collseq_table_lookup (collseq, cend);
+				  __collseq_table_lookup (collseq, cend);
 				if (hcollseq == ~((uint32_t) 0))
 				  {
 				    /* Hum, no information about the upper
@@ -924,7 +926,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 	case L('/'):
 	  if (NO_LEADING_PERIOD (flags))
 	    {
-	      if (n == string_end || c != *n)
+	      if (n == string_end || c != (UCHAR) *n)
 		return FNM_NOMATCH;
 
 	      new_no_leading_period = 1;
@@ -1007,6 +1009,7 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
   size_t pattern_len = STRLEN (pattern);
   const CHAR *p;
   const CHAR *rs;
+  enum { ALLOCA_LIMIT = 8000 };
 
   /* Parse the pattern.  Store the individual parts in the list.  */
   level = 0;
@@ -1042,7 +1045,6 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 	if (level-- == 0)
 	  {
 	    /* This means we found the end of the pattern.  */
-#define ALLOCA_LIMIT 8000
 #define NEW_PATTERN \
 	    struct patternlist *newp;					      \
 	    size_t plen;						      \
