@@ -1,0 +1,8 @@
+perl -pi -e \
+  's/\@code\{('"$(echo cp dd df dir dircolors du install ln ls mkdir mkfifo mknod mv shred touch vdir|tr ' ' '|')"')\}/\@command{$1}/' coreutils.texi
+
+perl -pi -e \
+  's/\@code\{('"$(echo cp dd df dir dircolors du install ln ls mkdir mkfifo mknod mv shred touch vdir|tr ' ' '|')"')\}/\@command{$1}/' coreutils.texi
+
+regex=$((textutils; shellutils) | tr -s ' ' '|')
+perl -pi -e 's/\@code\{('"$regex"')\}/\@command{$1}/' coreutils.texi
