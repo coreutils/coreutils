@@ -178,9 +178,9 @@ change_file_group (const char *file, int group)
 	describe_change (file, 1);
 
       if (change_symlinks)
-	fail = LCHOWN (file, file_stats.st_uid, group);
+	fail = LCHOWN (file, (uid_t) -1, group);
       else
-	fail = chown (file, file_stats.st_uid, group);
+	fail = chown (file, (uid_t) -1, group);
 
       if (fail)
 	{
