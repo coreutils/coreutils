@@ -1,10 +1,11 @@
 /* obstack.h - object stack macros
    Copyright (C) 1988,89,90,91,92,93,94,96,97,98,99 Free Software Foundation, Inc.
 
+   This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
 
    NOTE: The canonical source of this file is maintained with the GNU C Library.
-   Bugs can be reported to bug-glibc@prep.ai.mit.edu.
+   Bugs can be reported to bug-glibc@gnu.org.
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
