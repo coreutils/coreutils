@@ -16,7 +16,7 @@ AC_DEFUN([gl_FUNC_MKSTEMP],
       gl_cv_func_mkstemp_limitations,
       [
         mkdir conftest.mkstemp
-        cd conftest.mkstemp
+        ( cd conftest.mkstemp
 	AC_TRY_RUN([
 #         include <stdlib.h>
 	  int main ()
@@ -36,6 +36,7 @@ AC_DEFUN([gl_FUNC_MKSTEMP],
 	gl_cv_func_mkstemp_limitations=no,
 	gl_cv_func_mkstemp_limitations=yes,
 	gl_cv_func_mkstemp_limitations=yes
+	)
 	)
       ]
     )
