@@ -22,10 +22,28 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#ifndef S_IREAD
-#define S_IREAD S_IRUSR
-#define S_IWRITE S_IWUSR
-#define S_IEXEC S_IXUSR
+#if !S_IRUSR
+# if S_IREAD
+#  define S_IRUSR S_IREAD
+# else
+#  define S_IRUSR 00400
+# endif
+#endif
+
+#if !S_IWUSR
+# if S_IWRITE
+#  define S_IWUSR S_IWRITE
+# else
+#  define S_IWUSR 00200
+# endif
+#endif
+
+#if !S_IXUSR
+# if S_IEXEC
+#  define S_IXUSR S_IEXEC
+# else
+#  define S_IXUSR 00100
+# endif
 #endif
 
 #ifdef STAT_MACROS_BROKEN
@@ -191,9 +209,9 @@ rwx (bits, chars)
      unsigned short bits;
      char *chars;
 {
-  chars[0] = (bits & S_IREAD) ? 'r' : '-';
-  chars[1] = (bits & S_IWRITE) ? 'w' : '-';
-  chars[2] = (bits & S_IEXEC) ? 'x' : '-';
+  chars[0] = (bits & S_IRUSR) ? 'r' : '-';
+  chars[1] = (bits & S_IWUSR) ? 'w' : '-';
+  chars[2] = (bits & S_IXUSR) ? 'x' : '-';
 }
 
 /* Set the 's' and 't' flags in file attributes string CHARS,
