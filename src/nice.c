@@ -30,8 +30,9 @@
 #endif
 
 #include "system.h"
-#include "long-options.h"
 #include "error.h"
+#include "long-options.h"
+#include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "nice"
@@ -76,30 +77,11 @@ by default.  Range goes from -20 (highest priority) to 19 (lowest).\n\
   exit (status);
 }
 
-/* Return nonzero if S represents a (possibly signed) decimal integer,
-   zero if not. */
-
-static int
-isinteger (const char *s)
-{
-  if (*s == '-' || *s == '+')
-    ++s;
-  if (*s == 0)
-    return 0;
-  while (*s)
-    {
-      if (!ISDIGIT (*s))
-	return 0;
-      ++s;
-    }
-  return 1;
-}
-
 int
 main (int argc, char **argv)
 {
   int current_priority;
-  int adjustment = 0;
+  long int adjustment = 0;
   int minusflag = 0;
   int adjustment_given = 0;
   int i;
@@ -118,12 +100,10 @@ main (int argc, char **argv)
 
       if (s[0] == '-' && s[1] == '-' && ISDIGIT (s[2]))
 	{
-	  if (!isinteger (&s[2]))
+	  if (xstrtol (&s[2], NULL, 10, &adjustment, "") != LONGINT_OK)
 	    error (1, 0, _("invalid option `%s'"), s);
 
 	  minusflag = 1;
-	  /* FIXME: use xstrtol */
-	  adjustment = atoi (&s[2]);
 	  adjustment_given = 1;
 	  ++i;
 	}
@@ -132,12 +112,10 @@ main (int argc, char **argv)
 	{
 	  if (s[1] == '+')
 	    ++s;
-	  if (!isinteger (&s[1]))
+	  if (xstrtol (&s[1], NULL, 10, &adjustment, "") != LONGINT_OK)
 	    error (1, 0, _("invalid option `%s'"), s);
 
 	  minusflag = 0;
-	  /* FIXME: use xstrtol */
-	  adjustment = atoi (&s[1]);
 	  adjustment_given = 1;
 	  ++i;
 	}
@@ -158,12 +136,11 @@ main (int argc, char **argv)
 		  usage (1);
 
 		case 'n':
-		  if (!isinteger (optarg))
+		  if (xstrtol (optarg, NULL, 10, &adjustment, "")
+		      != LONGINT_OK)
 		    error (1, 0, _("invalid priority `%s'"), optarg);
 
 		  minusflag = 0;
-		  /* FIXME: use xstrtol */
-		  adjustment = atoi (optarg);
 		  adjustment_given = 1;
 		  break;
 		}
