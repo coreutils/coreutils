@@ -1,5 +1,17 @@
 2001-11-11  Jim Meyering  <meyering@lucent.com>
 
+
+	* src/od.c (struct tspec): Declare function pointer with prototype.
+
+	* src/sum.c (main): Declare function pointer with prototype.
+
+	* src/tsort.c (count_items): Mark parameter as unused.
+
+	* src/sort.c (struct_month_cmp): Guard definition with the same
+	cpp condition that guards the use.
+
+	* src/tail.c (xwrite): Remove assertion that size_t N >= 0.
+
 	* Version 2.0.17.
 
 	* src/pr.c (struct COLUMN) [print_func]: Declare with a protype.
@@ -15,7 +27,8 @@
 	compilers are required to support.  Sorry, translators :-(
 
 	* src/md5sum.c (usage): Split --help output into smaller pieces.
-	* src/ptx.c (main, usage): Split --help output into smaller pieces.
+	* src/ptx.c (main, usage): Likewise.
+	* src/fmt.c (usage): Likewise.
 
 	* src/wc.c (usage): Split --help output into smaller pieces.
 	Use fputs, not printf.
@@ -34,6 +47,7 @@
 	* src/tr.c (usage): Likewise.
 	* src/unexpand.c (usage): Likewise.
 	* src/uniq.c (usage): Likewise.
+	* src/tail.c (usage): Likewise.
 
 	* src/sys2.h (alloca) [__GNUC__]: Define only if not already defined.
 
