@@ -1,5 +1,9 @@
 #!/bin/sh
-# confirm that copying a directory into itself gets a proper diagnostic
+# Confirm that copying a directory into itself gets a proper diagnostic.
+# In 4.0.35 and earlier, `mkdir dir && cp -R dir dir' would produce this:
+#   cp: won't create hard link `dir/dir/dir' to directory `'
+# Now it gives this:
+#   cp: can't copy a directory `dir' into itself `dir/dir'
 
 if test "$VERBOSE" = yes; then
   set -x
