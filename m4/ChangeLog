@@ -3,6 +3,8 @@
 	* mbstate_t.m4: New file, defining AC_MBSTATE_T_OBJECT.
 	* prereq.m4 (jm_PREREQ_QUOTEARG): Use it.  Add check for iswprint.
 
+2000-06-23  Jim Meyering  <meyering@lucent.com>
+
 	* afs.m4: Add missing AC_MSG_RESULT.
 	Reported by Bruno Haible.
 
