@@ -26,6 +26,10 @@
 #include <assert.h>
 #include <sys/types.h>
 
+#if HAVE_HURD_H
+# include <hurd.h>
+#endif
+
 #include "system.h"
 #include "error.h"
 #include "backupfile.h"
@@ -1507,6 +1511,16 @@ copy_internal (const char *src_path, const char *dst_path,
 	    return 1;
 	}
     }
+
+#if HAVE_STRUCT_STAT_ST_AUTHOR
+  /* Preserve the st_author field.  */
+  {
+    file_t file = getdport (dst_path);
+    if (file_chauthor (file, src_sb.st_author))
+      error (0, errno, _("preserving authorship for %s"), quote (dst_path));
+    mach_port_deallocate (mach_task_self (), file);
+  }
+#endif
 
   /* Permissions of newly-created regular files were set upon `open' in
      copy_reg.  But don't return early if there were any special bits and
