@@ -226,7 +226,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 SIZE may be (or may be an integer optionally followed by) one of following:\n\
 kB 1000, K 1024, MB 1,000,000, M 1,048,576, and so on for G, T, P, E, Z, Y.\n\
 "), stdout);
-      puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
+      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);
 }

@@ -262,7 +262,7 @@ Change the mode of each FILE to MODE.\n\
 Each MODE is one or more of the letters ugoa, one of the symbols +-= and\n\
 one or more of the letters rwxXstugo.\n\
 "), stdout);
-      puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
+      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);
 }

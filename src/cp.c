@@ -254,7 +254,7 @@ As a special case, cp makes a backup of SOURCE when the force and backup\n\
 options are given and SOURCE and DEST are the same name for an existing,\n\
 regular file.\n\
 "), stdout);
-      puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
+      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);
 }

@@ -231,7 +231,7 @@ In addition, file system backups and remote mirrors may contain copies\n\
 of the file that cannot be removed, and that will allow a shredded file\n\
 to be recovered later.\n\
 "), stdout);
-      puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
+      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);
 }

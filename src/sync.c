@@ -48,7 +48,7 @@ Force changed blocks to disk, update the super block.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
-      puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
+      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);
 }

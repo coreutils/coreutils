@@ -930,7 +930,7 @@ Valid format sequences for file systems:\n\
   %T - Type in human readable form\n\
   %t - Type in hex\n\
 "), stdout);
-      puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
+      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);
 }

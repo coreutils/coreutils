@@ -3714,7 +3714,7 @@ optional WHEN argument is equivalent to using --color=always.  With\n\
 --color=auto, color codes are output only if standard output is connected\n\
 to a terminal (tty).\n\
 "), stdout);
-      puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
+      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);
 }

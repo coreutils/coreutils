@@ -111,7 +111,7 @@ Note that if you use rm to remove a file, it is usually possible to recover\n\
 the contents of that file.  If you want more assurance that the contents are\n\
 truly unrecoverable, consider using shred.\n\
 "), stdout);
-      puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
+      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);
 }

@@ -331,7 +331,7 @@ Each KEYWORD may be:\n\
   sync      pad every input block with NULs to ibs-size; when used\n\
               with block or unblock, pad with spaces rather than NULs\n\
 "), stdout);
-      puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
+      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);
 }

@@ -262,7 +262,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 \n\
 Note that the -d and -t options accept different time-date formats.\n\
 "), stdout);
-      puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
+      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);
 }
