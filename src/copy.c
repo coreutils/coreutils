@@ -1556,11 +1556,14 @@ copy_internal (const char *src_path, const char *dst_path,
 
 un_backup:
 
-  /* We didn't create the destination.
-     Remove the entry associating the source dev/ino with the
+  /* We have failed to create the destination file.
+     If we've just added a dev/ino entry via the remember_copied
+     call above (i.e., unless we've just failed to create a hard link),
+     remove the entry associating the source dev/ino with the
      destination file name, so we don't try to `preserve' a link
      to a file we didn't create.  */
-  forget_created (src_sb.st_ino, src_sb.st_dev);
+  if (earlier_file == NULL)
+    forget_created (src_sb.st_ino, src_sb.st_dev);
 
   if (dst_backup)
     {
