@@ -1,3 +1,10 @@
+1999-04-15  Jim Meyering  <meyering@ascend.com>
+
+	* src/pr.c Add comments.
+	(init_header): Tweak white space in Date/Time header.
+	* tests/pr/Test.pm: Updated all tests to reflect the big
+	1999-02-13 change.  From Roland Huebner.
+
 1999-04-12  Jim Meyering  <meyering@ascend.com>
 
 	* src/cat.c (main): Declare out_dev to be of type dev_t, not `int'.
