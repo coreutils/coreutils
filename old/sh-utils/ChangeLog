@@ -1,8 +1,12 @@
-Fri Mar 29 08:58:10 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+Fri Mar 29 22:13:10 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
-	* configure.in (VERSION): Bump to 1.12f.
+	* src/Makefile.am (INCLUDES): Replace -I$(top_srcdir)/intl with
+	-I../intl.  With the former, compiles didn't find libintl.h when
+	configured with `--srcdir=..'.  Reported by Marcus Daniels
+	<marcus@sysc.pdx.edu>.
 
-	* doc/Makefile.am (EXTRA_DIST): Set to getdate.texi.
+	* doc/Makefile.am (EXTRA_DIST): Set to getdate.texi so that file
+	gets distributed.
 
 	* src/Makefile.am (EXTRAdir): Set to $(bindir).
 
