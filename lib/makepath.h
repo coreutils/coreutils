@@ -1,10 +1,9 @@
-#ifndef __P
-#if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
+#if __STDC__
+#undef __P
 #define __P(args) args
 #else
 #define __P(args) ()
-#endif /* GCC.  */
-#endif /* Not __P.  */
+#endif
 
 int
   make_path __P ((const char *_argpath,
