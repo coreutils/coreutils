@@ -519,11 +519,10 @@ du_files (char **files, int bit_flags)
       process_file (fts, ent);
     }
 
-  if (fts_close (fts) < 0)
-    {
-      error (0, errno, "closing FTS handle");
-      fail = 1;
-    }
+  /* Ignore failure, since the only way it can do so is in failing to
+     return to the original directory, and since we're about to exit,
+     that doesn't matter.  */
+  fts_close (fts);
 
   if (print_totals)
     print_size (tot_size, _("total"));
