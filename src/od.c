@@ -109,9 +109,6 @@ typedef double LONG_DOUBLE;
 # define LDBL_DIG DBL_DIG
 #endif
 
-char *xmalloc ();
-char *xrealloc ();
-
 enum size_spec
   {
     NO_SIZE,
@@ -952,8 +949,9 @@ decode_format_string (const char *s)
       if (n_specs >= n_specs_allocated)
 	{
 	  n_specs_allocated = 1 + (3 * n_specs_allocated) / 2;
-	  spec = (struct tspec *) xrealloc (spec, (n_specs_allocated
-						   * sizeof (struct tspec)));
+	  spec = (struct tspec *) xrealloc ((char *) spec,
+					    (n_specs_allocated
+					     * sizeof (struct tspec)));
 	}
 
       memcpy ((char *) &spec[n_specs], (char *) &tspec,
