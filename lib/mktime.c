@@ -25,10 +25,6 @@
 # include <config.h>
 #endif
 
-#ifdef _LIBC
-# define STDC_HEADERS 1
-#endif
-
 /* Assume that leap seconds are possible, unless told otherwise.
    If the host has a `zic' command with a `-L leapsecondfilename' option,
    then it supports leap seconds; otherwise it probably doesn't.  */
@@ -43,10 +39,8 @@
 
 #if DEBUG
 # include <stdio.h>
-# if STDC_HEADERS
-#  include <stdlib.h>
-#  include <string.h>
-# endif
+# include <stdlib.h>
+# include <string.h>
 /* Make it work even if the system's libc has its own mktime routine.  */
 # define mktime my_mktime
 #endif /* DEBUG */
@@ -635,6 +629,6 @@ main (int argc, char **argv)
 
 /*
 Local Variables:
-compile-command: "gcc -DDEBUG -DSTDC_HEADERS -Wall -W -O -g mktime.c -o mktime"
+compile-command: "gcc -DDEBUG -Wall -W -O -g mktime.c -o mktime"
 End:
 */
