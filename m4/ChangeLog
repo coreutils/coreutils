@@ -1,3 +1,10 @@
+2000-01-23  Jim Meyering  <meyering@lucent.com>
+
+	* jm-macros.m4: (OPTIONAL_BIN_PROGS, OPTIONAL_BIN_ZCRIPTS, MAN):
+	AC_SUBST these here, rather than just in sh-util/configure.in, so
+	that the now-shared-by-fileutils-and-textutils lib/Makefile.am are
+	all the same.
+
 2000-01-22  Jim Meyering  <meyering@lucent.com>
 
 	* jm-macros.m4: Call AC_PROG_CC_STDC just before AC_C_CONST.
