@@ -32,10 +32,7 @@
 # define UINTMAX_MAX ((uintmax_t) -1)
 #endif
 
-#if HAVE_LOCALE_H && HAVE_LOCALECONV
-# include <locale.h>
-#endif
-
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -193,7 +190,6 @@ human_readable (uintmax_t n, char *buf, int opts,
   size_t decimal_pointlen = 1;
   char const *grouping = "";
   char const *thousands_sep = "";
-#if HAVE_LOCALE_H && HAVE_LOCALECONV
   struct lconv const *l = localeconv ();
   size_t pointlen = strlen (l->decimal_point);
   if (0 < pointlen && pointlen <= MB_LEN_MAX)
@@ -204,7 +200,6 @@ human_readable (uintmax_t n, char *buf, int opts,
   grouping = l->grouping;
   if (strlen (l->thousands_sep) <= MB_LEN_MAX)
     thousands_sep = l->thousands_sep;
-#endif
 
   psuffix = buf + LONGEST_HUMAN_READABLE - HUMAN_READABLE_SUFFIX_LENGTH_MAX;
   p = psuffix;
