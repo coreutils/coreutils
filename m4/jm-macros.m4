@@ -1,4 +1,4 @@
-#serial 52   -*- autoconf -*-
+#serial 53   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -66,7 +66,6 @@ AC_DEFUN([jm_MACROS],
   AC_REQUIRE([gt_INTTYPES_PRI])
 
   AC_REQUIRE([jm_FUNC_GETGROUPS])
-  test -n "$GETGROUPS_LIB" && LIBS="$GETGROUPS_LIB $LIBS"
 
   AC_REQUIRE([AC_FUNC_FSEEKO])
   AC_REQUIRE([AC_FUNC_VPRINTF])
