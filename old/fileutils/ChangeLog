@@ -1,5 +1,20 @@
 1997-08-31  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* m4/Makefile.am (EXTRA_DIST): Add lstat.m4.
+
+	* m4/lstat.m4: New file.
+	* lib/lstat.c: New file.
+
+	* src/rm.c (fspec_get_full_mode): Don't call error here.
+	(remove_file): Call error after fspec_get_full_mode call, if necessary.
+	Don't print mode when asking whether to descend into write-protected
+	directory.
+	(remove_dir): Don't fail just because we can't stat the file to get
+	the mode for the prompt string.
+	(rm): Exit successfully for missing files when -f is given.
+	(rm): Remove cruft to work around SunOS4's broken lstat now that
+	there is a working replacement function.
+
 	* lib/oa-hash.c: New file.
 	* lib/oa-hash.h: New file.
 
