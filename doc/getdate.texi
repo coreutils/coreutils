@@ -35,13 +35,13 @@ programs accept.  These are the strings you, as a user, can supply as
 arguments to the various programs.  The C interface (via the
 @code{getdate} function) is not described here.
 
-@cindex beginning of time, for @sc{posix}
-@cindex epoch, for @sc{posix}
+@cindex beginning of time, for @acronym{POSIX}
+@cindex epoch, for @acronym{POSIX}
 Although the date syntax here can represent any possible time since the
 year zero, computer integers often cannot represent such a wide range of
-time.  On @sc{posix} systems, the clock starts at 1970-01-01 00:00:00
-@sc{utc}: @sc{posix} does not require support for times before the
-@sc{posix} Epoch and times far in the future.  Traditional Unix systems
+time.  On @acronym{POSIX} systems, the clock starts at 1970-01-01 00:00:00
+@sc{utc}: @acronym{POSIX} does not require support for times before the
+@acronym{POSIX} Epoch and times far in the future.  Traditional Unix systems
 have 32-bit signed @code{time_t} and can represent times from 1901-12-13
 20:45:52 through 2038-01-19 03:14:07 @sc{utc}.  Systems with 64-bit
 signed @code{time_t} can represent all the times in the known
