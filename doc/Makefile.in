@@ -72,7 +72,7 @@ default: all
 $(srcdir)/Makefile.in: @MAINT@Makefile.am $(top_srcdir)/configure.in
 	cd $(top_srcdir) && automake $(subdir)/Makefile
 
-Makefile: $(top_builddir)/config.status $(srcdir)/Makefile.in
+Makefile: $(top_builddir)/config.status $(srcdir)/Makefile.in $(BUILT_SOURCES)
 	cd $(top_builddir) && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
 
 version.texi: @MAINT@stamp-vti
