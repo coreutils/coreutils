@@ -1,3 +1,12 @@
+2004-10-17  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* jm-macros.m4 (gl_MACROS): Check for mbrlen, for pathchk.
+	(gl_CHECK_ALL_TYPES): Require AC_TYPE_MBSTATE_T, for pathchk.
+
+	Sync from gnulib.
+	* getopt.m4 (gl_GETOPT): Detect and reject the incompatible BSD
+	implementation of getopt_long.
+
 2004-10-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Sync from gnulib.

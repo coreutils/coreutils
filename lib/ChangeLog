@@ -1,3 +1,11 @@
+2004-10-17  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Sync from gnulib.
+	* diacrit.c, diacrit.h: Add copyright notice.
+	* getpass.c (fflush_unlocked, flockfile, funlockfile)
+	(fputs_unlocked, putc_unlocked) [!_LIBCS && !USE_UNLOCKED_IO]: Map
+	to real functions.
+
 2004-10-13  Jim Meyering  <jim@meyering.net>
 
 	* fts.c (fts_read): When about to fail (by returning NULL) due

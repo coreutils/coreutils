@@ -1,3 +1,30 @@
+2004-10-17  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* AUTHORS: Add self to pathchk.
+	* src/pathchk.c (AUTHORS): Add self.
+	Change "path" to "file name" whenever possible.
+	Remove usage comment, as it was a duplication of the code or doc.
+	Include <wchar.h> if available.
+	(mbrlen, mbstate_t) [! (HAVE_MBRLEN && HAVE_MBSTATE_T)]: Define.
+	(NEED_PATHCONF_WRAPPER, PATH_MAX, PATH_MAX_FOR, NAME_MAX,
+	pathconf_wrapper, portable_chars, dir_ok): Remove.
+	(NAME_MAX_MINIMUM, PATH_MAX_MINIMUM): New macros.
+	(pathconf, _PC_NAME_MAX, _PC_PATH_MAX): Define if nonexistent.
+	(portable_chars_only): New arg FILELEN.
+	Don't assume ASCII; we might be on an EBCDIC host.
+	Don't assume unibyte locale in diagnostic.
+	(component_start, component_len): New functions.
+	(validate_file_name): Renamed from validate_path.  All uses changed.
+	Pretty much a complete rewrite.
+	Don't make copy of file arg.  Always append trailing slash to
+	pathconf arg, just in case it's a symlink (this is pure paranoia;
+	we don't know of any hosts where the trailing slash is required).
+	Use size_t instead of long int when possible.
+	Avoid need to call pathconf in most practical cases.
+	Don't use euidaccess several times to test searchability;
+	just use lstat once.  Reword diagnostic to put the (often very long)
+	file names last.
+	
 2004-10-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.

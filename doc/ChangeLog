@@ -1,3 +1,12 @@
+2004-10-17  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (pathchk invocation): Overall lengths are
+	OS limits, not file system limits.  Component length checks
+	apply to all components, not merely to existing ones.  Say
+	that nonexistent names are not errors.  For -p, omit all
+	checks based on the underlying file system, not merely length
+	checks.  Explain what the portabile file name character set is.
+
 2004-10-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (printf invocation): Mention ISO/IEC 10646 as
