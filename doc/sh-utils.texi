@@ -28,36 +28,39 @@
 @ifinfo
 @format
 START-INFO-DIR-ENTRY
-* Shell utilities: (sh-utils).		GNU shell utilities.
-* basename: (sh-utils)basename invocation.	Strip directory and suffix.
-* date: (sh-utils)date invocation.		Print/set system date and time.
-* dirname: (sh-utils)dirname invocation.	Strip non-directory suffix.
-* echo: (sh-utils)echo invocation.		Print a line of text.
-* env: (sh-utils)env invocation.		Modify the environment.
-* expr: (sh-utils)expr invocation.		Evaluate expressions.
-* false: (sh-utils)false invocation.		Do nothing, unsuccessfully.
-* groups: (sh-utils)groups invocation.		Print group names a user is in.
-* hostname: (sh-utils)hostname invocation.	Print or set system name.
-* id: (sh-utils)id invocation.			Print real/effective uid/gid.
-* logname: (sh-utils)logname invocation.	Print current login name.
-* nice: (sh-utils)nice invocation.		Modify scheduling priority.
-* nohup: (sh-utils)nohup invocation.		Immunize to hangups.
-* pathchk: (sh-utils)pathchk invocation.	Check file name portability.
-* printenv: (sh-utils)printenv invocation.	Print environment variables.
-* printf: (sh-utils)printf invocation.	        Format and print data.
-* pwd: (sh-utils)pwd invocation.	        Print working directory.
-* sleep: (sh-utils)sleep invocation.	        Delay for a specified time.
-* stty: (sh-utils)stty invocation.	        Print/change terminal settings.
-* su: (sh-utils)su invocation.	                Modify user and group id.
-* tee: (sh-utils)tee invocation.	        Redirect to multiple files.
-* test: (sh-utils)test invocation.	        File/string tests.
-* true: (sh-utils)true invocation.	        Do nothing, successfully.
-* tty: (sh-utils)tty invocation.	        Print terminal name.
-* uname: (sh-utils)uname invocation.	        Print system information.
-* users: (sh-utils)users invocation.	        Print current user names.
-* who: (sh-utils)who invocation.	        Print who is logged in.
-* whoami: (sh-utils)whoami invocation.		Print effective user id.
-* yes: (sh-utils)yes invocation.		Print a string indefinitely.
+* Shell utilities: (sh-utils).          GNU shell utilities.
+* basename: (sh-utils)basename invocation.      Strip directory and suffix.
+* chroot: (sh-utils)chroot invocation.          Specify the root directory.
+* date: (sh-utils)date invocation.              Print/set system date and time.
+* dirname: (sh-utils)dirname invocation.        Strip non-directory suffix.
+* echo: (sh-utils)echo invocation.              Print a line of text.
+* env: (sh-utils)env invocation.                Modify the environment.
+* expr: (sh-utils)expr invocation.              Evaluate expressions.
+* factor: (sh-utils)factor invocation.          Print prime factors
+* false: (sh-utils)false invocation.            Do nothing, unsuccessfully.
+* groups: (sh-utils)groups invocation.          Print group names a user is in.
+* hostname: (sh-utils)hostname invocation.      Print or set system name.
+* id: (sh-utils)id invocation.                  Print real/effective uid/gid.
+* logname: (sh-utils)logname invocation.        Print current login name.
+* nice: (sh-utils)nice invocation.              Modify scheduling priority.
+* nohup: (sh-utils)nohup invocation.            Immunize to hangups.
+* pathchk: (sh-utils)pathchk invocation.        Check file name portability.
+* printenv: (sh-utils)printenv invocation.      Print environment variables.
+* printf: (sh-utils)printf invocation.          Format and print data.
+* pwd: (sh-utils)pwd invocation.                Print working directory.
+* seq: (sh-utils)seq invocation.                Print numeric sequences
+* sleep: (sh-utils)sleep invocation.            Delay for a specified time.
+* stty: (sh-utils)stty invocation.              Print/change terminal settings.
+* su: (sh-utils)su invocation.                  Modify user and group id.
+* tee: (sh-utils)tee invocation.                Redirect to multiple files.
+* test: (sh-utils)test invocation.              File/string tests.
+* true: (sh-utils)true invocation.              Do nothing, successfully.
+* tty: (sh-utils)tty invocation.                Print terminal name.
+* uname: (sh-utils)uname invocation.            Print system information.
+* users: (sh-utils)users invocation.            Print current user names.
+* who: (sh-utils)who invocation.                Print who is logged in.
+* whoami: (sh-utils)whoami invocation.          Print effective user id.
+* yes: (sh-utils)yes invocation.                Print a string indefinitely.
 END-INFO-DIR-ENTRY
 @end format
 @end ifinfo
@@ -65,7 +68,7 @@ END-INFO-DIR-ENTRY
 @ifinfo
 This file documents the GNU shell utilities.
 
-Copyright (C) 1994 Free Software Foundation, Inc.
+Copyright (C) 1994, 95, 96 Free Software Foundation, Inc.
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -92,12 +95,12 @@ by the Foundation.
 @titlepage
 @title GNU @code{sh-utils}
 @subtitle A set of shell utilities
-@subtitle for version @value{VERSION}, @value{RELEASEDATE}
+@subtitle for version @value{VERSION}, @value{UPDATED}
 @author David MacKenzie et al.
 
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 1994 Free Software Foundation, Inc.
+Copyright @copyright{} 1994, 95, 96 Free Software Foundation, Inc.
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -126,18 +129,21 @@ This manual minimally documents version @value{VERSION} of the GNU shell
 utilities.
 
 @menu
-* Introduction::		Caveats, overview, and authors.
+* Introduction::                Caveats, overview, and authors.
 * Common options::              Common options.
-* Date input formats::		Specifying date strings.
+
+* Date input formats::          Specifying date strings.
 * Printing text::               echo printf yes
 * Conditions::                  false true test expr
 * Redirection::                 tee
 * File name manipulation::      dirname basename pathchk
-* Working context::		pwd stty printenv tty
+* Working context::             pwd stty printenv tty
 * User information::            id logname whoami groups users who
 * System context::              date uname hostname
 * Modified command invocation:: env nice nohup su
 * Delaying::                    sleep
+* Numeric operations::          factor seq
+
 * Index::                       General index.
 @end menu
 @end ifinfo
@@ -245,14 +251,12 @@ This section describes commands that display text strings.
 @cindex text, displaying
 @cindex arbitrary text, displaying
 
-Synopsis:
+@code{echo} writes each given @var{string} to standard output, with a
+space between each and a newline after the last one.  Synopsis:
 
 @example
 echo [@var{option}]@dots{} [@var{string}]@dots{}
 @end example
-
-@code{echo} writes each given @var{string} to standard output, with a
-space between each and a newline after the last one.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -298,7 +302,7 @@ a valid octal number, it is printed literally.
 @section @code{printf}: Format and print data
 
 @pindex printf
-Synopsis:
+@code{printf} does formatted printing of text. Synopsis:
 
 @example
 printf @var{format} [@var{argument}]@dots{}
@@ -699,9 +703,9 @@ Operands are either numbers or strings.  @code{expr} coerces
 anything appearing in an operand position to an integer or a string
 depending on the operation being applied to it.
 
-Strings are not quoted for @code{expr}, though you may need to quote
-them to protect characters with special meaning to the shell, e.g.,
-spaces.
+Strings are not quoted for @code{expr} itself, though you may need to
+quote them to protect characters with special meaning to the shell,
+e.g., spaces.
 
 @cindex parentheses for grouping
 Operators may given as infix symbols or prefix keywords.  Parentheses
@@ -897,10 +901,10 @@ to change the input source or output destination of a command.  But one
 useful redirection is performed by a separate command, not by the shell;
 it's described here.
 
-
 @menu
 * tee invocation::              Redirect output to multiple files.
 @end menu
+
 
 @node tee invocation
 @section @code{tee}: Redirect output to multiple files
@@ -912,9 +916,7 @@ it's described here.
 
 The @code{tee} command copies standard input to standard output and also
 to any files given as arguments.  This is useful when you want not only
-to send some data down a pipe, but also to save a copy.
-
-Synopsis:
+to send some data down a pipe, but also to save a copy.  Synopsis:
 
 @example
 tee [@var{option}]@dots{} [@var{file}]@dots{}
@@ -969,16 +971,16 @@ This section describes commands that manipulate file names.
 @cindex file names, stripping directory and suffix
 @cindex leading directory components, stripping
 
-Synopsis:
+@code{basename} removes any leading directory components from
+@var{name}.  Synopsis:
 
 @example
 basename @var{name} [@var{suffix}]
 @end example
 
-The @code{basename} command removes any leading directory components
-from @var{name}.  If @var{suffix} is specified and is identical
-to the end of @var{name}, it is removed from @var{name} as well.
-@code{basename} prints the result on standard output.
+If @var{suffix} is specified and is identical to the end of @var{name},
+it is removed from @var{name} as well.  @code{basename} prints the
+result on standard output.
 
 The only options are @samp{--help} and @samp{--version}.  @xref{Common
 options}.
@@ -992,15 +994,15 @@ options}.
 @cindex stripping non-directory suffix
 @cindex non-directory suffix, stripping
 
-Synopsis:
+@code{dirname} prints all but the final slash-delimited component of
+a string (presumably a filename).  Synopsis:
 
 @example
 dirname @var{name}
 @end example
 
-@code{dirname} prints all but the final slash-delimited component
-of @var{name}.  If @var{name} is a single component,
-@code{dirname} prints @samp{.} (meaning the current directory).
+If @var{name} is a single component, @code{dirname} prints @samp{.}
+(meaning the current directory).
 
 The only options are @samp{--help} and @samp{--version}.  @xref{Common
 options}.
@@ -1014,7 +1016,7 @@ options}.
 @cindex valid file names, checking for
 @cindex portable file names, checking for
 
-Synopsis:
+@code{pathchk} checks portability of filenames.  Synopsis:
 
 @example
 pathchk [@var{option}]@dots{} @var{name}@dots{}
@@ -1108,6 +1110,14 @@ The only options are a lone @samp{--help} or
 @cindex terminal settings
 @cindex line settings of terminal
 
+@code{stty} prints or changes terminal characteristics, such as baud rate.
+Synopses:
+
+@example
+stty [@var{setting}]@dots{}
+stty [@var{option}]
+@end example
+
 If given no arguments, @code{stty} prints the baud rate, line
 discipline number (on systems that support it), and line settings
 that have been changed from the values set by @samp{stty sane}.
@@ -1116,13 +1126,6 @@ standard input.
 
 @code{stty} accepts many non-option arguments that change aspects of
 the terminal line operation, as described below.
-
-Synopses:
-
-@example
-stty [@var{setting}]@dots{}
-stty [@var{option}]
-@end example
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -1735,7 +1738,7 @@ of: 0 50 75 110 134 134.5 150 200 300 600 1200 1800 2400 4800 9600
 @cindex printing all or some environment variables
 @cindex environment variables, printing
 
-Synopsis:
+@code{printenv} prints environment variable values.  Synopsis:
 
 @example
 printenv [@var{option}] [@var{variable}]@dots{}
@@ -1767,7 +1770,6 @@ Exit status:
 
 @code{tty} prints the file name of the tty connected to its standard
 input.  It prints @samp{not a tty} if standard input is not a tty.
-
 Synopsis:
 
 @example
@@ -1826,10 +1828,8 @@ logins, groups, and so forth.
 @cindex effective uid and gid, printing
 @cindex printing real and effective uid and gid
 
-@noindent @code{id} prints information about the given user, or the process
-running it if no user is specified.
-
-Synopsis:
+@code{id} prints information about the given user, or the process
+running it if no user is specified.  Synopsis:
 
 @example
 id [@var{option}]@dots{} [@var{username}]
@@ -1923,11 +1923,9 @@ options}.
 @cindex supplementary groups, printing
 
 @code{groups} prints the names of the primary and any supplementary
-groups that each given @var{username}, or the current process if none
-are given, is in.  If user names are given, the name of each user is
-printed before the list of that user's groups.
-
-Synopsis:
+groups for each given @var{username}, or the current process if no names
+are given.  If names are given, the name of each user is printed before
+the list of that user's groups.  Synopsis:
 
 @example
 groups [@var{username}]@dots{}
@@ -1951,9 +1949,7 @@ options}.
 names of users currently logged in to the current host.  Each user name
 corresponds to a login session, so if a user has more than one login
 session, that user's name will appear the same number of times in the
-output.
-
-Synopsis:
+output. Synopsis:
 
 @example
 users [@var{file}]
@@ -1976,6 +1972,7 @@ options}.
 @cindex printing current user information
 @cindex information, about current users
 
+@code{who} prints information about users who are currently logged on.
 Synopsis:
 
 @example
@@ -2085,10 +2082,8 @@ information.
 @cindex time, printing or setting
 @cindex printing the current time
 
-@code{date} with no arguments prints the current time and date, in
-the format of the @samp{%c} directive (described below).
-
-Synopses:
+@code{date} with no arguments prints the current time and date, in the
+format of the @samp{%c} directive (described below).  Synopses:
 
 @example
 date [@var{option}]@dots{} [+@var{format}]
@@ -2107,10 +2102,10 @@ directives, which start with @samp{%}, characters in the format string
 are printed unchanged.  The directives are described below.
 
 @menu
-* Time directives::             %[HIklMprsSTXZ]
+* Time directives::             %[HIklMprsSTXzZ]
 * Date directives::             %[aAbBcdDhjmUwWxyY]
 * Literal directives::          %[%nt]
-* Padding::			Pad with zeroes, spaces (%_), or nothing (%-).
+* Padding::                     Pad with zeroes, spaces (%_), or nothing (%-).
 * Setting the time::            Changing the system clock.
 * Options for date::            Instead of the current time.
 * Examples of date::            Examples.
@@ -2155,10 +2150,9 @@ time, 24-hour (hh:mm:ss)
 @item %X
 locale's time representation (%H:%M:%S)
 @item %z
-RFC-822 style numeric time zone (e.g., -0600 or +0100), or nothing
-if no time zone is determinable.
-Note that this value reflects the @emph{current} time zone.
-It isn't changed by the @samp{--date} option.
+RFC-822 style numeric time zone (e.g., -0600 or +0100), or nothing if no
+time zone is determinable.  This value reflects the @emph{current} time
+zone.  It isn't changed by the @samp{--date} option.
 @item %Z
 time zone (e.g., EDT), or nothing if no timezone is
 determinable.
@@ -2197,11 +2191,19 @@ day of year (001@dots{}366)
 @item %m
 month (01@dots{}12)
 @item %U
-week number of year with Sunday as first day of week (00@dots{}53)
+week number of year with Sunday as first day of week (00@dots{}53).
+Days in a new year preceding the first Sunday are in week zero.
+@item %V
+week number of year with Monday as first day of the week as a decimal
+(01@dots{}53). If the week containing January 1 has four or more days in
+the new year, then it is considered week 1; otherwise, it is week 53 of
+the previous year, and the next week is week 1. (See the ISO 8601: 1988
+standard.)
 @item %w
 day of week (0@dots{}6) with 0 corresponding to Sunday
 @item %W
-week number of year with Monday as first day of week (00@dots{}53)
+week number of year with Monday as first day of week (00@dots{}53).
+Days in a new year preceding the first Sunday are in week zero.
 @item %x
 locale's date representation (mm/dd/yy)
 @item %y
@@ -2351,10 +2353,8 @@ If @samp{--utc} is also specified, use @samp{GMT} in place of @samp{%z}.
 @itemx --reference=@var{file}
 @opindex -r
 @opindex --reference
-Display the time and date as obtained from a reference @var{file},
-instead of the current time and date.  Each file has a few timestamps
-associated with it.  In this context, the time and date of the last
-modification are used.
+Display the time and date reference according to the last modification
+time of @var{file}, instead of the current time and date.
 
 @item -s @var{datestr}
 @itemx --set=@var{datestr}
@@ -2456,9 +2456,7 @@ Mon, 25 Mar 1996 23:34:17 -0600
 
 @code{uname} prints information about the machine and operating system
 it is run on.  If no options are given, @code{uname} acts as if the
-@code{-s} option were given.
-
-Synopsis:
+@code{-s} option were given. Synopsis:
 
 @example
 uname [@var{option}]@dots{}
@@ -2543,9 +2541,7 @@ Print the operating system version.
 With no arguments, @code{hostname} prints the name of the current host
 system.  With one argument, it sets the current host name to the
 specified string.  You must have appropriate privileges to set the host
-name.
-
-Synopsis:
+name. Synopsis:
 
 @example
 hostname [@var{name}]
@@ -2567,6 +2563,7 @@ different than the current one: a modified environment, as a different
 user, etc.
 
 @menu
+* chroot invocation::           Modify the root directory.
 * env invocation::              Modify environment variables.
 * nice invocation::             Modify scheduling priority.
 * nohup invocation::            Immunize to hangups.
@@ -2574,17 +2571,42 @@ user, etc.
 @end menu
 
 
+@node chroot invocation
+@section @code{chroot}: Run a command with a different root directory
+
+@pindex chroot
+@cindex running a program in a specified root directory
+@cindex root directory, running a program in a specified
+
+@code{chroot} runs a command with a specified root directory.
+On many systems, only the super-user can do this.
+Synopses:
+
+@example
+chroot @var{newroot} [@var{command} [@var{args}]@dots{}]
+chroot @var{option}
+@end example
+
+Ordinarily, filenames are looked up starting at the root of the
+directory structure, i.e., @file{/}.  @code{chroot} changes the root to
+the directory @var{newroot} (which must exist) and then runs
+@var{command} with optional @var{args}.  If @var{command} is not
+specified, the default is the value of the @code{SHELL} environment
+variable or @code{/bin/sh} if not set, invoked with the @samp{-i} option.
+
+The only options are @samp{--help} and @samp{--version}.  @xref{Common
+options}.
+
+
 @node env invocation
 @section @code{env}: Run a command in a modified environment
 
 @pindex env
 @cindex environment, running a program in a modified
-@cindex modified environment, running a program in
+@cindex modified environment, running a program in a
+@cindex running a program in a modified environment
 
-@code{env} runs a command with an environment modified as specified
-by the command line arguments.
-
-Synopses:
+@code{env} runs a command with a modified environment.  Synopses:
 
 @example
 env [@var{option}]@dots{} [@var{name}=@var{value}]@dots{} @c
@@ -2639,6 +2661,13 @@ Start with an empty environment, ignoring the inherited environment.
 @cindex priority, modifying
 @cindex appropriate privileges
 
+@code{nice} prints or modifies the scheduling priority of a job.
+Synopsis:
+
+@example
+nice [@var{option}]@dots{} [@var{command} [@var{arg}]@dots{}]
+@end example
+
 If no arguments are given, @code{nice} prints the current scheduling
 priority, which it inherited.  Otherwise, @code{nice} runs the given
 @var{command} with its scheduling priority adjusted.  If no
@@ -2646,12 +2675,6 @@ priority, which it inherited.  Otherwise, @code{nice} runs the given
 10.  You must have appropriate privileges to specify a negative
 adjustment.  The priority can be adjusted by @code{nice} over the range
 of -20 (the highest priority) to 19 (the lowest).
-
-Synopsis:
-
-@example
-nice [@var{option}]@dots{} [@var{command} [@var{arg}]@dots{}]
-@end example
 
 @cindex conflicts with shell built-ins
 @cindex built-in shell commands, conflicts with
@@ -2678,24 +2701,24 @@ Add @var{adjustment} instead of 10 to the command's priority.
 @pindex nohup
 @cindex hangups, immunity to
 @cindex immunity to hangups
+@cindex logging out and continuing to run
 
 @flindex nohup.out
 @code{nohup} runs the given @var{command} with hangup signals ignored,
 so that the command can continue running in the background after you log
-out.
-
-Synopsis:
+out. Synopsis:
 
 @example
 nohup @var{command} [@var{arg}]@dots{}
 @end example
 
 @flindex nohup.out
-Also, the scheduling priority is increased by 5.  If standard output is a
-tty, it and standard error are redirected so that they are appended to
-the file @file{nohup.out}; if that cannot be written to, they are
-appended to the file @file{$HOME/nohup.out}.  If that cannot be written
-to, the command is not run.
+@code{nohup} increases the scheduling priority of @var{command} by 5, so
+it has a slightly smaller change to run.  If standard output is a tty,
+it and standard error are redirected so that they are appended to the
+file @file{nohup.out}; if that cannot be written to, they are appended
+to the file @file{$HOME/nohup.out}.  If that cannot be written to, the
+command is not run.
 
 If @code{nohup} creates either @file{nohup.out} or
 @file{$HOME/nohup.out}, it creates it with no ``group'' or ``other''
@@ -2721,9 +2744,7 @@ options}.
 
 @code{su} allows one user to temporarily become another user.  It runs a
 command (often an interactive shell) with the real and effective user
-id, group id, and supplemental groups of a given @var{user}.
-
-Synopsis:
+id, group id, and supplemental groups of a given @var{user}. Synopsis:
 
 @example
 su [@var{option}]@dots{} [@var{user} [@var{arg}]@dots{}]
@@ -2865,7 +2886,7 @@ might find this idea strange at first.
 @cindex delaying commands
 @cindex commands for delaying
 
-Perhaps @code{wait} or other commands should be described here also?
+@c Perhaps @code{wait} or other commands should be described here also?
 
 @menu
 * sleep invocation::            Delay for a specified time.
@@ -2880,7 +2901,6 @@ Perhaps @code{wait} or other commands should be described here also?
 
 @code{sleep} pauses for an amount of time specified by the sum of
 the values of the command line arguments.
-
 Synopsis:
 
 @example
@@ -2904,6 +2924,82 @@ days
 
 The only options are @samp{--help} and @samp{--version}.  @xref{Common
 options}.
+
+
+@node Numeric operations
+@chapter Numeric operations
+
+@cindex numeric operations
+These programs do numerically-related operations.
+
+@menu
+* factor invocation::              Show factors of numbers.
+* seq invocation::                 Print sequences of numbers.
+@end menu
+
+
+@node factor invocation
+@section @code{factor}: Print prime factors
+
+@pindex factor
+@cindex prime factors
+
+@code{factor} prints prime factors.  Synopses:
+
+@example
+factor [@var{number}]@dots{}
+factor @var{option}
+@end example
+
+If no @var{number} is specified on the command line, @code{factor} reads
+numbers from standard input, delimited by newlines, tabs, or spaces.
+
+The only options are @samp{--help} and @samp{--version}.  @xref{Common
+options}.
+
+
+@node seq invocation
+@section @code{seq}: Print numeric sequences
+
+@pindex seq
+@cindex numeric sequences
+@cindex sequence of numbers
+
+@code{seq} prints a sequence of numbers to standard output.  Synopses:
+
+@example
+seq [@var{option}]@dots{} [@var{first} [@var{step}]] @var{last}@dots{}
+@end example
+
+@code{seq} prints the numbers from @var{first} to @var{last} by
+@var{step}.  By default, @var{first} and @var{step} are both 1, and each
+number is printed on its own line.  All numbers can be reals, not just
+integers.
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+@item -f @var{format}
+@itemx --format=@var{format}
+@opindex -f @var{format}
+@opindex --format=@var{format}
+@cindex formatting of numbers in @code{seq}
+Print all numbers using @var{format}; default @samp{%g}.
+@var{format} must contain exactly one of the standarding float output
+formats @samp{%e}, @samp{%f}, or @samp{%g}.
+
+@item -s @var{string}
+@itemx --separator=@var{string}
+@cindex separator for numbers in @code{seq}
+Separate numbers with @var{string}; default is a newline.
+The output always terminates with a newline.
+
+@item -w
+@itemx --equal-width
+Print all numbers with the same width, by padding with leading zeroes.
+(To have other kinds of padding, use @samp{--format}).
+
+@end table
 
 
 @node Index

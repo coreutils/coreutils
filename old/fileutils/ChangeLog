@@ -1,3 +1,7 @@
+Tue May  7 22:10:20 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* configure.in: Require autoconf-2.10.
+
 Sun May  5 20:27:47 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* src/Makefile.am (bin_PROGRAMS): Add dircolors.
