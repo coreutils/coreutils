@@ -2,6 +2,13 @@
 
 	* glibc21.m4 (jm_GLIBC21): Define GLIBC21 for Makefiles, not for C.
 
+2000-06-12  Jim Meyering  <meyering@lucent.com>
+
+	* getloadavg.m4 (AM_FUNC_GETLOADAVG): Replace with AC_FUNC_GETLOADAVG
+	from autoconf, and tweak the latter to accept an optional argument.
+	* jm-macros.m4: s/AM_FUNC_GETLOADAVG/AC_FUNC_GETLOADAVG/, and supply
+	the optional argument, `lib'.
+
 2000-06-08  Jim Meyering  <meyering@lucent.com>
 
 	* largefile.m4: Remove file (now that it's part of autoconf).
