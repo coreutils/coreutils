@@ -166,8 +166,6 @@ split_3 (char *s, char **u, int *binary, char **w)
   return 1;
 }
 
-/* FIXME: use strcspn.  */
-
 static int
 hex_digits (const char *s)
 {
