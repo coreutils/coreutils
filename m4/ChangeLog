@@ -1,3 +1,12 @@
+2003-08-10  Jim Meyering  <jim@meyering.net>
+
+	* utimes.m4 (gl_FUNC_UTIMES): New file.
+	* utimens.m4: Require gl_FUNC_UTIMES.
+	Don't check for utime or utimes.
+
+	* utimes.m4: Removed.
+	* utimes-null.m4: Renamed from utimes.m4.
+
 2003-08-06  Paul Eggert  <eggert@twinsun.com>
 
 	* prereq.m4 (jm_PREREQ): Require gl_UTIMENS.
