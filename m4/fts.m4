@@ -15,24 +15,24 @@ AC_DEFUN([gl_FUNC_FTS],
   dnl Prerequisites of lib/fts.c.
 
   # Checks for header files.
-  AC_HEADER_DIRENT
-  AC_HEADER_STDC
-  AC_CHECK_HEADERS([fcntl.h inttypes.h stddef.h stdint.h
-		    stdlib.h string.h sys/param.h unistd.h])
+  AC_REQUIRE([AC_HEADER_DIRENT])
+  AC_REQUIRE([AC_HEADER_STDC])
+  AC_CHECK_HEADERS_ONCE([fcntl.h inttypes.h stddef.h stdint.h])
+  AC_CHECK_HEADERS_ONCE([stdlib.h string.h sys/param.h unistd.h])
 
   # Checks for typedefs, structures, and compiler characteristics.
-  AM_STDBOOL_H
-  AC_C_CONST
-  AC_TYPE_SIZE_T
+  AC_REQUIRE([AM_STDBOOL_H])
+  AC_REQUIRE([AC_C_CONST])
+  AC_REQUIRE([AC_TYPE_SIZE_T])
+  AC_REQUIRE([gt_INTTYPES_PRI])
   AC_CHECK_TYPES([ptrdiff_t])
-  gt_INTTYPES_PRI
 
   # Checks for library functions.
-  AC_FUNC_CLOSEDIR_VOID
-  AC_FUNC_LSTAT
-  AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK
-  AC_FUNC_MALLOC
-  AC_FUNC_REALLOC
-  AC_FUNC_STAT
-  AC_CHECK_FUNCS([fchdir memmove memset strrchr])
+  AC_REQUIRE([AC_FUNC_CLOSEDIR_VOID])
+  AC_REQUIRE([AC_FUNC_LSTAT])
+  AC_REQUIRE([AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK])
+  AC_REQUIRE([AC_FUNC_MALLOC])
+  AC_REQUIRE([AC_FUNC_REALLOC])
+  AC_REQUIRE([AC_FUNC_STAT])
+  AC_CHECK_FUNCS_ONCE([fchdir memmove memset strrchr])
 ])
