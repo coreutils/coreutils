@@ -425,7 +425,7 @@ same_file (const char *file_1, const char *file_2)
 /* Recursively remove all of the entries in the current directory.
    Return an indication of the success of the operation.  */
 
-enum RM_status
+static enum RM_status
 remove_cwd_entries (const struct rm_options *x)
 {
   /* NOTE: this is static.  */
