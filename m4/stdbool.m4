@@ -1,6 +1,6 @@
 # Check for stdbool.h that conforms to C99.
 
-# Copyright (C) 2002-2003 Free Software Foundation, Inc.
+# Copyright (C) 2002-2004 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ AC_DEFUN([AM_STDBOOL_H],
   AC_SUBST([HAVE__BOOL])
 ])
 
-# This macro is only needed in autoconf <= 2.54.  Newer versions of autoconf
+# This macro is only needed in autoconf <= 2.59.  Newer versions of autoconf
 # have this macro built-in.
 
 AC_DEFUN([AC_HEADER_STDBOOL],
@@ -59,7 +59,7 @@ AC_DEFUN([AC_HEADER_STDBOOL],
 	   "error: false is not 0"
 	  #endif
 	  #ifndef true
-	   "error: false is not defined"
+	   "error: true is not defined"
 	  #endif
 	  #if true != 1
 	   "error: true is not 1"
@@ -79,8 +79,14 @@ AC_DEFUN([AC_HEADER_STDBOOL],
 	  char g[true];
 	  char h[sizeof (_Bool)];
 	  char i[sizeof s.t];
+	  enum { j = false, k = true, l = false * true, m = true * 256 };
+	  _Bool n[m];
+	  char o[sizeof n == m * sizeof n[0] ? 1 : -1];
 	],
-	[ return !a + !b + !c + !d + !e + !f + !g + !h + !i; ],
+	[
+	  return (!a + !b + !c + !d + !e + !f + !g + !h + !i + !j + !k + !l
+		  + !m + !n + !o);
+	],
 	[ac_cv_header_stdbool_h=yes],
 	[ac_cv_header_stdbool_h=no])])
    AC_CHECK_TYPES([_Bool])
