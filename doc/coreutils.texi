@@ -112,7 +112,7 @@
 * unlink: (coreutils)unlink invocation.         Removal via unlink(2).
 * users: (coreutils)users invocation.           Print current user names.
 * vdir: (coreutils)vdir invocation.             List directories verbosely.
-* wc: (coreutils)wc invocation.                 Byte, word, and line counts.
+* wc: (coreutils)wc invocation.                 Line, word, and byte counts.
 * who: (coreutils)who invocation.               Print who is logged in.
 * whoami: (coreutils)whoami invocation.         Print effective user id.
 * yes: (coreutils)yes invocation.               Print a string indefinitely.
@@ -225,7 +225,7 @@ Output of parts of files
 
 Summarizing files
 
-* wc invocation::               Print byte, word, and line counts.
+* wc invocation::               Print line, word, and byte counts.
 * sum invocation::              Print checksum and block counts.
 * cksum invocation::            Print CRC checksum and byte counts.
 * md5sum invocation::           Print or check message-digests.
@@ -2506,7 +2506,7 @@ These commands generate just a few numbers representing entire
 contents of files.
 
 @menu
-* wc invocation::               Print byte, word, and line counts.
+* wc invocation::               Print line, word, and byte counts.
 * sum invocation::              Print checksum and block counts.
 * cksum invocation::            Print CRC checksum and byte counts.
 * md5sum invocation::           Print or check message-digests.
@@ -2514,7 +2514,7 @@ contents of files.
 
 
 @node wc invocation
-@section @command{wc}: Print byte, word, and line counts
+@section @command{wc}: Print line, word, and byte counts
 
 @pindex wc
 @cindex byte count
