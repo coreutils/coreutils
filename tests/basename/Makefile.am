@@ -7,5 +7,5 @@ TESTS_ENVIRONMENT = \
   top_srcdir=$(top_srcdir) \
   srcdir=$(srcdir) \
   PERL="@PERL@" \
-  PATH=../../src:$$PATH \
+  PATH=`pwd`/../../src:$$PATH \
   PROG=basename
