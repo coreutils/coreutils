@@ -334,7 +334,7 @@ setenv LS_COLORS \':");
     case MO_SH:
     case MO_KSH:
     case MO_ZSH:
-      puts ("LS_COLORS=\'");
+      fputs ("LS_COLORS=\'", stdout);
       break;
     }
 
