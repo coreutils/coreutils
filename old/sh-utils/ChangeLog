@@ -1,3 +1,8 @@
+1997-07-12  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* stpcpy.c: New file.
+	* configure.in (AC_REPLACE_FUNCS): Add stpcpy.c
+
 1997-07-05  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/Makefile.am (EXTRA_PROGRAMS): Add su here.
