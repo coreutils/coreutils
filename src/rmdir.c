@@ -29,6 +29,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "quote.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "rmdir"
@@ -126,7 +127,7 @@ remove_parents (char *path)
 	    }
 	  else
 	    {
-	      error (0, errno, "%s", path);
+	      error (0, errno, "%s", quote (path));
 	    }
 	  break;
 	}
@@ -225,7 +226,7 @@ main (int argc, char **argv)
 	      && errno_rmdir_non_empty (errno))
 	    continue;
 
-	  error (0, errno, "%s", dir);
+	  error (0, errno, "%s", quote (dir));
 	  errors = 1;
 	}
       else if (empty_paths)
