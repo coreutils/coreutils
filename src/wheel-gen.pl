@@ -6,7 +6,7 @@
 use strict;
 use Getopt::Long;
 
-(my $VERSION = '$Revision: 1.2 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.3 $ ') =~ tr/[0-9].//cd;
 (my $program_name = $0) =~ s|.*/||;
 
 my $debug = 0;
@@ -65,16 +65,7 @@ sub END
 #      die "$program_name: FIXME - process $arg here"
 #    }
 
-  my $n = $ARGV[0];
-
-  my $is_prime =
-    {
-     2 => 1,
-     3 => 1,
-     5 => 1,
-     7 => 1,
-     11 => 1,
-    };
+  my $wheel_size = $ARGV[0];
 
   sub is_prime ($)
   {
@@ -103,9 +94,9 @@ sub END
   }
 
   my $prod = 2 * 3 * 5;
-  my $last_prime = 1;
+  my $last_prime = 2;
   my $i;
-  for ($i = 2; $i < 2 * $prod; $i++)
+  for ($i = 3; $i < 2 * $prod; $i++)
     {
       if (is_prime $i)
 	{
