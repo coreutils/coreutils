@@ -214,10 +214,10 @@ main (int argc, char **argv)
   verbose = 0;
   umask (0);
 
-   version = getenv ("SIMPLE_BACKUP_SUFFIX");
-   if (version)
-      simple_backup_suffix = version;
-   version = getenv ("VERSION_CONTROL");
+  version = getenv ("SIMPLE_BACKUP_SUFFIX");
+  if (version)
+    simple_backup_suffix = version;
+  version = getenv ("VERSION_CONTROL");
 
   while ((optc = getopt_long (argc, argv, "bcsDdg:m:o:pvV:S:", long_options,
 			      NULL)) != -1)
@@ -238,8 +238,8 @@ main (int argc, char **argv)
 	  dir_arg = 1;
 	  break;
 	case 'D':
-	   mkdir_and_install = 1;
-	   break;
+	  mkdir_and_install = 1;
+	  break;
 	case 'v':
 	  verbose = 1;
 	  break;
@@ -361,7 +361,7 @@ install_file_to_path (const char *from, const char *to)
 	 int parent_dir_mode = (mode | (S_IRUGO | S_IXUGO)) & (~SPECIAL_BITS);
 	 */
       fail = make_path (dest_dir, mode, mode, owner_id, group_id, 0,
-		    (verbose ? _("creating directory `%s'") : NULL));
+			(verbose ? _("creating directory `%s'") : NULL));
     }
   else
     {
