@@ -7,7 +7,12 @@ AC_DEFUN(jm_FUNC_READDIR,
 AC_REQUIRE([AC_HEADER_DIRENT])
 AC_CHECK_HEADERS(string.h)
 AC_CACHE_CHECK([for working readdir], jm_cv_func_working_readdir,
-  [AC_TRY_RUN(
+  [dnl
+  # Arrange for deletion of the temporary directory this test creates, in
+  # case the test itself fails to delete everything -- as happens on Sunos.
+  ac_clean_files="$ac_clean_files conf-dir"
+
+  AC_TRY_RUN(
   changequote(<<, >>)dnl
   <<
 #   include <stdio.h>
@@ -43,9 +48,9 @@ AC_CACHE_CHECK([for working readdir], jm_cv_func_working_readdir,
       int i;
 
       if (mkdir (dir, 0700))
-	exit (1);
+	abort ();
       if (chdir (dir))
-	exit (1);
+	abort ();
 
       for (i = 0; i < 300; i++)
 	{
@@ -55,13 +60,13 @@ AC_CACHE_CHECK([for working readdir], jm_cv_func_working_readdir,
 	  sprintf (file_name, "%03d", i);
 	  out = fopen (file_name, "w");
 	  if (!out)
-	    exit (1);
+	    abort ();
 	  if (fclose (out) == EOF)
-	    exit (1);
+	    abort ();
 	}
 
       if (chdir (".."))
-	exit (1);
+	abort ();
     }
 
     static void
@@ -70,11 +75,11 @@ AC_CACHE_CHECK([for working readdir], jm_cv_func_working_readdir,
       DIR *dirp;
 
       if (chdir (dir))
-	exit (1);
+	abort ();
 
       dirp = opendir (".");
       if (dirp == NULL)
-	exit (1);
+	abort ();
 
       while (1)
 	{
@@ -86,12 +91,12 @@ AC_CACHE_CHECK([for working readdir], jm_cv_func_working_readdir,
 	    continue;
 
 	  if (unlink (dp->d_name))
-	    exit (1);
+	    abort ();
 	}
       closedir (dirp);
 
       if (chdir (".."))
-	exit (1);
+	abort ();
 
       if (rmdir (dir))
 	exit (1);
@@ -117,6 +122,7 @@ AC_CACHE_CHECK([for working readdir], jm_cv_func_working_readdir,
     dnl for this HAVE_-prefixed symbol in config.h.in.
     AC_CHECK_FUNCS(WORKING_READDIR)
   fi
+
 
   if test $jm_cv_func_working_readdir = yes; then
     ac_kludge=HAVE_WORKING_READDIR
