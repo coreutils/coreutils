@@ -51,10 +51,9 @@ AC_DEFUN(jm_INCLUDED_REGEX,
     fi
 
     test -n "$1" || AC_MSG_ERROR([missing argument])
-    syscmd([test -f $1])
-    ifelse(sysval, 0,
+    m4_syscmd([test -f $1])
+    ifelse(m4_sysval, 0,
       [
-
 	AC_ARG_WITH(included-regex,
 	[  --without-included-regex don't compile regex; this is the default on
                           systems with version 2 of the GNU C library
