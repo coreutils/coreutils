@@ -5,8 +5,8 @@ use strict;
 
 # For each test...
 # Export LANG=C so that the locale-dependent strings match.
-# Export TZ=UTC so that zone-dependent strings match.
-$Test::env_default = ['LANG=C TZ=UTC'];
+# Export TZ=UTC0 so that zone-dependent strings match.
+$Test::env_default = ['LANG=C TZ=UTC0'];
 
 sub test_vector
 {
