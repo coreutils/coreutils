@@ -425,7 +425,7 @@ print_size (uintmax_t n_blocks, const char *string)
 	  human_readable (n_blocks, buf, ST_NBLOCKSIZE, output_units,
 			  human_readable_base),
 	  string);
-  fflush (stdout);
+  FFLUSH (stdout);
 }
 
 /* Recursively print the sizes of the directories (and, if selected, files)

@@ -397,7 +397,7 @@ dc_parse_file (const char *filename)
 
   err = dc_parse_stream (fp, filename);
 
-  if (fp != stdin && fclose (fp) == EOF)
+  if (fp != stdin && FCLOSE (fp) == EOF)
     {
       error (0, errno, "%s", filename);
       return 1;
@@ -472,8 +472,8 @@ dircolors' internal database"));
       int i;
       for (i = 0; i < G_N_LINES; i++)
 	{
-	  fwrite (G_line[i], 1, G_line_length[i], stdout);
-	  fputc ('\n', stdout);
+	  FWRITE (G_line[i], 1, G_line_length[i], stdout);
+	  FPUTC ('\n', stdout);
 	}
     }
   else
@@ -513,14 +513,14 @@ dircolors' internal database"));
 	      suffix = "'\n";
 	    }
 	  fputs (prefix, stdout);
-	  fwrite (s, 1, len, stdout);
+	  FWRITE (s, 1, len, stdout);
 	  fputs (suffix, stdout);
 	}
     }
 
   close_stdout ();
 
-  if (have_read_stdin && fclose (stdin) == EOF)
+  if (have_read_stdin && FCLOSE (stdin) == EOF)
     error (EXIT_FAILURE, errno, _("standard input"));
 
   exit (err == 0 ? EXIT_SUCCESS : EXIT_FAILURE);

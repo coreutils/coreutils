@@ -569,7 +569,7 @@ static char const *const time_args[] =
    and later output themselves.  */
 static size_t dired_pos;
 
-#define DIRED_PUTCHAR(c) do {putchar ((c)); ++dired_pos;} while (0)
+#define DIRED_PUTCHAR(c) do {PUTCHAR ((c)); ++dired_pos;} while (0)
 
 /* Write S to STREAM and increment DIRED_POS by S_LEN.  */
 #define DIRED_FPUTS(s, stream, s_len) \
@@ -2139,7 +2139,7 @@ print_current_files (void)
       for (i = 0; i < files_index; i++)
 	{
 	  print_file_name_and_frills (files + i);
-	  putchar ('\n');
+	  PUTCHAR ('\n');
 	}
       break;
 
@@ -2375,7 +2375,7 @@ quote_name (FILE *out, const char *p, struct quoting_options const *options)
 	  buf[i] = '?';
     }
 
-  fwrite (buf, 1, len, out);
+  FWRITE (buf, 1, len, out);
   return len;
 }
 
@@ -2542,7 +2542,7 @@ put_indicator (const struct bin_str *ind)
   p = ind->string;
 
   for (i = ind->len; i > 0; --i)
-    putchar (*(p++));
+    PUTCHAR (*(p++));
 }
 
 static int
@@ -2660,7 +2660,7 @@ print_many_per_line (void)
 	  indent (pos + name_length, pos + max_name_length);
 	  pos += max_name_length;
 	}
-      putchar ('\n');
+      PUTCHAR ('\n');
     }
 }
 
@@ -2729,7 +2729,7 @@ print_horizontal (void)
 
       if (col == 0)
 	{
-	  putchar ('\n');
+	  PUTCHAR ('\n');
 	  pos = 0;
 	}
       else
@@ -2743,7 +2743,7 @@ print_horizontal (void)
       name_length = length_of_file_name_and_frills (files + filesno);
       max_name_length = line_fmt->col_arr[col];
     }
-  putchar ('\n');
+  PUTCHAR ('\n');
 }
 
 static void
@@ -2764,18 +2764,18 @@ print_with_commas (void)
 
       if (old_pos != 0 && pos >= line_length)
 	{
-	  putchar ('\n');
+	  PUTCHAR ('\n');
 	  pos -= old_pos;
 	}
 
       print_file_name_and_frills (files + filesno);
       if (filesno + 1 < files_index)
 	{
-	  putchar (',');
-	  putchar (' ');
+	  PUTCHAR (',');
+	  PUTCHAR (' ');
 	}
     }
-  putchar ('\n');
+  PUTCHAR ('\n');
 }
 
 /* Assuming cursor is at position FROM, indent up to position TO.
@@ -2788,12 +2788,12 @@ indent (int from, int to)
     {
       if (tabsize > 0 && to / tabsize > (from + 1) / tabsize)
 	{
-	  putchar ('\t');
+	  PUTCHAR ('\t');
 	  from += tabsize - from % tabsize;
 	}
       else
 	{
-	  putchar (' ');
+	  PUTCHAR (' ');
 	  from++;
 	}
     }

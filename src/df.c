@@ -327,7 +327,7 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
 #endif
       printf ("  %s", mount_point);
     }
-  putchar ('\n');
+  PUTCHAR ('\n');
 }
 
 /* Identify the directory, if any, that device

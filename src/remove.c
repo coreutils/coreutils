@@ -155,7 +155,7 @@ print_nth_dir (FILE *stream, unsigned int depth)
       sum += length[i];
     }
 
-  fwrite (dir_name, 1, sum, stream);
+  FWRITE (dir_name, 1, sum, stream);
 }
 
 static inline struct active_dir_ent *
@@ -801,10 +801,10 @@ NOTIFY YOUR SYSTEM MANAGER.\n\
 The following two directories have the same inode number:\n"));
 	  /* FIXME: test this!!  */
 	  print_nth_dir (stderr, current_depth ());
-	  fputc ('\n', stderr);
+	  FPUTC ('\n', stderr);
 	  print_nth_dir (stderr, old_ent->depth);
-	  fputc ('\n', stderr);
-	  fflush (stderr);
+	  FPUTC ('\n', stderr);
+	  FFLUSH (stderr);
 
 	  free (old_ent);
 
