@@ -38,12 +38,12 @@ getversion.c group-member.c idcache.c isdir.c makepath.c \
 modechange.c mountlist.c safe-read.c savedir.c \
 stripslash.c xgetcwd.c xmalloc.c xstrdup.c userspec.c yesno.c \
 fileblocks.c fnmatch.c ftruncate.c mkdir.c mktime.c rename.c stpcpy.c \
-strdup.c strstr.c alloca.c
+strdup.c strstr.c alloca.c long-options.c
 
 OBJECTS = getdate.o posixtm.o \
 argmatch.o backupfile.o basename.o dirname.o eaccess.o \
 error.o filemode.o full-write.o getopt.o getopt1.o \
-getversion.o group-member.o idcache.o isdir.o makepath.o \
+getversion.o group-member.o idcache.o isdir.o long-options.o makepath.o \
 modechange.o safe-read.o savedir.o \
 stripslash.o xgetcwd.o xmalloc.o xstrdup.o userspec.o yesno.o \
 @LIBOBJS@ @ALLOCA@
