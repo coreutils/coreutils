@@ -1,3 +1,11 @@
+Sun Apr 28 16:32:38 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* fileblocks.c [HAVE_ST_BLOCKS || _POSIX_VERSION]: Add extern dcl
+	of unused variable so that after preprocessing, the file will never
+	be empty.  Otherwise, some compilers in ANSI mode (among them, the
+	Dec Alpha OSF 2.0 C compiler) reject empty files.  From Kaveh Ghazi.
+	Indent CPP conditionals.
+
 Fri Apr 26 05:52:03 1996  Karl Eichwalder  <ke@ke.Central.DE>
 
 	* ls.c (usage): Add newline at end of printf format string.
