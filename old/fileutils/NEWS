@@ -1,4 +1,6 @@
 [4.1.6]
+* The obsolete usage `touch [-acm] MMDDhhmm[YY] FILE...' is no longer
+  supported on systems conforming to POSIX 1003.1-2001.  Use touch -t instead.
 * cp and inter-partition mv no longer give a misleading diagnostic in some
     unusual cases
 [4.1.5]
