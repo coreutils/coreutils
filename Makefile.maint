@@ -48,15 +48,27 @@ THIS_VERSION_REGEXP := $(shell echo $(VERSION)|sed 's/\./\\./g')
 PREV_VERSION := $(shell echo $(VERSION)|tr a-z Xa-y)
 PREV_VERSION_REGEXP := $(shell echo $(PREV_VERSION)|sed 's/\./\\./g')
 v = Version
+url = ftp://alpha.gnu.org/gnu/$(distdir).tar.gz
+md5 = $(shell md5sum < $(distdir).tar.gz|sed 's/  -//')
+
+rel-check:
+	tarz=/tmp/rel-check-tarz-$$$$; \
+	md5_tmp=/tmp/rel-check-md5-$$$$; \
+	set -e; \
+	trap 'status=$$?; rm -f $$tarz $$md5_tmp; exit $$status' 0 1 2 3 15; \
+	wget -q --output-document=$$tarz $(url); \
+	echo "$(md5)  -" > $$md5_tmp; \
+	md5sum -c $$md5_tmp < $$tarz
+
 announcement: NEWS ChangeLog $(distdir).tar.gz
 	@( \
 	  echo Subject: $(distdir) released; \
 	  echo; \
 	  echo FIXME: put comments here; \
 	  echo; \
-	  echo "  ftp://alpha.gnu.org/gnu/$(distdir).tar.gz"; \
+	  echo "  $(url)"; \
 	  echo; \
-	  md5sum $(distdir).tar.gz; \
+	  echo "$(md5)  $(distdir).tar.gz"; \
 	  echo; \
 	  echo NEWS:; \
 	  sed -n "/$(THIS_VERSION_REGEXP)/,/$(PREV_VERSION_REGEXP)/p" NEWS \
