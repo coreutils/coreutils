@@ -1,6 +1,24 @@
-2003-08-15  Jim Meyering  <jim@meyering.net>
+2003-08-16  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
+
+	* src/tail.c (tail_lines): Fix a potential (but very hard to exercise)
+	race condition bug.  The bug would be triggered when tailing a file
+	with file pointer not at beginning of file, and where the file was
+	truncated to have a length of less than the initial offset at just
+	the right moment (between the two lseek calls in this function).
+
+	An invalid initial value for *read_pos would result in
+	`tail -n0 -f FILE' and `tail -c0 -f FILE' doing what amounted to a
+	busy-wait rather than sleeping between iterations.  The bug manifests
+	itself only when tailing regular files that are initially nonempty.
+	* src/tail.c (tail_bytes): Set *read_pos to new file offset after
+	each xlseek call.
+	(tail_lines): Likewise, after lseek calls.
+	Reported by Nick Estes.  See http://bugs.debian.org/205251 for details.
+	* tests/tail-2/tail-n0f: New file.  Test for above fix.
+
+2003-08-15  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (sc_space_tab): Use exclusion list in separate file.
 	(sc_sun_os_names): Likewise.
