@@ -36,37 +36,28 @@ extern int errno;
 #include <sys/time.h>
 
 static int suspended;
+int first_call = 1;
 
 /* Handle SIGCONT. */
 
 static void
 sighandler (int sig)
 {
-#ifdef SA_INTERRUPT
-  struct sigaction sigact;
-
-  sigact.sa_handler = SIG_DFL;
-  sigemptyset (&sigact.sa_mask);
-  sigact.sa_flags = 0;
-  sigaction (sig, &sigact, NULL);
-#else
-  signal (sig, SIG_DFL);
-#endif
-
   suspended = 1;
-  kill (getpid (), sig);
 }
 
-/* Sleep for USEC microseconds. */
+/* FIXME: comment */
 
 static void
 my_usleep (const struct timespec *ts_delay)
 {
   struct timeval tv_delay;
   tv_delay.tv_sec = ts_delay->tv_sec;
-  tv_delay.tv_usec = 1000 * ts_delay->tv_nsec;
+  tv_delay.tv_usec = ts_delay->tv_nsec / 1000;
   select (0, (void *) 0, (void *) 0, (void *) 0, &tv_delay);
 }
+
+/* FIXME: comment */
 
 int
 nanosleep (const struct timespec *requested_delay,
@@ -78,19 +69,23 @@ nanosleep (const struct timespec *requested_delay,
 
   suspended = 0;
 
-  /* set up sig handler -- but maybe only do this the first time?  */
+  /* set up sig handler */
+  if (first_call)
+    {
 #ifdef SA_INTERRUPT
-  newact.sa_handler = sighandler;
-  sigemptyset (&newact.sa_mask);
-  newact.sa_flags = 0;
+      newact.sa_handler = sighandler;
+      sigemptyset (&newact.sa_mask);
+      newact.sa_flags = 0;
 
-  sigaction (SIGCONT, NULL, &oldact);
-  if (oldact.sa_handler != SIG_IGN)
-    sigaction (SIGCONT, &newact, NULL);
+      sigaction (SIGCONT, NULL, &oldact);
+      if (oldact.sa_handler != SIG_IGN)
+	sigaction (SIGCONT, &newact, NULL);
 #else
-  if (signal (SIGCONT, SIG_IGN) != SIG_IGN)
-    signal (SIGCONT, sighandler);
+      if (signal (SIGCONT, SIG_IGN) != SIG_IGN)
+	signal (SIGCONT, sighandler);
 #endif
+      first_call = 0;
+    }
 
   my_usleep (requested_delay);
 
@@ -99,11 +94,11 @@ nanosleep (const struct timespec *requested_delay,
       /* Calculate time remaining.  */
       /* FIXME: the code in sleep doesn't use this, so there's no
 	 rush to implement it.  */
+
+      errno = EINTR;
     }
 
   /* FIXME: Restore sig handler?  */
-
-  errno = EINTR;
 
   return suspended;
 }
