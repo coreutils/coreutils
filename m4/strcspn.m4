@@ -1,5 +1,5 @@
-# strcspn.m4 serial 1
-dnl Copyright (C) 2002 Free Software Foundation, Inc.
+# strcspn.m4 serial 2
+dnl Copyright (C) 2002-2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -15,6 +15,4 @@ AC_DEFUN([gl_FUNC_STRCSPN],
 ])
 
 # Prerequisites of lib/strcspn.c.
-AC_DEFUN([gl_PREREQ_STRCSPN], [
-  AC_CHECK_HEADERS_ONCE(string.h)
-])
+AC_DEFUN([gl_PREREQ_STRCSPN], [:])
