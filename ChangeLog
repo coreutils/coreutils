@@ -1,6 +1,10 @@
-2003-05-04  Jim Meyering  <jim@meyering.net>
+2003-05-06  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* src/sys2.h (CHAR_BIT): Remove duplicate definition.
+
+2003-05-04  Jim Meyering  <jim@meyering.net>
 
 	* tests/head/Test.pm: Remove tests of --bytes=-N; using that framework
 	caused the addition of thousands of small files to the tar archive.
