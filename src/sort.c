@@ -2112,6 +2112,7 @@ parse_field_count (char const *string, size_t *val, char const *msgid)
 	break;
       /* Fall through.  */
     case LONGINT_OVERFLOW:
+    case LONGINT_OVERFLOW | LONGINT_INVALID_SUFFIX_CHAR:
       if (msgid)
 	error (SORT_FAILURE, 0, _("%s: count `%.*s' too large"),
 	       _(msgid), (int) (suffix - string), string);
