@@ -1,5 +1,15 @@
 1997-10-14  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/sort.c (CHARS_IN_ABM): Remove definition
+	(inittables): Remove assumption that all abbreviated month names have
+	length 3.
+	(getmonth): Likewise.
+	(main): Add #if's for more efficient code when using the GNU C library.
+	From Ulrich Drepper.
+
+	* src/sort.c (strncoll): Rename parameter to LEN.
+	(keycompare): Move assignment out of if-expression.
+
 	* lib/xstrdup.c: New file.
 	* lib/Makefile.am (libtu_a_SOURCES): Add xstrdup.c
 
