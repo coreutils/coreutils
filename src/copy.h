@@ -142,6 +142,17 @@ int rpl_lstat PARAMS((const char *, struct stat *));
 #  define lstat rpl_lstat
 # endif
 
+int rename ();
+
+/* Arrange to make rename calls go through the wrapper function
+   on systems with a rename function that fails for a source path
+   specified with a trailing slash.  */
+# if RENAME_TRAILING_SLASH_BUG
+int rpl_rename PARAMS((const char *, const char *));
+#  undef rename
+#  define rename rpl_rename
+# endif
+
 int
 copy PARAMS ((const char *src_path, const char *dst_path,
 	      int nonexistent_dst, const struct cp_options *options,
