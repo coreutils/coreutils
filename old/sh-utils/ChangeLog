@@ -23,6 +23,12 @@ Fri Mar  1 23:46:32 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	[_WIN32 && _O_BINARY]: Include malloc.h and io.h.
 	Based on changes by Gary Newman <gnewman@shore.net>.
 
+Wed Feb 28 21:48:07 1996  Paul Eggert  <eggert@twinsun.com>
+
+        * configure.in (LOCALTIME_CACHE):
+        Also define if localtime mishandles unsetting TZ.
+        This works around a localtime bug in mips-dec-ultrix.
+
 Wed Feb 28 23:08:24 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* lib/Makefile.am (su_SOURCES): Add xstrtoul.c.
