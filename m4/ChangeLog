@@ -1,3 +1,11 @@
+2005-01-03  Jim Meyering  <jim@meyering.net>
+
+	* mkstemp.m4 (gl_FUNC_MKSTEMP): Don't `cd' into the temporary
+	subdirectory.  That would make the subsequent AC_TRY_RUN macro fail,
+	for lack of the ./confdefs.h file.  Instead, use the temporary
+	directory name as a prefix on the template string.
+	Include <unistd.h> for the declaration of close.
+
 2004-12-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getdate.m4 (gl_GETDATE): Remove AC_FUNC_ALLOCA.
