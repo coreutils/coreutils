@@ -63,9 +63,6 @@
 # define OFF_T_MAX TYPE_MAXIMUM (off_t)
 #endif
 
-/* Disable assertions.  Some systems have broken assert macros.  */
-#define NDEBUG 1
-
 #define XWRITE(fd, buffer, n_bytes)					\
   do									\
     {									\
@@ -75,17 +72,6 @@
 	error (EXIT_FAILURE, errno, _("write error"));			\
     }									\
   while (0)
-
-#define CLOSE_FD(Fd, Name)						\
-  do									\
-    {									\
-      if ((Fd) != -1 && (Fd) != STDIN_FILENO && close (Fd))		\
-	{								\
-	  error (0, errno, "closing %s (fd=%d)", (Name), (Fd));		\
-	}								\
-    }									\
-  while (0)
-
 
 /* Number of items to tail.  */
 #define DEFAULT_N_LINES 10
@@ -123,7 +109,10 @@ struct File_spec
   ino_t ino;
 
   /* FIXME: describe */
-  unsigned int no_change_counter;
+  unsigned int n_stat_calls;
+
+  /* FIXME: describe */
+  unsigned int n_unchanged_stats;
 
   /* FIXME: describe */
   int missing;
@@ -156,8 +145,8 @@ enum header_mode
   multiple_files, always, never
 };
 
-/* FIXME: rename, document, and use this -- add option */
-static unsigned long max_no_change_count = 5;
+/* FIXME: describe -- add option */
+static unsigned long max_n_unchanged_stats = 5;
 
 /* The name this program was run with.  */
 char *program_name;
@@ -228,6 +217,15 @@ or -c +VALUE.\n\
       puts (_("\nReport bugs to <textutils-bugs@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+}
+
+static __inline__ void
+close_fd (int fd, const char *filename)
+{
+  if (fd != -1 && fd != STDIN_FILENO && close (fd))
+    {
+      error (0, errno, _("closing %s (fd=%d)"), filename, fd);
+    }
 }
 
 static void
@@ -643,14 +641,14 @@ cannot follow end of non-regular file"),
 
   if (fail)
     {
-      CLOSE_FD (fd, f->pretty_name);
-      CLOSE_FD (f->fd, f->pretty_name);
+      close_fd (fd, f->pretty_name);
+      close_fd (f->fd, f->pretty_name);
       f->fd = -1;
     }
   else if (f->ino != new_stats.st_ino || f->dev != new_stats.st_dev)
     {
       /* Close the old one.  */
-      CLOSE_FD (f->fd, f->pretty_name);
+      close_fd (f->fd, f->pretty_name);
 
       /* File has been replaced (e.g., via log rotation) --
          tail the new one.  */
@@ -662,7 +660,7 @@ cannot follow end of non-regular file"),
       f->size = new_stats.st_size;
       f->dev = new_stats.st_dev;
       f->ino = new_stats.st_ino;
-      f->no_change_counter = 0;
+      f->n_unchanged_stats = 0;
       /* FIXME: check lseek return value  */
       lseek (f->fd, new_stats.st_size, SEEK_SET);
     }
@@ -675,13 +673,13 @@ cannot follow end of non-regular file"),
       f->size = new_stats.st_size;
       f->dev = new_stats.st_dev;
       f->ino = new_stats.st_ino;
-      f->no_change_counter = 0;
+      f->n_unchanged_stats = 0;
       /* FIXME: check lseek return value  */
       lseek (f->fd, new_stats.st_size, SEEK_SET);
     }
   else
     {
-      CLOSE_FD (fd, f->pretty_name);
+      close_fd (fd, f->pretty_name);
     }
 }
 
@@ -725,11 +723,11 @@ tail_forever (struct File_spec *f, int nfiles)
 
 	  if (stats.st_size == f[i].size)
 	    {
-	      if (++f[i].no_change_counter > max_no_change_count
+	      if (++f[i].n_unchanged_stats > max_n_unchanged_stats
 		  && follow_mode == follow_name)
 		{
 		  recheck (&f[i]);
-		  f[i].no_change_counter = 0;
+		  f[i].n_unchanged_stats = 0;
 		}
 
 	      continue;
@@ -745,7 +743,7 @@ tail_forever (struct File_spec *f, int nfiles)
 	  any_changed = 1;
 
 	  /* reset counter */
-	  f[i].no_change_counter = 0;
+	  f[i].n_unchanged_stats = 0;
 
 	  if (stats.st_size < f[i].size)
 	    {
@@ -963,7 +961,7 @@ tail_file (struct File_spec *f, off_t n_units)
 	    }
 	  if (errors)
 	    {
-	      CLOSE_FD (fd, f->pretty_name);
+	      close_fd (fd, f->pretty_name);
 	      f->fd = -1;
 	    }
 	  else
@@ -972,7 +970,7 @@ tail_file (struct File_spec *f, off_t n_units)
 	      f->size = stats.st_size;
 	      f->dev = stats.st_dev;
 	      f->ino = stats.st_ino;
-	      f->no_change_counter = 0;
+	      f->n_unchanged_stats = 0;
 	    }
 	}
       else
