@@ -986,9 +986,15 @@ close_output_file (void)
 {
   if (output_stream)
     {
-      if (ferror (output_stream) || fclose (output_stream) == EOF)
+      if (ferror (output_stream))
 	{
-	  error (0, errno, _("write error for `%s'"), output_filename);
+	  error (0, 0, _("write error for `%s'"), output_filename);
+	  output_stream = NULL;
+	  cleanup_fatal ();
+	}
+      if (fclose (output_stream) != 0)
+	{
+	  error (0, errno, "%s", output_filename);
 	  output_stream = NULL;
 	  cleanup_fatal ();
 	}
