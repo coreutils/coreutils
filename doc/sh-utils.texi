@@ -2499,6 +2499,13 @@ Print the machine (hardware) type.
 @cindex network node name
 Print the machine's network node hostname.
 
+@item -p
+@itemx --processor
+@opindex -p
+@opindex --processor
+@cindex host processor type
+Print the machine's processor type
+
 @item -r
 @itemx --release
 @opindex -r
