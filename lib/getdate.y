@@ -43,9 +43,7 @@
 
 #include <ctype.h>
 
-#if HAVE_STDLIB_H
-# include <stdlib.h> /* for `free'; used by Bison 1.27 */
-#endif
+#include <stdlib.h> /* for `free'; used by Bison 1.27 */
 
 #if STDC_HEADERS || (! defined isascii && ! HAVE_ISASCII)
 # define IN_CTYPE_DOMAIN(c) 1
@@ -67,9 +65,7 @@
    of `digit' even when the host does not conform to POSIX.  */
 #define ISDIGIT(c) ((unsigned) (c) - '0' <= 9)
 
-#if STDC_HEADERS || HAVE_STRING_H
-# include <string.h>
-#endif
+#include <string.h>
 
 #if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 8) || __STRICT_ANSI__
 # define __attribute__(x)
