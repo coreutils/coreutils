@@ -116,6 +116,8 @@ stamp-cat-id: $(PACKAGE).pot
 	cd $(srcdir) && rm -f stamp-cat-id && echo timestamp > stamp-cat-id
 
 
+installcheck:
+
 install: install-exec install-data
 install-exec:
 install-data: all
