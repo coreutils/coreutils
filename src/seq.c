@@ -181,7 +181,7 @@ valid_format (const char *fmt)
 static void
 print_numbers (const char *fmt)
 {
-  int i;
+  double i;
 
   for (i = 0; /* empty */; i++)
     {
