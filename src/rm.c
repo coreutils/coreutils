@@ -434,7 +434,7 @@ full_filename (const char *filename)
 
   /* Copy directory part, including trailing slash, and then
      append the filename part, including a trailing zero byte.  */
-  mempcpy (mempcpy (buf, dir_name, dir_len), filename, filename_len + 1);
+  memcpy (mempcpy (buf, dir_name, dir_len), filename, filename_len + 1);
 
   assert (strlen (buf) + 1 == n_bytes_needed);
 
