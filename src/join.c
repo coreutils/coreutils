@@ -200,7 +200,7 @@ xfields (struct line *line)
   if (!tab)
     {
       /* Skip leading blanks before the first field.  */
-      while (ptr < lim && ISSPACE (*ptr))
+      while (ptr < lim && ISBLANK (*ptr))
 	++ptr;
     }
 
@@ -222,15 +222,15 @@ xfields (struct line *line)
 	  unsigned char *beg;
 
 	  beg = ptr;
-	  while (ptr < lim && !ISSPACE (*ptr))
+	  while (ptr < lim && !ISBLANK (*ptr))
 	    ++ptr;
 	  ADD_FIELD (line, beg, ptr - beg);
-	  while (ptr < lim && ISSPACE (*ptr))
+	  while (ptr < lim && ISBLANK (*ptr))
 	    ++ptr;
 	}
     }
 
-  if (ptr > line->beg && ((!tab && ISSPACE (ptr[-1])) || ptr[-1] == tab))
+  if (ptr > line->beg && ((!tab && ISBLANK (ptr[-1])) || ptr[-1] == tab))
     {
       /* Add one more (empty) field because the last character of the
 	 line was a delimiter.  */
