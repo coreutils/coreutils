@@ -1,3 +1,9 @@
+2000-08-20  Jim Meyering  <meyering@lucent.com>
+
+	* check-decl.m4: Include utmp.h `#if HAVE_UTMP_H', rather than
+	`#if !HAVE_UTMPX_H'.  The latter would lose on systems with neither
+	utmp.h nor utmpx.h.  Reported by Eli Zaretskii.
+
 2000-08-11  J. David Anglin  <dave@hiauly1.hia.nrc.ca>
 
 	Improve fileutils installation on systems where running
