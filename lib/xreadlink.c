@@ -30,9 +30,7 @@ extern int errno;
 #endif
 
 #include <limits.h>
-#if HAVE_SYS_TYPES_H
-# include <sys/types.h>
-#endif
+#include <sys/types.h>
 #if HAVE_STDLIB_H
 # include <stdlib.h>
 #endif
