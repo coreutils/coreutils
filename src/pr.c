@@ -1633,6 +1633,10 @@ read_line (p)
   register int c, chars;
   int last_input_position;
 
+#ifdef lint  /* Suppress `used before initialized' warning.  */
+  chars = 0;
+#endif
+
   c = getc (p->fp);
 
   last_input_position = input_position;
