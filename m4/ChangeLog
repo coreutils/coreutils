@@ -1,3 +1,8 @@
+2001-11-20  Jim Meyering  <meyering@lucent.com>
+
+	* mkstemp.m4 (UTILS_FUNC_MKSTEMP): Update comment to reflect that
+	SunOS4.1.4 and solaris2.5.1 lose, too.
+
 2001-11-19  Jim Meyering  <meyering@lucent.com>
 
 	* mkstemp.m4 (UTILS_FUNC_MKSTEMP): Don't bother with a temporary
