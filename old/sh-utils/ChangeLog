@@ -1,3 +1,18 @@
+2001-03-09  Jim Meyering  <meyering@lucent.com>
+
+	* src/factor.c: Include wheel-size.h.
+	(WHEEL_START): Adjust definition.
+	(wheel_tab[]): Remove body of definition.
+	Include generated file, wheel.h, instead.
+
+	* src/wheel-gen.pl: New file.
+	* src/Makefile.am (noinst_HEADERS): Add wheel.h wheel-size.h.
+	(EXTRA_DIST): Add wheel-gen.pl.
+	(PERL): Define.
+	(wheel-size.h, wheel.h): New rules.
+	(BUILT_SOURCES): Add wheel.h and wheel-size.h.
+	(MAINTAINERCLEANFILES): Define.
+
 2001-04-20  Jim Meyering  <meyering@lucent.com>
 
 	* doc/sh-utils.texi (false invocation): Describe how --help and
