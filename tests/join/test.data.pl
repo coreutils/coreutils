@@ -43,5 +43,6 @@
 ('6b', '-a1 -e -', "a 1\nb 2\nd 4\n",  "a 21\nb 22\nc 23\nf 26\n", "a 1 21\nb 2 22\nd 4\n", 0);
 ('6c', '-a1 -e -', "a 21\nb 22\nc 23\nf 26\n", "a 1\nb 2\nd 4\n", "a 21 1\nb 22 2\nc 23\nf 26\n", 0);
 
-
 ('7a', '-a1 -e . -o 2.7',  "a\nb\nc\n", "a x y\nb\nc\n", ".\n.\n.\n", 0);
+
+('8a', '-a1 -e . -o 0,1.2',  "a\nb\nc\nd G\n", "a x y\nb\nc\ne\n", "a x\nb .\nc .\nd G\ne\n", 0);
