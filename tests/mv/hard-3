@@ -59,12 +59,12 @@ test -f x/b || fail=1
 test -f c || fail=1
 
 # The i-node numbers of a and c must be the same.
-ia=`ls -i a|sed 's/ a//'`
-ic=`ls -i c|sed 's/ c//'`
+ia=`ls -i a|sed 's/ a$//'`
+ic=`ls -i c|sed 's/ c$//'`
 test $ia = $ic || fail=1
 
 # The i-node number of x/b must be different.
-ib=`ls -i x/b|sed 's/ .*//'`
+ib=`ls -i x/b|sed 's/ x.b$//'`
 test $ia = $ib && fail=1
 
 (exit $fail); exit $fail
