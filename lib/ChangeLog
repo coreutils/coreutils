@@ -1,5 +1,9 @@
 2001-12-02  Jim Meyering  <meyering@lucent.com>
 
+	* tempname.c: Don't declare getenv, thus reverting the change of
+	2001-11-18.  It's no longer necessary, now that stdlib.h is always
+	included.
+
 	* regex.c [!__BOUNDED_POINTERS__]: Define away __bounded,
         __unbounded, and __ptrvalue.  Reported by Uwe H. Steinfeld.
 
