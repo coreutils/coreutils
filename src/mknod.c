@@ -171,7 +171,7 @@ numbers must be specified");
       s = argv[optind + 3];
       if (my_strtol (s, NULL, 0, &tmp_minor))
 	error (1, 0, "invalid minor device number `%s'", s);
-      
+
       i_major = (int) tmp_major;
       i_minor = (int) tmp_minor;
 
@@ -200,7 +200,7 @@ numbers must be specified");
       s = argv[optind + 3];
       if (my_strtol (s, NULL, 0, &tmp_minor))
 	error (1, 0, "invalid minor device number `%s'", s);
-      
+
       i_major = (int) tmp_major;
       i_minor = (int) tmp_minor;
 

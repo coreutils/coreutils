@@ -400,7 +400,7 @@ main (argc, argv)
   if (signal (SIGINT, SIG_IGN) != SIG_IGN)
     signal (SIGINT, interrupt_handler);
   if (signal (SIGPIPE, SIG_IGN) != SIG_IGN)
-    signal (SIGPIPE, interrupt_handler); 
+    signal (SIGPIPE, interrupt_handler);
 #endif				/* !_POSIX_VERSION */
   copy ();
 }
