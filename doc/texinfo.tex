@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2001-07-25.07}
+\def\texinfoversion{2002-01-04.07}
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99,
 %               2000, 01 Free Software Foundation, Inc.
@@ -30,14 +30,17 @@
 % Please try the latest version of texinfo.tex before submitting bug
 % reports; you can get the latest version from:
 %   ftp://ftp.gnu.org/gnu/texinfo.tex
-%   (and all GNU mirrors, see http://www.gnu.org/order/ftp.html)
-%   ftp://texinfo.org/tex/texinfo.tex
-%   ftp://us.ctan.org/macros/texinfo/texinfo.tex
-%   (and all CTAN mirrors, finger ctan@us.ctan.org for a list).
-%   /home/gd/gnu/doc/texinfo.tex on the GNU machines.
+%     (and all GNU mirrors, see http://www.gnu.org/order/ftp.html)
+%   ftp://texinfo.org/texinfo/texinfo.tex
+%   ftp://tug.org/tex/texinfo.tex
+%     (and all CTAN mirrors, see http://www.ctan.org),
+%   and /home/gd/gnu/doc/texinfo.tex on the GNU machines.
+% 
 % The texinfo.tex in any given Texinfo distribution could well be out
 % of date, so if that's what you're using, please check.
-% Texinfo has a small home page at http://texinfo.org/.
+% 
+% Texinfo has a small home page at http://texinfo.org/ and also
+% http://www.gnu.org/software/texinfo.
 %
 % Send bug reports to bug-texinfo@gnu.org.  Please include including a
 % complete document in each bug report with which we can reproduce the
@@ -927,10 +930,12 @@ where each line of input produces a line of output.}
   \def\dopdfimage#1#2#3{%
     \def\imagewidth{#2}%
     \def\imageheight{#3}%
+    % without \immediate, pdftex seg faults when the same image is
+    % included twice.  (Version 3.14159-pre-1.0-unofficial-20010704.)
     \ifnum\pdftexversion < 14
-      \pdfimage
+      \immediate\pdfimage
     \else
-      \pdfximage
+      \immediate\pdfximage
     \fi
       \ifx\empty\imagewidth\else width \imagewidth \fi
       \ifx\empty\imageheight\else height \imageheight \fi
@@ -943,7 +948,7 @@ where each line of input produces a line of output.}
       \pdfrefximage \pdflastximage
     \fi}
   \def\pdfmkdest#1{{\normalturnoffactive \pdfdest name{#1} xyz}}
-  \def\pdfmkpgn#1{#1@}
+  \def\pdfmkpgn#1{#1}
   \let\linkcolor = \Blue  % was Cyan, but that seems light?
   \def\endlink{\Black\pdfendlink}
   % Adding outlines to PDF; macros for calculating structure of outlines
@@ -5799,8 +5804,15 @@ width0pt\relax} \fi
   %
   \smallfonts \rm
   %
-  % Hang the footnote text off the number.
-  \hang
+  % Because we use hanging indentation in footnotes, a @noindent appears
+  % to exdent this text, so make it be a no-op.  makeinfo does not use
+  % hanging indentation so @noindent can still be needed within footnote
+  % text after an @example or the like (not that this is good style).
+  \let\noindent = \relax
+  %
+  % Hang the footnote text off the number.  Use \everypar in case the
+  % footnote extends for more than one paragraph.
+  \everypar = {\hang}%
   \textindent{\thisfootno}%
   %
   % Don't crash into the line above the footnote text.  Since this
@@ -5881,7 +5893,7 @@ width0pt\relax} \fi
       \global\warnednoepsftrue
     \fi
   \else
-    \imagexxx #1,,,\finish
+    \imagexxx #1,,,,,\finish
   \fi
 }
 %
@@ -5891,33 +5903,34 @@ width0pt\relax} \fi
 % #4 is (ignored optional) html alt text.
 % #5 is (ignored optional) extension.
 % #6 is just the usual extra ignored arg for parsing this stuff.
-\def\imagexxx#1,#2,#3,#4,#5,#6\finish{%
+\newif\ifimagevmode
+\def\imagexxx#1,#2,#3,#4,#5,#6\finish{\begingroup \loggingall
+  \catcode`\^^M = 5     % in case we're inside an example
+  \normalturnoffactive  % allow _ et al. in names
+  % If the image is by itself, center it.
+  \ifvmode
+    \imagevmodetrue
+    \nobreak\bigskip
+    % Usually we'll have text after the image which will insert
+    % \parskip glue, so insert it here too to equalize the space
+    % above and below. 
+    \nobreak\vskip\parskip
+    \nobreak
+    \line\bgroup\hss
+  \fi
+  %
+  % Output the image.
   \ifpdf
-    \centerline{\dopdfimage{#1}{#2}{#3}}%
+    \dopdfimage{#1}{#2}{#3}%
   \else
     % \epsfbox itself resets \epsf?size at each figure.
     \setbox0 = \hbox{\ignorespaces #2}\ifdim\wd0 > 0pt \epsfxsize=#2\relax \fi
     \setbox0 = \hbox{\ignorespaces #3}\ifdim\wd0 > 0pt \epsfysize=#3\relax \fi
-    \begingroup
-      \catcode`\^^M = 5     % in case we're inside an example
-      \normalturnoffactive  % allow _ et al. in names
-      % If the image is by itself, center it.
-      \ifvmode
-        \nobreak\bigskip
-        % Usually we'll have text after the image which will insert
-        % \parskip glue, so insert it here too to equalize the space
-        % above and below. 
-        \nobreak\vskip\parskip
-        \nobreak
-        \centerline{\epsfbox{#1.eps}}%
-        \bigbreak
-      \else
-        % In the middle of a paragraph, no extra space.
-        \epsfbox{#1.eps}%
-      \fi
-    \endgroup
+    \epsfbox{#1.eps}%
   \fi
-}
+  %
+  \ifimagevmode \hss \egroup \bigbreak \fi  % space after the image
+\endgroup}
 
 
 \message{localization,}
@@ -6087,6 +6100,10 @@ should work if nowhere else does.}
   %
   \afourpaper
   \internalpagesizes{237mm}{150mm}{3.6mm}{3.6mm}{3mm}{7mm}%
+  %
+  % Must explicitly reset to 0 because we call \afourpaper, apparently,
+  % although this does not entirely make sense.
+  \globaldefs = 0
 }}
 
 % Use @afourwide to print on European A4 paper in wide format.
