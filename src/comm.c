@@ -1,5 +1,5 @@
 /* comm -- compare two sorted files line by line.
-   Copyright (C) 86, 90, 91, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 86, 90, 91, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ Compare sorted files LEFT_FILE and RIGHT_FILE line by line.\n\
 \n\
   -1              suppress lines unique to left file\n\
   -2              suppress lines unique to right file\n\
-  -3              suppress lines unique to both files\n\
+  -3              suppress lines that appear in both files\n\
       --help      display this help and exit\n\
       --version   output version information and exit\n\
 "));
