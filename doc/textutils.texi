@@ -1513,6 +1513,10 @@ wc --bytes --words
 @noindent
 prints both the byte counts and the word counts.
 
+With the @code{--max-line-length} option, @code{wc} prints the length
+of the longest line per file, and if there is more than one file it
+prints the maximum (not the sum) of those lengths.
+
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
@@ -1536,6 +1540,12 @@ Print only the word counts.
 @opindex -l
 @opindex --lines
 Print only the newline counts.
+
+@item -L
+@itemx --max-line-length
+@opindex -L
+@opindex --max-line-length
+Print only the maximum line lengths.
 
 @end table
 
