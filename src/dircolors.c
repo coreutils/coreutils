@@ -106,11 +106,11 @@ usage (int status)
     {
       printf (_("Usage: %s [OPTION]... [FILE]\n"), program_name);
       printf (_("\
-Output commands to set the LS_COLOR environment variable.\n\
+Output commands to set the LS_COLORS environment variable.\n\
 \n\
 Determine format of output:\n\
-  -b, --sh, --bourne-shell    output Bourne shell code to set LS_COLOR\n\
-  -c, --csh, --c-shell        output C shell code to set LS_COLOR\n\
+  -b, --sh, --bourne-shell    output Bourne shell code to set LS_COLORS\n\
+  -c, --csh, --c-shell        output C shell code to set LS_COLORS\n\
   -p, --print-data-base       output defaults\n\
       --help                  display this help and exit\n\
       --version               output version information and exit\n\
