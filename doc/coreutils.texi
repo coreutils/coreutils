@@ -8704,7 +8704,7 @@ all of the given @var{argument}s.
 
 @vindex LC_NUMERIC
 A floating-point argument must use a period before any fractional
-digits, but is printed according to the LC_NUMERIC category of the
+digits, but is printed according to the @env{LC_NUMERIC} category of the
 current locale.  For example, in a locale whose radix character is a
 comma, the command @samp{printf %g 3.14} outputs @samp{3,14} whereas
 the command @samp{printf %g 3,14} is an error.
@@ -8729,8 +8729,8 @@ digits) specifying a character to print.
 @var{hhhh}, and @samp{\U} for 32-bit Unicode characters, specified as 8 hex
 digits @var{hhhhhhhh}. @command{printf} outputs the Unicode characters
 according to the LC_CTYPE part of the current locale, i.e. depending
-on the values of the environment variables @code{LC_ALL}, @code{LC_CTYPE},
-@code{LANG}.
+on the values of the environment variables @env{LC_ALL}, @env{LC_CTYPE},
+@env{LANG}.
 
 The processing of @samp{\u} and @samp{\U} requires a full-featured
 @code{iconv} facility. It is activated on systems with glibc 2.2 (or newer),
