@@ -7,10 +7,12 @@ if test "$VERBOSE" = yes; then
 fi
 
 ff=force-file
+ff2=force-file-2
 
 framework_failure=0
-rm -f $ff || framework_failure=1
+rm -f $ff $ff2 || framework_failure=1
 echo force-contents > $ff || framework_failure=1
+ln $ff $ff2 || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
@@ -35,6 +37,10 @@ EOF
 cmp out exp || fail=1
 test `cat $ff` = force-contents || fail=1
 
-rm -fr out exp $ff
+# This should succeed, even though the source and destination
+# device and inodes are the same.
+mv --force $ff $ff2 || fail=1
+
+rm -fr out exp $ff $ff2
 
 exit $fail
