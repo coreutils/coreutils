@@ -2,6 +2,26 @@
 
 	* Version 4.5.5.
 
+	* src/stat.c: Include "file-type.h"
+	(print_human_type): Remove function.
+	(human_access): Rename from print_human_access.  Return a string.
+	(human_time): Rename from print_human_time.  Return a string.
+	(print_stat): Arrange so that field width and an alignment specifier
+	are honored for the %A, %F, %x, %y, and %z formats.
+	[%F]: Use file_type; this gives slightly different file type strings,
+	e.g., `directory' instead of `Directory' and `regular file' or
+	`regular empty file' instead of `Regular file'.
+	Prompted by a report from Richard Dawe that the uses of
+	S_IFSOCK and S_IFIFO in print_human_time were not portable
+	to systems using e.g., DJGPP.
+
+2003-01-31  Richard Dawe  <rich@phekda.freeserve.co.uk>
+
+	* src/stat.c (print_stat): Use S_ISLNK rather than an explicit
+	test using S_IFMT and S_IFLNK.  S_IFLNK may not be defined.
+
+2003-01-31  Jim Meyering  <jim@meyering.net>
+
 	* src/du.c (main): Upon processing an invalid option or an invalid
 	--exclude-from or --max-depth option argument, don't exit right away,
 	in case there are others.  Rather record the failure and exit after
