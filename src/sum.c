@@ -86,7 +86,7 @@ With no FILE, or when FILE is -, read standard input.\n\
    Return 0 if successful, -1 if an error occurs. */
 
 static int
-bsd_sum_file (char *file, int print_name)
+bsd_sum_file (const char *file, int print_name)
 {
   register FILE *fp;
   register unsigned long checksum = 0; /* The checksum mod 2^16. */
@@ -146,7 +146,7 @@ bsd_sum_file (char *file, int print_name)
    Return 0 if successful, -1 if an error occurs. */
 
 static int
-sysv_sum_file (char *file, int print_name)
+sysv_sum_file (const char *file, int print_name)
 {
   int fd;
   unsigned char buf[8192];
