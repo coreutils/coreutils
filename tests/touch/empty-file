@@ -20,9 +20,11 @@ fi
 framework_failure=0
 
 for d in $TOUCH_DIR_LIST; do
-  rm -rf $d/a $d/b
-  : > $d/a || framework_failure=1
-  : > $d/b || framework_failure=1
+  $RM -rf $d/a $d/b
+  > $d/a || framework_failure=1
+  test -f $d/a || framework_failure=1
+  > $d/b || framework_failure=1
+  test -f $d/b || framework_failure=1
 done
 
 if test $framework_failure = 1; then
