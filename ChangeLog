@@ -22,7 +22,7 @@
 	* src/nl.c (proc_text): Fix a bug introduced on 2001-11-10,
 	for textutils-2.0.17, that would make nl output extra newlines
 	in some cases.  It was reported at http://bugs.debian.org/177256.
-	This bug was introduced for TEXTUTILS-2_0_17 on 2001-11-10.
+	This bug was introduced for textutils-2.0.17 on 2001-11-10.
 	* tests/misc/nl: Add test for the above-fixed bug.
 
 	* tests/misc/readlink: New file.  Test the --canonicalize option.
@@ -41,6 +41,7 @@
 
 	* src/yes.c: Include error.h after system.h, not before.
 
+	Clean up.
 	* src/copy.c, src/cp-hash.c, src/cp.c, src/csplit.c, src/cut.c:
 	* src/date.c, src/df.c, src/du.c, src/expand.c, src/expr.c, src/id.c:
 	* src/join.c, src/md5sum.c, src/nl.c, src/od.c, src/paste.c, src/pr.c:
