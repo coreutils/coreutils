@@ -1493,9 +1493,6 @@
    #define below would cause a syntax error. */
 #undef _UINT32_T
 
-/* Define to rpl_ if the chdir replacement function should be used. */
-#undef __CHDIR_PREFIX
-
 /* Enable extensions on Solaris.  */
 #ifndef __EXTENSIONS__
 # undef __EXTENSIONS__
