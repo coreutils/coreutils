@@ -1,5 +1,7 @@
 Changes in release 4.1:
 [4.1-b1]
+* ls --quoting-style=c prints correct octal escapes for certain nonprinting
+  characters in file names.
 * fix `ls -R .' formatting bug that broke mktexlsr
 * moving a directory into itself is properly diagnosed in more cases
 * moving a directory containing hard-linked files now works
