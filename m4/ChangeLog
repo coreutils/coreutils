@@ -1,3 +1,9 @@
+2004-12-21  Jim Meyering  <jim@meyering.net>
+
+	* mkstemp.m4 (gl_FUNC_MKSTEMP): Remove temporary directory right
+	away, rather than waiting for configure's at-exit trap code to do it.
+	Suggestion from Stepan Kasal.
+
 2004-12-20  Jim Meyering  <jim@meyering.net>
 
 	* mkstemp.m4: Do the `cd' in a subshell.
