@@ -27,6 +27,7 @@
 #include <sys/types.h>
 
 #include "md5.h"
+#include "getline.h"
 #include "system.h"
 #include "error.h"
 #include "version.h"
@@ -247,6 +248,8 @@ md5_check (checkfile_name, binary)
   int n_tests_failed = 0;
   unsigned char md5buffer[16];
   size_t line_number;
+  char *line;
+  size_t line_chars_allocated;
 
   if (strcmp (checkfile_name, "-") == 0)
     {
@@ -265,18 +268,20 @@ md5_check (checkfile_name, binary)
     }
 
   line_number = 0;
+  line = NULL;
+  line_chars_allocated = 0;
   do
     {
-      char line[1024];
       char *filename;
       int type_flag;
       char *md5num;
       int err;
+      int line_length;
 
       ++line_number;
 
-      /* FIXME: Use getline, not fgets.  */
-      if (fgets (line, 1024, checkfile_stream) == NULL)
+      line_length = getline (&line, &line_chars_allocated, checkfile_stream);
+      if (line_length <= 0)
 	break;
 
       /* Ignore comment lines, which begin with a '#' character.  */
@@ -284,15 +289,14 @@ md5_check (checkfile_name, binary)
 	continue;
 
       /* Remove any trailing newline.  */
-      if (line[strlen (line) - 1] == '\n')
-	line[strlen (line) - 1] = '\0';
+      if (line[line_length - 1] == '\n')
+	line[--line_length] = '\0';
 
       err = split_3 (line, &md5num, &type_flag, &filename);
       if (err || !hex_digits (md5num))
 	{
 	  if (verbose)
 	    {
-	      /* FIXME: use fprintf rather than error?  */
 	      error (0, 0, _("%s: %lu: invalid MD5 checksum line"),
 		     checkfile_name, (unsigned long) line_number);
 	    }
@@ -336,6 +340,10 @@ md5_check (checkfile_name, binary)
 	}
     }
   while (!feof (checkfile_stream) && !ferror (checkfile_stream));
+
+  /* FIXME: check ferror!!  */
+  if (line)
+    free (line);
 
   if (checkfile_stream != stdin && fclose (checkfile_stream) == EOF)
     {
