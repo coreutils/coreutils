@@ -1,3 +1,18 @@
+Sun Nov  5 06:59:27 1995  Jim Meyering  (meyering@comco.com)
+
+	* csplit.c Move prototypes after struct declarations.
+	Remove prototypes for xmalloc, xrealloc.
+	Protect prototypes with __P.
+	(new_control_record): Cast arg 1 to realloc.
+
+	* fmt.c [__P]: Test PROTOTYPES, not __STDC__.
+	Protoize.
+
+Sat Nov  4 23:51:30 CST 1995  Jim Meyering  (meyering@comco.com)
+
+	* csplit.c (close_output_file): Set output_stream to NULL so we
+	don't recurse endlessly between this function and cleanup.
+
 	* unexpand.c: Reorder functions to obviate forward dcls.  Remove
 	forward dcls.  Protoize.  Add `const' attribute to some parameters.
 
@@ -59,7 +74,7 @@ Mon Oct 23 23:17:04 1995  Jim Meyering  (meyering@comco.com)
 
 Thu Oct 19 17:38:28 1995  Jim Meyering  (meyering@comco.com)
 
-        * od.c: Indent cpp directives.
+	* od.c: Indent cpp directives.
 
 	* tr.c (BEGIN_STATE): Use INT_MAX - 1 so as not to interfere
 	with large repeat counts.
