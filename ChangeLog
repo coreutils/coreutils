@@ -1,3 +1,24 @@
+2004-09-22  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.3.0.
+
+	Clean up scoping etc. so that some make `distcheck' tests pass.
+	* src/csplit.c (xalloc_die): Declare to be static.
+	* src/chown-core.c (chown_files): Declare as `extern'.
+	* src/cp-hash.c (remember_created): Likewise.
+	* src/copy.c (copy): Likewise.
+	* src/checksum.h (enum) [ALG_MD5]: Define to be 1, not 0.
+
+	* src/id.c, src/nl.c, src/expand.c: Remove trailing blanks.
+	* src/unexpand.c: Likewise.
+
+	* src/Makefile.am (check-AUTHORS): New rule.
+	(check): Depend on it.
+	* AUTHORS: Update.
+
+	* Makefile.maint (syntax-check-rules): Remove duplicate sc_tight_scope.
+	(sc_system_h_headers): Also exclude copy.h; it includes <stdbool.h>.
+
 2004-09-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/ls.c (decode_switches): Don't compare a short value
@@ -1114,8 +1135,6 @@
 	numbers, since we're now printing long double.
 
 2004-07-06  Paul Eggert  <eggert@cs.ucla.edu>
-
-	* Version 5.3.0.
 
 	printf cleanup, to avoid undefined behavior, to add support for
 	formats that Bash supports, and to support wide integers like
