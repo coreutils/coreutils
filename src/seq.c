@@ -226,7 +226,7 @@ the increment must be positive"));
   return 0;
 }
 
-#if defined (HAVE_RINT) && defined (HAVE_MODF) && defined (HAVE_FLOOR)
+#if HAVE_RINT && HAVE_MODF && HAVE_FLOOR
 
 /* Return a printf-style format string with which all selected numbers
    will format to strings of the same width.  */
@@ -344,7 +344,7 @@ main (int argc, char **argv)
   step_is_set = 0;
 
   /* Figure out the locale's idea of a decimal point.  */
-#ifdef HAVE_LOCALECONV
+#if HAVE_LOCALECONV
   {
     struct lconv *locale;
 
