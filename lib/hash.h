@@ -20,11 +20,11 @@
 #  include <stdlib.h>
 # endif
 
-# ifndef HAVE_DECLARATION_FREE
+# ifndef HAVE_DECL_FREE
 void free ();
 # endif
 
-# ifndef HAVE_DECLARATION_MALLOC
+# ifndef HAVE_DECL_MALLOC
 char *malloc ();
 # endif
 
