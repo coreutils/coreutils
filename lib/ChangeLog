@@ -1,3 +1,9 @@
+2002-10-07  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/Makefile.am (libfetish_a_SOURCES): Add imaxtostr.c, offtostr.c,
+	umaxtostr.c.
+	(EXTRA_DIST): Add inttostr.c.
+
 2002-10-13  Jim Meyering  <meyering@lucent.com>
 
 	* xnanosleep.c (initialized): Remove declaration now that it's unused.
