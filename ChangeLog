@@ -1,3 +1,22 @@
+2003-02-10  Jim Meyering  <jim@meyering.net>
+
+	* Version 4.5.8.
+
+	* src/test.c: Don't include group-member.h.
+	Include euidaccess.h.
+	(eaccess): Rewrite function to set the real uid and gid temporarily
+	to the effective uid and gid, then invoke 'access', and then set the
+	real uid and gid back.  On systems that lack setreuid or setregid,
+	fall back on the kludges in euidaccess.  Before, it would not work
+	for e.g., files with ACLs, files that were marked immutable,
+	or on file systems mounted read-only.  Nelson Beebe raised the issue.
+	Paul Eggert suggested the new implementation.
+
+2003-02-09  Jim Meyering  <jim@meyering.net>
+
+	* src/test.c (test_stat): Remove function.  It's job is done (only
+	when necessary) by the wrapper in lib/stat.c.  Adjust all uses.
+
 2003-02-08  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.7.
