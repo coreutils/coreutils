@@ -561,7 +561,7 @@ unquote (s, len)
 
 static enum Char_class
 look_up_char_class (class_str, len)
-     unsigned char *class_str;
+     const unsigned char *class_str;
      int len;
 {
   unsigned int i;
@@ -723,7 +723,7 @@ append_range (list, first, last)
 static int
 append_char_class (list, char_class_str, len)
      struct Spec_list *list;
-     unsigned char *char_class_str;
+     const unsigned char *char_class_str;
      int len;
 {
   enum Char_class char_class;
@@ -780,7 +780,7 @@ append_repeated_char (list, the_char, repeat_count)
 static int
 append_equiv_class (list, equiv_class_str, len)
      struct Spec_list *list;
-     unsigned char *equiv_class_str;
+     const unsigned char *equiv_class_str;
      int len;
 {
   struct List_element *new;
