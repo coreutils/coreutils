@@ -47,7 +47,6 @@ extern int errno;
 #endif
 
 #include "save-cwd.h"
-#include "error.h"
 #include "xgetcwd.h"
 
 /* Record the location of the current working directory in CWD so that
@@ -80,10 +79,7 @@ save_cwd (struct saved_cwd *cwd)
 #if HAVE_FCHDIR
       cwd->desc = open (".", O_RDONLY | O_DIRECTORY);
       if (cwd->desc < 0)
-	{
-	  error (0, errno, "cannot open current directory");
-	  return 1;
-	}
+	return 1;
 
 # if __sun__ || sun
       /* On SunOS 4 and IRIX 5.3, fchdir returns EINVAL when auditing
@@ -98,9 +94,10 @@ save_cwd (struct saved_cwd *cwd)
 	    }
 	  else
 	    {
-	      error (0, errno, "current directory");
+	      int saved_errno = errno;
 	      close (cwd->desc);
 	      cwd->desc = -1;
+	      errno = saved_errno;
 	      return 1;
 	    }
 	}
@@ -115,10 +112,7 @@ save_cwd (struct saved_cwd *cwd)
     {
       cwd->name = xgetcwd ();
       if (cwd->name == NULL)
-	{
-	  error (0, errno, "cannot get current directory");
-	  return 1;
-	}
+	return 1;
     }
   return 0;
 }
