@@ -39,8 +39,8 @@
 # define STRTOD_L strtod_l
 #endif
 
-/* c_strtold falls back on strtod if strtold isn't declared.  */
-#if LONG && HAVE_DECL_STRTOLD
+/* c_strtold falls back on strtod if strtold doesn't conform to C99.  */
+#if LONG && HAVE_C99_STRTOLD
 # define STRTOD strtold
 #else
 # define STRTOD strtod
