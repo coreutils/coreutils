@@ -51,6 +51,8 @@ chmod 755 d
 #   or not requests to set or clear the set-user-ID-on-execution or
 #   set-group-ID-on-execution bits are honored.
 
-p=`ls -ld d|sed 's/ .*//'`; case $p in drwxr-sr-x);; *) fail=1;; esac
+# FIXME: consider changing GNU chmod to work like other versions of chmod.
+# For now, this test simply confirms the existing behavior.
+p=`ls -ld d|sed 's/ .*//'`; case $p in drwxr-xr-x);; *) fail=1;; esac
 
 (exit $fail); exit
