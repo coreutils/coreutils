@@ -33,6 +33,9 @@ my @Tests =
    ['neg-4',	qw(1 -1 -1),	{OUT => [qw(1 0 -1)]}],
 
    ['eq-wid-1',	qw(-w 1 -1 -1),	{OUT => [qw(01 00 -1)]}],
+
+   # Prior to 2.0g, this test would fail on e.g., HPUX systems
+   # because it'd end up using %3.1f as the format instead of %4.1f.
    ['eq-wid-2',	qw(-w -.1 .1 .1),{OUT => [qw(-0.1 00.0 00.1)]}],
   );
 
