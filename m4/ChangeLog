@@ -1,3 +1,12 @@
+2001-09-17  Jim Meyering  <meyering@lucent.com>
+
+	* chown.m4, fstypename.m4, getgroups.m4, gettimeofday.m4,
+	* jm-mktime.m4, lstat.m4, malloc.m4, memcmp.m4, mkdir-slash.m4,
+	* nanosleep.m4, putenv.m4, readdir.m4, realloc.m4, rename.m4,
+	* st_dm_mode.m4, stat.m4, strerror_r.m4, timespec.m4, utimbuf.m4,
+	* utimes.m4: Use AC_DEFINE rather than AC_DEFINE_UNQUOTED,
+	whenever the right hand side need not be expanded by the shell.
+
 2001-09-16  Paul Eggert  <eggert@twinsun.com>
 
 	* fnmatch.m4 (jm_FUNC_FNMATCH): Remove test for GNU C
