@@ -6832,12 +6832,20 @@ Use non-blocking I/O.
 @cindex symbolic links, following
 Do not follow symbolic links.
 
+@item noctty
+@opindex noctty
+@cindex controlling terminal
+Do not assign the file to be a controlling terminal for @command{dd}.
+This has no effect when the file is not a terminal.
+On many hosts (e.g., @acronym{GNU}/Linux hosts), this option has no effect
+at all.
+
 @end table
 
 These flags are not supported on all systems, and @samp{dd} rejects
 attempts to use them when they are not supported.  When reading from
-standard input or writing to standard output, the @samp{nofollow} flag
-should not be specified, and the other flags
+standard input or writing to standard output, the @samp{nofollow} and
+@samp{noctty} flags should not be specified, and the other flags
 (e.g., @samp{nonblock}) can affect how other processes behave with the
 affected file descriptors, even after @command{dd} exits.
 
