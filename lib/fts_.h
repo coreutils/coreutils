@@ -66,6 +66,9 @@ typedef struct {
 #define	FTS_NAMEONLY	0x0100		/* (private) child names only */
 #define	FTS_STOP	0x0200		/* (private) unrecoverable error */
 	int fts_options;		/* fts_open options, global flags */
+	/* Data structure in which to store the fingerprint
+	   of each directory we've encountered.  */
+	void *fts_dir_signatures;
 } FTS;
 
 typedef struct _ftsent {
