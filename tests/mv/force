@@ -1,5 +1,5 @@
 #!/bin/sh
-# move a file onto itself with --force
+# move a file onto itself
 
 if test "$VERBOSE" = yes; then
   set -x
@@ -28,7 +28,7 @@ LANG=C
 export LANG
 
 # This mv command should exit nonzero.
-mv --force $ff $ff > out 2>&1 && fail=1
+mv $ff $ff > out 2>&1 && fail=1
 
 cat > exp <<EOF
 mv: \`$ff' and \`$ff' are the same file
@@ -39,7 +39,7 @@ test `cat $ff` = force-contents || fail=1
 
 # This should succeed, even though the source and destination
 # device and inodes are the same.
-mv --force $ff $ff2 || fail=1
+mv $ff $ff2 || fail=1
 
 rm -fr out exp $ff $ff2
 
