@@ -1,3 +1,13 @@
+Sun Oct 30 01:30:41 1994  Jim Meyering  (meyering@comco.com)
+
+	* fmt.c, fmt.1: New files.
+	Both from Ross Paterson (rap@doc.ic.ac.uk).
+
+	* Makefile.in (PROGS): Add fmt.
+	* src/Makefile.in (SOURCES, OBJECTS): Add fmt.c and fmt.o respectively.
+	(fmt): Add a link rule.
+	* man/Makefile.in (MANFILES): Add fmt.1.
+
 Sat Oct 08 10:44:30 1994  Jim Meyering  (meyering@comco.com)
 
 	* Makefile.in (All of them): Update from the ones in sh-utils.

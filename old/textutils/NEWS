@@ -1,14 +1,14 @@
 User-visible changes in release 1.10
 * new program: fmt
 * tail -f on multiple files reports file truncation
-* tail -q corrected so it never prints headers
+* tail -q has been fixed so it never prints headers
 * wc -c is much faster when operating on non-regular files
 * unexpand gives a diagnostic (rather than a segfault) when given a name of
   a nonexistent file.
 * cat, csplit, head, split, sum, tac, tail, tr, and wc no longer fail
   gratuitously when continued after a suspended read or write system call.
-* cut interprets -d '' to mean `use the NUL byte as the delimiter.' rather
-  than reporting that no delimiter was specified.
+* cut interprets -d '' to mean `use the NUL byte as the delimiter' rather
+  than reporting that no delimiter was specified and failing.
 * `echo a:b:c: | cut -d: -f3,4' prints `c:'.  Before it printed just `c'.
 * cut has been rewritten, is markedly faster for large inputs, and passes a
   fairly large test suite.
