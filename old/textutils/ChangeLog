@@ -1,5 +1,7 @@
 2000-01-06  Jim Meyering  <meyering@ascend.com>
 
+	* tests/tail-2/assert: Tell the user just before sleeping for 7 seconds.
+
 	* tests/tail-2/Makefile.am (TESTS): Remove fflush test.  It didn't
 	test the losing behavior, and left a stray tail process to boot.
 
