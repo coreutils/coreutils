@@ -1837,13 +1837,11 @@ check (char **files, int nfiles)
 static void
 merge (char **files, int nfiles, int max_merge, char const *output_file)
 {
-  int i, t;
-  char *temp;
-  FILE *tfp;
-
   while (max_merge < nfiles)
     {
-      t = 0;
+      FILE *tfp;
+      int i, t = 0;
+      char *temp;
       for (i = 0; i < nfiles / NMERGE; ++i)
 	{
 	  temp = create_temp_file (&tfp);
@@ -1867,10 +1865,7 @@ static void
 sort (char **files, int nfiles, char const *output_file)
 {
   struct buffer buf;
-  FILE *tfp;
-  struct tempnode *node;
   int n_temp_files = 0;
-  char **tempfiles;
 
   buf.alloc = 0;
 
@@ -1879,6 +1874,7 @@ sort (char **files, int nfiles, char const *output_file)
       char const *temp_output;
       char const *file = *files;
       FILE *fp = xfopen (file, "r");
+      FILE *tfp;
 
       if (! buf.alloc)
 	initbuf (&buf, 2 * sizeof (struct line),
@@ -1944,7 +1940,8 @@ sort (char **files, int nfiles, char const *output_file)
   if (n_temp_files)
     {
       int i = n_temp_files;
-      tempfiles = (char **) xmalloc (n_temp_files * sizeof (char *));
+      struct tempnode *node;
+      char **tempfiles = (char **) xmalloc (n_temp_files * sizeof (char *));
       for (node = temphead; i > 0; node = node->next)
 	tempfiles[--i] = node->name;
       merge (tempfiles, n_temp_files, NMERGE, output_file);
