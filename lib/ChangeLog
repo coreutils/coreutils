@@ -1,3 +1,13 @@
+2005-03-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Remove workaround for bug in Linux kernel 2.6.8 or thereabouts.
+	The workaround isn't strictly needed for POSIX conformance, and
+	it's too much of a pain to configure and maintain.  We'll ask
+	people to fix their kernels instead.
+	* xnanosleep.c: Don't include gethrxtime.h or xtime.h.
+	(NANOSLEEP_BUG_WORKAROUND): Remove.
+	(xnanosleep): Remove the workaround.
+
 2005-02-27  Jim Meyering  <jim@meyering.net>
 
 	* xnanosleep.c (xnanosleep): Work around bug in Linux-2.6.8.1's
