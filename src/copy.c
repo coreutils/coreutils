@@ -424,7 +424,7 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
 	 know this here IFF preserving symlinks (aka xstat == lstat),
 	 then it's ok.  */
       if (S_ISLNK (src_sb->st_mode) && S_ISLNK (dst_sb->st_mode))
-	return 1;
+	return ! same_name (src_path, dst_path);
 
       src_sb_link = src_sb;
       dst_sb_link = dst_sb;
