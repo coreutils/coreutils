@@ -1,5 +1,5 @@
 /* dirname -- strip filename suffix from pathname
-   Copyright (C) 1990-1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1990-1997, 1999-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@
 #include "error.h"
 #include "dirname.h"
 #include "closeout.h"
-#include "xalloc.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "dirname"
