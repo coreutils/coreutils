@@ -1,3 +1,9 @@
+Tue Jan 14 22:40:06 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/dircolors.c [!STDC_HEADERS]: Remove unnecessary declaration
+	of free.
+	* src/ls.c [!STDC_HEADERS]: Likewise.
+
 Thu Jan  9 06:23:18 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* m4/gettext.m4: Remove AC_ISC_POSIX.  From Karl Heuer.
