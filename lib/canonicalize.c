@@ -227,7 +227,7 @@ canonicalize_file_name (const char *name)
 		new_size += end - start + 1;
 	      else
 		new_size += PATH_MAX;
-	      rpath = (char *) xrealloc (rpath, new_size);
+	      rpath = xrealloc (rpath, new_size);
 	      rpath_limit = rpath + new_size;
 
 	      dest = rpath + dest_offset;

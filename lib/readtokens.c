@@ -62,7 +62,7 @@ init_tokenbuffer (tokenbuffer)
      token_buffer *tokenbuffer;
 {
   tokenbuffer->size = INITIAL_TOKEN_LENGTH;
-  tokenbuffer->buffer = ((char *) xmalloc (INITIAL_TOKEN_LENGTH));
+  tokenbuffer->buffer = (xmalloc (INITIAL_TOKEN_LENGTH));
 }
 
 /* Read a token from `stream' into `tokenbuffer'.
@@ -184,8 +184,8 @@ readtokens (FILE *stream,
   else
     projected_n_tokens = 64;
   sz = projected_n_tokens;
-  tokens = (char **) xmalloc (sz * sizeof (char *));
-  lengths = (long *) xmalloc (sz * sizeof (long));
+  tokens = xmalloc (sz * sizeof (char *));
+  lengths = xmalloc (sz * sizeof (long));
 
   init_tokenbuffer (token);
   for (;;)
@@ -195,8 +195,8 @@ readtokens (FILE *stream,
       if (n_tokens >= sz)
 	{
 	  sz *= 2;
-	  tokens = (char **) xrealloc (tokens, sz * sizeof (char *));
-	  lengths = (long *) xrealloc (lengths, sz * sizeof (long));
+	  tokens = xrealloc (tokens, sz * sizeof (char *));
+	  lengths = xrealloc (lengths, sz * sizeof (long));
 	}
 
       if (token_length < 0)
@@ -206,7 +206,7 @@ readtokens (FILE *stream,
 	  lengths[n_tokens] = -1;
 	  break;
 	}
-      tmp = (char *) xmalloc ((token_length + 1) * sizeof (char));
+      tmp = xmalloc ((token_length + 1) * sizeof (char));
       lengths[n_tokens] = token_length;
       tokens[n_tokens] = strncpy (tmp, token->buffer,
 				  (unsigned) (token_length + 1));

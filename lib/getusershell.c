@@ -1,5 +1,5 @@
 /* getusershell.c -- Return names of valid user shells.
-   Copyright (C) 1991, 1997, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1997, 2000, 2001, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -153,7 +153,7 @@ readname (name, size, stream)
   if (*name == NULL)
     {
       *size = 10;
-      *name = (char *) xmalloc (*size);
+      *name = xmalloc (*size);
     }
 
   /* Skip blank space.  */
@@ -166,7 +166,7 @@ readname (name, size, stream)
       while (name_index >= *size)
 	{
 	  *size *= 2;
-	  *name = (char *) xrealloc (*name, *size);
+	  *name = xrealloc (*name, *size);
 	}
       c = getc (stream);
     }

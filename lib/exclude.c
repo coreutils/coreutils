@@ -104,10 +104,10 @@ struct exclude
 struct exclude *
 new_exclude (void)
 {
-  struct exclude *ex = (struct exclude *) xmalloc (sizeof *ex);
+  struct exclude *ex = xmalloc (sizeof *ex);
   ex->exclude_count = 0;
   ex->exclude_alloc = (1 << 6); /* This must be a power of 2.  */
-  ex->exclude = (struct patopts *) xmalloc (ex->exclude_alloc
+  ex->exclude = xmalloc (ex->exclude_alloc
 					    * sizeof ex->exclude[0]);
   return ex;
 }
@@ -206,8 +206,7 @@ add_exclude (struct exclude *ex, char const *pattern, int options)
       if (! (0 < s && s <= SIZE_MAX / sizeof ex->exclude[0]))
 	xalloc_die ();
       ex->exclude_alloc = s;
-      ex->exclude = (struct patopts *) xrealloc (ex->exclude,
-						 s * sizeof ex->exclude[0]);
+      ex->exclude = xrealloc (ex->exclude, s * sizeof ex->exclude[0]);
     }
 
   patopts = &ex->exclude[ex->exclude_count++];
