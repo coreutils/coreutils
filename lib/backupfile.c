@@ -228,15 +228,8 @@ static const enum backup_type backup_types[] =
 enum backup_type
 get_version (const char *version)
 {
-  int i;
-
   if (version == 0 || *version == 0)
     return numbered_existing;
-  i = argmatch (version, backup_args);
-  if (i < 0)
-    {
-      invalid_arg ("version control type", version, i);
-      exit (2);
-    }
-  return backup_types[i];
+  return XARGCASEMATCH ("version control type", version,
+			backup_args, backup_types);
 }
