@@ -25,6 +25,16 @@ test -f $file || fail=1
 # Make sure the dest file has been created.
 test -f $dir/$file || fail=1
 
+# This test would fail with 3.16s when using versions of strip that
+# don't work on read-only files (the one from binutils works fine).
+$INSTALL -s -c -m 555 ../../src/dd $dir || fail=1
+# Make sure the dest file has been created.
+test -f $dir/dd || fail=1
+# ...and that it is readable and executable but not writable.
+test -r $dir/dd || fail=1
+test -x $dir/dd || fail=1
+test -w $dir/dd && fail=1
+
 $RM -rf $dir $file
 
 exit $fail
