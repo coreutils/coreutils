@@ -1,5 +1,5 @@
 /* id -- print real and effective UIDs and GIDs
-   Copyright (C) 1989-2002 Free Software Foundation, Inc.
+   Copyright (C) 1989-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Written by Arnold Robbins, arnold@audiofax.com.
+/* Written by Arnold Robbins.
    Major rewrite by David MacKenzie, djm@gnu.ai.mit.edu. */
 
 #include <config.h>
