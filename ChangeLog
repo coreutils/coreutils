@@ -1,11 +1,16 @@
 2004-09-02  Paul Eggert  <eggert@cs.ucla.edu>
 
-	Port to diet libc.  Problem reported by Felix von Leitner in
-	<http://lists.gnu.org/archive/html/bug-coreutils/2004-08/msg00171.html>.
+	Output correct errno-related diagnostic on "paste" I/O errors.
+	* src/paste.c (write_error, xputchar): New functions.
+	(paste_parallel): Use correct errno value after input error.
+	(paste_parallel, paste_serial): Report errno value after output error.
+
+	Port to diet libc.  Problem reported by Felix von Leitner in:
+	http://lists.gnu.org/archive/html/bug-coreutils/2004-08/msg00171.html
 	* src/paste.c (dummy_closed, CLOSED, dummy_endlist, ENDLIST): Remove;
 	it's not portable C to assume FILE is a complete type.
-	(paste_parallel): Use null instead of ENDLIST, and an explicit
-	boolean instead of CLOSED.
+	(paste_parallel): Use index test instead of ENDLIST, and NULL
+	instead of CLOSED.
 
 2004-08-24  Paul Eggert  <eggert@cs.ucla.edu>
 
