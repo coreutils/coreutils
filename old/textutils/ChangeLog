@@ -1,6 +1,7 @@
 Sun May 19 13:15:49 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* configure.in (LINGUAS): Add ko.
+	* Makefile.am (distcheck): Remove @MAINT@ prefix from first command.
 
 Thu May 16 22:18:41 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
