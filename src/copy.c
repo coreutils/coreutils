@@ -13,6 +13,7 @@
 #include "savedir.h"
 #include "copy.h"
 #include "cp-hash.h"
+#include "path-concat.h"
 
 /* On Linux (from slackware-1.2.13 to 2.0.2?) there is no lchown function.
    To change ownership of symlinks, you must run chown with an effective
@@ -91,13 +92,10 @@ copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
   namep = name_space;
   while (*namep != '\0')
     {
-      int fn_length = strlen (namep) + 1;
-
-      dst_path = xmalloc (strlen (dst_path_in) + fn_length + 1);
-      src_path = xmalloc (strlen (src_path_in) + fn_length + 1);
-
-      stpcpy (stpcpy (stpcpy (src_path, src_path_in), "/"), namep);
-      stpcpy (stpcpy (stpcpy (dst_path, dst_path_in), "/"), namep);
+      src_path = path_concat (src_path_in, namep, NULL);
+      dst_path = path_concat (dst_path_in, namep, NULL);
+      if (dst_path == NULL || src_path == NULL)
+	error (1, 0, _("virtual memory exhausted"));
 
       ret |= copy_internal (src_path, dst_path, new_dst, src_sb->st_dev,
 			    ancestors, x);
@@ -108,7 +106,7 @@ copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
 
       free (src_path);
 
-      namep += fn_length;
+      namep += strlen (namep) + 1;
     }
   free (name_space);
   return -ret;
