@@ -2509,7 +2509,7 @@ will print a warning if this is the case.
 @opindex --max-unchanged-stats
 When tailing a file by name, if there have been @var{n} (default
 n=@value{DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS}) consecutive
-iterations for which the size has remained the same, then
+iterations for which the file has not changed, then
 @code{open}/@code{fstat} the file to determine if that file name is
 still associated with the same device/inode-number pair as before.
 When following a log file that is rotated, this is approximately the
