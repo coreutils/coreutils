@@ -1,0 +1,58 @@
+#!/bin/sh
+
+: ${PERL=perl}
+: ${srcdir=.}
+
+case "$PERL" in
+  *'missing perl')
+  echo 1>&2 "$0: configure didn't find a usable version of Perl, so can't run this test"
+  exit 77
+  ;;
+esac
+
+exec $PERL -w -I$srcdir/.. -MFetish -- - <<\EOF
+require 5.003;
+use strict;
+
+(my $program_name = $0) =~ s|.*/||;
+
+# Turn off localisation of executable's ouput.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+
+my $sha_degenerate = "da39a3ee5e6b4b0d3255bfef95601890afd80709";
+
+my @Tests =
+    (
+     ['s1', {IN=> {f=> ''}},
+			{OUT=>"$sha_degenerate  f\n"}],
+     ['s2', {IN=> {f=> 'a'}},
+			{OUT=>"86f7e437faa5a7fce15d1ddcb9eaeaea377667b8  f\n"}],
+     ['s3', {IN=> {f=> 'abc'}},
+			{OUT=>"a9993e364706816aba3e25717850c26c9cd0d89d  f\n"}],
+     ['s4',
+      {IN=> {f=> 'abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq'}},
+			{OUT=>"84983e441c3bd26ebaae4aa1f95129e5e54670f1  f\n"}],
+     ['s5', {IN=> {f=> 'abcdefghijklmnopqrstuvwxyz'}},
+			{OUT=>"32d10c7b8cf96570ca04ce37f2a19d84240d3a89  f\n"}],
+     ['s6', {IN=> {f=> join ('', 'A'..'Z', 'a'..'z', '0'..'9')}},
+			{OUT=>"761c457bf73b14d27e9e9265c46f4b4dda11f940  f\n"}],
+     ['s7', {IN=> {f=> '1234567890' x 8}},
+			{OUT=>"50abf5706a150990a08b2c5ea40fa0e585554732  f\n"}],
+     ['bs-sha', {IN=> {".\\foo"=> ''}},
+			{OUT=>"\\$sha_degenerate  .\\\\foo\n"}],
+    );
+
+# Insert the `--text' argument for each test.
+my $t;
+foreach $t (@Tests)
+  {
+    splice @$t, 1, 0, '--text';
+  }
+
+my $save_temps = $ENV{DEBUG};
+my $verbose = $ENV{VERBOSE};
+
+my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
+my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF
