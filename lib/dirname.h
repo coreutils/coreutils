@@ -28,4 +28,7 @@
 char *
 dir_name PARAMS ((const char *path));
 
+size_t
+dir_name_r PARAMS ((const char *path, const char **result));
+
 #endif /* not DIRNAME_H_ */
