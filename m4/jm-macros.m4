@@ -202,8 +202,7 @@ AC_DEFUN(jm_CHECK_ALL_TYPES,
 #endif])
 
   # Enable GNU extensions.
-  AC_DEFINE([_GNU_SOURCE], 1,
-    [Enable GNU extensions on systems that have them.])
+  AC_DEFINE([_GNU_SOURCE])
 
   dnl This test must come as early as possible after the compiler configuration
   dnl tests, because the choice of the file model can (in principle) affect
