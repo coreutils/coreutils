@@ -31,24 +31,12 @@
 # include <config.h>
 #endif
 
-#include <stdio.h>
-
-#ifdef STDC_HEADERS
-# include <stdlib.h>
-#endif
-
-#if defined (STDC_HEADERS) || defined(HAVE_STRING_H)
-# include <string.h>
-/* An ANSI string.h and pre-ANSI memory.h might conflict.  */
-# if !defined (STDC_HEADERS) && defined (HAVE_MEMORY_H)
-#  include <memory.h>
-# endif /* not STDC_HEADERS and HAVE_MEMORY_H */
-#else /* not STDC_HEADERS and not HAVE_STRING_H */
-# include <strings.h>
-/* memory.h and strings.h conflict on some systems.  */
-#endif /* not STDC_HEADERS and not HAVE_STRING_H */
-
 #include "readtokens.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "unlocked-io.h"
 #include "xalloc.h"
 
@@ -58,8 +46,7 @@
 /* Initialize a tokenbuffer. */
 
 void
-init_tokenbuffer (tokenbuffer)
-     token_buffer *tokenbuffer;
+init_tokenbuffer (token_buffer *tokenbuffer)
 {
   tokenbuffer->size = INITIAL_TOKEN_LENGTH;
   tokenbuffer->buffer = xmalloc (INITIAL_TOKEN_LENGTH);
