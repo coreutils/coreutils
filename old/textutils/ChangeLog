@@ -1,3 +1,7 @@
+Tue Dec  8 10:31:14 CST 1992
+
+	* tr.c (is_char_class_member): Remove unreached return after abort.
+
 Sun Dec  6 22:34:52 1992  Jim Meyering  (meyering@idefix.comco.com)
 
 	* csplit, cut.c, expand.c, fold.c, head.c, join.c, od.c, pr.c,
