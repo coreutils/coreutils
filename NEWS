@@ -200,6 +200,7 @@ GNU coreutils NEWS                                    -*- outline -*-
     sync      likewise, but also for metadata
     nonblock  use non-blocking I/O
     nofollow  do not follow symlinks
+    noctty    do not assign controlling terminal from file
 
   stty now provides support (iutf8) for setting UTF-8 input mode.
 
