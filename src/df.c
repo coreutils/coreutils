@@ -268,7 +268,9 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
   else
     {
       int w = human_readable_base ? 5 : 7;
-      char buf[3][LONGEST_HUMAN_READABLE + 1];
+      char buf[2][LONGEST_HUMAN_READABLE + 1];
+      char availbuf[LONGEST_HUMAN_READABLE + 2];
+      char *avail;
       double blocks_percent_used;
       uintmax_t blocks_used;
 
@@ -281,18 +283,31 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
 	{
 	  blocks_used = fsu.fsu_blocks - fsu.fsu_bfree;
 	  blocks_percent_used =
-	    (fsu.fsu_bfree < fsu.fsu_bavail ? -1
-	     : (blocks_used + fsu.fsu_bavail) == 0 ? 0
+	    ((fsu.fsu_bavail == -1
+	      || blocks_used + fsu.fsu_bavail == 0
+	      || (fsu.fsu_bavail_top_bit_set
+	          ? blocks_used < - fsu.fsu_bavail
+	          : fsu.fsu_bfree < fsu.fsu_bavail))
+	     ? -1
 	     : blocks_used * 100.0 / (blocks_used + fsu.fsu_bavail));
 	}
+
+      avail = df_readable ((fsu.fsu_bavail_top_bit_set
+			    ? - fsu.fsu_bavail
+			    : fsu.fsu_bavail),
+			   availbuf + 1, fsu.fsu_blocksize,
+			   output_units, human_readable_base);
+
+      if (fsu.fsu_bavail_top_bit_set)
+	*--avail = '-';
 
       printf (" %*s %*s  %*s ",
 	      w, df_readable (fsu.fsu_blocks, buf[0], fsu.fsu_blocksize,
 			      output_units, human_readable_base),
 	      w, df_readable (blocks_used, buf[1], fsu.fsu_blocksize,
 			      output_units, human_readable_base),
-	      w, df_readable (fsu.fsu_bavail, buf[2], fsu.fsu_blocksize,
-			      output_units, human_readable_base));
+	      w, avail);
+
       if (blocks_percent_used < 0)
 	printf ("     -  ");
       else
@@ -738,4 +753,3 @@ with the portable output format"));
   close_stdout ();
   exit (exit_status);
 }
-
