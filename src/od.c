@@ -26,6 +26,7 @@
 #include "system.h"
 #include "closeout.h"
 #include "error.h"
+#include "posixver.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -244,16 +245,13 @@ static enum size_spec integral_type_size[MAX_INTEGRAL_TYPE_SIZE + 1];
 #define MAX_FP_TYPE_SIZE sizeof(LONG_DOUBLE)
 static enum size_spec fp_type_size[MAX_FP_TYPE_SIZE + 1];
 
-static char const short_options[] =
-"abcdfhilos" OPTARG_POSIX "xw" OPTARG_POSIX "A:j:N:t:v";
+#define COMMON_SHORT_OPTIONS "A:N:abcdfhij:lot:vx"
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  STRINGS_OPTION = CHAR_MAX + 1,
-  TRADITIONAL_OPTION,
-  WIDTH_OPTION
+  TRADITIONAL_OPTION = CHAR_MAX + 1
 };
 
 static struct option const long_options[] =
@@ -263,10 +261,9 @@ static struct option const long_options[] =
   {"read-bytes", required_argument, NULL, 'N'},
   {"format", required_argument, NULL, 't'},
   {"output-duplicates", no_argument, NULL, 'v'},
-
-  {"strings", optional_argument, NULL, STRINGS_OPTION},
+  {"strings", optional_argument, NULL, 's'},
   {"traditional", no_argument, NULL, TRADITIONAL_OPTION},
-  {"width", optional_argument, NULL, WIDTH_OPTION},
+  {"width", optional_argument, NULL, 'w'},
 
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -293,12 +290,7 @@ concatenate them in the listed order to form the input.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
 "), stdout);
-      if (POSIX2_VERSION < 200112)
-	fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
-"), stdout);
-      else
-	fputs (_("\
+      fputs (_("\
 All arguments to long options are mandatory for short options.\n\
 "), stdout);
       fputs (_("\
@@ -1619,7 +1611,9 @@ main (int argc, char **argv)
   int width_specified = 0;
   int n_failed_decodes = 0;
   int err;
-  bool posix_pedantic = (getenv ("POSIXLY_CORRECT") != NULL);
+  char const *short_options = (posix2_version () < 200112
+			       ? COMMON_SHORT_OPTIONS "s::w::"
+			       : COMMON_SHORT_OPTIONS "s:w:");
 
   /* The old-style `pseudo starting address' to be printed in parentheses
      after any true address.  */
@@ -1721,12 +1715,6 @@ it must be one character from [doxn]"),
 	  break;
 
 	case 's':
-	  if (POSIX2_VERSION < 200112 && OBSOLETE_OPTION_WARNINGS
-	      && ! optarg && ! posix_pedantic)
-	    error (0, 0,
-		   _("warning: `od -s' is obsolete; use `od --strings'"));
-	  /* Fall through.  */
-	case STRINGS_OPTION:
 	  if (optarg == NULL)
 	    string_min = 3;
 	  else
@@ -1792,11 +1780,6 @@ it must be one character from [doxn]"),
 #undef CASE_OLD_ARG
 
 	case 'w':
-	  if (POSIX2_VERSION < 200112 && OBSOLETE_OPTION_WARNINGS
-	      && ! optarg && ! posix_pedantic)
-	    error (0, 0, _("warning: `od -w' is obsolete; use `od --width'"));
-	  /* Fall through.  */
-	case WIDTH_OPTION:
 	  width_specified = 1;
 	  if (optarg == NULL)
 	    {
