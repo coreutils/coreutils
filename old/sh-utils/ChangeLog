@@ -1,5 +1,11 @@
 1999-08-29  Jim Meyering  <meyering@ascend.com>
 
+	* src/env.c (main): Call exit explicitly to avoid warning from gcc.
+	* src/nice.c (main): Likewise.
+	Include "xstrtol.h".
+	(isinteger): Remove function and prototype.
+	(main): Use xstrtol in place of atoi.  Remove associated FIXME comments.
+
 	* configure.in (AC_YACC): Remove use, now that we require bison.
 
 	* tests/date/Test.pm (test_vector): Add a test for the Risks-reported
@@ -29,6 +35,7 @@
 	* src/nice.c (usage): Likewise.
 	* src/printenv.c (usage): Likewise.
 	* src/sleep.c (usage): Likewise.
+	* src/stty.c (usage): Likewise.
 	Reported by Daniel Bergstrom.
 
 1999-08-22  Jim Meyering  <meyering@ascend.com>
