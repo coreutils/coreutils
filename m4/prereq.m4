@@ -126,7 +126,7 @@ AC_DEFUN([jm_PREREQ_PHYSMEM],
   AC_CHECK_HEADERS([unistd.h sys/pstat.h sys/sysmp.h sys/sysinfo.h \
     machine/hal_sysinfo.h sys/table.h sys/param.h sys/sysctl.h \
     sys/systemcfg.h])
-  AC_CHECK_FUNCS(pstat_getstatic pstat_getdynamic sysmp getsysinfo sysctl)
+  AC_CHECK_FUNCS(pstat_getstatic pstat_getdynamic sysmp getsysinfo sysctl table)
 
   AC_REQUIRE([gl_SYS__SYSTEM_CONFIGURATION])
 ])
