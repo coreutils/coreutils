@@ -10,8 +10,8 @@ fi
 DEFAULT_SLEEP_SECONDS=2
 SLEEP_SECONDS=${SLEEP_SECONDS=$DEFAULT_SLEEP_SECONDS}
 
-t1=touch-no-rw1
-t2=touch-no-rw2
+t1=no-rw1
+t2=no-rw2
 rm -rf $t1 $t2
 : > $t1
 
