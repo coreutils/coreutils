@@ -495,9 +495,7 @@ cut_bytes (stream)
      FILE *stream;
 {
   int byte_idx;			/* Number of chars in the line so far. */
-  int printed_from_curr_line;
 
-  printed_from_curr_line = 0;
   byte_idx = 0;
   while (1)
     {
@@ -505,21 +503,22 @@ cut_bytes (stream)
 
       c = getc (stream);
 
-      if (c == '\n' || c == EOF)
+      if (c == '\n')
 	{
-	  if (printed_from_curr_line)
-	    putchar ('\n');
-	  if (c == EOF)
-	    break;
-	  printed_from_curr_line = 0;
+	  putchar ('\n');
 	  byte_idx = 0;
+	}
+      else if (c == EOF)
+	{
+	  if (byte_idx > 0)
+	    putchar ('\n');
+	  break;
 	}
       else
 	{
 	  ++byte_idx;
 	  if (print_kth (byte_idx))
 	    {
-	      printed_from_curr_line = 1;
 	      putchar (c);
 	    }
 	}
@@ -620,7 +619,8 @@ cut_fields (stream)
 	++field_idx;
       else if (c == '\n' || c == EOF)
 	{
-	  if (found_any_selected_field)
+	  if (found_any_selected_field
+	      || !(suppress_non_delimited && field_idx == 1))
 	    putchar ('\n');
 	  if (c == EOF)
 	    break;
