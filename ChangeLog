@@ -2,6 +2,8 @@
 
 	* Version 5.0.90.
 
+	* src/cut.c (set_fields): Use xcalloc in place of xmalloc+memset.
+
 	* man/Makefile.am (.x.1): Substitute 's,$t/$*,$*,' on output of
 	help2man, to avoid having `rm.td/rm' appear in rm.1.  Reported by
 	Thomas Luzat.  See http://bugs.debian.org/202413 for details.
