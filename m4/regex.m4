@@ -1,4 +1,4 @@
-#serial 13
+#serial 14
 
 dnl Initially derived from code in GNU grep.
 dnl Mostly written by Jim Meyering.
@@ -53,6 +53,16 @@ AC_DEFUN([jm_INCLUDED_REGEX],
 
 	    /* This should match, but doesn't for e.g. glibc-2.2.1.  */
 	    if (re_match (&regex, "an", 2, 0, &regs) != 2)
+	      exit (1);
+
+	    memset (&regex, 0, sizeof (regex));
+	    s = re_compile_pattern ("x", 1, &regex);
+	    if (s)
+	      exit (1);
+
+	    /* The version of regex.c in e.g. GNU libc-2.2.93 didn't
+	       work with a negative `range' argument.  */
+	    if (re_search (&regex, "wxy", 3, 2, -2, &regs) != 1)
 	      exit (1);
 
 	    exit (0);
