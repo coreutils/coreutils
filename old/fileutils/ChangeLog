@@ -1,6 +1,12 @@
-2001-10-20  Jim Meyering  <meyering@lucent.com>
+2001-10-21  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.1.
+
+	* src/copy.c: Include xreadlink.h.
+	(copy_internal): Don't use PATH_MAX.
+	Rewrite the symlink-copying code to use xreadlink.
+
+2001-10-20  Jim Meyering  <meyering@lucent.com>
 
 	* src/touch.c (touch): Extend last change to work on systems
 	for which errno is set to EINVAL.
