@@ -1517,7 +1517,7 @@ copy_internal (const char *src_path, const char *dst_path,
 #if HAVE_STRUCT_STAT_ST_AUTHOR
   /* Preserve the st_author field.  */
   {
-    file_t file = getdport (dst_path);
+    file_t file = file_name_lookup (dst_path, 0, 0);
     if (file_chauthor (file, src_sb.st_author))
       error (0, errno, _("failed to preserve authorship for %s"),
 	     quote (dst_path));
