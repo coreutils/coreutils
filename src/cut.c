@@ -242,7 +242,11 @@ is_printable_field (size_t i)
 static size_t
 hash_int (const void *x, size_t tablesize)
 {
+#ifdef UINTPTR_MAX
   uintptr_t y = (uintptr_t) x;
+#else
+  size_t y = (size_t) x;
+#endif
   return y % tablesize;
 }
 
