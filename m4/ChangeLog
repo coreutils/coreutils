@@ -1,3 +1,9 @@
+2001-04-21  Alexandre Duret-Lutz  <duret_g@epita.fr>
+
+	* ftruncate.m4: Check for chsize.
+	Link with ftruncate.o unconditionally if ftruncate is missing.
+	This was required when cross-compiling to i586-mingw32msvc.
+
 2001-03-24  Jim Meyering  <meyering@lucent.com>
 
 	* jm-macros.m4: Require autoconf-2.49d.
