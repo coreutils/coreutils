@@ -1,3 +1,8 @@
+Thu Mar 21 06:58:36 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* sort.c (main): Declare to return int, not void.
+	From Peter Seebach <seebs@taniemarie.solon.com>.
+
 Sat Mar 16 16:30:07 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* configure.in (PACKAGE_VERSION): New macro.
