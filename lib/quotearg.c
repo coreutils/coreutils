@@ -258,8 +258,8 @@ quotearg_buffer (char *buffer, size_t buffersize,
 		{
 		  STORE ('\\');
 		  STORE ('0' + (c >> 6));
-		  STORE ('0' + ((c >> 3) & 3));
-		  c = '0' + (c & 3);
+		  STORE ('0' + ((c >> 3) & 7));
+		  c = '0' + (c & 7);
 		  goto store_c;
 		}
 	      break;
