@@ -1,7 +1,7 @@
 #!/bin/sh
 # Convert an ls-style permission string, like drwxr----x and -rw-r-x-wx
 # to the equivalent chmod --mode (-m) argument, (=,u=rwx,g=r,o=x and
-# =,u=rw,g=rx,o=wx).
+# =,u=rw,g=rx,o=wx).  Ignore ACLs.
 
 case $# in
   1) rwx=$1;;
@@ -12,6 +12,7 @@ esac
 
 case $rwx in
   [ld-][rwx-][rwx-][rwxsS-][rwx-][rwx-][rwxsS-][rwx-][rwx-][rwxtT-]) ;;
+  [ld-][rwx-][rwx-][rwxsS-][rwx-][rwx-][rwxsS-][rwx-][rwx-][rwxtT-]+) ;;
   *) echo "$0: invalid mode string: $rwx" 1>&2; exit 1;;
 esac
 
