@@ -1,5 +1,6 @@
 Fri Jun  7 22:06:46 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* Version 1.18.
 	* configure.in (VERSION): Set to 1.18.
 
 	* src/Makefile.am (sort_LDADD): Set this to -lm to get pow when using
