@@ -82,6 +82,7 @@
 #define getusershell _getusershell_sys_proto_
 
 #include "system.h"
+#include "closeout.h"
 
 #undef getusershell
 
@@ -449,6 +450,7 @@ Change the effective user id and group id to that of USER.\n\
 A mere - implies -l.   If USER not given, assume root.\n\
 "));
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
+      close_stdout ();
     }
   exit (status);
 }
