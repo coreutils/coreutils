@@ -1,3 +1,11 @@
+2002-01-27  Jim Meyering  <meyering@lucent.com>
+
+	* Version 2.0.21.
+
+	tail -n +2 would perform an extra read after encountering EOF
+	* src/tail.c (start_lines): Detect EOF, inform caller.
+	(tail_lines): Upon EOF in start_lines, return immediately.
+
 2002-01-22  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.20.
