@@ -113,13 +113,13 @@ specified differently, depending on whether the month is specified
 numerically or literally.  All these strings specify the same calendar date:
 
 @example
-1970-09-17           # ISO 8601.
-70-9-17              # Assume 19xx for 69 through 99, 20xx for 00 through 68.
-70-09-17             # Leading zeros are ignored.
-9/17/72              # Common U.S. writing.
+1970-09-17      # ISO 8601.
+70-9-17         # Assume 19xx for 69 through 99, 20xx for 00 through 68.
+70-09-17        # Leading zeros are ignored.
+9/17/72         # Common U.S. writing.
 24 September 1972
-24 Sept 72           # September has a special abbreviation.
-24 Sep 72            # Three-letter abbreviations always allowed.
+24 Sept 72      # September has a special abbreviation.
+24 Sep 72       # Three-letter abbreviations always allowed.
 Sep 24, 1972
 24-sep-72
 24sep72
