@@ -32,6 +32,10 @@
 #include "long-options.h"
 #include "system.h"
 #include "error.h"
+#include "readtokens.h"
+
+/* Token delimiters when reading from a file.  */
+#define DELIM " \t\n"
 
 char *xstrdup ();
 
@@ -60,10 +64,10 @@ char *program_name;
 static int have_read_stdin;
 
 /* The head of the sorted list.  */
-static struct item *head;
+static struct item *head = NULL;
 
-/* A scratch variable.  */
-static struct item *rr = NULL;
+/* The tail of the list of `zeros', strings that have no predecessors.  */
+static struct item *zeros = NULL;
 
 /* The number of strings to sort.  */
 static int n_strings = 0;
@@ -292,12 +296,12 @@ scan_zeros (struct item *k)
 {
   if (k->count == 0)
     {
-      if (rr == NULL)
+      if (head == NULL)
 	head = k;
       else
-	rr->qlink = k;
+	zeros->qlink = k;
 
-      rr = k;
+      zeros = k;
     }
 }
 
@@ -346,89 +350,7 @@ walk_tree (struct item *root, void (*action) (struct item *))
     recurse_tree (root->right, action);
 }
 
-/* The following function was copied from getline.c, but with these changes:
-   - Read up to and not including any "whitespace" character.
-   - Remove unused argument, OFFSET.
-   - Use xmalloc and xrealloc instead of malloc and realloc.
-   - Declare this function static.  */
-
-/* Always add at least this many bytes when extending the buffer.  */
-#define MIN_CHUNK 64
-
-/* Read up to (and not including) any "whitespace" character from STREAM
-   into *LINEPTR (and null-terminate it). *LINEPTR is a pointer returned
-   from xmalloc (or NULL), pointing to *N characters of space.  It is
-   xrealloc'd as necessary.  Return the number of characters read (not
-   including the null terminator), or -1 on error or EOF.  */
-
-static int
-getstr (char **lineptr, int *n, FILE *stream)
-{
-  int nchars_avail;		/* Allocated but unused chars in *LINEPTR.  */
-  char *read_pos;		/* Where we're reading into *LINEPTR. */
-
-  if (!lineptr || !n || !stream)
-    return -1;
-
-  if (!*lineptr)
-    {
-      *n = MIN_CHUNK;
-      *lineptr = (char *) xmalloc (*n);
-      if (!*lineptr)
-	return -1;
-    }
-
-  nchars_avail = *n;
-  read_pos = *lineptr;
-
-  for (;;)
-    {
-      register int c = getc (stream);
-
-      /* We always want at least one char left in the buffer, since we
-	 always (unless we get an error while reading the first char)
-	 NUL-terminate the line buffer.  */
-
-      assert (*n - nchars_avail == read_pos - *lineptr);
-      if (nchars_avail < 1)
-	{
-	  if (*n > MIN_CHUNK)
-	    *n *= 2;
-	  else
-	    *n += MIN_CHUNK;
-
-	  nchars_avail = *n + *lineptr - read_pos;
-	  *lineptr = xrealloc (*lineptr, *n);
-	  if (!*lineptr)
-	    return -1;
-	  read_pos = *n - nchars_avail + *lineptr;
-	  assert (*n - nchars_avail == read_pos - *lineptr);
-	}
-
-      if (feof (stream) || ferror (stream))
-	{
-	  /* Return partial line, if any.  */
-	  if (read_pos == *lineptr)
-	    return -1;
-	  else
-	    break;
-	}
-
-      if (ISSPACE (c))
-	/* Return the string.  */
-	break;
-
-      *read_pos++ = c;
-      nchars_avail--;
-    }
-
-  /* Done - NUL terminate and return the number of chars read.  */
-  *read_pos = '\0';
-
-  return read_pos - *lineptr;
-}
-
-/* FIXME: describe */
+/* Do a topological sort on FILE.   */
 
 static void
 tsort (const char *file)
@@ -437,9 +359,7 @@ tsort (const char *file)
   struct item *j = NULL;
   struct item *k = NULL;
   register FILE *fp;
-  char *str = NULL;
-  size_t size = 0;
-  int len;
+  token_buffer tokenbuffer;
 
   /* Intialize the head of the tree will hold the strings we're sorting.  */
   root = new_item (NULL);
@@ -456,16 +376,20 @@ tsort (const char *file)
 	error (EXIT_FAILURE, errno, "%s", file);
     }
 
+  init_tokenbuffer (&tokenbuffer);
+
   while (1)
     {
+      long int len;
+      
       /* T2. Next Relation.  */
-      len = getstr (&str, &size, fp);
+      len = readtoken (fp, DELIM, sizeof (DELIM) - 1, &tokenbuffer);
       if (len < 0)
 	break;
 
       assert (len != 0);
 
-      k = search_item (root, str);
+      k = search_item (root, tokenbuffer.buffer);
       if (j)
 	{
 	  /* T3. Record the relation.  */
@@ -496,8 +420,8 @@ tsort (const char *file)
 	  p->suc->count--;
 	  if (p->suc->count == 0)
 	    {
-	      rr->qlink = p->suc;
-	      rr = p->suc;
+	      zeros->qlink = p->suc;
+	      zeros = p->suc;
 	    }
 
 	  p = p->next;
