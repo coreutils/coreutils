@@ -186,6 +186,11 @@ static pid_t pid;
 /* Nonzero if we have ever read standard input.  */
 static int have_read_stdin;
 
+/* If nonzero, skip the is-regular-file test used to determine whether
+   to use the lseek optimization.  Instead, use the more general (and
+   more expensive) code unconditionally. Intended solely for testing.  */
+static bool presume_input_pipe;
+
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
@@ -198,6 +203,7 @@ enum
   MAX_CONSECUTIVE_SIZE_CHANGES_OPTION,
 
   PID_OPTION,
+  PRESUME_INPUT_PIPE_OPTION,
   LONG_FOLLOW_OPTION
 };
 
@@ -213,6 +219,8 @@ static struct option const long_options[] =
   {"max-consecutive-size-changes", required_argument, NULL,
    MAX_CONSECUTIVE_SIZE_CHANGES_OPTION},
   {"pid", required_argument, NULL, PID_OPTION},
+  {"presume-input-pipe", no_argument, NULL,
+   PRESUME_INPUT_PIPE_OPTION}, /* do not document */
   {"quiet", no_argument, NULL, 'q'},
   {"retry", no_argument, NULL, RETRY_OPTION},
   {"silent", no_argument, NULL, 'q'},
@@ -1093,7 +1101,8 @@ tail_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
 
   if (from_start)
     {
-      if (S_ISREG (stats.st_mode) && n_bytes <= OFF_T_MAX)
+      if ( ! presume_input_pipe
+	   && S_ISREG (stats.st_mode) && n_bytes <= OFF_T_MAX)
 	{
 	  xlseek (fd, n_bytes, SEEK_CUR, pretty_filename);
 	  *read_pos += n_bytes;
@@ -1110,7 +1119,8 @@ tail_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
     }
   else
     {
-      if (S_ISREG (stats.st_mode) && n_bytes <= OFF_T_MAX)
+      if ( ! presume_input_pipe
+	   && S_ISREG (stats.st_mode) && n_bytes <= OFF_T_MAX)
 	{
 	  off_t current_pos = xlseek (fd, 0, SEEK_CUR, pretty_filename);
 	  off_t end_pos = xlseek (fd, 0, SEEK_END, pretty_filename);
@@ -1177,9 +1187,10 @@ tail_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
 
       /* Use file_lines only if FD refers to a regular file for
 	 which lseek (... SEEK_END) works.  */
-      if (S_ISREG (stats.st_mode)
-	  && (start_pos = lseek (fd, (off_t) 0, SEEK_CUR)) != -1
-	  && start_pos < (end_pos = lseek (fd, (off_t) 0, SEEK_END)))
+      if ( ! presume_input_pipe
+	   && S_ISREG (stats.st_mode)
+	   && (start_pos = lseek (fd, (off_t) 0, SEEK_CUR)) != -1
+	   && start_pos < (end_pos = lseek (fd, (off_t) 0, SEEK_END)))
 	{
 	  if (end_pos != 0 && file_lines (pretty_filename, fd, n_lines,
 					  start_pos, end_pos, read_pos))
@@ -1573,6 +1584,10 @@ parse_options (int argc, char **argv,
 	      }
 	    pid = tmp_ulong;
 	  }
+	  break;
+
+	case PRESUME_INPUT_PIPE_OPTION:
+	  presume_input_pipe = true;
 	  break;
 
 	case 'q':
