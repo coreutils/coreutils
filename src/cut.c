@@ -61,14 +61,8 @@
 
 #include <config.h>
 
-/* Get isblank from GNU libc.  */
-#define _GNU_SOURCE
-
 #include <stdio.h>
-
-#define NDEBUG
 #include <assert.h>
-
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"

@@ -19,11 +19,7 @@
 
 #include <config.h>
 
-/* Get isblank from GNU libc.  */
-#define _GNU_SOURCE
-
 #include <stdio.h>
-#define NDEBUG 1
 #include <assert.h>
 #include <errno.h>
 #include <sys/types.h>

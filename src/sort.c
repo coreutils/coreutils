@@ -23,15 +23,9 @@
 
 #include <config.h>
 
-/* Get isblank from GNU libc.  */
-#define _GNU_SOURCE
-
 #include <sys/types.h>
 #include <signal.h>
 #include <stdio.h>
-#ifndef ENABLE_ASSERTIONS
-# define NDEBUG 1
-#endif
 #include <assert.h>
 #include "system.h"
 #include "long-options.h"

@@ -21,10 +21,6 @@
 #include <config.h>
 
 #include <stdio.h>
-
-/* Disable assertions.  Some systems have broken assert macros.  */
-#define NDEBUG 1
-
 #include <assert.h>
 #include <getopt.h>
 #include <sys/types.h>
