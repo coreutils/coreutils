@@ -122,7 +122,7 @@ AUTOMAKE_OPTIONS = ../src/ansi2knr
 
 noinst_LIBRARIES = libfetish.a
 
-INCLUDES = -I.. -I$(srcdir) -I../intl
+INCLUDES = -I.. -I$(srcdir)
 DEFS = -DLIBDIR=\"$(libdir)\" @DEFS@
 
 libfetish_a_SOURCES = \
@@ -156,6 +156,7 @@ libfetish_a_SOURCES = \
   getpagesize.h \
   getstr.c getstr.h \
   gettime.c \
+  gettext.h \
   getugroups.c \
   group-member.h \
   hard-locale.c hard-locale.h \
@@ -295,15 +296,14 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	$(DEPDIR)/stat.Po $(DEPDIR)/stpcpy.Po \
 @AMDEP_TRUE@	$(DEPDIR)/strcasecmp.Po $(DEPDIR)/strcspn.Po \
 @AMDEP_TRUE@	$(DEPDIR)/strdup.Po $(DEPDIR)/strncasecmp.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strndup.Po $(DEPDIR)/strnlen.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strpbrk.Po $(DEPDIR)/strstr.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strtod.Po $(DEPDIR)/strtoimax.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strtol.Po $(DEPDIR)/strtoll.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strtoul.Po $(DEPDIR)/strtoull.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strtoumax.Po $(DEPDIR)/strverscmp.Po \
-@AMDEP_TRUE@	$(DEPDIR)/tempname.Po $(DEPDIR)/utime.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/acl$U.Po ./$(DEPDIR)/addext$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/argmatch$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strndup.Po $(DEPDIR)/strpbrk.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strstr.Po $(DEPDIR)/strtod.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strtoimax.Po $(DEPDIR)/strtol.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strtoll.Po $(DEPDIR)/strtoul.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strtoull.Po $(DEPDIR)/strtoumax.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strverscmp.Po $(DEPDIR)/tempname.Po \
+@AMDEP_TRUE@	$(DEPDIR)/utime.Po ./$(DEPDIR)/acl$U.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/addext$U.Po ./$(DEPDIR)/argmatch$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/backupfile$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/basename$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/canon-host$U.Po \
@@ -364,9 +364,9 @@ DIST_COMMON = README ChangeLog Makefile.am Makefile.in TODO \
 	mountlist.c nanosleep.c obstack.c obstack.h putenv.c readutmp.c \
 	realloc.c regex.c rename.c rmdir.c rpmatch.c stpcpy.c \
 	strcasecmp.c strcspn.c strdup.c strncasecmp.c strndup.c \
-	strnlen.c strpbrk.c strstr.c strtod.c strtoimax.c strtol.c \
-	strtoll.c strtoul.c strtoull.c strtoumax.c strverscmp.c \
-	tempname.c utime.c
+	strpbrk.c strstr.c strtod.c strtoimax.c strtol.c strtoll.c \
+	strtoul.c strtoull.c strtoumax.c strverscmp.c tempname.c \
+	utime.c
 SOURCES = $(libfetish_a_SOURCES)
 
 all: $(BUILT_SOURCES)
@@ -451,7 +451,6 @@ mostlyclean-kr:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strdup.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strncasecmp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strndup.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strnlen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strpbrk.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strstr.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strtod.Po@am__quote@
@@ -743,8 +742,6 @@ strncasecmp_.c: lib/strncasecmp.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/lib/strncasecmp.c; then echo $(srcdir)/lib/strncasecmp.c; else echo lib/strncasecmp.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strncasecmp_.c || rm -f strncasecmp_.c
 strndup_.c: lib/strndup.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/lib/strndup.c; then echo $(srcdir)/lib/strndup.c; else echo lib/strndup.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strndup_.c || rm -f strndup_.c
-strnlen_.c: lib/strnlen.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/lib/strnlen.c; then echo $(srcdir)/lib/strnlen.c; else echo lib/strnlen.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strnlen_.c || rm -f strnlen_.c
 strpbrk_.c: lib/strpbrk.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/lib/strpbrk.c; then echo $(srcdir)/lib/strpbrk.c; else echo lib/strpbrk.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strpbrk_.c || rm -f strpbrk_.c
 strstr_.c: lib/strstr.c $(ANSI2KNR)
@@ -831,17 +828,16 @@ safe-read_.$(OBJEXT) same_.$(OBJEXT) save-cwd_.$(OBJEXT) \
 savedir_.$(OBJEXT) settime_.$(OBJEXT) sha_.$(OBJEXT) stat_.$(OBJEXT) \
 stpcpy_.$(OBJEXT) strcasecmp_.$(OBJEXT) strcspn_.$(OBJEXT) \
 strdup_.$(OBJEXT) strftime_.$(OBJEXT) stripslash_.$(OBJEXT) \
-strncasecmp_.$(OBJEXT) strndup_.$(OBJEXT) strnlen_.$(OBJEXT) \
-strpbrk_.$(OBJEXT) strstr_.$(OBJEXT) strtod_.$(OBJEXT) \
-strtoimax_.$(OBJEXT) strtol_.$(OBJEXT) strtoll_.$(OBJEXT) \
-strtoul_.$(OBJEXT) strtoull_.$(OBJEXT) strtoumax_.$(OBJEXT) \
-strverscmp_.$(OBJEXT) tempname_.$(OBJEXT) unicodeio_.$(OBJEXT) \
-userspec_.$(OBJEXT) utime_.$(OBJEXT) version-etc_.$(OBJEXT) \
-xgetcwd_.$(OBJEXT) xgethostname_.$(OBJEXT) xmalloc_.$(OBJEXT) \
-xmemcoll_.$(OBJEXT) xreadlink_.$(OBJEXT) xstrdup_.$(OBJEXT) \
-xstrtod_.$(OBJEXT) xstrtoimax_.$(OBJEXT) xstrtol_.$(OBJEXT) \
-xstrtoul_.$(OBJEXT) xstrtoumax_.$(OBJEXT) yesno_.$(OBJEXT) : \
-$(ANSI2KNR)
+strncasecmp_.$(OBJEXT) strndup_.$(OBJEXT) strpbrk_.$(OBJEXT) \
+strstr_.$(OBJEXT) strtod_.$(OBJEXT) strtoimax_.$(OBJEXT) \
+strtol_.$(OBJEXT) strtoll_.$(OBJEXT) strtoul_.$(OBJEXT) \
+strtoull_.$(OBJEXT) strtoumax_.$(OBJEXT) strverscmp_.$(OBJEXT) \
+tempname_.$(OBJEXT) unicodeio_.$(OBJEXT) userspec_.$(OBJEXT) \
+utime_.$(OBJEXT) version-etc_.$(OBJEXT) xgetcwd_.$(OBJEXT) \
+xgethostname_.$(OBJEXT) xmalloc_.$(OBJEXT) xmemcoll_.$(OBJEXT) \
+xreadlink_.$(OBJEXT) xstrdup_.$(OBJEXT) xstrtod_.$(OBJEXT) \
+xstrtoimax_.$(OBJEXT) xstrtol_.$(OBJEXT) xstrtoul_.$(OBJEXT) \
+xstrtoumax_.$(OBJEXT) yesno_.$(OBJEXT) : $(ANSI2KNR)
 
 .y.c:
 	$(YACCCOMPILE) `test -f '$<' || echo '$(srcdir)/'`$<
