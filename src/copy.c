@@ -366,6 +366,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	  same = (src_sb.st_ino == dst_sb.st_ino
 		  && src_sb.st_dev == dst_sb.st_dev);
 
+#ifdef S_ISLNK
 	  /* If we're preserving symlinks (--no-dereference) and the
 	     destination file is a symlink, use stat (not xstat) to
 	     see if it points back to the source.  */
@@ -377,6 +378,7 @@ copy_internal (const char *src_path, const char *dst_path,
 		      src_sb.st_dev == dst2_sb.st_dev))
 		same = 1;
 	    }
+#endif
 
 	  if (same)
 	    {
