@@ -2133,19 +2133,7 @@ sighandler (int sig)
 
   cleanup ();
 
-#ifdef SA_NOCLDSTOP
-  {
-    struct sigaction sigact;
-
-    sigact.sa_handler = SIG_DFL;
-    sigemptyset (&sigact.sa_mask);
-    sigact.sa_flags = 0;
-    sigaction (sig, &sigact, NULL);
-  }
-#else
   signal (sig, SIG_DFL);
-#endif
-
   raise (sig);
 }
 
@@ -2225,11 +2213,6 @@ main (int argc, char **argv)
 			       : COMMON_SHORT_OPTIONS "y:");
   char *minus = "-", **files;
   char const *outfile = minus;
-  static int const sigs[] = { SIGHUP, SIGINT, SIGPIPE, SIGTERM };
-  unsigned int nsigs = sizeof sigs / sizeof *sigs;
-#ifdef SA_NOCLDSTOP
-  struct sigaction oldact, newact;
-#endif
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -2269,32 +2252,34 @@ main (int argc, char **argv)
   have_read_stdin = false;
   inittables ();
 
-#ifdef SA_NOCLDSTOP
   {
-    unsigned int i;
+    int i;
+    static int const sig[] = { SIGHUP, SIGINT, SIGPIPE, SIGTERM };
+    enum { nsigs = sizeof sig / sizeof sig[0] };
+
+#ifdef SA_NOCLDSTOP
+    struct sigaction act;
+
     sigemptyset (&caught_signals);
     for (i = 0; i < nsigs; i++)
-      sigaddset (&caught_signals, sigs[i]);
-    newact.sa_handler = sighandler;
-    newact.sa_mask = caught_signals;
-    newact.sa_flags = 0;
-  }
-#endif
-
-  {
-    unsigned int i;
-    for (i = 0; i < nsigs; i++)
       {
-	int sig = sigs[i];
-#ifdef SA_NOCLDSTOP
-	sigaction (sig, NULL, &oldact);
-	if (oldact.sa_handler != SIG_IGN)
-	  sigaction (sig, &newact, NULL);
-#else
-	if (signal (sig, SIG_IGN) != SIG_IGN)
-	  signal (sig, sighandler);
-#endif
+	sigaction (sig[i], NULL, &act);
+	if (act.sa_handler != SIG_IGN)
+	  sigaddset (&caught_signals, sig[i]);
       }
+
+    act.sa_handler = sighandler;
+    act.sa_mask = caught_signals;
+    act.sa_flags = 0;
+
+    for (i = 0; i < nsigs; i++)
+      if (sigismember (&caught_signals, sig[i]))
+	sigaction (sig[i], &act, NULL);
+#else
+    for (i = 0; i < nsigs; i++)
+      if (signal (sig[i], SIG_IGN) != SIG_IGN)
+	signal (sig[i], sighandler);
+#endif
   }
 
   gkey.sword = gkey.eword = SIZE_MAX;
