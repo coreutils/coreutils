@@ -1073,7 +1073,9 @@ main (int margc, char **margv)
 
   if (margv[0] && strcmp (margv[0], "[") == 0)
     {
-      parse_long_options (argc, argv, COMMAND_NAME, PACKAGE_VERSION, usage);
+      /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
+      if (getenv ("POSIXLY_CORRECT") == NULL)
+	parse_long_options (argc, argv, COMMAND_NAME, PACKAGE_VERSION, usage);
 
       --margc;
 

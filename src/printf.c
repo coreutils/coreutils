@@ -137,7 +137,9 @@ main (int argc, char **argv)
 
   exit_status = 0;
 
-  parse_long_options (argc, argv, "printf", PACKAGE_VERSION, usage);
+  /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
+  if (getenv ("POSIXLY_CORRECT") == NULL)
+    parse_long_options (argc, argv, "printf", PACKAGE_VERSION, usage);
 
   if (argc == 1)
     {
