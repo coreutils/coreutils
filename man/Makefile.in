@@ -64,6 +64,7 @@ GETLOADAVG_LIBS = @GETLOADAVG_LIBS@
 GLIBC21 = @GLIBC21@
 GMSGFMT = @GMSGFMT@
 GNU_PACKAGE = @GNU_PACKAGE@
+HAVE__BOOL = @HAVE__BOOL@
 HELP2MAN = @HELP2MAN@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -107,6 +108,7 @@ SEQ_LIBM = @SEQ_LIBM@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 SQRT_LIBM = @SQRT_LIBM@
+STDBOOL_H = @STDBOOL_H@
 STRIP = @STRIP@
 U = @U@
 USE_NLS = @USE_NLS@
@@ -152,7 +154,8 @@ dist_man_MANS = \
   basename.1 cat.1 chgrp.1 chmod.1 chown.1 chroot.1 cksum.1 comm.1 \
   cp.1 csplit.1 cut.1 date.1 dd.1 df.1 dir.1 dircolors.1 dirname.1 du.1 \
   echo.1 env.1 expand.1 expr.1 factor.1 false.1 fmt.1 fold.1 groups.1 \
-  head.1 hostid.1 hostname.1 id.1 install.1 join.1 link.1 ln.1 logname.1 \
+  head.1 hostid.1 hostname.1 id.1 install.1 join.1 kill.1 \
+  link.1 ln.1 logname.1 \
   ls.1 md5sum.1 mkdir.1 mkfifo.1 mknod.1 mv.1 nice.1 nl.1 nohup.1 od.1 \
   paste.1 pathchk.1 pinky.1 pr.1 printenv.1 printf.1 ptx.1 pwd.1 readlink.1 \
   rm.1 rmdir.1 seq.1 sha1sum.1 shred.1 sleep.1 sort.1 split.1 stat.1 stty.1 \
@@ -175,6 +178,12 @@ SUFFIXES = .x .1
 # `install' when creating install.1.
 t = $*.td
 mapped_name = `echo $*|sed 's/install/ginstall/'`
+
+programs = \
+  echo 'spy:;@echo $$(all_programs)'					\
+    | MAKEFLAGS= $(MAKE) -s -C $(srcdir)/../src -f Makefile -f - spy	\
+    | fmt -1 | sort -u
+
 subdir = man
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
@@ -404,6 +413,7 @@ hostname.1:	$(common_dep)	$(srcdir)/hostname.x	../src/hostname.c
 id.1:		$(common_dep)	$(srcdir)/id.x		../src/id.c
 install.1:	$(common_dep)	$(srcdir)/install.x	../src/install.c
 join.1:		$(common_dep)	$(srcdir)/join.x	../src/join.c
+kill.1:		$(common_dep)	$(srcdir)/kill.x	../src/kill.c
 link.1:		$(common_dep)	$(srcdir)/link.x	../src/link.c
 ln.1:		$(common_dep)	$(srcdir)/ln.x		../src/ln.c
 logname.1:	$(common_dep)	$(srcdir)/logname.x	../src/logname.c
@@ -472,7 +482,7 @@ yes.1:		$(common_dep)	$(srcdir)/yes.x		../src/yes.c
 	    --output=$@ $t/$*$(EXEEXT);		\
 	rm -rf $t
 
-check-local: check-x-vs-1
+check-local: check-x-vs-1 check-programs-vs-x
 
 # Ensure that for each .x file in this directory, there is a
 # corresponding .1 file in the definition of $(dist_man_MANS) above.
@@ -484,6 +494,15 @@ check-x-vs-1:
 	echo $(dist_man_MANS) | fmt -w1 | sed 's/\.1$$//' | sort -u	\
 	  | diff - $$t || { rm $$t; exit 1; };				\
 	rm $$t
+
+.PHONY: check-programs-vs-x
+check-programs-vs-x:
+	for p in `$(programs)`; do			\
+	  test $$p = ginstall && p=install || : ;	\
+	  test -f $(srcdir)/$$p.x			\
+	    || { echo missing $$p.x 1>&2; missing=1; };	\
+	done;						\
+	test "$$missing" = 1 && exit 1 || :
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
