@@ -1,3 +1,31 @@
+Tue Jul 11 21:56:02 1995  Jim Meyering  (meyering@comco.com)
+
+	* md5sum.c Add #else block after #ifdef VMS.
+	(main): Rename local variable.
+	Add FIXME: allow newlines in filenames.
+	Detect and report failed fclose calls on stdout and checkfile_stream.
+
+	* tr.c (unqote): Comment out unreachable break stmts.
+	(append_range): Declare FIRST and LAST parameters to be unsigned int,
+	not size_t.
+	(find_closing_delim): Clean up interface, separating boolean success
+	indicator and index.
+	(find_bracketed_repeat): Likewise.
+	(build_spec_list): Adapt to use new interfaces.
+	Declare CLOSING_DELIM_IDX and CLOSING_BRACKET_IDX to be of
+	type size_t, not int.
+	(main): Declare NR and CHARS_READ to be of type long, not int.
+
+	* sort.c (main): Comment out unreachable break stmt.
+
+	* tail.c (tail): Explicitly cast to long the N_UNITS argumennt in
+	call to tail_lines.  Otherwise, NetBSD lost because N_UNITS (of type
+	off_t, a 64-bit type on NetBSD) wasn't converted to the target type,
+	long.  Reported by Dan Hagerty (hag@gnu.ai.it.edu).
+
+	* comm.c: Reorder functions so main is last, so no forward dcls
+	are needed.
+
 Sun Jul  9 11:41:15 1995  Jim Meyering  (meyering@comco.com)
 
 	* sort.c (main): When using obsolescent +pos -pos syntax, allow
