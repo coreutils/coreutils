@@ -1,3 +1,13 @@
+2004-11-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* Version 5.3.0.
+
+	Restore dd's noctty flag, reverting the change of 2004-04-08.
+	POSIX does not allow "dd" to use O_NOCTTY by default.
+	* NEWS: Add noctty flag to dd.
+	* doc/coreutils.texi (dd invocation): Likewise.
+	* src/dd.c (flags, usage, main): Likewise.
+
 2004-11-19  Alfred M. Szmidt  <ams@gnu.org>
 
 	* src/ls.c (usage): Clarified description of --no-group (-G),
