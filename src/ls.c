@@ -1269,7 +1269,7 @@ Use `--si' for the old meaning."));
 	  break;
 
 	case '1':
-	  /* -1 has no effect after --l.  */
+	  /* -1 has no effect after -l.  */
 	  if (format != long_format)
 	    format = one_per_line;
 	  break;
