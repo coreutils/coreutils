@@ -6,18 +6,21 @@ if test "$VERBOSE" = yes; then
   shred --version
 fi
 
+PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
+
 pwd=`pwd`
-tmp=t-shred.$$
-trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
-trap 'exit $?' 1 2 13 15
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
 
 # The length of the basename is what matters.
 # In this case, shred would try to rename the file 256^10 times
 # before terminating.
-file=$tmp/0123456789
-
-framework_failure=0
-mkdir $tmp || framework_failure=1
+file=0123456789
 touch $file || framework_failure=1
 chmod u-w $file || framework_failure=1
 
@@ -26,21 +29,11 @@ if test $framework_failure = 1; then
   exit 1
 fi
 
-(echo foo >> $file) >/dev/null 2>&1 && {
-  echo '********************************************'
-  echo "$0: NOTICE: This test case cannot be run as root."
-  echo '********************************************'
-  exit 77
-}
-
 fail=0
 
 # This would take so long that it appears to infloop
 # when using version from fileutils-4.0k.
 # When the command completes, expect it to fail.
 shred -u $file > /dev/null 2>&1 && fail=1
-
-chmod u+w $tmp
-rm -rf $tmp
 
 exit $fail
