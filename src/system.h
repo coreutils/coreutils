@@ -173,53 +173,6 @@
 # include <limits.h>
 #endif
 
-#ifndef CHAR_BIT
-# define CHAR_BIT 8
-#endif
-
-/* The extra casts work around common compiler bugs,
-   e.g. Cray C 5.0.3.0 when t == time_t.  */
-#define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
-#define TYPE_MINIMUM(t) ((t) (TYPE_SIGNED (t) \
-			      ? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) : (t) 0))
-#define TYPE_MAXIMUM(t) ((t) (~ (t) 0 - TYPE_MINIMUM (t)))
-
-#ifndef CHAR_MIN
-# define CHAR_MIN TYPE_MINIMUM (char)
-#endif
-
-#ifndef CHAR_MAX
-# define CHAR_MAX TYPE_MAXIMUM (char)
-#endif
-
-#ifndef UCHAR_MAX
-# define UCHAR_MAX TYPE_MAXIMUM (unsigned char)
-#endif
-
-#ifndef SHRT_MIN
-# define SHRT_MIN TYPE_MINIMUM (short int)
-#endif
-
-#ifndef SHRT_MAX
-# define SHRT_MAX TYPE_MAXIMUM (short int)
-#endif
-
-#ifndef INT_MAX
-# define INT_MAX TYPE_MAXIMUM (int)
-#endif
-
-#ifndef UINT_MAX
-# define UINT_MAX TYPE_MAXIMUM (unsigned int)
-#endif
-
-#ifndef LONG_MAX
-# define LONG_MAX TYPE_MAXIMUM (long)
-#endif
-
-#ifndef ULONG_MAX
-# define ULONG_MAX TYPE_MAXIMUM (unsigned long)
-#endif
-
 #include "pathmax.h"
 
 #if TIME_WITH_SYS_TIME
