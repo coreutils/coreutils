@@ -16,7 +16,7 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
 #include <stdio.h>
@@ -24,14 +24,14 @@
 #include "mountlist.h"
 
 #ifdef STDC_HEADERS
-#include <stdlib.h>
+# include <stdlib.h>
 #else
 void free ();
 #endif
 #if defined(STDC_HEADERS) || defined(HAVE_STRING_H)
-#include <string.h>
+# include <string.h>
 #else
-#include <strings.h>
+# include <strings.h>
 #endif
 
 char *strstr ();
@@ -41,62 +41,62 @@ char *xstrdup ();
 void error ();
 
 #ifdef HAVE_SYS_PARAM_H
-#include <sys/param.h>
+# include <sys/param.h>
 #endif
 
 #if defined (MOUNTED_GETFSSTAT)	/* __alpha running OSF_1 */
-#  include <sys/mount.h>
-#  include <sys/fs_types.h>
+# include <sys/mount.h>
+# include <sys/fs_types.h>
 #endif /* MOUNTED_GETFSSTAT */
 
 #ifdef MOUNTED_GETMNTENT1	/* 4.3BSD, SunOS, HP-UX, Dynix, Irix.  */
-#include <mntent.h>
-#if !defined(MOUNTED)
+# include <mntent.h>
+# if !defined(MOUNTED)
 #  if defined(MNT_MNTTAB)	/* HP-UX.  */
-#    define MOUNTED MNT_MNTTAB
+#   define MOUNTED MNT_MNTTAB
 #  endif
 #  if defined(MNTTABNAME)	/* Dynix.  */
-#    define MOUNTED MNTTABNAME
+#   define MOUNTED MNTTABNAME
 #  endif
-#endif
+# endif
 #endif
 
 #ifdef MOUNTED_GETMNTINFO	/* 4.4BSD.  */
-#include <sys/mount.h>
+# include <sys/mount.h>
 #endif
 
 #ifdef MOUNTED_GETMNT		/* Ultrix.  */
-#include <sys/mount.h>
-#include <sys/fs_types.h>
+# include <sys/mount.h>
+# include <sys/fs_types.h>
 #endif
 
 #ifdef MOUNTED_FREAD		/* SVR2.  */
-#include <mnttab.h>
+# include <mnttab.h>
 #endif
 
 #ifdef MOUNTED_FREAD_FSTYP	/* SVR3.  */
-#include <mnttab.h>
-#include <sys/fstyp.h>
-#include <sys/statfs.h>
+# include <mnttab.h>
+# include <sys/fstyp.h>
+# include <sys/statfs.h>
 #endif
 
 #ifdef MOUNTED_LISTMNTENT
-#include <mntent.h>
+# include <mntent.h>
 #endif
 
 #ifdef MOUNTED_GETMNTENT2	/* SVR4.  */
-#include <sys/mnttab.h>
+# include <sys/mnttab.h>
 #endif
 
 #ifdef MOUNTED_VMOUNT		/* AIX.  */
-#include <fshelp.h>
-#include <sys/vfs.h>
+# include <fshelp.h>
+# include <sys/vfs.h>
 #endif
 
 #ifdef DOLPHIN
 /* So special that it's not worth putting this in autoconf.  */
-#undef MOUNTED_FREAD_FSTYP
-#define MOUNTED_GETMNTTBL
+# undef MOUNTED_FREAD_FSTYP
+# define MOUNTED_GETMNTTBL
 #endif
 
 #ifdef MOUNTED_GETMNTENT1	/* 4.3BSD, SunOS, HP-UX, Dynix, Irix.  */
@@ -134,90 +134,90 @@ fstype_to_string (t)
 {
   switch (t)
     {
-#ifdef MOUNT_PC
+# ifdef MOUNT_PC
     case MOUNT_PC:
       return "pc";
-#endif
-#ifdef MOUNT_MFS
+# endif
+# ifdef MOUNT_MFS
     case MOUNT_MFS:
       return "mfs";
-#endif
-#ifdef MOUNT_LO
+# endif
+# ifdef MOUNT_LO
     case MOUNT_LO:
       return "lo";
-#endif
-#ifdef MOUNT_TFS
+# endif
+# ifdef MOUNT_TFS
     case MOUNT_TFS:
       return "tfs";
-#endif
-#ifdef MOUNT_TMP
+# endif
+# ifdef MOUNT_TMP
     case MOUNT_TMP:
       return "tmp";
-#endif
-#ifdef MOUNT_UFS
+# endif
+# ifdef MOUNT_UFS
    case MOUNT_UFS:
      return "ufs" ;
-#endif
-#ifdef MOUNT_NFS
+# endif
+# ifdef MOUNT_NFS
    case MOUNT_NFS:
      return "nfs" ;
-#endif
-#ifdef MOUNT_MSDOS
+# endif
+# ifdef MOUNT_MSDOS
    case MOUNT_MSDOS:
      return "msdos" ;
-#endif
-#ifdef MOUNT_LFS
+# endif
+# ifdef MOUNT_LFS
    case MOUNT_LFS:
      return "lfs" ;
-#endif
-#ifdef MOUNT_LOFS
+# endif
+# ifdef MOUNT_LOFS
    case MOUNT_LOFS:
      return "lofs" ;
-#endif
-#ifdef MOUNT_FDESC
+# endif
+# ifdef MOUNT_FDESC
    case MOUNT_FDESC:
      return "fdesc" ;
-#endif
-#ifdef MOUNT_PORTAL
+# endif
+# ifdef MOUNT_PORTAL
    case MOUNT_PORTAL:
      return "portal" ;
-#endif
-#ifdef MOUNT_NULL
+# endif
+# ifdef MOUNT_NULL
    case MOUNT_NULL:
      return "null" ;
-#endif
-#ifdef MOUNT_UMAP
+# endif
+# ifdef MOUNT_UMAP
    case MOUNT_UMAP:
      return "umap" ;
-#endif
-#ifdef MOUNT_KERNFS
+# endif
+# ifdef MOUNT_KERNFS
    case MOUNT_KERNFS:
      return "kernfs" ;
-#endif
-#ifdef MOUNT_PROCFS
+# endif
+# ifdef MOUNT_PROCFS
    case MOUNT_PROCFS:
      return "procfs" ;
-#endif
-#ifdef MOUNT_AFS
+# endif
+# ifdef MOUNT_AFS
    case MOUNT_AFS:
      return "afs" ;
-#endif
-#ifdef MOUNT_CD9660
+# endif
+# ifdef MOUNT_CD9660
    case MOUNT_CD9660:
      return "cd9660" ;
-#endif
-#ifdef MOUNT_UNION
+# endif
+# ifdef MOUNT_UNION
    case MOUNT_UNION:
      return "union" ;
-#endif
-#ifdef MOUNT_DEVFS
+# endif
+# ifdef MOUNT_DEVFS
    case MOUNT_DEVFS:
      return "devfs" ;
-#endif
-#ifdef MOUNT_EXT2FS
+# endif
+# ifdef MOUNT_EXT2FS
    case MOUNT_EXT2FS:
      return "ext2fs" ;
-#endif
+# endif
     default:
       return "?";
     }
@@ -345,11 +345,11 @@ read_filesystem_list (need_fs_type, all_fs)
 	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
 	me->me_devname = xstrdup (fsp->f_mntfromname);
 	me->me_mountdir = xstrdup (fsp->f_mntonname);
-#ifdef __NetBSD__
+# ifdef __NetBSD__
 	me->me_type = xstrdup (fsp->f_fstypename);
-#else
+# else
 	me->me_type = fstype_to_string (fsp->f_type);
-#endif
+# endif
 	me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
 	me->me_next = NULL;
 
@@ -436,17 +436,17 @@ read_filesystem_list (need_fs_type, all_fs)
     while (fread (&mnt, sizeof mnt, 1, fp) > 0)
       {
 	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
-#ifdef GETFSTYP			/* SVR3.  */
+# ifdef GETFSTYP			/* SVR3.  */
 	me->me_devname = xstrdup (mnt.mt_dev);
-#else
+# else
 	me->me_devname = xmalloc (strlen (mnt.mt_dev) + 6);
 	strcpy (me->me_devname, "/dev/");
 	strcpy (me->me_devname + 5, mnt.mt_dev);
-#endif
+# endif
 	me->me_mountdir = xstrdup (mnt.mt_filsys);
 	me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
 	me->me_type = "";
-#ifdef GETFSTYP			/* SVR3.  */
+# ifdef GETFSTYP			/* SVR3.  */
 	if (need_fs_type)
 	  {
 	    struct statfs fsd;
@@ -456,7 +456,7 @@ read_filesystem_list (need_fs_type, all_fs)
 		&& sysfs (GETFSTYP, fsd.f_fstyp, typebuf) != -1)
 	      me->me_type = xstrdup (typebuf);
 	  }
-#endif
+# endif
 	me->me_next = NULL;
 
 	/* Add to the linked list. */
