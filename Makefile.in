@@ -38,10 +38,11 @@ host_triplet = @host@
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.hin \
 	$(top_srcdir)/configure ABOUT-NLS AUTHORS COPYING ChangeLog \
-	INSTALL NEWS THANKS TODO config/ChangeLog config/config.guess \
-	config/config.rpath config/config.sub config/depcomp \
-	config/install-sh config/mdate-sh config/missing \
-	config/mkinstalldirs config/texinfo.tex
+	INSTALL NEWS THANKS TODO build-aux/ChangeLog \
+	build-aux/config.guess build-aux/config.rpath \
+	build-aux/config.sub build-aux/depcomp build-aux/install-sh \
+	build-aux/mdate-sh build-aux/missing build-aux/mkinstalldirs \
+	build-aux/texinfo.tex
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
@@ -156,7 +157,7 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno configure.status.lineno
-mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
+mkinstalldirs = $(SHELL) $(top_srcdir)/build-aux/mkinstalldirs
 CONFIG_HEADER = config.h
 CONFIG_CLEAN_FILES =
 SOURCES =
@@ -531,7 +532,7 @@ distdir: $(DISTFILES)
 	esac
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/config $(distdir)/m4 $(distdir)/old/fileutils $(distdir)/old/sh-utils $(distdir)/old/textutils $(distdir)/po
+	$(mkdir_p) $(distdir)/build-aux $(distdir)/m4 $(distdir)/old/fileutils $(distdir)/old/sh-utils $(distdir)/old/textutils $(distdir)/po
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -778,7 +779,7 @@ check-root:
 	cd tests && $(MAKE) $@
 
 dist-hook:
-	test -x $(srcdir)/config/install-sh
+	test -x $(srcdir)/build-aux/install-sh
 
 distcheck-hook:
 	$(MAKE) my-distcheck

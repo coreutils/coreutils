@@ -149,14 +149,14 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
-mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
+mkinstalldirs = $(SHELL) $(top_srcdir)/build-aux/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 SOURCES =
 DIST_SOURCES =
 INFO_DEPS = $(srcdir)/coreutils.info
-TEXINFO_TEX = $(top_srcdir)/config/texinfo.tex
-am__TEXINFO_TEX_DIR = $(top_srcdir)/config
+TEXINFO_TEX = $(top_srcdir)/build-aux/texinfo.tex
+am__TEXINFO_TEX_DIR = $(top_srcdir)/build-aux
 DVIS = coreutils.dvi
 PDFS = coreutils.pdf
 PSS = coreutils.ps
@@ -394,7 +394,7 @@ coreutils.html: coreutils.texi $(srcdir)/version.texi
 $(srcdir)/version.texi:  $(srcdir)/stamp-vti
 $(srcdir)/stamp-vti: coreutils.texi $(top_srcdir)/configure
 	@(dir=.; test -f ./coreutils.texi || dir=$(srcdir); \
-	set `$(SHELL) $(top_srcdir)/config/mdate-sh $$dir/coreutils.texi`; \
+	set `$(SHELL) $(top_srcdir)/build-aux/mdate-sh $$dir/coreutils.texi`; \
 	echo "@set UPDATED $$1 $$2 $$3"; \
 	echo "@set UPDATED-MONTH $$2 $$3"; \
 	echo "@set EDITION $(VERSION)"; \
