@@ -320,6 +320,8 @@
 #include "inttostr.h"
 #include "mbswidth.h"
 #include "posixver.h"
+#include "strftime.h"
+#include "timespec.h"
 #include "xstrtol.h"
 
 #if ! (HAVE_DECL_STRTOUMAX || defined strtoumax)
@@ -1665,30 +1667,39 @@ init_header (char *filename, int desc)
 {
   char *buf = NULL;
   struct stat st;
+  time_t s;
+  int ns;
   struct tm *tm;
 
   /* If parallel files or standard input, use current date. */
   if (STREQ (filename, "-"))
     desc = -1;
-  if (desc < 0 || fstat (desc, &st) != 0)
-    st.st_mtime = time (NULL);
-
-  tm = localtime (&st.st_mtime);
-  if (tm == NULL)
+  if (0 <= desc && fstat (desc, &st) == 0)
     {
-      buf = xmalloc (INT_BUFSIZE_BOUND (long int));
-      sprintf (buf, "%ld", (long int) st.st_mtime);
+      s = st.st_mtime;
+      ns = TIMESPEC_NS (st.st_mtim);
     }
   else
     {
-      size_t bufsize = 0;
-      for (;;)
-	{
-	  buf = x2nrealloc (buf, &bufsize, sizeof *buf);
-	  *buf = '\1';
-	  if (strftime (buf, bufsize, date_format, tm) || *buf == '\0')
-	    break;
-	}
+      static struct timespec timespec;
+      if (! timespec.tv_sec)
+	gettime (&timespec);
+      s = timespec.tv_sec;
+      ns = timespec.tv_nsec;
+    }
+
+  tm = localtime (&s);
+  if (tm == NULL)
+    {
+      buf = xmalloc (INT_BUFSIZE_BOUND (long int)
+		     + MAX (10, INT_BUFSIZE_BOUND (int)));
+      sprintf (buf, "%ld.9d", (long int) s, ns);
+    }
+  else
+    {
+      size_t bufsize = nstrftime (NULL, SIZE_MAX, date_format, tm, 0, ns) + 1;
+      buf = xmalloc (bufsize);
+      nstrftime (buf, bufsize, date_format, tm, 0, ns);
     }
 
   if (date_text)
