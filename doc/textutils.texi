@@ -1796,12 +1796,13 @@ contents of files.
 
 @pindex wc
 @cindex byte count
+@cindex character count
 @cindex word count
 @cindex line count
 
-@code{wc} counts the number of bytes, whitespace-separated words, and
-newlines in each given @var{file}, or standard input if none are given
-or for a @var{file} of @samp{-}.  Synopsis:
+@code{wc} counts the number of bytes, characters, whitespace-separated
+words, and newlines in each given @var{file}, or standard input if none
+are given or for a @var{file} of @samp{-}.  Synopsis:
 
 @example
 wc [@var{option}]@dots{} [@var{file}]@dots{}
@@ -1812,16 +1813,16 @@ wc [@var{option}]@dots{} [@var{file}]@dots{}
 given as an argument, it prints the file name following the counts.  If
 more than one @var{file} is given, @code{wc} prints a final line
 containing the cumulative counts, with the file name @file{total}.  The
-counts are printed in this order: newlines, words, bytes.
+counts are printed in this order: newlines, words, characters, bytes.
 By default, each count is output right-justified in a 7-byte field with
 one space between fields so that the numbers and file names line up nicely
 in columns.  However, @sc{posix} requires that there be exactly one space
 separating columns.  You can make @code{wc} use the @sc{posix}-mandated
 output format by setting the @env{POSIXLY_CORRECT} environment variable.
 
-By default, @code{wc} prints all three counts.  Options can specify
-that only certain counts be printed.  Options do not undo others
-previously given, so
+By default, @code{wc} prints three counts: the newline, words, byte counts.
+Options can specify that only certain counts be printed.  Options do not
+undo others previously given, so
 
 @example
 wc --bytes --words
@@ -1840,11 +1841,15 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @item -c
 @itemx --bytes
-@itemx --chars
 @opindex -c
 @opindex --bytes
-@opindex --chars
 Print only the byte counts.
+
+@item -m
+@itemx --chars
+@opindex -m
+@opindex --chars
+Print only the character counts.
 
 @item -w
 @itemx --words
