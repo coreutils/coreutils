@@ -20,12 +20,35 @@
 /* Get isblank from GNU libc.  */
 #define _GNU_SOURCE
 #include <ctype.h>
-#ifndef isblank
-#define isblank(c) ((c) == ' ' || (c) == '\t')
+
+#ifdef isascii
+#define CTYPE_PREFIX(c) isascii (c) &&
+#else
+#define CTYPE_PREFIX(c) /* empty */
 #endif
-#ifndef isgraph
-#define isgraph(c) (isprint (c) && !isspace (c))
+
+#ifdef isblank
+#define ISBLANK(c) (CTYPE_PREFIX (c) isblank (c))
+#else
+#define ISBLANK(c) ((c) == ' ' || (c) == '\t')
 #endif
+#ifdef isgraph
+#define ISGRAPH(c) (CTYPE_PREFIX (c) isgraph (c))
+#else
+#define ISGRAPH(c) (CTYPE_PREFIX (c) isprint (c) && !isspace (c))
+#endif
+
+#define ISPRINT(c) (CTYPE_PREFIX (c) isprint (c))
+#define ISDIGIT(c) (CTYPE_PREFIX (c) isdigit (c))
+#define ISALNUM(c) (CTYPE_PREFIX (c) isalnum (c))
+#define ISALPHA(c) (CTYPE_PREFIX (c) isalpha (c))
+#define ISCNTRL(c) (CTYPE_PREFIX (c) iscntrl (c))
+#define ISLOWER(c) (CTYPE_PREFIX (c) islower (c))
+#define ISPUNCT(c) (CTYPE_PREFIX (c) ispunct (c))
+#define ISSPACE(c) (CTYPE_PREFIX (c) isspace (c))
+#define ISUPPER(c) (CTYPE_PREFIX (c) isupper (c))
+#define ISXDIGIT(c) (CTYPE_PREFIX (c) isxdigit (c))
+
 #include <stdio.h>
 #include <assert.h>
 #include <errno.h>
@@ -332,40 +355,40 @@ is_char_class_member (char_class, c)
   switch (char_class)
     {
     case CC_ALNUM:
-      return isalnum (c);
+      return ISALNUM (c);
       break;
     case CC_ALPHA:
-      return isalpha (c);
+      return ISALPHA (c);
       break;
     case CC_BLANK:
-      return isblank (c);
+      return ISBLANK (c);
       break;
     case CC_CNTRL:
-      return iscntrl (c);
+      return ISCNTRL (c);
       break;
     case CC_DIGIT:
-      return isdigit (c);
+      return ISDIGIT (c);
       break;
     case CC_GRAPH:
-      return isgraph (c);
+      return ISGRAPH (c);
       break;
     case CC_LOWER:
-      return islower (c);
+      return ISLOWER (c);
       break;
     case CC_PRINT:
-      return isprint (c);
+      return ISPRINT (c);
       break;
     case CC_PUNCT:
-      return ispunct (c);
+      return ISPUNCT (c);
       break;
     case CC_SPACE:
-      return isspace (c);
+      return ISSPACE (c);
       break;
     case CC_UPPER:
-      return isupper (c);
+      return ISUPPER (c);
       break;
     case CC_XDIGIT:
-      return isxdigit (c);
+      return ISXDIGIT (c);
       break;
     case CC_NO_CLASS:
       abort ();
@@ -510,7 +533,7 @@ make_printable_char (c)
   char *buf = xmalloc (5);
 
   assert (c < N_CHARS);
-  if (isprint (c))
+  if (ISPRINT (c))
     {
       buf[0] = c;
       buf[1] = '\0';
@@ -572,7 +595,7 @@ make_printable_str (s, len)
 	  tmp = "\\v";
 	  break;
 	default:
-	  if (isprint (s[i]))
+	  if (ISPRINT (s[i]))
 	    {
 	      buf[0] = s[i];
 	      buf[1] = '\0';
@@ -791,7 +814,7 @@ non_neg_strtol (s, len, val)
     return 1;
   if (s[0] == '0')
     base = 8;
-  else if (isdigit (s[0]))
+  else if (ISDIGIT (s[0]))
     base = 10;
   else
     return 1;
