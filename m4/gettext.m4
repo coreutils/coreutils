@@ -6,7 +6,7 @@
 # but which still want to provide support for the GNU gettext functionality.
 # Please note that the actual code is *not* freely available.
 
-# serial 106
+# serial 107
 
 AC_PREREQ(2.13)               dnl Minimum Autoconf version required.
 
@@ -48,21 +48,11 @@ AC_DEFUN(AM_WITH_NLS,
 
 	   if test "$gt_cv_func_gettext_libc" != "yes"; then
 	     AC_CHECK_LIB(intl, bindtextdomain,
-	       [AC_CACHE_CHECK([for gettext in libintl],
-		 gt_cv_func_gettext_libintl,
-		 [AC_CHECK_LIB(intl, gettext,
-		  gt_cv_func_gettext_libintl=yes,
-		  gt_cv_func_gettext_libintl=no)],
-		 gt_cv_func_gettext_libintl=no)])
-
-	     if test "$gt_cv_func_gettext_libintl" = yes; then
-	       LIBS="$LIBS -lintl"
-	     fi
-
+	       [AC_CHECK_LIB(intl, gettext)])
 	   fi
 
 	   if test "$gt_cv_func_gettext_libc" = "yes" \
-	      || test "$gt_cv_func_gettext_libintl" = "yes"; then
+	      || test "$ac_cv_lib_intl_gettext" = "yes"; then
 	      AC_DEFINE(HAVE_GETTEXT, 1,
 	  [Define to 1 if you have gettext and don't want to use GNU gettext.])
 	      AM_PATH_PROG_WITH_TEST(MSGFMT, msgfmt,
@@ -166,7 +156,7 @@ AC_DEFUN(AM_WITH_NLS,
       nls_cv_header_intl=intl/libintl.h
       nls_cv_header_libgt=intl/libgettext.h
     fi
-    if test -z "$nsl_cv_header_intl"; then
+    if test -z "$nls_cv_header_intl"; then
       # Clean out junk possibly left behind by a previous configuration.
       rm -f intl/libintl.h
     fi
@@ -313,17 +303,16 @@ strdup __argz_count __argz_stringify __argz_next])
    dnl Generate list of files to be processed by xgettext which will
    dnl be included in po/Makefile.
    test -d po || mkdir po
-   if test "x$srcdir" != "x."; then
-     changequote(, )dnl
-     if test "x`echo $srcdir | sed -e 's@^[A-z]:@@' -e 's@/.*@@'`" = "x"; then
-       posrcprefix="$srcdir/"
-     else
-       posrcprefix="../$srcdir/"
-     fi
-     changequote([, ])dnl
-   else
-     posrcprefix="../"
-   fi
+   changequote(, )dnl
+   case "$srcdir" in
+   .) 
+     posrcprefix="../" ;;
+   /* | [A-Za-z]:*)
+     posrcprefix="$srcdir/" ;;
+   *)
+     posrcprefix="../$srcdir/" ;;
+   esac
+   changequote([, ])dnl
    rm -f po/POTFILES
    sed -e "/^#/d" -e "/^\$/d" -e "s,.*,	$posrcprefix& \\\\," -e "\$s/\(.*\) \\\\/\1/" \
 	< $srcdir/po/POTFILES.in > po/POTFILES
