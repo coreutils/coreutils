@@ -123,6 +123,15 @@ sub test_vector
      # test for RFC-822 conformance
      ['rfc822-1', "-R -d '$d1'", {}, "Sun, 19 Jan 1997 08:17:48 +0000", 0],
 
+     # Relative seconds, with time.  fixed in 2.0j
+     ['relative-1', "--utc -d '1970-01-01 00:00:00 UTC +961062237 sec' $fmt",
+      {}, "2000-06-15 09:43:57", 0],
+
+     # Relative seconds, no time.
+     # This test has problems!  It works only if TZ is set to UTC+1 (as below).
+     ['relative-2', "--utc -d '1970-01-01 UTC +961062237 sec' $fmt", {},
+      "2000-06-15 10:43:57", 0],
+
      # FIXME: add a lot more...
      );
 
@@ -158,6 +167,7 @@ sub test_vector
   $Test::env{'date2sec-0'} = ['TZ=UTC+2'];
 
   $Test::env{'rfc822-1'} = ['LC_ALL=de_DE TZ=UTC0'];
+  $Test::env{'relative-2'} = ['TZ=UTC+1'];
 
   return @tv;
 }
