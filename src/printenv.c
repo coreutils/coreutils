@@ -70,7 +70,6 @@ If no environment VARIABLE specified, print them all.\n\
 "),
 	      program_name, program_name);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
-      close_stdout_status (2);
     }
   exit (status);
 }
@@ -89,6 +88,9 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  close_stdout_set_status (2);
+  atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      AUTHORS, usage);
@@ -132,8 +134,6 @@ main (int argc, char **argv)
 	}
       exit_status = (matches != argc - optind);
     }
-
-  close_stdout_status (2);
 
   exit (exit_status);
 }

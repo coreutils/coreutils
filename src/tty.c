@@ -69,7 +69,6 @@ Print the file name of the terminal connected to standard input.\n\
 "));
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
-  close_stdout_status (3);
   exit (status);
 }
 
@@ -83,6 +82,9 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  close_stdout_set_status (3);
+  atexit (close_stdout);
 
   silent = 0;
 
@@ -116,8 +118,6 @@ main (int argc, char **argv)
 	puts (tty);
       else
 	puts (_("not a tty"));
-
-      close_stdout_status (3);
     }
 
   exit (isatty (0) ? 0 : 1);
