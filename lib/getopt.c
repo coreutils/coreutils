@@ -62,16 +62,16 @@
 # define attribute_hidden
 #endif
 
-/* This version of `getopt' appears to the caller like standard Unix `getopt'
-   but it behaves differently for the user, since it allows the user
-   to intersperse the options with the other arguments.
+/* Unlike standard Unix `getopt', functions like `getopt_long'
+   let the user intersperse the options with the other arguments.
 
-   As `getopt' works, it permutes the elements of ARGV so that,
+   As `getopt_long' works, it permutes the elements of ARGV so that,
    when it is done, all the options precede everything else.  Thus
    all application programs are extended to handle flexible argument order.
 
-   Setting the environment variable POSIXLY_CORRECT disables permutation.
-   Then the behavior is completely standard.
+   Using `getopt' or setting the environment variable POSIXLY_CORRECT
+   disables permutation.
+   Then the application's behavior is completely standard.
 
    GNU application programs can use a third alternative mode in which
    they can distinguish the relative order of options and other arguments.  */
@@ -250,8 +250,8 @@ exchange (char **argv, struct _getopt_data *d)
 /* Initialize the internal data when the first call is made.  */
 
 static const char *
-_getopt_initialize (int argc, char *__getopt_argv_const *argv,
-		    const char *optstring, struct _getopt_data *d)
+_getopt_initialize (int argc, char **argv, const char *optstring,
+		    int posixly_correct, struct _getopt_data *d)
 {
   /* Start processing options with ARGV-element 1 (since ARGV-element 0
      is the program name); the sequence of previously skipped
@@ -261,7 +261,7 @@ _getopt_initialize (int argc, char *__getopt_argv_const *argv,
 
   d->__nextchar = NULL;
 
-  d->__posixly_correct = !!getenv ("POSIXLY_CORRECT");
+  d->__posixly_correct = posixly_correct || !!getenv ("POSIXLY_CORRECT");
 
   /* Determine how to handle the ordering of options and nonoptions.  */
 
@@ -355,11 +355,6 @@ _getopt_initialize (int argc, char *__getopt_argv_const *argv,
    `flag' field is nonzero, the value of the option's `val' field
    if the `flag' field is zero.
 
-   The elements of ARGV aren't really const, because we permute them.
-   If __getopt_argv_const is defined to const, pretend they're
-   const in the prototype to be compatible with Posix.
-   But tell the truth if __getopt_argv_const is defined to empty.
-
    LONGOPTS is a vector of `struct option' terminated by an
    element containing a name which is zero.
 
@@ -368,13 +363,15 @@ _getopt_initialize (int argc, char *__getopt_argv_const *argv,
    recent call.
 
    If LONG_ONLY is nonzero, '-' as well as '--' can introduce
-   long-named options.  */
+   long-named options.
+
+   If POSIXLY_CORRECT is nonzero, behave as if the POSIXLY_CORRECT
+   environment variable were set.  */
 
 int
-_getopt_internal_r (int argc, char *__getopt_argv_const *argv,
-		    const char *optstring,
+_getopt_internal_r (int argc, char **argv, const char *optstring,
 		    const struct option *longopts, int *longind,
-		    int long_only, struct _getopt_data *d)
+		    int long_only, int posixly_correct, struct _getopt_data *d)
 {
   int print_errors = d->opterr;
   if (optstring[0] == ':')
@@ -389,7 +386,8 @@ _getopt_internal_r (int argc, char *__getopt_argv_const *argv,
     {
       if (d->optind == 0)
 	d->optind = 1;	/* Don't scan ARGV[0], the program name.  */
-      optstring = _getopt_initialize (argc, argv, optstring, d);
+      optstring = _getopt_initialize (argc, argv, optstring,
+				      posixly_correct, d);
       d->__initialized = 1;
     }
 
@@ -1137,17 +1135,17 @@ _getopt_internal_r (int argc, char *__getopt_argv_const *argv,
 }
 
 int
-_getopt_internal (int argc, char *__getopt_argv_const *argv,
-		  const char *optstring,
-		  const struct option *longopts, int *longind, int long_only)
+_getopt_internal (int argc, char **argv, const char *optstring,
+		  const struct option *longopts, int *longind,
+		  int long_only, int posixly_correct)
 {
   int result;
 
   getopt_data.optind = optind;
   getopt_data.opterr = opterr;
 
-  result = _getopt_internal_r (argc, argv, optstring, longopts,
-			       longind, long_only, &getopt_data);
+  result = _getopt_internal_r (argc, argv, optstring, longopts, longind,
+			       long_only, posixly_correct, &getopt_data);
 
   optind = getopt_data.optind;
   optarg = getopt_data.optarg;
@@ -1157,12 +1155,9 @@ _getopt_internal (int argc, char *__getopt_argv_const *argv,
 }
 
 int
-getopt (int argc, char *__getopt_argv_const *argv, const char *optstring)
+getopt (int argc, char *const *argv, const char *optstring)
 {
-  return _getopt_internal (argc, argv, optstring,
-			   (const struct option *) 0,
-			   (int *) 0,
-			   0);
+  return _getopt_internal (argc, (char **) argv, optstring, NULL, NULL, 0, 1);
 }
 
 
