@@ -26,7 +26,7 @@ if test $framework_failure = 1; then
 fi
 
 fail=0
-chown 0:1 f
+chown -R --preserve-root 0:1 f
 
 # Make sure the owner and group are 0 and 1 respectively.
 set _ `ls -n f`; shift; test "$3:$4" = 0:1 || fail=1
@@ -35,5 +35,18 @@ chown --from=0:1 2:010 f || fail=1
 
 # And now they should be 2 and 10 respectively.
 set _ `ls -n f`; shift; test "$3:$4" = 2:10 || fail=1
+
+ln -s f slink
+# Applying chown to a symlink with --no-dereference
+# should change only the link.
+chown --no-dereference 0:1 slink || fail=1
+# owner/group on the symlink should be set
+set _ `ls -n slink`; shift; test "$3:$4" = 0:1 || fail=1
+# owner/group on the referent should remain unchanged
+set _ `ls -n f`;     shift; test "$3:$4" = 2:10 || fail=1
+
+chown --no-dereference --from=0:1 2:010 slink || fail=1
+# owner/group on the symlink should be changed
+set _ `ls -n slink`; shift; test "$3:$4" = 2:10 || fail=1
 
 (exit $fail); exit $fail
