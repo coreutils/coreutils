@@ -545,7 +545,7 @@ get_paragraph (f)
   return TRUE;
 }
 
-/* Copy a line which failed to match the prefix to the output, or which
+/* Copy to the output a line that failed to match the prefix, or that
    was blank after the prefix.  In the former case, C is the character
    that failed to match the prefix.  In the latter, C is \n or EOF.
    Return the character (\n or EOF) ending the line.  */
@@ -558,7 +558,7 @@ copy_rest (f, c)
   register const char *s;
 
   out_column = 0;
-  if (in_column > next_prefix_indent || (c != '\n' && c != EOF))
+  if (in_column > next_prefix_indent && c != '\n' && c != EOF)
     {
       put_space (next_prefix_indent);
       for (s = prefix; out_column != in_column; out_column++)
