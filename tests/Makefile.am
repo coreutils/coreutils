@@ -27,7 +27,7 @@ SUBDIRS = \
 check-root:
 	cd chown && $(MAKE) check TESTS=basic
 	cd cp    && $(MAKE) check TESTS=special-bits
-	cd mv    && $(MAKE) check TESTS=mv-special-1
+	cd rm    && $(MAKE) check TESTS=no-give-up
 	cd rm    && $(MAKE) check TESTS=fail-2eperm
 
 check-recursive: evar-check root-hint
