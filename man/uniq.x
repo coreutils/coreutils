@@ -1,4 +1,4 @@
 [NAME]
-uniq \- remove duplicate lines from a sorted file
+uniq \- report or omit repeated lines
 [DESCRIPTION]
 .\" Add any additional description here
