@@ -1,3 +1,7 @@
+2004-04-12  Jim Meyering  <jim@meyering.net>
+
+	* inttostr.h: Update from gnulib.
+
 2004-03-27  Paul Eggert  <eggert@twinsun.com>
 
 	* utimecmp.c, utimecmp.h: New files.
