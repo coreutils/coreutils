@@ -78,9 +78,16 @@ static char *ref_file;
 /* Info about the reference file. */
 static struct stat ref_stats;
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  TIME_OPTION = CHAR_MAX + 1
+};
+
 static struct option const longopts[] =
 {
-  {"time", required_argument, 0, CHAR_MAX + 1},
+  {"time", required_argument, 0, TIME_OPTION},
   {"no-create", no_argument, 0, 'c'},
   {"date", required_argument, 0, 'd'},
   {"file", required_argument, 0, 'r'}, /* FIXME: phase out --file */
@@ -276,7 +283,7 @@ main (int argc, char **argv)
 	  date_set++;
 	  break;
 
-	case CHAR_MAX + 1:	/* --time */
+	case TIME_OPTION:	/* --time */
 	  change_times |= XARGMATCH ("--time", optarg,
 				     time_args, time_masks);
 	  break;
