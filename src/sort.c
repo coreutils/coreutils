@@ -1,5 +1,5 @@
 /* sort - sort lines of text (with all kinds of options).
-   Copyright (C) 88, 91, 92, 93, 94, 95, 1996 Free Software Foundation
+   Copyright (C) 88, 91, 92, 93, 94, 95, 1996, 1997 Free Software Foundation
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -37,11 +37,11 @@
 #include "xstrtod.h"
 
 #ifdef HAVE_LIMITS_H
-#include <limits.h>
+# include <limits.h>
 #else
-#ifndef UCHAR_MAX
-#define UCHAR_MAX 255
-#endif
+# ifndef UCHAR_MAX
+#  define UCHAR_MAX 255
+# endif
 #endif
 #ifndef STDC_HEADERS
 char *malloc ();
@@ -57,7 +57,7 @@ void free ();
 #define UCHAR(c) ((unsigned char) (c))
 
 #ifndef DEFAULT_TMPDIR
-#define DEFAULT_TMPDIR "/tmp"
+# define DEFAULT_TMPDIR "/tmp"
 #endif
 
 /* Use this as exit status in case of error, not EXIT_FAILURE.  This
@@ -1203,18 +1203,26 @@ compare (register const struct line *a, register const struct line *b)
   return reverse ? -diff : diff;
 }
 
-/* Check that the lines read from the given FP come in order.  Return
-   1 if they do and 0 if there is a disorder.
-   FIXME: return number of first out-of-order line if not sorted.  */
+/* Check that the lines read from the given FP come in order.  Print a
+   diagnostic to stderr (POSIX says -c shouldn't write to stdout) and return
+   the line number of the first out-of-order line (counting from 1) if they
+   are not in order.  Otherwise, print no diagnostic and return zero.  */
 
 static int
-checkfp (FILE *fp)
+checkfp (FILE *fp, const char *file)
 {
   struct buffer buf;		/* Input buffer. */
   struct lines lines;		/* Lines scanned from the buffer. */
   struct line temp;		/* Copy of previous line. */
   int cc;			/* Character count. */
-  int alloc, sorted = 1;
+  int alloc;
+  int line_number = 1;
+  struct line *disorder_line;
+  int disorder_line_number = 0;
+
+#ifdef lint  /* Suppress `used before initialized' warning.  */
+  disorder_line = NULL;
+#endif
 
   initbuf (&buf, mergealloc);
   initlines (&lines, mergealloc / linelength + 1,
@@ -1240,10 +1248,13 @@ checkfp (FILE *fp)
 	  cmp = compare (&lines.lines[i], &lines.lines[i + 1]);
 	  if ((unique && cmp >= 0) || (cmp > 0))
 	    {
-	      sorted = 0;
+	      disorder_line = &lines.lines[i + 1];
+	      disorder_line_number = line_number + i + 1;
 	      goto finish;
 	    }
 	}
+
+      line_number += lines.used;
 
       /* Save the last line of the buffer and refill the buffer. */
       prev_line = lines.lines + (lines.used - 1);
@@ -1272,17 +1283,27 @@ checkfp (FILE *fp)
       cmp = compare (&temp, &lines.lines[0]);
       if ((unique && cmp >= 0) || (cmp > 0))
 	{
-	  sorted = 0;
+	  disorder_line = &lines.lines[0];
+	  disorder_line_number = line_number;
 	  break;
 	}
     }
 
 finish:
   xfclose (fp);
+
+  if (disorder_line_number)
+    {
+      fprintf (stderr, _("%s: %s:%d: disorder: "), program_name, file,
+	       disorder_line_number);
+      write_bytes (disorder_line->text, disorder_line->length, stderr);
+      putc (eolchar, stderr);
+    }
+
   free (buf.buf);
   free ((char *) lines.lines);
   free (temp.text);
-  return sorted;
+  return disorder_line_number;
 }
 
 /* Merge lines from FPS onto OFP.  NFPS cannot be greater than NMERGE.
@@ -1500,9 +1521,8 @@ check (char **files, int nfiles)
   for (i = 0; i < nfiles; ++i)
     {
       fp = xfopen (files[i], "r");
-      if (!checkfp (fp))
+      if (checkfp (fp, files[i]))
 	{
-	  fprintf (stderr, _("%s: disorder on %s\n"), program_name, files[i]);
 	  ++disorders;
 	}
     }
