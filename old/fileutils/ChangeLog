@@ -1,10 +1,13 @@
 1997-08-31  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in (jm_FUNC_LSTAT): Use it.
+
 	* acconfig.h (lstat): Add #undef.
 
 	* m4/Makefile.am (EXTRA_DIST): Add lstat.m4.
 
 	* m4/lstat.m4: New file.
+	* m4/lstat.m4 (jm_FUNC_LSTAT): New macro.
 	* lib/lstat.c: New file.
 
 	* src/rm.c (fspec_get_full_mode): Don't call error here.
