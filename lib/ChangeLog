@@ -1,3 +1,7 @@
+2003-01-14  Jim Meyering  <jim@meyering.net>
+
+	* ftw.c: Merge in Ulrich's and my changes from libc.
+
 2003-01-12  Jim Meyering  <jim@meyering.net>
 
 	* ftw.c (ftw_startup): Rename local-shadowing local to pacify gcc.
