@@ -1,3 +1,14 @@
+User-visible changes in release 3.13:
+* df fails if the same file system type is both selected and excluded.
+* df works around SunOS statfs brokenness wrt filesystems larger than 2GB
+* df better handles inconsistent mtab entries
+* `ls -lDR dir dir2' works
+* `ls -c' does what it's supposed to
+* all programs include program name in --version output
+* `ls --quote-name' works
+* fix bug in the way mv determined whether src and dest are the same file
+* du --dereference (-L) works with directory symlinks
+* du works on SunOS 4 systems even when accounting is enabled
 User-visible changes in release 3.12:
 * None.
 User-visible changes in release 3.11:
@@ -52,7 +63,7 @@ Major changes in release 3.9:
   They used to succeed, ignoring the implicitly contradictory trailing slash.
 
 Major changes in release 3.8:
-* install isn't as likely to produce spurious errors 
+* install isn't as likely to produce spurious errors
 * avoid redundant compilations for `dir' and `vdir';
 * configure properly defines STAT_STATFS2_BSIZE on a Pyramid MIServer
   running OSx 5.1
@@ -78,7 +89,7 @@ Major changes in release 3.5:
 
 Major changes in release 3.4:
 * cp -p and mv preserve setuid and setgid bits
-* chown works on systems where sizeof(uid_t) != sizeof(int) 
+* chown works on systems where sizeof(uid_t) != sizeof(int)
   or sizeof(uid) != sizeof(gid)
 * catch errors from spurious slashes at ends of arguments
 
