@@ -2,6 +2,10 @@
 
 	* Version 4.1.7.
 
+	* configure.ac (AM_INIT_AUTOMAKE): Specify the required version
+	of automake (1.6), and options (gnits dist-bzip2), rather than...
+	* Makefile.am (AUTOMAKE_OPTIONS): ...here.  Remove definition.
+
 	* src/copy.c (copy_reg): Don't exit upon finding a replaced file.
 	Instead, just skip it like the diagnostic says.
 	Reported by Paul Eggert.
