@@ -132,7 +132,6 @@ ftruncate.m4 \
 getgroups.m4 \
 getline.m4 \
 getloadavg.m4 \
-gettext.m4 \
 glibc.m4 \
 group-member.m4 \
 iconv.m4 \
@@ -147,6 +146,7 @@ largefile.m4 \
 lchown.m4 \
 lcmessage.m4 \
 lib-check.m4 \
+libintl.m4 \
 link-follow.m4 \
 ls-mntd-fs.m4 \
 lstat-slash.m4 \
