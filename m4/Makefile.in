@@ -83,9 +83,6 @@ MAKEINFO = @MAKEINFO@
 MAN = @MAN@
 MKINSTALLDIRS = @MKINSTALLDIRS@
 MSGFMT = @MSGFMT@
-NEED_SETGID = @NEED_SETGID@
-OPTIONAL_BIN_PROGS = @OPTIONAL_BIN_PROGS@
-OPTIONAL_BIN_ZCRIPTS = @OPTIONAL_BIN_ZCRIPTS@
 PACKAGE = @PACKAGE@
 PERL = @PERL@
 POFILES = @POFILES@
@@ -98,7 +95,6 @@ U = @U@
 USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
-YACC = @YACC@
 l = @l@
 
 EXTRA_DIST = README \
@@ -120,7 +116,7 @@ GZIP = --best
 default: all
 
 .SUFFIXES:
-$(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --gnits m4/Makefile
 
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
