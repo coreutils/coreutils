@@ -58,4 +58,8 @@ set X `ls -l $dir/dd`
 shift
 test "$1" = -r-xr-xr-x || fail=1
 
+# These failed in coreutils CVS from 2004-06-25 to 2004-08-11.
+ginstall -d . || fail=1
+ginstall -d newdir || fail=1
+
 (exit $fail); exit $fail
