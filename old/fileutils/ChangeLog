@@ -1,3 +1,25 @@
+Wed May 15 22:54:31 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* chmod.c (describe_change): Declare pointer parameters to be const.
+	(change_file_mode): Likewise.
+	(change_dir_mode): Likewise.
+
+	* modechange.c (mode_compile): Declare parameter MODE_STRING const.
+	Remove register attribute.
+	(mode_adjust): Likewise for CHANGES.
+	* modechange.h: Reflect above changes in prototypes.
+
+	* lib/Makefile.am (getdate.c): Disable dependencies that can
+	require rerunning YACC when not in maintainer mode.
+	(posixtm.c): Likewise.
+
+Tue May 14 23:36:54 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* dd.c (print_stats): Restructure pluralization of error message
+	so it's easier to translate.  Reported by Gvran Uddeborg
+	<gvran@uddeborg.pp.se>.
+	* mv.c (main): Likewise.
+
 Tue May  7 22:10:20 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* configure.in: Require autoconf-2.10.
