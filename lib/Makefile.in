@@ -49,7 +49,7 @@ RM = @RM@
 
 noinst_LIBRARIES = libfu.a
 
-EXTRA_DIST = mkdir.c rmdir.c getline.c mktime.c strftime.c
+EXTRA_DIST = mkdir.c rmdir.c getline.c mktime.c strftime.c getgroups.c
 
 INCLUDES = -I.. -I$(srcdir) -I../intl
 
@@ -94,10 +94,10 @@ HEADERS =  $(noinst_HEADERS)
 
 DIST_COMMON =  Makefile.am Makefile.in alloca.c basename.c error.c \
 error.h euidaccess.c fileblocks.c fnmatch.c fsusage.c ftruncate.c \
-getdate.c getline.c group-member.c interlock memcmp.c memcpy.c memset.c \
-mkdir.c mktime.c mountlist.c obstack.c obstack.h posixtm.c regex.c \
-regex.h rename.c rmdir.c rpmatch.c rx.c rx.h stpcpy.c strcasecmp.c \
-strdup.c strndup.c strstr.c strtol.c strtoul.c ylwrap
+getdate.c getgroups.c getline.c group-member.c interlock memcmp.c \
+memcpy.c memset.c mkdir.c mktime.c mountlist.c obstack.c obstack.h \
+posixtm.c regex.c regex.h rename.c rmdir.c rpmatch.c rx.c rx.h stpcpy.c \
+strcasecmp.c strdup.c strndup.c strstr.c strtol.c strtoul.c ylwrap
 
 
 PACKAGE = @PACKAGE@
