@@ -63,11 +63,25 @@
 /* Name this program was run with.  */
 char *program_name;
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  PRESUME_INPUT_TTY_OPTION = CHAR_MAX + 1
+};
+
 static struct option const long_opts[] =
 {
   {"directory", no_argument, NULL, 'd'},
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
+
+  /* This is solely for testing.  Do not document.  */
+  /* It is relatively difficult to ensure that there is a tty on stdin.
+     Since rm acts differently depending on that, without this option,
+     it'd be harder to test the parts of rm that depend on that setting.  */
+  {"presume-input-tty", no_argument, NULL, PRESUME_INPUT_TTY_OPTION},
+
   {"recursive", no_argument, NULL, 'r'},
   {"verbose", no_argument, NULL, 'v'},
   {GETOPT_HELP_OPTION_DECL},
@@ -163,6 +177,9 @@ main (int argc, char **argv)
 	case 'r':
 	case 'R':
 	  x.recursive = 1;
+	  break;
+	case PRESUME_INPUT_TTY_OPTION:
+	  x.stdin_tty = 1;
 	  break;
 	case 'v':
 	  x.verbose = 1;
