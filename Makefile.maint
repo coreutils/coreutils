@@ -246,7 +246,7 @@ announcement: NEWS ChangeLog $(rel-files) $(signatures)
 	@( \
 	  echo Subject: $(my_distdir) released; \
 	  echo; \
-	  $(mail-gpg-sign-cookie); \
+	  $(mail_gpg_sign_cookie); \
 	  echo FIXME: put comments here; \
 	  echo; \
 	  for url in $(url_dir_list); do \
