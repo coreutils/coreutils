@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 0.31 from Makefile.am
+# Makefile.in generated automatically by automake 0.32 from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -40,6 +40,7 @@ transform = @program_transform_name@
 
 info_TEXINFOS = fileutils.texi
 EXTRA_DIST = perm.texi getdate.texi
+mkinstalldirs = $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
 
 MAKEINFO = makeinfo
@@ -49,8 +50,7 @@ INFO_DEPS = fileutils.info
 DVIS = fileutils.dvi
 TEXINFOS = fileutils.texi
 
-DIST_COMMON = Makefile.am Makefile.in mdate-sh stamp-vti texinfo.tex \
-version.texi
+DIST_COMMON = Makefile.am Makefile.in stamp-vti version.texi
 
 
 PACKAGE = @PACKAGE@
@@ -60,6 +60,8 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
 	$(TEXINFOS) $(INFOS) $(MANS) $(EXTRA_DIST) $(DATA)
 DEP_DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
 	$(TEXINFOS) $(INFO_DEPS) $(MANS) $(EXTRA_DIST) $(DATA)
+
+TAR = tar
 default: all
 
 
@@ -72,8 +74,8 @@ Makefile: $(top_builddir)/config.status Makefile.in
 version.texi: stamp-vti
 
 stamp-vti: fileutils.texi $(top_srcdir)/configure.in
-	echo "@set UPDATED `cd $(srcdir) && $(SHELL) mdate-sh fileutils.texi`" \
-	  > vti.tmp
+	echo "@set UPDATED `cd $(srcdir) \
+	  && $(SHELL) ./mdate-sh fileutils.texi`" > vti.tmp
 	echo "@set EDITION $(VERSION)" >> vti.tmp
 	echo "@set VERSION $(VERSION)" >> vti.tmp
 	if cmp -s vti.tmp $(srcdir)/version.texi; then \
@@ -97,13 +99,13 @@ fileutils.info: fileutils.texi version.texi
 
 
 .texi.info:
-	$(MAKEINFO) -I$(srcdir) $<
+	$(MAKEINFO) -I$(srcdir) $< -o $(srcdir)/$@
 
 .texi.dvi:
 	TEXINPUTS=$(srcdir):$$TEXINPUTS $(TEXI2DVI) $<
 
 install-info: $(INFO_DEPS)
-	$(top_srcdir)/mkinstalldirs $(infodir)
+	$(mkinstalldirs) $(infodir)
 	for file in $(INFO_DEPS); do		\
 	  for ifile in `cd $(srcdir) && echo $$file*`; do \
 	    $(INSTALL_DATA) $(srcdir)/$$ifile $(infodir)/$$ifile; \
@@ -133,7 +135,7 @@ TAGS:
 
 subdir = doc
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
-dist: $(DEP_DISTFILES)
+distdir: $(DEP_DISTFILES)
 	@for file in `cd $(srcdir) && echo $(DISTFILES)`; do \
 	  test -f $(distdir)/$$file \
 	  || ln $(srcdir)/$$file $(distdir)/$$file 2> /dev/null \
@@ -151,7 +153,7 @@ install-exec:
 
 install-data: install-info
 
-install: install-exec install-data
+install: install-exec install-data all
 	@:
 
 uninstall: uninstall-info
@@ -161,7 +163,7 @@ all: $(INFO_DEPS) Makefile
 install-strip:
 	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' install
 installdirs:
-	$(top_srcdir)/mkinstalldirs  $(infodir)
+	$(mkinstalldirs)  $(infodir)
 
 
 mostlyclean-generic:
@@ -191,7 +193,7 @@ maintainer-clean:  maintainer-clean-vti maintainer-clean-info \
 
 .PHONY: default mostlyclean-vti distclean-vti clean-vti \
 maintainer-clean-vti install-info uninstall-info mostlyclean-info \
-distclean-info clean-info maintainer-clean-info tags dist info dvi \
+distclean-info clean-info maintainer-clean-info tags distdir info dvi \
 check installcheck install-exec install-data install uninstall all \
 installdirs mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean

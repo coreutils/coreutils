@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 0.31 from Makefile.am
+# Makefile.in generated automatically by automake 0.32 from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -61,6 +61,7 @@ getopt.h group-member.h long-options.h makepath.h modechange.h mountlist.h \
 obstack.h pathmax.h save-cwd.h xstrtol.h xstrtoul.h
 
 BUILT_SOURCES = getdate.c posixtm.c
+mkinstalldirs = $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
 LIBRARIES = $(noinst_LIBRARIES)
 
@@ -83,14 +84,13 @@ dirname.o error.o fileblocks.o filemode.o full-write.o getversion.o \
 group-member.o idcache.o isdir.o long-options.o makepath.o modechange.o \
 obstack.o safe-read.o save-cwd.o savedir.o stripslash.o userspec.o \
 xgetcwd.o xmalloc.o xstrdup.o xstrtol.o xstrtoul.o yesno.o
+EXTRA_fu_SOURCES =
 LIBFILES =  libfu.a
-
 AR = ar
 RANLIB = @RANLIB@
 HEADERS = $(noinst_HEADERS)
 
-DIST_COMMON = Makefile.am Makefile.in alloca.c fileblocks.c fnmatch.c \
-fsusage.c ftruncate.c mountlist.c
+DIST_COMMON = Makefile.am Makefile.in
 
 
 PACKAGE = @PACKAGE@
@@ -100,6 +100,8 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
 	$(TEXINFOS) $(INFOS) $(MANS) $(EXTRA_DIST) $(DATA)
 DEP_DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
 	$(TEXINFOS) $(INFO_DEPS) $(MANS) $(EXTRA_DIST) $(DATA)
+
+TAR = tar
 SOURCES = $(fu_SOURCES)
 OBJECTS = $(fu_OBJECTS)
 
@@ -141,7 +143,7 @@ libfu.a: $(fu_OBJECTS) $(fu_LIBADD)
 	$(RANLIB) libfu.a
 
 ID: $(HEADERS) $(SOURCES)
-	here=`pwd` && cd $(srcdir) && mkid -f $$here/ID $(SOURCES) $(HEADERS)
+	here=`pwd` && cd $(srcdir) && mkid -f$$here/ID $(SOURCES) $(HEADERS)
 
 tags: TAGS
 
@@ -159,7 +161,7 @@ maintainer-clean-tags:
 
 subdir = lib
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
-dist: $(DEP_DISTFILES)
+distdir: $(DEP_DISTFILES)
 	@for file in `cd $(srcdir) && echo $(DISTFILES)`; do \
 	  test -f $(distdir)/$$file \
 	  || ln $(srcdir)/$$file $(distdir)/$$file 2> /dev/null \
@@ -214,7 +216,7 @@ install-exec:
 
 install-data: 
 
-install: install-exec install-data
+install: install-exec install-data all
 	@:
 
 uninstall: 
@@ -259,7 +261,7 @@ maintainer-clean:  maintainer-clean-noinstLIBRARIES \
 clean-noinstLIBRARIES maintainer-clean-noinstLIBRARIES \
 mostlyclean-compile distclean-compile clean-compile \
 maintainer-clean-compile tags mostlyclean-tags distclean-tags \
-clean-tags maintainer-clean-tags dist info dvi check installcheck \
+clean-tags maintainer-clean-tags distdir info dvi check installcheck \
 install-exec install-data install uninstall all installdirs \
 mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
