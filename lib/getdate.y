@@ -503,10 +503,10 @@ static TABLE const UnitsTable[] = {
 
 /* Assorted relative-time words. */
 static TABLE const OtherTable[] = {
-    { "tomorrow",	tMINUTE_UNIT,	1 * 24 * 60 },
-    { "yesterday",	tMINUTE_UNIT,	-1 * 24 * 60 },
-    { "today",		tMINUTE_UNIT,	0 },
-    { "now",		tMINUTE_UNIT,	0 },
+    { "tomorrow",	tDAY_UNIT,	1 },
+    { "yesterday",	tDAY_UNIT,	-1 },
+    { "today",		tDAY_UNIT,	0 },
+    { "now",		tDAY_UNIT,	0 },
     { "last",		tUNUMBER,	-1 },
     { "this",		tMINUTE_UNIT,	0 },
     { "next",		tUNUMBER,	1 },
