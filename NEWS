@@ -182,6 +182,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   copying or moving multiple times to the same destination in a file
   system with a coarse time stamp resolution.
 
+  dd now also prints the number of bytes copied, the time, and the
+  transfer rate.
+
   dd has new conversions for the conv= option:
 
     nocreat   do not create the output file
