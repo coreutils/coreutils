@@ -28,6 +28,8 @@ GZIP_ENV = '--no-name --best'
 
 CVS = cvs
 
+CVS_LIST = cvsu --find --types='^.C'
+
 ifeq ($(origin prev_version_file), undefined)
   prev_version_file = .prev-version
 endif
@@ -113,9 +115,9 @@ sc_cast_of_alloca_return_value:
 	    exit 1; } || :
 
 sc_space_tab:
-	@( cvsu --list ) > /dev/null 2>&1 || : &&			\
+	@( $(CVS_LIST) ) > /dev/null 2>&1 || : &&			\
 	  grep '[ ]	'						\
-	     $$(cvsu --list | grep -vEf .x-$@ ) &&			\
+	     $$($(CVS_LIST) | grep -vEf .x-$@ ) &&			\
 	  { echo '$(ME): found SPACE-TAB sequence; remove the SPACE'	\
 		1>&2; exit 1; } || :
 
@@ -123,9 +125,9 @@ sc_space_tab:
 # They provide no error checking mechanism.
 # Instead, use strto* functions.
 sc_prohibit_atoi_atof:
-	@( cvsu --list ) > /dev/null 2>&1 || : &&			\
+	@( $(CVS_LIST) ) > /dev/null 2>&1 || : &&			\
 	  grep -E '\<(ato[filq]|atoll)\>'				\
-	     $$(cvsu --list | grep -vEf .x-$@ ) &&			\
+	     $$($(CVS_LIST) | grep -vEf .x-$@ ) &&			\
 	  { echo '$(ME): do not use atof, atoi, atol, atoll, or atoq'	\
 		1>&2; exit 1; } || :
 
@@ -139,7 +141,7 @@ sc_error_exit_success:
 
 sc_file_system:
 	@grep -i 'filesystem'						\
-	     $$(cvsu --list | grep -vEf .x-$@ ) &&			\
+	     $$($(CVS_LIST) | grep -vEf .x-$@ ) &&			\
 	  { echo '$(ME): found use of "filesystem";'			\
 	    'rewrite to use "file system"' 1>&2;			\
 	    exit 1; } || :
@@ -171,9 +173,9 @@ sc_dd_max_sym_length:
 # On 2004-04-13, they were all changed to start with gl_ instead.
 # Make sure that none are inadvertently reintroduced.
 sc_prohibit_jm_in_m4:
-	@( cvsu --list ) > /dev/null 2>&1 || : &&			\
+	@( $(CVS_LIST) ) > /dev/null 2>&1 || : &&			\
 	  grep -E 'jm_[A-Z]'						\
-		$$(cvsu --list $(srcdir)/m4 |grep '\.m4$$') &&		\
+		$$($(CVS_LIST) $(srcdir)/m4 |grep '\.m4$$') &&		\
 	    { echo '$(ME): do not use jm_ in m4 macro names'		\
 	      1>&2; exit 1; } || :
 
@@ -190,19 +192,19 @@ sc_prohibit_jm_in_m4:
 # the headers already included via system.h.
 sc_system_h_headers: .re-list
 	@if test -f $(srcdir)/src/system.h; then			\
-	  ( cvsu --list ) > /dev/null 2>&1 || exit 0;			\
+	  ( $(CVS_LIST) ) > /dev/null 2>&1 || exit 0;			\
 	  trap 'rm -f .re-list' 0 1 2 3 15;				\
 	  grep -E -f .re-list						\
-	      $$(cvsu --list src | grep -Ev '(copy|system)\.h$$')	\
+	      $$($(CVS_LIST) src | grep -Ev '(copy|system)\.h$$')	\
 	    && { echo '$(ME): the above are already included via system.h'\
 		  1>&2;  exit 1; } || :;				\
 	fi
 
 sc_sun_os_names:
-	@( cvsu --list ) > /dev/null 2>&1 || : && \
+	@( $(CVS_LIST) ) > /dev/null 2>&1 || : && \
 	grep -Ei \
 	    'solaris[^[:alnum:]]*2\.(7|8|9|[1-9][0-9])|sunos[^[:alnum:]][6-9]' \
-	  $$(cvsu --list | grep -vEf .x-$@ ) &&				\
+	  $$($(CVS_LIST) | grep -vEf .x-$@ ) &&				\
 	  { echo '$(ME): found misuse of Sun OS version numbers' 1>&2;	\
 	    exit 1; } || :
 
@@ -210,9 +212,9 @@ sc_tight_scope:
 	$(MAKE) -C src $@
 
 sc_trailing_blank:
-	@( cvsu --list ) > /dev/null 2>&1 || : &&			\
+	@( $(CVS_LIST) ) > /dev/null 2>&1 || : &&			\
 	  grep '[	 ]$$'						\
-	     $$(cvsu --list | grep -vEf .x-$@ ) &&			\
+	     $$($(CVS_LIST) | grep -vEf .x-$@ ) &&			\
 	  { echo '$(ME): found trailing blank(s)'			\
 		1>&2; exit 1; } || :
 
@@ -272,12 +274,12 @@ m4-check:
 # Verify that all source files using _() are listed in po/POTFILES.in.
 # FIXME: don't hard-code src/false.c below; use a more general mechanism.
 po-check:
-	( cvsu --list ) > /dev/null 2>&1 || : &&			\
+	( $(CVS_LIST) ) > /dev/null 2>&1 || : &&			\
 	if test -f po/POTFILES.in; then					\
 	  grep -E -v '^(#|$$)' po/POTFILES.in				\
 	    | grep -v '^src/false\.c$$' | sort > $@-1;			\
 	  files=;							\
-	  for file in $$(cvsu --list lib src | grep '\.[chly]$$'); do	\
+	  for file in $$($(CVS_LIST) lib src | grep '\.[chly]$$'); do	\
 	    case $$file in						\
 	    *.[ch])							\
 	      base=`expr " $$file" : ' \(.*\)\..'`;			\
