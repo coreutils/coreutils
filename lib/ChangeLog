@@ -1,3 +1,8 @@
+2004-03-04  Jim Meyering  <jim@meyering.net>
+
+	* cloexec.c (set_cloexec_flag) [ ! (F_GETFD && F_SETFD)]:
+	Return true, not false.
+
 2004-03-03  Paul Eggert  <eggert@twinsun.com>
 
 	* cloexec.c: Include "cloexec.h" first, and <unistd.h> before <fcntl.h>.
