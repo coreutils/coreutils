@@ -2,6 +2,8 @@
 
 	* Version 4.1.9.
 
+	* configure.ac: Invoke AC_GNU_SOURCE very early.
+
 	* tests/rm/rm1: Accommodate the  slightly different diagnostic we
 	get on some systems, due to `unlink (dir)' failing with EACCES
 	rather than EPERM.  E.g. for ReiserFS on Linux-2.4.18.
