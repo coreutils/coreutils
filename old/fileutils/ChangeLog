@@ -7,6 +7,31 @@ Tue Oct 05 14:52:02 1993  Jim Meyering  (meyering@comco.com)
 
 	* xmalloc.c [CONFIG_BROKETS]: Test this.
 
+	* install.c (install_file_in_dir): Use stpcpy instead of slow sprintf.
+
+	* argmatch.c, backupfile.c, basename.c, dirname.c, eaccess.c,
+	fileblocks.c, fsusage.c, getversion.c, idcache.c, isdir.c,
+	makepath.c, mountlist.c, rename.c, savedir.c, stripslash.c,
+	userspec.c, xgetcwd.c, xstrdup.c, yesno.c, [HAVE_CONFIG_H,
+	CONFIG_BROKETS]: Include <config.h> or "config.h".
+
+	* lib/Makefile.in, src/Makefile.in [.c.o]: Put -I.. before
+	-I$(srcdir) so <config.h> will get the right file.
+
+	* chgrp.c, chmod.c, chown.c, cp-aux.c, cp-hash.c, cp.c, dd.c,
+	df.c, du.c, install.c, ln.c, ls.c, mkdir.c, mkfifo.c, mknod.c,
+	mv.c, mvdir.c, rm.c, rmdir.c, touch.c, version.c [HAVE_CONFIG_H,
+	CONFIG_BROKETS]: Include <config.h> or "config.h".
+
+	* configure.in [AC_CONFIG_HEADER]: Use it.
+
+	* configure.in (rename.o) [MVDIR definition]: Remove it.
+	* src/Makefile.in [DEFS]: Put it here instead.
+
+	* config.h.in, acconfig.h: New files
+	* Makefile [DISTFILES]: Add them.
+	(config.h.in): Add a rule to warn if it may need to be rebuilt.
+
 Thu Sep  9 08:52:10 1993  Jim Meyering  (meyering@comco.com)
 
 	* src/*.c: Print version on standard output, not stderr.
@@ -58,11 +83,11 @@ Fri Aug 13 17:19:52 1993  Jim Meyering  (meyering@comco.com)
 	when computing the negative free-block count for disks that are
 	more than 100% full.
 
-        * mv.c (movefile): Use nested calls to stpcpy instead of sprintf.
-        (is_real_dir): New function.
-        (movefile): In addition to when dest is a directory, if dest has
-        a trailing `/' and source is not a directory, presume the target
-        is dest/`basename source`.  This converts `mv x y/' to `mv x y/x'
+	* mv.c (movefile): Use nested calls to stpcpy instead of sprintf.
+	(is_real_dir): New function.
+	(movefile): In addition to when dest is a directory, if dest has
+	a trailing `/' and source is not a directory, presume the target
+	is dest/`basename source`.  This converts `mv x y/' to `mv x y/x'
 	when x is not a directory.  This change means that the command
 	`mv any file/' will now fail rather than performing the move.
 
@@ -71,10 +96,10 @@ Fri Aug 13 17:19:52 1993  Jim Meyering  (meyering@comco.com)
 
 Wed Aug  4 17:43:18 1993  Jim Meyering  (meyering@comco.com)
 
-        * ls.c (get_link_name): Don't ever use the stat field st_size as a
+	* ls.c (get_link_name): Don't ever use the stat field st_size as a
 	buffer size.  Too many systems don't set it properly for mount points.
-        Instead, use a fixed-length buffer.  From Michael Joosten
-        <joost@ori.CAdlab.DE>.
+	Instead, use a fixed-length buffer.  From Michael Joosten
+	<joost@ori.CAdlab.DE>.
 	* cp.c (copy): Ditto.
 
 Mon Jul 19 17:39:01 1993  Jim Meyering  (meyering@comco.com)
@@ -2077,9 +2102,9 @@ Thu Mar 15 12:33:23 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 	* ls.c (print_type_indicator): Don't print a '*' next to
 	executable block or character special files.
 
-        * chmod.c (error): New function, replacing nonfatal_perror,
-        memory_out, and invalid_mode.
-        Global: Call error instead of the above functions.
+	* chmod.c (error): New function, replacing nonfatal_perror,
+	memory_out, and invalid_mode.
+	Global: Call error instead of the above functions.
 	(change_dir_mode): Make the new size of the path twice the
 	size of the name that was too long, rather than twice its old
 	size. 

@@ -1,4 +1,6 @@
 Major changes in release 3.9:
+* configure uses config.h, so DEFS won't exceed preprocessor limits of
+  some compilers on the number of symbols defined via -D.
 * ls and cp can handle mount points on more systems
 * cp, mkdir, and rmdir long option --path renamed to --parents;  --path
   will still work for a while

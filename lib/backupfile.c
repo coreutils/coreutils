@@ -18,6 +18,17 @@
 /* David MacKenzie <djm@gnu.ai.mit.edu>.
    Some algorithms adapted from GNU Emacs. */
 
+#ifdef HAVE_CONFIG_H
+#if defined (CONFIG_BROKETS)
+/* We use <config.h> instead of "config.h" so that a compilation
+   using -I. -I will use ./config.h rather than /config.h
+   (which it would do because it found this file in ).  */
+#include <config.h>
+#else
+#include "config.h"
+#endif
+#endif
+
 #include <stdio.h>
 #include <ctype.h>
 #include <sys/types.h>

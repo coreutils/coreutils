@@ -49,7 +49,7 @@ fnmatch.h fsusage.h mountlist.h pathmax.h system.h $(SOURCES)
 all: libfu.a
 
 .c.o:
-	$(CC) -c $(CPPFLAGS) $(DEFS) -I$(srcdir) $(CFLAGS) $<
+	$(CC) -c $(CPPFLAGS) $(DEFS) -I.. -I$(srcdir) $(CFLAGS) $<
 
 install: all
 

@@ -18,6 +18,17 @@
 /* Written by David MacKenzie <djm@gnu.ai.mit.edu> and
    Jim Meyering <meyering@cs.utexas.edu>.  */
 
+#ifdef HAVE_CONFIG_H
+#if defined (CONFIG_BROKETS)
+/* We use <config.h> instead of "config.h" so that a compilation
+   using -I. -I will use ./config.h rather than /config.h
+   (which it would do because it found this file in ).  */
+#include <config.h>
+#else
+#include "config.h"
+#endif
+#endif
+
 #ifdef __GNUC__
 #define alloca __builtin_alloca
 #else
@@ -29,6 +40,17 @@
 #else
 char *alloca ();
 #endif
+#endif
+#endif
+
+#ifdef HAVE_CONFIG_H
+#if defined (CONFIG_BROKETS)
+/* We use <config.h> instead of "config.h" so that a compilation
+   using -I. -I will use ./config.h rather than /config.h
+   (which it would do because it found this file in ).  */
+#include <config.h>
+#else
+#include "config.h"
 #endif
 #endif
 
