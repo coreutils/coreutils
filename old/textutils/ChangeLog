@@ -1,6 +1,27 @@
+1998-01-18  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/sort.c (strncoll, strncoll_s2_readonly, look_for_fraction,
+	numcompare): Remove the `unsigned' from some `unsigned char*'
+	parameter types.  Add casts via UCHAR where necessary to avoid
+	problems with unwanted sign extension.  Based on a patch from
+	Kaveh Ghazi to appease Irix4's cc compiler.
+
+1998-01-17  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/split.c (next_file_name): Rewrite.  This removes an artificial
+	limit (albeit already high, at INT_MAX :-) on the number of files
+	split could create.  Reported by Ralf W. Stephan.
+
 1998-01-16  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* lib/getling.c: Make PARAMS-defining conditionals consistent.
+	* src/sort.c: (mergefps): Add braces to avoid ambiguous `else' stmt.
+	(nls_set_fraction): Likewise.
+
+	* src/sort.c: Guard inclusion of langinfo.h also with HAVE_LANGINFO_H,
+	for Irix-4.0.5.  From Kaveh Ghazi.
+	* configure.in: Check for langinfo.h.
+
+	* lib/getline.c: Make PARAMS-defining conditionals consistent.
 	* lib/linebuffer.h: Likewise.
 	* lib/long-options.h: Likewise.
 	* lib/memcasecmp.h: Likewise.
