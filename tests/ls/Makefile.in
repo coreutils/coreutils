@@ -59,14 +59,17 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 host_alias = @host_alias@
 host_triplet = @host@
+AMDEP = @AMDEP@
 AMTAR = @AMTAR@
-AMTARFLAGS = @AMTARFLAGS@
 AWK = @AWK@
 CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
 CPP = @CPP@
+CXX = @CXX@
+CXXCPP = @CXXCPP@
 DATADIRNAME = @DATADIRNAME@
+DEPDIR = @DEPDIR@
 DF_PROG = @DF_PROG@
 GENCAT = @GENCAT@
 GETCONF = @GETCONF@
@@ -102,7 +105,12 @@ AUTOMAKE_OPTIONS = 1.2 gnits
 
 TESTS = rt-1 time-1
 EXTRA_DIST = $(TESTS)
-TESTS_ENVIRONMENT = LS=../../src/ls TOUCH=../../src/touch
+TESTS_ENVIRONMENT = \
+  top_srcdir=$(top_srcdir) \
+  srcdir=$(srcdir) \
+  PATH=`pwd`/../../src:$$PATH \
+  PROG=ls
+
 subdir = tests/ls
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
@@ -117,9 +125,9 @@ GZIP_ENV = --best
 all: all-redirect
 .SUFFIXES:
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOMAKE) --gnits --include-deps tests/ls/Makefile
+	cd $(top_srcdir) && $(AUTOMAKE) --gnits tests/ls/Makefile
 
-Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
 

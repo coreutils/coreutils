@@ -59,14 +59,17 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 host_alias = @host_alias@
 host_triplet = @host@
+AMDEP = @AMDEP@
 AMTAR = @AMTAR@
-AMTARFLAGS = @AMTARFLAGS@
 AWK = @AWK@
 CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
 CPP = @CPP@
+CXX = @CXX@
+CXXCPP = @CXXCPP@
 DATADIRNAME = @DATADIRNAME@
+DEPDIR = @DEPDIR@
 DF_PROG = @DF_PROG@
 GENCAT = @GENCAT@
 GETCONF = @GETCONF@
@@ -129,6 +132,7 @@ version-etc.h xalloc.h xstrtol.h
 
 BUILT_SOURCES = getdate.c lstat.c stat.c
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
+DISTCLEANFILES = lstat.c stat.c
 
 EXTRA_DIST = xstat.in
 subdir = lib
@@ -174,6 +178,34 @@ strverscmp.c utime.c
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
 GZIP_ENV = --best
+depcomp = $(SHELL) $(top_srcdir)/depcomp
+DEP_FILES =  @AMDEP@ $(DEPDIR)/addext$U.Po $(DEPDIR)/alloca.Po \
+$(DEPDIR)/argmatch$U.Po $(DEPDIR)/backupfile$U.Po \
+$(DEPDIR)/basename$U.Po $(DEPDIR)/chown.Po $(DEPDIR)/closeout$U.Po \
+$(DEPDIR)/dirname$U.Po $(DEPDIR)/dup2.Po $(DEPDIR)/error.Po \
+$(DEPDIR)/euidaccess.Po $(DEPDIR)/exclude$U.Po $(DEPDIR)/fileblocks.Po \
+$(DEPDIR)/filemode$U.Po $(DEPDIR)/fnmatch.Po $(DEPDIR)/fsusage.Po \
+$(DEPDIR)/ftruncate.Po $(DEPDIR)/full-write$U.Po $(DEPDIR)/getdate$U.Po \
+$(DEPDIR)/getgroups.Po $(DEPDIR)/getline.Po $(DEPDIR)/getopt$U.Po \
+$(DEPDIR)/getopt1$U.Po $(DEPDIR)/group-member.Po $(DEPDIR)/hash$U.Po \
+$(DEPDIR)/human$U.Po $(DEPDIR)/idcache$U.Po $(DEPDIR)/isdir$U.Po \
+$(DEPDIR)/lchown.Po $(DEPDIR)/long-options$U.Po $(DEPDIR)/lstat.Po \
+$(DEPDIR)/makepath$U.Po $(DEPDIR)/malloc.Po $(DEPDIR)/memchr.Po \
+$(DEPDIR)/memcmp.Po $(DEPDIR)/memcpy.Po $(DEPDIR)/memmove.Po \
+$(DEPDIR)/memset.Po $(DEPDIR)/mkdir.Po $(DEPDIR)/mktime.Po \
+$(DEPDIR)/modechange$U.Po $(DEPDIR)/mountlist.Po $(DEPDIR)/obstack.Po \
+$(DEPDIR)/path-concat$U.Po $(DEPDIR)/posixtm$U.Po \
+$(DEPDIR)/quotearg$U.Po $(DEPDIR)/realloc.Po $(DEPDIR)/regex.Po \
+$(DEPDIR)/rmdir.Po $(DEPDIR)/rpmatch.Po $(DEPDIR)/safe-read$U.Po \
+$(DEPDIR)/same$U.Po $(DEPDIR)/save-cwd$U.Po $(DEPDIR)/savedir$U.Po \
+$(DEPDIR)/stat.Po $(DEPDIR)/stpcpy.Po $(DEPDIR)/strcasecmp.Po \
+$(DEPDIR)/strdup.Po $(DEPDIR)/strftime.Po $(DEPDIR)/stripslash$U.Po \
+$(DEPDIR)/strncasecmp.Po $(DEPDIR)/strndup.Po $(DEPDIR)/strstr.Po \
+$(DEPDIR)/strtol.Po $(DEPDIR)/strtoul.Po $(DEPDIR)/strtoull.Po \
+$(DEPDIR)/strtoumax.Po $(DEPDIR)/strverscmp.Po $(DEPDIR)/userspec$U.Po \
+$(DEPDIR)/utime.Po $(DEPDIR)/version-etc$U.Po $(DEPDIR)/xgetcwd$U.Po \
+$(DEPDIR)/xmalloc$U.Po $(DEPDIR)/xstrdup$U.Po $(DEPDIR)/xstrtol$U.Po \
+$(DEPDIR)/xstrtoul$U.Po $(DEPDIR)/xstrtoumax$U.Po $(DEPDIR)/yesno$U.Po
 SOURCES = $(libfu_a_SOURCES)
 OBJECTS = $(am_libfu_a_OBJECTS)
 
@@ -181,9 +213,9 @@ all: all-redirect
 .SUFFIXES:
 .SUFFIXES: .c .o .y
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOMAKE) --gnits --include-deps lib/Makefile
+	cd $(top_srcdir) && $(AUTOMAKE) --gnits lib/Makefile
 
-Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
@@ -226,8 +258,6 @@ libfu.a: $(libfu_a_OBJECTS) $(libfu_a_DEPENDENCIES)
 	-rm -f libfu.a
 	$(libfu_a_AR) libfu.a $(libfu_a_OBJECTS) $(libfu_a_LIBADD)
 	$(RANLIB) libfu.a
-.c.o:
-	$(COMPILE) -c $<
 addext_.c: addext.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/addext.c; then echo $(srcdir)/addext.c; else echo addext.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > addext_.c
 alloca_.c: alloca.c $(ANSI2KNR)
@@ -452,6 +482,103 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 
+
+@AMDEP@include $(DEPDIR)/addext$U.Po
+@AMDEP@include $(DEPDIR)/alloca.Po
+@AMDEP@include $(DEPDIR)/argmatch$U.Po
+@AMDEP@include $(DEPDIR)/backupfile$U.Po
+@AMDEP@include $(DEPDIR)/basename$U.Po
+@AMDEP@include $(DEPDIR)/chown.Po
+@AMDEP@include $(DEPDIR)/closeout$U.Po
+@AMDEP@include $(DEPDIR)/dirname$U.Po
+@AMDEP@include $(DEPDIR)/dup2.Po
+@AMDEP@include $(DEPDIR)/error.Po
+@AMDEP@include $(DEPDIR)/euidaccess.Po
+@AMDEP@include $(DEPDIR)/exclude$U.Po
+@AMDEP@include $(DEPDIR)/fileblocks.Po
+@AMDEP@include $(DEPDIR)/filemode$U.Po
+@AMDEP@include $(DEPDIR)/fnmatch.Po
+@AMDEP@include $(DEPDIR)/fsusage.Po
+@AMDEP@include $(DEPDIR)/ftruncate.Po
+@AMDEP@include $(DEPDIR)/full-write$U.Po
+@AMDEP@include $(DEPDIR)/getdate$U.Po
+@AMDEP@include $(DEPDIR)/getgroups.Po
+@AMDEP@include $(DEPDIR)/getline.Po
+@AMDEP@include $(DEPDIR)/getopt$U.Po
+@AMDEP@include $(DEPDIR)/getopt1$U.Po
+@AMDEP@include $(DEPDIR)/group-member.Po
+@AMDEP@include $(DEPDIR)/hash$U.Po
+@AMDEP@include $(DEPDIR)/human$U.Po
+@AMDEP@include $(DEPDIR)/idcache$U.Po
+@AMDEP@include $(DEPDIR)/isdir$U.Po
+@AMDEP@include $(DEPDIR)/lchown.Po
+@AMDEP@include $(DEPDIR)/long-options$U.Po
+@AMDEP@include $(DEPDIR)/lstat.Po
+@AMDEP@include $(DEPDIR)/makepath$U.Po
+@AMDEP@include $(DEPDIR)/malloc.Po
+@AMDEP@include $(DEPDIR)/memchr.Po
+@AMDEP@include $(DEPDIR)/memcmp.Po
+@AMDEP@include $(DEPDIR)/memcpy.Po
+@AMDEP@include $(DEPDIR)/memmove.Po
+@AMDEP@include $(DEPDIR)/memset.Po
+@AMDEP@include $(DEPDIR)/mkdir.Po
+@AMDEP@include $(DEPDIR)/mktime.Po
+@AMDEP@include $(DEPDIR)/modechange$U.Po
+@AMDEP@include $(DEPDIR)/mountlist.Po
+@AMDEP@include $(DEPDIR)/obstack.Po
+@AMDEP@include $(DEPDIR)/path-concat$U.Po
+@AMDEP@include $(DEPDIR)/posixtm$U.Po
+@AMDEP@include $(DEPDIR)/quotearg$U.Po
+@AMDEP@include $(DEPDIR)/realloc.Po
+@AMDEP@include $(DEPDIR)/regex.Po
+@AMDEP@include $(DEPDIR)/rmdir.Po
+@AMDEP@include $(DEPDIR)/rpmatch.Po
+@AMDEP@include $(DEPDIR)/safe-read$U.Po
+@AMDEP@include $(DEPDIR)/same$U.Po
+@AMDEP@include $(DEPDIR)/save-cwd$U.Po
+@AMDEP@include $(DEPDIR)/savedir$U.Po
+@AMDEP@include $(DEPDIR)/stat.Po
+@AMDEP@include $(DEPDIR)/stpcpy.Po
+@AMDEP@include $(DEPDIR)/strcasecmp.Po
+@AMDEP@include $(DEPDIR)/strdup.Po
+@AMDEP@include $(DEPDIR)/strftime.Po
+@AMDEP@include $(DEPDIR)/stripslash$U.Po
+@AMDEP@include $(DEPDIR)/strncasecmp.Po
+@AMDEP@include $(DEPDIR)/strndup.Po
+@AMDEP@include $(DEPDIR)/strstr.Po
+@AMDEP@include $(DEPDIR)/strtol.Po
+@AMDEP@include $(DEPDIR)/strtoul.Po
+@AMDEP@include $(DEPDIR)/strtoull.Po
+@AMDEP@include $(DEPDIR)/strtoumax.Po
+@AMDEP@include $(DEPDIR)/strverscmp.Po
+@AMDEP@include $(DEPDIR)/userspec$U.Po
+@AMDEP@include $(DEPDIR)/utime.Po
+@AMDEP@include $(DEPDIR)/version-etc$U.Po
+@AMDEP@include $(DEPDIR)/xgetcwd$U.Po
+@AMDEP@include $(DEPDIR)/xmalloc$U.Po
+@AMDEP@include $(DEPDIR)/xstrdup$U.Po
+@AMDEP@include $(DEPDIR)/xstrtol$U.Po
+@AMDEP@include $(DEPDIR)/xstrtoul$U.Po
+@AMDEP@include $(DEPDIR)/xstrtoumax$U.Po
+@AMDEP@include $(DEPDIR)/yesno$U.Po
+
+mostlyclean-depend:
+
+clean-depend:
+
+distclean-depend:
+	-rm -rf $(DEPDIR)
+
+maintainer-clean-depend:
+
+@AMDEP@CCDEPMODE = @CCDEPMODE@
+
+.c.o:
+@AMDEP@	source='$<' object='$@' @AMDEPBACKSLASH@
+@AMDEP@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(COMPILE) -c -o $@ $<
+
 info-am:
 info: info-am
 dvi-am:
@@ -485,29 +612,32 @@ clean-generic:
 distclean-generic:
 	-rm -f Makefile $(CONFIG_CLEAN_FILES)
 	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
+	-test -z "$(DISTCLEANFILES)" || rm -f $(DISTCLEANFILES)
 
 maintainer-clean-generic:
 	-rm -f Makefile.in
 	-test -z "getdate.c$(BUILT_SOURCES)$(MAINTAINERCLEANFILES)" || rm -f getdate.c $(BUILT_SOURCES) $(MAINTAINERCLEANFILES)
 mostlyclean-am:  mostlyclean-noinstLIBRARIES mostlyclean-compile \
-		mostlyclean-kr mostlyclean-tags mostlyclean-generic
+		mostlyclean-kr mostlyclean-tags mostlyclean-depend \
+		mostlyclean-generic
 
 mostlyclean: mostlyclean-am
 
 clean-am:  clean-noinstLIBRARIES clean-compile clean-kr clean-tags \
-		clean-generic mostlyclean-am
+		clean-depend clean-generic mostlyclean-am
 
 clean: clean-am
 
 distclean-am:  distclean-noinstLIBRARIES distclean-compile distclean-kr \
-		distclean-tags distclean-generic clean-am
+		distclean-tags distclean-depend distclean-generic \
+		clean-am
 
 distclean: distclean-am
 
 maintainer-clean-am:  maintainer-clean-noinstLIBRARIES \
 		maintainer-clean-compile maintainer-clean-kr \
-		maintainer-clean-tags maintainer-clean-generic \
-		distclean-am
+		maintainer-clean-tags maintainer-clean-depend \
+		maintainer-clean-generic distclean-am
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
@@ -518,8 +648,9 @@ clean-noinstLIBRARIES maintainer-clean-noinstLIBRARIES \
 mostlyclean-compile distclean-compile clean-compile \
 maintainer-clean-compile mostlyclean-kr distclean-kr clean-kr \
 maintainer-clean-kr tags mostlyclean-tags distclean-tags clean-tags \
-maintainer-clean-tags distdir info-am info dvi-am dvi check check-am \
-installcheck-am installcheck install-exec-am install-exec \
+maintainer-clean-tags distdir mostlyclean-depend distclean-depend \
+clean-depend maintainer-clean-depend info-am info dvi-am dvi check \
+check-am installcheck-am installcheck install-exec-am install-exec \
 install-data-am install-data install-am install uninstall-am uninstall \
 all-redirect all-am all install-strip installdirs mostlyclean-generic \
 distclean-generic clean-generic maintainer-clean-generic clean \
