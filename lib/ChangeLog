@@ -1,5 +1,8 @@
 2003-02-27  Jim Meyering  <jim@meyering.net>
 
+	* physmem.c (physmem_total, physmem_available): Add comments.
+	From Kaveh Ghazi.
+
 	* physmem.c: Merge in portability changes from gcc/libiberty
 	to support AIX, Tru64, and Windows.  See the ChangeLog there
 	for credits and details.  Thanks to Kaveh Ghazi for helping
