@@ -44,7 +44,7 @@ libfetish_a_SOURCES = \
   basename.c \
   c-strtod.c c-strtod.h \
   canon-host.c \
-  canonicalize.h \
+  canonicalize.c canonicalize.h \
   cloexec.c cloexec.h \
   closeout.c closeout.h \
   cycle-check.c cycle-check.h \
