@@ -213,6 +213,7 @@ change_file_group (int cmdline_arg, const char *file, gid_t group)
     {
       int fail;
       int symlink_changed = 1;
+      int saved_errno;
 
       if (S_ISLNK (file_stats.st_mode) && change_symlinks)
 	{
@@ -231,6 +232,9 @@ change_file_group (int cmdline_arg, const char *file, gid_t group)
 	  fail = chown (file, (uid_t) -1, group);
 	}
 
+      /* Save errno, since in verbose mode, describe_change might change it.  */
+      saved_errno = errno;
+
       if (verbosity == V_high || (verbosity == V_changes_only && !fail))
 	{
 	  enum Change_status ch_status = (! symlink_changed ? CH_NOT_APPLIED
@@ -246,18 +250,18 @@ change_file_group (int cmdline_arg, const char *file, gid_t group)
 	      /* Give a more specific message.  Some systems set errno
 		 to EPERM for both `inaccessible file' and `user not a member
 		 of the specified group' errors.  */
-	      if (errno == EPERM && !group_member (group))
+	      if (saved_errno == EPERM && !group_member (group))
 		{
-		  error (0, errno, _("you are not a member of group `%s'"),
+		  error (0, saved_errno, _("you are not a member of group `%s'"),
 			 groupname);
 		}
-	      else if (errno == EINVAL && group > MAXUID)
+	      else if (saved_errno == EINVAL && group > MAXUID)
 		{
 		  error (0, 0, _("%s: invalid group number"), groupname);
 		}
 	      else
 		{
-		  error (0, errno, "%s", file);
+		  error (0, saved_errno, "%s", file);
 		}
 	    }
 	}
