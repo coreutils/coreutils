@@ -1,5 +1,19 @@
 Mon Dec  9 06:58:11 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in (jm_HEADER_TIOCGWINSZ_IN_TERMIOS_H): Fix typo:
+	Change $am_cv_sys_tiocgwinsz_needs_sys_ioctl_h to
+	$jm_cv_sys_tiocgwinsz_needs_sys_ioctl_h.
+	Patch from Kaveh R. Ghazi.
+
+	* src/stty.c: Include config.h before testing for
+	TERMIOS_NEEDS_XOPEN_SOURCE.
+	Patch from Karl Heuer.
+
+	* configure.in (AC_ISC_POSIX): Remove kludgy macro.
+	Use this test instead:
+	(LIBS): Add -lcposix if it contains strerror.
+	Patch from Karl Heuer.
+
 	* acinclude.m4 (AM_FUNC_GETLOADAVG): Put shell assignments to
 	ac_save_LIBS and LIBS on separate lines to avoid order-of-evaluation
 	problems -- some versions of sh (e.g. SunOS4.1.3's) evaluate such
