@@ -109,6 +109,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   "sort -o -" now writes to a file named "-" instead of to standard
   output; POSIX requires this.
 
+  tac can now handle regular, nonseekable files like Linux's
+  /proc/modules.  Before, it would produce no output for such a file.
+
   "tail -f" no longer mishandles pipes and fifos.  With no operands,
   tail now ignores -f if standard input is a pipe, as POSIX requires.
   When conforming to POSIX 1003.2-1992, tail now supports the SUSv2 b
