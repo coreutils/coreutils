@@ -186,7 +186,7 @@ am_libfetish_a_OBJECTS = acl.$(OBJEXT) getdate.$(OBJEXT) \
 	readtokens.$(OBJEXT) root-dev-ino.$(OBJEXT) \
 	safe-read.$(OBJEXT) safe-write.$(OBJEXT) same.$(OBJEXT) \
 	save-cwd.$(OBJEXT) savedir.$(OBJEXT) settime.$(OBJEXT) \
-	sha.$(OBJEXT) stripslash.$(OBJEXT) time_r.$(OBJEXT) \
+	sha1.$(OBJEXT) stripslash.$(OBJEXT) time_r.$(OBJEXT) \
 	umaxtostr.$(OBJEXT) unicodeio.$(OBJEXT) userspec.$(OBJEXT) \
 	utimens.$(OBJEXT) version-etc.$(OBJEXT) xfts.$(OBJEXT) \
 	xgetcwd.$(OBJEXT) xgethostname.$(OBJEXT) xmalloc.$(OBJEXT) \
@@ -267,7 +267,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/safe-read.Po ./$(DEPDIR)/safe-write.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/same.Po ./$(DEPDIR)/save-cwd.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/savedir.Po ./$(DEPDIR)/settime.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/sha.Po ./$(DEPDIR)/strftime.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/sha1.Po ./$(DEPDIR)/strftime.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/stripslash.Po ./$(DEPDIR)/time_r.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/umaxtostr.Po ./$(DEPDIR)/unicodeio.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/userspec.Po ./$(DEPDIR)/utimens.Po \
@@ -481,7 +481,7 @@ libfetish_a_SOURCES = \
   savedir.c savedir.h \
   search_.h \
   settime.c \
-  sha.c sha.h \
+  sha1.c sha1.h \
   sig2str.h \
   stdio-safer.h \
   stripslash.c \
@@ -714,7 +714,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/save-cwd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/savedir.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/settime.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strftime.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stripslash.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/time_r.Po@am__quote@
