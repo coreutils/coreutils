@@ -57,6 +57,7 @@ libfetish_a_SOURCES = \
   exclude.c exclude.h \
   exit.h \
   exitfail.c exitfail.h \
+  fcntl-safer.h \
   filemode.c filemode.h \
   file-type.c file-type.h \
   fopen-safer.c \
@@ -87,6 +88,7 @@ libfetish_a_SOURCES = \
   modechange.c modechange.h \
   mountlist.h \
   offtostr.c \
+  open-safer.c \
   path-concat.c path-concat.h \
   pathmax.h \
   physmem.c physmem.h \
