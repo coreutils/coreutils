@@ -3,6 +3,7 @@
 
 if test "$VERBOSE" = yes; then
   set -x
+  cp --version
   mv --version
 fi
 
@@ -28,14 +29,21 @@ fi
 
 fail=0
 
-# This is a no-op.
-mv --update old new || fail=1
-case "`cat new`" in new) ;; *) fail=1 ;; esac
-case "`cat old`" in old) ;; *) fail=1 ;; esac
+for cp_or_mv in cp mv; do
+  # This is a no-op.
+  $cp_or_mv --update old new || fail=1
+  case "`cat new`" in new) ;; *) fail=1 ;; esac
+  case "`cat old`" in old) ;; *) fail=1 ;; esac
+done
 
-# This will actually do the rename.
+# This will actually perform the rename.
 mv --update new old || fail=1
 test -f new && fail=1
 case "`cat old`" in new) ;; *) fail=1 ;; esac
+
+# This will actually perform the copy.
+cp --update new old || fail=1
+case "`cat old`" in new) ;; *) fail=1 ;; esac
+case "`cat new`" in new) ;; *) fail=1 ;; esac
 
 (exit $fail); exit
