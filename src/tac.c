@@ -411,7 +411,7 @@ tac_file (file)
 {
   int fd, errors;
 
-  fd = open (file, 0);
+  fd = open (file, O_RDONLY);
   if (fd == -1)
     {
       error (0, errno, "%s", file);
@@ -470,7 +470,7 @@ tac (fd, file)
   lseek (fd, file_pos, SEEK_SET);
   if (safe_read (fd, buffer, saved_record_size) != saved_record_size)
     {
-      error (0, 1, "%s", file);
+      error (0, errno, "%s", file);
       return 1;
     }
 
