@@ -1,3 +1,10 @@
+2002-10-06  Jim Meyering  <meyering@lucent.com>
+
+	* Version 4.5.3.
+
+	* Makefile.maint (announcement): Output all URLs for detached
+	signatures, not just the last one from the previous loop.
+
 2002-10-05  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.2.
