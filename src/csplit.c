@@ -137,11 +137,11 @@ struct buffer_record
 
 int safe_read ();
 
-static void close_output_file __P ((void));
-static void create_output_file __P ((void));
-static void delete_all_files __P ((void));
-static void save_line_to_file __P ((const struct cstring *line));
-static void usage __P ((int status));
+static void close_output_file PARAMS ((void));
+static void create_output_file PARAMS ((void));
+static void delete_all_files PARAMS ((void));
+static void save_line_to_file PARAMS ((const struct cstring *line));
+static void usage PARAMS ((int status));
 
 /* The name this program was run with. */
 char *program_name;

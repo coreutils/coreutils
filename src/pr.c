@@ -271,33 +271,33 @@ typedef struct COLUMN COLUMN;
 
 #define NULLCOL (COLUMN *)0
 
-static int char_to_clump __P ((int c));
-static int read_line __P ((COLUMN *p));
-static int print_page __P ((void));
-static int print_stored __P ((COLUMN *p));
-static int open_file __P ((char *name, COLUMN *p));
-static int skip_to_page __P ((int page));
-static void print_header __P ((void));
-static void pad_across_to __P ((int position));
-static void add_line_number __P ((COLUMN *p));
-static void getoptarg __P ((char *arg, char switch_char, char *character,
-			    int *number));
-static void usage __P ((int status));
-static void print_files __P ((int number_of_files, char **av));
-static void init_parameters __P ((int number_of_files));
-static void init_header __P ((char *filename, int desc));
-static void init_store_cols __P ((void));
-static void store_columns __P ((void));
-static void balance __P ((int total_stored));
-static void store_char __P ((int c));
-static void pad_down __P ((int lines));
-static void read_rest_of_line __P ((COLUMN *p));
-static void skip_read __P ((COLUMN *p, int column_number));
-static void print_char __P ((int c));
-static void cleanup __P ((void));
-static void first_last_page __P ((char *pages));
-static void print_sep_string __P ((void));
-static void separator_string __P ((const char *optarg_S));
+static int char_to_clump PARAMS ((int c));
+static int read_line PARAMS ((COLUMN *p));
+static int print_page PARAMS ((void));
+static int print_stored PARAMS ((COLUMN *p));
+static int open_file PARAMS ((char *name, COLUMN *p));
+static int skip_to_page PARAMS ((int page));
+static void print_header PARAMS ((void));
+static void pad_across_to PARAMS ((int position));
+static void add_line_number PARAMS ((COLUMN *p));
+static void getoptarg PARAMS ((char *arg, char switch_char, char *character,
+			       int *number));
+static void usage PARAMS ((int status));
+static void print_files PARAMS ((int number_of_files, char **av));
+static void init_parameters PARAMS ((int number_of_files));
+static void init_header PARAMS ((char *filename, int desc));
+static void init_store_cols PARAMS ((void));
+static void store_columns PARAMS ((void));
+static void balance PARAMS ((int total_stored));
+static void store_char PARAMS ((int c));
+static void pad_down PARAMS ((int lines));
+static void read_rest_of_line PARAMS ((COLUMN *p));
+static void skip_read PARAMS ((COLUMN *p, int column_number));
+static void print_char PARAMS ((int c));
+static void cleanup PARAMS ((void));
+static void first_last_page PARAMS ((char *pages));
+static void print_sep_string PARAMS ((void));
+static void separator_string PARAMS ((const char *optarg_S));
 
 /* The name under which this program was invoked. */
 char *program_name;

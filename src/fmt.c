@@ -155,23 +155,23 @@ struct Word
 
 /* Forward declarations.  */
 
-static void set_prefix __P ((char *p));
-static void fmt __P ((FILE *f));
-static bool get_paragraph __P ((FILE *f));
-static int get_line __P ((FILE *f, int c));
-static int get_prefix __P ((FILE *f));
-static int get_space __P ((FILE *f, int c));
-static int copy_rest __P ((FILE *f, int c));
-static bool same_para __P ((int c));
-static void flush_paragraph __P ((void));
-static void fmt_paragraph __P ((void));
-static void check_punctuation __P ((WORD *w));
-static COST base_cost __P ((WORD *this));
-static COST line_cost __P ((WORD *next, int len));
-static void put_paragraph __P ((WORD *finish));
-static void put_line __P ((WORD *w, int indent));
-static void put_word __P ((WORD *w));
-static void put_space __P ((int space));
+static void set_prefix PARAMS ((char *p));
+static void fmt PARAMS ((FILE *f));
+static bool get_paragraph PARAMS ((FILE *f));
+static int get_line PARAMS ((FILE *f, int c));
+static int get_prefix PARAMS ((FILE *f));
+static int get_space PARAMS ((FILE *f, int c));
+static int copy_rest PARAMS ((FILE *f, int c));
+static bool same_para PARAMS ((int c));
+static void flush_paragraph PARAMS ((void));
+static void fmt_paragraph PARAMS ((void));
+static void check_punctuation PARAMS ((WORD *w));
+static COST base_cost PARAMS ((WORD *this));
+static COST line_cost PARAMS ((WORD *next, int len));
+static void put_paragraph PARAMS ((WORD *finish));
+static void put_line PARAMS ((WORD *w, int indent));
+static void put_word PARAMS ((WORD *w));
+static void put_space PARAMS ((int space));
 
 /* The name this program was run with.  */
 const char *program_name;

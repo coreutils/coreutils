@@ -225,7 +225,7 @@ static long int pseudo_offset;
 
 /* Function to format an address and optionally an additional parenthesized
    pseudo-address; it returns the formatted string.  */
-static const char *(*format_address) __P ((long unsigned int));
+static const char *(*format_address) PARAMS ((long unsigned int));
 
 /* The number of input bytes to skip before formatting and writing.  */
 static off_t n_bytes_to_skip = 0;
