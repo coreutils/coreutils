@@ -1,5 +1,5 @@
 /* expand - convert tabs to spaces
-   Copyright (C) 89, 91, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 89, 91, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -420,7 +420,12 @@ main (int argc, char **argv)
 	      tabval = 0;
 	      have_tabval = true;
 	    }
-	  tabval = tabval * 10 + c - '0';
+	  {
+	    uintmax_t new_t = tabval * 10 + c - '0';
+	    if (UINTMAX_MAX / 10 < tabval || new_t < tabval * 10)
+	      error (EXIT_FAILURE, 0, _("tab stop value is too large"));
+	    tabval = new_t;
+	  }
 	  obsolete_tablist = true;
 	  break;
 	}
