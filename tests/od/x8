@@ -1,5 +1,6 @@
 #!/bin/sh
 # verify that od -t x8 works properly
+# This would fail before coreutils-4.5.2.
 
 if test "$VERBOSE" = yes; then
   set -x
