@@ -1,6 +1,10 @@
+#include <config.h>
+
 #include <stdio.h>
-#include <sys/stat.h>
-#include <sys/sysmacros.h>
+#include <sys/types.h>
+#ifdef HAVE_SYS_SYSMACROS_H
+# include <sys/sysmacros.h>
+#endif
 #include <pwd.h>
 #include <grp.h>
 #include <unistd.h>
@@ -9,6 +13,16 @@
 #include <string.h>
 #include <malloc.h>
 #include <ctype.h>
+
+#include "system.h"
+
+#include "closeout.h"
+#include "error.h"
+#include "filemode.h"
+#include "fs.h"
+#include "getopt.h"
+#include "quotearg.h"
+#include "xreadlink.h"
 
 #ifdef FLASK_LINUX
 # include <selinux/fs_secure.h>
@@ -19,9 +33,25 @@
 # define SECURITY_ID_T int
 #endif
 
-#include "fs.h"
+#define PROGRAM_NAME "stat"
 
-void print_human_type(unsigned short mode)
+#define AUTHORS "Michael Meskes"
+
+static struct option const long_options[] = {
+  {"link", no_argument, 0, 'l'},
+  {"format", required_argument, 0, 'c'},
+  {"filesystem", no_argument, 0, 'f'},
+  {"secure", no_argument, 0, 's'},
+  {"terse", no_argument, 0, 't'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
+  {NULL, 0, NULL, 0}
+};
+
+static char *program_name;
+
+void
+print_human_type(unsigned short mode)
 {
   switch (mode & S_IFMT)
     {
@@ -51,7 +81,8 @@ void print_human_type(unsigned short mode)
     }
 }
 
-void print_human_fstype(struct statfs *statfsbuf)
+void
+print_human_fstype(struct statfs *statfsbuf)
 {
   char *type;
 
@@ -243,56 +274,17 @@ void print_human_fstype(struct statfs *statfsbuf)
   free(type);
 }
 
-void print_human_access(struct stat *statbuf)
+void
+print_human_access(struct stat const *statbuf)
 {
-  char access[10];
-
-  access[9] = (statbuf->st_mode & S_IXOTH) ?
-    ((statbuf->st_mode & S_ISVTX) ? 't' : 'x') :
-    ((statbuf->st_mode & S_ISVTX) ? 'T' : '-');
-  access[8] = (statbuf->st_mode & S_IWOTH) ? 'w' : '-';
-  access[7] = (statbuf->st_mode & S_IROTH) ? 'r' : '-';
-  access[6] = (statbuf->st_mode & S_IXGRP) ?
-    ((statbuf->st_mode & S_ISGID) ? 's' : 'x') :
-    ((statbuf->st_mode & S_ISGID) ? 'S' : '-');
-  access[5] = (statbuf->st_mode & S_IWGRP) ? 'w' : '-';
-  access[4] = (statbuf->st_mode & S_IRGRP) ? 'r' : '-';
-  access[3] = (statbuf->st_mode & S_IXUSR) ?
-    ((statbuf->st_mode & S_ISUID) ? 's' : 'x') :
-    ((statbuf->st_mode & S_ISUID) ? 'S' : '-');
-  access[2] = (statbuf->st_mode & S_IWUSR) ? 'w' : '-';
-  access[1] = (statbuf->st_mode & S_IRUSR) ? 'r' : '-';
-
-  switch (statbuf->st_mode & S_IFMT)
-    {
-    case S_IFDIR:
-      access[0] = 'd';
-      break;
-    case S_IFCHR:
-      access[0] = 'c';
-      break;
-    case S_IFBLK:
-      access[0] = 'b';
-      break;
-    case S_IFREG:
-      access[0] = '-';
-      break;
-    case S_IFLNK:
-      access[0] = 'l';
-      break;
-    case S_IFSOCK:
-      access[0] = 's';
-      break;
-    case S_IFIFO:
-      access[0] = 'p';
-      break;
-    default:
-      access[0] = '?';
-    }
-    printf (access);
+  char modebuf[11];
+  mode_string (statbuf->st_mode, modebuf);
+  modebuf[10] = 0;
+  fputs (modebuf, stdout);
 }
 
-void print_human_time(time_t *t)
+void
+print_human_time(time_t *t)
 {
   char str[40];
 
@@ -301,7 +293,8 @@ void print_human_time(time_t *t)
 }
 
 /* print statfs info */
-void print_statfs(char *pformat, char m, char *filename, void *data, SECURITY_ID_T sid)
+void
+print_statfs(char *pformat, char m, char *filename, void *data, SECURITY_ID_T sid)
 {
     struct statfs *statfsbuf = (struct statfs*)data;
 #ifdef FLASK_LINUX
@@ -435,7 +428,8 @@ void print_statfs(char *pformat, char m, char *filename, void *data, SECURITY_ID
 }
 
 /* print stat info */
-void print_stat(char *pformat, char m, char *filename, void *data, SECURITY_ID_T sid)
+void
+print_stat(char *pformat, char m, char *filename, void *data, SECURITY_ID_T sid)
 {
     char linkname[256];
     int i;
@@ -590,8 +584,10 @@ void print_stat(char *pformat, char m, char *filename, void *data, SECURITY_ID_T
     }
 }
 
-void print_it(char *masterformat, char *filename,
-    void (*print_func)(char*, char, char*, void*, SECURITY_ID_T), void *data, SECURITY_ID_T sid)
+void
+print_it (char *masterformat, char *filename,
+	  void (*print_func) (char*, char, char*, void*, SECURITY_ID_T),
+	  void *data, SECURITY_ID_T sid)
 {
     char *m, *b, *format;
     char pformat[65];
@@ -703,7 +699,7 @@ do_statfs (char *filename, int terse, int secure, char *format)
 
 /* stat the file and print what we find */
 void
-do_stat (char *filename, int link, int terse, int secure, char *format)
+do_stat (char *filename, int follow_links, int terse, int secure, char *format)
 {
   struct stat statbuf;
   int i;
@@ -713,10 +709,10 @@ do_stat (char *filename, int link, int terse, int secure, char *format)
   if(!is_flask_enabled())
     secure = 0;
   if(secure)
-    i = (link == 1) ? stat_secure(filename, &statbuf, &sid) : lstat_secure(filename, &statbuf, &sid);
+    i = (follow_links == 1) ? stat_secure(filename, &statbuf, &sid) : lstat_secure(filename, &statbuf, &sid);
   else
 #endif
-  i = (link == 1) ? stat(filename, &statbuf) : lstat(filename, &statbuf);
+  i = (follow_links == 1) ? stat(filename, &statbuf) : lstat(filename, &statbuf);
 
   if (i == -1)
     {
@@ -794,13 +790,32 @@ do_stat (char *filename, int link, int terse, int secure, char *format)
 }
 
 void
-usage (char *progname)
+usage (int status)
 {
-  fprintf (stderr, "Usage: %s [-l] [-f] [-s] [-v] [-h] [-t] [-c format] file1 [file2 ...]\n", progname);
-  exit (1);
+  if (status != 0)
+    fprintf (stderr, _("Try %s --help' for more information.\n"),
+	     program_name);
+  else
+    {
+      printf (_("Usage: %s [OPTION] FILE...\n"), program_name);
+      fputs (_("\
+Display file or filesystem status.\n\
+\n\
+  -f, --filesystem	display filesystem status instead of file status\n\
+  -c  --format=FMT      FIXME\n\
+  -l, --link		follow links\n\
+  -s, --secure	        FIXME\n\
+  -t, --terse		print the information in terse form\n\
+"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
+    }
+  exit (status);
 }
 
-void verbose_usage(char *progname)
+void
+verbose_usage(char *progname)
 {
     fprintf(stderr, "Usage: %s [-l] [-f] [-s] [-v] [-h] [-t] [-c format] file1 [file2 ...]\n", progname);
     fprintf(stderr, "\tformat interpreted sequences for file stat are:\n");
@@ -848,48 +863,66 @@ void verbose_usage(char *progname)
     exit(1);
 }
 
-
 int
 main (int argc, char *argv[])
 {
-  int c, i, link = 0, fs = 0, terse = 0, secure = 0;
+  int c;
+  int i;
+  int follow_links = 0;
+  int fs = 0;
+  int terse = 0;
+  int secure = 0;
   char *format = NULL;
 
-  while ((c = getopt (argc, argv, "lsfvthc:")) != EOF)
+  program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
+  atexit (close_stdout);
+
+  while ((c = getopt_long (argc, argv, "c:flst", long_options, NULL)) != -1)
     {
       switch (c)
 	{
-	case 'l':
-	  link = 1;
+	case 'c':
+	  format = optarg;
 	  break;
-	case 's':
-	  secure = 1;
+	case 'l':
+	  follow_links = 1;
 	  break;
 	case 'f':
 	  fs = 1;
 	  break;
+	case 's':
+	  secure = 1;
+	  break;
 	case 't':
 	  terse = 1;
 	  break;
-	case 'c':
-	  format = optarg;
-	  break;
-	case 'h':
-	  printf ("stat version: 3.0\n");
-	  verbose_usage(argv[0]);
-	  break;
-	case 'v':
-          printf ("stat version: 3.0\n");
+
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+
 	default:
-	  usage (argv[0]);
+	  usage (EXIT_FAILURE);
 	}
     }
+
   if (argc == optind)
-    usage (argv[0]);
+    {
+      error (0, 0, _("too few arguments"));
+      usage (EXIT_FAILURE);
+    }
 
   for (i = optind; i < argc; i++)
-    (fs == 0) ? do_stat (argv[i], link, terse, secure, format) :
-     		do_statfs (argv[i], terse, secure, format);
+    {
+      if (fs == 0)
+	do_stat (argv[i], follow_links, terse, secure, format);
+      else
+	do_statfs (argv[i], terse, secure, format);
+    }
 
-  return (0);
+  exit (EXIT_SUCCESS);
 }
