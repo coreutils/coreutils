@@ -1,5 +1,6 @@
 Changes in release 1.17
  [1.16f]
+* `date -s' now exits with nonzero status upon failure
 * new autoconf tests detect bugs in vendor mktime from Irix-6.4 and SunOS4.1.4
   Your executables will be a little larger on such systems because you'll use
   GNU's mktime function, but date will work more reliably.
