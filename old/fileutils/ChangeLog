@@ -4,9 +4,7 @@
 	HAVE_*_UNLOCKED macros.
 
 	* Makefile.am (EXTRA_DIST): Add unlocked-io.hin and unlocked-io.h.
-	* Makefile.cfg (unlocked-io.h): New rule.
-	($(srcdir)/m4/jm-glibc-io.m4): New rule.
-	* unlocked-io.hin: New file.
+	* Makefile.cfg ($(srcdir)/m4/jm-glibc-io.m4): New rule.
 
 2001-07-14  Jim Meyering  <meyering@lucent.com>
 
