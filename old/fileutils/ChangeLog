@@ -1,6 +1,17 @@
-2001-10-13  Jim Meyering  <meyering@lucent.com>
+2001-10-14  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.1.
+
+	Now, -P is the same as --no-dereference, per POSIX.
+	Use --parents to get the old meaning.
+
+	* src/cp.c (enum) [NO_DEREFERENCE_OPTION]: Remove member.
+	(long_opts): Associate --no-dereference with `-P'.
+	(usage): Update description of -P.
+	(main): Remove local, used_P_option, and code to warn
+	that the meaning of -P would be changing.
+
+2001-10-13  Jim Meyering  <meyering@lucent.com>
 
 	* src/copy.c (copy_internal): Tighten up and add comments
 	describing the test for when to record (via remember_copied)
