@@ -1422,7 +1422,8 @@ max_out (format)
 }
 
 static void
-interrupt_handler ()
+interrupt_handler (signum)
+     int signum;
 {
   error (0, 0, "interrupted");
   cleanup ();
