@@ -1,4 +1,4 @@
-Changes in release 1.23
+Changes in release 2.0
 [1.22q]
 * HPUX portability fix: md5sum would dump core due to use of libc's getline
 [1.22p]
