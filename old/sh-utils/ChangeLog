@@ -1,3 +1,9 @@
+Sat Aug 17 00:14:55 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/strftime.c: Update from GNU libc -- this adds back %z and %s
+	formats and reverts to old behavior where unrecognized format like
+	%E is treated as eqivalent to `E'.
+
 Sun Aug  4 09:14:28 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* checks/: New directory.
