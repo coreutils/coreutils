@@ -75,7 +75,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   pwd now works even when run from a working directory whose name
   is longer than PATH_MAX.
 
-  cp, install, ln, and mv have a new --no-target-directory option.
+  cp, install, ln, and mv have a new --no-target-directory (-T) option,
+  and -t is now a short name for their --target-directory option.
 
   cp -pu and mv -u (when copying) now don't bother to update the
   destination if the resulting time stamp would be no newer than the
