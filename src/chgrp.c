@@ -27,16 +27,16 @@
 # include <limits.h>
 #endif
 
-#ifdef HAVE_LCHOWN
-# define chown(PATH, OWNER, GROUP) lchown(PATH, OWNER, GROUP)
-#endif
-
 #ifndef UINT_MAX
 # define UINT_MAX ((unsigned int) ~(unsigned int) 0)
 #endif
 
 #ifndef INT_MAX
 # define INT_MAX ((int) (UINT_MAX >> 1))
+#endif
+
+#ifndef MAXUID
+# define MAXUID INT_MAX
 #endif
 
 #include "system.h"
@@ -51,6 +51,12 @@ struct group *getgrnam ();
 # define endgrent() ((void) 0)
 #endif
 
+#ifdef HAVE_LCHOWN
+# define LCHOWN(FILE, OWNER, GROUP) lchown (FILE, OWNER, GROUP)
+#else
+# define LCHOWN(FILE, OWNER, GROUP) 1
+#endif
+
 char *group_member ();
 char *savedir ();
 char *xmalloc ();
@@ -60,6 +66,10 @@ static int change_dir_group __P ((char *dir, int group, struct stat *statp));
 
 /* The name the program was run with. */
 char *program_name;
+
+/* If nonzero, and the systems has support for it, change the ownership
+   of symbolic links rather than any files they point to.  */
+static int change_symlinks;
 
 /* If nonzero, change the ownership of directories recursively. */
 static int recurse;
@@ -86,6 +96,7 @@ static struct option const long_options[] =
 {
   {"recursive", no_argument, 0, 'R'},
   {"changes", no_argument, 0, 'c'},
+  {"no-dereference", no_argument, 0, 'h'},
   {"silent", no_argument, 0, 'f'},
   {"quiet", no_argument, 0, 'f'},
   {"verbose", no_argument, 0, 'v'},
@@ -154,9 +165,17 @@ change_file_group (char *file, int group)
 
   if (group != file_stats.st_gid)
     {
+      int fail;
+
       if (verbose)
 	describe_change (file, 1);
-      if (chown (file, file_stats.st_uid, group))
+
+      if (change_symlinks)
+	fail = LCHOWN (file, file_stats.st_uid, group);
+      else
+	fail = chown (file, file_stats.st_uid, group);
+
+      if (fail)
 	{
 	  errors = 1;
 	  if (force_silent == 0)
@@ -169,12 +188,10 @@ change_file_group (char *file, int group)
 		  error (0, errno, _("you are not a member of group `%s'"),
 			 groupname);
 		}
-#ifdef MAXUID
 	      else if (errno == EINVAL && group > MAXUID)
 		{
 		  error (0, 0, _("%s: invalid group number"), groupname);
 		}
-#endif
 	      else
 		{
 		  error (0, errno, "%s", file);
@@ -255,6 +272,8 @@ usage (int status)
 Change the group membership of each FILE to GROUP.\n\
 \n\
   -c, --changes           like verbose but report only when a change is made\n\
+  -h, --no-dereference    affect symbolic links instead of any referenced file\n\
+                          (available only on systems with lchown system call)\n\
   -f, --silent, --quiet   suppress most error messages\n\
   -v, --verbose           output a diagnostic for every file processed\n\
   -R, --recursive         change files and directories recursively\n\
@@ -274,7 +293,7 @@ main (int argc, char **argv)
   program_name = argv[0];
   recurse = force_silent = verbose = changes_only = 0;
 
-  while ((optc = getopt_long (argc, argv, "Rcfv", long_options, (int *) 0))
+  while ((optc = getopt_long (argc, argv, "Rcfnv", long_options, (int *) 0))
 	 != EOF)
     {
       switch (optc)
@@ -290,6 +309,9 @@ main (int argc, char **argv)
 	  break;
 	case 'f':
 	  force_silent = 1;
+	  break;
+	case 'h':
+	  change_symlinks = 1;
 	  break;
 	case 'v':
 	  verbose = 1;
@@ -313,6 +335,13 @@ main (int argc, char **argv)
       error (0, 0, _("too few arguments"));
       usage (1);
     }
+
+#ifndef HAVE_LCHOWN
+  if (change_symlinks)
+    {
+      error (1, 0, _("--no-dereference (-h) is not supported on this system"));
+    }
+#endif
 
   parse_group (argv[optind++], &group);
 
