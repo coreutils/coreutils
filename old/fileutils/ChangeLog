@@ -1,3 +1,8 @@
+Mon Oct  7 23:31:10 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/Makefile.am (noinst_HEADERS): Add dircolors.h.
+	(dircolors.h): Always depend on dcgen.
+
 Sat Oct  5 08:07:03 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* acinclude.m4 (AM_FUNC_ERROR_AT_LINE): New macro.
