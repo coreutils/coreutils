@@ -113,7 +113,7 @@ by the Foundation.
 @end titlepage
 
 
-@ifinfo
+@ifnottex
 @node Top
 @top GNU shell utilities
 
@@ -140,7 +140,7 @@ This manual documents version @value{VERSION} of the GNU shell utilities.
 
 * Index::                       General index.
 @end menu
-@end ifinfo
+@end ifnottex
 
 
 @node Introduction
