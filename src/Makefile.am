@@ -169,6 +169,10 @@ wheel.h: wheel-gen.pl Makefile.am
 
 BUILT_SOURCES = dircolors.h false.c wheel.h wheel-size.h
 
+# false exits nonzero even with --help or --version.
+# Tell automake to exempt it from that installcheck test.
+AM_INSTALLCHECK_STD_OPTIONS_EXEMPT = false
+
 false.c: true.c
 	sed \
 	  -e s/true/false/g \
