@@ -38,8 +38,6 @@
 #include "error.h"
 #include "xstrtol.h"
 
-static void usage (int status);
-
 /* The name this program was run with. */
 char *program_name;
 
@@ -56,6 +54,31 @@ static struct option const longopts[] =
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
+
+static void
+usage (int status)
+{
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("Usage: %s [OPTION]... NAME TYPE [MAJOR MINOR]\n", program_name);
+      printf ("\
+Create the special file NAME of the given TYPE.\n\
+\n\
+  -m, --mode=MODE   set permission mode (as in chmod), not 0666 - umask\n\
+      --help        display this help and exit\n\
+      --version     output version information and exit\n\
+\n\
+MAJOR MINOR are forbidden for TYPE p, mandatory otherwise.  TYPE may be:\n\
+\n\
+  b      create a block (buffered) special file\n\
+  c, u   create a character (unbuffered) special file   \n\
+  p      create a FIFO\n");
+    }
+  exit (status);
+}
 
 void
 main (int argc, char **argv)
@@ -200,29 +223,4 @@ major and minor device numbers may not be specified for fifo files");
     }
 
   exit (0);
-}
-
-static void
-usage (int status)
-{
-  if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
-	     program_name);
-  else
-    {
-      printf ("Usage: %s [OPTION]... NAME TYPE [MAJOR MINOR]\n", program_name);
-      printf ("\
-Create the special file NAME of the given TYPE.\n\
-\n\
-  -m, --mode=MODE   set permission mode (as in chmod), not 0666 - umask\n\
-      --help        display this help and exit\n\
-      --version     output version information and exit\n\
-\n\
-MAJOR MINOR are forbidden for TYPE p, mandatory otherwise.  TYPE may be:\n\
-\n\
-  b      create a block (buffered) special file\n\
-  c, u   create a character (unbuffered) special file   \n\
-  p      create a FIFO\n");
-    }
-  exit (status);
 }
