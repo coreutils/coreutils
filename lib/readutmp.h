@@ -1,5 +1,5 @@
 /* Declarations for GNU's read utmp module.
-   Copyright (C) 1992-2001 Free Software Foundation, Inc.
+   Copyright (C) 1992-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -69,9 +69,6 @@
 #   undef UT_USER
 #   define UT_USER(Utmp) ((Utmp)->ut_name)
 #  endif
-#  if defined HAVE_STRUCT_UTMPX_UT_TYPE
-#   define UT_TYPE(Utmp) ((Utmp)->ut_type)
-#  endif
 
 # else
 
@@ -82,11 +79,24 @@
 #   undef UT_USER
 #   define UT_USER(Utmp) Utmp->ut_name
 #  endif
-#  if defined HAVE_STRUCT_UTMP_UT_TYPE
-#   define UT_TYPE(Utmp) ((Utmp)->ut_type)
-#  endif
 
 # endif
+
+# define HAVE_STRUCT_XTMP_UT_EXIT \
+    (HAVE_STRUCT_UTMP_UT_EXIT \
+     || HAVE_STRUCT_UTMPX_UT_EXIT)
+
+# define HAVE_STRUCT_XTMP_UT_ID \
+    (HAVE_STRUCT_UTMP_UT_ID \
+     || HAVE_STRUCT_UTMPX_UT_ID)
+
+# define HAVE_STRUCT_XTMP_UT_PID \
+    (HAVE_STRUCT_UTMP_UT_PID \
+     || HAVE_STRUCT_UTMPX_UT_PID)
+
+# define HAVE_STRUCT_XTMP_UT_TYPE \
+    (HAVE_STRUCT_UTMP_UT_TYPE \
+     || HAVE_STRUCT_UTMPX_UT_TYPE)
 
 typedef struct UTMP_STRUCT_NAME STRUCT_UTMP;
 
