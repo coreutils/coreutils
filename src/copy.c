@@ -1406,6 +1406,12 @@ copy_internal (const char *src_path, const char *dst_path,
 	  goto un_backup;
 	}
 
+      if (x->recursive && x->copy_as_regular)
+	{
+	  error (0, 0, _("%s: WARNING: using -r to copy symbolic\
+ links is not portable"), quote (src_path));
+	}
+
       if (!symlink (src_link_val, dst_path))
 	free (src_link_val);
       else
