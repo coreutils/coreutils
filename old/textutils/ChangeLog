@@ -1,5 +1,21 @@
 2001-02-25  Paul Eggert  <eggert@twinsun.com>
 
+	* src/sort.c: Tune allocation and comparison of nodes
+	representing temp files.  This improved CPU performance of
+	'sort -S 1 *.[ch]' by 17% on my host.
+
+	(struct tempnode): name member now uses struct hack.
+	(temphead): Now a pointer, not a structure.  All uses changed.
+	(create_temp_file): Allocate node using struct hack.
+	(zaptemp): Free node using struct hack.  Use pointer comparison, not
+	string comparison.
+
+2001-02-25  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sort.c (eolchar, trim_trailing_blanks): Now static.
+
+2001-02-25  Paul Eggert  <eggert@twinsun.com>
+
 	'sort' race condition fixes.
 
 	Defend against a DoS attack where someone else creates a
