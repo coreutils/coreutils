@@ -2,6 +2,10 @@
 
 	* Version 4.5.10.
 
+	* tests/misc/tty-eof: Also check for the log_user method, to avoid
+	spurious failure when using an old version of Expect.pm (e.g., 1.07).
+	Reported by Bob Proulx.
+
 	* src/Makefile.am (check-misc): Check for use of `defined' in
 	#define directives.
 	Change to $(srcdir) before running grep.
