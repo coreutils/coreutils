@@ -149,7 +149,7 @@ main (int argc, char **argv)
       if (path_mode)
 	{
 	  errors |= make_path (argv[optind], newmode, parent_mode,
-			       -1, -1, 1, _("created directory `%s'"));
+			       -1, -1, 1, verbose_fmt_string);
 	}
       else if (mkdir (argv[optind], newmode))
 	{
