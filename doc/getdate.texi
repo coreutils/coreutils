@@ -122,7 +122,7 @@ $ TZ=UTC0 date +"%Y-%m-%d %H:%M:%SZ"
 2000-12-15 19:48:05Z
 $ date --iso-8601=seconds  # a GNU extension
 2000-12-15T11:48:05-0800
-$ date --rfc-822  # a GNU extension
+$ date --rfc-2822  # a GNU extension
 Fri, 15 Dec 2000 11:48:05 -0800
 $ date +"%Y-%m-%d %H:%M:%S %z"  # %z is a GNU extension.
 2000-12-15 11:48:05 -0800
