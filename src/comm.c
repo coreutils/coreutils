@@ -144,6 +144,9 @@ compare_files (char **infiles)
   /* streams[i] holds the input stream for file i.  */
   FILE *streams[2];
 
+  /* errno values for each stream.  */
+  int saved_errno[2];
+
   int i, ret = 0;
 
   /* Initialize the storage. */
@@ -159,6 +162,7 @@ compare_files (char **infiles)
 	}
 
       thisline[i] = readlinebuffer (thisline[i], streams[i]);
+      saved_errno[i] = errno;
     }
 
   while (thisline[0] || thisline[1])
@@ -198,16 +202,27 @@ compare_files (char **infiles)
       /* Step the file the line came from.
 	 If the files match, step both files.  */
       if (order >= 0)
-	thisline[1] = readlinebuffer (thisline[1], streams[1]);
+	{
+	  thisline[1] = readlinebuffer (thisline[1], streams[1]);
+	  saved_errno[1] = errno;
+	}
       if (order <= 0)
-	thisline[0] = readlinebuffer (thisline[0], streams[0]);
+	{
+	  thisline[0] = readlinebuffer (thisline[0], streams[0]);
+	  saved_errno[0] = errno;
+	}
     }
 
   /* Free all storage and close all input streams. */
   for (i = 0; i < 2; i++)
     {
       free (lb1[i].buffer);
-      if (ferror (streams[i]) || fclose (streams[i]) == EOF)
+      if (ferror (streams[i]))
+	{
+	  error (0, saved_errno[i], "%s", infiles[i]);
+	  ret = 1;
+	}
+      if (fclose (streams[i]) != 0)
 	{
 	  error (0, errno, "%s", infiles[i]);
 	  ret = 1;
