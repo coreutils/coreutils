@@ -34,7 +34,7 @@
 #include "dirname.h" /* for strip_trailing_slashes */
 #include "error.h"
 #include "exclude.h"
-#include "ftw.h"
+#include "fts_.h"
 #include "hash.h"
 #include "human.h"
 #include "quote.h"
@@ -86,13 +86,6 @@ static int print_totals = 0;
 /* If nonzero, do not add sizes of subdirectories.  */
 static int opt_separate_dirs = 0;
 
-/* If nonzero, dereference symlinks that are command line arguments.
-   Implementing this while still using nftw is a little tricky.
-   For each command line argument that is a symlink-to-directory,
-   call nftw with "command_line_arg/." and remember to omit the
-   added `/.' when printing.  */
-static int opt_dereference_arguments = 0;
-
 /* Show the total for each directory (and file if --all) that is at
    most MAX_DEPTH levels down from the root of the hierarchy.  The root
    is at level 0, so `du --max-depth=0' is equivalent to `du -s'.  */
@@ -110,24 +103,12 @@ static struct exclude *exclude;
 /* Grand total size of all args, in bytes. */
 static uintmax_t tot_size = 0;
 
-/* In some cases, we have to append `/.' or just `.' to an argument
-   (to dereference a symlink).  When we do that, we don't want to
-   expose this artifact when printing file/directory names, so these
-   variables keep track of the length of the original command line
-   argument and the length of the suffix we've added, respectively.
-   ARG_LENGTH == 0 indicates that we haven't added a suffix.
-   This information is used to omit any such added characters when
-   printing names.  */
-size_t arg_length;
-size_t suffix_length;
-
 /* Nonzero indicates that du should exit with EXIT_FAILURE upon completion.  */
 int G_fail;
 
-#define IS_FTW_DIR_TYPE(Type)	\
-  ((Type) == FTW_D		\
-   || (Type) == FTW_DP		\
-   || (Type) == FTW_DNR)
+#define IS_DIR_TYPE(Type)	\
+  ((Type) == FTS_DP		\
+   || (Type) == FTS_DNR)
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
@@ -310,46 +291,51 @@ print_size (uintmax_t n_bytes, const char *string)
    that and accumulates per-directory totals based on changes in
    the depth of the current entry.  */
 
-static int
-process_file (const char *file, const struct stat *sb, int file_type,
-	      struct FTW *info)
+static void
+process_file (FTS *fts, FTSENT *ent)
 {
   uintmax_t size;
   uintmax_t size_to_print;
   static int first_call = 1;
   static size_t prev_level;
   static size_t n_alloc;
+  /* The sum of the st_size values of all entries in the single directory
+     at the corresponding level.  Although this does include the st_size
+     corresponding to each subdirectory, it does not include the size of
+     any file in a subdirectory.  */
   static uintmax_t *sum_ent;
+
+  /* The sum of the sizes of all entries in the hierarchy at or below the
+     directory at the specified level.  */
   static uintmax_t *sum_subdir;
   int print = 1;
 
-  /* Always define info->skip before returning.  */
-  info->skip = excluded_filename (exclude, file + info->base);
+  const char *file = ent->fts_path;
+  const struct stat *sb = ent->fts_statp;
+  int skip;
 
-  switch (file_type)
+  /* If necessary, set FTS_SKIP before returning.  */
+  skip = excluded_filename (exclude, ent->fts_name);
+  if (skip)
+    fts_set (fts, ent, FTS_SKIP);
+
+  switch (ent->fts_info)
     {
-    case FTW_NS:
-      error (0, errno, _("cannot access %s"), quote (file));
+    case FTS_NS:
+      error (0, ent->fts_errno, _("cannot access %s"), quote (file));
       G_fail = 1;
-      return 0;
+      return;
 
-    case FTW_DCHP:
-      error (0, errno, _("cannot change to parent of directory %s"),
-	     quote (file));
+    case FTS_ERR:
+      /* if (S_ISDIR (ent->fts_statp->st_mode) && FIXME */
+      error (0, ent->fts_errno, _("%s"), quote (file));
       G_fail = 1;
-      return 0;
+      return;
 
-    case FTW_DCH:
-      /* Don't return just yet, since although nftw couldn't chdir into the
-	 directory, it was able to stat it, so we do have a size.  */
-      error (0, errno, _("cannot change to directory %s"), quote (file));
-      G_fail = 1;
-      break;
-
-    case FTW_DNR:
-      /* Don't return just yet, since although nftw couldn't read the
-	 directory, it was able to stat it, so we do have a size.  */
-      error (0, errno, _("cannot read directory %s"), quote (file));
+    case FTS_DNR:
+      /* Don't return just yet, since although the directory is not readable,
+	 we were able to stat it, so we do have a size.  */
+      error (0, ent->fts_errno, _("cannot read directory %s"), quote (file));
       G_fail = 1;
       break;
 
@@ -358,13 +344,14 @@ process_file (const char *file, const struct stat *sb, int file_type,
     }
 
   /* If this is the first (pre-order) encounter with a directory,
+     or if it's the second encounter for a skipped directory, then
      return right away.  */
-  if (file_type == FTW_DPRE)
-    return 0;
+  if (ent->fts_info == FTS_D || skip)
+    return;
 
   /* If the file is being excluded or if it has already been counted
      via a hard link, then don't let it contribute to the sums.  */
-  if (info->skip
+  if (skip
       || (!opt_count_all
 	  && 1 < sb->st_nlink
 	  && hash_ins (sb->st_ino, sb->st_dev)))
@@ -384,7 +371,7 @@ process_file (const char *file, const struct stat *sb, int file_type,
 
   if (first_call)
     {
-      n_alloc = info->level + 10;
+      n_alloc = ent->fts_level + 10;
       sum_ent = XCALLOC (uintmax_t, n_alloc);
       sum_subdir = XCALLOC (uintmax_t, n_alloc);
     }
@@ -392,12 +379,12 @@ process_file (const char *file, const struct stat *sb, int file_type,
     {
       /* FIXME: it's a shame that we need these `size_t' casts to avoid
 	 warnings from gcc about `comparison between signed and unsigned'.
-	 Probably unavoidable, assuming that the members of struct FTW
+	 Probably unavoidable, assuming that the struct members
 	 are of type `int' (historical), since I want variables like
 	 n_alloc and prev_level to have types that make sense.  */
-      if (n_alloc <= (size_t) info->level)
+      if (n_alloc <= (size_t) ent->fts_level)
 	{
-	  n_alloc = info->level * 2;
+	  n_alloc = ent->fts_level * 2;
 	  sum_ent = XREALLOC (sum_ent, uintmax_t, n_alloc);
 	  sum_subdir = XREALLOC (sum_subdir, uintmax_t, n_alloc);
 	}
@@ -407,44 +394,47 @@ process_file (const char *file, const struct stat *sb, int file_type,
 
   if (! first_call)
     {
-      if ((size_t) info->level == prev_level)
+      if ((size_t) ent->fts_level == prev_level)
 	{
 	  /* This is usually the most common case.  Do nothing.  */
 	}
-      else if ((size_t) info->level > prev_level)
+      else if (ent->fts_level > prev_level)
 	{
 	  /* Descending the hierarchy.
 	     Clear the accumulators for *all* levels between prev_level
 	     and the current one.  The depth may change dramatically,
 	     e.g., from 1 to 10.  */
 	  int i;
-	  for (i = prev_level + 1; i <= info->level; i++)
-	    sum_ent[i] = sum_subdir[i] = 0;
+	  for (i = prev_level + 1; i <= ent->fts_level; i++)
+	    {
+	      sum_ent[i] = 0;
+	      sum_subdir[i] = 0;
+	    }
 	}
-      else /* info->level < prev_level */
+      else /* ent->fts_level < prev_level */
 	{
 	  /* Ascending the hierarchy.
-	     nftw processes a directory only after all entries in that
+	     Process a directory only after all entries in that
 	     directory have been processed.  When the depth decreases,
 	     propagate sums from the children (prev_level) to the parent.
 	     Here, the current level is always one smaller than the
 	     previous one.  */
-	  assert ((size_t) info->level == prev_level - 1);
+	  assert ((size_t) ent->fts_level == prev_level - 1);
 	  size_to_print += sum_ent[prev_level];
 	  if (!opt_separate_dirs)
 	    size_to_print += sum_subdir[prev_level];
-	  sum_subdir[info->level] += (sum_ent[prev_level]
-				      + sum_subdir[prev_level]);
+	  sum_subdir[ent->fts_level] += (sum_ent[prev_level]
+					 + sum_subdir[prev_level]);
 	}
     }
 
-  prev_level = info->level;
+  prev_level = ent->fts_level;
   first_call = 0;
 
   /* Let the size of a directory entry contribute to the total for the
      containing directory, unless --separate-dirs (-S) is specified.  */
-  if ( ! (opt_separate_dirs && IS_FTW_DIR_TYPE (file_type)))
-    sum_ent[info->level] += size;
+  if ( ! (opt_separate_dirs && IS_DIR_TYPE (ent->fts_info)))
+    sum_ent[ent->fts_level] += size;
 
   /* Even if this directory is unreadable or we can't chdir into it,
      do let its size contribute to the total, ... */
@@ -452,101 +442,73 @@ process_file (const char *file, const struct stat *sb, int file_type,
 
   /* ... but don't print out a total for it, since without the size(s)
      of any potential entries, it could be very misleading.  */
-  if (file_type == FTW_DNR || file_type == FTW_DCH)
-    return 0;
+  if (ent->fts_info == FTS_DNR)
+    return;
 
   /* If we're not counting an entry, e.g., because it's a hard link
      to a file we've already counted (and --count-links), then don't
      print a line for it.  */
   if (!print)
-    return 0;
+    return;
 
-  if ((IS_FTW_DIR_TYPE (file_type) && info->level <= max_depth)
-      || ((opt_all && info->level <= max_depth) || info->level == 0))
+  if ((IS_DIR_TYPE (ent->fts_info) && ent->fts_level <= max_depth)
+      || ((opt_all && ent->fts_level <= max_depth) || ent->fts_level == 0))
     {
       print_only_size (size_to_print);
       fputc ('\t', stdout);
-      if (arg_length)
-	{
-	  /* Print the file name, but without the `.' or `/.'
-	     directory suffix that we may have added in main.  */
-	  /* Print everything before the part we appended.  */
-	  fwrite (file, arg_length, 1, stdout);
-	  /* Print everything after what we appended.  */
-	  fputs (file + arg_length + suffix_length
-		 + (file[arg_length - 1] == '/'
-		    && file[arg_length + suffix_length] == '/'), stdout);
-	}
-      else
-	{
-	  fputs (file, stdout);
-	}
+      fputs (file, stdout);
       fputc ('\n', stdout);
       fflush (stdout);
     }
-
-  return 0;
-}
-
-static int
-is_symlink_to_dir (char const *file)
-{
-  char *f;
-  struct stat sb;
-
-  ASSIGN_STRDUPA (f, file);
-  strip_trailing_slashes (f);
-  return (lstat (f, &sb) == 0 && S_ISLNK (sb.st_mode)
-	  && stat (f, &sb) == 0 && S_ISDIR (sb.st_mode));
 }
 
 /* Recursively print the sizes of the directories (and, if selected, files)
    named in FILES, the last entry of which is NULL.
-   FTW_FLAGS controls how nftw works.
+   FTS_FLAGS controls how fts works.
    Return nonzero upon error.  */
 
 static int
-du_files (char **files, int ftw_flags)
+du_files (char **files, int bit_flags)
 {
   int fail = 0;
-  int i;
-  for (i = 0; files[i]; i++)
+
+  FTS *fts = fts_open (files, bit_flags, NULL);
+  if (fts == NULL)
     {
-      char *file = files[i];
-      char *orig = file;
-      int err;
-      arg_length = 0;
+      /* FIXME */
+      error (0, errno, "FIXME");
+      return 1;
+    }
 
-      if (!print_totals)
-	hash_clear (htab);
+  while (1)
+    {
+      FTSENT *ent;
 
-      /* When dereferencing only command line arguments, we're using
-	 nftw's FTW_PHYS flag, so a symlink-to-directory specified on
-	 the command line wouldn't normally be dereferenced.  To work
-	 around that, we incur the overhead of appending `/.' (or `.')
-	 now, and later removing it each time we output the name of
-	 a derived file or directory name.  */
-      if (opt_dereference_arguments && is_symlink_to_dir (file))
+      ent = fts_read (fts);
+      if (ent == NULL)
 	{
-	  size_t len = strlen (file);
-	  /* Append `/.', but if there's already a trailing slash,
-	     append only the `.'.  */
-	  char const *suffix = (file[len - 1] == '/' ? "." : "/.");
-	  char *new_file;
-	  suffix_length = strlen (suffix);
-	  new_file = xmalloc (len + suffix_length + 1);
-	  memcpy (mempcpy (new_file, file, len), suffix, suffix_length + 1);
-	  arg_length = len;
-	  file = new_file;
+	  if (errno != 0)
+	    {
+	      /* FIXME: try to give a better message  */
+	      error (0, errno, "fts_read failed");
+	      fail = 1;
+	    }
+	  break;
 	}
 
-      err = nftw (file, process_file, MAX_N_DESCRIPTORS, ftw_flags);
-      if (err)
-	error (0, errno, "%s", quote (orig));
-      fail |= err;
+      /* This is a space optimization.  If we aren't printing totals,
+	 then it's ok to clear the duplicate-detection tables after
+	 each command line hierarchy has been processed.  */
+      if (ent->fts_level == 0 && ent->fts_info == FTS_D && !print_totals)
+	hash_clear (htab);
 
-      if (arg_length)
-	free (file);
+      process_file (fts, ent);
+    }
+
+  if (fts_close (fts) < 0)
+    {
+      error (0, errno, "closing FTS handle");
+      fail = 1;
     }
 
   if (print_totals)
@@ -564,8 +526,8 @@ main (int argc, char **argv)
   char **files;
   int fail;
 
-  /* Bit flags that control how nftw works.  */
-  int ftw_flags = FTW_DEPTH | FTW_PHYS | FTW_CHDIR;
+  /* Bit flags that control how fts works.  */
+  int bit_flags = FTS_PHYSICAL;
 
   /* If nonzero, display only a total for each argument. */
   int opt_summarize_only = 0;
@@ -658,7 +620,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'x':
-	  ftw_flags |= FTW_MOUNT;
+	  bit_flags |= FTS_XDEV;
 	  break;
 
 	case 'B':
@@ -666,11 +628,12 @@ main (int argc, char **argv)
 	  break;
 
 	case 'D':
-	  opt_dereference_arguments = 1;
+	  bit_flags |= FTS_COMFOLLOW;
 	  break;
 
 	case 'L':
-	  ftw_flags &= ~FTW_PHYS;
+	  bit_flags &= ~FTS_PHYSICAL;
+	  bit_flags |= FTS_LOGICAL;
 	  break;
 
 	case 'S':
@@ -730,6 +693,6 @@ main (int argc, char **argv)
   /* Initialize the hash structure for inode numbers.  */
   hash_init ();
 
-  exit (du_files (files, ftw_flags) || G_fail
+  exit (du_files (files, bit_flags) || G_fail
 	? EXIT_FAILURE : EXIT_SUCCESS);
 }
