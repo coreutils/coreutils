@@ -1,3 +1,10 @@
+2001-08-13  Paul Eggert  <eggert@twinsun.com>
+
+	* Makefile.am (unlocked-io.h): Do not append "_unlocked" twice.
+	Port to Solaris 8, where 'sed' requires a space after the 'r'
+	command, and where sh dislikes "$/".  Clean up the spacing a bit.
+	Redirect output to $tmp just once.
+
 2001-08-12  Paul Eggert  <eggert@sic.twinsun.com>
 
 	* lib/addext.c (<errno.h>): Include.
