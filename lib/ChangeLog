@@ -1,6 +1,9 @@
 2002-12-01  Jim Meyering  <jim@meyering.net>
 
 	* strtoll.c: Update from gnulib (trivial changes).
+	* strdup.c: Likewise.
+	* strstr.c: Likewise.
+	* tempname.c: Likewise.
 
 2002-11-28  Jim Meyering  <jim@meyering.net>
 
