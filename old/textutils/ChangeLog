@@ -1,5 +1,7 @@
 Thu Jul  4 07:24:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/uniq.c (usage): Remove space before newline in usage message.
+
 	* src/md5sum.c (MIN_DIGEST_LINE_LENGTH): New macro.
 	[NEWLINE_REPLACEMENT_STRING*]: Remove macros.
 	(main): Output a leading backslash for a line describing a file
