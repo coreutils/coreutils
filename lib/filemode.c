@@ -198,6 +198,17 @@ ftypelet (bits)
   if (S_ISNWK (bits))
     return 'n';
 #endif
+
+#ifdef S_ISOFD
+  /* Cray migrated dmf file.  */
+  if (S_ISOFD (bits))
+    return 'M';
+#endif
+#ifdef S_ISOFL
+  /* Cray migrated dmf file.  */
+  if (S_ISOFL (bits))
+    return 'M';
+#endif
   return '?';
 }
 
