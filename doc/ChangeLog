@@ -1,5 +1,11 @@
 2003-07-31  Paul Eggert  <eggert@twinsun.com>
 
+	* getdate.texi (General date syntax): Add --rfc-2822 option to GNU date.
+	* coreutils.texi (Options for date): Fix a typo in format:
+	it's now %d not %_d.  Add URLs.
+
+2003-07-31  Paul Eggert  <eggert@twinsun.com>
+
 	* getdate.texi (Relative items in date strings): Warn about
 	fuzz in relative units.
 
