@@ -100,6 +100,34 @@ When a month is written this way, it is still considered to be written
 numerically, instead of being ``spelled in full''; this changes the
 allowed strings.
 
+@cindex language, in dates
+In the current implementation, only English is supported for words and
+abbreviations like @samp{AM}, @samp{DST}, @samp{EST}, @samp{first},
+@samp{January}, @samp{Sunday}, @samp{tomorrow}, and @samp{year}.
+
+@cindex language, in dates
+@cindex time zone item
+The output of @command{date} is not always acceptable as a date string,
+not only because of the language problem, but also because there is no
+standard meaning for time zone items like @samp{IST}.  When using
+@command{date} to generate a date string intended to be parsed later,
+specify a date format that is independent of language and that does not
+use time zone items other than @samp{UTC} and @samp{Z}.  Here are some
+ways to do this:
+
+@example
+$ LC_ALL=C TZ=UTC0 date
+Fri Dec 15 19:48:05 UTC 2000
+$ TZ=UTC0 date +"%Y-%m-%d %H:%M:%SZ"
+2000-12-15 19:48:05Z
+$ date --iso-8601=seconds  # a GNU extension
+2000-12-15T11:48:05-0800
+$ date --rfc-822  # a GNU extension
+Fri, 15 Dec 2000 11:48:05 -0800
+$ date +"%Y-%m-%d %H:%M:%S %z"  # %z is a GNU extension.
+2000-12-15 11:48:05 -0800
+@end example
+
 @cindex case, ignored in dates
 @cindex comments, in dates
 Alphabetic case is completely ignored in dates.  Comments may be introduced
@@ -238,13 +266,15 @@ but not both.
 @cindex time zone item
 
 A @dfn{time zone item} specifies an international time zone, indicated
-by a small set of letters, e.g., @samp{UTC} for Coordinated Universal
+by a small set of letters, e.g., @samp{UTC} or @samp{Z}
+for Coordinated Universal
 Time.  Any included periods are ignored.  By following a
 non-daylight-saving time zone by the string @samp{DST} in a separate
 word (that is, separated by some white space), the corresponding
 daylight saving time zone may be specified.
 
-Time zone items are obsolescent and are not recommended, because they
+Time zone items other than @samp{UTC} and @samp{Z}
+are obsolescent and are not recommended, because they
 are ambiguous; for example, @samp{EST} has a different meaning in
 Australia than in the United States.  Instead, it's better to use
 unambiguous numeric time zone corrections like @samp{-0500}, as
