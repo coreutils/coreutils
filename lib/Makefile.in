@@ -46,7 +46,7 @@ modechange.o safe-read.o safe-stat.o safe-lstat.o savedir.o \
 stripslash.o xgetcwd.o xmalloc.o xstrdup.o userspec.o yesno.o \
 @LIBOBJS@ @ALLOCA@
 
-DISTFILES = Makefile.in backupfile.h getopt.h modechange.h \
+DISTFILES = Makefile.in backupfile.h getopt.h long-options.h modechange.h \
 fnmatch.h fsusage.h mountlist.h pathmax.h safe-xstat.cin safe-xstat.hin \
 getdate.c posixtm.c $(SOURCES)
 
