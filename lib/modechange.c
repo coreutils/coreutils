@@ -1,5 +1,5 @@
 /* modechange.c -- file mode manipulation
-   Copyright (C) 1989, 1990, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1989, 1990, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@
 #if STDC_HEADERS
 # include <stdlib.h>
 #else
-char *malloc ();
+char *malloc;
 #endif
 
 #ifndef NULL
@@ -55,7 +55,22 @@ char *malloc ();
 
 #define isodigit(c) ((c) >= '0' && (c) <= '7')
 
-static int oatoi ();
+/* Return a positive integer containing the value of the ASCII
+   octal number S.  If S is not an octal number, return -1.  */
+
+static int
+oatoi (char *s)
+{
+  register int i;
+
+  if (*s == 0)
+    return -1;
+  for (i = 0; isodigit (*s); ++s)
+    i = i * 8 + *s - '0';
+  if (*s)
+    return -1;
+  return i;
+}
 
 /* Return a linked list of file mode change operations created from
    MODE_STRING, an ASCII string that contains either an octal number
@@ -71,9 +86,7 @@ static int oatoi ();
    return MODE_MEMORY_EXHAUSTED if there is insufficient memory. */
 
 struct mode_change *
-mode_compile (mode_string, masked_ops)
-     const char *mode_string;
-     unsigned masked_ops;
+mode_compile (const char *mode_string, unsigned int masked_ops)
 {
   struct mode_change *head;	/* First element of the linked list. */
   struct mode_change *change;	/* An element of the linked list. */
@@ -240,8 +253,7 @@ invalid:
    of REF_FILE.  Return MODE_BAD_REFERENCE if REF_FILE can't be accessed.  */
 
 struct mode_change *
-mode_create_from_ref (ref_file)
-     const char *ref_file;
+mode_create_from_ref (const char *ref_file)
 {
   struct mode_change *change;	/* the only change element */
   struct stat ref_stats;
@@ -269,9 +281,7 @@ mode_create_from_ref (ref_file)
    The returned value has the S_IFMT bits cleared. */
 
 unsigned short
-mode_adjust (oldmode, changes)
-     unsigned oldmode;
-     const struct mode_change *changes;
+mode_adjust (unsigned int oldmode, const struct mode_change *changes)
 {
   unsigned short newmode;	/* The adjusted mode and one operand. */
   unsigned short value;		/* The other operand. */
@@ -336,8 +346,7 @@ mode_adjust (oldmode, changes)
    CHANGES. */
 
 void
-mode_free (changes)
-     register struct mode_change *changes;
+mode_free (register struct mode_change *changes)
 {
   register struct mode_change *next;
 
@@ -347,22 +356,4 @@ mode_free (changes)
       free (changes);
       changes = next;
     }
-}
-
-/* Return a positive integer containing the value of the ASCII
-   octal number S.  If S is not an octal number, return -1.  */
-
-static int
-oatoi (s)
-     char *s;
-{
-  register int i;
-
-  if (*s == 0)
-    return -1;
-  for (i = 0; isodigit (*s); ++s)
-    i = i * 8 + *s - '0';
-  if (*s)
-    return -1;
-  return i;
 }
