@@ -1,5 +1,5 @@
 1998-01-24  Jim Meyering  <meyering@na-net.ornl.gov>
-	
+
 	* Version 1.22e.
 
 	* src/system.h (TYPE_MINIMUM): Add extra outer cast to work around
