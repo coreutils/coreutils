@@ -1,5 +1,5 @@
 /* stty -- change and print terminal line settings
-   Copyright (C) 1990-2004 Free Software Foundation, Inc.
+   Copyright (C) 1990-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -100,10 +100,17 @@
 #if defined(VEOL2) && !defined(CEOL2)
 # define CEOL2 _POSIX_VDISABLE
 #endif
+/* Some platforms have VSWTC, others VSWTCH.  In both cases, this control
+   character is initialized by CSWTCH, if present.  */
+#if defined(VSWTC) && !defined(VSWTCH)
+# define VSWTCH VSWTC
+#endif
 /* ISC renamed swtch to susp for termios, but we'll accept either name.  */
 #if defined(VSUSP) && !defined(VSWTCH)
 # define VSWTCH VSUSP
-# define CSWTCH CSUSP
+# if defined(CSUSP) && !defined(CSWTCH)
+#  define CSWTCH CSUSP
+# endif
 #endif
 #if defined(VSWTCH) && !defined(CSWTCH)
 # define CSWTCH _POSIX_VDISABLE
