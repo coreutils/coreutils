@@ -174,6 +174,26 @@ int rpl_lstat PARAMS((const char *, struct stat *));
 # define st_author st_uid
 #endif
 
+/* Cray/Unicos DMF: use the file's migrated, not real, status */
+#if HAVE_ST_DM_MODE
+# define ST_DM_MODE(Stat_buf) ((Stat_buf).st_dm_mode)
+#else
+# define ST_DM_MODE(Stat_buf) ((Stat_buf).st_mode)
+#endif
+
+#ifndef LOGIN_NAME_MAX
+# if _POSIX_LOGIN_NAME_MAX
+#  define LOGIN_NAME_MAX _POSIX_LOGIN_NAME_MAX
+# else
+#  define LOGIN_NAME_MAX 17
+# endif
+#endif
+
+/* The maximum length of a string representation of a user or group ID,
+   not counting any terminating NUL byte.  */
+#define ID_LENGTH_MAX \
+  MAX (LOGIN_NAME_MAX - 1, LONGEST_HUMAN_READABLE)
+
 enum filetype
   {
     unknown DT_INIT (DT_UNKNOWN),
@@ -2748,16 +2768,18 @@ static void
 print_long_format (const struct fileinfo *f)
 {
   char modebuf[12];
-
-  /* 8 fields that may require LONGEST_HUMAN_READABLE bytes,
-     1 10-byte mode string,
-     1 35-byte time string (may be longer in some locales -- see below)
-       or LONGEST_HUMAN_READABLE integer,
-     10 spaces, one following each of these fields, and
-     1 trailing NUL byte.  */
-  char init_bigbuf[8 * LONGEST_HUMAN_READABLE + 10
-		   + MAX (35, LONGEST_HUMAN_READABLE)
-		   + 10 + 1];
+  char init_bigbuf
+    [LONGEST_HUMAN_READABLE + 1		/* inode */
+     + LONGEST_HUMAN_READABLE + 1	/* size in blocks */
+     + sizeof (modebuf) - 1 + 1		/* mode string */
+     + LONGEST_HUMAN_READABLE + 1	/* st_nlink */
+     + ID_LENGTH_MAX + 1		/* owner name */
+     + ID_LENGTH_MAX + 1		/* group name */
+     + ID_LENGTH_MAX + 1		/* author name */
+     + LONGEST_HUMAN_READABLE + 1	/* major device number */
+     + LONGEST_HUMAN_READABLE + 1	/* minor device number */
+     + 35 + 1	/* usual length of time/date -- may be longer; see below */
+     ];
   char *buf = init_bigbuf;
   size_t bufsize = sizeof (init_bigbuf);
   size_t s;
@@ -2766,12 +2788,10 @@ print_long_format (const struct fileinfo *f)
   int when_ns IF_LINT (= 0);
   struct tm *when_local;
 
-#if HAVE_ST_DM_MODE
-  /* Cray DMF: look at the file's migrated, not real, status */
-  mode_string (f->stat.st_dm_mode, modebuf);
-#else
-  mode_string (f->stat.st_mode, modebuf);
-#endif
+  /* Compute mode string.  On most systems, it's based on st_mode.
+     On systems with migration (via the stat.st_dm_mode field), use
+     the file's migrated status.  */
+  mode_string (ST_DM_MODE (f->stat), modebuf);
 
   modebuf[10] = (FILE_HAS_ACL (f) ? '+' : ' ');
   modebuf[11] = '\0';
