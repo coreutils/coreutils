@@ -1,3 +1,7 @@
+Wed Jul 17 00:30:28 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* install-sh: Get version with MIT copyright.
+
 Tue Jul 16 00:09:37 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* aclocal.m4 (fp_C_PROTOTYPES): Improved version from
