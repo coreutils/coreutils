@@ -2,6 +2,9 @@
 
 	* Version 1.16j.
 
+	* configure.in (AC_SEARCH_LIBS): Set LIB_CRYPT to $ac_cv_search_crypt,
+	to go along with the new macro in m4/search-libs.m4.
+
 1999-05-14  Jim Meyering  <meyering@ascend.com>
 
 	* lib/getugroups.c (getugroups): Don't dereference a null pointer when
