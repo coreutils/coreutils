@@ -21,7 +21,7 @@
 # include <config.h>
 #endif
 
-#include <sys/types.h>
+#include <stddef.h>
 
 /* Include errno.h *after* sys/types.h to work around header problems
    on AIX 3.2.5.  */
