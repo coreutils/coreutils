@@ -61,13 +61,6 @@ char *program_name;
 extern gid_t getegid ();
 extern uid_t geteuid ();
 
-#if !defined (R_OK)
-# define R_OK 4
-# define W_OK 2
-# define X_OK 1
-# define F_OK 0
-#endif /* R_OK */
-
 /* The following few defines control the truth and false output of each stage.
    TRUE and FALSE are what we use to compute the final output value.
    SHELL_BOOLEAN is the form which returns truth or falseness in shell terms.
@@ -121,46 +114,6 @@ test_syntax_error (char const *format, char const *arg)
   fflush (stderr);
   test_exit (TEST_FAILURE);
 }
-
-#if HAVE_SETREUID && HAVE_SETREGID
-/* Do the same thing access(2) does, but use the effective uid and gid.  */
-
-static int
-eaccess (char const *file, int mode)
-{
-  static int have_ids;
-  static uid_t uid, euid;
-  static gid_t gid, egid;
-  int result;
-
-  if (have_ids == 0)
-    {
-      have_ids = 1;
-      uid = getuid ();
-      gid = getgid ();
-      euid = geteuid ();
-      egid = getegid ();
-    }
-
-  /* Set the real user and group IDs to the effective ones.  */
-  if (uid != euid)
-    setreuid (euid, uid);
-  if (gid != egid)
-    setregid (egid, gid);
-
-  result = access (file, mode);
-
-  /* Restore them.  */
-  if (uid != euid)
-    setreuid (uid, euid);
-  if (gid != egid)
-    setregid (gid, egid);
-
-  return result;
-}
-#else
-# define eaccess(F, M) euidaccess (F, M)
-#endif
 
 /* Increment our position in the argument list.  Check that we're not
    past the end of the argument list.  This check is supressed if the
@@ -624,17 +577,17 @@ unary_operator (void)
 
     case 'r':			/* file is readable? */
       unary_advance ();
-      value = -1 != eaccess (argv[pos - 1], R_OK);
+      value = -1 != euidaccess (argv[pos - 1], R_OK);
       return (TRUE == value);
 
     case 'w':			/* File is writable? */
       unary_advance ();
-      value = -1 != eaccess (argv[pos - 1], W_OK);
+      value = -1 != euidaccess (argv[pos - 1], W_OK);
       return (TRUE == value);
 
     case 'x':			/* File is executable? */
       unary_advance ();
-      value = -1 != eaccess (argv[pos - 1], X_OK);
+      value = -1 != euidaccess (argv[pos - 1], X_OK);
       return (TRUE == value);
 
     case 'O':			/* File is owned by you? */
