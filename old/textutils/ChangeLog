@@ -1,3 +1,16 @@
+2001-10-04  Jim Meyering  <meyering@lucent.com>
+
+	* Version 2.0.17.
+
+	Rename --all-repeated argument `precede' to `prepend'.
+	* src/uniq.c (enum delimit_method): s/DM_PRECEDE/DM_PREPEND/
+	and change all uses.
+	(delimit_method_string): s/precede/prepend/
+	Patch by Padraig Brady.
+
+	* src/uniq.c (usage): Correct typo in description of --all-repeated.
+	Patch by Padraig Brady.
+
 2001-09-30  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.16.
