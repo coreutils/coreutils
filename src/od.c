@@ -46,14 +46,6 @@ typedef double LONG_DOUBLE;
 # include <values.h>
 #endif
 
-#ifndef MAX
-# define MAX(a, b) ((a) > (b) ? (a) : (b))
-#endif
-
-#ifndef MIN
-# define MIN(a,b) (((a) < (b)) ? (a) : (b))
-#endif
-
 /* The default number of input bytes per output line.  */
 #define DEFAULT_BYTES_PER_BLOCK 16
 
