@@ -722,7 +722,7 @@ main (int argc, char **argv)
       free (inbuf);
 
     contin:
-      if (strcmp (infile, "-") && close (input_desc) < 0)
+      if (!STREQ (infile, "-") && close (input_desc) < 0)
 	{
 	  error (0, errno, "%s", infile);
 	  exit_status = 1;

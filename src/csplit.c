@@ -689,7 +689,7 @@ no_more_lines (void)
 static void
 set_input_file (const char *name)
 {
-  if (!strcmp (name, "-"))
+  if (STREQ (name, "-"))
     input_desc = 0;
   else
     {

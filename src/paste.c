@@ -1,5 +1,5 @@
 /* paste - merge lines of files
-   Copyright (C) 1984, 1997 by David M. Ihnat
+   Copyright (C) 1984, 1997, 1998 by David M. Ihnat
 
    This program is a total rewrite of the Bell Laboratories Unix(Tm)
    command of the same name, as of System V.  It contains no proprietary
@@ -194,7 +194,7 @@ paste_parallel (int nfiles, char **fnamptr)
 	  fileptr = (FILE **) xrealloc ((char *) fileptr, (file_list_size + 1)
 					* sizeof (FILE *));
 	}
-      if (!strcmp (fnamptr[files_open], "-"))
+      if (STREQ (fnamptr[files_open], "-"))
 	{
 	  have_read_stdin = 1;
 	  fileptr[files_open] = stdin;
@@ -332,7 +332,7 @@ paste_serial (int nfiles, char **fnamptr)
 
   for (; nfiles; nfiles--, fnamptr++)
     {
-      if (!strcmp (*fnamptr, "-"))
+      if (STREQ (*fnamptr, "-"))
 	{
 	  have_read_stdin = 1;
 	  fileptr = stdin;

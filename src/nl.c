@@ -414,7 +414,7 @@ nl_file (const char *file)
 {
   FILE *stream;
 
-  if (!strcmp (file, "-"))
+  if (STREQ (file, "-"))
     {
       have_read_stdin = 1;
       stream = stdin;
@@ -436,7 +436,7 @@ nl_file (const char *file)
       error (0, errno, "%s", file);
       return 1;
     }
-  if (!strcmp (file, "-"))
+  if (STREQ (file, "-"))
     clearerr (stream);		/* Also clear EOF. */
   else if (fclose (stream) == EOF)
     {

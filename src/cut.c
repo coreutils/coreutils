@@ -1,5 +1,5 @@
 /* cut - remove parts of lines of files
-   Copyright (C) 1984, 1997 by David M. Ihnat
+   Copyright (C) 1984, 1997, 1998 by David M. Ihnat
 
    This program is a total rewrite of the Bell Laboratories Unix(Tm)
    command of the same name, as of System V.  It contains no proprietary
@@ -644,7 +644,7 @@ cut_file (char *file)
 {
   FILE *stream;
 
-  if (!strcmp (file, "-"))
+  if (STREQ (file, "-"))
     {
       have_read_stdin = 1;
       stream = stdin;
@@ -666,7 +666,7 @@ cut_file (char *file)
       error (0, errno, "%s", file);
       return 1;
     }
-  if (!strcmp (file, "-"))
+  if (STREQ (file, "-"))
     clearerr (stream);		/* Also clear EOF. */
   else if (fclose (stream) == EOF)
     {

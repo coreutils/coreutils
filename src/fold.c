@@ -123,7 +123,7 @@ fold_file (char *filename, int width)
   static char *line_out = NULL;
   static int allocated_out = 0;
 
-  if (!strcmp (filename, "-"))
+  if (STREQ (filename, "-"))
     {
       istream = stdin;
       have_read_stdin = 1;
@@ -212,11 +212,11 @@ fold_file (char *filename, int width)
   if (ferror (istream))
     {
       error (0, errno, "%s", filename);
-      if (strcmp (filename, "-"))
+      if (!STREQ (filename, "-"))
 	fclose (istream);
       return 1;
     }
-  if (strcmp (filename, "-") && fclose (istream) == EOF)
+  if (!STREQ (filename, "-") && fclose (istream) == EOF)
     {
       error (0, errno, "%s", filename);
       return 1;

@@ -843,10 +843,10 @@ main (int argc, char **argv)
       usage (1);
     }
 
-  fp1 = strcmp (names[0], "-") ? fopen (names[0], "r") : stdin;
+  fp1 = STREQ (names[0], "-") ? stdin : fopen (names[0], "r");
   if (!fp1)
     error (EXIT_FAILURE, errno, "%s", names[0]);
-  fp2 = strcmp (names[1], "-") ? fopen (names[1], "r") : stdin;
+  fp2 = STREQ (names[1], "-") ? stdin : fopen (names[1], "r");
   if (!fp2)
     error (EXIT_FAILURE, errno, "%s", names[1]);
   if (fp1 == fp2)

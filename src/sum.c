@@ -92,7 +92,7 @@ bsd_sum_file (const char *file, int print_name)
   register long total_bytes = 0; /* The number of bytes. */
   register int ch;		/* Each character read. */
 
-  if (!strcmp (file, "-"))
+  if (STREQ (file, "-"))
     {
       fp = stdin;
       have_read_stdin = 1;
@@ -118,12 +118,12 @@ bsd_sum_file (const char *file, int print_name)
   if (ferror (fp))
     {
       error (0, errno, "%s", file);
-      if (strcmp (file, "-"))
+      if (!STREQ (file, "-"))
 	fclose (fp);
       return -1;
     }
 
-  if (strcmp (file, "-") && fclose (fp) == EOF)
+  if (!STREQ (file, "-") && fclose (fp) == EOF)
     {
       error (0, errno, "%s", file);
       return -1;
@@ -151,7 +151,7 @@ sysv_sum_file (const char *file, int print_name)
   register unsigned long checksum = 0;
   long total_bytes = 0;
 
-  if (!strcmp (file, "-"))
+  if (STREQ (file, "-"))
     {
       fd = 0;
       have_read_stdin = 1;
@@ -178,12 +178,12 @@ sysv_sum_file (const char *file, int print_name)
   if (bytes_read < 0)
     {
       error (0, errno, "%s", file);
-      if (strcmp (file, "-"))
+      if (!STREQ (file, "-"))
 	close (fd);
       return -1;
     }
 
-  if (strcmp (file, "-") && close (fd) == -1)
+  if (!STREQ (file, "-") && close (fd) == -1)
     {
       error (0, errno, "%s", file);
       return -1;

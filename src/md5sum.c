@@ -1,6 +1,6 @@
 /* Compute MD5 checksum of files or strings according to the definition
    of MD5 in RFC 1321 from April 1992.
-   Copyright (C) 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 95, 96, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -240,7 +240,7 @@ md5_file (const char *filename, int binary, unsigned char *md5_result)
   FILE *fp;
   int err;
 
-  if (strcmp (filename, "-") == 0)
+  if (STREQ (filename, "-"))
     {
       have_read_stdin = 1;
       fp = stdin;
@@ -289,7 +289,7 @@ md5_check (const char *checkfile_name)
   char *line;
   size_t line_chars_allocated;
 
-  if (strcmp (checkfile_name, "-") == 0)
+  if (STREQ (checkfile_name, "-"))
     {
       have_read_stdin = 1;
       checkfile_name = _("standard input");

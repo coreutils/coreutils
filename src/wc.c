@@ -267,7 +267,7 @@ wc (int fd, const char *file)
 static void
 wc_file (const char *file)
 {
-  if (!strcmp (file, "-"))
+  if (STREQ (file, "-"))
     {
       have_read_stdin = 1;
       wc (0, file);

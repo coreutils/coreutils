@@ -216,14 +216,14 @@ check_file (const char *infile, const char *outfile)
   int prevlen, thislen;
   int match_count = 0;
 
-  if (!strcmp (infile, "-"))
+  if (STREQ (infile, "-"))
     istream = stdin;
   else
     istream = fopen (infile, "r");
   if (istream == NULL)
     error (EXIT_FAILURE, errno, "%s", infile);
 
-  if (!strcmp (outfile, "-"))
+  if (STREQ (outfile, "-"))
     ostream = stdout;
   else
     ostream = fopen (outfile, "w");
@@ -379,7 +379,7 @@ main (int argc, char **argv)
   if (show_help)
     usage (0);
 
-  if (optind >= 2 && strcmp (argv[optind - 1], "--") != 0)
+  if (optind >= 2 && !STREQ (argv[optind - 1], "--"))
     {
       /* Interpret non-option arguments with leading `+' only
 	 if we haven't seen `--'.  */

@@ -1,5 +1,5 @@
 /* comm -- compare two sorted files line by line.
-   Copyright (C) 86, 90, 91, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 86, 90, 91, 95, 96, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -148,8 +148,7 @@ compare_files (char **infiles)
     {
       initbuffer (&lb1[i]);
       thisline[i] = &lb1[i];
-      streams[i] = strcmp (infiles[i], "-")
-	? fopen (infiles[i], "r") : stdin;
+      streams[i] = (STREQ (infiles[i], "-") ? stdin : fopen (infiles[i], "r"));
       if (!streams[i])
 	{
 	  error (0, errno, "%s", infiles[i]);

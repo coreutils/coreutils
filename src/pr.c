@@ -1192,7 +1192,7 @@ init_funcs (void)
 static int
 open_file (char *name, COLUMN *p)
 {
-  if (!strcmp (name, "-"))
+  if (STREQ (name, "-"))
     {
       p->name = _("standard input");
       p->fp = stdin;
@@ -1376,7 +1376,7 @@ init_header (char *filename, int desc)
       char t_buf[T_BUF_SIZE];
 
       /* If parallel files or standard input, use current time. */
-      if (desc < 0 || !strcmp (filename, "-") || fstat (desc, &st))
+      if (desc < 0 || STREQ (filename, "-") || fstat (desc, &st))
 	st.st_mtime = time (NULL);
 
       tmptr = localtime (&st.st_mtime);

@@ -184,7 +184,7 @@ head_file (const char *filename, U_LONG_LONG n_units, int count_lines)
 {
   int fd;
 
-  if (!strcmp (filename, "-"))
+  if (STREQ (filename, "-"))
     {
       have_read_stdin = 1;
       filename = _("standard input");

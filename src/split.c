@@ -486,7 +486,7 @@ main (int argc, char **argv)
     }
 
   /* Open the input file.  */
-  if (!strcmp (infile, "-"))
+  if (STREQ (infile, "-"))
     input_desc = 0;
   else
     {

@@ -400,7 +400,7 @@ main (register int argc, register char **argv)
       for (; optind < argc; optind++)
 	{
 	  char *file = argv[optind];
-	  if (strcmp (file, "-") == 0)
+	  if (STREQ (file, "-"))
 	    fmt (stdin);
 	  else
 	    {

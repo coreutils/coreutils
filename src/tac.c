@@ -638,7 +638,7 @@ main (int argc, char **argv)
   else
     for (; optind < argc; ++optind)
       {
-	if (strcmp (argv[optind], "-") == 0)
+	if (STREQ (argv[optind], "-"))
 	  {
 	    have_read_stdin = 1;
 	    errors |= tac_stdin_to_mem ();
