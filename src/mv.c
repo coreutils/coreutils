@@ -1,5 +1,5 @@
 /* mv -- move or rename files
-   Copyright (C) 86, 89, 90, 91, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 86, 89, 90, 91, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -195,9 +195,7 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
 	     and failing.  */
 
 	  dir_to_remove = NULL;
-	  error (0, 0,
-		 _("cannot move %s to a subdirectory of itself, %s"),
-		 quote_n (0, source), quote_n (1, dest));
+	  fail = 1;
 	}
       else if (rename_succeeded)
 	{
@@ -259,9 +257,6 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
 	  if (fail)
 	    error (0, errno, _("cannot remove %s"), quote (dir_to_remove));
 	}
-
-      if (copy_into_self)
-	fail = 1;
     }
 
   return fail;
