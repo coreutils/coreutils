@@ -5,6 +5,7 @@
     when stdin is a tty, unless --force (-f) is specified, as per POSIX.
 * mv: fix the bug whereby `mv -uf source dest' would delete source,
     even though it's older than dest.
+* chown's --from=CURRENT_OWNER:CURRENT_GROUP option now works
 * cp now ensures that the set-user-ID and set-group-ID bits are cleared for
     the destination file when when copying and not preserving permissions.
 * `ln -f --backup k k' gives a clearer diagnostic
