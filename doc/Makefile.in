@@ -13,7 +13,6 @@
 
 @SET_MAKE@
 
-
 SHELL = @SHELL@
 
 srcdir = @srcdir@
@@ -34,11 +33,9 @@ infodir = @infodir@
 mandir = @mandir@
 includedir = @includedir@
 oldincludedir = /usr/include
-
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
-
 top_builddir = ..
 
 ACLOCAL = @ACLOCAL@
@@ -52,14 +49,12 @@ INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_HEADER = $(INSTALL_DATA)
 transform = @program_transform_name@
-
 NORMAL_INSTALL = :
 PRE_INSTALL = :
 POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-
 host_alias = @host_alias@
 host_triplet = @host@
 AMTAR = @AMTAR@
@@ -118,6 +113,10 @@ _am_quote = @_am_quote@
 install_sh = @install_sh@
 l = @l@
 
+info_TEXINFOS = omni-utils.texi
+
+EXTRA_DIST = perm.texi getdate.texi constants.texi doclicense.texi
+
 # The following is necessary if the package name is 8 characters or longer.
 # If the info documentation would be split into 10 or more separate files,
 # then this is necessary even if the package name is 7 characters long.
@@ -127,10 +126,6 @@ l = @l@
 # and those names all map to one 14-byte name (<package>.info-) on some crufty
 # old systems.
 MAKEINFO = makeinfo --no-split
-
-info_TEXINFOS = omni-utils.texi
-
-EXTRA_DIST = perm.texi getdate.texi
 EXEEXT =
 OBJEXT = o
 subdir = doc
@@ -138,7 +133,6 @@ mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 DIST_SOURCES =
-TEXI2DVI = texi2dvi
 INFO_DEPS = omni-utils.info
 DVIS = omni-utils.dvi
 TEXINFOS = omni-utils.texi
@@ -148,11 +142,9 @@ all: all-am
 
 .SUFFIXES:
 .SUFFIXES: .dvi .info .ps .texi
-
 $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnits  doc/Makefile
-
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && \
 	  CONFIG_HEADERS= CONFIG_LINKS= \
@@ -160,7 +152,6 @@ Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 
 $(srcdir)/version.texi:  $(srcdir)/stamp-vti
 	@:
-
 $(srcdir)/stamp-vti: omni-utils.texi $(top_srcdir)/configure.in
 	@(set `$(SHELL) $(srcdir)/mdate-sh $(srcdir)/omni-utils.texi`; \
 	echo "@set UPDATED $$1 $$2 $$3"; \
@@ -195,7 +186,7 @@ omni-utils.dvi: omni-utils.texi $(srcdir)/version.texi
 	@cd $(srcdir) && rm -f $@ $@-[0-9] $@-[0-9][0-9]
 	cd $(srcdir) \
 	  && $(MAKEINFO) `echo $< | sed 's,.*/,,'`
-
+TEXI2DVI = texi2dvi
 DVIPS = dvips
 .dvi.ps:
 	$(DVIPS) $< -o $@
@@ -253,7 +244,7 @@ distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
 
 distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
-	  d=$(srcdir); \
+	  if test -f $$file; then d=.; else d=$(srcdir); fi; \
 	  dir=`echo "$$file" | sed -e 's,/[^/]*$$,,'`; \
 	  if test "$$dir" != "$$file" && test "$$dir" != "."; then \
 	    $(mkinstalldirs) "$(distdir)/$$dir"; \
@@ -286,11 +277,9 @@ install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 
 installcheck: installcheck-am
-
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
 	  INSTALL_PROGRAM_ENV='$(INSTALL_STRIP_PROGRAM_ENV)' install
-
 mostlyclean-generic:
 
 clean-generic:
@@ -372,7 +361,6 @@ uninstall-info: uninstall-info-am
 	maintainer-clean-generic maintainer-clean-vti mostlyclean \
 	mostlyclean-aminfo mostlyclean-generic mostlyclean-vti \
 	uninstall uninstall-am uninstall-info-am
-
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
