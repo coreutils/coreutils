@@ -35,6 +35,7 @@
 #include "getpagesize.h"
 #include "human.h"
 #include "long-options.h"
+#include "quote.h"
 #include "safe-read.h"
 #include "xstrtol.h"
 
@@ -366,9 +367,9 @@ cleanup (void)
 {
   print_stats ();
   if (close (STDIN_FILENO) < 0)
-    error (1, errno, "%s", input_file);
+    error (1, errno, _("closing input file %s"), quote (input_file));
   if (close (STDOUT_FILENO) < 0)
-    error (1, errno, "%s", output_file);
+    error (1, errno, _("closing output file %s"), quote (output_file));
 }
 
 static inline void
@@ -452,7 +453,7 @@ write_output (void)
   int nwritten = full_write (STDOUT_FILENO, obuf, output_blocksize);
   if (nwritten != output_blocksize)
     {
-      error (0, errno, "%s", output_file);
+      error (0, errno, _("writing to %s"), quote (output_file));
       if (nwritten > 0)
 	w_partial++;
       quit (1);
@@ -484,7 +485,7 @@ parse_conversion (char *str)
 	  }
       if (conversions[i].convname == NULL)
 	{
-	  error (0, 0, _("%s: invalid conversion"), str);
+	  error (0, 0, _("invalid conversion: %s"), quote (str));
 	  usage (1);
 	}
       str = new;
@@ -540,7 +541,7 @@ scanargs (int argc, char **argv)
       val = strchr (name, '=');
       if (val == NULL)
 	{
-	  error (0, 0, _("unrecognized option `%s'"), name);
+	  error (0, 0, _("unrecognized option %s"), quote (name));
 	  usage (1);
 	}
       *val++ = '\0';
@@ -587,12 +588,13 @@ scanargs (int argc, char **argv)
 	    max_records = n;
 	  else
 	    {
-	      error (0, 0, _("unrecognized option `%s=%s'"), name, val);
+	      error (0, 0, _("unrecognized option %s=%s"),
+		     quote_n (0, name), quote_n (1, val));
 	      usage (1);
 	    }
 
 	  if (invalid)
-	    error (1, 0, _("invalid number `%s'"), val);
+	    error (1, 0, _("invalid number %s"), quote (val));
 	}
     }
 
@@ -739,7 +741,7 @@ skip (int fdesc, char *file, uintmax_t records, size_t blocksize,
 	  nread = safe_read (fdesc, buf, blocksize);
 	  if (nread < 0)
 	    {
-	      error (0, errno, "%s", file);
+	      error (0, errno, _("reading %s"), quote (file));
 	      quit (1);
 	    }
 	  /* POSIX doesn't say what to do when dd detects it has been
@@ -932,7 +934,7 @@ dd_copy (void)
 
       if (nread < 0)
 	{
-	  error (0, errno, "%s", input_file);
+	  error (0, errno, _("reading %s"), quote (input_file));
 	  if (conversions_mask & C_NOERROR)
 	    {
 	      print_stats ();
@@ -975,7 +977,7 @@ dd_copy (void)
 	  int nwritten = full_write (STDOUT_FILENO, obuf, n_bytes_read);
 	  if (nwritten < 0)
 	    {
-	      error (0, errno, "%s", output_file);
+	      error (0, errno, _("writing %s"), quote (output_file));
 	      quit (1);
 	    }
 	  else if (n_bytes_read == input_blocksize)
@@ -1036,7 +1038,7 @@ dd_copy (void)
 	w_partial++;
       if (nwritten < 0)
 	{
-	  error (0, errno, "%s", output_file);
+	  error (0, errno, _("writing %s"), quote (output_file));
 	  quit (1);
 	}
     }
@@ -1091,7 +1093,7 @@ main (int argc, char **argv)
   if (input_file != NULL)
     {
       if (open_fd (STDIN_FILENO, input_file, O_RDONLY, 0) < 0)
-	error (1, errno, "%s", input_file);
+	error (1, errno, _("opening %s"), quote (input_file));
     }
   else
     input_file = _("standard input");
@@ -1109,7 +1111,7 @@ main (int argc, char **argv)
       if ((! seek_record
 	   || open_fd (STDOUT_FILENO, output_file, O_RDWR | opts, perms) < 0)
 	  && open_fd (STDOUT_FILENO, output_file, O_WRONLY | opts, perms) < 0)
-	error (1, errno, "%s", output_file);
+	error (1, errno, _("opening %s"), quote (output_file));
 #if HAVE_FTRUNCATE
       if (seek_record != 0 && !(conversions_mask & C_NOTRUNC))
 	{
@@ -1117,7 +1119,12 @@ main (int argc, char **argv)
 	  if (o / output_blocksize != seek_record)
 	    error (1, 0, _("file offset out of range"));
 	  if (ftruncate (STDOUT_FILENO, o) < 0)
-	    error (1, errno, "%s", output_file);
+	    {
+	      char buf[LONGEST_HUMAN_READABLE + 1];
+	      error (1, errno, _("advancing past %s blocks in output file %s"),
+				 human_readable (seek_record, buf, 1, 1),
+				 quote (output_file));
+	    }
 	}
 #endif
     }
