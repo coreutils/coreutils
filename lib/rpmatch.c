@@ -21,9 +21,7 @@
 #endif
 
 #include <stddef.h>
-#if STDC_HEADERS || _LIBC
-# include <stdlib.h>
-#endif
+#include <stdlib.h>
 
 #if ENABLE_NLS
 # include <sys/types.h>
