@@ -1,6 +1,27 @@
+1999-08-01  Paul Eggert  <eggert@twinsun.com>
+
+	* lfs.m4: Remove this file.
+	* largefile.m4: New file.  It contains the old contents of
+	lfs.m4, except that all names with prefix AC_LFS have been
+	changed to use the prefix AC_SYS_LARGEFILE instead, to be
+	compatible with future autoconf versions.  Also, some minor m4
+	quoting problems have been fixed.
+
+1999-07-16  Paul Eggert  <eggert@twinsun.com>
+
+	* ulonglong.m4 (jm_AC_TYPE_UNSIGNED_LONG_LONG): Make sure
+	that we can shift, multiply and divide unsigned long long
+	values; Ultrix cc can't do it.
+
+1999-07-14  Paul Eggert  <eggert@twinsun.com>
+
+	* xstrtoumax.m4 (jm_AC_PREREQ_XSTRTOUMAX): Check whether
+	<inttypes.h> defines strtoumax as a macro (and not as a
+	function).
+
 1999-07-05  Paul Eggert  <eggert@twinsun.com>
 
-	* m4/gettext.m4 (AM_WITH_NLS): Remove unnecessary lines.
+	* gettext.m4 (AM_WITH_NLS): Remove unnecessary lines.
 	Fix typo: $nls_cv_header_intl was misspelled as $nsl_cv_header_intl.
 	(AM_GNU_GETTEXT): Fix problem with brackets and m4 quoting,
 	and simplify the shell code.
@@ -112,7 +133,7 @@
 	* group-member.m4: New file -- extracted from sh-utils' configure.in.
 
 	1999-02-05  Eli Zaretskii  <eliz@is.elta.co.il>
-	* m4/gettext.m4: Support DOS-style d:/foo/bar absolute file names.
+	* gettext.m4: Support DOS-style d:/foo/bar absolute file names.
 
 1999-02-06  Jim Meyering  <meyering@ascend.com>
 
