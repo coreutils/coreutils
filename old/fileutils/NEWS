@@ -1,4 +1,7 @@
 Changes in release 3.17:
+[4.0-b2]
+* man/Makefile.maint framework tweaks
+* add test for `mv -i' bug
 [4.0-pre1]
 * fix serious bug whereby `touch a b; echo n|mv -i a b' would remove b.
 [3.16z]
