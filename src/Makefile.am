@@ -157,8 +157,6 @@ dircolors.h: dcgen dircolors.hin
 	$(PERL) -w -- $(srcdir)/dcgen $(srcdir)/dircolors.hin > $@-t
 	mv $@-t $@
 
-PERL = @PERL@
-
 wheel_size = 5
 
 wheel-size.h: Makefile.am
