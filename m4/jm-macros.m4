@@ -1,4 +1,4 @@
-#serial 53   -*- autoconf -*-
+#serial 54   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -211,7 +211,6 @@ AC_DEFUN([jm_CHECK_ALL_HEADERS],
   AC_CHECK_HEADERS( \
     errno.h  \
     fcntl.h \
-    fenv.h \
     float.h \
     hurd.h \
     limits.h \
