@@ -1,11 +1,11 @@
 Mon Feb 12 21:12:28 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	Update for automake-0.29.
-	* Makefile.in (CONFIG_HEADER): Don't define.  Automake now does it.
-	* src/Makefile.in: Likewise.
-	* lib/Makefile.in: Likewise.
-	* doc/Makefile.in (info_TEXINFOS): Renamed from TEXINFOS.
-	* man/Makefile.in (man_MANS): Renamed from MANS.
+	* Makefile.am (CONFIG_HEADER): Don't define.  Automake now does it.
+	* src/Makefile.am: Likewise.
+	* lib/Makefile.am: Likewise.
+	* doc/Makefile.am (info_TEXINFOS): Renamed from TEXINFOS.
+	* man/Makefile.am (man_MANS): Renamed from MANS.
 
 	* fmt.c [TRUE]: Undefine before defining to avoid warning on NeXT.
 	[FALSE]: Likewise.

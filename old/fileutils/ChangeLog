@@ -4,11 +4,11 @@ Mon Feb 12 23:23:25 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	accomodate automake-0.29 buglet.
 
 	Update for automake-0.29.
-	* Makefile.in (CONFIG_HEADER): Don't define.  Automake now does it.
-	* src/Makefile.in: Likewise.
-	* lib/Makefile.in: Likewise.
-	* doc/Makefile.in (info_TEXINFOS): Renamed from TEXINFOS.
-	* man/Makefile.in (man_MANS): Renamed from MANS.
+	* Makefile.am (CONFIG_HEADER): Don't define.  Automake now does it.
+	* src/Makefile.am: Likewise.
+	* lib/Makefile.am: Likewise.
+	* doc/Makefile.am (info_TEXINFOS): Renamed from TEXINFOS.
+	* man/Makefile.am (man_MANS): Renamed from MANS.
 
 Wed Jan 31 21:50:41 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
