@@ -2,6 +2,7 @@
 
 	* unicodeio.c (unicode_to_mb): Change Solaris 2.7 to Solaris 5.7
 	in comment.
+	* putenv.c: Likewise.
 
 	* fatal.c, fatal.h: Remove unused files.
 
