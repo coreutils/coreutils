@@ -120,11 +120,11 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
-/* Check whether SOURCE and DEST point to the same name in the same
+/* Return nonzero if SOURCE and DEST point to the same name in the same
    directory.  */
 
 static int
-same_name (char *source, char *dest)
+same_name (const char *source, const char *dest)
 {
   struct stat source_dir_stats;
   struct stat dest_dir_stats;
