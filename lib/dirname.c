@@ -33,6 +33,10 @@ char *malloc ();
 # endif
 #endif
 
+#ifndef ISSLASH
+# define ISSLASH(C) ((C) == '/')
+#endif
+
 #include "dirname.h"
 
 /* Return the leading directories part of PATH,
@@ -58,8 +62,8 @@ dir_name (const char *path)
     {
       /* Remove any trailing slashes from the result.  */
 #ifdef MSDOS
-      char *lim = (path[0] >= 'A' && path[0] <= 'z' && path[1] == ':')
-		  ? path + 2 : path;
+      const char *lim = ((path[0] >= 'A' && path[0] <= 'z' && path[1] == ':')
+			 ? path + 2 : path);
 
       /* If canonicalized "d:/path", leave alone the root case "d:/".  */
       while (slash > lim && *slash == '/')
