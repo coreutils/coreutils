@@ -343,7 +343,7 @@ entire line as the key.\n\
 SIZE may be followed by the following multiplicative suffixes:\n\
 "), stdout);
       fputs (_("\
-% 1% of memory, b 1, k 1024 (default), and so on for M, G, T, P, E, Z, Y.\n\
+% 1% of memory, b 1, K 1024 (default), and so on for M, G, T, P, E, Z, Y.\n\
 \n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
@@ -602,9 +602,9 @@ specify_sort_size (char const *s)
 {
   uintmax_t n;
   char *suffix;
-  enum strtol_error e = xstrtoumax (s, &suffix, 10, &n, "EgGkmMPtTYZ");
+  enum strtol_error e = xstrtoumax (s, &suffix, 10, &n, "EgGkKmMPtTYZ");
 
-  /* The default unit is kB.  */
+  /* The default unit is KiB.  */
   if (e == LONGINT_OK && ISDIGIT (suffix[-1]))
     {
       if (n <= UINTMAX_MAX / 1024)
