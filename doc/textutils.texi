@@ -2256,9 +2256,9 @@ Other options are:
 @opindex -o
 @cindex overwriting of input, allowed
 Write output to @var{output-file} instead of standard output.
-If @var{output-file} is one of the input files, @code{sort} copies
-it to a temporary file before sorting and writing the output to
-@var{output-file}.
+If necessary, @command{sort} reads input before opening
+@var{output-file}, so you can safely sort a file in place by using
+commands like @code{sort F -o F} and @code{cat F | sort -o F}.
 
 @item -S @var{size}
 @opindex -S
