@@ -23,17 +23,8 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#if defined(STDC_HEADERS) || defined(HAVE_STRING_H)
-# include <string.h>
-#else
-# include <strings.h>
-#endif /* STDC_HEADERS || HAVE_STRING_H */
-
-#if STDC_HEADERS
-# include <stdlib.h>
-#else
-void *realloc ();
-#endif
+#include <string.h>
+#include <stdlib.h>
 
 #include "readutmp.h"
 #include "unlocked-io.h"
