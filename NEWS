@@ -25,6 +25,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   csplit would mistakenly exhaust virtual memory in some cases
 
+  ls --width=N (for very large N) is no longer subject to an address
+  arithmetic bug that could result in bounds violations.
+
 * Major changes in release 5.0.91:
 
 ** New features
