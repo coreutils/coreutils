@@ -1,7 +1,6 @@
-#!/p/bin/perl -w
+#!/usr/bin/perl -w
 
 $xx = './tr';
-$test = 0;
 $| = 1;
 
 print "#! /bin/sh\nxx='$xx'\necho testing with $xx=\$xx\nerrors=0\n";
@@ -10,13 +9,12 @@ $expected = '';
 $s1 = '';
 $input = '';
 $flags = '';
-$s1 = '';
+$s2 = '';
 
 while (<>)
   {
     next if (/^\s*#/);
 
-    $test++;
     chop;
     $prog = '($test_name, $input,$flags,$s1,$s2,$expected,$e_ret_code) = ' . $_ . ';';
     eval $prog;
