@@ -42,8 +42,10 @@ my @Tests =
      ['b-1', '-t', '2,4', {IN=> "      ."}, {OUT=>"\t\t  ."}],
      # These would infloop prior to textutils-2.0d.
 
-     # FIXME: Sun's /bin/unexpand does this:
+     # Solaris' /bin/unexpand does this:
      # ['infloop-1', '-t', '1,2', {IN=> " \t\t .\n"}, {OUT=>" \t\t .\n"}],
+     # FIXME: find out which is required
+
      ['infloop-1', '-t', '1,2', {IN=> " \t\t .\n"}, {OUT=>"\t\t\t .\n"}],
      ['infloop-2', '-t', '4,5', {IN=> ' 'x4 . "\t\t \n"}, {OUT=>"\t\t\t \n"}],
      ['infloop-3', '-t', '2,3', {IN=> "x \t\t \n"}, {OUT=>"x\t\t\t \n"}],
