@@ -1,5 +1,7 @@
 2003-07-20  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.0.90.
+
 	* src/wc.c (write_counts): Add a comment.
 	(wc): Rename `file' parameter.
 	Set new local, `file', to be the file name, or (when it's NULL)
@@ -37,8 +39,6 @@
 	* tests/wc/Test.pm: Adjust to the new output widths.
 
 2003-07-19  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.90.
 
 	* tests/rm/fail-eperm: Don't create temporary directory --
 	we don't use it.
