@@ -443,7 +443,13 @@ main (int argc, char **argv)
 		&& optarg[0] == '+'
 		&& xstrtoul (optarg, NULL, 10, &size, "") == LONGINT_OK
 		&& size <= SIZE_MAX)
-	      skip_chars = size;
+	      {
+		if (! posixly_correct)
+		  error (0, 0,
+			 _("warning: `uniq %s' is obsolete; use `uniq -s %s' instead"),
+			 optarg, optarg + 1);
+		skip_chars = size;
+	      }
 	    else if (nfiles == 2)
 	      {
 		error (0, 0, _("extra operand `%s'"), optarg);
