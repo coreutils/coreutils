@@ -1,3 +1,9 @@
+Mon May  1 23:03:30 1995  Jim Meyering  (meyering@comco.com)
+
+	* ls.c (quote_filename): Never return NULL when quoting filenames
+	as C-strings.  --quote-name was quoting only strings containing
+	at least one C-quotable character.  Reported by David J. MacKenzie.
+
 Mon Mar 20 21:44:40 1995  Jim Meyering  (meyering@comco.com)
 
 	* df.c (usage): Add ellipsis after `[OPTION]'.  Use FILE,
