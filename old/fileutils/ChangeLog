@@ -1,3 +1,12 @@
+2000-01-16  Jim Meyering  <meyering@lucent.com>
+
+	Sync with the version from emacs-20.5.
+	* lib/alloca.c
+	(<string.h>): Include if HAVE_STRING_H.
+	(<stdlib.h>): Include if HAVE_STDLIB_H.
+	(alloca): Abort if malloc fails.
+	Reported by Paul Eggert.
+
 2000-01-15  Jim Meyering  <meyering@lucent.com>
 
 	* configure.in (AC_REPLACE_FUNCS): Remove these: euidaccess memcpy
