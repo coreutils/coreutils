@@ -1,3 +1,9 @@
+1999-09-17  Jim Meyering  <meyering@ascend.com>
+
+	* jm-macros.m4 (AC_REPLACE_FUNCS): Add strdup.
+	Paul Nevai reported a link failure on a NeXT CUBE with NeXTSTEP 3.3
+	due to missing strdup (against sh-utils-2.0).
+
 1999-08-29  Jim Meyering  <meyering@ascend.com>
 
 	* jm-macros.m4: Require jm_BISON.
