@@ -2141,7 +2141,7 @@ print_long_format (const struct fileinfo *f)
 
   while (! (s = strftime (p, buf + bufsize - p, fmt, localtime (&when))))
     {
-      char *newbuf = alloca (bufsize *= 2);
+      char *newbuf = (char *) alloca (bufsize *= 2);
       memcpy (newbuf, buf, p - buf);
       p = newbuf + (p - buf);
       buf = newbuf;
