@@ -2,6 +2,15 @@
 
 	* Version 5.3.1.
 
+	* src/expr.c (toarith): Rewrite to detect/diagnose integer overflow,
+	rather than suffering silently.
+	Before, expr would silently overflow and wrap around:
+	  $ expr 9223372036854775808 = 0   # $(echo 2^63|bc)
+	  1
+	Now it detects the problem and exits nonzero:
+	  $ ./expr $(echo 2^63|bc) = 0
+	  ./expr: 9223372036854775808: integer is too large
+
 	* tests/chown/separator (id_gn): Exit 77, not 1, for a test-framework
 	failure, so that doesn't cause `make check' to stop.  Nelson Beebe
 	reported that this test would fail with this diagnostic
