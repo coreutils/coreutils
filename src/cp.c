@@ -465,6 +465,31 @@ make_path_private (const char *const_dirpath, int src_offset, int mode,
   return 0;
 }
 
+/* FILE is the last operand of this command.  Return -1 if FILE is a
+   directory, 0 if not, ENOENT if FILE does not exist.
+   But report an error there is a problem accessing FILE,
+   or if FILE does not exist but would have to refer to an existing
+   directory if it referred to anything at all.
+
+   Store the file's status into *ST, and store the resulting
+   error number into *ERRP.  */
+
+static int
+target_directory_operand (char const *file, struct stat *st, int *errp)
+{
+  char const *b = base_name (file);
+  size_t blen = strlen (b);
+  bool looks_like_a_dir = (blen == 0 || ISSLASH (b[blen - 1]));
+  int err = (stat (file, st) == 0 ? 0 : errno);
+  bool is_a_dir = !err && S_ISDIR (st->st_mode);
+  if (err && err != ENOENT)
+    error (EXIT_FAILURE, err, _("accessing %s"), quote (file));
+  if (is_a_dir < looks_like_a_dir)
+    error (EXIT_FAILURE, err, _("target %s is not a directory"), quote (file));
+  *errp = err;
+  return is_a_dir;
+}
+
 /* Scan the arguments, and copy each by calling copy.
    Return 0 if successful, 1 if any errors occur. */
 
@@ -472,15 +497,13 @@ static int
 do_copy (int n_files, char **file, const char *target_directory,
 	 struct cp_options *x)
 {
-  const char *dest;
   struct stat sb;
   int new_dst = 0;
   int ret = 0;
-  int dest_is_dir = 0;
 
   if (n_files <= !target_directory)
     {
-      if (n_files == 0)
+      if (n_files <= 0)
 	error (0, 0, _("missing file operand"));
       else
 	error (0, 0, _("missing destination file operand after %s"),
@@ -488,66 +511,17 @@ do_copy (int n_files, char **file, const char *target_directory,
       usage (EXIT_FAILURE);
     }
 
+  if (!target_directory)
+    {
+      if (2 <= n_files
+	  && target_directory_operand (file[n_files - 1], &sb, &new_dst))
+	target_directory = file[--n_files];
+      else if (2 < n_files)
+	error (EXIT_FAILURE, 0, _("target %s is not a directory"),
+	       quote (file[n_files - 1]));
+    }
+
   if (target_directory)
-    dest = target_directory;
-  else
-    {
-      dest = file[n_files - 1];
-      --n_files;
-    }
-
-  /* Initialize these hash tables only if we'll need them.
-     The problems they're used to detect can arise only if
-     there are two or more files to copy.  */
-  if (n_files >= 2)
-    {
-      dest_info_init (x);
-      src_info_init (x);
-    }
-
-  if (lstat (dest, &sb))
-    {
-      if (errno != ENOENT)
-	{
-	  error (0, errno, _("accessing %s"), quote (dest));
-	  return 1;
-	}
-
-      new_dst = 1;
-    }
-  else
-    {
-      struct stat sbx;
-
-      /* If `dest' is not a symlink to a nonexistent file, use
-	 the results of stat instead of lstat, so we can copy files
-	 into symlinks to directories. */
-      if (stat (dest, &sbx) == 0)
-	sb = sbx;
-
-      dest_is_dir = S_ISDIR (sb.st_mode);
-    }
-
-  if (!dest_is_dir)
-    {
-      if (target_directory || 1 < n_files)
-	{
-	  if (new_dst)
-	    error (0, 0, _("%s: destination directory does not exist"),
-		   quotearg_colon (dest));
-	  else if (target_directory)
-	    error (0, 0, _("%s: specified target is not a directory"),
-		   quotearg_colon (dest));
-	  else /* n_files > 1 */
-	    error (0, 0,
-	   _("copying multiple files, but last argument %s is not a directory"),
-		   quote (dest));
-
-	  usage (EXIT_FAILURE);
-	}
-    }
-
-  if (dest_is_dir)
     {
       /* cp file1...filen edir
 	 Copy the files `file1' through `filen'
@@ -557,6 +531,15 @@ do_copy (int n_files, char **file, const char *target_directory,
 			|| x->dereference == DEREF_ALWAYS
 			? stat
 			: lstat);
+
+      /* Initialize these hash tables only if we'll need them.
+	 The problems they're used to detect can arise only if
+	 there are two or more files to copy.  */
+      if (2 <= n_files)
+	{
+	  dest_info_init (x);
+	  src_info_init (x);
+	}
 
       for (i = 0; i < n_files; i++)
 	{
@@ -584,7 +567,7 @@ do_copy (int n_files, char **file, const char *target_directory,
 	      strip_trailing_slashes (arg_no_trailing_slash);
 
 	      /* Append all of `arg' (minus any trailing slash) to `dest'.  */
-	      dst_path = path_concat (dest, arg_no_trailing_slash,
+	      dst_path = path_concat (target_directory, arg_no_trailing_slash,
 				      &arg_in_concat);
 	      if (dst_path == NULL)
 		xalloc_die ();
@@ -603,13 +586,13 @@ do_copy (int n_files, char **file, const char *target_directory,
 	  else
 	    {
 	      char *arg_base;
-	      /* Append the last component of `arg' to `dest'.  */
+	      /* Append the last component of `arg' to `target_directory'.  */
 
 	      ASSIGN_BASENAME_STRDUPA (arg_base, arg);
 	      /* For `cp -R source/.. dest', don't copy into `dest/..'. */
 	      dst_path = (STREQ (arg_base, "..")
-			  ? xstrdup (dest)
-			  : path_concat (dest, arg_base, NULL));
+			  ? xstrdup (target_directory)
+			  : path_concat (target_directory, arg_base, NULL));
 	    }
 
 	  if (!parent_exists)
@@ -633,12 +616,12 @@ do_copy (int n_files, char **file, const char *target_directory,
 	}
       return ret;
     }
-  else /* if (n_files == 1) */
+  else /* !target_directory */
     {
-      char *new_dest;
-      char *source;
+      char const *new_dest;
+      char const *source = file[0];
+      char const *dest = file[1];
       int unused;
-      struct stat source_stats;
 
       if (flag_path)
 	{
@@ -646,8 +629,6 @@ do_copy (int n_files, char **file, const char *target_directory,
 	       _("when preserving paths, the destination must be a directory"));
 	  usage (EXIT_FAILURE);
 	}
-
-      source = file[0];
 
       /* When the force and backup options have been specified and
 	 the source and destination are the same name for an existing
@@ -675,30 +656,12 @@ do_copy (int n_files, char **file, const char *target_directory,
 	  if (new_dest == NULL)
 	    xalloc_die ();
 	}
-
-      /* When the destination is specified with a trailing slash and the
-	 source exists but is not a directory, convert the user's command
-	 `cp source dest/' to `cp source dest/basename(source)'.  Doing
-	 this ensures that the command `cp non-directory file/' will now
-	 fail rather than performing the copy.  COPY diagnoses the case of
-	 `cp directory non-directory'.  */
-
-      else if (dest[strlen (dest) - 1] == '/'
-	  && lstat (source, &source_stats) == 0
-	  && !S_ISDIR (source_stats.st_mode))
-	{
-	  char *source_base;
-
-	  ASSIGN_BASENAME_STRDUPA (source_base, source);
-	  new_dest = alloca (strlen (dest) + strlen (source_base) + 1);
-	  stpcpy (stpcpy (new_dest, dest), source_base);
-	}
       else
 	{
-	  new_dest = (char *) dest;
+	  new_dest = dest;
 	}
 
-      return copy (source, new_dest, new_dst, x, &unused, NULL);
+      return copy (source, new_dest, 0, x, &unused, NULL);
     }
 
   /* unreachable */
@@ -969,6 +932,18 @@ main (int argc, char **argv)
 	  break;
 
 	case TARGET_DIRECTORY_OPTION:
+	  if (target_directory)
+	    error (EXIT_FAILURE, 0,
+		   _("multiple target directories specified"));
+	  else
+	    {
+	      struct stat st;
+	      if (stat (optarg, &st) != 0)
+		error (EXIT_FAILURE, errno, _("accessing %s"), quote (optarg));
+	      if (! S_ISDIR (st.st_mode))
+		error (EXIT_FAILURE, 0, _("target %s is not a directory"),
+		       quote (optarg));
+	    }
 	  target_directory = optarg;
 	  break;
 
