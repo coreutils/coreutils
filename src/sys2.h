@@ -301,7 +301,7 @@ unsigned long strtoul ();
 #endif
 
 /* This is needed on some AIX systems.  */
-#if !HAVE_DECL_STRTOULL
+#if !HAVE_DECL_STRTOULL && HAVE_UNSIGNED_LONG_LONG
 unsigned long long strtoull ();
 #endif
 
