@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.1g from Makefile.am
+# Makefile.in generated automatically by automake 1.1k from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -80,13 +80,15 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) \
 TAR = tar
 default: all
 
+.SUFFIXES:
+.SUFFIXES: .pl
+$(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in 
+	cd $(top_srcdir) && automake --gnu Makefile
 
-$(srcdir)/Makefile.in: @MAINT@Makefile.am $(top_srcdir)/configure.in
-	cd $(top_srcdir) && automake --strictness=gnu $(subdir)/Makefile
-
-Makefile: $(top_builddir)/config.status $(srcdir)/Makefile.in $(BUILT_SOURCES)
+Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+
 tags: TAGS
 TAGS:
 
@@ -124,7 +126,8 @@ check-TESTS: $(TESTS)
 	fi
 info:
 dvi:
-check: all check-TESTS
+check: all
+	$(MAKE) check-TESTS
 installcheck:
 install-exec: 
 	$(NORMAL_INSTALL)
@@ -160,16 +163,16 @@ maintainer-clean-generic:
 	test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 mostlyclean:  mostlyclean-generic
 
-clean:  clean-generic mostlyclean 
+clean:  clean-generic mostlyclean
 
-distclean:  distclean-generic clean 
+distclean:  distclean-generic clean
 	rm -f config.status
 
-maintainer-clean:  maintainer-clean-generic distclean 
+maintainer-clean:  maintainer-clean-generic distclean
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
-.PHONY: default tags distdir check-TESTS info dvi check installcheck \
+.PHONY: default tags distdir check-TESTS info dvi installcheck \
 install-exec install-data install uninstall all installdirs \
 mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
@@ -183,8 +186,6 @@ $x-tests: @MAINT@build-script Test.pm
 .pl:
 	rm -f $@ $@.tmp
 	$(editpl) $< > $@.tmp && chmod +x $@.tmp && mv $@.tmp $@
-.SUFFIXES:
-.SUFFIXES: .pl
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
