@@ -203,7 +203,6 @@ AC_DEFUN([gl_CHECK_ALL_HEADERS],
     termios.h \
     unistd.h \
     utime.h \
-    values.h \
   )
 ])
 
