@@ -81,7 +81,7 @@ path_concat (const char *dir, const char *base, char **base_in_result)
 
   p = mempcpy (p_concat, dir, dirlen);
 
-  if (FILESYSTEM_PREFIX_LEN (dir) < dirlen)
+  if (FILE_SYSTEM_PREFIX_LEN (dir) < dirlen)
     {
       if (ISSLASH (*(p - 1)) && ISSLASH (*base))
 	--p;
