@@ -1,3 +1,7 @@
+2004-03-23  Jim Meyering  <jim@meyering.net>
+
+	* mbswidth.c, mbswidth.h: Sync from gnulib.
+
 2004-03-21  Jim Meyering  <jim@meyering.net>
 
 	* readtokens0.c, readtokens0.h: New files.
