@@ -18,16 +18,11 @@
 
 /* Written by Paul Eggert and Jim Meyering.  */
 
-/* Include <sys/types.h> and <sys/stat.h> before including this
-   file.  */
-
 #ifndef FILE_TYPE_H
 # define FILE_TYPE_H 1
 
-# if 2 <= __GLIBC__ && 2 <= __GLIBC_MINOR__
-#  if !defined _SYS_STAT_H || !defined _SYS_TYPES_H
-you must include <sys/types.h> and <sys/stat.h> before including this file
-#  endif
+# if ! defined S_ISREG && ! defined S_IFREG
+you must include <sys/stat.h> before including this file
 # endif
 
 char const *file_type (struct stat const *);
