@@ -47,13 +47,13 @@ rename (from, to)
   struct stat from_stats, to_stats;
   int pid, status;
 
-  if (safe_stat (from, &from_stats))
+  if (stat (from, &from_stats))
     return -1;
 
   /* Be careful not to unlink `from' if it happens to be equal to `to' or
      (on filesystems that silently truncate filenames after 14 characters)
      if `from' and `to' share the significant characters. */
-  if (safe_stat (to, &to_stats))
+  if (stat (to, &to_stats))
     {
       if (errno != ENOENT)
         return -1;
@@ -61,7 +61,7 @@ rename (from, to)
   else
     {
       if ((from_stats.st_dev == to_stats.st_dev)
-          && (from_stats.st_ino == to_stats.st_dev))
+          && (from_stats.st_ino == to_stats.st_ino))
         /* `from' and `to' designate the same file on that filesystem. */
         return 0;
 
