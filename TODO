@@ -155,3 +155,6 @@ Changes expected to go in, post-5.2.0:
   dereference command line symlinks to directories.  Since -l has
   an implicit --NO-dereference-command-line-symlink-to-dir meaning.
   Pointed out by Karl Berry.
+
+  Re-add a separate test for du's stack space usage (like the one removed
+  from tests/rm/deep-1).
