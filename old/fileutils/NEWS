@@ -38,7 +38,7 @@ Changes in release 4.1:
 [4.0m]
 * mv accepts new option: --strip-trailing-slashes (soon, many other
   programs will, too)
-* df no longer hangs when there is inaccessible mount point unrelated to PATH
+* df no longer hangs when there is an inaccessible mount point unrelated to PATH
 * rmdir --verbose no longer prints extra, bogus diagnosic upon failure
 * fix df bug that made it print bogus values in the `Use%' column.
 * touch -d once again parses dates with `hh:mm ZONE' time zone info.
