@@ -287,13 +287,13 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -t, --tagged-paragraph    indentation of first line different from second\n\
   -u, --uniform-spacing     one space between words, two after sentences\n\
-  -w, --width=NUMBER        maximum line width (default of 75 columns)\n\
+  -w, --width=WIDTH         maximum line width (default of 75 columns)\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-In -wNUMBER, the letter `w' may be omitted.\n"),
+With no FILE, or when FILE is -, read standard input.\n"),
 	     stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
@@ -363,10 +363,11 @@ main (register int argc, register char **argv)
     switch (optchar)
       {
       default:
+	if (ISDIGIT (optchar))
+	  error (0, 0, _("invalid option -- %c; -WIDTH is recognized\
+ only when it is the first\noption; use -w N instead"),
+		 optchar);
 	usage (EXIT_FAILURE);
-
-      case 0:
-	break;
 
       case 'c':
 	crown = TRUE;
