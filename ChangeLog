@@ -8,7 +8,7 @@
 	* src/df.c (show_disk): Move function to precede find_mount_point.
 	(show_disk): Add parameter: STATP.
 	If we don't find a matching device name, then resort to calling
-	find_mount_point.
+	find_mount_point.  Reported by Bob Proulx.
 
 2003-02-03  Andreas Schwab  <schwab@suse.de>
 
