@@ -158,6 +158,9 @@ group_number (char *number, size_t numberlen,
    so on.  Numbers smaller than the power aren't modified.
    human_autoscale is normally used together with human_SI.
 
+   If (OPTS & human_space_before_unit), use a space to separate the
+   number from any suffix that is appended as described below.
+
    If (OPTS & human_SI), append an SI prefix indicating which power is
    being used.  If in addition (OPTS & human_B), append "B" (if base
    1000) or "iB" (if base 1024) to the SI prefix.  When ((OPTS &
@@ -383,6 +386,9 @@ human_readable (uintmax_t n, char *buf, int opts,
 	    if (++exponent == exponent_max)
 	      break;
 	}
+
+      if ((exponent | (opts & human_B)) && (opts & human_space_before_unit))
+	*psuffix++ = ' ';
 
       if (exponent)
 	*psuffix++ = (! (opts & human_base_1024) && exponent == 1
