@@ -1,3 +1,10 @@
+Tue Apr 23 22:05:35 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* aclocal.m4 (AC_REPLACE_GNU_GETOPT): New macro.
+	* configure.in: Use it.
+	* lib/Makefile.am (tu_SOURCES): Remove getopt.c and getopt1.c.
+	(EXTRA_DIST): Add getopt.c and getopt1.c
+
 Sun Apr 21 08:04:51 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* getline.c: New version from gettext-0.10.12.
