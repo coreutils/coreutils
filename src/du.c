@@ -1,5 +1,5 @@
 /* du -- summarize disk usage
-   Copyright (C) 88, 89, 90, 91, 1995-2003 Free Software Foundation, Inc.
+   Copyright (C) 1988-1991, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,29 +18,11 @@
 /* Differences from the Unix du:
    * Doesn't simply ignore the names of regular files given as arguments
      when -a is given.
-   * Additional options:
-   -l		Count the size of all files, even if they have appeared
-		already in another hard link.
-   -x		Do not cross file-system boundaries during the recursion.
-   -c		Write a grand total of all of the arguments after all
-		arguments have been processed.  This can be used to find
-		out the disk usage of a directory, with some files excluded.
-   -h		Print sizes in human readable format (1k 234M 2G, etc).
-   -H		Similar, but use powers of 1000 not 1024.
-   -k		Print sizes in kilobytes.
-   -m		Print sizes in megabytes.
-   -b		Print sizes in bytes.
-   -S		Count the size of each directory separately, not including
-		the sizes of subdirectories.
-   -D		Dereference only symbolic links given on the command line.
-   -L		Dereference all symbolic links.
-   --exclude=PATTERN Exclude files that match PATTERN.
-   -X FILE	Exclude files that match patterns taken from FILE.
 
    By tege@sics.se, Torbjorn Granlund,
    and djm@ai.mit.edu, David MacKenzie.
    Variable blocks added by lm@sgi.com and eggert@twinsun.com.
-*/
+   Rewritten to use nftw by Jim Meyering.  */
 
 #include <config.h>
 #include <stdio.h>
@@ -49,21 +31,22 @@
 #include <assert.h>
 
 #include "system.h"
+#include "dirname.h" /* for strip_trailing_slashes */
 #include "error.h"
 #include "exclude.h"
+#include "ftw.h"
 #include "hash.h"
 #include "human.h"
 #include "quote.h"
+#include "quotearg.h"
 #include "same.h"
-#include "save-cwd.h"
-#include "savedir.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "du"
 
 #define AUTHORS \
-  N_ ("Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert")
+  N_ ("Torbjorn Granlund, David MacKenzie, Larry McVoy, Paul Eggert, and Jim Meyering")
 
 /* Initial size of the hash table.  */
 #define INITIAL_TABLE_SIZE 103
@@ -83,28 +66,6 @@ struct entry
 /* A set of dev/ino pairs.  */
 static Hash_table *htab;
 
-/* Structure for dynamically resizable strings. */
-
-struct String
-{
-  unsigned alloc;		/* Size of allocation for the text.  */
-  unsigned length;		/* Length of the text currently.  */
-  char *text;			/* Pointer to the text.  */
-};
-typedef struct String String;
-
-int stat ();
-int lstat ();
-
-/* Arrange to make lstat calls go through the wrapper function
-   on systems with an lstat function that does not dereference symlinks
-   that are specified with a trailing slash.  */
-#if ! LSTAT_FOLLOWS_SLASHED_SYMLINK
-int rpl_lstat (char const *, struct stat *);
-# undef lstat
-# define lstat rpl_lstat
-#endif
-
 /* Name under which this program was invoked.  */
 char *program_name;
 
@@ -114,16 +75,17 @@ static int opt_all = 0;
 /* If nonzero, count each hard link of files with multiple links. */
 static int opt_count_all = 0;
 
-/* If nonzero, do not cross file-system boundaries. */
-static int opt_one_file_system = 0;
-
 /* If nonzero, print a grand total at the end. */
 static int print_totals = 0;
 
 /* If nonzero, do not add sizes of subdirectories. */
 static int opt_separate_dirs = 0;
 
-/* If nonzero, dereference symlinks that are command line arguments. */
+/* If nonzero, dereference symlinks that are command line arguments.
+   Implementing this while still using nftw is a little tricky.
+   For each command line argument that is a symlink-to-directory,
+   call nftw with "command_line_arg/." and remember to omit the
+   added `/.' when printing.  */
 static int opt_dereference_arguments = 0;
 
 /* Show the total for each directory (and file if --all) that is at
@@ -137,21 +99,30 @@ static int human_output_opts;
 /* The units to use when printing sizes.  */
 static uintmax_t output_block_size;
 
-/* Accumulated path for file or directory being processed.  */
-static String *path;
-
-/* A pointer to either lstat or stat, depending on whether
-   dereferencing of all symbolic links is to be done. */
-static int (*xstat) ();
-
-/* The exit status to use if we don't get any fatal errors. */
-static int exit_status;
-
 /* File name patterns to exclude.  */
 static struct exclude *exclude;
 
 /* Grand total size of all args, in units of ST_NBLOCKSIZE-byte blocks. */
 static uintmax_t tot_size = 0;
+
+/* In some cases, we have to append `/.' or just `.' to an argument
+   (to dereference a symlink).  When we do that, we don't want to
+   expose this artifact when printing file/directory names, so these
+   variables keep track of the length of the original command line
+   argument and the length of the suffix we've added, respectively.
+   ARG_LENGTH == 0 indicates that we haven't added a suffix.
+   This information is used to omit any such added characters when
+   printing names.  */
+size_t arg_length;
+size_t suffix_length;
+
+/* Nonzero indicates that du should exit with EXIT_FAILURE upon completion.  */
+int G_fail;
+
+#define IS_FTW_DIR_TYPE(Type)	\
+  ((Type) == FTW_D		\
+   || (Type) == FTW_DP		\
+   || (Type) == FTW_DNR)
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
@@ -302,63 +273,16 @@ hash_init (void)
     xalloc_die ();
 }
 
-/* Initialize string S1 to hold SIZE characters.  */
+/* Print N_BLOCKS.  NBLOCKS is the number of
+   ST_NBLOCKSIZE-byte blocks; convert it to a readable value before
+   printing.  */
 
 static void
-str_init (String **s1, unsigned int size)
+print_only_size (uintmax_t n_blocks)
 {
-  String *s;
-
-  s = (String *) xmalloc (sizeof (struct String));
-  s->text = xmalloc (size + 1);
-
-  s->alloc = size;
-  *s1 = s;
-}
-
-static void
-ensure_space (String *s, unsigned int size)
-{
-  if (s->alloc < size)
-    {
-      s->text = xrealloc (s->text, size + 1);
-      s->alloc = size;
-    }
-}
-
-/* Assign the null-terminated C-string CSTR to S1.  */
-
-static void
-str_copyc (String *s1, const char *cstr)
-{
-  unsigned l = strlen (cstr);
-  ensure_space (s1, l);
-  strcpy (s1->text, cstr);
-  s1->length = l;
-}
-
-static void
-str_concatc (String *s1, const char *cstr)
-{
-  unsigned l1 = s1->length;
-  unsigned l2 = strlen (cstr);
-  unsigned l = l1 + l2;
-
-  ensure_space (s1, l);
-  strcpy (s1->text + l1, cstr);
-  s1->length = l;
-}
-
-/* Truncate the string S1 to have length LENGTH.  */
-
-static void
-str_trunc (String *s1, unsigned int length)
-{
-  if (s1->length > length)
-    {
-      s1->text[length] = 0;
-      s1->length = length;
-    }
+  char buf[LONGEST_HUMAN_READABLE + 1];
+  fputs (human_readable (n_blocks, buf, human_output_opts,
+			 ST_NBLOCKSIZE, output_block_size), stdout);
 }
 
 /* Print N_BLOCKS followed by STRING on a line.  NBLOCKS is the number of
@@ -376,181 +300,235 @@ print_size (uintmax_t n_blocks, const char *string)
   fflush (stdout);
 }
 
-/* Restore the previous working directory or exit.
-   If CWD is null, simply call `chdir ("..")'.  Otherwise,
-   use CWD and free it.  CURR_DIR_NAME is the name of the current directory
-   and is used solely in failure diagnostics.  */
+/* This function is called once for every file system object that nftw
+   encounters.  nftw does a depth-first traversal.  This function knows
+   that and accumulates per-directory totals based on changes in
+   the depth of the current entry.  */
 
-static void
-pop_dir (struct saved_cwd *cwd, const char *curr_dir_name)
+static int
+process_file (const char *file, const struct stat *sb, int file_type,
+	      struct FTW *info)
 {
-  if (cwd)
+  size_t size;
+  size_t s;
+  static int first_call = 1;
+  static size_t prev_level;
+  static size_t n_alloc;
+  /* The sum of the st_size values of all entries in the single directory
+     at the corresponding level.  Although this does include the st_size
+     corresponding to each subdirectory, it does not include the size of
+     any file in a subdirectory.  */
+  static uintmax_t *sum_ent;
+
+  /* The sum of the sizes of all entries in the hierarchy at or below the
+     directory at the specified level.  */
+  static uintmax_t *sum_subdir;
+
+  switch (file_type)
     {
-      if (restore_cwd (cwd, "..", curr_dir_name))
-	exit (EXIT_FAILURE);
-      free_cwd (cwd);
-    }
-  else if (chdir ("..") < 0)
-    {
-      error (EXIT_FAILURE, errno, _("cannot change to `..' from directory %s"),
-	     quote (curr_dir_name));
-    }
-}
-
-/* Print (if appropriate) the size (in units determined by `output_block_size')
-   of file or directory ENT. Return the size of ENT in units of 512-byte
-   blocks.  TOP is one for external calls, zero for recursive calls.
-   LAST_DEV is the device that the parent directory of ENT is on.
-   DEPTH is the number of levels (in hierarchy) down from a command
-   line argument.  Don't print if DEPTH > max_depth.
-   An important invariant is that when this function returns, the current
-   working directory is the same as when it was called.  */
-
-static uintmax_t
-count_entry (const char *ent, int top, dev_t last_dev, int depth)
-{
-  uintmax_t size;
-  struct stat stat_buf;
-  int (*tmp_stat) ();
-
-  if (top && opt_dereference_arguments)
-    tmp_stat = stat;
-  else
-    tmp_stat = xstat;
-
-  if ((*tmp_stat) (ent, &stat_buf) < 0)
-    {
-      error (0, errno, "%s", quote (path->text));
-      exit_status = 1;
+    case FTW_NS:
+      error (0, errno, _("cannot access %s"), quote (file));
+      G_fail = 1;
       return 0;
+
+    case FTW_DCHP:
+      error (0, errno, _("cannot change to parent of directory %s"),
+	     quote (file));
+      G_fail = 1;
+      return 0;
+
+    case FTW_DCH:
+      /* Don't return just yet, since although nftw couldn't chdir into the
+	 directory, it was able to stat it, so we do have a size.  */
+      error (0, errno, _("cannot change to directory %s"), quote (file));
+      G_fail = 1;
+      break;
+
+    case FTW_DNR:
+      /* Don't return just yet, since although nftw couldn't read the
+	 directory, it was able to stat it, so we do have a size.  */
+      error (0, errno, _("cannot read directory %s"), quote (file));
+      G_fail = 1;
+      break;
+
+    default:
+      break;
     }
 
   if (!opt_count_all
-      && stat_buf.st_nlink > 1
-      && hash_ins (stat_buf.st_ino, stat_buf.st_dev))
+      && 1 < sb->st_nlink
+      && hash_ins (sb->st_ino, sb->st_dev))
     return 0;			/* Have counted this already.  */
 
-  size = ST_NBLOCKS (stat_buf);
-  tot_size += size;
+  if (excluded_filename (exclude, file + info->base))
+    return 0;
 
-  if (S_ISDIR (stat_buf.st_mode))
+  s = size = ST_NBLOCKS (*sb);
+
+  if (first_call)
     {
-      unsigned pathlen;
-      unsigned prev_len;
-      dev_t dir_dev;
-      char *name_space;
-      char *namep;
-      struct saved_cwd *cwd;
-      struct saved_cwd cwd_buf;
-      struct stat e_buf;
-
-      dir_dev = stat_buf.st_dev;
-
-      /* Return `0' here, not SIZE, since the SIZE bytes
-	 would reside in the new filesystem.  */
-      if (opt_one_file_system && !top && last_dev != dir_dev)
-	return 0;		/* Don't enter a new file system.  */
-
-      /* If we're traversing more than one level, or if we're
-	 dereferencing symlinks and we're about to chdir through a
-	 symlink, remember the current directory so we can return to
-	 it later.  In other cases, chdir ("..") works fine.
-	 Treat `.' and `..' like multi-level paths, since `chdir ("..")'
-	 wont't restore the current working directory after a `chdir'
-	 to one of those.  */
-      if (strchr (ent, '/')
-	  || DOT_OR_DOTDOT (ent)
-	  || (tmp_stat == stat
-	      && lstat (ent, &e_buf) == 0
-	      && S_ISLNK (e_buf.st_mode)))
+      n_alloc = info->level + 10;
+      sum_ent = XCALLOC (uintmax_t, n_alloc);
+      sum_subdir = XCALLOC (uintmax_t, n_alloc);
+    }
+  else
+    {
+      /* FIXME: it's a shame that we need these `size_t' casts to avoid
+	 warnings from gcc about `comparison between signed and unsigned'.
+	 Probably unavoidable, assuming that the members of struct FTW
+	 are of type `int' (historical), since I want variables like
+	 n_alloc and prev_level to have types that make sense.  */
+      if (n_alloc <= (size_t) info->level)
 	{
-	  if (save_cwd (&cwd_buf))
-	    exit (EXIT_FAILURE);
-	  cwd = &cwd_buf;
+	  n_alloc = info->level * 2;
+	  sum_ent = XREALLOC (sum_ent, uintmax_t, n_alloc);
+	  sum_subdir = XREALLOC (sum_subdir, uintmax_t, n_alloc);
 	}
-      else
-	cwd = NULL;
+    }
 
-      if (chdir (ent) < 0)
+  if (! first_call)
+    {
+      if ((size_t) info->level == prev_level)
 	{
-	  error (0, errno, _("cannot change to directory %s"),
-		 quote (path->text));
-	  if (cwd)
-	    free_cwd (cwd);
-	  exit_status = 1;
-	  /* Do return SIZE, here, since even though we can't chdir into ENT,
-	     we *can* count the blocks used by its directory entry.  */
-	  return opt_separate_dirs ? 0 : size;
+	  /* This is usually the most common case.  Do nothing.  */
 	}
-
-      name_space = savedir (".");
-      if (name_space == NULL)
+      else if ((size_t) info->level < prev_level)
 	{
-	  error (0, errno, "%s", quote (path->text));
-	  pop_dir (cwd, path->text);
-	  exit_status = 1;
-	  /* Do count the SIZE bytes.  */
-	  return opt_separate_dirs ? 0 : size;
+	  /* Ascending the hierarchy.
+	     nftw processes a directory only after all entries in that
+	     directory have been processed.  When the depth decreases,
+	     propagate sums from the children (prev_level) to the parent.
+	     Here, the current level is always one smaller than the
+	     previous one.  */
+	  assert ((size_t) info->level == prev_level - 1);
+	  s += sum_ent[prev_level];
+	  if (!opt_separate_dirs)
+	    s += sum_subdir[prev_level];
+	  sum_subdir[info->level] += (sum_ent[prev_level]
+				      + sum_subdir[prev_level]);
 	}
-
-      /* Remember the current path.  */
-
-      prev_len = path->length;
-      if (prev_len && path->text[prev_len - 1] != '/')
-	str_concatc (path, "/");
-      pathlen = path->length;
-
-      for (namep = name_space; *namep; namep += strlen (namep) + 1)
+      else /* info->level > prev_level */
 	{
-	  if (!excluded_filename (exclude, namep))
+	  /* Descending the hierarchy.
+	     Clear the accumulators for *all* levels between prev_level
+	     and the current one.  The depth may change dramatically,
+	     e.g., from 1 to 10.  */
+	  int i;
+	  for (i = prev_level + 1; i <= info->level; i++)
 	    {
-	      str_concatc (path, namep);
-	      size += count_entry (namep, 0, dir_dev, depth + 1);
-	      str_trunc (path, pathlen);
+	      sum_ent[i] = 0;
+	      sum_subdir[i] = 0;
 	    }
 	}
-
-      free (name_space);
-
-      str_trunc (path, prev_len); /* Remove any "/" we added.  */
-      pop_dir (cwd, path->text);
-
-      if (depth <= max_depth || top)
-	print_size (size, path->text);
-      return opt_separate_dirs ? 0 : size;
     }
-  else if ((opt_all && depth <= max_depth) || top)
+
+  prev_level = info->level;
+  first_call = 0;
+
+  sum_ent[info->level] += size;
+
+  /* Even if this directory was unreadable or we couldn't chdir into it,
+     do let its size contribute to the total, ... */
+  tot_size += size;
+
+  /* ... but don't print out a total for it, since without the size(s)
+     of any potential entries, it could be very misleading.  */
+  if (file_type == FTW_DNR || file_type == FTW_DCH)
+    return 0;
+
+  /* FIXME: This looks suspiciously like it could be simplified.  */
+  if ((IS_FTW_DIR_TYPE (file_type) &&
+		     (info->level <= max_depth || info->level == 0))
+      || ((opt_all && info->level <= max_depth) || info->level == 0))
     {
-      /* FIXME: make this an option.  */
-      int print_only_dir_size = 0;
-      if (!print_only_dir_size)
-	print_size (size, path->text);
+      print_only_size (s);
+      fputc ('\t', stdout);
+      if (arg_length)
+	{
+	  /* Print the file name, but without the `.' or `/.'
+	     directory suffix that we may have added in main.  */
+	  /* Print everything before the part we appended.  */
+	  fwrite (file, arg_length, 1, stdout);
+	  /* Print everything after what we appended.  */
+	  fputs (file + arg_length + suffix_length
+		 + (file[arg_length + suffix_length] == '/'), stdout);
+	}
+      else
+	{
+	  fputs (file, stdout);
+	}
+      fputc ('\n', stdout);
+      fflush (stdout);
     }
 
-  return size;
+  return 0;
+}
+
+static int
+is_symlink_to_dir (char const *file)
+{
+  char *f;
+  struct stat sb;
+
+  ASSIGN_STRDUPA (f, file);
+  strip_trailing_slashes (f);
+  return (lstat (f, &sb) == 0 && S_ISLNK (sb.st_mode)
+	  && stat (f, &sb) == 0 && S_ISDIR (sb.st_mode));
 }
 
 /* Recursively print the sizes of the directories (and, if selected, files)
-   named in FILES, the last entry of which is NULL.  */
+   named in FILES, the last entry of which is NULL.
+   FTW_FLAGS controls how nftw works.
+   Return nonzero upon error.  */
 
-static void
-du_files (char **files)
+static int
+du_files (char **files, int ftw_flags)
 {
-  int i;			/* Index in FILES. */
-
+  int fail = 0;
+  int i;
   for (i = 0; files[i]; i++)
     {
-      char const *arg = files[i];
-      str_copyc (path, arg);
+      char *file = files[i];
+      char *orig = file;
+      int err;
+      arg_length = 0;
 
       if (!print_totals)
 	hash_clear (htab);
 
-      count_entry (arg, 1, 0, 0);
+      /* When dereferencing only command line arguments, we're using
+	 nftw's FTW_PHYS flag, so a symlink-to-directory specified on
+	 the command line wouldn't normally be dereferenced.  To work
+	 around that, we incur the overhead of appending `/.' (or `.')
+	 now, and later removing it each time we output the name of
+	 a derived file or directory name.  */
+      if (opt_dereference_arguments && is_symlink_to_dir (file))
+	{
+	  size_t len = strlen (file);
+	  /* Append `/.', but if there's already a trailing slash,
+	     append only the `.'.  */
+	  char const *suffix = (file[len - 1] == '/' ? "." : "/.");
+	  suffix_length = strlen (suffix);
+	  char *new_file = xmalloc (len + suffix_length + 1);
+	  memcpy (mempcpy (new_file, file, len), suffix, suffix_length + 1);
+	  arg_length = len;
+	  file = new_file;
+	}
+
+#define MAX_N_DESCRIPTORS (1000 - 1) /* FIXME-compute at configure time */
+      err = nftw (file, process_file, MAX_N_DESCRIPTORS, ftw_flags);
+      if (err)
+	error (0, errno, "%s", quote (orig));
+      fail |= err;
+
+      if (arg_length)
+	free (file);
     }
 
   if (print_totals)
     print_size (tot_size, _("total"));
+
+  return fail;
 }
 
 int
@@ -559,6 +537,10 @@ main (int argc, char **argv)
   int c;
   char *cwd_only[2];
   int max_depth_specified = 0;
+  char **files;
+
+  /* Bit flags that control how nftw works.  */
+  int ftw_flags = FTW_DEPTH | FTW_PHYS | FTW_CHDIR;
 
   /* If nonzero, display only a total for each argument. */
   int opt_summarize_only = 0;
@@ -574,7 +556,6 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   exclude = new_exclude ();
-  xstat = lstat;
 
   human_output_opts = human_options (getenv ("DU_BLOCK_SIZE"), false,
 				     &output_block_size);
@@ -617,9 +598,12 @@ main (int argc, char **argv)
 	  break;
 
 	case MAX_DEPTH_OPTION:		/* --max-depth=N */
+	  /* FIXME: merely set `fail' here, in case there are
+	     additional invalid options */
 	  if (xstrtol (optarg, NULL, 0, &tmp_long, NULL) != LONGINT_OK
 	      || tmp_long < 0 || tmp_long > INT_MAX)
-	    error (EXIT_FAILURE, 0, _("invalid maximum depth %s"), quote (optarg));
+	    error (EXIT_FAILURE, 0, _("invalid maximum depth %s"),
+		   quote (optarg));
 
 	  max_depth_specified = 1;
 	  max_depth = (int) tmp_long;
@@ -639,7 +623,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'x':
-	  opt_one_file_system = 1;
+	  ftw_flags |= FTW_MOUNT;
 	  break;
 
 	case 'B':
@@ -651,7 +635,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'L':
-	  xstat = stat;
+	  ftw_flags &= ~FTW_PHYS;
 	  break;
 
 	case 'S':
@@ -659,9 +643,11 @@ main (int argc, char **argv)
 	  break;
 
 	case 'X':
+	  /* FIXME: merely set `fail' here, in case there are
+	     additional invalid options */
 	  if (add_exclude_file (add_exclude, exclude, optarg,
 				EXCLUDE_WILDCARDS, '\n'))
-	    error (EXIT_FAILURE, errno, "%s", quote (optarg));
+	    error (EXIT_FAILURE, errno, "%s", quotearg_colon (optarg));
 	  break;
 
 	case EXCLUDE_OPTION:
@@ -700,12 +686,11 @@ main (int argc, char **argv)
   if (opt_summarize_only)
     max_depth = 0;
 
+  files = (optind == argc ? cwd_only : argv + optind);
+
   /* Initialize the hash structure for inode numbers.  */
   hash_init ();
 
-  str_init (&path, INITIAL_PATH_SIZE);
-
-  du_files (optind == argc ? cwd_only : argv + optind);
-
-  exit (exit_status);
+  exit (du_files (files, ftw_flags) || G_fail
+	? EXIT_FAILURE : EXIT_SUCCESS);
 }
