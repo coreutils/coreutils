@@ -1,3 +1,8 @@
+2002-07-23  Jim Meyering  <meyering@lucent.com>
+
+	* c-bs-a.m4 (AC_C_BACKSLASH_A): Remove file, now that autoconf
+	provides this macro.
+
 2002-07-20  Jim Meyering  <meyering@lucent.com>
 
 	* intdiv0.m4: New file.  From gettex-0.11.3.
