@@ -19,6 +19,7 @@ fpending.m4 \
 fstypename.m4 \
 fsusage.m4 \
 ftruncate.m4 \
+getcwd.m4 \
 getgroups.m4 \
 getline.m4 \
 getloadavg.m4 \
