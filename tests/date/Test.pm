@@ -140,7 +140,7 @@ sub test_vector
 
      # This would infloop (or appear to) prior to coreutils-4.5.5,
      # due to a bug in strftime.c.
-     ['bignum', "-d '1999-06-01' +%3004Y", {}, '0' x 3000 . '1999', 0],
+     ['wide-fmt', "-d '1999-06-01' +%3004Y", {}, '0' x 3000 . '1999', 0],
 
      # FIXME: add a lot more...
      );
