@@ -272,7 +272,7 @@ print_line (const char *user, const char state, const char *line,
     *x_exitstr = '\0';
 
   err = asprintf (&buf,
-		  "%-8.8s"
+		  "%-8s"
 		  "%s"
 		  " %-12s"
 		  " %-12s"
