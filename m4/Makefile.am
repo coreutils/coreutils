@@ -7,6 +7,7 @@ acl.m4 \
 afs.m4 \
 assert.m4 \
 bison.m4 \
+boottime.m4 \
 c-bs-a.m4 \
 c-stack.m4 \
 check-decl.m4 \

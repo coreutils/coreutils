@@ -1,3 +1,8 @@
+2002-07-17  Jim Meyering  <meyering@lucent.com>
+
+	* boottime.m4: New file.  Extracted from sh-utils' configure.ac
+	and extended to work also with *BSD systems.
+
 2002-07-15  Jim Meyering  <meyering@lucent.com>
 
 	FreeBSD support for uname and uptime.
