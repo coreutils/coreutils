@@ -1,6 +1,17 @@
-2003-10-18  Jim Meyering  <jim@meyering.net>
+2003-10-19  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.0.
+
+	chmod now uses fts to perform a directory traversal when -R is
+	specified.  Before, it operated on full path names, and as such
+	would encounter the PATH_MAX (often 4096) limit.
+
+	* src/chmod.c: Include "xfts.h".
+	(process_file): Rename from change_file_mode.
+	Adapt to be used with fts.
+	(process_files): New function.
+
+2003-10-18  Jim Meyering  <jim@meyering.net>
 
 	* tests/du/deref-args: Ensure that du -D now dereferences all
 	symlinks specified on the command line, not just those that
