@@ -1,3 +1,13 @@
+Sun Dec  8 07:22:38 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	=========== Update for automake-1.1k.
+	* configure.in (AM_CONFIG_HEADER): Use it.
+	(AC_OUTPUT): Remove stamp-h timestamping statement.
+	Now, AM_CONFIG_HEADER does it automatically.
+	* lib/Makefile.am (noinst_LIBRARIES): Rename to libfu.a as per
+	new automake requirement.
+	Rename fu_* variables to libfu_a_*.
+
 Mon Dec  2 20:30:20 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (jm_FUNC_MKTIME): Use this instead of AM_FUNC_MKTIME.
