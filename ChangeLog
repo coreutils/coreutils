@@ -4,6 +4,7 @@
 
 	* src/ls.c (long_time_expected_width): Use x2nrealloc, not alloca,
 	so format-string-abuse cannot provoke stack overflow.
+	(print_long_format): Likewise.
 
 	Don't segfault for a long header date string, e.g.,
 	echo a|pr -D +%9999999A
