@@ -1,3 +1,16 @@
+2000-08-22  Paul Eggert  <eggert@twinsun.com>
+
+	* src/dd.c (skip):
+	Assume lseek failed if it returned zero, since a zero return is
+	impossible and some buggy drivers return zero.
+
+	Use SEEK_CUR rather than SEEK_SET; this fixes a bug when the
+	file descriptor is not currently rewound.
+
+2000-08-23  Jim Meyering  <meyering@lucent.com>
+
+	* src/dd.c: Back out my last change.  Paul's (above) is better.
+
 2000-08-22  Jim Meyering  <meyering@lucent.com>
 
 	Don't even try to use lseek on character devices.
