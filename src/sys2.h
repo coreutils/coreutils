@@ -295,6 +295,16 @@ char *getenv ();
 off_t lseek ();
 #endif
 
+/* This is needed on some AIX systems.  */
+#ifndef HAVE_DECL_STRTOUL
+unsigned long strtoul ();
+#endif
+
+/* This is needed on some AIX systems.  */
+#ifndef HAVE_DECL_STRTOULL
+unsigned long long strtoull ();
+#endif
+
 #include "xalloc.h"
 
 #if ! defined HAVE_MEMPCPY && ! defined mempcpy
