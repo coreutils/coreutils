@@ -1,4 +1,7 @@
 Changes in release 4.1:
+[4.0y]
+* chgrp, chmod, and chown: when used with the --verbose option, might give an
+  invalid diagnostic (due to clobbered errno) when failing.
 [4.0x]
 * Fix cp so that `cp -r DIR1/ DIR2' works properly once again.
 * New ls option --quoting-style=clocale acts like --quoting-style=locale,
