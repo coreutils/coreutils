@@ -1,0 +1,56 @@
+#!/bin/sh
+# Show that mv doesn't preserve links to files the user has declined to move.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  mv --version
+fi
+
+. $srcdir/../envvar-check
+. $srcdir/../lang-default
+
+pwd=`pwd`
+tmp=i-link-no.$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+mkdir a b || framework_failure=1
+echo foo > a/foo || framework_failure=1
+ln a/foo a/bar || framework_failure=1
+echo FUBAR > b/FUBAR || framework_failure=1
+ln b/FUBAR b/bar || framework_failure=1
+chmod a-w b/bar || framework_failure=1
+echo no > no || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo '$0: failure in testing framework' 1>&2
+  (exit 1); exit
+fi
+
+fail=0
+
+mv -i a/bar a/foo b < no 2> err > out || fail=1
+cat <<EOF > exp
+EOF
+
+# There must be a trailing blank, and no trailing newline,
+# So remove the underscore (to expose the trailing blank) and the newline.
+cat <<\EOF |tr -d '_\012' > exp_err
+mv: overwrite `b/bar', overriding mode 0444? _
+EOF
+
+cmp err exp_err || fail=1
+test $fail = 1 && diff err exp_err 2> /dev/null
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
+case "`cat b/foo`" in
+  foo) ;;
+  *) fail=1;;
+esac
+
+(exit $fail); exit
