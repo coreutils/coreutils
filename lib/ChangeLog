@@ -1,3 +1,8 @@
+2003-01-14  Jim Meyering  <jim@meyering.net>
+
+	* same.c (same_name): Declare *_basename locals to be `const'.
+	Consolidate declarations and initializations of *_base* locals.
+
 2003-01-11  Bruno Haible  <bruno@clisp.org>
 
 	* same.c (same_name): Reorder tests so as to avoid calling stat()
