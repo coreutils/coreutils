@@ -2,6 +2,8 @@
 
 	* Version 4.5.2.
 
+	* Use autoconf-2.54.  Regenerate dependent files.
+
 	* src/csplit.c (get_format_width): Add cast to avoid
 	warning about `signed and unsigned type in conditional expression'.
 
