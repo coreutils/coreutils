@@ -1,5 +1,26 @@
 2002-04-25  Jim Meyering  <meyering@lucent.com>
 
+	Remove hash table, active_dir_map, used to detect directory cycles.
+	Instead, detect them lazily with just O(1) memory.
+	Suggestion from Andi Kleen.
+
+	* src/remove.c (is_power_of_two): New function.
+	(print_nth_dir, make_active_dir_ent): Remove functions.
+	(hash_active_dir_ent, hash_compare_active_dir_ents): Likewise.
+	(remove_dir): Check for cycles here, ...
+	(rm): ... and don't check for cycles here.
+
+	* src/remove.c (rm): Call fspec_get_full_mode here, rather than
+	fspec_get_filetype_mode.  We want to get the dev/ino earlier, and
+	at the same time as when we get the file type, to avoid the risk
+	that an attacker would change e.g. a directory to a symlink before
+	we record its dev/ino.
+
+	* configure.ac (AC_CONFIG_FILES): Remove intl/Makefile.
+	(AM_GNU_GETTEXT): Add external arg.
+
+	* Version 4.1.9.
+
 	* intl/: Remove directory.
 	* Makefile.am (SUBDIRS): Remove intl.
 	(DISTCLEANFILES): Remove definition.
@@ -14,14 +35,9 @@
 
 	* src/remove.c (rm): Call exit with EXIT_FAILURE, not `1'.
 
-	* Version 4.1.9.
-
 	* src/remove.c (rm, remove_init, remove_fini): Don't use or even
 	initialize the active_dir_map unless --recursive (-r) is specified.
 	Suggestion from Andi Kleen
-	* src/remove.h (remove_init): Adjust prototype.
-	* src/mv.c (do_move): Adjust caller of remove_init.
-	* src/rm.c (main): Likewise.
 
 2002-04-19  Jim Meyering  <meyering@lucent.com>
 
