@@ -91,9 +91,9 @@ struct cstring
    These structures are linked together if needed. */
 struct line
 {
-  unsigned int used;		/* Number of offsets used in this struct. */
-  unsigned int insert_index;	/* Next offset to use when inserting line. */
-  unsigned int retrieve_index;	/* Next index to use when retrieving line. */
+  size_t used;			/* Number of offsets used in this struct. */
+  size_t insert_index;		/* Next offset to use when inserting line. */
+  size_t retrieve_index;	/* Next index to use when retrieving line. */
   struct cstring starts[CTRL_SIZE]; /* Lines in the data area. */
   struct line *next;		/* Next in linked list. */
 };
@@ -1353,7 +1353,7 @@ main (int argc, char **argv)
 	if (xstrtoul (optarg, NULL, 10, &val, "") != LONGINT_OK
 	    || val > INT_MAX)
 	  error (EXIT_FAILURE, 0, _("%s: invalid number"), optarg);
-	digits = (int) val;
+	digits = val;
 	break;
 
       case 's':
