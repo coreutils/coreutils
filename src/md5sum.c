@@ -485,7 +485,7 @@ main (argc, argv)
 	  usage (EXIT_FAILURE);
 	}
 
-      err = md5_check (optind == argc ? "-" : argv[optind], binary);
+      err = md5_check ((optind == argc) ? "-" : argv[optind], binary);
     }
 
   if (fclose (stdout) == EOF)
