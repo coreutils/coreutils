@@ -1,5 +1,10 @@
 #!/bin/sh
 
+if test "$VERBOSE" = yes; then
+  set -x
+  cp --version
+fi
+
 pwd=`pwd`
 tmp=fail-perm.$$
 trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
