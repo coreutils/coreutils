@@ -1,3 +1,7 @@
+2000-06-22  Bruno Haible  <haible@clisp.cons.org>
+
+	* src/cat.c (main): Correct a comment.
+
 2000-06-21  Jim Meyering  <meyering@lucent.com>
 
 	* src/cut.c (getstr): Remove private (and out of date) version of
