@@ -1,6 +1,7 @@
 2005-03-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* intprops.h (INT_STRLEN_BOUND, INT_BUFSIZE_BOUND):
+	"one's complement" -> "ones' complement" in comment, as per Knuth.
 	"value of type" -> "type or expression" in comment.
 
 2005-03-26  Jim Meyering  <jim@meyering.net>
