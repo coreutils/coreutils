@@ -1,3 +1,14 @@
+Sat Nov  2 00:16:16 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/date.c (main): Give better diagnostic.
+	Suggestion from Karl Berry.
+
+Thu Oct 31 18:28:05 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/posixtm.y: Remap yacc globals to have pt_ prefix.
+	* lib/getdate.y: Remap yacc globals to have gd_ prefix.
+	Suggestion to do as in gdb/c-exp.y from Tom Tromey.
+
 Mon Oct 28 17:40:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/Makefile.am (install-exec-local): Redirect stderr of chown to
