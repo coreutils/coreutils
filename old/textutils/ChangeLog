@@ -1,3 +1,12 @@
+Mon Dec 18 21:42:44 1995  Jim Meyering  (meyering@comco.com)
+
+	Use automake to generate Makefile.in files.
+	* Makefile.am: New file.
+	* doc/Makefile.am: New file.
+	* lib/Makefile.am: New file.
+	* man/Makefile.am: New file.
+	* src/Makefile.am: New file.
+
 Thu Dec 14 21:13:22 1995  Jim Meyering  (meyering@comco.com)
 
 	* fmt.c (main): Use xstrtol instead of atoi.
