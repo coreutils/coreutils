@@ -29,6 +29,7 @@
 #include "filemode.h"
 #include "modechange.h"
 #include "quote.h"
+#include "root-dev-ino.h"
 #include "savedir.h"
 #include "xfts.h"
 
@@ -87,10 +88,10 @@ enum
 
 static struct option const long_options[] =
 {
-  {"recursive", no_argument, 0, 'R'},
   {"changes", no_argument, 0, 'c'},
-  {"preserve-root", no_argument, 0, PRESERVE_ROOT},
+  {"recursive", no_argument, 0, 'R'},
   {"no-preserve-root", no_argument, 0, NO_PRESERVE_ROOT},
+  {"preserve-root", no_argument, 0, PRESERVE_ROOT},
   {"quiet", no_argument, 0, 'f'},
   {"reference", required_argument, 0, REFERENCE_FILE_OPTION},
   {"silent", no_argument, 0, 'f'},
@@ -167,7 +168,6 @@ process_file (FTS *fts, FTSENT *ent, const struct mode_change *changes)
       return 1;
 
     case FTS_ERR:
-      /* if (S_ISDIR (ent->fts_statp->st_mode) && FIXME */
       error (0, ent->fts_errno, _("%s"), quote (file_full_name));
       return 1;
 
@@ -185,16 +185,9 @@ process_file (FTS *fts, FTSENT *ent, const struct mode_change *changes)
   if (ent->fts_info == FTS_DP)
     return 0;
 
-  if (root_dev_ino && SAME_INODE (*sb, *root_dev_ino))
+  if (ROOT_DEV_INO_CHECK (root_dev_ino, sb))
     {
-      if (STREQ (file_full_name, "/"))
-	error (0, 0, _("it is dangerous to operate recursively on %s"),
-	       quote (file_full_name));
-      else
-	error (0, 0,
-	       _("it is dangerous to operate recursively on %s (same as %s)"),
-	       quote_n (0, file_full_name), quote_n (1, "/"));
-      error (0, 0, _("use --no-preserve-root to override this failsafe"));
+      ROOT_DEV_INO_WARN (file_full_name);
       return 1;
     }
 
@@ -301,20 +294,6 @@ one or more of the letters rwxXstugo.\n\
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);
-}
-
-/* Call lstat to get the device and inode numbers for `/'.
-   Upon failure, return NULL.  Otherwise, set the members of
-   *ROOT_D_I accordingly and return ROOT_D_I.  */
-static struct dev_ino *
-get_root_dev_ino (struct dev_ino *root_d_i)
-{
-  struct stat statbuf;
-  if (lstat ("/", &statbuf))
-    return NULL;
-  root_d_i->st_ino = statbuf.st_ino;
-  root_d_i->st_dev = statbuf.st_dev;
-  return root_d_i;
 }
 
 /* Parse the ASCII mode given on the command line into a linked list
