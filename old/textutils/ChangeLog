@@ -1,6 +1,6 @@
 2000-03-12  Jim Meyering  <meyering@lucent.com>
 
-	Merge with fileutils.
+	Merge from fileutils.
 	* src/system.h "pathmax.h": Include.
 	<sys/time.h>: Include if appropriate.
 	<time.h>: Likewise.
