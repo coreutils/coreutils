@@ -3,6 +3,9 @@
 # An early version of my rewritten rm failed to remove all of
 # the files on SunOS4 when there were 254 or more in a directory.
 
+# And the rm from coreutils-5.0 exposes the same problem when there
+# are 338 or more files in a directory on a Darwin-6.5 system
+
 if test "$VERBOSE" = yes; then
   rm --version
   set -x
@@ -17,8 +20,8 @@ framework_fail=0
 mkdir -p $tmp || framework_fail=1
 cd $tmp || framework_fail=1
 
-# Create 300 files (12 * 25).
-for i in 0 1 2 3 4 5 6 7 8 9 a b; do
+# Create 500 files (20 * 25).
+for i in 0 1 2 3 4 5 6 7 8 9 a b c d e f g h i j; do
   files=
   for j in a b c d e f g h i j k l m n o p q r s t u v w x y; do
     files="$files $i$j"
@@ -28,7 +31,7 @@ done
 
 test -f 0a || framework_fail=1
 test -f by || framework_fail=1
-cd .. || framework_fail=1
+cd $pwd || framework_fail=1
 
 if test $framework_fail = 1; then
   echo 'failure in testing framework'
