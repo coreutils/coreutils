@@ -34,35 +34,38 @@ EOF
 esac
 
 fail=0
-for i in $all_programs; do
 
-  # false fails even when invoked with --help or --version.
-  if test $i = false; then
-    ./$i --help >/dev/null && fail=1
-    ./$i --version >/dev/null && fail=1
-    continue
-  fi
+for lang in C fr da; do
+  for i in $all_programs; do
 
-  # The just-built install executable is always named `ginstall'.
-  test $i = install && i=ginstall
-
-  # Make sure they exit successfully, under normal conditions.
-  ./$i --help >/dev/null || fail=1
-  ./$i --version >/dev/null || fail=1
-
-  # Make sure they fail upon `disk full' error.
-  if test -w /dev/full && test -c /dev/full; then
-    ./$i --help >/dev/full 2>/dev/null && fail=1
-    ./$i --version >/dev/full 2>/dev/null && fail=1
-    status=$?
-    eval "expected=\$expected_failure_status_$i"
-    test x$expected = x && expected=1
-    if test $status = $expected; then
-      : # ok
-    else
-      fail=1
+    # false fails even when invoked with --help or --version.
+    if test $i = false; then
+      env LC_MESSAGES=$lang ./$i --help    >/dev/null && fail=1
+      env LC_MESSAGES=$lang ./$i --version >/dev/null && fail=1
+      continue
     fi
-  fi
+
+    # The just-built install executable is always named `ginstall'.
+    test $i = install && i=ginstall
+
+    # Make sure they exit successfully, under normal conditions.
+    ./$i --help >/dev/null || fail=1
+    ./$i --version >/dev/null || fail=1
+
+    # Make sure they fail upon `disk full' error.
+    if test -w /dev/full && test -c /dev/full; then
+      ./$i --help >/dev/full 2>/dev/null && fail=1
+      ./$i --version >/dev/full 2>/dev/null && fail=1
+      status=$?
+      eval "expected=\$expected_failure_status_$i"
+      test x$expected = x && expected=1
+      if test $status = $expected; then
+	: # ok
+      else
+	fail=1
+      fi
+    fi
+  done
 done
 
 tmp=tmp-$$
