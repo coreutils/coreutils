@@ -1,4 +1,7 @@
 2000-01-22  Jim Meyering  <meyering@lucent.com>
+	1997-10-17  Eli Zaretskii  <eliz@is.elta.co.il>
+	* dirname.c (dir_name): Support for DOS-style file names with drive
+	letters.
 
 	* strverscmp.c (ISDIGIT): Define.
 	(strverscmp): Use ISDIGIT, not isdigit.
