@@ -65,7 +65,7 @@ dir_name (const char *path)
   else
     {
       /* Remove any trailing slashes from the result.  */
-#ifdef MSDOS
+#ifdef __MSDOS__
       const char *lim = ((path[0] >= 'A' && path[0] <= 'z' && path[1] == ':')
 			 ? path + 2 : path);
 
