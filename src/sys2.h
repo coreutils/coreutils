@@ -129,7 +129,7 @@ char *alloca ();
 #endif
 #define N_(Text) Text
 
-#define STREQ(a,b) (strcmp ((a), (b)) == 0)
+#define STREQ(a, b) (strcmp ((a), (b)) == 0)
 
 #ifndef HAVE_DECL_FREE
 void free ();
