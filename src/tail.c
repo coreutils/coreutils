@@ -861,7 +861,8 @@ main (int argc, char **argv)
 
   if (argc > 1
       && ((argv[1][0] == '-' && ISDIGIT (argv[1][1]))
-	  || (argv[1][0] == '+' && (ISDIGIT (argv[1][1]) || argv[1][1] == 0))))
+	  || (argv[1][0] == '+' && (ISDIGIT (argv[1][1])
+				    || argv[1][1] == 0))))
     {
       /* Old option syntax: a dash or plus, one or more digits (zero digits
 	 are acceptable with a plus), and one or more option letters.  */
@@ -878,6 +879,11 @@ main (int argc, char **argv)
 	    {
 	      STRTOL_FATAL_ERROR (argv[1], _("argument"), s_err);
 	    }
+
+	  /* If a [bkm] suffix was given then count bytes, not lines.  */
+	  if (p[-1] == 'b' || p[-1] == 'k' || p[-1] == 'm')
+	    count_lines = 0;
+
 	  /* Parse any appended option letters.  */
 	  while (*p)
 	    {
