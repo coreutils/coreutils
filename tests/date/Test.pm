@@ -14,6 +14,9 @@ sub test_vector
   my $t0 = '08:17:48';
   my $d0 = '1997-01-19';
   my $d1 = "$d0 $t0 +0";
+
+  my $fmt = "'+%Y-%m-%d %T'";
+
   my @tvec =
     (
      # test-name options input expected-output expected-return-code
@@ -49,12 +52,19 @@ sub test_vector
      ['millen-1', "--date '1998-1-1 3 years' +%Y", {}, '2001', 0],
 
      ['rel-0', "-d '$d1 now' '+%Y-%m-%d %T'", {}, "$d0 $t0", 0],
-     ['rel-1', "-d '$d1 yesterday' '+%Y-%m-%d %T'", {}, "1997-01-18 $t0", 0],
-     ['rel-2', "-d '$d1 tomorrow' '+%Y-%m-%d %T'", {}, "1997-01-20 $t0", 0],
-     ['rel-3', "-d '$d1 1 day ago' '+%Y-%m-%d %T'", {}, "1997-01-18 $t0", 0],
-     ['rel-4', "-d '$d1 2 hours ago' '+%Y-%m-%d %T'", {}, "$d0 06:17:48", 0],
-     ['rel-5', "-d '$d1 3 minutes ago' '+%Y-%m-%d %T'", {}, "$d0 08:14:48", 0],
-     ['rel-6', "-d '$d1 4 seconds ago' '+%Y-%m-%d %T'", {}, "$d0 08:17:44", 0],
+
+     ['rel-1a', "-d '$d1 yesterday' $fmt", {}, "1997-01-18 $t0", 0],
+     ['rel-1b', "-d '$d1 tomorrow' $fmt", {}, "1997-01-20 $t0", 0],
+
+     ['rel-2a', "-d '$d1 6 years ago' $fmt", {}, "1991-01-19 $t0", 0],
+     ['rel-2b', "-d '$d1 7 months ago' $fmt", {}, "1996-06-19 $t0", 0],
+     ['rel-2c', "-d '$d1 8 weeks ago' $fmt", {}, "1996-11-24 $t0", 0],
+     ['rel-2d', "-d '$d1 1 day ago' $fmt", {}, "1997-01-18 $t0", 0],
+     ['rel-2e', "-d '$d1 2 hours ago' $fmt", {}, "$d0 06:17:48", 0],
+     ['rel-2f', "-d '$d1 3 minutes ago' $fmt", {}, "$d0 08:14:48", 0],
+     ['rel-2g', "-d '$d1 4 seconds ago' $fmt", {}, "$d0 08:17:44", 0],
+
+     ['rel-3a', "-d '$d1 4 seconds ago' $fmt", {}, "$d0 08:17:44", 0],
 
      # FIXME: add a lot more...
      );
