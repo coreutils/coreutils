@@ -14,7 +14,7 @@ Makefile.am: Makefile.am.in
 	rm -f $@ $@t
 	sed -n '1,/^##m4-files-begin/p' $< > $@t
 	( echo EXTRA_DIST = README; \
-	  find . -type f -name '*.m4' -print |sed s/..// |sort ) \
+	  find . -type f -name '*.m4' -print |sed s,^\./,, |sort ) \
 	    |fmt | (tr '\012' @; echo) \
 	    |sed 's/@$$/%/;s/@/ \\@/g' |tr @% '\012\012' \
 	  >> $@t
