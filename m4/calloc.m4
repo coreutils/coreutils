@@ -31,7 +31,6 @@ AS_IF([test $ac_cv_func_calloc_0_nonnull = yes], [$1], [$2])
 # ---------------
 # Report whether `calloc (0, 0)' is properly handled, and replace calloc if
 # needed.
-AN_FUNCTION([calloc], [AC_FUNC_CALLOC])
 AC_DEFUN([AC_FUNC_CALLOC],
 [_AC_FUNC_CALLOC_IF(
   [AC_DEFINE([HAVE_CALLOC], 1,
