@@ -28,9 +28,21 @@
 #include <grp.h>
 #include <unistd.h>
 #include <time.h>
+#if HAVE_SYS_STATVFS_H
+# include <sys/statvfs.h>
+#endif
 #if HAVE_SYS_VFS_H
 # include <sys/vfs.h>
 #endif
+
+/* NetBSD 1.5.2 needs these, for the declaration of struct statfs. */
+#if !HAVE_SYS_STATVFS_H && !HAVE_SYS_VFS_H
+# if HAVE_SYS_MOUNT_H && HAVE_SYS_PARAM_H
+#  include <sys/param.h>
+#  include <sys/mount.h>
+# endif
+#endif
+
 #include <string.h>
 #include <malloc.h>
 #include <ctype.h>
@@ -78,6 +90,32 @@
 # define statfs_secure(a,b,c) statfs(a,b)
 #endif
 
+#define NAMEMAX_FORMAT PRIuMAX
+
+#if HAVE_STRUCT_STATVFS_F_BASETYPE
+# define STRUCT_STATVFS struct statvfs
+# define HAVE_STRUCT_STATXFS_F_TYPE HAVE_STRUCT_STATVFS
+# if HAVE_STRUCT_STATVFS_F_NAMEMAX
+#  define SB_F_NAMEMAX(S) ((uintmax_t) ((S)->f_namemax))
+# endif
+#else
+# define STRUCT_STATVFS struct statfs
+# define HAVE_STRUCT_STATXFS_F_TYPE HAVE_STRUCT_STATFS
+# if HAVE_STRUCT_STATFS_F_NAMELEN
+#  define SB_F_NAMEMAX(S) ((uintmax_t) ((S)->f_namelen))
+# endif
+#endif
+
+#ifndef SB_F_NAMEMAX
+/* NetBSD 1.5.2 has neither f_namemax nor f_namelen.  */
+# define SB_F_NAMEMAX(S) "*"
+# undef NAMEMAX_FORMAT
+# define NAMEMAX_FORMAT "s"
+#endif
+
+size_t nstrftime PARAMS ((char *, size_t, char const *,
+			  struct tm const *, int, int));
+
 #define PROGRAM_NAME "stat"
 
 #define AUTHORS "Michael Meskes"
@@ -93,7 +131,7 @@ static struct option const long_options[] = {
   {NULL, 0, NULL, 0}
 };
 
-static char *program_name;
+char *program_name;
 
 static void
 print_human_type (mode_t mode)
@@ -128,14 +166,24 @@ print_human_type (mode_t mode)
   fputs (type, stdout);
 }
 
+/* Return the type of the specified file system.
+   Some systems have statfvs.f_basetype[FSTYPSZ]. (AIX, HP-UX, and Solaris)
+   Others have statfs.f_fstypename[MFSNAMELEN]. (NetBSD 1.5.2)
+   Still others have neither and have to get by with f_type (Linux).  */
 static char *
-human_fstype (struct statfs const *statfsbuf)
+human_fstype (STRUCT_STATVFS const *statfsbuf)
 {
+#if HAVE_STRUCT_STATVFS_F_BASETYPE
+  return statfsbuf->f_basetype;
+#else
+# if HAVE_STRUCT_STATFS_F_FSTYPENAME
+  return statfsbuf->f_fstypename;
+# else
   char const *type;
 
   switch (statfsbuf->f_type)
     {
-#if defined __linux__
+#  if defined __linux__
     case S_MAGIC_AFFS:
       type = "affs";
       break;
@@ -223,7 +271,7 @@ human_fstype (struct statfs const *statfsbuf)
     case S_MAGIC_ROMFS:
       type = "romfs";
       break;
-#elif __GNU__
+#  elif __GNU__
     case FSTYPE_UFS:
       type = "ufs";
       break;
@@ -305,7 +353,7 @@ human_fstype (struct statfs const *statfsbuf)
     case FSTYPE_ISO9660:
       type = "iso9660";
       break;
-#endif
+#  endif
     default:
       type = NULL;
       break;
@@ -320,6 +368,8 @@ human_fstype (struct statfs const *statfsbuf)
     sprintf (buf, "UNKNOWN (0x%x)", statfsbuf->f_type);
     return buf;
   }
+# endif
+#endif
 }
 
 static void
@@ -334,9 +384,14 @@ print_human_access (struct stat const *statbuf)
 static void
 print_human_time (time_t const *t)
 {
-  char str[40];
+  char str[80];
 
+#if 0  /* %c is too locale-dependent.  */
   if (strftime (str, 40, "%c", localtime (t)) > 0)
+#else
+  if (nstrftime (str, sizeof str, "%Y-%m-%d %H:%M:%S.%N %z",
+		 localtime (t), 0, 0) > 0)
+#endif
     fputs (str, stdout);
   else
     printf ("Cannot calculate human readable time, sorry");
@@ -347,7 +402,7 @@ static void
 print_statfs (char *pformat, char m, char const *filename,
 	      void const *data, SECURITY_ID_T sid)
 {
-  struct statfs const *statfsbuf = data;
+  STRUCT_STATVFS const *statfsbuf = data;
 #ifdef FLASK_LINUX
   char sbuf[256];
   int rv;
@@ -362,23 +417,28 @@ print_statfs (char *pformat, char m, char const *filename,
       break;
 
     case 'i':
-#if !defined __linux__ && defined __GNU__
+#if HAVE_STRUCT_STATXFS_F_FSID___VAL
+      strcat (pformat, "x %-8x");
+      printf (pformat, statfsbuf->f_fsid.__val[0], /* u_long */
+	      statfsbuf->f_fsid.__val[1]);
+#else
       strcat (pformat, "Lx");
       printf (pformat, statfsbuf->f_fsid);
-#else
-      strcat (pformat, "x %-8x");
-      printf (pformat, statfsbuf->f_fsid.__val[0],
-	      statfsbuf->f_fsid.__val[1]);
 #endif
       break;
 
     case 'l':
-      strcat (pformat, PRIuMAX);
-      printf (pformat, (uintmax_t) (statfsbuf->f_namelen));
+      strcat (pformat, NAMEMAX_FORMAT);
+      printf (pformat, SB_F_NAMEMAX (statfsbuf));
       break;
     case 't':
+#if HAVE_STRUCT_STATXFS_F_TYPE
       strcat (pformat, "lx");
-      printf (pformat, (long int) (statfsbuf->f_type));
+      printf (pformat, (long int) (statfsbuf->f_type));  /* no equiv. */
+#else
+      strcat (pformat, "s");
+      printf (pformat, "*");
+#endif
       break;
     case 'T':
       strcat (pformat, "s");
@@ -653,7 +713,7 @@ print_it (char const *masterformat, char const *filename,
 static void
 do_statfs (char const *filename, int terse, int secure, char const *format)
 {
-  struct statfs statfsbuf;
+  STRUCT_STATVFS statfsbuf;
   SECURITY_ID_T sid = -1;
   int i;
 
@@ -670,26 +730,26 @@ do_statfs (char const *filename, int terse, int secure, char const *format)
 
   if (format == NULL)
     {
-      if (terse != 0)
+      if (terse)
 	{
+#define DEFAULT_FORMAT_TERSE "%n %i %l %t %b %f %a %s %c %d"
+#define DEFAULT_FORMAT_VERBOSE						\
+  "  File: \"%n\"\n"							\
+  "    ID: %-8i Namelen: %-7l Type: %T\n"				\
+  "Blocks: Total: %-10b Free: %-10f Available: %-10a Size: %s\n"	\
+  "Inodes: Total: %-10c Free: %-10d"
+
 	  if (secure)
-	    format = "%n %i %l %t %b %f %a %s %c %d %S %C";
+	    format = DEFAULT_FORMAT_TERSE " %S %C";
 	  else
-	    format = "%n %i %l %t %b %f %a %s %c %d";
+	    format = DEFAULT_FORMAT_TERSE;
 	}
       else
 	{
 	  if (secure)
-	    format = "  File: \"%n\"\n"
-	      "    ID: %-8i Namelen: %-7l Type: %T\n"
-	      "Blocks: Total: %-10b Free: %-10f Available: %-10a Size: %s\n"
-	      "Inodes: Total: %-10c Free: %-10d\n"
-	      "   SID: %-14S  S_Context: %C\n";
+	    format = DEFAULT_FORMAT_VERBOSE "   SID: %-14S  S_Context: %C\n";
 	  else
-	    format = "  File: \"%n\"\n"
-	      "    ID: %-8i Namelen: %-7l Type: %T\n"
-	      "Blocks: Total: %-10b Free: %-10f Available: %-10a Size: %s\n"
-	      "Inodes: Total: %-10c Free: %-10d";
+	    format = DEFAULT_FORMAT_VERBOSE;
 	}
     }
 
