@@ -4,6 +4,11 @@
 
 2003-03-07  John David Anglin  <dave.anglin@nrc-cnrc.gc.ca>
 
+	Avoid build failure with gcc on hppa1.1-hp-hpux10.20 (see GCC PR
+	middle-end/9986).  As one of GCC's optimizations, it transforms a
+	fputs_unlocked call to a fputc_unlocked call when the string is
+	one character long.  However, hpux doesn't have fputc_unlocked.
+
 	* expr.c (usage): Use putchar, not fputs, to output a single character.
 	* ls.c (dired_dump_obstack): Likewise.
 	* ptx.c (output_one_tex_line, output_one_dumb_line): Likewise.
