@@ -38,7 +38,7 @@
 #include "version.h"
 #include "error.h"
 
-static void print_element __P ((unsigned char mask, char *element));
+static void print_element __P ((unsigned int mask, char *element));
 static void usage __P ((int status));
 
 /* Values that are bitwise or'd into `toprint'. */
@@ -160,7 +160,7 @@ main (int argc, char **argv)
    be printed, in which case print a newline. */
 
 static void
-print_element (unsigned char mask, char *element)
+print_element (unsigned int mask, char *element)
 {
   if (toprint & mask)
     {
