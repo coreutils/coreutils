@@ -1,3 +1,7 @@
+2005-01-02  Jim Meyering  <jim@meyering.net>
+
+	* version-etc.c (version_etc_copyright): Update copyright date.
+
 2004-12-31  Jim Meyering  <jim@meyering.net>
 
 	* openat.c (rpl_openat): Correct comment.
