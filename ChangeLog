@@ -2,6 +2,8 @@
 
 	* Version 5.0.90.
 
+	* tests/cut/Test.pm (out-delim3a): New test.
+
 	* man/help2man: Update to version 1.33.
 
 	* src/expand.c (parse_tabstops): Detect overflow in tabstop sizes.
