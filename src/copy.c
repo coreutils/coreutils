@@ -687,6 +687,14 @@ copy_internal (const char *src_path, const char *dst_path,
       goto un_backup;
     }
 
+  /* POSIX says that `cp -p' must restore the following:
+     - permission bits
+     - setuid, setgid bits
+     - owner and group
+     If it fails to restore any of those, we may give a warning but
+     the destination must not be removed.
+     FIXME: implement the above. */
+
   /* Adjust the times (and if possible, ownership) for the copy.
      chown turns off set[ug]id bits for non-root,
      so do the chmod last.  */
@@ -701,13 +709,13 @@ copy_internal (const char *src_path, const char *dst_path,
       if (utime (dst_path, &utb))
 	{
 	  error (0, errno, _("preserving times for %s"), dst_path);
-	  return 1;
+	  return x->require_preserve;
 	}
 
       if (DO_CHOWN (chown, dst_path, src_sb.st_uid, src_sb.st_gid))
 	{
 	  error (0, errno, _("preserving ownership for %s"), dst_path);
-	  return 1;
+	  return x->require_preserve;
 	}
     }
 
@@ -717,7 +725,7 @@ copy_internal (const char *src_path, const char *dst_path,
       if (chmod (dst_path, src_mode & x->umask_kill))
 	{
 	  error (0, errno, _("preserving permissions for %s"), dst_path);
-	  return 1;
+	  return x->require_preserve;
 	}
     }
   else if (fix_mode)
@@ -748,6 +756,8 @@ valid_options (const struct cp_options *co)
 
   /* FIXME: make sure xstat and dereference are consistent.  */
   assert (co->xstat);
+
+  assert (co->require_preserve == 0 || co->require_preserve == 1);
 
   assert (co->sparse_mode != SPARSE_UNUSED);
   return 1;
