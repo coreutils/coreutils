@@ -57,6 +57,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+AMTAR = @AMTAR@
 AMTARFLAGS = @AMTARFLAGS@
 CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
@@ -84,7 +85,6 @@ POFILES = @POFILES@
 POSUB = @POSUB@
 POW_LIBM = @POW_LIBM@
 RANLIB = @RANLIB@
-TAR = @TAR@
 U = @U@
 USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
 USE_NLS = @USE_NLS@
@@ -172,6 +172,7 @@ distdir: $(DISTFILES)
 	    || cp -p $$d/$$file $(distdir)/$$file || :; \
 	  fi; \
 	done
+
 check-TESTS: $(TESTS)
 	@failed=0; all=0; xfail=0; xpass=0; \
 	srcdir=$(srcdir); export srcdir; \
