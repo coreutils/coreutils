@@ -2,6 +2,8 @@
 
 	* Version 5.0.1.
 
+	* src/yes.c: Include error.h after system.h, not before.
+
 	* copy.c, cp-hash.c, cp.c, csplit.c, cut.c, date.c, df.c, du.c:
 	* expand.c, expr.c, id.c, join.c, md5sum.c, nl.c, od.c, paste.c:
 	* pr.c, ptx.c, sort.c, split.c, su.c, tail.c, tee.c, tr.c:
