@@ -223,6 +223,15 @@ test "\$VERBOSE" && echo=echo || echo=:
 errors=0
 test "\$srcdir" || srcdir=.
 test "\$VERBOSE" && \$xx --version 2> /dev/null
+
+# Make sure we get English translations.
+LANGUAGE=C
+export LANGUAGE
+LC_ALL=C
+export LC_ALL
+LANG=C
+export LANG
+
 EOF1
 
   validate ();
