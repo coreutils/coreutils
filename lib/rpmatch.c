@@ -30,9 +30,7 @@
 #endif
 
 #include <sys/types.h>
-#if ! HAVE_LIBC_REGEX
-# include <regex.h>
-#endif
+#include <regex.h>
 
 #if ENABLE_NLS
 # include <libintl.h>
