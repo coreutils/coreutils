@@ -1,4 +1,7 @@
 [4.5.11]
+* seq no longer requires that a field width be specified
+* seq no longer fails when given a field width of `0'
+* seq now accepts ` ' and `'' as valid format flag characters
 * df now shows a HOSTNAME: prefix for each remote-mounted file system on AIX 5.1
 * portability tweaks for HP-UX, AIX 5.1, DJGPP
 [4.5.10]
