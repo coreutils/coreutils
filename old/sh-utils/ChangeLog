@@ -1,3 +1,14 @@
+Tue Apr 18 22:57:43 1995  Jim Meyering  (meyering@comco.com)
+
+	* configure.in: (AC_OUTPUT): Use echo, not date, to avoid creating
+	unnecessary conflicts for people using version control software
+	like RCS and CVS.
+	(AC_ARG_PROGRAM): Use it.
+
+Fri Mar 10 21:14:11 1995  Jim Meyering  (meyering@comco.com)
+
+	* src/*.c: Update Copyright dates.
+
 Mon Feb 27 08:05:25 1995  Jim Meyering  (meyering@comco.com)
 
 	* system.h: Separate errno declaration from STDC_HEADERS.
@@ -16,6 +27,7 @@ Sat Feb 11 08:27:12 1995  Jim Meyering  (meyering@comco.com)
 	just-built `id' executable.  That would lose when cross-compiling and
 	on systems like GNU in which a user may have several effective IDs.
 	(SOURCES, OBJECTS, PROGS): Add seq.
+	* Makefile.in (PROGS): Add seq.
 
         * configure.in (AC_REPLACE_FUNCS): Add memcmp, memcpy, and memset.
         (AC_CHECK_FUNCS): Add strchr and strrchr.

@@ -1,3 +1,10 @@
+Tue Apr 18 22:57:43 1995  Jim Meyering  (meyering@comco.com)
+
+	* configure.in: (AC_OUTPUT): Use echo, not date, to avoid creating
+	unnecessary conflicts for people using version control software
+	like RCS and CVS.
+	(AC_ARG_PROGRAM): Use it.
+
 Thu Apr 13 23:22:57 1995  Jim Meyering  (meyering@comco.com)
 
 	* head.c: Remove block of redundant comments describing options.
