@@ -876,7 +876,7 @@ sort.
 
 @vindex _POSIX2_VERSION
 The @sc{gnu} utilities normally conform to the version of @sc{posix}
-that is standard for your your system.  To cause them to conform to a
+that is standard for your system.  To cause them to conform to a
 different version of @sc{posix}, define the @env{_POSIX2_VERSION}
 environment variable to a value of the form @var{yyyymm} specifying
 the year and month the standard was adopted.  Two values are currently
