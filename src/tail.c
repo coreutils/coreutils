@@ -663,7 +663,7 @@ pipe_lines (filename, fd, n_lines)
          often be very small.  */
       if (tmp->nbytes + last->nbytes < BUFSIZ)
 	{
-	  bcopy (tmp->buffer, &last->buffer[last->nbytes], tmp->nbytes);
+	  memcpy (&last->buffer[last->nbytes], tmp->buffer, tmp->nbytes);
 	  last->nbytes += tmp->nbytes;
 	  last->nlines += tmp->nlines;
 	}
@@ -779,7 +779,7 @@ pipe_bytes (filename, fd, n_bytes)
          often be very small.  */
       if (tmp->nbytes + last->nbytes < BUFSIZ)
 	{
-	  bcopy (tmp->buffer, &last->buffer[last->nbytes], tmp->nbytes);
+	  memcpy (&last->buffer[last->nbytes], tmp->buffer, tmp->nbytes);
 	  last->nbytes += tmp->nbytes;
 	}
       else
