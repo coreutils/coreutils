@@ -19,9 +19,6 @@
    and David MacKenzie, djm@gnu.ai.mit.edu. */
 
 #include <config.h>
-#if HAVE_INTTYPES_H
-# include <inttypes.h>
-#endif
 
 #include <stdio.h>
 #include <getopt.h>

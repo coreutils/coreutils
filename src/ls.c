@@ -43,10 +43,6 @@
 #include <config.h>
 #include <sys/types.h>
 
-#if HAVE_INTTYPES_H
-# include <inttypes.h>
-#endif
-
 #if HAVE_TERMIOS_H
 # include <termios.h>
 #endif

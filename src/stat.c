@@ -46,10 +46,6 @@
 #include <string.h>
 #include <ctype.h>
 
-#if HAVE_INTTYPES_H
-# include <inttypes.h>
-#endif
-
 #if ! defined PRIdMAX
 # if HAVE_LONG_LONG
 #  define PRIdMAX "lld"

@@ -43,9 +43,6 @@
 */
 
 #include <config.h>
-#if HAVE_INTTYPES_H
-# include <inttypes.h>
-#endif
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
