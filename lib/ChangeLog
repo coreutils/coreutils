@@ -1,5 +1,14 @@
 2004-07-28  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* userspec.c: Include <stdbool.h>, "inttostr.h".
+	(V_STRDUP): Don't assume the string's length fits in int.
+	(ISDIGIT): unsigned -> unsigned int
+	(is_number): Define only ifdef __DJGPP__; not needed elsewhere.
+	Use bool instead of int where appropriate.
+	Do not allow empty strings.
+	(parse_user_spec): Parse numbers as decimal integers, even if
+	they have a leading 0.  Don't assume uids and gids fit in int.
+
 	* memchr.c: Include <stddef.h>, not <stdlib.h> and <sys/types.h>.
 	(LONG_MAX_32_BITS): Remove.
 	Include <inttypes.h> and <stdint.h> if available.
