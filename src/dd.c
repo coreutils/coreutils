@@ -76,6 +76,8 @@
 #define ISUPPER(c) (isascii (c) && isupper (c))
 #define ISDIGIT(c) (isascii (c) && isdigit (c))
 
+#define SWAB_ALIGN_OFFSET 2
+
 #include <sys/types.h>
 #include <signal.h>
 #include <getopt.h>
@@ -551,10 +553,14 @@ copy ()
   int nread;			/* Bytes read in the current block. */
   int exit_status = 0;
 
-  /* Leave an extra byte at the beginning and end of `ibuf' for conv=swab,
-     but keep the buffer address even.  Some peculiar device drivers work
-     only with word-aligned buffers.  */
-  ibuf = (unsigned char *) xmalloc (input_blocksize + 4) + 2;
+  /* Leave at least one extra byte at the beginning and end of `ibuf'
+     for conv=swab, but keep the buffer address even.  But some peculiar
+     device drivers work only with word-aligned buffers, so leave an
+     extra two bytes.  */
+
+  ibuf = (unsigned char *) xmalloc (input_blocksize + 2 * SWAB_ALIGN_OFFSET);
+  ibuf += SWAB_ALIGN_OFFSET;
+
   if (conversions_mask & C_TWOBUFS)
     obuf = (unsigned char *) xmalloc (output_blocksize);
   else
@@ -698,7 +704,7 @@ copy ()
 	}
     }
 
-  free (ibuf - 1);
+  free (ibuf - SWAB_ALIGN_OFFSET);
   if (obuf != ibuf)
     free (obuf);
 
