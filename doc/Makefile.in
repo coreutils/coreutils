@@ -446,7 +446,7 @@ check-texinfo:
 	fail=0; \
 	grep timezone $(srcdir)/*.texi && fail=1; \
 	grep '\$$@"' $(srcdir)/*.texi && fail=1; \
-	$(PERL) -e 1 && { $(PERL) -ne \
+	$(PERL) -e 1 2> /dev/null && { $(PERL) -ne \
 	  '/\bPOSIX\b/ && !/\@acronym{POSIX}/ && !/^\* / || /{posix}/ and print,exit 1' \
 	  $(srcdir)/*.texi 2> /dev/null || fail=1; }; \
 	exit $$fail

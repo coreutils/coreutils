@@ -824,7 +824,7 @@ AC_CONFIG_COMMANDS_PRE(
 Usually this means the macro was only invoked conditionally.])
 fi])])
 
-#serial 4
+#serial 5
 
 dnl From Jim Meyering.
 dnl Find a new-enough version of Perl.
@@ -846,7 +846,7 @@ AC_DEFUN([jm_PERL],
 
   found=no
   AC_SUBST(PERL)
-  PERL="$missing_dir/missing perl"
+  PERL="$am_missing_run perl"
   for perl in $candidate_perl_names; do
     # Run test in a subshell; some versions of sh will print an error if
     # an executable is not found, even if stderr is redirected.
