@@ -186,7 +186,10 @@ main (argc, argv)
     usage (0);
 
   if (argc < optind + 2)
-    usage (1);
+    {
+      error (0, 0, "missing file argument%s", argc == optind ? "s" : "");
+      usage (1);
+    }
 
   if (make_backups)
     backup_type = get_version (version);
