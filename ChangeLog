@@ -1,6 +1,10 @@
-2003-08-22  Jim Meyering  <jim@meyering.net>
+2003-08-25  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
+
+	* src/stat.c (main): Warn about use of deprecated `-l' option.
+
+2003-08-22  Jim Meyering  <jim@meyering.net>
 
 	* src/stat.c (do_stat): For link count at end of line, use %h format,
 	instead of %-5h.  The latter would make stat emit trailing spaces.
