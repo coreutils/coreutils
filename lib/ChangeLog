@@ -1,12 +1,12 @@
+2001-02-17  Jim Meyering  <meyering@lucent.com>
+
+	* regex.c: Update from libc.
+
 2001-02-16  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/alloca.c (malloc): Undef before defining, since stdlib.h
 	may have defined it.  Needed for Encore Umax-3.0.9.16b systems.
 	Reported by Mark Hounschell via Paul Eggert.
-
-2001-02-07  Jim Meyering  <meyering@lucent.com>
-
-	* regex.c: Update from libc.
 
 2001-01-30  Bruno Haible  <haible@clisp.cons.org>
 
