@@ -1,28 +1,26 @@
 /* cut - remove parts of lines of files
-   Copyright (C) 1984, 1997, 1998, 1999 by David M. Ihnat
+   Copyright (C) 1984, 1997, 1998, 1999, 2000 by David M. Ihnat
 
-   This program is a total rewrite of the Bell Laboratories Unix(Tm)
-   command of the same name, as of System V.  It contains no proprietary
-   code, and therefore may be used without violation of any proprietary
-   agreements whatsoever.  However, you will notice that the program is
-   copyrighted by me.  This is to assure the program does *not* fall
-   into the public domain.  Thus, I may specify just what I am now:
-   This program may be freely copied and distributed, provided this notice
-   remains; it may not be sold for profit without express written consent of
-   the author.
-   Please note that I recreated the behavior of the Unix(Tm) 'cut' command
-   as faithfully as possible; however, I haven't run a full set of regression
-   tests.  Thus, the user of this program accepts full responsibility for any
-   effects or loss; in particular, the author is not responsible for any losses,
-   explicit or incidental, that may be incurred through use of this program.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
 
-   I ask that any bugs (and, if possible, fixes) be reported to me when
-   possible.  -David Ihnat (312) 784-4544 ignatz@homebru.chi.il.us
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-   POSIX changes, bug fixes, long-named options, and cleanup
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+
+/* Written by David Ihnat.  */
+
+/* POSIX changes, bug fixes, long-named options, and cleanup
    by David MacKenzie <djm@gnu.ai.mit.edu>.
 
-   Rewrite cut_fields and cut_bytes -- Jim Meyering (meyering@comco.com).
+   Rewrite cut_fields and cut_bytes -- Jim Meyering.
 
    Options:
    --bytes=byte-list
