@@ -166,8 +166,9 @@ Use --sparse=never to inhibit creation of sparse files.\n\
 \n\
 "));
       printf (_("\
-The backup suffix is ~, unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n\
-The version control may be set with --backup or VERSION_CONTROL, values are:\n\
+The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n\
+The version control method may be selected via the --backup option or through\n\
+the VERSION_CONTROL environment variable.  Here are the values:\n\
 \n\
   none, off       never make backups (even if --backup is given)\n\
   numbered, t     make numbered backups\n\
