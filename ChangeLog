@@ -1,6 +1,14 @@
-2003-06-02  Jim Meyering  <jim@meyering.net>
+2003-06-03  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	Avoid unnecessary copying of environment.
+	* src/env.c (main): Rather than clearing the environment and --
+	unless told to ignore environment -- copying all settings from
+	the saved, original environment, clear the environment only when
+	that is requested.  Suggested by Jens Elkner.
+
+2003-06-02  Jim Meyering  <jim@meyering.net>
 
 	* src/system.h: Always include <string.h>, since we assume C89.
 	Include <limits.h> without checking for HAVE_LIMITS_H.
