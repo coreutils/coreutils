@@ -9,7 +9,7 @@ AM_INIT_AUTOMAKE([1.8 gnits dist-bzip2])
 
 gl_DEFAULT_POSIX2_VERSION
 gl_USE_SYSTEM_EXTENSIONS
-jm_PERL
+gl_PERL
 AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_GCC_TRADITIONAL
@@ -28,10 +28,10 @@ AC_CHECK_FUNCS(gethostid,
 	OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS hostid\$(EXEEXT)"
 	MAN="$MAN hostid.1")
 
-jm_MACROS
+gl_MACROS
 
 AC_HEADER_TIOCGWINSZ()
-jm_WINSIZE_IN_PTEM
+gl_WINSIZE_IN_PTEM
 
 AC_MSG_CHECKING(whether localtime caches TZ)
 AC_CACHE_VAL(utils_cv_localtime_cache,
@@ -119,7 +119,7 @@ else
   fi
 fi
 
-AC_DEFUN([jm_DUMMY_1],
+AC_DEFUN([coreutils_DUMMY_1],
 [
   AC_REQUIRE([gl_READUTMP])
   if test $ac_cv_header_utmp_h = yes || test $ac_cv_header_utmpx_h = yes; then
@@ -129,7 +129,7 @@ AC_DEFUN([jm_DUMMY_1],
     MAN="$MAN pinky.1 users.1 who.1"
   fi
 ])
-jm_DUMMY_1
+coreutils_DUMMY_1
 
 AC_MSG_CHECKING(ut_host in struct utmp)
 AC_CACHE_VAL(su_cv_func_ut_host_in_utmp,
@@ -162,7 +162,7 @@ GNULIB_BOOT_TIME(
   MAN="$MAN uptime.1"])
 
 AC_SYS_POSIX_TERMIOS()
-jm_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL
+gl_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL
 
 if test $ac_cv_sys_posix_termios = yes; then
   OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS stty\$(EXEEXT)" MAN="$MAN stty.1"
@@ -199,9 +199,9 @@ fi
 
 # FIXME: note that this macro appears above, too.
 # I'm leaving it here for now.  This whole thing needs to be modernized...
-jm_WINSIZE_IN_PTEM
+gl_WINSIZE_IN_PTEM
 
-jm_HEADER_TIOCGWINSZ_IN_TERMIOS_H
+gl_HEADER_TIOCGWINSZ_IN_TERMIOS_H
 
 if test $jm_cv_sys_tiocgwinsz_needs_termios_h = no && \
    test $jm_cv_sys_tiocgwinsz_needs_sys_ioctl_h = no; then
@@ -230,7 +230,7 @@ AC_CHECK_DECLS([strsignal, sys_siglist, _sys_siglist, __sys_siglist], , ,
   [AC_INCLUDES_DEFAULT
 #include <signal.h>])
 
-jm_LIB_CHECK
+gl_LIB_CHECK
 
 AM_GNU_GETTEXT([external], [need-ngettext])
 AM_GNU_GETTEXT_VERSION(0.13.1)
