@@ -50,8 +50,17 @@ split --bytes=$_4gb in || fail=1
 
 # Make sure that a huge obsolete option evokes the right failure.
 env -u _POSIX2_VERSION split -99999999999999999991 2> out && fail=1
+
+# On losing systems (x86 solaris 2.9 c89), we get a message like this:
+#   split: line count option -9999999999... is too large
+# while on most, we get this:
+#   split: line count option -99999999999999999991... is too large
+# so map them both to -99*1...
+sed 's/99[19]*/99*/' out > out-t
+mv -f out-t out
+
 cat <<\EOF > exp
-split: line count option -99999999999999999991... is too large
+split: line count option -99*... is too large
 EOF
 cmp out exp || fail=1
 test $fail = 1 && diff out exp 2> /dev/null
