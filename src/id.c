@@ -232,7 +232,8 @@ print_group (int gid)
 #if HAVE_GETGROUPS
 
 static int
-xgetgroups (const char *username, int *n_groups, GETGROUPS_T **groups)
+xgetgroups (const char *username, gid_t gid, int *n_groups,
+	    GETGROUPS_T **groups)
 {
   int max_n_groups;
   int ng;
@@ -242,14 +243,14 @@ xgetgroups (const char *username, int *n_groups, GETGROUPS_T **groups)
   if (username == 0)
     max_n_groups = getgroups (0, NULL);
   else
-    max_n_groups = getugroups (0, NULL, username);
+    max_n_groups = getugroups (0, NULL, username, gid);
 
   /* Add 1 just in case max_n_groups is zero.  */
   g = (GETGROUPS_T *) xmalloc (max_n_groups * sizeof (GETGROUPS_T) + 1);
   if (username == 0)
     ng = getgroups (max_n_groups, g);
   else
-    ng = getugroups (max_n_groups, g, username);
+    ng = getugroups (max_n_groups, g, username, gid);
 
   if (ng < 0)
     {
@@ -272,6 +273,12 @@ xgetgroups (const char *username, int *n_groups, GETGROUPS_T **groups)
 static void
 print_group_list (const char *username)
 {
+  struct passwd *pwd;
+
+  pwd = getpwuid (ruid);
+  if (pwd == NULL)
+    problems++;
+
   print_group (rgid);
   if (egid != rgid)
     {
@@ -285,7 +292,7 @@ print_group_list (const char *username)
     GETGROUPS_T *groups;
     register int i;
 
-    if (xgetgroups (username, &n_groups, &groups))
+    if (xgetgroups (username, pwd ? pwd->pw_gid : -1, &n_groups, &groups))
       {
 	++problems;
 	return;
@@ -350,7 +357,7 @@ print_full_info (const char *username)
     GETGROUPS_T *groups;
     register int i;
 
-    if (xgetgroups (username, &n_groups, &groups))
+    if (xgetgroups (username, pwd ? pwd->pw_gid : -1, &n_groups, &groups))
       {
 	++problems;
 	return;
