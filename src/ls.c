@@ -2034,16 +2034,17 @@ print_current_files (void)
 static void
 print_long_format (const struct fileinfo *f)
 {
-  char modebuf[20];
-/* This is more than enough for all known LC_TIME locales.  */
-#define TIMEBUF_SIZE 100
+  char modebuf[11];
 
   /* 7 fields that may (worst case: 64-bit integral values) require 20 bytes,
-     1 10-character mode string,
-     1 TIMEBUF_SIZE-character time string,
-     9 spaces, one following each of these fields,
-     and 1 trailing NUL byte.  */
-  char bigbuf[7 * 20 + 10 + TIMEBUF_SIZE + 9 + 1];
+     1 10-byte mode string,
+     1 24-byte time string (may be longer in some locales -- see below),
+     9 spaces, one following each of these fields, and
+     1 trailing NUL byte.  */
+  char init_bigbuf[7 * 20 + 10 + 24 + 9 + 1];
+  char *buf = init_bigbuf;
+  size_t bufsize = sizeof (init_bigbuf);
+  size_t s;
   char *p;
   time_t when;
   const char *fmt;
@@ -2092,7 +2093,7 @@ print_long_format (const struct fileinfo *f)
 	}
     }
 
-  p = bigbuf;
+  p = buf;
 
   if (print_inode)
     {
@@ -2137,12 +2138,23 @@ print_long_format (const struct fileinfo *f)
 
   /* Use strftime rather than ctime, because the former can produce
      locale-dependent names for the weekday (%a) and month (%b).  */
-  p += strftime (p, TIMEBUF_SIZE, fmt, localtime (&when));
+
+  while (! (s = strftime (p, buf + bufsize - p, fmt, localtime (&when))))
+    {
+      char *newbuf = alloca (bufsize *= 2);
+      memcpy (newbuf, buf, p - buf);
+      p = newbuf + (p - buf);
+      buf = newbuf;
+    }
+
+  p += s;
   *p++ = ' ';
+
+  /* NUL-terminate the string -- fputs (via FPUTS) requires it.  */
   *p = '\0';
 
   DIRED_INDENT ();
-  FPUTS (bigbuf, stdout, p - bigbuf);
+  FPUTS (buf, stdout, p - buf);
   PUSH_CURRENT_DIRED_POS (&dired_obstack);
   print_name_with_quoting (f->name, f->stat.st_mode, f->linkok);
   PUSH_CURRENT_DIRED_POS (&dired_obstack);
