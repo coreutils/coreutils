@@ -1,3 +1,8 @@
+1999-04-17  Jim Meyering  <meyering@ascend.com>
+
+	* src/tail.c (file_lines): Fix serious bug introduced with last changes.
+	From Andreas Schwab.
+
 1999-04-15  Jim Meyering  <meyering@ascend.com>
 
 	* tests/Makefile.am (EXTRA_DIST): Rename .posix-warn to .env-warn.
