@@ -1,5 +1,16 @@
 2004-07-07  Jim Meyering  <jim@meyering.net>
 
+	Don't infloop when MAXSYMLINKS is not defined.
+	Detect symlink loops much earlier (albeit lazily) on systems
+	with MAXSYMLINKS defined to a large value.
+
+	* canonicalize.c: Include "cycle-check.h".
+	(canonicalize_filename_mode): Don't try to detect loops by counting
+	symlink-hops.  Instead, use the cycle-check module.
+
+	* cycle-check.h: Include stdbool.h.
+	Forward-declare `struct stat'.
+
 	* canonicalize.c (canonicalize_filename_mode): Remove do-while(0) loop.
 	Replace each corresponding `break' stmt with `continue'.
 
