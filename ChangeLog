@@ -1,6 +1,12 @@
-2003-01-31  Jim Meyering  <jim@meyering.net>
+2003-02-01  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.5.
+
+	* src/stat.c (G_fail): New global.
+	(human_time): Diagnose failed localtime, not failed nstrftime.
+	(main): Fail if G_fail is set.
+
+2003-01-31  Jim Meyering  <jim@meyering.net>
 
 	* src/stat.c: Include "file-type.h"
 	(print_human_type): Remove function.
