@@ -1,3 +1,19 @@
+2003-09-13  Jim Meyering  <jim@meyering.net>
+
+	* strtol.c: Update from gnulib.
+
+2003-09-12  Paul Eggert  <eggert@twinsun.com>
+
+	* argmatch.c, xgethostname.c, xmalloc.c: Include exit.h.
+	* obstack.c [!defined _LIBC]: Likewise.
+	* argmatch.c (EXIT_FAILURE): Remove; now done by exit.h
+	* exitfail.c, fatal.c, xgethostname.c, xmalloc.c: Likewise.
+	* exitfail.c: Don't include stdlib.h; no longer needed.
+
+2003-09-12  Paul Eggert  <eggert@twinsun.com>
+
+	* error.c (error_tail): Assume vprintf.
+
 2003-09-09  Paul Eggert  <eggert@twinsun.com>
 
 	More K&R removal.
