@@ -1,4 +1,4 @@
-/* unexpand - convert spaces to tabs
+/* unexpand - convert blanks to tabs
    Copyright (C) 89, 91, 1995-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -25,12 +25,11 @@
    --tabs=tab1[,tab2[,...]]
    -t tab1[,tab2[,...]]
    -tab1[,tab2[,...]]	If only one tab stop is given, set the tabs tab1
-			spaces apart instead of the default 8.  Otherwise,
+			columns apart instead of the default 8.  Otherwise,
 			set the tabs at columns tab1, tab2, etc. (numbered from
-			0); replace any tabs beyond the tabstops given with
-			single spaces.
+			0); preserve any blanks beyond the tab stops given.
    --all
-   -a			Use tabs wherever they would replace 2 or more spaces,
+   -a			Use tabs wherever they would replace 2 or more blanks,
 			not just at the beginnings of lines.
 
    David MacKenzie <djm@gnu.ai.mit.edu> */
@@ -55,13 +54,6 @@
    allocated for the output line.  */
 #define OUTPUT_BLOCK 256
 
-/* A sentinel value that's placed at the end of the list of tab stops.
-   This value must be a large number, but not so large that adding the
-   length of a line to it would cause the column variable to overflow.
-   FIXME: The algorithm isn't correct once the numbers get large;
-   also, no error is reported if overflow occurs.  */
-#define TAB_STOP_SENTINEL INTMAX_MAX
-
 /* The name this program was run with.  */
 char *program_name;
 
@@ -70,7 +62,10 @@ char *program_name;
 static bool convert_entire_line;
 
 /* If nonzero, the size of all tab stops.  If zero, use `tab_list' instead.  */
-static uintmax_t tab_size;
+static size_t tab_size;
+
+/* The maximum distance between tab stops.  */
+static size_t max_column_width;
 
 /* Array of the explicit column numbers of the tab stops;
    after `tab_list' is exhausted, the rest of the line is printed
@@ -129,7 +124,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 "),
 	      program_name);
       fputs (_("\
-Convert spaces in each FILE to tabs, writing to standard output.\n\
+Convert blanks in each FILE to tabs, writing to standard output.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
 "), stdout);
@@ -137,8 +132,8 @@ With no FILE, or when FILE is -, read standard input.\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
-  -a, --all        convert all whitespace, instead of just initial whitespace\n\
-      --first-only convert only leading sequences of whitespace (overrides -a)\n\
+  -a, --all        convert all blanks, instead of just initial blanks\n\
+      --first-only convert only leading sequences of blanks (overrides -a)\n\
   -t, --tabs=N     have tabs N characters apart instead of 8 (enables -a)\n\
   -t, --tabs=LIST  use comma separated LIST of tab positions (enables -a)\n\
 "), stdout);
@@ -152,18 +147,28 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 /* Add tab stop TABVAL to the end of `tab_list'.  */
 
 static void
-add_tabstop (uintmax_t tabval)
+add_tab_stop (uintmax_t tabval)
 {
+  uintmax_t column_width =
+    tabval - (first_free_tab ? tab_list[first_free_tab - 1] : 0);
+
   if (first_free_tab == n_tabs_allocated)
     tab_list = x2nrealloc (tab_list, &n_tabs_allocated, sizeof *tab_list);
   tab_list[first_free_tab++] = tabval;
+
+  if (max_column_width < column_width)
+    {
+      if (SIZE_MAX < column_width)
+	error (EXIT_FAILURE, 0, _("tabs are too far apart"));
+      max_column_width = column_width;
+    }
 }
 
-/* Add the comma or blank separated list of tabstops STOPS
-   to the list of tabstops.  */
+/* Add the comma or blank separated list of tab stops STOPS
+   to the list of tab stops.  */
 
 static void
-parse_tabstops (char const *stops)
+parse_tab_stops (char const *stops)
 {
   bool have_tabval = false;
   uintmax_t tabval IF_LINT (= 0);
@@ -175,7 +180,7 @@ parse_tabstops (char const *stops)
       if (*stops == ',' || ISBLANK (to_uchar (*stops)))
 	{
 	  if (have_tabval)
-	    add_tabstop (tabval);
+	    add_tab_stop (tabval);
 	  have_tabval = false;
 	}
       else if (ISDIGIT (*stops))
@@ -214,14 +219,14 @@ parse_tabstops (char const *stops)
     exit (EXIT_FAILURE);
 
   if (have_tabval)
-    add_tabstop (tabval);
+    add_tab_stop (tabval);
 }
 
-/* Check that the list of tabstops TABS, with ENTRIES entries,
+/* Check that the list of tab stops TABS, with ENTRIES entries,
    contains only nonzero, ascending values.  */
 
 static void
-validate_tabstops (uintmax_t const *tabs, size_t entries)
+validate_tab_stops (uintmax_t const *tabs, size_t entries)
 {
   uintmax_t prev_tab = 0;
   size_t i;
@@ -256,7 +261,7 @@ next_file (FILE *fp)
 	}
       if (fp == stdin)
 	clearerr (fp);		/* Also clear EOF.  */
-      else if (fclose (fp) == EOF)
+      else if (fclose (fp) != 0)
 	{
 	  error (0, errno, "%s", prev_file);
 	  exit_status = EXIT_FAILURE;
@@ -283,147 +288,175 @@ next_file (FILE *fp)
   return NULL;
 }
 
-/* Change spaces to tabs, writing to stdout.
+/* Change blanks to tabs, writing to stdout.
    Read each file in `file_list', in order.  */
 
 static void
 unexpand (void)
 {
-  FILE *fp;			/* Input stream.  */
-  size_t tab_index = 0;		/* Index in `tab_list' of next tabstop.  */
-  size_t print_tab_index = 0;	/* For printing as many tabs as possible.  */
-  uintmax_t column = 0;		/* Column of next char.  */
-  uintmax_t next_tab_column;	/* Column the next tab stop is on.  */
-  bool convert = true;		/* If true, perform translations.  */
-  uintmax_t pending = 0;	/* Pending columns of blanks.  */
-  int saved_errno IF_LINT (= 0);
+  /* Input stream.  */
+  FILE *fp = next_file (NULL);
 
-  fp = next_file ((FILE *) NULL);
-  if (fp == NULL)
+  /* The array of pending blanks.  In non-POSIX locales, blanks can
+     include characters other than spaces, so the blanks must be
+     stored, not merely counted.  */
+  char *pending_blank;
+
+  if (!fp)
     return;
 
   /* Binary I/O will preserve the original EOL style (DOS/Unix) of files.  */
   SET_BINARY2 (fileno (fp), STDOUT_FILENO);
 
+  /* The worst case is a non-blank character, then one blank, then a
+     tab stop, then MAX_COLUMN_WIDTH - 1 blanks, then a non-blank; so
+     allocate MAX_COLUMN_WIDTH bytes to store the blanks.  */
+  pending_blank = xmalloc (max_column_width);
+
   for (;;)
     {
-      int c = getc (fp);
-      if (c == EOF)
-	{
-	  fp = next_file (fp);
-	  if (fp)
-	    {
-	      SET_BINARY2 (fileno (fp), STDOUT_FILENO);
-	      continue;
-	    }
-	  saved_errno = errno;
-	}
+      /* Input character, or EOF.  */
+      int c;
 
-      if (c == ' ' && convert && column < TAB_STOP_SENTINEL)
-	{
-	  ++pending;
-	  ++column;
-	}
-      else if (c == '\t' && convert)
-	{
-	  if (tab_size == 0)
-	    {
-	      /* Do not let tab_index == first_free_tab;
-		 stop when it is 1 less.  */
-	      while (tab_index < first_free_tab - 1
-		     && column >= tab_list[tab_index])
-		tab_index++;
-	      next_tab_column = tab_list[tab_index];
-	      if (tab_index < first_free_tab - 1)
-		tab_index++;
-	      if (column >= next_tab_column)
-		{
-		  convert = false;	/* Ran out of tab stops.  */
-		  goto flush_pend;
-		}
-	    }
-	  else
-	    {
-	      next_tab_column = column + tab_size - column % tab_size;
-	    }
-	  pending += next_tab_column - column;
-	  column = next_tab_column;
-	}
-      else
-	{
-	flush_pend:
-	  /* Flush pending spaces.  Print as many tabs as possible,
-	     then print the rest as spaces.  */
-	  if (pending == 1)
-	    {
-	      putchar (' ');
-	      pending = 0;
-	    }
-	  column -= pending;
-	  while (pending > 0)
-	    {
-	      if (tab_size == 0)
-		{
-		  /* Do not let print_tab_index == first_free_tab;
-		     stop when it is 1 less.  */
-		  while (print_tab_index < first_free_tab - 1
-			 && column >= tab_list[print_tab_index])
-		    print_tab_index++;
-		  next_tab_column = tab_list[print_tab_index];
-		  if (print_tab_index < first_free_tab - 1)
-		    print_tab_index++;
-		}
-	      else
-		{
-		  next_tab_column = column + tab_size - column % tab_size;
-		}
-	      if (next_tab_column - column <= pending)
-		{
-		  putchar ('\t');
-		  pending -= next_tab_column - column;
-		  column = next_tab_column;
-		}
-	      else
-		{
-		  --print_tab_index;
-		  column += pending;
-		  while (pending != 0)
-		    {
-		      putchar (' ');
-		      pending--;
-		    }
-		}
-	    }
+      /* If true, perform translations.  */
+      bool convert = true;
 
-	  if (c == EOF)
-	    {
-	      errno = saved_errno;
-	      break;
-	    }
+
+      /* The following variables have valid values only when CONVERT
+	 is true:  */
+
+      /* Column of next input character.  */
+      uintmax_t column = 0;
+
+      /* Column the next input tab stop is on.  */
+      uintmax_t next_tab_column = 0;
+
+      /* Index in TAB_LIST of next tab stop to examine.  */
+      size_t tab_index = 0;
+
+      /* If true, the first pending blank came just before a tab stop.  */
+      bool one_blank_before_tab_stop = false;
+
+      /* If true, the previous input character was a blank.  This is
+	 initially true, since initial strings of blanks are treated
+	 as if the line was preceded by a blank.  */
+      bool prev_blank = true;
+
+      /* Number of pending columns of blanks.  */
+      size_t pending = 0;
+
+
+      /* Convert a line of text.  */
+
+      do
+	{
+	  while ((c = getc (fp)) < 0 && (fp = next_file (fp)))
+	    SET_BINARY2 (fileno (fp), STDOUT_FILENO);
 
 	  if (convert)
 	    {
-	      if (c == '\b')
+	      bool blank = ISBLANK (c);
+
+	      if (blank)
 		{
-		  if (column > 0)
-		    --column;
+		  if (next_tab_column <= column)
+		    {
+		      if (tab_size)
+			next_tab_column =
+			  column + (tab_size - column % tab_size);
+		      else
+			for (;;)
+			  if (tab_index == first_free_tab)
+			    {
+			      convert = false;
+			      break;
+			    }
+			  else
+			    {
+			      uintmax_t tab = tab_list[tab_index++];
+			      if (column < tab)
+				{
+				  next_tab_column = tab;
+				  break;
+				}
+			    }
+		    }
+
+		  if (convert)
+		    {
+		      if (next_tab_column < column)
+			error (EXIT_FAILURE, 0, _("input line is too long"));
+
+		      if (c == '\t')
+			{
+			  column = next_tab_column;
+
+			  /* Discard pending blanks, unless it was a single
+			     blank just before the previous tab stop.  */
+			  if (! (pending == 1 && one_blank_before_tab_stop))
+			    {
+			      pending = 0;
+			      one_blank_before_tab_stop = false;
+			    }
+			}
+		      else
+			{
+			  column++;
+
+			  if (! (prev_blank && column == next_tab_column))
+			    {
+			      /* It is not yet known whether the pending blanks
+				 will be replaced by tabs.  */
+			      if (column == next_tab_column)
+				one_blank_before_tab_stop = true;
+			      pending_blank[pending++] = c;
+			      prev_blank = true;
+			      continue;
+			    }
+
+			  /* Replace the pending blanks by a tab or two.  */
+			  pending_blank[0] = c = '\t';
+			  pending = one_blank_before_tab_stop;
+			}
+		    }
+		}
+	      else if (c == '\b')
+		{
+		  /* Go back one column, and force recalculation of the
+		     next tab stop.  */
+		  column -= !!column;
+		  next_tab_column = column;
+		  tab_index -= !!tab_index;
 		}
 	      else
 		{
-		  ++column;
-		  convert &= convert_entire_line;
+		  column++;
+		  if (!column)
+		    error (EXIT_FAILURE, 0, _("input line is too long"));
 		}
+
+	      if (pending)
+		{
+		  if (fwrite (pending_blank, 1, pending, stdout) != pending)
+		    error (EXIT_FAILURE, errno, _("write error"));
+		  pending = 0;
+		  one_blank_before_tab_stop = false;
+		}
+	      
+	      prev_blank = blank;
+	      convert &= convert_entire_line | blank;
 	    }
 
-	  putchar (c);
-
-	  if (c == '\n')
+	  if (c < 0)
 	    {
-	      tab_index = print_tab_index = 0;
-	      column = pending = 0;
-	      convert = true;
+	      free (pending_blank);
+	      return;
 	    }
+
+	  if (putchar (c) < 0)
+	    error (EXIT_FAILURE, errno, _("write error"));
 	}
+      while (c != '\n');
     }
 }
 
@@ -435,7 +468,7 @@ main (int argc, char **argv)
   int c;
 
   /* If true, cancel the effect of any -a (explicit or implicit in -t),
-     so that only leading white space will be considered.  */
+     so that only leading blanks will be considered.  */
   bool convert_first_only = false;
 
   bool obsolete_tablist = false;
@@ -469,14 +502,14 @@ main (int argc, char **argv)
 	  break;
 	case 't':
 	  convert_entire_line = true;
-	  parse_tabstops (optarg);
+	  parse_tab_stops (optarg);
 	  break;
 	case CONVERT_FIRST_ONLY_OPTION:
 	  convert_first_only = true;
 	  break;
 	case ',':
 	  if (have_tabval)
-	    add_tabstop (tabval);
+	    add_tab_stop (tabval);
 	  have_tabval = false;
 	  obsolete_tablist = true;
 	  break;
@@ -505,26 +538,22 @@ main (int argc, char **argv)
     convert_entire_line = false;
 
   if (have_tabval)
-    add_tabstop (tabval);
+    add_tab_stop (tabval);
 
-  validate_tabstops (tab_list, first_free_tab);
+  validate_tab_stops (tab_list, first_free_tab);
 
   if (first_free_tab == 0)
-    tab_size = 8;
+    tab_size = max_column_width = 8;
   else if (first_free_tab == 1)
     tab_size = tab_list[0];
   else
-    {
-      /* Append a sentinel to the list of tab stop indices.  */
-      add_tabstop (TAB_STOP_SENTINEL);
-      tab_size = 0;
-    }
+    tab_size = 0;
 
   file_list = (optind < argc ? &argv[optind] : stdin_argv);
 
   unexpand ();
 
-  if (have_read_stdin && fclose (stdin) == EOF)
+  if (have_read_stdin && fclose (stdin) != 0)
     error (EXIT_FAILURE, errno, "-");
 
   exit (exit_status);
