@@ -6818,10 +6818,10 @@ Display status updates as sterilization proceeds.
 @itemx --exact
 @opindex -x
 @opindex --exact
-Normally, shred rounds the file size up to the next multiple of
-the filesystem block size to fully erase the last block of the file.
-This option suppresses that behavior.
-Thus, by default if you shred a 10-byte file on a system with 512-byte
+By default, @command{shred} rounds the size of a regular file up to the next
+multiple of the filesystem block size to fully erase the last block of the file.
+Use @option{--exact} to suppress that behavior.
+Thus, by default if you shred a 10-byte regular file on a system with 512-byte
 blocks, the resulting file will be 512 bytes long.  With this option,
 shred does not increase the size of the file.
 
