@@ -1,5 +1,9 @@
 1999-08-22  Jim Meyering  <meyering@ascend.com>
 
+	* src/sys2.h (IF_LINT): Define new macro.
+	* src/df.c (main): Rename locals i and j.
+	Use IF_LINT macro instead of #ifdef lint...
+
 	* src/dd.c (parse_integer): Add `const' to char* parameter and
 	add a separate `suffix' variable.
 
