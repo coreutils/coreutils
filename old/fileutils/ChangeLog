@@ -1,9 +1,11 @@
 1998-05-27  Jim Meyering  <meyering@ascend.com>
 
 	* tests/ls/Makefile.am (TESTS): s/cr-1/rt-1/
-	* tests/ls/rt-1: Rename from cr-1.
+	* tests/ls/rt-1: New file, renamed from cr-1.
 
-998-05-26  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+1998-05-26  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* src/Makefile.am (.rm-warn-stamp): Cope with $(srcdir) != ".".
 
 	* tests/ls/cr-1: Don't use the ctime for testing, it is impossible
 	to set it reliably.
