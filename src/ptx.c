@@ -1,5 +1,5 @@
 /* Permuted index for GNU, with keywords in their context.
-   Copyright (C) 1990, 1991, 1993, 1998-2004 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1991, 1993, 1998-2005 Free Software Foundation, Inc.
    François Pinard <pinard@iro.umontreal.ca>, 1988.
 
    This program is free software; you can redistribute it and/or modify
@@ -1943,12 +1943,12 @@ static const struct option long_options[] =
   {"word-regexp", required_argument, NULL, 'W'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {0, 0, 0, 0},
+  {NULL, 0, NULL, 0},
 };
 
 static char const* const format_args[] =
 {
-  "roff", "tex", 0
+  "roff", "tex", NULL
 };
 
 static enum Format const format_vals[] =
