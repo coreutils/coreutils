@@ -7,7 +7,7 @@ AC_DEFUN(jm_AC_FUNC_LINK_FOLLOWS_SYMLINK,
   AC_CACHE_CHECK([whether link(2) follows symlinks],
 		 jm_ac_cv_func_link_follows_symlink,
   [
-    # Create a regular file, `conftest.file'.
+    # Create a regular file.
     echo > conftest.file
     AC_TRY_RUN(
       [
@@ -29,11 +29,11 @@ AC_DEFUN(jm_AC_FUNC_LINK_FOLLOWS_SYMLINK,
 	  const char *hard = "conftest.hard";
 	  struct stat sb_file, sb_hard;
 
-	  /* Create a symlink `conftest.sym' to it. */
+	  /* Create a symlink to the regular file. */
 	  if (symlink (file, sym))
 	    abort ();
 
-	  /* Create a hard link `conftest.hard' to that symlink.  */
+	  /* Create a hard link to that symlink.  */
 	  if (link (sym, hard))
 	    abort ();
 
