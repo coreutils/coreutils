@@ -261,47 +261,47 @@ char *alloca ();
 
 #define STREQ(a, b) (strcmp ((a), (b)) == 0)
 
-#ifndef HAVE_DECL_FREE
+#if !HAVE_DECL_FREE
 void free ();
 #endif
 
-#ifndef HAVE_DECL_MALLOC
+#if !HAVE_DECL_MALLOC
 char *malloc ();
 #endif
 
-#ifndef HAVE_DECL_MEMCHR
+#if !HAVE_DECL_MEMCHR
 char *memchr ();
 #endif
 
-#ifndef HAVE_DECL_REALLOC
+#if !HAVE_DECL_REALLOC
 char *realloc ();
 #endif
 
-#ifndef HAVE_DECL_STPCPY
+#if !HAVE_DECL_STPCPY
 # ifndef stpcpy
 char *stpcpy ();
 # endif
 #endif
 
-#ifndef HAVE_DECL_STRSTR
+#if !HAVE_DECL_STRSTR
 char *strstr ();
 #endif
 
-#ifndef HAVE_DECL_GETENV
+#if !HAVE_DECL_GETENV
 char *getenv ();
 #endif
 
-#ifndef HAVE_DECL_LSEEK
+#if !HAVE_DECL_LSEEK
 off_t lseek ();
 #endif
 
 /* This is needed on some AIX systems.  */
-#ifndef HAVE_DECL_STRTOUL
+#if !HAVE_DECL_STRTOUL
 unsigned long strtoul ();
 #endif
 
 /* This is needed on some AIX systems.  */
-#ifndef HAVE_DECL_STRTOULL
+#if !HAVE_DECL_STRTOULL
 unsigned long long strtoull ();
 #endif
 
