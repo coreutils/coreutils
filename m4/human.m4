@@ -1,4 +1,4 @@
-# human.m4 serial 3
+# human.m4 serial 4
 dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -13,7 +13,6 @@ AC_DEFUN([gl_HUMAN],
   AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])
 
   dnl Prerequisites of lib/human.c.
-  AC_CHECK_HEADERS_ONCE(locale.h stdlib.h string.h)
-  AC_CHECK_DECLS_ONCE(getenv)
+  AC_CHECK_HEADERS_ONCE(locale.h)
   AC_CHECK_FUNCS_ONCE(localeconv)
 ])
