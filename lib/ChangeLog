@@ -1,3 +1,15 @@
+2001-10-20  Paul Eggert  <eggert@twinsun.com>
+
+	* error.c (strerror_r): Do not declare unless !_LIBC.
+	Do not check for HAVE_DECL_STRERROR_R missing unless STRERROR_R_CHAR_P.
+	Use strerror_r that is only a macro, even if it is not a function.
+	(strerror): Check for HAVE_DECL_STRERROR before declaring.
+	(private_strerror): Use prototypes, not old-style function definition.
+	(print_errno_message): New function.
+	Support the POSIX 'int'-flavored strerror_r, as well as the traditional
+	char*-flavored one.
+	(error_tail, error, error_at_line): Use it.
+
 2001-10-11  Jim Meyering  <meyering@lucent.com>
 
 	* argmatch.c (argmatch_invalid): Use quotearg_n_style (0, ...
