@@ -3,6 +3,62 @@
 	* src/wc.c (wc): Rename innermost `buf' to avoid shadowing warning.
 	(wc): Rename local `wc' to avoid shadowing function name.
 
+2001-02-18  Paul Eggert  <eggert@twinsun.com>
+
+	Check for input size, and do not overallocate memory.
+	Also check for memory quotas.
+
+	Revamp storage management so that line tables and character data are
+	taken from the same buffer.  Line tables are now in reverse order,
+	since they grow down while the character data grow up.
+
+	* src/sort.c:
+	(<sys/resource.h>): Include if HAVE_SYS_RESOURCE_H.
+	(struct rlimit, getrlimit): Define a replacement if RLIMIT_DATA
+	is not defined.
+	(RLIMIT_AS): Define to RLIMIT_DATA if not defined.
+	(struct lines): Remove.
+	(struct buffer): New members nlines, line_bytes, eof.
+	Remove member newline_free; no longer needed, since the code no longer
+	runs out of line table space.
+	(SORTALLOC_MIN, SORTALLOC_DEFAULT_MIN): Remove.
+	(sort_size): Renamed from sortalloc; now applies to the sum of the
+	character data and the line table, not just the character data.
+	(MIN_SORT_SIZE, INPUT_FILE_SIZE_GUESS): New macros.
+	(linelength): remove.
+	(specify_sort_size): Don't worry about the distinction between the
+	character data and the line table; that is now the caller's
+	responsibility.
+	(default_sort_size): Return the value, instead of being executed for
+	side effect.  Return half of available memory, or 1/16 of total memory,
+	whichever is greater; except do not exceed 1/2 of quota.
+	(sort_buffer_size): New function.
+	(initbuf): New arg LINE_BYTES.  Ensure that the line array is properly
+	aligned.  Initialize the new set of struct buffer members.
+	(buffer_linelim): New function.
+	(fillbuf): Return int, not size_t, since the callers merely care
+	whether the result is nonzero.  New arg FILE so that error messages
+	can report the file name.  Keep track of eof.  Initialize the line
+	table too, taking its memory from the input buffer's memory; this
+	subsumes the old findlines function and removes the need for worrying
+	about running out of line table entries.
+	(checkfp, mergefps, sortlines, merge, sort): Adjust to the new storage
+	management regime, in particular the fact that line tables are now
+	filled in by fillbuf and are in reverse order.
+	(checkfp): Now takes char *, not const char *, since subroutines
+	require that now.  Rewrite to avoid lint and duplicate code.
+	If line length alloc calculation overflows,
+	simply allocate enough memory to hold the line.
+	(mergefps): New arg FILES, used for buffer size calculation and error
+	messages.  Rewrite to avoid lint.  Do not loop if savealloc*2
+	overflows.
+	(mergefps, merge): Zap temporary files eagerly rather than lazily;
+	this is needed because we now pass FILES to mergefps.
+	(sortlines): Args now point at end of arrays, not at beginnings.
+	(sort): Do not allocate temporary line array for sortlines;
+	instead, take the space from the same buffer.
+	(main): Adjust to sort_size and default_sort_size changes.
+
 2001-02-18  Jim Meyering  <meyering@lucent.com>
 
 	Rename test input files to avoid conflicts on case-insensitive
