@@ -432,8 +432,8 @@ docolon (sv, pv)
   tostring (pv);
 
   len = strlen (pv->u.s);
-  bzero (&re_buffer, sizeof (re_buffer));
-  bzero (&re_regs, sizeof (re_regs));
+  memset (&re_buffer, 0, sizeof (re_buffer));
+  memset (&re_regs, 0, sizeof (re_regs));
   re_buffer.allocated = 2 * len;
   re_buffer.buffer = (unsigned char *) xmalloc (re_buffer.allocated);
   re_buffer.translate = 0;
