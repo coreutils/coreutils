@@ -1,4 +1,21 @@
 GNU coreutils NEWS                                    -*- outline -*-
+* Major changes in release 5.1.2 (2004-01-18):
+
+** Bug fixes
+
+  rmdir -p exits with status 1 on error; formerly it sometimes exited
+  with status 0 when given more than one argument.
+
+  nohup now always exits with status 127 when it finds an error,
+  as POSIX requires; formerly it sometimes exited with status 1.
+
+  Several programs (including cut, date, dd, env, hostname, nl, pr,
+  stty, and tr) now always exit with status 1 when they find an error;
+  formerly they sometimes exited with status 2.
+
+  factor no longer reports a usage error if stdin has the wrong format.
+
+
 * Major changes in release 5.1.1 (2004-01-17):
 
 ** Configuration option

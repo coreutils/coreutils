@@ -49,9 +49,6 @@
 	setting exit_failure directly; this optimizes away redundant
 	assignments.
 	* src/printenv.c, src/sort.c, src/test.c, src/tty.c: Likewise.
-	* src/system.h (initialize_exit_failure): New function.
-	Include exitfail.h here, since we refer to exit_failure.
-	All callers changed to not include exitfail.h.
 
 	* src/chroot.c (main): Exit with status 1 rather than 127
 	if chroot itself fails, as per documentation.
@@ -135,6 +132,8 @@
 	* src/system.h (EXIT_FAIL, EXIT_CANNOT_INVOKE, EXIT_ENOENT):
 	New enum values.
 	(initialize_exit_failure): New inline function.
+	Include exitfail.h here, since we refer to exit_failure.
+	All callers changed to not include exitfail.h.
 
 	* src/tty.c (TTY_FAILURE, TTY_WRITE_ERROR): New enum values;
 	substitute them for the corresponding integer constants.
