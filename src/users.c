@@ -104,6 +104,8 @@ users (const char *filename)
     error (EXIT_FAILURE, errno, "%s", filename);
 
   list_entries_users (n_users, utmp_buf);
+
+  free (utmp_buf);
 }
 
 void
