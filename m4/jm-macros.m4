@@ -1,4 +1,4 @@
-#serial 30   -*- autoconf -*-
+#serial 31   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -19,45 +19,7 @@ AC_DEFUN(jm_MACROS,
   dnl This macro actually runs replacement code.  See isc-posix.m4.
   AC_REQUIRE([AC_ISC_POSIX])dnl
 
-  AC_CHECK_HEADERS( \
-    errno.h  \
-    fcntl.h \
-    fenv.h \
-    float.h \
-    limits.h \
-    memory.h \
-    mntent.h \
-    mnttab.h \
-    netdb.h \
-    paths.h \
-    stdlib.h \
-    stddef.h \
-    stdint.h \
-    string.h \
-    sys/acl.h \
-    sys/filsys.h \
-    sys/fs/s5param.h \
-    sys/fs_types.h \
-    sys/fstyp.h \
-    sys/ioctl.h \
-    sys/mntent.h \
-    sys/mount.h \
-    sys/param.h \
-    sys/socket.h \
-    sys/statfs.h \
-    sys/statvfs.h \
-    sys/systeminfo.h \
-    sys/time.h \
-    sys/timeb.h \
-    sys/vfs.h \
-    sys/wait.h \
-    syslog.h \
-    termios.h \
-    unistd.h \
-    utime.h \
-    values.h \
-  )
-
+  jm_CHECK_ALL_TYPES
   jm_INCLUDED_REGEX([lib/regex.c])
 
   AC_REQUIRE([jm_BISON])
@@ -228,6 +190,51 @@ AC_DEFUN(jm_MACROS,
 
 ])
 
+# These tests must be run before any use of AC_CHECK_TYPE,
+# because that macro compiles code that tests e.g., HAVE_UNISTD_H.
+# See the definition of ac_includes_default in `configure'.
+AC_DEFUN(jm_CHECK_ALL_HEADERS,
+[
+  AC_CHECK_HEADERS( \
+    errno.h  \
+    fcntl.h \
+    fenv.h \
+    float.h \
+    limits.h \
+    memory.h \
+    mntent.h \
+    mnttab.h \
+    netdb.h \
+    paths.h \
+    stdlib.h \
+    stddef.h \
+    stdint.h \
+    string.h \
+    sys/acl.h \
+    sys/filsys.h \
+    sys/fs/s5param.h \
+    sys/fs_types.h \
+    sys/fstyp.h \
+    sys/ioctl.h \
+    sys/mntent.h \
+    sys/mount.h \
+    sys/param.h \
+    sys/socket.h \
+    sys/statfs.h \
+    sys/statvfs.h \
+    sys/systeminfo.h \
+    sys/time.h \
+    sys/timeb.h \
+    sys/vfs.h \
+    sys/wait.h \
+    syslog.h \
+    termios.h \
+    unistd.h \
+    utime.h \
+    values.h \
+  )
+])
+
 # This macro must be invoked before any tests that run the compiler.
 AC_DEFUN(jm_CHECK_ALL_TYPES,
 [
@@ -254,6 +261,7 @@ AC_DEFUN(jm_CHECK_ALL_TYPES,
   AC_REQUIRE([AC_C_INLINE])
   AC_REQUIRE([AC_C_LONG_DOUBLE])
 
+  AC_REQUIRE([jm_CHECK_ALL_HEADERS])
   AC_REQUIRE([AC_HEADER_DIRENT])
   AC_REQUIRE([AC_HEADER_STDC])
   AC_CHECK_MEMBERS([struct stat.st_blksize],,,[$ac_includes_default
