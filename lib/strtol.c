@@ -1,7 +1,7 @@
-/* strtol - Convert string representation of a number into an integer value.
-   Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Convert string representation of a number into an integer value.
+   Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    NOTE: The canonical source of this file is maintained with the GNU C
-   Library.  Bugs can be reported to bug-glibc@prep.ai.mit.edu.
+   Library.  Bugs can be reported to bug-glibc@gnu.org.
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
@@ -54,7 +54,7 @@ extern int errno;
 # include "../locale/localeinfo.h"
 #endif
 
-/* Nonzero if we are defining `strtoul' or `strtouq', operating on
+/* Nonzero if we are defining `strtoul' or `strtoull', operating on
    unsigned integers.  */
 #ifndef UNSIGNED
 # define UNSIGNED 0
@@ -64,72 +64,129 @@ extern int errno;
 #endif
 
 /* Determine the name.  */
-#if UNSIGNED
-# ifdef USE_WIDE_CHAR
-#  ifdef QUAD
-#   define strtol wcstouq
+#ifdef USE_IN_EXTENDED_LOCALE_MODEL
+# if UNSIGNED
+#  ifdef USE_WIDE_CHAR
+#   ifdef QUAD
+#    define strtol __wcstoull_l
+#   else
+#    define strtol __wcstoul_l
+#   endif
 #  else
-#   define strtol wcstoul
+#   ifdef QUAD
+#    define strtol __strtoull_l
+#   else
+#    define strtol __strtoul_l
+#   endif
 #  endif
 # else
-#  ifdef QUAD
-#   define strtol strtouq
+#  ifdef USE_WIDE_CHAR
+#   ifdef QUAD
+#    define strtol __wcstoll_l
+#   else
+#    define strtol __wcstol_l
+#   endif
 #  else
-#   define strtol strtoul
+#   ifdef QUAD
+#    define strtol __strtoll_l
+#   else
+#    define strtol __strtol_l
+#   endif
 #  endif
 # endif
 #else
-# ifdef USE_WIDE_CHAR
-#  ifdef QUAD
-#   define strtol wcstoq
+# if UNSIGNED
+#  ifdef USE_WIDE_CHAR
+#   ifdef QUAD
+#    define strtol wcstoull
+#   else
+#    define strtol wcstoul
+#   endif
 #  else
-#   define strtol wcstol
+#   ifdef QUAD
+#    define strtol strtoull
+#   else
+#    define strtol strtoul
+#   endif
 #  endif
 # else
-#  ifdef QUAD
-#   define strtol strtoq
+#  ifdef USE_WIDE_CHAR
+#   ifdef QUAD
+#    define strtol wcstoll
+#   else
+#    define strtol wcstol
+#   endif
+#  else
+#   ifdef QUAD
+#    define strtol strtoll
+#   endif
 #  endif
 # endif
 #endif
 
-/* If QUAD is defined, we are defining `strtoq' or `strtouq',
+/* If QUAD is defined, we are defining `strtoll' or `strtoull',
    operating on `long long int's.  */
 #ifdef QUAD
 # define LONG long long
-# undef LONG_MIN
-# define LONG_MIN LONG_LONG_MIN
-# undef LONG_MAX
-# define LONG_MAX LONG_LONG_MAX
-# undef ULONG_MAX
-# define ULONG_MAX ULONG_LONG_MAX
+# define STRTOL_LONG_MIN LONG_LONG_MIN
+# define STRTOL_LONG_MAX LONG_LONG_MAX
+# define STRTOL_ULONG_MAX ULONG_LONG_MAX
 # if __GNUC__ == 2 && __GNUC_MINOR__ < 7
    /* Work around gcc bug with using this constant.  */
    static const unsigned long long int maxquad = ULONG_LONG_MAX;
-#  undef ULONG_MAX
-#  define ULONG_MAX maxquad
+#  undef STRTOL_ULONG_MAX
+#  define STRTOL_ULONG_MAX maxquad
 # endif
 #else
 # define LONG long
 
-#ifndef ULONG_MAX
-# define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
+# ifndef ULONG_MAX
+#  define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
+# endif
+# ifndef LONG_MAX
+#  define LONG_MAX ((long int) (ULONG_MAX >> 1))
+# endif
+# define STRTOL_LONG_MIN LONG_MIN
+# define STRTOL_LONG_MAX LONG_MAX
+# define STRTOL_ULONG_MAX ULONG_MAX
 #endif
-#ifndef LONG_MAX
-# define LONG_MAX ((long int) (ULONG_MAX >> 1))
+
+
+/* We use this code also for the extended locale handling where the
+   function gets as an additional argument the locale which has to be
+   used.  To access the values we have to redefine the _NL_CURRENT
+   macro.  */
+#ifdef USE_IN_EXTENDED_LOCALE_MODEL
+# undef _NL_CURRENT
+# define _NL_CURRENT(category, item) \
+  (current->values[_NL_ITEM_INDEX (item)].string)
+# define LOCALE_PARAM , loc
+# define LOCALE_PARAM_DECL __locale_t loc;
+#else
+# define LOCALE_PARAM
+# define LOCALE_PARAM_DECL
 #endif
+
+#if defined _LIBC || defined HAVE_WCHAR_H
+# include <wchar.h>
 #endif
 
 #ifdef USE_WIDE_CHAR
-# include <wchar.h>
 # include <wctype.h>
 # define L_(Ch) L##Ch
 # define UCHAR_TYPE wint_t
 # define STRING_TYPE wchar_t
-# define ISSPACE(Ch) iswspace (Ch)
-# define ISALPHA(Ch) iswalpha (Ch)
-# define TOUPPER(Ch) towupper (Ch)
+# ifdef USE_IN_EXTENDED_LOCALE_MODEL
+#  define ISSPACE(Ch) __iswspace_l ((Ch), loc)
+#  define ISALPHA(Ch) __iswalpha_l ((Ch), loc)
+#  define TOUPPER(Ch) __towupper_l ((Ch), loc)
+# else
+#  define ISSPACE(Ch) iswspace (Ch)
+#  define ISALPHA(Ch) iswalpha (Ch)
+#  define TOUPPER(Ch) towupper (Ch)
+# endif
 #else
-# if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
+# if defined STDC_HEADERS || (!defined isascii && !defined HAVE_ISASCII)
 #  define IN_CTYPE_DOMAIN(c) 1
 # else
 #  define IN_CTYPE_DOMAIN(c) isascii(c)
@@ -137,9 +194,15 @@ extern int errno;
 # define L_(Ch) Ch
 # define UCHAR_TYPE unsigned char
 # define STRING_TYPE char
-# define ISSPACE(Ch) (IN_CTYPE_DOMAIN (Ch) && isspace (Ch))
-# define ISALPHA(Ch) (IN_CTYPE_DOMAIN (Ch) && isalpha (Ch))
-# define TOUPPER(Ch) (IN_CTYPE_DOMAIN (Ch) ? toupper (Ch) : (Ch))
+# ifdef USE_IN_EXTENDED_LOCALE_MODEL
+#  define ISSPACE(Ch) __isspace_l ((Ch), loc)
+#  define ISALPHA(Ch) __isalpha_l ((Ch), loc)
+#  define TOUPPER(Ch) __toupper_l ((Ch), loc)
+# else
+#  define ISSPACE(Ch) (IN_CTYPE_DOMAIN (Ch) && isspace (Ch))
+#  define ISALPHA(Ch) (IN_CTYPE_DOMAIN (Ch) && isalpha (Ch))
+#  define TOUPPER(Ch) (IN_CTYPE_DOMAIN (Ch) ? toupper (Ch) : (Ch))
+# endif
 #endif
 
 #ifdef __STDC__
@@ -156,6 +219,7 @@ extern int errno;
 #endif
 
 
+
 /* Convert NPTR to an `unsigned long int' or `long int' in base BASE.
    If BASE is 0 the base is determined by the presence of a leading
    zero, indicating octal or a leading "0x" or "0X", indicating hexadecimal.
@@ -164,11 +228,12 @@ extern int errno;
    one converted is stored in *ENDPTR.  */
 
 INT
-INTERNAL (strtol) (nptr, endptr, base, group)
+INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
      const STRING_TYPE *nptr;
      STRING_TYPE **endptr;
      int base;
      int group;
+     LOCALE_PARAM_DECL
 {
   int negative;
   register unsigned LONG int cutoff;
@@ -180,8 +245,11 @@ INTERNAL (strtol) (nptr, endptr, base, group)
   int overflow;
 
 #ifdef USE_NUMBER_GROUPING
+# ifdef USE_IN_EXTENDED_LOCALE_MODEL
+  struct locale_data *current = loc->__locales[LC_NUMERIC];
+# endif
   /* The thousands character of the current locale.  */
-  wchar_t thousands;
+  wchar_t thousands = L'\0';
   /* The numeric grouping specification of the current locale,
      in the format described in <locale.h>.  */
   const char *grouping;
@@ -194,9 +262,11 @@ INTERNAL (strtol) (nptr, endptr, base, group)
       else
 	{
 	  /* Figure out the thousands separator character.  */
-	  if (mbtowc (&thousands, _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
-		      strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP))) <= 0)
-	    thousands = (wchar_t) *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
+# if defined _LIBC || defined _HAVE_BTOWC
+	  thousands = __btowc (*_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP));
+	  if (thousands == WEOF)
+	    thousands = L'\0';
+# endif
 	  if (thousands == L'\0')
 	    grouping = NULL;
 	}
@@ -233,23 +303,19 @@ INTERNAL (strtol) (nptr, endptr, base, group)
   else
     negative = 0;
 
-  if (base == 16 && s[0] == L_('0') && TOUPPER (s[1]) == L_('X'))
-    s += 2;
-
-  /* If BASE is zero, figure it out ourselves.  */
-  if (base == 0)
-    if (*s == L_('0'))
-      {
-	if (TOUPPER (s[1]) == L_('X'))
-	  {
-	    s += 2;
-	    base = 16;
-	  }
-	else
-	  base = 8;
-      }
-    else
-      base = 10;
+  /* Recognize number prefix and if BASE is zero, figure it out ourselves.  */
+  if (*s == L_('0'))
+    {
+      if ((base == 0 || base == 16) && TOUPPER (s[1]) == L_('X'))
+	{
+	  s += 2;
+	  base = 16;
+	}
+      else if (base == 0)
+	base = 8;
+    }
+  else if (base == 0)
+    base = 10;
 
   /* Save the pointer so we can check later if anything happened.  */
   save = s;
@@ -273,8 +339,8 @@ INTERNAL (strtol) (nptr, endptr, base, group)
 #endif
     end = NULL;
 
-  cutoff = ULONG_MAX / (unsigned LONG int) base;
-  cutlim = ULONG_MAX % (unsigned LONG int) base;
+  cutoff = STRTOL_ULONG_MAX / (unsigned LONG int) base;
+  cutlim = STRTOL_ULONG_MAX % (unsigned LONG int) base;
 
   overflow = 0;
   i = 0;
@@ -314,25 +380,23 @@ INTERNAL (strtol) (nptr, endptr, base, group)
      `unsigned LONG int', but outside the range of `LONG int'.  */
   if (overflow == 0
       && i > (negative
-	      ? -((unsigned LONG int) (LONG_MIN + 1)) + 1
-	      : (unsigned LONG int) LONG_MAX))
+	      ? -((unsigned LONG int) (STRTOL_LONG_MIN + 1)) + 1
+	      : (unsigned LONG int) STRTOL_LONG_MAX))
     overflow = 1;
-#else
-  overflow |= negative;
 #endif
 
   if (overflow)
     {
       __set_errno (ERANGE);
 #if UNSIGNED
-      return ULONG_MAX;
+      return STRTOL_ULONG_MAX;
 #else
-      return negative ? LONG_MIN : LONG_MAX;
+      return negative ? STRTOL_LONG_MIN : STRTOL_LONG_MAX;
 #endif
     }
 
   /* Return the result of the appropriate sign.  */
-  return (negative ? -i : i);
+  return negative ? -i : i;
 
 noconv:
   /* We must handle a special case here: the base is 0 or 16 and the
@@ -340,12 +404,14 @@ noconv:
      hexadecimal digits.  This is no error case.  We return 0 and
      ENDPTR points to the `x`.  */
   if (endptr != NULL)
-    if (save - nptr >= 2 && TOUPPER (save[-1]) == L_('X')
-	&& save[-2] == L_('0'))
-      *endptr = (STRING_TYPE *) &save[-1];
-    else
-      /*  There was no number to convert.  */
-      *endptr = (STRING_TYPE *) nptr;
+    {
+      if (save - nptr >= 2 && TOUPPER (save[-1]) == L_('X')
+	  && save[-2] == L_('0'))
+	*endptr = (STRING_TYPE *) &save[-1];
+      else
+	/*  There was no number to convert.  */
+	*endptr = (STRING_TYPE *) nptr;
+    }
 
   return 0L;
 }
@@ -369,10 +435,11 @@ INT
 #ifdef weak_function
 weak_function
 #endif
-strtol (nptr, endptr, base)
+strtol (nptr, endptr, base LOCALE_PARAM)
      const STRING_TYPE *nptr;
      STRING_TYPE **endptr;
      int base;
+     LOCALE_PARAM_DECL
 {
-  return INTERNAL (strtol) (nptr, endptr, base, 0);
+  return INTERNAL (strtol) (nptr, endptr, base, 0 LOCALE_PARAM);
 }
