@@ -2,6 +2,11 @@
 
 ##test-files-begin
 x = tac
+explicit =
+maint_gen = basic-0.I basic-0.X basic-a.I basic-a.X basic-b.I basic-b.X \
+basic-c.I basic-c.X basic-d.I basic-d.X basic-e.I basic-e.X
+run_gen = basic-0.O basic-0.E basic-a.O basic-a.E basic-b.O basic-b.E \
+basic-c.O basic-c.E basic-d.O basic-d.E basic-e.O basic-e.E
 ##test-files-end
 
 EXTRA_DIST = mk-script.pl Test.pm $x-tests $(explicit) $(maint_gen)
