@@ -559,13 +559,12 @@ static void
 strip (const char *path)
 {
   int status;
-  pid_t pid;
+  pid_t pid = fork ();
 
-  pid = fork ();
   switch (pid)
     {
     case -1:
-      error (1, errno, _("fork system call failed"));
+      error (1, errno, _("cannot fork"));
       break;
     case 0:			/* Child. */
       execlp ("strip", "strip", path, NULL);
@@ -575,6 +574,8 @@ strip (const char *path)
       /* Parent process. */
       while (pid != wait (&status))	/* Wait for kid to finish. */
 	/* Do nothing. */ ;
+      if (status)
+	error (1, 0, _("strip failed"));
       break;
     }
 }
