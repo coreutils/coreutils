@@ -171,12 +171,18 @@ print_unicode_char (FILE *stream, unsigned int code)
 
       /* Convert the character from UTF-8 to the locale's charset.  */
       res = iconv (utf8_to_local, &inptr, &inbytesleft, &outptr, &outbytesleft);
-      if (inbytesleft > 0 || res == (size_t)(-1))
+      if (inbytesleft > 0 || res == (size_t)(-1)
+	  /* Irix iconv() inserts a NUL byte if it cannot convert. */
+# if !defined _LIBICONV_VERSION && (defined sgi || defined __sgi)
+	  || (res > 0 && code != 0 && outptr - outbuf == 1 && *outbuf == '\0')
+# endif
+         )
 	error (1, res == (size_t)(-1) ? errno : 0,
 	       _("cannot convert U+%04X to local character set"), code);
 
-      /* Avoid glibc-2.1 bug.  */
-# if defined _LIBICONV_VERSION || !(__GLIBC__ - 0 == 2 && __GLIBC_MINOR__ - 0 <= 1)
+      /* Avoid glibc-2.1 bug and Solaris 2.7 bug.  */
+# if defined _LIBICONV_VERSION \
+    || !((__GLIBC__ - 0 == 2 && __GLIBC_MINOR__ - 0 <= 1) || defined __sun)
 
       /* Get back to the initial shift state.  */
       res = iconv (utf8_to_local, NULL, NULL, &outptr, &outbytesleft);
