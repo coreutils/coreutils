@@ -1,5 +1,5 @@
 /* cp.c  -- file copying (main routines)
-   Copyright (C) 89, 90, 91, 95, 1996 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 95, 1996, 1997 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -37,8 +37,6 @@
 #include "copy.h"
 #include "error.h"
 
-#define CP_OPTIONS NULL
-
 #ifndef _POSIX_VERSION
 uid_t geteuid ();
 #endif
@@ -56,7 +54,7 @@ struct dir_attr
 int stat ();
 int lstat ();
 
-char *basename ();
+char *base_name ();
 char *dirname ();
 enum backup_type get_version ();
 void strip_trailing_slashes ();
@@ -469,7 +467,7 @@ do_copy (int argc, char **argv, const struct cp_options *x)
   	    {
 	      /* Append the last component of `arg' to `dest'.  */
 
-	      ap = basename (arg);
+	      ap = base_name (arg);
 	      /* For `cp -R source/.. dest', don't copy into `dest/..'. */
 	      dst_path = (STREQ (ap, "..")
 			  ? xstrdup (dest)
@@ -483,7 +481,7 @@ do_copy (int argc, char **argv, const struct cp_options *x)
   	    }
 	  else
 	    {
-	      ret |= copy (arg, dst_path, new_dst, CP_OPTIONS);
+	      ret |= copy (arg, dst_path, new_dst, x);
 	      forget_all ();
 
 	      if (flag_path)
@@ -554,7 +552,7 @@ do_copy (int argc, char **argv, const struct cp_options *x)
 	  tmp_source = (char *) alloca (strlen (source) + 1);
 	  strcpy (tmp_source, source);
 	  strip_trailing_slashes (tmp_source);
-	  source_base = basename (tmp_source);
+	  source_base = base_name (tmp_source);
 
 	  new_dest = (char *) alloca (strlen (dest)
 				      + strlen (source_base) + 1);
@@ -565,7 +563,7 @@ do_copy (int argc, char **argv, const struct cp_options *x)
 	  new_dest = dest;
 	}
 
-      return copy (source, new_dest, new_dst, CP_OPTIONS);
+      return copy (source, new_dest, new_dst, x);
     }
   else
     {
