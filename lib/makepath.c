@@ -206,7 +206,10 @@ make_path (argpath, mode, parent_mode, owner, group, verbose_fmt_string)
       /* We're done making leading directories.
 	 Make the final component of the path.  */
 
-      if (mkdir (dirpath, mode))
+      /* The path could end in "/." or contain "/..", so test
+	 if we really have to create the directory.  */
+
+      if (stat (dirpath, &stats) && mkdir (dirpath, mode))
 	{
 	  error (0, errno, "cannot make directory `%s'", dirpath);
 	  umask (oldmask);
