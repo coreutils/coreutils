@@ -438,25 +438,6 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
   putchar ('\n');
 }
 
-/* Identify the directory, if any, that device
-   DISK is mounted on, and show its disk usage.  */
-
-static void
-show_disk (const char *disk)
-{
-  struct mount_entry *me;
-
-  for (me = mount_list; me; me = me->me_next)
-    if (STREQ (disk, me->me_devname))
-      {
-	show_dev (me->me_devname, me->me_mountdir, me->me_type,
-		  me->me_dummy, me->me_remote);
-	return;
-      }
-  /* No filesystem is mounted on DISK. */
-  show_dev (disk, (char *) NULL, (char *) NULL, 0, 0);
-}
-
 /* Return the root mountpoint of the filesystem on which FILE exists, in
    malloced storage.  FILE_STAT should be the result of stating FILE.  */
 static char *
@@ -520,6 +501,25 @@ done:
   }
 
   return mp;
+}
+
+/* Identify the directory, if any, that device
+   DISK is mounted on, and show its disk usage.  */
+
+static void
+show_disk (const char *disk)
+{
+  struct mount_entry *me;
+
+  for (me = mount_list; me; me = me->me_next)
+    if (STREQ (disk, me->me_devname))
+      {
+	show_dev (me->me_devname, me->me_mountdir, me->me_type,
+		  me->me_dummy, me->me_remote);
+	return;
+      }
+  /* No filesystem is mounted on DISK. */
+  show_dev (disk, (char *) NULL, (char *) NULL, 0, 0);
 }
 
 /* Figure out which device file or directory POINT is mounted on
