@@ -1,0 +1,81 @@
+#!/bin/sh
+
+: ${PERL=perl}
+: ${srcdir=.}
+
+case "$PERL" in
+  *'missing perl')
+  echo 1>&2 "$0: configure didn't find a usable version of Perl, so can't run this test"
+  exit 77
+  ;;
+esac
+
+exec $PERL -w -I$srcdir/.. -MFetish -- - << \EOF
+require 5.003;
+use strict;
+
+(my $program_name = $0) =~ s|.*/||;
+
+# Turn off localisation of executable's ouput.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+
+my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
+
+my @Tests =
+    (
+     ['1', '9',          {OUT => '3 3'}],
+     ['1a', '7',         {OUT => '7'}],
+     ['2', '4294967291', {OUT => '4294967291'}],
+     ['3', '4294967292', {OUT => '2 2 3 3 7 11 31 151 331'}],
+     ['4', '4294967293', {OUT => '9241 464773'}],
+
+     ['a', '4294966201', {OUT => '12197 352133'}],
+     ['b', '4294966339', {OUT => '13187 325697'}],
+     ['c', '4294966631', {OUT => '13729 312839'}],
+     ['d', '4294966457', {OUT => '14891 288427'}],
+     ['e', '4294966759', {OUT => '21649 198391'}],
+     ['f', '4294966573', {OUT => '23071 186163'}],
+     ['g', '4294967101', {OUT => '23603 181967'}],
+     ['h', '4294966519', {OUT => '34583 124193'}],
+     ['i', '4294966561', {OUT => '36067 119083'}],
+     ['j', '4294966901', {OUT => '37747 113783'}],
+     ['k', '4294966691', {OUT => '39241 109451'}],
+     ['l', '4294966969', {OUT => '44201 97169'}],
+     ['m', '4294967099', {OUT => '44483 96553'}],
+     ['n', '4294966271', {OUT => '44617 96263'}],
+     ['o', '4294966789', {OUT => '50411 85199'}],
+     ['p', '4294966189', {OUT => '53197 80737'}],
+     ['q', '4294967213', {OUT => '57139 75167'}],
+     ['s', '4294967071', {OUT => '65521 65551'}],
+     ['t', '4294966194', {OUT => '2 3 3 3 3 3 3 3 53 97 191'}],
+     ['u', '4294966272', {OUT => '2 2 2 2 2 2 2 2 2 2 3 23 89 683'}],
+     ['v', '4294966400', {OUT => '2 2 2 2 2 2 2 5 5 1342177'}],
+     ['w', '4294966464', {OUT => '2 2 2 2 2 2 3 3 3 2485513'}],
+     ['x', '4294966896', {OUT => '2 2 2 2 3 3 3 11 607 1489'}],
+     ['y', '4294966998', {OUT => '2 3 7 3917 26107'}],
+     ['z', '-1',
+      {ERR => "$prog: `-1' is not a valid positive integer\n"
+       . "Try `factor --help' for more information.\n"},
+      {EXIT => 1}],
+    );
+
+# Prepend the command line argument and append a newline to end
+# of each expected `OUT' string.
+my $t;
+foreach $t (@Tests)
+  {
+    my $arg1 = $t->[1];
+    my $e;
+    foreach $e (@$t)
+      {
+	$e->{OUT} = "$arg1: $e->{OUT}\n"
+	  if ref $e eq 'HASH' and exists $e->{OUT};
+      }
+  }
+
+my $save_temps = $ENV{SAVE_TEMPS};
+my $verbose = $ENV{VERBOSE};
+
+my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF
