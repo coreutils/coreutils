@@ -17,9 +17,9 @@ cd $tmp || framework_failure=1
 
 # Determine if `.' is on a local (would non-NFS be sufficient?) file system.
 # On at least some NFS implementations, symlinks never take up space,
-df --local . > tmp
+df --local . | tail -n +2 > tmp
 # So if this is a non-local file system, skip the test.
-if grep '^/' tmp > /dev/null; then
+if test -s tmp; then
   : # Ok.
 else
   echo "$0: skipping this test, since \`.' is on a non-local file system" 1>&2
