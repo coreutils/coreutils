@@ -1,5 +1,6 @@
 Changes in release 3.17:
 [3.16o]
+* chown accepts new option, --dereference.  --no-dereference is now the default.
 * install now shares core copying code with mv and cp
 * mv (between distinct filesystems) now uses more of the core copying code
 * fixed a bug or two in mv
