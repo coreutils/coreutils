@@ -41,6 +41,7 @@ START-INFO-DIR-ENTRY
 * sum: (textutils)sum invocation.               Print traditional checksum.
 * tac: (textutils)tac invocation.               Reverse files.
 * tail: (textutils)tail invocation.             Output the last part of files.
+* tsort: (textutils)tsort invocation.           Topological sort.
 * tr: (textutils)tr invocation.                 Translate characters.
 * unexpand: (textutils)unexpand invocation.     Convert spaces to tabs.
 * uniq: (textutils)uniq invocation.             Uniqify files.
@@ -118,7 +119,7 @@ This manual documents version @value{VERSION} of the GNU text utilities.
 * Formatting file contents::           fmt pr fold
 * Output of parts of files::           head tail split csplit
 * Summarizing files::                  wc sum cksum md5sum
-* Operating on sorted files::   sort uniq comm ptx
+* Operating on sorted files::          sort uniq comm ptx tsort
 * Operating on fields within a line::  cut paste join
 * Operating on characters::            tr expand unexpand
 * Opening the software toolbox::       The software tools philosophy.
@@ -160,6 +161,7 @@ Operating on sorted files
 * uniq invocation::             Uniqify files.
 * comm invocation::             Compare two sorted files line by line.
 * ptx invocation::              Produce a permuted index of file contents.
+* tsort invocation::            Topological sort.
 
 @code{ptx}: Produce permuted indexes
 
@@ -1890,7 +1892,8 @@ These commands work with (or produce) sorted files.
 * sort invocation::             Sort text files.
 * uniq invocation::             Uniqify files.
 * comm invocation::             Compare two sorted files line by line.
-* ptx invocation::
+* ptx invocation::              Produce a permuted index of file contents.
+* tsort invocation::            Topological sort.
 @end menu
 
 
@@ -2349,6 +2352,57 @@ Unlike some other comparison utilities, @code{comm} has an exit
 status that does not depend on the result of the comparison.
 Upon normal completion @code{comm} produces an exit code of zero.
 If there is an error it exits with nonzero status.
+
+
+@node tsort invocation
+@section @code{tsort}: Topological sort
+
+@pindex tsort
+@cindex topological sort
+
+@code{tsort} performs a topological sort on the given @var{file}, or
+standard input if no input file is given or for a @var{file} of
+@samp{-}.  Synopsis:
+
+@example
+tsort [@var{option}] [@var{file}]
+@end example
+
+@code{tsort} reads its input as pairs of strings, separated by blanks,
+indicating a partial ordering.  The output is a total ordering that
+corresponds to the given partial ordering.
+
+For example
+
+@example
+tsort <<EOF
+a b c
+d
+e f
+b c d e
+EOF
+@end example
+
+@noindent
+will produce the output
+
+@example
+a
+b
+c
+d
+e
+f
+@end example
+
+@code{tsort} will detect cycles in the input and writes the first cycle
+encountered to standard error.
+
+Note that for a given partial ordering, generally there is no unique
+total ordering.
+
+The only options are @samp{--help} and @samp{--version}.  @xref{Common
+options}.
 
 
 @node ptx invocation
