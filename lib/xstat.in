@@ -32,6 +32,10 @@ extern int errno;
 #endif
 @BEGIN_LSTAT_ONLY@
 
+#if HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
+
 #ifdef STAT_MACROS_BROKEN
 # undef S_ISLNK
 #endif
