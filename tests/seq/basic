@@ -32,16 +32,8 @@ my @Tests =
    ['neg-3',	qw(1 -1 0),	{OUT => [qw(1 0)]}],
    ['neg-4',	qw(1 -1 -1),	{OUT => [qw(1 0 -1)]}],
 
-   ['int-1',	qw(--format=%d 1 -1 -1),	{OUT => [qw(1 0 -1)]}],
-   ['int-2',	qw(--format=%02d 1 -1 -1),	{OUT => [qw(01 00 -1)]}],
-   ['int-3',	qw(--format=%03d 1 -1 -1),	{OUT => [qw(001 000 -01)]}],
-
-   # this will fail on systems where `int' != 32 bits
-   ['hex-1',	qw(--format=%x 1 -1 -1),	{OUT => [qw(1 0 ffffffff)]}],
-
-   ['hex-2',	qw(--format=%x 32 36),	{OUT => [qw(20 21 22 23 24)]}],
-
-   ['oct-1',	qw(--format=%o 32 36),	{OUT => [qw(40 41 42 43 44)]}],
+   ['eq-wid-1',	qw(-w 1 -1 -1),	{OUT => [qw(01 00 -1)]}],
+   ['eq-wid-2',	qw(-w -.1 .1 .1),{OUT => [qw(-0.1 00.0 00.1)]}],
   );
 
 # Append a newline to each entry in the OUT array.
