@@ -33,6 +33,7 @@
 #include "error.h"
 #include "full-read.h"
 #include "full-write.h"
+#include "inttostr.h"
 #include "posixver.h"
 #include "safe-read.h"
 #include "xstrtol.h"
@@ -200,12 +201,12 @@ cwrite (int new_file_flag, const char *bp, size_t bytes)
    Use buffer BUF, whose size is BUFSIZE.  */
 
 static void
-bytes_split (size_t n_bytes, char *buf, size_t bufsize)
+bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize)
 {
   size_t n_read;
   int new_file_flag = 1;
   size_t to_read;
-  size_t to_write = n_bytes;
+  uintmax_t to_write = n_bytes;
   char *bp_out;
 
   do
@@ -217,6 +218,7 @@ bytes_split (size_t n_bytes, char *buf, size_t bufsize)
       to_read = n_read;
       for (;;)
 	{
+	  size_t last_bufsize;
 	  if (to_read < to_write)
 	    {
 	      if (to_read)	/* do not write 0 bytes! */
@@ -228,7 +230,8 @@ bytes_split (size_t n_bytes, char *buf, size_t bufsize)
 	      break;
 	    }
 
-	  cwrite (new_file_flag, bp_out, to_write);
+	  last_bufsize = to_write;
+	  cwrite (new_file_flag, bp_out, last_bufsize);
 	  bp_out += to_write;
 	  to_read -= to_write;
 	  new_file_flag = 1;
@@ -242,12 +245,12 @@ bytes_split (size_t n_bytes, char *buf, size_t bufsize)
    Use buffer BUF, whose size is BUFSIZE.  */
 
 static void
-lines_split (size_t n_lines, char *buf, size_t bufsize)
+lines_split (uintmax_t n_lines, char *buf, size_t bufsize)
 {
   size_t n_read;
   char *bp, *bp_out, *eob;
   int new_file_flag = 1;
-  size_t n = 0;
+  uintmax_t n = 0;
 
   do
     {
@@ -286,16 +289,19 @@ lines_split (size_t n_lines, char *buf, size_t bufsize)
 
 /* Split into pieces that are as large as possible while still not more
    than N_BYTES bytes, and are split on line boundaries except
-   where lines longer than N_BYTES bytes occur. */
+   where lines longer than N_BYTES bytes occur.
+   FIXME: don't require a buffer of size N_BYTES, in case N_BYTES
+   is very large.  */
 
 static void
-line_bytes_split (size_t n_bytes)
+line_bytes_split (uintmax_t n_bytes)
 {
   size_t n_read;
   char *bp;
   int eof = 0;
   size_t n_buffered = 0;
-  char *buf = (char *) xmalloc (n_bytes);
+  size_t n = n_bytes;
+  char *buf = (char *) xmalloc (n);
 
   do
     {
@@ -347,14 +353,13 @@ int
 main (int argc, char **argv)
 {
   struct stat stat_buf;
-  size_t num;			/* numeric argument from command line */
   enum
     {
       type_undef, type_bytes, type_byteslines, type_lines, type_digits
     } split_type = type_undef;
   size_t in_blk_size;		/* optimal block size of input file device */
   char *buf;			/* file i/o buffer */
-  size_t n_units = 0;
+  uintmax_t n_units;
   int c;
   int digits_optind = 0;
 
@@ -374,7 +379,6 @@ main (int argc, char **argv)
     {
       /* This is the argv-index of the option we will read next.  */
       int this_optind = optind ? optind : 1;
-      long int tmp_long;
 
       c = getopt_long (argc, argv, "0123456789C:a:b:l:", longopts, NULL);
       if (c == -1)
@@ -389,7 +393,7 @@ main (int argc, char **argv)
 	  {
 	    unsigned long tmp;
 	    if (xstrtoul (optarg, NULL, 10, &tmp, "") != LONGINT_OK
-		|| SIZE_MAX < tmp)
+		|| tmp == 0 || SIZE_MAX < tmp)
 	      {
 		error (0, 0, _("%s: invalid suffix length"), optarg);
 		usage (EXIT_FAILURE);
@@ -402,39 +406,36 @@ main (int argc, char **argv)
 	  if (split_type != type_undef)
 	    FAIL_ONLY_ONE_WAY ();
 	  split_type = type_bytes;
-	  if (xstrtol (optarg, NULL, 10, &tmp_long, "bkm") != LONGINT_OK
-	      || tmp_long < 0 || tmp_long > INT_MAX)
+	  if (xstrtoumax (optarg, NULL, 10, &n_units, "bkm") != LONGINT_OK
+	      || n_units == 0)
 	    {
 	      error (0, 0, _("%s: invalid number of bytes"), optarg);
 	      usage (EXIT_FAILURE);
 	    }
-	  n_units = /* FIXME: */ (int) tmp_long;
 	  break;
 
 	case 'l':
 	  if (split_type != type_undef)
 	    FAIL_ONLY_ONE_WAY ();
 	  split_type = type_lines;
-	  if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
-	      || tmp_long < 0 || tmp_long > INT_MAX)
+	  if (xstrtoumax (optarg, NULL, 10, &n_units, "") != LONGINT_OK
+	      || n_units == 0)
 	    {
 	      error (0, 0, _("%s: invalid number of lines"), optarg);
 	      usage (EXIT_FAILURE);
 	    }
-	  n_units = /* FIXME */ (int) tmp_long;
 	  break;
 
 	case 'C':
 	  if (split_type != type_undef)
 	    FAIL_ONLY_ONE_WAY ();
 	  split_type = type_byteslines;
-	  if (xstrtol (optarg, NULL, 10, &tmp_long, "bkm") != LONGINT_OK
-	      || tmp_long < 0 ||  tmp_long > INT_MAX)
+	  if (xstrtoumax (optarg, NULL, 10, &n_units, "bkm") != LONGINT_OK
+	      || n_units == 0 || SIZE_MAX < n_units)
 	    {
 	      error (0, 0, _("%s: invalid number of bytes"), optarg);
 	      usage (EXIT_FAILURE);
 	    }
-	  n_units = /* FIXME */ (int) tmp_long;
 	  break;
 
 	case '0':
@@ -447,13 +448,18 @@ main (int argc, char **argv)
 	case '7':
 	case '8':
 	case '9':
+	  if (split_type == type_undef)
+	    {
+	      split_type = type_digits;
+	      n_units = 0;
+	    }
 	  if (split_type != type_undef && split_type != type_digits)
 	    FAIL_ONLY_ONE_WAY ();
 	  if (digits_optind != 0 && digits_optind != this_optind)
 	    n_units = 0;	/* More than one number given; ignore other. */
 	  digits_optind = this_optind;
-	  split_type = type_digits;
 	  n_units = n_units * 10 + c - '0';
+	  /* FIXME: detect overflow, or remove this support altogether */
 	  break;
 
 	case_GETOPT_HELP_CHAR;
@@ -467,8 +473,9 @@ main (int argc, char **argv)
 
   if (digits_optind && 200112 <= posix2_version ())
     {
-      error (0, 0, _("`-%d' option is obsolete; use `-l %d'"),
-	     n_units, n_units);
+      char buffer[INT_BUFSIZE_BOUND (uintmax_t)];
+      char const *a = umaxtostr (n_units, buffer);
+      error (0, 0, _("`-%s' option is obsolete; use `-l %s'"), a, a);
       usage (EXIT_FAILURE);
     }
 
@@ -479,12 +486,13 @@ main (int argc, char **argv)
       n_units = 1000;
     }
 
-  if (n_units < 1)
+  if (n_units == 0)
     {
-      error (0, 0, _("invalid number"));
+      /* FIXME: be sure to remove this block when removing
+	 support for obsolete options like `-10'.  */
+      error (0, 0, _("invalid number of lines: 0"));
       usage (EXIT_FAILURE);
     }
-  num = n_units;
 
   /* Get out the filename arguments.  */
 
@@ -527,15 +535,15 @@ main (int argc, char **argv)
     {
     case type_digits:
     case type_lines:
-      lines_split (num, buf, in_blk_size);
+      lines_split (n_units, buf, in_blk_size);
       break;
 
     case type_bytes:
-      bytes_split (num, buf, in_blk_size);
+      bytes_split (n_units, buf, in_blk_size);
       break;
 
     case type_byteslines:
-      line_bytes_split (num);
+      line_bytes_split (n_units);
       break;
 
     default:
