@@ -895,7 +895,7 @@ main (int argc, char **argv)
   clear_files ();
 
   n_files = argc - i;
-  if (0 <= n_files)
+  if (0 < n_files)
     dir_defaulted = 0;
 
   for (; i < argc; i++)
