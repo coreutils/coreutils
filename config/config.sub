@@ -3,7 +3,7 @@
 #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
 #   2000, 2001, 2002 Free Software Foundation, Inc.
 
-timestamp='2002-03-07'
+timestamp='2002-04-26'
 
 # This file is (in principle) common to ALL GNU software.
 # The presence of a machine in this file suggests that SOME GNU software
@@ -1090,7 +1090,7 @@ case $os in
 	      | -openstep* | -oskit* | -conix* | -pw32* | -nonstopux* \
 	      | -storm-chaos* | -tops10* | -tenex* | -tops20* | -its* \
 	      | -os2* | -vos* | -palmos* | -uclinux* | -nucleus* \
-	      | -morphos* | -superux* | -rtmk* | -rtmk-nova*)
+	      | -morphos* | -superux* | -rtmk* | -rtmk-nova* | -windiss* )
 	# Remember, each alternative MUST END IN *, to match a version number.
 		;;
 	-qnx*)
@@ -1409,7 +1409,7 @@ case $basic_machine in
 			-ptx*)
 				vendor=sequent
 				;;
-			-vxsim* | -vxworks*)
+			-vxsim* | -vxworks* | -windiss*)
 				vendor=wrs
 				;;
 			-aux*)
