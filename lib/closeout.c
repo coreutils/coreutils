@@ -19,12 +19,7 @@
 # include <config.h>
 #endif
 
-#if HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
-#ifndef EXIT_FAILURE
-# define EXIT_FAILURE 1
-#endif
+#include "closeout.h"
 
 #include <stdio.h>
 
@@ -36,33 +31,23 @@ extern int errno;
 #include "gettext.h"
 #define _(msgid) gettext (msgid)
 
-#include "closeout.h"
 #include "error.h"
+#include "exitfail.h"
 #include "quotearg.h"
 #include "unlocked-io.h"
 #include "__fpending.h"
 
-static int default_exit_status = EXIT_FAILURE;
 static const char *file_name;
 
-/* Set the value to be used for the exit status when close_stdout is called.
-   This is useful when it is not convenient to call close_stdout_status,
-   e.g., when close_stdout is called via atexit.  */
-void
-close_stdout_set_status (int status)
-{
-  default_exit_status = status;
-}
-
 /* Set the file name to be reported in the event an error is detected
-   by close_stdout_status.  */
+   by close_stdout.  */
 void
 close_stdout_set_file_name (const char *file)
 {
   file_name = file;
 }
 
-/* Close standard output, exiting with status STATUS on failure.
+/* Close standard output, exiting with status 'exit_failure' on failure.
    If a program writes *anything* to stdout, that program should `fflush'
    stdout and make sure that it succeeds before exiting.  Otherwise,
    suppose that you go to the extreme of checking the return status
@@ -86,7 +71,7 @@ close_stdout_set_file_name (const char *file)
    on being able to detect failure in other tools via their exit status.  */
 
 void
-close_stdout_status (int status)
+close_stdout (void)
 {
   int e = ferror (stdout) ? 0 : -1;
 
@@ -102,15 +87,9 @@ close_stdout_status (int status)
     {
       char const *write_error = _("write error");
       if (file_name)
-	error (status, e, "%s: %s", quotearg_colon (file_name), write_error);
+	error (exit_failure, e, "%s: %s", quotearg_colon (file_name),
+	       write_error);
       else
-	error (status, e, "%s", write_error);
+	error (exit_failure, e, "%s", write_error);
     }
-}
-
-/* Close standard output, exiting with status EXIT_FAILURE on failure.  */
-void
-close_stdout (void)
-{
-  close_stdout_status (default_exit_status);
 }
