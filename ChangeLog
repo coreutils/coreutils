@@ -2,6 +2,10 @@
 
 	* Version 4.5.9.
 
+	* src/printf.c (print_esc): Remove pointless comparison of unsigned
+	integer with zero, to avoid a warning from Intel's ecc.
+	Reported by Nelson Beebe.
+
 	* src/du.c (process_file): Sizes must all be of type uintmax_t.
 	Otherwise, for files or totals that are too big, numbers would
 	be truncated.  Patch mostly by Michael Stone.
