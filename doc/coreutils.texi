@@ -11926,9 +11926,6 @@ There are some other tools that deserve brief mention.
 @item grep
 search files for text that matches a regular expression
 
-@item egrep
-like @command{grep}, but with more powerful regular expressions
-
 @item wc
 count lines, words, characters
 
