@@ -100,16 +100,6 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
 	$(TEXINFOS) $(INFOS) $(MANS) $(EXTRA_DIST) $(DATA)
 DEP_DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
 	$(TEXINFOS) $(INFO_DEPS) $(MANS) $(EXTRA_DIST) $(DATA)
-DEP_FILES = .deps/alloca.P .deps/argmatch.P .deps/backupfile.P \
-.deps/basename.P .deps/dirname.P .deps/error.P .deps/fileblocks.P \
-.deps/filemode.P .deps/fnmatch.P .deps/fsusage.P .deps/ftruncate.P \
-.deps/full-write.P .deps/getdate.P .deps/getopt.P .deps/getopt1.P \
-.deps/getversion.P .deps/group-member.P .deps/idcache.P .deps/isdir.P \
-.deps/long-options.P .deps/makepath.P .deps/modechange.P \
-.deps/mountlist.P .deps/obstack.P .deps/posixtm.P .deps/safe-read.P \
-.deps/save-cwd.P .deps/savedir.P .deps/stripslash.P .deps/userspec.P \
-.deps/xgetcwd.P .deps/xmalloc.P .deps/xstrdup.P .deps/xstrtol.P \
-.deps/xstrtoul.P .deps/yesno.P
 SOURCES = $(fu_SOURCES)
 OBJECTS = $(fu_OBJECTS)
 
@@ -175,33 +165,251 @@ dist: $(DEP_DISTFILES)
 	  || ln $(srcdir)/$$file $(distdir)/$$file 2> /dev/null \
 	  || cp -p $(srcdir)/$$file $(distdir)/$$file; \
 	done
+alloca.o: alloca.c ../config.h
+argmatch.o: argmatch.c ../config.h /usr/include/sys/types.h \
+ /usr/include/linux/types.h /usr/include/asm/types.h \
+ /usr/include/stdio.h /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/libio.h /p/i586-unknown-linux/include/_G_config.h \
+ /usr/include/string.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h
+backupfile.o: backupfile.c ../config.h /usr/include/stdio.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h /usr/include/libio.h \
+ /p/i586-unknown-linux/include/_G_config.h /usr/include/ctype.h \
+ /usr/include/endian.h /usr/include/bytesex.h \
+ /usr/include/linux/version.h /usr/include/asm/byteorder.h \
+ /usr/include/sys/types.h /usr/include/linux/types.h \
+ /usr/include/asm/types.h backupfile.h /usr/include/string.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h \
+ /usr/include/dirent.h /usr/include/gnu/types.h \
+ /usr/include/linux/limits.h /usr/include/linux/dirent.h \
+ /usr/include/posix1_lim.h /usr/include/stdlib.h /usr/include/errno.h \
+ /usr/include/linux/errno.h /usr/include/alloca.h \
+ /usr/include/unistd.h /usr/include/posix_opt.h \
+ /usr/include/confname.h
+basename.o: basename.c ../config.h /usr/include/string.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h
+dirname.o: dirname.c ../config.h /usr/include/stdlib.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h \
+ /usr/include/errno.h /usr/include/linux/errno.h /usr/include/alloca.h \
+ /usr/include/string.h
+error.o: error.c ../config.h /usr/include/stdio.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h /usr/include/libio.h \
+ /p/i586-unknown-linux/include/_G_config.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stdarg.h \
+ /usr/include/stdlib.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h \
+ /usr/include/errno.h /usr/include/linux/errno.h /usr/include/alloca.h \
+ /usr/include/string.h
+fileblocks.o: fileblocks.c ../config.h
+filemode.o: filemode.c ../config.h /usr/include/sys/types.h \
+ /usr/include/linux/types.h /usr/include/asm/types.h \
+ /usr/include/sys/stat.h /usr/include/features.h \
+ /usr/include/sys/cdefs.h /usr/include/linux/stat.h
+fnmatch.o: fnmatch.c ../config.h /usr/include/errno.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/linux/errno.h fnmatch.h /usr/include/ctype.h \
+ /usr/include/endian.h /usr/include/bytesex.h \
+ /usr/include/linux/version.h /usr/include/asm/byteorder.h
+fsusage.o: fsusage.c ../config.h /usr/include/sys/types.h \
+ /usr/include/linux/types.h /usr/include/asm/types.h \
+ /usr/include/sys/stat.h /usr/include/features.h \
+ /usr/include/sys/cdefs.h /usr/include/linux/stat.h fsusage.h \
+ /usr/include/sys/param.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/limits.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/syslimits.h \
+ /usr/include/limits.h /usr/include/posix1_lim.h \
+ /usr/include/linux/limits.h /usr/include/posix2_lim.h \
+ /usr/include/linux/param.h /usr/include/asm/param.h \
+ /usr/include/sys/mount.h /usr/include/sys/vfs.h \
+ /usr/include/linux/vfs.h /usr/include/fcntl.h \
+ /usr/include/gnu/types.h /usr/include/linux/fcntl.h
+ftruncate.o: ftruncate.c ../config.h /usr/include/sys/types.h \
+ /usr/include/linux/types.h /usr/include/asm/types.h \
+ /usr/include/fcntl.h /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/gnu/types.h /usr/include/linux/fcntl.h \
+ /usr/include/errno.h /usr/include/linux/errno.h
+full-write.o: full-write.c ../config.h /usr/include/sys/types.h \
+ /usr/include/linux/types.h /usr/include/asm/types.h \
+ /usr/include/unistd.h /usr/include/features.h \
+ /usr/include/sys/cdefs.h /usr/include/posix_opt.h \
+ /usr/include/gnu/types.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h \
+ /usr/include/confname.h /usr/include/errno.h \
+ /usr/include/linux/errno.h
+getdate.o: getdate.c ../config.h /usr/include/stdio.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h /usr/include/libio.h \
+ /p/i586-unknown-linux/include/_G_config.h /usr/include/ctype.h \
+ /usr/include/endian.h /usr/include/bytesex.h \
+ /usr/include/linux/version.h /usr/include/asm/byteorder.h \
+ /usr/include/sys/types.h /usr/include/linux/types.h \
+ /usr/include/asm/types.h /usr/include/sys/time.h \
+ /usr/include/linux/time.h /usr/include/time.h /usr/include/string.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h
+getopt.o: getopt.c ../config.h /usr/include/stdio.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h /usr/include/libio.h \
+ /p/i586-unknown-linux/include/_G_config.h
+getopt1.o: getopt1.c ../config.h getopt.h /usr/include/stdio.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h /usr/include/libio.h \
+ /p/i586-unknown-linux/include/_G_config.h
+getversion.o: getversion.c ../config.h backupfile.h \
+ /usr/include/stdlib.h /usr/include/features.h \
+ /usr/include/sys/cdefs.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h \
+ /usr/include/errno.h /usr/include/linux/errno.h /usr/include/alloca.h
+group-member.o: group-member.c ../config.h /usr/include/stdio.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h /usr/include/libio.h \
+ /p/i586-unknown-linux/include/_G_config.h /usr/include/sys/types.h \
+ /usr/include/linux/types.h /usr/include/asm/types.h \
+ /usr/include/stdlib.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h \
+ /usr/include/errno.h /usr/include/linux/errno.h /usr/include/alloca.h \
+ /usr/include/unistd.h /usr/include/posix_opt.h \
+ /usr/include/gnu/types.h /usr/include/confname.h group-member.h
+idcache.o: idcache.c ../config.h /usr/include/stdio.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h /usr/include/libio.h \
+ /p/i586-unknown-linux/include/_G_config.h /usr/include/sys/types.h \
+ /usr/include/linux/types.h /usr/include/asm/types.h \
+ /usr/include/pwd.h /usr/include/gnu/types.h /usr/include/grp.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h \
+ /usr/include/string.h /usr/include/unistd.h /usr/include/posix_opt.h \
+ /usr/include/confname.h
+isdir.o: isdir.c ../config.h /usr/include/sys/types.h \
+ /usr/include/linux/types.h /usr/include/asm/types.h \
+ /usr/include/sys/stat.h /usr/include/features.h \
+ /usr/include/sys/cdefs.h /usr/include/linux/stat.h
+long-options.o: long-options.c ../config.h /usr/include/stdio.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h /usr/include/libio.h \
+ /p/i586-unknown-linux/include/_G_config.h getopt.h long-options.h
+makepath.o: makepath.c ../config.h /usr/include/stdio.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h /usr/include/libio.h \
+ /p/i586-unknown-linux/include/_G_config.h /usr/include/sys/types.h \
+ /usr/include/linux/types.h /usr/include/asm/types.h \
+ /usr/include/sys/stat.h /usr/include/linux/stat.h \
+ /usr/include/unistd.h /usr/include/posix_opt.h \
+ /usr/include/gnu/types.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h \
+ /usr/include/confname.h /usr/include/stdlib.h /usr/include/errno.h \
+ /usr/include/linux/errno.h /usr/include/alloca.h \
+ /usr/include/string.h makepath.h
+modechange.o: modechange.c ../config.h /usr/include/sys/types.h \
+ /usr/include/linux/types.h /usr/include/asm/types.h \
+ /usr/include/sys/stat.h /usr/include/features.h \
+ /usr/include/sys/cdefs.h /usr/include/linux/stat.h modechange.h \
+ /usr/include/stdlib.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h \
+ /usr/include/errno.h /usr/include/linux/errno.h /usr/include/alloca.h
+mountlist.o: mountlist.c ../config.h /usr/include/stdio.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h /usr/include/libio.h \
+ /p/i586-unknown-linux/include/_G_config.h /usr/include/sys/types.h \
+ /usr/include/linux/types.h /usr/include/asm/types.h mountlist.h \
+ /usr/include/stdlib.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h \
+ /usr/include/errno.h /usr/include/linux/errno.h /usr/include/alloca.h \
+ /usr/include/string.h /usr/include/sys/param.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/limits.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/syslimits.h \
+ /usr/include/limits.h /usr/include/posix1_lim.h \
+ /usr/include/linux/limits.h /usr/include/posix2_lim.h \
+ /usr/include/linux/param.h /usr/include/asm/param.h \
+ /usr/include/mntent.h
+obstack.o: obstack.c obstack.h ../config.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h \
+ /usr/include/string.h /usr/include/features.h \
+ /usr/include/sys/cdefs.h /usr/include/stdio.h /usr/include/libio.h \
+ /p/i586-unknown-linux/include/_G_config.h
+posixtm.o: posixtm.c ../config.h /usr/include/stdio.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h /usr/include/libio.h \
+ /p/i586-unknown-linux/include/_G_config.h /usr/include/sys/types.h \
+ /usr/include/linux/types.h /usr/include/asm/types.h \
+ /usr/include/time.h
+safe-read.o: safe-read.c ../config.h /usr/include/sys/types.h \
+ /usr/include/linux/types.h /usr/include/asm/types.h \
+ /usr/include/unistd.h /usr/include/features.h \
+ /usr/include/sys/cdefs.h /usr/include/posix_opt.h \
+ /usr/include/gnu/types.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h \
+ /usr/include/confname.h /usr/include/errno.h \
+ /usr/include/linux/errno.h
+save-cwd.o: save-cwd.c ../config.h /usr/include/stdio.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h /usr/include/libio.h \
+ /p/i586-unknown-linux/include/_G_config.h /usr/include/stdlib.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h \
+ /usr/include/errno.h /usr/include/linux/errno.h /usr/include/alloca.h \
+ /usr/include/unistd.h /usr/include/posix_opt.h \
+ /usr/include/gnu/types.h /usr/include/confname.h \
+ /usr/include/sys/types.h /usr/include/linux/types.h \
+ /usr/include/asm/types.h /usr/include/fcntl.h \
+ /usr/include/linux/fcntl.h save-cwd.h error.h
+savedir.o: savedir.c ../config.h /usr/include/sys/types.h \
+ /usr/include/linux/types.h /usr/include/asm/types.h \
+ /usr/include/unistd.h /usr/include/features.h \
+ /usr/include/sys/cdefs.h /usr/include/posix_opt.h \
+ /usr/include/gnu/types.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h \
+ /usr/include/confname.h /usr/include/dirent.h \
+ /usr/include/linux/limits.h /usr/include/linux/dirent.h \
+ /usr/include/posix1_lim.h /usr/include/stdlib.h /usr/include/errno.h \
+ /usr/include/linux/errno.h /usr/include/alloca.h \
+ /usr/include/string.h
+stripslash.o: stripslash.c ../config.h /usr/include/string.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h
+userspec.o: userspec.c ../config.h /usr/include/stdio.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h /usr/include/libio.h \
+ /p/i586-unknown-linux/include/_G_config.h /usr/include/sys/types.h \
+ /usr/include/linux/types.h /usr/include/asm/types.h \
+ /usr/include/pwd.h /usr/include/gnu/types.h /usr/include/grp.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h \
+ /usr/include/string.h /usr/include/stdlib.h /usr/include/errno.h \
+ /usr/include/linux/errno.h /usr/include/alloca.h \
+ /usr/include/unistd.h /usr/include/posix_opt.h \
+ /usr/include/confname.h
+xgetcwd.o: xgetcwd.c ../config.h /usr/include/stdio.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h /usr/include/libio.h \
+ /p/i586-unknown-linux/include/_G_config.h /usr/include/errno.h \
+ /usr/include/linux/errno.h /usr/include/sys/types.h \
+ /usr/include/linux/types.h /usr/include/asm/types.h pathmax.h \
+ /usr/include/unistd.h /usr/include/posix_opt.h \
+ /usr/include/gnu/types.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h \
+ /usr/include/confname.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/limits.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/syslimits.h \
+ /usr/include/limits.h /usr/include/posix1_lim.h \
+ /usr/include/linux/limits.h /usr/include/posix2_lim.h
+xmalloc.o: xmalloc.c ../config.h /usr/include/sys/types.h \
+ /usr/include/linux/types.h /usr/include/asm/types.h \
+ /usr/include/stdlib.h /usr/include/features.h \
+ /usr/include/sys/cdefs.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h \
+ /usr/include/errno.h /usr/include/linux/errno.h /usr/include/alloca.h
+xstrdup.o: xstrdup.c ../config.h /usr/include/string.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h
+xstrtol.o: xstrtol.c ../config.h /usr/include/stdlib.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h \
+ /usr/include/errno.h /usr/include/linux/errno.h /usr/include/alloca.h \
+ /usr/include/string.h /p/i586-unknown-linux/include/assert.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/limits.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/syslimits.h \
+ /usr/include/limits.h /usr/include/posix1_lim.h \
+ /usr/include/linux/limits.h /usr/include/posix2_lim.h xstrtol.h
+xstrtoul.o: xstrtoul.c xstrtol.c ../config.h /usr/include/stdlib.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/stddef.h \
+ /usr/include/errno.h /usr/include/linux/errno.h /usr/include/alloca.h \
+ /usr/include/string.h /p/i586-unknown-linux/include/assert.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/limits.h \
+ /p/lib/gcc-lib/i586-unknown-linux/2.7.2-960329/include/syslimits.h \
+ /usr/include/limits.h /usr/include/posix1_lim.h \
+ /usr/include/linux/limits.h /usr/include/posix2_lim.h xstrtol.h
+yesno.o: yesno.c ../config.h /usr/include/stdio.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h /usr/include/libio.h \
+ /p/i586-unknown-linux/include/_G_config.h
 
-# This fragment is probably only useful for maintainers.  It relies on
-# GNU make and gcc.  It is only included in the generated Makefile.in
-# if `automake' is not passed the `--include-deps' flag.
-
-MKDEP = gcc -MM $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
-
--include .deps/.P
-.deps/.P: $(BUILT_SOURCES)
-	test -d .deps || mkdir .deps
-	echo > $@
-
--include $(DEP_FILES)
-$(DEP_FILES): .deps/.P
-
-.deps/%.P: %.c
-	@echo "mkdeps $< > $@"
-	@re=`echo 's,^$(srcdir)//*,,g;s, $(srcdir)//*, ,g' | sed 's,\.,\\\\.,g'`; \
-	  $(MKDEP) $< | sed "$$re" > $@-tmp
-	@if test -n "$o"; then			\
-	  sed 's/\.o:/$$o:/' $@-tmp > $@;	\
-	  rm $@-tmp;				\
-	else					\
-	  mv $@-tmp $@;				\
-	fi
-
-# End of maintainer-only section
 info:
 
 dvi:
