@@ -1,5 +1,7 @@
 2003-02-16  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.am (libfetish_a_SOURCES): Add mmap-stack.h.
+
 	* mmap-stack.c (MAP_ANONYMOUS): Use MAP_ANON, if possible.
 	Initialize `fd' to -1, so Solaris' mmap works with MAP_ANON.
 
