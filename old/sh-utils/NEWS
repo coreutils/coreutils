@@ -1,5 +1,9 @@
 Changes in release 2.1
  [2.0.12]
+* The following changes apply on systems conforming to POSIX 1003.1-2001,
+  and are required by the new POSIX standard:
+   - `date -I' is no longer supported.  Instead, use `date --iso-8601'.
+   - `nice -NUM' is no longer supported.  Instead, use `nice -n NUM'.
 * New 'uname' options -i or --hardware-platform, and -o or --operating-system.
    'uname -a' now outputs -i and -o information at the end.
    New uname option --kernel-version is an alias for -v.
