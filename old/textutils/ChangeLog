@@ -1,3 +1,22 @@
+2000-07-28  Paul Eggert  <eggert@twinsun.com>
+
+	sort's -T option can now appear multiple times.
+	Thanks to Charles Randall for suggesting this idea.
+
+	* doc/textutils.texi, NEWS: Document this.
+
+	* src/sort.c (temp_dir): Remove.
+	(temp_dirs, temp_dir_count, temp_dir_alloc): New vars.
+	(process_id): New var.
+	(usage): Describe new use of -T.
+	(add_temp_dir): New function.
+	(tempname): Use new temp_dirs array.
+	Do not discard information from the process-id or sequence
+	number, unless we have short file names.
+	(sighandle): Use process_id instead of getpid.
+	(main): Initialize process_id.
+	Add support for the new use of -T.
+
 2000-07-23  Jim Meyering  <meyering@lucent.com>
 
 	* tests/head/Test.pm: Rename tests (and hence files) to have a short
