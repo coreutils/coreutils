@@ -1,3 +1,7 @@
+Sat Aug 24 14:25:41 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/cat.c (cat): Cast first arg to stpcpy to char* to avoid warnings.
+
 Wed Aug 21 22:28:26 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (ALL_LINGUAS): Add polish (pl).
