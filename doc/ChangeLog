@@ -1,3 +1,7 @@
+2004-11-15  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (dd invocation): Reword the new dd message.
+
 2004-11-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (dd invocation): dd now outputs total bytes,
