@@ -31,6 +31,7 @@
 #include "system.h"
 #include "long-options.h"
 #include "error.h"
+#include "exitfail.h"
 #include "hard-locale.h"
 #include "inttostr.h"
 #include "physmem.h"
@@ -2209,8 +2210,7 @@ main (int argc, char **argv)
   inittables ();
 
   /* Change the way library functions fail.  */
-  xalloc_exit_failure = SORT_FAILURE;
-  xmemcoll_exit_failure = SORT_FAILURE;
+  exit_failure = SORT_FAILURE;
 
 #ifdef SA_NOCLDSTOP
   {
