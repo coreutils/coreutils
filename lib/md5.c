@@ -245,11 +245,7 @@ md5_process_bytes (const void *buffer, size_t len, struct md5_ctx *ctx)
     {
 #if !_STRING_ARCH_unaligned
 # define alignof(type) offsetof (struct { char c; type x; }, x)
-# ifdef UINTPTR_MAX
-#  define UNALIGNED_P(p) (((uintptr_t) p) % alignof (md5_uint32) != 0)
-# else
-#  define UNALIGNED_P(p) 1
-# endif
+# define UNALIGNED_P(p) (((size_t) p) % alignof (md5_uint32) != 0)
       if (UNALIGNED_P (buffer))
 	while (len > 64)
 	  {
