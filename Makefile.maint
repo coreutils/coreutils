@@ -38,6 +38,15 @@ cvs-dist: maintainer-check
 	cvs tag -c $(this-cvs-tag)
 	$(MAKE) dist
 
+# Use this to make sure we don't run these programs when building
+# from a virgin tgz file, below.
+null_AM_MAKEFLAGS = \
+  ACLOCAL=false \
+  AUTOCONF=false \
+  AUTOMAKE=false \
+  AUTOHEADER=false \
+  MAKEINFO=false
+
 t=./=test
 my-distcheck:
 	-rm -rf $(t)
@@ -48,6 +57,7 @@ my-distcheck:
 	cd $(t)/$(distdir) \
 	  && ./configure --disable-nls \
 	  && $(MAKE) CFLAGS='-Wformat -Werror' \
+	      AM_MAKEFLAGS='$(null_AM_MAKEFLAGS)' \
 	  && $(MAKE) dvi \
 	  && $(MAKE) check \
 	  && rm -rf $(DEPDIR) \
