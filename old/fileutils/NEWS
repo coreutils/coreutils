@@ -1,4 +1,11 @@
 Changes in release 4.1:
+[4.0j]
+* chgrp accepts new option, --dereference.  --no-dereference is now the default.
+* New ls option --quoting-style=locale acts like --quoting-style=c, except
+  with locale-specific quoting symbols (` and ' by default) instead of ".
+* `df DIR' is less likely to hang due to bad NFS mounts
+* As per POSIX.2, `df -P' now uses ceiling rather than rounding, and its
+  header now says `1024-blocks ... Capacity' instead of `1k-blocks ... Use%'.
 [4.0i]
 * `cp -f FILE FILE' and `mv -f FILE FILE' no longer remove FILE
 * touch works once again (DST-wise) when certain `--date DATE-TIME'
