@@ -1,3 +1,8 @@
+2003-07-12  Jim Meyering  <jim@meyering.net>
+
+	* jm-macros.m4 (OPTIONAL_BIN_PROGS, OPTIONAL_BIN_ZCRIPTS): Remove
+	unused variables.
+
 2003-07-10  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (jm_MACROS): Require gl_FUNC_VASPRINTF and
