@@ -125,6 +125,12 @@ for cmd in ln cp mv ginstall; do
 done
 
 # ===================================================
+# With coreutils-5.2.1, this would mistakenly access argv[1][-1].
+# I'm including it here, in case some day programs like valgrind detect that.
+# Purify probably would have done so.
+ln foo '' 2> /dev/null
+
+# ===================================================
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework' 1>&2
