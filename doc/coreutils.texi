@@ -8996,7 +8996,8 @@ Exit status:
 @display
 0 if the expression is neither null nor 0,
 1 if the expression is null or 0,
-2 for invalid expressions.
+2 if the expression is syntactically invalid,
+3 if an error occurred.
 @end display
 
 @menu
