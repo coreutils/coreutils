@@ -17,10 +17,7 @@
 
 /* David MacKenzie <djm@gnu.ai.mit.edu> */
 
-#ifdef HAVE_CONFIG_H
-
-#endif
-
+#include <config.h>
 #include <stdio.h>
 #include <getopt.h>
 

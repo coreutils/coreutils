@@ -17,10 +17,7 @@ You should have received a copy of the GNU General Public License along
 with Bash; see the file COPYING.  If not, write to the Free Software
 Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-#ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif
-
 #include <stdio.h>
 #include <sys/types.h>
 #include "system.h"

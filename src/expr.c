@@ -28,10 +28,7 @@
 
    Define EVAL_TRACE to print an evaluation trace.  */
 
-#ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif
-
 #include <stdio.h>
 #include <sys/types.h>
 #include <regex.h>

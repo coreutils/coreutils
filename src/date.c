@@ -13,36 +13,11 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
-
-/* Options:
-   -d DATESTR   Display the date DATESTR.
-   -s DATESTR   Set the date to DATESTR.
-   -u           Display or set the date in universal instead of local time.
-   +FORMAT      Specify custom date output format, described below.
-   MMDDhhmm[[CC]YY][.ss]        Set the date in the format described below.
-
-   If one non-option argument is given, it is used as the date to which
-   to set the system clock, and must have the format:
-   MM   month (01..12)
-   DD   day in month (01..31)
-   hh   hour (00..23)
-   mm   minute (00..59)
-   CC   first 2 digits of year (optional, defaults to current) (00..99)
-   YY   last 2 digits of year (optional, defaults to current) (00..99)
-   ss   second (00..61)
-
-   If a non-option argument that starts with a `+' is specified, it
-   is used to control the format in which the date is printed; it
-   can contain any of the `%' substitutions allowed by the strftime
-   function.  A newline is always added at the end of the output.
+   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
    David MacKenzie <djm@gnu.ai.mit.edu> */
 
-#ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif
-
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
@@ -97,7 +72,11 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
-/* FIXME: comment */
+/* Parse each line in INPUT_FILENAME as with --date and display the
+   each resulting time and date.  If the file cannot be opened, tell why
+   then exit.  Issue a diagnostic for any lines that cannot be parsed.
+   If any line cannot be parsed, return non-zero;  otherwise return zero.
+   */
 
 static int
 batch_convert (const char *input_filename, const char *format)
@@ -144,7 +123,10 @@ batch_convert (const char *input_filename, const char *format)
 	  error (0, 0, "invalid date `%s'", line);
 	  status = 1;
 	}
-      show_date (format, when);
+      else
+	{
+	  show_date (format, when);
+	}
     }
 
   if (have_read_stdin && fclose (stdin) == EOF)
@@ -350,6 +332,7 @@ Usage: %s [OPTION]... [+FORMAT]\n\
       printf ("\
 \n\
   -d, --date=STRING        display time described by STRING, not `now'\n\
+  -f, --file=DATEFILE      like --date once for each line of DATEFILE\n\
   -s, --set=STRING         set time described by STRING\n\
   -u, --utc, --universal   print or set Coordinated Universal Time\n\
       --help               display this help and exit\n\

@@ -18,10 +18,7 @@
 /* Written by Arnold Robbins, arnold@audiofax.com.
    Major rewrite by David MacKenzie, djm@gnu.ai.mit.edu. */
 
-#ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif
-
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>

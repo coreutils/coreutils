@@ -27,10 +27,7 @@
 
    David MacKenzie <djm@gnu.ai.mit.edu> */
 
-#ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif
-
 #include <stdio.h>
 #include <sys/types.h>
 #include <termios.h>
