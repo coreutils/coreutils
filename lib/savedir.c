@@ -87,7 +87,7 @@ savedir (dir, name_size)
   if (dirp == NULL)
     return NULL;
 
-  name_space = (char *) malloc (name_size);
+  name_space = (char *) malloc (name_size ? name_size : 1);
   if (name_space == NULL)
     {
       closedir (dirp);
