@@ -2,10 +2,12 @@ error.h
 fnmatch.h
 fts.c
 fts_.h
+getndelim2.h
 getopt.c
 getopt.h
 getopt1.c
 getpagesize.h
+gettext.h
 md5.h
 obstack.h
 printf-args.h
