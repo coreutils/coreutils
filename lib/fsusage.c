@@ -22,7 +22,15 @@
 
 #if HAVE_INTTYPES_H
 # include <inttypes.h>
+#else
+# if HAVE_STDINT_H
+#  include <stdint.h>
+# endif
 #endif
+#ifndef UINTMAX_MAX
+# define UINTMAX_MAX ((uintmax_t) -1)
+#endif
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "fsusage.h"
@@ -75,9 +83,14 @@ int statvfs ();
 
 /* Many space usage primitives use all 1 bits to denote a value that is
    not applicable or unknown.  Propagate this information by returning
-   a uintmax_t value that is all 1 bits if the argument is all 1 bits,
-   even if the argument is unsigned and smaller than uintmax_t.  */
-#define PROPAGATE_ALL_ONES(x) ((x) == -1 ? (uintmax_t) -1 : (uintmax_t) (x))
+   a uintmax_t value that is all 1 bits if X is all 1 bits, even if X
+   is unsigned and narrower than uintmax_t.  */
+#define PROPAGATE_ALL_ONES(x) \
+  ((sizeof (x) < sizeof (uintmax_t) \
+    && (~ (x) == (sizeof (x) < sizeof (int) \
+		  ? - (1 << (sizeof (x) * CHAR_BIT)) \
+		  : 0))) \
+   ? UINTMAX_MAX : (x))
 
 /* Extract the top bit of X as an uintmax_t value.  */
 #define EXTRACT_TOP_BIT(x) ((x) \
@@ -163,7 +176,7 @@ get_fs_usage (const char *path, const char *disk, struct fs_usage *fsp)
   fsp->fsu_bavail = PROPAGATE_TOP_BIT (fsd.s_tfree);
   fsp->fsu_bavail_top_bit_set = EXTRACT_TOP_BIT (fsd.s_tfree) != 0;
   fsp->fsu_files = (fsd.s_isize == -1
-		    ? (uintmax_t) -1
+		    ? UINTMAX_MAX
 		    : (fsd.s_isize - 2) * INOPB * (fsd.s_type == Fs2b ? 2 : 1));
   fsp->fsu_ffree = PROPAGATE_ALL_ONES (fsd.s_tinode);
 
@@ -236,8 +249,9 @@ get_fs_usage (const char *path, const char *disk, struct fs_usage *fsp)
     return -1;
 
   /* f_frsize isn't guaranteed to be supported.  */
-  fsp->fsu_blocksize =
-    PROPAGATE_ALL_ONES (fsd.f_frsize ? fsd.f_frsize : fsd.f_bsize);
+  fsp->fsu_blocksize = (fsd.f_frsize
+			? PROPAGATE_ALL_ONES (fsd.f_frsize)
+			: PROPAGATE_ALL_ONES (fsd.f_bsize));
 
 #endif /* STAT_STATVFS */
 
