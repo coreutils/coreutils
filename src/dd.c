@@ -377,7 +377,7 @@ cleanup (void)
     error (1, errno, "%s", output_file);
 }
 
-static void
+static inline void
 quit (int code)
 {
   cleanup ();
