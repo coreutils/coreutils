@@ -2,6 +2,8 @@
 
 	* Version 5.0.90.
 
+	* man/help2man: Update to version 1.33.
+
 	* src/expand.c (parse_tabstops): Detect overflow in tabstop sizes.
 
 	* src/dircolors.c: Include xstrndup.h.
