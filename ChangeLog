@@ -1,6 +1,13 @@
-2004-03-30  Jim Meyering  <jim@meyering.net>
+2004-03-31  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	Specifying an invalid --width=N (-w) or --gap-size=N (-g)
+	would not elicit an error.
+	* src/ptx.c: Include "xstrtol.h" and "quotearg.h".
+	(main): Don't use atoi.  Use xstrtoul instead.
+
+2004-03-30  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (sc_prohibit_atoi_atof): New rule.
 	(syntax-check-rules): Add it.
