@@ -32,6 +32,7 @@
 #include "dirname.h"
 #include "path-concat.h"
 #include "quote.h"
+#include "utimens.h"
 
 #define ASSIGN_BASENAME_STRDUPA(Dest, File_name)	\
   do							\
@@ -307,16 +308,14 @@ re_protect (const char *const_dst_path, int src_offset,
 
       if (x->preserve_timestamps)
 	{
-	  struct utimbuf utb;
+	  struct timespec timespec[2];
 
-	  /* There's currently no interface to set file timestamps with
-	     better than 1-second resolution, so discard any fractional
-	     part of the source timestamp.  */
+	  timespec[0].tv_sec = src_sb.st_atime;
+	  timespec[0].tv_nsec = TIMESPEC_NS (src_sb.st_atim);
+	  timespec[1].tv_sec = src_sb.st_mtime;
+	  timespec[1].tv_nsec = TIMESPEC_NS (src_sb.st_mtim);
 
-	  utb.actime = src_sb.st_atime;
-	  utb.modtime = src_sb.st_mtime;
-
-	  if (utime (dst_path, &utb))
+	  if (utimens (dst_path, timespec))
 	    {
 	      error (0, errno, _("failed to preserve times for %s"),
 		     quote (dst_path));
