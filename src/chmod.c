@@ -1,5 +1,5 @@
 /* chmod -- change permission modes of files
-   Copyright (C) 89, 90, 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -158,10 +158,8 @@ change_file_mode (const char *file, const struct mode_change *changes,
       return 1;
     }
 
-#ifdef S_ISLNK
   if (S_ISLNK (file_stats.st_mode))
     return 0;
-#endif
 
   newmode = mode_adjust (file_stats.st_mode, changes);
 
