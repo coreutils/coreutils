@@ -182,8 +182,10 @@ cat <<\EOF > $expected
 
 EOF
 
-# Uncomment this if you see a failure and want to try to diagnose it.
-diff -u $expected $actual 1>&2
+fail=0;
 
-cmp $expected $actual
-exit $?
+# Some folks don't have diff.
+cmp $expected $actual \
+  || { diff -c $expected $actual 1>&2; fail=1; }
+
+(exit $fail); exit
