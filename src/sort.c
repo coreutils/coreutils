@@ -2158,7 +2158,6 @@ main (int argc, char **argv)
   struct keyfield *key;
   struct keyfield gkey;
   char const *s;
-  int i;
   int c = 0;
   int checkonly = 0, mergeonly = 0, nfiles = 0;
   int posix_pedantic = (getenv ("POSIXLY_CORRECT") != NULL);
@@ -2213,26 +2212,32 @@ main (int argc, char **argv)
   xmemcoll_exit_failure = SORT_FAILURE;
 
 #ifdef SA_NOCLDSTOP
-  sigemptyset (&caught_signals);
-  for (i = 0; i < nsigs; i++)
-    sigaddset (&caught_signals, sigs[i]);
-  newact.sa_handler = sighandler;
-  newact.sa_mask = caught_signals;
-  newact.sa_flags = 0;
+  {
+    unsigned i;
+    sigemptyset (&caught_signals);
+    for (i = 0; i < nsigs; i++)
+      sigaddset (&caught_signals, sigs[i]);
+    newact.sa_handler = sighandler;
+    newact.sa_mask = caught_signals;
+    newact.sa_flags = 0;
+  }
 #endif
 
-  for (i = 0; i < nsigs; i++)
-    {
-      int sig = sigs[i];
+  {
+    unsigned i;
+    for (i = 0; i < nsigs; i++)
+      {
+	int sig = sigs[i];
 #ifdef SA_NOCLDSTOP
-      sigaction (sig, NULL, &oldact);
-      if (oldact.sa_handler != SIG_IGN)
-	sigaction (sig, &newact, NULL);
+	sigaction (sig, NULL, &oldact);
+	if (oldact.sa_handler != SIG_IGN)
+	  sigaction (sig, &newact, NULL);
 #else
-      if (signal (sig, SIG_IGN) != SIG_IGN)
-	signal (sig, sighandler);
+	if (signal (sig, SIG_IGN) != SIG_IGN)
+	  signal (sig, sighandler);
 #endif
-    }
+      }
+  }
 
   gkey.sword = gkey.eword = -1;
   gkey.ignore = NULL;
