@@ -1,3 +1,24 @@
+1998-08-15  Jim Meyering  <meyering@ascend.com>
+
+	* src/pr.c (usage): Reformat.
+
+	* src/ptx.c: Add braces to suppress warning about ambiguous `else'.
+	* lib/bumpalloc.h: Likewise.
+
+1998-08-13  François Pinard  <pinard@iro.umontreal.ca>
+
+	* src/ptx.c: New file.
+	* src/Makefile.am (bin_PROGRAMS): Add ptx.
+	* lib/bumpalloc.h, lib/diacrit.h, lib/diacrit.c: New files.
+	* lib/Makefile.am (libtu_a_SOURCES): Add diacrit.c.
+	(noinst_HEADERS): Add bumpalloc.h and diacrit.h.
+
+1998-08-09  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* src/pr.c (long_options): Add long names for all options.
+	(usage): Update help string.
+	(main): Handle the special options --pages and --columns.
+
 1998-08-02  Jim Meyering  <meyering@ascend.com>
 
 	* lib/linebuffer.c (readline): Return zero upon error as well as upon
