@@ -78,25 +78,24 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/long-options.m4 \
 	$(top_srcdir)/m4/longdouble.m4 $(top_srcdir)/m4/longlong.m4 \
 	$(top_srcdir)/m4/ls-mntd-fs.m4 $(top_srcdir)/m4/lstat.m4 \
-	$(top_srcdir)/m4/makepath.m4 $(top_srcdir)/m4/malloc.m4 \
-	$(top_srcdir)/m4/mbrtowc.m4 $(top_srcdir)/m4/mbswidth.m4 \
-	$(top_srcdir)/m4/md5.m4 $(top_srcdir)/m4/memchr.m4 \
-	$(top_srcdir)/m4/memcmp.m4 $(top_srcdir)/m4/memcoll.m4 \
-	$(top_srcdir)/m4/memcpy.m4 $(top_srcdir)/m4/memmove.m4 \
-	$(top_srcdir)/m4/memrchr.m4 $(top_srcdir)/m4/memset.m4 \
-	$(top_srcdir)/m4/mkdir-slash.m4 $(top_srcdir)/m4/mkstemp.m4 \
-	$(top_srcdir)/m4/mktime.m4 $(top_srcdir)/m4/modechange.m4 \
-	$(top_srcdir)/m4/mountlist.m4 $(top_srcdir)/m4/nanosleep.m4 \
-	$(top_srcdir)/m4/nls.m4 $(top_srcdir)/m4/obstack.m4 \
-	$(top_srcdir)/m4/onceonly.m4 $(top_srcdir)/m4/path-concat.m4 \
-	$(top_srcdir)/m4/pathmax.m4 $(top_srcdir)/m4/perl.m4 \
-	$(top_srcdir)/m4/physmem.m4 $(top_srcdir)/m4/po.m4 \
-	$(top_srcdir)/m4/posixtm.m4 $(top_srcdir)/m4/posixver.m4 \
-	$(top_srcdir)/m4/prereq.m4 $(top_srcdir)/m4/progtest.m4 \
-	$(top_srcdir)/m4/putenv.m4 $(top_srcdir)/m4/quote.m4 \
-	$(top_srcdir)/m4/quotearg.m4 $(top_srcdir)/m4/readdir.m4 \
-	$(top_srcdir)/m4/readlink.m4 $(top_srcdir)/m4/readtokens.m4 \
-	$(top_srcdir)/m4/readutmp.m4 $(top_srcdir)/m4/realloc.m4 \
+	$(top_srcdir)/m4/makepath.m4 $(top_srcdir)/m4/mbrtowc.m4 \
+	$(top_srcdir)/m4/mbswidth.m4 $(top_srcdir)/m4/md5.m4 \
+	$(top_srcdir)/m4/memchr.m4 $(top_srcdir)/m4/memcmp.m4 \
+	$(top_srcdir)/m4/memcoll.m4 $(top_srcdir)/m4/memcpy.m4 \
+	$(top_srcdir)/m4/memmove.m4 $(top_srcdir)/m4/memrchr.m4 \
+	$(top_srcdir)/m4/memset.m4 $(top_srcdir)/m4/mkdir-slash.m4 \
+	$(top_srcdir)/m4/mkstemp.m4 $(top_srcdir)/m4/mktime.m4 \
+	$(top_srcdir)/m4/modechange.m4 $(top_srcdir)/m4/mountlist.m4 \
+	$(top_srcdir)/m4/nanosleep.m4 $(top_srcdir)/m4/nls.m4 \
+	$(top_srcdir)/m4/obstack.m4 $(top_srcdir)/m4/onceonly.m4 \
+	$(top_srcdir)/m4/path-concat.m4 $(top_srcdir)/m4/pathmax.m4 \
+	$(top_srcdir)/m4/perl.m4 $(top_srcdir)/m4/physmem.m4 \
+	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/posixtm.m4 \
+	$(top_srcdir)/m4/posixver.m4 $(top_srcdir)/m4/prereq.m4 \
+	$(top_srcdir)/m4/progtest.m4 $(top_srcdir)/m4/putenv.m4 \
+	$(top_srcdir)/m4/quote.m4 $(top_srcdir)/m4/quotearg.m4 \
+	$(top_srcdir)/m4/readdir.m4 $(top_srcdir)/m4/readlink.m4 \
+	$(top_srcdir)/m4/readtokens.m4 $(top_srcdir)/m4/readutmp.m4 \
 	$(top_srcdir)/m4/regex.m4 $(top_srcdir)/m4/rename.m4 \
 	$(top_srcdir)/m4/restrict.m4 $(top_srcdir)/m4/rmdir-errno.m4 \
 	$(top_srcdir)/m4/rmdir.m4 $(top_srcdir)/m4/rpmatch.m4 \
@@ -266,7 +265,7 @@ EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
   top_srcdir=$(top_srcdir) \
   srcdir=$(srcdir) \
-  PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
+  PATH="`pwd`/../../src/vg$(PATH_SEPARATOR)$$PATH" \
   PROG=ls
 
 all: all-am
