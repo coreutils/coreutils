@@ -1,3 +1,20 @@
+1998-07-31  Paul Eggert  <eggert@twinsun.com>
+
+	Add support for filesystems whose timestamps have better resolution
+	than 1 second (e.g. Solaris 2.6, recent Linux kernels).
+
+	* configure.in (AC_STRUCT_ST_MTIM): Add.
+
+	* src/copy.c (copy_internal): Compare time stamps with
+	subsecond resolution if available.
+
+	* src/ls.c (compare_ctime, rev_cmp_ctime, compare_mtime,
+	rev_cmp_mtime, compare_atime, rev_cmp_atime): Compare time
+	stamps with subsecond resolution if available.
+
+	* src/system.h: (ST_TIME_CMP_NS, ST_TIME_CMP, ATIME_CMP,
+	CTIME_CMP, MTIME_CMP): New macros.
+
 1998-08-01  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in (ALL_LINGUAS): Add slovak (sk) and norwegian (no).
