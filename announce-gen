@@ -6,7 +6,7 @@ use Getopt::Long;
 use Digest::MD5;
 use Digest::SHA1;
 
-(my $VERSION = '$Revision: 1.11 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.12 $ ') =~ tr/[0-9].//cd;
 (my $ME = $0) =~ s|.*/||;
 
 my %valid_release_types = map {$_ => 1} qw (alpha beta major);
@@ -117,7 +117,7 @@ sub print_changelog_deltas ($$)
   # Remove leading `./'.
   @reordered = map { s!^\./!!; $_ } @reordered;
 
-  print "ChangeLog entries:\n";
+  print "ChangeLog entries:\n\n";
   # print join ("\n", @reordered), "\n";
 
   $prev_version =~ s/\./_/g;
@@ -232,6 +232,7 @@ FIXME: put comments here
 
 EOF
 
+  print "Here are the compressed sources:\n";
   foreach my $url (@url_dir_list)
     {
       print "  $url/$tgz   ($size{$tgz})\n";
