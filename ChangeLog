@@ -1,3 +1,7 @@
+2003-05-04  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.0.1.
+
 2003-05-04  Paul Eggert  <eggert@twinsun.com>
 
 	* src/remove.c (HAVE_WORKING_READDIR): Define to 0 if not defined.
@@ -6,8 +10,6 @@
 	which was a bit weird because it couldn't be emulated by a function.
 
 2003-05-03  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.1.
 
 	Extend head to accept --lines=-N (--bytes=-N) and to print all
 	but the N lines (bytes) at the end of the file.
