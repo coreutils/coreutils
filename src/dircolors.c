@@ -88,6 +88,8 @@ static struct option const long_options[] =
     {"csh", no_argument, NULL, 'c'},
     {"c-shell", no_argument, NULL, 'c'},
     {"help", no_argument, NULL, 'h'},
+    {"print-data-base", no_argument, NULL, 'p'},
+    {"print-database", no_argument, NULL, 'p'},
     {"version", no_argument, NULL, 'v'},
   };
 
@@ -106,12 +108,12 @@ usage (int status)
       printf (_("\
 Output commands to set the LS_COLOR environment variable.\n\
 \n\
-  -h, --help                  display this help and exit\n\
-      --version               output version information and exit\n\
 Determine format of output:\n\
-  -p, --print-data-base       output defaults\n\
   -b, --sh, --bourne-shell    output Bourne shell code to set LS_COLOR\n\
   -c, --csh, --c-shell        output C shell code to set LS_COLOR\n"));
+  -p, --print-data-base       output defaults\n\
+  -h, --help                  display this help and exit\n\
+      --version               output version information and exit\n\
     }
 
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
