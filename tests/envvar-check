@@ -1,4 +1,10 @@
-unset VERSION_CONTROL SIMPLE_BACKUP_SUFFIX
+if (FOO=FOO; unset FOO) >/dev/null 2>&1; then
+  as_unset=unset
+else
+  as_unset=false
+fi
+
+$as_unset VERSION_CONTROL SIMPLE_BACKUP_SUFFIX
 
 if test "${VERSION_CONTROL+set}" = set; then
   echo "$0: the VERSION_CONTROL envvar is set --" \
