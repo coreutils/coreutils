@@ -1,9 +1,9 @@
 Changes in release 4.1:
 [4.0j]
 * touch: no longer infloop on dangling symlinks
-* cp, ln, mv: deprecate the --version-control option.  Use the new optional
-  argument to --backup (--backup[=CONTROL]) instead.  The old option still
-  works, but now evokes a warning.
+* cp, install, ln, mv: deprecate the --version-control option.  Use --backup's
+  new optional argument instead.  The old option still works, but now evokes a
+  warning.
 * cp, ln, mv: accept new option: --target-directory=DIR
 * chgrp: accept new option, --dereference.  --no-dereference is now the default.
 * New ls option --quoting-style=locale acts like --quoting-style=c, except
