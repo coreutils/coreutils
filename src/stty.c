@@ -711,7 +711,7 @@ settings, CHAR is taken literally, or coded as in ^c, 0x37, 0177 or\n\
 }
 
 /* Return 1 if the string contains only valid options.  */
-int
+static int
 valid_options (char *opt, const char *valid_opts,
 	       const char *valid_arg_opts)
 {
