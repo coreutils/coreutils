@@ -1,3 +1,38 @@
+2001-12-18  Paul Eggert  <eggert@twinsun.com>
+
+	Use notation compatible with SI and with IEC 60027-2.
+	For example, --block-size=1MB now means --block-size=1000000,
+	whereas --block-size=1MiB now means --block-size=1048576.
+	A trailing `B' now means decimal, not binary; this is a silent change.
+	-H or --si now outputs the trailing 'B', for consistency with this.
+	Programs now output trailing 'K' (not 'k') to mean 1024.
+	New df, du short option -B is short for --block-size.
+	You can omit an integer `1' before a block size suffix,
+	e.g. `df -BG' is equivalent to `df -B 1G' and to `df --block-size=1G'.
+
+	* NEWS, doc/coreutils.texi: Document this.  Remove documentation
+	for obsolescent constructs MD, --kilobytes, -m or --megabytes.
+
+	* src/dd.c (usage, parse_integer): Prefer K to k for 1024.
+	* src/shred.c (usage, main): Likewise.
+
+	* src/shred.c (xstrtoumax): If there is no number but there
+	is a valid suffix, assume 1.  "MB" now means decimal, "MiB" binary.
+	Accept 'K' as well as 'k'.
+
+	* src/dd.c (usage): MD -> MB for decimal.
+
+	* src/df.c (BLOCK_SIZE_OPTION): Remove; no longer needed now that
+	we have 'B'.
+	(long_options, usage, main): Add -B.
+	(usage): Deprecate --kilobytes, -m, --megabytes.
+	Document size suffixes.
+	* src/du.c: Likewise.
+	* src/ls.c (usage): Deprecate --kilobytes.  Document size suffixes.
+
+	* src/df.c (print_header, show_dev): Enlarge column widths for
+	trailing "B".
+
 2001-12-17  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.5.
