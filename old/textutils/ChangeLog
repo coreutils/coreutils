@@ -1,5 +1,7 @@
 Sat Jan 25 00:12:29 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/tail.c (parse_obsolescent_option): Comment.
+
 	* tests/sort-test/mk-script.pl: Interpret `input arg is a hash
 	reference' as meaning that the tested program will read no input.
 	Most of the tests for the date program use this feature.
