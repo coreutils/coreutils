@@ -605,6 +605,8 @@ who (const char *filename)
     list_entries_who (n_users, utmp_buf);
   else
     scan_entries (n_users, utmp_buf);
+
+  free (utmp_buf);
 }
 
 void
