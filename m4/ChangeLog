@@ -1,3 +1,10 @@
+1999-05-10  Jim Meyering  <meyering@ascend.com>
+
+	* jm-mktime.m4: Reflect renaming: AM_FUNC_MKTIME -> AC_FUNC_MKTIME.
+
+	* jm-macros.m4: Require 2.14.1, since we use newly-renamed
+	AC_FUNC_MKTIME.
+
 1999-05-10  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* jm-mktime.m4, putenv.m4: Fix typos in config.h comments.
