@@ -38,6 +38,19 @@ my @Tests =
    # Prior to 2.0g, this test would fail on e.g., HPUX systems
    # because it'd end up using %3.1f as the format instead of %4.1f.
    ['eq-wid-2',	qw(-w -.1 .1 .1),{OUT => [qw(-0.1 00.0 00.1)]}],
+
+   # Prior to coreutils-4.5.11, some of these were not accepted.
+   ['fmt-1',	qw(-f %2.1f 1.5 .5 2),{OUT => [qw(1.5 2.0)]}],
+   ['fmt-2',	qw(-f %0.1f 1.5 .5 2),{OUT => [qw(1.5 2.0)]}],
+   ['fmt-3',	qw(-f %.1f  1.5 .5 2),{OUT => [qw(1.5 2.0)]}],
+
+   ['fmt-4',	qw(-f %3.0f 1 2),     {OUT => ['  1', '  2']}],
+   ['fmt-5',	qw(-f %-3.0f 1 2),    {OUT => ['1  ', '2  ']}],
+   ['fmt-6',	qw(-f %+3.0f 1 2),    {OUT => [' +1', ' +2']}],
+   ['fmt-7',	qw(-f %0+3.0f 1 2),   {OUT => [qw(+01 +02)]}],
+   ['fmt-8',	qw(-f %0+.0f 1 2),    {OUT => [qw(+1 +2)]}],
+   ['fmt-9',	'-f "% -3.0f"', qw(-1 0), {OUT => ['-1 ', ' 0 ']}],
+   ['fmt-a',	'-f "% -.0f"',qw(-1 0), {OUT => ['-1', ' 0']}],
   );
 
 # Append a newline to each entry in the OUT array.
