@@ -1,3 +1,8 @@
+2001-05-24  Jim Meyering  <meyering@lucent.com>
+
+	* omni-utils.texi (ls invocation): Document more clearly what ls
+	does when given no arguments.
+
 2001-05-21  Jim Meyering  <meyering@lucent.com>
 
 	* textutils.texi: Remove file.
