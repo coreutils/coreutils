@@ -1,3 +1,18 @@
+Thu Sep 19 22:13:31 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in ($PACKAGE, $VERSION): Don't AC_DEFINE_UNQUOTED these.
+	AM_INIT_AUTOMAKE now does it (as of automake-1.1e).
+
+	* lib/Makefile.am (fu_SOURCES): Move getopt.c and getopt1.c back to
+	here fro EXTRA_DIST.
+	* configure.in (AC_REPLACE_GNU_GETOPT): Remove it -- it's not
+	necessary.
+
+	* acinclude.m4 (AC_DEFUN(AM_SANITY_CHECK_CC,
+	AC_DEFUN(AC_SYS_POSIX_TERMIOS,
+	AC_DEFUN(AM_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL): Remove definitions.
+	Now automake's aclocal includes them.
+
 Sun Sep 15 23:08:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Makefile.am (EXTRA_DIST): Remove acinclude.m4.
