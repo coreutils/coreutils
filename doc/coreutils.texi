@@ -7948,7 +7948,7 @@ If used, @var{new-owner} specifies the new owner and/or group as follows
 (with no embedded white space):
 
 @example
-[@var{owner}] [ [:] [@var{group}] ]
+[@var{owner}] [ : [@var{group}] ]
 @end example
 
 Specifically:
@@ -7959,20 +7959,24 @@ If only an @var{owner} (a user name or numeric user id) is given, that
 user is made the owner of each given file, and the files' group is not
 changed.
 
-@itemx owner@samp{:}group
+@item owner@samp{:}group
 If the @var{owner} is followed by a colon and a @var{group} (a
 group name or numeric group id), with no spaces between them, the group
 ownership of the files is changed as well (to @var{group}).
 
-@itemx owner@samp{:}
+@item owner@samp{:}
 If a colon but no group name follows @var{owner}, that user is
 made the owner of the files and the group of the files is changed to
 @var{owner}'s login group.
 
-@itemx @samp{:}group
+@item @samp{:}group
 If the colon and following @var{group} are given, but the owner
 is omitted, only the group of the files is changed; in this case,
 @command{chown} performs the same function as @command{chgrp}.
+
+@item @samp{:}
+If only a colon is given, or if @var{new-owner} is empty, neither the
+owner nor the group is changed.
 
 @end table
 
@@ -7985,16 +7989,14 @@ portable, and because it has undesirable results if the entire
 @var{owner@samp{.}group} happens to identify a user whose name
 contains @samp{.}.
 
-Warning: The @command{chown} command may clear the set-user-ID or
-set-group-ID bits on some systems.  The @command{chown} command is
-dependent upon the policy and functionality of the underlying system
-which may make system-dependent file mode modifications outside the
-control of the @command{chown} command.  On some systems (e.g., Linux)
-the @command{chown} command clears the set-UID and set-GID bits because
-the underlying, system @code{chown} function clears them.  On other
-systems (e.g., HP-UX and Solaris) the @command{chown} command does not
-affect those bits when operated as the superuser.  On systems which allow
-non-privileged use of chown those bits are always cleared by the system.
+The @command{chown} command sometimes clears the set-user-ID or
+set-group-ID permission bits.  This behavior depends on the policy and
+functionality of the underlying @code{chown} system call, which may
+make system-dependent file mode modifications outside the control of
+the @command{chown} command.  For example, the @command{chown} command
+might not affect those bits when operated as the superuser, or if the
+bits signify some function other than executable permission (e.g.,
+mandatory locking).
 When in doubt, check the underlying system behavior.
 
 The program accepts the following options.  Also see @ref{Common options}.
@@ -8031,7 +8033,7 @@ For example, to reflect a UID numbering change for one user's files
 without an option like this, @code{root} might run
 
 @smallexample
-find / -owner OLDUSER -print0 | xargs -0 chown NEWUSER
+find / -owner OLDUSER -print0 | xargs -0 chown -h NEWUSER
 @end smallexample
 
 But that is dangerous because the interval between when the @command{find}
@@ -8041,7 +8043,7 @@ One way to narrow the gap would be to invoke chown for each file
 as it is found:
 
 @example
-find / -owner OLDUSER -exec chown NEWUSER @{@} \;
+find / -owner OLDUSER -exec chown -h NEWUSER @{@} \;
 @end example
 
 But that is very slow if there are many affected files.
@@ -8049,7 +8051,7 @@ With this option, it is safer (the gap is narrower still)
 though still not perfect:
 
 @example
-chown -R --from=OLDUSER NEWUSER /
+chown -h -R --from=OLDUSER NEWUSER /
 @end example
 
 @item --dereference
