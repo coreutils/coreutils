@@ -193,5 +193,10 @@ main (register int argc, register char **argv, char **envp)
     }
 
   execvp (argv[optind], &argv[optind]);
-  error (errno == ENOENT ? 127 : 126, errno, "%s", argv[optind]);
+
+  {
+    int exit_status = (errno == ENOENT ? 127 : 126);
+    error (0, errno, "%s", argv[optind]);
+    exit (exit_status);
+  }
 }
