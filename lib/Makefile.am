@@ -24,4 +24,12 @@ makepath.h modechange.h mountlist.h hash.h path-concat.h pathmax.h \
 posixtm.h quotearg.h regex.h safe-read.h save-cwd.h savedir.h strverscmp.h \
 xalloc.h xstrtol.h xstrtoul.h
 
-BUILT_SOURCES = getdate.c
+BUILT_SOURCES = getdate.c lstat.c stat.c
+
+lstat.c: xstat.in
+	sed -e '/@IGNORE@/d' -e 's/@xstat@/lstat/g' $(srcdir)/xstat.in > $@-t
+	mv $@-t $@
+
+stat.c: xstat.in
+	sed -e '/@IGNORE@/d' -e 's/@xstat@/stat/g' $(srcdir)/xstat.in > $@-t
+	mv $@-t $@
