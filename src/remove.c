@@ -418,10 +418,12 @@ static void
 AD_mark_helper (Hash_table **ht, char const *filename)
 {
   if (*ht == NULL)
-    *ht = hash_initialize (HT_UNREMOVABLE_INITIAL_CAPACITY, NULL, hash_pjw,
-			   hash_compare_strings, hash_freer);
-  if (*ht == NULL)
-    xalloc_die ();
+    {
+      *ht = hash_initialize (HT_UNREMOVABLE_INITIAL_CAPACITY, NULL, hash_pjw,
+			     hash_compare_strings, hash_freer);
+      if (*ht == NULL)
+	xalloc_die ();
+    }
   if (! hash_insert (*ht, filename))
     xalloc_die ();
 }
