@@ -29,6 +29,7 @@
 
 #include "system.h"
 #include "closeout.h"
+#include "dirname.h"
 #include "error.h"
 #include "full-write.h"
 #include "safe-read.h"
@@ -43,14 +44,17 @@
 char *program_name;
 
 /* Base name of output files.  */
-static char *outfile;
+static char const *outbase;
 
+/* Name of output files.  */
+static char *outfile;
+ 
 /* Pointer to the end of the prefix in OUTFILE.
    Suffixes are inserted here.  */
 static char *outfile_mid;
 
-/* Pointer to the end of OUTFILE. */
-static char *outfile_end;
+/* Length of OUTFILE's suffix.  */
+static size_t suffix_length = 2;
 
 /* Name of input file.  May be "-".  */
 static char *infile;
@@ -65,7 +69,7 @@ static int output_desc;
    output file is opened. */
 static int verbose;
 
-static char const shortopts[] = "vb:l:C:"
+static char const shortopts[] = "a:b:l:C:"
 #if POSIX2_VERSION < 200112
 "0123456789"
 #endif
@@ -76,6 +80,7 @@ static struct option const longopts[] =
   {"bytes", required_argument, NULL, 'b'},
   {"lines", required_argument, NULL, 'l'},
   {"line-bytes", required_argument, NULL, 'C'},
+  {"suffix-length", required_argument, NULL, 'a'},
   {"verbose", no_argument, NULL, 2},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -103,6 +108,7 @@ PREFIX is `x'.  With no INPUT, or when INPUT is -, read standard input.\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
+  -a, --suffix-length=N   use suffixes of length N (default 2)\n\
   -b, --bytes=SIZE        put SIZE bytes per output file\n\
   -C, --line-bytes=SIZE   put at most SIZE bytes of lines per output file\n\
   -l, --lines=NUMBER      put NUMBER lines per output file\n\
@@ -126,35 +132,49 @@ SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
-/* Compute the next sequential output file name suffix and store it
-   into the string `outfile' at the position pointed to by `outfile_mid'.  */
+/* Compute the next sequential output file name and store it into the
+   string `outfile'.  */
 
 static void
 next_file_name (void)
 {
-  static unsigned n_digits = 2;
-  char *p;
-
-  /* Change any suffix of `z's to `a's.  */
-  for (p = outfile_end - 1; *p == 'z'; p--)
+  if (! outfile)
     {
-      *p = 'a';
+      /* Allocate and initialize the first file name.  */
+
+      size_t outbase_length = strlen (outbase);
+      size_t outfile_length = outbase_length + suffix_length;
+      if (outfile_length + 1 < outbase_length)
+	xalloc_die ();
+      outfile = xmalloc (outfile_length + 1);
+      outfile_mid = outfile + outbase_length;
+      memcpy (outfile, outbase, outbase_length);
+      memset (outfile_mid, 'a', suffix_length);
+      outfile[outfile_length] = 0;
+
+#if ! _POSIX_NO_TRUNC && HAVE_PATHCONF && defined _PC_NAME_MAX
+      /* POSIX requires that if the output file name is too long for
+	 its directory, `split' must fail without creating any files.
+	 This must be checked for explicitly on operating systems that
+	 silently truncate file names.  */
+      {
+	char *dir = dir_name (outfile);
+	long name_max = pathconf (dir, _PC_NAME_MAX);
+	if (0 <= name_max && name_max < base_len (base_name (outfile)))
+	  error (EXIT_FAILURE, ENAMETOOLONG, "%s", outfile);
+	free (dir);
+      }
+#endif
     }
-
-  /* Increment the rightmost non-`z' character that was present before the
-     above z/a substitutions.  There is guaranteed to be such a character.  */
-  ++(*p);
-
-  /* If the result of that increment operation yielded a `z' and there
-     are only `z's to the left of it, then append two more `a' characters
-     to the end and add 1 (-1 + 2) to the number of digits (we're taking
-     out this `z' and adding two `a's).  */
-  if (*p == 'z' && p == outfile_mid)
+  else
     {
-      ++n_digits;
-      ++outfile_mid;
-      *outfile_end++ = 'a';
-      *outfile_end++ = 'a';
+      /* Increment the suffix in place, if possible.  */
+
+      char *p;
+      for (p = outfile_mid + suffix_length; outfile_mid < p; *--p = 'a')
+	if (p[-1]++ != 'z')
+	  return;
+      error (EXIT_FAILURE, 0, _("Output file suffixes exhausted"));
     }
 }
 
@@ -357,7 +377,6 @@ main (int argc, char **argv)
   int in_blk_size;		/* optimal block size of input file device */
   char *buf;			/* file i/o buffer */
   int accum = 0;
-  char *outbase;
   int c;
   int digits_optind = 0;
 
@@ -386,6 +405,16 @@ main (int argc, char **argv)
       switch (c)
 	{
 	case 0:
+	  break;
+
+	case 'a':
+	  if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
+	      || tmp_long < 0 || tmp_long > SIZE_MAX)
+	    {
+	      error (0, 0, _("%s: invalid suffix length"), optarg);
+	      usage (EXIT_FAILURE);
+	    }
+	  suffix_length = tmp_long;
 	  break;
 
 	case 'b':
@@ -521,17 +550,6 @@ main (int argc, char **argv)
 
   /* No output file is open now.  */
   output_desc = -1;
-
-  /* Copy the output file prefix so we can add suffixes to it.
-     26**29 is certainly enough output files!  */
-
-  outfile = xmalloc (strlen (outbase) + 30);
-  strcpy (outfile, outbase);
-  outfile_mid = outfile + strlen (outfile);
-  outfile_end = outfile_mid + 2;
-  memset (outfile_mid, 0, 30);
-  outfile_mid[0] = 'a';
-  outfile_mid[1] = 'a' - 1;  /* first call to next_file_name makes it an 'a' */
 
   /* Get the optimal block size of input device and make a buffer.  */
 
