@@ -463,8 +463,15 @@
 /* Define to 1 if you have the `initgroups' function. */
 #undef HAVE_INITGROUPS
 
+/* Define if you have the 'intmax_t' type in <stdint.h> or <inttypes.h>. */
+#undef HAVE_INTMAX_T
+
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
+
+/* Define if <inttypes.h> exists, doesn't clash with <sys/types.h>, and
+   declares uintmax_t. */
+#undef HAVE_INTTYPES_H_WITH_UINTMAX
 
 /* Define to 1 if you have the `isascii' function. */
 #undef HAVE_ISASCII
@@ -517,8 +524,7 @@
 /* Define to 1 if you have the `localtime_r' function. */
 #undef HAVE_LOCALTIME_R
 
-/* Define to 1 if long double works and has more range or precision than
-   double. */
+/* Define if you have the 'long double' type. */
 #undef HAVE_LONG_DOUBLE
 
 /* Define to 1 if you support file names longer than 14 characters. */
@@ -641,6 +647,9 @@
 /* Define to 1 if you have the `pstat_getstatic' function. */
 #undef HAVE_PSTAT_GETSTATIC
 
+/* Define to 1 if the system has the type `ptrdiff_t'. */
+#undef HAVE_PTRDIFF_T
+
 /* Define to 1 if you have the <pwd.h> header file. */
 #undef HAVE_PWD_H
 
@@ -687,6 +696,9 @@
 /* Define to 1 if you have the `sig2str' function. */
 #undef HAVE_SIG2STR
 
+/* Define to 1 if you have the `snprintf' function. */
+#undef HAVE_SNPRINTF
+
 /* Define to 1 if you have the `sqrt' function. */
 #undef HAVE_SQRT
 
@@ -706,6 +718,10 @@
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
+
+/* Define if <stdint.h> exists, doesn't clash with <sys/types.h>, and declares
+   uintmax_t. */
+#undef HAVE_STDINT_H_WITH_UINTMAX
 
 /* Define to 1 if you have the <stdio_ext.h> header file. */
 #undef HAVE_STDIO_EXT_H
@@ -1032,6 +1048,9 @@
 /* Define to 1 if you have the `tzset' function. */
 #undef HAVE_TZSET
 
+/* Define if you have the 'uintmax_t' type in <stdint.h> or <inttypes.h>. */
+#undef HAVE_UINTMAX_T
+
 /* Define to 1 if you have the `uname' function. */
 #undef HAVE_UNAME
 
@@ -1071,11 +1090,20 @@
 /* Define to 1 if you have the <values.h> header file. */
 #undef HAVE_VALUES_H
 
+/* Define to 1 if you have the `vasnprintf' function. */
+#undef HAVE_VASNPRINTF
+
+/* Define to 1 if you have the `vasprintf' function. */
+#undef HAVE_VASPRINTF
+
 /* Define to 1 if you have the `vprintf' function. */
 #undef HAVE_VPRINTF
 
 /* Define to 1 if you have the <wchar.h> header file. */
 #undef HAVE_WCHAR_H
+
+/* Define if you have the 'wchar_t' type. */
+#undef HAVE_WCHAR_T
 
 /* Define to 1 if you have the `wcrtomb' function. */
 #undef HAVE_WCRTOMB
@@ -1085,6 +1113,9 @@
 
 /* Define to 1 if you have the `wcwidth' function. */
 #undef HAVE_WCWIDTH
+
+/* Define if you have the 'wint_t' type. */
+#undef HAVE_WINT_T
 
 /* Define to 1 if you have the `wmempcpy' function. */
 #undef HAVE_WMEMPCPY
@@ -1382,7 +1413,7 @@
 /* Define to `unsigned long' if <sys/types.h> does not define. */
 #undef ino_t
 
-/* Define to widest signed type if <inttypes.h> doesn't define. */
+/* Define to long or long long if <stdint.h> and <inttypes.h> don't define. */
 #undef intmax_t
 
 /* Define to rpl_localtime if the replacement function should be used. */
@@ -1437,6 +1468,9 @@
    supported. Do not define if restrict is supported directly. */
 #undef restrict
 
+/* Define to empty if the C compiler doesn't support this keyword. */
+#undef signed
+
 /* Define to `unsigned' if <sys/types.h> does not define. */
 #undef size_t
 
@@ -1449,7 +1483,8 @@
 /* Define to `int' if <sys/types.h> doesn't define. */
 #undef uid_t
 
-/* Define to widest unsigned type if <inttypes.h> doesn't define. */
+/* Define to unsigned long or unsigned long long if <stdint.h> and
+   <inttypes.h> don't define. */
 #undef uintmax_t
 
 /* Define to empty if the keyword `volatile' does not work. Warning: valid
