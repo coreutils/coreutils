@@ -25,7 +25,7 @@ BUILT_SOURCES = getdate.c posixtm.c
 
 # Since this directory contains two parsers, we have to be careful to avoid
 # running two $(YACC)s during parallel makes.  See below.
-getdate.c: getdate.y
+getdate.c: @MAINT@getdate.y
 	@echo expect 10 shift/reduce conflicts
 	$(YACC) $(srcdir)/getdate.y
 	mv y.tab.c getdate.c
@@ -34,7 +34,7 @@ getdate.c: getdate.y
 # The artificial dependency on getdate.c keeps the two parsers from being
 # built in parallel.  Enforcing this little bit of sequentiality lets
 # everyone (even those without bison) still run mostly parallel builds.
-posixtm.c: posixtm.y getdate.c
+posixtm.c: @MAINT@posixtm.y getdate.c
 	$(YACC) $(srcdir)/posixtm.y
 	mv y.tab.c posixtm.tab.c
 	sed -e 's/yy/zz/g' posixtm.tab.c > tposixtm.c
