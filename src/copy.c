@@ -132,7 +132,7 @@ copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
       char *dst_path = path_concat (dst_path_in, namep, NULL);
 
       if (dst_path == NULL || src_path == NULL)
-	error (1, 0, _("virtual memory exhausted"));
+	xalloc_die ();
 
       ret |= copy_internal (src_path, dst_path, new_dst, src_sb->st_dev,
 			    ancestors, x, 0, &local_copy_into_self, NULL);
@@ -530,7 +530,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	      char *tmp_backup = find_backup_file_name (dst_path,
 							x->backup_type);
 	      if (tmp_backup == NULL)
-		error (1, 0, _("virtual memory exhausted"));
+		xalloc_die ();
 
 	      /* Detect (and fail) when creating the backup file would
 		 destroy the source file.  Before, running the commands
@@ -771,7 +771,7 @@ copy_internal (const char *src_path, const char *dst_path,
 
 	  dst_parent = dir_name (dst_path);
 	  if (dst_parent == NULL)
-	    error (1, 0, _("virtual memory exhausted"));
+	    xalloc_die ();
 
 	  in_current_dir = (STREQ (".", dst_parent)
 			    /* If either stat call fails, it's ok not to report
