@@ -42,7 +42,7 @@
 #endif
 
 #ifndef PATH_MAX
-# error "use this module only if your system defines PATH_MAX"
+# error "compile this file only if your system defines PATH_MAX"
 #endif
 
 /* FIXME: this use of `MIN' is our sole concession to arbitrary limitations.
