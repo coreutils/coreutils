@@ -68,6 +68,7 @@
 #include "error.h"
 #include "argmatch.h"
 #include "xstrtol.h"
+#include "strverscmp.h"
 
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
@@ -174,6 +175,10 @@ static int rev_cmp_name __P ((const struct fileinfo *file2,
 static int compare_extension __P ((const struct fileinfo *file1,
 				   const struct fileinfo *file2));
 static int rev_cmp_extension __P ((const struct fileinfo *file2,
+				   const struct fileinfo *file1));
+static int compare_version __P ((const struct fileinfo *file1,
+				   const struct fileinfo *file2));
+static int rev_cmp_version __P ((const struct fileinfo *file2,
 				   const struct fileinfo *file1));
 static int decode_switches __P ((int argc, char **argv));
 static int file_interesting __P ((const struct dirent *next));
@@ -288,7 +293,7 @@ static enum time_type time_type;
 
 int full_time;
 
-/* The file characteristic to sort by.  Controlled by -t, -S, -U, -X. */
+/* The file characteristic to sort by.  Controlled by -t, -S, -U, -X, -v. */
 
 enum sort_type
   {
@@ -296,7 +301,8 @@ enum sort_type
     sort_name,			/* default */
     sort_extension,		/* -X */
     sort_time,			/* -t */
-    sort_size			/* -S */
+    sort_size,			/* -S */
+    sort_version		/* -v */
   };
 
 static enum sort_type sort_type;
@@ -544,12 +550,12 @@ static enum format const formats[] =
 
 static char const *const sort_args[] =
 {
-  "none", "time", "size", "extension", 0
+  "none", "time", "size", "extension", "version", 0
 };
 
 static enum sort_type const sort_types[] =
 {
-  sort_none, sort_time, sort_size, sort_extension
+  sort_none, sort_time, sort_size, sort_extension, sort_version
 };
 
 static char const *const time_args[] =
@@ -893,7 +899,7 @@ decode_switches (int argc, char **argv)
     }
 
   while ((c = getopt_long (argc, argv,
-			   "abcdfgiklmnopqrstuw:xABCDFGI:LNQRST:UX1",
+			   "abcdfgiklmnopqrstuvw:xABCDFGI:LNQRST:UX1",
 			   long_options, NULL)) != -1)
     {
       switch (c)
@@ -984,6 +990,10 @@ decode_switches (int argc, char **argv)
 
 	case 'u':
 	  time_type = time_atime;
+	  break;
+
+	case 'v':
+	  sort_type = sort_version;
 	  break;
 
 	case 'w':
@@ -1908,6 +1918,9 @@ sort_files (void)
     case sort_size:
       func = sort_reverse ? rev_cmp_size : compare_size;
       break;
+    case sort_version:
+      func = sort_reverse ? rev_cmp_version : compare_version;
+      break;
     default:
       abort ();
     }
@@ -1963,6 +1976,18 @@ static int
 rev_cmp_size (const struct fileinfo *file2, const struct fileinfo *file1)
 {
   return longdiff (file2->stat.st_size, file1->stat.st_size);
+}
+
+static int
+compare_version (const struct fileinfo *file1, const struct fileinfo *file2)
+{
+  return strverscmp (file1->name, file2->name);
+}
+
+static int
+rev_cmp_version (const struct fileinfo *file2, const struct fileinfo *file1)
+{
+  return strverscmp (file1->name, file2->name);
 }
 
 static int
@@ -2897,6 +2922,7 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
       printf (_("\
   -S                         sort by file size\n\
       --sort=WORD            ctime -c, extension -X, none -U, size -S,\n\
+                               version -v\n\
                              status -c, time -t, atime -u, access -u, use -u\n\
       --time=WORD            show time as WORD instead of modification time:\n\
                              atime, access, use, ctime or status\n\
@@ -2904,6 +2930,7 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n\
   -u                         sort by last access time; with -l: show atime\n\
   -U                         do not sort; list entries in directory order\n\
+  -v                         sort by version\n\
   -w, --width=COLS           assume screen width instead of current value\n\
   -x                         list entries by lines instead of by columns\n\
   -X                         sort alphabetically by entry extension\n\
