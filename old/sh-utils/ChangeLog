@@ -1,5 +1,9 @@
 Fri Oct 11 22:51:50 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/who-users.c (print_uptime): Change #ifdef guard on getloadavg
+	call from just HAVE_GETLOADAVG to HAVE_GETLOADAVG || C_GETLOADAVG.
+	From Kaveh R. Ghazi.
+
 	* src/Makefile.am (uptime_LDADD): Add @UPTIME_LIBS@.
 
 	* acinclude.m4 (AM_FUNC_GETLOADAVG): Like AC_FUNC_GETLOADAVG, but
