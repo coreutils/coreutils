@@ -88,10 +88,8 @@ struct seq
 /* The name this program was run with.  */
 char *program_name;
 
-#ifdef ENABLE_NLS
 /* Nonzero if the LC_COLLATE locale is hard.  */
 static int hard_LC_COLLATE;
-#endif
 
 /* If nonzero, print unpairable lines in file 1 or 2.  */
 static int print_unpairables_1, print_unpairables_2;
@@ -372,10 +370,8 @@ keycmp (struct line *line1, struct line *line2)
     }
   else
     {
-#ifdef ENABLE_NLS
-      if (hard_LC_COLLATE)
+      if (HAVE_SETLOCALE && hard_LC_COLLATE)
 	return xmemcoll ((char *) beg1, len1, (char *) beg2, len2);
-#endif
       diff = memcmp (beg1, beg2, min (len1, len2));
     }
 
@@ -744,12 +740,9 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+  hard_LC_COLLATE = hard_locale (LC_COLLATE);
 
   atexit (close_stdout);
-
-#ifdef ENABLE_NLS
-  hard_LC_COLLATE = hard_locale (LC_COLLATE);
-#endif
 
   /* Initialize this before parsing options.  In parsing options,
      it may be increased.  */
