@@ -1,3 +1,8 @@
+1999-03-20  Jim Meyering  <meyering@ascend.com>
+
+	* regex.m4 (jm_INCLUDED_REGEX): Rename from jm_WITH_REGEX.
+	Don't depend on AM_GLIBC.  Suggestions from Alain Magloire.
+
 1999-03-19  Jim Meyering  <meyering@ascend.com>
 
 	* jm-winsz1.m4 (jm_WINSIZE_IN_PTEM): New macro.
