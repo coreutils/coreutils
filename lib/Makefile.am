@@ -1,7 +1,8 @@
 ## Process this file with automake to produce Makefile.in
 noinst_LIBRARIES = libfu.a
 
-EXTRA_DIST = chown.c getgroups.c getline.c lstat.c mktime.c stat.c strftime.c
+EXTRA_DIST = chown.c getgroups.c getline.c lstat.c mktime.c \
+  realloc.c stat.c strftime.c
 
 INCLUDES = -I.. -I$(srcdir) -I../intl
 
