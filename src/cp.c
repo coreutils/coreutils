@@ -70,7 +70,8 @@ struct dir_attr
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  NO_PRESERVE_ATTRIBUTES_OPTION = CHAR_MAX + 1,
+  COPY_CONTENTS_OPTION = CHAR_MAX + 1,
+  NO_PRESERVE_ATTRIBUTES_OPTION,
   PARENTS_OPTION,
   PRESERVE_ATTRIBUTES_OPTION,
   REPLY_OPTION,
@@ -125,6 +126,7 @@ static struct option const long_opts[] =
 {
   {"archive", no_argument, NULL, 'a'},
   {"backup", optional_argument, NULL, 'b'},
+  {"copy-contents", no_argument, NULL, COPY_CONTENTS_OPTION},
   {"dereference", no_argument, NULL, 'L'},
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
@@ -176,6 +178,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -a, --archive                same as -dpR\n\
       --backup[=CONTROL]       make a backup of each existing destination file\n\
   -b                           like --backup but does not accept an argument\n\
+      --copy-contents          copy contents of special files when recursive\n\
   -d                           same as --no-dereference --preserve=link\n\
 "), stdout);
       fputs (_("\
@@ -199,18 +202,14 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -P                           same as `--no-dereference'\n\
 "), stdout);
       fputs (_("\
-  -r                           copy recursively, non-directories as files,\n\
-                                 but do preserve symbolic links\n\
-                                 WARNING: use -R instead when you might copy\n\
-                                 special files like FIFOs or /dev/zero\n\
+  -R, -r, --recursive          copy directories recursively\n\
       --remove-destination     remove each existing destination file before\n\
                                  attempting to open it (contrast with --force)\n\
 "), stdout);
       fputs (_("\
-      --sparse=WHEN            control creation of sparse files\n\
-  -R, --recursive              copy directories recursively\n\
       --reply={yes,no,query}   specify how to handle the prompt about an\n\
                                  existing destination file\n\
+      --sparse=WHEN            control creation of sparse files\n\
       --strip-trailing-slashes remove any trailing slashes from each SOURCE\n\
                                  argument\n\
 "), stdout);
@@ -834,11 +833,8 @@ main (int argc, char **argv)
   char *backup_suffix_string;
   char *version_control_string = NULL;
   struct cp_options x;
+  int copy_contents = 0;
   char *target_directory = NULL;
-  bool seen_option_a = false;
-  bool seen_option_r = false;
-  bool seen_option_a_then_r = false;
-  bool seen_option_r_then_a = false;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -866,7 +862,7 @@ main (int argc, char **argv)
 				     sparse_type_string, sparse_type);
 	  break;
 
-	case 'a':		/* Like -dpR. */
+	case 'a':		/* Like -dpPR. */
 	  x.dereference = DEREF_NEVER;
 	  x.preserve_links = 1;
 	  x.preserve_ownership = 1;
@@ -874,10 +870,6 @@ main (int argc, char **argv)
 	  x.preserve_timestamps = 1;
 	  x.require_preserve = 1;
 	  x.recursive = 1;
-	  x.copy_as_regular = 0;
-	  seen_option_a = true;
-	  if (seen_option_r)
-	    seen_option_r_then_a = true;
 	  break;
 
 	case 'V':  /* FIXME: this is deprecated.  Remove it in 2001.  */
@@ -891,6 +883,10 @@ main (int argc, char **argv)
 	  make_backups = 1;
 	  if (optarg)
 	    version_control_string = optarg;
+	  break;
+
+	case COPY_CONTENTS_OPTION:
+	  copy_contents = 1;
 	  break;
 
 	case 'd':
@@ -950,16 +946,8 @@ main (int argc, char **argv)
 	  break;
 
 	case 'r':
-	  x.recursive = 1;
-	  x.copy_as_regular = 1;
-	  seen_option_r = true;
-	  if (seen_option_a)
-	    seen_option_a_then_r = true;
-	  break;
-
 	case 'R':
 	  x.recursive = 1;
-	  x.copy_as_regular = 0;
 	  break;
 
 	case REPLY_OPTION:
@@ -1013,19 +1001,6 @@ main (int argc, char **argv)
 	}
     }
 
-  if (seen_option_a_then_r)
-    {
-      error (0, 0,
-	     _("do not specify -r after --archive (-a);\
- -r is obsolescent.\nIf you're sure you want that combination,\
- use -dpr instead."));
-      usage (1);
-    }
-
-  if (seen_option_r_then_a)
-    error (0, 0,
-	   _("WARNING: -r has no effect when specified before --archive (-a)"));
-
   if (x.hard_link && x.symbolic_link)
     {
       error (0, 0, _("cannot make both hard and symbolic links"));
@@ -1064,6 +1039,9 @@ main (int argc, char **argv)
 	 any symlinks that are found via recursive traversal.  */
       x.xstat = stat;
     }
+
+  if (x.recursive)
+    x.copy_as_regular = copy_contents;
 
   /* If --force (-f) was specified and we're in link-creation mode,
      first remove any existing destination file.  */
