@@ -101,7 +101,7 @@ forget_created (ino_t ino, dev_t dev)
 /* Add PATH to the list of files that we have created.
    Return true if successful.  */
 
-bool
+extern bool
 remember_created (const char *path)
 {
   struct stat sb;
