@@ -1,6 +1,9 @@
 2003-03-22  Jim Meyering  <jim@meyering.net>
 
-	* fnmatch_loop.c (NEW_PATTERN): Cast alloca to proper type.
+	* strftime.c (widen): Cast alloca return value to proper type.
+
+	* fnmatch_loop.c
+	(NEW_PATTERN): Cast alloca return value to proper type.
 	Otherwise, it wouldn't compile with at least /bin/cc on
 	ymp-cray-unicos9.0.2.X.
 	Combine two mostly-identical uses of alloca into one.
