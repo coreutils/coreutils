@@ -7,6 +7,7 @@ $test = 0;
 $| = 1;
 
 print "#! /bin/sh\ntr='$tr'\necho testing with tr=\$tr\nerrors=0\n";
+print "$tr --version 2> /dev/null\n";
 $expected = '';
 $s1 = '';
 $input = '';
@@ -21,9 +22,9 @@ while (<>)
     chop;
     $prog = '($test_name, $input,$flags,$s1,$s2,$expected,$e_ret_code) = ' . $_ . ';';
     eval $prog;
-    $in = "t$test_name.in"; 
-    $exp_name = 't' . $test_name . '.exp'; 
-    $out = "t$test_name.out"; 
+    $in = "t$test_name.in";
+    $exp_name = 't' . $test_name . '.exp';
+    $out = "t$test_name.out";
 
     open(IN, ">$in") || die "Couldn't open $in for writing.\n";
     print IN $input;
