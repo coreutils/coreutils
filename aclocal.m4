@@ -866,7 +866,7 @@ WARNING: You don't seem to have perl5.003 or newer installed, or you lack
 ] )
 ])
 
-#serial 60   -*- autoconf -*-
+#serial 61   -*- autoconf -*-
 
 m4_undefine([AC_LANG_SOURCE(C)])
 dnl The following is identical to the definition in c.m4
@@ -1088,7 +1088,7 @@ AC_DEFUN([jm_MACROS],
   jm_FSTYPENAME
   jm_FILE_SYSTEM_USAGE([space=yes], [space=no])
   if test $list_mounted_fs = yes && test $space = yes; then
-    DF_PROG=df
+    DF_PROG='df$(EXEEXT)'
     AC_LIBOBJ(fsusage)
     AC_LIBOBJ(mountlist)
   fi
@@ -1097,6 +1097,7 @@ AC_DEFUN([jm_MACROS],
 
   # If any of these functions don't exist (e.g. DJGPP 2.03),
   # use the corresponding stub.
+  AC_CHECK_FUNC([fchdir], , [AC_LIBOBJ(fchdir-stub)])
   AC_CHECK_FUNC([fchown], , [AC_LIBOBJ(fchown-stub)])
   AC_CHECK_FUNC([lstat], , [AC_LIBOBJ(lstat-stub)])
   AC_CHECK_FUNC([readlink], , [AC_LIBOBJ(readlink-stub)])

@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: coreutils 4.5.8\n"
-"POT-Creation-Date: 2003-03-12 23:59+0100\n"
+"POT-Creation-Date: 2003-03-18 20:11+0100\n"
 "PO-Revision-Date: 2003-02-24 12:23-0300\n"
 "Last-Translator: Juan Carlos Castro y Castro <jcastro@vialink.com.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
@@ -29,14 +29,6 @@ msgstr "argumento ambíguo %s para `%s'"
 #: lib/argmatch.c:155
 msgid "Valid arguments are:"
 msgstr "Os argumentos válidos são:"
-
-#: lib/c-stack.c:368
-msgid "program error"
-msgstr "erro de programa"
-
-#: lib/c-stack.c:369
-msgid "stack overflow"
-msgstr "estouro de pilha"
 
 #: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:326
 #: src/cksum.c:269 src/head.c:152 src/head.c:196 src/tail.c:323
@@ -7811,6 +7803,12 @@ msgid ""
 "Repeatedly output a line with all specified STRING(s), or `y'.\n"
 "\n"
 msgstr ""
+
+#~ msgid "program error"
+#~ msgstr "erro de programa"
+
+#~ msgid "stack overflow"
+#~ msgstr "estouro de pilha"
 
 #~ msgid "   Type"
 #~ msgstr "   Tipo"

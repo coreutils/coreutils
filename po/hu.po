@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: fileutils 4.1.8\n"
-"POT-Creation-Date: 2003-03-12 23:59+0100\n"
+"POT-Creation-Date: 2003-03-18 20:11+0100\n"
 "PO-Revision-Date: 2002-05-07 09:03+0200\n"
 "Last-Translator: Emese Kovács <emese@gnome.hu>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
@@ -27,14 +27,6 @@ msgstr "`%s' argumentum nem egyértelmû a következõhöz: `%s'"
 #: lib/argmatch.c:155
 msgid "Valid arguments are:"
 msgstr "Az érvényes argumentumok a következõk:"
-
-#: lib/c-stack.c:368
-msgid "program error"
-msgstr ""
-
-#: lib/c-stack.c:369
-msgid "stack overflow"
-msgstr ""
 
 #: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:326
 #: src/cksum.c:269 src/head.c:152 src/head.c:196 src/tail.c:323

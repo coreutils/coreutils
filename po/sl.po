@@ -1,13 +1,13 @@
 # -*- mode: po; -*- Slovenian message catalog for GNU coreutils.
 # Copyright (C) 1996, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
 # Primo¾ Peterlin <primoz.peterlin@biofiz.mf.uni-lj.si>, 1996, 1999, 2000, 2001, 2002, 2003.
-# $Id: sl.po,v 1.53 2003/03/12 23:14:17 meyering Exp $
+# $Id: sl.po,v 1.56 2003/03/19 09:10:27 meyering Exp $
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU coreutils 4.5.9\n"
-"POT-Creation-Date: 2003-03-12 23:59+0100\n"
-"PO-Revision-Date: 2003-03-06 09:59+0100\n"
+"Project-Id-Version: GNU coreutils 4.5.10\n"
+"POT-Creation-Date: 2003-03-18 20:11+0100\n"
+"PO-Revision-Date: 2003-03-14 12:43+0100\n"
 "Last-Translator: Primo¾ Peterlin <primoz.peterlin@biofiz.mf.uni-lj.si>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -29,14 +29,6 @@ msgstr "dvoumen argument %s za %s"
 #: lib/argmatch.c:155
 msgid "Valid arguments are:"
 msgstr "Veljavni argumenti so:"
-
-#: lib/c-stack.c:368
-msgid "program error"
-msgstr "napaka v programu"
-
-#: lib/c-stack.c:369
-msgid "stack overflow"
-msgstr "prekoraèitev sklada"
 
 #: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:326
 #: src/cksum.c:269 src/head.c:152 src/head.c:196 src/tail.c:323
@@ -5224,14 +5216,14 @@ msgid "\\%c: invalid escape"
 msgstr "\\%c: neveljaven ube¾ni znak"
 
 #: src/printf.c:465
-#, fuzzy, c-format
+#, c-format
 msgid "invalid field width: %s"
-msgstr "neveljavna ¹irina vrstice: %s"
+msgstr "neveljavna ¹irina polja: %s"
 
 #: src/printf.c:491
-#, fuzzy, c-format
+#, c-format
 msgid "invalid precision: %s"
-msgstr "neveljavna pretvorba: %s"
+msgstr "neveljavna natanènost: %s"
 
 #: src/printf.c:512
 #, c-format
@@ -5712,7 +5704,6 @@ msgstr ""
 "G...)\n"
 
 #: src/shred.c:174
-#, fuzzy
 msgid ""
 "  -u, --remove   truncate and remove file after overwriting\n"
 "  -v, --verbose  show progress\n"
@@ -5724,6 +5715,7 @@ msgstr ""
 "  -u, --remove   datoteko po unièenju vsebine odstranimo\n"
 "  -v, --verbose  s prikazom napredka med delom\n"
 "  -x, --exact    brez zaokro¾evanja velikosti datotek do polnega bloka\n"
+"                   (privzeto za predmete, ki niso navadne datoteke)\n"
 "  -z, --zero     na koncu prepi¹emo datoteko z nièlami, da prikrijemo "
 "unièenje\n"
 "  -              unièimo vsebino standardnega vhoda\n"
@@ -8395,6 +8387,12 @@ msgid ""
 msgstr ""
 "Ponavljaje izpisujemo vrstico s podanim NIZOM (privzeto ,y`).\n"
 "\n"
+
+#~ msgid "program error"
+#~ msgstr "napaka v programu"
+
+#~ msgid "stack overflow"
+#~ msgstr "prekoraèitev sklada"
 
 #~ msgid "warning: unable to use large stack"
 #~ msgstr "opozorilo: uporaba velikega sklada ni mogoèa"

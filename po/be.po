@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: coreutils 4.5.8\n"
-"POT-Creation-Date: 2003-03-12 23:59+0100\n"
+"POT-Creation-Date: 2003-03-18 20:11+0100\n"
 "PO-Revision-Date: 2003-02-26 21:26+0200\n"
 "Last-Translator: Ales Nyakhaychyk <nab@mail.by>\n"
 "Language-Team: Belarusian <i18n@tut.by>\n"
@@ -30,14 +30,6 @@ msgstr "неадназначны довад %s для %s"
 #: lib/argmatch.c:155
 msgid "Valid arguments are:"
 msgstr "Рэчаісныя довады:"
-
-#: lib/c-stack.c:368
-msgid "program error"
-msgstr "памылка праграмы"
-
-#: lib/c-stack.c:369
-msgid "stack overflow"
-msgstr "перапаўненьне стэку"
 
 #: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:326
 #: src/cksum.c:269 src/head.c:152 src/head.c:196 src/tail.c:323
@@ -6850,6 +6842,12 @@ msgid ""
 msgstr ""
 "Бесперапынна выводзіць РАДОК(і), ці знак `y'.\n"
 "\n"
+
+#~ msgid "program error"
+#~ msgstr "памылка праграмы"
+
+#~ msgid "stack overflow"
+#~ msgstr "перапаўненьне стэку"
 
 #~ msgid "warning: unable to use large stack"
 #~ msgstr "Увага! Немагчыма выкарыстоўваць вялігі стэк"

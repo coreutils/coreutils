@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: fileutils 4.1.11\n"
-"POT-Creation-Date: 2003-03-12 23:59+0100\n"
+"POT-Creation-Date: 2003-03-18 20:11+0100\n"
 "PO-Revision-Date: 2002-09-02 22:46GMT\n"
 "Last-Translator: K.Birabwa <kompyuta@kizito.freeuk.com>\n"
 "Language-Team: Luganda <kompyuta@kizito.freeuk.com>\n"
@@ -28,14 +28,6 @@ msgstr "agumenti %s ku %s ebuzabuza"
 #: lib/argmatch.c:155
 msgid "Valid arguments are:"
 msgstr "Augumenti z'oyinza okukozesa ziri:"
-
-#: lib/c-stack.c:368
-msgid "program error"
-msgstr "kiremya mu pulogulamu"
-
-#: lib/c-stack.c:369
-msgid "stack overflow"
-msgstr ""
 
 #: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:326
 #: src/cksum.c:269 src/head.c:152 src/head.c:196 src/tail.c:323
@@ -6590,6 +6582,9 @@ msgid ""
 "Repeatedly output a line with all specified STRING(s), or `y'.\n"
 "\n"
 msgstr ""
+
+#~ msgid "program error"
+#~ msgstr "kiremya mu pulogulamu"
 
 #, fuzzy
 #~ msgid "cannot convert time"

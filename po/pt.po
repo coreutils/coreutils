@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: sh-utils 1.12i\n"
-"POT-Creation-Date: 2003-03-12 23:59+0100\n"
+"POT-Creation-Date: 2003-03-18 20:11+0100\n"
 "PO-Revision-Date: 1996-11-08 20:03+0100\n"
 "Last-Translator: António João Serras Rendas <arendas@mail.telepac.pt>\n"
 "Language-Team: Português <pt@li.org>\n"
@@ -27,15 +27,6 @@ msgstr "falta um argumento a `%s'"
 #, fuzzy
 msgid "Valid arguments are:"
 msgstr "argumento inválido `%s'"
-
-#: lib/c-stack.c:368
-#, fuzzy
-msgid "program error"
-msgstr "erro de leitura"
-
-#: lib/c-stack.c:369
-msgid "stack overflow"
-msgstr ""
 
 #: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:326
 #: src/cksum.c:269 src/head.c:152 src/head.c:196 src/tail.c:323
@@ -7148,6 +7139,10 @@ msgid ""
 "Repeatedly output a line with all specified STRING(s), or `y'.\n"
 "\n"
 msgstr ""
+
+#, fuzzy
+#~ msgid "program error"
+#~ msgstr "erro de leitura"
 
 #, fuzzy
 #~ msgid "cannot convert time"

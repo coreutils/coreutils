@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: coreutils 4.5.9\n"
-"POT-Creation-Date: 2003-03-12 23:59+0100\n"
-"PO-Revision-Date: 2003-03-06 08:31+0300\n"
+"Project-Id-Version: coreutils 4.5.10\n"
+"POT-Creation-Date: 2003-03-18 20:11+0100\n"
+"PO-Revision-Date: 2003-03-14 14:16+0300\n"
 "Last-Translator: Oleg S. Tihonov <ost@tatnipi.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -29,14 +29,6 @@ msgstr "неоднозначный аргумент %s для %s"
 #: lib/argmatch.c:155
 msgid "Valid arguments are:"
 msgstr "Верные аргументы:"
-
-#: lib/c-stack.c:368
-msgid "program error"
-msgstr "ошибка программы"
-
-#: lib/c-stack.c:369
-msgid "stack overflow"
-msgstr "переполнение стека"
 
 #: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:326
 #: src/cksum.c:269 src/head.c:152 src/head.c:196 src/tail.c:323
@@ -5258,14 +5250,14 @@ msgid "\\%c: invalid escape"
 msgstr "\\%c: неверная escape-последовательность"
 
 #: src/printf.c:465
-#, fuzzy, c-format
+#, c-format
 msgid "invalid field width: %s"
-msgstr "неверная ширина строки: %s"
+msgstr "неверная ширина поля: %s"
 
 #: src/printf.c:491
-#, fuzzy, c-format
+#, c-format
 msgid "invalid precision: %s"
-msgstr "недопустимое преобразование: %s"
+msgstr "неверная точность: %s"
 
 #: src/printf.c:512
 #, c-format
@@ -5749,7 +5741,6 @@ msgstr ""
 "  -s, --size=N   очистить N байт (возможны суффиксы вида K, M, G)\n"
 
 #: src/shred.c:174
-#, fuzzy
 msgid ""
 "  -u, --remove   truncate and remove file after overwriting\n"
 "  -v, --verbose  show progress\n"
@@ -5759,11 +5750,11 @@ msgid ""
 "  -              shred standard output\n"
 msgstr ""
 "  -u, --remove   обрезать и удалять файл после перезаписи\n"
-"  -v, --verbose  показывать прогресс (-vv, чтобы оставить прогресс на "
-"экране)\n"
-"  -x, --exact    не округлять размеры файлов до следующего целого блока\n"
+"  -v, --verbose  показывать прогресс\n"
+"  -x, --exact    не округлять размеры файлов до следующего целого блока;\n"
+"                   по умолчанию для необычных файлов\n"
 "  -z, --zero     добавить в конце запись нулей, чтобы скрыть перемешивание\n"
-"  -              перемешивать стандартный выход (конфликтует с -v)\n"
+"  -              перемешивать стандартный вывод\n"
 
 #: src/shred.c:184
 msgid ""
@@ -8482,5 +8473,8 @@ msgstr ""
 "`y'.\n"
 "\n"
 
-#~ msgid "warning: unable to use large stack"
-#~ msgstr "предупреждение: невозможно использовать большой стек"
+#~ msgid "program error"
+#~ msgstr "ошибка программы"
+
+#~ msgid "stack overflow"
+#~ msgstr "переполнение стека"

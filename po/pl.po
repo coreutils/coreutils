@@ -9,9 +9,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: coreutils 4.5.9\n"
-"POT-Creation-Date: 2003-03-12 23:59+0100\n"
-"PO-Revision-Date: 2003-03-10 22:00+0100\n"
+"Project-Id-Version: coreutils 4.5.10\n"
+"POT-Creation-Date: 2003-03-18 20:11+0100\n"
+"PO-Revision-Date: 2003-03-14 13:30+0100\n"
 "Last-Translator: Rafa³ Maszkowski <rzm@icm.edu.pl>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -33,14 +33,6 @@ msgstr "niejednoznaczny argument %s opcji %s"
 #: lib/argmatch.c:155
 msgid "Valid arguments are:"
 msgstr "Prawid³owe argumenty to:"
-
-#: lib/c-stack.c:368
-msgid "program error"
-msgstr "b³±d programu"
-
-#: lib/c-stack.c:369
-msgid "stack overflow"
-msgstr "przepe³nienie stosu"
 
 #: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:326
 #: src/cksum.c:269 src/head.c:152 src/head.c:196 src/tail.c:323
@@ -5269,14 +5261,14 @@ msgid "\\%c: invalid escape"
 msgstr "\\%c: b³êdna sekwencja escape"
 
 #: src/printf.c:465
-#, fuzzy, c-format
+#, c-format
 msgid "invalid field width: %s"
-msgstr "b³êdna szeroko¶æ linii: %s"
+msgstr "b³êdna szeroko¶æ pola: %s"
 
 #: src/printf.c:491
-#, fuzzy, c-format
+#, c-format
 msgid "invalid precision: %s"
-msgstr "b³êdna konwersja: %s"
+msgstr "b³±d specyfikacji precyzji: %s"
 
 #: src/printf.c:512
 #, c-format
@@ -5763,7 +5755,6 @@ msgstr ""
 "  -s, --size=N   zamazanie N bajtów (mo¿na u¿ywaæ przyrostków typu K, M, G)\n"
 
 #: src/shred.c:174
-#, fuzzy
 msgid ""
 "  -u, --remove   truncate and remove file after overwriting\n"
 "  -v, --verbose  show progress\n"
@@ -5774,7 +5765,9 @@ msgid ""
 msgstr ""
 "  -u, --remove   skrócenie i skasowanie pliku po zamazaniu\n"
 "  -v, --verbose  pokazywanie przebiegu zamazywania\n"
-"  -x, --exact    bez zaokr±glania rozmiarów plików w górê do pe³nych bloków\n"
+"  -x, --exact    bez zaokr±glania rozmiarów plików w górê do pe³nych "
+"bloków,\n"
+"                   domy¶lnie dla plików innych ni¿ zwyk³e\n"
 "  -z, --zero     dodatkowe zamazanie zerami, aby ukryæ zamazywanie\n"
 "  -              zamazanie standardowego wyj¶cia\n"
 
@@ -8447,5 +8440,8 @@ msgstr ""
 "Powtarzanie na wyj¶ciu linii ze wszystkimi podanymi £AÑCUCH(AMI) albo `y'\n"
 "\n"
 
-#~ msgid "warning: unable to use large stack"
-#~ msgstr "uwaga: nie mo¿na uzyæ du¿ego stosu"
+#~ msgid "program error"
+#~ msgstr "b³±d programu"
+
+#~ msgid "stack overflow"
+#~ msgstr "przepe³nienie stosu"

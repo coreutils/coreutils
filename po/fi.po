@@ -4,11 +4,13 @@
 # Lauri Nurmi <lanurmi@iki.fi>, 2003.
 # Matti Koskimies <matti@apulanta.fi>, 2002.
 #
+# TODO:
+# ownership -> omistajuus vai omistaja?
 msgid ""
 msgstr ""
-"Project-Id-Version: coreutils 4.5.7\n"
-"POT-Creation-Date: 2003-03-12 23:59+0100\n"
-"PO-Revision-Date: 2003-02-16 17:20+0200\n"
+"Project-Id-Version: coreutils 4.5.10\n"
+"POT-Creation-Date: 2003-03-18 20:11+0100\n"
+"PO-Revision-Date: 2003-03-15 22:28+0200\n"
 "Last-Translator: Lauri Nurmi <lanurmi@iki.fi>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -29,14 +31,6 @@ msgstr "moniselitteinen argumentti %s %s:lle"
 #: lib/argmatch.c:155
 msgid "Valid arguments are:"
 msgstr "Tarjolla olevat argumentit:"
-
-#: lib/c-stack.c:368
-msgid "program error"
-msgstr "ohjelmavirhe"
-
-#: lib/c-stack.c:369
-msgid "stack overflow"
-msgstr "pinon ylivuoto"
 
 #: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:326
 #: src/cksum.c:269 src/head.c:152 src/head.c:196 src/tail.c:323
@@ -157,7 +151,7 @@ msgstr "lohkokoko"
 
 #: lib/makepath.c:124 src/df.c:497 src/remove.c:402
 msgid "failed to return to initial working directory"
-msgstr ""
+msgstr "alkuperäiseen työhakemistoon palaaminen epäonnistui"
 
 #: lib/makepath.c:173 src/copy.c:1288 src/mkdir.c:170
 #, c-format
@@ -245,17 +239,17 @@ msgstr "Et voi jättää pois sekä käyttäjää että ryhmää"
 #: lib/version-etc.c:57
 #, c-format
 msgid "Written by %s.\n"
-msgstr "Kirjoittanut %s.\n"
+msgstr "Kirjoittaneet %s.\n"
 
 #: lib/version-etc.c:63
 msgid ""
 "This is free software; see the source for copying conditions.  There is NO\n"
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
 msgstr ""
-"Tätä ohjelmaa levitetään siinä toivossa, että se olisi hyödyllinen,\n"
-"mutta ilman mitään takuuta; ilman edes hiljaista takuuta kaupallisesti\n"
-"hyväksyttävästä laadusta tai soveltuvuudesta tiettyyn tarkoitukseen.\n"
-"Katso GPL-lisenssistä lisää yksityiskohtia.\n"
+"Tämä on vapaaohjelmisto; katso kopiointiehdot lähdekoodista. Takuuta EI "
+"OLE;\n"
+"ei edes KAUPALLISESTI HYVÄKSYTTÄVÄSTÄ LAADUSTA tai SOPIVUUDESTA TIETTYYN\n"
+"TARKOITUKSEEN.\n"
 
 #: lib/xmemcoll.c:57
 msgid "string comparison failed"
@@ -290,7 +284,7 @@ msgstr "Vertaillut merkkijonot olivat %s ja %s."
 #: src/whoami.c:48 src/yes.c:45
 #, c-format
 msgid "Try `%s --help' for more information.\n"
-msgstr "Kokeile komentoa \\\"%s --help\\\" lisätiedon saamiseksi.\n"
+msgstr "Kokeile komentoa \"%s --help\" lisätiedon saamiseksi.\n"
 
 #: src/basename.c:54
 #, c-format
@@ -335,7 +329,9 @@ msgid ""
 "Report bugs to <%s>.\n"
 msgstr ""
 "\n"
-"Lähetä raportit ohjelmistovirheistä osoitteeseen <%s>.\n"
+"Lähetä raportit ohjelmistovirheistä (englanniksi) osoitteeseen <%s>.\n"
+"Suomennoksen virheistä voi ilmoittaa listalle\n"
+"<translation-team-fi@lists.sourceforge.net>.\n"
 
 #: src/basename.c:114 src/chgrp.c:210 src/chmod.c:352 src/chown.c:211
 #: src/chroot.c:78 src/csplit.c:1464 src/dirname.c:89 src/expr.c:178
@@ -344,18 +340,18 @@ msgstr ""
 #: src/rm.c:199 src/rmdir.c:206 src/seq.c:411 src/sleep.c:139 src/stat.c:801
 #: src/unlink.c:88
 msgid "too few arguments"
-msgstr "liian vähän parametrejä"
+msgstr "liian vähän argumentteja"
 
 #: src/basename.c:115 src/dircolors.c:482 src/dirname.c:90 src/hostid.c:79
 #: src/hostname.c:122 src/link.c:93 src/mknod.c:139 src/readlink.c:141
 #: src/seq.c:417 src/split.c:498 src/tr.c:1848 src/unlink.c:94
 #: src/uptime.c:244 src/users.c:169 src/who.c:764
 msgid "too many arguments"
-msgstr "Liikaa parametrejä"
+msgstr "liian monta argumenttia"
 
 #: src/cat.c:42 src/split.c:43
 msgid "Torbjorn Granlund and Richard M. Stallman"
-msgstr ""
+msgstr "Torbjörn Granlund ja Richard M. Stallman"
 
 #: src/cat.c:92
 #, c-format
@@ -373,6 +369,15 @@ msgid ""
 "  -n, --number             number all output lines\n"
 "  -s, --squeeze-blank      never more than one single blank line\n"
 msgstr ""
+"Ketjuta TIEDOSTO(t) tai vakiosyöte vakiotulosteeseen.\n"
+"\n"
+"  -A, --show-all           sama kuin -vET\n"
+"  -b, --number-nonblank    numeroi ei-tyhjät tulosterivit\n"
+"  -e                       sama kuin -vE\n"
+"  -E, --show-ends          näytä merkki $ jokaisen rivin lopussa\n"
+"  -n, --number             numeroi kaikki tulosterivit\n"
+"  -s, --squeeze-blank      älä tulosta yhtä useampaa peräkkäistä tyhjää "
+"riviä\n"
 
 #: src/cat.c:106
 msgid ""
@@ -387,6 +392,8 @@ msgid ""
 "\n"
 "With no FILE, or when FILE is -, read standard input.\n"
 msgstr ""
+"\n"
+"Jos TIEDOSTOa ei ole annettu, tai se on -, luetaan vakiosyötettä.\n"
 
 #: src/cat.c:119
 msgid ""
@@ -396,9 +403,9 @@ msgid ""
 msgstr ""
 
 #: src/cat.c:314
-#, fuzzy, c-format
+#, c-format
 msgid "cannot do ioctl on `%s'"
-msgstr "nimen \"%s\" asetus järjestelmälle ei onnistu"
+msgstr "tiedostolle \"%s\" ei voi käyttää ioctl:ää"
 
 #: src/cat.c:669 src/dd.c:1222 src/od.c:1013 src/tee.c:181
 msgid "standard output"
@@ -470,6 +477,10 @@ msgid ""
 "  -R, --recursive        operate on files and directories recursively\n"
 "  -v, --verbose          output a diagnostic for every file processed\n"
 msgstr ""
+"  -f, --silent, --quiet  vaienna useimmat virheilmoitukset\n"
+"      --reference=RTIED  käytä RTIEDoston ryhmää annetun RYHMÄ-arvon sijaan\n"
+"  -R, --recursive        toimi rekursiivisesti\n"
+"  -v, --verbose          näytä ilmoitus jokaisesta käsitellystä tiedostosta\n"
 
 #: src/chgrp.c:218 src/chmod.c:157 src/chmod.c:365 src/chown-core.c:235
 #: src/chown-core.c:247 src/chown.c:220 src/cp.c:303 src/touch.c:169
@@ -486,7 +497,7 @@ msgstr ""
 #: src/chmod.c:124
 #, c-format
 msgid "mode of %s changed to %04lo (%s)\n"
-msgstr ""
+msgstr "tiedoston %s oikeuksiksi asetettu %04lo (%s)\n"
 
 #: src/chmod.c:127
 #, c-format
@@ -504,15 +515,15 @@ msgid "changing permissions of %s"
 msgstr "muutetaan tiedoston %s oikeuksia"
 
 #: src/chmod.c:242
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Usage: %s [OPTION]... MODE[,MODE]... FILE...\n"
 "  or:  %s [OPTION]... OCTAL-MODE FILE...\n"
 "  or:  %s [OPTION]... --reference=RFILE FILE...\n"
 msgstr ""
-"Käyttö: %s [VALITSIN]... LOPPU\n"
-"  tai:  %s [VALITSIN]... ALKU LOPPU\n"
-"  tai:  %s [VALITSIN]... ALKU LISÄYS LOPPU\n"
+"Käyttö: %s [VALITSIN]... OIKEUDET[,OIKEUDET]... TIEDOSTO...\n"
+"  tai:  %s [VALITSIN]... OKTAALI-OIKEUDET TIEDOSTO...\n"
+"  tai:  %s [VALITSIN]... --reference=RTIED TIEDOSTO...\n"
 
 #: src/chmod.c:248
 msgid ""
@@ -534,9 +545,9 @@ msgid ""
 msgstr ""
 
 #: src/chmod.c:320
-#, fuzzy, c-format
+#, c-format
 msgid "invalid character %s in mode string %s"
-msgstr "muotoilumerkkijono ei kelpaa: \"%s\""
+msgstr "virheellinen merkki %s oikeusmerkkijonossa %s"
 
 #: src/chmod.c:361
 #, fuzzy, c-format
@@ -551,12 +562,12 @@ msgstr ""
 #: src/chown-core.c:143
 #, c-format
 msgid "changed ownership of %s to %s\n"
-msgstr ""
+msgstr "vaihdettiin tiedoston %s omistajaksi %s\n"
 
 #: src/chown-core.c:144
 #, c-format
 msgid "changed group of %s to %s\n"
-msgstr ""
+msgstr "vaihdettiin tiedoston %s ryhmäksi %s\n"
 
 #: src/chown-core.c:148
 #, fuzzy, c-format
@@ -581,7 +592,7 @@ msgstr ""
 #: src/chown-core.c:326
 #, c-format
 msgid "changing ownership of %s"
-msgstr ""
+msgstr "muutetaan tiedoston %s omistajaa"
 
 #: src/chown-core.c:327
 #, fuzzy, c-format
@@ -702,7 +713,7 @@ msgid "Richard Stallman and David MacKenzie"
 msgstr "Richard Stallman ja David MacKenzie"
 
 #: src/comm.c:73
-#, fuzzy, c-format
+#, c-format
 msgid "Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n"
 msgstr "Käyttö: %s [VALITSIN]... VASEN_TIEDOSTO OIKEA_TIEDOSTO\n"
 
@@ -714,16 +725,23 @@ msgid ""
 "  -2              suppress lines unique to right file\n"
 "  -3              suppress lines that appear in both files\n"
 msgstr ""
+"Vertaa lajiteltuja tiedostoja VASEN_TIEDOSTO ja OIKEA_TIEDOSTO rivi "
+"riviltä.\n"
+"\n"
+"  -1              älä tulosta vain vasemmassa tiedostossa esiintyviä rivejä\n"
+"  -2              älä tulosta vain oikeassa tiedostossa esiintyviä rivejä\n"
+"  -3              älä tulosta rivejä, jotka esiintyvät molemmissa "
+"tiedostoissa\n"
 
 #: src/copy.c:162 src/du.c:332
-#, fuzzy, c-format
+#, c-format
 msgid "cannot access %s"
-msgstr "ryhmien asetus ei onnistu"
+msgstr "tiedostoa %s ei voi käsitellä"
 
 #: src/copy.c:226
 #, c-format
 msgid "cannot open %s for reading"
-msgstr ""
+msgstr "tiedostoa %s ei voi avata lukemista varten"
 
 #: src/copy.c:232 src/copy.c:286 src/copy.c:301 src/dd.c:1199
 #, fuzzy, c-format
@@ -733,23 +751,23 @@ msgstr "ajan asetus ei onnistu"
 #: src/copy.c:242
 #, c-format
 msgid "skipping file %s, as it was replaced while being copied"
-msgstr ""
+msgstr "ohitetaan tiedosto %s, sillä se korvattiin kopioinnin aikana"
 
 #: src/copy.c:262 src/copy.c:1034 src/copy.c:1124 src/ln.c:291
 #: src/remove.c:726 src/remove.c:780 src/remove.c:892 src/remove.c:996
-#, fuzzy, c-format
+#, c-format
 msgid "cannot remove %s"
-msgstr "hakemiston %s luominen ei onnistu"
+msgstr "tiedostoa %s ei voi poistaa"
 
 #: src/copy.c:277
-#, fuzzy, c-format
+#, c-format
 msgid "cannot create regular file %s"
-msgstr "hakemiston %s luominen ei onnistu"
+msgstr "tavallisen tiedoston %s luominen ei onnistu"
 
 #: src/copy.c:328 src/dd.c:816 src/dd.c:1010
 #, c-format
 msgid "reading %s"
-msgstr ""
+msgstr "luetaan tiedostoa %s"
 
 #: src/copy.c:362
 #, fuzzy, c-format
@@ -759,27 +777,27 @@ msgstr "ryhmien asetus ei onnistu"
 #: src/copy.c:377 src/copy.c:401 src/dd.c:1054 src/dd.c:1115
 #, c-format
 msgid "writing %s"
-msgstr ""
+msgstr "kirjoitetaan tiedostoa %s"
 
 #: src/copy.c:409 src/copy.c:415
 #, c-format
 msgid "closing %s"
-msgstr ""
+msgstr "suljetaan tiedostoa %s"
 
 #: src/copy.c:610
 #, c-format
 msgid "%s: overwrite %s, overriding mode %04lo? "
-msgstr ""
+msgstr "%s: korvataanko tiedosto %s, ohittaen oikeudet %04lo? "
 
 #: src/copy.c:616
 #, c-format
 msgid "%s: overwrite %s? "
-msgstr ""
+msgstr "%s: korvataanko tiedosto %s? "
 
 #: src/copy.c:810 src/copy.c:848 src/stat.c:637
-#, fuzzy, c-format
+#, c-format
 msgid "cannot stat %s"
-msgstr "ajan asetus ei onnistu"
+msgstr "tiedoston %s tilaa ei voi lukea"
 
 #: src/copy.c:820
 #, fuzzy, c-format
@@ -804,12 +822,12 @@ msgstr "siirtyminen hakemistoon %s ei onnistu"
 #: src/copy.c:893
 #, c-format
 msgid "will not overwrite just-created %s with %s"
-msgstr ""
+msgstr "ei korvata juuri luotua tiedostoa %s tiedostolla %s"
 
 #: src/copy.c:904
-#, fuzzy, c-format
+#, c-format
 msgid "cannot overwrite directory %s with non-directory"
-msgstr "hakemiston %s luominen ei onnistu"
+msgstr "hakemistoa %s ei voi korvata ei-hakemistolla"
 
 #: src/copy.c:965
 #, fuzzy, c-format
@@ -881,6 +899,7 @@ msgstr ""
 #, c-format
 msgid "%s: can make relative symbolic links only in current directory"
 msgstr ""
+"%s: suhteellisia symbolisia linkkejä voi tehdä vain nykyisessä hakemistossa"
 
 #: src/copy.c:1353
 #, fuzzy, c-format
@@ -915,17 +934,17 @@ msgstr "symbolisen linkin %s luominen ei onnistu"
 #: src/copy.c:1456 src/copy.c:1519 src/cp.c:339
 #, c-format
 msgid "failed to preserve ownership for %s"
-msgstr ""
+msgstr "tiedoston %s omistajuuden säilytys ei onnistu"
 
 #: src/copy.c:1471
 #, c-format
 msgid "%s has unknown file type"
-msgstr ""
+msgstr "tiedostolla %s on tuntematon tiedostotyyppi"
 
 #: src/copy.c:1506
 #, c-format
 msgid "preserving times for %s"
-msgstr ""
+msgstr "säilytetään tiedoston %s ajat"
 
 #: src/copy.c:1531
 #, c-format
@@ -933,9 +952,9 @@ msgid "failed to preserve authorship for %s"
 msgstr ""
 
 #: src/copy.c:1549
-#, fuzzy, c-format
+#, c-format
 msgid "setting permissions for %s"
-msgstr "%s:n oikeuksien muuttaminen ei onnistu"
+msgstr "asetetaan tiedoston %s oikeudet"
 
 #: src/copy.c:1571 src/ln.c:326
 #, c-format
@@ -948,9 +967,8 @@ msgid "%s -> %s (unbackup)\n"
 msgstr ""
 
 #: src/cp.c:53
-#, fuzzy
 msgid "Torbjorn Granlund, David MacKenzie, and Jim Meyering"
-msgstr "David MacKenzie ja Jim Meyering"
+msgstr "Torbjörn Granlund, David MacKenzie ja Jim Meyering"
 
 #: src/cp.c:164 src/mv.c:311
 #, fuzzy, c-format
@@ -1093,12 +1111,12 @@ msgstr ""
 #: src/cp.c:325
 #, c-format
 msgid "failed to preserve times for %s"
-msgstr ""
+msgstr "tiedoston %s aikojen säilyttäminen ei onnistu"
 
 #: src/cp.c:349
-#, fuzzy, c-format
+#, c-format
 msgid "failed to preserve permissions for %s"
-msgstr "%s:n oikeuksien muuttaminen ei onnistu"
+msgstr "tiedoston %s oikeuksien säilyttäminen ei onnistu"
 
 #: src/cp.c:434
 #, c-format
@@ -1106,9 +1124,8 @@ msgid "cannot make directory %s"
 msgstr "hakemiston %s luominen ei onnistu"
 
 #: src/cp.c:493 src/ln.c:490 src/mv.c:459 src/shred.c:1601
-#, fuzzy
 msgid "missing file argument"
-msgstr "\"%s\" vaatii argumentin"
+msgstr "puuttuva tiedostoargumentti"
 
 #: src/cp.c:498
 msgid "missing destination file"
@@ -1120,9 +1137,9 @@ msgid "accessing %s"
 msgstr ""
 
 #: src/cp.c:546
-#, fuzzy, c-format
+#, c-format
 msgid "%s: specified target is not a directory"
-msgstr "%s on olemassa, mutta se ei ole hakemisto"
+msgstr "%s: annettu kohde ei ole hakemisto"
 
 #: src/cp.c:554
 #, c-format
@@ -1135,12 +1152,13 @@ msgid "when preserving paths, the destination must be a directory"
 msgstr ""
 
 #: src/cp.c:878 src/install.c:219 src/ln.c:434 src/mv.c:405
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "warning: --version-control (-V) is obsolete;  support for it\n"
 "will be removed in some future release.  Use --backup=%s instead."
 msgstr ""
-"Varoitus: -i poistetaan tulevassa julkaisussa;   käytä -u:ta sen sijaan"
+"varoitus: --version-control (-V) on vanhentunut; sen tuki poistetaan\n"
+"jossakin tulevassa julkaisussa. Käytä sen sijaan --backup=%s."
 
 #: src/cp.c:972 src/ln.c:464
 msgid "symbolic links are not supported on this system"
@@ -1148,7 +1166,7 @@ msgstr "tämä järjestelmä ei tue symbolisia linkkejä"
 
 #: src/cp.c:1008
 msgid "cannot make both hard and symbolic links"
-msgstr ""
+msgstr "linkit eivät voi olla sekä kovia että symbolisia"
 
 #: src/cp.c:1016 src/install.c:275 src/ln.c:530 src/mv.c:483
 msgid "backup type"
@@ -1185,16 +1203,16 @@ msgstr ""
 #: src/csplit.c:788
 #, c-format
 msgid "%s: `%s': match not found"
-msgstr ""
+msgstr "%s: \"%s\": täsmäävyyttä ei löydy"
 
 #: src/csplit.c:849 src/csplit.c:889 src/tac.c:262
 msgid "error in regular expression search"
-msgstr ""
+msgstr "virhe säännöllisen lausekkeen haussa"
 
 #: src/csplit.c:992
-#, fuzzy, c-format
+#, c-format
 msgid "write error for `%s'"
-msgstr "kirjotuksenaikainen virhe"
+msgstr "virhe kirjoitettaessa tiedostoa \"%s\""
 
 #: src/csplit.c:1064
 #, c-format
@@ -1202,9 +1220,9 @@ msgid "%s: `+' or `-' expected after delimeter"
 msgstr ""
 
 #: src/csplit.c:1068
-#, fuzzy, c-format
+#, c-format
 msgid "%s: integer expected after `%c'"
-msgstr "\"%s\":n jälkeen puuttuu operandi"
+msgstr "%s: merkin \"%c\" jälkeen odotetaan kokonaislukua"
 
 #: src/csplit.c:1088
 #, c-format
@@ -1219,7 +1237,7 @@ msgstr ""
 #: src/csplit.c:1125
 #, c-format
 msgid "%s: closing delimeter `%c' missing"
-msgstr ""
+msgstr "%s: sulkeva rajoitin \"%c\" puuttuu"
 
 #: src/csplit.c:1141
 #, c-format
@@ -1633,7 +1651,7 @@ msgstr "ajan tulostus- ja asetusvalitsimia ei saa käyttää yhtäaikaa"
 #: src/date.c:377
 #, c-format
 msgid "too many non-option arguments: %s%s"
-msgstr "liikaa parametrejä jotka eivät ole valisimia: %s%s"
+msgstr "liikaa argumentteja, jotka eivät ole valitsimia: %s%s"
 
 #: src/date.c:385
 #, c-format
@@ -1776,7 +1794,7 @@ msgstr "suljetaan tulostiedosto %s"
 #: src/dd.c:469
 #, c-format
 msgid "writing to %s"
-msgstr ""
+msgstr "kirjoitetaan tiedostoon %s"
 
 #: src/dd.c:501
 #, c-format
@@ -1817,28 +1835,25 @@ msgid "opening %s"
 msgstr "avataan %s"
 
 #: src/dd.c:1196
-#, fuzzy
 msgid "file offset out of range"
-msgstr "merkki alueen ulkopuolelle"
+msgstr "tiedostosiirtymä on sallitun välin ulkopuolella"
 
 #: src/dd.c:1214
 #, c-format
 msgid "advancing past %s bytes in output file %s"
-msgstr ""
+msgstr "edetään %s tavun yli tulostiedostossa %s"
 
 #: src/df.c:49
 msgid "Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert"
 msgstr "Torbjörn Granlund, David MacKenzie, Larry McVoy ja Paul Eggert"
 
 #: src/df.c:153
-#, fuzzy
 msgid "Filesystem    Type"
-msgstr "Tied.järj. "
+msgstr "Tied.järj.  Tyyppi"
 
 #: src/df.c:155
-#, fuzzy
 msgid "Filesystem        "
-msgstr "Tied.järj. "
+msgstr "Tiedostojärjestelmä"
 
 #: src/df.c:158
 #, c-format
@@ -1848,22 +1863,22 @@ msgstr "  I-solmut   IKäyt   IJälj Ikäy%%"
 #: src/df.c:162
 #, c-format
 msgid "    Size  Used Avail Use%%"
-msgstr "    Koko  Käyt  Jälj Käy%%"
+msgstr "   Koko  Käyt Vapaa  Käy%%"
 
 #: src/df.c:164
 #, c-format
 msgid "     Size   Used  Avail Use%%"
-msgstr "     Koko   Käyt  Jälj  Käy%%"
+msgstr "     Koko   Käyt Vapaa Käy%%"
 
 #: src/df.c:167
 #, c-format
 msgid " %4s-blocks      Used Available Capacity"
-msgstr "%4s-lohkoja      Käyt   Vapaana Käytetty"
+msgstr "%4s-lohkot  Käytetty   Vapaana Käytetty"
 
 #: src/df.c:198
 #, c-format
 msgid " %4s-blocks      Used Available Use%%"
-msgstr "%4s-lohkoja      Käyt   Vapaana Käy%%"
+msgstr "%4s-lohkot  Käytetty   Vapaana Käy%%"
 
 #: src/df.c:202
 msgid " Mounted on\n"
@@ -1875,6 +1890,8 @@ msgid ""
 "or all filesystems by default.\n"
 "\n"
 msgstr ""
+"Näytä tietoja tiedostojärjestelmästä, jolla kukin TIEDOSTO sijaitsee,\n"
+"tai oletuksena kaikista tiedostojärjestelmistä.\n"
 
 #: src/df.c:720
 msgid ""
@@ -1884,6 +1901,10 @@ msgid ""
 "2G)\n"
 "  -H, --si              likewise, but use powers of 1000 not 1024\n"
 msgstr ""
+"  -a, --all             sisällytä myös 0 lohkon kokoiset "
+"tiedostojärjestelmät\n"
+"  -B, --block-size=KOKO käytä KOKO-tavuisia lohkoja\n"
+"  -h, --human-readable  näytä koot fuzzy\n"
 
 #: src/df.c:726
 msgid ""
@@ -1914,7 +1935,7 @@ msgstr ""
 #: src/df.c:859
 #, c-format
 msgid "file system type %s both selected and excluded"
-msgstr ""
+msgstr "tiedostojärjestelmätyyppi %s on sekä valittu että jätetty pois"
 
 #: src/df.c:903
 msgid "Warning: "
@@ -1951,12 +1972,12 @@ msgstr ""
 #: src/dircolors.c:299
 #, c-format
 msgid "%s:%lu: invalid line;  missing second token"
-msgstr ""
+msgstr "%s:%lu: virheellinen rivi; toinen symboli puuttuu"
 
 #: src/dircolors.c:371
-#, fuzzy, c-format
+#, c-format
 msgid "%s:%lu: unrecognized keyword %s"
-msgstr "%s: tunnistamaton valitsin \"%c%s\"\n"
+msgstr "%s:%lu: tunnistamaton avainsana %s"
 
 #: src/dircolors.c:372
 msgid "<internal>"
@@ -2046,6 +2067,9 @@ msgid ""
 "  -S, --separate-dirs   do not include size of subdirectories\n"
 "  -s, --summarize       display only a total for each argument\n"
 msgstr ""
+"  -L, --dereference     \n"
+"  -S, --separate-dirs   älä laske mukaan alihakemistojen kokoa\n"
+"  -s, --summarize       fuzzy\n"
 
 #: src/du.c:204
 msgid ""
@@ -2066,9 +2090,9 @@ msgid "cannot change to parent of directory %s"
 msgstr "juurihakemiston vaihto %s:ksi ei onnistu"
 
 #: src/du.c:345
-#, fuzzy, c-format
+#, c-format
 msgid "cannot change to directory %s"
-msgstr "juurihakemiston vaihto %s:ksi ei onnistu"
+msgstr "hakemistoon %s ei voi siirtyä"
 
 #: src/du.c:352
 #, c-format
@@ -2080,9 +2104,9 @@ msgid "total"
 msgstr "yhteensä"
 
 #: src/du.c:641
-#, fuzzy, c-format
+#, c-format
 msgid "invalid maximum depth %s"
-msgstr "argumentti \"%s\" ei kelpaa"
+msgstr "virheellinen enimmäissyvyys %s"
 
 #: src/du.c:707
 msgid "cannot both summarize and show all entries"
@@ -2159,7 +2183,8 @@ msgstr "Richard Mlynarik ja David MacKenzie"
 #: src/env.c:119
 #, c-format
 msgid "Usage: %s [OPTION]... [-] [NAME=VALUE]... [COMMAND [ARG]...]\n"
-msgstr "Käyttö: %s [VALITSIN]... [-] [NIMI=ARVO]... [KOMENTO [PARAMETRI]...]\n"
+msgstr ""
+"Käyttö: %s [VALITSIN]... [-] [NIMI=ARVO]... [KOMENTO [ARGUMENTTI]...]\n"
 
 #: src/env.c:122
 msgid ""
@@ -2201,9 +2226,8 @@ msgid ""
 msgstr ""
 
 #: src/expand.c:173 src/unexpand.c:153
-#, fuzzy
 msgid "tab size contains an invalid character"
-msgstr "polku \"%s\" sisältää siirrettäväksi kelpaamattoman merkin \"%c\""
+msgstr "sarkainkoko sisältää virheellisen merkin"
 
 #: src/expand.c:191 src/unexpand.c:171
 msgid "tab size cannot be 0"
@@ -2215,7 +2239,7 @@ msgstr ""
 
 #: src/expand.c:386
 msgid "`-LIST' option is obsolete; use `-t LIST'"
-msgstr ""
+msgstr "valitsin \"-LIST\" on vanhentunut; käytä \"-t LIST\""
 
 #: src/expr.c:90
 #, c-format
@@ -2227,7 +2251,6 @@ msgstr ""
 "  tai:  %s VALITSIN\n"
 
 #: src/expr.c:98
-#, fuzzy
 msgid ""
 "\n"
 "Print the value of EXPRESSION to standard output.  A blank line below\n"
@@ -2238,7 +2261,7 @@ msgid ""
 "  ARG1 & ARG2       ARG1 if neither argument is null or 0, otherwise 0\n"
 msgstr ""
 "\n"
-"Tulosta LAUSEKKEEN arvo vakiotulosteeseen. Alla tyhjä rivi\n"
+"Tulosta LAUSEKKEEN arvo vakiotulosteeseen. Alla oleva tyhjä rivi\n"
 "erottaa kasvavan arvojärjestyksen ryhmät.  LAUSEKE voi olla:\n"
 "\n"
 "  ARG1 | ARG2       ARG1 jos se ei ole tyhjä eikä 0, muutoin ARG2\n"
@@ -2274,7 +2297,7 @@ msgstr ""
 "  ARG1 - ARG2       ARG1:n ja ARG2:n aritmeettinen erotus\n"
 
 #: src/expr.c:121
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "  ARG1 * ARG2       arithmetic product of ARG1 and ARG2\n"
@@ -2282,11 +2305,9 @@ msgid ""
 "  ARG1 % ARG2       arithmetic remainder of ARG1 divided by ARG2\n"
 msgstr ""
 "\n"
-"  ARG1 * ARG2       ARG1:n ja ARG2:n aritmeettinen tulo\n"
-"  ARG1 / ARG2       jakolaskun ARG1 jaettuna ARG2:lla aritmeettinen "
-"osamäärä\n"
-"  ARG1 % ARG2       jakolaskun ARG1 jaettuna ARG2:lla aritmeettinen "
-"jakojäänös\n"
+"  ARG1 * ARG2       aritmeettinen tulo ARG1 kerrottuna ARG2:lla\n"
+"  ARG1 / ARG2       aritmeettinen osamäärä ARG1 jaettuna ARG2:lla\n"
+"  ARG1 % ARG2       aritmeettinen jakojäännös ARG1 jaettuna ARG2:lla\n"
 
 #: src/expr.c:127
 msgid ""
@@ -2331,7 +2352,7 @@ msgid ""
 msgstr ""
 "\n"
 "Huomaa, että monet operaattorit täytyy suojata komentotulkeilta.\n"
-"Vertailut ovat numeroparametreille aritmeettisia, muille sanakirjamaisia.\n"
+"Vertailut ovat numeroargumenteille aritmeettisia, muille sanakirjamaisia.\n"
 "Mallihaut palauttavat merkkien \\( ja \\) väliin täsmäävän merkkijonon tai\n"
 "tyhjän. Merkkien \\( ja \\) puuttuessa palautuu täsmäävien merkkien määrä "
 "tai 0.\n"
@@ -2383,7 +2404,7 @@ msgid ""
 msgstr ""
 "\n"
 "  Tulosta NUMEROiden (kokonaislukuja) tekijät.  Ilman "
-"komentoriviparametrejä\n"
+"komentoriviargumentteja\n"
 "  numerot luetaan vakiosyötteestä.\n"
 
 #: src/factor.c:154
@@ -2439,11 +2460,13 @@ msgid ""
 "\n"
 "In -wNUMBER, the letter `w' may be omitted.\n"
 msgstr ""
+"\n"
+"Kirjain \"w\" voidaan jättää pois valitsimessa -wMÄÄRÄ.\n"
 
 #: src/fmt.c:345
-#, fuzzy, c-format
+#, c-format
 msgid "invalid width option: `%s'"
-msgstr "valitsin \"%s\" ei kelpaa"
+msgstr "virheellinen leveysvalitsin: \"%s\""
 
 #: src/fmt.c:385
 #, fuzzy, c-format
@@ -2467,12 +2490,12 @@ msgstr ""
 #: src/fold.c:267
 #, c-format
 msgid "`%s' option is obsolete; use `%s'"
-msgstr ""
+msgstr "valitsin \"%s\" on vanhentunut; käytä \"%s\""
 
 #: src/fold.c:295
-#, fuzzy, c-format
+#, c-format
 msgid "invalid number of columns: `%s'"
-msgstr "kokonaislukuargumentti \"%s\" ei kelpaa"
+msgstr "virheellinen sarakemäärä: \"%s\""
 
 #: src/head.c:92
 msgid ""
@@ -2511,7 +2534,7 @@ msgstr "hakemiston %s luominen ei onnistu"
 #: src/head.c:256 src/tail.c:1388
 #, c-format
 msgid "%s: %s is so large that it is not representable"
-msgstr ""
+msgstr "%s: %s on liian suuri esitettäväksi"
 
 #: src/head.c:257 src/tail.c:1390
 msgid "number of lines"
@@ -2667,11 +2690,12 @@ msgstr "luodaan hakemisto %s"
 #, c-format
 msgid "installing multiple files, but last argument, %s is not a directory"
 msgstr ""
+"asennetaan useita tiedostoja, mutta viimeinen argumentti %s ei ole hakemisto"
 
 #: src/install.c:435
-#, fuzzy, c-format
+#, c-format
 msgid "%s is a directory"
-msgstr "\"%s\" ei ole hakemisto"
+msgstr "%s on hakemisto"
 
 #: src/install.c:495
 #, fuzzy, c-format
@@ -2824,14 +2848,14 @@ msgid "invalid file number in field spec: `%s'"
 msgstr "ajanjakso ei kelpaa: \"%s\""
 
 #: src/join.c:792
-#, fuzzy, c-format
+#, c-format
 msgid "invalid field number for file 1: `%s'"
-msgstr "ajanjakso ei kelpaa: \"%s\""
+msgstr "1: \"%s\""
 
 #: src/join.c:801
-#, fuzzy, c-format
+#, c-format
 msgid "invalid field number for file 2: `%s'"
-msgstr "ajanjakso ei kelpaa: \"%s\""
+msgstr "virheellinen kenttänumero tiedostolle 2: \"%s\""
 
 #: src/join.c:833
 msgid "too many non-option arguments"
@@ -2926,12 +2950,12 @@ msgid "cannot combine signal with -l or -t"
 msgstr "signaalin yhdistäminen -l:n tai -t:n kanssa ei onnistu"
 
 #: src/link.c:51
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Usage: %s FILE1 FILE2\n"
 "  or:  %s OPTION\n"
 msgstr ""
-"Käyttö: %s NIMI\n"
+"Käyttö: %s TIED1 TIED2\n"
 "  tai:  %s VALITSIN\n"
 
 #: src/link.c:54
@@ -2939,6 +2963,7 @@ msgid ""
 "Call the link function to create a link named FILE2 to an existing FILE1.\n"
 "\n"
 msgstr ""
+"Kutsu linkitysfunktiota linkin TIED2 luomiseksi olemassaolevaan TIED1:een.\n"
 
 #: src/link.c:98
 #, fuzzy, c-format
@@ -2956,19 +2981,19 @@ msgstr ""
 "%s: varoitus: kovan linkin tekeminen symboliseen linkkiin ei ole siirrettävää"
 
 #: src/ln.c:174
-#, fuzzy, c-format
+#, c-format
 msgid "%s: hard link not allowed for directory"
-msgstr "\"%s\" ei ole hakemisto"
+msgstr "%s: kova linkki ei ole sallittu hakemistolle"
 
 #: src/ln.c:246
 #, c-format
 msgid "%s: cannot overwrite directory"
-msgstr "%s: hakemistoa ei voi ylikirjoittaa"
+msgstr "%s: hakemistoa ei voi korvata"
 
 #: src/ln.c:251
 #, c-format
 msgid "%s: replace %s? "
-msgstr "%s: korvaa %s? "
+msgstr "%s: korvataanko tiedosto %s? "
 
 #: src/ln.c:257
 #, c-format
@@ -3044,13 +3069,13 @@ msgid ""
 msgstr ""
 
 #: src/ln.c:521
-#, fuzzy, c-format
+#, c-format
 msgid "%s: specified target directory is not a directory"
-msgstr "%s on olemassa, mutta se ei ole hakemisto"
+msgstr "%s: annettu kohdehakemisto ei ole hakemisto"
 
 #: src/ln.c:542
 msgid "when making multiple links, last argument must be a directory"
-msgstr ""
+msgstr "useita linkkejä luotaessa viimeisen argumentin on oltava hakemisto"
 
 #: src/logname.c:48 src/pwd.c:46 src/sync.c:44
 #, c-format
@@ -3386,7 +3411,7 @@ msgstr "%s: lukuvirhe"
 #: src/md5sum.c:457
 #, c-format
 msgid "%s: no properly formatted %s checksum lines found"
-msgstr ""
+msgstr "%s: kelvollisesti muotoiltuja %s-tarkistussummarivejä ei löytynyt"
 
 #: src/md5sum.c:470
 #, fuzzy, c-format
@@ -3443,15 +3468,17 @@ msgid "only one argument may be specified when using --check"
 msgstr "voit määritellä vain yhden laitteen"
 
 #: src/mkdir.c:61
-#, fuzzy, c-format
+#, c-format
 msgid "Usage: %s [OPTION] DIRECTORY...\n"
-msgstr "Käyttö: %s [VALITSIN]...\n"
+msgstr "Käyttö: %s [VALITSIN] HAKEMISTO...\n"
 
 #: src/mkdir.c:62
 msgid ""
 "Create the DIRECTORY(ies), if they do not already exist.\n"
 "\n"
 msgstr ""
+"Luo HAKEMISTO(t), elleivät ne ole jo olemassa.\n"
+"\n"
 
 #: src/mkdir.c:69
 msgid ""
@@ -3467,9 +3494,9 @@ msgid "created directory %s"
 msgstr "luotiin hakemisto %s"
 
 #: src/mkdir.c:190
-#, fuzzy, c-format
+#, c-format
 msgid "cannot set permissions of directory %s"
-msgstr "%s:n oikeuksien muuttaminen ei onnistu"
+msgstr "hakemiston %s oikeuksien asettaminen ei onnistu"
 
 #: src/mkfifo.c:55
 #, c-format
@@ -3489,7 +3516,7 @@ msgstr ""
 
 #: src/mkfifo.c:93 src/mknod.c:206
 msgid "fifo files not supported"
-msgstr ""
+msgstr "fifo-tiedostot eivät ole tuettuja"
 
 #: src/mkfifo.c:123 src/mknod.c:127
 #, fuzzy
@@ -3502,15 +3529,17 @@ msgid "cannot set permissions of fifo %s"
 msgstr "%s:n oikeuksien muuttaminen ei onnistu"
 
 #: src/mknod.c:55
-#, fuzzy, c-format
+#, c-format
 msgid "Usage: %s [OPTION]... NAME TYPE [MAJOR MINOR]\n"
-msgstr "Käyttö: %s [VALITSIN]... NIMI...\n"
+msgstr "Käyttö: %s [VALITSIN]... NIMI TYYPPI [MAJOR MINOR]\n"
 
 #: src/mknod.c:57
 msgid ""
 "Create the special file NAME of the given TYPE.\n"
 "\n"
 msgstr ""
+"Luo TYYPIN mukainen erikoistiedosto NIMI.\n"
+"\n"
 
 #: src/mknod.c:69
 msgid ""
@@ -3528,6 +3557,10 @@ msgid ""
 "  c, u   create a character (unbuffered) special file\n"
 "  p      create a FIFO\n"
 msgstr ""
+"\n"
+"  b      luo lohkoerikoistiedosto (puskuroitu)\n"
+"  c, u   luo merkkierikoistiedosto (puskuroimaton)\n"
+"  p      luo FIFO-putki\n"
 
 #: src/mknod.c:141
 msgid "wrong number of arguments"
@@ -3546,6 +3579,8 @@ msgid ""
 "when creating special files, major and minor device\n"
 "numbers must be specified"
 msgstr ""
+"major- ja minor-laitenumerot on annettava luotaessa\n"
+"erikoistiedostoja"
 
 #: src/mknod.c:186
 #, c-format
@@ -3567,9 +3602,9 @@ msgid "major and minor device numbers may not be specified for fifo files"
 msgstr "fifo-tiedostoille ei voi antaa major- ja minor-laitearvoja"
 
 #: src/mknod.c:231
-#, fuzzy, c-format
+#, c-format
 msgid "cannot set permissions of %s"
-msgstr "%s:n oikeuksien muuttaminen ei onnistu"
+msgstr "tiedoston %s oikeuksien asettaminen ei onnistu"
 
 #: src/mv.c:44
 msgid "Mike Parker, David MacKenzie, and Jim Meyering"
@@ -3580,6 +3615,8 @@ msgid ""
 "Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n"
 "\n"
 msgstr ""
+"Uudelleennimeä LÄHDE -> KOHDE, tai siirrä LÄHDE(teet) HAKEMISTOon.\n"
+"\n"
 
 #: src/mv.c:324
 msgid ""
@@ -3673,6 +3710,8 @@ msgid ""
 "With no FILE, or when FILE is -, read standard input.\n"
 "\n"
 msgstr ""
+"Kirjoita jokainen TIEDOSTO vakiotulosteeseen rivinumerointi lisäten.\n"
+"Jos TIEDOSTOa ei ole annettu, tai se on -, luetaan vakiosyötettä.\n"
 
 #: src/nl.c:188
 msgid ""
@@ -3724,9 +3763,9 @@ msgid ""
 msgstr ""
 
 #: src/nl.c:504
-#, fuzzy, c-format
+#, c-format
 msgid "invalid starting line number: `%s'"
-msgstr "liukulukuargumentti ei kelpaa: %s"
+msgstr "virheellinen aloitusrivin numero: \"%s\""
 
 #: src/nl.c:514
 #, fuzzy, c-format
@@ -3734,9 +3773,9 @@ msgid "invalid line number increment: `%s'"
 msgstr "kokonaislukuargumentti \"%s\" ei kelpaa"
 
 #: src/nl.c:527
-#, fuzzy, c-format
+#, c-format
 msgid "invalid number of blank lines: `%s'"
-msgstr "ajanjakso ei kelpaa: \"%s\""
+msgstr "virheellinen tyhjien rivien määrä: \"%s\""
 
 #: src/nl.c:541
 #, fuzzy, c-format
@@ -3899,7 +3938,7 @@ msgstr "Tarjolla olevat argumentit:"
 
 #: src/od.c:1735
 msgid "minimum string length"
-msgstr ""
+msgstr "merkkijonon vähimmäispituus"
 
 #: src/od.c:1740 src/od.c:1806
 #, c-format
@@ -3908,7 +3947,7 @@ msgstr "%s on liian suuri"
 
 #: src/od.c:1804
 msgid "width specification"
-msgstr ""
+msgstr "leveysmääritys"
 
 #: src/od.c:1826
 #, fuzzy
@@ -3922,11 +3961,11 @@ msgstr ""
 
 #: src/od.c:1895
 msgid "in compatibility mode, the last two arguments must be offsets"
-msgstr ""
+msgstr "kahden viimeisen argumentin on yhteensopivuustilassa oltava siirtymiä"
 
 #: src/od.c:1902
 msgid "compatibility mode supports at most three arguments"
-msgstr ""
+msgstr "yhteensopivuustila tukee korkeintaan kolmea argumenttia"
 
 #: src/od.c:1975
 #, c-format
@@ -4011,7 +4050,7 @@ msgstr "Tunnus:     "
 
 #: src/pinky.c:295
 msgid "In real life: "
-msgstr "Todellisessa elämässä: "
+msgstr "Tosielämässä: "
 
 #: src/pinky.c:298
 msgid "???\n"
@@ -4167,6 +4206,7 @@ msgstr ""
 msgid "`-W PAGE_WIDTH' invalid number of characters: `%s'"
 msgstr ""
 
+# tätä ei käytetä mihinkään, tyhmää
 #: src/pr.c:1079
 msgid "%b %e %H:%M %Y"
 msgstr "%e. %Bta %Y %H:%M"
@@ -4186,12 +4226,12 @@ msgstr ""
 
 #: src/pr.c:1299
 msgid "page width too narrow"
-msgstr ""
+msgstr "sivun leveys on liian pieni"
 
 #: src/pr.c:2362
 #, c-format
 msgid "starting page number larger than total number of pages: `%d'"
-msgstr ""
+msgstr "aloitussivunumero on suurempi kuin sivujen kokonaismäärä: \"%d\""
 
 #: src/pr.c:2393
 #, c-format
@@ -4202,7 +4242,7 @@ msgstr "Sivu %d"
 msgid ""
 "Paginate or columnate FILE(s) for printing.\n"
 "\n"
-msgstr ""
+msgstr "Numeroi sivut tai palstoita TIEDOSTO(t) tulostusta varten.\n"
 
 #: src/pr.c:2766
 msgid ""
@@ -4359,7 +4399,7 @@ msgid ""
 "Usage: %s FORMAT [ARGUMENT]...\n"
 "  or:  %s OPTION\n"
 msgstr ""
-"Käyttö: %s MUOTOILU [PARAMETRI]...\n"
+"Käyttö: %s MUOTOILU [ARGUMENTTI]...\n"
 "  tai:  %s VALITSIN\n"
 
 #: src/printf.c:105
@@ -4367,7 +4407,7 @@ msgid ""
 "Print ARGUMENT(s) according to FORMAT.\n"
 "\n"
 msgstr ""
-"Tulosta PARAMETRI(t) MUOTOLUn mukaisesti.\n"
+"Tulosta ARGUMENTTI(t) MUOTOILUn mukaisesti.\n"
 "\n"
 
 #: src/printf.c:111
@@ -4411,14 +4451,13 @@ msgstr ""
 "  \\v      pystysarkain\n"
 
 #: src/printf.c:131
-#, fuzzy
 msgid ""
 "  \\xNN    byte with hexadecimal value NN (1 to 2 digits)\n"
 "\n"
 "  \\uNNNN  character with hexadecimal value NNNN (4 digits)\n"
 "  \\UNNNNNNNN  character with hexadecimal value NNNNNNNN (8 digits)\n"
 msgstr ""
-"  \\xNNN   tavu, jonka heksadesimaaliarvo on NNN (1:stä 3:een numeroa)\n"
+"  \\xNN    tavu, jonka heksadesimaaliarvo on NN (1 tai 2 numeroa)\n"
 "\n"
 "  \\uNNNN  merkki, jonka heksadesimaaliarvo on NNNN (4 numeroa)\n"
 "  \\UNNNNNNNN  merkki, jonka heksadesimaaliarvo on NNNNNNNN (8 numeroa)\n"
@@ -4432,10 +4471,10 @@ msgid ""
 "ARGUMENTs converted to proper type first.  Variable widths are handled.\n"
 msgstr ""
 "  %%      yksittäinen %-merkki\n"
-"  %b      PARAMETRI mekkijonona \"\\\"-merkityt ohjauskoodit tulkittuina\n"
+"  %b      ARGUMENTTI mekkijonona \"\\\"-merkityt ohjauskoodit tulkittuina\n"
 "\n"
 "sekä kaikki merkkeihin diouxXfeEgGcs päättyvät C:n muotoilumääritykset\n"
-"PARAMETRIt muunnettuna oikean tyyppisiksi.  Muuttuvat leveydet huomoidaan.\n"
+"ARGUMENTIT muunnettuna oikean tyyppisiksi.  Muuttuvat leveydet huomoidaan.\n"
 
 #: src/printf.c:160
 #, c-format
@@ -4462,14 +4501,14 @@ msgid "\\%c: invalid escape"
 msgstr "\\%c: ohjausmerkki ei kelpaa"
 
 #: src/printf.c:465
-#, fuzzy, c-format
+#, c-format
 msgid "invalid field width: %s"
-msgstr "virheellinen rivileveys: %s"
+msgstr "virheellinen kenttäleveys: %s"
 
 #: src/printf.c:491
-#, fuzzy, c-format
+#, c-format
 msgid "invalid precision: %s"
-msgstr "virheellinen muunnos: %s"
+msgstr "virheellinen tarkkuus: %s"
 
 #: src/printf.c:512
 #, c-format
@@ -4489,17 +4528,16 @@ msgstr "varoitus: ylimääräiset argumentit jätetty huomiotta alkaen \"%s\":sta"
 #: src/ptx.c:410
 #, c-format
 msgid "%s (for regexp `%s')"
-msgstr ""
+msgstr "%s (säännölliselle lausekkeelle \"%s\")"
 
 #: src/ptx.c:1859
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Usage: %s [OPTION]... [INPUT]...   (without -G)\n"
 "  or:  %s -G [OPTION]... [INPUT [OUTPUT]]\n"
 msgstr ""
-"Käyttö: %s [VALITSIN]... LOPPU\n"
-"  tai:  %s [VALITSIN]... ALKU LOPPU\n"
-"  tai:  %s [VALITSIN]... ALKU LISÄYS LOPPU\n"
+"Käyttö: %s [VALITSIN]... [SYÖTE]...   (ilman valitsinta -G)\n"
+"  tai:  %s -G [VALITSIN]... [SYÖTE [TULOSTE]]\n"
 
 #: src/ptx.c:1863
 msgid ""
@@ -4548,6 +4586,9 @@ msgid ""
 "\n"
 "With no FILE or if FILE is -, read Standard Input.  `-F /' by default.\n"
 msgstr ""
+"\n"
+"Jos TIEDOSTOA ei ole annettu, tai se on -, luetaan vakiosyötettä.\n"
+"Oletus on \"-F /\".\n"
 
 #: src/ptx.c:1978
 msgid ""
@@ -4557,6 +4598,10 @@ msgid ""
 "any later version.\n"
 "\n"
 msgstr ""
+"Tämä ohjelma on vapaaohjelmisto; voitte levittää edelleen ja/tai \n"
+"muuttaa sitä Free Software Foundationin julkaiseman GNU General Public\n"
+"Licensen ehtojen mukaisesti; joko version 2, tai (valintanne mukaan)\n"
+"minkä tahansa myöhemmän version.\n"
 
 #: src/ptx.c:1985
 msgid ""
@@ -4566,6 +4611,11 @@ msgid ""
 "GNU General Public License for more details.\n"
 "\n"
 msgstr ""
+"Tätä ohjelmaa levitetään siinä toivossa, että se olisi hyödyllinen,\n"
+"mutta TAKUUTA EI OLE; ei edes KAUPALLISESTI HYVÄKSYTTÄVÄSTÄ LAADUSTA\n"
+"tai SOPIVUUDESTA TIETTYYN TARKOITUKSEEN. Katsokaa lisätietoja GNU\n"
+"General Public Licensestä.\n"
+"\n"
 
 #: src/ptx.c:1992
 msgid ""
@@ -4573,6 +4623,10 @@ msgid ""
 "along with this program; if not, write to the Free Software Foundation,\n"
 "Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"
 msgstr ""
+"Olette saaneet kopion GNU General Public Licensestä tämän\n"
+"ohjelman mukana. Ellette saaneet, kirjoittakaa osoitteeseen\n"
+"Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,\n"
+"MA 02111-1307, USA.\n"
 
 #: src/pwd.c:47
 msgid ""
@@ -4600,6 +4654,8 @@ msgid ""
 "Display value of a symbolic link on standard output.\n"
 "\n"
 msgstr ""
+"Näytä symbolisen linkin arvo vakiotulosteessa.\n"
+"\n"
 
 #: src/readlink.c:72
 msgid ""
@@ -4612,9 +4668,9 @@ msgid ""
 msgstr ""
 
 #: src/remove.c:394
-#, fuzzy, c-format
+#, c-format
 msgid "cannot chdir from %s to .."
-msgstr "siirtyminen hakemistoon %s ei onnistu"
+msgstr "siirtyminen hakemistosta %s hakemistoon .. ei onnistu"
 
 #: src/remove.c:407 src/remove.c:488
 #, fuzzy, c-format
@@ -4644,32 +4700,32 @@ msgstr "siirtyminen hakemistoon %s ei onnistu"
 #: src/remove.c:613
 #, c-format
 msgid "%s: remove write-protected %s %s? "
-msgstr ""
+msgstr "%s: poista kirjoitussuojattu %s %s? "
 
 #: src/remove.c:614
 #, c-format
 msgid "%s: remove %s %s? "
-msgstr ""
+msgstr "%s: poista %s %s? "
 
 #: src/remove.c:638
 #, c-format
 msgid "removed %s\n"
-msgstr "poistettiin %s\n"
+msgstr "poistettiin tiedosto %s\n"
 
 #: src/remove.c:653 src/remove.c:1058
-#, fuzzy, c-format
+#, c-format
 msgid "removed directory: %s\n"
-msgstr "hakemiston %s luominen ei onnistu"
+msgstr "poistettiin hakemisto: %s\n"
 
 #: src/remove.c:733 src/remove.c:750 src/remove.c:1063
-#, fuzzy, c-format
+#, c-format
 msgid "cannot remove directory %s"
-msgstr "hakemiston %s luominen ei onnistu"
+msgstr "hakemiston %s poistaminen ei onnistu"
 
 #: src/remove.c:814
-#, fuzzy, c-format
+#, c-format
 msgid "cannot open directory %s"
-msgstr "hakemiston %s luominen ei onnistu"
+msgstr "hakemiston %s avaaminen ei onnistu"
 
 #: src/remove.c:895 src/remove.c:1001
 #, fuzzy, c-format
@@ -4688,7 +4744,7 @@ msgstr ""
 
 #: src/remove.c:1097
 msgid "cannot remove `.' or `..'"
-msgstr ""
+msgstr "hakemistoa \".\" tai \"..\" ei voi poistaa"
 
 #: src/rm.c:60
 msgid "Paul Rubin, David MacKenzie, Richard Stallman, and Jim Meyering"
@@ -4732,14 +4788,14 @@ msgid ""
 msgstr ""
 
 #: src/rmdir.c:116 src/rmdir.c:217
-#, fuzzy, c-format
+#, c-format
 msgid "removing directory, %s"
-msgstr "hakemiston %s luominen ei onnistu"
+msgstr "poistetaan hakemisto %s"
 
 #: src/rmdir.c:146
-#, fuzzy, c-format
+#, c-format
 msgid "Usage: %s [OPTION]... DIRECTORY...\n"
-msgstr "Käyttö: %s [VALITSIN]... [TIEDOSTO]...\n"
+msgstr "Käyttö: %s [VALITSIN]... HAKEMISTO...\n"
 
 #: src/rmdir.c:147
 msgid ""
@@ -4834,9 +4890,9 @@ msgid "format string may not be specified when printing equal width strings"
 msgstr "muotoilua ei voi määritellä kun tulostetaan tasalevyisiä lukuja"
 
 #: src/shred.c:160
-#, fuzzy, c-format
+#, c-format
 msgid "Usage: %s [OPTIONS] FILE [...]\n"
-msgstr "Käyttö: %s [VALITSIN]... [TIEDOSTO]...\n"
+msgstr "Käyttö: %s [VALITSIMET] TIEDOSTO [...]\n"
 
 #: src/shred.c:161
 msgid ""
@@ -4920,7 +4976,7 @@ msgstr ""
 #: src/shred.c:868
 #, c-format
 msgid "%s: error writing at offset %s"
-msgstr ""
+msgstr "%s: virhe kirjoitettaessa siirtymässä %s"
 
 #: src/shred.c:897
 #, c-format
@@ -4938,9 +4994,9 @@ msgid "%s: pass %lu/%lu (%s)...%s/%s %d%%"
 msgstr ""
 
 #: src/shred.c:1195
-#, fuzzy, c-format
+#, c-format
 msgid "%s: invalid file type"
-msgstr "%s: signaali ei kelpaa"
+msgstr "%s: virheellinen tiedostotyyppi"
 
 #: src/shred.c:1212
 #, c-format
@@ -4983,9 +5039,9 @@ msgid "%s: invalid number of passes"
 msgstr "%s: prosessin id ei kelpaa"
 
 #: src/shred.c:1568
-#, fuzzy, c-format
+#, c-format
 msgid "%s: invalid file size"
-msgstr "%s: signaali ei kelpaa"
+msgstr "%s: virheellinen tiedostokoko"
 
 #: src/sleep.c:34
 msgid "Jim Meyering and Paul Eggert"
@@ -5078,7 +5134,7 @@ msgstr ""
 
 #: src/sort.c:319
 msgid "  -z, --zero-terminated     end lines with 0 byte, not newline\n"
-msgstr ""
+msgstr "  -z, --zero-terminated     päätä rivit 0-tavuun, ei rivinvaihtoon\n"
 
 #: src/sort.c:324
 msgid ""
@@ -5106,9 +5162,8 @@ msgid ""
 msgstr ""
 
 #: src/sort.c:444
-#, fuzzy
 msgid "cannot create temporary file"
-msgstr "hakemiston %s luominen ei onnistu"
+msgstr "väliaikaistiedoston luominen ei onnistu"
 
 #: src/sort.c:467
 msgid "open failed"
@@ -5119,9 +5174,8 @@ msgid "close failed"
 msgstr "sulkeminen epäonnistui"
 
 #: src/sort.c:495
-#, fuzzy
 msgid "write failed"
-msgstr "outo tiedosto"
+msgstr "kirjoitus epäonnistui"
 
 #: src/sort.c:641
 #, fuzzy
@@ -5133,19 +5187,17 @@ msgid "stat failed"
 msgstr ""
 
 #: src/sort.c:972
-#, fuzzy
 msgid "read failed"
-msgstr "tavallinen tiedosto"
+msgstr "lukeminen epäonnistui"
 
 #: src/sort.c:1570
 #, c-format
 msgid "%s: %s:%s: disorder: "
-msgstr ""
+msgstr "%s: %s:%s: epäjärjestys: "
 
 #: src/sort.c:1574
-#, fuzzy
 msgid "standard error"
-msgstr "syntaksivirhe"
+msgstr "vakiovirhe"
 
 #: src/sort.c:2032
 #, fuzzy, c-format
@@ -5239,7 +5291,7 @@ msgstr ""
 #: src/split.c:189
 #, c-format
 msgid "creating file `%s'\n"
-msgstr ""
+msgstr "luodaan tiedostoa \"%s\"\n"
 
 #: src/split.c:341
 #, fuzzy
@@ -5272,9 +5324,8 @@ msgid "invalid number"
 msgstr "käyttäjä ei kelpaa"
 
 #: src/stat.c:325
-#, fuzzy
 msgid "*** invalid date/time ***"
-msgstr "päiväys \"%s\" ei kelpaa"
+msgstr "*** virheellinen päiväys/aika ***"
 
 #: src/stat.c:607
 #, fuzzy, c-format
@@ -5282,9 +5333,9 @@ msgid "cannot read file system information for %s"
 msgstr "hakemiston %s luominen ei onnistu"
 
 #: src/stat.c:683
-#, fuzzy, c-format
+#, c-format
 msgid "Usage: %s [OPTION] FILE...\n"
-msgstr "Käyttö: %s [VALITSIN]... [TIEDOSTO]...\n"
+msgstr "Käyttö: %s [VALITSIN] TIEDOSTO...\n"
 
 #: src/stat.c:684
 msgid ""
@@ -5316,6 +5367,12 @@ msgid ""
 "  %G   Group name of owner\n"
 "  %g   Group ID of owner\n"
 msgstr ""
+"  %D   Laitenumero heksamuodossa\n"
+"  %d   Laitanumero desimaalimuodossa\n"
+"  %F   Tiedoston tyyppi\n"
+"  %f   Raaka tila heksamuodossa\n"
+"  %G   Omistajan ryhmän nimi\n"
+"  %g   Omistajan ryhmä-ID\n"
 
 #: src/stat.c:711
 msgid ""
@@ -5784,7 +5841,7 @@ msgid ""
 "127; special values ^- or undef used to disable special characters.\n"
 msgstr ""
 "\n"
-"Käsittele vakiosyötteeseen liitettyä tty:tä. Ilman parametreja\n"
+"Käsittele vakiosyötteeseen liitettyä tty:tä. Ilman argumentteja\n"
 "tulostaa nopeuden baudeina, rivikurin ja poikkeamat stty sane:sta.\n"
 "Asetuksissa MERKKI otetaan sellaisenaan tai, koodattuna kuten ^c,\n"
 "0x37, 0177 tai 127; erikoisarvoja ^- ja undef käytetään kun halutaan\n"
@@ -5864,7 +5921,7 @@ msgstr "tunnuksen id:n asetus ei onnistu"
 #: src/su.c:437
 #, c-format
 msgid "Usage: %s [OPTION]... [-] [USER [ARG]...]\n"
-msgstr "Käyttö: %s [VALITSIN]... [-] [TUNNUS [PARAM]...]\n"
+msgstr "Käyttö: %s [VALITSIN]... [-] [TUNNUS [ARG]...]\n"
 
 #: src/su.c:438
 msgid ""
@@ -5901,7 +5958,7 @@ msgstr ""
 #: src/su.c:529
 #, c-format
 msgid "user %s does not exist"
-msgstr "tunnusta %s ei ole"
+msgstr "tunnusta %s ei ole olemassa"
 
 #: src/su.c:552
 msgid "incorrect password"
@@ -5918,9 +5975,8 @@ msgid "warning: cannot change directory to %s"
 msgstr "varoitus: ei voida siirtyä hakemistoon %s"
 
 #: src/sum.c:36
-#, fuzzy
 msgid "Kayvan Aghaiepour and David MacKenzie"
-msgstr "Richard Mlynarik ja David MacKenzie"
+msgstr "Kayvan Aghaiepour ja David MacKenzie"
 
 #: src/sum.c:64
 msgid ""
@@ -5949,9 +6005,8 @@ msgid "      --version  output version information and exit\n"
 msgstr "      --version  tulosta versiotiedot ja poistu\n"
 
 #: src/tac.c:54
-#, fuzzy
 msgid "Jay Lepreau and David MacKenzie"
-msgstr "Joseph Arceneaux ja David MacKenzie"
+msgstr "Jay Lepreau ja David MacKenzie"
 
 #: src/tac.c:131
 msgid ""
@@ -6057,9 +6112,9 @@ msgid "closing %s (fd=%d)"
 msgstr "suljetaan %s (fd=%d)"
 
 #: src/tail.c:391
-#, fuzzy, c-format
+#, c-format
 msgid "%s: cannot seek to offset %s"
-msgstr "nimen \"%s\" asetus järjestelmälle ei onnistu"
+msgstr "%s: siirtyminen kohtaan %s ei onnistu"
 
 #: src/tail.c:395
 #, c-format
@@ -6186,7 +6241,7 @@ msgid ""
 msgstr ""
 "Kopioi vakiosyöte jokaiseen TIEDOSTOon sekä vakiotulosteeseen.\n"
 "\n"
-"  -a, --append              lisää TIEDOSTOjen perään, älä ylikirjoita\n"
+"  -a, --append              lisää TIEDOSTOjen perään, älä korvaa\n"
 "  -i, --ignore-interrupts   jätä keskeytyssignaalit huomiotta\n"
 
 #: src/test.c:216
@@ -6301,7 +6356,7 @@ msgid ""
 "Exit with the status determined by EXPRESSION.\n"
 "\n"
 msgstr ""
-"Poistu tilakoodilla, minkä LAUSEKE määrittää.\n"
+"Poistu tilakoodilla, jonka LAUSEKE määrittelee.\n"
 "\n"
 
 #: src/test.c:991
@@ -6310,8 +6365,7 @@ msgid ""
 "EXPRESSION is true or false and sets exit status.  It is one of:\n"
 msgstr ""
 "\n"
-"LAUSEKE on tosi tai epätosi ja asettaa tilakoodin.  Se on jokin "
-"seuraavista:\n"
+"LAUSEKE on tosi tai epätosi ja asettaa tilakoodin. Se on jokin seuraavista:\n"
 
 #: src/test.c:995
 msgid ""
@@ -6448,7 +6502,7 @@ msgid ""
 "INTEGER may also be -l STRING, which evaluates to the length of STRING.\n"
 msgstr ""
 "\n"
-"Huomaa, että sulut täytyy piilottaa (esim. kenoviivoilla) komentotulkeilta.\n"
+"Huomaa, että sulut täytyy suojata (esim. kenoviivoilla) komentotulkeilta.\n"
 "KOKONAISLUKU voi olla myös -l MERKKIJONO, joka laventuu MERKKIJONOn "
 "pituudeksi.\n"
 
@@ -6462,7 +6516,7 @@ msgstr "puuttuva \"]\"\n"
 
 #: src/test.c:1125
 msgid "too many arguments\n"
-msgstr "liikaa parametreja\n"
+msgstr "liian monta argumenttia\n"
 
 #: src/touch.c:39
 msgid ""
@@ -6490,6 +6544,8 @@ msgid ""
 "Update the access and modification times of each FILE to the current time.\n"
 "\n"
 msgstr ""
+"Päivitä jokaisen TIEDoston käyttö- ja muutosajat nykyiseen aikaan.\n"
+"\n"
 
 #: src/touch.c:252
 msgid ""
@@ -6514,6 +6570,9 @@ msgid ""
 "\n"
 "Note that the -d and -t options accept different time-date formats.\n"
 msgstr ""
+"\n"
+"Huomaa, että valitsimien -d ja -t hyväksymät aika-päiväysmuodot ovat\n"
+"erilaisia.\n"
 
 #: src/touch.c:311 src/touch.c:331
 #, c-format
@@ -6529,11 +6588,12 @@ msgstr ""
 msgid ""
 "warning: `touch %s' is obsolete; use `touch -t %04d%02d%02d%02d%02d.%02d'"
 msgstr ""
+"varoitus: \"touch %s\" on vanhentunut; käytä \"touch -t %04d%02d%02d%02d%02d."
+"%02d\""
 
 #: src/touch.c:399
-#, fuzzy
 msgid "file arguments missing"
-msgstr "liian vähän parametrejä"
+msgstr "tiedostoargumentit puuttuvat"
 
 #: src/tr.c:327
 #, fuzzy, c-format
@@ -6646,7 +6706,7 @@ msgstr ""
 
 #: src/tr.c:999
 msgid "missing character class name `[::]'"
-msgstr ""
+msgstr "puuttuva merkkiluokan nimi \"[::]\""
 
 #: src/tr.c:1002
 msgid "missing equivalence class character `[==]'"
@@ -6750,7 +6810,7 @@ msgstr ""
 #: src/tsort.c:533
 #, c-format
 msgid "%s: input contains a loop:"
-msgstr ""
+msgstr "%s: syöte sisältää silmukan:"
 
 #: src/tsort.c:575
 msgid "only one argument may be specified"
@@ -6769,7 +6829,7 @@ msgstr ""
 
 #: src/tty.c:120
 msgid "not a tty"
-msgstr "ei tty"
+msgstr "ei ole tty"
 
 #: src/uname.c:111
 msgid ""
@@ -6826,12 +6886,12 @@ msgstr ""
 
 #: src/unexpand.c:464
 msgid "`-LIST' option is obsolete; use `--first-only -t LIST'"
-msgstr ""
+msgstr "valitsin \"-LIST\" on vanhentunut; käytä \"--first-only -t LIST\""
 
 #: src/uniq.c:139
-#, fuzzy, c-format
+#, c-format
 msgid "Usage: %s [OPTION]... [INPUT [OUTPUT]]\n"
-msgstr "Käyttö: %s [VALITSIN]... [ TIEDOSTO ]\n"
+msgstr "Käyttö: %s [VALITSIN]... [SYÖTE [TULOSTE]]\n"
 
 #: src/uniq.c:143
 msgid ""
@@ -6885,32 +6945,32 @@ msgstr "ylimääräinen operandi \"%s\""
 
 #: src/uniq.c:473 src/uniq.c:498
 msgid "invalid number of fields to skip"
-msgstr ""
+msgstr "virheellinen ohitettavien kenttien määrä"
 
 #: src/uniq.c:507
 msgid "invalid number of bytes to skip"
-msgstr ""
+msgstr "virheellinen ohitettavien tavujen määrä"
 
 #: src/uniq.c:516
 msgid "invalid number of bytes to compare"
-msgstr ""
+msgstr "virheellinen verrattavien tavujen määrä"
 
 #: src/uniq.c:530
 #, c-format
 msgid "`-%lu' option is obsolete; use `-f %lu'"
-msgstr ""
+msgstr "valitsin \"-%lu\" on vanhentunut; käytä \"-f %lu\""
 
 #: src/uniq.c:538
 msgid "printing all duplicated lines and repeat counts is meaningless"
 msgstr ""
 
 #: src/unlink.c:51
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Usage: %s FILE\n"
 "  or:  %s OPTION\n"
 msgstr ""
-"Käyttö: %s NIMI\n"
+"Käyttö: %s TIEDOSTO\n"
 "  tai:  %s VALITSIN\n"
 
 #: src/unlink.c:54
@@ -6931,7 +6991,7 @@ msgstr "käynnistysajan haku ei onnistu"
 #: src/uptime.c:136
 #, c-format
 msgid " %2d:%02d%s  up "
-msgstr " %2d:%02d%s  päällä "
+msgstr " %2d:%02d%s  käynnissä "
 
 #: src/uptime.c:140
 msgid "am"
@@ -6976,8 +7036,8 @@ msgid ""
 msgstr ""
 "Näytä kellonaika, järjestelmän päälläoloaika, järjestelmään\n"
 "kirjautuneiden käyttäjien määrä sekä ajojonon töiden keskimääräinen\n"
-"lukumäärä viimeisten 1:n 5:n ja 15:n minuutin ajalta.\n"
-"OletusTIEDOSTO on %s.  %s TIEDOSTONA on yleinen.\n"
+"lukumäärä viimeisten 1, 5 ja 15 minuutin ajalta.\n"
+"OletusTIEDOSTO on %s.  %s TIEDOSTOna on yleinen.\n"
 "\n"
 
 #: src/users.c:35
@@ -7163,7 +7223,7 @@ msgid ""
 msgstr ""
 "\n"
 "%s on oletusTIEDOSTO.  %s TIEDOSTOna on yleinen.\n"
-"Jos ARG1 ARG2 annetaan, -m on oletus: `am i' tai `mom likes' ovat "
+"Jos ARG1 ja ARG2 annetaan, -m on oletetaan: \"am i\" tai \"mom likes\" ovat "
 "tavallisia.\n"
 
 #: src/who.c:711
@@ -7176,7 +7236,7 @@ msgid ""
 "Warning: the meaning of '-l' will change in a future release to conform to "
 "POSIX"
 msgstr ""
-"Varoitus: \"-l\" -valitsimen toiminta muuttuu tulevassa julkaisussa POSIX-"
+"Varoitus: valitsimen \"-l\" toiminta muuttuu tulevassa julkaisussa POSIX-"
 "yhteensopivaksi"
 
 #: src/whoami.c:53
@@ -7208,9 +7268,11 @@ msgid ""
 "Repeatedly output a line with all specified STRING(s), or `y'.\n"
 "\n"
 msgstr ""
-"Tulosta toistuvasti rivi, jolla on kaikki määritellyt MERKKIJONOt tai \"y"
-"\".\n"
+"Tulosta toistuvasti riviä, jolla on kaikki annetut MERKKIJONO(t) tai \"y\".\n"
 "\n"
 
-#~ msgid "   Type"
-#~ msgstr " Tyyppi"
+#~ msgid "program error"
+#~ msgstr "ohjelmavirhe"
+
+#~ msgid "stack overflow"
+#~ msgstr "pinon ylivuoto"

@@ -38,7 +38,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU coreutils 4.5.8\n"
-"POT-Creation-Date: 2003-03-12 23:59+0100\n"
+"POT-Creation-Date: 2003-03-18 20:11+0100\n"
 "PO-Revision-Date: 2003-02-24 10:51:09+0100\n"
 "Last-Translator: Michael Piefel <piefel@informatik.hu-berlin.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -60,14 +60,6 @@ msgstr "mehrdeutiges Argument %s für %s"
 #: lib/argmatch.c:155
 msgid "Valid arguments are:"
 msgstr "Gültige Argumente sind:"
-
-#: lib/c-stack.c:368
-msgid "program error"
-msgstr "Programmfehler"
-
-#: lib/c-stack.c:369
-msgid "stack overflow"
-msgstr "Stacküberlauf"
 
 #: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:326
 #: src/cksum.c:269 src/head.c:152 src/head.c:196 src/tail.c:323
@@ -8639,6 +8631,12 @@ msgid ""
 msgstr ""
 "Eine Zeile mit allen angegebenen ZEICHENKETTEN oder »y« wiederholt "
 "ausgeben.\n"
+
+#~ msgid "program error"
+#~ msgstr "Programmfehler"
+
+#~ msgid "stack overflow"
+#~ msgstr "Stacküberlauf"
 
 #~ msgid "warning: unable to use large stack"
 #~ msgstr "Warnung: kann großen Stack nicht verwenden"

@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: coreutils 4.5.9\n"
-"POT-Creation-Date: 2003-03-12 23:59+0100\n"
-"PO-Revision-Date: 2003-03-05 22:38+0200\n"
+"Project-Id-Version: coreutils 4.5.10\n"
+"POT-Creation-Date: 2003-03-18 20:11+0100\n"
+"PO-Revision-Date: 2003-03-15 16:14+0200\n"
 "Last-Translator: Toomas Soome <Toomas.Soome@microlink.ee>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -27,14 +27,6 @@ msgstr "segane argument %s võtmele `%s'"
 #: lib/argmatch.c:155
 msgid "Valid arguments are:"
 msgstr "Lubatud argumendid on:"
-
-#: lib/c-stack.c:368
-msgid "program error"
-msgstr "programmi viga"
-
-#: lib/c-stack.c:369
-msgid "stack overflow"
-msgstr "pinu ületäitumine"
 
 #: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:326
 #: src/cksum.c:269 src/head.c:152 src/head.c:196 src/tail.c:323
@@ -5105,14 +5097,14 @@ msgid "\\%c: invalid escape"
 msgstr "\\%c: vigane paojada"
 
 #: src/printf.c:465
-#, fuzzy, c-format
+#, c-format
 msgid "invalid field width: %s"
-msgstr "vigane rea laius: %s"
+msgstr "vigane välja laius: %s"
 
 #: src/printf.c:491
-#, fuzzy, c-format
+#, c-format
 msgid "invalid precision: %s"
-msgstr "vigane teisendus: %s"
+msgstr "vigane täpsus: %s"
 
 #: src/printf.c:512
 #, c-format
@@ -5585,7 +5577,6 @@ msgstr ""
 "  -s, --size=N   töötle N baiti (lubatud on kasutada ka sufiksit K, M, G)\n"
 
 #: src/shred.c:174
-#, fuzzy
 msgid ""
 "  -u, --remove   truncate and remove file after overwriting\n"
 "  -v, --verbose  show progress\n"
@@ -5596,7 +5587,8 @@ msgid ""
 msgstr ""
 "  -u, --remove   lühenda ja eemalda fail peale ülekirjutamisi\n"
 "  -v, --verbose  näita töö käiku\n"
-"  -x, --exact    ära ümarda failisuurusi üles täisplokini\n"
+"  -x, --exact    ära ümarda failisuurusi üles täisplokini;\n"
+"                   see on mitte-tavafailide puhul vaikimisi käitumine\n"
 "  -z, --zero     varja töötlemist, kirjutades viimasena nulle\n"
 "  -              töötle standardväljundit\n"
 
@@ -8219,5 +8211,8 @@ msgstr ""
 "Väljasta korduvalt rida antud sõnedega või `y'.\n"
 "\n"
 
-#~ msgid "warning: unable to use large stack"
-#~ msgstr "hoiatus: suurt pinu ei saa kasutada"
+#~ msgid "program error"
+#~ msgstr "programmi viga"
+
+#~ msgid "stack overflow"
+#~ msgstr "pinu ületäitumine"

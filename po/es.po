@@ -8,9 +8,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU coreutils 4.5.9\n"
-"POT-Creation-Date: 2003-03-12 23:59+0100\n"
-"PO-Revision-Date: 2003-03-06 16:32+0100\n"
+"Project-Id-Version: GNU coreutils 4.5.10\n"
+"POT-Creation-Date: 2003-03-18 20:11+0100\n"
+"PO-Revision-Date: 2003-03-14 15:07+0100\n"
 "Last-Translator: Santiago Vila Doncel <sanvila@unex.es>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -31,14 +31,6 @@ msgstr "argumento %s ambiguo para %s"
 #: lib/argmatch.c:155
 msgid "Valid arguments are:"
 msgstr "Los argumentos válidos son:"
-
-#: lib/c-stack.c:368
-msgid "program error"
-msgstr "error del programa"
-
-#: lib/c-stack.c:369
-msgid "stack overflow"
-msgstr "desbordamiento de pila"
 
 #: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:326
 #: src/cksum.c:269 src/head.c:152 src/head.c:196 src/tail.c:323
@@ -5947,14 +5939,14 @@ msgid "\\%c: invalid escape"
 msgstr "\\%c: secuencia de escape inválida"
 
 #: src/printf.c:465
-#, fuzzy, c-format
+#, c-format
 msgid "invalid field width: %s"
-msgstr "ancho de línea inválido: %s"
+msgstr "ancho de campo inválido: %s"
 
 #: src/printf.c:491
-#, fuzzy, c-format
+#, c-format
 msgid "invalid precision: %s"
-msgstr "conversión inválida: %s"
+msgstr "precisión inválida: %s"
 
 #: src/printf.c:512
 #, c-format
@@ -6546,7 +6538,6 @@ msgstr ""
 "                 (se permiten los sufijos K, M y G)\n"
 
 #: src/shred.c:174
-#, fuzzy
 msgid ""
 "  -u, --remove   truncate and remove file after overwriting\n"
 "  -v, --verbose  show progress\n"
@@ -6559,7 +6550,8 @@ msgstr ""
 "  -v, --verbose  muestra el progreso\n"
 "  -x, --exact    no redondea hacia arriba los tamaños de los ficheros hasta "
 "el\n"
-"                 siguiente bloque completo\n"
+"                   siguiente bloque completo; este es el comportamiento\n"
+"                   predeterminado para los ficheros no regulares\n"
 "  -z, --zero     añade una sobreescritura final con ceros para ocultar la\n"
 "                 acción de esta orden\n"
 "  -              efectúa shred en la salida estándar\n"
@@ -9507,6 +9499,12 @@ msgstr ""
 "Muestra repetidamente una línea con todas las CADENA(s) especificadas, o "
 "`y'.\n"
 "\n"
+
+#~ msgid "program error"
+#~ msgstr "error del programa"
+
+#~ msgid "stack overflow"
+#~ msgstr "desbordamiento de pila"
 
 #~ msgid "warning: unable to use large stack"
 #~ msgstr "atención: no se puede usar una pila grande"

@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU coreutils 4.5.9\n"
-"POT-Creation-Date: 2003-03-12 23:59+0100\n"
-"PO-Revision-Date: 2003-03-05 12:00-0500\n"
+"Project-Id-Version: GNU coreutils 4.5.10\n"
+"POT-Creation-Date: 2003-03-18 20:11+0100\n"
+"PO-Revision-Date: 2003-03-14 08:00-0500\n"
 "Last-Translator: Michel Robitaille <robitail@IRO.UMontreal.CA>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -27,14 +27,6 @@ msgstr "argument %s ambigu pour %s"
 #: lib/argmatch.c:155
 msgid "Valid arguments are:"
 msgstr "Arguments valides sont:"
-
-#: lib/c-stack.c:368
-msgid "program error"
-msgstr "erreur du programme"
-
-#: lib/c-stack.c:369
-msgid "stack overflow"
-msgstr "débordement de la pile"
 
 #: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:326
 #: src/cksum.c:269 src/head.c:152 src/head.c:196 src/tail.c:323
@@ -5390,14 +5382,14 @@ msgid "\\%c: invalid escape"
 msgstr "\\%c: échappement invalide"
 
 #: src/printf.c:465
-#, fuzzy, c-format
+#, c-format
 msgid "invalid field width: %s"
-msgstr "largeur de ligne invalide: %s"
+msgstr "largeur de champ invalide: %s"
 
 #: src/printf.c:491
-#, fuzzy, c-format
+#, c-format
 msgid "invalid precision: %s"
-msgstr "conversion invalide: %s"
+msgstr "précision invalide: %s"
 
 #: src/printf.c:512
 #, c-format
@@ -5892,7 +5884,6 @@ msgstr ""
 "acceptés)\n"
 
 #: src/shred.c:174
-#, fuzzy
 msgid ""
 "  -u, --remove   truncate and remove file after overwriting\n"
 "  -v, --verbose  show progress\n"
@@ -5904,10 +5895,12 @@ msgstr ""
 "  -u, --remove        tronquer et détruire le fichier après l'avoir écraser\n"
 "  -v, --verbose       afficher un indicateur de progrès\n"
 "  -x, --exact         ne pas arrondir la taille des fichiers\n"
-"                      jusqu'au prochain bloc complet\n"
-"  -z, --zero          ajouter une écriture finale avec des zéros\n"
+"                      jusqu'au prochain bloc complet;\n"
+"                      comportement par défaut pour les fichiers non "
+"réguliers\n"
+"  -z, --zero          ajouter une réécriture finale avec des zéros\n"
 "                      pour camoufler le déchiquetage du fichier\n"
-"  -                   déchiqueter l'entrée standard \n"
+"                      déchiqueter l'entrée standard \n"
 
 #: src/shred.c:184
 msgid ""
@@ -8669,6 +8662,12 @@ msgid ""
 msgstr ""
 "Afficher à répétition une ligne de caractères telle que spécifiée\n"
 "par CHAÎNE ou par « y ».\n"
+
+#~ msgid "program error"
+#~ msgstr "erreur du programme"
+
+#~ msgid "stack overflow"
+#~ msgstr "débordement de la pile"
 
 #~ msgid "warning: unable to use large stack"
 #~ msgstr "AVERTISSEMENT: incapable d'utiliser une grande pile"

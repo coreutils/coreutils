@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: fileutils 4.1.9\n"
-"POT-Creation-Date: 2003-03-12 23:59+0100\n"
+"POT-Creation-Date: 2003-03-18 20:11+0100\n"
 "PO-Revision-Date: 2002-07-19 23:58+0800\n"
 "Last-Translator: Anthony Fok <anthony@thizlinux.com>\n"
 "Language-Team: Chinese (simplified) <i18n-translation@lists.linux.net.cn>\n"
@@ -28,14 +28,6 @@ msgstr "%2$s 的参数 %1$s 不明确"
 #: lib/argmatch.c:155
 msgid "Valid arguments are:"
 msgstr "有效的参数为："
-
-#: lib/c-stack.c:368
-msgid "program error"
-msgstr "程序错误"
-
-#: lib/c-stack.c:369
-msgid "stack overflow"
-msgstr "堆栈溢出"
 
 #: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:326
 #: src/cksum.c:269 src/head.c:152 src/head.c:196 src/tail.c:323
@@ -7029,6 +7021,12 @@ msgid ""
 "Repeatedly output a line with all specified STRING(s), or `y'.\n"
 "\n"
 msgstr ""
+
+#~ msgid "program error"
+#~ msgstr "程序错误"
+
+#~ msgid "stack overflow"
+#~ msgstr "堆栈溢出"
 
 #~ msgid "   Type"
 #~ msgstr "   类型"

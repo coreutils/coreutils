@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: coreutils 4.5.9\n"
-"POT-Creation-Date: 2003-03-12 23:59+0100\n"
+"POT-Creation-Date: 2003-03-18 20:11+0100\n"
 "PO-Revision-Date: 2003-03-08 18:53+0100\n"
 "Last-Translator: Keld Jørn Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -27,14 +27,6 @@ msgstr "flertydigt argument %s til %s"
 #: lib/argmatch.c:155
 msgid "Valid arguments are:"
 msgstr "Gyldige argumenter er: "
-
-#: lib/c-stack.c:368
-msgid "program error"
-msgstr "programfejl"
-
-#: lib/c-stack.c:369
-msgid "stack overflow"
-msgstr "overløb af stak"
 
 #: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:326
 #: src/cksum.c:269 src/head.c:152 src/head.c:196 src/tail.c:323
@@ -8293,6 +8285,12 @@ msgid ""
 msgstr ""
 "Skriv gentagne gange en linje med alle specificerede STRENGe, eller \"y\"\n"
 "\n"
+
+#~ msgid "program error"
+#~ msgstr "programfejl"
+
+#~ msgid "stack overflow"
+#~ msgstr "overløb af stak"
 
 #~ msgid "warning: unable to use large stack"
 #~ msgstr "advarsel: kan ikke bruge stor stak"

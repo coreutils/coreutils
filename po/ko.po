@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU textutils 2.0.22\n"
-"POT-Creation-Date: 2003-03-12 23:59+0100\n"
+"POT-Creation-Date: 2003-03-18 20:11+0100\n"
 "PO-Revision-Date: 2002-07-22 20:02+0900\n"
 "Last-Translator: Changwoo Ryu <cwryu@debian.org>\n"
 "Language-Team: Korean <translation-team-ko@lists.sourceforge.net>\n"
@@ -27,14 +27,6 @@ msgstr "%2$s에 대해 애매한 인자 %1$s"
 #: lib/argmatch.c:155
 msgid "Valid arguments are:"
 msgstr "올바른 인자는:"
-
-#: lib/c-stack.c:368
-msgid "program error"
-msgstr "프로그램 오류"
-
-#: lib/c-stack.c:369
-msgid "stack overflow"
-msgstr "스택 오버플로우"
 
 #: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:326
 #: src/cksum.c:269 src/head.c:152 src/head.c:196 src/tail.c:323
@@ -7481,6 +7473,12 @@ msgid ""
 "Repeatedly output a line with all specified STRING(s), or `y'.\n"
 "\n"
 msgstr ""
+
+#~ msgid "program error"
+#~ msgstr "프로그램 오류"
+
+#~ msgid "stack overflow"
+#~ msgstr "스택 오버플로우"
 
 #, fuzzy
 #~ msgid "cannot convert time"

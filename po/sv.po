@@ -4,13 +4,13 @@
 # Thomas Olsson <cid95tho@lustudat.student.lu.se>, 1997.
 # Daniel Resare <daniel@resare.com> 1999, 2000.
 # Göran Uddeborg <goeran@uddeborg.pp.se>, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003.
-# $Revision: 1.53 $
+# $Revision: 1.56 $
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: coreutils 4.5.9\n"
-"POT-Creation-Date: 2003-03-12 23:59+0100\n"
-"PO-Revision-Date: 2003-03-07 20:54+0100\n"
+"Project-Id-Version: coreutils 4.5.10\n"
+"POT-Creation-Date: 2003-03-18 20:11+0100\n"
+"PO-Revision-Date: 2003-03-14 23:33+0100\n"
 "Last-Translator: Göran Uddeborg <goeran@uddeborg.pp.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -31,14 +31,6 @@ msgstr "tvetydigt argument %s till %s"
 #: lib/argmatch.c:155
 msgid "Valid arguments are:"
 msgstr "Giltiga argument är:"
-
-#: lib/c-stack.c:368
-msgid "program error"
-msgstr "programfel"
-
-#: lib/c-stack.c:369
-msgid "stack overflow"
-msgstr "stackspill"
 
 #: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:326
 #: src/cksum.c:269 src/head.c:152 src/head.c:196 src/tail.c:323
@@ -5152,14 +5144,14 @@ msgid "\\%c: invalid escape"
 msgstr "\\%c: felaktig kontrollsekvens"
 
 #: src/printf.c:465
-#, fuzzy, c-format
+#, c-format
 msgid "invalid field width: %s"
-msgstr "felaktig radlängd: %s"
+msgstr "ogiltig fältbredd: %s"
 
 #: src/printf.c:491
-#, fuzzy, c-format
+#, c-format
 msgid "invalid precision: %s"
-msgstr "ogiltig konvertering: %s"
+msgstr "ogiltig precision: %s"
 
 #: src/printf.c:512
 #, c-format
@@ -5630,7 +5622,6 @@ msgstr ""
 "  -s, --size=N   strimla detta antal byte (ändelse som K, M, G fungerar)\n"
 
 #: src/shred.c:174
-#, fuzzy
 msgid ""
 "  -u, --remove   truncate and remove file after overwriting\n"
 "  -v, --verbose  show progress\n"
@@ -5641,7 +5632,8 @@ msgid ""
 msgstr ""
 "  -u, --remove   stympa och ta bort filen efter överskrivningen\n"
 "  -v, --verbose  följ processen\n"
-"  -x, --exact    avrunda inte filstorlekar upp till nästa hela block\n"
+"  -x, --exact    avrunda inte filstorlekar upp till nästa hela block;\n"
+"                   detta är standardfallet för icke-normala filer\n"
 "  -z, --zero     lägg till en avslutande överskrivning med nollor för att\n"
 "                   dölja strimlandet\n"
 "  -              strimla standard ut\n"
@@ -8290,5 +8282,8 @@ msgstr ""
 "Skriv gång på gång en rad med alla specifierade STRÄNG(ar), eller \"y\"\n"
 "\n"
 
-#~ msgid "warning: unable to use large stack"
-#~ msgstr "varning: kan inte använda stor stack"
+#~ msgid "program error"
+#~ msgstr "programfel"
+
+#~ msgid "stack overflow"
+#~ msgstr "stackspill"

@@ -7,6 +7,10 @@
 	(fnmatch): Use const, not __const in prototype.
 	From Paul Eggert.
 
+2003-03-17  Richard Dawe  <rich@phekda.freeserve.co.uk>
+
+	* fchdir-stub.c: New file: trivial stub for fchdir.
+
 2003-03-18  Jim Meyering  <jim@meyering.net>
 
 	* mountlist.c (read_filesystem_list) [MOUNTED_VMOUNT]: Detect any
