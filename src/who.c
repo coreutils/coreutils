@@ -28,9 +28,11 @@
 #include <getopt.h>
 #include <stdio.h>
 
+#include <sys/types.h>
+#include "system.h"
+
 #include "error.h"
 #include "readutmp.h"
-#include "system.h"
 #include "closeout.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */

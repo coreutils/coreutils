@@ -22,7 +22,9 @@
 #include <pwd.h>
 #include <stdio.h>
 
+#include <sys/types.h>
 #include "system.h"
+
 #include "error.h"
 #include "readutmp.h"
 #include "closeout.h"
