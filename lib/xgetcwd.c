@@ -28,7 +28,13 @@ extern int errno;
 #endif
 
 #include <sys/types.h>
-#include "pathmax.h"
+
+#if HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
+#if HAVE_UNISTD_H
+# include <unistd.h>
+#endif
 
 #if HAVE_GETCWD
 char *getcwd ();
@@ -37,9 +43,7 @@ char *getwd ();
 # define getcwd(Buf, Max) getwd (Buf)
 #endif
 
-extern void *xmalloc ();
-extern char *xstrdup ();
-extern void free ();
+#include "xalloc.h"
 
 /* Return the current directory, newly allocated, arbitrarily long.
    Return NULL and set errno on error. */
@@ -51,7 +55,7 @@ xgetcwd ()
   return getcwd (NULL, 0);
 #else
   char *ret;
-  unsigned path_max;
+  size_t path_max;
   char buf[1024];
 
   errno = 0;
@@ -61,29 +65,28 @@ xgetcwd ()
   if (errno != ERANGE)
     return NULL;
 
-  path_max = 1300;
-  path_max += 2;		/* The getcwd docs say to do this. */
+  path_max = 1 << 10;
 
   for (;;)
     {
       char *cwd = (char *) xmalloc (path_max);
+      int save_errno;
 
       errno = 0;
       ret = getcwd (cwd, path_max);
       if (ret != NULL)
 	return ret;
-      if (errno != ERANGE)
+      save_errno = errno;
+      free (cwd);
+      if (save_errno != ERANGE)
 	{
-	  int save_errno = errno;
-	  free (cwd);
 	  errno = save_errno;
 	  return NULL;
 	}
 
-      free (cwd);
-
-      path_max += path_max / 16;
-      path_max += 32;
+      path_max *= 2;
+      if (path_max == 0)
+	xalloc_die ();
     }
 #endif
 }
