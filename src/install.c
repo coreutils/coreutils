@@ -1,5 +1,5 @@
 /* install - copy files and set attributes
-   Copyright (C) 89, 90, 91, 1995-2003 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -341,7 +341,7 @@ is not a directory"),
 	}
     }
 
-  exit (errors);
+  exit (errors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /* Copy file FROM onto file TO, creating any missing parent directories of TO.
@@ -585,7 +585,7 @@ get_ids (void)
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
