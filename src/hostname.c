@@ -27,7 +27,6 @@
 
 #if !defined(HAVE_SETHOSTNAME) && defined(HAVE_SYSINFO) && \
      defined (HAVE_SYS_SYSTEMINFO_H) && defined(HAVE_LIMITS_H)
-# include <limits.h>
 # include <sys/systeminfo.h>
 
 int
