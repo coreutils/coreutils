@@ -935,11 +935,12 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 		       qname, k, n, pass_string, human_offset);
 	      else
 		{
+		  uintmax_t off = offset;
 		  int percent = (size == 0
 				 ? 100
-				 : (offset <= TYPE_MAXIMUM (uintmax_t) / 100
-				    ? offset * (uintmax_t) 100 / size
-				    : offset / (size / 100)));
+				 : (off <= TYPE_MAXIMUM (uintmax_t) / 100
+				    ? off * 100 / size
+				    : off / (size / 100)));
 		  error (0, 0, _("%s: pass %lu/%lu (%s)...%s/%s %d%%"),
 			 qname, k, n, pass_string, human_offset,
 			 human_readable ((uintmax_t) size, size_buf, 1,
