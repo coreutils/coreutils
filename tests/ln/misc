@@ -88,21 +88,36 @@ touch a b || framework_failure=1
 ln b b~ || framework_failure=1
 ln -f --b=simple a b || fail=1
 
-# Create a hard link to a dangling symlink.
-# This is not portable.  At least sunos4.1.4 and OpenBSD 2.3 fail this test.
-# They get this:
-# ln: cannot create hard link `hard-to-dangle' to `no-such-dir': \
-#   No such file or directory
-#
-#ln -s /no-such-dir || fail=1
-#ln no-such-dir hard-to-dangle || fail=1
+# ===================================================
+# determine if link(2) follows symlinks on this system
+touch a || framework_failure=1
+ln -s a symlink || framework_failure=1
+ln symlink hard-to-sym > /dev/null 2>&1 || framework_failure=1
+ls=`ls -lG hard-to-sym`x
+case "$ls" in
+  *'hard-to-symx') link_follows_symlink=yes ;;
+  *'hard-to-sym -> ax') link_follows_symlink=no ;;
+  *) framework_failure=1 ;;
+esac
 
+if test $link_follows_symlink = no; then
+  # Create a hard link to a dangling symlink.
+  # This is not portable.  At least sunos4.1.4 and OpenBSD 2.3 fail this test.
+  # They get this:
+  # ln: cannot create hard link `hard-to-dangle' to `no-such-dir': \
+  #   No such file or directory
+  #
+  ln -s /no-such-dir || fail=1
+  ln no-such-dir hard-to-dangle > /dev/null 2>&1 || fail=1
+fi
+rm -rf a symlink hard-to-sym
+# ===================================================
 
 cd ..
 ../../src/rm -rf $tmp
 
 if test $framework_failure = 1; then
-  echo 'failure in testing framework'
+  echo 'failure in testing framework' 1>&2
   exit 1
 fi
 
