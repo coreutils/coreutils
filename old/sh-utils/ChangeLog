@@ -1,5 +1,11 @@
 Wed Feb 28 20:53:24 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
+	* lib/Makefile.am (su_SOURCES): Add xstrtoul.c.
+	(noinst_HEADERS): Add xstrtoul.h.
+	* factor.c: General cleanup.  Use xstrtoul, not atoi.
+  	Change output format.  Allow inputs as large as ULONG_MAX.
+	Allow more than one command line argument.
+
 	* stty.c (wrapf) [!__STDC__]: Indent by one space the first line
 	of the pre-ANSI function definition so ansi2knr doesn't munge it.
 
