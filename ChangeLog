@@ -1,6 +1,11 @@
-2002-08-07  Jim Meyering  <meyering@lucent.com>
+2002-08-08  Jim Meyering  <meyering@lucent.com>
 
 	* Version 0.1.0.
+
+	* src/date.c: Guard inclusion of <langinfo.h> with
+	`#if HAVE_LANGINFO_CODESET', not `#if HAVE_LANGINFO_H'.
+	* src/sort.c: Likewise.
+	Patch from From: GOTO Masanori.
 
 2002-08-05  Paul Eggert  <eggert@twinsun.com>
 
