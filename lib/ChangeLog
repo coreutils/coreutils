@@ -1,3 +1,7 @@
+2000-07-23  Jim Meyering  <meyering@lucent.com>
+
+	* basename.c (base_name): Add an assertion.
+
 2000-07-15  Bruno Haible  <clisp.cons.org>
 
 	* quotearg.c: When the system forces us to redefine mbstate_t,
