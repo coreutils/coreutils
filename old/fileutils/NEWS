@@ -1,5 +1,5 @@
 Changes in release 3.17:
-[3.16h]
+[3.16i]
 * du accepts new options, --exclude=PAT and --exclude-from=FILE (-X FILE)
 * ls now quotes file names for the shell by default, if they contain
   characters that need quoting.  Use -N to get the old default behavior.
