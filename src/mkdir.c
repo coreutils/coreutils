@@ -143,7 +143,7 @@ main (int argc, char **argv)
       int fail = 0;
       if (create_parents)
 	{
-	  const char *parents = dir_name (argv[optind]);
+	  char *parents = dir_name (argv[optind]);
 	  fail = make_path (parents, parent_mode, parent_mode,
 			    -1, -1, 1, verbose_fmt_string);
 	  free (parents);
