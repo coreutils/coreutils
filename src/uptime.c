@@ -95,23 +95,9 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
      ones, also in the process possibly gleaning boottime. */
   while (n--)
     {
-      if (UT_USER (this) [0]
-#ifdef USER_PROCESS
-	  && this->ut_type == USER_PROCESS
-#endif
-	  )
-	{
-	  ++entries;
-	}
-      /* If BOOT_MSG is defined, we can get boottime from utmp.  This avoids
-	 possibly needing special privs to read /dev/kmem. */
-#ifdef BOOT_MSG
-# if HAVE_PROC_UPTIME
-      if (uptime == 0)
-# endif /* HAVE_PROC_UPTIME */
-	if (strncmp (this->ut_line, BOOT_MSG, sizeof this->ut_line) == 0)
-	  boot_time = UT_TIME_MEMBER (this);
-#endif /* BOOT_MSG */
+      entries += IS_USER_PROCESS (this);
+      if (UT_TYPE_BOOT_TIME (this))
+	boot_time = UT_TIME_MEMBER (this);
       ++this;
     }
   time_now = time (0);
