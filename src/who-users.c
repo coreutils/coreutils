@@ -275,7 +275,7 @@ static const char *
 idle_string (time_t when)
 {
   static time_t now = 0;
-  static char idle[10];
+  static char idle_hhmm[10];
   time_t seconds_idle;
 
   if (now == 0)
@@ -286,10 +286,10 @@ idle_string (time_t when)
     return "  .  ";
   if (seconds_idle < (24 * 60 * 60)) /* One day. */
     {
-      sprintf (idle, "%02d:%02d",
+      sprintf (idle_hhmm, "%02d:%02d",
 	       (int) (seconds_idle / (60 * 60)),
 	       (int) ((seconds_idle % (60 * 60)) / 60));
-      return (const char *) idle;
+      return (const char *) idle_hhmm;
     }
   return _(" old ");
 }
