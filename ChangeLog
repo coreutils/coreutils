@@ -1,6 +1,43 @@
-2004-05-16  Jim Meyering  <jim@meyering.net>
+2004-05-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	In shred, check for errors from fdatasync more carefully.  If
+	fdatasync fails with errno==EINVAL, it means this implementation
+	does not support synchronized I/O for this file.  Do not report
+	this as an error, as (for example) AIX 5.2 fdatasync reports it
+	for raw disk devices.  Problem reported by Albert Chin in
+	<http://mail.gnu.org/archive/html/bug-gnu-utils/2004-05/msg00028.html>.
+
+	Check for write errors, though: the old code ignored them.
+	Improve error checking in a few other cases, too (e.g., close of a
+	directory).
+
+	Also, change several 'int' values to 'bool', so that the error
+	checking is a bit clearer.  Similarly, change unsigned values
+	to size_t where appropriate.
+
+	* src/shred.c: Include "dirname.h".
+	(datasync) [!HAVE_FDATASYNC]: Remove.
+	(dosync): New function.
+	(dopass): Use it.  Return 1 on write error, -1 on other error.
+	All callers changed.  Report write error if dosync does.
+	(do_wipefd, wipefd, wipename, wipefile): Return bool (true/false),
+	not int (0/-1).  All callers changed.  Return false if there's a
+	write error.
+	(incname): Return bool (true/false), not int (0/1).  Accept
+	size_t length, not unsigned.  All callers changed.  Do not
+	bother checking for non-digits; it can't happen.  Replace
+	recursion with iteration.
+	(wipename): Use dir_name, base_name, etc. instead of assuming
+	Unix file names.  Use size_t for length, not unsigned.
+	Report error if unlink or close fails.
+	(wipename, main): Use bool for booleans.
+
+	(names): Use only digits and uppercase letters, for greater
+	portability.
+
+2004-05-16  Jim Meyering  <jim@meyering.net>
 
 	* tests/chown/deref: New test for the yesterday's change.
 	* tests/chown/Makefile.am (TESTS): Add deref.
