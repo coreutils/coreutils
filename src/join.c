@@ -1,5 +1,5 @@
 /* join - join lines of two files on a common field
-   Copyright (C) 91, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -147,32 +147,38 @@ usage (int status)
 Usage: %s [OPTION]... FILE1 FILE2\n\
 "),
 	      program_name);
-      printf (_("\
+      fputs (_("\
 For each pair of input lines with identical join fields, write a line to\n\
 standard output.  The default join field is the first, delimited\n\
 by whitespace.  When FILE1 or FILE2 (not both) is -, read standard input.\n\
 \n\
   -a SIDE           print unpairable lines coming from file SIDE\n\
   -e EMPTY          replace missing input fields with EMPTY\n\
+"), stdout);
+      fputs (_("\
   -i, --ignore-case ignore differences in case when comparing fields\n\
   -j FIELD          (obsolescent) equivalent to `-1 FIELD -2 FIELD'\n\
   -j1 FIELD         (obsolescent) equivalent to `-1 FIELD'\n\
   -j2 FIELD         (obsolescent) equivalent to `-2 FIELD'\n\
   -o FORMAT         obey FORMAT while constructing output line\n\
   -t CHAR           use CHAR as input and output field separator\n\
+"), stdout);
+      fputs (_("\
   -v SIDE           like -a SIDE, but suppress joined output lines\n\
   -1 FIELD          join on this FIELD of file 1\n\
   -2 FIELD          join on this FIELD of file 2\n\
       --help        display this help and exit\n\
       --version     output version information and exit\n\
 \n\
+"), stdout);
+      fputs (_("\
 Unless -t CHAR is given, leading blanks separate fields and are ignored,\n\
 else fields are separated by CHAR.  Any FIELD is a field number counted\n\
 from 1.  FORMAT is one or more comma or blank separated specifications,\n\
 each being `SIDE.FIELD' or `0'.  Default FORMAT outputs the join field,\n\
 the remaining fields from FILE1, the remaining fields from FILE2, all\n\
 separated by CHAR.\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
