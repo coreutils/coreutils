@@ -57,13 +57,14 @@ for lang in C fr da; do
       ../src/$i --help    >/dev/full 2>/dev/null && fail=1
       ../src/$i --version >/dev/full 2>/dev/null && fail=1
       status=$?
-      eval "expected=\$expected_failure_status_$i"
+      test $i = [ && prog=lbracket || prog=$i
+      eval "expected=\$expected_failure_status_$prog"
       test x$expected = x && expected=1
       if test $status = $expected; then
 	: # ok
       else
 	fail=1
-	echo "$i with --help and/or --version didn't fail with output" \
+	echo "*** $i with --help and/or --version didn't fail with output" \
 	  "redirected to /dev/full" 1>&2
       fi
     fi
