@@ -1,4 +1,34 @@
+Wed Feb 19 22:06:32 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/ls.c (main): Remove trailing slashes from command line arguments.
+	Otherwise, running `mkdir x; chmod 644 x; ls -d x/' (note the trailing
+	slash) makes ls fail with permission denied on at least Linux 1.2.13
+	and 2.0.14 systems.
+
+Wed Feb  5 21:54:17 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/ls.c (quote_filename): Allocate two more bytes (for quotes)
+	when using --quote-name (-Q).
+	Feb 2 change wasn't complete.  Patch from Mark Harris.
+
+Mon Feb  3 21:49:55 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* po/POTFILES.in: Add copy.c and cp-hash.c.  Remove cp-aux.c.
+
 Sun Feb  2 09:40:37 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/system.h [__GNUC__]: Don't define alloca to __builtin_alloca.
+
+	* Makefile.am (SUBDIRS): Add tests.
+
+	* configure.in (AC_OUTPUT): Add tests/Makefile and tests/ls/Makefile.
+	* tests: New directory.
+	* tests/ls: New directory.
+
+	* src/ls.c (quote_filename): Don't backslash-escape double quotes.
+	This fixes a problem whereby columns weren't aligned when some files
+	contained double quote characters and ls's --escape (-b) option was
+	used.  Reported by Mark Harris.
 
 	* src/cp-hash.c (struct entry): Move dcl to this file from cp.h.
 	(struct htab): Likewise.
