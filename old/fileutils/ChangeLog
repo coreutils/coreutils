@@ -1,5 +1,7 @@
 1998-08-15  Jim Meyering  <meyering@ascend.com>
 
+	* Version 3.16u.
+
 	* tests/mv/into-self: Update to reflect changed behavior of mv.
 	* src/mv.c (do_move): Fail upon attempt to move a directory into itself.
 	With prodding from François Pinard :-)
