@@ -1,5 +1,15 @@
 Wed Dec 18 23:09:19 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/dircolors.hin (ORPHAN): By default, color orphans red on
+	a black background.
+
+	* src/dircolors.c (usage): Remove --print-data-base.
+	Now only --print-database remains.  Although it wasn't documented,
+	--print-data-base was still accepted.  But it made `--p', `--print',
+	`--print-data', etc. ambiguous.
+
+	* configure.in: Increment version to 1.15.
+
 	* src/ls.c (gobble_file): Stat symlinks also when printing with
 	color and set linkok to reflect existence of referent.
 	Patches from Joakim Rosqvist, James Antill, and Jesse Thilo.
