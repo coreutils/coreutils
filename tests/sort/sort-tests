@@ -1926,6 +1926,24 @@ else
   esac
 fi
 test -s o-no-file1.E || rm -f o-no-file1.E
+$xx -o no/such/file /dev/null  > create-empty.O 2> create-empty.E
+code=$?
+if test $code != 2; then
+  $echo "Test create-empty failed: ../../src/sort return code $code differs from expected value 2" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp create-empty.O $srcdir/create-empty.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed create-empty"; fi;;
+    1) $echo "Test create-empty failed: files create-empty.O and $srcdir/create-empty.X differ" 1>&2
+       (diff -c create-empty.O $srcdir/create-empty.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test create-empty may have failed." 1>&2
+       $echo The command "cmp create-empty.O $srcdir/create-empty.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s create-empty.E || rm -f create-empty.E
 $xx -n $srcdir/neg-nls.I > neg-nls.O 2> neg-nls.E
 code=$?
 if test $code != 0; then
@@ -1981,7 +1999,7 @@ else
 fi
 test -s use-nl.E || rm -f use-nl.E
 if test $errors = 0; then
-  $echo Passed all 109 tests. 1>&2
+  $echo Passed all 110 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
