@@ -1,4 +1,4 @@
-2002-02-02  Jim Meyering  <meyering@lucent.com>
+2002-02-11  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.21.
 
@@ -21,6 +21,10 @@
 	* src/pr.c (usage): Likewise.
 	* src/split.c (usage): Likewise.
 	* src/unexpand.c (usage): Likewise.
+
+	* src/tr.c (unquote): Make comment a little clearer.
+
+2002-02-02  Jim Meyering  <meyering@lucent.com>
 	* src/uniq.c (usage): Likewise.
 
 	* NEWS: Improve doc for previous fix in this area.
