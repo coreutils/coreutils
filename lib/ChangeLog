@@ -1,5 +1,10 @@
 2003-05-12  Jim Meyering  <jim@meyering.net>
 
+	* ftw.c (ftw_startup): Always call free_cwd after restore_cwd.
+	Reported by Matti Aarnio as
+	https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=90563.
+	Forwarded by Tim Waugh.
+
 	* strftime.c (my_strftime): Let the `-' (no-pad) flag affect
 	the space-padded-by-default conversion specifiers, %e, %k, %l.
 
