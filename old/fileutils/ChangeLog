@@ -1,5 +1,8 @@
 Sun Jun 15 07:04:29 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/full-write.c (full_write): Add comment regarding failure due
+	to bug in Linux Slackware 1.2.13 kernel.
+
 	* lib/makepath.c: Rewrite using save-cwd.c and chdir to remove
 	quadratic component of complexity.  Before, it processed O(n^2)
 	directory name components via stat and mkdir.  Now it's O(n).
