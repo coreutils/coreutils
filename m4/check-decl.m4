@@ -48,7 +48,7 @@ AC_DEFUN(jm_CHECK_DECLS,
     getenv,
     geteuid,
     getlogin,
-    getutent
+    getutent,
     lseek,
     malloc,
     memchr,
@@ -66,6 +66,6 @@ dnl This is a little helper so we can require these header checks.
 AC_DEFUN(_jm_DECL_HEADERS,
 [
   AC_REQUIRE([AC_HEADER_STDC])
-  AC_CHECK_HEADERS(memory.h string.h strings.h stdlib.h unistd.h sys/time.h
+  AC_CHECK_HEADERS(memory.h string.h strings.h stdlib.h unistd.h sys/time.h \
                    utmpx.h)
 ])
