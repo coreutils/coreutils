@@ -2,6 +2,9 @@
 
 	* Version 4.5.11.
 
+	* src/ansi2knr.c: Remove file.
+	* src/ansi2knr.1: Likewise.
+
 	* Makefile.maint (prev_version_file): Don't use ?= for this particular
 	assignment, since it causes trouble with old versions of GNU make
 	(e.g. 3.76.1).  The other uses of `?=' are inoffensive.  Details here.
