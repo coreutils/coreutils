@@ -1,5 +1,5 @@
 /* cp-hash.c  -- file copying (hash search routines)
-   Copyright (C) 89, 90, 91, 1995-2003 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2004 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -114,6 +114,20 @@ remember_created (const char *path)
 
   remember_copied (path, sb.st_ino, sb.st_dev);
   return 0;
+}
+
+/* If INO/DEV correspond to an already-copied source file, return the
+   name of the corresponding destination file.  Otherwise, return NULL.  */
+
+char *
+src_to_dest_lookup (ino_t ino, dev_t dev)
+{
+  struct Src_to_dest ent;
+  struct Src_to_dest const *e;
+  ent.st_ino = ino;
+  ent.st_dev = dev;
+  e = hash_lookup (src_to_dest, &ent);
+  return e ? e->name : NULL;
 }
 
 /* Add path NAME, copied from inode number INO and device number DEV,
