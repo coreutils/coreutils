@@ -1,5 +1,7 @@
 1998-05-16  Jim Meyering  <meyering@ascend.com>
 
+	* Version 1.16f.
+
 	* lib/readutmp.c (read_utmp): Add variant for systems that have
 	the utmpname function.
 	Ansideclify.
