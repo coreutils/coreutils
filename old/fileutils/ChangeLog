@@ -1,3 +1,15 @@
+2001-05-19  Jim Meyering  <meyering@lucent.com>
+
+	* doc/fileutils.texi: Remove.
+
+	* doc/omni-utils.texi: Change a few uses of `timezone' to `time zone'.
+	Reported by Stephen Eglen.
+
+2001-05-16  Jim Meyering  <meyering@lucent.com>
+
+	* Makefile.maint (my-distcheck): Remove work-around kludge and
+	associated comment, now that automake has ben fixed.
+
 2001-05-12  Paul Eggert  <eggert@twinsun.com>
 
 	Clean up some of the places where the code assumed that random
