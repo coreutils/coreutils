@@ -1,0 +1,37 @@
+#!/bin/sh
+
+: ${RM=rm}
+
+: ${TMPDIR=.}
+
+if test "$VERBOSE" = yes; then
+  $RM --version
+  set -x
+fi
+
+tmp=$TMPDIR/t-rm.$$
+
+framework_fail=0
+mkdir $tmp || framework_fail=1
+
+a=1
+n=300
+i=$a
+while :; do
+  touch $tmp/$i || framework_fail=1
+  test `expr $i = $n` = 1 && break
+  i=`expr $i + 1`
+done
+
+test -f $tmp/$a || framework_fail=1
+test -f $tmp/$n || framework_fail=1
+
+if test $framework_fail = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+$RM -rf $tmp || fail=1
+test -d $tmp && fail=1
+
+exit $fail
