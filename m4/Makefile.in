@@ -1,6 +1,6 @@
-# Makefile.in generated automatically by automake 1.1p from Makefile.am
+# Makefile.in generated automatically by automake 1.2 from Makefile.am
 
-# Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy, distribute and modify it.
 
@@ -53,36 +53,40 @@ POST_INSTALL = true
 NORMAL_UNINSTALL = true
 PRE_UNINSTALL = true
 POST_UNINSTALL = true
-ACLOCAL = @ACLOCAL@
-AUTOCONF = @AUTOCONF@
-AUTOHEADER = @AUTOHEADER@
-AUTOMAKE = @AUTOMAKE@
 CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
 CPP = @CPP@
 DATADIRNAME = @DATADIRNAME@
-DF_PROG = @DF_PROG@
 GENCAT = @GENCAT@
+GETLOADAVG_LIBS = @GETLOADAVG_LIBS@
 GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
+GNU_PACKAGE = @GNU_PACKAGE@
 GT_NO = @GT_NO@
 GT_YES = @GT_YES@
 INSTOBJEXT = @INSTOBJEXT@
 INTLDEPS = @INTLDEPS@
 INTLLIBS = @INTLLIBS@
 INTLOBJS = @INTLOBJS@
+KMEM_GROUP = @KMEM_GROUP@
 LIBOBJS = @LIBOBJS@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
+MAN = @MAN@
 MKINSTALLDIRS = @MKINSTALLDIRS@
 MSGFMT = @MSGFMT@
-MVDIR_PROG = @MVDIR_PROG@
+NEED_SETGID = @NEED_SETGID@
+OPTIONAL_BIN_PROGS = @OPTIONAL_BIN_PROGS@
+OPTIONAL_BIN_ZCRIPTS = @OPTIONAL_BIN_ZCRIPTS@
 PACKAGE = @PACKAGE@
 PERL = @PERL@
 POFILES = @POFILES@
 POSUB = @POSUB@
+POW_LIBM = @POW_LIBM@
 RANLIB = @RANLIB@
+SEQ_LIBM = @SEQ_LIBM@
+SQRT_LIBM = @SQRT_LIBM@
 U = @U@
 USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
 USE_NLS = @USE_NLS@
@@ -150,7 +154,7 @@ uninstall:
 all: Makefile
 
 install-strip:
-	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' install
+	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' INSTALL_SCRIPT='$(INSTALL_PROGRAM)' install
 installdirs:
 
 
