@@ -247,7 +247,7 @@ pop_dir (void)
 
   /* Pop the length stack, too.  */
   assert (obstack_object_size (&len_stack) >= sizeof (size_t));
-  obstack_blank (&len_stack, -(sizeof (size_t)));
+  obstack_blank (&len_stack, (int) -(sizeof (size_t)));
 }
 
 /* Copy the SRC_LEN bytes of data beginning at SRC into the DST_LEN-byte
