@@ -9,7 +9,7 @@
 	(parse_options): Accept it.
 	Patch by Christian Kurz, via Herbert Xu.
 
-	The command `echo foo|fmt -w 100000' would cause fmt to segfault.
+	The command `echo foo|fmt -w N' for N>=32K would cause fmt to segfault.
 
 	* src/fmt.c [struct Word]: Declare members length, space, and
 	line_length to be of type `int', not short.
