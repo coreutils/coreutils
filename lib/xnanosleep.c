@@ -24,6 +24,7 @@
 
 #include <stdio.h>
 #include <assert.h>
+#include <errno.h>
 #include <sys/types.h>
 #include <time.h>
 
@@ -123,7 +124,8 @@ clock_get_realtime (struct timespec *ts)
    SECONDS seconds after the time this function is called.
    SECONDS must be non-negative.  If SECONDS is so large that
    it is not representable as a `struct timespec', then use
-   the maximum value for that interval.  */
+   the maximum value for that interval.  Return -1 on failure
+   (setting errno), 0 on success.  */
 
 int
 xnanosleep (double seconds)
@@ -147,7 +149,7 @@ xnanosleep (double seconds)
 #endif
 
   if (clock_get_realtime (&ts_start) == NULL)
-    return 1;
+    return -1;
 
   /* Separate whole seconds from nanoseconds.
      Be careful to detect any overflow.  */
@@ -193,13 +195,22 @@ xnanosleep (double seconds)
       ts_sleep.tv_nsec = ts_stop.tv_nsec = 999999999;
     }
 
-  /* In case this process is suspended, then resumed, we'll know
-     whether to resume sleeping.  */
-  while (nanosleep (&ts_sleep, NULL) != 0
-	 && timespec_subtract (&ts_sleep, &ts_stop,
-			       clock_get_realtime (&ts_start)))
+  while (nanosleep (&ts_sleep, NULL) != 0)
     {
-      continue;
+      if (errno != EINTR)
+	return -1;
+
+      /* POSIX.1-2001 requires that when a process is suspended, then
+	 resumed, nanosleep (A, B) returns -1, sets errno to EINTR,
+	 and sets *B to the time remaining at the point of resumption.
+	 However, some versions of the Linux kernel incorrectly return
+	 the time remaining at the point of suspension.  Work around
+	 this bug by computing the remaining time here, rather than by
+	 relying on nanosleep's computation.  */
+
+      if (! timespec_subtract (&ts_sleep, &ts_stop,
+			       clock_get_realtime (&ts_start)))
+	break;
     }
 
   return 0;
