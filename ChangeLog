@@ -2,6 +2,18 @@
 
 	* Version 4.5.5.
 
+	* src/ls.c (gobble_file): Fall back on using lstat when required:
+	when --dereference (-L) is not specified, and
+	- when operating on a dangling symlink
+	- when operating on command-line-symlink-to-directories
+	This fixes numerous problems.  Here are examples:
+	- `ls dangling-symlink' would fail with `no such file...'
+	Now it prints `dangling-symlink'.
+	- `ls -i symlink' would mistakenly print the inode of the referent.
+	Now it prints the inode of the symlink.  Likewise for --size (-s).
+	Based on a patch from Michael Stone.
+	Reported by Deepak Goel as Debian bug #173793.
+
 	Rename ls's --dereference-command-line (-H)
 	option to   --dereference-command-line-symlink-to-dir.
 	* src/ls.c [enum Dereference_symlink]
