@@ -27,6 +27,7 @@
 #include "cp.h"
 #include "backupfile.h"
 #include "version.h"
+#include "argmatch.h"
 
 #ifndef _POSIX_VERSION
 uid_t geteuid ();
@@ -40,6 +41,25 @@ struct dir_attr
   int is_new_dir;
   int slash_offset;
   struct dir_attr *next;
+};
+
+/* Control creation of sparse files (files with holes).  */
+enum Sparse_type
+{
+  /* Never create holes in DEST.  */
+  SPARSE_NEVER,
+
+  /* This is the default.  Use a crude (and sometimes inaccurate)
+     heuristic to determine if SOURCE has holes.  If so, try to create
+     holes in DEST.  */
+  SPARSE_AUTO,
+
+  /* For every sufficiently long sequence of bytes in SOURCE, try to
+     create a corresponding hole in DEST.  There is a performance penalty
+     here because CP has to search for holes in SRC.  But if the holes are
+     big enough, that penalty can be offset by the decrease in the amount
+     of data written to disk.   */
+  SPARSE_ALWAYS
 };
 
 int stat ();
@@ -121,6 +141,19 @@ static int flag_update = 0;
 /* If nonzero, display the names of the files before copying them. */
 static int flag_verbose = 0;
 
+static char const *const sparse_type_string[] =
+{
+  "never", "auto", "always", 0
+};
+
+static enum Sparse_type const sparse_type[] =
+{
+  SPARSE_NEVER, SPARSE_AUTO, SPARSE_ALWAYS
+};
+
+/* Control creation of sparse files.  */
+static int flag_sparse = SPARSE_AUTO;
+
 /* The error code to return to the system. */
 static int exit_status = 0;
 
@@ -141,6 +174,7 @@ static struct option const long_opts[] =
   {"archive", no_argument, NULL, 'a'},
   {"backup", no_argument, NULL, 'b'},
   {"force", no_argument, NULL, 'f'},
+  {"sparse", required_argument, NULL, 2},
   {"interactive", no_argument, NULL, 'i'},
   {"link", no_argument, NULL, 'l'},
   {"no-dereference", no_argument, &flag_dereference, 0},
@@ -187,6 +221,21 @@ main (int argc, char **argv)
       switch (c)
 	{
 	case 0:
+	  break;
+
+	case 2:
+	  {
+	    int i;
+
+	    /* --sparse={never,auto,always}  */
+	    i = argmatch (optarg, sparse_type_string);
+	    if (i < 0)
+	      {
+		invalid_arg (_("sparse type"), optarg, i);
+		usage (2, NULL);
+	      }
+	    flag_sparse = sparse_type[i];
+	  }
 	  break;
 
 	case 'a':		/* Like -dpR. */
@@ -1110,7 +1159,7 @@ copy_reg (char *src_path, char *dst_path)
   int return_val = 0;
   long n_read_total = 0;
   int last_write_made_hole = 0;
-  int make_holes = 0;
+  int make_holes = (flag_sparse == SPARSE_ALWAYS);
 
   source_desc = open (src_path, O_RDONLY);
   if (source_desc < 0)
@@ -1142,7 +1191,7 @@ copy_reg (char *src_path, char *dst_path)
   buf_size = ST_BLKSIZE (sb);
 
 #ifdef HAVE_ST_BLOCKS
-  if (S_ISREG (sb.st_mode))
+  if (flag_sparse == SPARSE_AUTO && S_ISREG (sb.st_mode))
     {
       /* Find out whether the file contains any sparse blocks. */
 
