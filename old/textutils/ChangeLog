@@ -1,5 +1,9 @@
 Fri Dec 27 17:29:02 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* Makefile.am (aclocal.m4): No longer depend on acinclude.m4.
+
+	* tests/Makefile.am (SUBDIRS): Add pr-test.
+
 	* configure.in: AC_REQUIRE version 2.12 of autoconf.
 	AC_OUTPUT: Add tests/pr-test/Makefile.
 
