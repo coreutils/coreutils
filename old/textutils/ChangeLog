@@ -1,5 +1,7 @@
 1999-08-01  Jim Meyering  <meyering@ascend.com>
 
+	* Version 1.22o.
+
 	* configure.in (AM_C_PROTOTYPES): Move test to precede a few
 	header tests -- merely on principle.
 
