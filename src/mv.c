@@ -35,7 +35,7 @@
    -V, --version-control
 			Backup file creation.
 
-   Written by Mike Parker and David MacKenzie */
+   Written by Mike Parker, David MacKenzie, and Jim Meyering */
 
 #ifdef _AIX
  #pragma alloca
@@ -53,9 +53,14 @@
 #include "copy.h"
 #include "cp-hash.h"
 #include "error.h"
-#include "long-options.h"
 #include "path-concat.h"
 #include "remove.h"
+#include "version-etc.h"
+
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "mv"
+
+#define AUTHORS "Mike Parker, David MacKenzie, and Jim Meyering"
 
 /* Initial number of entries in each hash table entry's table of inodes.  */
 #define INITIAL_HASH_MODULE 100
@@ -84,6 +89,8 @@ static struct option const long_options[] =
   {"update", no_argument, NULL, 'u'},
   {"verbose", no_argument, NULL, 'v'},
   {"version-control", required_argument, NULL, 'V'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -368,9 +375,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "mv", GNU_PACKAGE, VERSION,
-		      "Mike Parker, David MacKenzie, and Jim Meyering", usage);
-
   cp_option_init (&x);
 
   /* FIXME: consider not calling getenv for SIMPLE_BACKUP_SUFFIX unless
@@ -411,6 +415,8 @@ main (int argc, char **argv)
 	case 'V':
 	  version = optarg;
 	  break;
+	case_GETOPT_HELP_CHAR;
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
 	  usage (1);
 	}

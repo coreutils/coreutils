@@ -25,9 +25,14 @@
 #include "system.h"
 #include "closeout.h"
 #include "error.h"
-#include "long-options.h"
 #include "makepath.h"
 #include "modechange.h"
+#include "version-etc.h"
+
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "mkdir"
+
+#define AUTHORS "David MacKenzie"
 
 /* The name this program was run with. */
 char *program_name;
@@ -40,6 +45,8 @@ static struct option const longopts[] =
   {"mode", required_argument, NULL, 'm'},
   {"parents", no_argument, NULL, 'p'},
   {"verbose", no_argument, NULL, 2},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -82,9 +89,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "mkdir", GNU_PACKAGE, VERSION,
-		      "David MacKenzie", usage);
-
   path_mode = 0;
 
   while ((optc = getopt_long (argc, argv, "pm:", longopts, NULL)) != -1)
@@ -102,6 +106,8 @@ main (int argc, char **argv)
 	case 2: /* --verbose  */
 	  verbose_fmt_string = _("created directory `%s'");
 	  break;
+	case_GETOPT_HELP_CHAR;
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
 	  usage (1);
 	}
