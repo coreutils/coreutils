@@ -1,3 +1,8 @@
+2000-06-29  Jim Meyering  <meyering@lucent.com>
+
+	* mountlist.c (fsp_to_string) [HAVE_F_FSTYPENAME_IN_STATFS]:
+	Avoid warning by casting result to `char *' to remove `const'.
+
 2000-06-17  Bruno Haible  <haible@clisp.cons.org>
 
 	* Makefile.am (libfetish_a_SOURCES): Remove readutmp.c.
