@@ -130,7 +130,7 @@ copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
   struct cp_options non_command_line_options = *x;
   int ret = 0;
 
-  name_space = savedir (src_path_in, src_sb->st_size);
+  name_space = savedir (src_path_in);
   if (name_space == NULL)
     {
       /* This diagnostic is a bit vague because savedir can fail in
