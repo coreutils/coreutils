@@ -31,6 +31,14 @@
 #include "closeout.h"
 #include "error.h"
 
+#ifndef EEXIST
+# define EEXIST 0
+#endif
+
+#ifndef ENOTEMPTY
+# define ENOTEMPTY 0
+#endif
+
 void strip_trailing_slashes ();
 
 /* The name this program was run with. */
@@ -199,14 +207,17 @@ main (int argc, char **argv)
 
       if (fail)
 	{
-	  if (!ignore_fail_on_non_empty || errno != ENOTEMPTY)
-	    {
-	      error (0, errno, "%s", dir);
-	      errors = 1;
-	    }
+	  if (ignore_fail_on_non_empty
+	      && (errno == ENOTEMPTY || errno == EEXIST))
+	    continue;
+
+	  error (0, errno, "%s", dir);
+	  errors = 1;
 	}
       else if (empty_paths)
-	errors += remove_parents (dir);
+	{
+	  errors += remove_parents (dir);
+	}
     }
 
   exit (errors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
