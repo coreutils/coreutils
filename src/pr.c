@@ -374,6 +374,7 @@
 
    numbered		True means precede this column with a line number. */
 
+struct COLUMN;
 struct COLUMN
   {
     FILE *fp;			/* Input stream for this column. */
@@ -2746,7 +2747,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 "),
 	      program_name);
 
-      printf (_("\
+      fputs (_("\
 Paginate or columnate FILE(s) for printing.\n\
 \n\
 Mandatory arguments to long options are mandatory for short options too.\n\
@@ -2756,12 +2757,16 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                     produce COLUMN-column output and print columns down,\n\
                     unless -a is used. Balance number of lines in the\n\
                     columns on each page.\n\
+"), stdout);
+      fputs (_("\
   -a, --across      print columns across rather than down, used together\n\
                     with -COLUMN\n\
   -c, --show-control-chars\n\
                     use hat notation (^G) and octal backslash notation\n\
   -d, --double-space\n\
                     double space the output\n\
+"), stdout);
+      fputs (_("\
   -D, --date-format=FORMAT\n\
                     use FORMAT for the header date\n\
   -e[CHAR[WIDTH]], --expand-tabs[=CHAR[WIDTH]]\n\
@@ -2770,8 +2775,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                     use form feeds instead of newlines to separate pages\n\
                     (by a 3-line page header with -F or a 5-line header\n\
                     and trailer without -F)\n\
-"));
-      printf (_("\
+"), stdout);
+      fputs (_("\
   -h HEADER, --header=HEADER\n\
                     use a centered HEADER instead of filename in page header,\n\
                     -h \"\" prints a blank line, don't use -h\"\"\n\
@@ -2779,35 +2784,45 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                     replace spaces with CHARs (TABs) to tab WIDTH (8)\n\
   -J, --join-lines  merge full lines, turns off -W line truncation, no column\n\
                     alignment, -S[STRING] sets separators\n\
+"), stdout);
+      fputs (_("\
   -l PAGE_LENGTH, --length=PAGE_LENGTH\n\
                     set the page length to PAGE_LENGTH (66) lines\n\
                     (default number of lines of text 56, and with -F 63)\n\
   -m, --merge       print all files in parallel, one in each column,\n\
                     truncate lines, but join lines of full length with -J\n\
+"), stdout);
+      fputs (_("\
   -n[SEP[DIGITS]], --number-lines[=SEP[DIGITS]]\n\
                     number lines, use DIGITS (5) digits, then SEP (TAB),\n\
                     default counting starts with 1st line of input file\n\
   -N NUMBER, --first-line-number=NUMBER\n\
                     start counting with NUMBER at 1st line of first\n\
                     page printed (see +FIRST_PAGE)\n\
+"), stdout);
+      fputs (_("\
   -o MARGIN, --indent=MARGIN\n\
                     offset each line with MARGIN (zero) spaces, do not\n\
                     affect -w or -W, MARGIN will be added to PAGE_WIDTH\n\
   -r, --no-file-warnings\n\
                     omit warning when a file cannot be opened\n\
-"));
-      printf (_("\
+"), stdout);
+      fputs (_("\
   -s[CHAR],--separator[=CHAR]\n\
                     separate columns by a single character, default for CHAR\n\
                     is the <TAB> character without -w and \'no char\' with -w\n\
                     -s[CHAR] turns off line truncation of all 3 column\n\
                     options (-COLUMN|-a -COLUMN|-m) except -w is set\n\
+"), stdout);
+      fputs (_("\
   -S[STRING], --sep-string[=STRING]\n\
                     separate columns by an optional STRING, don't use\n\
                     -S \"STRING\", -S only: No separator used (same as -S\"\"),\n\
                     without -S: Default separator <TAB> with -J and <space>\n\
                     otherwise (same as -S\" \"), no effect on column options\n\
   -t, --omit-header omit page headers and trailers\n\
+"), stdout);
+      fputs (_("\
   -T, --omit-pagination\n\
                     omit page headers and trailers, eliminate any pagination\n\
                     by form feeds set in input files\n\
@@ -2816,16 +2831,20 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -w PAGE_WIDTH, --width=PAGE_WIDTH\n\
                     set page width to PAGE_WIDTH (72) characters for\n\
                     multiple text-column output only, -s[char] turns off (72)\n\
+"), stdout);
+      fputs (_("\
   -W PAGE_WIDTH, --page-width=PAGE_WIDTH\n\
                     set page width to PAGE_WIDTH (72) characters always,\n\
                     truncate lines, except -J option is set, no interference\n\
                     with -S or -s\n\
   --help            display this help and exit\n\
   --version         output version information and exit\n\
+"), stdout);
+      fputs (_("\
 \n\
 -T implied by -l nn when nn <= 10 or <= 3 with -F. With no FILE, or when\n\
 FILE is -, read standard input.\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
