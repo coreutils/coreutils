@@ -1,3 +1,8 @@
+2000-05-09  Jim Meyering  <meyering@lucent.com>
+
+	* gettext.m4: Rename this...
+	* libintl.m4: ...to this.
+
 2000-05-06  Jim Meyering  <meyering@lucent.com>
 
 	* jm-macros.m4 (AC_REPLACE_FUNCS): Add atexit.
