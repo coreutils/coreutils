@@ -1,8 +1,10 @@
-2000-01-31  Jim Meyering  <meyering@lucent.com>
+2000-02-05  Jim Meyering  <meyering@lucent.com>
 
 	* src/who.c: Use UT_USER in place of hard-coded `->ut_name' here, too.
 	* src/pinky.c: Likewise.
-	Reported by Tom Tromey.
+	Reported by Tom Tromey and Andreas Schwab.
+	* src/uptime.c (print_uptime): Likewise.
+	* src/users.c (list_entries_users): Likewise.
 
 2000-01-30  Jim Meyering  <meyering@lucent.com>
 
