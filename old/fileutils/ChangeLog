@@ -518,8 +518,6 @@ Tue Oct 05 14:52:02 1993  Jim Meyering  (meyering@comco.com)
 	* isdir.c, makepath.c, rename.c, system.h [STAT_MACROS_BROKEN]:
 	Test this.
 
-	* xmalloc.c [CONFIG_BROKETS]: Test this.
-
 	* install.c (install_file_in_dir): Use stpcpy instead of slow sprintf.
 
 	* argmatch.c, backupfile.c, basename.c, dirname.c, eaccess.c,
@@ -562,13 +560,6 @@ Fri Aug 27 23:53:50 1993  Jim Meyering  (meyering@comco.com)
 
 	* fsusage.c (adjust_blocks): Use `1' instead of `+1'.  Many
 	compilers don't parse the latter.  From Kaveh R. Ghazi.
-
-Fri Aug 27 10:27:13 1993  Paul Eggert  (eggert@twinsun.com)
-
-	* xmalloc.c: Include "config.h" if HAVE_CONFIG_H.  Use size_t,
-	not int, when needed.
-	(VOID): New macro.  Use it when needed.
-	(error): Declaration uses varargs if required.
 
 Thu Aug 26 22:26:09 1993  Jim Meyering  (meyering@comco.com)
 
@@ -1560,9 +1551,6 @@ Mon Jul 22 11:39:31 1991  David J. MacKenzie  (djm at bleen)
 	* install.c: Use uid_t and gid_t.
 
 	* eaccess.c: Support POSIX method of getting multiple groups.
-
-	* xmalloc.c (xmalloc, xrealloc): Exit with value 2 on error,
-	not 1, so cmp can use it.
 
 Sat Jul 20 14:24:40 1991  David J. MacKenzie  (djm at bleen)
 

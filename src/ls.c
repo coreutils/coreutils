@@ -85,6 +85,7 @@ time_t time ();
 
 void mode_string ();
 
+char *stpcpy ();
 char *xstrdup ();
 char *getgroup ();
 char *getuser ();
@@ -277,6 +278,15 @@ static int print_block_size;
 
 static int kilobyte_blocks;
 
+/* Precede each line of long output (per file) with a string like `m,n:'
+   where M is the number of characters after the `:' and before the
+   filename and N is the length of the filename.  Using this format,
+   Emacs' dired mode starts up twice as fast using this option, and
+   can handle all strange characters in file names.
+   FIXME: what about symlinks -- they have two names...
+   */
+static int dired;
+
 /* none means don't mention the type of files.
    all means mention the types of all files.
    not_programs means do so except for executables.
@@ -387,6 +397,7 @@ static struct option const long_options[] =
   {"all", no_argument, 0, 'a'},
   {"escape", no_argument, 0, 'b'},
   {"directory", no_argument, 0, 'd'},
+  {"dired", no_argument, 0, 'D'},
   {"full-time", no_argument, &full_time, 1},
   {"inode", no_argument, 0, 'i'},
   {"kilobytes", no_argument, 0, 'k'},
@@ -609,7 +620,7 @@ decode_switches (argc, argv)
   p = getenv ("TABSIZE");
   tabsize = p ? atoi (p) : 8;
 
-  while ((c = getopt_long (argc, argv, "abcdfgiklmnpqrstuw:xABCFGI:LNQRST:UX1",
+  while ((c = getopt_long (argc, argv, "abcdfgiklmnpqrstuw:xABCDFGI:LNQRST:UX1",
 			   long_options, (int *) 0)) != EOF)
     {
       switch (c)
@@ -716,6 +727,10 @@ decode_switches (argc, argv)
 
 	case 'C':
 	  format = many_per_line;
+	  break;
+
+	case 'D':
+	  dired = 1;
 	  break;
 
 	case 'F':
@@ -1413,12 +1428,164 @@ print_current_files ()
     }
 }
 
+/* Set QUOTED_LENGTH to strlen(P) and return NULL if P == quoted(P).
+   Otherwise, return xmalloc'd storage containing the quoted version
+   of P and set QUOTED_LENGTH to the length of the quoted P.  */
+
+static char *
+quote_filename (p, quoted_length)
+     register const char *p;
+     int *quoted_length;
+{
+  register unsigned char c;
+  const char *p0 = p;
+  char *quoted, *q;
+  int found_quotable;
+
+  if (!quote_as_string && !quote_funny_chars && !qmark_funny_chars)
+    {
+      *quoted_length = strlen (p);
+      return NULL;
+    }
+
+  found_quotable = 0;
+  for (c = *p; c; c = *++p)
+    {
+      if (quote_funny_chars)
+	{
+	  switch (c)
+	    {
+	    case '\\':
+	    case '\n':
+	    case '\b':
+	    case '\r':
+	    case '\t':
+	    case '\f':
+	    case ' ':
+	    case '"':
+	      found_quotable = 1;
+	      break;
+
+	    default:
+	      /* FIXME: why not just use the ISPRINT macro here?  */
+	      if (!(c > 040 && c < 0177))
+		found_quotable = 1;
+	      break;
+	    }
+	}
+      else
+	{
+	  if (!(c >= 040 && c < 0177) && qmark_funny_chars)
+	    found_quotable = 1;
+	}
+      if (found_quotable)
+	break;
+    }
+
+  if (!found_quotable)
+    {
+      *quoted_length = p - p0;
+      return NULL;
+    }
+
+  p = p0;
+  quoted = xmalloc (4 * strlen (p) + 1);
+  q = quoted;
+
+#define SAVECHAR(c) *q++ = (c)
+#define SAVE_2_CHARS(c12) \
+    do { *q++ = ((c12)[0]); \
+	 *q++ = ((c12)[1]); } while (0)
+
+  if (quote_as_string)
+    SAVECHAR ('"');
+
+  while ((c = *p++))
+    {
+      if (quote_funny_chars)
+	{
+	  switch (c)
+	    {
+	    case '\\':
+	      SAVE_2_CHARS ("\\\\");
+	      break;
+
+	    case '\n':
+	      SAVE_2_CHARS ("\\n");
+	      break;
+
+	    case '\b':
+	      SAVE_2_CHARS ("\\b");
+	      break;
+
+	    case '\r':
+	      SAVE_2_CHARS ("\\r");
+	      break;
+
+	    case '\t':
+	      SAVE_2_CHARS ("\\t");
+	      break;
+
+	    case '\f':
+	      SAVE_2_CHARS ("\\f");
+	      break;
+
+	    case ' ':
+	      SAVE_2_CHARS ("\\ ");
+	      break;
+
+	    case '"':
+	      SAVE_2_CHARS ("\\\"");
+	      break;
+
+	    default:
+	      if (c > 040 && c < 0177)
+		SAVECHAR (c);
+	      else
+		{
+		  char buf[5];
+		  sprintf (buf, "\\%03o", (unsigned int) c);
+		  q = stpcpy (p, buf);
+		}
+	    }
+	}
+      else
+	{
+	  if (c >= 040 && c < 0177)
+	    SAVECHAR (c);
+	  else if (!qmark_funny_chars)
+	    SAVECHAR (c);
+	  else
+	    SAVECHAR ('?');
+	}
+    }
+
+  if (quote_as_string)
+    SAVECHAR ('"');
+
+  *quoted_length = q - quoted;
+
+  SAVECHAR ('\0');
+
+  return quoted;
+}
+
 static void
 print_long_format (f)
      struct fileinfo *f;
 {
   char modebuf[20];
   char timebuf[40];
+  char *quoted;
+  int quoted_length;
+
+  /* 7 fields that may (worst case be 64-bit integral values) require 20 bytes,
+     10 character mode field,
+     24 characters for the time,
+     9 spaces following each of these fields,
+     and 1 trailing NUL byte.  */
+  char bigbuf[7 * 20 + 10 + 24 + 9 + 1];
+  char *p;
   time_t when;
 
   mode_string (f->stat.st_mode, modebuf);
@@ -1457,40 +1624,61 @@ print_long_format (f)
       timebuf[16] = 0;
     }
 
+  p = bigbuf;
+
   if (print_inode)
-    printf ("%*lu ", INODE_DIGITS, (unsigned long) f->stat.st_ino);
+    {
+      sprintf (p, "%*lu ", INODE_DIGITS, (unsigned long) f->stat.st_ino);
+      p += strlen (p);
+    }
 
   if (print_block_size)
-    printf ("%*u ", block_size_size,
-	    (unsigned) convert_blocks (ST_NBLOCKS (f->stat),
-					    kilobyte_blocks));
+    {
+      sprintf (p, "%*u ", block_size_size,
+	       (unsigned) convert_blocks (ST_NBLOCKS (f->stat),
+					  kilobyte_blocks));
+      p += strlen (p);
+    }
 
   /* The space between the mode and the number of links is the POSIX
      "optional alternate access method flag". */
-  printf ("%s %3u ", modebuf, (unsigned int) f->stat.st_nlink);
+  sprintf (p, "%s %3u ", modebuf, (unsigned int) f->stat.st_nlink);
+  p += strlen (p);
 
   if (numeric_users)
-    printf ("%-8u ", (unsigned int) f->stat.st_uid);
+    sprintf (p, "%-8u ", (unsigned int) f->stat.st_uid);
   else
-    printf ("%-8.8s ", getuser (f->stat.st_uid));
+    sprintf (p, "%-8.8s ", getuser (f->stat.st_uid));
+  p += strlen (p);
 
   if (!inhibit_group)
     {
       if (numeric_users)
-	printf ("%-8u ", (unsigned int) f->stat.st_gid);
+	sprintf (p, "%-8u ", (unsigned int) f->stat.st_gid);
       else
-	printf ("%-8.8s ", getgroup (f->stat.st_gid));
+	sprintf (p, "%-8.8s ", getgroup (f->stat.st_gid));
+      p += strlen (p);
     }
 
   if (S_ISCHR (f->stat.st_mode) || S_ISBLK (f->stat.st_mode))
-    printf ("%3u, %3u ", (unsigned) major (f->stat.st_rdev),
-	    (unsigned) minor (f->stat.st_rdev));
+    sprintf (p, "%3u, %3u ", (unsigned) major (f->stat.st_rdev),
+	     (unsigned) minor (f->stat.st_rdev));
   else
-    printf ("%8lu ", (unsigned long) f->stat.st_size);
+    sprintf (p, "%8lu ", (unsigned long) f->stat.st_size);
+  p += strlen (p);
 
-  printf ("%s ", full_time ? timebuf : timebuf + 4);
+  sprintf (p, "%s ", full_time ? timebuf : timebuf + 4);
+  p += strlen (p);
 
-  print_name_with_quoting (f->name);
+  quoted = quote_filename (f->name, &quoted_length);
+
+  if (dired)
+    {
+      printf ("%d,%d:", p - bigbuf, quoted_length);
+    }
+
+  fputs (bigbuf, stdout);
+  fputs (quoted != NULL ? quoted : f->name, stdout);
 
   if (f->filetype == symbolic_link)
     {
@@ -1506,6 +1694,7 @@ print_long_format (f)
     print_type_indicator (f->stat.st_mode);
 }
 
+
 static void
 print_name_with_quoting (p)
      register char *p;
