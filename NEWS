@@ -3,7 +3,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
-  time stamps output by stat now include valid fractional seconds
+  time stamps output by stat now include actual fractional seconds,
+  when available -- or .0000000 for files without that information.
 
 
 * Major changes in release 5.1.2 (2004-01-25):
