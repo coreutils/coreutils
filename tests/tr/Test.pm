@@ -67,34 +67,35 @@ my @tv = (
 ['x', '-s ' . q|'abcdefghijklmn' '[:*016]'|, 'abcdefghijklmnop', ':op', 0],
 ['y', '-d ' . q|'a-z'|, 'abc $code', ' $', 0],
 ['z', '-ds ' . q|'a-z' '$.'|, 'a.b.c $$$$code\\', '. $\\', 0],
+
 # Make sure that a-a is accepted, even though POSIX 1001.2 says it is illegal.
-['A',     q|'a-a' 'z'|,         'abc',    'zbc',               0],
+['range-a-a', q|'a-a' 'z'|,         'abc',    'zbc',               0],
 #
-['B',     q|'a' ''''|,          '',       '',                  1],
-['C',     q|'[:lower:]' '[:upper:]'|,	'abcxyzABCXYZ', 'ABCXYZABCXYZ', 0],
-['D',     q|'[:upper:]' '[:lower:]'|,	'abcxyzABCXYZ', 'abcxyzabcxyz', 0],
+['null', q|'a' ''''|,          '',       '',                  1],
+['upcase',q|'[:lower:]' '[:upper:]'|,	'abcxyzABCXYZ', 'ABCXYZABCXYZ', 0],
+['dncase', q|'[:upper:]' '[:lower:]'|,	'abcxyzABCXYZ', 'abcxyzabcxyz', 0],
 #
-['E',     q|'a[=*2][=c=]' 'xyyz'|,	'a=c', 'xyz', 0],
-['F',     q|'[:*3][:digit:]' 'a-m'|,	':1239', 'cefgm', 0],
-['G',     q|'a[b*512]c' '1[x*]2'|,	'abc', '1x2', 0],
-['H',     q|'a[b*513]c' '1[x*]2'|,	'abc', '1x2', 0],
-['I',     q|'a\-z' 'A-Z'|,		'abc-z', 'AbcBC', 0],
+['rep-cclass',   q|'a[=*2][=c=]' 'xyyz'|,	'a=c', 'xyz', 0],
+['rep-1',   q|'[:*3][:digit:]' 'a-m'|,	':1239', 'cefgm', 0],
+['rep-2',   q|'a[b*512]c' '1[x*]2'|,	'abc', '1x2', 0],
+['rep-3',   q|'a[b*513]c' '1[x*]2'|,	'abc', '1x2', 0],
+['esc',     q|'a\-z' 'A-Z'|,		'abc-z', 'AbcBC', 0],
 
 
 
 
 #
 # From Ross
-['R0.0', '-cs ' . q|'[:upper:]' 'X[Y*]'|,	'', '', 1],
-['R0.1', '-cs ' . q|'[:cntrl:]' 'X[Y*]'|,	'', '', 1],
-['R1.0', '-cs ' . q|'[:upper:]' '[X*]'|,	'AMZamz123.-+AMZ', 'AMZXAMZ', 0],
-['R1.1', '-cs ' . q|'[:upper:][:digit:]' '[Z*]'|, '', '', 0],
-['R2', '-dcs ' . q|'[:lower:]' 'n-rs-z'|,	'amzAMZ123.-+amz', 'amzamz', 0],
-['R3', '-ds ' . q|'[:xdigit:]' '[:alnum:]'|,
+['ross-0a', '-cs ' . q|'[:upper:]' 'X[Y*]'|,	'', '', 1],
+['ross-0b', '-cs ' . q|'[:cntrl:]' 'X[Y*]'|,	'', '', 1],
+['ross-1a', '-cs ' . q|'[:upper:]' '[X*]'|, 'AMZamz123.-+AMZ', 'AMZXAMZ', 0],
+['ross-1b', '-cs ' . q|'[:upper:][:digit:]' '[Z*]'|, '', '', 0],
+['ross-2', '-dcs ' . q|'[:lower:]' 'n-rs-z'|, 'amzAMZ123.-+amz', 'amzamz', 0],
+['ross-3', '-ds ' . q|'[:xdigit:]' '[:alnum:]'|,
  '.ZABCDEFGzabcdefg.0123456788899.GG', '.ZGzg..G', 0],
-['R4', '-dcs ' . q|'[:alnum:]' '[:digit:]'|,	'', '', 0],
-['R5', '-dc ' . q|'[:lower:]'|,		'', '', 0],
-['R6', '-dc ' . q|'[:upper:]'|,		'', '', 0],
+['ross-4', '-dcs ' . q|'[:alnum:]' '[:digit:]'|,	'', '', 0],
+['ross-5', '-dc ' . q|'[:lower:]'|,		'', '', 0],
+['ross-6', '-dc ' . q|'[:upper:]'|,		'', '', 0],
 );
 
 sub test_vector
