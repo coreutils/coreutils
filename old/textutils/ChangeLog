@@ -1,3 +1,7 @@
+Sat Aug 17 18:57:17 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* Makefile.am (EXTRA_DIST): Add acinclude.m4.
+
 Tue Aug 13 21:47:23 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/Makefile.am (EXTRA_DIST): Remove ansi2knr.1 and ansi2knr.c.
