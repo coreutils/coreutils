@@ -1,5 +1,9 @@
 Changes in release 4.1:
 [4.0r]
+* install -d may now be used to set special bits
+    e.g., `install -m a=rwx,o+t -d DIR' now honors the `o+t' part
+* cp, mv, ln, install: document that while the --backup option takes an
+  optional argument, the -b option accepts none
 * `ls -e' fails with a more useful diagnostic
 * df produces better output for loop file system mount points
 [4.0q]
@@ -64,6 +68,7 @@ Changes in release 4.1:
 * cp, install, ln, mv: deprecate the --version-control option.  Use --backup's
   new optional argument instead.  The old option still works, but now evokes a
   warning.
+* cp, install, ln, mv: the --backup option now accepts an optional argument
 * cp, install, ln, mv: accept new option: --target-directory=DIR
 * chgrp: accept new option, --dereference.  --no-dereference is now the default.
 * New ls option --quoting-style=locale acts like --quoting-style=c, except
