@@ -1,5 +1,5 @@
-# nls.m4 serial 1 (gettext-0.12)
-dnl Copyright (C) 1995-2003 Free Software Foundation, Inc.
+# nls.m4 serial 2 (gettext-0.14.3)
+dnl Copyright (C) 1995-2003, 2005 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -17,6 +17,8 @@ dnl Authors:
 dnl   Ulrich Drepper <drepper@cygnus.com>, 1995-2000.
 dnl   Bruno Haible <haible@clisp.cons.org>, 2000-2003.
 
+AC_PREREQ(2.50)
+
 AC_DEFUN([AM_NLS],
 [
   AC_MSG_CHECKING([whether NLS is requested])
@@ -30,6 +32,8 @@ AC_DEFUN([AM_NLS],
 
 AC_DEFUN([AM_MKINSTALLDIRS],
 [
+  dnl Tell automake >= 1.10 to complain if mkinstalldirs is missing.
+  m4_ifdef([AC_REQUIRE_AUX_FILE], [AC_REQUIRE_AUX_FILE([mkinstalldirs])])
   dnl If the AC_CONFIG_AUX_DIR macro for autoconf is used we possibly
   dnl find the mkinstalldirs script in another subdir but $(top_srcdir).
   dnl Try to locate it.

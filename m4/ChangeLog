@@ -1,3 +1,8 @@
+2005-03-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* gettext.m4, inttypes.m4, isc-posix.m4, lib-link.m4, nls.m4,
+	onceonly.m4, po.m4: Sync from gnulib.
+
 2005-03-17  Jim Meyering  <jim@meyering.net>
 
 	* typeof.m4 (gl_TYPEOF): New file/macro.
