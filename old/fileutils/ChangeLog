@@ -1,5 +1,8 @@
 Tue Jul  9 20:19:44 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/dircolors.c (usage): Improve --help message.  From Karl Berry.
+	(long_options): Add print-data-base and print-database.
+
 	* src/dircolors.c (dc_parse_stream): Don't give `unrecognized keyword'
 	message unless we've processed a matching TERM directive.
 
