@@ -1,5 +1,5 @@
 /* xgetcwd.c -- return current directory with unlimited length
-   Copyright (C) 1992, 1996, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1996, 2000, 2001, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -46,12 +46,13 @@ char *getwd ();
 #endif
 
 #include "xalloc.h"
+#include "xgetcwd.h"
 
 /* Return the current directory, newly allocated, arbitrarily long.
    Return NULL and set errno on error. */
 
 char *
-xgetcwd ()
+xgetcwd (void)
 {
 #if HAVE_GETCWD_NULL
   char *cwd = getcwd (NULL, 0);
