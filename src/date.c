@@ -103,7 +103,7 @@ batch_convert (const char *input_filename, const char *format)
       in_stream = fopen (input_filename, "r");
       if (in_stream == NULL)
 	{
-	  error (0, errno, "%s", input_filename);
+	  error (1, errno, "`%s'", input_filename);
 	}
     }
 
