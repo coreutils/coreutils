@@ -68,10 +68,6 @@ struct valinfo
 };
 typedef struct valinfo VALUE;
 
-/* Non-zero if the POSIXLY_CORRECT environment variable is set.
-   The unary operator `quote' is disabled when this variable is zero.  */
-static int posixly_correct;
-
 /* The arguments given to the program, minus the program name.  */
 static char **args;
 
@@ -130,7 +126,7 @@ separates increasing precedence groups.  EXPRESSION may be:\n\
   substr STRING POS LENGTH   substring of STRING, POS counted from 1\n\
   index STRING CHARS         index in STRING where any CHARS is found, or 0\n\
   length STRING              length of STRING\n\
-  quote TOKEN                interpret TOKEN as a string, even if it is a\n\
+  + TOKEN                    interpret TOKEN as a string, even if it is a\n\
                                keyword like `match' or an operator like `/'\n\
 \n\
   ( EXPRESSION )             value of EXPRESSION\n\
@@ -159,12 +155,8 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
-
-  /* Recognize --help or --version only if POSIXLY_CORRECT is not set.  */
-  if (!posixly_correct)
-    parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-			AUTHORS, usage);
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      AUTHORS, usage);
   /* The above handles --help and --version.
      Since there is no other invocation of getopt, handle `--' here.  */
   if (argc > 1 && STREQ (argv[1], "--"))
@@ -470,7 +462,7 @@ eval7 (void)
   return str_value (*args++);
 }
 
-/* Handle match, substr, index, length, and quote keywords.  */
+/* Handle match, substr, index, and length keywords, and quoting "+".  */
 
 static VALUE *
 eval6 (void)
@@ -484,7 +476,7 @@ eval6 (void)
 #ifdef EVAL_TRACE
   trace ("eval6");
 #endif
-  if (!posixly_correct && nextarg ("quote"))
+  if (nextarg ("+"))
     {
       if (nomoreargs ())
 	error (2, 0, _("syntax error"));
