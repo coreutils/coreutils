@@ -86,6 +86,31 @@ my %opt_def = (
     'v|version-option=s' => \$version_option,
 );
 
+END
+{
+  # Nobody ever checks the status of print()s.  That's okay, because
+  # if any do fail, we're guaranteed to get an indicator when we close()
+  # the filehandle.
+  #
+  # Close stdout now, and if there were no errors, return happy status.
+  # If stdout has already been closed by the script, though, do nothing.
+  defined fileno STDOUT
+    or return;
+  close STDOUT
+    and return;
+
+  # Errors closing stdout.  Indicate that, and hope stderr is OK.
+  warn "$this_program: closing standard output: $!\n";
+
+  # Don't be so arrogant as to assume that we're the first END handler
+  # defined, and thus the last one invoked.  There may be others yet
+  # to come.  $? will be passed on to them, and to the final _exit().
+  #
+  # If it isn't already an error, make it one (and if it _is_ an error,
+  # preserve the value: it might be important).
+  $? ||= 1;
+}
+
 # Parse options.
 Getopt::Long::config('bundling');
 GetOptions (%opt_def,
@@ -527,7 +552,7 @@ for (@pre, (grep ! /^($filter)$/o, @include), @post)
     {
 	my $quote = /\W/ ? '"' : '';
 	print ".SH $quote$_$quote\n";
-	
+
 	for ($include{$_})
 	{
 	    # Replace leading dot, apostrophe and backslash tokens.
