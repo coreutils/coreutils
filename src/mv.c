@@ -55,7 +55,7 @@
 uid_t geteuid ();
 #endif
 
-char *basename (char *);
+char *basename ();
 enum backup_type get_version ();
 int isdir ();
 int yesno ();

@@ -43,7 +43,7 @@ struct pathstack
   ino_t inum;
 };
 
-char *basename (char *);
+char *basename ();
 char *stpcpy ();
 char *xmalloc ();
 char *xrealloc ();
