@@ -1,6 +1,6 @@
 1999-04-24  Jim Meyering  <meyering@ascend.com>
 
-	* Version 1.16f.
+	* Version 1.16g.
 
 	* configure.in: Use AC_CANONICAL_HOST.
 
