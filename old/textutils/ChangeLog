@@ -1,3 +1,11 @@
+Thu Sep 26 21:02:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/md5sum.c (usage): Remove references in --help output to
+	the now-deprecated --string option.  Support for it will be
+	removed soon.
+
+	* tests/md5sum-test/md5-rfc: Rewrite to avoid use of --string option.
+
 Wed Sep 25 21:43:10 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* tests/sort-test/Makefile.am (t): Factor out .in suffix.
