@@ -53,6 +53,10 @@ If you run the tests on a SunOS4.1.4 system, expect the ctime-part of
 the ls `time-1' test to fail.  I believe that is due to a bug in the
 way Sun implemented link(2) and chmod(2).
 
+***************************************
+Last-minute notes, before coreutils-5.0
+---------------------------------------
+
 A known problem exists when compiling on HPUX on both hppa and ia64
 in 64-bit mode (i.e. +DD64) on all known HPUX 11.x versions.  This
 is not due to a bug in the package but instead due to a bug in the
@@ -69,6 +73,15 @@ Here is one possible patch to correct the problem.
 -#ifndef __STDC_32_MODE__
 +#ifndef __LP64__
 
+I've heard that stat.c doesn't compile on Ultrix 4.3.
+Does anyone with access to such a system want to investigate?
+
+On some systems, some of the tests fail when run as root.  All failures
+I've seen appear to be due to problems in the testing framework, not
+in the tools themselves.  I'll address that for the next release by
+using a program like setuidgid (see the comment in TODO).
+
+***************************************
 
 There are pretty many tests, but nowhere near as many as we need.
 Additions and corrections are very welcome.
