@@ -1,5 +1,9 @@
 2003-01-20  Jim Meyering  <jim@meyering.net>
 
+	* obstack.h (obstack_object_size): Declare temporary, __o, to be const.
+	(obstack_room): Likewise.
+	(obstack_empty_p): Likewise.
+
 	Merge in changes from GNU libc
 	* error.c: Eliminate many `#ifdef USE_IN_LIBIO' conditionals.
 
