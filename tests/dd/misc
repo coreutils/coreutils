@@ -18,6 +18,10 @@ fi
 dd if=$tmp_in of=$tmp_out > /dev/null 2>&1 || fail=1
 cmp $tmp_in $tmp_out || fail=1
 
+rm $tmp_out
+dd -- if=$tmp_in of=$tmp_out > /dev/null 2>&1 || fail=1
+cmp $tmp_in $tmp_out || fail=1
+
 rm -f $tmp_in $tmp_out
 
 exit $fail
