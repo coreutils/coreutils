@@ -1,4 +1,4 @@
-#serial 2
+#serial 3
 # Check whether getcwd has the bug that it succeeds for a working directory
 # longer than PATH_MAX, yet returns a truncated directory name.
 # If so, arrange to compile the wrapper function.
@@ -44,23 +44,21 @@ AC_DEFUN([GL_FUNC_GETCWD_PATH_MAX],
 # define INT_MAX TYPE_MAXIMUM (int)
 #endif
 
-#ifndef PATH_MAX
-/* There might be a better way to handle this case, but note:
-   - the value shouldn't be anywhere near INT_MAX, and
-   - the value shouldn't be so big that the local declaration, below,
-   blows the stack.  */
-# define PATH_MAX 40000
-#endif
-
 /* The length of this name must be 8.  */
 #define DIR_NAME "confdir3"
 
 int
 main ()
 {
-  /* The '9' comes from strlen (DIR_NAME) + 1.  */
-#if INT_MAX - 9 <= PATH_MAX
-  /* FIXME: Assuming there's a system for which this is true -- Hurd?,
+#ifndef PATH_MAX
+  /* The Hurd doesn't define this, so getcwd can't exhibit the bug --
+     at least not on a local file system.  And if we were to start worrying
+     about remote file systems, we'd have to enable the wrapper function
+     all of the time, just to be safe.  That's not worth the cost.  */
+  exit (0);
+#elif INT_MAX - 9 <= PATH_MAX
+  /* The '9', above, comes from strlen (DIR_NAME) + 1.  */
+  /* FIXME: Assuming there's a system for which this is true,
      this should be done in a compile test.  */
   exit (0);
 #else
