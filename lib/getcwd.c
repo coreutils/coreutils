@@ -19,6 +19,10 @@
 
 #include <config.h>
 
+/* Undefine getcwd here so any prototype is not redefined to be a
+   prototype for rpl_getcwd.  */
+#undef getcwd
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -31,14 +35,6 @@ extern int errno;
 
 #include "pathmax.h"
 #include "same.h"
-
-/* Undefine getcwd here so any prototype is not redefined to be a
-   prototype for rpl_getcwd.  */
-#undef getcwd
-
-#if !HAVE_DECL_GETCWD
-extern char *getcwd (char *, size_t);
-#endif
 
 /* Guess high, because that makes the test below more conservative.
    But this is a kludge, because we should really use
