@@ -1,6 +1,13 @@
-2004-12-02  Jim Meyering  <jim@meyering.net>
+2004-12-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* src/tail.c (tail_file): Set errnum to -1 if the initial "tail"
+	failed.  This works around an assertion failure reported by
+	Roberto Nibali in:
+	http://lists.gnu.org/archive/html/bug-coreutils/2004-12/msg00012.html
+
+2004-12-02  Jim Meyering  <jim@meyering.net>
 
 	With using --color and with LS_COLORS saying not to color
 	executables, don't stat every file.
