@@ -4500,8 +4500,26 @@ else
   esac
 fi
 test -s dbl-sp-b.E || rm -f dbl-sp-b.E
+$xx --test -h x -W1 $srcdir/narrow-1.I > narrow-1.O 2> narrow-1.E
+code=$?
+if test $code != 0; then
+  $echo "Test narrow-1 failed: ../../src/pr return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp narrow-1.O $srcdir/narrow-1.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed narrow-1"; fi;;
+    1) $echo "Test narrow-1 failed: files narrow-1.O and $srcdir/narrow-1.X differ" 1>&2
+       (diff -c narrow-1.O $srcdir/narrow-1.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test narrow-1 may have failed." 1>&2
+       $echo The command "cmp narrow-1.O $srcdir/narrow-1.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s narrow-1.E || rm -f narrow-1.E
 if test $errors = 0; then
-  $echo Passed all 249 tests. 1>&2
+  $echo Passed all 250 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
