@@ -834,8 +834,7 @@ static size_t dired_pos;
 #define DIRED_INDENT()							\
     do									\
       {									\
-	/* FIXME: remove the `&& format == long_format' clause.  */	\
-	if (dired && format == long_format)				\
+	if (dired)							\
 	  DIRED_FPUTS_LITERAL ("  ", stdout);				\
       }									\
     while (0)
@@ -854,8 +853,7 @@ static struct obstack subdired_obstack;
 #define PUSH_CURRENT_DIRED_POS(obs)					\
   do									\
     {									\
-      /* FIXME: remove the `&& format == long_format' clause.  */	\
-      if (dired && format == long_format)				\
+      if (dired)							\
 	obstack_grow ((obs), &dired_pos, sizeof (dired_pos));		\
     }									\
   while (0)
@@ -1128,7 +1126,7 @@ main (int argc, char **argv)
 		       && (recursive || print_with_color
 			   || indicator_style != none));
 
-  if (dired && format == long_format)
+  if (dired)
     {
       obstack_init (&dired_obstack);
       obstack_init (&subdired_obstack);
@@ -1207,7 +1205,7 @@ main (int argc, char **argv)
       print_dir_name = 1;
     }
 
-  if (dired && format == long_format)
+  if (dired)
     {
       /* No need to free these since we're about to exit.  */
       dired_dump_obstack ("//DIRED//", &dired_obstack);
@@ -1674,6 +1672,12 @@ decode_switches (int argc, char **argv)
 
   dirname_quoting_options = clone_quoting_options (NULL);
   set_char_quoting (dirname_quoting_options, ':', 1);
+
+  /* --dired is meaningful only with --format=long (-l).
+     Otherwise, ignore it.  FIXME: warn about this?
+     Alternatively, make --dired imply --format=long?  */
+  if (dired && format != long_format)
+    dired = 0;
 
   /* If -c or -u is specified and not -l (or any other option that implies -l),
      and no sort-type was specified, then sort by the ctime (-c) or atime (-u).
