@@ -20,6 +20,8 @@
 	(IS_PIPE_LIKE_FILE_TYPE): Define.
 	(main): Use new IS_PIPE_LIKE_FILE_TYPE rather than simply S_ISFIFO.
 	Reported by Nelson Beebe.
+	This same change is also required on NetBSD/sparc-1.5.
+	Reported by Adrian Bunk.
 
 	* src/expr.c (toarith): Rewrite to detect/diagnose integer overflow,
 	rather than suffering silently.
