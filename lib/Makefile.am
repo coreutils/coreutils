@@ -14,7 +14,7 @@ addext.c argmatch.c backupfile.c basename.c \
 closeout.c dirname.c exclude.c filemode.c \
 full-write.c human.c idcache.c \
 isdir.c long-options.c makepath.c modechange.c hash.c path-concat.c \
-safe-read.c save-cwd.c savedir.c stripslash.c userspec.c xgetcwd.c \
+quotearg.c safe-read.c save-cwd.c savedir.c stripslash.c userspec.c xgetcwd.c \
 xmalloc.c xstrdup.c xstrtol.c xstrtoul.c yesno.c
 
 libfu_a_LIBADD = @LIBOBJS@ @ALLOCA@
@@ -24,6 +24,6 @@ noinst_HEADERS = argmatch.h backupfile.h closeout.h \
 error.h exclude.h fnmatch.h fsusage.h \
 get-date.h getline.h getopt.h group-member.h human.h long-options.h \
 makepath.h modechange.h mountlist.h hash.h path-concat.h pathmax.h \
-save-cwd.h savedir.h strverscmp.h xalloc.h xstrtol.h xstrtoul.h
+quotearg.h save-cwd.h savedir.h strverscmp.h xalloc.h xstrtol.h xstrtoul.h
 
 BUILT_SOURCES = getdate.c posixtm.c
