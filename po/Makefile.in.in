@@ -8,7 +8,7 @@
 # Please note that the actual code of GNU gettext is covered by the GNU
 # General Public License and is *not* in the public domain.
 #
-# Origin: gettext-0.12.2
+# Origin: gettext-0.13
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
@@ -88,7 +88,7 @@ all-no:
 # $(POFILES) has been designed to not touch files that don't need to be
 # changed.
 stamp-po: $(srcdir)/$(DOMAIN).pot
-	test -z "$(CATALOGS)" || $(MAKE) $(CATALOGS)
+	test -z "$(GMOFILES)" || $(MAKE) $(GMOFILES)
 	@echo "touch stamp-po"
 	@echo timestamp > stamp-poT
 	@mv stamp-poT stamp-po
