@@ -1,5 +1,5 @@
 /* mountlist.h -- declarations for list of mounted filesystems
-   Copyright (C) 1991, 1992, 1998, 2000-2003 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1998, 2000-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -49,12 +49,10 @@ struct mount_entry *read_filesystem_list PARAMS ((int need_fs_type));
 
 #ifndef ME_REMOTE
 /* A file system is `remote' if its Fs_name contains a `:'
-   or if (it is of type smbfs and its Fs_name starts with `//')
-   or if Fs_type starts with `nfs'.  */
+   or if (it is of type smbfs and its Fs_name starts with `//').  */
 # define ME_REMOTE(Fs_name, Fs_type)	\
     (strchr ((Fs_name), ':') != 0	\
      || ((Fs_name)[0] == '/'		\
 	 && (Fs_name)[1] == '/'		\
-	 && STREQ (Fs_type, "smbfs"))	\
-     || (strncasecmp (Fs_type, "nfs", 3) == 0))
+	 && STREQ (Fs_type, "smbfs")))
 #endif
