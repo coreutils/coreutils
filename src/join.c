@@ -29,6 +29,7 @@
 #include "hard-locale.h"
 #include "linebuffer.h"
 #include "memcasecmp.h"
+#include "memcoll.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
