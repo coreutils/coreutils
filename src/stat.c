@@ -100,12 +100,12 @@
 #define AUTHORS "Michael Meskes"
 
 static struct option const long_options[] = {
-  {"link", no_argument, 0, 'l'}, /* deprecated.  FIXME: remove in 2003 */
-  {"dereference", no_argument, 0, 'L'},
-  {"file-system", no_argument, 0, 'f'},
-  {"filesystem", no_argument, 0, 'f'}, /* obsolete and undocumented alias */
-  {"format", required_argument, 0, 'c'},
-  {"terse", no_argument, 0, 't'},
+  {"link", no_argument, NULL, 'l'}, /* deprecated.  FIXME: remove in 2003 */
+  {"dereference", no_argument, NULL, 'L'},
+  {"file-system", no_argument, NULL, 'f'},
+  {"filesystem", no_argument, NULL, 'f'}, /* obsolete and undocumented alias */
+  {"format", required_argument, NULL, 'c'},
+  {"terse", no_argument, NULL, 't'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
