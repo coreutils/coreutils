@@ -1,3 +1,11 @@
+2005-03-21  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Another change imported from gnulib.
+	* memcasecmp.m4 (gl_MEMCASECMP): Renamed from gl_FUNC_MEMCASECMP.
+	All uses changed.  Require AC_HEADER_STDC instead of invoking it.
+	Remove check for stddef.h, size_t, const, since we now assume
+	C89 or better.
+
 2005-03-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* gettext.m4, inttypes.m4, isc-posix.m4, lib-link.m4, nls.m4,
