@@ -1,5 +1,5 @@
 /* stat.c -- display file or filesystem status
-   Copyright (C) 2001, 2002 Free Software Foundation.
+   Copyright (C) 2001, 2002, 2003 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -531,7 +531,7 @@ print_stat (char *pformat, char m, char const *filename, void const *data)
       break;
     case 'b':
       strcat (pformat, "u");
-      printf (pformat, (unsigned int) statbuf->st_blocks);
+      printf (pformat, (unsigned int) ST_NBLOCKS (*statbuf));
       break;
     case 'o':
       strcat (pformat, "d");
