@@ -1,9 +1,14 @@
-2003-10-02  Jim Meyering  <jim@meyering.net>
+2003-10-03  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.92.
 
+	* src/du.c: Accept --no-dereference (-P).
+
+2003-10-02  Jim Meyering  <jim@meyering.net>
+
 	* tests/du/trailing-slash: Adjust for slightly different output.
 
+	Rewrite du.c to use fts.
 	* src/du.c: Include "fts_.h", not ftw.h.
 	(opt_dereference_arguments, arg_length, suffix_length): Remove globals.
 	(IS_FTW_DIR_TYPE): Remove definition.
@@ -28,18 +33,7 @@
 
 2003-09-30  Jim Meyering  <jim@meyering.net>
 
-	Rewrite du.c to use fts.
-
-	Now, du works better:
-	- the depth of hierarchy du can process is no longer limited by
-	    the user's stack size (nftw uses explicit recursion, the fts
-	    implementation doesn't)
-	- works even when run from an inaccessible directory
-	- du -D now dereferences all symlinks specified on the command line,
-	    not just the ones that reference directories (FIXME: confirm
-	    this, and add a test)
 	In progress:
-	- du now accepts -P (--no-dereference)
 	- du -H now has the POSIX-required meaning (it's equivalent to -D;
 	    before, it was equivalent to --si)
         - Change fts semantics so that du uses O(N) heap space
