@@ -30,19 +30,19 @@ my @tv = (
 ['23', '-d',  "a\na\nb\n",       "a\n",             0],
 # Check the key options
 # If we skip over fields or characters, is the output deterministic?
-['30', '-1',  "a a\nb a\n",      "a a\n",           0],
+['obs30', '-1',  "a a\nb a\n",      "a a\n",           0],
 ['31', '-f 1',"a a\nb a\n",      "a a\n",           0],
 ['32', '-f 1',"a a\nb b\n",      "a a\nb b\n",      0],
 ['33', '-f 1',"a a a\nb a c\n",  "a a a\nb a c\n",  0],
 ['34', '-f 1',"b a\na a\n",      "b a\n",           0],
 ['35', '-f 2',"a a c\nb a c\n",  "a a c\n",         0],
 # Skip over characters.
-['40', '+1',  "aaa\naaa\n",      "aaa\n",           0],
-['41', '+1',  "baa\naaa\n",      "baa\n",           0],
+['obs40', '+1',  "aaa\naaa\n",      "aaa\n",           0],
+['obs41', '+1',  "baa\naaa\n",      "baa\n",           0],
 ['42', '-s 1',"aaa\naaa\n",      "aaa\n",           0],
 ['43', '-s 2',"baa\naaa\n",      "baa\n",           0],
-['44', '+1 --',  "aaa\naaa\n",   "aaa\n",           0],
-['45', '+1 --',  "baa\naaa\n",   "baa\n",           0],
+['obs44', '+1 --',  "aaa\naaa\n",   "aaa\n",           0],
+['obs45', '+1 --',  "baa\naaa\n",   "baa\n",           0],
 # Skip over fields and characters
 ['50', '-f 1 -s 1',"a aaa\nb ab\n",      "a aaa\nb ab\n",       0],
 ['51', '-f 1 -s 1',"a aaa\nb aaa\n",     "a aaa\n",             0],
@@ -92,6 +92,9 @@ sub test_vector
     {
       my ($test_name, $flags, $in, $exp, $ret) = @$t;
       $Test::input_via{$test_name} = {REDIR => 0, PIPE => 0};
+
+      $test_name =~ /^obs/
+	and $Test::env{$test_name} = ['_POSIX2_VERSION=199209'];
     }
 
   return @tv;
