@@ -183,9 +183,9 @@ FUNC_NAME (char const *s)						 \
   return val;								 \
 }									 \
 
-STRTOX (intmax_t,  vstrtoimax, (strtoimax (s, &end, 0)))
-STRTOX (uintmax_t, vstrtoumax, (strtoumax (s, &end, 0)))
-STRTOX (double,    vstrtod,    (c_strtod (s, &end)))
+STRTOX (intmax_t,    vstrtoimax, (strtoimax (s, &end, 0)))
+STRTOX (uintmax_t,   vstrtoumax, (strtoumax (s, &end, 0)))
+STRTOX (long double, vstrtold,   (c_strtold (s, &end)))
 
 /* Output a single-character \ escape.  */
 
@@ -334,22 +334,31 @@ print_direc (const char *start, size_t length, char conversion,
      integer length modifier.  */
   {
     char *q;
+    char const *length_modifier;
     size_t length_modifier_len;
 
     switch (conversion)
       {
       case 'd': case 'i': case 'o': case 'u': case 'x': case 'X':
+	length_modifier = PRIdMAX;
 	length_modifier_len = sizeof PRIdMAX - 2;
 	break;
 
+      case 'a': case 'e': case 'f': case 'g':
+      case 'A': case 'E': case 'F': case 'G':
+	length_modifier = "L";
+	length_modifier_len = 1;
+	break;
+
       default:
+	length_modifier = start;  /* Any valid pointer will do.  */
 	length_modifier_len = 0;
 	break;
       }
 
     p = xmalloc (length + length_modifier_len + 2);
     q = mempcpy (p, start, length);
-    q = mempcpy (q, PRIdMAX, length_modifier_len);
+    q = mempcpy (q, length_modifier, length_modifier_len);
     *q++ = conversion;
     *q = '\0';
   }
@@ -409,7 +418,7 @@ print_direc (const char *start, size_t length, char conversion,
     case 'g':
     case 'G':
       {
-	double arg = vstrtod (argument);
+	long double arg = vstrtold (argument);
 	if (!have_field_width)
 	  {
 	    if (!have_precision)
