@@ -1,3 +1,11 @@
+2001-01-10  Jim Meyering  <meyering@lucent.com>
+
+	* src/copy.c (copy_internal): Don't allow cp (or mv, when working
+	across a partition boundary) to overwrite a non-directory with a
+	directory.  Reported by Michael J. Croghan.
+	* tests/cp/dir-vs-file: New test for the above.
+	* tests/cp/Makefile.am (TESTS): Add dir-vs-file.
+
 2001-01-09  Jim Meyering  <meyering@lucent.com>
 
 	Give a better diagnostic for `cp -R a a'.
