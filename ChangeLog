@@ -9,6 +9,11 @@
 
 	* src/date.c: Don't include timespec.h, now that system.h does it.
 
+2004-01-31  Paul Eggert  <eggert@twinsun.com>
+
+	* src/stat.c (human_time): Accept time rather than
+	pointer-to-const-time parameter, for clarity.  All callers changed.
+
 2004-02-02  Jim Meyering  <jim@meyering.net>
 
 	* src/stat.c (do_stat): Remove extra trailing newline from
