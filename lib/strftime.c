@@ -658,8 +658,11 @@ strftime (s, maxsize, format, tp)
 
 	case 's':		/* GNU extension.  */
   	  {
-	    struct tm ltm = *tp;
-	    time_t t = mktime (&ltm);
+	    struct tm ltm;
+	    time_t t;
+
+	    ltm = *tp;
+	    t = mktime (&ltm);
 
 	    /* Generate string value for T using time_t arithmetic;
 	       this works even if sizeof (long) < sizeof (time_t).  */
@@ -803,8 +806,11 @@ strftime (s, maxsize, format, tp)
 	    diff = tp->tm_gmtoff;
 #else
 	    struct tm gtm;
-	    struct tm ltm = *tp;
-	    time_t lt = mktime (&ltm);
+	    struct tm ltm;
+	    time_t lt;
+
+	    ltm = *tp;
+	    lt = mktime (&ltm);
 
 	    if (lt == (time_t) -1)
 	      {
