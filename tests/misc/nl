@@ -1,0 +1,41 @@
+#!/bin/sh
+# exercise nl functionality
+
+if test "$VERBOSE" = yes; then
+  set -x
+  nl --version
+fi
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+fi
+
+fail=0
+
+echo a | nl > out || fail=1
+echo b | nl -s%n >> out || fail=1
+echo c | nl -n ln >> out || fail=1
+echo d | nl -n rn >> out || fail=1
+echo e | nl -n rz >> out || fail=1
+cat <<\EOF > exp
+     1	a
+     1%nb
+1     	c
+     1	d
+000001	e
+EOF
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
+(exit $fail); exit $fail
