@@ -1,3 +1,21 @@
+2000-03-03  Jim Meyering  <meyering@lucent.com>
+
+	* src/sort.c (fillbuf): Move declaration of local, cc, into scope of
+	`while' loop where it's used.
+
+2000-03-02  Paul Eggert  <eggert@set.twinsun.com>
+
+	Big performance improvement when sorting many small files,
+	building on a suggestion by Charles Randall.
+
+	* src/sort.c (fillbuf): Skip memmove if it would be a no-op,
+	as many memmove implementations are slow in that case.
+	Don't examine leftover bytes for eolchar, since they may be left
+	over from a previous file, and we want to read from this file.
+
+	(sort): At end of file, if there is more input and buffer room,
+	concatenate the next input file.
+
 2000-02-29  Jim Meyering  <meyering@lucent.com>
 
 	* src/join.c (make_blank): Add an explicit cast to `unsigned char *'
