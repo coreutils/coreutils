@@ -1,4 +1,4 @@
-#serial 3
+#serial 4
 
 dnl From Jim Meyering.
 dnl
@@ -8,6 +8,12 @@ dnl
 
 AC_DEFUN(jm_FUNC_GLIBC_UNLOCKED_IO,
   [
+    # Kludge (not executed) to make autoheader do the right thing.
+    test a = b &&
+      AC_CHECK_DECLS([clearerr_unlocked, feof_unlocked, ferror_unlocked,
+	fflush_unlocked, fputc_unlocked, fread_unlocked, fwrite_unlocked,
+	getc_unlocked, getchar_unlocked, putc_unlocked, putchar_unlocked])
+
     io_functions='clearerr_unlocked feof_unlocked ferror_unlocked
     fflush_unlocked fputc_unlocked fread_unlocked fwrite_unlocked
     getc_unlocked getchar_unlocked putc_unlocked putchar_unlocked'
@@ -16,7 +22,7 @@ AC_DEFUN(jm_FUNC_GLIBC_UNLOCKED_IO,
       # Otherwise, we'd get the Solaris5.5.1 functions that are not
       # declared, and that have been removed from Solaris5.6.  The resulting
       # 5.5.1 binaries would not run on 5.6 due to shared library differences.
-      AC_CHECK_DECLS(($jm_io_func),
+      AC_CHECK_DECLS([$jm_io_func],
 		     jm_declared=yes,
 		     jm_declared=no,
 		     [#include <stdio.h>])
