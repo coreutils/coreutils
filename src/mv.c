@@ -124,15 +124,20 @@ cp_option_init (struct cp_options *x)
   x->copy_as_regular = 0;  /* FIXME: maybe make this an option */
   x->dereference = 0;
   x->force = 0;
+  x->failed_unlink_is_fatal = 1;
   x->hard_link = 0;
   x->interactive = 0;
   x->myeuid = geteuid ();
   x->one_file_system = 0;
-  x->preserve = 1;
+  x->preserve_owner_and_group = 1;
+  x->preserve_chmod_bits = 1;
+  x->preserve_timestamps = 1;
   x->require_preserve = 0;  /* FIXME: maybe make this an option */
   x->recursive = 1;
   x->sparse_mode = SPARSE_AUTO;  /* FIXME: maybe make this an option */
   x->symbolic_link = 0;
+  x->set_mode = 0;
+  x->mode = 0;
 
   /* Find out the current file creation mask, to knock the right bits
      when using chmod.  The creation mask is set to be liberal, so
