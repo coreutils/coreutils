@@ -77,6 +77,10 @@
 
 #define AUTHORS "Colin Plumb"
 
+#if HAVE_CONFIG_H
+# include <config.h>
+#endif
+
 #include <getopt.h>
 #include <stdio.h>
 #include <setjmp.h>
@@ -84,8 +88,6 @@
 
 #if HAVE_CONFIG_H
 /* Default fileutils build */
-# include <config.h>
-
 # include "system.h"
 # include "xstrtol.h"
 # include "closeout.h"
