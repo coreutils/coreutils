@@ -152,6 +152,26 @@ static int      fts_safe_changedir __P((FTS *, FTSENT *, int, const char *))
 #define BNAMES		2		/* fts_children, names only */
 #define BREAD		3		/* fts_read */
 
+#if FTS_DEBUG
+int fts_debug = 0;
+# include <stdio.h>
+# define Dprintf(x) do { if (fts_debug) printf x; } while (0)
+#else
+# define Dprintf(x)
+#endif
+
+#define ENTER_DIR(Fts, Ent, Tag)				\
+  do {								\
+      Dprintf (("  %s-entering: %s\n", Tag, (Ent)->fts_path));	\
+      enter_dir (sp, p);					\
+    } while (0)
+
+#define LEAVE_DIR(Fts, Ent, Tag)				\
+  do {								\
+      Dprintf (("  %s-leaving: %s\n", Tag, (Ent)->fts_path));	\
+      leave_dir (sp, p);					\
+    } while (0)
+
 struct known_object
 {
   dev_t dev;
@@ -173,27 +193,66 @@ object_compare (const void *p1, const void *p2)
   return (kp1->dev > kp2->dev) - (kp1->dev < kp2->dev);
 }
 
-static inline int
-add_object (FTS *fts, FTSENT *data, const struct stat *st)
-{
-  struct known_object *newp = malloc (sizeof (struct known_object));
-  if (newp == NULL)
-    return -1;
-  newp->dev = st->st_dev;
-  newp->ino = st->st_ino;
-  newp->fts_ent = data;
-  return tsearch (newp, &fts->fts_dir_signatures, object_compare) ? 0 : -1;
-}
-
 static inline FTSENT *
 find_object (const FTS *fts, const struct stat *st)
 {
   struct known_object obj;
+  void const *tree_node;
   struct known_object const *t;
   obj.dev = st->st_dev;
   obj.ino = st->st_ino;
-  t = tfind (&obj, &fts->fts_dir_signatures, object_compare);
-  return t ? t->fts_ent : NULL;
+  tree_node = tfind (&obj, &fts->fts_dir_signatures, object_compare);
+  if ( ! tree_node)
+    return NULL;
+
+  t = *(void **)tree_node;
+  return t->fts_ent;
+}
+
+static void
+enter_dir (FTS *fts, FTSENT *ent)
+{
+  struct known_object *newp;
+  struct stat const *st = ent->fts_statp;
+
+  /*
+   * See if we've already encountered this directory.
+   * This can happen when following symlinks as well as
+   * with a corrupted directory hierarchy.
+   */
+  FTSENT *t = find_object (fts, st);
+  if (t)
+    {
+      ent->fts_cycle = t;
+      ent->fts_info = FTS_DC;
+      return;
+    }
+
+  newp = malloc (sizeof (struct known_object));
+  if (newp == NULL)
+    return;
+  newp->dev = st->st_dev;
+  newp->ino = st->st_ino;
+  newp->fts_ent = ent;
+  tsearch (newp, &fts->fts_dir_signatures, object_compare);
+}
+
+static inline void
+leave_dir (FTS *fts, FTSENT *ent)
+{
+  struct stat const *st = ent->fts_statp;
+  struct known_object obj;
+  obj.dev = st->st_dev;
+  obj.ino = st->st_ino;
+  void *found = tdelete (&obj, &fts->fts_dir_signatures, object_compare);
+  if (!found)
+    abort ();
+
+  /* FIXME: there's a leak here.  We want to
+     free the key data, but can't, because tdelete frees
+     the _tree_ data &!^!%#*, so we'd have to add a separate tfind.
+     Sheesh.  Soon I'll rip out tsearch.c and use hash.c
+     functions here instead. */
 }
 
 FTS *
@@ -338,6 +397,13 @@ fts_load(sp, p)
 	sp->fts_dev = p->fts_dev;
 }
 
+static void
+free_node (void *nodep)
+{
+  free (*(void **)nodep);
+  free (nodep);
+}
+
 int
 fts_close(sp)
 	FTS *sp;
@@ -374,7 +440,7 @@ fts_close(sp)
 	}
 
 	/* Free all of the directory fingerprint info.  */
-	tdestroy (sp->fts_dir_signatures, free);
+	tdestroy (sp->fts_dir_signatures, free_node);
 
 	/* Free up the stream pointer. */
 	free(sp);
@@ -421,6 +487,8 @@ fts_read(sp)
 		p->fts_info = fts_stat(sp, p, 0);
 		return (p);
 	}
+	Dprintf (("fts_read: p=%s\n",
+		  p->fts_info == FTS_INIT ? "" : p->fts_path));
 
 	/*
 	 * Following a symlink -- SLNONE test allows application to see
@@ -438,6 +506,8 @@ fts_read(sp)
 			} else
 				p->fts_flags |= FTS_SYMFOLLOW;
 		}
+		if (p->fts_info == FTS_D)
+			ENTER_DIR (sp, p, "7");
 		return (p);
 	}
 
@@ -453,6 +523,7 @@ fts_read(sp)
 				sp->fts_child = NULL;
 			}
 			p->fts_info = FTS_DP;
+			LEAVE_DIR (sp, p, "1");
 			return (p);
 		}
 
@@ -492,6 +563,8 @@ fts_read(sp)
 			   subdirectory, tell the caller.  */
 			if (p->fts_errno)
 				p->fts_info = FTS_ERR;
+			/* FIXME: see if this should be in an else block */
+			LEAVE_DIR (sp, p, "2");
 			return (p);
 		}
 		p = sp->fts_child;
@@ -514,6 +587,8 @@ next:	tmp = p;
 				return (NULL);
 			}
 			fts_load(sp, p);
+			if (p->fts_info == FTS_D)
+				ENTER_DIR (sp, p, "8");
 			return (sp->fts_cur = p);
 		}
 
@@ -540,6 +615,8 @@ next:	tmp = p;
 name:		t = sp->fts_path + NAPPEND(p->fts_parent);
 		*t++ = '/';
 		memmove(t, p->fts_name, p->fts_namelen + 1);
+		if (p->fts_info == FTS_D)
+			ENTER_DIR (sp, p, "9");
 		return (sp->fts_cur = p);
 	}
 
@@ -585,6 +662,8 @@ name:		t = sp->fts_path + NAPPEND(p->fts_parent);
 		return (NULL);
 	}
 	p->fts_info = p->fts_errno ? FTS_ERR : FTS_DP;
+	if (p->fts_errno == 0)
+		LEAVE_DIR (sp, p, "3");
 	return (sp->fts_cur = p);
 }
 
@@ -960,6 +1039,68 @@ mem1:				saved_errno = errno;
 	return (head);
 }
 
+#if FTS_DEBUG
+
+static FTSENT const *G_current_ent;
+
+/* Given dev/ino for a directory available through NODEP,
+   determine whether that directory is a parent directory
+   of G_current_ent.  */
+static void
+look_up_active_dir (const void *nodep, const VISIT which, const int depth)
+{
+  FTSENT const *ent;
+
+  if ( ! (which == preorder || which == leaf))
+    return;
+
+  struct known_object const *ko = *(void **)nodep;
+
+  for (ent = G_current_ent;
+       ent->fts_level >= FTS_ROOTLEVEL; ent = ent->fts_parent)
+    {
+      if (ko->ino == ent->fts_statp->st_ino
+	  && ko->dev == ent->fts_statp->st_dev)
+	return;
+    }
+  printf ("ERROR: tree dir, %s, not active\n", ko->fts_ent->fts_accpath);
+  printf ("active dirs:\n");
+  for (ent = G_current_ent;
+       ent->fts_level >= FTS_ROOTLEVEL; ent = ent->fts_parent)
+    printf ("  %s(%d/%d) to %s(%d/%d)...\n",
+	    ko->fts_ent->fts_accpath,
+	    (int)ko->dev,
+	    (int)ko->ino,
+	    ent->fts_accpath,
+	    (int)ent->fts_statp->st_dev,
+	    (int)ent->fts_statp->st_ino);
+}
+
+void
+fts_cross_check (FTS const *sp, FTSENT const *ent)
+{
+  FTSENT const *t;
+  Dprintf (("fts-cross-check %s\n", ent->fts_path));
+  /* Make sure every parent dir is in the tree.  */
+  for (t = ent->fts_parent; t->fts_level >= FTS_ROOTLEVEL; t = t->fts_parent)
+    {
+      FTSENT *found = find_object (sp, t->fts_statp);
+      if (found == NULL)
+	printf ("ERROR: active dir, %s, not in tree\n", t->fts_path);
+    }
+
+  /* Make sure every dir in the tree is an active dir.
+     But ENT is not necessarily a directory.  If so, just skip this part. */
+  if (ent->fts_parent->fts_level >= FTS_ROOTLEVEL
+      && (ent->fts_info == FTS_DP
+	  || ent->fts_info == FTS_D))
+    {
+      G_current_ent = ent;
+      twalk (sp->fts_dir_signatures, look_up_active_dir);
+    }
+}
+#endif
+
 static u_short
 internal_function
 fts_stat(sp, p, follow)
@@ -1006,7 +1147,6 @@ err:		memset(sbp, 0, sizeof(struct stat));
 	}
 
 	if (S_ISDIR(sbp->st_mode)) {
-		FTSENT *t;
 		/*
 		 * Set the device/inode.  Used to find cycles and check for
 		 * crossing mount points.  Also remember the link count, used
@@ -1020,20 +1160,6 @@ err:		memset(sbp, 0, sizeof(struct stat));
 
 		if (ISDOT(p->fts_name))
 			return (FTS_DOT);
-
-		/*
-		 * See if we've already encountered this directory.
-		 * This can happen when following symlinks as well as
-		 * with a corrupted directory hierarchy.
-		 */
-		if ((t = find_object (sp, sbp))) {
-			p->fts_cycle = t;
-			return (FTS_DC);
-		}
-
-		/* Remember the object, ignoring any failure.  If we're running
-		   out of memory, detecting cycles isn't a high priority.  */
-		add_object (sp, p, sbp);
 
 		return (FTS_D);
 	}
