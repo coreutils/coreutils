@@ -167,8 +167,6 @@ AC_DEFUN([jm_MACROS],
   # use the corresponding stub.
   AC_CHECK_FUNC([fchdir], , [AC_LIBOBJ(fchdir-stub)])
   AC_CHECK_FUNC([fchown], , [AC_LIBOBJ(fchown-stub)])
-
-  AC_REQUIRE([gl_READTOKENS])
 ])
 
 # These tests must be run before any use of AC_CHECK_TYPE,
