@@ -43,9 +43,9 @@
 #endif
 
 #if HAVE_UNISTD_H && defined(_PC_PATH_MAX) && _POSIX_NAME_MAX == 12
-# define PATH_MAX_IN_DIR(f) pathconf(f, _PC_PATH_MAX)
+# define PATH_MAX_IN_DIR(Dir) pathconf(Dir, _PC_PATH_MAX)
 #else
-# define PATH_MAX_IN_DIR(f) 255
+# define PATH_MAX_IN_DIR(Dir) 255
 #endif
 
 char *xstrdup ();
@@ -304,7 +304,7 @@ Write sorted concatenation of all FILE(s) to standard output.\n\
   -r               reverse the result of comparisons\n\
   -s               stabilize sort by disabling last resort comparison\n\
   -t SEP           use SEParator instead of non- to whitespace transition\n\
-  -T DIRECT        use DIRECT for temporary files, not $TMPDIR or %s\n\
+  -T DIRECTORY     use DIRECTORY for temporary files, not $TMPDIR or %s\n\
   -u               with -c, check for strict ordering;\n\
                    with -m, only output the first of an equal sequence\n\
   -z               end lines with 0 byte, not newline, for find -print0\n\
