@@ -1,3 +1,10 @@
+Sat Jan  4 21:14:36 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/ls.c (print_long_format): Clean up vestiges of legacy
+	ctime-oriented code.  With internationalization and strftime,
+	you can't presume that %a expands to a 3-byte string.
+	Reported by Ross Ridge.
+
 Fri Jan  3 21:08:29 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* acconfig.h (getgroups): Add #undef.
