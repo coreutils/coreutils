@@ -531,6 +531,9 @@ distdir: $(DISTFILES)
 	      || exit 1; \
 	  fi; \
 	done
+	$(MAKE) $(AM_MAKEFLAGS) \
+	  top_distdir="$(top_distdir)" distdir="$(distdir)" \
+	  dist-hook
 	-find $(distdir) -type d ! -perm -777 -exec chmod a+rwx {} \; -o \
 	  ! -type d ! -perm -444 -links 1 -exec chmod a+r {} \; -o \
 	  ! -type d ! -perm -400 -exec chmod a+r {} \; -o \
@@ -731,6 +734,9 @@ install-root:
 # Some tests always need root privileges, others need them only sometimes.
 check-root:
 	cd tests && $(MAKE) $@
+
+dist-hook:
+	test -x config/install-sh
 
 distcheck-hook:
 	$(MAKE) my-distcheck
