@@ -1,5 +1,8 @@
 Thu Apr  4 21:28:03 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
+	* configure.in (LINGUAS): Add de.
+	* po/de.po: New file.
+
 	* src/Makefile.am (EXTRAdir): Set to $(bindir).
 
 Wed Apr  3 06:12:23 1996  Jim Meyering  (meyering@na-net.ornl.gov)
