@@ -12,6 +12,14 @@ Sun Apr  7 11:58:13 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	(main): Suggest --help upon failure.
 	Reported by Karl Eichwalder <ke@ke.Central.DE>.
 
+	* seq.c (print_numbers): Fix off-by-one error in
+	backwards-counting loop.  Reported by Karl Eichwalder.
+	
+	* strftime.c (mon_week_ISO): New function to implement new %V format.
+	(sun_week): Make TM parameter `const'.
+	(mon_week): Likewise.
+	(mon_week): Rewrite to correctly implement %W format..
+
 Fri Apr  5 07:33:00 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* strftime.c (sun_week): Make %U work properly.
