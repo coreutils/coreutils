@@ -45,7 +45,7 @@
 2002-10-09  Jim Meyering  <meyering@lucent.com>
 
 	* tests/cp/backup-is-src: Ensure that certain environment variables
-	are not set (e.g., SIMPLA_BACKUP_SUFFIX).  Reported by Duncan Roe.
+	are not set (e.g., SIMPLE_BACKUP_SUFFIX).  Reported by Duncan Roe.
 
 	* tests/tail-2/big-4gb: Mark this as an expensive test; it would
 	consume 4GB of disk space on systems without support for sparse files.
