@@ -1,3 +1,7 @@
+2004-08-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* tests/install/basic-1: Test for the -d regression.
+
 2004-08-11  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* src/install.c (main): Fix -d regression introduced with
