@@ -50,19 +50,22 @@ ways to internationalization, predating GNU `gettext'.
 
    By default, this package will be installed to allow translation of
 messages.  It will automatically detect whether the system provides
-usable `catgets' or `gettext' functions.  If neither is available, the
-GNU `gettext' own library will be used.  This library is wholly
-contained within this package, usually in the `intl/' subdirectory, so
-prior installation of the GNU `gettext' package is *not* required.
-Installers may use special options at configuration time for changing
-the default behaviour.  The commands:
+usable `catgets' (if using this is selected by the installer) or
+`gettext' functions.  If neither is available, the GNU `gettext' own
+library will be used.  This library is wholly contained within this
+package, usually in the `intl/' subdirectory, so prior installation of
+the GNU `gettext' package is *not* required.  Installers may use
+special options at configuration time for changing the default
+behaviour.  The commands:
 
      ./configure --with-gnu-gettext
+     ./configure --with-catgets
      ./configure --disable-nls
 
 will respectively bypass any pre-existing `catgets' or `gettext' to use
-the internationalizing routines provided within this package, or else,
-*totally* disable translation of messages.
+the internationalizing routines provided within this package, enable
+the use of the `catgets' functions (if found on the locale system), or
+else, *totally* disable translation of messages.
 
    When you already have GNU `gettext' installed on your system and run
 configure without an option for your new package, `configure' will
@@ -75,6 +78,19 @@ package is more recent, you should use
      ./configure --with-gnu-gettext
 
 to prevent auto-detection.
+
+   By default the configuration process will not test for the `catgets'
+function and therefore they will not be used.  The reasons are already
+given above: the emulation on top of `catgets' cannot provide all the
+extensions provided by the GNU `gettext' library.  If you nevertheless
+want to use the `catgets' functions use
+
+     ./configure --with-catgets
+
+to enable the test for `catgets' (this causes no harm if `catgets' is
+not available on your system).  If you really select this option we
+would like to hear about the reasons because we cannot think of any
+good ones outself.
 
    Internationalized packages have usually many `po/LL.po' files, where
 LL gives an ISO 639 two-letter code identifying the language.  Unless
