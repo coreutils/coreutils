@@ -49,7 +49,8 @@
 #endif /* not STDC_HEADERS and not HAVE_STRING_H */
 
 #include "readtokens.h"
-#include "xalloc.h"
+void *xmalloc ();
+void *xrealloc ();
 
 #define STREQ(a,b) ((a) == (b) || ((a) && (b) && *(a) == *(b) \
 				   && strcmp(a, b) == 0))
