@@ -88,7 +88,7 @@ usage (int status)
 Usage: %s [OPTION] [INPUT [PREFIX]]\n\
 "),
 	      program_name);
-    printf (_("\
+    fputs (_("\
 Output fixed-size pieces of INPUT to PREFIXaa, PREFIXab, ...; default\n\
 PREFIX is `x'.  With no INPUT, or when INPUT is -, read standard input.\n\
 \n\
@@ -96,6 +96,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -b, --bytes=SIZE        put SIZE bytes per output file\n\
   -C, --line-bytes=SIZE   put at most SIZE bytes of lines per output file\n\
   -l, --lines=NUMBER      put NUMBER lines per output file\n\
+"), stdout);
+      fputs (_("\
   -NUMBER                 same as -l NUMBER\n\
       --verbose           print a diagnostic to standard error just\n\
                             before each output file is opened\n\
@@ -103,7 +105,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       --version           output version information and exit\n\
 \n\
 SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
