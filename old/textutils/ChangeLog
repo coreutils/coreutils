@@ -1,3 +1,11 @@
+Tue Jan 28 20:54:06 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/cut-test/mk-script.pl: Remove `t' prefix on all generated
+	test file names.
+	Change suffixes from (.in, .exp, .out, .err) to (.I, .X, .O, .E).
+	Ensure that no test file (generated or maintainer-supplied) has a
+	name longer than 14 characters.
+
 Sun Jan 26 12:49:50 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Version 1.22.
