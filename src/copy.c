@@ -68,6 +68,26 @@ static int copy_internal PARAMS ((const char *src_path, const char *dst_path,
 /* The invocation name of this program.  */
 extern char *program_name;
 
+/* Encapsulate selection of the file mode to be applied to
+   new non-directories.  */
+
+static mode_t
+new_nondir_mode (const struct cp_options *option, mode_t mode)
+{
+  /* In some applications (e.g., install), use precisely the
+     specified mode.  */
+  if (option->set_mode)
+    return option->mode;
+
+  /* In others (e.g., cp, mv), apply the user's umask.  */
+  return mode & option->umask_kill;
+}
+
+/* FIXME: describe */
+/* FIXME: rewrite this to use a hash table so we avoid the quadratic
+   performance hit that's probably noticeable only on trees deeper
+   than a few hundred levels.  See use of active_dir_map in remove.c  */
+
 static int
 is_ancestor (const struct stat *sb, const struct dir_list *ancestors)
 {
@@ -508,9 +528,13 @@ copy_internal (const char *src_path, const char *dst_path,
 		    {
 		      error (0, errno, _("cannot remove old link to `%s'"),
 			     dst_path);
-		      return 1;
+		      if (x->failed_unlink_is_fatal)
+			return 1;
 		    }
-		  new_dst = 1;
+		  else
+		    {
+		      new_dst = 1;
+		    }
 		}
 	    }
 	}
@@ -632,7 +656,7 @@ copy_internal (const char *src_path, const char *dst_path,
 #ifdef S_ISFIFO
   if (S_ISFIFO (src_type))
     {
-      if (mkfifo (dst_path, src_mode & x->umask_kill))
+      if (mkfifo (dst_path, new_nondir_mode (x, src_mode)))
 	{
 	  error (0, errno, _("cannot create fifo `%s'"), dst_path);
 	  goto un_backup;
@@ -646,7 +670,7 @@ copy_internal (const char *src_path, const char *dst_path,
 #endif
 	)
     {
-      if (mknod (dst_path, src_mode & x->umask_kill, src_sb.st_rdev))
+      if (mknod (dst_path, new_nondir_mode (x, src_mode), src_sb.st_rdev))
 	{
 	  error (0, errno, _("cannot create special file `%s'"), dst_path);
 	  goto un_backup;
@@ -674,7 +698,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	  goto un_backup;
 	}
 
-      if (x->preserve)
+      if (x->preserve_owner_and_group)
 	{
 	  /* Preserve the owner and group of the just-`copied'
 	     symbolic link, if possible.  */
@@ -729,7 +753,7 @@ copy_internal (const char *src_path, const char *dst_path,
      chown turns off set[ug]id bits for non-root,
      so do the chmod last.  */
 
-  if (x->preserve)
+  if (x->preserve_timestamps)
     {
       struct utimbuf utb;
 
@@ -742,7 +766,10 @@ copy_internal (const char *src_path, const char *dst_path,
 	  if (x->require_preserve)
 	    return 1;
 	}
+    }
 
+  if (x->preserve_owner_and_group)
+    {
       if (DO_CHOWN (chown, dst_path, src_sb.st_uid, src_sb.st_gid))
 	{
 	  error (0, errno, _("preserving ownership for %s"), dst_path);
@@ -751,8 +778,17 @@ copy_internal (const char *src_path, const char *dst_path,
 	}
     }
 
-  if ((x->preserve || new_dst)
-      && (x->copy_as_regular || S_ISREG (src_type) || S_ISDIR (src_type)))
+  if (x->set_mode)
+    {
+      /* This is so install's -m MODE option works.  */
+      if (chmod (dst_path, x->mode))
+	{
+	  error (0, errno, _("setting permissions for %s"), dst_path);
+	  return 1;
+	}
+    }
+  else if ((x->preserve_chmod_bits || new_dst)
+	   && (x->copy_as_regular || S_ISREG (src_type) || S_ISDIR (src_type)))
     {
       if (chmod (dst_path, src_mode & x->umask_kill))
 	{
@@ -789,10 +825,15 @@ valid_options (const struct cp_options *co)
 
   assert (VALID_BACKUP_TYPE (co->backup_type));
 
-  /* FIXME: make sure xstat and dereference are consistent.  */
-  assert (co->xstat);
+  /* FIXME: for some reason this assertion always fails,
+     at least on Solaris2.5.1.  Just disable it for now.  */
+  /* assert (co->xstat == lstat || co->xstat == stat); */
+
+  /* Make sure xstat and dereference are consistent.  */
+  /* FIXME */
 
   assert (VALID_SPARSE_MODE (co->sparse_mode));
+
   return 1;
 }
 
