@@ -28,11 +28,7 @@
 
 #include "system.h"
 
-#if WITH_REGEX
-# include <regex.h>
-#else
-# include <rx.h>
-#endif
+#include <regex.h>
 
 #include "error.h"
 #include "xstrtoul.h"
@@ -1150,9 +1146,6 @@ extract_regexp (int argnum, boolean ignore, char *str)
   p->re_compiled.buffer = (unsigned char *) xmalloc (p->re_compiled.allocated);
   p->re_compiled.fastmap = xmalloc (256);
   p->re_compiled.translate = 0;
-#if !WITH_REGEX
-  p->re_compiled.syntax_parens = 0;
-#endif
   err = re_compile_pattern (p->regexpr, len, &p->re_compiled);
   if (err)
     {
