@@ -60,7 +60,8 @@ struct dir_attr
 enum
 {
   TARGET_DIRECTORY_OPTION = CHAR_MAX + 1,
-  SPARSE_OPTION
+  SPARSE_OPTION,
+  STRIP_TRAILING_SLASHES_OPTION
 };
 
 int stat ();
@@ -80,6 +81,9 @@ char *program_name;
 /* If nonzero, the command "cp x/e_file e_dir" uses "e_dir/x/e_file"
    as its destination instead of the usual "e_dir/e_file." */
 static int flag_path = 0;
+
+/* Remove any trailing slashes from each SOURCE argument.  */
+static int remove_trailing_slashes;
 
 static char const *const sparse_type_string[] =
 {
@@ -108,6 +112,7 @@ static struct option const long_opts[] =
   {"path", no_argument, NULL, 'P'},
   {"preserve", no_argument, NULL, 'p'},
   {"recursive", no_argument, NULL, 'R'},
+  {"strip-trailing-slash", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
   {"suffix", required_argument, NULL, 'S'},
   {"symbolic-link", no_argument, NULL, 's'},
   {"target-directory", required_argument, NULL, TARGET_DIRECTORY_OPTION},
@@ -150,6 +155,8 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
                                  special files like FIFOs or /dev/zero\n\
       --sparse=WHEN            control creation of sparse files\n\
   -R, --recursive              copy directories recursively\n\
+      --strip-trailing-slashes remove any trailing slashes from each SOURCE\n\
+                                 argument\n\
   -s, --symbolic-link          make symbolic links instead of copying\n\
   -S, --suffix=SUFFIX          override the usual backup suffix\n\
       --target-directory=DIRECTORY  move all SOURCE arguments into DIRECTORY\n\
@@ -486,7 +493,8 @@ do_copy (int n_files, char **file, const char *target_directory,
 	  char *arg_in_concat = NULL;
 	  char *arg = file[i];
 
-	  strip_trailing_slashes (arg);
+	  if (remove_trailing_slashes)
+	    strip_trailing_slashes (arg);
 
 	  if (flag_path)
 	    {
@@ -598,7 +606,8 @@ do_copy (int n_files, char **file, const char *target_directory,
 
 	  tmp_source = (char *) alloca (strlen (source) + 1);
 	  strcpy (tmp_source, source);
-	  strip_trailing_slashes (tmp_source);
+	  if (remove_trailing_slashes)
+	    strip_trailing_slashes (tmp_source);
 	  source_base = base_name (tmp_source);
 
 	  new_dest = (char *) alloca (strlen (dest)
@@ -744,6 +753,10 @@ main (int argc, char **argv)
 	case 'R':
 	  x.recursive = 1;
 	  x.copy_as_regular = 0;
+	  break;
+
+	case STRIP_TRAILING_SLASHES_OPTION:
+	  remove_trailing_slashes = 1;
 	  break;
 
 	case 's':
