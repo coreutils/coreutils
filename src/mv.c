@@ -280,7 +280,8 @@ do_move (source, dest)
 	  && eaccess_stat (&dest_stats, W_OK))
 	{
 	  fprintf (stderr, "%s: replace `%s', overriding mode %04o? ",
-		   program_name, dest, dest_stats.st_mode & 07777);
+		   program_name, dest,
+		   (unsigned int) (dest_stats.st_mode & 07777));
 	  if (!yesno ())
 	    return 0;
 	}

@@ -238,7 +238,7 @@ remove_file (statp)
 	       program_name,
 	       S_ISDIR (statp->st_mode) ? "directory " : "",
 	       pathname,
-	       statp->st_mode & 07777);
+	       (unsigned int) (statp->st_mode & 07777));
       if (!yesno ())
 	return 1;
     }
@@ -284,7 +284,8 @@ remove_dir (statp)
     {
       fprintf (stderr,
 	       "%s: descend directory `%s', overriding mode %04o? ",
-	       program_name, pathname, statp->st_mode & 07777);
+	       program_name, pathname,
+	       (unsigned int) (statp->st_mode & 07777));
       if (!yesno ())
 	return 1;
     }

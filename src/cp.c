@@ -565,7 +565,8 @@ copy (src_path, dst_path, new_dst, device, ancestors)
 		  if (eaccess_stat (&dst_sb, W_OK) != 0)
 		    fprintf (stderr,
 			     "%s: overwrite `%s', overriding mode %04o? ",
-			     program_name, dst_path, dst_sb.st_mode & 07777);
+			     program_name, dst_path,
+			     (unsigned int) (dst_sb.st_mode & 07777));
 		  else
 		    fprintf (stderr, "%s: overwrite `%s'? ",
 			     program_name, dst_path);
@@ -765,7 +766,7 @@ copy (src_path, dst_path, new_dst, device, ancestors)
       int link_size;
 
       link_val = (char *) alloca (PATH_MAX + 2);
-      link_size = readlink (src_path, link_val, sizeof (link_val) - 1);
+      link_size = readlink (src_path, link_val, PATH_MAX + 1);
       if (link_size < 0)
 	{
 	  error (0, errno, "cannot read symbolic link `%s'", src_path);
