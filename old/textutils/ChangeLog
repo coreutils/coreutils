@@ -2,8 +2,9 @@ Wed Dec  4 21:03:18 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/tr.c (main) [!POSIXLY_CORRECT]: Allow the identity mappings:
 	[:upper:] to [:upper:] and [:lower:] to [:lower:].
-	(main) [POSIXLY_CORRECT]: Give a more specific diagnostic for the
-	identity mappings [:upper:] to [:upper:] and [:lower:] to [:lower:].
+	(main) [POSIXLY_CORRECT]: Give a more specific diagnostic for
+	the invalid identity mappings [:upper:] to [:upper:] and [:lower:]
+	to [:lower:].
 	(class_ok): Update table to reflect that tr now allows these
 	identity mappings.  Suggestion from Risto Kankkunen.
 
