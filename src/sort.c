@@ -30,7 +30,6 @@
 #include "system.h"
 #include "version.h"
 #include "long-options.h"
-#include "safe-stat.h"
 #include "error.h"
 
 #ifdef _POSIX_VERSION
@@ -1752,7 +1751,7 @@ main (argc, argv)
   if (strcmp (outfile, "-"))
     {
       struct stat outstat;
-      if (safe_stat (outfile, &outstat) == 0)
+      if (stat (outfile, &outstat) == 0)
 	{
 	  /* The following code prevents a race condition when
 	     people use the brain dead shell programming idiom:
@@ -1773,7 +1772,7 @@ main (argc, argv)
 		{
 		  struct stat instat;
 		  if ((strcmp (files[i], "-")
-		       ? safe_stat (files[i], &instat)
+		       ? stat (files[i], &instat)
 		       : fstat (fileno (stdin), &instat)) != 0)
 		    {
 		      error (0, errno, "%s", files[i]);
