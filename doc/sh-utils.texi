@@ -122,7 +122,7 @@ by the Foundation.
 @cindex utilities for shell programming
 
 This manual minimally documents version @value{VERSION} of the GNU shell
-utilities.  See the introduction for caveats.
+utilities.
 
 @menu
 * Introduction::		Caveats, overview, and authors.
@@ -161,17 +161,18 @@ a great extent).  Others are occasionally useful interactively.
 @cindex POSIX.2
 The GNU shell utilities are mostly compatible with the POSIX.2 standard.
 
+@cindex bugs, reporting
 Please report bugs to @samp{bug-gnu-utils@@prep.ai.mit.edu}.  Remember
 to include the version number, machine architecture, input files, and
 any other information needed to reproduce the bug.  @xref{Bugs, , , gcc,
 GNU CC}.
 
+@cindex history
 This manual is based on the Unix man pages in the distribution, which
 were originally written by David MacKenzie and updated by Jim Meyering.
-@c This is odd -- looks like a bug in makeinfo.
 @c If the following space before `@value' is removed, makeinfo
 @c fails to substitute the value for Francois.  Instead, it reports
-@c `F{No Value For "rancois"}...'.
+@c `F{No Value For "rancois"}...'.  This is a bug in makeinfo.
 @c So please don't remove that leading space for now.
  @value{Francois} Pinard did the initial conversion to Texinfo format.
 Karl Berry did the indexing, some reorganization, and editing of the results.
@@ -186,10 +187,10 @@ overall process.
 
 Certain options are available in all these programs.  Rather than
 writing identical descriptions for each of the programs, they are
-described here.  In fact, every GNU program accepts (or should accept)
-these options.
+described here.  (In fact, every GNU program accepts (or should accept)
+these options.)
 
-Many shell utilities take arbitrary strings as arguments.  In those
+Many of these programs take arbitrary strings as arguments.  In those
 cases, @samp{--help} and @samp{--version} are taken as these options
 only if there is one and exactly one command line argument.
 
