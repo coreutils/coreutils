@@ -101,10 +101,34 @@ AC_DEFUN([jm_PREREQ_MEMCHR],
   AC_CHECK_HEADERS(limits.h stdlib.h bp-sym.h)
 ])
 
+# Check for the external symbol, _system_configuration,
+# a struct with member `physmem'.
+AC_DEFUN([gl_SYS__SYSTEM_CONFIGURATION],
+  [AC_CACHE_CHECK(for external symbol _system_configuration,
+		  gl_cv_var__system_configuration,
+    [AC_LINK_IFELSE([AC_LANG_PROGRAM(
+		      [[#include <sys/systemcfg.h>
+		      ]],
+		      [double x = _system_configuration.physmem;])],
+      [gl_cv_var__system_configuration=yes],
+      [gl_cv_var__system_configuration=no])])
+
+    if test $gl_cv_var__system_configuration = yes; then
+      AC_DEFINE(HAVE__SYSTEM_CONFIGURATION, 1,
+		[Define to 1 if you have the external variable,
+		_system_configuration with a member named physmem.])
+    fi
+  ]
+)
+
 AC_DEFUN([jm_PREREQ_PHYSMEM],
 [
-  AC_CHECK_HEADERS(sys/pstat.h unistd.h sys/sysmp.h)
-  AC_CHECK_FUNCS(pstat_getstatic pstat_getdynamic)
+  AC_CHECK_HEADERS([unistd.h sys/pstat.h sys/sysmp.h sys/sysinfo.h \
+    machine/hal_sysinfo.h sys/table.h sys/param.h sys/sysctl.h \
+    sys/systemcfg.h])
+  AC_CHECK_FUNCS(pstat_getstatic pstat_getdynamic sysmp getsysinfo sysctl)
+
+  AC_REQUIRE([gl_SYS__SYSTEM_CONFIGURATION])
 ])
 
 AC_DEFUN([jm_PREREQ_POSIXVER],
