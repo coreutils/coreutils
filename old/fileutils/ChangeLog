@@ -1,3 +1,22 @@
+Sun Oct 29 06:06:13 1995  Jim Meyering  (meyering@comco.com)
+
+	* aclocal.m4 (jm_WITH_AUTODEPS): New directive.
+	* configure.in: Use it.
+
+	* lib/Makefile.in (INCLUDE, COMPILE): New variables.
+	(.c.o): Rewrite to be more like src/Makefile.in.
+	Add line that (--with-autodeps) will include mkdep-Makefile.
+	(distclean): Remove .deps.
+	* src/Makefile.in: Likewise.
+
+	* mkdep-Makefile: New file.
+	* Makefile.in (DISTFILES): Add mkdep-Makefile.
+	
+	* doc/Makefile.in (mostlyclean): Remove *.info.
+
+	* touch.c: Change long option name `file' to `reference'.
+ 	(usage): Reflect option name change.  From Franc,ois Pinard.
+
 Wed Oct 18 23:09:55 1995  Jim Meyering  (meyering@comco.com)
 
 	* configure.in (AC_CHECK_HEADERS): Add sys/wait.h and sys/ioctl.h.

@@ -1,5 +1,19 @@
 Sat Oct 28 00:49:13 1995  Jim Meyering  (meyering@comco.com)
 
+	* aclocal.m4 (jm_WITH_AUTODEPS): New directive.
+	* configure.in: Use it.
+
+	* lib/Makefile.in (INCLUDE, COMPILE): New variables.
+	(.c.o): Rewrite to be more like src/Makefile.in.
+	Add line that (--with-autodeps) will include mkdep-Makefile.
+	(distclean): Remove .deps.
+	* src/Makefile.in: Likewise.
+
+	* mkdep-Makefile: New file.
+	* Makefile.in (DISTFILES): Add mkdep-Makefile.
+
+	* doc/Makefile.in (mostlyclean): Remove *.info.
+
 	* date.c: New option --reference=FILE (-r FILE) analogous to the
 	like-named touch option.
  	(main): Recognize it and give diagnostic for misuse.
