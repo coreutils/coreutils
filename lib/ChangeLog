@@ -1,5 +1,17 @@
-2000-05-15  Jim Meyering  <meyering@lucent.com>
+2000-05-15  Paul Eggert  <eggert@twinsun.com>
 
+	* lib/closeout.c:
+	<sys/stat.h>, <sys/types.h>, <unistd.h>, (STDOUT_FILENO):
+	Remove; no longer needed.
+	"quotearg.h": Add include.
+	(file_name): Do not bother to explicitly initialize to NULL; it's less
+	efficient on some hosts.
+	(close_stdout_status): Remove test as to whether stdout was already
+	closed; it breaks for the case "echo x | sort >&-".
+	Quote file name colons.
+	Do not assume that _("write error") lacks format strings.
+
+2000-05-15  Jim Meyering  <meyering@lucent.com>
 
 	* version-etc.c (version_etc_copyright): Update the copyright string
 	used in all --version output.
