@@ -1,3 +1,8 @@
+2001-12-15  Jim Meyering  <meyering@lucent.com>
+
+	* mountlist.h (ME_REMOTE): Recognize file systems of type smbfs
+	as `remote' if the name starts with `//'.  Suggested by Michael Stone.
+
 2001-12-10  Jim Meyering  <meyering@lucent.com>
 
 	* linebuffer.c: Remove explicit declarations of xmalloc and xrealloc,
