@@ -1,8 +1,13 @@
+1999-11-13  Jim Meyering  <meyering@ascend.com>
+
+	* tests/touch/no-rights: New test for this.
+	* tests/touch/Makefile.am (TESTS): Add no-rights.
+
 1999-11-12  Jim Meyering  <meyering@ascend.com>
 
 	* src/remove.c (print_nth_dir): Write one fewer byte so we don't print
 	a trailing slash.
-	(rm): Fix bugs in (and test, this time) the very-rarely-used code
+	(rm): Fix bugs in (and test, this time) the very rarely used code
 	to warn about directory cycles.
 	Reported by michael@roka.net.
 
