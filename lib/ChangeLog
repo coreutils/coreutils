@@ -1,3 +1,8 @@
+2002-03-10  Jim Meyering  <meyering@lucent.com>
+
+	* makepath.c (make_path): Remove a comma from a diagnostic.
+	Suggestion from Santiago Vila.
+
 2002-03-08  Jim Meyering  <meyering@lucent.com>
 
 	* rename.c: Mention that this wrapper is needed also on
