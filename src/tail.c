@@ -208,7 +208,7 @@ enum
   MAX_CONSECUTIVE_SIZE_CHANGES_OPTION,
 
   PID_OPTION,
-  LONG_FOLLOW_OPTION,
+  LONG_FOLLOW_OPTION
 };
 
 static struct option const long_options[] =
