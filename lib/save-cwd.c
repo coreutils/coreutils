@@ -1,5 +1,5 @@
 /* save-cwd.c -- Save and restore current working directory.
-   Copyright (C) 1995 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1997 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@
 #endif
 
 #include <errno.h>
-# ifndef errno
+#ifndef errno
 extern int errno;
 #endif
 
@@ -96,7 +96,7 @@ save_cwd (cwd)
 	}
 # endif /* __sun__ || sun */
 #else
-#define fchdir(x) (abort (), 0)
+# define fchdir(x) (abort (), 0)
       have_working_fchdir = 0;
 #endif
     }
@@ -152,4 +152,3 @@ free_cwd (cwd)
   if (cwd->name)
     free (cwd->name);
 }
-
