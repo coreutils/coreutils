@@ -149,3 +149,9 @@ Changes expected to go in, post-5.2.0:
     This will mean adding \n to default formats, internally.
 
   test/mv/*: clean up $other_partition_tmpdir in all cases
+
+  ls: when both -l and --dereference-command-line-symlink-to-dir are
+  specified, consider whether to let the latter select whether to
+  dereference command line symlinks to directories.  Since -l has
+  an implicit --NO-dereference-command-line-symlink-to-dir meaning.
+  Pointed out by Karl Berry.
