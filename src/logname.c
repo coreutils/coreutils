@@ -1,5 +1,5 @@
 /* logname -- print user's login name
-   Copyright (C) 1990-1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1990-1997, 1999-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -81,21 +81,21 @@ main (int argc, char **argv)
 	  break;
 
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 
   if (argc - optind != 0)
-    usage (1);
+    usage (EXIT_FAILURE);
 
   /* POSIX requires using getlogin (or equivalent code).  */
   cp = getlogin ();
   if (cp)
     {
       puts (cp);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
   /* POSIX prohibits using a fallback technique.  */
   fprintf (stderr, _("%s: no login name\n"), argv[0]);
-  exit (1);
+  exit (EXIT_FAILURE);
 }

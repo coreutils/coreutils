@@ -206,12 +206,12 @@ main (int argc, char **argv)
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 
   if (optind != argc)
-    usage (1);
+    usage (EXIT_FAILURE);
 
   if (toprint == 0)
     toprint = PRINT_KERNEL_NAME;
@@ -289,5 +289,5 @@ main (int argc, char **argv)
 
   putchar ('\n');
 
-  exit (0);
+  exit (EXIT_SUCCESS);
 }

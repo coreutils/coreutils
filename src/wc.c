@@ -565,7 +565,7 @@ main (int argc, char **argv)
       case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
       default:
-	usage (1);
+	usage (EXIT_FAILURE);
       }
 
   if (print_lines + print_words + print_chars + print_bytes + print_linelength

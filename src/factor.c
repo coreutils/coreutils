@@ -1,5 +1,5 @@
 /* factor -- print prime factors of n.
-   Copyright (C) 86, 1995-2001 Free Software Foundation, Inc.
+   Copyright (C) 86, 1995-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -217,7 +217,7 @@ main (int argc, char **argv)
 	fail |= print_factors (argv[i]);
     }
   if (fail)
-    usage (1);
+    usage (EXIT_FAILURE);
 
   exit (fail);
 }

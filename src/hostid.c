@@ -1,5 +1,5 @@
 /* print the hexadecimal identifier for the current host
-   Copyright (C) 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -77,7 +77,7 @@ main (int argc, char **argv)
   if (argc > 1)
     {
       error (0, 0, _("too many arguments"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   id = gethostid ();

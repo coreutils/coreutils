@@ -477,7 +477,7 @@ main (int argc, char **argv)
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	  break;
 	}
     }
@@ -488,7 +488,7 @@ main (int argc, char **argv)
   if (n_files == 0)
     {
       error (0, 0, _("missing file argument"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   target_directory_specified = (target_directory != NULL);
@@ -520,7 +520,7 @@ main (int argc, char **argv)
     {
       error (0, 0, _("%s: specified target directory is not a directory"),
 	     quote (target_directory));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (backup_suffix_string)

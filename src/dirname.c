@@ -88,7 +88,7 @@ main (int argc, char **argv)
     {
       error (0, 0, argc < 2 ? _("too few arguments")
 	     : _("too many arguments"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   result = argv[1];
@@ -103,5 +103,5 @@ main (int argc, char **argv)
   fwrite (result, 1, len, stdout);
   putchar ('\n');
 
-  exit (0);
+  exit (EXIT_SUCCESS);
 }

@@ -118,7 +118,7 @@ main (int argc, char **argv)
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 
@@ -144,7 +144,7 @@ main (int argc, char **argv)
       else
 	msg = _("wrong number of arguments");
       error (0, 0, "%s", msg);
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   /* Only check the first character, to allow mnemonic usage like
@@ -175,7 +175,7 @@ main (int argc, char **argv)
 	  error (0, 0, _("\
 when creating special files, major and minor device\n\
 numbers must be specified"));
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
 
       {
@@ -213,7 +213,7 @@ numbers must be specified"));
 	{
 	  error (0, 0, _("\
 major and minor device numbers may not be specified for fifo files"));
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
       if (mkfifo (argv[optind], newmode))
 	error (EXIT_FAILURE, errno, "%s", quote (argv[optind]));
@@ -222,7 +222,7 @@ major and minor device numbers may not be specified for fifo files"));
 
     default:
       error (0, 0, "invalid device type %s", quote (argv[optind + 1]));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   /* Perform an explicit chmod to ensure the file mode permission bits
@@ -236,5 +236,5 @@ major and minor device numbers may not be specified for fifo files"));
                quote (argv[optind]));
     }
 
-  exit (0);
+  exit (EXIT_SUCCESS);
 }

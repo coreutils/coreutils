@@ -341,7 +341,7 @@ main (int argc, char **argv)
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 
@@ -351,7 +351,7 @@ main (int argc, char **argv)
   if (optind >= argc)
     {
       error (0, 0, _("too few arguments"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   changes = (reference_file ? mode_create_from_ref (reference_file)

@@ -1,5 +1,5 @@
 /* GNU's users.
-   Copyright (C) 1992-2001 Free Software Foundation, Inc.
+   Copyright (C) 1992-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -151,7 +151,7 @@ main (int argc, char **argv)
 	  break;
 
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 
@@ -167,8 +167,8 @@ main (int argc, char **argv)
 
     default:			/* lose */
       error (0, 0, _("too many arguments"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
-  exit (0);
+  exit (EXIT_SUCCESS);
 }

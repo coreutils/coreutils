@@ -431,7 +431,7 @@ main (int argc, char **argv)
 	  if (nfiles == 2)
 	    {
 	      error (0, 0, _("extra operand `%s'"), argv[optind]);
-	      usage (1);
+	      usage (EXIT_FAILURE);
 	    }
 	  file[nfiles++] = argv[optind++];
 	}
@@ -448,7 +448,7 @@ main (int argc, char **argv)
 	    else if (nfiles == 2)
 	      {
 		error (0, 0, _("extra operand `%s'"), optarg);
-		usage (1);
+		usage (EXIT_FAILURE);
 	      }
 	    else
 	      file[nfiles++] = optarg;
@@ -521,7 +521,7 @@ main (int argc, char **argv)
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 
@@ -536,7 +536,7 @@ main (int argc, char **argv)
     {
       error (0, 0,
 	   _("printing all duplicated lines and repeat counts is meaningless"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   check_file (file[0], file[1]);

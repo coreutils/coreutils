@@ -1454,13 +1454,13 @@ main (int argc, char **argv)
       case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
       default:
-	usage (1);
+	usage (EXIT_FAILURE);
       }
 
   if (argc - optind < 2)
     {
       error (0, 0, _("too few arguments"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (suffix)

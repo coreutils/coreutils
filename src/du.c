@@ -380,7 +380,7 @@ pop_dir (struct saved_cwd *cwd, const char *curr_dir_name)
   if (cwd)
     {
       if (restore_cwd (cwd, "..", curr_dir_name))
-	exit (1);
+	exit (EXIT_FAILURE);
       free_cwd (cwd);
     }
   else if (chdir ("..") < 0)
@@ -456,7 +456,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 	      && S_ISLNK (e_buf.st_mode)))
 	{
 	  if (save_cwd (&cwd_buf))
-	    exit (1);
+	    exit (EXIT_FAILURE);
 	  cwd = &cwd_buf;
 	}
       else
@@ -671,14 +671,14 @@ main (int argc, char **argv)
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 
   if (opt_all && opt_summarize_only)
     {
       error (0, 0, _("cannot both summarize and show all entries"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (opt_summarize_only && max_depth_specified && max_depth == 0)
@@ -692,7 +692,7 @@ main (int argc, char **argv)
       error (0, 0,
 	     _("warning: summarizing conflicts with --max-depth=%d"),
 	       max_depth);
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (opt_summarize_only)

@@ -1,5 +1,5 @@
 /* GNU fmt -- simple text formatter.
-   Copyright (C) 1994-2001 Free Software Foundation, Inc.
+   Copyright (C) 1994-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -356,7 +356,7 @@ main (register int argc, register char **argv)
     switch (optchar)
       {
       default:
-	usage (1);
+	usage (EXIT_FAILURE);
 
       case 0:
 	break;

@@ -351,7 +351,7 @@ main (int argc, char **argv)
       case_GETOPT_HELP_CHAR;
       case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
       default:
-	usage (1);
+	usage (EXIT_FAILURE);
       }
 
   n_args = argc - optind;
@@ -364,21 +364,21 @@ main (int argc, char **argv)
     {
       error (0, 0,
 	_("the options to specify dates for printing are mutually exclusive"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (set_date && option_specified_date)
     {
       error (0, 0,
 	  _("the options to print and set the time may not be used together"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (n_args > 1)
     {
       error (0, 0, _("too many non-option arguments: %s%s"),
 	     argv[optind + 1], n_args == 2 ? "" : " ...");
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if ((set_date || option_specified_date)
@@ -389,7 +389,7 @@ the argument `%s' lacks a leading `+';\n\
 When using an option to specify date(s), any non-option\n\
 argument must be a format string beginning with `+'."),
 	     argv[optind]);
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   /* Simply ignore --rfc-822 if specified when setting the date.  */
@@ -398,7 +398,7 @@ argument must be a format string beginning with `+'."),
       error (0, 0,
 	     _("a format string may not be specified when using\
  the --rfc-822 (-R) option"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (set_date)

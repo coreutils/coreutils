@@ -358,7 +358,7 @@ main (int argc, char **argv)
 	  break;
 
 	case '?':
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	case 'i':
 	  convert_entire_line = 0;
 	  break;

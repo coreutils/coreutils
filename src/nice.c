@@ -139,7 +139,7 @@ main (int argc, char **argv)
 	      switch (optc)
 		{
 		case '?':
-		  usage (1);
+		  usage (EXIT_FAILURE);
 
 		case 'n':
 		  if (xstrtol (optarg, NULL, 10, &adjustment, "")
@@ -169,7 +169,7 @@ main (int argc, char **argv)
       if (adjustment_given)
 	{
 	  error (0, 0, _("a command must be given with an adjustment"));
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
       /* No command given; print the priority. */
       errno = 0;
@@ -177,7 +177,7 @@ main (int argc, char **argv)
       if (current_priority == -1 && errno != 0)
 	error (EXIT_FAILURE, errno, _("cannot get priority"));
       printf ("%d\n", current_priority);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 
 #ifndef NICE_PRIORITY

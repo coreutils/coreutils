@@ -1,5 +1,5 @@
 /* printenv -- print all or part of environment
-   Copyright (C) 1989-1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1989-1997, 1999-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -103,7 +103,7 @@ main (int argc, char **argv)
 	  break;
 
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 

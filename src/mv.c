@@ -444,7 +444,7 @@ main (int argc, char **argv)
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 
@@ -460,7 +460,7 @@ main (int argc, char **argv)
   if (n_files == 0 || (n_files == 1 && !target_directory_specified))
     {
       error (0, 0, _("missing file argument"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (target_directory_specified)
@@ -469,14 +469,14 @@ main (int argc, char **argv)
 	{
 	  error (0, 0, _("specified target, %s is not a directory"),
 		 quote (target_directory));
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
   else if (n_files > 2 && !dest_is_dir)
     {
       error (0, 0,
 	    _("when moving multiple files, last argument must be a directory"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (backup_suffix_string)

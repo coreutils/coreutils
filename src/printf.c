@@ -1,5 +1,5 @@
 /* printf - format and print data
-   Copyright (C) 1990-2001, Free Software Foundation, Inc.
+   Copyright (C) 1990-2002, Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -206,7 +206,7 @@ print_esc_char (int c)
       putchar (8);
       break;
     case 'c':			/* Cancel the rest of the output. */
-      exit (0);
+      exit (EXIT_SUCCESS);
       break;
     case 'f':			/* Form feed. */
       putchar (12);
@@ -548,7 +548,7 @@ main (int argc, char **argv)
   if (argc == 1)
     {
       fprintf (stderr, _("Usage: %s format [argument...]\n"), program_name);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   format = argv[1];

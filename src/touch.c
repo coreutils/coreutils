@@ -336,7 +336,7 @@ main (int argc, char **argv)
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 
@@ -347,7 +347,7 @@ main (int argc, char **argv)
       || (posix_date && flexible_date))
     {
       error (0, 0, _("cannot specify times from more than one source"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (use_ref)
@@ -390,7 +390,7 @@ main (int argc, char **argv)
   if (optind == argc)
     {
       error (0, 0, _("file arguments missing"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   for (; optind < argc; ++optind)

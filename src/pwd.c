@@ -1,5 +1,5 @@
 /* pwd - print current directory
-   Copyright (C) 1994-1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1994-1997, 1999-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -79,5 +79,5 @@ main (int argc, char **argv)
     error (EXIT_FAILURE, errno, _("cannot get current directory"));
   printf ("%s\n", wd);
 
-  exit (0);
+  exit (EXIT_SUCCESS);
 }

@@ -257,11 +257,11 @@ main (int argc, char **argv)
       case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
       default:
-	usage (1);
+	usage (EXIT_FAILURE);
       }
 
   if (optind + 2 != argc)
-    usage (1);
+    usage (EXIT_FAILURE);
 
   exit (compare_files (argv + optind) == 0
 	? EXIT_SUCCESS : EXIT_FAILURE);

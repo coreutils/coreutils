@@ -1,5 +1,5 @@
 /* echo.c, derived from code echo.c in Bash.
-   Copyright (C) 87,89, 1991-1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 87,89, 1991-1997, 1999-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -244,5 +244,5 @@ just_echo:
     }
   if (display_return)
     putchar ('\n');
-  exit (0);
+  exit (EXIT_SUCCESS);
 }

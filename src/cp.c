@@ -491,12 +491,12 @@ do_copy (int n_files, char **file, const char *target_directory,
   if (n_files <= 0)
     {
       error (0, 0, _("missing file arguments"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
   if (n_files == 1 && !target_directory)
     {
       error (0, 0, _("missing destination file"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (target_directory)
@@ -545,7 +545,7 @@ do_copy (int n_files, char **file, const char *target_directory,
 	{
 	  error (0, 0, _("%s: specified target is not a directory"),
 		 quote (dest));
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
 
       if (n_files > 1)
@@ -553,7 +553,7 @@ do_copy (int n_files, char **file, const char *target_directory,
 	  error (0, 0,
 	 _("copying multiple files, but last argument %s is not a directory"),
 	     quote (dest));
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 
@@ -650,7 +650,7 @@ do_copy (int n_files, char **file, const char *target_directory,
 	{
 	  error (0, 0,
 	       _("when preserving paths, the destination must be a directory"));
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
 
       source = file[0];
@@ -999,14 +999,14 @@ main (int argc, char **argv)
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 
   if (x.hard_link && x.symbolic_link)
     {
       error (0, 0, _("cannot make both hard and symbolic links"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (backup_suffix_string)

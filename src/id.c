@@ -154,7 +154,7 @@ main (int argc, char **argv)
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 
@@ -166,7 +166,7 @@ main (int argc, char **argv)
 	   _("cannot print only names or real IDs in default format"));
 
   if (argc - optind > 1)
-    usage (1);
+    usage (EXIT_FAILURE);
 
   if (argc - optind == 1)
     {

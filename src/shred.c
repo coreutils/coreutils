@@ -1597,7 +1597,7 @@ main (int argc, char **argv)
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 
@@ -1607,7 +1607,7 @@ main (int argc, char **argv)
   if (n_files == 0)
     {
       error (0, 0, _("missing file argument"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   for (i = 0; i < n_files; i++)

@@ -76,7 +76,7 @@ main (int argc, char **argv)
   if (argc == 1)
     {
       error (0, 0, _("too few arguments"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (chroot (argv[1]))

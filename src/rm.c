@@ -187,18 +187,18 @@ main (int argc, char **argv)
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 
   if (optind == argc)
     {
       if (x.ignore_missing_files)
-	exit (0);
+	exit (EXIT_SUCCESS);
       else
 	{
 	  error (0, 0, _("too few arguments"));
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 

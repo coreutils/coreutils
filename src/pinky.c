@@ -1,5 +1,5 @@
 /* GNU's pinky.
-   Copyright (C) 1992-1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1992-1997, 1999-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -563,7 +563,7 @@ main (int argc, char **argv)
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 
@@ -573,7 +573,7 @@ main (int argc, char **argv)
     {
       error (0, 0, _("no username specified; at least one must be\
  specified when using -l"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (do_short_format)
@@ -581,5 +581,5 @@ main (int argc, char **argv)
   else
     long_pinky (n_users, argv + optind);
 
-  exit (0);
+  exit (EXIT_SUCCESS);
 }

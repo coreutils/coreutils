@@ -504,7 +504,7 @@ parse_conversion (char *str)
       if (conversions[i].convname == NULL)
 	{
 	  error (0, 0, _("invalid conversion: %s"), quote (str));
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
       str = new;
   } while (new != NULL);
@@ -560,7 +560,7 @@ scanargs (int argc, char **argv)
       if (val == NULL)
 	{
 	  error (0, 0, _("unrecognized option %s"), quote (name));
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
       *val++ = '\0';
 
@@ -608,7 +608,7 @@ scanargs (int argc, char **argv)
 	    {
 	      error (0, 0, _("unrecognized option %s=%s"),
 		     quote_n (0, name), quote_n (1, val));
-	      usage (1);
+	      usage (EXIT_FAILURE);
 	    }
 
 	  if (invalid)

@@ -1,5 +1,5 @@
 /* sync - update the super block
-   Copyright (C) 1994-2001 Free Software Foundation, Inc.
+   Copyright (C) 1994-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -70,5 +70,5 @@ main (int argc, char **argv)
     error (0, 0, _("ignoring all arguments"));
 
   sync ();
-  exit (0);
+  exit (EXIT_SUCCESS);
 }

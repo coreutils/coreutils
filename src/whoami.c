@@ -1,5 +1,5 @@
 /* whoami -- print effective userid
-   Copyright (C) 89,90, 1991-1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 89,90, 1991-1997, 1999-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -87,21 +87,21 @@ main (int argc, char **argv)
 	  break;
 
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 
   if (optind != argc)
-    usage (1);
+    usage (EXIT_FAILURE);
 
   uid = geteuid ();
   pw = getpwuid (uid);
   if (pw)
     {
       puts (pw->pw_name);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
   fprintf (stderr, _("%s: cannot find username for UID %u\n"),
 	   program_name, (unsigned) uid);
-  exit (1);
+  exit (EXIT_FAILURE);
 }

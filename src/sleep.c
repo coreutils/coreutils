@@ -212,14 +212,14 @@ main (int argc, char **argv)
 	  break;
 
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 
   if (argc == 1)
     {
       error (0, 0, _("too few arguments"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
 #ifdef FE_UPWARD
@@ -248,7 +248,7 @@ main (int argc, char **argv)
     }
 
   if (fail)
-    usage (1);
+    usage (EXIT_FAILURE);
 
   /* Separate whole seconds from nanoseconds.
      Be careful to detect any overflow.  */
@@ -298,5 +298,5 @@ main (int argc, char **argv)
 			       clock_get_realtime (&ts_start)))
     continue;
 
-  exit (0);
+  exit (EXIT_SUCCESS);
 }

@@ -1812,7 +1812,7 @@ it must be one character from [doxn]"),
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	  break;
 	}
     }
@@ -1872,7 +1872,7 @@ it must be one character from [doxn]"),
 	      error (0, 0,
 		     _("invalid second operand in compatibility mode `%s'"),
 		     argv[optind + 1]);
-	      usage (1);
+	      usage (EXIT_FAILURE);
 	    }
 	}
       else if (n_files == 3)
@@ -1892,14 +1892,14 @@ it must be one character from [doxn]"),
 	    {
 	      error (0, 0,
 	    _("in compatibility mode, the last two arguments must be offsets"));
-	      usage (1);
+	      usage (EXIT_FAILURE);
 	    }
 	}
       else if (n_files > 3)
 	{
 	  error (0, 0,
 		 _("compatibility mode supports at most three arguments"));
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
 
       if (flag_pseudo_start)

@@ -1,5 +1,5 @@
 /* hostname - set or print the name of current host system
-   Copyright (C) 1994-1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1994-1997, 1999-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -102,7 +102,7 @@ main (int argc, char **argv)
       err = sethostname (argv[1], strlen (argv[1]));
       if (err != 0)
 	error (EXIT_FAILURE, errno, _("cannot set hostname to `%s'"), argv[1]);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 #else
   if (argc == 2)
@@ -120,8 +120,8 @@ main (int argc, char **argv)
   else
     {
       error (2, 0, _("too many arguments"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
-  exit (0);
+  exit (EXIT_SUCCESS);
 }

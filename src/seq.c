@@ -117,7 +117,7 @@ scan_double_arg (const char *arg)
   if (xstrtod (arg, NULL, &ret_val))
     {
       error (0, 0, _("invalid floating point argument: %s"), arg);
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   return ret_val;
@@ -188,7 +188,7 @@ print_numbers (const char *fmt)
 	  error (0, 0,
 		 _("when the starting value is larger than the limit,\n\
 the increment must be negative"));
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
 
       printf (fmt, first);
@@ -212,7 +212,7 @@ the increment must be negative"));
 	  error (0, 0,
 		 _("when the starting value is smaller than the limit,\n\
 the increment must be positive"));
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
 
       printf (fmt, first);
@@ -402,26 +402,26 @@ main (int argc, char **argv)
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 
   if (argc - optind < 1)
     {
       error (0, 0, _("too few arguments"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (3 < argc - optind)
     {
       error (0, 0, _("too many arguments"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (format_str && !valid_format (format_str))
     {
       error (0, 0, _("invalid format string: `%s'"), format_str);
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   last = scan_double_arg (argv[optind++]);
@@ -444,7 +444,7 @@ main (int argc, char **argv)
     {
       error (0, 0, _("\
 format string may not be specified when printing equal width strings"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (!step_is_set)

@@ -730,7 +730,7 @@ main (int argc, char **argv)
 	  case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 
@@ -762,8 +762,8 @@ main (int argc, char **argv)
 
     default:			/* lose */
       error (0, 0, _("too many arguments"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
-  exit (0);
+  exit (EXIT_SUCCESS);
 }

@@ -830,7 +830,7 @@ main (int argc, char **argv)
 	  if (nfiles > 1)
 	    {
 	      error (0, 0, _("too many non-option arguments"));
-	      usage (1);
+	      usage (EXIT_FAILURE);
 	    }
 	  names[nfiles++] = optarg;
 	  break;
@@ -840,7 +840,7 @@ main (int argc, char **argv)
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
       prev_optc = optc;
     }
@@ -852,7 +852,7 @@ main (int argc, char **argv)
   if (nfiles != 2)
     {
       error (0, 0, _("too few non-option arguments"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   fp1 = STREQ (names[0], "-") ? stdin : fopen (names[0], "r");

@@ -1,5 +1,5 @@
 /* dircolors - output commands to set the LS_COLOR environment variable
-   Copyright (C) 1994, 1995, 1997, 1998, 1999, 2000, 2001 H. Peter Anvin
+   Copyright (C) 1994, 1995, 1997, 1998, 1999, 2000, 2001, 2002 H. Peter Anvin
    Copyright (C) 1996-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -454,7 +454,7 @@ main (int argc, char **argv)
       case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
       default:
-	usage (1);
+	usage (EXIT_FAILURE);
       }
 
   argc -= optind;
@@ -467,7 +467,7 @@ main (int argc, char **argv)
       error (0, 0,
 	     _("the options to output dircolors' internal database and\n\
 to select a shell syntax are mutually exclusive"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (print_database && argc > 0)
@@ -475,13 +475,13 @@ to select a shell syntax are mutually exclusive"));
       error (0, 0,
 	     _("no FILE arguments may be used with the option to output\n\
 dircolors' internal database"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (!print_database && argc > 1)
     {
       error (0, 0, _("too many arguments"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (print_database)

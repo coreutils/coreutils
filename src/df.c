@@ -488,7 +488,7 @@ done:
   {
     int save_errno = errno;
     if (restore_cwd (&cwd, 0, mp))
-      exit (1);			/* We're scrod.  */
+      exit (EXIT_FAILURE);			/* We're scrod.  */
     free_cwd (&cwd);
     errno = save_errno;
   }
@@ -878,7 +878,7 @@ main (int argc, char **argv)
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 
@@ -902,7 +902,7 @@ main (int argc, char **argv)
 	  }
       }
     if (match)
-      exit (1);
+      exit (EXIT_FAILURE);
   }
 
   {

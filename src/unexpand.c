@@ -430,7 +430,7 @@ main (int argc, char **argv)
 	  break;
 
 	case '?':
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	case 'a':
 	  convert_entire_line = 1;
 	  break;

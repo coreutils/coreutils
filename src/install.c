@@ -263,7 +263,7 @@ main (int argc, char **argv)
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 
@@ -286,7 +286,7 @@ main (int argc, char **argv)
   if (n_files == 0 || (n_files == 1 && !dir_arg))
     {
       error (0, 0, _("too few arguments"));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   if (specified_mode)
@@ -336,7 +336,7 @@ main (int argc, char **argv)
 		     _("installing multiple files, but last argument, %s \
 is not a directory"),
 		     quote (dest));
-	      usage (1);
+	      usage (EXIT_FAILURE);
 	    }
 
 	  dest_info_init (&x);

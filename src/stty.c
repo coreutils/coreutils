@@ -802,7 +802,7 @@ main (int argc, char **argv)
 
   /* FIXME: what is this?!? */
   if (invalid_long_option)
-    usage (1);
+    usage (EXIT_FAILURE);
 
   /* Clear out the options that have been parsed.  This is really
      gross, but it's needed because stty SETTINGS look like options to
@@ -923,7 +923,7 @@ mutually exclusive"));
       max_col = screen_columns ();
       current_col = 0;
       display_settings (output_type, &mode, fd, device_name);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 
   speed_was_set = 0;
@@ -958,7 +958,7 @@ mutually exclusive"));
       if (match_found == 0 && reversed)
 	{
 	  error (0, 0, _("invalid argument `%s'"), --argv[k]);
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
       if (match_found == 0)
 	{
@@ -969,7 +969,7 @@ mutually exclusive"));
 		  if (k == argc - 1)
 		    {
 		      error (0, 0, _("missing argument to `%s'"), argv[k]);
-		      usage (1);
+		      usage (EXIT_FAILURE);
 		    }
 		  match_found = 1;
 		  ++k;
@@ -986,7 +986,7 @@ mutually exclusive"));
 	      if (k == argc - 1)
 		{
 		  error (0, 0, _("missing argument to `%s'"), argv[k]);
-		  usage (1);
+		  usage (EXIT_FAILURE);
 		}
 	      ++k;
 	      set_speed (input_speed, argv[k], &mode);
@@ -998,7 +998,7 @@ mutually exclusive"));
 	      if (k == argc - 1)
 		{
 		  error (0, 0, _("missing argument to `%s'"), argv[k]);
-		  usage (1);
+		  usage (EXIT_FAILURE);
 		}
 	      ++k;
 	      set_speed (output_speed, argv[k], &mode);
@@ -1011,7 +1011,7 @@ mutually exclusive"));
 	      if (k == argc - 1)
 		{
 		  error (0, 0, _("missing argument to `%s'"), argv[k]);
-		  usage (1);
+		  usage (EXIT_FAILURE);
 		}
 	      ++k;
 	      set_window_size ((int) integer_arg (argv[k]), -1,
@@ -1023,7 +1023,7 @@ mutually exclusive"));
 	      if (k == argc - 1)
 		{
 		  error (0, 0, _("missing argument to `%s'"), argv[k]);
-		  usage (1);
+		  usage (EXIT_FAILURE);
 		}
 	      ++k;
 	      set_window_size (-1, (int) integer_arg (argv[k]),
@@ -1042,7 +1042,7 @@ mutually exclusive"));
 	      if (k == argc - 1)
 		{
 		  error (0, 0, _("missing argument to `%s'"), argv[k]);
-		  usage (1);
+		  usage (EXIT_FAILURE);
 		}
 	      ++k;
 	      mode.c_line = integer_arg (argv[k]);
@@ -1065,7 +1065,7 @@ mutually exclusive"));
 	      if (recover_mode (argv[k], &mode) == 0)
 		{
 		  error (0, 0, _("invalid argument `%s'"), argv[k]);
-		  usage (1);
+		  usage (EXIT_FAILURE);
 		}
 	      require_set_attr = 1;
 	    }
@@ -1133,7 +1133,7 @@ mutually exclusive"));
 	}
     }
 
-  exit (0);
+  exit (EXIT_SUCCESS);
 }
 
 /* Return 0 if not applied because not reversible; otherwise return 1.  */
@@ -1912,7 +1912,7 @@ integer_arg (const char *s)
   if (xstrtol (s, NULL, 0, &value, "bB") != LONGINT_OK)
     {
       error (0, 0, _("invalid integer argument `%s'"), s);
-      usage (1);
+      usage (EXIT_FAILURE);
     }
   return value;
 }

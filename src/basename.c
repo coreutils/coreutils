@@ -1,5 +1,5 @@
 /* basename -- strip directory and suffix from filenames
-   Copyright (C) 1990-1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1990-1997, 1999-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -113,7 +113,7 @@ main (int argc, char **argv)
     {
       error (0, 0, (argc == 1 ? _("too few arguments")
 		    : _("too many arguments")));
-      usage (1);
+      usage (EXIT_FAILURE);
     }
 
   name = base_name (argv[1]);
@@ -124,5 +124,5 @@ main (int argc, char **argv)
 
   puts (name);
 
-  exit (0);
+  exit (EXIT_SUCCESS);
 }

@@ -1,5 +1,5 @@
 /* paste - merge lines of files
-   Copyright (C) 1984, 1997, 1998, 1999, 2000, 2001 by David M. Ihnat
+   Copyright (C) 1984, 1997-2002 by David M. Ihnat
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -467,7 +467,7 @@ main (int argc, char **argv)
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
-	  usage (1);
+	  usage (EXIT_FAILURE);
 	}
     }
 

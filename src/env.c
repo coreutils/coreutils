@@ -1,5 +1,5 @@
 /* env - run a program in a modified environment
-   Copyright (C) 1986, 1991-2001 Free Software Foundation, Inc.
+   Copyright (C) 1986, 1991-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -194,7 +194,7 @@ main (register int argc, register char **argv, char **envp)
     {
       while (*environ)
 	puts (*environ++);
-      exit (0);
+      exit (EXIT_SUCCESS);
     }
 
   execvp (argv[optind], &argv[optind]);
