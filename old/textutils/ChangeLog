@@ -1,6 +1,12 @@
-2002-03-09  Jim Meyering  <meyering@lucent.com>
+2002-03-10  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.22.
+
+	* configure.ac (AM_INIT_AUTOMAKE): Specify the required version
+	of automake (1.6), and options (gnits dist-bzip2), rather than...
+	* Makefile.am (AUTOMAKE_OPTIONS): ...here.  Remove definition.
+
+2002-03-09  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.am (EXTRA_DIST): Remove config/config.rpath,
 	now that automake knows about it.
