@@ -21,6 +21,8 @@
 # include <config.h>
 #endif
 
+/* Some pre-ANSI implementations (e.g. SunOS 4)
+   need stderr defined if assertion checking is enabled.  */
 #include <stdio.h>
 
 #if STDC_HEADERS
@@ -34,12 +36,6 @@
 # ifndef strchr
 #  define strchr index
 # endif
-#endif
-
-/* Some pre-ANSI implementations (e.g. SunOS 4)
-   need stderr defined if assertion checking is enabled.  */
-#ifndef NDEBUG
-# include <stdio.h>
 #endif
 
 #include <assert.h>
