@@ -1,3 +1,10 @@
+2003-09-05  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.0.91.
+
+	* tests/tail-2/tail-n0f: Wait .5 seconds for backgrounded process
+	to start, rather than just .1.  Upon failure, print unexpected state.
+
 2003-09-04  Paul Eggert  <eggert@twinsun.com>
 
 	* src/seq.c (step): Default to 1.
@@ -7,8 +14,6 @@
 	* tests/seq/basic (onearg-2): Output should be empty.
 
 2003-09-05  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.91.
 
 	* Makefile.cfg (wget_files): Temporarily disable, until master
 	versions are restored to ftp.gnu.org.
