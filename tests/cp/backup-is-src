@@ -10,8 +10,8 @@ fi
 
 framework_failure=0
 $RM -f a a~ || framework_failure=1
-: > a || framework_failure=1
-echo a > a~ || framework_failure=1
+echo a > a || framework_failure=1
+echo a-tilde > a~ || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
