@@ -5,16 +5,6 @@ GNU coreutils NEWS                                    -*- outline -*-
 - new program: `[' (much like `test')
 
 ** New features
-- chown no longer tries to preserve set-user-ID and set-group-ID bits;
-  on some systems, the chown syscall resets those bits, and previous
-  versions of the chown command would call chmod to restore the original,
-  pre-chown(2) settings, but that behavior is problematic.
-  1) There was a window whereby a malicious user, M, could subvert a
-  chown command run by some other user and operating on files in a
-  directory where M has write access.
-  2) Before (and even now, on systems with chown(2) that doesn't reset
-  those bits), an unwary admin. could use chown unwittingly to create e.g.,
-  a set-user-ID root copy of /bin/sh.
 - head now accepts --lines=-N (--bytes=-N) to print all but the
   N lines (bytes) at the end of the file
 - md5sum --check now accepts the output of the BSD md5sum program, e.g.,
@@ -25,6 +15,16 @@ GNU coreutils NEWS                                    -*- outline -*-
   on such a system, then it still accepts `.', by default.  If chown
   was compiled on a POSIX 1003.1-2001 system, then you may enable the
   old behavior by setting _POSIX2_VERSION=199209 in your environment.
+- chown no longer tries to preserve set-user-ID and set-group-ID bits;
+  on some systems, the chown syscall resets those bits, and previous
+  versions of the chown command would call chmod to restore the original,
+  pre-chown(2) settings, but that behavior is problematic.
+  1) There was a window whereby a malicious user, M, could subvert a
+  chown command run by some other user and operating on files in a
+  directory where M has write access.
+  2) Before (and even now, on systems with chown(2) that doesn't reset
+  those bits), an unwary admin. could use chown unwittingly to create e.g.,
+  a set-user-ID root copy of /bin/sh.
 
 ** Bug fixes
 - chown --dereference no longer leaks a file descriptor per symlink processed
