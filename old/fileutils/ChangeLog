@@ -1,3 +1,7 @@
+Sat May 22 02:13:12 1993  Jim Meyering  (meyering@comco.com)
+
+	* Version 3.6.
+
 Fri May 21 18:42:27 1993  Jim Meyering  (meyering@comco.com)
 
 	* rename.c (rename): Be careful not to unlink `from' if it happens
@@ -29,7 +33,7 @@ Wed May 12 20:48:55 1993  Jim Meyering  (meyering@comco.com)
 	for getmntent on m88k DGUX-5.4 systems.
 
 	* Makefile.in (installdirs): New rules for creating installation
-	directories. (install): depend on it.
+	directories. (install): Depend on it.
 
 Sat May  8 11:31:14 1993  Jim Meyering  (meyering@comco.com)
 
