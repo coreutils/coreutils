@@ -1087,7 +1087,7 @@ decode_switches (int argc, char **argv)
   return optind;
 }
 
-/* Parse a string as part of the LS_COLO(U)RS variable; this may involve
+/* Parse a string as part of the LS_COLORS variable; this may involve
    decoding all kinds of escape characters.  If equals_end is set an
    unescaped equal sign ends the string, otherwise only a : or \0
    does.  Returns the number of characters output, or -1 on failure.
