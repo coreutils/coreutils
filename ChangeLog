@@ -1,6 +1,12 @@
-2004-02-10  Jim Meyering  <jim@meyering.net>
+2004-02-11  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.2.0.
+
+	* tests/Makefile.am.in ($(srcdir)/Makefile.am): Use more portable
+	$(srcdir)/../Makefile.am.in, rather than $<.
+	Suggestion from Michael Elizabeth Chastain.
+
+2004-02-10  Jim Meyering  <jim@meyering.net>
 
 	* config/install-sh: Make this script executable.
 	* Makefile.am (dist-hook): New target, to ensure that config/install-sh
