@@ -1,3 +1,7 @@
+2001-05-19  Alexandre Duret-Lutz  <duret_g@epita.fr>
+
+	* dos.m4 (jm_AC_DOS): Check for _WIN32, __WIN32__, and __MSDOS__.
+
 2001-05-11  Paul Eggert  <eggert@twinsun.com>
 
 	* m4/strftime.m4 (jm_FUNC_GNU_STRFTIME):
