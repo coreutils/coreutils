@@ -96,7 +96,7 @@ struct tspec
   {
     enum output_format fmt;
     enum size_spec size;
-    void (*print_function) ();
+    void (*print_function) PARAMS ((size_t, const char *, const char *));
     char *fmt_string;
     int hexl_mode_trailer;
     int field_width;
