@@ -1,3 +1,8 @@
+2002-06-26  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi (Putting the tools together): Don't mention egrep,
+	since it's not part of POSIX 1003.1-2001.
+
 2002-06-21  Jim Meyering  <meyering@lucent.com>
 
 	* coreutils.texi (stat invocation): New section.  From Michael Meskes.
