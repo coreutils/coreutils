@@ -1,0 +1,5 @@
+config(ure|\.(guess|sub))
+tests/pr
+lib/regex.c
+config-log
+tests/misc/nl
