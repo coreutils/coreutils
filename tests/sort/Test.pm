@@ -127,6 +127,10 @@ use strict;
  "'s-Gravenhage\nAag\naagtappels\naëroclub\néminence\nüberhaupt\n",
  0],
 
+# This provokes a one-byte memory overrun of a malloc'd block for versions
+# of sort from textutils-1.19p and before.
+["17", '-c', "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n", "", 0],
+
 );
 
 1;
