@@ -1,6 +1,15 @@
-2003-03-20  Jim Meyering  <jim@meyering.net>
+2003-03-22  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.12.
+
+	* src/stat.c: Don't include <sys/sysmacros.h>.
+	That is already done via system.h.  Otherwise, the multiple
+	inclusion would evoke redefinition warnings from Cray's /bin/cc,
+	aka Cray Standard C Version 4.0.3  (057126) Mar 22 2003  22:02:28.
+	(human_fstype): Factor some directives `up', out of this function.
+	Cast away `const' to avoid error from Cray's /bin/cc.
+
+2003-03-20  Jim Meyering  <jim@meyering.net>
 
 	* announce-gen (print_changelog_deltas): Ensure that a newline
 	precedes each row of `*'s.
