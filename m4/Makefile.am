@@ -28,7 +28,7 @@ glibc21.m4 \
 gnu-source.m4 \
 group-member.m4 \
 iconv.m4 \
-inttypes_h.m4 \
+inttypes.m4 \
 isc-posix.m4 \
 jm-glibc-io.m4 \
 jm-macros.m4 \
@@ -40,6 +40,7 @@ lcmessage.m4 \
 lib-check.m4 \
 libintl.m4 \
 link-follow.m4 \
+longlong.m4 \
 ls-mntd-fs.m4 \
 lstat.m4 \
 malloc.m4 \
@@ -65,7 +66,6 @@ strerror_r.m4 \
 strftime.m4 \
 timespec.m4 \
 uintmax_t.m4 \
-ulonglong.m4 \
 unlink-busy.m4 \
 uptime.m4 \
 utimbuf.m4 \
