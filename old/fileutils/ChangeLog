@@ -1,3 +1,8 @@
+1998-07-01  Jim Meyering  <meyering@ascend.com>
+
+	* lib/xstrtol.c: Don't define NDEBUG here, now that it's done via
+	configure's --disable-assert option.
+
 1998-06-29  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/mountlist.c (read_filesystem_list):
