@@ -1,6 +1,11 @@
-2002-11-15  Jim Meyering  <jim@meyering.net>
+2002-11-17  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.4.
+
+	* src/mv.c (movefile): Don't remove trailing slashes from SOURCE.
+	Reported by Hans Ginzel.
+
+2002-11-15  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.cfg (gnu_rel_host): Define.
 	(url_dir_list): Choose from (alpha|ftp).gnu.org depending
