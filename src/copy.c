@@ -1081,7 +1081,7 @@ copy_internal (const char *src_path, const char *dst_path,
 		   && (x->unlink_dest_before_opening
 		       || (x->preserve_links && 1 < dst_sb.st_nlink)
 		       || (x->dereference == DEREF_NEVER
-			   && ! S_ISREG (src_sb.st_mode))))
+			   && S_ISLNK (src_sb.st_mode))))
 	    {
 	      if (unlink (dst_path) && errno != ENOENT)
 		{
