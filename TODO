@@ -104,8 +104,6 @@ unexpand: [http://www.opengroup.org/onlinepubs/007908799/xcu/unexpand.html]
 Let GNU su use the `wheel' group if appropriate.
   (there are a couple patches, already)
 
-look at sort patches from http://www.math.cas.cz/~kasal/sw/gnu/coreutils/
-
 sort: Investigate better sorting algorithms; see Knuth vol. 3.
 
   We tried list merge sort, but it was about 50% slower than the
