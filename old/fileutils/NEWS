@@ -1,4 +1,4 @@
-User-visible changes in release 3.13:
+Changes in release 3.13:
 * mkdir accepts new option: --verbose
 * cp has been fixed so that the full file name it uses for the destination
   in `cp file D/' is `D/file', not `D//file'.
