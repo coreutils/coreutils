@@ -7,7 +7,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   Several fixes to chgrp and chown for compatibility with POSIX and BSD:
 
     Do not affect symbolic links by default.
-    Now, operate on whatever a symbolic points to, instead.
+    Now, operate on whatever a symbolic link points to, instead.
     To get the old behavior, use --no-dereference (-h).
 
     --dereference now works, even when the specified owner
