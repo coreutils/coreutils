@@ -1,6 +1,17 @@
-2002-11-12  Jim Meyering  <jim@meyering.net>
+2002-11-14  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.4.
+
+	* Makefile.maint: Sync with Bison, i.e.:
+	(po-check): Scan .l and .y files instead of the
+	.c and the .h files that they generate.  This fixes the bug
+	reported by Tim Van Holder in:
+	<http://mail.gnu.org/pipermail/bison-patches/2002-November/001352.html>
+	Look for N_ as well as for _.  Try to avoid matching #define for
+	N_ and _.
+	From Paul Eggert.
+
+2002-11-12  Jim Meyering  <jim@meyering.net>
 
 	* src/ls.c (HAVE_SYMLINKS): Remove unnecessary macro definition.
 	Replace sole use with equivalent `#ifdef S_ISLNK'.
