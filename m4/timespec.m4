@@ -1,13 +1,30 @@
-#serial 5
+#serial 7
 
 dnl From Jim Meyering
+
+AC_DEFUN([gl_TIMESPEC],
+[
+  dnl Prerequisites of lib/timespec.h.
+  AC_REQUIRE([AC_GNU_SOURCE])
+  AC_REQUIRE([AC_HEADER_TIME])
+  AC_CHECK_HEADERS_ONCE(sys/time.h)
+  jm_CHECK_TYPE_STRUCT_TIMESPEC
+  AC_STRUCT_ST_MTIM_NSEC
+
+  dnl Persuade glibc <time.h> to declare nanosleep().
+  AC_REQUIRE([AC_GNU_SOURCE])
+
+  AC_CHECK_DECLS(nanosleep, , , [#include <time.h>])
+])
 
 dnl Define HAVE_STRUCT_TIMESPEC if `struct timespec' is declared
 dnl in time.h or sys/time.h.
 
 AC_DEFUN([jm_CHECK_TYPE_STRUCT_TIMESPEC],
 [
+  AC_REQUIRE([AC_GNU_SOURCE])
   AC_REQUIRE([AC_HEADER_TIME])
+  AC_CHECK_HEADERS_ONCE(sys/time.h)
   AC_CACHE_CHECK([for struct timespec], fu_cv_sys_struct_timespec,
     [AC_TRY_COMPILE(
       [
