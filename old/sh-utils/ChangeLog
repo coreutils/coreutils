@@ -1,3 +1,8 @@
+Sat Jun 29 18:58:20 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (PACKAGE_VERSION): Add `GNU ' prefix so we see
+	it in the output of --version.  Reported by RMS.
+
 Tue Jun 18 22:14:42 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* aclocal.m4: Update from gettext-0.10.20.
