@@ -61,10 +61,10 @@ void *xcalloc PARAMS ((size_t n, size_t s));
 void *xrealloc PARAMS ((void *p, size_t n));
 char *xstrdup PARAMS ((const char *str));
 
-# define XMALLOC(Type, N_bytes) ((Type *) xmalloc (sizeof (Type) * (N_bytes)))
-# define XCALLOC(Type, N_bytes) ((Type *) xcalloc (sizeof (Type), (N_bytes)))
-# define XREALLOC(Ptr, Type, N_bytes) \
-  ((Type *) xrealloc ((void *) (Ptr), sizeof (Type) * (N_bytes)))
+# define XMALLOC(Type, N_items) ((Type *) xmalloc (sizeof (Type) * (N_items)))
+# define XCALLOC(Type, N_items) ((Type *) xcalloc (sizeof (Type), (N_items)))
+# define XREALLOC(Ptr, Type, N_items) \
+  ((Type *) xrealloc ((void *) (Ptr), sizeof (Type) * (N_items)))
 
 /* Declare and alloc memory for VAR of type TYPE. */
 # define NEW(Type, Var)  Type *(Var) = XMALLOC (Type, 1)
