@@ -2,6 +2,9 @@
 
 	* Version 4.0.33.
 
+	* src/ls.c: Revert change of 2000-11-11.  It inadvertently change
+	the output format of `ls -l --full-time'.
+
 	* src/mkdir.c (main): When failing to create a directory, give only
 	one diagnostic, not two.  Reported by Volker Borchert.
 
