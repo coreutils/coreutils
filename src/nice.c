@@ -1,5 +1,5 @@
 /* nice -- run a program with modified scheduling priority
-   Copyright (C) 1990-2001 Free Software Foundation, Inc.
+   Copyright (C) 1990-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,10 +30,11 @@
 #endif
 
 #include "system.h"
+#include "closeout.h"
 #include "error.h"
 #include "long-options.h"
+#include "posixver.h"
 #include "xstrtol.h"
-#include "closeout.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "nice"

@@ -32,6 +32,7 @@
 #include "getdate.h"
 #include "getline.h"
 #include "posixtm.h"
+#include "posixver.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "date"
