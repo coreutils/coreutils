@@ -1,6 +1,6 @@
 User-visible changes in release 1.14
 * join accepts POSIX `-o 0' field specifier.
-* tr 'a[b*512]' '[a*]' terminates
+* tr 'a[b*512]' '[a*]' < /dev/null terminates
 * tr '[:*3][:digit:]' 'a-m' and tr 'a[=*2][=c=]' 'xyyz' no longer fail
 * special characters in tr's string1 and string2 may be escaped with backslash
 User-visible changes in release 1.13
