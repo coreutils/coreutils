@@ -1,3 +1,8 @@
+2002-02-18  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi (seq invocation): In the example, use "tail
+	-n 3", not "tail -3", to conform to POSIX 1003.1-2001.
+
 2002-02-17  Jim Meyering  <meyering@lucent.com>
 
 	* coreutils.texi (tsort background): New section.
