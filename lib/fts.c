@@ -136,7 +136,8 @@ fts_open(argv, options, compar)
 			goto mem3;
 		}
 
-		p = fts_alloc(sp, *argv, len);
+		if ((p = fts_alloc(sp, *argv, len)) == NULL)
+			goto mem3;
 		p->fts_level = FTS_ROOTLEVEL;
 		p->fts_parent = parent;
 		p->fts_accpath = p->fts_name;
@@ -369,6 +370,11 @@ fts_read(sp)
 		} else if ((sp->fts_child = fts_build(sp, BREAD)) == NULL) {
 			if (ISSET(FTS_STOP))
 				return (NULL);
+			/* If fts_build's call to fts_safe_changedir failed
+			   because it was not able to fchdir into a
+			   subdirectory, tell the caller.  */
+			if (p->fts_errno)
+				p->fts_info = FTS_ERR;
 			return (p);
 		}
 		p = sp->fts_child;
