@@ -31,7 +31,6 @@ touch --ref f --date='-30 min' f || fail=1
 
 TZ=utc command ls -og --time-style=+%Y-%m-%dT%H:%M:%S f > out.1 || fail
 sed 's/ f$//;s/.* //' out.1 > out
-rm -f out.1
 
 cat <<\EOF > exp || fail=1
 2004-01-16T04:56:38
