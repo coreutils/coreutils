@@ -349,8 +349,10 @@ static char const month_name[][10] =
 # ifdef strftime
 #  undef strftime
 # endif
-# define strftime _strftime_copytm
+# define strftime(S, Maxsize, Format, Tp) \
+  _strftime_copytm ((S), (Maxsize), (Format), (Tp))
 #endif
+
 
 
 /* Write information from TP into S according to the format
