@@ -1,4 +1,4 @@
-#serial 5
+#serial 6
 # Check for several getcwd bugs with long paths.
 # If so, arrange to compile the wrapper function.
 
@@ -29,12 +29,13 @@ AC_DEFUN([gl_FUNC_GETCWD_PATH_MAX],
   AC_CHECK_DECLS_ONCE(getcwd)
   AC_CHECK_HEADERS_ONCE(fcntl.h)
   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
-  AC_CACHE_CHECK([whether getcwd handles long paths properly],
-                 gl_cv_func_getcwd_path_max,
-  [
-  # Arrange for deletion of the temporary directory this test creates.
-  ac_clean_files="$ac_clean_files confdir3"
-  AC_RUN_IFELSE([AC_LANG_SOURCE([[
+  AC_CACHE_CHECK([whether getcwd handles long file names properly],
+    gl_cv_func_getcwd_path_max,
+    [# Arrange for deletion of the temporary directory this test creates.
+     ac_clean_files="$ac_clean_files confdir3"
+     AC_RUN_IFELSE(
+       [AC_LANG_SOURCE(
+	  [[
 #include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -112,16 +113,21 @@ main (void)
 	 as a failure, too.  */
       if (mkdir (DIR_NAME, S_IRWXU) < 0 || chdir (DIR_NAME) < 0)
 	{
-	  fail = 1;
+	  fail = 2;
 	  break;
 	}
 
       if (PATH_MAX <= cwd_len && cwd_len < PATH_MAX + DIR_NAME_SIZE)
 	{
 	  c = getcwd (buf, PATH_MAX);
-	  if (c || errno != ERANGE)
+	  if (!c && errno == ENOENT)
 	    {
 	      fail = 1;
+	      break;
+	    }
+	  if (c || ! (errno == ERANGE || is_ENAMETOOLONG (errno)))
+	    {
+	      fail = 2;
 	      break;
 	    }
 	}
@@ -131,16 +137,25 @@ main (void)
 	  if (dotdot_max + DIR_NAME_SIZE < cwd_len - initial_cwd_len)
 	    break;
 	  c = getcwd (buf, cwd_len + 1);
-	  if (!c && (AT_FDCWD || !is_ENAMETOOLONG (errno)))
+	  if (!c)
 	    {
-	      fail = 1;
-	      break;
+	      if (! (errno == ERANGE || errno == ENOENT
+		     || is_ENAMETOOLONG (errno)))
+		{
+		  fail = 2;
+		  break;
+		}
+	      if (AT_FDCWD || errno == ERANGE || errno == ENOENT)
+		{
+		  fail = 1;
+		  break;
+		}
 	    }
 	}
 
       if (c && strlen (c) != cwd_len)
 	{
-	  fail = 1;
+	  fail = 2;
 	  break;
 	}
       ++n_chdirs;
@@ -165,8 +180,20 @@ main (void)
   exit (fail);
 #endif
 }
-  ]])],
-       [gl_cv_func_getcwd_path_max=yes],
-       [gl_cv_func_getcwd_path_max=no],
-       [gl_cv_func_getcwd_path_max=no])])
+          ]])],
+    [gl_cv_func_getcwd_path_max=yes],
+    [case $? in
+     1) gl_cv_func_getcwd_path_max='no, but it is partly working';;
+     *) gl_cv_func_getcwd_path_max=no;;
+     esac],
+    [gl_cv_func_getcwd_path_max=no])
+  ])
+  case $gl_cv_func_getcwd_path_max in
+  no,*)
+    AC_DEFINE([HAVE_PARTLY_WORKING_GETCWD], 1,
+      [Define to 1 if getcwd works, except it sometimes fails when it shouldn't,
+       setting errno to ERANGE, ENAMETOOLONG, or ENOENT.  If __GETCWD_PREFIX
+       is not defined, it doesn't matter whether HAVE_PARTLY_WORKING_GETCWD
+       is defined.]);;
+  esac
 ])
