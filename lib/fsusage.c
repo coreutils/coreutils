@@ -1,5 +1,5 @@
 /* fsusage.c -- return space usage of mounted filesystems
-   Copyright (C) 1991, 1992, 1996, 1998, 1999, 2002 Free Software
+   Copyright (C) 1991, 1992, 1996, 1998, 1999, 2002, 2003 Free Software
    Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -41,8 +41,6 @@
 #ifndef CHAR_BIT
 # define CHAR_BIT 8
 #endif
-
-int statfs ();
 
 #if HAVE_SYS_PARAM_H
 # include <sys/param.h>
