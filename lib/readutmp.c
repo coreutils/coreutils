@@ -54,16 +54,17 @@ extract_trimmed_name (const STRUCT_UTMP *ut)
 /* Read the utmp entries corresponding to file FILENAME into freshly-
    malloc'd storage, set *UTMP_BUF to that pointer, set *N_ENTRIES to
    the number of entries, and return zero.  If there is any error,
-   return non-zero and don't modify the parameters.  */
+   return -1, setting errno, and don't modify the parameters.  */
 
 #ifdef UTMP_NAME_FUNCTION
 
 int
-read_utmp (const char *filename, int *n_entries, STRUCT_UTMP **utmp_buf)
+read_utmp (const char *filename, size_t *n_entries, STRUCT_UTMP **utmp_buf)
 {
-  int n_read;
+  size_t n_read;
+  size_t n_alloc = 4;
+  STRUCT_UTMP *utmp = xmalloc (n_alloc * sizeof *utmp);
   STRUCT_UTMP *u;
-  STRUCT_UTMP *utmp = NULL;
 
   /* Ignore the return value for now.
      Solaris' utmpname returns 1 upon success -- which is contrary
@@ -76,16 +77,12 @@ read_utmp (const char *filename, int *n_entries, STRUCT_UTMP **utmp_buf)
   n_read = 0;
   while ((u = GET_UTMP_ENT ()) != NULL)
     {
-      STRUCT_UTMP *p;
-      ++n_read;
-      p = (STRUCT_UTMP *) realloc (utmp, n_read * sizeof (STRUCT_UTMP));
-      if (p == NULL)
+      if (n_read == n_alloc)
 	{
-	  free (utmp);
-	  END_UTMP_ENT ();
-	  return 1;
+	  utmp = xnrealloc (utmp, n_alloc, 2 * sizeof *utmp);
+	  n_alloc *= 2;
 	}
-      utmp = p;
+      ++n_read;
       utmp[n_read - 1] = *u;
     }
 
@@ -100,7 +97,7 @@ read_utmp (const char *filename, int *n_entries, STRUCT_UTMP **utmp_buf)
 #else
 
 int
-read_utmp (const char *filename, int *n_entries, STRUCT_UTMP **utmp_buf)
+read_utmp (const char *filename, size_t *n_entries, STRUCT_UTMP **utmp_buf)
 {
   FILE *utmp;
   struct stat file_stats;
@@ -110,14 +107,14 @@ read_utmp (const char *filename, int *n_entries, STRUCT_UTMP **utmp_buf)
 
   utmp = fopen (filename, "r");
   if (utmp == NULL)
-    return 1;
+    return -1;
 
   if (fstat (fileno (utmp), &file_stats) != 0)
     {
       int e = errno;
       fclose (utmp);
       errno = e;
-      return 1;
+      return -1;
     }
   size = file_stats.st_size;
   buf = xmalloc (size);
@@ -128,14 +125,14 @@ read_utmp (const char *filename, int *n_entries, STRUCT_UTMP **utmp_buf)
       free (buf);
       fclose (utmp);
       errno = e;
-      return 1;
+      return -1;
     }
   if (fclose (utmp) != 0)
     {
       int e = errno;
       free (buf);
       errno = e;
-      return 1;
+      return -1;
     }
 
   *n_entries = n_read;
