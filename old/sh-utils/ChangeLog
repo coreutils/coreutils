@@ -1,3 +1,21 @@
+1997-07-12  Kaveh R. Ghazi  <ghazi@caip.rutgers.edu>
+
+	* lib/readutmp.c, lib/readutmp.h: New files implementing shared
+	functionality from src/who-users.c.
+
+	* lib/Makefile.am (libsu_a_SOURCES): Add readutmp.c.
+	(noinst_HEADERS): Add readutmp.h.
+
+	* src/who.c, src/users.c, src/uptime.c: Split these so they no
+	longer derive from the template source file who-users.c.  Use
+	shared functionality from lib/readutmp.c instead.
+
+	* src/Makefile.am: Remove rules to build who.c, users.c and
+	uptime.c from template source file who-users.c.  Handle these
+	files as stand-alone sources.
+
+	* src/who-users.c: Remove file.  It is no longer used.
+
 1997-07-12  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/date.c (MAYBE_SET_TZ_UTC0): New macro.
