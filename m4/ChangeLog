@@ -1,5 +1,8 @@
 2000-06-03  Jim Meyering  <meyering@lucent.com>
 
+	* prereq.m4 (jm_PREREQ_HUMAN): Use []-quoted list in AC_CHECK_DECLS,
+	now that autoconf requires that.
+
 	* jm-glibc-io.m4: Add a kludge to make autoheader emit the required
 	#undefs.  E.g., #undef HAVE_DECL_FERROR_UNLOCKED.
 	Use []-quoted list in AC_CHECK_DECLS, now that autoconf requires that.

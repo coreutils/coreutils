@@ -1,4 +1,4 @@
-#serial 8
+#serial 9
 
 dnl These are the prerequisite macros for files in the lib/
 dnl directories of the fileutils, sh-utils, and textutils packages.
