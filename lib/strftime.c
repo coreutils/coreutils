@@ -292,8 +292,11 @@ static const CHAR_T zeroes[16] = /* "0000000000000000" */
 	   MEMCPY ((PTR) p, (const PTR) (s), _n))
 
 #ifdef COMPILE_WIDE
-# ifdef USE_IN_EXTENDED_LOCALE_MODEL
-#  define widen(os, ws, l) \
+# ifndef USE_IN_EXTENDED_LOCALE_MODEL
+#  undef __mbsrtowcs_l
+#  define __mbsrtowcs_l(d, s, l, st, loc) __mbsrtowcs (d, s, l, st)
+# endif
+# define widen(os, ws, l) \
   {									      \
     mbstate_t __st;							      \
     const char *__s = os;						      \
@@ -302,17 +305,6 @@ static const CHAR_T zeroes[16] = /* "0000000000000000" */
     ws = alloca ((l + 1) * sizeof (wchar_t));				      \
     (void) __mbsrtowcs_l (ws, &__s, l, &__st, loc);			      \
   }
-# else
-#  define widen(os, ws, l) \
-  {									      \
-    mbstate_t __st;							      \
-    const char *__s = os;						      \
-    memset (&__st, '\0', sizeof (__st));				      \
-    l = __mbsrtowcs (NULL, &__s, 0, &__st);				      \
-    ws = alloca ((l + 1) * sizeof (wchar_t));				      \
-    (void) __mbsrtowcs (ws, &__s, l, &__st);				      \
-  }
-# endif
 #endif
 
 
@@ -488,8 +480,10 @@ static CHAR_T const month_name[][10] =
 #else
 # ifdef COMPILE_WIDE
 #  define my_strftime wcsftime
+#  define nl_get_alt_digit _nl_get_walt_digit
 # else
 #  define my_strftime strftime
+#  define nl_get_alt_digit _nl_get_alt_digit
 # endif
 # define extra_args
 # define extra_args_spec
@@ -998,13 +992,8 @@ my_strftime (s, maxsize, format, tp extra_args LOCALE_PARAM)
 #ifdef _NL_CURRENT
 	      /* Get the locale specific alternate representation of
 		 the number NUMBER_VALUE.  If none exist NULL is returned.  */
-# ifdef COMPILE_WIDE
-	      const wchar_t *cp = _nl_get_walt_digit (number_value
-						      HELPER_LOCALE_ARG);
-# else
-	      const char *cp = _nl_get_alt_digit (number_value
-						  HELPER_LOCALE_ARG);
-# endif
+	      const CHAR_T *cp = nl_get_alt_digit (number_value
+						   HELPER_LOCALE_ARG);
 
 	      if (cp != NULL)
 		{
