@@ -100,22 +100,12 @@ mode_changed (const char *file, mode_t old_mode)
 {
   struct stat new_stats;
 
-  if (lstat (file, &new_stats))
+  if (stat (file, &new_stats))
     {
       if (force_silent == 0)
 	error (0, errno, _("getting new attributes of %s"), quote (file));
       return 0;
     }
-
-#ifdef S_ISLNK
-  if (S_ISLNK (new_stats.st_mode)
-      && stat (file, &new_stats))
-    {
-      if (force_silent == 0)
-	error (0, errno, _("getting new attributes of %s"), quote (file));
-      return 0;
-    }
-#endif
 
   return old_mode != new_stats.st_mode;
 }
@@ -165,25 +155,16 @@ change_file_mode (const char *file, const struct mode_change *changes,
   int fail;
   int saved_errno;
 
-  if (lstat (file, &file_stats))
+  if (deref_symlink ? stat (file, &file_stats) : lstat (file, &file_stats))
     {
       if (force_silent == 0)
 	error (0, errno, _("getting attributes of %s"), quote (file));
       return 1;
     }
+
 #ifdef S_ISLNK
   if (S_ISLNK (file_stats.st_mode))
-    {
-      if (! deref_symlink)
-	return 0;
-      else
-	if (stat (file, &file_stats))
-	  {
-	    if (force_silent == 0)
-	      error (0, errno, _("getting attributes of %s"), quote (file));
-	    return 1;
-	  }
-    }
+    return 0;
 #endif
 
   newmode = mode_adjust (file_stats.st_mode, changes);
