@@ -233,6 +233,10 @@ re_protect (const char *const_dst_path, int src_offset,
 	{
 	  struct utimbuf utb;
 
+	  /* There's currently no interface to set file timestamps with
+	     better than 1-second resolution, so discard any fractional
+	     part of the source timestamp.  */
+
 	  utb.actime = src_sb.st_atime;
 	  utb.modtime = src_sb.st_mtime;
 
