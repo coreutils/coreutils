@@ -1699,7 +1699,7 @@ main (argc, argv)
 			  error (2, 0, "option `-T' requires an argument");
 		      }
 		    goto outer;
-		    break;
+		    /* break; */
 		  case 'u':
 		    unique = 1;
 		    break;
