@@ -6,7 +6,7 @@ my @tv = (
 # test name, options, input, expected output, expected return code
 #
 ['idem-1', '', "", "", 0],
-['idem-2', '', "a", "a\n", 0],
+['idem-2', '', "a", "a", 0],
 ['idem-3', '', "\n", "\n", 0],
 ['idem-4', '', "a\n", "a\n", 0],
 
