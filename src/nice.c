@@ -69,8 +69,8 @@ Run COMMAND with an adjusted scheduling priority.\n\
 With no COMMAND, print the current scheduling priority.  ADJUST is 10\n\
 by default.  Range goes from -20 (highest priority) to 19 (lowest).\n\
 \n\
-  -ADJUST                   increment priority by ADJUST first\n\
-  -n, --adjustment=ADJUST   same as -ADJUST\n\
+  -n, --adjustment=ADJUST   increment priority by ADJUST first\n\
+  -ADJUST                   (obsolete) same as -n ADJUST\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -102,22 +102,30 @@ main (int argc, char **argv)
     {
       char *s = argv[i];
 
-      if (s[0] == '-' && s[1] == '-' && ISDIGIT (s[2]))
+      if (POSIX2_VERSION < 200112
+	  && s[0] == '-' && s[1] == '-' && ISDIGIT (s[2]))
 	{
 	  if (xstrtol (&s[2], NULL, 10, &adjustment, "") != LONGINT_OK)
 	    error (1, 0, _("invalid option `%s'"), s);
+	  if (! getenv ("POSIXLY_CORRECT"))
+	    error (0, 0, _("warning: `%s' option is obsolete; use `-n %s'"),
+		   s, s + 1);
 
 	  minusflag = 1;
 	  adjustment_given = 1;
 	  ++i;
 	}
-      else if (s[0] == '-' && (ISDIGIT (s[1])
-			       || (s[1] == '+' && ISDIGIT (s[2]))))
+      else if (POSIX2_VERSION < 200112
+	       && s[0] == '-' && (ISDIGIT (s[1])
+				  || (s[1] == '+' && ISDIGIT (s[2]))))
 	{
 	  if (s[1] == '+')
 	    ++s;
 	  if (xstrtol (&s[1], NULL, 10, &adjustment, "") != LONGINT_OK)
 	    error (1, 0, _("invalid option `%s'"), s);
+	  if (! getenv ("POSIXLY_CORRECT"))
+	    error (0, 0, _("warning: `%s' option is obsolete; use `-n %s'"),
+		   argv[i], s + 1);
 
 	  minusflag = 0;
 	  adjustment_given = 1;
