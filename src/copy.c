@@ -41,7 +41,7 @@ enum Sparse_type
   SPARSE_ALWAYS
 };
 
-struct flag
+struct cp_options
 {
   /* If nonzero, copy all files except (directories and, if not dereferencing
      them, symbolic links,) as if they were regular files. */
@@ -132,7 +132,7 @@ is_ancestor (const struct stat *sb, const struct dir_list *ancestors)
 static int
 copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
 	  const struct stat *src_sb, struct dir_list *ancestors,
-	  const struct flag *x)
+	  const struct cp_options *x)
 {
   char *name_space;
   char *namep;
@@ -164,7 +164,8 @@ copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
       stpcpy (stpcpy (stpcpy (src_path, src_path_in), "/"), namep);
       stpcpy (stpcpy (stpcpy (dst_path, dst_path_in), "/"), namep);
 
-      ret |= copy (src_path, dst_path, new_dst, src_sb->st_dev, ancestors, x);
+      ret |= copy_internal (src_path, dst_path, new_dst, src_sb->st_dev,
+			    ancestors, x);
 
       /* Free the memory for `src_path'.  The memory for `dst_path'
 	 cannot be deallocated, since it is used to create multiple
@@ -371,7 +372,7 @@ ret2:
 static int
 copy_internal (const char *src_path, const char *dst_path,
 	       int new_dst, dev_t device, struct dir_list *ancestors,
-	       const struct flag *x)
+	       const struct cp_options *x)
 {
   struct stat src_sb;
   struct stat dst_sb;
@@ -787,17 +788,17 @@ un_backup:
 }
 
 /* Copy the file SRC_PATH to the file DST_PATH.  The files may be of
-   any type.  NONEXISTENT_DST should be nonzero if the file DST_PATH is
-   not to exist (e.g., because its parent directory was just created);
-   NONEXISTENT_DST should be zero if DST_PATH might already exist.
-   DEVICE is the device number of the parent directory, or 0 if the
-   parent of this file is not known.  ANCESTORS points to a linked, null
-   terminated list of devices and inodes of parent directories of SRC_PATH.
+   any type.  NONEXISTENT_DST should be nonzero if the file DST_PATH
+   is known not to exist (e.g., because its parent directory was just
+   created);  NONEXISTENT_DST should be zero if DST_PATH might already
+   exist.  DEVICE is the device number of the parent directory, or 0
+   if the parent of this file is not known.
+   OPTIONS is ... FIXME-describe
    Return 0 if successful, 1 if an error occurs. */
 
 int
-copy (const char *src_path, const char *dst_path, int nonexistent_dst,
-      const struct flag *x)
+copy (const char *src_path, const char *dst_path,
+      int nonexistent_dst, const struct cp_options *options)
 {
-  copy_internal (src_path, dst_path, ... , x);
+  copy_internal (src_path, dst_path, nonexistent_dst, NULL, options);
 }
