@@ -1011,20 +1011,20 @@ EXPRESSION is true or false and sets exit status.  It is one of:\n\
   FILE1 -nt FILE2   FILE1 is newer (modification date) than FILE2\n\
   FILE1 -ot FILE2   FILE1 is older than FILE2\n\
 \n\
-  -G FILE     FILE exists and is owned by the effective group ID\n\
-  -L FILE     FILE exists and is a symbolic link\n\
-  -O FILE     FILE exists and is owned by the effective user ID\n\
-  -S FILE     FILE exists and is a socket\n\
   -b FILE     FILE exists and is block special\n\
   -c FILE     FILE exists and is character special\n\
   -d FILE     FILE exists and is a directory\n\
   -e FILE     FILE exists\n\
   -f FILE     FILE exists and is a regular file\n\
   -g FILE     FILE exists and is set-group-ID\n\
+  -G FILE     FILE exists and is owned by the effective group ID\n\
   -k FILE     FILE exists and has its sticky bit set\n\
+  -L FILE     FILE exists and is a symbolic link\n\
+  -O FILE     FILE exists and is owned by the effective user ID\n\
   -p FILE     FILE exists and is a named pipe\n\
   -r FILE     FILE exists and is readable\n\
   -s FILE     FILE exists and has a size greater than zero\n\
+  -S FILE     FILE exists and is a socket\n\
   -t [FD]     file descriptor FD (stdout by default) is opened on a terminal\n\
   -u FILE     FILE exists and its set-user-ID bit is set\n\
   -w FILE     FILE exists and is writable\n\

@@ -22,15 +22,7 @@
    state: -T
    name, line, time: not -q
    idle: -u
-
-   Options:
-   -m		Same as 'who am i', for POSIX.
-   -q		Only user names and # logged on; overrides all other options.
-   -s		Name, line, time (default).
-   -i, -u	Idle hours and minutes; '.' means active in last minute;
-		'old' means idle for >24 hours.
-   -H		Print column headings at top.
-   -w, -T	-s plus mesg (+ or -, or ? if bad line). */
+*/
 
 #include <config.h>
 #include <stdio.h>
@@ -637,15 +629,15 @@ usage (int status)
       printf (_("\
 \n\
   -H, --heading     print line of column headings\n\
-  -T, -w, --mesg    add user's message status as +, - or ?\n\
   -i, -u, --idle    add user idle time as HOURS:MINUTES, . or old\n\
   -m                only hostname and user associated with stdin\n\
   -q, --count       all login names and number of users logged on\n\
   -s                (ignored)\n\
-      --help        display this help and exit\n\
+  -T, -w, --mesg    add user's message status as +, - or ?\n\
       --message     same as -T\n\
-      --version     output version information and exit\n\
       --writeable   same as -T\n\
+      --help        display this help and exit\n\
+      --version     output version information and exit\n\
 \n\
 If FILE not given, uses /etc/utmp.  /etc/wtmp as FILE is common.\n\
 If ARG1 ARG2 given, -m presumed: `am i' or `mom likes' are usual.\n\
