@@ -28,6 +28,7 @@
 #include <assert.h>
 
 #include "system.h"
+#include "argmatch.h"
 #include "backupfile.h"
 #include "copy.h"
 #include "cp-hash.h"
@@ -53,7 +54,8 @@
 enum
 {
   TARGET_DIRECTORY_OPTION = CHAR_MAX + 1,
-  STRIP_TRAILING_SLASHES_OPTION
+  STRIP_TRAILING_SLASHES_OPTION,
+  REPLY_OPTION
 };
 
 int euidaccess ();
@@ -67,11 +69,24 @@ char *program_name;
 /* Remove any trailing slashes from each SOURCE argument.  */
 static int remove_trailing_slashes;
 
+/* Valid arguments to the `--reply' option. */
+static char const* const reply_args[] =
+{
+  "yes", "no", "query", 0
+};
+
+/* The values that correspond to the above strings. */
+static int const reply_vals[] =
+{
+  I_ALWAYS_YES, I_ALWAYS_NO, I_ASK_USER
+};
+
 static struct option const long_options[] =
 {
   {"backup", optional_argument, NULL, 'b'},
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
+  {"reply", required_argument, NULL, REPLY_OPTION},
   {"strip-trailing-slashes", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
   {"suffix", required_argument, NULL, 'S'},
   {"target-directory", required_argument, NULL, TARGET_DIRECTORY_OPTION},
@@ -323,11 +338,19 @@ Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n\
 \n\
       --backup[=CONTROL]       make a backup of each existing destination file\n\
   -b                           like --backup but does not accept an argument\n\
-  -f, --force                  never prompt before overwriting\n\
+  -f, --force                  do not prompt before overwriting\n\
+                                 equivalent to --reply=yes\n\
   -i, --interactive            prompt before overwrite\n\
-      --strip-trailing-slashes  remove any trailing slashes from each SOURCE\n\
+                                 equivalent to --reply=query\n\
+"));
+      printf (_("\
+      --reply={yes,no,query}   specify how to handle the prompt about an\n\
+                                 existing destination file\n\
+      --strip-trailing-slashes remove any trailing slashes from each SOURCE\n\
                                  argument\n\
   -S, --suffix=SUFFIX          override the usual backup suffix\n\
+"));
+      printf (_("\
       --target-directory=DIRECTORY  move all SOURCE arguments into DIRECTORY\n\
   -u, --update                 move only when the SOURCE file is newer\n\
                                  than the destination file or when the\n\
@@ -402,10 +425,14 @@ main (int argc, char **argv)
 	    version_control_string = optarg;
 	  break;
 	case 'f':
-	  x.interactive = I_OFF;
+	  x.interactive = I_ALWAYS_YES;
 	  break;
 	case 'i':
-	  x.interactive = I_ON;
+	  x.interactive = I_ASK_USER;
+	  break;
+	case REPLY_OPTION:
+	  x.interactive = XARGMATCH ("--reply", optarg,
+				     reply_args, reply_vals);
 	  break;
 	case STRIP_TRAILING_SLASHES_OPTION:
 	  remove_trailing_slashes = 1;
