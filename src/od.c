@@ -142,7 +142,8 @@ struct tspec
     enum size_spec size;
     void (*print_function) ();
     char *fmt_string;
-    int  trailer, field_width;
+    int hexl_mode_trailer;
+    int field_width;
   };
 
 /* The name this program was run with.  */
@@ -529,17 +530,18 @@ print_long_double (long unsigned int n_bytes, const char *block,
 #endif
 
 static void
-dump_string_trailer(long unsigned int n_bytes, const char *block)
+dump_hexl_mode_trailer (long unsigned int n_bytes, const char *block)
 {
   int i;
-  printf("  >");
+  fputs ("  >", stdout);
   for (i = n_bytes; i > 0; i--)
     {
       unsigned int c = *(const unsigned char *) block;
-      printf ("%c", ISPRINT(c) ? c : '.');
+      unsigned int c2 = (ISPRINT(c) ? c : '.');
+      putchar (c2);
       block += sizeof (unsigned char);
     }
-  printf("<");
+  putchar ('<');
 }
 
 static void
@@ -677,7 +679,8 @@ decode_one_format (const char *s_orig, const char *s, const char **next,
   char *fmt_string;
   void (*print_function) ();
   const char *p;
-  unsigned int c, field_width=0;
+  unsigned int c;
+  unsigned int field_width = 0;
 
   assert (tspec != NULL);
 
@@ -746,28 +749,28 @@ this system doesn't provide a %lu-byte integral type"), s_orig, size);
 	case 'd':
 	  fmt = SIGNED_DECIMAL;
 	  sprintf (fmt_string, " %%%u%sd",
-		   field_width = bytes_to_signed_dec_digits[size],
+		   (field_width = bytes_to_signed_dec_digits[size]),
 		   (size_spec == LONG ? "l" : ""));
 	  break;
 
 	case 'o':
 	  fmt = OCTAL;
 	  sprintf (fmt_string, " %%0%u%so",
-		   field_width = bytes_to_oct_digits[size],
+		   (field_width = bytes_to_oct_digits[size]),
 		   (size_spec == LONG ? "l" : ""));
 	  break;
 
 	case 'u':
 	  fmt = UNSIGNED_DECIMAL;
 	  sprintf (fmt_string, " %%%u%su",
-		   field_width = bytes_to_unsigned_dec_digits[size],
+		   (field_width = bytes_to_unsigned_dec_digits[size]),
 		   (size_spec == LONG ? "l" : ""));
 	  break;
 
 	case 'x':
 	  fmt = HEXADECIMAL;
 	  sprintf (fmt_string, " %%0%u%sx",
-		   field_width = bytes_to_hex_digits[size],
+		   (field_width = bytes_to_hex_digits[size]),
 		   (size_spec == LONG ? "l" : ""));
 	  break;
 
@@ -858,7 +861,7 @@ this system doesn't provide a %lu-byte floating point type"), s_orig, size);
 	  pre_fmt_string = " %%%d.%de";
 	  fmt_string = xmalloc (strlen (pre_fmt_string));
 	  sprintf (fmt_string, pre_fmt_string,
-		   field_width = FLT_DIG + 8, FLT_DIG);
+		   (field_width = FLT_DIG + 8), FLT_DIG);
 	  break;
 
 	case FLOAT_DOUBLE:
@@ -866,7 +869,7 @@ this system doesn't provide a %lu-byte floating point type"), s_orig, size);
 	  pre_fmt_string = " %%%d.%de";
 	  fmt_string = xmalloc (strlen (pre_fmt_string));
 	  sprintf (fmt_string, pre_fmt_string,
-		   field_width = DBL_DIG + 8, DBL_DIG);
+		   (field_width = DBL_DIG + 8), DBL_DIG);
 	  break;
 
 #ifdef HAVE_LONG_DOUBLE
@@ -875,7 +878,7 @@ this system doesn't provide a %lu-byte floating point type"), s_orig, size);
 	  pre_fmt_string = " %%%d.%dLe";
 	  fmt_string = xmalloc (strlen (pre_fmt_string));
 	  sprintf (fmt_string, pre_fmt_string,
-		   field_width = LDBL_DIG + 8, LDBL_DIG);
+		   (field_width = LDBL_DIG + 8), LDBL_DIG);
 	  break;
 #endif
 
@@ -914,9 +917,9 @@ this system doesn't provide a %lu-byte floating point type"), s_orig, size);
   tspec->fmt_string = fmt_string;
 
   tspec->field_width = field_width;
-  tspec->trailer = (*s == 'z');
-  if (tspec->trailer)
-      s++;
+  tspec->hexl_mode_trailer = (*s == 'z');
+  if (tspec->hexl_mode_trailer)
+    s++;
 
   if (next != NULL)
     *next = s;
@@ -1147,20 +1150,22 @@ write_block (long unsigned int current_offset, long unsigned int n_bytes,
       prev_pair_equal = 0;
       for (i = 0; i < n_specs; i++)
 	{
-	  printf ("%s",  (i == 0
-			  ? format_address (current_offset)
-			  : address_pad));
+	  const char *addr_or_pad = (i == 0
+				     ? format_address (current_offset)
+				     : address_pad);
+
+	  fputs (addr_or_pad, stdout);
 	  (*spec[i].print_function) (n_bytes, curr_block, spec[i].fmt_string);
-	  if (spec[i].trailer)
+	  if (spec[i].hexl_mode_trailer)
 	    {
 	      /* space-pad out to full line width, then dump the trailer */
 	      int datum_width = width_bytes[spec[i].size];
 	      int blank_fields = (bytes_per_block - n_bytes) / datum_width;
 	      int field_width = spec[i].field_width + 1;
-	      printf("%*s", blank_fields * field_width, "");
-	      dump_string_trailer(n_bytes, curr_block);
+	      printf ("%*s", blank_fields * field_width, "");
+	      dump_hexl_mode_trailer (n_bytes, curr_block);
 	    }
-	  printf("\n");
+	  putchar ('\n');
 	}
     }
   first = 0;
@@ -1512,7 +1517,8 @@ dump_strings (void)
     tryline:
 
       if (limit_bytes_to_format
-	  && address >= (n_bytes_to_skip + max_bytes_to_format - string_min))
+	  && address >= (n_bytes_to_skip + max_bytes_to_format -
+			 (off_t) string_min))
 	break;
 
       for (i = 0; i < string_min; i++)
