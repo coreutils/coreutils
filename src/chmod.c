@@ -60,11 +60,11 @@ enum Verbosity
 /* The name the program was run with. */
 char *program_name;
 
-/* If nonzero, change the modes of directories recursively. */
-static int recurse;
+/* If true, change the modes of directories recursively. */
+static bool recurse;
 
-/* If nonzero, force silence (no error messages). */
-static int force_silent;
+/* If true, force silence (no error messages). */
+static bool force_silent;
 
 /* Level of verbosity.  */
 static enum Verbosity verbosity = V_off;
@@ -161,55 +161,55 @@ describe_change (const char *file, mode_t mode,
       abort ();
     }
   printf (fmt, quote (file),
-	  (unsigned long) (mode & CHMOD_MODE_BITS), &perms[1]);
+	  (unsigned long int) (mode & CHMOD_MODE_BITS), &perms[1]);
 }
 
 /* Change the mode of FILE according to the list of operations CHANGES.
-   Return 0 if successful, -1 if errors occurred.  This function is called
+   Return true if successful.  This function is called
    once for every file system object that fts encounters.  */
 
-static int
+static bool
 process_file (FTS *fts, FTSENT *ent, const struct mode_change *changes)
 {
   char const *file_full_name = ent->fts_path;
   char const *file = ent->fts_accpath;
   const struct stat *file_stats = ent->fts_statp;
   mode_t new_mode IF_LINT (= 0);
-  int errors = 0;
+  bool ok = true;
   bool do_chmod;
   bool symlink_changed = true;
 
   switch (ent->fts_info)
     {
     case FTS_DP:
-      return 0;
+      return true;
 
     case FTS_NS:
       error (0, ent->fts_errno, _("cannot access %s"), quote (file_full_name));
-      errors = -1;
+      ok = false;
       break;
 
     case FTS_ERR:
       error (0, ent->fts_errno, _("%s"), quote (file_full_name));
-      errors = -1;
+      ok = false;
       break;
 
     case FTS_DNR:
       error (0, ent->fts_errno, _("cannot read directory %s"),
 	     quote (file_full_name));
-      errors = -1;
+      ok = false;
       break;
 
     default:
       break;
     }
 
-  do_chmod = !errors;
+  do_chmod = ok;
 
   if (do_chmod && ROOT_DEV_INO_CHECK (root_dev_ino, file_stats))
     {
       ROOT_DEV_INO_WARN (file_full_name);
-      errors = -1;
+      ok = false;
       do_chmod = false;
     }
 
@@ -221,9 +221,9 @@ process_file (FTS *fts, FTSENT *ent, const struct mode_change *changes)
 	symlink_changed = false;
       else
 	{
-	  errors = chmod (file, new_mode);
+	  ok = (chmod (file, new_mode) == 0);
 
-	  if (errors && !force_silent)
+	  if (! (ok | force_silent))
 	    error (0, errno, _("changing permissions of %s"),
 		   quote (file_full_name));
 	}
@@ -232,13 +232,13 @@ process_file (FTS *fts, FTSENT *ent, const struct mode_change *changes)
   if (verbosity != V_off)
     {
       bool changed =
-	(!errors && symlink_changed
+	(ok && symlink_changed
 	 && mode_changed (file, file_stats->st_mode, new_mode));
 
       if (changed || verbosity == V_high)
 	{
 	  enum Change_status ch_status =
-	    (errors ? CH_FAILED
+	    (!ok ? CH_FAILED
 	     : !symlink_changed ? CH_NOT_APPLIED
 	     : !changed ? CH_NO_CHANGE_REQUESTED
 	     : CH_SUCCEEDED);
@@ -249,19 +249,18 @@ process_file (FTS *fts, FTSENT *ent, const struct mode_change *changes)
   if ( ! recurse)
     fts_set (fts, ent, FTS_SKIP);
 
-  return errors;
+  return ok;
 }
 
 /* Recursively change the modes of the specified FILES (the last entry
    of which is NULL) according to the list of operations CHANGES.
    BIT_FLAGS controls how fts works.
-   If the fts_open call fails, exit nonzero.
-   Otherwise, return nonzero upon error.  */
+   Return true if successful.  */
 
-static int
+static bool
 process_files (char **files, int bit_flags, const struct mode_change *changes)
 {
-  int fail = 0;
+  bool ok = true;
 
   FTS *fts = xfts_open (files, bit_flags, NULL);
 
@@ -276,12 +275,12 @@ process_files (char **files, int bit_flags, const struct mode_change *changes)
 	    {
 	      /* FIXME: try to give a better message  */
 	      error (0, errno, _("fts_read failed"));
-	      fail = 1;
+	      ok = false;
 	    }
 	  break;
 	}
 
-      fail |= process_file (fts, ent, changes);
+      ok &= process_file (fts, ent, changes);
     }
 
   /* Ignore failure, since the only way it can do so is in failing to
@@ -289,7 +288,7 @@ process_files (char **files, int bit_flags, const struct mode_change *changes)
      that doesn't matter.  */
   fts_close (fts);
 
-  return fail;
+  return ok;
 }
 
 void
@@ -340,7 +339,7 @@ int
 main (int argc, char **argv)
 {
   struct mode_change *changes;
-  int fail = 0;
+  bool ok;
   int modeind = 0;		/* Index of the mode argument in `argv'. */
   int thisind;
   bool preserve_root = false;
@@ -354,7 +353,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  recurse = force_silent = 0;
+  recurse = force_silent = false;
 
   while (1)
     {
@@ -402,13 +401,13 @@ main (int argc, char **argv)
 	  reference_file = optarg;
 	  break;
 	case 'R':
-	  recurse = 1;
+	  recurse = true;
 	  break;
 	case 'c':
 	  verbosity = V_changes_only;
 	  break;
 	case 'f':
-	  force_silent = 1;
+	  force_silent = true;
 	  break;
 	case 'v':
 	  verbosity = V_high;
@@ -444,7 +443,7 @@ main (int argc, char **argv)
     error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
 	   quote (reference_file));
 
-  if (recurse && preserve_root)
+  if (recurse & preserve_root)
     {
       static struct dev_ino dev_ino_buf;
       root_dev_ino = get_root_dev_ino (&dev_ino_buf);
@@ -457,7 +456,7 @@ main (int argc, char **argv)
       root_dev_ino = NULL;
     }
 
-  fail = process_files (argv + optind, FTS_COMFOLLOW, changes);
+  ok = process_files (argv + optind, FTS_COMFOLLOW, changes);
 
-  exit (fail ? EXIT_FAILURE : EXIT_SUCCESS);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
