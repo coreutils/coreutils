@@ -51,6 +51,6 @@ EOF
 
 cmp out2 exp || fail=1
 
-# rm -fr out out2 exp $file $symlink $other_partition_tmpdir
+rm -fr out out2 exp $file $symlink $other_partition_tmpdir
 
 exit $fail
