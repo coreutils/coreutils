@@ -1,3 +1,8 @@
+2000-08-06  Jim Meyering  <meyering@lucent.com>
+
+	* doc/fileutils.texi (cp invocation) [-r]: Remove inaccurate mention of
+	`non-symbolic links'.
+
 2000-08-05  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0y.
