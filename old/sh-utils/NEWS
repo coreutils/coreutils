@@ -1,4 +1,7 @@
 Changes in release 2.1
+ [2.0.13]
+* pathchk now exits nonzero for a path with a directory component
+    that specifies a non-directory
  [2.0.12]
 * kill: new program
 * who accepts new options: --all (-a), --boot (-b), --dead (-d), --login,
