@@ -2,7 +2,7 @@ Changes in release 2.1
 [2.0.15]
 * tail accepts new option: -F, equivalent to `--follow=name --retry',
     for compatibility with FreeBSD and NetBSD versions of tail.
-* fmt: `echo x|fmt -w 100000' no longer causes fmt to segfault.
+* fmt no longer segfaults when using a maximum line width larger than 32767 
 * uniq's --all-repeated option has new modes to delimit groups
     of duplicate lines: --all-repeated={precede,separate,none(default)}
 [2.0.14]
