@@ -1,3 +1,8 @@
+1997-10-22  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* m4/decl.m4: New file.
+	* m4/do-decl.m4: New file.
+
 1997-10-16  Paul Eggert  <eggert@twinsun.com>
 
 	* src/od.c (LONG_MAX): Define if not defined.
