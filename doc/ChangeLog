@@ -1,3 +1,10 @@
+2003-06-25  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (Time directives) [%s]: Add a cross reference
+	to the related examples.
+	(Examples of date): Add an @anchor here, along with a few more examples.
+	Suggestion from Dan Jacobson.
+
 2003-06-12  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (wc invocation): Tweak wording: wc prints counts in
