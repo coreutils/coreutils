@@ -34,25 +34,27 @@
 
 #define AUTHORS "Jim Meyering"
 
-#define N_CHARS (UCHAR_MAX + 1)
+enum { N_CHARS = UCHAR_MAX + 1 };
 
-/* A pointer to a filtering function.  */
-typedef size_t (*Filter) (/* unsigned char *, size_t, Filter */);
+/* Convert a possibly-signed character to an unsigned character.  This is
+   a bit safer than casting to unsigned char, since it catches some type
+   errors that the cast doesn't.  */
+static inline unsigned char uchar (char ch) { return ch; }
 
-/* Convert from character C to its index in the collating
-   sequence array.  Just cast to an unsigned int to avoid
-   problems with sign-extension.  */
-#define ORD(c) (unsigned int)(c)
-
-/* The inverse of ORD.  */
-#define CHR(i) (unsigned char)(i)
+/* An unsigned integer type big enough to hold a repeat count or an
+   unsigned character.  POSIX require support for repeat counts as
+   high as 2**31 - 1.  Since repeat counts might need to expand to
+   match the length of an argument string, we need at least size_t to
+   avoid arbitrary internal limits.  It doesn't cost much to use
+   uintmax_t, though.  */
+typedef uintmax_t count;
 
 /* The value for Spec_list->state that indicates to
    get_next that it should initialize the tail pointer.
    Its value should be as large as possible to avoid conflict
    a valid value for the state field -- and that may be as
    large as any valid repeat_count.  */
-#define BEGIN_STATE (INT_MAX - 1)
+#define BEGIN_STATE (UINTMAX_MAX - 1)
 
 /* The value for Spec_list->state that indicates to
    get_next that the element pointed to by Spec_list->tail is
@@ -61,9 +63,9 @@ typedef size_t (*Filter) (/* unsigned char *, size_t, Filter */);
    initializations.  */
 #define NEW_ELEMENT (BEGIN_STATE + 1)
 
-/* A value distinct from any character that may have been stored in a
-   buffer as the result of a block-read in the function squeeze_filter.  */
-#define NOT_A_CHAR (unsigned int)(-1)
+/* The maximum possible repeat count.  Due to how the states are
+   implemented, it can be as much as BEGIN_STATE.  */
+#define REPEAT_COUNT_MAXIMUM BEGIN_STATE
 
 /* The following (but not CC_NO_CLASS) are indices into the array of
    valid character class strings.  */
@@ -83,29 +85,14 @@ enum Char_class
    and string2.  */
 enum Upper_Lower_class
   {
-    UL_LOWER = 0,
-    UL_UPPER = 1,
-    UL_NONE = 2
+    UL_LOWER,
+    UL_UPPER,
+    UL_NONE
   };
-
-/* A shortcut to ensure that when constructing the translation array,
-   one of the values returned by paired calls to get_next (from s1 and s2)
-   is from [:upper:] and the other is from [:lower:], or neither is from
-   upper or lower.  By default, GNU tr permits the identity mappings: from
-   [:upper:] to [:upper:] and [:lower:] to [:lower:].  But when
-   POSIXLY_CORRECT is set, those evoke diagnostics. This array is indexed
-   by values of type enum Upper_Lower_class.  */
-static int const class_ok[3][3] =
-{
-  {1, 1, 0},
-  {1, 1, 0},
-  {0, 0, 1}
-};
 
 /* The type of a List_element.  See build_spec_list for more details.  */
 enum Range_element_type
   {
-    RE_NO_TYPE = 0,
     RE_NORMAL_CHAR,
     RE_RANGE,
     RE_CHAR_CLASS,
@@ -124,19 +111,19 @@ struct List_element
     struct List_element *next;
     union
       {
-	int normal_char;
+	unsigned char normal_char;
 	struct			/* unnamed */
 	  {
-	    unsigned int first_char;
-	    unsigned int last_char;
+	    unsigned char first_char;
+	    unsigned char last_char;
 	  }
 	range;
 	enum Char_class char_class;
-	int equiv_code;
+	unsigned char equiv_code;
 	struct			/* unnamed */
 	  {
-	    unsigned int the_repeated_char;
-	    size_t repeat_count;
+	    unsigned char the_repeated_char;
+	    count repeat_count;
 	  }
 	repeated_char;
       }
@@ -164,32 +151,32 @@ struct Spec_list
        signals get_next to initialize tail to point to head->next.  */
     struct List_element *tail;
 
-    /* Used to save state between calls to get_next().  */
-    unsigned int state;
+    /* Used to save state between calls to get_next.  */
+    count state;
 
     /* Length, in the sense that length ('a-z[:digit:]123abc')
        is 42 ( = 26 + 10 + 6).  */
-    size_t length;
+    count length;
 
     /* The number of [c*] and [c*0] constructs that appear in this spec.  */
-    int n_indefinite_repeats;
+    size_t n_indefinite_repeats;
 
     /* If n_indefinite_repeats is nonzero, this points to the List_element
        corresponding to the last [c*] or [c*0] construct encountered in
        this spec.  Otherwise it is undefined.  */
     struct List_element *indefinite_repeat_element;
 
-    /* Non-zero if this spec contains at least one equivalence
+    /* True if this spec contains at least one equivalence
        class construct e.g. [=c=].  */
-    int has_equiv_class;
+    bool has_equiv_class;
 
-    /* Non-zero if this spec contains at least one character class
+    /* True if this spec contains at least one character class
        construct.  E.g. [:digit:].  */
-    int has_char_class;
+    bool has_char_class;
 
-    /* Non-zero if this spec contains at least one of the character class
+    /* True if this spec contains at least one of the character class
        constructs (all but upper and lower) that aren't allowed in s2.  */
-    int has_restricted_char_class;
+    bool has_restricted_char_class;
   };
 
 /* A representation for escaped string1 or string2.  As a string is parsed,
@@ -198,28 +185,32 @@ struct Spec_list
    entry in the ESCAPED vector.  */
 struct E_string
 {
-  unsigned char *s;
-  int *escaped;
+  char *s;
+  bool *escaped;
   size_t len;
 };
 
 /* Return nonzero if the Ith character of escaped string ES matches C
    and is not escaped itself.  */
-#define ES_MATCH(ES, I, C) ((ES)->s[(I)] == (C) && !(ES)->escaped[(I)])
+static inline bool
+es_match (struct E_string const *es, size_t i, char c)
+{
+  return es->s[i] == c && !es->escaped[i];
+}
 
 /* The name by which this program was run.  */
 char *program_name;
 
-/* When nonzero, each sequence in the input of a repeated character
+/* When true, each sequence in the input of a repeated character
    (call it c) is replaced (in the output) by a single occurrence of c
    for every c in the squeeze set.  */
-static int squeeze_repeats = 0;
+static bool squeeze_repeats = false;
 
-/* When nonzero, removes characters in the delete set from input.  */
-static int delete = 0;
+/* When true, removes characters in the delete set from input.  */
+static bool delete = false;
 
 /* Use the complement of set1 in place of set1.  */
-static int complement = 0;
+static bool complement = false;
 
 /* When nonzero, this flag causes GNU tr to provide strict
    compliance with POSIX draft 1003.2.11.2.  The POSIX spec
@@ -234,7 +225,7 @@ static int complement = 0;
    Warnings on the following topics are suppressed when this
    variable is nonzero:
    1. Ambiguous octal escapes.  */
-static int posix_pedantic;
+static bool posix_pedantic;
 
 /* When tr is performing translation and string1 is longer than string2,
    POSIX says that the result is undefined.  That gives the implementor
@@ -264,34 +255,32 @@ static int posix_pedantic;
    of the POSIX constructs [:alpha:], [=c=], and [c*10], so if by
    some unfortunate coincidence you use such constructs in scripts
    expecting to use some other version of tr, the scripts will break.  */
-static int truncate_set1 = 0;
+static bool truncate_set1 = false;
 
 /* An alias for (!delete && non_option_args == 2).
    It is set in main and used there and in validate().  */
-static int translating;
+static bool translating;
 
-static unsigned char io_buf[BUFSIZ];
+static char io_buf[BUFSIZ];
 
 static char const *const char_class_name[] =
 {
   "alnum", "alpha", "blank", "cntrl", "digit", "graph",
   "lower", "print", "punct", "space", "upper", "xdigit"
 };
-#define N_CHAR_CLASSES (sizeof(char_class_name) / sizeof(char_class_name[0]))
-
-typedef char SET_TYPE;
+enum { N_CHAR_CLASSES = sizeof char_class_name / sizeof char_class_name[0] };
 
 /* Array of boolean values.  A character `c' is a member of the
    squeeze set if and only if in_squeeze_set[c] is true.  The squeeze
    set is defined by the last (possibly, the only) string argument
    on the command line when the squeeze option is given.  */
-static SET_TYPE in_squeeze_set[N_CHARS];
+static bool in_squeeze_set[N_CHARS];
 
 /* Array of boolean values.  A character `c' is a member of the
    delete set if and only if in_delete_set[c] is true.  The delete
    set is defined by the first (or only) string argument on the
    command line when the delete option is given.  */
-static SET_TYPE in_delete_set[N_CHARS];
+static bool in_delete_set[N_CHARS];
 
 /* Array of character values defining the translation (if any) that
    tr is to perform.  Translation is performed only when there are
@@ -394,8 +383,8 @@ translation or deletion.\n\
 /* Return nonzero if the character C is a member of the
    equivalence class containing the character EQUIV_CLASS.  */
 
-static int
-is_equiv_class_member (unsigned int equiv_class, unsigned int c)
+static inline bool
+is_equiv_class_member (unsigned char equiv_class, unsigned char c)
 {
   return (equiv_class == c);
 }
@@ -404,7 +393,7 @@ is_equiv_class_member (unsigned int equiv_class, unsigned int c)
    character class CHAR_CLASS.  */
 
 static int
-is_char_class_member (enum Char_class char_class, unsigned int c)
+is_char_class_member (enum Char_class char_class, unsigned char c)
 {
   int result;
 
@@ -461,21 +450,18 @@ es_free (struct E_string *es)
 }
 
 /* Perform the first pass over each range-spec argument S, converting all
-   \c and \ddd escapes to their one-byte representations.  The conversion
-   is done in-place, so S must point to writable storage.  If an invalid
-   quote sequence is found print an error message and return nonzero.
-   Otherwise set *LEN to the length of the resulting string and return
-   zero.  The resulting array of characters may contain zero-bytes;
+   \c and \ddd escapes to their one-byte representations.  If an invalid
+   quote sequence is found print an error message and return false;
+   Otherwise set *ES to the resulting string and return true.
+   The resulting array of characters may contain zero-bytes;
    however, on input, S is assumed to be null-terminated, and hence
    cannot contain actual (non-escaped) zero bytes.  */
 
-static int
-unquote (const unsigned char *s, struct E_string *es)
+static bool
+unquote (char const *s, struct E_string *es)
 {
   size_t i, j;
-  size_t len;
-
-  len = strlen ((char *) s);
+  size_t len = strlen (s);
 
   es->s = xmalloc (len);
   es->escaped = xcalloc (len, sizeof es->escaped[0]);
@@ -483,13 +469,14 @@ unquote (const unsigned char *s, struct E_string *es)
   j = 0;
   for (i = 0; s[i]; i++)
     {
+      unsigned char c;
+      int oct_digit;
+
       switch (s[i])
 	{
-	  int c;
 	case '\\':
 	  switch (s[i + 1])
 	    {
-	      int oct_digit;
 	    case '\\':
 	      c = '\\';
 	      break;
@@ -555,18 +542,18 @@ unquote (const unsigned char *s, struct E_string *es)
 	      break;
 	    case '\0':
 	      error (0, 0, _("invalid backslash escape at end of string"));
-	      return 1;
+	      return false;
 
 	    default:
 	      if (posix_pedantic)
 		{
 		  error (0, 0, _("invalid backslash escape `\\%c'"), s[i + 1]);
-		  return 1;
+		  return false;
 		}
 	      else
 	        {
 		  c = s[i + 1];
-		  es->escaped[j] = 1;
+		  es->escaped[j] = true;
 		}
 	    }
 	  ++i;
@@ -578,21 +565,21 @@ unquote (const unsigned char *s, struct E_string *es)
 	}
     }
   es->len = j;
-  return 0;
+  return true;
 }
 
 /* If CLASS_STR is a valid character class string, return its index
    in the global char_class_name array.  Otherwise, return CC_NO_CLASS.  */
 
 static enum Char_class
-look_up_char_class (const unsigned char *class_str, size_t len)
+look_up_char_class (char const *class_str, size_t len)
 {
-  unsigned int i;
+  enum Char_class i;
 
   for (i = 0; i < N_CHAR_CLASSES; i++)
-    if (strncmp ((const char *) class_str, char_class_name[i], len) == 0
+    if (strncmp (class_str, char_class_name[i], len) == 0
 	&& strlen (char_class_name[i]) == len)
-      return (enum Char_class) i;
+      return i;
   return CC_NO_CLASS;
 }
 
@@ -600,11 +587,10 @@ look_up_char_class (const unsigned char *class_str, size_t len)
    This function is used solely for formatting error messages.  */
 
 static char *
-make_printable_char (unsigned int c)
+make_printable_char (unsigned char c)
 {
   char *buf = xmalloc (5);
 
-  assert (c < N_CHARS);
   if (ISPRINT (c))
     {
       buf[0] = c;
@@ -625,11 +611,11 @@ make_printable_char (unsigned int c)
    sequences.  This function is used solely for printing error messages.  */
 
 static char *
-make_printable_str (const unsigned char *s, size_t len)
+make_printable_str (char const *s, size_t len)
 {
   /* Worst case is that every character expands to a backslash
      followed by a 3-character octal escape sequence.  */
-  char *printable_buf = xmalloc (4 * len + 1);
+  char *printable_buf = xnmalloc (len + 1, 4);
   char *p = printable_buf;
   size_t i;
 
@@ -637,8 +623,9 @@ make_printable_str (const unsigned char *s, size_t len)
     {
       char buf[5];
       char *tmp = NULL;
+      unsigned char c = s[i];
 
-      switch (s[i])
+      switch (c)
 	{
 	case '\\':
 	  tmp = "\\";
@@ -665,13 +652,13 @@ make_printable_str (const unsigned char *s, size_t len)
 	  tmp = "\\v";
 	  break;
 	default:
-	  if (ISPRINT (s[i]))
+	  if (ISPRINT (c))
 	    {
-	      buf[0] = s[i];
+	      buf[0] = c;
 	      buf[1] = '\0';
 	    }
 	  else
-	    sprintf (buf, "\\%03o", s[i]);
+	    sprintf (buf, "\\%03o", c);
 	  tmp = buf;
 	  break;
 	}
@@ -684,7 +671,7 @@ make_printable_str (const unsigned char *s, size_t len)
    character C to the specification list LIST.  */
 
 static void
-append_normal_char (struct Spec_list *list, unsigned int c)
+append_normal_char (struct Spec_list *list, unsigned char c)
 {
   struct List_element *new;
 
@@ -699,15 +686,15 @@ append_normal_char (struct Spec_list *list, unsigned int c)
 
 /* Append a newly allocated structure representing the range
    of characters from FIRST to LAST to the specification list LIST.
-   Return nonzero if LAST precedes FIRST in the collating sequence,
-   zero otherwise.  This means that '[c-c]' is acceptable.  */
+   Return false if LAST precedes FIRST in the collating sequence,
+   true otherwise.  This means that '[c-c]' is acceptable.  */
 
-static int
-append_range (struct Spec_list *list, unsigned int first, unsigned int last)
+static bool
+append_range (struct Spec_list *list, unsigned char first, unsigned char last)
 {
   struct List_element *new;
 
-  if (ORD (first) > ORD (last))
+  if (last < first)
     {
       char *tmp1 = make_printable_char (first);
       char *tmp2 = make_printable_char (last);
@@ -717,7 +704,7 @@ append_range (struct Spec_list *list, unsigned int first, unsigned int last)
 	     tmp1, tmp2);
       free (tmp1);
       free (tmp2);
-      return 1;
+      return false;
     }
   new = xmalloc (sizeof *new);
   new->next = NULL;
@@ -727,24 +714,24 @@ append_range (struct Spec_list *list, unsigned int first, unsigned int last)
   assert (list->tail);
   list->tail->next = new;
   list->tail = new;
-  return 0;
+  return true;
 }
 
 /* If CHAR_CLASS_STR is a valid character class string, append a
    newly allocated structure representing that character class to the end
-   of the specification list LIST and return 0.  If CHAR_CLASS_STR is not
-   a valid string return nonzero.  */
+   of the specification list LIST and return true.  If CHAR_CLASS_STR is not
+   a valid string return false.  */
 
-static int
+static bool
 append_char_class (struct Spec_list *list,
-		   const unsigned char *char_class_str, size_t len)
+		   char const *char_class_str, size_t len)
 {
   enum Char_class char_class;
   struct List_element *new;
 
   char_class = look_up_char_class (char_class_str, len);
   if (char_class == CC_NO_CLASS)
-    return 1;
+    return false;
   new = xmalloc (sizeof *new);
   new->next = NULL;
   new->type = RE_CHAR_CLASS;
@@ -752,7 +739,7 @@ append_char_class (struct Spec_list *list,
   assert (list->tail);
   list->tail->next = new;
   list->tail = new;
-  return 0;
+  return true;
 }
 
 /* Append a newly allocated structure representing a [c*n]
@@ -761,8 +748,8 @@ append_char_class (struct Spec_list *list,
    is a non-negative repeat count.  */
 
 static void
-append_repeated_char (struct Spec_list *list, unsigned int the_char,
-		      size_t repeat_count)
+append_repeated_char (struct Spec_list *list, unsigned char the_char,
+		      count repeat_count)
 {
   struct List_element *new;
 
@@ -779,17 +766,17 @@ append_repeated_char (struct Spec_list *list, unsigned int the_char,
 /* Given a string, EQUIV_CLASS_STR, from a [=str=] context and
    the length of that string, LEN, if LEN is exactly one, append
    a newly allocated structure representing the specified
-   equivalence class to the specification list, LIST and return zero.
-   If LEN is not 1, return nonzero.  */
+   equivalence class to the specification list, LIST and return true.
+   If LEN is not 1, return false.  */
 
-static int
+static bool
 append_equiv_class (struct Spec_list *list,
-		    const unsigned char *equiv_class_str, size_t len)
+		    char const *equiv_class_str, size_t len)
 {
   struct List_element *new;
 
   if (len != 1)
-    return 1;
+    return false;
   new = xmalloc (sizeof *new);
   new->next = NULL;
   new->type = RE_EQUIV_CLASS;
@@ -797,31 +784,18 @@ append_equiv_class (struct Spec_list *list,
   assert (list->tail);
   list->tail->next = new;
   list->tail = new;
-  return 0;
-}
-
-/* Return a newly allocated copy of the LEN-byte prefix of P.
-   The returned string may contain NUL bytes and is *not* NUL-terminated.  */
-
-static unsigned char *
-xmemdup (const unsigned char *p, size_t len)
-{
-  unsigned char *tmp = xmalloc (len);
-
-  /* Use memcpy rather than strncpy because `p' may contain zero-bytes.  */
-  memcpy (tmp, p, len);
-  return tmp;
+  return true;
 }
 
 /* Search forward starting at START_IDX for the 2-char sequence
    (PRE_BRACKET_CHAR,']') in the string P of length P_LEN.  If such
    a sequence is found, set *RESULT_IDX to the index of the first
-   character and return nonzero. Otherwise return zero.  P may contain
+   character and return true.  Otherwise return false.  P may contain
    zero bytes.  */
 
-static int
+static bool
 find_closing_delim (const struct E_string *es, size_t start_idx,
-		    unsigned int pre_bracket_char, size_t *result_idx)
+		    char pre_bracket_char, size_t *result_idx)
 {
   size_t i;
 
@@ -830,9 +804,9 @@ find_closing_delim (const struct E_string *es, size_t start_idx,
 	&& !es->escaped[i] && !es->escaped[i + 1])
       {
 	*result_idx = i;
-	return 1;
+	return true;
       }
-  return 0;
+  return false;
 }
 
 /* Parse the bracketed repeat-char syntax.  If the P_LEN characters
@@ -847,18 +821,18 @@ find_closing_delim (const struct E_string *es, size_t start_idx,
 
 static int
 find_bracketed_repeat (const struct E_string *es, size_t start_idx,
-		       unsigned int *char_to_repeat, size_t *repeat_count,
+		       unsigned char *char_to_repeat, count *repeat_count,
 		       size_t *closing_bracket_idx)
 {
   size_t i;
 
   assert (start_idx + 1 < es->len);
-  if (!ES_MATCH (es, start_idx + 1, '*'))
+  if (!es_match (es, start_idx + 1, '*'))
     return -1;
 
-  for (i = start_idx + 2; i < es->len; i++)
+  for (i = start_idx + 2; i < es->len && !es->escaped[i]; i++)
     {
-      if (ES_MATCH (es, i, ']'))
+      if (es->s[i] == ']')
 	{
 	  size_t digit_str_len = i - start_idx - 2;
 
@@ -867,40 +841,27 @@ find_bracketed_repeat (const struct E_string *es, size_t start_idx,
 	    {
 	      /* We've matched [c*] -- no explicit repeat count.  */
 	      *repeat_count = 0;
-	      *closing_bracket_idx = i;
-	      return 0;
 	    }
-
-	  /* Here, we have found [c*s] where s should be a string
-	     of octal (if it starts with `0') or decimal digits.  */
-	  {
-	    const char *digit_str = (const char *) &es->s[start_idx + 2];
-	    unsigned long int tmp_ulong;
-	    char *d_end;
-	    int base = 10;
-	    /* Select the base manually so we can be sure it's either 8 or 10.
-	       If the spec allowed it to be interpreted as hexadecimal, we
-	       could have used `0' and let xstrtoul decide.  */
-	    if (*digit_str == '0')
-	      {
-		base = 8;
-		++digit_str;
-		--digit_str_len;
-	      }
-	    if (xstrtoul (digit_str, &d_end, base, &tmp_ulong, NULL)
-		  != LONGINT_OK
-		|| BEGIN_STATE < tmp_ulong
-		|| digit_str + digit_str_len != d_end)
-	      {
-		char *tmp = make_printable_str (es->s + start_idx + 2,
-						i - start_idx - 2);
-		error (0, 0, _("invalid repeat count `%s' in [c*n] construct"),
-		       tmp);
-		free (tmp);
-		return -2;
-	      }
-	    *repeat_count = tmp_ulong;
-	  }
+	  else
+	    {
+	      /* Here, we have found [c*s] where s should be a string
+		 of octal (if it starts with `0') or decimal digits.  */
+	      char const *digit_str = &es->s[start_idx + 2];
+	      char *d_end;
+	      if ((xstrtoumax (digit_str, &d_end, *digit_str == '0' ? 8 : 10,
+			       repeat_count, NULL)
+		   != LONGINT_OK)
+		  || REPEAT_COUNT_MAXIMUM < *repeat_count
+		  || digit_str + digit_str_len != d_end)
+		{
+		  char *tmp = make_printable_str (digit_str, digit_str_len);
+		  error (0, 0,
+			 _("invalid repeat count `%s' in [c*n] construct"),
+			 tmp);
+		  free (tmp);
+		  return -2;
+		}
+	    }
 	  *closing_bracket_idx = i;
 	  return 0;
 	}
@@ -908,28 +869,22 @@ find_bracketed_repeat (const struct E_string *es, size_t start_idx,
   return -1;			/* No bracket found.  */
 }
 
-/* Return nonzero if the string at ES->s[IDX] matches the regular
-   expression `\*[0-9]*\]', zero otherwise.  To match, the `*' and
-   the `]' must not be escaped.  */
+/* Return true if the string at ES->s[IDX] matches the regular
+   expression `\*[0-9]*\]', false otherwise.  The string does not
+   match if any of its characters are escaped.  */
 
-static int
+static bool
 star_digits_closebracket (const struct E_string *es, size_t idx)
 {
   size_t i;
 
-  if (!ES_MATCH (es, idx, '*'))
-    return 0;
+  if (!es_match (es, idx, '*'))
+    return false;
 
   for (i = idx + 1; i < es->len; i++)
-    {
-      if (!ISDIGIT (es->s[i]))
-	{
-	  if (ES_MATCH (es, i, ']'))
-	    return 1;
-	  return 0;
-	}
-    }
-  return 0;
+    if (!ISDIGIT (uchar (es->s[i])) || es->escaped[i])
+      return es_match (es, i, ']');
+  return false;
 }
 
 /* Convert string UNESCAPED_STRING (which has been preprocessed to
@@ -944,10 +899,10 @@ star_digits_closebracket (const struct E_string *es, size_t idx)
 	  not precede the first in the current collating sequence.
       - c Any other character is interpreted as itself.  */
 
-static int
+static bool
 build_spec_list (const struct E_string *es, struct Spec_list *result)
 {
-  const unsigned char *p;
+  char const *p;
   size_t i;
 
   p = es->s;
@@ -961,28 +916,23 @@ build_spec_list (const struct E_string *es, struct Spec_list *result)
 
   for (i = 0; i + 2 < es->len; /* empty */)
     {
-      if (ES_MATCH (es, i, '['))
+      if (es_match (es, i, '['))
 	{
-	  int matched_multi_char_construct;
+	  bool matched_multi_char_construct;
 	  size_t closing_bracket_idx;
-	  unsigned int char_to_repeat;
-	  size_t repeat_count;
+	  unsigned char char_to_repeat;
+	  count repeat_count;
 	  int err;
 
-	  matched_multi_char_construct = 1;
-	  if (ES_MATCH (es, i + 1, ':')
-	      || ES_MATCH (es, i + 1, '='))
+	  matched_multi_char_construct = true;
+	  if (es_match (es, i + 1, ':') || es_match (es, i + 1, '='))
 	    {
 	      size_t closing_delim_idx;
-	      int found;
 
-	      found = find_closing_delim (es, i + 2, p[i + 1],
-					  &closing_delim_idx);
-	      if (found)
+	      if (find_closing_delim (es, i + 2, p[i + 1], &closing_delim_idx))
 		{
-		  int parse_failed;
 		  size_t opnd_str_len = closing_delim_idx - 1 - (i + 2) + 1;
-		  unsigned char *opnd_str;
+		  char const *opnd_str = p + i + 2;
 
 		  if (opnd_str_len == 0)
 		    {
@@ -991,24 +941,16 @@ build_spec_list (const struct E_string *es, struct Spec_list *result)
 		      else
 			error (0, 0,
 			       _("missing equivalence class character `[==]'"));
-		      return 1;
+		      return false;
 		    }
-
-		  opnd_str = xmemdup (p + i + 2, opnd_str_len);
 
 		  if (p[i + 1] == ':')
 		    {
-		      parse_failed = append_char_class (result, opnd_str,
-							opnd_str_len);
-
 		      /* FIXME: big comment.  */
-		      if (parse_failed)
+		      if (!append_char_class (result, opnd_str, opnd_str_len))
 			{
 			  if (star_digits_closebracket (es, i + 2))
-			    {
-			      free (opnd_str);
-			      goto try_bracketed_repeat;
-			    }
+			    goto try_bracketed_repeat;
 			  else
 			    {
 			      char *tmp = make_printable_str (opnd_str,
@@ -1016,23 +958,17 @@ build_spec_list (const struct E_string *es, struct Spec_list *result)
 			      error (0, 0, _("invalid character class `%s'"),
 				     tmp);
 			      free (tmp);
-			      return 1;
+			      return false;
 			    }
 			}
 		    }
 		  else
 		    {
-		      parse_failed = append_equiv_class (result, opnd_str,
-							 opnd_str_len);
-
 		      /* FIXME: big comment.  */
-		      if (parse_failed)
+		      if (!append_equiv_class (result, opnd_str, opnd_str_len))
 			{
 			  if (star_digits_closebracket (es, i + 2))
-			    {
-			      free (opnd_str);
-			      goto try_bracketed_repeat;
-			    }
+			    goto try_bracketed_repeat;
 			  else
 			    {
 			      char *tmp = make_printable_str (opnd_str,
@@ -1041,17 +977,12 @@ build_spec_list (const struct E_string *es, struct Spec_list *result)
 	       _("%s: equivalence class operand must be a single character"),
 				     tmp);
 			      free (tmp);
-			      return 1;
+			      return false;
 			    }
 			}
 		    }
-		  free (opnd_str);
 
-		  /* Return nonzero if append_*_class reports a problem.  */
-		  if (parse_failed)
-		    return 1;
-		  else
-		    i = closing_delim_idx + 2;
+		  i = closing_delim_idx + 2;
 		  continue;
 		}
 	      /* Else fall through.  This could be [:*] or [=*].  */
@@ -1071,13 +1002,13 @@ build_spec_list (const struct E_string *es, struct Spec_list *result)
 	    }
 	  else if (err == -1)
 	    {
-	      matched_multi_char_construct = 0;
+	      matched_multi_char_construct = false;
 	    }
 	  else
 	    {
 	      /* Found a string that looked like [c*n] but the
 		 numeric part was invalid.  */
-	      return 1;
+	      return false;
 	    }
 
 	  if (matched_multi_char_construct)
@@ -1089,10 +1020,10 @@ build_spec_list (const struct E_string *es, struct Spec_list *result)
 	}
 
       /* Look ahead one char for ranges like a-z.  */
-      if (ES_MATCH (es, i + 1, '-'))
+      if (es_match (es, i + 1, '-'))
 	{
-	  if (append_range (result, p[i], p[i + 2]))
-	    return 1;
+	  if (!append_range (result, p[i], p[i + 2]))
+	    return false;
 	  i += 3;
 	}
       else
@@ -1106,7 +1037,7 @@ build_spec_list (const struct E_string *es, struct Spec_list *result)
   for (; i < es->len; i++)
     append_normal_char (result, p[i]);
 
-  return 0;
+  return true;
 }
 
 /* Given a Spec_list S (with its saved state implicit in the values
@@ -1153,11 +1084,11 @@ get_next (struct Spec_list *s, enum Upper_Lower_class *class)
 
     case RE_RANGE:
       if (s->state == NEW_ELEMENT)
-	s->state = ORD (p->u.range.first_char);
+	s->state = p->u.range.first_char;
       else
 	++(s->state);
-      return_val = CHR (s->state);
-      if (s->state == ORD (p->u.range.last_char))
+      return_val = s->state;
+      if (s->state == p->u.range.last_char)
 	{
 	  s->tail = p->next;
 	  s->state = NEW_ELEMENT;
@@ -1167,19 +1098,19 @@ get_next (struct Spec_list *s, enum Upper_Lower_class *class)
     case RE_CHAR_CLASS:
       if (class)
 	{
-	  int upper_or_lower;
+	  bool upper_or_lower;
 	  switch (p->u.char_class)
 	    {
 	    case CC_LOWER:
 	      *class = UL_LOWER;
-	      upper_or_lower = 1;
+	      upper_or_lower = true;
 	      break;
 	    case CC_UPPER:
 	      *class = UL_UPPER;
-	      upper_or_lower = 1;
+	      upper_or_lower = true;
 	      break;
 	    default:
-	      upper_or_lower = 0;
+	      upper_or_lower = false;
 	      break;
 	    }
 
@@ -1201,7 +1132,7 @@ get_next (struct Spec_list *s, enum Upper_Lower_class *class)
 	  s->state = i;
 	}
       assert (is_char_class_member (p->u.char_class, s->state));
-      return_val = CHR (s->state);
+      return_val = s->state;
       for (i = s->state + 1; i < N_CHARS; i++)
 	if (is_char_class_member (p->u.char_class, i))
 	  break;
@@ -1241,17 +1172,12 @@ get_next (struct Spec_list *s, enum Upper_Lower_class *class)
 	    }
 	  ++(s->state);
 	  return_val = p->u.repeated_char.the_repeated_char;
-	  if (p->u.repeated_char.repeat_count > 0
-	      && s->state == p->u.repeated_char.repeat_count)
+	  if (s->state == p->u.repeated_char.repeat_count)
 	    {
 	      s->tail = p->next;
 	      s->state = NEW_ELEMENT;
 	    }
 	}
-      break;
-
-    case RE_NO_TYPE:
-      abort ();
       break;
 
     default:
@@ -1272,13 +1198,15 @@ card_of_complement (struct Spec_list *s)
 {
   int c;
   int cardinality = N_CHARS;
-  SET_TYPE in_set[N_CHARS];
+  bool in_set[N_CHARS];
 
   memset (in_set, 0, sizeof in_set);
   s->state = BEGIN_STATE;
   while ((c = get_next (s, NULL)) != -1)
-    if (!in_set[c]++)
-      --cardinality;
+    {
+      cardinality -= (!in_set[c]);
+      in_set[c] = true;
+    }
   return cardinality;
 }
 
@@ -1299,28 +1227,31 @@ static void
 get_spec_stats (struct Spec_list *s)
 {
   struct List_element *p;
-  int len = 0;
+  count length = 0;
 
   s->n_indefinite_repeats = 0;
-  s->has_equiv_class = 0;
-  s->has_restricted_char_class = 0;
-  s->has_char_class = 0;
+  s->has_equiv_class = false;
+  s->has_restricted_char_class = false;
+  s->has_char_class = false;
   for (p = s->head->next; p; p = p->next)
     {
+      int i;
+      count len = 0;
+      count new_length;
+
       switch (p->type)
 	{
-	  int i;
 	case RE_NORMAL_CHAR:
-	  ++len;
+	  len = 1;
 	  break;
 
 	case RE_RANGE:
 	  assert (p->u.range.last_char >= p->u.range.first_char);
-	  len += p->u.range.last_char - p->u.range.first_char + 1;
+	  len = p->u.range.last_char - p->u.range.first_char + 1;
 	  break;
 
 	case RE_CHAR_CLASS:
-	  s->has_char_class = 1;
+	  s->has_char_class = true;
 	  for (i = 0; i < N_CHARS; i++)
 	    if (is_char_class_member (p->u.char_class, i))
 	      ++len;
@@ -1330,7 +1261,7 @@ get_spec_stats (struct Spec_list *s)
 	    case CC_LOWER:
 	      break;
 	    default:
-	      s->has_restricted_char_class = 1;
+	      s->has_restricted_char_class = true;
 	      break;
 	    }
 	  break;
@@ -1339,26 +1270,35 @@ get_spec_stats (struct Spec_list *s)
 	  for (i = 0; i < N_CHARS; i++)
 	    if (is_equiv_class_member (p->u.equiv_code, i))
 	      ++len;
-	  s->has_equiv_class = 1;
+	  s->has_equiv_class = true;
 	  break;
 
 	case RE_REPEATED_CHAR:
 	  if (p->u.repeated_char.repeat_count > 0)
-	    len += p->u.repeated_char.repeat_count;
-	  else if (p->u.repeated_char.repeat_count == 0)
+	    len = p->u.repeated_char.repeat_count;
+	  else
 	    {
 	      s->indefinite_repeat_element = p;
 	      ++(s->n_indefinite_repeats);
 	    }
 	  break;
 
-	case RE_NO_TYPE:
-	  assert (0);
+	default:
+	  abort ();
 	  break;
 	}
+
+      /* Check for arithmetic overflow in computing length.  Also, reject
+	 any length greater than the maximum repeat count, in case the
+	 length is later used to compute the repeat count for an
+	 indefinite element.  */
+      new_length = length + len;
+      if (! (length <= new_length && new_length <= REPEAT_COUNT_MAXIMUM))
+	error (EXIT_FAILURE, 0, _("too many characters in set"));
+      length = new_length;
     }
 
-  s->length = len;
+  s->length = length;
 }
 
 static void
@@ -1370,7 +1310,7 @@ get_s1_spec_stats (struct Spec_list *s1)
 }
 
 static void
-get_s2_spec_stats (struct Spec_list *s2, size_t len_s1)
+get_s2_spec_stats (struct Spec_list *s2, count len_s1)
 {
   get_spec_stats (s2);
   if (len_s1 >= s2->length && s2->n_indefinite_repeats == 1)
@@ -1393,19 +1333,15 @@ spec_init (struct Spec_list *spec_list)
    one converts all \c and \ddd escapes to their one-byte representations.
    The second constructs a linked specification list, SPEC_LIST, of the
    characters and constructs that comprise the argument string.  If either
-   of these passes detects an error, this function returns nonzero.  */
+   of these passes detects an error, this function returns false.  */
 
-static int
-parse_str (const unsigned char *s, struct Spec_list *spec_list)
+static bool
+parse_str (char const *s, struct Spec_list *spec_list)
 {
   struct E_string es;
-  int fail;
-
-  fail = unquote (s, &es);
-  if (!fail)
-    fail = build_spec_list (&es, spec_list);
+  bool ok = unquote (s, &es) && build_spec_list (&es, spec_list);
   es_free (&es);
-  return fail;
+  return ok;
 }
 
 /* Given two specification lists, S1 and S2, and assuming that
@@ -1427,7 +1363,7 @@ static void
 string2_extend (const struct Spec_list *s1, struct Spec_list *s2)
 {
   struct List_element *p;
-  int char_to_repeat;
+  unsigned char char_to_repeat;
   int i;
 
   assert (translating);
@@ -1444,11 +1380,11 @@ string2_extend (const struct Spec_list *s1, struct Spec_list *s2)
       char_to_repeat = p->u.range.last_char;
       break;
     case RE_CHAR_CLASS:
-      for (i = N_CHARS; i >= 0; i--)
+      for (i = N_CHARS - 1; i >= 0; i--)
 	if (is_char_class_member (p->u.char_class, i))
 	  break;
       assert (i >= 0);
-      char_to_repeat = CHR (i);
+      char_to_repeat = i;
       break;
 
     case RE_REPEATED_CHAR:
@@ -1461,10 +1397,6 @@ string2_extend (const struct Spec_list *s1, struct Spec_list *s2)
       abort ();
       break;
 
-    case RE_NO_TYPE:
-      abort ();
-      break;
-
     default:
       abort ();
       break;
@@ -1474,11 +1406,11 @@ string2_extend (const struct Spec_list *s1, struct Spec_list *s2)
   s2->length = s1->length;
 }
 
-/* Return non-zero if S is a non-empty list in which exactly one
+/* Return true if S is a non-empty list in which exactly one
    character (but potentially, many instances of it) appears.
-   E.g.  [X*] or xxxxxxxx.  */
+   E.g., [X*] or xxxxxxxx.  */
 
-static int
+static bool
 homogeneous_spec_list (struct Spec_list *s)
 {
   int b, c;
@@ -1486,13 +1418,13 @@ homogeneous_spec_list (struct Spec_list *s)
   s->state = BEGIN_STATE;
 
   if ((b = get_next (s, NULL)) == -1)
-    return 0;
+    return false;
 
   while ((c = get_next (s, NULL)) != -1)
     if (c != b)
-      return 0;
+      return false;
 
-  return 1;
+  return true;
 }
 
 /* Die with an error message if S1 and S2 describe strings that
@@ -1581,9 +1513,13 @@ when translating"));
    character is in the squeeze set.  */
 
 static void
-squeeze_filter (unsigned char *buf, size_t size, Filter reader)
+squeeze_filter (char *buf, size_t size, size_t (*reader) (char *, size_t))
 {
-  unsigned int char_to_squeeze = NOT_A_CHAR;
+  /* A value distinct from any character that may have been stored in a
+     buffer as the result of a block-read in the function squeeze_filter.  */
+  enum { NOT_A_CHAR = CHAR_MAX + 1 };
+
+  int char_to_squeeze = NOT_A_CHAR;
   size_t i = 0;
   size_t nr = 0;
 
@@ -1593,17 +1529,7 @@ squeeze_filter (unsigned char *buf, size_t size, Filter reader)
 
       if (i >= nr)
 	{
-	  if (reader == NULL)
-	    {
-	      nr = safe_read (0, (char *) buf, size);
-	      if (nr == SAFE_READ_ERROR)
-		error (EXIT_FAILURE, errno, _("read error"));
-	    }
-	  else
-	    {
-	      nr = (*reader) (buf, size, NULL);
-	    }
-
+	  nr = reader (buf, size);
 	  if (nr == 0)
 	    break;
 	  i = 0;
@@ -1625,13 +1551,13 @@ squeeze_filter (unsigned char *buf, size_t size, Filter reader)
 	     of the input is removed by squeezing repeats.  But most
 	     uses of this functionality seem to remove less than 20-30%
 	     of the input.  */
-	  for (; i < nr && !in_squeeze_set[buf[i]]; i += 2)
-	    ;			/* empty */
+	  for (; i < nr && !in_squeeze_set[uchar (buf[i])]; i += 2)
+	    continue;
 
 	  /* There is a special case when i == nr and we've just
 	     skipped a character (the last one in buf) that is in
 	     the squeeze set.  */
-	  if (i == nr && in_squeeze_set[buf[i - 1]])
+	  if (i == nr && in_squeeze_set[uchar (buf[i - 1])])
 	    --i;
 
 	  if (i >= nr)
@@ -1653,7 +1579,7 @@ squeeze_filter (unsigned char *buf, size_t size, Filter reader)
 	      ++i;
 	    }
 	  if (out_len > 0
-	      && fwrite ((char *) &buf[begin], 1, out_len, stdout) == 0)
+	      && fwrite (&buf[begin], 1, out_len, stdout) != out_len)
 	    error (EXIT_FAILURE, errno, _("write error"));
 	}
 
@@ -1663,7 +1589,7 @@ squeeze_filter (unsigned char *buf, size_t size, Filter reader)
 	     (or to nr if all the rest of the characters in this
 	     buffer are the same as char_to_squeeze).  */
 	  for (; i < nr && buf[i] == char_to_squeeze; i++)
-	    ;			/* empty */
+	    continue;
 	  if (i < nr)
 	    char_to_squeeze = NOT_A_CHAR;
 	  /* If (i >= nr) we've squeezed the last character in this buffer.
@@ -1673,6 +1599,15 @@ squeeze_filter (unsigned char *buf, size_t size, Filter reader)
     }
 }
 
+static size_t
+plain_read (char *buf, size_t size)
+{
+  size_t nr = safe_read (STDIN_FILENO, buf, size);
+  if (nr == SAFE_READ_ERROR)
+    error (EXIT_FAILURE, errno, _("read error"));
+  return nr;
+}
+
 /* Read buffers of SIZE bytes from stdin until one is found that
    contains at least one character not in the delete set.  Store
    in the array BUF, all characters from that buffer that are not
@@ -1680,15 +1615,9 @@ squeeze_filter (unsigned char *buf, size_t size, Filter reader)
    or 0 upon EOF.  */
 
 static size_t
-read_and_delete (unsigned char *buf, size_t size, Filter not_used)
+read_and_delete (char *buf, size_t size)
 {
   size_t n_saved;
-  static int hit_eof = 0;
-
-  assert (not_used == NULL);
-
-  if (hit_eof)
-    return 0;
 
   /* This enclosing do-while loop is to make sure that
      we don't return zero (indicating EOF) when we've
@@ -1696,27 +1625,22 @@ read_and_delete (unsigned char *buf, size_t size, Filter not_used)
   do
     {
       size_t i;
-      size_t nr = safe_read (0, (char *) buf, size);
+      size_t nr = plain_read (buf, size);
 
-      if (nr == SAFE_READ_ERROR)
-	error (EXIT_FAILURE, errno, _("read error"));
       if (nr == 0)
-	{
-	  hit_eof = 1;
-	  return 0;
-	}
+	return 0;
 
       /* This first loop may be a waste of code, but gives much
          better performance when no characters are deleted in
          the beginning of a buffer.  It just avoids the copying
          of buf[i] into buf[n_saved] when it would be a NOP.  */
 
-      for (i = 0; i < nr && !in_delete_set[buf[i]]; i++)
-	/* empty */ ;
+      for (i = 0; i < nr && !in_delete_set[uchar (buf[i])]; i++)
+	continue;
       n_saved = i;
 
       for (++i; i < nr; i++)
-	if (!in_delete_set[buf[i]])
+	if (!in_delete_set[uchar (buf[i])])
 	  buf[n_saved++] = buf[i];
     }
   while (n_saved == 0);
@@ -1729,28 +1653,13 @@ read_and_delete (unsigned char *buf, size_t size, Filter not_used)
    array `xlate'.  Return the number of characters read, or 0 upon EOF.  */
 
 static size_t
-read_and_xlate (unsigned char *buf, size_t size, Filter not_used)
+read_and_xlate (char *buf, size_t size)
 {
-  size_t bytes_read = 0;
-  static int hit_eof = 0;
+  size_t bytes_read = plain_read (buf, size);
   size_t i;
 
-  assert (not_used == NULL);
-
-  if (hit_eof)
-    return 0;
-
-  bytes_read = safe_read (0, (char *) buf, size);
-  if (bytes_read == SAFE_READ_ERROR)
-    error (EXIT_FAILURE, errno, _("read error"));
-  if (bytes_read == 0)
-    {
-      hit_eof = 1;
-      return 0;
-    }
-
   for (i = 0; i < bytes_read; i++)
-    buf[i] = xlate[buf[i]];
+    buf[i] = xlate[uchar (buf[i])];
 
   return bytes_read;
 }
@@ -1758,10 +1667,10 @@ read_and_xlate (unsigned char *buf, size_t size, Filter not_used)
 /* Initialize a boolean membership set IN_SET with the character
    values obtained by traversing the linked list of constructs S
    using the function `get_next'.  If COMPLEMENT_THIS_SET is
-   nonzero the resulting set is complemented.  */
+   true the resulting set is complemented.  */
 
 static void
-set_initialize (struct Spec_list *s, int complement_this_set, SET_TYPE *in_set)
+set_initialize (struct Spec_list *s, bool complement_this_set, bool *in_set)
 {
   int c;
   size_t i;
@@ -1769,7 +1678,7 @@ set_initialize (struct Spec_list *s, int complement_this_set, SET_TYPE *in_set)
   memset (in_set, 0, N_CHARS * sizeof (in_set[0]));
   s->state = BEGIN_STATE;
   while ((c = get_next (s, NULL)) != -1)
-    in_set[c] = 1;
+    in_set[c] = true;
   if (complement_this_set)
     for (i = 0; i < N_CHARS; i++)
       in_set[i] = (!in_set[i]);
@@ -1800,19 +1709,19 @@ main (int argc, char **argv)
 	  break;
 
 	case 'c':
-	  complement = 1;
+	  complement = true;
 	  break;
 
 	case 'd':
-	  delete = 1;
+	  delete = true;
 	  break;
 
 	case 's':
-	  squeeze_repeats = 1;
+	  squeeze_repeats = true;
 	  break;
 
 	case 't':
-	  truncate_set1 = 1;
+	  truncate_set1 = true;
 	  break;
 
 	case_GETOPT_HELP_CHAR;
@@ -1868,13 +1777,13 @@ without squeezing repeats"));
 	   _("at least one string must be given when squeezing repeats"));
 
   spec_init (s1);
-  if (parse_str ((unsigned char *) argv[optind], s1))
+  if (!parse_str (argv[optind], s1))
     exit (EXIT_FAILURE);
 
   if (non_option_args == 2)
     {
       spec_init (s2);
-      if (parse_str ((unsigned char *) argv[optind + 1], s2))
+      if (!parse_str (argv[optind + 1], s2))
 	exit (EXIT_FAILURE);
     }
   else
@@ -1890,25 +1799,25 @@ without squeezing repeats"));
   if (squeeze_repeats && non_option_args == 1)
     {
       set_initialize (s1, complement, in_squeeze_set);
-      squeeze_filter (io_buf, sizeof io_buf, NULL);
+      squeeze_filter (io_buf, sizeof io_buf, plain_read);
     }
   else if (delete && non_option_args == 1)
     {
-      size_t nr;
-
       set_initialize (s1, complement, in_delete_set);
-      do
+
+      for (;;)
 	{
-	  nr = read_and_delete (io_buf, sizeof io_buf, NULL);
-	  if (nr > 0 && fwrite ((char *) io_buf, 1, nr, stdout) == 0)
+	  size_t nr = read_and_delete (io_buf, sizeof io_buf);
+	  if (nr == 0)
+	    break;
+	  if (fwrite (io_buf, 1, nr, stdout) != nr)
 	    error (EXIT_FAILURE, errno, _("write error"));
 	}
-      while (nr > 0);
     }
   else if (squeeze_repeats && delete && non_option_args == 2)
     {
       set_initialize (s1, complement, in_delete_set);
-      set_initialize (s2, 0, in_squeeze_set);
+      set_initialize (s2, false, in_squeeze_set);
       squeeze_filter (io_buf, sizeof io_buf, read_and_delete);
     }
   else if (translating)
@@ -1916,9 +1825,9 @@ without squeezing repeats"));
       if (complement)
 	{
 	  int i;
-	  SET_TYPE *in_s1 = in_delete_set;
+	  bool *in_s1 = in_delete_set;
 
-	  set_initialize (s1, 0, in_s1);
+	  set_initialize (s1, false, in_s1);
 	  s2->state = BEGIN_STATE;
 	  for (i = 0; i < N_CHARS; i++)
 	    xlate[i] = i;
@@ -1954,7 +1863,13 @@ without squeezing repeats"));
 	    {
 	      c1 = get_next (s1, &class_s1);
 	      c2 = get_next (s2, &class_s2);
-	      if (!class_ok[(int) class_s1][(int) class_s2])
+
+	      /* When constructing the translation array, either one of the
+		 values returned by paired calls to get_next must be from
+		 [:upper:] and the other is [:lower:], or neither can be from
+		 upper or lower.  */
+
+	      if ((class_s1 == UL_NONE) != (class_s2 == UL_NONE))
 		error (EXIT_FAILURE, 0,
 		       _("misaligned [:upper:] and/or [:lower:] construct"));
 
@@ -1997,21 +1912,19 @@ construct in string1 must be aligned with a corresponding construct\n\
 	}
       if (squeeze_repeats)
 	{
-	  set_initialize (s2, 0, in_squeeze_set);
+	  set_initialize (s2, false, in_squeeze_set);
 	  squeeze_filter (io_buf, sizeof io_buf, read_and_xlate);
 	}
       else
 	{
-	  size_t bytes_read;
-
-	  do
+	  for (;;)
 	    {
-	      bytes_read = read_and_xlate (io_buf, sizeof io_buf, NULL);
-	      if (bytes_read > 0
-		  && fwrite ((char *) io_buf, 1, bytes_read, stdout) == 0)
+	      size_t bytes_read = read_and_xlate (io_buf, sizeof io_buf);
+	      if (bytes_read == 0)
+		break;
+	      if (fwrite (io_buf, 1, bytes_read, stdout) != bytes_read)
 		error (EXIT_FAILURE, errno, _("write error"));
 	    }
-	  while (bytes_read > 0);
 	}
     }
 
