@@ -1,5 +1,5 @@
 /* uniq -- remove duplicate lines from a sorted file
-   Copyright (C) 86, 91, 1995-2002, Free Software Foundation, Inc.
+   Copyright (C) 86, 91, 1995-2003, Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -426,7 +426,7 @@ main (int argc, char **argv)
 				   "-0123456789Dcdf:is:uw:", longopts, NULL))
 	      == -1))
 	{
-	  if (optind == argc)
+	  if (argc <= optind)
 	    break;
 	  if (nfiles == 2)
 	    {
