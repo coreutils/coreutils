@@ -232,7 +232,7 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
   ++error_message_count;
   if (errnum)
     {
-#if defined HAVE_STRERROR_R || defined _LIBC
+#if defined HAVE_STRERROR_R || _LIBC
       char errbuf[1024];
 # if HAVE_WORKING_STRERROR_R || _LIBC
       fprintf (stderr, ": %s", __strerror_r (errnum, errbuf, sizeof errbuf));
