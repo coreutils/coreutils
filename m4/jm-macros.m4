@@ -1,4 +1,4 @@
-#serial 14
+#serial 15
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -195,9 +195,13 @@ AC_DEFUN(jm_MACROS,
 # This macro must be invoked before any tests that run the compiler.
 AC_DEFUN(jm_CHECK_ALL_TYPES,
 [
+  # Emit this code into config.h.in.
+  # The ifndef is to avoid redefinition warnings.
+  AH_VERBATIM([_GNU_SOURCE], [#ifndef _GNU_SOURCE
+# undef _GNU_SOURCE
+#endif])
+
   # Enable GNU extensions.
-  # Define this here, not in acconfig's @TOP@ section, since definitions
-  # in the latter don't make it into the configure-time tests.
   AC_DEFINE([_GNU_SOURCE], 1,
     [Enable GNU extensions on systems that have them.])
 
