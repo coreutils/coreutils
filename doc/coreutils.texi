@@ -6402,6 +6402,19 @@ results in an error message on systems that do not support symbolic links.
 
 @optTargetDirectory
 
+@item -u
+@itemx --update
+@opindex -u
+@opindex --update
+@cindex newer files, copying only
+Do not copy a non-directory that has an existing destination with the
+same or newer modification time.  If time stamps are being preserved,
+the comparison is to the source time stamp truncated to the
+resolutions of the destination file system and of the system calls
+used to update time stamps; this avoids duplicate work if several
+@samp{cp -pu} commands are executed with the same source and
+destination.
+
 @item -v
 @itemx --verbose
 @opindex -v
@@ -6881,6 +6894,11 @@ about each existing destination file.
 @cindex newer files, moving only
 Do not move a non-directory that has an existing destination with the
 same or newer modification time.
+If the move is across file system boundaries, the comparison is to the
+source time stamp truncated to the resolutions of the destination file
+system and of the system calls used to update time stamps; this avoids
+duplicate work if several @samp{mv -u} commands are executed with the
+same source and destination.
 
 @item -v
 @itemx --verbose
