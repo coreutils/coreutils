@@ -378,7 +378,7 @@ keycmp (struct line const *line1, struct line const *line2)
     }
   else
     {
-      if (HAVE_SETLOCALE && hard_LC_COLLATE)
+      if (hard_LC_COLLATE)
 	return xmemcoll (beg1, len1, beg2, len2);
       diff = memcmp (beg1, beg2, MIN (len1, len2));
     }
