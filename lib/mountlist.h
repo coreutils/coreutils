@@ -1,6 +1,6 @@
-/* mountlist.h -- declarations for list of mounted filesystems
+/* mountlist.h -- declarations for list of mounted file systems
 
-   Copyright (C) 1991, 1992, 1998, 2000, 2001, 2002, 2003 Free
+   Copyright (C) 1991, 1992, 1998, 2000, 2001, 2002, 2003, 2004 Free
    Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -24,13 +24,13 @@ struct mount_entry
   char *me_mountdir;		/* Mount point directory pathname. */
   char *me_type;		/* "nfs", "4.2", etc. */
   dev_t me_dev;			/* Device number of me_mountdir. */
-  unsigned int me_dummy : 1;	/* Nonzero for dummy filesystems. */
+  unsigned int me_dummy : 1;	/* Nonzero for dummy file systems. */
   unsigned int me_remote : 1;	/* Nonzero for remote fileystems. */
   unsigned int me_type_malloced : 1; /* Nonzero if me_type was malloced. */
   struct mount_entry *me_next;
 };
 
-struct mount_entry *read_filesystem_list (int need_fs_type);
+struct mount_entry *read_file_system_list (int need_fs_type);
 
 #ifndef ME_DUMMY
 # define ME_DUMMY(Fs_name, Fs_type) \
