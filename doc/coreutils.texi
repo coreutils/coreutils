@@ -3901,6 +3901,22 @@ corresponding lines of each given file, separated by a TAB character.
 Standard input is used for a file name of @samp{-} or if no input files
 are given.
 
+For example:
+
+@example
+$ cat num2
+1
+2
+$ cat let3
+a
+b
+c
+$ paste num2 let3
+1       a
+2       b
+        c
+@end example
+
 Synopsis:
 
 @example
@@ -3916,7 +3932,13 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex -s
 @opindex --serial
 Paste the lines of one file at a time rather than one line from each
-file.
+file.  Using the above example data:
+
+@example
+$ paste -s num2 let3
+1       2
+a       b       c
+@end example
 
 @item -d @var{delim-list}
 @itemx --delimiters=@var{delim-list}
@@ -3924,7 +3946,14 @@ file.
 @opindex --delimiters
 Consecutively use the characters in @var{delim-list} instead of
 TAB to separate merged lines.  When @var{delim-list} is
-exhausted, start again at its beginning.
+exhausted, start again at its beginning.  Using the above example data:
+
+@example
+$ paste -d '%_' num2 let3 num2
+1%a_1
+2%b_2
+%c_
+@end example
 
 @end table
 
