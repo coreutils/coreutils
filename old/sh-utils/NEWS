@@ -2,7 +2,7 @@ Changes in release 2.1
  [2.0g]
 * printf interprets unicode, \uNNNN \UNNNNNNNN, on systems with the
   required support;  from Bruno Haible.
-* stty's rprnt attribute works on HPUX 10.20
+* stty's rprnt attribute now works on HPUX 10.20
 * seq's --equal-width option works more portably
  [2.0f]
 * fix build problems with ut_name vs. ut_user
