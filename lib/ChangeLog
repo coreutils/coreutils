@@ -1,3 +1,7 @@
+2002-01-05  Jim Meyering  <meyering@lucent.com>
+
+	* version-etc.c (version_etc_copyright): Update copyright year.
+
 2001-01-19  Paul Eggert  <eggert@twinsun.com>
 
 	* closeout.c (close_stdout_status): If ferror (stdout), do
