@@ -246,15 +246,29 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
 
   if (! disk)
     disk = "-";			/* unknown */
-
-  printf ((print_type ? "%-13s" : "%-20s"), disk);
-  if ((int) strlen (disk) > (print_type ? 13 : 20) && !posix_format)
-    printf ((print_type ? "\n%13s" : "\n%20s"), "");
-
   if (! fstype)
     fstype = "-";		/* unknown */
+
+  /* df.c reserved 5 positions for fstype,
+     but that does not suffice for type iso9660 */
   if (print_type)
-    printf (" %-5s ", fstype);
+    {
+      int disk_name_len = (int) strlen (disk);
+      int fstype_len = (int) strlen (fstype);
+      if (disk_name_len + fstype_len + 2 < 20)
+	printf ("%s%*s  ", disk, 18 - disk_name_len, fstype);
+      else if (!posix_format)
+	printf ("%s\n%18s  ", disk, fstype);
+      else
+	printf ("%s %s", disk, fstype);
+    }
+  else
+    {
+      if ((int) strlen (disk) > 20 && !posix_format)
+	printf ("%s\n%20s", disk, "");
+      else
+	printf ("%-20s", disk);
+    }
 
   if (inode_format)
     {
