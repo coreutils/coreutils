@@ -166,7 +166,7 @@ main (int argc, char **argv)
 	  reference_file = optarg;
 	  break;
 	case DEREFERENCE_OPTION:
-	  chopt.change_symlinks = 0;
+	  chopt.dereference = DEREF_ALWAYS;
 	  break;
 	case FROM_OPTION:
 	  {
@@ -188,7 +188,7 @@ main (int argc, char **argv)
 	  chopt.force_silent = 1;
 	  break;
 	case 'h':
-	  chopt.change_symlinks = 1;
+	  chopt.dereference = DEREF_NEVER;
 	  break;
 	case 'v':
 	  chopt.verbosity = V_high;
