@@ -706,7 +706,7 @@ get_space (FILE *f, register int c)
 static void
 check_punctuation (register WORD *w)
 {
-  register const char *start, *finish;
+  const unsigned char *start, *finish;
 
   start = w->text;
   finish = start + (w->length - 1);
