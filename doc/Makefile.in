@@ -66,7 +66,6 @@ PATH_SEPARATOR = @PATH_SEPARATOR@
 AMTAR = @AMTAR@
 AWK = @AWK@
 BUILD_INCLUDED_LIBINTL = @BUILD_INCLUDED_LIBINTL@
-CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
 CPP = @CPP@
@@ -77,9 +76,9 @@ FESETROUND_LIBM = @FESETROUND_LIBM@
 GENCAT = @GENCAT@
 GETLOADAVG_LIBS = @GETLOADAVG_LIBS@
 GLIBC21 = @GLIBC21@
-GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
 GNU_PACKAGE = @GNU_PACKAGE@
+HAVE_LIB = @HAVE_LIB@
 HELP2MAN = @HELP2MAN@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 INSTOBJEXT = @INSTOBJEXT@
@@ -88,19 +87,22 @@ INTLLIBS = @INTLLIBS@
 INTLOBJS = @INTLOBJS@
 INTL_LIBTOOL_SUFFIX_PREFIX = @INTL_LIBTOOL_SUFFIX_PREFIX@
 KMEM_GROUP = @KMEM_GROUP@
+LIB = @LIB@
 LIBICONV = @LIBICONV@
+LIBINTL = @LIBINTL@
 LIB_CLOCK_GETTIME = @LIB_CLOCK_GETTIME@
 LIB_CRYPT = @LIB_CRYPT@
 LIB_NANOSLEEP = @LIB_NANOSLEEP@
+LTLIB = @LTLIB@
+LTLIBICONV = @LTLIBICONV@
+LTLIBINTL = @LTLIBINTL@
 MAN = @MAN@
 MKINSTALLDIRS = @MKINSTALLDIRS@
-MSGFMT = @MSGFMT@
 NEED_SETGID = @NEED_SETGID@
 OPTIONAL_BIN_PROGS = @OPTIONAL_BIN_PROGS@
 OPTIONAL_BIN_ZCRIPTS = @OPTIONAL_BIN_ZCRIPTS@
 PACKAGE = @PACKAGE@
 PERL = @PERL@
-POFILES = @POFILES@
 POSUB = @POSUB@
 RANLIB = @RANLIB@
 SEQ_LIBM = @SEQ_LIBM@
@@ -128,15 +130,15 @@ EXTRA_DIST = perm.texi getdate.texi constants.texi doclicense.texi
 # old systems.
 MAKEINFO = makeinfo --no-split
 subdir = doc
-mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 DIST_SOURCES =
+TEXINFO_TEX = $(top_srcdir)/config/texinfo.tex
 INFO_DEPS = coreutils.info
 DVIS = coreutils.dvi
 TEXINFOS = coreutils.texi
-DIST_COMMON = ChangeLog Makefile.am Makefile.in mdate-sh stamp-vti \
-	texinfo.tex version.texi
+DIST_COMMON = ChangeLog Makefile.am Makefile.in stamp-vti version.texi
 all: all-am
 
 .SUFFIXES:
@@ -150,7 +152,7 @@ Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 $(srcdir)/version.texi:  $(srcdir)/stamp-vti
 	@:
 $(srcdir)/stamp-vti: coreutils.texi $(top_srcdir)/configure.ac
-	@(set `$(SHELL) $(srcdir)/mdate-sh $(srcdir)/coreutils.texi`; \
+	@(set `$(SHELL) $(top_srcdir)/config/mdate-sh $(srcdir)/coreutils.texi`; \
 	echo "@set UPDATED $$1 $$2 $$3"; \
 	echo "@set UPDATED-MONTH $$2 $$3"; \
 	echo "@set EDITION $(VERSION)"; \
@@ -177,7 +179,7 @@ coreutils.dvi: coreutils.texi $(srcdir)/version.texi
 	       `echo $< | sed 's,.*/,,'`
 
 .texi.dvi:
-	TEXINPUTS="$(srcdir)$(PATH_SEPARATOR)$$TEXINPUTS" \
+	TEXINPUTS="$(top_srcdir)/config$(PATH_SEPARATOR)$$TEXINPUTS" \
 	MAKEINFO='$(MAKEINFO) $(AM_MAKEINFOFLAGS) $(MAKEINFOFLAGS) -I $(srcdir)' \
 	$(TEXI2DVI) $<
 
