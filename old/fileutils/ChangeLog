@@ -1,4 +1,11 @@
+1999-11-02  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (ALL_LINGUAS): Add Galician (gl).
+
 1999-11-01  Jim Meyering  <meyering@ascend.com>
+
+	* src/cp.c (usage): Warn about mixing use of `-r' with FIFOs and
+	other special files like /dev/zero.
 
 	* lib/Makefile.am (MAINTAINERCLEANFILES): Set to $(BUILT_SOURCES).
 
