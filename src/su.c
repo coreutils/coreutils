@@ -150,7 +150,6 @@ void endusershell ();
 void setusershell ();
 
 char *base_name ();
-char *xstrdup ();
 
 extern char **environ;
 
