@@ -1,3 +1,7 @@
+2003-03-05  Jim Meyering  <jim@meyering.net>
+
+	* physmem.c (ARRAY_SIZE): Define it.
+
 2003-03-04  Jim Meyering  <jim@meyering.net>
 
 	* makepath.c (CLEANUP_CWD): Call error here, now that restore_cwd
