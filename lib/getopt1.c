@@ -1,6 +1,8 @@
 /* getopt_long and getopt_long_only entry points for GNU getopt.
-   Copyright (C) 1987,88,89,90,91,92,93,94,96,97,98
-     Free Software Foundation, Inc.
+
+   Copyright (C) 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1996,
+   1997, 1998, 2003 Free Software Foundation, Inc.
+
    This file is part of the GNU C Library.
 
    This program is free software; you can redistribute it and/or modify
@@ -25,14 +27,6 @@
 # include <getopt.h>
 #else
 # include "getopt.h"
-#endif
-
-#if !defined __STDC__ || !__STDC__
-/* This is a separate conditional since some stdc systems
-   reject `defined (const)'.  */
-#ifndef const
-#define const
-#endif
 #endif
 
 #include <stdio.h>
@@ -67,12 +61,11 @@
 #endif
 
 int
-getopt_long (argc, argv, options, long_options, opt_index)
-     int argc;
-     char *const *argv;
-     const char *options;
-     const struct option *long_options;
-     int *opt_index;
+getopt_long (int argc,
+	     char *const *argv,
+	     const char *options,
+	     const struct option *long_options,
+	     int *opt_index)
 {
   return _getopt_internal (argc, argv, options, long_options, opt_index, 0);
 }
@@ -83,12 +76,11 @@ getopt_long (argc, argv, options, long_options, opt_index)
    instead.  */
 
 int
-getopt_long_only (argc, argv, options, long_options, opt_index)
-     int argc;
-     char *const *argv;
-     const char *options;
-     const struct option *long_options;
-     int *opt_index;
+getopt_long_only (int argc,
+		  char *const *argv,
+		  const char *options,
+		  const struct option *long_options,
+		  int *opt_index)
 {
   return _getopt_internal (argc, argv, options, long_options, opt_index, 1);
 }
@@ -105,9 +97,7 @@ libc_hidden_def (getopt_long_only)
 #include <stdio.h>
 
 int
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int c;
   int digit_optind = 0;
