@@ -137,7 +137,7 @@ static int opt_dereference_arguments = 0;
    most MAX_DEPTH levels down from the root of the hierarchy.  The root
    is at level 0, so `du --max-depth=0' is equivalent to `du -s'.  */
 static int max_depth = INT_MAX;
-  
+
 /* base used for human style output */
 static int human_readable_base;
 
