@@ -193,7 +193,7 @@ pm = progs-makefile
 pr = progs-readme
 # Ensure that the list of programs in README matches the list
 # of programs we can build.
-check: check-README
+check: check-README check-misc
 .PHONY: check-README
 check-README:
 	rm -rf $(pr) $(pm)
@@ -202,6 +202,12 @@ check-README:
 	sed -n '/^The programs .* are:/,/^[a-zA-Z]/p' $(top_srcdir)/README \
 	  | sed -n '/^   */s///p' | tr -s ' ' '\n' > $(pr)
 	diff $(pm) $(pr) && rm -rf $(pr) $(pm)
+
+# Make sure we don't define any S_IS* macros in src/*.c files.
+# Not a big deal, but they're already defined via system.h.
+.PHONY: check-misc
+check-misc:
+	grep '^# *define  *S_IS' $(SOURCES) && exit 1 || :
 
 # Extract the list of authors from each file.
 sed_filter = s/^ *//;s/N_ (//;s/^"//;s/")*$$//
