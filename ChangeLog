@@ -1,3 +1,31 @@
+2004-05-13  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: echo compatibility cleanup.
+	* doc/coreutils.texi (echo invocation): Document the changes.
+	* src/echo.c (V9_ECHO): Remove; always enabled.
+	(DEFAULT_ECHO_TO_XPG): Renamed from V9_DEFAULT, so that
+	we use the same naming convention as bash.  Now an enum,
+	not a macro.
+	(usage): Reword to mention -e/-E more accurately.
+	Mention \0NNN (the POSIX syntax) rather than \NNN (nonstandard).
+	(hextobin): New function.
+	(main): Use bool rather than int for local vars when appropriate.
+	Do not allow options if POSIXLY_CORRECT, unless we are using
+	BSD semantics and the first argument is "-n".
+	Don't pass unnecessary extra arg to parse_long_options.
+	do_v9 now defaults to DEFAULT_ECHO_TO_XPG, not to allow_options.
+	Do not look for options if !allow_options.
+	Use size_t rather than int when appropriate.
+	Open-code option test rather than using strrchr.
+	Use faster test for "-".
+	Avoid redundant argc test.
+	Add support for \x, for Bash compatibility.
+	Use e.g. '\a' rather than '\007', for portability to EBCDIC hosts.
+	When '\c' is encountered, stop printing immediately, as POSIX
+	requires.
+	Add support for \xhh syntax.
+	Add support for \0ooo syntax; POSIX requires this.
+
 2004-06-01  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.

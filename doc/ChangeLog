@@ -1,3 +1,7 @@
+2004-05-13  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* doc/coreutils.texi (echo invocation): Document today's changes.
+
 2004-05-17  Jim Meyering  <jim@meyering.net>
 
 	chgrp and chown now dereference symlinks by default, per POSIX.
