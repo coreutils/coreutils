@@ -16,6 +16,9 @@
    If not, write to the Free Software Foundation,
    59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
+#ifndef BACKUPFILE_H_
+# define BACKUPFILE_H_
+
 /* When to make backup files. */
 enum backup_type
 {
@@ -33,7 +36,7 @@ enum backup_type
   numbered
 };
 
-#define VALID_BACKUP_TYPE(Type)		\
+# define VALID_BACKUP_TYPE(Type)	\
   ((Type) == none			\
    || (Type) == simple			\
    || (Type) == numbered_existing	\
@@ -41,15 +44,17 @@ enum backup_type
 
 extern char const *simple_backup_suffix;
 
-#ifndef PARAMS
-# if defined PROTOTYPES || (defined __STDC__ && __STDC__)
-#  define PARAMS(Args) Args
-# else
-#  define PARAMS(Args) ()
+# ifndef PARAMS
+#  if defined PROTOTYPES || (defined __STDC__ && __STDC__)
+#   define PARAMS(Args) Args
+#  else
+#   define PARAMS(Args) ()
+#  endif
 # endif
-#endif
 
 char *base_name PARAMS ((char const *));
 char *find_backup_file_name PARAMS ((char const *, enum backup_type));
 enum backup_type get_version PARAMS ((char const *));
 void addext PARAMS ((char *, char const *, int));
+
+#endif /* ! BACKUPFILE_H_ */
