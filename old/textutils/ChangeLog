@@ -6,8 +6,8 @@ Sat Oct 28 16:02:39 1995  Jim Meyering  (meyering@comco.com)
 
 Thu Oct 26 00:11:35 1995  Jim Meyering  (meyering@comco.com)
 
-	* sort.c (xfopen): Rewrite using open/fdopen in order to set
-	proper permissions on temporary files.  Reported by Erik Corry
+	* sort.c (xtmpfopen): New function to set proper permissions on
+	temporary files.  Use it instead of xfopen. Reported by Erik Corry
 	(erik@kroete2.freinet.de).
 
 Mon Oct 23 23:17:04 1995  Jim Meyering  (meyering@comco.com)
