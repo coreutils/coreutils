@@ -1,6 +1,27 @@
-2005-03-15  Jim Meyering  <jim@meyering.net>
+2005-03-17  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/cut.c (set_fields): Use DECIMAL_DIGIT_ACCUMULATE macro,
+	in place of functionally-equivalent code.
+	* src/expand.c (parse_tab_stops, main): Likewise.
+	* src/split.c (main): Likewise.
+	* src/unexpand.c (parse_tab_stops, main): Likewise.
+	* src/uniq.c (main): Likewise.
+	* src/od.c: Use VERIFY macro in place of an equivalent open-coded
+	declaration.
+	* src/system.h (VERIFY, VERIFY_EXPR, DECIMAL_DIGIT_ACCUMULATE):
+	New macros.
+
+	Before, this command would make uniq skip 11 fields and print
+	only the first line.
+	$ _POSIX2_VERSION=1 ./uniq -f1 -1 <(seq --format='1 %g' 2)
+	1 1
+	1 2
+	* src/uniq.c (main): Interpret `uniq -f1 -1' like `uniq -f1',
+	not like `uniq -f11'.
+
+2005-03-15  Jim Meyering  <jim@meyering.net>
 
 	Both `pr -0' and e.g., `pr -03' would evoke `column count too large'.
 	`pr -0' should give a better diagnostic and `pr -03' should be
