@@ -14,6 +14,7 @@
 	* src/join.c (delseq, freeline): Likewise.
 	* src/expr.c (OLD): Likewise.
 	* src/sort.c (sort): Likewise.
+	* src/head.c (elide_tail_lines_pipe): Likewise.
 
 	* src/tail.c: Include "quote.h".
 	Use quote in diagnostics.  Change many error format strings
@@ -48,6 +49,7 @@
 
 	* src/uniq.c (main): Don't segfault when argc < optind.
 	* src/who.c (main): Handle argc < optind.
+	* src/df.c (main): Likewise.
 	* src/install.c (main): Likewise.
 	* src/mv.c (main): Likewise.
 	* src/pwd.c (main): Likewise.
