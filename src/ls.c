@@ -143,6 +143,15 @@
 # define S_ISDOOR(Mode) 0
 #endif
 
+/* Arrange to make lstat calls go through the wrapper function
+   on systems with an lstat function that does not dereference symlinks
+   that are specified with a trailing slash.  */
+#if ! LSTAT_FOLLOWS_SLASHED_SYMLINK
+int rpl_lstat PARAMS((const char *, struct stat *));
+# undef lstat
+# define lstat(Name, Stat_buf) rpl_lstat(Name, Stat_buf)
+#endif
+
 enum filetype
   {
     symbolic_link,
@@ -202,7 +211,6 @@ time_t time ();
 
 char *getgroup ();
 char *getuser ();
-void strip_trailing_slashes ();
 
 static size_t quote_name PARAMS ((FILE *out, const char *name,
 				  struct quoting_options const *options));
@@ -796,7 +804,6 @@ main (int argc, char **argv)
     dir_defaulted = 0;
   for (; i < argc; i++)
     {
-      strip_trailing_slashes (argv[i]);
       gobble_file (argv[i], 1, "");
     }
 
