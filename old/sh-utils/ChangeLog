@@ -1,3 +1,9 @@
+Thu Nov 16 21:25:45 1995  Jim Meyering  (meyering@comco.com)
+
+	* Makefile.in (_all): New default target.  Depend on `all' to work
+	around bug in AIX-3.2.5's /bin/make   Reported by Andreas Luik
+	<luik@isa.de>.
+
 Tue Nov  7 23:53:20 1995  Jim Meyering  (meyering@comco.com)
 
 	* stty.c (usage): Clarify descriptions of ignpar and ignbrk.
