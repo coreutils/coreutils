@@ -9,4 +9,4 @@
 int argmatch __ARGMATCH_P ((const char *, const char * const *));
 void invalid_arg __ARGMATCH_P ((const char *, const char *, int));
 
-extern char const program_name[];
+extern char *program_name;
