@@ -6,6 +6,23 @@ use strict;
 my @tv = (
 #test   options   input   expected-output   expected-return-code
 #
+["n1", '-n', ".01\n0\n", "0\n.01\n", 0],
+["n2", '-n', ".02\n.01\n", ".01\n.02\n", 0],
+["n3", '-n', ".02\n.00\n", ".00\n.02\n", 0],
+["n4", '-n', ".02\n.000\n", ".000\n.02\n", 0],
+["n5", '-n', ".021\n.029\n", ".021\n.029\n", 0],
+
+["n6", '-n', ".02\n.0*\n", ".0*\n.02\n", 0],
+["n7", '-n', ".02\n.*\n", ".*\n.02\n", 0],
+["n8a", '-s -n -k1,1', ".0a\n.0b\n", ".0a\n.0b\n", 0],
+["n8b", '-s -n -k1,1', ".0b\n.0a\n", ".0b\n.0a\n", 0],
+["n9a", '-s -n -k1,1', ".000a\n.000b\n", ".000a\n.000b\n", 0],
+["n9b", '-s -n -k1,1', ".000b\n.000a\n", ".000b\n.000a\n", 0],
+["n10a", '-s -n -k1,1', ".00a\n.000b\n", ".00a\n.000b\n", 0],
+["n10b", '-s -n -k1,1', ".00b\n.000a\n", ".00b\n.000a\n", 0],
+["n11a", '-s -n -k1,1', ".01a\n.010\n", ".01a\n.010\n", 0],
+["n11b", '-s -n -k1,1', ".010\n.01a\n", ".010\n.01a\n", 0],
+
 ["01a", '', "A\nB\nC\n", "A\nB\nC\n", 0],
 #
 ["02a", '-c', "A\nB\nC\n", '', 0],
@@ -19,9 +36,9 @@ my @tv = (
 ["03a", '-k1', "B\nA\n", "A\nB\n",  0],
 ["03b", '-k1,1', "B\nA\n", "A\nB\n",  0],
 ["03c", '-k1 -k2', "A b\nA a\n", "A a\nA b\n",  0],
-# FIXME: fail with a diagnostic when -k specifies field == 0
+# Fail with a diagnostic when -k specifies field == 0.
 ["03d", '-k0', "", "",  2],
-# FIXME: fail with a diagnostic when -k specifies character == 0
+# Fail with a diagnostic when -k specifies character == 0.
 ["03e", '-k1.0', "", "",  2],
 ["03f", '-k1.1,-k0', "", "",  2],
 # This is ok.
@@ -68,7 +85,7 @@ my @tv = (
 ["09c", '-n', "2e1\n1e2\n", "1e2\n2e1\n", 0],
 ["09d", '-k2g', "a 1e2\nb 2e1\n", "b 2e1\na 1e2\n", 0],
 #
-# Bug reported by Roger Peel" <R.Peel@ee.surrey.ac.uk>
+# Bug reported by Roger Peel <R.Peel@ee.surrey.ac.uk>
 ["10a", '-t : -k 2.2,2.2', ":ba\n:ab\n", ":ba\n:ab\n", 0],
 # Equivalent to above, but using obsolescent `+pos -pos' option syntax.
 ["10b", '-t : +1.1 -1.2', ":ba\n:ab\n", ":ba\n:ab\n", 0],
@@ -165,7 +182,6 @@ my @tv = (
  "_________U__free\n_________U__malloc\n_________U__abort\n_________U__memcpy\n_________U__memset\n_________U_dyld_stub_binding_helper\n_________U__malloc\n_________U___iob\n_________U__abort\n_________U__fprintf\n",
  "_________U___iob\n_________U__abort\n_________U__abort\n_________U__fprintf\n_________U__free\n_________U__malloc\n_________U__malloc\n_________U__memcpy\n_________U__memset\n_________U_dyld_stub_binding_helper\n",
  0],
-
 
 );
 
