@@ -1,3 +1,15 @@
+Thu Apr 18 23:16:41 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* basename.c (basename): Rewrite so it doesn't rely on strrchr,
+	and hence doesn't need to include string.h -- on some alpha-based
+	OSF systems, there's a conflicting prototype for basename in string.h.
+	Reported by Kaveh Ghazi.
+
+	* configure.in (AC_REPLACE_FUNCS): Add basename.
+	* lib/Makefile.am (EXTRA_DIST): Add basename.c.
+	(su_SOURCES): Remove basename.c.
+	From Kaveh Ghazi.
+
 Tue Apr 16 20:24:44 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* src/Makefile.am (who.c): Qualify who-users.c reference with
