@@ -6,7 +6,7 @@ $tr = './tr';
 $test = 0;
 $| = 1;
 
-print "#! /bin/sh\necho 'testing with tr=$tr'\ntr=$tr\nerrors=0\n";
+print "#! /bin/sh\ntr='$tr'\necho testing with tr=\$tr\nerrors=0\n";
 $expected = '';
 $s1 = '';
 $input = '';
