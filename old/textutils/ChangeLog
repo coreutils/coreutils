@@ -1,3 +1,14 @@
+1999-01-14  Jim Meyering  <meyering@ascend.com>
+
+	* lib/long-options.c (parse_long_options): Rename `usage' parameter
+	to avoid shadowing globally scoped function.
+
+1999-01-14  Akim Demaille  <demaille@inf.enst.fr>
+
+	* acconfig.h: Add a @BOTTOM@ section.
+	(@BOTTOM@): Define ARGMATCH_EXIT_FAILURE.  Declare usage ().
+	* src/*.c: Don't prototype usage as static.
+
 1999-01-10  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.22g.
