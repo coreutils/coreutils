@@ -1,3 +1,10 @@
+2000-06-21  Jim Meyering  <meyering@lucent.com>
+
+	* src/cut.c (getstr): Remove private (and out of date) version of
+	this function.
+	(cut_fields): Adjust caller to use the just-extended one in ../lib.
+	Reported by Paul Sauer.
+
 2000-06-20  Jim Meyering  <meyering@lucent.com>
 
 	* src/uniq.c (main): Fix off-by-argc test, so +N-style options are
