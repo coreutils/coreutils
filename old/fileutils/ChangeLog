@@ -1,3 +1,13 @@
+1999-02-18  Paul Eggert  <eggert@twinsun.com>
+
+	* getdate.y: <alloca.h>: Include if HAVE_ALLOCA_H, not FORCE_ALLOCA_H.
+	The FORCE_ALLOCA_H was a relic of the bad old pre-autoconf Emacs days.
+
+1999-02-17  Jim Meyering  <meyering@ascend.com>
+
+	* src/shred.c (wipename): Fix string thinko.  Now, shredding files
+	in subdirectories works (dir/file).  From Janos Farkas.
+
 1999-02-13  Jim Meyering  <meyering@ascend.com>
 
 	* src/dircolors.c (dc_parse_stream): Don't try to dereference
