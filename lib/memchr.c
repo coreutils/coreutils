@@ -31,6 +31,12 @@ Cambridge, MA 02139, USA.  */
 #endif
 #endif
 
+#if (SIZEOF_LONG != 4 && SIZEOF_LONG != 8)
+ error This function works only on systems for which sizeof(long) is 4 or 8.
+/* The previous line would begin with `#error,' but some compilers can't
+   handle that even when the condition is false.  */
+#endif
+
 /* Search no more than N bytes of S for C.  */
 
 char *
@@ -67,19 +73,18 @@ memchr (s, c, n)
 
      The 1-bits make sure that carries propagate to the next 0-bit.
      The 0-bits provide holes for carries to fall into.  */
-#ifdef LONG_64_BITS
-  /* 64-bit version of the magic.  */
+#if (SIZEOF_LONG == 8)
   magic_bits = ((unsigned long int) 0x7efefefe << 32) | 0xfefefeff;
 #else
   magic_bits = 0x7efefeff;
-#endif /* LONG_64_BITS */
+#endif /* SIZEOF_LONG == 8 */
 
   /* Set up a longword, each of whose bytes is C.  */
   charmask = c | (c << 8);
   charmask |= charmask << 16;
-#ifdef LONG_64_BITS
+#if (SIZEOF_LONG == 8)
   charmask |= charmask << 32;
-#endif /* LONG_64_BITS */
+#endif /* SIZEOF_LONG == 8 */
   if (sizeof (longword) > 8)
     abort ();
 
@@ -149,7 +154,7 @@ memchr (s, c, n)
 	    return (char *) &cp[2];
 	  if (cp[3] == c)
 	    return (char *) &cp[3];
-#ifdef LONG_64_BITS
+#if (SIZEOF_LONG == 8)
 	  if (cp[4] == c)
 	    return (char *) &cp[4];
 	  if (cp[5] == c)
@@ -158,7 +163,7 @@ memchr (s, c, n)
 	    return (char *) &cp[6];
 	  if (cp[7] == c)
 	    return (char *) &cp[7];
-#endif /* LONG_64_BITS */
+#endif /* SIZEOF_LONG == 8 */
 	}
 
       n -= sizeof (longword);
