@@ -1,5 +1,7 @@
 Changes in release 3.14:
  [3.13j]
+* install SRC DST no longer rejects non-regular, non-directory SRC
+* df accepts -F as a synonym for -t for compatibility with Solaris
 * cp -i /dev/null existing-file now prompts before overwriting the target
 * ls --color highlights orphaned symlinks text on terminals that support it
  [3.13i]
