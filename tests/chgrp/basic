@@ -43,6 +43,7 @@ test "$VERBOSE" = yes && set +x
   chgrp -c $g1 f
   chgrp -c $g2 f
   chgrp -c $g2 f
+  chgrp --verbose '' f
   chgrp --verbose $g1 f
   chgrp --verbose $g1 f
   chgrp --verbose --reference=f2 f
@@ -80,6 +81,7 @@ test "$VERBOSE" = yes && set +x
   chgrp $g2 g
   sleep 1
   chgrp $g1 f
+  chgrp '' f
   ls -c -t f g
 
 ) 2>&1 | sed "s/\([ :]\)$g1$/\1G1/;s/\([ :]\)$g2$/\1G2/" > actual
@@ -87,6 +89,7 @@ test "$VERBOSE" = yes && set +x
 cat <<\EOF > expected
 changed group of `f' to G1
 changed group of `f' to G2
+ownership of `f' retained
 changed group of `f' to G1
 group of `f' retained as G1
 changed group of `f' to G2
