@@ -1,3 +1,8 @@
+Thu Jun 12 06:48:23 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/expr.c (eval6): Accept new unary operator, quote.
+	From Karl Heuer.
+
 Wed Jun 11 15:13:56 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/expr.c (docolon): Test (re_buffer.re_nsub > 0) rather than
