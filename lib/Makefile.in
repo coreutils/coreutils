@@ -27,6 +27,8 @@ DEFS = @DEFS@
 CFLAGS = @CFLAGS@
 YACC = @YACC@
 
+GETOPT = getopt.o getopt1.o
+
 exec_prefix = @exec_prefix@
 libdir = $(exec_prefix)/lib
 
@@ -43,7 +45,7 @@ memcmp.c memcpy.c memset.c xstrtol.c xstrtoul.c
 
 OBJECTS = getdate.o posixtm.o \
 argmatch.o backupfile.o basename.o dirname.o \
-error.o filemode.o full-write.o getopt.o getopt1.o \
+error.o filemode.o full-write.o $(GETOPT) \
 getversion.o group-member.o idcache.o isdir.o long-options.o makepath.o \
 modechange.o obstack.o safe-read.o save-cwd.o savedir.o \
 stripslash.o xgetcwd.o xmalloc.o xstrdup.o userspec.o yesno.o \
@@ -143,8 +145,3 @@ installdirs maintainer-clean mostlyclean uninstall
 # Tell versions [3.59,3.63) of GNU make not to export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
-
-# The following include directive is uncommented automatically
-# when this package is configured with the --with-autodep option.
-# You need GNU make and a C compiler that can generate dependencies.
-@AUTODEP_COMMENT@include @top_srcdir@/mkdep-Makefile
