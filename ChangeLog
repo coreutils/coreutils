@@ -1,3 +1,11 @@
+2004-01-19  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.1.2.
+
+	* tests/mv/hard-4: Run envvar-check in case SIMPLE_BACKUP_SUFFIX is set.
+	* tests/mv/backup-is-src: Likewise.
+	Problem reported by Peter Horst
+
 2004-01-17  Jim Meyering  <jim@meyering.net>
 
 	* announce-gen (print_changelog_deltas): Use .sig suffix, not .asc.
