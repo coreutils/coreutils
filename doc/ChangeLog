@@ -1,5 +1,8 @@
 2003-04-10  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.am (check-texinfo): Check for uses of non-zero.
+	I prefer to spell it `nonzero'.
+
 	* coreutils.texi (readlink invocation): Tweak description a little.
 
 2003-04-04  Jim Meyering  <jim@meyering.net>
