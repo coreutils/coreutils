@@ -519,6 +519,10 @@ enum
 # define ULONG_MAX TYPE_MAXIMUM (unsigned long)
 #endif
 
+#ifndef SIZE_T_MAX
+# define SIZE_T_MAX TYPE_MAXIMUM (size_t)
+#endif
+
 #ifndef UID_T_MAX
 # define UID_T_MAX TYPE_MAXIMUM (uid_t)
 #endif
