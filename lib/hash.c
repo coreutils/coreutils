@@ -376,9 +376,8 @@ hash_string (const char *string, unsigned int n_buckets)
 /* Return true if CANDIDATE is a prime number.  CANDIDATE should be an odd
    number at least equal to 11.  */
 
-static bool
-is_prime (candidate)
-     unsigned long candidate;
+static int
+is_prime (unsigned long candidate)
 {
   unsigned long divisor = 3;
   unsigned long square = divisor * divisor;
@@ -397,9 +396,10 @@ is_prime (candidate)
    prime.  CANDIDATE should be at least equal to 10.  */
 
 static unsigned long
-next_prime (candidate)
-     unsigned long candidate;
+next_prime (unsigned long candidate)
 {
+  assert (candidate >= 10);
+
   /* Make it definitely odd.  */
   candidate |= 1;
 
