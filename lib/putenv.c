@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1997 Free Software Foundation, Inc.
 
    NOTE: The canonical source of this file is maintained with the GNU C
    Library.  Bugs can be reported to bug-glibc@prep.ai.mit.edu.
@@ -23,13 +23,6 @@
 # include <config.h>
 #endif
 
-/* Define-away any (possibly conflicting) prototype of putenv.
-   Many systems omit the `const' attribute on the argument.
-   But don't define-away if it's already defined (e.g. to rpl_putenv).  */
-#ifndef putenv
-# define putenv _sys_putenv
-#endif
-
 #if defined (__GNU_LIBRARY__) || defined (HAVE_STDLIB_H)
 # include <stdlib.h>
 #endif
@@ -39,8 +32,6 @@
 #if defined (__GNU_LIBRARY__) || defined (HAVE_UNISTD_H)
 # include <unistd.h>
 #endif
-
-#define _sys_putenv putenv
 
 #if !defined (__GNU_LIBRARY__) && !defined (HAVE_STRCHR)
 # define strchr index
@@ -58,7 +49,7 @@ extern char **environ;
 
 /* Put STRING, which is of the form "NAME=VALUE", in the environment.  */
 int
-putenv (string)
+rpl_putenv (string)
      const char *string;
 {
   const char *const name_end = strchr (string, '=');
