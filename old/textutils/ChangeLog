@@ -1,4 +1,12 @@
+2001-03-08  Jim Meyering  <meyering@lucent.com>
+
+	* tests/sha1sum/sample-vec: Insert the `--text' argument for each test.
+	Reported by Matthew Smith.
+
 2001-03-04  Jim Meyering  <meyering@lucent.com>
+
+	* Makefile.maint (my_distdir): Define.
+	Use it in place of $(distdir) almost everywhere.
 
 	* Version 2.0.12.
 
