@@ -965,9 +965,10 @@ parse_obsolescent_option (int argc, const char *const *argv,
 	  n_string_tmp[len] = '\0';
 
 	  error (0, 0,
-		 _("%s: `%s' is so large that it is not representable"),
-		 count_lines ? _("number of lines") : _("number of bytes"),
-		 n_string_tmp);
+		 _("%s: %s is so large that it is not representable"),
+		 n_string_tmp, (count_lines
+				? _("number of lines")
+				: _("number of bytes"));
 	  free (n_string_tmp);
 	  *fail = 1;
 	}
@@ -1030,7 +1031,7 @@ parse_options (int argc, char **argv,
 	    if (s_err != LONGINT_OK || tmp_ulong > OFF_T_MAX)
 	      {
 		error (EXIT_FAILURE, 0,
-		       _("%s: `%s' is so large that it is not representable"),
+		       _("%s: %s is so large that it is not representable"),
 		       optarg,
 		       c == 'n' ? _("number of lines") : _("number of bytes"));
 	      }
