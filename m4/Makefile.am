@@ -71,6 +71,7 @@ uptime.m4 \
 utimbuf.m4 \
 utime.m4 \
 utimes.m4 \
+xstrtoimax.m4 \
 xstrtoumax.m4
 ##m4-files-end
 
