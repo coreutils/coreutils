@@ -76,7 +76,7 @@ char *stpcpy ();
 char *
 savedir (dir, name_size)
      const char *dir;
-     unsigned name_size;
+     unsigned int name_size;
 {
   DIR *dirp;
   struct dirent *dp;

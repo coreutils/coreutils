@@ -6,4 +6,4 @@
 #endif
 
 char *
-savedir __P((const char *dir, unsigned name_size));
+savedir __P((const char *dir, unsigned int name_size));
