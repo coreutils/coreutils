@@ -37,7 +37,11 @@
 /* Replacement for Solaris' openat function.
    <http://www.google.com/search?q=openat+site:docs.sun.com>
    Simulate it by doing save_cwd/fchdir/open/restore_cwd.
-   If either the fchdir or the restore_cwd fails, then exit nonzero.  */
+   If either the save_cwd or the restore_cwd fails (relatively unlikely,
+   and usually indicative of a problem that deserves close attention),
+   then give a diagnostic and exit nonzero.
+   Otherwise, upon failure, set errno and return -1, as openat does.
+   Upon successful completion, return a file descriptor.  */
 int
 rpl_openat (int fd, char const *filename, int flags, ...)
 {
@@ -79,6 +83,8 @@ rpl_openat (int fd, char const *filename, int flags, ...)
   if (restore_cwd (&saved_cwd) != 0)
     error (exit_failure, errno,
 	   _("openat: unable to restore working directory"));
+
+  free_cwd (&saved_cwd);
 
   errno = saved_errno;
   return new_fd;
