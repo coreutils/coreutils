@@ -1,5 +1,9 @@
 2000-10-28  Jim Meyering  <meyering@lucent.com>
 
+	* regex.c: Update from libc.
+	* regex.h: Likewise.
+	* getopt1.c: Likewise.
+
 	* getusershell.c (setusershell) [HAVE_FSEEKO]: Use fseek0.
 	Patch by Ulrich Drepper.
 
