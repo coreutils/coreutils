@@ -571,7 +571,7 @@ copy ()
 	 whatever data we are able to read is followed by zeros.
 	 This minimizes data loss. */
       if ((conversions_mask & C_SYNC) && (conversions_mask & C_NOERROR))
-	bzero (ibuf, input_blocksize);
+	memset (ibuf, 0, input_blocksize);
 
       nread = safe_read (input_fd, ibuf, input_blocksize);
 
@@ -608,7 +608,7 @@ copy ()
 	    {
 	      if (!(conversions_mask & C_NOERROR))
 		/* If C_NOERROR, we zeroed the block before reading. */
-		bzero (ibuf + nread, input_blocksize - nread);
+		memset (ibuf + nread, 0, input_blocksize - nread);
 	      nread = input_blocksize;
 	    }
 	}
@@ -714,7 +714,7 @@ copy_simple (buf, nread)
       if (nfree > nread)
 	nfree = nread;
 
-      bcopy (start, obuf + oc, nfree);
+      memcpy (obuf + oc, start, nfree);
 
       nread -= nfree;		/* Update the number of bytes left to copy. */
       start += nfree;
@@ -905,6 +905,8 @@ scanargs (argc, argv)
 /* Return the value of STR, interpreted as a non-negative decimal integer,
    optionally multiplied by various values.
    Return -1 if STR does not represent a number in this format. */
+
+/* FIXME: use xstrtou?l */
 
 static int
 parse_integer (str)
