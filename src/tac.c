@@ -509,6 +509,7 @@ memrchr (const char *buf_start, const char *buf_end, int c)
   return NULL;
 }
 
+#if 0
 /* FIXME: describe */
 
 static int
@@ -594,6 +595,7 @@ tac_stdin_to_mem (void)
 
   return 0;
 }
+#endif
 
 int
 main (int argc, char **argv)
