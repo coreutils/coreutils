@@ -536,7 +536,8 @@ pipe_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
   /* Input is always read into a fresh buffer.  */
   while (1)
     {
-      n_read = tmp->nbytes = safe_read (fd, tmp->buffer, BUFSIZ);
+      n_read = safe_read (fd, tmp->buffer, BUFSIZ);
+      tmp->nbytes = n_read;
       if (n_read == 0 || n_read == SAFE_READ_ERROR)
 	break;
       *read_pos += n_read;
