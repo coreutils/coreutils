@@ -1,0 +1,21 @@
+r 206.65.212.10
+b main
+r
+n
+s
+n
+p addr
+p addr
+p he->h_name
+n
+q
+b canon_host 
+r 206.65.212.10
+n
+p he
+p *he
+n
+n
+p (he->h_addrtype)
+n
+q
