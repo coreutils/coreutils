@@ -1,5 +1,10 @@
 1999-05-09  Jim Meyering  <meyering@ascend.com>
 
+	* configure.in (LIB_CRYPT): Set it to -l$ac_lib, now that autoconf
+	uses an $ac_-prefixed variable name.
+
+	* lib/regex.c: Update from libc.
+
 	* Version 1.16i.
 
 	* configure.in: Clean up checks for libraries so that we don't add
