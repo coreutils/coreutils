@@ -1,5 +1,6 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-.
 
+# FIXME: move Fetish.pm to ..
 EXTRA_DIST = $(TESTS) Fetish.pm simple
 
 TESTS_ENVIRONMENT = \
