@@ -962,7 +962,8 @@ tail_forever (struct File_spec *f, int nfiles)
 	  if (stats.st_size == f[i].size)
 	    {
 	      f[i].n_consecutive_size_changes = 0;
-	      if (++f[i].n_unchanged_stats > max_n_unchanged_stats_between_opens
+	      if ((max_n_unchanged_stats_between_opens
+		   <= f[i].n_unchanged_stats++)
 		  && follow_mode == Follow_name)
 		{
 		  recheck (&f[i]);
@@ -971,14 +972,11 @@ tail_forever (struct File_spec *f, int nfiles)
 	      continue;
 	    }
 
-	  /* Size changed.  */
-	  ++f[i].n_consecutive_size_changes;
-
 	  /* Ensure that a file that's unlinked or moved aside, yet always
 	     growing will be recognized as having been renamed.  */
-	  if (follow_mode == Follow_name
-	      && (f[i].n_consecutive_size_changes
-		  > max_n_consecutive_size_changes_between_opens))
+	  if ((max_n_consecutive_size_changes_between_opens
+	       <= f[i].n_consecutive_size_changes++)
+	      && follow_mode == Follow_name)
 	    {
 	      f[i].n_consecutive_size_changes = 0;
 	      recheck (&f[i]);
