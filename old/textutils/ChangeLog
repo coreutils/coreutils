@@ -33,6 +33,7 @@
 	* src/tac.c (usage): Likewise.
 	* src/tr.c (usage): Likewise.
 	* src/unexpand.c (usage): Likewise.
+	* src/uniq.c (usage): Likewise.
 
 	* src/sys2.h (alloca) [__GNUC__]: Define only if not already defined.
 
