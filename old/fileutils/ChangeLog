@@ -1,3 +1,9 @@
+Thu Mar  7 20:26:07 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* df.c (main): Tell read_filesystem_list that it should determine
+	file system type when the user specifies --print-type or -T.
+ 	From Michael Rendell <michael@cs.mun.ca>.
+
 Tue Feb 27 23:13:46 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* src/Makefile.am: Adapt for automake-0.30.
