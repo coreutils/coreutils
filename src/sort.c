@@ -2188,7 +2188,7 @@ lacks following character offset"));
 			  {
 			    /* Provoke with `sort -k1.0' */
 			    error (0, 0, _("starting field character offset \
-argument to the `-k' option\nmust be positive"));
+argument to the `-k' option must be positive"));
 			    badfieldspec (argv[i]);
 			  }
 		      }
