@@ -9,6 +9,8 @@
 	account for the fact that the current path may end in `/'.
 	François Pinard reported that `du symlink-to-dir/' was not
 	equivalent to `du symlink-to-dir/.'.  Now it is.
+	* tests/du/trailing-slash: New file/test, for the above fix.
+	* tests/du/Makefile.am (TESTS): Add trailing-slash.
 
 2002-11-23  Jim Meyering  <jim@meyering.net>
 
