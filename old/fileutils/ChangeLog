@@ -1,5 +1,15 @@
 2000-11-06  Jim Meyering  <meyering@lucent.com>
 
+	* tests/rwx-to-mode: New file.
+	* tests/mkdir/parents: New file.
+
+	* tests/mkdir/Makefile.am (TESTS_ENVIRONMENT): Define srcdir=$(srcdir).
+
+	* tests/cp/cp-parents: Move mkdir tests into ../mkdir.
+
+	* doc/fileutils.texi: Use Free Documentation Licence.
+	Change GNU to @sc{gnu} in many places.
+
 	* doc/texinfo.tex: Update from master repository.
 	* config.sub: Likewise.
 	* config.guess: Likewise.
