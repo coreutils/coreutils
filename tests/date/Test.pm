@@ -138,6 +138,10 @@ sub test_vector
      ['relative-2', "--utc -d '1970-01-01 UTC +961062237 sec' $fmt", {},
       "2000-06-15 09:43:57", 0],
 
+     # This would infloop (or appear to) prior to coreutils-4.5.5,
+     # due to a bug in strftime.c.
+     ['bignum', "-d '1999-06-01' +%3004Y", {}, '0' x 3000 . '1999', 0],
+
      # FIXME: add a lot more...
      );
 
