@@ -182,8 +182,12 @@ simple_cat (
 
       /* Write this block out.  */
 
-      if (full_write (STDOUT_FILENO, buf, n_read) != n_read)
-	error (EXIT_FAILURE, errno, _("write error"));
+      {
+	/* The following is ok, since we know that 0 < n_read.  */
+	size_t n = n_read;
+	if (full_write (STDOUT_FILENO, buf, n) != n)
+	  error (EXIT_FAILURE, errno, _("write error"));
+      }
     }
 }
 
@@ -199,13 +203,13 @@ cat (
      char *inbuf,
 
      /* Number of characters read in each read call.  */
-     int insize,
+     size_t insize,
 
      /* Pointer to the beginning of the output buffer.  */
      char *outbuf,
 
      /* Number of characters written by each write call.  */
-     int outsize,
+     size_t outsize,
 
      /* Variables that have values according to the specified options.  */
      int quote,
@@ -258,7 +262,7 @@ cat (
 	{
 	  /* Write if there are at least OUTSIZE bytes in OUTBUF.  */
 
-	  if (bpout - outbuf >= outsize)
+	  if (outbuf + outsize <= bpout)
 	    {
 	      char *wp = outbuf;
 	      do
@@ -267,7 +271,7 @@ cat (
 		    error (EXIT_FAILURE, errno, _("write error"));
 		  wp += outsize;
 		}
-	      while (bpout - wp >= outsize);
+	      while (wp + outsize <= bpout);
 
 	      /* Move the remaining bytes to the beginning of the
 		 buffer.  */
@@ -497,10 +501,10 @@ int
 main (int argc, char **argv)
 {
   /* Optimal size of i/o operations of output.  */
-  int outsize;
+  size_t outsize;
 
   /* Optimal size of i/o operations of input.  */
-  int insize;
+  size_t insize;
 
   /* Pointer to the input buffer.  */
   char *inbuf;
