@@ -20,7 +20,7 @@ abs_srcdir=`pwd`
 cd $pwd || framework_failure=1
 mkdir $tmp || framework_failure=1
 cd $tmp || framework_failure=1
-mkdir e-dir || framework_failure=1
+mkdir -m 700 e-dir || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
@@ -28,6 +28,16 @@ if test $framework_failure = 1; then
 fi
 
 fail=0
+
+p=`ls -ld e-dir|sed 's/ .*//'`
+case $p in drwx------);; *) fail=1;; esac
+if test $fail = 1
+  cat <<EOF >&2
+$0: Since it looks like you're running this test in a directory with
+the sticky bit set, we're skipping this test.
+EOF
+  (exit 77); exit
+fi
 
 # Make sure `mkdir -p existing-dir' succeeds
 # and that `mkdir existing-dir' fails.

@@ -1,3 +1,7 @@
+2000-11-09  Jim Meyering  <meyering@lucent.com>
+
+	* Version 4.0.32.
+
 2000-11-06  Jim Meyering  <meyering@lucent.com>
 
 	* tests/cp/cp-parents: Move mkdir tests into ../mkdir.
