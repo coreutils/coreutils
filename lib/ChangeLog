@@ -1,5 +1,8 @@
 2003-02-21  Jim Meyering  <jim@meyering.net>
 
+	* mmap-stack.h: Undefine HAVE_MMAP_STACK, thus disabling
+	this code on all systems.
+
 	Merge in some changes from GNU libc.
 	* md5.h (md5_uintptr): Define.
 
