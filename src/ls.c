@@ -1220,7 +1220,7 @@ get_funky_string (char **dest, const char **src, int equals_end)
   int num;			/* For numerical codes */
   int count;			/* Something to count with */
   enum {
-    st_gnd, st_backslash, st_octal, st_hex, st_caret, st_end, st_error
+    ST_GND, ST_BACKSLASH, ST_OCTAL, ST_HEX, ST_CARET, ST_END, ST_ERROR
   } state;
   const char *p;
   char *q;
@@ -1231,30 +1231,30 @@ get_funky_string (char **dest, const char **src, int equals_end)
   count = 0;			/* No characters counted in yet.  */
   num = 0;
 
-  state = st_gnd;		/* Start in ground state.  */
-  while (state < st_end)
+  state = ST_GND;		/* Start in ground state.  */
+  while (state < ST_END)
     {
       switch (state)
 	{
-	case st_gnd:		/* Ground state (no escapes) */
+	case ST_GND:		/* Ground state (no escapes) */
 	  switch (*p)
 	    {
 	    case ':':
 	    case '\0':
-	      state = st_end;	/* End of string */
+	      state = ST_END;	/* End of string */
 	      break;
 	    case '\\':
-	      state = st_backslash; /* Backslash scape sequence */
+	      state = ST_BACKSLASH; /* Backslash scape sequence */
 	      ++p;
 	      break;
 	    case '^':
-	      state = st_caret; /* Caret escape */
+	      state = ST_CARET; /* Caret escape */
 	      ++p;
 	      break;
 	    case '=':
 	      if (equals_end)
 		{
-		  state = st_end; /* End */
+		  state = ST_END; /* End */
 		  break;
 		}
 	      /* else fall through */
@@ -1265,7 +1265,7 @@ get_funky_string (char **dest, const char **src, int equals_end)
 	    }
 	  break;
 
-	case st_backslash:	/* Backslash escaped character */
+	case ST_BACKSLASH:	/* Backslash escaped character */
 	  switch (*p)
 	    {
 	    case '0':
@@ -1276,12 +1276,12 @@ get_funky_string (char **dest, const char **src, int equals_end)
 	    case '5':
 	    case '6':
 	    case '7':
-	      state = st_octal;	/* Octal sequence */
+	      state = ST_OCTAL;	/* Octal sequence */
 	      num = *p - '0';
 	      break;
 	    case 'x':
 	    case 'X':
-	      state = st_hex;	/* Hex sequence */
+	      state = ST_HEX;	/* Hex sequence */
 	      num = 0;
 	      break;
 	    case 'a':		/* Bell */
@@ -1315,33 +1315,33 @@ get_funky_string (char **dest, const char **src, int equals_end)
 	      num = ' ';
 	      break;
 	    case '\0':		/* End of string */
-	      state = st_error;	/* Error! */
+	      state = ST_ERROR;	/* Error! */
 	      break;
 	    default:		/* Escaped character like \ ^ : = */
 	      num = *p;
 	      break;
 	    }
-	  if (state == st_backslash)
+	  if (state == ST_BACKSLASH)
 	    {
 	      *(q++) = num;
 	      ++count;
-	      state = st_gnd;
+	      state = ST_GND;
 	    }
 	  ++p;
 	  break;
 
-	case st_octal:		/* Octal sequence */
+	case ST_OCTAL:		/* Octal sequence */
 	  if (*p < '0' || *p > '7')
 	    {
 	      *(q++) = num;
 	      ++count;
-	      state = st_gnd;
+	      state = ST_GND;
 	    }
 	  else
 	    num = (num << 3) + (*(p++) - '0');
 	  break;
 
-	case st_hex:		/* Hex sequence */
+	case ST_HEX:		/* Hex sequence */
 	  switch (*p)
 	    {
 	    case '0':
@@ -1375,13 +1375,13 @@ get_funky_string (char **dest, const char **src, int equals_end)
 	    default:
 	      *(q++) = num;
 	      ++count;
-	      state = st_gnd;
+	      state = ST_GND;
 	      break;
 	    }
 	  break;
 
-	case st_caret:		/* Caret escape */
-	  state = st_gnd;	/* Should be the next state... */
+	case ST_CARET:		/* Caret escape */
+	  state = ST_GND;	/* Should be the next state... */
 	  if (*p >= '@' && *p <= '~')
 	    {
 	      *(q++) = *(p++) & 037;
@@ -1393,7 +1393,7 @@ get_funky_string (char **dest, const char **src, int equals_end)
 	      ++count;
 	    }
 	  else
-	    state = st_error;
+	    state = ST_ERROR;
 	  break;
 	}
     }
@@ -1401,7 +1401,7 @@ get_funky_string (char **dest, const char **src, int equals_end)
   *dest = q;
   *src = p;
 
-  return state == st_error ? -1 : count;
+  return state == ST_ERROR ? -1 : count;
 }
 
 
