@@ -1121,7 +1121,9 @@ main (int argc, char **argv)
 
   if (output_file != NULL)
     {
-      int omode = O_RDWR | O_CREAT;
+      /* Open the output file with *read* access only if we might
+	 need to read to satisfy a `seek=' request.  */
+      int omode = (seek_record ? O_RDWR : O_WRONLY) | O_CREAT;
 
       if (seek_record == 0 && !(conversions_mask & C_NOTRUNC))
 	omode |= O_TRUNC;
