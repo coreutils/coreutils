@@ -990,7 +990,8 @@ get_date (const char *p, const time_t *now)
 
   /* Let mktime deduce tm_isdst if we have an absolute time stamp,
      or if the relative time stamp mentions days, months, or years.  */
-  if (pc.dates_seen | pc.days_seen | pc.times_seen | pc.rel_day | pc.rel_month | pc.rel_year)
+  if (pc.dates_seen | pc.days_seen | pc.times_seen | pc.rel_day
+      | pc.rel_month | pc.rel_year)
     tm.tm_isdst = -1;
 
   /* But if the input explicitly specifies local time with or without
@@ -1037,6 +1038,7 @@ get_date (const char *p, const time_t *now)
     {
       tm.tm_mday += ((pc.day_number - tm.tm_wday + 7) % 7
 		     + 7 * (pc.day_ordinal - (0 < pc.day_ordinal)));
+      tm.tm_isdst = -1;
       Start = mktime (&tm);
       if (Start == (time_t) -1)
 	return Start;
