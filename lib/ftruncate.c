@@ -32,7 +32,9 @@ ftruncate (fd, length)
 
 #include <sys/stat.h>
 #include <errno.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 
 int
 ftruncate (fd, length)
