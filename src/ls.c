@@ -30,7 +30,11 @@
    device is a terminal.
    This is for the `ls' program. */
 
-/* Written by Richard Stallman and David MacKenzie. */
+/* Written by Richard Stallman and David MacKenzie.  */
+
+/* Colour support by Peter Anvin <Peter.Anvin@linux.org> and Dennis
+   Flaherty <dennisf@denix.elk.miles.com> based on original patches by
+   Greg Lee <lee@uhunix.uhcc.hawaii.edu>.  */
 
 #ifdef _AIX
  #pragma alloca
@@ -52,7 +56,7 @@
 /* limits.h must come before system.h because limits.h on some systems
    undefs PATH_MAX, whereas system.h includes pathmax.h which sets
    PATH_MAX.  */
-#include <limits.h>
+# include <limits.h>
 #endif
 
 #include "system.h"
@@ -68,20 +72,20 @@
 #define obstack_chunk_free free
 
 #ifndef INT_MAX
-#define INT_MAX 2147483647
+# define INT_MAX 2147483647
 #endif
 
 /* Return an int indicating the result of comparing two longs. */
 #if (INT_MAX <= 65535)
-#define longdiff(a, b) ((a) < (b) ? -1 : (a) > (b) ? 1 : 0)
+# define longdiff(a, b) ((a) < (b) ? -1 : (a) > (b) ? 1 : 0)
 #else
-#define longdiff(a, b) ((a) - (b))
+# define longdiff(a, b) ((a) - (b))
 #endif
 
 /* The maximum number of digits required to print an inode number
    in an unsigned format.  */
 #ifndef INODE_DIGITS
-#define INODE_DIGITS 7
+# define INODE_DIGITS 7
 #endif
 
 enum filetype
@@ -106,7 +110,39 @@ struct fileinfo
        zero. */
     unsigned int linkmode;
 
+    /* For symbolic link and color printing, 1 if linked-to file
+       exits, otherwise 0.  */
+    int linkok;
+
     enum filetype filetype;
+  };
+
+/* Null is a valid character in a color indicator (think about Epson
+   printers, for example) so we have to use a length/buffer string
+   type.  */
+
+struct bin_str
+  {
+    unsigned int len;		/* Number of bytes */
+    char *string;		/* Pointer to the same */
+  };
+
+struct bin_str color_indicator[] =
+  {
+    { 2, "\033[" },		/* lc: Left of color sequence */
+    { 1, "m" },			/* rc: Right of color sequence */
+    { 0, NULL },		/* ec: End color (replaces lc+no+rc) */
+    { 1, "0" },			/* no: Normal */
+    { 1, "0" },			/* fi: File: default */
+    { 2, "32" },		/* di: Directory: green */
+    { 2, "36" },		/* ln: Symlink: cyan */
+    { 2, "31" },		/* pi: Pipe: red */
+    { 2, "33" },		/* so: Socket: yellow/brown */
+    { 5, "44;37" },		/* bd: Block device: white on blue */
+    { 5, "44;37" },		/* cd: Char device: white on blue */
+    { 0, NULL },		/* mi: Missing file: undefined */
+    { 0, NULL },		/* or: Orphanned symlink: undefined */
+    { 2, "35" }			/* ex: Executable: purple */
   };
 
 #ifndef STDC_HEADERS
@@ -155,6 +191,9 @@ static int file_interesting __P ((register struct dirent *next));
 static int gobble_file __P ((const char *name, int explicit_arg,
 			     const char *dirname));
 static int is_not_dot_or_dotdot __P ((char *name));
+static void print_color_indicator __P ((char *name, unsigned int mode,
+					int linkok));
+static void put_indicator __P ((struct bin_str *ind));
 static int length_of_file_name_and_frills __P ((struct fileinfo *f));
 static void add_ignore_pattern __P ((char *pattern));
 static void attach __P ((char *dest, const char *dirname, const char *name));
@@ -168,11 +207,14 @@ static void print_file_name_and_frills __P ((struct fileinfo *f));
 static void print_horizontal __P ((void));
 static void print_long_format __P ((struct fileinfo *f));
 static void print_many_per_line __P ((void));
-static void print_name_with_quoting __P ((register char *p));
+static void print_name_with_quoting __P ((register char *p, unsigned int mode,
+					  int linkok));
 static void print_type_indicator __P ((unsigned int mode));
 static void print_with_commas __P ((void));
 static void queue_directory __P ((char *name, char *realname));
 static void sort_files __P ((void));
+int get_funky_string __P ((char **dest, const char **src, int equals_end));
+static void parse_ls_color __P ((void));
 static void usage __P ((int status));
 
 /* The name the program was run with, stripped of any leading path. */
@@ -302,9 +344,9 @@ static int kilobyte_blocks;
    strange characters in file names.  */
 static int dired;
 
-/* none means don't mention the type of files.
-   all means mention the types of all files.
-   not_programs means do so except for executables.
+/* `none' means don't mention the type of files.
+   `all' means mention the types of all files.
+   `not_programs' means do so except for executables.
 
    Controlled by -F and -p.  */
 
@@ -316,6 +358,44 @@ enum indicator_style
   };
 
 static enum indicator_style indicator_style;
+
+/* Nonzero means use colors to mark types.  Also define the different
+   colors as well as the stuff for the LS_COLORS environment variable.
+   The LS_COLORS variable is now in a termcap-like format.  */
+
+static int print_with_color;
+
+enum color_type
+  {
+    color_no,			/* 0: default or --color=no */
+    color_yes,			/* 1: --color=yes */
+    color_if_tty		/* 2: --color=tty */
+  };
+
+/* Note that color_no and color_yes equals boolean values; they will
+   be assigned to print_with_color which is a boolean variable.  */
+
+enum indicator_no
+  {
+    C_LEFT, C_RIGHT, C_END, C_NORM, C_FILE, C_DIR, C_LINK, C_FIFO, C_SOCK,
+    C_BLK, C_CHR, C_MISSING, C_ORPHAN, C_EXEC
+  };
+
+char *indicator_name[]=
+  {
+    "lc", "rc", "ec", "no", "fi", "di", "ln", "pi", "so",
+    "bd", "cd", "mi", "or", "ex", NULL
+  };
+
+struct col_ext_type
+  {
+    struct bin_str ext;		/* The extension we're looking for */
+    struct bin_str seq;		/* The sequence to output when we do */
+    struct col_ext_type *next;	/* Next in list */
+  };
+
+struct col_ext_type *col_ext_list = NULL;
+char *color_buf;		/* Buffer for color sequences */
 
 /* Nonzero means mention the inode number of each file.  -i  */
 
@@ -437,7 +517,9 @@ static struct option const long_options[] =
   {"time", required_argument, 0, 11},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
-  {0, 0, 0, 0}
+  {"color", optional_argument, 0, 13},
+  {"colour", optional_argument, 0, 13},
+  {NULL, 0, NULL, 0}
 };
 
 static char const *const format_args[] =
@@ -518,6 +600,18 @@ static enum time_type const time_types[] =
   time_atime, time_atime, time_atime, time_ctime, time_ctime
 };
 
+static char const* color_args[] =
+  {
+    /* Note: "no" is a prefix of "none" so we don't include it.  */
+    /* force and none are for compatibility with another color-ls version */
+    "yes", "force", "none", "tty", "if-tty", 0
+  };
+
+static enum color_type const color_types[] =
+  {
+    color_yes, color_yes, color_no, color_if_tty, color_if_tty
+  };
+
 
 /* Write to standard output the string PREFIX followed by a space-separated
    list of the integers stored in OS all on one line.  */
@@ -569,10 +663,13 @@ main (int argc, char **argv)
   if (show_help)
     usage (0);
 
+  if (print_with_color)
+    parse_ls_color ();
+
   format_needs_stat = sort_type == sort_time || sort_type == sort_size
     || format == long_format
     || trace_links || trace_dirs || indicator_style != none
-    || print_block_size || print_inode;
+    || print_block_size || print_inode || print_with_color;
 
   if (dired && format == long_format)
     {
@@ -782,6 +879,7 @@ decode_switches (int argc, char **argv)
 	  if (format == long_format)
 	    format = (isatty (1) ? many_per_line : one_per_line);
 	  print_block_size = 0;	/* disable -s */
+	  print_with_color = 0;	/* disable ---color */
 	  break;
 
 	case 'g':
@@ -950,6 +1048,31 @@ decode_switches (int argc, char **argv)
 	  format = formats[i];
 	  break;
 
+	case 13:		/* --color */
+	  if (optarg)
+	    {
+	      i = argmatch (optarg, color_args);
+	      if (i < 0)
+		{
+		  invalid_arg (_("colorization criterion"), optarg, i);
+		  usage (1);
+		}
+	      i = color_types[i];
+	    }
+	  else
+	    i = color_yes;	/* Only --color -> --color=yes */
+
+	  if (i == color_if_tty)
+	    print_with_color = isatty (1);
+	  else
+	    print_with_color = i;
+
+	  /* XXX Shouldn't this be an autoconf check?  */
+	  if (print_with_color)
+	    tabsize = line_length;	/* Some systems don't like tabs and
+					   color codes in combination */
+	  break;
+
 	default:
 	  usage (1);
 	}
@@ -957,7 +1080,331 @@ decode_switches (int argc, char **argv)
 
   return optind;
 }
+
 
+static void
+parse_ls_color (void)
+{
+  const char *p;		/* Pointer to character being parsed */
+  char *whichvar;		/* LS_COLORS or LS_COLOURS? */
+  char *buf;			/* color_buf buffer pointer */
+  int state;			/* State of parser */
+  int ind_no;			/* Indicator number */
+  char label[3] = "??";		/* Indicator label */
+  struct col_ext_type *ext;	/* Extension we are working on */
+  struct col_ext_type *ext2;	/* Extra pointer */
+
+  if (((p = getenv (whichvar = "LS_COLORS")) != NULL && *p != '\0')
+      || ((p = getenv (whichvar = "LS_COLOURS")) != NULL && *p != '\0'))
+    {
+      buf = color_buf = xstrdup (p);
+      /* This is an overly conservative estimate, but any possible
+	 LS_COLORS string will *not* generate a color_buf longer than
+	 itself, so it is a safe way of allocating a buffer in
+	 advance.  */
+
+      state = 1;
+      while (state > 0)
+	{
+	  switch (state)
+	    {
+	    case 1:		/* First label character */
+	      switch (*p)
+		{
+		case ':':
+		  ++p;
+		  break;
+
+		case '*':
+		  /* Allocate new extension block and add to head of
+		     linked list (this way a later definition will
+		     override an earlier one, which can be useful for
+		     having terminal-specific defs override global).  */
+
+		  ext = (struct col_ext_type *)
+		    xmalloc (sizeof (struct col_ext_type));
+		  ext->next = col_ext_list;
+		  col_ext_list = ext;
+
+		  ++p;
+		  ext->ext.string = buf;
+
+		  state = (ext->ext.len =
+			   get_funky_string (&buf, &p, 1)) < 0 ? -1 : 4;
+		  break;
+
+		case '\0':
+		  state = 0;	/* Done! */
+		  break;
+
+		default:	/* Assume it is file type label */
+		  label[0] = *(p++);
+		  state = 2;
+		  break;
+		}
+	      break;
+
+	    case 2:		/* Second label character */
+	      if (*p)
+		{
+		  label[1] = *(p++);
+		  state = 3;
+		}
+	      else
+		state = -1;	/* Error */
+	      break;
+
+	    case 3:		/* Equal sign after indicator label */
+	      state = -1;	/* Assume failure... */
+	      if (*(p++) == '=')/* It *should* be... */
+		{
+		  for (ind_no = 0; indicator_name[ind_no] != NULL; ++ind_no)
+		    {
+		      if (strcmp (label, indicator_name[ind_no]) == 0)
+			{
+			  color_indicator[ind_no].string = buf;
+			  state = ((color_indicator[ind_no].len =
+				    get_funky_string (&buf, &p, 0)) < 0 ?
+				   -1 : 1);
+			  break;
+			}
+		    }
+		  if (state == -1)
+		    fprintf (stderr, _("Unknown prefix: %s\n"), label);
+		}
+             break;
+
+	    case 4:		/* Equal sign after *.ext */
+	      if (*(p++) == '=')
+		{
+		  ext->seq.string = buf;
+		  state = (ext->seq.len =
+			   get_funky_string (&buf, &p, 0)) < 0 ? -1 : 1;
+		}
+	      else
+		state = -1;
+	      break;
+	    }
+	}
+
+      if (state < 0)
+	{
+	  fprintf (stderr, _("Bad %s variable\n"), whichvar);
+	  free (color_buf);
+	  for (ext = col_ext_list; ext != NULL ; )
+	    {
+	      ext2 = ext;
+	      ext = ext->next;
+	      free (ext2);
+	    }
+	  print_with_color = 0;
+	}
+    }
+}
+
+/* Parse a string as part of the LS_COLO(U)RS variable; this may involve
+   decoding all kinds of escape characters.  If equals_end is set an
+   unescaped equal sign ends the string, otherwise only a : or \0
+   does.  Returns the number of characters output, or -1 on failure.
+
+   The resulting string is *not* null-terminated, but may contain
+   embedded nulls.
+
+   Note that both dest and src are char **; on return they point to
+   the first free byte after the array and the character that ended
+   the input string, respectively.  */
+
+int
+get_funky_string (char **dest, const char **src, int equals_end)
+{
+  int num;			/* For numerical codes */
+  int count;			/* Something to count with */
+  enum {
+    st_gnd, st_backslash, st_octal, st_hex, st_caret, st_end, st_error
+  } state;
+  const char *p;
+  char *q;
+
+  p = *src;			/* We don't want to double-indirect */
+  q = *dest;			/* the whole darn time.  */
+
+  count = 0;			/* No characters counted in yet.  */
+  num = 0;
+
+  state = st_gnd;		/* Start in ground state.  */
+  while (state < st_end)
+    {
+      switch (state)
+	{
+	case st_gnd:		/* Ground state (no escapes) */
+	  switch (*p)
+	    {
+	    case ':':
+	    case '\0':
+	      state = st_end;	/* End of string */
+	      break;
+	    case '\\':
+	      state = st_backslash; /* Backslash scape sequence */
+	      ++p;
+	      break;
+	    case '^':
+	      state = st_caret; /* Caret escape */
+	      ++p;
+	      break;
+	    case '=':
+	      if (equals_end)
+		{
+		  state = st_end; /* End */
+		  break;
+		}
+	      /* else fall through */
+	    default:
+	      *(q++) = *(p++);
+	      ++count;
+	      break;
+	    }
+	  break;
+
+	case st_backslash:	/* Backslash escaped character */
+	  switch (*p)
+	    {
+	    case '0':
+	    case '1':
+	    case '2':
+	    case '3':
+	    case '4':
+	    case '5':
+	    case '6':
+	    case '7':
+	      state = st_octal;	/* Octal sequence */
+	      num = *p - '0';
+	      break;
+	    case 'x':
+	    case 'X':
+	      state = st_hex;	/* Hex sequence */
+	      num = 0;
+	      break;
+	    case 'a':		/* Bell */
+	      num = 7;		/* Not all C compilers know what \a means */
+	      break;
+	    case 'b':		/* Backspace */
+	      num = '\b';
+	      break;
+	    case 'e':		/* Escape */
+	      num = 27;
+	      break;
+	    case 'f':		/* Form feed */
+	      num = '\f';
+	      break;
+	    case 'n':		/* Newline */
+	      num = '\n';
+	      break;
+	    case 'r':		/* Carriage return */
+	      num = '\r';
+	      break;
+	    case 't':		/* Tab */
+	      num = '\t';
+	      break;
+	    case 'v':		/* Vtab */
+	      num = '\v';
+	      break;
+	    case '?':		/* Delete */
+              num = 127;
+	      break;
+	    case '_':		/* Space */
+	      num = ' ';
+	      break;
+	    case '\0':		/* End of string */
+	      state = st_error;	/* Error! */
+	      break;
+	    default:		/* Escaped character like \ ^ : = */
+	      num = *p;
+	      break;
+	    }
+	  if (state == st_backslash)
+	    {
+	      *(q++) = num;
+	      ++count;
+	      state = st_gnd;
+	    }
+	  ++p;
+	  break;
+
+	case st_octal:		/* Octal sequence */
+	  if (*p < '0' || *p > '7')
+	    {
+	      *(q++) = num;
+	      ++count;
+	      state = st_gnd;
+	    }
+	  else
+	    num = (num << 3) + (*(p++) - '0');
+	  break;
+
+	case st_hex:		/* Hex sequence */
+	  switch (*p)
+	    {
+	    case '0':
+	    case '1':
+	    case '2':
+	    case '3':
+	    case '4':
+	    case '5':
+	    case '6':
+	    case '7':
+	    case '8':
+	    case '9':
+	      num = (num << 4) + (*(p++) - '0');
+	      break;
+	    case 'a':
+	    case 'b':
+	    case 'c':
+	    case 'd':
+	    case 'e':
+	    case 'f':
+	      num = (num << 4) + (*(p++) - 'a') + 10;
+	      break;
+	    case 'A':
+	    case 'B':
+	    case 'C':
+	    case 'D':
+	    case 'E':
+	    case 'F':
+	      num = (num << 4) + (*(p++) - 'A') + 10;
+	      break;
+	    default:
+	      *(q++) = num;
+	      ++count;
+	      state = st_gnd;
+	      break;
+	    }
+	  break;
+
+	case st_caret:		/* Caret escape */
+	  state = st_gnd;	/* Should be the next state... */
+	  if (*p >= '@' && *p <= '~')
+	    {
+	      *(q++) = *(p++) & 037;
+	      ++count;
+	    }
+	  else if ( *p == '?' )
+	    {
+	      *(q++) = 127;
+	      ++count;
+	    }
+	  else
+	    state = st_error;
+	  break;
+	}
+    }
+
+  *dest = q;
+  *src = p;
+
+  return state == st_error ? -1 : count;
+}
+
+
 /* Request that the directory named `name' have its contents listed later.
    If `realname' is nonzero, it will be used instead of `name' when the
    directory name is printed.  This allows symbolic links to directories
@@ -1644,7 +2091,7 @@ print_long_format (struct fileinfo *f)
   DIRED_INDENT ();
   FPUTS (bigbuf, stdout, p - bigbuf);
   PUSH_CURRENT_DIRED_POS (&dired_obstack);
-  print_name_with_quoting (f->name);
+  print_name_with_quoting (f->name, f->stat.st_mode, f->linkok);
   PUSH_CURRENT_DIRED_POS (&dired_obstack);
 
   if (f->filetype == symbolic_link)
@@ -1652,7 +2099,7 @@ print_long_format (struct fileinfo *f)
       if (f->linkname)
 	{
 	  FPUTS_LITERAL (" -> ", stdout);
-	  print_name_with_quoting (f->linkname);
+	  print_name_with_quoting (f->linkname, f->linkmode, f->linkok-1);
 	  if (indicator_style != none)
 	    print_type_indicator (f->linkmode);
 	}
@@ -1801,15 +2248,28 @@ quote_filename (register const char *p, size_t *quoted_length)
 }
 
 static void
-print_name_with_quoting (register char *p)
+print_name_with_quoting (register char *p, unsigned int mode, int linkok)
 {
   char *quoted;
   size_t quoted_length;
+
+  if (print_with_color)
+    print_color_indicator (p, mode, linkok);
 
   quoted = quote_filename (p, &quoted_length);
   FPUTS (quoted != NULL ? quoted : p, stdout, quoted_length);
   if (quoted)
     free (quoted);
+
+  if (print_with_color)
+    if (color_indicator[C_END].string != NULL)
+      put_indicator (&color_indicator[C_END]);
+    else
+      {
+	put_indicator (&color_indicator[C_LEFT]);
+	put_indicator (&color_indicator[C_NORM]);
+	put_indicator (&color_indicator[C_RIGHT]);
+      }
 }
 
 /* Print the file name of `f' with appropriate quoting.
@@ -1827,7 +2287,7 @@ print_file_name_and_frills (struct fileinfo *f)
 	    (unsigned) convert_blocks (ST_NBLOCKS (f->stat),
 				       kilobyte_blocks));
 
-  print_name_with_quoting (f->name);
+  print_name_with_quoting (f->name, f->stat.st_mode, f->linkok);
 
   if (indicator_style != none)
     print_type_indicator (f->stat.st_mode);
@@ -1857,6 +2317,85 @@ print_type_indicator (unsigned int mode)
   if (S_ISREG (mode) && indicator_style == all
       && (mode & (S_IEXEC | S_IXGRP | S_IXOTH)))
     PUTCHAR ('*');
+}
+
+static void
+print_color_indicator (char *name, unsigned int mode, int linkok)
+{
+  int type = C_FILE;
+  struct col_ext_type *ext;	/* Color extension */
+  int len;			/* Length of name */
+
+  /* Is this a nonexistent file?  If so, linkok == -1.  */
+
+  if (linkok == -1 && color_indicator[C_MISSING].string != NULL)
+    {
+      ext = NULL;
+      type = C_MISSING;
+    }
+  else
+    {
+      /* Test if is is a recognized extension.  */
+
+      len = strlen (name);
+      name += len;		/* Pointer to final \0.  */
+      for (ext = col_ext_list; ext != NULL; ext = ext->next)
+	if (ext->ext.len <= len
+	    && strncmp (name-ext->ext.len, ext->ext.string, ext->ext.len) == 0)
+	  break;
+
+      if (ext == NULL)
+	{
+	  if (S_ISDIR (mode))
+	    type = C_DIR;
+
+#ifdef S_ISLNK
+	  else if (S_ISLNK (mode))
+	    type = (!linkok && color_indicator[C_ORPHAN].string) ?
+	      C_ORPHAN : C_LINK;
+#endif
+
+#ifdef S_ISFIFO
+	  else if (S_ISFIFO (mode))
+	    type = C_FIFO;
+#endif
+
+#ifdef S_ISSOCK
+	  else if (S_ISSOCK (mode))
+	    type = C_SOCK;
+#endif
+
+#ifdef S_ISBLK
+	  else if (S_ISBLK (mode))
+	    type = C_BLK;
+#endif
+
+#ifdef S_ISCHR
+	  else if (S_ISCHR (mode))
+	    type = C_CHR;
+#endif
+
+	  if (type == C_FILE && (mode & (S_IEXEC|S_IEXEC>>3|S_IEXEC>>6)) != 0)
+	    type = C_EXEC;
+	}
+    }
+
+  put_indicator (&color_indicator[C_LEFT]);
+  put_indicator (ext ? &(ext->seq) : &color_indicator[type]);
+  put_indicator (&color_indicator[C_RIGHT]);
+}
+
+/* Output a color indicator (which may contain nulls).  */
+static void
+put_indicator (struct bin_str *ind)
+{
+  register int i;
+  register char *p;
+
+  p = ind->string;
+
+  for (i = ind->len; i > 0; --i)
+    putchar (*(p++));
 }
 
 static int
@@ -2134,6 +2673,8 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -b, --escape               print octal escapes for nongraphic characters\n\
   -C                         list entries by columns\n\
   -c                         sort by change time; with -l: show ctime\n\
+      --color[=WORD]         colorize entries according to WORD\n\
+      --colour[=WORD]        yes, no, or tty (if output is terminal)\n\
   -D, --dired                generate output well suited to Emacs' dired mode\n\
   -d, --directory            list directory entries instead of contents\n\
   -F, --classify             append a character for typing each entry\n\
