@@ -647,7 +647,8 @@ format, make all components of the given DIRECTORY(ies).\n\
   -g, --group=GROUP   set group ownership, instead of process' current group\n\
   -m, --mode=MODE     set permission mode (as in chmod), instead of rwxr-xr-x\n\
   -o, --owner=OWNER   set ownership (super-user only)\n\
-  -p, --preserve-timestamps   Retain previous creation/modification times\n\
+  -p, --preserve-timestamps   apply access/modification times of SOURCE files\n\
+                        to corresponding destination files\n\
   -s, --strip         strip symbol tables, only for 1st and 2nd formats\n\
   -S, --suffix=SUFFIX override the usual backup suffix\n\
   -V, --version-control=WORD   override the usual version control\n\
