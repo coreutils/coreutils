@@ -1,11 +1,10 @@
 #!/bin/sh
 
-PATH=../../../src:$PATH
 tmp=t2-ln.$$
 
 if test "$VERBOSE" = yes; then
   set -x
-  $LN --version
+  ln --version
 fi
 
 test_failure=0
@@ -87,6 +86,12 @@ af=`pwd`/$f
 ln --no-dereference -fs $af $ld || fail=1
 test -f $ld || fail=1
 rm -rf $d $f $ld
+
+# Try to create a symlink with backup where the destination file exists
+# and the backup file name is a hard link to the destination file.
+touch a b || test_failure=1
+ln b b~ || test_failure=1
+ln -V simple -f -b a b || fail=1
 
 cd ..
 ../../src/rm -rf $tmp
