@@ -57,7 +57,7 @@ INCLUDES = -I.. -I$(srcdir)
 
 fu_LIBADD = @LIBOBJS@ @ALLOCA@
 
-HEADERS = backupfile.h error.h fnmatch.h fsusage.h getopt.h \
+HEADERS = argmatch.h backupfile.h error.h fnmatch.h fsusage.h getopt.h \
 group-member.h long-options.h makepath.h modechange.h mountlist.h \
 obstack.h pathmax.h save-cwd.h xstrtol.h xstrtoul.h
 
