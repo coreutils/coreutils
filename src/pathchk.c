@@ -1,5 +1,5 @@
 /* pathchk -- check whether pathnames are valid or portable
-   Copyright (C) 1991-2000 Free Software Foundation, Inc.
+   Copyright (C) 1991-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -43,6 +43,11 @@
 #include <getopt.h>
 #include <sys/types.h>
 
+#include <errno.h>
+#ifndef errno
+extern int errno;
+#endif
+
 #include "system.h"
 #include "error.h"
 #include "long-options.h"
@@ -55,10 +60,10 @@
 
 #ifdef _POSIX_VERSION
 # ifndef PATH_MAX
-#  define PATH_MAX_FOR(p) pathconf ((p), _PC_PATH_MAX)
+#  define PATH_MAX_FOR(p) pathconf_wrapper ((p), _PC_PATH_MAX)
 # endif /* not PATH_MAX */
 # ifndef NAME_MAX
-#  define NAME_MAX_FOR(p) pathconf ((p), _PC_NAME_MAX);
+#  define NAME_MAX_FOR(p) pathconf_wrapper ((p), _PC_NAME_MAX);
 # endif /* not NAME_MAX */
 
 #else /* not _POSIX_VERSION */
@@ -106,6 +111,23 @@ static struct option const longopts[] =
   {"portability", no_argument, NULL, 'p'},
   {NULL, 0, NULL, 0}
 };
+
+/* Distinguish between the cases when pathconf fails and when it reports there
+   is no limit (the latter is the case for PATH_MAX on the Hurd).  When there
+   is no limit, return LONG_MAX.  Otherwise, return pathconf's return value.  */
+
+static long int
+pathconf_wrapper (const char *filename, int param)
+{
+  long int ret;
+
+  errno = 0;
+  ret = pathconf (filename, param);
+  if (ret < 0 && errno == 0)
+    return LONG_MAX;
+
+  return ret;
+}
 
 void
 usage (int status)
@@ -263,7 +285,7 @@ dir_ok (const char *path)
 static int
 validate_path (char *path, int portability)
 {
-  int path_max;
+  long int path_max;
   int last_elem;		/* Nonzero if checking last element of path. */
   int exists IF_LINT (= 0);	/* 2 if the path element exists.  */
   char *slash;
@@ -282,8 +304,8 @@ validate_path (char *path, int portability)
   last_elem = 0;
   while (1)
     {
-      int name_max;
-      int length;		/* Length of partial path being checked. */
+      long int name_max;
+      long int length;		/* Length of partial path being checked. */
       char *start;		/* Start of path element being checked. */
 
       /* Find the end of this element of the path.
@@ -324,7 +346,7 @@ validate_path (char *path, int portability)
 	name_max = _POSIX_NAME_MAX;
       if (length > name_max)
 	{
-	  error (0, 0, _("name `%s' has length %d; exceeds limit of %d"),
+	  error (0, 0, _("name `%s' has length %ld; exceeds limit of %ld"),
 		 start, length, name_max);
 	  free (parent);
 	  return 1;
@@ -350,7 +372,7 @@ validate_path (char *path, int portability)
   free (parent);
   if (strlen (path) > (size_t) path_max)
     {
-      error (0, 0, _("path `%s' has length %d; exceeds limit of %d"),
+      error (0, 0, _("path `%s' has length %d; exceeds limit of %ld"),
 	     path, strlen (path), path_max);
       return 1;
     }
