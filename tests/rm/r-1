@@ -33,9 +33,9 @@ $tmp/a/a
 $tmp/b
 EOF
 
-    # FIXME: use cmp
-diff -u $tmp/$test.E $tmp/$test.O || fail=1
+# Compare expected and actual output.
+cmp $tmp/$test.E $tmp/$test.O || fail=1
 
-#rm -rf $dir
+rm -rf $dir
 
 exit $fail
