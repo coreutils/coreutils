@@ -78,12 +78,12 @@ my_strtoumax (char const *ptr, char **endptr, int base)
     /* An implementation with uintmax_t longer than long, but with no
        known way to convert it.  Do it by hand.  Assume base 10.  */
     uintmax_t n = 0;
-    int overflow = 0;
+    uintmax_t overflow = 0;
     for (;  '0' <= *ptr && *ptr <= '9';  ptr++)
       {
 	uintmax_t n10 = n * 10;
 	int digit = *ptr - '0';
-	overflow |= ! (n10 / 10 == n && n10 < n10 + digit);
+	overflow |= n ^ (n10 + digit) / 10;
 	n = n10 + digit;
       }
     if (endptr)
