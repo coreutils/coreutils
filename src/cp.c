@@ -229,7 +229,7 @@ re_protect (const char *const_dst_path, int src_offset,
 	 chown turns off set[ug]id bits for non-root,
 	 so do the chmod last.  */
 
-      if (x->preserve)
+      if (x->preserve_timestamps)
 	{
 	  struct utimbuf utb;
 
@@ -241,7 +241,10 @@ re_protect (const char *const_dst_path, int src_offset,
 	      error (0, errno, _("preserving times for %s"), dst_path);
 	      return 1;
 	    }
+	}
 
+      if (x->preserve_owner_and_group)
+	{
 	  /* If non-root uses -p, it's ok if we can't preserve ownership.
 	     But root probably wants to know, e.g. if NFS disallows it,
 	     or if the target system doesn't support file ownership.  */
@@ -253,7 +256,7 @@ re_protect (const char *const_dst_path, int src_offset,
 	    }
 	}
 
-      if (x->preserve || p->is_new_dir)
+      if (x->preserve_chmod_bits || p->is_new_dir)
 	{
 	  if (chmod (dst_path, src_sb.st_mode & x->umask_kill))
 	    {
@@ -591,15 +594,22 @@ cp_option_init (struct cp_options *x)
   x->copy_as_regular = 1;
   x->dereference = 1;
   x->force = 0;
+  x->failed_unlink_is_fatal = 1;
   x->hard_link = 0;
   x->interactive = 0;
   x->myeuid = geteuid ();
   x->one_file_system = 0;
-  x->preserve = 0;
+
+  x->preserve_owner_and_group = 0;
+  x->preserve_chmod_bits = 0;
+  x->preserve_timestamps = 0;
+
   x->require_preserve = 0;
   x->recursive = 0;
   x->sparse_mode = SPARSE_AUTO;
   x->symbolic_link = 0;
+  x->set_mode = 0;
+  x->mode = 0;
 
   /* Find out the current file creation mask, to knock the right bits
      when using chmod.  The creation mask is set to be liberal, so
@@ -656,7 +666,9 @@ main (int argc, char **argv)
 
 	case 'a':		/* Like -dpR. */
 	  x.dereference = 0;
-	  x.preserve = 1;
+	  x.preserve_owner_and_group = 1;
+	  x.preserve_chmod_bits = 1;
+	  x.preserve_timestamps = 1;
 	  x.require_preserve = 1;
 	  x.recursive = 1;
 	  x.copy_as_regular = 0;
@@ -685,7 +697,9 @@ main (int argc, char **argv)
 	  break;
 
 	case 'p':
-	  x.preserve = 1;
+	  x.preserve_owner_and_group = 1;
+	  x.preserve_chmod_bits = 1;
+	  x.preserve_timestamps = 1;
 	  x.require_preserve = 1;
 	  break;
 
@@ -754,7 +768,7 @@ main (int argc, char **argv)
 
   x.backup_type = (make_backups ? get_version (version) : none);
 
-  if (x.preserve == 1)
+  if (x.preserve_chmod_bits == 1)
     x.umask_kill = 0777777;
 
   /* The key difference between -d (--no-dereference) and not is the version
