@@ -1,3 +1,7 @@
+2004-06-07  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi: Remove menu references to just-removed subsection.
+
 2004-06-06  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (tr invocation): Remove the section describing
