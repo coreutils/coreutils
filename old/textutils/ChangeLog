@@ -6,6 +6,13 @@
 	line/byte count (when specified via obsolete option syntax) to be
 	less than ULONG_MAX on systems where OFF_T_MAX is larger.
 
+2002-04-28  Paul Eggert  <eggert@twinsun.com>
+
+	* src/tail.c (tail_forever): Do not treat
+	max_n_unchanged_stats_between_opens specially (as if it were
+	infinite) if it has its maximal value.  Similarly for
+	max_n_consecutive_size_changes_between_opens.
+
 2002-04-28  Jim Meyering  <meyering@lucent.com>
 
 	Avoid new warnings from gcc.
