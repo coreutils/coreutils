@@ -2231,14 +2231,21 @@ left over for the last section), into each output file.
 
 @cindex output file name prefix
 The output files' names consist of @var{prefix} (@samp{x} by default)
-followed by a group of letters @samp{aa}, @samp{ab}, and so on, such
-that concatenating the output files in sorted order by file name produces
-the original input file.  (If more than 676 output files are required,
-@code{split} uses @samp{zaa}, @samp{zab}, etc.)
+followed by a group of letters (@samp{aa}, @samp{ab}, @dots{} by default),
+such that concatenating the output files in sorted order by file name produces
+the original input file.  If the output file names are exhausted,
+@command{split} reports an error without deleting the output files
+that it did create.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
+
+@item -a @var{length}
+@itemx --suffix-length=@var{length}
+@opindex -a
+@opindex --suffix-length
+Use suffixes of length @var{length}.  The default @var{length} is 2.
 
 @item -l @var{lines}
 @itemx --lines=@var{lines}
