@@ -1099,21 +1099,21 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 10:		/* --sort */
-	  sort_type = XARGCASEMATCH ("--sort", optarg, sort_args, sort_types);
+	  sort_type = XARGMATCH ("--sort", optarg, sort_args, sort_types);
 	  break;
 
 	case 11:		/* --time */
-	  time_type = XARGCASEMATCH ("--time", optarg, time_args, time_types);
+	  time_type = XARGMATCH ("--time", optarg, time_args, time_types);
 	  break;
 
 	case 12:		/* --format */
-	  format = XARGCASEMATCH ("--format", optarg,
+	  format = XARGMATCH ("--format", optarg,
 				  format_args, format_types);
 	  break;
 
 	case 13:		/* --color */
 	  if (optarg)
-	    i = XARGCASEMATCH ("--color", optarg,
+	    i = XARGMATCH ("--color", optarg,
 			       color_args, color_types);
 	  else
 	    /* Using --color with no argument is equivalent to using
@@ -1134,14 +1134,14 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 14:		/* --indicator-style */
-	  indicator_style = XARGCASEMATCH ("--indicator-style", optarg,
+	  indicator_style = XARGMATCH ("--indicator-style", optarg,
 					   indicator_style_args,
 					   indicator_style_types);
 	  break;
 
 	case 15:		/* --quoting-style */
 	  set_quoting_style (NULL,
-			     XARGCASEMATCH ("--quoting-style", optarg,
+			     XARGMATCH ("--quoting-style", optarg,
 					    quoting_style_args,
 					    quoting_style_vals));
 	  break;

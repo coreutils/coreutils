@@ -655,7 +655,7 @@ main (int argc, char **argv)
 	  break;
 
 	case CHAR_MAX + 1:
-	  x.sparse_mode = XARGCASEMATCH ("--sparse", optarg,
+	  x.sparse_mode = XARGMATCH ("--sparse", optarg,
 					 sparse_type_string, sparse_type);
 	  break;
 
