@@ -1,5 +1,10 @@
 2000-09-04  Jim Meyering  <meyering@lucent.com>
 
+	* src/cp.c: Move declaractions of lstat, stat, and rpl_lstat
+	as well as the definition of lstat from here...
+	* src/copy.h: ...to here.
+	* src/copy.c: Remove declaration of lstat, now that it's in copy.h.
+
 	* tests/mv/force: mv's --force (-f) option is no longer needed for
 	this test, now that all it does is cancel --interactive (-i).
 
