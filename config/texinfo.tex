@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2003-07-27.17}
+\def\texinfoversion{2003-07-28.08}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
@@ -2602,11 +2602,13 @@ width0pt\relax} \fi
     % #1 contains, e.g., \ifinfo, a.k.a. @ifinfo.
     % #2 contains the string `ifinfo'.
     %
-    % Define a command to find the next "@end #2", which must be on a line
+    % Define a command to find the next `@end #2', which must be on a line
     % by itself.
-    \long\def\doignoretext##1^^M\end #2{\doignoretextyyy##1#1\ST@P}%
-    % And this command to find another #1 command.
-    \long\def\doignoretextyyy##1#1##2\ST@P{\doignoreyyy{##2}\ST@P}%
+    \long\def\doignoretext##1^^M\end #2{\doignoretextyyy##1^^M#1\ST@P}%
+    % And this command to find another #1 command, at the beginning of a
+    % line.  (Otherwise, we would consider a line `@c @ifset', for
+    % example, to count as an @ifset for nesting.)
+    \long\def\doignoretextyyy##1^^M#1##2\ST@P{\doignoreyyy{##2}\ST@P}%
     %
     % And now expand that command.
     \obeylines %
