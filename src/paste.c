@@ -143,13 +143,13 @@ collapse_escapes (char const *strptr)
 }
 
 /* Perform column paste on the NFILES files named in FNAMPTR.
-   Return 0 if no errors, 1 if one or more files could not be
+   Return true if successful, false if one or more files could not be
    opened or read. */
 
-static int
+static bool
 paste_parallel (size_t nfiles, char **fnamptr)
 {
-  int errors = 0;		/* 1 if open or read errors occur. */
+  bool ok = true;
   /* If all files are just ready to be closed, or will be on this
      round, the string of delimiters must be preserved.
      delbuf[0] through delbuf[nfiles]
@@ -232,14 +232,14 @@ paste_parallel (size_t nfiles, char **fnamptr)
 		  if (ferror (fileptr[i]))
 		    {
 		      error (0, errno, "%s", fnamptr[i]);
-		      errors = 1;
+		      ok = false;
 		    }
 		  if (fileptr[i] == stdin)
 		    clearerr (fileptr[i]); /* Also clear EOF. */
 		  else if (fclose (fileptr[i]) == EOF)
 		    {
 		      error (0, errno, "%s", fnamptr[i]);
-		      errors = 1;
+		      ok = false;
 		    }
 
 		  fileptr[i] = CLOSED;
@@ -298,17 +298,17 @@ paste_parallel (size_t nfiles, char **fnamptr)
     }
   free (fileptr);
   free (delbuf);
-  return errors;
+  return ok;
 }
 
 /* Perform serial paste on the NFILES files named in FNAMPTR.
-   Return 0 if no errors, 1 if one or more files could not be
+   Return true if no errors, false if one or more files could not be
    opened or read. */
 
-static int
+static bool
 paste_serial (size_t nfiles, char **fnamptr)
 {
-  int errors = 0;		/* 1 if open or read errors occur. */
+  bool ok = true;	/* false if open or read errors occur. */
   int charnew, charold; /* Current and previous char read. */
   char const *delimptr;	/* Current delimiter char. */
   FILE *fileptr;	/* Open for reading current file. */
@@ -327,7 +327,7 @@ paste_serial (size_t nfiles, char **fnamptr)
 	  if (fileptr == NULL)
 	    {
 	      error (0, errno, "%s", *fnamptr);
-	      errors = 1;
+	      ok = false;
 	      continue;
 	    }
 	}
@@ -372,17 +372,17 @@ paste_serial (size_t nfiles, char **fnamptr)
       if (ferror (fileptr))
 	{
 	  error (0, saved_errno, "%s", *fnamptr);
-	  errors = 1;
+	  ok = false;
 	}
       if (fileptr == stdin)
 	clearerr (fileptr);	/* Also clear EOF. */
       else if (fclose (fileptr) == EOF)
 	{
 	  error (0, errno, "%s", *fnamptr);
-	  errors = 1;
+	  ok = false;
 	}
     }
-  return errors;
+  return ok;
 }
 
 void
@@ -421,7 +421,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 int
 main (int argc, char **argv)
 {
-  int optc, exit_status;
+  int optc;
+  bool ok;
   char const *delim_arg = "\t";
 
   initialize_main (&argc, &argv);
@@ -468,13 +469,13 @@ main (int argc, char **argv)
   collapse_escapes (delim_arg);
 
   if (!serial_merge)
-    exit_status = paste_parallel (argc - optind, &argv[optind]);
+    ok = paste_parallel (argc - optind, &argv[optind]);
   else
-    exit_status = paste_serial (argc - optind, &argv[optind]);
+    ok = paste_serial (argc - optind, &argv[optind]);
 
   free (delims);
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, "-");
-  exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
