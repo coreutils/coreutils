@@ -1,5 +1,9 @@
 1999-03-06  Jim Meyering  <meyering@ascend.com>
 
+	* src/date.c (batch_convert): Use a `%s' format in error call,
+	in case the argument string contains a `%'.
+
+	* man/Makefile.am (man_MANS): Add pinky.1.
 	* man/Makefile.summ (pinky-summary): Define.
 
 	* src/date.c: Include long-options.h.
