@@ -1,8 +1,8 @@
 Sat Oct 28 16:02:39 1995  Jim Meyering  (meyering@comco.com)
 
-	* md5sum.c (md5_check): Use the same message format when the single
-	file has a read error or checksum mismatch as when there are more.
-	Suggestion from Greg Troxel (gdt@b-sgi.bbn.com).
+	* md5sum.c (md5_check): Use the same message format when there is
+ 	a single file and it gets a read error or checksum mismatch as when
+	there are more.  Suggestion from Greg Troxel (gdt@b-sgi.bbn.com).
 
 Thu Oct 26 00:11:35 1995  Jim Meyering  (meyering@comco.com)
 
