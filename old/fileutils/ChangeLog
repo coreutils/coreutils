@@ -1,3 +1,9 @@
+Wed Dec  2 12:28:10 1992  Jim Meyering  (meyering@idefix.comco.com)
+
+	* all files using getopt.h: Convert static declarations of
+	struct option to use new macros from getopt.h: no_argument,
+	required_argument, and optional_argument.
+
 Sat Oct 31 16:32:17 1992  Jim Meyering  (meyering@idefix.comco.com)
 
 	* fsusage.c (adjust_blocks): Convert to a macro.  The static
