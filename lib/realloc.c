@@ -24,6 +24,7 @@
 
 #include <sys/types.h>
 
+char *malloc ();
 char *realloc ();
 
 /* Change the size of an allocated block of memory P to N bytes,
