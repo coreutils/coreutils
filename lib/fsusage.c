@@ -170,7 +170,7 @@ get_fs_usage (path, disk, fsp)
 #endif
 #endif
 
-#ifdef HAVE_SYS_STATVFS_H	/* SVR4.  */
+#ifdef STAT_STATVFS		/* SVR4.  */
   struct statvfs fsd;
 
   if (statvfs (path, &fsd) < 0)
