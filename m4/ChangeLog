@@ -1,3 +1,8 @@
+1998-11-03  Jim Meyering  <meyering@ascend.com>
+
+	* stat.m4: Rewrite to set HAVE_STAT_EMPTY_STRING_BUG.
+	* lstat.m4: Rewrite to set HAVE_LSTAT_EMPTY_STRING_BUG.
+
 1998-10-18  Jim Meyering  <meyering@ascend.com>
 
 	* check-decl.m4 (jm_CHECK_DECL_LOCALTIME_R): Remove macro.
