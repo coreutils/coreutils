@@ -33,6 +33,9 @@
 # define S_MAGIC_REISERFS 0x52654973
 # define S_MAGIC_CRAMFS 0x28cd3d45
 # define S_MAGIC_ROMFS 0x7275
+# define S_MAGIC_RAMFS 0x858458f6
+# define S_MAGIC_SQUASHFS 0x73717368
+# define S_MAGIC_SYSFS 0x62656572
 #elif defined __GNU__
 # include <hurd/hurd_types.h>
 #endif
