@@ -31,6 +31,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  od -c -w9999999 no longer segfaults
+
   csplit no longer reads from freed memory (dumping core on some systems)
 
   csplit would mistakenly exhaust virtual memory in some cases

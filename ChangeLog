@@ -1,6 +1,11 @@
-2003-11-16  Jim Meyering  <jim@meyering.net>
+2003-11-18  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.0.
+
+	`od -c -w9999999' could segfault
+	* src/od.c (dump): Use xnmalloc/free, not alloca.
+
+2003-11-16  Jim Meyering  <jim@meyering.net>
 
 	* Use autoconf-2.59.  Regenerate dependent files.
 
