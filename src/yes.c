@@ -110,6 +110,6 @@ main (int argc, char **argv)
 	}
     }
 
-  error (0, errno, "standard output");
+  error (0, errno, _("standard output"));
   exit (EXIT_FAILURE);
 }
