@@ -66,14 +66,6 @@ struct cp_options
      any destination is sure to be removed before the open.  */
   int unlink_dest_after_failed_open;
 
-  /* Setting this member is meaningful only if FORCE is also set.
-     If nonzero, copy returns nonzero upon failed unlink.
-     Otherwise, the failure still elicits a diagnostic, but it doesn't
-     change copy's return value.  This is nonzero for cp and mv, and zero
-     for install.  */
-  /* FIXME: this is now unused.  */
-  int failed_unlink_is_fatal;
-
   /* If nonzero, create hard links instead of copying files.
      Create destination directories as usual. */
   int hard_link;
