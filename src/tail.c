@@ -346,6 +346,8 @@ file_lines (const char *pretty_filename, int fd, long int n_lines,
 	         print the text after it.  */
 	      if (i != bytes_read - 1)
 		xwrite (STDOUT_FILENO, &buffer[i + 1], bytes_read - (i + 1));
+	      dump_remainder (pretty_filename, fd,
+			      file_length - (pos + bytes_read));
 	      return 0;
 	    }
 	}
@@ -363,11 +365,13 @@ file_lines (const char *pretty_filename, int fd, long int n_lines,
       lseek (fd, pos, SEEK_SET);
     }
   while ((bytes_read = safe_read (fd, buffer, BUFSIZ)) > 0);
+
   if (bytes_read == -1)
     {
       error (0, errno, "%s", pretty_filename);
       return 1;
     }
+
   return 0;
 }
 
