@@ -207,11 +207,10 @@ AC_DEFUN(jm_MACROS,
 # This macro must be invoked before any tests that run the compiler.
 AC_DEFUN(jm_CHECK_ALL_TYPES,
 [
-  # Emit this code into config.h.in.
-  # The ifndef is to avoid redefinition warnings.
-  AH_VERBATIM([_GNU_SOURCE], [#ifndef _GNU_SOURCE
-# define _GNU_SOURCE
-#endif])
+  # FIXME: I shouldn't have to require this macro here.  Rather, it should
+  # be required by any autoconf macro that performs a compile-time test or
+  # otherwise uses confdefs.h.
+  AC_REQUIRE([AC__GNU_SOURCE])
 
   dnl This test must come as early as possible after the compiler configuration
   dnl tests, because the choice of the file model can (in principle) affect
