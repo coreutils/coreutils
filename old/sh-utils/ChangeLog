@@ -1,3 +1,9 @@
+Tue May 27 06:08:06 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in: Don't replace basename.  Now it's always required.
+
+	* lib/Makefile.am (libsu_a_SOURCES): Add basename.c.
+
 Sat May 24 13:26:04 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* man/Makefile.am (EXTRA_DIST): Put man_MANS here so they are
