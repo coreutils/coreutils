@@ -1,5 +1,5 @@
 /* save-cwd.c -- Save and restore current working directory.
-   Copyright (C) 1995, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1997, 1998, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -48,8 +48,7 @@ extern int errno;
 
 #include "save-cwd.h"
 #include "error.h"
-
-char *xgetcwd PARAMS ((void));
+#include "xgetcwd.h"
 
 /* Record the location of the current working directory in CWD so that
    the program may change to other directories and later use restore_cwd
