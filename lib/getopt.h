@@ -1,5 +1,8 @@
 /* Declarations for getopt.
-   Copyright (C) 1989-1994, 1996-1999, 2001 Free Software Foundation, Inc.
+
+   Copyright (C) 1989, 1990, 1991, 1992, 1993, 1994, 1996, 1997, 1998,
+   1999, 2001, 2003 Free Software Foundation, Inc.
+
    This file is part of the GNU C Library.
 
    This program is free software; you can redistribute it and/or modify
@@ -92,11 +95,7 @@ extern int optopt;
 
 struct option
 {
-# if (defined __STDC__ && __STDC__) || defined __cplusplus
   const char *name;
-# else
-  char *name;
-# endif
   /* has_arg can't be an enum because some compilers complain about
      type mismatches in all the code that assumes it is an int.  */
   int has_arg;
@@ -136,17 +135,16 @@ struct option
    arguments to the option '\0'.  This behavior is specific to the GNU
    `getopt'.  */
 
-#if (defined __STDC__ && __STDC__) || defined __cplusplus
-# ifdef __GNU_LIBRARY__
+#ifdef __GNU_LIBRARY__
 /* Many other libraries have conflicting prototypes for getopt, with
    differences in the consts, in stdlib.h.  To avoid compilation
    errors, only prototype getopt for the GNU C library.  */
 extern int getopt (int ___argc, char *const *___argv, const char *__shortopts);
-# else /* not __GNU_LIBRARY__ */
+#else /* not __GNU_LIBRARY__ */
 extern int getopt ();
-# endif /* __GNU_LIBRARY__ */
+#endif /* __GNU_LIBRARY__ */
 
-# ifndef __need_getopt
+#ifndef __need_getopt
 extern int getopt_long (int ___argc, char *const *___argv,
 			const char *__shortopts,
 		        const struct option *__longopts, int *__longind);
@@ -159,16 +157,7 @@ extern int _getopt_internal (int ___argc, char *const *___argv,
 			     const char *__shortopts,
 		             const struct option *__longopts, int *__longind,
 			     int __long_only);
-# endif
-#else /* not __STDC__ */
-extern int getopt ();
-# ifndef __need_getopt
-extern int getopt_long ();
-extern int getopt_long_only ();
-
-extern int _getopt_internal ();
-# endif
-#endif /* __STDC__ */
+#endif
 
 #ifdef	__cplusplus
 }
