@@ -1681,7 +1681,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((c = getopt_long (argc, argv, "cCdst", long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "+cCdst", long_options, NULL)) != -1)
     {
       switch (c)
 	{
