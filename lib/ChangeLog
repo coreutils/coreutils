@@ -1,3 +1,7 @@
+2003-08-04  Paul Eggert  <eggert@twinsun.com>
+
+	* regex.c, regex.h: Sync with gnulib.
+
 2003-08-03  Paul Eggert  <eggert@twinsun.com>
 
 	* stdbool_.h (_Bool): Use a #define, not a typedef.
