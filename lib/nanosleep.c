@@ -22,11 +22,15 @@
 #include <sys/types.h>
 #include <signal.h>
 
+#if HAVE_UNISTD_H
+# include <unistd.h>
+#endif
+
 #include <time.h>
 /* FIXME: is including both like this kosher?  */
 #include <sys/time.h>
 
-static interrupted;
+static int suspended;
 
 /* Handle SIGCONT. */
 
@@ -51,12 +55,12 @@ sighandler (int sig)
 /* Sleep for USEC microseconds. */
 
 static void
-usleep (const struct timespec *ts_delay)
+my_usleep (const struct timespec *ts_delay)
 {
   struct timeval tv_delay;
   tv_delay.tv_sec = ts_delay->tv_sec;
   tv_delay.tv_usec = 1000 * ts_delay->tv_nsec;
-  select (0, (void *) 0, (void *) 0, (void *) 0, tv_delay);
+  select (0, (void *) 0, (void *) 0, (void *) 0, &tv_delay);
 }
 
 int
@@ -67,7 +71,7 @@ nanosleep (const struct timespec *requested_delay,
   struct sigaction oldact, newact;
 #endif
 
-  interrupted = 0;
+  suspended = 0;
 
   /* set up sig handler -- but maybe only do this the first time?  */
 #ifdef SA_INTERRUPT
@@ -83,9 +87,9 @@ nanosleep (const struct timespec *requested_delay,
     signal (SIGCONT, sighandler);
 #endif
 
-  usleep (requested_delay);
+  my_usleep (requested_delay);
 
-  if (interrupted)
+  if (suspended)
     {
       /* Calculate time remaining.  */
       /* FIXME: the code in sleep doesn't use this, so there's no
@@ -94,5 +98,5 @@ nanosleep (const struct timespec *requested_delay,
 
   /* FIXME: Restore sig handler?  */
 
-  return interrupted;
+  return suspended;
 }
