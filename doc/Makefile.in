@@ -249,10 +249,11 @@ dist-info: $(INFO_DEPS)
 
 mostlyclean-aminfo:
 	-rm -f fileutils.aux fileutils.cp fileutils.cps fileutils.dvi \
-	  fileutils.fn fileutils.fns fileutils.ky fileutils.kys \
-	  fileutils.ps fileutils.log fileutils.pg fileutils.toc \
-	  fileutils.tp fileutils.tps fileutils.vr fileutils.vrs \
-	  fileutils.op fileutils.tr fileutils.cv fileutils.cn
+	  fileutils.fl fileutils.fn fileutils.fns fileutils.ky \
+	  fileutils.kys fileutils.ps fileutils.log fileutils.pg \
+	  fileutils.toc fileutils.tp fileutils.tps fileutils.vr \
+	  fileutils.vrs fileutils.op fileutils.tr fileutils.cv \
+	  fileutils.cn
 
 clean-aminfo:
 
