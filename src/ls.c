@@ -2890,7 +2890,7 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
                                none (default), classify (-F), file-type (-p)\n\
   -i, --inode                print index number of each file\n\
   -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\n\
-  -k, --kilobytes            use 1024 blocks, not 512 despite POSIXLY_CORRECT\n\
+  -k, --kilobytes            use 1024 byte blocks\n\
   -l                         use a long listing format\n\
   -L, --dereference          list entries pointed to by symbolic links\n\
   -m                         fill width with a comma separated list of entries\n\
