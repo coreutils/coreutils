@@ -285,8 +285,7 @@ re_protect (const char *const_dst_path, int src_offset,
   char *src_path;		/* The source name in `dst_path'. */
   uid_t myeuid = geteuid ();
 
-  dst_path = alloca (strlen (const_dst_path) + 1);
-  strcpy (dst_path, const_dst_path);
+  ASSIGN_STRDUPA (dst_path, const_dst_path);
   src_path = dst_path + src_offset;
 
   for (p = attr_list; p; p = p->next)
@@ -383,8 +382,7 @@ make_path_private (const char *const_dirpath, int src_offset, int mode,
   char *dst_dirname;		/* Leading path of `dirpath'. */
   size_t dirlen;		/* Length of leading path of `dirpath'. */
 
-  dirpath = alloca (strlen (const_dirpath) + 1);
-  strcpy (dirpath, const_dirpath);
+  ASSIGN_STRDUPA (dirpath, const_dirpath);
 
   src = dirpath + src_offset;
 
