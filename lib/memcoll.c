@@ -28,9 +28,7 @@
 extern int errno;
 #endif
 
-#if HAVE_STRING_H
-# include <string.h>
-#endif
+#include <string.h>
 
 /* Compare S1 (with length S1LEN) and S2 (with length S2LEN) according
    to the LC_COLLATE locale.  S1 and S2 do not overlap, and are not
