@@ -438,7 +438,7 @@ struct Options
 
 static struct option const long_opts[] =
 {
-  {"exact", required_argument, NULL, 'x'},
+  {"exact", no_argument, NULL, 'x'},
   {"force", no_argument, NULL, 'f'},
   {"iterations", required_argument, NULL, 'n'},
   {"size", required_argument, NULL, 's'},
