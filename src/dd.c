@@ -32,6 +32,7 @@
 #include "system.h"
 #include "closeout.h"
 #include "error.h"
+#include "full-write.h"
 #include "getpagesize.h"
 #include "human.h"
 #include "long-options.h"
@@ -83,8 +84,6 @@
 #define C_SYNC 02000
 /* Use separate input and output buffers, and combine partial input blocks. */
 #define C_TWOBUFS 04000
-
-int full_write ();
 
 /* The name this program was run with. */
 char *program_name;
@@ -459,11 +458,11 @@ open_fd (int desired_fd, char const *filename, int options, mode_t mode)
 static void
 write_output (void)
 {
-  int nwritten = full_write (STDOUT_FILENO, obuf, output_blocksize);
+  size_t nwritten = full_write (STDOUT_FILENO, obuf, output_blocksize);
   if (nwritten != output_blocksize)
     {
       error (0, errno, _("writing to %s"), quote (output_file));
-      if (nwritten > 0)
+      if (nwritten != 0)
 	w_partial++;
       quit (1);
     }
@@ -1018,8 +1017,8 @@ dd_copy (void)
 
       if (ibuf == obuf)		/* If not C_TWOBUFS. */
 	{
-	  int nwritten = full_write (STDOUT_FILENO, obuf, n_bytes_read);
-	  if (nwritten < 0)
+	  size_t nwritten = full_write (STDOUT_FILENO, obuf, n_bytes_read);
+	  if (nwritten != n_bytes_read)
 	    {
 	      error (0, errno, _("writing %s"), quote (output_file));
 	      quit (1);
@@ -1077,10 +1076,10 @@ dd_copy (void)
   /* Write out the last block. */
   if (oc != 0)
     {
-      int nwritten = full_write (STDOUT_FILENO, obuf, oc);
-      if (nwritten > 0)
+      size_t nwritten = full_write (STDOUT_FILENO, obuf, oc);
+      if (nwritten != 0)
 	w_partial++;
-      if (nwritten < 0)
+      if (nwritten != oc)
 	{
 	  error (0, errno, _("writing %s"), quote (output_file));
 	  quit (1);
