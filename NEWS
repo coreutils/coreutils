@@ -3,11 +3,14 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  `cp -d' now works as required even on systems like OSF V5.1 that
+  declare stat and lstat as `static inline' functions.
+
   time stamps output by stat now include actual fractional seconds,
   when available -- or .0000000 for files without that information.
 
-  seq no longer suffers integer overflow when printing 2^32 or more numbers.
-  For reference, seq `echo 2^32|bc` > /dev/null takes about two hours
+  seq no longer infloops when printing 2^31 or more numbers.
+  For reference, seq `echo 2^31|bc` > /dev/null takes about one hour
   on a 1.6 GHz Athlon 2000 XP.  Now it can output 2^53-1 numbers before
   misbehaving.
 
