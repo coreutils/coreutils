@@ -129,20 +129,19 @@
 # define CHAR_BIT 8
 #endif
 
-/* The extra casts work around common compiler bugs.  */
+/* The extra casts work around common compiler bugs,
+   e.g. Cray C 5.0.3.0 when t == time_t.  */
 #define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
-/* The outer cast is needed to work around a bug in Cray C 5.0.3.0.
-   It is necessary at least when t == time_t.  */
 #define TYPE_MINIMUM(t) ((t) (TYPE_SIGNED (t) \
 			      ? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) : (t) 0))
 #define TYPE_MAXIMUM(t) ((t) (~ (t) 0 - TYPE_MINIMUM (t)))
 
-#ifndef SCHAR_MIN
-# define SCHAR_MIN TYPE_MINIMUM (char)
+#ifndef CHAR_MIN
+# define CHAR_MIN TYPE_MINIMUM (char)
 #endif
 
-#ifndef SCHAR_MAX
-# define SCHAR_MAX TYPE_MAXIMUM (char)
+#ifndef CHAR_MAX
+# define CHAR_MAX TYPE_MAXIMUM (char)
 #endif
 
 #ifndef UCHAR_MAX
