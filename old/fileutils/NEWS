@@ -1,11 +1,13 @@
 Changes in release 4.01:
 [4.0.36]
+* attempting to use mv to move a symlink onto itself no longer removes
+    the symlink.
 * `cp -R directory file' no longer removes `file'.  now it fails and gives
     a diagnostic
 * The manual now warns that ls's --full-time format string is planned
-  to change in a future release.
+    to change in a future release.
 * ls -l's time stamp format now depends on LC_TIME, not LC_MESSAGES,
-  as POSIX requires.
+    as POSIX requires.
 * ls -l now reports the year for files even slightly in the future, as
     POSIX requires.  This helps warn users about clock skew problems.
 * `cp -d file symlink-to-some-other-file' no longer fails
