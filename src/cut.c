@@ -64,6 +64,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "getstr.h"
 #include "closeout.h"
 #include "error.h"
 
@@ -229,89 +230,6 @@ With no FILE, or when FILE is -, read standard input.\n\
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
-}
-
-/* The following function was copied from getline.c, but with these changes:
-   - Read up to and including a newline or TERMINATOR, whichever comes first.
-   The original does not treat newline specially.
-   - Remove unused argument, OFFSET.
-   - Use xmalloc and xrealloc instead of malloc and realloc.
-   - Declare this function static.  */
-
-/* Always add at least this many bytes when extending the buffer.  */
-#define MIN_CHUNK 64
-
-/* Read up to (and including) a newline or TERMINATOR from STREAM into
-   *LINEPTR (and null-terminate it). *LINEPTR is a pointer returned from
-   xmalloc (or NULL), pointing to *N characters of space.  It is
-   xrealloc'd as necessary.  Return the number of characters read (not
-   including the null terminator), or -1 on error or EOF.  */
-
-static int
-getstr (char **lineptr, int *n, FILE *stream, int terminator)
-{
-  int nchars_avail;		/* Allocated but unused chars in *LINEPTR.  */
-  char *read_pos;		/* Where we're reading into *LINEPTR. */
-
-  if (!lineptr || !n || !stream)
-    return -1;
-
-  if (!*lineptr)
-    {
-      *n = MIN_CHUNK;
-      *lineptr = (char *) xmalloc (*n);
-      if (!*lineptr)
-	return -1;
-    }
-
-  nchars_avail = *n;
-  read_pos = *lineptr;
-
-  for (;;)
-    {
-      register int c = getc (stream);
-
-      /* We always want at least one char left in the buffer, since we
-	 always (unless we get an error while reading the first char)
-	 NUL-terminate the line buffer.  */
-
-      assert (*n - nchars_avail == read_pos - *lineptr);
-      if (nchars_avail < 1)
-	{
-	  if (*n > MIN_CHUNK)
-	    *n *= 2;
-	  else
-	    *n += MIN_CHUNK;
-
-	  nchars_avail = *n + *lineptr - read_pos;
-	  *lineptr = xrealloc (*lineptr, *n);
-	  if (!*lineptr)
-	    return -1;
-	  read_pos = *n - nchars_avail + *lineptr;
-	  assert (*n - nchars_avail == read_pos - *lineptr);
-	}
-
-      if (feof (stream) || ferror (stream))
-	{
-	  /* Return partial line, if any.  */
-	  if (read_pos == *lineptr)
-	    return -1;
-	  else
-	    break;
-	}
-
-      *read_pos++ = c;
-      nchars_avail--;
-
-      if (c == terminator || c == '\n')
-	/* Return the line.  */
-	break;
-    }
-
-  /* Done - NUL terminate and return the number of chars read.  */
-  *read_pos = '\0';
-
-  return read_pos - *lineptr;
 }
 
 static int
@@ -556,9 +474,14 @@ cut_fields (FILE *stream)
 	{
 	  int len;
 
-	  len = getstr (&field_1_buffer, &field_1_bufsize, stream, delim);
+	  len = getstr (&field_1_buffer, &field_1_bufsize, stream,
+			delim, '\n', 0);
 	  if (len < 0)
-	    break;
+	    {
+	      if (feof (stream))
+		break;
+	      FATAL_ERROR (_("Memory exhausted"));
+	    }
 
 	  assert (len != 0);
 
