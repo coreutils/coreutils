@@ -1360,10 +1360,6 @@
 #ifndef _GNU_SOURCE
 # undef _GNU_SOURCE
 #endif
-/* Enable many GNU extensions on Solaris.  */
-#ifndef __EXTENSIONS__
-# undef __EXTENSIONS__
-#endif
 
 /* Define to 1 to make fseeko visible on some hosts (e.g. glibc 2.2). */
 #undef _LARGEFILE_SOURCE
@@ -1380,6 +1376,11 @@
 
 /* Define to 1 if you need to in order for `stat' and other things to work. */
 #undef _POSIX_SOURCE
+
+/* Enable extensions on Solaris.  */
+#ifndef __EXTENSIONS__
+# undef __EXTENSIONS__
+#endif
 
 /* Define like PROTOTYPES; this can be used by system headers. */
 #undef __PROTOTYPES

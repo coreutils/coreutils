@@ -833,22 +833,20 @@ AC_CONFIG_COMMANDS_PRE(
 Usually this means the macro was only invoked conditionally.])
 fi])])
 
-# AC_GNU_SOURCE
-# --------------
-AC_DEFUN([AC_GNU_SOURCE],
-[AH_VERBATIM([_GNU_SOURCE],
-[/* Enable GNU extensions on systems that have them.  */
-#ifndef _GNU_SOURCE
-# undef _GNU_SOURCE
-#endif
-/* Enable many GNU extensions on Solaris.  */
+# gl_USE_SYSTEM_EXTENSIONS
+# ------------------------
+# Enable extensions on systems that normally disable them,
+# typically due to standards-conformance issues.
+AC_DEFUN([gl_USE_SYSTEM_EXTENSIONS], [
+  AC_REQUIRE([AC_GNU_SOURCE])
+  AH_VERBATIM([__EXTENSIONS__],
+[/* Enable extensions on Solaris.  */
 #ifndef __EXTENSIONS__
 # undef __EXTENSIONS__
-#endif])dnl
-AC_BEFORE([$0], [AC_COMPILE_IFELSE])dnl
-AC_BEFORE([$0], [AC_RUN_IFELSE])dnl
-AC_DEFINE([_GNU_SOURCE])
-AC_DEFINE([__EXTENSIONS__])
+#endif])
+  AC_BEFORE([$0], [AC_COMPILE_IFELSE])dnl
+  AC_BEFORE([$0], [AC_RUN_IFELSE])dnl
+  AC_DEFINE([__EXTENSIONS__])
 ])
 
 #serial 5
@@ -1268,7 +1266,7 @@ AC_DEFUN([AC_ISC_POSIX],
   ]
 )
 
-#serial 18
+#serial 17
 
 dnl Initially derived from code in GNU grep.
 dnl Mostly written by Jim Meyering.
@@ -1322,7 +1320,7 @@ AC_DEFUN([jm_INCLUDED_REGEX],
 	    /* The following example is derived from a problem report
                against gawk from Jorge Stolfi <stolfi@ic.unicamp.br>.  */
 	    memset (&regex, 0, sizeof (regex));
-	    s = re_compile_pattern ("[[an\201]]*n", 7, &regex);
+	    s = re_compile_pattern ("[[an\371]]*n", 7, &regex);
 	    if (s)
 	      exit (1);
 
@@ -3322,20 +3320,28 @@ AC_DEFUN([gl_MEMCOLL],
   AC_FUNC_STRCOLL
 ])
 
-#serial 7 -*- autoconf -*-
+#serial 8 -*- autoconf -*-
 
 dnl From Jim Meyering.
 dnl
-dnl See if the glibc *_unlocked I/O macros are available.
-dnl Use only those *_unlocked macros that are declared.
-dnl
+dnl See if the glibc *_unlocked I/O macros or functions are available.
+dnl Use only those *_unlocked macros or functions that are declared
+dnl (because some of them were declared in Solaris 2.5.1 but were removed
+dnl in Solaris 2.6, whereas we want binaries built on Solaris 2.5.1 to run
+dnl on Solaris 2.6).
 
 AC_DEFUN([jm_FUNC_GLIBC_UNLOCKED_IO],
-  [AC_CHECK_DECLS(
-     [clearerr_unlocked, feof_unlocked, ferror_unlocked,
-      fflush_unlocked, fgets_unlocked, fputc_unlocked, fputs_unlocked,
-      fread_unlocked, fwrite_unlocked, getc_unlocked,
-      getchar_unlocked, putc_unlocked, putchar_unlocked])])
+[
+  dnl Persuade glibc and Solaris <stdio.h> to declare
+  dnl fgets_unlocked(), fputs_unlocked() etc.
+  AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
+
+  AC_CHECK_DECLS_ONCE(
+     [clearerr_unlocked feof_unlocked ferror_unlocked
+      fflush_unlocked fgets_unlocked fputc_unlocked fputs_unlocked
+      fread_unlocked fwrite_unlocked getc_unlocked
+      getchar_unlocked putc_unlocked putchar_unlocked])
+])
 
 #serial 3
 
@@ -6522,7 +6528,6 @@ dnl From Jim Meyering
 AC_DEFUN([gl_TIMESPEC],
 [
   dnl Prerequisites of lib/timespec.h.
-  AC_REQUIRE([AC_GNU_SOURCE])
   AC_REQUIRE([AC_HEADER_TIME])
   AC_CHECK_HEADERS_ONCE(sys/time.h)
   jm_CHECK_TYPE_STRUCT_TIMESPEC
@@ -6539,7 +6544,9 @@ dnl in time.h or sys/time.h.
 
 AC_DEFUN([jm_CHECK_TYPE_STRUCT_TIMESPEC],
 [
-  AC_REQUIRE([AC_GNU_SOURCE])
+  dnl Persuade pedantic Solaris to declare struct timespec.
+  AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
+
   AC_REQUIRE([AC_HEADER_TIME])
   AC_CHECK_HEADERS_ONCE(sys/time.h)
   AC_CACHE_CHECK([for struct timespec], fu_cv_sys_struct_timespec,
