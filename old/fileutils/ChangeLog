@@ -1,3 +1,14 @@
+1997-07-28  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/install.c (main): New option --preserve-timestamps (-p).
+	(install_file_in_file): Change timestamps if requested.
+	(change_timestamps): New function.
+	(usage): Describe --preserve-timestamps.
+	Correct --mode description.
+	From Galen Hazelwood.
+
+	* src/install.c: Declare pointer parameters const as appropriate.
+
 1997-07-13  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* doc/Makefile.am (EXTRA_DIST): Remove explicit mention of texinfo.texi.
