@@ -1,3 +1,18 @@
+2003-02-05  Jim Meyering  <jim@meyering.net>
+
+	* ftw.c: Include <limits.h>.
+	(PATH_MAX): Define to 1024, if not already defined.
+	(process_entry): Allocate enough space to hold the resulting
+	file name.  Don't presume that 2*dirbufsize is enough.
+	(ftw_startup): Always use PATH_MAX to compute buffer size, now that
+	it is guaranteed to be defined.
+
+	* ftw.c (process_entry): When using FTW_DEPTH, call `func', the
+	user-supplied callback, once for the current directory before calling
+	ftw_dir, in case that part of the hierarchy should be pruned.
+	`func' does that by setting `data->skip'.
+	(ftw_startup): Likewise.
+
 2003-02-02  Jim Meyering  <jim@meyering.net>
 
 	* ftw.c (lstat) [LSTAT_FOLLOWS_SLASHED_SYMLINK]: Define to rpl_lstat.
