@@ -114,11 +114,7 @@ install_sh = @install_sh@
 
 AUTOMAKE_OPTIONS = 1.2 gnits
 
-TESTS = infloop rt-1 time-1 symlink-slash follow-slink no-arg
-
-# This test is expected to fail.
-# ls should be fixed soon;  then we'll remove this line.
-XFAIL_TESTS = infloop
+TESTS = dired infloop rt-1 time-1 symlink-slash follow-slink no-arg
 
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
