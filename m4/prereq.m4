@@ -17,7 +17,7 @@ AC_DEFUN(jm_PREREQ_ADDEXT,
 [
   dnl For addext.c.
   AC_SYS_LONG_FILE_NAMES
-  AC_CHECK_FUNC(pathconf)
+  AC_CHECK_FUNCS(pathconf)
   AC_CHECK_HEADERS(limits.h string.h unistd.h)
 ])
 
