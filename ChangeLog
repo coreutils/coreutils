@@ -1,6 +1,9 @@
-2003-08-03  Jim Meyering  <jim@meyering.net>
+2003-08-04  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
+
+	* src/sort.c (main): Use unsigned int instead of int for `nsigs'
+	and for the indices to iterate through nsigs.
 
 2003-08-02  Paul Eggert  <eggert@twinsun.com>
 
