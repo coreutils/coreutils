@@ -1,3 +1,12 @@
+2001-11-27  Jim Meyering  <meyering@lucent.com>
+
+	* tempname.c: Merge with version from libc.
+
+	* tempname.c: Include stdlib.h unconditionally.  On some old systems
+	for which STDC_HEADERS is 0, it was not included, resulting in a
+	warning about an integer-to-pointer conversion problem with getenv.
+	Reported by Volker Borchert.
+
 2001-11-26  Jim Meyering  <meyering@lucent.com>
 
 	* gtod.h: Remove file.
