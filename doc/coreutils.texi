@@ -5900,7 +5900,7 @@ separated by @samp{, } (a comma and a space).
 Append a character to each file name indicating the file type.  This is
 like @option{-F}, except that executables are not marked.
 
-@item -x @var{format}
+@item -x
 @itemx --format=across
 @itemx --format=horizontal
 @opindex -x
@@ -6077,7 +6077,10 @@ backslash sequences like those used in C.
 @opindex -N
 @opindex --literal
 @opindex --quoting-style
-Do not quote file names.
+Do not quote file names.  However, with @command{ls} nongraphic
+characters are still printed as question marks if the output is a
+terminal and you do not specify the @option{--show-control-chars}
+option.
 
 @item -q
 @itemx --hide-control-chars
@@ -7170,13 +7173,15 @@ The program accepts the following options.  Also see @ref{Common options}.
 @cindex directories, removing with @code{unlink}
 @findex unlink
 @pindex fsck
-Attempt to remove directories using the @code{unlink} function rather than
-the @code{rmdir} function, and
-don't require a directory to be empty before trying to unlink it.  This works
+Use the @code{unlink} function unconditionally rather than attempting
+to check whether the file is a directory and using @code{rmdir} if it
+is a directory.  This can be useful on corrupted file systems where
+@code{unlink} works even though other, file-checking functions fail.
+For directories, this works
 only if you have appropriate privileges and if your operating system supports
 @code{unlink} for directories.  Because unlinking a directory causes any files
 in the deleted directory to become unreferenced, it is wise to @command{fsck}
-the file system after doing this.
+the file system afterwards.
 
 @item -f
 @itemx --force
@@ -11095,12 +11100,11 @@ Print only the user id.
 @cindex login name, printing
 @cindex user name, printing
 
-@flindex /etc/utmp
 @flindex utmp
-
-@command{logname} prints the calling user's name, as found in the file
-@file{/etc/utmp}, and exits with a status of 0.  If there is no
-@file{/etc/utmp} entry for the calling process, @command{logname} prints
+@command{logname} prints the calling user's name, as found in a
+system-maintained file (often @file{/var/run/utmp} or
+@file{/etc/utmp}), and exits with a status of 0.  If there is no entry
+for the calling process, @command{logname} prints
 an error message and exits with a status of 1.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
@@ -11167,11 +11171,12 @@ output.  Synopsis:
 users [@var{file}]
 @end example
 
-@flindex /etc/utmp
-@flindex /etc/wtmp
+@flindex utmp
+@flindex wtmp
 With no @var{file} argument, @command{users} extracts its information from
-the file @file{/etc/utmp}.  If a file argument is given, @command{users}
-uses that file instead.  A common choice is @file{/etc/wtmp}.
+a system-maintained file (often @file{/var/run/utmp} or
+@file{/etc/utmp}).  If a file argument is given, @command{users} uses
+that file instead.  A common choice is @file{/var/log/wtmp}.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
@@ -11200,11 +11205,12 @@ If given no non-option arguments, @command{who} prints the following
 information for each user currently logged on: login name, terminal
 line, login time, and remote hostname or X display.
 
-@flindex /etc/utmp
-@flindex /etc/wtmp
+@flindex utmp
+@flindex wtmp
 If given one non-option argument, @command{who} uses that instead of
-@file{/etc/utmp} as the name of the file containing the record of
-users logged on.  @file{/etc/wtmp} is commonly given as an argument
+a default system-maintained file (often @file{/var/run/utmp} or
++@file{/etc/utmp}) as the name of the file containing the record of
+users logged on.  @file{/var/log/wtmp} is commonly given as an argument
 to @command{who} to look at who has previously logged on.
 
 @opindex am i
