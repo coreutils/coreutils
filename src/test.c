@@ -993,6 +993,18 @@ posixtest ()
   return (value);
 }
 
+#if defined (TEST_STANDALONE)
+void parse_long_options ();
+
+static void
+usage ()
+{
+  fprintf (stderr, "Usage: %s [{--help,--version}] [expr]\n",
+	   program_name);
+  exit (1);
+}
+#endif /* TEST_STANDALONE */
+
 /*
  * [:
  *	'[' expr ']'
@@ -1026,6 +1038,8 @@ test_command (margc, margv)
 
   if (margv[0] && strcmp (margv[0], "[") == 0)
     {
+      parse_long_options (margc, margv, usage);
+
       --margc;
 
       if (margc < 2)
@@ -1041,6 +1055,7 @@ test_command (margc, margv)
   if (pos >= argc)
     test_exit (SHELL_BOOLEAN (FALSE));
 
+  parse_long_options (argc, argv, usage);
   value = posixtest ();
 
   if (pos != argc)

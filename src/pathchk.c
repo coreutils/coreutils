@@ -41,6 +41,8 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+
+#include "version.h"
 #include "system.h"
 
 #ifdef _POSIX_VERSION
@@ -96,9 +98,17 @@ static void usage ();
 /* The name this program was run with. */
 char *program_name;
 
+/* If non-zero, display usage information and exit.  */
+static int show_help;
+
+/* If non-zero, print the version on standard output and exit.  */
+static int show_version;
+
 static struct option const longopts[] =
 {
+  {"help", no_argument, &show_help, 1},
   {"portability", no_argument, NULL, 'p'},
+  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -117,13 +127,26 @@ main (argc, argv)
     {
       switch (optc)
 	{
+	case 0:
+	  break;
+
 	case 'p':
 	  check_portability = 1;
 	  break;
+
 	default:
 	  usage ();
 	}
     }
+
+  if (show_version)
+    {
+      printf ("%s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage ();
 
   if (optind == argc)
     usage ();

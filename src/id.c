@@ -85,7 +85,7 @@ static int problems = 0;
 /* If non-zero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard error.  */
+/* If non-zero, print the version on standard output and exit.  */
 static int show_version;
 
 static struct option const longopts[] =

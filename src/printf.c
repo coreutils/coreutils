@@ -46,7 +46,10 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <sys/types.h>
+#include <getopt.h>
+
 #include "system.h"
+#include "version.h"
 
 #if !defined (isascii) || defined (STDC_HEADERS)
 #undef isascii
@@ -68,6 +71,7 @@ unsigned long strtoul ();
 
 char *xmalloc ();
 void error ();
+void parse_long_options ();
 
 static double xstrtod ();
 static int print_esc ();
@@ -79,11 +83,19 @@ static void print_esc_char ();
 static void print_esc_string ();
 static void verify ();
 
+/* The value to return to the calling program.  */
+static int exit_status;
+
 /* The name this program was run with. */
 char *program_name;
 
-/* The value to return to the calling program.  */
-static int exit_status;
+static void
+usage ()
+{
+  fprintf (stderr, "Usage: %s [{--help,--version}] format [argument...]\n",
+	   program_name);
+  exit (1);
+}
 
 void
 main (argc, argv)
@@ -95,6 +107,8 @@ main (argc, argv)
 
   program_name = argv[0];
   exit_status = 0;
+
+  parse_long_options (argc, argv, usage);
 
   if (argc == 1)
     {

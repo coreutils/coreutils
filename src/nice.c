@@ -28,6 +28,12 @@
 #include "version.h"
 #include "system.h"
 
+#ifdef NICE_PRIORITY
+#define GET_PRIORITY() nice (0)
+#else
+#define GET_PRIORITY() getpriority (PRIO_PROCESS, 0)
+#endif
+
 void error ();
 
 static int isinteger ();
@@ -39,7 +45,7 @@ char *program_name;
 /* If non-zero, display usage information and exit.  */
 static int show_help;
 
-/* If non-zero, print the version on standard error.  */
+/* If non-zero, print the version on standard output and exit.  */
 static int show_version;
 
 static struct option const longopts[] =
@@ -111,27 +117,18 @@ main (argc, argv)
 	usage ();
       /* No command given; print the priority. */
       errno = 0;
-#ifndef NICE_PRIORITY
-      current_priority = getpriority (PRIO_PROCESS, 0);
-#else
-      current_priority = nice (0);
-#endif
+      current_priority = GET_PRIORITY ();
       if (current_priority == -1 && errno != 0)
 	error (1, errno, "cannot get priority");
       printf ("%d\n", current_priority);
       exit (0);
     }
 
-  errno = 0;
 #ifndef NICE_PRIORITY
-  current_priority = getpriority (PRIO_PROCESS, 0);
-#else
-  current_priority = nice (0);
-#endif
+  errno = 0;
+  current_priority = GET_PRIORITY ();
   if (current_priority == -1 && errno != 0)
     error (1, errno, "cannot get priority");
-
-#ifndef NICE_PRIORITY
   if (setpriority (PRIO_PROCESS, 0, current_priority + adjustment))
 #else
   if (nice (adjustment) == -1)

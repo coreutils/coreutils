@@ -1,3 +1,38 @@
+Sun Oct 10 14:05:23 1993  Jim Meyering  meyering@comco.com
+
+	* false.sh, groups.sh, nohup.sh, true.sh: Add --help and --version.
+	* src/Makefile.in (false, groups, nohup, true): Substitute the string
+	from version.c for @VERSION@ in *.sh.
+
+Sat Oct  9 23:12:53 1993  Jim Meyering  meyering@comco.com
+
+	* configure.in: Remove AC_UNISTD_H; add unistd.h to AC_HAVE_HEADERS.
+
+Tue Oct  5 22:18:05 1993  Jim Meyering  meyering@comco.com
+
+	* tty.c (main): Detect write error.  Use isatty (rather than
+	testing whether ttyname() is NULL) to determine exit status
+	because ttyname may return NULL when stdin is a terminal device.
+
+	* expr.c (eval7): Rewrite if-else-if-else... sequence to avoid a
+	spurious `function returns without a value' warning.
+
+	* printenv.c (main), tty.c (main): Detect and report write errors.
+
+	* echo.c, patchchk.c, printenv.c, printf.c, sleep.c, stty.c, su.c,
+	tee.c, test.c, tty.c, uname.c, yes.c: Accept --help and --version
+	options.
+
+	* long-options.c: New file.  To let echo, expr, printf, test, and
+	yes accept --help and --version as unobtrusively as possible.
+	* src/Makefile.in [SORUCES]: Add it.
+
+	* configure.in: Add AC_TIME_WITH_SYS_TIME and AC_STAT_MACROS_BROKEN.
+
+	* nice.c (main) [NICE_PRIORITY]: When given an argument, don't
+	try to get current priority.  nice() requires only the delta;
+	we don't need to compute the absolute priority as for setpriority.
+
 Mon Oct 04 22:15:07 1993  Jim Meyering (meyering@comco.com)
 
 	* who.c (print_entry, print_heading, who_am_i):

@@ -40,7 +40,9 @@
 #ifndef _POSIX_SOURCE
 #include <sys/param.h>
 #endif
+
 #include "system.h"
+#include "version.h"
 
 #ifndef UTMP_FILE
 #ifdef _PATH_UTMP		/* 4.4BSD.  */
@@ -75,6 +77,12 @@ static void who_am_i ();
 /* The name this program was run with. */
 char *program_name;
 
+/* If non-zero, display usage information and exit.  */
+static int show_help;
+
+/* If non-zero, print the version on standard output and exit.  */
+static int show_version;
+
 /* If nonzero, display only a list of usernames and count of
    the users logged on.
    Ignored for `who am i'. */
@@ -95,10 +103,12 @@ static int include_mesg;
 static struct option const longopts[] =
 {
   {"count", no_argument, NULL, 'q'},
+  {"help", no_argument, &show_help, 1},
   {"idle", no_argument, NULL, 'u'},
   {"heading", no_argument, NULL, 'H'},
   {"message", no_argument, NULL, 'T'},
   {"mesg", no_argument, NULL, 'T'},
+  {"version", no_argument, &show_version, 1},
   {"writable", no_argument, NULL, 'T'},
   {NULL, 0, NULL, 0}
 };
@@ -118,6 +128,9 @@ main (argc, argv)
     {
       switch (optc)
 	{
+	case 0:
+	  break;
+
 	case 'm':
 	  my_line_only = 1;
 	  break;
@@ -147,6 +160,15 @@ main (argc, argv)
 	  usage ();
 	}
     }
+
+  if (show_version)
+    {
+      printf ("%s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage ();
 
   if (chdir ("/dev"))
     error (1, errno, "cannot change directory to /dev");

@@ -73,6 +73,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include <pwd.h>
+#include <grp.h>
 #include "system.h"
 
 #ifdef HAVE_SYSLOG_H
@@ -115,6 +116,8 @@ uid_t getuid ();
 #include <shadow.h>
 #endif
 
+#include "version.h"
+
 /* The default PATH for simulated logins to non-superuser accounts.  */
 #define DEFAULT_LOGIN_PATH ":/usr/ucb:/bin:/usr/bin"
 
@@ -153,6 +156,12 @@ extern char **environ;
 /* The name this program was run with.  */
 char *program_name;
 
+/* If non-zero, display usage information and exit.  */
+static int show_help;
+
+/* If non-zero, print the version on standard output and exit.  */
+static int show_version;
+
 /* If nonzero, pass the `-f' option to the subshell.  */
 static int fast_startup;
 
@@ -166,9 +175,11 @@ static struct option const longopts[] =
 {
   {"command", required_argument, 0, 'c'},
   {"fast", no_argument, &fast_startup, 1},
+  {"help", no_argument, &show_help, 1},
   {"login", no_argument, &simulate_login, 1},
   {"preserve-environment", no_argument, &change_environment, 0},
   {"shell", required_argument, 0, 's'},
+  {"version", no_argument, &show_version, 1},
   {0, 0, 0, 0}
 };
 
@@ -196,26 +207,42 @@ main (argc, argv)
 	{
 	case 0:
 	  break;
+
 	case 'c':
 	  command = optarg;
 	  break;
+
 	case 'f':
 	  fast_startup = 1;
 	  break;
+
 	case 'l':
 	  simulate_login = 1;
 	  break;
+
 	case 'm':
 	case 'p':
 	  change_environment = 0;
 	  break;
+
 	case 's':
 	  shell = optarg;
 	  break;
+
 	default:
 	  usage ();
 	}
     }
+
+  if (show_version)
+    {
+      printf ("%s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage ();
+
   if (optind < argc && !strcmp (argv[optind], "-"))
     {
       simulate_login = 1;

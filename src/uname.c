@@ -32,7 +32,9 @@
 #include <sys/types.h>
 #include <sys/utsname.h>
 #include <getopt.h>
+
 #include "system.h"
+#include "version.h"
 
 void error ();
 
@@ -61,13 +63,20 @@ static unsigned char toprint;
 /* The name this program was run with, for error messages. */
 char *program_name;
 
+/* If non-zero, display usage information and exit.  */
+static int show_help;
+
+/* If non-zero, print the version on standard output and exit.  */
+static int show_version;
+
 static struct option const long_options[] =
 {
-  {"sysname", no_argument, NULL, 's'},
+  {"help", no_argument, &show_help, 1},
+  {"machine", no_argument, NULL, 'm'},
   {"nodename", no_argument, NULL, 'n'},
   {"release", no_argument, NULL, 'r'},
-  {"version", no_argument, NULL, 'v'},
-  {"machine", no_argument, NULL, 'm'},
+  {"sysname", no_argument, NULL, 's'},
+  {"version", no_argument, &show_version, 1},
   {"all", no_argument, NULL, 'a'},
   {NULL, 0, NULL, 0}
 };
@@ -88,29 +97,47 @@ main (argc, argv)
     {
       switch (c)
 	{
+	case 0:
+	  break;
+
 	case 's':
 	  toprint |= PRINT_SYSNAME;
 	  break;
+
 	case 'n':
 	  toprint |= PRINT_NODENAME;
 	  break;
+
 	case 'r':
 	  toprint |= PRINT_RELEASE;
 	  break;
+
 	case 'v':
 	  toprint |= PRINT_VERSION;
 	  break;
+
 	case 'm':
 	  toprint |= PRINT_MACHINE;
 	  break;
+
 	case 'a':
 	  toprint = PRINT_SYSNAME | PRINT_NODENAME | PRINT_RELEASE |
 	    PRINT_VERSION | PRINT_MACHINE;
 	  break;
+
 	default:
 	  usage ();
 	}
     }
+
+  if (show_version)
+    {
+      printf ("%s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage ();
 
   if (optind != argc)
     usage ();

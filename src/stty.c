@@ -45,7 +45,9 @@
 #include <varargs.h>
 #define VA_START(args, lastarg) va_start(args)
 #endif
+
 #include "system.h"
+#include "version.h"
 
 #if defined(GWINSZ_BROKEN)	/* Such as for SCO UNIX 3.2.2. */
 #undef TIOCGWINSZ
@@ -365,10 +367,18 @@ static int max_col;
 /* Current position, to know when to wrap. */
 static int current_col;
 
+/* If non-zero, display usage information and exit.  */
+static int show_help;
+
+/* If non-zero, print the version on standard output and exit.  */
+static int show_version;
+
 static struct option longopts[] =
 {
   {"all", no_argument, NULL, 'a'},
+  {"help", no_argument, &show_help, 1},
   {"save", no_argument, NULL, 'g'},
+  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -411,6 +421,15 @@ wrapf (message, va_alist)
   current_col += buflen;
 }
 
+static void
+usage ()
+{
+  fprintf (stderr,
+      "Usage: %s [{--help,--version}] [-ag] [--all] [--save] [setting...]\n",
+	   program_name);
+  exit (1);
+}
+
 void
 main (argc, argv)
      int argc;
@@ -425,13 +444,34 @@ main (argc, argv)
 
   while ((optc = getopt_long (argc, argv, "ag", longopts, (int *) 0)) != EOF)
     {
-      if (optc == 'a')
-	output_type = all;
-      else if (optc == 'g')
-	output_type = recoverable;
-      else
-	break;
+      switch (optc)
+	{
+	case 0:
+	  break;
+
+	case 'a':
+	  output_type = all;
+	  break;
+
+	case 'g':
+	  output_type = recoverable;
+	  break;
+
+	default:
+	  goto done;
+	}
     }
+
+done:;
+
+  if (show_version)
+    {
+      printf ("%s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage ();
 
   if (tcgetattr (0, &mode))
     error (1, errno, "standard input");
@@ -853,6 +893,9 @@ mode_type_flag (type, mode)
 
     case combination:
       return NULL;
+
+    default:
+      abort ();
     }
 }
 

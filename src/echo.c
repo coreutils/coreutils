@@ -57,6 +57,19 @@ on System V systems with the -E option.
 #  define VALID_ECHO_OPTIONS "n"
 #endif /* !V9_ECHO */
 
+/* The name this program was run with. */
+char *program_name;
+
+void parse_long_options ();
+
+static void
+usage ()
+{
+  fprintf (stderr, "Usage: %s [{--help,--version}] [-ne] [string ...]\n",
+	   program_name);
+  exit (1);
+}
+
 /* Print the words in LIST to standard output.  If the first word is
    `-n', then don't print a trailing newline.  We also support the
    echo syntax from Version 9 unix systems. */
@@ -66,6 +79,10 @@ main (argc, argv)
      char **argv;
 {
   int display_return = 1, do_v9 = 0;
+
+  program_name = argv[0];
+
+  parse_long_options (argc, argv, usage);
 
 /* System V machines already have a /bin/sh with a v9 behaviour.  We
    use the identical behaviour for these machines so that the

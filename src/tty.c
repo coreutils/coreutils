@@ -17,14 +17,19 @@
 
 /* Displays "not a tty" if stdin is not a terminal.
    Displays nothing if -s option is given.
-   Exit status 0 if stdin is a tty, 1 if not, 2 if usage error.
+   Exit status 0 if stdin is a tty, 1 if not, 2 if usage error,
+   3 if write error.
 
- Written by David MacKenzie <djm@gnu.ai.mit.edu>.  */
+   Written by David MacKenzie <djm@gnu.ai.mit.edu>.  */
 
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+
 #include "system.h"
+#include "version.h"
+
+void error ();
 
 static void usage ();
 
@@ -34,10 +39,18 @@ char *program_name;
 /* If nonzero, return an exit status but produce no output. */
 static int silent;
 
+/* If non-zero, display usage information and exit.  */
+static int show_help;
+
+/* If non-zero, print the version on standard output and exit.  */
+static int show_version;
+
 static struct option const longopts[] =
 {
+  {"help", no_argument, &show_help, 1},
   {"silent", no_argument, NULL, 's'},
   {"quiet", no_argument, NULL, 's'},
+  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -56,13 +69,26 @@ main (argc, argv)
     {
       switch (optc)
 	{
+	case 0:
+	  break;
+
 	case 's':
 	  silent = 1;
 	  break;
+
 	default:
 	  usage ();
 	}
     }
+
+  if (show_version)
+    {
+      printf ("%s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage ();
 
   if (optind != argc)
     usage ();
@@ -74,9 +100,12 @@ main (argc, argv)
 	puts (tty);
       else
 	puts ("not a tty");
+
+      if (ferror (stdout) || fclose (stdout) == EOF)
+	error (3, errno, "standard output");
     }
 
-  exit (tty == NULL);
+  exit (isatty (0) ? 0 : 1);
 }
 
 static void

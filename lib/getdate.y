@@ -41,7 +41,7 @@
 #ifdef _AIX /* for Bison */
  #pragma alloca
 #else
-char *alloca ();
+void *alloca ();
 #endif
 #endif
 #endif

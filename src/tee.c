@@ -21,7 +21,9 @@
 #include <sys/types.h>
 #include <signal.h>
 #include <getopt.h>
+
 #include "system.h"
+#include "version.h"
 
 char *xmalloc ();
 void error ();
@@ -38,12 +40,30 @@ static int ignore_interrupts;
 /* The name that this program was run with. */
 char *program_name;
 
+/* If non-zero, display usage information and exit.  */
+static int show_help;
+
+/* If non-zero, print the version on standard output and exit.  */
+static int show_version;
+
 static struct option const long_options[] =
 {
   {"append", no_argument, NULL, 'a'},
+  {"help", no_argument, &show_help, 1},
   {"ignore-interrupts", no_argument, NULL, 'i'},
+  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
+
+static void
+usage ()
+{
+	  fprintf (stderr, "\
+Usage: %s [{--help,--version}] [-ai] [--append]\n\
+       [--ignore-interrupts] [file...]\n",
+		   program_name);
+  exit (1);
+}
 
 void
 main (argc, argv)
@@ -62,19 +82,30 @@ main (argc, argv)
     {
       switch (optc)
 	{
+	case 0:
+	  break;
+
 	case 'a':
 	  append = 1;
 	  break;
+
 	case 'i':
 	  ignore_interrupts = 1;
 	  break;
+
 	default:
-	  fprintf (stderr, "\
-Usage: %s [-ai] [--append] [--ignore-interrupts] [file...]\n",
-		   program_name);
-	  exit (1);
+	  usage ();
 	}
     }
+
+  if (show_version)
+    {
+      printf ("%s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage ();
 
   if (ignore_interrupts)
     {

@@ -17,6 +17,9 @@
 
 #include <stdio.h>
 #include <sys/types.h>
+#include <getopt.h>
+
+#include "version.h"
 #include "system.h"
 
 void error ();
@@ -26,6 +29,27 @@ static long argdecode ();
 /* The name by which this program was run. */
 char *program_name;
 
+/* If non-zero, display usage information and exit.  */
+static int show_help;
+
+/* If non-zero, print the version on standard output and exit.  */
+static int show_version;
+
+static struct option const long_options[] =
+{
+  {"help", no_argument, &show_help, 1},
+  {"version", no_argument, &show_version, 1},
+  {0, 0, 0, 0}
+};
+
+static void
+usage ()
+{
+  fprintf (stderr, "Usage: %s [{--help,--version}] number[smhd]...\n",
+	   program_name);
+  exit (1);
+}
+
 void
 main (argc, argv)
      int argc;
@@ -33,8 +57,30 @@ main (argc, argv)
 {
   int i;
   unsigned seconds = 0;
+  int c;
 
   program_name = argv[0];
+
+  while ((c = getopt_long (argc, argv, "", long_options, (int *) 0)) != EOF)
+    {
+      switch (c)
+	{
+	case 0:
+	  break;
+
+	default:
+	  usage ();
+	}
+    }
+
+  if (show_version)
+    {
+      printf ("%s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage ();
 
   if (argc == 1)
     {
