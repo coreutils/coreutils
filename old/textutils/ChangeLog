@@ -1,3 +1,41 @@
+Wed Nov 02 17:36:34 1994  Jim Meyering  (meyering@comco.com)
+
+	* tr.c: Add const attribute where appropriate.
+
+	* tail.c (BUFSIZ): Use definition from <stdio.h>.
+
+Tue Nov 01 23:54:09 1994  Jim Meyering  (meyering@comco.com)
+
+	* tail.c (XWRITE): Allow n_bytes == 0 but call fwrite only if
+	n_bytes is positive.  Turn off assertions.  `tail /dev/null' was
+	getting a failed assertion.  Reported by Doug McLaren
+	(dougmc@comco.com).
+
+	* cut.c (cut_bytes): Print at least a newline for every line of input.
+	(cut_fields): Print a newline even for lines whose only selected
+	field is empty.  But print nothing when using -s without -f1.
+	And print nothing for empty input.  Reported by
+	Richard_Sharman@software.mitel.com.
+
+Tue Nov 01 06:05:23 1994  Jim Meyering  (meyering@comco.com)
+
+	* fmt.c: Change #ifdef __STDC__ to #if defined (__STDC__) && __STDC__.
+	* linebuffer.h: Likewise.
+
+Mon Oct 31 06:53:32 1994  Jim Meyering  (meyering@comco.com)
+
+	* configure.in (AC_REPLACE_FUNCS): Remove memcmp since AC_FUNC_MEMCMP
+	already handles it.  From Kaveh Ghazi.
+
+	* {lib,src}/Makefile.in (DEFS): Don't use -Dlint.  Some systems
+	get failures when it's defined.  From Kaveh Ghazi.
+
+	* cat.c (cat): Conditionalize test for errno == ENOSYS.  It's not
+	defined on some Next and Alliant systems.  From Kaveh Ghazi.
+
+	* sort.c join.c (main): Include version.h and call parse_long_options
+	with the proper number of arguments.  Reported by Franc,ois Pinard.
+
 Sun Oct 30 01:30:41 1994  Jim Meyering  (meyering@comco.com)
 
 	* (configure.in): Add AC_OFF_T and rearrange by type along the
