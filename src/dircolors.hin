@@ -75,7 +75,7 @@ EXEC 01;32
 .bz2 01;31
 .deb 01;31
 .rpm 01;31
-.jar 01;3
+.jar 01;31
 
 # image formats
 .jpg 01;35
