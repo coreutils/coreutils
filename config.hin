@@ -47,7 +47,6 @@
 # define DIR_TO_FD(Dir_p) -1
 #endif
 
-    
 
 /* Define if there is a member named d_ino in the struct describing directory
    headers. */
