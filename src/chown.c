@@ -52,6 +52,7 @@ struct group *getgrgid ();
 
 char *savedir ();
 char *parse_user_spec ();
+void strip_trailing_slashes ();
 char *xmalloc ();
 char *xrealloc ();
 void error ();
@@ -159,7 +160,10 @@ main (argc, argv)
     username = "";
 
   for (++optind; optind < argc; ++optind)
-    errors |= change_file_owner (argv[optind], user, group);
+    {
+      strip_trailing_slashes (argv[optind]);
+      errors |= change_file_owner (argv[optind], user, group);
+    }
 
   exit (errors);
 }

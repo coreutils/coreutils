@@ -33,11 +33,12 @@
 #include "safe-stat.h"
 #include "safe-lstat.h"
 
-char *savedir ();
-char *xmalloc ();
-char *xrealloc ();
 void error ();
 void mode_string ();
+char *savedir ();
+void strip_trailing_slashes ();
+char *xmalloc ();
+char *xrealloc ();
 
 static int change_file_mode ();
 static int change_dir_mode ();
@@ -166,7 +167,10 @@ main (argc, argv)
     error (1, 0, "virtual memory exhausted");
 
   for (; optind < argc; ++optind)
-    errors |= change_file_mode (argv[optind], changes, 1);
+    {
+      strip_trailing_slashes (argv[optind]);
+      errors |= change_file_mode (argv[optind], changes, 1);
+    }
 
   exit (errors);
 }
@@ -194,15 +198,17 @@ change_file_mode (file, changes, deref_symlink)
     }
 #ifdef S_ISLNK
   if (S_ISLNK (file_stats.st_mode))
-    if (! deref_symlink)
-      return 0;
-    else 
-      if (SAFE_STAT (file, &file_stats))
-	{
-	  if (force_silent == 0)
-	    error (0, errno, "%s", file);
-	  return 1;
-	}
+    {
+      if (! deref_symlink)
+	return 0;
+      else 
+	if (SAFE_STAT (file, &file_stats))
+	  {
+	    if (force_silent == 0)
+	      error (0, errno, "%s", file);
+	    return 1;
+	  }
+    }
 #endif
 
   newmode = mode_adjust (file_stats.st_mode, changes);
