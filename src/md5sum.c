@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 
+#include "long-options.h"
 #include "md5.h"
 #include "getline.h"
 #include "system.h"
@@ -62,11 +63,13 @@
 /* Nonzero if any of the files read were the standard input. */
 static int have_read_stdin;
 
-/* FIXME: comment. */
-static int quiet = 0;
+/* With --check, don't generate any output.
+   The exit code indicates success or failure.  */
+static int status_only = 0;
 
-/* FIXME: comment. */
-static int verbose = 0;
+/* With --check, print a message to standard error warning about each
+   improperly formatted MD5 checksum line.  */
+static int warn = 0;
 
 /* The name this program was run with.  */
 char *program_name;
@@ -75,12 +78,10 @@ static const struct option long_options[] =
 {
   { "binary", no_argument, 0, 'b' },
   { "check", no_argument, 0, 'c' },
-  { "help", no_argument, 0, 'h' },
-  { "quiet", no_argument, 0, 'q' },
-  { "string", required_argument, 0, 's' },
+  { "status", no_argument, 0, 2 },
+  { "string", required_argument, 0, 1 },
   { "text", no_argument, 0, 't' },
-  { "verbose", no_argument, 0, 'v' },
-  { "version", no_argument, 0, 'V' },
+  { "warn", no_argument, 0, 'w' },
   { NULL, 0, NULL, 0 }
 };
 
@@ -101,21 +102,22 @@ Usage: %s [OPTION] [FILE]...\n\
 Print or check MD5 checksums.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
-  -h, --help              display this help and exit\n\
-  -q, --quiet             don't output anything, status code shows success\n\
-  -v, --verbose           verbose output level\n\
-  -V, --version           output version information and exit\n\
-\n\
   -b, --binary            read files in binary mode\n\
   -t, --text              read files in text mode (default)\n\
-\n\
   -c, --check             check MD5 sums against given list\n\
-  -s, --string=STRING     compute checksum for STRING\n\
+\n\
+The following two options are useful only when verifying checksums:\n\
+      --status            don't output anything, status code shows success\n\
+  -w, --warn              warn about improperly formated MD5 checksum lines\n\
+\n\
+      --string=STRING     compute checksum for STRING\n\
+      --help              display this help and exit\n\
+      --version           output version information and exit\n\
 \n\
 The sums are computed as described in RFC 1321.  When checking, the input\n\
 should be a former output of this program.  The default mode is to print\n\
 a line with checksum, a character indicating type (`*' for binary, ` ' for\n\
-text), and name for each FILE.  The --quiet and --verbose options are\n\
+text), and name for each FILE.  The --status and --warn options are\n\
 meaningful only when verifying checksums.\n"),
 	    program_name, program_name, program_name);
 
@@ -183,6 +185,8 @@ hex_digits (s)
 }
 
 /* FIXME: allow newline in filename by encoding it. */
+/* FIXME: distinguish between file open/read failure and inconsistent
+   checksum. */
 
 static int
 md5_file (filename, binary, md5_result)
@@ -287,7 +291,7 @@ md5_check (checkfile_name, binary)
       err = split_3 (line, &md5num, &type_flag, &filename);
       if (err || !hex_digits (md5num))
 	{
-	  if (verbose)
+	  if (warn)
 	    {
 	      error (0, 0,
 		     _("%s: %lu: improperly formatted MD5 checksum line"),
@@ -325,7 +329,7 @@ md5_check (checkfile_name, binary)
 	  if (fail)
 	    ++n_tests_failed;
 
-	  if (!quiet)
+	  if (!status_only)
 	    {
 	      printf ("%s: %s\n", filename, (fail ? _("FAILED") : _("OK")));
 	      fflush (stdout);
@@ -334,9 +338,14 @@ md5_check (checkfile_name, binary)
     }
   while (!feof (checkfile_stream) && !ferror (checkfile_stream));
 
-  /* FIXME: check ferror!!  */
   if (line)
     free (line);
+
+  if (ferror (checkfile_stream))
+    {
+      error (0, 0, "%s: read error", checkfile_name);
+      return 1;
+    }
 
   if (checkfile_stream != stdin && fclose (checkfile_stream) == EOF)
     {
@@ -352,7 +361,7 @@ md5_check (checkfile_name, binary)
     }
   else
     {
-      if (!quiet)
+      if (!status_only)
 	{
 	  if (n_tests_failed == 0)
 	    {
@@ -380,7 +389,6 @@ main (argc, argv)
 {
   unsigned char md5buffer[16];
   int do_check = 0;
-  int do_help = 0;
   int do_version = 0;
   int opt;
   char **string = NULL;
@@ -388,33 +396,21 @@ main (argc, argv)
   size_t i;
   size_t err = 0;
 
-  /* FIXME: comment. */
   /* Text is default of the Plumb/Lankester format.  */
   int binary = 0;
 
   /* Setting values of global variables.  */
   program_name = argv[0];
 
-  while ((opt = getopt_long (argc, argv, "bchqs:tvV", long_options, NULL))
+  parse_long_options (argc, argv, "md5sum", version_string, usage);
+
+  while ((opt = getopt_long (argc, argv, "bctw", long_options, NULL))
 	 != EOF)
     switch (opt)
       {
       case 0:			/* long option */
 	break;
-      case 'b':
-	binary = 1;
-	break;
-      case 'c':
-	do_check = 1;
-	break;
-      case 'h':
-	do_help = 1;
-	break;
-      case 'q':
-	quiet = 1;
-	verbose = 0;
-	break;
-      case 's':
+      case 1: /* --string */
 	{
 	  if (string == NULL)
 	    string = (char **) xmalloc ((argc - 1) * sizeof (char *));
@@ -424,15 +420,22 @@ main (argc, argv)
 	  string[n_strings++] = optarg;
 	}
 	break;
+      case 'b':
+	binary = 1;
+	break;
+      case 'c':
+	do_check = 1;
+	break;
+      case 2:
+	status_only = 1;
+	warn = 0;
+	break;
       case 't':
 	binary = 0;
 	break;
-      case 'v':
-	quiet = 0;
-	verbose = 1;
-	break;
-      case 'V':
-	do_version = 1;
+      case 'w':
+	status_only = 0;
+	warn = 1;
 	break;
       default:
 	usage (EXIT_FAILURE);
@@ -444,21 +447,24 @@ main (argc, argv)
       exit (EXIT_SUCCESS);
     }
 
-  if (do_help)
-    usage (EXIT_SUCCESS);
-
-  if (n_strings > 0 && do_check != 0)
+  if (n_strings > 0 && do_check)
     {
       error (0, 0,
 	     _("the --string and --check options are mutually exclusive"));
       usage (EXIT_FAILURE);
     }
 
-  if ((quiet || verbose) && do_check == 0)
+  if (status_only && !do_check)
     {
       error (0, 0,
-	     _("the --quiet and --verbose options are meaningful only\n\
-when verifying checksums"));
+       _("the --status option is meaningful only when verifying checksums"));
+      usage (EXIT_FAILURE);
+    }
+
+  if (warn && !do_check)
+    {
+      error (0, 0,
+       _("the --warn option is meaningful only when verifying checksums"));
       usage (EXIT_FAILURE);
     }
 
