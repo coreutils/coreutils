@@ -2,6 +2,9 @@
 
 	* Version 4.5.4.
 
+	* configure.ac: Update via autoupdate.
+	Add `AM_GNU_GETTEXT_VERSION(0.11.5)'.
+
 	* src/mv.c (movefile): Don't remove trailing slashes from SOURCE.
 	Reported by Hans Ginzel.
 
