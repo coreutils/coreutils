@@ -1694,9 +1694,7 @@ keycompare (const struct line *a, const struct line *b)
 #ifdef ENABLE_NLS
 
       /* Sorting like this may become slow, so in a simple locale the user
-         can select a faster sort that is similar to ascii sort, but 8-bit
-         instead of 7-bit.  But can't handle more complex, combined,
-         character sets.  */
+         can select a faster sort that is similar to ascii sort  */
       else if (need_locale)
 	{
 	  /* FIXME: rewrite not to use variable size arrays */
@@ -2129,39 +2127,53 @@ nls_numeric_format (const struct line *line, int nlines)
 {
   struct nls_keyfield *n_key = nls_keyhead;
 
+  /* line = first line, nlines = number of lines,
+     nls_fraction_found = false                           */
   for (; !nls_fraction_found && nlines > 0; line++, nlines--)
     {
       int iter;
-      for (iter = 0; !nls_fraction_found; ++iter)
+      for (iter=0; !nls_fraction_found; iter++)
 	{
 	  unsigned char *text;
 	  unsigned char *lim;
 	  struct keyfield *key = n_key->key;
 
+	  /* text = {}, lim = {}, key = first key */
 	  if (iter || line->keybeg == NULL)
 	    {
-	      if (key->eword >= 0)
+	      /* Succeding keys, where the key field is
+                 specified                              */
+	      if (key->eword >= 0) /* key->eword = length of key */
 		lim = limfield (line, key);
 	      else
 		lim = line->text + line->length;
+	      /* lim = end of key field */
 
-	      if (key->sword >= 0)
+	      if (key->sword >= 0) /* key->sword = start of key */
 		text = begfield (line, key);
 	      else
 		text = line->text;
+	      /* text = start of field */
 	    }
 	  else
 	    {
+	      /* First key is always the whole line */
 	      text = line->keybeg;
 	      lim = line->keylim;
 	    }
+	  /* text = start of text to sort
+             lim  = end of text to sort    */
 
 	  look_for_fraction (text, lim);
+
+	  /* nls_fraction_found = decimal_point found? */
+
 	  if ((n_key = n_key->next) == nls_keyhead)
-	    break;
+	    break;  /* No more keys for this line */
 	}
     }
   nls_fraction_found = 1;
+  /* decide on current decimal_point known */
 }
 
 #endif
