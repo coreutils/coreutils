@@ -1,6 +1,12 @@
-2001-12-09  Jim Meyering  <meyering@lucent.com>
+2001-12-10  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.4.
+
+	* src/dd.c (buggy_lseek_support): Remove function.
+	(skip_via_lseek) [__linux__]: New function.
+	(skip): Use skip_via_lseek, not buggy_lseek_support.
+
+2001-12-09  Jim Meyering  <meyering@lucent.com>
 
 	* configure.in (ALL_LINGUAS): Add Estonian (et).
 
