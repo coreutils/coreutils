@@ -2,14 +2,25 @@
 
 	* Version 2.0.18.
 
+	Ideally, there would be just one translation for all --help
+	and --version description strings.  Before this change, they
+	differed only in the number of blanks between the option name
+	and the description.  Someday gettext may be smart enough
+	to merge such strings and to reconstruct the proper spacing at
+	run time.  In the mean time, now there is one string for each,
+	and those descriptions in the --help output are no longer aligned
+	with the others.
+	* src/sys2.h (HELP_OPTION_DESCRIPTION): New macro.
+	(VERSION_OPTION_DESCRIPTION): New macro.
 	* src/cat.c, src/cksum.c, src/comm.c, src/csplit.c, src/cut.c:
 	* src/expand.c, src/fmt.c, src/fold.c, src/head.c, src/join.c:
 	* src/md5sum.c, src/nl.c, src/od.c, src/paste.c, src/pr.c, src/ptx.c:
 	* src/sort.c, src/split.c, src/sum.c, src/sys2.h, src/tac.c:
 	* src/tail.c, src/tr.c, src/tsort.c, src/unexpand.c, src/uniq.c:
-	* src/wc.c (usage): Use new macros, EMIT_HELP_DESCRIPTION and
-      	EMIT_VERSION_DESCRIPTION instead of hard-coding --help and --version
-	descriptions.
+	* src/wc.c (usage): Use new macros, HELP_OPTION_DESCRIPTION and
+      	VERSION_OPTION_DESCRIPTION instead of hard-coding --help and
+	--version descriptions.
+	* po/POTFILES.in: Add src/sys2.h.
 
 2001-11-27  Jim Meyering  <meyering@lucent.com>
 
