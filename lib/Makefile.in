@@ -4,7 +4,6 @@
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
-
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY, to the extent permitted by law; without
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
@@ -146,7 +145,7 @@ getdate.c getgroups.c getline.c group-member.c lchown.c lstat.c \
 malloc.c memcmp.c memcpy.c memset.c mkdir.c mktime.c mountlist.c \
 obstack.c obstack.h posixtm.c realloc.c regex.c rename.c rmdir.c \
 rpmatch.c stat.c stpcpy.c strcasecmp.c strdup.c strftime.c strndup.c \
-strstr.c strtol.c strtoul.c strverscmp.c ylwrap
+strstr.c strtol.c strtoul.c strverscmp.c utime.c ylwrap
 
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
@@ -169,8 +168,9 @@ DEP_FILES =  .deps/addext.P .deps/alloca.P .deps/argmatch.P \
 .deps/save-cwd.P .deps/savedir.P .deps/stat.P .deps/stpcpy.P \
 .deps/strcasecmp.P .deps/strdup.P .deps/strftime.P .deps/stripslash.P \
 .deps/strndup.P .deps/strstr.P .deps/strtol.P .deps/strtoul.P \
-.deps/strverscmp.P .deps/userspec.P .deps/xgetcwd.P .deps/xmalloc.P \
-.deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P .deps/yesno.P
+.deps/strverscmp.P .deps/userspec.P .deps/utime.P .deps/xgetcwd.P \
+.deps/xmalloc.P .deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P \
+.deps/yesno.P
 SOURCES = $(libfu_a_SOURCES)
 OBJECTS = $(libfu_a_OBJECTS)
 
@@ -361,6 +361,8 @@ strverscmp_.c: strverscmp.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/strverscmp.c; then echo $(srcdir)/strverscmp.c; else echo strverscmp.c; fi` | $(ANSI2KNR) > strverscmp_.c
 userspec_.c: userspec.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/userspec.c; then echo $(srcdir)/userspec.c; else echo userspec.c; fi` | $(ANSI2KNR) > userspec_.c
+utime_.c: utime.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/utime.c; then echo $(srcdir)/utime.c; else echo utime.c; fi` | $(ANSI2KNR) > utime_.c
 xgetcwd_.c: xgetcwd.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/xgetcwd.c; then echo $(srcdir)/xgetcwd.c; else echo xgetcwd.c; fi` | $(ANSI2KNR) > xgetcwd_.c
 xmalloc_.c: xmalloc.c $(ANSI2KNR)
@@ -383,8 +385,8 @@ modechange_.o mountlist_.o obstack_.o path-concat_.o posixtm_.o \
 quotearg_.o realloc_.o regex_.o rename_.o rmdir_.o rpmatch_.o \
 safe-read_.o save-cwd_.o savedir_.o stat_.o stpcpy_.o strcasecmp_.o \
 strdup_.o strftime_.o stripslash_.o strndup_.o strstr_.o strtol_.o \
-strtoul_.o strverscmp_.o userspec_.o xgetcwd_.o xmalloc_.o xstrdup_.o \
-xstrtol_.o xstrtoul_.o yesno_.o : $(ANSI2KNR)
+strtoul_.o strverscmp_.o userspec_.o utime_.o xgetcwd_.o xmalloc_.o \
+xstrdup_.o xstrtol_.o xstrtoul_.o yesno_.o : $(ANSI2KNR)
 
 tags: TAGS
 
