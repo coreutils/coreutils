@@ -1,3 +1,120 @@
+2004-09-21  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: The following commands now reject unknown options:
+	basename dirname factor hostname link nohup sync unlink yes
+	Also, pathchk no longer accepts trailing options.
+
+	* src/basename.c: Include <getopt.h>.
+	* src/chroot.c: Likewise.
+	* src/dirname.c: Likewise.
+	* src/factor.c: Likewise.
+	* src/hostid.c: Likewise.
+	* src/hostname.c: Likewise.
+	* src/nohup.c: Likewise.
+	* src/pwd.c: Likewise.
+	* src/setuidgid.c: Likewise.
+	* src/sync.c: Likewise.
+
+	* src/basename.c (main): Reject unknown options.
+	* src/dirname.c (main): Likewise.
+	* src/factor.c (main): Likewise.
+	* src/hostid.c (main): Likewise.
+	* src/hostname.c (main): Likewise.
+	* src/link.c (main): Likewise.
+	* src/nohup.c (main): Likewise.
+	* src/pwd.c (main): Likewise.
+	* src/setuidgid.c (main): Likewise.
+	* src/sync.c (main): Likewise.
+	* src/unlink.c (main): Likewise.
+	* src/yes.c (main): Likewise.
+
+	* src/cat.c (main): Remove unused "case 0".
+	* src/chgrp.c (main): Likewise.
+	* src/chmod.c (main): Likewise.
+	* src/chown.c (main): Likewise.
+	* src/comm.c (main): Likewise.
+	* src/cp.c (main): Likewise.
+	* src/csplit.c (main): Likewise.
+	* src/cut.c (main): Likewise.
+	* src/date.c (main): Likewise.
+	* src/df.c (main): Likewise.
+	* src/du.c (main): Likewise.
+	* src/env.c (main): Likewise.
+	* src/expand.c (main): Likewise.
+	* src/fold.c (main): Likewise.
+	* src/head.c (main): Likewise.
+	* src/id.c (main): Likewise.
+	* src/install.c (main): Likewise.
+	* src/join.c (main): Likewise.
+	* src/ln.c (main): Likewise.
+	* src/ls.c (decode_switches): Likewise.
+	* src/mkdir.c (main): Likewise.
+	* src/mkfifo.c (main): Likewise.
+	* src/mknode.c (main): Likewise.
+	* src/mv.c (main): Likewise.
+	* src/nl.c (main): Likewise.
+	* src/paste.c (main): Likewise.
+	* src/pinky.c (main): Likewise.
+	* src/pr.c (main): Likewise.
+	* src/ptx.c (main): Likewise.
+	* src/readlink.c (main): Likewise.
+	* src/rm.c (main): Likewise.
+	* src/rmdir.c (main): Likewise.
+	* src/seq.c (main): Likewise.
+	* src/shred.c (main): Likewise.
+	* src/split.c (main): Likewise.
+	* src/sum.c (main): Likewise.
+	* src/tac.c (main): Likewise.
+	* src/tail.c (main): Likewise.
+	* src/tee.c (main): Likewise.
+	* src/touch.c (main): Likewise.
+	* src/tr.c (main): Likewise.
+	* src/tty.c (main): Likewise.
+	* src/uname.c (main): Likewise.
+	* src/unexpand.c (main): Likewise.
+	* src/wc.c (main): Likewise.
+	* src/who.c (main): Likewise.
+
+	* src/chroot.c (main): Use getopt where it suffices, not getopt_long.
+	* src/cksum.c (main): Likewise.
+	* src/dd.c (main): Likewise.
+	* src/logname.c (main): Likewise.
+	* src/printenv.c (main): Likewise.
+	* src/sleep.c (main): Likewise.
+	* src/tsort.c (main): Likewise.
+	* src/uptime.c (main): Likewise.
+	* src/users.c (main): Likewise.
+	* src/whoami.c (main): Likewise.
+
+	* src/du.c (long_options): Standardize on NULL vs 0.
+	* src/rm.c (long_opts): Likewise.
+
+	* src/logname.c (long_options): Remove.
+	* src/printenv.c (long_options): Likewise.
+	* src/sleep.c (long_options): Likewise.
+	* src/tsort.c (long_options): Likewise.
+	* src/uptime.c (longopts): Likewise.
+	* src/users.c (longopts): Likewise.
+	* src/whoami.c (long_options): Likewise.
+
+	* src/pathchk.c (longopts): Add --help, --version.
+	(main): Use longopts rather than parse_long_options.
+	* src/stty.c (longpts, main): Likewise.
+
+	* src/pathchk.c (main): Don't reorder arguments, so that
+	we can check weird file names.
+
+	* src/readlink.c: Don't include "long-options.h".
+	* src/sort.c: Likewise.
+	* src/stty.c: Likewise.
+
+	* src/split.c (verbose): Now bool, not int.
+	(VERBOSE_OPTION): New enum.
+	(longopts, main): Use it.
+
+	* tests/factor/basic: Adjust to new wording in diagnostic
+	that results from the above changes.
+
 2004-09-21  Jim Meyering  <jim@meyering.net>
 
 	* man/rm.x: Say "the response is affirmative" rather than "the
