@@ -2,7 +2,7 @@
 
 /* Modified to run with the GNU shell by bfox. */
 
-/* Copyright (C) 1987-1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1987-1996, 1997, 1998 Free Software Foundation, Inc.
 
    This file is part of GNU Bash, the Bourne Again SHell.
 
@@ -880,7 +880,9 @@ two_arguments (void)
 
   if (STREQ (argv[pos], "!"))
     value = strlen (argv[pos+1]) == 0;
-  else if ((argv[pos][0] == '-') && (argv[pos][2] == '\0'))
+  else if (argv[pos][0] == '-'
+	   && argv[pos][1] != '\0'
+	   && argv[pos][2] == '\0')
     {
       if (unop (argv[pos][1]))
 	value = unary_operator ();
