@@ -96,7 +96,7 @@ static int show_version;
 
 static struct option const longopts[] =
 {
-  {"time", required_argument, 0, 130},
+  {"time", required_argument, 0, CHAR_MAX + 1},
   {"no-create", no_argument, 0, 'c'},
   {"date", required_argument, 0, 'd'},
   {"file", required_argument, 0, 'r'},
@@ -294,7 +294,7 @@ main (int argc, char **argv)
 	  date_set++;
 	  break;
 
-	case 130:
+	case CHAR_MAX + 1:
 	  i = argmatch (optarg, time_args);
 	  if (i < 0)
 	    {

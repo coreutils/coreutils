@@ -115,7 +115,7 @@ static int print_type;
 static struct option const long_options[] =
 {
   {"all", no_argument, NULL, 'a'},
-  {"block-size", required_argument, NULL, 131},
+  {"block-size", required_argument, NULL, CHAR_MAX + 3},
   {"inodes", no_argument, NULL, 'i'},
   {"human-readable", no_argument, NULL, 'h'},
   {"si", no_argument, NULL, 'H'},
@@ -124,8 +124,8 @@ static struct option const long_options[] =
   {"megabytes", no_argument, NULL, 'm'},
   {"portability", no_argument, NULL, 'P'},
   {"print-type", no_argument, NULL, 'T'},
-  {"sync", no_argument, NULL, 129},
-  {"no-sync", no_argument, NULL, 130},
+  {"sync", no_argument, NULL, CHAR_MAX + 1},
+  {"no-sync", no_argument, NULL, CHAR_MAX + 2},
   {"type", required_argument, NULL, 't'},
   {"exclude-type", required_argument, NULL, 'x'},
   {"help", no_argument, &show_help, 1},
@@ -654,14 +654,14 @@ main (int argc, char **argv)
 	case 'P':
 	  posix_format = 1;
 	  break;
-	case 129:
+	case CHAR_MAX + 1:
 	  require_sync = 1;
 	  break;
-	case 130:
+	case CHAR_MAX + 2:
 	  require_sync = 0;
 	  break;
 
-	case 131:
+	case CHAR_MAX + 3:
 	  human_block_size (optarg, 1, &output_block_size);
 	  break;
 
