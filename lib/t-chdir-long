@@ -49,6 +49,8 @@ for t in . /t /tmp /var/tmp; do
     if test "$TMPDIR" = . ; then
       (pwd|tr -d '\n'; sed 's/^\.//' in) > k; rm -f in; mv k in
     fi
-    diff -u in out > diff || { echo FAIL $t:$i; cut -b 1-35 diff; } && :
+    diff -u in out > diff \
+      || { echo FAIL $t:$i; cut -b 1-35 diff; } \
+      && rm -f diff in out
   done
 done
