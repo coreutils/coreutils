@@ -1,7 +1,7 @@
 Thu Mar 28 23:01:48 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* ChangeLog.0: New file.
-	* Makefile.am (EXTRA_DIST): Add ChangeLog.0
+	* Makefile.am (EXTRA_DIST): Add ChangeLog.0.
 
 Thu Mar 28 00:06:28 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
