@@ -1,3 +1,14 @@
+2004-06-01  Jim Meyering  <jim@meyering.net>
+
+	* src/env.c (main): Prefer the notation `STREQ (a, b)'
+	over `!strcmp (a, b)'.
+	* src/sort.c (main, sort_buffer_size): Prefer the notation
+	`STREQ (a, b)' over `strcmp (a, b) == 0'.
+	* src/date.c (batch_convert): Likewise.
+	* src/expr.c (nextarg): Likewise.
+	* src/su.c (correct_password, restricted_shell, main): Likewise.
+	* src/ptx.c (swallow_file_in_memory, main): Likewise.
+
 2004-05-13  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: echo compatibility cleanup.
