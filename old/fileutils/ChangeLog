@@ -13,7 +13,7 @@ Sun Jan  5 09:33:07 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 	due to pathologically long strings in locale tables.
 	Patch from Paul Eggert.
 	(print_long_format): Change references to BIGBUF in use of
-	FPUT macro to references to BUF.
+	FPUTS macro to references to BUF.
 	Use 11 (not 20) bytes for mode string buffer.
 
 Sat Jan  4 21:14:36 1997  Jim Meyering  <meyering@na-net.ornl.gov>
