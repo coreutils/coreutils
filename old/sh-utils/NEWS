@@ -1,4 +1,6 @@
 Changes in release 1.17
+ [1.16l]
+* false and true are now C programs rather than shell scripts
  [1.16k]
 * fix typos in my version of AC_SEARCH_LIBS.
 * fix dates on config files so builders don't need autoconf/automake
