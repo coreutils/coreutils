@@ -1,4 +1,4 @@
-#serial 5
+#serial 6
 
 dnl From Volker Borchert.
 dnl Determine whether rename works for source paths with a trailing slash.
@@ -43,8 +43,4 @@ AC_DEFUN([vb_FUNC_RENAME],
 ])
 
 # Prerequisites of lib/rename.c.
-AC_DEFUN([gl_PREREQ_RENAME],
-[
-  AC_CHECK_HEADERS_ONCE(stdlib.h string.h)
-  AC_CHECK_DECLS_ONCE(free)
-])
+AC_DEFUN([gl_PREREQ_RENAME], [:])
