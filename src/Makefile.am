@@ -4,7 +4,7 @@ EXTRA_PROGRAMS = chroot df hostid nice pinky stty su uname uptime users who
 EXTRA_SCRIPTS = nohup
 
 bin_SCRIPTS = groups $(OPTIONAL_BIN_ZCRIPTS)
-bin_PROGRAMS = chgrp chown chmod cp dd dircolors du \
+bin_PROGRAMS = [ chgrp chown chmod cp dd dircolors du \
   ginstall link ln dir vdir ls mkdir \
   mkfifo mknod mv readlink rm rmdir shred stat sync touch unlink \
   cat cksum comm csplit cut expand fmt fold head join md5sum \
@@ -129,6 +129,9 @@ uninstall-local:
 
 transform = s/ginstall/install/; @program_transform_name@
 ginstall_SOURCES = install.c copy.c cp-hash.c
+
+# This is for the '[' program.  Automake transliterates '[' to '_'.
+__SOURCES = lbracket.c
 
 cp_SOURCES = cp.c copy.c cp-hash.c
 dir_SOURCES = ls.c ls-dir.c
