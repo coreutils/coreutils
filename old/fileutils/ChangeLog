@@ -1,5 +1,10 @@
 1999-11-07  Jim Meyering  <meyering@ascend.com>
 
+	* configure.in (AC_OUTPUT): Add tests/dd/Makefile.
+	* tests/Makefile.am (SUBDIRS): Add rmdir.
+	* tests/rmdir: New directory
+	* tests/rmdir/ignore: New file.
+
 	* src/rmdir.c (remove_parents): Use the correct test (just as in
 	main) in handling --ignore-fail-on-non-empty.  From Michael Stone.
 	(usage): Improve description of --parents.  Based on suggestion from
