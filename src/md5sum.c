@@ -101,12 +101,20 @@ static bool warn = false;
 /* The name this program was run with.  */
 char *program_name;
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  STATUS_OPTION = CHAR_MAX + 1,
+  STRING_OPTION
+};
+
 static const struct option long_options[] =
 {
   { "binary", no_argument, 0, 'b' },
   { "check", no_argument, 0, 'c' },
-  { "status", no_argument, 0, 2 },
-  { "string", required_argument, 0, 1 },
+  { "status", no_argument, 0, STATUS_OPTION },
+  { "string", required_argument, 0, STRING_OPTION },
   { "text", no_argument, 0, 't' },
   { "warn", no_argument, 0, 'w' },
   { GETOPT_HELP_OPTION_DECL },
@@ -576,15 +584,10 @@ main (int argc, char **argv)
   while ((opt = getopt_long (argc, argv, "bctw", long_options, NULL)) != -1)
     switch (opt)
       {
-      case 0:			/* long option */
-	break;
-      case 1: /* --string */
+      case STRING_OPTION:
 	{
 	  if (string == NULL)
 	    string = xnmalloc (argc - 1, sizeof *string);
-
-	  if (optarg == NULL)
-	    optarg = "";
 	  string[n_strings++] = optarg;
 	}
 	break;
@@ -595,7 +598,7 @@ main (int argc, char **argv)
       case 'c':
 	do_check = true;
 	break;
-      case 2:
+      case STATUS_OPTION:
 	status_only = true;
 	warn = false;
 	break;
