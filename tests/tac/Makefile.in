@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4i from Makefile.am.
+# Makefile.in generated automatically by automake 1.4k from Makefile.am.
 
 # Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
 # Free Software Foundation, Inc.
@@ -66,6 +66,7 @@ CPP = @CPP@
 DATADIRNAME = @DATADIRNAME@
 DEPDIR = @DEPDIR@
 DF_PROG = @DF_PROG@
+EXEEXT = @EXEEXT@
 FESETROUND_LIBM = @FESETROUND_LIBM@
 GENCAT = @GENCAT@
 GETLOADAVG_LIBS = @GETLOADAVG_LIBS@
@@ -91,6 +92,7 @@ MAN = @MAN@
 MKINSTALLDIRS = @MKINSTALLDIRS@
 MSGFMT = @MSGFMT@
 NEED_SETGID = @NEED_SETGID@
+OBJEXT = @OBJEXT@
 OPTIONAL_BIN_PROGS = @OPTIONAL_BIN_PROGS@
 OPTIONAL_BIN_ZCRIPTS = @OPTIONAL_BIN_ZCRIPTS@
 PACKAGE = @PACKAGE@
@@ -105,8 +107,8 @@ USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 YACC = @YACC@
-_am_include = @_am_include@
-_am_quote = @_am_quote@
+am__include = @am__include@
+am__quote = @am__quote@
 install_sh = @install_sh@
 l = @l@
 
@@ -141,8 +143,6 @@ mk_script = $(srcdir)/../mk-script
 
 MAINTAINERCLEANFILES = $x-tests $(maint_gen)
 CLEANFILES = $(run_gen)
-EXEEXT =
-OBJEXT = o
 subdir = tests/tac
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
@@ -156,7 +156,7 @@ all: all-am
 .SUFFIXES:
 $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnits  tests/tac/Makefile
+	  $(AUTOMAKE) --gnu  tests/tac/Makefile
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && \
 	  CONFIG_HEADERS= CONFIG_LINKS= \
