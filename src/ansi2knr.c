@@ -1,4 +1,6 @@
-/* ansi2knr.c */
+/* Copyright (C) 1989, 1997 Aladdin Enterprises.  All rights reserved. */
+
+/*$Id: ansi2knr.c,v 1.8 1998/05/24 17:43:17 meyering Exp $*/
 /* Convert ANSI C function definitions to K&R ("traditional C") syntax */
 
 /*
@@ -11,9 +13,10 @@ License (the "GPL") for full details.
 Everyone is granted permission to copy, modify and redistribute ansi2knr,
 but only under the conditions described in the GPL.  A copy of this license
 is supposed to have been given to you along with ansi2knr so you can know
-your rights and responsibilities.  It should be in a file named COPYLEFT.
-Among other things, the copyright notice and this notice must be preserved
-on all copies.
+your rights and responsibilities.  It should be in a file named COPYLEFT,
+or, if there is no file named COPYLEFT, a file named COPYING.  Among other
+things, the copyright notice and this notice must be preserved on all
+copies.
 
 We explicitly state here what we believe is already implied by the GPL: if
 the ansi2knr program is distributed as a separate set of sources and a
@@ -26,7 +29,10 @@ program under the GPL.
 
 /*
  * Usage:
-	ansi2knr input_file [output_file]
+	ansi2knr [--filename FILENAME] [INPUT_FILE [OUTPUT_FILE]]
+ * --filename provides the file name for the #line directive in the output,
+ * overriding input_file (if present).
+ * If no input_file is supplied, input is read from stdin.
  * If no output_file is supplied, output goes to stdout.
  * There are no error messages.
  *
@@ -49,6 +55,11 @@ program under the GPL.
  * The original and principal author of ansi2knr is L. Peter Deutsch
  * <ghost@aladdin.com>.  Other authors are noted in the change history
  * that follows (in reverse chronological order):
+	lpd 97-12-08 made input_file optional; only closes input and/or
+		output file if not stdin or stdout respectively; prints
+		usage message on stderr rather than stdout; adds
+		--filename switch (changes suggested by
+		<ceder@lysator.liu.se>)
 	lpd 96-01-21 added code to cope with not HAVE_CONFIG_H and with
 		compilers that don't understand void, as suggested by
 		Tom Lane
@@ -169,11 +180,15 @@ int
 main(argc, argv)
     int argc;
     char *argv[];
-{	FILE *in, *out;
+{	FILE *in = stdin;
+	FILE *out = stdout;
+	char *filename = 0;
 #define bufsize 5000			/* arbitrary size */
 	char *buf;
 	char *line;
 	char *more;
+	char *usage =
+	  "Usage: ansi2knr [--filename FILENAME] [INPUT_FILE [OUTPUT_FILE]]\n";
 	/*
 	 * In previous versions, ansi2knr recognized a --varargs switch.
 	 * If this switch was supplied, ansi2knr would attempt to convert
@@ -184,41 +199,49 @@ main(argc, argv)
 	 */
 	int convert_varargs = 1;
 
-	if ( argc > 1 && argv[1][0] == '-' && argv[1][1] )
-	  {	if ( !strcmp(argv[1], "--varargs") )
-		  {	convert_varargs = 1;
-			argc--;
-			argv++;
-		  }
-		else
-		  {	fprintf(stderr, "Unrecognized switch: %s\n", argv[1]);
-			exit(1);
-		  }
+	while ( argc > 1 && argv[1][0] == '-' ) {
+	  if ( !strcmp(argv[1], "--varargs") ) {
+	    convert_varargs = 1;
+	    argc--;
+	    argv++;
+	    continue;
 	  }
+	  if ( !strcmp(argv[1], "--filename") && argc > 2 ) {
+	    filename = argv[2];
+	    argc -= 2;
+	    argv += 2;
+	    continue;
+	  }
+	  fprintf(stderr, "Unrecognized switch: %s\n", argv[1]);
+	  fprintf(stderr, usage);
+	  exit(1);
+	}
 	switch ( argc )
 	   {
 	default:
-		printf("Usage: ansi2knr input_file [output_file]\n");
+		fprintf(stderr, usage);
 		exit(0);
-	case 2:
-		out = stdout;
-		break;
 	case 3:
 		out = fopen(argv[2], "w");
-		if ( out == NULL )
-		   {	fprintf(stderr, "Cannot open output file %s\n", argv[2]);
-			exit(1);
-		   }
+		if ( out == NULL ) {
+		  fprintf(stderr, "Cannot open output file %s\n", argv[2]);
+		  exit(1);
+		}
+		/* falls through */
+	case 2:
+		in = fopen(argv[1], "r");
+		if ( in == NULL ) {
+		  fprintf(stderr, "Cannot open input file %s\n", argv[1]);
+		  exit(1);
+		}
+		if ( filename == 0 )
+		  filename = argv[1];
+		/* falls through */
+	case 1:
+		break;
 	   }
-	if ( argv[1][0] == '-' && !argv[1][1] )
-	   in = stdin;
-	else
-	   in = fopen(argv[1], "r");
-	if ( in == NULL )
-	   {	fprintf(stderr, "Cannot open input file %s\n", argv[1]);
-		exit(1);
-	   }
-	fprintf(out, "#line 1 \"%s\"\n", argv[1]);
+	if ( filename )
+	  fprintf(out, "#line 1 \"%s\"\n", filename);
 	buf = malloc(bufsize);
 	line = buf;
 	while ( fgets(line, (unsigned)(buf + bufsize - line), in) != NULL )
@@ -270,8 +293,10 @@ wl:			fputs(buf, out);
 	if ( line != buf )
 	  fputs(buf, out);
 	free(buf);
-	fclose(out);
-	fclose(in);
+	if ( out != stdout )
+	  fclose(out);
+	if ( in != stdin )
+	  fclose(in);
 	return 0;
 }
 
