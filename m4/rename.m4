@@ -12,29 +12,29 @@ AC_DEFUN(vb_FUNC_RENAME,
 [
  AC_CACHE_CHECK([whether rename is broken],
   vb_cv_func_rename_trailing_slash_bug,
-  [AC_TRY_RUN([
-#   include <stdio.h>
-
-    int
-    main ()
-    {
-      if (mkdir ("foo") < 0)
-        exit (1);
-      if (rename ("foo/", "bar") < 0)
-        { rmdir ("foo"); exit (1); }
-      else
-        { rmdir ("bar"); exit (0); }
-    }
-	  ],
-	 vb_cv_func_rename_trailing_slash_bug=no,
-	 vb_cv_func_rename_trailing_slash_bug=yes,
-	 dnl When crosscompiling, assume rename is broken.
-	 vb_cv_func_rename_trailing_slash_bug=yes)
+  [
+    if mkdir conftestdir; then
+      vb_cv_func_rename_trailing_slash_bug=no
+    else
+      AC_TRY_RUN([
+#         include <stdio.h>
+          int
+          main ()
+          {
+            exit (rename ("conftestdir/", "conftestdir2") ? 1 : 0);
+          }
+	],
+	vb_cv_func_rename_trailing_slash_bug=no,
+	vb_cv_func_rename_trailing_slash_bug=yes,
+	dnl When crosscompiling, assume rename is broken.
+	vb_cv_func_rename_trailing_slash_bug=yes)
+      rm -rf conftestdir conftestdir2
+    fi
   ])
   if test $vb_cv_func_rename_trailing_slash_bug = yes; then
     AC_LIBOBJ(rename)
     AC_DEFINE_UNQUOTED(RENAME_TRAILING_SLASH_BUG, 1,
 [Define if rename does not work for source paths with a trailing slash,
-   like the one from SunOS 4.1.1_U1. ])
+   like the one from SunOS 4.1.1_U1.])
   fi
 ])
