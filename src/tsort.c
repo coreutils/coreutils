@@ -534,8 +534,7 @@ tsort (const char *file)
       if (n_strings > 0)
 	{
 	  /* The input contains a loop.  */
-	  error (0, 0, _("%s: input contains a loop:"),
-		 (have_read_stdin ? "-" : file));
+	  error (0, 0, _("%s: input contains a loop:"), file);
 	  exit_status = 1;
 
 	  /* Print the loop and remove a relation to break it.  */
@@ -574,16 +573,13 @@ main (int argc, char **argv)
 
   have_read_stdin = 0;
 
-  if (optind + 1 < argc)
+  if (1 < argc - optind)
     {
       error (0, 0, _("only one argument may be specified"));
       usage (EXIT_FAILURE);
     }
 
-  if (optind < argc)
-    tsort (argv[optind]);
-  else
-    tsort ("-");
+  tsort (optind == argc ? "-" : argv[optind]);
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, _("standard input"));
