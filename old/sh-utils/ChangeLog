@@ -1,3 +1,12 @@
+Fri Aug  2 21:45:06 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (check for /proc/uptime): New check.
+	* acconfig.h (SAVE_PROC_UPTIME): #undef it.  Reorder so symbols
+	are sorted again.
+	*src/who-users.c (print_uptime) [HAVE_PROC_UPTIME]: Read from
+	/proc/uptime.
+	From Ulrich Drepper.
+
 Thu Aug  1 22:38:38 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (AC_REPLACE_GNU_GETOPT): No longer use it.
