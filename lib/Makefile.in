@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.1o from Makefile.am
+# Makefile.in generated automatically by automake 1.1p from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -130,7 +130,7 @@ AR = ar
 YLWRAP = $(srcdir)/ylwrap
 CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
-LINK = $(CC) $(LDFLAGS) -o $@
+LINK = $(CC) $(CFLAGS) $(LDFLAGS) -o $@
 HEADERS =  $(noinst_HEADERS)
 
 DIST_COMMON =  Makefile.am Makefile.in alloca.c basename.c chown.c \
@@ -230,9 +230,11 @@ maintainer-clean-tags:
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
 
 subdir = lib
+
 distdir: $(DISTFILES)
-	here=`cd $(top_builddir) && pwd`; top_distdir=`cd $$top_distdir && pwd` \
-	  && cd $(top_srcdir) \
+	here=`cd $(top_builddir) && pwd`; \
+	top_distdir=`cd $(top_distdir) && pwd`; \
+	cd $(top_srcdir) \
 	  && $(AUTOMAKE) --include-deps --build-dir=$$here --srcdir-name=$(top_srcdir) --output-dir=$$top_distdir --gnu lib/Makefile
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
@@ -260,10 +262,10 @@ distclean-depend:
 maintainer-clean-depend:
 	rm -rf .deps
 
-.deps/%.P: $(srcdir)/%.c
+.deps/%.P: %.c
 	@echo "Computing dependencies for $<..."
-	@o='o';				\
-	test -n "$o" && o='$$o';	\
+	@o='o'; \
+	test -n "$o" && o='$$o'; \
 	$(MKDEP) $< | sed "s,^\(.*\)\.o:,\1.$$o \1.l$$o $@:," > $@
 info:
 dvi:
@@ -296,7 +298,7 @@ clean-generic:
 
 distclean-generic:
 	rm -f Makefile $(DISTCLEANFILES)
-	rm -f config.cache config.log stamp-h
+	rm -f config.cache config.log stamp-h stamp-h[0-9]*
 	test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 
 maintainer-clean-generic:

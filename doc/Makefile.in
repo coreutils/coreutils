@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.1o from Makefile.am
+# Makefile.in generated automatically by automake 1.1p from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -199,7 +199,7 @@ install-info-am: $(INFO_DEPS)
 	  done; \
 	done
 	@$(POST_INSTALL)
-	@if $(SHELL) -c 'install-info --version' >/dev/null 2>&1; then \
+	@if $(SHELL) -c 'install-info --version | sed 1q | fgrep -s -v -i debian' >/dev/null 2>&1; then \
 	  for file in $(INFO_DEPS); do \
 	    echo " install-info --info-dir=$(infodir) $(infodir)/$$file";\
 	    install-info --info-dir=$(infodir) $(infodir)/$$file; :;\
@@ -208,7 +208,7 @@ install-info-am: $(INFO_DEPS)
 
 uninstall-info:
 	$(PRE_UNINSTALL)
-	if $(SHELL) -c 'install-info --version' >/dev/null 2>&1; then \
+	@if $(SHELL) -c 'install-info --version | sed 1q | fgrep -s -v -i debian' >/dev/null 2>&1; then \
 	  ii=yes; \
 	else ii=; fi; \
 	for file in $(INFO_DEPS); do \
@@ -249,9 +249,11 @@ TAGS:
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
 
 subdir = doc
+
 distdir: $(DISTFILES)
-	here=`cd $(top_builddir) && pwd`; top_distdir=`cd $$top_distdir && pwd` \
-	  && cd $(top_srcdir) \
+	here=`cd $(top_builddir) && pwd`; \
+	top_distdir=`cd $(top_distdir) && pwd`; \
+	cd $(top_srcdir) \
 	  && $(AUTOMAKE) --include-deps --build-dir=$$here --srcdir-name=$(top_srcdir) --output-dir=$$top_distdir --gnu doc/Makefile
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
@@ -259,7 +261,7 @@ distdir: $(DISTFILES)
 	  || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
 	  || cp -p $$d/$$file $(distdir)/$$file; \
 	done
-	$(MAKE) top_distdir="$(distdir)" distdir="$(distdir)" dist-info
+	$(MAKE) top_distdir="$(top_distdir)" distdir="$(distdir)" dist-info
 info: $(INFO_DEPS)
 dvi: $(DVIS)
 check: all
@@ -292,20 +294,20 @@ clean-generic:
 
 distclean-generic:
 	rm -f Makefile $(DISTCLEANFILES)
-	rm -f config.cache config.log stamp-h
+	rm -f config.cache config.log stamp-h stamp-h[0-9]*
 	test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 
 maintainer-clean-generic:
 	test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
 	test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
-mostlyclean:  mostlyclean-vti mostlyclean-info mostlyclean-generic
+mostlyclean:  mostlyclean-vti mostlyclean-aminfo mostlyclean-generic
 
-clean:  clean-vti clean-info clean-generic mostlyclean
+clean:  clean-vti clean-aminfo clean-generic mostlyclean
 
-distclean:  distclean-vti distclean-info distclean-generic clean
+distclean:  distclean-vti distclean-aminfo distclean-generic clean
 	rm -f config.status
 
-maintainer-clean:  maintainer-clean-vti maintainer-clean-info \
+maintainer-clean:  maintainer-clean-vti maintainer-clean-aminfo \
 		maintainer-clean-generic distclean
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."

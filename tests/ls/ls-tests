@@ -9,7 +9,7 @@ $echo testing program: $xx
 errors=0
 test "$srcdir" || srcdir=.
 test "$VERBOSE" && $xx --version 2> /dev/null
-$xx -b $srcdir/'""""" "' $srcdir/b > q1.O 2> q1.E
+$xx -b  > q1.O 2> q1.E
 code=$?
 if test $code != 0 ; then
   $echo "Test q1 failed: ../../src/ls return code $code differs from expected value 0" 1>&2
@@ -26,7 +26,7 @@ else
   esac
 fi
 test -s q1.E || rm -f q1.E
-$xx -b -Q $srcdir/'""""" "' $srcdir/b > q2.O 2> q2.E
+$xx -b -Q  > q2.O 2> q2.E
 code=$?
 if test $code != 0 ; then
   $echo "Test q2 failed: ../../src/ls return code $code differs from expected value 0" 1>&2
