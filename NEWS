@@ -1,4 +1,5 @@
 [4.5.5]
+* rm on FreeBSD can once again remove directories from NFS-mounted file systems
 * ls has a new option --dereference-command-line-symlink-to-dir, which
   corresponds to the new default behavior when none of -d, -l -F, -H, -L
   has been specified.
