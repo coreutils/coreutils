@@ -1,3 +1,8 @@
+2000-06-14  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/getdate.y (get_date): Apply relative times after time
+	zone indicator, not before.  Reported by Todd A. Jacobs.
+
 2000-06-13  Jim Meyering  <meyering@lucent.com>
 
 	* xstat.in [!HAVE_DECL_FREE]: Declare free in lstat.c.
