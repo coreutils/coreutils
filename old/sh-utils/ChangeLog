@@ -1,3 +1,12 @@
+2001-08-12  Jim Meyering  <meyering@lucent.com>
+
+	* src/pathchk.c (PATH_MAX_FOR): Use pathconf via wrapper.
+	(NAME_MAX_FOR): Likewise.
+	(pathconf_wrapper): New function.
+	(validate_path): Declare length variables to be `long', not `int'.
+	Adjust corresponding printf-style specs to use %ld.
+	Reported by Neal H Walfield.
+
 2001-08-07  Jim Meyering  <meyering@lucent.com>
 
 	* src/printf.c (cfcc_msg): Remove now-inaccurate part of comment.
