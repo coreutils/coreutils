@@ -996,10 +996,10 @@ opened.  (The exit status will still be nonzero, however.)
 @opindex -s
 Separate columns by a string @var{separator}. Don't use
 @samp{-s @var{separator}}, no space between flag and argument. If this
-option is omitted altogether, the default is a space, same as
-@samp{-s" "}. With @samp{-s} only, no separator is used, same as
-@samp{-s""}. @samp{-s} does not affect line truncation or column
-alignment.
+option is omitted altogether, the default is @key{TAB} together with
+@samp{-j} option and space otherwise (same as @samp{-s" "}). With
+@samp{-s} only, no separator is used (same as @samp{-s""}). @samp{-s}
+does not affect line truncation or column alignment.
 
 @item -t
 @opindex -t
