@@ -892,14 +892,15 @@ static struct obstack subdired_obstack;
 static struct obstack dev_ino_obstack;
 
 /* Push a pair onto the device/inode stack.  */
-#define DEV_INO_PUSH(Dev, Ino)					\
-  do								\
-    {								\
-      struct dev_ino di;					\
-      di.st_dev = (Dev);					\
-      di.st_ino = (Ino);					\
-      obstack_grow (&dev_ino_obstack, &di, sizeof (di));	\
-    }								\
+#define DEV_INO_PUSH(Dev, Ino)						\
+  do									\
+    {									\
+      struct dev_ino *di;						\
+      obstack_blank (&dev_ino_obstack, sizeof (struct dev_ino));	\
+      di = -1 + (struct dev_ino *) obstack_next_free (&dev_ino_obstack); \
+      di->st_dev = (Dev);						\
+      di->st_ino = (Ino);						\
+    }									\
   while (0)
 
 /* Pop a dev/ino struct off the global dev_ino_obstack
@@ -907,11 +908,9 @@ static struct obstack dev_ino_obstack;
 static struct dev_ino
 dev_ino_pop (void)
 {
-  struct dev_ino di;
-  assert (sizeof di <= obstack_object_size (&dev_ino_obstack));
-  obstack_blank (&dev_ino_obstack, -(int) (sizeof di));
-  di = *(struct dev_ino*) obstack_next_free (&dev_ino_obstack);
-  return di;
+  assert (sizeof (struct dev_ino) <= obstack_object_size (&dev_ino_obstack));
+  obstack_blank (&dev_ino_obstack, -(int) (sizeof (struct dev_ino)));
+  return *(struct dev_ino*) obstack_next_free (&dev_ino_obstack);
 }
 
 #define ASSERT_MATCHING_DEV_INO(Name, Di)	\
