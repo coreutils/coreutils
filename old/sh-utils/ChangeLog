@@ -1,7 +1,7 @@
 1999-08-29  Jim Meyering  <meyering@ascend.com>
 
 	* tests/date/Test.pm (test_vector): Add a test for the Risks-reported
-	problem with `Nov 11 1996'.
+	problem with syntax like this: Nov 11 1996.
 
 	* lib/getdate.y (get_date): Rename outermost local `probe' to `quarter'.
 	(get_date): Rename latter local `tm' to probe_tm.
