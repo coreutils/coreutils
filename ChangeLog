@@ -1,6 +1,12 @@
-2003-03-28  Jim Meyering  <jim@meyering.net>
+2003-03-29  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.12.
+
+	* README: Note to expect build problems for stat.c on Ultrix 4.3.
+	Note that there are some harmless test failures when running
+	`make check' as root on some systems.
+
+2003-03-28  Jim Meyering  <jim@meyering.net>
 
 	* tests/stty/row-col-1: Skip this test if stty can't get window size.
 	This happens when connecting to sparc-solaris2.7 via ssh from within
