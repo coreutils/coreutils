@@ -26,6 +26,11 @@
 	(SWAP_LINES): New macro.
 	(check_file): Use it here.
 
+	* src/uniq.c (check_file): Generate each line of output earlier,
+	when possible.  It is possible when using none of these options:
+	--count, -repeated, --all-repeated, --unique.
+	Based on a patch from Ian Turner.
+
 1999-08-15  Jim Meyering  <meyering@ascend.com>
 
 	* src/tail.c (ENOSYS): Define to a bogus value if not already defined.
