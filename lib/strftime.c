@@ -289,7 +289,7 @@ static const CHAR_T zeroes[16] = /* "0000000000000000" */
 	 else if (to_uppcase)						      \
 	   memcpy_uppcase (p, (s), _n);					      \
 	 else								      \
-	   MEMCPY ((PTR) p, (PTR) (s), _n))
+	   MEMCPY ((PTR) p, (const PTR) (s), _n))
 
 #ifdef COMPILE_WIDE
 # define widen(os, ws, l) \
@@ -793,10 +793,11 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	    goto bad_format;
 #ifdef _NL_CURRENT
 	  if (! (modifier == 'E'
-		 && (*(subfmt = (CHAR_T *) _NL_CURRENT (LC_TIME,
-							NLW(ERA_D_T_FMT)))
+		 && (*(subfmt =
+		       (const CHAR_T *) _NL_CURRENT (LC_TIME,
+						     NLW(ERA_D_T_FMT)))
 		     != '\0')))
-	    subfmt = (CHAR_T *) _NL_CURRENT (LC_TIME, NLW(D_T_FMT));
+	    subfmt = (const CHAR_T *) _NL_CURRENT (LC_TIME, NLW(D_T_FMT));
 #else
 # if HAVE_STRFTIME
 	  goto underlying_strftime;
@@ -887,10 +888,10 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	    goto bad_format;
 #ifdef _NL_CURRENT
 	  if (! (modifier == L_('E')
-		 && (*(subfmt = (CHAR_T *)_NL_CURRENT (LC_TIME,
-						       NLW(ERA_D_FMT)))
+		 && (*(subfmt =
+		       (const CHAR_T *)_NL_CURRENT (LC_TIME, NLW(ERA_D_FMT)))
 		     != L_('\0'))))
-	    subfmt = (CHAR_T *) _NL_CURRENT (LC_TIME, NLW(D_FMT));
+	    subfmt = (const CHAR_T *) _NL_CURRENT (LC_TIME, NLW(D_FMT));
 	  goto subformat;
 #else
 # if HAVE_STRFTIME
@@ -1073,8 +1074,9 @@ my_strftime (s, maxsize, format, tp ut_argument)
 
 	case L_('r'):		/* POSIX.2 extension.  */
 #ifdef _NL_CURRENT
-	  if (*(subfmt = (CHAR_T *) _NL_CURRENT (LC_TIME,
-						 NLW(T_FMT_AMPM))) == L_('\0'))
+	  if (*(subfmt = (const CHAR_T *) _NL_CURRENT (LC_TIME,
+						       NLW(T_FMT_AMPM)))
+	      == L_('\0'))
 #endif
 	    subfmt = L_("%I:%M:%S %p");
 	  goto subformat;
@@ -1129,10 +1131,10 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	    goto bad_format;
 #ifdef _NL_CURRENT
 	  if (! (modifier == L_('E')
-		 && (*(subfmt = (CHAR_T *) _NL_CURRENT (LC_TIME,
-							NLW(ERA_T_FMT)))
+		 && (*(subfmt =
+		       (const CHAR_T *) _NL_CURRENT (LC_TIME, NLW(ERA_T_FMT)))
 		     != L_('\0'))))
-	    subfmt = (CHAR_T *) _NL_CURRENT (LC_TIME, NLW(T_FMT));
+	    subfmt = (const CHAR_T *) _NL_CURRENT (LC_TIME, NLW(T_FMT));
 	  goto subformat;
 #else
 # if HAVE_STRFTIME
