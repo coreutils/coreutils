@@ -1,3 +1,11 @@
+2000-09-16  Jim Meyering  <meyering@lucent.com>
+
+	* doc/perm.texi (Changing Special Permissions): Remove this statement:
+	`a' in the USERS part of a symbolic mode does not cause the special
+	permissions to be affected...  It doesn't reflect what the code does
+	and isn't required by POSIX.  Reported by aldomel@ix.netcom.com via
+	Mike Stone.
+
 2000-09-15  Jim Meyering  <meyering@lucent.com>
 
 	* config.sub: Update from master repository.
