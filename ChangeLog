@@ -1,5 +1,13 @@
 2004-07-27  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/printf.c (strtiomax, strtoumax): Declare if not already
+	declared: this fixes a portability bug with Solaris 8 + GCC.
+	(STRTOX): Parenthesize use of macro arg as expression.
+	(vstrtoimax, vstrtoumax, vstrtold): Remove now-unnecessary
+	parentheses.
+	* configure.ac: Check for declaration of strtoumax, for
+	src/printf.c.
+
 	* src/Makefile.am (cp_LDADD, ginstall_LDADD, mv_LDADD,
 	pathchk_LDADD, rm_LDADD, test_LDADD): New vars, for eaccess.
 
