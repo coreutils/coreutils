@@ -12327,7 +12327,7 @@ scheduling priority of @var{command}; use @command{nice} for that,
 e.g., @samp{nohup nice @var{command}}.
 
 @var{command} must not be a special built-in utility (@pxref{Special
-built-in utilities})
+built-in utilities}).
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.  Options must precede operands.
