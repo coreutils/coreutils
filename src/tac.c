@@ -199,7 +199,6 @@ tac_stream (FILE *in, const char *file)
   char *separator1 = separator + 1; /* Speed optimization, non-regexp. */
   int match_length1 = match_length - 1; /* Speed optimization, non-regexp. */
   struct re_registers regs;
-  size_t x;
 
   /* Find the size of the input file. */
   file_pos = lseek (fileno (in), (off_t) 0, SEEK_END);
@@ -396,8 +395,13 @@ save_stdin (FILE **g_tmp, char **g_tempfile)
   tempfile = mktemp (template);
 
   fd = open (tempfile, O_RDWR | O_CREAT | O_TRUNC | O_EXCL, 0600);
-  if (fd == -1 || (tmp = fdopen (fd, "w+")) == NULL)
+  if (fd == -1)
     error (EXIT_FAILURE, errno, "%s", tempfile);
+
+  tmp = fdopen (fd, "w+");
+  if (tmp == NULL)
+    error (EXIT_FAILURE, errno, "%s", tempfile);
+
   unlink (tempfile);
 
   while ((bytes_read = fread (G_buffer, 1, read_size, stdin)) > 0
