@@ -43,7 +43,6 @@
 # define S_IWGRP 020
 #endif
 
-int gethostname ();
 char *ttyname ();
 
 /* The name this program was run with. */
@@ -458,11 +457,7 @@ scan_entries (size_t n, const STRUCT_UTMP *utmp_buf,
 
   while (n--)
     {
-      if (UT_USER (utmp_buf)[0]
-#ifdef USER_PROCESS
-	  && utmp_buf->ut_type == USER_PROCESS
-#endif
-	)
+      if (IS_USER_PROCESS (utmp_buf))
 	{
 	  if (argc_names)
 	    {
