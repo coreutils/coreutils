@@ -1,3 +1,9 @@
+2000-02-02  Jim Meyering  <meyering@lucent.com>
+
+	* prereq.m4 (jm_PREREQ_ADDEXT): Fix typo that resulted in no
+	definition of HAVE_PATHCONF: s/AC_CHECK_FUNC/AC_CHECK_FUNCS/.
+	Reported by Eli Zaretskii.
+
 2000-01-30  Jim Meyering  <meyering@lucent.com>
 
 	* lib-check.m4: Clean up some kludgy old shadow password tests.
