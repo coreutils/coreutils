@@ -1,3 +1,11 @@
+Sat Jun 15 22:21:09 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (ALL_LINGUAS): Add pt.
+	(AC_REPLACE_FUNCS): Add basename.
+
+	* Makefile.am (EXTRA_DIST): Add basename.c.
+	(fu_SOURCES): Remove basename.c.
+
 Thu Jun  6 21:57:08 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* po/Makefile.in.in: Update from gettext-0.10.16.
