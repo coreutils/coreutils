@@ -1,4 +1,7 @@
 Changes in release 1.23
+[1.22l]
+* `join -tC' now works when input contains trailing spaces
+* portability tweaks for Irix's cc
 [1.22k]
 * `sort -n' works with negative numbers when configured/compiled
    with --enable-nls
