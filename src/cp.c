@@ -1,5 +1,5 @@
 /* cp.c  -- file copying (main routines)
-   Copyright (C) 89, 90, 91, 1995-2000 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2001 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -172,6 +172,8 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
                                  special files like FIFOs or /dev/zero\n\
       --remove-destination     remove each existing destination file before\n\
                                  attempting to open it (contrast with --force)\n\
+"));
+      printf (_("\
       --sparse=WHEN            control creation of sparse files\n\
   -R, --recursive              copy directories recursively\n\
       --strip-trailing-slashes remove any trailing slashes from each SOURCE\n\
