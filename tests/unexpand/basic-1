@@ -23,7 +23,7 @@ my @Tests =
     (
      # These would infloop prior to textutils-2.0d.
      ['infloop-1', '-t', '1,2', {IN=> " \t\t "}, {OUT=>"junk\n"}],
-     ['infloop-2', '-t', '2,17', {IN=> "  \t\t "}, {OUT=>"junk\n"}],
+     ['infloop-2', '-t', '4,5', {IN=> ' 'x4 . "\t\t "}, {OUT=>"junk\n"}],
     );
 
 my $save_temps = $ENV{DEBUG};
