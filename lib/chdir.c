@@ -296,7 +296,7 @@ main (int argc, char *argv[])
       if (feof (stdin))
 	exit (0);
 
-      error (EXIT_FAILURE, saved_errno, "reading standard input");
+      error (EXIT_FAILURE, saved_errno, _("reading standard input"));
     }
   else if (len == 0)
     exit (0);
@@ -305,7 +305,7 @@ main (int argc, char *argv[])
     line[len-1] = '\0';
 
   if (rpl_chdir (line) != 0)
-    error (EXIT_FAILURE, errno, "chdir failed: %s", line);
+    error (EXIT_FAILURE, errno, _("chdir failed: %s"), line);
 
   {
     /* Using `pwd' here makes sense only if it is a robust implementation,
