@@ -1,5 +1,8 @@
 2004-04-08  Jim Meyering  <jim@meyering.net>
 
+	* src/md5sum.c (PROGRAM_NAME) [algorithm == ALG_SHA1]:
+	Correct spelling: s/shasum/sha1sum.  Reported by Jesse Kornblum.
+
 	* src/dd.c (set_fd_flags): Don't OR in -1 when fcntl fails.
 	Rename parameter, flags, to avoid shadowing global.
 	(LONGEST_SYMBOL): Tweak comment.
