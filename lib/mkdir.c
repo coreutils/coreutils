@@ -1,4 +1,4 @@
-/* mkrmdir.c -- BSD compatible directory functions for System V
+/* mkdir.c -- BSD compatible directory functions for System V
    Copyright (C) 1988, 1990 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -15,12 +15,35 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
+#ifdef HAVE_CONFIG_H
+#if defined (CONFIG_BROKETS)
+/* We use <config.h> instead of "config.h" so that a compilation
+   using -I. -I$srcdir will use ./config.h rather than $srcdir/config.h
+   (which it would do because it found this file in $srcdir).  */
+#include <config.h>
+#else
+#include "config.h"
+#endif
+#endif
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
 #ifndef STDC_HEADERS
 extern int errno;
 #endif
+
+#ifdef	STAT_MACROS_BROKEN
+#ifdef S_ISDIR
+#undef S_ISDIR
+#endif
+#endif	/* STAT_MACROS_BROKEN.  */
+
+#if !defined(S_ISDIR) && defined(S_IFDIR)
+#define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+#endif
+
+#include "safe-stat.h"
 
 /* mkdir and rmdir adapted from GNU tar.  */
 
@@ -43,7 +66,7 @@ mkdir (dpath, dmode)
   int cpid, status;
   struct stat statbuf;
 
-  if (stat (dpath, &statbuf) == 0)
+  if (SAFE_STAT (dpath, &statbuf) == 0)
     {
       errno = EEXIST;		/* stat worked, so it already exists.  */
       return -1;
@@ -92,10 +115,10 @@ rmdir (dpath)
   int cpid, status;
   struct stat statbuf;
 
-  if (stat (dpath, &statbuf) != 0)
+  if (SAFE_STAT (dpath, &statbuf) != 0)
     return -1;			/* stat set errno.  */
 
-  if ((statbuf.st_mode & S_IFMT) != S_IFDIR)
+  if (!S_ISDIR (statbuf.st_mode))
     {
       errno = ENOTDIR;
       return -1;
