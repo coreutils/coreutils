@@ -43,7 +43,7 @@ foreach $test_vector (@Test::t)
     open (IN, ">$in") || die "$0: $in: $!\n";
     print IN $input;
     close (IN) || die "$0: $in: $!\n";
-    open (EXP, ">$exp_name") || die "$0: $in: $!\n";
+    open (EXP, ">$exp_name") || die "$0: $exp_name: $!\n";
     print EXP $expected;
     close (EXP) || die "$0: $exp_name: $!\n";
     my $err_output = "t$test_name.err";
