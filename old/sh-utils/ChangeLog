@@ -37,7 +37,7 @@
 	* src/date.c (usage): Call close_stdout_status.
 	* src/printenv.c (usage): Likewise.
 
-	* tests/date/Test.pm ($Test::env{'rfc822-1'}): Add TZ=UTC.
+	* tests/date/Test.pm ($Test::env{'rfc822-1'}): Add TZ=UTC0.
 
 2000-05-06  Jim Meyering  <meyering@lucent.com>
 
