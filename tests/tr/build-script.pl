@@ -42,10 +42,11 @@ foreach $test_vector (@Test::t)
 
     open (IN, ">$in") || die "$0: $in: $!\n";
     print IN $input;
-    close (IN);
-    open (EXP, ">$exp_name") || die "$0: $in: $!\n";
+    close (IN) || die "$0: $in: $!\n";
+    open (EXP, ">$exp_name") || die "$0: $exp_name: $!\n";
     print EXP $expected;
-    close (EXP);
+    close (EXP) || die "$0: $exp_name: $!\n";
+
     my $err_output = "t$test_name.err";
     my $arg2 = ($s2 ? " '$s2'" : '');
     my $cmd = "\$xx $flags \'$s1\'$arg2 < \$srcdir/$in > $out 2> $err_output";
