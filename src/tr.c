@@ -1740,7 +1740,7 @@ read_and_delete (unsigned char *buf, size_t size, Filter not_used)
 static size_t
 read_and_xlate (unsigned char *buf, size_t size, Filter not_used)
 {
-  size_t chars_read = 0;
+  size_t bytes_read = 0;
   static int hit_eof = 0;
   size_t i;
 
@@ -1749,19 +1749,19 @@ read_and_xlate (unsigned char *buf, size_t size, Filter not_used)
   if (hit_eof)
     return 0;
 
-  chars_read = safe_read (0, (char *) buf, size);
-  if (chars_read == SAFE_READ_ERROR)
+  bytes_read = safe_read (0, (char *) buf, size);
+  if (bytes_read == SAFE_READ_ERROR)
     error (EXIT_FAILURE, errno, _("read error"));
-  if (chars_read == 0)
+  if (bytes_read == 0)
     {
       hit_eof = 1;
       return 0;
     }
 
-  for (i = 0; i < chars_read; i++)
+  for (i = 0; i < bytes_read; i++)
     buf[i] = xlate[buf[i]];
 
-  return chars_read;
+  return bytes_read;
 }
 
 /* Initialize a boolean membership set IN_SET with the character
@@ -2010,16 +2010,16 @@ construct in string1 must be aligned with a corresponding construct\n\
 	}
       else
 	{
-	  size_t chars_read;
+	  size_t bytes_read;
 
 	  do
 	    {
-	      chars_read = read_and_xlate (io_buf, IO_BUF_SIZE, NULL);
-	      if (chars_read > 0
-		  && fwrite ((char *) io_buf, 1, chars_read, stdout) == 0)
+	      bytes_read = read_and_xlate (io_buf, IO_BUF_SIZE, NULL);
+	      if (bytes_read > 0
+		  && fwrite ((char *) io_buf, 1, bytes_read, stdout) == 0)
 		error (EXIT_FAILURE, errno, _("write error"));
 	    }
-	  while (chars_read > 0);
+	  while (bytes_read > 0);
 	}
     }
 
