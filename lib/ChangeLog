@@ -1,6 +1,10 @@
+2003-02-02  Jim Meyering  <jim@meyering.net>
+
+	* ftw.c (lstat) [LSTAT_FOLLOWS_SLASHED_SYMLINK]: Define to rpl_lstat.
+
 2003-01-25  Jim Meyering  <jim@meyering.net>
 
-	* ftw.c [_LIBC] (ISSLASH, FILESYSTEM_PREFIX_LEN): Define.
+	* ftw.c (ISSLASH, FILESYSTEM_PREFIX_LEN) [_LIBC]: Define.
 	(base_name): New function.
 	(ftw_startup): Don't strip trailing slashes.
 	Use base_name to find the offset of the basename.
