@@ -59,8 +59,6 @@ main (int argc, char **argv)
   int adjustment = 0;
   int minusflag = 0;
   int adjustment_given = 0;
-  int long_option_priority = 0;
-  int last_optind = 0;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -81,47 +79,46 @@ main (int argc, char **argv)
 	    error (1, 0, _("invalid option `%s'"), s);
 
 	  minusflag = 1;
+	  /* FIXME: use strtol */
 	  adjustment = atoi (&s[2]);
 	  adjustment_given = 1;
-	  long_option_priority = 1;
 	  ++optind;
 	}
       else
 	{
-	  int optc;
-	  while ((optc = getopt_long (argc, argv, "+0123456789n:", longopts,
-				      (int *) 0)) != EOF)
+	  if (s[0] == '-' && ISDIGIT (s[1]))
 	    {
-	      switch (optc)
-		{
-		case '?':
-		  usage (1);
-
-		case 'n':
-		  if (!isinteger (optarg))
-		    error (1, 0, _("invalid priority `%s'"), optarg);
-		  adjustment = atoi (optarg);
-		  adjustment_given = 1;
-		  break;
-
-		default:
-		  assert (ISDIGIT (optc));
-		  /* Reset ADJUSTMENT if the last priority-specifying option
-		     was not of the same type or if it was, but a separate
-		     option.  */
-		  if (long_option_priority ||
-		      (adjustment_given && optind != last_optind))
-		    {
-		      long_option_priority = 0;
-		      adjustment = 0;
-		    }
-		  adjustment = adjustment * 10 + optc - '0';
-		  adjustment_given = 1;
-		  last_optind = optind;
-		}
+	      if (!isinteger (&s[1]))
+		error (1, 0, _("invalid option `%s'"), s);
+	      /* FIXME: use strtol */
+	      adjustment = atoi (&s[1]);
+	      adjustment_given = 1;
+	      ++optind;
 	    }
-	  if (optc == EOF)
-	    break;
+	  else
+	    {
+	      int optc;
+	      while ((optc = getopt_long (argc, argv, "+n:",
+					  longopts, (int *) 0)) != EOF)
+		{
+		  switch (optc)
+		    {
+		    case '?':
+		      usage (1);
+
+		    case 'n':
+		      if (!isinteger (optarg))
+			error (1, 0, _("invalid priority `%s'"), optarg);
+		      /* FIXME: use strtol */
+		      adjustment = atoi (optarg);
+		      adjustment_given = 1;
+		      break;
+		    }
+		}
+
+	      if (optc == EOF)
+		break;
+	    }
 	}
     }
 
