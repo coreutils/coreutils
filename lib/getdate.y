@@ -906,12 +906,15 @@ get_date (const char *p, const time_t *now)
   yyInput = p;
   Start = now ? *now : time ((time_t *) NULL);
   tmp = localtime (&Start);
+  if (!tmp)
+    return -1;
   yyYear = tmp->tm_year + TM_YEAR_ORIGIN;
   yyMonth = tmp->tm_mon + 1;
   yyDay = tmp->tm_mday;
   yyHour = tmp->tm_hour;
   yyMinutes = tmp->tm_min;
   yySeconds = tmp->tm_sec;
+  tm.tm_isdst = tmp->tm_isdst;
   yyMeridian = MER24;
   yyRelSeconds = 0;
   yyRelMinutes = 0;
@@ -947,7 +950,6 @@ get_date (const char *p, const time_t *now)
   tm.tm_hour += yyRelHour;
   tm.tm_min += yyRelMinutes;
   tm.tm_sec += yyRelSeconds;
-  tm.tm_isdst = -1;
   tm0 = tm;
 
   Start = mktime (&tm);
@@ -994,7 +996,11 @@ get_date (const char *p, const time_t *now)
 
   if (yyHaveZone)
     {
-      long delta = yyTimezone * 60L + difftm (&tm, gmtime (&Start));
+      long delta;
+      struct tm *gmt = gmtime (&Start);
+      if (!gmt)
+	return -1;
+      delta = yyTimezone * 60L + difftm (&tm, gmt);
       if ((Start + delta < Start) != (delta < 0))
 	return -1;		/* time_t overflow */
       Start += delta;
