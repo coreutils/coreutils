@@ -2,7 +2,7 @@
 
 /* Modified to run with the GNU shell by bfox. */
 
-/* Copyright (C) 1987-2000 Free Software Foundation, Inc.
+/* Copyright (C) 1987-2001 Free Software Foundation, Inc.
 
    This file is part of GNU Bash, the Bourne Again SHell.
 
@@ -390,7 +390,6 @@ binary_operator (void)
   struct stat stat_buf, stat_spare;
   intmax_t l, r;
   int value;
-  time_t lt, rt;
   /* Are the left and right integer expressions of the form '-l string'? */
   int l_is_l, r_is_l;
 
@@ -520,6 +519,7 @@ binary_operator (void)
 	  if (argv[op][2] == 't' && !argv[op][3])
 	    {
 	      /* nt - newer than */
+	      time_t lt, rt;
 	      pos += 3;
 	      if (l_is_l || r_is_l)
 		test_syntax_error (_("-nt does not accept -l\n"), NULL);
@@ -593,6 +593,7 @@ binary_operator (void)
 	  if ('t' == argv[op][2] && '\000' == argv[op][3])
 	    {
 	      /* ot - older than */
+	      time_t lt, rt;
 	      pos += 3;
 	      if (l_is_l || r_is_l)
 		test_syntax_error (_("-nt does not accept -l\n"), NULL);
@@ -626,7 +627,6 @@ binary_operator (void)
 static int
 unary_operator (void)
 {
-  intmax_t fd;
   int value;
   struct stat stat_buf;
 
@@ -785,18 +785,21 @@ unary_operator (void)
 #endif
 
     case 't':			/* File (fd) is a terminal? */
-      advance (0);
-      if (pos < argc)
-	{
-	  if (!isint (argv[pos], &fd))
-	    integer_expected_error (_("after -t"));
-	  advance (0);
-	}
-      else
-	{
-	  fd = 1;
-	}
-      return (TRUE == (fd == (int) fd && isatty (fd)));
+      {
+	intmax_t fd;
+	advance (0);
+	if (pos < argc)
+	  {
+	    if (!isint (argv[pos], &fd))
+	      integer_expected_error (_("after -t"));
+	    advance (0);
+	  }
+	else
+	  {
+	    fd = 1;
+	  }
+	return (TRUE == (fd == (int) fd && isatty (fd)));
+      }
 
     case 'n':			/* True if arg has some length. */
       unary_advance ();
