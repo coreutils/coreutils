@@ -203,6 +203,7 @@ AC_DEFUN([jm_MACROS],
     AC_LIBOBJ(mountlist)
   fi
   AC_REQUIRE([jm_AC_DOS])
+  AC_REQUIRE([AC_FUNC_CANONICALIZE_FILE_NAME])
 
 ])
 
