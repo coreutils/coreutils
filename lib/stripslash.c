@@ -19,10 +19,14 @@
 # include <config.h>
 #endif
 
-#if defined(STDC_HEADERS) || defined(HAVE_STRING_H)
+#if STDC_HEADERS || HAVE_STRING_H
 # include <string.h>
 #else
 # include <strings.h>
+#endif
+
+#ifndef ISSLASH
+# define ISSLASH(C) ((C) == '/')
 #endif
 
 /* Remove trailing slashes from PATH.
@@ -37,6 +41,6 @@ strip_trailing_slashes (char *path)
   int last;
 
   last = strlen (path) - 1;
-  while (last > 0 && path[last] == '/')
+  while (last > 0 && ISSLASH (path[last]))
     path[last--] = '\0';
 }
