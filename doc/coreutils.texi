@@ -2859,9 +2859,9 @@ last-resort comparison so that lines in which all fields compare equal
 are left in their original relative order.  If no fields or global
 options are specified, @option{--stable} (@option{-s}) has no effect.
 
-@sc{gnu} @command{sort} (as specified for all @sc{gnu} utilities) has no limits on
-input line length or restrictions on bytes allowed within lines.  In
-addition, if the final byte of an input file is not a newline, @sc{gnu}
+@sc{gnu} @command{sort} (as specified for all @sc{gnu} utilities) has no
+limit on input line length or restrictions on bytes allowed within lines.
+In addition, if the final byte of an input file is not a newline, @sc{gnu}
 @command{sort} silently supplies one.  A line's trailing newline is not
 part of the line for comparison purposes.
 
