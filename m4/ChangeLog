@@ -1,3 +1,9 @@
+2003-05-26  Jim Meyering  <jim@meyering.net>
+
+	* lib-ld.m4 (AC_LIB_PROG_LD_GNU): Use TAB-SP, not SP-TAB
+	when setting IFS.
+	* progtest.m4 (AM_PATH_PROG_WITH_TEST): Likewise.
+
 2003-05-06  Jim Meyering  <jim@meyering.net>
 
 	* getcwd-path-max.m4 (GL_FUNC_GETCWD_PATH_MAX): Check for the
