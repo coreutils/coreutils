@@ -1439,7 +1439,7 @@ when given a @var{file} of @samp{-}.  Synopses:
 @example
 tail [@var{option}]@dots{} [@var{file}]@dots{}
 tail -@var{number} [@var{option}]@dots{} [@var{file}]@dots{}
-tail +@var{number} [@var{option}]@dots{} [@var{file}]@dots{}
+tail +@var{number} [@var{option}]@dots{} [@var{file}]@dots{} # obsolescent
 @end example
 
 If more than one @var{file} is specified, @code{tail} prints a
@@ -1460,8 +1460,10 @@ typically 32k.  A more reliable and versatile way to reverse files is
 the @sc{gnu} @code{tac} command.
 
 @code{tail} accepts two option formats: the new one, in which numbers
-are arguments to the options (@samp{-n 1}), and the old one, in which
-the number precedes any option letters (@samp{-1} or @samp{+1}).
+are arguments to the options (@samp{-n 1}), and the obsolescent one, in
+which the number precedes any option letters (@samp{-1} or @samp{+1}).
+Warning: support for the @samp{+1} form will be withdrawn, as future
+versions of @sc{posix} will not allow it.
 
 If any option-argument is a number @var{n} starting with a @samp{+},
 @code{tail} begins printing with the @var{n}th item from the start of
@@ -1479,6 +1481,10 @@ This option is only recognized if it is specified first.  @var{count} is
 a decimal number optionally followed by a size letter (@samp{b},
 @samp{k}, @samp{m}) as in @code{-c}, or @samp{l} to mean count by lines,
 or other option letters (@samp{cfqv}).
+
+Warning: the @samp{+@var{count}} usage is obsolescent.  Future versions
+of @sc{posix} will require that support for it be withdrawn.  Use
+@samp{-n +@var{count}} instead.
 
 @item -c @var{bytes}
 @itemx --bytes=@var{bytes}
@@ -2352,10 +2358,14 @@ reliably handle arbitrary pathnames (even those which contain Line Feed
 characters.)
 
 @item +@var{pos1}[-@var{pos2}]
-The obsolete, traditional option for specifying a sort field.  The field
+The obsolescent, traditional option for specifying a sort field.  The field
 consists of the line between @var{pos1} and up to but @emph{not including}
 @var{pos2} (or the end of the line if @var{pos2} is omitted).  Fields
 and character positions are numbered starting with 0.  See below.
+
+Warning: the @samp{+@var{pos}} usage is obsolescent.  Future versions of
+@sc{posix} will require that support for it be withdrawn.  Use
+@option{-k} instead.
 
 @end table
 
@@ -2393,7 +2403,7 @@ Keys may span multiple fields.
 
 Here are some examples to illustrate various combinations of options.
 In them, the @sc{posix} @samp{-k} option is used to specify sort keys rather
-than the obsolete @samp{+@var{pos1}-@var{pos2}} syntax.
+than the obsolescent @samp{+@var{pos1}-@var{pos2}} syntax.
 
 @itemize @bullet
 
@@ -2536,6 +2546,10 @@ each other by at least one space or tab.
 @opindex --skip-chars
 Skip @var{n} characters before checking for uniqueness.  If you use both
 the field and character skipping options, fields are skipped over first.
+
+Warning: the @samp{+@var{n}} usage is obsolescent.  Future versions of
+@sc{posix} will require that support for it be withdrawn.  Use @samp{-s
+@var{n}} instead.
 
 @item -c
 @itemx --count
