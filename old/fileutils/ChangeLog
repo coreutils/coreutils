@@ -1,5 +1,7 @@
 2001-02-03  Jim Meyering  <meyering@lucent.com>
 
+	* config.guess: Update from master repository.
+
 	* Makefile.maint (a_host): Use fencepost.
 	(real_dir): Use the same name for both.
 	(alpha): Print commands for both hosts.
