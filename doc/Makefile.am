@@ -34,6 +34,7 @@ check-texinfo:
 	grep non-zero $(srcdir)/*.texi && fail=1; \
 	grep -w NUL $(srcdir)/*.texi && fail=1; \
 	grep '\$$@"' $(srcdir)/*.texi && fail=1; \
+	grep -n '[^[:punct:]]@footnote' $(srcdir)/*.texi && fail=1; \
 	grep -n filename $(srcdir)/*.texi|grep -vE 'setfilename|{filename}' \
 	  && fail=1; \
 	$(PERL) -e 1 2> /dev/null && { $(PERL) -ne \
