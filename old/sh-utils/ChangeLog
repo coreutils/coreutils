@@ -267,6 +267,7 @@ Thu Jan 26 23:38:04 1995  Jim Meyering  (meyering@comco.com)
 
 Sat Dec 31 09:25:09 1994  Jim Meyering  (meyering@comco.com)
 
+	* factor.c: New file.
 	* Makefile.in (PROGS): Add factor.
 	* src/Makefile.in (SOURCES, OBJECTS, PROGS): Add factor.
 	(factor): New rule.
