@@ -316,6 +316,9 @@ toarith (v)
     case string:
       i = 0;
       cp = v->u.s;
+      /* Don't interpret the empty string as an integer.  */
+      if (*cp == 0)
+	return 0;
       neg = (*cp == '-');
       if (neg)
 	cp++;

@@ -64,7 +64,6 @@
 #endif
 
 #ifndef STDC_HEADERS
-time_t mktime ();
 size_t strftime ();
 time_t time ();
 #endif
@@ -269,6 +268,7 @@ FORMAT controls the output.  Interpreted sequences are:\n\
   %%n   a newline\n\
   %%p   locale's AM or PM\n\
   %%r   time, 12-hour (hh:mm:ss [AP]M)\n\
+  %%s   seconds since 00:00:00, Jan 1, 1970 (a nonstandard extension)\n\
   %%t   a horizontal tab\n\
   %%w   day of week (0..6)\n\
   %%x   locale's date representation (mm/dd/yy)\n\

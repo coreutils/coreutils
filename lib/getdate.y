@@ -315,6 +315,12 @@ date	: tUNUMBER '/' tUNUMBER {
 	    yyMonth = -$2;
 	    yyDay = -$3;
 	}
+	| tUNUMBER tMONTH tSNUMBER {
+	    /* e.g. 17-JUN-1992.  */
+	    yyDay = $1;
+	    yyMonth = $2;
+	    yyYear = -$3;
+	}
 	| tMONTH tUNUMBER {
 	    yyMonth = $1;
 	    yyDay = $2;

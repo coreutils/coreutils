@@ -46,6 +46,7 @@
    %p	locale's AM or PM
    %r	time, 12-hour (hh:mm:ss [AP]M)
    %R	time, 24-hour (hh:mm)
+   %s   time in seconds since 00:00:00, Jan 1, 1970 (a nonstandard extension)
    %S	second (00..61)
    %T	time, 24-hour (hh:mm:ss)
    %X	locale's time representation (%H:%M:%S)
@@ -84,11 +85,16 @@
 #endif
 #endif
 
+#include <stdio.h>
 #include <sys/types.h>
 #if defined(TM_IN_SYS_TIME) || (!defined(HAVE_TM_ZONE) && !defined(HAVE_TZNAME))
 #include <sys/time.h>
 #else
 #include <time.h>
+#endif
+
+#ifndef STDC_HEADERS
+time_t mktime ();
 #endif
 
 #if defined(HAVE_TZNAME)
@@ -175,7 +181,7 @@ add_num3 (string, num, max, pad)
 static int
 add_str (to, from, max)
      char *to;
-     char *from;
+     const char *from;
      int max;
 {
   int i;
@@ -183,6 +189,25 @@ add_str (to, from, max)
   for (i = 0; from[i] && i <= max; ++i)
     to[i] = from[i];
   return i;
+}
+
+static int
+add_num_time_t (string, max, num)
+     char *string;
+     int max;
+     time_t num;
+{
+  /* This buffer is large enough to hold the character representation
+     (including the trailing NUL) of any unsigned decimal quantity
+     whose binary representation fits in 128 bits.  */
+  char buf[40];
+  int length;
+
+  if (sizeof (num) > 16)
+    abort ();
+  sprintf (buf, "%lu", (unsigned long) num);
+  length = add_str (string, buf, max);
+  return length;
 }
 
 /* Return the week in the year of the time in TM, with the weeks
@@ -330,6 +355,16 @@ strftime (string, max, format, tm)
 	      length +=
 		strftime (&string[length], max - length, "%H:%M", tm);
 	      break;
+
+	    case 's':
+	      {
+		struct tm writable_tm;
+		writable_tm = *tm;
+		length += add_num_time_t (&string[length], max - length,
+					  mktime (&writable_tm));
+	      }
+	      break;
+
 	    case 'S':
 	      length +=
 		add_num2 (&string[length], tm->tm_sec, max - length, pad);
