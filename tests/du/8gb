@@ -30,7 +30,10 @@ if test $? != 0; then
 fi
 
 fail=0
+
+# This would print `0	big' with coreutils-4.5.8.
 du -ab big > out || fail=1
+
 cat <<\EOF > exp
 8589934592	big
 EOF
