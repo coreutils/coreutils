@@ -62,7 +62,7 @@ int yesno ();
 int safe_read ();
 int full_write ();
 void strip_trailing_slashes ();
-int eaccess_stat ();
+int euidaccess ();
 char *stpcpy ();
 
 static int copy_reg ();
@@ -276,7 +276,7 @@ do_move (source, dest)
 	return 0;
 
       if (!override_mode && (interactive || stdin_tty)
-	  && eaccess_stat (&dest_stats, W_OK, dest))
+	  && euidaccess (dest, W_OK))
 	{
 	  fprintf (stderr, "%s: replace `%s', overriding mode %04o? ",
 		   program_name, dest,
