@@ -1,6 +1,10 @@
-2003-04-21  Jim Meyering  <jim@meyering.net>
+2003-04-24  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* tests/tsort/basic-1: Test for the above fix.
+
+2003-04-21  Jim Meyering  <jim@meyering.net>
 
 	* tests/misc/printf: Add tests for the printf fixes below.
 
