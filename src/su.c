@@ -397,8 +397,12 @@ run_shell (const char *shell, const char *command, char **additional_args)
       args[argno++] = *additional_args;
   args[argno] = NULL;
   execv (shell, (char **) args);
-  error (0, errno, _("cannot run %s"), shell);
-  exit (1);
+
+  {
+    int exit_status = (errno == ENOENT ? 127 : 126);
+    error (0, errno, "%s", shell);
+    exit (exit_status);
+  }
 }
 
 /* Return 1 if SHELL is a restricted shell (one not returned by
