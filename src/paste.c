@@ -63,17 +63,17 @@ static FILE dummy_endlist;
 char *program_name;
 
 /* If nonzero, we have read standard input at some point. */
-static int have_read_stdin;
+static bool have_read_stdin;
 
 /* If nonzero, merge subsequent lines of each file rather than
    corresponding lines from each file in parallel. */
-static int serial_merge;
+static bool serial_merge;
 
 /* The delimeters between lines of input files (used cyclically). */
 static char *delims;
 
 /* A pointer to the character after the end of `delims'. */
-static char *delim_end;
+static char const *delim_end;
 
 static struct option const longopts[] =
 {
@@ -84,19 +84,16 @@ static struct option const longopts[] =
   {0, 0, 0, 0}
 };
 
-/* Replace backslash representations of special characters in
-   STRPTR with their actual values.
-   The set of possible backslash characters has been expanded beyond
-   that recognized by the Unix version.
+/* Set globals delims and delim_end.  Copy STRPTR to DELIMS, converting
+   backslash representations of special characters in STRPTR to their actual
+   values. The set of possible backslash characters has been expanded beyond
+   that recognized by the Unix version.  */
 
-   Return a pointer to the character after the new end of STRPTR. */
-
-static char *
-collapse_escapes (char *strptr)
+static void
+collapse_escapes (char const *strptr)
 {
-  register char *strout;
-
-  strout = strptr;		/* Start at the same place, anyway. */
+  char *strout = xstrdup (strptr);
+  delims = strout;
 
   while (*strptr)
     {
@@ -141,7 +138,7 @@ collapse_escapes (char *strptr)
 	  strptr++;
 	}
     }
-  return strout;
+  delim_end = strout;
 }
 
 /* Perform column paste on the NFILES files named in FNAMPTR.
@@ -149,29 +146,20 @@ collapse_escapes (char *strptr)
    opened or read. */
 
 static int
-paste_parallel (int nfiles, char **fnamptr)
+paste_parallel (size_t nfiles, char **fnamptr)
 {
   int errors = 0;		/* 1 if open or read errors occur. */
-  /* Number of files for which space is allocated in `delbuf' and `fileptr'.
-     Enlarged as necessary. */
-  int file_list_size = 12;
-  int chr IF_LINT (= 0);	/* Input character. */
-  int line_length;		/* Number of chars in line. */
-  int somedone;			/* 0 if all files empty for this line. */
   /* If all files are just ready to be closed, or will be on this
      round, the string of delimiters must be preserved.
-     delbuf[0] through delbuf[file_list_size]
+     delbuf[0] through delbuf[nfiles]
      store the delimiters for closed files. */
   char *delbuf;
-  size_t delims_saved;		/* Number of delims saved in `delbuf'. */
-  register char *delimptr;	/* Cycling pointer into `delims'. */
   FILE **fileptr;		/* Streams open to the files to process. */
-  int files_open;		/* Number of files still open to process. */
-  int i;			/* Loop index. */
-  int opened_stdin = 0;		/* Nonzero if any fopen got fd 0. */
+  size_t files_open;		/* Number of files still open to process. */
+  bool opened_stdin = false;	/* true if any fopen got fd == STDIN_FILENO */
 
-  delbuf = xmalloc (file_list_size + 2);
-  fileptr = xmalloc ((file_list_size + 1) * sizeof *fileptr);
+  delbuf = xmalloc (nfiles + 2);
+  fileptr = xnmalloc (nfiles + 1, sizeof *fileptr);
 
   /* Attempt to open all files.  This could be expanded to an infinite
      number of files, but at the (considerable) expense of remembering
@@ -179,15 +167,9 @@ paste_parallel (int nfiles, char **fnamptr)
 
   for (files_open = 0; files_open < nfiles; ++files_open)
     {
-      if (files_open == file_list_size - 2)
-	{
-	  file_list_size += 12;
-	  delbuf = xrealloc (delbuf, file_list_size + 2);
-	  fileptr = xrealloc (fileptr, (file_list_size + 1) * sizeof *fileptr);
-	}
       if (STREQ (fnamptr[files_open], "-"))
 	{
-	  have_read_stdin = 1;
+	  have_read_stdin = true;
 	  fileptr[files_open] = stdin;
 	}
       else
@@ -195,8 +177,8 @@ paste_parallel (int nfiles, char **fnamptr)
 	  fileptr[files_open] = fopen (fnamptr[files_open], "r");
 	  if (fileptr[files_open] == NULL)
 	    error (EXIT_FAILURE, errno, "%s", fnamptr[files_open]);
-	  else if (fileno (fileptr[files_open]) == 0)
-	    opened_stdin = 1;
+	  else if (fileno (fileptr[files_open]) == STDIN_FILENO)
+	    opened_stdin = true;
 	}
     }
 
@@ -212,13 +194,15 @@ paste_parallel (int nfiles, char **fnamptr)
   while (files_open)
     {
       /* Set up for the next line. */
-      somedone = 0;
-      delimptr = delims;
-      delims_saved = 0;
+      bool somedone = false;
+      char const *delimptr = delims;
+      size_t delims_saved = 0;	/* Number of delims saved in `delbuf'. */
+      size_t i;
 
       for (i = 0; fileptr[i] != ENDLIST && files_open; i++)
 	{
-	  line_length = 0;	/* Clear so we can easily detect EOF. */
+	  char chr IF_LINT (= 0);	/* Input character. */
+	  size_t line_length = 0;	/* Number of chars in line. */
 	  if (fileptr[i] != CLOSED)
 	    {
 	      chr = getc (fileptr[i]);
@@ -289,7 +273,7 @@ paste_parallel (int nfiles, char **fnamptr)
 	  else
 	    {
 	      /* Some data read. */
-	      somedone++;
+	      somedone = true;
 
 	      /* Except for last file, replace last newline with delim. */
 	      if (fileptr[i + 1] != ENDLIST)
@@ -311,6 +295,8 @@ paste_parallel (int nfiles, char **fnamptr)
 	    }
 	}
     }
+  free (fileptr);
+  free (delbuf);
   return errors;
 }
 
@@ -319,19 +305,19 @@ paste_parallel (int nfiles, char **fnamptr)
    opened or read. */
 
 static int
-paste_serial (int nfiles, char **fnamptr)
+paste_serial (size_t nfiles, char **fnamptr)
 {
   int errors = 0;		/* 1 if open or read errors occur. */
-  register int charnew, charold; /* Current and previous char read. */
-  register char *delimptr;	/* Current delimiter char. */
-  register FILE *fileptr;	/* Open for reading current file. */
+  int charnew, charold; /* Current and previous char read. */
+  char const *delimptr;	/* Current delimiter char. */
+  FILE *fileptr;	/* Open for reading current file. */
 
   for (; nfiles; nfiles--, fnamptr++)
     {
       int saved_errno;
       if (STREQ (*fnamptr, "-"))
 	{
-	  have_read_stdin = 1;
+	  have_read_stdin = true;
 	  fileptr = stdin;
 	}
       else
@@ -435,7 +421,7 @@ int
 main (int argc, char **argv)
 {
   int optc, exit_status;
-  char default_delims[2], zero_delims[3];
+  char const *delim_arg = "\t";
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -445,11 +431,8 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  have_read_stdin = 0;
-  serial_merge = 0;
-  delims = default_delims;
-  strcpy (delims, "\t");
-  strcpy (zero_delims, "\\0");
+  have_read_stdin = false;
+  serial_merge = false;
 
   while ((optc = getopt_long (argc, argv, "d:s", longopts, NULL)) != -1)
     {
@@ -461,12 +444,12 @@ main (int argc, char **argv)
 	case 'd':
 	  /* Delimiter character(s). */
 	  if (optarg[0] == '\0')
-	    optarg = zero_delims;
-	  delims = optarg;
+	    optarg = "\\0";
+	  delim_arg = optarg;
 	  break;
 
 	case 's':
-	  serial_merge++;
+	  serial_merge = true;
 	  break;
 
 	case_GETOPT_HELP_CHAR;
@@ -481,12 +464,15 @@ main (int argc, char **argv)
   if (optind == argc)
     argv[argc++] = "-";
 
-  delim_end = collapse_escapes (delims);
+  collapse_escapes (delim_arg);
 
   if (!serial_merge)
     exit_status = paste_parallel (argc - optind, &argv[optind]);
   else
     exit_status = paste_serial (argc - optind, &argv[optind]);
+
+  free (delims);
+
   if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, "-");
   exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
