@@ -1,5 +1,10 @@
 2005-01-25  Jim Meyering  <jim@meyering.net>
 
+	* path-concat.c: Don't include assert.h.
+	(path_concat): Remove assertion that would have triggered
+	for ABASE starting with more than one slash.
+	Reported by Andreas Schwab.
+
 	* path-concat.c (path_concat): Set *BASE_IN_RESULT
 	properly when ABASE is an absolute file name.
 	Correct the description of this function.
