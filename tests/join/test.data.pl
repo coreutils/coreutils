@@ -22,3 +22,7 @@
 ('4c', '-v 1', "a 1\nb\n", "b\n",        "a 1\n",       0);
 ('4d', '-v 2', "a 1\nb\n", "b\n",        "",            0);
 ('4e', '-v 2', "b\n",      "a 1\nb\n",   "a 1\n",       0);
+('5a', '-a1 -e - -o 1.1 2.2', "a 1\nb 2\n",  "a 11\nb\n", "a 11\nb -\n", 0);
+('5b', '-a1 -e - -o 1.1 2.2', "apr 15\naug 20\ndec 18\nfeb 05\n",  "apr 06\naug 14\ndate\nfeb 15", "apr 06\naug 14\ndec -\nfeb 15\n", 0);
+('5c', '-a1 -e - -o 1.1 2.2', "aug 20\ndec 18\n",  "aug 14\ndate\nfeb 15", "aug 14\ndec -\n", 0);
+('5d', '-a1 -e - -o 1.1 2.2', "dec 18\n",  "", "dec -\n", 0);

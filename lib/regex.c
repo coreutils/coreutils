@@ -49,9 +49,12 @@
 #include "buffer.h"
 #include "syntax.h"
 
-#define WIDE_INT EMACS_INT
-
 #else  /* not emacs */
+
+/* If we are not linking with Emacs proper,
+   we can't use the relocating allocator
+   even if config.h says that we can.  */
+#undef REL_ALLOC
 
 #ifdef STDC_HEADERS
 #include <stdlib.h>
@@ -59,11 +62,6 @@
 char *malloc ();
 char *realloc ();
 #endif
-
-/* This isn't right--it needs to check for machines with 64-bit pointers
-   and do something different.  But I don't know what, and I don't
-   need to deal with it right now.  -- rms.  */
-#define WIDE_INT int
 
 /* We used to test for `BSTRING' here, but only GCC and Emacs define
    `BSTRING', as far as I know, and neither of them use this code.  */
@@ -962,8 +960,11 @@ static const char *re_error_msgid[] =
 #endif
 
 /* The match routines may not allocate if (1) they would do it with malloc
-   and (2) it's not safe for them to use malloc.  */
-#if (defined (C_ALLOCA) || defined (REGEX_MALLOC)) && (defined (emacs) || defined (REL_ALLOC))
+   and (2) it's not safe for them to use malloc.
+   Note that if REL_ALLOC is defined, matching would not use malloc for the
+   failure stack, but we would still use it for the register vectors;
+   so REL_ALLOC should not affect this.  */
+#if (defined (C_ALLOCA) || defined (REGEX_MALLOC)) && defined (emacs)
 #undef MATCH_MAY_ALLOCATE
 #endif
 
@@ -984,13 +985,19 @@ static const char *re_error_msgid[] =
    exactly that if always used MAX_FAILURE_SPACE each time we failed.
    This is a variable only so users of regex can assign to it; we never
    change it ourselves.  */
-#ifdef REL_ALLOC
-int re_max_failures = 20000000;
+#if defined (MATCH_MAY_ALLOCATE)
+int re_max_failures = 200000;
 #else
 int re_max_failures = 2000;
 #endif
 
-typedef unsigned char *fail_stack_elt_t;
+union fail_stack_elt
+{
+  unsigned char *pointer;
+  int integer;
+};
+
+typedef union fail_stack_elt fail_stack_elt_t;
 
 typedef struct
 {
@@ -1002,7 +1009,6 @@ typedef struct
 #define FAIL_STACK_EMPTY()     (fail_stack.avail == 0)
 #define FAIL_STACK_PTR_EMPTY() (fail_stack_ptr->avail == 0)
 #define FAIL_STACK_FULL()      (fail_stack.avail == fail_stack.size)
-#define FAIL_STACK_TOP()       (fail_stack.stack[fail_stack.avail])
 
 
 /* Initialize `fail_stack'.  Do `return -2' if the alloc fails.  */
@@ -1048,34 +1054,39 @@ typedef struct
          1)))
 
 
-/* Push PATTERN_OP on FAIL_STACK. 
-
+/* Push pointer POINTER on FAIL_STACK. 
    Return 1 if was able to do so and 0 if ran out of memory allocating
    space to do so.  */
-#define PUSH_PATTERN_OP(pattern_op, fail_stack)				\
+#define PUSH_PATTERN_OP(POINTER, FAIL_STACK)				\
   ((FAIL_STACK_FULL ()							\
-    && !DOUBLE_FAIL_STACK (fail_stack))					\
+    && !DOUBLE_FAIL_STACK (FAIL_STACK))					\
    ? 0									\
-   : ((fail_stack).stack[(fail_stack).avail++] = pattern_op,		\
+   : ((FAIL_STACK).stack[(FAIL_STACK).avail++].pointer = POINTER,	\
       1))
 
 /* Push a pointer value onto the failure stack.
    Assumes the variable `fail_stack'.  Probably should only
    be called from within `PUSH_FAILURE_POINT'.  */
 #define PUSH_FAILURE_POINTER(item)					\
-  fail_stack.stack[fail_stack.avail++] = (fail_stack_elt_t) (item)
+  fail_stack.stack[fail_stack.avail++].pointer = (unsigned char *) (item)
 
 /* This pushes an integer-valued item onto the failure stack.
    Assumes the variable `fail_stack'.  Probably should only
    be called from within `PUSH_FAILURE_POINT'.  */
 #define PUSH_FAILURE_INT(item)					\
-  fail_stack.stack[fail_stack.avail++] = (fail_stack_elt_t) (WIDE_INT) (item)
+  fail_stack.stack[fail_stack.avail++].integer = (item)
 
-/* The complement operation.  Assumes `fail_stack' is nonempty.  */
-#define POP_FAILURE_POINTER() fail_stack.stack[--fail_stack.avail]
+/* Push a fail_stack_elt_t value onto the failure stack.
+   Assumes the variable `fail_stack'.  Probably should only
+   be called from within `PUSH_FAILURE_POINT'.  */
+#define PUSH_FAILURE_ELT(item)					\
+  fail_stack.stack[fail_stack.avail++] =  (item)
 
-/* The complement operation.  Assumes `fail_stack' is nonempty.  */
-#define POP_FAILURE_INT() (WIDE_INT) fail_stack.stack[--fail_stack.avail]
+/* These three POP... operations complement the three PUSH... operations.
+   All assume that `fail_stack' is nonempty.  */
+#define POP_FAILURE_POINTER() fail_stack.stack[--fail_stack.avail].pointer
+#define POP_FAILURE_INT() fail_stack.stack[--fail_stack.avail].integer
+#define POP_FAILURE_ELT() fail_stack.stack[--fail_stack.avail]
 
 /* Used to omit pushing failure point id's when we're not debugging.  */
 #ifdef DEBUG
@@ -1147,7 +1158,7 @@ typedef struct
         DEBUG_PRINT2 (" ever_matched=%d",				\
                       EVER_MATCHED_SOMETHING (reg_info[this_reg]));	\
 	DEBUG_PRINT1 ("\n");						\
-        PUSH_FAILURE_POINTER (reg_info[this_reg].word);			\
+        PUSH_FAILURE_ELT (reg_info[this_reg].word);			\
       }									\
 									\
     DEBUG_PRINT2 ("  Pushing  low active reg: %d\n", lowest_active_reg);\
@@ -1249,7 +1260,7 @@ typedef struct
     {									\
       DEBUG_PRINT2 ("    Popping reg: %d\n", this_reg);			\
 									\
-      reg_info[this_reg].word = POP_FAILURE_POINTER ();			\
+      reg_info[this_reg].word = POP_FAILURE_ELT ();			\
       DEBUG_PRINT2 ("      info: 0x%x\n", reg_info[this_reg]);		\
 									\
       regend[this_reg] = (const char *) POP_FAILURE_POINTER ();		\
@@ -1266,8 +1277,7 @@ typedef struct
 
 
 /* Structure for per-register (a.k.a. per-group) information.
-   This must not be longer than one word, because we push this value
-   onto the failure stack.  Other register information, such as the
+   Other register information, such as the
    starting and ending positions (which are addresses), and the list of
    inner groups (which is a bits list) are maintained in separate
    variables.  
@@ -1276,6 +1286,7 @@ typedef struct
    the compiler will pack our bit fields into something that fits into
    the type of `word', i.e., is something that fits into one item on the
    failure stack.  */
+
 typedef union
 {
   fail_stack_elt_t word;
@@ -2897,7 +2908,7 @@ re_compile_fastmap (bufp)
 	      /* Reset for next path.  */
 	      path_can_be_null = true;
 
-	      p = fail_stack.stack[--fail_stack.avail];
+	      p = fail_stack.stack[--fail_stack.avail].pointer;
 
 	      continue;
 	    }
@@ -3049,7 +3060,7 @@ re_compile_fastmap (bufp)
 	  
           /* If what's on the stack is where we are now, pop it.  */
           if (!FAIL_STACK_EMPTY () 
-	      && fail_stack.stack[fail_stack.avail - 1] == p)
+	      && fail_stack.stack[fail_stack.avail - 1].pointer == p)
             fail_stack.avail--;
 
           continue;
