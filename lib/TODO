@@ -28,3 +28,5 @@ Mention fragmentation.
 
 
 assert (bucket_limit - bucket == n_buckets) ?
+
+remove.c: s/done/successful or ok
