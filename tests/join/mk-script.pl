@@ -168,8 +168,8 @@ sub wrap
 
       my $len = 78;
       print join (" \\\n", wrap ($len, 'explicit =', @exp)), "\n";
-      print join (" \\\n", wrap ($len, 'maint-gen =', @maint)), "\n";
-      print join (" \\\n", wrap ($len, 'run-gen =', @run)), "\n";
+      print join (" \\\n", wrap ($len, 'maint_gen =', @maint)), "\n";
+      print join (" \\\n", wrap ($len, 'run_gen =', @run)), "\n";
 
       exit 0;
     }
