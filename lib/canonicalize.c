@@ -40,6 +40,7 @@ void free ();
 
 #include <errno.h>
 
+#include "path-concat.h"
 #include "xalloc.h"
 #include "xgetcwd.h"
 
