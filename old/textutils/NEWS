@@ -1,5 +1,6 @@
 Changes in release 1.21
  [1.20b]
+* Using --program-prefix no longer applies the prefix twice
 Changes in release 1.20
  Changes in test release 1.19r
 * see ChangeLog
