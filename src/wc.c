@@ -58,6 +58,10 @@ static int have_read_stdin;
 /* The error code to return to the system. */
 static int exit_status;
 
+/* If nonzero, do not line up columns but instead separate numbers by
+   a single space as specified in Single Unix Specification and POSIX. */
+static int posixly_correct;
+
 static struct option const longopts[] =
 {
   {"bytes", no_argument, NULL, 'c'},
@@ -107,25 +111,27 @@ write_counts (uintmax_t lines,
 {
   char buf[LONGEST_HUMAN_READABLE + 1];
   char const *space = "";
+  char const *format_int = (posixly_correct ? "%s" : "%7s");
+  char const *format_sp_int = (posixly_correct ? "%s%s" : "%s%7s");
 
   if (print_lines)
     {
-      printf ("%7s", human_readable (lines, buf, 1, 1));
+      printf (format_int, human_readable (lines, buf, 1, 1));
       space = " ";
     }
   if (print_words)
     {
-      printf ("%s%7s", space, human_readable (words, buf, 1, 1));
+      printf (format_sp_int, space, human_readable (words, buf, 1, 1));
       space = " ";
     }
   if (print_chars)
     {
-      printf ("%s%7s", space, human_readable (chars, buf, 1, 1));
+      printf (format_sp_int, space, human_readable (chars, buf, 1, 1));
       space = " ";
     }
   if (print_linelength)
     {
-      printf ("%s%7s", space, human_readable (linelength, buf, 1, 1));
+      printf (format_sp_int, space, human_readable (linelength, buf, 1, 1));
     }
   if (*file)
     printf (" %s", file);
@@ -304,6 +310,7 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   exit_status = 0;
+  posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
   print_lines = print_words = print_chars = print_linelength = 0;
   total_lines = total_words = total_chars = max_line_length = 0;
 
