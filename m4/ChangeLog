@@ -1,3 +1,8 @@
+2001-09-01  Jim Meyering  <meyering@lucent.com>
+
+	* jm-macros.m4 (jm_MACROS): Check for canonicalize_file_name.
+	Used by df.
+
 2001-08-30  Paul Eggert  <eggert@twinsun.com>
 
 	Simplify code, partly by assuming autoconf 2.52 semantics.
