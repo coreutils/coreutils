@@ -17,16 +17,10 @@
 
 #include <config.h>
 #include <stdio.h>
+#include <assert.h>
 #include <sys/types.h>
 #include <time.h>
 #include <getopt.h>
-
-#include <math.h>
-#if HAVE_FLOAT_H
-# include <float.h>
-#else
-# define DBL_MAX 1.7976931348623159e+308
-#endif
 
 #ifndef TIME_T_MAX
 # define TIME_T_MAX TYPE_MAXIMUM (time_t)
@@ -81,6 +75,8 @@ apply_suffix (double *s, char suffix_char)
 {
   unsigned int multiplier;
 
+  assert (*s <= TIME_T_MAX);
+
   switch (suffix_char)
     {
     case 0:
@@ -100,7 +96,7 @@ apply_suffix (double *s, char suffix_char)
       multiplier = 0;
     }
 
-  if (multiplier == 0 || *s > DBL_MAX / multiplier)
+  if (multiplier == 0)
     return 1;
 
   *s *= multiplier;
@@ -151,9 +147,11 @@ main (int argc, char **argv)
       if (xstrtod (argv[i], &p, &s)
 	  /* No negative intervals.  */
 	  || s < 0
+	  /* S must fit in a time_t.  */
+	  || s > TIME_T_MAX
 	  /* No extra chars after the number and an optional s,m,h,d char. */
 	  || (*p && *(p+1))
-	  /* Update S based on suffix char.  */
+	  /* Check any suffix char and update S based on the suffix.  */
 	  || apply_suffix (&s, *p)
 	  /* Make sure the sum fits in a time_t.  */
 	  || (seconds += s) > TIME_T_MAX
