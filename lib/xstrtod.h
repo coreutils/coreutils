@@ -3,13 +3,13 @@
 
 # ifndef __P
 #  if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
-#   define __P(args) args
+#   define __P(Args) Args
 #  else
-#   define __P(args) ()
-#  endif  /* GCC.  */
-# endif  /* Not __P.  */
+#   define __P(Args) ()
+#  endif
+# endif
 
 int
   xstrtod __P ((const char *str, const char **ptr, double *result));
 
-#endif /* XSTRTOD_H */
+#endif /* not XSTRTOD_H */
