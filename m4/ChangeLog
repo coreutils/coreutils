@@ -1,3 +1,9 @@
+1999-03-28  Jim Meyering  <meyering@ascend.com>
+
+	* jm-macros.m4: Define GNU_PACKAGE here.
+	Be sure to AC_SUBST it, once again, so that @GNU_PACKAGE@ is
+	replaced e.g., in the *.sh files of the sh-utils.
+
 1999-03-20  Jim Meyering  <meyering@ascend.com>
 
 	* jm-macros.m4: s/jm_WITH_REGEX/jm_INCLUDED_REGEX/.
