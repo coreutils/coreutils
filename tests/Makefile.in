@@ -288,7 +288,7 @@ EXTRA_DIST = \
   rwx-to-mode sample-test setgid-check
 
 SUBDIRS = \
-  basename chgrp chmod chown cp cut date dd dircolors du expr factor \
+  expr factor \
   fmt head install join ln ls ls-2 md5sum misc mkdir mv od pr rm rmdir \
   seq sha1sum shred sort stty sum tac tail tail-2 test touch tr tsort \
   unexpand uniq wc
@@ -666,11 +666,10 @@ evar-check:
 
 # Advertise `check-root' target.
 root-hint:
-	@echo '********************************************'
-	@echo "NOTICE: Some tests will or might need to be"
-	@echo "        run as root. Do \`make check-root'"
-	@echo "        as \`root' to run just these tests."
-	@echo '********************************************'
+	@echo '***********************************************************'
+	@echo "NOTICE: Some tests may be run only as root."
+	@echo "  Do \`make check-root' as \`root' to run these tests."
+	@echo '***********************************************************'
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
