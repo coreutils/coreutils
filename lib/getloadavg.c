@@ -36,6 +36,9 @@
 				Must be defined unless one of
 				apollo, DGUX, NeXT, or UMAX is defined;
 				otherwise, no load average is available.
+   NLIST_STRUCT			Include nlist.h, not a.out.h, and
+				the nlist n_name element is a pointer,
+				not an array.
    NLIST_NAME_UNION		struct nlist has an n_un member, not n_name.
    LINUX_LDAV_FILE		[__linux__]: File containing load averages.
 
@@ -305,6 +308,68 @@ extern int errno;
 #  define LDAV_CVT(n) (((double) (n)) / FSCALE)
 # endif
 
+/* VAX C can't handle multi-line #ifs, or lines longer that 256 characters.  */
+# ifndef NLIST_STRUCT
+
+#  ifdef MORE_BSD
+#   define NLIST_STRUCT
+#  endif
+
+#  ifdef sun
+#   define NLIST_STRUCT
+#  endif
+
+#  ifdef decstation
+#   define NLIST_STRUCT
+#  endif
+
+#  ifdef hpux
+#   define NLIST_STRUCT
+#  endif
+
+#  if defined (_SEQUENT_) || defined (sequent)
+#   define NLIST_STRUCT
+#  endif
+
+#  ifdef sgi
+#   define NLIST_STRUCT
+#  endif
+
+#  ifdef SVR4
+#   define NLIST_STRUCT
+#  endif
+
+#  ifdef sony_news
+#   define NLIST_STRUCT
+#  endif
+
+#  ifdef OSF_ALPHA
+#   define NLIST_STRUCT
+#  endif
+
+#  if defined (ardent) && defined (titan)
+#   define NLIST_STRUCT
+#  endif
+
+#  ifdef tek4300
+#   define NLIST_STRUCT
+#  endif
+
+#  ifdef butterfly
+#   define NLIST_STRUCT
+#  endif
+
+#  if defined(alliant) && defined(i860) /* Alliant FX/2800 */
+#   define NLIST_STRUCT
+#  endif
+
+#  ifdef _AIX
+#   define NLIST_STRUCT
+#  endif
+
+# endif /* defined (NLIST_STRUCT) */
+
+
 # if defined(sgi) || (defined(mips) && !defined(BSD))
 #  define FIXUP_KERNEL_SYMBOL_ADDR(nl) ((nl)[0].n_value &= ~(1 << 31))
 # endif
@@ -347,11 +412,11 @@ extern int errno;
 
 #  ifndef VMS
 #   ifndef __linux__
-#    ifndef HAVE_NLIST_H
+#    ifndef NLIST_STRUCT
 #     include <a.out.h>
-#    else /* HAVE_NLIST_H */
+#    else /* NLIST_STRUCT */
 #     include <nlist.h>
-#    endif /* HAVE_NLIST_H */
+#    endif /* NLIST_STRUCT */
 
 #    ifdef SUNOS_5
 #     include <fcntl.h>
@@ -855,10 +920,10 @@ getloadavg (loadavg, nelem)
   if (offset == 0)
     {
 #  ifndef sgi
-#   ifndef HAVE_NLIST_H
+#   ifndef NLIST_STRUCT
       strcpy (nl[0].n_name, LDAV_SYMBOL);
       strcpy (nl[1].n_name, "");
-#   else /* HAVE_NLIST_H */
+#   else /* NLIST_STRUCT */
 #    ifdef NLIST_NAME_UNION
       nl[0].n_un.n_name = LDAV_SYMBOL;
       nl[1].n_un.n_name = 0;
@@ -866,7 +931,7 @@ getloadavg (loadavg, nelem)
       nl[0].n_name = LDAV_SYMBOL;
       nl[1].n_name = 0;
 #    endif /* not NLIST_NAME_UNION */
-#   endif /* HAVE_NLIST_H */
+#   endif /* NLIST_STRUCT */
 
 #   ifndef SUNOS_5
       if (
