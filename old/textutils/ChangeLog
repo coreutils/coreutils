@@ -1,5 +1,8 @@
 Sat May 20 06:44:14 1995  Jim Meyering  (meyering@comco.com)
 
+	* All Makefile.in (install-exec, install-exec): New targets.
+	From Karl Berry.
+
 	* tr.c (look_up_char_class): Take a string length argument -- required
 	because the argument is a string that is *not* NUL-terminated.
 	Use strncmp, not strcmp and add string lengths comparison.
