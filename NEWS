@@ -140,6 +140,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   The usual `--' operand is now supported by chroot, hostid, hostname,
   pwd, sync, and yes.
 
+  The stat option --filesystem has been renamed to --file-system, for
+  consistency with POSIX "file system" and with cp and du --one-file-system.
+
 * Major changes in release 5.2.1 (2004-03-12) [stable]
 
 ** Bug fixes
