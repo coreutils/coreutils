@@ -1,3 +1,8 @@
+Thu Mar 16 22:05:05 1995  Jim Meyering  (meyering@comco.com)
+
+	* od.c (main): Detect and fail when argument to -N is too large
+	to fit in an off_t.
+
 Sun Mar 12 12:02:39 1995  Jim Meyering  (meyering@comco.com)
 
 	* configure.in (AC_REPLACE_FUNCS): Add memcmp.c.
