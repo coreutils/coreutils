@@ -16,7 +16,6 @@ my @tv = (
 # combinations of options and FF-arrangements
 #
 # One FF at start of file (one empty page)
-
 ['1a', '', [\'0Ft'], [\'0F'], 0],
 ['1b', '', [\'0Fnt'], [\'0F'], 0],
 ['1c', '+3', [\'0Ft'], [\'3-0F'], 0],
