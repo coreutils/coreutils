@@ -64,7 +64,7 @@ my_usleep (const struct timespec *ts_delay)
 
 int
 rpl_nanosleep (const struct timespec *requested_delay,
-	   struct timespec *remaining_delay)
+	       struct timespec *remaining_delay)
 {
 #ifdef SA_NOCLDSTOP
   struct sigaction oldact, newact;
