@@ -1375,14 +1375,15 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
   const char *n_string;
   const char *n_string_end;
   bool obsolete_usage;
+  int default_count = DEFAULT_N_LINES;
   bool t_from_start;
   bool t_count_lines = true;
   bool t_forever = false;
-  int len;
 
   /* With the obsolete form, there is one option string and
-     at most one file argument, possibly preceded by "--".  */
-  if (! ((2 <= argc && argc <= 3) || (argc == 4 && STREQ (argv[2], "--"))))
+     (technically) at most one file argument.  But we allow two or more
+     by default.  */
+  if (argc < 2)
     return false;
 
   obsolete_usage = (posix2_version () < 200112);
@@ -1401,14 +1402,11 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
       break;
 
     case '-':
-      /* Plain "-" is standard input in the non-obsolete form.  */
-      if (!obsolete_usage && !*p)
-	return false;
-
-      /* Plain "-c" is required to be the non-obsolete option.  For
-         plain "-f" POSIX 1003.2-1992 is ambiguous; assume the
-         non-obsolete form.  */
-      if ((p[0] == 'c' || p[0] == 'f') && !p[1])
+      /* In the non-obsolete form, "-" is standard input and "-c"
+	 requires an option-argument.  The obsolete multidigit options
+	 are diagnosed more nicely below than they would be if we
+	 simply returned false here.  */
+      if (!obsolete_usage && !p[p[0] == 'c'])
 	return false;
 
       t_from_start = false;
@@ -1422,6 +1420,7 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
 
   switch (*p)
     {
+    case 'b': default_count *= 512;	/* Fall through.  */
     case 'c': t_count_lines = false;	/* Fall through.  */
     case 'l': p++; break;
     }
@@ -1435,24 +1434,22 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
   if (*p)
     return false;
 
-  len = n_string_end - n_string;
-
   if (n_string == n_string_end)
-    *n_units = DEFAULT_N_LINES;
-  else if (xstrtoumax (n_string, NULL, 10, n_units, NULL) != LONGINT_OK)
-    error (EXIT_FAILURE, 0, _("number `%.*s' too large"), len, n_string);
-
-  if (!obsolete_usage)
+    *n_units = default_count;
+  else
     {
-      if (len == 0)
+      if ((xstrtoumax (n_string, NULL, 10, n_units, "b")
+	   & ~LONGINT_INVALID_SUFFIX_CHAR)
+	  != LONGINT_OK)
+	error (EXIT_FAILURE, 0, _("number in `%s' is too large"), argv[1]);
+
+      if (!obsolete_usage)
 	{
-	  len = 2;
-	  n_string = "10";
+	  error (0, 0, _("`%s' option is obsolete; use `%s-%c %"PRIuMAX"'"),
+		 argv[1], t_forever ? "-f " : "", t_count_lines ? 'n' : 'c',
+		 *n_units);
+	  usage (EXIT_FAILURE);
 	}
-      error (0, 0, _("`%s' option is obsolete; use `%s-%c %.*s'"),
-	     argv[1], t_forever ? "-f " : "", t_count_lines ? 'n' : 'c',
-	     len, n_string);
-      usage (EXIT_FAILURE);
     }
 
   /* Set globals.  */
@@ -1469,9 +1466,6 @@ parse_options (int argc, char **argv,
 	       double *sleep_interval)
 {
   int c;
-
-  count_lines = true;
-  forever = from_start = print_headers = false;
 
   while ((c = getopt_long (argc, argv, "c:n:fFqs:v", long_options, NULL))
 	 != -1)
@@ -1606,6 +1600,7 @@ main (int argc, char **argv)
   char **file;
   struct File_spec *F;
   int i;
+  bool obsolete_option;
 
   /* The number of seconds to sleep between iterations.
      During one iteration, every file name or descriptor is checked to
@@ -1622,10 +1617,12 @@ main (int argc, char **argv)
 
   have_read_stdin = false;
 
-  if (parse_obsolete_option (argc, argv, &n_units))
-    optind = 2;
-  else
-    parse_options (argc, argv, &n_units, &header_mode, &sleep_interval);
+  count_lines = true;
+  forever = from_start = print_headers = false;
+  obsolete_option = parse_obsolete_option (argc, argv, &n_units);
+  argc -= obsolete_option;
+  argv += obsolete_option;
+  parse_options (argc, argv, &n_units, &header_mode, &sleep_interval);
 
   /* To start printing with item N_UNITS from the start of the file, skip
      N_UNITS - 1 items.  `tail -n +0' is actually meaningless, but for Unix
