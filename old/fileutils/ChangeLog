@@ -1,3 +1,37 @@
+1999-10-09  Jim Meyering  <meyering@ascend.com>
+
+	Accept new option: --target-directory=DIR
+	* src/ln.c (TARGET_DIRECTORY_OPTION): Define.
+	(usage): Describe it.
+	(main): Implement it.
+	Make code clearer:  use new variable `n_files' in place of
+	`argc - optind'.  Use `file' instead of `argv + optind'.
+
+1999-10-04  Jim Meyering  <meyering@ascend.com>
+
+	* depcomp: New file, for automake's new dependency support.
+	* missing: New version, from automake's user-dep-gen-branch.
+
+	* lib/xalloc.h (__attribute__): Apply 1999-10-03 change here, too.
+	* src/sys2.h (__attribute__): Likewise.
+	Wrap with #ifndef __attribute__.
+
+1999-10-03  Paul Eggert  <eggert@twinsun.com>
+
+	* getdate.y (__attribute__): Define to empty if GCC claims to
+	be before 2.8; this is needed for OPENStep 4.2 cc.  Also,
+	define to empty if strict ANSI.
+
+1999-10-03  Jim Meyering  <meyering@ascend.com>
+
+	Accept new option: --target-directory=DIR
+	* src/mv.c (TARGET_DIRECTORY_OPTION): Define.
+	(usage): Describe it.
+	(main): Implement it.
+	Remove unused variable, stdin_tty.
+	Make code clearer:  use new variable `n_files' in place of
+	`argc - optind'.  Use `file' instead of `argv + optind'.
+
 1999-09-28  Jim Meyering  <meyering@ascend.com>
 
 	* src/system.h: Do s/#ifdef HAVE_/#if HAVE_/ -- solely for aesthetics.
