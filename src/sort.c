@@ -73,6 +73,7 @@ double strtod ();
    not properly sorted.  Any other irregular exit must exit with a
    status code greater than 1.  */
 #define SORT_FAILURE 2
+#define SORT_OUT_OF_ORDER 1
 
 #define C_DECIMAL_POINT '.'
 #define NEGATION_SIGN   '-'
@@ -2249,7 +2250,7 @@ but lacks following character offset"));
 
       /* POSIX requires that sort return 1 IFF invoked with -c and the
 	 input is not properly sorted.  */
-      exit (check (files, nfiles) == 0 ? EXIT_SUCCESS : 1);
+      exit (check (files, nfiles) == 0 ? EXIT_SUCCESS : SORT_OUT_OF_ORDER);
     }
 
   if (!STREQ (outfile, "-"))
