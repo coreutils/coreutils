@@ -2,6 +2,9 @@
 
 	* Version 4.0q.
 
+	* src/sys2.h: Use `#if !HAVE_DECL...' instead of `#ifndef HAVE_DECL...'
+	now that autoconf always defines the HAVE_DECL_ symbols.
+
 	* src/install.c (install_file_to_path): Always use install_file_in_file.
 	Based on a patch from Adam Klein via Michael Stone.
 
