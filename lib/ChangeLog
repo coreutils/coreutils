@@ -2,6 +2,8 @@
 
 	* Makefile.am (install-exec-local): Create $(libdir) before installing
 	into it.
+	(uninstall-local): Uncomment this rule so `make distcheck' works
+	once again.
 
 	* unicodeio.c (<errno.h>): Include it.
 	(errno): Declare if not defined.
