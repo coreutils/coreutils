@@ -92,7 +92,7 @@ print_uptime (int n, const STRUCT_UTMP *this)
     struct timeval result;
     size_t result_len = sizeof result;
 
-    if (0 <= sysctl (request, 2, &result, &result_len, NULL, 0))
+    if (sysctl (request, 2, &result, &result_len, NULL, 0) >= 0)
       boot_time = result.tv_sec;
   }
 #endif
