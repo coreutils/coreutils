@@ -122,10 +122,10 @@ TESTS_ENVIRONMENT = \
   srcdir=$(srcdir) \
   PERL="@PERL@" \
   PATH=`pwd`/../../src:$$PATH \
-  PROG=ls
+  PROG=dd
 
 
-TESTS = misc
+TESTS = misc not-rewound
 subdir = tests/dd
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
