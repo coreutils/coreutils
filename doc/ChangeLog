@@ -1,3 +1,15 @@
+2004-04-25  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi (sort invocation): Mention -k earlier, so
+	that the options are in alphabetical order.  Describe how -b works
+	more-accurately; this involves fixing some examples, too.  Mention
+	what happens if the start field falls after an end field or after
+	a line end.  Warn about using -k without -b, -g, -M, -n, or -t.
+	Add an example of how to sort IPv4 addresses and Apache Common
+	Log Format dates.  Remove a duplicate example.
+	(Putting the tools together): Use separate options rather
+	than agglomerating them.
+
 2004-03-27  Paul Eggert  <eggert@twinsun.com>
 
 	cp -pu and mv -u (when copying) now take the destination
