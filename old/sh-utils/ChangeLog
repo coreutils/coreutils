@@ -1,7 +1,12 @@
+1999-03-10  Jim Meyering  <meyering@ascend.com>
+
+	* lib/canon-host.c (canon_host): Don't use he->h_addr directly.
+	Based on a patch from Savochkin Andrey Vladimirovich.
+
 1999-03-09  Jim Meyering  <meyering@ascend.com>
 
-	Running `id USER' doesn't report any groups if there is no
-	entry for USER in /etc/group.  Make it report the one from /etc/passwd.
+	Running `id USER' doesn't report any groups if there is no entry
+	for USER in /etc/group.  Always include the one from /etc/passwd.
 	* src/id.c: (xgetgroups): Take new parameter, gid, and pass
 	it to getugroups.
 	(print_group_list): Call getpwuid and adjust calls to xgetgroups
