@@ -172,6 +172,8 @@ bin_PROGRAMS = [ chgrp chown chmod cp dd dircolors du \
   $(OPTIONAL_BIN_PROGS) $(DF_PROG)
 
 
+noinst_PROGRAMS = setuidgid
+
 noinst_HEADERS = \
   system.h sys2.h checksum.h copy.h cp-hash.h ls.h dircolors.h remove.h \
   chown-core.h fs.h \
@@ -316,7 +318,8 @@ bin_PROGRAMS = [$(EXEEXT) chgrp$(EXEEXT) chown$(EXEEXT) chmod$(EXEEXT) \
 	printf$(EXEEXT) pwd$(EXEEXT) seq$(EXEEXT) sleep$(EXEEXT) \
 	tee$(EXEEXT) test$(EXEEXT) true$(EXEEXT) tty$(EXEEXT) \
 	whoami$(EXEEXT) yes$(EXEEXT) @OPTIONAL_BIN_PROGS@ @DF_PROG@
-PROGRAMS = $(bin_PROGRAMS)
+noinst_PROGRAMS = setuidgid$(EXEEXT)
+PROGRAMS = $(bin_PROGRAMS) $(noinst_PROGRAMS)
 
 am___OBJECTS = lbracket.$(OBJEXT)
 __OBJECTS = $(am___OBJECTS)
@@ -603,6 +606,11 @@ seq_SOURCES = seq.c
 seq_OBJECTS = seq.$(OBJEXT)
 seq_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 seq_LDFLAGS =
+setuidgid_SOURCES = setuidgid.c
+setuidgid_OBJECTS = setuidgid.$(OBJEXT)
+setuidgid_LDADD = $(LDADD)
+setuidgid_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
+setuidgid_LDFLAGS =
 am_sha1sum_OBJECTS = md5sum.$(OBJEXT) sha1sum.$(OBJEXT)
 sha1sum_OBJECTS = $(am_sha1sum_OBJECTS)
 sha1sum_LDADD = $(LDADD)
@@ -784,21 +792,22 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/ptx.Po ./$(DEPDIR)/pwd.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/readlink.Po ./$(DEPDIR)/remove.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/rm.Po ./$(DEPDIR)/rmdir.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/seq.Po ./$(DEPDIR)/sha1sum.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/shred.Po ./$(DEPDIR)/sleep.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/sort.Po ./$(DEPDIR)/split.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/stat.Po ./$(DEPDIR)/stty.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/su.Po ./$(DEPDIR)/sum.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/sync.Po ./$(DEPDIR)/tac.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/tail.Po ./$(DEPDIR)/tee.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/test.Po ./$(DEPDIR)/touch.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/tr.Po ./$(DEPDIR)/true.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/tsort.Po ./$(DEPDIR)/tty.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/uname.Po ./$(DEPDIR)/unexpand.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/uniq.Po ./$(DEPDIR)/unlink.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/uptime.Po ./$(DEPDIR)/users.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/wc.Po ./$(DEPDIR)/who.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/whoami.Po ./$(DEPDIR)/yes.Po
+@AMDEP_TRUE@	./$(DEPDIR)/seq.Po ./$(DEPDIR)/setuidgid.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/sha1sum.Po ./$(DEPDIR)/shred.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/sleep.Po ./$(DEPDIR)/sort.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/split.Po ./$(DEPDIR)/stat.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/stty.Po ./$(DEPDIR)/su.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/sum.Po ./$(DEPDIR)/sync.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/tac.Po ./$(DEPDIR)/tail.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/tee.Po ./$(DEPDIR)/test.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/touch.Po ./$(DEPDIR)/tr.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/true.Po ./$(DEPDIR)/tsort.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/tty.Po ./$(DEPDIR)/uname.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/unexpand.Po ./$(DEPDIR)/uniq.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/unlink.Po ./$(DEPDIR)/uptime.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/users.Po ./$(DEPDIR)/wc.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/who.Po ./$(DEPDIR)/whoami.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/yes.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -811,15 +820,15 @@ DIST_SOURCES = $(__SOURCES) basename.c cat.c $(chgrp_SOURCES) chmod.c \
 	kill.c link.c ln.c logname.c $(ls_SOURCES) $(md5sum_SOURCES) \
 	mkdir.c mkfifo.c mknod.c $(mv_SOURCES) nice.c nl.c od.c paste.c \
 	pathchk.c pinky.c pr.c printenv.c printf.c ptx.c pwd.c \
-	readlink.c $(rm_SOURCES) rmdir.c seq.c $(sha1sum_SOURCES) \
-	shred.c sleep.c sort.c split.c stat.c stty.c su.c sum.c sync.c \
-	tac.c tail.c tee.c test.c touch.c tr.c true.c tsort.c tty.c \
-	uname.c unexpand.c uniq.c unlink.c uptime.c users.c \
-	$(vdir_SOURCES) wc.c who.c whoami.c yes.c
+	readlink.c $(rm_SOURCES) rmdir.c seq.c setuidgid.c \
+	$(sha1sum_SOURCES) shred.c sleep.c sort.c split.c stat.c stty.c \
+	su.c sum.c sync.c tac.c tail.c tee.c test.c touch.c tr.c true.c \
+	tsort.c tty.c uname.c unexpand.c uniq.c unlink.c uptime.c \
+	users.c $(vdir_SOURCES) wc.c who.c whoami.c yes.c
 HEADERS = $(noinst_HEADERS)
 
 DIST_COMMON = $(noinst_HEADERS) Makefile.am Makefile.in
-SOURCES = $(__SOURCES) basename.c cat.c $(chgrp_SOURCES) chmod.c $(chown_SOURCES) chroot.c cksum.c comm.c $(cp_SOURCES) csplit.c cut.c date.c dd.c df.c $(dir_SOURCES) dircolors.c dirname.c du.c echo.c env.c expand.c expr.c factor.c false.c fmt.c fold.c $(ginstall_SOURCES) head.c hostid.c hostname.c id.c join.c kill.c link.c ln.c logname.c $(ls_SOURCES) $(md5sum_SOURCES) mkdir.c mkfifo.c mknod.c $(mv_SOURCES) nice.c nl.c od.c paste.c pathchk.c pinky.c pr.c printenv.c printf.c ptx.c pwd.c readlink.c $(rm_SOURCES) rmdir.c seq.c $(sha1sum_SOURCES) shred.c sleep.c sort.c split.c stat.c stty.c su.c sum.c sync.c tac.c tail.c tee.c test.c touch.c tr.c true.c tsort.c tty.c uname.c unexpand.c uniq.c unlink.c uptime.c users.c $(vdir_SOURCES) wc.c who.c whoami.c yes.c
+SOURCES = $(__SOURCES) basename.c cat.c $(chgrp_SOURCES) chmod.c $(chown_SOURCES) chroot.c cksum.c comm.c $(cp_SOURCES) csplit.c cut.c date.c dd.c df.c $(dir_SOURCES) dircolors.c dirname.c du.c echo.c env.c expand.c expr.c factor.c false.c fmt.c fold.c $(ginstall_SOURCES) head.c hostid.c hostname.c id.c join.c kill.c link.c ln.c logname.c $(ls_SOURCES) $(md5sum_SOURCES) mkdir.c mkfifo.c mknod.c $(mv_SOURCES) nice.c nl.c od.c paste.c pathchk.c pinky.c pr.c printenv.c printf.c ptx.c pwd.c readlink.c $(rm_SOURCES) rmdir.c seq.c setuidgid.c $(sha1sum_SOURCES) shred.c sleep.c sort.c split.c stat.c stty.c su.c sum.c sync.c tac.c tail.c tee.c test.c touch.c tr.c true.c tsort.c tty.c uname.c unexpand.c uniq.c unlink.c uptime.c users.c $(vdir_SOURCES) wc.c who.c whoami.c yes.c
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -854,7 +863,7 @@ uninstall-binPROGRAMS:
 	done
 
 clean-binPROGRAMS:
-	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS) > /dev/null 2>&1 || /bin/rm -f $(bin_PROGRAMS)
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 
 installcheck-binPROGRAMS: $(bin_PROGRAMS)
 	bad=0; pid=$$$$; list="$(bin_PROGRAMS)"; for p in $$list; do \
@@ -870,6 +879,9 @@ installcheck-binPROGRAMS: $(bin_PROGRAMS)
 	    else echo "$$f does not support $$opt" 1>&2; bad=1; fi; \
 	  done; \
 	done; rm -f c$${pid}_.???; exit $$bad
+
+clean-noinstPROGRAMS:
+	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
 [$(EXEEXT): $(__OBJECTS) $(__DEPENDENCIES) 
 	@rm -f [$(EXEEXT)
 	$(LINK) $(__LDFLAGS) $(__OBJECTS) $(__LDADD) $(LIBS)
@@ -1044,6 +1056,9 @@ rmdir$(EXEEXT): $(rmdir_OBJECTS) $(rmdir_DEPENDENCIES)
 seq$(EXEEXT): $(seq_OBJECTS) $(seq_DEPENDENCIES) 
 	@rm -f seq$(EXEEXT)
 	$(LINK) $(seq_LDFLAGS) $(seq_OBJECTS) $(seq_LDADD) $(LIBS)
+setuidgid$(EXEEXT): $(setuidgid_OBJECTS) $(setuidgid_DEPENDENCIES) 
+	@rm -f setuidgid$(EXEEXT)
+	$(LINK) $(setuidgid_LDFLAGS) $(setuidgid_OBJECTS) $(setuidgid_LDADD) $(LIBS)
 sha1sum$(EXEEXT): $(sha1sum_OBJECTS) $(sha1sum_DEPENDENCIES) 
 	@rm -f sha1sum$(EXEEXT)
 	$(LINK) $(sha1sum_LDFLAGS) $(sha1sum_OBJECTS) $(sha1sum_LDADD) $(LIBS)
@@ -1240,6 +1255,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rm.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rmdir.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/seq.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/setuidgid.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha1sum.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/shred.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sleep.Po@am__quote@
@@ -1419,7 +1435,8 @@ maintainer-clean-generic:
 	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am
 
-clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
+clean-am: clean-binPROGRAMS clean-generic clean-noinstPROGRAMS \
+	mostlyclean-am
 
 distclean: distclean-am
 
@@ -1465,8 +1482,8 @@ uninstall-am: uninstall-binPROGRAMS uninstall-binSCRIPTS \
 	uninstall-info-am uninstall-local
 
 .PHONY: CTAGS GTAGS all all-am all-local check check-am clean \
-	clean-binPROGRAMS clean-generic ctags distclean \
-	distclean-compile distclean-depend distclean-generic \
+	clean-binPROGRAMS clean-generic clean-noinstPROGRAMS ctags \
+	distclean distclean-compile distclean-depend distclean-generic \
 	distclean-tags distdir dvi dvi-am info info-am install \
 	install-am install-binPROGRAMS install-binSCRIPTS install-data \
 	install-data-am install-exec install-exec-am install-exec-local \
