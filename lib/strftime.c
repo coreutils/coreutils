@@ -98,8 +98,8 @@ extern char *tzname[];
 # define L_(Str) L##Str
 # define NLW(Sym) _NL_W##Sym
 
-# define MEMCPY(d, s, n) wmemcpy (d, s, n)
-# define STRLEN(s) wcslen (s)
+# define MEMCPY(d, s, n) __wmemcpy (d, s, n)
+# define STRLEN(s) __wcslen (s)
 
 #else
 # define CHAR_T char
@@ -752,6 +752,11 @@ my_strftime (s, maxsize, format, tp ut_argument)
 
 	case L_('b'):
 	case L_('h'):		/* POSIX.2 extension.  */
+	  if (change_case)
+	    {
+	      to_uppcase = 1;
+	      to_lowcase = 0;
+	    }
 	  if (modifier != 0)
 	    goto bad_format;
 #if defined _NL_CURRENT || !HAVE_STRFTIME
@@ -848,7 +853,7 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	      if (era)
 		{
 # ifdef COMPILE_WIDE
-		  size_t len = wcslen (era->era_wname);
+		  size_t len = __wcslen (era->era_wname);
 		  cpy (len, era->era_wname);
 # else
 		  size_t len = strlen (era->era_name);
