@@ -53,27 +53,29 @@ my @Tests =
 
    # one file name, no NUL
    ['1', '--files0-from=-', '<',
-    {IN=>{f=>"g"}}, {AUX=>{g=>"x".64*1024}}, {OUT=>"4\tg\n"} ],
+    {IN=>{f=>"g"}}, {AUX=>{g=>''}},
+    {OUT=>"0\tg\n"}, {OUT_SUBST=>'s/^\d+/0/'} ],
 
    # one file name, with NUL
    ['1a', '--files0-from=-', '<',
-    {IN=>{f=>"g\0"}}, {AUX=>{g=>"x".64*1024}}, {OUT=>"4\tg\n"} ],
+    {IN=>{f=>"g\0"}}, {AUX=>{g=>''}},
+    {OUT=>"0\tg\n"}, {OUT_SUBST=>'s/^\d+/0/'} ],
 
    # two file names, no final NUL
    ['2', '--files0-from=-', '<',
-    {IN=>{f=>"g\0g"}}, {AUX=>{g=>"x".64*1024}}, {OUT=>"4\tg\n4\tg\n"} ],
+    {IN=>{f=>"g\0g"}}, {AUX=>{g=>''}},
+    {OUT=>"0\tg\n0\tg\n"}, {OUT_SUBST=>'s/^\d+/0/'} ],
 
    # two file names, with final NUL
    ['2a', '--files0-from=-', '<',
-    {IN=>{f=>"g\0g\0"}}, {AUX=>{g=>"x".64*1024}}, {OUT=>"4\tg\n4\tg\n"} ],
+    {IN=>{f=>"g\0g\0"}}, {AUX=>{g=>''}},
+    {OUT=>"0\tg\n0\tg\n"}, {OUT_SUBST=>'s/^\d+/0/'} ],
 
    # Ensure that du processes FILEs following a zero-length name.
    ['zero-len', '--files0-from=-', '<',
-    {IN=>{f=>"\0g\0"}}, {AUX=>{g=>"x".64*1024}},
-    {OUT=>"4\tg\n"},
-    {ERR => "du: -:1: invalid zero-length file name\n"},
-    {EXIT=>1}
-   ],
+    {IN=>{f=>"\0g\0"}}, {AUX=>{g=>''}},
+    {OUT=>"0\tg\n"}, {OUT_SUBST=>'s/^\d+/0/'},
+    {ERR => "du: -:1: invalid zero-length file name\n"}, {EXIT=>1} ],
   );
 
 my $save_temps = $ENV{DEBUG};
