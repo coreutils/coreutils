@@ -1,3 +1,9 @@
+2004-11-30  Jim Meyering  <jim@meyering.net>
+
+	* chdir.c (O_DIRECTORY): Define, if necessary.
+	(memchrcspn): Tiny wrapper around memchr.
+	(rpl_chdir): Use memchrcspn rather than strcspn.
+
 2004-11-28  Jim Meyering  <jim@meyering.net>
 
 	* openat.c (rpl_openat): Also accept optional mode parameter.
