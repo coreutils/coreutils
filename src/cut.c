@@ -563,15 +563,15 @@ cut_fields (FILE *stream)
   unsigned int field_idx;
   int found_any_selected_field;
   int buffer_first_field;
-  int empty_input;
 
   found_any_selected_field = 0;
   field_idx = 1;
 
   c = getc (stream);
-  empty_input = (c == EOF);
-  if (c != EOF)
-    ungetc (c, stream);
+  if (c == EOF)
+    return;
+
+  ungetc (c, stream);
 
   /* To support the semantics of the -s flag, we may have to buffer
      all of the first field to determine whether it is `delimited.'
@@ -667,7 +667,7 @@ cut_fields (FILE *stream)
       else if (c == '\n' || c == EOF)
 	{
 	  if (found_any_selected_field
-	      || (!empty_input && !(suppress_non_delimited && field_idx == 1)))
+	      || !(suppress_non_delimited && field_idx == 1))
 	    putchar ('\n');
 	  if (c == EOF)
 	    break;
