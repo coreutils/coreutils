@@ -1,6 +1,11 @@
-Fri Jun  7 22:06:46 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+Mon Jun 10 18:22:29 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Version 1.18.
+
+	* Makefile.am (cvs-dist): Use -c option in cvs tag command.
+
+Fri Jun  7 22:06:46 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
 	* configure.in (VERSION): Set to 1.18.
 
 	* src/Makefile.am (sort_LDADD): Set this to -lm to get pow when using
