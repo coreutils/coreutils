@@ -224,7 +224,7 @@ do_link (const char *source, const char *dest)
 	 equivalent: `ln -f k k' (with or without --backup) to get
 	 beyond this point, because the error message you'd get is
 	 misleading.  */
-      && (backup_type == none || !symlink)
+      && (backup_type == none || !symbolic_link)
       && (!symbolic_link || stat (source, &source_stats) == 0)
       && source_stats.st_dev == dest_stats.st_dev
       && source_stats.st_ino == dest_stats.st_ino
