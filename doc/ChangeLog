@@ -1,3 +1,8 @@
+2002-04-15  Jim Meyering  <meyering@lucent.com>
+
+	* coreutils.texi: Document kill.
+	Written by Marcus Brinkmann.
+
 2002-04-13  Jim Meyering  <meyering@lucent.com>
 
 	* coreutils.texi: Document link and unlink.
