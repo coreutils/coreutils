@@ -2,7 +2,9 @@
 
 	* Version 4.1.1.
 
-	Allow cp -a (and mv when it resorts to copying) to preserve
+	* TODO: Remove items relating to cp-hash.c, now that they're done.
+
+	Allow cp -d (and mv when it resorts to copying) to preserve
 	hard links that span command line arguments.
 
 	* src/cp.c (do_copy): Don't clear the hash table after processing
