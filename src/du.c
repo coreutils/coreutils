@@ -51,7 +51,6 @@
 #include "error.h"
 #include "xstrtol.h"
 
-#undef	convert_blocks
 #define	convert_blocks(b, size) (size == size_kilobytes ? ((b) + 1) / 2 : \
     size == size_megabytes ? ((b) + 1024) / 2048 : (b))
 
@@ -513,8 +512,7 @@ du_files (char **files)
 	}
       else
 	{
-	  printf (_("%ld\ttotal\n"), output_size == size_bytes ? tot_size
-		  : convert_blocks (tot_size, output_size == size_kilobytes));
+	  printf (_("%ld\ttotal\n"), convert_blocks (tot_size, output_size));
 	}
       fflush (stdout);
     }
@@ -650,9 +648,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 	    }
 	  else
 	    {
-	      printf ("%ld\t%s\n", (output_size == size_bytes
-				    ? size
-				    : convert_blocks (size, output_size)),
+	      printf ("%ld\t%s\n", convert_blocks (size, output_size),
 		      path->length > 0 ? path->text : "/");
 	    }
 	  fflush (stdout);
@@ -674,8 +670,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 	    }
 	  else
 	    {
-	      printf ("%ld\t%s\n", output_size == size_bytes ? size
-		      : convert_blocks (size, output_size),
+	      printf ("%ld\t%s\n", convert_blocks (size, output_size),
 		      path->text);
 	    }
 	  fflush (stdout);
