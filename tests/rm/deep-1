@@ -45,4 +45,4 @@ echo done
 # Make sure all of $tmp was deleted.
 test -d $tmp && fail=1
 
-exit $fail
+(exit $fail); exit

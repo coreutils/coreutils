@@ -39,4 +39,4 @@ fail=0
 rm -rf $tmp || fail=1
 test -d $tmp && fail=1
 
-exit $fail
+(exit $fail); exit

@@ -37,4 +37,4 @@ fail=0
 
 rm -r t || fail=1
 
-exit $fail
+(exit $fail); exit

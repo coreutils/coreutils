@@ -36,4 +36,4 @@ test -f $tmp/a && fail=1
 
 rm -rf $tmp
 
-exit $fail
+(exit $fail); exit

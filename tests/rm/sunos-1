@@ -35,4 +35,4 @@ $RM -r '' > /dev/null 2>&1 && fail=1
 cd ..
 rm -rf $tmp
 
-exit $fail
+(exit $fail); exit

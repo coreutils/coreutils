@@ -54,4 +54,4 @@ esac
 
 rm -rf $tmp $test.I
 
-exit $fail
+(exit $fail); exit
