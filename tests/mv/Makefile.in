@@ -87,7 +87,7 @@ VERSION = @VERSION@
 YACC = @YACC@
 l = @l@
 
-AUTOMAKE_OPTIONS = 1.1 gnits
+AUTOMAKE_OPTIONS = 1.2 gnits
 
 TESTS = mv-special-1 into-self
 EXTRA_DIST = $(TESTS) setup
