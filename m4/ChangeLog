@@ -1,3 +1,10 @@
+2000-04-17  Jim Meyering  <meyering@lucent.com>
+
+	Get it right :-)
+	* jm-macros.m4: (jm_CHECK_ALL_TYPES) [_GNU_SOURCE]: Emit the
+	actual #define via AH_VERBATIM.  Don't need separate AC_DEFINE.
+	Suggestion from Akim Demaille.
+
 2000-04-14  Jim Meyering  <meyering@lucent.com>
 
 	* jm-macros.m4: (jm_CHECK_ALL_TYPES) [_GNU_SOURCE]: Use the one-arg form
