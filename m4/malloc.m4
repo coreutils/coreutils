@@ -1,4 +1,4 @@
-#serial 5
+#serial 6
 
 dnl From Jim Meyering.
 dnl Determine whether malloc accepts 0 as its argument.
@@ -12,7 +12,8 @@ AC_DEFUN([jm_FUNC_MALLOC],
  AC_DEFINE(HAVE_DONE_WORKING_MALLOC_CHECK, 1,
            [Define if the malloc check has been performed. ])
 
- AC_CACHE_CHECK([for working malloc], jm_cv_func_working_malloc,
+ AC_CACHE_CHECK([whether malloc(0) returns a non-NULL pointer],
+                jm_cv_func_working_malloc,
   [AC_TRY_RUN([
     char *malloc ();
     int
@@ -23,7 +24,7 @@ AC_DEFUN([jm_FUNC_MALLOC],
 	  ],
 	 jm_cv_func_working_malloc=yes,
 	 jm_cv_func_working_malloc=no,
-	 dnl When crosscompiling, assume malloc is broken.
+	 dnl When crosscompiling, assume malloc(0) returns NULL.
 	 jm_cv_func_working_malloc=no)
   ])
   if test $jm_cv_func_working_malloc = no; then
