@@ -347,7 +347,7 @@ relunit	: tUNUMBER tYEAR_UNIT {
 	    yyRelYear += $1 * $2;
 	}
 	| tYEAR_UNIT {
-	    yyRelYear++;
+	    yyRelYear += $1;
 	}
 	| tUNUMBER tMONTH_UNIT {
 	    yyRelMonth += $1 * $2;
