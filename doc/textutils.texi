@@ -2826,10 +2826,10 @@ Robbins.
 @menu
 * Toolbox introduction::
 * I/O redirection::
-* The @code{who} command::
-* The @code{cut} command::
-* The @code{sort} command::
-* The @code{uniq} command::
+* The who command::
+* The cut command::
+* The sort command::
+* The uniq command::
 * Putting the tools together::
 @end menu
 
@@ -2944,7 +2944,7 @@ discussion, we will only present those command line options that interest
 us.  As you should always do, double check your system documentation
 for the full story.
 
-@node The @code{who} command
+@node The who command
 @unnumberedsec The @code{who} command
 
 The first program is the @code{who} command.  By itself, it generates a
@@ -2966,7 +2966,7 @@ Unix systems, user names are never more than eight characters long.  This
 little bit of trivia will be useful later.  The output of @code{who} is nice,
 but the data is not all that exciting.
 
-@node The @code{cut} command
+@node The cut command
 @unnumberedsec The @code{cut} command
 
 The next program we'll look at is the @code{cut} command.  This program
@@ -2995,7 +2995,7 @@ With the @samp{-c} option, @code{cut} will cut out specific characters
 useful for data filtering.
 
 
-@node The @code{sort} command
+@node The sort command
 @unnumberedsec The @code{sort} command
 
 Next we'll look at the @code{sort} command.  This is one of the most
@@ -3008,7 +3008,7 @@ making it into a filter).  The sort is based on the machine collating
 sequence (@sc{ASCII}) or based on  user-supplied ordering criteria.
 
 
-@node The @code{uniq} command
+@node The uniq command
 @unnumberedsec The @code{uniq} command
 
 Finally (at least for now), we'll look at the @code{uniq} program.  When
