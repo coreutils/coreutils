@@ -1,3 +1,8 @@
+2003-03-02  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (Exit status): New section.
+	Suggestion from Michael Stone.
+
 2003-02-21  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (du invocation): Document --apparent-size.
