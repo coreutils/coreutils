@@ -1,3 +1,8 @@
+1999-03-26  Jim Meyering  <meyering@ascend.com>
+
+	* lib/Makefile.am (libfu_a_SOURCES): Add version-etc.c.
+	(noinst_HEADERS): Add version-etc.h.
+
 1999-03-25  Jim Meyering  <meyering@ascend.com>
 
 	* src/tail.c (recheck): Factor out a block of duplicated code.
