@@ -239,7 +239,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "fold", GNU_PACKAGE, VERSION,
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      "David MacKenzie", usage);
 
   break_spaces = count_bytes = have_read_stdin = 0;

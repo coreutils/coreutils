@@ -475,7 +475,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "md5sum", GNU_PACKAGE, VERSION,
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      "Ulrich Drepper", usage);
 
   while ((opt = getopt_long (argc, argv, "bctw", long_options, NULL)) != -1)

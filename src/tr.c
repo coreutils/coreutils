@@ -1801,7 +1801,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "tr", GNU_PACKAGE, VERSION,
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      "Jim Meyering", usage);
 
   while ((c = getopt_long (argc, argv, "cdst", long_options, NULL)) != -1)

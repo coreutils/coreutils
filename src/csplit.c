@@ -1375,7 +1375,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "csplit", GNU_PACKAGE, VERSION,
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      "Stuart Kemp and David MacKenzie", usage);
 
   global_argv = argv;

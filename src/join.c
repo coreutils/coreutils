@@ -740,7 +740,7 @@ main (int argc, char **argv)
      it may be increased.  */
   uni_blank.nfields = 1;
 
-  parse_long_options (argc, argv, "join", GNU_PACKAGE, VERSION,
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      "Mike Haertel", usage);
 
   nfiles = 0;

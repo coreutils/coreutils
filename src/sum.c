@@ -212,7 +212,7 @@ main (int argc, char **argv)
 
   have_read_stdin = 0;
 
-  parse_long_options (argc, argv, "sum", GNU_PACKAGE, VERSION,
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      "Kayvan Aghaiepour and David MacKenzie", usage);
 
   while ((optc = getopt_long (argc, argv, "rs", longopts, NULL)) != -1)

@@ -313,7 +313,7 @@ main (register int argc, register char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "fmt", GNU_PACKAGE, VERSION,
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      "Ross Paterson", usage);
 
   crown = tagged = split = uniform = FALSE;

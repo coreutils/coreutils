@@ -336,7 +336,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "expand", GNU_PACKAGE, VERSION,
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      "David MacKenzie", usage);
 
   while ((c = getopt_long (argc, argv, "it:,0123456789", longopts, NULL)) != -1)

@@ -1340,7 +1340,7 @@ main (int argc, char **argv)
 
   have_read_stdin = 0;
 
-  parse_long_options (argc, argv, "tail", GNU_PACKAGE, VERSION,
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 	    "Paul Rubin, David MacKenzie, Ian Lance Taylor, and Jim Meyering",
 		      usage);
 
