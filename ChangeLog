@@ -2,6 +2,24 @@
 
 	* Version 5.1.3.
 
+	Remove xstat function pointer member.  The way it was used was not
+	portable, since some systems (OSF V5.1, Solaris 2.5.1) provide static
+	inline `stat' and `lstat' functions, thus making the tests of
+	`xstat == lstat' in copy.c always fail.
+	* src/copy.h (struct cp_options) [xstat]: Remove member.
+	(XSTAT): New macro.
+	* src/copy.c (copy_dir): Set `.dereference' member, not .xstat.
+	(copy_internal): Use `XSTAT (x, ...)' in place of `*(x->xstat) (...)'.
+	Use `x->dereference == DEREF_NEVER' in place of `x->xstat == lstat'.
+	(valid_options): Remove now-obsolete FIXME comments.
+
+	* src/cp.c (re_protect): Use `XSTAT (x, ...)' in place of
+	`*(x->xstat) (...)'.
+	(do_copy): Declare/use local xstat rather than x->xstat.
+	(main): Remove code that set x.xstat.
+	* src/mv.c (cp_option_init): Don't initialize xstat member.
+	* src/install.c (cp_option_init): Likewise.
+
 	* Makefile.cfg (gnu_ftp_host-alpha, etc.): Un-factor .gnu.org suffix,
 	so that emit_upload_commands can use these variables, too.
 
