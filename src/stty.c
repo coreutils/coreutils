@@ -528,9 +528,9 @@ Control settings:\n\
 Input settings:\n\
   [-]brkint     breaks cause an interrupt signal\n\
   [-]icrnl      translate carriage return to newline\n\
-  [-]ignbrk     ignore breaks\n\
+  [-]ignbrk     ignore break characters\n\
   [-]igncr      ignore carriage return\n\
-  [-]ignpar     ignore parity errors\n\
+  [-]ignpar     ignore characters with parity errors\n\
 * [-]imaxbel    beep and do not flush a full input buffer on a character\n\
   [-]inlcr      translate newline to carriage return\n\
   [-]inpck      enable input parity checking\n\
