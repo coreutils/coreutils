@@ -339,8 +339,8 @@ DIST_COMMON = README ChangeLog Makefile.am Makefile.in TODO \
 	obstack.h putenv.c readutmp.c realloc.c regex.c rename.c \
 	rmdir.c rpmatch.c stime.c stpcpy.c strcasecmp.c strcspn.c \
 	strdup.c strncasecmp.c strndup.c strnlen.c strpbrk.c strstr.c \
-	strtod.c strtoimax.c strtol.c strtoul.c strtoull.c strtoumax.c \
-	strverscmp.c tempname.c utime.c
+	strtod.c strtoimax.c strtol.c strtoll.c strtoul.c strtoull.c \
+	strtoumax.c strverscmp.c tempname.c utime.c
 SOURCES = $(libfetish_a_SOURCES)
 
 all: $(BUILT_SOURCES)
@@ -350,7 +350,7 @@ all: $(BUILT_SOURCES)
 .SUFFIXES: .sed .sin .c .h .o .obj .y
 $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnits  lib/Makefile
+	  $(AUTOMAKE) --gnu  lib/Makefile
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && \
 	  CONFIG_HEADERS= CONFIG_LINKS= \
@@ -711,6 +711,8 @@ strtoimax_.c: strtoimax.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strtoimax.c; then echo $(srcdir)/strtoimax.c; else echo strtoimax.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strtoimax_.c || rm -f strtoimax_.c
 strtol_.c: strtol.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strtol.c; then echo $(srcdir)/strtol.c; else echo strtol.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strtol_.c || rm -f strtol_.c
+strtoll_.c: strtoll.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strtoll.c; then echo $(srcdir)/strtoll.c; else echo strtoll.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strtoll_.c || rm -f strtoll_.c
 strtoul_.c: strtoul.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strtoul.c; then echo $(srcdir)/strtoul.c; else echo strtoul.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strtoul_.c || rm -f strtoul_.c
 strtoull_.c: strtoull.c $(ANSI2KNR)
@@ -781,13 +783,13 @@ strcspn_.$(OBJEXT) strdup_.$(OBJEXT) strftime_.$(OBJEXT) \
 stripslash_.$(OBJEXT) strncasecmp_.$(OBJEXT) strndup_.$(OBJEXT) \
 strnlen_.$(OBJEXT) strpbrk_.$(OBJEXT) strstr_.$(OBJEXT) \
 strtod_.$(OBJEXT) strtoimax_.$(OBJEXT) strtol_.$(OBJEXT) \
-strtoul_.$(OBJEXT) strtoull_.$(OBJEXT) strtoumax_.$(OBJEXT) \
-strverscmp_.$(OBJEXT) tempname_.$(OBJEXT) unicodeio_.$(OBJEXT) \
-userspec_.$(OBJEXT) utime_.$(OBJEXT) version-etc_.$(OBJEXT) \
-xgetcwd_.$(OBJEXT) xgethostname_.$(OBJEXT) xmalloc_.$(OBJEXT) \
-xstrdup_.$(OBJEXT) xstrtod_.$(OBJEXT) xstrtoimax_.$(OBJEXT) \
-xstrtol_.$(OBJEXT) xstrtoul_.$(OBJEXT) xstrtoumax_.$(OBJEXT) \
-yesno_.$(OBJEXT) : $(ANSI2KNR)
+strtoll_.$(OBJEXT) strtoul_.$(OBJEXT) strtoull_.$(OBJEXT) \
+strtoumax_.$(OBJEXT) strverscmp_.$(OBJEXT) tempname_.$(OBJEXT) \
+unicodeio_.$(OBJEXT) userspec_.$(OBJEXT) utime_.$(OBJEXT) \
+version-etc_.$(OBJEXT) xgetcwd_.$(OBJEXT) xgethostname_.$(OBJEXT) \
+xmalloc_.$(OBJEXT) xstrdup_.$(OBJEXT) xstrtod_.$(OBJEXT) \
+xstrtoimax_.$(OBJEXT) xstrtol_.$(OBJEXT) xstrtoul_.$(OBJEXT) \
+xstrtoumax_.$(OBJEXT) yesno_.$(OBJEXT) : $(ANSI2KNR)
 
 .y.c:
 	$(YACCCOMPILE) $< && mv y.tab.c $@
