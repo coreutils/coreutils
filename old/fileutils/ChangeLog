@@ -1,5 +1,8 @@
+2001-09-15  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.1.
+
+	* tests/mv/i-2: Clean up: use priv-check rather than open-coding it.
 
 2001-05-11  Paul Eggert  <eggert@twinsun.com>
 
