@@ -259,7 +259,7 @@ get_width_format ()
     }
 
   sprintf (buffer, "%g", rint (max_val));
-  if (buffer[strspn (buffer, "0123456789")] != '\0')
+  if (buffer[strspn (buffer, "-0123456789")] != '\0')
     return "%g";
   width1 = strlen (buffer);
 
