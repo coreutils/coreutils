@@ -455,7 +455,8 @@ main (argc, argv)
 	  s = optarg;
 	  if (*s == '+')
 	    {
-	      if (!ISDIGIT (*++s))
+	      ++s;
+	      if (!ISDIGIT (*s))
 		usage ("`+' requires a numeric argument");
 	      first_page_number = atoi (s);
 	    }
