@@ -1,4 +1,4 @@
-#serial 63   -*- autoconf -*-
+#serial 64   -*- autoconf -*-
 
 m4_undefine([AC_LANG_SOURCE(C)])
 dnl The following is identical to the definition in c.m4
@@ -89,6 +89,7 @@ AC_DEFUN([jm_MACROS],
   AC_REQUIRE([AC_FUNC_FSEEKO])
   AC_REQUIRE([AC_FUNC_VPRINTF])
   AC_REQUIRE([AC_FUNC_ALLOCA])
+  AC_REQUIRE([gl_FUNC_ALLOCA])
 
   AC_CONFIG_LIBOBJ_DIR([lib])
   AC_FUNC_GETLOADAVG
