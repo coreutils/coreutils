@@ -288,14 +288,16 @@ read_utmp (filename)
   FILE *utmp;
   struct stat file_stats;
   int n_read;
+  size_t size;
 
   utmp = fopen (filename, "r");
   if (utmp == NULL)
     error (1, errno, "%s", filename);
 
   fstat (fileno (utmp), &file_stats);
-  if (file_stats.st_size > 0)
-    utmp_contents = (STRUCT_UTMP *) xmalloc ((unsigned) file_stats.st_size);
+  size = file_stats.st_size;
+  if (size > 0)
+    utmp_contents = (STRUCT_UTMP *) xmalloc (size);
   else
     {
       fclose (utmp);
@@ -303,12 +305,12 @@ read_utmp (filename)
     }
 
   /* Use < instead of != in case the utmp just grew.  */
-  n_read = fread (utmp_contents, 1, file_stats.st_size, utmp);
+  n_read = fread (utmp_contents, 1, size, utmp);
   if (ferror (utmp) || fclose (utmp) == EOF
-      || n_read < file_stats.st_size)
+      || n_read < size)
     error (1, errno, "%s", filename);
 
-  return file_stats.st_size / sizeof (STRUCT_UTMP);
+  return size / sizeof (STRUCT_UTMP);
 }
 
 #ifdef WHO
