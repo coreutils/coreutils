@@ -1,4 +1,7 @@
 Changes in release 1.17
+* hostid: new program
+* `yes --help' and `yes --version' print those strings when the POSIXLY_CORRECT
+  environment variable is set
 * who no longer does DNS lookups by default -- the new option, --lookup (-l),
   enables lookups
  [1.16e]
