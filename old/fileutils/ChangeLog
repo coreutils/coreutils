@@ -1,3 +1,17 @@
+1997-10-03  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/savedir.h (savedir) [__P]: New file with prototype.
+	* lib/savedir.c (savedir): Declare DIR parameter to be const.
+	Include savedir.h.  Indent cpp directives.
+	* src/chgrp.c: Remove old-style savedir dcl.  Include savedir.h for
+	prototype.
+	* src/chmod.c: Likewise.
+	* src/chown.c: Likewise.
+	* src/copy.c: Likewise.
+	* src/du.c: Likewise.
+	Achim Blumensath reported that ``on systems where off_t is 64 bits
+	[not having a prototype] results in passing 0 as name_size...''
+
 1997-09-27  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/Makefile.am (Makefile): Depend on $(BUILT_SOURCES), per
