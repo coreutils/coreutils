@@ -26,8 +26,11 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #include <regex.h>
 
-#ifndef _
-# define _(String) String
+#if ENABLE_NLS
+# include <libintl.h>
+# define _(Text) gettext (Text)
+#else
+# define _(Text) Text
 #endif
 
 static int
