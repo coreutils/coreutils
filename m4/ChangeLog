@@ -1,3 +1,15 @@
+2005-03-10  Jim Meyering  <jim@meyering.net>
+
+	* human.m4 (gl_HUMAN): Add intprops.h.
+	* inttostr.m4 (gl_INTTOSTR): Likewise
+	* sig2str.m4 (gl_FUNC_SIG2STR): Likewise.
+	* userspec.m4 (gl_USERSPEC): Likewise.
+	* utimecmp.m4 (gl_UTIMECMP): Likewise.
+	* xnanosleep.m4 (gl_XNANOSLEEP): Likewise.
+
+	* xstrtol.m4 (gl_XSTRTOL): Use AC_LIBSOURCES and AC_LIBOBJ
+	to list the required files.
+
 2005-03-09  Jim Meyering  <jim@meyering.net>
 
 	* argmatch.m4, cycle-check.m4: New files.
