@@ -1,5 +1,7 @@
 2004-11-12  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* Version 5.3.0.
+
 	* NEWS: Document the following change.
 	* src/pr.c (strtoumax): Declare if not declared.
 	(skip_to_page, first_page_number, last_page_number, page_number,
@@ -18,8 +20,6 @@
 	(print_header): Detect page number overflow.
 
 2004-11-07  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.3.0.
 
 	* src/uname.c [__APPLE__]: Include <mach/machine.h> and <mach-o/arch.h>.
 	(main) [__APPLE__]: Get the processor type via syscall rather than
