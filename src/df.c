@@ -43,7 +43,7 @@
 #define PROGRAM_NAME "df"
 
 #define AUTHORS \
-  "Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert"
+  N_ ("Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert")
 
 char *xgetcwd ();
 

@@ -46,7 +46,7 @@
 #define PROGRAM_NAME "tail"
 
 #define AUTHORS \
-  "Paul Rubin, David MacKenzie, Ian Lance Taylor, and Jim Meyering"
+  N_ ("Paul Rubin, David MacKenzie, Ian Lance Taylor, and Jim Meyering")
 
 #ifndef ENOSYS
   /* Some systems don't have ENOSYS -- this should be a big enough
