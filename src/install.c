@@ -313,7 +313,7 @@ main (int argc, char **argv)
 	   _("the strip option may not be used when installing a directory"));
 
   if (make_backups)
-    x.backup_type = xget_version ("--version-control", version_control_string);
+    x.backup_type = xget_version ("backup type", version_control_string);
 
   n_files = argc - optind;
   file = argv + optind;
@@ -641,7 +641,8 @@ In the first two formats, copy SOURCE to DEST or multiple SOURCE(s) to\n\
 the existing DIRECTORY, while setting permission modes and owner/group.\n\
 In the third format, create all components of the given DIRECTORY(ies).\n\
 \n\
-  -b, --backup[=CONTROL]  make a backup of each existing destination file\n\
+      --backup[=CONTROL] make a backup of each existing destination file\n\
+  -b                  like --backup but does not accept an argument\n\
   -c                  (ignored)\n\
   -d, --directory     treat all arguments as directory names; create all\n\
                         components of the specified directories\n\
