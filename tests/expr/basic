@@ -37,7 +37,18 @@ my @Tests =
      ['paren5', '9 + \( 100 % 6 \)', {OUT => '13'}],
 
      # Before 2.0.12, this would output `1'.
-     ['00', '00 \< 0!', {OUT => '0'}, {EXIT => 1}],
+     ['0bang', '00 \< 0!', {OUT => '0'}, {EXIT => 1}],
+
+     # In 5.1.3 and earlier, these would exit with status 0.
+     ['00', '00', {OUT => '00'}, {EXIT => 1}],
+     ['minus0', '-0', {OUT => '-0'}, {EXIT => 1}],
+
+     # In 5.1.3 and earlier, these would report errors.
+     ['andand', '0 \& 1 / 0', {OUT => '0'}, {EXIT => 1}],
+     ['oror', '1 \| 1 / 0', {OUT => '1'}, {EXIT => 0}],
+
+     # In 5.1.3 and earlier, this would output the empty string.
+     ['orempty', '"" \| ""', {OUT => '0'}, {EXIT => 1}],
 
      # This evoked a syntax error diagnostic before 2.0.12.
      ['minus2', '-- 2 + 2', {OUT => '4'}],
