@@ -143,6 +143,7 @@ check-TESTS: $(TESTS)
 	  echo "========================"; \
 	else \
 	  echo "$$failed of $$all tests failed"; \
+	  exit 1; \
 	fi
 info:
 dvi:
