@@ -4,7 +4,8 @@
 	(tail invocation): Use `@value's instead of referring to the
 	output of `tail --help' for defaults.
 	* doc/Makefile.am (constants.texi): New rule.
-	(CLEANFILES): Add constants.texi.
+	(EXTRA_DIST): Add constants.texi.
+	(MAINTAINERCLEANFILES): Add it here, too.
 	(textutils.dvi, textutils.info): Depend on constants.texi.
 
 	* src/tail.c (usage): Clarify descriptions of the --max-* options.
