@@ -1,3 +1,14 @@
+Tue Nov 19 23:10:32 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (AM_SANITY_CHECK_CC): Remove it.  Autoconf-2.11
+	has this built-in.
+	(AC_FUNC_FNMATCH): Use this macro (new with autoconf-2.11) instead
+	of open-coding it.
+
+Sun Nov 17 20:53:00 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/touch.c: Remove unused declaration of mktime.  From Tony Leneis.
+
 Mon Nov  4 23:18:03 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (test for group_member): Handle it separately
