@@ -8,7 +8,7 @@ TODO
   */
 
 /* asa.c - interpret ASA carriage control characters
-   Copyright (C) 94, 1996 Thomas Koenig
+   Copyright (C) 94, 1996, 2003 Thomas Koenig
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ TODO
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include "xalloc.h"
 
 /* Macros */
 
@@ -53,9 +54,6 @@ static size_t line_num = 0;
 static size_t linebuf_size;
 
 /* Function declarations */
-
-char *xmalloc ();
-char *xrealloc ();
 
 static size_t readline (FILE *fp, char **a);
 static void add_line (str *);
