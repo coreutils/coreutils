@@ -15,9 +15,11 @@ esac
 echo=echo
 \$echo testing with $xx=\$xx
 errors=0
+test "\$srcdir" || srcdir=.
+test "\$verbose" && \$xx --version 2> /dev/null
 EOF
 
-print "# $xx --version 2> /dev/null\n";
+
 my %seen;
 
 while (<>)
@@ -34,7 +36,7 @@ while (<>)
       if (defined ($seen{$test_name}));
     $seen{$test_name} = 1;
     my $in = "t$test_name.in";
-    my $exp_name = 't' . $test_name . '.exp';
+    my $exp_name = "t$test_name.exp";
     my $out = "t$test_name.out";
 
     open(IN, ">$in") || die "$0: $in: $!\n";
@@ -45,7 +47,8 @@ while (<>)
     close(EXP);
     my $arg2 = ($s2 ? " '$s2'" : '');
     my $err_output = "t$test_name.err";
-    my $cmd = "\$xx $flags \'$s1\'$arg2 < $in > $out 2> $err_output";
+    my $cmd = "\$xx $flags \'$s1\'$arg2 < \$srcdir/$in > $out 2> $err_output";
+    $exp_name = "\$srcdir/$exp_name";
     print <<EOF ;
 $cmd
 code=\$?
@@ -53,7 +56,7 @@ if test \$code != $e_ret_code ; then
   \$echo Test $test_name failed: $xx return code \$code differs from expected value $e_ret_code 1>&2
   errors=`expr \$errors + 1`
 else
-  cmp $out $exp_name
+  cmp $out \$srcdir/$exp_name
   case \$? in
     0) if test "\$verbose" ; then \$echo passed $test_name; fi ;; # equal files
     1) \$echo Test $test_name failed: files $out and $exp_name differ 1>&2;
