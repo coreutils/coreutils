@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
 
    NOTE: The canonical source of this file is maintained with the GNU C Library.
    Bugs can be reported to bug-glibc@prep.ai.mit.edu.
@@ -817,6 +817,13 @@ my_strftime (s, maxsize, format, tp ut_argument)
 	    char *u = ufmt;
 	    char ubuf[1024]; /* enough for any single format in practice */
 	    size_t len;
+	    /* Make sure we're calling the actual underlying strftime.
+	       In some cases, config.h contains something like
+	       "#define strftime rpl_strftime".  */
+# ifdef strftime
+#  undef strftime
+# endif
+
 	    *u++ = '%';
 	    if (modifier != 0)
 	      *u++ = modifier;
