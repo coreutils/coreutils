@@ -16,6 +16,7 @@
 	Use memchr rather than a `while' loop.
 	(line_bytes_split): Use size_t instead of int.
 	Use safe_read, not stdread.
+	(main): Add some FIXME comments to remind me to remove casts.
 
 	* src/system.h (ST_BLKSIZE): Correct comment describing how to
 	reproduce HPUX-11 cat failure.  From Petter Reinholdtsen.
