@@ -1,5 +1,22 @@
 2000-08-27  Jim Meyering  <meyering@lucent.com>
 
+	* src/copy.c (copy_reg): New parameters: X and NEW_DST.
+	Remove the SPARSE_MODE parameter.  Update caller.
+	Perform POSIX-mandated (for cp) open-with-O_WRONLY|O_TRUNC when
+	the regular destination file exists;  upon failure, unlink
+	that existing file, then open again, but with O_WRONLY|O_CREAT.
+	(copy_internal): `force' in not related to interactive; remove
+	the conjunct.
+	Remove the entire `else if (x->force)' block;  justifying
+	removal of the non-directory part is easy:  POSIX requires we try
+	to open an existing regular file, so we can't unlink it beforehand.
+	The part that changes the mode on a directory to allow overwriting
+	isn't necessary.
+
+	* src/copy.c (copy_reg): Rename two goto labels.
+	(copy_internal): Set `new_dst' when the move_mode rename fails,
+	since we then unlink the destination file.
+
 	* src/cp.c (usage): --force is independent of --interactive.
 
 2000-08-24  Jim Meyering  <meyering@lucent.com>
