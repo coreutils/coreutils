@@ -259,7 +259,7 @@ canonicalize_filename_mode (const char *name, canonicalize_mode_t can_mode)
 	      st.st_mode = 0;
 	    }
 
-	  if (S_ISLNK (st.st_mode)) do
+	  if (S_ISLNK (st.st_mode))
 	    {
 	      char *buf;
 	      size_t n, len;
@@ -269,7 +269,7 @@ canonicalize_filename_mode (const char *name, canonicalize_mode_t can_mode)
 		{
 		  __set_errno (ELOOP);
 		  if (can_mode == CAN_MISSING)
-		    break;
+		    continue;
 		  else
 		    goto error;
 		}
@@ -279,7 +279,7 @@ canonicalize_filename_mode (const char *name, canonicalize_mode_t can_mode)
 	      if (!buf)
 		{
 		  if (can_mode == CAN_MISSING)
-		    break;
+		    continue;
 		  else
 		    goto error;
 		}
@@ -311,7 +311,7 @@ canonicalize_filename_mode (const char *name, canonicalize_mode_t can_mode)
 		  while ((--dest)[-1] != '/');
 
 	      free (buf);
-	    } while (0);
+	    }
 	  else
 	    {
 	      if (!S_ISDIR (st.st_mode) && *end && (can_mode != CAN_MISSING))
