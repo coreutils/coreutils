@@ -65,8 +65,8 @@ enum Change_status
   CH_NO_CHANGE_REQUESTED
 };
 
-static int change_dir_owner __P ((const char *dir, uid_t user, gid_t group,
-				  struct stat *statp));
+static int change_dir_owner PARAMS ((const char *dir, uid_t user, gid_t group,
+				     struct stat *statp));
 
 /* The name the program was run with. */
 char *program_name;
