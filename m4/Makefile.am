@@ -15,10 +15,9 @@ strftime.m4 uintmax_t.m4 uptime.m4 utimbuf.m4 utime.m4 utimes.m4
 Makefile.am: Makefile.am.in
 	rm -f $@ $@t
 	sed -n '1,/^##m4-files-begin/p' $< > $@t
-	( echo EXTRA_DIST = README Makefile.am.in; \
-	  find . -type f -name '*.m4' -print |sed 's,^\./,,' |sort ) \
-	    |fmt | (tr '\012' @; echo) \
-	    |sed 's/@$$/%/;s/@/ \\@/g' |tr @% '\012\012' \
+	echo EXTRA_DIST = README Makefile.am.in *.m4 \
+	  |fmt | (tr '\012' @; echo) \
+	  |sed 's/@$$/%/;s/@/ \\@/g' |tr @% '\012\012' \
 	  >> $@t
 	sed -n '/^##m4-files-end/,$$p' $< >> $@t
 	chmod a-w $@t
