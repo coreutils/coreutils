@@ -1,5 +1,5 @@
 [5.0.1]
-* date's %r format directive now honors any locale setting
+* date's %r format directive now honors locale settings
 * md5sum --check now accepts the output of the BSD md5sum program, e.g.,
   MD5 (f) = d41d8cd98f00b204e9800998ecf8427e
 * du no longer runs out of file descriptors unnecessarily
@@ -11,7 +11,7 @@
 * df and `readlink --canonicalize' no longer corrupt the heap on
   non-glibc, non-solaris systems
 * `env -u SOME_ALREADY_UNSET_VARIABLE' no longer dumps core on non-glibc systems
-* fmt now diagnose invalid obsolescent width specifications like `-72x'
+* fmt now diagnoses invalid obsolescent width specifications like `-72x'
 * fmt now exits nonzero when unable to open an input file
 * rm now works around Darwin6.5's broken readdir function;  before `rm -rf DIR'
   would fail to remove all files in DIR if there were more than 338.
