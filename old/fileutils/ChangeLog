@@ -1,3 +1,12 @@
+1999-11-22  Paul Eggert  <eggert@twinsun.com>
+
+	* src/df.c (df_readable): Now returns char const *, not char *.
+	New arg NEGATIVE.
+	(ceil_percent): Now returns double, not int.
+	Be more careful about adding 1 to a wild value.
+	(show_dev): Don't filter out wild sizes from the underlying operating
+	system; instead, show them to the user as faithfully as possible.
+
 1999-11-23  Jim Meyering  <meyering@ascend.com>
 
 	* doc/getdate.texi (Calendar date item): Correction regarding 0..68/
