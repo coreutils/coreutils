@@ -31,7 +31,7 @@ fail=0
 # This must exit nonzero.
 du d >/dev/null 2>out && fail=1
 cat <<\EOF > exp
-du: cannot change to directory `d/no-x': Permission denied
+du: `d/no-x': Permission denied
 EOF
 
 cmp out exp || fail=1
