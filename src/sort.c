@@ -36,7 +36,6 @@
 #include "memcoll.h"
 #include "physmem.h"
 #include "stdio-safer.h"
-#include "xalloc.h"
 #include "xstrtol.h"
 
 #if HAVE_SYS_RESOURCE_H
