@@ -31,12 +31,20 @@ enum Interactive
   I_UNSPECIFIED
 };
 
+/* How to handle symbolic links.  */
 enum Dereference_symlink
 {
   DEREF_UNDEFINED = 1,
-  DEREF_ALWAYS,
+
+  /* Copy the symbolic link itself.  -P  */
   DEREF_NEVER,
-  DEREF_COMMAND_LINE_ARGUMENTS
+
+  /* If the symbolic is a command line argument, then copy
+     its referent.  Otherwise, copy the symbolic link itself.  -H  */
+  DEREF_COMMAND_LINE_ARGUMENTS,
+
+  /* Copy the referent of the symbolic link.  -L  */
+  DEREF_ALWAYS
 };
 
 # define VALID_SPARSE_MODE(Mode)	\
@@ -52,7 +60,7 @@ struct cp_options
      them, symbolic links,) as if they were regular files. */
   int copy_as_regular;
 
-  /* If nonzero, dereference symbolic links (copy the files they point to). */
+  /* How to handle symlinks.  */
   enum Dereference_symlink dereference;
 
   /* If nonzero, remove each existing destination nondirectory before
@@ -91,6 +99,18 @@ struct cp_options
   int preserve_ownership;
   int preserve_mode;
   int preserve_timestamps;
+
+  /* Enabled for mv, and for cp by the --preserve=links option.
+     If nonzero, attempt to preserve in the destination files any
+     logical hard links between the source files.  If used with cp's
+     --no-dereference option, and copying two hard-linked files,
+     the two corresponding destination files will also be hard linked.
+
+     If used with cp's --dereference (-L) option, then, as that option implies,
+     hard links are *not* preserved.  However, when copying a file F and
+     a symlink S to F, the resulting S and F in the destination directory
+     will be hard links to the same file (a copy of F).  */
+  int preserve_links;
 
   /* If nonzero and any of the above (for preserve) file attributes cannot
      be applied to a destination file, treat it as a failure and return
