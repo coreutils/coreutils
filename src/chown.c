@@ -236,6 +236,25 @@ change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group,
 		       quote (file));
 	      errors = 1;
 	    }
+	  else
+	    {
+	      /* The change succeeded.  On some systems, the chown function
+		 resets the `special' permission bits.  When run by a
+		 `privileged' user, this program must ensure that at least
+		 the set-uid and set-group ones are still set.  */
+	      if (file_stats.st_mode & ~S_IRWXUGO
+		  /* If this is a symlink and we changed *it*, then skip it.  */
+		  && ! (S_ISLNK (file_stats.st_mode) && change_symlinks))
+		{
+		  if (chmod (file, file_stats.st_mode))
+		    {
+		      error (0, saved_errno,
+			     _("unable to restore permissions of %s"),
+			     quote (file));
+		      fail = 1;
+		    }
+		}
+	    }
 	}
       else if (verbosity == V_high)
 	{
