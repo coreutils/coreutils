@@ -2,6 +2,8 @@
 
 	* Version 4.1.7.
 
+	* Use autoconf-2.53.  Regenerate dependent files.
+
 	* Makefile.maint (GZIP, BZIP2): Remove definitions.
 	($(my_distdir).tar.bz2): Remove rule.  Now, it's built by `make dist'.
 
