@@ -40,7 +40,6 @@ char *strstr ();
 char *xmalloc ();
 char *xrealloc ();
 char *xstrdup ();
-void error ();
 
 #include <errno.h>
 #ifndef errno
@@ -713,7 +712,6 @@ read_filesystem_list (int need_fs_type)
   {
     int bufsize;
     char *entries, *thisent;
-    struct vmount *vmp;
 
     /* Ask how many bytes to allocate for the mounted filesystem info.  */
     mntctl (MCTL_QUERY, sizeof bufsize, (struct vmount *) &bufsize);
@@ -726,16 +724,9 @@ read_filesystem_list (int need_fs_type)
 	 thisent += vmp->vmt_length)
       {
 	char *options, *ignore;
+	struct vmount *vmp;
+
 	vmp = (struct vmount *) thisent;
-
-	options = thisent + vmp->vmt_data[VMT_ARGS].vmt_off;
-	ignore = strstr (options, "ignore");
-	if (ignore
-	    && (ignore == options || ignore[-1] == ',')
-	    && (ignore[sizeof "ignore" - 1] == ','
-		|| ignore[sizeof "ignore" - 1] == '\0'))
-	  continue;
-
 	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
 	if (vmp->vmt_flags & MNT_REMOTE)
 	  {
@@ -758,7 +749,12 @@ read_filesystem_list (int need_fs_type)
 	  }
 	me->me_mountdir = xstrdup (thisent + vmp->vmt_data[VMT_STUB].vmt_off);
 	me->me_type = xstrdup (fstype_to_string (vmp->vmt_gfstype));
-	me->me_dummy = ME_DUMMY (me->me_devname, me->me_type);
+	options = thisent + vmp->vmt_data[VMT_ARGS].vmt_off;
+	ignore = strstr (options, "ignore");
+	me->me_dummy = (ignore
+			&& (ignore == options || ignore[-1] == ',')
+			&& (ignore[sizeof "ignore" - 1] == ','
+			    || ignore[sizeof "ignore" - 1] == '\0'));
 	me->me_dev = (dev_t) -1; /* vmt_fsid might be the info we want.  */
 
 	/* Add to the linked list. */
