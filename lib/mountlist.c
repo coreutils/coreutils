@@ -1,5 +1,7 @@
 /* mountlist.c -- return a list of mounted file systems
-   Copyright (C) 1991, 1992, 1997-2004 Free Software Foundation, Inc.
+
+   Copyright (C) 1991, 1992, 1997, 1998, 1999, 2000, 2001, 2002, 2003,
+   2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,8 +21,9 @@
 # include <config.h>
 #endif
 
+#include "mountlist.h"
+
 #include <stdio.h>
-#include <sys/types.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -133,14 +136,30 @@ char *strstr ();
 # define MNT_IGNORE(M) 0
 #endif
 
-#include "mountlist.h"
-
 #if USE_UNLOCKED_IO
 # include "unlocked-io.h"
 #endif
 
 #ifndef SIZE_MAX
 # define SIZE_MAX ((size_t) -1)
+#endif
+
+#ifndef ME_DUMMY
+# define ME_DUMMY(Fs_name, Fs_type)		\
+    (strcmp (Fs_type, "autofs") == 0		\
+     || strcmp (Fs_type, "subfs") == 0		\
+     /* for Irix 6.5 */				\
+     || strcmp (Fs_type, "ignore") == 0)
+#endif
+
+#ifndef ME_REMOTE
+/* A file system is `remote' if its Fs_name contains a `:'
+   or if (it is of type smbfs and its Fs_name starts with `//').  */
+# define ME_REMOTE(Fs_name, Fs_type)		\
+    (strchr (Fs_name, ':') != 0			\
+     || ((Fs_name)[0] == '/'			\
+	 && (Fs_name)[1] == '/'			\
+	 && strcmp (Fs_type, "smbfs") == 0))
 #endif
 
 #if MOUNTED_GETMNTINFO
