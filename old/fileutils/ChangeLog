@@ -1,6 +1,26 @@
-2002-07-10  Jim Meyering  <meyering@lucent.com>
+2002-07-14  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.10.
+
+	Under some circumstances, rm would fail due to a lack of
+	permissions, but give a misleading diagnostic like this:
+	rm: cannot chdir from `.' to `foo': Not a directory
+	* src/remove.c (remove_dir): Detect the case in which unlinking a
+	non-directory fails with EPERM, and give an appropriate diagnostic.
+
+2002-07-13  Jim Meyering  <meyering@lucent.com>
+
+	* tests/rm/fail-eperm: New file/test, for the above.
+	* tests/rm/Makefile.am (TESTS): Add fail-eperm.
+
+	* src/stat.c (print_it): Use xstrdup, not strdup.
+	Use strspn to avoid an explicit loop.
+	Use fputc rather than printf "\n".
+
+	* src/stat.c: Include quote.h.
+	(print_stat): Use xreadlink, rather than using readlink directly.
+	Use the quote function rather than hard-coded double quotes.
+	Use error, not perror.
 
 2002-07-09  Martin Michlmayr  <tbm@cyrius.com>
 
@@ -49,16 +69,6 @@
 	(decode_switches): If a time style is prefixed by "posix-", ignore
 	it if in the POSIX locale.  Default style is now posix-long-iso.
 	(usage): Explain the above.
-
-2002-07-07  Jim Meyering  <meyering@lucent.com>
-
-	* src/stat.c (print_it): Use xstrdup, not strdup.
-	Use fputc rather than printf "\n".
-
-	* src/stat.c: Include quote.h.
-	(print_stat): Use xreadlink, rather than using readlink directly.
-	Use the quote function rather than hard-coded double quotes.
-	Use error, not perror.
 
 2002-07-06  Jim Meyering  <meyering@lucent.com>
 
