@@ -1,5 +1,5 @@
 /* printf - format and print data
-   Copyright (C) 1990-1998, Free Software Foundation, Inc.
+   Copyright (C) 1990-2000, Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -33,6 +33,8 @@
    \v = vertical tab
    \0ooo = octal number (ooo is 0 to 3 digits)
    \xhhh = hexadecimal number (hhh is 1 to 3 digits)
+   \uhhhh = 16-bit Unicode character (hhhh is 4 digits)
+   \Uhhhhhhhh = 32-bit Unicode character (hhhhhhhh is 8 digits)
 
    Additional directive:
 
@@ -51,6 +53,7 @@
 #include "system.h"
 #include "long-options.h"
 #include "error.h"
+#include "unicodeio.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "printf"
@@ -115,8 +118,10 @@ FORMAT controls the output as in C printf.  Interpreted sequences are:\n\
   \\r      carriage return\n\
   \\t      horizontal tab\n\
   \\v      vertical tab\n\
-  \\xNNN   character with hexadecimal value NNN (1 to 3 digits)\n\
+  \\xNNN   byte with hexadecimal value NNN (1 to 3 digits)\n\
 \n\
+  \\uNNNN  character with hexadecimal value NNNN (4 digits)\n\
+  \\UNNNNNNNN  character with hexadecimal value NNNNNNNN (8 digits)\n\
   %%%%      a single %%\n\
   %%b      ARGUMENT as a string with `\\' escapes interpreted\n\
 \n\
@@ -246,6 +251,34 @@ print_esc (const char *escstart)
     }
   else if (strchr ("\"\\abcfnrtv", *p))
     print_esc_char (*p++);
+  else if (!posixly_correct && (*p == 'u' || *p == 'U'))
+    {
+      char esc_char = *p;
+      unsigned int uni_value;
+
+      uni_value = 0;
+      for (esc_length = (esc_char == 'u' ? 4 : 8), ++p;
+	   esc_length > 0;
+	   --esc_length, ++p)
+	{
+	  if (!ISXDIGIT (*p))
+	    error (1, 0, _("missing hexadecimal number in escape"));
+	  uni_value = uni_value * 16 + hextobin (*p);
+	}
+
+      /* A universal character name shall not specify a character short
+	 identifier in the range 00000000 through 00000020, 0000007F through
+	 0000009F, or 0000D800 through 0000DFFF inclusive. A universal
+	 character name shall not designate a character in the required
+	 character set.  */
+      if ((uni_value >= 0x00 && uni_value <= 0x9f
+	   && uni_value != 0x24 && uni_value != 0x40 && uni_value != 0x60)
+	  || (uni_value >= 0xd800 && uni_value <= 0xdfff))
+	error (1, 0, _("invalid universal character name \\%c%0*x"),
+	       esc_char, (esc_char == 'u' ? 4 : 8), uni_value);
+
+      print_unicode_char (stdout, uni_value);
+    }
   else
     error (1, 0, _("\\%c: invalid escape"), *p);
   return p - escstart - 1;
