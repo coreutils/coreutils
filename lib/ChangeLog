@@ -20,6 +20,9 @@
 	[FTSENT] (fts_pathlen): Change type from u_short to size_t.
 	(fts_level): Change type from u_short to int.
 
+	* Makefile.am (libfetish_a_SOURCES): Add fts.c fts_.h.
+	Remove ftw_.h.
+
 2003-09-29  Paul Eggert  <eggert@twinsun.com>
 
 	* strftime.c (tm_diff) [! HAVE_TM_GMTOFF]:
