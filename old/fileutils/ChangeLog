@@ -1,4 +1,12 @@
+2001-08-04  Jim Meyering  <meyering@lucent.com>
+
+	* tests/mv/i-3: New test for the above fix.
+
 2001-07-15  Jim Meyering  <meyering@lucent.com>
+
+	* src/copy.c (copy_internal): Set *rename_succeeded, so that
+	the caller (mv) doesn't remove the source file.
+	FIXME: add test case
 
 	* src/Makefile.am (INCLUDES): Add -I../lib so sys2.h can include
 	the new, generated file, unlocked-io.h.
@@ -25,6 +33,7 @@
 	* src/copy.c (get_dest_mode): Clear set-user-ID and set-group-ID bits
 	when copying (i.e., not in move mode) and not preserving permissions.
 	Reported by kytek@cybercomm.net.
+	FIXME: add a test for this!!!
 
 2001-07-02  Jim Meyering  <meyering@lucent.com>
 
