@@ -9794,6 +9794,8 @@ same as %b
 day of year (001@dots{}366)
 @item %m
 month (01@dots{}12)
+@item %u
+day of week (1@dots{}7) with 1 corresponding to Monday
 @item %U
 week number of year with Sunday as first day of week (00@dots{}53).
 Days in a new year preceding the first Sunday are in week zero.
