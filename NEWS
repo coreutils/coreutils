@@ -1,4 +1,5 @@
 [5.0]
+* false --help now exits nonzero
 
 [4.5.12]
 * printf no longer treats \x specially when POSIXLY_CORRECT is set
