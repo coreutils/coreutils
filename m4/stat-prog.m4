@@ -26,7 +26,7 @@ AC_DEFUN([cu_PREREQ_STAT_PROG],
     [AC_INCLUDES_DEFAULT
      [#if HAVE_SYS_PARAM_H
        #include <sys/param.h>
-      #endif]))
+      #endif]])
   AC_CHECK_FUNCS_ONCE(statvfs)
 
   # For `struct statfs' on Ultrix 4.4.
