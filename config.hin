@@ -1369,6 +1369,14 @@
 /* Define if tzset clobbers localtime's static buffer. */
 #undef TZSET_CLOBBERS_LOCALTIME_BUFFER
 
+/* Define to its maximum value if an unsigned integer type of width exactly 32
+   bits exists and the standard includes do not define UINT32_MAX. */
+#undef UINT32_MAX
+
+/* Define to its maximum value if an unsigned integer type wide enough to hold
+   a pointer exists and the standard includes do not define UINTPTR_MAX. */
+#undef UINTPTR_MAX
+
 /* Define to 1 for Encore UMAX. */
 #undef UMAX
 
@@ -1546,11 +1554,16 @@
 /* Define to `int' if <sys/types.h> doesn't define. */
 #undef uid_t
 
+/* Define to the type of a unsigned integer type of width exactly 32 bits if
+   such a type exists and the standard includes do not define it. */
+#undef uint32_t
+
 /* Define to unsigned long or unsigned long long if <stdint.h> and
    <inttypes.h> don't define. */
 #undef uintmax_t
 
-/* Define to `size_t' if <sys/types.h> does not define. */
+/* Define to the type of a unsigned integer type wide enough to hold a
+   pointer, if such a type exists. */
 #undef uintptr_t
 
 /* Define to rpl_utime if the replacement function should be used. */
