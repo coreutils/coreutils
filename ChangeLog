@@ -1,6 +1,11 @@
-2002-12-20  Jim Meyering  <jim@meyering.net>
+2002-12-21  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.5.
+
+	* announce-gen: Generate MML-formatted announcement.
+	This makes it a *lot* harder to send stale MD5/SHA1 signatures.
+
+2002-12-20  Jim Meyering  <jim@meyering.net>
 
 	* src/touch.c (touch): Change the wording of a diagnostic so
 	that it makes sense both when the file exists and when it doesn't.
