@@ -71,12 +71,27 @@ extern int errno;
 # endif
 #endif
 
+#ifndef S_ISUID
+# define S_ISUID 04000
+#endif
+#ifndef S_ISGID
+# define S_ISGID 02000
+#endif
+#ifndef S_ISVTX
+# define S_ISVTX 01000
+#endif
+#ifndef S_IRUSR
+# define S_IRUSR 0200
+#endif
 #ifndef S_IWUSR
 # define S_IWUSR 0200
 #endif
-
 #ifndef S_IXUSR
 # define S_IXUSR 0100
+#endif
+
+#ifndef S_IRWXU
+# define S_IRWXU (S_IRUSR | S_IWUSR | S_IXUSR)
 #endif
 
 #define WX_USR (S_IWUSR | S_IXUSR)
@@ -223,7 +238,7 @@ make_path (const char *argpath,
       char *dirpath;
 
       /* Temporarily relax umask in case it's overly restrictive.  */
-      int oldmask = umask (0);
+      mode_t oldmask = umask (0);
 
       /* Make a copy of ARGPATH that we can scribble NULs on.  */
       dirpath = (char *) alloca (strlen (argpath) + 1);
@@ -235,9 +250,9 @@ make_path (const char *argpath,
 	 their owners, we need to fix their permissions after making them.  */
       if (((parent_mode & WX_USR) != WX_USR)
 	  || ((owner != (uid_t) -1 || group != (gid_t) -1)
-	      && (parent_mode & 07000) != 0))
+	      && (parent_mode & (S_ISUID | S_ISGID | S_ISVTX)) != 0))
 	{
-	  tmp_mode = 0700;
+	  tmp_mode = S_IRWXU;
 	  re_protect = 1;
 	}
       else
@@ -363,7 +378,8 @@ make_path (const char *argpath,
 	      retval = 1;
 	    }
 	  /* chown may have turned off some permission bits we wanted.  */
-	  if ((mode & 07000) != 0 && chmod (basename_dir, mode))
+	  if ((mode & (S_ISUID | S_ISGID | S_ISVTX))
+	      && chmod (basename_dir, mode))
 	    {
 	      error (0, errno, _("cannot chmod %s"), dirpath);
 	      retval = 1;
