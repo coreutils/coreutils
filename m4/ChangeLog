@@ -1,3 +1,9 @@
+1999-11-05  Jim Meyering  <meyering@ascend.com>
+
+	* jm-macros.m4 (jm_CHECK_ALL_TYPES): Move some tests from configure.in
+	of textutils, fileutils, and sh-utils into this one (shared between
+	those packages) file.
+
 1999-11-03  Jim Meyering  <meyering@ascend.com>
 
 	* ssize_t.m4: Remove file.  No longer needed since the new version of
