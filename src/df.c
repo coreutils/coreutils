@@ -185,6 +185,13 @@ excluded_fstype (const char *fstype)
   return 0;
 }
 
+/* Like human_readable, except return "-" if the argument is -1.  */
+static char *
+df_readable (uintmax_t n, char *buf, int from_units, int to_units, int base)
+{
+  return n == -1 ? "-" : human_readable (n, buf, from_units, to_units, base);
+}
+
 /* Display a space listing for the disk device with absolute path DISK.
    If MOUNT_POINT is non-NULL, it is the path of the root of the
    filesystem on DISK.
@@ -235,23 +242,28 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
       double inodes_percent_used;
       uintmax_t inodes_used;
 
-      if (fsu.fsu_files == 0)
+      if (fsu.fsu_files == -1 || fsu.fsu_files < fsu.fsu_ffree)
 	{
-	  inodes_used = 0;
-	  fsu.fsu_ffree = 0;
-	  inodes_percent_used = 0;
+	  inodes_used = -1;
+	  inodes_percent_used = -1;
 	}
       else
 	{
 	  inodes_used = fsu.fsu_files - fsu.fsu_ffree;
-	  inodes_percent_used = inodes_used * 100.0 / fsu.fsu_files;
+	  inodes_percent_used =
+	    (fsu.fsu_files == 0 ? 0
+	     : inodes_used * 100.0 / fsu.fsu_files);
 	}
 
-      printf (" %7s %7s %7s %5.0f%%",
-	      human_readable (fsu.fsu_files, buf[0], 1, 1, human_readable_base),
-	      human_readable (inodes_used, buf[1], 1, 1, human_readable_base),
-	      human_readable (fsu.fsu_ffree, buf[2], 1, 1, human_readable_base),
-	      inodes_percent_used);
+      printf (" %7s %7s %7s ",
+	      df_readable (fsu.fsu_files, buf[0], 1, 1, human_readable_base),
+	      df_readable (inodes_used, buf[1], 1, 1, human_readable_base),
+	      df_readable (fsu.fsu_ffree, buf[2], 1, 1, human_readable_base));
+
+      if (inodes_percent_used < 0)
+	printf ("     - ");
+      else
+	printf (" %5.0f%%", inodes_percent_used);
     }
   else
     {
@@ -260,27 +272,31 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
       double blocks_percent_used;
       uintmax_t blocks_used;
 
-      if (fsu.fsu_blocks == 0 || fsu.fsu_bavail == (unsigned long) -1)
+      if (fsu.fsu_blocks == -1 || fsu.fsu_blocks < fsu.fsu_bfree)
 	{
-	  blocks_used = 0;
-	  fsu.fsu_bavail = 0;
-	  blocks_percent_used = 0;
+	  blocks_used = -1;
+	  blocks_percent_used = -1;
 	}
       else
 	{
 	  blocks_used = fsu.fsu_blocks - fsu.fsu_bfree;
 	  blocks_percent_used =
-	    blocks_used * 100.0 / (blocks_used + fsu.fsu_bavail);
+	    (fsu.fsu_bfree < fsu.fsu_bavail ? -1
+	     : (blocks_used + fsu.fsu_bavail) == 0 ? 0
+	     : blocks_used * 100.0 / (blocks_used + fsu.fsu_bavail));
 	}
 
-      printf (" %*s %*s  %*s  %5.0f%% ",
-	      w, human_readable (fsu.fsu_blocks, buf[0], fsu.fsu_blocksize,
-				 output_units, human_readable_base),
-	      w, human_readable (blocks_used, buf[1], fsu.fsu_blocksize,
-				 output_units, human_readable_base),
-	      w, human_readable (fsu.fsu_bavail, buf[2], fsu.fsu_blocksize,
-				 output_units, human_readable_base),
-	      blocks_percent_used);
+      printf (" %*s %*s  %*s ",
+	      w, df_readable (fsu.fsu_blocks, buf[0], fsu.fsu_blocksize,
+			      output_units, human_readable_base),
+	      w, df_readable (blocks_used, buf[1], fsu.fsu_blocksize,
+			      output_units, human_readable_base),
+	      w, df_readable (fsu.fsu_bavail, buf[2], fsu.fsu_blocksize,
+			      output_units, human_readable_base));
+      if (blocks_percent_used < 0)
+	printf ("     -  ");
+      else
+	printf (" %5.0f%% ", blocks_percent_used);
     }
 
   if (mount_point)
