@@ -259,7 +259,7 @@ main (argc, argv)
   /* Setting values of global variables.  */
   program_name = argv[0];
 
-  while ((opt = getopt_long (argc, argv, "bc:hs::tvV", long_options, NULL))
+  while ((opt = getopt_long (argc, argv, "bc:hs:tvV", long_options, NULL))
 	 != EOF)
     switch (opt)
       {
