@@ -42,7 +42,6 @@
 #include "argmatch.h"
 
 #ifndef STDC_HEADERS
-time_t mktime ();
 time_t time ();
 #endif
 
