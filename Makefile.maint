@@ -72,7 +72,7 @@ my-distcheck: writable-files po-check
 
 THIS_VERSION_REGEXP = $(subst .,\.,$(VERSION))
 # FIXME: this works only for Gnits-style test releases.
-PREV_VERSION := $(shell echo $(VERSION)|tr b-z a-y|sed 's/a$$//')
+PREV_VERSION := $(shell cat .version)
 PREV_VERSION_REGEXP := $(shell echo $(PREV_VERSION)|sed 's/\./\\./g')
 v = Version
 
@@ -162,6 +162,8 @@ alpha: writable-files po-check
 	  && xdelta delta -9 $(prev-tgz) $(distdir).tar.gz $(xd-delta) || :
 	ln $(release-archive-dir)/$(xd-delta) .
 	chmod a-w $(release-archive-dir)/$(xd-delta)
+	echo $(VERSION) > .version
+	cvs ci -m. .version
 	@echo =====================================
 	@echo =====================================
 	@echo 'scp $(xd-delta) $(distdir).tar.gz \'
