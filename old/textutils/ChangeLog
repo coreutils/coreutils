@@ -1,6 +1,13 @@
-2002-04-30  Jim Meyering  <meyering@lucent.com>
+2002-05-14  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.22.
+
+	This bug was introduced with my change of 2000-10-22 (textutils-2.0.8).
+	* src/od.c (ulonglong_t): Move declaration to precede new use.
+	[enum size_spec] (N_SIZE_SPECS): New member.
+	(width_bytes): Add initializer corresponding to ulonglong_t type.
+	(struct assert_width_bytes_matches_size_spec_decl): Declare.
+	Based on a patch from Tony Kocurko.
 
 2002-04-29  Paul Eggert  <eggert@twinsun.com>
 
