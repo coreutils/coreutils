@@ -1,3 +1,9 @@
+2000-12-25  Alexandre Duret-Lutz  <duret_g@epita.fr>
+
+	* libintl.m4 (AM_WITH_NLS): When using AC_CONFIG_AUX_DIR,
+	prepend $(top_srcdir) to the value of MKINSTALLDIRS so that it
+	can be used in subdirectories.
+
 2000-12-26  Jim Meyering  <meyering@lucent.com>
 
 	* dos.m4 (jm_AC_DOS): Rewrite (though it's still a stub) to work better
