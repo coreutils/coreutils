@@ -1,5 +1,9 @@
 Tue Oct  1 06:54:22 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in: Use result of AM_FUNC_STRTOD to set POW_LIBM.
+	* src/Makefile.am (sort_LDADD): Use any library (-lm) that
+	gets substituted for @POW_LIBM@.
+
 	* tests/md5sum-test/md5-rfc (md5sum): Use ../../src/md5sum.
 
 Mon Sep 30 23:35:46 1996  Jim Meyering  <meyering@na-net.ornl.gov>
