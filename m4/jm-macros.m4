@@ -1,4 +1,4 @@
-#serial 47   -*- autoconf -*-
+#serial 48   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -270,7 +270,10 @@ AC_DEFUN([jm_CHECK_ALL_TYPES],
   AC_REQUIRE([jm_CHECK_ALL_HEADERS])
   AC_REQUIRE([AC_HEADER_DIRENT])
   AC_REQUIRE([AC_HEADER_STDC])
-  AC_CHECK_MEMBERS([struct stat.st_blksize],,,[$ac_includes_default
+  AC_CHECK_MEMBERS(
+    [struct stat.st_author,
+     struct stat.st_blksize],,,
+    [$ac_includes_default
 #include <sys/stat.h>
   ])
   AC_REQUIRE([AC_STRUCT_ST_BLOCKS])
