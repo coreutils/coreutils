@@ -19,11 +19,12 @@
 # include <config.h>
 #endif
 
+#include "yesno.h"
+
 #include <ctype.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "unlocked-io.h"
-#include "yesno.h"
 
 /* Read one line from standard input
    and return nonzero if that line begins with y or Y,
@@ -31,7 +32,7 @@
 
 extern int rpmatch (char const *response);
 
-int
+bool
 yesno (void)
 {
   /* We make some assumptions here:
