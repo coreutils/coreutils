@@ -1,4 +1,12 @@
 [4.5.5]
+* ls dangling-symlink now prints `dangling-symlink'.
+  Before, it would fail with `no such file or directory'
+* ls -s symlink and ls -i symlink now print attributes of `symlink', rather
+  than attributes of their referents
+* shred's --zero (-z) option no longer gobbles up any following string
+  Before, `shred --zero file' would produce `shred: missing file argument',
+  and worse, `shred --zero f1 f2 ...' would appear to work, but would leave
+  the first file untouched.
 * readlink: new program
 * cut: new feature: when used to select ranges of byte offsets (as opposed
   to ranges of fields) and when --output-delimiter=STRING is specified,
