@@ -4,7 +4,7 @@
 	not one that is guaranteed to be `no'.  Use `no_such_member'
 	to indicate that condition, rather than `-1'.
 	Change the name of the cache variable to have the gl_ prefix.
-	Prompted by a patch from Richard Dawe.
+	Prompted by a patch from Richard Dawe for DJGPP.
 
 2003-03-14  Jim Meyering  <jim@meyering.net>
 
