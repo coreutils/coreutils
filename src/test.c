@@ -106,18 +106,18 @@ static int pos;		/* The offset of the current argument in ARGV. */
 static int argc;	/* The number of arguments present in ARGV. */
 static char **argv;	/* The argument list. */
 
-static int unop __P ((int op));
-static int binop __P ((char *s));
-static int unary_operator __P ((void));
-static int binary_operator __P ((void));
-static int two_arguments __P ((void));
-static int three_arguments __P ((void));
-static int posixtest __P ((void));
+static int unop PARAMS ((int op));
+static int binop PARAMS ((char *s));
+static int unary_operator PARAMS ((void));
+static int binary_operator PARAMS ((void));
+static int two_arguments PARAMS ((void));
+static int three_arguments PARAMS ((void));
+static int posixtest PARAMS ((void));
 
-static int expr __P ((void));
-static int term __P ((void));
-static int and __P ((void));
-static int or __P ((void));
+static int expr PARAMS ((void));
+static int term PARAMS ((void));
+static int and PARAMS ((void));
+static int or PARAMS ((void));
 
 #if __GNUC__ >= 2 && defined (__GNUC_MINOR__) \
     && __GNUC_MINOR__ >= 5 && !defined (__STRICT_ANSI__)
@@ -126,8 +126,8 @@ static int or __P ((void));
 # define NO_RETURN_ATTRIBUTE /* empty */
 #endif
 
-static void test_syntax_error __P ((char *format, char *arg)) NO_RETURN_ATTRIBUTE;
-static void beyond __P ((void)) NO_RETURN_ATTRIBUTE;
+static void test_syntax_error PARAMS ((char *format, char *arg)) NO_RETURN_ATTRIBUTE;
+static void beyond PARAMS ((void)) NO_RETURN_ATTRIBUTE;
 
 static void
 test_syntax_error (char *format, char *arg)

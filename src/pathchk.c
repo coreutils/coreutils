@@ -91,8 +91,8 @@
 
 char *xstrdup ();
 
-static int validate_path __P ((char *path, int portability));
-static void usage __P ((int status));
+static int validate_path PARAMS ((char *path, int portability));
+static void usage PARAMS ((int status));
 
 /* The name this program was run with. */
 char *program_name;

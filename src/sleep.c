@@ -23,7 +23,7 @@
 #include "system.h"
 #include "error.h"
 
-static long argdecode __P ((const char *s));
+static long argdecode PARAMS ((const char *s));
 
 /* The name by which this program was run. */
 char *program_name;

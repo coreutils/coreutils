@@ -28,7 +28,7 @@
 
 int full_write ();
 
-static int tee __P ((int nfiles, const char **files));
+static int tee PARAMS ((int nfiles, const char **files));
 
 /* If nonzero, append to output files rather than truncating them. */
 static int append;

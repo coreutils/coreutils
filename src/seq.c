@@ -27,10 +27,10 @@
 #include "error.h"
 #include "xstrtod.h"
 
-static double scan_double_arg __P ((const char *arg));
-static int check_format __P ((const char *format_string));
-static char *get_width_format __P ((void));
-static int print_numbers __P ((const char *format_str));
+static double scan_double_arg PARAMS ((const char *arg));
+static int check_format PARAMS ((const char *format_string));
+static char *get_width_format PARAMS ((void));
+static int print_numbers PARAMS ((const char *format_str));
 
 /* If nonzero print all number with equal width.  */
 static int equal_width;

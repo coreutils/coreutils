@@ -88,7 +88,7 @@
 
 int putenv ();
 
-static void usage __P ((int status));
+static void usage PARAMS ((int status));
 
 extern char **environ;
 

@@ -31,9 +31,9 @@
 #include <config.h>
 #include <stdio.h>
 #include <sys/types.h>
-#include <regex.h>
-
 #include "system.h"
+
+#include <regex.h>
 #include "long-options.h"
 #include "error.h"
 
@@ -72,18 +72,18 @@ char *program_name;
 
 char *xstrdup ();
 
-static VALUE *docolon __P ((VALUE *sv, VALUE *pv));
-static VALUE *eval __P ((void));
-static VALUE *int_value __P ((int i));
-static VALUE *str_value __P ((char *s));
-static int isstring __P ((VALUE *v));
-static int nextarg __P ((char *str));
-static int nomoreargs __P ((void));
-static int null __P ((VALUE *v));
-static int toarith __P ((VALUE *v));
-static void freev __P ((VALUE *v));
-static void printv __P ((VALUE *v));
-static void tostring __P ((VALUE *v));
+static VALUE *docolon PARAMS ((VALUE *sv, VALUE *pv));
+static VALUE *eval PARAMS ((void));
+static VALUE *int_value PARAMS ((int i));
+static VALUE *str_value PARAMS ((char *s));
+static int isstring PARAMS ((VALUE *v));
+static int nextarg PARAMS ((char *str));
+static int nomoreargs PARAMS ((void));
+static int null PARAMS ((VALUE *v));
+static int toarith PARAMS ((VALUE *v));
+static void freev PARAMS ((VALUE *v));
+static void printv PARAMS ((VALUE *v));
+static void tostring PARAMS ((VALUE *v));
 
 #ifdef EVAL_TRACE
 static void trace ();

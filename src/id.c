@@ -40,11 +40,11 @@ gid_t getegid ();
 
 int getugroups ();
 
-static void print_user __P ((int uid));
-static void print_group __P ((int gid));
-static void print_group_list __P ((char *username));
-static void print_full_info __P ((char *username));
-static void usage __P ((int status));
+static void print_user PARAMS ((int uid));
+static void print_group PARAMS ((int gid));
+static void print_group_list PARAMS ((const char *username));
+static void print_full_info PARAMS ((const char *username));
+static void usage PARAMS ((int status));
 
 /* The name this program was run with. */
 char *program_name;
@@ -252,7 +252,7 @@ xgetgroups (const char *username, int *n_groups, GETGROUPS_T **groups)
 /* Print all of the distinct groups the user is in. */
 
 static void
-print_group_list (char *username)
+print_group_list (const char *username)
 {
   print_group (rgid);
   if (egid != rgid)
@@ -287,7 +287,7 @@ print_group_list (char *username)
 /* Print all of the info about the user's user and group IDs. */
 
 static void
-print_full_info (char *username)
+print_full_info (const char *username)
 {
   struct passwd *pwd;
   struct group *grp;

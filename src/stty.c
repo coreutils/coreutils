@@ -393,29 +393,29 @@ static struct control_info control_info[] =
   {NULL, 0, 0}
 };
 
-static const char *visible __P ((unsigned int ch));
-static unsigned long baud_to_value __P ((speed_t speed));
-static int recover_mode __P ((char *arg, struct termios *mode));
-static int screen_columns __P ((void));
-static int set_mode __P ((struct mode_info *info, int reversed,
-			  struct termios *mode));
-static long integer_arg __P ((const char *s));
-static speed_t string_to_baud __P ((const char *arg));
-static tcflag_t *mode_type_flag __P ((enum mode_type type,
+static const char *visible PARAMS ((unsigned int ch));
+static unsigned long baud_to_value PARAMS ((speed_t speed));
+static int recover_mode PARAMS ((char *arg, struct termios *mode));
+static int screen_columns PARAMS ((void));
+static int set_mode PARAMS ((struct mode_info *info, int reversed,
+			     struct termios *mode));
+static long integer_arg PARAMS ((const char *s));
+static speed_t string_to_baud PARAMS ((const char *arg));
+static tcflag_t *mode_type_flag PARAMS ((enum mode_type type,
+					 struct termios *mode));
+static void display_all PARAMS ((struct termios *mode));
+static void display_changed PARAMS ((struct termios *mode));
+static void display_recoverable PARAMS ((struct termios *mode));
+static void display_settings PARAMS ((enum output_type output_type,
 				      struct termios *mode));
-static void display_all __P ((struct termios *mode));
-static void display_changed __P ((struct termios *mode));
-static void display_recoverable __P ((struct termios *mode));
-static void display_settings __P ((enum output_type output_type,
-				   struct termios *mode));
-static void display_speed __P ((struct termios *mode, int fancy));
-static void display_window_size __P ((int fancy));
-static void sane_mode __P ((struct termios *mode));
-static void set_control_char __P ((struct control_info *info, const char *arg,
-				   struct termios *mode));
-static void set_speed __P ((enum speed_setting type, const char *arg,
+static void display_speed PARAMS ((struct termios *mode, int fancy));
+static void display_window_size PARAMS ((int fancy));
+static void sane_mode PARAMS ((struct termios *mode));
+static void set_control_char PARAMS ((struct control_info *info, const char *arg,
+				      struct termios *mode));
+static void set_speed PARAMS ((enum speed_setting type, const char *arg,
 			    struct termios *mode));
-static void set_window_size __P ((int rows, int cols));
+static void set_window_size PARAMS ((int rows, int cols));
 
 /* The width of the screen, for output wrapping. */
 static int max_col;

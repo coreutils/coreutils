@@ -30,7 +30,7 @@
 #include "system.h"
 #include "error.h"
 
-static void usage __P ((int status));
+static void usage PARAMS ((int status));
 
 /* The name under which this program was run. */
 char *program_name;

@@ -40,8 +40,8 @@
 # define GET_PRIORITY() getpriority (PRIO_PROCESS, 0)
 #endif
 
-static int isinteger __P ((char *s));
-static void usage __P ((int status));
+static int isinteger PARAMS ((char *s));
+static void usage PARAMS ((int status));
 
 /* The name this program was run with. */
 char *program_name;

@@ -41,8 +41,8 @@
 #include "system.h"
 #include "error.h"
 
-static void print_element __P ((unsigned int mask, char *element));
-static void usage __P ((int status));
+static void print_element PARAMS ((unsigned int mask, char *element));
+static void usage PARAMS ((int status));
 
 /* Values that are bitwise or'd into `toprint'. */
 /* Operating system name. */
