@@ -1,3 +1,13 @@
+2002-06-07  Jim Meyering  <meyering@lucent.com>
+
+	* prereq.m4 (jm_PREREQ_STAT): Check for sys/param.h and sys/mount.h.
+	They're needed at least for NetBSD 1.5.2.
+	($statxfs_includes): Include those same headers.
+	($statxfs_includes): Include sys/vfs.h if available.
+	($statxfs_includes): Likewise for sys/statvfs.h.
+	Check for the following members in both structs statfs and statvfs:
+	f_basetype, f_type, f_fsid.__val, f_namemax, f_namelen.
+
 2002-06-01  Jim Meyering  <meyering@lucent.com>
 
 	* d-type.m4 (jm_CHECK_TYPE_STRUCT_DIRENT_D_TYPE): Rename macro:
