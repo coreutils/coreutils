@@ -1,5 +1,9 @@
 1999-05-05  Jim Meyering  <meyering@ascend.com>
 
+	* lib/strtol.c (TYPE_SIGNED, TYPE_MAXIMUM, TYPE_MINIMUM): Define.
+	(ULONG_LONG_MAX, LONG_LONG_MAX, LONG_LONG_MIN): Define if not defined.
+	Based on a patch from Kaveh Ghazi.
+
 	* src/ls.c (USE_ACL): Define this only #if
 	(HAVE_SYS_ACL_H && HAVE_ACL && defined GETACLCNT).
 	Use `USE_ACL' in place of `HAVE_ACL' everywhere else.  From Kaveh Ghazi.
