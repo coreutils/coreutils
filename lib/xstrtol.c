@@ -24,15 +24,15 @@ extern int errno;
 #endif
 
 #if HAVE_LIMITS_H
-#include <limits.h>
+# include <limits.h>
 #endif
 
 #ifndef ULONG_MAX
-#define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
+# define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
 #endif
 
 #ifndef LONG_MAX
-#define LONG_MAX ((long int) (ULONG_MAX >> 1))
+# define LONG_MAX ((long int) (ULONG_MAX >> 1))
 #endif
 
 #include "xstrtol.h"
