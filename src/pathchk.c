@@ -240,7 +240,9 @@ validate_file_name (char *file, bool portability)
 	  size = pathconf (dir, _PC_PATH_MAX);
 	  if (size < 0 && errno != 0)
 	    {
-	      error (0, errno, dir);
+	      error (0, errno,
+		     _("%s: unable to determine maximum file name length"),
+		     dir);
 	      return false;
 	    }
 	  maxsize = MIN (size, SIZE_MAX);
