@@ -6,7 +6,7 @@ use Getopt::Long;
 use Digest::MD5;
 use Digest::SHA1;
 
-(my $VERSION = '$Revision: 1.13 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.14 $ ') =~ tr/[0-9].//cd;
 (my $ME = $0) =~ s|.*/||;
 
 my %valid_release_types = map {$_ => 1} qw (alpha beta major);
@@ -303,7 +303,10 @@ EOF
 	{
 	  if ( ! $in_items)
 	    {
-	      $line =~ /^[^ *].*\Q$curr_version\E/o
+	      # Match lines like this one:
+	      # * Major changes in release 5.0.1:
+	      # but not any other line that starts with a space, *, or -.
+	      $line =~ /^(\* .*changes in release :|[^ *-].*)\Q$curr_version\E/o
 		or next;
 	      $in_items = 1;
 	      print $line;
