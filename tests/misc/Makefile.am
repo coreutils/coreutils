@@ -11,6 +11,7 @@ TESTS_ENVIRONMENT = \
   PROG=$$tst
 
 TESTS = \
+  date-sec \
   paste-no-nl \
   stat-fmt \
   expand \
