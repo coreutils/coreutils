@@ -79,18 +79,12 @@ USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 l = @l@
 
-x = tac
+x = head
 explicit =
-maint_gen = basic-0.I basic-0.X basic-a.I basic-a.X basic-b.I basic-b.X \
-basic-c.I basic-c.X basic-d.I basic-d.X basic-e.I basic-e.X basic-f.I \
-basic-f.X basic-g.I basic-g.X basic-h.I basic-h.X basic-i.I basic-i.X \
-basic-j.I basic-j.X basic-k.I basic-k.X b2-e.I b2-e.X b2-f.I b2-f.X b2-g.I \
-b2-g.X b2-h.I b2-h.X b2-i.I b2-i.X b2-j.I b2-j.X b2-k.I b2-k.X
-run_gen = basic-0.O basic-0.E basic-a.O basic-a.E basic-b.O basic-b.E \
-basic-c.O basic-c.E basic-d.O basic-d.E basic-e.O basic-e.E basic-f.O \
-basic-f.E basic-g.O basic-g.E basic-h.O basic-h.E basic-i.O basic-i.E \
-basic-j.O basic-j.E basic-k.O basic-k.E b2-e.O b2-e.E b2-f.O b2-f.E b2-g.O \
-b2-g.E b2-h.O b2-h.E b2-i.O b2-i.E b2-j.O b2-j.E b2-k.O b2-k.E
+maint_gen = idem-1.I idem-1.X idem-2.I idem-2.X idem-3.I idem-3.X idem-4.I \
+idem-4.X
+run_gen = idem-1.O idem-1.E idem-2.O idem-2.E idem-3.O idem-3.E idem-4.O \
+idem-4.E
 
 EXTRA_DIST = mk-script.pl Test.pm $x-tests $(explicit) $(maint_gen)
 noinst_SCRIPTS = $x-tests
@@ -121,7 +115,7 @@ default: all
 .SUFFIXES:
 .SUFFIXES: .pl
 $(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOMAKE) --gnits tests/tac/Makefile
+	cd $(top_srcdir) && $(AUTOMAKE) --gnits tests/head/Makefile
 
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
@@ -133,13 +127,13 @@ TAGS:
 
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
 
-subdir = tests/tac
+subdir = tests/head
 
 distdir: $(DISTFILES)
 	here=`cd $(top_builddir) && pwd`; \
 	top_distdir=`cd $(top_distdir) && pwd`; \
 	cd $(top_srcdir) \
-	  && $(AUTOMAKE) --include-deps --build-dir=$$here --srcdir-name=$(top_srcdir) --output-dir=$$top_distdir --gnits tests/tac/Makefile
+	  && $(AUTOMAKE) --include-deps --build-dir=$$here --srcdir-name=$(top_srcdir) --output-dir=$$top_distdir --gnits tests/head/Makefile
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  test -f $(distdir)/$$file \
