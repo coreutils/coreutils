@@ -1,9 +1,20 @@
+2003-11-24  Paul Eggert  <eggert@twinsun.com>
+
+	Parse floating-point operands and options in the C locale.
+	POSIX requires this for printf, and we might as well be
+	consistent elsewhere (tail, sleep, seq).
+
+	* src/printf.c: Remove decls of strtod, strtol, strtoul; no longer
+	needed now that we assume C89.  Include "c-strtod.h".
+	(xstrtod): Call c_strtod, not strtod.
+	* src/sleep.c: Include "c-strtod.h".
+	(main): Update xstrtod call to include new argument, c_strtod.
+	* src/seq.c (scan_double_arg): Likewise.
+	* src/tail.c (parse_options): Likewise.
+
 2003-11-24  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.0.
-
-	FIXME: update coreutils.texi:
-	chmod's new options: --preserve-root and --no-preserve-root.
 
 	* tests/rm/fail-2eperm: Handle another errno variant (HPUX, EPERM).
 	Reported by Mark Conty.
