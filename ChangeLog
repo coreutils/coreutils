@@ -1,6 +1,20 @@
-2005-03-15  Corinna Vinschen  <corinna@vinschen.de>  (tiny change)
+2005-03-15  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	Both `pr -0' and e.g., `pr -03' would evoke `column count too large'.
+	`pr -0' should give a better diagnostic and `pr -03' should be
+	equivalent to `pr -3'.
+	* src/pr.c (parse_column_count): Change return type to void.
+	Call error (EXIT_FAILURE, ... for an invalid string.
+	(main): Allocate space for column_count_string using malloc.
+	Accumulate all old-style column-count digits before converting.
+	When the number of columns is specified via both old-style,
+	(e.g., -3), and a long option (--columns=5), ensure that only
+	the last one specified takes effect.
+	* tests/pr/Test.pm: Add tests for the above.
+
+2005-03-15  Corinna Vinschen  <corinna@vinschen.de>  (tiny change)
 
 	* src/copy.c (copy_reg): Copy regular files in binary mode.
 
