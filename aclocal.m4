@@ -2557,7 +2557,7 @@ AC_DEFUN([AC_FUNC_ACL],
    AC_CHECK_FUNCS(acl)])
 
 #serial 1
-# Use replacement ftw.c if the one in the C library is inadequate or buggy.
+# Use the replacement ftw.c if the one in the C library is inadequate or buggy.
 # From Jim Meyering
 
 AC_DEFUN([AC_FUNC_FTW],
@@ -2566,14 +2566,17 @@ AC_DEFUN([AC_FUNC_FTW],
   AC_REQUIRE([AC_HEADER_DIRENT])
   AC_CHECK_HEADERS(sys/param.h)
   AC_CHECK_DECLS([stpcpy])
+
+  # In the event that we have to use the replacement ftw.c,
+  # see if we'll also need the replacement tsearch.c.
   AC_CHECK_FUNC([tdestroy], , [need_tdestroy=1])
+
   AC_CACHE_CHECK([for working GNU ftw], ac_cv_func_ftw_working,
   [
-
   # The following test would fail prior to glibc-2.3.2, because `depth'
   # would be 2 rather than 4.
   mkdir -p conftest.dir/a/b/c
-  AC_RUN_IFELSE([AC_LANG_SOURCE([], [[
+  AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #include <string.h>
 #include <stdlib.h>
 #include <ftw.h>
@@ -2602,11 +2605,16 @@ main ()
                [ac_cv_func_ftw_working=yes],
                [ac_cv_func_ftw_working=no],
                [ac_cv_func_ftw_working=no])])
+  rm -rf conftest.dir
   if test $ac_cv_func_ftw_working = no; then
     AC_LIBOBJ([ftw])
+    AC_CONFIG_LINKS([$ac_config_libobj_dir/ftw.h:$ac_config_libobj_dir/ftw_.h])
     # Add tsearch.o IFF we have to use the replacement ftw.c.
     if test -n "$need_tdestroy"; then
       AC_LIBOBJ([tsearch])
+      # Link search.h to search_.h if we use the replacement tsearch.c.
+      AC_CONFIG_LINKS(
+        [$ac_config_libobj_dir/search.h:$ac_config_libobj_dir/search_.h])
     fi
   fi
 ])# AC_FUNC_FTW
