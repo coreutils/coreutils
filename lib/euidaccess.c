@@ -99,7 +99,7 @@ static int have_ids = 0;
    Then, if the user is not running set-uid or set-gid, use access
    instead of attempting a manual and non-portable comparison.  */
 
-int
+static int
 eaccess_stat (statp, mode, path)
      const struct stat *statp;
      int mode;
