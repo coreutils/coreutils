@@ -1,5 +1,22 @@
 2004-11-16  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* getopt.c (_getopt_initialize, _getopt_internal_r, _getopt_internal):
+	New arg POSIXLY_CORRECT.  All callers changed.
+	(getopt): Argv is now char * const *, as per standard.
+	(_getopt_internal_r, _getopt_internal): Argv is now char **,
+	not char *__getopt_argv_const *.
+	* getopt1.c (getopt_long, _getopt_long_r, getopt_long_only,
+	_getopt_long_only_r): Likewise.
+	* getopt_.h (getopt, getopt_long, geopt_long_only): Likewise.
+	* getopt_int.h (_getopt_internal, _getopt_internal_r,
+	_getopt_long_r, _getopt_long_only_r): Likewise.
+	* getopt_.h (__getopt_argv_const): Remove.
+	(getopt): Argv is now char * const *, as per standard.
+
+	* canon-host.c: Include "strdup.h".
+	(canon_host): Use getaddrinfo if available, so that IPv6 works.
+	Use strdup instead of malloc/strcpy to duplicate strings.
+
 	* getdate.y (tORDINAL): New token.
 	(day, relunit): Allow it for relative times.
 	(relative_time_table): Use tORDINAL for ordinals.
