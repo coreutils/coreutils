@@ -1,6 +1,11 @@
-2002-12-04  Jim Meyering  <jim@meyering.net>
+2002-12-06  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.4.
+
+	* tests/ls/file-type: New file.
+	A test to contrast ls -F and ls --indicator-style=file-type.
+
+2002-12-04  Jim Meyering  <jim@meyering.net>
 
 	* tests/ls/follow-slink: Make sure the symlink was created.
 	Richard Dawe reported that `ln -s link link' succeeds, but creates
