@@ -11,6 +11,7 @@ chown.m4 \
 codeset.m4 \
 d-ino.m4 \
 d-type.m4 \
+dos.m4 \
 error.m4 \
 fnmatch.m4 \
 fpending.m4 \
