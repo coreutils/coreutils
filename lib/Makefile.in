@@ -190,7 +190,7 @@ libfetish_a_SOURCES = \
   file-type.c file-type.h \
   fopen-safer.c \
   fsusage.h \
-  ftw_.h \
+  fts.c fts_.h \
   full-read.c full-read.h \
   full-write.c full-write.h \
   getline.h \
@@ -305,24 +305,24 @@ am_libfetish_a_OBJECTS = acl.$(OBJEXT) getdate.$(OBJEXT) \
 	closeout.$(OBJEXT) cycle-check.$(OBJEXT) diacrit.$(OBJEXT) \
 	dirname.$(OBJEXT) dup-safer.$(OBJEXT) exclude.$(OBJEXT) \
 	exitfail.$(OBJEXT) filemode.$(OBJEXT) file-type.$(OBJEXT) \
-	fopen-safer.$(OBJEXT) full-read.$(OBJEXT) full-write.$(OBJEXT) \
-	gettime.$(OBJEXT) getugroups.$(OBJEXT) hard-locale.$(OBJEXT) \
-	human.$(OBJEXT) idcache.$(OBJEXT) isdir.$(OBJEXT) \
-	imaxtostr.$(OBJEXT) linebuffer.$(OBJEXT) localcharset.$(OBJEXT) \
-	long-options.$(OBJEXT) makepath.$(OBJEXT) mbswidth.$(OBJEXT) \
-	md5.$(OBJEXT) memcasecmp.$(OBJEXT) memcoll.$(OBJEXT) \
-	modechange.$(OBJEXT) offtostr.$(OBJEXT) path-concat.$(OBJEXT) \
-	physmem.$(OBJEXT) quote.$(OBJEXT) quotearg.$(OBJEXT) \
-	readtokens.$(OBJEXT) safe-read.$(OBJEXT) safe-write.$(OBJEXT) \
-	same.$(OBJEXT) save-cwd.$(OBJEXT) savedir.$(OBJEXT) \
-	settime.$(OBJEXT) sha.$(OBJEXT) stripslash.$(OBJEXT) \
-	time_r.$(OBJEXT) umaxtostr.$(OBJEXT) unicodeio.$(OBJEXT) \
-	userspec.$(OBJEXT) utimens.$(OBJEXT) version-etc.$(OBJEXT) \
-	xgetcwd.$(OBJEXT) xgethostname.$(OBJEXT) xmalloc.$(OBJEXT) \
-	xmemcoll.$(OBJEXT) xnanosleep.$(OBJEXT) xreadlink.$(OBJEXT) \
-	xstrdup.$(OBJEXT) xstrndup.$(OBJEXT) xstrtod.$(OBJEXT) \
-	xstrtol.$(OBJEXT) xstrtoul.$(OBJEXT) xstrtoumax.$(OBJEXT) \
-	yesno.$(OBJEXT)
+	fopen-safer.$(OBJEXT) fts.$(OBJEXT) full-read.$(OBJEXT) \
+	full-write.$(OBJEXT) gettime.$(OBJEXT) getugroups.$(OBJEXT) \
+	hard-locale.$(OBJEXT) human.$(OBJEXT) idcache.$(OBJEXT) \
+	isdir.$(OBJEXT) imaxtostr.$(OBJEXT) linebuffer.$(OBJEXT) \
+	localcharset.$(OBJEXT) long-options.$(OBJEXT) \
+	makepath.$(OBJEXT) mbswidth.$(OBJEXT) md5.$(OBJEXT) \
+	memcasecmp.$(OBJEXT) memcoll.$(OBJEXT) modechange.$(OBJEXT) \
+	offtostr.$(OBJEXT) path-concat.$(OBJEXT) physmem.$(OBJEXT) \
+	quote.$(OBJEXT) quotearg.$(OBJEXT) readtokens.$(OBJEXT) \
+	safe-read.$(OBJEXT) safe-write.$(OBJEXT) same.$(OBJEXT) \
+	save-cwd.$(OBJEXT) savedir.$(OBJEXT) settime.$(OBJEXT) \
+	sha.$(OBJEXT) stripslash.$(OBJEXT) time_r.$(OBJEXT) \
+	umaxtostr.$(OBJEXT) unicodeio.$(OBJEXT) userspec.$(OBJEXT) \
+	utimens.$(OBJEXT) version-etc.$(OBJEXT) xgetcwd.$(OBJEXT) \
+	xgethostname.$(OBJEXT) xmalloc.$(OBJEXT) xmemcoll.$(OBJEXT) \
+	xnanosleep.$(OBJEXT) xreadlink.$(OBJEXT) xstrdup.$(OBJEXT) \
+	xstrndup.$(OBJEXT) xstrtod.$(OBJEXT) xstrtol.$(OBJEXT) \
+	xstrtoul.$(OBJEXT) xstrtoumax.$(OBJEXT) yesno.$(OBJEXT)
 libfetish_a_OBJECTS = $(am_libfetish_a_OBJECTS)
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
@@ -375,10 +375,10 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/dup-safer.Po ./$(DEPDIR)/exclude.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/exitfail.Po ./$(DEPDIR)/file-type.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/filemode.Po ./$(DEPDIR)/fopen-safer.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/full-read.Po ./$(DEPDIR)/full-write.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/getdate.Po ./$(DEPDIR)/getopt.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/getopt1.Po ./$(DEPDIR)/gettime.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/getugroups.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/fts.Po ./$(DEPDIR)/full-read.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/full-write.Po ./$(DEPDIR)/getdate.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/getopt.Po ./$(DEPDIR)/getopt1.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/gettime.Po ./$(DEPDIR)/getugroups.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/hard-locale.Po ./$(DEPDIR)/hash-pjw.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/hash.Po ./$(DEPDIR)/human.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/idcache.Po ./$(DEPDIR)/imaxtostr.Po \
@@ -550,6 +550,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/file-type.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filemode.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fopen-safer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fts.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-read.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-write.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getdate.Po@am__quote@
@@ -772,9 +773,9 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 	-rm -f getdate.c
 	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
-	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am
 
 clean-am: clean-generic clean-noinstLIBRARIES mostlyclean-am
