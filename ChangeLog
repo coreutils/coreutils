@@ -1,9 +1,14 @@
-2003-11-22  Jim Meyering  <jim@meyering.net>
+2003-11-24  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.0.
 
 	FIXME: update coreutils.texi:
 	chmod's new options: --preserve-root and --no-preserve-root.
+
+	* tests/rm/fail-2eperm: Handle another errno variant (HPUX, EPERM).
+	Reported by Mark Conty.
+
+2003-11-22  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (sc_xalloc_h_in_src): Remove rule.  Subsumed by...
 	(sc_system_h_headers): Do this test only if sys2.h exists.
