@@ -32,6 +32,9 @@ GNU coreutils NEWS                                    -*- outline -*-
     incorrect, as it failed to update the last-changed time and reset
     special permission bits, as POSIX requires.
 
+    "chown : file", "chown '' file", and "chgrp '' file" now succeed
+    without changing the uid or gid, instead of reporting an error.
+
     Do not report an error if the owner or group of a
     recursively-encountered symbolic link cannot be updated because
     the file system does not support it.
