@@ -1362,14 +1362,10 @@ dump (void)
 {
   char *block[2];
   off_t current_offset;
-  off_t end_offset;
+  off_t end_offset IF_LINT (= 0);
   int idx;
   int err;
   size_t n_bytes_read;
-
-#ifdef lint  /* Suppress `used before initialized' warning.  */
-  end_offset = 0;
-#endif
 
   block[0] = (char *) alloca (bytes_per_block);
   block[1] = (char *) alloca (bytes_per_block);
@@ -1581,11 +1577,7 @@ main (int argc, char **argv)
 
   /* The old-style `pseudo starting address' to be printed in parentheses
      after any true address.  */
-  long int pseudo_start;
-
-#ifdef lint  /* Suppress `used before initialized' warning.  */
-  pseudo_start = 0;
-#endif
+  long int pseudo_start IF_LINT (= 0);
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
