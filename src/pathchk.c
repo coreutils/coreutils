@@ -43,11 +43,6 @@
 #include <getopt.h>
 #include <sys/types.h>
 
-#include <errno.h>
-#ifndef errno
-extern int errno;
-#endif
-
 #include "system.h"
 #include "error.h"
 #include "long-options.h"
