@@ -19,7 +19,7 @@ cd $srcdir || framework_failure=1
 abs_srcdir=`pwd`
 cd $pwd || framework_failure=1
 
-mkdir $tmp || framework_failure=1
+mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 
 if test $framework_failure = 1; then
