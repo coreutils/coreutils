@@ -12,7 +12,7 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.16 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.17 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my $debug = $ENV{DEBUG};
@@ -204,6 +204,7 @@ sub run_tests ($$$$$)
   # Verify that test names are distinct.
   my $bad_test_name = 0;
   my %seen;
+  my %seen_8dot3;
   my $t;
   foreach $t (@$t_spec)
     {
@@ -214,6 +215,18 @@ sub run_tests ($$$$$)
 	  $bad_test_name = 1;
 	}
       $seen{$test_name} = 1;
+
+      if (0)
+	{
+	  my $t8 = lc substr $test_name, 0, 8;
+	  if ($seen_8dot3{$t8})
+	    {
+	      warn "$program_name: 8.3 test name conflict: "
+		. "$test_name, $seen_8dot3{$t8}\n";
+	      $bad_test_name = 1;
+	    }
+	  $seen_8dot3{$t8} = $test_name;
+	}
 
       # The test name may be no longer than 12 bytes,
       # so that we can add a two-byte suffix without exceeding
