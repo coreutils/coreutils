@@ -1,3 +1,7 @@
+2000-04-30  Jim Meyering  <meyering@lucent.com>
+
+	* src/yes.c: Detect and terminate upon write failure.
+
 2000-04-14  Jim Meyering  <meyering@lucent.com>
 
 	* src/seq.c: Shorten `#ifdef HAVE_...' to `#if HAVE_...' and
