@@ -63,6 +63,20 @@ $prog '7 \2y \02y \002y \0002y\n' |tr '\0\2' '*=' >> out
 
 $prog '8 %b %b %b %b\n' '\1y' '\01y' '\001y' '\0001y'|tr '\1' = >> out
 
+$prog '9 %*dx\n' -2 0 >>out || fail=1
+
+$prog '10 %.*dx\n' -2147483648 0 >>out || fail=1
+
+$prog '11 %*c\n' 2 x >>out || fail=1
+
+$prog '%#d\n' 0 >>out 2> /dev/null && fail=1
+
+$prog '%0s\n' 0 >>out 2> /dev/null && fail=1
+
+$prog '%.9c\n' 0 >>out 2> /dev/null && fail=1
+
+$prog '%'\''s\n' 0 >>out 2> /dev/null && fail=1
+
 cat <<\EOF > exp
 1 x  y
 2 failed, as expected
@@ -72,6 +86,9 @@ cat <<\EOF > exp
 6 !
 7 =y =y =y *2y
 8 =y =y =y =y
+9 0 x
+10 0x
+11  x
 EOF
 
 cmp out exp || fail=1
