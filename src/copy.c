@@ -428,9 +428,8 @@ copy_internal (const char *src_path, const char *dst_path,
 	      && ! x->force
 
 	      /* Allow them to be the same (and don't set `same') if
-		 we're in move mode and they're both symlinks.  */
+		 we're in move mode and the target is a symlink.  */
 	      && !(move_mode
-		   && S_ISLNK (src_sb.st_mode)
 		   && S_ISLNK (dst_sb.st_mode))
 
 	      /* If we're making a backup, we'll detect the problem case in
