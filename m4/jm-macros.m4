@@ -1,4 +1,4 @@
-#serial 79   -*- autoconf -*-
+#serial 80   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
