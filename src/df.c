@@ -330,7 +330,7 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
 #endif
       printf (" %s", mount_point);
     }
-  PUTCHAR ('\n');
+  putchar ('\n');
 }
 
 /* Identify the directory, if any, that device

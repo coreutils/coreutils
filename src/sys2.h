@@ -162,86 +162,62 @@ off_t lseek ();
    are more efficient but not thread-safe.  That they're not thread-safe
    is fine since all these applications are single threaded.  */
 
-#undef CLEARERR
 #ifdef HAVE_CLEARERR_UNLOCKED
-# define CLEARERR(S) clearerr_unlocked (S)
-#else
-# define CLEARERR(S) clearerr (S)
+# undef clearerr
+# define clearerr(S) clearerr_unlocked (S)
 #endif
 
-#undef FCLOSE
 #ifdef HAVE_FCLOSE_UNLOCKED
-# define FCLOSE(S) fclose_unlocked (S)
-#else
-# define FCLOSE(S) fclose (S)
+# undef fclose
+# define fclose(S) fclose_unlocked (S)
 #endif
 
-#undef FEOF
 #ifdef HAVE_FEOF_UNLOCKED
-# define FEOF(S) feof_unlocked (S)
-#else
-# define FEOF(S) feof (S)
+# undef feof
+# define feof(S) feof_unlocked (S)
 #endif
 
-#undef FERROR
 #ifdef HAVE_FERROR_UNLOCKED
-# define FERROR(S) ferror_unlocked (S)
-#else
-# define FERROR(S) ferror (S)
+# undef ferror
+# define ferror(S) ferror_unlocked (S)
 #endif
 
-#undef FFLUSH
 #ifdef HAVE_FFLUSH_UNLOCKED
-# define FFLUSH(S) fflush_unlocked (S)
-#else
-# define FFLUSH(S) fflush (S)
+# undef fflush
+# define fflush(S) fflush_unlocked (S)
 #endif
 
-#undef FPUTC
 #ifdef HAVE_FPUTC_UNLOCKED
-# define FPUTC(C, S) fputc_unlocked (C, S)
-#else
-# define FPUTC(C, S) fputc (C, S)
+# undef fputc
+# define fputc(C, S) fputc_unlocked (C, S)
 #endif
 
-#undef FREAD
 #ifdef HAVE_FREAD_UNLOCKED
-# define FREAD(P, Z, N, S) fread_unlocked (P, Z, N, S)
-#else
-# define FREAD(P, Z, N, S) fread (P, Z, N, S)
+# undef fread
+# define fread(P, Z, N, S) fread_unlocked (P, Z, N, S)
 #endif
 
-#undef FWRITE
 #ifdef HAVE_FWRITE_UNLOCKED
-# define FWRITE(P, Z, N, S) fwrite_unlocked (P, Z, N, S)
-#else
-# define FWRITE(P, Z, N, S) fwrite (P, Z, N, S)
+# undef fwrite
+# define fwrite(P, Z, N, S) fwrite_unlocked (P, Z, N, S)
 #endif
 
-#undef GETC
 #ifdef HAVE_GETC_UNLOCKED
-# define GETC(S) getc_unlocked (S)
-#else
-# define GETC(S) getc (S)
+# undef getc
+# define getc(S) getc_unlocked (S)
 #endif
 
-#undef GETCHAR
 #ifdef HAVE_GETCHAR_UNLOCKED
-# define GETCHAR(S) getchar_unlocked (S)
-#else
-# define GETCHAR(S) getchar (S)
+# undef getchar
+# define getchar(S) getchar_unlocked (S)
 #endif
 
-#undef PUTC
 #ifdef HAVE_PUTC_UNLOCKED
-# define PUTC(C, S) putc_unlocked (C, S)
-#else
-# define PUTC(C, S) putc (C, S)
+# undef putc
+# define putc(C, S) putc_unlocked (C, S)
 #endif
 
-#undef PUTCHAR
 #ifdef HAVE_PUTCHAR_UNLOCKED
-# define PUTCHAR(C) putchar_unlocked (C)
-#else
-# define PUTCHAR(C) putchar (C)
+# undef putchar
+# define putchar(C) putchar_unlocked (C)
 #endif
