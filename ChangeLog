@@ -1,3 +1,22 @@
+2004-06-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Some POSIX-conformance cleanups for tr.
+
+	* src/tr.c (posix_pedantic): Remove; no longer needed since
+	we need to test this in just one place now.
+	(usage): Mention -C.
+	(unquote): Note that \055, \n, etc are escaped.
+	Do not worry about POSIXLY_CORRECT when warning about ambiguous
+	escape sequences.
+	\ at end of string stands for itself.
+	Do not diagnose invalid backslash escapes: POSIX says the behavior
+	is unspecified in this case, so we don't need to diagnose it.
+	(main): Add support for -C (currently an alias for -c).
+	Do not diagnose 'tr [:upper:] [:upper:], as POSIX does not require
+	a diagnostic here.
+	* tests/tr/Test.pm: New tests bs-055, bs-at-end, repeat-Compl.
+	Fix comment for range-a-a.
+
 2004-05-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
