@@ -1079,6 +1079,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	    }
 	  else if (! S_ISDIR (dst_sb.st_mode)
 		   && (x->unlink_dest_before_opening
+		       || (x->preserve_links && 1 < dst_sb.st_nlink)
 		       || (x->dereference == DEREF_NEVER
 			   && ! S_ISREG (src_sb.st_mode))))
 	    {
