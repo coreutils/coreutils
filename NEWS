@@ -2,6 +2,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Major changes in release 5.3.1 (2005-??-??) [unstable]
 
+** Changes for better compliance with POSIX
+
   pathchk changes:
 
     It now rejects the empty name in the normal case.  That is,
@@ -15,6 +17,11 @@ GNU coreutils NEWS                                    -*- outline -*-
     <http://www.opengroup.org/austin/interps/doc.tpl?gdid=6233>.
 
     The --portability option is now equivalent to -p -P.
+
+** Bug fixes
+
+  test now detects integer overflow when evaluating large integers,
+  rather than silently wrapping around.
 
 * Major changes in release 5.3.0 (2005-01-08) [unstable]
 
