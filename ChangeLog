@@ -1,3 +1,9 @@
+2003-04-05  Jim Meyering  <jim@meyering.net>
+
+	* configure.ac: Also check for declaration of __sys_siglist.
+	Required for Tru64 4.0D, 4.0F, and 5.1.
+	Reported by Tony Leneis.
+
 2003-04-04  Jim Meyering  <jim@meyering.net>
 
 	* src/Makefile.am (PERL): Remove unnecessary definition.
