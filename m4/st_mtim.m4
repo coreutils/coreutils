@@ -1,4 +1,4 @@
-#serial 5
+#serial 6
 
 dnl From Paul Eggert.
 
@@ -26,7 +26,7 @@ AC_DEFUN([AC_STRUCT_ST_MTIM_NSEC],
   if test $ac_cv_struct_st_mtim_nsec != no; then
     AC_DEFINE_UNQUOTED(ST_MTIM_NSEC, $ac_cv_struct_st_mtim_nsec,
       [Define to be the nanoseconds member of struct stat's st_mtim,
-   if it exists.])
+       if it exists.])
   fi
  ]
 )
