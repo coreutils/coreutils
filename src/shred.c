@@ -142,6 +142,14 @@ FIXME maybe add more discussion here?\n\
   exit (status);
 }
 
+#if ! HAVE_FDATASYNC
+static int
+fdatasync (int fd)
+{
+  return fsync (fd);
+}
+#endif
+
 /*
  * --------------------------------------------------------------------
  *     Bob Jenkins' cryptographic random number generator, ISAAC.
@@ -1200,6 +1208,10 @@ wipename (char *oldname, struct Options const *flags)
 		sync ();	/* Force directory out */
 	      if (origname)
 		{
+		  /* The use of origname (rather than oldname) here is
+		     deliberate.  It makes the -v output more intelligible
+		     at the expense of making the `renamed to ...' messages
+		     use the logical (original) file name.  */
 		  pfstatus (_("%s: renamed to `%s'"), origname, newname);
 		  if (flags->verbose > 1)
 		    flushstatus ();
