@@ -73,8 +73,10 @@ static const char *const ls_codes[] =
 
 static struct option const long_options[] =
   {
+    {"bourne-shell", no_argument, NULL, 'b'},
     {"sh", no_argument, NULL, 'b'},
     {"csh", no_argument, NULL, 'c'},
+    {"c-shell", no_argument, NULL, 'c'},
     {"help", no_argument, NULL, 'h'},
     {"version", no_argument, NULL, 'v'},
   };
@@ -91,11 +93,12 @@ usage (int status)
     {
       printf (_("Usage: %s [OPTION]... [FILE]\n"), program_name);
       printf (_("\
-  -h, --help        display this help and exit\n\
-      --version     output version information and exit\n\
+  -h, --help                  display this help and exit\n\
+      --version               output version information and exit\n\
 Determine format of output:\n\
-  -b, --sh          assume Bourne shell\n\
-  -c, --csh         assume C-shell\n"));
+  -p, --print                 output defaults\n\
+  -b, --sh, --bourne-shell    output Bourne shell code to set LS_COLOR\n\
+  -c, --csh, --c-shell        output C-shell code to set LS_COLOR\n"));
     }
 
   exit (status);
@@ -352,6 +355,7 @@ main (int argc, char *argv[])
   enum Shell_syntax syntax = SHELL_SYNTAX_UNKNOWN;
   char *ls_color_string;
   char *file;
+  int print_defaults = 0;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -360,7 +364,7 @@ main (int argc, char *argv[])
 
   parse_long_options (argc, argv, "dircolors", PACKAGE_VERSION, usage);
 
-  while ((optc = getopt_long (argc, argv, "bc", long_options, NULL))
+  while ((optc = getopt_long (argc, argv, "bcp", long_options, NULL))
 	 != EOF)
     switch (optc)
       {
@@ -372,9 +376,29 @@ main (int argc, char *argv[])
 	syntax = SHELL_SYNTAX_C;
 	break;
 
+      case 'p':
+	print_defaults = 1;
+	break;
+
       default:
 	usage (1);
       }
+
+  /* FIXME: don't allow -b with -c
+     or -p with anything else.
+     No file args allowed with -p.
+     No more than one allowed in any case.
+     */
+
+  if (print_defaults)
+    {
+      int i;
+      for (i = 0; i < G_N_LINES; i++)
+	{
+	  fwrite (G_line[i], 1, G_line_length[i], stdout);
+	  fputc ('\n', stdout);
+	}
+    }
 
   /* Use shell to determine mode, if not already done. */
   if (syntax == SHELL_SYNTAX_UNKNOWN)
@@ -382,13 +406,16 @@ main (int argc, char *argv[])
       syntax = guess_shell_syntax ();
       if (syntax == SHELL_SYNTAX_UNKNOWN)
 	{
-	  error (1, 0,
+	  error (EXIT_FAILURE, 0,
 	   _("no SHELL environment variable, and no shell type option given"));
 	}
     }
 
   file = argv[optind];
   err = dc_parse_file (file, &ls_color_string);
+
+  if (fclose (stdout) == EOF)
+    error (EXIT_FAILURE, errno, _("write error"));
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, _("standard input"));
