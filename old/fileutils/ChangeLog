@@ -1,5 +1,7 @@
 Sun Apr 21 08:04:51 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
+	* df.c (usage): Reflect that now --no-sync is the default.
+
 	* Makefile.am (LDADD): Put @INTLLIBS@ before package library.
 
 Sat Apr 20 22:48:59 1996  Jim Meyering  (meyering@na-net.ornl.gov)

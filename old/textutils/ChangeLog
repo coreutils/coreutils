@@ -1,5 +1,16 @@
 Sun Apr 21 08:04:51 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
+	* getline.c: New version from gettext-0.10.12.
+	* getline.h: Likewise.
+	* configure.in (AC_CHECK_FUNCS): Add getdelim.
+	Suggested by Ulrich Drepper.
+
+	* md5sum.c (md5_check): Remove spurious newline at end of error
+	format string.
+
+	* od.c (decode_one_format): Use printf's L modifier for long doubles,
+	not `l'.  From Eric Backus.
+
 	* Makefile.am (LDADD): Put @INTLLIBS@ before package library.
 
 	* od.c: Include <values.h>.
