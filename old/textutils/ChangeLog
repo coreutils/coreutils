@@ -1,3 +1,27 @@
+1999-11-03  Jim Meyering  <meyering@ascend.com>
+
+	Fix so that `tail -fn 2 file' works again.
+	* src/tail.c (anonymous enum) [LONG_FOLLOW_OPTION]: Define.
+	(long_options): Use LONG_FOLLOW_OPTION here, instead of 'f'.
+	(main): Remove the `::' after the `f' in getopt_long string.
+	Add `case LONG_FOLLOW_OPTION' after `case 'f':'.
+	Based on a patch from Tim Waugh.
+
+	* src/tail.c (anonymous enum) [RETRY_OPTION]: Define.
+	[MAX_UNCHANGED_STATS_OPTION]: Likewise.
+	[MAX_CONSECUTIVE_SIZE_CHANGES_OPTION]: Likewise.
+	[PID_OPTION]: Likewise.
+	(long_options): Use *_OPTION instead of CHAR_MAX + N.
+	(main): Likewise.
+
+1999-11-02  Jim Meyering  <meyering@ascend.com>
+
+	* man/help2man: Import version 1.018.
+	* man/Makefile.maint ($(man_MANS)): Remove use of --name=... option.
+	* man/*.x: Include one-line summary in [NAME] section.
+	* man/Makefile.summ (cat-summary): Remove now-unused file.
+	Suggestion for clean-up from Akim Demaille.
+
 1999-11-01  Jim Meyering  <meyering@ascend.com>
 
 	* lib/Makefile.am (MAINTAINERCLEANFILES): Set to $(BUILT_SOURCES).
