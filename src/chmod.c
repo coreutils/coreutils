@@ -197,18 +197,12 @@ change_dir_mode (const char *dir, const struct mode_change *changes,
   unsigned pathlength;		/* Bytes allocated for `path'. */
   int errors = 0;
 
-  errno = 0;
   name_space = savedir (dir, statp->st_size);
   if (name_space == NULL)
     {
-      if (errno)
-	{
-	  if (force_silent == 0)
-	    error (0, errno, "%s", dir);
-	  return 1;
-	}
-      else
-	error (1, 0, _("virtual memory exhausted"));
+      if (force_silent == 0)
+	error (0, errno, "%s", dir);
+      return 1;
     }
 
   dirlength = strlen (dir) + 1;	/* + 1 is for the trailing '/'. */
