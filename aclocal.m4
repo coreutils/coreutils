@@ -3870,6 +3870,9 @@ AC_DEFUN([GL_FUNC_GETCWD_PATH_MAX],
 #include <sys/stat.h>
 #include <sys/types.h>
 
+/* Don't get link errors because mkdir is redefined to rpl_mkdir.  */
+#undef mkdir
+
 #ifndef CHAR_BIT
 # define CHAR_BIT 8
 #endif
@@ -3925,10 +3928,18 @@ main ()
       cwd_len += 1 + strlen (DIR_NAME);
       /* If mkdir or chdir fails, be pessimistic and consider that
 	 as a failure, too.  */
-      if (mkdir (DIR_NAME, 0700) < 0
-	  || chdir (DIR_NAME) < 0
-	  || ((c = getcwd (buf, PATH_MAX)) != NULL
-	      && (len = strlen (c)) != cwd_len))
+      if (mkdir (DIR_NAME, 0700) < 0 || chdir (DIR_NAME) < 0)
+	{
+	  fail = 1;
+	  break;
+	}
+      if ((c = getcwd (buf, PATH_MAX)) == NULL)
+        {
+	  /* This allows any failure to indicate there is no bug.
+	     FIXME: check errno?  */
+	  break;
+	}
+      if ((len = strlen (c)) != cwd_len)
 	{
 	  fail = 1;
 	  break;
