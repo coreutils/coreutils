@@ -242,13 +242,12 @@ sun_week (tm)
 {
   int dl;
 
-  /* Set `dl' to the day in the year of the last day of the week previous
-     to the one containing the day specified in TM.  If the day specified
-     in TM is in the first week of the year, `dl' will be negative or 0.
-     Otherwise, calculate the number of complete weeks before our week
-     (dl / 7) and add any partial week at the start of the year (dl % 7). */
+  /* %U Week of the year (Sunday as the first day of the week) as a decimal
+     number [00-53]. All days in a new year preceding the first Sunday are
+     considered to be in week 0.  */
+
   dl = tm->tm_yday - tm->tm_wday;
-  return dl <= 0 ? 0 : dl / 7 + (dl % 7 != 0);
+  return dl < 0 ? 0 : dl / 7 + 1;
 }
 
 /* Return the week in the year of the time in TM, with the weeks
