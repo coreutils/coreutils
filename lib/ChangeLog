@@ -1,3 +1,13 @@
+2002-09-25  Paul Eggert  <eggert@twinsun.com>
+
+	* fsusage.c [! HAVE_INTTYPES_H && HAVE_STDINT_H] Include <stdint.h>.
+	(UINTMAX_MAX) [!defined UINTMAX_MAX]: New macro.
+	(PROPAGATE_ALL_ONES): Work even if X is unsigned and narrower than
+	int.  Work more efficiently if X is the same width as uintmax_t.
+	Do not compare X to -1, to avoid bogus compiler warning.
+	(get_fs_usage): (uintmax_t) -1 -> UINTMAX_MAX to avoid a cast.
+	Don't assume that f_frsize and f_bsize are the same type.
+
 2002-09-25  Jim Meyering  <meyering@lucent.com>
 
 	* fsusage.c: Remove unneeded parentheses around operands of `defined'.
