@@ -15,11 +15,6 @@
 #include <sys/types.h>
 #include <fcntl.h>
 
-#include <errno.h>
-#ifndef STDC_HEADERS
-extern int errno;
-#endif
-
 #ifdef F_CHSIZE
 
 int
@@ -36,10 +31,8 @@ ftruncate (fd, length)
 /* By William Kucharski <kucharsk@netcom.com>.  */
 
 #include <sys/stat.h>
-
-#ifdef HAVE_UNISTD_H
+#include <errno.h>
 #include <unistd.h>
-#endif
 
 int
 ftruncate (fd, length)
@@ -95,6 +88,11 @@ ftruncate (fd, length)
 }
 
 #else /* not F_CHSIZE nor F_FREESP nor HAVE_CHSIZE */
+
+#include <errno.h>
+#ifndef errno
+extern int errno;
+#endif
 
 int
 ftruncate (fd, length)
