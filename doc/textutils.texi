@@ -3426,6 +3426,11 @@ enclose ranges, translations specified in that format will still work as
 long as the brackets in @var{string1} correspond to identical brackets
 in @var{string2}.
 
+Many historically common and even accepted uses of ranges are not
+portable.  For example, on @sc{ebcdic} hosts using the @samp{A-Z}
+range will not do what most would expect because @samp{A} through @samp{Z}
+are not contiguous as they are in @sc{ascii}.
+
 @item Repeated characters
 @cindex repeated characters
 
