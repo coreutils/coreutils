@@ -1,5 +1,7 @@
 2000-01-02  Jim Meyering  <meyering@ascend.com>
 
+	* Version 4.0l.
+
 	* src/mv.c: New option: --strip-trailing-slashes.
 
 	1999-11-18  Paul Eggert  <eggert@twinsun.com>
