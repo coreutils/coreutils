@@ -1,3 +1,29 @@
+1999-04-04  Jim Meyering  <meyering@ascend.com>
+
+	* src/cat.c: Standardize --help and --version processing.
+	* src/comm.c: Likewise.
+	* src/csplit.c: Likewise.
+	* src/cut.c: Likewise.
+	* src/expand.c: Likewise.
+	* src/fmt.c: Likewise.
+	* src/fold.c: Likewise.
+	* src/head.c: Likewise.
+	* src/join.c: Likewise.
+	* src/md5sum.c: Likewise.
+	* src/nl.c: Likewise.
+	* src/od.c: Likewise.
+	* src/paste.c: Likewise.
+	* src/pr.c: Likewise.
+	* src/ptx.c: Likewise.
+	* src/split.c: Likewise.
+	* src/sum.c: Likewise.
+	* src/tac.c: Likewise.
+	* src/tail.c: Likewise.
+	* src/tr.c: Likewise.
+	* src/unexpand.c: Likewise.
+	* src/uniq.c: Likewise.
+	* src/wc.c: Likewise.
+
 1999-03-29  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in (GNU_PACKAGE): Remove related code -- now it's in
