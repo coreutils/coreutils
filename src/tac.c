@@ -155,9 +155,9 @@ static void
 output (const char *start, const char *past_end)
 {
   static char buffer[WRITESIZE];
-  static int bytes_in_buffer = 0;
-  int bytes_to_add = past_end - start;
-  int bytes_available = WRITESIZE - bytes_in_buffer;
+  static size_t bytes_in_buffer = 0;
+  size_t bytes_to_add = past_end - start;
+  size_t bytes_available = WRITESIZE - bytes_in_buffer;
 
   if (start == 0)
     {
