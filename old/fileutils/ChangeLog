@@ -1,3 +1,7 @@
+Wed Mar 31 22:03:28 1993  Jim Meyering  (meyering@comco.com)
+
+	* configure.in [MVDIR]: Don't quote right hand side.
+
 Tue Mar 30 17:42:11 1993  david d `zoo' zuhn  (zoo at cirdan.cygnus.com)
 
 	* ls.c: Add -G,--no-group option to inhibit display of group
