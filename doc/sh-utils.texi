@@ -2566,7 +2566,7 @@ To print a date without the leading zero for one-digit days
 of the month, you can use the (GNU extension) @code{-} modifier to suppress
 the padding altogether.
 @example
-date -d=1may '+%B %-d'
+date -d 1may '+%B %-d'
 @end example
 
 @item
@@ -2595,31 +2595,31 @@ To convert a date string to the number of seconds since the epoch
 (which is 1970-01-01 00:00:00 UTC), use the @samp{--date} option with
 the @samp{%s} format.  That can be useful in sorting and/or graphing
 and/or comparing data by date.  The following command outputs the
-number of the seconds since the epoch for the time one second later
-than the epoch, but in a time zone five hours later (Cambridge, Massachusetts),
-thus a total of five hours and one second after the epoch:
+number of the seconds since the epoch for the time two minutes after the
+epoch:
 
 @example
-date --date='1970-01-01 00:00:01 UTC +5 hours' +%s
-18001
+date --date='1970-01-01 00:02:00 +0000' +%s
+120
 @end example
 
-Suppose you had @emph{not} specified time zone information in the example above.
-Then, @code{date} would have used your computer's idea of the time zone when
-interpreting the string.  Here's what you would get if you were in
-Greenwich, England:
+If you do not specify time zone information in the date string,
+@command{date} uses your computer's idea of the time zone when
+interpreting the string.  For example, if your computer's time zone is
+that of Cambridge, Massachusetts, which was then 5 hours (i.e., 18,000
+seconds) behind UTC:
 
 @example
 # local time zone used
-date --date='1970-01-01 00:00:01' +%s
-1
+date --date='1970-01-01 00:02:00' +%s
+18120
 @end example
 
 @item
 If you're sorting or graphing dated data, your raw date values may be
 represented as seconds since the epoch.  But few people can look at
 the date @samp{946684800} and casually note ``Oh, that's the first second
-of the year 2000.''
+of the year 2000 in Greenwich, England.''
 
 @example
 date --date='2000-01-01 UTC' +%s
@@ -2630,8 +2630,9 @@ To convert such an unwieldy number of seconds back to
 a more readable form, use a command like this:
 
 @smallexample
-date -d '1970-01-01 946684800 sec' +"%Y-%m-%d %T %z"
-2000-01-01 00:00:00 +0000
+# local time zone used
+date -d '1970-01-01 UTC 946684800 seconds' +"%Y-%m-%d %T %z"
+1999-12-31 19:00:00 -0500
 @end smallexample
 
 @end itemize
