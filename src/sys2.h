@@ -167,6 +167,10 @@ char *alloca ();
 # include <sys/exceptn.h>
 #endif
 
+#if HAVE_STDINT_H
+# include <stdint.h>
+#endif
+
 #include <ctype.h>
 
 /* Jim Meyering writes:
@@ -519,8 +523,8 @@ enum
 # define ULONG_MAX TYPE_MAXIMUM (unsigned long)
 #endif
 
-#ifndef SIZE_T_MAX
-# define SIZE_T_MAX TYPE_MAXIMUM (size_t)
+#ifndef SIZE_MAX
+# define SIZE_MAX TYPE_MAXIMUM (size_t)
 #endif
 
 #ifndef UID_T_MAX
