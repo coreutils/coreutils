@@ -2089,13 +2089,13 @@ if test $code != 0 ; then
   $echo "Test 7a failed: ../../src/pr return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 7a.O $srcdir/T-t
+  cmp 7a.O $srcdir/tt-t
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 7a"; fi ;;
-    1) $echo "Test 7a failed: files 7a.O and $srcdir/T-t differ" 1>&2;
+    1) $echo "Test 7a failed: files 7a.O and $srcdir/tt-t differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 7a may have failed." 1>&2;
-       $echo The command "cmp 7a.O $srcdir/T-t" failed. 1>&2 ;
+       $echo The command "cmp 7a.O $srcdir/tt-t" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
@@ -2106,13 +2106,13 @@ if test $code != 0 ; then
   $echo "Test 7b failed: ../../src/pr return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 7b.O $srcdir/T-t
+  cmp 7b.O $srcdir/tt-t
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 7b"; fi ;;
-    1) $echo "Test 7b failed: files 7b.O and $srcdir/T-t differ" 1>&2;
+    1) $echo "Test 7b failed: files 7b.O and $srcdir/tt-t differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 7b may have failed." 1>&2;
-       $echo The command "cmp 7b.O $srcdir/T-t" failed. 1>&2 ;
+       $echo The command "cmp 7b.O $srcdir/tt-t" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
@@ -2123,13 +2123,13 @@ if test $code != 0 ; then
   $echo "Test 7c failed: ../../src/pr return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 7c.O $srcdir/T-bl
+  cmp 7c.O $srcdir/tt-bl
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 7c"; fi ;;
-    1) $echo "Test 7c failed: files 7c.O and $srcdir/T-bl differ" 1>&2;
+    1) $echo "Test 7c failed: files 7c.O and $srcdir/tt-bl differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 7c may have failed." 1>&2;
-       $echo The command "cmp 7c.O $srcdir/T-bl" failed. 1>&2 ;
+       $echo The command "cmp 7c.O $srcdir/tt-bl" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
@@ -2140,13 +2140,13 @@ if test $code != 0 ; then
   $echo "Test 7d failed: ../../src/pr return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 7d.O $srcdir/T-0FF
+  cmp 7d.O $srcdir/tt-0FF
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 7d"; fi ;;
-    1) $echo "Test 7d failed: files 7d.O and $srcdir/T-0FF differ" 1>&2;
+    1) $echo "Test 7d failed: files 7d.O and $srcdir/tt-0FF differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 7d may have failed." 1>&2;
-       $echo The command "cmp 7d.O $srcdir/T-0FF" failed. 1>&2 ;
+       $echo The command "cmp 7d.O $srcdir/tt-0FF" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
@@ -2157,13 +2157,13 @@ if test $code != 0 ; then
   $echo "Test 7e failed: ../../src/pr return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 7e.O $srcdir/T-FF
+  cmp 7e.O $srcdir/tt-FF
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 7e"; fi ;;
-    1) $echo "Test 7e failed: files 7e.O and $srcdir/T-FF differ" 1>&2;
+    1) $echo "Test 7e failed: files 7e.O and $srcdir/tt-FF differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 7e may have failed." 1>&2;
-       $echo The command "cmp 7e.O $srcdir/T-FF" failed. 1>&2 ;
+       $echo The command "cmp 7e.O $srcdir/tt-FF" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
@@ -2174,13 +2174,13 @@ if test $code != 0 ; then
   $echo "Test 7f failed: ../../src/pr return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 7f.O $srcdir/T-FF
+  cmp 7f.O $srcdir/tt-FF
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 7f"; fi ;;
-    1) $echo "Test 7f failed: files 7f.O and $srcdir/T-FF differ" 1>&2;
+    1) $echo "Test 7f failed: files 7f.O and $srcdir/tt-FF differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 7f may have failed." 1>&2;
-       $echo The command "cmp 7f.O $srcdir/T-FF" failed. 1>&2 ;
+       $echo The command "cmp 7f.O $srcdir/tt-FF" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
@@ -2191,13 +2191,13 @@ if test $code != 0 ; then
   $echo "Test 7g failed: ../../src/pr return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 7g.O $srcdir/T-FF
+  cmp 7g.O $srcdir/tt-FF
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 7g"; fi ;;
-    1) $echo "Test 7g failed: files 7g.O and $srcdir/T-FF differ" 1>&2;
+    1) $echo "Test 7g failed: files 7g.O and $srcdir/tt-FF differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 7g may have failed." 1>&2;
-       $echo The command "cmp 7g.O $srcdir/T-FF" failed. 1>&2 ;
+       $echo The command "cmp 7g.O $srcdir/tt-FF" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
@@ -2208,13 +2208,13 @@ if test $code != 0 ; then
   $echo "Test 7aa failed: ../../src/pr return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 7aa.O $srcdir/Ta3-0FF
+  cmp 7aa.O $srcdir/tta3-0FF
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 7aa"; fi ;;
-    1) $echo "Test 7aa failed: files 7aa.O and $srcdir/Ta3-0FF differ" 1>&2;
+    1) $echo "Test 7aa failed: files 7aa.O and $srcdir/tta3-0FF differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 7aa may have failed." 1>&2;
-       $echo The command "cmp 7aa.O $srcdir/Ta3-0FF" failed. 1>&2 ;
+       $echo The command "cmp 7aa.O $srcdir/tta3-0FF" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
@@ -2225,13 +2225,13 @@ if test $code != 0 ; then
   $echo "Test 7ab failed: ../../src/pr return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 7ab.O $srcdir/Ta3-FF
+  cmp 7ab.O $srcdir/tta3-FF
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 7ab"; fi ;;
-    1) $echo "Test 7ab failed: files 7ab.O and $srcdir/Ta3-FF differ" 1>&2;
+    1) $echo "Test 7ab failed: files 7ab.O and $srcdir/tta3-FF differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 7ab may have failed." 1>&2;
-       $echo The command "cmp 7ab.O $srcdir/Ta3-FF" failed. 1>&2 ;
+       $echo The command "cmp 7ab.O $srcdir/tta3-FF" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
@@ -2242,13 +2242,13 @@ if test $code != 0 ; then
   $echo "Test 7ac failed: ../../src/pr return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 7ac.O $srcdir/Ta3-FF
+  cmp 7ac.O $srcdir/tta3-FF
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 7ac"; fi ;;
-    1) $echo "Test 7ac failed: files 7ac.O and $srcdir/Ta3-FF differ" 1>&2;
+    1) $echo "Test 7ac failed: files 7ac.O and $srcdir/tta3-FF differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 7ac may have failed." 1>&2;
-       $echo The command "cmp 7ac.O $srcdir/Ta3-FF" failed. 1>&2 ;
+       $echo The command "cmp 7ac.O $srcdir/tta3-FF" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
@@ -2259,13 +2259,13 @@ if test $code != 0 ; then
   $echo "Test 7ba failed: ../../src/pr return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 7ba.O $srcdir/Tb3-0FF
+  cmp 7ba.O $srcdir/ttb3-0FF
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 7ba"; fi ;;
-    1) $echo "Test 7ba failed: files 7ba.O and $srcdir/Tb3-0FF differ" 1>&2;
+    1) $echo "Test 7ba failed: files 7ba.O and $srcdir/ttb3-0FF differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 7ba may have failed." 1>&2;
-       $echo The command "cmp 7ba.O $srcdir/Tb3-0FF" failed. 1>&2 ;
+       $echo The command "cmp 7ba.O $srcdir/ttb3-0FF" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
@@ -2276,13 +2276,13 @@ if test $code != 0 ; then
   $echo "Test 7bb failed: ../../src/pr return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 7bb.O $srcdir/Tb3-FF
+  cmp 7bb.O $srcdir/ttb3-FF
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 7bb"; fi ;;
-    1) $echo "Test 7bb failed: files 7bb.O and $srcdir/Tb3-FF differ" 1>&2;
+    1) $echo "Test 7bb failed: files 7bb.O and $srcdir/ttb3-FF differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 7bb may have failed." 1>&2;
-       $echo The command "cmp 7bb.O $srcdir/Tb3-FF" failed. 1>&2 ;
+       $echo The command "cmp 7bb.O $srcdir/ttb3-FF" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
@@ -2293,13 +2293,13 @@ if test $code != 0 ; then
   $echo "Test 7bc failed: ../../src/pr return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 7bc.O $srcdir/Tb3-FF
+  cmp 7bc.O $srcdir/ttb3-FF
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 7bc"; fi ;;
-    1) $echo "Test 7bc failed: files 7bc.O and $srcdir/Tb3-FF differ" 1>&2;
+    1) $echo "Test 7bc failed: files 7bc.O and $srcdir/ttb3-FF differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test 7bc may have failed." 1>&2;
-       $echo The command "cmp 7bc.O $srcdir/Tb3-FF" failed. 1>&2 ;
+       $echo The command "cmp 7bc.O $srcdir/ttb3-FF" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
 fi
