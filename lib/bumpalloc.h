@@ -25,8 +25,8 @@
 `-------------------------------------------------------------------------*/
 
 /* Routines `xmalloc' and `xrealloc' are called to do the actual memory
-   management.  This implies that the program will abort with an `Memory
-   exhausted!' error if any problem arise.
+   management.  This implies that the program will abort with a "memory
+   exhausted" error if any problem arise.
 
    To work correctly, at least EXPONENT and TYPE should always be the
    same for all uses of this macro for any given TABLE.  A secure way to
