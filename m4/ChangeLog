@@ -1,5 +1,30 @@
 2001-08-30  Paul Eggert  <eggert@twinsun.com>
 
+	Simplify code, partly by assuming autoconf 2.52 semantics.
+
+	* Makefile.am (EXTRA_DIST): Remove uintmax_t.m4.
+
+	* inttypes.m4 (AC_PREREQ): Bump to 2.52.
+	(jm_AC_HEADER_INTTYPES_H): Remove; now done by autoconf in 2.52.
+	All uses removed.
+	(jm_AC_TYPE_INTMAX_T, jm_AC_TYPE_UINTMAX_T):
+	Move AC_REQUIRE to next-to-top level, to avoid confusion.
+	Use 2.52's AC_CHECK_TYPE instead of merely looking for the header.
+	* prereq.m4 (jm_PREREQ_HUMAN): Don't require jm_AC_HEADER_INTTYPES_H.
+	* jm-macros.m4 (jm_MACROS): Likewise.
+
+	* uintmax_t.m4: Remove, as it duplicates inttypes.m4.
+
+	* xstrtoimax.m4 (jm_AC_PREREQ_XSTRTOIMAX):
+	Quote first arg of AC_DEFUN.
+	Require jm_AC_TYPE_UINTMAX_T and jm_AC_TYPE_UNSIGNED_LONG_LONG
+	since they are needed to parse the include file even if we need
+	only xstrtoimax.  Simplify logic behind the args to AC_REPLACE.
+	* xstrtoumax.m4 (jm_AC_PREREQ_XSTRTOUMAX): Likewise,
+	but with opposite signedness.
+
+2001-08-30  Paul Eggert  <eggert@twinsun.com>
+
 	* prereq.m4 (jm_PREREQ): Add jm_PREREQ_EXCLUDE.
 	(jm_PREREQ_EXCLUDE): New macro.
 
