@@ -116,8 +116,7 @@ static struct option const longopts[] =
 static struct line uni_blank;
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -158,10 +157,7 @@ separated by CHAR.\n\
 }
 
 static void
-ADD_FIELD (line, field, len)
-     struct line *line;
-     const char *field;
-     size_t len;
+ADD_FIELD (struct line *line, const char *field, size_t len)
 {
   if (line->nfields >= line->nfields_allocated)
     {
@@ -178,8 +174,7 @@ ADD_FIELD (line, field, len)
 /* Fill in the `fields' structure in LINE. */
 
 static void
-xfields (line)
-     struct line *line;
+xfields (struct line *line)
 {
   int i;
   register char *ptr, *lim;
@@ -225,9 +220,7 @@ xfields (line)
    Return 0 if EOF, 1 otherwise. */
 
 static int
-get_line (fp, line)
-     FILE *fp;
-     struct line *line;
+get_line (FILE *fp, struct line *line)
 {
   static int linesize = 80;
   int c, i;
@@ -264,8 +257,7 @@ get_line (fp, line)
 }
 
 static void
-freeline (line)
-     struct line *line;
+freeline (struct line *line)
 {
   free ((char *) line->fields);
   free (line->beg);
@@ -273,8 +265,7 @@ freeline (line)
 }
 
 static void
-initseq (seq)
-     struct seq *seq;
+initseq (struct seq *seq)
 {
   seq->count = 0;
   seq->alloc = 1;
@@ -284,9 +275,7 @@ initseq (seq)
 /* Read a line from FP and add it to SEQ.  Return 0 if EOF, 1 otherwise. */
 
 static int
-getseq (fp, seq)
-     FILE *fp;
-     struct seq *seq;
+getseq (FILE *fp, struct seq *seq)
 {
   if (seq->count == seq->alloc)
     {
@@ -304,8 +293,7 @@ getseq (fp, seq)
 }
 
 static void
-delseq (seq)
-     struct seq *seq;
+delseq (struct seq *seq)
 {
   int i;
   for (i = 0; i < seq->count; i++)
@@ -318,9 +306,7 @@ delseq (seq)
    >0 if it compares greater; 0 if it compares equal. */
 
 static int
-keycmp (line1, line2)
-     struct line *line1;
-     struct line *line2;
+keycmp (struct line *line1, struct line *line2)
 {
   const char *beg1, *beg2;	/* Start of field to compare in each file. */
   int len1, len2;		/* Length of fields to compare. */
@@ -362,9 +348,7 @@ keycmp (line1, line2)
    `empty_filler' if it is nonempty. */
 
 static void
-prfield (n, line)
-     int n;
-     struct line *line;
+prfield (int n, struct line *line)
 {
   int len;
 
@@ -383,9 +367,7 @@ prfield (n, line)
 /* Print the join of LINE1 and LINE2. */
 
 static void
-prjoin (line1, line2)
-     struct line *line1;
-     struct line *line2;
+prjoin (struct line *line1, struct line *line2)
 {
   if (outlist)
     {
@@ -557,9 +539,7 @@ join (fp1, fp2)
    unless either argument is invalid; then just return 0. */
 
 static int
-add_field (file, field)
-     int file;
-     int field;
+add_field (int file, int field)
 {
   struct outlist *o;
 
@@ -584,8 +564,7 @@ add_field (file, field)
    Return the number of fields added. */
 
 static int
-add_field_list (str)
-     char *str;
+add_field_list (char *str)
 {
   int added = 0;
   int file = -1, field = -1;
@@ -629,9 +608,7 @@ add_field_list (str)
 /* Create a blank line with COUNT fields separated by tabs. */
 
 void
-make_blank (blank, count)
-     struct line *blank;
-     int count;
+make_blank (struct line *blank, int count)
 {
   int i;
   blank->nfields = count;
@@ -648,9 +625,7 @@ make_blank (blank, count)
 }
 
 void
-main (argc, argv)
-     int argc;
-     char *argv[];
+main (int argc, char **argv)
 {
   char *names[2];
   FILE *fp1, *fp2;
