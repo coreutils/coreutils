@@ -1,4 +1,5 @@
 User-visible changes in release 1.13
+* md5sum --check fails if it finds no properly formatted checksum lines
 * sort -c prints `disorder on...' message on standard error, not stdout
 * sort -k works as described in the texinfo documentation
 * tail works on NetBSD
