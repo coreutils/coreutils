@@ -23,14 +23,12 @@
    prototype for rpl_nanosleep. (they'd conflict e.g., on alpha-dec-osf3.2)  */
 #undef nanosleep
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <signal.h>
 
 #include <errno.h>
-#ifndef errno
-extern int errno;
-#endif
 
 #if HAVE_UNISTD_H
 # include <unistd.h>
@@ -77,7 +75,7 @@ int
 rpl_nanosleep (const struct timespec *requested_delay,
 	       struct timespec *remaining_delay)
 {
-  static int initialized;
+  static bool initialized;
 
 #ifdef SA_NOCLDSTOP
   struct sigaction oldact, newact;
@@ -100,7 +98,7 @@ rpl_nanosleep (const struct timespec *requested_delay,
       if (signal (SIGCONT, SIG_IGN) != SIG_IGN)
 	signal (SIGCONT, sighandler);
 #endif
-      initialized = 1;
+      initialized = true;
     }
 
   my_usleep (requested_delay);
