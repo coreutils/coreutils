@@ -1695,10 +1695,6 @@ set_ordering (register const char *s, struct keyfield *key,
 	  break;
 	case 'n':
 	  key->numeric = 1;
-	  if (blanktype == bl_start || blanktype == bl_both)
-	    key->skipsblanks = 1;
-	  if (blanktype == bl_end || blanktype == bl_both)
-	    key->skipeblanks = 1;
 	  break;
 	case 'r':
 	  key->reverse = 1;
