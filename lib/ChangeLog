@@ -1,0 +1,5 @@
+2000-01-16  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/quotearg.c (quotearg_buffer_restyled): Do not quote
+	alert, backslash, formfeed, and vertical tab unnecessarily in
+	shell quoting style.
