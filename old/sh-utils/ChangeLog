@@ -1,3 +1,7 @@
+1999-04-24  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in: Use AC_CANONICAL_HOST.
+
 1999-04-20  Jim Meyering  <meyering@ascend.com>
 
 	Update factor to use `uintmax_t'.
