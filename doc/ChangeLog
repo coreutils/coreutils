@@ -1,3 +1,11 @@
+2004-02-15  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi (expr invocation):
+	Document what forms integers may take, and say "integer"
+	consistently instead of "number".  Warn about operands
+	that "expr" can misinterpret, and how to work around the
+	problem.
+
 2004-02-17  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (csplit invocation): Correct typo (s/LINE/N/)
