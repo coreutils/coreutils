@@ -1,6 +1,31 @@
 # -*-Makefile-*-
 # This Makefile fragment is shared between fileutils, sh-utils, textutils,
-# and Autoconf.
+# CPPI, Bison, and Autoconf.
+
+## Copyright 2001 Free Software Foundation, Inc.
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2, or (at your option)
+## any later version.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with this program; if not, write to the Free Software
+## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+## 02111-1307, USA.
+
+# Do not save the original name or timestamp in the .tar.gz file.
+GZIP_ENV = '--no-name --best'
+
+# Automake 1.4 does not define AMTAR.
+AMTAR ?= $(TAR)
+
+CVS = cvs
 
 prev_version_file ?= .prev-version
 
@@ -17,13 +42,20 @@ my_distdir = $(PACKAGE)-$(VERSION)
 
 # Old releases are stored here.
 # Used for diffs and xdeltas.
-release-archive-dir ?= ../release
+release_archive_dir ?= ../release
 
 
 
 ## --------------- ##
 ## Sanity checks.  ##
 ## --------------- ##
+
+# Checks that don't require cvs.
+# Run `changelog-check' last, as previous test may reveal problems requiring
+# new ChangeLog entries.
+local-check: po-check copyright-check writable-files \
+	m4-check author_mark_check \
+	changelog-check
 
 changelog-check:
 	if head ChangeLog | grep 'Version $(VERSION)' >/dev/null; then \
@@ -57,33 +89,37 @@ author_mark_check:
 
 # Check that `make alpha' will not fail at the end of the process.
 writable-files:
-	if test -d $(release-archive-dir); then :; else			\
-	  mkdir $(release-archive-dir);					\
+	if test -d $(release_archive_dir); then :; else			\
+	  mkdir $(release_archive_dir);					\
 	fi
 	for file in $(distdir).tar.gz $(xd-delta)			\
-	            $(release-archive-dir)/$(distdir).tar.gz		\
-	            $(release-archive-dir)/$(xd-delta); do		\
+	            $(release_archive_dir)/$(distdir).tar.gz		\
+	            $(release_archive_dir)/$(xd-delta); do		\
 	  test -e $$file || continue;					\
 	  test -w $$file						\
 	    || { echo ERROR: $$file is not writable; fail=1; };		\
 	done;								\
 	test "$$fail" && exit 1 || :
 
-# Checks that don't require cvs.
-local-check: changelog-check po-check writable-files check-copyright m4-check \
-	author_mark_check
+# Make sure that the copyright date in lib/version-etc.c is up to date.
+copyright-check:
+	@if test -f lib/version-etc.c; then \
+	  grep 'N_("Copyright (C) $(shell date +%Y) Free' lib/version-etc.c \
+	    >/dev/null \
+	  || { echo 'out of date copyright in $<; update it' 1>&2; exit 1; }; \
+	fi
 
 
 # Sanity checks with the CVS repository.
 cvs-tag-check:
 	echo $(this-cvs-tag); \
-	if cvs -n log -h README | grep -e $(this-cvs-tag): >/dev/null; then \
+	if $(CVS) -n log -h README | grep -e $(this-cvs-tag): >/dev/null; then \
 	  echo "$(this-cvs-tag) as already been used; not tagging" 1>&2; \
 	  exit 1; \
 	else :; fi
 
 cvs-diff-check:
-	if cvs diff >cvs-diffs; then			  	\
+	if $(CVS) diff >cvs-diffs; then			  	\
 	  rm cvs-diffs;					  	\
 	else						  	\
 	  echo "Some files are locally modified:" 1>&2;  	\
@@ -98,18 +134,12 @@ maintainer-distcheck: changelog-check
 	$(MAKE) my-distcheck
 
 
-# Do not save the original name or timestamp in the .tar.gz file.
-GZIP_ENV = '--no-name --best'
-
-# Automake 1.4 does not define AMTAR.
-AMTAR ?= $(TAR)
-
 # Tag before making distribution.  Also, don't make a distribution if
 # checks fail.  Also, make sure the NEWS file is up-to-date.
 # FIXME: use dist-hook/my-dist like distcheck-hook/my-distcheck.
-cvs-dist: cvs-check maintainer-distcheck
-	cvs update po
-	cvs tag -c $(this-cvs-tag)
+cvs-dist: local-check cvs-check maintainer-distcheck
+	$(CVS) update po
+	$(CVS) tag -c $(this-cvs-tag)
 	$(MAKE) dist
 
 # Use this to make sure we don't run these programs when building
@@ -209,7 +239,7 @@ announcement: NEWS ChangeLog $(rel-files)
 	  echo; \
 	  echo ChangeLog entries:; \
 	  find . -name ChangeLog -maxdepth 2 \
-	    | xargs cvs diff -up -r$(prev-cvs-tag) -rHEAD \
+	    | xargs $(CVS) diff -up -r$(prev-cvs-tag) -rHEAD \
 	    | sed -n 's/^+//p' \
 	    | perl -ne 'm!^\+\+ (\./)?! or print,next;' \
 	      -e 'print "\n"."*"x70 ."\n"; s///; print; print "*"x70 ."\n"'; \
@@ -253,7 +283,7 @@ wget-update: $(get-targets)
 	for f in depcomp missing; do                                    \
 	  test -f $$f || continue;					\
 	  echo checking out $$f...;                                     \
-	  cvs -d $(automake_repo) co -p automake/lib/$$f > $$f.t        \
+	  $(CVS) -d $(automake_repo) co -p automake/lib/$$f > $$f.t     \
 	    && $(move_if_change) $$f.t $$f;                             \
 	done
 
@@ -268,23 +298,15 @@ define emit-rsync-commands
 	echo =====================================
 endef
 
-# Make sure that the copyright date in lib/version-etc.c is up to date.
-check-copyright:
-	@if test -f lib/version-etc.c; then \
-	  grep 'N_("Copyright (C) $(shell date +%Y) Free' lib/version-etc.c \
-	    > /dev/null \
-	  || { echo 'out of date copyright in $<; update it' 1>&2; exit 1; }; \
-	fi
-
-$(xd-delta): $(release-archive-dir)/$(prev-tgz) $(distdir).tar.gz
+$(xd-delta): $(release_archive_dir)/$(prev-tgz) $(distdir).tar.gz
 	xdelta delta -9 $^ $@ || :
 
-alpha: local-check
+alpha:
 	$(MAKE) cvs-dist
 	$(MAKE) $(xd-delta)
 	$(MAKE) -s announcement > /tmp/announce-$(my_distdir)
-	ln $(rel-files) $(release-archive-dir)
+	ln $(rel-files) $(release_archive_dir)
 	chmod a-w $(rel-files)
 	echo $(VERSION) > $(prev_version_file)
-	cvs ci -m. $(prev_version_file)
+	$(CVS) ci -m. $(prev_version_file)
 	@$(emit-rsync-commands)
