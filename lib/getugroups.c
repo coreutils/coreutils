@@ -1,5 +1,7 @@
 /* getugroups.c -- return a list of the groups a user is in
-   Copyright (C) 1990, 1991, 1998, 1999, 2000, 2003 Free Software Foundation.
+
+   Copyright (C) 1990, 1991, 1998, 1999, 2000, 2003, 2004 Free
+   Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -27,6 +29,11 @@
 
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
+#endif
+
+#include <errno.h>
+#ifndef EOVERFLOW
+# define EOVERFLOW EINVAL
 #endif
 
 /* setgrent, getgrent, and endgrent are not specified by POSIX.1,
@@ -88,6 +95,11 @@ getugroups (int maxcount, GETGROUPS_T *grouplist, char *username, gid_t gid)
 		  grouplist[count] = grp->gr_gid;
 		}
 	      count++;
+	      if (count < 0)
+		{
+		  errno = EOVERFLOW;
+		  return -1;
+		}
 	    }
 	}
     }
