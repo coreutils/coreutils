@@ -342,10 +342,10 @@ else
   esac
 fi
 test -s 02b.E || rm -f 02b.E
-$xx -cu $srcdir/02c.I > 02c.O 2> 02c.E
+$xx -c -k1,1 $srcdir/02c.I > 02c.O 2> 02c.E
 code=$?
-if test $code != 1; then
-  $echo "Test 02c failed: ../../src/sort return code $code differs from expected value 1" 1>&2
+if test $code != 0; then
+  $echo "Test 02c failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 02c.O $srcdir/02c.X > /dev/null 2>&1
@@ -360,60 +360,78 @@ else
   esac
 fi
 test -s 02c.E || rm -f 02c.E
-$xx -cu $srcdir/02d.I > 02d.O 2> 02d.E
+$xx -cu $srcdir/02m.I > 02m.O 2> 02m.E
+code=$?
+if test $code != 1; then
+  $echo "Test 02m failed: ../../src/sort return code $code differs from expected value 1" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp 02m.O $srcdir/02m.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed 02m"; fi;;
+    1) $echo "Test 02m failed: files 02m.O and $srcdir/02m.X differ" 1>&2
+       (diff -c 02m.O $srcdir/02m.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test 02m may have failed." 1>&2
+       $echo The command "cmp 02m.O $srcdir/02m.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s 02m.E || rm -f 02m.E
+$xx -cu $srcdir/02n.I > 02n.O 2> 02n.E
 code=$?
 if test $code != 0; then
-  $echo "Test 02d failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 02n failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 02d.O $srcdir/02d.X > /dev/null 2>&1
+  cmp 02n.O $srcdir/02n.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 02d"; fi;;
-    1) $echo "Test 02d failed: files 02d.O and $srcdir/02d.X differ" 1>&2
-       (diff -c 02d.O $srcdir/02d.X) 2> /dev/null
+    0) if test "$VERBOSE"; then $echo "passed 02n"; fi;;
+    1) $echo "Test 02n failed: files 02n.O and $srcdir/02n.X differ" 1>&2
+       (diff -c 02n.O $srcdir/02n.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 02d may have failed." 1>&2
-       $echo The command "cmp 02d.O $srcdir/02d.X" failed. 1>&2
+    2) $echo "Test 02n may have failed." 1>&2
+       $echo The command "cmp 02n.O $srcdir/02n.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
-test -s 02d.E || rm -f 02d.E
-$xx -cu $srcdir/02e.I > 02e.O 2> 02e.E
+test -s 02n.E || rm -f 02n.E
+$xx -cu $srcdir/02o.I > 02o.O 2> 02o.E
 code=$?
 if test $code != 1; then
-  $echo "Test 02e failed: ../../src/sort return code $code differs from expected value 1" 1>&2
+  $echo "Test 02o failed: ../../src/sort return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 02e.O $srcdir/02e.X > /dev/null 2>&1
+  cmp 02o.O $srcdir/02o.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 02e"; fi;;
-    1) $echo "Test 02e failed: files 02e.O and $srcdir/02e.X differ" 1>&2
-       (diff -c 02e.O $srcdir/02e.X) 2> /dev/null
+    0) if test "$VERBOSE"; then $echo "passed 02o"; fi;;
+    1) $echo "Test 02o failed: files 02o.O and $srcdir/02o.X differ" 1>&2
+       (diff -c 02o.O $srcdir/02o.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 02e may have failed." 1>&2
-       $echo The command "cmp 02e.O $srcdir/02e.X" failed. 1>&2
+    2) $echo "Test 02o may have failed." 1>&2
+       $echo The command "cmp 02o.O $srcdir/02o.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
-test -s 02e.E || rm -f 02e.E
-$xx -cu $srcdir/02f.I > 02f.O 2> 02f.E
+test -s 02o.E || rm -f 02o.E
+$xx -cu $srcdir/02p.I > 02p.O 2> 02p.E
 code=$?
 if test $code != 1; then
-  $echo "Test 02f failed: ../../src/sort return code $code differs from expected value 1" 1>&2
+  $echo "Test 02p failed: ../../src/sort return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 02f.O $srcdir/02f.X > /dev/null 2>&1
+  cmp 02p.O $srcdir/02p.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 02f"; fi;;
-    1) $echo "Test 02f failed: files 02f.O and $srcdir/02f.X differ" 1>&2
-       (diff -c 02f.O $srcdir/02f.X) 2> /dev/null
+    0) if test "$VERBOSE"; then $echo "passed 02p"; fi;;
+    1) $echo "Test 02p failed: files 02p.O and $srcdir/02p.X differ" 1>&2
+       (diff -c 02p.O $srcdir/02p.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 02f may have failed." 1>&2
-       $echo The command "cmp 02f.O $srcdir/02f.X" failed. 1>&2
+    2) $echo "Test 02p may have failed." 1>&2
+       $echo The command "cmp 02p.O $srcdir/02p.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
-test -s 02f.E || rm -f 02f.E
+test -s 02p.E || rm -f 02p.E
 $xx -k1 $srcdir/03a.I > 03a.O 2> 03a.E
 code=$?
 if test $code != 0; then
@@ -1999,7 +2017,7 @@ else
 fi
 test -s use-nl.E || rm -f use-nl.E
 if test $errors = 0; then
-  $echo Passed all 110 tests. 1>&2
+  $echo Passed all 111 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
