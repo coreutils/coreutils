@@ -1,3 +1,12 @@
+2003-01-15  Paul Eggert  <eggert@twinsun.com>
+
+	Change ls -H back to the way it was yesterday, since this is
+	compatible with FreeBSD and the POSIX spec is confusing
+	and somewhat contradictory.
+
+	* doc/coreutils.texi (Which files are listed, General output
+	formatting): Undo last change.
+
 2003-01-15  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (General output formatting): Reflect option name change:
