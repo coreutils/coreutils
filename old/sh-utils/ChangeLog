@@ -1,7 +1,11 @@
+
+	* lib/*.c, src/*.c: Remove CONFIG_BROKETS conditional.
+	* lib/Makefile.in src/Makefile.in: Don't define it.
+
 	configure.in (AC_CHECK_FUNCS): Add getcwd.  From Kaveh Ghazi.
 
 	* safe-xstat.c.in, safe-xstat.h.in: Rename to safe-xstat.cin and
-	safe-xstat.hin so the names don't exceed 14-character limit.
+	safe-xstat.hin so the names don't exceed the 14-character limit.
 	Reported by Kaveh Ghazi.
 
 Mon Sep 26 19:49:40 1994  Jim Meyering  (meyering@comco.com)
