@@ -35,7 +35,7 @@ BUILT_SOURCES = getdate.c lstat.c stat.c
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 DISTCLEANFILES = lstat.c stat.c
 
-EXTRA_DIST = xstat.in
+EXTRA_DIST = xstat.in config.charset
 lstat.c: xstat.in
 	sed \
 	  -e '/@IGNORE@/d' \
