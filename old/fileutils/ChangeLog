@@ -1,5 +1,9 @@
 2001-10-06  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.1.1.
+
+	* src/cp-hash.c: Rewrite to use the functions in lib/hash.c.
+	* src/cp-hash.h: Update prototype for hash_init.
 	* src/mv.c (do_move): Reflect that hash_init now takes no arguments.
 	* src/install.c (main): Likewise.
 	* src/cp.c (main): Likewise.
@@ -8,8 +12,6 @@
 	(copy_internal): Call remember_copied only for if the source file
 	has 1 < st_nlink, or if it's a directory.
 	Now that EARLIER_FILE is set conditionally, initialize it to NULL.
-
-	* Version 4.1.1.
 
 	* tests/mv/childproof: Redirect stderr on one test.
 
