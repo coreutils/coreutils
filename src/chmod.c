@@ -310,7 +310,12 @@ main (int argc, char **argv)
 	case '-':
 	case '=':
 	  if (modeind != 0 && modeind != thisind)
-	    error (1, 0, _("invalid mode"));
+	    {
+	      static char char_string[2] = {0, 0};
+	      char_string[0] = c;
+	      error (1, 0, _("invalid character %s in mode string %s"),
+		     quote_n (0, char_string), quote_n (1, argv[thisind]));
+	    }
 	  modeind = thisind;
 	  break;
 	case REFERENCE_FILE_OPTION:
@@ -348,7 +353,7 @@ main (int argc, char **argv)
 	     : mode_compile (argv[modeind], MODE_MASK_ALL));
 
   if (changes == MODE_INVALID)
-    error (1, 0, _("invalid mode"));
+    error (1, 0, _("invalid mode string: %s"), quote (argv[modeind]));
   else if (changes == MODE_MEMORY_EXHAUSTED)
     xalloc_die ();
   else if (changes == MODE_BAD_REFERENCE)
