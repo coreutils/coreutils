@@ -84,7 +84,6 @@ static int th_sep; /* if CHAR_MAX + 1, then there is no thousands separator */
 
 /* Nonzero if the corresponding locales are hard.  */
 static int hard_LC_COLLATE;
-static int hard_LC_CTYPE;
 # if HAVE_NL_LANGINFO
 static int hard_LC_TIME;
 # endif
@@ -160,6 +159,13 @@ struct month
 /* The name this program was run with. */
 char *program_name;
 
+/* FIXME: None of these tables work with multibyte character sets.
+   Also, there are many other bugs when handling multibyte characters,
+   or even unibyte encodings where line boundaries are not in the
+   initial shift state.  One way to fix this is to rewrite `sort' to
+   use wide characters internally, but doing this with good
+   performance is a bit tricky.  */
+
 /* Table of white space. */
 static int blanks[UCHAR_LIM];
 
@@ -169,8 +175,7 @@ static int nonprinting[UCHAR_LIM];
 /* Table of non-dictionary characters (not letters, digits, or blanks). */
 static int nondictionary[UCHAR_LIM];
 
-/* Translation table folding lower case to upper.
-   FIXME: This doesn't work with multibyte character sets.  */
+/* Translation table folding lower case to upper.  */
 static char fold_toupper[UCHAR_LIM];
 
 #define MONTHS_PER_YEAR 12
@@ -240,8 +245,8 @@ static int unique;
 /* Nonzero if any of the input files are the standard input. */
 static int have_read_stdin;
 
-/* Lists of key field comparisons to be tried. */
-static struct keyfield keyhead;
+/* List of key field comparisons to be tried.  */
+static struct keyfield *keylist;
 
 void
 usage (int status)
@@ -743,13 +748,15 @@ static void
 findlines (struct buffer *buf, struct lines *lines)
 {
   register char *beg = buf->buf, *lim = buf->buf + buf->used, *ptr;
-  struct keyfield *key = keyhead.next;
+  struct keyfield *key = keylist;
 
   lines->used = 0;
 
   while (beg < lim && (ptr = memchr (beg, eolchar, lim - beg))
 	 && lines->used < lines->limit)
     {
+      struct line *line;
+
       if (lines->used == lines->alloc)
 	{
 	  lines->alloc *= 2;
@@ -758,38 +765,26 @@ findlines (struct buffer *buf, struct lines *lines)
 		      lines->alloc * sizeof (struct line));
 	}
 
-      lines->lines[lines->used].text = beg;
-      lines->lines[lines->used].length = ptr + 1 - beg;
+      line = &lines->lines[lines->used];
+      line->text = beg;
+      line->length = ptr + 1 - beg;
 
-      /* Precompute the position of the first key for efficiency. */
       if (key)
 	{
-	  if (key->eword >= 0)
-	    lines->lines[lines->used].keylim =
-	      limfield (&lines->lines[lines->used], key);
-	  else
-	    lines->lines[lines->used].keylim = ptr;
+	  /* Precompute the position of the first key for efficiency. */
+	  line->keylim = 0 <= key->eword ? limfield (line, key) : ptr;
 
 	  if (key->sword >= 0)
-	    lines->lines[lines->used].keybeg =
-	      begfield (&lines->lines[lines->used], key);
+	    line->keybeg = begfield (line, key);
 	  else
 	    {
 	      if (key->skipsblanks)
 		while (blanks[UCHAR (*beg)])
 		  ++beg;
-	      lines->lines[lines->used].keybeg = beg;
+	      line->keybeg = beg;
 	    }
 	  if (key->skipeblanks)
-	    {
-	      trim_trailing_blanks (lines->lines[lines->used].keybeg,
-				    &lines->lines[lines->used].keylim);
-	    }
-	}
-      else
-	{
-	  lines->lines[lines->used].keybeg = 0;
-	  lines->lines[lines->used].keylim = 0;
+	    trim_trailing_blanks (line->keybeg, &line->keylim);
 	}
 
       ++lines->used;
@@ -1083,48 +1078,22 @@ getmonth (const char *s, int len)
 static int
 keycompare (const struct line *a, const struct line *b)
 {
-  register char *texta, *textb, *lima, *limb;
-  register unsigned char *translate;
-  register int *ignore;
-  struct keyfield *key;
-  int diff = 0, iter = 0, lena, lenb;
+  struct keyfield *key = keylist;
 
-  for (key = keyhead.next; key; key = key->next, ++iter)
+  /* For the first iteration only, the key positions have been
+     precomputed for us. */
+  register char *texta = a->keybeg;
+  register char *textb = b->keybeg;
+  register char *lima = a->keylim;
+  register char *limb = b->keylim;
+
+  int hard_collate = hard_LC_COLLATE;
+  int diff, lena, lenb;
+
+  for (;;)
     {
-      int comparable_lengths = 1;
-
-      ignore = key->ignore;
-      translate = (unsigned char *) key->translate;
-
-      /* Find the beginning and limit of each field. */
-      if (iter || a->keybeg == NULL || b->keybeg == NULL)
-	{
-	  if (key->eword >= 0)
-	    lima = limfield (a, key), limb = limfield (b, key);
-	  else
-	    lima = a->text + a->length - 1, limb = b->text + b->length - 1;
-
-	  if (key->sword >= 0)
-	    texta = begfield (a, key), textb = begfield (b, key);
-	  else
-	    {
-	      texta = a->text, textb = b->text;
-	      if (key->skipsblanks)
-		{
-		  while (texta < lima && blanks[UCHAR (*texta)])
-		    ++texta;
-		  while (textb < limb && blanks[UCHAR (*textb)])
-		    ++textb;
-		}
-	    }
-	}
-      else
-	{
-	  /* For the first iteration only, the key positions have
-	     been precomputed for us. */
-	  texta = a->keybeg, lima = a->keylim;
-	  textb = b->keybeg, limb = b->keylim;
-	}
+      register unsigned char *translate = (unsigned char *) key->translate;
+      register int *ignore = key->ignore;
 
       /* Find the lengths. */
       lena = lima - texta, lenb = limb - textb;
@@ -1152,27 +1121,18 @@ keycompare (const struct line *a, const struct line *b)
 	  diff = ((key->numeric ? numcompare : general_numcompare)
 		  (texta, textb));
 	  *lima = savea, *limb = saveb;
-	  if (diff)
-	    return key->reverse ? -diff : diff;
-	  continue;
 	}
       else if (key->month)
-	{
-	  diff = getmonth (texta, lena) - getmonth (textb, lenb);
-	  if (diff)
-	    return key->reverse ? -diff : diff;
-	  continue;
-	}
+	diff = getmonth (texta, lena) - getmonth (textb, lenb);
 #ifdef ENABLE_NLS
-
       /* Sorting like this may become slow, so in a simple locale the user
          can select a faster sort that is similar to ascii sort  */
-      else if (hard_LC_COLLATE | hard_LC_CTYPE)
+      else if (hard_collate)
 	{
 	  if (ignore || translate)
 	    {
-	      char *copy_a = (char *) alloca (lena + 1);
-	      char *copy_b = (char *) alloca (lenb + 1);
+	      char *copy_a = (char *) alloca (lena + 1 + lenb + 1);
+	      char *copy_b = copy_a + lena + 1;
 	      int new_len_a, new_len_b, i;
 
 	      /* Ignore and/or translate chars before comparing.  */
@@ -1198,103 +1158,103 @@ keycompare (const struct line *a, const struct line *b)
 
 	      diff = memcoll (copy_a, new_len_a, copy_b, new_len_b);
 	    }
+	  else if (lena == 0)
+	    diff = -lenb;
+	  else if (lenb == 0)
+	    goto greater;
 	  else
-	    {
-	      diff = memcoll (texta, lena, textb, lenb);
-	    }
-
-	  if (diff)
-	    return key->reverse ? -diff : diff;
-
-	  continue;
+	    diff = memcoll (texta, lena, textb, lenb);
 	}
 #endif
-      else if (ignore && translate)
-
+      else if (ignore)
+	{
 #define CMP_WITH_IGNORE(A, B)						\
   do									\
     {									\
-	  while (texta < lima && textb < limb)				\
+	  for (;;)							\
 	    {								\
 	      while (texta < lima && ignore[UCHAR (*texta)])		\
 		++texta;						\
 	      while (textb < limb && ignore[UCHAR (*textb)])		\
 		++textb;						\
-	      if (texta < lima && textb < limb)				\
-		{							\
-		  if ((A) != (B))					\
-		    {							\
-		      diff = UCHAR (A) - UCHAR (B);	      		\
-		      break;						\
-		    }							\
-		  ++texta;						\
-		  ++textb;						\
-		}							\
-									\
-	      if (texta == lima && textb < limb && !ignore[UCHAR (*textb)]) \
-		diff = -1;						\
-	      else if (texta < lima && textb == limb			\
-		       && !ignore[UCHAR (*texta)])			\
-		diff = 1;						\
+	      if (! (texta < lima && textb < limb))			\
+		break;							\
+	      diff = UCHAR (A) - UCHAR (B);				\
+	      if (diff)							\
+		goto not_equal;						\
+	      ++texta;							\
+	      ++textb;							\
 	    }								\
 									\
-	  if (diff == 0)						\
-	    {								\
-	      while (texta < lima && ignore[UCHAR (*texta)])		\
-		++texta;						\
-	      while (textb < limb && ignore[UCHAR (*textb)])		\
-		++textb;						\
-									\
-	      if (texta == lima && textb < limb)			\
-		diff = -1;						\
-	      else if (texta < lima && textb == limb)			\
-		diff = 1;						\
-	    }								\
-	  /* Relative lengths are meaningless if characters were ignored.  \
-	     Handling this case here avoids what might be an invalid length  \
-	     comparison below.  */					\
-	  if (diff == 0 && texta == lima && textb == limb)		\
-	    comparable_lengths = 0;					\
+	  diff = (lima - texta) - (limb - textb);			\
     }									\
   while (0)
 
-	CMP_WITH_IGNORE (translate[UCHAR (*texta)], translate[UCHAR (*textb)]);
-      else if (ignore)
-	CMP_WITH_IGNORE (UCHAR (*texta), UCHAR (*textb));
-      else if (translate)
-	while (texta < lima && textb < limb)
-	  {
-	    if (translate[UCHAR (*texta++)] != translate[UCHAR (*textb++)])
-	      {
-		diff = (UCHAR (translate[UCHAR (*--texta)])
-			- UCHAR (translate[UCHAR (*--textb)]));
-		break;
-	      }
-	  }
+	  if (translate)
+	    CMP_WITH_IGNORE (translate[UCHAR (*texta)],
+			     translate[UCHAR (*textb)]);
+	  else
+	    CMP_WITH_IGNORE (UCHAR (*texta), UCHAR (*textb));
+	}
+      else if (lena == 0)
+	diff = -lenb;
+      else if (lenb == 0)
+	goto greater;
       else
 	{
-#ifdef ENABLE_NLS
-	  if (hard_LC_COLLATE)
+	  if (translate)
 	    {
-	      /* Ignore any length difference if the localized comparison
-		 says the strings are equal.  */
-	      comparable_lengths = 0;
-	      diff = memcoll (texta, lena, textb, lenb);
+	      while (texta < lima && textb < limb)
+		{
+		  diff = (UCHAR (translate[UCHAR (*texta++)])
+			  - UCHAR (translate[UCHAR (*textb++)]));
+		  if (diff)
+		    goto not_equal;
+		}
 	    }
 	  else
-#endif
 	    {
 	      diff = memcmp (texta, textb, min (lena, lenb));
+	      if (diff)
+		goto not_equal;
 	    }
+	  diff = lena - lenb;
 	}
 
       if (diff)
-	return key->reverse ? -diff : diff;
-      if (comparable_lengths && (diff = lena - lenb) != 0)
-	return key->reverse ? -diff : diff;
+	goto not_equal;
+
+      key = key->next;
+      if (! key)
+	break;
+
+      /* Find the beginning and limit of the next field.  */
+      if (key->eword >= 0)
+	lima = limfield (a, key), limb = limfield (b, key);
+      else
+	lima = a->text + a->length - 1, limb = b->text + b->length - 1;
+
+      if (key->sword >= 0)
+	texta = begfield (a, key), textb = begfield (b, key);
+      else
+	{
+	  texta = a->text, textb = b->text;
+	  if (key->skipsblanks)
+	    {
+	      while (texta < lima && blanks[UCHAR (*texta)])
+		++texta;
+	      while (textb < limb && blanks[UCHAR (*textb)])
+		++textb;
+	    }
+	}
     }
 
   return 0;
+
+ greater:
+  diff = 1;
+ not_equal:
+  return key->reverse ? -diff : diff;
 }
 
 /* Compare two lines A and B, returning negative, zero, or positive
@@ -1303,38 +1263,32 @@ keycompare (const struct line *a, const struct line *b)
 static int
 compare (register const struct line *a, register const struct line *b)
 {
-  int diff, alen, blen, minlen;
+  int diff, alen, blen;
 
   /* First try to compare on the specified keys (if any).
      The only two cases with no key at all are unadorned sort,
      and unadorned sort -r. */
-  if (keyhead.next)
+  if (keylist)
     {
       diff = keycompare (a, b);
+      alloca (0);
       if (diff != 0 || unique || stable)
-	{
-	  alloca (0);
-	  return diff;
-	}
+	return diff;
     }
 
   /* If the keys all compare equal (or no keys were specified)
-     fall through to the default byte-by-byte comparison. */
+     fall through to the default comparison.  */
   alen = a->length - 1, blen = b->length - 1;
 
+  if (alen == 0)
+    diff = - blen;
+  else if (blen == 0)
+    diff = alen;
 #ifdef ENABLE_NLS
-  if (hard_LC_COLLATE)
-    {
-      diff = memcoll (a->text, alen, b->text, blen);
-      alloca (0);
-      return reverse ? -diff : diff;
-    }
+  else if (hard_LC_COLLATE)
+    diff = memcoll (a->text, alen, b->text, blen);
 #endif
-
-  minlen = min (alen, blen);
-  if (minlen == 0
-      || (! (diff = UCHAR (a->text[0]) - UCHAR (b->text[0]))
-	  && ! (diff = memcmp (a->text, b->text, minlen))))
+  else if (! (diff = memcmp (a->text, b->text, min (alen, blen))))
     diff = alen - blen;
 
   return reverse ? -diff : diff;
@@ -1356,6 +1310,7 @@ checkfp (FILE *fp, const char *file_name)
   int line_number = 1;
   struct line *disorder_line IF_LINT (= NULL);
   int disorder_line_number = 0;
+  struct keyfield *key = keylist;
 
   initbuf (&buf, mergealloc);
   initlines (&lines, mergealloc / linelength + 1,
@@ -1393,18 +1348,17 @@ checkfp (FILE *fp, const char *file_name)
       prev_line = lines.lines + (lines.used - 1);
       if (alloc < prev_line->length)
 	{
-	  do
-	    {
-	      alloc *= 2;
-	    }
-	  while (alloc < prev_line->length);
+	  while ((alloc *= 2) < prev_line->length)
+	    continue;
 	  temp.text = xrealloc (temp.text, alloc);
 	}
-      assert (prev_line->length <= alloc);
       memcpy (temp.text, prev_line->text, prev_line->length);
       temp.length = prev_line->length;
-      temp.keybeg = temp.text + (prev_line->keybeg - prev_line->text);
-      temp.keylim = temp.text + (prev_line->keylim - prev_line->text);
+      if (key)
+	{
+	  temp.keybeg = temp.text + (prev_line->keybeg - prev_line->text);
+	  temp.keylim = temp.text + (prev_line->keylim - prev_line->text);
+	}
 
       cc = fillbuf (&buf, fp);
       if (cc == 0)
@@ -1447,8 +1401,9 @@ mergefps (FILE **fps, register int nfps, FILE *ofp, const char *output_file)
 {
   struct buffer buffer[NMERGE];	/* Input buffers for each file. */
   struct lines lines[NMERGE];	/* Line tables for each buffer. */
-  struct line saved;		/* Saved line for unique check. */
-  int savedflag = 0;		/* True if there is a saved line. */
+  struct line saved;		/* Saved line storage for unique check. */
+  struct line const *savedline IF_LINT (= NULL);
+				/* &saved if there is a saved line. */
   int savealloc IF_LINT (= 0);	/* Size allocated for the saved line. */
   int cur[NMERGE];		/* Current line in each line table. */
   int ord[NMERGE];		/* Table representing a permutation of fps,
@@ -1456,10 +1411,12 @@ mergefps (FILE **fps, register int nfps, FILE *ofp, const char *output_file)
 				   is the smallest line and will be next
 				   output. */
   register int i, j, t;
+  struct keyfield *key = keylist;
 
   /* Allocate space for a saved line if necessary. */
   if (unique)
     {
+      savedline = NULL;
       savealloc = linelength;
       saved.text = xmalloc (savealloc);
     }
@@ -1500,44 +1457,39 @@ mergefps (FILE **fps, register int nfps, FILE *ofp, const char *output_file)
   /* Repeatedly output the smallest line until no input remains. */
   while (nfps)
     {
+      struct line const *smallest = &lines[ord[0]].lines[cur[ord[0]]];
+
       /* If uniquified output is turned on, output only the first of
 	 an identical series of lines. */
       if (unique)
 	{
-	  if (savedflag && compare (&saved, &lines[ord[0]].lines[cur[ord[0]]]))
+	  if (savedline && compare (savedline, smallest))
 	    {
+	      savedline = 0;
 	      write_bytes (saved.text, saved.length, ofp, output_file);
-	      savedflag = 0;
 	    }
-	  if (!savedflag)
+	  if (!savedline)
 	    {
-	      if (savealloc < lines[ord[0]].lines[cur[ord[0]]].length)
+	      savedline = &saved;
+	      if (savealloc < smallest->length)
 		{
-		  while (savealloc < lines[ord[0]].lines[cur[ord[0]]].length)
-		    savealloc *= 2;
+		  while ((savealloc *= 2) < smallest->length)
+		    continue;
 		  saved.text = xrealloc (saved.text, savealloc);
 		}
-	      saved.length = lines[ord[0]].lines[cur[ord[0]]].length;
-	      memcpy (saved.text, lines[ord[0]].lines[cur[ord[0]]].text,
-		      saved.length);
-	      if (lines[ord[0]].lines[cur[ord[0]]].keybeg != NULL)
+	      saved.length = smallest->length;
+	      memcpy (saved.text, smallest->text, saved.length);
+	      if (key)
 		{
-		  saved.keybeg = saved.text +
-		    (lines[ord[0]].lines[cur[ord[0]]].keybeg
-		     - lines[ord[0]].lines[cur[ord[0]]].text);
+		  saved.keybeg =
+		    saved.text + (smallest->keybeg - smallest->text);
+		  saved.keylim =
+		    saved.text + (smallest->keylim - smallest->text);
 		}
-	      if (lines[ord[0]].lines[cur[ord[0]]].keylim != NULL)
-		{
-		  saved.keylim = saved.text +
-		    (lines[ord[0]].lines[cur[ord[0]]].keylim
-		     - lines[ord[0]].lines[cur[ord[0]]].text);
-		}
-	      savedflag = 1;
 	    }
 	}
       else
-	write_bytes (lines[ord[0]].lines[cur[ord[0]]].text,
-		     lines[ord[0]].lines[cur[ord[0]]].length, ofp, output_file);
+	write_bytes (smallest->text, smallest->length, ofp, output_file);
 
       /* Check if we need to read more lines into core. */
       if (++cur[ord[0]] == lines[ord[0]].used)
@@ -1588,7 +1540,7 @@ mergefps (FILE **fps, register int nfps, FILE *ofp, const char *output_file)
       ord[i - 1] = t;
     }
 
-  if (unique && savedflag)
+  if (unique && savedline)
     {
       write_bytes (saved.text, saved.length, ofp, output_file);
       free (saved.text);
@@ -1728,10 +1680,10 @@ sort (char **files, int nfiles, FILE *ofp, const char *output_file)
       while (fillbuf (&buf, fp))
 	{
 	  findlines (&buf, &lines);
-	  if (lines.used > ntmp)
+	  if (ntmp < lines.used)
 	    {
-	      while (lines.used > ntmp)
-		ntmp *= 2;
+	      while ((ntmp *= 2) < lines.used)
+		continue;
 	      tmp = (struct line *)
 		xrealloc ((char *) tmp, ntmp * sizeof (struct line));
 	    }
@@ -1772,16 +1724,16 @@ sort (char **files, int nfiles, FILE *ofp, const char *output_file)
     }
 }
 
-/* Insert key KEY at the end of the list (`keyhead'). */
+/* Insert key KEY at the end of the key list.  */
 
 static void
 insertkey (struct keyfield *key)
 {
-  struct keyfield *k = &keyhead;
+  struct keyfield **p;
 
-  while (k->next)
-    k = k->next;
-  k->next = key;
+  for (p = &keylist; *p; p = &(*p)->next)
+    continue;
+  *p = key;
   key->next = NULL;
 }
 
@@ -1886,7 +1838,6 @@ main (int argc, char **argv)
 #ifdef ENABLE_NLS
 
   hard_LC_COLLATE = hard_locale (LC_COLLATE);
-  hard_LC_CTYPE = hard_locale (LC_CTYPE);
 # if HAVE_NL_LANGINFO
   hard_LC_TIME = hard_locale (LC_TIME);
 # endif
@@ -2212,7 +2163,7 @@ but lacks following character offset"));
     insertkey (key);
 
   /* Inheritance of global options to individual keys. */
-  for (key = keyhead.next; key; key = key->next)
+  for (key = keylist; key; key = key->next)
     if (!key->ignore && !key->translate && !key->skipsblanks && !key->reverse
 	&& !key->skipeblanks && !key->month && !key->numeric
         && !key->general_numeric)
@@ -2227,9 +2178,9 @@ but lacks following character offset"));
 	key->reverse = gkey.reverse;
       }
 
-  if (!keyhead.next && (gkey.ignore || gkey.translate || gkey.skipsblanks
-			|| gkey.skipeblanks || gkey.month || gkey.numeric
-                        || gkey.general_numeric))
+  if (!keylist && (gkey.ignore || gkey.translate || gkey.skipsblanks
+		   || gkey.skipeblanks || gkey.month || gkey.numeric
+		   || gkey.general_numeric))
     insertkey (&gkey);
   reverse = gkey.reverse;
 
