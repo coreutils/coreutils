@@ -779,19 +779,30 @@ numcompare (register const char *a, register const char *b)
 
   if (tmpa == '-')
     {
-      tmpa = UCHAR (*++a);
+      do
+	tmpa = UCHAR (*++a);
+      while (tmpa == '0');
       if (tmpb != '-')
 	{
-	  if ((tmpa == 0 || digits[tmpa]) && digits[tmpb])
+	  if (tmpa == '.')
+	    do
+	      tmpa = UCHAR (*++a);
+	    while (tmpa == '0');
+	  if (digits[tmpa])
+	    return -1;
+	  while (tmpb == '0')
+	    tmpb = UCHAR (*++b);
+	  if (tmpb == '.')
+	    do
+	      tmpb = *++b;
+	    while (tmpb == '0');
+	  if (digits[tmpb])
 	    return -1;
 	  return 0;
 	}
-      tmpb = UCHAR (*++b);
-
-      while (tmpa == '0')
-	tmpa = UCHAR (*++a);
-      while (tmpb == '0')
+      do
 	tmpb = UCHAR (*++b);
+      while (tmpb == '0');
 
       while (tmpa == tmpb && digits[tmpa])
 	tmpa = UCHAR (*++a), tmpb = UCHAR (*++b);
@@ -821,8 +832,22 @@ numcompare (register const char *a, register const char *b)
     }
   else if (tmpb == '-')
     {
-      ++b;
-      if (digits[UCHAR (tmpa)] && (UCHAR (*b) == 0 || digits[UCHAR (*b)]))
+      do
+	tmpb = UCHAR (*++b);
+      while (tmpb == '0');
+      if (tmpb == '.')
+	do
+	  tmpb = *++b;
+	while (tmpb == '0');
+      if (digits[tmpb])
+	return 1;
+      while (tmpa == '0')
+	tmpa = UCHAR (*++a);
+      if (tmpa == '.')
+	do
+	  tmpa = UCHAR (*++a);
+	while (tmpa == '0');
+      if (digits[tmpa])
 	return 1;
       return 0;
     }
