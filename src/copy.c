@@ -87,7 +87,7 @@ static int copy_internal PARAMS ((const char *src_path, const char *dst_path,
 				  int new_dst, dev_t device,
 				  struct dir_list *ancestors,
 				  const struct cp_options *x,
-				  int move_mode,
+				  int command_line_arg,
 				  int *copy_into_self,
 				  int *rename_succeeded));
 
@@ -801,14 +801,7 @@ copy_internal (const char *src_path, const char *dst_path,
   int ran_chown = 0;
   int preserve_metadata;
 
-  /* move_mode is set to the value from the `options' parameter for the
-     first copy_internal call.  For any subsequent recursive call, it must
-     be zero.  This is because if we're moving (via mv) a hierarchy and
-     end up having to recurse, it means the initial rename failed and so we
-     are in the process of *copy*ing all of the parts, not renaming them.  */
-  int move_mode = (command_line_arg ? x->move_mode : 0);
-
-  if (move_mode && rename_succeeded)
+  if (x->move_mode && rename_succeeded)
     *rename_succeeded = 0;
 
   *copy_into_self = 0;
@@ -964,7 +957,7 @@ copy_internal (const char *src_path, const char *dst_path,
 		}
 	    }
 
-	  if (move_mode)
+	  if (x->move_mode)
 	    {
 	      /* In move_mode, DEST may not be an existing directory.  */
 	      if (S_ISDIR (dst_sb.st_mode))
@@ -1127,9 +1120,7 @@ copy_internal (const char *src_path, const char *dst_path,
       return 0;
     }
 
-  /* Note that this is testing the local variable move_mode, not
-     the x->move_mode member.  */
-  if (move_mode)
+  if (x->move_mode)
     {
       if (rename (src_path, dst_path) == 0)
 	{
