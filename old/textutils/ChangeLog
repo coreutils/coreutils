@@ -1,5 +1,10 @@
 1999-04-15  Jim Meyering  <meyering@ascend.com>
 
+	* tests/Makefile.am (EXTRA_DIST): Rename .posix-warn to .env-warn.
+	(check-local): Warn about CDPATH in the same way
+	we warn about POSIXLY_CORRECT, since the cp/same-file test fails at
+	least when using bash with CDPATH set.  Reported by Mark Hewitt.
+
 	* src/pr.c Add comments.
 	(init_header): Tweak white space in Date/Time header.
 	* tests/pr/Test.pm: Updated all tests to reflect the big
