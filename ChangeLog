@@ -12,7 +12,7 @@
 
 2004-12-05  Jim Meyering  <jim@meyering.net>
 
-	* tests/tail/Test.pm (test_vector): Avoid test failure when
+	* tests/tail/Test.pm (err-6) ["tail -c"]: Avoid test failure when
 	_POSIX2_VERSION=199209 is in the environment, or when building on
 	e.g., OpenBSD 3.2.
 
