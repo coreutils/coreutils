@@ -1,5 +1,6 @@
 User visible changes in release 1.11
 * nice accepts options like `--5' (this is interpreted like `-n -5')
+* `stty speed' and `stty size' no longer output a spurious newline
 User visible changes in release 1.10
 * change package name from shellutils to sh-utils
 * add hostname, pwd, and users commands

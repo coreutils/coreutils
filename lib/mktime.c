@@ -1,6 +1,7 @@
 /* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
-   Contributed by Noel Cragg (noel@cs.oberlin.edu), with fixes
-   by Michael E. Calwas (calwas@ttd.teradyne.com).
+   Contributed by Noel Cragg (noel@cs.oberlin.edu), with fixes by
+   Michael E. Calwas (calwas@ttd.teradyne.com) and
+   Wade Hampton (tasi029@tmn.com).
 
 This file is part of the GNU C Library.
 
@@ -67,13 +68,6 @@ static int times_through_search; /* This library routine should never
 				    hang -- make sure we always return
 				    when we're searching for a value */
 
-/* After testing this, the maximum number of iterations that I had on
-   any number that I tried was 3!  Not bad.
-
-   mktime converts a `struct tm' (broken-down local time) into a `time_t';
-   it is the opposite of localtime.  It is possible to put the following
-   values out of range and have mktime compensate: tm_sec, tm_min, tm_hour,
-   tm_mday, tm_year.  The other values in the structure are ignored.  */
 
 #ifdef DEBUG
 
@@ -87,10 +81,10 @@ static void
 printtm (it)
      struct tm *it;
 {
-  printf ("%d/%d/%d %d:%d:%d (%s) yday:%d f:%d o:%ld",
-	  it->tm_mon,
+  printf ("%02d/%02d/%04d %02d:%02d:%02d (%s) yday:%03d dst:%d gmtoffset:%ld",
+	  it->tm_mon + 1,
 	  it->tm_mday,
-	  it->tm_year,
+	  it->tm_year + 1900,
 	  it->tm_hour,
 	  it->tm_min,
 	  it->tm_sec,
@@ -159,80 +153,26 @@ dist_tm (t1, t2)
 }
       
 
-/* Modified b-search -- make intelligent guesses as to where the time might
-   lie along the timeline, assuming that our target time lies a linear
-   distance (w/o considering time jumps of a particular region).
+/* MKTIME converts the values in a struct tm to a time_t.  The values
+   in tm_wday and tm_yday are ignored; other values can be put outside
+   of legal ranges since they will be normalized.  This routine takes
+   care of that normalization. */
 
-   Assume that time does not fluctuate at all along the timeline -- e.g.,
-   assume that a day will always take 86400 seconds, etc. -- and come up
-   with a hypothetical value for the time_t representation of the struct tm
-   TARGET, in relation to the guess variable -- it should be pretty close! */
-
-static time_t
-search (target, producer)
-     struct tm *target;
-     struct tm *(*producer) __P ((const time_t *));
+void
+do_normalization (tmptr)
+     struct tm *tmptr;
 {
-  struct tm *guess_tm;
-  time_t guess = 0;
-  time_t distance = 0;
-
-  times_through_search = 0;
-
-  do
-    {
-      guess += distance;
-
-      times_through_search++;     
-      
-      guess_tm = (*producer) (&guess);
-      
-#ifdef DEBUG
-      if (debugging_enabled)
-	{
-	  printf ("guess %d == ", (int) guess);
-	  printtm (guess_tm);
-	  puts ("");
-	}
-#endif
-      
-      /* Are we on the money? */
-      distance = dist_tm (target, guess_tm);
-      
-    } while (distance != 0);
-
-  return guess;
-}
-
-/* Since this function will call localtime many times (and the user might
-   be passing their `struct tm *' right from localtime, let's make a copy
-   for ourselves and run the search on the copy.
-
-   Also, we have to normalize *TIMEPTR because it's possible to call mktime
-   with values that are out of range for a specific item (like Feb 30th). */
-time_t
-_mktime_internal (timeptr, producer)
-     struct tm *timeptr;
-     struct tm *(*producer) __P ((const time_t *));
-{
-  struct tm private_mktime_struct_tm; /* Yes, users can get a ptr to this. */
-  struct tm *me;
-  time_t result;
-
-  me = &private_mktime_struct_tm;
-  
-  *me = *timeptr;
 
 #define normalize(foo,x,y,bar); \
-  while (me->foo < x) \
+  while (tmptr->foo < x) \
     { \
-      me->bar--; \
-      me->foo = (y - (x - me->foo) + 1); \
+      tmptr->bar--; \
+      tmptr->foo = (y - (x - tmptr->foo) + 1); \
     } \
-  while (me->foo > y) \
+  while (tmptr->foo > y) \
     { \
-      me->foo = (x + (me->foo - y) - 1); \
-      me->bar++; \
+      tmptr->foo = (x + (tmptr->foo - y) - 1); \
+      tmptr->bar++; \
     }
   
   normalize (tm_sec, 0, 59, tm_min);
@@ -244,11 +184,16 @@ _mktime_internal (timeptr, producer)
 
   /* Since the day range modifies the month, we should be careful how
      we reference the array of month lengths -- it is possible that
-     the month will go negative, hence the %... */
+     the month will go negative, hence the modulo...
+
+     Also, tm_year is the year - 1900, so we have to 1900 to have it
+     work correctly. */
+
   normalize (tm_mday, 1,
-	     __mon_lengths[__isleap (me->tm_year)][((me->tm_mon < 0)
-					            ? (12 + (me->tm_mon % 12))
-					            : (me->tm_mon % 12)) ],
+	     __mon_lengths[__isleap (tmptr->tm_year + 1900)]
+                          [((tmptr->tm_mon < 0)
+			    ? (12 + (tmptr->tm_mon % 12))
+			    : (tmptr->tm_mon % 12)) ],
 	     tm_mon);
 
   /* Do the month again, because the day may have pushed it out of range. */
@@ -256,21 +201,205 @@ _mktime_internal (timeptr, producer)
 
   /* Do the day again, because the month may have changed the range. */
   normalize (tm_mday, 1,
-	     __mon_lengths[__isleap (me->tm_year)][((me->tm_mon < 0)
-					            ? (12 + (me->tm_mon % 12))
-					            : (me->tm_mon % 12)) ],
+	     __mon_lengths[__isleap (tmptr->tm_year + 1900)]
+	                  [((tmptr->tm_mon < 0)
+			    ? (12 + (tmptr->tm_mon % 12))
+			    : (tmptr->tm_mon % 12)) ],
 	     tm_mon);
   
 #ifdef DEBUG
   if (debugging_enabled)
     {
-      printf ("After normalizing: ");
-      printtm (me);
-      puts ("\n");
+      printf ("   After normalizing:\n     ");
+      printtm (tmptr);
+      putchar ('\n');
     }
 #endif
 
-  result = search (me, producer);
+}
+
+
+/* Here's where the work gets done. */
+
+#define BAD_STRUCT_TM ((time_t) -1)
+
+time_t
+_mktime_internal (timeptr, producer)
+     struct tm *timeptr;
+     struct tm *(*producer) __P ((const time_t *));
+{
+  struct tm our_tm;		/* our working space */
+  struct tm *me = &our_tm;	/* a pointer to the above */
+  time_t result;		/* the value we return */
+
+  *me = *timeptr;		/* copy the struct tm that was passed
+				   in by the caller */
+
+
+  /***************************/
+  /* Normalize the structure */
+  /***************************/
+
+  /* This routine assumes that the value of TM_ISDST is -1, 0, or 1.
+     If the user didn't pass it in that way, fix it. */
+
+  if (me->tm_isdst > 0)
+    me->tm_isdst = 1;
+  else if (me->tm_isdst < 0)
+    me->tm_isdst = -1;
+
+  do_normalization (me);
+
+  /* Get out of here if it's not possible to represent this struct.
+     If any of the values in the normalized struct tm are negative,
+     our algorithms won't work.  Luckily, we only need to check the
+     year at this point; normalization guarantees that all values will
+     be in correct ranges EXCEPT the year. */
+
+  if (me->tm_year < 0)
+    return BAD_STRUCT_TM;
+
+  /*************************************************/
+  /* Find the appropriate time_t for the structure */
+  /*************************************************/
+
+  /* Modified b-search -- make intelligent guesses as to where the
+     time might lie along the timeline, assuming that our target time
+     lies a linear distance (w/o considering time jumps of a
+     particular region).
+
+     Assume that time does not fluctuate at all along the timeline --
+     e.g., assume that a day will always take 86400 seconds, etc. --
+     and come up with a hypothetical value for the time_t
+     representation of the struct tm TARGET, in relation to the guess
+     variable -- it should be pretty close!
+
+     After testing this, the maximum number of iterations that I had
+     on any number that I tried was 3!  Not bad.
+
+     The reason this is not a subroutine is that we will modify some
+     fields in the struct tm (yday and mday).  I've never felt good
+     about side-effects when writing structured code... */
+
+  {
+    struct tm *guess_tm;
+    time_t guess = 0;
+    time_t distance = 0;
+    time_t last_distance = 0;
+
+    times_through_search = 0;
+
+    do
+      {
+	guess += distance;
+
+	times_through_search++;     
+      
+	guess_tm = (*producer) (&guess);
+      
+#ifdef DEBUG
+	if (debugging_enabled)
+	  {
+	    printf ("   Guessing time_t == %d\n     ", (int) guess);
+	    printtm (guess_tm);
+	    putchar ('\n');
+	  }
+#endif
+      
+	/* How far is our guess from the desired struct tm? */
+	distance = dist_tm (me, guess_tm);
+      
+	/* Handle periods of time where a period of time is skipped.
+	   For example, 2:15 3 April 1994 does not exist, because DST
+	   is in effect.  The distance function will alternately
+	   return values of 3600 and -3600, because it doesn't know
+	   that the requested time doesn't exist.  In these situations
+	   (even if the skip is not exactly an hour) the distances
+	   returned will be the same, but alternating in sign.  We
+	   want the later time, so check to see that the distance is
+	   oscillating and we've chosen the correct of the two
+	   possibilities.
+
+	   Useful: 3 Apr 94 765356300, 30 Oct 94 783496000 */
+
+	if ((distance == -last_distance) && (distance < last_distance))
+	  {
+	    /* If the caller specified that the DST flag was off, it's
+               not possible to represent this time. */
+	    if (me->tm_isdst == 0)
+	      {
+#ifdef DEBUG
+	    printf ("   Distance is oscillating -- dst flag nixes struct!\n");
+#endif
+		return BAD_STRUCT_TM;
+	      }
+
+#ifdef DEBUG
+	    printf ("   Distance is oscillating -- chose the later time.\n");
+#endif
+	    distance = 0;
+	  }
+
+	if ((distance == 0) && (me->tm_isdst != -1)
+	    && (me->tm_isdst != guess_tm->tm_isdst))
+	  {
+	    /* If we're in this code, we've got the right time but the
+               wrong daylight savings flag.  We need to move away from
+               the time that we have and approach the other time from
+               the other direction.  That is, if I've requested the
+               non-DST version of a time and I get the DST version
+               instead, I want to put us forward in time and search
+               backwards to get the other time.  I checked all of the
+               configuration files for the tz package -- no entry
+               saves more than two hours, so I think we'll be safe by
+               moving 24 hours in one direction.  IF THE AMOUNT OF
+               TIME SAVED IN THE CONFIGURATION FILES CHANGES, THIS
+               VALUE MAY NEED TO BE ADJUSTED.  Luckily, we can never
+               have more than one level of overlaps, or this would
+               never work. */
+
+#define SKIP_VALUE 86400
+
+	    if (guess_tm->tm_isdst == 0)
+	      /* we got the later one, but want the earlier one */
+	      distance = -SKIP_VALUE;
+	    else
+	      distance = SKIP_VALUE;
+	    
+#ifdef DEBUG
+	    printf ("   Got the right time, wrong DST value -- adjusting\n");
+#endif
+	  }
+
+	last_distance = distance;
+
+      } while (distance != 0);
+
+    /* Check to see that the dst flag matches */
+
+    if (me->tm_isdst != -1)
+      {
+	if (me->tm_isdst != guess_tm->tm_isdst)
+	  {
+#ifdef DEBUG
+	    printf ("   DST flag doesn't match!  FIXME?\n");
+#endif
+	    return BAD_STRUCT_TM;
+	  }
+      }
+
+    result = guess;		/* Success! */
+
+    /* On successful completion, the values of tm_wday and tm_yday
+       have to be set appropriately. */
+    
+    /* me->tm_yday = guess_tm->tm_yday; 
+       me->tm_mday = guess_tm->tm_mday; */
+
+    *me = *guess_tm;
+  }
+
+  /* Update the caller's version of the structure */
 
   *timeptr = *me;
 
@@ -278,7 +407,12 @@ _mktime_internal (timeptr, producer)
 }
 
 time_t
+#ifdef DEBUG			/* make it work even if the system's
+				   libc has it's own mktime routine */
+my_mktime (timeptr)
+#else
 mktime (timeptr)
+#endif
      struct tm *timeptr;
 {
   return _mktime_internal (timeptr, localtime);
@@ -300,11 +434,11 @@ main (argc, argv)
       
       printf ("starting long test...\n");
 
-      for (q = 10000000; q < 1000000000; q++)
+      for (q = 10000000; q < 1000000000; q += 599)
 	{
-	  struct tm *tm = localtime (&q);
+	  struct tm *tm = localtime ((time_t *) &q);
 	  if ((q % 10000) == 0) { printf ("%ld\n", q); fflush (stdout); }
-	  if (q != mktime (tm))
+	  if (q != my_mktime (tm))
 	    { printf ("failed for %ld\n", q); fflush (stdout); }
 	}
       
@@ -324,14 +458,17 @@ main (argc, argv)
   ++argv;
   time = atoi (*argv);
   
-  printf ("Time: %d %s\n", time, ctime ((time_t *) &time));
-
   tmptr = localtime ((time_t *) &time);
-  printf ("localtime returns: ");
+  printf ("Localtime tells us that a time_t of %d represents\n     ", time);
   printtm (tmptr);
-  printf ("\n");
-  printf ("mktime: %d\n\n", (int) mktime (tmptr));
+  putchar ('\n');
 
+  printf ("   Given localtime's return val, mktime returns %d which is\n     ",
+	  (int) my_mktime (tmptr));
+  printtm (tmptr);
+  putchar ('\n');
+
+#if 0
   tmptr->tm_sec -= 20;
   tmptr->tm_min -= 20;
   tmptr->tm_hour -= 20;
@@ -341,12 +478,32 @@ main (argc, argv)
   tmptr->tm_gmtoff -= 20000;	/* This has no effect! */
   tmptr->tm_zone = NULL;	/* Nor does this! */
   tmptr->tm_isdst = -1;
+#endif
+  
+  tmptr->tm_hour += 1;
+  tmptr->tm_isdst = -1;
 
-  printf ("changed ranges: ");
+  printf ("\n\nchanged ranges: ");
   printtm (tmptr);
-  printf ("\n\n");
+  putchar ('\n');
 
-  result_time = mktime (tmptr);
+  result_time = my_mktime (tmptr);
+  printf ("\nmktime: %d\n", result_time);
+
+  tmptr->tm_isdst = 0;
+
+  printf ("\n\nchanged ranges: ");
+  printtm (tmptr);
+  putchar ('\n');
+
+  result_time = my_mktime (tmptr);
   printf ("\nmktime: %d\n", result_time);
 }
 #endif /* DEBUG */
+
+
+/*
+Local Variables:
+compile-command: "gcc -g mktime.c -o mktime -DDEBUG"
+End:
+*/
