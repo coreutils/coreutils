@@ -53,6 +53,8 @@ Fri Dec 20 19:28:37 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	(jm_FUNC_GETGROUPS): New macro
 	* lib/getgroups.c: New file.
 
+	* m4: New directory.
+
 Wed Dec 18 07:47:29 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (AC_CHECK_HEADERS): Add paths.h.
