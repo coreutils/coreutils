@@ -1,3 +1,7 @@
+2001-03-24  Jim Meyering  <meyering@lucent.com>
+
+	* configure.in: Don't require autoconf version here -- it's done in m4/.
+
 2001-03-23  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0.43.
