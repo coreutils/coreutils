@@ -21,6 +21,7 @@
 #endif
 
 #include <sys/types.h>
+#include <stdlib.h>
 
 #if HAVE_UNISTD_H
 # include <unistd.h>
@@ -34,14 +35,25 @@ extern int errno;
 #include "safe-read.h"
 
 /* Read LEN bytes at PTR from descriptor DESC, retrying if interrupted.
-   Return the actual number of bytes read, zero for EOF, or -1 upon error.  */
+   Return the actual number of bytes read, zero upon EOF,
+   or SAFE_READ_ERROR upon error.
+   Abort if LEN is SAFE_READ_ERROR (aka `(size_t) -1').
 
-ssize_t
+   WARNING: although both LEN and the return value are of type size_t,
+   the range of the return value is restricted -- by virtue of being
+   returned from read(2) -- and will never be larger than SSIZE_MAX,
+   with the exception of SAFE_READ_ERROR, of course.
+   So don't test `safe_read (..., N) == N' unless you're sure that
+   N <= SSIZE_MAX.  */
+
+size_t
 safe_read (int desc, void *ptr, size_t len)
 {
   ssize_t n_chars;
 
-  if (len <= 0)
+  if (len == SAFE_READ_ERROR)
+    abort ();
+  if (len == 0)
     return len;
 
 #ifdef EINTR
