@@ -2,6 +2,9 @@
 
 	* Version 5.1.0.
 
+	FIXME: update coreutils.texi:
+	chmod's new options: --preserve-root and --no-preserve-root.
+
 	* src/join.c (usage): Mention that FILE1 and FILE2 must be sorted
 	on the join fields.  Suggestion from Bruce Robertson.
 
@@ -32,9 +35,6 @@
 	* configure.ac: Require automake-1.7.8.
 
 2003-11-09  Jim Meyering  <jim@meyering.net>
-
-	FIXME: update coreutils.texi:
-	chmod's new options: --preserve-root and --no-preserve-root.
 
 	* Use automake-1.7.9.  Regenerate dependent files.
 
