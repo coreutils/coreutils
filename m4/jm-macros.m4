@@ -188,7 +188,7 @@ AC_DEFUN(jm_MACROS,
   test $am_cv_func_strtod_needs_libm = yes && POW_LIBM=-lm
 
   jm_LANGINFO_CODESET
-
+  jm_GLIBC21
   jm_ICONV
 
   # These tests are for df.
