@@ -1233,7 +1233,7 @@ typedef struct
 # if defined MATCH_MAY_ALLOCATE
 /* 4400 was enough to cause a crash on Alpha OSF/1,
    whose default stack limit is 2mb.  */
-int re_max_failures = 20000;
+int re_max_failures = 4000;
 # else
 int re_max_failures = 2000;
 # endif
@@ -2711,7 +2711,7 @@ regex_compile (pattern, size, syntax, bufp)
 			    PATFETCH (c);
 
 			    /* Now add the multibyte character(s) we found
-			       to the acceptabed list.
+			       to the accept list.
 
 			       XXX Note that this is not entirely correct.
 			       we would have to match multibyte sequences
@@ -3506,22 +3506,18 @@ compile_range (range_start_char, p_ptr, pend, translate, syntax, b)
      unsigned char *b;
 {
   unsigned this_char;
-
   const char *p = *p_ptr;
   reg_errcode_t ret;
-  char range_start[2];
-  char range_end[2];
-  char ch[2];
+#if _LIBC
+  const unsigned char *collseq;
+  unsigned int start_colseq;
+  unsigned int end_colseq;
+#else
+  unsigned end_char;
+#endif
 
   if (p == pend)
     return REG_ERANGE;
-
-  /* Fetch the endpoints without translating them; the
-     appropriate translation is done in the bit-setting loop below.  */
-  range_start[0] = range_start_char;
-  range_start[1] = '\0';
-  range_end[0] = p[0];
-  range_end[1] = '\0';
 
   /* Have to increment the pointer into the pattern string, so the
      caller isn't still at the ending character.  */
@@ -3530,19 +3526,34 @@ compile_range (range_start_char, p_ptr, pend, translate, syntax, b)
   /* Report an error if the range is empty and the syntax prohibits this.  */
   ret = syntax & RE_NO_EMPTY_RANGES ? REG_ERANGE : REG_NOERROR;
 
-  /* Here we see why `this_char' has to be larger than an `unsigned
-     char' -- we would otherwise go into an infinite loop, since all
-     characters <= 0xff.  */
-  ch[1] = '\0';
+#if _LIBC
+  collseq = (const unsigned char *) _NL_CURRENT (LC_COLLATE,
+						 _NL_COLLATE_COLLSEQMB);
+
+  start_colseq = collseq[(unsigned char) TRANSLATE (range_start_char)];
+  end_colseq = collseq[(unsigned char) TRANSLATE (p[0])];
   for (this_char = 0; this_char <= (unsigned char) -1; ++this_char)
     {
-      ch[0] = this_char;
-      if (strcoll (range_start, ch) <= 0 && strcoll (ch, range_end) <= 0)
+      unsigned int this_colseq = collseq[(unsigned char) TRANSLATE (this_char)];
+
+      if (start_colseq <= this_colseq && this_colseq <= end_colseq)
 	{
 	  SET_LIST_BIT (TRANSLATE (this_char));
 	  ret = REG_NOERROR;
 	}
     }
+#else
+  /* Here we see why `this_char' has to be larger than an `unsigned
+     char' -- we would otherwise go into an infinite loop, since all
+     characters <= 0xff.  */
+  range_start_char = TRANSLATE (range_start_char);
+  end_char = TRANSLATE (p[0]);
+  for (this_char = range_start_char; this_char <= end_char; ++this_char)
+    {
+      SET_LIST_BIT (TRANSLATE (this_char));
+      ret = REG_NOERROR;
+    }
+#endif
 
   return ret;
 }
