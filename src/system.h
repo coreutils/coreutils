@@ -1,4 +1,4 @@
-/* system-dependent definitions for fileutils programs.
+/* system-dependent definitions for fileutils, textutils, and sh-utils packages.
    Copyright (C) 89, 91, 92, 93, 94, 96, 1997 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -133,11 +133,6 @@
 
 #include "pathmax.h"
 
-/* FIXME: Don't use _POSIX_VERSION.  */
-#ifndef _POSIX_VERSION
-off_t lseek ();
-#endif
-
 #ifdef TM_IN_SYS_TIME
 # include <sys/time.h>
 #else
@@ -188,7 +183,6 @@ struct utimbuf
 # include <string.h>
 #else
 # include <strings.h>
-char *memchr ();
 #endif
 
 #include <errno.h>
@@ -220,7 +214,7 @@ extern int errno;
 # include <sys/file.h>
 #endif
 
-#ifndef SEEK_SET
+#if !defined (SEEK_SET)
 # define SEEK_SET 0
 # define SEEK_CUR 1
 # define SEEK_END 2
