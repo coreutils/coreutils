@@ -1,6 +1,6 @@
 2001-01-28  Jim Meyering  <meyering@lucent.com>
 
-	* Version 4.0.37.
+	* Version 4.0.38.
 
 	* configure, aclocal.m4, etc.: Regenerate using autoconf-2.49c.
 
