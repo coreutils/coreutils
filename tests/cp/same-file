@@ -51,6 +51,7 @@ for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' 'foo hardlink'; do
     case "$args" in *sl2*) ln -s foo sl2;; esac
     (
       (
+	echo 1>&2 $CP $options $args
 	$CP $options $args 2>.err
 	echo $? $options
 
@@ -165,6 +166,9 @@ cat <<\EOF > $expected
 0 -bdfl (foo hardlink)
 
 EOF
+
+# Uncomment this if you see a failure and want to try to diagnose it.
+# diff -u $expected $actual 1>&2
 
 cmp $expected $actual
 exit $?
