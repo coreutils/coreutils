@@ -1,3 +1,11 @@
+Mon Feb 26 21:23:58 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+	
+	* dd.c (copy): Remove bogus (now that we're using full_write)
+	increment of w_partial.
+	Change sense of the tests (though they're equivalent) that check
+	the value returned by full_write. making it clearer where errno
+	is valid.  full_write always writes the full amount or fails.
+
 Thu Feb 15 23:08:41 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* cp.c (copy): Detect (and fail) when creating backup file would
