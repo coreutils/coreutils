@@ -1,3 +1,11 @@
+2005-03-29  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* readutmp.m4 (gl_READUTMP): Require AC_C_INLINE.
+	Use AC_CHECK_HEADERS_ONCE and AC_CHECK_FUNCS_ONCE when possible.
+	Remove duplicate call to AC_LIBOBJ(readutmp).
+	(gl_PREREQ_READUTMP): Remove.  All uses removed.  This module
+	no longer relies on free (NULL) working.
+
 2005-03-28  Eric Blake  <ebb9@byu.net>  (tiny change)
 
 	* getcwd-path-max.m4: Return success on systems such as Cygwin
