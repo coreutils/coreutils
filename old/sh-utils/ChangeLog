@@ -1,3 +1,8 @@
+Fri Oct 18 21:31:58 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* Makefile.am (cvs-dist): Uncomment cvs tag command.
+	(cvs-dist): Use cvs tag's -c option.
+
 Thu Oct 17 23:48:16 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (LIBS): Add -lypsec on m88k/svr3 DolphinOS systems
