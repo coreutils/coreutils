@@ -1,3 +1,12 @@
+2004-04-09  Jim Meyering  <jim@meyering.net>
+
+	* stat-macros.h: New file, with contents from file-type.h
+	and coreutils' system.h.
+	* Makefile.am (libfetish_a_SOURCES): Add stat-macros.h.
+	* file-type.c: Include "stat-macros.h".
+	* file-type.h (file_type): Move all macro defiitions to new file,
+	stat-macros.h.
+
 2004-03-30  Paul Eggert  <eggert@twinsun.com>
 
 	* cloexec.c, cloexec.h, config.charset, file-type.c, file-type.h:
