@@ -123,7 +123,6 @@ void strip_trailing_slashes ();
    Return 0 if ARGPATH exists as a directory with the proper
    ownership and permissions when done, otherwise 1.  */
 
-#if __STDC__
 int
 make_path (const char *argpath,
 	   int mode,
@@ -132,18 +131,6 @@ make_path (const char *argpath,
 	   gid_t group,
 	   int preserve_existing,
 	   const char *verbose_fmt_string)
-#else
-int
-make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
-	   verbose_fmt_string)
-     const char *argpath;
-     int mode;
-     int parent_mode;
-     uid_t owner;
-     gid_t group;
-     int preserve_existing;
-     const char *verbose_fmt_string;
-#endif
 {
   struct stat stats;
   int retval = 0;
