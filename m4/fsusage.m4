@@ -1,4 +1,4 @@
-#serial 8
+#serial 9
 
 # From fileutils/configure.in
 
@@ -24,6 +24,11 @@ if test $ac_fsusage_space = no; then
   # SVR4
   AC_CACHE_CHECK([for statvfs function (SVR4)], fu_cv_sys_stat_statvfs,
 		 [AC_TRY_LINK([#include <sys/types.h>
+#ifdef __GLIBC__
+Do not use statvfs on systems with GNU libc, because that function stats
+all preceding entries in /proc/mounts, and that makes df hang if even
+one of the corresponding file systems is hard-mounted, but not available.
+#endif
 #include <sys/statvfs.h>],
 			      [struct statvfs fsd; statvfs (0, &fsd);],
 			      fu_cv_sys_stat_statvfs=yes,
