@@ -424,6 +424,7 @@ usage (int status)
       --help      display this help and exit\n\
       --version   output version information and exit\n\
 \n\
+A lightweight `finger' program;  print user information.
 The utmp file will be %s.\n\
 "), UTMP_FILE);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
@@ -441,7 +442,8 @@ main (int argc, char *const argv[])
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  while ((optc = getopt_long (argc, argv, "sfwiqbhlp", longopts, &longind)) != -1)
+  while ((optc = getopt_long (argc, argv, "sfwiqbhlp", longopts, &longind))
+	 != -1)
     {
       switch (optc)
 	{
