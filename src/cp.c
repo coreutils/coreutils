@@ -167,7 +167,7 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
       --backup[=CONTROL]       make a backup of each existing destination file\n\
   -b                           like --backup but does not accept an argument\n\
   -d, --no-dereference         preserve links\n\
-  -f, --force                  remove existing destinations, never prompt\n\
+  -f, --force                  remove existing destinations\n\
   -i, --interactive            prompt before overwrite\n\
   -H                           follow symbolic links that are explicitly\n\
                                  specified in the command line, but do not\n\
