@@ -54,6 +54,14 @@
 
 /* If any of the following S_* macros are undefined, define them here
    so each use doesn't have to be guarded with e.g., #ifdef S_ISLNK.  */
+#ifndef S_ISREG
+# define S_ISREG(Mode) 0
+#endif
+
+#ifndef S_ISDIR
+# define S_ISDIR(Mode) 0
+#endif
+
 #ifndef S_ISLNK
 # define S_ISLNK(Mode) 0
 #endif
@@ -77,6 +85,19 @@
 #ifndef S_ISDOOR
 # define S_ISDOOR(Mode) 0
 #endif
+
+#ifndef S_TYPEISSEM
+# define S_TYPEISSEM(Stat_buf_p) 0
+#endif
+
+#ifndef S_TYPEISSHM
+# define S_TYPEISSHM(Stat_buf_p) 0
+#endif
+
+#ifndef S_TYPEISTMO
+# define S_TYPEISTMO(Stat_buf_p) 0
+#endif
+
 
 /* If any of the following are undefined,
    define them to their de facto standard values.  */
