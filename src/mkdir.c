@@ -151,12 +151,22 @@ main (int argc, char **argv)
 
       if (fail == 0)
 	{
-	  fail = mkdir (argv[optind], newmode);
-	  if (fail)
-	    error (0, errno, _("cannot create directory %s"),
-		   quote (argv[optind]));
+	  const char *dir = argv[optind];
+	  int dir_created;
+	  int t_errno;
+	  fail = make_dir (dir, dir, newmode, &dir_created);
+	  t_errno = errno;
+	  /* If make_dir `succeeds' because the directory already exists,
+	     then fail unless --parents (-p) was specified.  */
+	  if (fail ||
+	      (!create_parents && !dir_created && (t_errno = EEXIST)))
+	    {
+	      error (0, t_errno, _("cannot create directory %s"),
+		     quote (dir));
+	      fail = 1;
+	    }
 	  else if (verbose_fmt_string)
-	    error (0, 0, verbose_fmt_string, quote (argv[optind]));
+	    error (0, 0, verbose_fmt_string, quote (dir));
 
 	  /* mkdir(2) is required to honor only the file permission bits.
 	     In particular, it needn't do anything about `special' bits,
@@ -166,10 +176,10 @@ main (int argc, char **argv)
 
 	  if (fail == 0 && specified_mode)
 	    {
-	      fail = chmod (argv[optind], newmode);
+	      fail = chmod (dir, newmode);
 	      if (fail)
 		error (0, errno, _("cannot set permissions of directory %s"),
-		       quote (argv[optind]));
+		       quote (dir));
 	    }
 	}
 
