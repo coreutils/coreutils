@@ -507,7 +507,7 @@ show_point (const char *point, const struct stat *statp)
     {
       for (me = mount_list; me; me = me->me_next)
 	{
-	  if (STREQ (me->me_mountdir, point))
+	  if (STREQ (me->me_mountdir, point) && !STREQ (me->me_type, "lofs"))
 	    {
 	      /* Prefer non-dummy entries.  */
 	      if (! me->me_dummy)
@@ -599,7 +599,7 @@ show_point (const char *point, const struct stat *statp)
 	    }
       }
 
-    if (best_match)
+    if (best_match && !STREQ (best_match->me_type, "lofs"))
       {
 	me = best_match;
 	goto show_me;
