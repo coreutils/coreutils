@@ -1,3 +1,9 @@
+2003-08-17  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (who invocation): Add an entry for -l, --login.
+	Remove `-l' from the entry for --lookup.
+	(who invocation): Begin adding missing option documentation.
+
 2003-08-07  Paul Eggert  <eggert@twinsun.com>
 
 	* coreutils.texi (split invocation):
