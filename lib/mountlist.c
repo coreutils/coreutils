@@ -129,10 +129,10 @@ extern int errno;
 /* Return the value of the hexadecimal number represented by CP.
    No prefix (like '0x') or suffix (like 'h') is expected to be
    part of CP. */
+/* FIXME: this can overflow */
 
 static int
-xatoi (cp)
-     char *cp;
+xatoi (char *cp)
 {
   int val;
 
@@ -266,8 +266,7 @@ fsp_to_string (const struct statfs *fsp)
 
 #ifdef MOUNTED_VMOUNT		/* AIX.  */
 static char *
-fstype_to_string (t)
-     int t;
+fstype_to_string (int t)
 {
   struct vfs_ent *e;
 
