@@ -27,7 +27,7 @@ dd bs=1 seek=4294967288 if=tmp of=big 2> err || framework_failure=1
 test $framework_failure == 1 && cat err 1>&2
 
 if test $framework_failure = 1; then
-  echo '$0: failure in testing framework' 1>&2
+  echo "$0: failure in testing framework" 1>&2
   (exit 1); exit 1
 fi
 
