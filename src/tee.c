@@ -175,6 +175,8 @@ tee (int nfiles, const char **files)
   for (i = nfiles; i >= 1; i--)
     files[i] = files[i - 1];
 
+  SET_BINARY2 (0, 1);
+
   /* In the array of NFILES + 1 descriptors, make
      the first one correspond to standard output.   */
   descriptors[0] = stdout;
@@ -192,6 +194,7 @@ tee (int nfiles, const char **files)
       else
 	{
 	  SETVBUF (descriptors[i], NULL, _IONBF, 0);
+	  SET_BINARY (fileno (descriptors[i]));
 	}
     }
 
