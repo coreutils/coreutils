@@ -1,3 +1,9 @@
+2002-05-27  Jim Meyering  <meyering@lucent.com>
+
+	* readdir.m4 (jm_FUNC_READDIR): Undefine `rmdir' so we don't try to
+	use the replacement function; it wouldn't resolve at link time.
+	Reported by Volker Borchert.
+
 2002-04-30  Jim Meyering  <meyering@lucent.com>
 
 	* prereq.m4 (jm_PREREQ): Add jm_PREREQ_STAT.
