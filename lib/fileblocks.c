@@ -34,6 +34,11 @@
 # endif
 
 # ifndef NINDIR
+
+#  if defined (__DJGPP__)
+typedef long daddr_t; /* for disk address */
+#  endif
+
 /* Some SysV's, like Irix, seem to lack this.  Hope it's correct. */
 /* Number of inode pointers per indirect block. */
 #  define NINDIR (BSIZE / sizeof (daddr_t))
