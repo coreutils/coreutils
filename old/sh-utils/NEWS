@@ -1,0 +1,14 @@
+Major changes in release 1.8:
+* add echo command
+* fix some incorrect warnings in pathchk
+* look at the right utmp file on 386BSD
+* date doesn't dump core on some systems now
+
+Major changes in release 1.7:
+* add su, who, true, false commands
+* add more tests to expr
+* fix printf program handling of \ escapes
+* printf can re-use format string for multiple groups of arguments
+* printf catches numeric conversion errors with an ANSI C library
+* stty nl and -nl were backwards
+* date can format an arbitrary date without setting it
