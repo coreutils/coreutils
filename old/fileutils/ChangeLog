@@ -1,6 +1,11 @@
-1998-02-07  Jim Meyering  <meyering@eng.ascend.com>
+1998-02-08  Jim Meyering  <meyering@eng.ascend.com>
 
 	* Version 3.16m.
+
+	* src/ln.c (usage): Reword to use `TARGET' and `LINK_NAME' in
+	description.
+
+1998-02-07  Jim Meyering  <meyering@eng.ascend.com>
 
 	* GNUmakefile: New file.
 	* Makefile.am (EXTRA_DIST): Add GNUmakefile.
