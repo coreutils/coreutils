@@ -3,7 +3,7 @@
 
 if test "$VERBOSE" = yes; then
   set -x
-  $mkdir --version
+  mkdir --version
 fi
 
 tmp=mkdir-sp-$$
