@@ -1,6 +1,14 @@
-2003-07-18  Jim Meyering  <jim@meyering.net>
+2003-07-19  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.90.
+
+	* src/printenv.c: Include "exitfail.h".
+	(main): Set exit_failure rather than calling close_stdout_set_status.
+	* src/date.c: Likewise.
+	* src/sort.c: Likewise.
+	* src/tty.c: Likewise.
+
+2003-07-18  Jim Meyering  <jim@meyering.net>
 
 	* tests/touch/not-owner: Update to use newer framework.
 
