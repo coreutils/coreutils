@@ -1,3 +1,16 @@
+Wed Jan 17 11:37:59 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* stty.c: Protoize and __P-protect forward dcls.
+	(visible): Change parameter type to unsigned int from unsigned char.
+	(integer_arg): Use xstrtol instead of open-coding this.
+
+	* lib/Makefile.am (su_SOURCES): Add xstrtol.c.
+	(HEADERS): Add xstrtol.h.
+
+Sat Jan 13 22:31:23 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* stty.c: Indent cpp directives.
+
 Sun Jan  7 23:56:03 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	Use automake to generate Makefile.in files.
