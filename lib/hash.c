@@ -568,10 +568,10 @@ hash_initialize (size_t candidate, const Hash_tuning *tuning,
       candidate = new_candidate;
     }
 
-  if (SIZE_MAX / sizeof *table->bucket < candidate)
+  if (xalloc_oversized (candidate, sizeof *table->bucket))
     goto fail;
   table->n_buckets = next_prime (candidate);
-  if (SIZE_MAX / sizeof *table->bucket < table->n_buckets)
+  if (xalloc_oversized (table->n_buckets, sizeof *table->bucket))
     goto fail;
 
   table->bucket = calloc (table->n_buckets, sizeof *table->bucket);
