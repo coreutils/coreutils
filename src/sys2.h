@@ -34,6 +34,13 @@ char *alloca ();
 # endif
 #endif
 
+#ifdef __DJGPP__
+  /* We need the declaration of setmode.  */
+# include <io.h>
+  /* We need the declaration of __djgpp_set_ctrl_c.  */
+# include <sys/exceptn.h>
+#endif
+
 #include <ctype.h>
 
 /* Jim Meyering writes:
