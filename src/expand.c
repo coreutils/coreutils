@@ -1,5 +1,5 @@
 /* expand - convert tabs to spaces
-   Copyright (C) 89, 91, 1995-2001 Free Software Foundation, Inc.
+   Copyright (C) 89, 91, 1995-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -89,6 +89,12 @@ static int have_read_stdin;
 /* Status to return to the system. */
 static int exit_status;
 
+static char const shortopts[] = "it:"
+#if POSIX2_VERSION < 200112
+",0123456789"
+#endif
+;
+
 static struct option const longopts[] =
 {
   {"tabs", required_argument, NULL, 't'},
@@ -127,9 +133,10 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
-      fputs (_("\
+      if (POSIX2_VERSION < 200112)
+	fputs (_("\
 \n\
-Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.\n\
+(obsolete) Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.\n\
 "), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
@@ -339,6 +346,8 @@ main (int argc, char **argv)
   int tabval = -1;		/* Value of tabstop being read, or -1. */
   int c;			/* Option character. */
 
+  bool obsolete_tablist = false;
+
   have_read_stdin = 0;
   exit_status = 0;
   convert_entire_line = 1;
@@ -351,14 +360,14 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((c = getopt_long (argc, argv, "it:,0123456789", longopts, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, shortopts, longopts, NULL)) != -1)
     {
       switch (c)
 	{
 	case 0:
 	  break;
 
-	case '?':
+	default:
 	  usage (1);
 	case 'i':
 	  convert_entire_line = 0;
@@ -366,19 +375,38 @@ main (int argc, char **argv)
 	case 't':
 	  parse_tabstops (optarg);
 	  break;
+	case_GETOPT_HELP_CHAR;
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+
+#if POSIX2_VERSION < 200112
 	case ',':
 	  add_tabstop (tabval);
 	  tabval = -1;
+	  obsolete_tablist = true;
 	  break;
-	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-	default:
+	case '0':
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+	case '5':
+	case '6':
+	case '7':
+	case '8':
+	case '9':
 	  if (tabval == -1)
 	    tabval = 0;
 	  tabval = tabval * 10 + c - '0';
+	  obsolete_tablist = true;
 	  break;
+#endif
 	}
     }
+
+  if (OBSOLETE_OPTION_WARNINGS
+      && obsolete_tablist && ! getenv ("POSIXLY_CORRECT"))
+    error (0, 0,
+	   _("warning: `expand -TABLIST' is obsolete; use `expand -t TABLIST'"));
 
   add_tabstop (tabval);
 
