@@ -3389,12 +3389,11 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
       --full-time            like -l --time-style=full-iso\n"));
 
       printf (_("\
-  -g                         -like -l, but do not list owner\n\
+  -g                         like -l, but do not list owner\n\
   -G, --no-group             inhibit display of group information\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
       --si                   likewise, but use powers of 1000 not 1024\n\
-  -H                         same as `--si' for now; soon to change\n\
-                               to conform to POSIX\n\
+  -H, --dereference-command-line  follow symbolic links on the command line\n\
       --indicator-style=WORD append indicator with style WORD to entry names:\n\
                                none (default), classify (-F), file-type (-p)\n\
   -i, --inode                print index number of each file\n\
