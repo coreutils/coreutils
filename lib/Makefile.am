@@ -6,10 +6,10 @@ noinst_LIBRARIES = libfetish.a
 
 INCLUDES = -I.. -I$(srcdir) -I../intl
 
-libfetish_a_SOURCES = getdate.y posixtm.c getopt.c getopt1.c \
+libfetish_a_SOURCES = getdate.y posixtm.c \
 addext.c argmatch.c backupfile.c basename.c \
 closeout.c dirname.c exclude.c filemode.c \
-full-write.c human.c idcache.c \
+full-write.c getopt.c getopt1.c human.c idcache.c \
 isdir.c long-options.c makepath.c modechange.c hash.c path-concat.c \
 quotearg.c safe-read.c same.c save-cwd.c savedir.c stripslash.c userspec.c \
 version-etc.c xgetcwd.c xmalloc.c xstrdup.c \
