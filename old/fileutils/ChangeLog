@@ -1,5 +1,11 @@
 2001-08-12  Jim Meyering  <meyering@lucent.com>
 
+	* tests/mk-script ($program_name): Define.
+	(main): Use $program_name, rather than long-inaccurate `build-script'.
+	(main): Iterate over the sorted keys (rather than `while...each...'),
+	so this script produces the same output regardless of which version
+	of perl (e.g., perl5.6) is used.
+
 	Work around non-compliant gettimeofday on Mac OS X 10.0.4,
 	(aka Darwin 1.3.7) that caused the date of the first file listed
 	in long output to be the current time rather than the file's mtime.
