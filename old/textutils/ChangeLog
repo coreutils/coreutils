@@ -1,3 +1,12 @@
+1997-07-19  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/sort.c (checkfp): Print the `disorder' message.  Include both
+	the number and the contents of the first out-of-order line, in addition
+	to the file name.  Change meaning of return value.
+	(check): Don't print disorder message here.
+	Adjust test of checkfp's return value.
+	Feature suggestion from Karl Heuer.
+
 1997-07-13  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* doc/Makefile.am (EXTRA_DIST): Remove explicit mention of texinfo.texi.
