@@ -6,6 +6,11 @@
 : ${RM=rm}
 : ${TOUCH=touch}
 
+if test "$VERBOSE" = yes; then
+  set -x
+  $MV --version
+fi
+
 dir=into-self-dir
 file=into-self-file
 
