@@ -34,6 +34,8 @@
 		the sizes of subdirectories.
    -D		Dereference only symbolic links given on the command line.
    -L		Dereference all symbolic links.
+   --exclude=PAT Exclude files that match PAT.
+   -X FILE	Exclude files that match patterns taken from FILE.
 
    By tege@sics.se, Torbjorn Granlund,
    and djm@ai.mit.edu, David MacKenzie.
@@ -49,6 +51,7 @@
 #include <sys/types.h>
 #include <assert.h>
 
+#include "exclude.h"
 #include "system.h"
 #include "save-cwd.h"
 #include "error.h"
@@ -167,6 +170,9 @@ static int show_help;
 /* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
+/* File name patterns to exclude.  */
+static struct exclude *exclude;
+
 /* Grand total size of all args, in units of ST_NBLOCKSIZE-byte blocks. */
 static uintmax_t tot_size = 0;
 
@@ -177,6 +183,8 @@ static struct option const long_options[] =
   {"count-links", no_argument, &opt_count_all, 1},
   {"dereference", no_argument, NULL, 'L'},
   {"dereference-args", no_argument, &opt_dereference_arguments, 1},
+  {"exclude", required_argument, 0, 128},
+  {"exclude-from", required_argument, 0, 'X'},
   {"human-readable", no_argument, NULL, 'h'},
   {"si", no_argument, 0, 'H'},
   {"kilobytes", no_argument, NULL, 'k'},
@@ -220,6 +228,8 @@ Summarize disk usage of each FILE, recursively for directories.\n\
   -S, --separate-dirs   do not include size of subdirectories\n\
   -s, --summarize       display only a total for each argument\n\
   -x, --one-file-system  skip directories on different filesystems\n\
+  -X FILE, --exclude-from=FILE  Exclude files that match any pattern in FILE.\n\
+      --exclude=PAT     Exclude files that match PAT.\n\
       --max-depth=N     print the total for a directory (or file, with --all)\n\
 			  only if it is N or fewer levels below the command\n\
 			  line argument;  --max-depth=0 is the same as\n\
@@ -251,6 +261,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  exclude = new_exclude ();
   xstat = lstat;
 
   if (getenv ("POSIXLY_CORRECT"))
@@ -269,7 +280,7 @@ main (int argc, char **argv)
   else
     output_units = 1024;
 
-  while ((c = getopt_long (argc, argv, "abchHklmsxDLS", long_options, NULL))
+  while ((c = getopt_long (argc, argv, "abchHklmsxDLSX:", long_options, NULL))
 	 != -1)
     {
       long int tmp_long;
@@ -342,6 +353,15 @@ main (int argc, char **argv)
 
 	case 'S':
 	  opt_separate_dirs = 1;
+	  break;
+
+	case 'X':
+	  if (add_exclude_file (exclude, optarg, '\n') != 0)
+	    error (1, errno, "%s", optarg);
+	  break;
+
+	case 128:
+	  add_exclude (exclude, optarg);
 	  break;
 
 	default:
@@ -558,16 +578,13 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
       str_concatc (path, "/");
       pathlen = path->length;
 
-      namep = name_space;
-      while (*namep != 0)
-	{
-	  str_concatc (path, namep);
-
-	  size += count_entry (namep, 0, dir_dev, depth + 1);
-
-	  str_trunc (path, pathlen);
-	  namep += strlen (namep) + 1;
-	}
+      for (namep = name_space; *namep; namep += strlen (namep) + 1)
+	if (!excluded_filename (exclude, namep))
+	  {
+	    str_concatc (path, namep);
+	    size += count_entry (namep, 0, dir_dev, depth + 1);
+	    str_trunc (path, pathlen);
+	  }
       free (name_space);
       if (through_symlink)
 	{
