@@ -158,7 +158,10 @@ Mandatory arguments to long options are mandatory for short options too.\n\
      fputs (_("\
   -w, --check-chars=N   compare no more than N characters in lines\n\
   -N                    same as -f N\n\
-  +N                    same as -s N (obsolescent; will be withdrawn)\n\
+"), stdout);
+     if (POSIX2_VERSION < 200112)
+       fputs (_("\
+  +N                    same as -s N (obsolete; will be withdrawn)\n\
 "), stdout);
      fputs (HELP_OPTION_DESCRIPTION, stdout);
      fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -436,7 +439,8 @@ main (int argc, char **argv)
 	case 1:
 	  {
 	    unsigned long int size;
-	    if (optarg[0] == '+'
+	    if (POSIX2_VERSION < 200112
+		&& optarg[0] == '+'
 		&& xstrtoul (optarg, NULL, 10, &size, "") == LONGINT_OK
 		&& size <= SIZE_MAX)
 	      skip_chars = size;
