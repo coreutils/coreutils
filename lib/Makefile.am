@@ -62,6 +62,7 @@ libfetish_a_SOURCES = \
   fnmatch_.h \
   fopen-safer.c \
   fsusage.h \
+  ftw.h \
   full-read.c full-read.h \
   full-write.c full-write.h \
   getline.h \
