@@ -33,7 +33,7 @@ fail=0
 # Both of these should fail.
 rm -rf a b > out 2>&1 && fail=1
 cat <<EOF > exp
-rm: cannot chdir from \`a/.' to \`1': Permission denied
+rm: cannot chdir from \`a' to \`1': Permission denied
 rm: cannot chdir from \`.' to \`b': Permission denied
 EOF
 

@@ -31,7 +31,7 @@ fail=0
 # This should fail.
 rm -rf a > out 2>&1 && fail=1
 cat <<EOF > exp
-rm: cannot open directory \`a/.': Permission denied
+rm: cannot open directory \`a': Permission denied
 EOF
 
 cmp out exp || fail=1
