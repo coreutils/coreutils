@@ -2,6 +2,10 @@
 
 	* Version 2.0.21.
 
+	* Makefile.maint (ac-check): Remove, now that we no longer have
+	to duplicate that information.
+	(local-check): Remove ac-check.
+
 	* Makefile.am (AUTOMAKE_OPTIONS): Require automake-1.5d.
 
 	* configure.ac (AM_INIT_AUTOMAKE): Use zero-arg form of this macro.
