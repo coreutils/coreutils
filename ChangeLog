@@ -1,6 +1,13 @@
-2004-06-22  Paul Eggert  <eggert@cs.ucla.edu>
+2004-06-23  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* tests/*: Replace all occurrences of `(exit N); exit' with
+	`(exit N); exit N'.  Otherwise, those many tests could exit with
+	improper exit status when exiting via e.g., a trapped interrupt.
+	Thanks to a report from Bob Proulx.
+
+2004-06-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/who.c (idle_string, print_user): New arg boottime,
 	specifying the most recent boot time.  All uses changed.
