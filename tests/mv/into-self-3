@@ -6,14 +6,14 @@
 
 if test "$VERBOSE" = yes; then
   set -x
-  $MV --version
+  mv --version
 fi
 
 dir1=is3-dir1
 dir2=is3-dir2
 
 framework_failure=0
-$RM -rf $dir1 $dir2 || framework_failure=1
+rm -rf $dir1 $dir2 || framework_failure=1
 mkdir $dir1 $dir2 || framework_failure=1
 
 if test $framework_failure = 1; then
@@ -30,10 +30,10 @@ LANG=C
 export LANG
 
 # This mv command should exit nonzero.
-$MV $dir1 $dir2 $dir2 > out 2>&1 && fail=1
+mv $dir1 $dir2 $dir2 > out 2>&1 && fail=1
 
 sed \
-   -e "s,$MV:,XXX:,g" \
+   -e "s,mv:,XXX:,g" \
    -e "s,$dir2,ZZZ,g" \
   out > out2
 
@@ -43,6 +43,6 @@ EOF
 
 cmp out2 exp || fail=1
 
-$RM -fr out out2 exp $dir1 $dir2
+rm -fr out out2 exp $dir1 $dir2
 
 exit $fail
