@@ -34,9 +34,15 @@
 
 #define AUTHORS "Richard Stallman and David MacKenzie"
 
-/* Undefine, to avoid warning about redefinition on some systems.  */
-#undef min
-#define min(x, y) ((x) < (y) ? (x) : (y))
+#define SWAP_LINES(A, B)			\
+  do						\
+    {						\
+      struct linebuffer *_tmp;			\
+      _tmp = (A);				\
+      (A) = (B);				\
+      (B) = _tmp;				\
+    }						\
+  while (0)
 
 /* The name this program was run with. */
 char *program_name;
@@ -256,11 +262,8 @@ check_file (const char *infile, const char *outfile)
 
       if (!match || mode == output_all_repeated)
 	{
-	  struct linebuffer *tmp;
 	  writeline (prevline, ostream, match_count);
-	  tmp = prevline;
-	  prevline = thisline;
-	  thisline = tmp;
+	  SWAP_LINES (prevline, thisline);
 	  prevfield = thisfield;
 	  prevlen = thislen;
 	  if (!match)
