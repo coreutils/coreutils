@@ -155,7 +155,7 @@ struct List_element
    to work with: a linked list of constructs (struct List_element).
    Each Spec_list structure also encapsulates various attributes of
    the corresponding argument string.  The attributes are used mainly
-   to verify that the strings are legal in the context of any options
+   to verify that the strings are valid in the context of any options
    specified (like -s, -d, or -c).  The main exception is the member
    `tail', which is first used to construct the list.  After construction,
    it is used by get_next to save its state when traversing the list.
@@ -1219,7 +1219,7 @@ card_of_complement (s)
 }
 
 /* Gather statistics about the spec-list S in preparation for the tests
-   in validate that determine the legality of the specs.  This function
+   in validate that determine the consistency of the specs.  This function
    is called at most twice; once for string1, and again for any string2.
    LEN_S1 < 0 indicates that this is the first call and that S represents
    string1.  When LEN_S1 >= 0, it is the length of the expansion of the
@@ -1409,7 +1409,7 @@ string2_extend (s1, s2)
 
 /* Die with an error message if S1 and S2 describe strings that
    are not valid with the given command line switches.
-   A side effect of this function is that if a legal [c*] or
+   A side effect of this function is that if a valid [c*] or
    [c*0] construct appears in string2, it is converted to [c*n]
    with a value for n that makes s2->length == s1->length.  By
    the same token, if the --truncate-set1 option is not
@@ -1760,7 +1760,7 @@ main (argc, argv)
   non_option_args = argc - optind;
   translating = (non_option_args == 2 && !delete);
 
-  /* Change this test if it is legal to give tr no options and
+  /* Change this test if it is valid to give tr no options and
      no args at all.  POSIX doesn't specifically say anything
      either way, but it looks like they implied it's invalid
      by omission.  If you want to make tr do a slow imitation
