@@ -192,7 +192,7 @@ static int have_read_stdin;
    Return 0 if successful, -1 if an error occurs. */
 
 static int
-cksum (char *file, int print_name)
+cksum (const char *file, int print_name)
 {
   unsigned char buf[BUFLEN];
   unsigned long crc = 0;
