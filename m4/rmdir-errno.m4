@@ -1,11 +1,11 @@
-#serial 2
+#serial 3
 
 # When rmdir fails because the specified directory is not empty, it sets
 # errno to some value, usually ENOTEMPTY.  However, on some AIX systems,
 # ENOTEMPTY is mistakenly defined to be EEXIST.  To work around this, and
 # in general, to avoid depending on the use of any particular symbol, this
 # test runs a test to determine the actual numeric value.
-AC_DEFUN(fetish_FUNC_RMDIR_NOTEMPTY,
+AC_DEFUN([fetish_FUNC_RMDIR_NOTEMPTY],
 [dnl
   AC_CACHE_CHECK([for rmdir-not-empty errno value],
     fetish_cv_func_rmdir_errno_not_empty,

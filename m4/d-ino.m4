@@ -1,11 +1,11 @@
-#serial 3
+#serial 4
 
 dnl From Jim Meyering.
 dnl
 dnl Check whether struct dirent has a member named d_ino.
 dnl
 
-AC_DEFUN(jm_CHECK_TYPE_STRUCT_DIRENT_D_INO,
+AC_DEFUN([jm_CHECK_TYPE_STRUCT_DIRENT_D_INO],
   [AC_REQUIRE([AC_HEADER_DIRENT])dnl
    AC_CACHE_CHECK([for d_ino member in directory struct],
 		  jm_cv_struct_dirent_d_ino,

@@ -1,4 +1,4 @@
-#serial 7
+#serial 8
 
 # From fileutils/configure.in
 
@@ -8,7 +8,7 @@
 #
 # jm_FILE_SYSTEM_USAGE([ACTION-IF-FOUND[, ACTION-IF-NOT-FOUND]])
 
-AC_DEFUN(jm_FILE_SYSTEM_USAGE,
+AC_DEFUN([jm_FILE_SYSTEM_USAGE],
 [
 
 echo "checking how to get filesystem space usage..."

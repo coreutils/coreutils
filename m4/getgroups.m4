@@ -1,4 +1,4 @@
-#serial 4
+#serial 5
 
 dnl From Jim Meyering.
 dnl
@@ -7,7 +7,7 @@ dnl  jm_FUNC_GETGROUPS
 dnl  test -n "$GETGROUPS_LIB" && LIBS="$GETGROUPS_LIB $LIBS"
 dnl
 
-AC_DEFUN(jm_FUNC_GETGROUPS,
+AC_DEFUN([jm_FUNC_GETGROUPS],
 [AC_REQUIRE([AC_TYPE_GETGROUPS])dnl
  AC_REQUIRE([AC_TYPE_SIZE_T])dnl
  AC_CHECK_FUNCS(getgroups)

@@ -2,7 +2,7 @@
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
-AC_DEFUN(jm_MACROS,
+AC_DEFUN([jm_MACROS],
 [
   AC_PREREQ(2.52)
 
@@ -113,6 +113,7 @@ AC_DEFUN(jm_MACROS,
     AC_CHECK_FUNCS(clock_gettime)
   LIBS=$fetish_saved_libs
   AC_CHECK_FUNCS(gettimeofday)
+  AC_FUNC_GETTIMEOFDAY_CLOBBER
 
   AC_REQUIRE([AC_FUNC_CLOSEDIR_VOID])
   AC_REQUIRE([jm_FUNC_UTIME])
@@ -197,7 +198,7 @@ AC_DEFUN(jm_MACROS,
 # These tests must be run before any use of AC_CHECK_TYPE,
 # because that macro compiles code that tests e.g., HAVE_UNISTD_H.
 # See the definition of ac_includes_default in `configure'.
-AC_DEFUN(jm_CHECK_ALL_HEADERS,
+AC_DEFUN([jm_CHECK_ALL_HEADERS],
 [
   AC_CHECK_HEADERS( \
     errno.h  \
@@ -241,7 +242,7 @@ AC_DEFUN(jm_CHECK_ALL_HEADERS,
 ])
 
 # This macro must be invoked before any tests that run the compiler.
-AC_DEFUN(jm_CHECK_ALL_TYPES,
+AC_DEFUN([jm_CHECK_ALL_TYPES],
 [
   # FIXME: I shouldn't have to require this macro here.  Rather, it should
   # be required by any autoconf macro that performs a compile-time test or

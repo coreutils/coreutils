@@ -1,10 +1,10 @@
-#serial 3
+#serial 4
 
 dnl From Jim Meyering.
 dnl Find a new-enough version of Perl.
 dnl
 
-AC_DEFUN(jm_PERL,
+AC_DEFUN([jm_PERL],
 [
   dnl FIXME: don't hard-code 5.003
   dnl FIXME: should we cache the result?

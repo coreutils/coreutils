@@ -1,10 +1,10 @@
-#serial 3
+#serial 4
 
 dnl Determine whether to add fnmatch.o to LIBOBJS and to
 dnl define fnmatch to rpl_fnmatch.
 dnl
 
-AC_DEFUN(jm_FUNC_FNMATCH,
+AC_DEFUN([jm_FUNC_FNMATCH],
 [
   AC_REQUIRE([AM_GLIBC])
   AC_FUNC_FNMATCH

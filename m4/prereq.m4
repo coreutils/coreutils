@@ -1,9 +1,9 @@
-#serial 19
+#serial 20
 
 dnl These are the prerequisite macros for files in the lib/
 dnl directories of the fileutils, sh-utils, and textutils packages.
 
-AC_DEFUN(jm_PREREQ,
+AC_DEFUN([jm_PREREQ],
 [
   jm_PREREQ_ADDEXT
   jm_PREREQ_CANON_HOST
@@ -20,7 +20,7 @@ AC_DEFUN(jm_PREREQ,
   jm_PREREQ_TEMPNAME # called by mkstemp
 ])
 
-AC_DEFUN(jm_PREREQ_ADDEXT,
+AC_DEFUN([jm_PREREQ_ADDEXT],
 [
   dnl For addext.c.
   AC_SYS_LONG_FILE_NAMES
@@ -28,7 +28,7 @@ AC_DEFUN(jm_PREREQ_ADDEXT,
   AC_CHECK_HEADERS(limits.h string.h unistd.h)
 ])
 
-AC_DEFUN(jm_PREREQ_CANON_HOST,
+AC_DEFUN([jm_PREREQ_CANON_HOST],
 [
   dnl Add any libraries as early as possible.
   dnl In particular, inet_ntoa needs -lnsl at least on Solaris5.5.1,
@@ -43,19 +43,19 @@ AC_DEFUN(jm_PREREQ_CANON_HOST,
                    netinet/in.h arpa/inet.h)
 ])
 
-AC_DEFUN(jm_PREREQ_DIRNAME,
+AC_DEFUN([jm_PREREQ_DIRNAME],
 [
   AC_HEADER_STDC
   AC_CHECK_HEADERS(string.h)
 ])
 
-AC_DEFUN(jm_PREREQ_GETPAGESIZE,
+AC_DEFUN([jm_PREREQ_GETPAGESIZE],
 [
   AC_CHECK_FUNCS(getpagesize)
   AC_CHECK_HEADERS(OS.h unistd.h)
 ])
 
-AC_DEFUN(jm_PREREQ_HASH,
+AC_DEFUN([jm_PREREQ_HASH],
 [
   AC_CHECK_HEADERS(stdlib.h stdbool.h)
   AC_REQUIRE([jm_CHECK_DECLS])
@@ -63,7 +63,7 @@ AC_DEFUN(jm_PREREQ_HASH,
 
 # If you use human.c, you need the following files:
 # uintmax_t.m4 inttypes_h.m4 ulonglong.m4
-AC_DEFUN(jm_PREREQ_HUMAN,
+AC_DEFUN([jm_PREREQ_HUMAN],
 [
   AC_CHECK_HEADERS(limits.h stdlib.h string.h)
   AC_CHECK_DECLS([getenv])
@@ -71,12 +71,12 @@ AC_DEFUN(jm_PREREQ_HUMAN,
   AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])
 ])
 
-AC_DEFUN(jm_PREREQ_MEMCHR,
+AC_DEFUN([jm_PREREQ_MEMCHR],
 [
   AC_CHECK_HEADERS(limits.h stdlib.h bp-sym.h)
 ])
 
-AC_DEFUN(jm_PREREQ_QUOTEARG,
+AC_DEFUN([jm_PREREQ_QUOTEARG],
 [
   AC_CHECK_FUNCS(isascii iswprint)
   jm_FUNC_MBRTOWC
@@ -87,7 +87,7 @@ AC_DEFUN(jm_PREREQ_QUOTEARG,
   AM_C_PROTOTYPES
 ])
 
-AC_DEFUN(jm_PREREQ_READUTMP,
+AC_DEFUN([jm_PREREQ_READUTMP],
 [
   AC_HEADER_STDC
   AC_CHECK_HEADERS(string.h utmp.h utmpx.h sys/param.h)
@@ -115,7 +115,7 @@ $ac_includes_default
   fi
 ])
 
-AC_DEFUN(jm_PREREQ_REGEX,
+AC_DEFUN([jm_PREREQ_REGEX],
 [
   dnl FIXME: Maybe provide a btowc replacement someday: solaris-2.5.1 lacks it.
   dnl FIXME: Check for wctype and iswctype, and and add -lw if necessary
@@ -126,7 +126,7 @@ AC_DEFUN(jm_PREREQ_REGEX,
   AC_FUNC_ALLOCA
 ])
 
-AC_DEFUN(jm_PREREQ_TEMPNAME,
+AC_DEFUN([jm_PREREQ_TEMPNAME],
 [
   AC_HEADER_STDC
   AC_HEADER_STAT

@@ -1,11 +1,11 @@
-#serial 4
+#serial 5
 
 dnl From Jim Meyering
 
 dnl Define HAVE_STRUCT_TIMESPEC if `struct timespec' is declared
 dnl in time.h or sys/time.h.
 
-AC_DEFUN(jm_CHECK_TYPE_STRUCT_TIMESPEC,
+AC_DEFUN([jm_CHECK_TYPE_STRUCT_TIMESPEC],
 [
   AC_REQUIRE([AC_HEADER_TIME])
   AC_CACHE_CHECK([for struct timespec], fu_cv_sys_struct_timespec,

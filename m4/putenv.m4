@@ -1,4 +1,4 @@
-#serial 4
+#serial 5
 
 dnl From Jim Meyering.
 dnl
@@ -6,7 +6,7 @@ dnl Check whether putenv ("FOO") removes FOO from the environment.
 dnl The putenv in libc on at least SunOS 4.1.4 does *not* do that.
 dnl
 
-AC_DEFUN(jm_FUNC_PUTENV,
+AC_DEFUN([jm_FUNC_PUTENV],
 [AC_CACHE_CHECK([for SVID conformant putenv], jm_cv_func_svid_putenv,
   [AC_TRY_RUN([
     int

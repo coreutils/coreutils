@@ -1,8 +1,8 @@
-#serial 3
+#serial 4
 
 dnl From Paul Eggert
 
-AC_DEFUN(jm_FUNC_MBRTOWC,
+AC_DEFUN([jm_FUNC_MBRTOWC],
 [
   AC_CACHE_CHECK([whether mbrtowc and mbstate_t are properly declared],
     jm_cv_func_mbrtowc,

@@ -1,11 +1,11 @@
-#serial 4
+#serial 5
 
 dnl From Paul Eggert.
 
 # Define ST_MTIM_NSEC to be the nanoseconds member of struct stat's st_mtim,
 # if it exists.
 
-AC_DEFUN(AC_STRUCT_ST_MTIM_NSEC,
+AC_DEFUN([AC_STRUCT_ST_MTIM_NSEC],
  [AC_CACHE_CHECK([for nanoseconds member of struct stat.st_mtim],
    ac_cv_struct_st_mtim_nsec,
    [ac_save_CPPFLAGS="$CPPFLAGS"

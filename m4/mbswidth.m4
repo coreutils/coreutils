@@ -1,9 +1,9 @@
-#serial 5
+#serial 6
 
 dnl autoconf tests required for use of mbswidth.c
 dnl From Bruno Haible.
 
-AC_DEFUN(jm_PREREQ_MBSWIDTH,
+AC_DEFUN([jm_PREREQ_MBSWIDTH],
 [
   AC_REQUIRE([AC_HEADER_STDC])
   AC_CHECK_HEADERS(limits.h stdlib.h string.h wchar.h wctype.h)

@@ -1,4 +1,4 @@
-# serial 8
+# serial 9
 
 # From Paul Eggert.
 
@@ -10,7 +10,7 @@
 # (at least glibc-2.1.3) because the "_XOPEN_SOURCE 500" definition elicits
 # a syntax error in wchar.h due to the use of undefined __int32_t.
 
-AC_DEFUN(AC_MBSTATE_T,
+AC_DEFUN([AC_MBSTATE_T],
   [
    AC_CHECK_HEADERS(stdlib.h)
 

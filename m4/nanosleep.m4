@@ -1,11 +1,11 @@
-#serial 7
+#serial 8
 
 dnl From Jim Meyering.
 dnl Check for the nanosleep function.
 dnl If not found, use the supplied replacement.
 dnl
 
-AC_DEFUN(jm_FUNC_NANOSLEEP,
+AC_DEFUN([jm_FUNC_NANOSLEEP],
 [
  nanosleep_save_libs=$LIBS
 

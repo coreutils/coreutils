@@ -1,8 +1,8 @@
-#serial 4
+#serial 5
 
 AC_PREREQ(2.13)
 
-AC_DEFUN(jm_SYS_PROC_UPTIME,
+AC_DEFUN([jm_SYS_PROC_UPTIME],
 [ dnl Require AC_PROG_CC to see if we're cross compiling.
   AC_REQUIRE([AC_PROG_CC])
   AC_CACHE_CHECK([for /proc/uptime], jm_cv_have_proc_uptime,

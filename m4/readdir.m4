@@ -1,4 +1,4 @@
-#serial 3
+#serial 4
 
 dnl SunOS's readdir is broken in such a way that rm.c has to add extra code
 dnl to test whether a NULL return value really means there are no more files
@@ -12,7 +12,7 @@ dnl Define HAVE_WORKING_READDIR if readdir does *not* have this problem.
 
 dnl Written by Jim Meyering.
 
-AC_DEFUN(jm_FUNC_READDIR,
+AC_DEFUN([jm_FUNC_READDIR],
 [dnl
 AC_REQUIRE([AC_HEADER_DIRENT])
 AC_CHECK_HEADERS(string.h)

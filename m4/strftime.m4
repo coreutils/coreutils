@@ -1,8 +1,8 @@
-#serial 16
+#serial 17
 
 dnl This macro is intended to be used solely in this file.
 dnl These are the prerequisite macros for GNU's strftime.c replacement.
-AC_DEFUN(_jm_STRFTIME_PREREQS,
+AC_DEFUN([_jm_STRFTIME_PREREQS],
 [
  dnl strftime.c uses localtime_r and the underyling system strftime
  dnl if they exist.
@@ -25,7 +25,7 @@ AC_DEFUN(_jm_STRFTIME_PREREQS,
 
 dnl From Jim Meyering.
 dnl
-AC_DEFUN(jm_FUNC_GNU_STRFTIME,
+AC_DEFUN([jm_FUNC_GNU_STRFTIME],
 [AC_REQUIRE([AC_HEADER_TIME])dnl
 
  _jm_STRFTIME_PREREQS
@@ -37,7 +37,7 @@ AC_DEFUN(jm_FUNC_GNU_STRFTIME,
    [Define to the name of the strftime replacement function.])
 ])
 
-AC_DEFUN(jm_FUNC_STRFTIME,
+AC_DEFUN([jm_FUNC_STRFTIME],
 [
   _jm_STRFTIME_PREREQS
 ])

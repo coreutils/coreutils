@@ -1,11 +1,11 @@
-#serial 11
+#serial 12
 
 dnl Initially derived from code in GNU grep.
 dnl Mostly written by Jim Meyering.
 
 dnl Usage: jm_INCLUDED_REGEX([lib/regex.c])
 dnl
-AC_DEFUN(jm_INCLUDED_REGEX,
+AC_DEFUN([jm_INCLUDED_REGEX],
   [
     dnl Even packages that don't use regex.c can use this macro.
     dnl Of course, for them it doesn't do anything.

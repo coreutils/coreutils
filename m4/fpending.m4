@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 
 dnl From Jim Meyering
 dnl Using code from emacs, based on suggestions from Paul Eggert
@@ -8,7 +8,7 @@ dnl Find out how to determine the number of pending output bytes on a stream.
 dnl glibc (2.1.93 and newer) and Solaris provide __fpending.  On other systems,
 dnl we have to grub around in the FILE struct.
 
-AC_DEFUN(jm_FUNC_FPENDING,
+AC_DEFUN([jm_FUNC_FPENDING],
 [
   AC_CHECK_HEADERS(stdio_ext.h)
   AC_REPLACE_FUNCS([__fpending])

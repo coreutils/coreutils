@@ -1,9 +1,9 @@
-#serial 3
+#serial 4
 
 dnl Shamelessly cloned from acspecific.m4's AC_FUNC_UTIME_NULL,
 dnl then do case-insensitive s/utime/utimes/.
 
-AC_DEFUN(jm_FUNC_UTIMES_NULL,
+AC_DEFUN([jm_FUNC_UTIMES_NULL],
 [AC_CACHE_CHECK(whether utimes accepts a null argument, ac_cv_func_utimes_null,
 [rm -f conftest.data; > conftest.data
 AC_TRY_RUN([

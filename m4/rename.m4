@@ -1,4 +1,4 @@
-#serial 2
+#serial 3
 
 dnl From Volker Borchert.
 dnl Determine whether rename works for source paths with a trailing slash.
@@ -8,7 +8,7 @@ dnl If it doesn't, then define RENAME_TRAILING_SLASH_BUG and arrange
 dnl to compile the wrapper function.
 dnl
 
-AC_DEFUN(vb_FUNC_RENAME,
+AC_DEFUN([vb_FUNC_RENAME],
 [
  AC_CACHE_CHECK([whether rename is broken],
   vb_cv_func_rename_trailing_slash_bug,

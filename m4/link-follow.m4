@@ -1,8 +1,8 @@
-#serial 2
+#serial 3
 dnl Run a program to determine whether whether link(2) follows symlinks.
 dnl Set LINK_FOLLOWS_SYMLINKS accordingly.
 
-AC_DEFUN(jm_AC_FUNC_LINK_FOLLOWS_SYMLINK,
+AC_DEFUN([jm_AC_FUNC_LINK_FOLLOWS_SYMLINK],
 [dnl
   AC_CACHE_CHECK(
     [whether link(2) dereferences a symlink specified with a trailing slash],

@@ -1,10 +1,10 @@
-#serial 2
+#serial 3
 
 dnl From Gordon Matzigkeit.
 dnl Test for the GNU C Library.
 dnl FIXME: this should migrate into libit.
 
-AC_DEFUN(AM_GLIBC,
+AC_DEFUN([AM_GLIBC],
   [
     AC_CACHE_CHECK(whether we are using the GNU C Library,
       ac_cv_gnu_library,

@@ -1,4 +1,4 @@
-#serial 2
+#serial 3
 
 dnl From Jim Meyering.
 dnl
@@ -6,7 +6,7 @@ dnl See if struct statfs has the f_fstypename member.
 dnl If so, define HAVE_F_FSTYPENAME_IN_STATFS.
 dnl
 
-AC_DEFUN(jm_FSTYPENAME,
+AC_DEFUN([jm_FSTYPENAME],
   [
     AC_CACHE_CHECK([for f_fstypename in struct statfs],
 		   fu_cv_sys_f_fstypename_in_statfs,

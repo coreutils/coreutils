@@ -1,11 +1,11 @@
-#serial 2
+#serial 3
 # Make sure _GNU_SOURCE is defined where necessary: as early as possible
 # for configure-time tests, as well as for every source file that includes
 # config.h.
 
 # From Jim Meyering.
 
-AC_DEFUN(AC__GNU_SOURCE,
+AC_DEFUN([AC__GNU_SOURCE],
 [
   # Make sure that _GNU_SOURCE is defined for all subsequent
   # configure-time compile tests.

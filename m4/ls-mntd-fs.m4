@@ -1,4 +1,4 @@
-#serial 10
+#serial 11
 
 dnl From Jim Meyering.
 dnl
@@ -7,7 +7,7 @@ dnl it in an AC_DEFUN.
 dnl
 
 # jm_LIST_MOUNTED_FILESYSTEMS([ACTION-IF-FOUND[, ACTION-IF-NOT-FOUND]])
-AC_DEFUN(jm_LIST_MOUNTED_FILESYSTEMS,
+AC_DEFUN([jm_LIST_MOUNTED_FILESYSTEMS],
   [
 AC_CHECK_FUNCS(listmntent getmntinfo)
 AC_CHECK_HEADERS(mntent.h)

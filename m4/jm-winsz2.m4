@@ -1,6 +1,6 @@
-#serial 3
+#serial 4
 
-AC_DEFUN(jm_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL,
+AC_DEFUN([jm_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL],
 [AC_REQUIRE([jm_HEADER_TIOCGWINSZ_IN_TERMIOS_H])
  AC_CACHE_CHECK([whether use of TIOCGWINSZ requires sys/ioctl.h],
 	        jm_cv_sys_tiocgwinsz_needs_sys_ioctl_h,

@@ -6,11 +6,11 @@
 # but which still want to provide support for the GNU gettext functionality.
 # Please note that the actual code is *not* freely available.
 
-# serial 110
+#serial 111
 
 AC_PREREQ(2.13)               dnl Minimum Autoconf version required.
 
-AC_DEFUN(AM_WITH_NLS,
+AC_DEFUN([AM_WITH_NLS],
   [AC_MSG_CHECKING([whether NLS is requested])
     dnl Default is enabled NLS
     AC_ARG_ENABLE(nls,
@@ -196,7 +196,7 @@ AC_DEFUN(AM_WITH_NLS,
     AC_SUBST(POSUB)
   ])
 
-AC_DEFUN(AM_GNU_GETTEXT,
+AC_DEFUN([AM_GNU_GETTEXT],
   [AC_REQUIRE([AC_PROG_MAKE_SET])dnl
    AC_REQUIRE([AC_PROG_CC])dnl
    AC_REQUIRE([AC_PROG_RANLIB])dnl

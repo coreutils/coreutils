@@ -1,4 +1,4 @@
-#serial 4
+#serial 5
 
 dnl A replacement for autoconf's macro by the same name.  This version
 dnl uses `ac_lib' rather than `i' for the loop variable, but more importantly
@@ -13,7 +13,7 @@ undefine([AC_SEARCH_LIBS])
 #                [OTHER-LIBRARIES])
 # --------------------------------------------------------
 # Search for a library defining FUNC, if it's not already available.
-AC_DEFUN(AC_SEARCH_LIBS,
+AC_DEFUN([AC_SEARCH_LIBS],
 [
   AC_CACHE_CHECK([for library containing $1], [ac_cv_search_$1],
   [

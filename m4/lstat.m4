@@ -1,4 +1,4 @@
-#serial 6
+#serial 7
 
 dnl From Jim Meyering.
 dnl Determine whether lstat has the bug that it succeeds when given the
@@ -9,7 +9,7 @@ dnl If it does, then define HAVE_LSTAT_EMPTY_STRING_BUG and arrange to
 dnl compile the wrapper function.
 dnl
 
-AC_DEFUN(jm_FUNC_LSTAT,
+AC_DEFUN([jm_FUNC_LSTAT],
 [
  AC_REQUIRE([AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK])
  AC_CACHE_CHECK([whether lstat accepts an empty string],
