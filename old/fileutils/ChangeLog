@@ -1,6 +1,8 @@
 2000-09-07  Jim Meyering  <meyering@lucent.com>
 
 	* doc/texinfo.tex: Update from master repository.
+	* config.sub: Likewise.
+	* config.guess: Likewise.
 
 2000-09-05  Jim Meyering  <meyering@lucent.com>
 
