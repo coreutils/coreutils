@@ -1,3 +1,7 @@
+2003-02-04  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* stat.c: Include "xalloc.h".
+
 2003-03-13  Paul Eggert  <eggert@twinsun.com>
 
 	Merge changes from Bison.
@@ -321,7 +325,8 @@
 	(libfetish_a_SOURCES): Add search_.h.
 	* ftw_.h: Rename from ftw.h.
 
-	* obstack.h (obstack_object_size): Declare temporary, __o, to be const.
+	* obstack.h (obstack_object_size): Declare temporary, __o,
+	to be const, in order to avoid warnings.
 	(obstack_room): Likewise.
 	(obstack_empty_p): Likewise.
 
