@@ -85,7 +85,6 @@
 #include <stdio.h>
 #include <setjmp.h>
 #include <signal.h>
-#include <sys/types.h>
 
 #if HAVE_CONFIG_H
 /* Default fileutils build */
@@ -477,6 +476,7 @@ Delete a file securely, first overwriting it to hide its contents.\n\
 \n\
 FIXME maybe add more discussion here?"), DEFAULT_PASSES);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
+      close_stdout ();
     }
   exit (status);
 }
@@ -1811,6 +1811,8 @@ main (int argc, char **argv)
 
   /* Just on general principles, wipe s. */
   memset (&s, 0, sizeof s);
+
+  close_stdout ();
 
   exit (err);
 }
