@@ -18,7 +18,7 @@ cvs-dist: maintainer-check
 	ver=`echo "$(VERSION)" | sed 's/\./_/g'`; \
 	tag="$$pkg-$$ver"; \
 	echo tag=$$tag; \
-	if cvs -n log -h README| grep -e $$tag > /dev/null; then \
+	if cvs -n log -h README| grep -e $$tag: > /dev/null; then \
 	  echo "VERSION not new; not tagging" 1>&2; \
 	  exit 1; \
 	fi; \
