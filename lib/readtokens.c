@@ -62,7 +62,7 @@ init_tokenbuffer (tokenbuffer)
      token_buffer *tokenbuffer;
 {
   tokenbuffer->size = INITIAL_TOKEN_LENGTH;
-  tokenbuffer->buffer = (xmalloc (INITIAL_TOKEN_LENGTH));
+  tokenbuffer->buffer = xmalloc (INITIAL_TOKEN_LENGTH);
 }
 
 /* Read a token from `stream' into `tokenbuffer'.
