@@ -23,25 +23,3 @@ go cu; cd po; export xu=tu j=fr
 go cu; cd po; export xu=su j=tr
 msgmerge -o k ../../$xu/po/$j.po $j.po && mv k $j.po
 cvs ci -m 'merge from sh-utils-2.0.15' $j.po
-
-change `error (1, ...' to `error (EXIT_FAILURE, ...'
-grep -lF 'error (1' *.c|xargs \
-  perl -pi -e 's/\berror \(1,/error (EXIT_FAILURE,/'
-
-Not sure the following is a good idea, since error doens't
-ever exit successfully...
-
-  grep -lF 'error (0,' *.c|xargs \
-    perl -pi -e 's/\berror \(0,/error (EXIT_SUCCESS,/'
-
-Also handle exit and usage.
-
-grep -lE '\bexit \(0\)' *.c \
-  | xargs perl -pi -e 's/\bexit \(0\)/exit (EXIT_SUCCESS)/'
-grep -lE '\bexit \(1\)' *.c \
-  | xargs perl -pi -e 's/\bexit \(1\)/exit (EXIT_FAILURE)/'
-
-fix diagnostic in printf: should be: too few args
-
-grep -lE '\busage \(1\)' *.c \
-  | xargs perl -pi -e 's/\busage \(1\)/usage (EXIT_FAILURE)/'
