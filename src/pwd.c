@@ -25,7 +25,6 @@
 #include "long-options.h"
 #include "quote.h"
 #include "root-dev-ino.h"
-#include "pathmax.h"
 #include "xgetcwd.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
