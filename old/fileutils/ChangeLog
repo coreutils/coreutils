@@ -1,5 +1,7 @@
 2000-10-29  Jim Meyering  <meyering@lucent.com>
 
+	* tests/cp/cp-parents: Add a test.
+
 	* src/ls.c (DT_INIT): Define.
 	[enum filetype]: Remove the #ifdef, and use DT_INIT on the
 	initializers instead.  `unknown' was undefined for some systems.
