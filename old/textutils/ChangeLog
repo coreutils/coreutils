@@ -1,7 +1,8 @@
 1999-03-12  Jim Meyering  <meyering@ascend.com>
 
 	* src/sys2.h (SETVBUF): Define new macro.
-	* src/tail.c (main) [if forever]: Make stdout unbuffered.
+	* src/tail.c (dump_remainder): Don't fflush stdout here.
+	(main) [if forever]: Make stdout unbuffered, instead.
 
 1999-03-07  Jim Meyering  <meyering@ascend.com>
 
