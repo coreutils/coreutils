@@ -102,7 +102,8 @@ EXEC 01;32
 .xwd 01;35
 
 # audio formats
-.ogg 01;35
-.mp3 01;35
-.wav 01;35
 .flac 01;35
+.mp3 01;35
+.mpc 01;35
+.ogg 01;35
+.wav 01;35
