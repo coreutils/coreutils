@@ -24,7 +24,8 @@ libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
 
 noinst_HEADERS = \
   argmatch.h backupfile.h bumpalloc.h closeout.h diacrit.h dirname.h error.h \
-  exclude.h filemode.h fnmatch.h fsusage.h getdate.h getline.h getopt.h \
+  exclude.h filemode.h fnmatch.h __fpending.h fsusage.h \
+  getdate.h getline.h getopt.h \
   getstr.h getpagesize.h group-member.h hard-locale.h hash.h human.h lchown.h \
   linebuffer.h long-options.h mbswidth.h md5.h memcasecmp.h memcoll.h \
   makepath.h mbswidth.h modechange.h mountlist.h nanosleep.h obstack.h \
