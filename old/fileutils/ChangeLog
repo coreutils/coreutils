@@ -1,3 +1,9 @@
+Fri Nov 22 22:14:10 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/cp.c (copy): With -i and not -f, prompt for any type of
+	(non-directory) source file before overwriting an existing target.
+	Reported by Mark A. Thomas.
+
 Tue Nov 19 23:10:32 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (AM_SANITY_CHECK_CC): Remove it.  Autoconf-2.11
