@@ -1,5 +1,5 @@
 /* sort - sort lines of text (with all kinds of options).
-   Copyright (C) 88, 1991-1999 Free Software Foundation, Inc.
+   Copyright (C) 88, 1991-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -543,10 +543,9 @@ fillbuf (struct buffer *buf, FILE *fp)
   int cc;
 
   memmove (buf->buf, buf->buf + buf->used - buf->left, buf->left);
-  buf->used = buf->left;
+  cc = buf->used = buf->left;
 
-  while (!feof (fp) && (buf->used == 0
-			|| !memchr (buf->buf, eolchar, buf->used)))
+  while (!feof (fp) && !memchr (buf->buf + buf->used - cc, eolchar, cc))
     {
       if (buf->used == buf->alloc)
 	{
