@@ -1,3 +1,10 @@
+2004-01-13  Jim Meyering  <jim@meyering.net>
+
+	* gettext.m4, lib-ld.m4, lib-prefix.m4, nls.m4, po.m4:
+	Update from gettext-0.13.1.
+	* intmax.m4, isc-posix.m4, printf-posix.m4, size_max.m4, xsize.m4:
+	New files.  From gettext-0.13.1.
+
 2004-01-11  Paul Eggert  <eggert@twinsun.com>
 
 	* posixver.m4 (gl_DEFAULT_POSIX2_VERSION): Move
