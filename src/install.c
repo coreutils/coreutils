@@ -135,7 +135,7 @@ enum backup_type get_version ();
 int stat ();
 
 static int change_timestamps PARAMS ((const char *from, const char *to));
-static int change_attributes PARAMS ((const char *path, mode_t mode));
+static int change_attributes PARAMS ((const char *path));
 static int copy_file PARAMS ((const char *from, const char *to,
 			      const struct cp_options *x));
 static int install_file_to_path PARAMS ((const char *from, const char *to,
@@ -167,6 +167,10 @@ static char *group_name;
 
 /* The group ID corresponding to `group_name'. */
 static gid_t group_id;
+
+/* The permissions to which the files will be set.  The umask has
+   no effect. */
+static mode_t mode = 0755;
 
 /* If nonzero, strip executable files after copying them. */
 static int strip_files;
@@ -218,8 +222,13 @@ cp_option_init (struct cp_options *x)
   x->recursive = 0;
   x->sparse_mode = SPARSE_AUTO;
   x->symbolic_link = 0;
+
+  /* Create destination files initially writable so we can run strip on them.
+     Although GNU strip works fine on read-only files, some others
+     would fail.  */
   x->set_mode = 1;
-  x->mode = 0755;
+  x->mode = 0600;
+
   x->umask_kill = 0;
   x->update = 0;
   x->verbose = 0;
@@ -337,7 +346,7 @@ main (int argc, char **argv)
 	error (1, 0, _("invalid mode `%s'"), symbolic_mode);
       else if (change == MODE_MEMORY_EXHAUSTED)
 	error (1, 0, _("virtual memory exhausted"));
-      x.mode = mode_adjust (0, change);
+      mode = mode_adjust (0, change);
     }
 
   get_ids ();
@@ -348,7 +357,7 @@ main (int argc, char **argv)
       for (i = 0; i < n_files; i++)
 	{
 	  errors |=
-	    make_path (file[i], x.mode, x.mode, owner_id, group_id, 0,
+	    make_path (file[i], mode, mode, owner_id, group_id, 0,
 		       (x.verbose ? "creating directory `%s'" : NULL));
 	}
     }
@@ -414,7 +423,7 @@ install_file_to_path (const char *from, const char *to,
 	 rules, it's not so bad.  Maybe use something like this instead:
 	 int parent_dir_mode = (mode | (S_IRUGO | S_IXUGO)) & (~SPECIAL_BITS);
 	 */
-      fail = make_path (dest_dir, x->mode, x->mode, owner_id, group_id, 0,
+      fail = make_path (dest_dir, mode, mode, owner_id, group_id, 0,
 			(x->verbose ? _("creating directory `%s'") : NULL));
     }
   else
@@ -439,7 +448,7 @@ install_file_in_file (const char *from, const char *to,
     return 1;
   if (strip_files)
     strip (to);
-  if (change_attributes (to, x->mode))
+  if (change_attributes (to))
     return 1;
   if (x->preserve_timestamps)
     return change_timestamps (from, to);
@@ -493,7 +502,7 @@ copy_file (const char *from, const char *to, const struct cp_options *x)
    Return 0 if successful, 1 if not. */
 
 static int
-change_attributes (const char *path, mode_t mode)
+change_attributes (const char *path)
 {
   int err = 0;
 
