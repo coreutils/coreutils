@@ -1,13 +1,12 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-.
 
-# FIXME: move Fetish.pm to ..
-EXTRA_DIST = $(TESTS) Fetish.pm simple
+EXTRA_DIST = $(TESTS) simple
 
 TESTS_ENVIRONMENT = \
   top_srcdir=$(top_srcdir) \
   srcdir=$(srcdir) \
   PERL="@PERL@" \
   PATH=../../src:$$PATH \
-  DIRCOLORS=dircolors
+  PROG=dircolors
 
 TESTS = run-test
