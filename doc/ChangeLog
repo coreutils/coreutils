@@ -1,3 +1,20 @@
+2002-10-07  Paul Eggert  <eggert@twinsun.com>
+
+	Add support for locale-specific size indications (e.g.,
+	thousands-separators) and for explicit size suffixes on output.
+
+	* coreutils.texi (Block size): Say that:
+	This affects display format as well as block size.
+	Fractional block counts are rounded up.
+	ls file size blocksize defaults to 1.
+	A block size spec preceded by ' generates thousands separators.
+	A suffix without a preceding integer generates suffixes.
+	(tail invocation): 32k -> 32 KiB.
+	(What information is listed): ls -h is now equivalent to
+	ls --block-size=human, and ls -H is now equivalent to
+	ls --block-size=si.  Displayed file size is now always affected by
+	--block-size.
+
 2002-09-13  Jim Meyering  <meyering@lucent.com>
 
 	* coreutils.texi (tail invocation): In --sleep-interval=NUMBER,
