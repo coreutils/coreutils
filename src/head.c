@@ -77,6 +77,35 @@ char *program_name;
 /* Have we ever read standard input?  */
 static int have_read_stdin;
 
+enum Copy_fd_status
+  {
+    COPY_FD_OK = 0,
+    COPY_FD_READ_ERROR,
+    COPY_FD_WRITE_ERROR,
+    COPY_FD_UNEXPECTED_EOF
+  };
+
+#define COPY_FD_DIAGNOSE(Err, Filename)					\
+  do									\
+    {									\
+      switch (Err)							\
+	{								\
+	case COPY_FD_READ_ERROR:					\
+	  error (0, errno, "error reading %s", quote (Filename));	\
+	  break;							\
+	case COPY_FD_WRITE_ERROR:					\
+	  error (0, errno, "error writing %s", quote (Filename));	\
+	  break;							\
+	case COPY_FD_UNEXPECTED_EOF:					\
+	  error (0, errno, "%s: file has shrunk too much",		\
+		 quote (Filename));					\
+	  break;							\
+	default:							\
+	  abort ();							\
+	}								\
+    }									\
+  while (0)
+
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
@@ -146,14 +175,6 @@ write_header (const char *filename)
   printf ("%s==> %s <==\n", (first_file ? "" : "\n"), filename);
   first_file = 0;
 }
-
-enum Copy_fd_status
-  {
-    COPY_FD_OK = 0,
-    COPY_FD_READ_ERROR,
-    COPY_FD_WRITE_ERROR,
-    COPY_FD_UNEXPECTED_EOF
-  };
 
 /* Copy no more than N_BYTES from file descriptor SRC_FD to O_STREAM.
    Return an appropriate indication of success or failure. */
@@ -391,7 +412,7 @@ elide_tail_bytes_file (const char *filename, int fd, uintmax_t n_elide)
 {
   struct stat stats;
 
-  /* We need binary input, since `tail' relies on `lseek' and byte counts,
+  /* We need binary input, since `head' relies on `lseek' and byte counts,
      while binary output will preserve the style (Unix/DOS) of text file.  */
   SET_BINARY2 (fd, STDOUT_FILENO);
 
@@ -433,20 +454,7 @@ elide_tail_bytes_file (const char *filename, int fd, uintmax_t n_elide)
       if (err == COPY_FD_OK)
 	return 0;
 
-      switch (err)
-	{
-	case COPY_FD_READ_ERROR:
-	  error (0, errno, "error reading %s", quote (filename));
-	  break;
-	case COPY_FD_WRITE_ERROR:
-	  error (0, errno, "error writing %s", quote (filename));
-	  break;
-	case COPY_FD_UNEXPECTED_EOF:
-	  error (0, errno, "%s: file has shrunk too much", quote (filename));
-	  break;
-	default:
-	  abort ();
-	}
+      COPY_FD_DIAGNOSE (err, filename);
       return 1;
     }
 }
@@ -460,6 +468,130 @@ elide_tail_lines_pipe (const char *filename, int fd, uintmax_t n_elide)
   abort ();
 }
 
+/* Output all but the last N_LINES lines of the input stream defined by
+   FD, START_POS, and END_POS.
+   START_POS is the starting position of the read pointer for the file
+   associated with FD (may be nonzero).
+   END_POS is the file offset of EOF (one larger than offset of last byte).
+   Return zero upon success.
+   Give a diagnostic and return nonzero upon error.
+
+   NOTE: this code is very similar to that of tail.c's file_lines function.
+   Unfortunately, factoring out some common core looks like it'd result
+   in a less efficient implementation or a messy interface.  */
+static int
+elide_tail_lines_seekable (const char *pretty_filename, int fd,
+			   uintmax_t n_lines,
+			   off_t start_pos, off_t end_pos)
+{
+  char buffer[BUFSIZ];
+  size_t bytes_read;
+  off_t pos = end_pos;
+
+  /* Set `bytes_read' to the size of the last, probably partial, buffer;
+     0 < `bytes_read' <= `BUFSIZ'.  */
+  bytes_read = (pos - start_pos) % BUFSIZ;
+  if (bytes_read == 0)
+    bytes_read = BUFSIZ;
+  /* Make `pos' a multiple of `BUFSIZ' (0 if the file is short), so that all
+     reads will be on block boundaries, which might increase efficiency.  */
+  pos -= bytes_read;
+  if (lseek (fd, pos, SEEK_SET) < 0)
+    {
+      char offset_buf[INT_BUFSIZE_BOUND (off_t)];
+      error (0, errno, _("%s: cannot seek to offset %s"),
+	     pretty_filename, offtostr (pos, offset_buf));
+      return 1;
+    }
+  bytes_read = safe_read (fd, buffer, bytes_read);
+  if (bytes_read == SAFE_READ_ERROR)
+    {
+      error (0, errno, _("error reading %s"), quote (pretty_filename));
+      return 1;
+    }
+
+  /* Count the incomplete line on files that don't end with a newline.  */
+  if (bytes_read && buffer[bytes_read - 1] != '\n')
+    --n_lines;
+
+  while (1)
+    {
+      /* Scan backward, counting the newlines in this bufferfull.  */
+
+      size_t n = bytes_read;
+      while (n)
+	{
+	  char const *nl;
+	  nl = memrchr (buffer, '\n', n);
+	  if (nl == NULL)
+	    break;
+	  n = nl - buffer;
+	  if (n_lines-- == 0)
+	    {
+	      /* Found it.  */
+	      /* If necessary, restore the file pointer and copy
+		 input to output up to position, POS.  */
+	      if (start_pos < pos)
+		{
+		  enum Copy_fd_status err;
+		  if (lseek (fd, start_pos, SEEK_SET) < 0)
+		    {
+		      /* Failed to reposition file pointer.  */
+		      error (0, errno,
+			 "%s: unable to restore file pointer to initial offset",
+			     quote (pretty_filename));
+		      return 1;
+		    }
+
+		  err = copy_fd (fd, stdout, pos - start_pos);
+		  if (err != COPY_FD_OK)
+		    {
+		      COPY_FD_DIAGNOSE (err, pretty_filename);
+		      return 1;
+		    }
+		}
+
+	      /* Output the initial portion of the buffer
+		 in which we found the desired newline byte.
+		 Don't bother testing for failure for such a small amount.
+		 Any failure will be detected upon close.  */
+	      fwrite (buffer, 1, n + 1, stdout);
+	      return 0;
+	    }
+	}
+
+      /* Not enough newlines in that bufferfull.  */
+      if (pos == start_pos)
+	{
+	  /* Not enough lines in the file.  */
+	  return 0;
+	}
+      pos -= BUFSIZ;
+      if (lseek (fd, pos, SEEK_SET) < 0)
+	{
+	  char offset_buf[INT_BUFSIZE_BOUND (off_t)];
+	  error (0, errno, _("%s: cannot seek to offset %s"),
+		 pretty_filename, offtostr (pos, offset_buf));
+	  return 1;
+	}
+
+      bytes_read = safe_read (fd, buffer, BUFSIZ);
+      if (bytes_read == SAFE_READ_ERROR)
+	{
+	  error (0, errno, _("error reading %s"), quote (pretty_filename));
+	  return 1;
+	}
+
+      /* FIXME: is this dead code?
+	 Consider the test, pos == start_pos, above. */
+      if (bytes_read == 0)
+	return 0;
+    }
+
+ done:;
+
+}
+
 /* FIXME: comment */
 
 static int
@@ -467,24 +599,34 @@ elide_tail_lines_file (const char *filename, int fd, uintmax_t n_elide)
 {
   struct stat stats;
 
-  /* We need binary input, since `tail' relies on `lseek' and byte counts,
+  /* We need binary input, since `head' relies on `lseek' and byte counts,
      while binary output will preserve the style (Unix/DOS) of text file.  */
   SET_BINARY2 (fd, STDOUT_FILENO);
 
-  if (presume_input_pipe || fstat (fd, &stats) || ! S_ISREG (stats.st_mode))
-    {
-      return elide_tail_lines_pipe (filename, fd, n_elide);
-    }
-  else
+  if (!presume_input_pipe)
     {
       /* Find the offset, OFF, of the Nth newline from the end,
 	 but not counting the last byte of the file.
 	 If found, write from current position to OFF, inclusive.
 	 Otherwise, just return 0.  */
 
-      /* FIXME: working here */
-      abort ();
+      off_t start_pos = lseek (fd, (off_t) 0, SEEK_CUR);
+      off_t end_pos = lseek (fd, (off_t) 0, SEEK_END);
+      if (0 <= start_pos && start_pos < end_pos)
+	{
+	  /* If the file is empty, we're done.  */
+	  if (end_pos == 0)
+	    return 0;
+
+	  return elide_tail_lines_seekable (filename, fd, n_elide,
+					    start_pos, end_pos);
+	}
+
+      /* lseek failed or the end offset precedes start.
+	 Fall through.  */
     }
+
+  return elide_tail_lines_pipe (filename, fd, n_elide);
 }
 
 static int
