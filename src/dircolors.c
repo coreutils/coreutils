@@ -1,4 +1,3 @@
-/* FIXME: why no error for BERM?  */
 /* FIXME: dircolors - parse a Slackware-style DIR_COLORS file.
    Copyright (C) 1994, 1995 H. Peter Anvin
    Copyright (C) 1996 Free Software Foundation, Inc.
@@ -46,9 +45,6 @@ enum Shell_syntax
   SHELL_SYNTAX_UNKNOWN
 };
 
-/* Parser needs these state variables.  */
-enum states { ST_TERMNO, ST_TERMYES, ST_TERMSURE, ST_GLOBAL };
-
 #define APPEND_CHAR(C) obstack_1grow (&lsc_obstack, C)
 #define APPEND_TWO_CHAR_STRING(S)					\
   do									\
@@ -58,10 +54,11 @@ enum states { ST_TERMNO, ST_TERMYES, ST_TERMSURE, ST_GLOBAL };
     }									\
   while (0)
 
-/* FIXME: */
+/* Accumulate in this obstack the value for the LS_COLORS environment
+   variable.  */
 static struct obstack lsc_obstack;
 
-/* Nonzero if any of the files read were the standard input. */
+/* Nonzero if the input file was the standard input. */
 static int have_read_stdin;
 
 /* FIXME: associate with ls_codes? */
@@ -225,10 +222,15 @@ append_quoted (const char *str)
     }
 }
 
-/* FIXME: Accumulate settings in obstack and convert to string in *RESULT.  */
+/* Read the file open on FP (with name FILENAME).  First, look for a
+   `TERM name' directive where name matches the current terminal type.
+   Once found, translate and accumulate the associated directives onto
+   the global obstack LSC_OBSTACK.  Give a diagnostic and return nonzero
+   upon failure (unrecognized keyword is the only way to fail here).
+   Return zero otherwise.  */
 
 static int
-dc_parse_stream (FILE *fp, const char *filename, char **result)
+dc_parse_stream (FILE *fp, const char *filename)
 {
   size_t line_number = 0;
   char *line = NULL;
@@ -236,6 +238,9 @@ dc_parse_stream (FILE *fp, const char *filename, char **result)
   int state;
   char *term;
   int err = 0;
+
+  /* State for the parser.  */
+  enum states { ST_TERMNO, ST_TERMYES, ST_TERMSURE, ST_GLOBAL };
 
   state = ST_GLOBAL;
 
@@ -354,7 +359,7 @@ dc_parse_stream (FILE *fp, const char *filename, char **result)
 }
 
 static int
-dc_parse_file (const char *filename, char **ls_color_string)
+dc_parse_file (const char *filename)
 {
   FILE *fp;
   int err;
@@ -378,7 +383,7 @@ dc_parse_file (const char *filename, char **ls_color_string)
 	}
     }
 
-  err = dc_parse_stream (fp, filename, ls_color_string);
+  err = dc_parse_stream (fp, filename);
 
   if (fp != stdin && fclose (fp) == EOF)
     {
@@ -395,7 +400,6 @@ main (int argc, char **argv)
   int err = 0;
   int optc;
   enum Shell_syntax syntax = SHELL_SYNTAX_UNKNOWN;
-  char *ls_color_string;
   int print_database = 0;
 
   program_name = argv[0];
@@ -476,9 +480,9 @@ dircolors' internal database"));
 
       obstack_init (&lsc_obstack);
       if (argc == 0)
-	err = dc_parse_stream (NULL, NULL, &ls_color_string);
+	err = dc_parse_stream (NULL, NULL);
       else
-	err = dc_parse_file (argv[0], &ls_color_string);
+	err = dc_parse_file (argv[0]);
 
       if (!err)
 	{
