@@ -2515,7 +2515,7 @@ but lacks following character offset"));
     error (SORT_FAILURE, errno, _("%s: write error"), outfile);
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    error (SORT_FAILURE, errno, "%s", outfile);
+    error (SORT_FAILURE, errno, "-");
 
   exit (EXIT_SUCCESS);
 }
