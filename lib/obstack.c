@@ -102,6 +102,13 @@ int obstack_exit_failure = EXIT_FAILURE;
 #  define obstack_exit_failure exit_failure
 # endif
 
+# ifdef _LIBC
+/* A looong time ago (before 1994, anyway; we're not sure) this global variable
+   was used by non-GNU-C macros to avoid multiple evaluation.  The GNU C
+   library still exports it because somebody might use it.  */
+struct obstack *_obstack;
+# endif
+
 /* Define a macro that either calls functions with the traditional malloc/free
    calling interface, or calls functions with the mmalloc/mfree interface
    (that adds an extra first argument), based on the state of use_extra_arg.
