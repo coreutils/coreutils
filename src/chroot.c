@@ -23,6 +23,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "exitfail.h"
 #include "long-options.h"
 #include "quote.h"
 
@@ -80,6 +81,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  exit_failure = CHROOT_FAILURE;
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
