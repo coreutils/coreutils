@@ -1,3 +1,15 @@
+2004-11-30  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* readutmp.c: Include readutmp.h first.
+	Include <errno.h>, since readutmp.h no longer does that.
+	* readutmp.h: Don't include <sys/types.h>, <errno.h>,
+	<sys/param.h>, <time.h>; not needed to establish interface.
+	Include <stddef.h> instead.
+	(errno): Remove decl.
+	(HAVE_STRUCT_XTMP_UT_TYPE): Remove; no longer needed.
+	(UT_TYPE_EQ, UT_TYPE_NOT_DEFINED, UT_TYPE_BOOT_TIME,
+	UT_TYPE_USER_PROCESS, IS_USER_PROCESS): New macros.
+
 2004-11-30  Jim Meyering  <jim@meyering.net>
 
 	Change the name of the robust chdir function from chdir to chdir_long.

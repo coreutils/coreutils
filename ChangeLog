@@ -1,6 +1,23 @@
-2004-11-25  Paul Eggert  <eggert@cs.ucla.edu>
+2004-11-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* src/pinky.c (gethostname): Remove decl.
+	(scan_entries): Use IS_USER_PROCESS instead of by-hand code.
+	* src/uptime.c (print_uptime): Use IS_USER_PROCESS and
+	UT_TYPE_BOOT_TIME instead of by-hand code.
+	* src/users.c (list_entries_users): Use IS_USER_PROCESS
+	instead of by-hand code.
+	* src/who.c (USER_PROCESS, RUN_LVL, INIT_PROCESS, LOGIN_PROCESS,
+	DEAD_PROCESS, BOOT_TIME, NEW_TIME, UT_TYPE_UNDEF, UT_TYPE): Remove.
+	(IS_USER_PROCESS): Move to ../lib/readutmp.h.
+	(UT_TYPE_RUN_LVL, UT_TYPE_INIT_PROCESS, UT_TYPE_LOGIN_PROCESS,
+	UT_TYPE_DEAD_PROCESS, UT_TYPE_NEW_TIME): New macros.
+	(gethostname): Remove decl.
+	(list_entries_who, scan_entries): Use the new macros defined above,
+	for consistency with pinky, uptime, and users.
+
+2004-11-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Fix problem reported by Scott S. Tinsley for HP-UX 11.11 using
 	HP's ANSI C compiler.  Declaring int functions causes warnings on
