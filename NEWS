@@ -66,6 +66,9 @@ GNU coreutils NEWS                                    -*- outline -*-
     It now consistently adjusts out-of-range nice values to the
     closest values in range; formerly it sometimes reported an error.
 
+  pathchk no longer accepts trailing options, e.g., "pathchk -p foo -b"
+  now treats -b as a file name to check, not as an invalid option.
+
   printf has several changes:
 
     It now uses 'intmax_t' (not 'long int') to format integers, so it
@@ -113,6 +116,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   tr no longer mishandles a second operand with leading "-".
 
   who now prints user names in full instead of truncating them after 8 bytes.
+
+  The following commands now reject unknown options instead of
+  accepting them as operands, so that users are properly warned that
+  options may be added later.  Formerly they accepted unknown options
+  as operands; e.g., "basename -a a" acted like "basename -- -a a".
+
+    basename dirname factor hostname link nohup sync unlink yes
 
 ** New features
 
