@@ -78,7 +78,7 @@ mkdir d e
 touch e/f
 ln -s ../e d/s
 chgrp -R $g1 e/f
-# Neither of the following should not change the group of e/f
+# Neither of the following should change the group of e/f
 chgrp -R $g2 d
 set _ `ls -l e/f`; g=$5; test "$g" = $g1 || fail=1
 chgrp --deref -R $g2 d
