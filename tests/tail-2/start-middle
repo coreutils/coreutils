@@ -1,6 +1,6 @@
 #!/bin/sh
 # Verify that tail works even when it's reading from a file
-# that is not at its beginning.
+# that is not at its beginning.  Based on a report from John Roll.
 
 if test "$VERBOSE" = yes; then
   set -x
