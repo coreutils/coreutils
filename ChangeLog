@@ -1,6 +1,12 @@
-2004-06-28  Jim Meyering  <jim@meyering.net>
+2004-06-29  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	Don't let verbose-mode output from a subshell obscure actual differences.
+	* tests/rm/inaccessible: Turn off command-echoing just before
+	invoking subshell, then turn it back on if VERBOSE=yes afterward.
+
+2004-06-28  Jim Meyering  <jim@meyering.net>
 
 	* src/cp.c (usage): Fix copy+paste error in description of
 	--target-directory: s/move/copy/.  From Paul Jarc.
