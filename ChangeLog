@@ -2,6 +2,9 @@
 
 	* Version 5.3.0.
 
+	tac would exit immediately upon I/O or temp-file creation failure.
+	Now it continues on, processing any remaining command line arguments.
+
 	* src/tac.c: Include quotearg.h.
 	Use quotearg_colon in most diagnostics.
 	(copy_to_temp): Rewrite not to exit upon I/O or temp-file-creation
@@ -13,6 +16,7 @@
 	(tac_nonseekable): Return false also if copy_to_temp fails.
 	[DONT_UNLINK_WHILE_OPEN]: Add a FIXME comment explaining that
 	using atexit like this is wrong.
+	* NEWS: Document this.
 	* tests/misc/tac-continue: New test for this.
 	* tests/misc/Makefile.am (TESTS): Add tac-continue.
 
