@@ -447,7 +447,7 @@ tail (filename, fd, n_units)
      off_t n_units;
 {
   if (count_lines)
-    return tail_lines (filename, fd, n_units);
+    return tail_lines (filename, fd, (long) n_units);
   else
     return tail_bytes (filename, fd, n_units);
 }
