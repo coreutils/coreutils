@@ -175,35 +175,35 @@ following matrix shows the current state of GNU internationalization,
 as of May 1996.  The matrix shows, in regard of each package, for which
 languages PO files have been submitted to translation coordination.
 
-                       cs de en es fi fr ja ko no pt sl sv
-                     .-------------------------------------.
-     bash            |                []                   |  1
-     bison           |                                     |  0
-     clisp           |    [] []       []                   |  3
-     cpio            |                []                   |  1
-     diffutils       |                []                [] |  2
-     enscript        |    []       [] []             []    |  4
-     fileutils       |    []          []                [] |  3
-     findutils       |    []          []                   |  2
-     flex            |                []                   |  1
-     gettext         |    []          []    [] []       [] |  6
-     glibc           |    []    []          []             |  3
-     grep            |          []    []    []       []    |  4
-     hello           |    []          []    []       []    |  4
-     m4              |    []          [] []             [] |  4
-     make            |                                     |  0
-     mkid            |    []          []                   |  2
-     music           |                []                   |  1
-     ptx             |    []          []                [] |  3
-     recode          |    []    []    []             [] [] |  5
-     sh-utils        |    []          []                   |  2
-     sharutils       |    []          []                [] |  3
-     tar             |    []          []    [] [] [] [] [] |  7
-     textutils       |    []          []    []             |  3
-     wdiff           | [] []          []                [] |  4
-                     `-------------------------------------'
-                       cs de en es fi fr ja ko no pt sl sv
-                        1 16  1  3  1 21  1  6  3  1  5  9
+                       cs de en es fi fr ja ko no pl pt sl sv
+                     .----------------------------------------.
+     bash            |                []                      |  1
+     bison           |                                        |  0
+     clisp           |    [] []       []                      |  3
+     cpio            |                []                      |  1
+     diffutils       |                []                   [] |  2
+     enscript        |    []       [] []                []    |  4
+     fileutils       |    []          []             []    [] |  4
+     findutils       |    []          []                      |  2
+     flex            |                []                      |  1
+     gettext         |    []          []    [] [] []    [] [] |  8
+     glibc           |    []    []          []                |  3
+     grep            |          []    []    []          []    |  4
+     hello           |    []          []    []       [] []    |  5
+     m4              |    []          [] []                [] |  4
+     make            |                                        |  0
+     mkid            |    []          []                      |  2
+     music           |                []                      |  1
+     ptx             |    []          []                   [] |  3
+     recode          |    []    []    []                [] [] |  5
+     sh-utils        |    []          []                      |  2
+     sharutils       |    []          []                   [] |  3
+     tar             |    []          []    [] []    [] [] [] |  7
+     textutils       |    []          []    []                |  3
+     wdiff           | [] []          []                   [] |  4
+                     `----------------------------------------'
+                       cs de en es fi fr ja ko no pl pt sl sv
+                        1 16  1  3  1 21  1  6  3  1  3  6  9
 
    For a PO file in the matrix above to be effective, the package to
 which it applies should also have been internationalized and distributed
