@@ -8,6 +8,7 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/setup
+. $srcdir/../envvar-check
 
 if test -z "$other_partition_tmpdir"; then
   exit 77
@@ -29,14 +30,6 @@ ln -s $rem_file $rem_symlink || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
-  exit 1
-fi
-
-unset VERSION_CONTROL
-
-if test "${VERSION_CONTROL+set}" = set; then
-  echo '$0: the VERSION_CONTROL envvar is set --' \
-    ' unset it and rerun this test' >&2
   exit 1
 fi
 
