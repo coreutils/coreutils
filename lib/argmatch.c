@@ -43,7 +43,7 @@
    ARGMATCH_QUOTING_STYLE. literal_quoting_style is not good.  */
 
 #ifndef ARGMATCH_QUOTING_STYLE
-# define ARGMATCH_QUOTING_STYLE c_quoting_style
+# define ARGMATCH_QUOTING_STYLE escape_quoting_style
 #endif
 
 extern char *program_name;
@@ -131,25 +131,17 @@ argmatch_invalid (const char *kind, const char *value, int problem)
 {
   enum quoting_style saved_quoting_style;
   char const *format;
-  char *quoted_arg;
 
   /* Make sure to have a good quoting style to report errors.
      literal is insane here. */
   saved_quoting_style = get_quoting_style (NULL);
   set_quoting_style (NULL, ARGMATCH_QUOTING_STYLE);
 
-  /* There is an error */
-  quoted_arg = quotearg (value);
-
-  /* Skip over the first quote character, and overwrite the last one.  */
-  ++quoted_arg;
-  quoted_arg[strlen (quoted_arg) - 1] = '\0';
-
   format = (problem == -1
 	    ? _("%s: invalid argument `%s' for `%s'\n")
 	    : _("%s: ambiguous argument `%s' for `%s'\n"));
 
-  fprintf (stderr, format, program_name, quoted_arg, kind);
+  fprintf (stderr, format, program_name, quotearg (value), kind);
 
   set_quoting_style (NULL, saved_quoting_style);
 }
