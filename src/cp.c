@@ -528,7 +528,7 @@ copy (src_path, dst_path, new_dst, device, ancestors)
 	      char *tmp_backup = find_backup_file_name (dst_path);
 	      if (tmp_backup == NULL)
 		error (1, 0, "virtual memory exhausted");
-	      dst_backup = alloca (strlen (tmp_backup) + 1);
+	      dst_backup = (char *) alloca (strlen (tmp_backup) + 1);
 	      strcpy (dst_backup, tmp_backup);
 	      free (tmp_backup);
 	      if (rename (dst_path, dst_backup))
@@ -831,13 +831,13 @@ make_path (const_dirpath, src_offset, mode, verbose_fmt_string,
   char *tmp_dst_dirname;	/* Leading path of `dirpath', malloc. */
   char *dst_dirname;		/* Leading path of `dirpath', alloca. */
 
-  dirpath = alloca (strlen (const_dirpath) + 1);
+  dirpath = (char *) alloca (strlen (const_dirpath) + 1);
   strcpy (dirpath, const_dirpath);
 
   src = dirpath + src_offset;
 
   tmp_dst_dirname = dirname (dirpath); 
-  dst_dirname = alloca (strlen (tmp_dst_dirname) + 1);
+  dst_dirname = (char *) alloca (strlen (tmp_dst_dirname) + 1);
   strcpy (dst_dirname, tmp_dst_dirname);
   free (tmp_dst_dirname);
 
@@ -950,7 +950,7 @@ re_protect (const_dst_path, src_offset, attr_list)
   char *dst_path;		/* A copy of CONST_DST_PATH we can change. */
   char *src_path;		/* The source name in `dst_path'. */
 
-  dst_path = alloca (strlen (const_dst_path) + 1);
+  dst_path = (char *) alloca (strlen (const_dst_path) + 1);
   strcpy (dst_path, const_dst_path);
   src_path = dst_path + src_offset; 
 
