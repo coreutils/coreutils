@@ -24,30 +24,30 @@
    changing the mode of many files, this probably results in a
    performance gain. */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
+#if HAVE_CONFIG_H
+# include <config.h>
 #endif
 
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "modechange.h"
 
-#ifdef STDC_HEADERS
-#include <stdlib.h>
+#if STDC_HEADERS
+# include <stdlib.h>
 #else
 char *malloc ();
 #endif
 
 #ifndef NULL
-#define NULL 0
+# define NULL 0
 #endif
 
-#ifdef STAT_MACROS_BROKEN
-#undef S_ISDIR
+#if STAT_MACROS_BROKEN
+# undef S_ISDIR
 #endif /* STAT_MACROS_BROKEN.  */
 
 #if !defined(S_ISDIR) && defined(S_IFDIR)
-#define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+# define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #endif
 
 /* Return newly allocated memory to hold one element of type TYPE. */
