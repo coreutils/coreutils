@@ -29,6 +29,7 @@ libfetish_a_SOURCES = \
   closeout.c closeout.h \
   diacrit.c diacrit.h \
   dirname.c dirname.h \
+  dirfd.h \
   dup-safer.c \
   exclude.c exclude.h \
   filemode.c filemode.h \
