@@ -211,7 +211,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -s, --symbolic-link          make symbolic links instead of copying\n\
   -S, --suffix=SUFFIX          override the usual backup suffix\n\
-      --target-directory=DIRECTORY  move all SOURCE arguments into DIRECTORY\n\
+      --target-directory=DIRECTORY  copy all SOURCE arguments into DIRECTORY\n\
 "), stdout);
       fputs (_("\
   -u, --update                 copy only when the SOURCE file is newer\n\
