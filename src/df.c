@@ -32,8 +32,6 @@
 char *xmalloc ();
 char *xstrdup ();
 
-static int selected_fstype __P ((char *fstype));
-static int excluded_fstype __P ((char *fstype));
 static void add_excluded_fs_type __P ((char *fstype));
 static void add_fs_type __P ((char *fstype));
 static void print_header __P ((void));
@@ -218,6 +216,7 @@ main (int argc, char **argv)
 	  add_fs_type (optarg);
 	  break;
 	case 'v':		/* For SysV compatibility. */
+	  /* ignore */
 	  break;
 	case 'x':
 	  add_excluded_fs_type (optarg);
@@ -235,6 +234,15 @@ main (int argc, char **argv)
 
   if (show_help)
     usage (0);
+
+  if (posix_format && megabyte_blocks)
+    error (1, 0, _("the option for counting 1MB blocks may not be used\n\
+with the portable output format"));
+
+  if (posix_format && human_blocks)
+    error (1, 0,
+	   _("the option for printing with adaptive units may not be used\n\
+with the portable output format"));
 
   /* Fail if the same file system type was both selected and excluded.  */
   {
@@ -463,6 +471,38 @@ human_readable_1k_blocks (int n_1k_byte_blocks, char *buf, int buf_len)
   return (p);
 }
 
+/* If FSTYPE is a type of filesystem that should be listed,
+   return nonzero, else zero. */
+
+static int
+selected_fstype (const char *fstype)
+{
+  const struct fs_type_list *fsp;
+
+  if (fs_select_list == NULL || fstype == NULL)
+    return 1;
+  for (fsp = fs_select_list; fsp; fsp = fsp->fs_next)
+    if (!strcmp (fstype, fsp->fs_name))
+      return 1;
+  return 0;
+}
+
+/* If FSTYPE is a type of filesystem that should be omitted,
+   return nonzero, else zero. */
+
+static int
+excluded_fstype (const char *fstype)
+{
+  const struct fs_type_list *fsp;
+
+  if (fs_exclude_list == NULL || fstype == NULL)
+    return 0;
+  for (fsp = fs_exclude_list; fsp; fsp = fsp->fs_next)
+    if (!strcmp (fstype, fsp->fs_name))
+      return 1;
+  return 0;
+}
+
 /* Display a space listing for the disk device with absolute path DISK.
    If MOUNT_POINT is non-NULL, it is the path of the root of the
    filesystem on DISK.
@@ -599,38 +639,6 @@ add_excluded_fs_type (char *fstype)
   fs_exclude_list = fsp;
 }
 
-/* If FSTYPE is a type of filesystem that should be listed,
-   return nonzero, else zero. */
-
-static int
-selected_fstype (char *fstype)
-{
-  struct fs_type_list *fsp;
-
-  if (fs_select_list == NULL || fstype == NULL)
-    return 1;
-  for (fsp = fs_select_list; fsp; fsp = fsp->fs_next)
-    if (!strcmp (fstype, fsp->fs_name))
-      return 1;
-  return 0;
-}
-
-/* If FSTYPE is a type of filesystem that should be omitted,
-   return nonzero, else zero. */
-
-static int
-excluded_fstype (char *fstype)
-{
-  struct fs_type_list *fsp;
-
-  if (fs_exclude_list == NULL || fstype == NULL)
-    return 0;
-  for (fsp = fs_exclude_list; fsp; fsp = fsp->fs_next)
-    if (!strcmp (fstype, fsp->fs_name))
-      return 1;
-  return 0;
-}
-
 static void
 usage (int status)
 {
@@ -655,9 +663,6 @@ or all filesystems by default.\n\
   -x, --exclude-type=TYPE   limit listing to filesystems not of type TYPE\n\
   -v                    (ignored)\n\
   -P, --portability     use the POSIX output format\n\
-FIXME: this should override or conflict with --human and --megabytes\n\
-FIXME-bug: currently, even with --portability, blocksize is 1024 bytes\n\
-FIXME-bug: make sure that's allowed by POSIX.\n\
   -T, --print-type      print filesystem type\n\
       --help            display this help and exit\n\
       --version         output version information and exit\n"));
