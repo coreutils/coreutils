@@ -5290,7 +5290,14 @@ within each section, options are listed alphabetically (ignoring case).
 The division of options into the subsections is not absolute, since some
 options affect more than one aspect of @command{ls}'s operation.
 
-@exitstatus
+@cindex exit status of @command{ls}
+Exit status:
+
+@display
+0 success
+1 minor problems (e.g., a file could not be found)
+2 serious trouble (e.g., memory exhausted)
+@end display
 
 Also see @ref{Common options}.
 
