@@ -23,7 +23,11 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <getopt.h>
-#include <regex.h>
+#if WITH_REGEX
+# include <regex.h>
+#else
+# include <rx.h>
+#endif
 #include "linebuffer.h"
 #include "system.h"
 #include "version.h"

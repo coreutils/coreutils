@@ -41,7 +41,11 @@ tac -r -s '.\|
 #include <getopt.h>
 #include <sys/types.h>
 #include <signal.h>
-#include <regex.h>
+#if WITH_REGEX
+# include <regex.h>
+#else
+# include <rx.h>
+#endif
 #include "system.h"
 #include "version.h"
 #include "error.h"

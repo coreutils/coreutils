@@ -36,7 +36,11 @@
 # define INT_MAX ((int) (UINT_MAX >> 1))
 #endif
 
-#include "regex.h"
+#if WITH_REGEX
+# include <regex.h>
+#else
+# include <rx.h>
+#endif
 #include "system.h"
 #include "version.h"
 #include "error.h"
