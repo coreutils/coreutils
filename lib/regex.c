@@ -41,8 +41,6 @@
 # define gettext(msgid) (msgid)
 #endif
 
-#define EMACS_INT int
-
 /* The `emacs' switch turns on certain matching commands
    that make sense only in Emacs. */
 #ifdef emacs
@@ -50,6 +48,8 @@
 #include "lisp.h"
 #include "buffer.h"
 #include "syntax.h"
+
+#define WIDE_INT EMACS_INT
 
 #else  /* not emacs */
 
@@ -60,6 +60,10 @@ char *malloc ();
 char *realloc ();
 #endif
 
+/* This isn't right--it needs to check for machines with 64-bit pointers
+   and do something different.  But I don't know what, and I don't
+   need to deal with it right now.  -- rms.  */
+#define WIDE_INT int
 
 /* We used to test for `BSTRING' here, but only GCC and Emacs define
    `BSTRING', as far as I know, and neither of them use this code.  */
@@ -242,7 +246,7 @@ char *alloca ();
    destination)
 
 /* No need to do anything to free, after alloca.  */
-#define REGEX_FREE(arg) while (0) /* empty */
+#define REGEX_FREE(arg) (0)
 
 #endif /* not REGEX_MALLOC */
 
@@ -1065,13 +1069,13 @@ typedef struct
    Assumes the variable `fail_stack'.  Probably should only
    be called from within `PUSH_FAILURE_POINT'.  */
 #define PUSH_FAILURE_INT(item)					\
-  fail_stack.stack[fail_stack.avail++] = (fail_stack_elt_t) (EMACS_INT) (item)
+  fail_stack.stack[fail_stack.avail++] = (fail_stack_elt_t) (WIDE_INT) (item)
 
 /* The complement operation.  Assumes `fail_stack' is nonempty.  */
 #define POP_FAILURE_POINTER() fail_stack.stack[--fail_stack.avail]
 
 /* The complement operation.  Assumes `fail_stack' is nonempty.  */
-#define POP_FAILURE_INT() (EMACS_INT) fail_stack.stack[--fail_stack.avail]
+#define POP_FAILURE_INT() (WIDE_INT) fail_stack.stack[--fail_stack.avail]
 
 /* Used to omit pushing failure point id's when we're not debugging.  */
 #ifdef DEBUG
@@ -2859,11 +2863,9 @@ re_compile_fastmap (bufp)
   unsigned char *p = pattern;
   register unsigned char *pend = pattern + size;
 
-#ifdef REL_ALLOC
   /* This holds the pointer to the failure stack, when
      it is allocated relocatably.  */
   fail_stack_elt_t *failure_stack_ptr;
-#endif
 
   /* Assume that each path through the pattern can be null until
      proven otherwise.  We set this false at the bottom of switch
@@ -3512,11 +3514,9 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
   unsigned nfailure_points_pushed = 0, nfailure_points_popped = 0;
 #endif
 
-#ifdef REL_ALLOC
   /* This holds the pointer to the failure stack, when
      it is allocated relocatably.  */
   fail_stack_elt_t *failure_stack_ptr;
-#endif
 
   /* We fill all the registers internally, independent of what we
      return, for use in backreferences.  The number here includes
