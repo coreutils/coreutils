@@ -28,4 +28,10 @@ split -b 0 in 2> /dev/null && fail=1
 split -C 0 in 2> /dev/null && fail=1
 split -l 0 in 2> /dev/null && fail=1
 
+# Make sure that the obsolete -N notation still works
+env -u _POSIX2_VERSION split -1 in 2> /dev/null || fail=1
+
+# Then make sure that -0 evokes a failure.
+env -u _POSIX2_VERSION split -0 in 2> /dev/null && fail=1
+
 (exit $fail); exit $fail
