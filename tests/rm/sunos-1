@@ -20,7 +20,7 @@ fi
 
 fail=0
 cd $tmp
-$RM '' && fail=1
+$RM '' > /dev/null 2>&1 && fail=1
 cd ..
 rm -rf $tmp
 
