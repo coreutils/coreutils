@@ -1,0 +1,47 @@
+#!/bin/sh
+
+: ${RM=rm}
+test=ir-1
+
+if test "$VERBOSE" = yes; then
+  set -x
+  $RM --version
+fi
+
+# Don't require use of TMPDIR.
+: ${RM_TMPDIR=.}
+
+tmp=$RM_TMPDIR/t-rm.$$
+
+test_failure=0
+mkdir $tmp || test_failure=1
+mkdir $tmp/a $tmp/a/a || test_failure=1
+mkdir $tmp/b $tmp/b/bb || test_failure=1
+mkdir $tmp/c $tmp/c/cc || test_failure=1
+
+if $test_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+fail=0
+$RM --verbose -r $tmp > $tmp/$test.O || fail=1
+
+for d in $dirs; do
+  if test -d $d; then
+    fail=1
+  fi
+done
+
+cat <<EOF > $tmp/$test.E
+$tmp/a
+$tmp/a/a
+$tmp/b
+EOF
+
+# Compare expected and actual output.
+cmp $tmp/$test.E $tmp/$test.O || fail=1
+
+rm -rf $tmp
+
+exit $fail
