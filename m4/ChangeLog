@@ -1,6 +1,6 @@
 2003-02-02  Jim Meyering  <jim@meyering.net>
 
-	* onceonly_2_57.m4: New file.  From gnulib.
+	* onceonly.m4: New file.  From gnulib.
 
 	* regex.m4 (jm_PREREQ_REGEX): New function, from gnulib.
 	(jm_INCLUDED_REGEX): Use it.
