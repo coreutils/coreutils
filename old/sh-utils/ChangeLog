@@ -1,3 +1,8 @@
+Fri Feb 11 19:39:37 1994  Jim Meyering  (meyering@comco.com)
+
+	* stty.c (get_win_size): Don't use an ANSI-style function
+	definition.  From Kaveh R. Ghazi <ghazi@noc.rutgers.edu>.
+
 Thu Feb 10 01:22:37 1994  Jim Meyering  (meyering@comco.com)
 
 	* stty.c [CSWTCH] (__sparc__ && __svr4__): Define `swtch' to
