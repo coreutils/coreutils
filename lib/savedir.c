@@ -1,5 +1,5 @@
 /* savedir.c -- save the list of files in a directory in a string
-   Copyright (C) 1990, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -86,6 +86,10 @@ savedir (const char *dir, off_t name_size)
   dirp = opendir (dir);
   if (dirp == NULL)
     return NULL;
+
+  /* Be sure name_size is at least `1' so there's room for
+     the final NUL byte.  */
+  name_size += !name_size;
 
   name_space = (char *) malloc (name_size);
   if (name_space == NULL)
