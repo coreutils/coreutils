@@ -16,7 +16,35 @@ Sun Nov 24 11:02:29 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	Use STDIN_FILENO and STDOUT_FILENO instead of literal 0, 1.
 
 	========== From Karl Heuer =========
-	* src/stty.c: Big patch from Karl Heuer.  FIXME: fill in details
+	* src/stty.c [TERMIOS_NEEDS_XOPEN_SOURCE]: Define _XOPEN_SOURCE.
+	i386-pc-isc3.0, needs that in order to cause all of the useful
+	termios symbols to be defined, instead of just those that are
+	required by POSIX.  This enables all of: iuclc ixany olcuc ocrnl
+	onlcr onocr onlret ofill ofdel nl0 cr0 tab0 bs0 vt0 ff0 xcase.
+
+	[GWINSZ_IN_SYS_PTY]: Include sys/ioctl.h, sys/tty.h, and sys/pty.h.
+
+	[!VSUSP && !VSWTCH]: Map VSWTCH and CSWTCH to VSUSP and CSUSP resp.
+	termio.h defines VSWTCH, but termios.h defines VSUSP instead (since
+	POSIX requires that symbol).  Define VSWTCH as a synonym if needed,
+	so that either one can be used on input.
+	(display_changed): If the slot for swtch is the same as the one for
+	susp, display only the setting for susp.
+	(display_all): Likewise.
+
+	(display_changed): Some systems still have (VEOF,VEOL) == (VMIN,VTIME).
+	On such systems, it's confusing to print both pairs.  So, skip eof and
+	eol when icanon is unset, and skip min and time when icanon is set.
+	(display_all): Likewise.
+
+	(set_window_size): Check only stdin (the device being queried) for
+	window size info.  You don't want "stty </dev/foo" to report the size
+	of your current window when /dev/foo has no size info.
+	(display_window_size): Likewise.
+
+	(screen_columns): Check only stdout for window size info.  You want
+	"stty </dev/foo" to wrap columns at the right margin of your current
+	window, not the /dev/foo width.
 
 	* acconfig.h (GWINSZ_IN_SYS_PTY): Add #undef.
 	(TERMIOS_NEEDS_XOPEN_SOURCE): Add #undef.
