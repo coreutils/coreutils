@@ -698,11 +698,12 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
 #ifdef WHO
-  while ((optc = getopt_long (argc, argv, "imqsuwHT", longopts, &longind))
+# define WU_OPTS "imqsuwHT"
 #else
-  while ((optc = getopt_long (argc, argv, "", longopts, &longind))
-#endif /* WHO */
-	 != EOF)
+# define WU_OPTS ""
+#endif
+
+  while ((optc = getopt_long (argc, argv, WU_OPTS, longopts, &longind)) != -1)
     {
       switch (optc)
 	{

@@ -122,7 +122,7 @@ main (register int argc, register char **argv, char **envp)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  while ((optc = getopt_long (argc, argv, "+iu:", longopts, (int *) 0)) != EOF)
+  while ((optc = getopt_long (argc, argv, "+iu:", longopts, NULL)) != -1)
     {
       switch (optc)
 	{
@@ -158,7 +158,7 @@ main (register int argc, register char **argv, char **envp)
       putenv (*envp);
 
   optind = 0;			/* Force GNU getopt to re-initialize. */
-  while ((optc = getopt_long (argc, argv, "+iu:", longopts, (int *) 0)) != EOF)
+  while ((optc = getopt_long (argc, argv, "+iu:", longopts, NULL)) != -1)
     if (optc == 'u')
       putenv (optarg);		/* Requires GNU putenv. */
 

@@ -106,7 +106,7 @@ main (int argc, char **argv)
 	  optind = 0;
 
 	  if ((optc = getopt_long (argc - (i - 1), fake_argv, "+n:",
-				   longopts, (int *) 0)) != EOF)
+				   longopts, NULL)) != -1)
 	    {
 	      switch (optc)
 		{

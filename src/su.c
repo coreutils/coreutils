@@ -467,8 +467,7 @@ main (int argc, char **argv)
   simulate_login = 0;
   change_environment = 1;
 
-  while ((optc = getopt_long (argc, argv, "c:flmps:", longopts, (int *) 0))
-	 != EOF)
+  while ((optc = getopt_long (argc, argv, "c:flmps:", longopts, NULL)) != -1)
     {
       switch (optc)
 	{

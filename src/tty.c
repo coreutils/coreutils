@@ -66,7 +66,7 @@ main (int argc, char **argv)
 
   silent = 0;
 
-  while ((optc = getopt_long (argc, argv, "s", longopts, (int *) 0)) != EOF)
+  while ((optc = getopt_long (argc, argv, "s", longopts, NULL)) != -1)
     {
       switch (optc)
 	{

@@ -673,8 +673,7 @@ main (int argc, char **argv)
 
   /* Recognize the long options only.  */
   opterr = 0;
-  while ((optc = getopt_long_only (argc, argv, "ag", longopts, (int *) 0))
-	 != EOF)
+  while ((optc = getopt_long_only (argc, argv, "ag", longopts, NULL)) != -1)
     {
       switch (optc)
 	{

@@ -124,7 +124,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  while ((optc = getopt_long (argc, argv, "p", longopts, (int *) 0)) != EOF)
+  while ((optc = getopt_long (argc, argv, "p", longopts, NULL)) != -1)
     {
       switch (optc)
 	{

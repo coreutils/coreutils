@@ -158,7 +158,7 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   while ((optc = getopt_long (argc, argv, "d:f:r:Rs:u", long_options, NULL))
-	 != EOF)
+	 != -1)
     switch (optc)
       {
       case 0:

@@ -91,8 +91,7 @@ main (int argc, char **argv)
   append = 0;
   ignore_interrupts = 0;
 
-  while ((optc = getopt_long (argc, argv, "ai", long_options, (int *) 0))
-	 != EOF)
+  while ((optc = getopt_long (argc, argv, "ai", long_options, NULL)) != -1)
     {
       switch (optc)
 	{

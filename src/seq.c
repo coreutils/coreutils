@@ -130,7 +130,7 @@ main (int argc, char **argv)
      REQUIRE_ORDER (the '+' in the format string) and it abort on the
      first non-option or negative number.  */
   while ((optc = getopt_long (argc, argv, "+0123456789f:s:w", long_options,
-			      (int *) 0)) != EOF)
+			      NULL)) != -1)
     {
       if ('0' <= optc && optc <= '9')
 	{
