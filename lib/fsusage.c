@@ -1,6 +1,6 @@
-/* fsusage.c -- return space usage of mounted filesystems
+/* fsusage.c -- return space usage of mounted file systems
 
-   Copyright (C) 1991, 1992, 1996, 1998, 1999, 2002, 2003 Free
+   Copyright (C) 1991, 1992, 1996, 1998, 1999, 2002, 2003, 2004 Free
    Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -102,7 +102,7 @@ int statvfs ();
 #define PROPAGATE_TOP_BIT(x) ((x) | ~ (EXTRACT_TOP_BIT (x) - 1))
 
 /* Fill in the fields of FSP with information about space usage for
-   the filesystem on which PATH resides.
+   the file system on which PATH resides.
    DISK is the device on which PATH is mounted, for space-getting
    methods that need to know it.
    Return 0 if successful, -1 if not.  When returning -1, ensure that

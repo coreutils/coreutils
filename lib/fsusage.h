@@ -1,6 +1,7 @@
-/* fsusage.h -- declarations for filesystem space usage info
+/* fsusage.h -- declarations for file system space usage info
 
-   Copyright (C) 1991, 1992, 1997, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1997, 2003, 2004 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -16,7 +17,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Space usage statistics for a filesystem.  Blocks are 512-byte. */
+/* Space usage statistics for a file system.  Blocks are 512-byte. */
 
 #if !defined FSUSAGE_H_
 # define FSUSAGE_H_

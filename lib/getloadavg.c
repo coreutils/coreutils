@@ -70,9 +70,9 @@
    UMAX4_3
    VMS
    WINDOWS32			No-op for Windows95/NT.
-   __linux__			Linux: assumes /proc filesystem mounted.
+   __linux__			Linux: assumes /proc file system mounted.
 				Support from Michael K. Johnson.
-   __NetBSD__			NetBSD: assumes /kern filesystem mounted.
+   __NetBSD__			NetBSD: assumes /kern file system mounted.
 
    In addition, to avoid nesting many #ifdefs, we internally set
    LDAV_DONE to indicate that the load average has been computed.
