@@ -1,4 +1,5 @@
 Changes in release 3.13:
+* uses automake-generated Makefile templates
 * chown and chgrp accept new option --no-dereference (-h)
 * ln -f FILE FILE fails with a diagnostic rather than silently removing FILE
 * when building on systems that have getopt_long (like Linux), the system-
