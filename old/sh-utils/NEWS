@@ -1,4 +1,6 @@
 User visible changes in release 2.0
+* --version outputs the name of the utility as well as the package name
+  and version number.
 * Configure properly determines options for stty on SCO ODT 3.0 systems.
 * `date -d' works better.  Before, `date -d '4apr94'' produced
   `Sun Apr  3 23:00:00 CDT 1994'.
