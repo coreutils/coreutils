@@ -1,3 +1,8 @@
+2004-03-15  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi: Add FIXME comment:
+	The following don't have `invocation' nodes: [, pinky, shasum, uptime.
+
 2004-03-10  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (Sorting the output): Remove description of
