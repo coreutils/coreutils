@@ -1,3 +1,18 @@
+2001-09-03  Jim Meyering  <meyering@lucent.com>
+
+	* xreadlink.c (xreadlink): Preserve errno around `free' during failure.
+
+2001-09-03  Paul Eggert  <eggert@twinsun.com>
+
+	* xgetcwd.c: Fix the !HAVE_GETCWD_NULL code to behave more
+	like the HAVE_GETCWD_NULL code.
+	Include pathmax.h if not HAVE_GETCWD.
+	Do not include xalloc.h.
+	(INITIAL_BUFFER_SIZE): New symbol.
+	Do not use xmalloc / xrealloc, since the caller is responsible for
+	handling errors.  Preserve errno around `free' during failure.
+	Do not overrun buffer when using getwd.
+
 2001-09-03  Paul Eggert  <eggert@twinsun.com>
 
 	* xgetcwd.c (xgetcwd): Use HAVE_GETCWD_NULL, not (defined
