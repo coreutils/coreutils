@@ -270,7 +270,7 @@ numbered_backup (char **buffer, size_t buffer_size, size_t filelen)
       *q = '0';
       q += all_9s;
       memcpy (q, p, versionlen + 2);
-      
+
       /* Add 1 to the version number.  */
 
       q += versionlen;
