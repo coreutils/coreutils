@@ -1,3 +1,9 @@
+1999-12-17  Kalle Olavi Niemitalo  <tosi@stekt.oulu.fi>
+
+	* src/rmdir.c (remove_parents, main): Don't pass errno to error
+	when printing "removing directory" message.  Failure of rmdir is
+	handled elsewhere.
+
 1999-12-23  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in: Remove clock_gettime tests.
