@@ -2,6 +2,8 @@
 
 	* Version 4.5.5.
 
+	* src/du.c (MAX_N_DESCRIPTORS): Define.
+
 	* src/stat.c (G_fail): New global.
 	(human_time): Diagnose failed localtime, not failed nstrftime.
 	(main): Fail if G_fail is set.
