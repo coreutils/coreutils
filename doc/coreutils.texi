@@ -8482,7 +8482,7 @@ are often symbolic links.
 @cindex including files from @command{du}
 Rather than processing files named on the command line, process those
 in the NUL-separated list in file @var{FILE0}.
-This is useful with the @option{--summarize} (@option{-s}) option when
+This is useful with the @option{--total} (@option{-c}) option when
 the list of file names is so long that it may exceed a command line
 length limitation.
 In such cases, running @command{du} via @command{xargs} is undesirable
