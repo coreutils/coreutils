@@ -1,3 +1,12 @@
+1999-04-18  Jim Meyering  <meyering@ascend.com>
+
+	* src/sort.c (usage): s/DIRECT/DIRECTORY/g
+	Rename global: s/temp_file_prefix/temp_dir/.
+	(NAME_MAX_IN_DIR): Rename from PATH_MAX_IN_DIR.  Use _POSIX_NAME_MAX,
+	not _POSIX_PATH_MAX.  Guard with #if HAVE_PATHCONF rather than
+	#if HAVE_UNISTD_H.
+	(tempname): Wrap after 99999 only for length-impaired file systems.
+
 1999-04-17  Jim Meyering  <meyering@ascend.com>
 
 	* src/tail.c (file_lines): Fix serious bug introduced with last changes.
