@@ -140,7 +140,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 "),
 	      program_name);
       fputs (_("\
-Print first 10 lines of each FILE to standard output.\n\
+Print the first 10 lines of each FILE to standard output.\n\
 With more than one FILE, precede each with a header giving the file name.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
@@ -149,8 +149,12 @@ With no FILE, or when FILE is -, read standard input.\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
-  -c, --bytes=SIZE         print first SIZE bytes\n\
-  -n, --lines=NUMBER       print first NUMBER lines instead of first 10\n\
+  -c, --bytes=[-]N         print the first N bytes of each file;\n\
+                             with the leading `-', print all but the last\n\
+                             N bytes of each file\n\
+  -n, --lines=[-]N         print the first N lines instead of the first 10;\n\
+                             with the leading `-', print all but the last\n\
+                             N lines of each file\n\
 "), stdout);
       fputs (_("\
   -q, --quiet, --silent    never print headers giving file names\n\
@@ -160,7 +164,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
+N may have a multiplier suffix: b for 512, k for 1024, m for 1048576 (1 Meg)\n\
 "), stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
