@@ -3028,6 +3028,24 @@ On newer systems, @option{-o} cannot appear after an input file if
 scripts should specify @option{-o @var{output-file}} before any input
 files.
 
+@item -s
+@itemx --stable
+@opindex -s
+@opindex --stable
+@cindex sort stability
+@cindex disabling sort's last-resort comparison
+
+Make @command{sort} stable by disabling the last-resort
+comparison that is performed in some cases.
+By default, when lines compare equal based on command line options
+that affect ordering, those lines are ordered using
+a @dfn{last-resort comparison} that takes the entire
+line as the key and acts as if no ordering options were specified.
+But if @option{--reverse} (@option{-r}) was specified along with other
+ordering options, then the last-resort comparison does use @option{--reverse}.
+In any case, when no ordering option is specified or when only
+@option{--reverse} is specified, the last-resort comparison is not performed
+
 @item -S @var{size}
 @itemx --buffer-size=@var{size}
 @opindex -S
