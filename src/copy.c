@@ -723,10 +723,10 @@ copy_internal (const char *src_path, const char *dst_path,
 		}
 	      new_dst = 1;
 	    }
-	  else if (x->unlink_dest_before_opening
-		   || (x->xstat == lstat
-		       && ! S_ISREG (src_sb.st_mode)
-		       && ! S_ISDIR (src_sb.st_mode)))
+	  else if (! S_ISDIR (dst_sb.st_mode)
+		   && (x->unlink_dest_before_opening
+		       || (x->xstat == lstat
+			   && ! S_ISREG (src_sb.st_mode))))
 	    {
 	      if (unlink (dst_path) && errno != ENOENT)
 		{
