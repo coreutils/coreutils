@@ -103,6 +103,9 @@ GNU coreutils NEWS                                    -*- outline -*-
     like %#d, instead of relying on undefined behavior in the underlying
     printf function.
 
+  "touch -- MMDDhhmm[yy] file" is now equivalent to
+  "touch MMDDhhmm[yy] file" even when conforming to pre-2001 POSIX.
+
   who now prints user names in full instead of truncating them after 8 bytes.
 
 ** New features
