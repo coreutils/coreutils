@@ -73,6 +73,12 @@ enum
   FTW_DCHP,
 # define FTW_DCHP FTW_DCHP
 
+  /* nftw calls the user-supplied function at most twice for each directory
+     it encounters.  When calling it the first time, it passes this value
+     as the `type'.  */
+  FTW_DPRE,
+# define FTW_DPRE FTW_DPRE
+
 # if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 
   FTW_SL,		/* Symbolic link.  */
@@ -110,6 +116,7 @@ struct FTW
   {
     int base;
     int level;
+    int skip;
   };
 # endif	/* extended X/Open */
 
