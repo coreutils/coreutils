@@ -5,7 +5,6 @@ dnl From Jim Meyering
 AC_DEFUN([gl_TIMESPEC],
 [
   dnl Prerequisites of lib/timespec.h.
-  AC_REQUIRE([AC_GNU_SOURCE])
   AC_REQUIRE([AC_HEADER_TIME])
   AC_CHECK_HEADERS_ONCE(sys/time.h)
   jm_CHECK_TYPE_STRUCT_TIMESPEC
@@ -22,7 +21,9 @@ dnl in time.h or sys/time.h.
 
 AC_DEFUN([jm_CHECK_TYPE_STRUCT_TIMESPEC],
 [
-  AC_REQUIRE([AC_GNU_SOURCE])
+  dnl Persuade pedantic Solaris to declare struct timespec.
+  AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
+
   AC_REQUIRE([AC_HEADER_TIME])
   AC_CHECK_HEADERS_ONCE(sys/time.h)
   AC_CACHE_CHECK([for struct timespec], fu_cv_sys_struct_timespec,
