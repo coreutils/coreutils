@@ -27,6 +27,10 @@
 # include <limits.h>
 #endif
 
+#ifdef HAVE_LCHOWN
+# define chown(PATH, OWNER, GROUP) lchown(PATH, OWNER, GROUP)
+#endif
+
 #ifndef UINT_MAX
 # define UINT_MAX ((unsigned int) ~(unsigned int) 0)
 #endif
