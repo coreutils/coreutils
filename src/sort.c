@@ -19,16 +19,7 @@
    The author may be reached (Email) at the address mike@gnu.ai.mit.edu,
    or (US mail) as Mike Haertel c/o Free Software Foundation. */
 
-#ifdef HAVE_CONFIG_H
-#if defined (CONFIG_BROKETS)
-/* We use <config.h> instead of "config.h" so that a compilation
-   using -I. -I$srcdir will use ./config.h rather than $srcdir/config.h
-   (which it would do because it found this file in $srcdir).  */
 #include <config.h>
-#else
-#include "config.h"
-#endif
-#endif
 
 /* Get isblank from GNU libc.  */
 #define _GNU_SOURCE
@@ -38,6 +29,7 @@
 #include <stdio.h>
 #include "system.h"
 #include "long-options.h"
+#include "safe-stat.h"
 
 #ifdef _POSIX_VERSION
 #include <limits.h>
@@ -1732,32 +1724,61 @@ main (argc, argv)
 
   if (strcmp (outfile, "-"))
     {
-      for (i = 0; i < nfiles; ++i)
-	if (!strcmp (outfile, files[i]))
-	  break;
-      if (i == nfiles)
-	ofp = xfopen (outfile, "w");
-      else
+      struct stat outstat;
+      if (SAFE_STAT (outfile, &outstat) == 0)
 	{
-	  char buf[8192];
-	  FILE *fp = xfopen (outfile, "r");
-	  int cc;
+	  /* The following code prevents a race condition when
+	     people use the brain dead shell programming idiom:
+		  cat file | sort -o file
+	     This feature is provided for historical compatibility,
+	     but we strongly discourage ever relying on this in
+	     new shell programs. */
 
-	  tmp = tempname ();
-	  ofp = xfopen (tmp, "w");
-	  while ((cc = fread (buf, 1, sizeof buf, fp)) > 0)
-	    xfwrite (buf, 1, cc, ofp);
-	  if (ferror (fp))
+	  /* Temporarily copy each input file that might be another name
+	     for the output file.  When in doubt (e.g. a pipe), copy.  */
+	  for (i = 0; i < nfiles; ++i)
 	    {
-	      error (0, errno, "%s", outfile);
-	      cleanup ();
-	      exit (2);
+	      char buf[8192];
+	      FILE *fp;
+	      int cc;
+
+	      if (S_ISREG (outstat.st_mode) && strcmp (outfile, files[i]))
+		{
+		  struct stat instat;
+		  if ((strcmp (files[i], "-")
+		       ? SAFE_STAT (files[i], &instat)
+		       : fstat (fileno (stdin), &instat)) != 0)
+		    {
+		      error (0, errno, "%s", files[i]);
+		      cleanup ();
+		      exit (2);
+		    }
+		  if (S_ISREG (instat.st_mode)
+		      && (instat.st_ino != outstat.st_ino
+			  || instat.st_dev != outstat.st_dev))
+		    {
+		      /* We know the files are distinct.  */
+		      continue;
+		    }
+		}
+
+	      fp = xfopen (files[i], "r");
+	      tmp = tempname ();
+	      ofp = xfopen (tmp, "w");
+	      while ((cc = fread (buf, 1, sizeof buf, fp)) > 0)
+		xfwrite (buf, 1, cc, ofp);
+	      if (ferror (fp))
+		{
+		  error (0, errno, "%s", files[i]);
+		  cleanup ();
+		  exit (2);
+		}
+	      xfclose (ofp);
+	      xfclose (fp);
+	      files[i] = tmp;
 	    }
-	  xfclose (ofp);
-	  xfclose (fp);
-	  files[i] = tmp;
-	  ofp = xfopen (outfile, "w");
 	}
+      ofp = xfopen (outfile, "w");
     }
   else
     ofp = stdout;

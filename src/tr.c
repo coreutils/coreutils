@@ -343,7 +343,7 @@ Usage: %s [OPTION]... SET1 [SET2]\n\
 SETs are specified as strings of characters.  Most represent\n\
 themselves.  Here are the special writings:\n\
 \n\
-  \\NNN            character with octal value NNN (1 to 3 digits)\n\
+  \\NNN            character with octal value NNN (1 to 3 octal digits)\n\
   \\\\              backslash\n\
   \\a              audible BEL\n\
   \\b              backspace\n\
@@ -1797,6 +1797,9 @@ deleting and squeezing repeats");
 	       "only one string may be given when deleting \
 without squeezing repeats");
     }
+
+  if (squeeze_repeats && non_option_args == 0)
+    error (1, 0, "at least one string must be given when squeezing repeats");
 
   spec_init (s1);
   if (parse_str ((unsigned char *) argv[optind], s1))
