@@ -627,7 +627,9 @@ main (int argc, char **argv)
       G_buffer += sentinel_length;
     }
   else
-    ++G_buffer;
+    {
+      ++G_buffer;
+    }
 
   if (optind == argc)
     {
@@ -635,16 +637,18 @@ main (int argc, char **argv)
       errors = tac_stdin_to_mem ();
     }
   else
-    for (; optind < argc; ++optind)
-      {
-	if (STREQ (argv[optind], "-"))
-	  {
-	    have_read_stdin = 1;
-	    errors |= tac_stdin_to_mem ();
-	  }
-	else
-	  errors |= tac_file (argv[optind]);
-      }
+    {
+      for (; optind < argc; ++optind)
+	{
+	  if (STREQ (argv[optind], "-"))
+	    {
+	      have_read_stdin = 1;
+	      errors |= tac_stdin_to_mem ();
+	    }
+	  else
+	    errors |= tac_file (argv[optind]);
+	}
+    }
 
   /* Flush the output buffer. */
   output ((char *) NULL, (char *) NULL);
