@@ -1,5 +1,5 @@
 /* remove.c -- core functions for removing files and directories
-   Copyright (C) 88, 90, 91, 1994-2000 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1994-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -615,7 +615,7 @@ remove_file (struct File_spec *fs, const struct rm_options *x)
   int asked = 0;
   char *pathname = fs->filename;
 
-  if (!x->ignore_missing_files && (x->interactive || x->stdin_tty)
+  if (!x->ignore_missing_files && x->interactive && x->stdin_tty
       && euidaccess (pathname, W_OK))
     {
       if (!S_ISLNK (fspec_filetype_mode (fs)))
