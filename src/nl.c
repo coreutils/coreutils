@@ -166,8 +166,7 @@ static struct option const longopts[] =
 /* Print a usage message and quit. */
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -219,7 +218,7 @@ FORMAT is one of:\n\
 /* Build the printf format string, based on `lineno_format'. */
 
 static void
-build_print_fmt ()
+build_print_fmt (void)
 {
   /* 12 = 10 chars for lineno_width, 1 for %, 1 for \0.  */
   print_fmt = xmalloc (strlen (separator_str) + 12);
@@ -241,9 +240,7 @@ build_print_fmt ()
    according to `optarg'.  */
 
 static int
-build_type_arg (typep, regexp)
-     char **typep;
-     struct re_pattern_buffer *regexp;
+build_type_arg (char **typep, struct re_pattern_buffer *regexp)
 {
   const char *errmsg;
   int rval = TRUE;
@@ -278,7 +275,7 @@ build_type_arg (typep, regexp)
 /* Print and increment the line number. */
 
 static void
-print_lineno ()
+print_lineno (void)
 {
   printf (print_fmt, line_no);
   line_no += page_incr;
@@ -287,7 +284,7 @@ print_lineno ()
 /* Switch to a header section. */
 
 static void
-proc_header ()
+proc_header (void)
 {
   current_type = header_type;
   current_regex = &header_regex;
@@ -299,7 +296,7 @@ proc_header ()
 /* Switch to a body section. */
 
 static void
-proc_body ()
+proc_body (void)
 {
   current_type = body_type;
   current_regex = &body_regex;
@@ -309,7 +306,7 @@ proc_body ()
 /* Switch to a footer section. */
 
 static void
-proc_footer ()
+proc_footer (void)
 {
   current_type = footer_type;
   current_regex = &footer_regex;
@@ -319,7 +316,7 @@ proc_footer ()
 /* Process a regular text line in `line_buf'. */
 
 static void
-proc_text ()
+proc_text (void)
 {
   static int blank_lines = 0;	/* Consecutive blank lines so far. */
 
@@ -363,7 +360,7 @@ proc_text ()
 /* Return the type of line in `line_buf'. */
 
 static enum section
-check_section ()
+check_section (void)
 {
   if (line_buf.length < 2 || memcmp (line_buf.buffer, section_del, 2))
     return Text;
@@ -382,8 +379,7 @@ check_section ()
 /* Read and process the file pointed to by FP. */
 
 static void
-process_file (fp)
-     FILE *fp;
+process_file (FILE *fp)
 {
   while (readline (&line_buf, fp))
     {
@@ -409,8 +405,7 @@ process_file (fp)
    Return 0 if successful, 1 if not. */
 
 static int
-nl_file (file)
-     char *file;
+nl_file (const char *file)
 {
   FILE *stream;
 
@@ -447,9 +442,7 @@ nl_file (file)
 }
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int c, exit_status = 0;
 
