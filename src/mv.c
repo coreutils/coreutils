@@ -321,9 +321,9 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       --backup[=CONTROL]       make a backup of each existing destination file\n\
   -b                           like --backup but does not accept an argument\n\
   -f, --force                  do not prompt before overwriting\n\
-                                 equivalent to --reply=yes\n\
+                                 (equivalent to --reply=yes)\n\
   -i, --interactive            prompt before overwrite\n\
-                                 equivalent to --reply=query\n\
+                                 (equivalent to --reply=query)\n\
 "), stdout);
       fputs (_("\
       --reply={yes,no,query}   specify how to handle the prompt about an\n\
