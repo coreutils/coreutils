@@ -1,3 +1,8 @@
+2004-12-19  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* c-strtod.m4 (gl_C99_STRTOLD): New macro.
+	(gl_C_STRTOD): Use it instead of AC_CHECK_DECLS_ONCE(strtold).
+
 2004-12-10  Jim Meyering  <jim@meyering.net>
 
 	* chdir-long.m4 (gl_FUNC_CHDIR_LONG: Arrange to compile chdir-long.c
