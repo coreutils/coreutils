@@ -1,6 +1,6 @@
 2003-08-07  Paul Eggert  <eggert@twinsun.com>
 
-        * coreutils.texi (split invocation):
+	* coreutils.texi (split invocation):
 	Add -d or --numeric-suffixes option to 'split'.
 
 2003-07-31  Paul Eggert  <eggert@twinsun.com>
