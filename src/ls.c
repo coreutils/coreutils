@@ -1004,6 +1004,8 @@ restore_default_color (void)
     put_indicator_direct (&color_indicator[C_RIGHT]);
 }
 
+/* Upon interrupt, suspend, hangup, etc. ensure that the
+   terminal text color is restored to the default.  */
 static void
 sighandler (int sig)
 {
@@ -1013,18 +1015,26 @@ sighandler (int sig)
 
   restore_default_color ();
 
+  /* SIGTSTP is special, since the application can receive that signal more
+     than once.  In this case, don't set the signal handler to the default.
+     Instead, just raise the uncatchable SIGSTOP.  */
+  if (sig == SIGTSTP)
+    {
+      sig = SIGSTOP;
+    }
+  else
+    {
 #ifdef SA_NOCLDSTOP
-  {
-    struct sigaction sigact;
+      struct sigaction sigact;
 
-    sigact.sa_handler = SIG_DFL;
-    sigemptyset (&sigact.sa_mask);
-    sigact.sa_flags = 0;
-    sigaction (sig, &sigact, NULL);
-  }
+      sigact.sa_handler = SIG_DFL;
+      sigemptyset (&sigact.sa_mask);
+      sigact.sa_flags = 0;
+      sigaction (sig, &sigact, NULL);
 #else
-  signal (sig, SIG_DFL);
+      signal (sig, SIG_DFL);
 #endif
+    }
 
   raise (sig);
 }
