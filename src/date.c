@@ -121,6 +121,8 @@ batch_convert (input_filename, format)
       when = get_date (line, NULL);
       if (when == -1)
 	{
+	  if (line[line_length - 1] == '\n')
+	    line[line_length - 1] = '\0';
 	  error (0, 0, "invalid date `%s'", line);
 	  status = 1;
 	}
