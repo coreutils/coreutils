@@ -1,3 +1,19 @@
+2004-08-04  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* mountlist.c (SIZE_MAX): Define after including files, to avoid
+	a collision on OpenBSD 3.4.
+
+	* fts.c (LONGEST_MODIFIER): New macro.
+	(PRIuMAX) [!PRI_MACROS_BROKEN && !defined PRIuMAX]: New macro.
+	(find_matching_ancestor): Use it for dev_t and ino_t.
+
+	* getndelim2.c: Sync from gnulib.
+
+	* error.c: Work around bug in OpenBSD 3.4 sterror_r: it
+	sometimes returns a positive errno value even when it succeeds.
+	(print_errno_message) [!LIBC]: Fall back on strerror if
+	__strerror_r fails.
+
 2004-08-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* canonicalize.c (errno): Remove decl; we now assume C89 or better.
@@ -55,7 +71,7 @@
 	* yesno.c: Include yesno.h first.
 	(yesno): Return bool, not int.
 	* yesno.h (yesno): Likewise.  Include <stdbool.h>.
-	
+
 	* xstrtod.h (xstrtod): Return bool, not int.  Invert the
 	sense of the boolean.  All uses changed.
 	* xstrtod.c (xstrtod): Likewise.
