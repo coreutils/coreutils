@@ -54,8 +54,10 @@
 #include "system.h"
 #include "error.h"
 #include "exclude.h"
+#include "hash.h"
 #include "human.h"
 #include "quote.h"
+#include "same.h"
 #include "save-cwd.h"
 #include "savedir.h"
 #include "xstrtol.h"
@@ -66,11 +68,8 @@
 #define AUTHORS \
   "Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert"
 
-/* Initial number of entries in each hash table entry's table of inodes.  */
-#define INITIAL_HASH_MODULE 100
-
-/* Initial number of entries in the inode hash table.  */
-#define INITIAL_ENTRY_TAB_SIZE 70
+/* Initial size of the hash table.  */
+#define INITIAL_TABLE_SIZE 103
 
 /* Initial size to allocate for `path'.  */
 #define INITIAL_PATH_SIZE 100
@@ -80,22 +79,12 @@
 
 struct entry
 {
-  ino_t ino;
-  dev_t dev;
-  struct entry *coll_link;
+  ino_t st_ino;
+  dev_t st_dev;
 };
 
-/* Structure for a hash table for inode numbers. */
-
-struct htab
-{
-  unsigned modulus;		/* Size of the `hash' pointer vector.  */
-  struct entry *entry_tab;	/* Pointer to dynamically growing vector.  */
-  unsigned entry_tab_size;	/* Size of current `entry_tab' allocation.  */
-  unsigned first_free_entry;	/* Index in `entry_tab'.  */
-  struct entry *hash[1];	/* Vector of pointers in `entry_tab'.  */
-};
-
+/* A set of dev/ino pairs.  */
+static struct hash_table *htab;
 
 /* Structure for dynamically resizable strings. */
 
@@ -142,9 +131,6 @@ static int output_block_size;
 
 /* Accumulated path for file or directory being processed.  */
 static String *path;
-
-/* Pointer to hash structure, used by the hash routines.  */
-static struct htab *htab;
 
 /* A pointer to either lstat or stat, depending on whether
    dereferencing of all symbolic links is to be done. */
@@ -232,6 +218,69 @@ Summarize disk usage of each FILE, recursively for directories.\n\
   exit (status);
 }
 
+static unsigned int
+entry_hash (void const *x, unsigned int table_size)
+{
+  struct entry const *p = x;
+
+  /* Ignoring the device number here should be fine.  */
+  /* The cast to uintmax_t prevents negative remainders
+     if st_ino is negative.  */
+  return (uintmax_t) p->st_ino % table_size;
+}
+
+/* Compare two dev/ino pairs.  Return true if they are the same.  */
+static bool
+entry_compare (void const *x, void const *y)
+{
+  struct entry const *a = x;
+  struct entry const *b = y;
+  return SAME_INODE (*a, *b) ? true : false;
+}
+
+/* Try to insert the INO/DEV pair into the global table, HTAB.
+   If the pair is successfully inserted, return zero.
+   Upon failed memory allocation exit nonzero.
+   If the pair is already in the table, return nonzero.  */
+static int
+hash_ins (ino_t ino, dev_t dev)
+{
+  struct entry *ent;
+  struct entry *ent_from_table;
+
+  ent = (struct entry *) xmalloc (sizeof *ent);
+  ent->st_ino = ino;
+  ent->st_dev = dev;
+
+  ent_from_table = hash_insert (htab, ent);
+  if (ent_from_table == NULL)
+    {
+      /* Insertion failed due to lack of memory.  */
+      xalloc_die ();
+    }
+
+  if (ent_from_table == ent)
+    {
+      /* Insertion succeeded.  */
+      return 0;
+    }
+
+  /* That pair is already in the table, so ENT was not inserted.  Free it.  */
+  free (ent);
+
+  return 1;
+}
+
+/* Initialize the hash table.  */
+static void
+hash_init (void)
+{
+  htab = hash_initialize (INITIAL_TABLE_SIZE, NULL,
+			  entry_hash, entry_compare, free);
+  if (htab == NULL)
+    xalloc_die ();
+}
+
 /* Initialize string S1 to hold SIZE characters.  */
 
 static void
@@ -307,154 +356,6 @@ print_size (uintmax_t n_blocks, const char *string)
   fflush (stdout);
 }
 
-/* Reset the hash structure in the global variable `htab' to
-   contain no entries.  */
-
-static void
-hash_reset (void)
-{
-  int i;
-  struct entry **p;
-
-  htab->first_free_entry = 0;
-
-  p = htab->hash;
-  for (i = htab->modulus; i > 0; i--)
-    *p++ = NULL;
-}
-
-/* Allocate space for the hash structures, and set the global
-   variable `htab' to point to it.  The initial hash module is specified in
-   MODULUS, and the number of entries are specified in ENTRY_TAB_SIZE.  (The
-   hash structure will be rebuilt when ENTRY_TAB_SIZE entries have been
-   inserted, and MODULUS and ENTRY_TAB_SIZE in the global `htab' will be
-   doubled.)  */
-
-static void
-hash_init (unsigned int modulus, unsigned int entry_tab_size)
-{
-  struct htab *htab_r;
-
-  htab_r = (struct htab *)
-    xmalloc (sizeof (struct htab) + sizeof (struct entry *) * modulus);
-
-  htab_r->entry_tab = (struct entry *)
-    xmalloc (sizeof (struct entry) * entry_tab_size);
-
-  htab_r->modulus = modulus;
-  htab_r->entry_tab_size = entry_tab_size;
-  htab = htab_r;
-
-  hash_reset ();
-}
-
-/* Insert INO and DEV in the hash structure HTAB, if not
-   already present.  Return zero if inserted and nonzero if it
-   already existed.  */
-
-static int
-hash_insert2 (struct htab *ht, ino_t ino, dev_t dev)
-{
-  struct entry **hp, *ep2, *ep;
-  hp = &ht->hash[ino % ht->modulus];
-  ep2 = *hp;
-
-  /* Collision?  */
-
-  if (ep2 != NULL)
-    {
-      ep = ep2;
-
-      /* Search for an entry with the same data.  */
-
-      do
-	{
-	  if (ep->ino == ino && ep->dev == dev)
-	    return 1;		/* Found an entry with the same data.  */
-	  ep = ep->coll_link;
-	}
-      while (ep != NULL);
-
-      /* Did not find it.  */
-
-    }
-
-  ep = *hp = &ht->entry_tab[ht->first_free_entry++];
-  ep->ino = ino;
-  ep->dev = dev;
-  ep->coll_link = ep2;		/* `ep2' is NULL if no collision.  */
-
-  return 0;
-}
-
-/* Insert an item (inode INO and device DEV) in the hash
-   structure in the global variable `htab', if an entry with the same data
-   was not found already.  Return zero if the item was inserted and nonzero
-   if it wasn't.  */
-
-static int
-hash_insert (ino_t ino, dev_t dev)
-{
-  struct htab *htab_r = htab;	/* Initially a copy of the global `htab'.  */
-
-  if (htab_r->first_free_entry >= htab_r->entry_tab_size)
-    {
-      int i;
-      struct entry *ep;
-      unsigned modulus;
-      unsigned entry_tab_size;
-
-      /* Increase the number of hash entries, and re-hash the data.
-	 The method of shrimping and increasing is made to compactify
-	 the heap.  If twice as much data would be allocated
-	 straightforwardly, we would never re-use a byte of memory.  */
-
-      /* Let `htab' shrimp.  Keep only the header, not the pointer vector.  */
-
-      htab_r = (struct htab *)
-	xrealloc ((char *) htab_r, sizeof (struct htab));
-
-      modulus = 2 * htab_r->modulus;
-      entry_tab_size = 2 * htab_r->entry_tab_size;
-
-      /* Increase the number of possible entries.  */
-
-      htab_r->entry_tab = (struct entry *)
-	xrealloc ((char *) htab_r->entry_tab,
-		  sizeof (struct entry) * entry_tab_size);
-
-      /* Increase the size of htab again.  */
-
-      htab_r = (struct htab *)
-	xrealloc ((char *) htab_r,
-		 sizeof (struct htab) + sizeof (struct entry *) * modulus);
-
-      htab_r->modulus = modulus;
-      htab_r->entry_tab_size = entry_tab_size;
-      htab = htab_r;
-
-      i = htab_r->first_free_entry;
-
-      /* Make the increased hash table empty.  The entries are still
-	 available in htab->entry_tab.  */
-
-      hash_reset ();
-
-      /* Go through the entries and install them in the pointer vector
-	 htab->hash.  The items are actually inserted in htab->entry_tab at
-	 the position where they already are.  The htab->coll_link need
-	 however be updated.  Could be made a little more efficient.  */
-
-      for (ep = htab_r->entry_tab; i > 0; i--)
-	{
-	  hash_insert2 (htab_r, ep->ino, ep->dev);
-	  ep++;
-	}
-    }
-
-  return hash_insert2 (htab_r, ino, dev);
-}
-
 /* Restore the previous working directory or exit.
    If CWD is null, simply call `chdir ("..")'.  Otherwise,
    use CWD and free it.  CURR_DIR_NAME is the name of the current directory
@@ -502,7 +403,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 
   if (!opt_count_all
       && stat_buf.st_nlink > 1
-      && hash_insert (stat_buf.st_ino, stat_buf.st_dev))
+      && hash_ins (stat_buf.st_ino, stat_buf.st_dev))
     return 0;			/* Have counted this already.  */
 
   size = ST_NBLOCKS (stat_buf);
@@ -634,7 +535,7 @@ du_files (char **files)
 	str_copyc (path, arg);
 
       if (!print_totals)
-	hash_reset ();
+	hash_clear (htab);
 
       count_entry (arg, 1, 0, 0);
     }
@@ -785,7 +686,7 @@ main (int argc, char **argv)
     max_depth = 0;
 
   /* Initialize the hash structure for inode numbers.  */
-  hash_init (INITIAL_HASH_MODULE, INITIAL_ENTRY_TAB_SIZE);
+  hash_init ();
 
   str_init (&path, INITIAL_PATH_SIZE);
 
