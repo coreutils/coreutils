@@ -1006,8 +1006,8 @@ build_spec_list (unescaped_string, len, result)
 	  fall_through = 0;
 	  switch (p[i + 1])
 	    {
-	      int closing_delim_idx;
-	      int closing_bracket_idx;
+	      size_t closing_delim_idx;
+	      size_t closing_bracket_idx;
 	      unsigned int char_to_repeat;
 	      size_t repeat_count;
 	      int found;
@@ -1864,7 +1864,7 @@ without squeezing repeats");
     }
   else if (delete && non_option_args == 1)
     {
-      int nr;
+      long nr;
 
       set_initialize (s1, complement, in_delete_set);
       do
@@ -1941,7 +1941,7 @@ without squeezing repeats");
 	}
       else
 	{
-	  int chars_read;
+	  long chars_read;
 
 	  do
 	    {
