@@ -93,9 +93,9 @@ COMPILE = $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 LINK = $(CC) $(LDFLAGS) -o $@
 HEADERS = $(noinst_HEADERS)
 
-DIST_COMMON = Makefile.am Makefile.in alloca.c error.c fileblocks.c \
-fnmatch.c fsusage.c ftruncate.c getline.c mountlist.c obstack.c regex.c \
-regex.h rx.c rx.h
+DIST_COMMON = Makefile.am Makefile.in alloca.c fileblocks.c fnmatch.c \
+fsusage.c ftruncate.c getline.c mountlist.c obstack.c regex.c regex.h \
+rx.c rx.h
 
 
 PACKAGE = @PACKAGE@
@@ -108,11 +108,11 @@ DEP_DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
 
 TAR = tar
 DEP_FILES = .deps/alloca.P .deps/argmatch.P .deps/backupfile.P \
-.deps/dirname.P .deps/error.P .deps/fileblocks.P .deps/filemode.P \
-.deps/fnmatch.P .deps/fsusage.P .deps/ftruncate.P .deps/full-write.P \
-.deps/getdate.P .deps/getline.P .deps/getopt.P .deps/getopt1.P \
-.deps/getversion.P .deps/idcache.P .deps/isdir.P .deps/long-options.P \
-.deps/makepath.P .deps/modechange.P .deps/mountlist.P .deps/obstack.P \
+.deps/dirname.P .deps/fileblocks.P .deps/filemode.P .deps/fnmatch.P \
+.deps/fsusage.P .deps/ftruncate.P .deps/full-write.P .deps/getdate.P \
+.deps/getline.P .deps/getopt.P .deps/getopt1.P .deps/getversion.P \
+.deps/idcache.P .deps/isdir.P .deps/long-options.P .deps/makepath.P \
+.deps/modechange.P .deps/mountlist.P .deps/obstack.P \
 .deps/path-concat.P .deps/posixtm.P .deps/regex.P .deps/rx.P \
 .deps/safe-read.P .deps/save-cwd.P .deps/savedir.P .deps/stripslash.P \
 .deps/userspec.P .deps/xgetcwd.P .deps/xmalloc.P .deps/xstrdup.P \
