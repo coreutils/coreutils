@@ -63,16 +63,6 @@
 # define OFF_T_MAX TYPE_MAXIMUM (off_t)
 #endif
 
-#define XWRITE(fd, buffer, n_bytes)					\
-  do									\
-    {									\
-      assert ((fd) == 1);						\
-      assert ((n_bytes) >= 0);						\
-      if (n_bytes > 0 && fwrite ((buffer), 1, (n_bytes), stdout) == 0)	\
-	error (EXIT_FAILURE, errno, _("write error"));			\
-    }									\
-  while (0)
-
 /* Number of items to tail.  */
 #define DEFAULT_N_LINES 10
 
@@ -219,7 +209,16 @@ or -c +VALUE.\n\
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
-static __inline__ void
+static void
+xwrite (int fd, char *const buffer, size_t n_bytes)
+{
+  assert (fd == 1);
+  assert (n_bytes >= 0);
+  if (n_bytes > 0 && fwrite (buffer, 1, n_bytes, stdout) == 0)
+    error (EXIT_FAILURE, errno, _("write error"));
+}
+
+static void
 close_fd (int fd, const char *filename)
 {
   if (fd != -1 && fd != STDIN_FILENO && close (fd))
@@ -289,7 +288,7 @@ file_lines (const char *pretty_filename, int fd, long int n_lines, off_t pos)
 	      /* If this newline wasn't the last character in the buffer,
 	         print the text after it.  */
 	      if (i != bytes_read - 1)
-		XWRITE (STDOUT_FILENO, &buffer[i + 1], bytes_read - (i + 1));
+		xwrite (STDOUT_FILENO, &buffer[i + 1], bytes_read - (i + 1));
 	      return 0;
 	    }
 	}
@@ -419,10 +418,10 @@ pipe_lines (const char *pretty_filename, int fd, long int n_lines)
     }
   else
     i = 0;
-  XWRITE (STDOUT_FILENO, &tmp->buffer[i], tmp->nbytes - i);
+  xwrite (STDOUT_FILENO, &tmp->buffer[i], tmp->nbytes - i);
 
   for (tmp = tmp->next; tmp; tmp = tmp->next)
-    XWRITE (STDOUT_FILENO, tmp->buffer, tmp->nbytes);
+    xwrite (STDOUT_FILENO, tmp->buffer, tmp->nbytes);
 
 free_lbuffers:
   while (first)
@@ -513,10 +512,10 @@ pipe_bytes (const char *pretty_filename, int fd, off_t n_bytes)
     i = total_bytes - n_bytes;
   else
     i = 0;
-  XWRITE (STDOUT_FILENO, &tmp->buffer[i], tmp->nbytes - i);
+  xwrite (STDOUT_FILENO, &tmp->buffer[i], tmp->nbytes - i);
 
   for (tmp = tmp->next; tmp; tmp = tmp->next)
-    XWRITE (STDOUT_FILENO, tmp->buffer, tmp->nbytes);
+    xwrite (STDOUT_FILENO, tmp->buffer, tmp->nbytes);
 
 free_cbuffers:
   while (first)
@@ -546,7 +545,7 @@ start_bytes (const char *pretty_filename, int fd, off_t n_bytes)
       return 1;
     }
   else if (n_bytes < 0)
-    XWRITE (STDOUT_FILENO, &buffer[bytes_read + n_bytes], -n_bytes);
+    xwrite (STDOUT_FILENO, &buffer[bytes_read + n_bytes], -n_bytes);
   return 0;
 }
 
@@ -575,7 +574,7 @@ start_lines (const char *pretty_filename, int fd, long int n_lines)
     }
   else if (bytes_to_skip < bytes_read)
     {
-      XWRITE (STDOUT_FILENO, &buffer[bytes_to_skip],
+      xwrite (STDOUT_FILENO, &buffer[bytes_to_skip],
 	      bytes_read - bytes_to_skip);
     }
   return 0;
@@ -594,7 +593,7 @@ dump_remainder (const char *pretty_filename, int fd)
   total = 0;
   while ((bytes_read = safe_read (fd, buffer, BUFSIZ)) > 0)
     {
-      XWRITE (STDOUT_FILENO, buffer, bytes_read);
+      xwrite (STDOUT_FILENO, buffer, bytes_read);
       total += bytes_read;
     }
   if (bytes_read == -1)
