@@ -1,5 +1,12 @@
 2003-03-14  Jim Meyering  <jim@meyering.net>
 
+	* Version 4.5.11.
+
+	* Use patched automake-1.7.3.  Regenerate Makefile.in files in
+	subdirectories so that each includes a definition of ACLOCAL_M4.
+
+	* announce-gen (main): Label the compressed source URLs.
+
 	* Version 4.5.10.
 
 	* tests/du/slink: Relax the test for the `local'ness of a file system,
