@@ -2,6 +2,7 @@
 
 	Make `ls' a lot more efficient on systems (e.g., linux-2.4.*)
 	that store file type information in directory entries.
+
 	* src/ls.c [enum filetype] (unknown):
 	Add members (as yet unused):
 	(HAVE_STRUCT_DIRENT_D_TYPE): Define.
@@ -14,6 +15,7 @@
 
 	Shred can now determine the size of a block devices (e.g. /dev/fd0)
 	by writing until a write operation fails.
+
 	* src/shred.c: Include assert.h.
 	(fillrand): Add a parameter, size_max.
 	Adjust caller.
@@ -24,6 +26,14 @@
 	If lseek fails or returns 0 for a non-regular file, let dopass
 	determine the length.
 	Inspired by a patch from Alan Iwi.
+
+	* tests/Makefile.am (EXTRA_DIST): Add lang-default.
+
+	* tests/rm/hash: Factor out the expensive-test-checking code, ...
+	* tests/expensive: ... into this new file.
+	* tests/mv/diag: Disable this test by default; it's expensive.
+	Mark this as an expensive test.
+	* tests/Makefile.am (EXTRA_DIST): Add expensive.
 
 2000-10-26  Jim Meyering  <meyering@lucent.com>
 
