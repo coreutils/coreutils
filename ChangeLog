@@ -2,6 +2,8 @@
 
 	* Version 5.1.0.
 
+	* Use automake-1.7f.  Regenerate dependent files.
+
 2003-11-24  Paul Eggert  <eggert@twinsun.com>
 
 	Parse floating-point operands and options in the C locale.
