@@ -9,11 +9,11 @@ join-tests: main build-script test.data.pl
 
 .PHONY: distclean
 distclean:
-	rm -f t*.out
+	rm -f t*.out core
 
 .PHONY: clean
 clean: distclean
 
 .PHONY: realclean
 realclean: clean
-	rm -f join-tests t*.in t*.exp
+	rm -f join-tests t*.[12] t*.exp t*.log

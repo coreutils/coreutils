@@ -27,6 +27,7 @@ while (<>)
     $seen{$test_name} = 1;
     $in1 = "t$test_name.1"; 
     $in2 = "t$test_name.2"; 
+    $log = "t$test_name.log"; 
     $exp_name = 't' . $test_name . '.exp'; 
     $out = "t$test_name.out"; 
 
@@ -42,22 +43,33 @@ while (<>)
     close(EXP);
     $cmd = "$join $flags $in1 $in2 > $out";
     print <<EOF ;
-$cmd 2> /dev/null
+$cmd 2> $log
 code=\$?
+fail=yes
 if test \$code != $e_ret_code ; then
-  echo Test $test_name failed: join return code \$code differs from expected value $e_ret_code 1>&2
-  errors=`expr \$errors + 1`
+  err_msg="Test $test_name failed: join return code \$code differs from expected value $e_ret_code"
 else
-  cmp $out $exp_name
+  cmp $out $exp_name >> $log 2>&1
   case \$? in
-    0) if test "\$verbose" ; then echo passed $test_name; fi ;; # equal files
-    1) echo Test $test_name failed: files $out and $exp_name differ 1>&2;
-       errors=`expr \$errors + 1` ;;
-    2) echo Test $test_name may have failed. 1>&2;
-       echo The command \"cmp $out $exp_name\" failed. 1>&2 ;
-       errors=`expr \$errors + 1` ;;
+    0) # equal files
+       if test "\$verbose" ; then
+	 echo passed $test_name
+       fi
+       fail=no
+       ;;
+    1) err_msg="Test $test_name failed: files $out and $exp_name differ"
+       ;;
+    2) err_msg="Test $test_name may have failed.
+echo The command \"cmp $out $exp_name\" failed."
+       ;;
   esac
 fi
+if test \$fail = yes; then
+  errors=`expr \$errors + 1`
+  echo "Failing command: $cmd" >> $log
+  echo "\$err_msg" >> $log
+fi
+test -s $log || rm -f $log
 EOF
   }
 print <<EOF2 ;
