@@ -176,7 +176,7 @@ print_uptime (int n)
       ++this;
   }
   if (boot_time == 0)
-    error (1, errno, _("couldn't get boot time"));
+    error (1, 0, _("couldn't get boot time"));
   time_now = time (0);
   uptime = time_now - boot_time;
   updays = uptime / 86400;
