@@ -1,5 +1,7 @@
 2002-07-20  Jim Meyering  <meyering@lucent.com>
 
+	* intdiv0.m4: New file.  From gettex-0.11.3.
+
 	* jm-macros.m4: Require autoconf-2.53b.
 	Use new macros AC_FUNC_MALLOC and AC_FUNC_REALLOC,
 	in place of jm_-prefixed ones.  Thanks, Akim!
