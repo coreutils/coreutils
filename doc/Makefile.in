@@ -26,7 +26,7 @@ MAKEINFO = makeinfo
 TEXI2DVI = texi2dvi
 
 prefix = @prefix@
-infodir = $(prefix)/info
+infodir = @infodir@
 
 .SUFFIXES:
 
@@ -37,12 +37,13 @@ all: fileutils.info
 
 info: fileutils.info
 
-version.texi: ../src/version.c
-	sed -e '/version_string/!d' \
-	    -e 's/[^0-9.]*\([0-9.a-z]*\).*/@set VERSION \1/' \
-	    -e q $(srcdir)/../src/version.c \
-	  > $@-t
-	echo '@set RELEASEDATE '`date '+%B %Y'` >> $@-t
+# Don't fail if `date' is not GNU date;  just use current
+# month/year instead of those in the file's mod-time.
+date = `date --reference=@top_srcdir@/VERSION '+%B %Y' || date '+%B %Y'`
+version.texi: ../VERSION
+	@echo '@set VERSION @VERSION@' > $@-t
+	@echo '@set RELEASEDATE '"$(date)" \
+	  >> $@-t
 	mv $@-t $@
 
 fileutils.info: fileutils.texi version.texi
@@ -85,7 +86,7 @@ maintainer-clean: distclean
 	@echo "it deletes files that may require special tools to rebuild."
 	rm -f fileutils.info version.texi
 
-distdir = ../`cat ../distname`/$(subdir)
+distdir = ../@PACKAGE@-@VERSION@/$(subdir)
 dist: $(DISTFILES)
 	for file in $(DISTFILES); do \
 	  ln $$file $(distdir) \
