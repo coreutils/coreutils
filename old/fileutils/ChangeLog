@@ -1,5 +1,7 @@
 1999-04-10  Jim Meyering  <meyering@ascend.com>
 
+	* Makefile.maint (alpha): Add trailing slash for ncftp.
+
 	* Version 4.0f.
 
 	* configure.in (AC_OUTPUT): Add tests/dd/Makefile.
