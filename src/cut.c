@@ -538,7 +538,8 @@ cut_bytes (stream)
 /* Read from stream STREAM, printing to standard output any selected fields.  */
 
 static void
-cut_fields (FILE *stream)
+cut_fields (stream)
+     FILE *stream;
 {
   int c;
   int field_idx;
