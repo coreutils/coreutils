@@ -7,6 +7,13 @@
 	(tail_file): Use it here.
 	Reported by François Pinard.
 
+	Once we encounter a file that is not of IS_TAILABLE_FILE_TYPE,
+	marke it as such and ignore it forever after.
+	* src/tail.c (struct File_spec): New member.
+	(recheck): Initialize new member.
+	(tail_file): Likewise.
+	(tail_forever): Skip the file if it's marked as ignorable.
+
 2000-03-03  Jim Meyering  <meyering@lucent.com>
 
 	* src/sort.c (fillbuf): Move declaration of local, cc, into scope of
