@@ -1,3 +1,8 @@
+Mon Aug  7 00:02:59 1995  Jim Meyering  (meyering@comco.com)
+
+	* system.h (_): Define macro -- as empty for now.
+	* src/*.c: Annotate localizable strings with _(...).  From Franc,ois.
+
 Sat Aug  5 23:51:25 1995  Jim Meyering  (meyering@comco.com)
 
 	* Version 1.12.1.
