@@ -10378,6 +10378,38 @@ i}, as in @samp{who am i}.
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
+
+@item -a
+@itemx --all
+@opindex -a
+@opindex --all
+Same as @samp{-b -d --login -p -r -t -T -u}.
+
+@item -b
+@itemx --boot
+@opindex -b
+@opindex --boot
+Print the date and time of last system boot.
+
+@item -d
+@itemx --dead
+@opindex -d
+@opindex --dead
+Print information corresponding to dead processes.
+
+@item -H
+@itemx --heading
+@opindex -H
+@opindex --heading
+Print column headings.
+
+@item -i
+@itemx --idle
+@opindex -i
+@opindex --idle
+Include idle time in HOURS:MINUTES, @samp{.} (to indicate
+current process), or @samp{old}.
+
 @item -m
 @opindex -m
 Same as @samp{who am i}.
