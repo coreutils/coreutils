@@ -146,7 +146,7 @@ struct dirstack_state
 };
 typedef struct dirstack_state Dirstack_state;
 
-Dirstack_state *
+static Dirstack_state *
 ds_init ()
 {
   Dirstack_state *ds = XMALLOC (struct dirstack_state, 1);
@@ -156,7 +156,7 @@ ds_init ()
   return ds;
 }
 
-void
+static void
 ds_free (Dirstack_state *ds)
 {
   obstack_free (&ds->dir_stack, NULL);
@@ -503,12 +503,12 @@ AD_is_removable (Dirstack_state const *ds, char const *file)
 }
 
 /* A wrapper for readdir so that callers don't see entries for `.' or `..'.  */
-static struct dirent *
+static struct dirent const *
 readdir_ignoring_dotdirs (DIR *dirp)
 {
   while (1)
     {
-      struct dirent *dp = readdir (dirp);
+      struct dirent const *dp = readdir (dirp);
       if (dp == NULL || ! DOT_OR_DOTDOT (dp->d_name))
 	return dp;
     }
@@ -520,7 +520,7 @@ static bool
 is_empty_dir (char const *dir)
 {
   DIR *dirp = opendir (dir);
-  struct dirent *dp;
+  struct dirent const *dp;
   int saved_errno;
 
   if (dirp == NULL)
@@ -822,7 +822,7 @@ remove_cwd_entries (Dirstack_state *ds, char **subdir, struct stat *subdir_sb,
 
   while (1)
     {
-      struct dirent *dp;
+      struct dirent const *dp;
       enum RM_status tmp_status;
       const char *f;
 
