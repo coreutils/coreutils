@@ -1,3 +1,9 @@
+2001-02-05  Jim Meyering  <meyering@lucent.com>
+
+	* jm-macros.m4: Require autoconf-2.14d (not yet released), because
+	it includes the patch required for `large file' support with at least
+	HP-UX's 10.20 /bin/cc.
+
 2001-02-03  Jim Meyering  <meyering@lucent.com>
 
 	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): Restore prior use of
