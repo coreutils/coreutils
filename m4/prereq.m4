@@ -6,6 +6,7 @@ dnl directories of the fileutils, sh-utils, and textutils packages.
 AC_DEFUN([jm_PREREQ],
 [
   jm_PREREQ_ADDEXT
+  jm_PREREQ_C_STACK
   jm_PREREQ_CANON_HOST
   jm_PREREQ_DIRNAME
   jm_PREREQ_ERROR
