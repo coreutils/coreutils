@@ -1,6 +1,57 @@
+1998-04-12  Jim Meyering  <meyering@ascend.com>
+
+	* src/cat.c: Use STREQ macro rather than strcmp.
+	* src/cksum.c: Likewise.
+	* src/comm.c: Likewise.
+	* src/csplit.c: Likewise.
+	* src/cut.c: Likewise.
+	* src/fmt.c: Likewise.
+	* src/fold.c: Likewise.
+	* src/head.c: Likewise.
+	* src/join.c: Likewise.
+	* src/md5sum.c: Likewise.
+	* src/nl.c: Likewise.
+	* src/paste.c: Likewise.
+	* src/pr.c: Likewise.
+	* src/split.c: Likewise.
+	* src/sum.c: Likewise.
+	* src/tac.c: Likewise.
+	* src/uniq.c: Likewise.
+	* src/wc.c: Likewise.
+
+1998-04-11  Jim Meyering  <meyering@ascend.com>
+
+	* lib/safe-read.h: New file.
+	* lib/safe-read.c: Include it.
+	* src/cat.c: Include it instead of merely declaring safe_read.
+	* src/csplit.c: Likewise.
+	* src/head.c: Likewise.
+	* src/split.c: Likewise.
+	* src/sum.c: Likewise.
+	* src/tac.c: Likewise.
+	* src/tail.c: Likewise.
+	* src/tr.c: Likewise.
+	* src/wc.c: Likewise.
+
+	* lib/Makefile.am (noinst_HEADERS): Add safe-read.h.
+
+	* src/wc.c [HAVE_INTTYPES_H]: Include inttypes.h.
+	Declare counters to be of type uintmax_t.
+	(write_counts): Use human_readable to format potentially-long-long
+	numbers.  Suggestion from Rogier Wolff.
+	(wc): Declare per-file counters to be of type uintmax_t.
+	Declare bytes_read to be ssize_t.
+	* lib/Makefile.am (libtu_a_SOURCES): Add human.c.
+	(noinst_HEADERS): Add human.h.
+
+	* lib/human.c: New file.
+	* lib/human.h: New file.
+
 1998-04-04  Jim Meyering  <meyering@eng.ascend.com>
 
-	* Version 1.22e.
+	* configure.in (jm_AC_HEADER_INTTYPES_H): Use it.
+	(jm_AC_TYPE_UINTMAX_T): Use it.
+	(jm_PREREQ): Use it.
 
 	* Makefile.am (ACLOCAL_AMFLAGS): Define this, so automake/aclocal
 	know about the m4/ subdirectory.
