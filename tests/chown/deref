@@ -26,7 +26,7 @@ fi
 
 fail=0
 
-set _ `ls -ldg dangle`; shift; user=$3
+set _ `ls -ldo dangle`; shift; user=$3
 
 # With 5.2.1 and earlier, this command would mistakenly succeed.
 chown --dereference $user dangle 2> out1 && fail=1
