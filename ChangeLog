@@ -32,6 +32,9 @@
 	and the name of the next file to remove is `.'-relative.
 	(rm): Fail if the require_restore_cwd flag is true and we've
 	failed to restore the working directory.
+	* src/mv.c (rm_option_init): Initialize new member,
+	x->require_restore_cwd.
+	* src/rm.c (rm_option_init): Likewise.
 
 2004-05-21  Jim Meyering  <jim@meyering.net>
 
