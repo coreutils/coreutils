@@ -746,7 +746,7 @@ handle_line_error (const struct control *p, int repetition)
 {
   char buf[LONGEST_HUMAN_READABLE + 1];
 
-  fprintf (stderr, _("%s: `%d': line number out of range"),
+  fprintf (stderr, _("%s: `%s': line number out of range"),
 	   program_name, human_readable (p->lines_required, buf, 1, 1));
   if (repetition)
     fprintf (stderr, _(" on repetition %d\n"), repetition);
