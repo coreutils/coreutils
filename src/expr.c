@@ -341,7 +341,7 @@ toarith (VALUE *v)
     }
 }
 
-/* Return nonzero if the next token matches STR exactly.
+/* Return nonzero and advance if the next token matches STR exactly.
    STR must not be NULL.  */
 
 static int
@@ -349,7 +349,12 @@ nextarg (char *str)
 {
   if (*args == NULL)
     return 0;
-  return strcmp (*args, str) == 0;
+  else
+    {
+      int r = strcmp (*args, str) == 0;
+      args += r;
+      return r;
+    }
 }
 
 /* Return nonzero if there no more tokens.  */
@@ -453,11 +458,9 @@ eval7 (void)
 
   if (nextarg ("("))
     {
-      args++;
       v = eval ();
       if (!nextarg (")"))
 	error (2, 0, _("syntax error"));
-      args++;
       return v;
     }
 
@@ -483,14 +486,12 @@ eval6 (void)
 #endif
   if (!posixly_correct && nextarg ("quote"))
     {
-      args++;
       if (nomoreargs ())
 	error (2, 0, _("syntax error"));
       return str_value (*args++);
     }
   else if (nextarg ("length"))
     {
-      args++;
       r = eval6 ();
       tostring (r);
       v = int_value (strlen (r->u.s));
@@ -499,7 +500,6 @@ eval6 (void)
     }
   else if (nextarg ("match"))
     {
-      args++;
       l = eval6 ();
       r = eval6 ();
       v = docolon (l, r);
@@ -509,7 +509,6 @@ eval6 (void)
     }
   else if (nextarg ("index"))
     {
-      args++;
       l = eval6 ();
       r = eval6 ();
       tostring (l);
@@ -523,7 +522,6 @@ eval6 (void)
     }
   else if (nextarg ("substr"))
     {
-      args++;
       l = eval6 ();
       i1 = eval6 ();
       i2 = eval6 ();
@@ -567,7 +565,6 @@ eval5 (void)
     {
       if (nextarg (":"))
 	{
-	  args++;
 	  r = eval6 ();
 	  v = docolon (l, r);
 	  freev (l);
@@ -603,7 +600,6 @@ eval4 (void)
 	fxn = mod;
       else
 	return l;
-      args++;
       r = eval5 ();
       if (!toarith (l) || !toarith (r))
 	error (2, 0, _("non-numeric argument"));
@@ -643,7 +639,6 @@ eval3 (void)
 	fxn = minus;
       else
 	return l;
-      args++;
       r = eval4 ();
       if (!toarith (l) || !toarith (r))
 	error (2, 0, _("non-numeric argument"));
@@ -689,7 +684,6 @@ eval2 (void)
 	fxn = greater_than;
       else
 	return l;
-      args++;
       r = eval3 ();
       tostring (l);
       tostring (r);
@@ -732,7 +726,6 @@ eval1 (void)
     {
       if (nextarg ("&"))
 	{
-	  args++;
 	  r = eval2 ();
 	  if (null (l) || null (r))
 	    {
@@ -764,7 +757,6 @@ eval (void)
     {
       if (nextarg ("|"))
 	{
-	  args++;
 	  r = eval1 ();
 	  if (null (l))
 	    {
