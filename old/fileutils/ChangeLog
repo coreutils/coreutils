@@ -3,6 +3,8 @@
 	* Makefile.maint (wget-update): Have wget write to a temporary file,
 	and replace the original only if wget succeeds.
 	Also get ansi2nkr.c.
+	(move-if-change): Define.
+	(wget-update): Use it in place of mv.
 
 	* src/ls.c: Use `#if D_TYPE_IN_DIRENT && defined DTTOIF' to
 	determine whether to enable the DT_INIT definition, not the less
