@@ -1,4 +1,6 @@
 Changes in release 1.20
+ Changes in test release 1.19r
+* fix bug in csplit with regexp and negative offset that led to infinite loop
  Changes in test release 1.19q
 * fix bug in sort -c that sometimes resulted in a segfault
  Changes in test release 1.19p

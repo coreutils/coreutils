@@ -1,3 +1,11 @@
+Fri Nov 22 20:20:37 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/csplit.c (process_regexp): Update CURRENT_LINE only if
+	the new value would be larger.  This avoids the infinite loop
+	otherwise provoked by situations like this:
+	printf "\na\n" | csplit - '/a/-1' '{*}'
+	From Jens Schmidt.
+
 Tue Nov 19 23:16:57 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (AM_SANITY_CHECK_CC): Remove it.  Autoconf-2.11
