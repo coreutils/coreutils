@@ -1,3 +1,8 @@
+Sun Jul 14 20:05:34 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/who-users.c (print_uptime): Use 0, not undefined errno in
+	couldn't-get-boot-time diagnostic.  From Ulrich Drepper.
+
 Sat Jul 13 14:22:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/chroot.c (usage): Add a `\' after `\n' in usage message.
