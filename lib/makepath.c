@@ -116,6 +116,7 @@ extern int errno;
 
 #include "save-cwd.h"
 #include "error.h"
+#include "quote.h"
 
 void strip_trailing_slashes ();
 
@@ -173,12 +174,13 @@ make_dir (const char *dir, const char *dirpath, mode_t mode, int *created_dir_p)
 
       if (stat (dir, &stats))
 	{
-	  error (0, saved_errno, _("cannot create directory `%s'"), dirpath);
+	  error (0, saved_errno, _("cannot create directory %s"),
+		 quote (dirpath));
 	  fail = 1;
 	}
       else if (!S_ISDIR (stats.st_mode))
 	{
-	  error (0, 0, _("`%s' exists but is not a directory"), dirpath);
+	  error (0, 0, _("%s exists but is not a directory"), quote (dirpath));
 	  fail = 1;
 	}
       else
@@ -307,7 +309,7 @@ make_path (const char *argpath,
 	  if (newly_created_dir)
 	    {
 	      if (verbose_fmt_string)
-		error (0, 0, verbose_fmt_string, dirpath);
+		error (0, 0, verbose_fmt_string, quote (dirpath));
 
 	      if ((owner != (uid_t) -1 || group != (gid_t) -1)
 		  && chown (basename_dir, owner, group)
@@ -316,7 +318,8 @@ make_path (const char *argpath,
 #endif
 		  )
 		{
-		  error (0, errno, "%s", dirpath);
+		  error (0, errno, _("cannot change owner and/or group of %s"),
+			 quote (dirpath));
 		  CLEANUP;
 		  return 1;
 		}
@@ -337,7 +340,8 @@ make_path (const char *argpath,
 	     stat and mkdir process O(n^2) file name components.  */
 	  if (do_chdir && chdir (basename_dir) < 0)
 	    {
-	      error (0, errno, _("cannot chdir to directory, %s"), dirpath);
+	      error (0, errno, _("cannot chdir to directory, %s"),
+		     quote (dirpath));
 	      CLEANUP;
 	      return 1;
 	    }
@@ -376,7 +380,8 @@ make_path (const char *argpath,
 #endif
 	      )
 	    {
-	      error (0, errno, _("cannot chown %s"), dirpath);
+	      error (0, errno, _("cannot change owner and/or group of %s"),
+		     quote (dirpath));
 	      retval = 1;
 	    }
 	}
@@ -389,7 +394,7 @@ make_path (const char *argpath,
       if ((mode & ~S_IRWXUGO)
 	  && chmod (basename_dir, mode))
 	{
-	  error (0, errno, _("cannot chmod %s"), dirpath);
+	  error (0, errno, _("cannot change permissions of %s"), quote (dirpath));
 	  retval = 1;
 	}
 
@@ -403,7 +408,8 @@ make_path (const char *argpath,
 	  *(p->dirname_end) = '\0';
 	  if (chmod (dirpath, parent_mode))
 	    {
-	      error (0, errno, "%s", dirpath);
+	      error (0, errno, "cannot change permissions of %s",
+		     quote (dirpath));
 	      retval = 1;
 	    }
 	}
@@ -416,7 +422,7 @@ make_path (const char *argpath,
 
       if (!S_ISDIR (stats.st_mode))
 	{
-	  error (0, 0, _("`%s' exists but is not a directory"), dirpath);
+	  error (0, 0, _("%s exists but is not a directory"), quote (dirpath));
 	  return 1;
 	}
 
@@ -435,12 +441,14 @@ make_path (const char *argpath,
 #endif
 	      )
 	    {
-	      error (0, errno, "%s", dirpath);
+	      error (0, errno, _("cannot change owner and/or group of %s"),
+		     quote (dirpath));
 	      retval = 1;
 	    }
 	  if (chmod (dirpath, mode))
 	    {
-	      error (0, errno, "%s", dirpath);
+	      error (0, errno, _("cannot change permissions of %s"),
+				 quote (dirpath));
 	      retval = 1;
 	    }
 	}
