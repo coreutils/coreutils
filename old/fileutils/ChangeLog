@@ -1,6 +1,11 @@
-2001-10-22  Paul Eggert  <eggert@twinsun.com>
+2001-10-24  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.1.
+
+	* src/cp.c (main): Free hash table storage.
+	* src/cp-hash.c (forget_all): Use hash_free, not hash_clear.
+
+2001-10-22  Paul Eggert  <eggert@twinsun.com>
 
 	* src/sys2.h (alloca): Define to __builtin_alloca if __GNUC__,
 	to avoid a warning if -Wall.
