@@ -1,5 +1,5 @@
 /* obstack.h - object stack macros
-   Copyright (C) 1988,89,90,91,92,93,94,96,97,98,99 Free Software Foundation, Inc.
+   Copyright (C) 1988,89,90,91,92,93,94,96,97,98,99,2003 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
@@ -123,7 +123,11 @@ extern "C" {
 #endif
 
 #ifndef __INT_TO_PTR
+#if defined __STDC__ && __STDC__
+# define __INT_TO_PTR(P) ((void *) ((P) + (char *) 0))
+#else
 # define __INT_TO_PTR(P) ((P) + (char *) 0)
+#endif
 #endif
 
 /* We need the type of the resulting object.  If __PTRDIFF_TYPE__ is
