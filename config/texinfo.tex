@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2002-03-13.06}
+\def\texinfoversion{2002-03-26.07}
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99,
 %               2000, 01, 02 Free Software Foundation, Inc.
@@ -53,7 +53,7 @@
 %   texindex foo.??
 %   tex foo.texi
 %   tex foo.texi
-%   dvips foo.dvi -o # or whatever, to process the dvi file; this makes foo.ps.
+%   dvips foo.dvi -o  # or whatever; this makes foo.ps.
 % The extra TeX runs get the cross-reference information correct.
 % Sometimes one run after texindex suffices, and sometimes you need more
 % than two; texi2dvi does it as many times as necessary.
@@ -2425,8 +2425,9 @@ width0pt\relax} \fi
 \def\ifnottex{\doignore{ifnottex}}
 \def\html{\doignore{html}}
 \def\menu{\doignore{menu}}
-\def\documentdescription{\doignore{documentdescription}}
 \def\direntry{\doignore{direntry}}
+\def\documentdescription{\doignore{documentdescription}}
+\def\documentdescriptionword{documentdescription}
 
 % @dircategory CATEGORY  -- specify a category of the dir file
 % which this file should belong to.  Ignore this in TeX.
@@ -2453,14 +2454,21 @@ width0pt\relax} \fi
   % We must not have @c interpreted as a control sequence.
   \catcode`\@ = 12
   %
-  % Make the letter c a comment character so that the rest of the line
-  % will be ignored. This way, the document can have (for example)
-  %   @c @end ifinfo
-  % and the @end ifinfo will be properly ignored.
-  % (We've just changed @ to catcode 12.)
-  \catcode`\c = 14
+  \def\ignoreword{#1}%
+  \ifx\ignoreword\documentdescriptionword
+    % The c kludge breaks documentdescription, since
+    % `documentdescription' contains a `c'.  Means not everything will
+    % be ignored inside @documentdescription, but oh well...
+  \else
+    % Make the letter c a comment character so that the rest of the line
+    % will be ignored. This way, the document can have (for example)
+    %   @c @end ifinfo
+    % and the @end ifinfo will be properly ignored.
+    % (We've just changed @ to catcode 12.)
+    \catcode`\c = 14
+  \fi
   %
-  % And now expand that command.
+  % And now expand the command defined above.
   \doignoretext
 }
 
@@ -4140,36 +4148,27 @@ width0pt\relax} \fi
 \message{environments,}
 % @foo ... @end foo.
 
+% @point{}, @result{}, @expansion{}, @print{}, @equiv{}.
+% 
 % Since these characters are used in examples, it should be an even number of
 % \tt widths. Each \tt character is 1en, so two makes it 1em.
-% Furthermore, these definitions must come after we define our fonts.
-\newbox\dblarrowbox    \newbox\longdblarrowbox
-\newbox\pushcharbox    \newbox\bullbox
-\newbox\equivbox       \newbox\errorbox
-
-%{\tentt
-%\global\setbox\dblarrowbox = \hbox to 1em{\hfil$\Rightarrow$\hfil}
-%\global\setbox\longdblarrowbox = \hbox to 1em{\hfil$\mapsto$\hfil}
-%\global\setbox\pushcharbox = \hbox to 1em{\hfil$\dashv$\hfil}
-%\global\setbox\equivbox = \hbox to 1em{\hfil$\ptexequiv$\hfil}
-% Adapted from the manmac format (p.420 of TeXbook)
-%\global\setbox\bullbox = \hbox to 1em{\kern.15em\vrule height .75ex width .85ex
-%                                      depth .1ex\hfil}
-%}
-
-% @point{}, @result{}, @expansion{}, @print{}, @equiv{}.
+%
 \def\point{$\star$}
 \def\result{\leavevmode\raise.15ex\hbox to 1em{\hfil$\Rightarrow$\hfil}}
 \def\expansion{\leavevmode\raise.1ex\hbox to 1em{\hfil$\mapsto$\hfil}}
 \def\print{\leavevmode\lower.1ex\hbox to 1em{\hfil$\dashv$\hfil}}
 \def\equiv{\leavevmode\lower.1ex\hbox to 1em{\hfil$\ptexequiv$\hfil}}
 
+% The @error{} command.
 % Adapted from the TeXbook's \boxit.
+% 
+\newbox\errorbox
+%
 {\tentt \global\dimen0 = 3em}% Width of the box.
 \dimen2 = .55pt % Thickness of rules
 % The text. (`r' is open on the right, `e' somewhat less so on the left.)
 \setbox0 = \hbox{\kern-.75pt \tensf error\kern-1.5pt}
-
+%
 \global\setbox\errorbox=\hbox to \dimen0{\hfil
    \hsize = \dimen0 \advance\hsize by -5.8pt % Space to left+right.
    \advance\hsize by -2\dimen2 % Rules.
@@ -4180,8 +4179,7 @@ width0pt\relax} \fi
          \kern3pt\vrule width\dimen2}% Space to right.
       \hrule height\dimen2}
     \hfil}
-
-% The @error{} command.
+%
 \def\error{\leavevmode\lower.7ex\copy\errorbox}
 
 % @tex ... @end tex    escapes into raw Tex temporarily.
@@ -4221,9 +4219,9 @@ width0pt\relax} \fi
   \def\@{@}%
 \let\Etex=\endgroup}
 
-% Define @lisp ... @endlisp.
+% Define @lisp ... @end lisp.
 % @lisp does a \begingroup so it can rebind things,
-% including the definition of @endlisp (which normally is erroneous).
+% including the definition of @end lisp (which normally is erroneous).
 
 % Amount to narrow the margins by for @lisp.
 \newskip\lispnarrowing \lispnarrowing=0.4in
@@ -4620,6 +4618,21 @@ width0pt\relax} \fi
   \expandafter\expandafter\setupverbatiminclude\input\thisfile
   \endgroup\nonfillfinish\endgroup
 }
+
+% @copying ... @end copying.
+% Save the text away for @insertcopying later.
+% 
+\newbox\copyingbox
+%
+\def\copying{\begingroup
+  \parindent = 0pt  % looks wrong on title page
+  \def\Ecopying{\egroup\endgroup}%
+  \global\setbox\copyingbox = \vbox\bgroup
+}
+
+% @insertcopying.
+% 
+\def\insertcopying{\unvcopy\copyingbox}
 
 
 \message{defuns,}
