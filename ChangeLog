@@ -1,6 +1,13 @@
-2005-03-11  Jim Meyering  <jim@meyering.net>
+2005-03-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* src/ls.c (TIME_STAMP_LEN_MAXIMUM): New constant.
+	(long_time_expected_width, print_long_format): Use it, to avoid
+	some possible denial-of-service attacks.
+	* NEWS: Document this.
+
+2005-03-11  Jim Meyering  <jim@meyering.net>
 
 	Prompt once again for `mv -i A B' when A and B are hard links
 	to the same file.  This fixes a bug introduced by my 2003-04-04
