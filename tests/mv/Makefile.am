@@ -2,6 +2,7 @@
 AUTOMAKE_OPTIONS = 1.3 gnits
 
 TESTS = \
+  part-hardlink \
   hard-4 \
   hard-3 \
   hard-2 \
