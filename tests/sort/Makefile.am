@@ -1,8 +1,7 @@
 ## Process this file with automake to produce Makefile.in.
 
-x = sort
-
 ##test-files-begin
+x = sort
 explicit =
 maint_gen = t01a.in t01a.exp t02a.in t02a.exp t02b.in t02b.exp t02c.in \
 t02c.exp t02d.in t02d.exp t02e.in t02e.exp t02f.in t02f.exp t03a.in t03a.exp \
@@ -70,7 +69,10 @@ CLEANFILES = $(run_gen)
 
 @MAINT@rebuild-check: Test.pm mk-script
 @MAINT@	rb=rb-check; rm -f $rb; \
-@MAINT@	sed -n '1,/^##test-files-begin/p' Makefile.am > $$rb; \
+@MAINT@	m_template=../Makefile.am.in; \
+@MAINT@	sed -n '1,/^##test-files-begin/p' $$m_template > $$rb; \
+@MAINT@	tool=`echo $(subdir)|sed 's/^tests.//;s/-test//'`; \
+@MAINT@	echo "x = $$tool" >> $$rb; \
 @MAINT@	./mk-script --list >> $$rb; \
-@MAINT@	sed -n '/^##test-files-end/,$$p' Makefile.am >> $$rb; \
+@MAINT@	sed -n '/^##test-files-end/,$$p' $$m_template >> $$rb; \
 @MAINT@	diff -u Makefile.am $$rb && echo ok || echo no
