@@ -227,7 +227,7 @@ main (int argc, char **argv)
 {
   int optc;
   int errors = 0;
-  char *symbolic_mode = NULL;
+  const char *symbolic_mode = NULL;
   int make_backups = 0;
   char *version;
   int mkdir_and_install = 0;
