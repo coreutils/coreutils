@@ -1,4 +1,4 @@
-#serial 13
+#serial 14
 
 dnl This macro is intended to be used solely in this file.
 dnl These are the prerequisite macros for GNU's strftime.c replacement.
@@ -16,7 +16,7 @@ AC_DEFUN(_jm_STRFTIME_PREREQS,
 
  AC_CHECK_FUNCS(mblen mbrlen)
 
- AC_CHECK_MEMBER(struct tm.tm_gmtoff,
+ AC_CHECK_MEMBER([struct tm.tm_gmtoff],
                  [AC_DEFINE(HAVE_TM_GMTOFF, 1,
                             [Define if struct tm has the tm_gmtoff member.])],
                  ,
