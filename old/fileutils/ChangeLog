@@ -2,6 +2,8 @@
 
 	* Version 4.0.36.
 
+	* depcomp: New version, from automake.
+
 2001-01-10  Jim Meyering  <meyering@lucent.com>
 
 	* src/copy.c (copy_internal): Add a comment.
