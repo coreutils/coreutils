@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: coreutils 4.5.7\n"
-"POT-Creation-Date: 2003-02-08 21:32+0100\n"
+"POT-Creation-Date: 2003-02-21 18:14+0100\n"
 "PO-Revision-Date: 2003-02-16 17:20+0200\n"
 "Last-Translator: Lauri Nurmi <lanurmi@iki.fi>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
@@ -39,7 +39,7 @@ msgid "stack overflow"
 msgstr "pinon ylivuoto"
 
 #: lib/closeout.c:103 src/cat.c:189 src/cat.c:272 src/cat.c:326
-#: src/cksum.c:267 src/head.c:152 src/head.c:196 src/tail.c:323
+#: src/cksum.c:269 src/head.c:152 src/head.c:196 src/tail.c:323
 #: src/tail.c:1659 src/tr.c:1666 src/tr.c:1912 src/tr.c:2020
 msgid "write error"
 msgstr "kirjotuksenaikainen virhe"
@@ -160,7 +160,7 @@ msgstr "lohkokoko"
 msgid "cannot create directory %s"
 msgstr "hakemiston %s luominen ei onnistu"
 
-#: lib/makepath.c:173 lib/makepath.c:415 src/cp.c:446 src/cp.c:468
+#: lib/makepath.c:173 lib/makepath.c:415 src/cp.c:444 src/cp.c:466
 #, c-format
 msgid "%s exists but is not a directory"
 msgstr "%s on olemassa, mutta se ei ole hakemisto"
@@ -179,6 +179,10 @@ msgstr "siirtyminen hakemistoon %s ei onnistu"
 #, c-format
 msgid "cannot change permissions of %s"
 msgstr "%s:n oikeuksien muuttaminen ei onnistu"
+
+#: lib/mmap-stack.h:31 lib/mmap-stack.h:45
+msgid "warning: unable to use large stack"
+msgstr ""
 
 #: lib/obstack.c:487 lib/obstack.c:490 lib/xmalloc.c:63
 msgid "memory exhausted"
@@ -267,9 +271,9 @@ msgid "The strings compared were %s and %s."
 msgstr "Vertaillut merkkijonot olivat %s ja %s."
 
 #: src/basename.c:50 src/cat.c:88 src/chgrp.c:122 src/chmod.c:238
-#: src/chown.c:95 src/chroot.c:41 src/cksum.c:276 src/comm.c:69 src/cp.c:160
-#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:719
-#: src/dircolors.c:99 src/dirname.c:42 src/du.c:167 src/echo.c:73
+#: src/chown.c:95 src/chroot.c:41 src/cksum.c:278 src/comm.c:69 src/cp.c:158
+#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:711
+#: src/dircolors.c:99 src/dirname.c:42 src/du.c:174 src/echo.c:73
 #: src/env.c:115 src/expand.c:106 src/expr.c:86 src/factor.c:70 src/fmt.c:267
 #: src/fold.c:63 src/head.c:84 src/hostid.c:44 src/hostname.c:63 src/id.c:83
 #: src/install.c:593 src/join.c:140 src/kill.c:89 src/link.c:47 src/ln.c:335
@@ -278,9 +282,9 @@ msgstr "Vertaillut merkkijonot olivat %s ja %s."
 #: src/od.c:283 src/paste.c:399 src/pathchk.c:142 src/pinky.c:465
 #: src/pr.c:2750 src/printenv.c:59 src/printf.c:93 src/ptx.c:1855 src/pwd.c:42
 #: src/readlink.c:65 src/rm.c:95 src/rmdir.c:142 src/seq.c:78 src/shred.c:156
-#: src/sleep.c:59 src/sort.c:272 src/split.c:91 src/stat.c:675 src/stty.c:494
+#: src/sleep.c:59 src/sort.c:272 src/split.c:92 src/stat.c:679 src/stty.c:494
 #: src/su.c:433 src/sum.c:56 src/sync.c:40 src/tac.c:123 src/tail.c:230
-#: src/tee.c:59 src/test.c:985 src/touch.c:240 src/tr.c:323 src/tsort.c:93
+#: src/tee.c:59 src/test.c:975 src/touch.c:240 src/tr.c:323 src/tsort.c:93
 #: src/tty.c:58 src/uname.c:106 src/unexpand.c:371 src/uniq.c:135
 #: src/unlink.c:47 src/uptime.c:187 src/users.c:114 src/wc.c:121 src/who.c:570
 #: src/whoami.c:48 src/yes.c:45
@@ -308,20 +312,20 @@ msgstr ""
 "\n"
 
 #: src/basename.c:66 src/cat.c:124 src/chgrp.c:152 src/chmod.c:264
-#: src/chown.c:139 src/chroot.c:59 src/cksum.c:291 src/comm.c:86 src/cp.c:257
-#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:758
-#: src/dircolors.c:120 src/dirname.c:58 src/du.c:212 src/echo.c:105
+#: src/chown.c:139 src/chroot.c:59 src/cksum.c:293 src/comm.c:86 src/cp.c:255
+#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:750
+#: src/dircolors.c:120 src/dirname.c:58 src/du.c:223 src/echo.c:105
 #: src/env.c:134 src/expand.c:131 src/expr.c:149 src/factor.c:90
 #: src/false.c:45 src/fmt.c:297 src/fold.c:86 src/head.c:115 src/hostid.c:57
-#: src/hostname.c:76 src/id.c:104 src/install.c:648 src/join.c:180
+#: src/hostname.c:76 src/id.c:104 src/install.c:648 src/join.c:181
 #: src/kill.c:119 src/link.c:59 src/ln.c:390 src/logname.c:55 src/ls.c:3891
 #: src/md5sum.c:157 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:82 src/mv.c:361
 #: src/nice.c:77 src/nl.c:227 src/od.c:370 src/paste.c:423 src/pathchk.c:154
 #: src/pinky.c:492 src/pr.c:2862 src/printenv.c:72 src/printf.c:141
 #: src/pwd.c:53 src/readlink.c:82 src/rm.c:127 src/rmdir.c:162 src/seq.c:104
-#: src/shred.c:219 src/sleep.c:75 src/sort.c:343 src/split.c:123
-#: src/stat.c:745 src/stty.c:708 src/su.c:454 src/sum.c:76 src/sync.c:51
-#: src/tac.c:146 src/tail.c:300 src/tee.c:72 src/test.c:1067 src/touch.c:271
+#: src/shred.c:219 src/sleep.c:75 src/sort.c:343 src/split.c:124
+#: src/stat.c:750 src/stty.c:708 src/su.c:454 src/sum.c:76 src/sync.c:51
+#: src/tac.c:146 src/tail.c:300 src/tee.c:72 src/test.c:1057 src/touch.c:271
 #: src/tr.c:396 src/true.c:45 src/tsort.c:105 src/tty.c:70 src/uname.c:128
 #: src/unexpand.c:395 src/uniq.c:174 src/unlink.c:58 src/uptime.c:202
 #: src/users.c:127 src/wc.c:143 src/who.c:613 src/whoami.c:60 src/yes.c:61
@@ -337,19 +341,19 @@ msgstr ""
 #: src/chroot.c:78 src/csplit.c:1464 src/dirname.c:89 src/expr.c:178
 #: src/install.c:284 src/link.c:87 src/mkdir.c:124 src/mkfifo.c:113
 #: src/mknod.c:137 src/pathchk.c:194 src/readlink.c:101 src/readlink.c:133
-#: src/rm.c:199 src/rmdir.c:206 src/seq.c:411 src/sleep.c:150 src/stat.c:796
+#: src/rm.c:199 src/rmdir.c:206 src/seq.c:411 src/sleep.c:150 src/stat.c:801
 #: src/unlink.c:88
 msgid "too few arguments"
 msgstr "liian vähän parametrejä"
 
 #: src/basename.c:115 src/dircolors.c:482 src/dirname.c:90 src/hostid.c:79
 #: src/hostname.c:122 src/link.c:93 src/mknod.c:139 src/readlink.c:141
-#: src/seq.c:417 src/split.c:503 src/tr.c:1848 src/unlink.c:94
+#: src/seq.c:417 src/split.c:502 src/tr.c:1848 src/unlink.c:94
 #: src/uptime.c:244 src/users.c:169 src/who.c:764
 msgid "too many arguments"
 msgstr "Liikaa parametrejä"
 
-#: src/cat.c:42 src/split.c:42
+#: src/cat.c:42 src/split.c:43
 msgid "Torbjorn Granlund and Richard M. Stallman"
 msgstr ""
 
@@ -452,7 +456,8 @@ msgstr ""
 
 #: src/chgrp.c:138 src/chown.c:112
 msgid ""
-"  -h, --no-dereference   affect symbolic links instead of any referenced file\n"
+"  -h, --no-dereference   affect symbolic links instead of any referenced "
+"file\n"
 "                         (available only on systems that can change the\n"
 "                         ownership of a symlink)\n"
 msgstr ""
@@ -467,7 +472,7 @@ msgid ""
 msgstr ""
 
 #: src/chgrp.c:218 src/chmod.c:157 src/chmod.c:365 src/chown-core.c:235
-#: src/chown-core.c:247 src/chown.c:220 src/cp.c:303 src/touch.c:169
+#: src/chown-core.c:247 src/chown.c:220 src/cp.c:301 src/touch.c:169
 #: src/touch.c:363
 #, c-format
 msgid "failed to get attributes of %s"
@@ -513,7 +518,8 @@ msgstr ""
 msgid ""
 "Change the mode of each FILE to MODE.\n"
 "\n"
-"  -c, --changes           like verbose but report only when a change is made\n"
+"  -c, --changes           like verbose but report only when a change is "
+"made\n"
 "  -f, --silent, --quiet   suppress most error messages\n"
 "  -v, --verbose           output a diagnostic for every file processed\n"
 "      --reference=RFILE   use RFILE's mode instead of MODE values\n"
@@ -611,8 +617,10 @@ msgstr ""
 msgid ""
 "      --from=CURRENT_OWNER:CURRENT_GROUP\n"
 "                         change the owner and/or group of each file only if\n"
-"                         its current owner and/or group match those specified\n"
-"                         here.  Either may be omitted, in which case a match\n"
+"                         its current owner and/or group match those "
+"specified\n"
+"                         here.  Either may be omitted, in which case a "
+"match\n"
 "                         is not required for the omitted attribute.\n"
 msgstr ""
 
@@ -672,7 +680,7 @@ msgstr "työhakemiston vaihto juurihakemistoksi ei onnistu"
 msgid "%s: file too long"
 msgstr "%s: liian pitkä tiedosto"
 
-#: src/cksum.c:280
+#: src/cksum.c:282
 #, c-format
 msgid ""
 "Usage: %s [FILE]...\n"
@@ -681,7 +689,7 @@ msgstr ""
 "Käyttö: %s [TIEDOSTO]...\n"
 "  tai:  %s [VALITSIN]\n"
 
-#: src/cksum.c:285
+#: src/cksum.c:287
 msgid ""
 "Print CRC checksum and byte counts of each FILE.\n"
 "\n"
@@ -707,7 +715,7 @@ msgid ""
 "  -3              suppress lines that appear in both files\n"
 msgstr ""
 
-#: src/copy.c:162 src/du.c:334
+#: src/copy.c:162 src/du.c:335
 #, fuzzy, c-format
 msgid "cannot access %s"
 msgstr "ryhmien asetus ei onnistu"
@@ -768,7 +776,7 @@ msgstr ""
 msgid "%s: overwrite %s? "
 msgstr ""
 
-#: src/copy.c:810 src/copy.c:848 src/stat.c:633
+#: src/copy.c:810 src/copy.c:848 src/stat.c:637
 #, fuzzy, c-format
 msgid "cannot stat %s"
 msgstr "ajan asetus ei onnistu"
@@ -861,7 +869,8 @@ msgstr "nimen \"%s\" asetus järjestelmälle ei onnistu"
 #: src/copy.c:1223
 #, c-format
 msgid "inter-device move failed: %s to %s; unable to remove target"
-msgstr "laitteiden välinen siirot epäonnistui: %s -> %s; kohdetta ei voi poistaa"
+msgstr ""
+"laitteiden välinen siirot epäonnistui: %s -> %s; kohdetta ei voi poistaa"
 
 #: src/copy.c:1251
 #, c-format
@@ -903,7 +912,7 @@ msgstr "symbolista linkkiä %s ei voi lukea"
 msgid "cannot create symbolic link %s"
 msgstr "symbolisen linkin %s luominen ei onnistu"
 
-#: src/copy.c:1438 src/copy.c:1501 src/cp.c:339
+#: src/copy.c:1438 src/copy.c:1501 src/cp.c:337
 #, c-format
 msgid "failed to preserve ownership for %s"
 msgstr ""
@@ -938,12 +947,12 @@ msgstr ""
 msgid "%s -> %s (unbackup)\n"
 msgstr ""
 
-#: src/cp.c:53
+#: src/cp.c:54
 #, fuzzy
 msgid "Torbjorn Granlund, David MacKenzie, and Jim Meyering"
 msgstr "David MacKenzie ja Jim Meyering"
 
-#: src/cp.c:164 src/mv.c:311
+#: src/cp.c:162 src/mv.c:311
 #, fuzzy, c-format
 msgid ""
 "Usage: %s [OPTION]... SOURCE DEST\n"
@@ -954,32 +963,37 @@ msgstr ""
 "  tai:  %s [VALITSIN]... ALKU LOPPU\n"
 "  tai:  %s [VALITSIN]... ALKU LISÄYS LOPPU\n"
 
-#: src/cp.c:170
+#: src/cp.c:168
 msgid ""
 "Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n"
 "\n"
 msgstr ""
 
-#: src/cp.c:174 src/csplit.c:1505 src/cut.c:182 src/df.c:729 src/du.c:176
+#: src/cp.c:172 src/csplit.c:1505 src/cut.c:182 src/df.c:721 src/du.c:183
 #: src/expand.c:119 src/fmt.c:277 src/fold.c:76 src/head.c:98
 #: src/install.c:609 src/kill.c:103 src/ln.c:354 src/ls.c:3767 src/mkdir.c:66
 #: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:321 src/nl.c:185 src/paste.c:413
-#: src/pr.c:2763 src/ptx.c:1867 src/shred.c:166 src/sort.c:286 src/split.c:104
+#: src/pr.c:2763 src/ptx.c:1867 src/shred.c:166 src/sort.c:286 src/split.c:105
 #: src/tac.c:136 src/tail.c:244 src/touch.c:249 src/unexpand.c:384
 #: src/uniq.c:148
-msgid "Mandatory arguments to long options are mandatory for short options too.\n"
-msgstr "Pitkien valitsinten pakolliset argumentit ovat pakollisia myös lyhyille.\n"
+msgid ""
+"Mandatory arguments to long options are mandatory for short options too.\n"
+msgstr ""
+"Pitkien valitsinten pakolliset argumentit ovat pakollisia myös lyhyille.\n"
 
-#: src/cp.c:177
+#: src/cp.c:175
 msgid ""
 "  -a, --archive                same as -dpR\n"
-"      --backup[=CONTROL]       make a backup of each existing destination file\n"
-"  -b                           like --backup but does not accept an argument\n"
-"      --copy-contents          copy contents of special files when recursive\n"
+"      --backup[=CONTROL]       make a backup of each existing destination "
+"file\n"
+"  -b                           like --backup but does not accept an "
+"argument\n"
+"      --copy-contents          copy contents of special files when "
+"recursive\n"
 "  -d                           same as --no-dereference --preserve=link\n"
 msgstr ""
 
-#: src/cp.c:184
+#: src/cp.c:182
 msgid ""
 "      --no-dereference         never follow symbolic links\n"
 "  -f, --force                  if an existing destination file cannot be\n"
@@ -988,7 +1002,7 @@ msgid ""
 "  -H                           follow command-line symbolic links\n"
 msgstr ""
 
-#: src/cp.c:191
+#: src/cp.c:189
 msgid ""
 "  -l, --link                   link files instead of copying\n"
 "  -L, --dereference            always follow symbolic links\n"
@@ -998,21 +1012,22 @@ msgid ""
 "                                 additional attributes: links, all\n"
 msgstr ""
 
-#: src/cp.c:199
+#: src/cp.c:197
 msgid ""
 "      --no-preserve=ATTR_LIST  don't preserve the specified attributes\n"
 "      --parents                append source path to DIRECTORY\n"
 "  -P                           same as `--no-dereference'\n"
 msgstr ""
 
-#: src/cp.c:204
+#: src/cp.c:202
 msgid ""
 "  -R, -r, --recursive          copy directories recursively\n"
 "      --remove-destination     remove each existing destination file before\n"
-"                                 attempting to open it (contrast with --force)\n"
+"                                 attempting to open it (contrast with --"
+"force)\n"
 msgstr ""
 
-#: src/cp.c:209
+#: src/cp.c:207
 msgid ""
 "      --reply={yes,no,query}   specify how to handle the prompt about an\n"
 "                                 existing destination file\n"
@@ -1021,14 +1036,15 @@ msgid ""
 "                                 argument\n"
 msgstr ""
 
-#: src/cp.c:216
+#: src/cp.c:214
 msgid ""
 "  -s, --symbolic-link          make symbolic links instead of copying\n"
 "  -S, --suffix=SUFFIX          override the usual backup suffix\n"
-"      --target-directory=DIRECTORY  move all SOURCE arguments into DIRECTORY\n"
+"      --target-directory=DIRECTORY  move all SOURCE arguments into "
+"DIRECTORY\n"
 msgstr ""
 
-#: src/cp.c:221
+#: src/cp.c:219
 msgid ""
 "  -u, --update                 copy only when the SOURCE file is newer\n"
 "                                 than the destination file or when the\n"
@@ -1037,26 +1053,28 @@ msgid ""
 "  -x, --one-file-system        stay on this file system\n"
 msgstr ""
 
-#: src/cp.c:230
+#: src/cp.c:228
 msgid ""
 "\n"
 "By default, sparse SOURCE files are detected by a crude heuristic and the\n"
 "corresponding DEST file is made sparse as well.  That is the behavior\n"
 "selected by --sparse=auto.  Specify --sparse=always to create a sparse DEST\n"
-"file whenever the SOURCE file contains a long enough sequence of zero bytes.\n"
+"file whenever the SOURCE file contains a long enough sequence of zero "
+"bytes.\n"
 "Use --sparse=never to inhibit creation of sparse files.\n"
 "\n"
 msgstr ""
 
-#: src/cp.c:239
+#: src/cp.c:237
 msgid ""
 "The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n"
-"The version control method may be selected via the --backup option or through\n"
+"The version control method may be selected via the --backup option or "
+"through\n"
 "the VERSION_CONTROL environment variable.  Here are the values:\n"
 "\n"
 msgstr ""
 
-#: src/cp.c:245 src/install.c:642 src/ln.c:384 src/mv.c:355
+#: src/cp.c:243 src/install.c:642 src/ln.c:384 src/mv.c:355
 msgid ""
 "  none, off       never make backups (even if --backup is given)\n"
 "  numbered, t     make numbered backups\n"
@@ -1064,7 +1082,7 @@ msgid ""
 "  simple, never   always make simple backups\n"
 msgstr ""
 
-#: src/cp.c:251
+#: src/cp.c:249
 msgid ""
 "\n"
 "As a special case, cp makes a backup of SOURCE when the force and backup\n"
@@ -1072,65 +1090,67 @@ msgid ""
 "regular file.\n"
 msgstr ""
 
-#: src/cp.c:325
+#: src/cp.c:323
 #, c-format
 msgid "failed to preserve times for %s"
 msgstr ""
 
-#: src/cp.c:349
+#: src/cp.c:347
 #, fuzzy, c-format
 msgid "failed to preserve permissions for %s"
 msgstr "%s:n oikeuksien muuttaminen ei onnistu"
 
-#: src/cp.c:434
+#: src/cp.c:432
 #, c-format
 msgid "cannot make directory %s"
 msgstr "hakemiston %s luominen ei onnistu"
 
-#: src/cp.c:493 src/ln.c:490 src/mv.c:459 src/shred.c:1599
+#: src/cp.c:491 src/ln.c:490 src/mv.c:459 src/shred.c:1599
 #, fuzzy
 msgid "missing file argument"
 msgstr "\"%s\" vaatii argumentin"
 
-#: src/cp.c:498
+#: src/cp.c:496
 msgid "missing destination file"
 msgstr "puuttuva kohdetiedosto"
 
-#: src/cp.c:523 src/ln.c:161 src/ln.c:183 src/ln.c:210 src/ln.c:297
+#: src/cp.c:521 src/ln.c:161 src/ln.c:183 src/ln.c:210 src/ln.c:297
 #, c-format
 msgid "accessing %s"
 msgstr ""
 
-#: src/cp.c:546
+#: src/cp.c:544
 #, fuzzy, c-format
 msgid "%s: specified target is not a directory"
 msgstr "%s on olemassa, mutta se ei ole hakemisto"
 
-#: src/cp.c:554
+#: src/cp.c:552
 #, c-format
 msgid "copying multiple files, but last argument %s is not a directory"
-msgstr "kopioidaan useita tiedostoja, mutta viimeinen argumentti %s ei ole hakemisto"
+msgstr ""
+"kopioidaan useita tiedostoja, mutta viimeinen argumentti %s ei ole hakemisto"
 
-#: src/cp.c:652
+#: src/cp.c:650
 msgid "when preserving paths, the destination must be a directory"
 msgstr ""
 
-#: src/cp.c:878 src/install.c:219 src/ln.c:434 src/mv.c:405
+#: src/cp.c:895 src/install.c:219 src/ln.c:434 src/mv.c:405
 #, fuzzy, c-format
 msgid ""
 "warning: --version-control (-V) is obsolete;  support for it\n"
 "will be removed in some future release.  Use --backup=%s instead."
-msgstr "Varoitus: -i poistetaan tulevassa julkaisussa;   käytä -u:ta sen sijaan"
+msgstr ""
+"Varoitus: -i poistetaan tulevassa julkaisussa;   käytä -u:ta sen sijaan"
 
-#: src/cp.c:972 src/ln.c:464
+#: src/cp.c:989 src/ln.c:464
 msgid "symbolic links are not supported on this system"
 msgstr "tämä järjestelmä ei tue symbolisia linkkejä"
 
-#: src/cp.c:1008
+#: src/cp.c:1025
 msgid "cannot make both hard and symbolic links"
 msgstr ""
 
-#: src/cp.c:1016 src/install.c:275 src/ln.c:530 src/mv.c:483
+#: src/cp.c:1033 src/install.c:275 src/ln.c:530 src/mv.c:483
 msgid "backup type"
 msgstr ""
 
@@ -1304,7 +1324,7 @@ msgstr ""
 msgid "David Ihnat, David MacKenzie, and Jim Meyering"
 msgstr "David Ihnat, David MacKenzie ja Jim Meyering"
 
-#: src/cut.c:174 src/df.c:723 src/du.c:171 src/expand.c:110 src/fold.c:67
+#: src/cut.c:174 src/df.c:715 src/du.c:178 src/expand.c:110 src/fold.c:67
 #: src/head.c:88 src/ls.c:3761 src/nl.c:176 src/paste.c:403 src/pr.c:2754
 #: src/sort.c:276 src/sum.c:60 src/tac.c:127 src/tail.c:234 src/tee.c:63
 #: src/unexpand.c:375 src/wc.c:125
@@ -1409,15 +1429,21 @@ msgid ""
 "                            time to the indicated precision.\n"
 "                            --iso-8601 without TIMESPEC defaults to `date'.\n"
 msgstr ""
-"Näytä tämänhetkinen aika halutulla MUOTOILUlla, tai aseta järjestelmän aika.\n"
+"Näytä tämänhetkinen aika halutulla MUOTOILUlla, tai aseta järjestelmän "
+"aika.\n"
 "\n"
-"  -d, --date=MERKKIJONO     näytä MERKKIJONOn määräämä aika \"now\":n sijaan\n"
-"  -f, --file=PVMTIEDOSTO    kuten --date kerran kullekin PVMTIEDOSTOn riville\n"
-"  -ITIMESPEC, --iso-8601[=AIKAMÄÄRE]  näytä päivämäärä/aika ISO 8601 -muodossa.\n"
+"  -d, --date=MERKKIJONO     näytä MERKKIJONOn määräämä aika \"now\":n "
+"sijaan\n"
+"  -f, --file=PVMTIEDOSTO    kuten --date kerran kullekin PVMTIEDOSTOn "
+"riville\n"
+"  -ITIMESPEC, --iso-8601[=AIKAMÄÄRE]  näytä päivämäärä/aika ISO 8601 -"
+"muodossa.\n"
 "                            AIKAMÄÄRE=\"date\" pelkälle päivämäärälle,\n"
-"                            \"hours\", \"minutes\", tai \"seconds\" päivämäärälle ja\n"
+"                            \"hours\", \"minutes\", tai \"seconds\" "
+"päivämäärälle ja\n"
 "                            ajalle mainitulla tarkkuudella.\n"
-"                            --iso-8601 ilman AIKAMÄÄREttä olettaa \"date\":n.\n"
+"                            --iso-8601 ilman AIKAMÄÄREttä olettaa \"date\":"
+"n.\n"
 
 #: src/date.c:133
 msgid ""
@@ -1454,9 +1480,11 @@ msgid ""
 "  %B   locale's full month name, variable length (January..December)\n"
 "  %c   locale's date and time (Sat Nov 04 12:02:33 EST 1989)\n"
 msgstr ""
-"  %A   maa-asetuksen pitkä viikonpäivän nimi, pituus vaihteleva (maanantai - sunnuntai)\n"
+"  %A   maa-asetuksen pitkä viikonpäivän nimi, pituus vaihteleva (maanantai - "
+"sunnuntai)\n"
 "  %b   maa-asetuksen lyhyt kuukauden nimi (tammi  - joulu )\n"
-"  %B   maa-asetuksen pitkä kuukauden nimi, pituus vaihteleva (tammikuu - joulukuu)\n"
+"  %B   maa-asetuksen pitkä kuukauden nimi, pituus vaihteleva (tammikuu - "
+"joulukuu)\n"
 "  %c   maa-asetuksen päivämäärä ja aika (la  4 marraskuu 1989 12:02:33)\n"
 
 #: src/date.c:155
@@ -1521,7 +1549,8 @@ msgstr ""
 "  %P   maa-asetuksen AM/PM merkintä pikkukirjaimilla (usein tyhjä)\n"
 "  %r   aika, 12-tuntinen (tt:mm:ss [AP]M)\n"
 "  %R   aika, 24-tuntinen (tt:mm)\n"
-"  %s   sekuntimäärä ajanhetkestä \"00:00:00 1970-01-01 UTC\" (GNU-laajennos)\n"
+"  %s   sekuntimäärä ajanhetkestä \"00:00:00 1970-01-01 UTC\" (GNU-"
+"laajennos)\n"
 
 #: src/date.c:187
 msgid ""
@@ -1570,8 +1599,10 @@ msgid ""
 "  `-' (hyphen) do not pad the field\n"
 "  `_' (underscore) pad the field with spaces\n"
 msgstr ""
-"  %z   RFC-822 -tyylinen numeerinen aikavyöhyke (-0500) (epästandardi laajennos)\n"
-"  %Z   aikavyöhyke (esim. EET), tai tyhjä jos aikavyöhykettä ei voida määrittää\n"
+"  %z   RFC-822 -tyylinen numeerinen aikavyöhyke (-0500) (epästandardi "
+"laajennos)\n"
+"  %Z   aikavyöhyke (esim. EET), tai tyhjä jos aikavyöhykettä ei voida "
+"määrittää\n"
 "\n"
 "Oletuksena date täyttää numeeriset kentät etunollilla. GNU date tunnistaa\n"
 "seuraavat muuntelijat \"%\"-merkin ja numeerisen ohjaimen välillä.\n"
@@ -1612,12 +1643,15 @@ msgid ""
 "argument must be a format string beginning with `+'."
 msgstr ""
 "argumentilta \"%s\" puuttuu edeltävä \"+\";\n"
-"käytettäessä valitsinta päiväyksen määräämiseen täytyy sellaisen valitsimen,\n"
+"käytettäessä valitsinta päiväyksen määräämiseen täytyy sellaisen "
+"valitsimen,\n"
 "joka ei ole argumentti, olla \"+\"-alkuinen muotoilumerkkijono."
 
 #: src/date.c:397
-msgid "a format string may not be specified when using the --rfc-822 (-R) option"
-msgstr "muotoilumerkkijonoa ei saa käyttää yhdessä --rfc-822 (-R) -valitsimen kanssa"
+msgid ""
+"a format string may not be specified when using the --rfc-822 (-R) option"
+msgstr ""
+"muotoilumerkkijonoa ei saa käyttää yhdessä --rfc-822 (-R) -valitsimen kanssa"
 
 #: src/date.c:433
 msgid "undefined"
@@ -1688,8 +1722,10 @@ msgstr ""
 "  ascii     EBCDIC -> ASCII\n"
 "  ebcdic    ASCII -> EBCDIC\n"
 "  ibm       ASCII -> muutettu EBCDIC\n"
-"  block     tasaa rivinvaihtoon päättyvät tietueet välilyönneillä cbs-kokoon\n"
-"  unblock   korvaa välilyönnit cbs-kokoisten tietuiden lopusta rivinvaihdolla\n"
+"  block     tasaa rivinvaihtoon päättyvät tietueet välilyönneillä cbs-"
+"kokoon\n"
+"  unblock   korvaa välilyönnit cbs-kokoisten tietuiden lopusta "
+"rivinvaihdolla\n"
 "  lcase     muuta isot kirjaimet pieniksi\n"
 
 #: src/dd.c:323
@@ -1705,7 +1741,8 @@ msgstr ""
 "  ucase     muuta pienet kirjaimet isoiksi\n"
 "  swab      vaihda keskenään jokainen syötetavupari\n"
 "  noerror   jatka lukuvirheistä huolimatta\n"
-"  sync      tasaa jokainen syötelohko NUL-merkeillä ibs-kokoon; käytettäessä\n"
+"  sync      tasaa jokainen syötelohko NUL-merkeillä ibs-kokoon; "
+"käytettäessä\n"
 "              avainsanaa block tai unblock, tasataan välilyönneillä\n"
 
 #: src/dd.c:362
@@ -1762,7 +1799,9 @@ msgid "invalid number %s"
 msgstr "käyttäjä ei kelpaa"
 
 #: src/dd.c:646
-msgid "only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, {unblock,sync}"
+msgid ""
+"only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, "
+"{unblock,sync}"
 msgstr ""
 
 #: src/dd.c:781
@@ -1791,67 +1830,69 @@ msgstr ""
 msgid "Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert"
 msgstr "Torbjörn Granlund, David MacKenzie, Larry McVoy ja Paul Eggert"
 
-#: src/df.c:152
-msgid "Filesystem "
-msgstr "Tied.järj. "
-
-#: src/df.c:155
+#: src/df.c:151
 msgid "   Type"
 msgstr " Tyyppi"
 
-#: src/df.c:160
+#: src/df.c:153
+msgid "Filesystem "
+msgstr "Tied.järj. "
+
+#: src/df.c:163
 #, c-format
 msgid "    Inodes   IUsed   IFree IUse%%"
 msgstr "  I-solmut   IKäyt   IJälj Ikäy%%"
 
-#: src/df.c:164
+#: src/df.c:167
 #, c-format
 msgid "    Size  Used Avail Use%%"
 msgstr "    Koko  Käyt  Jälj Käy%%"
 
-#: src/df.c:166
+#: src/df.c:169
 #, c-format
 msgid "     Size   Used  Avail Use%%"
 msgstr "     Koko   Käyt  Jälj  Käy%%"
 
-#: src/df.c:169
+#: src/df.c:172
 #, c-format
 msgid " %4s-blocks      Used Available Capacity"
 msgstr "%4s-lohkoja      Käyt   Vapaana Käytetty"
 
-#: src/df.c:200
+#: src/df.c:203
 #, c-format
 msgid " %4s-blocks      Used Available Use%%"
 msgstr "%4s-lohkoja      Käyt   Vapaana Käy%%"
 
-#: src/df.c:204
+#: src/df.c:207
 msgid " Mounted on\n"
 msgstr " Liitospiste\n"
 
-#: src/df.c:724
+#: src/df.c:716
 msgid ""
 "Show information about the filesystem on which each FILE resides,\n"
 "or all filesystems by default.\n"
 "\n"
 msgstr ""
 
-#: src/df.c:732
+#: src/df.c:724
 msgid ""
 "  -a, --all             include filesystems having 0 blocks\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
-"  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n"
+"  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M "
+"2G)\n"
 "  -H, --si              likewise, but use powers of 1000 not 1024\n"
 msgstr ""
 
-#: src/df.c:738
+#: src/df.c:730
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
 "  -k                    like --block-size=1K\n"
 "  -l, --local           limit listing to local filesystems\n"
-"      --no-sync         do not invoke sync before getting usage info (default)\n"
+"      --no-sync         do not invoke sync before getting usage info "
+"(default)\n"
 msgstr ""
 
-#: src/df.c:744
+#: src/df.c:736
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
 "      --sync            invoke sync before getting usage info\n"
@@ -1861,23 +1902,23 @@ msgid ""
 "  -v                    (ignored)\n"
 msgstr ""
 
-#: src/df.c:754 src/du.c:208 src/ls.c:3879
+#: src/df.c:746 src/du.c:219 src/ls.c:3879
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
 "kB 1000, K 1024, MB 1,000,000, M 1,048,576, and so on for G, T, P, E, Z, Y.\n"
 msgstr ""
 
-#: src/df.c:871
+#: src/df.c:863
 #, c-format
 msgid "file system type %s both selected and excluded"
 msgstr ""
 
-#: src/df.c:915
+#: src/df.c:907
 msgid "Warning: "
 msgstr "Varoitus: "
 
-#: src/df.c:918
+#: src/df.c:910
 #, c-format
 msgid "%scannot read table of mounted filesystems"
 msgstr "%sliitettyjen tiedostojärjestelmien taulua ei voida lukea"
@@ -1961,84 +2002,95 @@ msgstr ""
 "ei sisällä /-merkkiä, tulostetaan \".\" (tarkoittaen työhakemistoa).\n"
 "\n"
 
-#: src/du.c:49
-msgid "Torbjorn Granlund, David MacKenzie, Larry McVoy, Paul Eggert, and Jim Meyering"
-msgstr "Torbjörn Granlund, David MacKenzie, Larry McVoy, Paul Eggert ja Jim Meyering"
+#: src/du.c:50
+msgid ""
+"Torbjorn Granlund, David MacKenzie, Larry McVoy, Paul Eggert, and Jim "
+"Meyering"
+msgstr ""
+"Torbjörn Granlund, David MacKenzie, Larry McVoy, Paul Eggert ja Jim Meyering"
 
-#: src/du.c:172
+#: src/du.c:179
 msgid ""
 "Summarize disk usage of each FILE, recursively for directories.\n"
 "\n"
 msgstr ""
 
-#: src/du.c:179
+#: src/du.c:186
 msgid ""
 "  -a, --all             write counts for all files, not just directories\n"
+"      --apparent-size   print apparent sizes, rather than disk usage; "
+"although\n"
+"                          the apparent size is usually smaller, it may be\n"
+"                          larger due to holes in (`sparse') files, internal\n"
+"                          fragmentation, indirect blocks, and the like\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
-"  -b, --bytes           print size in bytes\n"
+"  -b, --bytes           equivalent to `--apparent-size --block-size=1'\n"
 "  -c, --total           produce a grand total\n"
 "  -D, --dereference-args  dereference FILEs that are symbolic links\n"
 msgstr ""
 
-#: src/du.c:186
+#: src/du.c:197
 msgid ""
-"  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n"
+"  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M "
+"2G)\n"
 "  -H, --si              likewise, but use powers of 1000 not 1024\n"
 "  -k                    like --block-size=1K\n"
 "  -l, --count-links     count sizes many times if hard linked\n"
 msgstr ""
 
-#: src/du.c:192
+#: src/du.c:203
 msgid ""
 "  -L, --dereference     dereference all symbolic links\n"
 "  -S, --separate-dirs   do not include size of subdirectories\n"
 "  -s, --summarize       display only a total for each argument\n"
 msgstr ""
 
-#: src/du.c:197
+#: src/du.c:208
 msgid ""
 "  -x, --one-file-system  skip directories on different filesystems\n"
-"  -X FILE, --exclude-from=FILE  Exclude files that match any pattern in FILE.\n"
+"  -X FILE, --exclude-from=FILE  Exclude files that match any pattern in "
+"FILE.\n"
 "      --exclude=PATTERN Exclude files that match PATTERN.\n"
-"      --max-depth=N     print the total for a directory (or file, with --all)\n"
+"      --max-depth=N     print the total for a directory (or file, with --"
+"all)\n"
 "                          only if it is N or fewer levels below the command\n"
 "                          line argument;  --max-depth=0 is the same as\n"
 "                          --summarize\n"
 msgstr ""
 
-#: src/du.c:339
+#: src/du.c:340
 #, fuzzy, c-format
 msgid "cannot change to parent of directory %s"
 msgstr "juurihakemiston vaihto %s:ksi ei onnistu"
 
-#: src/du.c:347
+#: src/du.c:348
 #, fuzzy, c-format
 msgid "cannot change to directory %s"
 msgstr "juurihakemiston vaihto %s:ksi ei onnistu"
 
-#: src/du.c:354
+#: src/du.c:355
 #, c-format
 msgid "cannot read directory %s"
 msgstr "hakemiston %s ei voi lukea"
 
-#: src/du.c:545 src/ls.c:2241 src/wc.c:591
+#: src/du.c:546 src/ls.c:2241 src/wc.c:591
 msgid "total"
 msgstr "yhteensä"
 
-#: src/du.c:627
+#: src/du.c:633
 #, fuzzy, c-format
 msgid "invalid maximum depth %s"
 msgstr "argumentti \"%s\" ei kelpaa"
 
-#: src/du.c:693
+#: src/du.c:699
 msgid "cannot both summarize and show all entries"
 msgstr ""
 
-#: src/du.c:700
+#: src/du.c:706
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr ""
 
-#: src/du.c:706
+#: src/du.c:712
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr ""
@@ -2125,7 +2177,8 @@ msgid ""
 "A mere - implies -i.  If no COMMAND, print the resulting environment.\n"
 msgstr ""
 "\n"
-"Pelkkä - tekee saman kuin -i.  Ilman KOMENTOa tulostuu seurauksena tuleva ympäristö.\n"
+"Pelkkä - tekee saman kuin -i.  Ilman KOMENTOa tulostuu seurauksena tuleva "
+"ympäristö.\n"
 
 #: src/expand.c:114
 msgid ""
@@ -2141,7 +2194,8 @@ msgid ""
 msgstr ""
 
 #: src/expand.c:126
-msgid "  -t, --tabs=LIST     use comma separated list of explicit tab positions\n"
+msgid ""
+"  -t, --tabs=LIST     use comma separated list of explicit tab positions\n"
 msgstr ""
 
 #: src/expand.c:173 src/unexpand.c:153
@@ -2227,8 +2281,10 @@ msgid ""
 msgstr ""
 "\n"
 "  ARG1 * ARG2       ARG1:n ja ARG2:n aritmeettinen tulo\n"
-"  ARG1 / ARG2       jakolaskun ARG1 jaettuna ARG2:lla aritmeettinen osamäärä\n"
-"  ARG1 % ARG2       jakolaskun ARG1 jaettuna ARG2:lla aritmeettinen jakojäänös\n"
+"  ARG1 / ARG2       jakolaskun ARG1 jaettuna ARG2:lla aritmeettinen "
+"osamäärä\n"
+"  ARG1 % ARG2       jakolaskun ARG1 jaettuna ARG2:lla aritmeettinen "
+"jakojäänös\n"
 
 #: src/expr.c:127
 msgid ""
@@ -2245,7 +2301,8 @@ msgstr ""
 "\n"
 "  match MERKKIJONO SÄLE          sama kuin MERKKIJONO : SÄLE\n"
 "  substr MERKKIJONO SIJA PITUUS  MERKKIJONOn osajono, SIJA 1:stä alkaen\n"
-"  index MERKKIJONO MERKIT        MERKKIJONOn kohta missä jokin MERKEISTÄ on tai 0\n"
+"  index MERKKIJONO MERKIT        MERKKIJONOn kohta missä jokin MERKEISTÄ on "
+"tai 0\n"
 "  length MERKKIJONO              MERKKIJONOn pituus\n"
 
 #: src/expr.c:136
@@ -2256,7 +2313,8 @@ msgid ""
 "  ( EXPRESSION )             value of EXPRESSION\n"
 msgstr ""
 "  + JONO                     tulkitse JONO kuten merkkijono vaikka se olisi\n"
-"                              avainsana kuten \"match\" tai operaattori kuten \"/\"\n"
+"                              avainsana kuten \"match\" tai operaattori "
+"kuten \"/\"\n"
 "\n"
 "  ( LAUSEKE )                LAUSEKKEEN arvo\n"
 
@@ -2266,13 +2324,15 @@ msgid ""
 "Beware that many operators need to be escaped or quoted for shells.\n"
 "Comparisons are arithmetic if both ARGs are numbers, else lexicographical.\n"
 "Pattern matches return the string matched between \\( and \\) or null; if\n"
-"\\( and \\) are not used, they return the number of characters matched or 0.\n"
+"\\( and \\) are not used, they return the number of characters matched or "
+"0.\n"
 msgstr ""
 "\n"
 "Huomaa, että monet operaattorit täytyy suojata komentotulkeilta.\n"
 "Vertailut ovat numeroparametreille aritmeettisia, muille sanakirjamaisia.\n"
 "Mallihaut palauttavat merkkien \\( ja \\) väliin täsmäävän merkkijonon tai\n"
-"tyhjän. Merkkien \\( ja \\) puuttuessa palautuu täsmäävien merkkien määrä tai 0.\n"
+"tyhjän. Merkkien \\( ja \\) puuttuessa palautuu täsmäävien merkkien määrä "
+"tai 0.\n"
 
 #: src/expr.c:186 src/expr.c:438 src/expr.c:444 src/expr.c:449 src/expr.c:471
 msgid "syntax error"
@@ -2315,11 +2375,13 @@ msgstr ""
 #: src/factor.c:85
 msgid ""
 "\n"
-"  Print the prime factors of all specified integer NUMBERs.  If no arguments\n"
+"  Print the prime factors of all specified integer NUMBERs.  If no "
+"arguments\n"
 "  are specified on the command line, they are read from standard input.\n"
 msgstr ""
 "\n"
-"  Tulosta NUMEROiden (kokonaislukuja) tekijät.  Ilman komentoriviparametrejä\n"
+"  Tulosta NUMEROiden (kokonaislukuja) tekijät.  Ilman "
+"komentoriviparametrejä\n"
 "  numerot luetaan vakiosyötteestä.\n"
 
 #: src/factor.c:154
@@ -2424,7 +2486,8 @@ msgid ""
 "  -n, --lines=NUMBER       print first NUMBER lines instead of first 10\n"
 msgstr ""
 "  -c, --bytes=KOKO         näytä ensimmäiset KOKO tavua\n"
-"  -n, --lines=MÄÄRÄ        näytä ensimmäiset MÄÄRÄ riviä, oletuksen 10 sijaan\n"
+"  -n, --lines=MÄÄRÄ        näytä ensimmäiset MÄÄRÄ riviä, oletuksen 10 "
+"sijaan\n"
 
 #: src/head.c:105
 msgid ""
@@ -2432,7 +2495,7 @@ msgid ""
 "  -v, --verbose            always print headers giving file names\n"
 msgstr ""
 
-#: src/head.c:111 src/split.c:119
+#: src/head.c:111 src/split.c:120
 msgid ""
 "\n"
 "SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n"
@@ -2539,7 +2602,8 @@ msgstr ""
 "  -g, --group     tulosta vain vallitsevan ryhmän ID\n"
 "  -G, --groups    tulosta kaikkien ryhmien ID:t\n"
 "  -n, --name      tulosta nimi numeron sijaan -ugG -valitsimilla\n"
-"  -r, --real      tulosta todellinen ID vallitsevan sijaan -ugG -valitsimilla\n"
+"  -r, --real      tulosta todellinen ID vallitsevan sijaan -ugG -"
+"valitsimilla\n"
 "  -u, --user      tulosta vain vallitseva käyttäjän ID\n"
 
 #: src/id.c:100
@@ -2556,7 +2620,8 @@ msgstr "pelkän tunnuksen ja pelkän ryhmän tulostus ei onnistu"
 
 #: src/id.c:166
 msgid "cannot print only names or real IDs in default format"
-msgstr "pelkkien nimien tai todellisten ID:iden tulostus oletusmuodossa ei onnistu"
+msgstr ""
+"pelkkien nimien tai todellisten ID:iden tulostus oletusmuodossa ei onnistu"
 
 #: src/id.c:175
 #, c-format
@@ -2667,16 +2732,20 @@ msgstr ""
 
 #: src/install.c:619
 msgid ""
-"  -D                  create all leading components of DEST except the last,\n"
+"  -D                  create all leading components of DEST except the "
+"last,\n"
 "                        then copy SOURCE to DEST;  useful in the 1st format\n"
-"  -g, --group=GROUP   set group ownership, instead of process' current group\n"
-"  -m, --mode=MODE     set permission mode (as in chmod), instead of rwxr-xr-x\n"
+"  -g, --group=GROUP   set group ownership, instead of process' current "
+"group\n"
+"  -m, --mode=MODE     set permission mode (as in chmod), instead of rwxr-xr-"
+"x\n"
 "  -o, --owner=OWNER   set ownership (super-user only)\n"
 msgstr ""
 
 #: src/install.c:626
 msgid ""
-"  -p, --preserve-timestamps   apply access/modification times of SOURCE files\n"
+"  -p, --preserve-timestamps   apply access/modification times of SOURCE "
+"files\n"
 "                        to corresponding destination files\n"
 "  -s, --strip         strip symbol tables, only for 1st and 2nd formats\n"
 "  -S, --suffix=SUFFIX override the usual backup suffix\n"
@@ -2687,7 +2756,8 @@ msgstr ""
 msgid ""
 "\n"
 "The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n"
-"The version control method may be selected via the --backup option or through\n"
+"The version control method may be selected via the --backup option or "
+"through\n"
 "the VERSION_CONTROL environment variable.  Here are the values:\n"
 "\n"
 msgstr ""
@@ -2703,11 +2773,12 @@ msgid ""
 "standard output.  The default join field is the first, delimited\n"
 "by whitespace.  When FILE1 or FILE2 (not both) is -, read standard input.\n"
 "\n"
-"  -a SIDE           print unpairable lines coming from file SIDE\n"
+"  -a FILENUM        print unpairable lines coming from file FILENUM, where\n"
+"                      FILENUM is 1 or 2, corresponding to FILE1 or FILE2\n"
 "  -e EMPTY          replace missing input fields with EMPTY\n"
 msgstr ""
 
-#: src/join.c:156
+#: src/join.c:157
 msgid ""
 "  -i, --ignore-case ignore differences in case when comparing fields\n"
 "  -j FIELD          (obsolescent) equivalent to `-1 FIELD -2 FIELD'\n"
@@ -2717,58 +2788,58 @@ msgid ""
 "  -t CHAR           use CHAR as input and output field separator\n"
 msgstr ""
 
-#: src/join.c:164
+#: src/join.c:165
 msgid ""
-"  -v SIDE           like -a SIDE, but suppress joined output lines\n"
+"  -v FILENUM        like -a FILENUM, but suppress joined output lines\n"
 "  -1 FIELD          join on this FIELD of file 1\n"
 "  -2 FIELD          join on this FIELD of file 2\n"
 msgstr ""
 
-#: src/join.c:171
+#: src/join.c:172
 msgid ""
 "\n"
 "Unless -t CHAR is given, leading blanks separate fields and are ignored,\n"
 "else fields are separated by CHAR.  Any FIELD is a field number counted\n"
 "from 1.  FORMAT is one or more comma or blank separated specifications,\n"
-"each being `SIDE.FIELD' or `0'.  Default FORMAT outputs the join field,\n"
+"each being `FILENUM.FIELD' or `0'.  Default FORMAT outputs the join field,\n"
 "the remaining fields from FILE1, the remaining fields from FILE2, all\n"
 "separated by CHAR.\n"
 msgstr ""
 
-#: src/join.c:644
+#: src/join.c:645
 #, fuzzy, c-format
 msgid "invalid field specifier: `%s'"
 msgstr "ajanjakso ei kelpaa: \"%s\""
 
-#: src/join.c:658 src/join.c:771 src/join.c:807
+#: src/join.c:659 src/join.c:772 src/join.c:808
 #, fuzzy, c-format
 msgid "invalid field number: `%s'"
 msgstr "ajanjakso ei kelpaa: \"%s\""
 
-#: src/join.c:671
+#: src/join.c:672
 #, fuzzy, c-format
 msgid "invalid file number in field spec: `%s'"
 msgstr "ajanjakso ei kelpaa: \"%s\""
 
-#: src/join.c:791
+#: src/join.c:792
 #, fuzzy, c-format
 msgid "invalid field number for file 1: `%s'"
 msgstr "ajanjakso ei kelpaa: \"%s\""
 
-#: src/join.c:800
+#: src/join.c:801
 #, fuzzy, c-format
 msgid "invalid field number for file 2: `%s'"
 msgstr "ajanjakso ei kelpaa: \"%s\""
 
-#: src/join.c:832
+#: src/join.c:833
 msgid "too many non-option arguments"
 msgstr "liikaa argumentteja, jotka eivät ole valisimia"
 
-#: src/join.c:854
+#: src/join.c:855
 msgid "too few non-option arguments"
 msgstr "liian vähän argumentteja, jotka eivät ole valisimia"
 
-#: src/join.c:865
+#: src/join.c:866
 msgid "both files cannot be standard input"
 msgstr "vakiosyötettä ei voi käyttää molempina tiedostoina"
 
@@ -2795,12 +2866,14 @@ msgstr ""
 msgid ""
 "  -s, --signal=SIGNAL, -SIGNAL\n"
 "                   specify the name or number of the signal to be sent\n"
-"  -l, --list       list signal names, or convert signal names to/from numbers\n"
+"  -l, --list       list signal names, or convert signal names to/from "
+"numbers\n"
 "  -t, --table      print a table of signal information\n"
 msgstr ""
 "  -s, --signal=SIGNAALI, -SIGNAALI\n"
 "                   anna välitettävän signaalin nimi tai numero\n"
-"  -l, --list       listaa signaalien nimet tai muunna niitä numeroiksi/niistä numeroita\n"
+"  -l, --list       listaa signaalien nimet tai muunna niitä numeroiksi/"
+"niistä numeroita\n"
 "  -t, --table      tulosta tietoja signaaleista taulukkomuodossa\n"
 
 #: src/kill.c:114
@@ -2811,7 +2884,8 @@ msgid ""
 "PID is an integer; if negative it identifies a process group.\n"
 msgstr ""
 "\n"
-"SIGNAALI voi olla signaalin nimi kuten \"HUP\" tai signaalin numero kuten \"1\"\n"
+"SIGNAALI voi olla signaalin nimi kuten \"HUP\" tai signaalin numero kuten \"1"
+"\"\n"
 "tai signaalilla keskeytetyn prosessin poistumistila. PID on kokonaisluku;\n"
 "negatiivisena se identifioi prosessiryhmän.\n"
 "\n"
@@ -2876,7 +2950,8 @@ msgstr "Mike Parker ja David MacKenzie"
 #: src/ln.c:167
 #, c-format
 msgid "%s: warning: making a hard link to a symbolic link is not portable"
-msgstr "%s: varoitus: kovan linkin tekeminen symboliseen linkkiin ei ole siirrettävää"
+msgstr ""
+"%s: varoitus: kovan linkin tekeminen symboliseen linkkiin ei ole siirrettävää"
 
 #: src/ln.c:174
 #, fuzzy, c-format
@@ -2942,7 +3017,8 @@ msgstr ""
 
 #: src/ln.c:357
 msgid ""
-"      --backup[=CONTROL]      make a backup of each existing destination file\n"
+"      --backup[=CONTROL]      make a backup of each existing destination "
+"file\n"
 "  -b                          like --backup but does not accept an argument\n"
 "  -d, -F, --directory         hard link directories (super-user only)\n"
 "  -f, --force                 remove existing destination files\n"
@@ -2959,7 +3035,8 @@ msgstr ""
 #: src/ln.c:369
 msgid ""
 "  -S, --suffix=SUFFIX         override the usual backup suffix\n"
-"      --target-directory=DIRECTORY  specify the DIRECTORY in which to create\n"
+"      --target-directory=DIRECTORY  specify the DIRECTORY in which to "
+"create\n"
 "                                the links\n"
 "  -v, --verbose               print name of each file before linking\n"
 msgstr ""
@@ -3077,7 +3154,8 @@ msgstr ""
 msgid ""
 "      --block-size=SIZE      use SIZE-byte blocks\n"
 "  -B, --ignore-backups       do not list implied entries ending with ~\n"
-"  -c                         with -lt: sort by, and show, ctime (time of last\n"
+"  -c                         with -lt: sort by, and show, ctime (time of "
+"last\n"
 "                               modification of file status information)\n"
 "                               with -l: show ctime and sort by name\n"
 "                               otherwise: sort by ctime\n"
@@ -3086,8 +3164,10 @@ msgstr ""
 #: src/ls.c:3784
 msgid ""
 "  -C                         list entries by columns\n"
-"      --color[=WHEN]         control whether color is used to distinguish file\n"
-"                               types.  WHEN may be `never', `always', or `auto'\n"
+"      --color[=WHEN]         control whether color is used to distinguish "
+"file\n"
+"                               types.  WHEN may be `never', `always', or "
+"`auto'\n"
 "  -d, --directory            list directory entries instead of contents,\n"
 "                               and do not dereference symbolic links\n"
 "  -D, --dired                generate output designed for Emacs' dired mode\n"
@@ -3106,10 +3186,12 @@ msgstr ""
 msgid ""
 "  -g                         like -l, but do not list owner\n"
 "  -G, --no-group             inhibit display of group information\n"
-"  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n"
+"  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M "
+"2G)\n"
 "      --si                   likewise, but use powers of 1000 not 1024\n"
 "  -H, --dereference-command-line\n"
-"                             follow symbolic links listed on the command line\n"
+"                             follow symbolic links listed on the command "
+"line\n"
 "      --dereference-command-line-symlink-to-dir\n"
 "                             follow each command line symbolic link\n"
 "                               that points to a directory\n"
@@ -3117,10 +3199,13 @@ msgstr ""
 
 #: src/ls.c:3810
 msgid ""
-"      --indicator-style=WORD append indicator with style WORD to entry names:\n"
-"                               none (default), classify (-F), file-type (-p)\n"
+"      --indicator-style=WORD append indicator with style WORD to entry "
+"names:\n"
+"                               none (default), classify (-F), file-type (-"
+"p)\n"
 "  -i, --inode                print index number of each file\n"
-"  -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\n"
+"  -I, --ignore=PATTERN       do not list implied entries matching shell "
+"PATTERN\n"
 "  -k                         like --block-size=1K\n"
 msgstr ""
 
@@ -3130,13 +3215,15 @@ msgid ""
 "  -L, --dereference          when showing file information for a symbolic\n"
 "                               link, show information for the file the link\n"
 "                               references rather than for the link itself\n"
-"  -m                         fill width with a comma separated list of entries\n"
+"  -m                         fill width with a comma separated list of "
+"entries\n"
 msgstr ""
 
 #: src/ls.c:3824
 msgid ""
 "  -n, --numeric-uid-gid      like -l, but list numeric UIDs and GIDs\n"
-"  -N, --literal              print raw entry names (don't treat e.g. control\n"
+"  -N, --literal              print raw entry names (don't treat e.g. "
+"control\n"
 "                               characters specially)\n"
 "  -o                         like -l, but do not list group information\n"
 "  -p, --file-type            append indicator (one of /=@|) to entries\n"
@@ -3146,10 +3233,12 @@ msgstr ""
 msgid ""
 "  -q, --hide-control-chars   print ? instead of non graphic characters\n"
 "      --show-control-chars   show non graphic characters as-is (default\n"
-"                             unless program is `ls' and output is a terminal)\n"
+"                             unless program is `ls' and output is a "
+"terminal)\n"
 "  -Q, --quote-name           enclose entry names in double quotes\n"
 "      --quoting-style=WORD   use quoting style WORD for entry names:\n"
-"                               literal, locale, shell, shell-always, c, escape\n"
+"                               literal, locale, shell, shell-always, c, "
+"escape\n"
 msgstr ""
 
 #: src/ls.c:3839
@@ -3164,8 +3253,10 @@ msgid ""
 "  -S                         sort by file size\n"
 "      --sort=WORD            extension -X, none -U, size -S, time -t,\n"
 "                               version -v\n"
-"                             status -c, time -t, atime -u, access -u, use -u\n"
-"      --time=WORD            show time as WORD instead of modification time:\n"
+"                             status -c, time -t, atime -u, access -u, use -"
+"u\n"
+"      --time=WORD            show time as WORD instead of modification "
+"time:\n"
 "                               atime, access, use, ctime or status; use\n"
 "                               specified time as sort key if --sort=time\n"
 msgstr ""
@@ -3174,7 +3265,8 @@ msgstr ""
 msgid ""
 "      --time-style=STYLE     show times using style STYLE:\n"
 "                               full-iso, long-iso, iso, locale, +FORMAT\n"
-"                             FORMAT is interpreted like `date'; if FORMAT is\n"
+"                             FORMAT is interpreted like `date'; if FORMAT "
+"is\n"
 "                             FORMAT1<newline>FORMAT2, FORMAT1 applies to\n"
 "                             non-recent files and FORMAT2 to recent files;\n"
 "                             if STYLE is prefixed with `posix-', STYLE\n"
@@ -3231,13 +3323,15 @@ msgstr ""
 #, c-format
 msgid ""
 "\n"
-"  -b, --binary            read files in binary mode (default on DOS/Windows)\n"
+"  -b, --binary            read files in binary mode (default on DOS/"
+"Windows)\n"
 "  -c, --check             check %s sums against given list\n"
 "  -t, --text              read files in text mode (default)\n"
 "\n"
 msgstr ""
 "\n"
-"  -b, --binary            lue tiedostot binäärimuodossa (oletus DOSissa/Windowsissa)\n"
+"  -b, --binary            lue tiedostot binäärimuodossa (oletus DOSissa/"
+"Windowsissa)\n"
 "  -c, --check             vertaa %s-summia annettuun listaan\n"
 "  -t, --text              lue tiedostot tekstimuodossa (oletus)\n"
 
@@ -3319,7 +3413,8 @@ msgid "checksums"
 msgstr ""
 
 #: src/md5sum.c:564
-msgid "the --binary and --text options are meaningless when verifying checksums"
+msgid ""
+"the --binary and --text options are meaningless when verifying checksums"
 msgstr ""
 
 #: src/md5sum.c:572
@@ -3358,7 +3453,8 @@ msgstr ""
 
 #: src/mkdir.c:69
 msgid ""
-"  -m, --mode=MODE   set permission mode (as in chmod), not rwxrwxrwx - umask\n"
+"  -m, --mode=MODE   set permission mode (as in chmod), not rwxrwxrwx - "
+"umask\n"
 "  -p, --parents     no error if existing, make parent directories as needed\n"
 "  -v, --verbose     print a message for each created directory\n"
 msgstr ""
@@ -3385,7 +3481,8 @@ msgid ""
 msgstr ""
 
 #: src/mkfifo.c:63 src/mknod.c:64
-msgid "  -m, --mode=MODE   set permission mode (as in chmod), not a=rw - umask\n"
+msgid ""
+"  -m, --mode=MODE   set permission mode (as in chmod), not a=rw - umask\n"
 msgstr ""
 
 #: src/mkfifo.c:93 src/mknod.c:206
@@ -3484,8 +3581,10 @@ msgstr ""
 
 #: src/mv.c:324
 msgid ""
-"      --backup[=CONTROL]       make a backup of each existing destination file\n"
-"  -b                           like --backup but does not accept an argument\n"
+"      --backup[=CONTROL]       make a backup of each existing destination "
+"file\n"
+"  -b                           like --backup but does not accept an "
+"argument\n"
 "  -f, --force                  do not prompt before overwriting\n"
 "                                 equivalent to --reply=yes\n"
 "  -i, --interactive            prompt before overwrite\n"
@@ -3503,7 +3602,8 @@ msgstr ""
 
 #: src/mv.c:339
 msgid ""
-"      --target-directory=DIRECTORY  move all SOURCE arguments into DIRECTORY\n"
+"      --target-directory=DIRECTORY  move all SOURCE arguments into "
+"DIRECTORY\n"
 "  -u, --update                 move only when the SOURCE file is newer\n"
 "                                 than the destination file or when the\n"
 "                                 destination file is missing\n"
@@ -3517,7 +3617,8 @@ msgstr "annettu kohde, %s, ei ole hakemisto"
 
 #: src/mv.c:475
 msgid "when moving multiple files, last argument must be a directory"
-msgstr "viimeisen argumentin on oltava hakemisto siirrettäessä useita tiedostoja"
+msgstr ""
+"viimeisen argumentin on oltava hakemisto siirrettäessä useita tiedostoja"
 
 #: src/nice.c:67
 #, c-format
@@ -3582,9 +3683,11 @@ msgstr ""
 msgid ""
 "  -h, --header-numbering=STYLE    use STYLE for numbering header lines\n"
 "  -i, --page-increment=NUMBER     line number increment at each line\n"
-"  -l, --join-blank-lines=NUMBER   group of NUMBER empty lines counted as one\n"
+"  -l, --join-blank-lines=NUMBER   group of NUMBER empty lines counted as "
+"one\n"
 "  -n, --number-format=FORMAT      insert line numbers according to FORMAT\n"
-"  -p, --no-renumber               do not reset line numbers at logical pages\n"
+"  -p, --no-renumber               do not reset line numbers at logical "
+"pages\n"
 "  -s, --number-separator=STRING   add STRING after (possible) line number\n"
 msgstr ""
 
@@ -3657,7 +3760,8 @@ msgstr ""
 
 #: src/od.c:299
 msgid "All arguments to long options are mandatory for short options.\n"
-msgstr "Pitkien valitsinten pakolliset argumentit ovat pakollisia myös lyhyille.\n"
+msgstr ""
+"Pitkien valitsinten pakolliset argumentit ovat pakollisia myös lyhyille.\n"
 
 #: src/od.c:302
 msgid ""
@@ -3668,7 +3772,8 @@ msgstr ""
 #: src/od.c:306
 msgid ""
 "  -N, --read-bytes=BYTES      limit dump to BYTES input bytes\n"
-"  -s, --strings[=BYTES]       output strings of at least BYTES graphic chars\n"
+"  -s, --strings[=BYTES]       output strings of at least BYTES graphic "
+"chars\n"
 "  -t, --format=TYPE           select output format or formats\n"
 "  -v, --output-duplicates     do not use * to mark line suppression\n"
 "  -w, --width[=BYTES]         output BYTES bytes per output line\n"
@@ -3866,7 +3971,8 @@ msgid ""
 msgstr ""
 "Diagnosoi siirrettäväksi kelpaamattomia rakenteita NIMESSÄ.\n"
 "\n"
-"  -p, --portability   tarkista muillekin POSIX -järjestelmille kuin vain tälle\n"
+"  -p, --portability   tarkista muillekin POSIX -järjestelmille kuin vain "
+"tälle\n"
 
 #: src/pathchk.c:237
 #, c-format
@@ -3965,7 +4071,8 @@ msgid ""
 msgstr ""
 "\n"
 "  -l              tuota pitkän mallin tuloste määrätyille TUNNUKSILLE\n"
-"  -b              älä näytä kotihakemistoa ja komentotulkkia pitkässä mallissa\n"
+"  -b              älä näytä kotihakemistoa ja komentotulkkia pitkässä "
+"mallissa\n"
 "  -h              älä näytä project-tiedostoa pitkässä mallissa\n"
 "  -p              älä näytä plan-tiedostoa pitkässä mallissa\n"
 "  -s              lyhyen mallin tuloste, tämä on oletus\n"
@@ -3980,8 +4087,10 @@ msgid ""
 msgstr ""
 "  -f              älä näytä otsakeriviä lyhyessä mallissa\n"
 "  -w              älä näytä käyttäjän koko nimeä lyhyessä mallissa\n"
-"  -i              älä näytä käyttäjän koko nimeä ja palvelinta lyhyessä mallissa\n"
-"  -q              älä näytä käyttäjän koko nimeä, palvelinta ja joutenoloaikaa\n"
+"  -i              älä näytä käyttäjän koko nimeä ja palvelinta lyhyessä "
+"mallissa\n"
+"  -q              älä näytä käyttäjän koko nimeä, palvelinta ja "
+"joutenoloaikaa\n"
 "                  lyhyessä mallissa\n"
 
 #: src/pinky.c:487
@@ -4128,11 +4237,13 @@ msgstr ""
 #: src/pr.c:2792
 msgid ""
 "  -h HEADER, --header=HEADER\n"
-"                    use a centered HEADER instead of filename in page header,\n"
+"                    use a centered HEADER instead of filename in page "
+"header,\n"
 "                    -h \"\" prints a blank line, don't use -h\"\"\n"
 "  -i[CHAR[WIDTH]], --output-tabs[=CHAR[WIDTH]]\n"
 "                    replace spaces with CHARs (TABs) to tab WIDTH (8)\n"
-"  -J, --join-lines  merge full lines, turns off -W line truncation, no column\n"
+"  -J, --join-lines  merge full lines, turns off -W line truncation, no "
+"column\n"
 "                    alignment, --sep-string[=STRING] sets separators\n"
 msgstr ""
 
@@ -4167,7 +4278,8 @@ msgstr ""
 #: src/pr.c:2823
 msgid ""
 "  -s[CHAR],--separator[=CHAR]\n"
-"                    separate columns by a single character, default for CHAR\n"
+"                    separate columns by a single character, default for "
+"CHAR\n"
 "                    is the <TAB> character without -w and 'no char' with -w\n"
 "                    -s[CHAR] turns off line truncation of all 3 column\n"
 "                    options (-COLUMN|-a -COLUMN|-m) except -w is set\n"
@@ -4181,27 +4293,31 @@ msgstr ""
 msgid ""
 "                    separate columns by STRING,\n"
 "                    without -S: Default separator <TAB> with -J and <space>\n"
-"                    otherwise (same as -S\" \"), no effect on column options\n"
+"                    otherwise (same as -S\" \"), no effect on column "
+"options\n"
 "  -t, --omit-header omit page headers and trailers\n"
 msgstr ""
 
 #: src/pr.c:2839
 msgid ""
 "  -T, --omit-pagination\n"
-"                    omit page headers and trailers, eliminate any pagination\n"
+"                    omit page headers and trailers, eliminate any "
+"pagination\n"
 "                    by form feeds set in input files\n"
 "  -v, --show-nonprinting\n"
 "                    use octal backslash notation\n"
 "  -w PAGE_WIDTH, --width=PAGE_WIDTH\n"
 "                    set page width to PAGE_WIDTH (72) characters for\n"
-"                    multiple text-column output only, -s[char] turns off (72)\n"
+"                    multiple text-column output only, -s[char] turns off "
+"(72)\n"
 msgstr ""
 
 #: src/pr.c:2849
 msgid ""
 "  -W PAGE_WIDTH, --page-width=PAGE_WIDTH\n"
 "                    set page width to PAGE_WIDTH (72) characters always,\n"
-"                    truncate lines, except -J option is set, no interference\n"
+"                    truncate lines, except -J option is set, no "
+"interference\n"
 "                    with -S or -s\n"
 msgstr ""
 
@@ -4231,7 +4347,8 @@ msgstr ""
 
 #: src/printf.c:84
 #, c-format
-msgid "warning: %s: character(s) following character constant have been ignored"
+msgid ""
+"warning: %s: character(s) following character constant have been ignored"
 msgstr "varoitus: %s: merkkivakiota seuraavat merkit on jätetty huomiotta"
 
 #: src/printf.c:97
@@ -4374,7 +4491,8 @@ msgstr ""
 
 #: src/ptx.c:1863
 msgid ""
-"Output a permuted index, including context, of the words in the input files.\n"
+"Output a permuted index, including context, of the words in the input "
+"files.\n"
 "\n"
 msgstr ""
 
@@ -4409,7 +4527,8 @@ msgstr ""
 msgid ""
 "  -r, --references               first field of each line is a reference\n"
 "  -t, --typeset-mode               - not implemented -\n"
-"  -w, --width=NUMBER             output width in columns, reference excluded\n"
+"  -w, --width=NUMBER             output width in columns, reference "
+"excluded\n"
 msgstr ""
 
 #: src/ptx.c:1898
@@ -4595,7 +4714,8 @@ msgstr ""
 msgid ""
 "\n"
 "Note that if you use rm to remove a file, it is usually possible to recover\n"
-"the contents of that file.  If you want more assurance that the contents are\n"
+"the contents of that file.  If you want more assurance that the contents "
+"are\n"
 "truly unrecoverable, consider using shred.\n"
 msgstr ""
 
@@ -4642,13 +4762,15 @@ msgstr ""
 msgid ""
 "Print numbers from FIRST to LAST, in steps of INCREMENT.\n"
 "\n"
-"  -f, --format=FORMAT      use printf style floating-point FORMAT (default: %g)\n"
+"  -f, --format=FORMAT      use printf style floating-point FORMAT (default: %"
+"g)\n"
 "  -s, --separator=STRING   use STRING to separate numbers (default: \\n)\n"
 "  -w, --equal-width        equalize width by padding with leading zeroes\n"
 msgstr ""
 "Tulosta luvut luvusta ALKU lukuun LOPPU, LISÄYS-luvun välein.\n"
 "\n"
-"  -f, --format=MUOTO       käytä printf-tyylistä muotoilua MUOTO (oletus: %g)\n"
+"  -f, --format=MUOTO       käytä printf-tyylistä muotoilua MUOTO (oletus: %"
+"g)\n"
 "  -s, --separator=JONO     käytä JONOa erottelemaan lukuja (oletus: \\n)\n"
 "  -w, --equal-width        tasoita leveydet lisäämällä nollia lukujen eteen\n"
 
@@ -4862,7 +4984,8 @@ msgid ""
 "Usage: %s NUMBER[SUFFIX]...\n"
 "  or:  %s OPTION\n"
 "Pause for NUMBER seconds.  SUFFIX may be `s' for seconds (the default),\n"
-"`m' for minutes, `h' for hours or `d' for days.  Unlike most implementations\n"
+"`m' for minutes, `h' for hours or `d' for days.  Unlike most "
+"implementations\n"
 "that require NUMBER be an integer, here NUMBER may be an arbitrary floating\n"
 "point number.\n"
 "\n"
@@ -4870,7 +4993,8 @@ msgstr ""
 "Käyttö: %s NUMERO[PÄÄTE]...\n"
 "  tai:  %s VALITSIN\n"
 "Keskeytä NUMERO sekunnin ajaksi.  PÄÄTE voi olla \"s\" (sekuntia, oletus),\n"
-"\"m\" (minuuttia), \"h\" (tuntia) tai \"d\" (päivää).  Toisin kuin useimmissa\n"
+"\"m\" (minuuttia), \"h\" (tuntia) tai \"d\" (päivää).  Toisin kuin "
+"useimmissa\n"
 "toteutuksissa, voi NUMERO olla kokonaisluvun lisäksi myös mielivaltainen\n"
 "liukuluku.\n"
 "\n"
@@ -4899,7 +5023,8 @@ msgstr ""
 #: src/sort.c:289
 msgid ""
 "  -b, --ignore-leading-blanks ignore leading blanks\n"
-"  -d, --dictionary-order      consider only blanks and alphanumeric characters\n"
+"  -d, --dictionary-order      consider only blanks and alphanumeric "
+"characters\n"
 "  -f, --ignore-case           fold lower case to upper case characters\n"
 msgstr ""
 
@@ -4921,18 +5046,21 @@ msgid ""
 "  -k, --key=POS1[,POS2]     start a key at POS1, end it at POS 2 (origin 1)\n"
 "  -m, --merge               merge already sorted files; do not sort\n"
 "  -o, --output=FILE         write result to FILE instead of standard output\n"
-"  -s, --stable              stabilize sort by disabling last-resort comparison\n"
+"  -s, --stable              stabilize sort by disabling last-resort "
+"comparison\n"
 "  -S, --buffer-size=SIZE    use SIZE for main memory buffer\n"
 msgstr ""
 
 #: src/sort.c:312
 #, c-format
 msgid ""
-"  -t, --field-separator=SEP use SEP instead of non- to whitespace transition\n"
+"  -t, --field-separator=SEP use SEP instead of non- to whitespace "
+"transition\n"
 "  -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %s\n"
 "                              multiple options specify multiple directories\n"
 "  -u, --unique              with -c: check for strict ordering\n"
-"                              otherwise: output only the first of an equal run\n"
+"                              otherwise: output only the first of an equal "
+"run\n"
 msgstr ""
 
 #: src/sort.c:319
@@ -4942,7 +5070,8 @@ msgstr ""
 #: src/sort.c:324
 msgid ""
 "\n"
-"POS is F[.C][OPTS], where F is the field number and C the character position\n"
+"POS is F[.C][OPTS], where F is the field number and C the character "
+"position\n"
 "in the field.  OPTS is one or more single-letter ordering options, which\n"
 "override global ordering options for that key.  If no key is given, use the\n"
 "entire line as the key.\n"
@@ -5063,19 +5192,19 @@ msgstr ""
 msgid "extra operand `%s' not allowed with -c"
 msgstr ""
 
-#: src/split.c:95
+#: src/split.c:96
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION] [INPUT [PREFIX]]\n"
 msgstr "Käyttö: %s [VALITSIN]... [ TIEDOSTO ]\n"
 
-#: src/split.c:99
+#: src/split.c:100
 msgid ""
 "Output fixed-size pieces of INPUT to PREFIXaa, PREFIXab, ...; default\n"
 "PREFIX is `x'.  With no INPUT, or when INPUT is -, read standard input.\n"
 "\n"
 msgstr ""
 
-#: src/split.c:107
+#: src/split.c:108
 #, c-format
 msgid ""
 "  -a, --suffix-length=N   use suffixes of length N (default %d)\n"
@@ -5084,47 +5213,47 @@ msgid ""
 "  -l, --lines=NUMBER      put NUMBER lines per output file\n"
 msgstr ""
 
-#: src/split.c:113
+#: src/split.c:114
 msgid ""
 "      --verbose           print a diagnostic to standard error just\n"
 "                            before each output file is opened\n"
 msgstr ""
 
-#: src/split.c:170
+#: src/split.c:171
 msgid "Output file suffixes exhausted"
 msgstr ""
 
-#: src/split.c:188
+#: src/split.c:189
 #, c-format
 msgid "creating file `%s'\n"
 msgstr ""
 
-#: src/split.c:342
+#: src/split.c:341
 #, fuzzy
 msgid "cannot split in more than one way"
 msgstr "ajan haku ei onnistu"
 
-#: src/split.c:395
+#: src/split.c:394
 #, fuzzy, c-format
 msgid "%s: invalid suffix length"
 msgstr "%s: signaali ei kelpaa"
 
-#: src/split.c:409 src/split.c:435
+#: src/split.c:408 src/split.c:434
 #, fuzzy, c-format
 msgid "%s: invalid number of bytes"
 msgstr "%s: prosessin id ei kelpaa"
 
-#: src/split.c:422
+#: src/split.c:421
 #, fuzzy, c-format
 msgid "%s: invalid number of lines"
 msgstr "%s: prosessin id ei kelpaa"
 
-#: src/split.c:475
+#: src/split.c:474
 #, c-format
 msgid "`-%d' option is obsolete; use `-l %d'"
 msgstr ""
 
-#: src/split.c:488
+#: src/split.c:487
 #, fuzzy
 msgid "invalid number"
 msgstr "käyttäjä ei kelpaa"
@@ -5134,17 +5263,17 @@ msgstr "käyttäjä ei kelpaa"
 msgid "*** invalid date/time ***"
 msgstr "päiväys \"%s\" ei kelpaa"
 
-#: src/stat.c:603
+#: src/stat.c:607
 #, fuzzy, c-format
 msgid "cannot read file system information for %s"
 msgstr "hakemiston %s luominen ei onnistu"
 
-#: src/stat.c:679
+#: src/stat.c:683
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION] FILE...\n"
 msgstr "Käyttö: %s [VALITSIN]... [TIEDOSTO]...\n"
 
-#: src/stat.c:680
+#: src/stat.c:684
 msgid ""
 "Display file or filesystem status.\n"
 "\n"
@@ -5154,17 +5283,18 @@ msgid ""
 "  -t, --terse           print the information in terse form\n"
 msgstr ""
 
-#: src/stat.c:691
+#: src/stat.c:695
 msgid ""
 "\n"
 "The valid format sequences for files (without --filesystem):\n"
 "\n"
 "  %A   Access rights in human readable form\n"
 "  %a   Access rights in octal\n"
-"  %b   Number of blocks allocated\n"
+"  %B   The size in bytes of each block reported by `%b'\n"
+"  %b   Number of blocks allocated (see %B)\n"
 msgstr ""
 
-#: src/stat.c:698
+#: src/stat.c:703
 msgid ""
 "  %D   Device number in hex\n"
 "  %d   Device number in decimal\n"
@@ -5174,7 +5304,7 @@ msgid ""
 "  %g   Group ID of owner\n"
 msgstr ""
 
-#: src/stat.c:706
+#: src/stat.c:711
 msgid ""
 "  %h   Number of hard links\n"
 "  %i   Inode number\n"
@@ -5186,7 +5316,7 @@ msgid ""
 "  %t   Major device type in hex\n"
 msgstr ""
 
-#: src/stat.c:716
+#: src/stat.c:721
 msgid ""
 "  %U   User name of owner\n"
 "  %u   User ID of owner\n"
@@ -5199,7 +5329,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/stat.c:728
+#: src/stat.c:733
 msgid ""
 "Valid format sequences for file systems:\n"
 "\n"
@@ -5210,7 +5340,7 @@ msgid ""
 "  %f   Free blocks in file system\n"
 msgstr ""
 
-#: src/stat.c:737
+#: src/stat.c:742
 msgid ""
 "  %i   File System id in hex\n"
 "  %l   Maximum length of filenames\n"
@@ -5242,8 +5372,10 @@ msgstr ""
 "Näytä tai muuta päätteen ominaisuuksia.\n"
 "\n"
 "  -a, --all          näytä voimassa olevat asetukset luettavassa muodossa\n"
-"  -g, --save         näytä voimassa olevat asetukset stty-luettavassa muodossa\n"
-"  -F, --file=LAITE   avaa ja ota käyttöön määrätty LAITE vakiosyötteen sijaan\n"
+"  -g, --save         näytä voimassa olevat asetukset stty-luettavassa "
+"muodossa\n"
+"  -F, --file=LAITE   avaa ja ota käyttöön määrätty LAITE vakiosyötteen "
+"sijaan\n"
 
 #: src/stty.c:513
 msgid ""
@@ -5323,7 +5455,8 @@ msgstr ""
 msgid ""
 "   ispeed N      set the input speed to N\n"
 " * line N        use line discipline N\n"
-"   min N         with -icanon, set N characters minimum for a completed read\n"
+"   min N         with -icanon, set N characters minimum for a completed "
+"read\n"
 "   ospeed N      set the output speed to N\n"
 msgstr ""
 "   ispeed N      aseta syötenopeudeksi N\n"
@@ -5334,14 +5467,16 @@ msgstr ""
 #: src/stty.c:556
 msgid ""
 " * rows N        tell the kernel that the terminal has N rows\n"
-" * size          print the number of rows and columns according to the kernel\n"
+" * size          print the number of rows and columns according to the "
+"kernel\n"
 "   speed         print the terminal speed\n"
 "   time N        with -icanon, set read timeout of N tenths of a second\n"
 msgstr ""
 " * rows N        kerro ytimelle, että päätteellä on N riviä\n"
 " * size          näytä ytimeltä saadut rivi- ja sarakemäärät\n"
 "   speed         näytä päätteen nopeus\n"
-"   time N        kun myös -icanon, aseta luvun aikarajaksi N kymmenesosasekuntia\n"
+"   time N        kun myös -icanon, aseta luvun aikarajaksi N "
+"kymmenesosasekuntia\n"
 
 #: src/stty.c:562
 msgid ""
@@ -5364,13 +5499,15 @@ msgid ""
 "   [-]cstopb     use two stop bits per character (one with `-')\n"
 "   [-]hup        send a hangup signal when the last process closes the tty\n"
 "   [-]hupcl      same as [-]hup\n"
-"   [-]parenb     generate parity bit in output and expect parity bit in input\n"
+"   [-]parenb     generate parity bit in output and expect parity bit in "
+"input\n"
 "   [-]parodd     set odd parity (even with `-')\n"
 msgstr ""
 "   [-]cstopb     käytä kahta pysäytysbittiä per merkki (\"-\":lla yksi)\n"
 "   [-]hup        lähetä sulkusignaali kun viimeinen prosessi sulkee tty:n\n"
 "   [-]hupcl      kuten [-]hup\n"
-"   [-]parenb     luo pariteettibitti tulosteeseen ja oleta pariteettibitti syötteessä\n"
+"   [-]parenb     luo pariteettibitti tulosteeseen ja oleta pariteettibitti "
+"syötteessä\n"
 "   [-]parodd     aseta pariton pariteetti (myös \"-\":lla)\n"
 
 #: src/stty.c:577
@@ -5477,7 +5614,8 @@ msgid ""
 msgstr ""
 "\n"
 "Paikalliset asetukset:\n"
-"   [-]crterase   toista erase-merkit näin: askelpalautin-välilyönti-askelpalautin\n"
+"   [-]crterase   toista erase-merkit näin: askelpalautin-välilyönti-"
+"askelpalautin\n"
 " * crtkill       hävitä koko rivi totellen echoprt- ja echoe-asetuksia\n"
 " * -crtkill      hävitä koko rivi totellen echoctl- ja echok-asetuksia\n"
 
@@ -5505,20 +5643,23 @@ msgid ""
 msgstr ""
 " * [-]echoke     sama kuin [-]crtkill\n"
 "   [-]echonl     toista rivinvaihto vaikka muita merkkejä ei toistettaisi\n"
-" * [-]echoprt    toista pyyhityt merkit takaperin, \"\\\" ja \"/\" -merkkien välissä\n"
+" * [-]echoprt    toista pyyhityt merkit takaperin, \"\\\" ja \"/\" -merkkien "
+"välissä\n"
 "   [-]icanon     ota erase, kill, werase, ja rprnt -erikoismerkit käyttöön\n"
 "   [-]iexten     ota ei-POSIX -erikoismerkit käyttöön\n"
 
 #: src/stty.c:645
 msgid ""
 "   [-]isig       enable interrupt, quit, and suspend special characters\n"
-"   [-]noflsh     disable flushing after interrupt and quit special characters\n"
+"   [-]noflsh     disable flushing after interrupt and quit special "
+"characters\n"
 " * [-]prterase   same as [-]echoprt\n"
 " * [-]tostop     stop background jobs that try to write to the terminal\n"
 " * [-]xcase      with icanon, escape with `\\' for uppercase characters\n"
 msgstr ""
 "   [-]isig       ota interrupt, quit ja suspend -erikoismerkit käyttöön\n"
-"   [-]noflsh     poista käytöstä interrupt ja quit -erikoismerkkien jälkeinen puskurintyhjennys\n"
+"   [-]noflsh     poista käytöstä interrupt ja quit -erikoismerkkien "
+"jälkeinen puskurintyhjennys\n"
 " * [-]prterase   sama kuin [-]echoprt\n"
 " * [-]tostop     pysäytä tausta-ajot, jotka yrittävät kirjoittaa päätteelle\n"
 " * [-]xcase      kun myös icanon, piilota isot kirjaimet \"\\\" -merkillä\n"
@@ -5725,12 +5866,16 @@ msgid ""
 msgstr ""
 "Ota käyttöön tunnuksen TUNNUS käyttäjä-id ja ryhmä-id.\n"
 "\n"
-"  -, -l, --login               tee komentotulkista sisäänkirjauskomentotulkki\n"
-"  -c, --commmand=KOMENTO       välitä komentotulkille KOMENTO -c -valitsimella\n"
-"  -f, --fast                   välitä komentotulkille valitsin -f (csh:lle tai tcsh:lle)\n"
+"  -, -l, --login               tee komentotulkista "
+"sisäänkirjauskomentotulkki\n"
+"  -c, --commmand=KOMENTO       välitä komentotulkille KOMENTO -c -"
+"valitsimella\n"
+"  -f, --fast                   välitä komentotulkille valitsin -f (csh:lle "
+"tai tcsh:lle)\n"
 "  -m, --preserve-environment   älä uudelleenaseta ympäristömuuttujia\n"
 "  -p                           sama kuin -m\n"
-"  -s, --shell=SHELL            aja komentotulkki SHELL, jos /etc/shells sallii sen\n"
+"  -s, --shell=SHELL            aja komentotulkki SHELL, jos /etc/shells "
+"sallii sen\n"
 
 #: src/su.c:450
 msgid ""
@@ -6031,103 +6176,103 @@ msgstr ""
 "  -a, --append              lisää TIEDOSTOjen perään, älä ylikirjoita\n"
 "  -i, --ignore-interrupts   jätä keskeytyssignaalit huomiotta\n"
 
-#: src/test.c:226
+#: src/test.c:216
 msgid "argument expected\n"
 msgstr "odotettiin argumenttia\n"
 
-#: src/test.c:234
+#: src/test.c:224
 #, c-format
 msgid "integer expression expected %s\n"
 msgstr "odotettiin kokonaislukulauseketta %s\n"
 
-#: src/test.c:352
+#: src/test.c:342
 msgid "')' expected\n"
 msgstr "\")\" oli odotus\n"
 
-#: src/test.c:355
+#: src/test.c:345
 #, c-format
 msgid "')' expected, found %s\n"
 msgstr "\")\" oli odotus, saatiin %s\n"
 
-#: src/test.c:371 src/test.c:904
+#: src/test.c:361 src/test.c:894
 #, c-format
 msgid "%s: unary operator expected\n"
 msgstr "%s: odotettiin unaarista operaattoria\n"
 
-#: src/test.c:399 src/test.c:930
+#: src/test.c:389 src/test.c:920
 #, c-format
 msgid "%s: binary operator expected\n"
 msgstr "%s: odotettiin binäärista operaattoria\n"
 
-#: src/test.c:434
+#: src/test.c:424
 msgid "before -lt"
 msgstr "ennen operaattoria -lt"
 
-#: src/test.c:442
+#: src/test.c:432
 msgid "after -lt"
 msgstr "operaattorin -lt jälkeen"
 
-#: src/test.c:456
+#: src/test.c:446
 msgid "before -le"
 msgstr "ennen operaattoria -le"
 
-#: src/test.c:463
+#: src/test.c:453
 msgid "after -le"
 msgstr "operaattorin -le jälkeen"
 
-#: src/test.c:479
+#: src/test.c:469
 msgid "before -gt"
 msgstr "ennen operaattoria -gt"
 
-#: src/test.c:486
+#: src/test.c:476
 msgid "after -gt"
 msgstr "operaattorin -gt jälkeen"
 
-#: src/test.c:500
+#: src/test.c:490
 msgid "before -ge"
 msgstr "ennen operaattoria -ge"
 
-#: src/test.c:507
+#: src/test.c:497
 msgid "after -ge"
 msgstr "operaattorin -ge jälkeen"
 
-#: src/test.c:522
+#: src/test.c:512
 msgid "-nt does not accept -l\n"
 msgstr "-nt ei hyväksy -l -lauseketta\n"
 
-#: src/test.c:536
+#: src/test.c:526
 msgid "before -ne"
 msgstr "ennen operaattoria -ne"
 
-#: src/test.c:543
+#: src/test.c:533
 msgid "after -ne"
 msgstr "operaattorin -ne jälkeen"
 
-#: src/test.c:559
+#: src/test.c:549
 msgid "before -eq"
 msgstr "ennen operaattoria -eq"
 
-#: src/test.c:566
+#: src/test.c:556
 msgid "after -eq"
 msgstr "operaattorin -eq jälkeen"
 
-#: src/test.c:577
+#: src/test.c:567
 msgid "-ef does not accept -l\n"
 msgstr "-ef ei hyväksy -l -lauseketta\n"
 
-#: src/test.c:596
+#: src/test.c:586
 msgid "-ot does not accept -l\n"
 msgstr "-ot ei hyväksy -l -lauseketta\n"
 
-#: src/test.c:603
+#: src/test.c:593
 msgid "unknown binary operator"
 msgstr "tuntematon binäärioperaattori"
 
-#: src/test.c:791
+#: src/test.c:781
 msgid "after -t"
 msgstr "operaattorin -t jälkeen"
 
-#: src/test.c:989
+#: src/test.c:979
 #, c-format
 msgid ""
 "Usage: %s EXPRESSION\n"
@@ -6138,7 +6283,7 @@ msgstr ""
 "  tai:  [ LAUSEKE ]\n"
 "  tai:  %s VALITSIN\n"
 
-#: src/test.c:995
+#: src/test.c:985
 msgid ""
 "Exit with the status determined by EXPRESSION.\n"
 "\n"
@@ -6146,15 +6291,16 @@ msgstr ""
 "Poistu tilakoodilla, minkä LAUSEKE määrittää.\n"
 "\n"
 
-#: src/test.c:1001
+#: src/test.c:991
 msgid ""
 "\n"
 "EXPRESSION is true or false and sets exit status.  It is one of:\n"
 msgstr ""
 "\n"
-"LAUSEKE on tosi tai epätosi ja asettaa tilakoodin.  Se on jokin seuraavista:\n"
+"LAUSEKE on tosi tai epätosi ja asettaa tilakoodin.  Se on jokin "
+"seuraavista:\n"
 
-#: src/test.c:1005
+#: src/test.c:995
 msgid ""
 "\n"
 "  ( EXPRESSION )               EXPRESSION is true\n"
@@ -6168,7 +6314,7 @@ msgstr ""
 "  LAUSEKE1 -a LAUSEKE2      sekä LAUSEKE1 että LAUSEKE2 ovat tosia\n"
 "  LAUSEKE1 -o LAUSEKE2      joko LAUSEKE1 tai LAUSEKE2 on tosi\n"
 
-#: src/test.c:1012
+#: src/test.c:1002
 msgid ""
 "\n"
 "  [-n] STRING          the length of STRING is nonzero\n"
@@ -6182,7 +6328,7 @@ msgstr ""
 "  MERKKIJONO1 = MERKKIJONO2   merkkijonot ovat yhteneväiset\n"
 "  MERKKIJONO1 != MERKKIJONO2  merkkijonot eivät ole yhteneväiset\n"
 
-#: src/test.c:1019
+#: src/test.c:1009
 msgid ""
 "\n"
 "  INTEGER1 -eq INTEGER2   INTEGER1 is equal to INTEGER2\n"
@@ -6193,14 +6339,20 @@ msgid ""
 "  INTEGER1 -ne INTEGER2   INTEGER1 is not equal to INTEGER2\n"
 msgstr ""
 "\n"
-"  KOKONAISLUKU1 -eq KOKONAISLUKU2  KOKONAISLUKU1 on yhtäsuuri kuin KOKONAISLUKU2\n"
-"  KOKONAISLUKU1 -ge KOKONAISLUKU2  KOKONAISLUKU1 on suurempi tai yhtäsuuri kuin KOKONAISLUKU2\n"
-"  KOKONAISLUKU1 -gt KOKONAISLUKU2  KOKONAISLUKU1 on suurempi kuin KOKONAISLUKU2\n"
-"  KOKONAISLUKU1 -le KOKONAISLUKU2  KOKONAISLUKU1 on pienempi tai yhtäsuuri kuin KOKONAISLUKU2\n"
-"  KOKONAISLUKU1 -lt KOKONAISLUKU2  KOKONAISLUKU1 on pienempi kuin KOKONAISLUKU2\n"
-"  KOKONAISLUKU1 -ne KOKONAISLUKU2  KOKONAISLUKU1 on erisuuri kuin KOKONAISLUKU2\n"
+"  KOKONAISLUKU1 -eq KOKONAISLUKU2  KOKONAISLUKU1 on yhtäsuuri kuin "
+"KOKONAISLUKU2\n"
+"  KOKONAISLUKU1 -ge KOKONAISLUKU2  KOKONAISLUKU1 on suurempi tai yhtäsuuri "
+"kuin KOKONAISLUKU2\n"
+"  KOKONAISLUKU1 -gt KOKONAISLUKU2  KOKONAISLUKU1 on suurempi kuin "
+"KOKONAISLUKU2\n"
+"  KOKONAISLUKU1 -le KOKONAISLUKU2  KOKONAISLUKU1 on pienempi tai yhtäsuuri "
+"kuin KOKONAISLUKU2\n"
+"  KOKONAISLUKU1 -lt KOKONAISLUKU2  KOKONAISLUKU1 on pienempi kuin "
+"KOKONAISLUKU2\n"
+"  KOKONAISLUKU1 -ne KOKONAISLUKU2  KOKONAISLUKU1 on erisuuri kuin "
+"KOKONAISLUKU2\n"
 
-#: src/test.c:1028
+#: src/test.c:1018
 msgid ""
 "\n"
 "  FILE1 -ef FILE2   FILE1 and FILE2 have the same device and inode numbers\n"
@@ -6209,10 +6361,11 @@ msgid ""
 msgstr ""
 "\n"
 "  TIEDOSTO1 -ef TIEDOSTO2   tiedostoilla on sama laite ja sama inode-numero\n"
-"  TIEDOSTO1 -nt TIEDOSTO2   TIEDOSTO1 on uudempi (muokkauspäiväys) kuin TIEDOSTO2\n"
+"  TIEDOSTO1 -nt TIEDOSTO2   TIEDOSTO1 on uudempi (muokkauspäiväys) kuin "
+"TIEDOSTO2\n"
 "  TIEDOSTO1 -ot TIEDOSTO2   TIEDOSTO1 on vanhempi kuin TIEDOSTO2\n"
 
-#: src/test.c:1034
+#: src/test.c:1024
 msgid ""
 "\n"
 "  -b FILE     FILE exists and is block special\n"
@@ -6226,7 +6379,7 @@ msgstr ""
 "  -d TIEDOSTO     TIEDOSTO on olemassa ja on hakemisto\n"
 "  -e TIEDOSTO     TIEDOSTO on olemassa\n"
 
-#: src/test.c:1041
+#: src/test.c:1031
 msgid ""
 "  -f FILE     FILE exists and is a regular file\n"
 "  -g FILE     FILE exists and is set-group-ID\n"
@@ -6236,11 +6389,13 @@ msgid ""
 msgstr ""
 "  -f TIEDOSTO     TIEDOSTO on olemassa ja on tavallinen tiedosto\n"
 "  -g TIEDOSTO     TIEDOSTO on olemassa ja sen set-group-ID -bitti on päällä\n"
-"  -h TIEDOSTO     TIEDOSTO on olemassa ja on symbolinen linkki (sama kuin -L)\n"
-"  -G TIEDOSTO     TIEDOSTO on olemassa ja voimassaolevan ryhmän omistuksessa\n"
+"  -h TIEDOSTO     TIEDOSTO on olemassa ja on symbolinen linkki (sama kuin -"
+"L)\n"
+"  -G TIEDOSTO     TIEDOSTO on olemassa ja voimassaolevan ryhmän "
+"omistuksessa\n"
 "  -k TIEDOSTO     TIEDOSTO on olemassa ja sen sticky bit on päällä\n"
 
-#: src/test.c:1048
+#: src/test.c:1038
 msgid ""
 "  -L FILE     FILE exists and is a symbolic link (same as -h)\n"
 "  -O FILE     FILE exists and is owned by the effective user ID\n"
@@ -6248,51 +6403,59 @@ msgid ""
 "  -r FILE     FILE exists and is readable\n"
 "  -s FILE     FILE exists and has a size greater than zero\n"
 msgstr ""
-"  -L TIEDOSTO     TIEDOSTO on olemassa ja on symbolinen linkki (sama kuin -h)\n"
-"  -O TIEDOSTO     TIEDOSTO on olemassa ja voimassaolevan käyttäjän omistuksessa\n"
+"  -L TIEDOSTO     TIEDOSTO on olemassa ja on symbolinen linkki (sama kuin -"
+"h)\n"
+"  -O TIEDOSTO     TIEDOSTO on olemassa ja voimassaolevan käyttäjän "
+"omistuksessa\n"
 "  -p TIEDOSTO     TIEDOSTO on olemassa ja on nimetty putki\n"
 "  -r TIEDOSTO     TIEDOSTO on olemassa ja luettavissa\n"
 "  -s TIEDOSTO     TIEDOSTO on olemassa ja kooltaan suurempi kuin nolla\n"
 
-#: src/test.c:1055
+#: src/test.c:1045
 msgid ""
 "  -S FILE     FILE exists and is a socket\n"
-"  -t [FD]     file descriptor FD (stdout by default) is opened on a terminal\n"
+"  -t [FD]     file descriptor FD (stdout by default) is opened on a "
+"terminal\n"
 "  -u FILE     FILE exists and its set-user-ID bit is set\n"
 "  -w FILE     FILE exists and is writable\n"
 "  -x FILE     FILE exists and is executable\n"
 msgstr ""
 "  -S TIEDOSTO     TIEDOSTO on olemassa ja on a socket\n"
-"  -t [TK]         tiedostokahva TK (oletuksena stdout) on auki ja päätelaite\n"
+"  -t [TK]         tiedostokahva TK (oletuksena stdout) on auki ja "
+"päätelaite\n"
 "  -u TIEDOSTO     TIEDOSTO on olemassa ja sen set-user-ID -bitti on päällä\n"
 "  -w TIEDOSTO     TIEDOSTO on olemassa ja kirjoitettavissa\n"
 "  -x TIEDOSTO     TIEDOSTO on olemassa ja ajettavissa\n"
 
-#: src/test.c:1062
+#: src/test.c:1052
 msgid ""
 "\n"
-"Beware that parentheses need to be escaped (e.g., by backslashes) for shells.\n"
+"Beware that parentheses need to be escaped (e.g., by backslashes) for "
+"shells.\n"
 "INTEGER may also be -l STRING, which evaluates to the length of STRING.\n"
 msgstr ""
 "\n"
 "Huomaa, että sulut täytyy piilottaa (esim. kenoviivoilla) komentotulkeilta.\n"
-"KOKONAISLUKU voi olla myös -l MERKKIJONO, joka laventuu MERKKIJONOn pituudeksi.\n"
+"KOKONAISLUKU voi olla myös -l MERKKIJONO, joka laventuu MERKKIJONOn "
+"pituudeksi.\n"
 
-#: src/test.c:1077
+#: src/test.c:1067
 msgid "FIXME: ksb and mjb"
 msgstr "FIXME: ksb ja mjb"
 
-#: src/test.c:1121
+#: src/test.c:1111
 msgid "missing `]'\n"
 msgstr "puuttuva \"]\"\n"
 
-#: src/test.c:1135
+#: src/test.c:1125
 msgid "too many arguments\n"
 msgstr "liikaa parametreja\n"
 
 #: src/touch.c:39
-msgid "Paul Rubin, Arnold Robbins, Jim Kingdon, David MacKenzie, and Randy Smith"
-msgstr "Paul Rubin, Arnold Robbins, Jim Kingdon, David MacKenzie ja Randy Smith"
+msgid ""
+"Paul Rubin, Arnold Robbins, Jim Kingdon, David MacKenzie, and Randy Smith"
+msgstr ""
+"Paul Rubin, Arnold Robbins, Jim Kingdon, David MacKenzie ja Randy Smith"
 
 #: src/touch.c:164 src/touch.c:179
 #, c-format
@@ -6328,7 +6491,8 @@ msgstr ""
 msgid ""
 "  -r, --reference=FILE   use this file's times instead of current time\n"
 "  -t STAMP               use [[CC]YY]MMDDhhmm[.ss] instead of current time\n"
-"  --time=WORD            set time given by WORD: access atime use (same as -a)\n"
+"  --time=WORD            set time given by WORD: access atime use (same as -"
+"a)\n"
 "                           modify mtime (same as -m)\n"
 msgstr ""
 
@@ -6349,7 +6513,8 @@ msgstr ""
 
 #: src/touch.c:378
 #, c-format
-msgid "warning: `touch %s' is obsolete; use `touch -t %04d%02d%02d%02d%02d.%02d'"
+msgid ""
+"warning: `touch %s' is obsolete; use `touch -t %04d%02d%02d%02d%02d.%02d'"
 msgstr ""
 
 #: src/touch.c:399
@@ -6369,7 +6534,8 @@ msgid ""
 "\n"
 "  -c, --complement        first complement SET1\n"
 "  -d, --delete            delete characters in SET1, do not translate\n"
-"  -s, --squeeze-repeats   replace each input sequence of a repeated character\n"
+"  -s, --squeeze-repeats   replace each input sequence of a repeated "
+"character\n"
 "                            that is listed in SET1 with a single occurrence\n"
 "                            of that character\n"
 "  -t, --truncate-set1     first truncate SET1 to length of SET2\n"
@@ -6585,7 +6751,8 @@ msgid ""
 msgstr ""
 "Tulosta vakiosyötteeseen kytketyn päätteen tiedostonimi.\n"
 "\n"
-"  -s, --silent, --quiet   ei tulostetta, pelkkä poistumisen tilakoodin palautus\n"
+"  -s, --silent, --quiet   ei tulostetta, pelkkä poistumisen tilakoodin "
+"palautus\n"
 
 #: src/tty.c:120
 msgid "not a tty"
@@ -6600,9 +6767,11 @@ msgid ""
 "  -n, --nodename           print the network node hostname\n"
 "  -r, --kernel-release     print the kernel release\n"
 msgstr ""
-"Tulosta tiettyjä järjestelmätietoja.  Komento ilman VALITSINta on sama kuin -s.\n"
+"Tulosta tiettyjä järjestelmätietoja.  Komento ilman VALITSINta on sama kuin -"
+"s.\n"
 "\n"
-"  -a, --all                tulosta kaikki tiedot, seuraavassa järjestyksessä:\n"
+"  -a, --all                tulosta kaikki tiedot, seuraavassa "
+"järjestyksessä:\n"
 "  -s, --kernel-name        tulosta ytimen nimi\n"
 "  -n, --nodename           tulosta koneen nimi\n"
 "  -r, --kernel-release     tulosta ytimen pääversionumero\n"
@@ -6634,8 +6803,10 @@ msgstr ""
 
 #: src/unexpand.c:387
 msgid ""
-"  -a, --all        convert all whitespace, instead of just initial whitespace\n"
-"      --first-only convert only leading sequences of whitespace (overrides -a)\n"
+"  -a, --all        convert all whitespace, instead of just initial "
+"whitespace\n"
+"      --first-only convert only leading sequences of whitespace (overrides -"
+"a)\n"
 "  -t, --tabs=N     have tabs N characters apart instead of 8 (enables -a)\n"
 "  -t, --tabs=LIST  use comma separated LIST of tab positions (enables -a)\n"
 msgstr ""
@@ -6928,7 +7099,8 @@ msgid ""
 "      --login       print system login processes\n"
 "                    (equivalent to SUS -l)\n"
 msgstr ""
-"  -i, --idle        lisää joutenoloaika muodossa TUNNIT:MINUUTIT, . tai kauan\n"
+"  -i, --idle        lisää joutenoloaika muodossa TUNNIT:MINUUTIT, . tai "
+"kauan\n"
 "                    (ei suositeltava, käytä valitsinta -u)\n"
 "      --login       näytä järjestelmän sisäänkirjausprosessit\n"
 "                    (sama kuin SUS -l)\n"
@@ -6978,15 +7150,21 @@ msgid ""
 msgstr ""
 "\n"
 "%s on oletusTIEDOSTO.  %s TIEDOSTOna on yleinen.\n"
-"Jos ARG1 ARG2 annetaan, -m on oletus: `am i' tai `mom likes' ovat tavallisia.\n"
+"Jos ARG1 ARG2 annetaan, -m on oletus: `am i' tai `mom likes' ovat "
+"tavallisia.\n"
 
 #: src/who.c:711
 msgid "Warning: -i will be removed in a future release;   use -u instead"
-msgstr "Varoitus: -i poistetaan tulevassa julkaisussa;   käytä -u:ta sen sijaan"
+msgstr ""
+"Varoitus: -i poistetaan tulevassa julkaisussa;   käytä -u:ta sen sijaan"
 
 #: src/who.c:722
-msgid "Warning: the meaning of '-l' will change in a future release to conform to POSIX"
-msgstr "Varoitus: \"-l\" -valitsimen toiminta muuttuu tulevassa julkaisussa POSIX-yhteensopivaksi"
+msgid ""
+"Warning: the meaning of '-l' will change in a future release to conform to "
+"POSIX"
+msgstr ""
+"Varoitus: \"-l\" -valitsimen toiminta muuttuu tulevassa julkaisussa POSIX-"
+"yhteensopivaksi"
 
 #: src/whoami.c:53
 msgid ""
@@ -7017,5 +7195,6 @@ msgid ""
 "Repeatedly output a line with all specified STRING(s), or `y'.\n"
 "\n"
 msgstr ""
-"Tulosta toistuvasti rivi, jolla on kaikki määritellyt MERKKIJONOt tai \"y\".\n"
+"Tulosta toistuvasti rivi, jolla on kaikki määritellyt MERKKIJONOt tai \"y"
+"\".\n"
 "\n"
