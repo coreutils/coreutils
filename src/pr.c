@@ -919,10 +919,8 @@ close_file (p)
 	  q->status = CLOSED;
 	  if (q->lines_stored == 0)
 	    {
-#if 0
-	      if (cols_ready_to_print > 0)
+	      if (cols_ready_to_print > 0 && !print_across_flag)
 		--cols_ready_to_print;
-#endif
 	      q->lines_to_print = 0;
 	    }
 	}
@@ -1180,8 +1178,13 @@ print_page ()
 	      if (use_column_separator)
 		++separators_not_printed;
 
-	      if (--p->lines_to_print <= 0 && --cols_ready_to_print <= 0)
-		break;
+	      --p->lines_to_print;
+	      if (p->lines_to_print <= 0)
+		{
+		  --cols_ready_to_print;
+		  if (cols_ready_to_print <= 0)
+		    break;
+		}
 	    }
 	}
 
