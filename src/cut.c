@@ -71,10 +71,10 @@
 
 char *xstrdup ();
 
-#define FATAL_ERROR(s)							\
+#define FATAL_ERROR(Message)						\
   do									\
     {									\
-      error (0, 0, (s));						\
+      error (0, 0, (Message));						\
       usage (2);							\
     }									\
   while (0)
