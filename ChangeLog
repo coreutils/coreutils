@@ -1,13 +1,13 @@
 2003-02-19  Jim Meyering  <jim@meyering.net>
 
+	* Version 4.5.8.
+
 	* tests/misc/tty-eof: Test all programs that can read stdin,
 	requiring no arguments and that write to standard output.
 
 	* tests/misc/tty-eof: New file.  Renamed from ...
 	* tests/misc/cat-tty-eof: Remove file.  Rename to tty-eof.
 	* tests/misc/Makefile.am (TESTS): Reflect renaming.
-
-	* Version 4.5.8.
 
 2003-02-18  Jim Meyering  <jim@meyering.net>
 
