@@ -123,13 +123,18 @@ mapped_name = `echo $*|sed 's/install/ginstall/'`
 # Note the use of $t/$*, rather than just `$*' as in other packages.
 # That is necessary to avoid failures for programs that are also shell built-in
 # functions like echo, false, printf, pwd.
+# The shenanigans after invoking $(HELP2MAN) are solely to convert the
+# two uses of program_name in rm.1's examples with `rm'.
+# Otherwise, they would otherwise appear as `rm.td/rm'.
 .x.1:
 	@echo "Updating man page $@";		\
 	mkdir $t;				\
 	(cd $t && $(LN_S) ../../src/$(mapped_name)$(EXEEXT) $*$(EXEEXT)); \
 	$(HELP2MAN)				\
 	    --include=$(srcdir)/$*.x		\
-	    --output=$@ $t/$*$(EXEEXT);		\
+	    --output=$@t $t/$*$(EXEEXT)
+	sed 's,$t/$*,$*,' $@t > $@t2
+	mv $@t2 $@
 	rm -rf $t
 
 check-local: check-x-vs-1 check-programs-vs-x
