@@ -12155,7 +12155,7 @@ $ factor `echo '2^64-1'|bc`
 @command{seq} prints a sequence of numbers to standard output.  Synopses:
 
 @example
-seq [@var{option}]@dots{} [@var{first} [@var{increment}]] @var{last}@dots{}
+seq [@var{option}]@dots{} [@var{first} [@var{increment}]] @var{last}
 @end example
 
 @command{seq} prints the numbers from @var{first} to @var{last} by
