@@ -1,15 +1,27 @@
 2002-06-15  Jim Meyering  <meyering@lucent.com>
 
-	* src/sys2.h (S_ISNAM): Add to list of S_IS* macros.
-	Rearrange #if directives for each S_IS macro.
-	From diffutils-2.8.2.
-
-2002-06-13  Jim Meyering  <meyering@lucent.com>
-
 	* Version 4.1.9.
 
 	* Makefile.maint (wget-update): `cd' to config first.
 	Warn when omitting a file ... FIXME
+
+	* src/system.h: For GNU libc 2.2 and newer, ensure that <sys/types.h>
+	has been included before this file.
+
+2002-06-13  Richard Dawe  <richdawe@bigfoot.com>
+
+	Accommodate DOS file name limitations.
+	* tests/cp/same-file: Change temp. file name: s/\.err/_err/, for DOS.
+	* tests/mv/force: Similar.
+	* tests/mv/into-self: Similar.
+	* tests/touch/no-rights: Similar.
+	* tests/mv/mv-special-1: Remove leading `.' from temp. names.
+
+2002-06-15  Jim Meyering  <meyering@lucent.com>
+
+	* src/sys2.h (S_ISNAM): Add to list of S_IS* macros.
+	Rearrange #if directives for each S_IS macro.
+	From diffutils-2.8.2.
 
 2002-06-12  Jim Meyering  <meyering@lucent.com>
 
