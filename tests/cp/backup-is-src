@@ -24,7 +24,7 @@ LANG=C
 export LANG
 
 # This cp command should exit nonzero.
-cp -b -V simple a~ a > out 2>&1 && fail=1
+cp --b=simple a~ a > out 2>&1 && fail=1
 
 sed "s,cp:,XXX:," out > out2
 
