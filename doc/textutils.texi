@@ -3632,6 +3632,39 @@ cat "$@@" \
   | uniq -d
 @end example
 
+@item
+Deleting a small set of characters is usually straightforward.  For example,
+to remove all @samp{a}s, @samp{x}s, and @samp{M}s you would do this:
+
+@example
+tr -d axM
+@end example
+
+However, when @samp{-} is one of those characters, it can be tricky
+because @samp{-} has special meanings.
+Performing the same task as above example but also
+removing all @samp{-} characters, we might try @code{tr -d -axM}, but
+that would fail because @code{tr} would try to interpret @samp{-a} as
+a command-line option.  Alternatively, we could try putting the hyphen
+inside the string, @code{tr -d a-xM}, but that wouldn't work either because
+it'd make @code{tr} remove all characters in the range @samp{a}@dots{}@samp{x}.
+One way to solve the problem is to put the hyphen at the end of the list
+of characters:
+
+@example
+tr -d axM-
+@end example
+
+More generally, use the character class notation @code{[=c=]}
+where you'd put @samp{-} (or any other character) in place of the @samp{c}:
+
+@example
+tr -d '[=-=]axM'
+@end example
+
+Note how single quotes are used in the above example to protect the
+square brackets from interpretation by a shell.
+
 @end itemize
 
 
