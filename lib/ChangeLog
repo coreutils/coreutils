@@ -1,6 +1,6 @@
 2003-01-20  Jim Meyering  <jim@meyering.net>
 
-	* search_.h: New file.
+	* search_.h: New file, from GNU libc.
 
 	* Makefile.am (libfetish_a_SOURCES): Use ftw_.h here, too.
 	(libfetish_a_SOURCES): Add search_.h.
