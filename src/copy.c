@@ -1,5 +1,5 @@
 /* copy.c -- core functions for copying files and directories
-   Copyright (C) 89, 90, 91, 1995-2000 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2001 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -66,6 +66,11 @@ static int copy_internal PARAMS ((const char *src_path, const char *dst_path,
 				  int move_mode,
 				  int *copy_into_self,
 				  int *rename_succeeded));
+
+/* Pointers to the file names:  they're used in the diagnostic that is issued
+   when we detect the user is trying to copy a directory into itself.  */
+static char const *top_level_src_path;
+static char const *top_level_dst_path;
 
 /* The invocation name of this program.  */
 extern char *program_name;
@@ -756,8 +761,15 @@ copy_internal (const char *src_path, const char *dst_path,
 	 directories).  */
       if (S_ISDIR (src_type))
 	{
-	  error (0, 0, _("won't create hard link %s to directory %s"),
-		 quote_n (0, dst_path), quote_n (1, earlier_file));
+	  /* If src_path and earlier_file refer to the same directory entry,
+	     then warn about copying a directory into itself.  */
+	  if (same_name (src_path, earlier_file))
+	    error (0, 0, _("can't copy a directory %s into itself %s"),
+		   quote_n (0, top_level_src_path),
+		   quote_n (1, top_level_dst_path));
+	  else
+	    error (0, 0, _("won't create hard link %s to directory %s"),
+		   quote_n (0, dst_path), quote_n (1, earlier_file));
 	  goto un_backup;
 	}
 
@@ -1167,6 +1179,12 @@ copy (const char *src_path, const char *dst_path,
   int move_mode = options->move_mode;
 
   assert (valid_options (options));
+
+  /* Record the file names: they're used in case of error,
+     when copying a directory into itself.  */
+  top_level_src_path = src_path;
+  top_level_dst_path = dst_path;
+
   return copy_internal (src_path, dst_path, nonexistent_dst, 0, NULL,
 			options, move_mode, copy_into_self, rename_succeeded);
 }
