@@ -1,3 +1,26 @@
+1998-05-03  Jim Meyering  <meyering@ascend.com>
+
+	* Version 3.16o.
+
+	* po/: Update from gettext-0.10.35.
+	* intl/: Likewise.
+	* configure.in: Remove use of AC_LINK_FILES.
+	(AC_OUTPUT): Remove po/Makefile-generating sed command.
+
+1998-04-28  Jim Meyering  <meyering@ascend.com>
+
+	* src/dircolors.c (parse_line): Use ISSPACE, not isspace.
+	Use unsigned char * pointers, not potentially signed ones, to avoid
+	sign extension.
+
+1998-04-26  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in: Use jm_ASSERT.
+	* acconfig.h: Add NDEBUG.
+
+	* src/mv.c: Don't define NDEBUG.
+	* src/cp.c: Likewise.
+
 1998-04-14  Jim Meyering  <meyering@ascend.com>
 
 	* src/.rm-warning: New file.
