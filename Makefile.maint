@@ -257,11 +257,8 @@ announcement: NEWS ChangeLog $(rel-files) $(signatures)
 	    --prev=$(PREV_VERSION)					\
 	    --curr=$(VERSION)						\
 	    --rel=$(release_archive_dir)				\
+	    --news=NEWS							\
 	    $(addprefix --url-dir=, $(url_dir_list));			\
-	  echo;								\
-	  echo NEWS:;							\
-	  sed -n "$(news-r1),$(news-r2)p" NEWS				\
-	    | grep -v '^\[';						\
 	  echo;								\
 	  echo ChangeLog entries:;					\
 	  find . -name ChangeLog -maxdepth 2				\
