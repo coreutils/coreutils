@@ -43,7 +43,7 @@ char *xmalloc ();
 
 #define STRINGLEN 2048		/* Max length of a string */
 
-enum modes { MO_SH, MO_CSH, MO_UNKNOWN, MO_ERR };
+enum modes { SHELLTYPE_BOURNE, SHELLTYPE_C, SHELLTYPE_UNKNOWN };
 
 /* Parser needs these state variables.  */
 enum states { ST_TERMNO, ST_TERMYES, ST_TERMSURE, ST_GLOBAL };
@@ -102,7 +102,7 @@ figure_mode (void)
 
   shellv = getenv ("SHELL");
   if (shellv == NULL || *shellv == '\0')
-    return MO_UNKNOWN;
+    return SHELLTYPE_UNKNOWN;
 
   shell = strrchr (shellv, '/');
   if (shell != NULL)
@@ -112,9 +112,9 @@ figure_mode (void)
 
   if (strcmp (shell, "csh") == 0
       || strcmp (shell, "tcsh") == 0)
-    return MO_CSH;
+    return SHELLTYPE_C;
 
-  return MO_SH;
+  return SHELLTYPE_BOURNE;
 }
 
 static void
@@ -194,7 +194,7 @@ main (int argc, char *argv[])
 {
   char *p;
   int optc;
-  int mode = MO_UNKNOWN;
+  int mode = SHELLTYPE_UNKNOWN;
   FILE *fp = NULL;
   char *term;
   int state;
@@ -216,11 +216,11 @@ main (int argc, char *argv[])
     switch (optc)
       {
       case 'b':	/* Bourne shell mode.  */
-	mode = MO_SH;
+	mode = SHELLTYPE_BOURNE;
 	break;
 
       case 'c':	/* Bourne shell mode.  */
-	mode = MO_CSH;
+	mode = SHELLTYPE_C;
 	break;
 
       default:
@@ -228,10 +228,10 @@ main (int argc, char *argv[])
       }
 
   /* Use shell to determine mode, if not already done. */
-  if (mode == MO_UNKNOWN)
+  if (mode == SHELLTYPE_UNKNOWN)
     {
       mode = figure_mode ();
-      if (mode == MO_UNKNOWN)
+      if (mode == SHELLTYPE_UNKNOWN)
 	{
 	  error (1, 0, _("\
 no SHELL environment variable, and no shell type option given"));
@@ -277,11 +277,11 @@ no SHELL environment variable, and no shell type option given"));
   /* Write out common start */
   switch (mode)
     {
-    case MO_CSH:
+    case SHELLTYPE_C:
       puts ("set noglob;\nsetenv LS_COLORS \':");
       break;
 
-    case MO_SH:
+    case SHELLTYPE_BOURNE:
       fputs ("LS_COLORS=\'", stdout);
       break;
     }
@@ -353,11 +353,11 @@ no SHELL environment variable, and no shell type option given"));
   /* Write it out.  */
   switch (mode)
     {
-    case MO_SH:
-      printf ("\'\nexport LS_COLORS\n");
+    case SHELLTYPE_BOURNE:
+      printf ("\';\nexport LS_COLORS\n");
       break;
 
-    case MO_CSH:
+    case SHELLTYPE_C:
       printf ("\'\nunset noglob\n");
       break;
 
