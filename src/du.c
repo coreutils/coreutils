@@ -560,7 +560,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 	  return opt_separate_dirs ? 0 : size;
 	}
 
-      name_space = savedir (".", stat_buf.st_size);
+      name_space = savedir (".");
       if (name_space == NULL)
 	{
 	  error (0, errno, "%s", quote (path->text));
