@@ -549,6 +549,11 @@ change_timestamps (const char *from, const char *to)
       error (0, errno, "%s", from);
       return 1;
     }
+
+  /* There's currently no interface to set file timestamps with
+     better than 1-second resolution, so discard any fractional
+     part of the source timestamp.  */
+
   utb.actime = stb.st_atime;
   utb.modtime = stb.st_mtime;
   if (utime (to, &utb))
