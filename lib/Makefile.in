@@ -44,31 +44,50 @@ host_triplet = @host@
 noinst_PROGRAMS = t-fpending$(EXEEXT)
 subdir = lib
 DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	ChangeLog TODO __fpending.c alloca.c asnprintf.c asprintf.c \
-	atexit.c calloc.c chdir-long.c chdir-long.h chown.c dirfd.c \
-	dup2.c error.c error.h euidaccess.c fchdir-stub.c \
-	fchown-stub.c fileblocks.c fnmatch.c free.c fsusage.c \
-	ftruncate.c getcwd.c getdate.c getgroups.c gethostname.c \
-	getline.c getloadavg.c getndelim2.c getopt.c getopt1.c \
-	getpass.c gettimeofday.c getusershell.c group-member.c \
-	lchown.c lchown.h lstat.c malloc.c memchr.c memcmp.c memcpy.c \
-	memmove.c mempcpy.c mempcpy.h memrchr.c memset.c mkdir.c \
-	mkstemp.c mktime.c mountlist.c nanosleep.c obstack.c obstack.h \
-	openat.c openat.h printf-args.c printf-parse.c putenv.c \
-	raise.c readlink.c readutmp.c realloc.c regex.c rename.c \
-	rmdir.c rpmatch.c save-cwd.c save-cwd.h setenv.c sig2str.c \
-	stat.c stpcpy.c strcasecmp.c strcspn.c strdup.c strncasecmp.c \
-	strndup.c strnlen.c strpbrk.c strstr.c strtod.c strtoimax.c \
+	ChangeLog TODO __fpending.c __fpending.h acl.c acl.h alloca.c \
+	asnprintf.c asprintf.c atexit.c backupfile.c backupfile.h \
+	basename.c c-strtod.c c-strtod.h c-strtold.c calloc.c \
+	canon-host.c canonicalize.c canonicalize.h chdir-long.c \
+	chdir-long.h chown.c cloexec.c cloexec.h closeout.c closeout.h \
+	dirfd.c dirfd.h dirname.c dirname.h dup2.c error.c error.h \
+	euidaccess.c exclude.c exclude.h exitfail.c exitfail.h \
+	fchdir-stub.c fchown-stub.c file-type.c file-type.h \
+	fileblocks.c filemode.c filemode.h fnmatch.c free.c fsusage.c \
+	fsusage.h ftruncate.c getcwd.c getdate.h getdate.y getgroups.c \
+	gethostname.c getline.c getline.h getloadavg.c getndelim2.c \
+	getopt.c getopt1.c getpagesize.h getpass.c gettime.c \
+	gettimeofday.c getugroups.c getusershell.c group-member.c \
+	group-member.h hard-locale.c hard-locale.h hash-pjw.c \
+	hash-pjw.h hash.c hash.h human.c human.h idcache.c lchown.c \
+	lchown.h long-options.c long-options.h lstat.c makepath.c \
+	makepath.h malloc.c md5.c md5.h memchr.c memcmp.c memcoll.c \
+	memcoll.h memcpy.c memmove.c mempcpy.c mempcpy.h memrchr.c \
+	memset.c mkdir.c mkstemp.c mktime.c modechange.c modechange.h \
+	mountlist.c mountlist.h nanosleep.c obstack.c obstack.h \
+	openat.c openat.h path-concat.c path-concat.h pathmax.h \
+	physmem.c physmem.h posixtm.c posixtm.h posixver.c posixver.h \
+	printf-args.c printf-parse.c putenv.c quote.c quote.h \
+	quotearg.c quotearg.h raise.c readlink.c readtokens.c \
+	readtokens.h readutmp.c readutmp.h realloc.c regex.c rename.c \
+	rmdir.c rpmatch.c safe-read.c safe-read.h safe-write.c \
+	safe-write.h same.c same.h save-cwd.c save-cwd.h savedir.c \
+	savedir.h setenv.c setenv.h settime.c sha1.c sha1.h sig2str.c \
+	sig2str.h stat.c stpcpy.c strcasecmp.c strcspn.c strdup.c \
+	strdup.h strftime.c strftime.h strncasecmp.c strndup.c \
+	strndup.h strnlen.c strpbrk.c strstr.c strtod.c strtoimax.c \
 	strtol.c strtoll.c strtoul.c strtoull.c strtoumax.c \
-	strverscmp.c tempname.c unsetenv.c utime.c vasnprintf.c \
-	vasprintf.c
+	strverscmp.c strverscmp.h tempname.c timespec.h unlocked-io.h \
+	unsetenv.c userspec.c userspec.h utime.c utimecmp.c utimecmp.h \
+	utimens.c utimens.h vasnprintf.c vasprintf.c xalloc.h \
+	xmalloc.c yesno.c yesno.h
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/alloca.m4 $(top_srcdir)/m4/allocsa.m4 \
 	$(top_srcdir)/m4/assert.m4 $(top_srcdir)/m4/atexit.m4 \
-	$(top_srcdir)/m4/backupfile.m4 $(top_srcdir)/m4/bison.m4 \
-	$(top_srcdir)/m4/boottime.m4 $(top_srcdir)/m4/c-strtod.m4 \
-	$(top_srcdir)/m4/calloc.m4 $(top_srcdir)/m4/canon-host.m4 \
+	$(top_srcdir)/m4/backupfile.m4 $(top_srcdir)/m4/basename.m4 \
+	$(top_srcdir)/m4/bison.m4 $(top_srcdir)/m4/boottime.m4 \
+	$(top_srcdir)/m4/c-strtod.m4 $(top_srcdir)/m4/calloc.m4 \
+	$(top_srcdir)/m4/canon-host.m4 \
 	$(top_srcdir)/m4/canonicalize.m4 \
 	$(top_srcdir)/m4/chdir-long.m4 $(top_srcdir)/m4/check-decl.m4 \
 	$(top_srcdir)/m4/chown.m4 $(top_srcdir)/m4/clock_time.m4 \
@@ -95,16 +114,17 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/getugroups.m4 \
 	$(top_srcdir)/m4/getusershell.m4 $(top_srcdir)/m4/glibc21.m4 \
 	$(top_srcdir)/m4/group-member.m4 \
-	$(top_srcdir)/m4/hard-locale.m4 $(top_srcdir)/m4/hash.m4 \
-	$(top_srcdir)/m4/host-os.m4 $(top_srcdir)/m4/human.m4 \
-	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/idcache.m4 \
-	$(top_srcdir)/m4/intmax_t.m4 $(top_srcdir)/m4/inttostr.m4 \
-	$(top_srcdir)/m4/inttypes-pri.m4 $(top_srcdir)/m4/inttypes.m4 \
-	$(top_srcdir)/m4/inttypes_h.m4 $(top_srcdir)/m4/jm-macros.m4 \
-	$(top_srcdir)/m4/jm-winsz1.m4 $(top_srcdir)/m4/jm-winsz2.m4 \
-	$(top_srcdir)/m4/lchown.m4 $(top_srcdir)/m4/lib-check.m4 \
-	$(top_srcdir)/m4/lib-ld.m4 $(top_srcdir)/m4/lib-link.m4 \
-	$(top_srcdir)/m4/lib-prefix.m4 $(top_srcdir)/m4/link-follow.m4 \
+	$(top_srcdir)/m4/hard-locale.m4 $(top_srcdir)/m4/hash-pjw.m4 \
+	$(top_srcdir)/m4/hash.m4 $(top_srcdir)/m4/host-os.m4 \
+	$(top_srcdir)/m4/human.m4 $(top_srcdir)/m4/iconv.m4 \
+	$(top_srcdir)/m4/idcache.m4 $(top_srcdir)/m4/intmax_t.m4 \
+	$(top_srcdir)/m4/inttostr.m4 $(top_srcdir)/m4/inttypes-pri.m4 \
+	$(top_srcdir)/m4/inttypes.m4 $(top_srcdir)/m4/inttypes_h.m4 \
+	$(top_srcdir)/m4/jm-macros.m4 $(top_srcdir)/m4/jm-winsz1.m4 \
+	$(top_srcdir)/m4/jm-winsz2.m4 $(top_srcdir)/m4/lchown.m4 \
+	$(top_srcdir)/m4/lib-check.m4 $(top_srcdir)/m4/lib-ld.m4 \
+	$(top_srcdir)/m4/lib-link.m4 $(top_srcdir)/m4/lib-prefix.m4 \
+	$(top_srcdir)/m4/link-follow.m4 \
 	$(top_srcdir)/m4/long-options.m4 \
 	$(top_srcdir)/m4/longdouble.m4 $(top_srcdir)/m4/longlong.m4 \
 	$(top_srcdir)/m4/ls-mntd-fs.m4 $(top_srcdir)/m4/lstat.m4 \
@@ -176,35 +196,19 @@ ARFLAGS = cru
 libfetish_a_AR = $(AR) $(ARFLAGS)
 am__DEPENDENCIES_1 = @LIBOBJS@
 am__DEPENDENCIES_2 = @ALLOCA@
-am_libfetish_a_OBJECTS = acl.$(OBJEXT) getdate.$(OBJEXT) \
-	posixtm.$(OBJEXT) posixver.$(OBJEXT) strftime.$(OBJEXT) \
-	hash.$(OBJEXT) hash-pjw.$(OBJEXT) allocsa.$(OBJEXT) \
-	argmatch.$(OBJEXT) backupfile.$(OBJEXT) basename.$(OBJEXT) \
-	c-strtod.$(OBJEXT) c-strtold.$(OBJEXT) canon-host.$(OBJEXT) \
-	canonicalize.$(OBJEXT) cloexec.$(OBJEXT) closeout.$(OBJEXT) \
-	cycle-check.$(OBJEXT) diacrit.$(OBJEXT) dirname.$(OBJEXT) \
-	dup-safer.$(OBJEXT) exclude.$(OBJEXT) exitfail.$(OBJEXT) \
-	filemode.$(OBJEXT) file-type.$(OBJEXT) fopen-safer.$(OBJEXT) \
-	fts.$(OBJEXT) full-read.$(OBJEXT) full-write.$(OBJEXT) \
-	gettime.$(OBJEXT) getugroups.$(OBJEXT) hard-locale.$(OBJEXT) \
-	human.$(OBJEXT) idcache.$(OBJEXT) imaxtostr.$(OBJEXT) \
-	linebuffer.$(OBJEXT) localcharset.$(OBJEXT) \
-	long-options.$(OBJEXT) makepath.$(OBJEXT) mbswidth.$(OBJEXT) \
-	md5.$(OBJEXT) memcasecmp.$(OBJEXT) memcoll.$(OBJEXT) \
-	modechange.$(OBJEXT) offtostr.$(OBJEXT) open-safer.$(OBJEXT) \
-	path-concat.$(OBJEXT) physmem.$(OBJEXT) quote.$(OBJEXT) \
-	quotearg.$(OBJEXT) readtokens0.$(OBJEXT) readtokens.$(OBJEXT) \
-	root-dev-ino.$(OBJEXT) safe-read.$(OBJEXT) \
-	safe-write.$(OBJEXT) same.$(OBJEXT) savedir.$(OBJEXT) \
-	settime.$(OBJEXT) sha1.$(OBJEXT) stripslash.$(OBJEXT) \
-	time_r.$(OBJEXT) umaxtostr.$(OBJEXT) unicodeio.$(OBJEXT) \
-	userspec.$(OBJEXT) utimecmp.$(OBJEXT) utimens.$(OBJEXT) \
-	version-etc.$(OBJEXT) version-etc-fsf.$(OBJEXT) \
-	xalloc-die.$(OBJEXT) xfts.$(OBJEXT) xgetcwd.$(OBJEXT) \
-	xgethostname.$(OBJEXT) xmalloc.$(OBJEXT) xmemcoll.$(OBJEXT) \
+am_libfetish_a_OBJECTS = allocsa.$(OBJEXT) argmatch.$(OBJEXT) \
+	cycle-check.$(OBJEXT) diacrit.$(OBJEXT) dup-safer.$(OBJEXT) \
+	fopen-safer.$(OBJEXT) fts.$(OBJEXT) full-read.$(OBJEXT) \
+	full-write.$(OBJEXT) imaxtostr.$(OBJEXT) linebuffer.$(OBJEXT) \
+	localcharset.$(OBJEXT) mbswidth.$(OBJEXT) memcasecmp.$(OBJEXT) \
+	offtostr.$(OBJEXT) open-safer.$(OBJEXT) readtokens0.$(OBJEXT) \
+	root-dev-ino.$(OBJEXT) stripslash.$(OBJEXT) time_r.$(OBJEXT) \
+	umaxtostr.$(OBJEXT) unicodeio.$(OBJEXT) version-etc.$(OBJEXT) \
+	version-etc-fsf.$(OBJEXT) xalloc-die.$(OBJEXT) xfts.$(OBJEXT) \
+	xgetcwd.$(OBJEXT) xgethostname.$(OBJEXT) xmemcoll.$(OBJEXT) \
 	xnanosleep.$(OBJEXT) xreadlink.$(OBJEXT) xstrndup.$(OBJEXT) \
 	xstrtod.$(OBJEXT) xstrtoimax.$(OBJEXT) xstrtol.$(OBJEXT) \
-	xstrtoul.$(OBJEXT) xstrtoumax.$(OBJEXT) yesno.$(OBJEXT)
+	xstrtoul.$(OBJEXT) xstrtoumax.$(OBJEXT)
 libfetish_a_OBJECTS = $(am_libfetish_a_OBJECTS)
 PROGRAMS = $(noinst_PROGRAMS)
 t_fpending_SOURCES = t-fpending.c
@@ -351,41 +355,23 @@ target_alias = @target_alias@
 noinst_LIBRARIES = libfetish.a
 LDADD = $(noinst_LIBRARIES)
 AM_CPPFLAGS = -I.. -I$(srcdir)
-libfetish_a_SOURCES = acl.h acl.c getdate.h getdate.y posixtm.c \
-	posixtm.h posixver.c posixver.h strftime.c strftime.h hash.c \
-	hash.h hash-pjw.c hash-pjw.h __fpending.h allocsa.c allocsa.h \
-	argmatch.c argmatch.h backupfile.c backupfile.h basename.c \
-	c-strtod.c c-strtod.h c-strtold.c canon-host.c canonicalize.c \
-	canonicalize.h cloexec.c cloexec.h closeout.c closeout.h \
+libfetish_a_SOURCES = allocsa.c allocsa.h argmatch.c argmatch.h \
 	cycle-check.c cycle-check.h dev-ino.h diacrit.c diacrit.h \
-	dirname.c dirname.h dirfd.h dup-safer.c euidaccess.h exclude.c \
-	exclude.h exit.h exitfail.c exitfail.h fcntl-safer.h \
-	filemode.c filemode.h file-type.c file-type.h fopen-safer.c \
-	fsusage.h fts.c fts_.h full-read.c full-read.h full-write.c \
-	full-write.h getcwd.h getline.h getpagesize.h getpass.h \
-	gettime.c gettext.h getugroups.c group-member.h hard-locale.c \
-	hard-locale.h human.c human.h idcache.c imaxtostr.c \
-	linebuffer.c linebuffer.h localcharset.c localcharset.h \
-	long-options.c long-options.h makepath.c makepath.h mbswidth.c \
-	mbswidth.h md5.c md5.h memcasecmp.c memcasecmp.h memcoll.c \
-	memcoll.h modechange.c modechange.h mountlist.h offtostr.c \
-	open-safer.c path-concat.c path-concat.h pathmax.h physmem.c \
-	physmem.h quote.c quote.h quotearg.c quotearg.h readtokens0.c \
-	readtokens0.h readtokens.c readtokens.h readutmp.h regex.h \
-	root-dev-ino.c root-dev-ino.h safe-read.c safe-read.h \
-	safe-write.c safe-write.h same.c same.h savedir.c savedir.h \
-	setenv.h settime.c sha1.c sha1.h sig2str.h stat-macros.h \
-	stdio-safer.h stripslash.c strdup.h strndup.h strverscmp.h \
-	time_r.c time_r.h timespec.h umaxtostr.c unicodeio.c \
-	unicodeio.h unistd-safer.h unlocked-io.h userspec.c userspec.h \
-	utimecmp.c utimecmp.h utimens.c utimens.h version-etc.c \
-	version-etc.h version-etc-fsf.c xalloc.h xalloc-die.c xfts.c \
-	xfts.h xgetcwd.c xgetcwd.h xgethostname.c xgethostname.h \
-	xmalloc.c xmemcoll.c xmemcoll.h xnanosleep.c xnanosleep.h \
+	dup-safer.c euidaccess.h exit.h fcntl-safer.h fopen-safer.c \
+	fts.c fts_.h full-read.c full-read.h full-write.c full-write.h \
+	getcwd.h gettext.h imaxtostr.c linebuffer.c linebuffer.h \
+	localcharset.c localcharset.h mbswidth.c mbswidth.h \
+	memcasecmp.c memcasecmp.h offtostr.c open-safer.c \
+	readtokens0.c readtokens0.h regex.h root-dev-ino.c \
+	root-dev-ino.h stat-macros.h stdio-safer.h stripslash.c \
+	time_r.c time_r.h umaxtostr.c unicodeio.c unicodeio.h \
+	unistd-safer.h version-etc.c version-etc.h version-etc-fsf.c \
+	xalloc-die.c xfts.c xfts.h xgetcwd.c xgetcwd.h xgethostname.c \
+	xgethostname.h xmemcoll.c xmemcoll.h xnanosleep.c xnanosleep.h \
 	xreadlink.c xreadlink.h xstrndup.c xstrndup.h xstrtod.c \
 	xstrtod.h xstrtoimax.c xstrtol.c xstrtol.h xstrtoul.c \
-	xstrtoumax.c yesno.c yesno.h printf-args.h printf-parse.h \
-	vasprintf.h vasnprintf.h
+	xstrtoumax.c printf-args.h printf-parse.h vasprintf.h \
+	vasnprintf.h
 libfetish_a_LIBADD = $(LIBOBJS) $(ALLOCA)
 libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
 lib_OBJECTS = $(libfetish_a_OBJECTS)
@@ -396,9 +382,9 @@ MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 MOSTLYCLEANFILES = stdbool.h stdbool.ht alloca.h alloca.h-t fnmatch.h \
 	fnmatch.h-t getopt.h getopt.h-t
 SUFFIXES = .sed .sin
-EXTRA_DIST = config.charset ref-add.sin ref-del.sin getndelim2.c \
-	getndelim2.h inttostr.c inttostr.h stdbool_.h alloca_.h \
-	fnmatch_.h fnmatch_loop.c getopt_.h getopt_int.h
+EXTRA_DIST = getdate.c config.charset ref-add.sin ref-del.sin \
+	getndelim2.c getndelim2.h inttostr.c inttostr.h stdbool_.h \
+	alloca_.h fnmatch_.h fnmatch_loop.c getopt_.h getopt_int.h
 charset_alias = $(DESTDIR)$(libdir)/charset.alias
 charset_tmp = $(DESTDIR)$(libdir)/charset.tmp
 all: $(BUILT_SOURCES)
@@ -456,25 +442,41 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/__fpending.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/acl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/alloca.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/asnprintf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/asprintf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/atexit.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/backupfile.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/basename.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/c-strtod.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/c-strtold.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/calloc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/canon-host.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/canonicalize.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/chdir-long.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/chown.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/cloexec.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/closeout.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/dirfd.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/dirname.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/dup2.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/error.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/euidaccess.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/exclude.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/exitfail.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fchdir-stub.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fchown-stub.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/file-type.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fileblocks.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/filemode.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fnmatch.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/free.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fsusage.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/ftruncate.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getcwd.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getdate.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getdate.y@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getgroups.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/gethostname.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getline.Po@am__quote@
@@ -483,14 +485,25 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getopt.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getopt1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getpass.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/gettime.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/gettimeofday.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getugroups.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getusershell.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/group-member.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/hard-locale.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/hash-pjw.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/hash.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/human.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/idcache.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/lchown.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/long-options.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/lstat.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/makepath.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/malloc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/md5.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/memchr.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/memcmp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/memcoll.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/memcpy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/memmove.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mempcpy.Po@am__quote@
@@ -499,29 +512,44 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mkdir.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mkstemp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mktime.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/modechange.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mountlist.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/nanosleep.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/obstack.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/openat.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/path-concat.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/physmem.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/posixtm.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/posixver.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/printf-args.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/printf-parse.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/putenv.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/quote.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/quotearg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/raise.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/readlink.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/readtokens.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/readutmp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/realloc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/regex.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/rename.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/rmdir.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/rpmatch.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/safe-read.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/safe-write.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/same.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/save-cwd.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/savedir.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/setenv.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/settime.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sha1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sig2str.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/stat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/stpcpy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strcasecmp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strcspn.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strdup.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strftime.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strncasecmp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strndup.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strnlen.Po@am__quote@
@@ -537,83 +565,43 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strverscmp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/tempname.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/unsetenv.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/userspec.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/utime.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/utimecmp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/utimens.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/vasnprintf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/vasprintf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/acl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xmalloc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/yesno.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/allocsa.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/argmatch.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/backupfile.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/basename.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/c-strtod.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/c-strtold.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/canon-host.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/canonicalize.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cloexec.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/closeout.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cycle-check.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/diacrit.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dirname.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dup-safer.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/exclude.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/exitfail.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/file-type.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filemode.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fopen-safer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fts.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-read.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-write.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getdate.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gettime.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getugroups.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hard-locale.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hash-pjw.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hash.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/human.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/idcache.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imaxtostr.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/linebuffer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/localcharset.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/long-options.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/makepath.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mbswidth.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/md5.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memcasecmp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memcoll.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/modechange.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/offtostr.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/open-safer.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/path-concat.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/physmem.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/posixtm.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/posixver.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quote.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quotearg.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/readtokens.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/readtokens0.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/root-dev-ino.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/safe-read.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/safe-write.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/same.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/savedir.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/settime.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha1.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strftime.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stripslash.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-fpending.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/time_r.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/umaxtostr.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/unicodeio.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/userspec.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utimecmp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utimens.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/version-etc-fsf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/version-etc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xalloc-die.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xfts.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xgetcwd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xgethostname.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xmalloc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xmemcoll.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xnanosleep.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xreadlink.Po@am__quote@
@@ -623,7 +611,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrtol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrtoul.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrtoumax.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/yesno.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
@@ -768,7 +755,6 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-	-rm -f getdate.c
 	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
 clean: clean-am
