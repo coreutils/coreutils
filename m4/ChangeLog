@@ -1,3 +1,7 @@
+2000-05-26  Jim Meyering  <meyering@lucent.com>
+
+	* uptime.m4: Use `$cross_compiling', not `$ac_cv_prog_cc_cross'.
+
 2000-05-24  Jim Meyering  <meyering@lucent.com>
 
 	* prereq.m4: Use []-quoted list in AC_CHECK_MEMBERS, now that
