@@ -1,6 +1,10 @@
-2000-07-31  Jim Meyering  <meyering@lucent.com>
+2000-08-05  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0y.
+
+	* Update to use latest CVS versions of automake and autoconf.
+
+2000-07-31  Jim Meyering  <meyering@lucent.com>
 
 	* src/shred.c [!HAVE_CONFIG_H]: Use `virtual memory exhausted', not
 	`Memory exhausted'.
