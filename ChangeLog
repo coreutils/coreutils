@@ -9,15 +9,13 @@
 
 2003-09-04  Paul Eggert  <eggert@twinsun.com>
 
-	Fix a bug reported by Andreas Schwab in
-	<http://mail.gnu.org/archive/html/bug-coreutils/2003-09/msg00009.html>.
 	* src/head.c (elide_tail_lines_pipe): Don't assign 0 or
 	SAFE_READ_ERROR to tmp->nbytes.
 	* src/tail.c (pipe_lines, pipe_bytes): Likewise.
 
 	* src/head.c (struct linebuffer): Change nbytes and nlines
 	from unsigned int to size_t.  unsigned int is safe (after the
-	changes noted above) but size_t is cleaner.
+	2003-09-03 patch) but size_t is cleaner.
 	* src/tail.c (struct linebuffer, struct charbuffer): Likewise.
 	(pipe_bytes): Likewise for local variable 'i', which was 'int'.
 
@@ -73,6 +71,8 @@
 
 2003-09-03  Andreas Schwab  <schwab@suse.de>
 
+	Bug report and patch here:
+	<http://mail.gnu.org/archive/html/bug-coreutils/2003-09/msg00009.html>
 	* src/tail.c (pipe_lines): Don't truncate return value from safe_read.
 	* src/head.c (elide_tail_lines_pipe): Likewise.
 
