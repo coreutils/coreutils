@@ -1,6 +1,8 @@
-2004-04-06  Jim Meyering  <jim@meyering.net>
+2004-04-02  Andreas Schwab  <schwab@suse.de>
 
-	* Version 5.3.0.
+	* src/stty.c: Add support for IUTF8 input flag.
+
+2004-04-06  Jim Meyering  <jim@meyering.net>
 
 	* src/system.h (makedev) [mkdev && !makedev]: Define in terms of mkdev.
 	Interix spells it `mkdev'.  Reported by Mark Funkenhauser.
