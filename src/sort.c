@@ -514,30 +514,34 @@ add_temp_dir (char const *dir)
   temp_dirs[temp_dir_count++] = dir;
 }
 
-/* Search through the list of temporary files for NAME;
-   remove it if it is found on the list. */
+/* Remove NAME from the list of temporary files.  */
 
 static void
 zaptemp (const char *name)
 {
   struct tempnode *volatile *pnode;
   struct tempnode *node;
+  struct tempnode *next;
   sigset_t oldset;
+  int unlink_status;
+  int unlink_errno = 0;
 
-  for (pnode = &temphead; (node = *pnode); pnode = &node->next)
-    if (node->name == name)
-      {
-	/* Unlink the temporary file in a critical section, to avoid races.  */
-	struct tempnode *t = node->next;
-	sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
-	unlink (name);
-	*pnode = t;
-	sigprocmask (SIG_SETMASK, &oldset, NULL);
-	if (! t)
-	  temptail = pnode;
-	free (node);
-	break;
-      }
+  for (pnode = &temphead; (node = *pnode)->name != name; pnode = &node->next)
+    continue;
+
+  /* Unlink the temporary file in a critical section to avoid races.  */
+  next = node->next;
+  sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
+  unlink_status = unlink (name);
+  unlink_errno = errno;
+  *pnode = next;
+  sigprocmask (SIG_SETMASK, &oldset, NULL);
+
+  if (unlink_status != 0)
+    error (0, unlink_errno, "warning: cannot remove: %s", name);
+  if (! next)
+    temptail = pnode;
+  free (node);
 }
 
 #if HAVE_NL_LANGINFO
