@@ -1,3 +1,7 @@
+1999-12-05  Jim Meyering  <meyering@ascend.com>
+
+	* Version 2.0a.
+
 1999-11-22  Jim Meyering  <meyering@ascend.com>
 
 	* lib/Makefile.am (DISTCLEANFILES): Put $(BUILT_SOURCES) here rather
@@ -77,6 +81,10 @@
 	* man/Makefile.maint ($(man_MANS)): Remove use of --name=... option.
 	* man/*.x: Include one-line summary in [NAME] section.
 	* man/Makefile.summ (cat-summary): Remove now-unused file.
+	* man/Makefile.am (EXTRA_DIST): Remove Makefile.summ.
+	* man/Makefile.maint: Include Makefile.summ with leading `-'.
+	This file is shared by fileutils and sh-utils, both of which still
+	have the file (albeit nearly empty now).
 	Suggestion for clean-up from Akim Demaille.
 
 1999-11-01  Jim Meyering  <meyering@ascend.com>
