@@ -96,8 +96,8 @@ EXTRA_DIST = chown.c mkdir.c rmdir.c getline.c mktime.c strftime.c getgroups.c
 INCLUDES = -I.. -I$(srcdir) -I../intl
 
 libfu_a_SOURCES = getdate.y posixtm.y getopt.c getopt1.c \
-argmatch.c backupfile.c dirname.c filemode.c \
-full-write.c getversion.c idcache.c \
+addext.c argmatch.c backupfile.c basename.c dirname.c filemode.c \
+full-write.c idcache.c \
 isdir.c long-options.c makepath.c modechange.c path-concat.c \
 safe-read.c save-cwd.c savedir.c stripslash.c userspec.c xgetcwd.c \
 xmalloc.c xstrdup.c xstrtol.c xstrtoul.c yesno.c
@@ -121,9 +121,9 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
-libfu_a_OBJECTS =  getdate.o posixtm.o getopt.o getopt1.o argmatch.o \
-backupfile.o dirname.o filemode.o full-write.o getversion.o idcache.o \
-isdir.o long-options.o makepath.o modechange.o path-concat.o \
+libfu_a_OBJECTS =  getdate.o posixtm.o getopt.o getopt1.o addext.o \
+argmatch.o backupfile.o basename.o dirname.o filemode.o full-write.o \
+idcache.o isdir.o long-options.o makepath.o modechange.o path-concat.o \
 safe-read.o save-cwd.o savedir.o stripslash.o userspec.o xgetcwd.o \
 xmalloc.o xstrdup.o xstrtol.o xstrtoul.o yesno.o
 AR = ar
@@ -133,25 +133,24 @@ COMPILE = $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 LINK = $(CC) $(CFLAGS) $(LDFLAGS) -o $@
 HEADERS =  $(noinst_HEADERS)
 
-DIST_COMMON =  Makefile.am Makefile.in alloca.c basename.c chown.c \
-error.c error.h euidaccess.c fileblocks.c fnmatch.c fsusage.c \
-ftruncate.c getdate.c getgroups.c getline.c group-member.c memcmp.c \
-memcpy.c memset.c mkdir.c mktime.c mountlist.c obstack.c obstack.h \
-posixtm.c regex.c regex.h rename.c rmdir.c rpmatch.c rx.c rx.h stpcpy.c \
-strcasecmp.c strdup.c strftime.c strndup.c strstr.c strtol.c strtoul.c \
-ylwrap
+DIST_COMMON =  Makefile.am Makefile.in alloca.c chown.c error.c error.h \
+euidaccess.c fileblocks.c fnmatch.c fsusage.c ftruncate.c getdate.c \
+getgroups.c getline.c group-member.c memcmp.c memcpy.c memset.c mkdir.c \
+mktime.c mountlist.c obstack.c obstack.h posixtm.c regex.c regex.h \
+rename.c rmdir.c rpmatch.c rx.c rx.h stpcpy.c strcasecmp.c strdup.c \
+strftime.c strndup.c strstr.c strtol.c strtoul.c ylwrap
 
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
 GZIP = --best
-DEP_FILES =  .deps/alloca.P .deps/argmatch.P .deps/backupfile.P \
-.deps/basename.P .deps/chown.P .deps/dirname.P .deps/error.P \
-.deps/euidaccess.P .deps/fileblocks.P .deps/filemode.P .deps/fnmatch.P \
-.deps/fsusage.P .deps/ftruncate.P .deps/full-write.P .deps/getdate.P \
-.deps/getgroups.P .deps/getline.P .deps/getopt.P .deps/getopt1.P \
-.deps/getversion.P .deps/group-member.P .deps/idcache.P .deps/isdir.P \
+DEP_FILES =  .deps/addext.P .deps/alloca.P .deps/argmatch.P \
+.deps/backupfile.P .deps/basename.P .deps/chown.P .deps/dirname.P \
+.deps/error.P .deps/euidaccess.P .deps/fileblocks.P .deps/filemode.P \
+.deps/fnmatch.P .deps/fsusage.P .deps/ftruncate.P .deps/full-write.P \
+.deps/getdate.P .deps/getgroups.P .deps/getline.P .deps/getopt.P \
+.deps/getopt1.P .deps/group-member.P .deps/idcache.P .deps/isdir.P \
 .deps/long-options.P .deps/makepath.P .deps/memcmp.P .deps/memcpy.P \
 .deps/memset.P .deps/mkdir.P .deps/mktime.P .deps/modechange.P \
 .deps/mountlist.P .deps/obstack.P .deps/path-concat.P .deps/posixtm.P \
