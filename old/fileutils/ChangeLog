@@ -1,6 +1,12 @@
+1999-09-28  Jim Meyering  <meyering@ascend.com>
+
+	* lib/xalloc.h (__attribute__): Protect against redefinition.
+	From Akim Demaille.
+
 1999-09-26  Jim Meyering  <meyering@ascend.com>
 
-	* lib/xmalloc.c (xalloc_die): Rename from xalloc_fail and update callers.
+	* lib/xmalloc.c (xalloc_die): Rename from xalloc_fail and
+	update callers.
 	Use explicit exit to help avoid warnings.
 	From Akim Demaille.
 
