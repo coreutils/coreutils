@@ -661,7 +661,7 @@ add_field_list (const char *c_str)
       int file_index, field_index;
       char *spec_item = p;
 
-      p = strchr (p, ',');
+      p = strpbrk (p, ", \t");
       if (p)
         *p++ = 0;
       invalid = decode_field_spec (spec_item, &file_index, &field_index);
