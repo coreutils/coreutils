@@ -92,7 +92,7 @@ AUTOMAKE_OPTIONS = 1.2 gnits
 
 TESTS = time-1
 EXTRA_DIST = $(TESTS)
-TESTS_ENVIRONMENT = LS=../../src/ls
+TESTS_ENVIRONMENT = LS=../../src/ls TOUCH=../../src/touch
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 

@@ -1,11 +1,28 @@
+1998-01-22  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/rm/sunos-1: Don't use -f.  Do adjust $RM if it's a
+	relative path.
+
+	* tests/ls/time-1: Use GNU touch to work around problems with NFS
+	caching and/or clock skew.  Reported by Kaveh Ghazi.
+
+	* tests/ls/Makefile.am (TESTS_ENVIRONMENT): Add TOUCH.
+
+	* src/Makefile.am (noinst_HEADERS): Add remove.h.
+	(mv_SOURCES): Define.
+	(rm_SOURCES): Define.
+
 1998-01-21  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/install.c: Declare new global, backup_type.
 	(main): Initialize backup_type unconditionally.
-	(copy_file): Call find_backup_file_name with new backup_type, argument.
+	(copy_file): Call find_backup_file_name with new argument, backup_type.
 	* src/ln.c: Declare new global, backup_type.
 	(main): Initialize backup_type unconditionally.
-	(do_link): Call find_backup_file_name with new backup_type, argument.
+	(do_link): Call find_backup_file_name with new argument, backup_type.
+
+	* src/copy.c (copy_internal): Use x->backup_type, not the global.
+	(valid_options): Use VALID_BACKUP_TYPE and VALID_SPARSE_MODE.
 
 	* src/copy.h: (VALID_SPARSE_MODE): Define.
 	[struct cp_options] (backup_type): New member.
