@@ -1,3 +1,8 @@
+2002-02-23  Paul Eggert  <eggert@twinsun.com>
+
+	* path-concat.c (xpath_concat): Reorder code to pacify
+	compilers that don't know that xalloc_die never returns.
+
 2002-02-20  Jim Meyering  <meyering@lucent.com>
 
 	* getdate.c: Regenerate using bison-1.33.
