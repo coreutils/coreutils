@@ -26,6 +26,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   test now detects integer overflow when evaluating large integers,
   rather than silently wrapping around.
 
+** New features
+
+  stat -f -c %S outputs the fundamental block size (used for block counts).
+  stat -f's default output format has been changed to output this size as well.
+
 * Major changes in release 5.3.0 (2005-01-08) [unstable]
 
 ** Bug fixes
