@@ -1,3 +1,13 @@
+2003-01-04  Jim Meyering  <jim@meyering.net>
+
+	* src/Makefile.am (check-misc): New rule, to ensure that no more
+	S_IS* macro definitions sneak into the code.
+	(check): Depend on check-misc.
+
+	* src/remove.c [S_ISLNK]: Don't define.  It's already defined in sys2.h.
+	* src/du.c (count_entry) [S_ISLNK]: Don't define.
+	* src/shred.c [S_ISLNK, S_ISFIFO, S_ISSOCK]: Don't define.
+
 2003-01-03  Jim Meyering  <jim@meyering.net>
 
 	* src/true.c: Add copyright.
@@ -67,9 +77,6 @@
 2002-12-23  Jim Meyering  <meyering@lucent.com>
 
 	* src/remove.c (remove_cwd_entries): Fix typo in comment.
-
-	* src/du.c (count_entry) [S_ISLNK]: Don't define.
-	It's already defined in sys2.h.
 
 2002-12-21  Jim Meyering  <jim@meyering.net>
 
