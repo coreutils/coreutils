@@ -35,6 +35,7 @@ libfetish_a_SOURCES = \
   dup-safer.c \
   exclude.c exclude.h \
   filemode.c filemode.h \
+  file-type.c file-type.h \
   fnmatch.h \
   fopen-safer.c \
   fsusage.h \
