@@ -5,10 +5,10 @@
    dircolors -p: output the compiled-in defaults
    dircolors FILE: use FILE, output a string setting LS_COLORS
 
-   Only distinction necessary: Bourne vs. C-shell
-   Use obstack to accumulate rhs of setenv
+   FIXME: Use obstack to accumulate rhs of setenv
  */
-/* dircolors - parse a Slackware-style DIR_COLORS file.
+
+/* FIXME: dircolors - parse a Slackware-style DIR_COLORS file.
    Copyright (C) 1994, 1995 H. Peter Anvin
    Copyright (C) 1996 Free Software Foundation, Inc.
 
@@ -42,6 +42,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 char *xmalloc ();
 char *basename ();
+char *strndup();
 
 /* Nonzero if any of the files read were the standard input. */
 static int have_read_stdin;
@@ -96,12 +97,12 @@ usage (int status)
   -h, --help                  display this help and exit\n\
       --version               output version information and exit\n\
 Determine format of output:\n\
-  -p, --print                 output defaults\n\
+  -p, --print-data-base       output defaults\n\
   -b, --sh, --bourne-shell    output Bourne shell code to set LS_COLOR\n\
   -c, --csh, --c-shell        output C-shell code to set LS_COLOR\n"));
     }
 
-  exit (status);
+  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /* If the SHELL environment variable is set to `csh' or `tcsh,'
@@ -125,41 +126,54 @@ guess_shell_syntax (void)
 }
 
 static void
-parse_line (char **keyword, char **arg, char *line)
+parse_line (const char *line, char **keyword, char **arg)
 {
-  char *p;
+  const char *p;
+  const char *keyword_start;
+  const char *arg_start;
 
-  *keyword = *arg = "";
+  *keyword = NULL;
+  *arg = NULL;
 
   for (p = line; isspace (*p); ++p)
     ;
 
+  /* Ignore blank lines and shell-style comments.  */
   if (*p == '\0' || *p == '#')
     return;
 
-  *keyword = p;
+  keyword_start = p;
 
-  while (!isspace (*p))
-    if (*p++ == '\0')
-      return;
+  while (!isspace (*p) && *p != '\0')
+    {
+      ++p;
+    }
 
-  *p++ = '\0';
+  *keyword = strndup (keyword_start, p - keyword_start);
+  if (*p  == '\0')
+    return;
 
-  while (isspace (*p))
-    ++p;
+  do
+    {
+      ++p;
+    }
+  while (isspace (*p));
 
   if (*p == '\0' || *p == '#')
     return;
 
-  *arg = p;
+  arg_start = p;
 
   while (*p != '\0' && *p != '#')
     ++p;
+
   for (--p; isspace (*p); --p)
-    ;
+    {
+      /* empty */
+    }
   ++p;
 
-  *p = '\0';
+  *arg = strndup (arg_start, p - arg_start);
 }
 
 /* Write a string to standard out, while watching for "dangerous"
@@ -240,65 +254,69 @@ dc_parse_stream (FILE *fp, const char *filename, char **result)
 	    break;
 	}
 
-      parse_line (&keywd, &arg, line);
-      if (*keywd != '\0')
-	{
-	  if (strcasecmp (keywd, "TERM") == 0)
-	    {
-	      if (strcmp (arg, term) == 0)
-		state = ST_TERMSURE;
-	      else if (state != ST_TERMSURE)
-		state = ST_TERMNO;
-	    }
-	  else
-	    {
-	      if (state == ST_TERMSURE)
-		state = ST_TERMYES; /* Another TERM can cancel */
+      parse_line (line, &keywd, &arg);
 
-	      if (state != ST_TERMNO)
+      if (keywd == NULL)
+	continue;
+
+      if (strcasecmp (keywd, "TERM") == 0)
+	{
+	  if (strcmp (arg, term) == 0)
+	    state = ST_TERMSURE;
+	  else if (state != ST_TERMSURE)
+	    state = ST_TERMNO;
+	}
+      else
+	{
+	  if (state == ST_TERMSURE)
+	    state = ST_TERMYES; /* Another TERM can cancel */
+
+	  if (state != ST_TERMNO)
+	    {
+	      if (keywd[0] == '.')
 		{
-		  if (keywd[0] == '.')
+		  putchar ('*');
+		  put_seq (keywd, '=');
+		  put_seq (arg, ':');
+		}
+	      else if (keywd[0] == '*')
+		{
+		  put_seq (keywd, '=');
+		  put_seq (arg, ':');
+		}
+	      else if (strcasecmp (keywd, "OPTIONS") == 0)
+		{
+		  /* Ignore.  */
+		}
+	      else if (strcasecmp (keywd, "COLOR") == 0)
+		{
+		   /* FIXME: ignored now.  */
+		}
+	      else
+		{
+		  int i;
+
+		  for (i = 0; slack_codes[i] != NULL; ++i)
+		    if (strcasecmp (keywd, slack_codes[i]) == 0)
+		      break;
+
+		  if (slack_codes[i] != NULL)
 		    {
-		      putchar ('*');
-		      put_seq (keywd, '=');
+		      printf ("%s=", ls_codes[i]);
 		      put_seq (arg, ':');
-		    }
-		  else if (keywd[0] == '*')
-		    {
-		      put_seq (keywd, '=');
-		      put_seq (arg, ':');
-		    }
-		  else if (strcasecmp (keywd, "OPTIONS") == 0)
-		    {
-		      /* Ignore.  */
-		    }
-		  else if (strcasecmp (keywd, "COLOR") == 0)
-		    {
-		       /* FIXME: ignored now.  */
 		    }
 		  else
 		    {
-		      int i;
-
-		      for (i = 0; slack_codes[i] != NULL; ++i)
-			if (strcasecmp (keywd, slack_codes[i]) == 0)
-			  break;
-
-		      if (slack_codes[i] != NULL)
-			{
-			  printf ("%s=", ls_codes[i]);
-			  put_seq (arg, ':');
-			}
-		      else
-			{
-			  error (0, 0, _("%s:%lu: unrecognized keyword %s\n"),
-				 filename, (long unsigned) line_number, keywd);
-			  err = 1;
-			}
+		      error (0, 0, _("%s:%lu: unrecognized keyword %s\n"),
+			     filename, (long unsigned) line_number, keywd);
+		      err = 1;
 		    }
 		}
 	    }
 	}
+      free (keywd);
+      if (arg)
+	free (arg);
     }
 
   return err;
@@ -348,14 +366,13 @@ dc_parse_file (const char *filename, char **ls_color_string)
 }
 
 int
-main (int argc, char *argv[])
+main (int argc, char **argv)
 {
-  int err;
+  int err = 0;
   int optc;
   enum Shell_syntax syntax = SHELL_SYNTAX_UNKNOWN;
   char *ls_color_string;
-  char *file;
-  int print_defaults = 0;
+  int print_database = 0;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -377,20 +394,41 @@ main (int argc, char *argv[])
 	break;
 
       case 'p':
-	print_defaults = 1;
+	print_database = 1;
 	break;
 
       default:
 	usage (1);
       }
 
-  /* FIXME: don't allow -b with -c
-     or -p with anything else.
-     No file args allowed with -p.
-     No more than one allowed in any case.
-     */
+  argc -= optind;
+  argv += optind;
 
-  if (print_defaults)
+  /* It doesn't make sense to use --print with either of
+     --bourne or --c-shell.  */
+  if (print_database && syntax != SHELL_SYNTAX_UNKNOWN)
+    {
+      error (0, 0,
+	     _("the options to output dircolors' internal database and\n\
+to select a shell syntax are mutually exclusive"));
+      usage (1);
+    }
+
+  if (print_database && argc > 0)
+    {
+      error (0, 0,
+	     _("no FILE arguments may be used with the option to output\n\
+dircolors' internal database"));
+      usage (1);
+    }
+
+  if (!print_database && argc > 1)
+    {
+      error (0, 0, _("too many arguments"));
+      usage (1);
+    }
+
+  if (print_database)
     {
       int i;
       for (i = 0; i < G_N_LINES; i++)
@@ -399,20 +437,24 @@ main (int argc, char *argv[])
 	  fputc ('\n', stdout);
 	}
     }
-
-  /* Use shell to determine mode, if not already done. */
-  if (syntax == SHELL_SYNTAX_UNKNOWN)
+  else
     {
-      syntax = guess_shell_syntax ();
+      /* If shell syntax was not explicitly specified, try to guess it. */
       if (syntax == SHELL_SYNTAX_UNKNOWN)
 	{
-	  error (EXIT_FAILURE, 0,
-	   _("no SHELL environment variable, and no shell type option given"));
+	  syntax = guess_shell_syntax ();
+	  if (syntax == SHELL_SYNTAX_UNKNOWN)
+	    {
+	      error (EXIT_FAILURE, 0,
+	 _("no SHELL environment variable, and no shell type option given"));
+	    }
 	}
-    }
 
-  file = argv[optind];
-  err = dc_parse_file (file, &ls_color_string);
+      if (argc == 0)
+	err = dc_parse_stream (NULL, NULL, &ls_color_string);
+      else
+	err = dc_parse_file (argv[0], &ls_color_string);
+    }
 
   if (fclose (stdout) == EOF)
     error (EXIT_FAILURE, errno, _("write error"));
