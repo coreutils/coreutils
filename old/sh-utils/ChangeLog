@@ -1,6 +1,12 @@
-2002-01-20  Jim Meyering  <meyering@lucent.com>
+2002-01-21  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* src/dirname.c: Don't include "xalloc.h", as system.h already
+	does that via sys2.h.
+	* src/expr.c: Likewise.
+
+2002-01-20  Jim Meyering  <meyering@lucent.com>
 
 	* src/Makefile.am (check_date_against_glibc_strftime): New target
 	to help keep date's --help output in sync with the glibc documentation
