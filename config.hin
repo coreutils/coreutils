@@ -251,10 +251,6 @@
    */
 #undef HAVE_DECL_STPCPY
 
-/* Define to 1 if you have the declaration of `strerror', and to 0 if you
-   don't. */
-#undef HAVE_DECL_STRERROR
-
 /* Define to 1 if you have the declaration of `strerror_r', and to 0 if you
    don't. */
 #undef HAVE_DECL_STRERROR_R
