@@ -6872,12 +6872,12 @@ and when @command{dd} completes, it outputs the final statistics.
 @example
 $ dd if=/dev/zero of=/dev/null count=10MB & pid=$!
 $ kill -s USR1 $pid; wait $pid
-4111640+0 records in
-4111639+0 records out
-2.1GB copied in 7.95411s (265MB/s)
+3385223+0 records in
+3385223+0 records out
+1733234176 bytes (1.7 GB) copied, 6.42173 seconds, 270 MB/s
 10000000+0 records in
 10000000+0 records out
-5.1GB copied in 19.3794s (264MB/s)
+5120000000 bytes (5.1 GB) copied, 18.913 seconds, 271 MB/s
 @end example
 
 @exitstatus
