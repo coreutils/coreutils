@@ -35,6 +35,7 @@
 #include "system.h"
 #include "error.h"
 #include "modechange.h"
+#include "quote.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -160,17 +161,17 @@ numbers must be specified"));
 
       s = argv[optind + 2];
       if (xstrtol (s, NULL, 0, &tmp_major, NULL) != LONGINT_OK)
-	error (1, 0, _("invalid major device number `%s'"), s);
+	error (1, 0, _("invalid major device number %s"), quote (s));
 
       s = argv[optind + 3];
       if (xstrtol (s, NULL, 0, &tmp_minor, NULL) != LONGINT_OK)
-	error (1, 0, _("invalid minor device number `%s'"), s);
+	error (1, 0, _("invalid minor device number %s"), quote (s));
 
       i_major = (int) tmp_major;
       i_minor = (int) tmp_minor;
 
       if (mknod (argv[optind], newmode | S_IFBLK, makedev (i_major, i_minor)))
-	error (1, errno, "%s", argv[optind]);
+	error (1, errno, "%s", quote (argv[optind]));
 #endif
       break;
 
@@ -189,17 +190,17 @@ numbers must be specified"));
 
       s = argv[optind + 2];
       if (xstrtol (s, NULL, 0, &tmp_major, NULL) != LONGINT_OK)
-	error (1, 0, _("invalid major device number `%s'"), s);
+	error (1, 0, _("invalid major device number %s"), quote (s));
 
       s = argv[optind + 3];
       if (xstrtol (s, NULL, 0, &tmp_minor, NULL) != LONGINT_OK)
-	error (1, 0, _("invalid minor device number `%s'"), s);
+	error (1, 0, _("invalid minor device number %s"), quote (s));
 
       i_major = (int) tmp_major;
       i_minor = (int) tmp_minor;
 
       if (mknod (argv[optind], newmode | S_IFCHR, makedev (i_major, i_minor)))
-	error (1, errno, "%s", argv[optind]);
+	error (1, errno, "%s", quote (argv[optind]));
 #endif
       break;
 
@@ -214,7 +215,7 @@ major and minor device numbers may not be specified for fifo files"));
 	  usage (1);
 	}
       if (mkfifo (argv[optind], newmode))
-	error (1, errno, "%s", argv[optind]);
+	error (1, errno, "%s", quote (argv[optind]));
 #endif
       break;
 
