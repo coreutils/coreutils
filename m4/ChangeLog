@@ -1,3 +1,7 @@
+2000-06-08  Jim Meyering  <meyering@lucent.com>
+
+	* largefile.m4: Remove file (now that it's part of autoconf).
+
 2000-06-04  Paul Eggert  <eggert@twinsun.com>
 
 	Rewrite largefile configuration so that we don't need to run
