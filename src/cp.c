@@ -522,7 +522,8 @@ do_copy (int argc, char **argv)
 	 source exists but is not a directory, convert the user's command
 	 `cp source dest/' to `cp source dest/basename(source)'.  Doing
 	 this ensures that the command `cp non-directory file/' will now
-	 fail rather than performing the copy.  */
+	 fail rather than performing the copy.  COPY diagnoses the case of
+	 `cp directory non-directory'.  */
 
       else if (dest[strlen (dest) - 1] == '/'
 	  && lstat (source, &source_stats) == 0
