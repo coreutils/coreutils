@@ -210,7 +210,8 @@ maintainer-clean: distclean
 
 distdir = ../$(PACKAGE)-$(VERSION)/$(subdir)
 dist distdir: update-po $(DISTFILES)
-	for file in $(DISTFILES); do \
+	dists="$(DISTFILES)"; \
+	for file in $$dists; do \
 	  ln $(srcdir)/$$file $(distdir) 2> /dev/null \
 	    || cp -p $(srcdir)/$$file $(distdir); \
 	done
