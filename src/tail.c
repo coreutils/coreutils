@@ -75,6 +75,17 @@
     }									\
   while (0)
 
+#define CLOSE_FD(Fd, Name)						\
+  do									\
+    {									\
+      if ((Fd) != -1 && (Fd) != STDIN_FILENO && close (Fd))		\
+	{								\
+	  error (0, errno, "closing %s (fd=%d)", (Name), (Fd));		\
+	}								\
+    }									\
+  while (0)
+
+
 /* Number of items to tail.  */
 #define DEFAULT_N_LINES 10
 
@@ -85,10 +96,10 @@
 
 enum Follow_mode
 {
-  /* FIXME */
+  /* FIXME: describe */
   follow_name,
 
-  /* FIXME */
+  /* FIXME: describe */
   follow_descriptor,
 };
 
@@ -110,8 +121,15 @@ struct File_spec
   dev_t dev;
   ino_t ino;
 
+  /* FIXME: describe */
   unsigned int no_change_counter;
+
+  /* FIXME: describe */
+  int missing;
 };
+
+/* FIXME: describe */
+static int allow_missing;
 
 /* If nonzero, interpret the numeric argument as the number of lines.
    Otherwise, interpret it as the number of bytes.  */
@@ -122,11 +140,8 @@ static int count_lines;
 /* FIXME: make follow_name the default? */
 static enum Follow_mode follow_mode;
 
-/* If nonzero, read from the end of one file until killed.  */
+/* If nonzero, read from the ends of all specified files until killed.  */
 static int forever;
-
-/* If nonzero, read from the end of multiple files until killed.  */
-static int forever_multiple;
 
 /* If nonzero, count from start of file instead of end.  */
 static int from_start;
@@ -162,6 +177,7 @@ static int show_version;
 
 static struct option const long_options[] =
 {
+  {"allow-missing", required_argument, NULL, 11},
   {"bytes", required_argument, NULL, 'c'},
   {"follow", no_argument, NULL, 'f'},
   {"follow-descriptor", no_argument, NULL, 12},
@@ -252,6 +268,7 @@ file_lines (const char *pretty_filename, int fd, long int n_lines, off_t pos)
   /* Make `pos' a multiple of `BUFSIZ' (0 if the file is short), so that all
      reads will be on block boundaries, which might increase efficiency.  */
   pos -= bytes_read;
+  /* FIXME: check lseek return value  */
   lseek (fd, pos, SEEK_SET);
   bytes_read = safe_read (fd, buffer, bytes_read);
   if (bytes_read == -1)
@@ -283,10 +300,12 @@ file_lines (const char *pretty_filename, int fd, long int n_lines, off_t pos)
       if (pos == 0)
 	{
 	  /* Not enough lines in the file; print the entire file.  */
+	  /* FIXME: check lseek return value  */
 	  lseek (fd, (off_t) 0, SEEK_SET);
 	  return 0;
 	}
       pos -= BUFSIZ;
+      /* FIXME: check lseek return value  */
       lseek (fd, pos, SEEK_SET);
     }
   while ((bytes_read = safe_read (fd, buffer, BUFSIZ)) > 0);
@@ -566,8 +585,7 @@ start_lines (const char *pretty_filename, int fd, long int n_lines)
 }
 
 /* Display file FILENAME from the current position in FD to the end.
-   If `forever' is nonzero, keep reading from the end of the file
-   until killed.  Return the number of bytes read from the file.  */
+   Return the number of bytes read from the file.  */
 
 static long
 dump_remainder (const char *pretty_filename, int fd)
@@ -577,7 +595,6 @@ dump_remainder (const char *pretty_filename, int fd)
   long total;
 
   total = 0;
-output:
   while ((bytes_read = safe_read (fd, buffer, BUFSIZ)) > 0)
     {
       XWRITE (STDOUT_FILENO, buffer, bytes_read);
@@ -585,24 +602,94 @@ output:
     }
   if (bytes_read == -1)
     error (EXIT_FAILURE, errno, "%s", pretty_filename);
+
   if (forever)
-    {
-      fflush (stdout);
-      sleep (sleep_interval);
-      goto output;
-    }
-  else
-    {
-      if (forever_multiple)
-	fflush (stdout);
-    }
+    fflush (stdout);
 
   return total;
 }
 
-/* Tail NFILES (>1) files forever until killed.
+/* FIXME: describe */
+
+static void
+recheck (struct File_spec *f)
+{
+  /* open/fstat the file and announce if dev/ino
+     have changed */
+  struct stat new_stats;
+  int fd;
+  int fail = 0;
+  int is_stdin = (STREQ (f->name, "-"));
+
+  fd = (is_stdin ? STDIN_FILENO : open (f->name, O_RDONLY));
+
+  /* If the open fails because the file doesn't exist,
+     then mark the file as missing.  */
+  f->missing = (allow_missing && fd == -1 && errno == ENOENT);
+
+  if (fd == -1 || fstat (fd, &new_stats) < 0)
+    {
+      fail = 1;
+      error (0, errno, "%s", f->pretty_name);
+    }
+  else if (!S_ISREG (new_stats.st_mode)
+	   && !S_ISFIFO (new_stats.st_mode))
+    {
+      fail = 1;
+      error (0, 0,
+	     _("%s has been replaced with a non-regular file;  \
+cannot follow end of non-regular file"),
+	     f->pretty_name);
+    }
+
+  if (fail)
+    {
+      CLOSE_FD (fd, f->pretty_name);
+      CLOSE_FD (f->fd, f->pretty_name);
+      f->fd = -1;
+    }
+  else if (f->ino != new_stats.st_ino || f->dev != new_stats.st_dev)
+    {
+      /* Close the old one.  */
+      CLOSE_FD (f->fd, f->pretty_name);
+
+      /* File has been replaced (e.g., via log rotation) --
+         tail the new one.  */
+      error (0, 0,
+	     _("%s has been replaced;  following end of new file"),
+	     f->pretty_name);
+
+      f->fd = fd;
+      f->size = new_stats.st_size;
+      f->dev = new_stats.st_dev;
+      f->ino = new_stats.st_ino;
+      f->no_change_counter = 0;
+      /* FIXME: check lseek return value  */
+      lseek (f->fd, new_stats.st_size, SEEK_SET);
+    }
+  else if (f->missing)
+    {
+      error (0, 0, _("%s has reappeared"), f->pretty_name);
+      f->missing = 0;
+
+      f->fd = fd;
+      f->size = new_stats.st_size;
+      f->dev = new_stats.st_dev;
+      f->ino = new_stats.st_ino;
+      f->no_change_counter = 0;
+      /* FIXME: check lseek return value  */
+      lseek (f->fd, new_stats.st_size, SEEK_SET);
+    }
+  else
+    {
+      CLOSE_FD (fd, f->pretty_name);
+    }
+}
+
+/* Tail NFILES files forever, or until killed.
    The pertinent information for each file is stored in an entry of F.
-   Loop over each of them, doing an fstat to see if they have changed size.
+   Loop over each of them, doing an fstat to see if they have changed size,
+   and an occasional open/fstat to see if any dev/ino pair has changed.
    If none of them have changed size in one iteration, sleep for a
    while and try again.  Continue until the user interrupts us.  */
 
@@ -616,15 +703,20 @@ tail_forever (struct File_spec *f, int nfiles)
   while (1)
     {
       int i;
-      int changed;
+      int any_changed;
+      int any_live_files;
 
-      changed = 0;
+      any_live_files = 0;
+      any_changed = 0;
       for (i = 0; i < nfiles; i++)
 	{
 	  struct stat stats;
 
-	  if (f[i].fd < 0)
+	  if (f[i].fd < 0 && !f[i].missing)
 	    continue;
+
+	  any_live_files = 1;
+
 	  if (fstat (f[i].fd, &stats) < 0)
 	    {
 	      error (0, errno, "%s", f[i].pretty_name);
@@ -637,70 +729,21 @@ tail_forever (struct File_spec *f, int nfiles)
 	      if (++f[i].no_change_counter > max_no_change_count
 		  && follow_mode == follow_name)
 		{
-		  /* open/fstat the file and announce if dev/ino
-		     have changed */
-		  struct stat new_stats;
-		  int fd;
-		  int fail = 0;
-		  int is_stdin = (STREQ (f[i].name, "-"));
-
-		  fd = (is_stdin ? STDIN_FILENO : open (f[i].name, O_RDONLY));
-
-		  if (fd == -1 || fstat (fd, &new_stats) < 0)
-		    {
-		      fail = 1;
-		      error (0, errno, "%s", f[i].pretty_name);
-		    }
-		  else if (!S_ISREG (new_stats.st_mode))
-		    {
-		      fail = 1;
-		      error (0, 0,
-			     _("%s has been replaced with a non-regular file;  \
-cannot follow end of non-regular file"),
-			     f[i].pretty_name);
-		    }
-
-		  if (fail)
-		    {
-		      if (fd != STDIN_FILENO)
-			close (fd);
-		      if (f[i].fd != STDIN_FILENO)
-			close (f[i].fd);
-		      f[i].fd = -1;
-		    }
-		  else if (f[i].ino != new_stats.st_ino
-			   || f[i].dev != new_stats.st_dev)
-		    {
-		      /* Close the old one.  */
-		      if (f[i].fd != STDIN_FILENO)
-			close (f[i].fd);
-
-		      /* File has been replaced (e.g., via log rotation) --
-			 tail the new one.  */
-		      error (0, 0,
-			 _("%s has been replaced;  following end of new file"),
-			     f[i].pretty_name);
-		      f[i].fd = fd;
-		      f[i].size = new_stats.st_size;
-		      f[i].dev = new_stats.st_dev;
-		      f[i].ino = new_stats.st_ino;
-		      f[i].no_change_counter = 0;
-		      lseek (f[i].fd, new_stats.st_size, SEEK_SET);
-		    }
-		  else
-		    {
-		      close (fd);
-		    }
-
+		  recheck (&f[i]);
 		  f[i].no_change_counter = 0;
-		};
+		}
+
 	      continue;
 	    }
+
+	  /* FIXME-now:
+	     Otherwise, a file that's unlinked or moved aside, yet always
+	     growing will never be recognized has having been renamed.  */
 
 	  /* This file has changed size.  Print out what we can, and
 	     then keep looping.  */
 
-	  changed = 1;
+	  any_changed = 1;
 
 	  /* reset counter */
 	  f[i].no_change_counter = 0;
@@ -709,6 +752,7 @@ cannot follow end of non-regular file"),
 	    {
 	      write_header (f[i].pretty_name, _("file truncated"));
 	      last = i;
+	      /* FIXME: check lseek return value  */
 	      lseek (f[i].fd, stats.st_size, SEEK_SET);
 	      f[i].size = stats.st_size;
 	      continue;
@@ -723,8 +767,14 @@ cannot follow end of non-regular file"),
 	  f[i].size += dump_remainder (f[i].pretty_name, f[i].fd);
 	}
 
+      if (!any_live_files /* FIXME-now: && ! allow_missing */ )
+	{
+	  error (0, 0, _("no files remaining"));
+	  break;
+	}
+
       /* If none of the files changed size, sleep.  */
-      if (! changed)
+      if (!any_changed)
 	sleep (sleep_interval);
     }
 }
@@ -750,9 +800,14 @@ tail_bytes (const char *pretty_filename, int fd, off_t n_bytes)
   if (from_start)
     {
       if (S_ISREG (stats.st_mode))
-	lseek (fd, n_bytes, SEEK_CUR);
+	{
+	  /* FIXME: check lseek return value  */
+	  lseek (fd, n_bytes, SEEK_CUR);
+	}
       else if (start_bytes (pretty_filename, fd, n_bytes))
-	return 1;
+	{
+	  return 1;
+	}
       dump_remainder (pretty_filename, fd);
     }
   else
@@ -782,12 +837,14 @@ tail_bytes (const char *pretty_filename, int fd, off_t n_bytes)
 		 more bytes than have been requested.  So reposition the
 		 file pointer to the incoming current position and print
 		 everything after that.  */
+	      /* FIXME: check lseek return value  */
 	      lseek (fd, current_pos, SEEK_SET);
 	    }
 	  else
 	    {
 	      /* There are more bytes remaining than were requested.
 		 Back up.  */
+	      /* FIXME: check lseek return value  */
 	      lseek (fd, -n_bytes, SEEK_END);
 	    }
 	  dump_remainder (pretty_filename, fd);
@@ -877,9 +934,11 @@ tail_file (struct File_spec *f, off_t n_units)
       fd = open (f->name, O_RDONLY);
     }
 
+  f->missing = (allow_missing && fd == -1 && errno == ENOENT);
+
   if (fd == -1)
     {
-      if (forever_multiple)
+      if (forever)
 	f->fd = -1;
       error (0, errno, "%s", f->pretty_name);
       errors = 1;
@@ -889,7 +948,7 @@ tail_file (struct File_spec *f, off_t n_units)
       if (print_headers)
 	write_header (f->pretty_name, NULL);
       errors = tail (f->pretty_name, fd, n_units);
-      if (forever_multiple)
+      if (forever)
 	{
 	  /* FIXME: duplicate code */
 	  if (fstat (fd, &stats) < 0)
@@ -897,7 +956,7 @@ tail_file (struct File_spec *f, off_t n_units)
 	      error (0, errno, "%s", f->pretty_name);
 	      errors = 1;
 	    }
-	  else if (!S_ISREG (stats.st_mode))
+	  else if (!S_ISREG (stats.st_mode) && !S_ISFIFO (stats.st_mode))
 	    {
 	      error (0, 0, _("%s: cannot follow end of non-regular file"),
 		     f->pretty_name);
@@ -905,8 +964,7 @@ tail_file (struct File_spec *f, off_t n_units)
 	    }
 	  if (errors)
 	    {
-	      if (!is_stdin)
-		close (fd);
+	      CLOSE_FD (fd, f->pretty_name);
 	      f->fd = -1;
 	    }
 	  else
@@ -1090,7 +1148,7 @@ parse_options (int argc, char **argv,
   int c;
 
   count_lines = 1;
-  forever = forever_multiple = from_start = print_headers = 0;
+  forever = from_start = print_headers = 0;
 
   while ((c = getopt_long (argc, argv, "c:n:fqs:v", long_options, NULL)) != -1)
     {
@@ -1131,6 +1189,10 @@ parse_options (int argc, char **argv,
 
 	case 'f':
 	  forever = 1;
+	  break;
+
+	case 11:
+	  allow_missing = 1;
 	  break;
 
 	case 12:
@@ -1229,12 +1291,6 @@ main (int argc, char **argv)
   n_files = argc - optind;
   file = argv + optind;
 
-  if (n_files > 1 && forever)
-    {
-      forever_multiple = 1;
-      forever = 0;
-    }
-
   if (n_files == 0)
     {
       static char *dummy_stdin = "-";
@@ -1253,7 +1309,7 @@ main (int argc, char **argv)
   for (i = 0; i < n_files; i++)
     exit_status |= tail_file (&F[i], n_units);
 
-  if (forever_multiple)
+  if (forever)
     tail_forever (F, n_files);
 
   if (have_read_stdin && close (0) < 0)
