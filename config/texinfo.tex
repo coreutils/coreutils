@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2003-07-24.06}
+\def\texinfoversion{2003-07-27.17}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
@@ -2524,20 +2524,6 @@ width0pt\relax} \fi
 % Prevent errors for section commands.
 % Used in @ignore and in failing conditionals.
 \def\ignoresections{%
-  \let\chapter=\relax
-  \let\unnumbered=\relax
-  \let\top=\relax
-  \let\unnumberedsec=\relax
-  \let\unnumberedsection=\relax
-  \let\unnumberedsubsec=\relax
-  \let\unnumberedsubsection=\relax
-  \let\unnumberedsubsubsec=\relax
-  \let\unnumberedsubsubsection=\relax
-  \let\section=\relax
-  \let\subsec=\relax
-  \let\subsubsec=\relax
-  \let\subsection=\relax
-  \let\subsubsection=\relax
   \let\appendix=\relax
   \let\appendixsec=\relax
   \let\appendixsection=\relax
@@ -2545,110 +2531,26 @@ width0pt\relax} \fi
   \let\appendixsubsection=\relax
   \let\appendixsubsubsec=\relax
   \let\appendixsubsubsection=\relax
+  %\let\begin=\relax
+  %\let\bye=\relax
+  \let\centerchap=\relax
+  \let\chapter=\relax
   \let\contents=\relax
+  \let\section=\relax
   \let\smallbook=\relax
+  \let\subsec=\relax
+  \let\subsection=\relax
+  \let\subsubsec=\relax
+  \let\subsubsection=\relax
   \let\titlepage=\relax
-}
-
-% Used in nested conditionals, where we have to parse the Texinfo source
-% and so want to turn off most commands, in case they are used
-% incorrectly.
-%
-% We use \empty instead of \relax for the @def... commands, so that \end
-% doesn't throw an error.  For instance:
-% @ignore
-% @deffn ...
-% @end deffn
-% @end ignore
-%
-% The @end deffn is going to get expanded, because we're trying to allow
-% nested conditionals.  But we don't want to expand the actual @deffn,
-% since it might be syntactically correct and intended to be ignored.
-% Since \end checks for \relax, using \empty does not cause an error.
-%
-\def\ignoremorecommands{%
-  \let\defcodeindex = \relax
-  \let\defcv = \empty
-  \let\defcvx = \empty
-  \let\Edefcv = \empty
-  \let\deffn = \empty
-  \let\deffnx = \empty
-  \let\Edeffn = \empty
-  \let\defindex = \relax
-  \let\defivar = \empty
-  \let\defivarx = \empty
-  \let\Edefivar = \empty
-  \let\defmac = \empty
-  \let\defmacx = \empty
-  \let\Edefmac = \empty
-  \let\defmethod = \empty
-  \let\defmethodx = \empty
-  \let\Edefmethod = \empty
-  \let\defop = \empty
-  \let\defopx = \empty
-  \let\Edefop = \empty
-  \let\defopt = \empty
-  \let\defoptx = \empty
-  \let\Edefopt = \empty
-  \let\defspec = \empty
-  \let\defspecx = \empty
-  \let\Edefspec = \empty
-  \let\deftp = \empty
-  \let\deftpx = \empty
-  \let\Edeftp = \empty
-  \let\deftypefn = \empty
-  \let\deftypefnx = \empty
-  \let\Edeftypefn = \empty
-  \let\deftypefun = \empty
-  \let\deftypefunx = \empty
-  \let\Edeftypefun = \empty
-  \let\deftypeivar = \empty
-  \let\deftypeivarx = \empty
-  \let\Edeftypeivar = \empty
-  \let\deftypemethod = \empty
-  \let\deftypemethodx = \empty
-  \let\Edeftypemethod = \empty
-  \let\deftypeop = \empty
-  \let\deftypeopx = \empty
-  \let\Edeftypeop = \empty
-  \let\deftypevar = \empty
-  \let\deftypevarx = \empty
-  \let\Edeftypevar = \empty
-  \let\deftypevr = \empty
-  \let\deftypevrx = \empty
-  \let\Edeftypevr = \empty
-  \let\defun = \empty
-  \let\defunx = \empty
-  \let\Edefun = \empty
-  \let\defvar = \empty
-  \let\defvarx = \empty
-  \let\Edefvar = \empty
-  \let\defvr = \empty
-  \let\defvrx = \empty
-  \let\Edefvr = \empty
-  \let\clear = \relax
-  \let\down = \relax
-  \let\evenfooting = \relax
-  \let\evenheading = \relax
-  \let\everyfooting = \relax
-  \let\everyheading = \relax
-  \let\headings = \relax
-  \let\include = \relax
-  \let\item = \relax
-  \let\lowersections = \relax
-  \let\oddfooting = \relax
-  \let\oddheading = \relax
-  \let\printindex = \relax
-  \let\pxref = \relax
-  \let\raisesections = \relax
-  \let\ref = \relax
-  \let\set = \relax
-  \let\setchapternewpage = \relax
-  \let\setchapterstyle = \relax
-  \let\settitle = \relax
-  \let\up = \relax
-  \let\verbatiminclude = \relax
-  \let\xref = \relax
+  \let\top=\relax
+  \let\unnumbered=\relax
+  \let\unnumberedsec=\relax
+  \let\unnumberedsection=\relax
+  \let\unnumberedsubsec=\relax
+  \let\unnumberedsubsection=\relax
+  \let\unnumberedsubsubsec=\relax
+  \let\unnumberedsubsubsection=\relax
 }
 
 % Ignore @ignore, @ifhtml, @ifinfo, and the like.
@@ -2659,7 +2561,7 @@ width0pt\relax} \fi
 \def\html{\doignore{html}}
 \def\ifhtml{\doignore{ifhtml}}
 \def\ifinfo{\doignore{ifinfo}}
-\def\ifnottex{\nestedignore{ifnottex}}
+\def\ifnottex{\doignore{ifnottex}}
 \def\ifplaintext{\doignore{ifplaintext}}
 \def\ifxml{\doignore{ifxml}}
 \def\ignore{\doignore{ignore}}
@@ -2670,140 +2572,75 @@ width0pt\relax} \fi
 % which this file should belong to.  Ignore this in TeX.
 \let\dircategory = \comment
 
-% Ignore text until a line `@end #1'.
+% Ignore text until a line `@end #1', keeping track of nested conditionals.
 %
+% A count to remember the depth of nesting.
+\newcount\doignorecount  \doignorecount = 0
+
 \def\doignore#1{\begingroup
   % Don't complain about control sequences we have declared \outer.
   \ignoresections
   %
-  % Define a command to swallow text until we reach `@end #1'.
-  % This @ is a catcode 12 token (that is the normal catcode of @ in
-  % this texinfo.tex file).  We change the catcode of @ below to match.
-  \long\def\doignoretext##1@end #1{\enddoignore}%
-  %
   % Make sure that spaces turn into tokens that match what \doignoretext wants.
   \catcode\spaceChar = 10
   %
-  % Ignore braces, too, so mismatched braces don't cause trouble.
+  % Ignore braces, so mismatched braces don't cause trouble.
   \catcode`\{ = 9
   \catcode`\} = 9
   %
-  % We must not have @c interpreted as a control sequence.
-  \catcode`\@ = 12
+  % Count number of #1's that we've seen.
+  \doignorecount = 0
   %
-  \def\ignoreword{#1}%
-  \ifx\ignoreword\documentdescriptionword
-    % The c kludge breaks documentdescription, since
-    % `documentdescription' contains a `c'.  Means not everything will
-    % be ignored inside @documentdescription, but oh well...
-  \else
-    % Make the letter c a comment character so that the rest of the line
-    % will be ignored. This way, the document can have (for example)
-    %   @c @end ifinfo
-    % and the @end ifinfo will be properly ignored.
-    % (We've just changed @ to catcode 12.)
-    \catcode`\c = 14
+  % Swallow text until we reach the matching `@end #1'.
+  \expandafter \dodoignore \csname#1\endcsname {#1}%
+}
+
+{ \catcode`@=11 % We want to use \ST@P which cannot appear in texinfo source.
+  \obeylines %
+  %
+  \gdef\dodoignore#1#2{%
+    % #1 contains, e.g., \ifinfo, a.k.a. @ifinfo.
+    % #2 contains the string `ifinfo'.
+    %
+    % Define a command to find the next "@end #2", which must be on a line
+    % by itself.
+    \long\def\doignoretext##1^^M\end #2{\doignoretextyyy##1#1\ST@P}%
+    % And this command to find another #1 command.
+    \long\def\doignoretextyyy##1#1##2\ST@P{\doignoreyyy{##2}\ST@P}%
+    %
+    % And now expand that command.
+    \obeylines %
+    \doignoretext ^^M%
+  }%
+}
+
+\def\doignoreyyy#1{%
+  \def\temp{#1}%
+  \ifx\temp\empty			% Nothing found.
+    \let\next\doignoretextzzz
+  \else					% Found a nested condition, ...
+    \advance\doignorecount by 1
+    \let\next\doignoretextyyy		% ..., look for another.
+    % If we're here, #1 ends with \ifinfo (for example).
   \fi
-  %
-  % And now expand the command defined above.
-  \doignoretext
+  \next #1% the token \ST@P is present just after this macro.
 }
 
-% What we do to finish off ignored text.
-%
-\def\enddoignore{\endgroup\ignorespaces}%
-
-\newif\ifwarnedobs\warnedobsfalse
-\def\obstexwarn{%
-  \ifwarnedobs\relax\else
-  % We need to warn folks that they may have trouble with TeX 3.0.
-  % This uses \immediate\write16 rather than \message to get newlines.
-    \immediate\write16{}
-    \immediate\write16{WARNING: for users of Unix TeX 3.0!}
-    \immediate\write16{This manual trips a bug in TeX version 3.0 (tex hangs).}
-    \immediate\write16{If you are running another version of TeX, relax.}
-    \immediate\write16{If you are running Unix TeX 3.0, kill this TeX process.}
-    \immediate\write16{  Then upgrade your TeX installation if you can.}
-    \immediate\write16{  (See ftp://ftp.gnu.org/non-gnu/TeX.README.)}
-    \immediate\write16{If you are stuck with version 3.0, run the}
-    \immediate\write16{  script ``tex3patch'' from the Texinfo distribution}
-    \immediate\write16{  to use a workaround.}
-    \immediate\write16{}
-    \global\warnedobstrue
-    \fi
+% We have to swallow the remaining "\ST@P".
+% 
+\def\doignoretextzzz#1{%
+  \ifnum\doignorecount = 0	% We have just found the outermost @end.
+    \let\next\enddoignore
+  \else				% Still inside a nested condition.
+    \advance\doignorecount by -1
+    \let\next\doignoretext      % Look for the next @end.
+  \fi
+  \next
 }
 
-% **In TeX 3.0, setting text in \nullfont hangs tex.  For a
-% workaround (which requires the file ``dummy.tfm'' to be installed),
-% uncomment the following line:
-%%%%%\font\nullfont=dummy\let\obstexwarn=\relax
+% Finish off ignored text.
+\def\enddoignore{\endgroup\ignorespaces}
 
-% Ignore text, except that we keep track of conditional commands for
-% purposes of nesting, up to an `@end #1' command.
-%
-\def\nestedignore#1{%
-  \obstexwarn
-  % We must actually expand the ignored text to look for the @end
-  % command, so that nested ignore constructs work.  Thus, we put the
-  % text into a \vbox and then do nothing with the result.  To minimize
-  % the chance of memory overflow, we follow the approach outlined on
-  % page 401 of the TeXbook.
-  %
-  \setbox0 = \vbox\bgroup
-    % Don't complain about control sequences we have declared \outer.
-    \ignoresections
-    %
-    % Define `@end #1' to end the box, which will in turn undefine the
-    % @end command again.
-    \expandafter\def\csname E#1\endcsname{\egroup\ignorespaces}%
-    %
-    % We are going to be parsing Texinfo commands.  Most cause no
-    % trouble when they are used incorrectly, but some commands do
-    % complicated argument parsing or otherwise get confused, so we
-    % undefine them.
-    %
-    % We can't do anything about stray @-signs, unfortunately;
-    % they'll produce `undefined control sequence' errors.
-    \ignoremorecommands
-    %
-    % Set the current font to be \nullfont, a TeX primitive, and define
-    % all the font commands to also use \nullfont.  We don't use
-    % dummy.tfm, as suggested in the TeXbook, because some sites
-    % might not have that installed.  Therefore, math mode will still
-    % produce output, but that should be an extremely small amount of
-    % stuff compared to the main input.
-    %
-    \nullfont
-    \let\tenrm=\nullfont \let\tenit=\nullfont \let\tensl=\nullfont
-    \let\tenbf=\nullfont \let\tentt=\nullfont \let\smallcaps=\nullfont
-    \let\tensf=\nullfont
-    % Similarly for index fonts.
-    \let\smallrm=\nullfont \let\smallit=\nullfont \let\smallsl=\nullfont
-    \let\smallbf=\nullfont \let\smalltt=\nullfont \let\smallsc=\nullfont
-    \let\smallsf=\nullfont
-    % Similarly for smallexample fonts.
-    \let\smallerrm=\nullfont \let\smallerit=\nullfont \let\smallersl=\nullfont
-    \let\smallerbf=\nullfont \let\smallertt=\nullfont \let\smallersc=\nullfont
-    \let\smallersf=\nullfont
-    %
-    % Don't complain when characters are missing from the fonts.
-    \tracinglostchars = 0
-    %
-    % Don't bother to do space factor calculations.
-    \frenchspacing
-    %
-    % Don't report underfull hboxes.
-    \hbadness = 10000
-    %
-    % Do minimal line-breaking.
-    \pretolerance = 10000
-    %
-    % Do not execute instructions in @tex.
-    \def\tex{\doignore{tex}}%
-    % Do not execute macro definitions.
-    % `c' is a comment character, so the word `macro' will get cut off.
-    \def\macro{\doignore{ma}}%
-}
 
 % @set VAR sets the variable VAR to an empty value.
 % @set VAR REST-OF-LINE sets VAR to the value REST-OF-LINE.
@@ -2881,7 +2718,7 @@ width0pt\relax} \fi
   \next
 }
 \def\ifsetsucceed{\conditionalsucceed{ifset}}
-\def\ifsetfail{\nestedignore{ifset}}
+\def\ifsetfail{\doignore{ifset}}
 \defineunmatchedend{ifset}
 
 % @ifclear VAR ... @end ifclear reads the `...' iff VAR has never been
@@ -2897,7 +2734,7 @@ width0pt\relax} \fi
   \next
 }
 \def\ifclearsucceed{\conditionalsucceed{ifclear}}
-\def\ifclearfail{\nestedignore{ifclear}}
+\def\ifclearfail{\doignore{ifclear}}
 \defineunmatchedend{ifclear}
 
 % @iftex, @ifnothtml, @ifnotinfo, @ifnotplaintext always succeed; we
@@ -6181,7 +6018,6 @@ width0pt\relax} \fi
     \closein 1
     \input \jobname.aux
     \global\havexrefstrue
-    \global\warnedobstrue
   \fi
   % Open the new aux file.  TeX will close it automatically at exit.
   \openout\auxfile=\jobname.aux
