@@ -1,6 +1,45 @@
-2001-09-19  Jim Meyering  <meyering@lucent.com>
+2001-09-20  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.15.
+
+2001-09-19  Paul Eggert  <eggert@twinsun.com>
+
+	* src/od.c (MAX_ADDRESS_LENGTH, pseudo_offset, format_address,
+	n_bytes_to_skip, skip, format_address_none,
+	format_address_std, format_address_paren,
+	format_address_label, write_block, parse_old_offset, dump,
+	dump_strings, main):
+	Use uintmax_t, not off_t, for file addresses, so that we can
+	handle multiple large files even if the sum of their sizes
+	exceeds off_t limits.
+
+	(print_s_char, print_char, print_s_short, print_short,
+	print_int, print_long, print_long_long, print_float,
+	print_double, print_long_double, dump_hexl_mode_trailer,
+	print_named_ascii, print_ascii, decode_one_format):
+	Use size_t, not off_t, for in-memory byte counts.
+
+	(end_offset): New var.
+	(dump, dump_strings): Use it.
+	(main): Set it, but check for overflow while doing so.
+
+	(skip): Report an error if an in-range lseek fails on a
+	regular file, as something's seriously wrong.  Check for
+	negative regular file sizes (possible with some broken NFS
+	implementations).
+
+	(parse_old_offset): Now all offsets are valid, so return a
+	success boolean and take a pointer to an offset as an argument.
+	All callers changed.
+
+	(dump_strings): Check for overflow when computing end_offset -
+	string_min.
+
+	(main): Remove OFF_T_MAX checks that are no longer needed.
+	Don't bother assigning through temporary when there's no size
+	limit to check.
+
+2001-09-19  Jim Meyering  <meyering@lucent.com>
 
 	* src/od.c (open_next_file): Use SETVBUF, not setbuf.
 	(skip): Revert part of last change: use lseek, not fseek.
