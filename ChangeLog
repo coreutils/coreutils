@@ -1,9 +1,16 @@
-2003-01-12  Jim Meyering  <jim@meyering.net>
+2003-01-13  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.5.
 
+	* src/shred.c (long_opts): --zero does not require an argument.
+	Patch by Michael Stone.  Reported by Roland Turner as Debian bug 172019.
+
+2003-01-12  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.maint (cvs-update): Skip any file with local modifications.
+
 	* src/unexpand.c (usage): Document --first-only and mention that
-	--tabs=N (-t) enables --all (-a).
+	--tabs=N (-t) enables --all (-a).  Reported by wiregauze@yahoo.com.
 
 2002-12-01  Dmitry V. Levin  <ldv@altlinux.org>
 
