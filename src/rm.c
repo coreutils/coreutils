@@ -22,7 +22,7 @@
 
    In the `usual' case RM saves no state for directories it is processing.
    When a removal fails (either due to an error or to an interactive `no'
-   reply), the failure is noted (see description of `ht' remove_cwd_entries)
+   reply), the failure is noted (see description of `ht' in remove_cwd_entries)
    so that when/if the containing directory is reopened, RM doesn't try to
    remove the entry again.
 
@@ -89,10 +89,10 @@
 # define ASSIGN_STRDUPA(DEST, S)		\
   do						\
     {						\
-      size_t len_ = strlen (S) + 1;		\
+      const char *s_ = (S);			\
+      size_t len_ = strlen (s_) + 1;		\
       char *tmp_dest_ = alloca (len_);		\
-      memcpy (tmp_dest_, (S), len_);		\
-      DEST = tmp_dest_;				\
+      DEST = memcpy (tmp_dest_, (s_), len_);	\
     }						\
   while (0)
 #endif
@@ -378,9 +378,7 @@ right_justify (char *dst, size_t dst_len, const char *src, size_t src_len,
       *truncated = 1;
     }
 
-  memcpy (dp, sp, src_len);
-
-  *result = dp;
+  *result = memcpy (dp, sp, src_len);
   return dst_len - src_len;
 }
 
@@ -434,10 +432,11 @@ full_filename (const char *filename)
 	}
     }
 
-  /* Copy directory part, including trailing slash.  */
+  /* Copy directory part, including trailing slash, and then
+     append the filename part, including a trailing zero byte.  */
+  /* FIXME: use mempcpy like this instead of two memcpy calls:
+     mempcpy (mempcpy (buf, dir_name, dir_len), filename, filename_len + 1); */
   memcpy (buf, dir_name, dir_len);
-
-  /* Append filename part, including trailing zero byte.  */
   memcpy (buf + dir_len, filename, filename_len + 1);
 
   assert (strlen (buf) + 1 == n_bytes_needed);
@@ -532,6 +531,9 @@ remove_cwd_entries (void)
      due either to an error or to an interactive `no' response.  */
   struct HT *ht = NULL;
 
+  /* FIXME: describe */
+  struct obstack entry_name_pool;
+
   enum RM_status status = RM_OK;
 
   if (dirp)
@@ -568,12 +570,34 @@ remove_cwd_entries (void)
 	  enum RM_status tmp_status;
 	  struct dirent *dp;
 
+	  obstack_init (&entry_name_pool);
+
 /* FILE should be skipped if it is `.' or `..', or if it is in
    the table, HT, of entries we've already processed.  */
 #define SKIPPABLE(Ht, File) (DOT_OR_DOTDOT(File) \
 			     || (Ht && hash_query_in_table (Ht, File)))
 
+	  /* FIXME: use readdir_r directly into an obstack to avoid
+	     the obstack_copy0 below --
+	     Suggestion from Uli.  Be careful -- there are different
+	     prototypes on e.g. Solaris.
+
+	     Do something like this:
+	     #define NAME_MAX_FOR(Parent_dir) pathconf ((Parent_dir),
+	                                                 _PC_NAME_MAX);
+	     dp = obstack_alloc (sizeof (struct dirent)
+	                         + NAME_MAX_FOR (".") + 1);
+	     fail = xreaddir (dirp, dp);
+	     where xreaddir is ...
+
+	     But what about systems like the hurd where NAME_MAX is supposed
+	     to be effectively unlimited.  We don't want to have to allocate
+	     a huge buffer to accommodate maximum possible entry name.  */
+
 	  dp = readdir (dirp);
+
+/* FIXME: add autoconf test to detect this.  */
+#ifndef HAVE_WORKING_READDIR
 	  if (dp == NULL)
 	    {
 	      /* Since we have probably modified the directory since it
@@ -587,6 +611,7 @@ remove_cwd_entries (void)
 		  /* empty */
 		}
 	    }
+#endif
 
 	  if (dp == NULL)
 	    break;
@@ -598,7 +623,8 @@ remove_cwd_entries (void)
 
 	  /* Save a copy of the name of this entry, in case we have
 	     to add it to the set of unremoved entries below.  */
-	  ASSIGN_STRDUPA (entry_name, dp->d_name);
+	  entry_name = obstack_copy0 (&entry_name_pool,
+				      dp->d_name, NLENGTH (dp));
 
 	  /* CAUTION: after this call to rm, DP may not be valid --
 	     it may have been freed due to a close in a recursive call
@@ -628,6 +654,11 @@ remove_cwd_entries (void)
 	      if (fail)
 		error (1, 0, _("Memory exhausted"));
 	    }
+	  else
+	    {
+	      /* This entry was not saved in the hash table.  Free it.  */
+	      obstack_free (&entry_name_pool, entry_name);
+	    }
 
 	  if (dirp == NULL)
 	    break;
@@ -646,6 +677,8 @@ remove_cwd_entries (void)
     {
       hash_free (ht);
     }
+
+  obstack_free (&entry_name_pool, NULL);
 
   return status;
 }
