@@ -51,9 +51,7 @@ AC_DEFUN(jm_CHECK_DECLARATIONS,
   do
     jm_CHECK_DECLARATION($jm_func,
     [
-      lower=abcdefghijklmnopqrstuvwxyz
-      upper=ABCDEFGHIJKLMNOPQRSTUVWXYZ
-      jm_tr_func=HAVE_DECLARATION_`echo $jm_func | tr $lower $upper`
+      jm_tr_func=HAVE_DECLARATION_`echo $jm_func | tr abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ`
       AC_DEFINE_UNQUOTED($jm_tr_func) $2], $3)dnl
   done
 ])
