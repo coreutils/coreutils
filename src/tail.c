@@ -847,7 +847,6 @@ main (int argc, char **argv)
   off_t n_units = -1;
   long int tmp_long;
   int c;			/* Option character.  */
-  int i;
   int n_files;
   char **file;
 
@@ -1006,13 +1005,18 @@ main (int argc, char **argv)
     print_headers = 1;
 
   if (n_files == 0)
-    exit_status |= tail_file ("-", n_units, 0);
+    {
+      exit_status |= tail_file ("-", n_units, 0);
+    }
+  else
+    {
+      int i;
+      for (i = 0; i < n_files; i++)
+	exit_status |= tail_file (file[i], n_units, i);
 
-  for (i = 0; i < n_files; i++)
-    exit_status |= tail_file (file[i], n_units, i);
-
-  if (forever_multiple)
-    tail_forever (file, n_files);
+      if (forever_multiple)
+	tail_forever (file, n_files);
+    }
 
   if (have_read_stdin && close (0) < 0)
     error (EXIT_FAILURE, errno, "-");
