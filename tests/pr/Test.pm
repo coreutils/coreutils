@@ -221,51 +221,119 @@ my @tv = (
 ['9Pmc', '-n.3 +3 -m -l 17 -f', [\'tn', \'tFFt-bl'], [\'n+3ml17f-tn-bl'], 0],
 #
 # line truncation  column alignment; header line truncation
-# -w PAGE_WIDTH [-j] options
-['10a', '-w 72 -j', [\'0FnFnt'], [\'w72j-0FF'], 0],
-['10b', '-w 48 -l17 -f', [\'tFFt-lm'], [\'w48l17f-lm'], 0],
-['10c', '-w 26 -l17 -f', [\'tFFt-lm'], [\'w26l17f-lm'], 0],
-['10d', '-w 25 -l17 -f', [\'tFFt-lm'], [\'w25l17f-lm'], 0],
-['10e', '-w 20 -l17 -f', [\'tFFt-lm'], [\'w20l17f-lm'], 0],
+# -w/W PAGE_WIDTH [-J] options
+['10wa', '-W 72 -J -l17 -f', [\'tFFt-ll'], [\'W72Jl17f-ll'], 0],
+['10wb', '-w 72 -J -l17 -f', [\'tFFt-ll'], [\'W72Jl17f-ll'], 0],
+['10wc', '-W 72 -l17 -f', [\'tFFt-ll'], [\'W72l17f-ll'], 0],
+['10wd', '-w 72 -l17 -f', [\'tFFt-ll'], [\'w72l17f-ll'], 0],
+['10we', '-W 28 -l17 -f', [\'tFFt-ll'], [\'W28l17f-ll'], 0],
+['10wf', '-W 27 -l17 -f', [\'tFFt-ll'], [\'W27l17f-ll'], 0],
+['10wg', '-W 26 -l17 -f', [\'tFFt-ll'], [\'W26l17f-ll'], 0],
+['10wh', '-W 20 -l17 -f', [\'tFFt-ll'], [\'W20l17f-ll'], 0],
 ['10ma', '-m -l 17 -f', [\'tFFt-lm', \'loli'], [\'ml17f-lm-lo'], 0],
-['10mb', '-w 35 -m -l 17 -f', [\'tFFt-lm', \'loli'], [\'w35ml17f-lm-lo'], 0],
-['10mc', '-j -m -l 17 -f', [\'tFFt-lm', \'loli'], [\'jml17f-lm-lo'], 0],
-['10md', '-w 35 -j -m -l 17 -f', [\'tFFt-lm', \'loli'], [\'w35jml17f-lmlo'], 0],
-['10me', '-n.3 -j -m -l 17 -f', [\'tFFt-lm', \'tFFt-lm', \'loli'], [\'njml17f-lmlmlo'], 0],
-['10mf', '-n.3 -j -m -l 17 -f', [\'tFFt-lm', \'loli', \'tFFt-lm'], [\'njml17f-lmlolm'], 0],
+['10mb', '-W 35 -m -l 17 -f', [\'tFFt-lm', \'loli'], [\'W35ml17f-lm-lo'], 0],
+['10mc', '-w 35 -m -l 17 -f', [\'tFFt-lm', \'loli'], [\'W35ml17f-lm-lo'], 0],
+['10md', '-J -m -l 17 -f', [\'tFFt-lm', \'loli'], [\'Jml17f-lm-lo'], 0],
+['10me', '-W 35 -J -m -l 17 -f', [\'tFFt-lm', \'loli'], [\'W35Jml17f-lmlo'], 0],
+['10mf', '-w 35 -J -m -l 17 -f', [\'tFFt-lm', \'loli'], [\'W35Jml17f-lmlo'], 0],
+['10mg', '-n.3 -J -m -l 17 -f', [\'tFFt-lm', \'tFFt-lm', \'loli'], [\'nJml17f-lmlmlo'], 0],
+['10mh', '-n.3 -J -m -l 17 -f', [\'tFFt-lm', \'loli', \'tFFt-lm'], [\'nJml17f-lmlolm'], 0],
 ['10aa', '-a -3 -l 17 -f', [\'tFFt-lm'], [\'a3l17f-lm'], 0],
-['10ab', '-w 35 -a -3 -l 17 -f', [\'tFFt-lm'], [\'w35a3l17f-lm'], 0],
-['10ac', '-j -a -3 -l 17 -f', [\'tFFt-lm'], [\'ja3l17f-lm'], 0],
-['10ad', '-w 35 -j -a -3 -l 17 -f', [\'tFFt-lm'], [\'w35ja3l17f-lm'], 0],
+['10ab', '-W 35 -a -3 -l 17 -f', [\'tFFt-lm'], [\'W35a3l17f-lm'], 0],
+['10ac', '-J -a -3 -l 17 -f', [\'tFFt-lm'], [\'Ja3l17f-lm'], 0],
+['10ad', '-W 35 -J -a -3 -l 17 -f', [\'tFFt-lm'], [\'W35Ja3l17f-lm'], 0],
 ['10ba', '-b -3 -l 17 -f', [\'tFFt-lm'], [\'b3l17f-lm'], 0],
-['10bb', '-w 35 -b -3 -l 17 -f', [\'tFFt-lm'], [\'w35b3l17f-lm'], 0],
-['10bc', '-j -b -3 -l 17 -f', [\'tFFt-lm'], [\'jb3l17f-lm'], 0],
-['10bd', '-w 35 -j -b -3 -l 17 -f', [\'tFFt-lm'], [\'w35jb3l17f-lm'], 0],
+['10bb', '-W 35 -b -3 -l 17 -f', [\'tFFt-lm'], [\'W35b3l17f-lm'], 0],
+['10bc', '-J -b -3 -l 17 -f', [\'tFFt-lm'], [\'Jb3l17f-lm'], 0],
+['10bd', '-W 35 -J -b -3 -l 17 -f', [\'tFFt-lm'], [\'W35Jb3l17f-lm'], 0],
 #
-# merge files (-m option)  use separator string (-s option)
-['11a', '-n.3 -s:--: -m -l 13 -f', [\'tFFt-bl', \'FnFn'], [\'nsml13-bl-FF'], 0],
-['11b', '-n.3 -s:--: -m -l 17 -f', [\'tFFt-bl', \'FnFn'], [\'nsml17-bl-FF'], 0],
-['11e', '-n.3 -s:--: -m -l 13 -f', [\'tn', \'tn', \'FnFn'], [\'nsml13-t-t-FF'], 0],
-['11f', '-n.3 -s:--: -m -l 17 -f', [\'tn', \'tn', \'FnFn'], [\'nsml17-t-t-FF'], 0],
-['11g', '-n.3 -s:--: -m -l 13 -f', [\'tn', \'tn', \'FnFn', \'FnFn'], [\'nsml13-t-tFFFF'], 0],
-['11h', '-n.3 -s:--: -m -l 17 -f', [\'tn', \'tn', \'FnFn', \'FnFn'], [\'nsml17-t-tFFFF'], 0],
+# merge files (-m option)  use separator string (-S option)
+['11sa', '-n.3 -S:--: -m -l 13 -f', [\'tFFt-bl', \'FnFn'], [\'nSml13-bl-FF'], 0],
+['11sb', '-n.3 -S:--: -m -l 17 -f', [\'tFFt-bl', \'FnFn'], [\'nSml17-bl-FF'], 0],
+['11se', '-n.3 -S:--: -m -l 13 -f', [\'tn', \'tn', \'FnFn'], [\'nSml13-t-t-FF'], 0],
+['11sf', '-n.3 -S:--: -m -l 17 -f', [\'tn', \'tn', \'FnFn'], [\'nSml17-t-t-FF'], 0],
+['11sg', '-n.3 -S:--: -m -l 13 -f', [\'tn', \'tn', \'FnFn', \'FnFn'], [\'nSml13-t-tFFFF'], 0],
+['11sh', '-n.3 -S:--: -m -l 17 -f', [\'tn', \'tn', \'FnFn', \'FnFn'], [\'nSml17-t-tFFFF'], 0],
 #
-# left margin (-o option) and separator string (-s option)
+# left margin (-o option) and separator string (-S option)
 ['12aa', '-o3 -a -3 -l17 -f', [\'tn'], [\'o3a3l17f-tn'], 0],
-['12ab', '-o3 -a -3 -s:--: -l17 -f', [\'tn'], [\'o3a3sl17f-tn'], 0],
-['12ac', '-o3 -a -3 -s:--: -n. -l17 -f', [\'tn'], [\'o3a3snl17f-tn'], 0],
+['12ab', '-o3 -a -3 -S:--: -l17 -f', [\'tn'], [\'o3a3Sl17f-tn'], 0],
+['12ac', '-o3 -a -3 -S:--: -n. -l17 -f', [\'tn'], [\'o3a3Snl17f-tn'], 0],
 ['12ba', '-o3 -b -3 -l17 -f', [\'tn'], [\'o3b3l17f-tn'], 0],
-['12bb', '-o3 -b -3 -s:--: -l17 -f', [\'tn'], [\'o3b3sl17f-tn'], 0],
-['12bc', '-o3 -b -3 -s:--: -n. -l17 -f', [\'tn'], [\'o3b3snl17f-tn'], 0],
+['12bb', '-o3 -b -3 -S:--: -l17 -f', [\'tn'], [\'o3b3Sl17f-tn'], 0],
+['12bc', '-o3 -b -3 -S:--: -n. -l17 -f', [\'tn'], [\'o3b3Snl17f-tn'], 0],
 ['12ma', '-o3 -m -l17 -f', [\'tFFt-bl', \'tn'], [\'o3ml17f-bl-tn'], 0],
-['12mb', '-o3 -m -s:--: -l17 -f', [\'tFFt-bl', \'tn'], [\'o3msl17f-bl-tn'], 0],
-['12mc', '-o3 -m -s:--: -n. -l17 -f', [\'tFFt-bl', \'tn'], [\'o3msnl17fbltn'], 0],
-['12md', '-o3 -j -m -l17 -f', [\'tFFt-lm', \'loli'], [\'o3jml17f-lm-lo'], 0],
+['12mb', '-o3 -m -S:--: -l17 -f', [\'tFFt-bl', \'tn'], [\'o3mSl17f-bl-tn'], 0],
+['12mc', '-o3 -m -S:--: -n. -l17 -f', [\'tFFt-bl', \'tn'], [\'o3mSnl17fbltn'], 0],
+['12md', '-o3 -J -m -l17 -f', [\'tFFt-lm', \'loli'], [\'o3Jml17f-lm-lo'], 0],
+#
+#
+# Single column output: POSIX compliant, adapt other UNIXes (SunOS.5.5.1 e.g.)
+# number-separator TAB always an output TAB --> varying number/text-spacing
+['13a', '-t -n -e8', [\'t_tab'], [\'tne8-t_tab'], 0],
+['13b', '-t -n -e8 -o3', [\'t_tab'], [\'tne8o3-t_tab'], 0],
+#
+# POSIX compliant: multi-columns of equal width (unlike SunOS.5.5.1 e.g.)
+# text-tab handling
+['13ba', '-t -n -2 -e8', [\'t_tab'], [\'tn2e8-t_tab'], 0],
+['13bb', '-t -n: -2 -e8', [\'t_tab'], [\'tn_2e8-t_tab'], 0],
+['13bc', '-t -n: -2 -e8 -S----', [\'t_tab'], [\'tn_2e8S-t_tab'], 0],
+['13bd', '-t -n -2 -e8 -o3', [\'t_tab'], [\'tn2e8o3-t_tab'], 0],
+# number-separator TAB not treated as input text-tab, no `-e' expansion
+['13be', '-t -n -2 -e5 -o3', [\'t_tab'], [\'tn2e5o3-t_tab'], 0],
+# input-tab-char `:' not equal default (text) TABs
+['13bf', '-t -n -2 -e:8', [\'t_tab_'], [\'tn2e8-t_tab'], 0],
+#
+# options -w/-s: POSIX-compliant, means adapting the interference of -w/-s
+# with multi-column output from other UNIXes (SunOS e.g.);
+# columns, truncated = 72   /  separator = space :
+['14a', '-2 -f', [\'t_notab'], [\'2f-t_notab'], 0],
+# full lines, no truncation /  separator = TAB :
+['14b', '-2 -s -f', [\'t_notab'], [\'2sf-t_notab'], 0],
+# full lines, no truncation /  separator = `:' :
+['14c', '-2 -s: -f', [\'t_notab'], [\'2s_f-t_notab'], 0],
+# columns, truncated = 60   /  separator = space :
+['14d', '-2 -w60 -f', [\'t_notab'], [\'2w60f-t_notab'], 0],
+# columns, truncated = 60   /  no separator   (SunOS-BUG: line width to small):
+['14e', '-2 -s -w60 -f', [\'t_notab'], [\'2sw60f-t_notab'], 0],
+# columns, truncated = 60   /  separator = `:'  (HP-UX.10.20-2-BUG:
+# `:' missing with -m option):
+['14f', '-2 -s: -w60 -f', [\'t_notab'], [\'2s_w60f-t_nota'], 0],
+#
+# new long-options -W/-S/-J disentangle those options (see also No.`10*')
+# columns, truncated = 72   /  no separator :
+['14g', '-2 -S -f', [\'t_notab'], [\'2Sf-t_notab'], 0],
+# full lines, no truncation /  separator = TAB :  (Input: -S"<TAB>")
+['14h', '-2 -S"	" -J -f', [\'t_notab'], [\'2sf-t_notab'], 0],
+# columns, truncated = 72   /  separator `:' :
+['14i', '-2 -S: -f', [\'t_notab'], [\'2S_f-t_notab'], 0],
+# full lines, no truncation /  separator = `:' :
+['14j', '-2 -S: -J -f', [\'t_notab'], [\'2s_f-t_notab'], 0],
+# columns, truncated = 60   /  separator = space:
+['14k', '-2 -W60 -f', [\'t_notab'], [\'2w60f-t_notab'], 0],
+# columns, truncated = 60   /  no separator :
+['14l', '-2 -S -W60 -f', [\'t_notab'], [\'2sw60f-t_notab'], 0],
+# columns, truncated = 60   /  separator = `:' :
+['14m', '-2 -S: -W60 -f', [\'t_notab'], [\'2s_w60f-t_nota'], 0],
+#
+# Tabify multiple spaces, -i option
+# number of input spaces between a and b must not change; be careful
+# comparing with other UNIXes (some other SunOS examples are OK !?)
+# SunOS.5.5.1-BUG: 8 input spaces --> 11 output spaces between a and b;
+['i-opt-a', '-tn -i5 -h ""', "a        b\n", "    1	a	    b\n", 0],
+# SunOS.5.5.1-BUG: 8 input spaces -->  9 output spaces between a and b;
+['i-opt-b', '-tn -i5 -o9 -h ""', "a        b\n", "		   1	a	    b\n", 0],
+#
+# line number overflow not allowed: cut off leading digits;
+# don't adapt other UNIXes, no real standard to follow, a consequent
+# programming of column handling may change the GNU pr concept.
+['ncut-a', '-tn2 -N98', "y\ny\ny\ny\ny\n", "98	y\n99	y\n00	y\n01	y\n02	y\n", 0],
+['ncut-b', '-tn:2 -N98', "y\ny\ny\ny\ny\n", "98:y\n99:y\n00:y\n01:y\n02:y\n", 0],
 
 ['margin-0', '-o 0', '', '', 0],
 
-# FIXME: that leading space on 3rd line of output should not be there
-['dbl-sp-a', '-d -l 14 -h ""', "1\n2\n", "\n\n \n\n\n1\n\n2\n\n\n\n\n\n\n", 0],
+# BUG fixed: that leading space on 3rd line of output should not be there
+['dbl-sp-a', '-d -l 14 -h ""', "1\n2\n", "\n\n\n\n\n1\n\n2\n\n\n\n\n\n\n", 0],
 # This test failed with 1.22e and earlier.
 ['dbl-sp-b', '-d -t', "1\n2\n", "1\n\n2\n\n", 0],
 
@@ -288,8 +356,7 @@ sub test_vector
       push (@new_tv, [$test_name, $flags, $in, $exp, $ret]);
     }
 
-  return ();
-  # return @new_tv;
+  return @new_tv;
 }
 
 1;
