@@ -708,7 +708,7 @@ check_punctuation (register WORD *w)
 {
   const unsigned char *start, *finish;
 
-  start = w->text;
+  start = (unsigned char *) w->text;
   finish = start + (w->length - 1);
   w->paren = isopen (*start);
   w->punct = ISPUNCT (*finish);
