@@ -60,6 +60,11 @@
 #include <getopt.h>
 #include <signal.h>
 
+#ifndef SA_NOCLDSTOP
+# define sigprocmask(How, Set, Oset) /* empty */
+# define sigset_t int
+#endif
+
 /* Get mbstate_t, mbrtowc(), mbsinit(), wcwidth().  */
 #if HAVE_WCHAR_H
 # include <wchar.h>
@@ -97,7 +102,6 @@ int wcwidth ();
 #include "dirname.h"
 #include "dirfd.h"
 #include "error.h"
-#include "full-write.h"
 #include "hard-locale.h"
 #include "hash.h"
 #include "human.h"
@@ -219,6 +223,10 @@ time_t time ();
 char *getgroup ();
 char *getuser ();
 
+#if ! HAVE_TCGETPGRP
+# define tcgetpgrp(Fd) 0
+#endif
+
 static size_t quote_name (FILE *out, const char *name,
 			  struct quoting_options const *options,
 			  size_t *width);
@@ -229,7 +237,6 @@ static uintmax_t gobble_file (const char *name, enum filetype type,
 			      int explicit_arg, const char *dirname);
 static void print_color_indicator (const char *name, mode_t mode, int linkok);
 static void put_indicator (const struct bin_str *ind);
-static int put_indicator_direct (const struct bin_str *ind);
 static void add_ignore_pattern (const char *pattern);
 static void attach (char *dest, const char *dirname, const char *name);
 static void clear_files (void);
@@ -656,6 +663,18 @@ static char const *long_time_format[2] =
     N_("%b %e %H:%M")
   };
 
+/* The set of signals that are caught.  */
+
+static sigset_t caught_signals;
+
+/* If nonzero, the value of the pending fatal signal.  */
+
+static sig_atomic_t volatile interrupt_signal;
+
+/* A count of the number of pending stop signals that have been received.  */
+
+static sig_atomic_t volatile stop_signal_count;
+
 /* Nonzero if a non-fatal error has occurred.  */
 
 static int exit_status;
@@ -964,29 +983,79 @@ free_pending_ent (struct pending *p)
 static void
 restore_default_color (void)
 {
-  if (put_indicator_direct (&color_indicator[C_LEFT]) == 0)
-    put_indicator_direct (&color_indicator[C_RIGHT]);
+  put_indicator (&color_indicator[C_LEFT]);
+  put_indicator (&color_indicator[C_RIGHT]);
 }
 
-/* Upon interrupt, suspend, hangup, etc. ensure that the
-   terminal text color is restored to the default.  */
+/* An ordinary signal was received; arrange for the program to exit.  */
+
 static void
 sighandler (int sig)
 {
-  /* SIGTSTP is special, since the application can receive that signal more
-     than once.  In this case, don't set the signal handler to the default.
-     Instead, just raise the uncatchable SIGSTOP.  */
 #ifndef SA_NOCLDSTOP
-  signal (sig, sig == SIGTSTP ? sighandler : SIG_IGN);
+  signal (sig, SIG_IGN);
 #endif
 
-  restore_default_color ();
+  if (! interrupt_signal)
+    interrupt_signal = sig;
+}
 
-  if (sig == SIGTSTP)
-    sig = SIGSTOP;
-  else
-    signal (sig, SIG_DFL);
-  raise (sig);
+/* A SIGTSTP was received; arrange for the program to suspend itself.  */
+
+static void
+stophandler (int sig)
+{
+#ifndef SA_NOCLDSTOP
+  signal (sig, stophandler);
+#endif
+
+  if (! interrupt_signal)
+    stop_signal_count++;
+}
+
+/* Process any pending signals.  If signals are caught, this function
+   should be called periodically.  Ideally there should never be an
+   unbounded amount of time when signals are not being processed.
+   Signal handling can restore the default colors, so callers must
+   immediately change colors after invoking this function.  */
+
+static void
+process_signals (void)
+{
+  while (interrupt_signal | stop_signal_count)
+    {
+      int sig;
+      int stops;
+      sigset_t oldset;
+
+      restore_default_color ();
+      fflush (stdout);
+
+      sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
+
+      /* Reload interrupt_signal and stop_signal_count, in case a new
+	 signal was handled before sigprocmask took effect.  */
+      sig = interrupt_signal;
+      stops = stop_signal_count;
+
+      /* SIGTSTP is special, since the application can receive that signal
+	 more than once.  In this case, don't set the signal handler to the
+	 default.  Instead, just raise the uncatchable SIGSTOP.  */
+      if (stops)
+	{
+	  stop_signal_count = stops - 1;
+	  sig = SIGSTOP;
+	}
+      else
+	signal (sig, SIG_DFL);
+
+      /* Exit or suspend the program.  */
+      raise (sig);
+      sigprocmask (SIG_SETMASK, &oldset, NULL);
+
+      /* If execution reaches here, then the program has been
+	 continued (after being suspended).  */
+    }
 }
 
 int
@@ -995,6 +1064,15 @@ main (int argc, char **argv)
   register int i;
   register struct pending *thispend;
   unsigned int n_files;
+
+  /* The signals that are trapped, and the number of such signals.  */
+  static int const sig[] = { SIGHUP, SIGINT, SIGPIPE,
+			     SIGQUIT, SIGTERM, SIGTSTP };
+  enum { nsigs = sizeof sig / sizeof sig[0] };
+
+#ifndef SA_NOCLDSTOP
+  bool caught_sig[nsigs];
+#endif
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -1021,44 +1099,50 @@ main (int argc, char **argv)
      may have just reset it -- e.g., if LS_COLORS is invalid.  */
   if (print_with_color)
     {
-      prep_non_filename_text ();
       /* Avoid following symbolic links when possible.  */
       if (color_indicator[C_ORPHAN].string != NULL
 	  || (color_indicator[C_MISSING].string != NULL
 	      && format == long_format))
 	check_symlink_color = 1;
 
-      {
-	int j;
-	static int const sig[] = { SIGHUP, SIGINT, SIGPIPE,
-				   SIGQUIT, SIGTERM, SIGTSTP };
-	enum { nsigs = sizeof sig / sizeof sig[0] };
+      /* If the standard output is a controlling terminal, watch out
+         for signals, so that the colors can be restored to the
+         default state if "ls" is suspended or interrupted.  */
 
+      if (0 <= tcgetpgrp (STDOUT_FILENO))
+	{
+	  int j;
 #ifdef SA_NOCLDSTOP
-	struct sigaction act;
-	sigset_t caught_signals;
+	  struct sigaction act;
 
-	sigemptyset (&caught_signals);
-	for (j = 0; j < nsigs; j++)
-	  {
-	    sigaction (sig[j], NULL, &act);
-	    if (act.sa_handler != SIG_IGN)
-	      sigaddset (&caught_signals, sig[j]);
-	  }
+	  sigemptyset (&caught_signals);
+	  for (j = 0; j < nsigs; j++)
+	    {
+	      sigaction (sig[j], NULL, &act);
+	      if (act.sa_handler != SIG_IGN)
+		sigaddset (&caught_signals, sig[j]);
+	    }
 
-	act.sa_handler = sighandler;
-	act.sa_mask = caught_signals;
-	act.sa_flags = SA_RESTART;
+	  act.sa_mask = caught_signals;
+	  act.sa_flags = SA_RESTART;
 
-	for (j = 0; j < nsigs; j++)
-	  if (sigismember (&caught_signals, sig[j]))
-	    sigaction (sig[j], &act, NULL);
+	  for (j = 0; j < nsigs; j++)
+	    if (sigismember (&caught_signals, sig[j]))
+	      {
+		act.sa_handler = sig[j] == SIGTSTP ? stophandler : sighandler;
+		sigaction (sig[j], &act, NULL);
+	      }
 #else
-	for (j = 0; j < nsigs; j++)
-	  if (signal (sig[j], SIG_IGN) != SIG_IGN)
-	    signal (sig[j], sighandler);
+	  for (j = 0; j < nsigs; j++)
+	    {
+	      caught_sig[j] = (signal (sig[j], SIG_IGN) != SIG_IGN);
+	      if (caught_sig[j])
+		signal (sig[j], sig[j] == SIGTSTP ? stophandler : sighandler);
+	    }
 #endif
-      }
+	}
+
+      prep_non_filename_text ();
     }
 
   if (dereference == DEREF_UNDEFINED)
@@ -1169,6 +1253,35 @@ main (int argc, char **argv)
       print_dir_name = 1;
     }
 
+  if (print_with_color)
+    {
+      int j;
+
+      restore_default_color ();
+      fflush (stdout);
+
+      /* Restore the default signal handling.  */
+#ifdef SA_NOCLDSTOP
+      for (j = 0; j < nsigs; j++)
+	if (sigismember (&caught_signals, sig[j]))
+	  signal (sig[j], SIG_DFL);
+#else
+      for (j = 0; j < nsigs; j++)
+	if (caught_sig[j])
+	  signal (sig[j], SIG_DFL);
+#endif
+
+      /* Act on any signals that arrived before the default was restored.
+	 This can process signals out of order, but there doesn't seem to
+	 be an easy way to do them in order, and the order isn't that
+	 important anyway.  */
+      for (j = stop_signal_count; j; j--)
+	raise (SIGSTOP);
+      j = interrupt_signal;
+      if (j)
+	raise (j);
+    }
+
   if (dired)
     {
       /* No need to free these since we're about to exit.  */
@@ -1176,13 +1289,6 @@ main (int argc, char **argv)
       dired_dump_obstack ("//SUBDIRED//", &subdired_obstack);
       printf ("//DIRED-OPTIONS// --quoting-style=%s\n",
 	      quoting_style_args[get_quoting_style (filename_quoting_options)]);
-    }
-
-  /* Restore default color before exiting */
-  if (print_with_color)
-    {
-      put_indicator (&color_indicator[C_LEFT]);
-      put_indicator (&color_indicator[C_RIGHT]);
     }
 
   if (LOOP_DETECT)
@@ -3231,8 +3337,7 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options,
 	    size_t *width)
 {
   char smallbuf[BUFSIZ];
-  size_t len = quotearg_buffer (smallbuf, sizeof smallbuf, name, SIZE_MAX,
-				options);
+  size_t len = quotearg_buffer (smallbuf, sizeof smallbuf, name, -1, options);
   char *buf;
   size_t displayed_width IF_LINT (= 0);
 
@@ -3241,7 +3346,7 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options,
   else
     {
       buf = alloca (len + 1);
-      quotearg_buffer (buf, len + 1, name, SIZE_MAX, options);
+      quotearg_buffer (buf, len + 1, name, -1, options);
     }
 
   if (qmark_funny_chars)
@@ -3408,7 +3513,10 @@ print_name_with_quoting (const char *p, mode_t mode, int linkok,
     PUSH_CURRENT_DIRED_POS (stack);
 
   if (print_with_color)
-    prep_non_filename_text ();
+    {
+      process_signals ();
+      prep_non_filename_text ();
+    }
 }
 
 static void
@@ -3549,20 +3657,6 @@ put_indicator (const struct bin_str *ind)
 
   for (i = ind->len; i != 0; --i)
     putchar (*(p++));
-}
-
-/* Output a color indicator, but don't use stdio, for use from signal handlers.
-   Return zero if the write is successful or if the string length is zero.
-   Return nonzero if the write fails.  */
-static int
-put_indicator_direct (const struct bin_str *ind)
-{
-  size_t len;
-  if (ind->len == 0)
-    return 0;
-
-  len = ind->len;
-  return (full_write (STDOUT_FILENO, ind->string, len) != len);
 }
 
 static size_t
