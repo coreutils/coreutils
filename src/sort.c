@@ -31,6 +31,7 @@
 #include "version.h"
 #include "long-options.h"
 #include "error.h"
+#include "xstrtod.h"
 
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
@@ -96,7 +97,11 @@ struct keyfield
   int skipeblanks;		/* Skip trailing white space at finish. */
   int *ignore;			/* Boolean array of characters to ignore. */
   char *translate;		/* Translation applied to characters. */
-  int numeric;			/* Flag for numeric comparison. */
+  int numeric;			/* Flag for numeric comparison.  Handle
+				   strings of digits with optional decimal
+				   point, but no exponential notation. */
+  int general_numeric;		/* Flag for general, numeric comparison.
+				   Handle numbers in exponential notation. */
   int month;			/* Flag for comparison by month name. */
   int reverse;			/* Reverse the sense of comparison. */
   struct keyfield *next;	/* Next keyfield to try. */
@@ -209,6 +214,7 @@ Write sorted concatenation of all FILE(s) to standard output.\n\
   -c               check if given files already sorted, do not sort\n\
   -d               consider only [a-zA-Z0-9 ] characters in keys\n\
   -f               fold lower case to upper case characters in keys\n\
+  -g               compare according to general numerical value, imply -b\n\
   -i               consider only [\\040-\\0176] characters in keys\n\
   -k POS1[,POS2]   same as +POS1 [-POS2], but all positions counted from 1\n\
   -m               merge already sorted files, do not sort\n\
@@ -803,6 +809,24 @@ numcompare (register const char *a, register const char *b)
     }
 }
 
+static int
+general_numcompare (const char *sa, const char *sb)
+{
+  double a, b;
+  /* FIXME: add option to warn about failed conversions.  */
+  /* FIXME: maybe add option to try expensive FP conversion
+     only if A and B can't be compared more cheaply/accurately.  */
+  if (xstrtod (sa, NULL, &a))
+    {
+      a = 0;
+    }
+  if (xstrtod (sb, NULL, &b))
+    {
+      b = 0;
+    }
+  return a == b ? 0 : a < b ? -1 : 1;
+}
+
 /* Return an integer <= 12 associated with month name S with length LEN,
    0 if the name in S is not recognized. */
 
@@ -898,6 +922,23 @@ keycompare (const struct line *a, const struct line *b)
 	    }
 	  else
 	    diff = numcompare (texta, textb);
+
+	  if (diff)
+	    return key->reverse ? -diff : diff;
+	  continue;
+	}
+      else if (key->general_numeric)
+	{
+	  if (*lima || *limb)
+	    {
+	      char savea = *lima, saveb = *limb;
+
+	      *lima = *limb = '\0';
+	      diff = general_numcompare (texta, textb);
+	      *lima = savea, *limb = saveb;
+	    }
+	  else
+	    diff = general_numcompare (texta, textb);
 
 	  if (diff)
 	    return key->reverse ? -diff : diff;
@@ -1479,11 +1520,9 @@ set_ordering (register const char *s, struct keyfield *key,
 	case 'f':
 	  key->translate = fold_toupper;
 	  break;
-#if 0
 	case 'g':
-	  /* Reserved for comparing floating-point numbers. */
+	  key->general_numeric = 1;
 	  break;
-#endif
 	case 'i':
 	  key->ignore = nonprinting;
 	  break;
@@ -1563,7 +1602,7 @@ main (int argc, char **argv)
   gkey.sword = gkey.eword = -1;
   gkey.ignore = NULL;
   gkey.translate = NULL;
-  gkey.numeric = gkey.month = gkey.reverse = 0;
+  gkey.numeric =  gkey.general_numeric = gkey.month = gkey.reverse = 0;
   gkey.skipsblanks = gkey.skipeblanks = 0;
 
   files = (char **) xmalloc (sizeof (char *) * argc);
@@ -1579,7 +1618,7 @@ main (int argc, char **argv)
 	  key->ignore = NULL;
 	  key->translate = NULL;
 	  key->skipsblanks = key->skipeblanks = 0;
-	  key->numeric = key->month = key->reverse = 0;
+	  key->numeric = key->general_numeric = key->month = key->reverse = 0;
 	  s = argv[i] + 1;
 	  if (! (digits[UCHAR (*s)] || (*s == '.' && digits[UCHAR (s[1])])))
 	    badfieldspec (argv[i]);
@@ -1776,7 +1815,8 @@ main (int argc, char **argv)
   /* Inheritance of global options to individual keys. */
   for (key = keyhead.next; key; key = key->next)
     if (!key->ignore && !key->translate && !key->skipsblanks && !key->reverse
-	&& !key->skipeblanks && !key->month && !key->numeric)
+	&& !key->skipeblanks && !key->month && !key->numeric
+        && !key->general_numeric)
       {
 	key->ignore = gkey.ignore;
 	key->translate = gkey.translate;
@@ -1784,11 +1824,13 @@ main (int argc, char **argv)
 	key->skipeblanks = gkey.skipeblanks;
 	key->month = gkey.month;
 	key->numeric = gkey.numeric;
+	key->general_numeric = gkey.general_numeric;
 	key->reverse = gkey.reverse;
       }
 
   if (!keyhead.next && (gkey.ignore || gkey.translate || gkey.skipsblanks
-			|| gkey.skipeblanks || gkey.month || gkey.numeric))
+			|| gkey.skipeblanks || gkey.month || gkey.numeric
+                        || gkey.general_numeric))
     insertkey (&gkey);
   reverse = gkey.reverse;
 
