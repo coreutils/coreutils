@@ -70,21 +70,6 @@ int rpl_lstat PARAMS((const char *, struct stat *));
 # define S_ISLNK(Mode) 0
 #endif
 
-#if defined strdupa
-# define ASSIGN_STRDUPA(DEST, S)		\
-  do { DEST = strdupa(S); } while (0)
-#else
-# define ASSIGN_STRDUPA(DEST, S)		\
-  do						\
-    {						\
-      const char *s_ = (S);			\
-      size_t len_ = strlen (s_) + 1;		\
-      char *tmp_dest_ = (char *) alloca (len_);	\
-      DEST = memcpy (tmp_dest_, (s_), len_);	\
-    }						\
-  while (0)
-#endif
-
 /* Initial capacity of per-directory hash table of entries that have
    been processed but not been deleted.  */
 #define HT_INITIAL_CAPACITY 13
@@ -838,6 +823,8 @@ rm (struct File_spec *fs, int user_specified_name, const struct rm_options *x)
 
   if (user_specified_name)
     {
+      /* CAUTION: this use of base_name works only because any
+	 trailing slashes in fs->filename have already been removed. */
       char *base = base_name (fs->filename);
 
       if (DOT_OR_DOTDOT (base))
