@@ -734,7 +734,7 @@ decode_one_format (const char *s_orig, const char *s, const char **next,
 		  || integral_type_size[size] == NO_SIZE)
 		{
 		  error (0, 0, _("invalid type string `%s';\n\
-this system doesn't provide a %d-byte integral type"), s_orig, size);
+this system doesn't provide a %lu-byte integral type"), s_orig, size);
 		  return 1;
 		}
 	      s = p;
@@ -847,7 +847,7 @@ this system doesn't provide a %d-byte integral type"), s_orig, size);
 		  || fp_type_size[size] == NO_SIZE)
 		{
 		  error (0, 0, _("invalid type string `%s';\n\
-this system doesn't provide a %d-byte floating point type"), s_orig, size);
+this system doesn't provide a %lu-byte floating point type"), s_orig, size);
 		  return 1;
 		}
 	      s = p;
