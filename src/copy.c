@@ -597,7 +597,7 @@ dest_info_hash (void const *x, unsigned int table_size)
   /* FIXME-maybe: is it worth the overhead of doing this
      just to avoid N^2 in such an unusual case?  N would have
      to be very large to make the N^2 factor noticable, and
-     one would probably encounter a limit on the lenght of
+     one would probably encounter a limit on the length of
      a command line before it became a problem.  */
   unsigned int tmp = hash_pjw (p->name, table_size);
 
@@ -614,13 +614,23 @@ dest_info_compare (void const *x, void const *y)
   return (SAME_INODE (*a, *b) && same_name (a->name, b->name)) ? true : false;
 }
 
+/* Free a dest_info entry.  */
+static void
+dest_info_free (void *x)
+{
+  struct Dest_info *a = x;
+  free ((char *) (a->name));
+  free (a);
+}
+
 /* Initialize the hash table implementing a set of dest_info entries.  */
 void
 dest_info_init ()
 {
   dest_info = hash_initialize (DEST_INFO_INITIAL_CAPACITY, NULL,
 			       dest_info_hash,
-			       dest_info_compare, free);
+			       dest_info_compare,
+			       dest_info_free);
 }
 
 /* Return nonzero if the file described by name, DEST, and DEST_STATS
@@ -655,7 +665,7 @@ record_dest (char const *dest, struct stat const *dest_stats)
     return;
 
   ent = (struct Dest_info *) xmalloc (sizeof *ent);
-  ent->name = dest;
+  ent->name = xstrdup (dest);
   if (dest_stats)
     {
       ent->st_ino = dest_stats->st_ino;
@@ -682,7 +692,7 @@ record_dest (char const *dest, struct stat const *dest_stats)
       {
 	/* There was alread a matching entry in the table, so ENT was
 	   not inserted.  Free it.  */
-	free (ent);
+	dest_info_free (ent);
       }
   }
 }
