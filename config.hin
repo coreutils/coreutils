@@ -62,6 +62,9 @@
    language is requested. */
 #undef ENABLE_NLS
 
+/* Define as good substitute value for EOVERFLOW. */
+#undef EOVERFLOW
+
 /* Define on systems for which file names may have a so-called `drive letter'
    prefix, define this to compute the length of that prefix, including the
    colon. */
