@@ -1,5 +1,9 @@
 2003-04-05  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.0.1.
+
+	* src/kill.c (sys_siglist): Also check for __sys_siglist.
+	Patch by Tony Leneis.
 	* configure.ac: Also check for declaration of __sys_siglist.
 	Required for Tru64 4.0D, 4.0F, and 5.1.
 	Reported by Tony Leneis.
@@ -24,8 +28,6 @@
 	Make each generated file be read-only.
 	Add each file name to BUILT_SOURCES separately.
 	(MAINTAINERCLEANFILES): Set to $(BUILT_SOURCES).
-
-	* Version 5.0.1.
 
 	Put LOCALEDIR macro definition in new file: localedir.h.
 	* src/Makefile.am (DEFS): Remove definition.
