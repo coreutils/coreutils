@@ -4,6 +4,8 @@
 * du no longer gets a failed assertion for certain hierarchy lay-outs
   involving hard-linked directories
 * `who -r' no longer segfaults when using non-C-locale messages
+* df now displays a mount point (usually `/') for non-mounted
+  character-special and block files
 [4.5.5]
 * ls --dired produces correct byte offset for file names containing
   nonprintable characters in a multibyte locale
