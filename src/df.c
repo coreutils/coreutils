@@ -1,5 +1,5 @@
 /* df - summarize free disk space
-   Copyright (C) 91, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -526,7 +526,10 @@ show_point (const char *point, const struct stat *statp)
 	goto show_matching_dummy;
     }
 
-#if HAVE_REALPATH || HAVE_RESOLVEPATH
+  /* Ideally, the following mess of #if'd code would be in a separate
+     file, and there'd be a single function call here.  FIXME, someday.  */
+
+#if HAVE_REALPATH || HAVE_RESOLVEPATH || HAVE_CANONICALIZE_FILE_NAME
   /* Calculate the real absolute path for POINT, and use that to find
      the mount point.  This avoids statting unavailable mount points,
      which can hang df.  */
@@ -536,7 +539,11 @@ show_point (const char *point, const struct stat *statp)
     ssize_t resolved_len;
     struct mount_entry *best_match = NULL;
 
-# if HAVE_RESOLVEPATH
+# if HAVE_CANONICALIZE_FILE_NAME
+    resolved = canonicalize_file_name (abspoint);
+    resolved_len = resolved ? strlen (resolved) : -1;
+# else
+#  if HAVE_RESOLVEPATH
     /* All known hosts with resolvepath (e.g. Solaris 7) don't turn
        relative names into absolute ones, so prepend the working
        directory if the path is not absolute.  */
@@ -567,23 +574,28 @@ show_point (const char *point, const struct stat *statp)
 	      abspoint = needs_freeing;
 	  }
       }
-# endif
+#  endif
 
-# if HAVE_RESOLVEPATH
+#  if HAVE_RESOLVEPATH
     {
       size_t resolved_size = strlen (abspoint);
-      do
+      while (1)
 	{
 	  resolved_size = 2 * resolved_size + 1;
-	  resolved = alloca (resolved_size);
+	  resolved = xmalloc (resolved_size);
 	  resolved_len = resolvepath (abspoint, resolved, resolved_size);
+	  if (resolved_len < resolved_size)
+	    break;
+	  free (resolved);
 	}
-      while (resolved_len == resolved_size);
     }
-# else
-    resolved = alloca (PATH_MAX + 1);
+#  else
+    /* Use realpath only as a last resort.
+       It provides a very poor interface.  */
+    resolved = xmalloc (PATH_MAX + 1);
     resolved = (char *) realpath (abspoint, resolved);
     resolved_len = resolved ? strlen (resolved) : -1;
+#  endif
 # endif
 
     if (1 <= resolved_len && resolved[0] == '/')
@@ -604,6 +616,9 @@ show_point (const char *point, const struct stat *statp)
 		}
 	    }
       }
+
+    if (resolved)
+      free (resolved);
 
     if (best_match && !STREQ (best_match->me_type, "lofs")
 	&& stat (best_match->me_mountdir, &disk_stats) == 0
