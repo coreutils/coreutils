@@ -25,10 +25,12 @@ editpl = sed -e 's,@''PERL''@,$(PERL),g' -e 's,@''srcdir''@,@srcdir@,g'
 
 TESTS = $x-tests
 
-$x-tests: @MAINT@mk-script Test.pm
+$(srcdir)/$x-tests: @MAINT@mk-script Test.pm
 	./mk-script ../../src/$x > $@.n
 	mv $@.n $@
 	chmod 755 $@
+
+mk-script: ../../config.status
 
 SUFFIXES = .pl
 
@@ -41,12 +43,11 @@ SUFFIXES = .pl
 MAINTAINERCLEANFILES = $x-tests $(maint_gen)
 CLEANFILES = $(run_gen)
 
-@MAINT@rebuild-check: Test.pm mk-script
-@MAINT@	rb=rb-check; rm -f $rb; \
-@MAINT@	m_template=../Makefile.am.in; \
-@MAINT@	sed -n '1,/^##test-files-begin/p' $$m_template > $$rb; \
+@MAINT@Makefile.am: ../Makefile.am.in Test.pm mk-script
+@MAINT@	rm -f $@ $@t
+@MAINT@	sed -n '1,/^##test-files-begin/p' $< > $@t
 @MAINT@	tool=`echo $(subdir)|sed 's/^tests.//;s/-test//'`; \
-@MAINT@	echo "x = $$tool" >> $$rb; \
-@MAINT@	./mk-script --list >> $$rb; \
-@MAINT@	sed -n '/^##test-files-end/,$$p' $$m_template >> $$rb; \
-@MAINT@	diff -u Makefile.am $$rb && echo ok || echo no
+@MAINT@	  echo "x = $$tool" >> $@t
+@MAINT@	./mk-script --list >> $@t
+@MAINT@	sed -n '/^##test-files-end/,$$p' $< >> $@t
+@MAINT@	mv $@t $@
