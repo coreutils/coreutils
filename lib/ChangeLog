@@ -1,3 +1,8 @@
+2000-10-16  Jim Meyering  <meyering@lucent.com>
+
+	* hard-locale.c (hard_locale): Use "", not 0 as 2nd arg to setlocale.
+	From Jan Fedak.
+
 2000-09-25  Jim Meyering  <meyering@lucent.com>
 
 	* md5.h (rol): Define (from GnuPG).
