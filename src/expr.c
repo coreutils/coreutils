@@ -421,6 +421,14 @@ docolon (VALUE *sv, VALUE *pv)
   tostring (sv);
   tostring (pv);
 
+  if (pv->u.s[0] == '^')
+    {
+      error (0, 0, _("\
+warning: unportable BRE: `%s': using `^' as the first character \n\
+of the basic regular expression is not portable; it is being ignored"),
+	     pv->u.s);
+    }
+
   len = strlen (pv->u.s);
   memset (&re_buffer, 0, sizeof (re_buffer));
   memset (&re_regs, 0, sizeof (re_regs));
