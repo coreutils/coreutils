@@ -4,6 +4,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  rm no longer required read access to the current directory.
+
   For some types of errors (e.g., read-only file system, I/O error)
   when first encountering a directory, `rm -r' would mistakenly fail
   to remove files under that directory.
