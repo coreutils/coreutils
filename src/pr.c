@@ -179,24 +179,32 @@ typedef struct COLUMN COLUMN;
 
 #define NULLCOL (COLUMN *)0
 
-static int char_to_clump (int c);
-static int read_line (COLUMN *p);
-static int print_page (void);
-static int print_stored (COLUMN *p);
-static int open_file (char *name, COLUMN *p);
-static int skip_to_page (int page);
-static void getoptarg (char *arg, char switch_char, char *character, int *number);
-static void usage (int status);
-static void print_files (int number_of_files, char **av);
-static void init_header (char *filename, int desc);
-static void init_store_cols (void);
-static void store_columns (void);
-static void balance (int total_stored);
-static void store_char (int c);
-static void pad_down (int lines);
-static void read_rest_of_line (COLUMN *p);
-static void print_char (int c);
-static void cleanup (void);
+#ifndef __P
+# if PROTOTYPES
+#  define __P(Args) Args
+# else
+#  define __P(Args) ()
+# endif
+#endif
+
+static int char_to_clump __P ((int c));
+static int read_line __P ((COLUMN *p));
+static int print_page __P ((void));
+static int print_stored __P ((COLUMN *p));
+static int open_file __P ((char *name, COLUMN *p));
+static int skip_to_page __P ((int page));
+static void getoptarg __P ((char *arg, char switch_char, char *character, int *number));
+static void usage __P ((int status));
+static void print_files __P ((int number_of_files, char **av));
+static void init_header __P ((char *filename, int desc));
+static void init_store_cols __P ((void));
+static void store_columns __P ((void));
+static void balance __P ((int total_stored));
+static void store_char __P ((int c));
+static void pad_down __P ((int lines));
+static void read_rest_of_line __P ((COLUMN *p));
+static void print_char __P ((int c));
+static void cleanup __P ((void));
 
 /* The name under which this program was invoked. */
 char *program_name;
