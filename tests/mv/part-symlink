@@ -20,6 +20,10 @@ pwd_tmp=$pwd/$tmp
 # Make sure the programs use C-locale formats/translations.
 . $srcdir/../lang-default
 
+# Unset CDPATH.  Otherwise, output from the `cd dir' command
+# can make this test fail.
+(unset CDPATH) >/dev/null 2>&1 && unset CDPATH
+
 if test -z "$other_partition_tmpdir"; then
   (exit 77); exit
 fi
