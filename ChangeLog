@@ -1,6 +1,32 @@
-2003-07-16  Jim Meyering  <jim@meyering.net>
+2003-07-18  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.90.
+
+	* tests/expr/basic: Add tests for when exit status is 2.
+
+	* src/nohup.c (NOHUP_FOUND_BUT_CANNOT_INVOKE, NOHUP_FAILURE):
+	Use an anonymous `enum', rather than #define.
+
+2003-07-17  Paul Eggert  <eggert@twinsun.com>
+
+	* src/expr.c: Include "exitfail.h", "quotearg.h".
+	(EXPR_INVALID, EXPR_ERROR): New constants.
+	(nomoreargs, null, toarith, nextarg): Return bool, not int.
+	(syntax_error): New function, exiting with status 2.  Use it
+	insteading of printing "syntax error" ourselves.
+	(main): Initialize exit_failure to EXPR_ERROR.
+	Exit with EXPR_INVALID on syntax error (too few arguments).
+	(nextarg): Use strcmp, not strcoll; strcoll might return
+	an undesirable 0, or might fail.
+	(docolon, eval4, eval3): Exit with status 3 on invalid argument type
+	or other such error.
+	(eval2): Report an error if strcoll fails in a string comparison.
+	* src/sort.c: Include "exitfail.h".
+	(main): Set exit_failure, not xalloc_exit_failure and
+	xmemcoll_exit_failure.
+	* tests/expr/basic: Invalid value exits with status 3, not 2.
+
+2003-07-16  Jim Meyering  <jim@meyering.net>
 
 	* configure.ac (AC_INIT): Use 5.0.90 as the version, rather than 5.0.2,
 	per GNU maintainer guidelines.  The next non-beta release will be 5.1.
