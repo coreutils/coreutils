@@ -2,6 +2,15 @@
 
 	* Version 4.0y.
 
+	* src/copy.c (copy_internal): Quote the file names that are displayed
+	with --verbose and --backup.
+	* src/remove.c (remove_file): Quote the file names that are displayed
+	with --verbose.
+	(remove_dir): Likewise.
+	* tests/mv/mv-special-1: Add quote marks to match new behavior.
+	* tests/rm/r-1: Likewise.
+	* tests/rm/r-2: Likewise.
+
 	* src/df.c: Convert "`%s'" in format strings to "%s", and wrap each
 	corresponding argument in a `quote (...)' call.
 	* src/dircolors.c: Likewise.
