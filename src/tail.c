@@ -1204,7 +1204,6 @@ tail_file (struct File_spec *f, off_t n_units)
 	  struct stat stats;
 
 	  f->errnum = 0;
-	  /* FIXME: duplicate code */
 	  if (fstat (fd, &stats) < 0)
 	    {
 	      errors = 1;
