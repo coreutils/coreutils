@@ -1,6 +1,8 @@
 [4.1.2]
 * cp no longer fails when two or more source files are the same;
-    now it just gives a warning.  E.g., cp a a d/
+    now it just gives a warning and doesn't copy the file the second time.
+    E.g., cp a a d/ produces this:
+    cp: warning: source file `a' specified more than once
 * chmod would set the wrong bit when given symbolic mode strings like
     these: g=o, o=g, o=u.  E.g., `chmod a=,o=w,ug=o f' would give a mode
     of --w-r---w- rather than --w--w--w-.
