@@ -1,4 +1,4 @@
-# inttostr.m4 serial 1
+# inttostr.m4 serial 2
 dnl Copyright (C) 2004 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -16,8 +16,8 @@ AC_DEFUN([gl_INTTOSTR],
 
 # Prerequisites of lib/inttostr.h.
 AC_DEFUN([gl_PREREQ_INTTOSTR], [
-  AC_REQUIRE([jm_AC_TYPE_INTMAX_T])
-  AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])
+  AC_REQUIRE([gl_AC_TYPE_INTMAX_T])
+  AC_REQUIRE([gl_AC_TYPE_UINTMAX_T])
   AC_REQUIRE([AC_TYPE_OFF_T])
   :
 ])

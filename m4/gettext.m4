@@ -1,5 +1,5 @@
-# gettext.m4 serial 28 (gettext-0.13)
-dnl Copyright (C) 1995-2003 Free Software Foundation, Inc.
+# gettext.m4 serial 29
+dnl Copyright (C) 1995-2004 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -358,19 +358,19 @@ AC_DEFUN([AM_INTL_SUBDIR],
   AC_REQUIRE([AC_C_INLINE])dnl
   AC_REQUIRE([AC_TYPE_OFF_T])dnl
   AC_REQUIRE([AC_TYPE_SIZE_T])dnl
-  AC_REQUIRE([jm_AC_TYPE_LONG_LONG])dnl
+  AC_REQUIRE([gl_AC_TYPE_LONG_LONG])dnl
   AC_REQUIRE([gt_TYPE_LONGDOUBLE])dnl
   AC_REQUIRE([gt_TYPE_WCHAR_T])dnl
   AC_REQUIRE([gt_TYPE_WINT_T])dnl
-  AC_REQUIRE([jm_AC_HEADER_INTTYPES_H])
-  AC_REQUIRE([jm_AC_HEADER_STDINT_H])
+  AC_REQUIRE([gl_AC_HEADER_INTTYPES_H])
+  AC_REQUIRE([gl_AC_HEADER_STDINT_H])
   AC_REQUIRE([gt_TYPE_INTMAX_T])
   AC_REQUIRE([gt_PRINTF_POSIX])
   AC_REQUIRE([AC_FUNC_ALLOCA])dnl
   AC_REQUIRE([AC_FUNC_MMAP])dnl
-  AC_REQUIRE([jm_GLIBC21])dnl
+  AC_REQUIRE([gl_GLIBC21])dnl
   AC_REQUIRE([gt_INTDIV0])dnl
-  AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])dnl
+  AC_REQUIRE([gl_AC_TYPE_UINTMAX_T])dnl
   AC_REQUIRE([gt_HEADER_INTTYPES_H])dnl
   AC_REQUIRE([gt_INTTYPES_PRI])dnl
   AC_REQUIRE([gl_XSIZE])dnl

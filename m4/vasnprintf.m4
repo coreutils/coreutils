@@ -1,5 +1,5 @@
-# vasnprintf.m4 serial 3
-dnl Copyright (C) 2002-2003 Free Software Foundation, Inc.
+# vasnprintf.m4 serial 4
+dnl Copyright (C) 2002-2004 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -24,7 +24,7 @@ AC_DEFUN([gl_FUNC_VASNPRINTF],
 AC_DEFUN([gl_PREREQ_PRINTF_ARGS],
 [
   AC_REQUIRE([bh_C_SIGNED])
-  AC_REQUIRE([jm_AC_TYPE_LONG_LONG])
+  AC_REQUIRE([gl_AC_TYPE_LONG_LONG])
   AC_REQUIRE([gt_TYPE_LONGDOUBLE])
   AC_REQUIRE([gt_TYPE_WCHAR_T])
   AC_REQUIRE([gt_TYPE_WINT_T])
@@ -33,7 +33,7 @@ AC_DEFUN([gl_PREREQ_PRINTF_ARGS],
 # Prequisites of lib/printf-parse.h, lib/printf-parse.c.
 AC_DEFUN([gl_PREREQ_PRINTF_PARSE],
 [
-  AC_REQUIRE([jm_AC_TYPE_LONG_LONG])
+  AC_REQUIRE([gl_AC_TYPE_LONG_LONG])
   AC_REQUIRE([gt_TYPE_LONGDOUBLE])
   AC_REQUIRE([gt_TYPE_WCHAR_T])
   AC_REQUIRE([gt_TYPE_WINT_T])
@@ -46,7 +46,7 @@ AC_DEFUN([gl_PREREQ_PRINTF_PARSE],
 AC_DEFUN([gl_PREREQ_VASNPRINTF],
 [
   AC_REQUIRE([AC_FUNC_ALLOCA])
-  AC_REQUIRE([jm_AC_TYPE_LONG_LONG])
+  AC_REQUIRE([gl_AC_TYPE_LONG_LONG])
   AC_REQUIRE([gt_TYPE_LONGDOUBLE])
   AC_REQUIRE([gt_TYPE_WCHAR_T])
   AC_REQUIRE([gt_TYPE_WINT_T])

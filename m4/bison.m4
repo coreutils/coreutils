@@ -1,6 +1,6 @@
-#serial 2
+#serial 3
 
-AC_DEFUN([jm_BISON],
+AC_DEFUN([gl_BISON],
 [
   # getdate.y works with bison only.
   : ${YACC='bison -y'}

@@ -1,4 +1,4 @@
-# getdate.m4 serial 3
+# getdate.m4 serial 4
 dnl Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -13,7 +13,7 @@ AC_DEFUN([gl_GETDATE],
   AC_REQUIRE([gl_TIMESPEC])
 
   dnl Prerequisites of lib/getdate.y.
-  AC_REQUIRE([jm_BISON])
+  AC_REQUIRE([gl_BISON])
   AC_REQUIRE([AC_FUNC_ALLOCA])
   AC_REQUIRE([AC_HEADER_STDC])
   AC_CHECK_FUNCS_ONCE(isascii)

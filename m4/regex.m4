@@ -1,16 +1,16 @@
-#serial 20
+#serial 21
 
 dnl Initially derived from code in GNU grep.
 dnl Mostly written by Jim Meyering.
 
 AC_DEFUN([gl_REGEX],
 [
-  jm_INCLUDED_REGEX([lib/regex.c])
+  gl_INCLUDED_REGEX([lib/regex.c])
 ])
 
-dnl Usage: jm_INCLUDED_REGEX([lib/regex.c])
+dnl Usage: gl_INCLUDED_REGEX([lib/regex.c])
 dnl
-AC_DEFUN([jm_INCLUDED_REGEX],
+AC_DEFUN([gl_INCLUDED_REGEX],
   [
     dnl Even packages that don't use regex.c can use this macro.
     dnl Of course, for them it doesn't do anything.
@@ -93,7 +93,7 @@ AC_DEFUN([jm_INCLUDED_REGEX],
 		    jm_with_regex=$ac_use_included_regex)
 	if test "$jm_with_regex" = yes; then
 	  AC_LIBOBJ(regex)
-	  jm_PREREQ_REGEX
+	  gl_PREREQ_REGEX
 	fi
       ],
     )
@@ -101,7 +101,7 @@ AC_DEFUN([jm_INCLUDED_REGEX],
 )
 
 # Prerequisites of lib/regex.c.
-AC_DEFUN([jm_PREREQ_REGEX],
+AC_DEFUN([gl_PREREQ_REGEX],
 [
   dnl FIXME: Maybe provide a btowc replacement someday: Solaris 2.5.1 lacks it.
   dnl FIXME: Check for wctype and iswctype, and and add -lw if necessary

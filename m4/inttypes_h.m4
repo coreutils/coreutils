@@ -1,5 +1,5 @@
-# inttypes_h.m4 serial 5 (gettext-0.12)
-dnl Copyright (C) 1997-2003 Free Software Foundation, Inc.
+# inttypes_h.m4 serial 6
+dnl Copyright (C) 1997-2004 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -11,7 +11,7 @@ dnl From Paul Eggert.
 # Define HAVE_INTTYPES_H_WITH_UINTMAX if <inttypes.h> exists,
 # doesn't clash with <sys/types.h>, and declares uintmax_t.
 
-AC_DEFUN([jm_AC_HEADER_INTTYPES_H],
+AC_DEFUN([gl_AC_HEADER_INTTYPES_H],
 [
   AC_CACHE_CHECK([for inttypes.h], jm_ac_cv_header_inttypes_h,
   [AC_TRY_COMPILE(

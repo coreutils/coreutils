@@ -1,6 +1,6 @@
-#serial 5
+#serial 6
 
-AC_DEFUN([jm_AFS],
+AC_DEFUN([gl_AFS],
   [
     AC_MSG_CHECKING(for AFS)
     if test -d /afs; then

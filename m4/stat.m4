@@ -1,4 +1,4 @@
-#serial 9
+#serial 10
 
 dnl From Jim Meyering.
 dnl Determine whether stat has the bug that it succeeds when given the
@@ -9,7 +9,7 @@ dnl If it does, then define HAVE_STAT_EMPTY_STRING_BUG and arrange to
 dnl compile the wrapper function.
 dnl
 
-AC_DEFUN([jm_FUNC_STAT],
+AC_DEFUN([gl_FUNC_STAT],
 [
   AC_FUNC_STAT
   dnl Note: AC_FUNC_STAT does AC_LIBOBJ(stat).

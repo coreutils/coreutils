@@ -1,9 +1,9 @@
-#serial 8
+#serial 9
 
 dnl From Jim Meyering.
 dnl A wrapper around AC_FUNC_GETGROUPS.
 
-AC_DEFUN([jm_FUNC_GETGROUPS],
+AC_DEFUN([gl_FUNC_GETGROUPS],
 [
   AC_REQUIRE([AC_FUNC_GETGROUPS])
   if test $ac_cv_func_getgroups_works = no; then

@@ -1,5 +1,5 @@
-# strtoull.m4 serial 1
-dnl Copyright (C) 2002 Free Software Foundation, Inc.
+# strtoull.m4 serial 2
+dnl Copyright (C) 2002, 2004 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -10,7 +10,7 @@ AC_DEFUN([gl_FUNC_STRTOULL],
 [
   dnl We don't need (and can't compile) the replacement strtoull
   dnl unless the type 'unsigned long long' exists.
-  AC_REQUIRE([jm_AC_TYPE_UNSIGNED_LONG_LONG])
+  AC_REQUIRE([gl_AC_TYPE_UNSIGNED_LONG_LONG])
   if test "$ac_cv_type_unsigned_long_long" = yes; then
     AC_REPLACE_FUNCS(strtoull)
     if test $ac_cv_func_strtoull = no; then
@@ -23,4 +23,3 @@ AC_DEFUN([gl_FUNC_STRTOULL],
 AC_DEFUN([gl_PREREQ_STRTOULL], [
   :
 ])
-

@@ -1,7 +1,7 @@
-#serial 3
+#serial 4
 dnl based on code from Eleftherios Gkioulekas
 
-AC_DEFUN([jm_ASSERT],
+AC_DEFUN([gl_ASSERT],
 [
   AC_MSG_CHECKING(whether to enable assertions)
   AC_ARG_ENABLE(assert,

@@ -1,5 +1,5 @@
-# intmax_t.m4 serial 2
-dnl Copyright (C) 1997-2003 Free Software Foundation, Inc.
+# intmax_t.m4 serial 3
+dnl Copyright (C) 1997-2004 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -13,14 +13,14 @@ AC_PREREQ(2.13)
 # Define intmax_t to 'long' or 'long long'
 # if it is not already defined in <stdint.h> or <inttypes.h>.
 
-AC_DEFUN([jm_AC_TYPE_INTMAX_T],
+AC_DEFUN([gl_AC_TYPE_INTMAX_T],
 [
   dnl For simplicity, we assume that a header file defines 'intmax_t' if and
   dnl only if it defines 'uintmax_t'.
-  AC_REQUIRE([jm_AC_HEADER_INTTYPES_H])
-  AC_REQUIRE([jm_AC_HEADER_STDINT_H])
+  AC_REQUIRE([gl_AC_HEADER_INTTYPES_H])
+  AC_REQUIRE([gl_AC_HEADER_STDINT_H])
   if test $jm_ac_cv_header_inttypes_h = no && test $jm_ac_cv_header_stdint_h = no; then
-    AC_REQUIRE([jm_AC_TYPE_LONG_LONG])
+    AC_REQUIRE([gl_AC_TYPE_LONG_LONG])
     test $ac_cv_type_long_long = yes \
       && ac_type='long long' \
       || ac_type='long'
@@ -36,8 +36,8 @@ dnl An alternative would be to explicitly test for 'intmax_t'.
 
 AC_DEFUN([gt_AC_TYPE_INTMAX_T],
 [
-  AC_REQUIRE([jm_AC_HEADER_INTTYPES_H])
-  AC_REQUIRE([jm_AC_HEADER_STDINT_H])
+  AC_REQUIRE([gl_AC_HEADER_INTTYPES_H])
+  AC_REQUIRE([gl_AC_HEADER_STDINT_H])
   AC_CACHE_CHECK(for intmax_t, gt_cv_c_intmax_t,
     [AC_TRY_COMPILE([
 #include <stddef.h>
@@ -53,7 +53,7 @@ AC_DEFUN([gt_AC_TYPE_INTMAX_T],
     AC_DEFINE(HAVE_INTMAX_T, 1,
       [Define if you have the 'intmax_t' type in <stdint.h> or <inttypes.h>.])
   else
-    AC_REQUIRE([jm_AC_TYPE_LONG_LONG])
+    AC_REQUIRE([gl_AC_TYPE_LONG_LONG])
     test $ac_cv_type_long_long = yes \
       && ac_type='long long' \
       || ac_type='long'

@@ -1,9 +1,9 @@
-#serial 8
+#serial 9
 
 dnl From Jim Meyering.
 dnl A wrapper around AC_FUNC_MKTIME.
 
-AC_DEFUN([jm_FUNC_MKTIME],
+AC_DEFUN([gl_FUNC_MKTIME],
 [AC_REQUIRE([AC_FUNC_MKTIME])dnl
 
  dnl mktime.c uses localtime_r if it exists.  Check for it.

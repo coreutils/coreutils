@@ -2,7 +2,7 @@
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
-AC_DEFUN([jm_MACROS],
+AC_DEFUN([gl_MACROS],
 [
   AC_PREREQ(2.58)
 
@@ -19,34 +19,34 @@ AC_DEFUN([jm_MACROS],
   dnl This macro actually runs replacement code.  See isc-posix.m4.
   AC_REQUIRE([AC_ISC_POSIX])dnl
 
-  jm_CHECK_ALL_TYPES
+  gl_CHECK_ALL_TYPES
 
   AC_REQUIRE([UTILS_HOST_OS])
-  AC_REQUIRE([jm_ASSERT])
-  AC_REQUIRE([jm_CHECK_TYPE_STRUCT_UTIMBUF])
-  AC_REQUIRE([jm_CHECK_TYPE_STRUCT_DIRENT_D_TYPE])
-  AC_REQUIRE([jm_CHECK_TYPE_STRUCT_DIRENT_D_INO])
-  AC_REQUIRE([jm_CHECK_DECLS])
+  AC_REQUIRE([gl_ASSERT])
+  AC_REQUIRE([gl_CHECK_TYPE_STRUCT_UTIMBUF])
+  AC_REQUIRE([gl_CHECK_TYPE_STRUCT_DIRENT_D_TYPE])
+  AC_REQUIRE([gl_CHECK_TYPE_STRUCT_DIRENT_D_INO])
+  AC_REQUIRE([gl_CHECK_DECLS])
 
-  AC_REQUIRE([jm_PREREQ])
+  AC_REQUIRE([gl_PREREQ])
 
   AC_REQUIRE([UTILS_FUNC_DIRFD])
   AC_REQUIRE([AC_FUNC_ACL])
-  AC_REQUIRE([jm_FUNC_LCHOWN])
+  AC_REQUIRE([gl_FUNC_LCHOWN])
   AC_REQUIRE([fetish_FUNC_RMDIR_NOTEMPTY])
-  AC_REQUIRE([jm_FUNC_CHOWN])
+  AC_REQUIRE([gl_FUNC_CHOWN])
   AC_REQUIRE([AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK])
   AC_REQUIRE([AC_FUNC_STRERROR_R])
-  AC_REQUIRE([jm_FUNC_GROUP_MEMBER])
-  AC_REQUIRE([jm_AFS])
-  AC_REQUIRE([jm_AC_FUNC_LINK_FOLLOWS_SYMLINK])
-  AC_REQUIRE([jm_FUNC_FPENDING])
+  AC_REQUIRE([gl_FUNC_GROUP_MEMBER])
+  AC_REQUIRE([gl_AFS])
+  AC_REQUIRE([gl_AC_FUNC_LINK_FOLLOWS_SYMLINK])
+  AC_REQUIRE([gl_FUNC_FPENDING])
 
   # This is for od and stat, and any other program that
   # uses the PRI.MAX macros from inttypes.h.
   AC_REQUIRE([gt_INTTYPES_PRI])
 
-  AC_REQUIRE([jm_FUNC_GETGROUPS])
+  AC_REQUIRE([gl_FUNC_GETGROUPS])
 
   AC_REQUIRE([AC_FUNC_FSEEKO])
   AC_REQUIRE([AC_FUNC_ALLOCA])
@@ -54,8 +54,8 @@ AC_DEFUN([jm_MACROS],
   AC_CONFIG_LIBOBJ_DIR([lib])
   AC_FUNC_GETLOADAVG([lib])
 
-  AC_REQUIRE([jm_SYS_PROC_UPTIME])
-  AC_REQUIRE([jm_FUNC_FTRUNCATE])
+  AC_REQUIRE([gl_SYS_PROC_UPTIME])
+  AC_REQUIRE([gl_FUNC_FTRUNCATE])
 
   # raise is used by at least sort and ls.
   AC_REPLACE_FUNCS(raise)
@@ -138,9 +138,9 @@ AC_DEFUN([jm_MACROS],
     ])
 
   AM_LANGINFO_CODESET
-  jm_GLIBC21
+  gl_GLIBC21
   AM_ICONV
-  jm_FUNC_UNLINK_BUSY_TEXT
+  gl_FUNC_UNLINK_BUSY_TEXT
 
   # These tests are for df.
   AC_REQUIRE([gl_FSUSAGE])
@@ -148,7 +148,7 @@ AC_DEFUN([jm_MACROS],
   if test $gl_cv_list_mounted_fs = yes && test $gl_cv_fs_space = yes; then
     DF_PROG='df$(EXEEXT)'
   fi
-  AC_REQUIRE([jm_AC_DOS])
+  AC_REQUIRE([gl_AC_DOS])
   AC_REQUIRE([AC_FUNC_CANONICALIZE_FILE_NAME])
 
   # If any of these functions don't exist (e.g. DJGPP 2.03),
@@ -162,7 +162,7 @@ AC_DEFUN([jm_MACROS],
 # These tests must be run before any use of AC_CHECK_TYPE,
 # because that macro compiles code that tests e.g., HAVE_UNISTD_H.
 # See the definition of ac_includes_default in `configure'.
-AC_DEFUN([jm_CHECK_ALL_HEADERS],
+AC_DEFUN([gl_CHECK_ALL_HEADERS],
 [
   AC_CHECK_HEADERS( \
     errno.h  \
@@ -206,7 +206,7 @@ AC_DEFUN([jm_CHECK_ALL_HEADERS],
 ])
 
 # This macro must be invoked before any tests that run the compiler.
-AC_DEFUN([jm_CHECK_ALL_TYPES],
+AC_DEFUN([gl_CHECK_ALL_TYPES],
 [
   dnl This test must come as early as possible after the compiler configuration
   dnl tests, because the choice of the file model can (in principle) affect
@@ -225,7 +225,7 @@ AC_DEFUN([jm_CHECK_ALL_TYPES],
   AC_REQUIRE([AC_C_INLINE])
   AC_REQUIRE([AC_C_LONG_DOUBLE])
 
-  AC_REQUIRE([jm_CHECK_ALL_HEADERS])
+  AC_REQUIRE([gl_CHECK_ALL_HEADERS])
   AC_REQUIRE([AC_HEADER_DIRENT])
   AC_REQUIRE([AC_HEADER_STDC])
   AC_CHECK_MEMBERS(
@@ -257,8 +257,8 @@ AC_DEFUN([jm_CHECK_ALL_TYPES],
   AC_CHECK_TYPE(major_t, unsigned int)
   AC_CHECK_TYPE(minor_t, unsigned int)
 
-  AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])
-  AC_REQUIRE([jm_AC_TYPE_UNSIGNED_LONG_LONG])
+  AC_REQUIRE([gl_AC_TYPE_UINTMAX_T])
+  AC_REQUIRE([gl_AC_TYPE_UNSIGNED_LONG_LONG])
 
   AC_REQUIRE([AC_HEADER_MAJOR])
   AC_REQUIRE([AC_HEADER_DIRENT])

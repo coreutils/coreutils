@@ -1,4 +1,4 @@
-#serial 14
+#serial 15
 
 dnl From Jim Meyering.
 dnl
@@ -6,8 +6,8 @@ dnl This is not pretty.  I've just taken the autoconf code and wrapped
 dnl it in an AC_DEFUN.
 dnl
 
-# jm_LIST_MOUNTED_FILESYSTEMS([ACTION-IF-FOUND[, ACTION-IF-NOT-FOUND]])
-AC_DEFUN([jm_LIST_MOUNTED_FILESYSTEMS],
+# gl_LIST_MOUNTED_FILESYSTEMS([ACTION-IF-FOUND[, ACTION-IF-NOT-FOUND]])
+AC_DEFUN([gl_LIST_MOUNTED_FILESYSTEMS],
   [
 AC_CHECK_FUNCS(listmntent getmntinfo)
 AC_CHECK_HEADERS_ONCE(sys/param.h)

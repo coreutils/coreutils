@@ -1,11 +1,11 @@
-#serial 8
+#serial 9
 
 dnl From Jim Meyering.
 dnl Determine whether chown accepts arguments of -1 for uid and gid.
 dnl If it doesn't, arrange to use the replacement function.
 dnl
 
-AC_DEFUN([jm_FUNC_CHOWN],
+AC_DEFUN([gl_FUNC_CHOWN],
 [
   AC_REQUIRE([AC_TYPE_UID_T])dnl
   AC_REQUIRE([AC_FUNC_CHOWN])

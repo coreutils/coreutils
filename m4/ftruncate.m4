@@ -1,8 +1,8 @@
-#serial 5
+#serial 6
 
 # See if we need to emulate a missing ftruncate function using fcntl or chsize.
 
-AC_DEFUN([jm_FUNC_FTRUNCATE],
+AC_DEFUN([gl_FUNC_FTRUNCATE],
 [
   AC_REPLACE_FUNCS(ftruncate)
   if test $ac_cv_func_ftruncate = no; then

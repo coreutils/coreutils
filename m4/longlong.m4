@@ -1,5 +1,5 @@
-# longlong.m4 serial 4
-dnl Copyright (C) 1999-2003 Free Software Foundation, Inc.
+# longlong.m4 serial 5
+dnl Copyright (C) 1999-2004 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -10,7 +10,7 @@ dnl From Paul Eggert.
 
 # Define HAVE_LONG_LONG if 'long long' works.
 
-AC_DEFUN([jm_AC_TYPE_LONG_LONG],
+AC_DEFUN([gl_AC_TYPE_LONG_LONG],
 [
   AC_CACHE_CHECK([for long long], ac_cv_type_long_long,
   [AC_TRY_LINK([long long ll = 1LL; int i = 63;],

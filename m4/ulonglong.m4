@@ -1,5 +1,5 @@
-# ulonglong.m4 serial 3
-dnl Copyright (C) 1999-2003 Free Software Foundation, Inc.
+# ulonglong.m4 serial 4
+dnl Copyright (C) 1999-2004 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -10,7 +10,7 @@ dnl From Paul Eggert.
 
 # Define HAVE_UNSIGNED_LONG_LONG if 'unsigned long long' works.
 
-AC_DEFUN([jm_AC_TYPE_UNSIGNED_LONG_LONG],
+AC_DEFUN([gl_AC_TYPE_UNSIGNED_LONG_LONG],
 [
   AC_CACHE_CHECK([for unsigned long long], ac_cv_type_unsigned_long_long,
   [AC_TRY_LINK([unsigned long long ull = 1ULL; int i = 63;],

@@ -1,8 +1,8 @@
-#serial 5
+#serial 6
 
 dnl Written by Jim Meyering
 
-AC_DEFUN([jm_FUNC_GROUP_MEMBER],
+AC_DEFUN([gl_FUNC_GROUP_MEMBER],
 [
   dnl Persuade glibc <unistd.h> to declare group_member().
   AC_REQUIRE([AC_GNU_SOURCE])

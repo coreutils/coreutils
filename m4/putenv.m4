@@ -1,5 +1,5 @@
-# putenv.m4 serial 7
-dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+# putenv.m4 serial 8
+dnl Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -11,7 +11,7 @@ dnl
 dnl Check whether putenv ("FOO") removes FOO from the environment.
 dnl The putenv in libc on at least SunOS 4.1.4 does *not* do that.
 
-AC_DEFUN([jm_FUNC_PUTENV],
+AC_DEFUN([gl_FUNC_PUTENV],
 [AC_CACHE_CHECK([for SVID conformant putenv], jm_cv_func_svid_putenv,
   [AC_TRY_RUN([
     int

@@ -1,5 +1,5 @@
-# memchr.m4 serial 2
-dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+# memchr.m4 serial 3
+dnl Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -10,11 +10,11 @@ AC_DEFUN([gl_FUNC_MEMCHR],
 [
   AC_REPLACE_FUNCS(memchr)
   if test $ac_cv_func_memchr = no; then
-    jm_PREREQ_MEMCHR
+    gl_PREREQ_MEMCHR
   fi
 ])
 
 # Prerequisites of lib/memchr.c.
-AC_DEFUN([jm_PREREQ_MEMCHR], [
+AC_DEFUN([gl_PREREQ_MEMCHR], [
   AC_CHECK_HEADERS(bp-sym.h)
 ])

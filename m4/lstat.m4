@@ -1,4 +1,4 @@
-#serial 10
+#serial 11
 
 dnl From Jim Meyering.
 dnl Determine whether lstat has the bug that it succeeds when given the
@@ -9,7 +9,7 @@ dnl If it does, then define HAVE_LSTAT_EMPTY_STRING_BUG and arrange to
 dnl compile the wrapper function.
 dnl
 
-AC_DEFUN([jm_FUNC_LSTAT],
+AC_DEFUN([gl_FUNC_LSTAT],
 [
   AC_FUNC_LSTAT
   dnl Note: AC_FUNC_LSTAT does AC_LIBOBJ(lstat).
