@@ -102,8 +102,8 @@ Usage: %s FORMAT [ARGUMENT]...\n\
       printf (_("\
 Print ARGUMENT(s) according to FORMAT.\n\
 \n\
-  --help      display this help and exit\n\
-  --version   output version information and exit\n\
+      --help      display this help and exit\n\
+      --version   output version information and exit\n\
 \n\
 FORMAT controls the output as in C printf.  Interpreted sequences are:\n\
 \n\

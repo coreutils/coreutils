@@ -76,8 +76,8 @@ Pause for NUMBER seconds.  SUFFIX may be `s' for seconds (the default),\n\
 that require NUMBER be an integer, here NUMBER may be an arbitrary floating\n\
 point number.\n\
 \n\
-  --help      display this help and exit\n\
-  --version   output version information and exit\n\
+      --help      display this help and exit\n\
+      --version   output version information and exit\n\
 "),
 	      program_name, program_name);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));

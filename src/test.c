@@ -998,8 +998,8 @@ Usage: %s EXPRESSION\n\
       printf (_("\
 Exit with the status determined by EXPRESSION.\n\
 \n\
-  --help      display this help and exit\n\
-  --version   output version information and exit\n\
+      --help      display this help and exit\n\
+      --version   output version information and exit\n\
 \n\
 EXPRESSION is true or false and sets exit status.  It is one of:\n\
 "));

@@ -94,8 +94,8 @@ Usage: %s EXPRESSION\n\
 	      program_name, program_name);
       printf (_("\
 \n\
-  --help      display this help and exit\n\
-  --version   output version information and exit\n\
+      --help      display this help and exit\n\
+      --version   output version information and exit\n\
 \n\
 "));
       printf (_("\

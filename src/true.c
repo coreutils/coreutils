@@ -21,8 +21,8 @@ Exit with a status code indicating success.\n\
 \n\
 These option names may not be abbreviated.\n\
 \n\
-  --help      display this help and exit\n\
-  --version   output version information and exit\n\
+      --help      display this help and exit\n\
+      --version   output version information and exit\n\
 ")
 	  , program_name, program_name);
   puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));

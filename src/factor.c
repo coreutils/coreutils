@@ -79,8 +79,8 @@ Usage: %s [NUMBER]...\n\
       printf (_("\
 Print the prime factors of each NUMBER.\n\
 \n\
-  --help      display this help and exit\n\
-  --version   output version information and exit\n\
+      --help      display this help and exit\n\
+      --version   output version information and exit\n\
 \n\
   Print the prime factors of all specified integer NUMBERs.  If no arguments\n\
   are specified on the command line, they are read from standard input.\n\

@@ -65,8 +65,8 @@ Usage: %s [VARIABLE]...\n\
   or:  %s OPTION\n\
 If no environment VARIABLE specified, print them all.\n\
 \n\
-  --help      display this help and exit\n\
-  --version   output version information and exit\n\
+      --help      display this help and exit\n\
+      --version   output version information and exit\n\
 "),
 	      program_name, program_name);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));

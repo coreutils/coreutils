@@ -69,8 +69,8 @@ Usage: %s [NAME]\n\
   or:  %s OPTION\n\
 Print or set the hostname of the current system.\n\
 \n\
-  --help      display this help and exit\n\
-  --version   output version information and exit\n\
+      --help      display this help and exit\n\
+      --version   output version information and exit\n\
 ")
              , program_name, program_name);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));

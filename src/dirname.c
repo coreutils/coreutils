@@ -53,8 +53,8 @@ Usage: %s NAME\n\
 Print NAME with its trailing /component removed; if NAME contains no /'s,\n\
 output `.' (meaning the current directory).\n\
 \n\
-  --help      display this help and exit\n\
-  --version   output version information and exit\n\
+      --help      display this help and exit\n\
+      --version   output version information and exit\n\
 "));
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
