@@ -378,9 +378,12 @@ check_file (const char *infile, const char *outfile)
 int
 main (int argc, char **argv)
 {
-  int optc;
-  char *infile = "-", *outfile = "-";
+  int optc = 0;
+  int posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
+  int nfiles = 0;
+  char const *file[2];
 
+  file[0] = file[1] = "-";
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
@@ -395,12 +398,40 @@ main (int argc, char **argv)
   countmode = count_none;
   delimit_groups = DM_NONE;
 
-  while ((optc = getopt_long (argc, argv, "0123456789cdDf:is:uw:", longopts,
-			      NULL)) != -1)
+  for (;;)
     {
-      switch (optc)
+      /* Parse an operand with leading "+" as a file after "--" was
+         seen; or if pedantic and a file was seen.  POSIX 1003.1-200x
+         d7 removes support for such operands, so when it becomes
+         official the code will need to be changed.  */
+
+      if (optc == -1
+	  || (posixly_correct && nfiles != 0)
+	  || ((optc = getopt_long (argc, argv,
+				   "-0123456789cdDf:is:uw:", longopts, NULL))
+	      == -1))
 	{
-	case 0:
+	  if (optind == argc)
+	    break;
+	  file[nfiles++] = argv[optind++];
+	}
+      else switch (optc)
+	{
+	case 1:
+	  {
+	    unsigned long int size;
+	    if (optarg[0] == '+'
+		&& xstrtoul (optarg, NULL, 10, &size, "") == LONGINT_OK
+		&& size <= SIZE_MAX)
+	      skip_chars = size;
+	    else if (nfiles == 2)
+	      {
+		error (0, 0, _("extra operand `%s'"), optarg);
+		usage (1);
+	      }
+	    else
+	      file[nfiles++] = optarg;
+	  }
 	  break;
 
 	case '0':
@@ -472,27 +503,6 @@ main (int argc, char **argv)
 	}
     }
 
-  if (optind < argc && !STREQ (argv[optind - 1], "--"))
-    {
-      /* Interpret non-option arguments with leading `+' only
-	 if we haven't seen `--'.  */
-      while (optind < argc && argv[optind][0] == '+')
-	skip_chars = size_opt (argv[optind++],
-			       N_("invalid number of bytes to skip"));
-    }
-
-  if (optind < argc)
-    infile = argv[optind++];
-
-  if (optind < argc)
-    outfile = argv[optind++];
-
-  if (optind < argc)
-    {
-      error (0, 0, _("too many arguments"));
-      usage (1);
-    }
-
   if (countmode == count_occurrences && mode == output_all_repeated)
     {
       error (0, 0,
@@ -500,7 +510,7 @@ main (int argc, char **argv)
       usage (1);
     }
 
-  check_file (infile, outfile);
+  check_file (file[0], file[1]);
 
   exit (EXIT_SUCCESS);
 }
