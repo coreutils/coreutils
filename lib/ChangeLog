@@ -1,3 +1,9 @@
+2002-09-14  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/xnanosleep (xnanosleep): Return -1 on failure, not 1,
+	for consistency with nanosleep.  Check errno after nanosleep
+	returns -1.
+
 2002-09-11  Jim Meyering  <meyering@lucent.com>
 
 	* xnanosleep.c, xnanosleep.h: New files, factored out of sleep.c.
