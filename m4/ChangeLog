@@ -19,7 +19,7 @@
 
 	* stripslash.m4: New file.
 	* linebuffer.m4: New file.
-	* prereq.m4: Require gl_STRIPSLASH and gl_LINEBUFFER])
+	* prereq.m4 (gl_PREREQ): Require gl_STRIPSLASH and gl_LINEBUFFER.
 
 2005-02-11  Jim Meyering  <jim@meyering.net>
 
