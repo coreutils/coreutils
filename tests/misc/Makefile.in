@@ -124,7 +124,7 @@ TESTS_ENVIRONMENT = \
   PATH=`pwd`/../../src:$$PATH
 
 
-TESTS = head-c
+TESTS = head-c csplit
 subdir = tests/misc
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
