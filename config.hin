@@ -1387,6 +1387,9 @@
 /* Define to rpl_fnmatch if the replacement function should be used. */
 #undef fnmatch
 
+/* Define to rpl_getcwd if the wrapper function should be used. */
+#undef getcwd
+
 /* Define as rpl_getgroups if getgroups doesn't work right. */
 #undef getgroups
 

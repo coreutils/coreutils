@@ -328,35 +328,35 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	$(DEPDIR)/euidaccess.Po $(DEPDIR)/fileblocks.Po \
 @AMDEP_TRUE@	$(DEPDIR)/fnmatch.Po $(DEPDIR)/fsusage.Po \
 @AMDEP_TRUE@	$(DEPDIR)/ftruncate.Po $(DEPDIR)/ftw.Po \
-@AMDEP_TRUE@	$(DEPDIR)/getgroups.Po $(DEPDIR)/gethostname.Po \
-@AMDEP_TRUE@	$(DEPDIR)/getline.Po $(DEPDIR)/getloadavg.Po \
-@AMDEP_TRUE@	$(DEPDIR)/getpass.Po $(DEPDIR)/gettimeofday.Po \
-@AMDEP_TRUE@	$(DEPDIR)/getusershell.Po $(DEPDIR)/group-member.Po \
-@AMDEP_TRUE@	$(DEPDIR)/lchown.Po $(DEPDIR)/lstat.Po \
-@AMDEP_TRUE@	$(DEPDIR)/malloc.Po $(DEPDIR)/memchr.Po \
-@AMDEP_TRUE@	$(DEPDIR)/memcmp.Po $(DEPDIR)/memcpy.Po \
-@AMDEP_TRUE@	$(DEPDIR)/memmove.Po $(DEPDIR)/memrchr.Po \
-@AMDEP_TRUE@	$(DEPDIR)/memset.Po $(DEPDIR)/mkdir.Po \
-@AMDEP_TRUE@	$(DEPDIR)/mkstemp.Po $(DEPDIR)/mktime.Po \
-@AMDEP_TRUE@	$(DEPDIR)/mmap-stack.Po $(DEPDIR)/mountlist.Po \
-@AMDEP_TRUE@	$(DEPDIR)/nanosleep.Po $(DEPDIR)/obstack.Po \
-@AMDEP_TRUE@	$(DEPDIR)/putenv.Po $(DEPDIR)/raise.Po \
-@AMDEP_TRUE@	$(DEPDIR)/readutmp.Po $(DEPDIR)/realloc.Po \
-@AMDEP_TRUE@	$(DEPDIR)/regex.Po $(DEPDIR)/rename.Po \
-@AMDEP_TRUE@	$(DEPDIR)/rmdir.Po $(DEPDIR)/rpmatch.Po \
-@AMDEP_TRUE@	$(DEPDIR)/sig2str.Po $(DEPDIR)/stat.Po \
-@AMDEP_TRUE@	$(DEPDIR)/stpcpy.Po $(DEPDIR)/strcasecmp.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strcspn.Po $(DEPDIR)/strdup.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strncasecmp.Po $(DEPDIR)/strndup.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strnlen.Po $(DEPDIR)/strpbrk.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strstr.Po $(DEPDIR)/strtod.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strtoimax.Po $(DEPDIR)/strtol.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strtoll.Po $(DEPDIR)/strtoul.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strtoull.Po $(DEPDIR)/strtoumax.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strverscmp.Po $(DEPDIR)/tempname.Po \
-@AMDEP_TRUE@	$(DEPDIR)/tsearch.Po $(DEPDIR)/utime.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/acl$U.Po ./$(DEPDIR)/addext$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/argmatch$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/getcwd.Po $(DEPDIR)/getgroups.Po \
+@AMDEP_TRUE@	$(DEPDIR)/gethostname.Po $(DEPDIR)/getline.Po \
+@AMDEP_TRUE@	$(DEPDIR)/getloadavg.Po $(DEPDIR)/getpass.Po \
+@AMDEP_TRUE@	$(DEPDIR)/gettimeofday.Po $(DEPDIR)/getusershell.Po \
+@AMDEP_TRUE@	$(DEPDIR)/group-member.Po $(DEPDIR)/lchown.Po \
+@AMDEP_TRUE@	$(DEPDIR)/lstat.Po $(DEPDIR)/malloc.Po \
+@AMDEP_TRUE@	$(DEPDIR)/memchr.Po $(DEPDIR)/memcmp.Po \
+@AMDEP_TRUE@	$(DEPDIR)/memcpy.Po $(DEPDIR)/memmove.Po \
+@AMDEP_TRUE@	$(DEPDIR)/memrchr.Po $(DEPDIR)/memset.Po \
+@AMDEP_TRUE@	$(DEPDIR)/mkdir.Po $(DEPDIR)/mkstemp.Po \
+@AMDEP_TRUE@	$(DEPDIR)/mktime.Po $(DEPDIR)/mmap-stack.Po \
+@AMDEP_TRUE@	$(DEPDIR)/mountlist.Po $(DEPDIR)/nanosleep.Po \
+@AMDEP_TRUE@	$(DEPDIR)/obstack.Po $(DEPDIR)/putenv.Po \
+@AMDEP_TRUE@	$(DEPDIR)/raise.Po $(DEPDIR)/readutmp.Po \
+@AMDEP_TRUE@	$(DEPDIR)/realloc.Po $(DEPDIR)/regex.Po \
+@AMDEP_TRUE@	$(DEPDIR)/rename.Po $(DEPDIR)/rmdir.Po \
+@AMDEP_TRUE@	$(DEPDIR)/rpmatch.Po $(DEPDIR)/sig2str.Po \
+@AMDEP_TRUE@	$(DEPDIR)/stat.Po $(DEPDIR)/stpcpy.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strcasecmp.Po $(DEPDIR)/strcspn.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strdup.Po $(DEPDIR)/strncasecmp.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strndup.Po $(DEPDIR)/strnlen.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strpbrk.Po $(DEPDIR)/strstr.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strtod.Po $(DEPDIR)/strtoimax.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strtol.Po $(DEPDIR)/strtoll.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strtoul.Po $(DEPDIR)/strtoull.Po \
+@AMDEP_TRUE@	$(DEPDIR)/strtoumax.Po $(DEPDIR)/strverscmp.Po \
+@AMDEP_TRUE@	$(DEPDIR)/tempname.Po $(DEPDIR)/tsearch.Po \
+@AMDEP_TRUE@	$(DEPDIR)/utime.Po ./$(DEPDIR)/acl$U.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/addext$U.Po ./$(DEPDIR)/argmatch$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/backupfile$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/basename$U.Po ./$(DEPDIR)/c-stack$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/canon-host$U.Po \
@@ -418,13 +418,13 @@ DIST_SOURCES = $(libfetish_a_SOURCES)
 DIST_COMMON = README ChangeLog Makefile.am Makefile.in TODO \
 	__fpending.c alloca.c atexit.c canonicalize.c chown.c dirfd.c \
 	dup2.c error.c error.h euidaccess.c fileblocks.c fnmatch.c \
-	fsusage.c ftruncate.c ftw.c getdate.c getgroups.c gethostname.c \
-	getline.c getloadavg.c getpass.c gettimeofday.c getusershell.c \
-	group-member.c lchown.c lstat.c malloc.c memchr.c memcmp.c \
-	memcpy.c memmove.c memrchr.c memset.c mkdir.c mkstemp.c \
-	mktime.c mmap-stack.c mountlist.c nanosleep.c obstack.c \
-	obstack.h putenv.c raise.c readutmp.c realloc.c regex.c \
-	rename.c rmdir.c rpmatch.c sig2str.c stat.c stpcpy.c \
+	fsusage.c ftruncate.c ftw.c getcwd.c getdate.c getgroups.c \
+	gethostname.c getline.c getloadavg.c getpass.c gettimeofday.c \
+	getusershell.c group-member.c lchown.c lstat.c malloc.c \
+	memchr.c memcmp.c memcpy.c memmove.c memrchr.c memset.c mkdir.c \
+	mkstemp.c mktime.c mmap-stack.c mountlist.c nanosleep.c \
+	obstack.c obstack.h putenv.c raise.c readutmp.c realloc.c \
+	regex.c rename.c rmdir.c rpmatch.c sig2str.c stat.c stpcpy.c \
 	strcasecmp.c strcspn.c strdup.c strncasecmp.c strndup.c \
 	strnlen.c strpbrk.c strstr.c strtod.c strtoimax.c strtol.c \
 	strtoll.c strtoul.c strtoull.c strtoumax.c strverscmp.c \
@@ -478,6 +478,7 @@ mostlyclean-kr:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fsusage.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/ftruncate.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/ftw.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getcwd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getgroups.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/gethostname.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getline.Po@am__quote@
@@ -701,6 +702,8 @@ full-read_.c: full-read.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/full-read.c; then echo $(srcdir)/full-read.c; else echo full-read.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
 full-write_.c: full-write.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/full-write.c; then echo $(srcdir)/full-write.c; else echo full-write.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
+getcwd_.c: getcwd.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/getcwd.c; then echo $(srcdir)/getcwd.c; else echo getcwd.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
 getdate_.c: getdate.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/getdate.c; then echo $(srcdir)/getdate.c; else echo getdate.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
 getgroups_.c: getgroups.c $(ANSI2KNR)
@@ -932,20 +935,20 @@ exclude_.$(OBJEXT) exitfail_.$(OBJEXT) file-type_.$(OBJEXT) \
 fileblocks_.$(OBJEXT) filemode_.$(OBJEXT) fnmatch_.$(OBJEXT) \
 fopen-safer_.$(OBJEXT) fsusage_.$(OBJEXT) ftruncate_.$(OBJEXT) \
 fts_.$(OBJEXT) ftw_.$(OBJEXT) full-read_.$(OBJEXT) \
-full-write_.$(OBJEXT) getdate_.$(OBJEXT) getgroups_.$(OBJEXT) \
-gethostname_.$(OBJEXT) getline_.$(OBJEXT) getloadavg_.$(OBJEXT) \
-getopt_.$(OBJEXT) getopt1_.$(OBJEXT) getpass_.$(OBJEXT) \
-getstr_.$(OBJEXT) gettime_.$(OBJEXT) gettimeofday_.$(OBJEXT) \
-getugroups_.$(OBJEXT) getusershell_.$(OBJEXT) group-member_.$(OBJEXT) \
-hard-locale_.$(OBJEXT) hash_.$(OBJEXT) hash-pjw_.$(OBJEXT) \
-human_.$(OBJEXT) idcache_.$(OBJEXT) imaxtostr_.$(OBJEXT) \
-isdir_.$(OBJEXT) lchown_.$(OBJEXT) linebuffer_.$(OBJEXT) \
-localcharset_.$(OBJEXT) long-options_.$(OBJEXT) lstat_.$(OBJEXT) \
-makepath_.$(OBJEXT) malloc_.$(OBJEXT) mbswidth_.$(OBJEXT) \
-md5_.$(OBJEXT) memcasecmp_.$(OBJEXT) memchr_.$(OBJEXT) \
-memcmp_.$(OBJEXT) memcoll_.$(OBJEXT) memcpy_.$(OBJEXT) \
-memmove_.$(OBJEXT) memrchr_.$(OBJEXT) memset_.$(OBJEXT) \
-mkdir_.$(OBJEXT) mkstemp_.$(OBJEXT) mktime_.$(OBJEXT) \
+full-write_.$(OBJEXT) getcwd_.$(OBJEXT) getdate_.$(OBJEXT) \
+getgroups_.$(OBJEXT) gethostname_.$(OBJEXT) getline_.$(OBJEXT) \
+getloadavg_.$(OBJEXT) getopt_.$(OBJEXT) getopt1_.$(OBJEXT) \
+getpass_.$(OBJEXT) getstr_.$(OBJEXT) gettime_.$(OBJEXT) \
+gettimeofday_.$(OBJEXT) getugroups_.$(OBJEXT) getusershell_.$(OBJEXT) \
+group-member_.$(OBJEXT) hard-locale_.$(OBJEXT) hash_.$(OBJEXT) \
+hash-pjw_.$(OBJEXT) human_.$(OBJEXT) idcache_.$(OBJEXT) \
+imaxtostr_.$(OBJEXT) isdir_.$(OBJEXT) lchown_.$(OBJEXT) \
+linebuffer_.$(OBJEXT) localcharset_.$(OBJEXT) long-options_.$(OBJEXT) \
+lstat_.$(OBJEXT) makepath_.$(OBJEXT) malloc_.$(OBJEXT) \
+mbswidth_.$(OBJEXT) md5_.$(OBJEXT) memcasecmp_.$(OBJEXT) \
+memchr_.$(OBJEXT) memcmp_.$(OBJEXT) memcoll_.$(OBJEXT) \
+memcpy_.$(OBJEXT) memmove_.$(OBJEXT) memrchr_.$(OBJEXT) \
+memset_.$(OBJEXT) mkdir_.$(OBJEXT) mkstemp_.$(OBJEXT) mktime_.$(OBJEXT) \
 mmap-stack_.$(OBJEXT) modechange_.$(OBJEXT) mountlist_.$(OBJEXT) \
 nanosleep_.$(OBJEXT) obstack_.$(OBJEXT) offtostr_.$(OBJEXT) \
 path-concat_.$(OBJEXT) physmem_.$(OBJEXT) posixtm_.$(OBJEXT) \

@@ -866,7 +866,7 @@ WARNING: You don't seem to have perl5.003 or newer installed, or you lack
 ] )
 ])
 
-#serial 58   -*- autoconf -*-
+#serial 59   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -1041,6 +1041,7 @@ AC_DEFUN([jm_MACROS],
 
   AC_FUNC_STRTOD
   AC_REQUIRE([UTILS_SYS_OPEN_MAX])
+  AC_REQUIRE([GL_FUNC_GETCWD_ROBUST])
 
   # See if linking `seq' requires -lm.
   # It does on nearly every system.  The single exception (so far) is
@@ -3843,6 +3844,123 @@ AC_DEFUN([UTILS_SYS_OPEN_MAX],
     [the maximum number of simultaneously open files per process])
 ])
 
+#serial 1
+# Check whether getcwd can return a path longer than PATH_MAX.
+# If not, arrange to compile the wrapper function.
+# From Jim Meyering
+
+AC_DEFUN([GL_FUNC_GETCWD_ROBUST],
+[
+  AC_CACHE_CHECK([whether getcwd can return a path longer than PATH_MAX],
+                 utils_cv_func_getcwd_robust,
+  [
+  # Arrange for deletion of the temporary directory this test creates.
+  ac_clean_files="$ac_clean_files confdir3"
+  AC_RUN_IFELSE([AC_LANG_SOURCE([[
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <limits.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+#ifndef CHAR_BIT
+# define CHAR_BIT 8
+#endif
+
+/* The extra casts work around common compiler bugs.  */
+#define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
+/* The outer cast is needed to work around a bug in Cray C 5.0.3.0.
+   It is necessary at least when t == time_t.  */
+#define TYPE_MINIMUM(t) ((t) (TYPE_SIGNED (t) \
+			      ? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) : (t) 0))
+#define TYPE_MAXIMUM(t) ((t) (~ (t) 0 - TYPE_MINIMUM (t)))
+
+#ifndef INT_MAX
+# define INT_MAX TYPE_MAXIMUM (int)
+#endif
+
+#ifndef PATH_MAX
+/* There might be a better way to handle this case, but note:
+   - the value shouldn't be anywhere near INT_MAX, and
+   - the value shouldn't be so big that the local declaration, below,
+   blows the stack.  */
+# define PATH_MAX 40000
+#endif
+
+/* The length of this name must be 8.  */
+#define DIR_NAME "confdir3"
+
+int
+main ()
+{
+  /* The '9' comes from strlen (DIR_NAME) + 1.  */
+#if INT_MAX - 9 <= PATH_MAX
+  /* FIXME: Assuming there's a system for which this is true -- Hurd?,
+     this should be done in a compile test.  */
+  exit (0);
+#else
+  char buf[PATH_MAX + 20];
+  char *cwd = getcwd (buf, PATH_MAX);
+  size_t cwd_len;
+  int fail = 0;
+  size_t n_chdirs = 0;
+
+  if (cwd == NULL)
+    exit (1);
+
+  cwd_len = strlen (cwd);
+
+  while (1)
+    {
+      char *c;
+      size_t len;
+
+      cwd_len += 1 + strlen (DIR_NAME);
+      if (mkdir (DIR_NAME, 0700) < 0
+	  || chdir (DIR_NAME) < 0
+	  || (c = getcwd (buf, PATH_MAX)) == NULL
+	  || (len = strlen (c)) != cwd_len)
+	{
+	  fail = 1;
+	  break;
+	}
+      ++n_chdirs;
+      if (PATH_MAX < len)
+	break;
+    }
+
+  /* Leaving behind such a deep directory is not polite.
+     So clean up here, right away, even though the driving
+     shell script would also clean up.  */
+  {
+    size_t i;
+
+    /* Unlink first, in case the chdir failed.  */
+    unlink (DIR_NAME);
+    for (i = 0; i <= n_chdirs; i++)
+      {
+	if (chdir ("..") < 0)
+	  break;
+	rmdir (DIR_NAME);
+      }
+  }
+
+  exit (fail);
+#endif
+}
+  ]])],
+       [utils_cv_func_getcwd_robust=yes],
+       [utils_cv_func_getcwd_robust=no],
+       [utils_cv_func_getcwd_robust=no])])
+
+  if test $utils_cv_func_getcwd_robust = yes; then
+    AC_LIBOBJ(getcwd)
+    AC_DEFINE(getcwd, rpl_getcwd,
+      [Define to rpl_getcwd if the wrapper function should be used.])
+  fi
+])
+
 # codeset.m4 serial AM1 (gettext-0.10.40)
 dnl Copyright (C) 2000-2002 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
@@ -5147,7 +5265,7 @@ AC_DEFUN([jm_FSTYPENAME],
   ]
 )
 
-#serial 8
+#serial 9
 
 # From fileutils/configure.in
 
@@ -5173,6 +5291,11 @@ if test $ac_fsusage_space = no; then
   # SVR4
   AC_CACHE_CHECK([for statvfs function (SVR4)], fu_cv_sys_stat_statvfs,
 		 [AC_TRY_LINK([#include <sys/types.h>
+#ifdef __GLIBC__
+Do not use statvfs on systems with GNU libc, because that function stats
+all preceding entries in /proc/mounts, and that makes df hang if even
+one of the corresponding file systems is hard-mounted, but not available.
+#endif
 #include <sys/statvfs.h>],
 			      [struct statvfs fsd; statvfs (0, &fsd);],
 			      fu_cv_sys_stat_statvfs=yes,
