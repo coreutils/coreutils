@@ -1,9 +1,27 @@
+2002-05-30  Jim Meyering  <meyering@lucent.com>
+
+	* Version 4.1.9.
+
+	* src/copy.c (copy_reg): Use a temporary to avoid a warning
+	from gcc -W about comparison between signed and unsigned.
+	(copy_internal): Likewise, but use a cast.
+
+2002-05-24  Jim Meyering  <meyering@lucent.com>
+
+	`rm' no longer uses explicit recursion, and as such is now able
+	to remove hierarchies of effectively unlimited depth.  Prior to
+	this change, on typical systems, rm was unable to remove
+	hierarchies of depth greater than about 25,000.
+
+	* src/remove.c: Merge in all changes from no-recursion branch.
+	* src/remove.h: Likewise.
+	* src/rm.c: Likewise.
+	* src/mv.c: Likewise.
+
 2002-05-22  Jim Meyering  <meyering@lucent.com>
 
 	* src/sys2.h (S_ISREG, S_ISDIR): Define if not already defined.
 	(S_TYPEISSEM, S_TYPEISSHM, S_TYPEISTMO): Likewise.
-
-	* Version 4.1.9.
 
 	* src/ls.c (S_ISLNK, S_ISFIFO, S_ISSOCK, S_ISCHR, S_ISBLK, S_ISDOOR):
 	Remove definitions.
