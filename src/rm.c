@@ -58,7 +58,7 @@
 #define PROGRAM_NAME "rm"
 
 #define AUTHORS \
-  N_ ("Paul Rubin, David MacKenzie, Richard Stallman, and Jim Meyering")
+  "Paul Rubin", "David MacKenzie", "Richard Stallman", "Jim Meyering"
 
 /* Name this program was run with.  */
 char *program_name;

@@ -50,7 +50,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "pathchk"
 
-#define AUTHORS N_ ("David MacKenzie and Jim Meyering")
+#define AUTHORS "David MacKenzie", "Jim Meyering"
 
 #define NEED_PATHCONF_WRAPPER 0
 #if HAVE_PATHCONF
@@ -166,7 +166,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
+		      usage, AUTHORS, NULL);
 
   while ((optc = getopt_long (argc, argv, "p", longopts, NULL)) != -1)
     {

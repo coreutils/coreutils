@@ -47,7 +47,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "cp"
 
-#define AUTHORS N_ ("Torbjorn Granlund, David MacKenzie, and Jim Meyering")
+#define AUTHORS "Torbjorn Granlund", "David MacKenzie", "Jim Meyering"
 
 #ifndef _POSIX_VERSION
 uid_t geteuid ();

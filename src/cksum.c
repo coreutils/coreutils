@@ -309,7 +309,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, VERSION,
-		      AUTHORS, usage);
+		      usage, AUTHORS, NULL);
 
   have_read_stdin = 0;
 

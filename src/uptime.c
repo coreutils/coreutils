@@ -35,7 +35,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "uptime"
 
-#define AUTHORS N_ ("Joseph Arceneaux, David MacKenzie, and Kaveh Ghazi")
+#define AUTHORS "Joseph Arceneaux", "David MacKenzie", "Kaveh Ghazi"
 
 int getloadavg ();
 
@@ -216,7 +216,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
+		      usage, AUTHORS, NULL);
 
   while ((optc = getopt_long (argc, argv, "", longopts, &longind)) != -1)
     {

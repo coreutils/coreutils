@@ -69,7 +69,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
+		      usage, AUTHORS, NULL);
 
   if (argc > 1)
     {

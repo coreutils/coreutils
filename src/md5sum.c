@@ -34,7 +34,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME (algorithm == ALG_MD5 ? "md5sum" : "shasum")
 
-#define AUTHORS N_ ("Ulrich Drepper and Scott Miller")
+#define AUTHORS "Ulrich Drepper", "Scott Miller"
 
 /* Most systems do not distinguish between external and internal
    text representations.  */

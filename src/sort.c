@@ -51,7 +51,7 @@ struct rlimit { size_t rlim_cur; };
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "sort"
 
-#define AUTHORS N_ ("Mike Haertel and Paul Eggert")
+#define AUTHORS "Mike Haertel", "Paul Eggert"
 
 #if HAVE_LANGINFO_CODESET
 # include <langinfo.h>

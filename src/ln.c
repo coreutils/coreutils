@@ -32,7 +32,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "ln"
 
-#define AUTHORS N_ ("Mike Parker and David MacKenzie")
+#define AUTHORS "Mike Parker", "David MacKenzie"
 
 #ifndef ENABLE_HARD_LINK_TO_SYMLINK_WARNING
 # define ENABLE_HARD_LINK_TO_SYMLINK_WARNING 0
