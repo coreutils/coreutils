@@ -1,5 +1,5 @@
-As of 2002-09-01, the GNU fileutils, textutils, and sh-utils packages
-have been merged into one, called the GNU coreutils.
+As of 2002-09-01, the GNU fileutils, textutils, and sh-utils
+packages have been merged into one, called the GNU coreutils.
 See http://www.gnu.org/software/coreutils/ for a description.
 
 For information on the mailing lists associated with the
