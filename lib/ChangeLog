@@ -1,5 +1,8 @@
 2004-03-23  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.am (libfetish_a_SOURCES): Add getopt_int.h.
+	* getopt_int.h: New file, from gnulib.
+	* getopt.c, getopt.h, getopt1.c: Sync from gnulib.
 	* mbswidth.c, mbswidth.h: Sync from gnulib.
 
 2004-03-21  Jim Meyering  <jim@meyering.net>
