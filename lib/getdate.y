@@ -1078,7 +1078,7 @@ get_date (struct timespec *result, char const *p, struct timespec const *now)
       char const *tzbase = p + 4;
       size_t tzsize = 1;
       char const *s;
-      
+
       for (s = tzbase; *s; s++, tzsize++)
 	if (*s == '\\')
 	  {
