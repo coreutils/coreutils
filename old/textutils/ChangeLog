@@ -1,3 +1,13 @@
+2001-02-18  Jim Meyering  <meyering@lucent.com>
+
+	Rename test input files to avoid conflicts on case-insensitive
+	file systems.
+	* tests/pr/2-Sf-t_notab: Rename from 2Sf-t_notab.
+	* tests/pr/2-S_f-t_notab: Rename from 2S_f-t_notab.
+	* tests/pr/W-72l17f-ll: Rename from W72l17f-ll.
+	* tests/pr/Test.pm: Update file names to reflect renamings.
+	Reported by Matthew Smith.
+
 2001-01-20  Jim Meyering  <meyering@lucent.com>
 
 	* configure.in: Remove jm_CHECK_ALL_TYPES.
