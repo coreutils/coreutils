@@ -1,5 +1,5 @@
 /* Copyright (C) 1991, 1992, 1993, 1996, 1997, 1998, 1999, 2000, 2001,
-   2002 Free Software Foundation, Inc.
+   2002, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1051,13 +1051,14 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 	    /* This means we found the end of the pattern.  */
 #define NEW_PATTERN \
 	    struct patternlist *newp;					      \
+	    size_t plen;						      \
 									      \
-	    if (opt == L('?') || opt == L('@'))				      \
-	      newp = alloca (offsetof (struct patternlist, str)		      \
-			     + (pattern_len * sizeof (CHAR)));		      \
-	    else							      \
-	      newp = alloca (offsetof (struct patternlist, str)		      \
-			     + ((p - startp + 1) * sizeof (CHAR)));	      \
+	    plen = (opt == L('?') || opt == L('@')			      \
+		    ? pattern_len					      \
+		    : p - startp + 1);					      \
+	    newp = (struct patternlist *)				      \
+	      alloca (offsetof (struct patternlist, str)		      \
+		      + (plen * sizeof (CHAR)));			      \
 	    *((CHAR *) MEMPCPY (newp->str, startp, p - startp)) = L('\0');    \
 	    newp->next = NULL;						      \
 	    *lastp = newp;						      \
