@@ -1,3 +1,27 @@
+2000-01-22  Jim Meyering  <meyering@lucent.com>
+
+	* src/seq.c (enum Format_type): Declare.
+	(format_type): New global to take place of intconv.
+	(format_str): Move global declaration...
+	(main): ... to here.
+	(check_format): Rename parameter to avoid shadowing global.
+	(DO_printf): New macro.
+	(main): Use it.
+	Topologically sort the functions and remove fwd declarations.
+
+	* tests/seq/basic: Add new tests for the new functionality.
+
+2000-01-21  Bruno Haible  <haible@linuix.math.u-bordeaux.fr>
+
+        Add support for octal and hexadecimal output.
+        * seq.c (intconv): New variable.
+	(usage): Update.
+	(main): Call scan_arg instead of scan_double_arg. Call check_format
+	before scan_arg.
+	(scan_int_arg, scan_arg): New functions.
+	(check_format): Add intconv argument. Accept %d, %u, %o, %x, %X.
+	(print_numbers): If intconv is true, pass an int argument to printf.
+
 2000-01-21  Jim Meyering  <meyering@lucent.com>
 
 	* configure.in (ALL_LINGUAS): Add Galician (gl).
