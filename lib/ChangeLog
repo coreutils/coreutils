@@ -1,5 +1,9 @@
 2002-11-23  Jim Meyering  <jim@meyering.net>
 
+	From gnulib, by Bruno Haible
+	* closeout.c: Include gettext.h instead of <libintl.h>.
+	* error.c [!_LIBC]: Include gettext.h instead of <libintl.h>.
+
 	* mbswidth.h: Update from gnulib.
 	* mbswidth.c: Likewise.
 	* localcharset.c: Likewise.
