@@ -1,5 +1,5 @@
 /* human.c -- print human readable file size
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -258,7 +258,7 @@ humblock (char const *spec, int *block_size)
 
   if (! spec && ! (spec = getenv ("BLOCK_SIZE")))
     *block_size = getenv ("POSIXLY_CORRECT") ? 512 : DEFAULT_BLOCK_SIZE;
-  else if (0 <= (i = argmatch (spec, block_size_args)))
+  else if (0 <= (i = ARGMATCH (spec, block_size_args, block_size_types)))
     *block_size = block_size_types[i];
   else
     {
