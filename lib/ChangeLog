@@ -1,5 +1,8 @@
 2000-07-15  Jim Meyering  <meyering@lucent.com>
 
+	* Makefile.am (libfetish_a_SOURCES): Add quote.c.
+	(noinst_HEADERS): Add quote.h.
+
 	* quote.c (quote, quote_n): New file.  Two functions taken verbatim
 	from tar's src/misc.c.
 	* quote.h: New file.  Prototypes for same.
