@@ -12,6 +12,9 @@ Sun Apr  4 09:38:00 1993  Jim Meyering  (meyering@comco.com)
 	* mv.c (do_move): Ditto
 	* makepath.c (make_path): Ditto
 
+	* lib/eaccess.c (eaccess_stat): Cast to unsigned the value to
+	be right-shifted to avoid ANSI vs K&R semantic ambiguity.
+
 Sat Apr  3 18:17:23 1993  Jim Meyering  (meyering@comco.com)
 
 	* Makefile.in [Makefile]: Add dependencies and a rule to remake it.
