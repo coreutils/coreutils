@@ -7,4 +7,3 @@ safe-lstat.c
 safe-lstat.h
 getdate.tab.c
 .deps
-group_member.c
