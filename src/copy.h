@@ -22,8 +22,15 @@ enum Sparse_type
   SPARSE_ALWAYS
 };
 
+# define VALID_SPARSE_MODE(Mode)	\
+  ((Mode) == SPARSE_NEVER		\
+   || (Mode) == SPARSE_AUTO		\
+   || (Mode) == SPARSE_ALWAYS)
+
 struct cp_options
 {
+  enum backup_type backup_type;
+
   /* If nonzero, copy all files except (directories and, if not dereferencing
      them, symbolic links,) as if they were regular files. */
   int copy_as_regular;
