@@ -34,7 +34,7 @@
 uid_t geteuid ();
 #endif
 
-/* Used by do_copy, make_path, and re_protect
+/* Used by do_copy, make_path_private, and re_protect
    to keep a list of leading directories whose protections
    need to be fixed after copying. */
 struct dir_attr
@@ -53,7 +53,7 @@ int full_write ();
 static int do_copy ();
 static int copy ();
 static int copy_dir ();
-static int make_path ();
+static int make_path_private ();
 static int copy_reg ();
 static int re_protect ();
 
@@ -368,7 +368,7 @@ do_copy (argc, argv)
 	      /* For --parents, we have to make sure that the directory
 	         dirname (dst_path) exists.  We may have to create a few
 	         leading directories. */
-	      parent_exists = !make_path (dst_path,
+	      parent_exists = !make_path_private (dst_path,
 					  strlen (dest) + 1, 0700,
 					  flag_verbose ? "%s -> %s\n" :
 					  (char *) NULL,
@@ -391,7 +391,7 @@ do_copy (argc, argv)
 
 	  if (!parent_exists)
 	    {
-	      /* make_path failed, so we shouldn't even attempt the copy. */
+	      /* make_path_private failed, so we shouldn't even attempt the copy. */
 	      ret = 1;
   	    }
 	  else
@@ -859,8 +859,8 @@ un_backup:
    permissions when done, otherwise 1. */
 
 static int
-make_path (const_dirpath, src_offset, mode, verbose_fmt_string,
-	      attr_list, new_dst)
+make_path_private (const_dirpath, src_offset, mode, verbose_fmt_string,
+		   attr_list, new_dst)
      char *const_dirpath;
      int src_offset;
      int mode;
@@ -911,7 +911,8 @@ make_path (const_dirpath, src_offset, mode, verbose_fmt_string,
 	      /* This element of the path does not exist.  We must set
 		 *new_dst and new->is_new_dir inside this loop because,
 		 for example, in the command `cp --parents ../a/../b/c e_dir',
-		 make_path creates only e_dir/../a if ./b already exists. */
+		 make_path_private creates only e_dir/../a if ./b already
+		 exists. */
 	      *new_dst = 1;
 	      new->is_new_dir = 1;
 	      if (mkdir (dirpath, mode))
