@@ -34,6 +34,13 @@ char *malloc ();
 #endif
 #include <assert.h>
 
+#ifndef HAVE_DECL_MEMRCHR
+"this configure-time declaration test was not run"
+#endif
+#if !HAVE_DECL_MEMRCHR
+void *memrchr ();
+#endif
+
 #include "dirname.h"
 
 #ifndef ISSLASH
@@ -44,8 +51,8 @@ char *malloc ();
 
 /* Return the leading directories part of PATH,
    allocated with malloc.  If out of memory, return 0.
-   Assumes that trailing slashes have already been
-   removed.  */
+   Works properly even if there are trailing slashes
+   (by effectively ignoring them).  */
 
 char *
 dir_name (const char *path)
@@ -62,11 +69,26 @@ dir_name (const char *path)
 	slash = b;
     }
 
-  /* Make sure there are no trailing slashes.  */
-  assert (slash == NULL	   /* There are no slashes in PATH.  */
-	  || slash[1] != 0 /* There is a non-NUL byte after the last slash.  */
-	  || path == slash /* PATH is just `/'.  */
-	  );
+  /* If the last byte of PATH is a slash, decrement SLASH until it's
+     pointing at the leftmost in a sequence of trailing slashes.  */
+  if (slash && slash[1] == 0)
+    {
+      while (path < slash && ISSLASH (slash[-1]))
+	{
+	  --slash;
+	}
+
+      if (path < slash)
+	{
+	  slash = memrchr (path, '/', slash - path);
+	  if (BACKSLASH_IS_PATH_SEPARATOR)
+	    {
+	      char *b = memrchr (path, '\\', slash - path);
+	      if (b && slash < b)
+		slash = b;
+	    }
+	}
+    }
 
   if (slash == 0)
     {
@@ -103,3 +125,46 @@ dir_name (const char *path)
   newpath[length] = 0;
   return newpath;
 }
+
+#ifdef TEST_DIRNAME
+/*
+
+Run the test like this (expect no output):
+  gcc -DHAVE_CONFIG_H -DTEST_DIRNAME -I.. -O -Wall memrchr.c dirname.c
+  sed -n '/^BEGIN-DATA$/,/^END-DATA$/p' dirname.c|grep -v DATA|./a.out
+
+BEGIN-DATA
+foo//// .
+bar/foo//// bar
+foo/ .
+/ /
+. .
+a .
+END-DATA
+
+*/
+
+# define MAX_BUFF_LEN 1024
+# include <stdio.h>
+# include <stdlib.h>
+
+int
+main ()
+{
+  char buff[MAX_BUFF_LEN + 1];
+
+  buff[MAX_BUFF_LEN] = 0;
+  while (fgets (buff, MAX_BUFF_LEN, stdin) && buff[0])
+    {
+      char path[MAX_BUFF_LEN];
+      char expected_result[MAX_BUFF_LEN];
+      char *result;
+      sscanf (buff, "%s %s", path, expected_result);
+      result = dir_name (path);
+      if (strcmp (result, expected_result))
+	printf ("%s: got %s, expected %s\n", path, result, expected_result);
+    }
+  exit (0);
+
+}
+#endif
