@@ -1,4 +1,6 @@
 2001-05-21  Jim Meyering  <meyering@lucent.com>
 
-	* doc/Makefile.am ($(DVIS), $(INFO_DEPS)): Depend on $(EXTRA_DIST).
+	* textutils.texi: Remove file.
+
+	* Makefile.am ($(DVIS), $(INFO_DEPS)): Depend on $(EXTRA_DIST).
 	(DISABLED_constants.texi): New rule -- disabled for now.
