@@ -43,9 +43,6 @@
 # endif
 #endif
 
-#include <string.h>
-#include <ctype.h>
-
 #include "system.h"
 
 #include "closeout.h"
