@@ -1,6 +1,11 @@
-2002-07-18  Jim Meyering  <meyering@lucent.com>
+2002-07-20  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.13.
+
+	* Upgrade to gettext-0.11.3.
+	* Upgrade to autoconf-2.53b.
+
+2002-07-18  Jim Meyering  <meyering@lucent.com>
 
 	* src/uname.c (main): Test sysctl(...) >= 0, not == 0, since
 	on NetBSD the return value may well be positive.
