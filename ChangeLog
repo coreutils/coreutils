@@ -1,6 +1,13 @@
-2004-09-24  Jim Meyering  <jim@meyering.net>
+2004-09-24  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* NEWS: Mention that "chmod -r -w x" now works as expected.
+	* src/chmod.c (main): Revamp option processing to support this.
+	* tests/chmod/Makefile.am (TESTS): Add 'usage'.
+	* tests/chmod/usage: New set of tests for usage like that.
+
+2004-09-24  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (CVS_LIST): Use --types=AFGM option so that
 	it lists only cvs-controlled regular files.
