@@ -21,7 +21,14 @@
 # include <config.h>
 #endif
 
-#include <string.h>
+#if HAVE_STRING_H
+# if !STDC_HEADERS && HAVE_MEMORY_H
+#  include <memory.h>
+# endif
+# include <string.h>
+#else
+# include <strings.h>
+#endif
 
 #ifndef HAVE_DECL_MEMCHR
 "this configure-time declaration test was not run"
