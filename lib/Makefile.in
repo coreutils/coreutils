@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.1k from Makefile.am
+# Makefile.in generated automatically by automake 1.1l from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -38,18 +38,18 @@ INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 transform = @program_transform_name@
 YACC = @YACC@
-DF_PROG = @DF_PROG@
+GENCAT = @GENCAT@
 PERL = @PERL@
 MV = @MV@
+GMSGFMT = @GMSGFMT@
 CC = @CC@
 RANLIB = @RANLIB@
-MVDIR_PROG = @MVDIR_PROG@
 LN = @LN@
 RM = @RM@
 
 noinst_LIBRARIES = libfu.a
 
-EXTRA_DIST = mkdir.c rmdir.c getline.c
+EXTRA_DIST = mkdir.c rmdir.c getline.c mktime.c strftime.c
 
 INCLUDES = -I.. -I$(srcdir) -I../intl
 
@@ -94,10 +94,11 @@ HEADERS =  $(noinst_HEADERS)
 
 DIST_COMMON =  Makefile.am Makefile.in alloca.c basename.c error.c \
 error.h euidaccess.c fileblocks.c fnmatch.c fsusage.c ftruncate.c \
-getdate.c group-member.c interlock memcmp.c memcpy.c memset.c mkdir.c \
-mountlist.c obstack.c obstack.h posixtm.c regex.c regex.h rename.c \
-rmdir.c rpmatch.c rx.c rx.h stpcpy.c strcasecmp.c strdup.c strndup.c \
-strstr.c strtol.c strtoul.c ylwrap
+getdate.c getline.c getloadavg.c group-member.c interlock memcmp.c \
+memcpy.c memset.c mkdir.c mktime.c mountlist.c obstack.c obstack.h \
+posixtm.c regex.c regex.h rename.c rmdir.c rpmatch.c rx.c rx.h stpcpy.c \
+strcasecmp.c strdup.c strftime.c strndup.c strstr.c strtol.c strtoul.c \
+ylwrap
 
 
 PACKAGE = @PACKAGE@
@@ -110,17 +111,18 @@ TAR = tar
 DEP_FILES =  .deps/alloca.P .deps/argmatch.P .deps/backupfile.P \
 .deps/basename.P .deps/dirname.P .deps/error.P .deps/euidaccess.P \
 .deps/fileblocks.P .deps/filemode.P .deps/fnmatch.P .deps/fsusage.P \
-.deps/ftruncate.P .deps/full-write.P .deps/getdate.P .deps/getopt.P \
-.deps/getopt1.P .deps/getversion.P .deps/group-member.P .deps/idcache.P \
-.deps/isdir.P .deps/long-options.P .deps/makepath.P .deps/memcmp.P \
-.deps/memcpy.P .deps/memset.P .deps/mkdir.P .deps/modechange.P \
-.deps/mountlist.P .deps/obstack.P .deps/path-concat.P .deps/posixtm.P \
-.deps/regex.P .deps/rename.P .deps/rmdir.P .deps/rpmatch.P .deps/rx.P \
+.deps/ftruncate.P .deps/full-write.P .deps/getdate.P .deps/getline.P \
+.deps/getloadavg.P .deps/getopt.P .deps/getopt1.P .deps/getversion.P \
+.deps/group-member.P .deps/idcache.P .deps/isdir.P .deps/long-options.P \
+.deps/makepath.P .deps/memcmp.P .deps/memcpy.P .deps/memset.P \
+.deps/mkdir.P .deps/mktime.P .deps/modechange.P .deps/mountlist.P \
+.deps/obstack.P .deps/path-concat.P .deps/posixtm.P .deps/regex.P \
+.deps/rename.P .deps/rmdir.P .deps/rpmatch.P .deps/rx.P \
 .deps/safe-read.P .deps/save-cwd.P .deps/savedir.P .deps/stpcpy.P \
-.deps/strcasecmp.P .deps/strdup.P .deps/stripslash.P .deps/strndup.P \
-.deps/strstr.P .deps/strtol.P .deps/strtoul.P .deps/userspec.P \
-.deps/xgetcwd.P .deps/xmalloc.P .deps/xstrdup.P .deps/xstrtol.P \
-.deps/xstrtoul.P .deps/yesno.P
+.deps/strcasecmp.P .deps/strdup.P .deps/strftime.P .deps/stripslash.P \
+.deps/strndup.P .deps/strstr.P .deps/strtol.P .deps/strtoul.P \
+.deps/userspec.P .deps/xgetcwd.P .deps/xmalloc.P .deps/xstrdup.P \
+.deps/xstrtol.P .deps/xstrtoul.P .deps/yesno.P
 SOURCES = $(libfu_a_SOURCES)
 OBJECTS = $(libfu_a_OBJECTS)
 
@@ -128,8 +130,8 @@ default: all
 
 .SUFFIXES:
 .SUFFIXES: .c .o .y
-$(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in 
-	cd $(top_srcdir) && automake --gnits Makefile
+$(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL) 
+	cd $(top_srcdir) && automake --gnu lib/Makefile
 
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
@@ -219,11 +221,11 @@ distclean-depend:
 maintainer-clean-depend:
 	rm -rf .deps
 
-.deps/%.P: $(srcdir)/%@EXT@
+.deps/%.P: $(srcdir)/%.c
 	@echo "Computing dependencies for $<..."
 	@o='o';				\
-ONLYC	test -n "$o" && o='$$o';	\
-	$(@MKDEP@) $< | sed "s/^\(.*\)\.o:/\1.$$o \1.l$$o:/" > $@
+	test -n "$o" && o='$$o';	\
+	$(MKDEP) $< | sed "s/^\(.*\)\.o:/\1.$$o \1.l$$o:/" > $@
 info:
 dvi:
 check: all

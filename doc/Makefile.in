@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.1k from Makefile.am
+# Makefile.in generated automatically by automake 1.1l from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -38,12 +38,12 @@ INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 transform = @program_transform_name@
 YACC = @YACC@
-DF_PROG = @DF_PROG@
+GENCAT = @GENCAT@
 PERL = @PERL@
 MV = @MV@
+GMSGFMT = @GMSGFMT@
 CC = @CC@
 RANLIB = @RANLIB@
-MVDIR_PROG = @MVDIR_PROG@
 LN = @LN@
 RM = @RM@
 
@@ -79,9 +79,9 @@ TAR = tar
 default: all
 
 .SUFFIXES:
-.SUFFIXES: .texi .texinfo .info .dvi
-$(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in 
-	cd $(top_srcdir) && automake --gnits Makefile
+.SUFFIXES: .texi .texinfo .info .dvi .ps
+$(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL) 
+	cd $(top_srcdir) && automake --gnu doc/Makefile
 
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
@@ -135,16 +135,18 @@ DVIPS = dvips
 install-info-am: $(INFO_DEPS)
 	$(NORMAL_INSTALL)
 	$(mkinstalldirs) $(infodir)
-	for file in $(INFO_DEPS); do \
+	@for file in $(INFO_DEPS); do \
 	  for ifile in `cd $(srcdir) && echo $$file $$file-[0-9] $$file-[0-9][0-9]`; do \
 	    if test -f $(srcdir)/$$ifile; then \
+	      echo "$(INSTALL_DATA) $(srcdir)/$$ifile $(infodir)/$$ifile"; \
 	      $(INSTALL_DATA) $(srcdir)/$$ifile $(infodir)/$$ifile; \
 	    else : ; fi; \
 	  done; \
 	done
 	$(POST_INSTALL)
-	if $(SHELL) -c 'install-info --version' >/dev/null 2>&1; then \
+	@if $(SHELL) -c 'install-info --version' >/dev/null 2>&1; then \
 	  for file in $(INFO_DEPS); do \
+	    echo "install-info --info-dir=$(infodir) $(infodir)/$$file";\
 	    install-info --info-dir=$(infodir) $(infodir)/$$file; :;\
 	  done; \
 	else : ; fi
