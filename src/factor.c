@@ -136,7 +136,7 @@ do_stdin ()
 				&tokenbuffer);
       if (token_length < 0)
 	break;
-      /* FIXME: Use xstrtoul, not atoi.  */
+      /* FIXME: Use strtoul, not atoi.  */
       print_factors ((unsigned long) atoi (tokenbuffer.buffer));
     }
   free (tokenbuffer.buffer);
