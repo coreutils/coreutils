@@ -1,5 +1,5 @@
 /* split.c -- split a file into pieces.
-   Copyright (C) 88, 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 88, 91, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@
 #include "closeout.h"
 #include "dirname.h"
 #include "error.h"
+#include "full-read.h"
 #include "full-write.h"
 #include "posixver.h"
 #include "safe-read.h"
@@ -209,7 +210,7 @@ bytes_split (size_t nchars, char *buf, size_t bufsize)
 
   do
     {
-      n_read = safe_read (input_desc, buf, bufsize);
+      n_read = full_read (input_desc, buf, bufsize);
       if (n_read == SAFE_READ_ERROR)
         error (EXIT_FAILURE, errno, "%s", infile);
       bp_out = buf;
@@ -226,14 +227,12 @@ bytes_split (size_t nchars, char *buf, size_t bufsize)
 		}
 	      break;
 	    }
-	  else
-	    {
-	      cwrite (new_file_flag, bp_out, to_write);
-	      bp_out += to_write;
-	      to_read -= to_write;
-	      new_file_flag = 1;
-	      to_write = nchars;
-	    }
+
+	  cwrite (new_file_flag, bp_out, to_write);
+	  bp_out += to_write;
+	  to_read -= to_write;
+	  new_file_flag = 1;
+	  to_write = nchars;
 	}
     }
   while (n_read == bufsize);
@@ -252,7 +251,7 @@ lines_split (size_t nlines, char *buf, size_t bufsize)
 
   do
     {
-      n_read = safe_read (input_desc, buf, bufsize);
+      n_read = full_read (input_desc, buf, bufsize);
       if (n_read == SAFE_READ_ERROR)
 	error (EXIT_FAILURE, errno, "%s", infile);
       bp = bp_out = buf;
@@ -271,15 +270,15 @@ lines_split (size_t nlines, char *buf, size_t bufsize)
 		}
 	      break;
 	    }
-	  else
-	    ++bp;
-	    if (++n >= nlines)
-	      {
-		cwrite (new_file_flag, bp_out, bp - bp_out);
-		bp_out = bp;
-		new_file_flag = 1;
-		n = 0;
-	      }
+
+	  ++bp;
+	  if (++n >= nlines)
+	    {
+	      cwrite (new_file_flag, bp_out, bp - bp_out);
+	      bp_out = bp;
+	      new_file_flag = 1;
+	      n = 0;
+	    }
 	}
     }
   while (n_read == bufsize);
@@ -302,7 +301,7 @@ line_bytes_split (size_t nchars)
     {
       /* Fill up the full buffer size from the input file.  */
 
-      n_read = safe_read (input_desc, buf + n_buffered, nchars - n_buffered);
+      n_read = full_read (input_desc, buf + n_buffered, nchars - n_buffered);
       if (n_read == SAFE_READ_ERROR)
 	error (EXIT_FAILURE, errno, "%s", infile);
 
