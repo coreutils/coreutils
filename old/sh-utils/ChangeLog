@@ -1,6 +1,29 @@
-1998-05-16  Jim Meyering  <meyering@ascend.com>
+1998-06-28  Jim Meyering  <meyering@ascend.com>
+
+	* src/*.c: Change all uses of unlocked-wrapped functions to their
+	upper case wrapper names.
+	* src/sys2.h: Add macro definitions for GNU libc unlocked wrappers
+	(e.g. FFLUSH for fflush_unlocked).
+
+1998-06-06  Jim Meyering  <meyering@ascend.com>
+
+	* src/test.c (unary_operator): Fail if the operand to -t is not valid.
+	(posixtest): Treat `test -t' the same as `test -t 1'.
+
+1998-05-26  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.16f.
+
+	* src/test.c (two_arguments): Don't test argv[pos][2] if it's
+	past end of string.
+
+1998-05-25  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (_GNU_SOURCE): AC_DEFINE it here.
+	* acconfig.h (_GNU_SOURCE): Remove definition from @TOP@ section.
+	[!_GNU_SOURCE]: Add #undef instead.
+
+1998-05-16  Jim Meyering  <meyering@ascend.com>
 
 	* lib/readutmp.c (read_utmp): Add variant for systems that have
 	the utmpname function.
