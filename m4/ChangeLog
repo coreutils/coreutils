@@ -1,5 +1,6 @@
 1999-03-20  Jim Meyering  <meyering@ascend.com>
 
+	* jm-macros.m4: s/jm_WITH_REGEX/jm_INCLUDED_REGEX/.
 	* regex.m4 (jm_INCLUDED_REGEX): Rename from jm_WITH_REGEX.
 	Don't depend on AM_GLIBC.  Suggestions from Alain Magloire.
 
