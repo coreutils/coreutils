@@ -1,5 +1,12 @@
 1997-10-25  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in (jm_FUNC_MALLOC): Use it.
+
+	* lib/Makefile.am (EXTRA_DIST): Add malloc.c.
+	* lib/malloc.c: New file.
+	* m4/malloc.m4: New file.
+	* m4/Makefile.am (EXTRA_DIST): Add malloc.m4.
+
 	* lib/Makefile.am (noinst_HEADERS): Add xalloc.h.
 
 	* lib/xalloc.h: New file.
