@@ -1,3 +1,14 @@
+2004-09-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/dd.c (usage): "alternated EBCDIC" -> "alternate EBCDIC".
+	(bit_count): Remove.  All uses changed to....
+	(multiple_bits_set): New function.
+	(scanargs): Use it, and check separately for each set of
+	incompatible options, to improve diagnostics.
+	(MX): Remove.
+	(apply_translations): Move checks for incompatible options
+	to scanargs, so that they're done consistently.
+
 2004-09-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Output correct errno-related diagnostic on "paste" I/O errors.
