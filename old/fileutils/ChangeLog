@@ -14,7 +14,7 @@
 	* man/Makefile.summ: New file.
 	* man/Makefile.maint: Include it.
 
-	* tests/Fetish.pm: Make `VERBOSE' be a little more verbose.
+	* tests/Fetish.pm: Make `DEBUG' be a little more verbose.
 
 	* tests/mv/Makefile.am (TESTS): Add i-1.
 	* tests/mv/i-1: New test.
