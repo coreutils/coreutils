@@ -110,7 +110,7 @@ static int dereference_dest_dir_symlinks = 1;
 
 static struct option const long_options[] =
 {
-  {"backup", no_argument, NULL, 'b'},
+  {"backup", optional_argument, NULL, 'b'},
   {"directory", no_argument, NULL, 'F'},
   {"no-dereference", no_argument, NULL, 'n'},
   {"force", no_argument, NULL, 'f'},
@@ -119,7 +119,7 @@ static struct option const long_options[] =
   {"target-directory", required_argument, NULL, TARGET_DIRECTORY_OPTION},
   {"symbolic", no_argument, NULL, 's'},
   {"verbose", no_argument, NULL, 'v'},
-  {"version-control", required_argument, NULL, 'V'},
+  {"version-control", required_argument, NULL, 'V'}, /* Deprecated. FIXME. */
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -316,7 +316,7 @@ more than one TARGET, the last argument must be a directory;  create links\n\
 in DIRECTORY to each TARGET.  Create hard links by default, symbolic links\n\
 with --symbolic.  When creating hard links, each TARGET must exist.\n\
 \n\
-  -b, --backup                make a backup of each existing destination file\n\
+  -b, --backup[=CONTROL]      make a backup of each existing destination file\n\
   -d, -F, --directory         hard link directories (super-user only)\n\
   -f, --force                 remove existing destination files\n\
   -n, --no-dereference        treat destination that is a symlink to a\n\
@@ -326,14 +326,13 @@ with --symbolic.  When creating hard links, each TARGET must exist.\n\
   -S, --suffix=SUFFIX         override the usual backup suffix\n\
       --target-directory=DIR   move all SOURCE arguments into directory DIR\n\
   -v, --verbose               print name of each file before linking\n\
-  -V, --version-control=WORD  override the usual version control\n\
       --help                  display this help and exit\n\
       --version               output version information and exit\n\
 \n\
 "));
       printf (_("\
-The backup suffix is ~, unless set with SIMPLE_BACKUP_SUFFIX.  The\n\
-version control may be set with VERSION_CONTROL, values are:\n\
+The backup suffix is ~, unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n\
+The version control may be set with --backup or VERSION_CONTROL, values are:\n\
 \n\
   none, off       never make backups (even if --backup is given)\n\
   numbered, t     make numbered backups\n\
@@ -352,7 +351,8 @@ main (int argc, char **argv)
   int c;
   int errors;
   int make_backups = 0;
-  const char *version;
+  char *backup_suffix_string;
+  char *version_control_string = NULL;
   char *target_directory = NULL;
   int target_directory_specified;
   unsigned int n_files;
@@ -365,11 +365,8 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   /* FIXME: consider not calling getenv for SIMPLE_BACKUP_SUFFIX unless
-     we'll actually use simple_backup_suffix.  */
-  version = getenv ("SIMPLE_BACKUP_SUFFIX");
-  if (version)
-    simple_backup_suffix = version;
-  version = NULL;
+     we'll actually use backup_suffix_string.  */
+  backup_suffix_string = getenv ("SIMPLE_BACKUP_SUFFIX");
 
   symbolic_link = remove_existing_files = interactive = verbose
     = hard_dir_link = 0;
@@ -382,8 +379,18 @@ main (int argc, char **argv)
 	{
 	case 0:			/* Long-named option. */
  	  break;
+
+	case 'V':  /* FIXME: this is deprecated.  Remove it in 2001.  */
+	  error (0, 0,
+		 _("warning: --version-control (-V) is obsolete;  support for\
+ it\nwill be removed in some future release.  Use --backup=%s instead."
+		   ), optarg);
+	  /* Fall through.  */
+
 	case 'b':
 	  make_backups = 1;
+	  if (optarg)
+	    version_control_string = optarg;
 	  break;
 	case 'd':
 	case 'F':
@@ -414,10 +421,8 @@ main (int argc, char **argv)
 	  verbose = 1;
 	  break;
 	case 'S':
-	  simple_backup_suffix = optarg;
-	  break;
-	case 'V':
-	  version = optarg;
+	  make_backups = 1;
+	  backup_suffix_string = optarg;
 	  break;
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -479,7 +484,7 @@ main (int argc, char **argv)
     }
 
   backup_type = (make_backups
-		 ? xget_version (_("--version-control"), version)
+		 ? xget_version (_("--version-control"), version_control_string)
 		 : none);
 
   if (target_directory_specified || n_files > 2)
