@@ -340,7 +340,7 @@ siginfo_handler (int sig)
 /* Encapsulate portability mess of establishing signal handlers.  */
 
 static void
-handle_sig (int sig_num, RETSIGTYPE (*sig_handler) (int sig))
+install_handler (int sig_num, RETSIGTYPE (*sig_handler) (int sig))
 {
 #ifdef _POSIX_VERSION
   struct sigaction sigact;
@@ -422,10 +422,10 @@ main (int argc, char **argv)
       output_file = _("standard output");
     }
 
-  handle_sig (SIGINT, interrupt_handler);
-  handle_sig (SIGQUIT, interrupt_handler);
-  handle_sig (SIGPIPE, interrupt_handler);
-  handle_sig (SIGINFO, siginfo_handler);
+  install_handler (SIGINT, interrupt_handler);
+  install_handler (SIGQUIT, interrupt_handler);
+  install_handler (SIGPIPE, interrupt_handler);
+  install_handler (SIGINFO, siginfo_handler);
 
   copy ();
 }
