@@ -1,3 +1,11 @@
+Thu Nov 16 21:25:45 1995  Jim Meyering  (meyering@comco.com)
+
+	* Makefile.in (_all): New default target.  Depend on `all' to work
+	around bug in AIX-3.2.5's /bin/make   Reported by Andreas Luik
+	<luik@isa.de>.
+
+Fri Nov 10 23:31:46 1995  Jim Meyering  (meyering@comco.com)
+
 	* src/Makefile.in (.c._o, ._c._o): Remove temporary source files.
 	(.c._c): Don't redirect directly to $@.
 
@@ -15,11 +23,10 @@
 	(stamp.h.in): Depend on aclocal.m4 and acconfig.h.
 	* acconfig.h: Add PROTOTYPES.
 
-	* cp.h: Remove declaration of error.
+	* cp.h: Remove declaration of error.  Include error.h instead.
 	Protoize forward dcls of functions in cp-hash.c and cp-aux.c
 	* cp-aux.c: Protoize and add const attribute to parameters.
 	* cp-hash.c: Likewise.
-	* cp.c: Include error.h.
 
 	* ls.c (parse_ls_color): Use strcpy to initialize 3-character array
 	rather than automatic aggregate initialization.  The latter isn't
