@@ -1,3 +1,12 @@
+Sun Sep 29 20:04:53 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/sort-test/build-script.pl: Die if close fails.
+	* tests/tr-test/build-script.pl: Likewise.
+
+	* configure.in (AC_OUTPUT): Add tests/cut-test/Makefile.
+	* tests/Makefile.am (SUBDIRS): Add cut-test.
+	* tests/cut-test: New directory.
+
 Fri Sep 27 22:22:09 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (ALL_LINGUAS): Add spanish (es).

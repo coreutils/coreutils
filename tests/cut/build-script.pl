@@ -67,6 +67,7 @@ else
        errors=`expr \$errors + 1` ;;
   esac
 fi
+test -s $err_output || rm -f $err_output
 EOF
   }
 print <<EOF2 ;
