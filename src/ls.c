@@ -1675,7 +1675,6 @@ quote_filename (register const char *p, size_t *quoted_length)
 	      break;
 
 	    default:
-	      /* FIXME: why not just use the ISGRAPH macro here?  */
 	      if (!ISGRAPH (c))
 		found_quotable = 1;
 	      break;
