@@ -600,6 +600,13 @@ as if all the options appear before any operands.  For example,
 @env{POSIXLY_CORRECT} environment variable is set, options must appear
 before operands, unless otherwise specified for a particular command.
 
+A few programs can usefully have trailing operands with leading
+@samp{-}.  With such a program, options must precede operands even if
+@env{POSIXLY_CORRECT} is not set, and this fact is noted in the
+program description.  For example, the @command{env} command's options
+must appear before its operands, since in some cases the operands
+specify a command that itself contains options.
+
 Some of these programs recognize the @option{--help} and @option{--version}
 options only when one of them is the sole command line argument.
 
@@ -4749,6 +4756,9 @@ This distinction will matter only when some values are not characters,
 and this is possible only in locales using multibyte encodings when
 the input contains encoding errors.
 
+The program accepts the @option{--help} and @option{--version}
+options.  @xref{Common options}.  Options must precede operands.
+
 @exitstatus
 
 @menu
@@ -5058,6 +5068,12 @@ of characters:
 
 @example
 tr -d axM-
+@end example
+
+Or you can use @samp{--} to terminate option processing:
+
+@example
+tr -d -- -axM
 @end example
 
 More generally, use the character class notation @code{[=c=]}
@@ -9052,6 +9068,9 @@ echo [@var{option}]@dots{} [@var{string}]@dots{}
 @end example
 
 The program accepts the following options.  Also see @ref{Common options}.
+Options must precede operands, and the normally-special argument
+@samp{--} has no special meaning and is treated like any other
+@var{string}.
 
 @table @samp
 @item -n
@@ -9217,6 +9236,7 @@ use of @samp{\u} and @samp{\U} will give an error message.
 
 The only options are a lone @option{--help} or
 @option{--version}.  @xref{Common options}.
+Options must precede operands.
 
 The Unicode character syntaxes are useful for writing strings in a locale
 independent way.  For example, a string containing the Euro currency symbol
@@ -9378,14 +9398,22 @@ not have the desired effect.  Since @samp{test @var{expr}} and @samp{[
 @var{expr} ]} have the same meaning, only the former form is discussed
 below.
 
+Synopses:
+
+@example
+test [@var{expression}]
+[ [@var{expression}] ]
+@end example
+
 @cindex conflicts with shell built-ins
 @cindex built-in shell commands, conflicts with
 Because most shells have a built-in command by the same name, using the
 unadorned command name in a script or interactively may get you
 different functionality than that described here.
 
-Besides the options below, a single argument is also allowed:
-@command{test} returns true if the argument is not null.  The argument
+If @var{expression} is omitted, @command{test} returns false.
+If @var{expression} is a single argument,
+@command{test} returns false if the argument is null and true otherwise.  The argument
 can be any string, including strings like @samp{-d}, @samp{-1},
 @samp{--}, @samp{--help}, and @samp{--version} that most other
 programs would treat as options.  To get help and version information,
@@ -9712,6 +9740,9 @@ may be used for grouping in the usual manner.  You must quote
 parentheses and many operators to avoid the shell evaluating them,
 however.
 
+The only options are @option{--help} and @option{--version}.  @xref{Common
+options}.  Options must precede operands.
+
 @cindex exit status of @command{expr}
 Exit status:
 
@@ -10028,7 +10059,7 @@ it is removed from @var{name} as well.  @command{basename} prints the
 result on standard output.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
-options}.
+options}.  Options must precede operands.
 
 @exitstatus
 
@@ -11961,7 +11992,7 @@ specified, the default is the value of the @env{SHELL} environment
 variable or @command{/bin/sh} if not set, invoked with the @option{-i} option.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
-options}.
+options}.  Options must precede operands.
 
 Here are a few tips to help avoid common problems in using chroot.
 To start with a simple example, make @var{command} refer to a statically
@@ -12035,6 +12066,7 @@ specifications, the resulting environment is printed.  This is like
 specifying a command name of @command{printenv}.
 
 The program accepts the following options.  Also see @ref{Common options}.
+Options must precede operands.
 
 @table @samp
 
@@ -12104,6 +12136,7 @@ unadorned command name in a script or interactively may get you
 different functionality than that described here.
 
 The program accepts the following option.  Also see @ref{Common options}.
+Options must precede operands.
 
 @table @samp
 @item -n @var{adjustment}
@@ -12222,7 +12255,7 @@ scheduling priority of @var{command}; use @command{nice} for that,
 e.g., @samp{nohup nice @var{command}}.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
-options}.
+options}.  Options must precede operands.
 
 @cindex exit status of @command{nohup}
 Exit status:
@@ -12691,6 +12724,7 @@ Floating-point numbers
 may be specified (using a period before any fractional digits).
 
 The program accepts the following options.  Also see @ref{Common options}.
+Options must precede operands.
 
 @table @samp
 @item -f @var{format}
