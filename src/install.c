@@ -97,7 +97,6 @@ static int change_attributes ();
 static int copy_file ();
 static int install_file_in_dir ();
 static int install_file_in_file ();
-static int isnumber ();
 static void get_ids ();
 static void strip ();
 static void usage ();
@@ -470,6 +469,21 @@ strip (path)
     }
 }
 
+/* Return nonzero if STR is an ASCII representation of a nonzero
+   decimal integer, zero if not. */
+
+static int
+is_number (str)
+     char *str;
+{
+  if (*str == 0)
+    return 0;
+  for (; *str; str++)
+    if (!ISDIGIT (*str))
+      return 0;
+  return 1;
+}
+
 /* Initialize the user and group ownership of the files to install. */
 
 static void
@@ -483,8 +497,10 @@ get_ids ()
       pw = getpwnam (owner_name);
       if (pw == NULL)
 	{
-	  if (!isnumber (owner_name))
+	  if (!is_number (owner_name))
 	    error (1, 0, "invalid user `%s'", owner_name);
+	  /* FIXME: atoi won't warn about overflow.  Use xstrtoul.  */
+	  /* FIXME: eliminate is_number altogether!  */
 	  owner_id = atoi (owner_name);
 	}
       else
@@ -499,8 +515,9 @@ get_ids ()
       gr = getgrnam (group_name);
       if (gr == NULL)
 	{
-	  if (!isnumber (group_name))
+	  if (!is_number (group_name))
 	    error (1, 0, "invalid group `%s'", group_name);
+	  /* FIXME: atoi won't warn about overflow.  Use xstrtoul.  */
 	  group_id = atoi (group_name);
 	}
       else
@@ -509,21 +526,6 @@ get_ids ()
     }
   else
     group_id = getgid ();
-}
-
-/* Return nonzero if STR is an ASCII representation of a nonzero
-   decimal integer, zero if not. */
-
-static int
-isnumber (str)
-     char *str;
-{
-  if (*str == 0)
-    return 0;
-  for (; *str; str++)
-    if (!ISDIGIT (*str))
-      return 0;
-  return 1;
 }
 
 static void
