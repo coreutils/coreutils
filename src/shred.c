@@ -86,7 +86,6 @@
 
 #include <getopt.h>
 #include <stdio.h>
-#include <string.h>		/* For memcpy(), strerror() */
 #include <stdarg.h>		/* Used by pferror */
 #include <setjmp.h>
 #include <signal.h>
@@ -118,6 +117,7 @@
  * but it's a lot less intertwingled than the usual GNU utilities.
  */
 
+# include <string.h>	/* For memcpy(), strerror() */
 # include <limits.h>	/* For ULONG_MAX etc. */
 # include <stdlib.h>	/* For strtoul, EXIT_FAILURE */
 # include <errno.h>
@@ -151,9 +151,12 @@
 #  endif
 # endif
 
+# define RETSIGTYPE int;
+
 # ifndef O_NOCTTY
 #  define O_NOCTTY 0  /* This is a very optional frill */
 # endif
+
 # ifndef S_IWUSR
 #  ifdef S_IWRITE
 #   define S_IWUSR S_IWRITE
@@ -759,7 +762,8 @@ isaac_seed_finish(struct isaac_state *s)
  * possibility of SIGILL while we're working.
  */
 static jmp_buf env;
-static void sigill_handler(int signum)
+static RETSIGTYPE
+sigill_handler(int signum)
 {
   (void)signum;
   longjmp(env, 1);  /* Trivial, just return an indication that it happened */
@@ -768,7 +772,7 @@ static void sigill_handler(int signum)
 static void
 isaac_seed_machdep(struct isaac_state *s)
 {
-  void (*oldhandler)(int);
+  RETSIGTYPE (*oldhandler)(int);
 
   /* This is how one does try/except in C */
   oldhandler = signal(SIGILL, sigill_handler);
