@@ -1,3 +1,9 @@
+Sun Jun  1 12:00:10 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/getdate.y (OtherTable): Interpret `next' as 1 (not 2) units.
+	Patch from Richard Sharman <rsharman@magmacom.com>.
+	* tests/date/Test.pm: Add tests using `next'.
+
 Tue May 27 06:08:06 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/basename.c: Don't include backupfile.h.
