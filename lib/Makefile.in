@@ -125,7 +125,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/rpmatch.m4 $(top_srcdir)/m4/safe-read.m4 \
 	$(top_srcdir)/m4/safe-write.m4 $(top_srcdir)/m4/same.m4 \
 	$(top_srcdir)/m4/save-cwd.m4 $(top_srcdir)/m4/savedir.m4 \
-	$(top_srcdir)/m4/settime.m4 $(top_srcdir)/m4/sha.m4 \
+	$(top_srcdir)/m4/settime.m4 $(top_srcdir)/m4/sha1.m4 \
 	$(top_srcdir)/m4/sig2str.m4 $(top_srcdir)/m4/signed.m4 \
 	$(top_srcdir)/m4/ssize_t.m4 $(top_srcdir)/m4/st_dm_mode.m4 \
 	$(top_srcdir)/m4/st_mtim.m4 $(top_srcdir)/m4/stat-prog.m4 \
@@ -191,12 +191,12 @@ am_libfetish_a_OBJECTS = acl.$(OBJEXT) getdate.$(OBJEXT) \
 	savedir.$(OBJEXT) settime.$(OBJEXT) sha1.$(OBJEXT) \
 	stripslash.$(OBJEXT) time_r.$(OBJEXT) umaxtostr.$(OBJEXT) \
 	unicodeio.$(OBJEXT) userspec.$(OBJEXT) utimecmp.$(OBJEXT) \
-	utimens.$(OBJEXT) version-etc.$(OBJEXT) xfts.$(OBJEXT) \
-	xgetcwd.$(OBJEXT) xgethostname.$(OBJEXT) xmalloc.$(OBJEXT) \
-	xmemcoll.$(OBJEXT) xnanosleep.$(OBJEXT) xreadlink.$(OBJEXT) \
-	xstrdup.$(OBJEXT) xstrndup.$(OBJEXT) xstrtod.$(OBJEXT) \
-	xstrtoimax.$(OBJEXT) xstrtol.$(OBJEXT) xstrtoul.$(OBJEXT) \
-	xstrtoumax.$(OBJEXT) yesno.$(OBJEXT)
+	utimens.$(OBJEXT) version-etc.$(OBJEXT) xalloc-die.$(OBJEXT) \
+	xfts.$(OBJEXT) xgetcwd.$(OBJEXT) xgethostname.$(OBJEXT) \
+	xmalloc.$(OBJEXT) xmemcoll.$(OBJEXT) xnanosleep.$(OBJEXT) \
+	xreadlink.$(OBJEXT) xstrdup.$(OBJEXT) xstrndup.$(OBJEXT) \
+	xstrtod.$(OBJEXT) xstrtoimax.$(OBJEXT) xstrtol.$(OBJEXT) \
+	xstrtoul.$(OBJEXT) xstrtoumax.$(OBJEXT) yesno.$(OBJEXT)
 libfetish_a_OBJECTS = $(am_libfetish_a_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
@@ -363,13 +363,13 @@ libfetish_a_SOURCES = acl.h acl.c getdate.h getdate.y posixtm.c \
 	strverscmp.h time_r.c time_r.h timespec.h umaxtostr.c \
 	unicodeio.c unicodeio.h unistd-safer.h unlocked-io.h \
 	userspec.c userspec.h utimecmp.c utimecmp.h utimens.c \
-	utimens.h version-etc.c version-etc.h xalloc.h xfts.c xfts.h \
-	xgetcwd.c xgetcwd.h xgethostname.c xgethostname.h xmalloc.c \
-	xmemcoll.c xmemcoll.h xnanosleep.c xnanosleep.h xreadlink.c \
-	xreadlink.h xstrdup.c xstrndup.c xstrndup.h xstrtod.c \
-	xstrtod.h xstrtoimax.c xstrtol.c xstrtol.h xstrtoul.c \
-	xstrtoumax.c yesno.c yesno.h printf-args.h printf-parse.h \
-	vasprintf.h vasnprintf.h
+	utimens.h version-etc.c version-etc.h xalloc.h xalloc-die.c \
+	xfts.c xfts.h xgetcwd.c xgetcwd.h xgethostname.c \
+	xgethostname.h xmalloc.c xmemcoll.c xmemcoll.h xnanosleep.c \
+	xnanosleep.h xreadlink.c xreadlink.h xstrdup.c xstrndup.c \
+	xstrndup.h xstrtod.c xstrtod.h xstrtoimax.c xstrtol.c \
+	xstrtol.h xstrtoul.c xstrtoumax.c yesno.c yesno.h \
+	printf-args.h printf-parse.h vasprintf.h vasnprintf.h
 libfetish_a_LIBADD = $(LIBOBJS) $(ALLOCA)
 libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
 lib_OBJECTS = $(libfetish_a_OBJECTS)
@@ -579,6 +579,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utimecmp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utimens.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/version-etc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xalloc-die.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xfts.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xgetcwd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xgethostname.Po@am__quote@

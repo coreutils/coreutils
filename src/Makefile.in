@@ -135,7 +135,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/rpmatch.m4 $(top_srcdir)/m4/safe-read.m4 \
 	$(top_srcdir)/m4/safe-write.m4 $(top_srcdir)/m4/same.m4 \
 	$(top_srcdir)/m4/save-cwd.m4 $(top_srcdir)/m4/savedir.m4 \
-	$(top_srcdir)/m4/settime.m4 $(top_srcdir)/m4/sha.m4 \
+	$(top_srcdir)/m4/settime.m4 $(top_srcdir)/m4/sha1.m4 \
 	$(top_srcdir)/m4/sig2str.m4 $(top_srcdir)/m4/signed.m4 \
 	$(top_srcdir)/m4/ssize_t.m4 $(top_srcdir)/m4/st_dm_mode.m4 \
 	$(top_srcdir)/m4/st_mtim.m4 $(top_srcdir)/m4/stat-prog.m4 \
