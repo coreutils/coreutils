@@ -1,5 +1,14 @@
 1998-10-08  Paul Eggert  <eggert@twinsun.com>
 
+        * mktime.c (__mktime_internal): When the requested time falls
+        in a spring-forward gap of size DT, return a time that is DT
+        away from the requested time, preferring a time whose tm_isdst
+        differs from the requested value.  Bump the max number of
+        probes from 4 to 6 to account for the extra probes needed to
+        discover a spring-forward gap in the worst case.
+
+1998-10-08  Paul Eggert  <eggert@twinsun.com>
+
 	* mktime.c (my_mktime_localtime_r): Renamed from localtime_r.
 	Define also if HAVE_LOCALTIME_R && defined (localtime_r), with
 	a body that merely expands localtime_r; this works around a
