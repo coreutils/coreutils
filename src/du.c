@@ -225,6 +225,7 @@ save_cwd (cwd)
 
   if (!have_working_fchdir)
     {
+      cwd->desc = -1;
       cwd->name = xgetcwd ();
       if (cwd->name == NULL)
 	error (1, errno, "cannot get current directory");
@@ -241,11 +242,6 @@ restore_cwd (cwd, dest, current)
      const char *dest;
      const char *current;
 {
-
-#ifndef HAVE_FCHDIR
-#define fchdir(x) (abort (), -1)
-#endif
-
   if (cwd->desc >= 0)
     {
       if (fchdir (cwd->desc) < 0)
