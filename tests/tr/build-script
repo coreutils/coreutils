@@ -1,4 +1,4 @@
-#!/p/bin/perl5.000 -w
+#!/p/bin/perl -w
 
 $tr = '../tr +io 5';
 $tr = './tr';
@@ -54,7 +54,9 @@ fi
 EOF
   }
 print <<EOF2 ;
-if test \$errors -gt 0 ; then
+if test \$errors = 0 ; then
+  echo Passed all tests. 1>&2
+else
   echo Failed \$errors tests. 1>&2
 fi
 EOF2
