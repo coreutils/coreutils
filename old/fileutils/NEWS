@@ -1,5 +1,6 @@
 Changes in release 4.1.0:
 [4.0.43]
+* regenerate configure-related files using autoconf-2.49d
 [4.0.42]
 * Using ls's short-named `-H' option evokes the warning that the
    meaning of `-H' will soon change.  Use `--si' instead.
