@@ -1,3 +1,7 @@
+2000-06-18  Jim Meyering  <meyering@lucent.com>
+
+	* README-alpha: Update.
+
 2000-06-17  Jim Meyering  <meyering@lucent.com>
 
 	* tests/install/basic-1: Don't fail (just exit 77) if strip doesn't

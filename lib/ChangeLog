@@ -1,3 +1,7 @@
+2000-06-19  Jim Meyering  <meyering@lucent.com>
+
+	* getloadavg.c [HAVE_NLIST_H] (NLIST_STRUCT): Define.
+
 2000-06-18  Jim Meyering  <meyering@lucent.com>
 
 	* mkdir.c: Remove file, due mainly to copyright incompatibility.
@@ -5,9 +9,6 @@
 
 	* strnlen.c: Include memory.h, string.h, and/or strings.h as needed.
 	(this snippet comes from src/system.h).
-
-	* getloadavg.c: s/NLIST_STRUCT/HAVE_NLIST_H/.  Remove big
-	multi-platform `#ifndef NLIST_STRUCT' block.
 
 2000-06-15  Paul Eggert  <eggert@twinsun.com>
 
