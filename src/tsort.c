@@ -329,8 +329,12 @@ scan_zeros (struct item *k)
    this, but that is no problem.  If we encounter an item that we have
    encountered before, we know that we've found a cycle.  All we have
    to do now is retrace our steps, printing out the items until we
-   encounter that item again.  (This does not have to be the item that
-   we started at in the first place.)  Since the order */
+   encounter that item again.  (This is not necessarily the item that
+   we started from originally.)  Since the order in which the items
+   are stored in the tree is not related to the specified partial
+   ordering, we may need to walk the tree several times before the
+   loop has completely been constructed.  If the loop was found, the
+   global variable LOOP will be NULL.  */
 
 static int
 detect_loop (struct item *k)
