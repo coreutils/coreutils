@@ -428,7 +428,7 @@ main (int argc, char **argv)
 	}
     }
 
-  if (optind >= 2 && !STREQ (argv[optind - 1], "--"))
+  if (argc - optind >= 2 && !STREQ (argv[optind - 1], "--"))
     {
       /* Interpret non-option arguments with leading `+' only
 	 if we haven't seen `--'.  */
@@ -439,7 +439,7 @@ main (int argc, char **argv)
 	  if (xstrtol (opt_str, NULL, 10, &tmp_long, "") != LONGINT_OK
 	      || tmp_long <= 0 || tmp_long > INT_MAX)
 	    error (EXIT_FAILURE, 0,
-		   _("invalid number of bytes to compare: `%s'"),
+		   _("invalid number of bytes to skip: `%s'"),
 		   opt_str);
 	  skip_chars = (int) tmp_long;
 	}
