@@ -8,6 +8,7 @@ mkdir.c mktime.c mountlist.c obstack.c posixtm.y rename.c rmdir.c rpmatch.c \
 stpcpy.c strcasecmp.c strdup.c strndup.c strstr.c strtol.c strtoul.c
 
 INCLUDES = -I.. -I$(srcdir)
+INCLUDES = -I.. -I$(srcdir) -I../intl
 
 fu_SOURCES = getdate.c getline.c posixtm.c argmatch.c backupfile.c \
 dirname.c fileblocks.c filemode.c \
