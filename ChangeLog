@@ -1,6 +1,29 @@
-2004-06-14  Jim Meyering  <jim@meyering.net>
+2004-06-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* NEWS: Remove special cases for POSIXLY_CORRECT when POSIX allows
+	the GNU behavior.
+	* doc/coreutils.texi (pr invocation, unlink invocation): Document this.
+	* src/ls.c (decode_switches): Pay attention to TABSIZE even if
+	POSIXLY_CORRECT is set.  POSIX reserves upper-case environment
+	variables to the implementation, so it's OK for ls to depend on
+	TABSIZE.
+	* src/pr.c: Include "hard-locale.h".
+	(main): When in a non-POSIX locale, ignore POSIXLY_CORRECT, since
+	POSIX specifies the behavior only in the POSIX locale.
+	* src/printf.c (print_esc): Support \x, \u, \U even if POSIXLY_CORRECT,
+	since POSIX says the behavior is unspecified here.
+	* src/tail.c (parse_obsolescent_option): Support multiple file operands
+	even if POSIXLY_CORRECT, since POSIX does not require a diagnostic.
+	* src/printf.c (main): Recognize --help, --version even if
+	POSIXLY_CORRECT.  POSIX does not specify any options, but it
+	does not prohibit options either, so "printf" is like "expr" here.
+	* src/unlink.c (main): Likewise.
+	* tests/misc/printf: Adjust to the new semantics for \x if
+	POSIXLY_CORRECT.
+
+2004-06-14  Jim Meyering  <jim@meyering.net>
 
 	* tests/misc/pwd: New test, for fix of 2004-04-19.
 	* tests/misc/Makefile.am (TESTS): Add pwd.
