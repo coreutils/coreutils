@@ -1,3 +1,7 @@
+Wed Jul 17 22:37:40 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (ALL_LINGUAS): Add polish (pl).
+
 Mon Jul 15 23:42:57 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Many files: Update FSF address.
