@@ -107,6 +107,18 @@ install-data-yes: all
 	    echo "installing $(srcdir)/$$cat as" \
 		 "$(DESTDIR)$$dir/$(PACKAGE).mo"; \
 	  fi; \
+	  timedir=$(localedir)/$$lang/LC_TIME; \
+	  case "`ls -ld $(DESTDIR)$$timedir 2>/dev/null`" in \
+	  */'LC_TIME -> LC_MESSAGES') ;; \
+	  *) \
+	    rm -fr $(DESTDIR)$$timedir; \
+	    ln -s LC_MESSAGES $(DESTDIR)$$timedir \
+	    || { $(mkinstalldirs) $(DESTDIR)$$timedir \
+		 && { ln $(DESTDIR)$$dir/* $(DESTDIR)$$timedir \
+		      || cp $(DESTDIR)$$dir/* $(DESTDIR)$$timedir; }; }; \
+	    echo "installing $(DESTDIR)$$timedir as" \
+		 "an alias for $(DESTDIR)$$dir";; \
+	  esac; \
 	done
 
 # Define this as empty until I found a useful application.
@@ -126,7 +138,8 @@ uninstall-data-yes:
 	for cat in $$catalogs; do \
 	  cat=`basename $$cat`; \
 	  lang=`echo $$cat | sed 's/\.gmo$$//'`; \
-	  rm -f $(DESTDIR)$(localedir)/$$lang/LC_MESSAGES/$(PACKAGE).mo; \
+	  rm -f $(DESTDIR)$(localedir)/$$lang/LC_MESSAGES/$(PACKAGE).mo \
+		$(DESTDIR)$(localedir)/$$lang/LC_TIME/$(PACKAGE).mo; \
 	done
 
 check: all
