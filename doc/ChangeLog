@@ -1,6 +1,9 @@
 2004-01-27  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (seq invocation): Remove `@dots{}' at end of synopsis.
+	Separate `Synopses' section into three examples.
+	Clarify first paragraph.  @w{}-protect an expression.1
+	Use @option{--option}, rather than @code{--option}.
 
 2004-01-19  Paul Eggert  <eggert@twinsun.com>
 
