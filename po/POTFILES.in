@@ -8,6 +8,7 @@ lib/error.c
 lib/file-type.c
 lib/getopt.c
 lib/human.c
+lib/makepath.c
 lib/obstack.c
 lib/quotearg.c
 lib/rpmatch.c
