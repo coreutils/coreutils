@@ -2,6 +2,11 @@
 
 	* Version 5.1.0.
 
+	* tests/chmod/no-x: New file.
+	* tests/chgrp/no-x: New file.
+	* tests/chmod/Makefile.am (TESTS): Add no-x.
+	* tests/chgrp/Makefile.am (TESTS): Likewise.
+
 	* src/du.c: Include "xfts.h".
 	(du_files): Use xfts_open, rather than fts_open.
 	* src/chown-core.c (chown_files): Likewise.
