@@ -1,5 +1,5 @@
 /* readlink -- display value of a symbolic link.
-   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,13 +44,13 @@ static bool verbose;
 
 static struct option const longopts[] =
 {
-  {"canonicalize", no_argument, 0, 'f'},
-  {"canonicalize-existing", no_argument, 0, 'e'},
-  {"canonicalize-missing", no_argument, 0, 'm'},
-  {"no-newline", no_argument, 0, 'n'},
-  {"quiet", no_argument, 0, 'q'},
-  {"silent", no_argument, 0, 's'},
-  {"verbose", no_argument, 0, 'v'},
+  {"canonicalize", no_argument, NULL, 'f'},
+  {"canonicalize-existing", no_argument, NULL, 'e'},
+  {"canonicalize-missing", no_argument, NULL, 'm'},
+  {"no-newline", no_argument, NULL, 'n'},
+  {"quiet", no_argument, NULL, 'q'},
+  {"silent", no_argument, NULL, 's'},
+  {"verbose", no_argument, NULL, 'v'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
