@@ -1,5 +1,5 @@
 /* Permuted index for GNU, with keywords in their context.
-   Copyright (C) 1990, 1991, 1993, 1998-2000 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1991, 1993, 1998-2001 Free Software Foundation, Inc.
    François Pinard <pinard@iro.umontreal.ca>, 1988.
 
    This program is free software; you can redistribute it and/or modify
@@ -1861,8 +1861,9 @@ Usage: %s [OPTION]... [INPUT]...   (without -G)\n\
   or:  %s -G [OPTION]... [INPUT [OUTPUT]]\n"),
 	      program_name, program_name);
       fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
+Output a permuted index, including context, of the words in the input files.\n\
 \n\
+Mandatory arguments to long options are mandatory for short options too.\n\
   -A, --auto-reference           output automatically generated references\n\
   -C, --copyright                display Copyright and copying conditions\n\
   -G, --traditional              behave more like System V `ptx'\n\
