@@ -1,3 +1,14 @@
+2000-05-24  Jim Meyering  <meyering@lucent.com>
+
+	* prereq.m4: Use []-quoted list in AC_CHECK_MEMBERS, now that
+	autoconf requires that.
+	* lib-check.m4: Likewise.
+	* jm-macros.m4: Likewise.
+	* strftime.m4: Likewise.
+
+	* check-decl.m4 (jm_CHECK_DECLS): Use []-quoted list in AC_CHECK_DECLS,
+	now that autoconf requires that.
+
 2000-05-22  Jim Meyering  <meyering@lucent.com>
 
 	* stat.m4: Require jm_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK.
