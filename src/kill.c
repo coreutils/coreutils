@@ -1,5 +1,5 @@
 /* kill -- send a signal to a process
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -51,6 +51,8 @@ intmax_t strtoimax ();
 # if ! (HAVE_DECL_SYS_SIGLIST || defined sys_siglist)
 #  if HAVE_DECL__SYS_SIGLIST || defined _sys_siglist
 #   define sys_siglist _sys_siglist
+#  elif HAVE_DECL___SYS_SIGLIST || defined __sys_siglist
+#   define sys_siglist __sys_siglist
 #  endif
 # endif
 # if HAVE_DECL_SYS_SIGLIST || defined sys_siglist
