@@ -52,6 +52,9 @@ static int show_help;
 /* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
+/* If nonzero, attempt to canonicalize hostnames via a DNS lookup. */
+static int do_lookup;
+
 /* If nonzero, display only a list of usernames and count of
    the users logged on.
    Ignored for `who am i'. */
@@ -74,6 +77,7 @@ static struct option const longopts[] =
   {"count", no_argument, NULL, 'q'},
   {"idle", no_argument, NULL, 'u'},
   {"heading", no_argument, NULL, 'H'},
+  {"lookup", no_argument, NULL, 'l'},
   {"message", no_argument, NULL, 'T'},
   {"mesg", no_argument, NULL, 'T'},
   {"writable", no_argument, NULL, 'T'},
@@ -171,7 +175,7 @@ print_entry (const STRUCT_UTMP *utmp_ent)
 	printf ("   .  ");
     }
 #ifdef HAVE_UT_HOST
-  if (utmp_ent->ut_host[0])
+  if (utmp_ent->ut_host[0] && do_lookup)
     {
       extern char *canon_host ();
       char ut_host[sizeof (utmp_ent->ut_host) + 1];
@@ -357,6 +361,7 @@ usage (int status)
 \n\
   -H, --heading     print line of column headings\n\
   -i, -u, --idle    add user idle time as HOURS:MINUTES, . or old\n\
+  -l, --lookup      attempt to canonicalize hostnames via DNS\n\
   -m                only hostname and user associated with stdin\n\
   -q, --count       all login names and number of users logged on\n\
   -s                (ignored)\n\
@@ -385,7 +390,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  while ((optc = getopt_long (argc, argv, "imqsuwHT", longopts, &longind)) != -1)
+  while ((optc = getopt_long (argc, argv, "ilmqsuwHT", longopts, &longind)) != -1)
     {
       switch (optc)
 	{
@@ -394,6 +399,10 @@ main (int argc, char **argv)
 
 	case 'm':
 	  my_line_only = 1;
+	  break;
+
+	case 'l':
+	  do_lookup = 1;
 	  break;
 
 	case 'q':
