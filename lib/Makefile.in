@@ -191,6 +191,7 @@ libfetish_a_SOURCES = \
   xgetcwd.c \
   xgethostname.c \
   xmalloc.c \
+  xmemcoll.c xmemcoll.h \
   xreadlink.c xreadlink.h \
   xstrdup.c \
   xstrtod.c xstrtod.h \
@@ -252,9 +253,10 @@ am_libfetish_a_OBJECTS = getdate$U.$(OBJEXT) posixtm$U.$(OBJEXT) \
 	stripslash$U.$(OBJEXT) unicodeio$U.$(OBJEXT) \
 	userspec$U.$(OBJEXT) version-etc$U.$(OBJEXT) \
 	xgetcwd$U.$(OBJEXT) xgethostname$U.$(OBJEXT) \
-	xmalloc$U.$(OBJEXT) xreadlink$U.$(OBJEXT) xstrdup$U.$(OBJEXT) \
-	xstrtod$U.$(OBJEXT) xstrtol$U.$(OBJEXT) xstrtoul$U.$(OBJEXT) \
-	xstrtoimax$U.$(OBJEXT) xstrtoumax$U.$(OBJEXT) yesno$U.$(OBJEXT)
+	xmalloc$U.$(OBJEXT) xmemcoll$U.$(OBJEXT) xreadlink$U.$(OBJEXT) \
+	xstrdup$U.$(OBJEXT) xstrtod$U.$(OBJEXT) xstrtol$U.$(OBJEXT) \
+	xstrtoul$U.$(OBJEXT) xstrtoimax$U.$(OBJEXT) \
+	xstrtoumax$U.$(OBJEXT) yesno$U.$(OBJEXT)
 libfetish_a_OBJECTS = $(am_libfetish_a_OBJECTS)
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 CPPFLAGS = @CPPFLAGS@
@@ -320,10 +322,11 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	$(DEPDIR)/userspec$U.Po $(DEPDIR)/utime.Po \
 @AMDEP_TRUE@	$(DEPDIR)/version-etc$U.Po $(DEPDIR)/xgetcwd$U.Po \
 @AMDEP_TRUE@	$(DEPDIR)/xgethostname$U.Po $(DEPDIR)/xmalloc$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/xreadlink$U.Po $(DEPDIR)/xstrdup$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/xstrtod$U.Po $(DEPDIR)/xstrtoimax$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/xstrtol$U.Po $(DEPDIR)/xstrtoul$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/xstrtoumax$U.Po $(DEPDIR)/yesno$U.Po
+@AMDEP_TRUE@	$(DEPDIR)/xmemcoll$U.Po $(DEPDIR)/xreadlink$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/xstrdup$U.Po $(DEPDIR)/xstrtod$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/xstrtoimax$U.Po $(DEPDIR)/xstrtol$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/xstrtoul$U.Po $(DEPDIR)/xstrtoumax$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/yesno$U.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -492,6 +495,7 @@ mostlyclean-kr:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xgetcwd$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xgethostname$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xmalloc$U.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xmemcoll$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xreadlink$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xstrdup$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xstrtod$U.Po@am__quote@
@@ -746,6 +750,8 @@ xgethostname_.c: xgethostname.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/xgethostname.c; then echo $(srcdir)/xgethostname.c; else echo xgethostname.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > xgethostname_.c || rm -f xgethostname_.c
 xmalloc_.c: xmalloc.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/xmalloc.c; then echo $(srcdir)/xmalloc.c; else echo xmalloc.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > xmalloc_.c || rm -f xmalloc_.c
+xmemcoll_.c: xmemcoll.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/xmemcoll.c; then echo $(srcdir)/xmemcoll.c; else echo xmemcoll.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > xmemcoll_.c || rm -f xmemcoll_.c
 xreadlink_.c: xreadlink.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/xreadlink.c; then echo $(srcdir)/xreadlink.c; else echo xreadlink.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > xreadlink_.c || rm -f xreadlink_.c
 xstrdup_.c: xstrdup.c $(ANSI2KNR)
@@ -799,10 +805,10 @@ strtoll_.$(OBJEXT) strtoul_.$(OBJEXT) strtoull_.$(OBJEXT) \
 strtoumax_.$(OBJEXT) strverscmp_.$(OBJEXT) tempname_.$(OBJEXT) \
 unicodeio_.$(OBJEXT) userspec_.$(OBJEXT) utime_.$(OBJEXT) \
 version-etc_.$(OBJEXT) xgetcwd_.$(OBJEXT) xgethostname_.$(OBJEXT) \
-xmalloc_.$(OBJEXT) xreadlink_.$(OBJEXT) xstrdup_.$(OBJEXT) \
-xstrtod_.$(OBJEXT) xstrtoimax_.$(OBJEXT) xstrtol_.$(OBJEXT) \
-xstrtoul_.$(OBJEXT) xstrtoumax_.$(OBJEXT) yesno_.$(OBJEXT) : \
-$(ANSI2KNR)
+xmalloc_.$(OBJEXT) xmemcoll_.$(OBJEXT) xreadlink_.$(OBJEXT) \
+xstrdup_.$(OBJEXT) xstrtod_.$(OBJEXT) xstrtoimax_.$(OBJEXT) \
+xstrtol_.$(OBJEXT) xstrtoul_.$(OBJEXT) xstrtoumax_.$(OBJEXT) \
+yesno_.$(OBJEXT) : $(ANSI2KNR)
 
 .y.c:
 	$(YACCCOMPILE) $<
