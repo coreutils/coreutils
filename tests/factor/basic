@@ -55,7 +55,7 @@ my @Tests =
      ['x', '4294966896', {OUT => '2 2 2 2 3 3 3 11 607 1489'}],
      ['y', '4294966998', {OUT => '2 3 7 3917 26107'}],
      ['z', '-1',
-      {ERR => "$prog: `-1' is not a valid positive integer\n"
+      {ERR => "$prog: invalid option -- 1\n"
        . "Try `$prog --help' for more information.\n"},
       {EXIT => 1}],
     );
