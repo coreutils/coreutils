@@ -1,3 +1,8 @@
+2002-03-02  Jim Meyering  <meyering@lucent.com>
+
+	* coreutils.texi (cp invocation): Document that cp -r
+	preserves symlinks.  Emphasize non-portability of cp -r.
+
 2002-02-27  Paul Eggert  <eggert@twinsun.com>
 
 	* coreutils.texi (Time directives): Add %N for nanoseconds.
