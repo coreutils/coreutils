@@ -41,13 +41,9 @@ my @Tests =
      ['b-1', '-t', '2,4', {IN=> "      ."}, {OUT=>"\t\t  ."}],
      # These would infloop prior to textutils-2.0d.
 
-     # Solaris' /bin/unexpand does this:
-     # ['infloop-1', '-t', '1,2', {IN=> " \t\t .\n"}, {OUT=>" \t\t .\n"}],
-     # FIXME: find out which is required
-
      ['infloop-1', '-t', '1,2', {IN=> " \t\t .\n"}, {OUT=>"\t\t\t .\n"}],
      ['infloop-2', '-t', '4,5', {IN=> ' 'x4 . "\t\t \n"}, {OUT=>"\t\t\t \n"}],
-     ['infloop-3', '-t', '2,3', {IN=> "x \t\t \n"}, {OUT=>"x\t\t\t \n"}],
+     ['infloop-3', '-t', '2,3', {IN=> "x \t\t \n"}, {OUT=>"x \t\t \n"}],
      ['infloop-4', '-t', '1,2', {IN=> " \t\t   \n"}, {OUT=>"\t\t\t   \n"}],
      ['c-1', '-t', '1,2', {IN=> "x\t\t .\n"}, {OUT=>"x\t\t .\n"}],
 
@@ -55,6 +51,21 @@ my @Tests =
      # Feature addition (--first-only) prompted by a report from Jie Xu.
      ['tabs-1', qw(-t 3),              {IN=> "   a  b\n"}, {OUT=>"\ta\tb\n"}],
      ['tabs-2', qw(-t 3 --first-only), {IN=> "   a  b\n"}, {OUT=>"\ta  b\n"}],
+
+     # blanks
+     ['blanks-1', qw(-t 1), {IN=> " b  c   d\n"}, {OUT=> "\tb\t\tc\t\t\td\n"}],
+     ['blanks-2', qw(-t 1), {IN=> "a \n"}, {OUT=> "a \n"}],
+     ['blanks-3', qw(-t 1), {IN=> "a  \n"}, {OUT=> "a\t\t\n"}],
+     ['blanks-4', qw(-t 1), {IN=> "a   \n"}, {OUT=> "a\t\t\t\n"}],
+     ['blanks-5', qw(-t 1), {IN=> "a "}, {OUT=> "a "}],
+     ['blanks-6', qw(-t 1), {IN=> "a  "}, {OUT=> "a\t\t"}],
+     ['blanks-7', qw(-t 1), {IN=> "a   "}, {OUT=> "a\t\t\t"}],
+     ['blanks-8', qw(-t 1), {IN=> " a a  a\n"}, {OUT=> "\ta a\t\ta\n"}],
+     ['blanks-9', qw(-t 2), {IN=> "   a  a  a\n"}, {OUT=> "\t a\ta  a\n"}],
+     ['blanks-10', '-t', '3,4', {IN=> "0 2 4 6\t8\n"}, {OUT=> "0 2 4 6\t8\n"}],
+     ['blanks-11', '-t', '3,4', {IN=> "    4\n"}, {OUT=> "\t\t4\n"}],
+     ['blanks-12', '-t', '3,4', {IN=> "01  4\n"}, {OUT=> "01\t\t4\n"}],
+     ['blanks-13', '-t', '3,4', {IN=> "0   4\n"}, {OUT=> "0\t\t4\n"}],
     );
 
 my $save_temps = $ENV{DEBUG};
