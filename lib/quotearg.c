@@ -62,12 +62,10 @@
 # include <wchar.h>
 # if !HAVE_MBSTATE_T_OBJECT
 #  define mbrtowc(pwc, s, n, ps) (mbrtowc) (pwc, s, n, 0)
-#  define mbstate_t int
 # endif
 #else
 # define mbrtowc(pwc, s, n, ps) 1
 # define mbsinit(ps) 1
-# define mbstate_t int
 #endif
 
 #if HAVE_WCTYPE_H
