@@ -1085,7 +1085,10 @@ main (int argc, char **argv)
     }
 
   if (column_count_string)
-    parse_column_count (column_count_string);
+    {
+      parse_column_count (column_count_string);
+      free (column_count_string);
+    }
 
   if (! date_format)
     date_format = (getenv ("POSIXLY_CORRECT") && !hard_locale (LC_TIME)
