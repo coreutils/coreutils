@@ -1,5 +1,7 @@
 1999-05-07  Jim Meyering  <meyering@ascend.com>
 
+	* Version 4.0h.
+
 	* tests/touch/dir-1: New test.
 	* tests/touch/Makefile.am (TESTS_ENVIRONMENT): Remove individual
 	upper-case program names.  Add a definition of PATH.
