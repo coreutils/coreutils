@@ -1,9 +1,23 @@
+Sun Jan  5 09:33:07 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/ls.c (print_long_format): Avoid making unnecessary copy of
+	date/time string.  Patch from Paul Eggert.
+	(print_long_format): NUL-terminate line of output.
+	(print_long_format): Detect and handle strftime failure
+	due to pathologically long strings in locale tables.
+	Patch from Paul Eggert.
+	(print_long_format): Change references to BIGBUF in use of
+	FPUT macro to references to BUF.
+	Use 11 (not 20) bytes for mode string buffer.
+
 Sat Jan  4 21:14:36 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/ls.c (print_long_format): Clean up vestiges of legacy
 	ctime-oriented code.  With internationalization and strftime,
 	you can't presume that %a expands to a 3-byte string.
 	Reported by Ross Ridge.
+	(print_long_format): Use POSIX-mandated %e (blank-padded numeric
+	day of month), not %d (the same number, but *zero*-filled).
 
 Fri Jan  3 21:08:29 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
