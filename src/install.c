@@ -506,15 +506,25 @@ change_attributes (const char *path)
       && errno != EPERM
 #endif
       )
-    err = errno;
-  if (chmod (path, mode))
-    err = errno;
+    {
+      error (0, errno, "cannot change ownership of `%s'", path);
+      err = 1;
+    }
+
+  if (!err && chmod (path, mode))
+    {
+      error (0, errno, "cannot change permissions of `%s'", path);
+      err = 1;
+    }
+
   if (err)
     {
-      error (0, err, "%s", path);
-      return 1;
+      error (0, 0, "removing file: `%s'", path);
+      if (unlink (path))
+	error (0, errno, "cannot remove `%s'", path);
     }
-  return 0;
+
+  return err;
 }
 
 /* Set the timestamps of file TO to match those of file FROM.
