@@ -3,6 +3,7 @@
 
 	* expr.c (docolon): Set re_syntax_options to RE_SYNTAX_POSIX_BASIC
  	so expr's pattern matching uses BASIC (not GNU-extended) REs.
+	Reported by Jim Kingdon.
 
 	* who-users.c (print_entry): Use strchr, not index.
 
