@@ -95,15 +95,12 @@ sub test_vector
      ['next-mo', "-d '$d1 next month' '+%Y-%m-%d %T'", {}, "$dm $t0", 0],
      ['next-y', "-d '$d1 next year'   '+%Y-%m-%d %T'", {}, "$dy $t0", 0],
 
-     # These utc-* tests failed for sh-utils-1.16.
-     ['utc-0', "-u -d '08/01/97 6:00' '+%D,%H:%M'", {}, "08/01/97,10:00", 0],
-     # Same as above, but don't rely on TZ in environment.
+     ['utc-0', "-u -d '08/01/97 6:00' '+%D,%H:%M'", {}, "08/01/97,06:00", 0],
      ['utc-0a', "-u -d '08/01/97 6:00 UTC +4 hours' '+%D,%H:%M'", {},
       "08/01/97,10:00", 0],
      # Make sure --file=FILE works with -u.
      ['utc-1', "-u --file=- '+%Y-%m-%d %T'", "$d0 $t0\n$d0 $t0\n",
-      "$d0 $th\n$d0 $th", 0],
-     # Same as above, but don't rely on TZ in environment.
+      "$d0 $t0\n$d0 $t0", 0],
      ['utc-1a', "-u --file=- '+%Y-%m-%d %T'",
       "$d0 $t0 UTC +1 hour\n$d0 $t0 UTC +1 hour\n",
       "$d0 $th\n$d0 $th", 0],
@@ -138,9 +135,8 @@ sub test_vector
       {}, "2000-06-15 09:43:57", 0],
 
      # Relative seconds, no time.
-     # This test is fragile!  It works only if TZ is set to UTC+1 (as below).
      ['relative-2', "--utc -d '1970-01-01 UTC +961062237 sec' $fmt", {},
-      "2000-06-15 10:43:57", 0],
+      "2000-06-15 09:43:57", 0],
 
      # FIXME: add a lot more...
      );
