@@ -18,7 +18,7 @@ export LC_ALL
 LANG=C
 export LANG
 
-$xx -a1 $srcdir/1a.I1 $srcdir/1a.I2 > 1a.O 2> 1a.E
+ $xx -a1 $srcdir/1a.I1 $srcdir/1a.I2 > 1a.O 2> 1a.E
 code=$?
 if test $code != 0; then
   $echo "Test 1a failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -36,7 +36,7 @@ else
   esac
 fi
 test -s 1a.E || rm -f 1a.E
-$xx -a2 $srcdir/1b.I1 $srcdir/1b.I2 > 1b.O 2> 1b.E
+ $xx -a2 $srcdir/1b.I1 $srcdir/1b.I2 > 1b.O 2> 1b.E
 code=$?
 if test $code != 0; then
   $echo "Test 1b failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -54,7 +54,7 @@ else
   esac
 fi
 test -s 1b.E || rm -f 1b.E
-$xx -a1 -a2 $srcdir/1c.I1 $srcdir/1c.I2 > 1c.O 2> 1c.E
+ $xx -a1 -a2 $srcdir/1c.I1 $srcdir/1c.I2 > 1c.O 2> 1c.E
 code=$?
 if test $code != 0; then
   $echo "Test 1c failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -72,7 +72,7 @@ else
   esac
 fi
 test -s 1c.E || rm -f 1c.E
-$xx -a1 $srcdir/1d.I1 $srcdir/1d.I2 > 1d.O 2> 1d.E
+ $xx -a1 $srcdir/1d.I1 $srcdir/1d.I2 > 1d.O 2> 1d.E
 code=$?
 if test $code != 0; then
   $echo "Test 1d failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -90,7 +90,7 @@ else
   esac
 fi
 test -s 1d.E || rm -f 1d.E
-$xx -a2 $srcdir/1e.I1 $srcdir/1e.I2 > 1e.O 2> 1e.E
+ $xx -a2 $srcdir/1e.I1 $srcdir/1e.I2 > 1e.O 2> 1e.E
 code=$?
 if test $code != 0; then
   $echo "Test 1e failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -108,7 +108,7 @@ else
   esac
 fi
 test -s 1e.E || rm -f 1e.E
-$xx -a2 $srcdir/1f.I1 $srcdir/1f.I2 > 1f.O 2> 1f.E
+ $xx -a2 $srcdir/1f.I1 $srcdir/1f.I2 > 1f.O 2> 1f.E
 code=$?
 if test $code != 0; then
   $echo "Test 1f failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -126,7 +126,7 @@ else
   esac
 fi
 test -s 1f.E || rm -f 1f.E
-$xx -a1 -e . $srcdir/2a.I1 $srcdir/2a.I2 > 2a.O 2> 2a.E
+ $xx -a1 -e . $srcdir/2a.I1 $srcdir/2a.I2 > 2a.O 2> 2a.E
 code=$?
 if test $code != 0; then
   $echo "Test 2a failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -144,7 +144,7 @@ else
   esac
 fi
 test -s 2a.E || rm -f 2a.E
-$xx -a1 -e . -o 2.1,2.2,2.3 $srcdir/2b.I1 $srcdir/2b.I2 > 2b.O 2> 2b.E
+ $xx -a1 -e . -o 2.1,2.2,2.3 $srcdir/2b.I1 $srcdir/2b.I2 > 2b.O 2> 2b.E
 code=$?
 if test $code != 0; then
   $echo "Test 2b failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -162,7 +162,7 @@ else
   esac
 fi
 test -s 2b.E || rm -f 2b.E
-$xx -a1 -e . -o 2.1,2.2,2.3 $srcdir/2c.I1 $srcdir/2c.I2 > 2c.O 2> 2c.E
+ $xx -a1 -e . -o 2.1,2.2,2.3 $srcdir/2c.I1 $srcdir/2c.I2 > 2c.O 2> 2c.E
 code=$?
 if test $code != 0; then
   $echo "Test 2c failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -180,7 +180,7 @@ else
   esac
 fi
 test -s 2c.E || rm -f 2c.E
-$xx -t: $srcdir/3a.I1 $srcdir/3a.I2 > 3a.O 2> 3a.E
+ $xx -t: $srcdir/3a.I1 $srcdir/3a.I2 > 3a.O 2> 3a.E
 code=$?
 if test $code != 0; then
   $echo "Test 3a failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -198,7 +198,7 @@ else
   esac
 fi
 test -s 3a.E || rm -f 3a.E
-$xx -v 1 $srcdir/4a.I1 $srcdir/4a.I2 > 4a.O 2> 4a.E
+ $xx -v 1 $srcdir/4a.I1 $srcdir/4a.I2 > 4a.O 2> 4a.E
 code=$?
 if test $code != 0; then
   $echo "Test 4a failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -216,7 +216,7 @@ else
   esac
 fi
 test -s 4a.E || rm -f 4a.E
-$xx -v 2 $srcdir/4b.I1 $srcdir/4b.I2 > 4b.O 2> 4b.E
+ $xx -v 2 $srcdir/4b.I1 $srcdir/4b.I2 > 4b.O 2> 4b.E
 code=$?
 if test $code != 0; then
   $echo "Test 4b failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -234,7 +234,7 @@ else
   esac
 fi
 test -s 4b.E || rm -f 4b.E
-$xx -v 1 $srcdir/4c.I1 $srcdir/4c.I2 > 4c.O 2> 4c.E
+ $xx -v 1 $srcdir/4c.I1 $srcdir/4c.I2 > 4c.O 2> 4c.E
 code=$?
 if test $code != 0; then
   $echo "Test 4c failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -252,7 +252,7 @@ else
   esac
 fi
 test -s 4c.E || rm -f 4c.E
-$xx -v 2 $srcdir/4d.I1 $srcdir/4d.I2 > 4d.O 2> 4d.E
+ $xx -v 2 $srcdir/4d.I1 $srcdir/4d.I2 > 4d.O 2> 4d.E
 code=$?
 if test $code != 0; then
   $echo "Test 4d failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -270,7 +270,7 @@ else
   esac
 fi
 test -s 4d.E || rm -f 4d.E
-$xx -v 2 $srcdir/4e.I1 $srcdir/4e.I2 > 4e.O 2> 4e.E
+ $xx -v 2 $srcdir/4e.I1 $srcdir/4e.I2 > 4e.O 2> 4e.E
 code=$?
 if test $code != 0; then
   $echo "Test 4e failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -288,7 +288,7 @@ else
   esac
 fi
 test -s 4e.E || rm -f 4e.E
-$xx -a1 -e - -o 1.1 2.2 $srcdir/5a.I1 $srcdir/5a.I2 > 5a.O 2> 5a.E
+ $xx -a1 -e - -o 1.1 2.2 $srcdir/5a.I1 $srcdir/5a.I2 > 5a.O 2> 5a.E
 code=$?
 if test $code != 0; then
   $echo "Test 5a failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -306,7 +306,7 @@ else
   esac
 fi
 test -s 5a.E || rm -f 5a.E
-$xx -a1 -e - -o 1.1 2.2 $srcdir/5b.I1 $srcdir/5b.I2 > 5b.O 2> 5b.E
+ $xx -a1 -e - -o 1.1 2.2 $srcdir/5b.I1 $srcdir/5b.I2 > 5b.O 2> 5b.E
 code=$?
 if test $code != 0; then
   $echo "Test 5b failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -324,7 +324,7 @@ else
   esac
 fi
 test -s 5b.E || rm -f 5b.E
-$xx -a1 -e - -o 1.1 2.2 $srcdir/5c.I1 $srcdir/5c.I2 > 5c.O 2> 5c.E
+ $xx -a1 -e - -o 1.1 2.2 $srcdir/5c.I1 $srcdir/5c.I2 > 5c.O 2> 5c.E
 code=$?
 if test $code != 0; then
   $echo "Test 5c failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -342,7 +342,7 @@ else
   esac
 fi
 test -s 5c.E || rm -f 5c.E
-$xx -a1 -e - -o 1.1 2.2 $srcdir/5d.I1 $srcdir/5d.I2 > 5d.O 2> 5d.E
+ $xx -a1 -e - -o 1.1 2.2 $srcdir/5d.I1 $srcdir/5d.I2 > 5d.O 2> 5d.E
 code=$?
 if test $code != 0; then
   $echo "Test 5d failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -360,7 +360,7 @@ else
   esac
 fi
 test -s 5d.E || rm -f 5d.E
-$xx -a2 -e - -o 1.1 2.2 $srcdir/5e.I1 $srcdir/5e.I2 > 5e.O 2> 5e.E
+ $xx -a2 -e - -o 1.1 2.2 $srcdir/5e.I1 $srcdir/5e.I2 > 5e.O 2> 5e.E
 code=$?
 if test $code != 0; then
   $echo "Test 5e failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -378,7 +378,7 @@ else
   esac
 fi
 test -s 5e.E || rm -f 5e.E
-$xx -a2 -e - -o 2.2 1.1 $srcdir/5f.I1 $srcdir/5f.I2 > 5f.O 2> 5f.E
+ $xx -a2 -e - -o 2.2 1.1 $srcdir/5f.I1 $srcdir/5f.I2 > 5f.O 2> 5f.E
 code=$?
 if test $code != 0; then
   $echo "Test 5f failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -396,7 +396,7 @@ else
   esac
 fi
 test -s 5f.E || rm -f 5f.E
-$xx -a1 -e - -o 2.2 1.1 $srcdir/5g.I1 $srcdir/5g.I2 > 5g.O 2> 5g.E
+ $xx -a1 -e - -o 2.2 1.1 $srcdir/5g.I1 $srcdir/5g.I2 > 5g.O 2> 5g.E
 code=$?
 if test $code != 0; then
   $echo "Test 5g failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -414,7 +414,7 @@ else
   esac
 fi
 test -s 5g.E || rm -f 5g.E
-$xx -a1 -e - -o 2.2 1.1 $srcdir/5h.I1 $srcdir/5h.I2 > 5h.O 2> 5h.E
+ $xx -a1 -e - -o 2.2 1.1 $srcdir/5h.I1 $srcdir/5h.I2 > 5h.O 2> 5h.E
 code=$?
 if test $code != 0; then
   $echo "Test 5h failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -432,7 +432,7 @@ else
   esac
 fi
 test -s 5h.E || rm -f 5h.E
-$xx -a1 -e - -o 1.1 2.2 $srcdir/5i.I1 $srcdir/5i.I2 > 5i.O 2> 5i.E
+ $xx -a1 -e - -o 1.1 2.2 $srcdir/5i.I1 $srcdir/5i.I2 > 5i.O 2> 5i.E
 code=$?
 if test $code != 0; then
   $echo "Test 5i failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -450,7 +450,7 @@ else
   esac
 fi
 test -s 5i.E || rm -f 5i.E
-$xx -a2 -e - -o 2.2 1.1 $srcdir/5j.I1 $srcdir/5j.I2 > 5j.O 2> 5j.E
+ $xx -a2 -e - -o 2.2 1.1 $srcdir/5j.I1 $srcdir/5j.I2 > 5j.O 2> 5j.E
 code=$?
 if test $code != 0; then
   $echo "Test 5j failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -468,7 +468,7 @@ else
   esac
 fi
 test -s 5j.E || rm -f 5j.E
-$xx -a2 -e - -o 2.2 1.1 $srcdir/5k.I1 $srcdir/5k.I2 > 5k.O 2> 5k.E
+ $xx -a2 -e - -o 2.2 1.1 $srcdir/5k.I1 $srcdir/5k.I2 > 5k.O 2> 5k.E
 code=$?
 if test $code != 0; then
   $echo "Test 5k failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -486,7 +486,7 @@ else
   esac
 fi
 test -s 5k.E || rm -f 5k.E
-$xx -a1 -e - -o 2.2 1.1 $srcdir/5l.I1 $srcdir/5l.I2 > 5l.O 2> 5l.E
+ $xx -a1 -e - -o 2.2 1.1 $srcdir/5l.I1 $srcdir/5l.I2 > 5l.O 2> 5l.E
 code=$?
 if test $code != 0; then
   $echo "Test 5l failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -504,7 +504,7 @@ else
   esac
 fi
 test -s 5l.E || rm -f 5l.E
-$xx -a2 -e - -o 2.2 1.1 $srcdir/5m.I1 $srcdir/5m.I2 > 5m.O 2> 5m.E
+ $xx -a2 -e - -o 2.2 1.1 $srcdir/5m.I1 $srcdir/5m.I2 > 5m.O 2> 5m.E
 code=$?
 if test $code != 0; then
   $echo "Test 5m failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -522,7 +522,7 @@ else
   esac
 fi
 test -s 5m.E || rm -f 5m.E
-$xx -e - $srcdir/6a.I1 $srcdir/6a.I2 > 6a.O 2> 6a.E
+ $xx -e - $srcdir/6a.I1 $srcdir/6a.I2 > 6a.O 2> 6a.E
 code=$?
 if test $code != 0; then
   $echo "Test 6a failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -540,7 +540,7 @@ else
   esac
 fi
 test -s 6a.E || rm -f 6a.E
-$xx -a1 -e - $srcdir/6b.I1 $srcdir/6b.I2 > 6b.O 2> 6b.E
+ $xx -a1 -e - $srcdir/6b.I1 $srcdir/6b.I2 > 6b.O 2> 6b.E
 code=$?
 if test $code != 0; then
   $echo "Test 6b failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -558,7 +558,7 @@ else
   esac
 fi
 test -s 6b.E || rm -f 6b.E
-$xx -a1 -e - $srcdir/6c.I1 $srcdir/6c.I2 > 6c.O 2> 6c.E
+ $xx -a1 -e - $srcdir/6c.I1 $srcdir/6c.I2 > 6c.O 2> 6c.E
 code=$?
 if test $code != 0; then
   $echo "Test 6c failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -576,7 +576,7 @@ else
   esac
 fi
 test -s 6c.E || rm -f 6c.E
-$xx -a1 -e . -o 2.7 $srcdir/7a.I1 $srcdir/7a.I2 > 7a.O 2> 7a.E
+ $xx -a1 -e . -o 2.7 $srcdir/7a.I1 $srcdir/7a.I2 > 7a.O 2> 7a.E
 code=$?
 if test $code != 0; then
   $echo "Test 7a failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -594,7 +594,7 @@ else
   esac
 fi
 test -s 7a.E || rm -f 7a.E
-$xx -a1 -e . -o 0,1.2 $srcdir/8a.I1 $srcdir/8a.I2 > 8a.O 2> 8a.E
+ $xx -a1 -e . -o 0,1.2 $srcdir/8a.I1 $srcdir/8a.I2 > 8a.O 2> 8a.E
 code=$?
 if test $code != 0; then
   $echo "Test 8a failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -612,7 +612,7 @@ else
   esac
 fi
 test -s 8a.E || rm -f 8a.E
-$xx -a1 -a2 -e . -o 0,1.2 $srcdir/8b.I1 $srcdir/8b.I2 > 8b.O 2> 8b.E
+ $xx -a1 -a2 -e . -o 0,1.2 $srcdir/8b.I1 $srcdir/8b.I2 > 8b.O 2> 8b.E
 code=$?
 if test $code != 0; then
   $echo "Test 8b failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -630,7 +630,7 @@ else
   esac
 fi
 test -s 8b.E || rm -f 8b.E
-$xx  $srcdir/9a.I1 $srcdir/9a.I2 > 9a.O 2> 9a.E
+ $xx  $srcdir/9a.I1 $srcdir/9a.I2 > 9a.O 2> 9a.E
 code=$?
 if test $code != 0; then
   $echo "Test 9a failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -648,7 +648,7 @@ else
   esac
 fi
 test -s 9a.E || rm -f 9a.E
-$xx -t: -1 1 -2 1 $srcdir/trailing-sp.I1 $srcdir/trailing-sp.I2 > trailing-sp.O 2> trailing-sp.E
+ $xx -t: -1 1 -2 1 $srcdir/trailing-sp.I1 $srcdir/trailing-sp.I2 > trailing-sp.O 2> trailing-sp.E
 code=$?
 if test $code != 0; then
   $echo "Test trailing-sp failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -666,7 +666,7 @@ else
   esac
 fi
 test -s trailing-sp.E || rm -f trailing-sp.E
-$xx  $srcdir/sp-vs-blank.I1 $srcdir/sp-vs-blank.I2 > sp-vs-blank.O 2> sp-vs-blank.E
+ $xx  $srcdir/sp-vs-blank.I1 $srcdir/sp-vs-blank.I2 > sp-vs-blank.O 2> sp-vs-blank.E
 code=$?
 if test $code != 0; then
   $echo "Test sp-vs-blank failed: ../../src/join return code $code differs from expected value 0" 1>&2
@@ -684,7 +684,7 @@ else
   esac
 fi
 test -s sp-vs-blank.E || rm -f sp-vs-blank.E
-$xx -t§ $srcdir/8-bit-t.I1 $srcdir/8-bit-t.I2 > 8-bit-t.O 2> 8-bit-t.E
+ $xx -t§ $srcdir/8-bit-t.I1 $srcdir/8-bit-t.I2 > 8-bit-t.O 2> 8-bit-t.E
 code=$?
 if test $code != 0; then
   $echo "Test 8-bit-t failed: ../../src/join return code $code differs from expected value 0" 1>&2

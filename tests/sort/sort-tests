@@ -18,1999 +18,1999 @@ export LC_ALL
 LANG=C
 export LANG
 
-$xx -n $srcdir/n1.I > n1.O 2> n1.E
+_POSIX2_VERSION=199209 $xx -n $srcdir/n1.I > n1.O 2> n1.E
 code=$?
 if test $code != 0; then
-  $echo "Test n1 failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test n1(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp n1.O $srcdir/n1.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed n1"; fi;;
-    1) $echo "Test n1 failed: files n1.O and $srcdir/n1.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed n1(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test n1(_POSIX2_VERSION=199209) failed: files n1.O and $srcdir/n1.X differ" 1>&2
        (diff -c n1.O $srcdir/n1.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test n1 may have failed." 1>&2
+    2) $echo "Test n1(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp n1.O $srcdir/n1.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s n1.E || rm -f n1.E
-$xx -n $srcdir/n2.I > n2.O 2> n2.E
+_POSIX2_VERSION=199209 $xx -n $srcdir/n2.I > n2.O 2> n2.E
 code=$?
 if test $code != 0; then
-  $echo "Test n2 failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test n2(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp n2.O $srcdir/n2.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed n2"; fi;;
-    1) $echo "Test n2 failed: files n2.O and $srcdir/n2.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed n2(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test n2(_POSIX2_VERSION=199209) failed: files n2.O and $srcdir/n2.X differ" 1>&2
        (diff -c n2.O $srcdir/n2.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test n2 may have failed." 1>&2
+    2) $echo "Test n2(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp n2.O $srcdir/n2.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s n2.E || rm -f n2.E
-$xx -n $srcdir/n3.I > n3.O 2> n3.E
+_POSIX2_VERSION=199209 $xx -n $srcdir/n3.I > n3.O 2> n3.E
 code=$?
 if test $code != 0; then
-  $echo "Test n3 failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test n3(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp n3.O $srcdir/n3.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed n3"; fi;;
-    1) $echo "Test n3 failed: files n3.O and $srcdir/n3.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed n3(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test n3(_POSIX2_VERSION=199209) failed: files n3.O and $srcdir/n3.X differ" 1>&2
        (diff -c n3.O $srcdir/n3.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test n3 may have failed." 1>&2
+    2) $echo "Test n3(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp n3.O $srcdir/n3.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s n3.E || rm -f n3.E
-$xx -n $srcdir/n4.I > n4.O 2> n4.E
+_POSIX2_VERSION=199209 $xx -n $srcdir/n4.I > n4.O 2> n4.E
 code=$?
 if test $code != 0; then
-  $echo "Test n4 failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test n4(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp n4.O $srcdir/n4.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed n4"; fi;;
-    1) $echo "Test n4 failed: files n4.O and $srcdir/n4.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed n4(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test n4(_POSIX2_VERSION=199209) failed: files n4.O and $srcdir/n4.X differ" 1>&2
        (diff -c n4.O $srcdir/n4.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test n4 may have failed." 1>&2
+    2) $echo "Test n4(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp n4.O $srcdir/n4.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s n4.E || rm -f n4.E
-$xx -n $srcdir/n5.I > n5.O 2> n5.E
+_POSIX2_VERSION=199209 $xx -n $srcdir/n5.I > n5.O 2> n5.E
 code=$?
 if test $code != 0; then
-  $echo "Test n5 failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test n5(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp n5.O $srcdir/n5.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed n5"; fi;;
-    1) $echo "Test n5 failed: files n5.O and $srcdir/n5.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed n5(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test n5(_POSIX2_VERSION=199209) failed: files n5.O and $srcdir/n5.X differ" 1>&2
        (diff -c n5.O $srcdir/n5.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test n5 may have failed." 1>&2
+    2) $echo "Test n5(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp n5.O $srcdir/n5.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s n5.E || rm -f n5.E
-$xx -n $srcdir/n6.I > n6.O 2> n6.E
+_POSIX2_VERSION=199209 $xx -n $srcdir/n6.I > n6.O 2> n6.E
 code=$?
 if test $code != 0; then
-  $echo "Test n6 failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test n6(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp n6.O $srcdir/n6.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed n6"; fi;;
-    1) $echo "Test n6 failed: files n6.O and $srcdir/n6.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed n6(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test n6(_POSIX2_VERSION=199209) failed: files n6.O and $srcdir/n6.X differ" 1>&2
        (diff -c n6.O $srcdir/n6.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test n6 may have failed." 1>&2
+    2) $echo "Test n6(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp n6.O $srcdir/n6.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s n6.E || rm -f n6.E
-$xx -n $srcdir/n7.I > n7.O 2> n7.E
+_POSIX2_VERSION=199209 $xx -n $srcdir/n7.I > n7.O 2> n7.E
 code=$?
 if test $code != 0; then
-  $echo "Test n7 failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test n7(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp n7.O $srcdir/n7.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed n7"; fi;;
-    1) $echo "Test n7 failed: files n7.O and $srcdir/n7.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed n7(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test n7(_POSIX2_VERSION=199209) failed: files n7.O and $srcdir/n7.X differ" 1>&2
        (diff -c n7.O $srcdir/n7.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test n7 may have failed." 1>&2
+    2) $echo "Test n7(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp n7.O $srcdir/n7.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s n7.E || rm -f n7.E
-$xx -s -n -k1,1 $srcdir/n8a.I > n8a.O 2> n8a.E
+_POSIX2_VERSION=199209 $xx -s -n -k1,1 $srcdir/n8a.I > n8a.O 2> n8a.E
 code=$?
 if test $code != 0; then
-  $echo "Test n8a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test n8a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp n8a.O $srcdir/n8a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed n8a"; fi;;
-    1) $echo "Test n8a failed: files n8a.O and $srcdir/n8a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed n8a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test n8a(_POSIX2_VERSION=199209) failed: files n8a.O and $srcdir/n8a.X differ" 1>&2
        (diff -c n8a.O $srcdir/n8a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test n8a may have failed." 1>&2
+    2) $echo "Test n8a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp n8a.O $srcdir/n8a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s n8a.E || rm -f n8a.E
-$xx -s -n -k1,1 $srcdir/n8b.I > n8b.O 2> n8b.E
+_POSIX2_VERSION=199209 $xx -s -n -k1,1 $srcdir/n8b.I > n8b.O 2> n8b.E
 code=$?
 if test $code != 0; then
-  $echo "Test n8b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test n8b(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp n8b.O $srcdir/n8b.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed n8b"; fi;;
-    1) $echo "Test n8b failed: files n8b.O and $srcdir/n8b.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed n8b(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test n8b(_POSIX2_VERSION=199209) failed: files n8b.O and $srcdir/n8b.X differ" 1>&2
        (diff -c n8b.O $srcdir/n8b.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test n8b may have failed." 1>&2
+    2) $echo "Test n8b(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp n8b.O $srcdir/n8b.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s n8b.E || rm -f n8b.E
-$xx -s -n -k1,1 $srcdir/n9a.I > n9a.O 2> n9a.E
+_POSIX2_VERSION=199209 $xx -s -n -k1,1 $srcdir/n9a.I > n9a.O 2> n9a.E
 code=$?
 if test $code != 0; then
-  $echo "Test n9a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test n9a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp n9a.O $srcdir/n9a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed n9a"; fi;;
-    1) $echo "Test n9a failed: files n9a.O and $srcdir/n9a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed n9a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test n9a(_POSIX2_VERSION=199209) failed: files n9a.O and $srcdir/n9a.X differ" 1>&2
        (diff -c n9a.O $srcdir/n9a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test n9a may have failed." 1>&2
+    2) $echo "Test n9a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp n9a.O $srcdir/n9a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s n9a.E || rm -f n9a.E
-$xx -s -n -k1,1 $srcdir/n9b.I > n9b.O 2> n9b.E
+_POSIX2_VERSION=199209 $xx -s -n -k1,1 $srcdir/n9b.I > n9b.O 2> n9b.E
 code=$?
 if test $code != 0; then
-  $echo "Test n9b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test n9b(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp n9b.O $srcdir/n9b.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed n9b"; fi;;
-    1) $echo "Test n9b failed: files n9b.O and $srcdir/n9b.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed n9b(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test n9b(_POSIX2_VERSION=199209) failed: files n9b.O and $srcdir/n9b.X differ" 1>&2
        (diff -c n9b.O $srcdir/n9b.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test n9b may have failed." 1>&2
+    2) $echo "Test n9b(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp n9b.O $srcdir/n9b.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s n9b.E || rm -f n9b.E
-$xx -s -n -k1,1 $srcdir/n10a.I > n10a.O 2> n10a.E
+_POSIX2_VERSION=199209 $xx -s -n -k1,1 $srcdir/n10a.I > n10a.O 2> n10a.E
 code=$?
 if test $code != 0; then
-  $echo "Test n10a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test n10a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp n10a.O $srcdir/n10a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed n10a"; fi;;
-    1) $echo "Test n10a failed: files n10a.O and $srcdir/n10a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed n10a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test n10a(_POSIX2_VERSION=199209) failed: files n10a.O and $srcdir/n10a.X differ" 1>&2
        (diff -c n10a.O $srcdir/n10a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test n10a may have failed." 1>&2
+    2) $echo "Test n10a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp n10a.O $srcdir/n10a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s n10a.E || rm -f n10a.E
-$xx -s -n -k1,1 $srcdir/n10b.I > n10b.O 2> n10b.E
+_POSIX2_VERSION=199209 $xx -s -n -k1,1 $srcdir/n10b.I > n10b.O 2> n10b.E
 code=$?
 if test $code != 0; then
-  $echo "Test n10b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test n10b(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp n10b.O $srcdir/n10b.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed n10b"; fi;;
-    1) $echo "Test n10b failed: files n10b.O and $srcdir/n10b.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed n10b(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test n10b(_POSIX2_VERSION=199209) failed: files n10b.O and $srcdir/n10b.X differ" 1>&2
        (diff -c n10b.O $srcdir/n10b.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test n10b may have failed." 1>&2
+    2) $echo "Test n10b(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp n10b.O $srcdir/n10b.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s n10b.E || rm -f n10b.E
-$xx -s -n -k1,1 $srcdir/n11a.I > n11a.O 2> n11a.E
+_POSIX2_VERSION=199209 $xx -s -n -k1,1 $srcdir/n11a.I > n11a.O 2> n11a.E
 code=$?
 if test $code != 0; then
-  $echo "Test n11a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test n11a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp n11a.O $srcdir/n11a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed n11a"; fi;;
-    1) $echo "Test n11a failed: files n11a.O and $srcdir/n11a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed n11a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test n11a(_POSIX2_VERSION=199209) failed: files n11a.O and $srcdir/n11a.X differ" 1>&2
        (diff -c n11a.O $srcdir/n11a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test n11a may have failed." 1>&2
+    2) $echo "Test n11a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp n11a.O $srcdir/n11a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s n11a.E || rm -f n11a.E
-$xx -s -n -k1,1 $srcdir/n11b.I > n11b.O 2> n11b.E
+_POSIX2_VERSION=199209 $xx -s -n -k1,1 $srcdir/n11b.I > n11b.O 2> n11b.E
 code=$?
 if test $code != 0; then
-  $echo "Test n11b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test n11b(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp n11b.O $srcdir/n11b.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed n11b"; fi;;
-    1) $echo "Test n11b failed: files n11b.O and $srcdir/n11b.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed n11b(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test n11b(_POSIX2_VERSION=199209) failed: files n11b.O and $srcdir/n11b.X differ" 1>&2
        (diff -c n11b.O $srcdir/n11b.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test n11b may have failed." 1>&2
+    2) $echo "Test n11b(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp n11b.O $srcdir/n11b.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s n11b.E || rm -f n11b.E
-$xx  $srcdir/01a.I > 01a.O 2> 01a.E
+_POSIX2_VERSION=199209 $xx  $srcdir/01a.I > 01a.O 2> 01a.E
 code=$?
 if test $code != 0; then
-  $echo "Test 01a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 01a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 01a.O $srcdir/01a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 01a"; fi;;
-    1) $echo "Test 01a failed: files 01a.O and $srcdir/01a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 01a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 01a(_POSIX2_VERSION=199209) failed: files 01a.O and $srcdir/01a.X differ" 1>&2
        (diff -c 01a.O $srcdir/01a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 01a may have failed." 1>&2
+    2) $echo "Test 01a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 01a.O $srcdir/01a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 01a.E || rm -f 01a.E
-$xx -c $srcdir/02a.I > 02a.O 2> 02a.E
+_POSIX2_VERSION=199209 $xx -c $srcdir/02a.I > 02a.O 2> 02a.E
 code=$?
 if test $code != 0; then
-  $echo "Test 02a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 02a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 02a.O $srcdir/02a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 02a"; fi;;
-    1) $echo "Test 02a failed: files 02a.O and $srcdir/02a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 02a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 02a(_POSIX2_VERSION=199209) failed: files 02a.O and $srcdir/02a.X differ" 1>&2
        (diff -c 02a.O $srcdir/02a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 02a may have failed." 1>&2
+    2) $echo "Test 02a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 02a.O $srcdir/02a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 02a.E || rm -f 02a.E
-$xx -c $srcdir/02b.I > 02b.O 2> 02b.E
+_POSIX2_VERSION=199209 $xx -c $srcdir/02b.I > 02b.O 2> 02b.E
 code=$?
 if test $code != 1; then
-  $echo "Test 02b failed: ../../src/sort return code $code differs from expected value 1" 1>&2
+  $echo "Test 02b(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 02b.O $srcdir/02b.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 02b"; fi;;
-    1) $echo "Test 02b failed: files 02b.O and $srcdir/02b.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 02b(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 02b(_POSIX2_VERSION=199209) failed: files 02b.O and $srcdir/02b.X differ" 1>&2
        (diff -c 02b.O $srcdir/02b.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 02b may have failed." 1>&2
+    2) $echo "Test 02b(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 02b.O $srcdir/02b.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 02b.E || rm -f 02b.E
-$xx -c -k1,1 $srcdir/02c.I > 02c.O 2> 02c.E
+_POSIX2_VERSION=199209 $xx -c -k1,1 $srcdir/02c.I > 02c.O 2> 02c.E
 code=$?
 if test $code != 0; then
-  $echo "Test 02c failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 02c(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 02c.O $srcdir/02c.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 02c"; fi;;
-    1) $echo "Test 02c failed: files 02c.O and $srcdir/02c.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 02c(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 02c(_POSIX2_VERSION=199209) failed: files 02c.O and $srcdir/02c.X differ" 1>&2
        (diff -c 02c.O $srcdir/02c.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 02c may have failed." 1>&2
+    2) $echo "Test 02c(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 02c.O $srcdir/02c.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 02c.E || rm -f 02c.E
-$xx -cu $srcdir/02m.I > 02m.O 2> 02m.E
+_POSIX2_VERSION=199209 $xx -cu $srcdir/02m.I > 02m.O 2> 02m.E
 code=$?
 if test $code != 1; then
-  $echo "Test 02m failed: ../../src/sort return code $code differs from expected value 1" 1>&2
+  $echo "Test 02m(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 02m.O $srcdir/02m.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 02m"; fi;;
-    1) $echo "Test 02m failed: files 02m.O and $srcdir/02m.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 02m(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 02m(_POSIX2_VERSION=199209) failed: files 02m.O and $srcdir/02m.X differ" 1>&2
        (diff -c 02m.O $srcdir/02m.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 02m may have failed." 1>&2
+    2) $echo "Test 02m(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 02m.O $srcdir/02m.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 02m.E || rm -f 02m.E
-$xx -cu $srcdir/02n.I > 02n.O 2> 02n.E
+_POSIX2_VERSION=199209 $xx -cu $srcdir/02n.I > 02n.O 2> 02n.E
 code=$?
 if test $code != 0; then
-  $echo "Test 02n failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 02n(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 02n.O $srcdir/02n.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 02n"; fi;;
-    1) $echo "Test 02n failed: files 02n.O and $srcdir/02n.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 02n(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 02n(_POSIX2_VERSION=199209) failed: files 02n.O and $srcdir/02n.X differ" 1>&2
        (diff -c 02n.O $srcdir/02n.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 02n may have failed." 1>&2
+    2) $echo "Test 02n(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 02n.O $srcdir/02n.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 02n.E || rm -f 02n.E
-$xx -cu $srcdir/02o.I > 02o.O 2> 02o.E
+_POSIX2_VERSION=199209 $xx -cu $srcdir/02o.I > 02o.O 2> 02o.E
 code=$?
 if test $code != 1; then
-  $echo "Test 02o failed: ../../src/sort return code $code differs from expected value 1" 1>&2
+  $echo "Test 02o(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 02o.O $srcdir/02o.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 02o"; fi;;
-    1) $echo "Test 02o failed: files 02o.O and $srcdir/02o.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 02o(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 02o(_POSIX2_VERSION=199209) failed: files 02o.O and $srcdir/02o.X differ" 1>&2
        (diff -c 02o.O $srcdir/02o.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 02o may have failed." 1>&2
+    2) $echo "Test 02o(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 02o.O $srcdir/02o.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 02o.E || rm -f 02o.E
-$xx -cu $srcdir/02p.I > 02p.O 2> 02p.E
+_POSIX2_VERSION=199209 $xx -cu $srcdir/02p.I > 02p.O 2> 02p.E
 code=$?
 if test $code != 1; then
-  $echo "Test 02p failed: ../../src/sort return code $code differs from expected value 1" 1>&2
+  $echo "Test 02p(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 1" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 02p.O $srcdir/02p.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 02p"; fi;;
-    1) $echo "Test 02p failed: files 02p.O and $srcdir/02p.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 02p(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 02p(_POSIX2_VERSION=199209) failed: files 02p.O and $srcdir/02p.X differ" 1>&2
        (diff -c 02p.O $srcdir/02p.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 02p may have failed." 1>&2
+    2) $echo "Test 02p(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 02p.O $srcdir/02p.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 02p.E || rm -f 02p.E
-$xx -k1 $srcdir/03a.I > 03a.O 2> 03a.E
+_POSIX2_VERSION=199209 $xx -k1 $srcdir/03a.I > 03a.O 2> 03a.E
 code=$?
 if test $code != 0; then
-  $echo "Test 03a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 03a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 03a.O $srcdir/03a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 03a"; fi;;
-    1) $echo "Test 03a failed: files 03a.O and $srcdir/03a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 03a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 03a(_POSIX2_VERSION=199209) failed: files 03a.O and $srcdir/03a.X differ" 1>&2
        (diff -c 03a.O $srcdir/03a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 03a may have failed." 1>&2
+    2) $echo "Test 03a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 03a.O $srcdir/03a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 03a.E || rm -f 03a.E
-$xx -k1,1 $srcdir/03b.I > 03b.O 2> 03b.E
+_POSIX2_VERSION=199209 $xx -k1,1 $srcdir/03b.I > 03b.O 2> 03b.E
 code=$?
 if test $code != 0; then
-  $echo "Test 03b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 03b(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 03b.O $srcdir/03b.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 03b"; fi;;
-    1) $echo "Test 03b failed: files 03b.O and $srcdir/03b.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 03b(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 03b(_POSIX2_VERSION=199209) failed: files 03b.O and $srcdir/03b.X differ" 1>&2
        (diff -c 03b.O $srcdir/03b.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 03b may have failed." 1>&2
+    2) $echo "Test 03b(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 03b.O $srcdir/03b.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 03b.E || rm -f 03b.E
-$xx -k1 -k2 $srcdir/03c.I > 03c.O 2> 03c.E
+_POSIX2_VERSION=199209 $xx -k1 -k2 $srcdir/03c.I > 03c.O 2> 03c.E
 code=$?
 if test $code != 0; then
-  $echo "Test 03c failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 03c(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 03c.O $srcdir/03c.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 03c"; fi;;
-    1) $echo "Test 03c failed: files 03c.O and $srcdir/03c.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 03c(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 03c(_POSIX2_VERSION=199209) failed: files 03c.O and $srcdir/03c.X differ" 1>&2
        (diff -c 03c.O $srcdir/03c.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 03c may have failed." 1>&2
+    2) $echo "Test 03c(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 03c.O $srcdir/03c.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 03c.E || rm -f 03c.E
-$xx -k0 $srcdir/03d.I > 03d.O 2> 03d.E
+_POSIX2_VERSION=199209 $xx -k0 $srcdir/03d.I > 03d.O 2> 03d.E
 code=$?
 if test $code != 2; then
-  $echo "Test 03d failed: ../../src/sort return code $code differs from expected value 2" 1>&2
+  $echo "Test 03d(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 2" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 03d.O $srcdir/03d.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 03d"; fi;;
-    1) $echo "Test 03d failed: files 03d.O and $srcdir/03d.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 03d(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 03d(_POSIX2_VERSION=199209) failed: files 03d.O and $srcdir/03d.X differ" 1>&2
        (diff -c 03d.O $srcdir/03d.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 03d may have failed." 1>&2
+    2) $echo "Test 03d(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 03d.O $srcdir/03d.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 03d.E || rm -f 03d.E
-$xx -k1.0 $srcdir/03e.I > 03e.O 2> 03e.E
+_POSIX2_VERSION=199209 $xx -k1.0 $srcdir/03e.I > 03e.O 2> 03e.E
 code=$?
 if test $code != 2; then
-  $echo "Test 03e failed: ../../src/sort return code $code differs from expected value 2" 1>&2
+  $echo "Test 03e(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 2" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 03e.O $srcdir/03e.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 03e"; fi;;
-    1) $echo "Test 03e failed: files 03e.O and $srcdir/03e.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 03e(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 03e(_POSIX2_VERSION=199209) failed: files 03e.O and $srcdir/03e.X differ" 1>&2
        (diff -c 03e.O $srcdir/03e.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 03e may have failed." 1>&2
+    2) $echo "Test 03e(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 03e.O $srcdir/03e.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 03e.E || rm -f 03e.E
-$xx -k1.1,-k0 $srcdir/03f.I > 03f.O 2> 03f.E
+_POSIX2_VERSION=199209 $xx -k1.1,-k0 $srcdir/03f.I > 03f.O 2> 03f.E
 code=$?
 if test $code != 2; then
-  $echo "Test 03f failed: ../../src/sort return code $code differs from expected value 2" 1>&2
+  $echo "Test 03f(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 2" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 03f.O $srcdir/03f.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 03f"; fi;;
-    1) $echo "Test 03f failed: files 03f.O and $srcdir/03f.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 03f(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 03f(_POSIX2_VERSION=199209) failed: files 03f.O and $srcdir/03f.X differ" 1>&2
        (diff -c 03f.O $srcdir/03f.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 03f may have failed." 1>&2
+    2) $echo "Test 03f(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 03f.O $srcdir/03f.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 03f.E || rm -f 03f.E
-$xx -k1.1,1.0 $srcdir/03g.I > 03g.O 2> 03g.E
+_POSIX2_VERSION=199209 $xx -k1.1,1.0 $srcdir/03g.I > 03g.O 2> 03g.E
 code=$?
 if test $code != 0; then
-  $echo "Test 03g failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 03g(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 03g.O $srcdir/03g.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 03g"; fi;;
-    1) $echo "Test 03g failed: files 03g.O and $srcdir/03g.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 03g(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 03g(_POSIX2_VERSION=199209) failed: files 03g.O and $srcdir/03g.X differ" 1>&2
        (diff -c 03g.O $srcdir/03g.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 03g may have failed." 1>&2
+    2) $echo "Test 03g(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 03g.O $srcdir/03g.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 03g.E || rm -f 03g.E
-$xx -k1.1,1 $srcdir/03h.I > 03h.O 2> 03h.E
+_POSIX2_VERSION=199209 $xx -k1.1,1 $srcdir/03h.I > 03h.O 2> 03h.E
 code=$?
 if test $code != 0; then
-  $echo "Test 03h failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 03h(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 03h.O $srcdir/03h.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 03h"; fi;;
-    1) $echo "Test 03h failed: files 03h.O and $srcdir/03h.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 03h(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 03h(_POSIX2_VERSION=199209) failed: files 03h.O and $srcdir/03h.X differ" 1>&2
        (diff -c 03h.O $srcdir/03h.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 03h may have failed." 1>&2
+    2) $echo "Test 03h(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 03h.O $srcdir/03h.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 03h.E || rm -f 03h.E
-$xx -k1,1 $srcdir/03i.I > 03i.O 2> 03i.E
+_POSIX2_VERSION=199209 $xx -k1,1 $srcdir/03i.I > 03i.O 2> 03i.E
 code=$?
 if test $code != 0; then
-  $echo "Test 03i failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 03i(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 03i.O $srcdir/03i.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 03i"; fi;;
-    1) $echo "Test 03i failed: files 03i.O and $srcdir/03i.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 03i(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 03i(_POSIX2_VERSION=199209) failed: files 03i.O and $srcdir/03i.X differ" 1>&2
        (diff -c 03i.O $srcdir/03i.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 03i may have failed." 1>&2
+    2) $echo "Test 03i(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 03i.O $srcdir/03i.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 03i.E || rm -f 03i.E
-$xx -nc $srcdir/04a.I > 04a.O 2> 04a.E
+_POSIX2_VERSION=199209 $xx -nc $srcdir/04a.I > 04a.O 2> 04a.E
 code=$?
 if test $code != 0; then
-  $echo "Test 04a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 04a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 04a.O $srcdir/04a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 04a"; fi;;
-    1) $echo "Test 04a failed: files 04a.O and $srcdir/04a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 04a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 04a(_POSIX2_VERSION=199209) failed: files 04a.O and $srcdir/04a.X differ" 1>&2
        (diff -c 04a.O $srcdir/04a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 04a may have failed." 1>&2
+    2) $echo "Test 04a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 04a.O $srcdir/04a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 04a.E || rm -f 04a.E
-$xx -n $srcdir/04b.I > 04b.O 2> 04b.E
+_POSIX2_VERSION=199209 $xx -n $srcdir/04b.I > 04b.O 2> 04b.E
 code=$?
 if test $code != 0; then
-  $echo "Test 04b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 04b(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 04b.O $srcdir/04b.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 04b"; fi;;
-    1) $echo "Test 04b failed: files 04b.O and $srcdir/04b.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 04b(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 04b(_POSIX2_VERSION=199209) failed: files 04b.O and $srcdir/04b.X differ" 1>&2
        (diff -c 04b.O $srcdir/04b.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 04b may have failed." 1>&2
+    2) $echo "Test 04b(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 04b.O $srcdir/04b.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 04b.E || rm -f 04b.E
-$xx -k1n $srcdir/04c.I > 04c.O 2> 04c.E
+_POSIX2_VERSION=199209 $xx -k1n $srcdir/04c.I > 04c.O 2> 04c.E
 code=$?
 if test $code != 0; then
-  $echo "Test 04c failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 04c(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 04c.O $srcdir/04c.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 04c"; fi;;
-    1) $echo "Test 04c failed: files 04c.O and $srcdir/04c.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 04c(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 04c(_POSIX2_VERSION=199209) failed: files 04c.O and $srcdir/04c.X differ" 1>&2
        (diff -c 04c.O $srcdir/04c.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 04c may have failed." 1>&2
+    2) $echo "Test 04c(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 04c.O $srcdir/04c.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 04c.E || rm -f 04c.E
-$xx -k1 $srcdir/04d.I > 04d.O 2> 04d.E
+_POSIX2_VERSION=199209 $xx -k1 $srcdir/04d.I > 04d.O 2> 04d.E
 code=$?
 if test $code != 0; then
-  $echo "Test 04d failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 04d(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 04d.O $srcdir/04d.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 04d"; fi;;
-    1) $echo "Test 04d failed: files 04d.O and $srcdir/04d.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 04d(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 04d(_POSIX2_VERSION=199209) failed: files 04d.O and $srcdir/04d.X differ" 1>&2
        (diff -c 04d.O $srcdir/04d.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 04d may have failed." 1>&2
+    2) $echo "Test 04d(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 04d.O $srcdir/04d.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 04d.E || rm -f 04d.E
-$xx -k2 $srcdir/04e.I > 04e.O 2> 04e.E
+_POSIX2_VERSION=199209 $xx -k2 $srcdir/04e.I > 04e.O 2> 04e.E
 code=$?
 if test $code != 0; then
-  $echo "Test 04e failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 04e(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 04e.O $srcdir/04e.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 04e"; fi;;
-    1) $echo "Test 04e failed: files 04e.O and $srcdir/04e.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 04e(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 04e(_POSIX2_VERSION=199209) failed: files 04e.O and $srcdir/04e.X differ" 1>&2
        (diff -c 04e.O $srcdir/04e.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 04e may have failed." 1>&2
+    2) $echo "Test 04e(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 04e.O $srcdir/04e.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 04e.E || rm -f 04e.E
-$xx -k1,2 $srcdir/05a.I > 05a.O 2> 05a.E
+_POSIX2_VERSION=199209 $xx -k1,2 $srcdir/05a.I > 05a.O 2> 05a.E
 code=$?
 if test $code != 0; then
-  $echo "Test 05a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 05a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 05a.O $srcdir/05a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 05a"; fi;;
-    1) $echo "Test 05a failed: files 05a.O and $srcdir/05a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 05a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 05a(_POSIX2_VERSION=199209) failed: files 05a.O and $srcdir/05a.X differ" 1>&2
        (diff -c 05a.O $srcdir/05a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 05a may have failed." 1>&2
+    2) $echo "Test 05a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 05a.O $srcdir/05a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 05a.E || rm -f 05a.E
-$xx -k1,2 $srcdir/05b.I > 05b.O 2> 05b.E
+_POSIX2_VERSION=199209 $xx -k1,2 $srcdir/05b.I > 05b.O 2> 05b.E
 code=$?
 if test $code != 0; then
-  $echo "Test 05b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 05b(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 05b.O $srcdir/05b.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 05b"; fi;;
-    1) $echo "Test 05b failed: files 05b.O and $srcdir/05b.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 05b(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 05b(_POSIX2_VERSION=199209) failed: files 05b.O and $srcdir/05b.X differ" 1>&2
        (diff -c 05b.O $srcdir/05b.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 05b may have failed." 1>&2
+    2) $echo "Test 05b(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 05b.O $srcdir/05b.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 05b.E || rm -f 05b.E
-$xx -k1 -k2 $srcdir/05c.I > 05c.O 2> 05c.E
+_POSIX2_VERSION=199209 $xx -k1 -k2 $srcdir/05c.I > 05c.O 2> 05c.E
 code=$?
 if test $code != 0; then
-  $echo "Test 05c failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 05c(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 05c.O $srcdir/05c.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 05c"; fi;;
-    1) $echo "Test 05c failed: files 05c.O and $srcdir/05c.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 05c(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 05c(_POSIX2_VERSION=199209) failed: files 05c.O and $srcdir/05c.X differ" 1>&2
        (diff -c 05c.O $srcdir/05c.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 05c may have failed." 1>&2
+    2) $echo "Test 05c(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 05c.O $srcdir/05c.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 05c.E || rm -f 05c.E
-$xx -k2,2 $srcdir/05d.I > 05d.O 2> 05d.E
+_POSIX2_VERSION=199209 $xx -k2,2 $srcdir/05d.I > 05d.O 2> 05d.E
 code=$?
 if test $code != 0; then
-  $echo "Test 05d failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 05d(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 05d.O $srcdir/05d.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 05d"; fi;;
-    1) $echo "Test 05d failed: files 05d.O and $srcdir/05d.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 05d(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 05d(_POSIX2_VERSION=199209) failed: files 05d.O and $srcdir/05d.X differ" 1>&2
        (diff -c 05d.O $srcdir/05d.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 05d may have failed." 1>&2
+    2) $echo "Test 05d(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 05d.O $srcdir/05d.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 05d.E || rm -f 05d.E
-$xx -k2,2 $srcdir/05e.I > 05e.O 2> 05e.E
+_POSIX2_VERSION=199209 $xx -k2,2 $srcdir/05e.I > 05e.O 2> 05e.E
 code=$?
 if test $code != 0; then
-  $echo "Test 05e failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 05e(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 05e.O $srcdir/05e.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 05e"; fi;;
-    1) $echo "Test 05e failed: files 05e.O and $srcdir/05e.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 05e(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 05e(_POSIX2_VERSION=199209) failed: files 05e.O and $srcdir/05e.X differ" 1>&2
        (diff -c 05e.O $srcdir/05e.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 05e may have failed." 1>&2
+    2) $echo "Test 05e(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 05e.O $srcdir/05e.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 05e.E || rm -f 05e.E
-$xx -k2,2 $srcdir/05f.I > 05f.O 2> 05f.E
+_POSIX2_VERSION=199209 $xx -k2,2 $srcdir/05f.I > 05f.O 2> 05f.E
 code=$?
 if test $code != 0; then
-  $echo "Test 05f failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 05f(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 05f.O $srcdir/05f.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 05f"; fi;;
-    1) $echo "Test 05f failed: files 05f.O and $srcdir/05f.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 05f(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 05f(_POSIX2_VERSION=199209) failed: files 05f.O and $srcdir/05f.X differ" 1>&2
        (diff -c 05f.O $srcdir/05f.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 05f may have failed." 1>&2
+    2) $echo "Test 05f(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 05f.O $srcdir/05f.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 05f.E || rm -f 05f.E
-$xx -k 1,2 $srcdir/06a.I > 06a.O 2> 06a.E
+_POSIX2_VERSION=199209 $xx -k 1,2 $srcdir/06a.I > 06a.O 2> 06a.E
 code=$?
 if test $code != 0; then
-  $echo "Test 06a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 06a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 06a.O $srcdir/06a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 06a"; fi;;
-    1) $echo "Test 06a failed: files 06a.O and $srcdir/06a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 06a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 06a(_POSIX2_VERSION=199209) failed: files 06a.O and $srcdir/06a.X differ" 1>&2
        (diff -c 06a.O $srcdir/06a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 06a may have failed." 1>&2
+    2) $echo "Test 06a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 06a.O $srcdir/06a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 06a.E || rm -f 06a.E
-$xx -k 1,2 $srcdir/06b.I > 06b.O 2> 06b.E
+_POSIX2_VERSION=199209 $xx -k 1,2 $srcdir/06b.I > 06b.O 2> 06b.E
 code=$?
 if test $code != 0; then
-  $echo "Test 06b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 06b(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 06b.O $srcdir/06b.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 06b"; fi;;
-    1) $echo "Test 06b failed: files 06b.O and $srcdir/06b.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 06b(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 06b(_POSIX2_VERSION=199209) failed: files 06b.O and $srcdir/06b.X differ" 1>&2
        (diff -c 06b.O $srcdir/06b.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 06b may have failed." 1>&2
+    2) $echo "Test 06b(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 06b.O $srcdir/06b.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 06b.E || rm -f 06b.E
-$xx -k 1 -k 2 $srcdir/06c.I > 06c.O 2> 06c.E
+_POSIX2_VERSION=199209 $xx -k 1 -k 2 $srcdir/06c.I > 06c.O 2> 06c.E
 code=$?
 if test $code != 0; then
-  $echo "Test 06c failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 06c(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 06c.O $srcdir/06c.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 06c"; fi;;
-    1) $echo "Test 06c failed: files 06c.O and $srcdir/06c.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 06c(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 06c(_POSIX2_VERSION=199209) failed: files 06c.O and $srcdir/06c.X differ" 1>&2
        (diff -c 06c.O $srcdir/06c.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 06c may have failed." 1>&2
+    2) $echo "Test 06c(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 06c.O $srcdir/06c.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 06c.E || rm -f 06c.E
-$xx -k 2,2 $srcdir/06d.I > 06d.O 2> 06d.E
+_POSIX2_VERSION=199209 $xx -k 2,2 $srcdir/06d.I > 06d.O 2> 06d.E
 code=$?
 if test $code != 0; then
-  $echo "Test 06d failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 06d(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 06d.O $srcdir/06d.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 06d"; fi;;
-    1) $echo "Test 06d failed: files 06d.O and $srcdir/06d.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 06d(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 06d(_POSIX2_VERSION=199209) failed: files 06d.O and $srcdir/06d.X differ" 1>&2
        (diff -c 06d.O $srcdir/06d.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 06d may have failed." 1>&2
+    2) $echo "Test 06d(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 06d.O $srcdir/06d.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 06d.E || rm -f 06d.E
-$xx -k 2,2 $srcdir/06e.I > 06e.O 2> 06e.E
+_POSIX2_VERSION=199209 $xx -k 2,2 $srcdir/06e.I > 06e.O 2> 06e.E
 code=$?
 if test $code != 0; then
-  $echo "Test 06e failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 06e(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 06e.O $srcdir/06e.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 06e"; fi;;
-    1) $echo "Test 06e failed: files 06e.O and $srcdir/06e.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 06e(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 06e(_POSIX2_VERSION=199209) failed: files 06e.O and $srcdir/06e.X differ" 1>&2
        (diff -c 06e.O $srcdir/06e.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 06e may have failed." 1>&2
+    2) $echo "Test 06e(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 06e.O $srcdir/06e.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 06e.E || rm -f 06e.E
-$xx -k 2,2 $srcdir/06f.I > 06f.O 2> 06f.E
+_POSIX2_VERSION=199209 $xx -k 2,2 $srcdir/06f.I > 06f.O 2> 06f.E
 code=$?
 if test $code != 0; then
-  $echo "Test 06f failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 06f(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 06f.O $srcdir/06f.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 06f"; fi;;
-    1) $echo "Test 06f failed: files 06f.O and $srcdir/06f.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 06f(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 06f(_POSIX2_VERSION=199209) failed: files 06f.O and $srcdir/06f.X differ" 1>&2
        (diff -c 06f.O $srcdir/06f.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 06f may have failed." 1>&2
+    2) $echo "Test 06f(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 06f.O $srcdir/06f.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 06f.E || rm -f 06f.E
-$xx -k 2,3 $srcdir/07a.I > 07a.O 2> 07a.E
+_POSIX2_VERSION=199209 $xx -k 2,3 $srcdir/07a.I > 07a.O 2> 07a.E
 code=$?
 if test $code != 0; then
-  $echo "Test 07a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 07a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 07a.O $srcdir/07a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 07a"; fi;;
-    1) $echo "Test 07a failed: files 07a.O and $srcdir/07a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 07a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 07a(_POSIX2_VERSION=199209) failed: files 07a.O and $srcdir/07a.X differ" 1>&2
        (diff -c 07a.O $srcdir/07a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 07a may have failed." 1>&2
+    2) $echo "Test 07a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 07a.O $srcdir/07a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 07a.E || rm -f 07a.E
-$xx -k 2,3 $srcdir/07b.I > 07b.O 2> 07b.E
+_POSIX2_VERSION=199209 $xx -k 2,3 $srcdir/07b.I > 07b.O 2> 07b.E
 code=$?
 if test $code != 0; then
-  $echo "Test 07b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 07b(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 07b.O $srcdir/07b.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 07b"; fi;;
-    1) $echo "Test 07b failed: files 07b.O and $srcdir/07b.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 07b(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 07b(_POSIX2_VERSION=199209) failed: files 07b.O and $srcdir/07b.X differ" 1>&2
        (diff -c 07b.O $srcdir/07b.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 07b may have failed." 1>&2
+    2) $echo "Test 07b(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 07b.O $srcdir/07b.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 07b.E || rm -f 07b.E
-$xx -k 2,3 $srcdir/07c.I > 07c.O 2> 07c.E
+_POSIX2_VERSION=199209 $xx -k 2,3 $srcdir/07c.I > 07c.O 2> 07c.E
 code=$?
 if test $code != 0; then
-  $echo "Test 07c failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 07c(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 07c.O $srcdir/07c.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 07c"; fi;;
-    1) $echo "Test 07c failed: files 07c.O and $srcdir/07c.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 07c(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 07c(_POSIX2_VERSION=199209) failed: files 07c.O and $srcdir/07c.X differ" 1>&2
        (diff -c 07c.O $srcdir/07c.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 07c may have failed." 1>&2
+    2) $echo "Test 07c(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 07c.O $srcdir/07c.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 07c.E || rm -f 07c.E
-$xx +1 -3 $srcdir/07d.I > 07d.O 2> 07d.E
+_POSIX2_VERSION=199209 $xx +1 -3 $srcdir/07d.I > 07d.O 2> 07d.E
 code=$?
 if test $code != 0; then
-  $echo "Test 07d failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 07d(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 07d.O $srcdir/07d.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 07d"; fi;;
-    1) $echo "Test 07d failed: files 07d.O and $srcdir/07d.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 07d(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 07d(_POSIX2_VERSION=199209) failed: files 07d.O and $srcdir/07d.X differ" 1>&2
        (diff -c 07d.O $srcdir/07d.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 07d may have failed." 1>&2
+    2) $echo "Test 07d(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 07d.O $srcdir/07d.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 07d.E || rm -f 07d.E
-$xx -k 2.,3 $srcdir/08a.I > 08a.O 2> 08a.E
+_POSIX2_VERSION=199209 $xx -k 2.,3 $srcdir/08a.I > 08a.O 2> 08a.E
 code=$?
 if test $code != 2; then
-  $echo "Test 08a failed: ../../src/sort return code $code differs from expected value 2" 1>&2
+  $echo "Test 08a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 2" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 08a.O $srcdir/08a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 08a"; fi;;
-    1) $echo "Test 08a failed: files 08a.O and $srcdir/08a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 08a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 08a(_POSIX2_VERSION=199209) failed: files 08a.O and $srcdir/08a.X differ" 1>&2
        (diff -c 08a.O $srcdir/08a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 08a may have failed." 1>&2
+    2) $echo "Test 08a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 08a.O $srcdir/08a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 08a.E || rm -f 08a.E
-$xx -k 2, $srcdir/08b.I > 08b.O 2> 08b.E
+_POSIX2_VERSION=199209 $xx -k 2, $srcdir/08b.I > 08b.O 2> 08b.E
 code=$?
 if test $code != 2; then
-  $echo "Test 08b failed: ../../src/sort return code $code differs from expected value 2" 1>&2
+  $echo "Test 08b(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 2" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 08b.O $srcdir/08b.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 08b"; fi;;
-    1) $echo "Test 08b failed: files 08b.O and $srcdir/08b.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 08b(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 08b(_POSIX2_VERSION=199209) failed: files 08b.O and $srcdir/08b.X differ" 1>&2
        (diff -c 08b.O $srcdir/08b.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 08b may have failed." 1>&2
+    2) $echo "Test 08b(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 08b.O $srcdir/08b.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 08b.E || rm -f 08b.E
-$xx -g $srcdir/09a.I > 09a.O 2> 09a.E
+_POSIX2_VERSION=199209 $xx -g $srcdir/09a.I > 09a.O 2> 09a.E
 code=$?
 if test $code != 0; then
-  $echo "Test 09a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 09a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 09a.O $srcdir/09a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 09a"; fi;;
-    1) $echo "Test 09a failed: files 09a.O and $srcdir/09a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 09a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 09a(_POSIX2_VERSION=199209) failed: files 09a.O and $srcdir/09a.X differ" 1>&2
        (diff -c 09a.O $srcdir/09a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 09a may have failed." 1>&2
+    2) $echo "Test 09a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 09a.O $srcdir/09a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 09a.E || rm -f 09a.E
-$xx -n $srcdir/09b.I > 09b.O 2> 09b.E
+_POSIX2_VERSION=199209 $xx -n $srcdir/09b.I > 09b.O 2> 09b.E
 code=$?
 if test $code != 0; then
-  $echo "Test 09b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 09b(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 09b.O $srcdir/09b.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 09b"; fi;;
-    1) $echo "Test 09b failed: files 09b.O and $srcdir/09b.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 09b(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 09b(_POSIX2_VERSION=199209) failed: files 09b.O and $srcdir/09b.X differ" 1>&2
        (diff -c 09b.O $srcdir/09b.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 09b may have failed." 1>&2
+    2) $echo "Test 09b(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 09b.O $srcdir/09b.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 09b.E || rm -f 09b.E
-$xx -n $srcdir/09c.I > 09c.O 2> 09c.E
+_POSIX2_VERSION=199209 $xx -n $srcdir/09c.I > 09c.O 2> 09c.E
 code=$?
 if test $code != 0; then
-  $echo "Test 09c failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 09c(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 09c.O $srcdir/09c.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 09c"; fi;;
-    1) $echo "Test 09c failed: files 09c.O and $srcdir/09c.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 09c(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 09c(_POSIX2_VERSION=199209) failed: files 09c.O and $srcdir/09c.X differ" 1>&2
        (diff -c 09c.O $srcdir/09c.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 09c may have failed." 1>&2
+    2) $echo "Test 09c(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 09c.O $srcdir/09c.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 09c.E || rm -f 09c.E
-$xx -k2g $srcdir/09d.I > 09d.O 2> 09d.E
+_POSIX2_VERSION=199209 $xx -k2g $srcdir/09d.I > 09d.O 2> 09d.E
 code=$?
 if test $code != 0; then
-  $echo "Test 09d failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 09d(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 09d.O $srcdir/09d.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 09d"; fi;;
-    1) $echo "Test 09d failed: files 09d.O and $srcdir/09d.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 09d(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 09d(_POSIX2_VERSION=199209) failed: files 09d.O and $srcdir/09d.X differ" 1>&2
        (diff -c 09d.O $srcdir/09d.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 09d may have failed." 1>&2
+    2) $echo "Test 09d(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 09d.O $srcdir/09d.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 09d.E || rm -f 09d.E
-$xx -t : -k 2.2,2.2 $srcdir/10a.I > 10a.O 2> 10a.E
+_POSIX2_VERSION=199209 $xx -t : -k 2.2,2.2 $srcdir/10a.I > 10a.O 2> 10a.E
 code=$?
 if test $code != 0; then
-  $echo "Test 10a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 10a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 10a.O $srcdir/10a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 10a"; fi;;
-    1) $echo "Test 10a failed: files 10a.O and $srcdir/10a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 10a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 10a(_POSIX2_VERSION=199209) failed: files 10a.O and $srcdir/10a.X differ" 1>&2
        (diff -c 10a.O $srcdir/10a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 10a may have failed." 1>&2
+    2) $echo "Test 10a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 10a.O $srcdir/10a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 10a.E || rm -f 10a.E
-$xx -t : +1.1 -1.2 $srcdir/10b.I > 10b.O 2> 10b.E
+_POSIX2_VERSION=199209 $xx -t : +1.1 -1.2 $srcdir/10b.I > 10b.O 2> 10b.E
 code=$?
 if test $code != 0; then
-  $echo "Test 10b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 10b(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 10b.O $srcdir/10b.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 10b"; fi;;
-    1) $echo "Test 10b failed: files 10b.O and $srcdir/10b.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 10b(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 10b(_POSIX2_VERSION=199209) failed: files 10b.O and $srcdir/10b.X differ" 1>&2
        (diff -c 10b.O $srcdir/10b.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 10b may have failed." 1>&2
+    2) $echo "Test 10b(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 10b.O $srcdir/10b.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 10b.E || rm -f 10b.E
-$xx -t : -k 2.2,2.2 $srcdir/10c.I > 10c.O 2> 10c.E
+_POSIX2_VERSION=199209 $xx -t : -k 2.2,2.2 $srcdir/10c.I > 10c.O 2> 10c.E
 code=$?
 if test $code != 0; then
-  $echo "Test 10c failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 10c(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 10c.O $srcdir/10c.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 10c"; fi;;
-    1) $echo "Test 10c failed: files 10c.O and $srcdir/10c.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 10c(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 10c(_POSIX2_VERSION=199209) failed: files 10c.O and $srcdir/10c.X differ" 1>&2
        (diff -c 10c.O $srcdir/10c.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 10c may have failed." 1>&2
+    2) $echo "Test 10c(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 10c.O $srcdir/10c.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 10c.E || rm -f 10c.E
-$xx -t : +1.1 -1.2 $srcdir/10d.I > 10d.O 2> 10d.E
+_POSIX2_VERSION=199209 $xx -t : +1.1 -1.2 $srcdir/10d.I > 10d.O 2> 10d.E
 code=$?
 if test $code != 0; then
-  $echo "Test 10d failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 10d(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 10d.O $srcdir/10d.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 10d"; fi;;
-    1) $echo "Test 10d failed: files 10d.O and $srcdir/10d.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 10d(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 10d(_POSIX2_VERSION=199209) failed: files 10d.O and $srcdir/10d.X differ" 1>&2
        (diff -c 10d.O $srcdir/10d.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 10d may have failed." 1>&2
+    2) $echo "Test 10d(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 10d.O $srcdir/10d.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 10d.E || rm -f 10d.E
-$xx -k 2.3,2.3 $srcdir/10a0.I > 10a0.O 2> 10a0.E
+_POSIX2_VERSION=199209 $xx -k 2.3,2.3 $srcdir/10a0.I > 10a0.O 2> 10a0.E
 code=$?
 if test $code != 0; then
-  $echo "Test 10a0 failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 10a0(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 10a0.O $srcdir/10a0.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 10a0"; fi;;
-    1) $echo "Test 10a0 failed: files 10a0.O and $srcdir/10a0.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 10a0(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 10a0(_POSIX2_VERSION=199209) failed: files 10a0.O and $srcdir/10a0.X differ" 1>&2
        (diff -c 10a0.O $srcdir/10a0.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 10a0 may have failed." 1>&2
+    2) $echo "Test 10a0(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 10a0.O $srcdir/10a0.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 10a0.E || rm -f 10a0.E
-$xx -k 1.2,1.2 $srcdir/10a1.I > 10a1.O 2> 10a1.E
+_POSIX2_VERSION=199209 $xx -k 1.2,1.2 $srcdir/10a1.I > 10a1.O 2> 10a1.E
 code=$?
 if test $code != 0; then
-  $echo "Test 10a1 failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 10a1(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 10a1.O $srcdir/10a1.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 10a1"; fi;;
-    1) $echo "Test 10a1 failed: files 10a1.O and $srcdir/10a1.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 10a1(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 10a1(_POSIX2_VERSION=199209) failed: files 10a1.O and $srcdir/10a1.X differ" 1>&2
        (diff -c 10a1.O $srcdir/10a1.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 10a1 may have failed." 1>&2
+    2) $echo "Test 10a1(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 10a1.O $srcdir/10a1.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 10a1.E || rm -f 10a1.E
-$xx -b -k 2.2,2.2 $srcdir/10a2.I > 10a2.O 2> 10a2.E
+_POSIX2_VERSION=199209 $xx -b -k 2.2,2.2 $srcdir/10a2.I > 10a2.O 2> 10a2.E
 code=$?
 if test $code != 0; then
-  $echo "Test 10a2 failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 10a2(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 10a2.O $srcdir/10a2.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 10a2"; fi;;
-    1) $echo "Test 10a2 failed: files 10a2.O and $srcdir/10a2.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 10a2(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 10a2(_POSIX2_VERSION=199209) failed: files 10a2.O and $srcdir/10a2.X differ" 1>&2
        (diff -c 10a2.O $srcdir/10a2.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 10a2 may have failed." 1>&2
+    2) $echo "Test 10a2(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 10a2.O $srcdir/10a2.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 10a2.E || rm -f 10a2.E
-$xx -k 1.2,1.2 $srcdir/10e.I > 10e.O 2> 10e.E
+_POSIX2_VERSION=199209 $xx -k 1.2,1.2 $srcdir/10e.I > 10e.O 2> 10e.E
 code=$?
 if test $code != 0; then
-  $echo "Test 10e failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 10e(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 10e.O $srcdir/10e.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 10e"; fi;;
-    1) $echo "Test 10e failed: files 10e.O and $srcdir/10e.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 10e(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 10e(_POSIX2_VERSION=199209) failed: files 10e.O and $srcdir/10e.X differ" 1>&2
        (diff -c 10e.O $srcdir/10e.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 10e may have failed." 1>&2
+    2) $echo "Test 10e(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 10e.O $srcdir/10e.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 10e.E || rm -f 10e.E
-$xx -t : -k 1.3,1.3 $srcdir/10f.I > 10f.O 2> 10f.E
+_POSIX2_VERSION=199209 $xx -t : -k 1.3,1.3 $srcdir/10f.I > 10f.O 2> 10f.E
 code=$?
 if test $code != 0; then
-  $echo "Test 10f failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 10f(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 10f.O $srcdir/10f.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 10f"; fi;;
-    1) $echo "Test 10f failed: files 10f.O and $srcdir/10f.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 10f(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 10f(_POSIX2_VERSION=199209) failed: files 10f.O and $srcdir/10f.X differ" 1>&2
        (diff -c 10f.O $srcdir/10f.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 10f may have failed." 1>&2
+    2) $echo "Test 10f(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 10f.O $srcdir/10f.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 10f.E || rm -f 10f.E
-$xx -k 1.4,1.4 $srcdir/10g.I > 10g.O 2> 10g.E
+_POSIX2_VERSION=199209 $xx -k 1.4,1.4 $srcdir/10g.I > 10g.O 2> 10g.E
 code=$?
 if test $code != 0; then
-  $echo "Test 10g failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 10g(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 10g.O $srcdir/10g.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 10g"; fi;;
-    1) $echo "Test 10g failed: files 10g.O and $srcdir/10g.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 10g(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 10g(_POSIX2_VERSION=199209) failed: files 10g.O and $srcdir/10g.X differ" 1>&2
        (diff -c 10g.O $srcdir/10g.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 10g may have failed." 1>&2
+    2) $echo "Test 10g(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 10g.O $srcdir/10g.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 10g.E || rm -f 10g.E
-$xx -t: -k1,1b -k2,2 $srcdir/11a.I > 11a.O 2> 11a.E
+_POSIX2_VERSION=199209 $xx -t: -k1,1b -k2,2 $srcdir/11a.I > 11a.O 2> 11a.E
 code=$?
 if test $code != 0; then
-  $echo "Test 11a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 11a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 11a.O $srcdir/11a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 11a"; fi;;
-    1) $echo "Test 11a failed: files 11a.O and $srcdir/11a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 11a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 11a(_POSIX2_VERSION=199209) failed: files 11a.O and $srcdir/11a.X differ" 1>&2
        (diff -c 11a.O $srcdir/11a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 11a may have failed." 1>&2
+    2) $echo "Test 11a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 11a.O $srcdir/11a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 11a.E || rm -f 11a.E
-$xx -t: -k1,1b -k2,2 $srcdir/11b.I > 11b.O 2> 11b.E
+_POSIX2_VERSION=199209 $xx -t: -k1,1b -k2,2 $srcdir/11b.I > 11b.O 2> 11b.E
 code=$?
 if test $code != 0; then
-  $echo "Test 11b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 11b(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 11b.O $srcdir/11b.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 11b"; fi;;
-    1) $echo "Test 11b failed: files 11b.O and $srcdir/11b.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 11b(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 11b(_POSIX2_VERSION=199209) failed: files 11b.O and $srcdir/11b.X differ" 1>&2
        (diff -c 11b.O $srcdir/11b.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 11b may have failed." 1>&2
+    2) $echo "Test 11b(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 11b.O $srcdir/11b.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 11b.E || rm -f 11b.E
-$xx -t: -k2,2b -k3,3 $srcdir/11c.I > 11c.O 2> 11c.E
+_POSIX2_VERSION=199209 $xx -t: -k2,2b -k3,3 $srcdir/11c.I > 11c.O 2> 11c.E
 code=$?
 if test $code != 0; then
-  $echo "Test 11c failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 11c(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 11c.O $srcdir/11c.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 11c"; fi;;
-    1) $echo "Test 11c failed: files 11c.O and $srcdir/11c.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 11c(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 11c(_POSIX2_VERSION=199209) failed: files 11c.O and $srcdir/11c.X differ" 1>&2
        (diff -c 11c.O $srcdir/11c.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 11c may have failed." 1>&2
+    2) $echo "Test 11c(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 11c.O $srcdir/11c.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 11c.E || rm -f 11c.E
-$xx -t: -k2,2b -k3,3 $srcdir/11d.I > 11d.O 2> 11d.E
+_POSIX2_VERSION=199209 $xx -t: -k2,2b -k3,3 $srcdir/11d.I > 11d.O 2> 11d.E
 code=$?
 if test $code != 0; then
-  $echo "Test 11d failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 11d(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 11d.O $srcdir/11d.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 11d"; fi;;
-    1) $echo "Test 11d failed: files 11d.O and $srcdir/11d.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 11d(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 11d(_POSIX2_VERSION=199209) failed: files 11d.O and $srcdir/11d.X differ" 1>&2
        (diff -c 11d.O $srcdir/11d.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 11d may have failed." 1>&2
+    2) $echo "Test 11d(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 11d.O $srcdir/11d.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 11d.E || rm -f 11d.E
-$xx -n -t: +1 $srcdir/12a.I > 12a.O 2> 12a.E
+_POSIX2_VERSION=199209 $xx -n -t: +1 $srcdir/12a.I > 12a.O 2> 12a.E
 code=$?
 if test $code != 0; then
-  $echo "Test 12a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 12a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 12a.O $srcdir/12a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 12a"; fi;;
-    1) $echo "Test 12a failed: files 12a.O and $srcdir/12a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 12a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 12a(_POSIX2_VERSION=199209) failed: files 12a.O and $srcdir/12a.X differ" 1>&2
        (diff -c 12a.O $srcdir/12a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 12a may have failed." 1>&2
+    2) $echo "Test 12a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 12a.O $srcdir/12a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 12a.E || rm -f 12a.E
-$xx -n -t: +1 $srcdir/12b.I > 12b.O 2> 12b.E
+_POSIX2_VERSION=199209 $xx -n -t: +1 $srcdir/12b.I > 12b.O 2> 12b.E
 code=$?
 if test $code != 0; then
-  $echo "Test 12b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 12b(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 12b.O $srcdir/12b.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 12b"; fi;;
-    1) $echo "Test 12b failed: files 12b.O and $srcdir/12b.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 12b(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 12b(_POSIX2_VERSION=199209) failed: files 12b.O and $srcdir/12b.X differ" 1>&2
        (diff -c 12b.O $srcdir/12b.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 12b may have failed." 1>&2
+    2) $echo "Test 12b(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 12b.O $srcdir/12b.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 12b.E || rm -f 12b.E
-$xx -n -t: +1 $srcdir/12c.I > 12c.O 2> 12c.E
+_POSIX2_VERSION=199209 $xx -n -t: +1 $srcdir/12c.I > 12c.O 2> 12c.E
 code=$?
 if test $code != 0; then
-  $echo "Test 12c failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 12c(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 12c.O $srcdir/12c.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 12c"; fi;;
-    1) $echo "Test 12c failed: files 12c.O and $srcdir/12c.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 12c(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 12c(_POSIX2_VERSION=199209) failed: files 12c.O and $srcdir/12c.X differ" 1>&2
        (diff -c 12c.O $srcdir/12c.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 12c may have failed." 1>&2
+    2) $echo "Test 12c(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 12c.O $srcdir/12c.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 12c.E || rm -f 12c.E
-$xx -n -t: +1 $srcdir/12d.I > 12d.O 2> 12d.E
+_POSIX2_VERSION=199209 $xx -n -t: +1 $srcdir/12d.I > 12d.O 2> 12d.E
 code=$?
 if test $code != 0; then
-  $echo "Test 12d failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 12d(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 12d.O $srcdir/12d.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 12d"; fi;;
-    1) $echo "Test 12d failed: files 12d.O and $srcdir/12d.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 12d(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 12d(_POSIX2_VERSION=199209) failed: files 12d.O and $srcdir/12d.X differ" 1>&2
        (diff -c 12d.O $srcdir/12d.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 12d may have failed." 1>&2
+    2) $echo "Test 12d(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 12d.O $srcdir/12d.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 12d.E || rm -f 12d.E
-$xx +0.1n $srcdir/13a.I > 13a.O 2> 13a.E
+_POSIX2_VERSION=199209 $xx +0.1n $srcdir/13a.I > 13a.O 2> 13a.E
 code=$?
 if test $code != 0; then
-  $echo "Test 13a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 13a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 13a.O $srcdir/13a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 13a"; fi;;
-    1) $echo "Test 13a failed: files 13a.O and $srcdir/13a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 13a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 13a(_POSIX2_VERSION=199209) failed: files 13a.O and $srcdir/13a.X differ" 1>&2
        (diff -c 13a.O $srcdir/13a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 13a may have failed." 1>&2
+    2) $echo "Test 13a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 13a.O $srcdir/13a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 13a.E || rm -f 13a.E
-$xx +0.1n $srcdir/13b.I > 13b.O 2> 13b.E
+_POSIX2_VERSION=199209 $xx +0.1n $srcdir/13b.I > 13b.O 2> 13b.E
 code=$?
 if test $code != 0; then
-  $echo "Test 13b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 13b(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 13b.O $srcdir/13b.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 13b"; fi;;
-    1) $echo "Test 13b failed: files 13b.O and $srcdir/13b.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 13b(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 13b(_POSIX2_VERSION=199209) failed: files 13b.O and $srcdir/13b.X differ" 1>&2
        (diff -c 13b.O $srcdir/13b.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 13b may have failed." 1>&2
+    2) $echo "Test 13b(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 13b.O $srcdir/13b.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 13b.E || rm -f 13b.E
-$xx -d -u $srcdir/14a.I > 14a.O 2> 14a.E
+_POSIX2_VERSION=199209 $xx -d -u $srcdir/14a.I > 14a.O 2> 14a.E
 code=$?
 if test $code != 0; then
-  $echo "Test 14a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 14a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 14a.O $srcdir/14a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 14a"; fi;;
-    1) $echo "Test 14a failed: files 14a.O and $srcdir/14a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 14a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 14a(_POSIX2_VERSION=199209) failed: files 14a.O and $srcdir/14a.X differ" 1>&2
        (diff -c 14a.O $srcdir/14a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 14a may have failed." 1>&2
+    2) $echo "Test 14a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 14a.O $srcdir/14a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 14a.E || rm -f 14a.E
-$xx -f -d -u $srcdir/14b.I > 14b.O 2> 14b.E
+_POSIX2_VERSION=199209 $xx -f -d -u $srcdir/14b.I > 14b.O 2> 14b.E
 code=$?
 if test $code != 0; then
-  $echo "Test 14b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 14b(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 14b.O $srcdir/14b.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 14b"; fi;;
-    1) $echo "Test 14b failed: files 14b.O and $srcdir/14b.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 14b(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 14b(_POSIX2_VERSION=199209) failed: files 14b.O and $srcdir/14b.X differ" 1>&2
        (diff -c 14b.O $srcdir/14b.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 14b may have failed." 1>&2
+    2) $echo "Test 14b(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 14b.O $srcdir/14b.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 14b.E || rm -f 14b.E
-$xx -i -u $srcdir/15a.I > 15a.O 2> 15a.E
+_POSIX2_VERSION=199209 $xx -i -u $srcdir/15a.I > 15a.O 2> 15a.E
 code=$?
 if test $code != 0; then
-  $echo "Test 15a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 15a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 15a.O $srcdir/15a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 15a"; fi;;
-    1) $echo "Test 15a failed: files 15a.O and $srcdir/15a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 15a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 15a(_POSIX2_VERSION=199209) failed: files 15a.O and $srcdir/15a.X differ" 1>&2
        (diff -c 15a.O $srcdir/15a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 15a may have failed." 1>&2
+    2) $echo "Test 15a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 15a.O $srcdir/15a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 15a.E || rm -f 15a.E
-$xx -i -u $srcdir/15b.I > 15b.O 2> 15b.E
+_POSIX2_VERSION=199209 $xx -i -u $srcdir/15b.I > 15b.O 2> 15b.E
 code=$?
 if test $code != 0; then
-  $echo "Test 15b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 15b(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 15b.O $srcdir/15b.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 15b"; fi;;
-    1) $echo "Test 15b failed: files 15b.O and $srcdir/15b.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 15b(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 15b(_POSIX2_VERSION=199209) failed: files 15b.O and $srcdir/15b.X differ" 1>&2
        (diff -c 15b.O $srcdir/15b.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 15b may have failed." 1>&2
+    2) $echo "Test 15b(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 15b.O $srcdir/15b.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 15b.E || rm -f 15b.E
-$xx -i -u $srcdir/15c.I > 15c.O 2> 15c.E
+_POSIX2_VERSION=199209 $xx -i -u $srcdir/15c.I > 15c.O 2> 15c.E
 code=$?
 if test $code != 0; then
-  $echo "Test 15c failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 15c(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 15c.O $srcdir/15c.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 15c"; fi;;
-    1) $echo "Test 15c failed: files 15c.O and $srcdir/15c.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 15c(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 15c(_POSIX2_VERSION=199209) failed: files 15c.O and $srcdir/15c.X differ" 1>&2
        (diff -c 15c.O $srcdir/15c.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 15c may have failed." 1>&2
+    2) $echo "Test 15c(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 15c.O $srcdir/15c.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 15c.E || rm -f 15c.E
-$xx -i -u $srcdir/15d.I > 15d.O 2> 15d.E
+_POSIX2_VERSION=199209 $xx -i -u $srcdir/15d.I > 15d.O 2> 15d.E
 code=$?
 if test $code != 0; then
-  $echo "Test 15d failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 15d(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 15d.O $srcdir/15d.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 15d"; fi;;
-    1) $echo "Test 15d failed: files 15d.O and $srcdir/15d.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 15d(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 15d(_POSIX2_VERSION=199209) failed: files 15d.O and $srcdir/15d.X differ" 1>&2
        (diff -c 15d.O $srcdir/15d.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 15d may have failed." 1>&2
+    2) $echo "Test 15d(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 15d.O $srcdir/15d.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 15d.E || rm -f 15d.E
-$xx -i -u $srcdir/15e.I > 15e.O 2> 15e.E
+_POSIX2_VERSION=199209 $xx -i -u $srcdir/15e.I > 15e.O 2> 15e.E
 code=$?
 if test $code != 0; then
-  $echo "Test 15e failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 15e(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 15e.O $srcdir/15e.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 15e"; fi;;
-    1) $echo "Test 15e failed: files 15e.O and $srcdir/15e.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 15e(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 15e(_POSIX2_VERSION=199209) failed: files 15e.O and $srcdir/15e.X differ" 1>&2
        (diff -c 15e.O $srcdir/15e.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 15e may have failed." 1>&2
+    2) $echo "Test 15e(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 15e.O $srcdir/15e.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 15e.E || rm -f 15e.E
-$xx -f $srcdir/16a.I > 16a.O 2> 16a.E
+_POSIX2_VERSION=199209 $xx -f $srcdir/16a.I > 16a.O 2> 16a.E
 code=$?
 if test $code != 0; then
-  $echo "Test 16a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 16a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 16a.O $srcdir/16a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 16a"; fi;;
-    1) $echo "Test 16a failed: files 16a.O and $srcdir/16a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 16a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 16a(_POSIX2_VERSION=199209) failed: files 16a.O and $srcdir/16a.X differ" 1>&2
        (diff -c 16a.O $srcdir/16a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 16a may have failed." 1>&2
+    2) $echo "Test 16a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 16a.O $srcdir/16a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 16a.E || rm -f 16a.E
-$xx -c $srcdir/17.I > 17.O 2> 17.E
+_POSIX2_VERSION=199209 $xx -c $srcdir/17.I > 17.O 2> 17.E
 code=$?
 if test $code != 0; then
-  $echo "Test 17 failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 17(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 17.O $srcdir/17.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 17"; fi;;
-    1) $echo "Test 17 failed: files 17.O and $srcdir/17.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 17(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 17(_POSIX2_VERSION=199209) failed: files 17.O and $srcdir/17.X differ" 1>&2
        (diff -c 17.O $srcdir/17.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 17 may have failed." 1>&2
+    2) $echo "Test 17(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 17.O $srcdir/17.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 17.E || rm -f 17.E
-$xx -k1.1,1.2n $srcdir/18a.I > 18a.O 2> 18a.E
+_POSIX2_VERSION=199209 $xx -k1.1,1.2n $srcdir/18a.I > 18a.O 2> 18a.E
 code=$?
 if test $code != 0; then
-  $echo "Test 18a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 18a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 18a.O $srcdir/18a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 18a"; fi;;
-    1) $echo "Test 18a failed: files 18a.O and $srcdir/18a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 18a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 18a(_POSIX2_VERSION=199209) failed: files 18a.O and $srcdir/18a.X differ" 1>&2
        (diff -c 18a.O $srcdir/18a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 18a may have failed." 1>&2
+    2) $echo "Test 18a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 18a.O $srcdir/18a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 18a.E || rm -f 18a.E
-$xx -b -k1.1,1.2n $srcdir/18b.I > 18b.O 2> 18b.E
+_POSIX2_VERSION=199209 $xx -b -k1.1,1.2n $srcdir/18b.I > 18b.O 2> 18b.E
 code=$?
 if test $code != 0; then
-  $echo "Test 18b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 18b(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 18b.O $srcdir/18b.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 18b"; fi;;
-    1) $echo "Test 18b failed: files 18b.O and $srcdir/18b.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 18b(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 18b(_POSIX2_VERSION=199209) failed: files 18b.O and $srcdir/18b.X differ" 1>&2
        (diff -c 18b.O $srcdir/18b.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 18b may have failed." 1>&2
+    2) $echo "Test 18b(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 18b.O $srcdir/18b.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 18b.E || rm -f 18b.E
-$xx -k1.1,1.2nb $srcdir/18c.I > 18c.O 2> 18c.E
+_POSIX2_VERSION=199209 $xx -k1.1,1.2nb $srcdir/18c.I > 18c.O 2> 18c.E
 code=$?
 if test $code != 0; then
-  $echo "Test 18c failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 18c(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 18c.O $srcdir/18c.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 18c"; fi;;
-    1) $echo "Test 18c failed: files 18c.O and $srcdir/18c.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 18c(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 18c(_POSIX2_VERSION=199209) failed: files 18c.O and $srcdir/18c.X differ" 1>&2
        (diff -c 18c.O $srcdir/18c.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 18c may have failed." 1>&2
+    2) $echo "Test 18c(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 18c.O $srcdir/18c.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 18c.E || rm -f 18c.E
-$xx -k1.1b,1.2n $srcdir/18d.I > 18d.O 2> 18d.E
+_POSIX2_VERSION=199209 $xx -k1.1b,1.2n $srcdir/18d.I > 18d.O 2> 18d.E
 code=$?
 if test $code != 0; then
-  $echo "Test 18d failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 18d(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 18d.O $srcdir/18d.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 18d"; fi;;
-    1) $echo "Test 18d failed: files 18d.O and $srcdir/18d.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 18d(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 18d(_POSIX2_VERSION=199209) failed: files 18d.O and $srcdir/18d.X differ" 1>&2
        (diff -c 18d.O $srcdir/18d.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 18d may have failed." 1>&2
+    2) $echo "Test 18d(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 18d.O $srcdir/18d.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 18d.E || rm -f 18d.E
-$xx -nb -k1.1,1.2 $srcdir/18e.I > 18e.O 2> 18e.E
+_POSIX2_VERSION=199209 $xx -nb -k1.1,1.2 $srcdir/18e.I > 18e.O 2> 18e.E
 code=$?
 if test $code != 0; then
-  $echo "Test 18e failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 18e(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 18e.O $srcdir/18e.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 18e"; fi;;
-    1) $echo "Test 18e failed: files 18e.O and $srcdir/18e.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 18e(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 18e(_POSIX2_VERSION=199209) failed: files 18e.O and $srcdir/18e.X differ" 1>&2
        (diff -c 18e.O $srcdir/18e.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 18e may have failed." 1>&2
+    2) $echo "Test 18e(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 18e.O $srcdir/18e.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 18e.E || rm -f 18e.E
-$xx +0 +1nr $srcdir/19a.I > 19a.O 2> 19a.E
+_POSIX2_VERSION=199209 $xx +0 +1nr $srcdir/19a.I > 19a.O 2> 19a.E
 code=$?
 if test $code != 0; then
-  $echo "Test 19a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 19a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 19a.O $srcdir/19a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 19a"; fi;;
-    1) $echo "Test 19a failed: files 19a.O and $srcdir/19a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 19a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 19a(_POSIX2_VERSION=199209) failed: files 19a.O and $srcdir/19a.X differ" 1>&2
        (diff -c 19a.O $srcdir/19a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 19a may have failed." 1>&2
+    2) $echo "Test 19a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 19a.O $srcdir/19a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 19a.E || rm -f 19a.E
-$xx -k1,1 -k2nr $srcdir/19b.I > 19b.O 2> 19b.E
+_POSIX2_VERSION=199209 $xx -k1,1 -k2nr $srcdir/19b.I > 19b.O 2> 19b.E
 code=$?
 if test $code != 0; then
-  $echo "Test 19b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 19b(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 19b.O $srcdir/19b.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 19b"; fi;;
-    1) $echo "Test 19b failed: files 19b.O and $srcdir/19b.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 19b(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 19b(_POSIX2_VERSION=199209) failed: files 19b.O and $srcdir/19b.X differ" 1>&2
        (diff -c 19b.O $srcdir/19b.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 19b may have failed." 1>&2
+    2) $echo "Test 19b(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 19b.O $srcdir/19b.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 19b.E || rm -f 19b.E
-$xx  $srcdir/20a.I > 20a.O 2> 20a.E
+_POSIX2_VERSION=199209 $xx  $srcdir/20a.I > 20a.O 2> 20a.E
 code=$?
 if test $code != 0; then
-  $echo "Test 20a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 20a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 20a.O $srcdir/20a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 20a"; fi;;
-    1) $echo "Test 20a failed: files 20a.O and $srcdir/20a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 20a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 20a(_POSIX2_VERSION=199209) failed: files 20a.O and $srcdir/20a.X differ" 1>&2
        (diff -c 20a.O $srcdir/20a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 20a may have failed." 1>&2
+    2) $echo "Test 20a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 20a.O $srcdir/20a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 20a.E || rm -f 20a.E
-$xx  $srcdir/21a.I > 21a.O 2> 21a.E
+_POSIX2_VERSION=199209 $xx  $srcdir/21a.I > 21a.O 2> 21a.E
 code=$?
 if test $code != 0; then
-  $echo "Test 21a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 21a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 21a.O $srcdir/21a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 21a"; fi;;
-    1) $echo "Test 21a failed: files 21a.O and $srcdir/21a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 21a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 21a(_POSIX2_VERSION=199209) failed: files 21a.O and $srcdir/21a.X differ" 1>&2
        (diff -c 21a.O $srcdir/21a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 21a may have failed." 1>&2
+    2) $echo "Test 21a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 21a.O $srcdir/21a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 21a.E || rm -f 21a.E
-$xx -f $srcdir/21b.I > 21b.O 2> 21b.E
+_POSIX2_VERSION=199209 $xx -f $srcdir/21b.I > 21b.O 2> 21b.E
 code=$?
 if test $code != 0; then
-  $echo "Test 21b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 21b(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 21b.O $srcdir/21b.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 21b"; fi;;
-    1) $echo "Test 21b failed: files 21b.O and $srcdir/21b.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 21b(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 21b(_POSIX2_VERSION=199209) failed: files 21b.O and $srcdir/21b.X differ" 1>&2
        (diff -c 21b.O $srcdir/21b.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 21b may have failed." 1>&2
+    2) $echo "Test 21b(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 21b.O $srcdir/21b.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 21b.E || rm -f 21b.E
-$xx -f $srcdir/21c.I > 21c.O 2> 21c.E
+_POSIX2_VERSION=199209 $xx -f $srcdir/21c.I > 21c.O 2> 21c.E
 code=$?
 if test $code != 0; then
-  $echo "Test 21c failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 21c(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 21c.O $srcdir/21c.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 21c"; fi;;
-    1) $echo "Test 21c failed: files 21c.O and $srcdir/21c.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 21c(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 21c(_POSIX2_VERSION=199209) failed: files 21c.O and $srcdir/21c.X differ" 1>&2
        (diff -c 21c.O $srcdir/21c.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 21c may have failed." 1>&2
+    2) $echo "Test 21c(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 21c.O $srcdir/21c.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 21c.E || rm -f 21c.E
-$xx -f $srcdir/21d.I > 21d.O 2> 21d.E
+_POSIX2_VERSION=199209 $xx -f $srcdir/21d.I > 21d.O 2> 21d.E
 code=$?
 if test $code != 0; then
-  $echo "Test 21d failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 21d(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 21d.O $srcdir/21d.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 21d"; fi;;
-    1) $echo "Test 21d failed: files 21d.O and $srcdir/21d.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 21d(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 21d(_POSIX2_VERSION=199209) failed: files 21d.O and $srcdir/21d.X differ" 1>&2
        (diff -c 21d.O $srcdir/21d.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 21d may have failed." 1>&2
+    2) $echo "Test 21d(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 21d.O $srcdir/21d.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 21d.E || rm -f 21d.E
-$xx -f $srcdir/21e.I > 21e.O 2> 21e.E
+_POSIX2_VERSION=199209 $xx -f $srcdir/21e.I > 21e.O 2> 21e.E
 code=$?
 if test $code != 0; then
-  $echo "Test 21e failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 21e(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 21e.O $srcdir/21e.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 21e"; fi;;
-    1) $echo "Test 21e failed: files 21e.O and $srcdir/21e.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 21e(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 21e(_POSIX2_VERSION=199209) failed: files 21e.O and $srcdir/21e.X differ" 1>&2
        (diff -c 21e.O $srcdir/21e.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 21e may have failed." 1>&2
+    2) $echo "Test 21e(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 21e.O $srcdir/21e.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 21e.E || rm -f 21e.E
-$xx -fs $srcdir/21f.I > 21f.O 2> 21f.E
+_POSIX2_VERSION=199209 $xx -fs $srcdir/21f.I > 21f.O 2> 21f.E
 code=$?
 if test $code != 0; then
-  $echo "Test 21f failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 21f(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 21f.O $srcdir/21f.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 21f"; fi;;
-    1) $echo "Test 21f failed: files 21f.O and $srcdir/21f.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 21f(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 21f(_POSIX2_VERSION=199209) failed: files 21f.O and $srcdir/21f.X differ" 1>&2
        (diff -c 21f.O $srcdir/21f.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 21f may have failed." 1>&2
+    2) $echo "Test 21f(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 21f.O $srcdir/21f.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 21f.E || rm -f 21f.E
-$xx -fu $srcdir/21g.I > 21g.O 2> 21g.E
+_POSIX2_VERSION=199209 $xx -fu $srcdir/21g.I > 21g.O 2> 21g.E
 code=$?
 if test $code != 0; then
-  $echo "Test 21g failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 21g(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 21g.O $srcdir/21g.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 21g"; fi;;
-    1) $echo "Test 21g failed: files 21g.O and $srcdir/21g.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 21g(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 21g(_POSIX2_VERSION=199209) failed: files 21g.O and $srcdir/21g.X differ" 1>&2
        (diff -c 21g.O $srcdir/21g.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 21g may have failed." 1>&2
+    2) $echo "Test 21g(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 21g.O $srcdir/21g.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 21g.E || rm -f 21g.E
-$xx -k 2,2fd -k 1,1r $srcdir/22a.I > 22a.O 2> 22a.E
+_POSIX2_VERSION=199209 $xx -k 2,2fd -k 1,1r $srcdir/22a.I > 22a.O 2> 22a.E
 code=$?
 if test $code != 0; then
-  $echo "Test 22a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 22a(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 22a.O $srcdir/22a.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 22a"; fi;;
-    1) $echo "Test 22a failed: files 22a.O and $srcdir/22a.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 22a(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 22a(_POSIX2_VERSION=199209) failed: files 22a.O and $srcdir/22a.X differ" 1>&2
        (diff -c 22a.O $srcdir/22a.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 22a may have failed." 1>&2
+    2) $echo "Test 22a(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 22a.O $srcdir/22a.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 22a.E || rm -f 22a.E
-$xx -k 2,2d  -k 1,1r $srcdir/22b.I > 22b.O 2> 22b.E
+_POSIX2_VERSION=199209 $xx -k 2,2d  -k 1,1r $srcdir/22b.I > 22b.O 2> 22b.E
 code=$?
 if test $code != 0; then
-  $echo "Test 22b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test 22b(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 22b.O $srcdir/22b.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed 22b"; fi;;
-    1) $echo "Test 22b failed: files 22b.O and $srcdir/22b.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed 22b(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test 22b(_POSIX2_VERSION=199209) failed: files 22b.O and $srcdir/22b.X differ" 1>&2
        (diff -c 22b.O $srcdir/22b.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test 22b may have failed." 1>&2
+    2) $echo "Test 22b(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp 22b.O $srcdir/22b.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s 22b.E || rm -f 22b.E
-$xx no-file  > no-file1.O 2> no-file1.E
+_POSIX2_VERSION=199209 $xx no-file  > no-file1.O 2> no-file1.E
 code=$?
 if test $code != 2; then
-  $echo "Test no-file1 failed: ../../src/sort return code $code differs from expected value 2" 1>&2
+  $echo "Test no-file1(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 2" 1>&2
   errors=`expr $errors + 1`
 else
   cmp no-file1.O $srcdir/no-file1.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed no-file1"; fi;;
-    1) $echo "Test no-file1 failed: files no-file1.O and $srcdir/no-file1.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed no-file1(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test no-file1(_POSIX2_VERSION=199209) failed: files no-file1.O and $srcdir/no-file1.X differ" 1>&2
        (diff -c no-file1.O $srcdir/no-file1.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test no-file1 may have failed." 1>&2
+    2) $echo "Test no-file1(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp no-file1.O $srcdir/no-file1.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s no-file1.E || rm -f no-file1.E
-$xx -o no-such-file no-such-file  > o-no-file1.O 2> o-no-file1.E
+_POSIX2_VERSION=199209 $xx -o no-such-file no-such-file  > o-no-file1.O 2> o-no-file1.E
 code=$?
 if test $code != 2; then
-  $echo "Test o-no-file1 failed: ../../src/sort return code $code differs from expected value 2" 1>&2
+  $echo "Test o-no-file1(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 2" 1>&2
   errors=`expr $errors + 1`
 else
   cmp o-no-file1.O $srcdir/o-no-file1.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed o-no-file1"; fi;;
-    1) $echo "Test o-no-file1 failed: files o-no-file1.O and $srcdir/o-no-file1.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed o-no-file1(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test o-no-file1(_POSIX2_VERSION=199209) failed: files o-no-file1.O and $srcdir/o-no-file1.X differ" 1>&2
        (diff -c o-no-file1.O $srcdir/o-no-file1.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test o-no-file1 may have failed." 1>&2
+    2) $echo "Test o-no-file1(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp o-no-file1.O $srcdir/o-no-file1.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s o-no-file1.E || rm -f o-no-file1.E
-$xx -o no/such/file /dev/null  > create-empty.O 2> create-empty.E
+_POSIX2_VERSION=199209 $xx -o no/such/file /dev/null  > create-empty.O 2> create-empty.E
 code=$?
 if test $code != 2; then
-  $echo "Test create-empty failed: ../../src/sort return code $code differs from expected value 2" 1>&2
+  $echo "Test create-empty(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 2" 1>&2
   errors=`expr $errors + 1`
 else
   cmp create-empty.O $srcdir/create-empty.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed create-empty"; fi;;
-    1) $echo "Test create-empty failed: files create-empty.O and $srcdir/create-empty.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed create-empty(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test create-empty(_POSIX2_VERSION=199209) failed: files create-empty.O and $srcdir/create-empty.X differ" 1>&2
        (diff -c create-empty.O $srcdir/create-empty.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test create-empty may have failed." 1>&2
+    2) $echo "Test create-empty(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp create-empty.O $srcdir/create-empty.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s create-empty.E || rm -f create-empty.E
-$xx -n $srcdir/neg-nls.I > neg-nls.O 2> neg-nls.E
+_POSIX2_VERSION=199209 $xx -n $srcdir/neg-nls.I > neg-nls.O 2> neg-nls.E
 code=$?
 if test $code != 0; then
-  $echo "Test neg-nls failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test neg-nls(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp neg-nls.O $srcdir/neg-nls.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed neg-nls"; fi;;
-    1) $echo "Test neg-nls failed: files neg-nls.O and $srcdir/neg-nls.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed neg-nls(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test neg-nls(_POSIX2_VERSION=199209) failed: files neg-nls.O and $srcdir/neg-nls.X differ" 1>&2
        (diff -c neg-nls.O $srcdir/neg-nls.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test neg-nls may have failed." 1>&2
+    2) $echo "Test neg-nls(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp neg-nls.O $srcdir/neg-nls.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s neg-nls.E || rm -f neg-nls.E
-$xx  $srcdir/nul-nls.I > nul-nls.O 2> nul-nls.E
+_POSIX2_VERSION=199209 $xx  $srcdir/nul-nls.I > nul-nls.O 2> nul-nls.E
 code=$?
 if test $code != 0; then
-  $echo "Test nul-nls failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test nul-nls(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp nul-nls.O $srcdir/nul-nls.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed nul-nls"; fi;;
-    1) $echo "Test nul-nls failed: files nul-nls.O and $srcdir/nul-nls.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed nul-nls(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test nul-nls(_POSIX2_VERSION=199209) failed: files nul-nls.O and $srcdir/nul-nls.X differ" 1>&2
        (diff -c nul-nls.O $srcdir/nul-nls.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test nul-nls may have failed." 1>&2
+    2) $echo "Test nul-nls(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp nul-nls.O $srcdir/nul-nls.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
 fi
 test -s nul-nls.E || rm -f nul-nls.E
-$xx  $srcdir/use-nl.I > use-nl.O 2> use-nl.E
+_POSIX2_VERSION=199209 $xx  $srcdir/use-nl.I > use-nl.O 2> use-nl.E
 code=$?
 if test $code != 0; then
-  $echo "Test use-nl failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  $echo "Test use-nl(_POSIX2_VERSION=199209) failed: ../../src/sort return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp use-nl.O $srcdir/use-nl.X > /dev/null 2>&1
   case $? in
-    0) if test "$VERBOSE"; then $echo "passed use-nl"; fi;;
-    1) $echo "Test use-nl failed: files use-nl.O and $srcdir/use-nl.X differ" 1>&2
+    0) if test "$VERBOSE"; then $echo "passed use-nl(_POSIX2_VERSION=199209)"; fi;;
+    1) $echo "Test use-nl(_POSIX2_VERSION=199209) failed: files use-nl.O and $srcdir/use-nl.X differ" 1>&2
        (diff -c use-nl.O $srcdir/use-nl.X) 2> /dev/null
        errors=`expr $errors + 1`;;
-    2) $echo "Test use-nl may have failed." 1>&2
+    2) $echo "Test use-nl(_POSIX2_VERSION=199209) may have failed." 1>&2
        $echo The command "cmp use-nl.O $srcdir/use-nl.X" failed. 1>&2
        errors=`expr $errors + 1`;;
   esac
