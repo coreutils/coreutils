@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 2000 Free Software Foundation, Inc.
 
 NOTE: The canonical source of this file is maintained with the GNU C Library.
 Bugs can be reported to bug-glibc@prep.ai.mit.edu.
@@ -35,7 +35,7 @@ USA.  */
 #endif
 
 #ifndef	HAVE_GNU_LD
-# define	__environ	environ
+# define __environ	environ
 #endif
 
 int
