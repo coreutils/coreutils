@@ -1,0 +1,45 @@
+#!/bin/sh
+# Demonstrate a bug in `tail -cN' when operating on files of size 4G and larger
+# Fixed in coreutils-4.5.2.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  tail --version
+fi
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+# Create a file of size exactly 4GB (2^32) with 8 bytes
+# at the beginning and another set of 8 bytes at the end.
+# The rest will be NUL bytes.  On most modern systems, the following
+# creates a file that takes up only a few KB.  Here, du -sh says 16KB.
+echo abcdefgh | tr -d '\n' > big
+echo 87654321 | tr -d '\n' > tmp
+# Seek 4GB - 8
+dd bs=1 seek=4294967288 if=tmp of=big
+
+if test $framework_failure = 1; then
+  echo '$0: failure in testing framework' 1>&2
+  (exit 1); exit 1
+fi
+
+fail=0
+
+tail -c1 big > out || fail=1
+# Append a newline.
+echo >> out
+cat <<\EOF > exp
+1
+EOF
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
+(exit $fail); exit $fail
