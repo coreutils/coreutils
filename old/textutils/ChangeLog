@@ -1,5 +1,8 @@
 Tue Nov 24 08:42:30 1992  Jim Meyering  (meyering@idefix.comco.com)
 
+	* od.c (print_ascii, dump_strings): Use ISDIGIT and ISPRINT
+	macros like pr.c.  Suggested by David J. MacKenzie.
+
 	* od.c (print_ascii, dump_strings): Check for isascii before isprint.
 	(dump_strings): Free malloc'd buffer before returning.
 	(skip): Return non-zero if an error occurred, zero otherwise.
