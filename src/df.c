@@ -213,6 +213,29 @@ main (argc, argv)
   if (show_help)
     usage (0);
 
+  /* Fail if the same file system type was both selected and excluded.  */
+  {
+    int match = 0;
+    struct fs_type_list *i;
+    for (i = fs_select_list; i; i = i->fs_next)
+      {
+	struct fs_type_list *j;
+	for (j = fs_exclude_list; j; j = j->fs_next)
+	  {
+	    if (strcmp (i->fs_name, j->fs_name) == 0)
+	      {
+		error (0, 0,
+		       "file system type `%s' both selected and excluded",
+		       i->fs_name);
+		match = 1;
+		break;
+	      }
+	  }
+      }
+    if (match)
+      exit (1);
+  }
+
   if (optind == argc)
     {
 #ifdef lint
@@ -531,8 +554,8 @@ or all filesystems by default.\n\
   -k, --kilobytes           use 1024 blocks, not 512 despite POSIXLY_CORRECT\n\
       --sync                invoke sync before getting usage info (default)\n\
       --no-sync             do not invoke sync before getting usage info\n\
-  -t, --type=TYPE           limit the listing to TYPE filesystems type\n\
-  -x, --exclude-type=TYPE   limit the listing to not TYPE filesystems type\n\
+  -t, --type=TYPE           limit listing to filesystems of type TYPE\n\
+  -x, --exclude-type=TYPE   limit listing to filesystems not of type TYPE\n\
   -v                        (ignored)\n\
   -P, --portability         use the POSIX output format\n\
   -T, --print-type          print filesystem type\n\
