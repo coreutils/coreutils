@@ -1,3 +1,15 @@
+Wed Jan 31 23:40:50 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* lib/strftime.c (add_num_tz): New function.
+	(strftime): Handle new %z format.
+	* date.c (main): Accept new option, --rfc-822 (-R).
+	(show_date): Use RFC822-mandated strftime format.
+	From H. Peter Anvin (hpa@storm.net).
+	(usage): Add a line describing the new option.
+
+	* lib/strftime.c (add_num_tz): Don't use local, LENGTH,
+	before it's defined.
+
 Mon Jan 29 19:24:04 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* acconfig.h (PROTOTYPES): Define it.
