@@ -61,7 +61,6 @@ main ()
     AC_LIBOBJ(gettimeofday)
     AC_DEFINE_UNQUOTED(gettimeofday, rpl_gettimeofday,
       [Define to rpl_gettimeofday if the replacement function should be used.])
-    jm_gtod_init_rhs='GTOD_init ()'
     AC_DEFINE(GETTIMEOFDAY_CLOBBERS_LOCALTIME_BUFFER, 1,
       [Define if gettimeofday clobbers localtime's static buffer.])
   fi
