@@ -455,14 +455,14 @@ hash_insert (ino_t ino, dev_t dev)
 }
 
 /* Restore the previous working directory or exit.
-   If THROUGH_SYMLINK is non-zero, simply call `chdir ("..")'.  Otherwise,
+   If CWD is null, simply call `chdir ("..")'.  Otherwise,
    use CWD and free it.  CURR_DIR_NAME is the name of the current directory
    and is used solely in failure diagnostics.  */
 
 static void
-pop_dir (int through_symlink, struct saved_cwd *cwd, const char *curr_dir_name)
+pop_dir (struct saved_cwd *cwd, const char *curr_dir_name)
 {
-  if (through_symlink)
+  if (cwd)
     {
       if (restore_cwd (cwd, "..", curr_dir_name))
 	exit (1);
@@ -513,8 +513,8 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
       dev_t dir_dev;
       char *name_space;
       char *namep;
-      struct saved_cwd cwd;
-      int through_symlink;
+      struct saved_cwd *cwd;
+      struct saved_cwd cwd_buf;
       struct stat e_buf;
 
       dir_dev = stat_buf.st_dev;
@@ -525,18 +525,27 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 #ifndef S_ISLNK
 # define S_ISLNK(s) 0
 #endif
-      /* If we're dereferencing symlinks and we're about to chdir through
-	 a symlink, remember the current directory so we can return to it
-	 later.  In other cases, chdir ("..") works fine.  */
-      through_symlink = (xstat == stat
-			 && lstat (ent, &e_buf) == 0
-			 && S_ISLNK (e_buf.st_mode));
-      if (through_symlink && save_cwd (&cwd))
-	exit (1);
+      /* If we're traversing more than one level, or if we're
+	 dereferencing symlinks and we're about to chdir through a
+	 symlink, remember the current directory so we can return to
+	 it later.  In other cases, chdir ("..") works fine.  */
+      if (strchr (ent, '/')
+	  || (xstat == stat
+	      && lstat (ent, &e_buf) == 0
+	      && S_ISLNK (e_buf.st_mode)))
+	{
+	  if (save_cwd (&cwd_buf))
+	    exit (1);
+	  cwd = &cwd_buf;
+	}
+      else
+	cwd = NULL;
 
       if (chdir (ent) < 0)
 	{
 	  error (0, errno, _("cannot change to directory %s"), path->text);
+	  if (cwd)
+	    free_cwd (cwd);
 	  exit_status = 1;
 	  return 0;
 	}
@@ -548,7 +557,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 	  if (errno)
 	    {
 	      error (0, errno, "%s", path->text);
-	      pop_dir (through_symlink, &cwd, path->text);
+	      pop_dir (cwd, path->text);
 	      exit_status = 1;
 	      return 0;
 	    }
@@ -572,7 +581,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 	}
 
       free (name_space);
-      pop_dir (through_symlink, &cwd, path->text);
+      pop_dir (cwd, path->text);
 
       str_trunc (path, pathlen - 1); /* Remove the "/" we added.  */
       if (depth <= max_depth || top)
