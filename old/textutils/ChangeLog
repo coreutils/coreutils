@@ -1,6 +1,34 @@
-1998-01-25  Jim Meyering  <meyering@na-net.ornl.gov>
+1998-02-04  Jim Meyering  <meyering@eng.ascend.com>
 
 	* Version 1.22e.
+
+	* tests/Makefile.am.in (EXTRA_DIST): Remove mk-script.pl.
+	(mk_script): Set to ../mk-script.
+	(x-tests): Use `$(PERL) -w -- $(mk_script)', not ./mk-script.
+	Remove @MAINT@ cruft.
+	(Makefile.am): Likewise.
+	Remove @MAINT@ cruft.  Now `missing' will explain the failure
+	when people don't have Perl yet modify a file whose rebuilding
+	would lead to the use of Perl.
+
+	* tests/Makefile.am (EXTRA_DIST): Add mk-script.
+	* tests/*/mk-script.pl: Remove files.
+
+	* GNUmakefile: New file.
+	* Makefile.am (EXTRA_DIST): Add GNUmakefile.
+
+1998-01-30  Paul Eggert  <eggert@twinsun.com>
+
+        * configure.in (AC_LFS): Put before anything that can affect or use
+        CPPFLAGS, LDFLAGS, or LIBS.
+
+1998-01-25  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* Makefile.maint: New file.
+	* Makefile.am: Move rules common to textutils, fileutils, sh-utils
+	into Makefile.maint.
+	Include Makefile.maint.
+	(EXTRA_DIST): Add Makefile.maint.
 
 	* src/cat.c (cat): Convert comma-expressions to pairs of
 	semicolon-terminated stmts.
