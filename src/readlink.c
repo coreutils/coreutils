@@ -26,7 +26,6 @@
 #include "canonicalize.h"
 #include "error.h"
 #include "xreadlink.h"
-#include "long-options.h"
 #include "quote.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -116,8 +115,6 @@ main (int argc, char *const argv[])
     {
       switch (optc)
 	{
-	case 0:
-	  break;
 	case 'e':
 	  can_mode = CAN_EXISTING;
 	  break;
