@@ -1,5 +1,7 @@
 Mon Dec  9 06:58:11 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in: Bump version to 1.12s.
+
 	* lib/getdate.y (Convert): Don't reject all dates in 2038.
 	Some fit in 31 bits.
 
