@@ -317,19 +317,19 @@ Equivalent to @samp{-vET}.
 @opindex -B
 @opindex --binary
 @cindex binary and text I/O in cat
-On MS-DOS and MS-Windows only, read and write the
-files in binary mode.  By default, @code{cat} on MS-DOS/MS-Windows uses
-binary mode only when standard output is redirected to a file or a pipe;
-this option overrides that.  Binary file I/O is used so that the files
-retain their format (Unix text as opposed to DOS text and binary),
-because @code{cat} is frequently used as a file-copying program.  Some
-options (see below) cause @code{cat} read and write files in text mode
-because then the original file contents aren't important (e.g., when
-lines are numbered by @code{cat}, or when line endings should be
-marked).  This is so these options work as DOS/Windows users would
-expect; for example, DOS-style text files have their lines end with
-the CR-LF pair of characters which won't be processed as an empty line
-by @samp{-b} unless the file is read in text mode.
+On MS-DOS and MS-Windows only, read and write the files in binary mode.
+By default, @code{cat} on MS-DOS/MS-Windows uses binary mode only when
+standard output is redirected to a file or a pipe; this option overrides
+that.  Binary file I/O is used so that the files retain their format
+(Unix text as opposed to DOS text and binary), because @code{cat} is
+frequently used as a file-copying program.  Some options (see below)
+cause @code{cat} to read and write files in text mode because in those
+cases the original file contents aren't important (e.g., when lines are
+numbered by @code{cat}, or when line endings should be marked).  This is
+so these options work as DOS/Windows users would expect; for example,
+DOS-style text files have their lines end with the CR-LF pair of
+characters, which won't be processed as an empty line by @samp{-b} unless
+the file is read in text mode.
 
 @item -b
 @itemx --number-nonblank
@@ -813,12 +813,12 @@ Output as hexadecimal shorts.  Equivalent to @samp{-tx2}.
 @item -C
 @itemx --traditional
 @opindex --traditional
-Recognize the pre-POSIX non-option arguments that traditional @code{od}
+Recognize the pre-@sc{posix} non-option arguments that traditional @code{od}
 accepted.  The following syntax:
 
-@example
+@smallexample
 od --traditional [@var{file}] [[+]@var{offset}[.][b] [[+]@var{label}[.][b]]]
-@end example
+@end smallexample
 
 @noindent
 can be used to specify at most one file and optional arguments
@@ -983,24 +983,27 @@ is @samp{space}).  For multicolumn output, lines will always be truncated to
 column output no line truncation occurs by default.  Use @samp{-W} option to
 truncate lines in that case.
 
+@c FIXME:???  Should this be something like "Starting with version 1.22i,..."
    Including version 1.22i:
 
-Some small @var{letter options} (@samp{-s}, @samp{-w}) has been redefined
-with the object of a better @var{posix} compliance.  The output of some
-further cases has been adapted to other @var{unix}es.  A violation of
-downward compatibility has to be accepted.
+@c FIXME: this whole section here sounds very awkward to me. I
+@c made a few small changes, but really it all needs to be redone. - Brian
+Some small @var{letter options} (@samp{-s}, @samp{-w}) have been redefined
+with the object of a better @sc{posix} compliance.  The output of some
+further cases has been adapted to other Unix systems.  These changes are
+not compatible with earlier versions of the program.
 
 Some @var{new capital letter} options (@samp{-J}, @samp{-S}, @samp{-W})
-has been introduced to turn off unexpected interferences of small letter
+have been introduced to turn off unexpected interferences of small letter
 options.  The @samp{-N} option and the second argument @var{last_page}
 of @samp{+FIRST_PAGE} offer more flexibility.  The detailed handling of
-form feeds set in the input files requires @samp{-T} option.
+form feeds set in the input files requires the @samp{-T} option.
 
-Capital letter options dominate small letter ones.
+Capital letter options override small letter ones.
 
 Some of the option-arguments (compare @samp{-s}, @samp{-S}, @samp{-e},
 @samp{-i}, @samp{-n}) cannot be specified as separate arguments from the
-preceding option letter (already stated in the @var{posix} specification).
+preceding option letter (already stated in the @sc{posix} specification).
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -1110,7 +1113,7 @@ Merge lines of full length.  Used together with the column options
 @samp{-W/-w} line truncation;
 no column alignment used; may be used with @samp{-S[@var{string}]}.
 @samp{-J} has been introduced (together with @samp{-W} and @samp{-S})
-to disentangle the old (@var{posix} compliant) options @samp{-w} and
+to disentangle the old (@sc{posix}-compliant) options @samp{-w} and
 @samp{-s} along with the three column options.
 
 
@@ -1120,7 +1123,7 @@ to disentangle the old (@var{posix} compliant) options @samp{-w} and
 @opindex --length
 Set the page length to @var{page_length} (default 66) lines, including
 the lines of the header [and the footer].  If @var{page_length} is less
-than or equal 10 (and <= 3 with @samp{-F}), the header and footer are
+than or equal to 10 (or <= 3 with @samp{-F}), the header and footer are
 omitted, and all form feeds set in input files are eliminated, as if
 the @samp{-T} option had been given.
 
@@ -1129,7 +1132,7 @@ the @samp{-T} option had been given.
 @opindex -m
 @opindex --merge
 Merge and print all @var{file}s in parallel, one in each column.  If a
-line is too long to fit in a column, it is truncated, unless @samp{-J}
+line is too long to fit in a column, it is truncated, unless the @samp{-J}
 option is used.  @samp{-S[@var{string}]} may be used.  Empty pages in
 some @var{file}s (form feeds set) produce empty columns, still marked
 by @var{string}.  The result is a continuous line numbering and column
@@ -1146,8 +1149,8 @@ Provide @var{digits} digit line numbering (default for @var{digits} is
 5).  With multicolumn output the number occupies the first @var{digits}
 column positions of each text column or only each line of @samp{-m}
 output.  With single column output the number precedes each line just as
-@samp{-m} does.  Default counting of the line numbers starts with 1st
-line of the input file (not the 1st line printed, compare the
+@samp{-m} does.  Default counting of the line numbers starts with the
+first line of the input file (not the first line printed, compare the
 @samp{--page} option and @samp{-N} option).
 Optional argument @var{number-separator} is the character appended to
 the line number to separate it from the text followed.  The default
@@ -1155,8 +1158,8 @@ separator is the TAB character.  In a strict sense a TAB is always
 printed with single column output only.  The @var{TAB}-width varies
 with the @var{TAB}-position, e.g. with the left @var{margin} specified
 by @samp{-o} option.  With multicolumn output priority is given to
-@samp{equal width of output columns} (a @var{posix} specification).
-The @var{TAB}-width is fixed to the value of the 1st column and does
+@samp{equal width of output columns} (a @sc{posix} specification).
+The @var{TAB}-width is fixed to the value of the first column and does
 not change with different values of left @var{margin}.  That means a
 fixed number of spaces is always printed in the place of the
 @var{number-separator tab}.  The tabification depends upon the output
@@ -1196,7 +1199,7 @@ is the TAB character without @samp{-w} and @samp{no character} with
 @samp{-w}.  Without @samp{-s} default separator @samp{space} is set.
 @samp{-s[char]} turns off line truncation of all three column options
 (@samp{-COLUMN}|@samp{-a -COLUMN}|@samp{-m}) except @samp{-w} is set.
-That is a @var{posix} compliant formulation.
+That is a @sc{posix}-compliant formulation.
 
 
 @item -S[@var{string}]
@@ -1251,7 +1254,7 @@ output only (default for @var{page_width} is 72).  @samp{-s[CHAR]} turns
 off the default page width and any line truncation and column alignment.
 Lines of full length are merged, regardless of the column options
 set.  No @var{page_width} setting is possible with single column output.
-A @var{posix} compliant formulation.
+A @sc{posix}-compliant formulation.
 
 @item -W @var{page_width}
 @itemx --page_width=@var{page_width}
@@ -1812,8 +1815,8 @@ containing the cumulative counts, with the file name @file{total}.  The
 counts are printed in this order: newlines, words, bytes.
 By default, each count is output right-justified in a 7-byte field with
 one space between fields so that the numbers and file names line up nicely
-in columns.  However, POSIX requires that there be exactly one space
-separating columns.  You can make @code{wc} use the POSIX-mandated
+in columns.  However, @sc{posix} requires that there be exactly one space
+separating columns.  You can make @code{wc} use the @sc{posix}-mandated
 output format by setting the @env{POSIXLY_CORRECT} environment variable.
 
 By default, @code{wc} prints all three counts.  Options can specify
@@ -2388,13 +2391,13 @@ sort -t : -n -k 5b,5 -k 3,3 /etc/passwd
 @end example
 
 @item
-Generate a tags file in case insensitive sorted order.
+Generate a tags file in case-insensitive sorted order.
 
-@example
+@smallexample
 find src -type f -print0 | sort -t / -z -f | xargs -0 etags --append
-@end example
+@end smallexample
 
-The use of @samp{-print0}, @samp{-z}, and @samp{-0} in this case mean
+The use of @samp{-print0}, @samp{-z}, and @samp{-0} in this case means
 that pathnames that contain Line Feed characters will not get broken up
 by the sort operation.
 
@@ -2463,7 +2466,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex --skip-fields
 Skip @var{n} fields on each line before checking for uniqueness.  Fields
 are sequences of non-space non-tab characters that are separated from
-each other by at least one spaces or tabs.
+each other by at least one space or tab.
 
 @item +@var{n}
 @itemx -s @var{n}
@@ -2630,35 +2633,35 @@ ptx -G [@var{option} @dots{}] [@var{input} [@var{output}]]
 @end example
 
 The @samp{-G} (or its equivalent: @samp{--traditional}) option disables
-all GNU extensions and revert to traditional mode, thus introducing some
-limitations, and changes several of the program's default option values.
+all GNU extensions and reverts to traditional mode, thus introducing some
+limitations and changing several of the program's default option values.
 When @samp{-G} is not specified, GNU extensions are always enabled.  GNU
 extensions to @code{ptx} are documented wherever appropriate in this
 document.  For the full list, see @xref{Compatibility in ptx}.
 
-Individual options are explained in incoming sections.
+Individual options are explained in the following sections.
 
 When GNU extensions are enabled, there may be zero, one or several
-@var{file} after the options.  If there is no @var{file}, the program
-reads the standard input.  If there is one or several @var{file}, they
+@var{file}s after the options.  If there is no @var{file}, the program
+reads the standard input.  If there is one or several @var{file}s, they
 give the name of input files which are all read in turn, as if all the
 input files were concatenated.  However, there is a full contextual
 break between each file and, when automatic referencing is requested,
 file names and line numbers refer to individual text input files.  In
-all cases, the program produces the permuted index onto the standard
+all cases, the program outputs the permuted index to the standard
 output.
 
 When GNU extensions are @emph{not} enabled, that is, when the program
 operates in traditional mode, there may be zero, one or two parameters
-besides the options.  If there is no parameters, the program reads the
-standard input and produces the permuted index onto the standard output.
+besides the options.  If there are no parameters, the program reads the
+standard input and outputs the permuted index to the standard output.
 If there is only one parameter, it names the text @var{input} to be read
 instead of the standard input.  If two parameters are given, they give
 respectively the name of the @var{input} file to read and the name of
 the @var{output} file to produce.  @emph{Be very careful} to note that,
 in this case, the contents of file given by the second parameter is
-destroyed.  This behaviour is dictated only by System V @code{ptx}
-compatibility, because GNU Standards discourage output parameters not
+destroyed.  This behavior is dictated by System V @code{ptx}
+compatibility; GNU Standards normally discourage output parameters not
 introduced by an option.
 
 Note that for @emph{any} file named as the value of an option or as an
@@ -2667,7 +2670,7 @@ standard input is assumed.  However, it would not make sense to use this
 convention more than once per program invocation.
 
 @menu
-* General options in ptx::      Options which affect general program behaviour.
+* General options in ptx::      Options which affect general program behavior.
 * Charset selection in ptx::    Underlying character set considerations.
 * Input processing in ptx::     Input fields, contexts, and keyword selection.
 * Output formatting in ptx::    Types of output format, and sizing the fields.
@@ -2682,20 +2685,20 @@ convention more than once per program invocation.
 
 @item -C
 @itemx --copyright
-Prints a short note about the Copyright and copying conditions, then
+Print a short note about the copyright and copying conditions, then
 exit without further processing.
 
 @item -G
 @itemx --traditional
 As already explained, this option disables all GNU extensions to
-@code{ptx} and switch to traditional mode.
+@code{ptx} and switches to traditional mode.
 
 @item --help
-Prints a short help on standard output, then exit without further
+Print a short help on standard output, then exit without further
 processing.
 
 @item --version
-Prints the program verison on standard output, then exit without further
+Print the program version on standard output, then exit without further
 processing.
 
 @end table
@@ -2704,16 +2707,17 @@ processing.
 @node Charset selection in ptx
 @subsection Charset selection
 
-As it is setup now, the program assumes that the input file is coded
+@c FIXME:  People don't necessarily know what an IBM-PC was these days.
+As it is set up now, the program assumes that the input file is coded
 using 8-bit ISO 8859-1 code, also known as Latin-1 character set,
-@emph{unless} if it is compiled for MS-DOS, in which case it uses the
+@emph{unless} it is compiled for MS-DOS, in which case it uses the
 character set of the IBM-PC.  (GNU @code{ptx} is not known to work on
-smaller MS-DOS machines anymore.)  Compared to 7-bit @sc{ascii}, the set of
-characters which are letters is then different, this fact alters the
-behaviour of regular expression matching.  Thus, the default regular
-expression for a keyword allows foreign or diacriticized letters.
-Keyword sorting, however, is still crude; it obeys the underlying
-character set ordering quite blindly.
+smaller MS-DOS machines anymore.)  Compared to 7-bit @sc{ascii}, the set
+of characters which are letters is different; this alters the behavior
+of regular expression matching.  Thus, the default regular expression
+for a keyword allows foreign or diacriticized letters.  Keyword sorting,
+however, is still crude; it obeys the underlying character set ordering
+quite blindly.
 
 @table @samp
 
@@ -2735,7 +2739,7 @@ Fold lower case letters to upper case for sorting.
 This option provides an alternative (to @samp{-W}) method of describing
 which characters make up words.  It introduces the name of a
 file which contains a list of characters which can@emph{not} be part of
-one word, this file is called the @dfn{Break file}.  Any character which
+one word; this file is called the @dfn{Break file}.  Any character which
 is not part of the Break file is a word constituent.  If both options
 @samp{-b} and @samp{-W} are specified, then @samp{-W} has precedence and
 @samp{-b} is ignored.
@@ -2764,21 +2768,21 @@ default Ignore file, specify @code{/dev/null} instead.
 @itemx --only-file=@var{file}
 
 The file associated with this option contains a list of words which will
-be retained in concordance output, any word not mentioned in this file
+be retained in concordance output; any word not mentioned in this file
 is ignored.  The file is called the @dfn{Only file}.  The file contains
 exactly one word in each line; the end of line separation of words is
 not subject to the value of the @samp{-S} option.
 
 There is no default for the Only file.  In the case there are both an
-Only file and an Ignore file, a word will be subject to be a keyword
-only if it is given in the Only file and not given in the Ignore file.
+Only file and an Ignore file, a word can be a keyword only if it is
+given in the Only file and not given in the Ignore file.
 
 @item -r
 @itemx --references
 
-On each input line, the leading sequence of non white characters will be
+On each input line, the leading sequence of non-white space characters will be
 taken to be a reference that has the purpose of identifying this input
-line on the produced permuted index.  For more information about reference
+line in the resulting permuted index.  For more information about reference
 production, see @xref{Output formatting in ptx}.
 Using this option changes the default value for option @samp{-S}.
 
@@ -2793,12 +2797,12 @@ excluded from the output contexts.
 @itemx --sentence-regexp=@var{regexp}
 
 This option selects which regular expression will describe the end of a
-line or the end of a sentence.  In fact, there is other distinction
-between end of lines or end of sentences than the effect of this regular
-expression, and input line boundaries have no special significance
-outside this option.  By default, when GNU extensions are enabled and if
-@samp{-r} option is not used, end of sentences are used.  In this
-case, the precise @var{regex} is imported from GNU emacs:
+line or the end of a sentence.  In fact, this regular expression is not
+the only distinction between end of lines or end of sentences, and input
+line boundaries have no special significance outside this option.  By
+default, when GNU extensions are enabled and if @samp{-r} option is not
+used, end of sentences are used.  In this case, this @var{regex} is
+imported from GNU Emacs:
 
 @example
 [.?!][]\"')@}]*\\($\\|\t\\|  \\)[ \t\n]*
@@ -2829,8 +2833,8 @@ the head of the input line or sentence is used to fill the unused area
 on the right of the output line.
 
 As a matter of convenience to the user, many usual backslashed escape
-sequences, as found in the C language, are recognized and converted to
-the corresponding characters by @code{ptx} itself.
+sequences from the C language are recognized and converted to the
+corresponding characters by @code{ptx} itself.
 
 @item -W @var{regexp}
 @itemx --word-regexp=@var{regexp}
@@ -2841,9 +2845,9 @@ letters; the @var{regexp} used is @samp{\w+}.  When GNU extensions are
 disabled, a word is by default anything which ends with a space, a tab
 or a newline; the @var{regexp} used is @samp{[^ \t\n]+}.
 
-An empty @var{regexp} is equivalent to not using this option, letting the
-default dive in.  @xref{Regexps, , Syntax of Regular Expressions, emacs,
-The GNU Emacs Manual}.
+An empty @var{regexp} is equivalent to not using this option.
+@xref{Regexps, , Syntax of Regular Expressions, emacs, The GNU Emacs
+Manual}.
 
 As a matter of convenience to the user, many usual backslashed escape
 sequences, as found in the C language, are recognized and converted to
@@ -2855,13 +2859,13 @@ the corresponding characters by @code{ptx} itself.
 @node Output formatting in ptx
 @subsection Output formatting
 
-Output format is mainly controlled by @samp{-O} and @samp{-T} options,
-described in the table below.  When neither @samp{-O} nor @samp{-T} is
-selected, and if GNU extensions are enabled, the program choose an
-output format suited for a dumb terminal.  Each keyword occurrence is
+Output format is mainly controlled by the @samp{-O} and @samp{-T} options
+described in the table below.  When neither @samp{-O} nor @samp{-T} are
+selected, and if GNU extensions are enabled, the program chooses an
+output format suitable for a dumb terminal.  Each keyword occurrence is
 output to the center of one line, surrounded by its left and right
 contexts.  Each field is properly justified, so the concordance output
-could readily be observed.  As a special feature, if automatic
+can be readily observed.  As a special feature, if automatic
 references are selected by option @samp{-A} and are output before the
 left context, that is, if option @samp{-R} is @emph{not} selected, then
 a colon is added after the reference; this nicely interfaces with GNU
@@ -2879,8 +2883,8 @@ Output format is further controlled by the following options.
 @item -g @var{number}
 @itemx --gap-size=@var{number}
 
-Select the size of the minimum white gap between the fields on the output
-line.
+Select the size of the minimum white space gap between the fields on the
+output line.
 
 @item -w @var{number}
 @itemx --width=@var{number}
@@ -2890,7 +2894,7 @@ used, they are included or excluded from the output maximum width
 depending on the value of option @samp{-R}.  If this option is not
 selected, that is, when references are output before the left context,
 the output maximum width takes into account the maximum length of all
-references.  If this options is selected, that is, when references are
+references.  If this option is selected, that is, when references are
 output after the right context, the output maximum width does not take
 into account the space taken by references, nor the gap that precedes
 them.
@@ -2930,12 +2934,12 @@ towards the beginning or the end of the current line, or current
 sentence, as selected with option @samp{-S}.  But there is a maximum
 allowed output line width, changeable through option @samp{-w}, which is
 further divided into space for various output fields.  When a field has
-to be truncated because cannot extend until the beginning or the end of
-the current line to fit in the, then a truncation occurs.  By default,
+to be truncated because it cannot extend beyond the beginning or the end of
+the current line to fit in, then a truncation occurs.  By default,
 the string used is a single slash, as in @samp{-F /}.
 
 @var{string} may have more than one character, as in @samp{-F ...}.
-Also, in the particular case @var{string} is empty (@samp{-F ""}),
+Also, in the particular case when @var{string} is empty (@samp{-F ""}),
 truncation flagging is disabled, and no truncation marks are appended in
 this case.
 
@@ -2955,11 +2959,11 @@ generating output suitable for @code{nroff}, @code{troff} or @TeX{}.
 Choose an output format suitable for @code{nroff} or @code{troff}
 processing.  Each output line will look like:
 
-@example
+@smallexample
 .xx "@var{tail}" "@var{before}" "@var{keyword_and_after}" "@var{head}" "@var{ref}"
-@end example
+@end smallexample
 
-so it will be possible to write an @samp{.xx} roff macro to take care of
+so it will be possible to write a @samp{.xx} roff macro to take care of
 the output typesetting.  This is the default output format when GNU
 extensions are disabled.  Option @samp{-M} might be used to change
 @samp{xx} to another macro name.
@@ -2975,9 +2979,9 @@ so it will be correctly processed by @code{nroff} or @code{troff}.
 Choose an output format suitable for @TeX{} processing.  Each output
 line will look like:
 
-@example
+@smallexample
 \xx @{@var{tail}@}@{@var{before}@}@{@var{keyword}@}@{@var{after}@}@{@var{head}@}@{@var{ref}@}
-@end example
+@end smallexample
 
 @noindent
 so it will be possible to write a @code{\xx} definition to take care of
@@ -3025,11 +3029,11 @@ or, if a second @var{file} parameter is given on the command, to that
 
 Having output parameters not introduced by options is a quite dangerous
 practice which GNU avoids as far as possible.  So, for using @code{ptx}
-portably between GNU and System V, you should pay attention to always
-use it with a single input file, and always expect the result on
-standard output.  You might also want to automatically configure in a
-@samp{-G} option to @code{ptx} calls in products using @code{ptx}, if
-the configurator finds that the installed @code{ptx} accepts @samp{-G}.
+portably between GNU and System V, you should always use it with a
+single input file, and always expect the result on standard output.  You
+might also want to automatically configure in a @samp{-G} option to
+@code{ptx} calls in products using @code{ptx}, if the configurator finds
+that the installed @code{ptx} accepts @samp{-G}.
 
 @item
 The only options available in System V @code{ptx} are options @samp{-b},
@@ -3053,7 +3057,7 @@ line width computations.
 All 256 characters, even @kbd{NUL}s, are always read and processed from
 input file with no adverse effect, even if GNU extensions are disabled.
 However, System V @code{ptx} does not accept 8-bit characters, a few
-control characters are rejected, and the tilde @kbd{~} is condemned.
+control characters are rejected, and the tilde @kbd{~} is also rejected.
 
 @item
 Input line length is only limited by available memory, even if GNU
@@ -3156,7 +3160,7 @@ character.
 
 @itemx --output-delimiter=@var{output_delim_string}
 @opindex --output-delimiter
-For @samp{-f}, output fields are separated by @var{output_delim_string}
+For @samp{-f}, output fields are separated by @var{output_delim_string}.
 The default is to use the input delimiter.
 
 
@@ -3871,9 +3875,9 @@ water pipeline.
 
 With the Unix shell, it's very easy to set up data pipelines:
 
-@example
+@smallexample
 program_to_create_data | filter1 | .... | filterN > final.pretty.data
-@end example
+@end smallexample
 
 We start out by creating the raw data; each filter applies some successive
 transformation to the data, until by the time it comes out of the pipeline,
@@ -4137,9 +4141,9 @@ The next step is to get rid of punctuation.  Quoted words and unquoted words
 should be treated identically; it's easiest to just get the punctuation out of
 the way.
 
-@example
+@smallexample
 $ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' | ...
-@end example
+@end smallexample
 
 The second @code{tr} command operates on the complement of the listed
 characters, which are all the letters, the digits, the underscore, and
@@ -4152,10 +4156,10 @@ The words only contain alphanumeric characters (and the underscore).  The
 next step is break the data apart so that we have one word per line. This
 makes the counting operation much easier, as we will see shortly.
 
-@example
+@smallexample
 $ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' |
 > tr -s '[ ]' '\012' | ...
-@end example
+@end smallexample
 
 This command turns blanks into newlines.  The @samp{-s} option squeezes
 multiple newline characters in the output into just one.  This helps us
@@ -4166,10 +4170,10 @@ typing in all of a command.)
 We now have data consisting of one word per line, no punctuation, all one
 case.  We're ready to count each word:
 
-@example
+@smallexample
 $ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' |
 > tr -s '[ ]' '\012' | sort | uniq -c | ...
-@end example
+@end smallexample
 
 At this point, the data might look something like this:
 
@@ -4198,7 +4202,7 @@ reverse the order of the sort
 
 The final pipeline looks like this:
 
-@example
+@smallexample
 $ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' |
 > tr -s '[ ]' '\012' | sort | uniq -c | sort -nr
  156 the
@@ -4207,7 +4211,7 @@ $ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' |
   51 of
   51 and
  ...
-@end example
+@end smallexample
 
 Whew!  That's a lot to digest.  Yet, the same principles apply. With six
 commands, on two lines (really one long one split for convenience), we've
@@ -4225,19 +4229,19 @@ dictionary.
 Now, how to compare our file with the dictionary?  As before, we generate
 a sorted list of words, one per line:
 
-@example
+@smallexample
 $ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' |
 > tr -s '[ ]' '\012' | sort -u | ...
-@end example
+@end smallexample
 
 Now, all we need is a list of words that are @emph{not} in the
 dictionary.  Here is where the @code{comm} command comes in.
 
-@example
+@smallexample
 $ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' |
 > tr -s '[ ]' '\012' | sort -u |
 > comm -23 - /usr/lib/ispell/ispell.words
-@end example
+@end smallexample
 
 The @samp{-2} and @samp{-3} options eliminate lines that are only in the
 dictionary (the second file), and lines that are in both files.  Lines
