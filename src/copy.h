@@ -56,6 +56,10 @@ struct cp_options
      with regular files. */
   int interactive;
 
+  /* If nonzero, rather than copying, first attempt to use rename.
+     If that fails, then resort to copying.  */
+  int move_mode;
+
   /* This process's effective user ID.  */
   uid_t myeuid;
 
@@ -79,13 +83,6 @@ struct cp_options
      as themselves rather than copying their contents. */
   int recursive;
 
-  /* Control creation of sparse files.  */
-  enum Sparse_type sparse_mode;
-
-  /* If nonzero, create symbolic links instead of copying files.
-     Create destination directories as usual. */
-  int symbolic_link;
-
   /* If nonzero, set file mode to value of MODE.  Otherwise,
      set it based on current umask modified by UMASK_KILL.  */
   int set_mode;
@@ -93,6 +90,13 @@ struct cp_options
   /* Set the mode of the destination file to exactly this value
      if USE_MODE is nonzero.  */
   mode_t mode;
+
+  /* Control creation of sparse files.  */
+  enum Sparse_type sparse_mode;
+
+  /* If nonzero, create symbolic links instead of copying files.
+     Create destination directories as usual. */
+  int symbolic_link;
 
   /* The bits to preserve in created files' modes. */
   unsigned int umask_kill;
@@ -112,6 +116,6 @@ struct cp_options
 int
 copy PARAMS ((const char *src_path, const char *dst_path,
 	      int nonexistent_dst, const struct cp_options *options,
-	      int *copy_into_self));
+	      int *copy_into_self, int *rename_succeeded));
 
 #endif
