@@ -17,7 +17,7 @@ THIS_VERSION_REGEXP = $(subst .,\.,$(VERSION))
 PREV_VERSION := $(shell cat $(prev_version_file))
 PREV_VERSION_REGEXP := $(shell echo $(PREV_VERSION)|sed 's/\./\\./g')
 
-tag-package = $(shell echo "$(PACKAGE)" | tr a-z A-Z)
+tag-package = $(shell echo "$(PACKAGE)" | tr '[:lower:]' '[:upper:]')
 tag-this-version = $(subst .,_,$(VERSION))
 tag-prev-version = $(subst .,_,$(PREV_VERSION))
 this-cvs-tag = $(tag-package)-$(tag-this-version)
@@ -177,7 +177,12 @@ define emit-rsync-commands
 	echo =====================================
 endef
 
-alpha: writable-files po-check
+# Make sure that the copyright date in lib/version-etc.c is up to date.
+check-copyright: lib/version-etc.c
+	@grep 'N_("Copyright (C) $(shell date +%Y) Free' $< > /dev/null \
+	  || { echo 'out of date copyright in $<; update it' 1>&2; exit 1; }
+
+alpha: writable-files po-check check-copyright
 	$(MAKE) cvs-dist
 	$(MAKE) -s announcement > /tmp/announce-$(my_distdir)
 	ln $(distdir).tar.gz ../release
