@@ -1,6 +1,11 @@
-2004-12-06  Jim Meyering  <jim@meyering.net>
+2004-12-07  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* src/factor.c (factor): Don't list 1 as a factor of 1.
+	Problem reported by Thomas Folz-Donahue.
+
+2004-12-06  Jim Meyering  <jim@meyering.net>
 
 	* tests/du/files0-from: Sanitize environment.
 	Otherwise, e.g., BLOCKSIZE=k would cause a failure, and that
