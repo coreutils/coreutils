@@ -1,12 +1,5 @@
 #! /bin/sh
 
-: ${LS=ls}
-: ${MV=mv}
-: ${MKDIR=mkdir}
-: ${MKNOD=mknod}
-: ${RM=rm}
-: ${TOUCH=touch}
-
 . $srcdir/setup
 
 if test -z "$other_partition_tmpdir"; then
@@ -18,10 +11,10 @@ dir=.mv-dir
 
 framework_failure=0
 
-$RM -f $null || framework_failure=1
-$MKNOD $null p || framework_failure=1
-$MKDIR -p $dir/a/b/c $dir/d/e/f || framework_failure=1
-$TOUCH $dir/a/b/c/file1 $dir/d/e/f/file2 || framework_failure=1
+rm -f $null || framework_failure=1
+mknod $null p || framework_failure=1
+mkdir -p $dir/a/b/c $dir/d/e/f || framework_failure=1
+touch $dir/a/b/c/file1 $dir/d/e/f/file2 || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
@@ -37,13 +30,13 @@ LANG=C
 export LANG
 
 fail=0
-$MV --verbose $null $dir $other_partition_tmpdir > out || fail=1
+mv --verbose $null $dir $other_partition_tmpdir > out || fail=1
 # Make sure the files are gone.
 test -f $null && fail=1
 test -d $dir && fail=1
 # Make sure they were moved.
 # Since `test -e' is not portable, use `ls'.
-$LS $other_partition_tmpdir/$null > /dev/null || fail=1
+ls $other_partition_tmpdir/$null > /dev/null || fail=1
 test -d $other_partition_tmpdir/$dir/a/b/c || fail=1
 
 sed "s,$other_partition_tmpdir,XXX," out > out2
@@ -81,8 +74,8 @@ EOF
 cmp out2 exp || fail=1
 
 # cd $other_partition_tmpdir
-# $LS -l -A -R $other_partition_tmpdir
+# ls -l -A -R $other_partition_tmpdir
 
-$RM -rf $null $dir $other_partition_tmpdir out out2 exp
+rm -rf $null $dir $other_partition_tmpdir out out2 exp
 
 exit $fail
