@@ -1,3 +1,19 @@
+2004-05-06  Jim Meyering  <jim@meyering.net>
+
+	* src/id.c (xgetgroups): Use xnmalloc, rather than xmalloc.
+	Don't add `1' to the buffer size (it was to protect against malloc
+	implementations that fail to allocate a buffer of size zero).
+	That is no longer necessary, since we use a malloc wrapper
+	on such systems.
+
+	* src/wc.c (get_input_fstatus): Use xnmalloc, rather than xmalloc.
+	* src/head.c (elide_tail_bytes_pipe): Likewise.
+	* src/df.c (main): Likewise.
+	* src/shred.c (do_wipefd): Likewise.
+	* src/users.c (list_entries_users): Likewise.
+	* src/tail.c (main): Likewise.
+	* src/md5sum.c (main): Likewise.
+
 2004-04-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/df.c (show_disk, show_point): If several filesystems are
