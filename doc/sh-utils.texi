@@ -3145,8 +3145,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 Print all numbers using @var{format}; default @samp{%g}.
 @var{format} must contain exactly one of the standarding float output
 formats @samp{%e}, @samp{%f}, @samp{%g}, or integer output formats
-@samp{%d}, @samp{%u}, @samp{%o}, @samp{%x}, @samp{%X}.  However, currently
-the integer formats are restricted to those that take `int' arguments.
+@samp{%d}, @samp{%u}, @samp{%o}, @samp{%x}, @samp{%X}.  However, the
+integer formats are currently restricted to those that take `int' arguments.
 That is, the `long' and `long long' variants like @samp{%ld} and @samp{%llu}
 are not supported.
 
