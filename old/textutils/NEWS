@@ -1,5 +1,12 @@
 Changes in release 2.1
 [2.0.13]
+* pr accepts new -D or --date option, to specify date format.
+* The following changes are required by POSIX:
+  - If POSIXLY_CORRECT is set, dates in pr headers now look something like
+    'Dec  4 23:59 2001', with the exact appearance affected by LC_TIME.
+  - pr -h now affects only the center header string, not the entire header.
+  - pr no longer truncates headers.
+* Spacing in pr headers has been adjusted slightly.
 * `fmt --prefix=S' now works when S contains a byte with the high bit set
 [2.0.12]
 * sort has improved performance when using very little main memory
