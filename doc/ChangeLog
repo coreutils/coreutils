@@ -1,3 +1,7 @@
+2002-08-27  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* coreutils.texi: Document readlink.
+
 2002-12-14  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (mknod invocation): Specify how major and minor mode
