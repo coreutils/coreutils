@@ -896,7 +896,13 @@ copy_internal (const char *src_path, const char *dst_path,
   else if ((x->preserve_chmod_bits || new_dst)
 	   && (x->copy_as_regular || S_ISREG (src_type) || S_ISDIR (src_type)))
     {
-      if (chmod (dst_path, src_mode & x->umask_kill))
+      mode_t dst_mode = src_mode;
+
+      /* Honor the umask for `cp', but not for `mv'.  */
+      if (!x->move_mode)
+	dst_mode &= x->umask_kill;
+
+      if (chmod (dst_path, dst_mode))
 	{
 	  error (0, errno, _("preserving permissions for %s"), dst_path);
 	  if (x->require_preserve)
