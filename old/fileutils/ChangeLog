@@ -2,6 +2,9 @@
 
 	* Version 4.0q.
 
+	* src/install.c (install_file_to_path): Always use install_file_in_file.
+	Based on a patch from Adam Klein via Michael Stone.
+
 	* tests/install/Makefile.am (TESTS): Add create-leading.
 	* tests/install/create-leading: New file.
 
