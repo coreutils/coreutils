@@ -75,10 +75,17 @@ typedef double LONG_DOUBLE;
 #ifndef ULONG_MAX
 # define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
 #endif
+
+#if HAVE_VALUES_H
+# include <values.h>
+#endif
+
+#ifndef BITSPERBYTE
+# define BITSPERBYTE 8
+#endif
+
 #ifndef OFF_T_MAX
-/* FIXME: is there a way to do this without relying on the
-   `8 bits per byte' assumption?  */
-# define OFF_T_MAX (~((off_t)1 << (sizeof (off_t) * 8 - 1)))
+# define OFF_T_MAX ((off_t)(~((off_t)1 << (sizeof (off_t) * BITSPERBYTE - 1))))
 #endif
 
 #define STREQ(a,b) (strcmp((a), (b)) == 0)
