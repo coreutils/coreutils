@@ -1,6 +1,10 @@
-2002-01-21  Jim Meyering  <meyering@lucent.com>
+2002-01-22  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* po/POTFILES.in: Add lib/xmemcoll.c and src/sys2.h.
+
+2002-01-21  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.maint (strftime-check): New rule.
 	(local-check): Convert this target to a list.  Update uses.
