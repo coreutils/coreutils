@@ -1,3 +1,12 @@
+1999-08-29  Jim Meyering  <meyering@ascend.com>
+
+	* lib/getdate.y (get_date): Rename outermost local `probe' to `quarter'.
+	(get_date): Rename latter local `tm' to probe_tm.
+
+	* lib/getdate.y (relative_time_table): Change `type' of `THIS' from
+	tMINUTE_UNIT to tUNUMBER.  From Urs Thuermann.
+	* tests/date/Test.pm (test_vector): Add tests for use of `this'.
+
 1999-08-25  Jim Meyering  <meyering@ascend.com>
 
 	* man/Makefile.summ (seq-summary): Define.
