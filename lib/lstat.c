@@ -1,7 +1,7 @@
 /* Work around the bug in some systems whereby lstat succeeds when
    given the zero-length file name argument.  The lstat from SunOS4.1.4
    has this bug.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,11 +21,6 @@
 
 #include <config.h>
 
-/* Disable the definition of lstat to rpl_lstat (from config.h) in this
-   file.  Otherwise, we'd get conflicting prototypes for rpl_lstat on
-   most systems.  */
-#undef lstat
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
@@ -33,16 +28,20 @@
 extern int errno;
 #endif
 
-/* FIXME: describe.  */
+/* This is a wrapper for lstat(2).
+   If FILE is the empty string, fail with errno == ENOENT.
+   Otherwise, return the result of calling the real lstat.
+
+   This works around the bug in some systems whereby lstat succeeds when
+   given the zero-length file name argument.  The lstat from SunOS4.1.4
+   has this bug.  */
 
 int
-rpl_lstat (file, sbuf)
-     const char *file;
-     struct stat *sbuf;
+rpl_lstat (const char *file, struct stat *sbuf)
 {
   if (file && *file == 0)
     {
-      errno = EINVAL;
+      errno = ENOENT;
       return -1;
     }
 
