@@ -1,4 +1,6 @@
-/*  Copyright (C) 2000 Free Software Foundation, Inc.
+/* timespec -- System time interface
+
+   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -14,8 +16,8 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-#if ! defined NANOSLEEP_H
-# define NANOSLEEP_H
+#if ! defined TIMESPEC_H
+# define TIMESPEC_H
 
 /* You must include config.h before including this file.  */
 
@@ -40,10 +42,19 @@ struct timespec
 };
 # endif
 
+# ifdef ST_MTIM_NSEC
+#  define TIMESPEC_NS(timespec) ((timespec).ST_MTIM_NSEC)
+# else
+#  define TIMESPEC_NS(timespec) 0
+# endif
+
 # if ! HAVE_DECL_NANOSLEEP
 /* Don't specify a prototype here.  Some systems (e.g., OSF) declare
    nanosleep with a conflicting one (const-less first parameter).  */
 int nanosleep ();
 # endif
+
+int gettime (struct timespec *);
+int settime (struct timespec const *);
 
 #endif
