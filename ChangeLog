@@ -1,6 +1,11 @@
-2005-02-02  Jim Meyering  <jim@meyering.net>
+2005-02-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* src/system.h: Include "memrchr.h".
+	(memrchr) [!HAVE_DECL_MEMRCHR]: Remove decl.
+
+2005-02-02  Jim Meyering  <jim@meyering.net>
 
 	* tests/du/8gb: Also adjust the test (s/64/128/) to detect
 	systems that don't support sparse files.
