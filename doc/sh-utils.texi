@@ -797,7 +797,7 @@ This makes it possible to test @code{expr length quote "$x"} or
 @code{expr quote "$x" : '.*/\(.\)'} and have it do the right thing even if
 the value of @var{$x} happens to be (for example) @code{/} or @code{index}.
 This operator is a GNU extension.  It is disabled when
-the environment variable @var{POSIXLY_CORRECT} is set.
+the environment variable @env{POSIXLY_CORRECT} is set.
 
 @end table
 
@@ -1749,7 +1749,7 @@ Tell the kernel that the terminal has @var{n} columns.  Non-POSIX.
 @vindex COLUMNS
 Print the number of rows and columns that the kernel thinks the
 terminal has.  (Systems that don't support rows and cols in the kernel
-typically use the environment variables @code{LINES} and @code{COLUMNS}
+typically use the environment variables @env{LINES} and @env{COLUMNS}
 instead; however, GNU @code{stty} does not know anything about them.)
 Non-POSIX.
 
@@ -2690,7 +2690,7 @@ Ordinarily, filenames are looked up starting at the root of the
 directory structure, i.e., @file{/}.  @code{chroot} changes the root to
 the directory @var{newroot} (which must exist) and then runs
 @var{command} with optional @var{args}.  If @var{command} is not
-specified, the default is the value of the @code{SHELL} environment
+specified, the default is the value of the @env{SHELL} environment
 variable or @code{/bin/sh} if not set, invoked with the @samp{-i} option.
 
 The only options are @samp{--help} and @samp{--version}.  @xref{Common
@@ -2720,7 +2720,7 @@ to an empty value is different from unsetting it.
 
 @vindex PATH
 The first remaining argument specifies the program name to invoke; it is
-searched for according to the @code{PATH} environment variable.  Any
+searched for according to the @env{PATH} environment variable.  Any
 remaining arguments are passed as arguments to that program.
 
 @cindex environment, printing
@@ -2864,9 +2864,9 @@ effective user id of zero (the super-user).
 @vindex LOGNAME
 @cindex login shell
 By default, @code{su} does not change the current directory.
-It sets the environment variables @code{HOME} and @code{SHELL}
+It sets the environment variables @env{HOME} and @env{SHELL}
 from the password entry for @var{user}, and if @var{user} is not
-the super-user, sets @code{USER} and @code{LOGNAME} to @var{user}.
+the super-user, sets @env{USER} and @env{LOGNAME} to @var{user}.
 By default, the shell is not a login shell.
 
 Any additional @var{arg}s are passed as additional arguments to the
@@ -2917,10 +2917,10 @@ expansion (globbing), which is not likely to be useful.
 @vindex PATH
 @cindex login shell, creating
 Make the shell a login shell.  This means the following.  Unset all
-environment variables except @code{TERM}, @code{HOME}, and @code{SHELL}
-(which are set as described above), and @code{USER} and @code{LOGNAME}
+environment variables except @env{TERM}, @env{HOME}, and @env{SHELL}
+(which are set as described above), and @env{USER} and @env{LOGNAME}
 (which are set, even for the super-user, as described above), and set
-@code{PATH} to a compiled-in default value.  Change to @var{user}'s home
+@env{PATH} to a compiled-in default value.  Change to @var{user}'s home
 directory.  Prepend @samp{-} to the shell's name, intended to make it
 read its login startup file(s).
 
@@ -2933,9 +2933,9 @@ read its login startup file(s).
 @cindex environment, preserving
 @flindex /etc/shells
 @cindex restricted shell
-Do not change the environment variables @code{HOME}, @code{USER},
-@code{LOGNAME}, or @code{SHELL}.  Run the shell given in the environment
-variable @code{SHELL} instead of the shell from @var{user}'s passwd
+Do not change the environment variables @env{HOME}, @env{USER},
+@env{LOGNAME}, or @env{SHELL}.  Run the shell given in the environment
+variable @env{SHELL} instead of the shell from @var{user}'s passwd
 entry, unless the user running @code{su} is not the superuser and
 @var{user}'s shell is restricted.  A @dfn{restricted shell} is one that
 is not listed in the file @file{/etc/shells}, or in a compiled-in list
