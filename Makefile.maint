@@ -47,6 +47,14 @@ po-check:
 	  rm -f $@-1 $@-2; \
 	fi
 
+# In a definition of #define AUTHORS "... and ..." where the RHS contains
+# the English word `and', the string must be marked with `N_ (...)' so that
+# gettext recognizes it as a string requiring translation.
+author_mark_check:
+	@grep '^# *define AUTHORS "[^"]* and ' src/*.c |grep -v ' N_ (' && \
+	  { echo 'Makefile.maint: enclose the above strings in N_ (...)' 1>&2; \
+	    exit 1; } || :
+
 # Check that `make alpha' will not fail at the end of the process.
 writable-files:
 	if test -d $(release-archive-dir); then :; else			\
@@ -62,7 +70,8 @@ writable-files:
 	test "$$fail" && exit 1 || :
 
 # Checks that don't require cvs.
-local-check: changelog-check po-check writable-files check-copyright m4-check
+local-check: changelog-check po-check writable-files check-copyright m4-check \
+	author_mark_check
 
 
 # Sanity checks with the CVS repository.
