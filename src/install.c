@@ -560,7 +560,7 @@ get_ids (void)
 	{
 	  long int tmp_long;
 	  if (xstrtol (owner_name, NULL, 0, &tmp_long, NULL) != LONGINT_OK
-	      || tmp_long < 0 || tmp_long > UID_T_MAX)
+	      || !(0 <= tmp_long && (uid_t) tmp_long <= UID_T_MAX))
 	    error (EXIT_FAILURE, 0, _("invalid user %s"), quote (owner_name));
 	  owner_id = (uid_t) tmp_long;
 	}
@@ -578,7 +578,7 @@ get_ids (void)
 	{
 	  long int tmp_long;
 	  if (xstrtol (group_name, NULL, 0, &tmp_long, NULL) != LONGINT_OK
-	      || tmp_long < 0 || tmp_long > GID_T_MAX)
+	      || !(0 <= tmp_long && (gid_t) tmp_long <= GID_T_MAX))
 	    error (EXIT_FAILURE, 0, _("invalid group %s"), quote (group_name));
 	  group_id = (gid_t) tmp_long;
 	}
