@@ -27,8 +27,6 @@ DEFS += -DLIBDIR=\"$(libdir)\"
 
 libfetish_a_SOURCES = \
   allocsa.c allocsa.h \
-  argmatch.c argmatch.h \
-  cycle-check.c cycle-check.h \
   dev-ino.h \
   diacrit.c diacrit.h \
   dup-safer.c \
