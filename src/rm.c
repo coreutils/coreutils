@@ -1,5 +1,5 @@
 /* `rm' file deletion utility for GNU.
-   Copyright (C) 88, 90, 91, 1994-2001 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1994-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -187,17 +187,31 @@ main (int argc, char **argv)
 
   remove_init ();
 
-  for (; optind < argc; optind++)
-    {
-      struct File_spec fs;
-      enum RM_status status;
+  {
+    struct stat cwd_sb;
+    struct dev_ino cwd_dev_ino;
 
-      fspec_init_file (&fs, argv[optind]);
-      status = rm (&fs, 1, &x);
-      assert (VALID_STATUS (status));
-      if (status == RM_ERROR)
-	fail = 1;
-    }
+    /* FIXME: this lstat is not always necessary -- e.g., if there are no
+       directories, or if all directories arguments are specified via
+       absolute names.  */
+    if (lstat (".", &cwd_sb))
+      error (EXIT_FAILURE, errno, _("cannot lstat `.'"));
+
+    cwd_dev_ino.st_dev = cwd_sb.st_dev;
+    cwd_dev_ino.st_ino = cwd_sb.st_ino;
+
+    for (; optind < argc; optind++)
+      {
+	struct File_spec fs;
+	enum RM_status status;
+
+	fspec_init_file (&fs, argv[optind]);
+	status = rm (&fs, 1, &x, &cwd_dev_ino);
+	assert (VALID_STATUS (status));
+	if (status == RM_ERROR)
+	  fail = 1;
+      }
+  }
 
   remove_fini ();
 
