@@ -1,3 +1,17 @@
+2004-01-09  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (yes invocation): Document that a write error
+	makes `yes' exit unsuccessfully.
+	(chroot invocation): Enumerate the meaning of exit status values.
+	(nice invocation): Likewise.
+	(Exit status) [@macro exitstatus]: New macro.
+	Use @exitstatus to describe the exit status of most programs.
+
+2004-01-02  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (du invocation): Mention that -H will eventually
+	mean not --si, but --dereference-args (-D).
+
 2003-12-20  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (du invocation): Describe new option: -0, --null.
