@@ -37,7 +37,6 @@
 #include "ftw.h"
 #include "hash.h"
 #include "human.h"
-#include "mmap-stack.h"
 #include "quote.h"
 #include "quotearg.h"
 #include "same.h"
@@ -494,8 +493,7 @@ is_symlink_to_dir (char const *file)
    FTW_FLAGS controls how nftw works.
    Return nonzero upon error.  */
 
-static void du_files (char **files, int ftw_flags) ATTRIBUTE_NORETURN;
-static void
+static int
 du_files (char **files, int ftw_flags)
 {
   int fail = 0;
@@ -542,7 +540,7 @@ du_files (char **files, int ftw_flags)
   if (print_totals)
     print_size (tot_size, _("total"));
 
-  exit (fail || G_fail ? EXIT_FAILURE : EXIT_SUCCESS);
+  return fail;
 }
 
 int
@@ -719,5 +717,6 @@ main (int argc, char **argv)
   /* Initialize the hash structure for inode numbers.  */
   hash_init ();
 
-  RUN_WITH_BIG_STACK_2 (du_files, files, ftw_flags);
+  exit (du_files (files, ftw_flags) || G_fail
+	? EXIT_FAILURE : EXIT_SUCCESS);
 }
