@@ -639,8 +639,8 @@ overwrite_prompt (char const *dst_path, struct stat const *dst_sb)
 }
 
 /* Hash an F_triple.  */
-static unsigned int
-triple_hash (void const *x, unsigned int table_size)
+static size_t
+triple_hash (void const *x, size_t table_size)
 {
   struct F_triple const *p = x;
 
@@ -652,15 +652,15 @@ triple_hash (void const *x, unsigned int table_size)
      to be very large to make the N^2 factor noticable, and
      one would probably encounter a limit on the length of
      a command line before it became a problem.  */
-  unsigned int tmp = hash_pjw (p->name, table_size);
+  size_t tmp = hash_pjw (p->name, table_size);
 
   /* Ignoring the device number here should be fine.  */
   return (tmp | p->st_ino) % table_size;
 }
 
 /* Hash an F_triple.  */
-static unsigned int
-triple_hash_no_name (void const *x, unsigned int table_size)
+static size_t
+triple_hash_no_name (void const *x, size_t table_size)
 {
   struct F_triple const *p = x;
 
