@@ -1,5 +1,6 @@
 2003-10-31  Jim Meyering  <jim@meyering.net>
 
+	* hash.c: Include "xalloc.h".
 
 	* linebuffer.c: Include <string.h> for declaration of memset.
 
