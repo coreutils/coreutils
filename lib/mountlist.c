@@ -1,5 +1,5 @@
 /* mountlist.c -- return a list of mounted filesystems
-   Copyright (C) 1991, 1992, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -83,6 +83,11 @@ extern int errno;
 #ifdef MOUNTED_GETMNT		/* Ultrix.  */
 # include <sys/mount.h>
 # include <sys/fs_types.h>
+#endif
+
+#ifdef MOUNTED_NEXT_DEV		/* BeOS.  */
+# include <fs_info.h>
+# include <dirent.h>
 #endif
 
 #ifdef MOUNTED_FREAD		/* SVR2.  */
@@ -412,6 +417,111 @@ read_filesystem_list (int need_fs_type)
       goto free_then_fail;
   }
 #endif /* MOUNTED_GETMNT. */
+
+#if defined (MOUNTED_NEXT_DEV) /* BeOS */
+  {
+    /* The next_dev() and fs_stat_dev() system calls give the list of
+       all filesystems, including the information returned by statvfs()
+       (fs type, total blocks, free blocks etc.), but without the mount
+       point. But on BeOS all filesystems except / are mounted in the
+       rootfs, directly under /.
+       The directory name of the mount point is often, but not always,
+       identical to the volume name of the device.
+       We therefore get the list of subdirectories of /, and the list
+       of all filesystems, and match the two lists.  */
+
+    DIR *dirp;
+    struct rootdir_entry
+      {
+        char *name;
+        dev_t dev;
+        ino_t ino;
+        struct rootdir_entry *next;
+      };
+    struct rootdir_entry *rootdir_list;
+    struct rootdir_entry **rootdir_tail;
+    int32 pos;
+    dev_t dev;
+    fs_info fi;
+
+    /* All volumes are mounted in the rootfs, directly under /. */
+    rootdir_list = NULL;
+    rootdir_tail = &rootdir_list;
+    dirp = opendir ("/");
+    if (dirp)
+      {
+        struct dirent *d;
+
+        while ((d = readdir (dirp)) != NULL)
+          {
+            char *name;
+            struct stat statbuf;
+
+            if (strcmp (d->d_name, "..") == 0)
+              continue;
+
+            if (strcmp (d->d_name, ".") == 0)
+              name = xstrdup ("/");
+            else
+              {
+                name = xmalloc (1 + strlen (d->d_name) + 1);
+                name[0] = '/';
+                strcpy (name + 1, d->d_name);
+              }
+
+            if (stat (name, &statbuf) >= 0 && S_ISDIR (statbuf.st_mode))
+              {
+                struct rootdir_entry *re;
+
+                re = (struct rootdir_entry *) xmalloc (sizeof (struct rootdir_entry));
+                re->name = name;
+                re->dev = statbuf.st_dev;
+                re->ino = statbuf.st_ino;
+
+                /* Add to the linked list.  */
+                *rootdir_tail = re;
+                rootdir_tail = &re->next;
+              }
+            else
+              free (name);
+          }
+        closedir (dirp);
+      }
+    *rootdir_tail = NULL;
+
+    for (pos = 0; (dev = next_dev (&pos)) >= 0; )
+      if (fs_stat_dev (dev, &fi) >= 0)
+        {
+          /* Note: fi.dev == dev. */
+          struct rootdir_entry *re;
+
+          for (re = rootdir_list; re; re = re->next)
+            if (re->dev == fi.dev && re->ino == fi.root)
+              break;
+
+          me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
+          me->me_devname = xstrdup (fi.device_name[0] != '\0' ? fi.device_name : fi.fsh_name);
+          me->me_mountdir = xstrdup (re != NULL ? re->name : fi.fsh_name);
+          me->me_type = xstrdup (fi.fsh_name);
+          me->me_dev = fi.dev;
+          me->me_dummy = 0;
+          me->me_remote = (fi.flags & B_FS_IS_SHARED) != 0;
+
+          /* Add to the linked list. */
+          *mtail = me;
+          mtail = &me->me_next;
+        }
+    *mtail = NULL;
+
+    while (rootdir_list != NULL)
+      {
+        struct rootdir_entry *re = rootdir_list;
+        rootdir_list = re->next;
+        free (re->name);
+        free (re);
+      }
+  }
+#endif /* MOUNTED_NEXT_DEV */
 
 #if defined (MOUNTED_GETFSSTAT)	/* __alpha running OSF_1 */
   {
