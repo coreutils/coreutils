@@ -1,6 +1,25 @@
-#serial 2
+# calloc.m4 serial 3
 
-# Determine whether calloc (N, S) returns non-NULL when N*S is zero.
+# Copyright (C) 2004 Free Software Foundation, Inc.
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+# Written by Jim Meyering.
+
+# Determine whether calloc (N, S) returns non-NULL when N*S is zero,
+# and returns NULL when N*S overflows.
 # If so, define HAVE_CALLOC.  Otherwise, define calloc to rpl_calloc
 # and arrange to use a calloc wrapper function that does work in that case.
 
@@ -9,17 +28,11 @@
 # If `calloc (0, 0)' is properly handled, run IF-WORKS, otherwise, IF-NOT.
 AC_DEFUN([_AC_FUNC_CALLOC_IF],
 [AC_REQUIRE([AC_HEADER_STDC])dnl
+AC_REQUIRE([AC_TYPE_SIZE_T])dnl
 AC_CHECK_HEADERS(stdlib.h)
 AC_CACHE_CHECK([for GNU libc compatible calloc], ac_cv_func_calloc_0_nonnull,
-[AC_RUN_IFELSE(
-[AC_LANG_PROGRAM(
-[[#if STDC_HEADERS || HAVE_STDLIB_H
-# include <stdlib.h>
-#else
-char *calloc ();
-#endif
-]],
-		 [exit (calloc (0, 0) ? 0 : 1);])],
+[AC_RUN_IFELSE([AC_LANG_PROGRAM([AC_INCLUDES_DEFAULT],
+		  [exit (!calloc (0, 0) || calloc ((size_t) -1 / 8 + 1, 8));])],
 	       [ac_cv_func_calloc_0_nonnull=yes],
 	       [ac_cv_func_calloc_0_nonnull=no],
 	       [ac_cv_func_calloc_0_nonnull=no])])

@@ -1,3 +1,10 @@
+2004-11-17  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* realloc.c (rpl_realloc): Call 'free' if n==0, since realloc
+	might fail.  Problem reported by Yoann Vandoorselaere.
+	* calloc.c (rpl_calloc): Defend against buggy calloc implementations
+	that mishandle size_t overflow.
+
 2004-11-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* xgetcwd.c: Include <limits.h>, for PATH_MAX.

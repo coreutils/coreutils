@@ -1,3 +1,8 @@
+2004-11-17  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* calloc.m4 (_AC_FUNC_CALLOC_IF): Check for buggy calloc implementations
+	that mishandle size_t overflow.
+
 2004-11-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* canon-host.m4 (gl_CANON_HOST): Check for getaddrinfo.

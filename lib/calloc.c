@@ -1,4 +1,4 @@
-/* Work around the condition whereby calloc (n, s) fails when n*s is 0.
+/* calloc() function that is glibc compatible.
    This wrapper function is required at least on Tru64 UNIX 5.1.
    Copyright (C) 2004 Free Software Foundation, Inc.
 
@@ -31,9 +31,17 @@
 void *
 rpl_calloc (size_t n, size_t s)
 {
+  size_t bytes;
   if (n == 0)
     n = 1;
   if (s == 0)
     s = 1;
+
+  /* Defend against buggy calloc implementations that mishandle
+     size_t overflow.  */
+  bytes = n * s;
+  if (bytes / s != n)
+    return NULL;
+
   return calloc (n, s);
 }
