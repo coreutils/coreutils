@@ -127,7 +127,7 @@ make_path (argpath, mode, parent_mode, owner, group, verbose_fmt_string)
       slash = dirpath;
       while (*slash == '/')
 	slash++;
-      while (slash = index (slash, '/'))
+      while ((slash = index (slash, '/')))
 	{
 	  *slash = '\0';
 	  if (stat (dirpath, &stats))
