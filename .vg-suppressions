@@ -17,7 +17,6 @@
 }
 {
    libc_dl_catch_error__map_versions
-   <insert a suppression name here>
    Memcheck:Addr1
    obj:/lib/ld-2.3.2.so
    fun:_dl_check_map_versions
