@@ -2,6 +2,7 @@
 
 	* coreutils.texi (sort invocation): -u disables the last-resort
 	comparison, too.  Revamp its description.
+	(test invocation): Document -r, -w, -x more carefully.
 
 2004-09-08  Paul Eggert  <eggert@cs.ucla.edu>
 
