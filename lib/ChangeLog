@@ -1,5 +1,10 @@
 2003-01-11  Bruno Haible  <bruno@clisp.org>
 
+	* same.c (same_name): Reorder tests so as to avoid calling stat()
+	when a string comparison is sufficient.
+
+2003-01-11  Bruno Haible  <bruno@clisp.org>
+
 	* readtokens.c (readtoken): Cast character to 'unsigned char', not
 	'unsigned int'.
 
