@@ -1,5 +1,10 @@
 Changes in release 2.1
 [2.0a]
+* `tail --follow=name' no longer gets a failed assertion for a
+  dev,inode-reusing race condition
+* sort and comm no longer consider newlines to be part of the line,
+  as this requirement will likely be removed from POSIX.2.
+  This undoes some changes made for textutils 1.22m and 1.22n.
 * tail's (short only) -f option no longer accepts an optional argument,
   so e.g., `tail -fn 2 file' works again.
 * tail no longer refuses to operate on certain types of files
