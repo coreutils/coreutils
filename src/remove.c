@@ -1,5 +1,5 @@
 /* remove.c -- core functions for removing files and directories
-   Copyright (C) 88, 90, 91, 1994-2001 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1994-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -874,6 +874,10 @@ The following two directories have the same inode number:\n"));
     }
   else
     {
+      /* If this command line argument contains a `/' (which means
+	 rm will chdir `into' it while removing it), then rm will
+	 have to save/restore the current working directory, in case a
+	 subsequent command line argument is a relative path name.  */
       int need_save_cwd = user_specified_name;
       enum RM_status status;
 
