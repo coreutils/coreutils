@@ -119,13 +119,21 @@ struct buffer_record
   struct buffer_record *next;
 };
 
+#ifndef __P
+# if PROTOTYPES
+#  define __P(Args) Args
+# else
+#  define __P(Args) ()
+# endif
+#endif
+
 int safe_read ();
 
-static void cleanup (void);
-static void close_output_file (void);
-static void create_output_file (void);
-static void save_line_to_file (struct cstring *line);
-static void usage (int status);
+static void cleanup __P ((void));
+static void close_output_file __P ((void));
+static void create_output_file __P ((void));
+static void save_line_to_file __P ((struct cstring *line));
+static void usage __P ((int status));
 
 /* The name this program was run with. */
 char *program_name;
