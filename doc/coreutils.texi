@@ -8279,25 +8279,26 @@ Allow user to specify the output format.
 
 Interpreted sequences for file stat are:
 @itemize @bullet
-@item %n - File name
-@item %N - Quoted File name with dereference if symbolic link
-@item %d - Device number in decimal
-@item %D - Device number in hex
-@item %i - Inode number
 @item %a - Access rights in octal
 @item %A - Access rights in human readable form
+@item %b - Number of blocks allocated (see @samp{%B})
+@item %B - The size in bytes of each block reported by @samp{%b}
+@item %d - Device number in decimal
+@item %D - Device number in hex
 @item %f - raw mode in hex
 @item %F - File type
-@item %h - Number of hard links
-@item %u - User Id of owner
-@item %U - User name of owner
 @item %g - Group Id of owner
 @item %G - Group name of owner
+@item %h - Number of hard links
+@item %i - Inode number
+@item %n - File name
+@item %N - Quoted File name with dereference if symbolic link
+@item %o - IO block size
+@item %s - Total size, in bytes
 @item %t - Major device type in hex
 @item %T - Minor device type in hex
-@item %s - Total size, in bytes
-@item %b - Number of blocks allocated
-@item %o - IO block size
+@item %u - User Id of owner
+@item %U - User name of owner
 @item %x - Time of last access
 @item %X - Time of last access as seconds since Epoch
 @item %y - Time of last modification
