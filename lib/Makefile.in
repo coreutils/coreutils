@@ -247,6 +247,7 @@ libfetish_a_SOURCES = \
   utimens.c utimens.h \
   version-etc.c version-etc.h \
   xalloc.h \
+  xfts.c xfts.h \
   xgetcwd.c xgetcwd.h \
   xgethostname.c xgethostname.h \
   xmalloc.c \
@@ -319,12 +320,12 @@ am_libfetish_a_OBJECTS = acl.$(OBJEXT) getdate.$(OBJEXT) \
 	save-cwd.$(OBJEXT) savedir.$(OBJEXT) settime.$(OBJEXT) \
 	sha.$(OBJEXT) stripslash.$(OBJEXT) time_r.$(OBJEXT) \
 	umaxtostr.$(OBJEXT) unicodeio.$(OBJEXT) userspec.$(OBJEXT) \
-	utimens.$(OBJEXT) version-etc.$(OBJEXT) xgetcwd.$(OBJEXT) \
-	xgethostname.$(OBJEXT) xmalloc.$(OBJEXT) xmemcoll.$(OBJEXT) \
-	xnanosleep.$(OBJEXT) xreadlink.$(OBJEXT) xstrdup.$(OBJEXT) \
-	xstrndup.$(OBJEXT) xstrtod.$(OBJEXT) xstrtoimax.$(OBJEXT) \
-	xstrtol.$(OBJEXT) xstrtoul.$(OBJEXT) xstrtoumax.$(OBJEXT) \
-	yesno.$(OBJEXT)
+	utimens.$(OBJEXT) version-etc.$(OBJEXT) xfts.$(OBJEXT) \
+	xgetcwd.$(OBJEXT) xgethostname.$(OBJEXT) xmalloc.$(OBJEXT) \
+	xmemcoll.$(OBJEXT) xnanosleep.$(OBJEXT) xreadlink.$(OBJEXT) \
+	xstrdup.$(OBJEXT) xstrndup.$(OBJEXT) xstrtod.$(OBJEXT) \
+	xstrtoimax.$(OBJEXT) xstrtol.$(OBJEXT) xstrtoul.$(OBJEXT) \
+	xstrtoumax.$(OBJEXT) yesno.$(OBJEXT)
 libfetish_a_OBJECTS = $(am_libfetish_a_OBJECTS)
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
@@ -400,13 +401,14 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/time_r.Po ./$(DEPDIR)/umaxtostr.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/unicodeio.Po ./$(DEPDIR)/userspec.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/utimens.Po ./$(DEPDIR)/version-etc.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/xgetcwd.Po ./$(DEPDIR)/xgethostname.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/xmalloc.Po ./$(DEPDIR)/xmemcoll.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/xnanosleep.Po ./$(DEPDIR)/xreadlink.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/xstrdup.Po ./$(DEPDIR)/xstrndup.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/xstrtod.Po ./$(DEPDIR)/xstrtoimax.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/xstrtol.Po ./$(DEPDIR)/xstrtoul.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/xstrtoumax.Po ./$(DEPDIR)/yesno.Po
+@AMDEP_TRUE@	./$(DEPDIR)/xfts.Po ./$(DEPDIR)/xgetcwd.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/xgethostname.Po ./$(DEPDIR)/xmalloc.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/xmemcoll.Po ./$(DEPDIR)/xnanosleep.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/xreadlink.Po ./$(DEPDIR)/xstrdup.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/xstrndup.Po ./$(DEPDIR)/xstrtod.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/xstrtoimax.Po ./$(DEPDIR)/xstrtol.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/xstrtoul.Po ./$(DEPDIR)/xstrtoumax.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/yesno.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -596,6 +598,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/userspec.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utimens.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/version-etc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xfts.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xgetcwd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xgethostname.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xmalloc.Po@am__quote@
