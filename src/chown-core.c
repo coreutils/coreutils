@@ -332,23 +332,12 @@ change_file_owner (int cmdline_arg, const char *file, uid_t uid, gid_t gid,
 	    }
 	  else
 	    {
-	      /* The change succeeded.  On some systems, the chown function
-		 resets the `special' permission bits.  When run by a
-		 `privileged' user, this program must ensure that at least
-		 the set-uid and set-group ones are still set.  */
-	      if (file_stats.st_mode & ~(S_IFMT | S_IRWXUGO)
-		  /* If we called lchown above (which means this is a symlink),
-		     then skip it.  */
-		  && ! called_lchown)
-		{
-		  if (chmod (file, file_stats.st_mode))
-		    {
-		      error (0, saved_errno,
-			     _("unable to restore permissions of %s"),
-			     quote (file));
-		      fail = 1;
-		    }
-		}
+	      /* The change succeeded.  On some systems (e.g., Linux-2.4.x),
+		 the chown function resets the `special' permission bits.
+		 Do *not* restore those bits;  doing so would open a window in
+		 which a malicious user, M, could subvert a chown command run
+		 by some other user and operating on files in a directory
+		 where M has write access.  */
 	    }
 	}
       else if (chopt->verbosity == V_high)
