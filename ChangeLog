@@ -20,6 +20,7 @@
 	(tail_lines): Likewise, after lseek calls.
 	Reported by Nick Estes.  See http://bugs.debian.org/205251 for details.
 	* tests/tail-2/tail-n0f: New file.  Test for above fix.
+	* tests/tail-2/Makefile.am (TESTS): Add tail-n0f.
 
 2003-08-15  Jim Meyering  <jim@meyering.net>
 

@@ -162,7 +162,10 @@ TESTS_ENVIRONMENT = \
   PROG=tail
 
 
-TESTS = big-4gb proc-ksyms start-middle assert assert-2
+TESTS = \
+  tail-n0f \
+  big-4gb proc-ksyms start-middle assert assert-2
+
 subdir = tests/tail-2
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
