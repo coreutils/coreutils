@@ -63,13 +63,6 @@ dd: consider adding an option to suppress `bytes/block read/written'
 output to stderr.  Suggested here:
   http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=165045
 
-nl: fix this bug:
-  http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=177256
-  # printf 'a\n\n'|nl|cat -A
-     1^Ia$
-         $
-  $
-
 m4: rename all macros that start with AC_ to start with another prefix
 
 document that `true --version' can fail, e.g., like this:
@@ -81,9 +74,11 @@ resolve RH report on cp -a forwarded by Tim Waugh
 
 Martin Michlmayr's patch to provide ls with `--sort directory' option
 
-clean-up: Remove all of the casts (they're unnecessary) found by this:
+clean-up: Remove anachronistic casts of xmalloc, xrealloc, and xcalloc
+return values found by this:
   grep -E '\*\) *x(m|c|re)alloc\>' {lib,src}/*.[ch]
 Fix with this:
   perl -pi -e 's/\([^(]*?\*\) *(x(m|c|re)alloc)\b/$1/'
+Also remove anachronistic casts of xrealloc's first argument.
 
 Remove uses of PROTOTYPES
