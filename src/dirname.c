@@ -26,6 +26,7 @@
 #include "error.h"
 #include "dirname.h"
 #include "closeout.h"
+#include "xalloc.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "dirname"
@@ -92,9 +93,11 @@ main (int argc, char **argv)
       usage (1);
     }
 
-  len = dir_name_r (argv[1], &result);
-  fwrite (result, 1, len, stdout);
-  putchar ('\n');
+  result = dir_name (argv[1]);
+  if (result == NULL)
+    xalloc_die ();
+  puts (result);
+  free (result);
 
   exit (0);
 }
