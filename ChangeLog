@@ -1,6 +1,10 @@
-2003-01-21  Jim Meyering  <jim@meyering.net>
+2003-01-22  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.5.
+
+	* tests/du/no-x: New test, for functionality added to lib/ftw.c.
+
+2003-01-21  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (remove_entry) [ROOT_CAN_UNLINK_DIRS
 	&& HAVE_STRUCT_DIRENT_D_TYPE]: If a file has d_type == DT_UNKNOWN
