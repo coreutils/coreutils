@@ -47,8 +47,8 @@ char *program_name;
 /* If nonzero, show inode information. */
 static int inode_format;
 
-/* If nonzero, show even filesystems with zero size or
-   uninteresting types. */
+/* If positive, show all entries; if zero, omit size-zero entries and
+   automounter dummies; if negative, also omit non-local filesystems.  */
 static int show_all_fs;
 
 /* If nonzero, output data for each filesystem corresponding to a
@@ -117,6 +117,7 @@ static struct option const long_options[] =
   {"human-readable", no_argument, 0, 'h'},
   {"si", no_argument, 0, 'H'},
   {"kilobytes", no_argument, 0, 'k'},
+  {"local", no_argument, &show_all_fs, -1},
   {"megabytes", no_argument, 0, 'm'},
   {"portability", no_argument, &posix_format, 1},
   {"print-type", no_argument, &print_type, 1},
@@ -213,14 +214,17 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
   struct fs_usage fsu;
   const char *stat_file;
 
-  if (!selected_fstype (fstype) || excluded_fstype (fstype))
-    return;
-
   /* If MOUNT_POINT is NULL, then the filesystem is not mounted, and this
      program reports on the filesystem that the special file is on.
      It would be better to report on the unmounted filesystem,
      but statfs doesn't do that on most systems.  */
   stat_file = mount_point ? mount_point : disk;
+
+  if (show_all_fs < 0 && fstype && REMOTE_FS_TYPE (fstype))
+    return;
+
+  if (!selected_fstype (fstype) || excluded_fstype (fstype))
+    return;
 
   if (get_fs_usage (stat_file, disk, &fsu))
     {
@@ -229,7 +233,7 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
       return;
     }
 
-  if (fsu.fsu_blocks == 0 && !show_all_fs && !show_listed_fs)
+  if (fsu.fsu_blocks == 0 && show_all_fs <= 0 && !show_listed_fs)
     return;
 
   if (! disk)
@@ -548,6 +552,7 @@ or all filesystems by default.\n\
   -H, --si              likewise, but use powers of 1000 not 1024\n\
   -i, --inodes          list inode information instead of block usage\n\
   -k, --kilobytes       like --block-size=1024\n\
+  -l, --local           limit listing to local filesystems\n\
   -m, --megabytes       like --block-size=1048576\n\
       --no-sync         do not invoke sync before getting usage info (default)\n\
   -P, --portability     use the POSIX output format\n\
@@ -588,7 +593,7 @@ main (int argc, char **argv)
   posix_format = 0;
   exit_status = 0;
 
-  while ((c = getopt_long (argc, argv, "aiF:hHkmPTt:vx:", long_options, NULL))
+  while ((c = getopt_long (argc, argv, "aiF:hHklmPTt:vx:", long_options, NULL))
 	 != -1)
     {
       switch (c)
@@ -609,6 +614,9 @@ main (int argc, char **argv)
 	  break;
 	case 'k':
 	  output_block_size = 1024;
+	  break;
+	case 'l':
+	  show_all_fs = -1;
 	  break;
 	case 'm':
 	  output_block_size = 1024 * 1024;
@@ -708,7 +716,7 @@ main (int argc, char **argv)
     read_filesystem_list ((fs_select_list != NULL
 			   || fs_exclude_list != NULL
 			   || print_type),
-			  show_all_fs);
+			  optind == argc ? show_all_fs : 1);
 
   if (mount_list == NULL)
     error (1, errno, _("cannot read table of mounted filesystems"));
