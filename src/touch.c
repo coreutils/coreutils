@@ -1,5 +1,5 @@
 /* touch -- change modification and access times of files
-   Copyright (C) 87, 1989-1991, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 87, 1989-1991, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -217,7 +217,7 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]... FILE...\n"), program_name);
-      printf (_("  or : %s [-acm] MMDDhhmm[YY] FILE... (obsolescent)\n"),
+      printf (_("  or:  %s [-acm] MMDDhhmm[YY] FILE... (obsolescent)\n"),
 	      program_name);
       printf (_("\
 Update the access and modification times of each FILE to the current time.\n\
