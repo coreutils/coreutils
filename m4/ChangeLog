@@ -1,3 +1,8 @@
+2002-08-05  Jim Meyering  <meyering@lucent.com>
+
+	* jm-winsz1.m4: Also change use of $am_cv_sys_posix_termios
+	to $ac_cv_sys_posix_termios.  Reported by Andreas Schwab.
+
 2002-08-03  Jim Meyering  <meyering@lucent.com>
 
 	* jm-winsz1.m4: Require AC_SYS_POSIX_TERMIOS, not AM_SYS_POSIX_TERMIOS.
