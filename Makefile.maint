@@ -338,7 +338,7 @@ writable-files:
 	done;								\
 	test "$$fail" && exit 1 || :
 
-v_etc_file = lib/version-etc.c
+v_etc_file = lib/version-etc-fsf.c
 # Make sure that the copyright date in $(v_etc_file) is up to date.
 copyright-check:
 	@if test -f $(v_etc_file); then \
