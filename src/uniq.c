@@ -28,7 +28,9 @@
 #include "argmatch.h"
 #include "linebuffer.h"
 #include "error.h"
+#include "hard-locale.h"
 #include "posixver.h"
+#include "xmemcoll.h"
 #include "xstrtol.h"
 #include "memcasecmp.h"
 
@@ -49,6 +51,9 @@
 
 /* The name this program was run with. */
 char *program_name;
+
+/* Nonzero if the LC_COLLATE locale is hard.  */
+static int hard_LC_COLLATE;
 
 /* Number of fields to skip on each line when doing comparisons. */
 static size_t skip_fields;
@@ -215,23 +220,22 @@ find_field (const struct linebuffer *line)
    OLDLEN and NEWLEN are their lengths. */
 
 static int
-different (const char *old, const char *new, size_t oldlen, size_t newlen)
+different (char *old, char *new, size_t oldlen, size_t newlen)
 {
   if (check_chars < oldlen)
     oldlen = check_chars;
   if (check_chars < newlen)
     newlen = check_chars;
 
-  if (oldlen != newlen)
-    return 1;
-
-  /* Use an if-statement here rather than a function variable to
-     avoid portability hassles of getting a non-conflicting declaration
-     of memcmp.  */
   if (ignore_case)
-    return memcasecmp (old, new, oldlen);
+    {
+      /* FIXME: This should invoke strcoll somehow.  */
+      return oldlen != newlen || memcasecmp (old, new, oldlen);
+    }
+  else if (HAVE_SETLOCALE && hard_LC_COLLATE)
+    return xmemcoll (old, oldlen, new, newlen);
   else
-    return memcmp (old, new, oldlen);
+    return oldlen != newlen || memcmp (old, new, oldlen);
 }
 
 /* Output the line in linebuffer LINE to stream STREAM
@@ -303,7 +307,7 @@ check_file (const char *infile, const char *outfile)
 	  if (readline (thisline, istream) == 0)
 	    break;
 	  thisfield = find_field (thisline);
-	  thislen = thisline->length - (thisfield - thisline->buffer);
+	  thislen = thisline->length - 1 - (thisfield - thisline->buffer);
 	  if (prevline->length == 0
 	      || different (thisfield, prevfield, thislen, prevlen))
 	    {
@@ -326,7 +330,7 @@ check_file (const char *infile, const char *outfile)
       if (readline (prevline, istream) == 0)
 	goto closefiles;
       prevfield = find_field (prevline);
-      prevlen = prevline->length - (prevfield - prevline->buffer);
+      prevlen = prevline->length - 1 - (prevfield - prevline->buffer);
 
       while (!feof (istream))
 	{
@@ -336,7 +340,7 @@ check_file (const char *infile, const char *outfile)
 	  if (readline (thisline, istream) == 0)
 	    break;
 	  thisfield = find_field (thisline);
-	  thislen = thisline->length - (thisfield - thisline->buffer);
+	  thislen = thisline->length - 1 - (thisfield - thisline->buffer);
 	  match = !different (thisfield, prevfield, thislen, prevlen);
 
 	  if (match)
@@ -399,6 +403,7 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+  hard_LC_COLLATE = hard_locale (LC_COLLATE);
 
   atexit (close_stdout);
 
