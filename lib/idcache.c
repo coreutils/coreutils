@@ -97,7 +97,7 @@ getuser (uid)
 
 uid_t *
 getuidbyname (user)
-     char *user;
+     const char *user;
 {
   register struct userid *tail;
   struct passwd *pwent;
@@ -171,7 +171,7 @@ getgroup (gid)
 
 gid_t *
 getgidbyname (group)
-     char *group;
+     const char *group;
 {
   register struct userid *tail;
   struct group *grent;
