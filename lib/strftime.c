@@ -73,6 +73,17 @@
 
    David MacKenzie <djm@gnu.ai.mit.edu> */
 
+#ifdef HAVE_CONFIG_H
+#if defined (CONFIG_BROKETS)
+/* We use <config.h> instead of "config.h" so that a compilation
+   using -I. -I$srcdir will use ./config.h rather than $srcdir/config.h
+   (which it would do because it found this file in $srcdir).  */
+#include <config.h>
+#else
+#include "config.h"
+#endif
+#endif
+
 #include <sys/types.h>
 #if defined(TM_IN_SYS_TIME) || (!defined(HAVE_TM_ZONE) && !defined(HAVE_TZNAME))
 #include <sys/time.h>
