@@ -260,9 +260,8 @@ main (int argc, char **argv)
       negative = timeval_subtract (&diff, &tv_done, &tv_now);
       if (negative)
 	break;
-      tv_sleep (&diff);
-      sleep (diff->tv_sec);
-      usleep (diff->tv_usec);
+      sleep (diff.tv_sec);
+      usleep (diff.tv_usec);
     }
 
   exit (0);
