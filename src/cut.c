@@ -1,5 +1,5 @@
 /* cut - remove parts of lines of files
-   Copyright (C) 1984, 1997, 1998, 1999, 2000, 2001, 2002 by David M. Ihnat
+   Copyright (C) 1984, 1997, 1998, 1999, 2000, 2001, 2002, 2003 by David M. Ihnat
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -227,7 +227,7 @@ print_kth (unsigned int k)
    one field specification, zero otherwise.  */
 
 /* FIXME-someday:  What if the user wants to cut out the 1,000,000-th field
-   of some huge input file?  This function shouldn't have to alloate a table
+   of some huge input file?  This function shouldn't have to allocate a table
    of a million ints just so we can test every field < 10^6 with an array
    dereference.  Instead, consider using a dynamic hash table.  It would be
    simpler and nearly as good a solution to use a 32K x 4-byte table with
