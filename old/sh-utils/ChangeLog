@@ -1,3 +1,13 @@
+1999-05-27  Volker Borchert  <bt@teknon.de>
+
+	* tests/Makefile.am: Qualify .env-warn with $(srcdir)/ prefix.
+
+1999-05-25  Jim Meyering  <meyering@ascend.com>
+
+	* tests/stty/basic-1: Fix non-portable use of `tr' that caused
+	this test to fail when run with a SysV-style tr.
+	Based on a patch from Kaveh Ghazi.
+
 1999-05-21  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.16k.
