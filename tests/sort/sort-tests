@@ -1633,8 +1633,127 @@ else
   esac
 fi
 test -s 20a.E || rm -f 20a.E
+$xx  $srcdir/21a.I > 21a.O 2> 21a.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test 21a failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp 21a.O $srcdir/21a.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed 21a"; fi ;;
+    1) $echo "Test 21a failed: files 21a.O and $srcdir/21a.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test 21a may have failed." 1>&2;
+       $echo The command "cmp 21a.O $srcdir/21a.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s 21a.E || rm -f 21a.E
+$xx -f $srcdir/21b.I > 21b.O 2> 21b.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test 21b failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp 21b.O $srcdir/21b.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed 21b"; fi ;;
+    1) $echo "Test 21b failed: files 21b.O and $srcdir/21b.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test 21b may have failed." 1>&2;
+       $echo The command "cmp 21b.O $srcdir/21b.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s 21b.E || rm -f 21b.E
+$xx -f $srcdir/21c.I > 21c.O 2> 21c.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test 21c failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp 21c.O $srcdir/21c.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed 21c"; fi ;;
+    1) $echo "Test 21c failed: files 21c.O and $srcdir/21c.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test 21c may have failed." 1>&2;
+       $echo The command "cmp 21c.O $srcdir/21c.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s 21c.E || rm -f 21c.E
+$xx -f $srcdir/21d.I > 21d.O 2> 21d.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test 21d failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp 21d.O $srcdir/21d.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed 21d"; fi ;;
+    1) $echo "Test 21d failed: files 21d.O and $srcdir/21d.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test 21d may have failed." 1>&2;
+       $echo The command "cmp 21d.O $srcdir/21d.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s 21d.E || rm -f 21d.E
+$xx -f $srcdir/21e.I > 21e.O 2> 21e.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test 21e failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp 21e.O $srcdir/21e.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed 21e"; fi ;;
+    1) $echo "Test 21e failed: files 21e.O and $srcdir/21e.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test 21e may have failed." 1>&2;
+       $echo The command "cmp 21e.O $srcdir/21e.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s 21e.E || rm -f 21e.E
+$xx -fs $srcdir/21f.I > 21f.O 2> 21f.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test 21f failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp 21f.O $srcdir/21f.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed 21f"; fi ;;
+    1) $echo "Test 21f failed: files 21f.O and $srcdir/21f.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test 21f may have failed." 1>&2;
+       $echo The command "cmp 21f.O $srcdir/21f.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s 21f.E || rm -f 21f.E
+$xx -fu $srcdir/21g.I > 21g.O 2> 21g.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test 21g failed: ../../src/sort return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp 21g.O $srcdir/21g.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed 21g"; fi ;;
+    1) $echo "Test 21g failed: files 21g.O and $srcdir/21g.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test 21g may have failed." 1>&2;
+       $echo The command "cmp 21g.O $srcdir/21g.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s 21g.E || rm -f 21g.E
 if test $errors = 0 ; then
-  $echo Passed all 95 tests. 1>&2
+  $echo Passed all 102 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi

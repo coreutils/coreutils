@@ -17,7 +17,8 @@ n10b.X n11a.I n11a.X n11b.I n11b.X 01a.I 01a.X 02a.I 02a.X 02b.I 02b.X 02c.I \
 11b.X 11c.I 11c.X 11d.I 11d.X 12a.I 12a.X 12b.I 12b.X 12c.I 12c.X 12d.I 12d.X \
 13a.I 13a.X 13b.I 13b.X 14a.I 14a.X 14b.I 14b.X 15a.I 15a.X 15b.I 15b.X 15c.I \
 15c.X 15d.I 15d.X 15e.I 15e.X 16a.I 16a.X 17.I 17.X 18a.I 18a.X 18b.I 18b.X \
-18c.I 18c.X 18d.I 18d.X 18e.I 18e.X 19a.I 19a.X 19b.I 19b.X 20a.I 20a.X
+18c.I 18c.X 18d.I 18d.X 18e.I 18e.X 19a.I 19a.X 19b.I 19b.X 20a.I 20a.X 21a.I \
+21a.X 21b.I 21b.X 21c.I 21c.X 21d.I 21d.X 21e.I 21e.X 21f.I 21f.X 21g.I 21g.X
 run_gen = n1.O n1.E n2.O n2.E n3.O n3.E n4.O n4.E n5.O n5.E n6.O n6.E n7.O \
 n7.E n8a.O n8a.E n8b.O n8b.E n9a.O n9a.E n9b.O n9b.E n10a.O n10a.E n10b.O \
 n10b.E n11a.O n11a.E n11b.O n11b.E 01a.O 01a.E 02a.O 02a.E 02b.O 02b.E 02c.O \
@@ -32,7 +33,8 @@ n10b.E n11a.O n11a.E n11b.O n11b.E 01a.O 01a.E 02a.O 02a.E 02b.O 02b.E 02c.O \
 11b.E 11c.O 11c.E 11d.O 11d.E 12a.O 12a.E 12b.O 12b.E 12c.O 12c.E 12d.O 12d.E \
 13a.O 13a.E 13b.O 13b.E 14a.O 14a.E 14b.O 14b.E 15a.O 15a.E 15b.O 15b.E 15c.O \
 15c.E 15d.O 15d.E 15e.O 15e.E 16a.O 16a.E 17.O 17.E 18a.O 18a.E 18b.O 18b.E \
-18c.O 18c.E 18d.O 18d.E 18e.O 18e.E 19a.O 19a.E 19b.O 19b.E 20a.O 20a.E
+18c.O 18c.E 18d.O 18d.E 18e.O 18e.E 19a.O 19a.E 19b.O 19b.E 20a.O 20a.E 21a.O \
+21a.E 21b.O 21b.E 21c.O 21c.E 21d.O 21d.E 21e.O 21e.E 21f.O 21f.E 21g.O 21g.E
 ##test-files-end
 
 EXTRA_DIST = mk-script.pl Test.pm $x-tests $(explicit) $(maint_gen)
