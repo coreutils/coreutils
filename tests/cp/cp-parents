@@ -14,9 +14,16 @@ tmp=cp-parents.$$
 trap 'status=$?; cd $pwd; exec 1>&2; rm -rf $tmp && exit $status' 0
 trap '(exit $?); exit' 1 2 13 15
 
+framework_failure=0
+
+# Record absolute path of srcdir and cd back to current dir.
+cd $srcdir || framework_failure=1
+abs_srcdir=`pwd`
+cd $pwd || framework_failure=1
+
+. $abs_srcdir/../sticky-check
 . $srcdir/../envvar-check
 
-framework_failure=0
 mkdir $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 mkdir foo bar || framework_failure=1
