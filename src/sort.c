@@ -1,5 +1,5 @@
 /* sort - sort lines of text (with all kinds of options).
-   Copyright (C) 88, 91, 92, 93, 94, 95, 1996, 1997 Free Software Foundation
+   Copyright (C) 88, 91, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -39,16 +39,8 @@
 #include "xstrtod.h"
 
 #ifdef ENABLE_NLS
-/* FIXME: this may need some heading.... applies to Debian linux for
-   reading the structure of _NL_ITEM... to get abbreviated month names */
 # include <langinfo.h>
-
-# if !defined (_NL_ITEM)
-#  define _NL_ITEM(Category, Index) (Index)
-# endif
-#endif   /* NLS */
-
-
+#endif
 
 #ifdef HAVE_LIMITS_H
 # include <limits.h>
@@ -602,8 +594,7 @@ inittables (void)
 	  size_t s_len;
 	  int j;
 
-	  s = nl_langinfo (_NL_ITEM (LC_TIME,
-				     ABMON_1 + us_monthtab[i].val - 1));
+	  s = nl_langinfo (ABMON_1 + us_monthtab[i].val - 1);
 	  s_len = strlen (s);
 	  nls_monthtab[i].name = (char *) xmalloc (s_len + 1);
 	  nls_monthtab[i].val = us_monthtab[i].val;
