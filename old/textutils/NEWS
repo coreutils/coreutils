@@ -3,6 +3,7 @@ Changes in release 1.16
   character in a field that has fewer than N characters
 * tail with old-style options like -20k and +31m operates on units of bytes,
   as the --help usage message says.  Before, it used units of lines.
+
 Changes in release 1.15
 * od gives better diagnostics for invalid format specs
 * uses automake-generated Makefile templates
@@ -16,6 +17,7 @@ Changes in release 1.15
 * sort accepts new option: -z for NUL terminated records
 * join accepts new option: --ignore-case, -i
 * uniq accepts new option: --ignore-case, -i
+
 User-visible changes in release 1.14
 * sort -i and sort -d properly order strings containing ignored characters
 * nl: rename misleading --first-page=N option to --starting-line-number=N.
