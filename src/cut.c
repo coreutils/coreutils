@@ -73,8 +73,6 @@
 
 #define AUTHORS "David Ihnat, David MacKenzie, and Jim Meyering"
 
-char *xstrdup ();
-
 #define FATAL_ERROR(Message)						\
   do									\
     {									\

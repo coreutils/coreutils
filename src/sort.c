@@ -53,8 +53,6 @@
 double strtod ();
 #endif
 
-char *xstrdup ();
-
 /* Undefine, to avoid warning about redefinition on some systems.  */
 #undef min
 #define min(a, b) ((a) < (b) ? (a) : (b))

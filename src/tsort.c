@@ -42,8 +42,6 @@
 /* Token delimiters when reading from a file.  */
 #define DELIM " \t\n"
 
-char *xstrdup ();
-
 /* Members of the list of successors.  */
 struct successor
 {
