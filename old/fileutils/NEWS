@@ -1,4 +1,9 @@
 Changes in release 3.17:
+[3.16r]
+* minor cp bug fixed
+* non-portable cp tests removed
+* --without-regex now means don't compile regex.c
+* rx support removed
 [3.16q]
 * `df', `du', and `ls' now accept a new option --block-size=SIZE,
   where SIZE can be a positive integer block size, followed by an
