@@ -28,12 +28,8 @@ extern int errno;
 # define __set_errno(ev) ((errno) = (ev))
 #endif
 
-#if _LIBC || HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
-#if _LIBC || HAVE_STRING_H
-# include <string.h>
-#endif
+#include <stdlib.h>
+#include <string.h>
 #if _LIBC || HAVE_UNISTD_H
 # include <unistd.h>
 #endif
@@ -284,7 +280,7 @@ setenv (const char *name, const char *value, int replace)
    never made it.  Nevertheless the POSIX.9 standard (POSIX bindings
    for Fortran 77) requires this function.  */
 int
-clearenv ()
+clearenv (void)
 {
   LOCK;
 
