@@ -211,10 +211,9 @@ mode_compile (const char *mode_string, unsigned int masked_ops)
 
   umask_value = umask (0);
   umask (umask_value);		/* Restore the old value. */
-  --mode_string;
 
   /* One loop iteration for each "ugoa...=+-rwxXstugo...[=+-rwxXstugo...]". */
-  do
+  for (;; mode_string++)
     {
       /* Which bits in the mode are operated on. */
       mode_t affected_bits = 0;
@@ -226,7 +225,7 @@ mode_compile (const char *mode_string, unsigned int masked_ops)
       bool who_specified_p;
 
       /* Turn on all the bits in `affected_bits' for each group given. */
-      for (++mode_string;; ++mode_string)
+      for (;; mode_string++)
 	switch (*mode_string)
 	  {
 	  case 'u':
@@ -349,7 +348,11 @@ mode_compile (const char *mode_string, unsigned int masked_ops)
 	      }
 	no_more_values:;
 	}
-  } while (*mode_string == ',');
+
+      if (*mode_string != ',')
+	break;
+    }
+
   if (*mode_string == 0)
     return head;
 invalid:
