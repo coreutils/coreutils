@@ -1,3 +1,7 @@
+2003-11-22  Jim Meyering  <jim@meyering.net>
+
+	* xmalloc.c (x2nrealloc_inline): Fix typos in comments: s/size/size_t/.
+
 2003-11-21  Jim Meyering  <jim@meyering.net>
 
 	* xreadlink.c (xreadlink): Correct outdated comment.
