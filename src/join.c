@@ -64,6 +64,7 @@ char *alloca ();
 #include "long-options.h"
 #include "xstrtol.h"
 #include "error.h"
+#include "memcasecmp.h"
 
 #define join system_join
 
@@ -199,24 +200,6 @@ separated by CHAR.\n\
 "));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
-}
-
-/* Like memcmp, but ignore differences in case.  */
-
-static int
-memcasecmp (const void *vs1, const void *vs2, size_t n)
-{
-  unsigned int i;
-  unsigned char *s1 = (unsigned char *) vs1;
-  unsigned char *s2 = (unsigned char *) vs2;
-  for (i = 0; i < n; i++)
-    {
-      unsigned char u1 = *s1++;
-      unsigned char u2 = *s2++;
-      if (TOLOWER (u1) != TOLOWER (u2))
-        return TOLOWER (u1) - TOLOWER (u2);
-    }
-  return 0;
 }
 
 static void
