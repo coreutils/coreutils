@@ -1,20 +1,16 @@
+1999-07-24  Jim Meyering  <meyering@ascend.com>
+
+	* src/dd.c (PTR_ALIGN, ROUND_UP_OFFSET): New macros.
+	(dd_copy): Use those to page-align both the input and output buffers.
+
 1999-06-01  Volker Borchert  <bt@teknon.de>
 
 	* tests/Makefile.am: Make envvar-check depend on check-recursive rather
 	than on `check' so that its tests are performed before any real tests.
 
-1999-07-20  Jim Meyering  <meyering@ascend.com>
-
-	Handle the `\040' that Linux puts in mount dir names containing spaces.
-
-	* lib/mountlist.c (translate_040_to_space) [MOUNTED_GETMNTENT1]:
-	New function.
-	(read_filesystem_list) [MOUNTED_GETMNTENT1]: Use it.
-
 1999-07-15  Jim Meyering  <meyering@ascend.com>
 
 	* src/dd.c: Include getpagesize.h.
-	(ROUND_UP_TO_MODULUS): Define.
 	(dd_copy): Page-align the input buffer.
 	Based on a patch from Scott Lurndal.
 

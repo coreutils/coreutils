@@ -151,48 +151,6 @@ xatoi (char *cp)
     }
   return val;
 }
-
-/* Convert, in place, each unambiguous `\040' sequence in the NUL-terminated
-   string, STR, to a single space.  `unambiguous' means that it must not be
-   immediately preceded by an odd number of backslash characters.  */
-/* FIXME: should any other backslash-escaped sequences be translated?  */
-/* FIXME: is the backslash counting necessary?  */
-
-static void
-translate_040_to_space (char *str)
-{
-  while (1)
-    {
-      char *p;
-      char *backslash = strstr (str, "\\040");
-      unsigned int backslash_count = 0;
-
-      if (backslash == NULL)
-	break;
-
-      /* Count preceding backslashes, going no further than str.  */
-      for (p = backslash - 1; p >= str && *p == '\\'; p--)
-	++backslash_count;
-
-      if (backslash_count % 2 == 1)
-	{
-	  /* The backslash is escaped;  advance past the 040 and
-	     continue searching.  */
-	  str = backslash + 4;
-	  continue;
-	}
-
-      /* We found an unambiguous `\040'.  Replace the `/' with a space
-	 and shift the string after `040' so that it starts where the
-	 first zero was.  The source and destination regions may overlap,
-	 so use memmove.  */
-      *backslash = ' ';
-      str = backslash + 1;
-      /* Be sure to copy the trailing NUL byte, too.  */
-      memmove (str, backslash + 4, strlen (backslash + 4) + 1);
-    }
-}
-
 #endif /* MOUNTED_GETMNTENT1.  */
 
 #if MOUNTED_GETMNTINFO
@@ -390,11 +348,6 @@ read_filesystem_list (int need_fs_type)
 	  }
 	else
 	  me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
-
-	/* FIXME: do the conversion only if we're using some version of
-	   GNU libc -- which one?  */
-	/* Convert each `\040' string to a space.  */
-	translate_040_to_space (me->me_mountdir);
 
 	/* Add to the linked list. */
 	*mtail = me;
@@ -719,18 +672,3 @@ read_filesystem_list (int need_fs_type)
     return NULL;
   }
 }
-
-#ifdef TEST
-int
-main (int argc, char **argv)
-{
-  int i;
-  for (i = 1; i < argc; i++)
-    {
-      char *p = xstrdup (argv[i]);
-      translate_040_to_space (p);
-      printf ("%s: %s\n", argv[i], p);
-    }
-  exit (0);
-}
-#endif
