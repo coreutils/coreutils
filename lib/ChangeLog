@@ -1,3 +1,8 @@
+2003-09-29  Paul Eggert  <eggert@twinsun.com>
+
+	* strftime.c (tm_diff) [! HAVE_TM_GMTOFF]:
+	Fix arg typo in previous patch.
+
 2003-09-28  Jim Meyering  <jim@meyering.net>
 
 	* error.c: Update from gnulib.
