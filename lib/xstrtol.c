@@ -141,8 +141,16 @@ __xstrtol (const char *s, char **ptr, int strtol_base,
   tmp = __strtol (s, p, strtol_base);
   if (errno != 0)
     return LONGINT_OVERFLOW;
+
   if (*p == s)
-    return LONGINT_INVALID;
+    {
+      /* If there is no number but there is a valid suffix, assume the
+	 number is 1.  The string is invalid otherwise.  */
+      if (valid_suffixes && **p && strchr (valid_suffixes, **p))
+	tmp = 1;
+      else
+	return LONGINT_INVALID;
+    }
 
   /* Let valid_suffixes == NULL mean `allow any suffix'.  */
   /* FIXME: update all callers except the ones that allow suffixes
@@ -169,15 +177,20 @@ __xstrtol (const char *s, char **ptr, int strtol_base,
 	{
 	  /* The ``valid suffix'' '0' is a special flag meaning that
 	     an optional second suffix is allowed, which can change
-	     the base, e.g. "100MD" for 100 megabytes decimal.  */
+	     the base.  A suffix "B" (e.g. "100MB") stands for a power
+	     of 1000, whereas a suffix "iB" (e.g. "100MiB") stands for
+	     a power of 1024.  If no suffix (e.g. "100M"), assume
+	     power-of-1024.  */
 
 	  switch (p[0][1])
 	    {
-	    case 'B':
-	      suffixes++;
+	    case 'i':
+	      if (p[0][2] == 'B')
+		suffixes += 2;
 	      break;
 
-	    case 'D':
+	    case 'B':
+	    case 'D': /* 'D' is obsolescent */
 	      base = 1000;
 	      suffixes++;
 	      break;
@@ -198,29 +211,30 @@ __xstrtol (const char *s, char **ptr, int strtol_base,
 	  overflow = 0;
 	  break;
 
-	case 'E': /* Exa */
+	case 'E': /* exa or exbi */
 	  overflow = bkm_scale_by_power (&tmp, base, 6);
 	  break;
 
-	case 'G': /* Giga */
+	case 'G': /* giga or gibi */
 	case 'g': /* 'g' is undocumented; for compatibility only */
 	  overflow = bkm_scale_by_power (&tmp, base, 3);
 	  break;
 
 	case 'k': /* kilo */
+	case 'K': /* kibi */
 	  overflow = bkm_scale_by_power (&tmp, base, 1);
 	  break;
 
-	case 'M': /* Mega */
+	case 'M': /* mega or mebi */
 	case 'm': /* 'm' is undocumented; for compatibility only */
 	  overflow = bkm_scale_by_power (&tmp, base, 2);
 	  break;
 
-	case 'P': /* Peta */
+	case 'P': /* peta or pebi */
 	  overflow = bkm_scale_by_power (&tmp, base, 5);
 	  break;
 
-	case 'T': /* Tera */
+	case 'T': /* tera or tebi */
 	case 't': /* 't' is undocumented; for compatibility only */
 	  overflow = bkm_scale_by_power (&tmp, base, 4);
 	  break;
@@ -229,11 +243,11 @@ __xstrtol (const char *s, char **ptr, int strtol_base,
 	  overflow = bkm_scale (&tmp, 2);
 	  break;
 
-	case 'Y': /* Yotta */
+	case 'Y': /* yotta or 2**80 */
 	  overflow = bkm_scale_by_power (&tmp, base, 8);
 	  break;
 
-	case 'Z': /* Zetta */
+	case 'Z': /* zetta or 2**70 */
 	  overflow = bkm_scale_by_power (&tmp, base, 7);
 	  break;
 
