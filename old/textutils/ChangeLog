@@ -1,3 +1,20 @@
+2000-12-18  Paul Eggert  <eggert@twinsun.com>
+
+	* NEWS, doc/textutils.texi: New "sort" option -S SIZE.
+
+	* src/sys2.h (UINTMAX_MAX): New macro, taken from C99.
+
+	* src/sort.c: Include physmem.h.
+	(SORTALLOC, mergealloc, LINEALLOC): Remove.
+	(sortalloc): Default to zero at program startup.
+	(SORTALLOC_MIN, SORTALLOC_DEFAULT_MIN): New macros.
+	(usage, main): Add support for new -S SIZE option.
+	(specify_sort_size, default_sort_size): New functions.
+	(initlines): Do not let alloc exceed limit.
+	(findlines): Likewise.
+	(checkfp, mergefps, sort): Use sortalloc to size everything
+	else, instead of relying on precomputed sizes.
+
 2000-12-17  Jim Meyering  <meyering@lucent.com>
 
 	* doc/texinfo.tex: Update from master repository.
