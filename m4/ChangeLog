@@ -1,3 +1,7 @@
+2004-08-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* fnmatch.m4 (_AC_LIBOBJ_FNMATCH): Check for wmemchr and wmemcpy.
+
 2004-08-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* sha1.m4: Renamed from sha.m4.

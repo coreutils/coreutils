@@ -1,3 +1,9 @@
+2004-08-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* fnmatch.c (WIDE_CHAR_SUPPORT): Don't set to 1 if missing
+	wmemchr or wmemcpy.  Problem reported by Robert Dahlem
+	for Reliant Unix 5.43.
+
 2004-08-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Makefile.am (libfetish_a_SOURCES): Add getpass.h.
