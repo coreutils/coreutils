@@ -6,4 +6,4 @@
 # endif
 #endif
 
-char *xreadlink PARAMS ((char const *, size_t *));
+char *xreadlink PARAMS ((char const *));
