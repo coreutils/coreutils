@@ -1,5 +1,10 @@
 Sun Jul 21 11:58:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in (AC_CHECK_HEADERS): Add sys/timeb.h for lib/getdate.y.
+	This was a problem for SCO OSR5.  From Bela Lubkin <belal@sco.com>.
+	(statvfs test): Arrange for this test to fail (as it should) for
+	SCO OSR5.  Suggestion from Bela Lubkin.
+
 	* src/Makefile.am (BUILT_SOURCES): Remove @MAINT@.
 	(dircolors.h): Remove @MAINT@.  These prevented `make distcheck'
 	from working sometimes.
