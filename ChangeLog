@@ -1,3 +1,11 @@
+2003-07-08  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.0.1.
+
+	* man/help2man: Update to version 1.29.
+
+	* man/help2man: Add END handler to close STDOUT and check for errors.
+
 2003-06-30  Paul Eggert  <eggert@twinsun.com>
 
 	Add support for a "[" that conforms to the GNU coding standards,
@@ -19,8 +27,6 @@
 	Do not bother testing that margv[margc] is non-null.
 
 2003-07-04  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.1.
 
 	* src/who.c (print_line): Rewrite to use asprintf, in order to be
 	able to avoid emitting trailing spaces.  Reported by Dan Jacobson.
