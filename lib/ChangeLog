@@ -1,4 +1,15 @@
+2001-08-27  Jim Meyering  <meyering@lucent.com>
+
+	* strtoxmax.c: Tweak comment.
+
 2001-08-26  Jim Meyering  <meyering@lucent.com>
+
+	* version-etc.c (version_etc_copyright_fmt): Replace literal year
+	of copyright with `%s' so translators don't get an untranslated
+	message in 2002.
+	(COPYRIGHT_YEAR): Define.
+	(version_etc): Use fprintf rather than fputs.
+	Suggestion from Ulrich Drepper.
 
 	* Makefile.am (libfetish_a_SOURCES): Add xstrtoimax.c.
 
@@ -10,7 +21,7 @@
 	* strtoimax.c: New file.  Likewise, but first define STRTOUXMAX_SIGNED.
 
 	* strtoumax.c: Factor to work both for unsigned and signed types, ...
-	* strtouxmax.c: ... then renamed to this.
+	* strtoxmax.c: ... then renamed to this.
 
 2001-08-13  Paul Eggert  <eggert@twinsun.com>
 
