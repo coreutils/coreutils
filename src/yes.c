@@ -1,5 +1,5 @@
 /* yes - output a string repeatedly until killed
-   Copyright (C) 1991-1997, 1999-2002 Free Software Foundation, Inc.
+   Copyright (C) 1991-1997, 1999-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -22,10 +22,11 @@
 #include <sys/types.h>
 #include <getopt.h>
 
-#include "error.h"
 #include "system.h"
-#include "long-options.h"
+
 #include "closeout.h"
+#include "error.h"
+#include "long-options.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "yes"
