@@ -427,8 +427,14 @@ char *base_name PARAMS ((char const *));
 
 /* Factor out some of the common --help and --version processing code.  */
 
-#define GETOPT_HELP_CHAR 250
-#define GETOPT_VERSION_CHAR 251
+/* These enum values cannot possibly conflict with the option values
+   ordinarily used by commands, including CHAR_MAX + 1, etc.  Avoid
+   CHAR_MIN - 1, as it may equal -1, the getopt end-of-options value.  */
+enum
+{
+  GETOPT_HELP_CHAR = (CHAR_MIN - 2),
+  GETOPT_VERSION_CHAR = (CHAR_MIN - 3)
+};
 
 #define GETOPT_HELP_OPTION_DECL \
   "help", no_argument, 0, GETOPT_HELP_CHAR
