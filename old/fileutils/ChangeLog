@@ -1,3 +1,7 @@
+Fri Apr 26 05:52:03 1996  Karl Eichwalder  <ke@ke.Central.DE>
+
+	* ls.c (usage): Add newline at end of printf format string.
+
 Wed Apr 24 21:33:43 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* ln.c (do_link): Remove duplicate `if (lstat(...' block.
