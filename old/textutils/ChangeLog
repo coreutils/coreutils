@@ -1,3 +1,15 @@
+1998-01-08  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/tac.c (tac_stream): Don't perform arithmetic on now-void pointer
+	result of xrealloc (until recently it was char*).
+
+	* configure.in (AC_CHECK_FUNCS): Add nl_langinfo.
+	* src/sort.c (inittables): Add && HAVE_NL_LANGINFO to the #if-test
+	guarding the nls month-checking code.
+	(nls_numeric_format): Remove unnecessary (and error-evoking w/SunOS' cc)
+	`unsigned' from dcls of text and lim.
+	(main): Cast lconvp->grouping to `unsigned char*' to appease SunOS's cc.
+
 1998-01-03  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/Makefile.am (AUTOMAKE_OPTIONS): Define to ../src/ansi2knr.
