@@ -1,3 +1,8 @@
+2005-02-07  Jim Meyering  <jim@meyering.net>
+
+	* fts.m4 (gl_FUNC_FTS): New file and macro.
+	* prereq.m4: Require gl_FUNC_FTS.
+
 2005-02-06  Jim Meyering  <jim@meyering.net>
 
 	* memrchr.m4 (gl_FUNC_MEMRCHR): Check for declaration of memrchr.
