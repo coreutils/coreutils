@@ -1,6 +1,8 @@
 #! /bin/sh
-
 # depcomp - compile a program generating dependencies as side-effects
+
+scriptversion=2003-11-08.23
+
 # Copyright (C) 1999, 2000, 2003 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
@@ -24,6 +26,36 @@
 # the same distribution terms that you use for the rest of that program.
 
 # Originally written by Alexandre Oliva <oliva@dcc.unicamp.br>.
+
+case $1 in
+  '')
+     echo "$0: No command.  Try \`$0 --help' for more information." 1>&2
+     exit 1;
+     ;;
+  -h | --h*)
+    cat <<\EOF
+Usage: depcomp [--help] [--version] PROGRAM [ARGS]
+
+Run PROGRAMS ARGS to compile a file, generating dependencies
+as side-effects.
+
+Environment variables:
+  depmode     Dependency tracking mode.
+  source      Source file read by `PROGRAMS ARGS'.
+  object      Object file output by `PROGRAMS ARGS'.
+  depfile     Dependency file to output.
+  tmpdepfile  Temporary file to use when outputing dependencies.
+  libtool     Whether libtool is used (yes/no).
+
+Report bugs to <bug-automake@gnu.org>.
+EOF
+    exit 0
+    ;;
+  -v | --v*)
+    echo "depcomp $scriptversion"
+    exit 0
+    ;;
+esac
 
 if test -z "$depmode" || test -z "$source" || test -z "$object"; then
   echo "depcomp: Variables source, object and depmode must be set" 1>&2
@@ -477,3 +509,12 @@ none)
 esac
 
 exit 0
+
+# Local Variables:
+# mode: shell-script
+# sh-indentation: 2
+# eval: (add-hook 'write-file-hooks 'time-stamp)
+# time-stamp-start: "scriptversion="
+# time-stamp-format: "%:y-%02m-%02d.%02H"
+# time-stamp-end: "$"
+# End:
