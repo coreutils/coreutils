@@ -1,3 +1,16 @@
+2001-03-11  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sort.c: Decrease buffer size when only merging or checking.
+	(sort_size): Now the user-specified sort size.
+	(MIN_MERGE_BUFFER_SIZE): New macro.
+	(MIN_SORT_SIZE): Use it.
+	(merge_buffer_size): New variable.
+	(fillbuf): Increase merge_buffer_size if a longer line is encountered.
+	(checkfp, mergefps): Do not allocate a buffer smaller than
+	merge_buffer_size.
+	(sort): Use the default_sort_size if sort_size is zero.
+	(main): Do not set sort_size to default_sort_size.
+
 2001-03-06  Paul Eggert  <eggert@twinsun.com>
 
 	* src/sort.c (sort): If all the input files are empty, create
