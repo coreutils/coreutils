@@ -49,6 +49,13 @@ void exit ();
 
 #include "error.h"
 
+#ifndef HAVE_DECL_STRERROR_R
+"this configure-time declaration test was not run"
+#endif
+#if !HAVE_DECL_STRERROR_R
+char *strerror_r ();
+#endif
+
 #ifndef _
 # define _(String) String
 #endif
