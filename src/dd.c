@@ -816,24 +816,20 @@ skip (int fdesc, char const *file, uintmax_t n, Unit units, size_t blocksize,
     {
       int nread;
 
-      /* Decrement N according to UNITS: if we're counting bytes, then
-	 decrement N by BLOCKSIZE (the last read may be smaller than BLOCKSIZE),
-	 otherwise, simply decrement N by 1.  */
-      if (units == U_BYTES)
+      /* Decrement N according to UNITS: if we're counting blocks, then
+	 simply decrement N by 1.  Otherwise, decrement N by BLOCKSIZE
+	 (the last read may be smaller than BLOCKSIZE).  */
+      if (units == U_BLOCKS)
+	--n;
+      else
 	{
-	  if (n < blocksize)
+	  if (blocksize <= n)
+	    n -= blocksize;
+	  else
 	    {
 	      n = 0;
 	      blocksize = n;
 	    }
-	  else
-	    {
-	      n -= blocksize;
-	    }
-	}
-      else
-	{
-	  --n;
 	}
 
       nread = safe_read (fdesc, buf, blocksize);
@@ -1210,7 +1206,8 @@ main (int argc, char **argv)
       mode_t perms = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
       int opts
 	= (O_CREAT
-	   | (seek_record || (conversions_mask & C_NOTRUNC) ? 0 : O_TRUNC));
+	   | ((seek_record || seek_bytes)
+	      || (conversions_mask & C_NOTRUNC) ? 0 : O_TRUNC));
 
       /* Open the output file with *read* access only if we might
 	 need to read to satisfy a `seek=' request.  If we can't read
