@@ -2,6 +2,9 @@
 
 	* Version 5.0.1.
 
+	* src/who.c (print_line): Rewrite to use asprintf, in order to be
+	able to avoid emitting trailing spaces.  Reported by Dan Jacobson.
+
 	* tests/misc/head-elide-tail: Add tests of head's new --lines=-N
 	option, and perform the 1600 invocations of head IFF the envvar
 	RUN_EXPENSIVE_TESTS is set.
