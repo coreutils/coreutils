@@ -118,7 +118,7 @@ If FILE is specified, read it to determine which colors to use for which\n\
 file types and extensions.  Otherwise, a precompiled database is used.\n\
 For details on the format of these files, run `dircolors --print-database'.\n\
 "));
-      puts (_("\nReport bugs to fileutils-bugs@gnu.ai.mit.edu"));
+      puts (_("\nReport bugs to <fileutils-bugs@gnu.ai.mit.edu>."));
     }
 
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);

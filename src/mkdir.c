@@ -67,7 +67,7 @@ Create the DIRECTORY(ies), if they do not already exist.\n\
       --help        display this help and exit\n\
       --version     output version information and exit\n\
 "));
-      puts (_("\nReport bugs to fileutils-bugs@gnu.ai.mit.edu"));
+      puts (_("\nReport bugs to <fileutils-bugs@gnu.ai.mit.edu>."));
     }
   exit (status);
 }

@@ -43,7 +43,7 @@ Force changed blocks to disk, update the super block.\n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
 "));
-      puts (_("\nReport bugs to fileutils-bugs@gnu.ai.mit.edu"));
+      puts (_("\nReport bugs to <fileutils-bugs@gnu.ai.mit.edu>."));
     }
   exit (status);
 }
