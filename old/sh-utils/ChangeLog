@@ -2,6 +2,9 @@
 
 	* Version 2.0e.
 
+	* src/su.c (correct_password): Guard with `HAVE_GETSPNAM &&
+	HAVE_STRUCT_PASSWD_SP_PWDP', rather than just `#ifdef HAVE_SHADOW_H'.
+
 	* po/POTFILES.in: Add lib/makepath.c, lib/obstack.c, lib/rpmatch.c,
 	and lib/same.c.
 
