@@ -1,3 +1,10 @@
+1997-10-05  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/copy.h (struct cp_options): New field: require_preserve.
+	* src/copy.c (copy_internal): Use require_preserve.
+	* src/cp.c (cp_option_init): Initialize it.
+	(main): Set to 1 for -a and for -p.
+
 1997-10-03  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/savedir.h (savedir) [__P]: New file with prototype.
