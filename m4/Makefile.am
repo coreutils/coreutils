@@ -46,6 +46,7 @@ st_mtim.m4 \
 stat.m4 \
 strftime.m4 \
 uintmax_t.m4 \
+ulonglong.m4 \
 uptime.m4 \
 utimbuf.m4 \
 utime.m4 \
