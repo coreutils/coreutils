@@ -3,7 +3,8 @@
    x use error, not pferror
    - don't use pfstatus -- or maybe leave it in and see who complains
    x bracket strings with _(...) for gettext
-   - use consistent non-capitalizatin in error messages
+   - use consistent non-capitalization in error messages
+   - add standard GNU copyleft comment
  */
 
 /*
@@ -12,7 +13,7 @@
  * Do a secure overwrite of given files or devices, so that not even
  * very expensive hardware probing can recover the data.
  *
- * Although this processs is also known as "wiping", I prefer the longer
+ * Although this process is also known as "wiping", I prefer the longer
  * name both because I think it is more evocative of what is happening and
  * because a longer name conveys a more appropriate sense of deliberateness.
  *
@@ -22,8 +23,8 @@
  *
  * Just for the record, reversing one or two passes of disk overwrite
  * is not terribly difficult with hardware help.  Hook up a good-quality
- * digitizing oscilliscope to the output of the head preamplifier and copy
- * the high-res diitized data to a computer for some off-line analysis.
+ * digitizing oscilloscope to the output of the head preamplifier and copy
+ * the high-res digitized data to a computer for some off-line analysis.
  * Read the "current" data and average all the pulses together to get an
  * "average" pulse on the disk.  Subtract this average pulse from all of
  * the actual pulses and you can clearly see the "echo" of the previous
@@ -304,9 +305,9 @@ isaac_mix (struct isaac_state *s, word32 const seed[ISAAC_WORDS])
 /*
  * Initialize the ISAAC RNG with the given seed material.
  * Its size MUST be a multiple of ISAAC_BYTES, and may be
- * tored in the s->mm array.
+ * stored in the s->mm array.
  *
- * This is a generalization of the original ISAAC initialzation code
+ * This is a generalization of the original ISAAC initialization code
  * to support larger seed sizes.  For seed sizes of 0 and ISAAC_BYTES,
  * it is identical.
  */
@@ -783,7 +784,7 @@ dopass (int fd, char const *name, off_t size, int type,
  * are done in random order.  The idea is to deprive someone trying to
  * reverse the process of knowledge of the overwrite patterns, so they
  * have the additional step of figuring out what was done to the disk
- * befire they can try to reverse or cancel it.
+ * before they can try to reverse or cancel it.
  *
  * First, all possible 1-bit patterns.  There are two of them.
  * Then, all possible 2-bit patterns.  There are four, but the two
@@ -1134,6 +1135,7 @@ incname (char *name, unsigned len)
  * Note that rename() and remove() are both in the ANSI C standard,
  * so that part, at least, is NOT Unix-specific.
  *
+ * FIXME: update this comment.
  * To force the directory data out, we try to open() the directory and
  * invoke fdatasync() on it.  This is rather non-standard, so we don't
  * insist that it works, just fall back to a global sync() in that case.
