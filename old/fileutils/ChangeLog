@@ -1,3 +1,22 @@
+Tue May 27 04:35:17 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/argmatch.h Change dcl of program_name so it doesn't conflict
+	with the ubiquitous char* one.
+
+	* lib/addext.c: New file.
+	* lib/Makefile.am (libfu_a_SOURCES): Add addext.c.
+	Remove getversion.c;  get_version is now in backupfile.c.
+	Add basename.c since it's no longer replacible.
+
+	* lib/getopt.c: Update from glibc via patch-2.2.93.
+	* lib/getopt1.c: Likewise.
+	* lib/getopt.h: Likewise.
+	* lib/argmatch.h: Update from FSF via patch-2.2.93.
+	* lib/argmatch.c: Likewise.
+	* lib/backupfile.c: Likewise.
+	* lib/backupfile.h: Likewise.
+	* lib/basename: Likewise.
+
 Sun May 25 09:21:01 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/copy.c (copy_internal): When preserving symlinks
