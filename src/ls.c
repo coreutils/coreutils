@@ -170,6 +170,10 @@ int rpl_lstat PARAMS((const char *, struct stat *));
 # define TIMESPEC_NS(timespec) 0
 #endif
 
+#if ! HAVE_STRUCT_STAT_ST_AUTHOR
+# define st_author st_uid
+#endif
+
 enum filetype
   {
     unknown DT_INIT (DT_UNKNOWN),
@@ -433,6 +437,10 @@ static int sort_reverse;
 
 static int print_owner = 1;
 
+/* Nonzero means to display author information.  */
+
+static bool print_author;
+
 /* Nonzero means to display group information.  -G and -o turn this off.  */
 
 static int print_group = 1;
@@ -669,7 +677,8 @@ static int exit_status;
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  BLOCK_SIZE_OPTION = CHAR_MAX + 1,
+  AUTHOR_OPTION = CHAR_MAX + 1,
+  BLOCK_SIZE_OPTION,
   COLOR_OPTION,
   FORMAT_OPTION,
   FULL_TIME_OPTION,
@@ -719,6 +728,7 @@ static struct option const long_options[] =
   {"time-style", required_argument, 0, TIME_STYLE_OPTION},
   {"color", optional_argument, 0, COLOR_OPTION},
   {"block-size", required_argument, 0, BLOCK_SIZE_OPTION},
+  {"author", no_argument, 0, AUTHOR_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -1465,6 +1475,10 @@ decode_switches (int argc, char **argv)
 	  if (format != long_format)
 	    format = one_per_line;
 	  break;
+
+        case AUTHOR_OPTION:
+          print_author = true;
+          break;
 
 	case SORT_OPTION:
 	  sort_type = XARGMATCH ("--sort", optarg, sort_args, sort_types);
@@ -2713,20 +2727,37 @@ get_current_time (void)
   current_time_ns = 999999999;
 }
 
+/* Format into BUFFER the name or id of the user with id U.  Return
+   the length of the formatted buffer, not counting the terminating
+   null.  */
+
+static size_t
+format_user (char *buffer, uid_t u)
+{
+  char const *name = (numeric_ids ? NULL : getuser (u));
+  if (name)
+    sprintf (buffer, "%-8s ", name);
+  else
+    sprintf (buffer, "%-8lu ", (unsigned long) u);
+  return strlen (buffer);
+}
+
+/* Print information about F in long format.  */
+
 static void
 print_long_format (const struct fileinfo *f)
 {
   char modebuf[12];
 
-  /* 7 fields that may require LONGEST_HUMAN_READABLE bytes,
+  /* 8 fields that may require LONGEST_HUMAN_READABLE bytes,
      1 10-byte mode string,
      1 35-byte time string (may be longer in some locales -- see below)
        or LONGEST_HUMAN_READABLE integer,
-     9 spaces, one following each of these fields, and
+     10 spaces, one following each of these fields, and
      1 trailing NUL byte.  */
-  char init_bigbuf[7 * LONGEST_HUMAN_READABLE + 10
+  char init_bigbuf[8 * LONGEST_HUMAN_READABLE + 10
 		   + MAX (35, LONGEST_HUMAN_READABLE)
-		   + 9 + 1];
+		   + 10 + 1];
   char *buf = init_bigbuf;
   size_t bufsize = sizeof (init_bigbuf);
   size_t s;
@@ -2787,14 +2818,7 @@ print_long_format (const struct fileinfo *f)
   p += strlen (p);
 
   if (print_owner)
-    {
-      char const *user_name = (numeric_ids ? NULL : getuser (f->stat.st_uid));
-      if (user_name)
-	sprintf (p, "%-8s ", user_name);
-      else
-	sprintf (p, "%-8lu ", (unsigned long) f->stat.st_uid);
-      p += strlen (p);
-    }
+    p += format_user (p, f->stat.st_uid);
 
   if (print_group)
     {
@@ -2805,6 +2829,9 @@ print_long_format (const struct fileinfo *f)
 	sprintf (p, "%-8lu ", (unsigned long) f->stat.st_gid);
       p += strlen (p);
     }
+
+  if (print_author)
+    p += format_user (p, f->stat.st_author);
 
   if (S_ISCHR (f->stat.st_mode) || S_ISBLK (f->stat.st_mode))
     sprintf (p, "%3lu, %3lu ",
@@ -3556,6 +3583,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -a, --all                  do not hide entries starting with .\n\
   -A, --almost-all           do not list implied . and ..\n\
+      --author               print the author of each file\n\
   -b, --escape               print octal escapes for nongraphic characters\n\
 "), stdout);
       fputs (_("\
