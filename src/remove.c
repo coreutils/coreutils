@@ -598,11 +598,18 @@ prompt (char const *filename, struct rm_options const *x,
 		    : _("%s: descend into directory %s? ")),
 		   program_name, quoted_name);
 	else
-	  fprintf (stderr,
-		   (write_protected
-		    ? _("%s: remove write-protected %s %s? ")
-		    : _("%s: remove %s %s? ")),
-		   program_name, file_type (&sbuf), quoted_name);
+	  {
+	    /* TRANSLATORS: You may find it more convenient to translate
+	       the equivalent of _("%1$s: %3$s is write-protected and is
+	       of type `%2$s'.  Remove it? ").  This is more verbose than
+	       the original but it should avoid grammatical problems with
+	       the output of file_type.  */
+	    fprintf (stderr,
+		     (write_protected
+		      ? _("%s: remove write-protected %s %s? ")
+		      : _("%s: remove %s %s? ")),
+		     program_name, file_type (&sbuf), quoted_name);
+	  }
 
 	if (!yesno ())
 	  return RM_USER_DECLINED;
