@@ -1,3 +1,7 @@
+1999-01-31  Jim Meyering  <meyering@ascend.com>
+
+	* getloadavg.m4: Check for locale.h and the function, setlocale.
+
 1999-01-30  Jim Meyering  <meyering@ascend.com>
 
 	* check-type.m4: Use 3-arg form of AC_DEFINE.
