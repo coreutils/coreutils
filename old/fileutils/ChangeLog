@@ -2,6 +2,11 @@
 
 	* Version 4.1.3.
 
+	* src/touch.c (touch): Extend the change of 2001-09-15 to work on
+	systems for which errno is set to EPERM in that case.  Thus, e.g.,
+	`touch /' by non-root gives a better diagnostic on systems like SunOS4.
+	Reported by Volker Borchert.
+
 	Don't emulate dd's skip=N for *all* character devices;  lseek works
 	just fine on non-tape character devices like /dev/mem and /dev/kmem.
 	* src/dd.c (buggy_lseek_support) [__linux__]: Emulate `skip=N'
