@@ -1,6 +1,7 @@
 .deps
 .version
 Makefile
+[
 basename
 cat
 chgrp
