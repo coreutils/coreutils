@@ -8126,6 +8126,11 @@ Change the modification time only.
 @opindex -r
 @opindex --reference
 Use the times of the reference @var{file} instead of the current time.
+If this option is combined with the @option{--date=@var{time}}
+(@option{-d @var{time}}) option, the reference @var{file}'s time is
+the origin for any relative @var{time}s given, but is otherwise ignored.
+For example, @samp{-r foo -d '-5 seconds'} specifies a time stamp
+equal to five seconds before the corresponding time stamp for @file{foo}.
 
 @item -t [[CC]YY]MMDDhhmm[.ss]
 Use the argument (optional four-digit or two-digit years, months,
