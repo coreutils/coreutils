@@ -1,7 +1,7 @@
 /* getndelim2 - Read a line from a stream, stopping at one of 2 delimiters,
    with bounded memory allocation.
 
-   Copyright (C) 1993, 1996, 1997, 1998, 2000, 2003 Free Software
+   Copyright (C) 1993, 1996, 1997, 1998, 2000, 2003, 2004 Free Software
    Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -80,15 +80,17 @@ getndelim2 (char **lineptr, size_t *linesize, size_t nmax,
 	{
 	  size_t newlinesize =
 	    (*linesize > MIN_CHUNK ? 2 * *linesize : *linesize + MIN_CHUNK);
+	  char *p;
 
 	  if (! (*linesize < newlinesize && newlinesize <= nmax))
 	    newlinesize = nmax;
 
 	  *linesize = newlinesize;
 	  nbytes_avail = *linesize + *lineptr - read_pos;
-	  *lineptr = realloc (*lineptr, *linesize);
-	  if (!*lineptr)
+	  p = realloc (*lineptr, *linesize);
+	  if (!p)
 	    return -1;
+	  *lineptr = p;
 	  read_pos = *linesize - nbytes_avail + *lineptr;
 	}
 
