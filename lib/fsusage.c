@@ -23,10 +23,12 @@
 
 #if HAVE_INTTYPES_H
 # include <inttypes.h>
-#else
-# if HAVE_STDINT_H
-#  include <stdint.h>
-# endif
+#endif
+#if HAVE_STDINT_H
+# include <stdint.h>
+#endif
+#if HAVE_UNISTD_H
+# include <unistd.h>
 #endif
 #ifndef UINTMAX_MAX
 # define UINTMAX_MAX ((uintmax_t) -1)
