@@ -85,7 +85,9 @@ struct group *getgrgid ();
 
 #define isdigit(c) ((c) >= '0' && (c) <= '9')
 
+#ifndef strdup
 char *strdup ();
+#endif
 
 /* Return nonzero if STR represents an unsigned decimal integer,
    otherwise return 0. */
