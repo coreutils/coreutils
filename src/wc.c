@@ -32,12 +32,16 @@
 # include <wchar.h>
 #endif
 
-/* Get iswprint().  */
+/* Get iswprint(), iswspace().  */
 #if HAVE_WCTYPE_H
 # include <wctype.h>
 #endif
 #if !defined iswprint && !HAVE_ISWPRINT
 # define iswprint(wc) 1
+#endif
+#if !defined iswspace && !HAVE_ISWSPACE
+# define iswspace(wc) \
+    ((wc) == (unsigned char) (wc) && ISSPACE ((unsigned char) (wc)))
 #endif
 
 /* Include this after wctype.h so that we `#undef' ISPRINT
@@ -378,6 +382,8 @@ wc (int fd, const char *file)
 			  int width = wcwidth (wide_char);
 			  if (width > 0)
 			    linepos += width;
+			  if (iswspace (wide_char))
+			    goto mb_word_separator;
 			  in_word = 1;
 			}
 		      break;
@@ -452,6 +458,8 @@ wc (int fd, const char *file)
 		  if (ISPRINT ((unsigned char) p[-1]))
 		    {
 		      linepos++;
+		      if (ISSPACE ((unsigned char) p[-1]))
+			goto word_separator;
 		      in_word = 1;
 		    }
 		  break;
