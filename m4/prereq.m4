@@ -39,7 +39,7 @@ AC_DEFUN(jm_PREREQ_CANON_HOST,
 AC_DEFUN(jm_PREREQ_QUOTEARG,
 [
   AC_CHECK_FUNCS(isascii mbrtowc)
-  AC_CHECK_HEADERS(limits.h stdlib.h string.h wchar.h)
+  AC_CHECK_HEADERS(limits.h stdlib.h string.h wchar.h wctype.h)
   AC_HEADER_STDC
   AC_C_BACKSLASH_A
   AM_C_PROTOTYPES
