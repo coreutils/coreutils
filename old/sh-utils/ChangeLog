@@ -1,3 +1,35 @@
+1999-03-30  Jim Meyering  <meyering@ascend.com>
+
+	* src/sys2.h: Include "closeout.h" and "version-etc.h"
+
+	* src/*.c (PROGRAM_NAME, AUTHORS): Define and use.
+
+	* src/date.c: No longer include long-options.h.
+	[long_options]: Add entries for --help and --version.
+	Remove parse_long_options call.
+	(main) [getopt switch]: Add a case for each of --help and --version.
+	* src/env.c: Likewise.
+	* src/id.c: Likewise.
+	* src/pinky.c: Likewise.
+	* src/seq.c: Likewise.
+	* src/su.c: Likewise.
+	* src/sys2.h: Likewise.
+	* src/tee.c: Likewise.
+	* src/tty.c: Likewise.
+	* src/uname.c: Likewise.
+	* src/who.c: Likewise.
+
+1999-03-29  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (GNU_PACKAGE): Remove related code -- now it's in
+	the catch-all for shared autoconf code, m4/jm-macros.m4.
+	(jm_CHECK_ALL_TYPES): Remove explicit AC_TYPE_* macros and use
+	this instead.
+
+1999-03-28  Jim Meyering  <meyering@ascend.com>
+
+	* src/test.c (PROGRAM_NAME): Rename from COMMAND_NAME.
+
 1999-03-28  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/getdate.y (get_date): Reuse tm_isdst of first localtime
@@ -10,6 +42,7 @@
 	* src/false.sh (usage): Change `[OPTION]...' to `[OPTION]' to show
 	that only one of --help or --version is recognized at a time.
 	Reported by Meelis Roos.
+	* src/true.sh: Likewise.
 
 	* src/id.c (print_user): Use uid_t instead of int.
 	(print_group): Use gid_t instead of int.
