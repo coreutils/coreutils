@@ -1,3 +1,7 @@
+2001-03-19  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/version-etc.c (version_etc_copyright): Update to 2001.
+
 2001-03-16  Paul Eggert  <eggert@twinsun.com>
 
 	* tempname.c (uint64_t): Define to uintmax_t if
