@@ -2,7 +2,7 @@
 noinst_LIBRARIES = fu
 
 EXTRA_DIST = alloca.c basename.c error.c euidaccess.c fnmatch.c fsusage.c \
-ftruncate.c getdate.y group-member.c memcmp.c memcpy.c memset.c \
+ftruncate.c getdate.y getline.c group-member.c memcmp.c memcpy.c memset.c \
 mkdir.c mktime.c mountlist.c obstack.c posixtm.y regex.c rx.c \
 rename.c rmdir.c rpmatch.c \
 stpcpy.c strcasecmp.c strdup.c strndup.c strstr.c strtol.c strtoul.c
@@ -10,7 +10,7 @@ stpcpy.c strcasecmp.c strdup.c strndup.c strstr.c strtol.c strtoul.c
 INCLUDES = -I.. -I$(srcdir)
 INCLUDES = -I.. -I$(srcdir) -I../intl
 
-fu_SOURCES = getdate.c getline.c getopt.c getopt1.c posixtm.c \
+fu_SOURCES = getdate.c getopt.c getopt1.c posixtm.c \
 argmatch.c backupfile.c \
 dirname.c fileblocks.c filemode.c \
 full-write.c getversion.c idcache.c \
