@@ -80,10 +80,10 @@
 #   EUC-KR                    glibc aix hpux irix osf solaris freebsd   yes
 #   EUC-TW                    glibc aix hpux irix osf solaris
 #   BIG5                      glibc aix hpux osf solaris freebsd        yes
-#   BIG5HKSCS                 glibc
+#   BIG5-HKSCS                glibc
 #   GBK                       aix osf win32 dos
 #   GB18030                   glibc
-#   SJIS                      hpux osf solaris freebsd
+#   SHIFT_JIS                 hpux osf solaris freebsd                  yes
 #   JOHAB                     glibc win32
 #   TIS-620                   glibc aix hpux osf solaris
 #   VISCII                    glibc                                     yes
@@ -174,7 +174,7 @@ case "$os" in
 	echo "eucTW EUC-TW"
 	echo "hp15CN GB2312"
 	#echo "ccdc ?" # what is this?
-	echo "SJIS SJIS"
+	echo "SJIS SHIFT_JIS"
 	echo "utf8 UTF-8"
 	;;
     irix*)
@@ -209,7 +209,7 @@ case "$os" in
 	echo "GBK GBK"
 	echo "KSC5601 CP949"
 	echo "sdeckanji EUC-JP"
-	echo "SJIS SJIS"
+	echo "SJIS SHIFT_JIS"
 	echo "TACTIS TIS-620"
 	echo "UTF-8 UTF-8"
 	;;
@@ -230,7 +230,7 @@ case "$os" in
 	echo "cns11643 EUC-TW"
 	echo "5601 EUC-KR"
 	echo "eucJP EUC-JP"
-	echo "PCK SJIS"
+	echo "PCK SHIFT_JIS"
 	echo "TIS620.2533 TIS-620"
 	#echo "sun_eu_greek ?" # what is this?
 	echo "UTF-8 UTF-8"
@@ -266,8 +266,8 @@ case "$os" in
 	echo "zh_TW.Big5 BIG5"
 	echo "zh_CN.EUC GB2312"
 	echo "ja_JP.EUC EUC-JP"
-	echo "ja_JP.SJIS SJIS"
-	echo "ja_JP.Shift_JIS SJIS"
+	echo "ja_JP.SJIS SHIFT_JIS"
+	echo "ja_JP.Shift_JIS SHIFT_JIS"
 	echo "ko_KR.EUC EUC-KR"
 	;;
     beos*)
