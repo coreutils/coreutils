@@ -1,0 +1,52 @@
+#!/bin/sh
+# Make sure name is used as secondary key when sorting on mtime or ctime.
+
+: ${LS=ls}
+: ${TOUCH=touch}
+
+if test "$VERBOSE" = yes; then
+  set -x
+  $LS --version
+fi
+
+tmp=t-ls.$$
+
+# We're going to run LS from a subdir.
+# Prepend ../ if $LS is a relative file name.
+case $LS in
+  /*) ;;
+  */*) LS=../$LS
+esac
+
+case $TOUCH in
+  /*) ;;
+  */*) TOUCH=../$TOUCH
+esac
+
+test_failure=0
+mkdir $tmp || test_failure=1
+cd $tmp || test_failure=1
+
+date=1998-01-15
+
+$TOUCH -d "$date" c || test_failure=1
+$TOUCH -d "$date" a || test_failure=1
+$TOUCH -d "$date" b || test_failure=1
+
+if test $test_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+fail=0
+
+set `$LS -c a b c`
+test "$*" = 'a b c' && : || fail=1
+
+set `$LS -rc a b c`
+test "$*" = 'c b a' && : || fail=1
+
+cd ..
+rm -rf $tmp
+
+exit $fail
