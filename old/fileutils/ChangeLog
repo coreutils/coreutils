@@ -4,7 +4,7 @@ Sun Feb  2 09:40:37 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 	(struct htab): Likewise.
 	No longer include cp.h.  Instead, include the things it used to
 	include.
-	(hash_insert2): Make function static.  Move function to precede
+	(hash_insert2): Make function static.  Move this function to precede
 	the sole function from which it is called.
 
 	* src/Makefile.am (noinst_HEADERS): Add copy.h, cp-hash.h.
