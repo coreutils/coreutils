@@ -134,7 +134,7 @@ test_syntax_error (char *format, char *arg)
 {
   fprintf (stderr, "%s: ", argv[0]);
   fprintf (stderr, format, arg);
-  fflush (stderr);
+  FFLUSH (stderr);
   test_exit (SHELL_BOOLEAN (FALSE));
 }
 
@@ -370,7 +370,7 @@ term (void)
     value = binary_operator ();
 
   /* Might be a switch type argument */
-  else if ('-' == argv[pos][0] && 0 == argv[pos][2])
+  else if ('-' == argv[pos][0] && argv[pos][1] && 0 == argv[pos][2])
     {
       if (unop (argv[pos][1]))
 	value = unary_operator ();
@@ -627,7 +627,7 @@ binary_operator (void)
 static int
 unary_operator (void)
 {
-  long r, value;
+  long fd, value;
   struct stat stat_buf;
 
   switch (argv[pos][1])
@@ -784,14 +784,19 @@ unary_operator (void)
       return (TRUE == (0 != (stat_buf.st_mode & S_ISVTX)));
 #endif
 
-    case 't':			/* File (fd) is a terminal?  (fd) defaults to stdout. */
+    case 't':			/* File (fd) is a terminal? */
       advance (0);
-      if (pos < argc && isint (argv[pos], &r))
+      if (pos < argc)
 	{
+	  if (!isint (argv[pos], &fd))
+	    integer_expected_error (_("after -t"));
 	  advance (0);
-	  return (TRUE == (isatty ((int) r)));
 	}
-      return (TRUE == (isatty (1)));
+      else
+	{
+	  fd = 1;
+	}
+      return (TRUE == (isatty ((int) fd)));
 
     case 'n':			/* True if arg has some length. */
       unary_advance ();
@@ -874,12 +879,21 @@ unop (int op)
 }
 
 static int
+one_argument (const char *s)
+{
+  if (STREQ (s, "-t"))
+    return (TRUE == (isatty (1)));
+
+  return strlen (s) != 0;
+}
+
+static int
 two_arguments (void)
 {
   int value;
 
   if (STREQ (argv[pos], "!"))
-    value = strlen (argv[pos+1]) == 0;
+    value = ! one_argument (argv[pos+1]);
   else if (argv[pos][0] == '-'
 	   && argv[pos][1] != '\0'
 	   && argv[pos][2] == '\0')
@@ -931,7 +945,7 @@ posixtest (void)
 	break;
 
       case 1:
-	value = strlen (argv[1]) != 0;
+	value = one_argument (argv[1]);
 	pos = argc;
 	break;
 
