@@ -1059,26 +1059,28 @@ static void
 nls_set_fraction (register unsigned char ch)
 {
   if (!nls_fraction_found && ch != decimal_point)
-    if (ch == FLOATING_POINT)
-      {				/* US style */
-	decimal_point = FLOATING_POINT;
-	th_sep = FLOATING_COMMA;
-      }
-    else if (ch == FLOATING_COMMA)
-      {				/* EU style */
-	decimal_point = FLOATING_COMMA;
-	th_sep = FLOATING_POINT;
-      }
-    else if (ch != decimal_point)
-      {				/* Alien    */
-	decimal_point = ch;
-	th_sep = '\0';
-      }
+    {
+      if (ch == FLOATING_POINT)
+	{				/* US style */
+	  decimal_point = FLOATING_POINT;
+	  th_sep = FLOATING_COMMA;
+	}
+      else if (ch == FLOATING_COMMA)
+	{				/* EU style */
+	  decimal_point = FLOATING_COMMA;
+	  th_sep = FLOATING_POINT;
+	}
+      else if (ch != decimal_point)
+	{				/* Alien    */
+	  decimal_point = ch;
+	  th_sep = '\0';
+	}
+    }
   nls_fraction_found = 1;
 }
 
 /* Look for a fraction
-   It ain't as simple as it looks... however, consider a number:
+   It isn't as simple as it looks... however, consider a number:
       1.234,00
       1,234.00
    It's easy to tell which is a decimal point, and which isn't.  We use
@@ -2024,32 +2026,34 @@ mergefps (FILE **fps, register int nfps, FILE *ofp)
 
       /* Check if we need to read more lines into core. */
       if (++cur[ord[0]] == lines[ord[0]].used)
-	if (fillbuf (&buffer[ord[0]], fps[ord[0]]))
-	  {
-	    findlines (&buffer[ord[0]], &lines[ord[0]]);
-	    cur[ord[0]] = 0;
-	  }
-	else
-	  {
-	    /* We reached EOF on fps[ord[0]]. */
-	    for (i = 1; i < nfps; ++i)
-	      if (ord[i] > ord[0])
-		--ord[i];
-	    --nfps;
-	    xfclose (fps[ord[0]]);
-	    free (buffer[ord[0]].buf);
-	    free ((char *) lines[ord[0]].lines);
-	    for (i = ord[0]; i < nfps; ++i)
-	      {
-		fps[i] = fps[i + 1];
-		buffer[i] = buffer[i + 1];
-		lines[i] = lines[i + 1];
-		cur[i] = cur[i + 1];
-	      }
-	    for (i = 0; i < nfps; ++i)
-	      ord[i] = ord[i + 1];
-	    continue;
-	  }
+	{
+	  if (fillbuf (&buffer[ord[0]], fps[ord[0]]))
+	    {
+	      findlines (&buffer[ord[0]], &lines[ord[0]]);
+	      cur[ord[0]] = 0;
+	    }
+	  else
+	    {
+	      /* We reached EOF on fps[ord[0]]. */
+	      for (i = 1; i < nfps; ++i)
+		if (ord[i] > ord[0])
+		  --ord[i];
+	      --nfps;
+	      xfclose (fps[ord[0]]);
+	      free (buffer[ord[0]].buf);
+	      free ((char *) lines[ord[0]].lines);
+	      for (i = ord[0]; i < nfps; ++i)
+		{
+		  fps[i] = fps[i + 1];
+		  buffer[i] = buffer[i + 1];
+		  lines[i] = lines[i + 1];
+		  cur[i] = cur[i + 1];
+		}
+	      for (i = 0; i < nfps; ++i)
+		ord[i] = ord[i + 1];
+	      continue;
+	    }
+	}
 
       /* The new line just read in may be larger than other lines
 	 already in core; push it back in the queue until we encounter
