@@ -56,7 +56,7 @@ hard_locale (int category)
 #else
 
   int hard = 1;
-  char const *p = setlocale (category, 0);
+  char const *p = setlocale (category, "");
 
   if (p)
     {
