@@ -2,6 +2,8 @@
 
 	* Version 4.1-b1.
 
+	* tests/ln/misc: Use absolute path for final rm.
+
 	* Makefile.maint (my-distcheck): Run make with
 	CFLAGS='-Wformat -Werror'.
 
