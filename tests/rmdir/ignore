@@ -9,7 +9,6 @@ fi
 tmp=rmdir.$$
 trap "rm -rf $tmp" 0 1 2 3 15
 
-
 test_failure=0
 mkdir -p $tmp/a/b $tmp/x || test_failure=1
 
