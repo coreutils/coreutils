@@ -402,7 +402,7 @@ main (int argc, char **argv)
   int do_version = 0;
   int opt;
   char **string = NULL;
-  char n_strings = 0;
+  size_t n_strings = 0;
   size_t i;
   size_t err = 0;
 
