@@ -8663,11 +8663,11 @@ Without it, @command{stat} acts on any symbolic link argument directly.
 Print the information in terse form, suitable for parsing by other programs.
 
 @item -c
-@itemx --format
+@itemx --format=@var{format}
 @opindex -c
-@opindex --format
+@opindex --format=@var{format}
 @cindex output format
-Allow user to specify the output format.
+Use @var{format} rather than the default format.
 
 Interpreted sequences for file stat are:
 @itemize @bullet
