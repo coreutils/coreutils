@@ -14,6 +14,7 @@
 	* tests/du/inaccessible-cwd: Ensure that even when run from an
 	inaccessible directory, du can still operate on accessible
 	directories elsewhere.
+	* tests/du/Makefile.am (TESTS): Add inaccessible-cwd.
 
 	* tests/rm/deep-1: Ensure that du can process a hierarchy
 	of depth 400 while using no more than 50KB of stack space.
