@@ -289,12 +289,10 @@ wget-update: $(get-targets)
 	    && $(move_if_change) $$f.t $$f;                             \
 	done
 
-define emit-rsync-commands
+define emit-upload-commands
 	echo =====================================
 	echo =====================================
-	echo 'for host in $(a_host) $(b_host); do \'
-	echo '  rsync -e ssh --pro -av $(xd-delta) $(my_distdir).tar.bz2 \'
-	echo '    $(my_distdir).tar.gz $$host:$(real_dir); done'
+	echo upload $(my_distdir) $(PREV_VERSION) $(VERSION)
 	echo '# send the /tmp/announcement e-mail'
 	echo =====================================
 	echo =====================================
@@ -311,4 +309,4 @@ alpha: local-check
 	chmod a-w $(rel-files)
 	echo $(VERSION) > $(prev_version_file)
 	$(CVS) ci -m. $(prev_version_file)
-	@$(emit-rsync-commands)
+	@$(emit-upload-commands)
