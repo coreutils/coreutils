@@ -1,3 +1,22 @@
+1999-08-15  Jim Meyering  <meyering@ascend.com>
+
+	* src/tail.c (ENOSYS): Define to a bogus value if not already defined.
+
+1999-08-13  Eli Zaretskii  <eliz@is.elta.co.il>
+
+	* src/tail.c (parse_options): Warn if --pid=PID is used and kill()
+	returns ENOSYS (e.g. when compiled with DJGPP).
+
+1999-08-13  Jim Meyering  <meyering@ascend.com>
+
+	* src/tsort.c (usage): Use consistent bug-reporting address.
+
+	* tests/tsort/Test.pm: New file.
+	* tests/tsort/Makefile.am: New file.
+	* tests/tsort: New directory.
+	* tests/Makefile.am (SUBDIRS): Add tsort.
+	* configure.in (AC_OUTPUT): Add tests/tsort/Makefile.
+
 1999-08-11  Paul Eggert  <eggert@twinsun.com>
 
 	* doc/textutils.texi: Document how to ignore newline during sort.
