@@ -1,8 +1,24 @@
 1998-10-03  Jim Meyering  <meyering@ascend.com>
 
+	* Version 1.22g.
+
+	* man/Makefile.am: Switch to using help2man.
+	(EXTRA_DIST): Add Makefile.summ.
+
+	* man/help2man: Invoke program with --manhelp option only if
+	--name=STRING not specified.  Otherwise, this would fail with `yes'.
+	* man/Makefile.summ: New file.
+	* man/Makefile.maint: Include it.
+	* man/help2man: New file.
+	* man/GNUmakefile: New file.
+	* man/Makefile.maint: New file.
+	* man/*.x: New files.
+	* man/*.1: Remove files.
+
 	* src/md5sum.c (split_3): Rename local variable, to `escaped_filename'.
 	(main): Output the leading backslash not just when there's a newline
 	in the file name, but also when there's a backslash.
+	Reported by Jim Dennis.
 
 	* tests/md5sum/basic-1: Add tests with filenames containing newline
 	and backslash characters.  (for the bug fixed above)
