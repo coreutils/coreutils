@@ -20,6 +20,7 @@ Sun Apr  7 11:58:13 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	(mon_week): Likewise.
 	(mon_week): Rewrite to correctly implement %W format..
 	(strftime): Handle %V format.
+	Reported by Arne Juul.
 
 Fri Apr  5 07:33:00 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
