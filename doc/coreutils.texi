@@ -3131,8 +3131,9 @@ discards all but one of identical successive lines.  Optionally, it can
 instead show only lines that appear exactly once, or lines that appear
 more than once.
 
-The input must be sorted.  If your input is not sorted, perhaps you want
-to use @code{sort -u}.
+The input need not be sorted, but duplicate input lines are detected
+only if they are adjacent.  If you want to discard non-adjacent
+duplicate lines, perhaps you want to use @code{sort -u}.
 
 If no @var{output} file is specified, @code{uniq} writes to standard
 output.
@@ -3181,14 +3182,14 @@ Ignore differences in case when comparing lines.
 @opindex -d
 @opindex --repeated
 @cindex duplicate lines, outputting
-Print only duplicate lines.
+Print one copy of each duplicate line.
 
 @item -D
 @itemx --all-repeated[=@var{delimit-method}]
 @opindex -D
 @opindex --all-repeated
 @cindex all duplicate lines, outputting
-Print all duplicate lines and only duplicate lines.
+Print all copies of each duplicate line.
 This option is useful mainly in conjunction with other options e.g.,
 to ignore case or to compare only selected fields.
 The optional @var{delimit-method} tells how to delimit
@@ -3223,7 +3224,7 @@ This is a @sc{gnu} extension.
 @opindex -u
 @opindex --unique
 @cindex unique lines, outputting
-Print only unique lines.
+Print non-duplicate lines.
 
 @item -w @var{n}
 @itemx --check-chars=@var{n}
