@@ -49,8 +49,8 @@ DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	getgroups.c gethostname.c getline.c getloadavg.c getndelim2.c \
 	getopt.c getopt1.c getpass.c gettimeofday.c getusershell.c \
 	group-member.c lchown.c lstat.c malloc.c memchr.c memcmp.c \
-	memcpy.c memmove.c memrchr.c memset.c mkdir.c mkstemp.c \
-	mktime.c mountlist.c nanosleep.c obstack.c obstack.h \
+	memcpy.c memmove.c mempcpy.c memrchr.c memset.c mkdir.c \
+	mkstemp.c mktime.c mountlist.c nanosleep.c obstack.c obstack.h \
 	printf-args.c printf-parse.c putenv.c raise.c readlink.c \
 	readutmp.c realloc.c regex.c rename.c rmdir.c rpmatch.c \
 	setenv.c sig2str.c stat.c stpcpy.c strcasecmp.c strcspn.c \
@@ -109,45 +109,45 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/md5.m4 $(top_srcdir)/m4/memchr.m4 \
 	$(top_srcdir)/m4/memcmp.m4 $(top_srcdir)/m4/memcoll.m4 \
 	$(top_srcdir)/m4/memcpy.m4 $(top_srcdir)/m4/memmove.m4 \
-	$(top_srcdir)/m4/memrchr.m4 $(top_srcdir)/m4/memset.m4 \
-	$(top_srcdir)/m4/mkdir-slash.m4 $(top_srcdir)/m4/mkstemp.m4 \
-	$(top_srcdir)/m4/mktime.m4 $(top_srcdir)/m4/modechange.m4 \
-	$(top_srcdir)/m4/mountlist.m4 $(top_srcdir)/m4/nanosleep.m4 \
-	$(top_srcdir)/m4/nls.m4 $(top_srcdir)/m4/obstack.m4 \
-	$(top_srcdir)/m4/onceonly.m4 $(top_srcdir)/m4/path-concat.m4 \
-	$(top_srcdir)/m4/pathmax.m4 $(top_srcdir)/m4/perl.m4 \
-	$(top_srcdir)/m4/physmem.m4 $(top_srcdir)/m4/po.m4 \
-	$(top_srcdir)/m4/posixtm.m4 $(top_srcdir)/m4/posixver.m4 \
-	$(top_srcdir)/m4/prereq.m4 $(top_srcdir)/m4/progtest.m4 \
-	$(top_srcdir)/m4/putenv.m4 $(top_srcdir)/m4/quote.m4 \
-	$(top_srcdir)/m4/quotearg.m4 $(top_srcdir)/m4/readdir.m4 \
-	$(top_srcdir)/m4/readlink.m4 $(top_srcdir)/m4/readtokens.m4 \
-	$(top_srcdir)/m4/readutmp.m4 $(top_srcdir)/m4/regex.m4 \
-	$(top_srcdir)/m4/rename.m4 $(top_srcdir)/m4/restrict.m4 \
-	$(top_srcdir)/m4/rmdir-errno.m4 $(top_srcdir)/m4/rmdir.m4 \
-	$(top_srcdir)/m4/rpmatch.m4 $(top_srcdir)/m4/safe-read.m4 \
-	$(top_srcdir)/m4/safe-write.m4 $(top_srcdir)/m4/same.m4 \
-	$(top_srcdir)/m4/save-cwd.m4 $(top_srcdir)/m4/savedir.m4 \
-	$(top_srcdir)/m4/setenv.m4 $(top_srcdir)/m4/settime.m4 \
-	$(top_srcdir)/m4/sha1.m4 $(top_srcdir)/m4/sig2str.m4 \
-	$(top_srcdir)/m4/signed.m4 $(top_srcdir)/m4/ssize_t.m4 \
-	$(top_srcdir)/m4/st_dm_mode.m4 $(top_srcdir)/m4/st_mtim.m4 \
-	$(top_srcdir)/m4/stat-prog.m4 $(top_srcdir)/m4/stat.m4 \
-	$(top_srcdir)/m4/stdbool.m4 $(top_srcdir)/m4/stdint_h.m4 \
-	$(top_srcdir)/m4/stdio-safer.m4 $(top_srcdir)/m4/stpcpy.m4 \
-	$(top_srcdir)/m4/strcase.m4 $(top_srcdir)/m4/strcspn.m4 \
-	$(top_srcdir)/m4/strdup.m4 $(top_srcdir)/m4/strftime.m4 \
-	$(top_srcdir)/m4/strndup.m4 $(top_srcdir)/m4/strnlen.m4 \
-	$(top_srcdir)/m4/strpbrk.m4 $(top_srcdir)/m4/strstr.m4 \
-	$(top_srcdir)/m4/strtod.m4 $(top_srcdir)/m4/strtoimax.m4 \
-	$(top_srcdir)/m4/strtol.m4 $(top_srcdir)/m4/strtoll.m4 \
-	$(top_srcdir)/m4/strtoul.m4 $(top_srcdir)/m4/strtoull.m4 \
-	$(top_srcdir)/m4/strtoumax.m4 $(top_srcdir)/m4/strverscmp.m4 \
-	$(top_srcdir)/m4/timespec.m4 $(top_srcdir)/m4/tm_gmtoff.m4 \
-	$(top_srcdir)/m4/tzset.m4 $(top_srcdir)/m4/uint32_t.m4 \
-	$(top_srcdir)/m4/uintmax_t.m4 $(top_srcdir)/m4/uintptr_t.m4 \
-	$(top_srcdir)/m4/ulonglong.m4 $(top_srcdir)/m4/unicodeio.m4 \
-	$(top_srcdir)/m4/unistd-safer.m4 \
+	$(top_srcdir)/m4/mempcpy.m4 $(top_srcdir)/m4/memrchr.m4 \
+	$(top_srcdir)/m4/memset.m4 $(top_srcdir)/m4/mkdir-slash.m4 \
+	$(top_srcdir)/m4/mkstemp.m4 $(top_srcdir)/m4/mktime.m4 \
+	$(top_srcdir)/m4/modechange.m4 $(top_srcdir)/m4/mountlist.m4 \
+	$(top_srcdir)/m4/nanosleep.m4 $(top_srcdir)/m4/nls.m4 \
+	$(top_srcdir)/m4/obstack.m4 $(top_srcdir)/m4/onceonly.m4 \
+	$(top_srcdir)/m4/path-concat.m4 $(top_srcdir)/m4/pathmax.m4 \
+	$(top_srcdir)/m4/perl.m4 $(top_srcdir)/m4/physmem.m4 \
+	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/posixtm.m4 \
+	$(top_srcdir)/m4/posixver.m4 $(top_srcdir)/m4/prereq.m4 \
+	$(top_srcdir)/m4/progtest.m4 $(top_srcdir)/m4/putenv.m4 \
+	$(top_srcdir)/m4/quote.m4 $(top_srcdir)/m4/quotearg.m4 \
+	$(top_srcdir)/m4/readdir.m4 $(top_srcdir)/m4/readlink.m4 \
+	$(top_srcdir)/m4/readtokens.m4 $(top_srcdir)/m4/readutmp.m4 \
+	$(top_srcdir)/m4/regex.m4 $(top_srcdir)/m4/rename.m4 \
+	$(top_srcdir)/m4/restrict.m4 $(top_srcdir)/m4/rmdir-errno.m4 \
+	$(top_srcdir)/m4/rmdir.m4 $(top_srcdir)/m4/rpmatch.m4 \
+	$(top_srcdir)/m4/safe-read.m4 $(top_srcdir)/m4/safe-write.m4 \
+	$(top_srcdir)/m4/same.m4 $(top_srcdir)/m4/save-cwd.m4 \
+	$(top_srcdir)/m4/savedir.m4 $(top_srcdir)/m4/setenv.m4 \
+	$(top_srcdir)/m4/settime.m4 $(top_srcdir)/m4/sha1.m4 \
+	$(top_srcdir)/m4/sig2str.m4 $(top_srcdir)/m4/signed.m4 \
+	$(top_srcdir)/m4/ssize_t.m4 $(top_srcdir)/m4/st_dm_mode.m4 \
+	$(top_srcdir)/m4/st_mtim.m4 $(top_srcdir)/m4/stat-prog.m4 \
+	$(top_srcdir)/m4/stat.m4 $(top_srcdir)/m4/stdbool.m4 \
+	$(top_srcdir)/m4/stdint_h.m4 $(top_srcdir)/m4/stdio-safer.m4 \
+	$(top_srcdir)/m4/stpcpy.m4 $(top_srcdir)/m4/strcase.m4 \
+	$(top_srcdir)/m4/strcspn.m4 $(top_srcdir)/m4/strdup.m4 \
+	$(top_srcdir)/m4/strftime.m4 $(top_srcdir)/m4/strndup.m4 \
+	$(top_srcdir)/m4/strnlen.m4 $(top_srcdir)/m4/strpbrk.m4 \
+	$(top_srcdir)/m4/strstr.m4 $(top_srcdir)/m4/strtod.m4 \
+	$(top_srcdir)/m4/strtoimax.m4 $(top_srcdir)/m4/strtol.m4 \
+	$(top_srcdir)/m4/strtoll.m4 $(top_srcdir)/m4/strtoul.m4 \
+	$(top_srcdir)/m4/strtoull.m4 $(top_srcdir)/m4/strtoumax.m4 \
+	$(top_srcdir)/m4/strverscmp.m4 $(top_srcdir)/m4/timespec.m4 \
+	$(top_srcdir)/m4/tm_gmtoff.m4 $(top_srcdir)/m4/tzset.m4 \
+	$(top_srcdir)/m4/uint32_t.m4 $(top_srcdir)/m4/uintmax_t.m4 \
+	$(top_srcdir)/m4/uintptr_t.m4 $(top_srcdir)/m4/ulonglong.m4 \
+	$(top_srcdir)/m4/unicodeio.m4 $(top_srcdir)/m4/unistd-safer.m4 \
 	$(top_srcdir)/m4/unlink-busy.m4 \
 	$(top_srcdir)/m4/unlocked-io.m4 $(top_srcdir)/m4/uptime.m4 \
 	$(top_srcdir)/m4/userspec.m4 $(top_srcdir)/m4/utimbuf.m4 \
@@ -350,25 +350,25 @@ libfetish_a_SOURCES = acl.h acl.c getdate.h getdate.y posixtm.c \
 	exclude.h exit.h exitfail.c exitfail.h fcntl-safer.h \
 	filemode.c filemode.h file-type.c file-type.h fopen-safer.c \
 	fsusage.h fts.c fts_.h full-read.c full-read.h full-write.c \
-	full-write.h getline.h getpagesize.h getpass.h gettime.c \
-	gettext.h getugroups.c group-member.h hard-locale.c \
+	full-write.h getcwd.h getline.h getpagesize.h getpass.h \
+	gettime.c gettext.h getugroups.c group-member.h hard-locale.c \
 	hard-locale.h human.c human.h idcache.c imaxtostr.c lchown.h \
 	linebuffer.c linebuffer.h localcharset.c localcharset.h \
 	long-options.c long-options.h makepath.c makepath.h mbswidth.c \
 	mbswidth.h md5.c md5.h memcasecmp.c memcasecmp.h memcoll.c \
-	memcoll.h modechange.c modechange.h mountlist.h offtostr.c \
-	open-safer.c path-concat.c path-concat.h pathmax.h physmem.c \
-	physmem.h quote.c quote.h quotearg.c quotearg.h readtokens0.c \
-	readtokens0.h readtokens.c readtokens.h readutmp.h regex.h \
-	root-dev-ino.c root-dev-ino.h safe-read.c safe-read.h \
-	safe-write.c safe-write.h same.c same.h save-cwd.c save-cwd.h \
-	savedir.c savedir.h setenv.h settime.c sha1.c sha1.h sig2str.h \
-	stat-macros.h stdio-safer.h stripslash.c strdup.h strndup.h \
-	strverscmp.h time_r.c time_r.h timespec.h umaxtostr.c \
-	unicodeio.c unicodeio.h unistd-safer.h unlocked-io.h \
-	userspec.c userspec.h utimecmp.c utimecmp.h utimens.c \
-	utimens.h version-etc.c version-etc.h xalloc.h xalloc-die.c \
-	xfts.c xfts.h xgetcwd.c xgetcwd.h xgethostname.c \
+	memcoll.h mempcpy.h modechange.c modechange.h mountlist.h \
+	offtostr.c open-safer.c path-concat.c path-concat.h pathmax.h \
+	physmem.c physmem.h quote.c quote.h quotearg.c quotearg.h \
+	readtokens0.c readtokens0.h readtokens.c readtokens.h \
+	readutmp.h regex.h root-dev-ino.c root-dev-ino.h safe-read.c \
+	safe-read.h safe-write.c safe-write.h same.c same.h save-cwd.c \
+	save-cwd.h savedir.c savedir.h setenv.h settime.c sha1.c \
+	sha1.h sig2str.h stat-macros.h stdio-safer.h stripslash.c \
+	strdup.h strndup.h strverscmp.h time_r.c time_r.h timespec.h \
+	umaxtostr.c unicodeio.c unicodeio.h unistd-safer.h \
+	unlocked-io.h userspec.c userspec.h utimecmp.c utimecmp.h \
+	utimens.c utimens.h version-etc.c version-etc.h xalloc.h \
+	xalloc-die.c xfts.c xfts.h xgetcwd.c xgetcwd.h xgethostname.c \
 	xgethostname.h xmalloc.c xmemcoll.c xmemcoll.h xnanosleep.c \
 	xnanosleep.h xreadlink.c xreadlink.h xstrndup.c xstrndup.h \
 	xstrtod.c xstrtod.h xstrtoimax.c xstrtol.c xstrtol.h \
@@ -474,6 +474,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/memcmp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/memcpy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/memmove.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mempcpy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/memrchr.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/memset.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mkdir.Po@am__quote@

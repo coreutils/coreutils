@@ -439,17 +439,14 @@
 /* Define to 1 if you have the `ftruncate' function. */
 #undef HAVE_FTRUNCATE
 
+/* Define to 1 if you have the `futimes' function. */
+#undef HAVE_FUTIMES
+
 /* Define if struct statfs has the f_fstypename member. */
 #undef HAVE_F_FSTYPENAME_IN_STATFS
 
 /* Define to 1 if you have the `getaddrinfo' function. */
 #undef HAVE_GETADDRINFO
-
-/* Define to 1 if you have the `getcwd' function. */
-#undef HAVE_GETCWD
-
-/* Define if getcwd (NULL, 0) allocates memory for result. */
-#undef HAVE_GETCWD_NULL
 
 /* Define to 1 if you have the `getdelim' function. */
 #undef HAVE_GETDELIM
@@ -1498,6 +1495,9 @@
 # undef __EXTENSIONS__
 #endif
 
+/* Define to rpl_ if the getcwd replacement function should be used. */
+#undef __GETCWD_PREFIX
+
 /* Define to rpl_ if the getopt replacement functions and variables should be
    used. */
 #undef __GETOPT_PREFIX
@@ -1519,9 +1519,6 @@
 
 /* Define to rpl_free if the replacement function should be used. */
 #undef free
-
-/* Define to rpl_getcwd if the wrapper function should be used. */
-#undef getcwd
 
 /* Define as rpl_getgroups if getgroups doesn't work right. */
 #undef getgroups
