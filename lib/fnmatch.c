@@ -37,7 +37,7 @@ Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #if defined (_LIBC) || !defined (__GNU_LIBRARY__)
 
 
-#if !defined(__GNU_LIBRARY__) && !defined(STDC_HEADERS)
+#ifndef errno
 extern int errno;
 #endif
 
