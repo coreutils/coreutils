@@ -1657,8 +1657,7 @@ print_files (int number_of_files, char **av)
 static void
 init_header (char *filename, int desc)
 {
-  char *buf;
-  char initbuf[MAX (256, INT_BUFSIZE_BOUND (long int))];
+  char *buf = NULL;
   struct stat st;
   struct tm *tm;
 
@@ -1668,25 +1667,27 @@ init_header (char *filename, int desc)
   if (desc < 0 || fstat (desc, &st) != 0)
     st.st_mtime = time (NULL);
 
-  buf = initbuf;
   tm = localtime (&st.st_mtime);
-  if (! tm)
-    sprintf (buf, "%ld", (long int) st.st_mtime);
+  if (tm == NULL)
+    {
+      buf = xmalloc (INT_BUFSIZE_BOUND (long int));
+      sprintf (buf, "%ld", (long int) st.st_mtime);
+    }
   else
     {
-      size_t bufsize = sizeof initbuf;
+      size_t bufsize = 0;
       for (;;)
 	{
+	  buf = x2nrealloc (buf, &bufsize, sizeof *buf);
 	  *buf = '\1';
-	  if (strftime (buf, bufsize, date_format, tm) || ! *buf)
+	  if (strftime (buf, bufsize, date_format, tm) || *buf == '\0')
 	    break;
-	  buf = alloca (bufsize *= 2);
 	}
     }
 
   if (date_text)
     free (date_text);
-  date_text = xstrdup (buf);
+  date_text = buf;
   file_text = custom_header ? custom_header : desc < 0 ? "" : filename;
   header_width_available = (chars_per_line
 			    - mbswidth (date_text, 0)
