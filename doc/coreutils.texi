@@ -3860,7 +3860,7 @@ Do not split multi-byte characters (no-op for now).
 @opindex -s
 @opindex --only-delimited
 For @samp{-f}, do not print lines that do not contain the field separator
-character.
+character.  Normally, any line without a field separator is printed verbatim.
 
 @itemx --output-delimiter=@var{output_delim_string}
 @opindex --output-delimiter
