@@ -15,7 +15,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Written by Jim Meyering, meyering@cs.utexas.edu.  */
+/* Written by Jim Meyering */
 
 #include <config.h>
 
@@ -37,11 +37,11 @@
 #include "error.h"
 
 #ifndef ULONG_MAX
-#define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
+# define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
 #endif
 
 #ifndef LONG_MAX
-#define LONG_MAX ((long int) (ULONG_MAX >> 1))
+# define LONG_MAX ((long int) (ULONG_MAX >> 1))
 #endif
 
 #ifndef UINT_MAX
@@ -53,7 +53,7 @@
 #endif
 
 #ifndef UCHAR_MAX
-#define UCHAR_MAX 0xFF
+# define UCHAR_MAX 0xFF
 #endif
 
 #define N_CHARS (UCHAR_MAX + 1)
@@ -298,7 +298,7 @@ static int truncate_set1 = 0;
 static int translating;
 
 #ifndef BUFSIZ
-#define BUFSIZ 8192
+# define BUFSIZ 8192
 #endif
 
 #define IO_BUF_SIZE BUFSIZ
