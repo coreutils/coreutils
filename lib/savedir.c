@@ -27,22 +27,22 @@
 #include <unistd.h>
 #endif
 
-#ifdef HAVE_DIRENT_H
-#include <dirent.h>
-#define NLENGTH(direct) (strlen((direct)->d_name))
-#else /* not HAVE_DIRENT_H */
-#define dirent direct
-#define NLENGTH(direct) ((direct)->d_namlen)
-#ifdef HAVE_SYS_NDIR_H
-#include <sys/ndir.h>
-#endif /* HAVE_SYS_NDIR_H */
-#ifdef HAVE_SYS_DIR_H
-#include <sys/dir.h>
-#endif /* HAVE_SYS_DIR_H */
-#ifdef HAVE_NDIR_H
-#include <ndir.h>
-#endif /* HAVE_NDIR_H */
-#endif /* HAVE_DIRENT_H */
+#if HAVE_DIRENT_H
+# include <dirent.h>
+# define NAMLEN(dirent) strlen((dirent)->d_name)
+#else
+# define dirent direct
+# define NAMLEN(dirent) (dirent)->d_namlen
+# if HAVE_SYS_NDIR_H
+#  include <sys/ndir.h>
+# endif
+# if HAVE_SYS_DIR_H
+#  include <sys/dir.h>
+# endif
+# if HAVE_NDIR_H
+#  include <ndir.h>
+# endif
+#endif
 
 #ifdef CLOSEDIR_VOID
 /* Fake a return value. */
@@ -100,7 +100,7 @@ savedir (dir, name_size)
 	  || (dp->d_name[1] != '\0'
 	      && (dp->d_name[1] != '.' || dp->d_name[2] != '\0')))
 	{
-	  unsigned size_needed = (namep - name_space) + NLENGTH (dp) + 2;
+	  unsigned size_needed = (namep - name_space) + NAMLEN (dp) + 2;
 
 	  if (size_needed > name_size)
 	    {
