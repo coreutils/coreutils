@@ -1,7 +1,10 @@
 2001-12-15  Jim Meyering  <meyering@lucent.com>
 
+	* regex.h (__restrict_arr): Update from libc.
+
 	* mountlist.h (ME_REMOTE): Recognize file systems of type smbfs
 	as `remote' if the name starts with `//'.  Suggested by Michael Stone.
+	(STREQ): Define.
 
 2001-12-10  Jim Meyering  <meyering@lucent.com>
 
