@@ -1,6 +1,6 @@
 /* Convert string representation of a number into an integer value.
 
-   Copyright (C) 1991, 1992, 1994, 1995, 1996, 1997, 1998, 1999, 2003
+   Copyright (C) 1991, 1992, 1994, 1995, 1996, 1997, 1998, 1999, 2003, 2005
    Free Software Foundation, Inc.
 
    NOTE: The canonical source of this file is maintained with the GNU C
@@ -124,11 +124,19 @@ extern int errno;
 # define STRTOL_LONG_MAX LONG_LONG_MAX
 # define STRTOL_ULONG_MAX ULONG_LONG_MAX
 
-/* The extra casts work around common compiler bugs,
-   e.g. Cray C 5.0.3.0 when t == time_t.  */
+/* The extra casts in the following macros work around compiler bugs,
+   e.g., in Cray C 5.0.3.0.  */
+
+/* True if the arithmetic type T is signed.  */
 # ifndef TYPE_SIGNED
 #  define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
 # endif
+
+/* The maximum and minimum values for the integer type T.  These
+   macros have undefined behavior if T is signed and has padding bits
+   (i.e., bits that do not contribute to the value), or if T uses
+   signed-magnitude representation.  If this is a problem for you,
+   please let us know how to fix it for your host.  */
 # ifndef TYPE_MINIMUM
 #  define TYPE_MINIMUM(t) ((t) (TYPE_SIGNED (t) \
 				? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) \
