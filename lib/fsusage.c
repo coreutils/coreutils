@@ -1,5 +1,5 @@
 /* fsusage.c -- return space usage of mounted filesystems
-   Copyright (C) 1991, 1992, 1996, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1996, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -184,7 +184,7 @@ get_fs_usage (const char *path, const char *disk, struct fs_usage *fsp)
      truncation, presumably without botching the 4.1.1 case, in which
      the values are not truncated.  The correct counts are stored in
      undocumented spare fields.  */
-  if (fsd.f_blocks == 0x1fffff && fsd.f_spare[0] > 0)
+  if (fsd.f_blocks == 0x7fffffff / fsd.f_bsize && fsd.f_spare[0] > 0)
     {
       fsd.f_blocks = fsd.f_spare[0];
       fsd.f_bfree = fsd.f_spare[1];
