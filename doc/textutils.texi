@@ -639,7 +639,7 @@ more consecutive output lines would be identical, @code{od} outputs only
 the first line, and puts just an asterisk on the following line to
 indicate the elision.
 
-@item -w [@var{n}]
+@item -w[@var{n}]
 @itemx --width[=@var{n}]
 @opindex -w
 @opindex --width
