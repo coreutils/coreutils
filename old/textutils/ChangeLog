@@ -1,8 +1,7 @@
 Tue Jul 16 00:09:37 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* src/od.c [OFF_T_MAX]: Use `(unsigned long)1' rather than `(off_t)1'
-	so the left operand of the << isn't signed.
-	From Kaveh Ghazi.
+	* src/od.c (OFF_T_MAX): Remove definition.
+	(main): Compare against LONG_MAX rather than OFF_T_MAX.
 
 Mon Jul 15 23:42:57 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
