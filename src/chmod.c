@@ -277,8 +277,12 @@ Usage: %s [OPTION]... MODE[,MODE]... FILE...\n\
 Change the mode of each FILE to MODE.\n\
 \n\
   -c, --changes           like verbose but report only when a change is made\n\
-      --preserve-root     fail to operate recursively on `/'\n\
+"), stdout);
+      fputs (_("\
       --no-preserve-root  do not treat `/' specially (the default)\n\
+      --preserve-root     fail to operate recursively on `/'\n\
+"), stdout);
+      fputs (_("\
   -f, --silent, --quiet   suppress most error messages\n\
   -v, --verbose           output a diagnostic for every file processed\n\
       --reference=RFILE   use RFILE's mode instead of MODE values\n\
