@@ -1,6 +1,15 @@
-2003-07-26  Jim Meyering  <jim@meyering.net>
+2003-07-27  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.90.
+
+	* src/pathchk.c (validate_path): Use %lu, not %ld.
+	From Paul Eggert.
+	* src/cut.c (is_printable_field): Simplify bit arithmetic.
+	From Paul Eggert.
+	* src/ls.c (sort_files): Put `volatile' in the right place.
+	From Paul Eggert.
+
+2003-07-26  Jim Meyering  <jim@meyering.net>
 
 	Use only one bit per field/offset in array, not one `int'.
 	* src/cut.c (printable_field): Change type to `unsigned char'.
