@@ -1,4 +1,6 @@
 [4.1.4]
+* df --local no longer lists smbfs file systems whose name starts with //
+* dd now detects the Linux/tape/lseek bug at run time and warns about it.
 [4.1.3]
 * ls -R once again outputs a blank line between per-directory groups of files.
     This was broken by the cycle-detection change in 4.1.1.
