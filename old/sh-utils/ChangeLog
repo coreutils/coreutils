@@ -1,3 +1,30 @@
+Tue Mar 12 17:52:05 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* basename.c date.c dirname.c echo.c env.c expr.c factor.c hostname.c
+	id.c logname.c nice.c pathchk.c printenv.c printf.c pwd.c seq.c
+	sleep.c stty.c su.c tee.c test.c tty.c uname.c who-users.c whoami.c
+	yes.c (main): Initialize for internationalized message support:
+	call setlocale, bindtextdomain, and textdomain.
+	* system.h: Add definitions and includes for NLS.
+	* Makefile.am (SUBDIRS): Add intl and po.
+	* src/Makefile.am (datadir): Define.
+	(localedir): Define.
+	(DEFS): Add LOCALEDIR definition.
+	(LDADD): Add @INTLLIBS@.
+	* aclocal.m4: Add NLS-related macro definitions from
+	gettext distribution.
+	* acconfig.h (ENABLE_NLS, HAVE_CATGETS, HAVE_GETTEXT, HAVE_LC_MESSAGES,
+	HAVE_STPCPY): New macros.
+	Add PACKAGE and VERSION.
+	* configure.in (PACKAGE): Define with AC_DEFINE_UNQUOTED.
+	(VERSION): Likewise.
+	(ALL_LINGUAS): Define.
+	(ud_GNU_GETTEXT): Use it.
+	Link an nls file.
+	(AC_OUTPUT): Reflect addition of two new directories, intl and po.
+	Create po/Makefile.
+  	Mostly from François Pinard.
+
 Wed Mar  6 21:40:34 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* who-users.c (print_entry): Use STRUCT_UTMP, not `struct utmp' to
