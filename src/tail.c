@@ -411,17 +411,16 @@ xlseek (int fd, off_t offset, int whence, char const *filename)
    read NUMBER newlines.
    START_POS is the starting position of the read pointer for the file
    associated with FD (may be nonzero).
-   FILE_LENGTH is the length of the file (one more than the offset of the
-   last byte of the file).
+   END_POS is the file offset of EOF (one larger than offset of last byte).
    Return 0 if successful, 1 if an error occurred.  */
 
 static int
 file_lines (const char *pretty_filename, int fd, long int n_lines,
-	    off_t start_pos, off_t file_length)
+	    off_t start_pos, off_t end_pos)
 {
   char buffer[BUFSIZ];
   size_t bytes_read;
-  off_t pos = file_length;
+  off_t pos = end_pos;
 
   if (n_lines == 0)
     return 0;
@@ -465,7 +464,7 @@ file_lines (const char *pretty_filename, int fd, long int n_lines,
 	      if (n != bytes_read - 1)
 		xwrite (STDOUT_FILENO, nl + 1, bytes_read - (n + 1));
 	      dump_remainder (pretty_filename, fd,
-			      file_length - (pos + bytes_read));
+			      end_pos - (pos + bytes_read));
 	      return 0;
 	    }
 	}
@@ -475,7 +474,7 @@ file_lines (const char *pretty_filename, int fd, long int n_lines,
 	{
 	  /* Not enough lines in the file; print the entire file.  */
 	  xlseek (fd, start_pos, SEEK_SET, pretty_filename);
-	  dump_remainder (pretty_filename, fd, file_length);
+	  dump_remainder (pretty_filename, fd, end_pos);
 	  return 0;
 	}
       pos -= BUFSIZ;
