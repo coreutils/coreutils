@@ -731,11 +731,9 @@ main (int argc, char **argv)
 
 	case 'f':
 	  x.force = 1;
-	  x.interactive = 0;
 	  break;
 
 	case 'i':
-	  x.force = 0;
 	  x.interactive = 1;
 	  break;
 
