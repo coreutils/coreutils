@@ -3,6 +3,12 @@ Sun Jun 19 00:18:06 1994  Jim Meyering  (meyering@comco.com)
 	* nice.c (main): Accept options like `--5' (equivalent to `-n -5')
 	instead of letting getopt give an `unrecognized option' error.
 
+	* long-options.c: Require another argument: version_string.
+	Don't include "version.h" or "system.h".
+	* basename.c, dirname.c, echo.c, expr.c, hostname.c, printf.c,
+	pwd.c, stty.c, test.c, yes.c: Adjust callers of parse_long_options
+	accordingly.
+
 Thu Jun 02 14:11:31 1994  Jim Meyering  (meyering@comco.com)
 
 	* stty.c (main): Set max_col and current_col before running
