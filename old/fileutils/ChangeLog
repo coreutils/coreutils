@@ -3,6 +3,11 @@
 	* lib/getdate.y (get_date): Fix typo in time_t overflow test.
 	From Michael Stone.
 
+1999-12-21  Andreas Schwab  <schwab@suse.de>
+
+	* tests/shred/remove: Use $file, not $tmp/file.  Exit 77 if run as
+	root.
+
 1999-12-19  Jim Meyering  <meyering@ascend.com>
 
 	* Version 4.0l.
