@@ -26,7 +26,7 @@
 #include "system.h"
 
 #include "md5.h"
-#include "sha.h"
+#include "sha1.h"
 #include "checksum.h"
 #include "getline.h"
 #include "error.h"
