@@ -1,4 +1,4 @@
-# serial 5
+# serial 6
 
 # From Paul Eggert.
 
@@ -14,21 +14,7 @@ AC_DEFUN(AC_MBSTATE_T_OBJECT,
   [
    AC_CHECK_HEADERS(stdlib.h)
 
-   AC_CACHE_CHECK([for mbstate_t], ac_cv_type_mbstate_t,
-    [AC_TRY_COMPILE([
-#if HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
-#include <wchar.h>],
-      [mbstate_t *x; return sizeof x;],
-      ac_cv_type_mbstate_t=yes,
-      ac_cv_type_mbstate_t=no)])
-   if test $ac_cv_type_mbstate_t != yes; then
-     AC_DEFINE(mbstate_t, int,
-	       [Define to int if <wchar.h> does not define.])
-   fi
-
-   AC_CACHE_CHECK([for mbstate_t object type], ac_cv_type_mbstate_t_object,
+   AC_CACHE_CHECK([for mbstate_t object], ac_cv_type_mbstate_t_object,
     [AC_TRY_COMPILE([
 #if HAVE_STDLIB_H
 # include <stdlib.h>
@@ -40,4 +26,18 @@ AC_DEFUN(AC_MBSTATE_T_OBJECT,
    if test $ac_cv_type_mbstate_t_object = yes; then
      AC_DEFINE(HAVE_MBSTATE_T_OBJECT, 1,
 	       [Define if mbstate_t is an object type.])
+   else
+     AC_CACHE_CHECK([for mbstate_t], ac_cv_type_mbstate_t,
+      [AC_TRY_COMPILE([
+#if HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
+#include <wchar.h>],
+	[mbstate_t *x; return sizeof x;],
+	ac_cv_type_mbstate_t=yes,
+	ac_cv_type_mbstate_t=no)])
+     if test $ac_cv_type_mbstate_t != yes; then
+       AC_DEFINE(mbstate_t, int,
+		 [Define to int if <wchar.h> does not define.])
+     fi
    fi])
