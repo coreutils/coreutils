@@ -413,19 +413,6 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
     {
       same_link = same;
 
-      /* The backup code ensures there's a copy, so it's ok to remove
-	 any destination file.  But there's one exception: when both
-	 source and destination are the same directory entry.  In that
-	 case, moving the destination file aside (in making the backup)
-	 would also rename the source file and result in an error.  */
-      if (x->backup_type != none)
-	{
-	  if (!same_link)
-	    return 1;
-
-	  return ! same_name (src_path, dst_path);
-	}
-
       /* If both the source and destination files are symlinks (and we'll
 	 know this here IFF preserving symlinks (aka xstat == lstat),
 	 then it's ok.  */
@@ -459,20 +446,19 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
       if (S_ISLNK (src_sb_link->st_mode) && S_ISLNK (dst_sb_link->st_mode)
 	  && x->unlink_dest_before_opening)
 	return 1;
+    }
 
-      /* FIXME: factor this code and above */
-      /* The backup code ensures there's a copy, so it's ok to remove
-	 any destination file.  But there's one exception: when both
-	 source and destination are the same directory entry.  In that
-	 case, moving the destination file aside (in making the backup)
-	 would also rename the source file and result in an error.  */
-      if (x->backup_type != none)
-	{
-	  if (!same_link)
-	    return 1;
+  /* The backup code ensures there's a copy, so it's ok to remove
+     any destination file.  But there's one exception: when both
+     source and destination are the same directory entry.  In that
+     case, moving the destination file aside (in making the backup)
+     would also rename the source file and result in an error.  */
+  if (x->backup_type != none)
+    {
+      if (!same_link)
+	return 1;
 
-	  return ! same_name (src_path, dst_path);
-	}
+      return ! same_name (src_path, dst_path);
     }
 
 #if 0
