@@ -1,3 +1,7 @@
+2002-01-22  Paul Eggert  <eggert@twinsun.com>
+
+	* jm-macros.m4 (jm_MACROS): Require AC_FUNC_FSEEKO.
+
 2002-01-19  Jim Meyering  <meyering@lucent.com>
 
 	* jm-macros.m4 (jm_MACROS): Use AC_FUNC_STRNLEN.
