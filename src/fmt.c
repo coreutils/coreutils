@@ -1,4 +1,4 @@
-* GNU fmt -- simple text formatter.
+/* GNU fmt -- simple text formatter.
    Copyright (C) 1994 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
