@@ -577,6 +577,8 @@ is_power_of_two (unsigned int i)
   return (i & (i - 1)) == 0;
 }
 
+/* Test whether the current dev/ino (from SB) is the same as the saved one.
+   Periodically squirrel away the dev/ino of a current directory.  */
 static void
 cycle_check (struct stat const *sb)
 {
