@@ -1,5 +1,8 @@
 2003-02-05  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.am (check-texinfo): Allow bare `POSIX' to be used on
+	direntry lines.
+
 	* coreutils.texi: Use new form of @direntry.
 	Put unlink in its proper place.  Adjust wording in some
 	dir entry descriptions, mainly so they fit in 80 columns.
