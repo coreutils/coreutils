@@ -11,19 +11,13 @@
 # include <config.h>
 #endif
 
+#include "sha.h"
+
 #include <sys/types.h>
 
-#if STDC_HEADERS || defined _LIBC
-# include <stdlib.h>
-# include <string.h>
-#else
-# ifndef HAVE_MEMCPY
-#  define memcpy(d, s, n) bcopy ((s), (d), (n))
-# endif
-#endif
+#include <stdlib.h>
+#include <string.h>
 
-#include "md5.h"
-#include "sha.h"
 #include "unlocked-io.h"
 
 /*
