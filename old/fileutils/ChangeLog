@@ -1,3 +1,15 @@
+Tue Mar 23 23:13:33 1993  Jim Meyering  (meyering@comco.com)
+
+	* ls.c (gobble_file): Don't stat symlinks unless we need to.
+	From Mike Rendell <michael@mercury.cs.mun.ca>.
+
+	* dd.c (copy, copy_with_block, copy_with_block): Decrement
+	pending_spaces only if it's > 0. The following command didn't
+	terminate:
+	perl -e 'print "a  a\n";'| dd of=/dev/null ibs=1 cbs=3 conv=unblock
+	With suggestions from Chris Weber <weber@bucknell.edu>,
+	Marlys.A.Nelson@uwrf.edu, and Albert-Lunde@nwu.edu.
+
 Mon Dec  7 20:09:59 1992  Jim Meyering  (meyering@idefix.comco.com)
 
 	* install.c (isnumber), chgrp.c (change_file_group): Define ISDIGIT
