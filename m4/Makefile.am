@@ -6,4 +6,4 @@
 EXTRA_DIST = README \
 chown.m4 d-ino.m4 d-type.m4 getgroups.m4 getline.m4 getloadavg.m4 \
 jm-mktime.m4 jm-winsz1.m4 jm-winsz2.m4 lstat.m4 memcmp.m4 putenv.m4 \
-strftime.m4 uptime.m4
+stat.m4 strftime.m4 uptime.m4
