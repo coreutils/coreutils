@@ -1,5 +1,10 @@
 2004-11-06  Jim Meyering  <jim@meyering.net>
 
+	* __fpending.c, __fpending.h: Remove files.
+
+	* Makefile.am (libfetish_a_SOURCES): Remove __fpending.h, now
+	that it's no longer used.
+
 	Ensure that no close failure goes unreported.
 	* closeout.c (close_stdout): Always close stdout.  I.e., don't
 	return early when it seems there's nothing to flush.
