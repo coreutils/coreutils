@@ -175,6 +175,16 @@ AC_DEFUN(jm_MACROS,
   AC_SUBST(POW_LIBM)
   test $am_cv_func_strtod_needs_libm = yes && POW_LIBM=-lm
 
+  # These tests are for df.
+  jm_LIST_MOUNTED_FILESYSTEMS([list_mounted_fs=yes], [list_mounted_fs=no])
+  jm_FSTYPENAME
+  jm_FILE_SYSTEM_USAGE([space=yes], [space=no])
+  if test $list_mounted_fs = yes && test $space = yes; then
+    DF_PROG="df"
+    LIBOBJS="$LIBOBJS fsusage.$ac_objext"
+    LIBOBJS="$LIBOBJS mountlist.$ac_objext"
+  fi
+
 ])
 
 AC_DEFUN(jm_CHECK_ALL_TYPES,
