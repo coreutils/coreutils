@@ -5,6 +5,9 @@
 	* Makefile.maint (my-distcheck): Depend on po-check, so I'll be warned
 	about any required changes at `make distcheck' time rather than at
 	`make alpha' time.
+	(writable-files): New target.
+	(my-distcheck): Depend on it.
+	(alpha): Likewise.
 
 	* po/POTFILES.in: Add these: lib/makepath.c, lib/rpmatch.c,
 	and lib/same.c
