@@ -368,7 +368,7 @@ nextarg (char const *str)
     return 0;
   else
     {
-      bool r = strcmp (*args, str) == 0;
+      bool r = STREQ (*args, str);
       args += r;
       return r;
     }
