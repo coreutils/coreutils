@@ -15,15 +15,16 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Usage: stty [-ag] [--all] [--save] [setting...]
+/* Usage: stty [-ag] [--all] [--save] [-F device] [--file=device] [setting...]
 
    Options:
    -a, --all    Write all current settings to stdout in human-readable form.
    -g, --save   Write all current settings to stdout in stty-readable form.
+   -F, --file   Open and use the specified device instead of stdin
 
    If no args are given, write to stdout the baud rate and settings that
    have been changed from their defaults.  Mode reading and changes
-   are done on stdin.
+   are done on the specified device, or stdin if none was specified.
 
    David MacKenzie <djm@gnu.ai.mit.edu> */
 
@@ -403,19 +404,24 @@ static long integer_arg PARAMS ((const char *s));
 static speed_t string_to_baud PARAMS ((const char *arg));
 static tcflag_t *mode_type_flag PARAMS ((enum mode_type type,
 					 struct termios *mode));
-static void display_all PARAMS ((struct termios *mode));
+static void display_all PARAMS ((struct termios *mode, int fd,
+				 const char *device));
 static void display_changed PARAMS ((struct termios *mode));
 static void display_recoverable PARAMS ((struct termios *mode));
 static void display_settings PARAMS ((enum output_type output_type,
-				      struct termios *mode));
+				      struct termios *mode, int fd,
+				      const char *device));
 static void display_speed PARAMS ((struct termios *mode, int fancy));
-static void display_window_size PARAMS ((int fancy));
+static void display_window_size PARAMS ((int fancy, int fd,
+					 const char *device));
 static void sane_mode PARAMS ((struct termios *mode));
-static void set_control_char PARAMS ((struct control_info *info, const char *arg,
+static void set_control_char PARAMS ((struct control_info *info,
+				      const char *arg,
 				      struct termios *mode));
 static void set_speed PARAMS ((enum speed_setting type, const char *arg,
-			    struct termios *mode));
-static void set_window_size PARAMS ((int rows, int cols));
+			       struct termios *mode));
+static void set_window_size PARAMS ((int rows, int cols, int fd,
+ 				  const char *device));
 
 /* The width of the screen, for output wrapping. */
 static int max_col;
@@ -427,6 +433,7 @@ static struct option longopts[] =
 {
   {"all", no_argument, NULL, 'a'},
   {"save", no_argument, NULL, 'g'},
+  {"file", required_argument, NULL, 'F'},
   {NULL, 0, NULL, 0}
 };
 
@@ -478,15 +485,17 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [SETTING]...\n\
-  or:  %s OPTION\n\
+Usage: %s [-F device] [--file=device] [SETTING]...\n\
+  or:  %s [-F device] [--file=device] [-a|--all]\n\
+  or:  %s [-F device] [--file=device] [-g|--save]\n\
 "),
-	      program_name, program_name);
+	      program_name, program_name, program_name);
       printf (_("\
 Print or change terminal characteristics.\n\
 \n\
   -a, --all       print all current settings in human-readable form\n\
   -g, --save      print all current settings in a stty-readable form\n\
+  -F, --file      open and use the specified device instead of stdin\n\
       --help      display this help and exit\n\
       --version   output version information and exit\n\
 \n\
@@ -650,6 +659,29 @@ settings, CHAR is taken literally, or coded as in ^c, 0x37, 0177 or\n\
   exit (status);
 }
 
+/*
+ * Return 1 if the string only contains valid options
+ */
+int valid_options(char *opt, const char *valid_opts,
+		  const char *valid_arg_opts)
+{
+	char ch;
+	
+	if (*opt++ != '-')
+		return 0;
+
+	while (ch = *opt) {
+		opt++;
+		if (strchr(valid_opts, ch))
+			continue;
+		if (strchr(valid_arg_opts, ch))
+			return 1;
+		return 0;
+	}
+	return 1;
+}
+
+
 int
 main (int argc, char **argv)
 {
@@ -661,6 +693,11 @@ main (int argc, char **argv)
   int verbose_output;
   int recoverable_output;
   int k;
+  int noargs = 1;
+  char *file_name = NULL, *cp;
+  int fd, fdflags;
+  const char *device_name;
+  const char *posixly_correct = getenv("POSIXLY_CORRECT");
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -675,7 +712,7 @@ main (int argc, char **argv)
 
   /* Recognize the long options only.  */
   opterr = 0;
-  while ((optc = getopt_long_only (argc, argv, "ag", longopts, NULL)) != -1)
+  while ((optc = getopt_long_only (argc, argv, "agF:", longopts, NULL)) != -1)
     {
       switch (optc)
 	{
@@ -689,43 +726,79 @@ main (int argc, char **argv)
 	  output_type = recoverable;
 	  break;
 
+	case 'f':
+	  if (file_name)
+	    error(2, 0, _("Only one device can be specified.\n"));
+	  file_name = optarg;
+	  break;
+
 	default:
 	  break;
 	}
     }
 
-  /* Recognize short options and combinations: -a, -g, -ag, and -ga.
-     They need not precede non-options.  We cannot use GNU getopt because
-     it would treat -tabs and -ixany as uses of the -a option.  */
-  for (k = optind; k < argc; k++)
+  /*
+   * Clear out the options that have been parsed.  This is kind of
+   * gross, but it's needed because stty SETTINGS look like options to
+   * getopt(), so we need to work around things in a really horrible
+   * way.  If any new options are ever added to stty, the short option
+   * MUST NOT be a letter which is the first letter of one of the
+   * possible stty settings.  (NOTE: I didn't add this brokeness, I
+   * just fixed the existing code so that it worked correctly in all
+   * cases of --, POSIXLY_CORRECT, etc.  [tytso:19980401.1316EST])
+   */
+  for (k = 1; k < argc; k++) 
     {
-      if (argv[k][0] == '-')
+      if (!argv[k])
+	continue;
+      /* Handle --, and set noargs if there are arguments following it */
+      if (!strcmp(argv[k], "--"))
 	{
-	  if (argv[k][1] == 'a'
-	      && argv[k][2] == '\0')
-	    {
-	      ++optind;
-	      verbose_output = 1;
-	    }
-	  else if (argv[k][1] == 'g'
-		   && argv[k][2] == '\0')
-	    {
-	      ++optind;
-	      recoverable_output = 1;
-	    }
-	  else if ((argv[k][1] == 'g'
-		    && argv[k][2] == 'a'
-		    && argv[k][3] == '\0')
-		   || (argv[k][1] == 'a'
-		       && argv[k][2] == 'g'
-		       && argv[k][3] == '\0'))
-	    {
-	      ++optind;
-	      verbose_output = 1;
-	      recoverable_output = 1;
-	    }
-	}
+	  argv[k] = 0;
+	  if (k < argc-1)
+	    noargs = 0;
+	  break;
+    	}
+      /* Handle "--file device" */
+      if (!strcmp(argv[k], "--file"))
+	{
+	  argv[k+1] = 0;
+	  argv[k] = 0;
+    	}
+      /* Handle "--all", "--save", and "--file=device" */
+      else if (!strcmp(argv[k], "--all") ||
+	       !strcmp(argv[k], "--save") ||
+	       !strncmp(argv[k], "--file=", 7))
+	argv[k] = 0;
+      /* Handle "-a", "-ag", "-aF/dev/foo", "-aF /dev/foo", etc. */
+      else if (valid_options(argv[k], "ag", "F"))
+	{
+	  if (!strcmp(argv[k], "-file") ||
+	      argv[k][strlen(argv[k])-1] == 'F')
+	    argv[k+1] = 0;
+	  argv[k] = 0;
+        }
+      /* Everything else must be a normal, non-option argument. */
+      else
+	{
+	noargs = 0;
+	if (posixly_correct)
+	  break;
+        }
     }
+
+#if 0
+  /* For debugging purposes, print out the argument */
+  for (k=1; k < argc; k++) {
+	if (argv[k])
+		printf("arg: %s\n", argv[k]);
+	else
+		printf("arg: none\n");
+  }
+  printf("File_name = %s\n", file_name ? file_name : "NONE");
+  printf("noargs = %d\n", noargs);
+#endif
+
 
   /* Specifying both -a and -g gets an error.  */
   if (verbose_output && recoverable_output)
@@ -734,20 +807,35 @@ main (int argc, char **argv)
 mutually exclusive"));
 
   /* Specifying any other arguments with -a or -g gets an error.  */
-  if (argc - optind > 0 && (verbose_output || recoverable_output))
+  if (!noargs && (verbose_output || recoverable_output))
     error (2, 0, _("when specifying an output style, modes may not be set"));
 
+  if (file_name)
+    {
+      device_name = file_name;
+      fd = open(device_name, O_RDONLY|O_NONBLOCK);
+      if (fd < 0)
+	error(1, errno, device_name);
+      if ((fdflags = fcntl(fd, F_GETFL)) == -1
+	  || fcntl(fd, F_SETFL, fdflags & ~O_NONBLOCK) < 0)
+	error(1, errno, _("couldn't reset non-blocking mode"));
+    } else
+    {
+      fd = 0;
+      device_name = _("standard input");
+    }
+  
   /* Initialize to all zeroes so there is no risk memcmp will report a
      spurious difference in an uninitialized portion of the structure.  */
   memset (&mode, 0, sizeof (mode));
-  if (tcgetattr (0, &mode))
-    error (1, errno, _("standard input"));
+  if (tcgetattr (fd, &mode))
+    error (1, errno, device_name);
 
-  if (verbose_output || recoverable_output || argc == 1)
+  if (verbose_output || recoverable_output || noargs)
     {
       max_col = screen_columns ();
       current_col = 0;
-      display_settings (output_type, &mode);
+      display_settings (output_type, &mode, fd, device_name);
       exit (0);
     }
 
@@ -759,6 +847,11 @@ mutually exclusive"));
       int match_found = 0;
       int reversed = 0;
       int i;
+
+      if (argv[k] == 0) {
+	 k++;
+         continue;
+      }
 
       if (argv[k][0] == '-')
 	{
@@ -833,7 +926,8 @@ mutually exclusive"));
 		  usage (1);
 		}
 	      ++k;
-	      set_window_size ((int) integer_arg (argv[k]), -1);
+	      set_window_size ((int) integer_arg (argv[k]), -1,
+			       fd, device_name);
 	    }
 	  else if (!strcmp (argv[k], "cols")
 		   || !strcmp (argv[k], "columns"))
@@ -844,13 +938,14 @@ mutually exclusive"));
 		  usage (1);
 		}
 	      ++k;
-	      set_window_size (-1, (int) integer_arg (argv[k]));
+	      set_window_size (-1, (int) integer_arg (argv[k]),
+			       fd, device_name);
 	    }
 	  else if (!strcmp (argv[k], "size"))
 	    {
 	      max_col = screen_columns ();
 	      current_col = 0;
-	      display_window_size (0);
+	      display_window_size (0, fd, device_name);
 	    }
 #endif
 #ifdef HAVE_C_LINE
@@ -894,8 +989,8 @@ mutually exclusive"));
     {
       struct termios new_mode;
 
-      if (tcsetattr (0, TCSADRAIN, &mode))
-	error (1, errno, _("standard input"));
+      if (tcsetattr (fd, TCSADRAIN, &mode))
+	error (1, errno, device_name);
 
       /* POSIX (according to Zlotnick's book) tcsetattr returns zero if
 	 it performs *any* of the requested operations.  This means it
@@ -907,8 +1002,8 @@ mutually exclusive"));
       /* Initialize to all zeroes so there is no risk memcmp will report a
 	 spurious difference in an uninitialized portion of the structure.  */
       memset (&new_mode, 0, sizeof (new_mode));
-      if (tcgetattr (0, &new_mode))
-	error (1, errno, _("standard input"));
+      if (tcgetattr (fd, &new_mode))
+	error (1, errno, device_name);
 
       /* Normally, one shouldn't use memcmp to compare structures that
 	 may have `holes' containing uninitialized data, but we have been
@@ -935,7 +1030,8 @@ mutually exclusive"));
 	    {
 	      size_t i;
 	      error (1, 0,
-	      _("standard input: unable to perform all requested operations"));
+		     _("%s: unable to perform all requested operations"),
+		     device_name);
 	      printf (_("new_mode: mode\n"));
 	      for (i = 0; i < sizeof (new_mode); i++)
 		printf ("0x%02x: 0x%02x\n",
@@ -1202,14 +1298,14 @@ get_win_size (int fd, struct winsize *win)
 }
 
 static void
-set_window_size (int rows, int cols)
+set_window_size (int rows, int cols, int fd, const char *device)
 {
   struct winsize win;
 
-  if (get_win_size (STDIN_FILENO, &win))
+  if (get_win_size (fd, &win))
     {
       if (errno != EINVAL)
-	error (1, errno, _("standard input"));
+	error (1, errno, device);
       memset (&win, 0, sizeof (win));
     }
 
@@ -1250,28 +1346,28 @@ set_window_size (int rows, int cols)
       win.ws_row = 1;
       win.ws_col = 1;
 
-      if (ioctl (STDIN_FILENO, TIOCSWINSZ, (char *) &win))
-	error (1, errno, _("standard input"));
+      if (ioctl (fd, TIOCSWINSZ, (char *) &win))
+	error (1, errno, device);
 
-      if (ioctl (STDIN_FILENO, TIOCSSIZE, (char *) &ttysz))
-	error (1, errno, _("standard input"));
+      if (ioctl (fd, TIOCSSIZE, (char *) &ttysz))
+	error (1, errno, device);
       return;
     }
 # endif
 
-  if (ioctl (STDIN_FILENO, TIOCSWINSZ, (char *) &win))
-    error (1, errno, _("standard input"));
+  if (ioctl (fd, TIOCSWINSZ, (char *) &win))
+    error (1, errno, device);
 }
 
 static void
-display_window_size (int fancy)
+display_window_size (int fancy, int fd, const char *device)
 {
   struct winsize win;
 
-  if (get_win_size (STDIN_FILENO, &win))
+  if (get_win_size (fd, &win))
     {
       if (errno != EINVAL)
-	error (1, errno, _("standard input"));
+	error (1, errno, device);
       if (!fancy)
 	error (1, 0, _("no size information for this device"));
     }
@@ -1332,7 +1428,8 @@ mode_type_flag (enum mode_type type, struct termios *mode)
 }
 
 static void
-display_settings (enum output_type output_type, struct termios *mode)
+display_settings (enum output_type output_type, struct termios *mode,
+		  int fd, const char *device)
 {
   switch (output_type)
     {
@@ -1341,7 +1438,7 @@ display_settings (enum output_type output_type, struct termios *mode)
       break;
 
     case all:
-      display_all (mode);
+      display_all (mode, fd, device);
       break;
 
     case recoverable:
@@ -1435,7 +1532,7 @@ display_changed (struct termios *mode)
 }
 
 static void
-display_all (struct termios *mode)
+display_all (struct termios *mode, int fd, const char *device)
 {
   int i;
   tcflag_t *bitsp;
@@ -1444,7 +1541,7 @@ display_all (struct termios *mode)
 
   display_speed (mode, 1);
 #ifdef TIOCGWINSZ
-  display_window_size (1);
+  display_window_size (1, fd, device);
 #endif
 #ifdef HAVE_C_LINE
   wrapf ("line = %d;", mode->c_line);
@@ -1591,6 +1688,12 @@ struct speed_map speeds[] =
 #endif
 #ifdef B115200
   {"115200", B115200, 115200},
+#endif
+#ifdef B230400
+  {"230400", B230400, 230400},
+#endif
+#ifdef B460800
+  {"460800", B460800, 460800},
 #endif
   {NULL, 0, 0}
 };
