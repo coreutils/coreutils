@@ -24,7 +24,7 @@ yes_pid=$!
 while :; do
   test -s t && break
 done
-tail -1 t &
+tail -n 1 t &
 tail_pid=$!
 kill $yes_pid
 sleep 1
