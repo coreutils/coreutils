@@ -249,7 +249,7 @@ parse_user_spec (spec_arg, uid, gid, username_arg, groupname_arg)
   return error_msg;
 }
 
-#ifdef TESTING
+#ifdef TEST
 
 #define NULL_CHECK(s) ((s) == NULL ? "(null)" : (s))
 
