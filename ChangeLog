@@ -1,3 +1,12 @@
+2003-03-30  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.0.
+
+	* src/remove.c (is_empty_dir): Don't let a failing closedir
+	clobber errno.  Spotted by Arnold Robbins.
+
+	* src/env.c: Fix typo in comment.  From Arnold Robbins.
+
 2003-03-29  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.12.
