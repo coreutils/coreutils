@@ -176,17 +176,15 @@ A_Z=ABCDEFGHIJKLMNOPQRSTUVWXYZ
 
 unlocked-io.h: $(srcdir)/unlocked-io.hin Makefile.am
 	tmp=t$$$$;							\
-	echo						> $$tmp;	\
-	for b in $(io_functions); do					\
-	  f=$${b}_unlocked;						\
+	for f in $(io_functions); do					\
 	  u=`echo $$f|tr $(a_z) $(A_Z)`;				\
-	  echo "#  if HAVE_$${u}_UNLOCKED"		>> $$tmp;	\
-	  echo "#   undef $$f"				>> $$tmp;	\
-	  echo "#   define $$f(S) $${f}_unlocked (S)"	>> $$tmp;	\
-	  echo '#endif'					>> $$tmp;	\
-	done;								\
-	sed "/^@replace_this@$$/r$$tmp" $(srcdir)/unlocked-io.hin	\
-	  | sed "/^@replace_this@$$/d"					\
+	  echo "#  if HAVE_$${u}_UNLOCKED"		;		\
+	  echo "#   undef $$f"				;		\
+	  echo "#   define $$f(S) $${f}_unlocked (S)"	;		\
+	  echo '#  endif'				;		\
+	done > $$tmp;							\
+	sed '/^@replace_this@\$$/r '$$tmp $(srcdir)/unlocked-io.hin	\
+	  | sed '/^@replace_this@$$/d'					\
 	  > $@t;							\
 	rm -f $$tmp;							\
 	mv $@t $@
