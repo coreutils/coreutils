@@ -1,0 +1,33 @@
+#!/bin/sh
+
+: ${PERL=perl}
+: ${srcdir=.}
+
+case "$PERL" in
+  *'missing perl')
+  echo 1>&2 "$0: configure didn't find a usable version of Perl, so can't run this test"
+  exit 77
+  ;;
+esac
+
+exec $PERL -w -I$srcdir/.. -MFetish -- - <<\EOF
+require 5.003;
+use strict;
+
+(my $program_name = $0) =~ s|.*/||;
+
+# Turn off localisation of executable's ouput.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+
+my @Tests =
+    (
+     ['m1', '-m', {IN=> {empty=> ''}}, {IN=> {f=> "foo\n"}}, {OUT=>"foo\n"}],
+    );
+
+my $save_temps = $ENV{DEBUG};
+my $verbose = $ENV{VERBOSE};
+
+my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
+my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF
