@@ -56,7 +56,6 @@ libfetish_a_SOURCES = \
   xgetcwd.c xgetcwd.h \
   xgethostname.c xgethostname.h \
   xmemcoll.c xmemcoll.h \
-  xnanosleep.c xnanosleep.h \
   xreadlink.c xreadlink.h \
   xstrndup.c xstrndup.h \
   xstrtod.c xstrtod.h \
