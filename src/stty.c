@@ -720,7 +720,7 @@ main (argc, argv)
 
   /* Initialize to all zeroes so there is no risk memcmp will report a
      spurious difference in an uninitialized portion of the structure.  */
-  bzero (&mode, sizeof (mode));
+  memset (&mode, 0, sizeof (mode));
   if (tcgetattr (0, &mode))
     error (1, errno, "standard input");
 
@@ -887,7 +887,7 @@ main (argc, argv)
 
       /* Initialize to all zeroes so there is no risk memcmp will report a
 	 spurious difference in an uninitialized portion of the structure.  */
-      bzero (&new_mode, sizeof (new_mode));
+      memset (&new_mode, 0, sizeof (new_mode));
       if (tcgetattr (0, &new_mode))
 	error (1, errno, "standard input");
 
@@ -1209,7 +1209,7 @@ set_window_size (rows, cols)
     {
       if (errno != EINVAL)
 	error (1, errno, "standard input");
-      bzero (&win, sizeof (win));
+      memset (&win, 0, sizeof (win));
     }
 
   if (rows >= 0)
