@@ -91,7 +91,7 @@ int wcwidth ();
    character string pointed to by STRING.  If a non-printable character
    occurs, and MBSW_REJECT_UNPRINTABLE is specified, -1 is returned.
    With flags = MBSW_REJECT_INVALID | MBSW_REJECT_UNPRINTABLE, this is
-   the multibyte analogon of the wcswidth function.  */
+   the multibyte analogue of the wcswidth function.  */
 int
 mbswidth (const char *string, int flags)
 {

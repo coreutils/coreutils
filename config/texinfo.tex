@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2004-10-31.06}
+\def\texinfoversion{2004-11-08.15}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004 Free Software
@@ -1242,13 +1242,13 @@ where each line of input produces a line of output.}
       % Read toc silently, to get counts of subentries for \pdfoutline.
       \def\numchapentry##1##2##3##4{%
 	\def\thischapnum{##2}%
-	\let\thissecnum\empty
-	\let\thissubsecnum\empty
+	\def\thissecnum{0}%
+	\def\thissubsecnum{0}%
       }%
       \def\numsecentry##1##2##3##4{%
 	\advancenumber{chap\thischapnum}%
 	\def\thissecnum{##2}%
-	\let\thissubsecnum\empty
+	\def\thissubsecnum{0}%
       }%
       \def\numsubsecentry##1##2##3##4{%
 	\advancenumber{sec\thissecnum}%
@@ -1257,9 +1257,9 @@ where each line of input produces a line of output.}
       \def\numsubsubsecentry##1##2##3##4{%
 	\advancenumber{subsec\thissubsecnum}%
       }%
-      \let\thischapnum\empty
-      \let\thissecnum\empty
-      \let\thissubsecnum\empty
+      \def\thischapnum{0}%
+      \def\thissecnum{0}%
+      \def\thissubsecnum{0}%
       %
       % use \def rather than \let here because we redefine \chapentry et
       % al. a second time, below.
