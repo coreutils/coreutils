@@ -12,14 +12,14 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.6 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.7 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my @Types = qw (IN OUT ERR EXIT);
 my %Types = map {$_ => 1} @Types;
 my %Zero_one_type = map {$_ => 1} qw (OUT ERR EXIT);
-
 my $srcdir = $ENV{srcdir};
+my $Global_count = 1;
 
 # A file spec: a scalar or a reference to a single-keyed hash
 # ================
@@ -39,6 +39,10 @@ my $srcdir = $ENV{srcdir};
 # {OUT => 'data'}    put data in a temp file and compare it to stdout from cmd
 # {OUT => {'filename'=>undef}} compare contents of existing filename to
 #           stdout from cmd
+# {OUT => {'filename'=>[$CTOR, $DTOR]}} $CTOR and $DTOR are references to
+#           functions, each which is passed the single argument `filename'.
+#           $CTOR must create `filename'.
+#           DTOR may be omitted in which case `sub{unlink @_[0]}' is used.
 # Ditto for `ERR', but compare with stderr
 # {EXIT => N} expect exit status of cmd to be N
 #
@@ -49,7 +53,8 @@ my $srcdir = $ENV{srcdir};
 #   on stdout (or stderr).
 # If the EXIT-keyed one is omitted, then expect the exit status to be zero.
 
-my $Global_count = 1;
+# FIXME: Make sure that no junkfile is also listed as a
+# non-junkfile (i.e. with undef for contents)
 
 sub _shell_quote ($)
 {
@@ -58,9 +63,9 @@ sub _shell_quote ($)
   return "'$string'";
 }
 
-sub _create_file ($$$$$)
+sub _create_file ($$$$)
 {
-  my ($program_name, $test_name, $type, $file_name, $data) = @_;
+  my ($program_name, $test_name, $file_name, $data) = @_;
   my $file;
   if (defined $file_name)
     {
@@ -74,7 +79,6 @@ sub _create_file ($$$$$)
 
   # The test spec gave a string.
   # Write it to a temp file and return tempfile name.
-  #warn "writing $type `$data' to $file\n";
   my $fh = new FileHandle "> $file";
   die "$program_name: $file: $!\n" if ! $fh;
   print $fh $data;
@@ -124,6 +128,7 @@ sub run_tests ($$$$$)
       my $test_name = shift @$t;
       my $expect = {};
 
+      # FIXME: maybe don't reset this.
       $Global_count = 1;
       my @args;
       my $io_spec;
@@ -181,7 +186,7 @@ sub run_tests ($$$$$)
 
 	  my $is_junk_file = (! defined $file_name
 			      || ($type eq 'IN' && defined $contents));
-	  my $file = _create_file ($program_name, $test_name, $type,
+	  my $file = _create_file ($program_name, $test_name,
 				   $file_name, $contents);
 	  if ($type eq 'IN')
 	    {
@@ -214,7 +219,7 @@ sub run_tests ($$$$$)
 	{
 	  if (!exists $expect->{$eo})
 	    {
-	      $expect->{$eo} = _create_file ($program_name, $test_name, $eo,
+	      $expect->{$eo} = _create_file ($program_name, $test_name,
 					     undef, '');
 	      push @junk_files, $expect->{$eo};
 	    }
@@ -260,6 +265,7 @@ sub run_tests ($$$$$)
 	}
     }
 
+  # FIXME: maybe unlink files inside the big foreach loop?
   unlink @junk_files if ! $save_temps;
 
   return $fail;
