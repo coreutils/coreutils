@@ -10,7 +10,7 @@ fi
 
 pwd=`pwd`
 tmp=part-ren.$$
-trap 'status=$?; cd $pwd; exec 1>&2; rm -rf $tmp $other_partition_tmpdir && exit $status' 0
+trap 'status=$?; cd $pwd; exec 1>&2; rm -rf $tmp && exit $status' 0
 trap '(exit $?); exit' 1 2 13 15
 
 . $srcdir/setup
@@ -19,6 +19,7 @@ trap '(exit $?); exit' 1 2 13 15
 if test -z "$other_partition_tmpdir"; then
   (exit 77); exit
 fi
+t0="$t0 $other_partition_tmpdir"
 
 framework_failure=0
 mkdir $tmp || framework_failure=1
