@@ -1,5 +1,5 @@
 /* date - print or set the system date and time
-   Copyright (C) 1989-2003 Free Software Foundation, Inc.
+   Copyright (C) 1989-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -28,7 +28,6 @@
 #include "system.h"
 #include "argmatch.h"
 #include "error.h"
-#include "exitfail.h"
 #include "getdate.h"
 #include "getline.h"
 #include "posixtm.h"
@@ -111,7 +110,7 @@ static struct option const long_options[] =
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -277,7 +276,7 @@ batch_convert (const char *input_filename, const char *format)
     }
 
   if (fclose (in_stream) == EOF)
-    error (2, errno, "%s", quote (input_filename));
+    error (EXIT_FAILURE, errno, "%s", quote (input_filename));
 
   if (line != NULL)
     free (line);
@@ -310,7 +309,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  exit_failure = 2;
   atexit (close_stdout);
 
   while ((optc = getopt_long (argc, argv, short_options, long_options, NULL))
@@ -476,7 +474,7 @@ argument must be a format string beginning with `+'."),
       show_date (format, when);
     }
 
-  exit (status);
+  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /* Display the date and/or time in WHEN according to the format specified
