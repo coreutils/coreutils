@@ -1,3 +1,8 @@
+2000-07-17  Jim Meyering  <meyering@lucent.com>
+
+	* src/stty.c (visible): Don't mark `<undef>' for translation.
+	The standard requires that exact string.
+
 2000-07-09  Jim Meyering  <meyering@lucent.com>
 
 	* config.guess: Update from FSF.
