@@ -30,9 +30,7 @@ echo fubar > in
 tail -f in | cat > out &
 pid=$!
 sleep 1
-echo out: `cat out`
 kill $pid
-echo out: `cat out`
 
 fail=0
 test "`cat out`" = fubar || fail=1
