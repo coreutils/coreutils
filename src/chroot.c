@@ -18,6 +18,7 @@
 /* Written by Roland McGrath.  */
 
 #include <config.h>
+#include <getopt.h>
 #include <stdio.h>
 #include <sys/types.h>
 
@@ -75,8 +76,7 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
-
-  if (getopt_long (argc, argv, "+", NULL, NULL) != -1)
+  if (getopt (argc, argv, "+") != -1)
     usage (EXIT_FAIL);
 
   if (argc <= optind)
