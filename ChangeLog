@@ -1,6 +1,22 @@
 2003-07-16  Jim Meyering  <jim@meyering.net>
 
-	* Version 5.0.2.
+	* Version 5.0.90.
+
+	* configure.ac: Use 5.0.90, rather than 5.0.2, per GNU maintainer
+	guidelines.  The next non-beta release will be 5.1.
+
+	This script would have caught at least two recent bugs:
+	those in [ and kill.
+	* tests/help-version: Revive this script.
+	It wasn't doing anything useful, since $all_programs wasn't being
+	defined by the invoking Makefile.am.
+	Reflect that nohup is no longer a script, so don't exclude it.
+	Add framework to handle the programs added since it was last run:
+	kill, stat, unlink, [, link, readlink.
+	Fix path-related problems deriving from the move of this script
+	from src/ to its present location.
+	* tests/Makefile.am (all_programs): Define.
+	(TESTS_ENVIRONMENT): Use it.
 
 	* src/kill.c (main): Fix bug introduced on 2003-05-10 (for 5.0.1)
 	whereby kill would always attempt to operate on argv[0] and fail.
