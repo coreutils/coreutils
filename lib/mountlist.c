@@ -34,7 +34,9 @@ void free ();
 # include <strings.h>
 #endif
 
+#ifndef strstr
 char *strstr ();
+#endif
 char *xmalloc ();
 char *xrealloc ();
 char *xstrdup ();
