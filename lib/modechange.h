@@ -45,11 +45,11 @@ struct mode_change
 #define MODE_MEMORY_EXHAUSTED (struct mode_change *) 1
 
 #ifndef __P
-#if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
-#define __P(args) args
-#else
-#define __P(args) ()
-#endif  /* GCC.  */
+# if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
+#  define __P(args) args
+# else
+#  define __P(args) ()
+# endif  /* GCC.  */
 #endif  /* Not __P.  */
 
 struct mode_change *mode_compile __P ((const char *, unsigned));
