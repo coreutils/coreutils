@@ -255,7 +255,8 @@ char *getgroup ();
 char *getuser ();
 
 static size_t quote_name (FILE *out, const char *name,
-			  struct quoting_options const *options);
+			  struct quoting_options const *options,
+			  size_t *width);
 static char *make_link_path (const char *path, const char *linkname);
 static int decode_switches (int argc, char **argv);
 static int file_interesting (const struct dirent *next);
@@ -2226,7 +2227,7 @@ print_dir (const char *name, const char *realname)
       DIRED_INDENT ();
       PUSH_CURRENT_DIRED_POS (&subdired_obstack);
       dired_pos += quote_name (stdout, realname ? realname : name,
-			       dirname_quoting_options);
+			       dirname_quoting_options, NULL);
       PUSH_CURRENT_DIRED_POS (&subdired_obstack);
       DIRED_FPUTS_LITERAL (":\n", stdout);
     }
@@ -3103,16 +3104,18 @@ print_long_format (const struct fileinfo *f)
 
 /* Output to OUT a quoted representation of the file name NAME,
    using OPTIONS to control quoting.  Produce no output if OUT is NULL.
-   Return the number of screen columns occupied by NAME's quoted
-   representation.  */
+   Store the number of screen columns occupied by NAME's quoted
+   representation into WIDTH, if non-NULL.  Return the number of bytes
+   produced.  */
 
 static size_t
-quote_name (FILE *out, const char *name, struct quoting_options const *options)
+quote_name (FILE *out, const char *name, struct quoting_options const *options,
+	    size_t *width)
 {
   char smallbuf[BUFSIZ];
   size_t len = quotearg_buffer (smallbuf, sizeof smallbuf, name, -1, options);
   char *buf;
-  int displayed_width;
+  size_t displayed_width IF_LINT (= 0);
 
   if (len < sizeof smallbuf)
     buf = smallbuf;
@@ -3242,20 +3245,32 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options)
 	  displayed_width = len;
 	}
     }
-  else
+  else if (width != NULL)
     {
-      /* Assume unprintable characters have a displayed_width of 1.  */
 #if HAVE_MBRTOWC
       if (MB_CUR_MAX > 1)
 	displayed_width = mbsnwidth (buf, len, 0);
       else
 #endif
-	displayed_width = len;
+	{
+	  char const *p = buf;
+	  char const *plimit = buf + len;
+
+	  displayed_width = 0;
+	  while (p < plimit)
+	    {
+	      if (ISPRINT ((unsigned char) *p))
+		displayed_width++;
+	      p++;
+	    }
+	}
     }
 
   if (out != NULL)
     fwrite (buf, 1, len, out);
-  return displayed_width;
+  if (width != NULL)
+    *width = displayed_width;
+  return len;
 }
 
 static void
@@ -3268,7 +3283,7 @@ print_name_with_quoting (const char *p, mode_t mode, int linkok,
   if (stack)
     PUSH_CURRENT_DIRED_POS (stack);
 
-  dired_pos += quote_name (stdout, p, filename_quoting_options);
+  dired_pos += quote_name (stdout, p, filename_quoting_options, NULL);
 
   if (stack)
     PUSH_CURRENT_DIRED_POS (stack);
@@ -3434,6 +3449,7 @@ static int
 length_of_file_name_and_frills (const struct fileinfo *f)
 {
   register int len = 0;
+  size_t name_width;
 
   if (print_inode)
     len += INODE_DIGITS + 1;
@@ -3441,7 +3457,8 @@ length_of_file_name_and_frills (const struct fileinfo *f)
   if (print_block_size)
     len += 1 + block_size_size;
 
-  len += quote_name (NULL, f->name, filename_quoting_options);
+  quote_name (NULL, f->name, filename_quoting_options, &name_width);
+  len += name_width;
 
   if (indicator_style != none)
     {
