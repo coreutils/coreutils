@@ -79,7 +79,7 @@ static struct option const longopts[] =
   {"lines", required_argument, NULL, 'l'},
   {"line-bytes", required_argument, NULL, 'C'},
   {"suffix-length", required_argument, NULL, 'a'},
-  {"verbose", no_argument, NULL, 2},
+  {"verbose", no_argument, &verbose, 0},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -454,10 +454,6 @@ main (int argc, char **argv)
 	  digits_optind = this_optind;
 	  split_type = type_digits;
 	  accum = accum * 10 + c - '0';
-	  break;
-
-	case 2:
-	  verbose = 1;
 	  break;
 
 	case_GETOPT_HELP_CHAR;
