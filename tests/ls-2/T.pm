@@ -8,7 +8,7 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.13 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.14 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my @Types = qw (IN OUT ERR EXIT);
@@ -209,9 +209,9 @@ sub run_tests ($$$$$)
       warn "$test_name...\n" if $verbose;
       my $t_out = "$test_name-out";
       my $t_err = "$test_name-err";
-      push (@junk_files, $t_out, $t_err);
+      push @junk_files, $t_out, $t_err;
       my @cmd = ($prog, @args, "> $t_out", "2> $t_err");
-      my $cmd_str = join (' ', @cmd);
+      my $cmd_str = join ' ', @cmd;
       warn "Running command: `$cmd_str'\n" if $verbose;
       my $rc = 0xffff & system $cmd_str;
       if ($rc == 0xff00)
