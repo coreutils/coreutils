@@ -114,10 +114,10 @@ main (int argc, char **argv)
       usage (1);
     }
 
-  newmode = ((S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH)
-	     & ~ umask (0));
+  newmode = (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
   if (symbolic_mode)
     {
+      newmode &= ~ umask (0);
       change = mode_compile (symbolic_mode, 0);
       if (change == MODE_INVALID)
 	error (1, 0, _("invalid mode"));
@@ -128,11 +128,23 @@ main (int argc, char **argv)
 
   for (; optind < argc; ++optind)
     {
-      if (mkfifo (argv[optind], newmode))
-	{
-	  error (0, errno, _("cannot make fifo %s"), quote (argv[optind]));
-	  errors = 1;
-	}
+      int fail = mkfifo (argv[optind], newmode);
+      if (fail)
+	error (0, errno, _("cannot create fifo `%s'"), quote (argv[optind]));
+
+      /* If the containing directory happens to have a default ACL, chmod
+	 ensures the file mode permission bits are still set as desired.  */
+
+      if (fail == 0 && symbolic_mode)
+ 	{
+ 	  fail = chmod (argv[optind], newmode);
+	  if (fail)
+	    error (0, errno, _("cannot set permissions of fifo `%s'"),
+		   quote (argv[optind]));
+ 	}
+
+      if (fail)
+ 	errors = 1;
     }
 
   exit (errors);
