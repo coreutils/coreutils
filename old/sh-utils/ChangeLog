@@ -1,3 +1,15 @@
+Sun Jan  7 23:56:03 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	Use automake to generate Makefile.in files.
+	* Makefile.am: New file.
+	* doc/Makefile.am: New file.
+	* lib/Makefile.am: New file.
+	* man/Makefile.am: New file.
+	* src/Makefile.am: New file.
+
+	* configure.in (OPTIONAL_PROGS, OPTIONAL_SCRIPTS): New variables
+	used in place of PROGS.
+
 Sat Jan  6 05:13:40 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* configure.in (PACKAGE, VERSION): New variables.
