@@ -68,7 +68,8 @@ my @tv = (
 ['n-5b', '-n  0', "y\n" x 5, '', 0],
 
 # With textutils-1.22, this failed.
-#['f-1', '-f -n 1', "a\nb\n", "b\n", 0],
+['f-1', '-f -n 1', "a\nb\n", "b\n", 0],
+#['f-2', '-f -n 1 -', "a\nb\n", "b\n", 0],
 );
 
 sub test_vector
@@ -86,7 +87,7 @@ sub test_vector
 	{
 	  $Test::input_via{$test_name} = {REDIR => 0, PIPE => 0};
 	}
-      elsif ($test_name eq 'f-1')
+      elsif ($test_name =~ /^f-/)
 	{
 	  # Using redirection or a file would make this hang.
 	  $Test::input_via{$test_name} = {PIPE => 0};
