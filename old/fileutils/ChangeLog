@@ -1,3 +1,7 @@
+2001-12-19  Paul Eggert  <eggert@twinsun.com>
+
+	* src/shred.c: Add FSF copyright notice.
+
 2001-12-18  Paul Eggert  <eggert@twinsun.com>
 
 	Use notation compatible with SI and with IEC 60027-2.
