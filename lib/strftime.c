@@ -86,27 +86,27 @@ extern char *tzname[];
 #endif
 
 #ifndef __P
-#if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
-#define __P(args) args
-#else
-#define __P(args) ()
-#endif  /* GCC.  */
+# if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
+#  define __P(args) args
+# else
+#  define __P(args) ()
+# endif  /* GCC.  */
 #endif  /* Not __P.  */
 
 #ifndef PTR
-#ifdef __STDC__
-#define PTR void *
-#else
-#define PTR char *
-#endif
+# ifdef __STDC__
+#  define PTR void *
+# else
+#  define PTR char *
+# endif
 #endif
 
 #ifndef CHAR_BIT
-#define CHAR_BIT 8
+# define CHAR_BIT 8
 #endif
 
 #ifndef NULL
-#define NULL 0
+# define NULL 0
 #endif
 
 #define TYPE_SIGNED(t) ((t) -1 < 0)
@@ -124,7 +124,7 @@ extern char *tzname[];
 #ifndef __isleap
 /* Nonzero if YEAR is a leap year (every 4 years,
    except every 100th isn't, and every 400th is).  */
-#define __isleap(year)	\
+# define __isleap(year)	\
   ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
 #endif
 
@@ -139,7 +139,7 @@ extern int __tz_compute __P ((time_t timer, const struct tm *tm));
 # if ! HAVE_LOCALTIME_R
 #  if ! HAVE_TM_GMTOFF
 /* Approximate gmtime_r as best we can in its absence.  */
-#define gmtime_r my_gmtime_r
+#   define gmtime_r my_gmtime_r
 static struct tm *gmtime_r __P ((const time_t *, struct tm *));
 static struct tm *
 gmtime_r (t, tp)
@@ -155,7 +155,7 @@ gmtime_r (t, tp)
 #  endif /* ! HAVE_TM_GMTOFF */
 
 /* Approximate localtime_r as best we can in its absence.  */
-#define localtime_r my_localtime_r
+#  define localtime_r my_localtime_r
 static struct tm *localtime_r __P ((const time_t *, struct tm *));
 static struct tm *
 localtime_r (t, tp)
