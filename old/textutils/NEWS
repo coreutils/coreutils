@@ -1,4 +1,5 @@
 User-visible changes in release 1.15
+* fix a couple bugs in tr involving use of -c and/or -d flags -- see ChangeLog
 * diagnose some improper or questionable invokations of csplit
 * properly handle `echo |csplit - 1 1', rather than aborting
 * join without -t now ignores leading blanks

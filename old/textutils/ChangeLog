@@ -1,3 +1,29 @@
+Thu Apr  4 17:05:33 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* tr.c: The following commands all failed unnecessarily.
+	tr -cs '[:upper:]' '[X*]'
+	tr -dcs '[:lower:]' n-rs-z
+	tr -ds '[:xdigit:]' [:alnum:]'
+	tr -dcs '[:alnum:]' [:digit:]'
+	tr -dc '[:upper:]'
+	Reported by Ross Ridge (ross@worf.mks.com).
+	(validate): Add missing conjunct (translating) in test for
+	`translating and complementing character classes' error.  Before,
+	valid uses of tr could fail.  E.g. `tr -dcs '[:cntrl:]' '[:alnum:]''.
+	(homogeneous_spec_list): New function.
+	(validate): Use it to relax the old (overly restrictive) restriction
+	that prohibited use of complemented character classes when translating.
+	Now, that is allowed as long as the translation maps many to one.
+	(get_spec_stats): Rename and redefine global has_char_class from
+	has_upper_or_lower.
+
+Wed Apr  3 07:08:57 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* aclocal.m4: Update NLS macros from gettext-0.10.11.
+
+	* src/Makefile.am (INCLUDES): Add -I$(srcdir) to get system.h
+	when srcdir != builddir.  From Kaveh Ghazi.
+
 Wed Mar 27 23:33:36 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* cksum.c (cksum): Use format "%lu %ld" (instead of "%10lu %8ld")
