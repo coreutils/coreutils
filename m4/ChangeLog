@@ -1,5 +1,9 @@
 2001-11-09  Jim Meyering  <meyering@lucent.com>
 
+	* jm-macros.m4: Require autoconf-2.52f.
+	(AC_FUNC_ERROR_AT_LINE, AC_FUNC_OBSTACK, AC_FUNC_STRTOD):
+	Use these AC_-prefixed names, not the AM_-prefixed ones.
+
 	* afs.m4 (jm_AFS): Quote the body.  Patch by Akim Demaille.
 
 2001-11-04  Jim Meyering  <meyering@lucent.com>
