@@ -1,5 +1,5 @@
 #!/bin/sh
-# compare actual numbers, assuming block size matches mine
+# Compare actual numbers from du, assuming block size matches mine.
 
 if test "$VERBOSE" = yes; then
   set -x
