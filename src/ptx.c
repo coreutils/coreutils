@@ -1,5 +1,5 @@
 /* Permuted index for GNU, with keywords in their context.
-   Copyright © 1990, 1991, 1993, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1991, 1993, 1998-1999 Free Software Foundation, Inc.
    François Pinard <pinard@iro.umontreal.ca>, 1988.
 
    This program is free software; you can redistribute it and/or modify
