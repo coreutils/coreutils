@@ -1,6 +1,7 @@
 Changes in release 3.17:
 [3.16x]
-* automatically generated man pages
+* man pages are now automatically generated from a combination of --help
+  output and the contents of new (though mostly empty), man/*.x files.
 [3.16w]
 * touch now interprets `-t TIME-DATE' as POSIX specifies
 * `ls EMPTY-DIR EMPTY-DIR' once again outputs the directory names
