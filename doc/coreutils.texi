@@ -495,6 +495,77 @@ insights to the overall process.
 @node Common options
 @chapter Common options
 
+@macro optBackup
+@item -b
+@itemx @w{@kbd{--backup}[=@var{method}]}
+@opindex -b
+@opindex --backup
+@vindex VERSION_CONTROL
+@cindex backups, making
+@xref{Backup options}.
+Make a backup of each file that would otherwise be overwritten or removed.
+@end macro
+
+@macro optBackupSuffix
+@item -S @var{suffix}
+@itemx --suffix=@var{suffix}
+@opindex -S
+@opindex --suffix
+Append @var{suffix} to each backup file made with @option{-b}.
+@xref{Backup options}.
+@end macro
+
+@macro optTargetDirectory
+@itemx @w{@kbd{--target-directory}=@var{directory}}
+@opindex --target-directory
+@cindex target directory
+@cindex destination directory
+Specify the destination @var{directory}.
+@xref{Target directory}.
+@end macro
+
+@macro optSi
+@itemx --si
+@opindex --si
+@cindex SI output
+Append an SI-style abbreviation to each size, such as @samp{MB} for
+megabytes.  Powers of 1000 are used, not 1024; @samp{MB} stands for
+1,000,000 bytes.  This option is equivalent to
+@option{--block-size=si}.  Use the @option{-h} or
+@option{--human-readable} option if
+you prefer powers of 1024.
+@end macro
+
+@macro optHumanReadable
+@item -h
+@itemx --human-readable
+@opindex -h
+@opindex --human-readable
+@cindex human-readable output
+Append a size letter to each size, such as @samp{M} for mebibytes.
+Powers of 1024 are used, not 1000; @samp{M} stands for 1,048,576 bytes.
+Use the @option{--si} option if you prefer powers of 1000.
+@end macro
+
+@macro optStripTrailingSlashes
+@itemx @w{@kbd{--strip-trailing-slashes}}
+@opindex --strip-trailing-slashes
+@cindex stripping trailing slashes
+Remove any trailing slashes from each @var{source} argument.
+@xref{Trailing slashes}.
+@end macro
+
+@macro optVersionControl
+@item -V @var{method}
+@itemx --version-control=@var{method}
+@opindex -V
+@opindex --version-control
+Change the type of backups made with @option{-b}.  The @var{method}
+argument can be @samp{none} (or @samp{off}), @samp{numbered} (or
+@samp{t}), @samp{existing} (or @samp{nil}), or @samp{never} (or
+@samp{simple}).  @xref{Backup options}.
+@end macro
+
 @cindex common options
 
 Certain options are available in all of these programs.  Rather than
@@ -5292,15 +5363,7 @@ Inhibit display of group information in a long format directory listing.
 (This is the default in some non-@sc{gnu} versions of @command{ls}, so we
 provide this option for compatibility.)
 
-@item -h
-@itemx --human-readable
-@opindex -h
-@opindex --human-readable
-@cindex human-readable output
-Append a size letter to each size, such as @samp{M} for mebibytes.
-Powers of 1024 are used, not 1000; @samp{M} stands for 1,048,576 bytes.
-This option is equivalent to @option{--block-size=human} (@pxref{Block size}).
-Use the @option{--si} option if you prefer powers of 1000.
+@optHumanReadable
 
 @item -i
 @itemx --inode
@@ -5400,15 +5463,7 @@ systems, it reports sizes that are twice the correct values for files
 that are NFS-mounted from BSD systems.  This is due to a flaw in HP-UX;
 it also affects the HP-UX @command{ls} program.
 
-@itemx --si
-@opindex --si
-@cindex SI output
-Append an SI-style abbreviation to each size, such as @samp{MB} for
-megabytes.  Powers of 1000 are used, not 1024; @samp{MB} stands for
-1,000,000 bytes.  This option is equivalent to
-@option{--block-size=si}.  Use the @option{-h} or
-@option{--human-readable} option if
-you prefer powers of 1024.
+@optSi
 
 @end table
 
@@ -6289,11 +6344,7 @@ This is useful in creating a file for use with the @command{mkswap} command,
 since such a file must not have any holes.
 @end table
 
-@itemx @w{@kbd{--strip-trailing-slashes}}
-@opindex --strip-trailing-slashes
-@cindex stripping trailing slashes
-Remove any trailing slashes from each @var{source} argument.
-@xref{Trailing slashes}.
+@optStripTrailingSlashes
 
 @item -s
 @itemx --symbolic-link
@@ -6305,19 +6356,9 @@ file names must be absolute (starting with @samp{/}) unless the
 destination files are in the current directory.  This option merely
 results in an error message on systems that do not support symbolic links.
 
-@item -S @var{suffix}
-@itemx --suffix=@var{suffix}
-@opindex -S
-@opindex --suffix
-Append @var{suffix} to each backup file made with @option{-b}.
-@xref{Backup options}.
+@optBackupSuffix
 
-@itemx @w{@kbd{--target-directory}=@var{directory}}
-@opindex --target-directory
-@cindex target directory
-@cindex destination directory
-Specify the destination @var{directory}.
-@xref{Target directory}.
+@optTargetDirectory
 
 @item -v
 @itemx --verbose
@@ -6325,14 +6366,7 @@ Specify the destination @var{directory}.
 @opindex --verbose
 Print the name of each file before copying it.
 
-@item -V @var{method}
-@itemx --version-control=@var{method}
-@opindex -V
-@opindex --version-control
-Change the type of backups made with @option{-b}.  The @var{method}
-argument can be @samp{none} (or @samp{off}), @samp{numbered} (or
-@samp{t}), @samp{existing} (or @samp{nil}), or @samp{never} (or
-@samp{simple}).  @xref{Backup options}.
+@optVersionControl
 
 @item -x
 @itemx --one-file-system
@@ -6551,14 +6585,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@item -b
-@itemx @w{@kbd{--backup}[=@var{method}]}
-@opindex -b
-@opindex --backup
-@vindex VERSION_CONTROL
-@cindex backups, making
-@xref{Backup options}.
-Make a backup of each file that would otherwise be overwritten or removed.
+@optBackup
 
 @item -c
 @opindex -c
@@ -6630,19 +6657,9 @@ to when they were last installed.
 @cindex stripping symbol table information
 Strip the symbol tables from installed binary executables.
 
-@item -S @var{suffix}
-@itemx --suffix=@var{suffix}
-@opindex -S
-@opindex --suffix
-Append @var{suffix} to each backup file made with @option{-b}.
-@xref{Backup options}.
+@optBackupSuffix
 
-@itemx @w{@kbd{--target-directory}=@var{directory}}
-@opindex --target-directory
-@cindex target directory
-@cindex destination directory
-Specify the destination @var{directory}.
-@xref{Target directory}.
+@optTargetDirectory
 
 @item -v
 @itemx --verbose
@@ -6650,14 +6667,7 @@ Specify the destination @var{directory}.
 @opindex --verbose
 Print the name of each file before copying it.
 
-@item -V @var{method}
-@itemx --version-control=@var{method}
-@opindex -V
-@opindex --version-control
-Change the type of backups made with @option{-b}.  The @var{method}
-argument can be @samp{none} (or @samp{off}), @samp{numbered} (or
-@samp{t}), @samp{existing} (or @samp{nil}), or @samp{never} (or
-@samp{simple}).  @xref{Backup options}.
+@optVersionControl
 
 @end table
 
@@ -6712,14 +6722,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@item -b
-@itemx @w{@kbd{--backup}[=@var{method}]}
-@opindex -b
-@opindex --backup
-@vindex VERSION_CONTROL
-@cindex backups, making
-@xref{Backup options}.
-Make a backup of each file that would otherwise be overwritten or removed.
+@optBackup
 
 @item -f
 @itemx --force
@@ -6760,34 +6763,13 @@ same or newer modification time.
 @opindex --verbose
 Print the name of each file before moving it.
 
-@itemx @w{@kbd{--strip-trailing-slashes}}
-@opindex --strip-trailing-slashes
-@cindex stripping trailing slashes
-Remove any trailing slashes from each @var{source} argument.
-@xref{Trailing slashes}.
+@optStripTrailingSlashes
 
-@item -S @var{suffix}
-@itemx --suffix=@var{suffix}
-@opindex -S
-@opindex --suffix
-Append @var{suffix} to each backup file made with @option{-b}.
-@xref{Backup options}.
+@optBackupSuffix
 
-@itemx @w{@kbd{--target-directory}=@var{directory}}
-@opindex --target-directory
-@cindex target directory
-@cindex destination directory
-Specify the destination @var{directory}.
-@xref{Target directory}.
+@optTargetDirectory
 
-@item -V @var{method}
-@itemx --version-control=@var{method}
-@opindex -V
-@opindex --version-control
-Change the type of backups made with @option{-b}.  The @var{method}
-argument can be @samp{none} (or @samp{off}), @samp{numbered} (or
-@samp{t}), @samp{existing} (or @samp{nil}), or @samp{never} (or
-@samp{simple}).  @xref{Backup options}.
+@optVersionControl
 
 @end table
 
@@ -7244,14 +7226,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@item -b
-@itemx @w{@kbd{--backup}[=@var{method}]}
-@opindex -b
-@opindex --backup
-@vindex VERSION_CONTROL
-@cindex backups, making
-@xref{Backup options}.
-Make a backup of each file that would otherwise be overwritten or removed.
+@optBackup
 
 @item -d
 @itemx -F
@@ -7302,19 +7277,9 @@ just like a directory.
 Make symbolic links instead of hard links.  This option merely produces
 an error message on systems that do not support symbolic links.
 
-@item -S @var{suffix}
-@itemx --suffix=@var{suffix}
-@opindex -S
-@opindex --suffix
-Append @var{suffix} to each backup file made with @option{-b}.
-@xref{Backup options}.
+@optBackupSuffix
 
-@itemx @w{@kbd{--target-directory}=@var{directory}}
-@opindex --target-directory
-@cindex target directory
-@cindex destination directory
-Specify the destination @var{directory}.
-@xref{Target directory}.
+@optTargetDirectory
 
 @item -v
 @itemx --verbose
@@ -7322,14 +7287,7 @@ Specify the destination @var{directory}.
 @opindex --verbose
 Print the name of each file before linking it.
 
-@item -V @var{method}
-@itemx --version-control=@var{method}
-@opindex -V
-@opindex --version-control
-Change the type of backups made with @option{-b}.  The @var{method}
-argument can be @samp{none} (or @samp{off}), @samp{numbered} (or
-@samp{t}), @samp{existing} (or @samp{nil}), or @samp{never} (or
-@samp{simple}).  @xref{Backup options}.
+@optVersionControl
 
 @end table
 
@@ -8257,24 +8215,11 @@ only included if this option is specified.
 Scale sizes by @var{size} before printing them (@pxref{Block size}).
 For example, @option{-BG} prints sizes in units of 1,073,741,824 bytes.
 
-@item -h
-@itemx --human-readable
-@opindex -h
-@opindex --human-readable
-@cindex human-readable output
-Append a size letter to each size, such as @samp{M} for mebibytes.
-Powers of 1024 are used, not 1000; @samp{M} stands for 1,048,576 bytes.
-Use the @option{-H} or @option{--si} option if you prefer powers of 1000.
+@optHumanReadable
 
 @item -H
-@itemx --si
 @opindex -H
-@opindex --si
-@cindex SI output
-Append an SI-style abbreviation to each size, such as @samp{MB} for
-megabytes.  Powers of 1000 are used, not 1024; @samp{MB} stands for
-1,000,000 bytes.  Use the @option{-h} or @option{--human-readable} option if
-you prefer powers of 1024.
+Equivalent to @option{--si}.
 
 @item -i
 @itemx --inodes
@@ -8329,6 +8274,8 @@ some network mounts), the columns are misaligned.
 @item
 The labels in the header output line are changed to conform to @acronym{POSIX}.
 @end enumerate
+
+@optSi
 
 @item --sync
 @opindex --sync
@@ -8485,14 +8432,7 @@ Does not affect other symbolic links.  This is helpful for finding
 out the disk usage of directories, such as @file{/usr/tmp}, which
 are often symbolic links.
 
-@item -h
-@itemx --human-readable
-@opindex -h
-@opindex --human-readable
-@cindex human-readable output
-Append a size letter to each size, such as @samp{M} for mebibytes.
-Powers of 1024 are used, not 1000; @samp{M} stands for 1,048,576 bytes.
-Use the @option{--si} option if you prefer powers of 1000.
+@optHumanReadable
 
 @item -H
 @opindex -H
