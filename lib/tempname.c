@@ -44,9 +44,10 @@
 
 #if STDC_HEADERS || _LIBC
 # include <stddef.h>
-# include <stdlib.h>
 # include <string.h>
 #endif
+
+#include <stdlib.h>
 
 #if HAVE_FCNTL_H || _LIBC
 # include <fcntl.h>
