@@ -1,3 +1,9 @@
+1999-03-07  Jim Meyering  <meyering@ascend.com>
+
+	* lib/long-options.c (parse_long_options): Include `Copyright...' line
+	in --version output.
+	Add the `...NO warranty...' message.
+
 1999-03-03  Jim Meyering  <meyering@ascend.com>
 
 	* lib/long-options.c (_): Define it.

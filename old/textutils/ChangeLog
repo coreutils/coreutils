@@ -3,9 +3,6 @@
 	* tests/md5sum/newline-1: Test for the actual feature.
 	With help from Eli Zaretskii.
 
-	* lib/long-options.c (parse_long_options): Add the `...NO warranty...'
-	message.
-
 	* src/pr.c (usage): Add missing \n\.
 
 	The newline test would always fail on MSDOS/Windows systems --
