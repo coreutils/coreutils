@@ -9,6 +9,8 @@ Changes in release 4.1:
   only the symlink.
 * `install -d -g foo 1/2' now sets the `group' of the final component as well
   as that of the leading one.
+* df, du, and ls no longer divide by zero when an invalid block size is
+  specified through an environment variable
 * under certain conditions, chgrp would fail to affect files referenced
   through symlinks.  Now it does.
 * ln now makes hard links to symlinks on systems that support it.
