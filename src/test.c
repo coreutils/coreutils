@@ -40,7 +40,6 @@
 #include "error.h"
 #include "euidaccess.h"
 
-#include <limits.h>
 #ifndef _POSIX_VERSION
 # include <sys/param.h>
 #endif /* _POSIX_VERSION */
@@ -53,15 +52,6 @@ char *program_name;
 #if !defined (_POSIX_VERSION)
 # include <sys/file.h>
 #endif /* !_POSIX_VERSION */
-
-#include <errno.h>
-#ifndef errno
-extern int errno;
-#endif
-
-#if !defined (member)
-# define member(c, s) ((c) ? (strchr ((s), (c)) ? 1 : 0) : 0)
-#endif /* !member */
 
 extern gid_t getegid ();
 extern uid_t geteuid ();
@@ -101,7 +91,7 @@ static int pos;		/* The offset of the current argument in ARGV. */
 static int argc;	/* The number of arguments present in ARGV. */
 static char **argv;	/* The argument list. */
 
-static int unop (int op);
+static int test_unop (char const *s);
 static int binop (char *s);
 static int unary_operator (void);
 static int binary_operator (void);
@@ -312,31 +302,31 @@ term (void)
   if (pos >= argc)
     beyond ();
 
-  /* Deal with leading "not"'s. */
-  if ('!' == argv[pos][0] && '\000' == argv[pos][1])
+  /* Deal with leading `not's. */
+  if (argv[pos][0] == '!' && argv[pos][1] == '\0')
     {
-      value = FALSE;
-      while (pos < argc && '!' == argv[pos][0] && '\000' == argv[pos][1])
+      value = 0;
+      while (pos < argc && argv[pos][0] == '!' && argv[pos][1] == '\0')
 	{
 	  advance (1);
-	  value ^= (TRUE);
+	  value = 1 - value;
 	}
 
-      return (value ^ (term ()));
+      return (value ? !term() : term());
     }
 
   /* A paren-bracketed argument. */
-  if (argv[pos][0] == '(' && !argv[pos][1])
+  if (argv[pos][0] == '(' && argv[pos][1] == '\0')
     {
       advance (1);
       value = expr ();
-      if (!argv[pos])
+      if (argv[pos] == 0)
 	test_syntax_error (_("')' expected\n"), NULL);
       else
         if (argv[pos][0] != ')' || argv[pos][1])
 	  test_syntax_error (_("')' expected, found %s\n"), argv[pos]);
       advance (0);
-      return (TRUE == (value));
+      return (value);
     }
 
   /* are there enough arguments left that this could be dyadic? */
@@ -345,9 +335,9 @@ term (void)
     value = binary_operator ();
 
   /* Might be a switch type argument */
-  else if ('-' == argv[pos][0] && argv[pos][1] && 0 == argv[pos][2])
+  else if (argv[pos][0] == '-' && argv[pos][1] && argv[pos][2] == '\0')
     {
-      if (unop (argv[pos][1]))
+      if (test_unop (argv[pos]))
 	value = unary_operator ();
       else
 	test_syntax_error (_("%s: unary operator expected\n"), argv[pos]);
@@ -857,9 +847,22 @@ binop (char *s)
 
 /* Return nonzero if OP is one of the test command's unary operators. */
 static int
-unop (int op)
+test_unop (char const *op)
 {
-  return (member (op, "abcdefgkLhprsStuwxOGnz"));
+  if (op[0] != '-')
+    return (0);
+
+  switch (op[1])
+    {
+    case 'a': case 'b': case 'c': case 'd': case 'e':
+    case 'f': case 'g': case 'h': case 'k': case 'n':
+    case 'o': case 'p': case 'r': case 's': case 't':
+    case 'u': case 'w': case 'x': case 'z':
+    case 'G': case 'L': case 'O': case 'S': case 'N':
+      return (1);
+    }
+
+  return (0);
 }
 
 static int
@@ -882,7 +885,7 @@ two_arguments (void)
 	   && argv[pos][1] != '\0'
 	   && argv[pos][2] == '\0')
     {
-      if (unop (argv[pos][1]))
+      if (test_unop (argv[pos]))
 	value = unary_operator ();
       else
 	test_syntax_error (_("%s: unary operator expected\n"), argv[pos]);
