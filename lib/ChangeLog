@@ -1,3 +1,13 @@
+2000-07-13  Paul Eggert  <eggert@twinsun.com>
+
+	* quotearg.h (enum quoting style): New enum clocale_quoting_style.
+
+	* quotearg.c: (quoting_style_args, quoting_style_vals,
+	quotearg_buffer_restyled): Add support for
+	clocale_quoting_style.  Undo previous change to
+	locale_quoting_style behavior, and undo the "{LEFT QUOTATION MARK}"
+	and "{RIGHT QUOTATION MARK}" msgids.
+
 2000-07-05  Paul Eggert  <eggert@twinsun.com>
 
 	The old behavior of quoting `like this' doesn't look good with
