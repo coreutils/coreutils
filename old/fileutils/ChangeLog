@@ -1,3 +1,17 @@
+2000-12-31  Jim Meyering  <meyering@lucent.com>
+
+	* tests/cp/Makefile.am (TESTS): Add deref-slink.
+	* tests/cp/deref-slink: New file.  Test for the bug fixed by my
+	2000-12-28 change to copy.c.
+
+2000-12-30  Paul Eggert  <eggert@twinsun.com>
+
+	* src/ls.c: Improve performance by invoking gettext twice at the start,
+	instead of once for each file.
+	(long_time_format): New var.
+	(decode_switches): Initialize it, if format == long_format.
+	(print_long_format): Use it.
+
 2000-12-30  Paul Eggert  <eggert@twinsun.com>
 
 	* src/ls.c (print_long_format): Don't dump core if strftime
