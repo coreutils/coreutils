@@ -17,13 +17,6 @@
 @syncodeindex vr cp
 
 @ifinfo
-@set Francois Franc,ois
-@end ifinfo
-@tex
-@set Francois Fran\noexpand\ptexc cois
-@end tex
-
-@ifinfo
 @format
 START-INFO-DIR-ENTRY
 * Text utilities: (textutils).          GNU text utilities.
@@ -160,7 +153,7 @@ sometimes difficult to infer. @xref{Bugs, , , gcc, GNU CC}.
 This manual is based on the Unix man pages in the distribution, which
 were originally written by David MacKenzie and updated by Jim Meyering.
 The original @code{fmt} man page was written by Ross Paterson.
-@value{Francois} Pinard did the initial conversion to Texinfo format.
+Fran@,{c}ois Pinard did the initial conversion to Texinfo format.
 Karl Berry did the indexing, some reorganization, and editing of the results.
 Richard Stallman contributed his usual invaluable insights to the
 overall process.
