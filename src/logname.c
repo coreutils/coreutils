@@ -101,6 +101,6 @@ main (int argc, char **argv)
       exit (0);
     }
   /* POSIX.2 prohibits using a fallback technique.  */
-  fprintf (stderr,_("%s: no login name\n"), argv[0]);
+  fprintf (stderr, _("%s: no login name\n"), argv[0]);
   exit (1);
 }

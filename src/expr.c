@@ -251,7 +251,7 @@ null (VALUE *v)
     case integer:
       return v->u.i == 0;
     case string:
-      return v->u.s[0] == '\0' || strcmp(v->u.s, "0") == 0;
+      return v->u.s[0] == '\0' || strcmp (v->u.s, "0") == 0;
     default:
       abort ();
     }
