@@ -50,7 +50,8 @@ THIS_VERSION_REGEXP = $(subst .,\.,$(VERSION))
 PREV_VERSION := $(shell echo $(VERSION)|tr a-z Xa-y)
 PREV_VERSION_REGEXP := $(shell echo $(PREV_VERSION)|sed 's/\./\\./g')
 v = Version
-url = ftp://alpha.gnu.org/gnu/fetish/$(distdir).tar.gz
+url-host-prefix = ftp://alpha.gnu.org
+url = $(url-host-prefix)/gnu/fetish/$(distdir).tar.gz
 md5 = $(shell md5sum < $(distdir).tar.gz|sed 's/  -//')
 
 rel-check:
@@ -87,7 +88,7 @@ alpha:
 	ln $(distdir).tar.gz ../release
 	chmod a-w $(distdir).tar.gz
 	@echo =====================================
-	@echo 'ncftp -u $(dir $(url))'
+	@echo 'ncftp -u $(url-host-prefix)/fs/share/ftp/gnu/fetish/'
 	@echo '#   put $(distdir).tar.gz'
 	@echo '# send the /tmp/announcement e-mail'
 	@echo 'pot-mail $(distdir).tar.gz | bash'
