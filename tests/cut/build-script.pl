@@ -51,19 +51,19 @@ foreach $test_vector (@Test::t)
     my $cmd = "\$xx $flags \$srcdir/$in > $out 2> $err_output";
     $exp_name = "\$srcdir/$exp_name";
     print <<EOF ;
-$cmd 2> /dev/null
+$cmd
 code=\$?
 if test \$code != $e_ret_code ; then
-  echo Test $test_name failed: cut return code \$code differs from expected value $e_ret_code 1>&2
+  \$echo Test $test_name failed: $xx return code \$code differs from expected value $e_ret_code 1>&2
   errors=`expr \$errors + 1`
 else
   cmp $out $exp_name
   case \$? in
-    0) if test "\$VERBOSE" ; then echo passed $test_name; fi ;; # equal files
-    1) echo Test $test_name failed: files $out and $exp_name differ 1>&2;
+    0) if test "\$VERBOSE" ; then \$echo passed $test_name; fi ;; # equal files
+    1) \$echo Test $test_name failed: files $out and $exp_name differ 1>&2;
        errors=`expr \$errors + 1` ;;
-    2) echo Test $test_name may have failed. 1>&2;
-       echo The command \"cmp $out $exp_name\" failed. 1>&2 ;
+    2) \$echo Test $test_name may have failed. 1>&2;
+       \$echo The command \"cmp $out $exp_name\" failed. 1>&2 ;
        errors=`expr \$errors + 1` ;;
   esac
 fi
