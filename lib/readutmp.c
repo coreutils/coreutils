@@ -19,6 +19,9 @@
 
 #include <config.h>
 
+#include "readutmp.h"
+
+#include <errno.h>
 #include <stdio.h>
 
 #include <sys/types.h>
@@ -26,7 +29,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "readutmp.h"
 #include "xalloc.h"
 
 #if USE_UNLOCKED_IO
