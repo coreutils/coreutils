@@ -23,7 +23,7 @@
 
 2002-02-23  Paul Eggert  <eggert@twinsun.com>
 
-	* src/cat.c (simple_cat, cat, main): Used char * rather than
+	* src/cat.c (simple_cat, cat, main): Use char * rather than
 	unsigned char *, to avoid some technical violations of the C
 	standard, and to avoid the need for casts.  I guess the
 	unsigned char * was probably there for improved performance
