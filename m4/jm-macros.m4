@@ -76,7 +76,7 @@ AC_DEFUN([jm_MACROS],
   AC_REPLACE_FUNCS(strcasecmp strncasecmp)
   AC_REPLACE_FUNCS(dup2)
   AC_REPLACE_FUNCS(gethostname getusershell)
-  AC_REPLACE_FUNCS(stime strcspn stpcpy strstr strtol strtoul)
+  AC_REPLACE_FUNCS(strcspn stpcpy strstr strtol strtoul)
   AC_REPLACE_FUNCS(strpbrk)
   AC_REPLACE_FUNCS(euidaccess memcmp rmdir rpmatch strndup strverscmp)
   AC_REPLACE_FUNCS(atexit)
@@ -113,7 +113,7 @@ AC_DEFUN([jm_MACROS],
     AC_SEARCH_LIBS(clock_gettime, [rt posix4],
 		   [LIB_CLOCK_GETTIME=$ac_cv_search_clock_gettime])
     AC_SUBST(LIB_CLOCK_GETTIME)
-    AC_CHECK_FUNCS(clock_gettime)
+    AC_CHECK_FUNCS(clock_gettime clock_settime)
   LIBS=$fetish_saved_libs
   AC_CHECK_FUNCS(gettimeofday)
   AC_FUNC_GETTIMEOFDAY_CLOBBER
