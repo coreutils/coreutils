@@ -3254,7 +3254,7 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -c                         with -lt: sort by, and show, ctime (time of last\n\
                                modification of file status information)\n\
                                with -l: show ctime and sort by name\n\
-                               otherwise: sort by ctime\n\
+    	                          otherwise: sort by ctime\n\
   -C                         list entries by columns\n\
       --color[=WHEN]         control whether color is used to distinguish file\n\
                                types.  WHEN may be `never', `always', or `auto'\n\
