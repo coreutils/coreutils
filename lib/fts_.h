@@ -32,7 +32,17 @@
 #ifndef	_FTS_H
 # define _FTS_H 1
 
-# include <features.h>
+# ifdef _LIBC
+#  include <features.h>
+# else
+#  undef __THROW
+#  define __THROW
+#  undef __BEGIN_DECLS
+#  define __BEGIN_DECLS
+#  undef __END_DECLS
+#  define __END_DECLS
+# endif
+
 # include <sys/types.h>
 
 typedef struct {
