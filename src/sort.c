@@ -1800,7 +1800,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 \n\
   +POS1 [-POS2]    start a key at POS1, end it before POS2\n\
   -M               compare (unknown) < `JAN' < ... < `DEC', imply -b\n\
-  -T DIRECT        use DIRECTfor temporary files, not $TEMPDIR nor /tmp\n\
+  -T DIRECT        use DIRECT for temporary files, not $TMPDIR or /tmp\n\
   -b               ignore leading blanks in sort fields or keys\n\
   -c               check if given files already sorted, do not sort\n\
   -d               consider only [a-zA-Z0-9 ] characters in keys\n\

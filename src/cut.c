@@ -77,6 +77,14 @@
 #include "system.h"
 #include "version.h"
 
+#define FATAL_ERROR(s)							\
+  do									\
+    {									\
+      error (0, 0, (s));						\
+      usage (2);							\
+    }									\
+  while (0)
+
 char *xmalloc ();
 char *xrealloc ();
 void error ();
@@ -87,7 +95,6 @@ static void cut_stream ();
 static void cut_bytes ();
 static void cut_fields ();
 static void enlarge_line ();
-static void invalid_list ();
 static void usage ();
 
 /* The number of elements allocated for the input line
@@ -109,10 +116,10 @@ static char *inbufptr;
 
 /* What can be done about a byte or field. */
 enum field_action
-{
-  FIELD_OMIT,
-  FIELD_OUTPUT
-};
+  {
+    FIELD_OMIT,
+    FIELD_OUTPUT
+  };
 
 /* In byte mode, which bytes to output.
    In field mode, which `delim'-separated fields to output.
@@ -121,15 +128,15 @@ enum field_action
 static enum field_action *fields;
 
 enum operating_mode
-{
-  undefined_mode,
+  {
+    undefined_mode,
 
-  /* Output characters that are in the given bytes. */
-  byte_mode,
+    /* Output characters that are in the given bytes. */
+    byte_mode,
 
-  /* Output the given delimeter-separated fields. */
-  field_mode
-};
+    /* Output the given delimeter-separated fields. */
+    field_mode
+  };
 
 /* The name this program was run with. */
 char *program_name;
@@ -203,27 +210,27 @@ main (argc, argv)
 	case 'c':
 	  /* Build the byte list. */
 	  if (operating_mode != undefined_mode)
-	    usage (2);
+	    FATAL_ERROR ("only one type of list may be specified");
 	  operating_mode = byte_mode;
 	  if (set_fields (optarg) == 0)
-	    error (2, 0, "no fields given");
+	    FATAL_ERROR ("missing list of positions");
 	  break;
 
 	case 'f':
 	  /* Build the field list. */
 	  if (operating_mode != undefined_mode)
-	    usage (2);
+	    FATAL_ERROR ("only one type of list may be specified");
 	  operating_mode = field_mode;
 	  if (set_fields (optarg) == 0)
-	    error (2, 0, "no fields given");
+	    FATAL_ERROR ("missing list of fields");
 	  break;
 
 	case 'd':
 	  /* New delimiter. */
 	  if (optarg[0] == '\0')
-	    error (2, 0, "no delimiter given");
+	    FATAL_ERROR ("missing delimiter argument");
 	  if (optarg[1] != '\0')
-	    error (2, 0, "delimiter must be a single character");
+	    FATAL_ERROR ("the delimiter must be a single character");
 	  delim = optarg[0];
 	  break;
 
@@ -249,10 +256,10 @@ main (argc, argv)
     usage (0);
 
   if (operating_mode == undefined_mode)
-    usage (2);
+    FATAL_ERROR ("you must specify a list of bytes, characters, or fields");
 
   if ((delimited_lines_only || delim != '\0') && operating_mode != field_mode)
-    usage (2);
+    FATAL_ERROR ("a delimiter may be specified only when operating on fields");
 
   if (delim == '\0')
     delim = '\t';
@@ -297,7 +304,7 @@ set_fields (fieldstr)
 	{
 	  /* Starting a range. */
 	  if (dash_found)
-	    invalid_list ();
+	    FATAL_ERROR ("invalid byte or field list");
 	  dash_found++;
 	  fieldstr++;
 
@@ -330,7 +337,7 @@ set_fields (fieldstr)
 		{
 		  /* `m-n' or `-n' (1-n). */
 		  if (value < initial)
-		    invalid_list ();
+		    FATAL_ERROR ("invalid byte or field list");
 
 		  if (value >= line_size)
 		    enlarge_line (value);
@@ -401,7 +408,7 @@ set_fields (fieldstr)
 	  fieldstr++;
 	}
       else
-	invalid_list ();
+	FATAL_ERROR ("invalid byte or field list");
     }
 }
 
@@ -507,10 +514,13 @@ cut_fields (stream)
      FILE *stream;
 {
   register int c;		/* Each character from the file. */
+  int last_c;			/* The previour character. */
   int doneflag = 0;		/* Nonzero if EOF reached. */
   int char_count;		/* Number of chars in line before any delim. */
   int fieldfound;		/* Nonzero if any fields to print found. */
   int curr_field;		/* Current index in `fields'. */
+
+  c = EOF;
 
   while (doneflag == 0)
     {
@@ -522,11 +532,18 @@ cut_fields (stream)
 
       do
 	{
+	  last_c = c;
 	  c = getc (stream);
 	  if (c == EOF)
 	    {
 	      doneflag++;
-	      break;
+	      if (last_c == '\n' || last_c == EOF)
+		break;
+
+	      /* The last character from the input stream is not a
+		 newline.  Pretend that the input was NL terminated.
+		 But do that only if the file is not completely empty.  */
+	      c = '\n';
 	    }
 
 	  if (fields[curr_field] == FIELD_OUTPUT && c != '\n')
@@ -552,7 +569,7 @@ cut_fields (stream)
 		enlarge_line (curr_field);
 	    }
 	}
-      while (c != '\n');
+      while (c != '\n' && !doneflag);
 
       if (fieldfound)
 	{
@@ -601,12 +618,6 @@ enlarge_line (new_size)
   for (i = line_size; i < new_size; i++)
     fields[i] = FIELD_OMIT;
   line_size = new_size;
-}
-
-static void
-invalid_list ()
-{
-  error (2, 0, "invalid byte or field list");
 }
 
 static void

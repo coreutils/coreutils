@@ -317,13 +317,12 @@ usage (status)
     {
       printf ("\
 Usage: %s [OPTION]... [FILE]...\n\
-  or:  %s -C [FILE] [[+]OFFSET [[+]LABEL]]\n\
+  or:  %s --traditional [FILE] [[+]OFFSET [[+]LABEL]]\n\
 ",
 	      program_name, program_name);
       printf ("\
 \n\
   -A, --address-radix=RADIX   decide how file offsets are printed\n\
-  -C, --backward-compatible   trigger older syntax\n\
   -N, --read-bytes=BYTES      limit dump to BYTES input bytes per file\n\
   -j, --skip-bytes=BYTES      skip BYTES input bytes first on each file\n\
   -s, --strings[=BYTES]       output strings of at least BYTES graphic chars\n\
@@ -331,6 +330,7 @@ Usage: %s [OPTION]... [FILE]...\n\
   -v, --output-duplicates     do not use * to mark line suppression\n\
   -w, --width[=BYTES]         output BYTES bytes per output line\n\
       --help                  display this help and exit\n\
+      --traditional           accept arguments in pre-POSIX form\n\
       --version               output version information and exit\n\
 \n\
 Pre-POSIX format specifications may be intermixed, they accumulate:\n\
