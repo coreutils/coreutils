@@ -103,3 +103,4 @@ EXEC 01;32
 # audio formats
 .ogg 01;35
 .mp3 01;35
+.wav 01;35
