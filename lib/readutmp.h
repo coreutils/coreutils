@@ -30,6 +30,12 @@
 
 # include <sys/types.h>
 
+/* AIX 4.3.3 has both utmp.h and utmpx.h, but only struct utmp
+   has the ut_exit member.  */
+# if HAVE_UTMPX_H && HAVE_UTMP_H && HAVE_STRUCT_UTMP_UT_EXIT && ! HAVE_STRUCT_UTMPX_UT_EXIT
+#  undef HAVE_UTMPX_H
+# endif
+
 # ifdef HAVE_UTMPX_H
 #  ifdef HAVE_UTMP_H
     /* HPUX 10.20 needs utmp.h, for the definition of e.g., UTMP_FILE.  */
@@ -44,6 +50,27 @@
 #  ifdef HAVE_UTMPXNAME
 #   define UTMP_NAME_FUNCTION utmpxname
 #  endif
+
+#  if HAVE_STRUCT_UTMPX_UT_EXIT_E_TERMINATION
+#   define UT_EXIT_E_TERMINATION(U) ((U)->ut_exit.e_termination)
+#  else
+#   if HAVE_STRUCT_UTMPX_UT_EXIT_UT_TERMINATION
+#    define UT_EXIT_E_TERMINATION(U) ((U)->ut_exit.ut_termination)
+#   else
+#    define UT_EXIT_E_TERMINATION(U) 0
+#   endif
+#  endif
+
+#  if HAVE_STRUCT_UTMPX_UT_EXIT_E_EXIT
+#   define UT_EXIT_E_EXIT(U) ((U)->ut_exit.e_exit)
+#  else
+#   if HAVE_STRUCT_UTMPX_UT_EXIT_UT_EXIT
+#    define UT_EXIT_E_EXIT(U) ((U)->ut_exit.ut_exit)
+#   else
+#    define UT_EXIT_E_EXIT(U) 0
+#   endif
+#  endif
+
 # else
 #  include <utmp.h>
 #  if !HAVE_DECL_GETUTENT
@@ -57,6 +84,27 @@
 #  ifdef HAVE_UTMPNAME
 #   define UTMP_NAME_FUNCTION utmpname
 #  endif
+
+#  if HAVE_STRUCT_UTMP_UT_EXIT_E_TERMINATION
+#   define UT_EXIT_E_TERMINATION(U) ((U)->ut_exit.e_termination)
+#  else
+#   if HAVE_STRUCT_UTMP_UT_EXIT_UT_TERMINATION
+#    define UT_EXIT_E_TERMINATION(U) ((U)->ut_exit.ut_termination)
+#   else
+#    define UT_EXIT_E_TERMINATION(U) 0
+#   endif
+#  endif
+
+#  if HAVE_STRUCT_UTMP_UT_EXIT_E_EXIT
+#   define UT_EXIT_E_EXIT(U) ((U)->ut_exit.e_exit)
+#  else
+#   if HAVE_STRUCT_UTMP_UT_EXIT_UT_EXIT
+#    define UT_EXIT_E_EXIT(U) ((U)->ut_exit.ut_exit)
+#   else
+#    define UT_EXIT_E_EXIT(U) 0
+#   endif
+#  endif
+
 # endif
 
 /* Accessor macro for the member named ut_user or ut_name.  */
