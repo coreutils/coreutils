@@ -50,7 +50,7 @@
    %S	second (00..61)
    %T	time, 24-hour (hh:mm:ss)
    %X	locale's time representation (%H:%M:%S)
-   %z  RFC-822 style numeric timezone (-0500) (a nonstandard extension)
+   %z   RFC-822 style numeric timezone (-0500) (a nonstandard extension)
    %Z	time zone (EDT), or nothing if no time zone is determinable
 
    Date fields:
