@@ -1,4 +1,4 @@
-LIBRARIES = fu
+noinst_LIBRARIES = fu
 
 DIST_OTHER = alloca.c euidaccess.c fnmatch.c fsusage.c ftruncate.c \
 getdate.y memcmp.c memcpy.c memset.c mkdir.c mktime.c mountlist.c \
