@@ -60,10 +60,6 @@
 # include <sys/ptem.h>
 #endif
 
-#if HAVE_SYS_ACL_H
-# include <sys/acl.h>
-#endif
-
 #include <stdio.h>
 #include <assert.h>
 #include <setjmp.h>
@@ -107,6 +103,7 @@ int wcwidth ();
 #include "system.h"
 #include <fnmatch.h>
 
+#include "acl.h"
 #include "argmatch.h"
 #include "dirname.h"
 #include "dirfd.h"
@@ -125,13 +122,6 @@ int wcwidth ();
 #include "strverscmp.h"
 #include "xstrtol.h"
 #include "xreadlink.h"
-
-/* Use access control lists only under all the following conditions.
-   Some systems (OSF4, Irix5, Irix6) have the acl function, but not
-   sys/acl.h or don't define the GETACLCNT macro.  */
-#if HAVE_SYS_ACL_H && HAVE_ACL && defined GETACLCNT
-# define USE_ACL 1
-#endif
 
 #define PROGRAM_NAME (ls_mode == LS_LS ? "ls" \
 		      : (ls_mode == LS_MULTI_COL \
@@ -242,14 +232,13 @@ struct fileinfo
 
     enum filetype filetype;
 
-#if USE_ACL
-    /* For long listings, nonzero if the file has an access control list,
-       otherwise zero.  */
-    int have_acl;
+#if HAVE_ACL
+    /* For long listings, true if the file has an access control list.  */
+    bool have_acl;
 #endif
   };
 
-#if USE_ACL
+#if HAVE_ACL
 # define FILE_HAS_ACL(F) ((F)->have_acl)
 #else
 # define FILE_HAS_ACL(F) 0
@@ -2225,11 +2214,14 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 	  return 0;
 	}
 
-#if USE_ACL
+#if HAVE_ACL
       if (format == long_format)
-	files[files_index].have_acl =
-	  (! S_ISLNK (files[files_index].stat.st_mode)
-	   && 4 < acl (path, GETACLCNT, 0, NULL));
+	{
+	  int n = file_has_acl (path, &files[files_index].stat);
+	  files[files_index].have_acl = (0 < n);
+	  if (n < 0)
+	    error (0, errno, "%s", quotearg_colon (path));
+	}
 #endif
 
       if (S_ISLNK (files[files_index].stat.st_mode)
