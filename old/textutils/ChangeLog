@@ -1,7 +1,3 @@
-2000-08-11  Jim Meyering  <meyering@lucent.com>
-
-	* doc/textutils.texi (wc invocation): Update accordingly.
-
 2000-08-10  Paul Eggert  <eggert@twinsun.com>
 
 	* doc/textutils.texi: Recommend against the System V syntax
@@ -20,6 +16,23 @@
 	* src/cut.c (cut_fields): Invoke xalloc_die instead of printing
 	our own message.
 	(cut_fields): Check for I/O error as well as end-of-file
+
+2000-08-06  Bruno Haible  <haible@clisp.cons.org>
+
+	* src/wc.c: Add support for multi-byte locales.
+	(iswprint, mbrtowc, wcwidth): Provide default definitions.
+	(total_bytes): New variable.
+	(print_bytes): New variable.
+	(longopts): Change abbreviation for --chars from 'c' to 'm'.
+	(usage): Update.
+	(write_counts): Add `bytes' argument.
+	(wc): New variables `bytes', `count_bytes', `count_chars',
+	`count_complicated'. The old code determines `bytes', not `chars'.
+	New case for MB_CUR_MAX > 1. A non-printable non-space character does
+	not increment the line position or start a word. Update `total_bytes'.
+	(main): Initialize `print_bytes' and `total_bytes' to 0. Accept 'm'
+	option. Pass `total_bytes' to write_counts.
+	* doc/textutils.texi (wc invocation): Update accordingly.
 
 2000-08-06  Bruno Haible  <haible@clisp.cons.org>
 
