@@ -1,3 +1,15 @@
+Wed Jul 10 22:57:29 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* getopt.c: Update from gettext-0.10.23.
+	* getopt1.c: Likewise.
+	* getopt.h: Likewise.
+
+Sun Jul  7 22:40:08 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* aclocal.m4 (AM_SYS_POSIX_TERMIOS): New macro, derived from test
+	in configure.in.
+	(AM_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL): Likewise.
+
 Sat Jul  6 12:47:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (AC_REPLACE_FUNCS): Add group_member.

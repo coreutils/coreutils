@@ -1,3 +1,9 @@
+Wed Jul 10 22:57:29 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* getopt.c: Update from gettext-0.10.23.
+	* getopt1.c: Likewise.
+	* getopt.h: Likewise.
+
 Tue Jul  9 20:19:44 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/dircolors.c (usage): Improve --help message.  From Karl Berry.
