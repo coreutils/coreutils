@@ -19,6 +19,7 @@ AC_DEFUN([jm_PREREQ],
   jm_PREREQ_READUTMP
   jm_PREREQ_REGEX
   jm_PREREQ_TEMPNAME # called by mkstemp
+  jm_PREREQ_XGETCWD
 ])
 
 AC_DEFUN([jm_PREREQ_ADDEXT],
@@ -138,4 +139,12 @@ AC_DEFUN([jm_PREREQ_TEMPNAME],
   AC_HEADER_STAT
   AC_CHECK_HEADERS(fcntl.h sys/time.h stdint.h unistd.h)
   AC_CHECK_FUNCS(__secure_getenv gettimeofday)
+])
+
+AC_DEFUN([jm_PREREQ_XGETCWD],
+[
+  AC_C_PROTOTYPES
+  AC_CHECK_HEADERS(stdlib.h unistd.h)
+  AC_CHECK_FUNCS(getcwd)
+  AC_FUNC_GETCWD_NULL
 ])
