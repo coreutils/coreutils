@@ -1,5 +1,10 @@
 1999-05-09  Jim Meyering  <meyering@ascend.com>
 
+	* Version 1.22j.
+
+	* Makefile.maint (alpha): Put the announcement in
+	/tmp/announce-$(distdir)
+
 	* tests/sort/Test.pm (neg-nls): New test.
 
 1999-05-08  Jim Meyering  <meyering@ascend.com>
