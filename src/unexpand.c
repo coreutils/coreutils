@@ -249,14 +249,6 @@ unexpand (void)
   for (;;)
     {
       c = getc (fp);
-      if (c == EOF)
-	{
-	  fp = next_file (fp);
-	  if (fp == NULL)
-	    break;		/* No more files. */
-	  else
-	    continue;
-	}
 
       if (c == ' ' && convert)
 	{
@@ -332,6 +324,15 @@ unexpand (void)
 		      pending--;
 		    }
 		}
+	    }
+
+	  if (c == EOF)
+	    {
+	      fp = next_file (fp);
+	      if (fp == NULL)
+		break;		/* No more files. */
+	      else
+		continue;
 	    }
 
 	  if (convert)
