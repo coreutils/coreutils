@@ -2,6 +2,7 @@
 AUTOMAKE_OPTIONS = 1.4 gnits
 
 TESTS = \
+  files0-from \
   inaccessible-cwd \
   deref-args \
   slash \
