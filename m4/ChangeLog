@@ -2,8 +2,14 @@
 
 	* search-libs.m4 (AC_SEARCH_LIBS): Remove file/macro, now that
 	this replacement is no longer needed.  Besides, this macro has
-	no effect with autoconf-2.58, since its `undefine' is not honored.
-	Reported by Andreas Schwab.
+	no effect with autoconf-2.58, since `undefine' in package-supplied
+	.m4 files is no longer honored.  Reported by Andreas Schwab.
+
+	Remove now-unnecessary (and unused) files.  They also used `undefine'.
+	* isc-posix.m4 (AC_ISC_POSIX): Remove file.
+	* getloadavg.m4 (gl_FUNC_GETLOADAVG): Remove file.
+	* prereq.m4 (jm_PREREQ): Require AC_FUNC_GETLOADAVG,
+	not gl_FUNC_GETLOADAVG.
 
 2003-11-08  Jim Meyering  <jim@meyering.net>
 
