@@ -3,6 +3,15 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  `test' is now more compatible with Bash and POSIX:
+
+    `test -t', `test --help', and `test --version' now silently exit
+    with status 0.  To test whether standard output is a terminal, use
+    `test -t 1'.  To get help and version info for `test', use
+    `[ --help' and `[ --version'.
+
+    `test' now exits with status 2 (not 1) if there is an error.
+
   wc count field widths now are heuristically adjusted depending on the input
   size, if known.  If only one count is printed, it is guaranteed to
   be printed without leading spaces.
