@@ -75,7 +75,7 @@ syntax-check-rules = \
   sc_prohibit_atoi_atof \
   sc_prohibit_jm_in_m4 \
   sc_space_tab \
-  sc_src_tight_scope \
+  sc_tight_scope \
   sc_sun_os_names \
   sc_system_h_headers \
   sc_tight_scope \
