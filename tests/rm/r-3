@@ -1,4 +1,7 @@
 #!/bin/sh
+# Create and remove a directory with more than 254 files.
+# An early version of my rewritten rm failed to remove all of
+# the files on SunOS4 when there were 254 or more in a directory.
 
 : ${RM=rm}
 
@@ -31,6 +34,7 @@ if test $framework_fail = 1; then
   exit 1
 fi
 
+fail=0
 $RM -rf $tmp || fail=1
 test -d $tmp && fail=1
 
