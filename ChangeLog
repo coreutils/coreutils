@@ -1,6 +1,15 @@
-2004-09-22  Jim Meyering  <jim@meyering.net>
+2004-09-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* src/tail.c (parse_obsolete_option): Bring back support
+	for obsolete option followed by non-obsolete, or by more
+	than one file.  When obsolete, conform to SUSv2 rather than
+	original POSIX 1003.2-1992, as SUSv2 corrected the case of
+	"tail -c".  Add support for the SUSv2 "b" modifier.
+	* NEWS: Mention the above.
+
+2004-09-22  Jim Meyering  <jim@meyering.net>
 
 	* Use automake-1.9.2.  Regenerate dependent files.
 
