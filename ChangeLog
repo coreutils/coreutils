@@ -1,6 +1,17 @@
-2004-12-13  Paul Eggert  <eggert@cs.ucla.edu>
+2004-12-14  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/tac.c: Include quotearg.h.
+	Use quotearg_colon in most diagnostics.
+	(copy_to_temp): Rewrite not to exit upon I/O or temp-file-creation
+	failure.  Before, this command (with /full/tmp being a full partition)
+	  TMPDIR=/full/tmp ./tac /proc/modules tac.c
+	would exit immediately upon the write error while trying to copy
+	non-seekable /proc/modules to the full partition.  Now it still
+	reports the failure but continues on with the remaining file.
+
+2004-12-13  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/ls.c (gobble_file): Change arg name to be command_line_arg
 	rather than explicit_arg, for consistency with copy.c.
