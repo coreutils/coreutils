@@ -68,13 +68,9 @@ char *alloca ();
 #include "xalloc.h"
 #include "xstrtol.h"
 
-#if ENABLE_NLS
-# include <libintl.h>
-# define _(Text) gettext (Text)
-#else
-# define _(Text) Text
-#endif
-#define N_(Text) Text
+#include "gettext.h"
+#define _(msgid) gettext (msgid)
+#define N_(msgid) msgid
 
 #ifndef _POSIX_VERSION
 struct passwd *getpwnam ();
