@@ -2,6 +2,19 @@ Sun Dec  4 14:53:12 1994  Jim Meyering  (meyering@comco.com)
 
 	* doc/Makefile.in (DISTFILES): Add getdate.texi.
 
+Fri Nov 11 11:15:20 1994  Jim Meyering  (meyering@comco.com)
+
+        * mknod.c (my_strtol): New function.
+        (main): Use it instead of atoi to convert argument strings to
+        major and minor device numbers.  Now, mknod diagnoses invalid
+        device numbers and accepts octal and hexadecimal as well as
+        decimal string arguments.  Ralf Lammers
+        <rlammers@physik.uni-osnabrueck.de> suggested that mknod accept
+        hex device numbers for compatibility with HPUX's mknod program.
+
+        * configure.in (AC_REPLACE_FUNCS): Add strtol.
+        * lib/Makefile.in (SOURCES): Add strtol.c.
+
 Sun Nov 06 00:18:56 1994  Jim Meyering  (meyering@comco.com)
 
 	* Version 3.12.
