@@ -1,6 +1,7 @@
 error.h
 fnmatch.h
 getopt.h
+md5.h
 obstack.h
 regex.h
 getpagesize.h

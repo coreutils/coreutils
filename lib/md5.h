@@ -1,6 +1,6 @@
 /* md5.h - Declaration of functions and data types used for MD5 sum
    computing library functions.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1999 Free Software Foundation, Inc.
    NOTE: The canonical source of this file is maintained with the GNU C
    Library.  Bugs can be reported to bug-glibc@prep.ai.mit.edu.
 
@@ -118,7 +118,7 @@ extern void md5_process_bytes __P ((const void *buffer, size_t len,
    endian byte order, so that a byte-wise output yields to the wanted
    ASCII representation of the message digest.
 
-   IMPORTANT: On some systems it is required that RESBUF is correctly
+   IMPORTANT: On some systems it is required that RESBUF be correctly
    aligned for a 32 bits value.  */
 extern void *md5_finish_ctx __P ((struct md5_ctx *ctx, void *resbuf));
 
