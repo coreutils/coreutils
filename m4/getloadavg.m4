@@ -1,9 +1,12 @@
-#serial 2
+#serial 3
 
 AC_DEFUN(AM_FUNC_GETLOADAVG,
 [ac_have_func=no # yes means we've found a way to get the load average.
 
 am_cv_saved_LIBS="$LIBS"
+
+# On HPUX9, an unprivileged user can get load averages through this function.
+AC_CHECK_FUNCS(pstat_getdynamic)
 
 # Solaris has libkstat which does not require root.
 AC_CHECK_LIB(kstat, kstat_open)
