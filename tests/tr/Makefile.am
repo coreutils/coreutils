@@ -2,6 +2,7 @@
 
 AUTOMAKE_OPTIONS = 1.1c
 
+x = tr
 in = \
   t1.in t2.in t3.in t4.in t5.in t6.in t7.in t8.in t9.in tA.in tB.in \
   tC.in tD.in tE.in tF.in tG.in tH.in tI.in tR0.0.in tR0.1.in tR1.0.in \
@@ -14,15 +15,15 @@ out = $(in:.in=.out)
 err = $(in:.in=.err)
 
 EXTRA_DIST = build-script.pl Test.pm $(in) $(exp)
-noinst_SCRIPTS = tr-tests
+noinst_SCRIPTS = $x-tests
 
 PERL = @PERL@
 editpl = sed -e 's,@''PERL''@,$(PERL),g' -e 's,@''srcdir''@,@srcdir@,g'
 
-TESTS = tr-tests
+TESTS = $x-tests
 
-tr-tests: build-script Test.pm
-	./build-script ../../src/tr > $@.n
+$x-tests: build-script Test.pm
+	./build-script ../../src/$x > $@.n
 	mv $@.n $@
 	chmod 755 $@
 
@@ -32,5 +33,5 @@ SUFFIXES = .pl
 	rm -f $@ $@.tmp
 	$(editpl) $< > $@.tmp && chmod +x $@.tmp && mv $@.tmp $@
 
-MAINTAINERCLEANFILES = tr-tests $(in) $(exp)
+MAINTAINERCLEANFILES = $x-tests $(in) $(exp)
 CLEANFILES = $(out) $(err)
