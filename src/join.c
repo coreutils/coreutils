@@ -460,6 +460,7 @@ prjoin (struct line *line1, struct line *line2)
 	  else
 	    {
 	      line = (o->file == 1 ? line1 : line2);
+	      assert (o->field >= 0);
 	      field = o->field;
 	    }
 	  prfield (field, line);
@@ -630,7 +631,7 @@ add_field (int file, int field)
   struct outlist *o;
 
   assert (file == 0 || file == 1 || file == 2);
-  assert (field >= 0);
+  assert (file == 0 ? field < 0 : field >= 0);
 
   o = (struct outlist *) xmalloc (sizeof (struct outlist));
   o->file = file;
@@ -659,7 +660,8 @@ decode_field_spec (const char *s, int *file_index, int *field_index)
       if (s[1] == '\0')
 	{
 	  *file_index = 0;
-	  /* Leave *field_index undefined.  */
+	  /* Give *field_index an invalid value.  */
+	  *field_index = -1;
 	  invalid = 0;
 	}
       else
