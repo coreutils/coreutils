@@ -1,9 +1,12 @@
 Tue Dec 10 00:14:24 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in: Bump version to 3.13k.
+
 	* src/install.c [_POSIX_VERSION]: Don't declare wait.  That
 	declaration conflicted with one in a system header file on
 	i386-pc-isc3.0, now that I've removed the AC_ISC_POSIX macro
 	and _POSIX_VERSION is no longer defined.
+	Reported by Karl Heuer.
 
 	* configure.in (AC_ISC_POSIX): Remove kludgy macro.
 	Use this test instead:
@@ -15,8 +18,6 @@ Tue Dec 10 00:14:24 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	* (EXTRA_DIST): Add strftime.c to appease automake.
 	Although it's not used yet, it'll be used by ls's (to-be-done)
 	--format=FORMAT option.
-
-	* configure.in: Bump version to 3.13k.
 
 Mon Dec  9 18:26:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
