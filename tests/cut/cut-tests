@@ -1999,7 +1999,7 @@ else
 fi
 test -s missing-bl.E || rm -f missing-bl.E
 if test $errors = 0 ; then
-  $echo Passed all 39 tests. 1>&2
+  $echo Passed all 117 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi

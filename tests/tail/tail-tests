@@ -26,6 +26,23 @@ else
   esac
 fi
 test -s obs-c1.E || rm -f obs-c1.E
+cat $srcdir/obs-c1.I | $xx +2c > obs-c1.O 2> obs-c1.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test obs-c1(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp obs-c1.O $srcdir/obs-c1.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed obs-c1(|)"; fi ;;
+    1) $echo "Test obs-c1(|) failed: files obs-c1.O and $srcdir/obs-c1.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test obs-c1(|) may have failed." 1>&2;
+       $echo The command "cmp obs-c1.O $srcdir/obs-c1.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s obs-c1.E || rm -f obs-c1.E
 $xx +2c < $srcdir/obs-c1.I > obs-c1.O 2> obs-c1.E
 code=$?
 if test $code != 0 ; then
@@ -55,6 +72,23 @@ else
     1) $echo "Test obs-c2(F) failed: files obs-c2.O and $srcdir/obs-c2.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test obs-c2(F) may have failed." 1>&2;
+       $echo The command "cmp obs-c2.O $srcdir/obs-c2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s obs-c2.E || rm -f obs-c2.E
+cat $srcdir/obs-c2.I | $xx +8c > obs-c2.O 2> obs-c2.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test obs-c2(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp obs-c2.O $srcdir/obs-c2.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed obs-c2(|)"; fi ;;
+    1) $echo "Test obs-c2(|) failed: files obs-c2.O and $srcdir/obs-c2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test obs-c2(|) may have failed." 1>&2;
        $echo The command "cmp obs-c2.O $srcdir/obs-c2.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
@@ -94,6 +128,23 @@ else
   esac
 fi
 test -s obs-c3.E || rm -f obs-c3.E
+cat $srcdir/obs-c3.I | $xx -1c > obs-c3.O 2> obs-c3.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test obs-c3(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp obs-c3.O $srcdir/obs-c3.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed obs-c3(|)"; fi ;;
+    1) $echo "Test obs-c3(|) failed: files obs-c3.O and $srcdir/obs-c3.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test obs-c3(|) may have failed." 1>&2;
+       $echo The command "cmp obs-c3.O $srcdir/obs-c3.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s obs-c3.E || rm -f obs-c3.E
 $xx -1c < $srcdir/obs-c3.I > obs-c3.O 2> obs-c3.E
 code=$?
 if test $code != 0 ; then
@@ -123,6 +174,23 @@ else
     1) $echo "Test obs-c4(F) failed: files obs-c4.O and $srcdir/obs-c4.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test obs-c4(F) may have failed." 1>&2;
+       $echo The command "cmp obs-c4.O $srcdir/obs-c4.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s obs-c4.E || rm -f obs-c4.E
+cat $srcdir/obs-c4.I | $xx -9c > obs-c4.O 2> obs-c4.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test obs-c4(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp obs-c4.O $srcdir/obs-c4.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed obs-c4(|)"; fi ;;
+    1) $echo "Test obs-c4(|) failed: files obs-c4.O and $srcdir/obs-c4.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test obs-c4(|) may have failed." 1>&2;
        $echo The command "cmp obs-c4.O $srcdir/obs-c4.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
@@ -162,6 +230,23 @@ else
   esac
 fi
 test -s obs-c5.E || rm -f obs-c5.E
+cat $srcdir/obs-c5.I | $xx -12c > obs-c5.O 2> obs-c5.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test obs-c5(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp obs-c5.O $srcdir/obs-c5.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed obs-c5(|)"; fi ;;
+    1) $echo "Test obs-c5(|) failed: files obs-c5.O and $srcdir/obs-c5.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test obs-c5(|) may have failed." 1>&2;
+       $echo The command "cmp obs-c5.O $srcdir/obs-c5.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s obs-c5.E || rm -f obs-c5.E
 $xx -12c < $srcdir/obs-c5.I > obs-c5.O 2> obs-c5.E
 code=$?
 if test $code != 0 ; then
@@ -191,6 +276,23 @@ else
     1) $echo "Test obs-l1(F) failed: files obs-l1.O and $srcdir/obs-l1.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test obs-l1(F) may have failed." 1>&2;
+       $echo The command "cmp obs-l1.O $srcdir/obs-l1.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s obs-l1.E || rm -f obs-l1.E
+cat $srcdir/obs-l1.I | $xx -1l > obs-l1.O 2> obs-l1.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test obs-l1(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp obs-l1.O $srcdir/obs-l1.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed obs-l1(|)"; fi ;;
+    1) $echo "Test obs-l1(|) failed: files obs-l1.O and $srcdir/obs-l1.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test obs-l1(|) may have failed." 1>&2;
        $echo The command "cmp obs-l1.O $srcdir/obs-l1.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
@@ -230,6 +332,23 @@ else
   esac
 fi
 test -s obs-l2.E || rm -f obs-l2.E
+cat $srcdir/obs-l2.I | $xx -1l > obs-l2.O 2> obs-l2.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test obs-l2(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp obs-l2.O $srcdir/obs-l2.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed obs-l2(|)"; fi ;;
+    1) $echo "Test obs-l2(|) failed: files obs-l2.O and $srcdir/obs-l2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test obs-l2(|) may have failed." 1>&2;
+       $echo The command "cmp obs-l2.O $srcdir/obs-l2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s obs-l2.E || rm -f obs-l2.E
 $xx -1l < $srcdir/obs-l2.I > obs-l2.O 2> obs-l2.E
 code=$?
 if test $code != 0 ; then
@@ -259,6 +378,23 @@ else
     1) $echo "Test obs-l3(F) failed: files obs-l3.O and $srcdir/obs-l3.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test obs-l3(F) may have failed." 1>&2;
+       $echo The command "cmp obs-l3.O $srcdir/obs-l3.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s obs-l3.E || rm -f obs-l3.E
+cat $srcdir/obs-l3.I | $xx -1l > obs-l3.O 2> obs-l3.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test obs-l3(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp obs-l3.O $srcdir/obs-l3.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed obs-l3(|)"; fi ;;
+    1) $echo "Test obs-l3(|) failed: files obs-l3.O and $srcdir/obs-l3.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test obs-l3(|) may have failed." 1>&2;
        $echo The command "cmp obs-l3.O $srcdir/obs-l3.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
@@ -298,6 +434,23 @@ else
   esac
 fi
 test -s obs-l4.E || rm -f obs-l4.E
+cat $srcdir/obs-l4.I | $xx +1l > obs-l4.O 2> obs-l4.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test obs-l4(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp obs-l4.O $srcdir/obs-l4.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed obs-l4(|)"; fi ;;
+    1) $echo "Test obs-l4(|) failed: files obs-l4.O and $srcdir/obs-l4.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test obs-l4(|) may have failed." 1>&2;
+       $echo The command "cmp obs-l4.O $srcdir/obs-l4.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s obs-l4.E || rm -f obs-l4.E
 $xx +1l < $srcdir/obs-l4.I > obs-l4.O 2> obs-l4.E
 code=$?
 if test $code != 0 ; then
@@ -327,6 +480,23 @@ else
     1) $echo "Test obs-l5(F) failed: files obs-l5.O and $srcdir/obs-l5.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test obs-l5(F) may have failed." 1>&2;
+       $echo The command "cmp obs-l5.O $srcdir/obs-l5.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s obs-l5.E || rm -f obs-l5.E
+cat $srcdir/obs-l5.I | $xx +2l > obs-l5.O 2> obs-l5.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test obs-l5(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp obs-l5.O $srcdir/obs-l5.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed obs-l5(|)"; fi ;;
+    1) $echo "Test obs-l5(|) failed: files obs-l5.O and $srcdir/obs-l5.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test obs-l5(|) may have failed." 1>&2;
        $echo The command "cmp obs-l5.O $srcdir/obs-l5.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
@@ -366,6 +536,23 @@ else
   esac
 fi
 test -s obs-1.E || rm -f obs-1.E
+cat $srcdir/obs-1.I | $xx -1 > obs-1.O 2> obs-1.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test obs-1(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp obs-1.O $srcdir/obs-1.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed obs-1(|)"; fi ;;
+    1) $echo "Test obs-1(|) failed: files obs-1.O and $srcdir/obs-1.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test obs-1(|) may have failed." 1>&2;
+       $echo The command "cmp obs-1.O $srcdir/obs-1.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s obs-1.E || rm -f obs-1.E
 $xx -1 < $srcdir/obs-1.I > obs-1.O 2> obs-1.E
 code=$?
 if test $code != 0 ; then
@@ -395,6 +582,23 @@ else
     1) $echo "Test obs-2(F) failed: files obs-2.O and $srcdir/obs-2.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test obs-2(F) may have failed." 1>&2;
+       $echo The command "cmp obs-2.O $srcdir/obs-2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s obs-2.E || rm -f obs-2.E
+cat $srcdir/obs-2.I | $xx -1 > obs-2.O 2> obs-2.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test obs-2(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp obs-2.O $srcdir/obs-2.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed obs-2(|)"; fi ;;
+    1) $echo "Test obs-2(|) failed: files obs-2.O and $srcdir/obs-2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test obs-2(|) may have failed." 1>&2;
        $echo The command "cmp obs-2.O $srcdir/obs-2.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
@@ -434,6 +638,23 @@ else
   esac
 fi
 test -s obs-3.E || rm -f obs-3.E
+cat $srcdir/obs-3.I | $xx -1 > obs-3.O 2> obs-3.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test obs-3(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp obs-3.O $srcdir/obs-3.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed obs-3(|)"; fi ;;
+    1) $echo "Test obs-3(|) failed: files obs-3.O and $srcdir/obs-3.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test obs-3(|) may have failed." 1>&2;
+       $echo The command "cmp obs-3.O $srcdir/obs-3.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s obs-3.E || rm -f obs-3.E
 $xx -1 < $srcdir/obs-3.I > obs-3.O 2> obs-3.E
 code=$?
 if test $code != 0 ; then
@@ -463,6 +684,23 @@ else
     1) $echo "Test obs-4(F) failed: files obs-4.O and $srcdir/obs-4.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test obs-4(F) may have failed." 1>&2;
+       $echo The command "cmp obs-4.O $srcdir/obs-4.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s obs-4.E || rm -f obs-4.E
+cat $srcdir/obs-4.I | $xx +1 > obs-4.O 2> obs-4.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test obs-4(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp obs-4.O $srcdir/obs-4.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed obs-4(|)"; fi ;;
+    1) $echo "Test obs-4(|) failed: files obs-4.O and $srcdir/obs-4.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test obs-4(|) may have failed." 1>&2;
        $echo The command "cmp obs-4.O $srcdir/obs-4.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
@@ -502,6 +740,23 @@ else
   esac
 fi
 test -s obs-5.E || rm -f obs-5.E
+cat $srcdir/obs-5.I | $xx +2 > obs-5.O 2> obs-5.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test obs-5(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp obs-5.O $srcdir/obs-5.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed obs-5(|)"; fi ;;
+    1) $echo "Test obs-5(|) failed: files obs-5.O and $srcdir/obs-5.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test obs-5(|) may have failed." 1>&2;
+       $echo The command "cmp obs-5.O $srcdir/obs-5.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s obs-5.E || rm -f obs-5.E
 $xx +2 < $srcdir/obs-5.I > obs-5.O 2> obs-5.E
 code=$?
 if test $code != 0 ; then
@@ -531,6 +786,23 @@ else
     1) $echo "Test obsx-1(F) failed: files obsx-1.O and $srcdir/obsx-1.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test obsx-1(F) may have failed." 1>&2;
+       $echo The command "cmp obsx-1.O $srcdir/obsx-1.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s obsx-1.E || rm -f obsx-1.E
+cat $srcdir/obsx-1.I | $xx +c > obsx-1.O 2> obsx-1.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test obsx-1(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp obsx-1.O $srcdir/obsx-1.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed obsx-1(|)"; fi ;;
+    1) $echo "Test obsx-1(|) failed: files obsx-1.O and $srcdir/obsx-1.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test obsx-1(|) may have failed." 1>&2;
        $echo The command "cmp obsx-1.O $srcdir/obsx-1.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
@@ -570,6 +842,23 @@ else
   esac
 fi
 test -s obsx-2.E || rm -f obsx-2.E
+cat $srcdir/obsx-2.I | $xx +l > obsx-2.O 2> obsx-2.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test obsx-2(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp obsx-2.O $srcdir/obsx-2.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed obsx-2(|)"; fi ;;
+    1) $echo "Test obsx-2(|) failed: files obsx-2.O and $srcdir/obsx-2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test obsx-2(|) may have failed." 1>&2;
+       $echo The command "cmp obsx-2.O $srcdir/obsx-2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s obsx-2.E || rm -f obsx-2.E
 $xx +l < $srcdir/obsx-2.I > obsx-2.O 2> obsx-2.E
 code=$?
 if test $code != 0 ; then
@@ -599,6 +888,23 @@ else
     1) $echo "Test obs-l(F) failed: files obs-l.O and $srcdir/obs-l.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test obs-l(F) may have failed." 1>&2;
+       $echo The command "cmp obs-l.O $srcdir/obs-l.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s obs-l.E || rm -f obs-l.E
+cat $srcdir/obs-l.I | $xx -l > obs-l.O 2> obs-l.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test obs-l(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp obs-l.O $srcdir/obs-l.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed obs-l(|)"; fi ;;
+    1) $echo "Test obs-l(|) failed: files obs-l.O and $srcdir/obs-l.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test obs-l(|) may have failed." 1>&2;
        $echo The command "cmp obs-l.O $srcdir/obs-l.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
@@ -638,6 +944,23 @@ else
   esac
 fi
 test -s err-1.E || rm -f err-1.E
+cat $srcdir/err-1.I | $xx +cl > err-1.O 2> err-1.E
+code=$?
+if test $code != 1 ; then
+  $echo "Test err-1(|) failed: ../../src/tail return code $code differs from expected value 1" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp err-1.O $srcdir/err-1.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed err-1(|)"; fi ;;
+    1) $echo "Test err-1(|) failed: files err-1.O and $srcdir/err-1.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test err-1(|) may have failed." 1>&2;
+       $echo The command "cmp err-1.O $srcdir/err-1.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s err-1.E || rm -f err-1.E
 $xx +cl < $srcdir/err-1.I > err-1.O 2> err-1.E
 code=$?
 if test $code != 1 ; then
@@ -667,6 +990,23 @@ else
     1) $echo "Test err-2(F) failed: files err-2.O and $srcdir/err-2.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test err-2(F) may have failed." 1>&2;
+       $echo The command "cmp err-2.O $srcdir/err-2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s err-2.E || rm -f err-2.E
+cat $srcdir/err-2.I | $xx -cl > err-2.O 2> err-2.E
+code=$?
+if test $code != 1 ; then
+  $echo "Test err-2(|) failed: ../../src/tail return code $code differs from expected value 1" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp err-2.O $srcdir/err-2.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed err-2(|)"; fi ;;
+    1) $echo "Test err-2(|) failed: files err-2.O and $srcdir/err-2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test err-2(|) may have failed." 1>&2;
        $echo The command "cmp err-2.O $srcdir/err-2.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
@@ -706,6 +1046,23 @@ else
   esac
 fi
 test -s err-3.E || rm -f err-3.E
+cat $srcdir/err-3.I | $xx +2cz > err-3.O 2> err-3.E
+code=$?
+if test $code != 1 ; then
+  $echo "Test err-3(|) failed: ../../src/tail return code $code differs from expected value 1" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp err-3.O $srcdir/err-3.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed err-3(|)"; fi ;;
+    1) $echo "Test err-3(|) failed: files err-3.O and $srcdir/err-3.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test err-3(|) may have failed." 1>&2;
+       $echo The command "cmp err-3.O $srcdir/err-3.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s err-3.E || rm -f err-3.E
 $xx +2cz < $srcdir/err-3.I > err-3.O 2> err-3.E
 code=$?
 if test $code != 1 ; then
@@ -735,6 +1092,23 @@ else
     1) $echo "Test err-4(F) failed: files err-4.O and $srcdir/err-4.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test err-4(F) may have failed." 1>&2;
+       $echo The command "cmp err-4.O $srcdir/err-4.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s err-4.E || rm -f err-4.E
+cat $srcdir/err-4.I | $xx -2cX > err-4.O 2> err-4.E
+code=$?
+if test $code != 1 ; then
+  $echo "Test err-4(|) failed: ../../src/tail return code $code differs from expected value 1" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp err-4.O $srcdir/err-4.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed err-4(|)"; fi ;;
+    1) $echo "Test err-4(|) failed: files err-4.O and $srcdir/err-4.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test err-4(|) may have failed." 1>&2;
        $echo The command "cmp err-4.O $srcdir/err-4.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
@@ -774,6 +1148,23 @@ else
   esac
 fi
 test -s err-5.E || rm -f err-5.E
+cat $srcdir/err-5.I | $xx -c99999999999999999999 > err-5.O 2> err-5.E
+code=$?
+if test $code != 1 ; then
+  $echo "Test err-5(|) failed: ../../src/tail return code $code differs from expected value 1" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp err-5.O $srcdir/err-5.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed err-5(|)"; fi ;;
+    1) $echo "Test err-5(|) failed: files err-5.O and $srcdir/err-5.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test err-5(|) may have failed." 1>&2;
+       $echo The command "cmp err-5.O $srcdir/err-5.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s err-5.E || rm -f err-5.E
 $xx -c99999999999999999999 < $srcdir/err-5.I > err-5.O 2> err-5.E
 code=$?
 if test $code != 1 ; then
@@ -803,6 +1194,23 @@ else
     1) $echo "Test err-6(F) failed: files err-6.O and $srcdir/err-6.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test err-6(F) may have failed." 1>&2;
+       $echo The command "cmp err-6.O $srcdir/err-6.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s err-6.E || rm -f err-6.E
+cat $srcdir/err-6.I | $xx -c > err-6.O 2> err-6.E
+code=$?
+if test $code != 1 ; then
+  $echo "Test err-6(|) failed: ../../src/tail return code $code differs from expected value 1" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp err-6.O $srcdir/err-6.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed err-6(|)"; fi ;;
+    1) $echo "Test err-6(|) failed: files err-6.O and $srcdir/err-6.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test err-6(|) may have failed." 1>&2;
        $echo The command "cmp err-6.O $srcdir/err-6.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
@@ -910,6 +1318,23 @@ else
   esac
 fi
 test -s n-1.E || rm -f n-1.E
+cat $srcdir/n-1.I | $xx -n 10 > n-1.O 2> n-1.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n-1(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n-1.O $srcdir/n-1.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n-1(|)"; fi ;;
+    1) $echo "Test n-1(|) failed: files n-1.O and $srcdir/n-1.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n-1(|) may have failed." 1>&2;
+       $echo The command "cmp n-1.O $srcdir/n-1.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n-1.E || rm -f n-1.E
 $xx -n 10 < $srcdir/n-1.I > n-1.O 2> n-1.E
 code=$?
 if test $code != 0 ; then
@@ -939,6 +1364,23 @@ else
     1) $echo "Test n-2(F) failed: files n-2.O and $srcdir/n-2.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test n-2(F) may have failed." 1>&2;
+       $echo The command "cmp n-2.O $srcdir/n-2.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n-2.E || rm -f n-2.E
+cat $srcdir/n-2.I | $xx -n -10 > n-2.O 2> n-2.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n-2(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n-2.O $srcdir/n-2.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n-2(|)"; fi ;;
+    1) $echo "Test n-2(|) failed: files n-2.O and $srcdir/n-2.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n-2(|) may have failed." 1>&2;
        $echo The command "cmp n-2.O $srcdir/n-2.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
@@ -978,6 +1420,23 @@ else
   esac
 fi
 test -s n-3.E || rm -f n-3.E
+cat $srcdir/n-3.I | $xx -n +10 > n-3.O 2> n-3.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n-3(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n-3.O $srcdir/n-3.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n-3(|)"; fi ;;
+    1) $echo "Test n-3(|) failed: files n-3.O and $srcdir/n-3.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n-3(|) may have failed." 1>&2;
+       $echo The command "cmp n-3.O $srcdir/n-3.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n-3.E || rm -f n-3.E
 $xx -n +10 < $srcdir/n-3.I > n-3.O 2> n-3.E
 code=$?
 if test $code != 0 ; then
@@ -1007,6 +1466,23 @@ else
     1) $echo "Test n-4(F) failed: files n-4.O and $srcdir/n-4.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test n-4(F) may have failed." 1>&2;
+       $echo The command "cmp n-4.O $srcdir/n-4.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n-4.E || rm -f n-4.E
+cat $srcdir/n-4.I | $xx -n +0 > n-4.O 2> n-4.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n-4(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n-4.O $srcdir/n-4.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n-4(|)"; fi ;;
+    1) $echo "Test n-4(|) failed: files n-4.O and $srcdir/n-4.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n-4(|) may have failed." 1>&2;
        $echo The command "cmp n-4.O $srcdir/n-4.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
@@ -1046,6 +1522,23 @@ else
   esac
 fi
 test -s n-4a.E || rm -f n-4a.E
+cat $srcdir/n-4a.I | $xx -n +1 > n-4a.O 2> n-4a.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n-4a(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n-4a.O $srcdir/n-4a.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n-4a(|)"; fi ;;
+    1) $echo "Test n-4a(|) failed: files n-4a.O and $srcdir/n-4a.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n-4a(|) may have failed." 1>&2;
+       $echo The command "cmp n-4a.O $srcdir/n-4a.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n-4a.E || rm -f n-4a.E
 $xx -n +1 < $srcdir/n-4a.I > n-4a.O 2> n-4a.E
 code=$?
 if test $code != 0 ; then
@@ -1075,6 +1568,23 @@ else
     1) $echo "Test n-5(F) failed: files n-5.O and $srcdir/n-5.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test n-5(F) may have failed." 1>&2;
+       $echo The command "cmp n-5.O $srcdir/n-5.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n-5.E || rm -f n-5.E
+cat $srcdir/n-5.I | $xx -n -0 > n-5.O 2> n-5.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n-5(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n-5.O $srcdir/n-5.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n-5(|)"; fi ;;
+    1) $echo "Test n-5(|) failed: files n-5.O and $srcdir/n-5.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n-5(|) may have failed." 1>&2;
        $echo The command "cmp n-5.O $srcdir/n-5.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
@@ -1114,6 +1624,23 @@ else
   esac
 fi
 test -s n-5a.E || rm -f n-5a.E
+cat $srcdir/n-5a.I | $xx -n -1 > n-5a.O 2> n-5a.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n-5a(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n-5a.O $srcdir/n-5a.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n-5a(|)"; fi ;;
+    1) $echo "Test n-5a(|) failed: files n-5a.O and $srcdir/n-5a.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n-5a(|) may have failed." 1>&2;
+       $echo The command "cmp n-5a.O $srcdir/n-5a.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n-5a.E || rm -f n-5a.E
 $xx -n -1 < $srcdir/n-5a.I > n-5a.O 2> n-5a.E
 code=$?
 if test $code != 0 ; then
@@ -1143,6 +1670,23 @@ else
     1) $echo "Test n-5b(F) failed: files n-5b.O and $srcdir/n-5b.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
     2) $echo "Test n-5b(F) may have failed." 1>&2;
+       $echo The command "cmp n-5b.O $srcdir/n-5b.X" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s n-5b.E || rm -f n-5b.E
+cat $srcdir/n-5b.I | $xx -n  0 > n-5b.O 2> n-5b.E
+code=$?
+if test $code != 0 ; then
+  $echo "Test n-5b(|) failed: ../../src/tail return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp n-5b.O $srcdir/n-5b.X
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed n-5b(|)"; fi ;;
+    1) $echo "Test n-5b(|) failed: files n-5b.O and $srcdir/n-5b.X differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test n-5b(|) may have failed." 1>&2;
        $echo The command "cmp n-5b.O $srcdir/n-5b.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
