@@ -1,3 +1,9 @@
+User-visible changes in release 1.13
+* tail works on NetBSD
+* md5sum reads and writes (de facto) standard Plumb/Lankester format
+* sort accepts -.1 +.2 options for compatibility
+* od works properly when dump limit is specified and is a multiple of
+  bytes_per_block (set by --width, 16 by default).
 User-visible changes in release 1.12
 * sort no longer reports spurious errors on Ultrix systems
 * new program: md5sum
