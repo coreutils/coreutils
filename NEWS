@@ -55,6 +55,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   paste no longer mistakenly outputs 0xff bytes for a nonempty input file
   without a trailing newline.
 
+  `tail -n0 -f FILE' and `tail -c0 -f FILE' no longer perform what amounted
+  to a busy wait, rather than sleeping between iterations.
+
 
 * Major changes in release 5.0.90:
 
