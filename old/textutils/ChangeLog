@@ -1,5 +1,9 @@
 2000-05-12  Jim Meyering  <meyering@lucent.com>
 
+	* src/head.c (string_to_integer): Restrict base to 10.
+	Reported by Joseph S. Myers.
+	* tests/head/Test.pm: Add a few tests for this.
+
 	New option: --first-only
 	* src/unexpand.c (anonymous enum) [CONVERT_FIRST_ONLY_OPTION]: Define.
 	(long_options): Add `first-only'.
