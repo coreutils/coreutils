@@ -57,6 +57,7 @@ int lstat ();
 char *base_name ();
 char *dirname ();
 enum backup_type get_version ();
+char *stpcpy ();
 void strip_trailing_slashes ();
 char *xmalloc ();
 char *xstrdup ();
