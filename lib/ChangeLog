@@ -1,3 +1,9 @@
+2001-09-23  Jim Meyering  <meyering@lucent.com>
+
+	* mountlist.c: Remove useless parentheses in #if directives.
+	(MOUNTED) [!defined MOUNTED]: Define to _PATH_MOUNTED, for when
+	the deprecated MOUNTED symbol is no longer defined in mntent.h.
+
 2001-09-22  Jim Meyering  <meyering@lucent.com>
 
 	* localcharset.c: Update from latest gettext.
