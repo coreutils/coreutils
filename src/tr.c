@@ -39,7 +39,7 @@ enum { N_CHARS = UCHAR_MAX + 1 };
 /* Convert a possibly-signed character to an unsigned character.  This is
    a bit safer than casting to unsigned char, since it catches some type
    errors that the cast doesn't.  */
-static inline unsigned char uchar (char ch) { return ch; }
+static inline unsigned char to_uchar (char ch) { return ch; }
 
 /* An unsigned integer type big enough to hold a repeat count or an
    unsigned character.  POSIX requires support for repeat counts as
@@ -864,7 +864,7 @@ star_digits_closebracket (const struct E_string *es, size_t idx)
     return false;
 
   for (i = idx + 1; i < es->len; i++)
-    if (!ISDIGIT (uchar (es->s[i])) || es->escaped[i])
+    if (!ISDIGIT (to_uchar (es->s[i])) || es->escaped[i])
       return es_match (es, i, ']');
   return false;
 }
@@ -1533,13 +1533,13 @@ squeeze_filter (char *buf, size_t size, size_t (*reader) (char *, size_t))
 	     of the input is removed by squeezing repeats.  But most
 	     uses of this functionality seem to remove less than 20-30%
 	     of the input.  */
-	  for (; i < nr && !in_squeeze_set[uchar (buf[i])]; i += 2)
+	  for (; i < nr && !in_squeeze_set[to_uchar (buf[i])]; i += 2)
 	    continue;
 
 	  /* There is a special case when i == nr and we've just
 	     skipped a character (the last one in buf) that is in
 	     the squeeze set.  */
-	  if (i == nr && in_squeeze_set[uchar (buf[i - 1])])
+	  if (i == nr && in_squeeze_set[to_uchar (buf[i - 1])])
 	    --i;
 
 	  if (i >= nr)
@@ -1617,12 +1617,12 @@ read_and_delete (char *buf, size_t size)
          the beginning of a buffer.  It just avoids the copying
          of buf[i] into buf[n_saved] when it would be a NOP.  */
 
-      for (i = 0; i < nr && !in_delete_set[uchar (buf[i])]; i++)
+      for (i = 0; i < nr && !in_delete_set[to_uchar (buf[i])]; i++)
 	continue;
       n_saved = i;
 
       for (++i; i < nr; i++)
-	if (!in_delete_set[uchar (buf[i])])
+	if (!in_delete_set[to_uchar (buf[i])])
 	  buf[n_saved++] = buf[i];
     }
   while (n_saved == 0);
@@ -1641,7 +1641,7 @@ read_and_xlate (char *buf, size_t size)
   size_t i;
 
   for (i = 0; i < bytes_read; i++)
-    buf[i] = xlate[uchar (buf[i])];
+    buf[i] = xlate[to_uchar (buf[i])];
 
   return bytes_read;
 }
