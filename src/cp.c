@@ -35,8 +35,13 @@
 #include "cp-hash.h"
 #include "error.h"
 #include "dirname.h"
-#include "long-options.h"
 #include "path-concat.h"
+#include "version-etc.h"
+
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "cp"
+
+#define AUTHORS "Torbjorn Granlund, David MacKenzie, and Jim Meyering"
 
 #ifndef _POSIX_VERSION
 uid_t geteuid ();
@@ -103,6 +108,8 @@ static struct option const long_opts[] =
   {"update", no_argument, NULL, 'u'},
   {"verbose", no_argument, NULL, 'v'},
   {"version-control", required_argument, NULL, 'V'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -631,10 +638,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "cp", GNU_PACKAGE, VERSION,
-		      "Torbjorn Granlund, David MacKenzie, and Jim Meyering",
-		      usage);
-
   cp_option_init (&x);
 
   /* FIXME: consider not calling getenv for SIMPLE_BACKUP_SUFFIX unless
@@ -737,6 +740,10 @@ main (int argc, char **argv)
 	case 'V':
 	  version = optarg;
 	  break;
+
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  usage (1);
