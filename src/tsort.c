@@ -100,8 +100,8 @@ Write totally ordered list consistent with the partial ordering in FILE.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
 "), program_name);
-      EMIT_HELP_DESCRIPTION (stdout);
-      EMIT_VERSION_DESCRIPTION (stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
 

@@ -417,8 +417,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -d, --delimiters=LIST   reuse characters from LIST instead of TABs\n\
   -s, --serial            paste one file at a time instead of in parallel\n\
 "), stdout);
-      EMIT_HELP_DESCRIPTION (stdout);
-      EMIT_VERSION_DESCRIPTION (stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       /* FIXME: add a couple of examples.  */
       fputs (_("\
 \n\

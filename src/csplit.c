@@ -1514,8 +1514,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -s, --quiet, --silent      do not print counts of output file sizes\n\
   -z, --elide-empty-files    remove empty output files\n\
 "), stdout);
-      EMIT_HELP_DESCRIPTION (stdout);
-      EMIT_VERSION_DESCRIPTION (stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
 Read standard input if FILE is -.  Each PATTERN may be:\n\

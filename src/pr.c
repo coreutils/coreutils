@@ -2847,8 +2847,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                     truncate lines, except -J option is set, no interference\n\
                     with -S or -s\n\
 "), stdout);
-      EMIT_HELP_DESCRIPTION (stdout);
-      EMIT_VERSION_DESCRIPTION (stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
 -T implied by -l nn when nn <= 10 or <= 3 with -F. With no FILE, or when\n\

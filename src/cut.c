@@ -191,8 +191,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       --output-delimiter=STRING  use STRING as the output delimiter\n\
                             the default is to use the input delimiter\n\
 "), stdout);
-      EMIT_HELP_DESCRIPTION (stdout);
-      EMIT_VERSION_DESCRIPTION (stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
 Use one, and only one of -b, -c or -f.  Each LIST is made up of one\n\

@@ -389,8 +389,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -t, --tabs=NUMBER   have tabs NUMBER characters apart instead of 8\n\
   -t, --tabs=LIST     use comma separated list of explicit tab positions\n\
 "), stdout);
-     EMIT_HELP_DESCRIPTION (stdout);
-     EMIT_VERSION_DESCRIPTION (stdout);
+     fputs (HELP_OPTION_DESCRIPTION, stdout);
+     fputs (VERSION_OPTION_DESCRIPTION, stdout);
      fputs (_("\
 \n\
 Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.\n\

@@ -141,8 +141,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -r, --regex              interpret the separator as a regular expression\n\
   -s, --separator=STRING   use STRING as the separator instead of newline\n\
 "), stdout);
-      EMIT_HELP_DESCRIPTION (stdout);
-      EMIT_VERSION_DESCRIPTION (stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
