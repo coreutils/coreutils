@@ -14,7 +14,7 @@
 
 	* tests/rm/fail-eperm: Handle the case in which rm produces no output.
 
-	rm would prompt for non-dangling symlinks
+	rm would prompt for a symlink to an unwritable file
 	* src/remove.c (prompt): When not interactive, don't prompt
 	for a symlink.  Reported by Dave Beckett.  Patch by Michael Stone.
 	* tests/rm/dangling-symlink: Add a test for the above-fixed bug.
