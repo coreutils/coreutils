@@ -61,7 +61,7 @@ extern int errno;
    Return the actual number of bytes written, zero for EOF, or SAFE_WRITE_ERROR
    upon error.  */
 size_t
-safe_write (int fd, const void *buf, size_t count)
+safe_write (int fd, void const *buf, size_t count)
 {
   ssize_t result;
 
