@@ -1,4 +1,4 @@
-## Process this file with automake to produce Makefile.in -*-Makefile-*-
+## This is a template from which Makefile.am is generated. -*-Makefile-*-
 
 ##m4-files-begin
 EXTRA_DIST = \
