@@ -46,7 +46,7 @@ char *alloca ();
 # undef S_ISDIR
 #endif
 
-#if !defined(S_ISDIR) && defined(S_IFDIR)
+#if !defined S_ISDIR && defined S_IFDIR
 # define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #endif
 
@@ -311,7 +311,7 @@ make_path (const char *argpath,
 
 	      if ((owner != (uid_t) -1 || group != (gid_t) -1)
 		  && chown (basename_dir, owner, group)
-#if defined(AFS) && defined (EPERM)
+#if defined AFS && defined EPERM
 		  && errno != EPERM
 #endif
 		  )
@@ -392,7 +392,8 @@ make_path (const char *argpath,
       if ((mode & ~S_IRWXUGO)
 	  && chmod (basename_dir, mode))
 	{
-	  error (0, errno, _("cannot change permissions of %s"), quote (dirpath));
+	  error (0, errno, _("cannot change permissions of %s"),
+		 quote (dirpath));
 	  retval = 1;
 	}
 
