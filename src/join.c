@@ -114,7 +114,7 @@ static struct outlist *outlist_end = &outlist_head;
 /* Tab character separating fields; if this is NUL fields are separated
    by any nonempty string of white space, otherwise by exactly one
    tab character.  */
-static unsigned char tab;
+static char tab;
 
 /* When using getopt_long_only, no long option can start with
    a character that is a short option.  */
