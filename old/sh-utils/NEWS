@@ -1,6 +1,8 @@
 Changes in release 2.1
  [2.0a]
+* sleep accepts floating point arguments on command line
 * sleep continues sleeping after being suspended and continued
+* who once again prints whatever host information it has, even without --lookup
 Changes in release 2.0
 * disable stty tests (otherwise they fail) when `make check' is run via rsh
  [1.16m]
