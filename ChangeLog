@@ -8,7 +8,6 @@
 	Since $(LN_S) may degenerate to `cp -p', be careful
 	to invoke it from the destination directory.
 	Mostly from Richard Dawe.
-
 	* configure.ac: Use AC_PROG_LN_S.
 
 	* tests/mv/part-symlink: Unset CDPATH.  Otherwise, having the
