@@ -1,5 +1,7 @@
 Changes in release 4.01:
 [4.0.36]
+* ls -l now reports the year for files even slightly in the future, as
+    POSIX requires.  This helps warn users about clock skew problems.
 * `cp -d file symlink-to-some-other-file' no longer fails
 * performance improvements for ls
 [4.0.35]
