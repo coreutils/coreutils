@@ -1,3 +1,12 @@
+1999-07-30  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (ALL_LINGUAS): Add Brazilian Portuguese (pt_BR).
+
+1999-07-26  Jim Meyering  <meyering@ascend.com>
+
+	* src/tee.c (tee): Convert from open/fds to using fopen/streams for
+	output, in preparation for addition of new compression option.
+
 1999-07-21  Jim Meyering  <meyering@ascend.com>
 
 	* tests/stty/basic-1 (options): Avoid Solaris' broken /usr/ucb/tr by
