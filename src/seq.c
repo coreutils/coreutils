@@ -399,15 +399,16 @@ print_numbers (const char *format_str)
 	  /* NOTREACHED */
 	}
 
+      printf (format_str, first);
       for (i = 0; /* empty */; i++)
 	{
 	  double x = first + i * step;
-	  printf (format_str, x);
 
-	  if (x <= last)
+	  if (x < last)
 	    break;
 
 	  fputs (separator, stdout);
+	  printf (format_str, x);
 	}
     }
   else
@@ -421,15 +422,16 @@ print_numbers (const char *format_str)
 	  /* NOTREACHED */
 	}
 
-      for (i = 0; /* empty */; i++)
+      printf (format_str, first);
+      for (i = 1; /* empty */; i++)
 	{
 	  double x = first + i * step;
-	  printf (format_str, x);
 
-	  if (x >= last)
+	  if (x > last)
 	    break;
 
 	  fputs (separator, stdout);
+	  printf (format_str, x);
 	}
     }
   fputs (terminator, stdout);
