@@ -1,8 +1,3 @@
-2003-03-06  Jim Meyering  <jim@meyering.net>
-
-	* getcwd-path-max.m4 (GL_FUNC_GETCWD_PATH_MAX): Check for
-	declaration of getcwd.
-
 2003-03-04  Jim Meyering  <jim@meyering.net>
 
 	* getcwd-path-max.m4 (GL_FUNC_GETCWD_PATH_MAX): New macro.

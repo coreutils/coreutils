@@ -14,7 +14,6 @@ AC_DEFUN([GL_FUNC_GETCWD_PATH_MAX],
   AC_CACHE_CHECK([whether getcwd properly handles paths longer than PATH_MAX],
                  gl_cv_func_getcwd_vs_path_max,
   [
-  AC_CHECK_DECLS([getcwd])
   # Arrange for deletion of the temporary directory this test creates.
   ac_clean_files="$ac_clean_files confdir3"
   AC_RUN_IFELSE([AC_LANG_SOURCE([[
