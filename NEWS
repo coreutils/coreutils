@@ -1,5 +1,7 @@
 [4.5.5]
-* du has been rewritten to use a variant of ftw.c from GNU libc
+* ls --dired produces correct byte offset for file names containing
+  nonprintable characters in a multibyte locale
+* du has been rewritten to use a variant of GNU libc's ftw.c
 * du now counts the space associated with a directory's directory entry,
   even if it cannot list or chdir into that subdirectory.
 * du -S now includes the st_size of each entry corresponding to a subdirectory
