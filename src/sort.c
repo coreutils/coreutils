@@ -33,9 +33,9 @@
 #include "error.h"
 #include "hard-locale.h"
 #include "human.h"
-#include "memcoll.h"
 #include "physmem.h"
 #include "stdio-safer.h"
+#include "xmemcoll.h"
 #include "xstrtol.h"
 
 #if HAVE_SYS_RESOURCE_H
@@ -416,7 +416,6 @@ static void
 die (char const *message, char const *file)
 {
   error (0, errno, "%s: %s", message, file);
-  cleanup ();
   exit (SORT_FAILURE);
 }
 
@@ -1401,14 +1400,14 @@ keycompare (const struct line *a, const struct line *b)
 		    }
 		}
 
-	      diff = memcoll (copy_a, new_len_a, copy_b, new_len_b);
+	      diff = xmemcoll (copy_a, new_len_a, copy_b, new_len_b);
 	    }
 	  else if (lena == 0)
 	    diff = - NONZERO (lenb);
 	  else if (lenb == 0)
 	    goto greater;
 	  else
-	    diff = memcoll (texta, lena, textb, lenb);
+	    diff = xmemcoll (texta, lena, textb, lenb);
 	}
 #endif
       else if (ignore)
@@ -1532,7 +1531,7 @@ compare (register const struct line *a, register const struct line *b)
     diff = NONZERO (alen);
 #ifdef ENABLE_NLS
   else if (hard_LC_COLLATE)
-    diff = memcoll (a->text, alen, b->text, blen);
+    diff = xmemcoll (a->text, alen, b->text, blen);
 #endif
   else if (! (diff = memcmp (a->text, b->text, min (alen, blen))))
     diff = alen < blen ? -1 : alen != blen;
@@ -2184,6 +2183,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (cleanup);
+
 #ifdef ENABLE_NLS
 
   hard_LC_COLLATE = hard_locale (LC_COLLATE);
@@ -2213,9 +2214,9 @@ main (int argc, char **argv)
   have_read_stdin = 0;
   inittables ();
 
-  /* Change the way xmalloc and xrealloc fail.  */
+  /* Change the way library functions fail.  */
   xalloc_exit_failure = SORT_FAILURE;
-  xalloc_fail_func = cleanup;
+  xmemcoll_exit_failure = SORT_FAILURE;
 
 #ifdef SA_NOCLDSTOP
   sigemptyset (&caught_signals);
@@ -2500,6 +2501,5 @@ main (int argc, char **argv)
   if (have_read_stdin && fclose (stdin) == EOF)
     die (_("close failed"), "-");
 
-  cleanup ();
   exit (EXIT_SUCCESS);
 }
