@@ -1,6 +1,7 @@
 Sun Mar 12 12:02:39 1995  Jim Meyering  (meyering@comco.com)
 
 	* configure.in (AC_REPLACE_FUNCS): Add memcmp.c.
+	Remove check for sizeof long.
 
 	* linebuffer.h: Undefine __P before defining it.
 	* long-options.h: Likewise.
