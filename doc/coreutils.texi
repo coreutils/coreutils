@@ -333,7 +333,7 @@ Conditions
 
 @code{expr}: Evaluate expression
 
-* String expressions::         <colon> match substr index length quote
+* String expressions::         + : match substr index length
 * Numeric expressions::        + - * / %
 * Relations for expr::         | & < <= = == != >= >
 * Examples of expr::           Examples of using @code{expr}
@@ -8138,7 +8138,7 @@ Exit status:
 @end display
 
 @menu
-* String expressions::          <colon> match substr index length quote
+* String expressions::          + : match substr index length
 * Numeric expressions::         + - * / %
 * Relations for expr::          | & < <= = == != >= >
 * Examples of expr::            Examples.
@@ -8209,15 +8209,15 @@ Returns the first position in @var{string} where the first character in
 @findex length
 Returns the length of @var{string}.
 
-@item quote @var{token}
-@findex quote
+@item + @var{token}
+@kindex +
 Interpret @var{token} as a string, even if it is a keyword like @var{match}
 or an operator like @code{/}.
-This makes it possible to test @code{expr length quote "$x"} or
-@code{expr quote "$x" : '.*/\(.\)'} and have it do the right thing even if
+This makes it possible to test @code{expr length + "$x"} or
+@code{expr + "$x" : '.*/\(.\)'} and have it do the right thing even if
 the value of @var{$x} happens to be (for example) @code{/} or @code{index}.
-This operator is a GNU extension.  It is disabled when
-the environment variable @env{POSIXLY_CORRECT} is set.
+This operator is a GNU extension.  Portable shell scripts should use
+@code{@w{" $token"} : @w{' \(.*\)'}} instead of @code{+ "$token"}.
 
 @end table
 
