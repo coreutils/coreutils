@@ -1,5 +1,21 @@
 GNU coreutils NEWS                                    -*- outline -*-
 
+* Major changes in release 5.3.1 (2005-??-??) [unstable]
+
+  pathchk changes:
+
+    It now rejects the empty name in the normal case.  That is,
+    "pathchk -p ''" now fails, and "pathchk ''" fails unless the
+    current host (contra POSIX) allows empty file names.
+
+    The new -P option checks whether a file name component has leading "-",
+    as suggested in interpretation "Austin-039:XCU:pathchk:pathchk -p"
+    <http://www.opengroup.org/austin/interps/doc.tpl?gdid=6232>.
+    It also rejects the empty name even if the current host accepts it; see
+    <http://www.opengroup.org/austin/interps/doc.tpl?gdid=6233>.
+
+    The --portability option is now equivalent to -p -P.
+
 * Major changes in release 5.3.0 (2005-01-08) [unstable]
 
 ** Bug fixes
