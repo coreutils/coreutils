@@ -17,6 +17,9 @@ Sun Apr  4 09:38:00 1993  Jim Meyering  (meyering@comco.com)
 
 	* src/Makefile.in (incl): New variable.
 
+	* chown.c (main): Explicitly cast -1 to [ug]id_t to avoid compiler
+	warnings.
+
 Sat Apr  3 18:17:23 1993  Jim Meyering  (meyering@comco.com)
 
 	* Makefile.in [Makefile]: Add dependencies and a rule to remake it.
