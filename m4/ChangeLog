@@ -1,5 +1,7 @@
 2000-05-01  Jim Meyering  <meyering@lucent.com>
 
+	* fsusage.m4: Use AC_MSG_CHECKING instead of obsolete AC_CHECKING.
+
 	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): Add BeOS support.
 	Based on a patch from Bruno Haible.
 
