@@ -65,8 +65,8 @@ for copy in cp mv; do
       'loc_sl rem_reg' \
       'rem_reg loc_sl' \
       ; do
-    for options in '' --rem; do
-      test "$options" = --rem && test $copy = mv && continue
+    for options in '' --rem '--rem -d' '--rem -b'; do
+      case "$options" in *--rem*) test $copy = mv && continue;; esac
       rm -rf dir || fail=1
       rm -f $other_partition_tmpdir/rem_reg || fail=1
       rm -f $other_partition_tmpdir/rem_sl || fail=1
