@@ -253,7 +253,7 @@ cleanup (void)
 
 /* Allocate N bytes of memory dynamically, with error checking.  */
 
-char *
+static char *
 xmalloc (unsigned int n)
 {
   char *p;
@@ -273,7 +273,7 @@ xmalloc (unsigned int n)
    If P is NULL, run xmalloc.
    If N is 0, run free and return NULL.  */
 
-char *
+static char *
 xrealloc (char *p, unsigned int n)
 {
   if (p == 0)
