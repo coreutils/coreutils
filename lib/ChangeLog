@@ -1,5 +1,11 @@
 2003-06-06  Jim Meyering  <jim@meyering.net>
 
+	Update from gnulib.
+	* memcoll.c: Include "memcoll.h", which gets us size_t and checks
+	our interface, instead of including <sys/types.h>
+	(memcoll): Fall back on a simple algorithm using
+	memcmp if strcoll doesn't work.
+
 	* memcasecmp.h: Include <stddef.h>.  From gnulib.
 	* memcasecmp.c: Don't include <sys/types.h>.  From gnulib.
 
