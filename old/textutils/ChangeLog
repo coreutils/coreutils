@@ -1,3 +1,24 @@
+2001-03-28  Paul Eggert  <eggert@twinsun.com>
+
+	* src/cksum.c: Fix bugs when computing length of large files.
+	Add overflow and write error checks.  Use uint_fast32_t, not
+	unsigned long, to do checksum calculation, as C99 says
+	uint_fast32_t should be no slower and might be faster.
+
+	Include <stdio.h> and "system.h" even if CRCTAB is defined,
+	so that the code will compile if CRCTAB is defined.
+	Include "human.h" if CRCTAB is not defined.
+	(uint_fast32_t): Define if it appears that stdint.h didn't.
+	(BIT, remainder, main, crctab): Use uint_fast32_t, not unsigned long,
+	for checksums.
+	(fill_r, remainder, main): Use ANSI prototypes.
+	(fill_r, remainder, main): Omit duplicate code.
+	(main): Use uintmax_t, not unsigned long, for file lengths.
+	Use size_t, not long, for result of fread.
+	Check for overflow when computing file lengths.
+	Check for write error immediately after printing a line, so that
+	we don't write to stdout indefinitely after an error.
+
 2001-04-14  Paul Eggert  <eggert@twinsun.com>
 
 	* src/sort.c (default_sort_size): Leave a 1/16 margin for RSS.
