@@ -1,3 +1,10 @@
+1999-03-13  Jim Meyering  <meyering@ascend.com>
+
+	* src/tac.c: (tac_mem): `#if-0'-out this unused function.
+	(tac_stdin_to_mem): Likewise.
+
+	* doc/textutils.texi (cut invocation): Describe --output-delimiter.
+
 1999-03-12  Jim Meyering  <meyering@ascend.com>
 
 	* src/sys2.h (SETVBUF): Define new macro.
