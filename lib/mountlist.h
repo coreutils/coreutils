@@ -1,5 +1,5 @@
 /* mountlist.h -- declarations for list of mounted filesystems
-   Copyright (C) 1991, 1992, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1998, 2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -39,7 +39,10 @@ struct mount_entry *read_filesystem_list PARAMS ((int need_fs_type));
 
 #ifndef ME_DUMMY
 # define ME_DUMMY(fs_name, fs_type) \
-    (!strcmp (fs_type, "auto") || !strcmp (fs_type, "ignore"))
+    (!strcmp (fs_type, "auto") \
+     || !strcmp (fs_type, "autofs") \
+     /* for Irix 6.5 */ \
+     || !strcmp (fs_type, "ignore"))
 #endif
 
 #ifndef ME_REMOTE
