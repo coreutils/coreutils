@@ -5,10 +5,10 @@
 
 2001-02-17  Paul Eggert  <eggert@twinsun.com>
 
-	* m4/mbrtowc.m4: New file, defining jm_FUNC_MBRTOWC.
-	* m4/mbswidth.m4 (jm_PREREQ_MBSWIDTH):
+	* mbrtowc.m4: New file, defining jm_FUNC_MBRTOWC.
+	* mbswidth.m4 (jm_PREREQ_MBSWIDTH):
 	Use jm_FUNC_MBRTOWC, not AC_CHECK_FUNCS(mbrtowc).
-	* m4/prereq.m4 (jm_PREREQ_QUOTEARG): Likewise.
+	* prereq.m4 (jm_PREREQ_QUOTEARG): Likewise.
 
 2001-02-07  Jim Meyering  <meyering@lucent.com>
 
@@ -194,7 +194,7 @@
 
 2000-08-06  Paul Eggert  <eggert@twinsun.com>
 
-	* m4/mbstate_t.m4 (AC_MBSTATE_T): Define mbstate_t to be int,
+	* mbstate_t.m4 (AC_MBSTATE_T): Define mbstate_t to be int,
 	not char, for compatibility with glibc 2.1.3 strftime.c.
 
 2000-07-23  Paul Eggert  <eggert@twinsun.com>
