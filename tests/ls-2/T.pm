@@ -1,6 +1,6 @@
 package T;
 
-require 5.004;
+require 5.003;
 use strict;
 use vars qw($VERSION @ISA @EXPORT);
 
