@@ -156,14 +156,11 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
   -a, --archive                same as -dpR\n\
       --backup[=CONTROL]       make a backup of each existing destination file\n\
   -b                           like --backup but does not accept an argument\n\
-  -d, --no-dereference         preserve links\n\
-  -f, --force                  if a preexisting destination file cannot be\n\
-                                   opened, then unlink it and try again\n\
+  -d, --no-dereference         never follow symbolic links\n\
+  -f, --force                  if an existing destination file cannot be\n\
+                                   opened, remove it and try again\n\
   -i, --interactive            prompt before overwrite\n\
-  -H                           follow symbolic links that are explicitly\n\
-                                 specified in the command line, but do not\n\
-                                 follow symlinks that are found via recursive\n\
-                                 traversal\n\
+  -H                           follow command-line symbolic links\n\
   -l, --link                   link files instead of copying\n\
   -L, --dereference            always follow symbolic links\n\
   -p, --preserve               preserve file attributes if possible\n\
@@ -173,7 +170,7 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
   -r                           copy recursively, non-directories as files\n\
                                  WARNING: use -R instead when you might copy\n\
                                  special files like FIFOs or /dev/zero\n\
-      --remove-destination     unlink each preexisting destination file before\n\
+      --remove-destination     remove each existing destination file before\n\
                                  attempting to open it (contrast with --force)\n\
       --sparse=WHEN            control creation of sparse files\n\
   -R, --recursive              copy directories recursively\n\
