@@ -1,3 +1,9 @@
+Sun Oct  8 22:41:15 1995  Jim Meyering  (meyering@comco.com)
+
+	* strpbrk.c: New file.
+	* lib/Makefile.in (SOURCES): Add strpbrk.c.
+	Remove bcopy.c.
+
 Sat Oct  7 22:27:01 1995  Jim Meyering  (meyering@comco.com)
 
 	* join.c (add_field): No longer return a value.
