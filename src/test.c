@@ -2,7 +2,7 @@
 
 /* Modified to run with the GNU shell by bfox. */
 
-/* Copyright (C) 1987-2002 Free Software Foundation, Inc.
+/* Copyright (C) 1987-2003 Free Software Foundation, Inc.
 
    This file is part of GNU Bash, the Bourne Again SHell.
 
@@ -135,18 +135,6 @@ test_syntax_error (char const *format, char const *arg)
   test_exit (SHELL_BOOLEAN (FALSE));
 }
 
-/* A wrapper for stat () which disallows pathnames that are empty strings. */
-static int
-test_stat (char *path, struct stat *finfo)
-{
-  if (*path == '\0')
-    {
-      errno = ENOENT;
-      return (-1);
-    }
-  return (stat (path, finfo));
-}
-
 /* Do the same thing access(2) does, but use the effective uid and gid,
    and don't make the mistake of telling root that any file is executable.
    But this loses when the containing filesystem is mounted e.g. read-only.  */
@@ -156,7 +144,7 @@ eaccess (char *path, int mode)
   struct stat st;
   static uid_t euid = -1;
 
-  if (test_stat (path, &st) < 0)
+  if (stat (path, &st) < 0)
     return (-1);
 
   if (euid == (uid_t) -1)
@@ -298,7 +286,7 @@ static int
 age_of (char *filename, time_t *age)
 {
   struct stat finfo;
-  int r = test_stat (filename, &finfo);
+  int r = stat (filename, &finfo);
   if (r == 0)
     *age = finfo.st_mtime;
   return r;
@@ -640,7 +628,7 @@ unary_operator (void)
     case 'a':			/* file exists in the file system? */
     case 'e':
       unary_advance ();
-      value = -1 != test_stat (argv[pos - 1], &stat_buf);
+      value = -1 != stat (argv[pos - 1], &stat_buf);
       return (TRUE == value);
 
     case 'r':			/* file is readable? */
@@ -660,21 +648,21 @@ unary_operator (void)
 
     case 'O':			/* File is owned by you? */
       unary_advance ();
-      if (test_stat (argv[pos - 1], &stat_buf) < 0)
+      if (stat (argv[pos - 1], &stat_buf) < 0)
 	return (FALSE);
 
       return (TRUE == (geteuid () == stat_buf.st_uid));
 
     case 'G':			/* File is owned by your group? */
       unary_advance ();
-      if (test_stat (argv[pos - 1], &stat_buf) < 0)
+      if (stat (argv[pos - 1], &stat_buf) < 0)
 	return (FALSE);
 
       return (TRUE == (getegid () == stat_buf.st_gid));
 
     case 'f':			/* File is a file? */
       unary_advance ();
-      if (test_stat (argv[pos - 1], &stat_buf) < 0)
+      if (stat (argv[pos - 1], &stat_buf) < 0)
 	return (FALSE);
 
       /* Under POSIX, -f is true if the given file exists
@@ -684,14 +672,14 @@ unary_operator (void)
 
     case 'd':			/* File is a directory? */
       unary_advance ();
-      if (test_stat (argv[pos - 1], &stat_buf) < 0)
+      if (stat (argv[pos - 1], &stat_buf) < 0)
 	return (FALSE);
 
       return (TRUE == (S_ISDIR (stat_buf.st_mode)));
 
     case 's':			/* File has something in it? */
       unary_advance ();
-      if (test_stat (argv[pos - 1], &stat_buf) < 0)
+      if (stat (argv[pos - 1], &stat_buf) < 0)
 	return (FALSE);
 
       return (TRUE == (stat_buf.st_size > (off_t) 0));
@@ -702,7 +690,7 @@ unary_operator (void)
 #else
       unary_advance ();
 
-      if (test_stat (argv[pos - 1], &stat_buf) < 0)
+      if (stat (argv[pos - 1], &stat_buf) < 0)
 	return (FALSE);
 
       return (TRUE == (S_ISSOCK (stat_buf.st_mode)));
@@ -710,14 +698,14 @@ unary_operator (void)
 
     case 'c':			/* File is character special? */
       unary_advance ();
-      if (test_stat (argv[pos - 1], &stat_buf) < 0)
+      if (stat (argv[pos - 1], &stat_buf) < 0)
 	return (FALSE);
 
       return (TRUE == (S_ISCHR (stat_buf.st_mode)));
 
     case 'b':			/* File is block special? */
       unary_advance ();
-      if (test_stat (argv[pos - 1], &stat_buf) < 0)
+      if (stat (argv[pos - 1], &stat_buf) < 0)
 	return (FALSE);
 
       return (TRUE == (S_ISBLK (stat_buf.st_mode)));
@@ -727,7 +715,7 @@ unary_operator (void)
 #ifndef S_ISFIFO
       return (FALSE);
 #else
-      if (test_stat (argv[pos - 1], &stat_buf) < 0)
+      if (stat (argv[pos - 1], &stat_buf) < 0)
 	return (FALSE);
       return (TRUE == (S_ISFIFO (stat_buf.st_mode)));
 #endif				/* S_ISFIFO */
@@ -753,7 +741,7 @@ unary_operator (void)
 #ifndef S_ISUID
       return (FALSE);
 #else
-      if (test_stat (argv[pos - 1], &stat_buf) < 0)
+      if (stat (argv[pos - 1], &stat_buf) < 0)
 	return (FALSE);
 
       return (TRUE == (0 != (stat_buf.st_mode & S_ISUID)));
@@ -764,7 +752,7 @@ unary_operator (void)
 #ifndef S_ISGID
       return (FALSE);
 #else
-      if (test_stat (argv[pos - 1], &stat_buf) < 0)
+      if (stat (argv[pos - 1], &stat_buf) < 0)
 	return (FALSE);
 
       return (TRUE == (0 != (stat_buf.st_mode & S_ISGID)));
@@ -772,7 +760,7 @@ unary_operator (void)
 
     case 'k':			/* File has sticky bit set? */
       unary_advance ();
-      if (test_stat (argv[pos - 1], &stat_buf) < 0)
+      if (stat (argv[pos - 1], &stat_buf) < 0)
 	return (FALSE);
 #ifndef S_ISVTX
       /* This is not Posix, and is not defined on some Posix systems. */
