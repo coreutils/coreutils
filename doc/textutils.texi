@@ -2807,9 +2807,9 @@ is ignored.  The file is called the @dfn{Only file}.  The file contains
 exactly one word in each line; the end of line separation of words is
 not subject to the value of the @samp{-S} option.
 
-There is no default for the Only file.  In the case where there are both
-an Only file and an Ignore file, a word can be a keyword only if it is
-given in the Only file and not given in the Ignore file.
+There is no default for the Only file.  When both an Only file and an
+Ignore file are specified, a word is considered a keyword only
+if it is listed in the Only file and not in the Ignore file.
 
 @item -r
 @itemx --references
