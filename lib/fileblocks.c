@@ -1,5 +1,5 @@
 /* Convert file size to number of blocks on System V-like machines.
-   Copyright (C) 1990, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,9 +21,13 @@
 # include <config.h>
 #endif
 
-#if !HAVE_ST_BLOCKS && !defined _POSIX_SOURCE && defined BSIZE
-# include <sys/types.h>
+#include <sys/types.h>
+
+#if HAVE_SYS_PARAM_H
 # include <sys/param.h>
+#endif
+
+#if !HAVE_ST_BLOCKS && !defined _POSIX_SOURCE && defined BSIZE
 
 # if HAVE_UNISTD_H
 #  include <unistd.h>
@@ -32,7 +36,7 @@
 # ifndef NINDIR
 /* Some SysV's, like Irix, seem to lack this.  Hope it's correct. */
 /* Number of inode pointers per indirect block. */
-#  define NINDIR (BSIZE/sizeof(daddr_t))
+#  define NINDIR (BSIZE / sizeof (daddr_t))
 # endif /* !NINDIR */
 
 /* Number of direct block addresses in an inode. */
