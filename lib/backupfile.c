@@ -156,11 +156,11 @@ max_backup_version (file, dir)
   int highest_version;
   int this_version;
   int file_name_length;
-  
+
   dirp = opendir (dir);
   if (!dirp)
     return 0;
-  
+
   highest_version = 0;
   file_name_length = strlen (file);
 
@@ -168,7 +168,7 @@ max_backup_version (file, dir)
     {
       if (!REAL_DIR_ENTRY (dp) || NLENGTH (dp) <= file_name_length)
 	continue;
-      
+
       this_version = version_number (file, dp->d_name, file_name_length);
       if (this_version > highest_version)
 	highest_version = this_version;
@@ -207,7 +207,7 @@ version_number (base, backup, base_length)
 {
   int version;
   char *p;
-  
+
   version = 0;
   if (!strncmp (base, backup, base_length) && ISDIGIT (backup[base_length]))
     {

@@ -31,7 +31,7 @@
 
 int statfs ();
 
-#if defined (STATFS_OSF1)	/* DEC Alpha running OSF/1 */
+#if defined (STAT_STATFS3_OSF1)	/* DEC Alpha running OSF/1 */
 #  include <sys/mount.h>
 #endif
 
@@ -95,13 +95,13 @@ get_fs_usage (path, disk, fsp)
      char *path, *disk;
      struct fs_usage *fsp;
 {
-#if defined (STATFS_OSF1)
+#if defined (STAT_STATFS3_OSF1)
   struct statfs fsd;
 
   if (statfs (path, &fsd, sizeof (struct statfs)) != 0)
     return (-1);
 #define convert_blocks(b) adjust_blocks ((b),fsd.f_fsize, 512)
-#endif /* STATFS_OSF1 */
+#endif /* STAT_STATFS3_OSF1 */
 
 #ifdef STAT_STATFS2_FS_DATA	/* Ultrix.  */
   struct fs_data fsd;
