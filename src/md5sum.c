@@ -37,13 +37,6 @@
 # include <limits.h>
 #endif
 
-/* #define UINT_MAX_32_BITS ((unsigned int) 4294967294 + 1) */
-#define UINT_MAX_32_BITS 4294967295U
-
-#ifndef UINT_MAX
-# define UINT_MAX UINT_MAX_32_BITS
-#endif
-
 #include "system.h"
 #include "error.h"
 #include "version.h"
@@ -91,14 +84,38 @@
 # define INLINE /* empty */
 #endif
 
+/* The following contortions are an attempt to use the C preprocessor
+   to determine an unsigned integral type that is 32 bits wide.  An
+   alternative approach is to use autoconf's AC_CHECK_SIZEOF macro, but
+   doing that would require that the configure script compile and *run*
+   the resulting executable.  Locally running cross-compiled executables
+   is usually not possible.  */
+
+#if defined __STDC__ && __STDC__
+# define UINT_MAX_32_BITS 4294967295U
+#else
+# define UINT_MAX_32_BITS 0xFFFFFFFF
+#endif
+
+/* If UINT_MAX isn't defined, assume it's a 32-bit type.
+   This should be valid for all systems GNU cares about because
+   that doesn't include 16-bit systems, and only modern systems
+   (that certainly have <limits.h>) have 64+-bit integral types.  */
+
+#ifndef UINT_MAX
+# define UINT_MAX UINT_MAX_32_BITS
+#endif
+
 #if UINT_MAX == UINT_MAX_32_BITS
 typedef unsigned int uint32;
-#elif USHRT_MAX == UINT_MAX_32_BITS
-typedef unsigned short uint32;
 #else
+# if USHRT_MAX == UINT_MAX_32_BITS
+typedef unsigned short uint32;
+# else
   /* The following line is intended to throw an error.  Using #error is
      not portable enough.  */
   "Cannot determine unsigned 32-bit data type."
+# endif
 #endif
 
 /* Hook for i18n.  */
@@ -118,7 +135,7 @@ char *program_name;
 
 /* This array contains the bytes used to pad the buffer to the next
    64-byte boundary.  (RFC 1321, 3.1: Step 1)  */
-static const unsigned char fillbuf[64] = { 0x80, 0 };
+static const unsigned char fillbuf[64] = { 0x80, 0 /* , 0, 0, ...  */ };
 
 static const struct option long_options[] =
 {
@@ -132,16 +149,32 @@ static const struct option long_options[] =
   { NULL, 0, NULL, 0 }
 };
 
+char *xmalloc ();
+
 /* Prototypes for local functions.  */
 static void usage __P ((int status));
 static INLINE void init __P ((struct md5_ctx *ctx));
-static INLINE void *result __P ((struct md5_ctx *ctx, void *resbuf));
+static INLINE void *result __P ((const struct md5_ctx *ctx, void *resbuf));
 void *md5_file __P ((const char *filename, void *resblock, int binary));
 void *md5_buffer __P ((const char *buffer, size_t len, void *resblock));
 static void process_buffer __P ((const void *buffer, size_t len,
 				 struct md5_ctx *ctx));
 
 #ifndef USE_AS_LIBRARY
+
+static int
+hex_digits (const char *md5num, size_t len)
+{
+  size_t i;
+
+  for (i = 0; i < len; ++i)
+    {
+      if (!ISXDIGIT (md5num[i]))
+        return 0;
+    }
+  return 1;
+}
+
 int
 main (argc, argv)
      int argc;
@@ -153,10 +186,12 @@ main (argc, argv)
   int do_help = 0;
   int do_version = 0;
   int verbose = 0;
-  int did_string = 0;
   int opt;
+  char **string = NULL;
+  char n_strings = 0;
+  size_t i;
 
-  /* Setting valuesof global variables.  */
+  /* Setting values of global variables.  */
   program_name = argv[0];
 
   while ((opt = getopt_long (argc, argv, "bc:hs::tvV", long_options, NULL))
@@ -176,19 +211,12 @@ main (argc, argv)
 	break;
       case 's':
 	{
-	  size_t cnt;
+	  if (string == NULL)
+	    string = (char **) xmalloc ((argc - 1) * sizeof (char *));
 
 	  if (optarg == NULL)
 	    optarg = "";
-
-	  md5_buffer (optarg, strlen (optarg), md5buffer);
-
-	  for (cnt = 0; cnt < 16; ++cnt)
-	    printf ("%02x", md5buffer[cnt]);
-
-	  printf (" b \"%s\"\n", optarg);
-
-	  did_string = 1;
+	  string[n_strings++] = optarg;
 	}
 	break;
       case 't':
@@ -204,9 +232,6 @@ main (argc, argv)
 	usage (1);
       }
 
-  if (did_string != 0)
-    exit (0);
-
   if (do_version)
     {
       printf ("md5sum - %s\n", version_string);
@@ -216,8 +241,39 @@ main (argc, argv)
   if (do_help)
     usage (0);
 
-  if (check_file == NULL)
+  if (n_strings > 0 && check_file != NULL)
     {
+      error (0, 0,
+	     _("the --string and --check options are mutually exclusive"));
+      usage (1);
+    }
+
+  if (n_strings > 0)
+    {
+      if (optind < argc)
+	{
+	  error (0, 0, _("no files may be specified when using --string"));
+	  usage (1);
+	}
+      for (i = 0; i < n_strings; ++i)
+	{
+	  size_t cnt;
+	  md5_buffer (string[i], strlen (string[i]), md5buffer);
+
+	  for (cnt = 0; cnt < 16; ++cnt)
+	    printf ("%02x", md5buffer[cnt]);
+
+	  printf (" b \"%s\"\n", string[i]);
+	}
+    }
+  else if (check_file == NULL)
+    {
+      if (optind == argc)
+	{
+	  error (0, errno, _("missing file argument"));
+	  usage (1);
+	}
+
       for (; optind < argc; ++optind)
 	{
 	  size_t cnt;
@@ -233,12 +289,24 @@ main (argc, argv)
   else
     {
       FILE *cfp;
-      int tests_all = 0;
-      int tests_failed = 0;
+      int n_tests = 0;
+      int n_tests_failed = 0;
 
-      cfp = fopen (check_file, "r");
-      if (cfp == NULL)
-	error (1, errno, _("while opening check file"));
+      if (optind < argc)
+	{
+	  error (0, 0,
+	       _("no additional files may be specified when using --check"));
+	  usage (1);
+	}
+
+      if (strcmp (check_file, "-") == 0)
+	cfp = stdin;
+      else
+	{
+	  cfp = fopen (check_file, "r");
+	  if (cfp == NULL)
+	    error (1, errno, _("check file: %s"), check_file);
+	}
 
       do
 	{
@@ -248,12 +316,16 @@ main (argc, argv)
 	  char md5num[32];
 	  int items;
 
+	  /* FIXME: It may be better to use getline here.  */
 	  if (fgets (line, 1024, cfp) == NULL)
 	    break;
 
+	  /* FIXME: maybe accept the output of --string=STRING.  */
 	  items = sscanf (line, "%32c %c %s", md5num, &binary, filename);
 
-	  if (items != 3)
+	  if (items != 3
+	      || !hex_digits (md5num, 32)
+	      || (binary != 'b' && binary != 't'))
 	    {
 	      if (verbose)
 		error (0, 0, _("invalid line in check file: %s"), line);
@@ -270,20 +342,25 @@ main (argc, argv)
 	      if (verbose)
 		fflush (stdout);
 
-	      ++tests_all;
+	      ++n_tests;
 	      md5_file (filename, md5buffer, binary == 'b');
+
+	      /* Convert any upper case hex digits to lower case.  */
+	      for (cnt = 0; cnt < 32; ++cnt)
+	        if (isupper (md5num[cnt]))
+		  md5num[cnt] = tolower (md5num[cnt]);
 
 	      for (cnt = 0; cnt < 16; ++cnt)
 		if (md5num[2 * cnt] != bin2hex[md5buffer[cnt] >> 4]
 		    || md5num[2 * cnt + 1] != (bin2hex[md5buffer[cnt] & 0xf]))
 		  break;
 
-	      puts (cnt < 16 ? (++tests_failed, _("FAILED")) : _("OK"));
+	      puts (cnt < 16 ? (++n_tests_failed, _("FAILED")) : _("OK"));
 	    }
 	}
       while (!feof (cfp));
 
-      printf (_("%d out of %d tests failed\n"), tests_failed, tests_all);
+      printf (_("%d out of %d tests failed\n"), n_tests_failed, n_tests);
     }
 
   exit (0);
@@ -297,7 +374,10 @@ usage (status)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
-    printf (_("Usage: %s [OPTION] [FILE]...\n\
+    printf (_("\
+Usage: %s [OPTION] FILE...\n\
+  or:  %s --check=FILE\n\
+  or:  %s --string=STRING\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
 \n\
   -h, --help              display this help and exit\n\
@@ -308,12 +388,12 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -t, --text              read files in text mode\n\
 \n\
   -c, --check=FILE        check MD5 sums against list in FILE\n\
-  -s, --string[=STRING]   compute checksum for STRING\n\
+  -s, --string=STRING     compute checksum for STRING\n\
 \n\
 The sums are computed as described in RFC 1321.  The file given at the -c\n\
 option should be a former output of this program.  The default mode is to\n\
 produce a list with the checksum informations.  A file name - denotes stdin.\n"),
-	    program_name);
+	    program_name, program_name, program_name);
 
   exit (status);
 }
@@ -335,7 +415,7 @@ init (ctx)
    be in little endian byte order.  */
 static INLINE void *
 result (ctx, resbuf)
-     struct md5_ctx *ctx;
+     const struct md5_ctx *ctx;
      void *resbuf;
 {
   ((uint32 *) resbuf)[0] = SWAP (ctx->A);
