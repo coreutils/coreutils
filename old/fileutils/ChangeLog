@@ -1,3 +1,8 @@
+2000-02-05  Jim Meyering  <meyering@lucent.com>
+
+	* src/copy.c (copy_internal): Don't allow mv to move a directory onto
+	a non-directory.  Reported by Brian Kimball via Michael Stone.
+
 2000-02-03  Jim Meyering  <meyering@lucent.com>
 
 	* tests/mv/Makefile.am (TESTS): Add dir-file.
