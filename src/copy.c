@@ -671,19 +671,22 @@ copy_internal (const char *src_path, const char *dst_path,
 	  struct stat dot_sb;
 	  struct stat dst_parent_sb;
 	  char *dst_parent;
-	  int not_current_dir;
+	  int in_current_dir;
 
 	  dst_parent = dirname (dst_path);
 	  if (dst_parent == NULL)
 	    error (1, 0, _("virtual memory exhausted"));
 
-	  not_current_dir = (!STREQ (".", dst_parent)
-			     && stat (".", &dot_sb) == 0
-			     && stat (dst_parent, &dst_parent_sb) == 0
-			     && !SAME_INODE (dot_sb, dst_parent_sb));
+	  in_current_dir = (STREQ (".", dst_parent)
+			    /* If either stat call fails, it's ok not to report
+			       the failure and say dst_path is in the current
+			       directory.  Other things will fail later.  */
+			    || stat (".", &dot_sb)
+			    || stat (dst_parent, &dst_parent_sb)
+			    || SAME_INODE (dot_sb, dst_parent_sb));
 	  free (dst_parent);
 
-	  if (not_current_dir)
+	  if (! in_current_dir)
 	    {
 	      error (0, 0,
 	   _("%s: can make relative symbolic links only in current directory"),
