@@ -2394,7 +2394,10 @@ main (int argc, char **argv)
 	  tab = optarg[0];
 	  if (tab && optarg[1])
 	    {
-	      /* Provoke with `sort -txx'.  */
+	      /* Provoke with `sort -txx'.  Complain about
+		 "multi-character tab" instead of "multibyte tab", so
+		 that the diagnostic's wording does not need to be
+		 changed once multibyte characters are supported.  */
 	      error (SORT_FAILURE, 0, _("multi-character tab `%s'"), optarg);
 	    }
 	  break;
