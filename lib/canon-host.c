@@ -1,6 +1,7 @@
 /* Host name canonicalization
 
-   Copyright (C) 1995, 1999, 2000, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1999, 2000, 2002, 2003, 2004 Free Software
+   Foundation, Inc.
 
    Written by Miles Bader <miles@gnu.ai.mit.edu>
 
@@ -42,55 +43,73 @@
 # include <arpa/inet.h>
 #endif
 
+#include "strdup.h"
+
 /* Returns the canonical hostname associated with HOST (allocated in a static
-   buffer), or 0 if it can't be determined.  */
+   buffer), or NULL if it can't be determined.  */
 char *
-canon_host (const char *host)
+canon_host (char const *host)
 {
-#ifdef HAVE_GETHOSTBYNAME
-  struct hostent *he = gethostbyname (host);
+  char *h_addr_copy = NULL;
 
-  if (he)
-    {
+#if HAVE_GETADDRINFO
+  {
+    struct addrinfo hint = { 0 };
+    struct addrinfo *res = NULL;
+    hint.ai_flags = AI_CANONNAME;
+    if (getaddrinfo (host, NULL, &hint, &res) == 0)
+      {
+	h_addr_copy = strdup (res->ai_canonname);
+	freeaddrinfo (res);
+      }
+  }
+#elif HAVE_GETHOSTBYNAME
+  {
+    struct hostent *he = gethostbyname (host);
+
+    if (he)
+      {
 # ifdef HAVE_GETHOSTBYADDR
-      char *addr = 0;
+	char *addr = NULL;
 
-      /* Try and get an ascii version of the numeric host address.  */
-      switch (he->h_addrtype)
-	{
+	/* Try and get an ascii version of the numeric host address.  */
+	switch (he->h_addrtype)
+	  {
 #  ifdef HAVE_INET_NTOA
-	case AF_INET:
-	  addr = inet_ntoa (*(struct in_addr *) he->h_addr);
-	  break;
+	  case AF_INET:
+	    addr = inet_ntoa (*(struct in_addr *) he->h_addr);
+	    break;
 #  endif /* HAVE_INET_NTOA */
-	}
+	  }
 
-      if (addr && strcmp (he->h_name, addr) == 0)
-	{
-	  /* gethostbyname has returned a string representation of the IP
-	     address, for example, "127.0.0.1".  So now, look up the host
-	     name via the address.  Although it may seem reasonable to look
-	     up the host name via the address, we must not pass `he->h_addr'
-	     directly to gethostbyaddr because on some systems he->h_addr
-	     is located in a static library buffer that is reused in the
-	     gethostbyaddr call.  Make a copy and use that instead.  */
-	  char *h_addr_copy = (char *) malloc (he->h_length);
-	  if (h_addr_copy == NULL)
-	    he = NULL;
-	  else
-	    {
-	      memcpy (h_addr_copy, he->h_addr, he->h_length);
-	      he = gethostbyaddr (h_addr_copy, he->h_length, he->h_addrtype);
-	      free (h_addr_copy);
-	    }
-	}
+	if (addr && strcmp (he->h_name, addr) == 0)
+	  {
+	    /* gethostbyname has returned a string representation of the IP
+	       address, for example, "127.0.0.1".  So now, look up the host
+	       name via the address.  Although it may seem reasonable to look
+	       up the host name via the address, we must not pass `he->h_addr'
+	       directly to gethostbyaddr because on some systems he->h_addr
+	       is located in a static library buffer that is reused in the
+	       gethostbyaddr call.  Make a copy and use that instead.  */
+	    h_addr_copy = (char *) malloc (he->h_length);
+	    if (h_addr_copy == NULL)
+	      he = NULL;
+	    else
+	      {
+		memcpy (h_addr_copy, he->h_addr, he->h_length);
+		he = gethostbyaddr (h_addr_copy, he->h_length, he->h_addrtype);
+		free (h_addr_copy);
+	      }
+	  }
 # endif /* HAVE_GETHOSTBYADDR */
 
-      if (he)
-	return (char *) (he->h_name);
-    }
+	if (he)
+	  h_addr_copy = strdup (he->h_name);
+      }
+  }
 #endif /* HAVE_GETHOSTBYNAME */
-  return 0;
+
+  return h_addr_copy;
 }
 
 #ifdef TEST_CANON_HOST
