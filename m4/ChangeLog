@@ -1,3 +1,14 @@
+2000-01-22  Jim Meyering  <meyering@lucent.com>
+
+	* decl.m4: Remove kludgy `test -z $ac_...AC_CHECK_HEADERS(...)' code.
+	Moved tests into their own function (_jm_DECL_HEADERS) in check-decl.m4.
+
+	* check-decl.m4: Use #if rather than #ifdef.
+	Add HAVE_DECL_STRTOUL and HAVE_DECL_STRTOULL.
+	(jm_CHECK_DECLARATIONS): Add strtoul strtoull.
+	(_jm_DECL_HEADERS): Define new function.
+	(jm_CHECK_DECLARATIONS): Require it.
+
 2000-01-19  Jim Meyering  <meyering@lucent.com>
 
 	* nanosleep.m4 (jm_FUNC_NANOSLEEP): Include <sys/time.h>, too.
