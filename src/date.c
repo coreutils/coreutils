@@ -64,6 +64,7 @@ static struct option const long_options[] =
   {"date", required_argument, NULL, 'd'},
   {"file", required_argument, NULL, 'f'},
   {"help", no_argument, &show_help, 1},
+  {"reference", required_argument, NULL, 'r'},
   {"set", required_argument, NULL, 's'},
   {"uct", no_argument, NULL, 'u'},
   {"utc", no_argument, NULL, 'u'},
@@ -145,31 +146,36 @@ main (argc, argv)
 {
   int optc;
   const char *datestr = NULL;
+  const char *set_datestr = NULL;
   time_t when;
   int set_date = 0;
-  int print_date = 0;
   char *format;
   char *batch_file = NULL;
+  char *reference = NULL;
+  struct stat refstats;
   int n_args;
   int status;
+  int option_specified_date;
 
   program_name = argv[0];
 
-  while ((optc = getopt_long (argc, argv, "d:f:s:u", long_options, (int *) 0))
-	 != EOF)
+  while (optc = getopt_long (argc, argv, "d:f:r:s:u", long_options, (int *) 0),
+	 optc != EOF)
     switch (optc)
       {
       case 0:
 	break;
       case 'd':
 	datestr = optarg;
-	print_date = 1;
 	break;
       case 'f':
 	batch_file = optarg;
 	break;
+      case 'r':
+	reference = optarg;
+	break;
       case 's':
-	datestr = optarg;
+	set_datestr = optarg;
 	set_date = 1;
 	break;
       case 'u':
@@ -190,7 +196,18 @@ main (argc, argv)
 
   n_args = argc - optind;
 
-  if (set_date && print_date)
+  option_specified_date = ((datestr ? 1 : 0)
+			   + (batch_file ? 1 : 0)
+			   + (reference ? 1 : 0));
+
+  if (option_specified_date > 1)
+    {
+      error (0, 0,
+	_("the options to specify dates for printing are mutually exclusive"));
+      usage (1);
+    }
+
+  if (set_date && option_specified_date)
     {
       error (0, 0,
 	  _("the options to print and set the time may not be used together"));
@@ -203,23 +220,20 @@ main (argc, argv)
       usage (1);
     }
 
-  if ((set_date || print_date || batch_file != NULL)
+  if ((set_date || option_specified_date)
       && n_args == 1 && argv[optind][0] != '+')
     {
       error (0, 0, _("\
-when using the print, set time, or batch options, any\n\
+when using an option to specify date(s), any\n\
 non-option argument must be a format string beginning with `+'"));
       usage (1);
     }
 
+  if (set_date)
+    datestr = set_datestr;
+
   if (batch_file != NULL)
     {
-      if (set_date || print_date)
-	{
-	  error (0, 0, _("\
-neither print nor set options may be used when reading dates from a file"));
-	  usage (1);
-	}
       status = batch_convert (batch_file,
 			      (n_args == 1 ? argv[optind] + 1 : NULL));
     }
@@ -227,7 +241,7 @@ neither print nor set options may be used when reading dates from a file"));
     {
       status = 0;
 
-      if (!print_date && !set_date)
+      if (!option_specified_date && !set_date)
 	{
 	  if (n_args == 1 && argv[optind][0] != '+')
 	    {
@@ -241,7 +255,6 @@ neither print nor set options may be used when reading dates from a file"));
 	  else
 	    {
 	      /* Prepare to print the current date/time.  */
-	      print_date = 1;
 	      datestr = _("undefined");
 	      time (&when);
 	      format = (n_args == 1 ? argv[optind] + 1 : NULL);
@@ -249,8 +262,15 @@ neither print nor set options may be used when reading dates from a file"));
 	}
       else
 	{
-	  /* (print_date || set_date) */
-	  when = get_date (datestr, NULL);
+	  /* (option_specified_date || set_date) */
+	  if (reference != NULL)
+	    {
+	      if (stat (reference, &refstats))
+		error (1, errno, "%s", reference);
+	      when = refstats.st_mtime;
+	    }
+	  else
+	    when = get_date (datestr, NULL);
 	  format = (n_args == 1 ? argv[optind] + 1 : NULL);
 	}
 
@@ -334,6 +354,7 @@ Display the current time in the given FORMAT, or set the system date.\n\
 \n\
   -d, --date=STRING        display time described by STRING, not `now'\n\
   -f, --file=DATEFILE      like --date once for each line of DATEFILE\n\
+  -r, --reference=FILE     display the last modification time of FILE\n\
   -s, --set=STRING         set time described by STRING\n\
   -u, --utc, --universal   print or set Coordinated Universal Time\n\
       --help               display this help and exit\n\
