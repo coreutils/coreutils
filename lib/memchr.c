@@ -100,7 +100,7 @@ memchr (s, c, n)
   charmask = c | (c << 8);
   charmask |= charmask << 16;
 #if LONG_MAX > LONG_MAX_32_BITS
-    charmask |= charmask << 32;
+  charmask |= charmask << 32;
 #endif
 
   /* Instead of the traditional loop which tests each character,

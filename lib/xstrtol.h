@@ -49,6 +49,7 @@ strtol_error
 	  break;							\
 									\
 	case LONGINT_OVERFLOW:						\
+	  /* FIXME: make this message dependent on STRING_TO_UNSIGNED */\
 	  error ((exit_code), 0, "%s `%s' larger than maximum long int",\
 		 (argument_type_string), (str));			\
 	  break;							\
