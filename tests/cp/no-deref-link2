@@ -4,6 +4,11 @@
 
 : ${CP=cp}
 
+if test "$VERBOSE" = yes; then
+  set -x
+  $CP --version
+fi
+
 rm -rf a b
 mkdir b
 msg=bar

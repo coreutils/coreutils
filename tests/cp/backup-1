@@ -2,6 +2,11 @@
 
 : ${CP=cp}
 
+if test "$VERBOSE" = yes; then
+  set -x
+  $CP --version
+fi
+
 suffix=.b
 tmp=b1.$$
 tmp_backup="$tmp$suffix"
