@@ -1,5 +1,19 @@
 2000-08-12  Jim Meyering  <meyering@lucent.com>
 
+	* tests/mv/into-self-2: Remove test for the VERSION_CONTROL and/or
+	SIMPLE_BACKUP_SUFFIX envvars.  Source ../envvar-check instead.
+	* tests/mv/i-2: Likewise.
+	* tests/mv/to-symlink: Likewise.
+	* tests/cp/slink-2-slink: Likewise.
+	* tests/mv/partition-perm: Likewise.
+	* tests/cp/cp-mv-backup: Likewise.
+
+	* tests/Makefile.am (EXTRA_DIST): Add envvar-check.
+	* tests/envvar-check: New file.
+
+	* tests/cp/Makefile.am (TESTS): Add perm.
+	* tests/cp/perm: New tests.
+
 	* install-sh: Remove trailing blanks.
 	Output diagnostics to stderr, not stdout.
 	Remove many useless curly braces and double quotes.
