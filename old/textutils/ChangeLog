@@ -1,3 +1,23 @@
+Thu May 30 00:07:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* Version 1.15.
+
+	* od.c (decode_one_format): Take another parameter.
+	Give a specific diagnostic for invalid format spec here rather
+	than an overly general one from caller's caller.
+	(decode_format_string): Update caller.
+	(main): Don't give diagnostic here when decode_format_string fails.
+	Remove assertions that could fail on some Crays because they don't
+	have a two-byte type.
+	Johan Danielsson (joda@pdc.kth.se) reported the failed assertions.
+
+Mon May 27 17:43:31 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* cat.c (main): Use STDIN_FILENO and STDOUT_FILENO instead of
+	less portable fileno (stdin) and fileno (stdout).
+	* sort.c (main): Use STDIN_FILENO instead of less portable
+	fileno (stdin).
+
 Mon May 20 21:50:23 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* Makefile.am (distcheck): Remove target and rule -- automake-0.33
