@@ -79,14 +79,6 @@ int rpl_lstat (const char *, struct stat *);
 # define lstat(Name, Stat_buf) rpl_lstat(Name, Stat_buf)
 #endif
 
-#ifdef D_INO_IN_DIRENT
-# define D_INO(dp) ((dp)->d_ino)
-# define ENABLE_CYCLE_CHECK
-#else
-/* Some systems don't have inodes, so fake them to avoid lots of ifdefs.  */
-# define D_INO(dp) 1
-#endif
-
 /* Initial capacity of per-directory hash table of entries that have
    been processed but not been deleted.  */
 #define HT_UNREMOVABLE_INITIAL_CAPACITY 13
