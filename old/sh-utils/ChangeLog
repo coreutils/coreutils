@@ -1,8 +1,20 @@
 Mon May 20 22:56:06 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
-        * lib/Makefile.am (getdate.c): Disable dependencies that can
-        require rerunning YACC when not in maintainer mode.
-        (posixtm.c): Likewise.
+	* id.c (xgetgroups): New function, factored out of
+	print_group_list and print_full_info.
+	(print_group_list): Call it.
+	(print_full_info): Call it.
+
+	* lib/Makefile.am (getdate.c): Disable dependencies that can
+	require rerunning YACC when not in maintainer mode.
+	(posixtm.c): Likewise.
+
+Tue May 14 18:47:35 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund\
+.de>
+
+	* src/id.c (print_group_list): When USERNAME is specified use
+	getugroups to get the number of groups.
+	(print_full_info): Likewise.
 
 Sun May 19 21:45:49 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
@@ -311,7 +323,7 @@ Tue Mar 12 17:52:05 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	Link an nls file.
 	(AC_OUTPUT): Reflect addition of two new directories, intl and po.
 	Create po/Makefile.
-  	Mostly from François Pinard.
+	Mostly from François Pinard.
 
 Wed Mar  6 21:40:34 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
@@ -322,7 +334,7 @@ Tue Mar  5 22:49:33 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* getdate.y (RelativeMonth): Add 1900 to the year so that relative
 	date specs that push the year through the end of the century work.
-  	For example, `date -d "01/01/1998 3 years" +%Y' now prints 2001.
+	For example, `date -d "01/01/1998 3 years" +%Y' now prints 2001.
 	From Peter Dalgaard (pd@kubism.ku.dk).
 
 Mon Mar  4 23:46:43 1996  Jim Meyering  (meyering@na-net.ornl.gov)
@@ -333,7 +345,7 @@ Mon Mar  4 23:46:43 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 Fri Mar  1 23:46:32 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* expr.c (docolon): Don't initialize re_syntax_options to
- 	deceptively-named RE_SYNTAX_POSIX_BASIC -- it recognizes non-BRE
+	deceptively-named RE_SYNTAX_POSIX_BASIC -- it recognizes non-BRE
 	\?, \+, and \|.  Use RE_SYNTAX_POSIX_MINIMAL_BASIC instead.
 
 	* od.c (WINDOWS_SETFILEMODE_BINARY): New macro.
@@ -345,9 +357,9 @@ Fri Mar  1 23:46:32 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 Wed Feb 28 21:48:07 1996  Paul Eggert  <eggert@twinsun.com>
 
-        * configure.in (LOCALTIME_CACHE):
-        Also define if localtime mishandles unsetting TZ.
-        This works around a localtime bug in mips-dec-ultrix.
+	* configure.in (LOCALTIME_CACHE):
+	Also define if localtime mishandles unsetting TZ.
+	This works around a localtime bug in mips-dec-ultrix.
 
 Wed Feb 28 23:08:24 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
@@ -355,7 +367,7 @@ Wed Feb 28 23:08:24 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	(noinst_HEADERS): Add xstrtoul.h.
 
 	* factor.c: General cleanup.  Use xstrtoul, not atoi.
-  	Change output format.  Allow inputs as large as ULONG_MAX.
+	Change output format.  Allow inputs as large as ULONG_MAX.
 	Allow more than one command line argument.
 
 	* stty.c (wrapf) [!__STDC__]: Indent by one space the first line
@@ -371,9 +383,9 @@ Sun Feb 25 22:19:52 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	* src/Makefile.am (BUILT_SOURCES): Set to `who.c users.c'.
 	(MOSTLYCLEANFILES): Add who.c and users.c.
 	(who.c): New rule to create this file.  Concatenate definition of
- 	WHO and contents of who-users.c.
+	WHO and contents of who-users.c.
 	(users.c): New rule to create this file.  Concatenate definition of
- 	USERS and contents of who-users.c.
+	USERS and contents of who-users.c.
 
 Sat Feb 24 12:20:58 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
@@ -391,7 +403,7 @@ Sat Feb 24 12:20:58 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	not int.
 
 	* expr.c (docolon): Set re_syntax_options to RE_SYNTAX_POSIX_BASIC
- 	so expr's pattern matching uses BASIC (not GNU-extended) REs.
+	so expr's pattern matching uses BASIC (not GNU-extended) REs.
 	Reported by Jim Kingdon.
 
 	* who-users.c (print_entry): Use strchr, not index.
@@ -563,7 +575,7 @@ Sat Oct 28 00:49:13 1995  Jim Meyering  (meyering@comco.com)
 
 	* date.c: New option --reference=FILE (-r FILE) analogous to the
 	like-named touch option.
- 	(main): Recognize it and give diagnostic for misuse.
+	(main): Recognize it and give diagnostic for misuse.
 	(usage): Describe briefly.
 	From Franc,ois Pinard.
 
@@ -573,8 +585,8 @@ Sat Oct 28 00:49:13 1995  Jim Meyering  (meyering@comco.com)
 Tue Sep 26 23:05:01 1995  Jim Meyering  (meyering@comco.com)
 
 	* man/Makefile.in (install-data, uninstall): Use sed not basename.
- 	The GNU Coding Standard suggests that only a select set of
- 	relatively standard utilities be used in Makefiles.  basename is
+	The GNU Coding Standard suggests that only a select set of
+	relatively standard utilities be used in Makefiles.  basename is
 	not among them.  Suggested by Ulrich Drepper.
 
 Tue Aug  8 22:57:34 1995  Jim Meyering  (meyering@comco.com)
@@ -670,9 +682,9 @@ Sat Feb 11 08:27:12 1995  Jim Meyering  (meyering@comco.com)
 	(SOURCES, OBJECTS, PROGS): Add seq.
 	* Makefile.in (PROGS): Add seq.
 
-        * configure.in (AC_REPLACE_FUNCS): Add memcmp, memcpy, and memset.
-        (AC_CHECK_FUNCS): Add strchr and strrchr.
-        * lib/Makefile.in (SOURCES): Add memcmp.c, memcpy.c, and memset.c.
+	* configure.in (AC_REPLACE_FUNCS): Add memcmp, memcpy, and memset.
+	(AC_CHECK_FUNCS): Add strchr and strrchr.
+	* lib/Makefile.in (SOURCES): Add memcmp.c, memcpy.c, and memset.c.
 
 	* system.h: Remove index/rindex and bcmp/bcopy/bzero references.
 	Separate errno declaration from STDC_HEADERS.
