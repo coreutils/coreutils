@@ -19,7 +19,9 @@ else
 # define FILESYSTEM_PREFIX_LEN(Filename) 0
 #endif])
 
-    AC_DEFINE([FILESYSTEM_ACCEPTS_DRIVE_LETTER_PREFIX],
+    ac_fs_accepts_drive_letter_prefix=0
+    AC_DEFINE_UNQUOTED([FILESYSTEM_ACCEPTS_DRIVE_LETTER_PREFIX],
+      $ac_fs_accepts_drive_letter_prefix,
       [Define on systems for which file names may have a so-called
        `drive letter' prefix, define this to compute the length of that
        prefix, including the colon.])
@@ -31,7 +33,9 @@ else
 # define ISSLASH(C) ((C) == '/')
 #endif])
 
-    AC_DEFINE([FILESYSTEM_BACKSLASH_IS_FILE_NAME_SEPARATOR],
+    ac_fs_backslash_is_file_name_separator=0
+    AC_DEFINE_UNQUOTED([FILESYSTEM_BACKSLASH_IS_FILE_NAME_SEPARATOR],
+      $ac_fs_backslash_is_file_name_separator,
       [Define if the backslash character may also serve as a file name
        component separator.])
   ])
