@@ -26,7 +26,7 @@ fi
 
 fail=0
 
-du slink/ | sed 's/^[1-9][0-9]*	//' > out
+du slink/ | sed 's/^[0-9][0-9]*	//' > out
 cat <<\EOF > exp
 slink/1/2
 slink/1
