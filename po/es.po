@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU coreutils 4.5.4\n"
-"POT-Creation-Date: 2003-02-02 00:05+0100\n"
+"POT-Creation-Date: 2003-02-05 11:25+0100\n"
 "PO-Revision-Date: 2002-12-24 15:15+0100\n"
 "Last-Translator: Santiago Vila Doncel <sanvila@unex.es>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -285,7 +285,7 @@ msgstr "Las cadenas comparadas eran %s y %s."
 
 #: src/basename.c:50 src/cat.c:88 src/chgrp.c:122 src/chmod.c:238
 #: src/chown.c:95 src/chroot.c:41 src/cksum.c:276 src/comm.c:69 src/cp.c:160
-#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:707
+#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:719
 #: src/dircolors.c:99 src/dirname.c:42 src/du.c:167 src/echo.c:73
 #: src/env.c:115 src/expand.c:106 src/expr.c:86 src/factor.c:70 src/fmt.c:267
 #: src/fold.c:63 src/head.c:84 src/hostid.c:44 src/hostname.c:63 src/id.c:83
@@ -328,7 +328,7 @@ msgstr ""
 # Véase "A bug's life".
 #: src/basename.c:66 src/cat.c:124 src/chgrp.c:152 src/chmod.c:264
 #: src/chown.c:139 src/chroot.c:59 src/cksum.c:291 src/comm.c:86 src/cp.c:257
-#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:746
+#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:758
 #: src/dircolors.c:120 src/dirname.c:58 src/du.c:212 src/echo.c:105
 #: src/env.c:134 src/expand.c:131 src/expr.c:149 src/factor.c:90
 #: src/false.c:45 src/fmt.c:297 src/fold.c:86 src/head.c:115 src/hostid.c:57
@@ -1228,7 +1228,7 @@ msgstr ""
 "Copia ORIGEN a DESTINO, o varios ORIGEN(es) a DIRECTORIO.\n"
 "\n"
 
-#: src/cp.c:174 src/csplit.c:1505 src/cut.c:182 src/df.c:717 src/du.c:176
+#: src/cp.c:174 src/csplit.c:1505 src/cut.c:182 src/df.c:729 src/du.c:176
 #: src/expand.c:119 src/fmt.c:277 src/fold.c:76 src/head.c:98
 #: src/install.c:609 src/kill.c:103 src/ln.c:354 src/ls.c:3767 src/mkdir.c:66
 #: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:321 src/nl.c:185 src/paste.c:413
@@ -1749,7 +1749,7 @@ msgstr ""
 msgid "David Ihnat, David MacKenzie, and Jim Meyering"
 msgstr "David Ihnat, David MacKenzie, y Jim Meyering"
 
-#: src/cut.c:174 src/df.c:711 src/du.c:171 src/expand.c:110 src/fold.c:67
+#: src/cut.c:174 src/df.c:723 src/du.c:171 src/expand.c:110 src/fold.c:67
 #: src/head.c:88 src/ls.c:3761 src/nl.c:176 src/paste.c:403 src/pr.c:2754
 #: src/sort.c:276 src/sum.c:60 src/tac.c:127 src/tail.c:234 src/tee.c:63
 #: src/unexpand.c:375 src/wc.c:125
@@ -2368,7 +2368,7 @@ msgstr "Bloques de %4s   Usado    Dispon Uso%%"
 msgid " Mounted on\n"
 msgstr " Montado en\n"
 
-#: src/df.c:712
+#: src/df.c:724
 msgid ""
 "Show information about the filesystem on which each FILE resides,\n"
 "or all filesystems by default.\n"
@@ -2379,7 +2379,7 @@ msgstr ""
 "o por omisión sobre todos los sistemas de ficheros.\n"
 "\n"
 
-#: src/df.c:720
+#: src/df.c:732
 msgid ""
 "  -a, --all             include filesystems having 0 blocks\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
@@ -2393,7 +2393,7 @@ msgstr ""
 "2G)\n"
 "  -H, --si             análogo, pero utiliza potencias de 1000 y no de 1024\n"
 
-#: src/df.c:726
+#: src/df.c:738
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
 "  -k                    like --block-size=1K\n"
@@ -2409,7 +2409,7 @@ msgstr ""
 "      --no-sync         no llama a sync antes de obtener el modo de empleo\n"
 "                        (por defecto)\n"
 
-#: src/df.c:732
+#: src/df.c:744
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
 "      --sync            invoke sync before getting usage info\n"
@@ -2428,7 +2428,7 @@ msgstr ""
 "                       no son del tipo TIPO\n"
 "  -v                   (no tiene efecto)\n"
 
-#: src/df.c:742 src/du.c:208 src/ls.c:3879
+#: src/df.c:754 src/du.c:208 src/ls.c:3879
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
@@ -2439,16 +2439,16 @@ msgstr ""
 "de los siguientes: kB 1.000, K 1.024, MB 1.000.000, M 1.048.576, y así\n"
 "en adelante para G, T, P, E, Z, Y.\n"
 
-#: src/df.c:859
+#: src/df.c:871
 #, c-format
 msgid "file system type %s both selected and excluded"
 msgstr "el sistema de ficheros %s está simultánemente seleccionado y excluido"
 
-#: src/df.c:903
+#: src/df.c:915
 msgid "Warning: "
 msgstr "Atención: "
 
-#: src/df.c:906
+#: src/df.c:918
 #, c-format
 msgid "%scannot read table of mounted filesystems"
 msgstr "%sno se puede leer la tabla de sistemas de ficheros montados"
@@ -2657,24 +2657,24 @@ msgstr "no se puede cambiar al directorio %s"
 msgid "cannot read directory %s"
 msgstr "no se puede crear el directorio %s"
 
-#: src/du.c:533 src/ls.c:2241 src/wc.c:591
+#: src/du.c:545 src/ls.c:2241 src/wc.c:591
 msgid "total"
 msgstr "total"
 
-#: src/du.c:615
+#: src/du.c:627
 #, c-format
 msgid "invalid maximum depth %s"
 msgstr "profundidad máxima inválida %s"
 
-#: src/du.c:681
+#: src/du.c:693
 msgid "cannot both summarize and show all entries"
 msgstr "no se puede al mismo tiempo resumir y mostrar todas las entradas"
 
-#: src/du.c:688
+#: src/du.c:700
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr "atención: resumir es lo mismo que usar --max-depth=0"
 
-#: src/du.c:694
+#: src/du.c:706
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr "atención: resumir entra en conflicto con --max-depth=%d"

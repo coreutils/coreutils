@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: textutils 2.0e\n"
-"POT-Creation-Date: 2003-02-02 00:05+0100\n"
+"POT-Creation-Date: 2003-02-05 11:25+0100\n"
 "PO-Revision-Date: 2000-03-20 19:30+0100\n"
 "Last-Translator: Rafa³ Maszkowski <rzm@icm.edu.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
@@ -270,7 +270,7 @@ msgstr ""
 
 #: src/basename.c:50 src/cat.c:88 src/chgrp.c:122 src/chmod.c:238
 #: src/chown.c:95 src/chroot.c:41 src/cksum.c:276 src/comm.c:69 src/cp.c:160
-#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:707
+#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:719
 #: src/dircolors.c:99 src/dirname.c:42 src/du.c:167 src/echo.c:73
 #: src/env.c:115 src/expand.c:106 src/expr.c:86 src/factor.c:70 src/fmt.c:267
 #: src/fold.c:63 src/head.c:84 src/hostid.c:44 src/hostname.c:63 src/id.c:83
@@ -312,7 +312,7 @@ msgstr ""
 
 #: src/basename.c:66 src/cat.c:124 src/chgrp.c:152 src/chmod.c:264
 #: src/chown.c:139 src/chroot.c:59 src/cksum.c:291 src/comm.c:86 src/cp.c:257
-#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:746
+#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:758
 #: src/dircolors.c:120 src/dirname.c:58 src/du.c:212 src/echo.c:105
 #: src/env.c:134 src/expand.c:131 src/expr.c:149 src/factor.c:90
 #: src/false.c:45 src/fmt.c:297 src/fold.c:86 src/head.c:115 src/hostid.c:57
@@ -1029,7 +1029,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/cp.c:174 src/csplit.c:1505 src/cut.c:182 src/df.c:717 src/du.c:176
+#: src/cp.c:174 src/csplit.c:1505 src/cut.c:182 src/df.c:729 src/du.c:176
 #: src/expand.c:119 src/fmt.c:277 src/fold.c:76 src/head.c:98
 #: src/install.c:609 src/kill.c:103 src/ln.c:354 src/ls.c:3767 src/mkdir.c:66
 #: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:321 src/nl.c:185 src/paste.c:413
@@ -1489,7 +1489,7 @@ msgstr ""
 msgid "David Ihnat, David MacKenzie, and Jim Meyering"
 msgstr ""
 
-#: src/cut.c:174 src/df.c:711 src/du.c:171 src/expand.c:110 src/fold.c:67
+#: src/cut.c:174 src/df.c:723 src/du.c:171 src/expand.c:110 src/fold.c:67
 #: src/head.c:88 src/ls.c:3761 src/nl.c:176 src/paste.c:403 src/pr.c:2754
 #: src/sort.c:276 src/sum.c:60 src/tac.c:127 src/tail.c:234 src/tee.c:63
 #: src/unexpand.c:375 src/wc.c:125
@@ -1950,14 +1950,14 @@ msgstr " bl.%4s B        u¿yte dostêpne %%u¿."
 msgid " Mounted on\n"
 msgstr " zamont. na\n"
 
-#: src/df.c:712
+#: src/df.c:724
 msgid ""
 "Show information about the filesystem on which each FILE resides,\n"
 "or all filesystems by default.\n"
 "\n"
 msgstr ""
 
-#: src/df.c:720
+#: src/df.c:732
 msgid ""
 "  -a, --all             include filesystems having 0 blocks\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
@@ -1966,7 +1966,7 @@ msgid ""
 "  -H, --si              likewise, but use powers of 1000 not 1024\n"
 msgstr ""
 
-#: src/df.c:726
+#: src/df.c:738
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
 "  -k                    like --block-size=1K\n"
@@ -1975,7 +1975,7 @@ msgid ""
 "(default)\n"
 msgstr ""
 
-#: src/df.c:732
+#: src/df.c:744
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
 "      --sync            invoke sync before getting usage info\n"
@@ -1985,23 +1985,23 @@ msgid ""
 "  -v                    (ignored)\n"
 msgstr ""
 
-#: src/df.c:742 src/du.c:208 src/ls.c:3879
+#: src/df.c:754 src/du.c:208 src/ls.c:3879
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
 "kB 1000, K 1024, MB 1,000,000, M 1,048,576, and so on for G, T, P, E, Z, Y.\n"
 msgstr ""
 
-#: src/df.c:859
+#: src/df.c:871
 #, c-format
 msgid "file system type %s both selected and excluded"
 msgstr "typ systemu plików %s równocze¶nie wybrany i wykluczony"
 
-#: src/df.c:903
+#: src/df.c:915
 msgid "Warning: "
 msgstr "Uwaga: "
 
-#: src/df.c:906
+#: src/df.c:918
 #, c-format
 msgid "%scannot read table of mounted filesystems"
 msgstr "%snie mo¿na przeczytaæ tablicy zamontowanych systemów plików"
@@ -2169,24 +2169,24 @@ msgstr "nie mo¿na przej¶æ do katalogu %s"
 msgid "cannot read directory %s"
 msgstr "nie mo¿na utworzyæ katalogu `%s'"
 
-#: src/du.c:533 src/ls.c:2241 src/wc.c:591
+#: src/du.c:545 src/ls.c:2241 src/wc.c:591
 msgid "total"
 msgstr "razem"
 
-#: src/du.c:615
+#: src/du.c:627
 #, fuzzy, c-format
 msgid "invalid maximum depth %s"
 msgstr "b³êdny numer pola: `%s'"
 
-#: src/du.c:681
+#: src/du.c:693
 msgid "cannot both summarize and show all entries"
 msgstr "nie mo¿na równocze¶nie tylko podsumowaæ i wypisaæ wszystkich danych"
 
-#: src/du.c:688
+#: src/du.c:700
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr "ostrze¿enie: --summarizie jest tym samym co --max-depth=0"
 
-#: src/du.c:694
+#: src/du.c:706
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr "ostrze¿enie: --summarize nie mo¿e byæ u¿yte rezem z --max-depth=%d"

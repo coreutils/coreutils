@@ -35,9 +35,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU coreutils 4.5.4\n"
-"POT-Creation-Date: 2003-02-02 00:05+0100\n"
-"PO-Revision-Date: 2002-12-16 11:15:03+0100\n"
+"Project-Id-Version: GNU coreutils 4.5.5\n"
+"POT-Creation-Date: 2003-02-05 11:25+0100\n"
+"PO-Revision-Date: 2003-02-04 11:35:48+0100\n"
 "Last-Translator: Michael Piefel <piefel@informatik.hu-berlin.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -296,7 +296,7 @@ msgstr "Die verglichenen Zeichenketten waren %s und %s."
 
 #: src/basename.c:50 src/cat.c:88 src/chgrp.c:122 src/chmod.c:238
 #: src/chown.c:95 src/chroot.c:41 src/cksum.c:276 src/comm.c:69 src/cp.c:160
-#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:707
+#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:719
 #: src/dircolors.c:99 src/dirname.c:42 src/du.c:167 src/echo.c:73
 #: src/env.c:115 src/expand.c:106 src/expr.c:86 src/factor.c:70 src/fmt.c:267
 #: src/fold.c:63 src/head.c:84 src/hostid.c:44 src/hostname.c:63 src/id.c:83
@@ -337,7 +337,7 @@ msgstr ""
 
 #: src/basename.c:66 src/cat.c:124 src/chgrp.c:152 src/chmod.c:264
 #: src/chown.c:139 src/chroot.c:59 src/cksum.c:291 src/comm.c:86 src/cp.c:257
-#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:746
+#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:758
 #: src/dircolors.c:120 src/dirname.c:58 src/du.c:212 src/echo.c:105
 #: src/env.c:134 src/expand.c:131 src/expr.c:149 src/factor.c:90
 #: src/false.c:45 src/fmt.c:297 src/fold.c:86 src/head.c:115 src/hostid.c:57
@@ -1091,7 +1091,7 @@ msgstr ""
 "Kopieren von QUELLE nach ZIEL, oder mehrere QUELLE(n) in VERZEICHNIS\n"
 "\n"
 
-#: src/cp.c:174 src/csplit.c:1505 src/cut.c:182 src/df.c:717 src/du.c:176
+#: src/cp.c:174 src/csplit.c:1505 src/cut.c:182 src/df.c:729 src/du.c:176
 #: src/expand.c:119 src/fmt.c:277 src/fold.c:76 src/head.c:98
 #: src/install.c:609 src/kill.c:103 src/ln.c:354 src/ls.c:3767 src/mkdir.c:66
 #: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:321 src/nl.c:185 src/paste.c:413
@@ -1546,7 +1546,7 @@ msgstr ""
 msgid "David Ihnat, David MacKenzie, and Jim Meyering"
 msgstr "David Ihnat, David MacKenzie und Jim Meyering"
 
-#: src/cut.c:174 src/df.c:711 src/du.c:171 src/expand.c:110 src/fold.c:67
+#: src/cut.c:174 src/df.c:723 src/du.c:171 src/expand.c:110 src/fold.c:67
 #: src/head.c:88 src/ls.c:3761 src/nl.c:176 src/paste.c:403 src/pr.c:2754
 #: src/sort.c:276 src/sum.c:60 src/tac.c:127 src/tail.c:234 src/tee.c:63
 #: src/unexpand.c:375 src/wc.c:125
@@ -1643,10 +1643,10 @@ msgid "you must specify a list of bytes, characters, or fields"
 msgstr "Sie müssen eine Liste von Bytes, Zeichen oder Feldern angeben"
 
 #: src/cut.c:720
-#, fuzzy
 msgid "an input delimiter may be specified only when operating on fields"
 msgstr ""
-"Ein Begrenzer darf nur angegeben werden, wenn auf Feldern gearbeitet wird"
+"Ein Eingabe-Begrenzer darf nur angegeben werden, wenn auf Feldern gearbeitet "
+"wird"
 
 # CHECKIT -> no \t, please
 # 2001-08-10 08:03:34 CEST -ke-
@@ -2138,7 +2138,7 @@ msgstr " %4s-Blöcke   Benutzt Verfügbar Ben%%"
 msgid " Mounted on\n"
 msgstr " Eingehängt auf\n"
 
-#: src/df.c:712
+#: src/df.c:724
 msgid ""
 "Show information about the filesystem on which each FILE resides,\n"
 "or all filesystems by default.\n"
@@ -2148,7 +2148,7 @@ msgstr ""
 "DATEI befindet, oder alle Dateisysteme als Standardvorgabe.\n"
 "\n"
 
-#: src/df.c:720
+#: src/df.c:732
 msgid ""
 "  -a, --all             include filesystems having 0 blocks\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
@@ -2164,7 +2164,7 @@ msgstr ""
 "                              ausgeben.\n"
 "  -H, --si                  Wie »-h«, aber mit 1000 statt 1024 als Teiler.\n"
 
-#: src/df.c:726
+#: src/df.c:738
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
 "  -k                    like --block-size=1K\n"
@@ -2179,7 +2179,7 @@ msgstr ""
 "      --no-sync             »sync« vor Erlangen der Benutzungsinformation\n"
 "                              nicht aufrufen (Standardvorgabe).\n"
 
-#: src/df.c:732
+#: src/df.c:744
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
 "      --sync            invoke sync before getting usage info\n"
@@ -2197,7 +2197,7 @@ msgstr ""
 "begrenzen.\n"
 "  -v                        (ignoriert)\n"
 
-#: src/df.c:742 src/du.c:208 src/ls.c:3879
+#: src/df.c:754 src/du.c:208 src/ls.c:3879
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
@@ -2210,16 +2210,16 @@ msgstr ""
 "kB 1000, K 1024, MB 1.000.000, M 1.048.576 und so weiter für G, T, P, E, Z, "
 "Y.\n"
 
-#: src/df.c:859
+#: src/df.c:871
 #, c-format
 msgid "file system type %s both selected and excluded"
 msgstr "Dateisystemtyp %s ist sowohl ausgewählt als auch ausgeschlossen"
 
-#: src/df.c:903
+#: src/df.c:915
 msgid "Warning: "
 msgstr "Warnung: "
 
-#: src/df.c:906
+#: src/df.c:918
 #, c-format
 msgid "%scannot read table of mounted filesystems"
 msgstr "%sLesen der Tabelle eingehängter Dateisysteme nicht möglich"
@@ -2318,11 +2318,11 @@ msgstr ""
 "\n"
 
 #: src/du.c:49
-#, fuzzy
 msgid ""
 "Torbjorn Granlund, David MacKenzie, Larry McVoy, Paul Eggert, and Jim "
 "Meyering"
-msgstr "Torbjörn Granlund, David MacKenzie, Larry McVoy und Paul Eggert"
+msgstr ""
+"Torbjörn Granlund, David MacKenzie, Larry McVoy, Paul Eggert und Jim Meyering"
 
 #: src/du.c:172
 msgid ""
@@ -2402,38 +2402,38 @@ msgstr ""
 "summarize«.\n"
 
 #: src/du.c:339
-#, fuzzy, c-format
+#, c-format
 msgid "cannot change to parent of directory %s"
-msgstr "In Verzeichnis %s kann nicht gewechselt werden"
+msgstr "Kann nicht in das übergeordnete Verzeichnis von %s wechseln"
 
 #: src/du.c:347
 #, c-format
 msgid "cannot change to directory %s"
-msgstr "In Verzeichnis %s kann nicht gewechselt werden"
+msgstr "Kann nicht in Verzeichnis %s wechseln"
 
 #: src/du.c:354
-#, fuzzy, c-format
+#, c-format
 msgid "cannot read directory %s"
-msgstr "kann Verzeichnis %s nicht anlegen"
+msgstr "kann Verzeichnis %s nicht lesen"
 
-#: src/du.c:533 src/ls.c:2241 src/wc.c:591
+#: src/du.c:545 src/ls.c:2241 src/wc.c:591
 msgid "total"
 msgstr "insgesamt"
 
-#: src/du.c:615
+#: src/du.c:627
 #, c-format
 msgid "invalid maximum depth %s"
 msgstr "Ungültige maximale Tiefe %s"
 
-#: src/du.c:681
+#: src/du.c:693
 msgid "cannot both summarize and show all entries"
 msgstr "Sowohl zusammenfassen, als auch Anzeige aller Einträge nicht möglich"
 
-#: src/du.c:688
+#: src/du.c:700
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr "Warnung: Zusammenfassen ist das gleiche wie --max-depth=0"
 
-#: src/du.c:694
+#: src/du.c:706
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr "Warnung: Zusammenfassen widerspricht --max-depth=%d"
@@ -3658,17 +3658,16 @@ msgid ""
 "                               with -l: show ctime and sort by name\n"
 "                               otherwise: sort by ctime\n"
 msgstr ""
-"      --block-size=GRÖßE     GRÖßE große Blöcke verwenden.\n"
-"  -B, --ignore-backups       Einträge, die mit ~ enden, nicht ausgeben.\n"
+"      --block-size=GRÖßE     GRÖßE große Blöcke verwenden\n"
+"  -B, --ignore-backups       Einträge, die mit ~ enden, nicht ausgeben\n"
 "  -c                         mit -lt: Sortieren nach und Anzeige von ctime \n"
 "                               (Zeit der letzten Veränderung der Datei-"
 "Status-\n"
-"                               informationen) ; mit -l: ctime anzeigen und "
+"                               informationen); mit -l: ctime anzeigen und "
 "nach\n"
-"                               Namen sortieren.\n"
+"                               Namen sortieren\n"
 
 #: src/ls.c:3784
-#, fuzzy
 msgid ""
 "  -C                         list entries by columns\n"
 "      --color[=WHEN]         control whether color is used to distinguish "
@@ -3679,15 +3678,17 @@ msgid ""
 "                               and do not dereference symbolic links\n"
 "  -D, --dired                generate output designed for Emacs' dired mode\n"
 msgstr ""
-"  -C                         Einträge mehrspaltig ausgeben.\n"
+"  -C                         Einträge mehrspaltig ausgeben\n"
 "      --color[=WANN]         Kontrolle, wann Farbe zum Unterscheiden der "
 "Datei-\n"
-"                               typen eingesetzt wird. WANN kann »never«,\n"
-"                               »always« oder »auto« sein.\n"
+"                               typen eingesetzt wird; WANN kann "
+"»never« (nie),\n"
+"                               »always« (immer) oder »auto« sein\n"
 "  -d, --directory            Verzeichnis-Einträge statt der Inhalte "
-"anzeigen.\n"
+"anzeigen,\n"
+"                               symbolische Verknüpfungen nicht verfolgen\n"
 "  -D, --dired                Ausgabe für den »dired«-Modus im Emacs "
-"formatieren.\n"
+"formatieren\n"
 
 #: src/ls.c:3792
 msgid ""
@@ -3697,17 +3698,16 @@ msgid ""
 "                               single-column -1, verbose -l, vertical -C\n"
 "      --full-time            like -l --time-style=full-iso\n"
 msgstr ""
-"  -f                         Nicht sortieren, -aU aktivieren, -lst "
-"deaktiviern.\n"
-"  -F, --classify             Ein Zeichen (einen von */=@|) zur Typisierung\n"
-"                               anhängen.\n"
+"  -f                         nicht sortieren, -aU aktivieren, -lst "
+"deaktiviern\n"
+"  -F, --classify             ein Zeichen (einen von */=@|) zur Typisierung\n"
+"                               anhängen\n"
 "      --format=WORT          across -x, commas -m, horizontal -x, long -l,\n"
 "                               single-column -1, verbose -l, vertical -C\n"
-"      --full-time            Sowohl volles Datum als auch volle Zeit "
-"anzeigen.\n"
+"      --full-time            sowohl volles Datum als auch volle Zeit "
+"anzeigen\n"
 
 #: src/ls.c:3799
-#, fuzzy
 msgid ""
 "  -g                         like -l, but do not list owner\n"
 "  -G, --no-group             inhibit display of group information\n"
@@ -3721,14 +3721,17 @@ msgid ""
 "                             follow each command line symbolic link\n"
 "                               that points to a directory\n"
 msgstr ""
-"  -g                         Wie -l, aber Eigner nicht auflisten.\n"
-"  -G, --no-group             Ausgabe von Gruppen-Informationen "
-"unterdrücken.\n"
+"  -g                         wie -l, aber Eigner nicht auflisten\n"
+"  -G, --no-group             Ausgabe von Gruppen-Informationen unterdrücken\n"
 "  -h, --human-readable       Ausgabe von Größen in menschenlesbarem Format\n"
-"                               (z.B. 1K 234M 2G).\n"
-"      --si                   wie -h, aber mit 1000 statt 1024 als Teiler.\n"
-"  -H                         Symbolischen Verknüpfungen, die auf der\n"
+"                               (z.B. 1K 234M 2G)\n"
+"      --si                   wie -h, aber mit 1000 statt 1024 als Teiler\n"
+"  -H, --dereference-command-line   symbolischen Verknüpfungen, die auf der\n"
 "                               Kommandozeile aufgeführt sind, folgen.\n"
+"      --dereference-command-line-symlink-to-dir\n"
+"                             symbolischen Verknüpfungen auf der "
+"Kommandozeile,\n"
+"                                die auf Verzeichnisse zeigen, folgen\n"
 
 #: src/ls.c:3810
 msgid ""
@@ -4149,9 +4152,16 @@ msgid ""
 "it is interpreted as hexadecimal; otherwise, if it begins with 0, as octal;\n"
 "otherwise, as decimal.  TYPE may be:\n"
 msgstr ""
+"\n"
+"Sowohl MAJOR als auch MINOR müssen angegeben werden, wenn der TYP b, c oder "
+"u\n"
+"ist, und müssen weggelassen werden für TYP p. Beginnen MAJOR oder MINOR mit "
+"0x\n"
+"oder 0X, wird die Zahl hexadezimal interpretiert; anderenfalls, wenn sie mit "
+"0\n"
+"beginnen, oktal; anderenfalls dezimal. TYP kann sein:\n"
 
 #: src/mknod.c:76
-#, fuzzy
 msgid ""
 "\n"
 "  b      create a block (buffered) special file\n"
@@ -4159,10 +4169,8 @@ msgid ""
 "  p      create a FIFO\n"
 msgstr ""
 "\n"
-"MAJOR MINOR sind verboten für TYP p, sonst vorgeschrieben. TYP kann sein:\n"
-"\n"
-"  b      eine blockorientiert (gepufferte) Spezial-Datei anlegen\n"
-"  c, u   eine zeichenorientert (ungepufferte) Spezial-Datei anlegen\n"
+"  b      eine blockorientierte (gepufferte) Spezial-Datei anlegen\n"
+"  c, u   eine zeichenorienterte (ungepufferte) Spezial-Datei anlegen\n"
 "  p      eine FIFO anlegen\n"
 
 #: src/mknod.c:141
@@ -5515,15 +5523,17 @@ msgid "cannot get current directory"
 msgstr "Das aktuelle Verzeichnis ist nicht erreichbar"
 
 #: src/readlink.c:69
-#, fuzzy, c-format
+#, c-format
 msgid "Usage: %s [OPTION]... FILE\n"
-msgstr "Aufruf: %s [OPTION]... [DATEI]\n"
+msgstr "Aufruf: %s [OPTION]... DATEI\n"
 
 #: src/readlink.c:70
 msgid ""
 "Display value of a symbolic link on standard output.\n"
 "\n"
 msgstr ""
+"Wert einer symbolischen Verknüpfung auf der Standardausgabe ausgeben.\n"
+"\n"
 
 #: src/readlink.c:72
 msgid ""
@@ -5534,6 +5544,14 @@ msgid ""
 "  -s, --silent            suppress most error messages\n"
 "  -v, --verbose           report error messages\n"
 msgstr ""
+"  -f, --canonicalize      kanonisieren, indem jeder symb. Verknüpfung in "
+"jeder\n"
+"                            Komponente des gegebenen Pfads rekursiv gefolgt "
+"wird\n"
+"  -n, --no-newline        keinen abschließenden Zeilenvorschub ausgeben\n"
+"  -q, --quiet,\n"
+"  -s, --silent            Fehlermeldungen größtenteils unterdrücken\n"
+"  -v, --verbose           Fehlermeldungen ausgeben\n"
 
 #: src/remove.c:394
 #, c-format
@@ -6358,9 +6376,8 @@ msgid "invalid number"
 msgstr "Ungültige Anzahl"
 
 #: src/stat.c:325
-#, fuzzy
 msgid "*** invalid date/time ***"
-msgstr "ungültiges Datum »%s«"
+msgstr "*** ungültiges Datum/Zeit ***"
 
 #: src/stat.c:603
 #, c-format
@@ -7689,9 +7706,9 @@ msgid "creating %s"
 msgstr "Erzeugen von %s"
 
 #: src/touch.c:222
-#, fuzzy, c-format
+#, c-format
 msgid "cannot touch %s"
-msgstr "kann Eigentümer von %s nicht ändern"
+msgstr "kann %s nicht berühren"
 
 #: src/touch.c:228
 #, c-format
@@ -8125,7 +8142,6 @@ msgstr ""
 "schreiben.  Ohne DATEI, oder wenn DATEI »-« ist, Standardeingabe lesen.\n"
 
 #: src/unexpand.c:387
-#, fuzzy
 msgid ""
 "  -a, --all        convert all whitespace, instead of just initial "
 "whitespace\n"
@@ -8135,9 +8151,12 @@ msgid ""
 "  -t, --tabs=LIST  use comma separated LIST of tab positions (enables -a)\n"
 msgstr ""
 "  -a, --all           alle Leerzeichen wandeln, statt nur der führendenen\n"
+"      --first-only    nur führendene Leerzeichen konvertieren (überschreibt -"
+"a)\n"
 "  -t, --tabs=ANZAHL   Tabulatoren alle ANZAHL Zeichen annehmen, statt 8\n"
-"  -t, --tabs=LISTE    mit Kommata getrennte Liste von Tabulatorpositionen\n"
-"                        verwenden\n"
+"  -t, --tabs=LISTE    kommagetrennte Liste von Tabulatorpositionen "
+"verwenden\n"
+"                        (-t und --tabs impliziert -a)\n"
 
 #: src/unexpand.c:464
 msgid "`-LIST' option is obsolete; use `--first-only -t LIST'"
@@ -8582,19 +8601,11 @@ msgstr ""
 "Eine Zeile mit allen angegebenen ZEICHENKETTEN oder »y« wiederholt "
 "ausgeben.\n"
 
-#, fuzzy
-#~ msgid "cannot convert time"
-#~ msgstr "das Datum kann nicht gesetzt werden"
-
-#, fuzzy
-#~ msgid "cannot format time"
-#~ msgstr "das Datum kann nicht gesetzt werden"
+#~ msgid "missing file arguments"
+#~ msgstr "Fehlende Dateiargumente"
 
 #~ msgid "cannot change to `..' from directory %s"
 #~ msgstr "Wechseln in »..« des Verzeichnisses %s nicht möglich"
-
-#~ msgid "missing file arguments"
-#~ msgstr "Fehlende Dateiargumente"
 
 #~ msgid "%s: is so large that it is not representable"
 #~ msgstr "%s: ist so groß, dass es nicht dargestellt werden kann"

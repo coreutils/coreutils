@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: textutils 2.1\n"
-"POT-Creation-Date: 2003-02-02 00:05+0100\n"
+"POT-Creation-Date: 2003-02-05 11:25+0100\n"
 "PO-Revision-Date: 2002-08-04 06:10+0800\n"
 "Last-Translator: Abel Cheung <maddog@linux.org.hk>\n"
 "Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
@@ -264,7 +264,7 @@ msgstr "要比較的字串為%s及%s。"
 
 #: src/basename.c:50 src/cat.c:88 src/chgrp.c:122 src/chmod.c:238
 #: src/chown.c:95 src/chroot.c:41 src/cksum.c:276 src/comm.c:69 src/cp.c:160
-#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:707
+#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:719
 #: src/dircolors.c:99 src/dirname.c:42 src/du.c:167 src/echo.c:73
 #: src/env.c:115 src/expand.c:106 src/expr.c:86 src/factor.c:70 src/fmt.c:267
 #: src/fold.c:63 src/head.c:84 src/hostid.c:44 src/hostname.c:63 src/id.c:83
@@ -302,7 +302,7 @@ msgstr ""
 
 #: src/basename.c:66 src/cat.c:124 src/chgrp.c:152 src/chmod.c:264
 #: src/chown.c:139 src/chroot.c:59 src/cksum.c:291 src/comm.c:86 src/cp.c:257
-#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:746
+#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:758
 #: src/dircolors.c:120 src/dirname.c:58 src/du.c:212 src/echo.c:105
 #: src/env.c:134 src/expand.c:131 src/expr.c:149 src/factor.c:90
 #: src/false.c:45 src/fmt.c:297 src/fold.c:86 src/head.c:115 src/hostid.c:57
@@ -1017,7 +1017,7 @@ msgstr ""
 "將 <來源> 檔案複製至 <目的地>，或將多個 <檔案> 複製至指定 <目錄>。\n"
 "\n"
 
-#: src/cp.c:174 src/csplit.c:1505 src/cut.c:182 src/df.c:717 src/du.c:176
+#: src/cp.c:174 src/csplit.c:1505 src/cut.c:182 src/df.c:729 src/du.c:176
 #: src/expand.c:119 src/fmt.c:277 src/fold.c:76 src/head.c:98
 #: src/install.c:609 src/kill.c:103 src/ln.c:354 src/ls.c:3767 src/mkdir.c:66
 #: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:321 src/nl.c:185 src/paste.c:413
@@ -1441,7 +1441,7 @@ msgstr ""
 msgid "David Ihnat, David MacKenzie, and Jim Meyering"
 msgstr "David Ihnat、David MacKenzie 及 Jim Meyering"
 
-#: src/cut.c:174 src/df.c:711 src/du.c:171 src/expand.c:110 src/fold.c:67
+#: src/cut.c:174 src/df.c:723 src/du.c:171 src/expand.c:110 src/fold.c:67
 #: src/head.c:88 src/ls.c:3761 src/nl.c:176 src/paste.c:403 src/pr.c:2754
 #: src/sort.c:276 src/sum.c:60 src/tac.c:127 src/tail.c:234 src/tee.c:63
 #: src/unexpand.c:375 src/wc.c:125
@@ -1941,7 +1941,7 @@ msgstr "   %4s-區段      已用     可用 已用%%"
 msgid " Mounted on\n"
 msgstr " 掛載點\n"
 
-#: src/df.c:712
+#: src/df.c:724
 msgid ""
 "Show information about the filesystem on which each FILE resides,\n"
 "or all filesystems by default.\n"
@@ -1950,7 +1950,7 @@ msgstr ""
 "顯示每個 <檔案> 所在的檔案系統的資訊，預設是顯示所有檔案系統。\n"
 "\n"
 
-#: src/df.c:720
+#: src/df.c:732
 msgid ""
 "  -a, --all             include filesystems having 0 blocks\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
@@ -1963,7 +1963,7 @@ msgstr ""
 "  -h, --human-readable  以容易理解的格式印出檔案系統大小 (例如 1K 234M 2G)\n"
 "  -H, --si              類似 -h，但取 1000 的次方而不是 1024\n"
 
-#: src/df.c:726
+#: src/df.c:738
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
 "  -k                    like --block-size=1K\n"
@@ -1976,7 +1976,7 @@ msgstr ""
 "  -l, --local           只顯示本機的檔案系統\n"
 "      --no-sync         取得使用量資料前不進行 sync 動作 (預設)\n"
 
-#: src/df.c:732
+#: src/df.c:744
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
 "      --sync            invoke sync before getting usage info\n"
@@ -1992,7 +1992,7 @@ msgstr ""
 "  -x, --exclude-type=類型   只印出不是指定 <類型> 的檔案系統資訊\n"
 "  -v                    (此選項不作處理)\n"
 
-#: src/df.c:742 src/du.c:208 src/ls.c:3879
+#: src/df.c:754 src/du.c:208 src/ls.c:3879
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
@@ -2002,16 +2002,16 @@ msgstr ""
 "<大小> 可以是以下的單位 (單位前可加上整數)：\n"
 "kB=1000，K=1024，MB=1000000，M=1048576，還有 G、T、P、E、Z、Y 如此類推。\n"
 
-#: src/df.c:859
+#: src/df.c:871
 #, c-format
 msgid "file system type %s both selected and excluded"
 msgstr "不能同時選擇和排除檔案系統類型%s"
 
-#: src/df.c:903
+#: src/df.c:915
 msgid "Warning: "
 msgstr "警告："
 
-#: src/df.c:906
+#: src/df.c:918
 #, c-format
 msgid "%scannot read table of mounted filesystems"
 msgstr "%s無法讀取已掛上的檔案系統的名單"
@@ -2189,24 +2189,24 @@ msgstr "無法進入%s目錄"
 msgid "cannot read directory %s"
 msgstr "無法建立目錄%s"
 
-#: src/du.c:533 src/ls.c:2241 src/wc.c:591
+#: src/du.c:545 src/ls.c:2241 src/wc.c:591
 msgid "total"
 msgstr "總計"
 
-#: src/du.c:615
+#: src/du.c:627
 #, fuzzy, c-format
 msgid "invalid maximum depth %s"
 msgstr "無效的寬度：‘%s’"
 
-#: src/du.c:681
+#: src/du.c:693
 msgid "cannot both summarize and show all entries"
 msgstr "不能只顯示總用量，同時又顯示每個項目"
 
-#: src/du.c:688
+#: src/du.c:700
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr "警告：顯示總用量等於使用 --max-depth=0"
 
-#: src/du.c:694
+#: src/du.c:706
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr "警告：顯示總用量的選項和 --max-depth=%d 互相抵觸"

@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU textutils 2.0.22\n"
-"POT-Creation-Date: 2003-02-02 00:05+0100\n"
+"POT-Creation-Date: 2003-02-05 11:25+0100\n"
 "PO-Revision-Date: 2002-07-27 22:54+0900\n"
 "Last-Translator: Masahito Yamaga <ma@yama-ga.com>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
@@ -271,7 +271,7 @@ msgstr "比較した文字列は %s と %s です."
 
 #: src/basename.c:50 src/cat.c:88 src/chgrp.c:122 src/chmod.c:238
 #: src/chown.c:95 src/chroot.c:41 src/cksum.c:276 src/comm.c:69 src/cp.c:160
-#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:707
+#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:719
 #: src/dircolors.c:99 src/dirname.c:42 src/du.c:167 src/echo.c:73
 #: src/env.c:115 src/expand.c:106 src/expr.c:86 src/factor.c:70 src/fmt.c:267
 #: src/fold.c:63 src/head.c:84 src/hostid.c:44 src/hostname.c:63 src/id.c:83
@@ -312,7 +312,7 @@ msgstr ""
 
 #: src/basename.c:66 src/cat.c:124 src/chgrp.c:152 src/chmod.c:264
 #: src/chown.c:139 src/chroot.c:59 src/cksum.c:291 src/comm.c:86 src/cp.c:257
-#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:746
+#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:758
 #: src/dircolors.c:120 src/dirname.c:58 src/du.c:212 src/echo.c:105
 #: src/env.c:134 src/expand.c:131 src/expr.c:149 src/factor.c:90
 #: src/false.c:45 src/fmt.c:297 src/fold.c:86 src/head.c:115 src/hostid.c:57
@@ -1041,7 +1041,7 @@ msgstr ""
 "SOURCE から DEST へ、或いは FILE (複数可)を DIRECTORY へコピーする。\n"
 "\n"
 
-#: src/cp.c:174 src/csplit.c:1505 src/cut.c:182 src/df.c:717 src/du.c:176
+#: src/cp.c:174 src/csplit.c:1505 src/cut.c:182 src/df.c:729 src/du.c:176
 #: src/expand.c:119 src/fmt.c:277 src/fold.c:76 src/head.c:98
 #: src/install.c:609 src/kill.c:103 src/ln.c:354 src/ls.c:3767 src/mkdir.c:66
 #: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:321 src/nl.c:185 src/paste.c:413
@@ -1480,7 +1480,7 @@ msgstr ""
 msgid "David Ihnat, David MacKenzie, and Jim Meyering"
 msgstr "David Ihnat, David MacKenzie および Jim Meyering"
 
-#: src/cut.c:174 src/df.c:711 src/du.c:171 src/expand.c:110 src/fold.c:67
+#: src/cut.c:174 src/df.c:723 src/du.c:171 src/expand.c:110 src/fold.c:67
 #: src/head.c:88 src/ls.c:3761 src/nl.c:176 src/paste.c:403 src/pr.c:2754
 #: src/sort.c:276 src/sum.c:60 src/tac.c:127 src/tail.c:234 src/tee.c:63
 #: src/unexpand.c:375 src/wc.c:125
@@ -2058,7 +2058,7 @@ msgstr " %4s-ブロック    使用   使用可 使用%%"
 msgid " Mounted on\n"
 msgstr " マウント位置\n"
 
-#: src/df.c:712
+#: src/df.c:724
 msgid ""
 "Show information about the filesystem on which each FILE resides,\n"
 "or all filesystems by default.\n"
@@ -2068,7 +2068,7 @@ msgstr ""
 "あるいは、ファイルが指定されなければ全ファイルシステムの使用量を表示する。\n"
 "\n"
 
-#: src/df.c:720
+#: src/df.c:732
 #, fuzzy
 msgid ""
 "  -a, --all             include filesystems having 0 blocks\n"
@@ -2082,7 +2082,7 @@ msgstr ""
 "  -h, --human-readable  人間が読みやすい形式で表示する (例: 1K 234M 2G)\n"
 "  -H, --si              同上。但し単位は 1024 ではなく 1000 倍\n"
 
-#: src/df.c:726
+#: src/df.c:738
 #, fuzzy
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
@@ -2097,7 +2097,7 @@ msgstr ""
 "  -m, --megabytes       --block-size=1048576 と同様\n"
 "      --no-sync         使用情報取得の前に sync(2) を起動しない (default)\n"
 
-#: src/df.c:732
+#: src/df.c:744
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
 "      --sync            invoke sync before getting usage info\n"
@@ -2113,23 +2113,23 @@ msgstr ""
 "  -x, --exclude-type=TYPE  指定した種類のファイルシステムを除いて表示する\n"
 "  -v                    (無視される)\n"
 
-#: src/df.c:742 src/du.c:208 src/ls.c:3879
+#: src/df.c:754 src/du.c:208 src/ls.c:3879
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
 "kB 1000, K 1024, MB 1,000,000, M 1,048,576, and so on for G, T, P, E, Z, Y.\n"
 msgstr ""
 
-#: src/df.c:859
+#: src/df.c:871
 #, c-format
 msgid "file system type %s both selected and excluded"
 msgstr "%s 形式ファイルシステムが選択/非選択の両方で指定されました"
 
-#: src/df.c:903
+#: src/df.c:915
 msgid "Warning: "
 msgstr "警告: "
 
-#: src/df.c:906
+#: src/df.c:918
 #, c-format
 msgid "%scannot read table of mounted filesystems"
 msgstr "%sマウントされているファイルシステムのテーブルを読めません"
@@ -2323,24 +2323,24 @@ msgstr "ディレクトリ %s に移動できません"
 msgid "cannot read directory %s"
 msgstr "ディレクトリ %s を作成できません"
 
-#: src/du.c:533 src/ls.c:2241 src/wc.c:591
+#: src/du.c:545 src/ls.c:2241 src/wc.c:591
 msgid "total"
 msgstr "合計"
 
-#: src/du.c:615
+#: src/du.c:627
 #, fuzzy, c-format
 msgid "invalid maximum depth %s"
 msgstr "幅 `%s' が正しくありません"
 
-#: src/du.c:681
+#: src/du.c:693
 msgid "cannot both summarize and show all entries"
 msgstr "合計と全エントリの表示の両方を、一度に指定することはできません"
 
-#: src/du.c:688
+#: src/du.c:700
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr "警告: 統計(-s)と -max-depth=0 は同じ用法です"
 
-#: src/du.c:694
+#: src/du.c:706
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr "警告: 統計(-s)と -max-depth=%d の指定が競合しています"

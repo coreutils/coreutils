@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU coreutils 4.5.4\n"
-"POT-Creation-Date: 2003-02-02 00:05+0100\n"
-"PO-Revision-Date: 2002-12-15 08:00-0500\n"
+"Project-Id-Version: GNU coreutils 4.5.5\n"
+"POT-Creation-Date: 2003-02-05 11:25+0100\n"
+"PO-Revision-Date: 2003-02-03 08:00-0500\n"
 "Last-Translator: Michel Robitaille <robitail@IRO.UMontreal.CA>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -267,7 +267,7 @@ msgstr "Les chaînes comparées étaient %s et %s."
 
 #: src/basename.c:50 src/cat.c:88 src/chgrp.c:122 src/chmod.c:238
 #: src/chown.c:95 src/chroot.c:41 src/cksum.c:276 src/comm.c:69 src/cp.c:160
-#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:707
+#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:719
 #: src/dircolors.c:99 src/dirname.c:42 src/du.c:167 src/echo.c:73
 #: src/env.c:115 src/expand.c:106 src/expr.c:86 src/factor.c:70 src/fmt.c:267
 #: src/fold.c:63 src/head.c:84 src/hostid.c:44 src/hostname.c:63 src/id.c:83
@@ -308,7 +308,7 @@ msgstr ""
 
 #: src/basename.c:66 src/cat.c:124 src/chgrp.c:152 src/chmod.c:264
 #: src/chown.c:139 src/chroot.c:59 src/cksum.c:291 src/comm.c:86 src/cp.c:257
-#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:746
+#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:758
 #: src/dircolors.c:120 src/dirname.c:58 src/du.c:212 src/echo.c:105
 #: src/env.c:134 src/expand.c:131 src/expr.c:149 src/factor.c:90
 #: src/false.c:45 src/fmt.c:297 src/fold.c:86 src/head.c:115 src/hostid.c:57
@@ -1055,7 +1055,7 @@ msgstr ""
 "RÉPERTOIRE.\n"
 "\n"
 
-#: src/cp.c:174 src/csplit.c:1505 src/cut.c:182 src/df.c:717 src/du.c:176
+#: src/cp.c:174 src/csplit.c:1505 src/cut.c:182 src/df.c:729 src/du.c:176
 #: src/expand.c:119 src/fmt.c:277 src/fold.c:76 src/head.c:98
 #: src/install.c:609 src/kill.c:103 src/ln.c:354 src/ls.c:3767 src/mkdir.c:66
 #: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:321 src/nl.c:185 src/paste.c:413
@@ -1512,7 +1512,7 @@ msgstr ""
 msgid "David Ihnat, David MacKenzie, and Jim Meyering"
 msgstr "David Ihnat, David MacKenzie et Jim Meyering"
 
-#: src/cut.c:174 src/df.c:711 src/du.c:171 src/expand.c:110 src/fold.c:67
+#: src/cut.c:174 src/df.c:723 src/du.c:171 src/expand.c:110 src/fold.c:67
 #: src/head.c:88 src/ls.c:3761 src/nl.c:176 src/paste.c:403 src/pr.c:2754
 #: src/sort.c:276 src/sum.c:60 src/tac.c:127 src/tail.c:234 src/tee.c:63
 #: src/unexpand.c:375 src/wc.c:125
@@ -1615,9 +1615,9 @@ msgid "you must specify a list of bytes, characters, or fields"
 msgstr "Une liste d'octets, de caractères, ou de champs doit être spécifiée."
 
 #: src/cut.c:720
-#, fuzzy
 msgid "an input delimiter may be specified only when operating on fields"
-msgstr "Un délimiteur peut être spécifié lorsqu'opérant sur des champs."
+msgstr ""
+"un délimiteur peut être spécifié seulement lorsqu'opérant sur des champs"
 
 #: src/cut.c:724
 msgid ""
@@ -2118,7 +2118,7 @@ msgstr " %4s-blocs    Utilisé de la capacité disponible%%"
 msgid " Mounted on\n"
 msgstr " Monté sur\n"
 
-#: src/df.c:712
+#: src/df.c:724
 msgid ""
 "Show information about the filesystem on which each FILE resides,\n"
 "or all filesystems by default.\n"
@@ -2128,7 +2128,7 @@ msgstr ""
 "réside chaque FICHIER ou de tous les systèmes de fichiers par défaut.\n"
 "\n"
 
-#: src/df.c:720
+#: src/df.c:732
 msgid ""
 "  -a, --all             include filesystems having 0 blocks\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
@@ -2143,7 +2143,7 @@ msgstr ""
 "  -H, --si                idem mais utiliser un multiple de 1000\n"
 "                          au lieu de 1024\n"
 
-#: src/df.c:726
+#: src/df.c:738
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
 "  -k                    like --block-size=1K\n"
@@ -2159,7 +2159,7 @@ msgstr ""
 "                          d'obtenir les informations d'utilisation\n"
 "                          des disques (par défaut)\n"
 
-#: src/df.c:732
+#: src/df.c:744
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
 "      --sync            invoke sync before getting usage info\n"
@@ -2179,7 +2179,7 @@ msgstr ""
 "                          de système de fichiers\n"
 "  -v                      (ignorée)\n"
 
-#: src/df.c:742 src/du.c:208 src/ls.c:3879
+#: src/df.c:754 src/du.c:208 src/ls.c:3879
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
@@ -2191,16 +2191,16 @@ msgstr ""
 "E, Z, Y.\n"
 "\n"
 
-#: src/df.c:859
+#: src/df.c:871
 #, c-format
 msgid "file system type %s both selected and excluded"
 msgstr "Le système de fichier %s est à la fois sélectionné et exclu."
 
-#: src/df.c:903
+#: src/df.c:915
 msgid "Warning: "
 msgstr "AVERTISSEMENT: "
 
-#: src/df.c:906
+#: src/df.c:918
 #, c-format
 msgid "%scannot read table of mounted filesystems"
 msgstr "La table du système de fichiers %s ne peut être lue."
@@ -2301,11 +2301,11 @@ msgstr ""
 "\n"
 
 #: src/du.c:49
-#, fuzzy
 msgid ""
 "Torbjorn Granlund, David MacKenzie, Larry McVoy, Paul Eggert, and Jim "
 "Meyering"
-msgstr "Torbjorn Granlund, David MacKenzie, Larry McVoy et Paul Eggert"
+msgstr ""
+"Torbjorn Granlund, David MacKenzie, Larry McVoy, Paul Eggert et Jim Meyering"
 
 #: src/du.c:172
 msgid ""
@@ -2387,9 +2387,9 @@ msgstr ""
 "                           systèmes de fichiers\n"
 
 #: src/du.c:339
-#, fuzzy, c-format
+#, c-format
 msgid "cannot change to parent of directory %s"
-msgstr "ne peut aller vers le répertoire %s"
+msgstr "ne peut aller vers le répertoire parent de %s"
 
 #: src/du.c:347
 #, c-format
@@ -2397,30 +2397,30 @@ msgid "cannot change to directory %s"
 msgstr "ne peut aller vers le répertoire %s"
 
 #: src/du.c:354
-#, fuzzy, c-format
+#, c-format
 msgid "cannot read directory %s"
-msgstr "Ne peut créer le répertoire %s"
+msgstr "ne peut lire le répertoire %s"
 
-#: src/du.c:533 src/ls.c:2241 src/wc.c:591
+#: src/du.c:545 src/ls.c:2241 src/wc.c:591
 msgid "total"
 msgstr "total"
 
-#: src/du.c:615
+#: src/du.c:627
 #, c-format
 msgid "invalid maximum depth %s"
 msgstr "profondeur maximum invalide %s"
 
-#: src/du.c:681
+#: src/du.c:693
 msgid "cannot both summarize and show all entries"
 msgstr "Ne peut à la fois produire un sommaire et afficher toutes les entrées."
 
-#: src/du.c:688
+#: src/du.c:700
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr ""
 "AVERTISSEMENT: le sommaire est identique si l'option --max-dept=0 est "
 "utilisée"
 
-#: src/du.c:694
+#: src/du.c:706
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr "AVERTISSEMENT: conflit d'options pour le sommaire avec --max-depth=%d"
@@ -3664,7 +3664,6 @@ msgstr ""
 "(ctime)\n"
 
 #: src/ls.c:3784
-#, fuzzy
 msgid ""
 "  -C                         list entries by columns\n"
 "      --color[=WHEN]         control whether color is used to distinguish "
@@ -3676,11 +3675,13 @@ msgid ""
 "  -D, --dired                generate output designed for Emacs' dired mode\n"
 msgstr ""
 "  -C                         afficher en colonnes\n"
-"      --color[=PARAM]        afficher les fichiers avec une couleur selon\n"
-"                             leur type à l'aide d'un des PARAMètres\n"
-"                             suivants: never, always ou auto\n"
+"      --color[=PARAM]        afficher avec une couleur pour distinguer les "
+"types de fichiers\n"
+"                             de fichiers, selon un des PARAMètres\n"
+"                             suivants: `never', `always', ou `auto'\n"
 "  -d, --directory            lister les noms de répertoires plutôt\n"
-"                             que leur contenu\n"
+"                             que leur contenu et ne pas déférencer les liens "
+"symboliques\n"
 "  -D, --dired                générer une sortie adaptée pour le mode\n"
 "                             « dired » de Emacs\n"
 
@@ -3702,7 +3703,6 @@ msgstr ""
 "      --full-time            identique à -l --time-style=full-iso\n"
 
 #: src/ls.c:3799
-#, fuzzy
 msgid ""
 "  -g                         like -l, but do not list owner\n"
 "  -G, --no-group             inhibit display of group information\n"
@@ -3726,6 +3726,10 @@ msgstr ""
 "  -H, --dereference-command-line\n"
 "                             suivre les liens symboliques de la ligne de "
 "commande\n"
+"      --dereference-command-line-symlink-to-dir\n"
+"                             suivre chaque lein symbolique de la ligne de "
+"commande\n"
+"                             qui pointe vers un répertoire\n"
 
 #: src/ls.c:3810
 msgid ""
@@ -4151,18 +4155,22 @@ msgid ""
 "it is interpreted as hexadecimal; otherwise, if it begins with 0, as octal;\n"
 "otherwise, as decimal.  TYPE may be:\n"
 msgstr ""
+"\n"
+"Les deux MAJEUR et MINEUR doivent être spécifiés quand le TYPE est b, c ou "
+"u\n"
+"et ils doivent être omis lorsque le TYPE est p. Si MAJEUR et MINEUR avec 0x "
+"ou 0X,\n"
+"est fourni, ils sont interprétés en hexadécimal; autrement, s'ils débutent "
+"pas 0, ils\n"
+"le sont en octal autrement en décimal. Le TYPE peut être:\n"
 
 #: src/mknod.c:76
-#, fuzzy
 msgid ""
 "\n"
 "  b      create a block (buffered) special file\n"
 "  c, u   create a character (unbuffered) special file\n"
 "  p      create a FIFO\n"
 msgstr ""
-"\n"
-"MAJEUR MINEUR sont interdits pour un  TYPE p, obligatoire autrement.\n"
-"Le TYPE peut être:\n"
 "\n"
 "  b      créer un fichier spécial de type blocage (avec tampon)\n"
 "  c, u   créer un fichier spécial de type caractère (sans tampon) \n"
@@ -5532,15 +5540,17 @@ msgid "cannot get current directory"
 msgstr "ne peut obtenir le répertoire courant"
 
 #: src/readlink.c:69
-#, fuzzy, c-format
+#, c-format
 msgid "Usage: %s [OPTION]... FILE\n"
-msgstr "Usage: %s [OPTION]... [FICHIER]\n"
+msgstr "Usage: %s [OPTION]... FICHIER\n"
 
 #: src/readlink.c:70
 msgid ""
 "Display value of a symbolic link on standard output.\n"
 "\n"
 msgstr ""
+"Afficher la valeur d'un lien symbolique sur la sortie standard.\n"
+"\n"
 
 #: src/readlink.c:72
 msgid ""
@@ -5551,6 +5561,13 @@ msgid ""
 "  -s, --silent            suppress most error messages\n"
 "  -v, --verbose           report error messages\n"
 msgstr ""
+"  -f, --canonicalize      canoniser en suivant chaque lien symbolique dans "
+"chacun\n"
+"                          des composants d'un chemin donné récursivement\n"
+"  -n, --no-newline        ne pas afficher de retour de chariot en suffixe\n"
+"  -q, --quiet,            \n"
+"  -s, --silent            supprimer la pluplart des messages d'erreur\n"
+"  -v, --verbose           rapporter les message d'erreur\n"
 
 #: src/remove.c:394
 #, c-format
@@ -6371,9 +6388,8 @@ msgid "invalid number"
 msgstr "Nombre invalide."
 
 #: src/stat.c:325
-#, fuzzy
 msgid "*** invalid date/time ***"
-msgstr "date invalide « %s »"
+msgstr "*** date/heure invalide ***"
 
 #: src/stat.c:603
 #, c-format
@@ -7735,9 +7751,9 @@ msgid "creating %s"
 msgstr "création de %s"
 
 #: src/touch.c:222
-#, fuzzy, c-format
+#, c-format
 msgid "cannot touch %s"
-msgstr "Ne peut changer la protection de %s"
+msgstr "ne peut faire un touch sur %s"
 
 #: src/touch.c:228
 #, c-format
@@ -8183,7 +8199,6 @@ msgstr ""
 "Sans FICHIER, ou quand le FICHIER est -, lire de l'entrée standard.\n"
 
 #: src/unexpand.c:387
-#, fuzzy
 msgid ""
 "  -a, --all        convert all whitespace, instead of just initial "
 "whitespace\n"
@@ -8194,6 +8209,8 @@ msgid ""
 msgstr ""
 "  -a, --all           convertir tous les espaces blancs,\n"
 "                      au lieu du blanc d'espacement initial\n"
+"      --first-only    convertir seulement les séquences de tête d'espaces "
+"blancs (écrase -a)\n"
 "  -t, --tabs=N        utiliser N caractères de tabulations au lieu de 8\n"
 "  -t, --tabs=LISTE    utiliser la LISTE explicite de positions\n"
 "                      de tabulation\n"
@@ -8619,19 +8636,11 @@ msgstr ""
 "Afficher à répétition une ligne de caractères telle que spécifiée\n"
 "par CHAÎNE ou par « y ».\n"
 
-#, fuzzy
-#~ msgid "cannot convert time"
-#~ msgstr "ne peut initialiser la date."
-
-#, fuzzy
-#~ msgid "cannot format time"
-#~ msgstr "Ne peut changer la protection de %s"
+#~ msgid "missing file arguments"
+#~ msgstr "arguments de fichier manquants"
 
 #~ msgid "cannot change to `..' from directory %s"
 #~ msgstr "ne peut aller vers `..' à partir du répertoire %s"
-
-#~ msgid "missing file arguments"
-#~ msgstr "arguments de fichier manquants"
 
 #~ msgid "%s: is so large that it is not representable"
 #~ msgstr "%s: est tellement grand qu'il n'est pas représentable."
@@ -8710,6 +8719,10 @@ msgstr ""
 #~ "pour «.» sont %lu/%lu. Cela signifie que durant l'exécution du programme, "
 #~ "le\n"
 #~ "fichier a été remplacé soit par un autre. Fichier escamoté."
+
+#, fuzzy
+#~ msgid "cannot fork"
+#~ msgstr "Ne peut changer la protection de %s"
 
 #~ msgid ""
 #~ "ERROR: the directory %s initially had device/inode\n"

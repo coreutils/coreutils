@@ -1,13 +1,13 @@
 # -*- mode: po; -*- Slovenian message catalog for GNU coreutils.
 # Copyright (C) 1996, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
 # Primo¾ Peterlin <primoz.peterlin@biofiz.mf.uni-lj.si>, 1996, 1999, 2000, 2001, 2002.
-# $Id: sl.po,v 1.37 2003/02/02 21:48:02 meyering Exp $
+# $Id: sl.po,v 1.40 2003/02/06 08:08:44 meyering Exp $
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU coreutils 4.5.4\n"
-"POT-Creation-Date: 2003-02-02 00:05+0100\n"
-"PO-Revision-Date: 2002-12-16 10:20+0100\n"
+"Project-Id-Version: GNU coreutils 4.5.5\n"
+"POT-Creation-Date: 2003-02-05 11:25+0100\n"
+"PO-Revision-Date: 2003-02-05 11:24+0100\n"
 "Last-Translator: Primo¾ Peterlin <primoz.peterlin@biofiz.mf.uni-lj.si>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -270,7 +270,7 @@ msgstr "Primerjana niza sta bila %s in %s."
 
 #: src/basename.c:50 src/cat.c:88 src/chgrp.c:122 src/chmod.c:238
 #: src/chown.c:95 src/chroot.c:41 src/cksum.c:276 src/comm.c:69 src/cp.c:160
-#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:707
+#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:719
 #: src/dircolors.c:99 src/dirname.c:42 src/du.c:167 src/echo.c:73
 #: src/env.c:115 src/expand.c:106 src/expr.c:86 src/factor.c:70 src/fmt.c:267
 #: src/fold.c:63 src/head.c:84 src/hostid.c:44 src/hostname.c:63 src/id.c:83
@@ -310,7 +310,7 @@ msgstr ""
 
 #: src/basename.c:66 src/cat.c:124 src/chgrp.c:152 src/chmod.c:264
 #: src/chown.c:139 src/chroot.c:59 src/cksum.c:291 src/comm.c:86 src/cp.c:257
-#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:746
+#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:758
 #: src/dircolors.c:120 src/dirname.c:58 src/du.c:212 src/echo.c:105
 #: src/env.c:134 src/expand.c:131 src/expr.c:149 src/factor.c:90
 #: src/false.c:45 src/fmt.c:297 src/fold.c:86 src/head.c:115 src/hostid.c:57
@@ -1042,7 +1042,7 @@ msgstr ""
 "Prepi¹emo IZVOR v CILJ, ali veè IZVOROV v IMENIK.\n"
 "\n"
 
-#: src/cp.c:174 src/csplit.c:1505 src/cut.c:182 src/df.c:717 src/du.c:176
+#: src/cp.c:174 src/csplit.c:1505 src/cut.c:182 src/df.c:729 src/du.c:176
 #: src/expand.c:119 src/fmt.c:277 src/fold.c:76 src/head.c:98
 #: src/install.c:609 src/kill.c:103 src/ln.c:354 src/ls.c:3767 src/mkdir.c:66
 #: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:321 src/nl.c:185 src/paste.c:413
@@ -1489,7 +1489,7 @@ msgstr ""
 msgid "David Ihnat, David MacKenzie, and Jim Meyering"
 msgstr "David Ihnat, David MacKenzie in Jim Meyering"
 
-#: src/cut.c:174 src/df.c:711 src/du.c:171 src/expand.c:110 src/fold.c:67
+#: src/cut.c:174 src/df.c:723 src/du.c:171 src/expand.c:110 src/fold.c:67
 #: src/head.c:88 src/ls.c:3761 src/nl.c:176 src/paste.c:403 src/pr.c:2754
 #: src/sort.c:276 src/sum.c:60 src/tac.c:127 src/tail.c:234 src/tee.c:63
 #: src/unexpand.c:375 src/wc.c:125
@@ -1591,9 +1591,8 @@ msgid "you must specify a list of bytes, characters, or fields"
 msgstr "podati je treba seznam bajtov, znakov ali polj"
 
 #: src/cut.c:720
-#, fuzzy
 msgid "an input delimiter may be specified only when operating on fields"
-msgstr "razmejilnik se sme doloèiti le, kadar delamo s polji"
+msgstr "vhodni razmejilnik se sme doloèiti le, kadar delamo s polji"
 
 #: src/cut.c:724
 msgid ""
@@ -2079,7 +2078,7 @@ msgstr " %4s-blokov      Upor. Na voljo Upo%%"
 msgid " Mounted on\n"
 msgstr " Priklopljeno na\n"
 
-#: src/df.c:712
+#: src/df.c:724
 msgid ""
 "Show information about the filesystem on which each FILE resides,\n"
 "or all filesystems by default.\n"
@@ -2089,7 +2088,7 @@ msgstr ""
 "ali o vseh datoteènih sistemih.\n"
 "\n"
 
-#: src/df.c:720
+#: src/df.c:732
 msgid ""
 "  -a, --all             include filesystems having 0 blocks\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
@@ -2103,7 +2102,7 @@ msgstr ""
 "2G)\n"
 "  -H, --si              podobno kot -h, vendar z bazo 1000 namesto 1024\n"
 
-#: src/df.c:726
+#: src/df.c:738
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
 "  -k                    like --block-size=1K\n"
@@ -2116,7 +2115,7 @@ msgstr ""
 "  -l, --local           omejimo seznam na lokalni datoteèni sistem\n"
 "      --no-sync         brez klica sync() pred izpisom porabe (privzeto)\n"
 
-#: src/df.c:732
+#: src/df.c:744
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
 "      --sync            invoke sync before getting usage info\n"
@@ -2132,7 +2131,7 @@ msgstr ""
 "  -x, --exclude-type=TIP     brez datoteènih sistemov tipa TIP\n"
 "  -v                    (ignorirano)\n"
 
-#: src/df.c:742 src/du.c:208 src/ls.c:3879
+#: src/df.c:754 src/du.c:208 src/ls.c:3879
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
@@ -2144,16 +2143,16 @@ msgstr ""
 "tako\n"
 "dalje za G, T, P, E, Z in Y.\n"
 
-#: src/df.c:859
+#: src/df.c:871
 #, c-format
 msgid "file system type %s both selected and excluded"
 msgstr "tip datoteènega sistema %s je obenem izbran in izloèen"
 
-#: src/df.c:903
+#: src/df.c:915
 msgid "Warning: "
 msgstr "Opozorilo: "
 
-#: src/df.c:906
+#: src/df.c:918
 #, c-format
 msgid "%scannot read table of mounted filesystems"
 msgstr "%stabela priklopljenih datoteènih sistemov ni berljiva"
@@ -2253,11 +2252,11 @@ msgstr ""
 "po¹evnic, izpi¹emo ,.` (pomeni trenutni imenik).\n"
 
 #: src/du.c:49
-#, fuzzy
 msgid ""
 "Torbjorn Granlund, David MacKenzie, Larry McVoy, Paul Eggert, and Jim "
 "Meyering"
-msgstr "Torbjorn Granlund, David MacKenzie, Larry McVoy in Paul Eggert"
+msgstr ""
+"Torbjorn Granlund, David MacKenzie, Larry McVoy, Paul Eggert in Jim Meyerling"
 
 #: src/du.c:172
 msgid ""
@@ -2328,9 +2327,9 @@ msgstr ""
 "                        imenikom; --max-depth=0 je isto kot --summarize\n"
 
 #: src/du.c:339
-#, fuzzy, c-format
+#, c-format
 msgid "cannot change to parent of directory %s"
-msgstr "imenik %s ni dosegljiv"
+msgstr "imenik nad imenikom %s ni dosegljiv"
 
 #: src/du.c:347
 #, c-format
@@ -2338,28 +2337,28 @@ msgid "cannot change to directory %s"
 msgstr "imenik %s ni dosegljiv"
 
 #: src/du.c:354
-#, fuzzy, c-format
+#, c-format
 msgid "cannot read directory %s"
-msgstr "imenika %s ni mogoèe ustvariti"
+msgstr "imenika %s ni mogoèe prebrati"
 
-#: src/du.c:533 src/ls.c:2241 src/wc.c:591
+#: src/du.c:545 src/ls.c:2241 src/wc.c:591
 msgid "total"
 msgstr "skupno"
 
-#: src/du.c:615
+#: src/du.c:627
 #, c-format
 msgid "invalid maximum depth %s"
 msgstr "neveljavna najveèja globina %s"
 
-#: src/du.c:681
+#: src/du.c:693
 msgid "cannot both summarize and show all entries"
 msgstr "mo¾nosti se izkljuèujeta - ali izpis vseh, ali povzetek"
 
-#: src/du.c:688
+#: src/du.c:700
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr "opozorilo: povzetek je isto kot izbira --max-depth=0"
 
-#: src/du.c:694
+#: src/du.c:706
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr "opozorilo: povzetek se izkljuèuje z --max-depth=%d"
@@ -3565,7 +3564,6 @@ msgstr ""
 "                               sicer: uredimo po ctime\n"
 
 #: src/ls.c:3784
-#, fuzzy
 msgid ""
 "  -C                         list entries by columns\n"
 "      --color[=WHEN]         control whether color is used to distinguish "
@@ -3581,7 +3579,8 @@ msgstr ""
 "datoteke\n"
 "                               Mo¾nosti so ,never`, ,always` in ,auto`\n"
 "  -d, --directory            izpis imen imenika(-ov) namesto njihove "
-"vsebine\n"
+"vsebine,\n"
+"                               brez sledenja simbolnim povezavam\n"
 "  -D, --dired                izpis primeren za naèin ,dired` v Emacsu\n"
 
 #: src/ls.c:3792
@@ -3599,7 +3598,6 @@ msgstr ""
 "      --full-time            pri dolgem izpisu celoten datum z uro\n"
 
 #: src/ls.c:3799
-#, fuzzy
 msgid ""
 "  -g                         like -l, but do not list owner\n"
 "  -G, --no-group             inhibit display of group information\n"
@@ -3621,6 +3619,10 @@ msgstr ""
 "1024\n"
 "  -H, --dereference-command-line  sledimo simbolnim povezavam v ukazni "
 "vrstici\n"
+"      --dereference-command-line-symlink-to-dir\n"
+"                             sledimo vsem simbolnim povezavam v ukazni "
+"vrstici,\n"
+"                               ki ka¾ejo na imenike\n"
 
 #: src/ls.c:3810
 msgid ""
@@ -4030,20 +4032,23 @@ msgid ""
 "it is interpreted as hexadecimal; otherwise, if it begins with 0, as octal;\n"
 "otherwise, as decimal.  TYPE may be:\n"
 msgstr ""
+"\n"
+"GLAVNO in POMO®NO ¹tevilo moramo vedno navesti za TIP b, c ali u, ne smemo "
+"pa\n"
+"ju navesti pri TIPU p. Èe se GLAVNO ali POMO®NO ¹tevilo zaène z 0x ali 0X, "
+"se\n"
+"ga tolmaèi kot ¹estnajsti¹ko ¹tevilo; èe se zaène z vodilno nièko, kot "
+"osmi¹ko,\n"
+"sicer pa kot deseti¹ko ¹tevilo. TIP je lahko:\n"
 
 # ! INEXACT
 #: src/mknod.c:76
-#, fuzzy
 msgid ""
 "\n"
 "  b      create a block (buffered) special file\n"
 "  c, u   create a character (unbuffered) special file\n"
 "  p      create a FIFO\n"
 msgstr ""
-"\n"
-"GLAVNI in POMO®NI ¹tevili nista dovoljeni za TIP p, za ostale pa sta "
-"obvezni.\n"
-"TIP je lahko:\n"
 "\n"
 "  b      ustvarimo bloèno enoto (z medpomnilnikom)\n"
 "  c, u   ustvarimo znakovno enoto (brez medpomnilnika)\n"
@@ -5360,15 +5365,17 @@ msgstr "trenutnega imenika ni mogoèe ugotoviti"
 
 # ! INEXACT
 #: src/readlink.c:69
-#, fuzzy, c-format
+#, c-format
 msgid "Usage: %s [OPTION]... FILE\n"
-msgstr "Uporaba: %s [IZBIRA]... [DATOTEKA]...\n"
+msgstr "Uporaba: %s [IZBIRA]... DATOTEKA\n"
 
 #: src/readlink.c:70
 msgid ""
 "Display value of a symbolic link on standard output.\n"
 "\n"
 msgstr ""
+"Izpi¹i cilj simbolne povezave na standardni izhod.\n"
+"\n"
 
 #: src/readlink.c:72
 msgid ""
@@ -5379,6 +5386,12 @@ msgid ""
 "  -s, --silent            suppress most error messages\n"
 "  -v, --verbose           report error messages\n"
 msgstr ""
+"  -f, --canonicalize      kanoniziran izpis vsake komponente vsake simbolne\n"
+"                            povezave z rekurzivnim sledenjem povezav\n"
+"  -n, --no-newline        brez izpisa vodilnih znakov za novo vrstico\n"
+"  -q, --quiet,\n"
+"  -s, --silent            brez izpisa veèine poroèil o napakah\n"
+"  -v, --verbose           z poroèili o napakah\n"
 
 #: src/remove.c:394
 #, c-format
@@ -6178,9 +6191,8 @@ msgid "invalid number"
 msgstr "neveljavno ¹tevilo"
 
 #: src/stat.c:325
-#, fuzzy
 msgid "*** invalid date/time ***"
-msgstr "neveljavni datum ,%s`"
+msgstr "*** neveljavni datum/èas ***"
 
 #: src/stat.c:603
 #, c-format
@@ -7487,9 +7499,9 @@ msgid "creating %s"
 msgstr "ustvarjamo %s"
 
 #: src/touch.c:222
-#, fuzzy, c-format
+#, c-format
 msgid "cannot touch %s"
-msgstr "statusa %s ni moè ugotoviti s stat"
+msgstr "%s ni dosegljiv"
 
 #: src/touch.c:228
 #, c-format
@@ -7914,7 +7926,6 @@ msgstr ""
 "\n"
 
 #: src/unexpand.c:387
-#, fuzzy
 msgid ""
 "  -a, --all        convert all whitespace, instead of just initial "
 "whitespace\n"
@@ -7924,10 +7935,12 @@ msgid ""
 "  -t, --tabs=LIST  use comma separated LIST of tab positions (enables -a)\n"
 msgstr ""
 "  -a, --all           pretvorimo vse prazne prostore, ne le uvodnih\n"
-"  -t, --tabs=©TEVILO  tabulatorji naj bodo ©TEVILO znakov narazen (privzeto "
-"8)\n"
+"      --first-only    navzlic izbiri -a pretvorimo samo vodilne presledke\n"
+"  -t, --tabs=©TEVILO  tabulatorji naj bodo ©TEVILO znakov narazen namesto\n"
+"                        privzetih 8 (implicira -a)\n"
 "  -t, --tabs=SEZNAM   z vejicami loèen seznam eksplicitnih polo¾ajev "
 "tabulatorja\n"
+"                        (implicira -a)\n"
 
 #: src/unexpand.c:464
 msgid "`-LIST' option is obsolete; use `--first-only -t LIST'"
@@ -8350,19 +8363,11 @@ msgstr ""
 "Ponavljaje izpisujemo vrstico s podanim NIZOM (privzeto ,y`).\n"
 "\n"
 
-#, fuzzy
-#~ msgid "cannot convert time"
-#~ msgstr "datuma ni mo¾no nastaviti"
-
-#, fuzzy
-#~ msgid "cannot format time"
-#~ msgstr "datuma ni mo¾no nastaviti"
+#~ msgid "missing file arguments"
+#~ msgstr "datoteka ni podana"
 
 #~ msgid "cannot change to `..' from directory %s"
 #~ msgstr "iz imenika %s imenik ,..` ni dosegljiv"
-
-#~ msgid "missing file arguments"
-#~ msgstr "datoteka ni podana"
 
 #~ msgid "%s: is so large that it is not representable"
 #~ msgstr "%s: je tako veliko, da ni predstavljivo"

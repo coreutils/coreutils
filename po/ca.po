@@ -36,9 +36,9 @@
 #     bonic).
 msgid ""
 msgstr ""
-"Project-Id-Version: coreutils 4.5.2\n"
-"POT-Creation-Date: 2003-02-02 00:05+0100\n"
-"PO-Revision-Date: 2003-01-27 00:00+0100\n"
+"Project-Id-Version: coreutils 4.5.5\n"
+"POT-Creation-Date: 2003-02-05 11:25+0100\n"
+"PO-Revision-Date: 2003-02-03 18:07+0100\n"
 "Last-Translator: Ivan Vilata i Balaguer <ivan@selidor.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
 "MIME-Version: 1.0\n"
@@ -309,7 +309,7 @@ msgstr "Les cadenes comparades eren %s i %s."
 
 #: src/basename.c:50 src/cat.c:88 src/chgrp.c:122 src/chmod.c:238
 #: src/chown.c:95 src/chroot.c:41 src/cksum.c:276 src/comm.c:69 src/cp.c:160
-#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:707
+#: src/csplit.c:1492 src/cut.c:170 src/date.c:113 src/dd.c:284 src/df.c:719
 #: src/dircolors.c:99 src/dirname.c:42 src/du.c:167 src/echo.c:73
 #: src/env.c:115 src/expand.c:106 src/expr.c:86 src/factor.c:70 src/fmt.c:267
 #: src/fold.c:63 src/head.c:84 src/hostid.c:44 src/hostname.c:63 src/id.c:83
@@ -350,7 +350,7 @@ msgstr ""
 
 #: src/basename.c:66 src/cat.c:124 src/chgrp.c:152 src/chmod.c:264
 #: src/chown.c:139 src/chroot.c:59 src/cksum.c:291 src/comm.c:86 src/cp.c:257
-#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:746
+#: src/csplit.c:1534 src/cut.c:215 src/date.c:215 src/dd.c:331 src/df.c:758
 #: src/dircolors.c:120 src/dirname.c:58 src/du.c:212 src/echo.c:105
 #: src/env.c:134 src/expand.c:131 src/expr.c:149 src/factor.c:90
 #: src/false.c:45 src/fmt.c:297 src/fold.c:86 src/head.c:115 src/hostid.c:57
@@ -1184,7 +1184,7 @@ msgstr ""
 "\n"
 
 # Agafat més o menys de libc.  ivb
-#: src/cp.c:174 src/csplit.c:1505 src/cut.c:182 src/df.c:717 src/du.c:176
+#: src/cp.c:174 src/csplit.c:1505 src/cut.c:182 src/df.c:729 src/du.c:176
 #: src/expand.c:119 src/fmt.c:277 src/fold.c:76 src/head.c:98
 #: src/install.c:609 src/kill.c:103 src/ln.c:354 src/ls.c:3767 src/mkdir.c:66
 #: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:321 src/nl.c:185 src/paste.c:413
@@ -1658,7 +1658,7 @@ msgstr ""
 msgid "David Ihnat, David MacKenzie, and Jim Meyering"
 msgstr "David Ihnat, David MacKenzie i Jim Meyering"
 
-#: src/cut.c:174 src/df.c:711 src/du.c:171 src/expand.c:110 src/fold.c:67
+#: src/cut.c:174 src/df.c:723 src/du.c:171 src/expand.c:110 src/fold.c:67
 #: src/head.c:88 src/ls.c:3761 src/nl.c:176 src/paste.c:403 src/pr.c:2754
 #: src/sort.c:276 src/sum.c:60 src/tac.c:127 src/tail.c:234 src/tee.c:63
 #: src/unexpand.c:375 src/wc.c:125
@@ -1762,9 +1762,9 @@ msgid "you must specify a list of bytes, characters, or fields"
 msgstr "cal especificar una llista d'octets, caràcters o camps"
 
 #: src/cut.c:720
-#, fuzzy
 msgid "an input delimiter may be specified only when operating on fields"
-msgstr "només es pot especificar un delimitador quan s'opere amb camps"
+msgstr ""
+"només es pot especificar un delimitador d'entrada quan s'opere amb camps"
 
 #: src/cut.c:724
 msgid ""
@@ -2291,9 +2291,9 @@ msgstr "   Tamany  En ús Lliure  %%Ús"
 
 # Format portable 1.  ivb
 #: src/df.c:169
-#, fuzzy, c-format
+#, c-format
 msgid " %4s-blocks      Used Available Capacity"
-msgstr "  Blocs %4d     Usats   Lliures   Cabuda"
+msgstr "  Blocs %4s     Usats   Lliures   Cabuda"
 
 # Format habitual.  ivb
 #: src/df.c:200
@@ -2305,7 +2305,7 @@ msgstr "  Blocs %4s     Usats   Lliures  %%Ús"
 msgid " Mounted on\n"
 msgstr " Muntat en\n"
 
-#: src/df.c:712
+#: src/df.c:724
 msgid ""
 "Show information about the filesystem on which each FILE resides,\n"
 "or all filesystems by default.\n"
@@ -2316,7 +2316,7 @@ msgstr ""
 "defecte, informació sobre tots els sistemes de fitxers.\n"
 "\n"
 
-#: src/df.c:720
+#: src/df.c:732
 msgid ""
 "  -a, --all             include filesystems having 0 blocks\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
@@ -2332,7 +2332,7 @@ msgstr ""
 "no\n"
 "                             de 1024.\n"
 
-#: src/df.c:726
+#: src/df.c:738
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
 "  -k                    like --block-size=1K\n"
@@ -2346,7 +2346,7 @@ msgstr ""
 "      --no-sync              No invoca sync() abans d'obtenir la informació\n"
 "                             sobre l'ús (per defecte).\n"
 
-#: src/df.c:732
+#: src/df.c:744
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
 "      --sync            invoke sync before getting usage info\n"
@@ -2367,7 +2367,7 @@ msgstr ""
 "                             siguen del TIPUS especificat.\n"
 "  -v                         (No es té en compte.)\n"
 
-#: src/df.c:742 src/du.c:208 src/ls.c:3879
+#: src/df.c:754 src/du.c:208 src/ls.c:3879
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
@@ -2379,16 +2379,16 @@ msgstr ""
 "així per G, T, P, E, Z, Y.  També poden anar precedits d'un número enter.\n"
 
 # Usa quote().  ivb
-#: src/df.c:859
+#: src/df.c:871
 #, c-format
 msgid "file system type %s both selected and excluded"
 msgstr "s'ha seleccionat i exclós alhora el tipus de sistema de fitxers %s"
 
-#: src/df.c:903
+#: src/df.c:915
 msgid "Warning: "
 msgstr "avís: "
 
-#: src/df.c:906
+#: src/df.c:918
 #, c-format
 msgid "%scannot read table of mounted filesystems"
 msgstr "%sno es pot llegir la taula de sistemes de fitxers muntats"
@@ -2495,11 +2495,11 @@ msgstr ""
 "\n"
 
 #: src/du.c:49
-#, fuzzy
 msgid ""
 "Torbjorn Granlund, David MacKenzie, Larry McVoy, Paul Eggert, and Jim "
 "Meyering"
-msgstr "Torbjorn Granlund, David MacKenzie, Larry McVoy i Paul Eggert"
+msgstr ""
+"Torbjorn Granlund, David MacKenzie, Larry McVoy, Paul Eggert i Jim Meyering"
 
 #: src/du.c:172
 msgid ""
@@ -2510,7 +2510,6 @@ msgstr ""
 "\n"
 
 #: src/du.c:179
-#, fuzzy
 msgid ""
 "  -a, --all             write counts for all files, not just directories\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
@@ -2524,8 +2523,8 @@ msgstr ""
 "  -B, --block-size=TAMANY    Usa blocs de TAMANY octets.\n"
 "  -b, --bytes                Mostra els tamanys en octets.\n"
 "  -c, --total                Produeix un recompte total.\n"
-"  -D, --dereference-args     Segueix els camins que siguen enllaços "
-"simbòlics.\n"
+"  -D, --dereference-args     Segueix cada FITXER que siga un enllaç "
+"simbòlic.\n"
 
 #: src/du.c:186
 msgid ""
@@ -2579,43 +2578,44 @@ msgstr ""
 "                             sota de l'argument de la línia d'ordres;\n"
 "                             «--max-depth=0» equival a «--summarize».\n"
 
+# Usa quote().  ivb
 #: src/du.c:339
-#, fuzzy, c-format
+#, c-format
 msgid "cannot change to parent of directory %s"
-msgstr "no s'ha pogut canviar al directori %s"
+msgstr "no s'ha pogut canviar al pare del directori %s"
 
 #: src/du.c:347
 #, c-format
 msgid "cannot change to directory %s"
 msgstr "no s'ha pogut canviar al directori %s"
 
-# Els 3 usen quote().  ivb
+# Usa quote().  ivb
 #: src/du.c:354
-#, fuzzy, c-format
+#, c-format
 msgid "cannot read directory %s"
-msgstr "no s'ha pogut crear el directori %s"
+msgstr "no s'ha pogut llegir el directori %s"
 
 # Els 3 fan el mateix ús.  ivb
-#: src/du.c:533 src/ls.c:2241 src/wc.c:591
+#: src/du.c:545 src/ls.c:2241 src/wc.c:591
 msgid "total"
 msgstr "total"
 
 # Usa quote().  ivb
-#: src/du.c:615
+#: src/du.c:627
 #, c-format
 msgid "invalid maximum depth %s"
 msgstr "la profunditat màxima %s no és vàlida"
 
-#: src/du.c:681
+#: src/du.c:693
 msgid "cannot both summarize and show all entries"
 msgstr "no es pot resumir les entrades i mostrar-ne els continguts alhora"
 
-#: src/du.c:688
+#: src/du.c:700
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr "avís: resumir equival a utilitzar «--max-depth=0»"
 
 # conflicts -> no compatible? jm
-#: src/du.c:694
+#: src/du.c:706
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr "avís: resumir no és compatible amb «--max-depth=%d»"
@@ -3922,7 +3922,6 @@ msgstr ""
 "                             Altrament: ordena per la data de canvi.\n"
 
 #: src/ls.c:3784
-#, fuzzy
 msgid ""
 "  -C                         list entries by columns\n"
 "      --color[=WHEN]         control whether color is used to distinguish "
@@ -3940,7 +3939,8 @@ msgstr ""
 "                             «auto».\n"
 "  -d, --directory            Llista les entrades dels directoris en comptes "
 "de\n"
-"                             llurs continguts.\n"
+"                             llurs continguts, i no segueix els enllaços\n"
+"                             simbòlics.\n"
 "  -D, --dired                Genera eixida preparada pel mode «dired» "
 "d'Emacs.\n"
 
@@ -3961,8 +3961,8 @@ msgstr ""
 "C).\n"
 "      --full-time            Equival a «-l --time-style=full-iso».\n"
 
+# «--dereference-command-line-symlink-to-dir» /**/  ivb
 #: src/ls.c:3799
-#, fuzzy
 msgid ""
 "  -g                         like -l, but do not list owner\n"
 "  -G, --no-group             inhibit display of group information\n"
@@ -3985,6 +3985,9 @@ msgstr ""
 "                             de 1024.\n"
 "  -H, --dereference-command-line    Segueix els enllaços simbòlics que es\n"
 "                             troben en la línia d'ordres.\n"
+"      --dereference-command-line-symlink-to-dir    Segueix els enllaços\n"
+"                             simbòlics que es troben en la línia d'ordres i\n"
+"                             apunten cap a un directori.\n"
 
 #: src/ls.c:3810
 msgid ""
@@ -4424,19 +4427,22 @@ msgid ""
 "it is interpreted as hexadecimal; otherwise, if it begins with 0, as octal;\n"
 "otherwise, as decimal.  TYPE may be:\n"
 msgstr ""
+"\n"
+"Cal especificar MAJOR i MENOR quan el TIPUS siga «b», «c» o «u»; cal "
+"ometre'ls\n"
+"quan aquest siga «p».  Si MAJOR o MENOR comença per «0x» o «0X», "
+"s'interpreta\n"
+"com a hexadecimal; si comença per «0», com a octal; altrament s'interpreta "
+"com\n"
+"a decimal.  El TIPUS pot ser:\n"
 
 #: src/mknod.c:76
-#, fuzzy
 msgid ""
 "\n"
 "  b      create a block (buffered) special file\n"
 "  c, u   create a character (unbuffered) special file\n"
 "  p      create a FIFO\n"
 msgstr ""
-"\n"
-"No es pot especificar MAJOR ni MENOR pel TIPUS «p», altrament són "
-"obligatoris.\n"
-"TIPUS pot ser:\n"
 "\n"
 "  b       Crea un fitxer especial de blocs (amb memòria intermèdia).\n"
 "  c, u    Crea un fitxer especial de caràcters (sense memòria intermèdia).\n"
@@ -5138,14 +5144,12 @@ msgid "Login"
 msgstr "Entrada"
 
 #: src/pinky.c:388
-#, fuzzy
 msgid "Name"
 msgstr "Nom"
 
 #: src/pinky.c:389
-#, fuzzy
 msgid " TTY"
-msgstr "TTY"
+msgstr " TTY"
 
 # Hauria de ser «Inactiu», però té més de 6 caràcters.  ivb
 #: src/pinky.c:391
@@ -5644,14 +5648,13 @@ msgstr ""
 
 # El més llarg és «UNNNNNNNN».  ivb
 #: src/printf.c:128
-#, fuzzy
 msgid ""
 "  \\xNN    byte with hexadecimal value NN (1 to 2 digits)\n"
 "\n"
 "  \\uNNNN  character with hexadecimal value NNNN (4 digits)\n"
 "  \\UNNNNNNNN  character with hexadecimal value NNNNNNNN (8 digits)\n"
 msgstr ""
-"  \\xNNN         Caràcter amb valor hexadecimal NNN (d'1 a 3 dígits).\n"
+"  \\xNN          Octet amb valor hexadecimal NN (d'1 a 2 dígits).\n"
 "  \\uNNNN        Caràcter amb valor hexadecimal NNNN (4 dígits).\n"
 "  \\uNNNNNNNN    Caràcter amb valor hexadecimal NNNNNNNN (8 dígits).\n"
 
@@ -5878,15 +5881,17 @@ msgid "cannot get current directory"
 msgstr "no s'ha pogut obtenir el directori actual"
 
 #: src/readlink.c:69
-#, fuzzy, c-format
+#, c-format
 msgid "Usage: %s [OPTION]... FILE\n"
-msgstr "Foma d'ús: %s [OPCIÓ]... [FITXER]\n"
+msgstr "Foma d'ús: %s [OPCIÓ]... FITXER\n"
 
 #: src/readlink.c:70
 msgid ""
 "Display value of a symbolic link on standard output.\n"
 "\n"
 msgstr ""
+"Mostra el valor d'un enllaç simbòlic en l'eixida estàndard.\n"
+"\n"
 
 #: src/readlink.c:72
 msgid ""
@@ -5897,6 +5902,13 @@ msgid ""
 "  -s, --silent            suppress most error messages\n"
 "  -v, --verbose           report error messages\n"
 msgstr ""
+"  -f, --canonicalize         Prova de trobar el nom canònic, seguint\n"
+"                             recursivament cada enllaç simbòlic de cada\n"
+"                             component del camí indicat.\n"
+"  -n, --no-newline           No escriu un salt de línia al final.\n"
+"  -q, --quiet,\n"
+"  -s, --silent               No mostra la majoria de missatges d'error.\n"
+"  -v, --verbose              Mostra els missatges d'error.\n"
 
 # Usa quote().  ivb
 #: src/remove.c:394
@@ -6751,9 +6763,8 @@ msgid "invalid number"
 msgstr "el número no és vàlid"
 
 #: src/stat.c:325
-#, fuzzy
 msgid "*** invalid date/time ***"
-msgstr "la data «%s» no és vàlida"
+msgstr "*** l'hora o data no és vàlida ***"
 
 # Usa quote().  ivb
 #: src/stat.c:603
@@ -6788,7 +6799,6 @@ msgstr ""
 "  -t, --terse                Mostra la informació de forma pelada.\n"
 
 #: src/stat.c:691
-#, fuzzy
 msgid ""
 "\n"
 "The valid format sequences for files (without --filesystem):\n"
@@ -6800,12 +6810,11 @@ msgstr ""
 "\n"
 "Seqüències de format vàlides pels fitxers (és a dir, sense «--filesystem»):\n"
 "\n"
-"  %A - Permisos d'accés en un format llegible pels humans.\n"
-"  %a - Permisos d'accés en octal.\n"
-"  %b - Nombre de blocs reservats.\n"
+"  %A    Permisos d'accés en un format llegible pels humans.\n"
+"  %a    Permisos d'accés en octal.\n"
+"  %b    Nombre de blocs reservats.\n"
 
 #: src/stat.c:698
-#, fuzzy
 msgid ""
 "  %D   Device number in hex\n"
 "  %d   Device number in decimal\n"
@@ -6814,15 +6823,14 @@ msgid ""
 "  %G   Group name of owner\n"
 "  %g   Group ID of owner\n"
 msgstr ""
-"  %D - Número del dispositiu en hexadecimal.\n"
-"  %d - Número del dispositiu en decimal.\n"
-"  %F - Tipus del fitxer.\n"
-"  %f - Mode en brut, en hexadecimal.\n"
-"  %G - Nom del grup del propietari.\n"
-"  %g - Identificador del grup del propietari.\n"
+"  %D    Número del dispositiu en hexadecimal.\n"
+"  %d    Número del dispositiu en decimal.\n"
+"  %F    Tipus del fitxer.\n"
+"  %f    Mode en brut, en hexadecimal.\n"
+"  %G    Nom del grup del propietari.\n"
+"  %g    Identificador del grup del propietari.\n"
 
 #: src/stat.c:706
-#, fuzzy
 msgid ""
 "  %h   Number of hard links\n"
 "  %i   Inode number\n"
@@ -6833,20 +6841,18 @@ msgid ""
 "  %T   Minor device type in hex\n"
 "  %t   Major device type in hex\n"
 msgstr ""
-"  %h - Nombre d'enllaços forts.\n"
-"  %i - Número del node índex.\n"
-"  %N - Nom entrecometat del fitxer, o del fitxer apuntat en el cas d'un "
-"enllaç\n"
-"       simbòlic.\n"
-"  %n - Nom del fitxer.\n"
-"  %o - Tamany del bloc d'E/S.\n"
-"  %s - Tamany total, en octets.\n"
-"  %T - Número menor de dispositiu, en hexadecimal.\n"
-"  %t - Número major de dispositiu, en hexadecimal.\n"
+"  %h    Nombre d'enllaços forts.\n"
+"  %i    Número del node índex.\n"
+"  %N    Nom entrecometat del fitxer, o del fitxer apuntat en el cas d'un\n"
+"        enllaç simbòlic.\n"
+"  %n    Nom del fitxer.\n"
+"  %o    Tamany del bloc d'E/S.\n"
+"  %s    Tamany total, en octets.\n"
+"  %T    Número menor de dispositiu, en hexadecimal.\n"
+"  %t    Número major de dispositiu, en hexadecimal.\n"
 
 # Indique «de les dades» i «del node índex», queda més clar.  ivb
 #: src/stat.c:716
-#, fuzzy
 msgid ""
 "  %U   User name of owner\n"
 "  %u   User ID of owner\n"
@@ -6858,18 +6864,18 @@ msgid ""
 "  %z   Time of last change\n"
 "\n"
 msgstr ""
-"  %U - Nom d'usuari del propietari.\n"
-"  %u - Identificador d'usuari del propietari.\n"
-"  %X - Data de l'últim accés, en segons des de l'Època.\n"
-"  %x - Data de l'últim accés.\n"
-"  %Y - Data de l'última modificació de les dades, en segons des de l'Època.\n"
-"  %y - Data de l'última modificació de les dades.\n"
-"  %Z - Data de l'últim canvi en el node índex, en segons des de l'Època.\n"
-"  %z - Data de l'últim canvi en el node índex.\n"
+"  %U    Nom d'usuari del propietari.\n"
+"  %u    Identificador d'usuari del propietari.\n"
+"  %X    Data de l'últim accés, en segons des de l'Època.\n"
+"  %x    Data de l'últim accés.\n"
+"  %Y    Data de l'última modificació de les dades, en segons des de "
+"l'Època.\n"
+"  %y    Data de l'última modificació de les dades.\n"
+"  %Z    Data de l'últim canvi en el node índex, en segons des de l'Època.\n"
+"  %z    Data de l'últim canvi en el node índex.\n"
 "\n"
 
 #: src/stat.c:728
-#, fuzzy
 msgid ""
 "Valid format sequences for file systems:\n"
 "\n"
@@ -6881,14 +6887,13 @@ msgid ""
 msgstr ""
 "Seqüències de format vàlides pels sistemes de fitxers:\n"
 "\n"
-"  %a - Nombre de blocs lliures disponibles pels usuaris normals.\n"
-"  %b - Nombre total de blocs de dades del sistema de fitxers.\n"
-"  %c - Nombre total de nodes índex del sistema de fitxers.\n"
-"  %d - Nombre de nodes índex lliures del sistema de fitxers.\n"
-"  %f - Nombre de blocs de dades lliures del sistema de fitxers.\n"
+"  %a    Nombre de blocs lliures disponibles pels usuaris normals.\n"
+"  %b    Nombre total de blocs de dades del sistema de fitxers.\n"
+"  %c    Nombre total de nodes índex del sistema de fitxers.\n"
+"  %d    Nombre de nodes índex lliures del sistema de fitxers.\n"
+"  %f    Nombre de blocs de dades lliures del sistema de fitxers.\n"
 
 #: src/stat.c:737
-#, fuzzy
 msgid ""
 "  %i   File System id in hex\n"
 "  %l   Maximum length of filenames\n"
@@ -6897,12 +6902,12 @@ msgid ""
 "  %T   Type in human readable form\n"
 "  %t   Type in hex\n"
 msgstr ""
-"  %i - Identificador del sistema de fitxers en hexadecimal.\n"
-"  %l - Longitud màxima dels noms de fitxer.\n"
-"  %n - Nom del fitxer.\n"
-"  %s - Tamany òptim del bloc de transferència.\n"
-"  %T - Tipus del sistema de fitxers en un format llegible pels humans.\n"
-"  %t - Tipus del sistema de fitxers en hexadecimal.\n"
+"  %i    Identificador del sistema de fitxers en hexadecimal.\n"
+"  %l    Longitud màxima dels noms de fitxer.\n"
+"  %n    Nom del fitxer.\n"
+"  %s    Tamany òptim del bloc de transferència.\n"
+"  %T    Tipus del sistema de fitxers en un format llegible pels humans.\n"
+"  %t    Tipus del sistema de fitxers en hexadecimal.\n"
 
 #: src/stty.c:498
 #, c-format
@@ -7697,23 +7702,20 @@ msgstr ""
 msgid "closing %s (fd=%d)"
 msgstr "en tancar «%s» (fd=%d)"
 
-# Les variables són nom de fitxer, signe, número.  ivb
 #: src/tail.c:391
-#, fuzzy, c-format
+#, c-format
 msgid "%s: cannot seek to offset %s"
-msgstr "%s: no s'ha pogut moure fins el desplaçament %s%s"
+msgstr "%s: no s'ha pogut moure fins el desplaçament %s"
 
-# Les variables són nom de fitxer, signe, número.  ivb
 #: src/tail.c:395
-#, fuzzy, c-format
+#, c-format
 msgid "%s: cannot seek to relative offset %s"
-msgstr "%s: no s'ha pogut moure dins el desplaçament relatiu %s%s"
+msgstr "%s: no s'ha pogut moure dins el desplaçament relatiu %s"
 
-# Les variables són nom de fitxer, signe, número.  ivb
 #: src/tail.c:400
-#, fuzzy, c-format
+#, c-format
 msgid "%s: cannot seek to end-relative offset %s"
-msgstr "%s: no s'ha pogut moure fins el desplaçament relatiu al final %s%s"
+msgstr "%s: no s'ha pogut moure fins el desplaçament relatiu al final %s"
 
 # FIXME: pretty_name() lacks i18n.  ivb
 #: src/tail.c:818
@@ -8146,11 +8148,12 @@ msgstr "Paul Rubin, Arnold Robbins, Jim Kingdon, David MacKenzie i Randy Smith"
 msgid "creating %s"
 msgstr "en crear %s"
 
-# Els 3 usen quote().  ivb
+# Usa quote().  ivb
+# En el codi font diu que no val la pena distingir el tipus d'error.  ivb
 #: src/touch.c:222
-#, fuzzy, c-format
+#, c-format
 msgid "cannot touch %s"
-msgstr "ha fallat stat() sobre %s"
+msgstr "no s'han pogut canviar les dates de %s"
 
 # Usa quote().  ivb
 # Condició d'error.  ivb
@@ -8602,7 +8605,6 @@ msgstr ""
 
 # mirar la traducció del expand
 #: src/unexpand.c:387
-#, fuzzy
 msgid ""
 "  -a, --all        convert all whitespace, instead of just initial "
 "whitespace\n"
@@ -8614,11 +8616,17 @@ msgstr ""
 "  -a, --all                  Converteix tots els espais en blanc, no només "
 "els\n"
 "                             que es troben a principi de línia.\n"
+"      --first-only           Només converteix les seqüències d'espais en "
+"blanc\n"
+"                             que es troben a principi de la línia "
+"(inhabilita\n"
+"                             «-a»).\n"
 "  -t, --tabs=NÚMERO          Tabula a una distància de NÚMERO caràcters, en\n"
-"                             lloc de 8.\n"
+"                             lloc de 8 (habilita «-a»).\n"
 "  -t, --tabs=LLISTA          Especifica una llista de posicions explícites "
 "per\n"
-"                             cada tabulació, separades per comes.\n"
+"                             cada tabulació, separades per comes (habilita\n"
+"                             «-a»).\n"
 
 #: src/unexpand.c:464
 msgid "`-LIST' option is obsolete; use `--first-only -t LIST'"
@@ -9079,18 +9087,3 @@ msgid ""
 msgstr ""
 "Mostra repetidament una línia amb totes les cadenes indicades, o «y».\n"
 "\n"
-
-#, fuzzy
-#~ msgid "cannot convert time"
-#~ msgstr "no s'ha pogut establir la data"
-
-#, fuzzy
-#~ msgid "cannot format time"
-#~ msgstr "no s'ha pogut establir la data"
-
-#~ msgid "missing file arguments"
-#~ msgstr "manquen els arguments fitxer"
-
-# Usa quote().  ivb
-#~ msgid "cannot change to `..' from directory %s"
-#~ msgstr "no s'ha pogut canviar a «..» des del directori %s"
