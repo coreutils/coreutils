@@ -1,5 +1,7 @@
 2003-07-23  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.0.90.
+
 	* src/expand.c (parse_tabstops): Detect overflow in tabstop sizes.
 
 	* src/dircolors.c: Include xstrndup.h.
@@ -13,8 +15,6 @@
 	nonzero.
 
 2003-07-22  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.90.
 
 	* src/cut.c (set_fields): Use xcalloc in place of xmalloc+memset.
 
