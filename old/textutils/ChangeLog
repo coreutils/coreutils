@@ -6,7 +6,7 @@ Wed Nov 22 23:12:47 1995  Jim Meyering  (meyering@comco.com)
 
 Sat Nov 18 12:04:30 1995  Jim Meyering  (meyering@comco.com)
 
-	* src/Makefile.in (version.c): Depend on ../.version, not Makefile.
+	* src/Makefile.in (version.c): Depend on ../VERSION, not Makefile.
 
 	Update for autoconf-2.5:
 	* src/Makefile.in (libdir): Set to @libdir@.
@@ -102,7 +102,7 @@ Sat Nov 11 15:46:02 1995  Jim Meyering  (meyering@comco.com)
 	file is output file'.  From Jarkko Hietaniemi <jhi@epsilon.hut.fi>.
 
 	* Makefile.in (DISTFILES): Add @README_ALPHA@.
-	(config.status) Depend on .version.
+	(config.status) Depend on VERSION.
 	* configure.in: Set README_ALPHA if the version number ends in [a-z].
 
 Fri Nov 10 21:13:42 1995  Jim Meyering  (meyering@comco.com)
@@ -114,11 +114,11 @@ Fri Nov 10 21:13:42 1995  Jim Meyering  (meyering@comco.com)
 
 Tue Nov  7 23:55:24 1995  Jim Meyering  (meyering@comco.com)
 
-	* .version: New file.
+	* VERSION: New file.
 	* configure.in (VERSION): New variable.
 	(PACKAGE): New variable.
 
-	* Makefile.in (DISTFILES): Add .version.
+	* Makefile.in (DISTFILES): Add VERSION.
 	(distdir): Use @PACKAGE@-@VERSION@, not distname.
 	Remove all references to distname.
 	* src/Makefile.in (version.c): Generate it.
