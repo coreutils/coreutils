@@ -1,4 +1,18 @@
+1999-07-27  Jim Meyering  <meyering@ascend.com>
+
+	* lib/linebuffer.c: Include <sys/types.h> now that linebuffer.h uses
+	size_t.  This is required on at least SunOS4.  From Kaveh Ghazi.
+
+1999-07-26  Jim Meyering  <meyering@ascend.com>
+
+	* src/sys2.h (PID_T_MAX): Define.
+
+	* src/tail.c (struct File_spec) [n_stat_calls]: Remove unused member.
+
 1999-07-25  Jim Meyering  <meyering@ascend.com>
+
+	* src/pr.c (usage): Remove `NEWS'-style paragraph (sorry to have
+	let that in, translators).
 
 	* Version 1.22n.
 
