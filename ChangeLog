@@ -1,5 +1,9 @@
 2004-07-28  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* tests/misc/pwd: Don't assume that Perl's getpwd agrees with our
+	pwd when there are multiple names for the working directory
+	(which can happen with an automounter, sigh).
+
 	* src/Makefile.am ($(SCRIPTS)): Don't depend on Makefile;
 	this causes Solaris 8 'make' to refuse to build "groups".
 	(localedir.h): Don't depend on Makefile: this causes Solaris
