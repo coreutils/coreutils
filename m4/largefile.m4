@@ -1,4 +1,4 @@
-#serial 7
+#serial 8
 
 dnl By default, many hosts won't let programs access large files;
 dnl one must use special compiler options to get large-file access to work.
