@@ -1,5 +1,17 @@
 1999-01-17  Jim Meyering  <meyering@ascend.com>
 
+	* tests/cp/Makefile.am (TESTS_ENVIRONMENT): Set PATH here, rather
+	than setting RM and CP.
+	* tests/cp/*: Now that PATH is set properly, use rm and cp rather
+	than $RM and $CP.
+
+	* tests/ln/Makefile.am (TESTS): Add backup-1.
+	(TESTS_ENVIRONMENT): Set PATH here, rather than setting LN.
+	* tests/ln/*: Now that PATH is set properly, use ln rather than $LN.
+	* tests/ln/backup-1: New test for this.
+	* src/ln.c (do_link): Try to remove DEST even after renaming it.
+	This fixes a bug reported by Jamie Lokier.
+
 	* src/ln.c (same_name): Use SAME_INODE rather than open coding it.
 
 1999-01-16  Jim Meyering  <meyering@ascend.com>
