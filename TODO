@@ -124,17 +124,26 @@ cp --recursive: perform dir traversals in source and dest hierarchy rather
   than forming full file names.  The latter (current) approach fails
   unnecessarily when the names become very long.
 
-du and wc: add an option, --from0-file, to make them read NUL-delimited
-  file name arguments from a file.
-
 tail --p is now ambiguous
-
-patch from Olivier Delhomme
 
 Remove suspicious uses of alloca (ones that may allocate more than
    about 4k)
 
-Move help2man from man/ to config?
-
 Adapt these contribution guidelines for coreutils:
   http://sources.redhat.com/automake/contribute.html
+
+
+Changes expected to go in, post-5.2.0:
+======================================
+
+  du and wc: add an option, --from0-file, to make them read NUL-delimited
+    file name arguments from a file.
+
+  dd patch from Olivier Delhomme
+
+  Apply Andreas Gruenbacher's ACL and xattr changes
+
+  Apply Bruno Haible's hostname changes
+
+  stat: no longer output trailing newline for user-supplied FORMATs
+    This will mean adding \n to default formats, internally.
