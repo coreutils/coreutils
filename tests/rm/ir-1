@@ -46,7 +46,7 @@ $RM --verbose -i -r $tmp < $test.I > /dev/null 2>&1 || fail=1
 test -d $tmp || fail=1
 
 # There should be only one directory left.
-case $tmp/* in
+case `echo $tmp/*` in
   $tmp/[abc]) ;;
   *) fail=1 ;;
 esac
