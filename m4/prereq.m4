@@ -1,4 +1,4 @@
-#serial 24
+#serial 25
 
 dnl These are the prerequisite macros for files in the lib/
 dnl directories of the fileutils, sh-utils, and textutils packages.
@@ -21,6 +21,7 @@ AC_DEFUN([jm_PREREQ],
   jm_PREREQ_QUOTEARG
   jm_PREREQ_READUTMP
   jm_PREREQ_REGEX
+  jm_PREREQ_SIG2STR
   jm_PREREQ_TEMPNAME # called by mkstemp
   jm_PREREQ_XGETCWD
   jm_PREREQ_XREADLINK
@@ -159,6 +160,11 @@ AC_DEFUN([jm_PREREQ_REGEX],
   AC_CHECK_HEADERS(alloca.h libintl.h wctype.h wchar.h)
   AC_HEADER_STDC
   AC_FUNC_ALLOCA
+])
+
+AC_DEFUN([jm_PREREQ_SIG2STR],
+[
+  AC_CHECK_HEADERS(sys/wait.h)
 ])
 
 AC_DEFUN([jm_PREREQ_TEMPNAME],
