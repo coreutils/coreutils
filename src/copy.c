@@ -698,7 +698,7 @@ triple_free (void *x)
 
 /* Initialize the hash table implementing a set of F_triple entries
    corresponding to destination files.  */
-void
+extern void
 dest_info_init (struct cp_options *x)
 {
   x->dest_info
@@ -711,7 +711,7 @@ dest_info_init (struct cp_options *x)
 
 /* Initialize the hash table implementing a set of F_triple entries
    corresponding to source files listed on the command line.  */
-void
+extern void
 src_info_init (struct cp_options *x)
 {
 
@@ -1667,7 +1667,7 @@ valid_options (const struct cp_options *co)
    same as) DST_PATH;  otherwise, set it to zero.
    Return 0 if successful, 1 if an error occurs. */
 
-int
+extern int
 copy (const char *src_path, const char *dst_path,
       int nonexistent_dst, const struct cp_options *options,
       int *copy_into_self, int *rename_succeeded)
