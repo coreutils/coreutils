@@ -1,4 +1,5 @@
 #!/bin/sh
+# Test some of ls's sorting options.
 
 : ${LS=ls}
 test=time-1
@@ -24,6 +25,11 @@ cd $tmp || test_failure=1
 : > a || test_failure=1
 sleep 1
 : > b || test_failure=1
+: > c || test_failure=1
+sleep 1
+cat a || test_failure=1
+
+mv c d || test_failure=1
 
 if test $test_failure = 1; then
   echo 'failure in testing framework'
@@ -32,7 +38,13 @@ fi
 
 fail=0
 set `$LS -u a b`
+test "$*" = 'a b' && : || fail=1
+
+set `$LS -t a b`
 test "$*" = 'b a' && : || fail=1
+
+set `$LS -c a d`
+test "$*" = 'd a' && : || fail=1
 
 cd ..
 rm -rf $tmp
