@@ -2323,8 +2323,20 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
   files[files_index].linkmode = 0;
   files[files_index].linkok = 0;
 
-  if (explicit_arg || format_needs_stat
-      || (format_needs_type && type == unknown))
+  if (explicit_arg
+      || format_needs_stat
+      || (format_needs_type
+	  && (type == unknown
+
+	      /* FIXME: remove this disjunct.
+		 I don't think we care about symlinks here, but for now
+		 this won't make a big performance difference.  */
+	      || type == symbolic_link
+
+	      /* --indicator-style=classify (aka -F)
+		 requires that we stat each regular file
+		 to see if it's executable.  */
+	      || (type == normal && indicator_style == classify))))
     {
       /* `path' is the absolute pathname of this file. */
       int val;
