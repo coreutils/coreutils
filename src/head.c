@@ -45,7 +45,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "head"
 
-#define AUTHORS "David MacKenzie and Jim Meyering"
+#define AUTHORS N_("David MacKenzie and Jim Meyering")
 
 /* Number of lines/chars/blocks to head. */
 #define DEFAULT_NUMBER 10
