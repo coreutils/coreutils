@@ -1,3 +1,10 @@
+2000-03-05  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sort.c (struct buffer.newline_free): New member.
+	(initbuf, findlines): Set it.
+	(fillbuf): Do not double the size of a full buffer to append a newline
+	unless the buffer is known to be newline free.
+
 2000-03-05  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0e.
