@@ -140,15 +140,12 @@ struct bin_str
 
 #ifndef STDC_HEADERS
 time_t time ();
-void free ();
-char *malloc ();
 #endif
 
 void mode_string ();
 
 char *getgroup ();
 char *getuser ();
-char *stpcpy ();
 void strip_trailing_slashes ();
 char *xstrdup ();
 char *xmalloc ();
