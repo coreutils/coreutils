@@ -1,5 +1,5 @@
 /* GNU's read utmp module.
-   Copyright (C) 1992-1999 Free Software Foundation, Inc.
+   Copyright (C) 1992-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -41,11 +41,11 @@ extract_trimmed_name (const STRUCT_UTMP *ut)
 {
   char *p, *trimmed_name;
 
-  trimmed_name = xmalloc (sizeof (ut->ut_name) + 1);
-  strncpy (trimmed_name, ut->ut_name, sizeof (ut->ut_name));
+  trimmed_name = xmalloc (sizeof (UT_USER (ut)) + 1);
+  strncpy (trimmed_name, UT_USER (ut), sizeof (UT_USER (ut)));
   /* Append a trailing space character.  Some systems pad names shorter than
      the maximum with spaces, others pad with NULs.  Remove any spaces.  */
-  trimmed_name[sizeof (ut->ut_name)] = ' ';
+  trimmed_name[sizeof (UT_USER (ut))] = ' ';
   p = strchr (trimmed_name, ' ');
   if (p != NULL)
     *p = '\0';
