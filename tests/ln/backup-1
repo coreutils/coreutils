@@ -8,6 +8,8 @@ if test "$VERBOSE" = yes; then
   ln --version
 fi
 
+trap "rm -rf a b b~" 0 1 2 3 15
+
 framework_failure=0
 touch a b || framework_failure=1
 
