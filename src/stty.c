@@ -39,7 +39,7 @@
 # include <sys/ptem.h>
 #endif
 #include <getopt.h>
-#ifdef __STDC__
+#if PROTOTYPES
 # include <stdarg.h>
 # define VA_START(args, lastarg) va_start(args, lastarg)
 #else
@@ -422,7 +422,7 @@ char *program_name;
 
 /* VARARGS */
 static void
-#ifdef __STDC__
+#if PROTOTYPES
 wrapf (const char *message,...)
 #else
  wrapf (message, va_alist)
