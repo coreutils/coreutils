@@ -44,21 +44,6 @@
 #define AUTHORS \
   "Paul Rubin, David MacKenzie, Ian Lance Taylor, and Jim Meyering"
 
-#define MAGIC_BYTE 0xfa
-
-#define IS_MAGIC(x) 						\
-  ({								\
-    int _result = 0;						\
-    unsigned char *_p = (unsigned char *) &(x);			\
-    int _i;							\
-    for (_i = 0; _i < sizeof(x); _i++)				\
-      {								\
-	if (_p[_i] == MAGIC_BYTE)				\
-	  _result = 1;						\
-      }								\
-    _result;							\
-  })
-
 #ifndef ENOSYS
   /* Some systems don't have ENOSYS -- this should be a big enough
      value that no valid errno value will match it.  */
@@ -740,8 +725,6 @@ recheck (struct File_spec *f)
   int prev_errnum = f->errnum;
   int new_file;
 
-  assert (! IS_MAGIC (f->errnum));
-
   assert (valid_file_spec (f));
 
   fd = (is_stdin ? STDIN_FILENO : open (f->name, O_RDONLY));
@@ -802,8 +785,7 @@ recheck (struct File_spec *f)
       assert (f->fd == -1);
       error (0, 0, _("`%s' has become accessible"), pretty_name (f));
     }
-  else if ((assert (!IS_MAGIC (f->ino) && ! IS_MAGIC (f->dev)), 0)
-	   || f->ino != new_stats.st_ino || f->dev != new_stats.st_dev)  /* UMR */
+  else if (f->ino != new_stats.st_ino || f->dev != new_stats.st_dev)
     {
       new_file = 1;
       if (f->fd == -1)
@@ -895,8 +877,7 @@ tail_forever (struct File_spec *f, int nfiles)
 	{
 	  struct stat stats;
 
-	  assert (! IS_MAGIC (f[i].ignore));
-	  if (f[i].ignore)  /* UMR */
+	  if (f[i].ignore)
 	    continue;
 
 	  if (f[i].fd < 0)
@@ -1573,7 +1554,6 @@ main (int argc, char **argv)
     }
 
   F = (struct File_spec *) xmalloc (n_files * sizeof (F[0]));
-  memset (F, MAGIC_BYTE, n_files * sizeof (F[0]));
   for (i = 0; i < n_files; i++)
     F[i].name = file[i];
 
