@@ -43,11 +43,11 @@ noinst_LIBRARIES = fu
 EXTRA_DIST = alloca.c basename.c euidaccess.c fnmatch.c fsusage.c \
 ftruncate.c getdate.y getopt.c getopt1.c memcmp.c memcpy.c memset.c \
 mkdir.c mktime.c mountlist.c posixtm.y rename.c rmdir.c \
-stpcpy.c strcasecmp.c strdup.c strstr.c strtol.c strtoul.c
+stpcpy.c strcasecmp.c strdup.c strndup.c strstr.c strtol.c strtoul.c
 
 INCLUDES = -I.. -I$(srcdir)
 
-fu_SOURCES = getdate.c posixtm.c argmatch.c backupfile.c \
+fu_SOURCES = getdate.c getline.c posixtm.c argmatch.c backupfile.c \
 dirname.c error.c fileblocks.c filemode.c \
 full-write.c getversion.c group-member.c idcache.c \
 isdir.c long-options.c makepath.c modechange.c obstack.c \
@@ -57,8 +57,8 @@ xmalloc.c xstrdup.c xstrtol.c xstrtoul.c yesno.c
 fu_LIBADD = @LIBOBJS@ @ALLOCA@
 
 noinst_HEADERS = argmatch.h backupfile.h error.h fnmatch.h fsusage.h \
-getopt.h group-member.h long-options.h makepath.h modechange.h mountlist.h \
-obstack.h pathmax.h save-cwd.h xstrtol.h xstrtoul.h
+getline.h getopt.h group-member.h long-options.h makepath.h modechange.h \
+mountlist.h obstack.h pathmax.h save-cwd.h xstrtol.h xstrtoul.h
 
 BUILT_SOURCES = getdate.c posixtm.c
 mkinstalldirs = $(top_srcdir)/mkinstalldirs
@@ -79,8 +79,8 @@ LIBS = @LIBS@
 
 COMPILE = $(CC) -c $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 LINK = $(CC) $(LDFLAGS) -o $@
-fu_OBJECTS = getdate.o posixtm.o argmatch.o backupfile.o dirname.o \
-error.o fileblocks.o filemode.o full-write.o getversion.o \
+fu_OBJECTS = getdate.o getline.o posixtm.o argmatch.o backupfile.o \
+dirname.o error.o fileblocks.o filemode.o full-write.o getversion.o \
 group-member.o idcache.o isdir.o long-options.o makepath.o modechange.o \
 obstack.o safe-read.o save-cwd.o savedir.o stripslash.o userspec.o \
 xgetcwd.o xmalloc.o xstrdup.o xstrtol.o xstrtoul.o yesno.o
@@ -102,6 +102,24 @@ DEP_DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
 	$(TEXINFOS) $(INFO_DEPS) $(MANS) $(EXTRA_DIST) $(DATA)
 
 TAR = tar
+DEP_FILES = $(srcdir)/.deps/alloca.P $(srcdir)/.deps/argmatch.P \
+$(srcdir)/.deps/backupfile.P $(srcdir)/.deps/dirname.P \
+$(srcdir)/.deps/error.P $(srcdir)/.deps/fileblocks.P \
+$(srcdir)/.deps/filemode.P $(srcdir)/.deps/fnmatch.P \
+$(srcdir)/.deps/fsusage.P $(srcdir)/.deps/ftruncate.P \
+$(srcdir)/.deps/full-write.P $(srcdir)/.deps/getdate.P \
+$(srcdir)/.deps/getline.P $(srcdir)/.deps/getopt.P \
+$(srcdir)/.deps/getopt1.P $(srcdir)/.deps/getversion.P \
+$(srcdir)/.deps/group-member.P $(srcdir)/.deps/idcache.P \
+$(srcdir)/.deps/isdir.P $(srcdir)/.deps/long-options.P \
+$(srcdir)/.deps/makepath.P $(srcdir)/.deps/modechange.P \
+$(srcdir)/.deps/mountlist.P $(srcdir)/.deps/obstack.P \
+$(srcdir)/.deps/posixtm.P $(srcdir)/.deps/safe-read.P \
+$(srcdir)/.deps/save-cwd.P $(srcdir)/.deps/savedir.P \
+$(srcdir)/.deps/stripslash.P $(srcdir)/.deps/userspec.P \
+$(srcdir)/.deps/xgetcwd.P $(srcdir)/.deps/xmalloc.P \
+$(srcdir)/.deps/xstrdup.P $(srcdir)/.deps/xstrtol.P \
+$(srcdir)/.deps/xstrtoul.P $(srcdir)/.deps/yesno.P
 SOURCES = $(fu_SOURCES)
 OBJECTS = $(fu_OBJECTS)
 
@@ -167,43 +185,33 @@ distdir: $(DEP_DISTFILES)
 	  || ln $(srcdir)/$$file $(distdir)/$$file 2> /dev/null \
 	  || cp -p $(srcdir)/$$file $(distdir)/$$file; \
 	done
-alloca.o: alloca.c
-argmatch.o: argmatch.c
-backupfile.o: backupfile.c backupfile.h
-basename.o: basename.c
-dirname.o: dirname.c
-error.o: error.c
-fileblocks.o: fileblocks.c
-filemode.o: filemode.c
-fnmatch.o: fnmatch.c
-fsusage.o: fsusage.c fsusage.h
-ftruncate.o: ftruncate.c
-full-write.o: full-write.c
-getdate.o: getdate.c
-getopt.o: getopt.c
-getopt1.o: getopt1.c getopt.h
-getversion.o: getversion.c backupfile.h
-group-member.o: group-member.c group-member.h
-idcache.o: idcache.c
-isdir.o: isdir.c
-long-options.o: long-options.c long-options.h
-makepath.o: makepath.c makepath.h
-modechange.o: modechange.c modechange.h
-mountlist.o: mountlist.c mountlist.h
-obstack.o: obstack.c obstack.h
-posixtm.o: posixtm.c
-safe-read.o: safe-read.c
-save-cwd.o: save-cwd.c ../config.h save-cwd.h error.h
-savedir.o: savedir.c
-stripslash.o: stripslash.c
-userspec.o: userspec.c
-xgetcwd.o: xgetcwd.c pathmax.h
-xmalloc.o: xmalloc.c
-xstrdup.o: xstrdup.c
-xstrtol.o: xstrtol.c xstrtol.h
-xstrtoul.o: xstrtoul.c xstrtol.c xstrtol.h
-yesno.o: yesno.c
 
+# This fragment is probably only useful for maintainers.  It relies on
+# GNU make and gcc.  It is only included in the generated Makefile.in
+# if `automake' is not passed the `--include-deps' flag.
+
+MKDEP = gcc -MM $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+
+-include $(srcdir)/.deps/.P
+$(srcdir)/.deps/.P: $(BUILT_SOURCES)
+	cd $(srcdir) && test -d .deps || mkdir .deps
+	echo > $@
+
+-include $(DEP_FILES)
+$(DEP_FILES): $(srcdir)/.deps/.P
+
+$(srcdir)/.deps/%.P: $(srcdir)/%.c
+	@echo "mkdeps $< > $@"
+	@re=`echo 's,^$(srcdir)//*,,g;s, $(srcdir)//*, ,g' | sed 's,\.,\\\\.,g'`; \
+	  $(MKDEP) $< | sed "$$re" > $@-tmp
+	@if test -n "$o"; then			\
+	  sed 's/\.o:/$$o:/' $@-tmp > $@;	\
+	  rm $@-tmp;				\
+	else					\
+	  mv $@-tmp $@;				\
+	fi
+
+# End of maintainer-only section
 info:
 
 dvi:
