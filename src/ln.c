@@ -127,6 +127,7 @@ static struct option const long_options[] =
 static int
 do_link (char *source, char *dest)
 {
+  struct stat source_stats;
   struct stat dest_stats;
   char *dest_backup = NULL;
   int lstat_status;
@@ -137,8 +138,6 @@ do_link (char *source, char *dest)
      On other systems, link follows symlinks, so this check is right.  */
   if (!symbolic_link)
     {
-      struct stat source_stats;
-
       if (stat (source, &source_stats) != 0)
 	{
 	  error (0, errno, "%s", source);
@@ -151,10 +150,6 @@ do_link (char *source, char *dest)
 	}
     }
 
-  /* If the destination is a directory or (it is a symlink to a directory
-     and the user has not specified --no-dereference), then form the
-     actual destination name by appending basename (source) to the
-     specified destination directory.  */
   lstat_status = lstat (dest, &dest_stats);
 
   if (lstat_status != 0 && errno != ENOENT)
@@ -163,6 +158,23 @@ do_link (char *source, char *dest)
       return 1;
     }
 
+  /* If --force (-f) has been specified, before making a link ln must
+     remove the destination file if it exists.  But if the source and
+     destination are the same, don't remove anything and fail right here.  */
+  if (remove_existing_files
+      && lstat_status == 0
+      && (!symlink || stat (source, &source_stats) == 0)
+      && source_stats.st_dev == dest_stats.st_dev
+      && source_stats.st_ino == dest_stats.st_ino)
+    {
+      error (0, 0, _("`%s' and `%s' are the same file"), source, dest);
+      return 1;
+    }
+
+  /* If the destination is a directory or (it is a symlink to a directory
+     and the user has not specified --no-dereference), then form the
+     actual destination name by appending basename (source) to the
+     specified destination directory.  */
   if ((lstat_status == 0
        && S_ISDIR (dest_stats.st_mode))
 #ifdef S_ISLNK
