@@ -1,5 +1,9 @@
 Mon Oct 21 16:52:28 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/Makefile.am (EXTRA_DIST): Remove group-member.c.
+	Add (temporary hack to work around bug in automake-1.1f) mvdir.c and
+	rmdir.c.
+
 	* configure.in: Remove hack that created link from group_member.c
 	to group-member.c.
 
