@@ -1,3 +1,13 @@
+Sun Jul 21 09:47:55 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/stty.c (usage): Correct typo (-iucl -> -iuclc) in usage message.
+	From Thomas Olsson <d95to@efd.lth.se>.
+
+Sat Jul 20 17:01:56 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (PACKAGE_VERSION): Use space instead of hyphen to
+	separate PACKAGE and VERSION.
+
 Wed Jul 17 23:13:19 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/chroot.c: Include <sys/types.h> before system.h.
