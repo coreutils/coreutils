@@ -35,7 +35,7 @@ my @Tests =
       {ERR => "fmt: cannot open `no-such-file' for reading:"
        . " No such file or directory\n"}, {EXIT => 1}],
      ['obs-1', '-c -72',
-      {ERR => "fmt: invalid option -- 7; -NUMBER is recognized only when it"
+      {ERR => "fmt: invalid option -- 7; -WIDTH is recognized only when it"
        . " is the first\noption; use -w N instead\n"
        . "Try `fmt --help' for more information.\n" }, {EXIT => 1}],
     );
