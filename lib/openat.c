@@ -19,10 +19,7 @@
 
 #include <config.h>
 
-/* Disable the definition of openat to rpl_openat (from config.h) in this
-   file.  Otherwise, we'd get conflicting prototypes for rpl_openat on
-   most systems.  */
-#undef openat
+#include "openat.h"
 
 #include <stdlib.h>
 #include <stdarg.h>
@@ -30,9 +27,8 @@
 #include <errno.h>
 #include <fcntl.h>
 
-#include "openat.h"
-
 #include "error.h"
+#include "exitfail.h"
 #include "save-cwd.h"
 
 #include "gettext.h"
@@ -46,42 +42,44 @@ int
 rpl_openat (int fd, char const *filename, int flags, ...)
 {
   struct saved_cwd saved_cwd;
-  int saved_errno = 0;
+  int saved_errno;
   int new_fd;
-  mode_t mode;
+  mode_t mode = 0;
 
   if (flags & O_CREAT)
     {
       va_list arg;
       va_start (arg, flags);
+
+      /* Assume that mode_t is passed compatibly with mode_t's type
+	 after argument promotion.  */
       mode = va_arg (arg, mode_t);
+
       va_end (arg);
-    }
-  else
-    {
-      mode = 0;
     }
 
   if (fd == AT_FDCWD || *filename == '/')
     return open (filename, flags, mode);
 
   if (save_cwd (&saved_cwd) != 0)
-    error (EXIT_FAILURE, errno,
+    error (exit_failure, errno,
 	   _("openat: unable to record current working directory"));
+
   if (fchdir (fd) != 0)
     {
+      saved_errno = errno;
       free_cwd (&saved_cwd);
+      errno = saved_errno;
       return -1;
     }
 
   new_fd = open (filename, flags, mode);
-  if (new_fd < 0)
-    saved_errno = errno;
+  saved_errno = errno;
 
   if (restore_cwd (&saved_cwd) != 0)
-    error (EXIT_FAILURE, errno,
+    error (exit_failure, errno,
 	   _("openat: unable to restore working directory"));
-  errno = saved_errno;
 
+  errno = saved_errno;
   return new_fd;
 }
