@@ -1,3 +1,8 @@
+2001-05-15  Jim Meyering  <meyering@lucent.com>
+
+	* regex.m4: Use proper quoting so brackets appear in the test program.
+	Reported by Bruno Haible.
+
 2001-05-13  Jim Meyering  <meyering@lucent.com>
 
 	* jm-macros.m4 (major_t, minor_t): Define to unsigned int if undefined.
