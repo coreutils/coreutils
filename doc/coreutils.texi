@@ -6640,15 +6640,24 @@ Conversions:
 
 @item ascii
 @opindex ascii@r{, converting to}
-Convert @acronym{EBCDIC} to @acronym{ASCII}.
+Convert @acronym{EBCDIC} to @acronym{ASCII},
+using the conversion table specified by @acronym{POSIX}.
+This provides a 1:1 translation for all 256 bytes.
 
 @item ebcdic
 @opindex ebcdic@r{, converting to}
 Convert @acronym{ASCII} to @acronym{EBCDIC}.
+This is the inverse of the @samp{ascii} conversion.
 
 @item ibm
 @opindex alternate ebcdic@r{, converting to}
-Convert @acronym{ASCII} to alternate @acronym{EBCDIC}.
+Convert @acronym{ASCII} to alternate @acronym{EBCDIC},
+using the alternate conversion table specified by @acronym{POSIX}.
+This is not a 1:1 translation, but reflects common historical practice
+for @samp{~}, @samp{[}, and @samp{]}.
+
+The @samp{ascii}, @samp{ebcdic}, and @samp{ibm} conversions are
+mutually exclusive.
 
 @item block
 @opindex block @r{(space-padding)}
@@ -6660,6 +6669,8 @@ input newline with a space and padding with spaces as necessary.
 Replace trailing spaces in each @samp{cbs}-sized input block with a
 newline.
 
+The @samp{block} and @samp{unblock} conversions are mutually exclusive.
+
 @item lcase
 @opindex lcase@r{, converting to}
 Change uppercase letters to lowercase.
@@ -6667,6 +6678,8 @@ Change uppercase letters to lowercase.
 @item ucase
 @opindex ucase@r{, converting to}
 Change lowercase letters to uppercase.
+
+The @samp{lcase} and @samp{ucase} conversions are mutually exclusive.
 
 @item swab
 @opindex swab @r{(byte-swapping)}
@@ -6690,6 +6703,8 @@ Do not create the output file; the output file must already exist.
 @cindex creating output file, requiring
 Fail if the output file already exists; @command{dd} must create the
 output file itself.
+
+The @samp{excl} and @samp{nocreat} conversions are mutually exclusive.
 
 @item notrunc
 @opindex notrunc
