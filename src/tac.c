@@ -49,6 +49,7 @@ tac -r -s '.\|
 #endif
 
 #include "error.h"
+#include "safe-read.h"
 
 #ifndef DEFAULT_TMPDIR
 # define DEFAULT_TMPDIR "/tmp"
@@ -176,7 +177,7 @@ output (const char *start, const char *past_end)
    Return 0 if ok, 1 if an error occurs. */
 
 static int
-tac_stream (FILE *in, const char *file)
+tac_seekable (int input_fd, const char *file)
 {
   /* Pointer to the location in `G_buffer' where the search for
      the next separator will begin. */
@@ -201,7 +202,7 @@ tac_stream (FILE *in, const char *file)
   struct re_registers regs;
 
   /* Find the size of the input file. */
-  file_pos = lseek (fileno (in), (off_t) 0, SEEK_END);
+  file_pos = lseek (input_fd, (off_t) 0, SEEK_END);
   if (file_pos < 1)
     return 0;			/* It's an empty file. */
 
@@ -217,10 +218,10 @@ tac_stream (FILE *in, const char *file)
   /* `file_pos' now points to the start of the last (probably partial) block
      in the input file. */
 
-  if (lseek (fileno (in), file_pos, SEEK_SET) < 0)
+  if (lseek (input_fd, file_pos, SEEK_SET) < 0)
     error (0, errno, "%s: seek failed", file);
 
-  if (fread (G_buffer, 1, saved_record_size, in) != saved_record_size)
+  if (safe_read (input_fd, G_buffer, saved_record_size) != saved_record_size)
     {
       error (0, errno, "%s", file);
       return 1;
@@ -306,7 +307,7 @@ tac_stream (FILE *in, const char *file)
 	      read_size = file_pos;
 	      file_pos = 0;
 	    }
-	  lseek (fileno (in), file_pos, SEEK_SET);
+	  lseek (input_fd, file_pos, SEEK_SET);
 
 	  /* Shift the pending record data right to make room for the new.
 	     The source and destination regions probably overlap.  */
@@ -318,7 +319,7 @@ tac_stream (FILE *in, const char *file)
 	  else
 	    match_start = past_end;
 
-	  if (fread (G_buffer, 1, read_size, in) != read_size)
+	  if (safe_read (input_fd, G_buffer, read_size) != read_size)
 	    {
 	      error (0, errno, "%s", file);
 	      return 1;
@@ -363,7 +364,7 @@ tac_file (const char *file)
       error (0, errno, "%s", file);
       return 1;
     }
-  errors = tac_stream (in, file);
+  errors = tac_seekable (fileno (in), file);
   if (ferror (in) || fclose (in) == EOF)
     {
       error (0, errno, "%s", file);
@@ -381,7 +382,7 @@ save_stdin (FILE **g_tmp, char **g_tempfile)
   static char *tempdir;
   static char *tempfile;
   FILE *tmp;
-  size_t bytes_read;
+  ssize_t bytes_read;
   int fd;
 
   if (template == NULL)
@@ -404,14 +405,17 @@ save_stdin (FILE **g_tmp, char **g_tempfile)
 
   unlink (tempfile);
 
-  while ((bytes_read = fread (G_buffer, 1, read_size, stdin)) > 0
-	 && fwrite (G_buffer, 1, bytes_read, tmp) > 0)
+  while (1)
     {
-      /* empty */
-    }
+      bytes_read = safe_read (STDIN_FILENO, G_buffer, read_size);
+      if (bytes_read == 0)
+	break;
+      if (bytes_read < 0)
+	error (EXIT_FAILURE, errno, _("stdin: read error"));
 
-  if (ferror (stdin))
-    error (EXIT_FAILURE, errno, _("stdin: read error"));
+      /* Don't bother checking for failure inside the loop -- check after.  */
+      fwrite (G_buffer, 1, bytes_read, tmp);
+    }
 
   if (ferror (tmp) || fflush (tmp) == EOF)
     error (EXIT_FAILURE, errno, "%s", tempfile);
@@ -444,14 +448,14 @@ tac_stdin (void)
 
   if (S_ISREG (stats.st_mode))
     {
-      errors = tac_stream (stdin, _("standard input"));
+      errors = tac_seekable (fileno (stdin), _("standard input"));
     }
   else
     {
       FILE *tmp_stream;
       char *tmp_file;
       save_stdin (&tmp_stream, &tmp_file);
-      errors = tac_stream (tmp_stream, tmp_file);
+      errors = tac_seekable (fileno (tmp_stream), tmp_file);
     }
 
   return errors;
@@ -528,7 +532,7 @@ tac_stdin_to_mem (void)
 
   while (1)
     {
-      int bytes_read;
+      ssize_t bytes_read;
       if (buf == NULL)
 	buf = (char *) malloc (bufsiz);
       else
@@ -542,13 +546,11 @@ tac_stdin_to_mem (void)
 	  /* FIXME */
 	  abort ();
 	}
-      bytes_read = fread (buf + n_bytes, 1, bufsiz - n_bytes, stdin);
+      bytes_read = safe_read (STDIN_FILENO, buf + n_bytes, bufsiz - n_bytes);
       if (bytes_read == 0)
-	{
-	  if (ferror (stdin))
-	    error (1, errno, _("stdin: read error"));
-	  break;
-	}
+	break;
+      if (bytes_read < 0)
+	error (EXIT_FAILURE, errno, _("stdin: read error"));
       n_bytes += bytes_read;
 
       bufsiz += delta;
