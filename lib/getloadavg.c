@@ -543,10 +543,13 @@ getloadavg (loadavg, nelem)
   kstat_named_t *kn;
 
   kc = kstat_open ();
-  if (kc == 0) return -1;
+  if (kc == 0)
+    return -1;
   ksp = kstat_lookup (kc, "unix", 0, "system_misc");
-  if (ksp == 0 ) return -1;
-  if (kstat_read (kc, ksp, 0) == -1) return -1;
+  if (ksp == 0 )
+    return -1;
+  if (kstat_read (kc, ksp, 0) == -1)
+    return -1;
 
 
   kn = kstat_data_lookup (ksp, "avenrun_1min");
@@ -678,7 +681,7 @@ getloadavg (loadavg, nelem)
     {
       info_count = PROCESSOR_SET_BASIC_INFO_COUNT;
       if (processor_set_info (default_set, PROCESSOR_SET_BASIC_INFO, &host,
-			     (processor_set_info_t) &info, &info_count)
+			      (processor_set_info_t) &info, &info_count)
 	  != KERN_SUCCESS)
 	getloadavg_initialized = 0;
       else
@@ -919,13 +922,13 @@ getloadavg (loadavg, nelem)
 	  }
 #   endif /* !SUNOS_5 */
 #  else  /* sgi */
-	  int ldav_off;
+      int ldav_off;
 
-	  ldav_off = sysmp (MP_KERNADDR, MPKA_AVENRUN);
-	  if (ldav_off != -1)
-	  offset = (long) ldav_off & 0x7fffffff;
+      ldav_off = sysmp (MP_KERNADDR, MPKA_AVENRUN);
+      if (ldav_off != -1)
+	offset = (long) ldav_off & 0x7fffffff;
 #  endif /* sgi */
-	}
+    }
 
   /* Make sure we have /dev/kmem open.  */
   if (!getloadavg_initialized)
