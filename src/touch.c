@@ -21,7 +21,7 @@
    -d, --date=TIME		Specify time and date in various formats.
    -f				Ignored.
    -m, --time={mtime,modify}	Change modification time only.
-   -r, --file=FILE		Use the time and date of reference file FILE.
+   -r, --reference=FILE		Use the time and date of reference file FILE.
    -t TIME			Specify time and date in the form
 				`MMDDhhmm[[CC]YY][.ss]'.
 
@@ -107,6 +107,7 @@ static struct option const longopts[] =
   {"no-create", no_argument, 0, 'c'},
   {"date", required_argument, 0, 'd'},
   {"file", required_argument, 0, 'r'},
+  {"reference", required_argument, 0, 'r'},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
   {0, 0, 0, 0}
@@ -385,7 +386,7 @@ Update the access and modification times of each FILE to the current time.\n\
   -d, --date=STRING      parse STRING and use it instead of current time\n\
   -f                     (ignored)\n\
   -m                     change only the modification time\n\
-  -r, --file=REFERENCE   use this file's times instead of current time\n\
+  -r, --reference=FILE   use this file's times instead of current time\n\
   -t STAMP               use MMDDhhmm[[CC]YY][.ss] instead of current time\n\
       --help             display this help and exit\n\
       --time=WORD        access -a, atime -a, mtime -m, modify -m, use -a\n\
