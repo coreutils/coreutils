@@ -1,6 +1,9 @@
 #serial 1
 
 dnl From Jim Meyering.
+dnl Determine whether chown accepts arguments of -1 for gid and uid.
+dnl If it doesn't, arrange to use the replacement function.
+dnl
 dnl If you use this macro in a package, you should
 dnl add the following two lines to acconfig.h:
 dnl  /* Define to rpl_chown if the replacement function should be used.  */
