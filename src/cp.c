@@ -37,14 +37,15 @@
 uid_t geteuid ();
 #endif
 
-#ifdef HAVE_LCHOWN
-# define LINK_CHOWN(FILE, OWNER, GROUP) lchown(FILE, OWNER, GROUP)
-#else
-# define LINK_CHOWN(FILE, OWNER, GROUP) chown(FILE, OWNER, GROUP)
+/* On Linux (from slackware-1.2.13 to 2.0.2?) there is no lchown function.
+   To change ownership of symlinks, you must run chown with an effective
+   UID of 0.  */
+#ifdef __linux__
+# define ROOT_CHOWN_AFFECTS_SYMLINKS
 #endif
 
-#define DO_CHOWN(FILE, NEW_UID, NEW_GID)				\
-  (LINK_CHOWN ((FILE), (myeuid == 0 ? (NEW_UID) : myeuid), (NEW_GID))	\
+#define DO_CHOWN(Chown, File, New_uid, New_gid)				\
+  (Chown ((File), (myeuid == 0 ? (New_uid) : myeuid), (New_gid))	\
    /* If non-root uses -p, it's ok if we can't preserve ownership.	\
       But root probably wants to know, e.g. if NFS disallows it.  */	\
    && (errno != EPERM || myeuid == 0))
@@ -823,17 +824,6 @@ copy (const char *src_path, const char *dst_path, int new_dst, dev_t device,
 	      goto un_backup;
 	    }
 
-	  /* Change the owner and group of the just-created symbolic link
-	     if this system has the lchown function.  */
-#ifdef HAVE_LCHOWN
-	  if (flag_preserve
-	      && DO_CHOWN (dst_path, src_sb.st_uid, src_sb.st_gid))
-	    {
-	      error (0, errno, "%s", dst_path);
-	      goto un_backup;
-	    }
-#endif
-
 	  return 0;
 	}
       else
@@ -910,16 +900,39 @@ copy (const char *src_path, const char *dst_path, int new_dst, dev_t device,
 	  goto un_backup;
 	}
 
-      /* Change the owner and group of the just-created symbolic link
-	 if this system has the lchown function.  */
-#ifdef HAVE_LCHOWN
-      if (flag_preserve
-	  && DO_CHOWN (dst_path, src_sb.st_uid, src_sb.st_gid))
+      if (flag_preserve)
 	{
-	  error (0, errno, "%s", dst_path);
-	  goto un_backup;
-	}
+	  /* Preserve the owner and group of the just-`copied'
+	     symbolic link, if possible.  */
+#ifdef HAVE_LCHOWN
+	  if (DO_CHOWN (lchown, dst_path, src_sb.st_uid, src_sb.st_gid))
+	    {
+	      error (0, errno, "%s", dst_path);
+	      goto un_backup;
+	    }
+#else
+# ifdef ROOT_CHOWN_AFFECTS_SYMLINKS
+	  if (myeuid == 0)
+	    {
+	      if (DO_CHOWN (chown, dst_path, src_sb.st_uid, src_sb.st_gid))
+		{
+		  error (0, errno, "%s", dst_path);
+		  goto un_backup;
+		}
+	    }
+	  else
+	    {
+	      /* FIXME: maybe give a diagnostic: you must be root
+		 to preserve ownership and group of symlinks.  */
+	    }
+# else
+	  /* Can't preserve ownership of symlinks.
+	     FIXME: maybe give a warning or even error for symlinks
+	     in directories with the sticky bit set -- there, not
+	     preserving owner/group is a potential security problem.  */
+# endif
 #endif
+	}
 
       return 0;
     }
@@ -947,7 +960,7 @@ copy (const char *src_path, const char *dst_path, int new_dst, dev_t device,
 	  return 1;
 	}
 
-      if (DO_CHOWN (dst_path, src_sb.st_uid, src_sb.st_gid))
+      if (DO_CHOWN (chown, dst_path, src_sb.st_uid, src_sb.st_gid))
 	{
 	  error (0, errno, "%s", dst_path);
 	  return 1;
