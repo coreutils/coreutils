@@ -17,8 +17,8 @@
 
 /* Differences from the Unix cat:
    * Always unbuffered, -u is ignored.
-   * 100 times faster with -v -u.
-   * 20 times faster with -v.
+   * Usually much faster than other versions of cat, the difference
+   is especially apparent when using the -v option.
 
    By tege@sics.se, Torbjorn Granlund, advised by rms, Richard Stallman. */
 
