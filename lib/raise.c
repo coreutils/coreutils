@@ -25,9 +25,12 @@
 
 #include <sys/types.h>
 #include <signal.h>
+#if HAVE_UNISTD_H
+# include <unistd.h>
+#endif
 
 int
 rpl_raise (int sig)
 {
-  kill (getpid (), sig)
+  kill (getpid (), sig);
 }
