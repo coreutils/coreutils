@@ -1,5 +1,7 @@
 1999-11-17  Jim Meyering  <meyering@ascend.com>
 
+	* Version 4.0j.
+
 	* src/mkdir.c (S_IRWXUGO): Define if necessary.
 	(main): Use chmod to set the permissions if bits other than those
 	of S_IRWXUGO were requested.  Reported by Sami Farin.
