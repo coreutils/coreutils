@@ -1,6 +1,18 @@
-2003-09-26  Jim Meyering  <jim@meyering.net>
+2003-09-27  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.92.
+
+	Don't exhaust virtual memory when processing large inputs.
+	Fix this by removing csplit's internal free-list management;
+	instead rely on malloc for that.
+	* src/csplit.c (free_list): Remove global.
+	(clear_all_line_control): Remove function.
+	(get_new_buffer): Always use create_new_buffer to obtain a
+	new buffer, rather than searching free_list.
+	(free_buffer): Just call free.
+	Reported by Nikola Milutinovic.
+
+2003-09-26  Jim Meyering  <jim@meyering.net>
 
 	* man/rm.x: Also list `chattr' in SEE ALSO section.
 	Suggestion from Mark Hubbart.
