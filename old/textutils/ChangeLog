@@ -1,3 +1,8 @@
+Thu Dec 12 23:42:51 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/sort.c (usage): Clarify description of -u option.
+	From Karl Berry.
+
 Wed Dec 11 19:32:18 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Version 1.20.
