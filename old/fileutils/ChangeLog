@@ -1,6 +1,12 @@
-2001-09-23  Jim Meyering  <meyering@lucent.com>
+2001-09-26  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.1.
+
+	* configure.ac: Renamed from configure.in.
+
+	* INSTALL, mkinstalldirs: Update to autoconf 2.50 version.
+
+2001-09-23  Jim Meyering  <meyering@lucent.com>
 
 	* tests/mv/childproof: New test, for the above fix.
 	Based on a report from Dan Jacobson.
