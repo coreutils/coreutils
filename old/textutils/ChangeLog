@@ -1,10 +1,20 @@
-1999-01-01  Jim Meyering  <meyering@ascend.com>
+1999-01-02  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.22g.
+
+	* lib/argmatch.h (XARGMATCH): Don't return a value;  instead,
+	modify a parameter.  Add a `Die_stmt' parameter.
+	Add parentheses.
+	* lib/argmatch.c (__xargmatch_internal): Remove now-unused function.
+	(argmatch_to_argument): Add `const' attribute to first parameter.
+
+1999-01-01  Jim Meyering  <meyering@ascend.com>
 
 	* src/tsort.c: Move inclusion of assert.h to follow that of stdio.h.
 	Some losing systems require this.
 	Use STREQ macro instead of strcmp in a few places.
+
+	* po/POTFILES.in: Add tsort.c.
 
 	* man/Makefile.maint ($(man_MANS)): `exit 1' if any of help2man,
 	chmod, or mv fails.  Otherwise, the failure could go unnoticed.
