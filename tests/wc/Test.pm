@@ -38,6 +38,11 @@ sub test_vector
       # FILE in the ouput -- and FILE is different depending on $srcdir.
       $Test::input_via{$test_name} = {FILE => 0}
         if $test_name =~ /-file$/;
+
+      # Now that `wc FILE' (note, with no options) produces results
+      # different from `cat FILE|wc', disable those two `PIPE' tests.
+      $flags eq ''
+	and delete $Test::input_via{$test_name}->{PIPE};
     }
 
   return @tv;
