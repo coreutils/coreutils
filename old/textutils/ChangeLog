@@ -1,3 +1,8 @@
+2001-02-19  Jim Meyering  <meyering@lucent.com>
+
+	* src/wc.c (wc): Rename innermost `buf' to avoid shadowing warning.
+	(wc): Rename local `wc' to avoid shadowing function name.
+
 2001-02-18  Jim Meyering  <meyering@lucent.com>
 
 	Rename test input files to avoid conflicts on case-insensitive
