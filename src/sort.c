@@ -547,10 +547,13 @@ fillbuf (struct buffer *buf, FILE *fp)
 {
   int cc;
 
-  memmove (buf->buf, buf->buf + buf->used - buf->left, buf->left);
-  cc = buf->used = buf->left;
+  if (buf->used != buf->left)
+    {
+      memmove (buf->buf, buf->buf + buf->used - buf->left, buf->left);
+      buf->used = buf->left;
+    }
 
-  while (!feof (fp) && !memchr (buf->buf + buf->used - cc, eolchar, cc))
+  while (!feof (fp))
     {
       if (buf->used == buf->alloc)
 	{
@@ -565,6 +568,8 @@ fillbuf (struct buffer *buf, FILE *fp)
 	  exit (SORT_FAILURE);
 	}
       buf->used += cc;
+      if (memchr (buf->buf + buf->used - cc, eolchar, cc))
+	break;
     }
 
   if (feof (fp) && buf->used && buf->buf[buf->used - 1] != eolchar)
@@ -1678,6 +1683,15 @@ sort (char **files, int nfiles, FILE *ofp, const char *output_file)
       fp = xfopen (*files++, "r");
       while (fillbuf (&buf, fp))
 	{
+	  if (nfiles && buf.used != buf.alloc && feof (fp))
+	    {
+	      /* End of file, but there is more input and buffer room.
+		 Concatenate the next input file; this is faster in
+		 the usual case.  */
+	      buf.left = buf.used;
+	      break;
+	    }
+
 	  findlines (&buf, &lines);
 	  if (ntmp < lines.used)
 	    {
