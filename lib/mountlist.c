@@ -393,8 +393,8 @@ read_filesystem_list (int need_fs_type)
     struct fs_data fsd;
 
     while (errno = 0,
-	   0 <= (val = getmnt (&offset, &fsd, sizeof (fsd), NOSTAT_MANY,
-			       (char *) 0)))
+	   0 < (val = getmnt (&offset, &fsd, sizeof (fsd), NOSTAT_MANY,
+			      (char *) 0)))
       {
 	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
 	me->me_devname = xstrdup (fsd.fd_req.devname);
