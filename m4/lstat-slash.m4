@@ -34,6 +34,8 @@ AC_DEFUN(jm_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK,
       jm_cv_func_lstat_dereferences_slashed_symlink=no
      )
    else
+     # If the `ln -s' command failed, then we probably don't even
+     # have an lstat function.
      jm_cv_func_lstat_dereferences_slashed_symlink=no
    fi
   ])
