@@ -1,3 +1,9 @@
+2003-04-05  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am (DEFS): Use += notation rather than `DEFS = ... @DEFS@'.
+	Use $(VAR) rather than @VAR@, now that we can rely on automake to
+	emit a definition for each substituted variable.
+
 2003-03-26  Richard Dawe  <rich@phekda.freeserve.co.uk>
 
 	* dirname.c [TEST_DIRNAME]: Update build instructions for test.
