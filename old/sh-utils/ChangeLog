@@ -1,3 +1,8 @@
+2000-07-05  Bruno Haible  <haible@clisp.cons.org>
+
+	* tests/nice: Avoid syntax error in "test" when `nice` generates
+	no output.
+
 2000-07-04  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0j.
