@@ -12,6 +12,7 @@
 	* src/Makefile.am (bin_PROGRAMS): Add pinky.
 
 	* src/pinky.c: New file.  From Kaveh Ghazi.
+	* po/POTFILES.in: Add pinky.c.
 
 1997-07-19  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
