@@ -173,11 +173,11 @@ main (int argc, char **argv)
 	case FROM_OPTION:
 	  {
 	    char *u_dummy, *g_dummy;
-	    const char *e = parse_user_spec (argv[optind],
+	    const char *e = parse_user_spec (optarg,
 					     &old_uid, &old_gid,
 					     &u_dummy, &g_dummy);
 	    if (e)
-	      error (1, 0, "%s: %s", quote (argv[optind]), e);
+	      error (1, 0, "%s: %s", quote (optarg), e);
 	    break;
 	  }
 	case 'R':
