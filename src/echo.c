@@ -109,7 +109,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "echo", PACKAGE_VERSION, usage);
+  /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
+  if (getenv ("POSIXLY_CORRECT") == NULL)
+    parse_long_options (argc, argv, "echo", PACKAGE_VERSION, usage);
 
 /* System V machines already have a /bin/sh with a v9 behaviour.  We
    use the identical behaviour for these machines so that the
