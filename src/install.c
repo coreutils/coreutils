@@ -81,10 +81,6 @@
 # include <values.h>
 #endif
 
-#ifndef BITSPERBYTE
-# define BITSPERBYTE 8
-#endif
-
 struct passwd *getpwnam ();
 struct group *getgrnam ();
 
@@ -108,13 +104,11 @@ gid_t getgid ();
 #define READ_SIZE (32 * 1024)
 
 #ifndef UID_T_MAX
-# define UID_T_MAX ((uid_t)(~((unsigned long)1 << ((sizeof (uid_t) \
-						    * BITSPERBYTE - 1)))))
+# define UID_T_MAX TYPE_MAXIMUM (uid_t)
 #endif
 
 #ifndef GID_T_MAX
-# define GID_T_MAX ((gid_t)(~((unsigned long)1 << ((sizeof (gid_t) \
-						    * BITSPERBYTE - 1)))))
+# define GID_T_MAX TYPE_MAXIMUM (gid_t)
 #endif
 
 char *base_name ();
