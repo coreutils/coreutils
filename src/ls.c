@@ -1376,7 +1376,7 @@ parse_ls_color (void)
 	    {
 	      for (ind_no = 0; indicator_name[ind_no] != NULL; ++ind_no)
 		{
-		  if (strcmp (label, indicator_name[ind_no]) == 0)
+		  if (STREQ (label, indicator_name[ind_no]))
 		    {
 		      color_indicator[ind_no].string = buf;
 		      state = ((color_indicator[ind_no].len =
