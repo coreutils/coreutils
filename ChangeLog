@@ -1,8 +1,14 @@
-2002-11-06  Jim Meyering  <jim@meyering.net>
+2002-11-09  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.4.
 
-	* Makefile.maint (automake_repo): Use anoncvs@subversions.gnu.org.
+	Update from autoconf.
+	* Makefile.maint (AMTAR): Remove definition.
+	(update, cvs-update, po-update, do-po-update): New rules.
+	(wget-update): Update (thus renaming to cvs-update).
+	(automake_repo): Use anoncvs@sources.redhat.com.
+
+2002-11-06  Jim Meyering  <jim@meyering.net>
 
 	* tests/misc/Makefile.am (TESTS): Add printf-hex.
 
