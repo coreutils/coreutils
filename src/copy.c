@@ -273,6 +273,7 @@ copy_reg (const char *src_path, const char *dst_path,
       return_val = false;
       goto close_src_desc;
     }
+  SET_BINARY2 (source_desc, dest_desc);
 
   /* Determine the optimal buffer size.  */
 
