@@ -162,9 +162,10 @@ localedir = $(datadir)/locale
 BUILT_SOURCES = localedir.h
 DISTCLEANFILES = localedir.h
 localedir.h:
-	@rm -f $@
-	echo '#define LOCALEDIR "$(localedir)"' >$@
-	@chmod a-w $@
+	@rm -f $@ $@-t
+	echo '#define LOCALEDIR "$(localedir)"' >$@-t
+	@chmod a-w $@-t
+	mv $@-t $@
 
 BUILT_SOURCES += dircolors.h
 dircolors.h: dcgen dircolors.hin
