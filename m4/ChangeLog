@@ -1,3 +1,21 @@
+2000-06-04  Paul Eggert  <eggert@twinsun.com>
+
+	Rewrite largefile configuration so that we don't need to run
+	getconf and don't need AC_CANONICAL_HOST.  [I'm leaving the use of
+	AC_CANONICAL_HOST in configure.in -- jmm]
+
+	* largefile.m4 (AC_SYS_LARGEFILE_FLAGS,
+	AC_SYS_LARGEFILE_SPACE_APPEND): Remove.
+	(AC_SYS_LARGEFILE_TEST_INCLUDES): New macro.
+	(AC_SYS_LARGEFILE_MACRO_VALUE): Change arguments from
+	CODE-TO-SET-DEFAULT to VALUE, INCLUDES, FUNCTION-BODY.
+	All uses changed.
+	Instead of inspecting the output of getconf, try to compile the
+	test program without and with the macro definition.
+	(AC_SYS_LARGEFILE): Do not require AC_CANONICAL_HOST or check
+	for getconf.  Instead, check for the needed flags by compiling
+	test programs.
+
 2000-06-03  Jim Meyering  <meyering@lucent.com>
 
 	* prereq.m4 (jm_PREREQ_HUMAN): Use []-quoted list in AC_CHECK_DECLS,
