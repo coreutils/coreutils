@@ -1511,6 +1511,8 @@ keycompare (const struct line *a, const struct line *b)
 
   for (key = keyhead.next; key; key = key->next, ++iter)
     {
+      int comparable_lengths = 1;
+
       ignore = key->ignore;
       translate = (unsigned char *) key->translate;
 
@@ -1725,7 +1727,7 @@ keycompare (const struct line *a, const struct line *b)
 	     Handling this case here avoids what might be an invalid length  \
 	     comparison below.  */					\
 	  if (diff == 0 && texta == lima && textb == limb)		\
-	    return 0;							\
+	    comparable_lengths = 0;					\
     }									\
   while (0)
 
@@ -1749,7 +1751,7 @@ keycompare (const struct line *a, const struct line *b)
 
       if (diff)
 	return key->reverse ? -diff : diff;
-      if ((diff = lena - lenb) != 0)
+      if (comparable_lengths && (diff = lena - lenb) != 0)
 	return key->reverse ? -diff : diff;
     }
 
@@ -2143,7 +2145,11 @@ sortlines (struct line *lines, int nlines, struct line *temp)
   if (nlines == 2)
     {
       if (compare (&lines[0], &lines[1]) > 0)
-	*temp = lines[0], lines[0] = lines[1], lines[1] = *temp;
+	{
+	  *temp = lines[0];
+	  lines[0] = lines[1];
+	  lines[1] = *temp;
+	}
       return;
     }
 
