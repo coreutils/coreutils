@@ -1,5 +1,9 @@
 Tue Jul  9 18:07:23 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/fmt.c (MAXCOST): Use `(unsigned long)1' rather than `(COST)1'
+	so the left operand of the << isn't signed.
+	From Kjetil Torgrim Homme.
+
 	* po/Makefile.in.in (install-data): Don't install NLS files when
 	they're not requested.  From Ulrich Drepper.  Reported by
 	Kjetil Torgrim Homme <kjetilho@ifi.uio.no>.
