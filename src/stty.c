@@ -669,7 +669,7 @@ valid_options (char *opt, const char *valid_opts,
   if (*opt++ != '-')
     return 0;
 
-  while (ch = *opt)
+  while ((ch = *opt))
     {
       opt++;
       if (strchr (valid_opts, ch))
@@ -680,7 +680,6 @@ valid_options (char *opt, const char *valid_opts,
     }
   return 1;
 }
-
 
 int
 main (int argc, char **argv)
@@ -694,10 +693,10 @@ main (int argc, char **argv)
   int recoverable_output;
   int k;
   int noargs = 1;
-  char *file_name = NULL, *cp;
+  char *file_name = NULL;
   int fd;
   const char *device_name;
-  const char *posixly_correct = getenv("POSIXLY_CORRECT");
+  const char *posixly_correct = getenv ("POSIXLY_CORRECT");
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -755,26 +754,26 @@ main (int argc, char **argv)
       if (STREQ (argv[k], "--"))
 	{
 	  argv[k] = 0;
-	  if (k < argc-1)
+	  if (k < argc - 1)
 	    noargs = 0;
 	  break;
     	}
       /* Handle "--file device" */
       if (STREQ (argv[k], "--file"))
 	{
-	  argv[k+1] = 0;
+	  argv[k + 1] = 0;
 	  argv[k] = 0;
     	}
       /* Handle "--all", "--save", and "--file=device" */
       else if (STREQ (argv[k], "--all") ||
 	       STREQ (argv[k], "--save") ||
-	       !strncmp(argv[k], "--file=", 7))
+	       !strncmp (argv[k], "--file=", 7))
 	argv[k] = 0;
       /* Handle "-a", "-ag", "-aF/dev/foo", "-aF /dev/foo", etc. */
-      else if (valid_options(argv[k], "ag", "F"))
+      else if (valid_options (argv[k], "ag", "F"))
 	{
-	  if (STREQ (argv[k], "-file") || argv[k][strlen(argv[k])-1] == 'F')
-	    argv[k+1] = 0;
+	  if (STREQ (argv[k], "-file") || argv[k][strlen (argv[k]) - 1] == 'F')
+	    argv[k + 1] = 0;
 	  argv[k] = 0;
         }
       /* Everything else must be a normal, non-option argument. */
@@ -800,7 +799,7 @@ mutually exclusive"));
     {
       int fdflags;
       device_name = file_name;
-      fd = open (device_name, O_RDONLY|O_NONBLOCK);
+      fd = open (device_name, O_RDONLY | O_NONBLOCK);
       if (fd < 0)
 	error (1, errno, device_name);
       if ((fdflags = fcntl (fd, F_GETFL)) == -1
@@ -1550,7 +1549,7 @@ display_all (struct termios *mode, int fd, const char *device)
 #if VEOF == VMIN
       if ((mode->c_lflag & ICANON) == 0
 	  && (STREQ (control_info[i].name, "eof")
-	      || STREQ(control_info[i].name, "eol")))
+	      || STREQ (control_info[i].name, "eol")))
 	continue;
 #endif
       wrapf ("%s = %s;", control_info[i].name,
