@@ -1,3 +1,7 @@
+1998-05-12  Jim Meyering  <meyering@ascend.com>
+
+	* Makefile.am (EXTRA_DIST): Add isc-posix.m4.
+
 1998-05-11  Jim Meyering  <meyering@ascend.com>
 
 	* isc-posix.m4: New file.
