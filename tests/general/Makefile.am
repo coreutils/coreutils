@@ -1,7 +1,7 @@
 ## Process this file with automake to create Makefile.in.
 
 ## Makefile for Autoconf testsuite.
-## Copyright 2000 Free Software Foundation, Inc.
+## Copyright 2000, 2003 Free Software Foundation, Inc.
 
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ check-local: atconfig
 
 testsuite: $(SUITE) atgeneral.m4
 	$(M4) -I $(srcdir) atgeneral.m4 suite.at > $@-t1
-	sed 's/[ 	]*$$//;/^$$/N;/\n$$/D' $@-t1 > $@-tmp
+	sed 's/[	 ]*$$//;/^$$/N;/\n$$/D' $@-t1 > $@-tmp
 	rm -f $@-t1
 	chmod +x $@-tmp
 	mv $@-tmp $@
