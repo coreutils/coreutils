@@ -132,7 +132,7 @@ static int
 split_3 (char *s, size_t s_len, unsigned char **u, int *binary, char **w)
 {
   size_t i;
-  int filename_has_newline = 0;
+  int escaped_filename = 0;
 
 #define ISWHITE(c) ((c) == ' ' || (c) == '\t')
 
@@ -150,7 +150,7 @@ split_3 (char *s, size_t s_len, unsigned char **u, int *binary, char **w)
   if (s[i] == '\\')
     {
       ++i;
-      filename_has_newline = 1;
+      escaped_filename = 1;
     }
   *u = (unsigned char *) &s[i];
 
@@ -171,7 +171,7 @@ split_3 (char *s, size_t s_len, unsigned char **u, int *binary, char **w)
      significant -- that includes leading and trailing white space.  */
   *w = &s[i];
 
-  if (filename_has_newline)
+  if (escaped_filename)
     {
       /* Translate each `\n' string in the file name to a NEWLINE,
 	 and each `\\' string to a backslash.  */
@@ -575,8 +575,8 @@ verifying checksums"));
 	      size_t i;
 
 	      /* Output a leading backslash if the file name contains
-		 a newline.  */
-	      if (strchr (file, '\n'))
+		 a newline or backslash.  */
+	      if (strchr (file, '\n') || strchr (file, '\\'))
 		putchar ('\\');
 
 	      for (i = 0; i < 16; ++i)
