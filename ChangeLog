@@ -5,6 +5,7 @@
 	Don't exhaust virtual memory when processing large inputs.
 	Fix this by removing csplit's internal free-list management;
 	instead rely on malloc for that.
+
 	* src/csplit.c (free_list): Remove global.
 	(clear_all_line_control): Remove function.
 	(get_new_buffer): Always use create_new_buffer to obtain a
