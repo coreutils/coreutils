@@ -816,6 +816,14 @@ fmt_paragraph (void)
 	      start->next_break = w;
 	      start->line_length = len;
 	    }
+
+	  /* This is a kludge to keep us from computing `len' as the
+	     sum of the sentinel length and some non-zero number.
+	     Since the sentinel w->length may be INT_MAX, adding
+	     to that would give a negative result.  */
+	  if (w == word_limit)
+	    break;
+
 	  len += (w - 1)->space + w->length;	/* w > start >= word */
 	}
       while (len < max_width);
