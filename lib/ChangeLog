@@ -1,7 +1,19 @@
+2004-09-13  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* backupfile.h (enum backuptype): Rename none -> no_backups,
+	simple -> simple_backups, numbered_existing ->
+	numbered_existing_backups, numbered -> numbered_backups
+	to avoid shadowing problems.  All uses changed.
+	* argmatch.c (enum backuptype): Likewise.
+	* backupfile.c (check_extension, numbered_backup):
+	Rename locals to avoid shadowing 'basename'.
+	* backupfile.h (VALID_BACKUP_TYPE): Don't evaluate arg more than
+	once.
+
 2004-09-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Port to diet libc.  Problem reported by Felix von Leitner in
-	<http://lists.gnu.org/archive/html/bug-coreutils/2004-08/msg00171.html>.
+	<http://lists.gnu.org/archive/html/bug-coreutils/2004-08/msg00171.html>
 	* fts.c (fts_stat, fts_open, fts_read): Use "unsigned short int"
 	rather than the unportable "u_short", and similarly for u_int.
 	* fts_.h (FTSENT): Likewise.
