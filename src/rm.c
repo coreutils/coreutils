@@ -54,7 +54,6 @@
 #include "quote.h"
 #include "remove.h"
 #include "root-dev-ino.h"
-#include "save-cwd.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "rm"
