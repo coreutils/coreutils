@@ -1,12 +1,14 @@
+Sat Jun 24 16:18:01 1995  Jim Meyering  (meyering@comco.com)
+
 	* cat.c, comm.c, join.c, sort.c, uniq.c: Undefine min/max before
-	defining to avoid redefinition warning on systems.
+	defining to avoid redefinition warning on some systems.
 
 	* csplit.c (read_input): Rename paramater MAX to MAX_N_BYTES.
 	This avoids potential conflict with max macro from some system's
 	header files when using bad pre-ANSI compilers.
 
-	* uniq.c (usage): Fix typo.  From Steve McConnel
-	<steve@acadcomp.sil.org>
+	* uniq.c (usage): Fix typo in text of --help output.
+	From Steve McConnel <steve@acadcomp.sil.org>
 
 	* md5sum.c [uint32]: When testing for 32-bit arithmetic type,
 	also check `unsigned long', as a concession to systems with
@@ -21,9 +23,11 @@
 	error in sa_handler assignment.
 
 	* fmt.c [word]: Redefine.  Otherwise, systems (Unicos for one) with
-	headers that define `word' to be a type get syntax errors because
-	of the variable by the same name.
-	* join.c [join]: Redefine.  Also for Unicos.
+	headers that typedef `word' get syntax errors because of the
+	variable by the same name.
+
+	* join.c [join]: Redefine to avoid conflict with prototype in some
+	system header file.  Also for Unicos.
 
 	* md5sum.c (main): Remove spurious colon in getopt spec string.
 	From Ken Pizzini <kenp@spry.com>.
