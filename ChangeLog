@@ -1,6 +1,13 @@
-2004-12-15  Jim Meyering  <jim@meyering.net>
+2004-12-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* src/ls.c (print_dir): Use "%s: not listing already-listed
+	directory", not "not listing already-listed directory: %s", to
+	format already-listed directories, to be consistent with other
+	diagnostics involving file names and colons.
+
+2004-12-15  Jim Meyering  <jim@meyering.net>
 
 	* src/Makefile.am (__LDADD): Define, so that building `[' on
 	Solaris still uses the -lgen library that it requires in order
