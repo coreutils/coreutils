@@ -31,3 +31,7 @@
 	* lib/quotearg.c (quotearg_buffer_restyled): Do not quote
 	alert, backslash, formfeed, and vertical tab unnecessarily in
 	shell quoting style.
+
+Local Variables:
+version-control: never
+End:
