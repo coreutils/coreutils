@@ -44,8 +44,8 @@
 struct group *getgrnam ();
 #endif
 
-#ifdef _POSIX_VERSION
-#define endgrent()
+#ifndef HAVE_ENDGRENT
+# define endgrent() ((void) 0)
 #endif
 
 char *group_member ();
