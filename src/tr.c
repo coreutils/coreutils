@@ -212,23 +212,8 @@ static bool delete = false;
 /* Use the complement of set1 in place of set1.  */
 static bool complement = false;
 
-/* When nonzero, this flag causes GNU tr to provide strict
-   compliance with POSIX draft 1003.2.11.2.  The POSIX spec
-   says that when -d is used without -s, string2 (if present)
-   must be ignored.  Silently ignoring arguments is a bad idea.
-   The default GNU behavior is to give a usage message and exit.
-   Additionally, when this flag is nonzero, tr prints warnings
-   on stderr if it is being used in a manner that is not portable.
-   Applicable warnings are given by default, but are suppressed
-   if the environment variable `POSIXLY_CORRECT' is set, since
-   being POSIX conformant means we can't issue such messages.
-   Warnings on the following topics are suppressed when this
-   variable is nonzero:
-   1. Ambiguous octal escapes.  */
-static bool posix_pedantic;
-
 /* When tr is performing translation and string1 is longer than string2,
-   POSIX says that the result is undefined.  That gives the implementor
+   POSIX says that the result is unspecified.  That gives the implementor
    of a POSIX conforming version of tr two reasonable choices for the
    semantics of this case.
 
@@ -314,7 +299,7 @@ Usage: %s [OPTION]... SET1 [SET2]\n\
 Translate, squeeze, and/or delete characters from standard input,\n\
 writing to standard output.\n\
 \n\
-  -c, --complement        first complement SET1\n\
+  -c, -C, --complement    first complement SET1\n\
   -d, --delete            delete characters in SET1, do not translate\n\
   -s, --squeeze-repeats   replace each input sequence of a repeated character\n\
                             that is listed in SET1 with a single occurrence\n\
@@ -475,6 +460,7 @@ unquote (char const *s, struct E_string *es)
       switch (s[i])
 	{
 	case '\\':
+	  es->escaped[j] = true;
 	  switch (s[i + 1])
 	    {
 	    case '\\':
@@ -523,15 +509,16 @@ unquote (char const *s, struct E_string *es)
 			  c = 8 * c + oct_digit;
 			  ++i;
 			}
-		      else if (!posix_pedantic)
+		      else
 			{
 			  /* A 3-digit octal number larger than \377 won't
 			     fit in 8 bits.  So we stop when adding the
 			     next digit would put us over the limit and
 			     give a warning about the ambiguity.  POSIX
-			     isn't clear on this, but one person has said
-			     that in his interpretation, POSIX says tr
-			     can't even give a warning.  */
+			     isn't clear on this, and we interpret this
+			     lack of clarity as meaning the resulting behavior
+			     is undefined, which means we're allowed to issue
+			     a warning.  */
 			  error (0, 0, _("warning: the ambiguous octal escape \
 \\%c%c%c is being\n\tinterpreted as the 2-byte sequence \\0%c%c, `%c'"),
 				 s[i], s[i + 1], s[i + 2],
@@ -541,20 +528,15 @@ unquote (char const *s, struct E_string *es)
 		}
 	      break;
 	    case '\0':
-	      error (0, 0, _("invalid backslash escape at end of string"));
-	      return false;
-
+	      /* POSIX seems to require that a trailing backslash must
+		 stand for itself.  Weird.  */
+	      es->escaped[j] = false;
+	      i--;
+	      c = '\\';
+	      break;
 	    default:
-	      if (posix_pedantic)
-		{
-		  error (0, 0, _("invalid backslash escape `\\%c'"), s[i + 1]);
-		  return false;
-		}
-	      else
-	        {
-		  c = s[i + 1];
-		  es->escaped[j] = true;
-		}
+	      c = s[i + 1];
+	      break;
 	    }
 	  ++i;
 	  es->s[j++] = c;
@@ -1701,7 +1683,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((c = getopt_long (argc, argv, "cdst", long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "cCdst", long_options, NULL)) != -1)
     {
       switch (c)
 	{
@@ -1709,6 +1691,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'c':
+	case 'C':
 	  complement = true;
 	  break;
 
@@ -1733,8 +1716,6 @@ main (int argc, char **argv)
 	  break;
 	}
     }
-
-  posix_pedantic = (getenv ("POSIXLY_CORRECT") != NULL);
 
   non_option_args = argc - optind;
   translating = (non_option_args == 2 && !delete);
@@ -1764,7 +1745,7 @@ deleting and squeezing repeats"));
      this deserves a fatal error, so that's the default.  */
   if ((delete && !squeeze_repeats) && non_option_args != 1)
     {
-      if (posix_pedantic && non_option_args == 2)
+      if (non_option_args == 2 && getenv ("POSIXLY_CORRECT"))
 	--non_option_args;
       else
 	error (EXIT_FAILURE, 0,
@@ -1888,17 +1869,8 @@ without squeezing repeats"));
 	      else if ((class_s1 == UL_LOWER && class_s2 == UL_LOWER)
 		       || (class_s1 == UL_UPPER && class_s2 == UL_UPPER))
 		{
-		  /* By default, GNU tr permits the identity mappings: from
-		     [:upper:] to [:upper:] and [:lower:] to [:lower:].  But
-		     when POSIXLY_CORRECT is set, those evoke diagnostics.  */
-		  if (posix_pedantic)
-		    {
-		      error (EXIT_FAILURE, 0,
-			     _("\
-invalid identity mapping;  when translating, any [:lower:] or [:upper:]\n\
-construct in string1 must be aligned with a corresponding construct\n\
-([:upper:] or [:lower:], respectively) in string2"));
-		    }
+		  /* POSIX says the behavior of `tr "[:upper:]" "[:upper:]"'
+		     is undefined.  Treat it as a no-op.  */
 		}
 	      else
 		{
