@@ -1,4 +1,32 @@
 Changes in release 3.17:
+* ls accepts new options:
+    --indicator-style=none (no indicators, the default)
+    --indicator-style=classify (all indicators)
+	 (equivalent to -F or --classify)
+    --indicator-style=file-type (file type indicators)
+	 (equivalent to -p or --file-type)
+
+    --quoting-style=literal (do not quote output)
+    --quoting-style=shell (minimally quote output for the shell)
+    --quoting-style=shell-always (always quote output with '' for the shell)
+    --quoting-style=c (quote output as for a C-language string)
+	 (equivalent to -Q or --quote-name)
+    --quoting-style=escape (like c but omit enclosing "")
+	 (equivalent to -b or --escape)
+
+    --show-control-chars is the opposite of --hide-control-chars
+      This option can be useful if output is to a terminal,
+      to override the default beahvior of hiding control characters.
+
+* The QUOTING_STYLE environment variable can now be used to specify the
+  default value for ls's --quoting-style option.  If not specified,
+  the default quoting style is 'literal', but this default may change to
+  'shell' in a future version of this package.
+* ls's quoting style now affects operands in diagnostics, too.
+* ls's --dired option now outputs the quoting style
+  using the format of the new --quoting-style option.
+* ls's -e or --quote-shell option (introduced in 3.16j) has been removed;
+  use --quoting-style=shell to get its functionality.
 [3.16m]
 * mv can move (and doesn't read) special files
 * remove maintainer mode
