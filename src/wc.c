@@ -137,9 +137,9 @@ static void
 wc (int fd, const char *file)
 {
   char buf[BUFFER_SIZE + 1];
-  register int bytes_read;
-  register int in_word = 0;
-  register unsigned long lines, words, chars, linelength;
+  ssize_t bytes_read;
+  int in_word = 0;
+  uintmax_t lines, words, chars, linelength;
 
   lines = words = chars = linelength = 0;
 
@@ -203,11 +203,11 @@ wc (int fd, const char *file)
     }
   else
     {
-      register unsigned long linepos = 0;
+      uintmax_t linepos = 0;
 
       while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
 	{
-	  register char *p = buf;
+	  const char *p = buf;
 
 	  chars += bytes_read;
 	  do
