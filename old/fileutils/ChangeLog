@@ -1,3 +1,13 @@
+1998-10-05  Jim Meyering  <meyering@ascend.com>
+
+	* src/install.c (long_options): Add entry for --suffix=SUFFIX option.
+	From aldomel.
+
+1998-10-04  Jim Meyering  <meyering@ascend.com>
+
+	* tests/mv/Makefile.am (TESTS_ENVIRONMENT): Define PERL.
+	From Kaveh Ghazi.
+
 1998-10-03  Jim Meyering  <meyering@ascend.com>
 
 	* Version 4.0-b2.
