@@ -124,7 +124,7 @@ install-data: all
 	if test -r $(MKINSTALLDIRS); then \
 	  $(MKINSTALLDIRS) $(datadir); \
 	else \
-	  $(top-srcdir)/mkinstalldirs $(datadir); \
+	  $(top_srcdir)/mkinstalldirs $(datadir); \
 	fi
 	@catalogs='$(CATALOGS)'; \
 	for cat in $$catalogs; do \
@@ -137,7 +137,7 @@ install-data: all
 	  if test -r $(MKINSTALLDIRS); then \
 	    $(MKINSTALLDIRS) $$dir; \
 	  else \
-	    $(top-srcdir)/mkinstalldirs $$dir; \
+	    $(top_srcdir)/mkinstalldirs $$dir; \
 	  fi; \
 	  if test -r $$cat; then \
 	    $(INSTALL_DATA) $$cat $$dir/$(PACKAGE)$(INSTOBJEXT); \
