@@ -72,7 +72,7 @@ struct dir_list
 /* Describe a just-created or just-renamed destination file.  */
 struct F_triple
 {
-  char const* name;
+  char *name;
   ino_t st_ino;
   dev_t st_dev;
 };
@@ -684,7 +684,7 @@ static void
 triple_free (void *x)
 {
   struct F_triple *a = x;
-  free ((char *) (a->name));
+  free (a->name);
   free (a);
 }
 
@@ -735,7 +735,7 @@ seen_file (Hash_table const *ht, char const *filename,
   if (ht == NULL)
     return 0;
 
-  new_ent.name = filename;
+  new_ent.name = (char *) filename;
   new_ent.st_ino = stats->st_ino;
   new_ent.st_dev = stats->st_dev;
 
