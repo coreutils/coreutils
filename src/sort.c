@@ -315,7 +315,7 @@ tempname ()
 	   (len && temp_file_prefix[len - 1] != '/'
 	    ? "%s/sort%5.5d%5.5d"
 	    : "%ssort%5.5d%5.5d"),
-	   temp_file_prefix, (int) getpid (), ++seq);
+	   temp_file_prefix, (unsigned int) getpid () & 0xffff, ++seq);
   node->name = name;
   node->next = temphead.next;
   temphead.next = node;
