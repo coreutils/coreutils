@@ -177,21 +177,34 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
       hash_init (INITIAL_HASH_MODULE, INITIAL_ENTRY_TAB_SIZE);
     }
 
-  fail = copy (source, dest, 0, x,
-	       &copy_into_self, &rename_succeeded);
+  fail = copy (source, dest, 0, x, &copy_into_self, &rename_succeeded);
 
   if (!fail)
     {
+      const char *dir_to_remove;
       if (copy_into_self)
 	{
-	  /* Do *not* remove SOURCE if it is the same as or a parent
-	     of DEST.  Otherwise, mv would be removing the original
-	     *and* the copy.  */
+	  /* In general, when copy returns with copy_into_self set, SOURCE is
+	     the same as, or a parent of DEST.  In this case we know it's a
+	     parent.  It doesn't make sense to move a directory into itself, and
+	     besides in some situations doing so would give highly nonintuitive
+	     results.  Run this `mkdir b; touch a c; mv * b' in an empty
+	     directory.  Here's the result of running echo `find b -print`:
+	     b b/a b/b b/b/a b/c.  Notice that only file `a' was copied
+	     into b/b.  Handle this by giving a diagnostic, removing the
+	     copied-into-self directory, DEST (`b/b' in the example),
+	     and failing.  */
+
+	  dir_to_remove = dest;
+	  error (0, 0,
+		 _("cannot move `%s' to a subdirectory of itself, `%s'"),
+		 source, dest);
 	}
       else if (rename_succeeded)
 	{
 	  /* No need to remove anything.  SOURCE was successfully
 	     renamed to DEST.  */
+	  dir_to_remove = NULL;
 	}
       else
 	{
@@ -217,6 +230,11 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
 	     This function used to resort to copying only when rename
 	     failed and set errno to EXDEV.  */
 
+	  dir_to_remove = source;
+	}
+
+      if (dir_to_remove != NULL)
+	{
 	  struct rm_options rm_options;
 	  struct File_spec fs;
 	  enum RM_status status;
@@ -226,7 +244,7 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
 
 	  remove_init ();
 
-	  fspec_init_file (&fs, source);
+	  fspec_init_file (&fs, dir_to_remove);
 	  status = rm (&fs, 1, &rm_options);
 	  assert (VALID_STATUS (status));
 	  if (status == RM_ERROR)
@@ -235,8 +253,11 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
 	  remove_fini ();
 
 	  if (fail)
-	    error (0, errno, _("cannot remove `%s'"), source);
+	    error (0, errno, _("cannot remove `%s'"), dir_to_remove);
 	}
+
+      if (copy_into_self)
+	fail = 1;
     }
 
   return fail;
