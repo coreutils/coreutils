@@ -52,9 +52,10 @@ my @Tests =
      ['infloop-4', '-t', '1,2', {IN=> " \t\t   \n"}, {OUT=>"\t\t\t   \n"}],
      ['c-1', '-t', '1,2', {IN=> "x\t\t .\n"}, {OUT=>"x\t\t .\n"}],
 
-     # This test failed in 2.0e and earlier.  From Jie Xu.
-     ['tabs-1', qw(   -t 4), {IN=> "    a   b\n"}, {OUT=>"\ta   b\n"}],
-     ['tabs-2', qw(-a -t 4), {IN=> "    a   b\n"}, {OUT=>"\ta\tb\n"}],
+     # -t implies -a
+     # Feature addition (--first-only) prompted by a report from Jie Xu.
+     ['tabs-1', qw(-t 3),              {IN=> "   a  b\n"}, {OUT=>"\ta\tb\n"}],
+     ['tabs-2', qw(-t 3 --first-only), {IN=> "   a  b\n"}, {OUT=>"\ta  b\n"}],
     );
 
 my $save_temps = $ENV{DEBUG};
