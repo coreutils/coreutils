@@ -1,6 +1,13 @@
-2002-04-27  Jim Meyering  <meyering@lucent.com>
+2002-05-22  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.9.
+
+	* src/ls.c (S_ISLNK, S_ISFIFO, S_ISSOCK, S_ISCHR, S_ISBLK, S_ISDOOR):
+	Remove definitions.
+	* src/sys2.c (S_ISLNK, S_ISFIFO, S_ISSOCK, S_ISCHR, S_ISBLK, S_ISDOOR):
+	Define here instead.
+
+2002-04-27  Jim Meyering  <meyering@lucent.com>
 
 	* src/remove.c (cycle_check): New function containing code factored
 	out of remove_dir.  The sole difference is that upon detecting a
