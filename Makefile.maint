@@ -66,7 +66,8 @@ syntax-check-rules = \
   sc_cast_of_x_alloc_return_value \
   sc_space_tab \
   sc_error_exit_success \
-  sc_xalloc_h_in_src
+  sc_xalloc_h_in_src \
+  sc_changelog
 
 syntax-check: $(syntax-check-rules)
 #	@grep -E '#  *include <(limits|std(def|arg|bool))\.h>'		\
@@ -124,6 +125,12 @@ sc_xalloc_h_in_src:
 	    exit 1;							\
 	  fi;								\
 	fi
+
+# Each nonempty line must start with a year number, or a TAB.
+sc_changelog:
+	@grep '^[^12	]' $$(find . -name ChangeLog -maxdepth 2) &&	\
+	  { echo '$(ME): found unexpected prefix in a ChangeLog' 1>&2;	\
+	    exit 1; } || :
 
 # Ensure that date's --help output stays in sync with the info
 # documentation for GNU strftime.  The only exception is %N,
