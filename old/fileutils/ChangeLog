@@ -3,6 +3,9 @@
 	* Version 4.1.2.
 
 	Don't fail for commands like this: cp a a d/
+	This change in behavior was introduced in 4.1.1, as part of the
+	2001-09-28 change.  cp and mv still fail for commands like this:
+	rm -rf a b c; mkdir a b c; touch a/f b/f; mv a/f b/f c
 
 	* src/copy.c (triple_hash_no_name): New function.
 	(src_info_init): New function.
