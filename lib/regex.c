@@ -41,6 +41,8 @@
 # define gettext(msgid) (msgid)
 #endif
 
+#define EMACS_INT int
+
 /* The `emacs' switch turns on certain matching commands
    that make sense only in Emacs. */
 #ifdef emacs
