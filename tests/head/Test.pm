@@ -40,6 +40,13 @@ my @tv = (
 
 # Make sure we don't break like AIX 4.3.1 on files with \0 in them.
 ['null-1', '', "a\0a\n", "a\0a\n", 0],
+
+# Make sure counts are interpreted as decimal.
+# Before 2.0f, these would have been interpreted as octal
+['no-octal-1', '-08',  "\n"x12, "\n"x8, 0],
+['no-octal-2', '-010', "\n"x12, "\n"x10, 0],
+['no-octal-3', '-n 08', "\n"x12, "\n"x8, 0],
+['no-octal-4', '-c 08', "\n"x12, "\n"x8, 0],
 );
 
 sub test_vector
