@@ -1,5 +1,7 @@
 Wed Jan  8 16:38:24 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* Version 1.21.
+
 	* lib/getopt.c (_getopt_internal): Use `_', rather than the
 	(sometimes-)expansion `gettext'.
 
