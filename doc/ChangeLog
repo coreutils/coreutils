@@ -1,3 +1,11 @@
+2003-02-05  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi: Use new form of @direntry.
+	Put unlink in its proper place.  Adjust wording in some
+	dir entry descriptions, mainly so they fit in 80 columns.
+	Don't use mark-up like @acronym{POSIX} in direntries.
+	Mostly from Karl Berry.
+
 2003-01-25  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (cut invocation): Describe new functionality of
