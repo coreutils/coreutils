@@ -1,3 +1,12 @@
+2005-01-07  Paul Eggert  <eggert@twinsun.com>
+
+	* src/pr.c (main): Check for column count overflow with
+	usages like "pr -2147483648".
+
+2005-01-07  Jim Meyering  <jim@meyering.net>
+
+	* src/pr.c (init_fps): Use xnmalloc, rather than xmalloc.
+
 2005-01-06  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
