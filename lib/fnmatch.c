@@ -27,18 +27,18 @@
 #include <fnmatch.h>
 #include <ctype.h>
 
-# if defined STDC_HEADERS || !defined isascii
-#  define IN_CTYPE_DOMAIN(c) 1
-# else
-#  define IN_CTYPE_DOMAIN(c) isascii (c)
-# endif
+#if defined STDC_HEADERS || !defined isascii
+# define IN_CTYPE_DOMAIN(c) 1
+#else
+# define IN_CTYPE_DOMAIN(c) isascii (c)
+#endif
 
-# define ISUPPER(c) (IN_CTYPE_DOMAIN (c) && isupper (c))
+#define ISUPPER(c) (IN_CTYPE_DOMAIN (c) && isupper (c))
 
 
-# ifndef errno
+#ifndef errno
 extern int errno;
-# endif
+#endif
 
 /* Match STRING against the filename pattern PATTERN, returning zero if
    it matches, nonzero if not.  */
@@ -49,9 +49,9 @@ fnmatch (const char *pattern, const char *string, int flags)
   register char c;
 
 /* Note that this evaluates C many times.  */
-# define FOLD(c) ((flags & FNM_CASEFOLD) && ISUPPER ((unsigned char) (c)) \
-                  ? tolower ((unsigned char) (c)) \
-                  : (c))
+#define FOLD(c) ((flags & FNM_CASEFOLD) && ISUPPER ((unsigned char) (c)) \
+                 ? tolower ((unsigned char) (c)) \
+                 : (c))
 
   while ((c = *p++) != '\0')
     {
@@ -226,5 +226,5 @@ fnmatch (const char *pattern, const char *string, int flags)
 
   return FNM_NOMATCH;
 
-# undef FOLD
+#undef FOLD
 }
