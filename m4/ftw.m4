@@ -49,8 +49,7 @@ main ()
                [ac_cv_func_ftw_working=no])])
   if test $ac_cv_func_ftw_working = no; then
     AC_LIBOBJ([ftw])
-    AC_DEFINE(ftw, rpl_ftw,
-      [Define to rpl_ftw if the replacement function should be used.])
+    AC_CONFIG_LINKS([$ac_config_libobj_dir/ftw.h:$ac_config_libobj_dir/ftw_.h])
     # Add tsearch.o IFF we have to use the replacement ftw.c.
     if test -n "$need_tdestroy"; then
       AC_LIBOBJ([tsearch])
