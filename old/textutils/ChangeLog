@@ -1,3 +1,8 @@
+1998-01-24  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/system.h (TYPE_MINIMUM): Add extra outer cast to work around
+	bug in Cray C 5.0.3.0 when T == time_t.
+
 1998-01-18  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/sort.c (strncoll, strncoll_s2_readonly, look_for_fraction,
