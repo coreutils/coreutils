@@ -27,6 +27,24 @@ cd $tmp || framework_failure=1
 
 . $abs_srcdir/../setgid-check
 
+umask 0
+mkdir d || framework_failure=1
+
+chmod g+s d 2> /dev/null ||
+  {
+    # This is required because on some systems (at least  NetBSD 1.4.2A),
+    # it may happen that when you create a directory, its group isn't one
+    # to which you belong.  When that happens, the above chmod fails.  So
+    # here, upon failure, we try to set the group, then rerun the chmod command.
+    group=${FETISH_GROUP-`(id -nG || /usr/xpg4/bin/id -nG) 2>/dev/null`}
+    if test "$group"; then
+      chgrp "$group" d || framework_failure=1
+      chmod g+s d || framework_failure=1
+    else
+      framework_failure=1
+    fi
+  }
+
 if test $framework_failure = 1; then
   echo 'failure in testing framework' 1>&2
   (exit 1); exit
@@ -34,9 +52,6 @@ fi
 
 fail=0
 
-umask 0
-mkdir d
-chmod g+s d
 chmod 755 d
 
 # To be compatible with chmod from other vendors,
