@@ -2,6 +2,8 @@
 # Demonstrate a bug in `tail -cN' when operating on files of size 4G and larger
 # Fixed in coreutils-4.5.2.
 
+. $srcdir/../expensive
+
 if test "$VERBOSE" = yes; then
   set -x
   tail --version
@@ -23,8 +25,11 @@ cd $tmp || framework_failure=1
 echo abcdefgh | tr -d '\n' > big || framework_failure=1
 echo 87654321 | tr -d '\n' > tmp || framework_failure=1
 # Seek 4GB - 8
-dd bs=1 seek=4294967288 if=tmp of=big 2> err || framework_failure=1
-test $framework_failure = 1 && cat err 1>&2
+dd bs=1 seek=4294967288 if=tmp of=big 2> err || dd_failed=1
+if test "$dd_failed" = 1; then
+  cat err 1>&2
+  framework_failure=1
+fi
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
