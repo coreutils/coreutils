@@ -2,6 +2,8 @@
 
 	* Version 5.0.90.
 
+	* Makefile.maint (GZIP_ENV): Try Debian/gzip's new --rsyncable option.
+
 2003-07-28  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/stdbool.hin (_Bool): Make it signed char, instead of
