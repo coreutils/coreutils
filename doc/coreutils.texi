@@ -8124,7 +8124,7 @@ quote them to protect characters with special meaning to the shell,
 e.g., spaces.
 
 @cindex parentheses for grouping
-Operators may given as infix symbols or prefix keywords.  Parentheses
+Operators may be given as infix symbols or prefix keywords.  Parentheses
 may be used for grouping in the usual manner (you must quote parentheses
 to avoid the shell evaluating them, however).
 
