@@ -1,3 +1,9 @@
+2001-09-04  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi (join invocation): Describe the GNU
+	extension to join, which does not require sorted input when
+	the input contains no unpairable lines.
+
 2001-08-24  Herbert Xu  <herbert@gondor.apana.org.au>
 
 	* coreutils.texi (cut invocation): Document how cut treats lines
