@@ -10,7 +10,8 @@ EXTRA_DIST = chown.c getgroups.c getline.c lstat.c malloc.c mktime.c \
 INCLUDES = -I.. -I$(srcdir) -I../intl
 
 libfu_a_SOURCES = getdate.y posixtm.y getopt.c getopt1.c \
-addext.c argmatch.c backupfile.c basename.c dirname.c exclude.c filemode.c \
+addext.c argmatch.c backupfile.c basename.c \
+closeout.c dirname.c exclude.c filemode.c \
 full-write.c human.c idcache.c \
 isdir.c long-options.c makepath.c modechange.c hash.c path-concat.c \
 safe-read.c save-cwd.c savedir.c stripslash.c userspec.c xgetcwd.c \
@@ -19,7 +20,8 @@ xmalloc.c xstrdup.c xstrtol.c xstrtoul.c yesno.c
 libfu_a_LIBADD = @LIBOBJS@ @ALLOCA@
 libfu_a_DEPENDENCIES = $(libfu_a_LIBADD)
 
-noinst_HEADERS = argmatch.h backupfile.h error.h exclude.h fnmatch.h fsusage.h \
+noinst_HEADERS = argmatch.h backupfile.h closeout.h \
+error.h exclude.h fnmatch.h fsusage.h \
 getdate.h getline.h getopt.h group-member.h human.h long-options.h \
 makepath.h modechange.h mountlist.h hash.h path-concat.h pathmax.h \
 save-cwd.h savedir.h strverscmp.h xalloc.h xstrtol.h xstrtoul.h
