@@ -335,7 +335,11 @@ check_file (const char *infile, const char *outfile)
 	  char *thisfield;
 	  size_t thislen;
 	  if (readlinebuffer (thisline, istream) == 0)
-	    break;
+	    {
+	      if (ferror (istream))
+		goto closefiles;
+	      break;
+	    }
 	  thisfield = find_field (thisline);
 	  thislen = thisline->length - 1 - (thisfield - thisline->buffer);
 	  match = !different (thisfield, prevfield, thislen, prevlen);
@@ -377,9 +381,11 @@ check_file (const char *infile, const char *outfile)
   if (ferror (istream) || fclose (istream) == EOF)
     error (EXIT_FAILURE, errno, _("error reading %s"), infile);
 
+  if (ferror (ostream))
+    error (EXIT_FAILURE, 0, _("error writing %s"), outfile);
   /* Close ostream only if it's not stdout -- the latter is closed
      via the atexit-invoked close_stdout.  */
-  if (ostream != stdout && (ferror (ostream) || fclose (ostream) == EOF))
+  if (ostream != stdout && fclose (ostream) != 0)
     error (EXIT_FAILURE, errno, _("error writing %s"), outfile);
 
   free (lb1.buffer);
