@@ -1,3 +1,11 @@
+2003-03-22  Jim Meyering  <jim@meyering.net>
+
+	* fnmatch_loop.c (NEW_PATTERN): Cast alloca to proper type.
+	Otherwise, it wouldn't compile with at least /bin/cc on
+	ymp-cray-unicos9.0.2.X.
+	Combine two mostly-identical uses of alloca into one.
+	Thanks to the Cray-Cyber project for access to a Cray Y-MP.
+
 2003-03-19  Jim Meyering  <jim@meyering.net>
 
 	DJGPP doesn't have S_ISLNK, so provide a replacement.
