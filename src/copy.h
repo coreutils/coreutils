@@ -172,9 +172,6 @@ struct cp_options
   Hash_table *src_info;
 };
 
-int stat ();
-int lstat ();
-
 # define XSTAT(X, Src_path, Src_sb) \
   ((X)->dereference == DEREF_NEVER \
    ? lstat (Src_path, Src_sb) \
@@ -188,8 +185,6 @@ int rpl_lstat (const char *, struct stat *);
 #  undef lstat
 #  define lstat rpl_lstat
 # endif
-
-int rename ();
 
 /* Arrange to make rename calls go through the wrapper function
    on systems with a rename function that fails for a source path
