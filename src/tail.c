@@ -179,7 +179,7 @@ main (argc, argv)
 	  strtol_error s_err;
 	  char *p;
 
-	  s_err = xstrtol (++argv[1], &p, 0, &tmp_long, 1);
+	  s_err = xstrtol (++argv[1], &p, 0, &tmp_long, "bkm");
 	  n_units = tmp_long;
 	  if (s_err == LONGINT_OVERFLOW)
 	    {
@@ -249,7 +249,7 @@ main (argc, argv)
 	      from_start = 1;
 	    }
 
-	  s_err = xstrtol (optarg, NULL, 0, &tmp_long, 1);
+	  s_err = xstrtol (optarg, NULL, 0, &tmp_long, "bkm");
 	  if (tmp_long < 0)
 	    tmp_long = -tmp_long;
 	  n_units = tmp_long;
