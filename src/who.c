@@ -33,6 +33,7 @@
 
 #include "readutmp.h"
 #include "error.h"
+#include "inttostr.h"
 #include "vasprintf.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -233,8 +234,17 @@ time_string (const STRUCT_UTMP *utmp_ent)
      the tv_sec member of a struct timeval value.''  */
   time_t tm = UT_TIME_MEMBER (utmp_ent);
 
-  char *ptr = ctime (&tm) + 4;
-  ptr[12] = '\0';
+  char *ptr = ctime (&tm);
+  if (ptr)
+    {
+      ptr += 4;
+      ptr[12] = '\0';
+    }
+  else
+    {
+      static char buf[INT_BUFSIZE_BOUND (intmax_t)];
+      ptr = (TYPE_SIGNED (time_t) ? imaxtostr (tm, buf) : umaxtostr (tm, buf));
+    }
   return ptr;
 }
 
