@@ -30,7 +30,6 @@
 #else
 # define _(Text) Text
 #endif
-#define N_(Text) Text
 
 /* Default copyright goes to the FSF. */
 
