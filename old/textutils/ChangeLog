@@ -1,5 +1,8 @@
 Sat Jul 20 15:59:36 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in (PACKAGE_VERSION): Use space instead of hyphen to
+	separate PACKAGE and VERSION.
+
 	* aclocal.m4 (AM_SANITY_CHECK_CC): New macro.  Derived from
 	macros from Bruno Haible and from Cygnus.
 	* configure.in (AM_SANITY_CHECK_CC): Use it.
