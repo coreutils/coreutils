@@ -1,9 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 noinst_LIBRARIES = libfu.a
 
-## FIXME: Remove mvdir.c, and rmdir.c when
-## automake is fixed -- probably for 1.1g
-EXTRA_DIST = chown.c mkdir.c rmdir.c getline.c mktime.c strftime.c getgroups.c
+EXTRA_DIST = chown.c getgroups.c getline.c lstat.c mktime.c stat.c strftime.c
 
 INCLUDES = -I.. -I$(srcdir) -I../intl
 
