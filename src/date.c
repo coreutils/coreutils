@@ -43,8 +43,6 @@ time_t time ();
 int putenv ();
 int stime ();
 
-char *xstrdup ();
-
 static void show_date PARAMS ((const char *format, time_t when));
 
 enum Time_spec
