@@ -7,6 +7,9 @@
 	in m4/prereq.m4.
 	Remove many function checks (moved to m4/.)
 
+	* configure.in (AM_FUNC_STRTOD): Move to m4/.
+	(AC_SUBST(POW_LIBM)): Likewise.
+
 	* configure.in (SEQ_LIBM): Remove AC_SUBST of a constant.
 	* src/Makefile.am (seq_LDADD): Add -lm rather than constant $(SEQ_LIBM).
 
