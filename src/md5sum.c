@@ -160,6 +160,45 @@ text), and name for each FILE.\n"),
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
+#define ISWHITE(c) ((c) == ' ' || (c) == '\t')
+
+/* Split the checksum string S (of length S_LEN) from a BSD 'md5'
+   command into two parts: a hexadecimal digest, and the file name.  S
+   is modified.  */
+
+static int
+bsd_split_3 (char *s, size_t s_len, unsigned char **hex_digest, char **file_name)
+{
+  size_t i;
+
+  *file_name = s;
+
+  /* Find end of filename. The BSD 'md5' does not escape filenames, so
+     search backwards for the last ')'. */
+  i = s_len - 1;
+  while (i && s[i] != ')')
+    i--;
+
+  if (s[i] != ')')
+    return 1;
+
+  s[i++] = '\0';
+
+  while (ISWHITE (s[i]))
+    i++;
+
+  if (s[i] != '=')
+    return 1;
+
+  i++;
+
+  while (ISWHITE (s[i]))
+    i++;
+
+  *hex_digest = (unsigned char *) &s[i];
+  return 0;
+}
+
 /* Split the string S (of length S_LEN) into three parts:
    a hexadecimal digest, binary flag, and the file name.
    S is modified.  */
@@ -171,11 +210,16 @@ split_3 (char *s, size_t s_len,
   size_t i;
   int escaped_filename = 0;
 
-#define ISWHITE(c) ((c) == ' ' || (c) == '\t')
-
   i = 0;
   while (ISWHITE (s[i]))
     ++i;
+
+  /* Check for BSD-style checksum line. */
+  if (strncmp (s + i, "MD5 (", 5) == 0)
+    {
+      *binary = 0;
+      return bsd_split_3 (s + i + 5, s_len - i - 5, hex_digest, file_name);
+    }
 
   /* Ignore this line if it is too short.
      Each line must have at least `min_digest_line_length - 1' (or one more, if
