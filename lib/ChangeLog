@@ -1,5 +1,22 @@
 2001-12-09  Jim Meyering  <meyering@lucent.com>
 
+	* modechange.c (mode_compile): Add cast to avoid warning about
+	`signed and unsigned type in conditional expression'.
+	* posixtm.c (posix_time_parse): Likewise.
+
+	* xreadlink.c (xreadlink): Add cast to avoid a warning.
+
+	* readtokens.c (readtoken): Declare an index to be of type unsigned
+	to avoid a pedantic warning.
+
+	* getstr.c: Don't include assert.h.
+	(getstr): Remove warning-evoking assertions.
+	Return -1 if offset parameter is out of bounds.
+	Change the type of a local from int to size_t.
+
+	* strftime.c (my_strftime_localtime_r): Include this function
+	definition in the `#if ! HAVE_TM_GMTOFF' block.
+
 	* xgethostname.c: Remove declarations of xmalloc and xrealloc.
 	Include xalloc.h instead.
 
