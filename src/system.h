@@ -537,22 +537,7 @@ initialize_exit_failure (int status)
 #define CHMOD_MODE_BITS \
   (S_ISUID | S_ISGID | S_ISVTX | S_IRWXU | S_IRWXG | S_IRWXO)
 
-#ifdef ST_MTIM_NSEC
-# define ST_TIME_CMP_NS(a, b, ns) ((a).ns < (b).ns ? -1 : (a).ns > (b).ns)
-#else
-# define ST_TIME_CMP_NS(a, b, ns) 0
-#endif
-#define ST_TIME_CMP(a, b, s, ns) \
-  ((a).s < (b).s ? -1 : (a).s > (b).s ? 1 : ST_TIME_CMP_NS(a, b, ns))
-#define ATIME_CMP(a, b) ST_TIME_CMP (a, b, st_atime, st_atim.ST_MTIM_NSEC)
-#define CTIME_CMP(a, b) ST_TIME_CMP (a, b, st_ctime, st_ctim.ST_MTIM_NSEC)
-#define MTIME_CMP(a, b) ST_TIME_CMP (a, b, st_mtime, st_mtim.ST_MTIM_NSEC)
-
-#ifdef ST_MTIM_NSEC
-# define TIMESPEC_NS(timespec) ((timespec).ST_MTIM_NSEC)
-#else
-# define TIMESPEC_NS(timespec) 0
-#endif
+#include "timespec.h"
 
 #ifndef RETSIGTYPE
 # define RETSIGTYPE void
