@@ -1,3 +1,20 @@
+1999-04-24  Jim Meyering  <meyering@ascend.com>
+
+	* src/csplit.c: Include new "xstrtol.h", not "xstrtoul.h".
+	(struct control) [repeat]: Declare as uintmax_t, not int.
+	(struct control) [lines_required]: Likewise.
+	(handle_line_error): Use human_readable to print lines_required.
+	(parse_repeat_count): Parse a uintmax_t.
+	(parse_patterns): Parse a uintmax_t.
+
+	* src/tail.c: Include new "xstrtol.h", not "xstrtoul.h".
+	* src/od.c: Likewise.
+
+	* src/head.c: Include new "xstrtol.h", not "xstrtoul.h".
+	Change all U_LONG_LONG to uintmax_t.
+	(head_lines): Move a couple dcls into an inner scope.
+	(string_to_integer): Rename from string_to_ull.
+
 1999-04-19  Jim Meyering  <meyering@ascend.com>
 
 	* Makefile.maint (b_host): Remove /pub suffix.
