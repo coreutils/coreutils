@@ -1,3 +1,9 @@
+2003-07-23  Jim Meyering  <jim@meyering.net>
+
+	* xstrndup.h: New file.
+	* xstrndup.c: New file, factored out of dircolors.c from coreutils.
+	* Makefile.am (libfetish_a_SOURCES): Add xstrndup.c and xstrndup.h.
+
 2003-07-22  Paul Eggert  <eggert@twinsun.com>
 
 	* xalloc.h (XCALLOC, XREALLOC, CCLONE): Fix under- and
