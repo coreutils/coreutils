@@ -1,6 +1,15 @@
-2002-01-12  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.6.
+
+2002-01-14  Paul Eggert  <eggert@twinsun.com>
+
+	Add support for POSIX 1003.1-2001, which requires removal for
+	support of the obsolete `touch [-acm] MMDDhhmm[YY] FILE...' syntax.
+
+	* NEWS: Document this.
+	* src/touch.c (usage, main): Implement this.
+
+2002-01-12  Jim Meyering  <meyering@lucent.com>
 
 	Avoid giving a misleading diagnostic in some unusual cases.
 	Instead, give one that makes sense.
