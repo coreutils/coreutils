@@ -175,7 +175,8 @@ Wed Dec 22 00:53:51 1993  Jim Meyering  (meyering@comco.com)
 Mon Dec 20 23:29:30 1993  Jim Meyering  (meyering@comco.com)
 
 	* configure.in [test for 8-bit clean memcmp]: Add a test to detect
-	losing memcmp from SunOS4.1.x.
+	losing memcmp from SunOS4.1.x.  From Robert H. de Vries
+	<robert@and.nl>.
 
 Sat Dec 18 01:12:24 1993  Jim Meyering  (meyering@comco.com)
 
