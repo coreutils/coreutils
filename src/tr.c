@@ -28,6 +28,7 @@
 #include "system.h"
 #include "error.h"
 #include "safe-read.h"
+#include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "tr"
@@ -36,8 +37,8 @@
 
 #define N_CHARS (UCHAR_MAX + 1)
 
-/* A pointer to a function that returns a `long'.  */
-typedef long (*PFL) (/* unsigned char *, long int, PFL */);
+/* A pointer to a filtering function.  */
+typedef size_t (*Filter) (/* unsigned char *, size_t, Filter */);
 
 /* Convert from character C to its index in the collating
    sequence array.  Just cast to an unsigned int to avoid
@@ -838,48 +839,6 @@ find_closing_delim (const struct E_string *es, size_t start_idx,
   return 0;
 }
 
-/* Convert a string S with explicit length LEN, possibly
-   containing embedded zero bytes, to a long integer value.
-   If the string represents a negative value, a value larger
-   than LONG_MAX, or if all LEN characters do not represent a
-   valid integer, return nonzero and do not modify *VAL.
-   Otherwise, return zero and set *VAL to the converted value.  */
-
-static int
-non_neg_strtol (const unsigned char *s, size_t len, size_t *val)
-{
-  size_t i;
-  unsigned long sum = 0;
-  unsigned int base;
-
-  if (len <= 0)
-    return 1;
-  if (s[0] == '0')
-    base = 8;
-  else if (ISDIGIT (s[0]))
-    base = 10;
-  else
-    return 1;
-
-  for (i = 0; i < len; i++)
-    {
-      unsigned int c;
-
-      if (s[i] < '0')
-	return 1;
-
-      c = s[i] - '0';
-      if (c >= base)
-	return 1;
-
-      if (sum > (LONG_MAX - c) / base)
-	return 1;
-      sum = sum * base + c;
-    }
-  *val = sum;
-  return 0;
-}
-
 /* Parse the bracketed repeat-char syntax.  If the P_LEN characters
    beginning with P[ START_IDX ] comprise a valid [c*n] construct,
    then set *CHAR_TO_REPEAT, *REPEAT_COUNT, and *CLOSING_BRACKET_IDX
@@ -905,7 +864,6 @@ find_bracketed_repeat (const struct E_string *es, size_t start_idx,
     {
       if (ES_MATCH (es, i, ']'))
 	{
-	  const unsigned char *digit_str;
 	  size_t digit_str_len = i - start_idx - 2;
 
 	  *char_to_repeat = es->s[start_idx];
@@ -918,17 +876,34 @@ find_bracketed_repeat (const struct E_string *es, size_t start_idx,
 	    }
 
 	  /* Here, we have found [c*s] where s should be a string
-	     of octal or decimal digits.  */
-	  digit_str = &es->s[start_idx + 2];
-	  if (non_neg_strtol (digit_str, digit_str_len, repeat_count)
-	      || *repeat_count > BEGIN_STATE)
-	    {
-	      char *tmp = make_printable_str (digit_str, digit_str_len);
-	      error (0, 0, _("invalid repeat count `%s' in [c*n] construct"),
-		     tmp);
-	      free (tmp);
-	      return -2;
-	    }
+	     of octal (if it starts with `0') or decimal digits.  */
+	  {
+	    const char *digit_str = &es->s[start_idx + 2];
+	    unsigned long int tmp_ulong;
+	    char *d_end;
+	    int base = 10;
+	    /* Select the base manually so we can be sure it's either 8 or 10.
+	       If the spec allowed it to be interpreted as hexadecimal, we
+	       could have used `0' and let xstrtoul decide.  */
+	    if (*digit_str == '0')
+	      {
+		base = 8;
+		++digit_str;
+		--digit_str_len;
+	      }
+	    if (xstrtoul (digit_str, &d_end, base, &tmp_ulong, NULL) != LONGINT_OK
+		|| BEGIN_STATE < tmp_ulong
+		|| d_end - digit_str != digit_str_len)
+	      {
+		char *tmp = make_printable_str (es->s + start_idx + 2,
+						i - start_idx - 2);
+		error (0, 0, _("invalid repeat count `%s' in [c*n] construct"),
+		       tmp);
+		free (tmp);
+		return -2;
+	      }
+	    *repeat_count = tmp_ulong;
+	  }
 	  *closing_bracket_idx = i;
 	  return 0;
 	}
@@ -1598,25 +1573,30 @@ when translating"));
    character is in the squeeze set.  */
 
 static void
-squeeze_filter (unsigned char *buf, long int size, PFL reader)
+squeeze_filter (unsigned char *buf, size_t size, Filter reader)
 {
   unsigned int char_to_squeeze = NOT_A_CHAR;
-  long i = 0;
-  long nr = 0;
+  size_t i = 0;
+  ssize_t nr = 0;
 
   for (;;)
     {
-      long begin;
+      size_t begin;
 
       if (i >= nr)
 	{
 	  if (reader == NULL)
-	    nr = safe_read (0, (char *) buf, size);
+	    {
+	      ssize_t signed_nr = safe_read (0, (char *) buf, size);
+	      if (signed_nr < 0)
+		error (EXIT_FAILURE, errno, _("read error"));
+	      nr = signed_nr;
+	    }
 	  else
-	    nr = (*reader) (buf, size, NULL);
+	    {
+	      nr = (*reader) (buf, size, NULL);
+	    }
 
-	  if (nr < 0)
-	    error (EXIT_FAILURE, errno, _("read error"));
 	  if (nr == 0)
 	    break;
 	  i = 0;
@@ -1626,7 +1606,7 @@ squeeze_filter (unsigned char *buf, long int size, PFL reader)
 
       if (char_to_squeeze == NOT_A_CHAR)
 	{
-	  long out_len;
+	  size_t out_len;
 	  /* Here, by being a little tricky, we can get a significant
 	     performance increase in most cases when the input is
 	     reasonably large.  Since tr will modify the input only
@@ -1692,14 +1672,13 @@ squeeze_filter (unsigned char *buf, long int size, PFL reader)
    in the delete set, and return the number of characters saved
    or 0 upon EOF.  */
 
-static long
-read_and_delete (unsigned char *buf, long int size, PFL not_used)
+static size_t
+read_and_delete (unsigned char *buf, size_t size, Filter not_used)
 {
-  long n_saved;
+  size_t n_saved;
   static int hit_eof = 0;
 
   assert (not_used == NULL);
-  assert (size > 0);
 
   if (hit_eof)
     return 0;
@@ -1709,8 +1688,8 @@ read_and_delete (unsigned char *buf, long int size, PFL not_used)
      just deleted all the characters in a buffer.  */
   do
     {
-      int i;
-      int nr = safe_read (0, (char *) buf, size);
+      size_t i;
+      ssize_t nr = safe_read (0, (char *) buf, size);
 
       if (nr < 0)
 	error (EXIT_FAILURE, errno, _("read error"));
@@ -1742,15 +1721,14 @@ read_and_delete (unsigned char *buf, long int size, PFL not_used)
    perform the in-place and one-to-one mapping specified by the global
    array `xlate'.  Return the number of characters read, or 0 upon EOF.  */
 
-static long
-read_and_xlate (unsigned char *buf, long int size, PFL not_used)
+static size_t
+read_and_xlate (unsigned char *buf, size_t size, Filter not_used)
 {
-  long chars_read = 0;
+  ssize_t chars_read = 0;
   static int hit_eof = 0;
-  int i;
+  size_t i;
 
   assert (not_used == NULL);
-  assert (size > 0);
 
   if (hit_eof)
     return 0;
@@ -1779,7 +1757,7 @@ static void
 set_initialize (struct Spec_list *s, int complement_this_set, SET_TYPE *in_set)
 {
   int c;
-  int i;
+  size_t i;
 
   memset (in_set, 0, N_CHARS * sizeof (in_set[0]));
   s->state = BEGIN_STATE;
@@ -1906,7 +1884,7 @@ without squeezing repeats"));
     }
   else if (delete && non_option_args == 1)
     {
-      long nr;
+      size_t nr;
 
       set_initialize (s1, complement, in_delete_set);
       do
@@ -2014,7 +1992,7 @@ construct in string1 must be aligned with a corresponding construct\n\
 	}
       else
 	{
-	  long chars_read;
+	  size_t chars_read;
 
 	  do
 	    {
