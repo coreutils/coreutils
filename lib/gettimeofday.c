@@ -39,16 +39,8 @@
 #endif
 
 #include <stdlib.h>
-#include "gtod.h"
 
 static struct tm *localtime_buffer_addr;
-
-void
-GTOD_init (void)
-{
-  time_t t = 0;
-  localtime_buffer_addr = localtime (&t);
-}
 
 /* This is a wrapper for gettimeofday.  It is used only on systems for which
    gettimeofday clobbers the static buffer used for localtime's result.
@@ -63,7 +55,10 @@ rpl_gettimeofday (struct timeval *tv, struct timezone *tz)
   int result;
 
   if (! localtime_buffer_addr)
-    abort ();
+    {
+      time_t t = 0;
+      localtime_buffer_addr = localtime (&t);
+    }
 
   save = *localtime_buffer_addr;
   result = gettimeofday (tv, tz);
