@@ -2460,7 +2460,7 @@ used only in @var{set1} or @var{set2}, as noted below.
 
 @table @asis
 
-@item Backslash escapes.
+@item Backslash escapes
 @cindex backslash escapes
 
 A backslash followed by a character not listed below causes an error
@@ -2468,19 +2468,19 @@ message.
 
 @table @samp
 @item \a
-Control-G,
+Control-G.
 @item \b
-Control-H,
+Control-H.
 @item \f
-Control-L,
+Control-L.
 @item \n
-Control-J,
+Control-J.
 @item \r
-Control-M,
+Control-M.
 @item \t
-Control-I,
+Control-I.
 @item \v
-Control-K,
+Control-K.
 @item \@var{ooo}
 The character with the value given by @var{ooo}, which is 1 to 3
 octal digits,
@@ -2488,7 +2488,7 @@ octal digits,
 A backslash.
 @end table
 
-@item Ranges.
+@item Ranges
 @cindex ranges
 
 The notation @samp{@var{m}-@var{n}} expands to all of the characters
@@ -2500,7 +2500,7 @@ enclose ranges, translations specified in that format will still work as
 long as the brackets in @var{string1} correspond to identical brackets
 in @var{string2}.
 
-@item Repeated characters.
+@item Repeated characters
 @cindex repeated characters
 
 The notation @samp{[@var{c}*@var{n}]} in @var{set2} expands to @var{n}
@@ -2510,7 +2510,7 @@ to as many copies of @var{c} as are needed to make @var{set2} as long as
 @var{set1}.  If @var{n} begins with @samp{0}, it is interpreted in
 octal, otherwise in decimal.
 
-@item Character classes.
+@item Character classes
 @cindex characters classes
 
 The notation @samp{[:@var{class}:]} expands to all of the characters in
@@ -2565,7 +2565,7 @@ Uppercase letters.
 Hexadecimal digits.
 @end table
 
-@item Equivalence classes.
+@item Equivalence classes
 @cindex equivalence classes
 
 The syntax @samp{[=@var{c}=]} expands to all of the characters that are
