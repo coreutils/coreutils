@@ -1,5 +1,9 @@
 2001-09-01  Jim Meyering  <meyering@lucent.com>
 
+	* xreadlink.c: New file.
+	* xreadlink.h: New file.
+	* Makefile.am (libfetish_a_SOURCES): Add xreadlink.c and xreadlink.h.
+
 	* regex.c (uintptr_t) [!_LIBC]: Define to private_uintptr_t, so it
 	doesn't conflict with sparc-sun-solaris2.7's definition in
 	/usr/include/sys/int_types.h.
