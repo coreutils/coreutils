@@ -864,6 +864,7 @@ operating on it.  The @w{@kbd{--strip-trailing-slashes}} option enables
 this behavior.
 
 This is useful when a @var{source} argument may have a trailing slash and
+@c FIXME: mv's behavior in this case is system-dependent
 specify a symbolic link to a directory.  This scenario is in fact rather
 common because some shells can automatically append a trailing slash when
 performing file name completion on such symbolic links.  Without this
