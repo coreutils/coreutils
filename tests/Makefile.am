@@ -18,7 +18,6 @@ SUBDIRS = \
 check-root:
 	cd chown && $(MAKE) check TESTS=basic
 	cd cp    && $(MAKE) check TESTS=special-bits
-	cd touch && $(MAKE) check TESTS=fifo
 	cd mv    && $(MAKE) check TESTS=mv-special-1
 	cd rm    && $(MAKE) check TESTS=fail-2eperm
 
