@@ -1,3 +1,21 @@
+1999-03-04  Jim Meyering  <meyering@ascend.com>
+
+	* basename.c (main): Include author name argument in call to
+	parse_long_options.
+	* chroot.c: Likewise.
+	* dirname.c: Likewise.
+	* echo.c: Likewise.
+	* expr.c: Likewise.
+	* factor.c: Likewise.
+	* hostid.c: Likewise.
+	* hostname.c: Likewise.
+	* nice.c: Likewise.
+	* printf.c: Likewise.
+	* pwd.c: Likewise.
+	* stty.c: Likewise.
+	* test.c: Likewise.
+	* yes.c: Likewise.
+
 1999-03-02  Jim Meyering  <meyering@ascend.com>
 
 	* lib/readutmp.c (read_utmp) [HAVE_UTMPNAME]: Rewrite.
