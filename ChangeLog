@@ -2,13 +2,13 @@
 
 	* Version 5.1.0.
 
+	FIXME: update coreutils.texi:
+	chmod's new options: --preserve-root and --no-preserve-root.
+
 	* Makefile.maint (sc_xalloc_h_in_src): Remove rule.  Subsumed by...
 	(sc_system_h_headers): Do this test only if sys2.h exists.
 
 2003-11-20  Jim Meyering  <jim@meyering.net>
-
-	FIXME: update coreutils.texi:
-	chmod's new options: --preserve-root and --no-preserve-root.
 
 	* tests/help-version: Ensure that the bug-reporting address is
 	included in the --help output for every program.
