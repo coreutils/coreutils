@@ -16,14 +16,7 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
 #ifdef HAVE_CONFIG_H
-#if defined (CONFIG_BROKETS)
-/* We use <config.h> instead of "config.h" so that a compilation
-   using -I. -I$srcdir will use ./config.h rather than $srcdir/config.h
-   (which it would do because it found this file in $srcdir).  */
 #include <config.h>
-#else
-#include "config.h"
-#endif
 #endif
 
 #include <sys/types.h>
@@ -67,7 +60,7 @@ mkdir (dpath, dmode)
 
   if (SAFE_STAT (dpath, &statbuf) == 0)
     {
-      errno = EEXIST;		/* stat worked, it already exists */
+      errno = EEXIST;		/* stat worked, so it already exists.  */
       return -1;
     }
 
@@ -78,33 +71,27 @@ mkdir (dpath, dmode)
   cpid = fork ();
   switch (cpid)
     {
-    case -1:			/* cannot fork */
-      return -1;		/* errno already set */
+    case -1:			/* Cannot fork.  */
+      return -1;		/* errno is already set.  */
 
-    case 0:			/* child process */
-
+    case 0:			/* Child process.  */
       /* Cheap hack to set mode of new directory.  Since this child
-	 process is going away anyway, we zap its umask.  This won't
-	 suffice to set SUID, SGID, etc. on this directory, so the parent
-	 process calls chmod afterward.  */
-
-      status = umask (0);
-      umask (status | (0777 & ~dmode));
+	 process is going away anyway, we zap its umask.
+	 This won't suffice to set SUID, SGID, etc. on this
+	 directory, so the parent process calls chmod afterward.  */
+      status = umask (0);	/* Get current umask.  */
+      umask (status | (0777 & ~dmode));	/* Set for mkdir.  */
       execl ("/bin/mkdir", "mkdir", dpath, (char *) 0);
       _exit (1);
 
-    default:			/* parent process */
-
+    default:			/* Parent process.  */
       /* Wait for kid to finish.  */
-
       while (wait (&status) != cpid)
 	/* Do nothing.  */ ;
 
       if (status & 0xFFFF)
 	{
-
 	  /* /bin/mkdir failed.  */
-
 	  errno = EIO;
 	  return -1;
 	}
