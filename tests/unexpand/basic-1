@@ -23,9 +23,9 @@ my $degenerate = "d41d8cd98f00b204e9800998ecf8427e";
 
 my @Tests =
     (
-     # This would infloop prior to textutils-2.0d
-     ['infloop', '-t', '2,17', {IN=> "  \t\t "}, {OUT=>"junk\n"}],
-     ['infloop', '-t', '1,2', {IN=> " \t\t "}, {OUT=>"junk\n"}],
+     # These would infloop prior to textutils-2.0d.
+     ['infloop-1', '-t', '1,2', {IN=> " \t\t "}, {OUT=>"junk\n"}],
+     ['infloop-2', '-t', '2,17', {IN=> "  \t\t "}, {OUT=>"junk\n"}],
     );
 
 my $save_temps = $ENV{DEBUG};
