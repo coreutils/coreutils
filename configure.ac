@@ -1,9 +1,9 @@
 dnl Process this file with autoconf to produce a configure script. -*-m4-*-
-AC_INIT(GNU coreutils, 4.5.4, bug-coreutils@gnu.org)
+AC_INIT([GNU coreutils],[4.5.4],[bug-coreutils@gnu.org])
 AC_CONFIG_SRCDIR(src/ls.c)
 
 AC_CONFIG_AUX_DIR(config)
-AM_CONFIG_HEADER(config.h:config.hin)
+AC_CONFIG_HEADERS([config.h:config.hin])
 AC_CANONICAL_HOST
 
 AM_INIT_AUTOMAKE([1.6b gnits dist-bzip2])
@@ -26,7 +26,7 @@ AC_CHECK_FUNCS(gethostid,
 
 jm_MACROS
 
-AM_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL
+AC_HEADER_TIOCGWINSZ()
 jm_WINSIZE_IN_PTEM
 
 # Check for SunOS statfs brokenness wrt partitions 2GB and larger.
@@ -34,16 +34,15 @@ jm_WINSIZE_IN_PTEM
 # enable the work-around code in fsusage.c.
 AC_MSG_CHECKING([for statfs that truncates block counts])
 AC_CACHE_VAL(fu_cv_sys_truncating_statfs,
-[AC_TRY_COMPILE([
+[AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 #if !defined(sun) && !defined(__sun)
 choke -- this is a workaround for a Sun-specific problem
 #endif
 #include <sys/types.h>
-#include <sys/vfs.h>],
-[struct statfs t; long c = *(t.f_spare);],
-fu_cv_sys_truncating_statfs=yes,
-fu_cv_sys_truncating_statfs=no,
-)])
+#include <sys/vfs.h>]],
+  [[struct statfs t; long c = *(t.f_spare);]])],
+  [fu_cv_sys_truncating_statfs=yes],
+  [fu_cv_sys_truncating_statfs=no])])
 if test $fu_cv_sys_truncating_statfs = yes; then
   AC_DEFINE(STATFS_TRUNCATES_BLOCK_COUNTS, 1,
 [  Define if the block counts reported by statfs may be truncated to 2GB
@@ -56,7 +55,7 @@ AC_MSG_RESULT($fu_cv_sys_truncating_statfs)
 AC_MSG_CHECKING(whether localtime caches TZ)
 AC_CACHE_VAL(utils_cv_localtime_cache,
 [if test x$ac_cv_func_tzset = xyes; then
-AC_TRY_RUN([#include <time.h>
+AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <time.h>
 #if STDC_HEADERS
 # include <stdlib.h>
 #endif
@@ -85,7 +84,9 @@ main()
   if (localtime (&now)->tm_hour != hour_unset)
     exit (1);
   exit (0);
-}], utils_cv_localtime_cache=no, utils_cv_localtime_cache=yes,
+}]])],
+[utils_cv_localtime_cache=no],
+[utils_cv_localtime_cache=yes],
 [# If we have tzset, assume the worst when cross-compiling.
 utils_cv_localtime_cache=yes])
 else
@@ -115,10 +116,10 @@ fi
 
 AC_MSG_CHECKING(for 3-argument setpriority function)
 AC_CACHE_VAL(utils_cv_func_setpriority,
-[AC_TRY_LINK([#include <sys/time.h>
-#include <sys/resource.h>],
-[setpriority(0, 0, 0);],
-utils_cv_func_setpriority=yes, utils_cv_func_setpriority=no)])
+[AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <sys/time.h>
+  #include <sys/resource.h>]], [[setpriority(0, 0, 0);]])],
+  [utils_cv_func_setpriority=yes],
+  [utils_cv_func_setpriority=no])])
 AC_MSG_RESULT($utils_cv_func_setpriority)
 if test $utils_cv_func_setpriority = yes; then
   OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS nice"
@@ -127,8 +128,9 @@ if test $utils_cv_func_setpriority = yes; then
 else
   AC_MSG_CHECKING(for nice function)
   AC_CACHE_VAL(utils_cv_func_nice,
-  [AC_TRY_LINK([], nice();,
-  utils_cv_func_nice=yes, utils_cv_func_nice=no)])
+    [AC_LINK_IFELSE([AC_LANG_PROGRAM([[]], [[nice();]])],
+		    [utils_cv_func_nice=yes],
+		    [utils_cv_func_nice=no])])
   AC_MSG_RESULT($utils_cv_func_nice)
   if test $utils_cv_func_nice = yes; then
     AC_DEFINE(NICE_PRIORITY, 1, [FIXME])
@@ -150,9 +152,10 @@ jm_DUMMY_1
 
 AC_MSG_CHECKING(ut_host in struct utmp)
 AC_CACHE_VAL(su_cv_func_ut_host_in_utmp,
-[AC_TRY_LINK([#include <sys/types.h>
-#include <utmp.h>], [struct utmp ut; ut.ut_host;],
-su_cv_func_ut_host_in_utmp=yes, su_cv_func_ut_host_in_utmp=no)])
+[AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
+#include <utmp.h>]], [[struct utmp ut; ut.ut_host;]])],
+  [su_cv_func_ut_host_in_utmp=yes],
+  [su_cv_func_ut_host_in_utmp=no])])
 AC_MSG_RESULT($su_cv_func_ut_host_in_utmp)
 if test $su_cv_func_ut_host_in_utmp = yes; then
   have_ut_host=1
@@ -162,9 +165,10 @@ fi
 if test -z "$have_ut_host"; then
   AC_MSG_CHECKING(ut_host in struct utmpx)
   AC_CACHE_VAL(su_cv_func_ut_host_in_utmpx,
-  [AC_TRY_LINK([#include <sys/types.h>
-#include <utmpx.h>], [struct utmpx ut; ut.ut_host;],
-  su_cv_func_ut_host_in_utmpx=yes, su_cv_func_ut_host_in_utmpx=no)])
+  [AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
+#include <utmpx.h>]], [[struct utmpx ut; ut.ut_host;]])],
+    [su_cv_func_ut_host_in_utmpx=yes],
+    [su_cv_func_ut_host_in_utmpx=no])])
   AC_MSG_RESULT($su_cv_func_ut_host_in_utmpx)
   if test $su_cv_func_ut_host_in_utmpx = yes; then
     AC_DEFINE(HAVE_UTMPX_H, 1, [FIXME])
@@ -175,7 +179,7 @@ fi
 GNULIB_BOOT_TIME(
   [OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS uptime" MAN="$MAN uptime.1"])
 
-AM_SYS_POSIX_TERMIOS
+AC_SYS_POSIX_TERMIOS()
 jm_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL
 
 if test $ac_cv_sys_posix_termios = yes; then
@@ -199,16 +203,16 @@ yes
 
   AC_MSG_CHECKING(c_line in struct termios)
   AC_CACHE_VAL(su_cv_sys_c_line_in_termios,
-  [AC_TRY_LINK([#if TERMIOS_NEEDS_XOPEN_SOURCE
+  [AC_LINK_IFELSE([AC_LANG_PROGRAM([[#if TERMIOS_NEEDS_XOPEN_SOURCE
 #define _XOPEN_SOURCE
 #endif
 #include <sys/types.h>
-#include <termios.h>],
-	      [struct termios t; t.c_line;],
-	      su_cv_sys_c_line_in_termios=yes,
-	      su_cv_sys_c_line_in_termios=no)])
+#include <termios.h>]], [[struct termios t; t.c_line;]])],
+    [su_cv_sys_c_line_in_termios=yes],
+    [su_cv_sys_c_line_in_termios=no])])
   AC_MSG_RESULT($su_cv_sys_c_line_in_termios)
-  test $su_cv_sys_c_line_in_termios = yes && AC_DEFINE(HAVE_C_LINE, 1, [FIXME])
+  test $su_cv_sys_c_line_in_termios = yes \
+    && AC_DEFINE(HAVE_C_LINE, 1, [FIXME])
 fi
 
 # FIXME: note that this macro appears above, too.
@@ -221,17 +225,16 @@ if test $jm_cv_sys_tiocgwinsz_needs_termios_h = no && \
    test $jm_cv_sys_tiocgwinsz_needs_sys_ioctl_h = no; then
   AC_MSG_CHECKING(TIOCGWINSZ in sys/pty.h)
   AC_CACHE_VAL(su_cv_sys_tiocgwinsz_in_sys_pty_h,
-  [AC_TRY_LINK([#include <sys/types.h>
+  [AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
 #ifdef WINSIZE_IN_PTEM
 # include <sys/stream.h>
 # include <sys/ptem.h>
 #endif
 #include <sys/ioctl.h>
 #include <sys/tty.h>
-#include <sys/pty.h>],
-	      [int x = TIOCGWINSZ;],
-	      su_cv_sys_tiocgwinsz_in_sys_pty_h=yes,
-	      su_cv_sys_tiocgwinsz_in_sys_pty_h=no)])
+#include <sys/pty.h>]], [[int x = TIOCGWINSZ;]])],
+    [su_cv_sys_tiocgwinsz_in_sys_pty_h=yes],
+    [su_cv_sys_tiocgwinsz_in_sys_pty_h=no])])
   AC_MSG_RESULT($su_cv_sys_tiocgwinsz_in_sys_pty_h)
 
   test $su_cv_sys_tiocgwinsz_in_sys_pty_h = yes \
@@ -245,6 +248,7 @@ AC_CHECK_DECLS([strsignal, strtoimax, sys_siglist, _sys_siglist])
 jm_LIB_CHECK
 
 AM_GNU_GETTEXT([external], [need-ngettext])
+AM_GNU_GETTEXT_VERSION(0.11.5)
 
 AC_CONFIG_FILES(
   Makefile
