@@ -2,6 +2,8 @@
 
 	* Version 4.1.8.
 
+	* src/mv.c (do_move): Correct a comment.
+
 	* src/copy.c (copy_internal): Move the block that sets `earlier_file'
 	down to just before the first use of that variable.  Otherwise, it was
 	possible to make mv (and probably cp, too) malfunction when copying
