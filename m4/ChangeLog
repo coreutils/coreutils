@@ -1,3 +1,8 @@
+2000-07-09  Jim Meyering  <meyering@lucent.com>
+
+	* gnu-source.m4 (AC__GNU_SOURCE): New file/macro.
+	* jm-macros.m4 (jm_CHECK_ALL_TYPES): Require it.
+
 2000-07-05  Bruno Haible  <haible@clisp.cons.org>
 
 	* strerror_r.m4 (AC_FUNC_STRERROR_R): Pass a reasonably large buffer
