@@ -1,4 +1,5 @@
 Changes in release 2.1
+[2.0.18]
 [2.0.17]
 * csplit no longer gets a failed assertion for this:
     printf 'a\n\n'|csplit - '/^$/' 2
@@ -6,6 +7,8 @@ Changes in release 2.1
 * tail no longer gets a segfault on Linux's /proc/ksyms
 * sum -s produces the proper 16-bit checksum for large files
     (this fixes a bug that was introduced in 2.0f)
+* uniq is now about 3 times faster than the version from 2.0 on Linux systems;
+    the code uses lock-avoiding variants of common I/O functions
 [2.0.16]
 * tail -F no longer segfaults
 [2.0.15]
