@@ -1477,8 +1477,8 @@ print_long_format (f)
     }
 
   if (S_ISCHR (f->stat.st_mode) || S_ISBLK (f->stat.st_mode))
-    printf ("%3u, %3u ", major (f->stat.st_rdev),
-	    minor (f->stat.st_rdev));
+    printf ("%3u, %3u ", (unsigned) major (f->stat.st_rdev),
+	    (unsigned) minor (f->stat.st_rdev));
   else
     printf ("%8lu ", f->stat.st_size);
 

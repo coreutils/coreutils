@@ -176,18 +176,21 @@ main (argc, argv)
     error (1, 0, "virtual memory exhausted");
 
   for (; optind < argc; ++optind)
-    errors |= change_file_mode (argv[optind], changes);
+    errors |= change_file_mode (argv[optind], changes, 1);
 
   exit (errors);
 }
 
 /* Change the mode of FILE according to the list of operations CHANGES.
-   Return 0 if successful, 1 if errors occurred. */
+   If DEREF_SYMLINK is non-zero and FILE is a symbolic link, change the
+   mode of the referenced file.  If DEREF_SYMLINK is zero, ignore symbolic
+   links.  Return 0 if successful, 1 if errors occurred. */
 
 static int
-change_file_mode (file, changes)
+change_file_mode (file, changes, deref_symlink)
      char *file;
      struct mode_change *changes;
+     int deref_symlink;
 {
   struct stat file_stats;
   unsigned short newmode;
@@ -201,7 +204,15 @@ change_file_mode (file, changes)
     }
 #ifdef S_ISLNK
   if (S_ISLNK (file_stats.st_mode))
-    return 0;
+    if (! deref_symlink)
+      return 0;
+    else 
+      if (stat (file, &file_stats))
+	{
+	  if (force_silent == 0)
+	    error (0, errno, "%s", file);
+	  return 1;
+	}
 #endif
 
   newmode = mode_adjust (file_stats.st_mode, changes);
@@ -273,7 +284,7 @@ change_dir_mode (dir, changes, statp)
 	  path = xrealloc (path, pathlength);
 	}
       strcpy (path + dirlength, namep);
-      errors |= change_file_mode (path, changes);
+      errors |= change_file_mode (path, changes, 0);
     }
   free (path);
   free (name_space);

@@ -1,3 +1,18 @@
+Sun Oct 17 00:19:58 1993  Jim Meyering  (meyering@comco.com)
+
+	* ls.c (print_long_format): Cast printf args major and minor
+	so they'll have types macthing %u format even on systems
+	where those macros have signed type.
+
+Sat Oct 16 00:25:42 1993  Jim Meyering  (meyering@comco.com)
+
+	* chmod.c (change_file_mode): Reapply Oct 6 change for symlinks.
+	Somehow it got removed from working sources.
+
+        * lib/Makefile.in [OBJECTS]: Change dependency to ../config.h so
+	it works when building in a subdirectory.  From Rick Sladkey
+	(jrs@world.std.com).
+
 Wed Oct 13 19:43:47 1993  Jim Meyering  (meyering@comco.com)
 
 	* cp.c (copy), ls.c (get_link_name): Complete Aug 27 change so

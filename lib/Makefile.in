@@ -109,7 +109,7 @@ rename.o: rename.c
 	$(CC) -c $(CPPFLAGS) -DMVDIR="\"$(libdir)/mvdir\"" $(DEFS) \
 	    -I.. -I$(srcdir) $(CFLAGS) $(srcdir)/rename.c
 
-$(OBJECTS): $(srcdir)/../config.h
+$(OBJECTS): ../config.h
 
 backupfile.o getversion.o: backupfile.h
 fnmatch.o: fnmatch.h
