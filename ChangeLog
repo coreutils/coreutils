@@ -2,6 +2,9 @@
 
 	* Version 5.3.0.
 
+	* tests/Fetish.pm (run_tests): Remove `.orig' file.
+	Remove debugging diagnostic.
+
 	Specifying an invalid --width=N (-w) or --gap-size=N (-g)
 	would not elicit an error.
 	* src/ptx.c: Include "xstrtol.h" and "quotearg.h".
