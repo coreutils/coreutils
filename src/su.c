@@ -530,6 +530,10 @@ main (int argc, char **argv)
     error (1, 0, _("user %s does not exist"), new_user);
   endpwent ();
 
+  /* make sure pw->pw_shell is non-zero */
+  if (pw->pw_shell == 0 || pw->pw_shell[0] == 0)
+    pw->pw_shell = (char *) DEFAULT_SHELL;
+
   /* Make a copy of the password information and point pw at the local
      copy instead.  Otherwise, some systems (e.g. Linux) would clobber
      the static data through the getlogin call from log_su.  */
@@ -553,8 +557,6 @@ main (int argc, char **argv)
     }
 #endif
 
-  if (pw->pw_shell == 0 || pw->pw_shell[0] == 0)
-    pw->pw_shell = (char *) DEFAULT_SHELL;
   if (shell == 0 && change_environment == 0)
     shell = getenv ("SHELL");
   if (shell != 0 && getuid () && restricted_shell (pw->pw_shell))
