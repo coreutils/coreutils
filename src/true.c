@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include "system.h"
 #include "version-etc.h"
+#include "closeout.h"
 
 #define PROGRAM_NAME "true"
 #define AUTHORS "no one"
@@ -25,6 +26,7 @@ These option names may not be abbreviated.\n\
 ")
 	  , program_name, program_name);
   puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
+  close_stdout ();
   exit (status);
 }
 
