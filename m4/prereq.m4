@@ -1,7 +1,10 @@
-#serial 26
+#serial 27
 
-dnl These are the prerequisite macros for files in the lib/
-dnl directories of the fileutils, sh-utils, and textutils packages.
+dnl We use jm_ for non Autoconf macros.
+m4_pattern_forbid([^jm_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
+
+# These are the prerequisite macros for files in the lib/
+# directory of the coreutils package.
 
 AC_DEFUN([jm_PREREQ],
 [
@@ -114,6 +117,7 @@ AC_DEFUN([jm_PREREQ_QUOTEARG],
 [
   AC_CHECK_FUNCS(isascii iswprint)
   jm_FUNC_MBRTOWC
+  jm_FUNC_MEMCMP
   AC_CHECK_HEADERS(limits.h stddef.h stdlib.h string.h wchar.h wctype.h)
   AC_HEADER_STDC
   AC_C_BACKSLASH_A
