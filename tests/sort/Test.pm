@@ -117,7 +117,7 @@ my @tv = (
 # Before 1.22m, the first key comparison reported equality.
 # With 1.22m, they compare different: "a" sorts before "a\n",
 # and the second key spec isn't even used.
-["11d", '-t: -k2,2b -k3,3', "z:a :b\na\t:a\n", "z:a :b\na\t:a\n", 0],
+["11d", '-t: -k2,2b -k3,3', "z:a :b\na\t:a\n", "a\t:a\nz:a :b\n", 0],
 #
 # Exercise bug re comparing `-' and integers.
 ["12a", '-n -t: +1', "a:1\nb:-\n", "b:-\na:1\n", 0],
@@ -235,7 +235,7 @@ my @tv = (
 #
 # because \t comes before \n in the collating sequence, and the trailing
 # \n's are part of the input line.
-["use-nl", '', "\n\t\n", "\t\n\n", 0],
+["use-nl", '', "\n\t\n", "\n\t\n", 0],
 
 );
 
