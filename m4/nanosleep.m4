@@ -1,7 +1,8 @@
 #serial 2
 
 dnl From Jim Meyering.
-dnl Check for the nanosleep function
+dnl Check for the nanosleep function.
+dnl If not found, use the supplied replacement.
 dnl
 
 AC_DEFUN(jm_FUNC_NANOSLEEP,
