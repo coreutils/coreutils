@@ -1,6 +1,11 @@
-2003-03-11  Jim Meyering  <jim@meyering.net>
+2003-03-13  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.10.
+
+	* tests/du/8gb: Work around what appears to be an NFS failure that
+	would make this test fail on some systems.
+
+2003-03-11  Jim Meyering  <jim@meyering.net>
 
 	* tests/du/basic: Make the test file exactly 4k bytes long.
 
