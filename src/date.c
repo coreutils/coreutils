@@ -327,7 +327,7 @@ main (int argc, char **argv)
 	set_date = 1;
 	break;
       case 'u':
-	/* POSIX.2 says that `date -u' is equivalent to setting the TZ
+	/* POSIX says that `date -u' is equivalent to setting the TZ
 	   environment variable, so this option should do nothing other
 	   than setting TZ.  */
 	if (putenv ("TZ=UTC0") != 0)
@@ -495,7 +495,7 @@ show_date (const char *format, time_t when)
 	  char *date_fmt = DATE_FMT_LANGINFO ();
 	  /* Do not wrap the following literal format string with _(...).
 	     For example, suppose LC_ALL is unset, LC_TIME="POSIX",
-	     and LANG="ko_KR".	In that case, POSIX.2 says that LC_TIME
+	     and LANG="ko_KR".	In that case, POSIX says that LC_TIME
 	     determines the format and contents of date and time strings
 	     written by date, which means "date" must generate output
 	     using the POSIX locale; but adding _() would cause "date"
