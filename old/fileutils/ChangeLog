@@ -25,6 +25,7 @@
 	If the file was created and if amtime_now is nonzero, this
 	change means we'll have to do another utime system call, but
 	that's no more harmful than the previous version of this code.
+	Reported by Gabor Z. Papp.
 
 1999-10-21  Jim Meyering  <meyering@ascend.com>
 
