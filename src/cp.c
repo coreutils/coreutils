@@ -606,8 +606,8 @@ do_copy (int n_files, char **file, const char *target_directory,
 						  &attr_list, &new_dst,
 						  x->xstat);
 	    }
-  	  else
-  	    {
+	  else
+	    {
 	      char *arg_base;
 	      /* Append the last component of `arg' to `dest'.  */
 
@@ -622,7 +622,7 @@ do_copy (int n_files, char **file, const char *target_directory,
 	    {
 	      /* make_path_private failed, so don't even attempt the copy. */
 	      ret = 1;
-  	    }
+	    }
 	  else
 	    {
 	      int copy_into_self;
