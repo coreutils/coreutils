@@ -1,6 +1,17 @@
-1998-02-13  Jim Meyering  <meyering@eng.ascend.com>
+1998-02-19  Jim Meyering  <meyering@eng.ascend.com>
 
 	* Version 3.16m.
+
+	* lib/dirname.c (dirname): Include ctype.h.
+	[IN_CTYPE_DOMAIN]: Define.
+	[ISALPHA]: Define.
+	[MSDOS]: Add support for DOS-style file names with drive letters.
+	Based on a patch from Eli Zaretskii.
+
+	1997-10-17  Eli Zaretskii  <eliz@is.elta.co.il>
+	* lib/fileblocks.c [__DJGPP__]: Add missing typedef for daddr_t.
+
+1998-02-13  Jim Meyering  <meyering@eng.ascend.com>
 
 	* src/mv.c (cp_option_init): Set copy_as_regular to 0, not 1.
 	Otherwise, mv tries to open special files.
