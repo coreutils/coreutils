@@ -2198,8 +2198,7 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
   if (files_index == nfiles)
     {
       nfiles *= 2;
-      files = (struct fileinfo *) xrealloc ((char *) files,
-					    sizeof (*files) * nfiles);
+      files = XREALLOC (files, struct fileinfo, nfiles);
     }
 
   files[files_index].linkname = 0;
