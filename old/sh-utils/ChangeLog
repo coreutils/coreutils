@@ -1,3 +1,10 @@
+2000-11-18  Jim Meyering  <meyering@lucent.com>
+
+	* Version 2.0.12.
+
+	* configure, config.h.in, Makefile.in, etc.: Regenerate using the
+	very latest version (in CVS) of autoconf.
+
 2000-11-17  Jim Meyering  <meyering@lucent.com>
 
 	* GNUmakefile (.NOTPARALLEL): New target.  Prevent unwanted parallelism.
