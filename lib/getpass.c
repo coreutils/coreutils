@@ -35,8 +35,7 @@
 #endif
 
 char *
-getpass (prompt)
-     const char *prompt;
+getpass (const char *prompt)
 {
   FILE *in, *out;
   struct termios s, t;
