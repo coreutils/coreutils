@@ -1,3 +1,7 @@
+2003-10-17  Jim Meyering  <jim@meyering.net>
+
+	* POTFILES.in: Add lib/xfts.c.
+
 2003-09-22  Jim Meyering  <jim@meyering.net>
 
 	* Makevars (XGETTEXT_OPTIONS): Add --from-code=UTF-8 to accommodate the
