@@ -1,3 +1,26 @@
+1998-10-18  Jim Meyering  <meyering@ascend.com>
+
+	* Version 4.0-b5.
+
+	* lib/mktime.c: Update from libc with this additional change from Paul.
+	* lib/strftime.c: Likewise.
+
+	1998-10-17  Paul Eggert  <eggert@twinsun.com>
+
+	Don't invoke localtime_r or gmtime_r unless it's the GNU C
+	library's localtime_r and gmtime_r; there are too many buggy
+	implementations of localtime_r and gmtime_r out there, and
+	it's not worth keeping track of all the different bugs.
+
+	* mktime.c (__EXTENSIONS__, HAVE_LOCALTIME_R): Remove.
+	(my_mktime_localtime_r): Renamed from localtime_r; all uses changed.
+	Base it on localtime unless _LIBC.
+
+	* strftime.c (__EXTENSIONS__): Remove.
+	(my_strftime_gmtime_r): Renamed from gmtime_r; all uses changed.
+	(my_strftime_localtime_r): Renamed from localtime_r; all uses changed.
+	Base them on localtime/gmtime if not _LIBC.
+
 1998-10-17  Jim Meyering  <meyering@ascend.com>
 
 	* Version 4.0-b4.
