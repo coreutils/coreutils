@@ -1,6 +1,11 @@
-2003-08-17  Jim Meyering  <jim@meyering.net>
+2003-08-18  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
+
+	* src/sys2.h (textdomain, bindtextdomain) [! ENABLE_NLS]: Define away,
+	to avoid warnings from gcc.
+
+2003-08-17  Jim Meyering  <jim@meyering.net>
 
 	Avoid unnecessary and sometimes time-consuming hostname lookups.
 	* src/who.c (print_user): Use strchr, not strrchr.
