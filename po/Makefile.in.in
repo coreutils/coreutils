@@ -150,6 +150,8 @@ install-data: all
 	  $(top_srcdir)/mkinstalldirs $(gettextsrcdir); \
 	  cd $(srcdir) && \
 	    $(INSTALL_DATA) Makefile.in.in $(gettextsrcdir)/Makefile.in.in; \
+	else \
+	  true; \
 	fi
 
 # Define this as empty until I found a useful application.
