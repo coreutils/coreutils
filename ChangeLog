@@ -1,3 +1,12 @@
+2003-10-14  Paul Eggert  <eggert@twinsun.com>
+
+	Fix some number-parsing bugs, e.g., "head -n 100k@" wasn't
+	properly diagnosed.
+	* lib/human.c, lib/xstrtoimax.c, lib/xstrtol.c, lib/xstrtol.h,
+	lib/xstrtoul.c, lib/xstrtoumax.c: Sync with gnulib.
+	* src/sort.c (parse_field_count): Handle the case where overflow
+	and invalid suffix char are both reported.
+
 2003-10-14  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.92.
@@ -5,6 +14,10 @@
 	FIXME: update coreutils.texi:
 	chmod's new options: --preserve-root and --no-preserve-root.
 	chown and chgrp have new options: -H -L -P
+
+	* src/ls.c (decode_switches) [TIOCGWINSZ]: Comment out the
+	warning-inducing test, ws.ws_col <= SIZE_MAX, since it was always
+	true on Linux.
 
 	* tests/chgrp/posix-H: New tests for the above.
 	* tests/chgrp/Makefile.am (TESTS): Add posix-H.
