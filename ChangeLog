@@ -1,6 +1,14 @@
-2004-02-23  Jim Meyering  <jim@meyering.net>
+2004-03-02  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.2.1.
+
+2004-03-01  Paul Eggert  <eggert@twinsun.com>
+
+	* configure.ac: Include <signal.h> when checking for strsignal,
+	sys_siglist, and friends.  Problem reported by Toney Leneis in
+	<http://mail.gnu.org/archive/html/bug-coreutils/2004-02/msg00136.html>.
+
+2004-02-23  Jim Meyering  <jim@meyering.net>
 
 	* src/seq.c (usage): Remove stray space after \n in --help output.
 
