@@ -73,6 +73,7 @@
 #include "strverscmp.h"
 #include "quotearg.h"
 #include "filemode.h"
+#include "path-concat.h"
 
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
@@ -174,7 +175,6 @@ static int decode_switches PARAMS ((int argc, char **argv));
 static int file_interesting PARAMS ((const struct dirent *next));
 static uintmax_t gobble_file PARAMS ((const char *name, int explicit_arg,
 				      const char *dirname));
-static int is_not_dot_or_dotdot PARAMS ((const char *name));
 static void print_color_indicator PARAMS ((const char *name, unsigned int mode,
 					   int linkok));
 static void put_indicator PARAMS ((const struct bin_str *ind));
@@ -1873,6 +1873,16 @@ make_link_path (const char *path, const char *linkname)
 }
 #endif
 
+/* Return nonzero if base_name (NAME) ends in `.' or `..'
+   This is so we don't try to recurse on `././././. ...' */
+
+static int
+basename_is_dot_or_dotdot (const char *name)
+{
+  char *base = base_name (name);
+  return DOT_OR_DOTDOT (base);
+}
+
 /* Remove any entries from `files' that are for directories,
    and queue them to be listed as directories instead.
    `dirname' is the prefix to prepend to each dirname
@@ -1884,7 +1894,6 @@ static void
 extract_dirs_from_files (const char *dirname, int recursive)
 {
   register int i, j;
-  register char *path;
   int dirlen;
 
   dirlen = strlen (dirname) + 2;
@@ -1892,7 +1901,7 @@ extract_dirs_from_files (const char *dirname, int recursive)
      order.  */
   for (i = files_index - 1; i >= 0; i--)
     if ((files[i].filetype == directory || files[i].filetype == arg_directory)
-	&& (!recursive || is_not_dot_or_dotdot (files[i].name)))
+	&& (!recursive || !basename_is_dot_or_dotdot (files[i].name)))
       {
 	if (files[i].name[0] == '/' || dirname[0] == 0)
 	  {
@@ -1900,8 +1909,7 @@ extract_dirs_from_files (const char *dirname, int recursive)
 	  }
 	else
 	  {
-	    path = (char *) xmalloc (strlen (files[i].name) + dirlen);
-	    attach (path, dirname, files[i].name);
+	    char *path = path_concat (dirname, files[i].name, NULL);
 	    queue_directory (path, files[i].linkname);
 	    free (path);
 	  }
@@ -1916,26 +1924,6 @@ extract_dirs_from_files (const char *dirname, int recursive)
     if (files[i].filetype != arg_directory)
       files[j++] = files[i];
   files_index = j;
-}
-
-/* Return nonzero if `name' doesn't end in `.' or `..'
-   This is so we don't try to recurse on `././././. ...' */
-
-static int
-is_not_dot_or_dotdot (const char *name)
-{
-  char *t;
-
-  t = strrchr (name, '/');
-  if (t)
-    name = t + 1;
-
-  if (name[0] == '.'
-      && (name[1] == '\0'
-	  || (name[1] == '.' && name[2] == '\0')))
-    return 0;
-
-  return 1;
 }
 
 /* Sort the files now in the table.  */
@@ -2799,6 +2787,8 @@ indent (int from, int to)
 }
 
 /* Put DIRNAME/NAME into DEST, handling `.' and `/' properly. */
+/* FIXME: maybe remove this function someday.  See about using a
+   non-malloc'ing version of path_concat.  */
 
 static void
 attach (char *dest, const char *dirname, const char *name)
