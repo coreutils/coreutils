@@ -2,6 +2,7 @@
 
 	* jm-macros.m4 (AC_CHECK_HEADERS): Add langinfo.h (moved here from
 	textutils/configure.in).
+	(AC_CHECK_FUNCS): Add nl_langinfo.  (also from textutils/configure.in)
 
 2000-04-02  Paul Eggert  <eggert@twinsun.com>
 
