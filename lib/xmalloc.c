@@ -1,5 +1,5 @@
 /* xmalloc.c -- malloc with out of memory checking
-   Copyright (C) 1990-1997, 98 Free Software Foundation, Inc.
+   Copyright (C) 1990-1997, 98, 99 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -70,7 +70,7 @@ xalloc_fail (void)
 {
   if (xalloc_fail_func)
     (*xalloc_fail_func) ();
-  error (xalloc_exit_failure, 0, xalloc_msg_memory_exhausted);
+  error (xalloc_exit_failure, 0, "%s", xalloc_msg_memory_exhausted);
 }
 
 /* Allocate N bytes of memory dynamically, with error checking.  */
