@@ -88,8 +88,7 @@ static const struct option long_options[] =
 char *xmalloc ();
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -127,9 +126,7 @@ meaningful only when verifying checksums.\n"),
 /* FIXME: this format loses with filenames containing newline.  */
 
 static int
-split_3 (s, u, binary, w)
-     char *s, **u, **w;
-     int *binary;
+split_3 (char *s, char **u, int *binary, char **w)
 {
   size_t i;
 
@@ -172,8 +169,7 @@ split_3 (s, u, binary, w)
 /* FIXME: use strcspn.  */
 
 static int
-hex_digits (s)
-     const char *s;
+hex_digits (const char *s)
 {
   while (*s)
     {
@@ -189,10 +185,7 @@ hex_digits (s)
    checksum. */
 
 static int
-md5_file (filename, binary, md5_result)
-     const char *filename;
-     int binary;
-     unsigned char *md5_result;
+md5_file (const char *filename, int binary, unsigned char *md5_result)
 {
   FILE *fp;
   int err;
@@ -235,9 +228,7 @@ md5_file (filename, binary, md5_result)
 }
 
 static int
-md5_check (checkfile_name, binary)
-     const char *checkfile_name;
-     int binary;
+md5_check (const char *checkfile_name, int binary)
 {
   FILE *checkfile_stream;
   int n_tests = 0;
@@ -383,9 +374,7 @@ md5_check (checkfile_name, binary)
 }
 
 int
-main (argc, argv)
-     int argc;
-     char *argv[];
+main (int argc, char **argv)
 {
   unsigned char md5buffer[16];
   int do_check = 0;
