@@ -21,7 +21,7 @@
 #include <config.h>
 #endif
 
-#if !defined (HAVE_ST_BLOCKS) && !defined(_POSIX_SOURCE)
+#if !defined (HAVE_ST_BLOCKS) && !defined(_POSIX_VERSION)
 #include <sys/types.h>
 #include <sys/param.h>
 
