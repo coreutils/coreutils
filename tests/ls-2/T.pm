@@ -77,13 +77,11 @@ sub run_tests ($$$$$)
   foreach $t (@$t_spec)
     {
       my $test_name = shift @$t;
-
-      my $expout_file;
-      my $experr_file;
-      my $exit_status;
+      my $expect = {};
 
       my @args;
       my $io_spec;
+      my %seen_type;
       foreach $io_spec (@$t)
 	{
 	  if (!ref $io_spec)
@@ -110,87 +108,64 @@ sub run_tests ($$$$$)
 	  if ($type eq 'EXIT')
 	    {
 	      # FIXME: make sure $data is numeric
-	      $exit_status = $val;
+	      $expect->{EXIT} = $val;
 	      next;
 	    }
 
 	  my $file_spec = $val;
-	  my ($filename, $contents);
-	  if (!ref $io_spec)
+	  my ($file_name, $contents);
+	  if (!ref $file_spec)
 	    {
-	      ($filename, $contents) = (undef, $io_spec);
+	      ($file_name, $contents) = (undef, $file_spec);
 	    }
-	  elsif (ref $io_spec eq 'HASH')
+	  elsif (ref $file_spec eq 'HASH')
 	    {
 	      my $n = keys %$file_spec;
 	      die "$program_name: $test_name: $type spec has $n elements --"
 		. " expected 1\n"
 		  if $n != 1;
-	      ($filename, $contents) = each %$file_spec;
+	      ($file_name, $contents) = each %$file_spec;
 	    }
 	  else
 	    {
 	      die "$program_name: $test_name: invalid RHS in $type-spec\n"
 	    }
 
-	  my $is_junk_file = (! defined $filename);
-	  my $file = _create_file ($program_name, $test_name, $filename, $data);
-	  push @junk_files, $file
-	    if $is_junk_file;
+	  my $is_junk_file = (! defined $file_name);
+	  my $file = _create_file ($program_name, $test_name,
+				   $file_name, $contents);
+	  push @args, $file
+	    if $type eq 'IN';
 
-	  if ($type =~ /_FILE$/ || $type =~ /_DATA$/)
+	  if ($is_junk_file)
 	    {
-	      my $file;
-	      if ($type =~ /_FILE$/)
-		{
-		  $file = $data;
-		  warn "$program_name: $test_name: specified file `$file' does"
-		    . " not exist\n"
-		      if ! -f $file;
-		}
-	      else
-		{
-		  $file = _create_file ($program_name, $test_name, $data);
-		  push @junk_files, $file;
-		}
-
-	      if ($type =~ /IN_/)
-		{
-		  push (@args, $file)
-		}
-	      elsif ($type =~ /OUT_/)
-		{
-		  die "$program_name: $test_name: duplicate OUT_* spec\n"
-		    if defined $expout_file;
-		  $expout_file = $file;
-		}
-	      elsif ($type =~ /ERR_/)
-		{
-		  die "$program_name: $test_name: duplicate ERR_* spec\n"
-		    if defined $experr_file;
-		  $experr_file = $file;
-		}
-	    }
-	  elsif ($type eq 'EXIT_STATUS')
-	    {
-	      $exit_status = $data;
+	      push @junk_files, $file
 	    }
 	  else
 	    {
-	      die "$program_name: $test_name: internal error\n";
+	      # FIXME: put $srcdir in here somewhere
+	      warn "$program_name: $test_name: specified file `$file' does"
+		. " not exist\n"
+		  if ! -f $file;
 	    }
 	}
 
-      $exit_status = 0 if !defined $exit_status;
+      # Expect an exit status of zero if it's not specified.
+      $expect->{EXIT} ||= 0;
 
-      # Allow ERR_* to be omitted -- in that case, expect no error output.
-      if (!defined $experr_file)
+      # Allow ERR to be omitted -- in that case, expect no error output.
+      my $eo;
+      foreach $eo (qw (ERR OUT))
 	{
-	  $experr_file = _create_file ($program_name, $test_name, '');
-	  push @junk_files, $experr_file;
+	  if (!exists $expect->{$eo})
+	    {
+	      $expect->{$eo} = _create_file ($program_name, $test_name,
+					     undef, '');
+	      push @junk_files, $expect->{$eo};
+	    }
 	}
 
-      # FIXME: Require at least one of OUT_DATA, OUT_FILE.
+      # FIXME: Require at least one of OUT_DATA, OUT_FILE.  Why?
 
       warn "$test_name...\n";
       my $t_out = "$test_name-out";
@@ -208,25 +183,25 @@ sub run_tests ($$$$$)
 	  next;
 	}
       $rc >>= 8 if $rc > 0x80;
-      if ($exit_status != $rc)
+      if ($expect->{EXIT} != $rc)
 	{
 	  warn "$program_name: test $test_name failed: exit status mismatch:"
-	    . "  expected $exit_status, got $rc\n";
+	    . "  expected $expect->{EXIT}, got $rc\n";
 	  $fail = 1;
 	  next;
 	}
 
-      if (compare ($expout_file, $t_out))
+      if (compare ($expect->{OUT}, $t_out))
 	{
 	  warn "$program_name: stdout mismatch, comparing"
-	    . " $expout_file and $t_out\n";
+	    . " $expect->{OUT} and $t_out\n";
 	  $fail = 1;
 	  next;
 	}
-      if (compare ($experr_file, $t_err))
+      if (compare ($expect->{ERR}, $t_err))
 	{
 	  warn "$program_name: stderr mismatch, comparing"
-	    . " $experr_file and $t_err\n";
+	    . " $expect->{ERR} and $t_err\n";
 	  $fail = 1;
 	  next;
 	}
