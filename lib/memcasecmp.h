@@ -1,8 +1,8 @@
 #undef PARAMS
 #if defined (__STDC__) && __STDC__
-# define PARAMS(args) args
+# define PARAMS(Args) Args
 #else
-# define PARAMS(args) ()
+# define PARAMS(Args) ()
 #endif
 
 int
