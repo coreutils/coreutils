@@ -1,4 +1,4 @@
-# serial 3
+# serial 4
 
 # From Paul Eggert.
 
@@ -11,7 +11,20 @@
 # a syntax error in wchar.h due to the use of undefined __int32_t.
 
 AC_DEFUN(AC_MBSTATE_T_OBJECT,
-  [AC_CACHE_CHECK([for mbstate_t object type], ac_cv_type_mbstate_t_object,
+  [
+   # Check for the mbstate_t type.
+   ac_mbs_tmp=$ac_includes_default
+   ac_includes_default="
+$ac_includes_default
+#if HAVE_WCHAR_H
+# include <wchar.h>
+#endif
+"
+   AC_CHECK_TYPE(mbstate_t, int)
+   # Restore the default value.
+   ac_includes_default=$ac_mbs_tmp
+
+   AC_CACHE_CHECK([for mbstate_t object type], ac_cv_type_mbstate_t_object,
     [AC_TRY_COMPILE([
 #if HAVE_STDLIB_H
 # include <stdlib.h>
