@@ -4,7 +4,8 @@ tmp=gen-uio.$$
 trap 'status=$?; rm -f $tmp && exit $status' 0
 trap '{ (exit 1); exit 1; }' 1 2 13 15
 
-cat <<\EOF || exit 1
+fail=0
+cat <<\EOF || fail=1
 #ifndef UNLOCKED_IO_H
 # define UNLOCKED_IO_H 1
 
@@ -19,7 +20,7 @@ EOF
 
 for f in $@; do
   u=`echo $f|tr abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ`
-  cat <<EOF || exit 1
+  cat <<EOF || fail=1
 #  if HAVE_${u}_UNLOCKED
 #   undef $f
 EOF
@@ -35,18 +36,18 @@ EOF
     fread | fwrite )
       params=w,x,y,z;;
     *)
-      echo $0: missing case for $f 2>&1; exit 1;;
+      echo $0: missing case for $f 2>&1; fail=1;;
   esac
-  cat <<EOF || exit 1
+  cat <<EOF || fail=1
 #   define $f($params) ${f}_unlocked ($params)
 #  endif
 EOF
 done
 
-cat <<\EOF || exit 1
+cat <<\EOF || fail=1
 
 # endif /* USE_UNLOCKED_IO */
 #endif /* UNLOCKED_IO_H */
 EOF
 
-(exit 0); exit
+(exit $fail); exit
