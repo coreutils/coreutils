@@ -5451,14 +5451,12 @@ done
 @end example
 
 @item -d
-@itemx --no-dereference
 @opindex -d
-@opindex --no-dereference
 @cindex symbolic links, copying
 @cindex hard links, preserving
 Copy symbolic links as symbolic links rather than copying the files that
-they point to, and preserve hard links between source files in the
-copies.
+they point to, and preserve hard links between source files in the copies.
+Equivalent to @option{--no-dereference --preserve=links}.
 
 @item -f
 @itemx --force
@@ -5497,19 +5495,57 @@ Make hard links instead of copies of non-directories.
 @opindex --dereference
 Always follow symbolic links.
 
+@item -P
+@itemx --no-dereference
+@opindex -P
+@opindex --no-dereference
+@cindex symbolic links, copying
+Copy symbolic links as symbolic links rather than copying the files that
+they point to.
+
 @item -p
-@itemx --preserve
+@itemx @w{@kbd{--preserve}[=@var{attribute_list}]}
 @opindex -p
 @opindex --preserve
 @cindex file information, preserving
-Preserve the original files' owner, group, permissions, and timestamps.
+Preserve the specified attributes of the original files.
+If specified, the @var{attribute_list} must be a comma-separated list
+of one or more of the following strings:
+
+@table @samp
+@itemx mode
+Preserve the permission attributes.
+@itemx ownership
+Preserve the owner and group.  On most modern systems,
+only the super-user may change the owner of a file, and regular users
+may preserve the group ownership of a file only if they happen to be
+a member of the desired group.
+@itemx timestamps
+Preserve the times of last access and last modification.
+@itemx links
+Preserve in the destination files
+any links between corresponding source files.
+@c Give examples illustrating how hard links are preserved.
+@c Also, show how soft links map to hard links with -L and -H.
+@itemx all
+Preserve all file attributes.
+Equivalent to specifying all of the above.
+@c Mention ACLs here.
+@end table
+
+Using @option{--preserve} with no @var{attribute_list} is equivalent
+to @option{--preserve=mode,ownership,timestamps}.
+
 In the absence of this option, each destination file is created with the
 permissions of the corresponding source file, minus the bits set in the
 umask and minus the set-user-id and set-group-id bits. @xref{File permissions}.
 
-@item -P
+@itemx @w{@kbd{--no-preserve}=@var{attribute_list}}
+@cindex file information, preserving
+Do not preserve the specified attributes.  The @var{attribute_list}
+has the same form as for @option{--preserve}.
+
 @itemx --parents
-@opindex -P
 @opindex --parents
 @cindex parent directories and @code{cp}
 Form the name of each destination file by appending to the target
