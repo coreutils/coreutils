@@ -1,3 +1,9 @@
+2000-09-09  Jim Meyering  <meyering@lucent.com>
+
+	* doc/sh-utils.texi (Setting the time): Correct the capitalization of
+	`HHMM' in the info-rendering of the texinfo documentation.
+	Reported by Karl Eichwalder.
+
 2000-08-14  Jim Meyering  <meyering@lucent.com>
 
 	* src/tee.c (main): Remove incorrect `FIXME' comment.
