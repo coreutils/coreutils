@@ -711,7 +711,7 @@ add_field_list (const char *c_str)
 
 /* Create a blank line with COUNT fields separated by tabs.  */
 
-void
+static void
 make_blank (struct line *blank, int count)
 {
   int i;
