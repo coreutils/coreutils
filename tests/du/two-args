@@ -13,6 +13,6 @@ trap 'exit $?' 1 2 13 15
 mkdir -p $tmp/1 $tmp/2
 
 test -d $tmp || fail=1
-du $tmp/1 $tmp/2
+du $tmp/1 $tmp/2 > /dev/null || fail=1
 
 exit $fail
