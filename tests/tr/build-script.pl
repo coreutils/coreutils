@@ -6,7 +6,7 @@ require 5.002;
 
 BEGIN { push @INC, '@srcdir@' if '@srcdir@' ne '.'; }
 use strict;
-use Trtest;
+use Test;
 
 $| = 1;
 
@@ -29,7 +29,7 @@ EOF
 my %seen;
 
 my $test_vector;
-foreach $test_vector (@Trtest::t)
+foreach $test_vector (@Test::t)
   {
     my ($test_name, $input, $flags, $s1, $s2, $expected, $e_ret_code)
         = @{$test_vector};
