@@ -1,3 +1,8 @@
+1998-06-28  Jim Meyering  <meyering@ascend.com>
+
+	* jm-macros.m4: Require the new macro.
+	* jm-glibc-io.m4: New file.
+
 1998-05-19  Jim Meyering  <meyering@ascend.com>
 
 	* jm-macros.m4: Add jm_FUNC_LCHOWN.
