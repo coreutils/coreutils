@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-
 
-SUBDIRS = lib src doc man m4 po tests
+SUBDIRS = lib src doc man po tests
 EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
   .kludge-stamp .prev-version THANKS-to-translators THANKStt.in \
   .x-sc_space_tab .x-sc_sun_os_names \
