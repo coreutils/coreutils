@@ -1,6 +1,12 @@
-2002-05-14  Jim Meyering  <meyering@lucent.com>
+2002-05-22  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.22.
+
+	* src/od.c [struct dummy]: Renamed.  Don't rely on portability of
+	zero-length arrays.  Instead, use sizes of -1 or +1.
+	Reported by Eric Backus.
+
+2002-05-14  Jim Meyering  <meyering@lucent.com>
 
 	This bug was introduced with my change of 2000-10-22 (textutils-2.0.8).
 	* src/od.c (ulonglong_t): Move declaration to precede new use.
