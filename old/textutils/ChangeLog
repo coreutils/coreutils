@@ -1,3 +1,8 @@
+2000-02-29  Jim Meyering  <meyering@lucent.com>
+
+	* src/join.c (make_blank): Add an explicit cast to `unsigned char *'
+	to placate HPUX's C compiler.  Reported by Bob Proulx.
+
 2000-01-30  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0d.
