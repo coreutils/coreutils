@@ -45,7 +45,7 @@ on System V systems with the -E option.
 
 /* If defined, interpret backslash escapes unless -E is given.
    V9_ECHO must also be defined.  */
-#define V9_DEFAULT
+/* #define V9_DEFAULT */
 
 #if defined (V9_ECHO)
 # if defined (V9_DEFAULT)
@@ -73,8 +73,9 @@ usage (int status)
 Echo the STRING(s) to standard output.\n\
 \n\
   -n              do not output the trailing newline\n\
-  -e              (unused)\n\
-  -E              disable interpolation of some sequences in STRINGs\n\
+  -e              enable interpretation of the backslash-escaped characters\n\
+                    listed below\n\
+  -E              disable interpretation of those sequences in STRINGs\n\
       --help      display this help and exit (should be alone)\n\
       --version   output version information and exit (should be alone)\n\
 \n\
@@ -104,6 +105,7 @@ int
 main (int argc, char **argv)
 {
   int display_return = 1, do_v9 = 0;
+  int allow_options = 1;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -113,12 +115,14 @@ main (int argc, char **argv)
   /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
   if (getenv ("POSIXLY_CORRECT") == NULL)
     parse_long_options (argc, argv, "echo", GNU_PACKAGE, VERSION, usage);
+  else
+    allow_options = 0;
 
 /* System V machines already have a /bin/sh with a v9 behaviour.  We
    use the identical behaviour for these machines so that the
    existing system shell scripts won't barf. */
 #if defined (V9_ECHO) && defined (V9_DEFAULT)
-  do_v9 = 1;
+  do_v9 = allow_options;
 #endif
 
   --argc;
@@ -147,13 +151,13 @@ main (int argc, char **argv)
 	 Handle them. */
       while (*temp)
 	{
-	  if (*temp == 'n')
+	  if (allow_options && *temp == 'n')
 	    display_return = 0;
 #if defined (V9_ECHO)
-	  else if (*temp == 'e')
+	  else if (allow_options && *temp == 'e')
 	    do_v9 = 1;
 # if defined (V9_DEFAULT)
-	  else if (*temp == 'E')
+	  else if (allow_options && *temp == 'E')
 	    do_v9 = 0;
 # endif /* V9_DEFAULT */
 #endif /* V9_ECHO */
