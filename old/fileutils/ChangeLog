@@ -1,3 +1,25 @@
+
+	* Makefile.in (install): Install `install' first as transformed
+	`ginstall,' then remove the target (transformed `install') and move
+	GNU install into its place.  Before, the installation process failed
+	on systems (e.g. HPUX) that have trouble overwriting an executable
+	associated with a running process.
+
+	* system.h [!HAVE_STRING_H]: Define strchr to index and strrchr to
+	rindex instead of the other way around.
+	* rmdir.c (remove_parents): Use strr?chr instead of r?index.
+	* mvdir.c (main): Likewise.
+	* dd.c (parse_conversion, scan_args): Likewise.
+	* cp.c (copy, make_path_private): Likewise.
+
+	* system.h: Include <ctype.h> and define IS* macros.
+	* touch.c: No longer include <ctype.h>.
+	* chown.c: Likewise.
+	* install.c: Likewise.
+	[isascii, ISDIGIT]: Remove definitions.
+	* chgrp.c: Likewise.
+	* dd.c: Likewise.
+
 Sun Dec  4 14:53:12 1994  Jim Meyering  (meyering@comco.com)
 
 	* doc/Makefile.in (DISTFILES): Add getdate.texi.
