@@ -108,8 +108,6 @@ bsd_sum_file (const char *file, int print_name)
 	}
     }
 
-  /* This algorithm seems to depend on sign extension in `ch' in order to
-     give the right results.  Ick.  */
   while ((ch = getc (fp)) != EOF)
     {
       total_bytes++;
