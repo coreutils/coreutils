@@ -6,6 +6,18 @@
 	* tests/rm/inaccessible: Turn off command-echoing just before
 	invoking subshell, then turn it back on if VERBOSE=yes afterward.
 
+2004-06-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Add support for 'install --target-directory', an option
+	that has been documented for years but not implemented (!).
+	* doc/coreutils.texi (install invocation): Document
+	--target-directory in synopsis, too.
+	* src/install.c (TARGET_DIRECTORY_OPTION): New var.
+	(long_options, main, usage): Add --target-directory.
+	(target_directory_operand): New function, stolen from mv.c.
+	(main): Use it.  Check for -d and --target-directory.
+	Alter wording of diagnostics to match other programs.
+
 2004-06-28  Jim Meyering  <jim@meyering.net>
 
 	* src/cp.c (usage): Fix copy+paste error in description of
