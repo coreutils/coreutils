@@ -1,3 +1,7 @@
+2000-06-17  Bruno Haible  <haible@clisp.cons.org>
+
+	* Makefile.am (libfetish_a_SOURCES): Remove readutmp.c.
+
 2000-06-26  Paul Eggert  <eggert@twinsun.com>
 
 	savedir now sets errno on failure and invokes xmalloc to get memory.
