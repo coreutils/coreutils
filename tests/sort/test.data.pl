@@ -48,3 +48,20 @@
 ("8a", '-k 2.,3', "", "", 1);
 # FIXME: report an error for `,' but missing POS2
 ("8b", '-k 2,', "", "", 1);
+#
+# Test new -g option.
+("9a", '-g', "1e2\n2e1\n", "2e1\n1e2\n", 0);
+# Make sure -n works how we expect.
+("9b", '-n', "1e2\n2e1\n", "1e2\n2e1\n", 0);
+("9c", '-n', "2e1\n1e2\n", "1e2\n2e1\n", 0);
+("9d", '-k2g', "a 1e2\nb 2e1\n", "b 2e1\na 1e2\n", 0);
+#
+# Bug reported by Roger Peel" <R.Peel@ee.surrey.ac.uk>
+("10a", '-t : -k 2.2,2.2', ":ba\n:ab\n", ":ba\n:ab\n", 0);
+# Equivalent to above, but using obsolescent `+pos -pos' option syntax.
+("10b", '-t : +1.1 -1.2', ":ba\n:ab\n", ":ba\n:ab\n", 0);
+#
+# The same as the preceding two, but with input lines reversed.
+("10c", '-t : -k 2.2,2.2', ":ab\n:ba\n", ":ba\n:ab\n", 0);
+# Equivalent to above, but using obsolescent `+pos -pos' option syntax.
+("10d", '-t : +1.1 -1.2', ":ab\n:ba\n", ":ba\n:ab\n", 0);
