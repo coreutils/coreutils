@@ -1,5 +1,10 @@
 Sat Jan 25 00:34:39 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/cp-aux.c (is_ancestor): Remove function.
+	* src/cp.c (is_ancestor): Add function.
+
+	* src/cp.h: Remove spurious extern dcl of htab.
+
 	* m4/getgroups.m4: Move the code from configure.in into
 	this macro that resorts to looking for getgroups in -lbsd.
 	Set new shell variable, GETGROUPS_LIB (that callers should check),
