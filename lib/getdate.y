@@ -904,8 +904,14 @@ get_date(p, now)
 
 	if (! (tm = gmtime (&ftz.time)))
 	    return -1;
-	gmt = *tm;	/* Make a copy, in case localtime modifies *tm.  */
-	ftz.timezone = difftm (&gmt, localtime (&ftz.time)) / 60;
+	gmt = *tm;
+
+	if (! (tm = localtime (&ftz.time)))
+	    return -1;
+	
+	ftz.timezone = difftm (&gmt, tm) / 60;
+	if(tm->tm_isdst)
+	    ftz.timezone += 60;
     }
 
     tm = localtime(&now->time);
