@@ -1,5 +1,7 @@
 2000-10-17  Jim Meyering  <meyering@lucent.com>
 
+	* quote.h [PARAMS]: Define and use.
+
 	* getopt.c: Update from libc.
 
 2000-10-16  Jim Meyering  <meyering@lucent.com>
