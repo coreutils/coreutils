@@ -942,7 +942,12 @@ gobble_file (name, explicit_arg, dirname)
 	  get_link_name (path, &files[files_index]);
 	  linkpath = make_link_path (path, files[files_index].linkname);
 
-	  if (linkpath && stat (linkpath, &linkstats) == 0)
+	  /* Avoid following symbolic links when possible, ie, when
+	     they won't be traced and when no indicator is needed. */
+	  if (linkpath
+	      && ((explicit_arg && format != long_format)
+		   || indicator_style != none)
+	      && stat (linkpath, &linkstats) == 0)
 	    {
 	      /* Symbolic links to directories that are mentioned on the
 		 command line are automatically traced if not being
