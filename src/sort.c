@@ -66,7 +66,6 @@ double strtod ();
 #endif
 
 #define UCHAR_LIM (UCHAR_MAX + 1)
-#define UCHAR(c) ((unsigned char) (c))
 
 #ifndef DEFAULT_TMPDIR
 # define DEFAULT_TMPDIR "/tmp"
@@ -104,7 +103,7 @@ static bool hard_LC_TIME;
 #else
 
 # define decimal_point C_DECIMAL_POINT
-# define IS_THOUSANDS_SEP(x) 0
+# define IS_THOUSANDS_SEP(x) false
 
 #endif
 
@@ -566,7 +565,7 @@ inittables (void)
 	  monthtab[i].val = i + 1;
 
 	  for (j = 0; j < s_len; j++)
-	    name[j] = fold_toupper[UCHAR (s[j])];
+	    name[j] = fold_toupper[to_uchar (s[j])];
 	  name[j] = '\0';
 	}
       qsort ((void *) monthtab, MONTHS_PER_YEAR,
@@ -806,14 +805,14 @@ begfield (const struct line *line, const struct keyfield *key)
   else
     while (ptr < lim && sword--)
       {
-	while (ptr < lim && blanks[UCHAR (*ptr)])
+	while (ptr < lim && blanks[to_uchar (*ptr)])
 	  ++ptr;
-	while (ptr < lim && !blanks[UCHAR (*ptr)])
+	while (ptr < lim && !blanks[to_uchar (*ptr)])
 	  ++ptr;
       }
 
   if (key->skipsblanks)
-    while (ptr < lim && blanks[UCHAR (*ptr)])
+    while (ptr < lim && blanks[to_uchar (*ptr)])
       ++ptr;
 
   /* Advance PTR by SCHAR (if possible), but no further than LIM.  */
@@ -854,9 +853,9 @@ limfield (const struct line *line, const struct keyfield *key)
   else
     while (ptr < lim && eword--)
       {
-	while (ptr < lim && blanks[UCHAR (*ptr)])
+	while (ptr < lim && blanks[to_uchar (*ptr)])
 	  ++ptr;
-	while (ptr < lim && !blanks[UCHAR (*ptr)])
+	while (ptr < lim && !blanks[to_uchar (*ptr)])
 	  ++ptr;
       }
 
@@ -903,9 +902,9 @@ limfield (const struct line *line, const struct keyfield *key)
     {
       char *newlim;
       newlim = ptr;
-      while (newlim < lim && blanks[UCHAR (*newlim)])
+      while (newlim < lim && blanks[to_uchar (*newlim)])
 	++newlim;
-      while (newlim < lim && !blanks[UCHAR (*newlim)])
+      while (newlim < lim && !blanks[to_uchar (*newlim)])
 	++newlim;
       lim = newlim;
     }
@@ -915,7 +914,7 @@ limfield (const struct line *line, const struct keyfield *key)
      of the field, don't start counting bytes until after skipping
      past any leading blanks. */
   if (key->skipeblanks)
-    while (ptr < lim && blanks[UCHAR (*ptr)])
+    while (ptr < lim && blanks[to_uchar (*ptr)])
       ++ptr;
 
   /* Advance PTR by ECHAR (if possible), but no further than LIM.  */
@@ -1010,7 +1009,7 @@ fillbuf (struct buffer *buf, register FILE *fp, char const *file)
 		  else
 		    {
 		      if (key->skipsblanks)
-			while (blanks[UCHAR (*line_start)])
+			while (blanks[to_uchar (*line_start)])
 			  line_start++;
 		      line->keybeg = line_start;
 		    }
@@ -1111,15 +1110,18 @@ fraccompare (register const char *a, register const char *b)
 static int
 numcompare (register const char *a, register const char *b)
 {
-  register int tmpa, tmpb, tmp;
-  register size_t log_a, log_b;
+  char tmpa;
+  char tmpb;
+  int tmp;
+  size_t log_a;
+  size_t log_b;
 
   tmpa = *a;
   tmpb = *b;
 
-  while (blanks[UCHAR (tmpa)])
+  while (blanks[to_uchar (tmpa)])
     tmpa = *++a;
-  while (blanks[UCHAR (tmpb)])
+  while (blanks[to_uchar (tmpb)])
     tmpb = *++b;
 
   if (tmpa == NEGATION_SIGN)
@@ -1286,7 +1288,7 @@ getmonth (const char *s, size_t len)
   register size_t i;
   register int lo = 0, hi = MONTHS_PER_YEAR, result;
 
-  while (len > 0 && blanks[UCHAR (*s)])
+  while (len > 0 && blanks[to_uchar (*s)])
     {
       ++s;
       --len;
@@ -1297,7 +1299,7 @@ getmonth (const char *s, size_t len)
 
   month = alloca (len + 1);
   for (i = 0; i < len; ++i)
-    month[i] = fold_toupper[UCHAR (s[i])];
+    month[i] = fold_toupper[to_uchar (s[i])];
   month[len] = '\0';
 
   do
@@ -1371,17 +1373,17 @@ keycompare (const struct line *a, const struct line *b)
 		  if (i < lena)
 		    {
 		      copy_a[new_len_a] = (translate
-					   ? translate[UCHAR (texta[i])]
+					   ? translate[to_uchar (texta[i])]
 					   : texta[i]);
-		      if (!ignore || !ignore[UCHAR (texta[i])])
+		      if (!ignore || !ignore[to_uchar (texta[i])])
 			++new_len_a;
 		    }
 		  if (i < lenb)
 		    {
 		      copy_b[new_len_b] = (translate
-					   ? translate[UCHAR (textb[i])]
+					   ? translate[to_uchar (textb[i])]
 					   : textb [i]);
-		      if (!ignore || !ignore[UCHAR (textb[i])])
+		      if (!ignore || !ignore[to_uchar (textb[i])])
 			++new_len_b;
 		    }
 		}
@@ -1402,13 +1404,13 @@ keycompare (const struct line *a, const struct line *b)
     {									\
 	  for (;;)							\
 	    {								\
-	      while (texta < lima && ignore[UCHAR (*texta)])		\
+	      while (texta < lima && ignore[to_uchar (*texta)])		\
 		++texta;						\
-	      while (textb < limb && ignore[UCHAR (*textb)])		\
+	      while (textb < limb && ignore[to_uchar (*textb)])		\
 		++textb;						\
 	      if (! (texta < lima && textb < limb))			\
 		break;							\
-	      diff = UCHAR (A) - UCHAR (B);				\
+	      diff = to_uchar (A) - to_uchar (B);			\
 	      if (diff)							\
 		goto not_equal;						\
 	      ++texta;							\
@@ -1420,8 +1422,8 @@ keycompare (const struct line *a, const struct line *b)
   while (0)
 
 	  if (translate)
-	    CMP_WITH_IGNORE (translate[UCHAR (*texta)],
-			     translate[UCHAR (*textb)]);
+	    CMP_WITH_IGNORE (translate[to_uchar (*texta)],
+			     translate[to_uchar (*textb)]);
 	  else
 	    CMP_WITH_IGNORE (*texta, *textb);
 	}
@@ -1435,8 +1437,8 @@ keycompare (const struct line *a, const struct line *b)
 	    {
 	      while (texta < lima && textb < limb)
 		{
-		  diff = (UCHAR (translate[UCHAR (*texta++)])
-			  - UCHAR (translate[UCHAR (*textb++)]));
+		  diff = (to_uchar (translate[to_uchar (*texta++)])
+			  - to_uchar (translate[to_uchar (*textb++)]));
 		  if (diff)
 		    goto not_equal;
 		}
@@ -1470,9 +1472,9 @@ keycompare (const struct line *a, const struct line *b)
 	  texta = a->text, textb = b->text;
 	  if (key->skipsblanks)
 	    {
-	      while (texta < lima && blanks[UCHAR (*texta)])
+	      while (texta < lima && blanks[to_uchar (*texta)])
 		++texta;
-	      while (textb < limb && blanks[UCHAR (*textb)])
+	      while (textb < limb && blanks[to_uchar (*textb)])
 		++textb;
 	    }
 	}
@@ -2424,7 +2426,7 @@ main (int argc, char **argv)
 
 	case 't':
 	  {
-	    int newtab = optarg[0];
+	    char newtab = optarg[0];
 	    if (! newtab)
 	      error (SORT_FAILURE, 0, _("empty tab"));
 	    if (optarg[1])
