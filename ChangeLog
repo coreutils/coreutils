@@ -1,15 +1,37 @@
 2004-05-29  Jim Meyering  <jim@meyering.net>
 
+	* tests/chown/deref: Fix typo: use ls -ldo, not ls -ldg.
+	Patch from Albert Chin.
+
+	* src/ptx.c (text_buffer_maxend): Remove declaration of unused variable.
+
 	* src/remove.c (push_dir): Merge declaration and adjacent assignment
 	into a single statement.
 
 2004-05-28  Jim Meyering  <jim@meyering.net>
 
-	* src/remove.c (AD_mark_helper): Eliminate unnecessary comparison.
+	* src/remove.c (AD_mark_helper): Eliminate an unnecessary comparison.
 
 2004-05-22  Jim Meyering  <jim@meyering.net>
 
+	rm -r would get a failed assertion when run from an inaccessible
+	directory and with two or more command line arguments including an
+	absolute-named directory followed by a relative-named directory.
+
+	* src/remove.h (struct rm_options) [require_restore_cwd]: New member.
 	* src/remove.c (struct cwd_state): Define.
+	(AD_pop_and_chdir): Redesign interface so that a restore_cwd failure
+	can be detected by the caller.  Instead of returning a malloc'd
+	directory name, communicate it to caller via a new parameter, and
+	return an indication of whether restore_cwd failed.  Update caller.
+	Eliminate an unnecessary call to AC_stack_top.
+	(remove_dir): Change type of cwd_state parameter to `struct cwd_state'
+	so we can now communicate to caller whether/how functions like
+	restore_cwd have failed.  Update caller.
+	(rm_1): Fail if we've failed to restore the working directory
+	and the name of the next file to remove is `.'-relative.
+	(rm): Fail if the require_restore_cwd flag is true and we've
+	failed to restore the working directory.
 
 2004-05-21  Jim Meyering  <jim@meyering.net>
 
@@ -111,9 +133,6 @@
 	owner and group of the referent.
 
 2004-05-14  Jim Meyering  <jim@meyering.net>
-
-	* src/remove.c (AD_pop_and_chdir): Eliminate an unnecessary
-	call to AC_stack_top.
 
 	* man/pwd.x, man/echo.x, man/printf.x: Fix typo:
 	s/supercede/supersede/ reported by Andrew Fabbro.
