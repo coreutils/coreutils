@@ -1,3 +1,14 @@
+Sat Oct 31 16:32:17 1992  Jim Meyering  (meyering@idefix.comco.com)
+
+	* fsusage.c (adjust_blocks): Convert to a macro.  The static
+	function wasn't always used.
+
+	* makepath.c, cp.c, ls.c: Add parentheses to expressions
+	like (c = *p++) as per suggestion from gcc -Wall.
+
+	* dd.c (swab_buffer): Fix typo that incremented pointer instead
+	of counter.  Add braces around static struct initializers.
+
 Thu Oct 29 14:57:21 1992  David J. MacKenzie  (djm@kropotkin.gnu.ai.mit.edu)
 
 	* Version 3.4.
