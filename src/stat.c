@@ -80,7 +80,7 @@
 # define STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME f_basetype
 #else
 # if HAVE_STRUCT_STATFS_F_FSTYPENAME
-#  define STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME f_basetype
+#  define STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME f_fstypename
 # endif
 #endif
 
