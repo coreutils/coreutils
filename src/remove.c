@@ -34,6 +34,7 @@ typedef enum {false = 0, true = 1} bool;
 
 #include "save-cwd.h"
 #include "system.h"
+#include "dirname.h"
 #include "error.h"
 #include "obstack.h"
 #include "hash.h"

@@ -107,6 +107,7 @@ int wcwidth ();
 #include <fnmatch.h>
 
 #include "argmatch.h"
+#include "dirname.h"
 #include "error.h"
 #include "human.h"
 #include "filemode.h"
