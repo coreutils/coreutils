@@ -191,7 +191,7 @@ static void
 wc (int fd, const char *file)
 {
   char buf[BUFFER_SIZE + 1];
-  ssize_t bytes_read;
+  size_t bytes_read;
   uintmax_t lines, words, chars, bytes, linelength;
   int count_bytes, count_chars, count_complicated;
 
@@ -244,12 +244,13 @@ wc (int fd, const char *file)
 	{
 	  while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
 	    {
+	      if (bytes_read == SAFE_READ_ERROR)
+		{
+		  error (0, errno, "%s", file);
+		  exit_status = 1;
+		  break;
+		}
 	      bytes += bytes_read;
-	    }
-	  if (bytes_read < 0)
-	    {
-	      error (0, errno, "%s", file);
-	      exit_status = 1;
 	    }
 	}
     }
@@ -261,17 +262,19 @@ wc (int fd, const char *file)
 	{
 	  register char *p = buf;
 
+	  if (bytes_read == SAFE_READ_ERROR)
+	    {
+	      error (0, errno, "%s", file);
+	      exit_status = 1;
+	      break;
+	    }
+
 	  while ((p = memchr (p, '\n', (buf + bytes_read) - p)))
 	    {
 	      ++p;
 	      ++lines;
 	    }
 	  bytes += bytes_read;
-	}
-      if (bytes_read < 0)
-	{
-	  error (0, errno, "%s", file);
-	  exit_status = 1;
 	}
     }
 #if HAVE_MBRTOWC && (MB_LEN_MAX > 1)
@@ -291,9 +294,9 @@ wc (int fd, const char *file)
 	 this is the ISO C 99 and glibc-2.2 behaviour - or not - amended
 	 ANSI C, glibc-2.1 and Solaris 2.7 behaviour.  We don't have an
 	 autoconf test for this, yet.  */
-      int prev = 0; /* number of bytes carried over from previous round */
+      size_t prev = 0; /* number of bytes carried over from previous round */
 # else
-      const int prev = 0;
+      const size_t prev = 0;
 # endif
 
       memset (&state, 0, sizeof (mbstate_t));
@@ -303,6 +306,12 @@ wc (int fd, const char *file)
 # if SUPPORT_OLD_MBRTOWC
 	  mbstate_t backup_state;
 # endif
+	  if (bytes_read == SAFE_READ_ERROR)
+	    {
+	      error (0, errno, "%s", file);
+	      exit_status = 1;
+	      break;
+	    }
 
 	  bytes += bytes_read;
 	  p = buf;
@@ -403,11 +412,6 @@ wc (int fd, const char *file)
 	  prev = bytes_read;
 # endif
 	}
-      if (bytes_read < 0)
-	{
-	  error (0, errno, "%s", file);
-	  exit_status = 1;
-	}
       if (linepos > linelength)
 	linelength = linepos;
       if (in_word)
@@ -422,6 +426,12 @@ wc (int fd, const char *file)
       while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
 	{
 	  const char *p = buf;
+	  if (bytes_read == SAFE_READ_ERROR)
+	    {
+	      error (0, errno, "%s", file);
+	      exit_status = 1;
+	      break;
+	    }
 
 	  bytes += bytes_read;
 	  do
@@ -463,11 +473,6 @@ wc (int fd, const char *file)
 		}
 	    }
 	  while (--bytes_read);
-	}
-      if (bytes_read < 0)
-	{
-	  error (0, errno, "%s", file);
-	  exit_status = 1;
 	}
       if (linepos > linelength)
 	linelength = linepos;
