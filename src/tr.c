@@ -270,12 +270,7 @@ static int truncate_set1 = 0;
    It is set in main and used there and in validate().  */
 static int translating;
 
-#ifndef BUFSIZ
-# define BUFSIZ 8192
-#endif
-
-#define IO_BUF_SIZE BUFSIZ
-static unsigned char io_buf[IO_BUF_SIZE];
+static unsigned char io_buf[BUFSIZ];
 
 static char const *const char_class_name[] =
 {
@@ -1897,7 +1892,7 @@ without squeezing repeats"));
   if (squeeze_repeats && non_option_args == 1)
     {
       set_initialize (s1, complement, in_squeeze_set);
-      squeeze_filter (io_buf, IO_BUF_SIZE, NULL);
+      squeeze_filter (io_buf, sizeof io_buf, NULL);
     }
   else if (delete && non_option_args == 1)
     {
@@ -1906,7 +1901,7 @@ without squeezing repeats"));
       set_initialize (s1, complement, in_delete_set);
       do
 	{
-	  nr = read_and_delete (io_buf, IO_BUF_SIZE, NULL);
+	  nr = read_and_delete (io_buf, sizeof io_buf, NULL);
 	  if (nr > 0 && fwrite ((char *) io_buf, 1, nr, stdout) == 0)
 	    error (EXIT_FAILURE, errno, _("write error"));
 	}
@@ -1916,7 +1911,7 @@ without squeezing repeats"));
     {
       set_initialize (s1, complement, in_delete_set);
       set_initialize (s2, 0, in_squeeze_set);
-      squeeze_filter (io_buf, IO_BUF_SIZE, read_and_delete);
+      squeeze_filter (io_buf, sizeof io_buf, read_and_delete);
     }
   else if (translating)
     {
@@ -2005,7 +2000,7 @@ construct in string1 must be aligned with a corresponding construct\n\
       if (squeeze_repeats)
 	{
 	  set_initialize (s2, 0, in_squeeze_set);
-	  squeeze_filter (io_buf, IO_BUF_SIZE, read_and_xlate);
+	  squeeze_filter (io_buf, sizeof io_buf, read_and_xlate);
 	}
       else
 	{
@@ -2013,7 +2008,7 @@ construct in string1 must be aligned with a corresponding construct\n\
 
 	  do
 	    {
-	      bytes_read = read_and_xlate (io_buf, IO_BUF_SIZE, NULL);
+	      bytes_read = read_and_xlate (io_buf, sizeof io_buf, NULL);
 	      if (bytes_read > 0
 		  && fwrite ((char *) io_buf, 1, bytes_read, stdout) == 0)
 		error (EXIT_FAILURE, errno, _("write error"));
