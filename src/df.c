@@ -649,8 +649,8 @@ or all filesystems by default.\n\
   -i, --inodes          list inode information instead of block usage\n\
   -k, --kilobytes       use 1024-byte blocks, not 512 despite POSIXLY_CORRECT\n\
   -m, --megabytes       use 1024K-byte blocks, not 512 despite POSIXLY_CORRECT\n\
-      --sync            invoke sync before getting usage info (default)\n\
-      --no-sync         do not invoke sync before getting usage info\n\
+      --no-sync         do not invoke sync before getting usage info (default)\n\
+      --sync            invoke sync before getting usage info\n\
   -t, --type=TYPE       limit listing to filesystems of type TYPE\n\
   -x, --exclude-type=TYPE   limit listing to filesystems not of type TYPE\n\
   -v                    (ignored)\n\
