@@ -1,3 +1,8 @@
+2002-09-28  Jim Meyering  <meyering@lucent.com>
+
+	* makepath.c (make_path): Restore umask *before* creating the final
+	component.
+
 2002-09-25  Paul Eggert  <eggert@twinsun.com>
 
 	* fsusage.c [! HAVE_INTTYPES_H && HAVE_STDINT_H] Include <stdint.h>.

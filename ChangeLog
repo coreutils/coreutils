@@ -1,3 +1,13 @@
+2002-09-28  Jim Meyering  <meyering@lucent.com>
+
+	Fix things so `mkdir -p' can create very deep directories, e.g.,
+	mkdir -p $(perl -e 'print "a/" x 40000') now works.
+	* src/mkdir.c (main): For --parents (-p), call make_path with the
+	entire directory name, so we don't ever require that file operations
+	like stat or chmod be performed on the entire command line argument.
+	* makepath.c (make_path): Restore umask *before* creating the final
+	component.
+
 2002-09-26  Jim Meyering  <meyering@lucent.com>
 
 	* src/install.c (get_ids): Use strtoul, not strtol.  Remove some casts.
