@@ -27,8 +27,21 @@ double
 c_strtod (char const *nptr, char **endptr)
 {
   double r;
-  setlocale (LC_NUMERIC, "C");
+  char *saved_locale = setlocale (LC_NUMERIC, NULL);
+
+  if (saved_locale)
+    {
+      saved_locale = xstrdup (saved_locale);
+      setlocale (LC_NUMERIC, "C");
+    }
+
   r = strtod (nptr, endptr);
-  setlocale (LC_NUMERIC, "");
+
+  if (saved_locale)
+    {
+      setlocale (LC_NUMERIC, saved_locale);
+      free (saved_locale);
+    }
+
   return r;
 }
