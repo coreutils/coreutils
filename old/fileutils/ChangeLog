@@ -1,3 +1,7 @@
+2001-03-16  Jim Meyering  <meyering@lucent.com>
+
+	* missing: Update from automake.
+
 2001-03-11  Jim Meyering  <meyering@lucent.com>
 
 	* tests/rm/isatty: Disable this test, for now.
