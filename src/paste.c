@@ -202,7 +202,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
 
       for (i = 0; fileptr[i] != ENDLIST && files_open; i++)
 	{
-	  char chr IF_LINT (= 0);	/* Input character. */
+	  int chr IF_LINT (= 0);	/* Input character. */
 	  size_t line_length = 0;	/* Number of chars in line. */
 	  if (fileptr[i] != CLOSED)
 	    {
