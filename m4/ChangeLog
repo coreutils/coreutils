@@ -1,3 +1,20 @@
+1998-10-17  Jim Meyering  <meyering@ascend.com>
+
+	* decl.m4 (jm_CHECK_DECLARATION): Don't hard-code which headers to
+	include, though we still hard-code the `require'-like AC_CHECK_HEADERS
+	calls for those previously hard-coded headers.  Instead, take a new
+	parameter.
+	(jm_CHECK_DECLARATIONS): Reflect interface change.
+	* check-decl.m4 (jm_CHECK_DECLS): Likewise.
+	(jm_CHECK_DECL_LOCALTIME_R): New macro.
+
+	* mktime.m4: Test for spring-forward gap before long-running test.
+
+1998-10-14  Jim Meyering  <meyering@ascend.com>
+
+	* mktime.m4: Use the more portable "TZ=PST8PDT,M4.1.0,M10.5.0"
+	instead of "TZ=America/Vancouver".  From Paul Eggert.
+
 1998-10-11  Jim Meyering  <meyering@ascend.com>
 
 	* mktime.m4 (jm_AM_FUNC_MKTIME): New file and macro.
