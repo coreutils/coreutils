@@ -13,3 +13,6 @@ doc/coreutils.texi:
 implement --target-directory=DIR for install (per texinfo documentation)
 
 ls: add --format=FORMAT option that controls how each line is printed.
+
+cp --no-preserve=X should not attempt to preserve attribute X
+  reported by Andreas Schwab
