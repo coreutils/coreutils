@@ -1,3 +1,18 @@
+1999-05-20  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sort.c: Treat the trailing newline as part of the line,
+	as required by POSIX.2.
+
+	(struct line, findlines, compare, checkfp, mergefps, sort):
+	A line now includes its trailing newline.
+	(findlines): Do not replace newline with NUL.
+	(memcoll, keycompare): Work even if the data to be compared are
+	adjacent strings; this is possible now that lines contain the
+	trailing newline.
+	(fillbuf): Always have an unused byte at the end of the	buffer,
+	since memcoll and keycompare want to modify a byte after the last line.
+	(sortalloc, mergealloc): Increase by 1, for trailing byte.
+
 1999-05-20  Jim Meyering  <meyering@ascend.com>
 
 	* tests/sort/Test.pm: Add test case from Paul Eggert.
