@@ -98,7 +98,8 @@
 * ls no longer truncates user names or group names that are longer
     than 8 characters.
 * ls's new --dereference-command-line option causes it to dereference
-  symbolic links on the command-line only.
+  symbolic links on the command-line only.  It is the default unless
+  one of the -d, -F, or -l options are given.
 * ls -H now means the same as ls --dereference-command-line, as per POSIX.
 * ls -g now acts like ls -l, except it does not display owner, as per POSIX.
 * ls -n now implies -l, as per POSIX.
