@@ -48,6 +48,8 @@ my @tv = (
 ['51', '-f 1 -s 1',"a aaa\nb aaa\n",     "a aaa\n",             0],
 ['52', '-s 1 -f 1',"a aaa\nb ab\n",      "a aaa\nb ab\n",       0],
 ['53', '-s 1 -f 1',"a aaa\nb aaa\n",     "a aaa\n",             0],
+# Fixed in 2.0.15
+['54', '-s 4',     "abc\nabcd\n",        "abc\n",               0],
 # Only account for a number of characters
 ['60', '-w 1',"a a\nb a\n",      "a a\nb a\n",         0],
 ['61', '-w 3',"a a\nb a\n",      "a a\nb a\n",         0],
