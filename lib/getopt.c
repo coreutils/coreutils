@@ -158,6 +158,9 @@ static enum
 {
   REQUIRE_ORDER, PERMUTE, RETURN_IN_ORDER
 } ordering;
+
+/* Value of POSIXLY_CORRECT environment variable.  */
+static char *posixly_correct;
 
 #if defined (__GNU_LIBRARY__) || defined (__sgi)
 /* We want to avoid inclusion of string.h with non-GNU libraries
@@ -289,6 +292,8 @@ _getopt_initialize (optstring)
 
   nextchar = NULL;
 
+  posixly_correct = getenv ("POSIXLY_CORRECT");
+
   /* Determine how to handle the ordering of options and nonoptions.  */
 
   if (optstring[0] == '-')
@@ -301,7 +306,7 @@ _getopt_initialize (optstring)
       ordering = REQUIRE_ORDER;
       ++optstring;
     }
-  else if (getenv ("POSIXLY_CORRECT") != NULL)
+  else if (posixly_correct != NULL)
     ordering = REQUIRE_ORDER;
   else
     ordering = PERMUTE;
@@ -609,8 +614,11 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
       {
 	if (opterr)
 	  {
-	    /* 1003.2 specifies the format of this message.  */
-	    fprintf (stderr, "%s: illegal option -- %c\n", argv[0], c);
+	    if (posixly_correct)
+	      /* 1003.2 specifies the format of this message.  */
+	      fprintf (stderr, "%s: illegal option -- %c\n", argv[0], c);
+	    else
+	      fprintf (stderr, "%s: invalid option -- %c\n", argv[0], c);
 	  }
 	optopt = c;
 	return '?';

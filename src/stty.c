@@ -18,8 +18,8 @@
 /* Usage: stty [-ag] [--all] [--save] [setting...]
 
    Options:
-   -a, --all	Write all current settings to stdout in human-readable form.
-   -g, --save	Write all current settings to stdout in stty-readable form.
+   -a, --all    Write all current settings to stdout in human-readable form.
+   -g, --save   Write all current settings to stdout in stty-readable form.
 
    If no args are given, write to stdout the baud rate and settings that
    have been changed from their defaults.  Mode reading and changes
@@ -115,7 +115,7 @@
 #if defined(VDSUSP) && !defined (CDSUSP)
 #define	CDSUSP Control ('y')
 #endif
-#if !defined(VREPRINT) && defined(VRPRNT) /* Irix 4.0.5 */
+#if !defined(VREPRINT) && defined(VRPRNT)	/* Irix 4.0.5 */
 #define VREPRINT VRPRNT
 #endif
 #if defined(VREPRINT) && !defined(CRPRNT)
@@ -130,7 +130,7 @@
 #if defined(VDISCARD) && !defined(VFLUSHO)
 #define VFLUSHO VDISCARD
 #endif
-#if defined(VFLUSH) && !defined(VFLUSHO) /* Ultrix 4.2 */
+#if defined(VFLUSH) && !defined(VFLUSHO)	/* Ultrix 4.2 */
 #define VFLUSHO VFLUSH
 #endif
 #if defined(VFLUSHO) && !defined(CFLUSHO)
@@ -163,21 +163,21 @@ void error ();
 
 /* Which speeds to set.  */
 enum speed_setting
-{
-  input_speed, output_speed, both_speeds
-};
+  {
+    input_speed, output_speed, both_speeds
+  };
 
 /* What to output and how.  */
 enum output_type
-{
-  changed, all, recoverable	/* Default, -a, -g.  */
-};
+  {
+    changed, all, recoverable	/* Default, -a, -g.  */
+  };
 
 /* Which member(s) of `struct termios' a mode uses.  */
 enum mode_type
-{
-  control, input, output, local, combination
-};
+  {
+    control, input, output, local, combination
+  };
 
 /* Flags for `struct mode_info'. */
 #define SANE_SET 1		/* Set in `sane' mode. */
@@ -187,13 +187,13 @@ enum mode_type
 
 /* Each mode.  */
 struct mode_info
-{
-  char *name;			/* Name given on command line.  */
-  enum mode_type type;		/* Which structure element to change. */
-  char flags;			/* Setting and display options.  */
-  unsigned long bits;		/* Bits to set for this mode.  */
-  unsigned long mask;		/* Other bits to turn off for this mode.  */
-};
+  {
+    char *name;			/* Name given on command line.  */
+    enum mode_type type;	/* Which structure element to change. */
+    char flags;			/* Setting and display options.  */
+    unsigned long bits;		/* Bits to set for this mode.  */
+    unsigned long mask;		/* Other bits to turn off for this mode.  */
+  };
 
 static struct mode_info mode_info[] =
 {
@@ -344,11 +344,11 @@ static struct mode_info mode_info[] =
 
 /* Control character settings.  */
 struct control_info
-{
-  char *name;			/* Name given on command line.  */
-  unsigned char saneval;	/* Value to set for `stty sane'.  */
-  int offset;			/* Offset in c_cc.  */
-};
+  {
+    char *name;			/* Name given on command line.  */
+    unsigned char saneval;	/* Value to set for `stty sane'.  */
+    int offset;			/* Offset in c_cc.  */
+  };
 
 /* Control characters. */
 
@@ -388,7 +388,6 @@ static struct control_info control_info[] =
   {"status", CSTATUS, VSTATUS},
 #endif
 
-
   /* These must be last because of the display routines. */
   {"min", 1, VMIN},
   {"time", 0, VTIME},
@@ -418,7 +417,7 @@ char *program_name;
 /* VARARGS */
 static void
 #ifdef __STDC__
-wrapf (char *message, ...)
+wrapf (char *message,...)
 #else
 wrapf (message, va_alist)
      char *message;
@@ -586,11 +585,11 @@ Combination settings:\n\
   cbreak        same as -icanon\n\
   -cbreak       same as icanon\n\
   cooked        same as brkint ignpar istrip icrnl ixon opost isig\n\
-                icanon, eof and eol characters to their default values\n\
+		icanon, eof and eol characters to their default values\n\
   -cooked       same as raw\n\
   crt           same as echoe echoctl echoke\n\
   dec           same as echoe echoctl echoke -ixany intr ^c erase 0177\n\
-                kill ^u\n\
+		kill ^u\n\
 * [-]decctlq    same as [-]ixany\n\
   ek            erase and kill characters to their default values\n\
   evenp         same as parenb -parodd cs7\n\
@@ -606,15 +605,15 @@ Combination settings:\n\
   pass8         same as -parenb -istrip cs8\n\
   -pass8        same as parenb istrip cs7\n\
   raw           same as -ignbrk -brkint -ignpar -parmrk -inpck -istrip\n\
-                -inlcr -igncr -icrnl  -ixon  -ixoff  -iuclc  -ixany\n\
-                -imaxbel -opost -isig -icanon -xcase min 1 time 0\n\
+		-inlcr -igncr -icrnl  -ixon  -ixoff  -iuclc  -ixany\n\
+		-imaxbel -opost -isig -icanon -xcase min 1 time 0\n\
   -raw          same as cooked\n\
   sane          same as cread -ignbrk brkint -inlcr -igncr icrnl\n\
-                -ixoff -iucl -ixany imaxbel opost -olcuc -ocrnl onlcr\n\
-                -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0\n\
-                isig icanon iexten echo echoe echok -echonl -noflsh\n\
-                -xcase -tostop -echoprt echoctl echoke, all special\n\
-                characters to their default values.\n\
+		-ixoff -iucl -ixany imaxbel opost -olcuc -ocrnl onlcr\n\
+		-onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0\n\
+		isig icanon iexten echo echoe echok -echonl -noflsh\n\
+		-xcase -tostop -echoprt echoctl echoke, all special\n\
+		characters to their default values.\n\
 ");
       printf ("\
 \n\
@@ -691,8 +690,8 @@ main (argc, argv)
 	      recoverable_output = 1;
 	    }
 	  else if ((argv[k][1] == 'g'
-	            && argv[k][2] == 'a'
-	            && argv[k][3] == '\0')
+		    && argv[k][2] == 'a'
+		    && argv[k][3] == '\0')
 		   || (argv[k][1] == 'a'
 		       && argv[k][2] == 'g'
 		       && argv[k][3] == '\0'))
@@ -824,11 +823,11 @@ main (argc, argv)
 	      set_window_size (-1, (int) integer_arg (argv[k]));
 	    }
 	  else if (!strcmp (argv[k], "size"))
-	  {
-	    max_col = screen_columns ();
-	    current_col = 0;
-	    display_window_size (0);
-	  }
+	    {
+	      max_col = screen_columns ();
+	      current_col = 0;
+	      display_window_size (0);
+	    }
 #endif
 #ifdef HAVE_C_LINE
 	  else if (!strcmp (argv[k], "line"))
@@ -844,7 +843,10 @@ main (argc, argv)
 	    }
 #endif
 	  else if (!strcmp (argv[k], "speed"))
-	    display_speed (&mode, 0);
+	    {
+	      max_col = screen_columns ();
+	      display_speed (&mode, 0);
+	    }
 	  else if (string_to_baud (argv[k]) != (speed_t) -1)
 	    {
 	      set_speed (both_speeds, argv[k], &mode);
@@ -895,7 +897,7 @@ main (argc, argv)
 	{
 #ifdef CIBAUD
 	  /* SunOS 4.1.3 (at least) has the problem that after this sequence,
-	       tcgetattr(&m1); tcsetattr(&m1); tcgetattr(&m2); 
+	     tcgetattr(&m1); tcsetattr(&m1); tcgetattr(&m2);
 	     sometimes (m1 != m2).  The only difference is in the four bits
 	     of the c_cflag field corresponding to the baud rate.  To save
 	     Sun users a little confusion, don't report an error if this
@@ -903,11 +905,11 @@ main (argc, argv)
 	     set the baud rate explicitly -- otherwise we'd never give an
 	     error for a true failure to set the baud rate.  */
 
-          new_mode.c_cflag &= (~CIBAUD);
+	  new_mode.c_cflag &= (~CIBAUD);
 	  if (speed_was_set || memcmp (&mode, &new_mode, sizeof (mode)) != 0)
 #endif
-	  error (1, 0,
-	       "standard input: unable to perform all requested operations");
+	    error (1, 0,
+	      "standard input: unable to perform all requested operations");
 	}
     }
 
@@ -953,16 +955,16 @@ set_mode (info, reversed, mode)
 	      mode->c_iflag = (mode->c_iflag | ICRNL) & ~INLCR & ~IGNCR;
 	      mode->c_oflag = (mode->c_oflag
 #ifdef ONLCR
-		| ONLCR
+			       | ONLCR
 #endif
-			      )
+		)
 #ifdef OCRNL
-		  & ~OCRNL
+		& ~OCRNL
 #endif
 #ifdef ONLRET
-		  & ~ONLRET
+		& ~ONLRET
 #endif
-		    ;
+		;
 	    }
 	  else
 	    {
@@ -1039,7 +1041,7 @@ set_mode (info, reversed, mode)
 #ifdef XCASE
 				 | XCASE
 #endif
-				 );
+		);
 	      mode->c_cc[VMIN] = 1;
 	      mode->c_cc[VTIME] = 0;
 	    }
@@ -1086,22 +1088,22 @@ set_mode (info, reversed, mode)
 	  | ECHOCTL
 #endif
 #ifdef ECHOKE
-	    | ECHOKE
+	  | ECHOKE
 #endif
-	      ;
+	  ;
       else if (!strcmp (info->name, "dec"))
 	{
-	  mode->c_cc[VINTR] = 3; /* ^C */
-	  mode->c_cc[VERASE] = 127; /* DEL */
-	  mode->c_cc[VKILL] = 21; /* ^U */
+	  mode->c_cc[VINTR] = 3;	/* ^C */
+	  mode->c_cc[VERASE] = 127;	/* DEL */
+	  mode->c_cc[VKILL] = 21;	/* ^U */
 	  mode->c_lflag |= ECHOE
 #ifdef ECHOCTL
 	    | ECHOCTL
 #endif
 #ifdef ECHOKE
-	      | ECHOKE
+	    | ECHOKE
 #endif
-		;
+	    ;
 #ifdef IXANY
 	  mode->c_iflag &= ~IXANY;
 #endif
@@ -1186,10 +1188,11 @@ set_window_size (rows, cols)
 	error (1, errno, "standard input");
       bzero (&win, sizeof (win));
     }
-      if (rows >= 0)
-	win.ws_row = rows;
-      if (cols >= 0)
-	win.ws_col = cols;
+
+  if (rows >= 0)
+    win.ws_row = rows;
+  if (cols >= 0)
+    win.ws_col = cols;
 
 #ifdef TIOCSSIZE
   /* Alexander Dupuy <dupuy@cs.columbia.edu> wrote:
@@ -1198,10 +1201,10 @@ set_window_size (rows, cols)
      test would have been (ts_lines > 64k || ts_cols > 64k || ts_cols == 0).
      At any rate, the problem is gone in Solaris 2.x.
 
-       Unfortunately, the old TIOCSSIZE code does collide with TIOCSWINSZ,
-       but they can be disambiguated by checking whether a "struct ttysize"
-       structure's "ts_lines" field is greater than 64K or not.  If so,
-       it's almost certainly a "struct winsize" instead.
+     Unfortunately, the old TIOCSSIZE code does collide with TIOCSWINSZ,
+     but they can be disambiguated by checking whether a "struct ttysize"
+     structure's "ts_lines" field is greater than 64K or not.  If so,
+     it's almost certainly a "struct winsize" instead.
 
      At any rate, the bug manifests itself when ws_row == 0; the symptom is
      that ws_row is set to ws_col, and ws_col is set to (ws_xpixel<<16) +

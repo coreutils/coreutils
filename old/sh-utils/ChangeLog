@@ -1,3 +1,9 @@
+Fri Jul 08 01:09:23 1994  Jim Meyering  (meyering@comco.com)
+
+	stty.c (main): Initialize max_col (used by wrapf) before calling
+	display_speed.  Otherwise, `stty speed' output a spurious newline.
+	From Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>.
+
 Sun Jul 03 08:44:00 1994  Jim Meyering  (meyering@comco.com)
 
 	* configure.in [AC_HAVE_HEADERS]: Add sys/param.h, for
