@@ -4,6 +4,7 @@
 	m4-quoted string.
 	* ls-mntd-fs.m4: Likewise.
 	* jm-macros.m4: Likewise.  Also, use AC_TYPE_SSIZE_T instead
+	* jm-winsz1.m4: Likewise.
 
 	* const.m4: Remove file, since the fix made it into the experimental
 	version of autoconf.
