@@ -586,7 +586,7 @@ load_buffer ()
       if (hold_count)
 	{
 	  if (p != hold_area)
-	    bcopy (hold_area, p, hold_count);
+	    memcpy (p, hold_area, hold_count);
 	  p += hold_count;
 	  b->bytes_used += hold_count;
 	  bytes_avail -= hold_count;
