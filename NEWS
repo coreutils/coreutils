@@ -4,6 +4,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  rm (without -f) no longer hangs when attempting to remove a symlink
+  to a file on an off-line NFS-mounted partition.
+
+  cut's --output-delimiter=D option works with abutting byte ranges.
+
   rm no longer gets a failed assertion under some unusual conditions.
 
   chgrp and chown no longer affect symbolic links by default.
