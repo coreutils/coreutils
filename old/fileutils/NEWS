@@ -1,4 +1,6 @@
 User-visible changes in release 3.13:
+* cp has been fixed so that the full file name it uses for the destination
+  in `cp file D/' is `D/file', not `D//file'.
 * cp --backup a~ a fails instead of silently destroying the source file
 * df and du have new options --human-readable (-h) and --megabytes (-m).
 * install now honors --backup (-b), --suffix=SUFFIX (-S SUFFIX), and
