@@ -727,10 +727,10 @@ decode_switches (int argc, char **argv)
   }
 #endif
 
-  /* TABSIZE is not POSIX-approved.
+  /* Using the TABSIZE environment variable is not POSIX-approved.
      Ignore it when POSIXLY_CORRECT is set.  */
   tabsize = 8;
-  if (getenv ("POSIXLY_CORRECT") == 0 && (p = getenv ("TABSIZE")))
+  if (!getenv ("POSIXLY_CORRECT") && (p = getenv ("TABSIZE")))
     {
       if (xstrtol (p, NULL, 0, &tmp_long, NULL) == LONGINT_OK
 	  && 0 < tmp_long && tmp_long <= INT_MAX)
@@ -839,9 +839,10 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'w':
-	  line_length = atoi (optarg);
-	  if (line_length < 1)
+	  if (xstrtol (optarg, NULL, 0, &tmp_long, NULL) != LONGINT_OK
+	      || tmp_long <= 0 || tmp_long > INT_MAX)
 	    error (1, 0, _("invalid line width: %s"), optarg);
+	  line_length = (int) tmp_long;
 	  break;
 
 	case 'x':
@@ -901,9 +902,10 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'T':
-	  tabsize = atoi (optarg);
-	  if (tabsize < 1)
+	  if (xstrtol (optarg, NULL, 0, &tmp_long, NULL) != LONGINT_OK
+	      || tmp_long <= 0 || tmp_long > INT_MAX)
 	    error (1, 0, _("invalid tab size: %s"), optarg);
+	  tabsize = (int) tmp_long;
 	  break;
 
 	case 'U':
