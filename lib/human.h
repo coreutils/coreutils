@@ -1,6 +1,14 @@
 #ifndef HUMAN_H_
 # define HUMAN_H_ 1
 
+# if HAVE_CONFIG_H
+#  include <config.h>
+# endif
+
+# if HAVE_INTTYPES_H
+#  include <inttypes.h>
+# endif
+
 /* A conservative bound on the maximum length of a human-readable string.
    The output can be the product of the largest uintmax_t and the largest int,
    so add their sizes before converting to a bound on digits.  */
