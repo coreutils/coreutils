@@ -1,5 +1,6 @@
 Changes in release 2.1
 [2.0.20]
+* sort -S now accepts 'K' as a synonym for 'k'.
 * wc recognizes all locale-defined white-space characters, not just those
     in the "C" locale.
 [2.0.19]
