@@ -214,6 +214,10 @@ enum time_type
 
 static enum time_type time_type;
 
+/* print the full time, -T, otherwise the standard unix heuristics. */
+
+int full_time;
+
 /* The file characteristic to sort by.  Controlled by -t, -S, -U, -X. */
 
 enum sort_type
@@ -425,6 +429,7 @@ static struct option const long_options[] =
   {"all", no_argument, 0, 'a'},
   {"escape", no_argument, 0, 'b'},
   {"directory", no_argument, 0, 'd'},
+  {"full-time", no_argument, 0, 'f'},
   {"inode", no_argument, 0, 'i'},
   {"kilobytes", no_argument, 0, 'k'},
   {"numeric-uid-gid", no_argument, 0, 'n'},
@@ -522,6 +527,7 @@ decode_switches (argc, argv)
 #endif
 
   time_type = time_mtime;
+  full_time = 0;
   sort_type = sort_name;
   sort_reverse = 0;
   numeric_users = 0;
@@ -552,7 +558,7 @@ decode_switches (argc, argv)
   p = getenv ("TABSIZE");
   tabsize = p ? atoi (p) : 8;
 
-  while ((c = getopt_long (argc, argv, "abcdgiklmnpqrstuw:xABCFI:LNQRST:UX1",
+  while ((c = getopt_long (argc, argv, "abcdfgiklmnpqrstuw:xABCFI:LNQRST:UX1",
 			   long_options, (int *) 0)) != EOF)
     {
       switch (c)
@@ -574,7 +580,11 @@ decode_switches (argc, argv)
 	case 'd':
 	  immediate_dirs = 1;
 	  break;
-	  
+
+	case 'f':
+	  full_time = 1;
+	  break;
+
 	case 'g':
 	  /* No effect.  For BSD compatibility. */
 	  break;
@@ -1368,18 +1378,24 @@ print_long_format (f)
     }
 
   strcpy (timebuf, ctime (&when));
-  if (current_time > when + 6L * 30L * 24L * 60L * 60L /* Old. */
-      || current_time < when - 60L * 60L) /* In the future. */
+
+  if (full_time)
+    timebuf[24] = '\0';
+  else
     {
-      /* The file is fairly old or in the future.
-	 POSIX says the cutoff is 6 months old;
-	 approximate this by 6*30 days.
-	 Allow a 1 hour slop factor for what is considered "the future",
-	 to allow for NFS server/client clock disagreement.
-	 Show the year instead of the time of day.  */
-      strcpy (timebuf + 11, timebuf + 19);
+      if (current_time > when + 6L * 30L * 24L * 60L * 60L /* Old. */
+	  || current_time < when - 60L * 60L) /* In the future. */
+	{
+	  /* The file is fairly old or in the future.
+	     POSIX says the cutoff is 6 months old;
+	     approximate this by 6*30 days.
+	     Allow a 1 hour slop factor for what is considered "the future",
+	     to allow for NFS server/client clock disagreement.
+	     Show the year instead of the time of day.  */
+	  strcpy (timebuf + 11, timebuf + 19);
+	}
+      timebuf[16] = 0;
     }
-  timebuf[16] = 0;
 
   if (print_inode)
     printf ("%6u ", f->stat.st_ino);
@@ -1408,7 +1424,7 @@ print_long_format (f)
   else
     printf ("%8lu ", f->stat.st_size);
 
-  printf ("%s ", timebuf + 4);
+  printf ("%s ", full_time ? timebuf : timebuf + 4);
 
   print_name_with_quoting (f->name);
 
