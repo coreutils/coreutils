@@ -10,9 +10,10 @@ Sat Sep 24 10:13:00 1994  Jim Meyering  (meyering@comco.com)
 	system.h now does that.
 	* printf.c: Ditto.
 
+	* date.c (usage): Add description of numeric modifiers.
+
 	* printf.c (print_formatted): Declare DIREC_LENGTH size_t, not int.
 	(print_esc_string): Ditto for LENGTH.
-	* date.c (usage): Add description of numeric modifiers.
 	* dirname.c (main): Cast string literal to (char*).
 	* stty.c (wrapf): Declare first argument const char *.
 	* tee.c (main, tee): More const dcls and casting.
