@@ -24,6 +24,16 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  Mistakenly renaming a file onto itself, e.g., via `mv B b' when `B' is
+  the same directory entry as `b' no longer destroys the directory entry
+  referenced by both `b' and `B'.  Note that this would happen only on
+  file systems like VFAT where two different names may refer to the same
+  directory entry, usually due to lower->upper case mapping of file names.
+  Now, the above can happen only on file systems that perform name mapping and
+  that support hard links (stat.st_nlink > 1).  This mitigates the problem
+  in two ways: few file systems appear to be affected (hpfs and ntfs are),
+  when the bug is triggered, mv no longer removes the last hard link to a file.
+
   stat no longer overruns a buffer for format strings ending in `%'
 
   fold -s -wN would infloop for N < 8 with TABs in the input.
