@@ -1,5 +1,7 @@
 /* path-concat.c -- concatenate two arbitrary pathnames
-   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+
+   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002 Free
+   Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -121,7 +123,7 @@ char *
 xpath_concat (const char *dir, const char *base, char **base_in_result)
 {
   char *res = path_concat (dir, base, base_in_result);
-  if (res)
-    return res;
-  xalloc_die ();
+  if (! res)
+    xalloc_die ();
+  return res;
 }
