@@ -1,6 +1,19 @@
-2004-11-12  Paul Eggert  <eggert@cs.ucla.edu>
+2004-11-14  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* tests/misc/close-stdout: New file.  Test today's closeout.c change.
+	* tests/misc/Makefile.am (TESTS): Add close-stdout.
+
+2004-11-13  Jim Meyering  <jim@meyering.net>
+
+	* src/test.c (usage): Put the description of `[-n] STRING'
+	on two lines, one for `-n STRING' and one for `STRING' so that
+	help2man properly escapes the `-'.  Otherwise, the hyphen is
+	rendered inappropriately in UTF-8 locales.
+	Reported by Uwe Zeisberger in http://bugs.debian.org/281069.
+
+2004-11-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: Document the following changes.
 
