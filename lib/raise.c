@@ -1,5 +1,5 @@
 /* Provide a non-threads replacement for the POSIX raise function.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,10 +19,6 @@
 
 #include <config.h>
 
-/* Undefine raise here so any system prototype is not redefined
-   to be a prototype for rpl_raise.  */
-#undef raise
-
 #include <sys/types.h>
 #include <signal.h>
 #if HAVE_UNISTD_H
@@ -30,7 +26,7 @@
 #endif
 
 int
-rpl_raise (int sig)
+raise (int sig)
 {
   return kill (getpid (), sig);
 }
