@@ -319,24 +319,6 @@ prfield (n, line)
     fputs (empty_filler, stdout);
 }
 
-/* Print LINE, with its fields separated by `tab'. */
-
-static void
-prline (line)
-     struct line *line;
-{
-  int i;
-
-  for (i = 0; i < line->nfields; ++i)
-    {
-      prfield (i, line);
-      if (i == line->nfields - 1)
-	putchar ('\n');
-      else
-	putchar (tab ? tab : ' ');
-    }
-}
-
 /* Print the join of LINE1 and LINE2. */
 
 static void
