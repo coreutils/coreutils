@@ -5,6 +5,12 @@
 	* strpbrk.c: Likewise.
 	* strstr.c: Likewise.
 	* tempname.c: Likewise.
+	* obstack.c: Likewise.
+	* getopt.c: Likewise.
+	* getopt1.c: Likewise.
+	* getopt.h: Likewise.
+	* quote.h: Update from gnulib: add Copyright comment.
+	* quote.c: Likewise.
 
 2002-11-28  Jim Meyering  <jim@meyering.net>
 
