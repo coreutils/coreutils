@@ -296,7 +296,7 @@ usage (int status)
 Usage: %s [OPTION]... GROUP FILE...\n\
   or:  %s [OPTION]... --reference=RFILE FILE...\n\
 "),
-	program_name, program_name);
+	      program_name, program_name);
       printf (_("\
 Change the group membership of each FILE to GROUP.\n\
 \n\
