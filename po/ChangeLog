@@ -1,3 +1,7 @@
+2004-11-28  Jim Meyering  <jim@meyering.net>
+
+	* POTFILES.in: Add lib/openat.c.
+
 2004-10-11  Jim Meyering  <jim@meyering.net>
 
 	* fr.po: Fix two typos reported in http://bugs.debian.org/275924
