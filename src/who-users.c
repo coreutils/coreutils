@@ -302,6 +302,7 @@ print_entry (STRUCT_UTMP *this)
 #define DEV_DIR_LEN (sizeof (DEV_DIR_WITH_TRAILING_SLASH) - 1)
 
   char line[sizeof (this->ut_line) + DEV_DIR_LEN + 1];
+  time_t tm;
 
   /* Copy ut_line into LINE, prepending `/dev/' if ut_line is not
      already an absolute pathname.  Some system may put the full,
@@ -333,7 +334,15 @@ print_entry (STRUCT_UTMP *this)
   if (include_mesg)
     printf ("  %c  ", mesg);
   printf (" %-8.*s", (int) sizeof (this->ut_line), this->ut_line);
-  printf (" %-12.12s", ctime (&UT_TIME_MEMBER (this)) + 4);
+
+  /* Don't take the address of UT_TIME_MEMBER directly.
+     Ulrich Drepper wrote:
+     ``... GNU libc (and perhaps other libcs as well) have extended
+     utmp file formats which do not use a simple time_t ut_time field.
+     In glibc, ut_time is a macro which selects for backward compatibility
+     the tv_sec member of a struct timeval value.''  */
+  tm = UT_TIME_MEMBER (this);
+  printf (" %-12.12s", ctime (&tm) + 4);
 
   if (include_idle)
     {
