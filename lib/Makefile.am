@@ -62,7 +62,7 @@ libfetish_a_SOURCES = \
   fnmatch_.h \
   fopen-safer.c \
   fsusage.h \
-  ftw.h \
+  ftw_.h \
   full-read.c full-read.h \
   full-write.c full-write.h \
   getline.h \
@@ -102,6 +102,7 @@ libfetish_a_SOURCES = \
   same.c same.h \
   save-cwd.c save-cwd.h \
   savedir.c savedir.h \
+  search.h \
   settime.c \
   sha.c sha.h \
   sig2str.h \
