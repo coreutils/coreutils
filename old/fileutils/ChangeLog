@@ -1,5 +1,6 @@
 1999-01-31  Jim Meyering  <meyering@ascend.com>
 
+	* tests/ln/misc: Add test for this.
 	* src/ln.c (do_link): Allow creation of a hard link to a dangling
 	symlink.  Reported by Alexey Solovyov.
 
