@@ -122,7 +122,7 @@ TESTS_ENVIRONMENT = \
   PROG=sum
 
 
-TESTS = basic-1
+TESTS = basic-1 sysv
 subdir = tests/sum
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
