@@ -1,4 +1,6 @@
 [4.1.1]
+* cp now ensures that the set-user-ID and set-group-ID bits are cleared for
+    the destination file when when copying and not preserving permissions.
 * `ln -f --backup k k' gives a clearer diagnostic
 * ls no longer truncates user names or group names that are longer
     than 8 characters.
