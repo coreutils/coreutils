@@ -1,3 +1,8 @@
+2003-10-31  Jim Meyering  <jim@meyering.net>
+
+	* alloca.c, xmalloc.c, xalloc.h: Update from gnulib.
+	* exclude.c, getgroups.c: Update from gnulib.
+
 2003-10-25  Jim Meyering  <jim@meyering.net>
 
 	* hash.c, hash.h: Update from gnulib.
