@@ -26,7 +26,7 @@ use strict;
 use Getopt::Long;
 use POSIX 'strftime';
 
-my $RCS_Id = '$Id: help2man,v 1.2 1998/10/03 19:15:41 meyering Exp $';
+my $RCS_Id = '$Id: help2man,v 1.3 1998/10/06 04:07:25 meyering Exp $';
 my $this_program = 'help2man';
 my $this_version = '0.0';
 
@@ -129,15 +129,11 @@ if ($include or $opt_include)
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
 # Grab help and version paragraphs from executable
-# Invoke program with `--manhelp' only if --name=STRING not specified.
-my @help = split /\n\n+/, `$ARGV[0] --manhelp 2>/dev/null`
-  if !defined $opt_name;
+my @help = split /\n\n+/, `$ARGV[0] --help 2>/dev/null`
+    or die "$this_program: can't get `--help' info from $ARGV[0]\n";
+
 my @version = split /\n\n+/, `$ARGV[0] --version 2>/dev/null`
     or die "$this_program: can't get `--version' info from $ARGV[0]\n";
-
-@help = split /\n\n+/, `$ARGV[0] --help 2>/dev/null`
-    or die "$this_program: can't get `--help' info from $ARGV[0]\n"
-    unless @help;
 
 my $date = strftime "%B %Y", localtime;
 (my $program = $ARGV[0]) =~ s!.*/!!;
@@ -187,14 +183,7 @@ else
 
 $program =~ s!.*/!!;
 
-# Check for name in help output
-if ($help[0] =~ s/^(?:name|oneliner):\s*(\S.*)//)
-{
-    ($include{NAME} = "$program \\- $1") =~ s/\s+$//;
-    shift @help unless length $help[0];
-}
-
-# --name overrides --include contents and/or --manhelp oneliner
+# --name overrides --include contents
 $include{NAME} = "$program \\- $opt_name" if $opt_name;
 
 # Default (useless) NAME paragraph
