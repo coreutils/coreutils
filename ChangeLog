@@ -1,6 +1,10 @@
-2003-08-19  Jim Meyering  <jim@meyering.net>
+2003-08-20  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
+
+	* Makefile.am (EXTRA_DIST): Add .x-sc_space_tab .x-sc_sun_os_names
+
+2003-08-19  Jim Meyering  <jim@meyering.net>
 
 	* src/system.h: Include stdlib.h unconditionally,
 	as we're now assuming that part of hosted C89.
