@@ -1,3 +1,32 @@
+Tue Nov 01 06:18:20 1994  Jim Meyering  (meyering@comco.com)
+
+	* eaccess.c (euidaccess): Rename from eaccess to avoid conflict
+	with like-named, different function in some C libraries.
+	* euidaccess.c: Renamed from eaccess.c
+	* lib/Makefile.in (SOURCES): Rename eaccess.c.
+	Update dependency, too.
+	* configure.in (AC_REPLACE_FUNCS): Check for euidaccess
+
+Mon Oct 31 08:02:31 1994  Jim Meyering  (meyering@comco.com)
+
+	* ls.c (dired_dump_obstack): Cast obstack_finish for non-ANSI
+	compilers.  Kaveh Ghazi reported the problem.
+
+Sat Oct 29 00:42:18 1994  Jim Meyering  (meyering@comco.com)
+
+	* fsusage.c (get_fs_usage) [STAT_STATFS4]: Define CONVERT_BLOCKS
+	to adjust_blocks for _AIX.  Was getting off-by-8x numbers.
+
+	* df.c: Make --sync the default.
+	Add new option: --no-sync.
+	Remove short option alias for --sync.
+	(usage): Update.
+
+	* ls.c [!STDC_HEADERS]: Declare free.
+	(dired_dump_obstack): Cast pos[i] (of type size_t) to int so it
+	matches %d in printf.
+	(quote_filename): Fix typo in stpcpy call.
+
 Thu Oct 27 00:02:45 1994  Jim Meyering  (meyering@comco.com)
 
 	* fsusage.c: Include <sys/stat.h> before safe-stat.h.
@@ -5,7 +34,7 @@ Thu Oct 27 00:02:45 1994  Jim Meyering  (meyering@comco.com)
 	* cp.c (make_path): Don't change protections on existing directory.
 	Reported by Andreas Schwab.
 
-	* df.c: New option: --sync (-s).  No longer perform sync by default.
+	* df.c: New option: --sync.  No longer perform sync by default.
 	Do it only when this option is used.  Invoking sync can be very
 	expensive, and it's not clear that doing so yields more up to date
 	results.  With encouragement/prodding from Paolo Zeppegno
