@@ -19,6 +19,6 @@ libfu_a_DEPENDENCIES = $(libfu_a_LIBADD)
 noinst_HEADERS = argmatch.h backupfile.h error.h fnmatch.h fsusage.h \
 getdate.h getline.h getopt.h group-member.h long-options.h \
 makepath.h modechange.h mountlist.h hash.h path-concat.h pathmax.h \
-save-cwd.h savedir.h xstrtol.h xstrtoul.h strverscmp.h
+save-cwd.h savedir.h strverscmp.h xalloc.h xstrtol.h xstrtoul.h
 
 BUILT_SOURCES = getdate.c posixtm.c
