@@ -2202,7 +2202,7 @@ format of the @samp{%c} directive (described below).  Synopses:
 @example
 date [@var{option}]@dots{} [+@var{format}]
 date [-u|--utc|--universal] @c this avoids a newline in the output
-[ @var{MMDDhhmm}[[@var{CC}]@var{YY}][.@var{ss}] ]
+[ MMDDhhmm[[CC]YY][.ss] ]
 @end example
 
 @findex strftime @r{and @code{date}}
@@ -2400,7 +2400,7 @@ zone.
 The argument must consist entirely of digits, which have the following
 meaning:
 
-@table @var
+@table @samp
 @item MM
 month
 @item DD
