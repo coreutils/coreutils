@@ -716,27 +716,28 @@ name:		t = sp->fts_path + NAPPEND(p->fts_parent);
 	 */
 	if (p->fts_level == FTS_ROOTLEVEL) {
 		if (FCHDIR(sp, sp->fts_rfd)) {
+			p->fts_errno = errno;
 			SET(FTS_STOP);
-			return (NULL);
 		}
 	} else if (p->fts_flags & FTS_SYMFOLLOW) {
 		if (FCHDIR(sp, p->fts_symfd)) {
 			saved_errno = errno;
 			(void)close(p->fts_symfd);
 			__set_errno (saved_errno);
+			p->fts_errno = errno;
 			SET(FTS_STOP);
-			return (NULL);
 		}
 		(void)close(p->fts_symfd);
 	} else if (!(p->fts_flags & FTS_DONTCHDIR) &&
 		   fts_safe_changedir(sp, p->fts_parent, -1, "..")) {
+		p->fts_errno = errno;
 		SET(FTS_STOP);
-		return (NULL);
 	}
 	p->fts_info = p->fts_errno ? FTS_ERR : FTS_DP;
 	if (p->fts_errno == 0)
 		LEAVE_DIR (sp, p, "3");
-	return (sp->fts_cur = p);
+	sp->fts_cur = p;
+	return ISSET(FTS_STOP) ? NULL : p;
 }
 
 /*
