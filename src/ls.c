@@ -2035,15 +2035,15 @@ static void
 print_long_format (const struct fileinfo *f)
 {
   char modebuf[20];
-#define TIMEBUF_SIZE 40
-  char timebuf[TIMEBUF_SIZE];
+/* This is more than enough for all known LC_TIME locales.  */
+#define TIMEBUF_SIZE 100
 
   /* 7 fields that may (worst case: 64-bit integral values) require 20 bytes,
      1 10-character mode string,
-     1 24-character time string,
+     1 TIMEBUF_SIZE-character time string,
      9 spaces, one following each of these fields,
      and 1 trailing NUL byte.  */
-  char bigbuf[7 * 20 + 10 + 24 + 9 + 1];
+  char bigbuf[7 * 20 + 10 + TIMEBUF_SIZE + 9 + 1];
   char *p;
   time_t when;
   const char *fmt;
@@ -2092,10 +2092,6 @@ print_long_format (const struct fileinfo *f)
 	}
     }
 
-  /* Use strftime rather than ctime, because the former can produce
-     locale-dependent names for the weekday (%a) and month (%b).  */
-  strftime (timebuf, TIMEBUF_SIZE, fmt, localtime (&when));
-
   p = bigbuf;
 
   if (print_inode)
@@ -2139,7 +2135,10 @@ print_long_format (const struct fileinfo *f)
     sprintf (p, "%8lu ", (unsigned long) f->stat.st_size);
   p += strlen (p);
 
-  p = stpcpy (stpcpy (p, timebuf), " ");
+  /* Use strftime rather than ctime, because the former can produce
+     locale-dependent names for the weekday (%a) and month (%b).  */
+  p += strftime (p, TIMEBUF_SIZE, fmt, localtime (&when));
+  *p++ = ' ';
 
   DIRED_INDENT ();
   FPUTS (bigbuf, stdout, p - bigbuf);
