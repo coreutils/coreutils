@@ -1,6 +1,20 @@
-2004-06-11  Paul Eggert  <eggert@cs.ucla.edu>
+2004-06-13  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* src/who.c (PIDSTR_DECL_AND_INIT): Don't assume pid_t fits in int.
+	(UT_ID) [!HAVE_STRUCT_XTMP_UT_ID]: Remove bogus comment,
+	as (sizeof "??") reliably returns 3.
+	(print_line): Guard against idle and pid being too long
+	(which is possible when printing headers).
+	(print_user): Allocate enough bytes for idlestr.  Use IDLESTR_LEN.
+	Avoid unnecessary cast of sizeof to int.
+	(make_id_equals_comment): Do not assume that UT_ID returns
+	a string; it might return a non-null-terminated array.
+	Use strncat instead.  It's not very often where strncat is
+	exactly what you want, but this is one of those rare cases.
+
+2004-06-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/who.c (list_entries_who): Don't output a trailing space.
 
