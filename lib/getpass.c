@@ -57,6 +57,17 @@
 # define funlockfile(s) _IO_funlockfile (s)
 #elif USE_UNLOCKED_IO
 # include "unlocked-io.h"
+#else
+# undef fflush_unlocked
+# define fflush_unlocked(x) fflush (x)
+# undef flockfile
+# define flockfile(x) ((void) 0)
+# undef funlockfile
+# define funlockfile(x) ((void) 0)
+# undef fputs_unlocked
+# define fputs_unlocked(str,stream) fputs (str, stream)
+# undef putc_unlocked
+# define putc_unlocked(c,stream) putc (c, stream)
 #endif
 
 #if _LIBC

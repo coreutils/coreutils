@@ -1,4 +1,4 @@
-# getopt.m4 serial 3
+# getopt.m4 serial 4
 dnl Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -37,6 +37,10 @@ AC_DEFUN([gl_GETOPT],
   GETOPT_H=
   AC_CHECK_HEADERS([getopt.h], [], [GETOPT_H=getopt.h])
   AC_CHECK_FUNCS([getopt_long_only], [], [GETOPT_H=getopt.h])
+
+  dnl BSD getopt_long uses an incompatible method to reset option processing,
+  dnl and (as of 2004-10-15) mishandles optional option-arguments.
+  AC_CHECK_DECL([optreset], [GETOPT_H=getopt.h], [], [#include <getopt.h>])
 
   if test -n "$GETOPT_H"; then
      gl_GETOPT_SUBSTITUTE
