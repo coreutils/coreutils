@@ -95,7 +95,7 @@ typedef unsigned short word32;
 #elif UCHAR_MAX == 0xffffffff
 typedef unsigned char word32;
 #else
-#error No 32-bit type available!
+# error No 32-bit type available!
 #endif
 
 /* Size of the state tables to use.  (You may change ISAAC_LOG) */
