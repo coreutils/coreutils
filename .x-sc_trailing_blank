@@ -1,0 +1,4 @@
+^tests/pr/
+Makefile\.in$
+^config-log/
+\.gdb-history$
