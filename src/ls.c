@@ -108,6 +108,7 @@ int wcwidth ();
 
 #include "argmatch.h"
 #include "dirname.h"
+#include "dirfd.h"
 #include "error.h"
 #include "hard-locale.h"
 #include "hash.h"
@@ -2036,7 +2037,12 @@ print_dir (const char *name, const char *realname)
   if (LOOP_DETECT)
     {
       struct stat dir_stat;
-      if (fstat (dirfd (reading), &dir_stat) < 0)
+      int fd = dirfd (reading);
+
+      /* If dirfd failed, endure the overhead of using stat.  */
+      if ((0 <= fd
+	   ? fstat (fd, &dir_stat)
+	   : stat (name, &dir_stat)) < 0)
 	{
 	  error (0, errno, _("cannot determine device and inode of %s"),
 		 quotearg_colon (name));
