@@ -1,5 +1,8 @@
 Fri Jun 28 22:56:00 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/dircolors.c (dc_parse_stream): Move enum states dcl into
+	this function.
+
 	* src/ln.c (do_link): Allow `ln -sf --backup k k' to succeed in
 	creating the self-referential symlink, since doing so doesn't
 	remove the source but merely renames it.
