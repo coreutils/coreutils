@@ -1,3 +1,7 @@
+2003-10-13  Jim Meyering  <jim@meyering.net>
+
+	* src/ls.c (init_column_info): Add another FIXME comment.
+
 2003-10-13  Paul Eggert  <eggert@twinsun.com>
 
 	Fix address-arithmetic bug in 'ls', reported by Georgi Guninski.
