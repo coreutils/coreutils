@@ -10,9 +10,9 @@ fi
 
 tmp=t-ls.$$
 
-test_failure=0
-mkdir $tmp || test_failure=1
-cd $tmp || test_failure=1
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
 
 t1='1998-01-15 21:00'
 t2='1998-01-15 22:00'
@@ -22,15 +22,15 @@ u1='1998-01-14 11:00'
 u2='1998-01-14 12:00'
 u3='1998-01-14 13:00'
 
-touch -m -d "$t3" a || test_failure=1
-touch -m -d "$t2" b || test_failure=1
-touch -m -d "$t1" c || test_failure=1
+touch -m -d "$t3" a || framework_failure=1
+touch -m -d "$t2" b || framework_failure=1
+touch -m -d "$t1" c || framework_failure=1
 
-touch -a -d "$u3" c || test_failure=1
-touch -a -d "$u2" b || test_failure=1
+touch -a -d "$u3" c || framework_failure=1
+touch -a -d "$u2" b || framework_failure=1
 # Make sure A has ctime at least 1 second more recent than C's.
 sleep 2
-touch -a -d "$u1" a || test_failure=1
+touch -a -d "$u1" a || framework_failure=1
 
 fail=0
 
@@ -43,9 +43,9 @@ test "$*" = 'a c' || fail=1
 sleep 2
 
 # Create a link, updating c's ctime.
-ln c d || test_failure=1
+ln c d || framework_failure=1
 
-if test $test_failure = 1; then
+if test $framework_failure = 1; then
   echo 'failure in testing framework'
   exit 1
 fi
