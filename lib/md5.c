@@ -396,7 +396,7 @@ md5_process_block (buffer, len, ctx)
 	 argument specifying the function to use.  */
 #undef OP
 #define OP(f, a, b, c, d, k, s, T)					\
-      do 								\
+      do								\
 	{								\
 	  a += f (b, c, d) + correct_words[k] + T;			\
 	  a = rol (a, s);						\

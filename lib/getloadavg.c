@@ -1,6 +1,6 @@
 /* Get the system load averages.
-   Copyright (C) 1985, 86, 87, 88, 89, 91, 92, 93, 1994, 1995, 1997
-   	Free Software Foundation, Inc.
+   Copyright (C) 1985, 86, 87, 88, 89, 91, 92, 93, 1994, 1995, 1997, 2003
+   Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -62,7 +62,7 @@
    VMS
    WINDOWS32			No-op for Windows95/NT.
    __linux__			Linux: assumes /proc filesystem mounted.
-   				Support from Michael K. Johnson.
+				Support from Michael K. Johnson.
    __NetBSD__			NetBSD: assumes /kern filesystem mounted.
 
    In addition, to avoid nesting many #ifdefs, we internally set
