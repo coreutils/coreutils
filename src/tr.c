@@ -1207,6 +1207,33 @@ get_next (struct Spec_list *s, enum Upper_Lower_class *class)
       break;
 
     case RE_CHAR_CLASS:
+      if (class)
+	{
+	  int upper_or_lower;
+	  switch (p->u.char_class)
+	    {
+	    case CC_LOWER:
+	      *class = UL_LOWER;
+	      upper_or_lower = 1;
+	      break;
+	    case CC_UPPER:
+	      *class = UL_UPPER;
+	      upper_or_lower = 1;
+	      break;
+	    default:
+	      upper_or_lower = 0;
+	      break;
+	    }
+
+	  if (upper_or_lower)
+	    {
+	      s->tail = p->next;
+	      s->state = NEW_ELEMENT;
+	      return_val = 0;
+	      break;
+	    }
+	}
+
       if (s->state == NEW_ELEMENT)
 	{
 	  for (i = 0; i < N_CHARS; i++)
@@ -1226,21 +1253,6 @@ get_next (struct Spec_list *s, enum Upper_Lower_class *class)
 	{
 	  s->tail = p->next;
 	  s->state = NEW_ELEMENT;
-	}
-      if (class)
-	{
-	  switch (p->u.char_class)
-	    {
-	    case CC_LOWER:
-	      *class = UL_LOWER;
-	      break;
-	    case CC_UPPER:
-	      *class = UL_UPPER;
-	      break;
-	    default:
-	      /* empty */
-	      break;
-	    }
 	}
       break;
 
@@ -1982,10 +1994,26 @@ without squeezing repeats"));
 	      if (!class_ok[(int) class_s1][(int) class_s2])
 		error (EXIT_FAILURE, 0,
 		     _("misaligned or mismatched upper and/or lower classes"));
-	      /* The following should have been checked by validate...  */
-	      if (c2 == -1)
-		break;
-	      xlate[c1] = c2;
+
+	      if (class_s1 == UL_LOWER && class_s2 == UL_UPPER)
+		{
+		  for (i = 0; i < N_CHARS; i++)
+		    if (ISLOWER (i))
+		      xlate[i] = toupper (i);
+		}
+	      else if (class_s1 == UL_UPPER && class_s2 == UL_LOWER)
+		{
+		  for (i = 0; i < N_CHARS; i++)
+		    if (ISUPPER (i))
+		      xlate[i] = tolower (i);
+		}
+	      else
+		{
+		  /* The following should have been checked by validate...  */
+		  if (c2 == -1)
+		    break;
+		  xlate[c1] = c2;
+		}
 	    }
 	  assert (c1 == -1 || truncate_set1);
 	}
