@@ -1,5 +1,6 @@
 [5.0.1]
-* `kill -t' now prints signal descriptions (not `?') on Tru64.
+* `kill -t' now prints signal descriptions (not `?') on systems like Tru64
+  with __sys_siglist but no strsignal function.
 * mv now removes `a' in this example on all systems: touch a; ln a b; mv a b
 
 [5.0]
