@@ -113,7 +113,6 @@ uid_t getuid ();
 #include <shadow.h>
 #endif
 
-#include "version.h"
 #include "error.h"
 
 /* The default PATH for simulated logins to non-superuser accounts.  */
@@ -239,7 +238,7 @@ main (argc, argv)
 
   if (show_version)
     {
-      printf ("su - %s\n", version_string);
+      printf ("su - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

@@ -36,7 +36,6 @@
 #  include "filecntl.h"
 #else /* TEST_STANDALONE */
 #  include "system.h"
-#  include "version.h"
 #  include "group-member.h"
 #  include "error.h"
 #  if !defined (S_IXUGO)
@@ -1074,7 +1073,7 @@ main (int margc, char **margv)
 
   if (margv[0] && strcmp (margv[0], "[") == 0)
     {
-      parse_long_options (argc, argv, COMMAND_NAME, version_string, usage);
+      parse_long_options (argc, argv, COMMAND_NAME, PACKAGE_VERSION, usage);
 
       --margc;
 
@@ -1091,7 +1090,7 @@ main (int margc, char **margv)
   if (pos >= argc)
     test_exit (SHELL_BOOLEAN (FALSE));
 
-  parse_long_options (argc, argv, COMMAND_NAME, version_string, usage);
+  parse_long_options (argc, argv, COMMAND_NAME, PACKAGE_VERSION, usage);
   value = posixtest ();
 
   if (pos != argc)

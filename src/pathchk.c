@@ -43,7 +43,6 @@
 #include <getopt.h>
 #include <sys/types.h>
 
-#include "version.h"
 #include "system.h"
 #include "error.h"
 
@@ -143,7 +142,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("pathchk - %s\n", version_string);
+      printf ("pathchk - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

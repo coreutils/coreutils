@@ -49,7 +49,6 @@
 #include <getopt.h>
 
 #include "system.h"
-#include "version.h"
 #include "long-options.h"
 #include "error.h"
 
@@ -138,7 +137,7 @@ main (int argc, char **argv)
 
   exit_status = 0;
 
-  parse_long_options (argc, argv, "printf", version_string, usage);
+  parse_long_options (argc, argv, "printf", PACKAGE_VERSION, usage);
 
   if (argc == 1)
     {

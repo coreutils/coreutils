@@ -30,7 +30,6 @@
 #include <sys/resource.h>
 #endif
 
-#include "version.h"
 #include "system.h"
 #include "long-options.h"
 #include "error.h"
@@ -68,7 +67,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "nice", version_string, usage);
+  parse_long_options (argc, argv, "nice", PACKAGE_VERSION, usage);
 
   for (optind = 1; optind < argc; /* empty */)
     {

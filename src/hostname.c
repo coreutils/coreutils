@@ -22,7 +22,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "version.h"
 #include "long-options.h"
 #include "error.h"
 
@@ -83,7 +82,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "hostname", version_string, usage);
+  parse_long_options (argc, argv, "hostname", PACKAGE_VERSION, usage);
 
 #ifdef HAVE_SETHOSTNAME
   if (argc == 2)

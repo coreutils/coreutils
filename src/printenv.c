@@ -32,7 +32,6 @@
 #include <sys/types.h>
 #include <getopt.h>
 
-#include "version.h"
 #include "system.h"
 #include "error.h"
 
@@ -101,7 +100,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("printenv - %s\n", version_string);
+      printf ("printenv - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

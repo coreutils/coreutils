@@ -26,7 +26,6 @@
 #include <grp.h>
 #include <getopt.h>
 
-#include "version.h"
 #include "system.h"
 #include "error.h"
 
@@ -134,7 +133,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("id - %s\n", version_string);
+      printf ("id - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

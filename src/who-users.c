@@ -51,7 +51,6 @@
 #endif
 
 #include "system.h"
-#include "version.h"
 #include "error.h"
 
 #if !defined (UTMP_FILE) && defined (_PATH_UTMP)	/* 4.4BSD.  */
@@ -623,7 +622,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("%s - %s\n", COMMAND_NAME, version_string);
+      printf ("%s - %s\n", COMMAND_NAME, PACKAGE_VERSION);
       exit (0);
     }
 

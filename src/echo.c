@@ -21,7 +21,6 @@ Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <sys/types.h>
 #include "system.h"
-#include "version.h"
 #include "long-options.h"
 
 /* echo [-neE] [arg ...]
@@ -111,7 +110,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "echo", version_string, usage);
+  parse_long_options (argc, argv, "echo", PACKAGE_VERSION, usage);
 
 /* System V machines already have a /bin/sh with a v9 behaviour.  We
    use the identical behaviour for these machines so that the

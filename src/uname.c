@@ -35,7 +35,6 @@
 #include <getopt.h>
 
 #include "system.h"
-#include "version.h"
 #include "error.h"
 
 static void print_element __P ((unsigned int mask, char *element));
@@ -134,7 +133,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("uname - %s\n", version_string);
+      printf ("uname - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

@@ -48,7 +48,6 @@
 #endif
 
 #include "system.h"
-#include "version.h"
 #include "long-options.h"
 #include "error.h"
 #include "xstrtol.h"
@@ -654,7 +653,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "stty", version_string, usage);
+  parse_long_options (argc, argv, "stty", PACKAGE_VERSION, usage);
 
   output_type = changed;
   verbose_output = 0;

@@ -28,7 +28,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "version.h"
 #include "error.h"
 
 static void usage __P ((int status));
@@ -85,7 +84,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("tty - %s\n", version_string);
+      printf ("tty - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

@@ -24,7 +24,6 @@
 
 #include "system.h"
 #include "error.h"
-#include "version.h"
 
 static double scan_double_arg __P ((char *arg));
 static int check_format __P ((char *format_string));
@@ -151,7 +150,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      (void) printf ("seq - %s\n", version_string);
+      (void) printf ("seq - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

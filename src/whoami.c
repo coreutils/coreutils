@@ -24,7 +24,6 @@
 #include <pwd.h>
 #include <getopt.h>
 
-#include "version.h"
 #include "system.h"
 
 /* The name this program was run with. */
@@ -88,7 +87,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("whoami - %s\n", version_string);
+      printf ("whoami - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

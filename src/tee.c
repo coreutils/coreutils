@@ -24,7 +24,6 @@
 #include <getopt.h>
 
 #include "system.h"
-#include "version.h"
 #include "error.h"
 
 char *xmalloc ();
@@ -114,7 +113,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("tee - %s\n", version_string);
+      printf ("tee - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

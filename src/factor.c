@@ -39,7 +39,6 @@
 #endif
 
 #include "system.h"
-#include "version.h"
 #include "long-options.h"
 #include "error.h"
 #include "xstrtoul.h"
@@ -178,7 +177,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "factor", version_string, usage);
+  parse_long_options (argc, argv, "factor", PACKAGE_VERSION, usage);
 
   fail = 0;
   if (argc == 1)

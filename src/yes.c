@@ -23,7 +23,6 @@
 
 #include "system.h"
 #include "long-options.h"
-#include "version.h"
 
 /* The name this program was run with. */
 char *program_name;
@@ -54,7 +53,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "yes", version_string, usage);
+  parse_long_options (argc, argv, "yes", PACKAGE_VERSION, usage);
 
   if (argc == 1)
     while (1)

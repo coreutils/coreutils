@@ -22,7 +22,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "version.h"
 #include "long-options.h"
 #include "error.h"
 
@@ -66,7 +65,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "dirname", version_string, usage);
+  parse_long_options (argc, argv, "dirname", PACKAGE_VERSION, usage);
 
   if (argc != 2)
     {

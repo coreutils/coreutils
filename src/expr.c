@@ -34,7 +34,6 @@
 #include <regex.h>
 
 #include "system.h"
-#include "version.h"
 #include "long-options.h"
 #include "error.h"
 
@@ -159,7 +158,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "expr", version_string, usage);
+  parse_long_options (argc, argv, "expr", PACKAGE_VERSION, usage);
 
   if (argc == 1)
     {

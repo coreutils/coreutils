@@ -83,7 +83,6 @@
 #include <sys/types.h>
 #include <getopt.h>
 
-#include "version.h"
 #include "system.h"
 #include "error.h"
 
@@ -141,7 +140,7 @@ main (register int argc, register char **argv, char **envp)
 
   if (show_version)
     {
-      printf ("env - %s\n", version_string);
+      printf ("env - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 

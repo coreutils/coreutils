@@ -20,7 +20,6 @@
 #include <sys/types.h>
 #include <getopt.h>
 
-#include "version.h"
 #include "system.h"
 
 /* The name this program was run with. */
@@ -83,7 +82,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("logname - %s\n", version_string);
+      printf ("logname - %s\n", PACKAGE_VERSION);
       exit (0);
     }
 
