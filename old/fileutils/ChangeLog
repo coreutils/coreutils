@@ -1,3 +1,11 @@
+Sat Nov  2 07:05:36 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (ALL_LINGUAS): Add Spanish (es).
+
+	* doc/Makefile.am (MAKEINFO): Set to makeinfo --no-split.
+	Otherwise, the generated info files have names longer than
+	the 14-byte max of some old systems.
+
 Tue Oct 29 06:49:16 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/ls.c (decode_switches): Make -A set really_all_files to zero

@@ -1,3 +1,9 @@
+Sat Nov  2 08:50:01 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* doc/Makefile.am (MAKEINFO): Set to makeinfo --no-split.
+	Otherwise, the generated info files have names longer than
+	the 14-byte max of some old systems.
+
 Fri Nov  1 21:33:16 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/strtol.c: Update from GNU libc.
