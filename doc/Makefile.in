@@ -392,7 +392,7 @@ $(INFO_DEPS): $(EXTRA_DIST)
 check-texinfo:
 	grep timezone $(srcdir)/*.texi && exit 1 || :
 	grep '\$$@"' $(srcdir)/*.texi && exit 1 || :
-	@PERL@ -ne \
+	$(PERL) -ne \
 	  '/\bPOSIX\b/ && !/\@acronym{POSIX}/ || /{posix}/ and print,exit 1' \
 	  $(srcdir)/*.texi 2> /dev/null && : || exit 1
 
