@@ -6,9 +6,7 @@ afs.m4 \
 assert.m4 \
 bison.m4 \
 check-decl.m4 \
-check-type.m4 \
 chown.m4 \
-const.m4 \
 d-ino.m4 \
 d-type.m4 \
 decl.m4 \
@@ -44,6 +42,7 @@ readdir.m4 \
 realloc.m4 \
 regex.m4 \
 search-libs.m4 \
+ssize_t.m4 \
 st_dm_mode.m4 \
 st_mtim.m4 \
 stat.m4 \
