@@ -240,7 +240,6 @@ AC_CONFIG_FILES(
   doc/Makefile
   lib/Makefile
   man/Makefile
-  m4/Makefile
   po/Makefile.in
   src/Makefile
   tests/Makefile
