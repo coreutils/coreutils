@@ -133,3 +133,7 @@ du: rewrite to use something other than nftw to perform directory traversal.
     using -D makes du dereference each command
     line argument that is a symlink to a directory.
     A symlink to non-directory is not dereferenced.
+
+cp --recursive: perform dir traversals in source and dest hierarchy rather
+  than forming full file names.  The latter (current) approach fails
+  unnecessarily when the names become very long.
