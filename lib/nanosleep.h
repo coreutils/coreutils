@@ -52,6 +52,6 @@ struct timespec
 
 int
 nanosleep PARAMS ((const struct timespec *requested_delay,
-		   struct timespec *remaining_delay)
+		   struct timespec *remaining_delay));
 
 #endif
