@@ -1,3 +1,9 @@
+Wed Oct  2 21:44:36 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/dircolors.c (usage): Deprecate --print-data-base even though
+	that's the way GNU make writes it.  `database' is one word.
+	Add description of FILE argument.
+
 Tue Oct  1 12:56:23 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/Makefile.am (fu_SOURCES): Remove getline.c.
