@@ -1,4 +1,6 @@
 [4.5.9]
+* rm -rf now gives an accurate diagnostic when failing to remove a file
+  under certain unusual conditions
 * mv and `cp --preserve=links' now preserve multiple hard links even under
   certain unusual conditions where they used to fail
 
