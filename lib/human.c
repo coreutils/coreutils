@@ -276,13 +276,19 @@ human_readable_inexact (uintmax_t n, char *buf,
 static char const *const block_size_args[] = { "human-readable", "si", 0 };
 static int const block_size_types[] = { -1024, -1000 };
 
+static int
+default_block_size (void)
+{
+  return getenv ("POSIXLY_CORRECT") ? 512 : DEFAULT_BLOCK_SIZE;
+}
+
 static strtol_error
 humblock (char const *spec, int *block_size)
 {
   int i;
 
   if (! spec && ! (spec = getenv ("BLOCK_SIZE")))
-    *block_size = getenv ("POSIXLY_CORRECT") ? 512 : DEFAULT_BLOCK_SIZE;
+    *block_size = default_block_size ();
   else if (0 <= (i = ARGMATCH (spec, block_size_args, block_size_types)))
     *block_size = block_size_types[i];
   else
@@ -306,6 +312,11 @@ void
 human_block_size (char const *spec, int report_errors, int *block_size)
 {
   strtol_error e = humblock (spec, block_size);
+  if (*block_size == 0)
+    {
+      *block_size = default_block_size ();
+      e = LONGINT_INVALID;
+    }
   if (e != LONGINT_OK && report_errors)
     STRTOL_FATAL_ERROR (spec, _("block size"), e);
 }
