@@ -1,4 +1,14 @@
+1997-01-22  Paul Eggert  <eggert@twinsun.com>
+
+	* m4/mktime.m4: (AM_FUNC_MKTIME): Fix bug in mktime test -- don't
+	test now, test a couple of thousand times.
+
 Sat Jan 18 09:32:26 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/getdate.y (get_date): Change prototype to reflect const'ness
+	of parameters.
+	Indent cpp-directives to reflect nesting.
+	Indent with GNU indent.
 
 	* lib/getdate.h: New file.
 	* src/date.c: Include getdate.h.
