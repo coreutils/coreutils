@@ -43,7 +43,7 @@
 # define YYSTACK_USE_ALLOCA 0
 #endif
 
-/* Tell Bison ow much stack space is needed.  20 should be plenty for
+/* Tell Bison how much stack space is needed.  20 should be plenty for
    this grammar, which is not right recursive.  Beware setting it too
    high, since that might cause problems on machines whose alloca
    implementations have lame stack-overflow checking.  */
