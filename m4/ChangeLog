@@ -1,3 +1,20 @@
+1999-10-30  Jim Meyering  <meyering@ascend.com>
+
+	* uintmax_t.m4: Require 2.14a.  Remove backslash before backtick in
+	m4-quoted string.
+	* ls-mntd-fs.m4: Likewise.
+	* jm-macros.m4: Likewise.  Also, use AC_TYPE_SSIZE_T instead
+
+	* const.m4: Remove file, since the fix made it into the experimental
+	version of autoconf.
+
+	* check-type.m4: Remove file, now that the latest version of
+	AC_CHECK_TYPE takes a third arg to specify additional #includes.
+
+	* ssize_t.m4: New file, requires experimental version of autoconf.
+	* jm-macros.m4: Use new AC_TYPE_SSIZE_T instead of my hacked
+	AC_CHECK_TYPE.
+
 1999-10-04  Jim Meyering  <meyering@ascend.com>
 
 	* jm-macros.m4: Don't require autoconf-2.14.1.
