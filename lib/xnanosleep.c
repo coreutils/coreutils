@@ -54,15 +54,6 @@
 #include "xnanosleep.h"
 #include "xstrtod.h"
 
-#if HAVE_FENV_H
-# include <fenv.h>
-#endif
-
-/* Tell the compiler that non-default rounding modes are used.  */
-#if 199901 <= __STDC_VERSION__
- #pragma STDC FENV_ACCESS ON
-#endif
-
 static int initialized = 0;
 
 /* Subtract the `struct timespec' values X and Y,
@@ -138,16 +129,6 @@ xnanosleep (double seconds)
 
   assert (0 <= seconds);
 
-#ifdef FE_UPWARD
-  if (! initialized)
-    {
-      /* Always round up, since we must sleep for at least the specified
-	 interval.  */
-      /* FIXME: save and restore state, rather than just setting it?  */
-      fesetround (FE_UPWARD);
-    }
-#endif
-
   if (clock_get_realtime (&ts_start) == NULL)
     return -1;
 
@@ -159,7 +140,10 @@ xnanosleep (double seconds)
   ts_sleep.tv_nsec = ns;
 
   /* Round up to the next whole number, if necessary, so that we
-     always sleep for at least the requested amount of time.  */
+     always sleep for at least the requested amount of time.  Assuming
+     the default rounding mode, we don't have to worry about the
+     rounding error when computing 'ns' above, since the error won't
+     cause 'ns' to drop below an integer boundary.  */
   ts_sleep.tv_nsec += (ts_sleep.tv_nsec < ns);
 
   /* Normalize the interval length.  nanosleep requires this.  */
