@@ -32,6 +32,21 @@ Sat Sep 24 10:13:00 1994  Jim Meyering  (meyering@comco.com)
 
 	* src/Makefile.in: Add dependencies on long-options.h.
 
+	* configure.in: Make having autoconf-1.120 a prerequisite.
+
+	* sh-utils.texi [INFO-DIR-ENTRY]: Add an entry for each `invoking'
+	node.  Regularize punctuation, indexing, and xrefs.
+	From Franc,ois Pinard.
+
+	* date.c (usage): Tweak the usage message a little.
+	Add `const' to more dcls.
+
+	* stty.c: Add `const' to more dcls.
+	* su.c: Ditto.
+	* who.c: Ditto.
+
+	* tee.c (main): Use _POSIX_SOURCE, not _POSIX_VERSION.
+
 Sat Sep 17 15:48:10 1994  Jim Meyering  (meyering@comco.com)
 
 	* (doc): New subdirectory with texinfo documentation.

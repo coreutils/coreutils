@@ -74,6 +74,10 @@
 
    David MacKenzie <djm@gnu.ai.mit.edu> */
 
+#ifdef emacs
+#define CONFIG_BROKETS
+#endif
+
 #ifdef HAVE_CONFIG_H
 #if defined (CONFIG_BROKETS)
 /* We use <config.h> instead of "config.h" so that a compilation
