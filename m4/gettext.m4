@@ -6,7 +6,7 @@
 # but which still want to provide support for the GNU gettext functionality.
 # Please note that the actual code is *not* freely available.
 
-# serial 107
+# serial 108
 
 AC_PREREQ(2.13)               dnl Minimum Autoconf version required.
 
