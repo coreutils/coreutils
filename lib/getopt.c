@@ -60,7 +60,7 @@
 
 /* This needs to come after some library #include
    to get __GNU_LIBRARY__ defined.  */
-#ifdef	__GNU_LIBRARY__
+#if defined (__GNU_LIBRARY__) || defined (__sgi)
 /* Don't include stdlib.h for non-GNU C libraries because some of them
    contain conflicting prototypes for getopt.  */
 #include <stdlib.h>
@@ -159,7 +159,7 @@ static enum
   REQUIRE_ORDER, PERMUTE, RETURN_IN_ORDER
 } ordering;
 
-#ifdef	__GNU_LIBRARY__
+#if defined (__GNU_LIBRARY__) || defined (__sgi)
 /* We want to avoid inclusion of string.h with non-GNU libraries
    because there are many ways it can cause trouble.
    On some systems, it contains special magic macros that don't work
@@ -479,6 +479,10 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 
       for (nameend = nextchar; *nameend && *nameend != '='; nameend++)
 	/* Do nothing.  */ ;
+
+#ifdef lint		/* Suppress `used before initialized' warning.  */
+      indfound = 0;
+#endif
 
       /* Test all long options for either exact match
 	 or abbreviated matches.  */
