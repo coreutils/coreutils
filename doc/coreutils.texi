@@ -36,7 +36,7 @@
 * chmod: (coreutils)chmod invocation.           Change file permissions.
 * chown: (coreutils)chown invocation.           Change file owners/groups.
 * chroot: (coreutils)chroot invocation.         Specify the root directory.
-* cksum: (coreutils)cksum invocation.           Print CRC checksum.
+* cksum: (coreutils)cksum invocation.           Print POSIX CRC checksum.
 * comm: (coreutils)comm invocation.             Compare sorted files by line.
 * cp: (coreutils)cp invocation.                 Copy files.
 * csplit: (coreutils)csplit invocation.         Split by context.
