@@ -45,9 +45,8 @@ struct group *getgrnam ();
 struct group *getgrgid ();
 #endif
 
-#ifdef _POSIX_SOURCE
-#define endgrent()
-#define endpwent()
+#ifndef HAVE_ENDPWENT
+# define endpwent() ((void) 0)
 #endif
 
 char *savedir ();
