@@ -44,24 +44,22 @@ extern int errno;
 int chown ();
 
 /* Work just like chown, except when FILE is a symbolic link.
-   In that case, set errno to ENOSYS and return -1.
+   In that case, set errno to EOPNOTSUPP and return -1.
    But if autoconf tests determined that chown modifies
    symlinks, then just call chown.  */
 
 int
 lchown (const char *file, uid_t uid, gid_t gid)
 {
-#if CHOWN_MODIFIES_SYMLINK
-  return chown (file, uid, gid);
-#else
+#if ! CHOWN_MODIFIES_SYMLINK
   struct stat stats;
 
   if (lstat (file, &stats) == 0 && S_ISLNK (stats.st_mode))
     {
-      errno = ENOSYS;
+      errno = EOPNOTSUPP;
       return -1;
     }
+#endif
 
   return chown (file, uid, gid);
-#endif
 }
