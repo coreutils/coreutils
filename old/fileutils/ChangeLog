@@ -1,3 +1,13 @@
+2001-01-28  Jim Meyering  <meyering@lucent.com>
+
+	* src/ls.c (gobble_file): Add a FIXME comment.
+
+	* TODO: Add a few items.
+
+	* src/ls.c (enum) [FULL_TIME]: Define.
+	(long_options): Use it.
+	(decode_switches): Make --full-time imply -l.
+
 2001-01-22  Jim Meyering  <meyering@lucent.com>
 
 	* src/remove.c (remove_file): Correct an expression to avoid making
