@@ -54,8 +54,8 @@
 
 #ifndef STDC_HEADERS
 double strtod ();
-long strtol ();
-unsigned long strtoul ();
+long int strtol ();
+unsigned long int strtoul ();
 #endif
 
 #define isodigit(c) ((c) >= '0' && (c) <= '7')
@@ -134,41 +134,35 @@ verify (const char *s, const char *end)
     }
 }
 
-static unsigned long
-xstrtoul (const char *s)
-{
-  char *end;
-  unsigned long val;
+#define STRTOX(TYPE, FUNC_NAME, LIB_FUNC_EXPR)				 \
+static TYPE								 \
+FUNC_NAME (const char *s)						 \
+{									 \
+  char *end;								 \
+  TYPE val;								 \
+									 \
+  if (*s == '\"' || *s == '\'')						 \
+    {									 \
+      val = *(unsigned char *) ++s;					 \
+      if (*++s != 0)							 \
+	{								 \
+	  error (0, 0,							 \
+		 _("%s: character(s) following character constant"), s); \
+	  exit_status = 1;						 \
+	}								 \
+    }									 \
+  else									 \
+    {									 \
+      errno = 0;							 \
+      val = LIB_FUNC_EXPR;						 \
+      verify (s, end);							 \
+    }									 \
+  return val;								 \
+}									 \
 
-  errno = 0;
-  val = strtoul (s, &end, 0);
-  verify (s, end);
-  return val;
-}
-
-static long
-xstrtol (const char *s)
-{
-  char *end;
-  long val;
-
-  errno = 0;
-  val = strtol (s, &end, 0);
-  verify (s, end);
-  return val;
-}
-
-static double
-xstrtod (const char *s)
-{
-  char *end;
-  double val;
-
-  errno = 0;
-  val = strtod (s, &end);
-  verify (s, end);
-  return val;
-}
+STRTOX (unsigned long int, xstrtoul, (strtoul (s, &end, 0)))
+STRTOX (long int,          xstrtol,  (strtol  (s, &end, 0)))
+STRTOX (double,            xstrtod,  (strtod  (s, &end)))
 
 /* Output a single-character \ escape.  */
 
