@@ -1,3 +1,9 @@
+2000-03-03  Jim Meyering  <meyering@lucent.com>
+
+	* po/Makefile.in.in (dist distdir): Don't use `ln' (which was just a
+	space optimization anyway) to populate $(distdir).  Otherwise, the dist
+	rules that change permissions would end up affecting the master sources.
+
 2000-03-01  Paul Eggert  <eggert@twinsun.com>
 
 	* src/df.c (show_point): Ignore shortcuts based on path
