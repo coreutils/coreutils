@@ -1,3 +1,9 @@
+Sun Mar 31 16:26:06 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* configure.in: Simplify checking for math library.
+	This also eliminates some confusing output from configure.
+	Suggested by François Pinard.
+
 Fri Mar 29 22:13:10 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* src/Makefile.am (INCLUDES): Replace -I$(top_srcdir)/intl with
