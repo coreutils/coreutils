@@ -1,4 +1,6 @@
 [4.5.9]
+* mv and `cp --preserve=links' now preserve multiple hard links even under
+  certain unusual conditions where they used to fail
 
 [4.5.8]
 * du -S once again works like it did before the change in 4.5.5
