@@ -1,0 +1,13 @@
+Major changes in release 3.4:
+* cp -p and mv preserve setuid and setgid bits
+* chown works on systems where sizeof(uid_t) != sizeof(int) 
+  or sizeof(uid) != sizeof(gid)
+* catch errors from spurious slashes at ends of arguments
+
+Major changes in release 3.3:
+* df sped up by not calling sync for every filesystem
+* df ported to AIX (RS/6000 and PS/2), and SVR2 port fixed
+* df -i now also prints the total number of inodes per filesystem
+* ls sped up by not reading symlink contents unnecessarily
+* du doesn't die on POSIX systems when the root filesystem is NFS mounted
+* cp and mv report chown Permission denied errors when run by root
