@@ -230,11 +230,11 @@ tac_seekable (int input_fd, const char *file)
      in the input file. */
 
   if (lseek (input_fd, file_pos, SEEK_SET) < 0)
-    error (0, errno, _("%s: seek failed"), file);
+    error (0, errno, _("%s: seek failed"), quote (file));
 
   if (safe_read (input_fd, G_buffer, saved_record_size) != saved_record_size)
     {
-      error (0, errno, "%s", file);
+      error (0, errno, "%s", quote (file));
       return false;
     }
 
@@ -327,7 +327,7 @@ tac_seekable (int input_fd, const char *file)
 	      file_pos = 0;
 	    }
 	  if (lseek (input_fd, file_pos, SEEK_SET) < 0)
-	    error (0, errno, _("%s: seek failed"), file);
+	    error (0, errno, _("%s: seek failed"), quote (file));
 
 	  /* Shift the pending record data right to make room for the new.
 	     The source and destination regions probably overlap.  */
@@ -341,7 +341,7 @@ tac_seekable (int input_fd, const char *file)
 
 	  if (safe_read (input_fd, G_buffer, read_size) != read_size)
 	    {
-	      error (0, errno, "%s", file);
+	      error (0, errno, "%s", quote (file));
 	      return false;
 	    }
 	}
@@ -422,11 +422,11 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
   tempfile = template;
   fd = mkstemp (template);
   if (fd == -1)
-    error (EXIT_FAILURE, errno, "%s", tempfile);
+    error (EXIT_FAILURE, errno, "%s", quote (tempfile));
 
   tmp = fdopen (fd, "w+");
   if (tmp == NULL)
-    error (EXIT_FAILURE, errno, "%s", tempfile);
+    error (EXIT_FAILURE, errno, "%s", quote (tempfile));
 
 #if DONT_UNLINK_WHILE_OPEN
   record_tempfile (tempfile, tmp);
@@ -440,14 +440,14 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
       if (bytes_read == 0)
 	break;
       if (bytes_read == SAFE_READ_ERROR)
-	error (EXIT_FAILURE, errno, _("%s: read error"), file);
+	error (EXIT_FAILURE, errno, _("%s: read error"), quote (file));
 
       if (fwrite (G_buffer, 1, bytes_read, tmp) != bytes_read)
-	error (EXIT_FAILURE, errno, "%s", tempfile);
+	error (EXIT_FAILURE, errno, "%s", quote (tempfile));
     }
 
   if (fflush (tmp) != 0)
-    error (EXIT_FAILURE, errno, "%s", tempfile);
+    error (EXIT_FAILURE, errno, "%s", quote (tempfile));
 
   SET_BINARY (fileno (tmp));
   *g_tmp = tmp;
