@@ -1,5 +1,5 @@
 /* wc - print the number of bytes, words, and lines in files
-   Copyright (C) 85, 91, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 85, 91, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -274,7 +274,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
 	 but not chars or words.  */
       while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
 	{
-	  register char *p = buf;
+	  char *p = buf;
 
 	  if (bytes_read == SAFE_READ_ERROR)
 	    {
