@@ -187,7 +187,7 @@ specifies Coordinated Universal Time.  Interpreted sequences are:\n\
   %s   seconds since `00:00:00 1970-01-01 UTC' (a GNU extension)\n\
 "), stdout);
       fputs (_("\
-  %S   second (00..60)\n\
+  %S   second (00..60); the 60 is necessary to accommodate a leap second\n\
   %t   a horizontal tab\n\
   %T   time, 24-hour (hh:mm:ss)\n\
   %u   day of week (1..7);  1 represents Monday\n\
