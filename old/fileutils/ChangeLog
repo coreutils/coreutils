@@ -2,6 +2,13 @@
 
 	* Version 4.1.9.
 
+	Handle "lld" vs "ld" printf formats the same way Bash does.
+	* src/stat.c: Include inttypes.h.
+	(PRIdMAX, PRIuMAX): Define, if not already defined.
+	(print_statfs): Use those macros, not the literal strings.
+	(print_stat): Likewise.
+	Suggestion from Paul Eggert.
+
 	* src/stat.c (print_human_fstype): Add missing `break;'
 	for `case S_MAGIC_MINIX:'.
 
