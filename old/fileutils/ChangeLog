@@ -1,8 +1,8 @@
 Fri Jun 28 22:56:00 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/ln.c (do_link): Allow `ln -sf --backup k k' to succeed in
-	creating the self-referential symlink, doing so doesn't remove the
-	source but merely renames it.
+	creating the self-referential symlink, since doing so doesn't
+	remove the source but merely renames it.
 
 Wed Jun 26 06:58:58 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
@@ -29,8 +29,8 @@ Mon Jun 24 22:39:02 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* dircolors.c (dc_parse_stream): Remove spurious newline in
 	error message.
-	(dc_parse_stream): Give `unrecognized keyword' for misspelled
-	`TERM' keyword as well as for others.
+	(dc_parse_stream): Give `unrecognized keyword' diagnostic for
+	misspelled `TERM' keyword as well as for others.
 
 Sun Jun 23 12:58:32 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
