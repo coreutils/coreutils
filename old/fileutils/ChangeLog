@@ -1,5 +1,8 @@
 1999-11-20  Jim Meyering  <meyering@ascend.com>
 
+	* tests/ls/time-1: Use `ls' and `touch', not $LS and $TOUCH.
+	* tests/ls/Makefile.am (TESTS_ENVIRONMENT): Specify PATH, etc.
+
 	* src/chgrp.c: Declare lstat;  needed on e.g. SunOS4.
 	Reported by Tom Tromey.
 
