@@ -11,8 +11,10 @@ AC_DEFUN([jm_FUNC_NANOSLEEP],
 
  # Solaris 2.5.1 needs -lposix4 to get the nanosleep function.
  # Solaris 7 prefers the library name -lrt to the obsolescent name -lposix4.
- AC_SEARCH_LIBS(nanosleep, [rt posix4], [LIB_NANOSLEEP=$ac_cv_search_nanosleep])
- AC_SUBST(LIB_NANOSLEEP)
+ AC_SEARCH_LIBS([nanosleep], [rt posix4],
+                [test "$ac_cv_search_nanosleep" = "none required" ||
+	         LIB_NANOSLEEP=$ac_cv_search_nanosleep])
+ AC_SUBST([LIB_NANOSLEEP])
 
  AC_CACHE_CHECK([whether nanosleep works],
   jm_cv_func_nanosleep_works,
