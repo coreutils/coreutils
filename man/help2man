@@ -78,7 +78,7 @@ my $help_info = sprintf _(<<'EOT'), $this_program, $this_program;
 
 Usage: %s [OPTION]... EXECUTABLE
 
-     --program_name=STRING  override any name found in output of
+     --program_name=NAME  override any name found in output of
                               `EXECUTABLE --version'
  -n, --name=STRING       description for the NAME paragraph
  -s, --section=SECTION   section number for manual page (1, 6, 8)
