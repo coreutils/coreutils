@@ -1,7 +1,7 @@
 /* Work around the bug in some systems whereby stat succeeds when
    given the zero-length file name argument.  The stat from SunOS4.1.4
    has this bug.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -33,7 +33,13 @@
 extern int errno;
 #endif
 
-/* FIXME: describe.  */
+/* This is a wrapper for stat(2).
+   If FILE is the empty string, fail with errno == ENOENT.
+   Otherwise, return the result of calling the real stat.
+
+   This works around the bug in some systems whereby stat succeeds when
+   given the zero-length file name argument.  The stat from SunOS4.1.4
+   has this bug.  */
 
 int
 rpl_stat (file, sbuf)
@@ -42,7 +48,7 @@ rpl_stat (file, sbuf)
 {
   if (file && *file == 0)
     {
-      errno = EINVAL;
+      errno = ENOENT;
       return -1;
     }
 
