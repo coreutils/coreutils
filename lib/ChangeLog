@@ -1,3 +1,13 @@
+2004-03-03  Paul Eggert  <eggert@twinsun.com>
+
+	* cloexec.c: Include "cloexec.h" first, and <unistd.h> before <fcntl.h>.
+	(set_cloexec_flag): Use bool for booleans.  All uses changed.
+	If F_GETFD returns a negative number (not just -1), report a
+	failure.  Don't use F_SETFD if the flags are already right.
+	Don't report a failure with F_SETFD unless it returns -1.
+	* cloexec.h: Include <stdbool.h>.
+	Adjust signature to use `bool' rather than `int'.
+
 2004-03-02  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* cloexec.c: New file.
