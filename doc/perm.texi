@@ -119,7 +119,7 @@ format:
 
 @noindent
 The spaces between the three parts above are shown for readability only;
-symbolic modes can not contain spaces.
+symbolic modes cannot contain spaces.
 
 The @var{users} part tells which users' access to the file is changed.
 It consists of one or more of the following letters (or it can be empty;
@@ -428,7 +428,7 @@ This number is always interpreted in octal; you do not have to add a
 leading 0, as you do in C.  Mode 0055 is the same as mode 55.
 
 A numeric mode is usually shorter than the corresponding symbolic
-mode, but it is limited in that it can not take into account a file's
+mode, but it is limited in that it cannot take into account a file's
 previous permissions; it can only set them absolutely.
 
 On most systems, the permissions granted to the user,
