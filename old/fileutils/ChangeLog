@@ -1,3 +1,29 @@
+2000-02-12  Jim Meyering  <meyering@lucent.com>
+
+	* po/POTFILES.in: Add lib/userspec.c.
+
+	* doc/fileutils.texi (chown invocation): Deprecate use of `.'.
+
+	* src/chown.c (usage): Mention only `:', and not `.' as the separator,
+	since POSIX allows only the former.
+	Prompted by a report from Manas Garg.
+
+2000-02-11  Jim Meyering  <meyering@lucent.com>
+
+	* src/df.c (main): Count the stat'able arguments.
+	Print the header line only if there is at least one valid argument.
+	Reported by Andy Longton <alongton@metamark.com>
+
+2000-02-10  Jim Meyering  <meyering@lucent.com>
+
+	Make du work when invoked from an unreadable directory.
+
+	* src/du.c (pop_dir): New function.
+	(count_entry): Factor out common code (pop_dir), and call the new
+	function instead.
+	(du_files): Don't stat `.' or call save_cwd, since count_entry
+	never returns with a changed working directory.
+
 2000-02-09  Jim Meyering  <meyering@lucent.com>
 
 	* tests/mv/mv-special-1: Use $null and $dir in place of literals
