@@ -1,5 +1,5 @@
 /* Utility to accept --help and --version options as unobtrusively as possible.
-   Copyright (C) 1993, 1994, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1994, 1998, 1999, 2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@
 
 #include <stdio.h>
 #include <getopt.h>
-#include "closeout.h"
 #include "long-options.h"
 #include "version-etc.h"
 
@@ -71,8 +70,6 @@ parse_long_options (int argc,
 
 	case 'v':
 	  version_etc (stdout, command_name, package, version, authors);
-	  close_stdout (); /* FIXME: output failure exit status
-			      should be settable via an arg.  */
 	  exit (0);
 
 	default:
