@@ -27,6 +27,10 @@
 
    David MacKenzie <djm@gnu.ai.mit.edu> */
 
+#ifdef TERMIOS_NEEDS_XOPEN_SOURCE
+# define _XOPEN_SOURCE
+#endif
+
 #include <config.h>
 #include <stdio.h>
 #include <sys/types.h>
@@ -37,6 +41,11 @@
 #ifdef WINSIZE_IN_PTEM
 # include <sys/stream.h>
 # include <sys/ptem.h>
+#endif
+#ifdef GWINSZ_IN_SYS_PTY
+# include <sys/ioctl.h>
+# include <sys/tty.h>
+# include <sys/pty.h>
 #endif
 #include <getopt.h>
 #if PROTOTYPES
@@ -87,6 +96,11 @@
 #endif
 #if defined(VEOL2) && !defined(CEOL2)
 # define CEOL2 _POSIX_VDISABLE
+#endif
+/* ISC renamed swtch to susp for termios, but we'll accept either name.  */
+#if defined(VSUSP) && !defined(VSWTCH)
+# define VSWTCH VSUSP
+# define CSWTCH CSUSP
 #endif
 #if defined(VSWTCH) && !defined(CSWTCH)
 # define CSWTCH _POSIX_VDISABLE
@@ -1178,27 +1192,12 @@ set_speed (enum speed_setting type, const char *arg, struct termios *mode)
 
 #ifdef TIOCGWINSZ
 
-/* Get window size information.  First try getting the information
-   associated with standard output and if that fails, try standard input.
-   Return zero for success, nonzero if both ioctl's failed.  */
-
-static int
-get_win_size (struct winsize *win)
-{
-  int err;
-
-  err = ioctl (1, TIOCGWINSZ, (char *) win);
-  if (err != 0)
-    err = ioctl (0, TIOCGWINSZ, (char *) win);
-  return err;
-}
-
 static void
 set_window_size (int rows, int cols)
 {
   struct winsize win;
 
-  if (get_win_size (&win))
+  if (ioctl (0, TIOCGWINSZ, (char *) &win))
     {
       if (errno != EINVAL)
 	error (1, errno, _("standard input"));
@@ -1260,10 +1259,12 @@ display_window_size (int fancy)
 {
   struct winsize win;
 
-  if (get_win_size (&win))
+  if (ioctl (0, TIOCGWINSZ, (char *) &win))
     {
       if (errno != EINVAL)
 	error (1, errno, _("standard input"));
+      if (!fancy)
+	error (1, 0, _("no size information for this device"));
     }
   else
     {
@@ -1281,16 +1282,16 @@ screen_columns (void)
 #ifdef TIOCGWINSZ
   struct winsize win;
 
-  if (get_win_size (&win))
-    {
-      /* With Solaris 2.[123], this ioctl fails and errno is set to
-	 EINVAL for telnet (but not rlogin) sessions.  */
-      if (errno != EINVAL)
-	error (1, errno, _("standard input"));
-    }
-  else if (win.ws_col > 0)
+  /* With Solaris 2.[123], this ioctl fails and errno is set to
+     EINVAL for telnet (but not rlogin) sessions.
+     On ISC 3.0, it fails for the console and the serial port
+     (but it works for ptys).
+     It can also fail on any system when stdout isn't a tty.
+     In case of any failure, just use the default.  */
+  if (ioctl (1, TIOCGWINSZ, (char *) &win) == 0 && win.ws_col > 0)
     return win.ws_col;
 #endif
+  /* FIXME: use xstrtol */
   if (getenv ("COLUMNS"))
     return atoi (getenv ("COLUMNS"));
   return 80;
@@ -1361,6 +1362,19 @@ display_changed (struct termios *mode)
     {
       if (mode->c_cc[control_info[i].offset] == control_info[i].saneval)
 	continue;
+      /* If swtch is the same as susp, don't print both.  */
+#if VSWTCH == VSUSP
+      if (strcmp (control_info[i].name, "swtch") == 0)
+	continue;
+#endif
+      /* If eof uses the same slot as min, only print whichever applies.  */
+#if VEOF == VMIN
+      if ((mode->c_lflag & ICANON) == 0
+	  && (strcmp (control_info[i].name, "eof") == 0
+	      || strcmp(control_info[i].name, "eol") == 0))
+	continue;
+#endif
+
       empty_line = 0;
       wrapf ("%s = %s;", control_info[i].name,
 	     visible (mode->c_cc[control_info[i].offset]));
@@ -1431,10 +1445,27 @@ display_all (struct termios *mode)
 
   for (i = 0; strcmp (control_info[i].name, "min"); ++i)
     {
+      /* If swtch is the same as susp, don't print both.  */
+#if VSWTCH == VSUSP
+      if (strcmp (control_info[i].name, "swtch") == 0)
+	continue;
+#endif
+      /* If eof uses the same slot as min, only print whichever applies.  */
+#if VEOF == VMIN
+      if ((mode->c_lflag & ICANON) == 0
+	  && (strcmp (control_info[i].name, "eof") == 0
+	      || strcmp(control_info[i].name, "eol") == 0))
+	continue;
+#endif
       wrapf ("%s = %s;", control_info[i].name,
 	     visible (mode->c_cc[control_info[i].offset]));
     }
-  wrapf ("min = %d; time = %d;\n", mode->c_cc[VMIN], mode->c_cc[VTIME]);
+#if VEOF == VMIN
+  if ((mode->c_lflag & ICANON) == 0)
+#endif
+    wrapf ("min = %d; time = %d;", mode->c_cc[VMIN], mode->c_cc[VTIME]);
+  if (current_col != 0)
+    putchar ('\n');
   current_col = 0;
 
   for (i = 0; mode_info[i].name != NULL; ++i)
