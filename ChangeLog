@@ -1,6 +1,11 @@
-2004-05-08  Jim Meyering  <jim@meyering.net>
+2004-05-09  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/tr.c (unquote): Use xcalloc rather than xmalloc and
+	a loop initializing the just-allocated memory to zero.
+
+2004-05-08  Jim Meyering  <jim@meyering.net>
 
 	* tests/rm/no-give-up: New file; check for today's fix.
 	* tests/rm/Makefile.am (TESTS): Add no-give-up.
