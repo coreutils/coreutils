@@ -31,7 +31,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "comm"
 
-#define AUTHORS "Richard Stallman", "David MacKenzie"
+#define AUTHORS N_ ("Richard Stallman and David MacKenzie")
 
 /* Undefine, to avoid warning about redefinition on some systems.  */
 #undef min

@@ -39,7 +39,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "dd"
 
-#define AUTHORS "Paul Rubin", "David MacKenzie", "Stuart Kemp"
+#define AUTHORS N_ ("Paul Rubin, David MacKenzie, and Stuart Kemp")
 
 #ifndef SIGINFO
 # define SIGINFO SIGUSR1
@@ -1161,7 +1161,7 @@ main (int argc, char **argv)
   atexit (close_stdout_wrapper);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, VERSION,
-		      usage, AUTHORS, NULL);
+		      AUTHORS, usage);
 
   /* Don't close stdout on exit from here on.  */
   closeout_func = NULL;

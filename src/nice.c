@@ -99,7 +99,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      usage, AUTHORS, NULL);
+		      AUTHORS, usage);
 
   for (i = 1; i < argc; /* empty */)
     {

@@ -37,7 +37,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "csplit"
 
-#define AUTHORS "Stuart Kemp", "David MacKenzie"
+#define AUTHORS N_ ("Stuart Kemp and David MacKenzie")
 
 #ifndef TRUE
 # define FALSE 0

@@ -24,12 +24,8 @@
 
 extern char *version_etc_copyright;
 
-void version_etc_va (FILE *stream,
-		     char const *command_name, char const *package,
-		     char const *version, va_list authors);
-
 void version_etc (FILE *stream,
-		  char const *command_name, char const *package,
-		  char const *version, ...);
+		  const char *command_name, const char *package,
+		  const char *version, const char *authors);
 
 #endif /* VERSION_ETC_H */

@@ -37,7 +37,7 @@
 #define PROGRAM_NAME "touch"
 
 #define AUTHORS \
-"Paul Rubin", "Arnold Robbins", "Jim Kingdon", "David MacKenzie", "Randy Smith"
+N_ ("Paul Rubin, Arnold Robbins, Jim Kingdon, David MacKenzie, and Randy Smith")
 
 #ifndef STDC_HEADERS
 time_t time ();

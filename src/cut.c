@@ -39,7 +39,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "cut"
 
-#define AUTHORS "David Ihnat", "David MacKenzie", "Jim Meyering"
+#define AUTHORS N_ ("David Ihnat, David MacKenzie, and Jim Meyering")
 
 #define FATAL_ERROR(Message)						\
   do									\

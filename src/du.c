@@ -46,7 +46,7 @@
 #define PROGRAM_NAME "du"
 
 #define AUTHORS \
-  "Torbjorn Granlund", "David MacKenzie", "Paul Eggert", "Jim Meyering"
+  N_ ("Torbjorn Granlund, David MacKenzie, Paul Eggert, and Jim Meyering")
 
 /* Initial size of the hash table.  */
 #define INITIAL_TABLE_SIZE 103

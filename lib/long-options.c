@@ -25,10 +25,9 @@
 
 #include "long-options.h"
 
-#include <stdarg.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <getopt.h>
+#include <stdlib.h>
 
 #include "version-etc.h"
 
@@ -48,8 +47,8 @@ parse_long_options (int argc,
 		    const char *command_name,
 		    const char *package,
 		    const char *version,
-		    void (*usage_func)(),
-		    ...)
+		    const char *authors,
+		    void (*usage_func)())
 {
   int c;
   int saved_opterr;
@@ -68,12 +67,8 @@ parse_long_options (int argc,
 	  (*usage_func) (0);
 
 	case 'v':
-	  {
-	    va_list args;
-	    va_start (args, usage_func);
-	    version_etc_va (stdout, command_name, package, version, args);
-	    exit (0);
-	  }
+	  version_etc (stdout, command_name, package, version, authors);
+	  exit (0);
 
 	default:
 	  /* Don't process any other long-named options.  */
