@@ -1823,7 +1823,14 @@ mergelines (struct line *t,
 /* Sort the array LINES with NLINES members, using TEMP for temporary space.
    NLINES must be at least 2.
    The input and output arrays are in reverse order, and LINES and
-   TEMP point just past the end of their respective arrays.  */
+   TEMP point just past the end of their respective arrays.
+
+   Use a recursive divide-and-conquer algorithm, in the style
+   suggested by Knuth volume 3 (2nd edition), exercise 5.2.4-23.  Use
+   the optimization suggested by exercise 5.2.4-10; this requires room
+   for only 1.5*N lines, rather than the usual 2*N lines.  Knuth
+   writes that this memory optimization was originally published by
+   D. A. Bell, Comp J. 1 (1958), 75.  */
 
 static void
 sortlines (struct line *lines, size_t nlines, struct line *temp)
