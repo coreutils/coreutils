@@ -72,7 +72,7 @@ static struct option const long_options[] =
   {"backup", optional_argument, NULL, 'b'},
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
-  {"strip-trailing-slash", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
+  {"strip-trailing-slashes", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
   {"suffix", required_argument, NULL, 'S'},
   {"target-directory", required_argument, NULL, TARGET_DIRECTORY_OPTION},
   {"update", no_argument, NULL, 'u'},
