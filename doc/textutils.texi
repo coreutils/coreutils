@@ -3044,12 +3044,12 @@ take up 1 character.
 Print only the fields listed in @var{field-list}.  Fields are
 separated by a @key{TAB} by default.
 
-@item -d @var{delim}
-@itemx --delimiter=@var{delim}
+@item -d @var{input_delim_byte}
+@itemx --delimiter=@var{input_delim_byte}
 @opindex -d
 @opindex --delimiter
-For @samp{-f}, fields are separated by the first character in @var{delim}
-(default is @key{TAB}).
+For @samp{-f}, fields are separated in the input by the first character
+in @var{input_delim_byte} (default is @key{TAB}).
 
 @item -n
 @opindex -n
@@ -3061,6 +3061,12 @@ Do not split multi-byte characters (no-op for now).
 @opindex --only-delimited
 For @samp{-f}, do not print lines that do not contain the field separator
 character.
+
+@itemx --output-delimiter=@var{output_delim_string}
+@opindex --output-delimiter
+For @samp{-f}, output fields are separated by @var{output_delim_string}
+The default is to use the input delimiter.
+
 
 @end table
 
