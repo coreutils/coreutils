@@ -50,17 +50,12 @@ struct group *getgrgid ();
 # define endpwent() ((void) 0)
 #endif
 
-#if HAVE_LCHOWN
-# define LCHOWN(FILE, OWNER, GROUP) lchown (FILE, OWNER, GROUP)
-#else
-# define LCHOWN(FILE, OWNER, GROUP) 1
-#endif
-
 char *parse_user_spec ();
 void strip_trailing_slashes ();
 
 enum Change_status
 {
+  CH_NOT_APPLIED,
   CH_SUCCEEDED,
   CH_FAILED,
   CH_NO_CHANGE_REQUESTED
@@ -86,7 +81,7 @@ char *program_name;
 
 /* If nonzero, and the systems has support for it, change the ownership
    of symbolic links rather than any files they point to.  */
-static int change_symlinks;
+static int change_symlinks = 1;
 
 /* If nonzero, change the ownership of directories recursively. */
 static int recurse;
@@ -117,6 +112,7 @@ static struct option const long_options[] =
 {
   {"recursive", no_argument, 0, 'R'},
   {"changes", no_argument, 0, 'c'},
+  {"dereference", no_argument, 0, 13},
   {"no-dereference", no_argument, 0, 'h'},
   {"quiet", no_argument, 0, 'f'},
   {"silent", no_argument, 0, 'f'},
@@ -134,6 +130,13 @@ static void
 describe_change (const char *file, enum Change_status changed)
 {
   const char *fmt;
+
+  if (changed == CH_NOT_APPLIED)
+    {
+      printf (_("symbolic link %s not changed\n"), file);
+      return;
+    }
+
   switch (changed)
     {
     case CH_SUCCEEDED:
@@ -160,7 +163,7 @@ describe_change (const char *file, enum Change_status changed)
    Return 0 if successful, 1 if errors occurred. */
 
 static int
-change_file_owner (const char *file, uid_t user, gid_t group)
+change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group)
 {
   struct stat file_stats;
   uid_t newuser;
@@ -179,14 +182,34 @@ change_file_owner (const char *file, uid_t user, gid_t group)
   if (newuser != file_stats.st_uid || newgroup != file_stats.st_gid)
     {
       int fail;
+      int symlink_changed = 1;
 
-      if (change_symlinks)
-	fail = LCHOWN (file, newuser, newgroup);
+      if (S_ISLNK (file_stats.st_mode) && change_symlinks)
+	{
+	  fail = lchown (file, newuser, newgroup);
+
+	  /* Failing to lchown a symlink is fatal only if it is a command
+	     line argument.  Symlinks encountered during a recursive
+	     traversal are silently ignored.  So, ignore the failure
+	     if it's due to lack of support (ENOSYS) and this is not a
+	     command line argument.  */
+	  if (!cmdline_arg && fail && errno == ENOSYS)
+	    {
+	      fail = 0;
+	      symlink_changed = 0;
+	    }
+	}
       else
-	fail = chown (file, newuser, newgroup);
+	{
+	  fail = chown (file, newuser, newgroup);
+	}
 
       if (verbosity == V_high || (verbosity == V_changes_only && !fail))
-	describe_change (file, (fail ? CH_FAILED : CH_SUCCEEDED));
+	{
+	  enum Change_status ch_status = (! symlink_changed ? CH_NOT_APPLIED
+					  : (fail ? CH_FAILED : CH_SUCCEEDED));
+	  describe_change (file, ch_status);
+	}
 
       if (fail)
 	{
@@ -250,7 +273,7 @@ change_dir_owner (const char *dir, uid_t user, gid_t group, struct stat *statp)
 	  path = xrealloc (path, pathlength);
 	}
       strcpy (path + dirlength, namep);
-      errors |= change_file_owner (path, user, group);
+      errors |= change_file_owner (0, path, user, group);
     }
   free (path);
   free (name_space);
@@ -275,6 +298,8 @@ Usage: %s [OPTION]... OWNER[.[GROUP]] FILE...\n\
 Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
 \n\
   -c, --changes          be verbose whenever change occurs\n\
+      --dereference      affect the referent of each symbolic link, rather\n\
+                         than the symbolic link itself\n\
   -h, --no-dereference   affect symbolic links instead of any referenced file\n\
                          (available only on systems that can change the\n\
                          ownership of a symlink)\n\
@@ -320,6 +345,9 @@ main (int argc, char **argv)
 	case 12:
 	  reference_file = optarg;
 	  break;
+	case 13:
+	  change_symlinks = 0;
+	  break;
 	case 'R':
 	  recurse = 1;
 	  break;
@@ -356,13 +384,6 @@ main (int argc, char **argv)
       usage (1);
     }
 
-#if ! HAVE_LCHOWN
-  if (change_symlinks)
-    {
-      error (1, 0, _("--no-dereference (-h) is not supported on this system"));
-    }
-#endif
-
   if (reference_file)
     {
       struct stat ref_stats;
@@ -387,7 +408,7 @@ main (int argc, char **argv)
   for (; optind < argc; ++optind)
     {
       strip_trailing_slashes (argv[optind]);
-      errors |= change_file_owner (argv[optind], user, group);
+      errors |= change_file_owner (1, argv[optind], user, group);
     }
 
   if (verbosity != V_off)
