@@ -117,6 +117,8 @@ struct fileinfo
     enum filetype filetype;
   };
 
+#define LEN_STR_PAIR(s) sizeof (s) - 1, s
+
 /* Null is a valid character in a color indicator (think about Epson
    printers, for example) so we have to use a length/buffer string
    type.  */
@@ -129,20 +131,20 @@ struct bin_str
 
 struct bin_str color_indicator[] =
   {
-    { 2, "\033[" },		/* lc: Left of color sequence */
-    { 1, "m" },			/* rc: Right of color sequence */
-    { 0, NULL },		/* ec: End color (replaces lc+no+rc) */
-    { 1, "0" },			/* no: Normal */
-    { 1, "0" },			/* fi: File: default */
-    { 2, "32" },		/* di: Directory: green */
-    { 2, "36" },		/* ln: Symlink: cyan */
-    { 2, "31" },		/* pi: Pipe: red */
-    { 2, "33" },		/* so: Socket: yellow/brown */
-    { 5, "44;37" },		/* bd: Block device: white on blue */
-    { 5, "44;37" },		/* cd: Char device: white on blue */
-    { 0, NULL },		/* mi: Missing file: undefined */
-    { 0, NULL },		/* or: Orphanned symlink: undefined */
-    { 2, "35" }			/* ex: Executable: purple */
+    { LEN_STR_PAIR ("\033[") },		/* lc: Left of color sequence */
+    { LEN_STR_PAIR ("m") },		/* rc: Right of color sequence */
+    { 0, NULL },			/* ec: End color (replaces lc+no+rc) */
+    { LEN_STR_PAIR ("0") },		/* no: Normal */
+    { LEN_STR_PAIR ("0") },		/* fi: File: default */
+    { LEN_STR_PAIR ("32") },		/* di: Directory: green */
+    { LEN_STR_PAIR ("36") },		/* ln: Symlink: cyan */
+    { LEN_STR_PAIR ("31") },		/* pi: Pipe: red */
+    { LEN_STR_PAIR ("33") },		/* so: Socket: yellow/brown */
+    { LEN_STR_PAIR ("44;37") },		/* bd: Block device: white on blue */
+    { LEN_STR_PAIR ("44;37") },		/* cd: Char device: white on blue */
+    { 0, NULL },			/* mi: Missing file: undefined */
+    { 0, NULL },			/* or: Orphanned symlink: undefined */
+    { LEN_STR_PAIR ("35") }		/* ex: Executable: purple */
   };
 
 #ifndef STDC_HEADERS
@@ -380,7 +382,7 @@ enum indicator_no
     C_BLK, C_CHR, C_MISSING, C_ORPHAN, C_EXEC
   };
 
-char *indicator_name[]=
+static const char *const indicator_name[]=
   {
     "lc", "rc", "ec", "no", "fi", "di", "ln", "pi", "so",
     "bd", "cd", "mi", "or", "ex", NULL
@@ -393,8 +395,11 @@ struct col_ext_type
     struct col_ext_type *next;	/* Next in list */
   };
 
+/* FIXME: comment  */
 struct col_ext_type *col_ext_list = NULL;
-char *color_buf;		/* Buffer for color sequences */
+
+/* Buffer for color sequences */
+static char *color_buf;
 
 /* Nonzero means mention the inode number of each file.  -i  */
 
@@ -599,7 +604,7 @@ static enum time_type const time_types[] =
   time_atime, time_atime, time_atime, time_ctime, time_ctime
 };
 
-static char const* color_args[] =
+static char const *const color_args[] =
   {
     /* Note: "no" is a prefix of "none" so we don't include it.  */
     /* force and none are for compatibility with another color-ls version */
@@ -1066,10 +1071,13 @@ decode_switches (int argc, char **argv)
 	  else
 	    print_with_color = i;
 
-	  /* XXX Shouldn't this be an autoconf check?  */
 	  if (print_with_color)
-	    tabsize = line_length;	/* Some systems don't like tabs and
-					   color codes in combination */
+	    {
+	      /* Don't use TAB characters in output.  Some terminal
+		 emulators can't handle the combination of tabs and
+		 color codes on the same line.  */
+	      tabsize = line_length;
+	    }
 	  break;
 
 	default:
@@ -1371,7 +1379,7 @@ parse_ls_color (void)
 			}
 		    }
 		  if (state == -1)
-		    fprintf (stderr, _("Unknown prefix: %s\n"), label);
+		    error (0, 0, _("unrecognized prefix: %s"), label);
 		}
              break;
 
@@ -1390,7 +1398,7 @@ parse_ls_color (void)
 
       if (state < 0)
 	{
-	  fprintf (stderr, _("Bad %s variable\n"), whichvar);
+	  error (0, 0, _("unparsable %s variable"), whichvar);
 	  free (color_buf);
 	  for (ext = col_ext_list; ext != NULL ; )
 	    {
