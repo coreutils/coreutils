@@ -1,3 +1,10 @@
+2004-12-15  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (ls invocation): Change minor problem to be
+	"subdirectory not found", since top-level trouble is now serious.
+	(dircolors invocation): Quote argument to eval.  Problem reported
+	by Stephane Chazelas.
+
 2004-12-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (join invocation): Mention that blank separators
