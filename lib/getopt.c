@@ -20,12 +20,6 @@
    along with this program; if not, write to the Free Software
    Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-/* This tells Alpha OSF/1 not to define a getopt prototype in <stdio.h>.
-   Ditto for AIX 3.2 and <stdlib.h>.  */
-#ifndef _NO_PROTO
-#define _NO_PROTO
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -38,7 +32,9 @@
 #endif
 #endif
 
+#define getopt _sys_getopt
 #include <stdio.h>
+#undef getopt
 
 /* Comment out all this code if we are using the GNU C Library, and are not
    actually compiling the library itself.  This code is part of the GNU C
@@ -50,14 +46,9 @@
 
 #if defined (_LIBC) || !defined (__GNU_LIBRARY__)
 
-
-/* This needs to come after some library #include
-   to get __GNU_LIBRARY__ defined.  */
-#if defined (__GNU_LIBRARY__) || defined (__sgi)
-/* Don't include stdlib.h for non-GNU C libraries because some of them
-   contain conflicting prototypes for getopt.  */
+#define getopt _sys_getopt
 #include <stdlib.h>
-#endif	/* GNU C library.  */
+#undef getopt
 
 /* This version of `getopt' appears to the caller like standard Unix `getopt'
    but it behaves differently for the user, since it allows the user
