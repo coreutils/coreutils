@@ -12,8 +12,8 @@
 
 2004-01-16  Jim Meyering  <jim@meyering.net>
 
-	* tests/touch/Makefile.am (TESTS): Add relative.
 	* tests/touch/relative: New test for the above.
+	* tests/touch/Makefile.am (TESTS): Add relative.
 
 2004-01-13  Jim Meyering  <jim@meyering.net>
 
