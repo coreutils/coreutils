@@ -40,7 +40,7 @@ for p in empty -p; do
 
   old_IFS=$IFS
   IFS=':'
-  set - `echo "$tests"|tr -d '\012'|sed 's/^ *//;s/ *:/:/g;s/: */:/g'`
+  set - `(echo "$tests"|tr -d '\012'; echo)|sed 's/^ *//;s/ *:/:/g;s/: */:/g'`
   IFS=$old_IFS
 
   while :; do
