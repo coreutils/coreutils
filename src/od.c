@@ -1421,8 +1421,8 @@ dump (void)
   int err;
   size_t n_bytes_read;
 
-  block[0] = alloca (bytes_per_block);
-  block[1] = alloca (bytes_per_block);
+  block[0] = xnmalloc (2, bytes_per_block);
+  block[1] = block[0] + bytes_per_block;
 
   current_offset = n_bytes_to_skip;
 
@@ -1486,6 +1486,8 @@ dump (void)
 
   if (limit_bytes_to_format && current_offset >= end_offset)
     err |= check_and_close (0);
+
+  free (block[0]);
 
   return err;
 }
