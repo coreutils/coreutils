@@ -82,31 +82,22 @@ enum
     SORT_FAILURE = 2
   };
 
-#define C_DECIMAL_POINT '.'
 #define NEGATION_SIGN   '-'
 #define NUMERIC_ZERO    '0'
 
-#if HAVE_SETLOCALE
-
+/* The representation of the decimal point in the current locale.  */
 static char decimal_point;
-static int th_sep; /* if CHAR_MAX + 1, then there is no thousands separator */
+
+/* Thousands separator; if CHAR_MAX + 1, then there isn't one.  */
+static int thousands_sep;
 
 /* Nonzero if the corresponding locales are hard.  */
 static bool hard_LC_COLLATE;
-# if HAVE_NL_LANGINFO
+#if HAVE_NL_LANGINFO
 static bool hard_LC_TIME;
-# endif
-
-# define IS_THOUSANDS_SEP(x) ((x) == th_sep)
-
-#else
-
-# define decimal_point C_DECIMAL_POINT
-# define IS_THOUSANDS_SEP(x) false
-
 #endif
 
-#define NONZERO(x) (x != 0)
+#define NONZERO(x) ((x) != 0)
 
 /* The kind of blanks for '-b' to skip in various options. */
 enum blanktype { bl_start, bl_end, bl_both };
@@ -1139,19 +1130,16 @@ numcompare (register const char *a, register const char *b)
   size_t log_a;
   size_t log_b;
 
-  tmpa = *a;
-  tmpb = *b;
-
-  while (blanks[to_uchar (tmpa)])
-    tmpa = *++a;
-  while (blanks[to_uchar (tmpb)])
-    tmpb = *++b;
+  while (blanks[to_uchar (tmpa = *a)])
+    a++;
+  while (blanks[to_uchar (tmpb = *b)])
+    b++;
 
   if (tmpa == NEGATION_SIGN)
     {
       do
 	tmpa = *++a;
-      while (tmpa == NUMERIC_ZERO || IS_THOUSANDS_SEP (tmpa));
+      while (tmpa == NUMERIC_ZERO || tmpa == thousands_sep);
       if (tmpb != NEGATION_SIGN)
 	{
 	  if (tmpa == decimal_point)
@@ -1160,45 +1148,43 @@ numcompare (register const char *a, register const char *b)
 	    while (tmpa == NUMERIC_ZERO);
 	  if (ISDIGIT (tmpa))
 	    return -1;
-	  while (tmpb == NUMERIC_ZERO || IS_THOUSANDS_SEP (tmpb))
+	  while (tmpb == NUMERIC_ZERO || tmpb == thousands_sep)
 	    tmpb = *++b;
 	  if (tmpb == decimal_point)
 	    do
 	      tmpb = *++b;
 	    while (tmpb == NUMERIC_ZERO);
-	  if (ISDIGIT (tmpb))
-	    return -1;
-	  return 0;
+	  return - ISDIGIT (tmpb);
 	}
       do
 	tmpb = *++b;
-      while (tmpb == NUMERIC_ZERO || IS_THOUSANDS_SEP (tmpb));
+      while (tmpb == NUMERIC_ZERO || tmpb == thousands_sep);
 
       while (tmpa == tmpb && ISDIGIT (tmpa))
 	{
 	  do
 	    tmpa = *++a;
-	  while (IS_THOUSANDS_SEP (tmpa));
+	  while (tmpa == thousands_sep);
 	  do
 	    tmpb = *++b;
-	  while (IS_THOUSANDS_SEP (tmpb));
+	  while (tmpb == thousands_sep);
 	}
 
       if ((tmpa == decimal_point && !ISDIGIT (tmpb))
 	  || (tmpb == decimal_point && !ISDIGIT (tmpa)))
-	return -fraccompare (a, b);
+	return fraccompare (b, a);
 
       tmp = tmpb - tmpa;
 
       for (log_a = 0; ISDIGIT (tmpa); ++log_a)
 	do
 	  tmpa = *++a;
-	while (IS_THOUSANDS_SEP (tmpa));
+	while (tmpa == thousands_sep);
 
       for (log_b = 0; ISDIGIT (tmpb); ++log_b)
 	do
 	  tmpb = *++b;
-	while (IS_THOUSANDS_SEP (tmpb));
+	while (tmpb == thousands_sep);
 
       if (log_a != log_b)
 	return log_a < log_b ? 1 : -1;
@@ -1212,38 +1198,36 @@ numcompare (register const char *a, register const char *b)
     {
       do
 	tmpb = *++b;
-      while (tmpb == NUMERIC_ZERO || IS_THOUSANDS_SEP (tmpb));
+      while (tmpb == NUMERIC_ZERO || tmpb == thousands_sep);
       if (tmpb == decimal_point)
 	do
 	  tmpb = *++b;
 	while (tmpb == NUMERIC_ZERO);
       if (ISDIGIT (tmpb))
 	return 1;
-      while (tmpa == NUMERIC_ZERO || IS_THOUSANDS_SEP (tmpa))
+      while (tmpa == NUMERIC_ZERO || tmpa == thousands_sep)
 	tmpa = *++a;
       if (tmpa == decimal_point)
 	do
 	  tmpa = *++a;
 	while (tmpa == NUMERIC_ZERO);
-      if (ISDIGIT (tmpa))
-	return 1;
-      return 0;
+      return ISDIGIT (tmpa);
     }
   else
     {
-      while (tmpa == NUMERIC_ZERO || IS_THOUSANDS_SEP (tmpa))
+      while (tmpa == NUMERIC_ZERO || tmpa == thousands_sep)
 	tmpa = *++a;
-      while (tmpb == NUMERIC_ZERO || IS_THOUSANDS_SEP (tmpb))
+      while (tmpb == NUMERIC_ZERO || tmpb == thousands_sep)
 	tmpb = *++b;
 
       while (tmpa == tmpb && ISDIGIT (tmpa))
 	{
 	  do
 	    tmpa = *++a;
-	  while (IS_THOUSANDS_SEP (tmpa));
+	  while (tmpa == thousands_sep);
 	  do
 	    tmpb = *++b;
-	  while (IS_THOUSANDS_SEP (tmpb));
+	  while (tmpb == thousands_sep);
 	}
 
       if ((tmpa == decimal_point && !ISDIGIT (tmpb))
@@ -1255,12 +1239,12 @@ numcompare (register const char *a, register const char *b)
       for (log_a = 0; ISDIGIT (tmpa); ++log_a)
 	do
 	  tmpa = *++a;
-	while (IS_THOUSANDS_SEP (tmpa));
+	while (tmpa == thousands_sep);
 
       for (log_b = 0; ISDIGIT (tmpb); ++log_b)
 	do
 	  tmpb = *++b;
-	while (IS_THOUSANDS_SEP (tmpb));
+	while (tmpb == thousands_sep);
 
       if (log_a != log_b)
 	return log_a < log_b ? -1 : 1;
@@ -1387,7 +1371,7 @@ keycompare (const struct line *a, const struct line *b)
 	diff = getmonth (texta, lena) - getmonth (textb, lenb);
       /* Sorting like this may become slow, so in a simple locale the user
 	 can select a faster sort that is similar to ascii sort.  */
-      else if (HAVE_SETLOCALE && hard_LC_COLLATE)
+      else if (hard_LC_COLLATE)
 	{
 	  if (ignore || translate)
 	    {
@@ -1548,7 +1532,7 @@ compare (register const struct line *a, register const struct line *b)
     diff = - NONZERO (blen);
   else if (blen == 0)
     diff = 1;
-  else if (HAVE_SETLOCALE && hard_LC_COLLATE)
+  else if (hard_LC_COLLATE)
     diff = xmemcoll (a->text, alen, b->text, blen);
   else if (! (diff = memcmp (a->text, b->text, MIN (alen, blen))))
     diff = alen < blen ? -1 : alen != blen;
@@ -2316,24 +2300,22 @@ main (int argc, char **argv)
   hard_LC_TIME = hard_locale (LC_TIME);
 #endif
 
-#if HAVE_SETLOCALE
-  /* Let's get locale's representation of the decimal point */
+  /* Get locale's representation of the decimal point.  */
   {
-    struct lconv const *lconvp = localeconv ();
+    struct lconv const *locale = localeconv ();
 
     /* If the locale doesn't define a decimal point, or if the decimal
-       point is multibyte, use the C decimal point.  We don't support
-       multibyte decimal points yet.  */
-    decimal_point = *lconvp->decimal_point;
-    if (! decimal_point || lconvp->decimal_point[1])
-      decimal_point = C_DECIMAL_POINT;
+       point is multibyte, use the C locale's decimal point.  FIXME:
+       add support for multibyte decimal points.  */
+    decimal_point = locale->decimal_point[0];
+    if (! decimal_point || locale->decimal_point[1])
+      decimal_point = '.';
 
-    /* We don't support multibyte thousands separators yet.  */
-    th_sep = *lconvp->thousands_sep;
-    if (! th_sep || lconvp->thousands_sep[1])
-      th_sep = CHAR_MAX + 1;
+    /* FIXME: add support for multibyte thousands separators.  */
+    thousands_sep = *locale->thousands_sep;
+    if (! thousands_sep || locale->thousands_sep[1])
+      thousands_sep = CHAR_MAX + 1;
   }
-#endif
 
   have_read_stdin = false;
   inittables ();
