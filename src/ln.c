@@ -49,6 +49,20 @@ int link ();			/* Some systems don't declare this anywhere. */
 int symlink ();
 #endif
 
+/* In being careful not even to try to make hard links to directories,
+   we have to know whether link(2) follows symlinks.  If it does, then
+   we have to *stat* the `source' to see if the resulting link would be
+   to a directory.  Otherwise, we have to use *lstat* so that we allow
+   users to make hard links to symlinks-that-point-to-directories.  */
+
+#if LINK_FOLLOWS_SYMLINKS
+# define STAT_LIKE_LINK(File, Stat_buf) \
+  stat (File, Stat_buf)
+#else
+# define STAT_LIKE_LINK(File, Stat_buf) \
+  lstat (File, Stat_buf)
+#endif
+
 /* Construct a string NEW_DEST by concatenating DEST, a slash, and
    basename(SOURCE) in alloca'd memory.  Don't modify DEST or SOURCE.  */
 
@@ -144,17 +158,23 @@ do_link (const char *source, const char *dest)
      On other systems, link follows symlinks, so this check is right.  */
   if (!symbolic_link)
     {
-      if (stat (source, &source_stats) != 0)
+      if (STAT_LIKE_LINK (source, &source_stats) != 0)
 	{
+#if LINK_FOLLOWS_SYMLINKS
 	  /* This still could be a legitimate request:
 	     if SOURCE is a dangling symlink.  */
-	  if (errno != ENOENT
-	      || lstat (source, &source_stats) != 0)
+	  if (errno == ENOENT && lstat (source, &source_stats) == 0)
+	    {
+	      /* FIXME: Consider giving a warning that this is not portable.  */
+	    }
+	  else
+#endif
 	    {
 	      error (0, errno, "%s", source);
 	      return 1;
 	    }
 	}
+
       if (!hard_dir_link && S_ISDIR (source_stats.st_mode))
 	{
 	  error (0, 0, _("%s: hard link not allowed for directory"), source);
