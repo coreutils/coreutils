@@ -1,5 +1,7 @@
 Tue Dec 17 16:49:02 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/strftime.c: Update from GNU libc.
+
 	* acinclude.m4 (jm_SYS_PROC_UPTIME): Require AC_PROG_CC, rather than
 	now-obsolete AC_C_CROSS.
 	(jm_FUNC_MKTIME): When redefining, use rpl_ prefix, not gnu_ one
