@@ -1,3 +1,10 @@
+2005-01-04  Jim Meyering  <jim@meyering.net>
+
+	* chown.m4 (gl_FUNC_CHOWN): When cross-compiling, assume that chown
+	is sane and DOES follow symlinks.  Besides, testing 20 different
+	systems found no broken chown implementations.
+	Prompted by a change in rsync's copy of this macro.
+
 2005-01-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* ullong_max.m4: New file.
