@@ -336,6 +336,8 @@ writing to standard output.\n\
   -d, --delete            delete characters in SET1, do not translate\n\
   -s, --squeeze-repeats   replace sequence of characters with one\n\
   -t, --truncate-set1     first truncate SET1 to length of SET2\n\
+"), stdout);
+      fputs (_("\
       --help              display this help and exit\n\
       --version           output version information and exit\n\
 "), stdout);

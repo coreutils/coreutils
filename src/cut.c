@@ -171,7 +171,11 @@ Usage: %s [OPTION]... [FILE]...\n\
       fputs (_("\
 Print selected parts of lines from each FILE to standard output.\n\
 \n\
+"), stdout);
+      fputs (_("\
 Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      fputs (_("\
   -b, --bytes=LIST        output only these bytes\n\
   -c, --characters=LIST   output only these characters\n\
   -d, --delimiter=DELIM   use DELIM instead of TAB for field delimiter\n\
@@ -186,11 +190,13 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -s, --only-delimited    do not print lines not containing delimiters\n\
       --output-delimiter=STRING  use STRING as the output delimiter\n\
                             the default is to use the input delimiter\n\
-      --help              display this help and exit\n\
-      --version           output version information and exit\n\
-\n\
 "), stdout);
       fputs (_("\
+      --help              display this help and exit\n\
+      --version           output version information and exit\n\
+"), stdout);
+      fputs (_("\
+\n\
 Use one, and only one of -b, -c or -f.  Each LIST is made up of one\n\
 range, or many ranges separated by commas.  Each range is one of:\n\
 \n\

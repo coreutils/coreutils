@@ -136,6 +136,8 @@ read standard input.\n\
       fputs (_("\
   -L, --max-line-length  print the length of the longest line\n\
   -w, --words            print the word counts\n\
+"), stdout);
+      fputs (_("\
       --help             display this help and exit\n\
       --version          output version information and exit\n\
 "), stdout);

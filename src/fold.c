@@ -67,17 +67,23 @@ usage (int status)
 Usage: %s [OPTION]... [FILE]...\n\
 "),
 	      program_name);
-      printf (_("\
+      fputs (_("\
 Wrap input lines in each FILE (standard input by default), writing to\n\
 standard output.\n\
 \n\
+"), stdout);
+      fputs (_("\
 Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      fputs (_("\
   -b, --bytes         count bytes rather than columns\n\
   -s, --spaces        break at spaces\n\
   -w, --width=WIDTH   use WIDTH columns instead of 80\n\
+"), stdout);
+      fputs (_("\
       --help          display this help and exit\n\
       --version       output version information and exit\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);

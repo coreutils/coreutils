@@ -273,7 +273,11 @@ usage (int status)
 Reformat each paragraph in the FILE(s), writing to standard output.\n\
 If no FILE or if FILE is `-', read standard input.\n\
 \n\
+"), stdout);
+      fputs (_("\
 Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      fputs (_("\
   -c, --crown-margin        preserve indentation of first two lines\n\
   -p, --prefix=STRING       combine only lines having STRING as prefix\n\
   -s, --split-only          split long lines, but do not refill\n\
@@ -283,8 +287,12 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -t, --tagged-paragraph    indentation of first line different from second\n\
   -u, --uniform-spacing     one space between words, two after sentences\n\
   -w, --width=NUMBER        maximum line width (default of 75 columns)\n\
+"), stdout);
+      fputs (_("\
       --help                display this help and exit\n\
       --version             output version information and exit\n\
+"), stdout);
+      fputs (_("\
 \n\
 In -wNUMBER, the letter `w' may be omitted.\n"),
 	     stdout);

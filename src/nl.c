@@ -181,7 +181,11 @@ Usage: %s [OPTION]... [FILE]...\n\
 Write each FILE to standard output, with line numbers added.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
+"), stdout);
+      fputs (_("\
 Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      fputs (_("\
   -b, --body-numbering=STYLE      use STYLE for numbering body lines\n\
   -d, --section-delimiter=CC      use CC for separating logical pages\n\
   -f, --footer-numbering=STYLE    use STYLE for numbering footer lines\n\
@@ -197,8 +201,12 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -v, --first-page=NUMBER         first line number on each logical page\n\
   -w, --number-width=NUMBER       use NUMBER columns for line numbers\n\
+"), stdout);
+      fputs (_("\
       --help                      display this help and exit\n\
       --version                   output version information and exit\n\
+"), stdout);
+      fputs (_("\
 \n\
 By default, selects -v1 -i1 -l1 -sTAB -w6 -nrn -hn -bt -fn.  CC are\n\
 two delimiter characters for separating logical pages, a missing\n\

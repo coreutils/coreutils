@@ -282,7 +282,11 @@ of FILE to standard output.  With more than one FILE argument,\n\
 concatenate them in the listed order to form the input.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
+"), stdout);
+      fputs (_("\
 Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      fputs (_("\
   -A, --address-radix=RADIX   decide how file offsets are printed\n\
   -j, --skip-bytes=BYTES      skip BYTES input bytes first\n\
 "), stdout);
@@ -297,6 +301,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
       --help                  display this help and exit\n\
       --version               output version information and exit\n\
+"), stdout);
+      fputs (_("\
 \n\
 Pre-POSIX format specifications may be intermixed, they accumulate:\n\
   -a   same as -t a,  select named characters\n\

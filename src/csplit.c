@@ -1500,7 +1500,11 @@ Usage: %s [OPTION]... FILE PATTERN...\n\
 Output pieces of FILE separated by PATTERN(s) to files `xx01', `xx02', ...,\n\
 and output byte counts of each piece to standard output.\n\
 \n\
+"), stdout);
+      fputs (_("\
 Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      fputs (_("\
   -b, --suffix-format=FORMAT use sprintf FORMAT instead of %d\n\
   -f, --prefix=PREFIX        use PREFIX instead of `xx'\n\
   -k, --keep-files           do not remove output files on errors\n\
@@ -1509,8 +1513,12 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -n, --digits=DIGITS        use specified number of digits instead of 2\n\
   -s, --quiet, --silent      do not print counts of output file sizes\n\
   -z, --elide-empty-files    remove empty output files\n\
+"), stdout);
+      fputs (_("\
       --help                 display this help and exit\n\
       --version              output version information and exit\n\
+"), stdout);
+      fputs (_("\
 \n\
 Read standard input if FILE is -.  Each PATTERN may be:\n\
 "), stdout);

@@ -291,7 +291,11 @@ Write sorted concatenation of all FILE(s) to standard output.\n\
 \n\
 Ordering options:\n\
 \n\
+"), stdout);
+      fputs (_("\
 Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      fputs (_("\
   -b, --ignore-leading-blanks ignore leading blanks\n\
   -d, --dictionary-order      consider only blanks and alphanumeric characters\n\
   -f, --ignore-case           fold lower case to upper case characters\n\
@@ -325,11 +329,13 @@ Other options:\n\
   -z, --zero-terminated     end lines with 0 byte, not newline\n\
   +POS1 [-POS2]             start a key at POS1, end it before POS2 (origin 0)\n\
                               Warning: this option is obsolescent\n\
-      --help       display this help and exit\n\
-      --version    output version information and exit\n\
-\n\
 "), stdout);
       fputs (_("\
+      --help       display this help and exit\n\
+      --version    output version information and exit\n\
+"), stdout);
+      fputs (_("\
+\n\
 POS is F[.C][OPTS], where F is the field number and C the character position\n\
 in the field, both counted from one with -k, from zero with the obsolescent\n\
 form.  OPTS is made up of one or more single-letter ordering options, which\n\

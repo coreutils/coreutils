@@ -139,15 +139,19 @@ With no FILE, or when FILE is -, read standard input.\n\
 \n\
 "),
 	      DIGEST_TYPE_STRING (algorithm));
-      printf (_("\
+      fputs (_("\
 The following two options are useful only when verifying checksums:\n\
       --status            don't output anything, status code shows success\n\
   -w, --warn              warn about improperly formated checksum lines\n\
 \n\
+"), stdout);
+      fputs (_("\
       --help              display this help and exit\n\
       --version           output version information and exit\n\
+"), stdout);
+      fputs (_("\
 \n\
-"));
+"), stdout);
       printf (_("\
 The sums are computed as described in %s.  When checking, the input\n\
 should be a former output of this program.  The default mode is to print\n\

@@ -243,13 +243,17 @@ Print the last %d lines of each FILE to standard output.\n\
 With more than one FILE, precede each with a header giving the file name.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
+"), DEFAULT_N_LINES);
+     fputs (_("\
 Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+     fputs (_("\
       --retry              keep trying to open a file even if it is\n\
                            inaccessible when tail starts or if it becomes\n\
                            inaccessible later -- useful only with -f\n\
-"), DEFAULT_N_LINES);
-     fputs (_("\
   -c, --bytes=N            output the last N bytes\n\
+"), stdout);
+     fputs (_("\
   -f, --follow[={name|descriptor}]\n\
                            output appended data as the file grows;\n\
                            -f, --follow, and --follow=descriptor are\n\
@@ -272,14 +276,14 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -q, --quiet, --silent    never output headers giving file names\n\
   -s, --sleep-interval=S   with -f, each iteration lasts approximately S\n\
                            (default 1) seconds\n\
+  -v, --verbose            always output headers giving file names\n\
 "), stdout);
      fputs (_("\
-  -v, --verbose            always output headers giving file names\n\
       --help               display this help and exit\n\
       --version            output version information and exit\n\
-\n\
 "), stdout);
      fputs (_("\
+\n\
 If the first character of N (the number of bytes or lines) is a `+',\n\
 print beginning with the Nth item from the start of each file, otherwise,\n\
 print the last N items in the file.  N may have a multiplier suffix:\n\

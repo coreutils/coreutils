@@ -61,16 +61,20 @@ usage (int status)
 Usage: %s [OPTION]... [FILE]...\n\
 "),
 	      program_name);
-      printf (_("\
+      fputs (_("\
 Print checksum and block counts for each FILE.\n\
 \n\
   -r              defeat -s, use BSD sum algorithm, use 1K blocks\n\
   -s, --sysv      use System V sum algorithm, use 512 bytes blocks\n\
+"), stdout);
+      fputs (_("\
       --help      display this help and exit\n\
       --version   output version information and exit\n\
+"), stdout);
+      fputs (_("\
 \n\
 With no FILE, or when FILE is -, read standard input.\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);

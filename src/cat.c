@@ -108,8 +108,12 @@ Concatenate FILE(s), or standard input, to standard output.\n\
   -T, --show-tabs          display TAB characters as ^I\n\
   -u                       (ignored)\n\
   -v, --show-nonprinting   use ^ and M- notation, except for LFD and TAB\n\
+"), stdout);
+      fputs (_("\
       --help               display this help and exit\n\
       --version            output version information and exit\n\
+"), stdout);
+      fputs (_("\
 \n\
 With no FILE, or when FILE is -, read standard input.\n\
 "), stdout);

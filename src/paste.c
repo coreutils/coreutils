@@ -404,18 +404,27 @@ usage (int status)
 Usage: %s [OPTION]... [FILE]...\n\
 "),
 	      program_name);
-      printf (_("\
+      fputs (_("\
 Write lines consisting of the sequentially corresponding lines from\n\
 each FILE, separated by TABs, to standard output.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
+"), stdout);
+      fputs (_("\
 Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      fputs (_("\
   -d, --delimiters=LIST   reuse characters from LIST instead of TABs\n\
   -s, --serial            paste one file at a time instead of in parallel\n\
+"), stdout);
+      fputs (_("\
       --help              display this help and exit\n\
       --version           output version information and exit\n\
+"), stdout);
+      /* FIXME: add a couple of examples.  */
+      fputs (_("\
 \n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);

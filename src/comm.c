@@ -76,15 +76,17 @@ usage (int status)
 Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n\
 "),
 	      program_name);
-      printf (_("\
+      fputs (_("\
 Compare sorted files LEFT_FILE and RIGHT_FILE line by line.\n\
 \n\
   -1              suppress lines unique to left file\n\
   -2              suppress lines unique to right file\n\
   -3              suppress lines that appear in both files\n\
+"), stdout);
+      fputs (_("\
       --help      display this help and exit\n\
       --version   output version information and exit\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);

@@ -90,15 +90,23 @@ Print first 10 lines of each FILE to standard output.\n\
 With more than one FILE, precede each with a header giving the file name.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
+"), stdout);
+      fputs (_("\
 Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      fputs (_("\
   -c, --bytes=SIZE         print first SIZE bytes\n\
   -n, --lines=NUMBER       print first NUMBER lines instead of first 10\n\
 "), stdout);
       fputs (_("\
   -q, --quiet, --silent    never print headers giving file names\n\
   -v, --verbose            always print headers giving file names\n\
+"), stdout);
+      fputs (_("\
       --help               display this help and exit\n\
       --version            output version information and exit\n\
+"), stdout);
+      fputs (_("\
 \n\
 SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
 If -VALUE is used as first OPTION, read -c VALUE when one of\n\

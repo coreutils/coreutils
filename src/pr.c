@@ -2755,7 +2755,11 @@ Usage: %s [OPTION]... [FILE]...\n\
       fputs (_("\
 Paginate or columnate FILE(s) for printing.\n\
 \n\
+"), stdout);
+      fputs (_("\
 Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      fputs (_("\
   +FIRST_PAGE[:LAST_PAGE], --pages=FIRST_PAGE[:LAST_PAGE]\n\
                     begin [stop] printing with page FIRST_[LAST_]PAGE\n\
   -COLUMN, --columns=COLUMN\n\
@@ -2842,6 +2846,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                     set page width to PAGE_WIDTH (72) characters always,\n\
                     truncate lines, except -J option is set, no interference\n\
                     with -S or -s\n\
+"), stdout);
+      fputs (_("\
   --help            display this help and exit\n\
   --version         output version information and exit\n\
 "), stdout);

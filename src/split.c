@@ -92,17 +92,23 @@ Usage: %s [OPTION] [INPUT [PREFIX]]\n\
 Output fixed-size pieces of INPUT to PREFIXaa, PREFIXab, ...; default\n\
 PREFIX is `x'.  With no INPUT, or when INPUT is -, read standard input.\n\
 \n\
+"), stdout);
+      fputs (_("\
 Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      fputs (_("\
   -b, --bytes=SIZE        put SIZE bytes per output file\n\
   -C, --line-bytes=SIZE   put at most SIZE bytes of lines per output file\n\
   -l, --lines=NUMBER      put NUMBER lines per output file\n\
-"), stdout);
-      fputs (_("\
   -NUMBER                 same as -l NUMBER\n\
       --verbose           print a diagnostic to standard error just\n\
                             before each output file is opened\n\
+"), stdout);
+      fputs (_("\
       --help              display this help and exit\n\
       --version           output version information and exit\n\
+"), stdout);
+      fputs (_("\
 \n\
 SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
 "), stdout);

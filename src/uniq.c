@@ -138,7 +138,11 @@ Usage: %s [OPTION]... [INPUT [OUTPUT]]\n\
 Discard all but one of successive identical lines from INPUT (or\n\
 standard input), writing to OUTPUT (or standard output).\n\
 \n\
+"), stdout);
+     fputs (_("\
 Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+     fputs (_("\
   -c, --count           prefix lines by the number of occurrences\n\
   -d, --repeated        only print duplicate lines\n\
 "), stdout);
@@ -155,8 +159,12 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -w, --check-chars=N   compare no more than N characters in lines\n\
   -N                    same as -f N\n\
   +N                    same as -s N (obsolescent; will be withdrawn)\n\
+"), stdout);
+     fputs (_("\
       --help            display this help and exit\n\
       --version         output version information and exit\n\
+"), stdout);
+     fputs (_("\
 \n\
 A field is a run of whitespace, then non-whitespace characters.\n\
 Fields are skipped before chars.\n\

@@ -1863,7 +1863,11 @@ Usage: %s [OPTION]... [INPUT]...   (without -G)\n\
       fputs (_("\
 Output a permuted index, including context, of the words in the input files.\n\
 \n\
+"), stdout);
+      fputs (_("\
 Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      fputs (_("\
   -A, --auto-reference           output automatically generated references\n\
   -C, --copyright                display Copyright and copying conditions\n\
   -G, --traditional              behave more like System V `ptx'\n\
@@ -1888,11 +1892,15 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -r, --references               first field of each line is a reference\n\
   -t, --typeset-mode               - not implemented -\n\
   -w, --width=NUMBER             output width in columns, reference excluded\n\
+"), stdout);
+      fputs (_("\
       --help                     display this help and exit\n\
       --version                  output version information and exit\n\
+"), stdout);
+      fputs (_("\
 \n\
-With no FILE or if FILE is -, read Standard Input.  `-F /' by default.\n"),
-	     stdout);
+With no FILE or if FILE is -, read Standard Input.  `-F /' by default.\n\
+"), stdout);
     }
   exit (status);
 }

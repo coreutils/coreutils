@@ -282,12 +282,14 @@ Usage: %s [FILE]...\n\
   or:  %s [OPTION]\n\
 "),
 	      program_name, program_name);
-      printf (_("\
+      fputs (_("\
 Print CRC checksum and byte counts of each FILE.\n\
 \n\
+"), stdout);
+      fputs (_("\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
