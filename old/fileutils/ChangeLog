@@ -8,7 +8,9 @@ Sat Apr  3 18:17:23 1993  Jim Meyering  (meyering@comco.com)
 
 	* src/Makefile.in [.c.o, dir.o, vdir.o]: Put CFLAGS after DEFS and
 	CPPFLAGS per standards.texi.
-	Automatically generate dependencies.
+	Use automatically generated dependencies.
+
+	* mvdir.c (main): Remove dcl of unused variable.
 
 Thu Apr  1 18:05:48 1993  Jim Meyering  (meyering@comco.com)
 
