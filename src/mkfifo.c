@@ -30,6 +30,7 @@
 #include "system.h"
 #include "error.h"
 #include "modechange.h"
+#include "quote.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "mkfifo"
@@ -129,7 +130,7 @@ main (int argc, char **argv)
     {
       if (mkfifo (argv[optind], newmode))
 	{
-	  error (0, errno, _("cannot make fifo `%s'"), argv[optind]);
+	  error (0, errno, _("cannot make fifo %s"), quote (argv[optind]));
 	  errors = 1;
 	}
     }
