@@ -208,6 +208,7 @@ cp_option_init (struct cp_options *x)
 
   x->hard_link = 0;
   x->interactive = 0;
+  x->move_mode = 0;
   x->myeuid = geteuid ();
   x->one_file_system = 0;
   x->preserve_owner_and_group = 0;
@@ -476,7 +477,7 @@ copy_file (const char *from, const char *to, const struct cp_options *x)
       return 1;
     }
 
-  fail = copy (from, to, nonexistent_dst, x, &copy_into_self);
+  fail = copy (from, to, nonexistent_dst, x, &copy_into_self, NULL);
 
   return fail;
 }

@@ -485,7 +485,7 @@ do_copy (int argc, char **argv, const struct cp_options *x)
 	  else
 	    {
 	      int unused;
-	      ret |= copy (arg, dst_path, new_dst, x, &unused);
+	      ret |= copy (arg, dst_path, new_dst, x, &unused, NULL);
 	      forget_all ();
 
 	      if (flag_path)
@@ -573,7 +573,7 @@ do_copy (int argc, char **argv, const struct cp_options *x)
 	  new_dest = dest;
 	}
 
-      return copy (source, new_dest, new_dst, x, &unused);
+      return copy (source, new_dest, new_dst, x, &unused, NULL);
     }
   else
     {
@@ -598,6 +598,7 @@ cp_option_init (struct cp_options *x)
   x->hard_link = 0;
   x->interactive = 0;
   x->myeuid = geteuid ();
+  x->move_mode = 0;
   x->one_file_system = 0;
 
   x->preserve_owner_and_group = 0;
