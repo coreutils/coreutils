@@ -236,7 +236,7 @@ advance (f)
 static void
 beyond ()
 {
-  test_syntax_error ("argument expected\n", (char *)NULL);
+  test_syntax_error ("argument expected\n", NULL);
 }
 
 /* Syntax error for when an integer argument was expected, but
@@ -370,8 +370,11 @@ term ()
     {
       advance (1);
       value = expr ();
-      if (argv[pos][0] != ')' || argv[pos][1])
-	test_syntax_error ("')' expected, found %s\n", argv[pos]);
+      if (!argv[pos])
+	test_syntax_error ("')' expected\n", NULL);
+      else
+        if (argv[pos][0] != ')' || argv[pos][1])
+	  test_syntax_error ("')' expected, found %s\n", argv[pos]);
       advance (0);
       return (TRUE == (value));
     }
@@ -535,7 +538,7 @@ binary_operator ()
 	      /* nt - newer than */
 	      pos += 3;
 	      if (l_is_l || r_is_l)
-		test_syntax_error ("-nt does not accept -l\n", (char *)NULL);
+		test_syntax_error ("-nt does not accept -l\n", NULL);
 	      if (age_of (argv[op - 1], &l) && age_of (argv[op + 1], &r))
 		return (TRUE == (l > r));
 	      else
@@ -591,7 +594,7 @@ binary_operator ()
 	      /* ef - hard link? */
 	      pos += 3;
 	      if (l_is_l || r_is_l)
-		test_syntax_error ("-ef does not accept -l\n", (char *)NULL);
+		test_syntax_error ("-ef does not accept -l\n", NULL);
 	      if (safe_stat (argv[op - 1], &stat_buf) < 0)
 		return (FALSE);
 	      if (safe_stat (argv[op + 1], &stat_spare) < 0)
@@ -608,7 +611,7 @@ binary_operator ()
 	      /* ot - older than */
 	      pos += 3;
 	      if (l_is_l || r_is_l)
-		test_syntax_error ("-nt does not accept -l\n", (char *)NULL);
+		test_syntax_error ("-nt does not accept -l\n", NULL);
 	      if (age_of (argv[op - 1], &l) && age_of (argv[op + 1], &r))
 		return (TRUE == (l < r));
 	      return (FALSE);
@@ -1095,7 +1098,7 @@ test_command (margc, margv)
 	test_exit (SHELL_BOOLEAN (FALSE));
 
       if (margv[margc] && strcmp (margv[margc], "]") != 0)
-	test_syntax_error ("missing `]'\n", (char *)NULL);
+	test_syntax_error ("missing `]'\n", NULL);
     }
 
   argc = margc;
@@ -1108,7 +1111,7 @@ test_command (margc, margv)
   value = posixtest ();
 
   if (pos != argc)
-    test_syntax_error ("too many arguments\n", (char *)NULL);
+    test_syntax_error ("too many arguments\n", NULL);
 
   test_exit (SHELL_BOOLEAN (value));
 }
