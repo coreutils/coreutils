@@ -39,9 +39,9 @@ AC_DEFUN(jm_CHECK_DECLS,
 #endif
 '
 
-  AC_CHECK_DECLS(
-    (free lseek malloc memchr nanosleep realloc stpcpy strstr strtoul strtoull),
-    , , $headers)
+  AC_CHECK_DECLS((free, lseek, malloc, memchr, nanosleep,
+                  realloc, stpcpy, strstr, strtoul, strtoull),
+                  , , $headers)
 ])
 
 dnl FIXME: when autoconf has support for it.
