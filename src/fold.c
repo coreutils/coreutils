@@ -77,7 +77,7 @@ Wrap input lines in each FILE (standard input by default), writing to\n\
 standard output.\n\
 \n\
   -b, --bytes         count bytes rather than columns\n\
-  -s, --spaces        break at word boundaries\n\
+  -s, --spaces        break at spaces\n\
   -w, --width=WIDTH   use WIDTH columns instead of 80\n\
 "));
     }
