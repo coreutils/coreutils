@@ -1,5 +1,5 @@
 /* `dir', `vdir' and `ls' directory listing programs for GNU.
-   Copyright (C) 85, 88, 90, 91, 1995-2001 Free Software Foundation, Inc.
+   Copyright (C) 85, 88, 90, 91, 1995-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -66,6 +66,7 @@
 
 #include <stdio.h>
 #include <assert.h>
+#include <setjmp.h>
 #include <grp.h>
 #include <pwd.h>
 #include <getopt.h>
@@ -118,6 +119,7 @@ int wcwidth ();
 #include "mbswidth.h"
 #include "obstack.h"
 #include "path-concat.h"
+#include "quote.h"
 #include "quotearg.h"
 #include "same.h"
 #include "strverscmp.h"
@@ -278,34 +280,6 @@ char *getuser ();
 static size_t quote_name PARAMS ((FILE *out, const char *name,
 				  struct quoting_options const *options));
 static char *make_link_path PARAMS ((const char *path, const char *linkname));
-static int compare_atime PARAMS ((const struct fileinfo *file1,
-				  const struct fileinfo *file2));
-static int rev_cmp_atime PARAMS ((const struct fileinfo *file2,
-				  const struct fileinfo *file1));
-static int compare_ctime PARAMS ((const struct fileinfo *file1,
-				  const struct fileinfo *file2));
-static int rev_cmp_ctime PARAMS ((const struct fileinfo *file2,
-				  const struct fileinfo *file1));
-static int compare_mtime PARAMS ((const struct fileinfo *file1,
-				  const struct fileinfo *file2));
-static int rev_cmp_mtime PARAMS ((const struct fileinfo *file2,
-				  const struct fileinfo *file1));
-static int compare_size PARAMS ((const struct fileinfo *file1,
-				 const struct fileinfo *file2));
-static int rev_cmp_size PARAMS ((const struct fileinfo *file2,
-				 const struct fileinfo *file1));
-static int compare_name PARAMS ((const struct fileinfo *file1,
-				 const struct fileinfo *file2));
-static int rev_cmp_name PARAMS ((const struct fileinfo *file2,
-				 const struct fileinfo *file1));
-static int compare_extension PARAMS ((const struct fileinfo *file1,
-				      const struct fileinfo *file2));
-static int rev_cmp_extension PARAMS ((const struct fileinfo *file2,
-				      const struct fileinfo *file1));
-static int compare_version PARAMS ((const struct fileinfo *file1,
-				    const struct fileinfo *file2));
-static int rev_cmp_version PARAMS ((const struct fileinfo *file2,
-				    const struct fileinfo *file1));
 static int decode_switches PARAMS ((int argc, char **argv));
 static int file_interesting PARAMS ((const struct dirent *next));
 static uintmax_t gobble_file PARAMS ((const char *name, enum filetype type,
@@ -2450,12 +2424,121 @@ extract_dirs_from_files (const char *dirname, int ignore_dot_and_dot_dot)
   files_index = j;
 }
 
+/* Use strcoll to compare strings in this locale.  If an error occurs,
+   report an error and longjmp to failed_strcoll.  */
+
+static jmp_buf failed_strcoll;
+
+static int
+xstrcoll (char const *a, char const *b)
+{
+  int diff;
+  errno = 0;
+  diff = strcoll (a, b);
+  if (errno)
+    {
+      error (0, errno, _("cannot compare file names %s and %s"),
+	     quote_n (0, a), quote_n (1, b));
+      exit_status = 1;
+      longjmp (failed_strcoll, 1);
+    }
+  return diff;
+}
+
+/* Comparison routines for sorting the files. */
+
+typedef void const *V;
+
+static inline int
+cmp_ctime (struct fileinfo const *a, struct fileinfo const *b,
+	   int (*cmp) PARAMS ((char const *, char const *)))
+{
+  int diff = CTIME_CMP (b->stat, a->stat);
+  return diff ? diff : cmp (a->name, b->name);
+}
+static int compare_ctime (V a, V b) { return cmp_ctime (a, b, xstrcoll); }
+static int compstr_ctime (V a, V b) { return cmp_ctime (a, b, strcmp); }
+static int rev_cmp_ctime (V a, V b) { return compare_ctime (b, a); }
+static int rev_str_ctime (V a, V b) { return compstr_ctime (b, a); }
+
+static inline int
+cmp_mtime (struct fileinfo const *a, struct fileinfo const *b,
+	   int (*cmp) PARAMS((char const *, char const *)))
+{
+  int diff = MTIME_CMP (b->stat, a->stat);
+  return diff ? diff : cmp (a->name, b->name);
+}
+static int compare_mtime (V a, V b) { return cmp_mtime (a, b, xstrcoll); }
+static int compstr_mtime (V a, V b) { return cmp_mtime (a, b, strcmp); }
+static int rev_cmp_mtime (V a, V b) { return compare_mtime (b, a); }
+static int rev_str_mtime (V a, V b) { return compstr_mtime (b, a); }
+
+static inline int
+cmp_atime (struct fileinfo const *a, struct fileinfo const *b,
+	   int (*cmp) PARAMS ((char const *, char const *)))
+{
+  int diff = ATIME_CMP (b->stat, a->stat);
+  return diff ? diff : cmp (a->name, b->name);
+}
+static int compare_atime (V a, V b) { return cmp_atime (a, b, xstrcoll); }
+static int compstr_atime (V a, V b) { return cmp_atime (a, b, strcmp); }
+static int rev_cmp_atime (V a, V b) { return compare_atime (b, a); }
+static int rev_str_atime (V a, V b) { return compstr_atime (b, a); }
+
+static inline int
+cmp_size (struct fileinfo const *a, struct fileinfo const *b,
+	  int (*cmp) PARAMS ((char const *, char const *)))
+{
+  int diff = longdiff (b->stat.st_size, a->stat.st_size);
+  return diff ? diff : cmp (a->name, b->name);
+}
+static int compare_size (V a, V b) { return cmp_size (a, b, xstrcoll); }
+static int compstr_size (V a, V b) { return cmp_size (a, b, strcmp); }
+static int rev_cmp_size (V a, V b) { return compare_size (b, a); }
+static int rev_str_size (V a, V b) { return compstr_size (b, a); }
+
+static inline int
+cmp_version (struct fileinfo const *a, struct fileinfo const *b)
+{
+  return strverscmp (a->name, b->name);
+}
+static int compare_version (V a, V b) { return cmp_version (a, b); }
+static int rev_cmp_version (V a, V b) { return compare_version (b, a); }
+
+static inline int
+cmp_name (struct fileinfo const *a, struct fileinfo const *b,
+	  int (*cmp) PARAMS ((char const *, char const *)))
+{
+  return cmp (a->name, b->name);
+}
+static int compare_name (V a, V b) { return cmp_name (a, b, xstrcoll); }
+static int compstr_name (V a, V b) { return cmp_name (a, b, strcmp); }
+static int rev_cmp_name (V a, V b) { return compare_name (b, a); }
+static int rev_str_name (V a, V b) { return compstr_name (b, a); }
+
+/* Compare file extensions.  Files with no extension are `smallest'.
+   If extensions are the same, compare by filenames instead. */
+
+static inline int
+cmp_extension (struct fileinfo const *a, struct fileinfo const *b,
+	       int (*cmp) PARAMS ((char const *, char const *)))
+{
+  char const *base1 = strrchr (a->name, '.');
+  char const *base2 = strrchr (b->name, '.');
+  int diff = cmp (base1 ? base1 : "", base2 ? base2 : "");
+  return diff ? diff : cmp (a->name, b->name);
+}
+static int compare_extension (V a, V b) { return cmp_extension (a, b, xstrcoll); }
+static int compstr_extension (V a, V b) { return cmp_extension (a, b, strcmp); }
+static int rev_cmp_extension (V a, V b) { return compare_extension (b, a); }
+static int rev_str_extension (V a, V b) { return compstr_extension (b, a); }
+
 /* Sort the files now in the table.  */
 
 static void
 sort_files (void)
 {
-  int (*func) ();
+  int (*func) PARAMS ((V, V));
 
   switch (sort_type)
     {
@@ -2493,144 +2576,46 @@ sort_files (void)
       abort ();
     }
 
+  /* Try strcoll.  If it fails, fall back on strcmp.  We can't safely
+     ignore strcoll failures, as a failing strcoll might be a
+     comparison function that is not a total order, and if we ignored
+     the failure this might cause qsort to dump core.  */
+
+  if (setjmp (failed_strcoll))
+    {
+      switch (sort_type)
+	{
+	case sort_time:
+	  switch (time_type)
+	    {
+	    case time_ctime:
+	      func = sort_reverse ? rev_str_ctime : compstr_ctime;
+	      break;
+	    case time_mtime:
+	      func = sort_reverse ? rev_str_mtime : compstr_mtime;
+	      break;
+	    case time_atime:
+	      func = sort_reverse ? rev_str_atime : compstr_atime;
+	      break;
+	    default:
+	      abort ();
+	    }
+	  break;
+	case sort_name:
+	  func = sort_reverse ? rev_str_name : compstr_name;
+	  break;
+	case sort_extension:
+	  func = sort_reverse ? rev_str_extension : compstr_extension;
+	  break;
+	case sort_size:
+	  func = sort_reverse ? rev_str_size : compstr_size;
+	  break;
+	default:
+	  abort ();
+	}
+    }
+
   qsort (files, files_index, sizeof (struct fileinfo), func);
-}
-
-/* Comparison routines for sorting the files. */
-
-static int
-compare_ctime (const struct fileinfo *file1, const struct fileinfo *file2)
-{
-  int diff = CTIME_CMP (file2->stat, file1->stat);
-  if (diff == 0)
-    diff = strcoll (file1->name, file2->name);
-  return diff;
-}
-
-static int
-rev_cmp_ctime (const struct fileinfo *file2, const struct fileinfo *file1)
-{
-  int diff = CTIME_CMP (file2->stat, file1->stat);
-  if (diff == 0)
-    diff = strcoll (file1->name, file2->name);
-  return diff;
-}
-
-static int
-compare_mtime (const struct fileinfo *file1, const struct fileinfo *file2)
-{
-  int diff = MTIME_CMP (file2->stat, file1->stat);
-  if (diff == 0)
-    diff = strcoll (file1->name, file2->name);
-  return diff;
-}
-
-static int
-rev_cmp_mtime (const struct fileinfo *file2, const struct fileinfo *file1)
-{
-  int diff = MTIME_CMP (file2->stat, file1->stat);
-  if (diff == 0)
-    diff = strcoll (file1->name, file2->name);
-  return diff;
-}
-
-static int
-compare_atime (const struct fileinfo *file1, const struct fileinfo *file2)
-{
-  int diff = ATIME_CMP (file2->stat, file1->stat);
-  if (diff == 0)
-    diff = strcoll (file1->name, file2->name);
-  return diff;
-}
-
-static int
-rev_cmp_atime (const struct fileinfo *file2, const struct fileinfo *file1)
-{
-  int diff = ATIME_CMP (file2->stat, file1->stat);
-  if (diff == 0)
-    diff = strcoll (file1->name, file2->name);
-  return diff;
-}
-
-static int
-compare_size (const struct fileinfo *file1, const struct fileinfo *file2)
-{
-  int diff = longdiff (file2->stat.st_size, file1->stat.st_size);
-  if (diff == 0)
-    diff = strcoll (file1->name, file2->name);
-  return diff;
-}
-
-static int
-rev_cmp_size (const struct fileinfo *file2, const struct fileinfo *file1)
-{
-  int diff = longdiff (file2->stat.st_size, file1->stat.st_size);
-  if (diff == 0)
-    diff = strcoll (file1->name, file2->name);
-  return diff;
-}
-
-static int
-compare_version (const struct fileinfo *file1, const struct fileinfo *file2)
-{
-  return strverscmp (file1->name, file2->name);
-}
-
-static int
-rev_cmp_version (const struct fileinfo *file2, const struct fileinfo *file1)
-{
-  return strverscmp (file1->name, file2->name);
-}
-
-static int
-compare_name (const struct fileinfo *file1, const struct fileinfo *file2)
-{
-  return strcoll (file1->name, file2->name);
-}
-
-static int
-rev_cmp_name (const struct fileinfo *file2, const struct fileinfo *file1)
-{
-  return strcoll (file1->name, file2->name);
-}
-
-/* Compare file extensions.  Files with no extension are `smallest'.
-   If extensions are the same, compare by filenames instead. */
-
-static int
-compare_extension (const struct fileinfo *file1, const struct fileinfo *file2)
-{
-  int cmp;
-  char const *base1 = strrchr (file1->name, '.');
-  char const *base2 = strrchr (file2->name, '.');
-  if (base1 == 0 && base2 == 0)
-    return strcoll (file1->name, file2->name);
-  if (base1 == 0)
-    return -1;
-  if (base2 == 0)
-    return 1;
-  cmp = strcoll (base1, base2);
-  if (cmp == 0)
-    return strcoll (file1->name, file2->name);
-  return cmp;
-}
-
-static int
-rev_cmp_extension (const struct fileinfo *file2, const struct fileinfo *file1)
-{
-  int cmp;
-  char const *base1 = strrchr (file1->name, '.');
-  char const *base2 = strrchr (file2->name, '.');
-  if (base1 == 0 && base2 == 0)
-    return strcoll (file1->name, file2->name);
-  if (base1 == 0)
-    return -1;
-  if (base2 == 0)
-    return 1;
-  cmp = strcoll (base1, base2);
-  if (cmp == 0)
-    return strcoll (file1->name, file2->name);
-  return cmp;
 }
 
 /* List all the files now in the table.  */
