@@ -1,5 +1,7 @@
 2003-06-17  Jim Meyering  <jim@meyering.net>
 
+	* getline.c: Update from gnulib.
+
 	Merge in changes from gnulib.
 	* hash.c: Include <stdbool.h> unconditionally.
 	Include <limits.h>.
