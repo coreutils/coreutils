@@ -101,7 +101,6 @@ main (int argc, char **argv)
 {
   int i;
   double seconds = 0.0;
-  int c;
   bool ok = true;
 
   initialize_main (&argc, &argv);

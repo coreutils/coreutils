@@ -57,7 +57,6 @@ int
 main (int argc, char **argv)
 {
   register char *cp;
-  int c;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];

@@ -78,7 +78,6 @@ main (int argc, char **argv)
   char **env;
   char *ep, *ap;
   int i;
-  int c;
   bool ok;
 
   initialize_main (&argc, &argv);
