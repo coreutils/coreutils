@@ -79,3 +79,10 @@ lib/strftime.c: Since %N is the only format that we need but that
   glibc's strftime doesn't support, consider using a wrapper that
   would expand /%(-_)?\d*N/ to the desired string and then pass the
   resulting string to glibc's strftime.
+
+chown-core.c: warn when operating on set-UID or set-GID regular file
+
+sort: Compress temporary files when doing large external sort/merges.
+  This improves performance when you can compress/uncompress faster than
+  you can read/write, which is common in these days of fast CPUs.
+  suggestion from Charles Randall on 2001-08-10
