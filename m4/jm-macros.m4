@@ -87,10 +87,7 @@ AC_DEFUN([jm_MACROS],
   AC_REPLACE_FUNCS(memchr memcpy memmove memrchr memset)
   AC_CHECK_FUNCS(getpagesize)
 
-  AC_REPLACE_FUNCS(mkstemp)
-  if test $ac_cv_func_mkstemp != yes; then
-    AC_LIBOBJ(tempname)
-  fi
+  AC_REQUIRE([UTILS_FUNC_MKSTEMP])
 
   # By default, argmatch should fail calling usage (1).
   AC_DEFINE(ARGMATCH_DIE, [usage (1)],
