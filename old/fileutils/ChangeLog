@@ -1,6 +1,20 @@
-2002-06-17  Jim Meyering  <meyering@lucent.com>
+2002-06-21  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.9.
+
+	* src/ls.c (LOGIN_NAME_MAX): Define if not already defined.
+	(ID_LENGTH_MAX): Define.
+	(ST_DM_MODE): New macro.  Code moved from...
+	(print_long_format): ...here.
+	(print_long_format): Itemize and comment the individual parts
+	of init_bigbuf.  Use the above *_MAX macros.
+
+2002-06-20  Jim Meyering  <meyering@lucent.com>
+
+	* src/system.h: Change `defined(X)' syntax to `defined X'
+	in cpp directives.
+
+2002-06-17  Jim Meyering  <meyering@lucent.com>
 
 	* tests/setgid-check: Interpret a permissions string of
 	drwxr-xr-x (DOS/Windows) as meaning the cwd is not setgid.
