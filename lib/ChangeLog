@@ -1,8 +1,28 @@
 2004-07-27  Paul Eggert  <eggert@cs.ucla.edu>
 
+	cycle-check integer overflow fixup.
+
+	* cycle-check.h: Remove now-inaccurate comment about the files
+	you need to include first.  You don't need to include any files
+	other than the usual config.h.
+	Include <inttypes.h> and <stdint.h> if available, for uintmax_t.
+	Remove 'struct stat;' not needed since we know sys/stat.h has
+	been included by dev-ino.h.
+	(struct cycle_check_state): Change chdir_counter to uintmax_t,
+	not size_t, since it isn't limited by object sizes.
+	Change magic from long unsigned int to int; that's good enough
+	for our use.
+	* cycle-check.c (is_zero_or_power_of_two): Renamed from
+	is_power_of_two, to reflect better what it really does.
+	All uses changed.  Arg is now uintmax_t, not unsigned int
+	(it should have been unsigned long int -- that was a bug).
+	(cycle_check): Check for integer overflow in cycle count,
+	and report a cycle if that happens, as it must be a cycle
+	by this point.
+
 	backupfile.c rewrite to avoid arbitrary limits on lengths of
 	numeric backup extensions.
-	
+
 	* addext.c: Remove; no longer needed.
 	* Makefile.am (libfetish_a_SOURCES): Remove addext.c.
 	* backupfile.h (addext): Remove decl.
@@ -27,7 +47,7 @@
 	new numbered backup name has the same length as the old.
 	Also, use xmalloc rather than malloc, so that the caller
 	needn't worry about memory exhaustion.
-	
+
 2004-07-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* euidaccess.c [!defined LIBC]: Included group-member.h, stat-macros.h.
