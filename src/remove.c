@@ -647,7 +647,7 @@ remove_file (struct File_spec *fs, const struct rm_options *x)
     }
 
   if (x->verbose)
-    printf (_("removing %s\n"), full_filename (pathname));
+    printf (_("removing %s\n"), quote (full_filename (pathname)));
 
   if (unlink (pathname) && (errno != ENOENT || !x->ignore_missing_files))
     {
@@ -696,7 +696,7 @@ remove_dir (struct File_spec *fs, int need_save_cwd, const struct rm_options *x)
 
   if (x->verbose)
     printf (_("removing all entries of directory %s\n"),
-	    full_filename (dir_name));
+	    quote (full_filename (dir_name)));
 
   /* Save cwd if needed.  */
   if (need_save_cwd && save_cwd (&cwd))
@@ -782,7 +782,7 @@ was replaced with either another directory or a link to another directory."),
 
   if (x->verbose)
     printf (_("removing the directory itself: %s\n"),
-	    full_filename (dir_name));
+	    quote (full_filename (dir_name)));
 
   if (rmdir (dir_name) && (errno != ENOENT || !x->ignore_missing_files))
     {
