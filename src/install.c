@@ -15,50 +15,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Copy files and set their permission modes and, if possible,
-   their owner and group.  Used similarly to `cp'; typically
-   used in Makefiles to copy programs into their destination
-   directories.  It can also be used to create the destination
-   directories and any leading directories, and to set the final
-   directory's modes.  It refuses to copy files onto themselves.
-
-   Options:
-   -g, --group=GROUP
-	Set the group ownership of the installed file or directory
-	to the group ID of GROUP (default is process's current
-	group).  GROUP may also be a numeric group ID.
-
-   -m, --mode=MODE
-	Set the permission mode for the installed file or directory
-	to MODE, which is an octal number (default is u=rwx,g=rx,o=rx).
-
-   -o, --owner=OWNER
-	If run as root, set the ownership of the installed file to
-	the user ID of OWNER (default is root).  OWNER may also be
-	a numeric user ID.
-
-   -c	No effect.  For compatibility with old Unix versions of install.
-
-   -s, --strip
-	Strip the symbol tables from installed files.
-
-   -p, --preserve-timestamps
-        Retain creation and modification timestamps when installing files.
-
-   -d, --directory
-	Create a directory and its leading directories, if they
-	do not already exist.  Set the owner, group and mode
-	as given on the command line.  Any leading directories
-	that are created are also given those attributes.
-	This is different from the SunOS 4.0 install, which gives
-	directories that it creates the default attributes.
-
-  -D
-	Like the -d option, but a file is installed, along with the directory.
-	Useful when installing into a new directory, and the install
-	process doesn't properly comprehend making directories.
-
-   David MacKenzie <djm@gnu.ai.mit.edu> */
+/* Written by David MacKenzie <djm@gnu.ai.mit.edu> */
 
 #ifdef _AIX
  #pragma alloca
