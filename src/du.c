@@ -74,16 +74,20 @@ static Hash_table *htab;
 /* Name under which this program was invoked.  */
 char *program_name;
 
-/* If nonzero, display counts for all files, not just directories. */
+/* If nonzero, display counts for all files, not just directories.  */
 static int opt_all = 0;
 
-/* If nonzero, count each hard link of files with multiple links. */
+/* If nonzero, rather than using the disk usage of each file,
+   use the apparent size (a la stat.st_size).  */
+static int apparent_size = 0;
+
+/* If nonzero, count each hard link of files with multiple links.  */
 static int opt_count_all = 0;
 
-/* If nonzero, print a grand total at the end. */
+/* If nonzero, print a grand total at the end.  */
 static int print_totals = 0;
 
-/* If nonzero, do not add sizes of subdirectories. */
+/* If nonzero, do not add sizes of subdirectories.  */
 static int opt_separate_dirs = 0;
 
 /* If nonzero, dereference symlinks that are command line arguments.
@@ -107,7 +111,7 @@ static uintmax_t output_block_size;
 /* File name patterns to exclude.  */
 static struct exclude *exclude;
 
-/* Grand total size of all args, in units of ST_NBLOCKSIZE-byte blocks. */
+/* Grand total size of all args, in bytes. */
 static uintmax_t tot_size = 0;
 
 /* In some cases, we have to append `/.' or just `.' to an argument
@@ -278,30 +282,24 @@ hash_init (void)
     xalloc_die ();
 }
 
-/* Print N_BLOCKS.  NBLOCKS is the number of
-   ST_NBLOCKSIZE-byte blocks; convert it to a readable value before
-   printing.  */
+/* Print N_BYTES.  Convert it to a readable value before printing.  */
 
 static void
-print_only_size (uintmax_t n_blocks)
+print_only_size (uintmax_t n_bytes)
 {
   char buf[LONGEST_HUMAN_READABLE + 1];
-  fputs (human_readable (n_blocks, buf, human_output_opts,
-			 ST_NBLOCKSIZE, output_block_size), stdout);
+  fputs (human_readable (n_bytes, buf, human_output_opts,
+			 1, output_block_size), stdout);
 }
 
-/* Print N_BLOCKS followed by STRING on a line.  NBLOCKS is the number of
-   ST_NBLOCKSIZE-byte blocks; convert it to a readable value before
-   printing.  */
+/* Print N_BYTES followed by STRING on a line.
+   Convert N_BYTES to a readable value before printing.  */
 
 static void
-print_size (uintmax_t n_blocks, const char *string)
+print_size (uintmax_t n_bytes, const char *string)
 {
-  char buf[LONGEST_HUMAN_READABLE + 1];
-  printf ("%s\t%s\n",
-	  human_readable (n_blocks, buf, human_output_opts,
-			  ST_NBLOCKSIZE, output_block_size),
-	  string);
+  print_only_size (n_bytes);
+  printf ("\t%s\n", string);
   fflush (stdout);
 }
 
@@ -375,7 +373,9 @@ process_file (const char *file, const struct stat *sb, int file_type,
     }
   else
     {
-      size = ST_NBLOCKS (*sb);
+      size = (apparent_size
+	      ? sb->st_size
+	      : ST_NBLOCKS (*sb) * ST_NBLOCKSIZE);
     }
 
   if (first_call)
