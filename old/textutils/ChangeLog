@@ -27,7 +27,7 @@
 	(main): Use string_to_ull, not atou/parse_unit.
 	The problem was that overflow wasn't detected, so `head -c 4096m'
 	was treated just like `head -c 0'.
-	Reported by Jerome Abela <abela@hsc.fr>
+	Reported by Jerome Abela
 
 	* tests/wc: New directory.
 	* tests/head: New directory.
