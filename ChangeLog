@@ -1,6 +1,18 @@
-2004-01-27  Jim Meyering  <jim@meyering.net>
+2004-02-02  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.2.
+
+	Print actual fractional seconds in time stamps, not just `.00000000'.
+	* src/stat.c (human_time): Add and use new parameter, t_ns.
+	(print_stat): Update callers.
+	* src/ls.c (TIMESPEC_NS): Remove definition.
+	* src/system.h (TIMESPEC_NS): Define here, instead, now that stat.c
+	also uses this macro.
+	Nelson H. F. Beebe noticed that ls --full-time printed nonzero
+	fractional seconds for files on an XFS file system, but that stat's
+	fractional seconds were always zero.
+
+2004-01-27  Jim Meyering  <jim@meyering.net>
 
 	* src/seq.c (usage): Mention that if INCREMENT is omitted,
 	it defaults to 1, even when FIRST is larger than LAST.
