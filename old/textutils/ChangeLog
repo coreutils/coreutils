@@ -1,3 +1,22 @@
+2002-01-18  Jim Meyering  <meyering@lucent.com>
+
+	* Version 2.0.20.
+
+	Fix tr so it no longer gets a failed assertion for [::] or [==].
+
+	* src/tr.c (xmemdup): Rename from `substr' and rewrite to
+	take only pointer/length parameters.
+	(build_spec_list): Update sole caller.
+	Before calling xmemdup, compute operand length and fail if it's zero.
+	Pawel Prokop reported that `tr [::] _' elicits a failed assertion.
+
+2002-01-14  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sort.c (main):  Issue a warning for obsolete usage, unless
+	POSIXLY_CORRECT.
+	* src/tail.c (parse_obsolescent_option): Likewise.
+	* src/uniq.c (main): Likewise.
+
 2002-02-14  Paul Eggert  <eggert@twinsun.com>
 
 	Add support for POSIX 1003.1-2001, which requires removal for
@@ -10,9 +29,9 @@
 	* src/uniq.c (usage, main): Likewise.
 	* src/system.h (_POSIX2_VERSION, POSIX2_VERSION): New macros.
 
-2002-01-14  Jim Meyering  <meyering@lucent.com>
+	* src/sys2.h (ISDIGIT, S_ISVTX, S_IXUGO): Comment fix.
 
-	* Version 2.0.20.
+2002-01-14  Jim Meyering  <meyering@lucent.com>
 
 	* tests/misc/sort: New test, for just-fixed bug.
 	* tests/misc/Makefile.am (TESTS): Add sort.
