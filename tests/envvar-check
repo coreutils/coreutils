@@ -5,16 +5,47 @@ else
 fi
 
 $as_unset VERSION_CONTROL SIMPLE_BACKUP_SUFFIX
+$as_unset BLOCK_SIZE DU_BLOCK_SIZE DF_BLOCK_SIZE LS_BLOCK_SIZE
 
 if test "${VERSION_CONTROL+set}" = set; then
   echo "$0: the VERSION_CONTROL envvar is set --" \
     ' unset it and rerun this test' >&2
-  exit 1
+  envvar_check_fail=1
 fi
 
 if test "${SIMPLE_BACKUP_SUFFIX+set}" = set; then
   echo "$0: the SIMPLE_BACKUP_SUFFIX envvar is set --" \
     ' unset it and rerun this test' >&2
     >&2
-  exit 1
+  envvar_check_fail=1
 fi
+
+if test "${BLOCK_SIZE+set}" = set; then
+  echo "$0: the BLOCK_SIZE envvar is set --" \
+    ' unset it and rerun this test' >&2
+    >&2
+  envvar_check_fail=1
+fi
+
+if test "${DU_BLOCK_SIZE+set}" = set; then
+  echo "$0: the DU_BLOCK_SIZE envvar is set --" \
+    ' unset it and rerun this test' >&2
+    >&2
+  envvar_check_fail=1
+fi
+
+if test "${DF_BLOCK_SIZE+set}" = set; then
+  echo "$0: the DF_BLOCK_SIZE envvar is set --" \
+    ' unset it and rerun this test' >&2
+    >&2
+  envvar_check_fail=1
+fi
+
+if test "${LS_BLOCK_SIZE+set}" = set; then
+  echo "$0: the LS_BLOCK_SIZE envvar is set --" \
+    ' unset it and rerun this test' >&2
+    >&2
+  envvar_check_fail=1
+fi
+
+test "$envvar_check_fail" = 1 && exit 1
