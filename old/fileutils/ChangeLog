@@ -1,5 +1,7 @@
 1998-09-28  Jim Meyering  <meyering@ascend.com>
 
+	* Version 4.0-pre1.
+
 	* src/copy.c (copy_internal): Do honor `n' reply in move-mode.
 	Otherwise, `touch a b; echo n|mv -i a b' would remove b.
 	From Bernd Leibing.
