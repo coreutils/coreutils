@@ -1,10 +1,13 @@
 2002-02-18  Jim Meyering  <meyering@lucent.com>
 
+
 	* Version 2.0.21.
 
 	* tests/tail/Test.pm: For tests matching /^(obs|err-[134])/,
 	put _POSIX2_VERSION=199209 in the environment, so the tests succeed
 	even when the environment would have contained _POSIX2_VERSION=200112.
+	* tests/uniq/Test.pm (test_vector): Rename tests of obsolete usage
+	to have prefix of `obs'.  Adjust environment for those tests as above.
 
 	* tests/mk-script: When getting input via a pipe, apply the
 	environment settings to the command in question, not to `cat'.
