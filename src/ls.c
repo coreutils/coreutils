@@ -1057,10 +1057,10 @@ main (int argc, char **argv)
 	      && format == long_format))
 	check_symlink_color = 1;
 
-	signal (SIGINT, restore_default_color_handler);
-	signal (SIGTERM, restore_default_color_handler);
-	signal (SIGQUIT, restore_default_color_handler);
-	signal (SIGTSTP, sigtstp_handler);
+      signal (SIGINT, restore_default_color_handler);
+      signal (SIGTERM, restore_default_color_handler);
+      signal (SIGQUIT, restore_default_color_handler);
+      signal (SIGTSTP, sigtstp_handler);
     }
 
   if (dereference == DEREF_UNDEFINED)
