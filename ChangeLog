@@ -1,3 +1,17 @@
+2004-10-01  Paolo Bonzini  <bonzini@gnu.org>
+
+	* cut.c (complement, COMPLEMENT_OPTION): New.
+	(longopts): Add --complement.
+	(usage): Say not that -b, -c, and -f `print' fields,
+	but rather that they `select' fields for printing.
+	Describe the new --complement option.
+	(mark_range_start): Extracted from set_fields.
+	(print_kth): Support --complement.
+	(compare_ranges): New function.
+	(set_fields): Rewrite the part that populates range_start_ht,
+	merging it with the part that populates printable_field.
+	(main): Handle --complement.
+
 2004-12-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
