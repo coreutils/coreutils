@@ -12,7 +12,7 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.7 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.8 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my @Types = qw (IN OUT ERR EXIT);
@@ -43,6 +43,7 @@ my $Global_count = 1;
 #           functions, each which is passed the single argument `filename'.
 #           $CTOR must create `filename'.
 #           DTOR may be omitted in which case `sub{unlink @_[0]}' is used.
+#           FIXME: implement this
 # Ditto for `ERR', but compare with stderr
 # {EXIT => N} expect exit status of cmd to be N
 #
