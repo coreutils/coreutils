@@ -27,6 +27,7 @@
 #include "xstrtoul.h"
 #include "error.h"
 #include "savedir.h"
+#include "group-member.h"
 
 /* MAXUID may come from limits.h *or* sys/params.h (via system.h) above. */
 #ifndef MAXUID
@@ -53,8 +54,6 @@ enum Change_status
   CH_FAILED,
   CH_NO_CHANGE_REQUESTED
 };
-
-char *group_member ();
 
 static int change_dir_group PARAMS ((const char *dir, int group,
 				     const struct stat *statp));
