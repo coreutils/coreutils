@@ -240,7 +240,7 @@ print_group_list (username)
       print_group (egid);
     }
 
-#ifdef NGROUPS_MAX
+#if defined(NGROUPS_MAX) && defined(HAVE_GETGROUPS)
   {
     int ngroups;
     GETGROUPS_T *groups;
@@ -313,7 +313,7 @@ print_full_info (username)
 	printf ("(%s)", grp->gr_name);
     }
 
-#ifdef NGROUPS_MAX
+#if defined(NGROUPS_MAX) && defined(HAVE_GETGROUPS)
   {
     int ngroups;
     GETGROUPS_T *groups;

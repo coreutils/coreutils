@@ -77,7 +77,7 @@
 #include <grp.h>
 #include "system.h"
 
-#ifdef HAVE_SYSLOG_H
+#if defined(HAVE_SYSLOG_H) && defined(HAVE_SYSLOG)
 #include <syslog.h>
 static void log_su ();
 #else /* !HAVE_SYSLOG_H */
@@ -397,7 +397,7 @@ static void
 change_identity (pw)
      struct passwd *pw;
 {
-#ifdef NGROUPS_MAX
+#ifdef HAVE_INITGROUPS
   errno = 0;
   if (initgroups (pw->pw_name, pw->pw_gid) == -1)
     error (1, errno, "cannot set groups");
