@@ -1,3 +1,9 @@
+2000-09-18  Jim Meyering  <meyering@lucent.com>
+
+	* getloadavg.m4 (AC_FUNC_GETLOADAVG): Restore the initial value of LIBS.
+	Otherwise, everyone ends up linking with -lelf for some configurations.
+	Reported by Mike Stone.
+
 2000-08-26  Jim Meyering  <meyering@lucent.com>
 
 	* jm-macros.m4: Use jm_FUNC_FPENDING.
