@@ -1,5 +1,9 @@
 Sat Oct  5 11:38:23 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/Makefile.am (.sh): Substitute for @GNU_PACKAGE@ and @VERSION@
+	in the four installed scripts.
+	* src/*.sh: Update --version output to conform to the coding standard.
+
 	* acinclude.m4 (AC_HEADER_SYS_TIME_H): New macro.
 	(AM_FUNC_MKTIME): Require AC_HEADER_SYS_TIME_H so that configure's
 	checking... messages don't get nested.
