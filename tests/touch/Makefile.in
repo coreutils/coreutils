@@ -115,7 +115,7 @@ l = @l@
 
 AUTOMAKE_OPTIONS = 1.3 gnits
 
-TESTS = dir-1 dangling-symlink empty-file fifo no-rights obsolescent
+TESTS = fail-diag dir-1 dangling-symlink empty-file fifo no-rights obsolescent
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
   host_triplet=$(host_triplet) \
