@@ -36,3 +36,15 @@ See if we can be consistent about where --verbose sends its output:
   readlink is different
 
 coreutils.texi: Add an entry for sort's --stable option.
+
+Write an autoconf test to work around build failure in HPUX's 64-bit mode.
+See notes in README -- and remove them once there's a work-around.
+
+after 5.0, change doc strings (like df, ls, etc) not to use `,'
+as thousands separator in e.g. 1,000,000.  Instead, do this:
+
+  SIZE may be (or may be an integer optionally followed by) one of following:
+  kB 1000, K 1024, MB 1000*1000, M 1024*1024 and so on for G, T, P, E, Z, Y.
+
+Integrate use of sendfile, suggested here:
+  http://mail.gnu.org/archive/html/bug-fileutils/2003-03/msg00030.html
