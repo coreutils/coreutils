@@ -2408,7 +2408,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'o':
-	  if (outfile != minus && strcmp (outfile, optarg) != 0)
+	  if (outfile != minus && !STREQ (outfile, optarg))
 	    error (SORT_FAILURE, 0, _("multiple output files specified"));
 	  outfile = optarg;
 	  break;
