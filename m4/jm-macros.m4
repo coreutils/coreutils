@@ -4,7 +4,7 @@ dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
 AC_DEFUN(jm_MACROS,
 [
-  AC_PREREQ(2.49d)
+  AC_PREREQ(2.52)
 
   GNU_PACKAGE="GNU $PACKAGE"
   AC_DEFINE_UNQUOTED(GNU_PACKAGE, "$GNU_PACKAGE",
