@@ -1,5 +1,8 @@
 2000-11-17  Jim Meyering  <meyering@lucent.com>
 
+	* GNUmakefile (.NOTPARALLEL): New target.  Prevent unwanted parallelism.
+	Suggestion from Ulrich Drepper.
+
 	* src/pinky.c: Explicitly include sys/types.h before including system.h.
 	* src/uptime.c: Likewise.
 	* src/users.c: Likewise.
