@@ -550,19 +550,13 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 	  return 0;
 	}
 
-      errno = 0;
       name_space = savedir (".", stat_buf.st_size);
       if (name_space == NULL)
 	{
-	  if (errno)
-	    {
-	      error (0, errno, "%s", path->text);
-	      pop_dir (cwd, path->text);
-	      exit_status = 1;
-	      return 0;
-	    }
-	  else
-	    error (1, 0, _("virtual memory exhausted"));
+	  error (0, errno, "%s", path->text);
+	  pop_dir (cwd, path->text);
+	  exit_status = 1;
+	  return 0;
 	}
 
       /* Remember the current path.  */
