@@ -641,21 +641,16 @@ main (argc, argv)
 
   parse_long_options (argc, argv, usage);
 
-  /* Assume we'll be setting modes rather than displaying them.
-     But if either of -a or -g is specified, set this to zero.  */
-
   output_type = changed;
   verbose_output = 0;
   recoverable_output = 0;
 
+  /* Recognize the long options only.  */
   opterr = 0;
-  while ((optc = getopt_long (argc, argv, "ag", longopts, (int *) 0)) != EOF)
+  while ((optc = getopt_long (argc, argv, "", longopts, (int *) 0)) != EOF)
     {
       switch (optc)
 	{
-	case 0:
-	  break;
-
 	case 'a':
 	  verbose_output = 1;
 	  output_type = all;
@@ -671,6 +666,39 @@ main (argc, argv)
 	}
     }
 
+  /* Recognize short options and combinations: -a, -g, -ag, and -ga.
+     They need not precede non-options.  We cannot use GNU getopt because
+     it would treat -tabs and -ixany as uses of the -a option.  */
+  for (k = optind; k < argc; k++)
+    {
+      if (argv[k][0] == '-')
+	{
+	  if (argv[k][1] == 'a'
+	      && argv[k][2] == '\0')
+	    {
+	      ++optind;
+	      verbose_output = 1;
+	    }
+	  else if (argv[k][1] == 'g'
+		   && argv[k][2] == '\0')
+	    {
+	      ++optind;
+	      recoverable_output = 1;
+	    }
+	  else if ((argv[k][1] == 'g'
+	            && argv[k][2] == 'a'
+	            && argv[k][3] == '\0')
+		   || (argv[k][1] == 'a'
+		       && argv[k][2] == 'g'
+		       && argv[k][3] == '\0'))
+	    {
+	      ++optind;
+	      verbose_output = 1;
+	      recoverable_output = 1;
+	    }
+	}
+    }
+
   /* Specifying both -a and -g gets an error.  */
   if (verbose_output && recoverable_output)
     error (2, 0,
@@ -678,7 +706,7 @@ main (argc, argv)
 \tmutually exclusive");
 
   /* Specifying any other arguments with -a or -g gets an error.  */
-  if (argc > 2 && (verbose_output || recoverable_output))
+  if (argc - optind > 0 && (verbose_output || recoverable_output))
     error (2, 0, "when specifying an output style, modes may not be set");
 
   /* Initialize to all zeroes so there is no risk memcmp will report a
