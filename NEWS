@@ -58,6 +58,19 @@ GNU coreutils NEWS                                    -*- outline -*-
   POSIXLY_CORRECT is set and the first argument is not "-n", echo now
   outputs all option-like arguments instead of treating them as options.
 
+  printf has several changes:
+
+    It now uses 'intmax_t' (not 'long int') to format integers, so it
+    can now format 64-bit integers on most modern hosts.
+
+    On modern hosts it now supports the C99-inspired %a, %A, %F conversion
+    specs, the "'" and "0" flags, and the ll, j, t, and z length modifiers
+    (this is compatible with recent Bash versions).
+
+    The printf command now rejects invalid conversion specifications
+    like %#d, instead of relying on undefined behavior in the underlying
+    printf function.
+
   who now prints user names in full instead of truncating them after 8 bytes.
 
 ** New features
