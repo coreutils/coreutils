@@ -1,3 +1,91 @@
+1999-04-03  Jim Meyering  <meyering@ascend.com>
+
+	* src/shred.c (dopass): add curly braces to avoid warning about
+	ambiguous `else'.
+	(wipefd): Add parentheses suggested by gcc.
+	(do_wipefd): Remove declaration of unused local.
+
+1999-04-02  Colin Plumb  <colin@nyx.net>
+
+	* shred.c [!HAVE_CONFIG_H] (xstrtoul, error, close_stdout): Added stubs
+	to allow standalone compilation.
+
+	(wipefile): Added support for emulating /dev/fd/# files even if
+	the OS doesn't support them.  From Paul Eggert.
+
+	(main, usage): Changed --device short option to -D.
+
+	(wipefd, do_wipefd): Renamed function to do_wipefd and added
+	separate wipefd that performs sanity checks on externally-opened file
+	descriptors, such as not append-only.  From Paul Eggert.
+
+	(do_wipefd, isaac_seedfd): Do not read file for any reason.
+	if the file is low-entropy, it's a security hole.
+	(wipefile) Changed to open O_WRONLY and chmod to write-only when
+	forcing.
+	(isaac_seedfd) Function deleted as unnecessary.
+	From Paul Eggert.
+
+	(dopass): Dynamically fall back to fsync() if fdatasync() fails,
+	since POSIX, in their infinitesimal wisdom, encourage implementations
+	that return constant -1, making compile-time testing useless.
+	From Paul Eggert.
+
+	(dopass): Changed to support a size of -1 to mean "unknown".
+	This entailed changing to a counting-up offset rather than couting-down
+	cursize for the central state variable.  Also changed size argument to
+	be call-by-reference so that it can be passed back once known.
+	(sizer) Function deleted as unnecessary.
+	(wipefd): Changed to match.  From Paul Eggert
+
+	(dopass): Try to skip over bad blocks in destination files.
+	Also added ftruncate() for more complete destruction of metadata.
+
+	(main, usage): Changed "-" to stand for standard output.
+	(wipefd): Added error message to detect conflict with -v.
+
+	(dopass): Added periodic fsync() calls to keep the pass progress
+	display in sync with reality.  Hopefully they're sufficiently far spaced
+	that throughput isn't affected.  It might be a good thing to do even in
+	non-verbose mode, to avoid filling up the kernel caches with dirty data.
+	Also added ftruncate() for more complete destruction of metadata.
+
+	(quotearg_colon): New function to print
+	pathological filenames properly.
+	[!HAVE_CONFIG_H] (quotearg_colon_buf) New internal helper function
+	that does most of the work.
+	(wipefd, do_wipefd, dopass) Now take a qname (pre-quoted name) argument.
+	(wipename, wipefile, main) Changed diagnostics to use quotearg_colon.
+	Error messages are also in a more uniform format.
+	From Paul Eggert.
+
+	(struct Options, main, do_wipefd): Added -s/--size=N flag.
+	(xstrtoul): Added support for valid_suffixes to help this.
+	(usage) Documented it.
+
+	(error): Changed some arguments from N_() to _(), since error()
+	does not translate its argument.  I think this is a bug.
+
+	(struct Options do_wipefd, wipefd, wipefile, main): moved passes
+	argument into the Options structure as n_iterations, which is now a
+	size_t.  From Paul Eggert.
+
+	(isaac_seed_start, isaac_seed_data, isaac_seed_finish): New functions
+	to manage seeding of RNG with arbitrary-sized data.
+	(isaac_init): commented out as dead code.
+	(isaac_seed): changed to use new functions to prevent any possibility of
+	a buffer overflow.
+
+	(isaac_seed): Added support for Solaris' gethrtime()
+	configure.in: Corresponding feature test.  From Paul Eggert.
+
+	(wipename): Change remove() to unlink() for speed & portability.
+	Use lstat() instead of access() to see if a filename is taken.  This
+	works even on dangling symlinks and avoids the suid problems of
+	access(2).  From Paul Eggert.
+
+	(isaac_seed_machdep): New function for reading cycle counters
+
 1999-04-02  Paul Eggert  <eggert@shade.twinsun.com>
 
 	* configure.in (AC_CHECK_FUNCS): Add gethrtime.
