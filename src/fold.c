@@ -35,9 +35,6 @@ char *xmalloc ();
 /* The name this program was run with. */
 char *program_name;
 
-static int adjust_column ();
-static int fold_file ();
-
 /* If nonzero, try to break on whitespace. */
 static int break_spaces;
 
@@ -62,10 +59,9 @@ static struct option const longopts[] =
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
-
+
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -88,82 +84,30 @@ standard output.\n\
   exit (status);
 }
 
-void
-main (argc, argv)
-     int argc;
-     char **argv;
+/* Assuming the current column is COLUMN, return the column that
+   printing C will move the cursor to.
+   The first column is 0. */
+
+static int
+adjust_column (int column, char c)
 {
-  int width = 80;
-  int i;
-  int optc;
-  int errs = 0;
-
-  program_name = argv[0];
-  break_spaces = count_bytes = have_read_stdin = 0;
-
-  /* Turn any numeric options into -w options.  */
-  for (i = 1; i < argc; i++)
+  if (!count_bytes)
     {
-      if (argv[i][0] == '-' && ISDIGIT (argv[i][1]))
+      if (c == '\b')
 	{
-	  char *s;
-
-	  s = xmalloc (strlen (argv[i]) + 2);
-	  s[0] = '-';
-	  s[1] = 'w';
-	  strcpy (s + 2, argv[i] + 1);
-	  argv[i] = s;
+	  if (column > 0)
+	    column--;
 	}
+      else if (c == '\r')
+	column = 0;
+      else if (c == '\t')
+	column = column + 8 - column % 8;
+      else /* if (isprint (c)) */
+	column++;
     }
-
-  while ((optc = getopt_long (argc, argv, "bsw:", longopts, (int *) 0))
-	 != EOF)
-    {
-      switch (optc)
-	{
-	case 0:
-	  break;
-
-	case 'b':		/* Count bytes rather than columns. */
-	  count_bytes = 1;
-	  break;
-
-	case 's':		/* Break at word boundaries. */
-	  break_spaces = 1;
-	  break;
-
-	case 'w':		/* Line width. */
-	  width = atoi (optarg);
-	  if (width < 1)
-	    error (1, 0, _("%s: invalid line width"), optarg);
-	  break;
-
-	default:
-	  usage (1);
-	}
-    }
-
-  if (show_version)
-    {
-      printf ("fold - %s\n", version_string);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
-
-  if (argc == optind)
-    errs |= fold_file ("-", width);
   else
-    for (i = optind; i < argc; i++)
-      errs |= fold_file (argv[i], width);
-
-  if (have_read_stdin && fclose (stdin) == EOF)
-    error (1, errno, "-");
-  if (fclose (stdout) == EOF)
-    error (1, errno, _("write error"));
-
-  exit (errs);
+    column++;
+  return column;
 }
 
 /* Fold file FILENAME, or standard input if FILENAME is "-",
@@ -171,9 +115,7 @@ main (argc, argv)
    Return 0 if successful, 1 if an error occurs. */
 
 static int
-fold_file (filename, width)
-     char *filename;
-     int width;
+fold_file (char *filename, int width)
 {
   FILE *istream;
   register int c;
@@ -289,30 +231,78 @@ fold_file (filename, width)
   return 0;
 }
 
-/* Assuming the current column is COLUMN, return the column that
-   printing C will move the cursor to.
-   The first column is 0. */
-
-static int
-adjust_column (column, c)
-     int column;
-     char c;
+void
+main (int argc, char **argv)
 {
-  if (!count_bytes)
+  int width = 80;
+  int i;
+  int optc;
+  int errs = 0;
+
+  program_name = argv[0];
+  break_spaces = count_bytes = have_read_stdin = 0;
+
+  /* Turn any numeric options into -w options.  */
+  for (i = 1; i < argc; i++)
     {
-      if (c == '\b')
+      if (argv[i][0] == '-' && ISDIGIT (argv[i][1]))
 	{
-	  if (column > 0)
-	    column--;
+	  char *s;
+
+	  s = xmalloc (strlen (argv[i]) + 2);
+	  s[0] = '-';
+	  s[1] = 'w';
+	  strcpy (s + 2, argv[i] + 1);
+	  argv[i] = s;
 	}
-      else if (c == '\r')
-	column = 0;
-      else if (c == '\t')
-	column = column + 8 - column % 8;
-      else /* if (isprint (c)) */
-	column++;
     }
+
+  while ((optc = getopt_long (argc, argv, "bsw:", longopts, (int *) 0))
+	 != EOF)
+    {
+      switch (optc)
+	{
+	case 0:
+	  break;
+
+	case 'b':		/* Count bytes rather than columns. */
+	  count_bytes = 1;
+	  break;
+
+	case 's':		/* Break at word boundaries. */
+	  break_spaces = 1;
+	  break;
+
+	case 'w':		/* Line width. */
+	  width = atoi (optarg);
+	  if (width < 1)
+	    error (1, 0, _("%s: invalid line width"), optarg);
+	  break;
+
+	default:
+	  usage (1);
+	}
+    }
+
+  if (show_version)
+    {
+      printf ("fold - %s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage (0);
+
+  if (argc == optind)
+    errs |= fold_file ("-", width);
   else
-    column++;
-  return column;
+    for (i = optind; i < argc; i++)
+      errs |= fold_file (argv[i], width);
+
+  if (have_read_stdin && fclose (stdin) == EOF)
+    error (1, errno, "-");
+  if (fclose (stdout) == EOF)
+    error (1, errno, _("write error"));
+
+  exit (errs);
 }
