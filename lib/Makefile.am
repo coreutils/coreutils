@@ -1,7 +1,9 @@
 ## Process this file with automake to produce Makefile.in
 noinst_LIBRARIES = fu
 
-EXTRA_DIST = group-member.c
+## FIXME: Remove mvdir.c, and rmdir.c when
+## automake is fixed -- probably for 1.1g
+EXTRA_DIST = mkdir.c rmdir.c
 
 INCLUDES = -I.. -I$(srcdir) -I../intl
 
