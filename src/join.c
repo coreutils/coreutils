@@ -635,7 +635,7 @@ add_field (int file, size_t field)
    (the zero-based field number).  If it cannot be converted, give a
    diagnostic and exit.  */
 
-size_t
+static size_t
 string_to_join_field (char const *str, char const *err_msg_fmt)
 {
   size_t result;
