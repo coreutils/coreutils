@@ -158,18 +158,7 @@ main (int argc, char **argv)
 	error (NOHUP_FAILURE, errno, _("failed to redirect standard error"));
     }
 
-  /* Ignore hang-up signals.  */
-  {
-#ifdef _POSIX_SOURCE
-    struct sigaction sigact;
-    sigact.sa_handler = SIG_IGN;
-    sigemptyset (&sigact.sa_mask);
-    sigact.sa_flags = 0;
-    sigaction (SIGHUP, &sigact, NULL);
-#else
-    signal (SIGHUP, SIG_IGN);
-#endif
-  }
+  signal (SIGHUP, SIG_IGN);
 
   {
     int exit_status;
