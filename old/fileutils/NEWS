@@ -1,5 +1,10 @@
 Changes in release 4.1:
 [4.0q]
+* chown now works properly when the specified login name contains a period
+  This is at the expense of always looking up the entire USER.GROUP string
+  as a login name first, and only then (upon failure) interpreting the `.'
+  as a separator and looking up `USER'.  To avoid the extra getpwnam call,
+  always use the POSIX-mandated `:' character as the separator.
 * `du some-other-dir' no longer fails if it can't open the current directory
 * `mv DIR EXISTING-FILE' no longer removes EXISTING-FILE.  Now it gets an error
   as POSIX says it must.
