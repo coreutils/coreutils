@@ -2,7 +2,7 @@
 
 	* path-concat.c: [!HAVE_DECL_MALLOC]: Declare malloc.
 	Also include memory.h, stdlib.h, unistd.h if appropriate.
-	Reported by Andreas Jaeger.
+	Reported by Andreas Jaeger (conflicting declaration of malloc).
 
 2000-12-02  Jim Meyering  <meyering@lucent.com>
 
