@@ -178,7 +178,7 @@ false.c: true.c
 	sed \
 	  -e s/true/false/g \
 	  -e s/success/failure/g \
-	  -e 's/^  exit (EXIT_SUCCESS/  exit (EXIT_FAILURE/g' \
+	  -e 's/(EXIT_SUCCESS)/(EXIT_FAILURE)/g' \
 	  $(srcdir)/true.c > $@-t
 	chmod a-w $@-t
 	mv $@-t $@
