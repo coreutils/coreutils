@@ -1,3 +1,8 @@
+2000-06-28  Jim Meyering  <meyering@lucent.com>
+
+	* mbstate_t.m4: Use stdlib.h, not stdio.h.  The latter is not included
+	by quotearg.c, for which we perform this test.  From Bruno Haible.
+
 2000-06-17  Bruno Haible  <haible@clisp.cons.org>
 
 	* check-decl.m4 (_jm_DECL_HEADERS): Check for utmp.h as well.
