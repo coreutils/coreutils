@@ -41,35 +41,35 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in TODO
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/alloca.m4 $(top_srcdir)/m4/allocsa.m4 \
-	$(top_srcdir)/m4/assert.m4 $(top_srcdir)/m4/atexit.m4 \
-	$(top_srcdir)/m4/backupfile.m4 $(top_srcdir)/m4/basename.m4 \
-	$(top_srcdir)/m4/bison.m4 $(top_srcdir)/m4/boottime.m4 \
-	$(top_srcdir)/m4/c-strtod.m4 $(top_srcdir)/m4/calloc.m4 \
-	$(top_srcdir)/m4/canon-host.m4 \
+	$(top_srcdir)/m4/argmatch.m4 $(top_srcdir)/m4/assert.m4 \
+	$(top_srcdir)/m4/atexit.m4 $(top_srcdir)/m4/backupfile.m4 \
+	$(top_srcdir)/m4/basename.m4 $(top_srcdir)/m4/bison.m4 \
+	$(top_srcdir)/m4/boottime.m4 $(top_srcdir)/m4/c-strtod.m4 \
+	$(top_srcdir)/m4/calloc.m4 $(top_srcdir)/m4/canon-host.m4 \
 	$(top_srcdir)/m4/canonicalize.m4 \
 	$(top_srcdir)/m4/chdir-long.m4 $(top_srcdir)/m4/check-decl.m4 \
 	$(top_srcdir)/m4/chown.m4 $(top_srcdir)/m4/clock_time.m4 \
 	$(top_srcdir)/m4/cloexec.m4 $(top_srcdir)/m4/closeout.m4 \
-	$(top_srcdir)/m4/codeset.m4 $(top_srcdir)/m4/d-ino.m4 \
-	$(top_srcdir)/m4/d-type.m4 $(top_srcdir)/m4/dirfd.m4 \
-	$(top_srcdir)/m4/dirname.m4 $(top_srcdir)/m4/dos.m4 \
-	$(top_srcdir)/m4/dup2.m4 $(top_srcdir)/m4/eealloc.m4 \
-	$(top_srcdir)/m4/eoverflow.m4 $(top_srcdir)/m4/error.m4 \
-	$(top_srcdir)/m4/euidaccess.m4 $(top_srcdir)/m4/exclude.m4 \
-	$(top_srcdir)/m4/exitfail.m4 $(top_srcdir)/m4/extensions.m4 \
-	$(top_srcdir)/m4/fcntl-safer.m4 $(top_srcdir)/m4/file-type.m4 \
-	$(top_srcdir)/m4/fileblocks.m4 $(top_srcdir)/m4/filemode.m4 \
-	$(top_srcdir)/m4/fnmatch.m4 $(top_srcdir)/m4/fpending.m4 \
-	$(top_srcdir)/m4/free.m4 $(top_srcdir)/m4/fstypename.m4 \
-	$(top_srcdir)/m4/fsusage.m4 $(top_srcdir)/m4/ftruncate.m4 \
-	$(top_srcdir)/m4/fts.m4 $(top_srcdir)/m4/getcwd-path-max.m4 \
-	$(top_srcdir)/m4/getcwd.m4 $(top_srcdir)/m4/getdate.m4 \
-	$(top_srcdir)/m4/getgroups.m4 $(top_srcdir)/m4/gethostname.m4 \
-	$(top_srcdir)/m4/gethrxtime.m4 $(top_srcdir)/m4/getline.m4 \
-	$(top_srcdir)/m4/getndelim2.m4 $(top_srcdir)/m4/getopt.m4 \
-	$(top_srcdir)/m4/getpagesize.m4 $(top_srcdir)/m4/getpass.m4 \
-	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/gettime.m4 \
-	$(top_srcdir)/m4/gettimeofday.m4 \
+	$(top_srcdir)/m4/codeset.m4 $(top_srcdir)/m4/cycle-check.m4 \
+	$(top_srcdir)/m4/d-ino.m4 $(top_srcdir)/m4/d-type.m4 \
+	$(top_srcdir)/m4/dirfd.m4 $(top_srcdir)/m4/dirname.m4 \
+	$(top_srcdir)/m4/dos.m4 $(top_srcdir)/m4/dup2.m4 \
+	$(top_srcdir)/m4/eealloc.m4 $(top_srcdir)/m4/eoverflow.m4 \
+	$(top_srcdir)/m4/error.m4 $(top_srcdir)/m4/euidaccess.m4 \
+	$(top_srcdir)/m4/exclude.m4 $(top_srcdir)/m4/exitfail.m4 \
+	$(top_srcdir)/m4/extensions.m4 $(top_srcdir)/m4/fcntl-safer.m4 \
+	$(top_srcdir)/m4/file-type.m4 $(top_srcdir)/m4/fileblocks.m4 \
+	$(top_srcdir)/m4/filemode.m4 $(top_srcdir)/m4/fnmatch.m4 \
+	$(top_srcdir)/m4/fpending.m4 $(top_srcdir)/m4/free.m4 \
+	$(top_srcdir)/m4/fstypename.m4 $(top_srcdir)/m4/fsusage.m4 \
+	$(top_srcdir)/m4/ftruncate.m4 $(top_srcdir)/m4/fts.m4 \
+	$(top_srcdir)/m4/getcwd-path-max.m4 $(top_srcdir)/m4/getcwd.m4 \
+	$(top_srcdir)/m4/getdate.m4 $(top_srcdir)/m4/getgroups.m4 \
+	$(top_srcdir)/m4/gethostname.m4 $(top_srcdir)/m4/gethrxtime.m4 \
+	$(top_srcdir)/m4/getline.m4 $(top_srcdir)/m4/getndelim2.m4 \
+	$(top_srcdir)/m4/getopt.m4 $(top_srcdir)/m4/getpagesize.m4 \
+	$(top_srcdir)/m4/getpass.m4 $(top_srcdir)/m4/gettext.m4 \
+	$(top_srcdir)/m4/gettime.m4 $(top_srcdir)/m4/gettimeofday.m4 \
 	$(top_srcdir)/m4/getugroups.m4 \
 	$(top_srcdir)/m4/getusershell.m4 $(top_srcdir)/m4/glibc21.m4 \
 	$(top_srcdir)/m4/group-member.m4 \
