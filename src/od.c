@@ -85,7 +85,8 @@ typedef double LONG_DOUBLE;
 #endif
 
 #ifndef OFF_T_MAX
-# define OFF_T_MAX ((off_t)(~((off_t)1 << (sizeof (off_t) * BITSPERBYTE - 1))))
+# define OFF_T_MAX ((off_t)(~((unsigned long)1 << (sizeof (off_t)
+						   * BITSPERBYTE - 1))))
 #endif
 
 #define STREQ(a,b) (strcmp((a), (b)) == 0)
