@@ -47,16 +47,17 @@ DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	euidaccess.c fchdir-stub.c fchown-stub.c fileblocks.c \
 	fnmatch.c free.c fsusage.c ftruncate.c getcwd.c getdate.c \
 	getgroups.c gethostname.c getline.c getloadavg.c getndelim2.c \
-	getpass.c gettimeofday.c getusershell.c group-member.c \
-	lchown.c lstat.c malloc.c memchr.c memcmp.c memcpy.c memmove.c \
-	memrchr.c memset.c mkdir.c mkstemp.c mktime.c mountlist.c \
-	nanosleep.c obstack.c obstack.h printf-args.c printf-parse.c \
-	putenv.c raise.c readlink.c readutmp.c realloc.c regex.c \
-	rename.c rmdir.c rpmatch.c sig2str.c stat.c stpcpy.c \
-	strcasecmp.c strcspn.c strdup.c strncasecmp.c strndup.c \
-	strnlen.c strpbrk.c strstr.c strtod.c strtoimax.c strtol.c \
-	strtoll.c strtoul.c strtoull.c strtoumax.c strverscmp.c \
-	tempname.c utime.c vasnprintf.c vasprintf.c
+	getopt.c getopt1.c getpass.c gettimeofday.c getusershell.c \
+	group-member.c lchown.c lstat.c malloc.c memchr.c memcmp.c \
+	memcpy.c memmove.c memrchr.c memset.c mkdir.c mkstemp.c \
+	mktime.c mountlist.c nanosleep.c obstack.c obstack.h \
+	printf-args.c printf-parse.c putenv.c raise.c readlink.c \
+	readutmp.c realloc.c regex.c rename.c rmdir.c rpmatch.c \
+	sig2str.c stat.c stpcpy.c strcasecmp.c strcspn.c strdup.c \
+	strncasecmp.c strndup.c strnlen.c strpbrk.c strstr.c strtod.c \
+	strtoimax.c strtol.c strtoll.c strtoul.c strtoull.c \
+	strtoumax.c strverscmp.c tempname.c utime.c vasnprintf.c \
+	vasprintf.c
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/alloca.m4 $(top_srcdir)/m4/allocsa.m4 \
@@ -170,10 +171,9 @@ am__DEPENDENCIES_1 = @LIBOBJS@
 am__DEPENDENCIES_2 = @ALLOCA@
 am_libfetish_a_OBJECTS = acl.$(OBJEXT) getdate.$(OBJEXT) \
 	posixtm.$(OBJEXT) posixver.$(OBJEXT) strftime.$(OBJEXT) \
-	getopt.$(OBJEXT) getopt1.$(OBJEXT) hash.$(OBJEXT) \
-	hash-pjw.$(OBJEXT) allocsa.$(OBJEXT) argmatch.$(OBJEXT) \
-	backupfile.$(OBJEXT) basename.$(OBJEXT) c-strtod.$(OBJEXT) \
-	c-strtold.$(OBJEXT) canon-host.$(OBJEXT) \
+	hash.$(OBJEXT) hash-pjw.$(OBJEXT) allocsa.$(OBJEXT) \
+	argmatch.$(OBJEXT) backupfile.$(OBJEXT) basename.$(OBJEXT) \
+	c-strtod.$(OBJEXT) c-strtold.$(OBJEXT) canon-host.$(OBJEXT) \
 	canonicalize.$(OBJEXT) cloexec.$(OBJEXT) closeout.$(OBJEXT) \
 	cycle-check.$(OBJEXT) diacrit.$(OBJEXT) dirname.$(OBJEXT) \
 	dup-safer.$(OBJEXT) exclude.$(OBJEXT) exitfail.$(OBJEXT) \
@@ -240,6 +240,7 @@ EXEEXT = @EXEEXT@
 FESETROUND_LIBM = @FESETROUND_LIBM@
 FNMATCH_H = @FNMATCH_H@
 GETLOADAVG_LIBS = @GETLOADAVG_LIBS@
+GETOPT_H = @GETOPT_H@
 GLIBC21 = @GLIBC21@
 GMSGFMT = @GMSGFMT@
 GNU_PACKAGE = @GNU_PACKAGE@
@@ -336,11 +337,10 @@ target_alias = @target_alias@
 noinst_LIBRARIES = libfetish.a
 AM_CPPFLAGS = -I.. -I$(srcdir)
 libfetish_a_SOURCES = acl.h acl.c getdate.h getdate.y posixtm.c \
-	posixtm.h posixver.c posixver.h strftime.c strftime.h getopt.c \
-	getopt.h getopt1.c getopt_int.h hash.c hash.h hash-pjw.c \
-	hash-pjw.h __fpending.h allocsa.c allocsa.h argmatch.c \
-	argmatch.h backupfile.c backupfile.h basename.c c-strtod.c \
-	c-strtod.h c-strtold.c canon-host.c canonicalize.c \
+	posixtm.h posixver.c posixver.h strftime.c strftime.h hash.c \
+	hash.h hash-pjw.c hash-pjw.h __fpending.h allocsa.c allocsa.h \
+	argmatch.c argmatch.h backupfile.c backupfile.h basename.c \
+	c-strtod.c c-strtod.h c-strtold.c canon-host.c canonicalize.c \
 	canonicalize.h cloexec.c cloexec.h closeout.c closeout.h \
 	cycle-check.c cycle-check.h dev-ino.h diacrit.c diacrit.h \
 	dirname.c dirname.h dirfd.h dup-safer.c euidaccess.h exclude.c \
@@ -374,15 +374,16 @@ libfetish_a_SOURCES = acl.h acl.c getdate.h getdate.y posixtm.c \
 libfetish_a_LIBADD = $(LIBOBJS) $(ALLOCA)
 libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
 lib_OBJECTS = $(libfetish_a_OBJECTS)
-BUILT_SOURCES = getdate.c $(STDBOOL_H) $(ALLOCA_H) $(FNMATCH_H)
+BUILT_SOURCES = getdate.c $(STDBOOL_H) $(ALLOCA_H) $(FNMATCH_H) \
+	$(GETOPT_H)
 CLEANFILES = charset.alias ref-add.sed ref-del.sed
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 MOSTLYCLEANFILES = stdbool.h stdbool.ht alloca.h alloca.h-t fnmatch.h \
-	fnmatch.h-t
+	fnmatch.h-t getopt.h getopt.h-t
 SUFFIXES = .sed .sin
 EXTRA_DIST = config.charset ref-add.sin ref-del.sin getndelim2.c \
 	getndelim2.h inttostr.c inttostr.h stdbool_.h alloca_.h \
-	fnmatch_.h fnmatch_loop.c
+	fnmatch_.h fnmatch_loop.c getopt_.h getopt_int.h
 charset_alias = $(DESTDIR)$(libdir)/charset.alias
 charset_tmp = $(DESTDIR)$(libdir)/charset.tmp
 all: $(BUILT_SOURCES)
@@ -457,6 +458,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getline.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getloadavg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getndelim2.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getopt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getopt1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getpass.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/gettimeofday.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getusershell.Po@am__quote@
@@ -534,8 +537,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-read.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-write.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getdate.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getopt.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getopt1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gettime.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getugroups.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hard-locale.Po@am__quote@
@@ -861,6 +862,13 @@ alloca.h: alloca_.h
 all-local $(lib_OBJECTS): $(FNMATCH_H)
 fnmatch.h: fnmatch_.h
 	cp $(srcdir)/fnmatch_.h $@-t
+	mv $@-t $@
+
+# We need the following in order to create an <getopt.h> when the system
+# doesn't have one that works with the given compiler.
+all-local $(lib_OBJECTS): $(GETOPT_H)
+getopt.h: getopt_.h
+	cp $(srcdir)/getopt_.h $@-t
 	mv $@-t $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
