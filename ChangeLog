@@ -33,7 +33,7 @@
 	consume 4GB of disk space on systems without support for sparse files.
 	Fix a logic error that'd make it `cat err' even though dd didn't fail.
 
-	* src/dircolors.hin (.jar): Fix typo: s/01;3/01;31/.
+	* src/dircolors.hin (.jar): Fix typo: s/;3$/;31/.
 	Patch by steven@magelico.net, forwarded by Michael Stone.
 
 	* tests/ls/dired: Ensure that ls produces English messages.
