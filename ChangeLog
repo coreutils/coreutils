@@ -2,6 +2,14 @@
 
 	* Version 5.0.90.
 
+2003-07-28  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/stdbool.hin (_Bool): Make it signed char, instead of
+	an enum type, so that it's guaranteed to promote to int.
+	* src/sort.c (sortlines_temp): Undo previous change.
+
+2003-07-28  Jim Meyering  <jim@meyering.net>
+
 	* src/sort.c (sortlines_temp): Declare local `swap' to be `int', not
 	`bool'.  Otherwise, at least one buggy compiler (alpha gcc-2.95.4)
 	would cause lines[-1 - swap] (with swap = false) to evaluate to
