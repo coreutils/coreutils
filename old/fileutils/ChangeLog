@@ -1,6 +1,8 @@
 1997-09-13  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/strverscmp.h [HAVE_CONFIG_H]: Include config.h.
+	(PARAMS): Define.
+	Guard prototype with PARAMS.
 
 	* lib/oa-hash.c: Use K&R style function dcls, not ANSI.
 	(HASH_MALLOC): Prefix with (Type*) cast to placate old compilers.
