@@ -12,5 +12,6 @@ TESTS_ENVIRONMENT = \
   MV=../../src/mv \
   RM=../../src/rm \
   TOUCH=../../src/touch \
+  PERL=@PERL@ \
   PATH=../../src:$$PATH \
   PROG=mv
