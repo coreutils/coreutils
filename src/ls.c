@@ -661,7 +661,10 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("ls - %s\n", PACKAGE_VERSION);
+      printf ("%s - %s\n",
+	      (ls_mode == LS_LS ? "ls"
+	       : (ls_mode == LS_MULTI_COL ? "dir" : "vdir")
+	      PACKAGE_VERSION);
       exit (0);
     }
 
