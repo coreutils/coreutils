@@ -133,7 +133,6 @@ char *realloc ();
 char *base_name ();
 int euidaccess ();
 char *stpcpy ();
-char *stpncpy ();
 void strip_trailing_slashes ();
 char *xmalloc ();
 int yesno ();
@@ -600,7 +599,7 @@ remove_cwd_entries (void)
 		    error (1, 0, _("Memory exhausted"));
 		}
 	      p = xmalloc (NLENGTH (dp) + 1);
-	      stpncpy (p, (dp)->d_name, NLENGTH (dp));
+	      memcpy (p, (dp)->d_name, NLENGTH (dp) + 1);
 	      fail = hash_insert_item (ht, p, &old_item);
 	      assert (old_item == NULL);
 	      if (fail)
