@@ -93,6 +93,10 @@ touch a b || test_failure=1
 ln b b~ || test_failure=1
 ln -V simple -f -b a b || fail=1
 
+# Create a hard link to a dangling symlink.
+ln -s /no-such-dir || fail=1
+ln no-such-dir hard-to-dangle || fail=1
+
 cd ..
 ../../src/rm -rf $tmp
 
