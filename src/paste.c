@@ -158,7 +158,7 @@ paste_parallel (int nfiles, char **fnamptr)
   /* Number of files for which space is allocated in `delbuf' and `fileptr'.
      Enlarged as necessary. */
   int file_list_size = 12;
-  int chr;			/* Input character. */
+  int chr IF_LINT (= 0);	/* Input character. */
   int line_length;		/* Number of chars in line. */
   int somedone;			/* 0 if all files empty for this line. */
   /* If all files are just ready to be closed, or will be on this
@@ -172,10 +172,6 @@ paste_parallel (int nfiles, char **fnamptr)
   int files_open;		/* Number of files still open to process. */
   int i;			/* Loop index. */
   int opened_stdin = 0;		/* Nonzero if any fopen got fd 0. */
-
-#ifdef lint  /* Suppress `used before initialized' warning.  */
-  chr = 0;
-#endif
 
   delbuf = (char *) xmalloc (file_list_size + 2);
   fileptr = (FILE **) xmalloc ((file_list_size + 1) * sizeof (FILE *));
