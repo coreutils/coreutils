@@ -55,7 +55,6 @@
 #include <stdarg.h>
 
 #include "system.h"
-#include "long-options.h"
 #include "error.h"
 #include "xstrtol.h"
 
@@ -440,6 +439,8 @@ static struct option longopts[] =
   {"all", no_argument, NULL, 'a'},
   {"save", no_argument, NULL, 'g'},
   {"file", required_argument, NULL, 'F'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
@@ -738,9 +739,6 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      usage, AUTHORS, (char const *) NULL);
-
   output_type = changed;
   verbose_output = false;
   recoverable_output = false;
@@ -776,6 +774,10 @@ main (int argc, char **argv)
 	    error (EXIT_FAILURE, 0, _("only one device may be specified"));
 	  file_name = optarg;
 	  break;
+
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  noargs = false;
