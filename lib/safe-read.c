@@ -78,6 +78,8 @@ safe_read (int fd, void *buf, size_t count)
 	nbytes_to_read = MAX_BYTES_TO_READ & ~8191;
 
       result = read (fd, ptr, nbytes_to_read);
+      if (result == 0)
+	break;
       if (result < 0)
 	{
 #ifdef EINTR
