@@ -1704,7 +1704,7 @@
 	Round negative numbers correctly.
 	(show_dev): Round disk usage up and disk free space down.
 
-	* src/ls.c: (print_dir, gobble_file, print_long_format,
+	* src/ls.c (print_dir, gobble_file, print_long_format,
 	print_file_name_and_frills): Round disk usage up.
 	* src/du.c (print_size): Likewise.
 
@@ -2024,7 +2024,7 @@
 2000-03-12  Jim Meyering  <meyering@lucent.com>
 
 	Merge from textutils.
-	* src/system.h: (O_BINARY, O_TEXT): Define if necessary.
+	* src/system.h (O_BINARY, O_TEXT): Define if necessary.
 	(SET_BINARY, SET_BINARY2): Define.
 	(DEV_BSIZE): Define to BBSIZE if appropriate.
 
@@ -2315,7 +2315,7 @@
 
 	* lib/euidaccess.c: Sync with the GNU C library.
 
-	* tests/dir/Makefile.am: (TESTS_ENVIRONMENT): Add `pwd`/ prefix
+	* tests/dir/Makefile.am (TESTS_ENVIRONMENT): Add `pwd`/ prefix
 	to exported PATH value (though not strictly necessary, here).
 	* tests/dd/Makefile.am: Likewise.
 	* tests/dircolors/Makefile.am: Likewise.
@@ -3218,7 +3218,7 @@
 	create directory' rather than `cannot make directory'.  The former
 	also matches the one in makepath.c.
 
-	* src/dd.c: (apply_translations): Use TOUPPER and TOLOWER,
+	* src/dd.c (apply_translations): Use TOUPPER and TOLOWER,
 	not toupper and tolower.
 
 1999-05-05  Jim Meyering  <meyering@ascend.com>
@@ -4252,7 +4252,7 @@
 	(base_name): Declare.
 	Mostly from Akim Demaille.
 
-	* lib/addext.c: (base_name): Declare.
+	* lib/addext.c (base_name): Declare.
 	* src/sys2.h: Add prototype for base_name.
 
 	* lib/argmatch.c: s/argmatch_exit_failure/argmatch_die/
@@ -4898,7 +4898,7 @@
 
 	* configure.in (AC_STRUCT_ST_MTIM_NSEC): Renamed from AC_STRUCT_ST_MTIM.
 	* acconfig.h (ST_MTIM_NSEC): New #undef.
-	* src/system.h: (ST_TIME_CMP_NS, ATIME_CMP, CTIME_CMP, MTIME_CMP):
+	* src/system.h (ST_TIME_CMP_NS, ATIME_CMP, CTIME_CMP, MTIME_CMP):
 	Use new ST_MTIM_NSEC macro.
 
 1998-08-16  Jim Meyering  <meyering@ascend.com>
@@ -4983,7 +4983,7 @@
 	rev_cmp_mtime, compare_atime, rev_cmp_atime): Compare time
 	stamps with subsecond resolution if available.
 
-	* src/system.h: (ST_TIME_CMP_NS, ST_TIME_CMP, ATIME_CMP,
+	* src/system.h (ST_TIME_CMP_NS, ST_TIME_CMP, ATIME_CMP,
 	CTIME_CMP, MTIME_CMP): New macros.
 
 1998-08-01  Jim Meyering  <meyering@ascend.com>
@@ -5158,7 +5158,7 @@
 
 1998-06-30  Paul Eggert  <eggert@shade.twinsun.com>
 
-	* lib/mountlist.c: (read_filesystem_list):
+	* lib/mountlist.c (read_filesystem_list):
 	Don't leak memory on failure.
 	Don't create a dummy struct mount_entry entry;
 	use the address-of-the-tail-address method instead.
@@ -5224,7 +5224,7 @@
 
 1998-06-29  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/mountlist.c: (read_filesystem_list): If SVR4, lock
+	* lib/mountlist.c (read_filesystem_list): If SVR4, lock
 	/etc/.mnttab.lock if available, to avoid race conditions
 	(e.g. with the automounter on Solaris 2.6).
 
@@ -5881,7 +5881,7 @@
 	* src/copy.c (copy_internal): Use x->backup_type, not the global.
 	(valid_options): Use VALID_BACKUP_TYPE and VALID_SPARSE_MODE.
 
-	* src/copy.h: (VALID_SPARSE_MODE): Define.
+	* src/copy.h (VALID_SPARSE_MODE): Define.
 	[struct cp_options] (backup_type): New member.
 
 	* src/cp.c [NDEBUG]: Comment out definition.
