@@ -85,6 +85,6 @@ changed group of `symlink' to G1
 EOF
 
 cmp expected actual \
-  || { diff -u expected actual 1>&2; fail=1; }
+  || { diff expected actual 1>&2; fail=1; }
 
 (exit $fail); exit

@@ -50,7 +50,7 @@ c:
 EOF
 
 cmp out exp || fail=1
-test $fail = 1 && diff -u out exp 2> /dev/null
+test $fail = 1 && diff out exp 2> /dev/null
 
 rm -rf out exp
 ls -R1 x y f > out || fail=1
@@ -63,6 +63,6 @@ y:
 EOF
 
 cmp out exp || fail=1
-test $fail = 1 && diff -u out exp 2> /dev/null
+test $fail = 1 && diff out exp 2> /dev/null
 
 (exit $fail); exit

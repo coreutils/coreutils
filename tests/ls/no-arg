@@ -35,7 +35,7 @@ fail=0
 ls > out || fail=1
 
 cmp out exp || fail=1
-test $fail = 1 && diff -u out exp 2> /dev/null
+test $fail = 1 && diff out exp 2> /dev/null
 
 cat > exp <<\EOF
 .:
@@ -54,6 +54,6 @@ EOF
 ls -R > out || fail=1
 
 cmp out exp || fail=1
-test $fail = 1 && diff -u out exp 2> /dev/null
+test $fail = 1 && diff out exp 2> /dev/null
 
 (exit $fail); exit
