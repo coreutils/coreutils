@@ -33,13 +33,24 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #include <values.h>
 #include <sys/types.h>
 
+#if defined (HAVE_LIMITS_H) || defined (_LIBC)
+# include <limits.h>
+#endif
+
+/* #define UINT_MAX_32_BITS ((unsigned int) 4294967294 + 1) */
+#define UINT_MAX_32_BITS 4294967295U
+
+#ifndef UINT_MAX
+# define UINT_MAX UINT_MAX_32_BITS
+#endif
+
 #include "system.h"
 #include "error.h"
 #include "version.h"
 
 #ifdef WORDS_BIGENDIAN
 # define SWAP(n)							      \
-    ((n << 24) | ((n & 0xff00) << 8) | ((n >> 8) & 0xff00) | (n >> 24))
+    (((n) << 24) | (((n) & 0xff00) << 8) | (((n) >> 8) & 0xff00) | ((n) >> 24))
 #else
 # define SWAP(n) (n)
 #endif
@@ -78,20 +89,20 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 # define INLINE __inline
 #endif
 
-#if SIZEOF_UNSIGNED_INT == 4
+#if UINT_MAX == UINT_MAX_32_BITS
 typedef unsigned int uint32;
-#elif SIZEOF_UNSIGNED_SHORT == 4
+#elif USHRT_MAX == UINT_MAX_32_BITS
 typedef unsigned short uint32;
 #else
   /* The following line is intended to throw an error.  Using #error is
      not portable enough.  */
-  "Cannot determine unsigned 32-bit data type.  I'm screwed"
+  "Cannot determine unsigned 32-bit data type."
 #endif
 
 /* Hook for i18n.  */
 #define _(str) str
 
-/* Structure to safe state of computation between the single steps.  */
+/* Structure to save state of computation between the single steps.  */
 struct md5_ctx
 {
   uint32 A;
@@ -105,8 +116,7 @@ char *program_name;
 
 /* This array contains the bytes used to pad the buffer to the next
    64-byte boundary.  (RFC 1321, 3.1: Step 1)  */
-static const unsigned char fillbuf[64] = { 0x80, 0, };
-
+static const unsigned char fillbuf[64] = { 0x80, 0 };
 
 static const struct option long_options[] =
 {
