@@ -1,17 +1,22 @@
-2001-03-09  Jim Meyering  <meyering@lucent.com>
+2001-05-11  Paul Eggert  <eggert@twinsun.com>
 
-	* src/factor.c: Include wheel-size.h.
-	(WHEEL_START): Adjust definition.
-	(wheel_tab[]): Remove body of definition.
-	Include generated file, wheel.h, instead.
+	dirname code cleanup.  base_name now behaves more compatibly
+	with POSIX basename when given file names that have trailing
+	slashes, and similarly for dir_name.  Add new primitives
+	base_len and dir_len.  Put the directory-name-related decls
+	into dirname.h.
 
-	* src/wheel-gen.pl: New file.
-	* src/Makefile.am (noinst_HEADERS): Add wheel.h wheel-size.h.
-	(EXTRA_DIST): Add wheel-gen.pl.
-	(PERL): Define.
-	(wheel-size.h, wheel.h): New rules.
-	(BUILT_SOURCES): Add wheel.h and wheel-size.h.
-	(MAINTAINERCLEANFILES): Define.
+	* basename.c: Include "dirname.h".
+	(base_name, strip_trailing_slashes): Remove decls; now in dirname.h.
+	(main): Use base_len instead of strip_trailing_slashes to strip
+	trailing slashes.
+
+	* dirname.c (strip_trailing_slashes): Remove decl;
+	now in dirname.h.
+	(main): Use dir_len rather than dir_name_r.
+
+	* su.c: Include "dirname.h".
+	(base_name): Remove decl; now in dirname.h.
 
 2001-04-20  Jim Meyering  <meyering@lucent.com>
 
@@ -29,6 +34,19 @@
 
 	* doc/sh-utils.texi (date invocation): Correct the description of how
 	date works when given no format.  Reported by Ole Laursen.
+
+	* src/factor.c: Include wheel-size.h.
+	(WHEEL_START): Adjust definition.
+	(wheel_tab[]): Remove body of definition.
+	Include generated file, wheel.h, instead.
+
+	* src/wheel-gen.pl: New file.
+	* src/Makefile.am (noinst_HEADERS): Add wheel.h wheel-size.h.
+	(EXTRA_DIST): Add wheel-gen.pl.
+	(PERL): Define.
+	(wheel-size.h, wheel.h): New rules.
+	(BUILT_SOURCES): Add wheel.h and wheel-size.h.
+	(MAINTAINERCLEANFILES): Define.
 
 2001-03-09  Jim Meyering  <meyering@lucent.com>
 
