@@ -2206,7 +2206,7 @@ date [-u|--utc|--universal] @c this avoids a newline in the output
 [ MMDDhhmm[[CC]YY][.ss] ]
 @end example
 
-Invoking @code{date} with no arguments is equivalent to invoking
+Invoking @code{date} with no @var{format} argument is equivalent to invoking
 @samp{date '+%a %b %e %H:%M:%S %Z %Y'}.
 
 @findex strftime @r{and @code{date}}
