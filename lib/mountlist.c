@@ -80,6 +80,10 @@ void error ();
 #include <sys/statfs.h>
 #endif
 
+#ifdef MOUNTED_LISTMNTENT
+#include <mntent.h>
+#endif
+
 #ifdef MOUNTED_GETMNTENT2	/* SVR4.  */
 #include <sys/mnttab.h>
 #endif
@@ -194,6 +198,36 @@ read_filesystem_list (need_fs_type, all_fs)
   me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
   me->me_next = NULL;
   mount_list = mtail = me;
+
+#ifdef MOUNTED_LISTMNTENT
+  {
+    struct tabmntent *mntlist, *p;
+    struct mntent *mnt;
+    struct mount_entry *me;
+    
+    /* the third and fourth arguments could be used to filter mounts,
+       but Crays doesn't seem to have any mounts that we want to
+       remove. Specifically, automount create normal NFS mounts.
+       */
+
+    if(listmntent(&mntlist, KMTAB, NULL, NULL) < 0)
+      return NULL;
+    p = mntlist;
+    while(p){
+      mnt = p->ment;
+      me = (struct mount_entry*) xmalloc(sizeof (struct mount_entry));
+      me->me_devname = xstrdup(mnt->mnt_fsname);
+      me->me_mountdir = xstrdup(mnt->mnt_dir);
+      me->me_type = xstrdup(mnt->mnt_type);
+      me->me_dev = -1;
+      me->me_next = NULL;
+      mtail->me_next = me;
+      mtail = me;
+      p = p->next;
+    }
+    freemntlist(mntlist);
+  }
+#endif
 
 #ifdef MOUNTED_GETMNTENT1	/* 4.3BSD, SunOS, HP-UX, Dynix, Irix.  */
   {
