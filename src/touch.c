@@ -262,7 +262,7 @@ Update the access and modification times of each FILE to the current time.\n\
 \n\
 STAMP may be used without -t if none of -drt, nor --, are used.\n\
 "));
-      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu\n"));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu"));
     }
   exit (status);
 }

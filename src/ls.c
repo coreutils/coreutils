@@ -2747,7 +2747,7 @@ optional WHEN argument is equivalent to using --color=always.  With\n\
 --color=auto, color codes are output only if standard output is connected\n\
 to a terminal (tty).\n\
 "));
-      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu\n"));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu"));
     }
   exit (status);
 }
