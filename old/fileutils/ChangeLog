@@ -1,3 +1,12 @@
+1998-01-24  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/system.h (TYPE_MINIMUM): Add extra outer cast to work around
+	bug in Cray C 5.0.3.0 when T == time_t.
+
+	* tests/rm/r-1: Adjust expected output for changed format of
+	`rm --verbose'.
+	* tests/rm/r-2: Likewise.
+
 1998-01-23  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/mktime.c (__mktime_internal): Work around bug in Irix4.0.5's
