@@ -108,7 +108,7 @@ main (int argc, char **argv)
       puts (pw->pw_name);
       exit (EXIT_SUCCESS);
     }
-  fprintf (stderr, _("%s: cannot find username for UID %u\n"),
-	   program_name, (unsigned) uid);
+  fprintf (stderr, _("%s: cannot find username for UID %lu\n"),
+	   program_name, (unsigned long int) uid);
   exit (EXIT_FAILURE);
 }
