@@ -34,7 +34,7 @@ libfetish_a_SOURCES = \
   fnmatch.h \
   fopen-safer.c \
   fsusage.h \
-  full-write.c \
+  full-write.c full-write.h \
   getline.h \
   getpagesize.h \
   getstr.c getstr.h \
