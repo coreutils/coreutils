@@ -1,3 +1,13 @@
+Fri Jan 24 23:36:00 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/long-options.c (parse_long_options): Reset optind to zero
+	before just returning so that getopt internals get initialized from
+	the probably-new parameters when/if getopt is called later.
+	This solves the problem (reintroduced with 1.15) where `stty -tabs'
+	would not work as advertised but instead act like `stty -a'.
+	Reported by Arne Juul.
+	Suggested fix from Ulrich Drepper.
+
 Wed Jan 22 20:12:31 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/getopt.c: Update from GNU C library.
