@@ -1,3 +1,8 @@
+2000-08-24  Jim Meyering  <meyering@lucent.com>
+
+	* install-sh: Double quote as needed, to protect against arguments
+	containing spaces or shell metacharacters.  Reported by Bruno Haible.
+
 2000-08-23  Jim Meyering  <meyering@lucent.com>
 
 	* tests/dd/not-rewound: New test, for the SEEK_CUR vs. SEEK_SET part
