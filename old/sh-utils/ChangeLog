@@ -2,6 +2,9 @@
 
 	* Version 2.0.12.
 
+	* src/who.c: Don't include xalloc.h.
+	It's already included via system.h.
+
 2002-04-28  Paul Eggert  <eggert@twinsun.com>
 
 	* src/kill.c: Rewrite from scratch.  Support everything
