@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2003-10-29.10}
+\def\texinfoversion{2003-11-15.16}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
@@ -2426,12 +2426,16 @@ where each line of input produces a line of output.}
   \go
 }
 
+\def\headitem{\errmessage{@headitem outside of @multitable}}
+
 % @multitable ... @end multitable definitions:
 %
 \def\multitable{\parsearg\dotable}
 \def\dotable#1{\bgroup
   \vskip\parskip
   \let\item=\crcrwithfootnotes
+  % FIXXME, @headitem should change the font for its row to bold.
+  \let\headitem=\crcrwithfootnotes
   % A \tab used to include \hskip1sp.  But then the space in a template
   % line is not enough.  That is bad.  So let's go back to just & until
   % we encounter the problem it was intended to solve again.  --karl,
@@ -3031,6 +3035,7 @@ width0pt\relax} \fi
   % Assorted special characters.
   \definedummyword{bullet}%
   \definedummyword{copyright}%
+  \definedummyword{registeredsymbol}%
   \definedummyword{dots}%
   \definedummyword{enddots}%
   \definedummyword{equiv}%
@@ -3140,20 +3145,20 @@ width0pt\relax} \fi
 \let\SETmarginindex=\relax % put index entries in margin (undocumented)?
 
 % Most index entries go through here, but \dosubind is the general case.
-%
+% #1 is the index name, #2 is the entry text.
 \def\doind#1#2{\dosubind{#1}{#2}{}}
 
 % Workhorse for all \fooindexes.
 % #1 is name of index, #2 is stuff to put there, #3 is subentry --
 % \empty if called from \doind, as we usually are.  The main exception
-% is with defuns, which call us directly.
+% is with some defuns, which call us directly.
 %
 \def\dosubind#1#2#3{%
   \iflinks
   {%
     % Store the main index entry text (including the third arg).
     \toks0 = {#2}%
-    % If third arg is present, precede it with space.
+    % If third arg is present, precede it with a space.
     \def\thirdarg{#3}%
     \ifx\thirdarg\empty \else
       \toks0 = \expandafter{\the\toks0 \space #3}%
@@ -3170,7 +3175,7 @@ width0pt\relax} \fi
   \fi
 }
 
-% Write the entry to the index file:
+% Write the entry in \toks0 to the index file:
 %
 \def\dosubindwrite{%
   % Put the index entry in the margin if desired.
@@ -4689,7 +4694,8 @@ width0pt\relax} \fi
 % @quotation does normal linebreaking (hence we can't use \nonfillstart)
 % and narrows the margins.
 %
-\def\quotation{%
+\def\quotation{\parsearg\doquotation}
+\def\doquotation#1{%
   \begingroup\inENV %This group ends at the end of the @quotation body
   {\parskip=0pt \aboveenvbreak}% because \aboveenvbreak inserts \parskip
   \parindent=0pt
@@ -4703,6 +4709,12 @@ width0pt\relax} \fi
     \advance\rightskip by \lispnarrowing
     \exdentamount = \lispnarrowing
     \let\nonarrowing = \relax
+  \fi
+  %
+  % If we're given an argument, typeset it in bold with a colon after.
+  \def\thearg{#1}%
+  \ifx\thearg\empty \else
+    {\bf \thearg:}
   \fi
 }
 
