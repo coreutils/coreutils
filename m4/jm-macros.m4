@@ -1,4 +1,4 @@
-#serial 25
+#serial 26
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -116,7 +116,7 @@ AC_DEFUN(jm_MACROS,
   dnl used by e.g. intl/*domain.c and lib/canon-host.c
   AC_REPLACE_FUNCS(strdup)
 
-  AC_REPLACE_FUNCS(memchr memmove memcpy memset)
+  AC_REPLACE_FUNCS(memchr memcpy memmove memrchr memset)
   AC_CHECK_FUNCS(getpagesize)
 
   # By default, argmatch should fail calling usage (1).
