@@ -34,6 +34,7 @@
 #include "hard-locale.h"
 #include "human.h"
 #include "physmem.h"
+#include "posixver.h"
 #include "stdio-safer.h"
 #include "xmemcoll.h"
 #include "xstrtol.h"
@@ -327,11 +328,6 @@ Other options:\n\
       fputs (_("\
   -z, --zero-terminated     end lines with 0 byte, not newline\n\
 "), stdout);
-      if (POSIX2_VERSION < 200112)
-	fputs (_("\
-  +POS1 [-POS2]             start a key at POS1, end it before POS2 (origin 0)\n\
-                              Warning: this option is obsolete\n\
-"), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
@@ -362,8 +358,7 @@ native byte values.\n\
   exit (status);
 }
 
-static char const short_options[] =
-"-bcdfgik:mMno:rsS:t:T:uy" OPTARG_POSIX "z";
+#define COMMON_SHORT_OPTIONS "-bcdfgik:mMno:rsS:t:T:uz"
 
 static struct option const long_options[] =
 {
@@ -2172,6 +2167,10 @@ main (int argc, char **argv)
   int c = 0;
   int checkonly = 0, mergeonly = 0, nfiles = 0;
   int posix_pedantic = (getenv ("POSIXLY_CORRECT") != NULL);
+  bool obsolete_usage = (posix2_version () < 200112);
+  char const *short_options = (obsolete_usage
+			       ? COMMON_SHORT_OPTIONS "y::"
+			       : COMMON_SHORT_OPTIONS "y:");
   char *minus = "-", **files;
   char const *outfile = minus;
   static int const sigs[] = { SIGHUP, SIGINT, SIGPIPE, SIGTERM };
@@ -2260,7 +2259,7 @@ main (int argc, char **argv)
 
       if (c == -1
 	  || (posix_pedantic && nfiles != 0
-	      && ! (POSIX2_VERSION < 200112
+	      && ! (obsolete_usage
 		    && ! checkonly
 		    && optind != argc
 		    && argv[optind][0] == '-' && argv[optind][1] == 'o'
@@ -2277,7 +2276,7 @@ main (int argc, char **argv)
 	{
 	case 1:
 	  key = NULL;
-	  if (POSIX2_VERSION < 200112 && optarg[0] == '+')
+	  if (obsolete_usage && optarg[0] == '+')
 	    {
 	      /* Treat +POS1 [-POS2] as a key if possible; but silently
 		 treat an operand as a file if it is not a valid +POS1.  */
@@ -2294,10 +2293,6 @@ main (int argc, char **argv)
 		}
 	      else
 		{
-		  if (OBSOLETE_OPTION_WARNINGS && ! posix_pedantic)
-		    error (0, 0,
-			   _("warning: `sort %s' is obsolete; use `sort -k'"),
-			   optarg);
 		  if (optind != argc && argv[optind][0] == '-'
 		      && ISDIGIT (argv[optind][1]))
 		    {
@@ -2430,10 +2425,8 @@ main (int argc, char **argv)
 
 	case 'y':
 	  /* Accept and ignore e.g. -y0 for compatibility with Solaris
-	     2.x through Solaris 7.  -y SIZE is marked as obsolete
-	     starting with Solaris 8.  */
-	  if (OBSOLETE_OPTION_WARNINGS && ! optarg && ! posix_pedantic)
-	    error (0, 0, _("warning: `sort -y' is obsolete; omit `-y'"));
+	     2.x through Solaris 7.  -y is marked as obsolete starting
+	     with Solaris 8.  */
 	  break;
 
 	case 'z':
