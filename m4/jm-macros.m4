@@ -192,8 +192,25 @@ AC_DEFUN(jm_MACROS,
 
 ])
 
+# This macro must be invoked before any tests that run the compiler.
 AC_DEFUN(jm_CHECK_ALL_TYPES,
 [
+  # Enable GNU extensions.
+  # Define this here, not in acconfig's @TOP@ section, since definitions
+  # in the latter don't make it into the configure-time tests.
+  AC_DEFINE([_GNU_SOURCE], 1,
+    [Enable GNU extensions on systems that have them.])
+
+  dnl This test must come as early as possible after the compiler configuration
+  dnl tests, because the choice of the file model can (in principle) affect
+  dnl whether functions and headers are available, whether they work, etc.
+  AC_REQUIRE([AC_SYS_LARGEFILE])
+
+  dnl This test must precede tests of compiler characteristics like
+  dnl that for the inline keyword, since it may change the degree to
+  dnl which the compiler supports such features.
+  AC_REQUIRE([AM_C_PROTOTYPES])
+
   dnl Checks for typedefs, structures, and compiler characteristics.
   AC_REQUIRE([AC_C_BIGENDIAN])
   AC_REQUIRE([AC_PROG_CC_STDC])
