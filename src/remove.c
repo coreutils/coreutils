@@ -823,7 +823,7 @@ remove_cwd_entries (char **subdir, struct stat *subdir_sb,
 	    {
 	      /* Save/restore errno across closedir call.  */
 	      int e = errno;
-	      CLOSEDIR (dirp);
+	      closedir (dirp);
 	      errno = e;
 
 	      /* Arrange to give a diagnostic after exiting this loop.  */
