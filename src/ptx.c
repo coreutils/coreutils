@@ -28,6 +28,7 @@
 #include "bumpalloc.h"
 #include "diacrit.h"
 #include "error.h"
+#include "long-options.h"
 #include "regex.h"
 
 /* Number of possible characters in a byte.  */
@@ -79,12 +80,6 @@
 
 /* The name this program was run with. */
 char *program_name;
-
-/* If nonzero, display usage information and exit.  */
-static int show_help = 0;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version = 0;
 
 /* Program options.  */
 
@@ -1919,7 +1914,6 @@ static const struct option long_options[] =
   {"flag-truncation", required_argument, NULL, 'F'},
   {"ignore-case", no_argument, NULL, 'f'},
   {"gap-size", required_argument, NULL, 'g'},
-  {"help", no_argument, &show_help, 1},
   {"ignore-file", required_argument, NULL, 'i'},
   {"macro-name", required_argument, NULL, 'M'},
   {"only-file", required_argument, NULL, 'o'},
@@ -1929,7 +1923,6 @@ static const struct option long_options[] =
   {"sentence-regexp", required_argument, NULL, 'S'},
   {"traditional", no_argument, NULL, 'G'},
   {"typeset-mode", no_argument, NULL, 't'},
-  {"version", no_argument, &show_version, 1},
   {"width", required_argument, NULL, 'w'},
   {"word-regexp", required_argument, NULL, 'W'},
   {0, 0, 0, 0},
@@ -1946,7 +1939,7 @@ static enum Format const format_vals[] =
 };
 
 int
-main (int argc, char *const argv[])
+main (int argc, char **argv)
 {
   int optchar;			/* argument character */
   int file_index;		/* index in text input file arrays */
@@ -1955,10 +1948,15 @@ main (int argc, char *const argv[])
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
 #if HAVE_SETCHRCLASS
   setchrclass (NULL);
 #endif
+
+  parse_long_options (argc, argv, "ptx", GNU_PACKAGE, VERSION,
+		      "François Pinard", usage);
 
   while (optchar = getopt_long (argc, argv, "ACF:GM:ORS:TW:b:i:fg:o:trw:",
 				long_options, NULL),
@@ -2063,17 +2061,6 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"),
 	  output_format = XARGMATCH ("--format", optarg,
 				     format_args, format_vals);
 	}
-    }
-
-  /* Process trivial options.  */
-
-  if (show_help)
-    usage (EXIT_SUCCESS);
-
-  if (show_version)
-    {
-      printf ("ptx (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (EXIT_SUCCESS);
     }
 
   /* Change the default Ignore file if one is defined.  */
