@@ -2,9 +2,6 @@
 
 	* Version 5.3.0.
 
-	* src/join.c (usage): Mention that input files should be sorted.
-	Suggested by Torsten Finke.
-
 	* NEWS: Document new UTC+HH:MM date syntax, and put date changes
 	together.
 
