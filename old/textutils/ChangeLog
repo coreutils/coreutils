@@ -1,6 +1,17 @@
-2001-08-28  Jim Meyering  <meyering@lucent.com>
+2001-08-31  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.15.
+
+2001-08-30  Paul Eggert  <eggert@twinsun.com>
+
+	* src/cat.c: Include full-write.h.
+	(full_write): Remove decl; not needed.
+	* src/split.c: Likewise.
+
+	* src/cat.c (simple_cat, cat):
+	Don't assume read and write size fits in int.
+
+2001-08-28  Jim Meyering  <meyering@lucent.com>
 
 	* src/fmt.c (main): Correct the diagnostic for invalid argument to -w.
 	(main): Diagnose an invalid, old-style width option.
