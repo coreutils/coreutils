@@ -388,7 +388,7 @@ with b suffix, by 1024 with k and by 1048576 with m.  -s without a\n\
 number implies 3.  -w without a number implies 32.  By default, od\n\
 uses -A o -t d2 -w 16.\n\
 "));
-      puts (_("\nReport bugs to textutils-bugs@gnu.ai.mit.edu"));
+      puts (_("\nReport bugs to <textutils-bugs@gnu.ai.mit.edu>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

@@ -117,7 +117,7 @@ PREFIX is `x'.  With no INPUT, or when INPUT is -, read standard input.\n\
 \n\
 SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
 "));
-      puts (_("\nReport bugs to textutils-bugs@gnu.ai.mit.edu"));
+      puts (_("\nReport bugs to <textutils-bugs@gnu.ai.mit.edu>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

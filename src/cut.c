@@ -220,7 +220,7 @@ range, or many ranges separated by commas.  Each range is one of:\n\
 \n\
 With no FILE, or when FILE is -, read standard input.\n\
 "));
-      puts (_("\nReport bugs to textutils-bugs@gnu.ai.mit.edu"));
+      puts (_("\nReport bugs to <textutils-bugs@gnu.ai.mit.edu>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

@@ -123,7 +123,7 @@ should be a former output of this program.  The default mode is to print\n\
 a line with checksum, a character indicating type (`*' for binary, ` ' for\n\
 text), and name for each FILE.\n"),
 	      program_name, program_name, program_name);
-      puts (_("\nReport bugs to textutils-bugs@gnu.ai.mit.edu"));
+      puts (_("\nReport bugs to <textutils-bugs@gnu.ai.mit.edu>."));
     }
 
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
