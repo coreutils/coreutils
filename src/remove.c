@@ -121,25 +121,47 @@ int yesno ();
 
 extern char *program_name;
 
-/* The name of the directory (starting with and relative to a command
-   line argument) being processed.  When a subdirectory is entered, a new
-   component is appended (pushed).  When RM chdir's out of a directory,
-   the top component is removed (popped).  This is used to form a full
-   file name when necessary.  */
-static struct obstack dir_stack;
+struct dirstack_state
+{
+  /* The name of the directory (starting with and relative to a command
+     line argument) being processed.  When a subdirectory is entered, a new
+     component is appended (pushed).  Remove (pop) the top component
+     upon chdir'ing out of a directory.  This is used to form the full
+     name of the current directory or a file therein, when necessary.  */
+  struct obstack dir_stack;
 
-/* Stack of lengths of directory names (including trailing slash)
-   appended to dir_stack.  We have to have a separate stack of lengths
-   (rather than just popping back to previous slash) because the first
-   element pushed onto the dir stack may contain slashes.  */
-static struct obstack len_stack;
+  /* Stack of lengths of directory names (including trailing slash)
+     appended to dir_stack.  We have to have a separate stack of lengths
+     (rather than just popping back to previous slash) because the first
+     element pushed onto the dir stack may contain slashes.  */
+  struct obstack len_stack;
 
-/* Stack of active directory entries.
-   The first `active' directory is the initial working directory.
-   Additional active dirs are pushed onto the stack as rm `chdir's
-   into each nonempty directory it must remove.  When rm has finished
-   removing the hierarchy under a directory, it pops the active dir stack.  */
-static struct obstack Active_dir;
+  /* Stack of active directory entries.
+     The first `active' directory is the initial working directory.
+     Additional active dirs are pushed onto the stack as we `chdir'
+     into each directory to be processed.  When finished with the
+     hierarchy under a directory, pop the active dir stack.  */
+  struct obstack Active_dir;
+};
+typedef struct dirstack_state DS;
+
+DS *
+ds_init ()
+{
+  DS *ds = XMALLOC (struct dirstack_state, 1);
+  obstack_init (&(ds->dir_stack));
+  obstack_init (&(ds->len_stack));
+  obstack_init (&(ds->Active_dir));
+  return ds;
+}
+
+void
+ds_free (DS *ds)
+{
+  obstack_free (&(ds->dir_stack), NULL);
+  obstack_free (&(ds->len_stack), NULL);
+  obstack_free (&(ds->Active_dir), NULL);
+}
 
 static void
 hash_freer (void *x)
@@ -154,34 +176,34 @@ hash_compare_strings (void const *x, void const *y)
 }
 
 static inline void
-push_dir (const char *dir_name)
+push_dir (DS *ds, const char *dir_name)
 {
   size_t len;
 
   len = strlen (dir_name);
 
   /* Append the string onto the stack.  */
-  obstack_grow (&dir_stack, dir_name, len);
+  obstack_grow (&ds->dir_stack, dir_name, len);
 
   /* Append a trailing slash.  */
-  obstack_1grow (&dir_stack, '/');
+  obstack_1grow (&ds->dir_stack, '/');
 
   /* Add one for the slash.  */
   ++len;
 
   /* Push the length (including slash) onto its stack.  */
-  obstack_grow (&len_stack, &len, sizeof (len));
+  obstack_grow (&ds->len_stack, &len, sizeof (len));
 }
 
 /* Return the entry name of the directory on the top of the stack
    in malloc'd storage.  */
 static inline char *
-top_dir (void)
+top_dir (DS const *ds)
 {
-  int n_lengths = obstack_object_size (&len_stack) / sizeof (size_t);
-  size_t *length = (size_t *) obstack_base (&len_stack);
+  int n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
+  size_t *length = (size_t *) obstack_base (&ds->len_stack);
   size_t top_len = length[n_lengths - 1];
-  char const *p = obstack_next_free (&dir_stack) - top_len;
+  char const *p = obstack_next_free (&ds->dir_stack) - top_len;
   char *q = xmalloc (top_len);
   memcpy (q, p, top_len - 1);
   q[top_len - 1] = 0;
@@ -189,10 +211,10 @@ top_dir (void)
 }
 
 static inline void
-pop_dir (void)
+pop_dir (DS *ds)
 {
-  int n_lengths = obstack_object_size (&len_stack) / sizeof (size_t);
-  size_t *length = (size_t *) obstack_base (&len_stack);
+  int n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
+  size_t *length = (size_t *) obstack_base (&ds->len_stack);
   size_t top_len;
 
   assert (n_lengths > 0);
@@ -200,12 +222,12 @@ pop_dir (void)
   assert (top_len >= 2);
 
   /* Pop off the specified length of pathname.  */
-  assert (obstack_object_size (&dir_stack) >= top_len);
-  obstack_blank (&dir_stack, -top_len);
+  assert (obstack_object_size (&ds->dir_stack) >= top_len);
+  obstack_blank (&ds->dir_stack, -top_len);
 
   /* Pop the length stack, too.  */
-  assert (obstack_object_size (&len_stack) >= sizeof (size_t));
-  obstack_blank (&len_stack, (int) -(sizeof (size_t)));
+  assert (obstack_object_size (&ds->len_stack) >= sizeof (size_t));
+  obstack_blank (&ds->len_stack, (int) -(sizeof (size_t)));
 }
 
 /* Copy the SRC_LEN bytes of data beginning at SRC into the DST_LEN-byte
@@ -244,21 +266,22 @@ right_justify (char *dst, size_t dst_len, const char *src, size_t src_len,
    caller.  Realloc as necessary.  If realloc fails, use a static buffer
    and put as long a suffix in that buffer as possible.  */
 
+#define full_filename(Filename) full_filename_ (ds, Filename)
 static char *
-full_filename (const char *filename)
+full_filename_ (DS const *ds, const char *filename)
 {
   static char *buf = NULL;
   static size_t n_allocated = 0;
 
-  int dir_len = obstack_object_size (&dir_stack);
-  char *dir_name = (char *) obstack_base (&dir_stack);
+  int dir_len = obstack_object_size (&ds->dir_stack);
+  char *dir_name = (char *) obstack_base (&ds->dir_stack);
   size_t n_bytes_needed;
   size_t filename_len;
 
   filename_len = strlen (filename);
   n_bytes_needed = dir_len + filename_len + 1;
 
-  if (n_bytes_needed > n_allocated)
+  if (n_allocated < n_bytes_needed)
     {
       /* This code requires that realloc accept NULL as the first arg.
          This function must not use xrealloc.  Otherwise, an out-of-memory
@@ -299,27 +322,27 @@ full_filename (const char *filename)
 }
 
 static size_t
-AD_stack_height (void)
+AD_stack_height (DS const *ds)
 {
-  return obstack_object_size (&Active_dir) / sizeof (struct AD_ent);
+  return obstack_object_size (&ds->Active_dir) / sizeof (struct AD_ent);
 }
 
 static struct AD_ent *
-AD_stack_top (void)
+AD_stack_top (DS const *ds)
 {
   return (struct AD_ent *)
-    ((char *) obstack_next_free (&Active_dir) - sizeof (struct AD_ent));
+    ((char *) obstack_next_free (&ds->Active_dir) - sizeof (struct AD_ent));
 }
 
 static void
-AD_stack_pop (void)
+AD_stack_pop (DS *ds)
 {
   /* operate on Active_dir.  pop and free top entry */
-  struct AD_ent *top = AD_stack_top ();
+  struct AD_ent *top = AD_stack_top (ds);
   if (top->unremovable)
     hash_free (top->unremovable);
-  obstack_blank (&Active_dir, -sizeof (struct AD_ent));
-  pop_dir ();
+  obstack_blank (&ds->Active_dir, -sizeof (struct AD_ent));
+  pop_dir (ds);
 }
 
 /* chdir `up' one level.
@@ -328,23 +351,23 @@ AD_stack_pop (void)
    Return the name (in malloc'd storage) of the
    directory (usually now empty) from which we're coming.  */
 static char *
-AD_pop_and_chdir (void)
+AD_pop_and_chdir (DS *ds)
 {
   /* Get the name of the current directory from the top of the stack.  */
-  char *dir = top_dir ();
-  enum RM_status old_status = AD_stack_top()->status;
+  char *dir = top_dir (ds);
+  enum RM_status old_status = AD_stack_top(ds)->status;
   struct stat sb;
   struct AD_ent *top;
 
-  AD_stack_pop ();
+  AD_stack_pop (ds);
 
   /* Propagate any failure to parent.  */
-  UPDATE_STATUS (AD_stack_top()->status, old_status);
+  UPDATE_STATUS (AD_stack_top(ds)->status, old_status);
 
-  assert (AD_stack_height ());
+  assert (AD_stack_height (ds));
 
-  top = AD_stack_top ();
-  if (1 < AD_stack_height ())
+  top = AD_stack_top (ds);
+  if (1 < AD_stack_height (ds))
     {
       /* We can give a better diagnostic here, since the target is relative. */
       if (chdir (".."))
@@ -364,7 +387,7 @@ AD_pop_and_chdir (void)
     error (EXIT_FAILURE, errno,
 	   _("cannot lstat `.' in %s"), quote (full_filename (".")));
 
-  if (1 < AD_stack_height ())
+  if (1 < AD_stack_height (ds))
     {
       /*  Ensure that post-chdir dev/ino match the stored ones.  */
       if ( ! SAME_INODE (sb, top->u.a))
@@ -391,9 +414,9 @@ AD_mark_helper (Hash_table **ht, char const *filename)
 
 /* Mark FILENAME (in current directory) as unremovable.  */
 static void
-AD_mark_as_unremovable (char const *filename)
+AD_mark_as_unremovable (DS *ds, char const *filename)
 {
-  AD_mark_helper (&AD_stack_top()->unremovable, xstrdup (filename));
+  AD_mark_helper (&AD_stack_top(ds)->unremovable, xstrdup (filename));
 }
 
 /* Mark the current directory as unremovable.  I.e., mark the entry
@@ -401,12 +424,12 @@ AD_mark_as_unremovable (char const *filename)
    This happens e.g., when an opendir fails and the only name
    the caller has conveniently at hand is `.'.  */
 static void
-AD_mark_current_as_unremovable (void)
+AD_mark_current_as_unremovable (DS *ds)
 {
-  struct AD_ent *top = AD_stack_top ();
-  const char *curr = top_dir ();
+  struct AD_ent *top = AD_stack_top (ds);
+  const char *curr = top_dir (ds);
 
-  assert (1 < AD_stack_height ());
+  assert (1 < AD_stack_height (ds));
 
   --top;
   AD_mark_helper (&top->unremovable, curr);
@@ -415,17 +438,16 @@ AD_mark_current_as_unremovable (void)
 /* Push the initial cwd info onto the stack.
    This will always be the bottommost entry on the stack.  */
 static void
-AD_push_initial (struct saved_cwd const *cwd)
+AD_push_initial (DS *ds, struct saved_cwd const *cwd)
 {
   struct AD_ent *top;
 
   /* Extend the stack.  */
-  obstack_blank (&Active_dir, sizeof (struct AD_ent));
+  obstack_blank (&ds->Active_dir, sizeof (struct AD_ent));
 
   /* Fill in the new values.  */
-  top = AD_stack_top ();
+  top = AD_stack_top (ds);
   top->u.saved_cwd = *cwd;
-  top->status = RM_OK;
   top->unremovable = NULL;
 }
 
@@ -434,12 +456,12 @@ AD_push_initial (struct saved_cwd const *cwd)
    which we've just `chdir'd to this directory.  DIR_SB_FROM_PARENT
    is the result of calling lstat on DIR from the parent of DIR.  */
 static void
-AD_push (char const *dir, struct stat const *dir_sb_from_parent)
+AD_push (DS *ds, char const *dir, struct stat const *dir_sb_from_parent)
 {
   struct stat sb;
   struct AD_ent *top;
 
-  push_dir (dir);
+  push_dir (ds, dir);
 
   if (lstat (".", &sb))
     error (EXIT_FAILURE, errno,
@@ -450,20 +472,19 @@ AD_push (char const *dir, struct stat const *dir_sb_from_parent)
 	   _("%s changed dev/ino"), quote (full_filename (".")));
 
   /* Extend the stack.  */
-  obstack_blank (&Active_dir, sizeof (struct AD_ent));
+  obstack_blank (&ds->Active_dir, sizeof (struct AD_ent));
 
   /* Fill in the new values.  */
-  top = AD_stack_top ();
+  top = AD_stack_top (ds);
   top->u.a.st_dev = sb.st_dev;
   top->u.a.st_ino = sb.st_ino;
-  top->status = RM_OK;
   top->unremovable = NULL;
 }
 
 static int
-AD_is_removable (char const *file)
+AD_is_removable (DS const *ds, char const *file)
 {
-  struct AD_ent *top = AD_stack_top ();
+  struct AD_ent *top = AD_stack_top (ds);
   return ! (top->unremovable && hash_lookup (top->unremovable, file));
 }
 
@@ -474,7 +495,7 @@ is_power_of_two (unsigned int i)
 }
 
 static void
-cycle_check (struct stat const *sb)
+cycle_check (DS const *ds, struct stat const *sb)
 {
 #ifdef ENABLE_CYCLE_CHECK
   /* If there is a directory cycle, detect it (lazily) and die.  */
@@ -551,7 +572,7 @@ is_empty_dir (char const *dir)
    Set *IS_DIR to T_YES or T_NO if we happen to determine whether
    FILENAME is a directory.  */
 static enum RM_status
-prompt (char const *filename, struct rm_options const *x,
+prompt (DS const *ds, char const *filename, struct rm_options const *x,
 	enum Prompt_action mode, Ternary *is_dir, Ternary *is_empty)
 {
   int write_protected = 0;
@@ -664,12 +685,12 @@ prompt (char const *filename, struct rm_options const *x,
    But if FILENAME specifies a non-empty directory, return RM_NONEMPTY_DIR. */
 
 static enum RM_status
-remove_entry (char const *filename, struct rm_options const *x,
+remove_entry (DS const *ds, char const *filename, struct rm_options const *x,
 	      struct dirent const *dp)
 {
   Ternary is_dir;
   Ternary is_empty_directory;
-  enum RM_status s = prompt (filename, x, PA_DESCEND_INTO_DIR,
+  enum RM_status s = prompt (ds, filename, x, PA_DESCEND_INTO_DIR,
 			     &is_dir, &is_empty_directory);
 
   if (s != RM_OK)
@@ -793,11 +814,11 @@ remove_entry (char const *filename, struct rm_options const *x,
    the user declines to remove at least one entry.  Remove as much as
    possible, continuing even if we fail to remove some entries.  */
 static enum RM_status
-remove_cwd_entries (char **subdir, struct stat *subdir_sb,
+remove_cwd_entries (DS *ds, char **subdir, struct stat *subdir_sb,
 		    struct rm_options const *x)
 {
   DIR *dirp = opendir (".");
-  struct AD_ent *top = AD_stack_top ();
+  struct AD_ent *top = AD_stack_top (ds);
   enum RM_status status = top->status;
 
   assert (VALID_STATUS (status));
@@ -842,14 +863,14 @@ remove_cwd_entries (char **subdir, struct stat *subdir_sb,
 	continue;
 
       /* Skip files we've already tried/failed to remove.  */
-      if ( ! AD_is_removable (f))
+      if ( ! AD_is_removable (ds, f))
 	continue;
 
       /* Pass dp->d_type info to remove_entry so the non-glibc
 	 case can decide whether to use unlink or chdir.
 	 Systems without the d_type member will have to endure
 	 the performance hit of first calling lstat F. */
-      tmp_status = remove_entry (f, x, dp);
+      tmp_status = remove_entry (ds, f, x, dp);
       switch (tmp_status)
 	{
 	case RM_OK:
@@ -858,7 +879,7 @@ remove_cwd_entries (char **subdir, struct stat *subdir_sb,
 
 	case RM_ERROR:
 	case RM_USER_DECLINED:
-	  AD_mark_as_unremovable (f);
+	  AD_mark_as_unremovable (ds, f);
 	  UPDATE_STATUS (status, tmp_status);
 	  break;
 
@@ -874,11 +895,11 @@ remove_cwd_entries (char **subdir, struct stat *subdir_sb,
 	    {
 	      error (0, errno, _("cannot chdir from %s to %s"),
 		     quote_n (0, full_filename (".")), quote_n (1, f));
-	      AD_mark_as_unremovable (f);
+	      AD_mark_as_unremovable (ds, f);
 	      status = RM_ERROR;
 	      break;
 	    }
-	  cycle_check (subdir_sb);
+	  cycle_check (ds, subdir_sb);
 
 	  *subdir = xstrdup (f);
 	  break;
@@ -902,6 +923,16 @@ remove_cwd_entries (char **subdir, struct stat *subdir_sb,
   return status;
 }
 
+/* Do this after each call to AD_push or AD_push_initial.
+   Because the status = RM_OK bit is too remove-specific to
+   go into the general-purpose AD_* package.  */
+#define AD_INIT_OTHER_MEMBERS()			\
+  do						\
+    {						\
+      AD_stack_top(ds)->status = RM_OK;		\
+    }						\
+  while (0)
+
 /*  Remove the hierarchy rooted at DIR.
     Do that by changing into DIR, then removing its contents, then
     returning to the original working directory and removing DIR itself.
@@ -912,7 +943,7 @@ remove_cwd_entries (char **subdir, struct stat *subdir_sb,
     If the working directory cannot be restored, exit immediately.  */
 
 static enum RM_status
-remove_dir (char const *dir, struct saved_cwd **cwd_state,
+remove_dir (DS *ds, char const *dir, struct saved_cwd **cwd_state,
 	    struct rm_options const *x)
 {
   enum RM_status status;
@@ -927,7 +958,8 @@ remove_dir (char const *dir, struct saved_cwd **cwd_state,
       *cwd_state = XMALLOC (struct saved_cwd, 1);
       if (save_cwd (*cwd_state))
 	return RM_ERROR;
-      AD_push_initial (*cwd_state);
+      AD_push_initial (ds, *cwd_state);
+      AD_INIT_OTHER_MEMBERS ();
     }
 
   /* There is a race condition in that an attacker could replace the nonempty
@@ -963,7 +995,8 @@ remove_dir (char const *dir, struct saved_cwd **cwd_state,
       return RM_ERROR;
     }
 
-  AD_push (dir, &dir_sb);
+  AD_push (ds, dir, &dir_sb);
+  AD_INIT_OTHER_MEMBERS ();
 
   status = RM_OK;
 
@@ -971,15 +1004,18 @@ remove_dir (char const *dir, struct saved_cwd **cwd_state,
     {
       char *subdir = NULL;
       struct stat subdir_sb;
-      enum RM_status tmp_status = remove_cwd_entries (&subdir, &subdir_sb, x);
+      enum RM_status tmp_status = remove_cwd_entries (ds,
+						      &subdir, &subdir_sb, x);
       if (tmp_status != RM_OK)
 	{
 	  UPDATE_STATUS (status, tmp_status);
-	  AD_mark_current_as_unremovable ();
+	  AD_mark_current_as_unremovable (ds);
 	}
       if (subdir)
 	{
-	  AD_push (subdir, &subdir_sb);
+	  AD_push (ds, subdir, &subdir_sb);
+	  AD_INIT_OTHER_MEMBERS ();
+
 	  free (subdir);
 	  continue;
 	}
@@ -987,7 +1023,7 @@ remove_dir (char const *dir, struct saved_cwd **cwd_state,
       /* Execution reaches this point when we've removed the last
 	 removable entry from the current directory.  */
       {
-	char *d = AD_pop_and_chdir ();
+	char *d = AD_pop_and_chdir (ds);
 
 	/* Try to remove D only if remove_cwd_entries succeeded.  */
 	if (tmp_status == RM_OK)
@@ -998,7 +1034,8 @@ remove_dir (char const *dir, struct saved_cwd **cwd_state,
 	       But that's no big deal since we're interactive.  */
 	    Ternary is_dir;
 	    Ternary is_empty;
-	    enum RM_status s = prompt (d, x, PA_REMOVE_DIR, &is_dir, &is_empty);
+	    enum RM_status s = prompt (ds, d, x, PA_REMOVE_DIR,
+				       &is_dir, &is_empty);
 
 	    if (s != RM_OK)
 	      {
@@ -1016,15 +1053,15 @@ remove_dir (char const *dir, struct saved_cwd **cwd_state,
 	      {
 		error (0, errno, _("cannot remove directory %s"),
 		       quote (full_filename (d)));
-		AD_mark_as_unremovable (d);
+		AD_mark_as_unremovable (ds, d);
 		status = RM_ERROR;
-		UPDATE_STATUS (AD_stack_top()->status, status);
+		UPDATE_STATUS (AD_stack_top(ds)->status, status);
 	      }
 	  }
 
 	free (d);
 
-	if (AD_stack_height () == 1)
+	if (AD_stack_height (ds) == 1)
 	  break;
       }
     }
@@ -1040,7 +1077,7 @@ remove_dir (char const *dir, struct saved_cwd **cwd_state,
    a malloc'd `struct saved_cwd' that may be freed.  */
 
 static enum RM_status
-rm_1 (char const *filename,
+rm_1 (DS *ds, char const *filename,
       struct rm_options const *x, struct saved_cwd **cwd_state)
 {
   char *base = base_name (filename);
@@ -1052,11 +1089,11 @@ rm_1 (char const *filename,
       return RM_ERROR;
     }
 
-  status = remove_entry (filename, x, NULL);
+  status = remove_entry (ds, filename, x, NULL);
   if (status != RM_NONEMPTY_DIR)
     return status;
 
-  return remove_dir (filename, cwd_state, x);
+  return remove_dir (ds, filename, cwd_state, x);
 }
 
 /* Remove all files and/or directories specified by N_FILES and FILE.
@@ -1067,21 +1104,18 @@ rm (size_t n_files, char const *const *file, struct rm_options const *x)
   struct saved_cwd *cwd_state = NULL;
   enum RM_status status = RM_OK;
   size_t i;
+  DS *ds;
 
-  obstack_init (&dir_stack);
-  obstack_init (&len_stack);
-  obstack_init (&Active_dir);
+  ds = ds_init ();
 
   for (i = 0; i < n_files; i++)
     {
-      enum RM_status s = rm_1 (file[i], x, &cwd_state);
+      enum RM_status s = rm_1 (ds, file[i], x, &cwd_state);
       assert (VALID_STATUS (s));
       UPDATE_STATUS (status, s);
     }
 
-  obstack_free (&dir_stack, NULL);
-  obstack_free (&len_stack, NULL);
-  obstack_free (&Active_dir, NULL);
+  ds_free (ds);
 
   XFREE (cwd_state);
 
