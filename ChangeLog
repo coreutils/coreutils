@@ -1,6 +1,10 @@
-2004-06-23  Paul Eggert  <eggert@cs.ucla.edu>
+2004-06-25  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* tests/ln/misc: Add test for ln subscript error.
+
+2004-06-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/ln.c (do_link): Remove unnecessary call to lstat.
 	(main): Avoid subscript error when the destination is "".
