@@ -33,6 +33,13 @@
 	* idcache.m4: Likewise.
 	* getugroups.m4: Likewise.
 
+2003-09-11  Paul Eggert  <eggert@twinsun.com>
+
+	More patches to assume C89 or better.
+	* strndup.m4 (gl_PREREQ_STRNDUP): Remove STDC_HEADERS check.
+	* strnlen.m4 (gl_PREREQ_STRNLEN): Don't check for memory.h,
+	string.h, memchr, STDC_HEADERS.
+
 2003-09-10  Bruno Haible  <bruno@clisp.org>
 
 	* strcspn.m4 (gl_PREREQ_STRCSPN): Remove <string.h> check.
