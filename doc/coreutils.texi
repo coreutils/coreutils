@@ -5265,8 +5265,9 @@ Also see @ref{Common options}.
 @subsection Which files are listed
 
 These options determine which files @command{ls} lists information for.
-By default, any files and the contents of any directories on the command
-line are shown.
+By default, @command{ls} lists files and the contents of any
+directories on the command line, except that in directories it ignores
+files whose names start with @samp{.}.
 
 @table @samp
 
@@ -5274,21 +5275,23 @@ line are shown.
 @itemx --all
 @opindex -a
 @opindex --all
-List all files in directories, including files that start with @samp{.}.
+In directories, do not ignore file names that start with @samp{.}.
 
 @item -A
 @itemx --almost-all
 @opindex -A
 @opindex --almost-all
-List all files in directories except for @file{.} and @file{..}.
+In directories, do not ignore all file names that start with @samp{.};
+ignore only @file{.} and @file{..}.  The @option{--all} (@option{-a})
+option overrides this option.
 
 @item -B
 @itemx --ignore-backups
 @opindex -B
 @opindex --ignore-backups
 @cindex backup files, ignoring
-Do not list files that end with @samp{~}, unless they are given on the
-command line.
+In directories, ignore files that end with @samp{~}.  This option is
+equivalent to @samp{--ignore='*~' --ignore='.*~'}.
 
 @item -d
 @itemx --directory
@@ -5324,12 +5327,26 @@ option has been specified (@option{--classify} (@option{-F}),
 @option{--dereference} (@option{-L}), or
 @option{--dereference-command-line} (@option{-H})).
 
-@item -I PATTERN
-@itemx --ignore=PATTERN
+@item --hide=PATTERN
+@opindex --hide=@var{pattern}
+In directories, ignore files whose names match the shell pattern
+@var{pattern}, unless the @option{--all} (@option{-a}) or
+@option{--almost-all} (@option{-A}) is also given.  This
+option acts like @option{--ignore=@var{pattern}} except that it has no
+effect if @option{--all} (@option{-a}) or @option{--almost-all}
+(@option{-A}) is also given.
+
+This option can be useful in shell aliases.  For example, if
+@command{lx} is an alias for @samp{ls --hide='*~'} and @command{ly} is
+an alias for @samp{ls --ignore='*~'}, then the command @samp{lx -A}
+lists the file @file{README~} even though @samp{ly -A} would not.
+
+@item -I @var{pattern}
+@itemx --ignore=@var{pattern}
 @opindex -I
 @opindex --ignore=@var{pattern}
-Do not list files whose names match the shell pattern (not regular
-expression) @var{pattern} unless they are given on the command line.  As
+In directories, ignore files whose names match the shell pattern
+(not regular expression) @var{pattern}.  As
 in the shell, an initial @samp{.} in a file name does not match a
 wildcard at the start of @var{pattern}.  Sometimes it is useful
 to give this option several times.  For example,
@@ -8501,7 +8518,7 @@ or some such command.)
 @menu
 * df invocation::               Report file system disk space usage.
 * du invocation::               Estimate file space usage.
-* stat invocation::		Report file or file system status.
+* stat invocation::             Report file or file system status.
 * sync invocation::             Synchronize memory and disk.
 @end menu
 
