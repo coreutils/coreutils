@@ -2,8 +2,9 @@
 
 	* Version 5.0.1.
 
-	* chown.c, cp.c, du.c, ln.c, mkfifo.c, ptx.c, spline.c, stty.c:
-	* tail.c, test.c, unexpand.c: Remove (or replace-with-TAB(s) to
+	* src/chown.c, src/cp.c, src/dircolors.hin, src/du.c, src/ln.c:
+	* src/mkfifo.c, src/ptx.c, src/spline.c, src/stty.c, src/tail.c:
+	* src/test.c, src/unexpand.c: Remove (or replace-with-TAB(s) to
 	retain alignment) each sequence of spaces before a TAB character.
 
 	* src/ls.c: Include <stdlib.h> unconditionally.
