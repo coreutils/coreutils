@@ -3,7 +3,7 @@ Fri Jan  5 18:30:28 CST  Jim Meyering  (meyering@na-net.ornl.gov)
 	* aclocal.m4: For SVR4 systems, use -Xc -D_POSIX_C_SOURCE in CFLAGS,
 	not just -Xc.  From Franc,ois Pinard.
 
-	* doc/Makefile.am (DIST_OTHER): Remove assignment.  mdate-sh is
+	* doc/Makefile.am (DIST_OTHER): Don't set to mdate-sh.  mdate-sh is
 	distributed automatically.  From Tom Tromey.
 
 Thu Jan  4 20:32:52 1996  Jim Meyering  (meyering@na-net.ornl.gov)
