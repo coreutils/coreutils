@@ -2,6 +2,8 @@
 
 	* Version 4.5.5.
 
+	* Makefile.cfg ($(url_dir_list)): Use .../coreutils, not .../fetish.
+
 	* src/system.h [! HAVE_DECL_MEMRCHR]: Declare memrchr.
 	This is necessary at least for Irix6.5 when using c89.
 	Reported by Nelson Beebe.
