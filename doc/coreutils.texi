@@ -8275,6 +8275,14 @@ Dereference symbolic links (show the disk space used by the file
 or directory that the link points to instead of the space used by
 the link).
 
+@item -P
+@itemx --no-dereference
+@opindex -P
+@opindex --no-dereference
+@cindex symbolic links, dereferencing in @command{du}
+For each symbolic links encountered by @command{du},
+consider the disk space used by the symbolic link.
+
 @item --max-depth=@var{DEPTH}
 @opindex --max-depth=@var{DEPTH}
 @cindex limiting output of @command{du}
