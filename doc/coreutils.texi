@@ -901,8 +901,6 @@ other parts of that standard.
 @node Traversing symlinks
 @section Traversing symlinks
 
-@macro chownchgrpoptions
-
 @cindex symbolic link to directory, controlling traversal of
 
 The following options modify how @command{chown} and @command{chgrp}
@@ -910,39 +908,47 @@ The following options modify how @command{chown} and @command{chgrp}
 @c different meaning.
 traverse a hierarchy when the @option{--recursive} (@option{-R})
 option is also specified.
-If more than one is specified, only the final one takes effect.
-These options determine whether processing a symbolic link to a directory
+If more than one of the following options is specified, only the final
+one takes effect.
+These options specify whether processing a symbolic link to a directory
 entails operating on just the symbolic link or on all files in the
 hierarchy rooted at that directory.
-Note that these options are independent of @option{--dereference} and
+
+These options are independent of @option{--dereference} and
 @option{--no-dereference} (@option{-h}), which control whether to modify
 a symlink or its referent.
 
 @table @samp
 
+@macro choptH
 @item -H
 @opindex -H
 @cindex symbolic link to directory, traverse each that is specified on the command line
 If @option{--recursive} (@option{-R}) is specified and
 a command line argument is a symbolic link to a directory, traverse it.
+@end macro
+@choptH
 
+@macro choptL
 @item -L
 @opindex -L
 @cindex symbolic link to directory, traverse each that is encountered
 In a recursive traversal, traverse every symbolic link to a directory
 that is encountered.
+@end macro
+@choptL
 
+@macro choptP
 @item -P
 @opindex -P
 @cindex symbolic link to directory, never traverse
 Do not traverse any symbolic links.
 This is the default if none of @option{-H}, @option{-L},
 or @option{-P} is specified.
+@end macro
+@choptP
 
 @end table
-@end macro
-
-@chownchgrpoptions
 
 
 @node Treating / specially
@@ -7772,9 +7778,16 @@ its referent is being changed.
 @cindex recursively changing file ownership
 Recursively change ownership of directories and their contents.
 
-@end table
+@choptH
+@xref{Traversing symlinks}.
 
-@chownchgrpoptions
+@choptL
+@xref{Traversing symlinks}.
+
+@choptP
+@xref{Traversing symlinks}.
+
+@end table
 
 
 @node chgrp invocation
@@ -7871,9 +7884,16 @@ its referent is being changed.
 @cindex recursively changing group ownership
 Recursively change the group ownership of directories and their contents.
 
-@end table
+@choptH
+@xref{Traversing symlinks}.
 
-@chownchgrpoptions
+@choptL
+@xref{Traversing symlinks}.
+
+@choptP
+@xref{Traversing symlinks}.
+
+@end table
 
 
 @node chmod invocation
