@@ -134,10 +134,9 @@ announcement: NEWS ChangeLog $(distdir).tar.gz
 	)
 
 writable-files:
-	for file in $(distdir).tar.gz ../release/$(distdir).tar.gz	\
-	    ../release/$(xd-delta); do					\
-	  test -e $$file						\
-	    || continue;						\
+	for file in $(distdir).tar.gz $(xd-delta)			\
+	  ../release/$(distdir).tar.gz ../release/$(xd-delta); do	\
+	  test -e $$file || continue;					\
 	  test -w $$file						\
 	    || { echo ERROR: $$file is not writable; fail=1; };		\
 	done;								\
