@@ -352,7 +352,7 @@ line_bytes_split (int nchars)
   free (buf);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   struct stat stat_buf;

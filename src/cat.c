@@ -438,7 +438,7 @@ cat (
     }
 }
 
-void
+int
 main (int argc, char **argv)
 {
   /* Optimal size of i/o operations of output.  */

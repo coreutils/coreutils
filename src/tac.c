@@ -579,7 +579,7 @@ tac_stdin (void)
   return errors;
 }
 
-void
+int
 main (int argc, char **argv)
 {
   const char *error_message;	/* Return value from re_compile_pattern. */

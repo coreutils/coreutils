@@ -245,7 +245,7 @@ fold_file (char *filename, int width)
   return 0;
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int width = 80;

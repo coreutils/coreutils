@@ -85,7 +85,7 @@ remainder (m)
   return rem & 0xFFFFFFFF;	/* Make it run on 64-bit machine.  */
 }
 
-void
+int
 main ()
 {
   int i;
@@ -279,7 +279,7 @@ Print CRC checksum and byte counts of each FILE.\n\
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int i, c;

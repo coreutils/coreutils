@@ -765,7 +765,7 @@ make_blank (struct line *blank, int count)
   blank->lim = &blank->beg[i];
 }
 
-void
+int
 main (int argc, char **argv)
 {
   char *names[2];

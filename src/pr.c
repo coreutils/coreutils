@@ -457,7 +457,7 @@ cols_ready_to_print (void)
   return n;
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int c;

@@ -669,7 +669,7 @@ cut_file (char *file)
   return 0;
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int optc, exit_status = 0;

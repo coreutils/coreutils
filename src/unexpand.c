@@ -376,7 +376,7 @@ Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.\n\
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int tabval = -1;		/* Value of tabstop being read, or -1. */

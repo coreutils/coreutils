@@ -211,7 +211,7 @@ compare_files (char **infiles)
   return ret;
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int c;

@@ -272,7 +272,7 @@ check_file (const char *infile, const char *outfile)
   free (lb2.buffer);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int optc;

@@ -429,7 +429,7 @@ With no FILE, or when FILE is -, read standard input.\n\
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int optc, exit_status;

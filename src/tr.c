@@ -1785,7 +1785,7 @@ set_initialize (struct Spec_list *s, int complement_this_set, SET_TYPE *in_set)
       in_set[i] = (!in_set[i]);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int c;

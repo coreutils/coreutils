@@ -197,7 +197,7 @@ sysv_sum_file (const char *file, int print_name)
   return 0;
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int errors = 0;

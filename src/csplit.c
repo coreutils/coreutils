@@ -1396,7 +1396,7 @@ max_out (char *format)
   return out_count;
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int optc;

@@ -253,7 +253,7 @@ wc_file (const char *file)
     }
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int optc;

@@ -321,7 +321,7 @@ expand (void)
     }
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int tabval = -1;		/* Value of tabstop being read, or -1. */

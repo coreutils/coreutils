@@ -248,7 +248,7 @@ head_file (const char *filename, long int number)
     }
 }
 
-void
+int
 main (int argc, char **argv)
 {
   enum header_mode header_mode = multiple_files;
