@@ -1,4 +1,5 @@
 Changes in release 3.14:
+ [3.13k]
  [3.13j]
 * ls --color highlights based on suffix rules only for regular files
 * touch --date=DATE accepts dates like those in an RCS log listing, e.g.,
