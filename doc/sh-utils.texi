@@ -3094,6 +3094,23 @@ numbers from standard input, delimited by newlines, tabs, or spaces.
 The only options are @samp{--help} and @samp{--version}.  @xref{Common
 options}.
 
+The algorithm it uses is not very sophisticated, so for some inputs
+@code{factor} runs for a long time.  The hardest numbers to factor are
+the products of large primes.  Factoring the square of the largest 32-bit
+prime number takes over 10 minutes of CPU time on a 400MHz Pentium II.
+
+@example
+$ factor `echo '4294967291^2'|bc`
+18446744030759878681: 4294967291 4294967291
+@end example
+
+In contrast, @code{factor} factors the largest 64-bit number in just
+over a tenth of a second:
+
+@example
+$ factor `echo '2^64-1'|bc`
+18446744073709551615: 3 5 17 257 641 65537 6700417
+@end example
 
 @node seq invocation
 @section @code{seq}: Print numeric sequences
