@@ -1,4 +1,18 @@
+2000-07-24  Bruno Haible  <haible@clisp.cons.org>
+
+	* src/ls.c: Include <limits.h>, <stdlib.h>, <wchar.h>, <wctype.h>.
+	(quote_name): Use mbrtowc to step through the filename string while
+	replacing nonprintables with question marks. Return the screen width,
+	not the strlen length. Do no output if the out stream is NULL.
+	(length_of_file_name_and_frills): Use the quote_name return value.
+
 2000-07-25  Jim Meyering  <meyering@lucent.com>
+
+	* src/chgrp.c (change_file_group): Save errno from a possibly failed
+	chown, and use that later.  Otherwise, errno itself could be clobbered
+	before used.
+	* src/chmod.c (change_file_mode): Likewise.
+	* src/chown.c (change_file_owner): Likewise.
 
 	* src/mv.c (main): Remove unnecessary "%s" argument.
 
@@ -7,6 +21,7 @@
 	Add more precise diagnostics.
 	* src/mv.c: Likewise.
 	* src/cp.c: Likewise.
+	* src/touch.c: Likewise.
 
 2000-07-23  Jim Meyering  <meyering@lucent.com>
 
