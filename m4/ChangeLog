@@ -1,7 +1,7 @@
 2003-03-04  Jim Meyering  <jim@meyering.net>
 
-	* getcwd-robust.m4 (GL_FUNC_GETCWD_ROBUST): New macro.
-	* jm-macros.m4: Require GL_FUNC_GETCWD_ROBUST.
+	* getcwd-path-max.m4 (GL_FUNC_GETCWD_PATH_MAX): New macro.
+	* jm-macros.m4: Require GL_FUNC_GETCWD_PATH_MAX.
 
 	`df /some/mount-point' no longer hangs when an unrelated hard-mount
 	is unavailable
