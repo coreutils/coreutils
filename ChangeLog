@@ -1370,7 +1370,7 @@
 2003-03-28  Jim Meyering  <jim@meyering.net>
 
 	* tests/stty/row-col-1: Skip this test if stty can't get window size.
-	This happens when connecting to sparc-solaris2.7 via ssh from within
+	This happens when connecting to sparc-solaris5.7 via ssh from within
 	emacs.  Reported by Karl Berry.
 
 	* tests/du/basic: Use seq, not `yes' to generate 4KB of data.
@@ -2400,7 +2400,7 @@
 2002-12-08  Jim Meyering  <jim@meyering.net>
 
 	* src/du.c (lstat) [! LSTAT_FOLLOWS_SLASHED_SYMLINK]:
-	Define to rpl_lstat, so that even on systems like Solaris 2.8,
+	Define to rpl_lstat, so that even on systems like Solaris 5.8,
 	du honors (per POSIX) the trailing slash on an argument referring
 	to a symlink-to-directory.
 
@@ -3110,7 +3110,7 @@
 	file-scoped global.
 	(main): Register it with atexit.
 	Close STDOUT_FILENO, to avoid a problem when writing to
-	/dev/audio on at least Solaris 2.7 and 2.8 systems.
+	/dev/audio on at least Solaris 5.7 and 5.8 systems.
 	Reported by Shing-Shong Shei.
 
 2002-08-25  Jim Meyering  <jim@meyering.net>

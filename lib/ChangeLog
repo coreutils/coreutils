@@ -1,5 +1,8 @@
 2003-08-09  Jim Meyering  <jim@meyering.net>
 
+	* unicodeio.c (unicode_to_mb): Change Solaris 2.7 to Solaris 5.7
+	in comment.
+
 	* fatal.c, fatal.h: Remove unused files.
 
 	* Makefile.am: Use the e.g., `$(FNMATCH_H)' notation for AC_SUBST'd
