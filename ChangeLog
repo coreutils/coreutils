@@ -37,7 +37,7 @@
 	thing with symlinks and/or -1 arguments, now that we have wrappers
 	to do this.  Use ENOTSUPP not ENOSYS, and ignore all ENOTSUPP
 	errors, not just command-line errors.
-	(chown_files): Pass FTS_STAT to xfts_open if we don't need file status.
+	(chown_files): Pass FTS_NOSTAT to xfts_open if we don't need file status.
 
 	* src/system.h (ENOTSUP): Remove.
 
