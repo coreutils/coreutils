@@ -1,5 +1,5 @@
 /* tr -- a filter to translate characters
-   Copyright (C) 91, 1995-1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -807,23 +807,16 @@ append_equiv_class (struct Spec_list *list,
   return 0;
 }
 
-/* Return a newly allocated copy of the substring P[FIRST_IDX..LAST_IDX].
-   The returned string has length LAST_IDX - FIRST_IDX + 1, may contain
-   NUL bytes, and is *not* NUL-terminated.  */
+/* Return a newly allocated copy of the LEN-byte prefix of P.
+   The returned string may contain NUL bytes and is *not* NUL-terminated.  */
 
 static unsigned char *
-substr (const unsigned char *p, size_t first_idx, size_t last_idx)
+xmemdup (const unsigned char *p, size_t len)
 {
-  size_t len;
-  unsigned char *tmp;
+  unsigned char *tmp = (unsigned char *) xmalloc (len);
 
-  assert (first_idx <= last_idx);
-  len = last_idx - first_idx + 1;
-  tmp = (unsigned char *) xmalloc (len);
-
-  assert (first_idx <= last_idx);
   /* Use memcpy rather than strncpy because `p' may contain zero-bytes.  */
-  memcpy (tmp, p + first_idx, len);
+  memcpy (tmp, p, len);
   return tmp;
 }
 
@@ -995,9 +988,20 @@ build_spec_list (const struct E_string *es, struct Spec_list *result)
 	      if (found)
 		{
 		  int parse_failed;
-		  unsigned char *opnd_str = substr (p, i + 2,
-						    closing_delim_idx - 1);
 		  size_t opnd_str_len = closing_delim_idx - 1 - (i + 2) + 1;
+		  unsigned char *opnd_str;
+
+		  if (opnd_str_len == 0)
+		    {
+		      if (p[i + 1] == ':')
+			error (0, 0, _("missing character class name `[::]'"));
+		      else
+			error (0, 0,
+			       _("missing equivalence class character `[==]'"));
+		      return 1;
+		    }
+
+		  opnd_str = xmemdup (p + i + 2, opnd_str_len);
 
 		  if (p[i + 1] == ':')
 		    {
