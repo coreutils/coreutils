@@ -12,7 +12,7 @@ addext.c argmatch.c backupfile.c basename.c dirname.c filemode.c \
 full-write.c idcache.c \
 isdir.c long-options.c makepath.c modechange.c path-concat.c \
 safe-read.c save-cwd.c savedir.c stripslash.c userspec.c xgetcwd.c \
-xmalloc.c xstrdup.c xstrtol.c xstrtoul.c yesno.c strverscmp.c
+xmalloc.c xstrdup.c xstrtol.c xstrtoul.c yesno.c
 
 libfu_a_LIBADD = @LIBOBJS@ @ALLOCA@
 libfu_a_DEPENDENCIES = $(libfu_a_LIBADD)
