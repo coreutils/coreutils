@@ -7010,7 +7010,7 @@ the times of last access and modification -- of a file, there is actually
 a third one as well: the inode change time.  This is often referred to
 as a file's @code{ctime}.
 The inode change time represents the time when the file's meta-information
-last changed. One common example of this is when the permissions of a
+last changed.  One common example of this is when the permissions of a
 file change.  Changing the permissions doesn't access the file, so
 the atime doesn't change, nor does it modify the file, so the mtime
 doesn't change.  Yet, something about the file itself has changed,
@@ -7714,7 +7714,7 @@ be used as a dummy shell for the purpose of disabling accounts.
 @dfn{success}.  It can be used as a place holder in shell scripts
 where a successful command is needed, although the shell built-in
 command @code{:} (colon) may do the same thing faster.
-In most modern shells, @code{true} is built-in command, so when
+In most modern shells, @code{true} is a built-in command, so when
 you use @samp{true} in a script, you're probably using the built-in
 command, not the one documented here.
 
