@@ -41,6 +41,13 @@ struct cp_options
   /* If nonzero, remove existing destination nondirectories. */
   int force;
 
+  /* Setting this member is meaningful only if FORCE is also set.
+     If nonzero, copy returns nonzero upon failed unlink.
+     Otherwise, the failure still elicits a diagnostic, but it doesn't
+     change copy's return value.  This is nonzero for cp and mv, and zero
+     for install.  */
+  int failed_unlink_is_fatal;
+
   /* If nonzero, create hard links instead of copying files.
      Create destination directories as usual. */
   int hard_link;
@@ -58,7 +65,9 @@ struct cp_options
 
   /* If nonzero, attempt to give the copies the original files' permissions,
      owner, group, and timestamps. */
-  int preserve;
+  int preserve_owner_and_group;
+  int preserve_chmod_bits;
+  int preserve_timestamps;
 
   /* If nonzero and any of the above (for preserve) file attributes cannot
      be applied to a destination file, treat it as a failure and return
@@ -76,6 +85,14 @@ struct cp_options
   /* If nonzero, create symbolic links instead of copying files.
      Create destination directories as usual. */
   int symbolic_link;
+
+  /* If nonzero, set file mode to value of MODE.  Otherwise,
+     set it based on current umask modified by UMASK_KILL.  */
+  int set_mode;
+
+  /* Set the mode of the destination file to exactly this value
+     if USE_MODE is nonzero.  */
+  mode_t mode;
 
   /* The bits to preserve in created files' modes. */
   unsigned int umask_kill;
