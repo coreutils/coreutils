@@ -548,6 +548,12 @@ initialize_exit_failure (int status)
 #define CTIME_CMP(a, b) ST_TIME_CMP (a, b, st_ctime, st_ctim.ST_MTIM_NSEC)
 #define MTIME_CMP(a, b) ST_TIME_CMP (a, b, st_mtime, st_mtim.ST_MTIM_NSEC)
 
+#ifdef ST_MTIM_NSEC
+# define TIMESPEC_NS(timespec) ((timespec).ST_MTIM_NSEC)
+#else
+# define TIMESPEC_NS(timespec) 0
+#endif
+
 #ifndef RETSIGTYPE
 # define RETSIGTYPE void
 #endif
