@@ -2,6 +2,9 @@
 
 	* Version 5.0.1.
 
+	* src/head.c (usage): Use 1024*1024 in place of 1048576.
+	* src/tail.c (usage): Likewise.
+
 	* tests/rm/fail-2eperm: Now that we have setuidgid, use it in
 	place of the kludge in this test.  Suggestion from Paul Jarc.
 
