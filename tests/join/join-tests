@@ -9,6 +9,15 @@ $echo testing program: $xx
 errors=0
 test "$srcdir" || srcdir=.
 test "$VERBOSE" && $xx --version 2> /dev/null
+
+# Make sure we get English translations.
+LANGUAGE=C
+export LANGUAGE
+LC_ALL=C
+export LC_ALL
+LANG=C
+export LANG
+
 $xx -a1 $srcdir/1a.I1 $srcdir/1a.I2 > 1a.O 2> 1a.E
 code=$?
 if test $code != 0 ; then
