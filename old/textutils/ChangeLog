@@ -1,3 +1,9 @@
+2000-08-23  Jim Meyering  <meyering@lucent.com>
+
+	* src/md5sum.c: Include <config.h> unconditionally, to be consistent
+	with all the other programs in this directory.
+	* src/tsort.c: Likewise.
+
 2000-08-19  Jim Meyering  <meyering@lucent.com>
 
 	* src/comm.c (writeline): Correct comments.  From Bruno Haible.
