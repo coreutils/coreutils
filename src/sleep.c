@@ -47,13 +47,17 @@ usage (int status)
 	     program_name);
   else
     {
-      printf (_("Usage: %s [OPTION]... NUMBER[SUFFIX]\n"), program_name);
       printf (_("\
+Usage: %s NUMBER[SUFFIX]\n\
+  or:  %s OPTION\n\
 Pause for NUMBER seconds.\n\
-SUFFIX may be s to keep seconds, m for minutes, h for hours or d for days.\n\
+SUFFIX may be s for seconds (the default), m for minutes,\n\
+h for hours or d for days.\n\
 \n\
   --help      display this help and exit\n\
-  --version   output version information and exit\n"));
+  --version   output version information and exit\n\
+"),
+	      program_name, program_name);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);
