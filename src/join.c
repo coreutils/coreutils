@@ -406,11 +406,14 @@ prjoin (struct line *line1, struct line *line2)
     {
       const struct outlist *o;
 
-      prfield (outlist->field - 1, outlist->file == 1 ? line1 : line2);
-      for (o = outlist->next; o; o = o->next)
+      o = outlist;
+      while (1)
 	{
-	  putchar (tab ? tab : ' ');
 	  prfield (o->field - 1, o->file == 1 ? line1 : line2);
+	  o = o->next;
+	  if (o == NULL)
+	    break;
+	  putchar (tab ? tab : ' ');
 	}
       putchar ('\n');
     }
