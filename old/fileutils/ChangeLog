@@ -1,3 +1,9 @@
+Fri Dec 22 00:48:01 1995  Jim Meyering  (meyering@comco.com)
+
+	* dd.c (cleanup): New function -- broken out from quit.
+	(interrupt_handler): Rewrite to reset default signal handler,
+	call cleanup, then repost caught signal.
+
 Thu Dec 21 23:15:06 1995  Jim Meyering  (meyering@comco.com)
 
 	* argmatch.h: New file.
