@@ -90,7 +90,7 @@ batch_convert (const char *input_filename, const char *format)
   FILE *in_stream;
   char *line;
   int line_length;
-  int buflen;
+  size_t buflen;
   time_t when;
 
   if (strcmp (input_filename, "-") == 0)
