@@ -1,3 +1,7 @@
+2000-12-18  Bruno Haible  <haible@clisp.cons.org>
+
+	* config.charset: Add support for BeOS.
+
 2000-12-16  Jim Meyering  <meyering@lucent.com>
 
 	* getusershell.c [!SHELLS_FILE && __DJGPP__]: Define
