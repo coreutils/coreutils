@@ -39,13 +39,6 @@
 # include "unlocked-io.h"
 #endif
 
-/* If EBADF is not defined then the code below can't possibly work --
-   we'll need to know what value errno is set to when fclose fails to
-   close an already-closed stream.  Ask the user to report it.  */
-#ifndef EBADF
-# error "EBADF is not defined: please report this to bug-gnulib@gnu.org"
-#endif
-
 static const char *file_name;
 
 /* Set the file name to be reported in the event an error is detected
