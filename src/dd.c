@@ -718,6 +718,37 @@ swab_buffer (unsigned char *buf, size_t *nread)
   return ++bufstart;
 }
 
+/* Return nonzero iff the file referenced by FDESC is of a type for
+   which lseek's return value is known to be invalid on some systems.
+   Otherwise, return zero.
+   For example, return nonzero if FDESC references a character device
+   (on any system) because the lseek on many Linux systems incorrectly
+   returns an offset implying it succeeds for tape devices, even though
+   the function fails to perform the requested operation.  In that case,
+   lseek should return nonzero and set errno.  */
+
+static int
+buggy_lseek_support (int fdesc)
+{
+  /* We have to resort to this because on some systems, lseek doesn't work
+     on some special files but doesn't return an error, either.
+     In particular, the Linux tape drivers are a problem.
+     For example, when I did the following using dd-4.0y or earlier on a
+     Linux-2.2.17 system with a Exabyte SCSI tape drive:
+
+       dev=/dev/nst0
+       reset='mt -f $dev rewind; mt -f $dev fsf 1'
+       eval $reset; dd if=$dev bs=32k of=out1
+       eval $reset; dd if=$dev bs=32k of=out2 skip=1
+
+     the resulting files, out1 and out2, would compare equal.  */
+
+  struct stat stats;
+
+  return (fstat (fdesc, &stats) == 0
+	  && (S_ISCHR (stats.st_mode)));
+}
+
 /* Throw away RECORDS blocks of BLOCKSIZE bytes on file descriptor FDESC,
    which is open with read permission for FILE.  Store up to BLOCKSIZE
    bytes of the data at a time in BUF, if necessary.  RECORDS must be
@@ -731,10 +762,11 @@ skip (int fdesc, char *file, uintmax_t records, size_t blocksize,
 
   /* Try lseek and if an error indicates it was an inappropriate
      operation, fall back on using read.  Some broken versions of
-     lseek return zero, so count that as an error too as a valid zero
-     return is not possible here.  */
+     lseek may return zero, so count that as an error too as a valid
+     zero return is not possible here.  */
   o = records * blocksize;
   if (o / blocksize != records
+      || buggy_lseek_support (fdesc)
       || lseek (fdesc, o, SEEK_CUR) <= 0)
     {
       while (records-- > 0)
