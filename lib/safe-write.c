@@ -1,4 +1,4 @@
-/* An interface to write() that retries after interrupts.
+/* An interface to write that retries after interrupts.
    Copyright (C) 1993, 1994, 1998, 2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -33,51 +33,51 @@
 extern int errno;
 #endif
 
+#ifdef EINTR
+# define IS_EINTR(x) ((x) == EINTR)
+#else
+# define IS_EINTR(x) 0
+#endif
+
 #include <limits.h>
 
-/* We don't pass an nbytes count > SSIZE_MAX to write() - POSIX says the
-   effect would be implementation-defined.  Also we don't pass an nbytes
-   count > INT_MAX but <= SSIZE_MAX to write() - this triggers a bug in
-   Tru64 5.1.  */
-#define MAX_BYTES_TO_READ INT_MAX
+#ifndef CHAR_BIT
+# define CHAR_BIT 8
+#endif
+
+/* The extra casts work around common compiler bugs.  */
+#define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
+/* The outer cast is needed to work around a bug in Cray C 5.0.3.0.
+   It is necessary at least when t == time_t.  */
+#define TYPE_MINIMUM(t) ((t) (TYPE_SIGNED (t) \
+			      ? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) : (t) 0))
+#define TYPE_MAXIMUM(t) ((t) (~ (t) 0 - TYPE_MINIMUM (t)))
+
+#ifndef INT_MAX
+# define INT_MAX TYPE_MAXIMUM (int)
+#endif
 
 /* Write up to COUNT bytes at BUF to descriptor FD, retrying if interrupted.
-   Return the actual number of bytes written, zero for EOF, or (size_t) -1
-   for an error.  */
+   Return the actual number of bytes written, zero for EOF, or SAFE_WRITE_ERROR
+   upon error.  */
 size_t
 safe_write (int fd, const void *buf, size_t count)
 {
-  size_t total_written = 0;
+  ssize_t result;
 
-  if (count > 0)
+  /* POSIX limits COUNT to SSIZE_MAX, but we limit it further, requiring
+     that COUNT <= INT_MAX, to avoid triggering a bug in Tru64 5.1.
+     When decreasing COUNT, keep the file pointer block-aligned.
+     Note that in any case, write may succeed, yet write fewer than COUNT
+     bytes, so the caller must be prepared to handle partial results.  */
+  if (count > INT_MAX)
+    count = INT_MAX & ~8191;
+
+  do
     {
-      const char *ptr = (const char *) buf;
-      do
-	{
-	  size_t nbytes_to_write = count;
-	  ssize_t result;
-
-	  /* Limit the number of bytes to write in one round, to avoid running
-	     into unspecified behaviour.  But keep the file pointer block
-	     aligned when doing so.  */
-	  if (nbytes_to_write > MAX_BYTES_TO_READ)
-	    nbytes_to_write = MAX_BYTES_TO_READ & ~8191;
-
-	  result = write (fd, ptr, nbytes_to_write);
-	  if (result < 0)
-	    {
-#ifdef EINTR
-	      if (errno == EINTR)
-		continue;
-#endif
-	      return result;
-	    }
-	  total_written += result;
-	  ptr += result;
-	  count -= result;
-	}
-      while (count > 0);
+      result = write (fd, buf, count);
     }
+  while (result < 0 && IS_EINTR (errno));
 
-  return total_written;
+  return (size_t) result;
 }
