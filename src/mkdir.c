@@ -138,7 +138,7 @@ main (int argc, char **argv)
 	}
       else if (mkdir (argv[optind], newmode))
 	{
-	  error (0, errno, _("cannot make directory `%s'"), argv[optind]);
+	  error (0, errno, _("cannot create directory `%s'"), argv[optind]);
 	  errors = 1;
 	}
       else if (verbose_fmt_string)
