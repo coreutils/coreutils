@@ -1,4 +1,6 @@
 Changes in release 3.17:
+[3.16a]
+* install accepts new option, --preserver-timestamps
 * du --megabytes --total now shows total in megabytes
 * touch -d DATE now works on Unicos
 * du accepts new option --max-depth=N
