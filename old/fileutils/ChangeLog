@@ -1,3 +1,13 @@
+Sun May 21 07:20:55 1995  Jim Meyering  (meyering@comco.com)
+
+	* euidaccess.c: No longer include safe-l?stat.h.
+	* fsusage.c: Likewise.
+	* isdir.c: Likewise.
+	* makepath.c: Likewise.
+	* mkdir.c: Likewise.
+	* rename.c : Likewise.
+	* rmdir.c: Likewise.
+
 Sat May 13 07:47:44 1995  Jim Meyering  (meyering@comco.com)
 
 	* lib/Makefile.in: Remove safe-l?stat.[ch]in and related rules.
