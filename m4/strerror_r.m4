@@ -1,4 +1,4 @@
-#serial 1001
+#serial 1002
 # Experimental replacement for the function in the latest CVS autoconf.
 # If the compile-test says strerror_r doesn't work, then resort to a
 # `run'-test that works on BeOS and segfaults on DEC Unix.
@@ -9,8 +9,7 @@ undefine([AC_FUNC_STRERROR_R])
 # AC_FUNC_STRERROR_R
 # ------------------
 AC_DEFUN([AC_FUNC_STRERROR_R],
-[# Check strerror_r
-AC_CHECK_DECLS([strerror_r])
+[AC_CHECK_DECLS([strerror_r])
 AC_CHECK_FUNCS([strerror_r])
 if test $ac_cv_func_strerror_r = yes; then
   AC_CHECK_HEADERS(string.h)
@@ -58,11 +57,10 @@ if test $ac_cv_func_strerror_r = yes; then
        ac_cv_func_strerror_r_works=no,
        ac_cv_func_strerror_r_works=no)
     fi
-
-    if test $ac_cv_func_strerror_r_works = yes; then
-      AC_DEFINE_UNQUOTED(HAVE_WORKING_STRERROR_R, 1,
-        [Define to 1 if `strerror_r' returns a string.])
-    fi
   ])
+  if test $ac_cv_func_strerror_r_works = yes; then
+    AC_DEFINE_UNQUOTED(HAVE_WORKING_STRERROR_R, 1,
+      [Define to 1 if `strerror_r' returns a string.])
+  fi
 fi
 ])# AC_FUNC_STRERROR_R
