@@ -1143,19 +1143,16 @@ set_window_size (rows, cols)
     {
       if (errno != EINVAL)
 	error (1, errno, "standard input");
-      win.ws_row = (rows >= 0 ? rows : 0);
-      win.ws_col = (cols >= 0 ? cols : 0);
+      bzero (&win, sizeof (win));
     }
-  else
-    {
       if (rows >= 0)
 	win.ws_row = rows;
       if (cols >= 0)
 	win.ws_col = cols;
-    }
 
 #ifdef TIOCSSIZE
-  /* The following code deals with a bug in the SunOS 4.x (and 3.x?) kernel.
+  /* Alexander Dupuy <dupuy@cs.columbia.edu> wrote:
+     The following code deals with a bug in the SunOS 4.x (and 3.x?) kernel.
      This comment from sys/ttold.h describes Sun's twisted logic - a better
      test would have been (ts_lines > 64k || ts_cols > 64k || ts_cols == 0).
      At any rate, the problem is gone in Solaris 2.x.
