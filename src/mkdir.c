@@ -46,7 +46,7 @@ static struct option const longopts[] =
 {
   {"mode", required_argument, NULL, 'm'},
   {"parents", no_argument, NULL, 'p'},
-  {"verbose", no_argument, NULL, 2},
+  {"verbose", no_argument, NULL, 'v'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -66,7 +66,7 @@ Create the DIRECTORY(ies), if they do not already exist.\n\
 \n\
   -m, --mode=MODE   set permission mode (as in chmod), not rwxrwxrwx - umask\n\
   -p, --parents     no error if existing, make parent directories as needed\n\
-      --verbose     print a message for each created directory\n\
+  -v, --verbose     print a message for each created directory\n\
       --help        display this help and exit\n\
       --version     output version information and exit\n\
 "));
@@ -94,7 +94,7 @@ main (int argc, char **argv)
 
   create_parents = 0;
 
-  while ((optc = getopt_long (argc, argv, "pm:", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "pm:v", longopts, NULL)) != -1)
     {
       switch (optc)
 	{
@@ -106,7 +106,7 @@ main (int argc, char **argv)
 	case 'm':
 	  symbolic_mode = optarg;
 	  break;
-	case 2: /* --verbose  */
+	case 'v': /* --verbose  */
 	  verbose_fmt_string = _("created directory `%s'");
 	  break;
 	case_GETOPT_HELP_CHAR;
