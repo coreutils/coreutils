@@ -8,3 +8,5 @@ md5.h
 obstack.h
 regex.c
 regex.h
+fts_.h
+fts.c
