@@ -17,3 +17,4 @@ regex.h
 stdbool_.h
 vasnprintf.h
 vasprintf.h
+localcharset.h
