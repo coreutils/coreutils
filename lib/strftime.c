@@ -472,27 +472,37 @@ strftime (s, maxsize, format, tp)
 	case 'z':
 	  {
 	    struct tm tml = *tp;
-	    time_t t = mktime (&tml);
 	    struct tm tmg;
+	    time_t t;
+	    time_t offset = 0;
 	    int diff;
 
-	    tml = *localtime (&t);	/* Canonicalize the local time.  */
-	    tmg = *gmtime (&t);
+	    t = __mktime_internal (&tml, __localtime_r, &offset);
 
-	    /* Compute the difference.  */
-	    diff = tml.tm_min - tmg.tm_min;
-	    diff += 60 * (tml.tm_hour - tmg.tm_hour);
-
-	    if (tml.tm_mon != tmg.tm_mon)
+	    /* Canonicalize the local time.  */
+	    if (t == (time_t) -1 || __localtime_r (&t, &tml) == NULL)
+	      /* We didn't managed to get the local time.  Assume it
+		 GMT as a reasonable default value.  */
+	      diff = 0;
+	    else
 	      {
-		/* We assume no timezone differs from UTC by more than
-		   +- 23 hours.  This should be safe.  */
-		if (tmg.tm_mday == 1)
-		  tml.tm_mday = 0;
-		else /* tml.tm_mday == 1 */
-		  tmg.tm_mday = 0;
+		__gmtime_r (&t, &tmg);
+
+		/* Compute the difference.  */
+		diff = tml.tm_min - tmg.tm_min;
+		diff += 60 * (tml.tm_hour - tmg.tm_hour);
+
+		if (tml.tm_mon != tmg.tm_mon)
+		  {
+		    /* We assume no timezone differs from UTC by more
+		       than +- 23 hours.  This should be safe.  */
+		    if (tmg.tm_mday == 1)
+		      tml.tm_mday = 0;
+		    else /* tml.tm_mday == 1 */
+		      tmg.tm_mday = 0;
+		  }
+		diff += 1440 * (tml.tm_mday - tmg.tm_mday);
 	      }
-	    diff += 1440 * (tml.tm_mday - tmg.tm_mday);
 
 	    if (diff < 0)
 	      {
