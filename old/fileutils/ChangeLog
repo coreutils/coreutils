@@ -1,3 +1,12 @@
+Tue May 21 07:06:30 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/euidaccess.c (euidaccess) [!S_IROTH]: Define.
+	[!S_IWOTH]: Define.
+	[!S_IXOTH]: Define.
+	Marcus Daniels <marcus@sysc.pdx.edu> reported that m68k NEXTSTEP 3.2
+	doesn't define S_IROTH or S_IWOTH unless some posix compile option
+	is used and associated symbols defined.
+
 Sun May 19 09:32:51 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* chown.c: New option: --no-dereference (-h).  Solaris 5.4's chown
