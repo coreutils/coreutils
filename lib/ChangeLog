@@ -1,5 +1,6 @@
 2002-02-25  Paul Eggert  <eggert@twinsun.com>
 
+	* acl.c, acl.h: New files.
 	* Makefile.am (libfetish_a_SOURCES): Add acl.h, acl.c.
 
 2002-02-24  Jim Meyering  <meyering@lucent.com>
