@@ -1020,7 +1020,7 @@
 	(squeeze_filter, set_initialize, main): Use size_t and ssize_t in
 	place of long and int in several decls.
 	(read_and_delete, read_and_xlate): Likewise, and remove assertion.
-	* tests/tr/Test.pm: (o-rep-1, o-rep-2): New tests.
+	* tests/tr/Test.pm (o-rep-1, o-rep-2): New tests.
 
 	* src/cut.c: Correct copying notice to use GPL, per author's request.
 	* src/paste.c: Likewise.
@@ -1217,7 +1217,7 @@
 
 	* lib/linebuffer.c (readline): Do not leave room for an extra
 	byte after the newline; it's no longer needed.
-	* src/sort.c: (sortalloc, mergealloc, fillbuf, checkfp, mergefps):
+	* src/sort.c (sortalloc, mergealloc, fillbuf, checkfp, mergefps):
 	Likewise.
 
 	* lib/memcoll.c (memcoll): The two arguments cannot be
@@ -1820,7 +1820,7 @@
 	* src/sys2.h (TOLOWER): Define.
 	(TOUPPER): Define.
 	* src/join.c (TOLOWER): Remove definition.
-	* src/md5sum.c: (TOLOWER): Remove definition.
+	* src/md5sum.c (TOLOWER): Remove definition.
 
 1999-04-30  Jim Meyering  <meyering@ascend.com>
 
@@ -1972,7 +1972,7 @@
 
 1999-03-13  Jim Meyering  <meyering@ascend.com>
 
-	* src/tac.c: (tac_mem): `#if-0'-out this unused function.
+	* src/tac.c (tac_mem): `#if-0'-out this unused function.
 	(tac_stdin_to_mem): Likewise.
 
 	* doc/textutils.texi (cut invocation): Describe --output-delimiter.
@@ -2802,7 +2802,7 @@
 
 1998-01-16  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* src/sort.c: (mergefps): Add braces to avoid ambiguous `else' stmt.
+	* src/sort.c (mergefps): Add braces to avoid ambiguous `else' stmt.
 	(nls_set_fraction): Likewise.
 
 	* src/sort.c: Guard inclusion of langinfo.h also with HAVE_LANGINFO_H,
@@ -3094,7 +3094,7 @@
 
 1997-10-14  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* src/sort.c: (_NL_ITEM) [!defined]: Define.
+	* src/sort.c (_NL_ITEM) [!defined]: Define.
 	From from Ørn E. Hansen.
 
 	* src/sort.c: Use STREQ in place of most uses of strcmp.
@@ -4533,7 +4533,7 @@ Wed Feb 28 20:32:48 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	(noinst_HEADERS): Rename from HEADERS.
 	(INCLUDES): Remove -I.. and -I$(srcdir).  automake-0.30 adds these
 	to DEFS automatically.
-	* lib/Makefile.am: (noinst_HEADERS): Rename from HEADERS.
+	* lib/Makefile.am (noinst_HEADERS): Rename from HEADERS.
 
 Wed Feb 21 18:56:27 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
@@ -4802,7 +4802,7 @@ Tue Nov 14 23:10:54 1995  Jim Meyering  (meyering@comco.com)
 	(cleanup_fatal): Renamed from cleanup.  Call cleanup, then exit.
 	Update callers.
 
-	* tac.c: (cleanup): Don't exit.
+	* tac.c (cleanup): Don't exit.
 	(cleanup_fatal): New function.  Call cleanup, then exit.
 	(sighandler): New function.
 	(cleanup_fatal): Renamed from cleanup.  Call cleanup, then exit.
@@ -5062,7 +5062,7 @@ Sat Sep 23 15:43:46 1995  Jim Meyering  (meyering@comco.com)
 
 	* Makefile.in (DISTFILES): Add README.alpha.
 
-	* lib/Makfile.in: (GETOPT, MEMCHR, REGEX): New variables.
+	* lib/Makfile.in (GETOPT, MEMCHR, REGEX): New variables.
 	(OBJECTS): Use them instead of hardcoding object file names.
 	Suggested by Ulrich Drepper.
 
@@ -5139,7 +5139,7 @@ Sun Jul 30 00:01:58 1995  Jim Meyering  (meyering@comco.com)
 
 	* md5sum.c (md5_check): Use getline instead of fgets.
 
-	* lib/Makefile.in: (SOURCES): Add getline.c.
+	* lib/Makefile.in (SOURCES): Add getline.c.
 	(OBJECTS): Add getline.o.
 	(DISTFILES): Add getline.h.
 	(getline.o): Depend on getline.h.
@@ -5212,7 +5212,7 @@ Fri Jul 21 01:21:49 1995  Jim Meyering  (meyering@comco.com)
 	(split_3): No longer parse the `new format.'  There is only one
 	valid format now: the compatible one.
 
-	* lib/Makefile.in: (SOURCES): Add md5.c.
+	* lib/Makefile.in (SOURCES): Add md5.c.
 	(OBJECTS): Add md5.o.
 	(DISTFILES): Add md5.h.
 	(md5.o): Depend on md5.h.
@@ -5412,10 +5412,10 @@ Sun Jun 11 00:39:50 1995  Jim Meyering  (meyering@comco.com)
 
 	* md5sum.c: New file.  From Ulrich Drepper.
 	* md5-test.rfc: New file.
-	* Makefile.in: (PROGS): Add md5sum.
+	* Makefile.in (PROGS): Add md5sum.
 	(check): Run a recursive make in each subdirectory.
-	* man/Makefile.in: (MANFILES): Add md5sum.1.
-	* src/Makefile.in: (SOURCES): Add md5sum.c.
+	* man/Makefile.in (MANFILES): Add md5sum.1.
+	* src/Makefile.in (SOURCES): Add md5sum.c.
 	(OBJECTS): Add md5sum.o.
 	(PROGS): Add md5sum.
 	(check): Add basic checks for md5sum.
@@ -5536,7 +5536,7 @@ Thu Apr 20 23:09:33 1995  Jim Meyering  (meyering@comco.com)
 
 Tue Apr 18 22:57:43 1995  Jim Meyering  (meyering@comco.com)
 
-	* configure.in: (AC_OUTPUT): Use echo, not date, to avoid creating
+	* configure.in (AC_OUTPUT): Use echo, not date, to avoid creating
 	unnecessary conflicts for people using version control software
 	like RCS and CVS.
 	(AC_ARG_PROGRAM): Use it.
