@@ -1,3 +1,45 @@
+2000-07-15  Jim Meyering  <meyering@lucent.com>
+
+
+	Begin converting "`%s'" in format strings to "%s", and wrap each
+	corresponding argument in a `quote (...)' call -- if there's only one.
+	If there are more than one, then use `quote_n (0, ...),
+	quote_n (1, ...), ...'.
+
+	Here's the justification, from Paul Eggert (thanks, Paul):
+
+	  [Consider] the following, taken from fileutils/copy.c:
+
+	     error (0, errno, _("cannot create directory `%s'"), dst_path);
+
+	  Now, suppose dst_path is "/'\nrm: removing all files under `/"
+	  (expressed in C string syntax).  This will cause the user to see
+	  the following delightfully ambiguous display:
+
+	    cp: cannot create directory `/'
+	    rm: removing all files under `/'
+
+	  It would be better to rewrite the above line to be something
+	  like this:
+
+	    error (0, errno, _("cannot create directory %s"), quote (dst_path));
+
+	  using the definition of "quote" [in lib/quote.c].  That way,
+	  the user will see the following unambiguous display instead:
+
+	    cp: cannot create directory `/\'\nrm: removing all files under `/'
+
+	  One might object that any user who asks to copy a file with
+	  a weird name like that deserves to get confused.  But this
+	  is not a good objection, as the source of the string may not
+	  be under the user's control, or even visible to the user.
+
+	* src/copy.c: Adapt format strings and args as above.  Include quote.h.
+	I have deliberately not changed the output of --verbose.
+	FIXME: maybe I should.
+	* src/cp.c: Likewise.
+	* src/remove.c: Likewise.
+
 2000-07-13  Paul Eggert  <eggert@twinsun.com>
 
 	* NEWS: Describe --quoting-style=clocale.
