@@ -52,6 +52,10 @@ time_t time ();
 # define O_NONBLOCK O_NDELAY
 #endif
 
+#if !defined O_NOCTTY
+# define O_NOCTTY 0
+#endif
+
 /* The name by which this program was run. */
 char *program_name;
 
@@ -131,7 +135,7 @@ touch (const char *file)
   if (! no_create)
     {
       /* Try to open FILE, creating it if necessary.  */
-      fd = open (file, O_WRONLY | O_CREAT | O_NONBLOCK,
+      fd = open (file, O_WRONLY | O_CREAT | O_NONBLOCK | O_NOCTTY,
 		 S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
       if (fd == -1)
 	open_errno = errno;
