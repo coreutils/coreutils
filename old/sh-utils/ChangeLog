@@ -1,8 +1,39 @@
 Fri Dec 20 19:28:37 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/strftime.c: Update from GNU libc.
+
+	* m4/getline.m4: New file, extracted from acinclude.m4.
+	* m4/getloadavg.m4: Likewise.
+	* m4/jm-mktime.m4: Likewise.
+	* m4/jm-winsz1.m4: Likewise.
+	* m4/jm-winsz2.m4: Likewise.
+	* m4/memcmp.m4: Likewise.
+	* m4/strftime.m4: Likewise.
+	* m4/uptime.m4: Likewise.
+
+	* m4/ccstdc.m4: Copied from automake-1.1l.
+	* m4/dmalloc.m4: Likewise.
+	* m4/error.m4: Likewise.
+	* m4/gettext.m4: Likewise.
+	* m4/header.m4: Likewise.
+	* m4/init.m4: Likewise.
+	* m4/install.m4: Likewise.
+	* m4/lcmessage.m4: Likewise.
+	* m4/lispdir.m4: Likewise.
+	* m4/maintainer.m4: Likewise.
+	* m4/mktime.m4: Likewise.
+	* m4/obstack.m4: Likewise.
+	* m4/progtest.m4: Likewise.
+	* m4/protos.m4: Likewise.
+	* m4/ptrdiff.m4: Likewise.
+	* m4/regex.m4: Likewise.
+	* m4/sanity.m4: Likewise.
+	* m4/strtod.m4: Likewise.
+	* m4/termios.m4: Likewise.
+	* m4/winsz.m4: Likewise.
+
 	* m4/getgroups.m4: New file.
 	(jm_FUNC_GETGROUPS): New macro
-
 	* lib/getgroups.c: New file.
 
 Wed Dec 18 07:47:29 1996  Jim Meyering  <meyering@na-net.ornl.gov>
