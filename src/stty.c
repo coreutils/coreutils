@@ -615,7 +615,7 @@ Combination settings:\n\
                 -imaxbel -opost -isig -icanon -xcase min 1 time 0\n\
   -raw          same as cooked\n\
   sane          same as cread -ignbrk brkint -inlcr -igncr icrnl\n\
-                -ixoff -iucl -ixany imaxbel opost -olcuc -ocrnl onlcr\n\
+                -ixoff -iuclc -ixany imaxbel opost -olcuc -ocrnl onlcr\n\
                 -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0\n\
                 isig icanon iexten echo echoe echok -echonl -noflsh\n\
                 -xcase -tostop -echoprt echoctl echoke, all special\n\
