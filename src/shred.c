@@ -53,19 +53,19 @@
  *   I'd prefer to do it in one source file if possible.
  */
 
-#include <sys/stat.h>	/* For struct stat */
-#include <sys/time.h>	/* For struct timeval */
+#include <sys/stat.h>		/* For struct stat */
+#include <sys/time.h>		/* For struct timeval */
 #include <stdio.h>
-#include <stdarg.h>	/* Used by pferror */
-#include <stdlib.h>	/* For free() */
-#include <unistd.h>	/* for open(), close(), write(), fstat() */
-#include <fcntl.h>	/* for open(), close(), O_RDWR */
-#include <string.h>	/* For strlen(), memcpy(), memset(), etc. */
-#include <limits.h>	/* For UINT_MAX, etc. */
-#include <errno.h>	/* For errno */
+#include <stdarg.h>		/* Used by pferror */
+#include <stdlib.h>		/* For free() */
+#include <unistd.h>		/* for open(), close(), write(), fstat() */
+#include <fcntl.h>		/* for open(), close(), O_RDWR */
+#include <string.h>		/* For strlen(), memcpy(), memset(), etc. */
+#include <limits.h>		/* For UINT_MAX, etc. */
+#include <errno.h>		/* For errno */
 
 static char const version_string[] =
-	"sterilize 1.02";
+"sterilize 1.02";
 #define DEFAULT_PASSES 25	/* Default */
 /* How often to update wiping display */
 #define VERBOSE_UPDATE	100*1024
@@ -104,11 +104,12 @@ typedef unsigned char word32;
 #define ISAAC_BYTES (ISAAC_WORDS*sizeof(word32))
 
 /* RNG state variables */
-struct isaac_state {
-	word32 mm[ISAAC_WORDS];	/* Main state array */
-	word32 iv[8];		/* Seeding initial vector */
-	word32 a, b, c;		/* Extra index variables */
-};
+struct isaac_state
+  {
+    word32 mm[ISAAC_WORDS];	/* Main state array */
+    word32 iv[8];		/* Seeding initial vector */
+    word32 a, b, c;		/* Extra index variables */
+  };
 
 /* This index operation is more efficient on many processors */
 #define ind(mm,x)  *(unsigned *)((char *)(mm) + ( (x) & (ISAAC_WORDS-1)<<2 ))
@@ -131,31 +132,35 @@ struct isaac_state {
  * Refill the entire r[] array
  */
 static void
-isaac_refill(struct isaac_state *s, word32 r[ISAAC_WORDS])
+isaac_refill (struct isaac_state *s, word32 r[ISAAC_WORDS])
 {
-	register word32 a, b;	/* Caches of a and b */
-	register word32 x, y;	/* Temps needed by isaac_step() macro */
-	register word32 *m = s->mm;	/* Pointer into state array */
+  register word32 a, b;		/* Caches of a and b */
+  register word32 x, y;		/* Temps needed by isaac_step() macro */
+  register word32 *m = s->mm;	/* Pointer into state array */
 
-	a = s->a;
-	b = s->b + (++s->c);
+  a = s->a;
+  b = s->b + (++s->c);
 
-	do {
-		isaac_step(a << 13, a, b, s->mm, m  , ISAAC_WORDS/2, r  );
-		isaac_step(a >>  6, a, b, s->mm, m+1, ISAAC_WORDS/2, r+1);
-		isaac_step(a <<  2, a, b, s->mm, m+2, ISAAC_WORDS/2, r+2);
-		isaac_step(a >> 16, a, b, s->mm, m+3, ISAAC_WORDS/2, r+3);
-		r += 4;
-	} while ((m += 4) < s->mm+ISAAC_WORDS/2);
-	do {
-		isaac_step(a << 13, a, b, s->mm, m  , -ISAAC_WORDS/2, r  );
-		isaac_step(a >>  6, a, b, s->mm, m+1, -ISAAC_WORDS/2, r+1);
-		isaac_step(a <<  2, a, b, s->mm, m+2, -ISAAC_WORDS/2, r+2);
-		isaac_step(a >> 16, a, b, s->mm, m+3, -ISAAC_WORDS/2, r+3);
-		r += 4;
-	} while ((m += 4) < s->mm+ISAAC_WORDS);
-	s->a = a;
-	s->b = b;
+  do
+    {
+      isaac_step (a << 13, a, b, s->mm, m, ISAAC_WORDS / 2, r);
+      isaac_step (a >> 6, a, b, s->mm, m + 1, ISAAC_WORDS / 2, r + 1);
+      isaac_step (a << 2, a, b, s->mm, m + 2, ISAAC_WORDS / 2, r + 2);
+      isaac_step (a >> 16, a, b, s->mm, m + 3, ISAAC_WORDS / 2, r + 3);
+      r += 4;
+    }
+  while ((m += 4) < s->mm + ISAAC_WORDS / 2);
+  do
+    {
+      isaac_step (a << 13, a, b, s->mm, m, -ISAAC_WORDS / 2, r);
+      isaac_step (a >> 6, a, b, s->mm, m + 1, -ISAAC_WORDS / 2, r + 1);
+      isaac_step (a << 2, a, b, s->mm, m + 2, -ISAAC_WORDS / 2, r + 2);
+      isaac_step (a >> 16, a, b, s->mm, m + 3, -ISAAC_WORDS / 2, r + 3);
+      r += 4;
+    }
+  while ((m += 4) < s->mm + ISAAC_WORDS);
+  s->a = a;
+  s->b = b;
 }
 
 /*
@@ -175,48 +180,49 @@ isaac_refill(struct isaac_state *s, word32 r[ISAAC_WORDS])
 
 /* The basic ISAAC initialization pass.  */
 static void
-isaac_mix(struct isaac_state *s, word32 const seed[ISAAC_WORDS])
+isaac_mix (struct isaac_state *s, word32 const seed[ISAAC_WORDS])
 {
-	int i;
- 	word32 a = s->iv[0];
- 	word32 b = s->iv[1];
- 	word32 c = s->iv[2];
- 	word32 d = s->iv[3];
- 	word32 e = s->iv[4];
- 	word32 f = s->iv[5];
- 	word32 g = s->iv[6];
- 	word32 h = s->iv[7];
+  int i;
+  word32 a = s->iv[0];
+  word32 b = s->iv[1];
+  word32 c = s->iv[2];
+  word32 d = s->iv[3];
+  word32 e = s->iv[4];
+  word32 f = s->iv[5];
+  word32 g = s->iv[6];
+  word32 h = s->iv[7];
 
-	for (i = 0; i < ISAAC_WORDS; i += 8) {
-		a += seed[i];
-		b += seed[i+1];
-		c += seed[i+2];
-		d += seed[i+3];
-		e += seed[i+4];
-		f += seed[i+5];
-		g += seed[i+6];
-		h += seed[i+7];
+  for (i = 0; i < ISAAC_WORDS; i += 8)
+    {
+      a += seed[i];
+      b += seed[i + 1];
+      c += seed[i + 2];
+      d += seed[i + 3];
+      e += seed[i + 4];
+      f += seed[i + 5];
+      g += seed[i + 6];
+      h += seed[i + 7];
 
-		mix(a, b, c, d, e, f, g, h);
+      mix (a, b, c, d, e, f, g, h);
 
-		s->mm[i] = a;
-		s->mm[i+1] = b;
-		s->mm[i+2] = c;
-		s->mm[i+3] = d;
-		s->mm[i+4] = e;
-		s->mm[i+5] = f;
-		s->mm[i+6] = g;
-		s->mm[i+7] = h;
-	}
+      s->mm[i] = a;
+      s->mm[i + 1] = b;
+      s->mm[i + 2] = c;
+      s->mm[i + 3] = d;
+      s->mm[i + 4] = e;
+      s->mm[i + 5] = f;
+      s->mm[i + 6] = g;
+      s->mm[i + 7] = h;
+    }
 
-	s->iv[0] = a;
-	s->iv[1] = b;
-	s->iv[2] = c;
-	s->iv[3] = d;
-	s->iv[4] = e;
-	s->iv[5] = f;
-	s->iv[6] = g;
-	s->iv[7] = h;
+  s->iv[0] = a;
+  s->iv[1] = b;
+  s->iv[2] = c;
+  s->iv[3] = d;
+  s->iv[4] = e;
+  s->iv[5] = f;
+  s->iv[6] = g;
+  s->iv[7] = h;
 }
 
 /*
@@ -229,43 +235,48 @@ isaac_mix(struct isaac_state *s, word32 const seed[ISAAC_WORDS])
  * it is identical.
  */
 static void
-isaac_init(struct isaac_state *s, word32 const *seed, size_t seedsize)
+isaac_init (struct isaac_state *s, word32 const *seed, size_t seedsize)
 {
-	static word32 const iv[8] = {
-		0x1367df5a, 0x95d90059, 0xc3163e4b, 0x0f421ad8,
-		0xd92a4a78, 0xa51a3c49, 0xc4efea1b, 0x30609119 };
-	int i;
+  static word32 const iv[8] =
+  {
+    0x1367df5a, 0x95d90059, 0xc3163e4b, 0x0f421ad8,
+    0xd92a4a78, 0xa51a3c49, 0xc4efea1b, 0x30609119};
+  int i;
 
 #if 0
-	/* The initialization of iv is a precomputed form of: */
-	for (i = 0; i < 7; i++)
-		iv[i] = 0x9e3779b9;	/* the golden ratio */
-	for (i = 0; i < 4; ++i)		/* scramble it */
-		mix(iv[0], iv[1], iv[2], iv[3], iv[4], iv[5], iv[6], iv[7]);
+  /* The initialization of iv is a precomputed form of: */
+  for (i = 0; i < 7; i++)
+    iv[i] = 0x9e3779b9;		/* the golden ratio */
+  for (i = 0; i < 4; ++i)	/* scramble it */
+    mix (iv[0], iv[1], iv[2], iv[3], iv[4], iv[5], iv[6], iv[7]);
 #endif
-	s->a = s->b = s->c = 0;
+  s->a = s->b = s->c = 0;
 
-	for (i = 0; i < 8; i++)
-		s->iv[i] = iv[i];
+  for (i = 0; i < 8; i++)
+    s->iv[i] = iv[i];
 
-	if (seedsize) {
-		/* First pass (as in reference ISAAC code) */
-		isaac_mix(s, seed);
-		/* Second and subsequent passes (extension to ISAAC) */
-		while (seedsize -= ISAAC_BYTES) {
-			seed += ISAAC_WORDS;
-			for (i = 0; i < ISAAC_WORDS; i++)
-				s->mm[i] += seed[i];
-			isaac_mix(s, s->mm);
-		}
-	} else {
-		/* The no seed case (as in reference ISAAC code) */
-		for (i = 0; i < ISAAC_WORDS; i++)
-			s->mm[i] = 0;
+  if (seedsize)
+    {
+      /* First pass (as in reference ISAAC code) */
+      isaac_mix (s, seed);
+      /* Second and subsequent passes (extension to ISAAC) */
+      while (seedsize -= ISAAC_BYTES)
+	{
+	  seed += ISAAC_WORDS;
+	  for (i = 0; i < ISAAC_WORDS; i++)
+	    s->mm[i] += seed[i];
+	  isaac_mix (s, s->mm);
 	}
+    }
+  else
+    {
+      /* The no seed case (as in reference ISAAC code) */
+      for (i = 0; i < ISAAC_WORDS; i++)
+	s->mm[i] = 0;
+    }
 
-	/* Final pass */
-	isaac_mix(s, s->mm);
+  /* Final pass */
+  isaac_mix (s, s->mm);
 }
 
 /*
@@ -273,41 +284,45 @@ isaac_init(struct isaac_state *s, word32 const *seed, size_t seedsize)
  * /dev/urandom, we get 32 bytes = 256 bits for complete overkill.
  */
 static void
-isaac_seed(struct isaac_state *s)
+isaac_seed (struct isaac_state *s)
 {
-	s->mm[0] = getpid();
-	s->mm[1] = getppid();
+  s->mm[0] = getpid ();
+  s->mm[1] = getppid ();
 
-	{
-#ifdef CLOCK_REALTIME	/* POSIX ns-resolution */
-		struct timespec ts;
-		clock_gettime(CLOCK_REALTIME, &ts);
-		s->mm[2] = ts.tv_sec;
-		s->mm[3] = ts.tv_nsec;
+  {
+#ifdef CLOCK_REALTIME		/* POSIX ns-resolution */
+    struct timespec ts;
+    clock_gettime (CLOCK_REALTIME, &ts);
+    s->mm[2] = ts.tv_sec;
+    s->mm[3] = ts.tv_nsec;
 #else
-		struct timeval tv;
-		gettimeofday(&tv, (struct timezone *)0);
-		s->mm[2] = tv.tv_sec;
-		s->mm[3] = tv.tv_usec;
+    struct timeval tv;
+    gettimeofday (&tv, (struct timezone *) 0);
+    s->mm[2] = tv.tv_sec;
+    s->mm[3] = tv.tv_usec;
 #endif
-	}
+  }
 
-	{
-		int fd = open("/dev/urandom", O_RDONLY);
-		if (fd >= 0) {
-			read(fd, (char *)(s->mm+4), 32);
-			close(fd);
-		} else {
-			fd = open("/dev/random", O_RDONLY | O_NONBLOCK);
-			if (fd >= 0) {
-				/* /dev/random is more precious, so use less */
-				read(fd, (char *)(s->mm+4), 16);
-				close(fd);
-			}
-		}
-	}
+  {
+    int fd = open ("/dev/urandom", O_RDONLY);
+    if (fd >= 0)
+      {
+	read (fd, (char *) (s->mm + 4), 32);
+	close (fd);
+      }
+    else
+      {
+	fd = open ("/dev/random", O_RDONLY | O_NONBLOCK);
+	if (fd >= 0)
+	  {
+	    /* /dev/random is more precious, so use less */
+	    read (fd, (char *) (s->mm + 4), 16);
+	    close (fd);
+	  }
+      }
+  }
 
-	isaac_init(s, s->mm, sizeof(s->mm));
+  isaac_init (s, s->mm, sizeof (s->mm));
 }
 
 /*
@@ -315,53 +330,58 @@ isaac_seed(struct isaac_state *s)
  * ISAAC seed material.  Returns the number of bytes actually read.
  */
 static off_t
-isaac_seedfd(struct isaac_state *s, int fd, off_t size)
+isaac_seedfd (struct isaac_state *s, int fd, off_t size)
 {
-	off_t sizeleft = size;
-	size_t lim, soff;
-	ssize_t ssize;
-	int i;
-	word32 seed[ISAAC_WORDS];
+  off_t sizeleft = size;
+  size_t lim, soff;
+  ssize_t ssize;
+  int i;
+  word32 seed[ISAAC_WORDS];
 
-	while (sizeleft) {
-		lim = sizeof(seed);
-		if ((off_t)lim > sizeleft)
-			lim = (size_t)sizeleft;
-		soff = 0;
-		do {
-			ssize = read(fd, (char *)seed+soff, lim-soff);
-		} while (ssize > 0 && (soff += (size_t)ssize) < lim);
-		/* Mix in what was read */
-		if (soff) {
-			/* Garbage after the sofff position is harmless */
-			for (i = 0; i < ISAAC_WORDS; i++)
-				s->mm[i] += seed[i];
-			isaac_mix(s, s->mm);
-			sizeleft -= soff;
-		}
-		if (ssize <= 0)
-			break;
+  while (sizeleft)
+    {
+      lim = sizeof (seed);
+      if ((off_t) lim > sizeleft)
+	lim = (size_t) sizeleft;
+      soff = 0;
+      do
+	{
+	  ssize = read (fd, (char *) seed + soff, lim - soff);
 	}
-	/* Wipe the copy of the file in "seed" */
-	memset(seed, 0, sizeof(seed));
+      while (ssize > 0 && (soff += (size_t) ssize) < lim);
+      /* Mix in what was read */
+      if (soff)
+	{
+	  /* Garbage after the sofff position is harmless */
+	  for (i = 0; i < ISAAC_WORDS; i++)
+	    s->mm[i] += seed[i];
+	  isaac_mix (s, s->mm);
+	  sizeleft -= soff;
+	}
+      if (ssize <= 0)
+	break;
+    }
+  /* Wipe the copy of the file in "seed" */
+  memset (seed, 0, sizeof (seed));
 
-	/* Final mix, as in isaac_init */
-	isaac_mix(s, s->mm);
-	return size - sizeleft;
+  /* Final mix, as in isaac_init */
+  isaac_mix (s, s->mm);
+  return size - sizeleft;
 }
 
 /* Single-word RNG built on top of ISAAC */
-struct irand_state {
-	word32 r[ISAAC_WORDS];
-	unsigned numleft;
-	struct isaac_state *s;
+struct irand_state
+{
+  word32 r[ISAAC_WORDS];
+  unsigned numleft;
+  struct isaac_state *s;
 };
 
 static void
-irand_init(struct irand_state *r, struct isaac_state *s)
+irand_init (struct irand_state *r, struct isaac_state *s)
 {
-	r->numleft = 0;
-	r->s = s;
+  r->numleft = 0;
+  r->s = s;
 }
 
 /*
@@ -370,13 +390,14 @@ irand_init(struct irand_state *r, struct isaac_state *s)
  * marginally better mixed than the initial ones.
  */
 static word32
-irand32(struct irand_state *r)
+irand32 (struct irand_state *r)
 {
-	if (!r->numleft) {
-		isaac_refill(r->s, r->r);
-		r->numleft = ISAAC_WORDS;
-	}
-	return r->r[--r->numleft];
+  if (!r->numleft)
+    {
+      isaac_refill (r->s, r->r);
+      r->numleft = ISAAC_WORDS;
+    }
+  return r->r[--r->numleft];
 }
 
 /*
@@ -391,19 +412,21 @@ irand32(struct irand_state *r)
  * for a new value.
  */
 static word32
-irand_mod(struct irand_state *r, word32 n)
+irand_mod (struct irand_state *r, word32 n)
 {
-	word32 x;
-	word32 lim;
+  word32 x;
+  word32 lim;
 
-	if (!++n)
-		return irand32(r);
+  if (!++n)
+    return irand32 (r);
 
-	lim = -n % n;	/* == (2**32-n) % n == 2**32 % n */
-	do {
-		x = irand32(r);
-	} while (x < lim);
-	return x % n;
+  lim = -n % n;			/* == (2**32-n) % n == 2**32 % n */
+  do
+    {
+      x = irand32 (r);
+    }
+  while (x < lim);
+  return x % n;
 }
 
 /* Global variable for error printing purposes */
@@ -413,8 +436,11 @@ static char const *argv0 = NULL;
  * Like perror() but fancier.  (And fmt is not allowed to be NULL)
  */
 #if __GNUC__ >= 2
-static void pfstatus(char const *, ...) __attribute__((format(printf, 1, 2)));
-static void pferror(char const *, ...) __attribute__((format(printf, 1, 2)));
+static void
+pfstatus (char const *,...)
+__attribute__ ((format (printf, 1, 2)));
+     static void pferror (char const *,...) __attribute__ ((format (printf, 1,
+								    2)));
 #endif
 
 /*
@@ -428,62 +454,68 @@ static int status_pos = 0;	/* Current position, including padding */
 
 /* Print a new status line, overwriting the previous one. */
 static void
-pfstatus(char const *fmt, ...)
+pfstatus (char const *fmt,...)
 {
-	int new;	/* New status_visible value */
-	va_list ap;
+  int new;			/* New status_visible value */
+  va_list ap;
 
-	/* If we weren't at beginning, go there. */
-	if (status_pos)
-		putchar('\r');
-	va_start(ap, fmt);
-	new = vprintf(fmt, ap);
-	va_end(ap);
-	if (new >= 0) {
-		status_pos = new;
-		while (status_pos < status_visible) {
-			putchar(' ');
-			status_pos++;
-		}
-		status_visible = new;
+  /* If we weren't at beginning, go there. */
+  if (status_pos)
+    putchar ('\r');
+  va_start (ap, fmt);
+  new = vprintf (fmt, ap);
+  va_end (ap);
+  if (new >=0)
+    {
+      status_pos = new;
+      while (status_pos < status_visible)
+	{
+	  putchar (' ');
+	  status_pos++;
 	}
-	fflush(stdout);
+      status_visible = new;
+    }
+  fflush (stdout);
 }
 
 /* Leave current status (if any) visible and go to the next free line. */
 static void
-flushstatus(void)
+flushstatus (void)
 {
-	if (status_visible) {
-		putchar('\n');	/* Leave line visible */
-		fflush(stdout);
-		status_visible = status_pos = 0;
-	} else if (status_pos) {
-		putchar('\r');	/* Go back to beginning of line */
-		fflush(stdout);
-		status_pos = 0;
-	}
+  if (status_visible)
+    {
+      putchar ('\n');		/* Leave line visible */
+      fflush (stdout);
+      status_visible = status_pos = 0;
+    }
+  else if (status_pos)
+    {
+      putchar ('\r');		/* Go back to beginning of line */
+      fflush (stdout);
+      status_pos = 0;
+    }
 }
 
 /* Print an error message on stderr, leaving any status message visible. */
 static void
-pferror(char const *fmt, ...)
+pferror (char const *fmt,...)
 {
-	va_list ap;
-	int e = errno;
+  va_list ap;
+  int e = errno;
 
-	flushstatus();	/* Make it look pretty */
+  flushstatus ();		/* Make it look pretty */
 
-	if (argv0) {
-		fputs(argv0, stderr);
-		fputs(": ", stderr);
-	}
-	va_start(ap, fmt);
-	vfprintf(stderr, fmt, ap);
-	va_end(ap);
-	fputs(": ", stderr);
-	fputs(strerror(e), stderr);
-	putc('\n', stderr);
+  if (argv0)
+    {
+      fputs (argv0, stderr);
+      fputs (": ", stderr);
+    }
+  va_start (ap, fmt);
+  vfprintf (stderr, fmt, ap);
+  va_end (ap);
+  fputs (": ", stderr);
+  fputs (strerror (e), stderr);
+  putc ('\n', stderr);
 }
 
 /*
@@ -498,44 +530,46 @@ pferror(char const *fmt, ...)
  * also possible at all offsets <= x.
  */
 static off_t
-sizefd(int fd)
+sizefd (int fd)
 {
-	off_t hi, lo, mid;
-	char c;	/* One-byte buffer for dummy reads */
+  off_t hi, lo, mid;
+  char c;			/* One-byte buffer for dummy reads */
 
-	/* Binary doubling upwards to find the right range */
-	lo = 0;
-	hi = 0;	/* Any number, preferably 2^x-1, is okay here. */
+  /* Binary doubling upwards to find the right range */
+  lo = 0;
+  hi = 0;			/* Any number, preferably 2^x-1, is okay here. */
 
-	/*
-	 * Loop invariant: we have verified that it is possible to read a
-	 * byte at all offsets < lo.  Probe at offset hi >= lo until it
-	 * is not possible to read a byte at that offset, establishing
-	 * the loop invariant for the following loop.
-	 */
-	for (;;) {
-		if (lseek(fd, hi, SEEK_SET) == (off_t)-1 ||
-		    read(fd, &c, 1) < 1)
-			break;
-		lo = hi+1;	/* This preserves the loop invariant. */
-		hi += lo;	/* Exponential doubling. */
-	}
-	/*
-	 * Binary search to find the exact endpoint.
-	 * Loop invariant: it is not possible to read a byte at hi,
-	 * but it is possible at all offsets < lo.  Thus, the
-	 * offset we seek is between lo and hi inclusive.
-	 */
-	while (hi > lo) {
-		mid = (hi+lo)/2;	/* Rounded down, so lo <= mid < hi */
-		if (lseek(fd, mid, SEEK_SET) == (off_t)-1 ||
-		    read(fd, &c, 1) < 1)
-			hi = mid;	/* mid < hi, so this makes progress */
-		else
-			lo = mid+1;	/* Because mid < hi, lo <= hi */
-	}
-	/* lo == hi, so we have an exact answer */
-	return hi;
+  /*
+   * Loop invariant: we have verified that it is possible to read a
+   * byte at all offsets < lo.  Probe at offset hi >= lo until it
+   * is not possible to read a byte at that offset, establishing
+   * the loop invariant for the following loop.
+   */
+  for (;;)
+    {
+      if (lseek (fd, hi, SEEK_SET) == (off_t) -1 ||
+	  read (fd, &c, 1) < 1)
+	break;
+      lo = hi + 1;		/* This preserves the loop invariant. */
+      hi += lo;			/* Exponential doubling. */
+    }
+  /*
+   * Binary search to find the exact endpoint.
+   * Loop invariant: it is not possible to read a byte at hi,
+   * but it is possible at all offsets < lo.  Thus, the
+   * offset we seek is between lo and hi inclusive.
+   */
+  while (hi > lo)
+    {
+      mid = (hi + lo) / 2;	/* Rounded down, so lo <= mid < hi */
+      if (lseek (fd, mid, SEEK_SET) == (off_t) -1 ||
+	  read (fd, &c, 1) < 1)
+	hi = mid;		/* mid < hi, so this makes progress */
+      else
+	lo = mid + 1;		/* Because mid < hi, lo <= hi */
+    }
+  /* lo == hi, so we have an exact answer */
+  return hi;
 }
 
 /*
@@ -545,24 +579,24 @@ sizefd(int fd)
  * size is less.  Larger sizes are filled exactly.
  */
 static void
-fillpattern(int type, unsigned char *r, size_t size)
+fillpattern (int type, unsigned char *r, size_t size)
 {
-	size_t i;
-	unsigned bits = type & 0xfff;
+  size_t i;
+  unsigned bits = type & 0xfff;
 
-	bits |= bits << 12;
-	((unsigned char *)r)[0] = (bits >> 4) & 255;
-	((unsigned char *)r)[1] = (bits >> 8) & 255;
-	((unsigned char *)r)[2] = bits & 255;
-	for (i = 3; i < size/2; i *= 2)
-		memcpy((char *)r+i, (char *)r, i);
-	if (i < size)
-		memcpy((char *)r+i, (char *)r, size-i);
+  bits |= bits << 12;
+  ((unsigned char *) r)[0] = (bits >> 4) & 255;
+  ((unsigned char *) r)[1] = (bits >> 8) & 255;
+  ((unsigned char *) r)[2] = bits & 255;
+  for (i = 3; i < size / 2; i *= 2)
+    memcpy ((char *) r + i, (char *) r, i);
+  if (i < size)
+    memcpy ((char *) r + i, (char *) r, size - i);
 
-	/* Invert the first bit of every 512-byte sector. */
-	if (type & 0x1000)
-		for (i = 0; i < size; i += 512)
-			r[i] ^= 0x80;
+  /* Invert the first bit of every 512-byte sector. */
+  if (type & 0x1000)
+    for (i = 0; i < size; i += 512)
+      r[i] ^= 0x80;
 }
 
 /*
@@ -570,25 +604,26 @@ fillpattern(int type, unsigned char *r, size_t size)
  * size is rounded UP to a multiple of ISAAC_BYTES.
  */
 static void
-fillrand(struct isaac_state *s, word32 *r, size_t size)
+fillrand (struct isaac_state *s, word32 * r, size_t size)
 {
-	size = (size+ISAAC_BYTES-1)/ISAAC_BYTES;
+  size = (size + ISAAC_BYTES - 1) / ISAAC_BYTES;
 
-	while (size--) {
-		isaac_refill(s, r);
-		r += ISAAC_WORDS;
-	}
+  while (size--)
+    {
+      isaac_refill (s, r);
+      r += ISAAC_WORDS;
+    }
 }
 
 /* Generate a 6-character (+ nul) pass name string */
 #define PASS_NAME_SIZE 7
 static void
-passname(unsigned char const *data, char name[PASS_NAME_SIZE])
+passname (unsigned char const *data, char name[PASS_NAME_SIZE])
 {
-	if (data)
-		sprintf(name, "%02x%02x%02x", data[0], data[1], data[2]);
-	else
-		memcpy(name, "random", PASS_NAME_SIZE);
+  if (data)
+    sprintf (name, "%02x%02x%02x", data[0], data[1], data[2]);
+  else
+    memcpy (name, "random", PASS_NAME_SIZE);
 }
 
 /*
@@ -597,88 +632,100 @@ passname(unsigned char const *data, char name[PASS_NAME_SIZE])
  * progress message purposes.  If n == 0, no progress messages are printed.
  */
 static int
-dopass(int fd, char const *name, off_t size, int type,
+dopass (int fd, char const *name, off_t size, int type,
 	struct isaac_state *s, unsigned long k, unsigned long n)
 {
-	off_t cursize;	/* Amount of file remaining to wipe (counts down) */
-	off_t thresh;	/* cursize at which next status update is printed */
-	size_t lim;	/* Amount of data to try writing */
-	size_t soff;	/* Offset into buffer for next write */
-	ssize_t ssize;	/* Return value from write() */
+  off_t cursize;		/* Amount of file remaining to wipe (counts down) */
+  off_t thresh;			/* cursize at which next status update is printed */
+  size_t lim;			/* Amount of data to try writing */
+  size_t soff;			/* Offset into buffer for next write */
+  ssize_t ssize;		/* Return value from write() */
 #if ISAAC_WORDS > 1024
-	word32 r[ISAAC_WORDS*3]; /* Multiple of 4K and of pattern size */
+  word32 r[ISAAC_WORDS * 3];	/* Multiple of 4K and of pattern size */
 #else
-	word32 r[1024*3];	/* Multiple of 4K and of pattern size */
+  word32 r[1024 * 3];		/* Multiple of 4K and of pattern size */
 #endif
-	char pass_string[PASS_NAME_SIZE];	/* Name of current pass */
+  char pass_string[PASS_NAME_SIZE];	/* Name of current pass */
 
-	if (lseek(fd, 0, SEEK_SET) < 0) {
-		pferror("Error seeking \"%s\"", name);
-		return -1;
+  if (lseek (fd, 0, SEEK_SET) < 0)
+    {
+      pferror ("Error seeking \"%s\"", name);
+      return -1;
+    }
+
+  /* Constant fill patterns need only be set up once. */
+  if (type >= 0)
+    {
+      lim = sizeof (r);
+      if ((off_t) lim > size)
+	{
+	  lim = (size_t) size;
+	}
+      fillpattern (type, (unsigned char *) r, lim);
+      passname ((unsigned char *) r, pass_string);
+    }
+  else
+    {
+      passname (0, pass_string);
+    }
+
+  /* Set position if first status update */
+  thresh = 0;
+  if (n)
+    {
+      pfstatus ("%s: pass %lu/%lu (%s)...", name, k, n, pass_string);
+      if (size > VERBOSE_UPDATE)
+	thresh = size - VERBOSE_UPDATE;
+    }
+
+  for (cursize = size; cursize;)
+    {
+      /* How much to write this time? */
+      lim = sizeof (r);
+      if ((off_t) lim > cursize)
+	lim = (size_t) cursize;
+      if (type < 0)
+	fillrand (s, r, lim);
+      /* Loop to retry partial writes. */
+      for (soff = 0; soff < lim; soff += ssize)
+	{
+	  ssize = write (fd, (char *) r + soff, lim - soff);
+	  if (ssize < 0)
+	    {
+	      int e = errno;
+	      pferror ("Error writing \"%s\" at %lu",
+		       name, size - cursize + soff);
+	      /* This error confuses people. */
+	      if (e == EBADF && fd == 0)
+		fputs (
+			"(Did you remember to open stdin read/write with \"<>file\"?)\n",
+			stderr);
+	      return -1;
+	    }
 	}
 
-	/* Constant fill patterns need only be set up once. */
-	if (type >= 0) {
-		lim = sizeof(r);
-		if ((off_t)lim > size) {
-			lim = (size_t)size;
-		}
-		fillpattern(type, (unsigned char *)r, lim);
-		passname((unsigned char *)r, pass_string);
-	} else {
-		passname(0, pass_string);
-	}
+      /* Okay, we have written "lim" bytes. */
+      cursize -= lim;
 
-	/* Set position if first status update */
-	thresh = 0;
-	if (n) {
-		pfstatus("%s: pass %lu/%lu (%s)...", name, k, n, pass_string);
-		if (size > VERBOSE_UPDATE)
-			thresh = size - VERBOSE_UPDATE;
+      /* Time to print progress? */
+      if (cursize <= thresh && n)
+	{
+	  pfstatus ("%s: pass %lu/%lu (%s)...%lu/%lu K",
+		    name, k, n, pass_string,
+		    (size - cursize + 1023) / 1024, (size + 1023) / 1024);
+	  if (thresh > VERBOSE_UPDATE)
+	    thresh -= VERBOSE_UPDATE;
+	  else
+	    thresh = 0;
 	}
-
-	for (cursize = size; cursize; ) {
-		/* How much to write this time? */
-		lim = sizeof(r);
-		if ((off_t)lim > cursize)
-			lim = (size_t)cursize;
-		if (type < 0)
-			fillrand(s, r, lim);
-		/* Loop to retry partial writes. */
-		for (soff = 0; soff < lim; soff += ssize) {
-			ssize = write(fd, (char *)r+soff, lim-soff);
-			if (ssize < 0) {
-				int e = errno;
-				pferror("Error writing \"%s\" at %lu",
-					name, size-cursize+soff);
-				/* This error confuses people. */
-				if (e == EBADF && fd == 0)
-					fputs(
-"(Did you remember to open stdin read/write with \"<>file\"?)\n", stderr);
-				return -1;
-			}
-		}
-
-		/* Okay, we have written "lim" bytes. */
-		cursize -= lim;
-
-		/* Time to print progress? */
-		if (cursize <= thresh && n) {
-			pfstatus("%s: pass %lu/%lu (%s)...%lu/%lu K",
-				name, k, n, pass_string,
-				(size-cursize+1023)/1024, (size+1023)/1024);
-			if (thresh > VERBOSE_UPDATE)
-				thresh -= VERBOSE_UPDATE;
-			else
-				thresh = 0;
-		}
-	}
-	/* Force what we just wrote to hit the media. */
-	if (fdatasync(fd) < 0) {
-		pferror("Error syncing \"%s\"", name);
-		return -1;
-	}
-	return 0;
+    }
+  /* Force what we just wrote to hit the media. */
+  if (fdatasync (fd) < 0)
+    {
+      pferror ("Error syncing \"%s\"", name);
+      return -1;
+    }
+  return 0;
 }
 
 /*
@@ -736,23 +783,23 @@ dopass(int fd, char const *name, off_t size, int type,
  * provide, just start repeating from the beginning of the list.
  */
 static int const
-patterns[] = {
-	-2,			/* 2 random passes */
-	2, 0x000, 0xFFF,	/* 1-bit */
-	2, 0x555, 0xAAA,	/* 2-bit */
-	-1,			/* 1 random pass */
-	6,         0x249, 0x492, 0x6DB, 0x924, 0xB6D, 0xDB6,	/* 3-bit */
-	12,        0x111, 0x222, 0x333, 0x444,        0x666, 0x777,
-	    0x888, 0x999,        0xBBB, 0xCCC, 0xDDD, 0xEEE, 	/* 4-bit */
-	-1,			/* 1 random pass */
+  patterns[] =
+{
+  -2,				/* 2 random passes */
+  2, 0x000, 0xFFF,		/* 1-bit */
+  2, 0x555, 0xAAA,		/* 2-bit */
+  -1,				/* 1 random pass */
+  6, 0x249, 0x492, 0x6DB, 0x924, 0xB6D, 0xDB6,	/* 3-bit */
+  12, 0x111, 0x222, 0x333, 0x444, 0x666, 0x777,
+  0x888, 0x999, 0xBBB, 0xCCC, 0xDDD, 0xEEE,	/* 4-bit */
+  -1,				/* 1 random pass */
 	/* The following patterns have the frst bit per block flipped */
-	8, 0x1000, 0x1249, 0x1492, 0x16DB, 0x1924, 0x1B6D, 0x1DB6, 0x1FFF,
-	14,         0x1111, 0x1222, 0x1333, 0x1444, 0x1555, 0x1666, 0x1777,
-	    0x1888, 0x1999, 0x1AAA, 0x1BBB, 0x1CCC, 0x1DDD, 0x1EEE,
-	-1,			/* 1 random pass */
-	0	/* End */
+  8, 0x1000, 0x1249, 0x1492, 0x16DB, 0x1924, 0x1B6D, 0x1DB6, 0x1FFF,
+  14, 0x1111, 0x1222, 0x1333, 0x1444, 0x1555, 0x1666, 0x1777,
+  0x1888, 0x1999, 0x1AAA, 0x1BBB, 0x1CCC, 0x1DDD, 0x1EEE,
+  -1,				/* 1 random pass */
+  0				/* End */
 };
-
 
 /*
  * Generate a random wiping pass pattern with num passes.
@@ -761,104 +808,121 @@ patterns[] = {
  * order.
  */
 static void
-genpattern(int *dest, size_t num, struct isaac_state *s)
+genpattern (int *dest, size_t num, struct isaac_state *s)
 {
-	struct irand_state r;
-	size_t randpasses;
-	int const *p;
-	int *d;
-	size_t n;
-	size_t accum, top, swap;
-	int k;
+  struct irand_state r;
+  size_t randpasses;
+  int const *p;
+  int *d;
+  size_t n;
+  size_t accum, top, swap;
+  int k;
 
-	if (!num)
-		return;
+  if (!num)
+    return;
 
-	irand_init(&r, s);
+  irand_init (&r, s);
 
-	/* Stage 1: choose the passes to use */
-	p = patterns;
-	randpasses = 0;
-	d = dest;	/* Destination for generated pass list */
-	n = num;	/* Passes remaining to fill */
+  /* Stage 1: choose the passes to use */
+  p = patterns;
+  randpasses = 0;
+  d = dest;			/* Destination for generated pass list */
+  n = num;			/* Passes remaining to fill */
 
-	for (;;) {
-		k = *p++;	/* Block descriptor word */
-		if (!k) {	/* Loop back to the beginning */
-			p = patterns;
-		} else if (k < 0) {	/* -k random passes */
-			k = -k;
-			if ((size_t)k >= n) {
-				randpasses += n;
-				n = 0;
-				break;
-			}
-			randpasses += k;
-			n -= k;
-		} else if ((size_t)k <= n) {	/* Full block of patterns */
-			memcpy(d, p, k*sizeof(int));
-			p += k;
-			d += k;
-			n -= k;
-		} else if (n < 2 || 3*n < (size_t)k) { /* Finish with random */
-			randpasses += n;
-			break;
-		} else {	/* Pad out with k of the n available */
-			do {
-				if (n == (size_t)k-- || irand_mod(&r, k) < n) {
-					*d++ = *p;
-					n--;
-				}
-				p++;
-			} while (n);
-			break;
-		}
+  for (;;)
+    {
+      k = *p++;			/* Block descriptor word */
+      if (!k)
+	{			/* Loop back to the beginning */
+	  p = patterns;
 	}
-	top = num - randpasses;	/* Top of initialized data */
-
-	/* assert(d == dest+top); */
-
-	/*
-	 * We now have fixed patterns in the dest buffer up to
-	 * "top", and we need to scramble them, with "randpasses"
-	 * random passes evenly spaced among them.
-	 *
-	 * We want one at the beginning, one at the end, and
-	 * evenly spaced in between.  To do this, we basically
-	 * use Bresenham's line draw (a.k.a DDA) algorithm
-	 * to draw a line with slope (randpasses-1)/(num-1).
-	 * (We use a positive accumulator and count down to
-	 * do this.)
-	 *
-	 * So for each desired output value, we do the following:
-	 * - If it should be a random pass, copy the pass type
-	 *   to top++, out of the way of the other passes, and
-	 *   set the current pass to -1 (random).
-	 * - If it should be a normal pattern pass, choose an
-	 *   entry at random between here and top-1 (inclusive)
-	 *   and swap the current entry with that one.
-	 */
-
-	randpasses--;	/* To speed up later math */
-	accum = randpasses;	/* Bresenham DDA accumulator */
-	for (n = 0; n < num; n++) {
-		if (accum <= randpasses) {
-			accum += num-1;
-			dest[top++] = dest[n];
-			dest[n] = -1;
-		} else {
-			swap = n + irand_mod(&r, top-n-1);
-			k = dest[n];
-			dest[n] = dest[swap];
-			dest[swap] = k;
-		}
-		accum -= randpasses;
+      else if (k < 0)
+	{			/* -k random passes */
+	  k = -k;
+	  if ((size_t) k >= n)
+	    {
+	      randpasses += n;
+	      n = 0;
+	      break;
+	    }
+	  randpasses += k;
+	  n -= k;
 	}
-	/* assert(top == num); */
+      else if ((size_t) k <= n)
+	{			/* Full block of patterns */
+	  memcpy (d, p, k * sizeof (int));
+	  p += k;
+	  d += k;
+	  n -= k;
+	}
+      else if (n < 2 || 3 * n < (size_t) k)
+	{			/* Finish with random */
+	  randpasses += n;
+	  break;
+	}
+      else
+	{			/* Pad out with k of the n available */
+	  do
+	    {
+	      if (n == (size_t) k-- || irand_mod (&r, k) < n)
+		{
+		  *d++ = *p;
+		  n--;
+		}
+	      p++;
+	    }
+	  while (n);
+	  break;
+	}
+    }
+  top = num - randpasses;	/* Top of initialized data */
 
-	memset(&r, 0, sizeof(r));	/* Wipe this on general principles */
+  /* assert(d == dest+top); */
+
+  /*
+   * We now have fixed patterns in the dest buffer up to
+   * "top", and we need to scramble them, with "randpasses"
+   * random passes evenly spaced among them.
+   *
+   * We want one at the beginning, one at the end, and
+   * evenly spaced in between.  To do this, we basically
+   * use Bresenham's line draw (a.k.a DDA) algorithm
+   * to draw a line with slope (randpasses-1)/(num-1).
+   * (We use a positive accumulator and count down to
+   * do this.)
+   *
+   * So for each desired output value, we do the following:
+   * - If it should be a random pass, copy the pass type
+   *   to top++, out of the way of the other passes, and
+   *   set the current pass to -1 (random).
+   * - If it should be a normal pattern pass, choose an
+   *   entry at random between here and top-1 (inclusive)
+   *   and swap the current entry with that one.
+   */
+
+  randpasses--;			/* To speed up later math */
+  accum = randpasses;		/* Bresenham DDA accumulator */
+  for (n = 0; n < num; n++)
+    {
+      if (accum <= randpasses)
+	{
+	  accum += num - 1;
+	  dest[top++] = dest[n];
+	  dest[n] = -1;
+	}
+      else
+	{
+	  swap = n + irand_mod (&r, top - n - 1);
+	  k = dest[n];
+	  dest[n] = dest[swap];
+	  dest[swap] = k;
+	}
+      accum -= randpasses;
+    }
+  /* assert(top == num); */
+
+  memset (&r, 0, sizeof (r));	/* Wipe this on general principles */
 }
-
 
 /* Flags definition.  Bit numbers here correspond to flag letters below! */
 #define FLAG_DEVICES	1
@@ -877,92 +941,100 @@ static char const simpleflags[] = "dfpvxz";	/* Same order as above */
  * regular files, and 1 on success with non-regular files.
  */
 static int
-wipefd(int fd, char const *name, struct isaac_state *s,
+wipefd (int fd, char const *name, struct isaac_state *s,
 	size_t passes, unsigned flags)
 {
-	size_t i;
-	struct stat st;
-	off_t size, seedsize;	/* Size to write, size to read */
-	unsigned long n;	/* Number of passes for printing purposes */
-	int *passarray;
+  size_t i;
+  struct stat st;
+  off_t size, seedsize;		/* Size to write, size to read */
+  unsigned long n;		/* Number of passes for printing purposes */
+  int *passarray;
 
-	if (!passes)
-		passes = DEFAULT_PASSES;
+  if (!passes)
+    passes = DEFAULT_PASSES;
 
-	n = 0;	/* dopass takes n -- 0 to mean "don't print progress" */
-	if (flags & FLAG_VERBOSE)
-		n = passes + ((flags & FLAG_ZERO) != 0);
+  n = 0;			/* dopass takes n -- 0 to mean "don't print progress" */
+  if (flags & FLAG_VERBOSE)
+    n = passes + ((flags & FLAG_ZERO) != 0);
 
-	if (fstat(fd, &st)) {
-		pferror("Can't fstat file \"%s\"", name);
-		return -1;
+  if (fstat (fd, &st))
+    {
+      pferror ("Can't fstat file \"%s\"", name);
+      return -1;
+    }
+
+  /* Check for devices */
+  if (!S_ISREG (st.st_mode) && !(flags & FLAG_DEVICES))
+    {
+      fprintf (stderr,
+	       "\"%s\" is not a regular file: use -d to enable operations on devices\n",
+	       name);
+      return -1;
+    }
+
+  /* Allocate pass array */
+  passarray = malloc (passes * sizeof (int));
+  if (!passarray)
+    {
+      pferror ("Can't alllocate array for %lu passes",
+	       (unsigned long) passes);
+      return -1;
+    }
+
+  seedsize = size = st.st_size;
+  if (!size)
+    {
+      /* Reluctant to talk?  Apply thumbscrews. */
+      seedsize = size = sizefd (fd);
+    }
+  else if (st.st_blksize && !(flags & FLAG_EXACT))
+    {
+      /* Round up to the next st_blksize to include "slack" */
+      size += st.st_blksize - 1 - (size - 1) % st.st_blksize;
+    }
+
+  /*
+   * Use the file itself as seed material.  Avoid wasting "lots"
+   * of time (>10% of the write time) reading "large" (>16K)
+   * files for seed material if there aren't many passes.
+   *
+   * Note that "seedsize*passes/10" risks overflow, while
+   * "seedsize/10*passes is slightly inaccurate.  The hack
+   * here manages perfection with no overflow.
+   */
+  if (passes < 10 && seedsize > 16384)
+    {
+      seedsize -= 16384;
+      seedsize = seedsize / 10 * passes + seedsize % 10 * passes / 10;
+      seedsize += 16384;
+    }
+  (void) isaac_seedfd (s, fd, seedsize);
+
+  /* Schedule the passes in random order. */
+  genpattern (passarray, passes, s);
+
+  /* Do the work */
+  for (i = 0; i < passes; i++)
+    {
+      if (dopass (fd, name, size, passarray[i], s, i + 1, n) < 0)
+	{
+	  memset (passarray, 0, passes * sizeof (int));
+	  free (passarray);
+	  return -1;
 	}
+      if (flags & FLAG_EXTRAVERBOSE)
+	flushstatus ();
+    }
 
-	/* Check for devices */
-	if (!S_ISREG(st.st_mode) && !(flags & FLAG_DEVICES)) {
-		fprintf(stderr,
-"\"%s\" is not a regular file: use -d to enable operations on devices\n",
-			name);
-		return -1;
-	}
+  memset (passarray, 0, passes * sizeof (int));
+  free (passarray);
 
-	/* Allocate pass array */
-	passarray = malloc(passes * sizeof(int));
-	if (!passarray) {
-		pferror("Can't alllocate array for %lu passes",
-		        (unsigned long)passes);
-		return -1;
-	}
+  if (flags & FLAG_ZERO)
+    if (dopass (fd, name, size, 0, s, passes + 1, n) < 0)
+      return -1;
 
-	seedsize = size = st.st_size;
-	if (!size) {
-		/* Reluctant to talk?  Apply thumbscrews. */
-		seedsize = size = sizefd(fd);
-	} else if (st.st_blksize && !(flags & FLAG_EXACT)) {
-		/* Round up to the next st_blksize to include "slack" */
-		size += st.st_blksize - 1 - (size-1) % st.st_blksize;
-	}
-
-	/*
-	 * Use the file itself as seed material.  Avoid wasting "lots"
-	 * of time (>10% of the write time) reading "large" (>16K)
-	 * files for seed material if there aren't many passes.
-	 *
-	 * Note that "seedsize*passes/10" risks overflow, while
-	 * "seedsize/10*passes is slightly inaccurate.  The hack
-	 * here manages perfection with no overflow.
-	 */
-	if (passes < 10 && seedsize > 16384) {
-		seedsize -= 16384;
-		seedsize = seedsize/10*passes + seedsize%10*passes/10;
-		seedsize += 16384;
-	}
-	(void)isaac_seedfd(s, fd, seedsize);
-
-	/* Schedule the passes in random order. */
-	genpattern(passarray, passes, s);
-
-	/* Do the work */
-	for (i = 0; i < passes; i++) {
-		if (dopass(fd, name, size, passarray[i], s, i+1, n) < 0) {
-			memset(passarray, 0, passes*sizeof(int));
-			free(passarray);
-			return -1;
-		}
-		if (flags & FLAG_EXTRAVERBOSE)
-			flushstatus();
-	}
-
-	memset(passarray, 0, passes*sizeof(int));
-	free(passarray);
-
-	if (flags & FLAG_ZERO)
-		if (dopass(fd, name, size, 0, s, passes+1, n) < 0)
-			return -1;
-
-	return !S_ISREG(st.st_mode);
+  return !S_ISREG (st.st_mode);
 }
-
 
 /* Characters allowed in a file name - a safe universal set. */
 static char const nameset[] =
@@ -979,27 +1051,29 @@ static char const nameset[] =
  * This returns the carry (1 on overflow).
  */
 static int
-incname(char *name, unsigned len)
+incname (char *name, unsigned len)
 {
-	char const *p;
+  char const *p;
 
-	if (!len)
-		return -1;
+  if (!len)
+    return -1;
 
-	p = strchr(nameset, name[--len]);
-	/* If the character is not found, replace it with a 0 digit */
-	if (!p) {
-		name[len] = nameset[0];
-		return 0;
-	}
-	/* If this character has a successor, use it */
-	if (p[1]) {
-		name[len] = p[1];
-		return 0;
-	}
-	/* Otherwise, set this digit to 0 and increment the prefix */
-	name[len] = nameset[0];
-	return incname(name, len);
+  p = strchr (nameset, name[--len]);
+  /* If the character is not found, replace it with a 0 digit */
+  if (!p)
+    {
+      name[len] = nameset[0];
+      return 0;
+    }
+  /* If this character has a successor, use it */
+  if (p[1])
+    {
+      name[len] = p[1];
+      return 0;
+    }
+  /* Otherwise, set this digit to 0 and increment the prefix */
+  name[len] = nameset[0];
+  return incname (name, len);
 }
 
 /*
@@ -1027,76 +1101,87 @@ incname(char *name, unsigned len)
  * Unfortunately, this code is Unix-specific.
  */
 int
-wipename(char *oldname, unsigned flags)
+wipename (char *oldname, unsigned flags)
 {
-	char *newname, *origname = 0;
-	char *base;	/* Pointer to filename component, after directories. */
-	unsigned len;
-	int err;
-	int dirfd;	/* Try to open directory to sync *it* */
+  char *newname, *origname = 0;
+  char *base;			/* Pointer to filename component, after directories. */
+  unsigned len;
+  int err;
+  int dirfd;			/* Try to open directory to sync *it* */
 
-	pfstatus("%s: deleting", oldname);
+  pfstatus ("%s: deleting", oldname);
 
-	newname = strdup(oldname);	/* This is a malloc */
-	if (!newname) {
-		pferror("malloc failed");
-		return -1;
+  newname = strdup (oldname);	/* This is a malloc */
+  if (!newname)
+    {
+      pferror ("malloc failed");
+      return -1;
+    }
+  if (flags & FLAG_VERBOSE)
+    {
+      origname = strdup (oldname);
+      if (!origname)
+	{
+	  pferror ("malloc failed");
+	  free (newname);
+	  return -1;
 	}
-	if (flags & FLAG_VERBOSE) {
-		origname = strdup(oldname);
-		if (!origname) {
-			pferror("malloc failed");
-			free(newname);
-			return -1;
+    }
+
+  /* Find the file name portion */
+  base = strrchr (newname, '/');
+  /* Temporary hackery to get a directory fd */
+  if (base)
+    {
+      *base = '\0';
+      dirfd = open (newname, O_RDONLY);
+      *base = '/';
+    }
+  else
+    {
+      dirfd = open (".", O_RDONLY);
+    }
+  base = base ? base + 1 : newname;
+  len = strlen (base);
+
+  while (len)
+    {
+      memset (base, nameset[0], len);
+      base[len] = 0;
+      do
+	{
+	  if (access (newname, F_OK) < 0
+	      && !rename (oldname, newname))
+	    {
+	      if (dirfd < 0 || fdatasync (dirfd) < 0)
+		sync ();	/* Force directory out */
+	      if (origname)
+		{
+		  pfstatus ("%s: renamed to \"%s\"",
+			    origname, newname);
+		  if (flags & FLAG_EXTRAVERBOSE)
+		    flushstatus ();
 		}
+	      memcpy (oldname + (base - newname), newname, len + 1);
+	      break;
+	    }
 	}
-
-	/* Find the file name portion */
-	base = strrchr(newname, '/');
-	/* Temporary hackery to get a directory fd */
-	if (base) {
-		*base = '\0';
-		dirfd = open(newname, O_RDONLY);
-		*base = '/';
-	} else {
-		dirfd = open(".", O_RDONLY);
-	}
-	base = base ? base+1 : newname;
-	len = strlen(base);
-
-	while (len) {
-		memset(base, nameset[0], len);
-		base[len] = 0;
-		do {
-			if (access(newname, F_OK) < 0
-			    && !rename(oldname, newname)) {
-				if (dirfd < 0 || fdatasync(dirfd) < 0)
-					sync();	/* Force directory out */
-				if (origname) {
-					pfstatus("%s: renamed to \"%s\"",
-						origname, newname);
-					if (flags & FLAG_EXTRAVERBOSE)
-						flushstatus();
-				}
-				memcpy(oldname+(base-newname), newname, len+1);
-				break;
-			}
-		} while (!incname(base, len));
-		len--;
-	}
-	free(newname);
-	err = remove(oldname);
-	if (dirfd < 0 || fdatasync(dirfd) < 0)
-		sync();
-	close(dirfd);
-	if (origname) {
-		if (!err)
-			pfstatus("%s: deleted", origname);
-		free(origname);
-	}
-	return err;
+      while (!incname (base, len));
+      len--;
+    }
+  free (newname);
+  err = remove (oldname);
+  if (dirfd < 0 || fdatasync (dirfd) < 0)
+    sync ();
+  close (dirfd);
+  if (origname)
+    {
+      if (!err)
+	pfstatus ("%s: deleted", origname);
+      free (origname);
+    }
+  return err;
 }
-
 
 /*
  * Finally, the function that actually takes a filename and grinds
@@ -1108,144 +1193,162 @@ wipename(char *oldname, unsigned flags)
  * reasonable error messages.  But it might be better to change that.
  */
 static int
-wipefile(char *name, struct isaac_state *s, size_t passes, unsigned flags)
+wipefile (char *name, struct isaac_state *s, size_t passes, unsigned flags)
 {
-	int err, fd;
+  int err, fd;
 
-	fd = open(name, O_RDWR);
-	if (fd < 0 && errno == EACCES && flags & FLAG_FORCE) {
-		if (chmod(name, 0600) >= 0)
-			fd = open(name, O_RDWR);
-	}
-	if (fd < 0) {
-		pferror("Unable to open \"%s\"", name);
-		return -1;
-	}
+  fd = open (name, O_RDWR);
+  if (fd < 0 && errno == EACCES && flags & FLAG_FORCE)
+    {
+      if (chmod (name, 0600) >= 0)
+	fd = open (name, O_RDWR);
+    }
+  if (fd < 0)
+    {
+      pferror ("Unable to open \"%s\"", name);
+      return -1;
+    }
 
-	err = wipefd(fd, name, s, passes, flags);
-	close(fd);
-	/*
-	 * Wipe the name and unlink - regular files only, no devices!
-	 * (wipefd returns 1 for non-regular files.)
-	 */
-	if (err == 0 && !(flags & FLAG_PRESERVE)) {
-		err = wipename(name, flags);
-		if (err < 0)
-			pferror("Unable to delete file \"%s\"", name);
-	}
-	return err;
+  err = wipefd (fd, name, s, passes, flags);
+  close (fd);
+  /*
+   * Wipe the name and unlink - regular files only, no devices!
+   * (wipefd returns 1 for non-regular files.)
+   */
+  if (err == 0 && !(flags & FLAG_PRESERVE))
+    {
+      err = wipename (name, flags);
+      if (err < 0)
+	pferror ("Unable to delete file \"%s\"", name);
+    }
+  return err;
 }
 
 /* Command-line parsing.  I hate global variables, ergo I hate getopt. */
 int
-main(int argc, char **argv)
+main (int argc, char **argv)
 {
-	struct isaac_state s;
-	int err = 0;
-	int no_more_opts = 0;
-	unsigned flags = 0;
-	char const *p;
-	char *p2;	/* Actually a const ptr, but kludged... */
-	unsigned long passes = 0;
-	unsigned wipes = 0;	/* How many files have we actually wiped? */
+  struct isaac_state s;
+  int err = 0;
+  int no_more_opts = 0;
+  unsigned flags = 0;
+  char const *p;
+  char *p2;			/* Actually a const ptr, but kludged... */
+  unsigned long passes = 0;
+  unsigned wipes = 0;		/* How many files have we actually wiped? */
 
-	argv0 = argv[0];	/* Ick!  A global variable! */
+  argv0 = argv[0];		/* Ick!  A global variable! */
 
-	isaac_seed(&s);
+  isaac_seed (&s);
 
-	while (--argc && !err) {
-		p = *++argv;
-		if (no_more_opts || *p != '-') {
-			/* Plain filename - Note that this overwrites *argv! */
-			if (wipefile(*argv, &s, (size_t)passes, flags) < 0)
-				err = 1;
-			flushstatus();
-			wipes++;
-			continue;
-		}
-
-		/* Parse option */
-		if (p[1] == '\0') {	/* "-": stdin */
-			if (wipefd(0, *argv, &s, (size_t)passes, flags) < 0)
-				err = 1;
-			flushstatus();
-			wipes++;
-			continue;
-		}
-		if (p[1] == '-') {	/* "--long_option" */
-			if (p[2] == '\0') {
-				no_more_opts = 1;
-			} else if (strcmp(p+2, "help") == 0) {
-				puts(
-"Usage: sterilize [OPTIONS] FILE [...]\n"
-"Delete a file securely, first overwriting it to hide its contents.\n"
-"\n"
-"  -          Sterilize standard input (but don't delete it)\n"
-"             This will error unless you use <>file, a safety feature\n"
-"  -NUM       Overwrite NUM times instead of the default (25)\n"
-"  -d         Allow operation on devices (devices are never deleted)\n"
-"  -f         Force, change permissions to allow writing if necessary\n"
-"  -p         Preserve, do not delete file after overwriting\n"
-"  -v         Verbose, print progress (-vv to leave progress on screen)\n"
-"  -x         Exact, do not round file sizes up to the next full block\n"
-"  -z         Add a final overwrite with zeros to hide sterilization\n"
-"  --         End of options; following filenames may begin with -\n"
-"  --help     Display this help and exit\n"
-"  --version  Print version information and exit");
-				return 0;	/* Immediate quit */
-			} else if (strcmp(p+2, "version") == 0) {
-				puts(version_string);
-				return 0;	/* Immediate quit */
-			} else {
-				fprintf(stderr, "%s: Unknown option %s\n",
-					argv0, p);
-				err = 1;
-				break;
-			}
-			continue;
-		}
-		/* Short options - letter options or digits */
-		while (*++p) {
-			p2 = strchr(simpleflags, *p);
-			if (p2) {
-				unsigned flag = 1u << (p2-simpleflags);
-				if (flag & flags & FLAG_VERBOSE)
-					flags |= FLAG_EXTRAVERBOSE;
-				flags |= flag;
-				continue;
-			}
-			if (*p >= '0' && *p <= '9') {
-				passes = strtoul(p, &p2, 0);
-
-				if ((word32)passes != passes ||
-				    (size_t)(passes*sizeof(int))/sizeof(int)
-					!= passes)
-				{
-					fprintf(stderr,
-						"%s: Too many passes: -%s\n",
-						argv0, p);
-					err = 1;
-					break;
-				}
-				p = p2-1;
-				continue;
-			}
-			fprintf(stderr, "%s: Unknown option -%s\n",
-				argv0, p);
-			err = 1;
-			break;
-		}
+  while (--argc && !err)
+    {
+      p = *++argv;
+      if (no_more_opts || *p != '-')
+	{
+	  /* Plain filename - Note that this overwrites *argv! */
+	  if (wipefile (*argv, &s, (size_t) passes, flags) < 0)
+	    err = 1;
+	  flushstatus ();
+	  wipes++;
+	  continue;
 	}
 
-	/* Just on general principles, wipe s. */
-	memset(&s, 0, sizeof(s));
-
-	if (!wipes && !err) {
-		fprintf(stderr, "%s: no filename specified\n"
-		                "Try \"%s --help\" for more information.\n",
-			argv0, argv0);
-		err = 1;
+      /* Parse option */
+      if (p[1] == '\0')
+	{			/* "-": stdin */
+	  if (wipefd (0, *argv, &s, (size_t) passes, flags) < 0)
+	    err = 1;
+	  flushstatus ();
+	  wipes++;
+	  continue;
 	}
+      if (p[1] == '-')
+	{			/* "--long_option" */
+	  if (p[2] == '\0')
+	    {
+	      no_more_opts = 1;
+	    }
+	  else if (strcmp (p + 2, "help") == 0)
+	    {
+	      puts (
+		     "Usage: sterilize [OPTIONS] FILE [...]\n"
+		     "Delete a file securely, first overwriting it to hide its contents.\n"
+		     "\n"
+	      "  -          Sterilize standard input (but don't delete it)\n"
+		     "             This will error unless you use <>file, a safety feature\n"
+		     "  -NUM       Overwrite NUM times instead of the default (25)\n"
+		     "  -d         Allow operation on devices (devices are never deleted)\n"
+		     "  -f         Force, change permissions to allow writing if necessary\n"
+	      "  -p         Preserve, do not delete file after overwriting\n"
+		     "  -v         Verbose, print progress (-vv to leave progress on screen)\n"
+		     "  -x         Exact, do not round file sizes up to the next full block\n"
+		     "  -z         Add a final overwrite with zeros to hide sterilization\n"
+		     "  --         End of options; following filenames may begin with -\n"
+		     "  --help     Display this help and exit\n"
+		     "  --version  Print version information and exit");
+	      return 0;		/* Immediate quit */
+	    }
+	  else if (strcmp (p + 2, "version") == 0)
+	    {
+	      puts (version_string);
+	      return 0;		/* Immediate quit */
+	    }
+	  else
+	    {
+	      fprintf (stderr, "%s: Unknown option %s\n",
+		       argv0, p);
+	      err = 1;
+	      break;
+	    }
+	  continue;
+	}
+      /* Short options - letter options or digits */
+      while (*++p)
+	{
+	  p2 = strchr (simpleflags, *p);
+	  if (p2)
+	    {
+	      unsigned flag = 1u << (p2 - simpleflags);
+	      if (flag & flags & FLAG_VERBOSE)
+		flags |= FLAG_EXTRAVERBOSE;
+	      flags |= flag;
+	      continue;
+	    }
+	  if (*p >= '0' && *p <= '9')
+	    {
+	      passes = strtoul (p, &p2, 0);
 
-	return err;
+	      if ((word32) passes != passes ||
+		  (size_t) (passes * sizeof (int)) / sizeof (int)
+		  != passes)
+		{
+		  fprintf (stderr,
+			   "%s: Too many passes: -%s\n",
+			   argv0, p);
+		  err = 1;
+		  break;
+		}
+	      p = p2 - 1;
+	      continue;
+	    }
+	  fprintf (stderr, "%s: Unknown option -%s\n",
+		   argv0, p);
+	  err = 1;
+	  break;
+	}
+    }
+
+  /* Just on general principles, wipe s. */
+  memset (&s, 0, sizeof (s));
+
+  if (!wipes && !err)
+    {
+      fprintf (stderr, "%s: no filename specified\n"
+	       "Try \"%s --help\" for more information.\n",
+	       argv0, argv0);
+      err = 1;
+    }
+
+  return err;
 }
