@@ -22,6 +22,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   `sha1sum --check' now accepts the BSD format for SHA1 message digests
   in addition to the BSD format for MD5 ones.
 
+  who -l now means `who --login', not `who --lookup', per POSIX.
+  who's -l option has been eliciting an unconditional warning about
+  this impending change since sh-utils-2.0.12 (April 2002).
+
 ** Bug fixes
 
   Mistakenly renaming a file onto itself, e.g., via `mv B b' when `B' is
