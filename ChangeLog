@@ -1,3 +1,8 @@
+2004-03-13  Jim Meyering  <jim@meyering.net>
+
+	* src/nl.c (usage): Specify that nl uses _basic_ regular expressions.
+	Suggestion from Dan Jacobson.
+
 2004-03-12  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.2.1.
