@@ -1,3 +1,7 @@
+2000-09-05  Jim Meyering  <meyering@lucent.com>
+
+	* config.guess: Update from master repository.
+
 2000-09-04  Jim Meyering  <meyering@lucent.com>
 
 	* src/cp.c: Move declaractions of lstat, stat, and rpl_lstat
