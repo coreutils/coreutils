@@ -235,10 +235,13 @@ static struct month nls_monthtab[NLS_NUM_MONTHS];
 static int nls_months_collide[NLS_NUM_MONTHS + 1];
 
 /* Numeric keys, to search for numeric format */
-static struct nls_keyfield {
+struct nls_keyfield
+{
   struct keyfield *key;
   struct nls_keyfield *next;
-} *nls_keyhead = NULL;
+};
+
+static struct nls_keyfield *nls_keyhead = NULL;
 
 #endif
 
@@ -1010,7 +1013,7 @@ fraccompare (register const char *a, register const char *b)
 	    return 1;
 	  return 0;
 	}
-      if (digits[tmpb])
+      if (ISDIGIT (tmpb))
 	{
 	  while (tmpb == NUMERIC_ZERO)
 	    tmpb = *++b;
@@ -1302,7 +1305,7 @@ numcompare (register const char *a, register const char *b)
 	tmpb = UCHAR (*++b);
       while (tmpb == NUMERIC_ZERO);
 
-      while (tmpa == tmpb && digits[tmpa])
+      while (tmpa == tmpb && ISDIGIT (tmpa))
 	tmpa = UCHAR (*++a), tmpb = UCHAR (*++b);
 
       if ((tmpa == decimal_point && !ISDIGIT (tmpb))
@@ -2252,18 +2255,23 @@ insertkey (struct keyfield *key)
     k = k->next;
   k->next = key;
   key->next = NULL;
-  if (key->numeric || key->general_numeric) {
-    struct nls_keyfield *nk;
+#ifdef ENABLE_NLS
+  if (key->numeric || key->general_numeric)
+    {
+      struct nls_keyfield *nk;
 
-    nk = (struct nls_keyfield *)xmalloc(sizeof(struct nls_keyfield));
-    nk->key  = key;
-    if (nls_keyhead) {
-      nk->next = nls_keyhead->next;
-      nls_keyhead->next = nk;
-    } else
-      nk->next = nk;
-    nls_keyhead = nk;
-  }
+      nk = (struct nls_keyfield *) xmalloc (sizeof (struct nls_keyfield));
+      nk->key = key;
+      if (nls_keyhead)
+	{
+	  nk->next = nls_keyhead->next;
+	  nls_keyhead->next = nk;
+	}
+      else
+	nk->next = nk;
+      nls_keyhead = nk;
+    }
+#endif
 }
 
 static void
