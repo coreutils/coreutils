@@ -1,5 +1,13 @@
 2000-08-05  Jim Meyering  <meyering@lucent.com>
 
+	* src/pr.c (init_header): Fix buffer-overrun error.
+	Allocated buffer was sometimes too small.
+	Reported by Greg McGary (who found this bug using his
+	bounded-pointers-enabled gcc).
+	(init_header): Move declarations of several variables into the
+	inner scope where they are used.
+	* tests/pr/Test.pm (narrow-1): New test, for the above.
+
 	* src/csplit.c (MAX): Remove definition (It's in sys2.h).
 
 2000-08-04  Jim Meyering  <meyering@lucent.com>
