@@ -149,6 +149,10 @@ extern int errno;
 #define decstation
 #endif
 
+#if defined (__SVR4) && !defined (SVR4)
+#define SVR4
+#endif
+
 #if (defined(sun) && defined(SVR4)) || defined (SOLARIS2)
 #define SUNOS_5
 #endif
@@ -362,7 +366,7 @@ extern int errno;
 #define KERNEL_FILE "/hp-ux"
 #endif
 
-#if !defined(KERNEL_FILE) && (defined(_SEQUENT_) || defined(MIPS) || defined(SVR4) || defined(ISC) || defined (sgi) || defined(SVR4) || (defined (ardent) && defined (titan)))
+#if !defined(KERNEL_FILE) && (defined(_SEQUENT_) || defined(MIPS) || defined(SVR4) || defined(ISC) || defined (sgi) || (defined (ardent) && defined (titan)))
 #define KERNEL_FILE "/unix"
 #endif
 
