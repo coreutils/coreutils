@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 
 dnl The problem is that the default compilation flags in Solaris 2.6 won't
 dnl let programs access large files;  you need to tell the compiler that
@@ -28,6 +28,19 @@ AC_DEFUN(AC_LFS,
     ac_getconfs=$ac_getconfs$ac_getconf
     eval ac_test_$ac_shellvar=\$ac_getconf
   done
+  case "$ac_result" in
+  no)
+    case `(uname -s -r) 2>/dev/null` in
+    HP-UX' '?.10.[[2-9]][[0-9]]* | HP-UX' '?.1[[1-9]]* | HP-UX' '?.[[2-9]][[0-9]]*)
+      # HP-UX 10.20 and later support large files,
+      # but do not support `getconf LFS_CFLAGS'.
+      ac_test_CPPFLAGS='-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64'
+      ac_test_LDFLAGS=
+      ac_test_LIBS=
+      ac_getconfs=nonempty
+      ac_result=yes ;;
+    esac ;;
+  esac
   case "$ac_result$ac_getconfs" in
     yes) ac_result=no ;;
   esac
