@@ -6,7 +6,7 @@ use Getopt::Long;
 use Digest::MD5;
 use Digest::SHA1;
 
-(my $VERSION = '$Revision: 1.5 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.6 $ ') =~ tr/[0-9].//cd;
 (my $ME = $0) =~ s|.*/||;
 
 END
@@ -205,21 +205,22 @@ EOF
 	{
 	  if ( ! $in_items)
 	    {
-	      # FIXME: quote dots
-	      $line =~ /^[^ *].*$curr_version/o
+	      $line =~ /^[^ *].*\Q$curr_version\E/o
 		or next;
 	      $in_items = 1;
 	      print $line;
 	    }
 	  else
 	    {
-	      # FIXME: quote dots
-	      $line =~ /^[^ *].*$prev_version/o
+	      $line =~ /^[^ *].*\Q$prev_version\E/o
 		and last;
 	      print $line;
 	    }
 	}
       close NEWS;
+
+      $in_items
+	or die "$ME: $news_file: no matching lines\n";
     }
 
   # FIXME: depend on whether it's a test release
