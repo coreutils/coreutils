@@ -136,7 +136,7 @@ main (int argc, char **argv)
 	msg = _("too many arguments");
       else
 	msg = _("wrong number of arguments");
-      error (0, 0, msg);
+      error (0, 0, "%s", msg);
       usage (1);
     }
 
