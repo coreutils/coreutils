@@ -1,3 +1,26 @@
+2001-08-13  Jim Meyering  <meyering@lucent.com>
+
+	Change the rules governing when mv prompts before removing an
+	existing destination file so it is consistent with POSIX:
+	Now, in the absence of --force (-f), if stdin is a tty and an
+	existing destination is not writable mv will prompt before
+	overwriting the destination file.
+
+	* src/copy.c (overwrite_prompt): New function.
+	(copy_internal): Separate the mv-specific and non-move_mode code
+	that determines whether to prompt the user.
+	[move_mode]: Don't make mv fail (i.e. don't return 1) just because
+	the user declined to remove one or more of the files.
+	* src/copy.h (enum Interactive): New type.
+	(struct cp_options) [interactive]: Change type to Interactive.
+	(struct cp_options) [stdin_tty]: New member.
+	* src/cp.c (cp_option_init): Adjust initialization of `interactive',
+	and initialize new member, stdin_tty.
+	* src/mv.c (cp_option_init): Likewise.
+	* src/install.c (cp_option_init): Likewise.
+	* src/cp.c (main): Adjust initialization(s) of `interactive',
+	* src/mv.c (main): Likewise.
+
 2001-08-12  Jim Meyering  <meyering@lucent.com>
 
 	* tests/mk-script ($program_name): Define.
