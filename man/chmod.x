@@ -1,3 +1,5 @@
+[NAME]
+chmod \- change file access permissions
 [DESCRIPTION]
 This manual page
 documents the GNU version of

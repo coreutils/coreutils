@@ -1,3 +1,5 @@
+[NAME]
+rm \- remove files or directories
 [DESCRIPTION]
 This manual page
 documents the GNU version of

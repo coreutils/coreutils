@@ -1,3 +1,5 @@
+[NAME]
+df \- report filesystem disk space usage
 [DESCRIPTION]
 This manual page
 documents the GNU version of

@@ -1,3 +1,5 @@
+[NAME]
+chown \- change file owner and group
 [DESCRIPTION]
 This manual page
 documents the GNU version of
