@@ -162,7 +162,7 @@ copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
   /* For cp's -H option, dereference command line arguments, but do not
      dereference symlinks that are found via recursive traversal.  */
   if (x->dereference == DEREF_COMMAND_LINE_ARGUMENTS)
-    non_command_line_options.xstat = lstat;
+    non_command_line_options.dereference = DEREF_NEVER;
 
   namep = name_space;
   while (*namep != '\0')
@@ -459,7 +459,7 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
       return 1;
     }
 
-  if (x->xstat == lstat)
+  if (x->dereference == DEREF_NEVER)
     {
       same_link = same;
 
@@ -595,7 +595,7 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
       && S_ISLNK (dst_sb_link->st_mode))
     return dst_sb_link->st_dev == src_sb_link->st_dev;
 
-  if (x->xstat == lstat)
+  if (x->dereference == DEREF_NEVER)
     {
       if ( ! S_ISLNK (src_sb_link->st_mode))
 	tmp_src_sb = *src_sb_link;
@@ -825,7 +825,8 @@ copy_internal (const char *src_path, const char *dst_path,
     *rename_succeeded = 0;
 
   *copy_into_self = 0;
-  if ((*(x->xstat)) (src_path, &src_sb))
+
+  if (XSTAT (x, src_path, &src_sb))
     {
       error (0, errno, _("cannot stat %s"), quote (src_path));
       return 1;
@@ -861,7 +862,7 @@ copy_internal (const char *src_path, const char *dst_path,
 
   if (!new_dst)
     {
-      if ((*(x->xstat)) (dst_path, &dst_sb))
+      if (XSTAT (x, dst_path, &dst_sb))
 	{
 	  if (errno != ENOENT)
 	    {
@@ -1062,7 +1063,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	    }
 	  else if (! S_ISDIR (dst_sb.st_mode)
 		   && (x->unlink_dest_before_opening
-		       || (x->xstat == lstat
+		       || (x->dereference == DEREF_NEVER
 			   && ! S_ISREG (src_sb.st_mode))))
 	    {
 	      if (unlink (dst_path) && errno != ENOENT)
@@ -1617,18 +1618,8 @@ static int
 valid_options (const struct cp_options *co)
 {
   assert (co != NULL);
-
   assert (VALID_BACKUP_TYPE (co->backup_type));
-
-  /* FIXME: for some reason this assertion always fails,
-     at least on Solaris 2.5.1.  Just disable it for now.  */
-  /* assert (co->xstat == lstat || co->xstat == stat); */
-
-  /* Make sure xstat and dereference are consistent.  */
-  /* FIXME */
-
   assert (VALID_SPARSE_MODE (co->sparse_mode));
-
   return 1;
 }
 
