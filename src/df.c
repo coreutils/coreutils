@@ -27,10 +27,12 @@
 #include "mountlist.h"
 #include "fsusage.h"
 #include "system.h"
+#include "save-cwd.h"
 #include "error.h"
 
 char *xmalloc ();
 char *xstrdup ();
+char *xgetcwd ();
 
 /* The maximum length of a human-readable string.  Be pessimistic
    and assume `int' is 64-bits wide.  Converting 2^63 - 1 gives the
@@ -237,7 +239,9 @@ excluded_fstype (const char *fstype)
 /* Display a space listing for the disk device with absolute path DISK.
    If MOUNT_POINT is non-NULL, it is the path of the root of the
    filesystem on DISK.
-   If FSTYPE is non-NULL, it is the type of the filesystem on DISK. */
+   If FSTYPE is non-NULL, it is the type of the filesystem on DISK.
+   If MOUNT_POINT is non-NULL, then DISK may be NULL -- certain systems may
+   not be able to produce statistics in this case.  */
 
 static void
 show_dev (const char *disk, const char *mount_point, const char *fstype)
@@ -302,10 +306,15 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
 	(inodes_used * 100.0 / fsu.fsu_files + 0.5);
     }
 
+  if (! disk)
+    disk = "-";			/* unknown */
+
   printf ((print_type ? "%-13s" : "%-20s"), disk);
   if (strlen (disk) > (print_type ? 13 : 20) && !posix_format)
     printf ((print_type ? "\n%13s" : "\n%20s"), "");
 
+  if (! fstype)
+    fstype = "-";		/* unknown */
   if (print_type)
     printf (" %-5s ", fstype);
 
@@ -362,10 +371,91 @@ show_disk (const char *disk)
   show_dev (disk, (char *) NULL, (char *) NULL);
 }
 
+/* Return the root mountpoint of the filesystem on which FILE exists, in
+   malloced storage.  FILE_STAT should be the result of stating FILE.  */
+static char *
+find_mount_point (file, file_stat)
+     char *file;
+     struct stat *file_stat;
+{
+  struct saved_cwd cwd;
+  struct stat last_stat;
+  char *mp = 0;			/* The malloced mount point path.  */
+
+  if (save_cwd (&cwd))
+    return NULL;
+
+  if (S_ISDIR (file_stat->st_mode))
+    /* FILE is a directory, so just chdir there directly.  */
+    {
+      last_stat = *file_stat;
+      if (chdir (file) < 0)
+	return NULL;
+    }
+  else
+    /* FILE is some other kind of file, we need to use its directory.  */
+    {
+      int rv;
+      char *dir = xstrdup (file);
+      char *end = dir + strlen (dir);
+
+      /* Strip off the last pathname element of FILE to get the directory.  */
+      while (end > dir + 1 && end[-1] == '/')
+	*--end = '\0';
+      while (end > dir && end[-1] != '/')
+	end--;
+      if (end == dir)
+	/* FILE only has a single element, use the cwd's parent.  */
+	rv = chdir ("..");
+      else
+	{
+	  *end = '\0';
+	  rv = chdir (dir);
+	}
+      free (dir);
+
+      if (rv < 0)
+	return NULL;
+
+      if (stat (".", &last_stat) < 0)
+	goto done;
+    }
+
+  /* Now walk up FILE's parents until we find another filesystem or /,
+     chdiring as we go.  LAST_STAT holds stat information for the last place
+     we visited.  */
+  for (;;)
+    {
+      struct stat st;
+      if (stat ("..", &st) < 0)
+	goto done;
+      if (st.st_dev != last_stat.st_dev || st.st_ino == last_stat.st_ino)
+	/* cwd is the mount point.  */
+	break;
+      if (chdir ("..") < 0)
+	goto done;
+      last_stat = st;
+    }
+
+  /* Finally reached a mount point, see what it's called.  */
+  mp = xgetcwd ();
+
+done:
+  /* Restore the original cwd.  */
+  {
+    int save_errno = errno;
+    if (restore_cwd (&cwd, 0, mp))
+      exit (1);			/* We're scrod.  */
+    free_cwd (&cwd);
+    errno = save_errno;
+  }
+
+  return mp;
+}
+
 /* Figure out which device file or directory POINT is mounted on
    and show its disk usage.
    STATP is the results of `stat' on POINT.  */
-
 static void
 show_point (const char *point, const struct stat *statp)
 {
@@ -397,8 +487,21 @@ show_point (const char *point, const struct stat *statp)
 	  return;
 	}
     }
-  error (0, 0, _("cannot find mount point for %s"), point);
-  exit_status = 1;
+
+  /* We couldn't find the mount entry corresponding to POINT.  Go ahead and
+     print as much info as we can; methods that require the device to be
+     present will fail at a later point.  */
+  {
+    /* Find the actual mount point.  */
+    char *mp = find_mount_point (point, statp);
+    if (mp)
+      {
+	show_dev (0, mp, 0);
+	free (mp);
+      }
+    else
+      error (0, errno, "%s", point);
+  }
 }
 
 /* Determine what kind of node PATH is and show the disk usage
@@ -639,20 +742,22 @@ with the portable output format"));
 			   || print_type),
 			  show_all_fs);
 
-  if (mount_list == NULL)
-    error (1, errno, _("cannot read table of mounted filesystems"));
-
-  print_header ();
   if (require_sync)
     sync ();
 
   if (optind == argc)
-    show_all_entries ();
+    {
+      if (mount_list == NULL)
+	error (1, errno, _("cannot read table of mounted filesystems"));
+      print_header ();
+      show_all_entries ();
+    }
   else
     {
       /* Display explicitly requested empty filesystems. */
       show_listed_fs = 1;
 
+      print_header ();
       for (i = optind; i < argc; ++i)
 	if (argv[i])
 	  show_entry (argv[i], &stats[i - optind]);
