@@ -144,9 +144,9 @@ DIST_COMMON =  Makefile.am Makefile.in TODO alloca.c chown.c error.c \
 error.h euidaccess.c fileblocks.c fnmatch.c fsusage.c ftruncate.c \
 getdate.c getgroups.c getline.c group-member.c lchown.c lstat.c \
 malloc.c memcmp.c memcpy.c memset.c mkdir.c mktime.c mountlist.c \
-obstack.c obstack.h posixtm.c realloc.c regex.c regex.h rename.c \
-rmdir.c rpmatch.c rx.c rx.h stat.c stpcpy.c strcasecmp.c strdup.c \
-strftime.c strndup.c strstr.c strtol.c strtoul.c strverscmp.c ylwrap
+obstack.c obstack.h posixtm.c realloc.c regex.c rename.c rmdir.c \
+rpmatch.c stat.c stpcpy.c strcasecmp.c strdup.c strftime.c strndup.c \
+strstr.c strtol.c strtoul.c strverscmp.c ylwrap
 
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
@@ -165,13 +165,12 @@ DEP_FILES =  .deps/addext.P .deps/alloca.P .deps/argmatch.P \
 .deps/memset.P .deps/mkdir.P .deps/mktime.P .deps/modechange.P \
 .deps/mountlist.P .deps/obstack.P .deps/path-concat.P .deps/posixtm \
 .deps/posixtm.P .deps/quotearg.P .deps/realloc.P .deps/regex.P \
-.deps/rename.P .deps/rmdir.P .deps/rpmatch.P .deps/rx.P \
-.deps/safe-read.P .deps/save-cwd.P .deps/savedir.P .deps/stat.P \
-.deps/stpcpy.P .deps/strcasecmp.P .deps/strdup.P .deps/strftime.P \
-.deps/stripslash.P .deps/strndup.P .deps/strstr.P .deps/strtol.P \
-.deps/strtoul.P .deps/strverscmp.P .deps/userspec.P .deps/xgetcwd.P \
-.deps/xmalloc.P .deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P \
-.deps/yesno.P
+.deps/rename.P .deps/rmdir.P .deps/rpmatch.P .deps/safe-read.P \
+.deps/save-cwd.P .deps/savedir.P .deps/stat.P .deps/stpcpy.P \
+.deps/strcasecmp.P .deps/strdup.P .deps/strftime.P .deps/stripslash.P \
+.deps/strndup.P .deps/strstr.P .deps/strtol.P .deps/strtoul.P \
+.deps/strverscmp.P .deps/userspec.P .deps/xgetcwd.P .deps/xmalloc.P \
+.deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P .deps/yesno.P
 SOURCES = $(libfu_a_SOURCES)
 OBJECTS = $(libfu_a_OBJECTS)
 
@@ -332,8 +331,6 @@ rmdir_.c: rmdir.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/rmdir.c; then echo $(srcdir)/rmdir.c; else echo rmdir.c; fi` | $(ANSI2KNR) > rmdir_.c
 rpmatch_.c: rpmatch.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/rpmatch.c; then echo $(srcdir)/rpmatch.c; else echo rpmatch.c; fi` | $(ANSI2KNR) > rpmatch_.c
-rx_.c: rx.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/rx.c; then echo $(srcdir)/rx.c; else echo rx.c; fi` | $(ANSI2KNR) > rx_.c
 safe-read_.c: safe-read.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/safe-read.c; then echo $(srcdir)/safe-read.c; else echo safe-read.c; fi` | $(ANSI2KNR) > safe-read_.c
 save-cwd_.c: save-cwd.c $(ANSI2KNR)
@@ -383,7 +380,7 @@ getgroups_.o getline_.o getopt_.o getopt1_.o group-member_.o hash_.o \
 human_.o idcache_.o isdir_.o lchown_.o long-options_.o lstat_.o \
 makepath_.o malloc_.o memcmp_.o memcpy_.o memset_.o mkdir_.o mktime_.o \
 modechange_.o mountlist_.o obstack_.o path-concat_.o posixtm_.o \
-quotearg_.o realloc_.o regex_.o rename_.o rmdir_.o rpmatch_.o rx_.o \
+quotearg_.o realloc_.o regex_.o rename_.o rmdir_.o rpmatch_.o \
 safe-read_.o save-cwd_.o savedir_.o stat_.o stpcpy_.o strcasecmp_.o \
 strdup_.o strftime_.o stripslash_.o strndup_.o strstr_.o strtol_.o \
 strtoul_.o strverscmp_.o userspec_.o xgetcwd_.o xmalloc_.o xstrdup_.o \
