@@ -1,3 +1,6 @@
+[4.1.10]
+* stat: rename --link/-l to --dereference/-L.
+    The old options will continue to work for a while.
 [4.1.9]
 * rm can now remove very deep hierarchies, in spite of any limit on stack size
 * new programs: link, unlink, and stat
