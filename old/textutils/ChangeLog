@@ -1,6 +1,9 @@
-2001-11-14  Jim Meyering  <meyering@lucent.com>
+2001-11-17  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.17.
+
+	* configure.ac: Replace use of the one-arg form of AC_INIT
+	with a use of the 3-arg form and a use of AC_CONFIG_SRCDIR.
 
 2001-11-14  Paul Eggert  <eggert@twinsun.com>
 
