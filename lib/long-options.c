@@ -46,10 +46,8 @@ parse_long_options (argc, argv, command_name, package, version, usage)
 {
   int c;
   int saved_opterr;
-  int saved_optind;
 
   saved_opterr = opterr;
-  saved_optind = optind;
 
   /* Don't print an error message for unrecognized options.  */
   opterr = 0;
@@ -75,6 +73,7 @@ parse_long_options (argc, argv, command_name, package, version, usage)
   /* Restore previous value.  */
   opterr = saved_opterr;
 
-  /* Restore optind in case it has advanced past a leading `--'.  */
-  optind = saved_optind;
+  /* Reset this to zero so that getopt internals get initialized from
+     the probably-new parameters when/if getopt is called later.  */
+  optind = 0;
 }
