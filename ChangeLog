@@ -2,6 +2,9 @@
 
 	* Version 5.3.0.
 
+	* src/remove.c (AD_push): Don't use errno in diagnostic about
+	`changed dev/ino'.
+
 	Remove these generated files from CVS.
 	* tests/cut/cut-tests, tests/date/date-tests, tests/join/join-tests:
 	* tests/ls/ls-tests, tests/pr/pr-tests, tests/tac/tac-tests:
