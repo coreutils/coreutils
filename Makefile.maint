@@ -196,7 +196,7 @@ my-distcheck: $(local-check)
 	GZIP=$(GZIP_ENV) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
 	cd $(t)/$(distdir) \
 	  && ./configure --disable-nls \
-	  && $(MAKE) CFLAGS='-Wformat' \
+	  && $(MAKE) CFLAGS='-Wformat -Werror' \
 	      AM_MAKEFLAGS='$(null_AM_MAKEFLAGS)' \
 	  && $(MAKE) dvi \
 	  && $(MAKE) check \
@@ -237,9 +237,6 @@ news-r2 = /^[^ ].*$(PREV_VERSION_REGEXP)[]:]/
 signatures ?= $(distdir).tar.bz2.sig $(distdir).tar.gz.sig
 %.sig: %
 	gpg --detach-sign $<
-
-# This is useful when sending via GNUS in Emacs.
-mail_gpg_sign_cookie ?= echo '<\#secure method=pgpmime mode=sign>'
 
 rel-files = $(xd-delta) $(distdir).tar.bz2 $(distdir).tar.gz
 announcement: NEWS ChangeLog $(rel-files) $(signatures)
