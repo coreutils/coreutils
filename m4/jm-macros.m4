@@ -1,4 +1,4 @@
-#serial 46   -*- autoconf -*-
+#serial 47   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -76,6 +76,7 @@ AC_DEFUN([jm_MACROS],
   AC_REPLACE_FUNCS(strcasecmp strncasecmp)
   AC_REPLACE_FUNCS(dup2)
   AC_REPLACE_FUNCS(gethostname getusershell)
+  AC_REPLACE_FUNCS(sig2str)
   AC_REPLACE_FUNCS(strcspn stpcpy strstr strtol strtoul)
   AC_REPLACE_FUNCS(strpbrk)
   AC_REPLACE_FUNCS(euidaccess memcmp rmdir rpmatch strndup strverscmp)
