@@ -1,3 +1,9 @@
+2005-01-04  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* human.c (SIZE_MAX, UINTMAX_MAX): Move these conditional
+	definitions to be after all include files, to avoid collisions.
+	Problem reported by Bob Proulx.
+
 2005-01-04  Bob Proulx  <bob@proulx.com>
 
 	* obstack.c [DEFAULT_ALIGNMENT]: Use an intermediate type to simplify
