@@ -14,7 +14,7 @@ Thu Jul  4 07:24:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	(md5_check): Don't use "s"-adding trick to form the plural of
 	`checksum.'  That doesn't work well with translation.
 	Suggestions from Ulrich Drepper.
-	(split_3): Add missing semicolon.  From Jim Blandy.
+	(split_3): Add missing semicolon so it compiles.  From Jim Blandy.
 
 Wed Jul  3 23:21:09 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
