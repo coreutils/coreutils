@@ -6,6 +6,9 @@ if test "$VERBOSE" = yes; then
   FIXME --version
 fi
 
+# FIXME: . $srcdir/../envvar-check
+# FIXME: . $srcdir/../lang-default
+
 pwd=`pwd`
 tmp=FIXME.$$
 trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
