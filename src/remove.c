@@ -518,11 +518,11 @@ remove_cwd_entries (const struct rm_options *x)
 		  ht = hash_initialize (HT_INITIAL_CAPACITY, NULL,
 					hash_pjw, hash_compare_strings);
 		  if (ht == NULL)
-		    error (1, 0, _("Memory exhausted"));
+		    error (1, 0, _("virtual memory exhausted"));
 		}
 	      HASH_INSERT_NEW_ITEM (ht, entry_name, &fail);
 	      if (fail)
-		error (1, 0, _("Memory exhausted"));
+		error (1, 0, _("virtual memory exhausted"));
 	    }
 	  else
 	    {
@@ -644,7 +644,7 @@ remove_dir (struct File_spec *fs, int need_save_cwd, const struct rm_options *x)
     }
 
   if (x->verbose)
-    printf (_("removing any entries of directory %s\n"),
+    printf (_("removing all entries of directory %s\n"),
 	    full_filename (dir_name));
 
   /* Save cwd if needed.  */
@@ -762,7 +762,7 @@ rm (struct File_spec *fs, int user_specified_name, const struct rm_options *x)
 							    current_depth ()),
 				       &fail);
       if (fail)
-	error (1, 0, _("Memory exhausted"));
+	error (1, 0, _("virtual memory exhausted"));
 
       if (old_ent)
 	{
