@@ -1,5 +1,5 @@
 /* factor -- print prime factors of n.
-   Copyright (C) 86, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 86, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -97,7 +97,7 @@ Print the prime factors of each NUMBER.\n\
 static size_t
 factor (uintmax_t n0, size_t max_n_factors, uintmax_t *factors)
 {
-  register uintmax_t n = n0, d, q;
+  uintmax_t n = n0, d, q;
   size_t n_factors = 0;
   unsigned char const *w = wheel_tab;
 
