@@ -1,3 +1,10 @@
+2000-01-25  Jim Meyering  <meyering@lucent.com>
+
+	* timespec.m4: Require AC_HEADER_TIME, and include sys/time.h as well
+	as time.h in the compile check.
+	* nanosleep.m4: Require AC_HEADER_TIME rather than simply using it.
+	Fix typo in cross-compiling case: s/yes/no/.
+
 2000-01-23  Jim Meyering  <meyering@lucent.com>
 
 	* jm-macros.m4: Move df-related tests here from fileutils/configure.in
