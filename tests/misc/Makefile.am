@@ -10,6 +10,7 @@ TESTS_ENVIRONMENT = \
   PROG=$$tst
 
 TESTS = \
+  readlink \
   split-fail \
   false \
   tty-eof \
