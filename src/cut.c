@@ -445,8 +445,7 @@ set_fields (const char *fieldstr)
      the field numbers corresponding to all finite ranges
      (i.e. `2-6' or `-4', but not `5-') in FIELDSTR.  */
 
-  printable_field = xmalloc ((max_range_endpoint + 1) * sizeof (int));
-  memset (printable_field, 0, (max_range_endpoint + 1) * sizeof (int));
+  printable_field = xcalloc ((max_range_endpoint + 1) * sizeof (int), 1);
 
   /* Set the array entries corresponding to integers in the ranges of RP.  */
   for (i = 0; i < n_rp; i++)
