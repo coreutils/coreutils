@@ -4,7 +4,7 @@
 
 	* tests/du/basic: Make the test larger than 64 bytes, so that we don't
 	immediately disqualify file systems (e.g., NetApp) on which smaller
-	files take up zero disk blocks.
+	files take up zero disk blocks.  Reported by Vin Shelton.
 
 2003-03-10  Jim Meyering  <jim@meyering.net>
 
