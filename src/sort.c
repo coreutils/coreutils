@@ -1246,7 +1246,7 @@ check (files, nfiles)
       fp = xfopen (files[i], "r");
       if (!checkfp (fp))
 	{
-	  printf ("%s: disorder on %s\n", program_name, files[i]);
+	  fprintf (stderr, "%s: disorder on %s\n", program_name, files[i]);
 	  ++disorders;
 	}
     }
@@ -1644,12 +1644,19 @@ main (argc, argv)
 			if (t)
 			      t--;
 			t2 = 0;
+			/* FIXME: It's an error to specify `.'
+			   but no char-spec. */
 			if (*s == '.')
 			  {
 			    for (++s; digits[UCHAR (*s)]; ++s)
 			      t2 = t2 * 10 + *s - '0';
 			    if (t2)
 			      t2--;
+			  }
+			else
+			  {
+			    /* `-k 2,3' is equivalent to `+1 -3'.  */
+			    ++t;
 			  }
 			key->eword = t;
 			key->echar = t2;
