@@ -1,15 +1,19 @@
 2004-12-05  Jim Meyering  <jim@meyering.net>
 
-	* Makefile.am (unit-test): New target.
-	(check): Depend on it.
-	(noinst_PROGRAMS): Define.
-	(LDADD): Define.
+	Currently, fpending.m4 punts (by defining PENDING_OUTPUT_N_BYTES
+	to 1) if it doesn't find a valid expression for the replacement
+	function.  Before this change, that might have gone undetected
+	for some time.  Now, we'll catch it close to the source.
 
 	* t-fpending.c: New file.  Test the __fpending function.
 	This ensures that if there is an error in the definition of the
 	PENDING_OUTPUT_N_BYTES expression, we'll find about it right away;
 	that value is used only in the rare event that close_stdout's
 	fclose fails with EBADF.
+	* Makefile.am (unit-test): New target.
+	(check): Depend on it.
+	(noinst_PROGRAMS): Define.
+	(LDADD): Define.
 
 2004-12-02  Paul Eggert  <eggert@cs.ucla.edu>
 
