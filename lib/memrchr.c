@@ -39,22 +39,6 @@
 
 #include <limits.h>
 
-#if HAVE_INTTYPES_H
-# include <inttypes.h>
-#endif
-#if defined _LIBC || HAVE_STDINT_H
-# include <stdint.h>
-#endif
-
-/* Use sizeof, not alignof, for better performance on some hosts.  For
-   example, on m68k-linux alignof (type) will always be at most 2, but
-   you get better performance with a 4-byte aligned pointer.  */
-#ifdef UINTPTR_MAX
-# define UNALIGNED_P(p) (((uintptr_t) p) % sizeof (unsigned long int) != 0)
-#else
-# define UNALIGNED_P(p) 1
-#endif
-
 #undef __memrchr
 #undef memrchr
 
@@ -77,7 +61,7 @@ __memrchr (void const *s, int c_in, size_t n)
   /* Handle the last few characters by reading one character at a time.
      Do this until CHAR_PTR is aligned on a longword boundary.  */
   for (char_ptr = (const unsigned char *) s + n;
-       n > 0 && UNALIGNED_P (char_ptr);
+       n > 0 && (size_t) char_ptr % sizeof longword != 0;
        --n)
     if (*--char_ptr == c)
       return (void *) char_ptr;
