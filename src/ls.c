@@ -134,11 +134,12 @@ struct bin_str
 time_t time ();
 #endif
 
+char *base_name ();
 char *getgroup ();
 char *getuser ();
+void invalid_arg ();
 void strip_trailing_slashes ();
 char *xstrdup ();
-void invalid_arg ();
 
 static size_t quote_name PARAMS ((FILE *out, const char *name,
 				  struct quoting_options const *options));
