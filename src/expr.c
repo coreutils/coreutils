@@ -437,7 +437,7 @@ of the basic regular expression is not portable; it is being ignored"),
   if (re_buffer.allocated < len)
     xalloc_die ();
   re_buffer.buffer = xmalloc (re_buffer.allocated);
-  re_buffer.translate = 0;
+  re_buffer.translate = NULL;
   re_syntax_options = RE_SYNTAX_POSIX_BASIC;
   errmsg = re_compile_pattern (pv->u.s, len, &re_buffer);
   if (errmsg)
