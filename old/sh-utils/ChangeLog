@@ -1,3 +1,15 @@
+Wed Jul  2 11:05:09 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/printf.c (STRTOX): Convert function header in macro definition
+	to K&R-style.  Otherwise, ansi2knr would fail to convert the function
+	definitions to K&R for old style compilers.  From Kaveh Ghazi.
+
+Tue Jul  1 06:28:00 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/putenv.c [putenv]: Undefine before including system headers.
+	Otherwise, the declaration of *rpl_putenv* conflicts with the system
+	prototype on at least Irix5.3.  From Marcus Daniels.
+
 Sun Jun 29 07:18:25 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/putenv.c (rpl_putenv): Renamed from putenv.
