@@ -68,6 +68,9 @@ char *xmalloc ();
 /* The value to return to the calling program.  */
 static int exit_status;
 
+static char *const cfcc_msg =
+  N_("%s: character(s) following character constant");
+
 /* The name this program was run with. */
 char *program_name;
 
@@ -146,8 +149,7 @@ FUNC_NAME (const char *s)						 \
       val = *(unsigned char *) ++s;					 \
       if (*++s != 0)							 \
 	{								 \
-	  error (0, 0,							 \
-		 _("%s: character(s) following character constant"), s); \
+	  error (0, 0, _(cfcc_msg), s);					 \
 	  exit_status = 1;						 \
 	}								 \
     }									 \
