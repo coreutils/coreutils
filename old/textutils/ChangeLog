@@ -1,3 +1,9 @@
+2000-07-23  Jim Meyering  <meyering@lucent.com>
+
+	* tests/head/Test.pm: Rename tests (and hence files) to have a short
+	enough prefix so that they're not truncated on 8+3 file systems.
+	Reported by Eli Zaretskii.
+
 2000-07-09  Jim Meyering  <meyering@lucent.com>
 
 	* config.guess: Update from FSF.
