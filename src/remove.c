@@ -102,7 +102,8 @@ extern char *program_name;
 /* An entry in the active_dir_map.  */
 struct active_dir_ent
 {
-  ino_t inum;
+  ino_t st_ino;
+  dev_t st_dev;
   unsigned int depth;
 };
 
@@ -160,11 +161,12 @@ print_nth_dir (FILE *stream, unsigned int depth)
 }
 
 static inline struct active_dir_ent *
-make_active_dir_ent (ino_t inum, unsigned int depth)
+make_active_dir_ent (ino_t inum, dev_t device, unsigned int depth)
 {
   struct active_dir_ent *ent;
   ent = (struct active_dir_ent *) xmalloc (sizeof *ent);
-  ent->inum = inum;
+  ent->st_ino = inum;
+  ent->st_dev = device;
   ent->depth = depth;
   return ent;
 }
@@ -173,7 +175,9 @@ static unsigned int
 hash_active_dir_ent (void const *x, unsigned int table_size)
 {
   struct active_dir_ent const *ade = x;
-  return ade->inum % table_size;
+
+  /* Ignoring the device number here should be fine.  */
+  return ade->st_ino % table_size;
 }
 
 static bool
@@ -181,7 +185,7 @@ hash_compare_active_dir_ents (void const *x, void const *y)
 {
   struct active_dir_ent const *a = x;
   struct active_dir_ent const *b = y;
-  return a->inum == b->inum;
+  return SAME_INODE (*a, *b);
 }
 
 /* A hash function for null-terminated char* strings using
@@ -340,21 +344,27 @@ full_filename (const char *filename)
   return buf;
 }
 
+static inline void
+fspec_init_common (struct File_spec *fs)
+{
+  fs->have_full_mode = 0;
+  fs->have_filetype_mode = 0;
+  fs->have_device = 0;
+}
+
 void
 fspec_init_file (struct File_spec *fs, const char *filename)
 {
   fs->filename = (char *) filename;
-  fs->have_full_mode = 0;
-  fs->have_filetype_mode = 0;
+  fspec_init_common (fs);
 }
 
 static inline void
 fspec_init_dp (struct File_spec *fs, struct dirent *dp)
 {
   fs->filename = dp->d_name;
-  fs->have_full_mode = 0;
-  fs->have_filetype_mode = 0;
-  fs->inum = D_INO (dp);
+  fspec_init_common (fs);
+  fs->st_ino = D_INO (dp);
 
 #if D_TYPE_IN_DIRENT && defined DT_UNKNOWN && defined DTTOIF
   if (dp->d_type != DT_UNKNOWN)
@@ -366,15 +376,12 @@ fspec_init_dp (struct File_spec *fs, struct dirent *dp)
 }
 
 static inline int
-fspec_get_full_mode (struct File_spec *fs, mode_t *full_mode)
+fspec_get_full_mode (struct File_spec *fs)
 {
   struct stat stat_buf;
 
   if (fs->have_full_mode)
-    {
-      *full_mode = fs->mode;
-      return 0;
-    }
+    return 0;
 
   if (lstat (fs->filename, &stat_buf))
     return 1;
@@ -382,9 +389,31 @@ fspec_get_full_mode (struct File_spec *fs, mode_t *full_mode)
   fs->have_full_mode = 1;
   fs->have_filetype_mode = 1;
   fs->mode = stat_buf.st_mode;
-  fs->inum = stat_buf.st_ino;
+  fs->st_ino = stat_buf.st_ino;
+  fs->have_device = 1;
+  fs->st_dev = stat_buf.st_dev;
 
-  *full_mode = stat_buf.st_mode;
+  return 0;
+}
+
+static inline int
+fspec_get_device_number (struct File_spec *fs)
+{
+  struct stat stat_buf;
+
+  if (fs->have_device)
+    return 0;
+
+  if (lstat (fs->filename, &stat_buf))
+    return 1;
+
+  fs->have_full_mode = 1;
+  fs->have_filetype_mode = 1;
+  fs->mode = stat_buf.st_mode;
+  fs->st_ino = stat_buf.st_ino;
+  fs->have_device = 1;
+  fs->st_dev = stat_buf.st_dev;
+
   return 0;
 }
 
@@ -393,15 +422,9 @@ fspec_get_filetype_mode (struct File_spec *fs, mode_t *filetype_mode)
 {
   int fail;
 
-  if (fs->have_filetype_mode)
-    {
-      *filetype_mode = fs->mode;
-      fail = 0;
-    }
-  else
-    {
-      fail = fspec_get_full_mode (fs, filetype_mode);
-    }
+  fail = fs->have_filetype_mode ? 0 : fspec_get_full_mode (fs);
+  if (!fail)
+    *filetype_mode = fs->mode;
 
   return fail;
 }
@@ -701,26 +724,20 @@ remove_dir (struct File_spec *fs, int need_save_cwd, const struct rm_options *x)
       return RM_ERROR;
     }
 
-  /* Verify that the inode number of `.' is the same as the one we had
-     for dir_name before we cd'd into it.  This detects the scenario
-     in which an attacker tries to make Bob's rm command remove some
-     other directory belonging to Bob.  The method would be to replace
-     an existing lstat'd but-not-yet-removed directory with a symlink
-     to the target directory.  */
+  /* Verify that the device and inode numbers of `.' are the same as
+     the ones we recorded for dir_name before we cd'd into it.  This
+     detects the scenario in which an attacker tries to make Bob's rm
+     command remove some other directory belonging to Bob.  The method
+     would be to replace an existing lstat'd but-not-yet-removed directory
+     with a symlink to the target directory.  */
   {
     struct stat sb;
     if (lstat (".", &sb))
       error (EXIT_FAILURE, errno,
 	     _("cannot lstat `.' in `%s'"), full_filename (dir_name));
 
-    /* You might wonder whether it's safe to compare only the inode numbers
-       and not also the device numbers.  The risk is that the attacker might
-       find a Bob-writable directory (on another device) with the same inode
-       number as one Bob intends to be removed with `rm -r'.  The selected
-       directory must itself be in a directory that is writable by the attacker.
-       In order to eliminate this small risk, we'd have to add a device number
-       member to struct File_spec and compare it to st_dev here.  */
-    if (sb.st_ino != fs->inum)
+    assert (fs->have_device);
+    if (!SAME_INODE (sb, *fs))
       {
 	error (EXIT_FAILURE, 0,
 	       _("ERROR: the directory `%s' initially had inode number %lu,\n\
@@ -728,7 +745,7 @@ but now (after a chdir into it), the inode number of `.' is %lu.\n\
 That means the directory was replaced with either another directory\n\
 or a link to another directory."),
 	       full_filename (dir_name),
-	       (unsigned long)(fs->inum),
+	       (unsigned long)(fs->st_ino),
 	       (unsigned long)(sb.st_ino));
       }
   }
@@ -839,15 +856,15 @@ rm (struct File_spec *fs, int user_specified_name, const struct rm_options *x)
       struct active_dir_ent *old_ent;
       struct active_dir_ent *new_ent;
 
-      /* If there is already a directory in the map with the same inum,
-	 then there's *probably* a directory cycle.  This test can get
-	 a false positive if two directories have the same inode number
-	 but different device numbers, and one directory contains the
-	 other.  But since people don't often try to delete hierarchies
-	 containing mount points, and when they do, duplicate inode
-	 numbers are not that likely, this isn't worth detecting.  */
+      /* If there is already a directory in the map with the same device
+	 and inode numbers, then there is a directory cycle.  */
 
-      new_ent = make_active_dir_ent (fs->inum, current_depth ());
+      if (fspec_get_device_number (fs))
+	{
+	  error (0, errno, _("cannot stat `%s'"), full_filename (fs->filename));
+	  return RM_ERROR;
+	}
+      new_ent = make_active_dir_ent (fs->st_ino, fs->st_dev, current_depth ());
       old_ent = hash_lookup (active_dir_map, new_ent);
       if (old_ent)
 	{
@@ -895,7 +912,9 @@ The following two directories have the same inode number:\n"));
 	struct active_dir_ent *old_ent;
 
 	/* Remove this directory from the active_dir_map.  */
-	tmp.inum = fs->inum;
+	tmp.st_ino = fs->st_ino;
+	assert (fs->have_device);
+	tmp.st_dev = fs->st_dev;
 	old_ent = hash_delete (active_dir_map, &tmp);
 	assert (old_ent != NULL);
 	free (old_ent);
