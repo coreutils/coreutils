@@ -2,6 +2,22 @@
 
 	* Version 4.5.5.
 
+	* src/Makefile.am (check-misc): Check for st_blocks, too.
+
+	* src/stat.c (print_stat): Use ST_NBLOCKS rather than `->st_blocks'.
+	Reported by Richard Dawe.
+
+2003-01-27  Andreas Schwab  <schwab@suse.de>
+
+	* src/ls.c (quote_name): Add fourth parameter, width, into which to
+	store the screen columns, and return the number of bytes instead.
+	(print_dir): Pass NULL as fourth parameter of quote_name.
+	(print_name_with_quoting): Likewise.
+	(length_of_file_name_and_frills): Get the width from the fourth
+	parameter of quote_name instead of return value.
+
+2003-01-27  Jim Meyering  <jim@meyering.net>
+
 	* src/ls.c (decode_switches): If `dired' is set without
 	`format == long_format', then silently reset dired.  This doesn't
 	change the behavior of ls (all prior uses of dired were protected
