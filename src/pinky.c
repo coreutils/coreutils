@@ -49,33 +49,33 @@ char *ttyname ();
 /* The name this program was run with. */
 const char *program_name;
 
-/* If nonzero, display the hours:minutes since each user has touched
+/* If true, display the hours:minutes since each user has touched
    the keyboard, or blank if within the last minute, or days followed
    by a 'd' if not within the last day. */
-static int include_idle = 1;
+static bool include_idle = true;
 
-/* If nonzero, display a line at the top describing each field. */
-static int include_heading = 1;
+/* If true, display a line at the top describing each field. */
+static bool include_heading = true;
 
-/* if nonzero, display the user's full name from pw_gecos. */
-static int include_fullname = 1;
+/* if true, display the user's full name from pw_gecos. */
+static bool include_fullname = true;
 
-/* if nonzero, display the user's ~/.project file when doing long format. */
-static int include_project = 1;
+/* if true, display the user's ~/.project file when doing long format. */
+static bool include_project = true;
 
-/* if nonzero, display the user's ~/.plan file when doing long format. */
-static int include_plan = 1;
+/* if true, display the user's ~/.plan file when doing long format. */
+static bool include_plan = true;
 
-/* if nonzero, display the user's home directory and shell
+/* if true, display the user's home directory and shell
    when doing long format. */
-static int include_home_and_shell = 1;
+static bool include_home_and_shell = true;
 
-/* if nonzero, use the "short" output format. */
-static int do_short_format = 1;
+/* if true, use the "short" output format. */
+static bool do_short_format = true;
 
-/* if nonzero, display the ut_host field. */
+/* if true, display the ut_host field. */
 #ifdef HAVE_UT_HOST
-static int include_where = 1;
+static bool include_where = true;
 #endif
 
 /* The strftime format to use for login times, and its expected
@@ -92,10 +92,10 @@ static struct option const longopts[] =
 
 /* Count and return the number of ampersands in STR.  */
 
-static int
+static size_t
 count_ampersands (const char *str)
 {
-  int count = 0;
+  size_t count = 0;
   do
     {
       if (*str == '&')
@@ -113,10 +113,21 @@ count_ampersands (const char *str)
 static char *
 create_fullname (const char *gecos_name, const char *user_name)
 {
-  const int result_len = strlen (gecos_name)
-    + count_ampersands (gecos_name) * (strlen (user_name) - 1) + 1;
-  char *const result = xmalloc (result_len);
-  char *r = result;
+  size_t rsize = strlen (gecos_name) + 1;
+  char *result;
+  char *r;
+  size_t ampersands = count_ampersands (gecos_name);
+
+  if (ampersands != 0)
+    {
+      size_t ulen = strlen (user_name);
+      size_t product = ampersands * ulen;
+      rsize += product - ampersands;
+      if (xalloc_oversized (ulen, ampersands) || rsize < product)
+	xalloc_die ();
+    }
+
+  r = result = xmalloc (rsize);
 
   while (*gecos_name)
     {
@@ -147,7 +158,7 @@ static const char *
 idle_string (time_t when)
 {
   static time_t now = 0;
-  static char idle_hhmm[10];
+  static char buf[INT_STRLEN_BOUND (long int) + 2];
   time_t seconds_idle;
 
   if (now == 0)
@@ -158,13 +169,16 @@ idle_string (time_t when)
     return "     ";
   if (seconds_idle < (24 * 60 * 60))	/* One day. */
     {
-      sprintf (idle_hhmm, "%02d:%02d",
-	       (int) (seconds_idle / (60 * 60)),
-	       (int) ((seconds_idle % (60 * 60)) / 60));
-      return (const char *) idle_hhmm;
+      int hours = seconds_idle / (60 * 60);
+      int minutes = (seconds_idle % (60 * 60)) / 60;
+      sprintf (buf, "%02d:%02d", hours, minutes);
     }
-  sprintf (idle_hhmm, "%dd", (int) (seconds_idle / (24 * 60 * 60)));
-  return (const char *) idle_hhmm;
+  else
+    {
+      unsigned long int days = seconds_idle / (24 * 60 * 60);
+      sprintf (buf, "%lud", days);
+    }
+  return buf;
 }
 
 /* Return a time string.  */
@@ -231,15 +245,15 @@ print_entry (const STRUCT_UTMP *utmp_ent)
       last_change = 0;
     }
 
-  printf ("%-8.*s", (int) sizeof (UT_USER (utmp_ent)), UT_USER (utmp_ent));
+  printf ("%-8.*s", UT_USER_SIZE, UT_USER (utmp_ent));
 
   if (include_fullname)
     {
       struct passwd *pw;
-      char name[sizeof (UT_USER (utmp_ent)) + 1];
+      char name[UT_USER_SIZE + 1];
 
-      strncpy (name, UT_USER (utmp_ent), sizeof (UT_USER (utmp_ent)));
-      name[sizeof (UT_USER (utmp_ent))] = '\0';
+      strncpy (name, UT_USER (utmp_ent), UT_USER_SIZE);
+      name[UT_USER_SIZE] = '\0';
       pw = getpwnam (name);
       if (pw == NULL)
 	printf (" %19s", "        ???");
@@ -422,7 +436,7 @@ print_heading (void)
 /* Display UTMP_BUF, which should have N entries. */
 
 static void
-scan_entries (int n, const STRUCT_UTMP *utmp_buf,
+scan_entries (size_t n, const STRUCT_UTMP *utmp_buf,
 	      const int argc_names, char *const argv_names[])
 {
   if (hard_locale (LC_TIME))
@@ -452,8 +466,8 @@ scan_entries (int n, const STRUCT_UTMP *utmp_buf,
 	      int i;
 
 	      for (i = 0; i < argc_names; i++)
-		if (strncmp (UT_USER (utmp_buf), argv_names[i],
-			     sizeof (UT_USER (utmp_buf))) == 0)
+		if (strncmp (UT_USER (utmp_buf), argv_names[i], UT_USER_SIZE)
+		    == 0)
 		  {
 		    print_entry (utmp_buf);
 		    break;
@@ -472,11 +486,10 @@ static void
 short_pinky (const char *filename,
 	     const int argc_names, char *const argv_names[])
 {
-  int n_users;
+  size_t n_users;
   STRUCT_UTMP *utmp_buf;
-  int fail = read_utmp (filename, &n_users, &utmp_buf);
 
-  if (fail)
+  if (read_utmp (filename, &n_users, &utmp_buf) != 0)
     error (EXIT_FAILURE, errno, "%s", filename);
 
   scan_entries (n_users, utmp_buf, argc_names, argv_names);
@@ -530,7 +543,7 @@ The utmp file will be %s.\n\
 int
 main (int argc, char **argv)
 {
-  int optc, longind;
+  int optc;
   int n_users;
 
   initialize_main (&argc, &argv);
@@ -541,8 +554,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "sfwiqbhlp", longopts, &longind))
-	 != -1)
+  while ((optc = getopt_long (argc, argv, "sfwiqbhlp", longopts, NULL)) != -1)
     {
       switch (optc)
 	{
@@ -550,46 +562,46 @@ main (int argc, char **argv)
 	  break;
 
 	case 's':
-	  do_short_format = 1;
+	  do_short_format = true;
 	  break;
 
 	case 'l':
-	  do_short_format = 0;
+	  do_short_format = false;
 	  break;
 
 	case 'f':
-	  include_heading = 0;
+	  include_heading = false;
 	  break;
 
 	case 'w':
-	  include_fullname = 0;
+	  include_fullname = false;
 	  break;
 
 	case 'i':
-	  include_fullname = 0;
+	  include_fullname = false;
 #ifdef HAVE_UT_HOST
-	  include_where = 0;
+	  include_where = false;
 #endif
 	  break;
 
 	case 'q':
-	  include_fullname = 0;
+	  include_fullname = false;
 #ifdef HAVE_UT_HOST
-	  include_where = 0;
+	  include_where = false;
 #endif
-	  include_idle = 0;
+	  include_idle = false;
 	  break;
 
 	case 'h':
-	  include_project = 0;
+	  include_project = false;
 	  break;
 
 	case 'p':
-	  include_plan = 0;
+	  include_plan = false;
 	  break;
 
 	case 'b':
-	  include_home_and_shell = 0;
+	  include_home_and_shell = false;
 	  break;
 
 	case_GETOPT_HELP_CHAR;
@@ -603,7 +615,7 @@ main (int argc, char **argv)
 
   n_users = argc - optind;
 
-  if (do_short_format == 0 && n_users == 0)
+  if (!do_short_format && n_users == 0)
     {
       error (0, 0, _("no username specified; at least one must be\
  specified when using -l"));
