@@ -1,3 +1,7 @@
+1998-08-11  Jim Meyering  <meyering@ascend.com>
+
+	* src/uptime.c (usage): Correct description.  Reported by John Murphy.
+
 1998-07-16  Jim Meyering  <meyering@ascend.com>
 
 	* lib/Makefile.am (noinst_HEADERS): Add lchown.h.
