@@ -1,3 +1,9 @@
+2004-05-07  Jim Meyering  <jim@meyering.net>
+
+	Update from gnulib.
+	* obstack.c (_): Define only if not already defined.
+	* obstack.h (obstack_finish): Rename local: s/value/__value/.
+
 2004-05-03  Jim Meyering  <jim@meyering.net>
 
 	* lchown.c (lchown) [CHOWN_MODIFIES_SYMLINK]: Just call chown.
