@@ -42,7 +42,7 @@
 #define PROGRAM_NAME "df"
 
 #define AUTHORS \
-  N_ ("Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert")
+  N_ ("Torbjorn Granlund, David MacKenzie, and Paul Eggert")
 
 /* Name this program was run with. */
 char *program_name;
