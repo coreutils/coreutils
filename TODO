@@ -73,6 +73,9 @@ df: alignment problem of `Used' heading with e.g., -mP
 tr: support nontrivial equivalence classes, e.g. [=e=] with LC_COLLATE=fr_FR
 
 fix tail -f to work with named pipes; reported by Ian D. Allen
+  $ mkfifo j; tail -f j & sleep 1; echo x > j
+  ./tail: j: file truncated
+  ./tail: j: cannot seek to offset 0: Illegal seek
 
 lib/strftime.c: Since %N is the only format that we need but that
   glibc's strftime doesn't support, consider using a wrapper that
