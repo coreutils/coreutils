@@ -1,3 +1,7 @@
+2005-02-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* memrchr.m4 (gl_FUNC_MEMRCHR): Add AC_LIBSOURCES, for memrchr.h.
+
 2005-01-29  Jim Meyering  <jim@meyering.net>
 
 	Use AC_LIBSOURCES to list corresponding source (.c, .h, .y) files
