@@ -24,7 +24,7 @@
 #include "system.h"
 #include "error.h"
 
-static long argdecode __P ((char *s));
+static long argdecode __P ((const char *s));
 
 /* The name by which this program was run. */
 char *program_name;
@@ -106,10 +106,10 @@ main (int argc, char **argv)
 }
 
 static long
-argdecode (char *s)
+argdecode (const char *s)
 {
   long value;
-  register char *p = s;
+  register const char *p = s;
   register char c;
 
   value = 0;
