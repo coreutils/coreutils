@@ -127,8 +127,7 @@ AC_CACHE_VAL(utils_cv_func_setpriority,
 AC_MSG_RESULT($utils_cv_func_setpriority)
 if test $utils_cv_func_setpriority = yes; then
   OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS nice\$(EXEEXT)"
-  OPTIONAL_BIN_ZCRIPTS="$OPTIONAL_BIN_ZCRIPTS nohup"
-  MAN="$MAN nice.1 nohup.1"
+  MAN="$MAN nice.1"
 else
   AC_MSG_CHECKING(for nice function)
   AC_CACHE_VAL(utils_cv_func_nice,
@@ -139,8 +138,7 @@ else
   if test $utils_cv_func_nice = yes; then
     AC_DEFINE(NICE_PRIORITY, 1, [FIXME])
     OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS nice\$(EXEEXT)"
-    OPTIONAL_BIN_ZCRIPTS="$OPTIONAL_BIN_ZCRIPTS nohup"
-    MAN="$MAN nice.1 nohup.1"
+    MAN="$MAN nice.1"
   fi
 fi
 
