@@ -1,6 +1,12 @@
-1998-02-04  Jim Meyering  <meyering@eng.ascend.com>
+1998-02-06  Jim Meyering  <meyering@eng.ascend.com>
 
 	* Version 1.22e.
+
+	* configure.in: Don't use AM_MAINTAINER_MODE or
+	AC_PATH_PROG(PERL, perl).
+	(jm_PERL): Use this.
+
+1998-02-04  Jim Meyering  <meyering@eng.ascend.com>
 
 	* tests/Makefile.am.in (EXTRA_DIST): Remove mk-script.pl.
 	(mk_script): Set to ../mk-script.
@@ -16,6 +22,7 @@
 
 	* GNUmakefile: New file.
 	* Makefile.am (EXTRA_DIST): Add GNUmakefile.
+	Don't include Makefile.maint from here.  It's included from GNUmakefile.
 
 1998-01-30  Paul Eggert  <eggert@twinsun.com>
 
