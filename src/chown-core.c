@@ -167,18 +167,19 @@ describe_change (const char *file, enum Change_status changed,
    to UID and/or GID as appropriate.
    FIXME: describe old_uid and old_gid.
    CHOPT specifies additional options.
-   Return nonzero upon error, zero otherwise.  */
+   Return 0 if successful, -1 if errors occurred.  */
 static int
 change_file_owner (FTS *fts, FTSENT *ent,
 		   uid_t uid, gid_t gid,
 		   uid_t old_uid, gid_t old_gid,
 		   struct Chown_option const *chopt)
 {
-  const char *file_full_name = ent->fts_path;
+  char const *file_full_name = ent->fts_path;
+  char const *file = ent->fts_accpath;
   struct stat const *file_stats IF_LINT (= NULL);
   struct stat stat_buf;
   int errors = 0;
-  bool do_chown = true;
+  bool do_chown;
   bool symlink_changed = true;
 
   switch (ent->fts_info)
@@ -195,23 +196,30 @@ change_file_owner (FTS *fts, FTSENT *ent,
 
     case FTS_NS:
       error (0, ent->fts_errno, _("cannot access %s"), quote (file_full_name));
-      return 1;
+      errors = -1;
+      break;
 
     case FTS_ERR:
       error (0, ent->fts_errno, _("%s"), quote (file_full_name));
-      return 1;
+      errors = -1;
+      break;
 
     case FTS_DNR:
       error (0, ent->fts_errno, _("cannot read directory %s"),
 	     quote (file_full_name));
-      return 1;
+      errors = -1;
+      break;
 
     default:
       break;
     }
 
-  if (old_uid != (uid_t) -1 || old_gid != (gid_t) -1
-      || (chopt->root_dev_ino && chopt->affect_symlink_referent))
+  if (errors)
+    do_chown = false;
+  else if (old_uid == (uid_t) -1 && old_gid == (gid_t) -1
+	   && chopt->verbosity == V_off && ! chopt->root_dev_ino)
+    do_chown = true;
+  else
     {
       file_stats = ent->fts_statp;
 
@@ -219,32 +227,30 @@ change_file_owner (FTS *fts, FTSENT *ent,
 	 stat it to get the permissions of the referent.  */
       if (S_ISLNK (file_stats->st_mode) && chopt->affect_symlink_referent)
 	{
-	  if (stat (ent->fts_accpath, &stat_buf) != 0)
+	  if (stat (file, &stat_buf) != 0)
 	    {
 	      error (0, errno, _("cannot dereference %s"),
 		     quote (file_full_name));
-	      return 1;
+	      errors = -1;
 	    }
 
 	  file_stats = &stat_buf;
 	}
 
-      do_chown = ((old_uid == (uid_t) -1
-		   || file_stats->st_uid == old_uid)
-		  && (old_gid == (gid_t) -1
-		      || file_stats->st_gid == old_gid));
+      do_chown = (!errors
+		  && (old_uid == (uid_t) -1 || old_uid == file_stats->st_uid)
+		  && (old_gid == (gid_t) -1 || old_gid == file_stats->st_gid));
+    }
+
+  if (do_chown && ROOT_DEV_INO_CHECK (chopt->root_dev_ino, file_stats))
+    {
+      ROOT_DEV_INO_WARN (file_full_name);
+      errors = -1;
+      do_chown = false;
     }
 
   if (do_chown)
     {
-      const char *file = ent->fts_accpath;
-
-      if (ROOT_DEV_INO_CHECK (chopt->root_dev_ino, file_stats))
-	{
-	  ROOT_DEV_INO_WARN (file_full_name);
-	  return 1;
-	}
-
       if (chopt->affect_symlink_referent)
 	{
 	  /* Applying chown to a symlink and expecting it to affect
@@ -280,15 +286,23 @@ change_file_owner (FTS *fts, FTSENT *ent,
 	       quote (file_full_name));
     }
 
-  if (chopt->verbosity == V_high
-      || (chopt->verbosity == V_changes_only && !errors))
+  if (chopt->verbosity != V_off)
     {
-      enum Change_status ch_status = (!do_chown ? CH_NO_CHANGE_REQUESTED
-				      : !symlink_changed ? CH_NOT_APPLIED
-				      : errors ? CH_FAILED
-				      : CH_SUCCEEDED);
-      describe_change (file_full_name, ch_status,
-		       chopt->user_name, chopt->group_name);
+      bool changed =
+	(do_chown && !errors && symlink_changed
+	 && ! ((uid == (uid_t) -1 || uid == file_stats->st_uid)
+	       && (gid == (gid_t) -1 || gid == file_stats->st_gid)));
+
+      if (changed || chopt->verbosity == V_high)
+	{
+	  enum Change_status ch_status =
+	    (errors ? CH_FAILED
+	     : !symlink_changed ? CH_NOT_APPLIED
+	     : !changed ? CH_NO_CHANGE_REQUESTED
+	     : CH_SUCCEEDED);
+	  describe_change (file_full_name, ch_status,
+			   chopt->user_name, chopt->group_name);
+	}
     }
 
   if ( ! chopt->recurse)
@@ -315,9 +329,8 @@ chown_files (char **files, int bit_flags,
   int fail = 0;
 
   /* Use lstat and stat only if they're needed.  */
-  int stat_flags = ((chopt->root_dev_ino
-		     || required_uid != (uid_t) -1
-		     || required_gid != (gid_t) -1)
+  int stat_flags = ((required_uid != (uid_t) -1 || required_gid != (gid_t) -1
+		     || chopt->verbosity != V_off || chopt->root_dev_ino)
 		    ? 0
 		    : FTS_NOSTAT);
 
