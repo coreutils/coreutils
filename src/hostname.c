@@ -25,6 +25,7 @@
 #include "long-options.h"
 #include "error.h"
 #include "quote.h"
+#include "xgethostname.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "hostname"
@@ -40,22 +41,14 @@ int sethostname ();
 # include <sys/systeminfo.h>
 
 int
-sethostname (name, namelen)
-     char *name;
-     int namelen;
+sethostname (char *name, size_t namelen)
 {
   /* Using sysinfo() is the SVR4 mechanism to set a hostname. */
-  int result;
-
-  result = sysinfo (SI_SET_HOSTNAME, name, namelen);
-
-  return (result == -1 ? result : 0);
+  return (sysinfo (SI_SET_HOSTNAME, name, namelen) < 0 ? -1 : 0);
 }
 
 # define HAVE_SETHOSTNAME 1  /* Now we have it... */
 #endif
-
-char *xgethostname ();
 
 /* The name this program was run with. */
 char *program_name;
@@ -109,11 +102,8 @@ main (int argc, char **argv)
 #ifdef HAVE_SETHOSTNAME
   if (argc == 2)
     {
-      int err;
-
       /* Set hostname to argv[1].  */
-      err = sethostname (argv[1], strlen (argv[1]));
-      if (err != 0)
+      if (sethostname (argv[1], strlen (argv[1])) != 0)
 	error (EXIT_FAILURE, errno, _("cannot set hostname to `%s'"), argv[1]);
       exit (EXIT_SUCCESS);
     }
