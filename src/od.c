@@ -151,7 +151,7 @@ static const char *const charname[33] =
 };
 
 /* Address base (8, 10 or 16).  */
-int address_base;
+static int address_base;
 
 /* The number of octal digits required to represent the largest off_t value.  */
 #define MAX_ADDRESS_LENGTH \
