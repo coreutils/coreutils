@@ -1331,8 +1331,10 @@ number all lines,
 number only nonempty lines (default for body),
 @item n
 do not number lines (default for header and footer),
-@item p@var{regexp}
-number only lines that contain a match for @var{regexp}.
+@item p@var{bre}
+number only lines that contain a match for the basic regular
+expression @var{bre}.
+@xref{Regular Expressions, , Regular Expressions, grep, The GNU Grep Manual}.
 @end table
 
 @item -d @var{cd}
