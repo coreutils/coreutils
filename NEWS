@@ -2,9 +2,14 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Major changes in release 5.3.0 (2004-03-17) [unstable]
 
-** Bug fixes
-
 ** New features
+
+   'df', 'du', and 'ls' now take the default block size from the
+   BLOCKSIZE environment variable if the BLOCK_SIZE, DF_BLOCK_SIZE,
+   DU_BLOCK_SIZE, and LS_BLOCK_SIZE environment variables are not set.
+   Unlike the other variables, though, BLOCKSIZE does not affect
+   values like 'ls -l' sizes that are normally displayed as bytes.
+   This new behavior is for compatibility with BSD.
 
   du accepts a new option --files0-from=FILE, where FILE contains a
   list of NUL-terminated file names.
@@ -18,6 +23,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   `date' has a new option --iso-8601=ns that outputs
   nanosecond-resolution time stamps.
+
+** Bug fixes
 
 
 * Major changes in release 5.2.1 (2004-03-12) [stable]
