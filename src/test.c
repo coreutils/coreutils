@@ -57,9 +57,9 @@ char *program_name;
 #endif /* !_POSIX_VERSION */
 
 #include <errno.h>
-#if !defined (errno)
+#ifndef errno
 extern int errno;
-#endif /* !errno */
+#endif
 
 #if !defined (STREQ)
 #  define STREQ(a, b) ((a)[0] == (b)[0] && strcmp (a, b) == 0)
