@@ -1,46 +1,60 @@
 /* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 
-NOTE: The canonical source of this file is maintained with the GNU C Library.
-Bugs can be reported to bug-glibc@prep.ai.mit.edu.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
 
-This program is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; either version 2, or (at your option) any
-later version.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-#include <ansidecl.h>
-#include <localeinfo.h>
 #include <errno.h>
-#include <float.h>
 #include <ctype.h>
-#include <stdlib.h>
-#include <string.h>
 #include <math.h>
 
+#ifdef HAVE_FLOAT_H
+#include <float.h>
+#else
+#define DBL_MAX 1.7976931348623159e+308
+#define DBL_MIN 2.2250738585072010e-308
+#endif
+
+#if STDC_HEADERS
+#include <stdlib.h>
+#include <string.h>
+#else
+#define NULL 0
+extern int errno;
+#ifndef HUGE_VAL
+#define HUGE_VAL HUGE
+#endif
+#endif
 
 /* Convert NPTR to a double.  If ENDPTR is not NULL, a pointer to the
    character after the last one used in the number is put in *ENDPTR.  */
 double
-DEFUN(strtod, (nptr, endptr), CONST char *nptr AND char **endptr)
+strtod (nptr, endptr)
+     const char *nptr;
+     char **endptr;
 {
-  register CONST char *s;
+  register const char *s;
   short int sign;
-  wchar_t decimal;	/* Decimal point character.  */
 
   /* The number so far.  */
   double num;
 
-  int got_dot;		/* Found a decimal point.  */
-  int got_digit;	/* Seen any digits.  */
+  int got_dot;			/* Found a decimal point.  */
+  int got_digit;		/* Seen any digits.  */
 
   /* The exponent of the number.  */
   long int exponent;
@@ -51,14 +65,10 @@ DEFUN(strtod, (nptr, endptr), CONST char *nptr AND char **endptr)
       goto noconv;
     }
 
-  /* Figure out the decimal point character.  */
-  if (mbtowc(&decimal, _numeric_info->decimal_point, 1) <= 0)
-    decimal = (wchar_t) *_numeric_info->decimal_point;
-
   s = nptr;
 
   /* Eat whitespace.  */
-  while (isspace(*s))
+  while (isspace (*s))
     ++s;
 
   /* Get the sign.  */
@@ -94,7 +104,7 @@ DEFUN(strtod, (nptr, endptr), CONST char *nptr AND char **endptr)
 	  if (got_dot)
 	    --exponent;
 	}
-      else if (!got_dot && (wchar_t) *s == decimal)
+      else if (!got_dot && *s == '.')
 	/* Record that we have found the decimal point.  */
 	got_dot = 1;
       else
@@ -105,7 +115,7 @@ DEFUN(strtod, (nptr, endptr), CONST char *nptr AND char **endptr)
   if (!got_digit)
     goto noconv;
 
-  if (tolower(*s) == 'e')
+  if (tolower (*s) == 'e')
     {
       /* Get the exponent specified after the `e' or `E'.  */
       int save = errno;
@@ -114,7 +124,7 @@ DEFUN(strtod, (nptr, endptr), CONST char *nptr AND char **endptr)
 
       errno = 0;
       ++s;
-      exp = strtol(s, &end, 10);
+      exp = strtol (s, &end, 10);
       if (errno == ERANGE)
 	{
 	  /* The exponent overflowed a `long int'.  It is probably a safe
@@ -147,32 +157,32 @@ DEFUN(strtod, (nptr, endptr), CONST char *nptr AND char **endptr)
 
   if (exponent < 0)
     {
-      if (num < DBL_MIN * pow(10.0, (double) -exponent))
+      if (num < DBL_MIN * pow (10.0, (double) -exponent))
 	goto underflow;
     }
   else if (exponent > 0)
     {
-      if (num > DBL_MAX * pow(10.0, (double) -exponent))
+      if (num > DBL_MAX * pow (10.0, (double) -exponent))
 	goto overflow;
     }
 
-  num *= pow(10.0, (double) exponent);
+  num *= pow (10.0, (double) exponent);
 
   return num * sign;
 
- overflow:
+overflow:
   /* Return an overflow error.  */
   errno = ERANGE;
   return HUGE_VAL * sign;
 
- underflow:
+underflow:
   /* Return an underflow error.  */
   if (endptr != NULL)
     *endptr = (char *) nptr;
   errno = ERANGE;
   return 0.0;
 
- noconv:
+noconv:
   /* There was no number.  */
   if (endptr != NULL)
     *endptr = (char *) nptr;
