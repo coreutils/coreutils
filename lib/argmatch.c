@@ -18,12 +18,15 @@
 /* Written by David MacKenzie <djm@ai.mit.edu>
    Modified by Akim Demaille <demaille@inf.enst.fr> */
 
+#if HAVE_CONFIG_H
+# include <config.h>
+#endif
+
 #include "argmatch.h"
 
 #include <stdio.h>
-#ifdef STDC_HEADERS
-# include <string.h>
-#endif
+#include <stdlib.h>
+#include <string.h>
 
 #if HAVE_LOCALE_H
 # include <locale.h>
@@ -46,14 +49,6 @@
    literal_quoting_style.  */
 #ifndef ARGMATCH_QUOTING_STYLE
 # define ARGMATCH_QUOTING_STYLE locale_quoting_style
-#endif
-
-/* The following test is to work around the gross typo in
-   systems like Sony NEWS-OS Release 4.0C, whereby EXIT_FAILURE
-   is defined to 0, not 1.  */
-#if !EXIT_FAILURE
-# undef EXIT_FAILURE
-# define EXIT_FAILURE 1
 #endif
 
 /* Non failing version of argmatch call this function after failing. */
