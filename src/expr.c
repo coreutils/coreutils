@@ -320,19 +320,19 @@ toarith (VALUE *v)
     case string:
       i = 0;
       cp = v->u.s;
-      /* Don't interpret the empty string as an integer.  */
-      if (*cp == 0)
-	return 0;
       neg = (*cp == '-');
       if (neg)
 	cp++;
-      for (; *cp; cp++)
+
+      do
 	{
 	  if (ISDIGIT (*cp))
 	    i = i * 10 + *cp - '0';
 	  else
 	    return 0;
 	}
+      while (*++cp);
+
       free (v->u.s);
       v->u.i = i * (neg ? -1 : 1);
       v->type = integer;
