@@ -129,7 +129,8 @@ mapped_name = `echo $*|sed 's/install/ginstall/; s/test/[/'`
 	@echo "Updating man page $@";		\
 	mkdir $t;				\
 	(cd $t && $(LN_S) ../../src/$(mapped_name)$(EXEEXT) $*$(EXEEXT)); \
-	$(HELP2MAN)				\
+	$(srcdir)/help2man			\
+	    --info-page='$(PACKAGE) $*'		\
 	    --include=$(srcdir)/$*.x		\
 	    --output=$@ $t/$*$(EXEEXT)
 	@chmod a-w $@
