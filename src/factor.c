@@ -1,4 +1,4 @@
-/* factor -- print factors of n.  lose if n > 2^32.
+/* factor -- print factors of n.
    Copyright (C) 86, 95, 96, 1997, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
