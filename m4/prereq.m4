@@ -1,16 +1,26 @@
-#serial 2
+#serial 3
 
 dnl These are the prerequisite macros for files in the lib/
 dnl directories of the fileutils, sh-utils, and textutils packages.
 
 AC_DEFUN(jm_PREREQ,
 [
+  jm_PREREQ_CANON_HOST
   jm_PREREQ_ERROR
   jm_PREREQ_QUOTEARG
   jm_PREREQ_REGEX
 ])
 
-dnl FIXME: maybe put this in a separate file
+AC_DEFUN(jm_PREREQ_CANON_HOST,
+[
+  AC_CHECK_FUNCS(gethostbyname gethostbyaddr inet_ntoa)
+  AC_CHECK_HEADERS(unistd.h string.h netdb.h sys/socket.h \
+                   netinet/in.h arpa/inet.h)
+
+  AC_HEADER_STDC
+  AC_FUNC_ALLOCA
+])
+
 AC_DEFUN(jm_PREREQ_QUOTEARG,
 [
   AC_CHECK_FUNCS(isascii mbrtowc)
@@ -20,7 +30,6 @@ AC_DEFUN(jm_PREREQ_QUOTEARG,
   AM_C_PROTOTYPES
 ])
 
-dnl FIXME: maybe put this in a separate file
 AC_DEFUN(jm_PREREQ_REGEX,
 [
   dnl FIXME: Maybe provide a btowc replacement someday: solaris-2.5.1 lacks it.
