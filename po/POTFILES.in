@@ -1,5 +1,5 @@
 # List of files which contain translatable strings.
-# Copyright (C) 1996-2002 Free Software Foundation, Inc.
+# Copyright (C) 1996-2003 Free Software Foundation, Inc.
 
 # These are nominally temporary...
 lib/argmatch.c
@@ -75,6 +75,7 @@ src/printenv.c
 src/printf.c
 src/ptx.c
 src/pwd.c
+src/readlink.c
 src/remove.c
 src/rm.c
 src/rmdir.c
