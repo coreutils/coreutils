@@ -1,5 +1,7 @@
 Fri Nov  1 21:33:16 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* tests/sort-test/Test.pm: Add a test to exercize this fix.
+
 	* src/sort.c [!ENABLE_ASSERTIONS]: Guard NDEBUG definition.
 	(checkfp): Fix off-by-one error that resulted in writing one byte
 	beyond the end of a malloc'd buffer.  It caused `sort -c' to segfault
