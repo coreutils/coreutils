@@ -2,6 +2,12 @@
 
 	* Version 5.0.90.
 
+	* Makefile.maint (ME): Don't use trick suggested in Make manual.
+	It doesn't work for make-3.79.1.  Reported by Christian Krackowizer.
+
+	* Makefile.maint (sc_system_h_headers): Another syntax check.
+	(syntax-check-rules): Add it to the list.
+
 	* src/pathchk.c (validate_path): Cast strlen value to `unsigned long'
 	so it matches `%ld' format even on 32-bit systems.
 
