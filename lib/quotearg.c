@@ -58,6 +58,10 @@
 # include <string.h>
 #endif
 
+#if HAVE_WCTYPE_H
+# include <wctype.h>
+#endif
+
 #if HAVE_MBRTOWC && HAVE_WCHAR_H
 # include <wchar.h>
 #else
