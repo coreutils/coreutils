@@ -1,5 +1,7 @@
 1998-01-10  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* Version 1.22d.
+
 	* src/system.h [HAVE_LIMITS_H]: Include limits.h
 	(TYPE_SIGNED): Define.
 	(TYPE_MINIMUM): Define.
