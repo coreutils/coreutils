@@ -1,5 +1,12 @@
 2004-03-30  Paul Eggert  <eggert@twinsun.com>
 
+	* cloexec.c, cloexec.h, config.charset, file-type.c, file-type.h:
+	* getloadavg.c, getndelim2.c, getusershell.c, group-member.c:
+	* human.c, path-concat.c, printf-args.c, printf-args.h, quotearg.c:
+	* quotearg.h, setenv.c, strdup.c, userspec.c:
+	* userspec.h, vasprintf.c: Sync from gnulib.
+
+	* allocsa.c, allocsa.h, strdup.h: New files, from gnulib.
 	* Makefile.am (libfetish_a_SOURCES): Add allocsa.c, allocsa.h,
 	and strdup.h.
 
