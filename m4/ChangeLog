@@ -1,5 +1,10 @@
 2004-05-01  Jim Meyering  <jim@meyering.net>
 
+	* jm-mktime.m4: Remove file.  This is now part of mktime.m4.
+	* glibc.m4, c-stack.m4, xsize.m4, size_max.m4: Remove unused files.
+	* printf-posix.m4, lcmessage.m4: Likewise.
+	* gettextext.m4, intdiv0.m4, intmax.m4: Likewise.
+
 	* jm-macros.m4 (gl_MACROS): Move fchown-checking code to chown.m4.
 	* chown.m4 (gl_PREREQ_CHOWN): Check for fcntl.h.
 	See if we need an fchown replacement.
