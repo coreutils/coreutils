@@ -1,3 +1,7 @@
+2004-01-27  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (seq invocation): Remove `@dots{}' at end of synopsis.
+
 2004-01-19  Paul Eggert  <eggert@twinsun.com>
 
 	* coreutils.texi (Exit status): Document that ordinary failure
