@@ -53,8 +53,6 @@ int safe_read ();
 int full_write ();
 void invalid_arg ();
 
-static int touch (char *file);
-static void usage (int status);
 #ifndef HAVE_UTIME_NULL
 static int utime_now ();
 #endif
@@ -124,131 +122,6 @@ static int const time_masks[] =
 {
   CH_ATIME, CH_ATIME, CH_ATIME, CH_MTIME, CH_MTIME
 };
-
-void
-main (int argc, char **argv)
-{
-  int c, i;
-  int date_set = 0;
-  int err = 0;
-
-  program_name = argv[0];
-  change_times = no_create = use_ref = posix_date = flexible_date = 0;
-  newtime = (time_t) -1;
-
-  while ((c = getopt_long (argc, argv, "acd:fmr:t:", longopts, (int *) 0))
-	 != EOF)
-    {
-      switch (c)
-	{
-	case 0:
-	  break;
-
-	case 'a':
-	  change_times |= CH_ATIME;
-	  break;
-
-	case 'c':
-	  no_create++;
-	  break;
-
-	case 'd':
-	  flexible_date++;
-	  newtime = get_date (optarg, NULL);
-	  if (newtime == (time_t) -1)
-	    error (1, 0, "invalid date format `%s'", optarg);
-	  date_set++;
-	  break;
-
-	case 'f':
-	  break;
-
-	case 'm':
-	  change_times |= CH_MTIME;
-	  break;
-
-	case 'r':
-	  use_ref++;
-	  ref_file = optarg;
-	  break;
-
-	case 't':
-	  posix_date++;
-	  newtime = posixtime (optarg);
-	  if (newtime == (time_t) -1)
-	    error (1, 0, "invalid date format `%s'", optarg);
-	  date_set++;
-	  break;
-
-	case 130:
-	  i = argmatch (optarg, time_args);
-	  if (i < 0)
-	    {
-	      invalid_arg ("time selector", optarg, i);
-	      usage (1);
-	    }
-	  change_times |= time_masks[i];
-	  break;
-
-	default:
-	  usage (1);
-	}
-    }
-
-  if (show_version)
-    {
-      printf ("touch - %s\n", version_string);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
-
-  if (change_times == 0)
-    change_times = CH_ATIME | CH_MTIME;
-
-  if ((use_ref && (posix_date || flexible_date))
-      || (posix_date && flexible_date))
-    {
-      error (0, 0, "cannot specify times from more than one source");
-      usage (1);
-    }
-
-  if (use_ref)
-    {
-      if (stat (ref_file, &ref_stats))
-	error (1, errno, "%s", ref_file);
-      date_set++;
-    }
-
-  if (!date_set && optind < argc && strcmp (argv[optind - 1], "--"))
-    {
-      newtime = posixtime (argv[optind]);
-      if (newtime != (time_t) -1)
-	{
-	  optind++;
-	  date_set++;
-	}
-    }
-  if (!date_set)
-    {
-      if ((change_times & (CH_ATIME | CH_MTIME)) == (CH_ATIME | CH_MTIME))
-	amtime_now = 1;
-      else
-	time (&newtime);
-    }
-
-  if (optind == argc)
-    {
-      error (0, 0, "file arguments missing");
-      usage (1);
-    }
-
-  for (; optind < argc; ++optind)
-    err += touch (argv[optind]);
-
-  exit (err != 0);
-}
 
 /* Update the time of file FILE according to the options given.
    Return 0 if successful, 1 if an error occurs. */
@@ -391,4 +264,129 @@ Update the access and modification times of each FILE to the current time.\n\
 STAMP may be used without -t if none of -drt, nor --, are used.\n");
     }
   exit (status);
+}
+
+void
+main (int argc, char **argv)
+{
+  int c, i;
+  int date_set = 0;
+  int err = 0;
+
+  program_name = argv[0];
+  change_times = no_create = use_ref = posix_date = flexible_date = 0;
+  newtime = (time_t) -1;
+
+  while ((c = getopt_long (argc, argv, "acd:fmr:t:", longopts, (int *) 0))
+	 != EOF)
+    {
+      switch (c)
+	{
+	case 0:
+	  break;
+
+	case 'a':
+	  change_times |= CH_ATIME;
+	  break;
+
+	case 'c':
+	  no_create++;
+	  break;
+
+	case 'd':
+	  flexible_date++;
+	  newtime = get_date (optarg, NULL);
+	  if (newtime == (time_t) -1)
+	    error (1, 0, "invalid date format `%s'", optarg);
+	  date_set++;
+	  break;
+
+	case 'f':
+	  break;
+
+	case 'm':
+	  change_times |= CH_MTIME;
+	  break;
+
+	case 'r':
+	  use_ref++;
+	  ref_file = optarg;
+	  break;
+
+	case 't':
+	  posix_date++;
+	  newtime = posixtime (optarg);
+	  if (newtime == (time_t) -1)
+	    error (1, 0, "invalid date format `%s'", optarg);
+	  date_set++;
+	  break;
+
+	case 130:
+	  i = argmatch (optarg, time_args);
+	  if (i < 0)
+	    {
+	      invalid_arg ("time selector", optarg, i);
+	      usage (1);
+	    }
+	  change_times |= time_masks[i];
+	  break;
+
+	default:
+	  usage (1);
+	}
+    }
+
+  if (show_version)
+    {
+      printf ("touch - %s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage (0);
+
+  if (change_times == 0)
+    change_times = CH_ATIME | CH_MTIME;
+
+  if ((use_ref && (posix_date || flexible_date))
+      || (posix_date && flexible_date))
+    {
+      error (0, 0, "cannot specify times from more than one source");
+      usage (1);
+    }
+
+  if (use_ref)
+    {
+      if (stat (ref_file, &ref_stats))
+	error (1, errno, "%s", ref_file);
+      date_set++;
+    }
+
+  if (!date_set && optind < argc && strcmp (argv[optind - 1], "--"))
+    {
+      newtime = posixtime (argv[optind]);
+      if (newtime != (time_t) -1)
+	{
+	  optind++;
+	  date_set++;
+	}
+    }
+  if (!date_set)
+    {
+      if ((change_times & (CH_ATIME | CH_MTIME)) == (CH_ATIME | CH_MTIME))
+	amtime_now = 1;
+      else
+	time (&newtime);
+    }
+
+  if (optind == argc)
+    {
+      error (0, 0, "file arguments missing");
+      usage (1);
+    }
+
+  for (; optind < argc; ++optind)
+    err += touch (argv[optind]);
+
+  exit (err != 0);
 }
