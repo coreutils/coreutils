@@ -81,7 +81,6 @@ AC_DEFUN([jm_MACROS],
   AC_CHECK_FUNCS( \
     endgrent \
     endpwent \
-    fdatasync \
     ftruncate \
     gethrtime \
     hasmntopt \
@@ -110,6 +109,15 @@ AC_DEFUN([jm_MACROS],
   AC_FUNC_STRTOD
   AC_REQUIRE([GL_FUNC_GETCWD_PATH_MAX])
   AC_REQUIRE([GL_FUNC_READDIR])
+
+  # for dd.c and shred.c
+  fetish_saved_libs=$LIBS
+    AC_SEARCH_LIBS([fdatasync], [rt posix4],
+		   [test "$ac_cv_search_fdatasync" = "none required" ||
+		    LIB_FDATASYNC=$ac_cv_search_fdatasync])
+    AC_SUBST([LIB_FDATASYNC])
+    AC_CHECK_FUNCS(fdatasync)
+  LIBS=$fetish_saved_libs
 
   # See if linking `seq' requires -lm.
   # It does on nearly every system.  The single exception (so far) is
