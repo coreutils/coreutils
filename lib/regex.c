@@ -1157,7 +1157,7 @@ typedef struct
     /* Push the info, starting with the registers.  */			\
     DEBUG_PRINT1 ("\n");						\
 									\
-    if (!RE_NO_POSIX_BACKTRACKING & bufp->syntax)			\
+    if (!(RE_NO_POSIX_BACKTRACKING & bufp->syntax))			\
       for (this_reg = lowest_active_reg; this_reg <= highest_active_reg; \
 	   this_reg++)							\
 	{								\
@@ -1279,7 +1279,7 @@ typedef struct
   low_reg = (unsigned) POP_FAILURE_INT ();				\
   DEBUG_PRINT2 ("  Popping  low active reg: %d\n", low_reg);		\
 									\
-  if (!RE_NO_POSIX_BACKTRACKING & bufp->syntax)				\
+  if (!(RE_NO_POSIX_BACKTRACKING & bufp->syntax))			\
     for (this_reg = high_reg; this_reg >= low_reg; this_reg--)		\
       {									\
 	DEBUG_PRINT2 ("    Popping reg: %d\n", this_reg);		\
@@ -1293,6 +1293,16 @@ typedef struct
 	regstart[this_reg] = (const char *) POP_FAILURE_POINTER ();	\
 	DEBUG_PRINT2 ("      start: 0x%x\n", regstart[this_reg]);	\
       }									\
+  else									\
+    {									\
+      for (this_reg = highest_active_reg; this_reg > high_reg; this_reg--) \
+	{								\
+	  reg_info[this_reg].word = 0;					\
+	  regend[this_reg] = 0;						\
+	  regstart[this_reg] = 0;					\
+	}								\
+      highest_active_reg = high_reg;					\
+    }									\
 									\
   set_regs_matched_done = 0;						\
   DEBUG_STATEMENT (nfailure_points_popped++);				\
@@ -1369,11 +1379,13 @@ static reg_errcode_t compile_range ();
    if necessary.  Also cast from a signed character in the constant
    string passed to us by the user to an unsigned char that we can use
    as an array index (in, e.g., `translate').  */
+#ifndef PATFETCH
 #define PATFETCH(c)							\
   do {if (p == pend) return REG_EEND;					\
     c = (unsigned char) *p++;						\
-    if (translate) c = translate[c]; 					\
+    if (translate) c = (unsigned char) translate[c];			\
   } while (0)
+#endif
 
 /* Fetch the next character in the uncompiled pattern, with no
    translation.  */
@@ -1390,7 +1402,10 @@ static reg_errcode_t compile_range ();
    cast the subscript to translate because some data is declared as
    `char *', to avoid warnings when a string constant is passed.  But
    when we use a character as a subscript we must make it unsigned.  */
-#define TRANSLATE(d) (translate ? translate[(unsigned char) (d)] : (d))
+#ifndef TRANSLATE
+#define TRANSLATE(d) \
+  (translate ? (char) translate[(unsigned char) (d)] : (d))
+#endif
 
 
 /* Macros for outputting the compiled pattern into `buffer'.  */
@@ -1656,7 +1671,7 @@ regex_compile (pattern, size, syntax, bufp)
   const char *pend = pattern + size;
   
   /* How to translate the characters in the pattern.  */
-  char *translate = bufp->translate;
+  RE_TRANSLATE_TYPE translate = bufp->translate;
 
   /* Address of the count-byte of the most recently inserted `exactn'
      command.  This makes it possible to tell if a new exact-match
@@ -2822,7 +2837,7 @@ group_in_compile_stack (compile_stack, regnum)
 static reg_errcode_t
 compile_range (p_ptr, pend, translate, syntax, b)
     const char **p_ptr, *pend;
-    char *translate;
+    RE_TRANSLATE_TYPE translate;
     reg_syntax_t syntax;
     unsigned char *b;
 {
@@ -3256,7 +3271,7 @@ re_search_2 (bufp, string1, size1, string2, size2, startpos, range, regs, stop)
 {
   int val;
   register char *fastmap = bufp->fastmap;
-  register char *translate = bufp->translate;
+  register RE_TRANSLATE_TYPE translate = bufp->translate;
   int total_size = size1 + size2;
   int endpos = startpos + range;
 
@@ -3544,7 +3559,7 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
   unsigned char *just_past_start_mem = 0;
 
   /* We use this to map every character in the string.  */
-  char *translate = bufp->translate;
+  RE_TRANSLATE_TYPE translate = bufp->translate;
 
   /* Failure point stack.  Each place that can handle a failure further
      down the line pushes a failure point on this stack.  It consists of
@@ -3945,7 +3960,8 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
 	      do
 		{
 		  PREFETCH ();
-		  if (translate[(unsigned char) *d++] != (char) *p++)
+		  if ((unsigned char) translate[(unsigned char) *d++]
+		      != (unsigned char) *p++)
                     goto fail;
 		}
 	      while (--mcnt);
@@ -4359,7 +4375,7 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
              for that group and all inner ones, so that if we fail back
              to this point, the group's information will be correct.
              For example, in \(a*\)*\1, we need the preceding group,
-             and in \(\(a*\)b*\)\2, we need the inner group.  */
+             and in \(zz\(a*\)b*\)\2, we need the inner group.  */
 
           /* We can't use `p' to check ahead because we push
              a failure point to `p + mcnt' after we do this.  */
@@ -5067,7 +5083,7 @@ static int
 bcmp_translate (s1, s2, len, translate)
      unsigned char *s1, *s2;
      register int len;
-     char *translate;
+     RE_TRANSLATE_TYPE translate;
 {
   register unsigned char *p1 = s1, *p2 = s2;
   while (len)
@@ -5239,7 +5255,9 @@ regcomp (preg, pattern, cflags)
     {
       unsigned i;
       
-      preg->translate = (char *) malloc (CHAR_SET_SIZE);
+      preg->translate
+	= (RE_TRANSLATE_TYPE) malloc (CHAR_SET_SIZE
+				      * sizeof (*(RE_TRANSLATE_TYPE)0));
       if (preg->translate == NULL)
         return (int) REG_ESPACE;
 

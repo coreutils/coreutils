@@ -279,6 +279,10 @@ typedef enum
    compiled, the `re_nsub' field is available.  All other fields are
    private to the regex routines.  */
 
+#ifndef RE_TRANSLATE_TYPE 
+#define RE_TRANSLATE_TYPE char *
+#endif
+
 struct re_pattern_buffer
 {
 /* [[[begin pattern_buffer]]] */
@@ -305,7 +309,7 @@ struct re_pattern_buffer
            comparing them, or zero for no translation.  The translation
            is applied to a pattern when it is compiled and to a string
            when it is matched.  */
-  char *translate;
+  RE_TRANSLATE_TYPE translate;
 
 	/* Number of subexpressions found by the compiler.  */
   size_t re_nsub;
