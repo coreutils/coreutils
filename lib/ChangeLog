@@ -1,3 +1,8 @@
+2001-03-06  Bruno Haible  <haible@clisp.cons.org>
+
+	* config.charset: Update for FreeBSD 4.2 and OSF/1 5.1. Add
+	support for DOS/DJGPP.
+
 2001-02-28  Paul Eggert  <eggert@twinsun.com>
 
 	* Makefile.am (libfetish_a_SOURCES):
