@@ -42,7 +42,7 @@ libfetish_a_SOURCES = \
   argmatch.c argmatch.h \
   backupfile.c backupfile.h \
   basename.c \
-  c-strtod.c c-strtod.h \
+  c-strtod.c c-strtod.h c-strtold.c \
   canon-host.c \
   canonicalize.c canonicalize.h \
   cloexec.c cloexec.h \
