@@ -6,7 +6,7 @@ use Getopt::Long;
 use Digest::MD5;
 use Digest::SHA1;
 
-(my $VERSION = '$Revision: 1.16 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.17 $ ') =~ tr/[0-9].//cd;
 (my $ME = $0) =~ s|.*/||;
 
 my %valid_release_types = map {$_ => 1} qw (alpha beta major);
@@ -226,11 +226,13 @@ sub print_changelog_deltas ($$)
   $fail
     and exit 1;
 
+  # The markup is escaped as <\# so that when this script is sent by
+  # mail (or part of a diff), Gnus is not triggered.
   print <<EOF;
 
 Subject: $my_distdir released
 
-<#secure method=pgpmime mode=sign>
+<\#secure method=pgpmime mode=sign>
 
 FIXME: put comments here
 
@@ -263,8 +265,10 @@ EOF
 
   print "\nHere are the MD5 and SHA1 signatures:\n";
   print "\n";
-  print "<#part type=text/plain filename=\"$tmp\" disposition=inline>\n"
-    . "<#/part>\n";
+  # The markup is escaped as <\# so that when this script is sent by
+  # mail (or part of a diff), Gnus is not triggered.
+  print "<\#part type=text/plain filename=\"$tmp\" disposition=inline>\n"
+    . "<\#/part>\n";
 
   open OUT, '>', $tmp
     or die "$ME: $tmp: cannot open for writing: $!\n";
