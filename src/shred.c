@@ -107,6 +107,7 @@
 #include "closeout.h"
 #include "error.h"
 #include "human.h"
+#include "inttostr.h"
 #include "quotearg.h"		/* For quotearg_colon */
 #include "quote.h"		/* For quotearg_colon */
 char *xstrdup PARAMS ((char const *));
@@ -131,10 +132,6 @@ char *xstrdup PARAMS ((char const *));
 /* How many seconds to wait before checking whether to output another
    verbose output line.  */
 #define VERBOSE_UPDATE 5
-
-/* If positive, the units to use when printing sizes;
-   if negative, the human-readable base.  */
-#define OUTPUT_BLOCK_SIZE (-1024)
 
 struct Options
 {
@@ -878,11 +875,9 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 	      else
 		{
 		  int errnum = errno;
-		  char buf[LONGEST_HUMAN_READABLE + 1];
+		  char buf[INT_BUFSIZE_BOUND (uintmax_t)];
 		  error (0, errnum, _("%s: error writing at offset %s"),
-			 qname,
-			 human_readable ((uintmax_t) (offset + soff),
-					 buf, 1, 1));
+			 qname, umaxtostr ((uintmax_t) offset + soff, buf));
 		  /*
 		   * I sometimes use shred on bad media, before throwing it
 		   * out.  Thus, I don't want it to give up on bad blocks.
@@ -923,9 +918,11 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 	{
 	  char offset_buf[LONGEST_HUMAN_READABLE + 1];
 	  char size_buf[LONGEST_HUMAN_READABLE + 1];
+	  int human_progress_opts = (human_autoscale | human_SI
+				     | human_base_1024 | human_B);
 	  char const *human_offset
-	    = human_readable ((uintmax_t) offset, offset_buf, 1,
-			      OUTPUT_BLOCK_SIZE);
+	    = human_readable (offset, offset_buf,
+			      human_floor | human_progress_opts, 1, 1);
 
 	  if (offset == size
 	      || !STREQ (previous_human_offset, human_offset))
@@ -941,10 +938,14 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 				 : (off <= TYPE_MAXIMUM (uintmax_t) / 100
 				    ? off * 100 / size
 				    : off / (size / 100)));
+		  char const *human_size
+		    = human_readable (size, size_buf,
+				      human_ceiling | human_progress_opts,
+				      1, 1);
+		  if (offset == size)
+		    human_offset = human_size;
 		  error (0, 0, _("%s: pass %lu/%lu (%s)...%s/%s %d%%"),
-			 qname, k, n, pass_string, human_offset,
-			 human_readable ((uintmax_t) size, size_buf, 1,
-					 OUTPUT_BLOCK_SIZE),
+			 qname, k, n, pass_string, human_offset, human_size,
 			 percent);
 		}
 
