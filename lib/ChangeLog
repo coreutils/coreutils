@@ -1,3 +1,33 @@
+2004-07-27  Paul Eggert  <eggert@cs.ucla.edu>
+
+	backupfile.c rewrite to avoid arbitrary limits on lengths of
+	numeric backup extensions.
+	
+	* addext.c: Remove; no longer needed.
+	* Makefile.am (libfetish_a_SOURCES): Remove addext.c.
+	* backupfile.h (addext): Remove decl.
+	* backupfile.c: Include "backupfile.h" first.
+	Include errno.h, stdbool.h, limits.h, unistd.h, xalloc.h.
+	(CLOSEDIR, INT_STRLEN_BOUND): Remove.
+	(pathconf) [! (HAVE_PATHCONF && defined _PC_NAME_MAX)]: New macro.
+	(_POSIX_NAME_MAX) [!defined _POSIX_NAME_MAX]: New macro.
+	(NAME_MAX_MAXIMUM): New macro.  Unlike the old addext.c, we
+	also look at _XOPEN_NAME_MAX, for better performance on modern
+	hosts that support only file names of length 255 or more.
+	(ISDIGIT): unsigned -> unsigned int
+	(max_backup_version, version_number): Remove.
+	(check_extension): New function.  Similar to the old addext, but
+	static, assumes that the extension has already been added,
+	and a bit more careful on DOS hosts.
+	(numbered_backup): New function.  It does what max_backup_version
+	and version_number used to do, but it doesn't use integer arithmetic
+	to calculate extensions so it doesn't overflow.
+	(find_backup_file_name): Rewrite to use these new functions.
+	This has a new optimization: we needn't call pathconf if the
+	new numbered backup name has the same length as the old.
+	Also, use xmalloc rather than malloc, so that the caller
+	needn't worry about memory exhaustion.
+	
 2004-07-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* euidaccess.c [!defined LIBC]: Included group-member.h, stat-macros.h.

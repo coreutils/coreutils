@@ -1,3 +1,9 @@
+2004-07-27  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* backupfile.m4 (gl_BACKUPFILE): AC_REQUIRE
+	gl_CHECK_TYPE_STRUCT_DIRENT_D_INO instead of invoking it directly.
+	Do not require AC_FUNC_CLOSEDIR_VOID.
+
 2004-07-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* jm-macros.m4 (gl_MACROS): Remove test for setreuid and setregid,
