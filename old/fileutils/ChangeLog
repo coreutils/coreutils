@@ -1,5 +1,7 @@
 1998-02-07  Jim Meyering  <meyering@eng.ascend.com>
 
+	* Version 3.16m.
+
 	* GNUmakefile: New file.
 	* Makefile.am (EXTRA_DIST): Add GNUmakefile.
 	Don't include Makefile.maint from here.  It's included from GNUmakefile.
