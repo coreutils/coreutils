@@ -1,6 +1,11 @@
-2002-04-14  Jim Meyering  <meyering@lucent.com>
+2002-04-15  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.9.
+
+	* src/stat.c (print_human_fstype): Add missing `break;'
+	for `case S_MAGIC_MINIX:'.
+
+2002-04-14  Jim Meyering  <meyering@lucent.com>
 
 	* src/stat.c (statfs_secure): Define.
 	(print_stat): Remove another #ifdef.
