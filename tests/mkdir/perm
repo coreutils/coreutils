@@ -31,26 +31,29 @@ tests='
     050  :            :drwx-w-rwx:
     050  :   -m 312   :d-wx--x-w-:
     160  :            :drw---xrwx:
+    -    :   -        :last:
     '
+for p in empty -p; do
+  test _$p = _empty && p=
 
-old_IFS=$IFS
-IFS=':
+  old_IFS=$IFS
+  IFS=':
 '
-set - $tests
-IFS=$old_IFS
+  set - $tests
+  IFS=$old_IFS
 
-while :; do
-  case $# in 0|1|2) break;; esac
+  while :; do
+    umask=$1 mode=$2 expected_perms=$3
+    test $expected_perms = last && break
+    shift; shift; shift
+    umask $umask
+    mkdir $p $mode d || fail=1
 
-  umask=$1 mode=$2 expected_perms=$3
-  shift; shift; shift
-  umask $umask
-  mkdir $mode d || fail=1
-
-  actual_perms=`ls -ld d | sed 's/ .*//'`
-  test "$expected_perms" = "$actual_perms" \
-    || { fail=1; echo expected $expected_perms, got $actual_perms; }
-  rmdir d || fail=1
+    actual_perms=`ls -ld d | sed 's/ .*//'`
+    test "$expected_perms" = "$actual_perms" \
+      || { fail=1; echo expected $expected_perms, got $actual_perms; }
+    rmdir d || fail=1
+  done
 done
 
 (exit $fail); exit
