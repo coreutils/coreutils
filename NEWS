@@ -3,8 +3,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
-  chgrp -R can now process hierarchies of virtually unlimited depth.
-  chgrp now accepts POSIX-mandated -L, -H, and -P options
+  chown and chgrp can now process hierarchies of virtually unlimited depth
+  chown and chgrp now accept POSIX-mandated -L, -H, and -P options
 
   chmod accepts new options: --preserve-root, --no-preserve-root
 
