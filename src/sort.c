@@ -1315,7 +1315,7 @@ sort (files, nfiles, ofp)
   int i, ntmp;
   FILE *fp, *tfp;
   struct tempnode *node;
-  int ntemp = 0;
+  int n_temp_files = 0;
   char **tempfiles;
 
   initbuf (&buf, sortalloc);
@@ -1338,11 +1338,11 @@ sort (files, nfiles, ofp)
 		xrealloc ((char *) tmp, ntmp * sizeof (struct line));
 	    }
 	  sortlines (lines.lines, lines.used, tmp);
-	  if (feof (fp) && !nfiles && !ntemp && !buf.left)
+	  if (feof (fp) && !nfiles && !n_temp_files && !buf.left)
 	    tfp = ofp;
 	  else
 	    {
-	      ++ntemp;
+	      ++n_temp_files;
 	      tfp = xfopen (tempname (), "w");
 	    }
 	  for (i = 0; i < lines.used; ++i)
@@ -1362,13 +1362,13 @@ sort (files, nfiles, ofp)
   free ((char *) lines.lines);
   free ((char *) tmp);
 
-  if (ntemp)
+  if (n_temp_files)
     {
-      tempfiles = (char **) xmalloc (ntemp * sizeof (char *));
-      i = ntemp;
+      tempfiles = (char **) xmalloc (n_temp_files * sizeof (char *));
+      i = n_temp_files;
       for (node = temphead.next; i > 0; node = node->next)
 	tempfiles[--i] = node->name;
-      merge (tempfiles, ntemp, ofp);
+      merge (tempfiles, n_temp_files, ofp);
       free ((char *) tempfiles);
     }
 }
