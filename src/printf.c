@@ -224,7 +224,7 @@ print_esc (const char *escstart)
   if (*p == 'x')
     {
       for (esc_length = 0, ++p;
-	   esc_length < 3 && ISXDIGIT (*(const unsigned char*)p);
+	   esc_length < 3 && ISXDIGIT (*p);
 	   ++esc_length, ++p)
 	esc_value = esc_value * 16 + hextobin (*p);
       if (esc_length == 0)
