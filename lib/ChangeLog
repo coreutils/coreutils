@@ -1,3 +1,8 @@
+2000-11-04  Alexandre Duret-Lutz  <duret_g@epita.fr>
+
+	* hash.c (hash_get_next): Fix a thinko:  when ENTRY is the
+	last one in a bucket, advance to the next bucket.
+
 2000-11-02  Vesselin Atanasov  <vesselin@bgnet.bg>
 
 	* lib/fnmatch.c: Do not comment out all the code if we are using
