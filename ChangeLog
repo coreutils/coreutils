@@ -1,6 +1,10 @@
-2004-05-31  Jim Meyering  <jim@meyering.net>
+2004-06-01  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* Use automake-1.8b.  Regenerate dependent files.
+
+2004-05-31  Jim Meyering  <jim@meyering.net>
 
 	* tests/Makefile.am.in (TESTS_ENVIRONMENT): Define PATH to include
 	the build src/ directory -- at the front.
