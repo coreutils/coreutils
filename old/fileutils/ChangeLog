@@ -1,3 +1,9 @@
+2000-06-26  Paul Eggert  <eggert@twinsun.com>
+
+	* src/df.c (show_dev): Round disk usage percentage up, not to
+	nearest value.  Use integer arithmetic if it's easy.  Fix bug
+	when converting twos-complement negative values to floating point.
+
 2000-06-25  Jim Meyering  <meyering@lucent.com>
 
 	* src/copy.c (copy_internal): Don't return return immediately after a
