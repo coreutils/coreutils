@@ -77,8 +77,6 @@ enum
   UNLINK_DEST_BEFORE_OPENING
 };
 
-void strip_trailing_slashes ();
-
 /* Initial number of entries in each hash table entry's table of inodes.  */
 #define INITIAL_HASH_MODULE 100
 
@@ -342,18 +340,18 @@ make_path_private (const char *const_dirpath, int src_offset, int mode,
   struct stat stats;
   char *dirpath;		/* A copy of CONST_DIRPATH we can change. */
   char *src;			/* Source name in `dirpath'. */
-  char *tmp_dst_dirname;	/* Leading path of `dirpath', malloc. */
-  char *dst_dirname;		/* Leading path of `dirpath', alloca. */
+  char *dst_dirname;		/* Leading path of `dirpath'. */
+  size_t dirlen;		/* Length of leading path of `dirpath'. */
 
   dirpath = (char *) alloca (strlen (const_dirpath) + 1);
   strcpy (dirpath, const_dirpath);
 
   src = dirpath + src_offset;
 
-  tmp_dst_dirname = dir_name (dirpath);
-  dst_dirname = (char *) alloca (strlen (tmp_dst_dirname) + 1);
-  strcpy (dst_dirname, tmp_dst_dirname);
-  free (tmp_dst_dirname);
+  dirlen = dir_len (dirpath);
+  dst_dirname = (char *) alloca (dirlen + 1);
+  memcpy (dst_dirname, dirpath, dirlen);
+  dst_dirname[dirlen] = '\0';
 
   *attr_list = NULL;
 
