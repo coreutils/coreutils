@@ -1,5 +1,8 @@
 1999-08-08  Jim Meyering  <meyering@ascend.com>
 
+	* src/touch.c (usage): Clarify description of --time=WORD.
+	From Karl Berry.
+
 	* lib/savedir.c (savedir): Change type of name_size parameter to off_t.
 	* lib/savedir.h (savedir): Update prototype.
 	* src/chmod.c (change_dir_mode): Remove cast of savedir arg.
