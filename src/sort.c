@@ -83,7 +83,7 @@ char *xstrdup ();
 # define NLS_STRNCMP(S1, S2, Len) strncoll_s2_readonly (S1, S2, Len)
 #else
 # define NLS_MEMCMP(S1, S2, Len) memcmp (S1, S2, Len)
-# define NLS_STRNCMP(S1, S2, Len) strcmp (S1, S2, Len)
+# define NLS_STRNCMP(S1, S2, Len) strncmp (S1, S2, Len)
 #endif
 
 #ifdef ENABLE_NLS
