@@ -34,7 +34,7 @@ my $slink_d = {PRE => sub {symlink '/', 'd' or die "d: $!\n";
                            }};
 my $exe_in_subdir =
   {PRE => sub { mkdir 'j', 0700 or die "creating j: $!\n";
-		open FH, '>j/d' or die "creating j/d: $!\n";
+		(open F, '>j/d') && close F or die "creating j/d: $!\n";
                 chmod 0555, 'j/d' or die "making j/d executable: $!\n";
                 $ENV{LS_COLORS}='ex=01;32'
                 }};
