@@ -2,6 +2,9 @@
 
 	* Version 5.3.0.
 
+	* src/who.c (print_user): Use xrealloc here, rather than
+	unchecked realloc.  Remove anachronistic casts.
+
 	* src/remove.c (full_filename_): Don't leak upon failed realloc.
 
 	* src/system.h (readdir_ignoring_dot_and_dotdot): New inline function,
