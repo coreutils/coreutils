@@ -1,6 +1,11 @@
-2002-09-14  Jim Meyering  <meyering@lucent.com>
+2002-09-15  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.2.
+
+	* src/csplit.c (get_format_width): Add cast to avoid
+	warning about `signed and unsigned type in conditional expression'.
+
+2002-09-14  Jim Meyering  <meyering@lucent.com>
 
 	* src/who.c (print_user): Change type of local to size_t
 	to avoid warnings about `comparison between signed and unsigned'.
