@@ -2141,6 +2141,12 @@ get_link_name (const char *filename, struct fileinfo *f)
   size_t link_val_len;
 
   f->linkname = xreadlink (filename, &link_val_len);
+  if (f->linkname == NULL)
+    {
+      error (0, errno, _("cannot read symbolic link %s"),
+	     quotearg_colon (filename));
+      exit_status = 1;
+    }
 }
 
 /* If `linkname' is a relative path and `path' contains one or more
