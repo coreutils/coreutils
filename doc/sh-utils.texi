@@ -718,85 +718,11 @@ Exit status:
 @end display
 
 @menu
-* Relations for expr::          | & < <= = == != >= >
-* Numeric expressions::         + - * / %
 * String expressions::          <colon> match substr index length quote
+* Numeric expressions::         + - * / %
+* Relations for expr::          | & < <= = == != >= >
 * Examples of expr::            Examples.
 @end menu
-
-
-@node Relations for expr
-@subsection Relations for @code{expr}
-
-@cindex connectives, logical
-@cindex logical connectives
-@cindex relations, numeric or string
-
-The usual logical connectives and relations, in order of precedence.
-
-@table @samp
-
-@item |
-@kindex |
-@cindex logical or operator
-@cindex or operator
-Yields its first argument if it is neither null nor 0, otherwise its
-second argument.
-
-@item &
-@kindex &
-@cindex logical and operator
-@cindex and operator
-Yields its first argument if neither argument is null or 0, otherwise
-0.
-
-@item < <= = == != >= >
-@kindex <
-@kindex <=
-@kindex =
-@kindex ==
-@kindex >
-@kindex >=
-@cindex comparison operators
-Compare the arguments and return 1 if the relation is true, 0 otherwise.
-@code{==} is a synonym for @code{=}.  @code{expr} first tries to coerce
-both arguments to numbers and do a numeric comparison; if either
-coercion fails, it does a lexicographic comparison.
-
-@end table
-
-
-@node Numeric expressions
-@subsection Numeric expressions
-
-@cindex numeric expressions
-@cindex expressions, numeric
-
-Numeric operators, in order of increasing precedence.  The connectives
-(previous section) have higher precedence, the string operators
-(following section) have lower.
-
-@table @samp
-
-@item + -
-@kindex +
-@kindex -
-@cindex addition
-@cindex subtraction
-Addition and subtraction.  Both arguments are coerced to numbers;
-an error occurs if this cannot be done.
-
-@item * / %
-@kindex *
-@kindex /
-@kindex %
-@cindex multiplication
-@cindex division
-@cindex remainder
-Multiplication, division, remainder.  Both arguments are coerced to
-numbers; an error occurs if this cannot be done.
-
-@end table
 
 
 @node String expressions
@@ -814,7 +740,7 @@ String operators.  These have lowest precedence.
 @cindex regular expression matching
 @cindex matching patterns
 Perform pattern matching.  The arguments are coerced to strings and the
-second is considered to be a (basic, a la @code{grep}) regular
+second is considered to be a (basic, a la GNU @code{grep}) regular
 expression, with a @code{^} implicitly prepended.  The first argument is
 then matched against this regular expression.
 
@@ -825,12 +751,20 @@ subexpression; otherwise, it returns the number of characters matched.
 If the match fails, the @code{:} operator returns the null string if
 @samp{\(} and @samp{\)} are used in @var{regex}, otherwise 0.
 
+@kindex \( @r{regexp operator}
 Only the first @samp{\( @dots{} \)} pair is relevant to the return
 value; additional pairs are meaningful only for grouping the regular
 expression operators.
 
+@kindex \+ @r{regexp operator}
+@kindex \? @r{regexp operator}
+@kindex \| @r{regexp operator}
+In the regular expression, @code{\+}, @code{\?}, and @code{\|} are
+operators which respectively match one or more, zero or one, or separate
+alternatives.  SunOS and other @code{expr}'s treat these as regular
+characters.  (POSIX allows either behavior.)
 @xref{Top, , Regular Expression Library, regex, Regex}, for details of
-regular expression syntax.
+regular expression syntax.  Some examples are in @ref{Examples of expr}.
 
 @item match @var{string} @var{regex}
 @findex match
@@ -869,8 +803,84 @@ To make @code{expr} interpret keywords as strings, you must use the
 @code{quote} operator.
 
 
+@node Numeric expressions
+@subsection Numeric expressions
+
+@cindex numeric expressions
+@cindex expressions, numeric
+
+@code{expr} supports the usual numeric operators, in order of increasing
+precedence.  The string operators (previous section) have lower precedence,
+the connectives (next section) have higher.
+
+@table @samp
+
+@item + -
+@kindex +
+@kindex -
+@cindex addition
+@cindex subtraction
+Addition and subtraction.  Both arguments are coerced to numbers;
+an error occurs if this cannot be done.
+
+@item * / %
+@kindex *
+@kindex /
+@kindex %
+@cindex multiplication
+@cindex division
+@cindex remainder
+Multiplication, division, remainder.  Both arguments are coerced to
+numbers; an error occurs if this cannot be done.
+
+@end table
+
+
+@node Relations for expr
+@subsection Relations for @code{expr}
+
+@cindex connectives, logical
+@cindex logical connectives
+@cindex relations, numeric or string
+
+@code{expr} supports the usual logical connectives and relations.  These
+are higher precedence than either the string or numeric operators
+(previous sections).  Here is the list, lowest-precedence operator first.
+
+@table @samp
+
+@item |
+@kindex |
+@cindex logical or operator
+@cindex or operator
+Returns its first argument if that is neither null nor 0, otherwise its
+second argument.
+
+@item &
+@kindex &
+@cindex logical and operator
+@cindex and operator
+Return its first argument if neither argument is null or 0, otherwise
+0.
+
+@item < <= = == != >= >
+@kindex <
+@kindex <=
+@kindex =
+@kindex ==
+@kindex >
+@kindex >=
+@cindex comparison operators
+Compare the arguments and return 1 if the relation is true, 0 otherwise.
+@code{==} is a synonym for @code{=}.  @code{expr} first tries to coerce
+both arguments to numbers and do a numeric comparison; if either
+coercion fails, it does a lexicographic comparison.
+
+@end table
+
+
 @node Examples of expr
-@subsection Examples of @code{expr}
+@subsection Examples of using @code{expr}
 
 @cindex examples of @code{expr}
 Here are a few examples, including quoting for shell metacharacters.
@@ -886,6 +896,12 @@ To print the non-directory part of the file name stored in
 expr $fname : '.*/\(^.*\)' '^|' $fname
 @end example
 
+An example showing that @code{\+} is an operator:
+@example
+expr aaa : 'a\+'
+@result{} 3
+@end example
+
 @example
 expr abc : 'a\(.\)c'
 @result{} b
@@ -895,7 +911,6 @@ expr index index a
 @error{} expr: syntax error
 expr index quote index a
 @result{} 0
-
 @end example
 
 
