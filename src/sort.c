@@ -52,6 +52,10 @@ static void usage ();
 #define UCHAR_LIM (UCHAR_MAX + 1)
 #define UCHAR(c) ((unsigned char) (c))
 
+#ifndef DEFAULT_TMPDIR
+#define DEFAULT_TMPDIR "/tmp"
+#endif
+
 /* The kind of blanks for '-b' to skip in various options. */
 enum blanktype { bl_start, bl_end, bl_both };
 
@@ -312,10 +316,10 @@ tempname ()
   (struct tempnode *) xmalloc (sizeof (struct tempnode));
 
   sprintf (name,
-	   (len && temp_file_prefix[len - 1] != '/'
-	    ? "%s/sort%5.5d%5.5d"
-	    : "%ssort%5.5d%5.5d"),
-	   temp_file_prefix, (unsigned int) getpid () & 0xffff, ++seq);
+	   "%s%ssort%5.5d%5.5d",
+	   temp_file_prefix,
+	   (len && temp_file_prefix[len - 1] != '/') ? "/" : "",
+	   (unsigned int) getpid () & 0xffff, ++seq);
   node->name = name;
   node->next = temphead.next;
   temphead.next = node;
@@ -1477,7 +1481,7 @@ main (argc, argv)
 
   temp_file_prefix = getenv ("TMPDIR");
   if (temp_file_prefix == NULL)
-    temp_file_prefix = "/tmp";
+    temp_file_prefix = DEFAULT_TMPDIR;
 
 #ifdef _POSIX_VERSION
   newact.sa_handler = sighandler;
@@ -1841,7 +1845,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 \n\
   +POS1 [-POS2]    start a key at POS1, end it before POS2\n\
   -M               compare (unknown) < `JAN' < ... < `DEC', imply -b\n\
-  -T DIRECT        use DIRECT for temporary files, not $TMPDIR or /tmp\n\
+  -T DIRECT        use DIRECT for temporary files, not $TMPDIR or %s\n\
   -b               ignore leading blanks in sort fields or keys\n\
   -c               check if given files already sorted, do not sort\n\
   -d               consider only [a-zA-Z0-9 ] characters in keys\n\
@@ -1864,7 +1868,8 @@ position in the field, both counted from zero.  OPTS is made up of one\n\
 or more of Mbdfinr, this effectively disable global -Mbdfinr settings\n\
 for that key.  If no key given, use the entire line as key.  With no\n\
 FILE, or when FILE is -, read standard input.\n\
-");
+"
+	      , DEFAULT_TMPDIR);
     }
   exit (status);
 }
