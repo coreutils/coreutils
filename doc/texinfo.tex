@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{1999-02-14.16}%
+\def\texinfoversion{1999-02-21.16}%
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99
 % Free Software Foundation, Inc.
@@ -96,14 +96,14 @@
 \newlinechar = `^^J
 
 % Set up fixed words for English if not already set.
-\ifx\putwordAppendix\undefined	\gdef\putwordAppendix{Appendix}\fi
+\ifx\putwordAppendix\undefined  \gdef\putwordAppendix{Appendix}\fi
 \ifx\putwordChapter\undefined   \gdef\putwordChapter{Chapter}\fi
 \ifx\putwordfile\undefined      \gdef\putwordfile{file}\fi
 \ifx\putwordIndexIsEmpty\undefined     \gdef\putwordIndexIsEmpty{(Index is empty)}\fi
 \ifx\putwordIndexNonexistent\undefined \gdef\putwordIndexNonexistent{(Index is nonexistent)}\fi
 \ifx\putwordInfo\undefined      \gdef\putwordInfo{Info}\fi
 \ifx\putwordMethodon\undefined  \gdef\putwordMethodon{Method on}\fi
-\ifx\putwordNoTitle\undefined	\gdef\putwordNoTitle{No Title}\fi
+\ifx\putwordNoTitle\undefined   \gdef\putwordNoTitle{No Title}\fi
 \ifx\putwordof\undefined        \gdef\putwordof{of}\fi
 \ifx\putwordon\undefined        \gdef\putwordon{on}\fi
 \ifx\putwordpage\undefined      \gdef\putwordpage{page}\fi
@@ -111,8 +111,8 @@
 \ifx\putwordSection\undefined   \gdef\putwordSection{Section}\fi
 \ifx\putwordsee\undefined       \gdef\putwordsee{see}\fi
 \ifx\putwordSee\undefined       \gdef\putwordSee{See}\fi
-\ifx\putwordShortTOC\undefined	\gdef\putwordShortTOC{Short Contents}\fi
-\ifx\putwordTOC\undefined	\gdef\putwordTOC{Table of Contents}\fi
+\ifx\putwordShortTOC\undefined  \gdef\putwordShortTOC{Short Contents}\fi
+\ifx\putwordTOC\undefined       \gdef\putwordTOC{Table of Contents}\fi
 %
 \ifx\putwordMJan\undefined \gdef\putwordMJan{January}\fi
 \ifx\putwordMFeb\undefined \gdef\putwordMFeb{February}\fi
@@ -127,13 +127,13 @@
 \ifx\putwordMNov\undefined \gdef\putwordMNov{November}\fi
 \ifx\putwordMDec\undefined \gdef\putwordMDec{December}\fi
 %
-\ifx\putwordDefmac\undefined	\gdef\putwordDefmac{Macro}\fi
-\ifx\putwordDefspec\undefined	\gdef\putwordDefspec{Special Form}\fi
-\ifx\putwordDefivar\undefined	\gdef\putwordDefivar{Instance Variable}\fi
-\ifx\putwordDefvar\undefined	\gdef\putwordDefvar{Variable}\fi
-\ifx\putwordDefopt\undefined	\gdef\putwordDefopt{User Option}\fi
+\ifx\putwordDefmac\undefined    \gdef\putwordDefmac{Macro}\fi
+\ifx\putwordDefspec\undefined   \gdef\putwordDefspec{Special Form}\fi
+\ifx\putwordDefivar\undefined   \gdef\putwordDefivar{Instance Variable}\fi
+\ifx\putwordDefvar\undefined    \gdef\putwordDefvar{Variable}\fi
+\ifx\putwordDefopt\undefined    \gdef\putwordDefopt{User Option}\fi
 \ifx\putwordDeftypevar\undefined\gdef\putwordDeftypevar{Variable}\fi
-\ifx\putwordDeffunc\undefined	\gdef\putwordDeffunc{Function}\fi
+\ifx\putwordDeffunc\undefined   \gdef\putwordDeffunc{Function}\fi
 \ifx\putwordDeftypefun\undefined\gdef\putwordDeftypefun{Function}\fi
 
 % Ignore a token.
