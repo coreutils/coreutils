@@ -1,3 +1,7 @@
+2004-04-20  Jim Meyering  <jim@meyering.net>
+
+	* dirfd.m4: Don't emit trailing blanks.
+
 2004-04-19  Jim Meyering  <jim@meyering.net>
 
 	* readutmp.m4 (gl_PREREQ_READUTMP): Require gl_FUNC_FREE,
