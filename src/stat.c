@@ -96,7 +96,7 @@ print_human_fstype (struct statfs const *statfsbuf)
 
   switch (statfsbuf->f_type)
     {
-#if defined (__linux__)
+#if defined __linux__
     case S_MAGIC_AFFS:
       type = "affs";
       break;
@@ -317,7 +317,7 @@ print_statfs (char *pformat, char m, char const *filename,
       break;
 
     case 'i':
-#if !defined(__linux__) && defined (__GNU__)
+#if !defined __linux__ && defined __GNU__
       strcat (pformat, "Lx");
       printf (pformat, statfsbuf->f_fsid);
 #else
