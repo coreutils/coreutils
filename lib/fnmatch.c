@@ -1,5 +1,5 @@
 /* Copyright (C) 1991, 1992, 1993, 1996, 1997, 1998, 1999, 2000, 2001,
-   2002 Free Software Foundation, Inc.
+   2002, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -45,23 +45,14 @@ char *alloca ();
 # define __builtin_expect(expr, expected) (expr)
 #endif
 
-#include <assert.h>
-#include <errno.h>
 #include <fnmatch.h>
+
+#include <assert.h>
 #include <ctype.h>
-
-#if HAVE_STRING_H || defined _LIBC
-# include <string.h>
-#else
-# if HAVE_STRINGS_H
-#  include <strings.h>
-# endif
-#endif
-
-#if defined STDC_HEADERS || defined _LIBC
-# include <stddef.h>
-# include <stdlib.h>
-#endif
+#include <errno.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define WIDE_CHAR_SUPPORT (HAVE_WCTYPE_H && HAVE_WCHAR_H && HAVE_BTOWC)
 
@@ -177,10 +168,6 @@ extern int fnmatch (const char *pattern, const char *string, int flags);
 
 /* Avoid depending on library functions or files
    whose names are inconsistent.  */
-
-# if !defined _LIBC && !defined getenv && !HAVE_DECL_GETENV
-extern char *getenv ();
-# endif
 
 # ifndef errno
 extern int errno;
@@ -328,10 +315,7 @@ is_char_class (const wchar_t *wcs)
 
 
 int
-fnmatch (pattern, string, flags)
-     const char *pattern;
-     const char *string;
-     int flags;
+fnmatch (const char *pattern, const char *string, int flags)
 {
 # if HANDLE_MULTIBYTE
   if (__builtin_expect (MB_CUR_MAX, 1) != 1)
