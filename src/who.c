@@ -56,7 +56,7 @@
 
 #include <time.h>
 #include <getopt.h>
-#ifndef _POSIX_SOURCE
+#ifdef HAVE_SYS_PARAM_H
 #include <sys/param.h>
 #endif
 

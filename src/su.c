@@ -118,8 +118,11 @@ uid_t getuid ();
 #endif
 #endif /* not _POSIX_VERSION */
 
-#ifdef _POSIX_SOURCE
+#ifndef HAVE_ENDGRENT
 #define endgrent()
+#endif
+
+#ifndef HAVE_ENDPWENT
 #define endpwent()
 #endif
 
