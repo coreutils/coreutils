@@ -21,9 +21,7 @@
 # include <config.h>
 #endif
 
-#include <stdlib.h>
-#ifndef EXIT_FAILURE
-# define EXIT_FAILURE 1
-#endif
+#include "exitfail.h"
+#include "exit.h"
 
 int volatile exit_failure = EXIT_FAILURE;
