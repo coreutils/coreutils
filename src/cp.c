@@ -70,7 +70,10 @@ struct dir_attr
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  PARENTS_OPTION = CHAR_MAX + 1,
+  NO_DEREFERENCE_OPTION = CHAR_MAX + 1,
+  NO_PRESERVE_ATTRIBUTES_OPTION,
+  PARENTS_OPTION,
+  PRESERVE_ATTRIBUTES_OPTION,
   REPLY_OPTION,
   SPARSE_OPTION,
   STRIP_TRAILING_SLASHES_OPTION,
@@ -125,17 +128,18 @@ static struct option const long_opts[] =
   {"backup", optional_argument, NULL, 'b'},
   {"dereference", no_argument, NULL, 'L'},
   {"force", no_argument, NULL, 'f'},
-  {"sparse", required_argument, NULL, SPARSE_OPTION},
   {"interactive", no_argument, NULL, 'i'},
   {"link", no_argument, NULL, 'l'},
-  {"no-dereference", no_argument, NULL, 'd'},
+  {"no-dereference", no_argument, NULL, NO_DEREFERENCE_OPTION},
+  {"no-preserve", required_argument, NULL, NO_PRESERVE_ATTRIBUTES_OPTION},
   {"one-file-system", no_argument, NULL, 'x'},
   {"parents", no_argument, NULL, PARENTS_OPTION},
   {"path", no_argument, NULL, PARENTS_OPTION},   /* Deprecated.  */
-  {"preserve", no_argument, NULL, 'p'},
+  {"preserve", optional_argument, NULL, PRESERVE_ATTRIBUTES_OPTION},
   {"recursive", no_argument, NULL, 'R'},
   {"remove-destination", no_argument, NULL, UNLINK_DEST_BEFORE_OPENING},
   {"reply", required_argument, NULL, REPLY_OPTION},
+  {"sparse", required_argument, NULL, SPARSE_OPTION},
   {"strip-trailing-slashes", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
   {"suffix", required_argument, NULL, 'S'},
   {"symbolic-link", no_argument, NULL, 's'},
@@ -168,7 +172,8 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
   -a, --archive                same as -dpR\n\
       --backup[=CONTROL]       make a backup of each existing destination file\n\
   -b                           like --backup but does not accept an argument\n\
-  -d, --no-dereference         never follow symbolic links\n\
+  -d                           same as --no-dereference --preserve=link\n\
+      --no-dereference         never follow symbolic links\n\
   -f, --force                  if an existing destination file cannot be\n\
                                  opened, remove it and try again\n\
   -i, --interactive            prompt before overwrite\n\
@@ -177,7 +182,11 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
       printf (_("\
   -l, --link                   link files instead of copying\n\
   -L, --dereference            always follow symbolic links\n\
-  -p, --preserve               preserve file attributes if possible\n\
+  -p                           same as --preserve=mode,ownership,timestamps\n\
+      --preserve[=ATTR_LIST]   preserve the specified attributes (default:\n\
+                                 mode,ownership,timestamps), if possible\n\
+                                 additional attributes: links, all\n\
+      --no-preserve=ATTR_LIST  don't preserve the specified attributes\n\
       --parents                append source path to DIRECTORY\n\
   -P                           same as `--parents' for now; soon to change to\n\
                                  `--no-dereference' to conform to POSIX\n\
@@ -697,6 +706,7 @@ cp_option_init (struct cp_options *x)
   x->one_file_system = 0;
 
   x->preserve_ownership = 0;
+  x->preserve_links = 0;
   x->preserve_mode = 0;
   x->preserve_timestamps = 0;
 
@@ -718,6 +728,81 @@ cp_option_init (struct cp_options *x)
 
   x->update = 0;
   x->verbose = 0;
+}
+
+/* Given a string, ARG, containing a comma-separated list of arguments
+   to the --preserve option, set the appropriate fields of X to ON_OFF.  */
+static void
+decode_preserve_arg (char const *arg, struct cp_options *x, int on_off)
+{
+  enum File_attribute
+    {
+      PRESERVE_MODE,
+      PRESERVE_TIMESTAMPS,
+      PRESERVE_OWNERSHIP,
+      PRESERVE_LINK,
+      PRESERVE_ALL
+    };
+  static enum File_attribute const preserve_vals[] =
+    {
+      PRESERVE_MODE, PRESERVE_TIMESTAMPS,
+      PRESERVE_OWNERSHIP, PRESERVE_LINK, PRESERVE_ALL
+    };
+
+  /* Valid arguments to the `--reply' option. */
+  static char const* const preserve_args[] =
+    {
+      "mode", "timestamps",
+      "ownership", "links", "all", 0
+    };
+
+  char *arg_writable = xstrdup (arg);
+  char *s = arg_writable;
+  do
+    {
+      /* find next comma */
+      char *comma = strchr (s, ',');
+      enum File_attribute val;
+
+      /* put a NUL in its place */
+      if (comma)
+	*comma = 0;
+
+      /* process S.  */
+      val = XARGMATCH ("--preserve", s, preserve_args, preserve_vals);
+      switch (val)
+	{
+	case PRESERVE_MODE:
+	  x->preserve_mode = on_off;
+	  break;
+
+	case PRESERVE_TIMESTAMPS:
+	  x->preserve_timestamps = on_off;
+	  break;
+
+	case PRESERVE_OWNERSHIP:
+	  x->preserve_ownership = on_off;
+	  break;
+
+	case PRESERVE_LINK:
+	  x->preserve_links = on_off;
+	  break;
+
+	case PRESERVE_ALL:
+	  x->preserve_mode = on_off;
+	  x->preserve_timestamps = on_off;
+	  x->preserve_ownership = on_off;
+	  x->preserve_links = on_off;
+	  break;
+
+	default:
+	  abort ();
+	}
+      s = comma;
+    }
+  while (s);
+
+  free (arg_writable);
 }
 
 int
@@ -759,6 +844,7 @@ main (int argc, char **argv)
 
 	case 'a':		/* Like -dpR. */
 	  x.dereference = DEREF_NEVER;
+	  x.preserve_links = 1;
 	  x.preserve_ownership = 1;
 	  x.preserve_mode = 1;
 	  x.preserve_timestamps = 1;
@@ -781,6 +867,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'd':
+	  x.preserve_links = 1;
 	  x.dereference = DEREF_NEVER;
 	  break;
 
@@ -803,6 +890,26 @@ main (int argc, char **argv)
 	case 'L':
 	  x.dereference = DEREF_ALWAYS;
 	  break;
+
+	case NO_DEREFERENCE_OPTION:
+	  x.dereference = DEREF_NEVER;
+	  break;
+
+	case NO_PRESERVE_ATTRIBUTES_OPTION:
+	  decode_preserve_arg (optarg, &x, 0);
+	  break;
+
+	case PRESERVE_ATTRIBUTES_OPTION:
+	  if (optarg == NULL)
+	    {
+	      /* Fall through to the case for `p' below.  */
+	    }
+	  else
+	    {
+	      decode_preserve_arg (optarg, &x, 1);
+	      x.require_preserve = 1;
+	      break;
+	    }
 
 	case 'p':
 	  x.preserve_ownership = 1;
