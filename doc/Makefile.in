@@ -603,10 +603,13 @@ $(DVIS): $(EXTRA_DIST)
 $(INFO_DEPS): $(EXTRA_DIST)
 
 # List words/regexps here that should not appear in the texinfo documentation.
+# E.g., use @sc{nul}, not `NUL'
+# and use `time zone', not `timezone'.
 check-texinfo:
 	fail=0; \
 	grep timezone $(srcdir)/*.texi && fail=1; \
 	grep non-zero $(srcdir)/*.texi && fail=1; \
+	grep -w NUL $(srcdir)/*.texi && fail=1; \
 	grep '\$$@"' $(srcdir)/*.texi && fail=1; \
 	$(PERL) -e 1 2> /dev/null && { $(PERL) -ne \
 	  '/\bPOSIX\b/ && !/\@acronym{POSIX}/ && !/^\* / || /{posix}/ and print,exit 1' \
