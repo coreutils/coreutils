@@ -3248,6 +3248,17 @@ Other options are:
 
 @table @samp
 
+@item -k @var{pos1}[,@var{pos2}]
+@itemx --key=@var{pos1}[,@var{pos2}]
+@opindex -k
+@opindex --key
+@cindex sort field
+Specify a sort field that consists of the part of the line between
+@var{pos1} and @var{pos2} (or the end of the line, if @var{pos2} is
+omitted), @emph{inclusive}.  Fields and character positions are numbered
+starting with 1.  So to sort on the second field, you'd use
+@option{--key=2,2} (@option{-k 2,2}).  See below for more examples.
+
 @item -o @var{output-file}
 @itemx --output=@var{output-file}
 @opindex -o
@@ -3313,8 +3324,10 @@ string between a non-blank character and a blank character.
 That is, given the input line @w{@samp{ foo bar}}, @command{sort} breaks it
 into fields @w{@samp{ foo}} and @w{@samp{ bar}}.  The field separator is
 not considered to be part of either the field preceding or the field
-following.  But note that sort fields that extend to the end of the line,
-as @option{-k 2}, or sort fields consisting of a range, as @option{-k 2,3},
+following, so with @samp{sort @w{-t " "}} the same input line has
+three fields: an empty field, @samp{foo}, and @samp{bar}.
+However, fields that extend to the end of the line,
+as @option{-k 2}, or fields consisting of a range, as @option{-k 2,3},
 retain the field separators present between the endpoints of the range.
 
 To specify a zero byte (@acronym{ASCII} @sc{nul} (Null) character) as
@@ -3343,17 +3356,6 @@ disks and controllers.
 Normally, output only the first of a sequence of lines that compare
 equal.  For the @option{--check} (@option{-c}) option,
 check that no pair of consecutive lines compares equal.
-
-@item -k @var{pos1}[,@var{pos2}]
-@itemx --key=@var{pos1}[,@var{pos2}]
-@opindex -k
-@opindex --key
-@cindex sort field
-Specify a sort field that consists of the part of the line between
-@var{pos1} and @var{pos2} (or the end of the line, if @var{pos2} is
-omitted), @emph{inclusive}.  Fields and character positions are numbered
-starting with 1.  So to sort on the second field, you'd use
-@option{--key=2,2} (@option{-k 2,2}).  See below for more examples.
 
 @item -z
 @itemx --zero-terminated
@@ -3385,7 +3387,8 @@ of the field to use and @var{c} is the number of the first character
 from the beginning of the field.  In a start position, an omitted
 @samp{.@var{c}} stands for the field's first character.  In an end
 position, an omitted or zero @samp{.@var{c}} stands for the field's
-last character.  If the
+last character.  If the start field falls after the end of the line
+or after the end field, the field is empty.  If the
 @option{-b} option was specified, the @samp{.@var{c}} part of a field
 specification is counted from the first nonblank character of the field.
 
@@ -3395,7 +3398,12 @@ for that particular field.  The @option{-b} option may be independently
 attached to either or both of the start and
 end positions of a field specification, and if it is inherited
 from the global options it will be attached to both.
-Keys may span multiple fields.
+If input lines can contain leading or adjacent blanks and @option{-t}
+is not used, then @option{-k} is typically combined with @option{-b},
+@option{-g}, @option{-M}, or @option{-n}; otherwise the varying
+numbers of leading blanks in fields can cause confusing results.
+
+Keys can span multiple fields.
 
 On older systems, @command{sort} supports an obsolete origin-zero
 syntax @samp{+@var{pos1} [-@var{pos2}]} for specifying sort keys.
@@ -3410,16 +3418,18 @@ Here are some examples to illustrate various combinations of options.
 Sort in descending (reverse) numeric order.
 
 @example
-sort -nr
+sort -n -r
 @end example
 
 @item
-Sort alphabetically, omitting the first and second fields.
+Sort alphabetically, omitting the first and second fields
+and the blanks at the start of the third field.
 This uses a single key composed of the characters beginning
-at the start of field three and extending to the end of each line.
+at the start of the first nonblank character in field three
+and extending to the end of each line.
 
 @example
-sort -k 3
+sort -k 3b
 @end example
 
 @item
@@ -3431,7 +3441,7 @@ Use @samp{:} as the field delimiter.
 sort -t : -k 2,2n -k 5.3,5.4
 @end example
 
-Note that if you had written @option{-k 2} instead of @option{-k 2,2}
+Note that if you had written @option{-k 2n} instead of @option{-k 2,2n}
 @command{sort} would have used all characters beginning in the second field
 and extending to the end of the line as the primary @emph{numeric}
 key.  For the large majority of applications, treating keys spanning
@@ -3447,17 +3457,57 @@ field-end part of the key specifier.
 @item
 Sort the password file on the fifth field and ignore any
 leading blanks.  Sort lines with equal values in field five
-on the numeric user ID in field three.
+on the numeric user ID in field three.  Fields are separated
+by @samp{:}.
 
 @example
 sort -t : -k 5b,5 -k 3,3n /etc/passwd
+sort -t : -n -k 5b,5 -k 3,3 /etc/passwd
+sort -t : -b -k 5,5 -k 3,3n /etc/passwd
 @end example
 
-An alternative is to use the global numeric modifier @option{-n}.
+These three commands have equivalent effect.  The first specifies that
+the first key's start position ignores leading blanks and the second
+key is sorted numerically.  The other two commands rely on global
+options being inherited by sort keys that lack modifiers.  The inheritance
+works in this case because @option{-k 5b,5b} and @option{-k 5b,5} are
+equivalent, as the location of a field-end lacking a @samp{.@var{c}}
+character position is not affected by whether initial blanks are
+skipped.
+
+@item
+Sort a set of log files, primarily by IPv4 address and secondarily by
+time stamp.  If two lines' primary and secondary keys are identical,
+output the lines in the same order that they were input.  The log
+files contain lines that look like this:
 
 @example
-sort -t : -n -k 5b,5 -k 3,3 /etc/passwd
+4.150.156.3 - - [01/Apr/2004:06:31:51 +0000] message 1
+211.24.3.231 - - [24/Apr/2004:20:17:39 +0000] message 2
 @end example
+
+Fields are separated by exactly one space.  Sort IPv4 addresses
+lexicographically, e.g., 212.61.52.2 sorts before 212.129.233.201
+because 61 is less than 129.
+
+@example
+sort -s -t ' ' -k 4.9n -k 4.5M -k 4.2n -k 4.14,4.21 file*.log |
+sort -s -t '.' -k 1,1n -k 2,2n -k 3,3n -k 4,4n
+@end example
+
+This example cannot be done with a single @command{sort} invocation,
+since IPv4 address components are separated by @samp{.} while dates
+come just after a space.  So it is broken down into two invocations of
+@command{sort}: the first sorts by time stamp and the second by IPv4
+address.  The time stamp is sorted by year, then month, then day, and
+finally by hour-minute-second field, using @option{-k} to isolate each
+field.  Except for hour-minute-second there's no need to specify the
+end of each key field, since the @samp{n} and @samp{M} modifiers sort
+based on leading prefixes that cannot cross field boundaries.  The
+IPv4 addresses are sorted lexicographically.  The second sort uses
+@samp{-s} so that ties in the primary key are broken by the secondary
+key; the first sort uses @samp{-s} so that the combination of the two
+sorts is stable.
 
 @item
 Generate a tags file in case-insensitive sorted order.
@@ -3469,21 +3519,6 @@ find src -type f -print0 | sort -t / -z -f | xargs -0 etags --append
 The use of @option{-print0}, @option{-z}, and @option{-0} in this case means
 that pathnames that contain Line Feed characters will not get broken up
 by the sort operation.
-
-Finally, to ignore both leading and trailing blanks, you
-could have applied the @samp{b} modifier to the field-end specifier
-for the first key,
-
-@example
-sort -t : -n -k 5b,5b -k 3,3 /etc/passwd
-@end example
-
-or by using the global @option{-b} modifier instead of @option{-n}
-and an explicit @samp{n} with the second key specifier.
-
-@example
-sort -t : -b -k 5,5 -k 3,3n /etc/passwd
-@end example
 
 @c This example is a bit contrived and needs more explanation.
 @c @item
@@ -12972,7 +13007,7 @@ The final pipeline looks like this:
 
 @smallexample
 $ tr '[A-Z]' '[a-z]' < whats.gnu | tr -cd '[A-Za-z0-9_ \012]' |
-> tr -s '[ ]' '\012' | sort | uniq -c | sort -nr
+> tr -s '[ ]' '\012' | sort | uniq -c | sort -n -r
 @print{}  156 the
 @print{}   60 a
 @print{}   58 to
