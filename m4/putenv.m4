@@ -1,5 +1,5 @@
-# putenv.m4 serial 6
-dnl Copyright (C) 2002 Free Software Foundation, Inc.
+# putenv.m4 serial 7
+dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -47,7 +47,5 @@ AC_DEFUN([jm_FUNC_PUTENV],
 
 # Prerequisites of lib/putenv.c.
 AC_DEFUN([gl_PREREQ_PUTENV], [
-  AC_CHECK_HEADERS_ONCE(string.h unistd.h)
-  AC_CHECK_FUNCS_ONCE(memcpy)
-  AC_CHECK_FUNCS(strchr)
+  AC_CHECK_HEADERS_ONCE(unistd.h)
 ])
