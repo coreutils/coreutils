@@ -1,6 +1,12 @@
 2003-06-07  Jim Meyering  <jim@meyering.net>
 
 	Update from gnulib.
+	* strtoimax.c: Include <stdint.h> as an alternative to <inttypes.h>.
+	* xstrtol.h: Likewise.
+	* xstrtoimax.c: Likewise.
+	* xstrtoumax.c: Likewise.
+
+	Update from gnulib.
 	* strcasecmp.c: Include <stddef.h>, not <sys/types.h>.
 	* savedir.c: Include <stddef.h>.
 	(NULL): Don't define, since <stddef.h> does that.
