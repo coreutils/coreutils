@@ -1,3 +1,13 @@
+2004-09-05  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/stty.c (valid_options): Remove.
+	(main): Fix some bugs in handling invalid option-combinations
+	like "stty -F".
+	(recover_mode): Arg is now char const *, not char *.
+	(main): Use STDIN_FILENO, not 0.
+	Simplify option-parsing code a tad.
+	* tests/stty/basic-1: Check for the fixed bugs.
+
 2004-09-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/stat.c (HAVE_STRUCT_STATXFS_F_TYPE): Fix typo that prevented
