@@ -597,6 +597,16 @@ triple_hash (void const *x, unsigned int table_size)
   return (tmp | p->st_ino) % table_size;
 }
 
+/* Hash an F_triple.  */
+static unsigned int
+triple_hash_no_name (void const *x, unsigned int table_size)
+{
+  struct F_triple const *p = x;
+
+  /* Ignoring the device number here should be fine.  */
+  return p->st_ino % table_size;
+}
+
 /* Compare two F_triple structs.  */
 static bool
 triple_compare (void const *x, void const *y)
@@ -615,7 +625,8 @@ triple_free (void *x)
   free (a);
 }
 
-/* Initialize the hash table implementing a set of F_triple entries.  */
+/* Initialize the hash table implementing a set of F_triple entries
+   corresponding to destination files.  */
 void
 dest_info_init (struct cp_options *x)
 {
@@ -627,8 +638,30 @@ dest_info_init (struct cp_options *x)
 		       triple_free);
 }
 
-/* Return nonzero if the file described by name, FILENAME, and STATS
-   has already been created (and hence has an entry in hash table, HT).
+/* Initialize the hash table implementing a set of F_triple entries
+   corresponding to source files listed on the command line.  */
+void
+src_info_init (struct cp_options *x)
+{
+
+  /* Note that we use triple_hash_no_name here.
+     Contrast with the use of triple_hash above.
+     That is necessary because a source file may be specified
+     in many different ways.  We want to warn about this
+       cp a a d/
+     as well as this:
+       cp a ./a d/
+  */
+  x->src_info
+    = hash_initialize (DEST_INFO_INITIAL_CAPACITY,
+		       NULL,
+		       triple_hash_no_name,
+		       triple_compare,
+		       triple_free);
+}
+
+/* Return nonzero if there is an entry in hash table, HT,
+   for the file described by FILENAME and STATS.
    Otherwise, return zero.  */
 static int
 seen_file (Hash_table const *ht, char const *filename,
@@ -646,12 +679,11 @@ seen_file (Hash_table const *ht, char const *filename,
   return !!hash_lookup (ht, &new_ent);
 }
 
-/* Record destination filename, FILENAME, and dev/ino from *STATS, in
-   the hash table, HT, so that if we are asked to overwrite that
-   file again, we can detect it and fail.  If HT is NULL, return
-   immediately.  If STATS is NULL, call lstat on FILENAME to get device
-   and inode numbers.  If that lstat fails, simply return.  If memory
-   allocation fails, exit immediately.  */
+/* Record destination filename, FILENAME, and dev/ino from *STATS,
+   in the hash table, HT.  If HT is NULL, return immediately.
+   If STATS is NULL, call lstat on FILENAME to get the device
+   and inode numbers.  If that lstat fails, simply return.
+   If memory allocation fails, exit immediately.  */
 static void
 record_file (Hash_table *ht, char const *filename,
 	     struct stat const *stats)
@@ -786,6 +818,24 @@ copy_internal (const char *src_path, const char *dst_path,
     {
       error (0, 0, _("omitting directory %s"), quote (src_path));
       return 1;
+    }
+
+  /* Detect the case in which the same source file appears more than
+     once on the command line and no backup option has been selected.
+     If so, simply warn and don't copy it the second time.
+     This check is enabled only if x->src_info is non-NULL.  */
+  if (command_line_arg)
+    {
+      if ( ! S_ISDIR (src_sb.st_mode)
+	   && x->backup_type == none
+	   && seen_file (x->src_info, src_path, &src_sb))
+	{
+	  error (0, 0, _("warning: source file %s specified more than once"),
+		 quote (src_path));
+	  return 0;
+	}
+
+      record_file (x->src_info, src_path, &src_sb);
     }
 
   if (!new_dst)
