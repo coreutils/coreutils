@@ -1,6 +1,17 @@
-2001-11-19  Jim Meyering  <meyering@lucent.com>
+2001-11-22  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.17.
+
+	csplit could get a failed assertion: printf 'a\n\n'|csplit - '/^$/' 2
+	* src/csplit.c: No longer include assert.h.
+	(process_line_count): Remove invalid assertion.
+	Reported by Eric Pemente.
+
+	* tests/misc/csplit: New file.  Test for the above fix and others.
+	* tests/misc/Makefile.am (TESTS): Add csplit.
+	* tests/Makefile.am (EXTRA_DIST): Add lang-default.
+
+2001-11-19  Jim Meyering  <meyering@lucent.com>
 
 	* src/tail.c (xlseek): New function.
 	Call it instead of lseek, in most cases, so any failure is reported.
