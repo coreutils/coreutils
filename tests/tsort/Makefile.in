@@ -97,8 +97,12 @@ l = @l@
 
 x = tsort
 explicit = 
-maint_gen = cycle-1.I cycle-1.X
-run_gen = cycle-1.O cycle-1.E
+maint_gen = cycle-1.I cycle-1.X cycle-2.I cycle-2.X posix-1.I posix-1.X \
+posix-2.I posix-2.X
+
+run_gen = cycle-1.O cycle-1.E cycle-2.O cycle-2.E posix-1.O posix-1.E \
+posix-2.O posix-2.E
+
 
 EXTRA_DIST = Test.pm $x-tests $(explicit) $(maint_gen)
 noinst_SCRIPTS = $x-tests
