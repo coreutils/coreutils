@@ -217,7 +217,7 @@ cp_option_init (struct cp_options *x)
   x->recursive = 0;
   x->sparse_mode = SPARSE_AUTO;
   x->symbolic_link = 0;
-  x->use_mode = 1;
+  x->set_mode = 1;
   x->mode = 0755;
   x->umask_kill = 0;
   x->update = 0;
