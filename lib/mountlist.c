@@ -84,7 +84,7 @@ extern int errno;
 # include <sys/fs_types.h>
 #endif
 
-#ifdef MOUNTED_NEXT_DEV		/* BeOS.  */
+#ifdef MOUNTED_FS_STAT_DEV	/* BeOS.  */
 # include <fs_info.h>
 # include <dirent.h>
 #endif
@@ -417,7 +417,7 @@ read_filesystem_list (int need_fs_type)
   }
 #endif /* MOUNTED_GETMNT. */
 
-#if defined (MOUNTED_NEXT_DEV) /* BeOS */
+#if defined (MOUNTED_FS_STAT_DEV) /* BeOS */
   {
     /* The next_dev() and fs_stat_dev() system calls give the list of
        all filesystems, including the information returned by statvfs()
@@ -468,7 +468,7 @@ read_filesystem_list (int need_fs_type)
                 strcpy (name + 1, d->d_name);
               }
 
-            if (stat (name, &statbuf) >= 0 && S_ISDIR (statbuf.st_mode))
+            if (lstat (name, &statbuf) >= 0 && S_ISDIR (statbuf.st_mode))
               {
                 struct rootdir_entry *re;
 
@@ -520,7 +520,7 @@ read_filesystem_list (int need_fs_type)
         free (re);
       }
   }
-#endif /* MOUNTED_NEXT_DEV */
+#endif /* MOUNTED_FS_STAT_DEV */
 
 #if defined (MOUNTED_GETFSSTAT)	/* __alpha running OSF_1 */
   {
