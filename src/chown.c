@@ -38,7 +38,6 @@
 #include "error.h"
 #include "lchown.h"
 #include "quote.h"
-#include "savedir.h"
 #include "chown-core.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
