@@ -1,5 +1,5 @@
 /* BUMP_ALLOC macro - increase table allocation by one element.
-   Copyright (C) 1990, 1991, 1993 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1991, 1993, 1998 Free Software Foundation, Inc.
    François Pinard <pinard@iro.umontreal.ca>, 1990.
 
    This program is free software; you can redistribute it and/or modify
@@ -27,12 +27,12 @@
 /* Routines `xmalloc' and `xrealloc' are called to do the actual memory
    management.  This implies that the program will abort with an `Memory
    exhausted!' error if any problem arise.
-   
+
    To work correctly, at least EXPONENT and TYPE should always be the
    same for all uses of this macro for any given TABLE.  A secure way to
    achieve this is to never use this macro directly, but use it to define
    other macros, which would then be TABLE-specific.
-   
+
    The first time through, COUNT is usually zero.  Note that COUNT is not
    updated by this macro, but it should be update elsewhere, later.  This
    is convenient, because it allows TABLE[COUNT] to refer to the new
@@ -48,14 +48,16 @@
    SIZE argument.  The EXPONENT, TYPE and SIZE parameters should still
    have the same value for all macro calls related to a specific TABLE.  */
 
-#define BUMP_ALLOC_WITH_SIZE(Table, Count, Exponent, Type, Size) \
+#define BUMP_ALLOC_WITH_SIZE(Table, Count, Exponent, Type, Size)	\
   do									\
     {									\
       if (((Count) & (~(~0 << (Exponent)))) == 0)			\
-	if ((Count) == 0)						\
-	  (Table) = (Type *) xmalloc ((1 << (Exponent)) * (Size));	\
-	else								\
-	  (Table) = (Type *)						\
-	    xrealloc ((Table), ((Count) + (1 << (Exponent))) * (Size));	\
+	{								\
+	  if ((Count) == 0)						\
+	    (Table) = (Type *) xmalloc ((1 << (Exponent)) * (Size));	\
+	  else								\
+	    (Table) = (Type *)						\
+	      xrealloc ((Table), ((Count) + (1 << (Exponent))) * (Size)); \
+	}								\
     }									\
   while (0)
