@@ -1169,7 +1169,7 @@ static int
 decode_switches (int argc, char **argv)
 {
   int c;
-  char const *time_style_option = 0;
+  char *time_style_option = 0;
 
   /* Record whether there is an option specifying sort type.  */
   int sort_type_specified = 0;
@@ -1606,35 +1606,52 @@ decode_switches (int argc, char **argv)
       if (! time_style_option)
 	time_style_option = getenv ("TIME_STYLE");
 
-      switch (time_style_option
-	      ? XARGMATCH ("time style", time_style_option,
-			   time_style_args,
-			   time_style_types)
-	      : posix_iso_time_style)
+      if (time_style_option && *time_style_option == '+')
 	{
-	case full_iso_time_style:
-	  long_time_format[0] = long_time_format[1] =
-	    "%Y-%m-%d %H:%M:%S.%N %z";
-	  break;
-
-	case posix_iso_time_style:
-	  if (! hard_locale (LC_TIME))
-	    break;
-	  /* Fall through.  */
-	case iso_time_style:
-	  long_time_format[0] = "%Y-%m-%d ";
-	  long_time_format[1] = "%m-%d %H:%M";
-	  break;
-
-	case locale_time_style:
-	  if (hard_locale (LC_TIME))
+	  char *p0 = time_style_option + 1;
+	  char *p1 = strchr (p0, '\n');
+	  if (! p1)
+	    p1 = p0;
+	  else
 	    {
-	      unsigned int i;
-	      for (i = 0; i < 2; i++)
-		long_time_format[i] =
-		  dcgettext (NULL, long_time_format[i], LC_TIME);
+	      if (strchr (p1 + 1, '\n'))
+		error (EXIT_FAILURE, 0, _("invalid time style format %s"),
+		       quote (p0));
+	      *p1++ = '\0';
 	    }
+	  long_time_format[0] = p0;
+	  long_time_format[1] = p1;
 	}
+      else
+	switch (time_style_option
+		? XARGMATCH ("time style", time_style_option,
+			     time_style_args,
+			     time_style_types)
+		: posix_iso_time_style)
+	  {
+	  case full_iso_time_style:
+	    long_time_format[0] = long_time_format[1] =
+	      "%Y-%m-%d %H:%M:%S.%N %z";
+	    break;
+
+	  case posix_iso_time_style:
+	    if (! hard_locale (LC_TIME))
+	      break;
+	    /* Fall through.  */
+	  case iso_time_style:
+	    long_time_format[0] = "%Y-%m-%d ";
+	    long_time_format[1] = "%m-%d %H:%M";
+	    break;
+
+	  case locale_time_style:
+	    if (hard_locale (LC_TIME))
+	      {
+		unsigned int i;
+		for (i = 0; i < 2; i++)
+		  long_time_format[i] =
+		    dcgettext (NULL, long_time_format[i], LC_TIME);
+	      }
+	  }
     }
 
   return optind;
@@ -3643,7 +3660,10 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
       --time-style=WORD      show times using style WORD:\n\
-                               full-iso, iso, locale, posix-iso\n\
+                               full-iso, iso, locale, posix-iso, +FORMAT\n\
+                             FORMAT is interpreted like `date'; if FORMAT is\n\
+                             FORMAT1<newline>FORMAT2, FORMAT1 applies to\n\
+                             non-recent files and FORMAT2 to recent files\n\
   -t                         sort by modification time\n\
   -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n\
 "), stdout);
