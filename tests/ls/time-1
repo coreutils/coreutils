@@ -37,12 +37,16 @@ if test $test_failure = 1; then
 fi
 
 fail=0
+
+# A was accessed more recently.
 set `$LS -u a b`
 test "$*" = 'a b' && : || fail=1
 
+# B was modified more recently.
 set `$LS -t a b`
 test "$*" = 'b a' && : || fail=1
 
+# D has newer ctime.
 set `$LS -c a d`
 test "$*" = 'd a' && : || fail=1
 
