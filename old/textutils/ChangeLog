@@ -1,6 +1,64 @@
-2002-01-28  Jim Meyering  <meyering@lucent.com>
+2002-02-01  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.21.
+
+2002-01-31  Paul Eggert  <eggert@twinsun.com>
+
+	Add more support for POSIX 1003.1-2001, which requires removal for
+	support of obsolete "-N" option syntax in expand, head, fold,
+	split, tail, unexpand, uniq, and which prohibits options with
+	optional arguments in od and pr.
+
+	* NEWS: Document this.
+	* doc/coreutils.texi: Likewise.
+	* src/expand.c (usage): Likewise.
+	* src/fold.c (usage): Likewise.
+	* src/head.c (usage): Likewise.
+	* src/od.c (usage): Likewise.
+	* src/pr.c (usage): Likewise.
+	* src/split.c (usage): Likewise.
+	* src/unexpand.c (usage): Likewise.
+	* src/uniq.c (usage): Likewise.
+
+	* NEWS: Improve doc for previous fix in this area.
+
+	* src/expand.c (shortopts): New constant.
+	* src/od.c (short_options): Likewise.
+	* src/pr.c (short_options): Likewise.
+	* src/sort.c (short_options): Likewise.
+	* src/split.c (shortopts): Likewise.
+	* src/unexpand.c (shortopts): Likewise.
+	* src/uniq.c (shortopts): Likewise.
+
+	* src/expand.c (main): Check for obsolete options.
+	* src/fold.c (main): Likewise.
+	* src/head.c (main): Likewise.
+	* src/od.c (main): Likewise.
+	* src/pr.c (main): Likewise.
+	* src/sort.c (main): Likewise.
+	* src/split.c (main): Likewise.
+	* src/tail.c (parse_obsolescent_option, main): Likewise.
+	* src/unexpand.c (main): Likewise.
+	* src/uniq.c (main): Likewise.
+
+	* src/head.c (header_mode_option): New constant.
+
+	* src/od.c: New enum for long options.
+
+	* src/pr.c (SEP_STRING_OPTION): New enum value.
+	(long_options): Use it.
+
+	* src/split.c (main): Use -1, not EOF, for getopt_long.
+
+	* src/system.h (OPTARG_POSIX, OBSOLETE_OPTION_WARNINGS): New macros.
+
+	* src/fold.c (main): Fix bug: -- -N was treated as -N --.
+
+2002-02-01  Jim Meyering  <meyering@lucent.com>
+
+	* src/tail.c (start_lines): Handle the case in which bytes_read is zero.
+
+2002-01-28  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.maint (ac-check): Remove, now that we no longer have
 	to duplicate that information.
@@ -102,7 +160,7 @@
 	* src/tail.c (parse_obsolescent_option): Likewise.
 	* src/uniq.c (main): Likewise.
 
-2002-02-14  Paul Eggert  <eggert@twinsun.com>
+2002-01-14  Paul Eggert  <eggert@twinsun.com>
 
 	Add support for POSIX 1003.1-2001, which requires removal for
 	support of obsolete "+" option syntax in sort, tail, and uniq.
