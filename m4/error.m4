@@ -1,4 +1,4 @@
-#serial 8
+#serial 9
 
 AC_DEFUN([gl_ERROR],
 [
@@ -10,6 +10,6 @@ AC_DEFUN([gl_ERROR],
 # Prerequisites of lib/error.c.
 AC_DEFUN([jm_PREREQ_ERROR],
 [
-  AC_REQUIRE([AC_FUNC_VPRINTF])
-  AC_FUNC_STRERROR_R
+  AC_REQUIRE([AC_FUNC_STRERROR_R])
+  :
 ])
