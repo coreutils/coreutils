@@ -1,6 +1,18 @@
-2002-01-13  Jim Meyering  <meyering@lucent.com>
+2002-01-14  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.20.
+
+	* tests/misc/sort: New test, for just-fixed bug.
+	* tests/misc/Makefile.am (TESTS): Add sort.
+	(TESTS_ENVIRONMENT): Add PROG=$$tst.  This is a gross kludge
+	that depends on the name of an automake-generated local variable.
+
+2002-01-13  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sort.c (mergefps): Fix bug when eliminating empty files.
+	Bug reported by James Hutt.
+
+2002-01-13  Jim Meyering  <meyering@lucent.com>
 
 	* tests/help-version: Tweak to work with the programs in diffutils.
 
