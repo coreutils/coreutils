@@ -289,7 +289,7 @@ strdup __argz_count __argz_stringify __argz_next])
    dnl Try to locate it.
    MKINSTALLDIRS=
    if test -n "$ac_aux_dir"; then
-     MKINSTALLDIRS="\$(top_srcdir)/$ac_aux_dir/mkinstalldirs"
+     MKINSTALLDIRS="`CDPATH=:; cd $ac_aux_dir && pwd`/mkinstalldirs"
    fi
    if test -z "$MKINSTALLDIRS"; then
      MKINSTALLDIRS="\$(top_srcdir)/mkinstalldirs"
