@@ -1,3 +1,11 @@
+2000-01-29  Jim Meyering  <meyering@lucent.com>
+
+	* configure.in: Remove lib-check for cposix now that we use
+	m4/isc-posix.m4.
+	(jm_LIB_CHECK): Use this even though the library checks aren't
+	required for this patchage (so all three lib/Makefile.in files
+	will be the same).
+
 2000-01-24  Mark Kettenis  <kettenis@gnu.org>
 
 	* src/tsort.c (exit_status): New variable.
