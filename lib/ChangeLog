@@ -1,5 +1,6 @@
 2003-12-02  Jim Meyering  <jim@meyering.net>
 
+	* sha.c: Add FSF Copyright.
 	* sha.h: Correct stale references to MD5 and `16 bytes'.
 	Patch by Ulrich Drepper.
 
