@@ -88,7 +88,7 @@ static int apparent_size = 0;
 static int opt_count_all = 0;
 
 /* If true, output the NUL byte instead of a newline at the end of each line. */
-bool opt_nul_terminate_output = false;
+static bool opt_nul_terminate_output = false;
 
 /* If nonzero, print a grand total at the end.  */
 static int print_grand_total = 0;
