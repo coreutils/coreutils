@@ -7670,6 +7670,44 @@ Recursively change ownership of directories and their contents.
 
 @end table
 
+@macro chownchgrpoptions
+The following options modify how @command{chown} and @command{chgrp}
+traverse a hierarchy when the @option{--recursive} (@option{-R})
+option is also specified.
+If more than one is specified, only the final one takes effect.
+These options determine whether processing a symbolic link to a directory
+entails operating on just the symbolic link or on all files in the
+hierarchy rooted at that directory.
+Note that these options are independent of @option{--dereference} and
+@option{--no-dereference} (@option{-h}), which control whether to modify
+a symlink or its referent.
+
+@table @samp
+
+@item -H
+@opindex -H
+@cindex traverse symbolic links specified on the command line
+If @option{--recursive} (@option{-R}) is specified and
+a command line argument is a symbolic link to a directory, traverse it.
+
+@item -L
+@opindex -L
+@cindex traverse every symbolic link to a directory encountered
+In a recursive traversal, traverse every symbolic link to a directory
+that is encountered.
+
+@item -P
+@opindex -P
+@cindex do not traverse any symbolic links
+Do not traverse any symbolic links.
+This is the default if none of @option{-H}, @option{-L},
+or @option{-P} is specified.
+
+@end table
+@end macro
+
+@chownchgrpoptions
+
 
 @node chgrp invocation
 @section @command{chgrp}: Change group ownership
@@ -7753,6 +7791,8 @@ its referent is being changed.
 Recursively change the group ownership of directories and their contents.
 
 @end table
+
+@chownchgrpoptions
 
 
 @node chmod invocation
