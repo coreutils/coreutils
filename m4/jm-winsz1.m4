@@ -1,5 +1,5 @@
 dnl From Jim Meyering.
-#serial 1
+#serial 2
 AC_DEFUN(jm_HEADER_TIOCGWINSZ_IN_TERMIOS_H,
 [AC_REQUIRE([AM_SYS_POSIX_TERMIOS])
  AC_CACHE_CHECK([whether use of TIOCGWINSZ requires termios.h],
@@ -17,3 +17,10 @@ AC_DEFUN(jm_HEADER_TIOCGWINSZ_IN_TERMIOS_H,
    fi
   ])
 ])
+
+AC_DEFUN(jm_WINSIZE_IN_PTEM,
+  [AC_CHECK_HEADER([sys/ptem.h],
+		   AC_DEFINE(WINSIZE_IN_PTEM, 1,
+      [Define if your system defines \`struct winsize' in sys/ptem.h.]))
+  ]
+)
