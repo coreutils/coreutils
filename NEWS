@@ -2,6 +2,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 * Major changes in release 5.0.2:
 
 ** Bug fixes
+- `sort --version' and `sort --help' fail, as they should
+  when their output is redirected to /dev/full.
 - `su --version > /dev/full' now fails, as it should.
 - uniq -c now uses a SPACE, not a TAB between the count and the
   corresponding line, as required by POSIX.
