@@ -747,6 +747,7 @@ main (int argc, char **argv)
 
   switch (argc - optind)
     {
+    case -1:
     case 0:			/* who */
       who (UTMP_FILE);
       break;
