@@ -1,7 +1,7 @@
 Changes in release 2.1
 [2.0.15]
 * uniq's --all-repeated option has new modes to delimit groups
-  of duplicate lines: --all-repeated={all,minimum,none(default)}
+  of duplicate lines: --all-repeated={precede,separate,none(default)}
 [2.0.14]
 * sort now accepts long options like "--reverse" and "--".
 * sort now checks option syntax as POSIX requires, except that (as usual
