@@ -1,5 +1,8 @@
 Mon Sep  2 10:59:10 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/rpmatch.c (ENABLE_NLS): Include libintl.h and define _ to
+	gettext.
+
 	* src/*.c (usage): Tell where to report bugs.
 
 Sat Aug 31 18:48:18 1996  Jim Meyering  <meyering@na-net.ornl.gov>
