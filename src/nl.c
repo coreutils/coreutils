@@ -23,15 +23,30 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <getopt.h>
+
 #if WITH_REGEX
 # include <regex.h>
 #else
 # include <rx.h>
 #endif
+
+#if HAVE_LIMITS_H
+# include <limits.h>
+#endif
+
+#ifndef UINT_MAX
+# define UINT_MAX ((unsigned int) ~(unsigned int) 0)
+#endif
+
+#ifndef INT_MAX
+# define INT_MAX ((int) (UINT_MAX >> 1))
+#endif
+
 #include "linebuffer.h"
 #include "system.h"
 #include "version.h"
 #include "error.h"
+#include "xstrtol.h"
 
 #ifndef TRUE
 #define TRUE   1
@@ -120,7 +135,7 @@ static char *print_fmt;
 static char *print_no_line_fmt = NULL;
 
 /* Starting line number on each page (-v).  */
-static int page_start = 1;
+static int starting_line_number = 1;
 
 /* Line number increment (-i).  */
 static int page_incr = 1;
@@ -154,7 +169,7 @@ static struct option const longopts[] =
   {"header-numbering", required_argument, NULL, 'h'},
   {"body-numbering", required_argument, NULL, 'b'},
   {"footer-numbering", required_argument, NULL, 'f'},
-  {"first-page", required_argument, NULL, 'v'},
+  {"starting-line-number", required_argument, NULL, 'v'},
   {"page-increment", required_argument, NULL, 'i'},
   {"no-renumber", no_argument, NULL, 'p'},
   {"join-blank-lines", required_argument, NULL, 'l'},
@@ -293,7 +308,7 @@ proc_header (void)
   current_type = header_type;
   current_regex = &header_regex;
   if (reset_numbers)
-    line_no = page_start;
+    line_no = starting_line_number;
   putchar ('\n');
 }
 
@@ -474,26 +489,51 @@ main (int argc, char **argv)
 	    usage (2);
 	  break;
 	case 'v':
-	  page_start = atoi (optarg);
+	  {
+	    long int tmp_long;
+	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
+		/* Allow it to be negative.  */
+		|| tmp_long > INT_MAX)
+	      error (1, 0, _("invalid starting line number: `%s'"),
+		     optarg);
+	    starting_line_number = (int) tmp_long;
+	  }
 	  break;
 	case 'i':
-	  page_incr = atoi (optarg);
-	  if (page_incr < 1)
-	    page_incr = 1;
+	  {
+	    long int tmp_long;
+	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
+		|| tmp_long <= 0 || tmp_long > INT_MAX)
+	      error (1, 0, _("invalid line number increment: `%s'"),
+		     optarg);
+	    page_incr = (int) tmp_long;
+	  }
 	  break;
 	case 'p':
 	  reset_numbers = FALSE;
 	  break;
 	case 'l':
-	  blank_join = atoi (optarg);
+	  {
+	    long int tmp_long;
+	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
+		|| tmp_long <= 0 || tmp_long > INT_MAX)
+	      error (1, 0, _("invalid number of blank lines: `%s'"),
+		     optarg);
+	    blank_join = (int) tmp_long;
+	  }
 	  break;
 	case 's':
 	  separator_str = optarg;
 	  break;
 	case 'w':
-	  lineno_width = atoi (optarg);
-	  if (lineno_width < 1)
-	    lineno_width = 1;
+	  {
+	    long int tmp_long;
+	    if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
+		|| tmp_long <= 0 || tmp_long > INT_MAX)
+	      error (1, 0, _("invalid line number field width: `%s'"),
+		     optarg);
+	    lineno_width = (int) tmp_long;
+	  }
 	  break;
 	case 'n':
 	  switch (*optarg)
@@ -565,7 +605,7 @@ main (int argc, char **argv)
   memset (print_no_line_fmt, ' ', lineno_width + c);
   print_no_line_fmt[lineno_width + c] = '\0';
 
-  line_no = page_start;
+  line_no = starting_line_number;
   current_type = body_type;
   current_regex = &body_regex;
   build_print_fmt ();
