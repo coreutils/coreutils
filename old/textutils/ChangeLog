@@ -2,6 +2,14 @@
 
 	* Version 2.0.17.
 
+2001-11-14  Paul Eggert  <eggert@twinsun.com>
+
+	* src/tail.c (file_lines): Remove unnecessary cast.
+	(tail_lines): Could have called file_lines even though the first
+	lseek failed.  Fix that.
+
+2001-11-14  Jim Meyering  <meyering@lucent.com>
+
 	* src/tail.c (file_lines): Add a parameter, start_pos.
 	Work properly even when the read pointer is not at beginning of file.
 	(tail_lines): Call file_lines for any regular file, as long as lseek
