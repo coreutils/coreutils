@@ -8092,8 +8092,6 @@ Interpreted sequences for file stat are:
 @item %Y - Time of last modification as seconds since Epoch
 @item %z - Time of last change
 @item %Z - Time of last change as seconds since Epoch
-@item %S - Security ID in SE-Linux
-@item %C - Security context in SE-Linux
 @end itemize
 
 Interpreted sequences for filesystem stat are:
@@ -8108,8 +8106,6 @@ Interpreted sequences for filesystem stat are:
 @item %a - Free blocks available to non-superuser
 @item %s - Optimal transfer block size
 @item %c - Total file nodes in file system
-@item %S - Security ID in SE-Linux
-@item %C - Security context in SE-Linux
 @end itemize
 @end table
 
