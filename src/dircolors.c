@@ -151,16 +151,16 @@ guess_shell_syntax (void)
 }
 
 static void
-parse_line (const char *line, char **keyword, char **arg)
+parse_line (unsigned char const *line, char **keyword, char **arg)
 {
-  const char *p;
-  const char *keyword_start;
-  const char *arg_start;
+  unsigned char const *p;
+  unsigned char const *keyword_start;
+  unsigned char const *arg_start;
 
   *keyword = NULL;
   *arg = NULL;
 
-  for (p = line; isspace (*p); ++p)
+  for (p = line; ISSPACE (*p); ++p)
     ;
 
   /* Ignore blank lines and shell-style comments.  */
@@ -169,7 +169,7 @@ parse_line (const char *line, char **keyword, char **arg)
 
   keyword_start = p;
 
-  while (!isspace (*p) && *p != '\0')
+  while (!ISSPACE (*p) && *p != '\0')
     {
       ++p;
     }
@@ -182,7 +182,7 @@ parse_line (const char *line, char **keyword, char **arg)
     {
       ++p;
     }
-  while (isspace (*p));
+  while (ISSPACE (*p));
 
   if (*p == '\0' || *p == '#')
     return;
@@ -192,7 +192,7 @@ parse_line (const char *line, char **keyword, char **arg)
   while (*p != '\0' && *p != '#')
     ++p;
 
-  for (--p; isspace (*p); --p)
+  for (--p; ISSPACE (*p); --p)
     {
       /* empty */
     }
