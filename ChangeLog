@@ -2,6 +2,9 @@
 
 	* Version 5.1.1.
 
+	* Makefile.maint (po-check): Ensure that cvsu works before using it.
+	Reported by Alexandre Duret-Lutz.
+
 	* src/tail.c (main): Warn about following stdin only when it's a tty.
 
 	* configure.ac: Use gl_DEFAULT_POSIX2_VERSION.
