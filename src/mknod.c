@@ -73,7 +73,7 @@ Create the special file NAME of the given TYPE.\n\
 MAJOR MINOR are forbidden for TYPE p, mandatory otherwise.  TYPE may be:\n\
 \n\
   b      create a block (buffered) special file\n\
-  c, u   create a character (unbuffered) special file   \n\
+  c, u   create a character (unbuffered) special file\n\
   p      create a FIFO\n"));
     }
   exit (status);
