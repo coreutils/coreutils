@@ -2873,9 +2873,7 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options)
       /* Assume unprintable characters have a displayed_width of 1.  */
 #if HAVE_MBRTOWC
       if (MB_CUR_MAX > 1)
-	displayed_width = mbsnwidth (buf, len,
-				     (MBSW_ACCEPT_INVALID
-				      | MBSW_ACCEPT_UNPRINTABLE));
+	displayed_width = mbsnwidth (buf, len, 0);
       else
 #endif
 	displayed_width = len;
