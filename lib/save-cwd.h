@@ -8,7 +8,7 @@ struct saved_cwd
   };
 
 # ifndef PARAMS
-#  if __STDC__
+#  if defined PROTOTYPES || (defined __STDC__ && __STDC__)
 #   define PARAMS(Args) Args
 #  else
 #   define PARAMS(Args) ()
