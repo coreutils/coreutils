@@ -1,3 +1,7 @@
+2003-07-18  Andreas Schwab  <schwab@suse.de>
+
+	* memcoll.c (memcoll) [!HAVE_STRCOLL]: Clear errno.
+
 2003-07-17  Paul Eggert  <eggert@twinsun.com>
 
 	* xalloca.h, xmalloc.c, xmemcoll.c, xmemcoll.h:
