@@ -111,7 +111,7 @@ static const Hash_tuning default_tuning =
     DEFAULT_SHRINK_FACTOR,
     DEFAULT_GROWTH_THRESHOLD,
     DEFAULT_GROWTH_FACTOR,
-    0
+    false
   };
 
 /* Information and lookup.  */
