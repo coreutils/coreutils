@@ -1,3 +1,11 @@
+Sat Nov 05 08:35:25 1994  Jim Meyering  (meyering@comco.com)
+
+	* Version 1.12.
+
+Fri Nov 04 06:01:00 1994  Jim Meyering  (meyering@comco.com)
+
+	* Version 1.11.
+
 Wed Nov 02 18:52:20 1994  Jim Meyering  (meyering@comco.com)
 
 	* doc/Makefile.in (install): Remove test for existence of info
