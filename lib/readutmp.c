@@ -27,7 +27,6 @@
 #endif /* STDC_HEADERS || HAVE_STRING_H */
 
 #include "readutmp.h"
-#include "error.h"
 
 char *xmalloc ();
 
