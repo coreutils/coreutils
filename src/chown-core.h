@@ -1,5 +1,6 @@
 /* chown-core.h -- types and prototypes shared by chown and chgrp.
-   Copyright (C) 2000, 2003 Free Software Foundation.
+
+   Copyright (C) 2000, 2003, 2004 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -77,7 +78,7 @@ gid_to_name (gid_t);
 char *
 uid_to_name (uid_t);
 
-int
+bool
 chown_files (char **files, int bit_flags,
 	     uid_t uid, gid_t gid,
 	     uid_t required_uid, gid_t required_gid,
