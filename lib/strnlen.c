@@ -19,6 +19,13 @@
 
 #include <string.h>
 
+#ifndef HAVE_DECL_MEMCHR
+"this configure-time declaration test was not run"
+#endif
+#if !HAVE_DECL_MEMCHR
+char *memchr ();
+#endif
+
 #undef __strnlen
 #undef strnlen
 
