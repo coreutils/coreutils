@@ -237,11 +237,11 @@ print_esc_char (int c)
 /* Print a \ escape sequence starting at ESCSTART.
    Return the number of characters in the escape sequence
    besides the backslash.
-   If OCTAL0 is nonzero, octal escapes are of the form \0ooo, where o
+   If OCTAL_0 is nonzero, octal escapes are of the form \0ooo, where o
    is an octal digit; otherwise they are of the form \ooo.  */
 
 static int
-print_esc (const char *escstart, bool octal0)
+print_esc (const char *escstart, bool octal_0)
 {
   register const char *p = escstart + 1;
   int esc_value = 0;		/* Value of \nnn escape. */
@@ -260,10 +260,10 @@ print_esc (const char *escstart, bool octal0)
     }
   else if (isodigit (*p))
     {
-      /* Parse \0ooo (if octal0 && *p == '0') or \ooo (otherwise).
-         Allow \ooo if octal0 && *p != '0'; this is an undocumented
+      /* Parse \0ooo (if octal_0 && *p == '0') or \ooo (otherwise).
+         Allow \ooo if octal_0 && *p != '0'; this is an undocumented
          extension to POSIX that is compatible with Bash 2.05b.  */
-      for (esc_length = 0, p += octal0 && *p == '0';
+      for (esc_length = 0, p += octal_0 && *p == '0';
 	   esc_length < 3 && isodigit (*p);
 	   ++esc_length, ++p)
 	esc_value = esc_value * 8 + octtobin (*p);
