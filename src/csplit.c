@@ -1249,7 +1249,7 @@ get_format_width (char **format_ptr)
      allow for enough octal digits to represent the value of LONG_MAX.  */
   count = ((*format_ptr == start)
 	   ? bytes_to_octal_digits[sizeof (long)]
-	   : atoi (start));
+	   : (unsigned) atoi (start));
   **format_ptr = ch_save;
   return count;
 }
