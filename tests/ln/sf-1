@@ -36,6 +36,7 @@ export LC_ALL
 LANG=C
 export LANG
 
+fail=0
 $LN -sf a b > err 2>&1 && fail=1
 case `cat err` in
   *'are the same file') ;;
