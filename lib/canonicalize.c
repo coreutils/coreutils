@@ -44,6 +44,7 @@ void free ();
 
 #include <errno.h>
 
+#include "cycle-check.h"
 #include "path-concat.h"
 #include "stat-macros.h"
 #include "xalloc.h"
@@ -164,7 +165,7 @@ canonicalize_filename_mode (const char *name, canonicalize_mode_t can_mode)
   char *rpath, *dest, *extra_buf = NULL;
   const char *start, *end, *rpath_limit;
   size_t extra_len = 0;
-  int num_links = 0;
+  struct cycle_check_state cycle_state;
 
   if (name == NULL)
     {
@@ -204,6 +205,7 @@ canonicalize_filename_mode (const char *name, canonicalize_mode_t can_mode)
       dest = rpath + 1;
     }
 
+  cycle_check_init (&cycle_state);
   for (start = end = name; *start; start = end)
     {
       /* Skip sequence of multiple path-separators.  */
@@ -264,8 +266,7 @@ canonicalize_filename_mode (const char *name, canonicalize_mode_t can_mode)
 	      char *buf;
 	      size_t n, len;
 
-#  ifdef MAXSYMLINKS
-	      if (++num_links > MAXSYMLINKS)
+	      if (cycle_check (&cycle_state, &st))
 		{
 		  __set_errno (ELOOP);
 		  if (can_mode == CAN_MISSING)
@@ -273,7 +274,6 @@ canonicalize_filename_mode (const char *name, canonicalize_mode_t can_mode)
 		  else
 		    goto error;
 		}
-#  endif /* MAXSYMLINKS */
 
 	      buf = xreadlink (rpath, st.st_size);
 	      if (!buf)
