@@ -1,5 +1,14 @@
 1999-01-02  Jim Meyering  <meyering@ascend.com>
 
+	* src/tsort.c (tsort): Use a single call to error instead of two
+	to fprintf.
+	(main): Remove `%s: ' prefix on format string.
+
+	* src/tail.c (parse_options): Use XARGMATCH in place of argmatch.
+
+	* src/ptx.c (format_vals): New array.
+	(main): Use XARGMATCH in place of argmatch.
+
 	* Version 1.22g.
 
 	* lib/argmatch.h (XARGMATCH): Don't return a value;  instead,
