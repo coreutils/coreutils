@@ -1,4 +1,5 @@
 [5.0.1]
+* date's %r format directive now honors locale settings
 * md5sum --check now accepts the output of the BSD md5sum program, e.g.,
   MD5 (f) = d41d8cd98f00b204e9800998ecf8427e
 * du no longer runs out of file descriptors unnecessarily

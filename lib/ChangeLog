@@ -1,3 +1,9 @@
+2003-05-29  Jim Meyering  <jim@meyering.net>
+
+	Make the %r format directive honor any locale setting.
+	* strftime.c: (my_strftime) [!defined _NL_CURRENT && HAVE_STRFTIME]:
+	Use underlying_strftime for %r.
+
 2003-05-15  Jim Meyering  <jim@meyering.net>
 
 	* getopt.h: Remove a space before a TAB.
