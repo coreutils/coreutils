@@ -67,6 +67,9 @@ void strip_trailing_slashes ();
 /* The name by which the program was run, for error messages.  */
 char *program_name;
 
+/* FIXME: document */
+enum backup_type backup_type;
+
 /* A pointer to the function used to make links.  This will point to either
    `link' or `symlink'. */
 static int (*linkfunc) ();
@@ -266,7 +269,7 @@ do_link (const char *source, const char *dest)
 
       if (backup_type != none)
 	{
-	  char *tmp_backup = find_backup_file_name (dest);
+	  char *tmp_backup = find_backup_file_name (dest, backup_type);
 	  if (tmp_backup == NULL)
 	    error (1, 0, _("virtual memory exhausted"));
 	  dest_backup = (char *) alloca (strlen (tmp_backup) + 1);
@@ -444,8 +447,7 @@ main (int argc, char **argv)
       usage (1);
     }
 
-  if (make_backups)
-    backup_type = get_version (version);
+  backup_type = (make_backups ? get_version (version) : none);
 
 #ifdef S_ISLNK
   if (symbolic_link)
