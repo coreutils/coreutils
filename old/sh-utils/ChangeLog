@@ -1,3 +1,14 @@
+Tue Feb 15 18:28:28 1994  Jim Meyering  (meyering@comco.com)
+
+	* stty.c (main): Use getopt only to recognize long options.
+	Hand code the loop to detect -a, -g, -ag and -ga.  Using getopt
+	to detect the short options loses (because we have to ignore
+	unrecognized options and we are allowing GNU getopt to permute)
+	because e.g. `-tabs' is interpreted as a group of options, one of
+	which is `-a'.  Before, running `stty -tabs echo' gave this error:
+	  stty: when specifying an output style, modes may not be set
+	Reported by Arne H. Juul.
+
 Sun Feb 13 13:34:25 1994  Jim Meyering  (meyering@comco.com)
 
 	* basename.1, dirname.1, stty.1: Reflect usage changes.
