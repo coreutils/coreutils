@@ -35,8 +35,8 @@
 
 #define AUTHORS "Ulrich Drepper"
 
-/* If nonzero print all number with equal width.  */
-static int equal_width;
+/* If true print all number with equal width.  */
+static bool equal_width;
 
 /* The name that this program was run with.  */
 char *program_name;
@@ -117,7 +117,7 @@ scan_double_arg (const char *arg)
 {
   double ret_val;
 
-  if (xstrtod (arg, NULL, &ret_val, c_strtod))
+  if (! xstrtod (arg, NULL, &ret_val, c_strtod))
     {
       error (0, 0, _("invalid floating point argument: %s"), arg);
       usage (EXIT_FAILURE);
@@ -126,10 +126,10 @@ scan_double_arg (const char *arg)
   return ret_val;
 }
 
-/* Check whether the format string is valid for a single `double'
-   argument.  Return 0 if not, 1 if correct. */
+/* Return true if the format string is valid for a single `double'
+   argument.  */
 
-static int
+static bool
 valid_format (const char *fmt)
 {
   while (*fmt != '\0')
@@ -144,7 +144,7 @@ valid_format (const char *fmt)
       fmt++;
     }
   if (*fmt == '\0')
-    return 0;
+    return false;
 
   fmt += strspn (fmt, "-+#0 '");
   if (ISDIGIT (*fmt) || *fmt == '.')
@@ -159,7 +159,7 @@ valid_format (const char *fmt)
     }
 
   if (!(*fmt == 'e' || *fmt == 'f' || *fmt == 'g'))
-    return 0;
+    return false;
 
   fmt++;
   while (*fmt != '\0')
@@ -168,13 +168,13 @@ valid_format (const char *fmt)
 	{
 	  fmt++;
 	  if (*fmt != '%')
-	    return 0;
+	    return false;
 	}
 
       fmt++;
     }
 
-  return 1;
+  return true;
 }
 
 /* Actually print the sequence of numbers in the specified range, with the
@@ -311,7 +311,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  equal_width = 0;
+  equal_width = false;
   separator = "\n";
   first = 1.0;
 
@@ -358,7 +358,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'w':
-	  equal_width = 1;
+	  equal_width = true;
 	  break;
 
 	case_GETOPT_HELP_CHAR;
