@@ -115,7 +115,7 @@ copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
   int ret = 0;
 
   errno = 0;
-  name_space = savedir (src_path_in, (unsigned int) src_sb->st_size);
+  name_space = savedir (src_path_in, src_sb->st_size);
   if (name_space == 0)
     {
       if (errno)
