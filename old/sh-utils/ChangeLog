@@ -1,5 +1,7 @@
 Sat Dec  7 12:52:00 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in (ALL_LINGUAS): Add Portuguese (pt).
+
 	* lib/getloadavg.c [__SVR4]: Define SVR4.
 	Remove duplicate `|| defined(SVR4)' disjunct guarding the
 	#define KERNEL_FILE "/unix" definiton.
@@ -7,12 +9,12 @@ Sat Dec  7 12:52:00 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	* configure.in (jm_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL): Use this variant
 	of the AM_ prefixed macro.
 	(check for TIOCGWINSZ in sys/pty): In essence, require
-	jm_HEADER_TIOCGWINSZ_IN_TERMIOS_H so that 
+	jm_HEADER_TIOCGWINSZ_IN_TERMIOS_H so that
 	$jm_cv_sys_tiocgwinsz_needs_termios_h (renamed from
 	$gwinsz_in_termios_h) is defined.
 
 	* lib/strftime.c (strftime): Remove " %Z" part of format for %c.
-	Suggestion from Paul Eggert.
+	Correction from Paul Eggert.
 
 Fri Dec  6 20:52:07 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
