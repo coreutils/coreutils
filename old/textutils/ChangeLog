@@ -1,8 +1,13 @@
+Sun Feb  2 23:06:59 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/join.c: Move alloca-related preprocessor code into system.h.
+	* src/od.c: Remove alloca-related preprocessor code.
+	* src/system.h: Add alloca-related preprocessor code.
+
 Sat Feb  1 07:21:43 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* tests/pr-test/w35jml17f-lmlo: Rename file from w35jml17f-lm-lo to
-	avoid exceeding 14-character limit.
-	* tests/pr-test/Test.pm (test 10md): Reflect renaming.
+	* tests/pr-test/*: Rename files to avoid exceeding 14-character limit.
+	* tests/pr-test/Test.pm: Reflect renamings.
 
 	* tests/pr-test/mk-script.pl (spec_to_list): Warn about all filenames
 	that exceed max-length before dying.
