@@ -90,7 +90,7 @@ setenv (name, value, replace)
       new_environ[size] = malloc (namelen + 1 + vallen);
       if (new_environ[size] == NULL)
 	{
-	  free ((char *) new_environ);
+	  free (new_environ);
 	  errno = ENOMEM;
 	  return -1;
 	}
