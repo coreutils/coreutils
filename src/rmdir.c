@@ -124,7 +124,7 @@ remove_parents (path)
 
   do
     {
-      slash = rindex (path, '/');
+      slash = strrchr (path, '/');
       if (slash == NULL)
 	break;
       /* Remove any characters after the slash, skipping any extra
