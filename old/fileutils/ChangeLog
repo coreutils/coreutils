@@ -1,3 +1,7 @@
+1999-03-24  Jim Meyering  <meyering@ascend.com>
+
+	* man/help2man: Import version 1.010.
+
 1999-03-22  Jim Meyering  <meyering@ascend.com>
 
 	* src/chmod.c (usage): Add one-liner.  Suggestion from Karl Berry.
