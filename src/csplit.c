@@ -43,16 +43,6 @@ char *realloc ();
 #define MAX(a,b) (((a) > (b)) ? (a) : (b))
 #endif
 
-int safe_read ();
-
-static char *xrealloc (char *p, unsigned int n);
-static char *xmalloc (unsigned int n);
-static void cleanup (void);
-static void close_output_file (void);
-static void create_output_file (void);
-static void save_line_to_file (struct cstring *line);
-static void usage (int status);
-
 #ifndef TRUE
 #define FALSE 0
 #define TRUE 1
@@ -128,6 +118,14 @@ struct buffer_record
   struct line *curr_line;	/* The line start record currently in use. */
   struct buffer_record *next;
 };
+
+int safe_read ();
+
+static void cleanup (void);
+static void close_output_file (void);
+static void create_output_file (void);
+static void save_line_to_file (struct cstring *line);
+static void usage (int status);
 
 /* The name this program was run with. */
 char *program_name;
@@ -1064,7 +1062,8 @@ new_control_record (void)
     {
       control_allocated += ALLOC_SIZE;
       controls = (struct control *)
-	xrealloc (controls, sizeof (struct control) * control_allocated);
+	xrealloc ((char *) controls,
+		  sizeof (struct control) * control_allocated);
     }
   p = &controls[control_used++];
   p->regexpr = NULL;
