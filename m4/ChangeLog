@@ -1,8 +1,18 @@
 2004-04-20  Jim Meyering  <jim@meyering.net>
 
+	Change UTILS_ to gl_ in AC_DEFINE'd names.
+	Change utils_- and jm_-prefixed variables, too.
+	* mkdir-slash.m4 (gl_FUNC_MKDIR_TRAILING_SLASH): Renamed from
+	UTILS_FUNC_MKDIR_TRAILING_SLASH.
+	* mkstemp.m4 (gl_FUNC_MKSTEMP): Renamed from UTILS_FUNC_MKSTEP.
+	* host-os.m4 (gl_HOST_OS): Renamed from UTILS_HOST_OS.
+
 	* dirfd.m4 (gl_FUNC_DIRFD): Rename from UTILS_FUNC_DIRFD.
 	Don't emit trailing blanks.
-	* jm-macros.m4 (gl_MACROS): Reflect the renaming.
+	Also rename jm_-prefixed variables to have gl_ prefix.
+
+	* jm-macros.m4: Reflect the renamings.
+	* prereq.m4: Likewise.
 
 2004-04-19  Jim Meyering  <jim@meyering.net>
 
