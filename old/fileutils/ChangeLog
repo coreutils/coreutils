@@ -1,5 +1,7 @@
 1999-12-19  Jim Meyering  <meyering@ascend.com>
 
+	* Version 4.0l.
+
 	* src/ls.c [! LSTAT_FOLLOWS_SLASHED_SYMLINK]: Use lstat wrapper.
 	[Notice the new configure-time test in m4/lstat-slash.m4. ]
 	(main): Back out change from 1999-02-19 that made ls remove
