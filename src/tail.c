@@ -261,6 +261,28 @@ write_header (const char *pretty_filename, const char *comment)
   first_file = 0;
 }
 
+/* Display file PRETTY_FILENAME from the current position in FD to the end.
+   Return the number of bytes read from the file.  */
+
+static long
+dump_remainder (const char *pretty_filename, int fd)
+{
+  char buffer[BUFSIZ];
+  int bytes_read;
+  long total;
+
+  total = 0;
+  while ((bytes_read = safe_read (fd, buffer, BUFSIZ)) > 0)
+    {
+      xwrite (STDOUT_FILENO, buffer, bytes_read);
+      total += bytes_read;
+    }
+  if (bytes_read == -1)
+    error (EXIT_FAILURE, errno, "%s", pretty_filename);
+
+  return total;
+}
+
 /* Print the last N_LINES lines from the end of file FD.
    Go backward through the file, reading `BUFSIZ' bytes at a time (except
    probably the first), until we hit the start of the file or have
@@ -321,6 +343,7 @@ file_lines (const char *pretty_filename, int fd, long int n_lines, off_t pos)
 	  /* Not enough lines in the file; print the entire file.  */
 	  /* FIXME: check lseek return value  */
 	  lseek (fd, (off_t) 0, SEEK_SET);
+	  dump_remainder (pretty_filename, fd);
 	  return 0;
 	}
       pos -= BUFSIZ;
@@ -601,28 +624,6 @@ start_lines (const char *pretty_filename, int fd, long int n_lines)
 	      bytes_read - bytes_to_skip);
     }
   return 0;
-}
-
-/* Display file PRETTY_FILENAME from the current position in FD to the end.
-   Return the number of bytes read from the file.  */
-
-static long
-dump_remainder (const char *pretty_filename, int fd)
-{
-  char buffer[BUFSIZ];
-  int bytes_read;
-  long total;
-
-  total = 0;
-  while ((bytes_read = safe_read (fd, buffer, BUFSIZ)) > 0)
-    {
-      xwrite (STDOUT_FILENO, buffer, bytes_read);
-      total += bytes_read;
-    }
-  if (bytes_read == -1)
-    error (EXIT_FAILURE, errno, "%s", pretty_filename);
-
-  return total;
 }
 
 /* FIXME: describe */
@@ -962,7 +963,6 @@ tail_lines (const char *pretty_filename, int fd, long int n_lines)
 	  length = lseek (fd, (off_t) 0, SEEK_END);
 	  if (length != 0 && file_lines (pretty_filename, fd, n_lines, length))
 	    return 1;
-	  dump_remainder (pretty_filename, fd);
 	}
       else
 	return pipe_lines (pretty_filename, fd, n_lines);
