@@ -1525,6 +1525,27 @@ Change the number of seconds to wait between iterations (the default is 1).
 During one iteration, every specified file is checked to see if it has
 changed size.
 
+@itemx --pid=@var{pid}
+@opindex --pid
+When following by name or by descriptor, you may specify the process ID
+@var{pid} of the sole writer of all @var{file} arguments.  Then, when that
+process terminates, tail will also terminate.  For this to work properly,
+the tail process and the writer must be on the same machine and the tail
+process must be able to send a signal to the writing process (but does
+not actually send any signal).  For example, to save the output of a
+build in a file and to watch the file grow, if you invoke @code{make}
+and @code{tail} like this then the tail process will stop when your
+build completes.  Without this option, you would have had to kill the
+@code{tail -f} process yourself.
+@example
+make >& makerr & tail --pid=$! -f makerr
+@end example
+If you specify a valid @var{pid} that is not in use or that does not
+correspond to the process that is writing to the tailed files, then
+@code{tail} may terminate long before any @var{file}s stop growing
+or it may not terminate until long after the real writer process has
+terminated.
+
 @itemx --max-consecutive-size-changes=@var{n}
 @opindex --max-consecutive-size-changes
 This option is meaningful only when following by name.
