@@ -59,9 +59,6 @@ static bool no_create;
 /* (-r) If true, use times from a reference file.  */
 static bool use_ref;
 
-/* (-t) If true, use date supplied on command line in POSIX format.  */
-static bool posix_date;
-
 /* If true, the only thing we have to do is change both the
    modification and access time to the current time, so we don't
    have to own the file, just be able to read and write it.
@@ -127,6 +124,8 @@ touch (const char *file)
   struct stat sbuf;
   int fd = -1;
   int open_errno = 0;
+  struct timespec timespec[2];
+  struct timespec const *t;
 
   if (! no_create)
     {
@@ -142,7 +141,7 @@ touch (const char *file)
 	open_errno = errno;
     }
 
-  if (! amtime_now)
+  if (change_times != (CH_ATIME | CH_MTIME))
     {
       /* We're setting only one of the time values.  stat the target to get
 	 the other one.  If we have the file descriptor already, use fstat.
@@ -165,37 +164,36 @@ touch (const char *file)
 	}
     }
 
-  if (fd != -1 && close (fd) < 0)
-    {
-      error (0, errno, _("creating %s"), quote (file));
-      return false;
-    }
-
   if (amtime_now)
     {
-      /* Pass NULL to utime so it will not fail if we just have
+      /* Pass NULL to futimens so it will not fail if we have
 	 write access to the file, but don't own it.  */
-      ok = (utime (file, NULL) == 0);
+      t = NULL;
     }
   else
     {
-      struct timespec timespec[2];
-      memcpy (timespec, newtime, sizeof timespec);
-
-      if (!(change_times & CH_ATIME))
+      if (change_times & CH_ATIME)
+	timespec[0] = newtime[0];
+      else
 	{
 	  timespec[0].tv_sec = sbuf.st_atime;
 	  timespec[0].tv_nsec = TIMESPEC_NS (sbuf.st_atim);
 	}
 
-      if (!(change_times & CH_MTIME))
+      if (change_times & CH_MTIME)
+	timespec[1] = newtime[1];
+      else
 	{
 	  timespec[1].tv_sec = sbuf.st_mtime;
 	  timespec[1].tv_nsec = TIMESPEC_NS (sbuf.st_mtim);
 	}
 
-      ok = (utimens (file, timespec) == 0);
+      t = timespec;
     }
+
+  ok = (futimens (fd, file, t) == 0);
+  if (fd != -1)
+    ok &= (close (fd) == 0);
 
   if (!ok)
     {
@@ -276,7 +274,8 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  change_times = no_create = use_ref = posix_date = false;
+  change_times = 0;
+  no_create = use_ref = false;
 
   while ((c = getopt_long (argc, argv, "acd:fmr:t:", longopts, NULL)) != -1)
     {
@@ -292,7 +291,6 @@ main (int argc, char **argv)
 
 	case 'd':
 	  flex_date = optarg;
-	  date_set = true;
 	  break;
 
 	case 'f':
@@ -308,10 +306,10 @@ main (int argc, char **argv)
 	  break;
 
 	case 't':
-	  posix_date = true;
 	  if (! posixtime (&newtime[0].tv_sec, optarg,
 			   PDS_LEADING_YEAR | PDS_CENTURY | PDS_SECONDS))
-	    error (EXIT_FAILURE, 0, _("invalid date format %s"), quote (optarg));
+	    error (EXIT_FAILURE, 0, _("invalid date format %s"),
+		   quote (optarg));
 	  newtime[0].tv_nsec = 0;
 	  newtime[1] = newtime[0];
 	  date_set = true;
@@ -334,7 +332,7 @@ main (int argc, char **argv)
   if (change_times == 0)
     change_times = CH_ATIME | CH_MTIME;
 
-  if (posix_date && (use_ref || flex_date))
+  if (date_set && (use_ref || flex_date))
     {
       error (0, 0, _("cannot specify times from more than one source"));
       usage (EXIT_FAILURE);
@@ -350,6 +348,7 @@ main (int argc, char **argv)
       newtime[0].tv_nsec = TIMESPEC_NS (ref_stats.st_atim);
       newtime[1].tv_sec = ref_stats.st_mtime;
       newtime[1].tv_nsec = TIMESPEC_NS (ref_stats.st_mtim);
+      date_set = true;
       if (flex_date)
 	{
 	  if (change_times & CH_ATIME)
@@ -357,7 +356,6 @@ main (int argc, char **argv)
 	  if (change_times & CH_MTIME)
 	    get_reldate (&newtime[1], flex_date, &newtime[1]);
 	}
-      date_set = true;
     }
   else
     {
@@ -365,35 +363,36 @@ main (int argc, char **argv)
 	{
 	  get_reldate (&newtime[0], flex_date, NULL);
 	  newtime[1] = newtime[0];
+	  date_set = true;
 	}
     }
 
   /* The obsolete `MMDDhhmm[YY]' form is valid IFF there are
      two or more non-option arguments.  */
-  if (!date_set && 2 <= argc - optind && posix2_version () < 200112)
+  if (!date_set && 2 <= argc - optind && posix2_version () < 200112
+      && posixtime (&newtime[0].tv_sec, argv[optind], PDS_TRAILING_YEAR))
     {
-      if (posixtime (&newtime[0].tv_sec, argv[optind], PDS_TRAILING_YEAR))
-	{
-	  newtime[0].tv_nsec = 0;
-	  newtime[1] = newtime[0];
-	  if (! getenv ("POSIXLY_CORRECT"))
-	    {
-	      struct tm const *tm = localtime (&newtime[0].tv_sec);
-	      error (0, 0,
-		     _("warning: `touch %s' is obsolete; use\
- `touch -t %04ld%02d%02d%02d%02d.%02d'"),
-		     argv[optind],
-		     tm->tm_year + 1900L, tm->tm_mon + 1, tm->tm_mday,
-		     tm->tm_hour, tm->tm_min, tm->tm_sec);
-	    }
+      newtime[0].tv_nsec = 0;
+      newtime[1] = newtime[0];
+      date_set = true;
 
-	  optind++;
-	  date_set = true;
+      if (! getenv ("POSIXLY_CORRECT"))
+	{
+	  struct tm const *tm = localtime (&newtime[0].tv_sec);
+	  error (0, 0,
+		 _("warning: `touch %s' is obsolete; use "
+		   "`touch -t %04ld%02d%02d%02d%02d.%02d'"),
+		 argv[optind],
+		 tm->tm_year + 1900L, tm->tm_mon + 1, tm->tm_mday,
+		 tm->tm_hour, tm->tm_min, tm->tm_sec);
 	}
+
+      optind++;
     }
+
   if (!date_set)
     {
-      if ((change_times & (CH_ATIME | CH_MTIME)) == (CH_ATIME | CH_MTIME))
+      if (change_times == (CH_ATIME | CH_MTIME))
 	amtime_now = true;
       else
 	{
