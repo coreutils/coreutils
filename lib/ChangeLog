@@ -1,3 +1,7 @@
+2000-08-30  Jim Meyering  <meyering@lucent.com>
+
+	* strftime.c: Merge in changes from GNU libc.
+
 2000-08-26  Jim Meyering  <meyering@lucent.com>
 
 	* closeout.c: Include "__fpending.h".
