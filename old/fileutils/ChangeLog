@@ -251,10 +251,6 @@ Fri Nov 10 23:31:46 1995  Jim Meyering  (meyering@comco.com)
 	* cp-aux.c: Protoize and add const attribute to parameters.
 	* cp-hash.c: Likewise.
 
-	* ls.c (parse_ls_color): Use strcpy to initialize 3-character array
-	rather than automatic aggregate initialization.  The latter isn't
-	portable.
-
 Thu Nov  9 23:27:05 1995  Jim Meyering  (meyering@comco.com)
 
 	* system.h [__P]: Define it.
