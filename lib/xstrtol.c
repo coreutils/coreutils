@@ -17,15 +17,15 @@
 
 /* Jim Meyering (meyering@na-net.ornl.gov) */
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
 #include <config.h>
 #endif
 
-#ifdef STDC_HEADERS
+#if STDC_HEADERS
 #include <stdlib.h>
 #endif
 
-#ifdef HAVE_STRING_H
+#if HAVE_STRING_H
 # include <string.h>
 #else
 # include <strings.h>
