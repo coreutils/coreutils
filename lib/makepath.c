@@ -210,6 +210,9 @@ make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
 	      saved_cwd = !save_cwd (&cwd);
 	    }
 
+	  /* If save_cwd could not record the current directory, then don't
+	     do the chdir optimization and resort to using full pathnames.  */
+
 	  if (!saved_cwd)
 	    basename_dir = dirpath;
 
@@ -258,6 +261,10 @@ make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
 	      leading_dirs = new;
 	    }
 
+	  /* If we were able to save the initial working directory,
+	     then we can use chdir to change into each directory before
+	     creating an entry in that directory.  This avoids making
+	     stat and mkdir process O(n^2) file name components.  */
 	  if (saved_cwd && chdir (basename_dir) < 0)
 	    {
 	      error (0, errno, "cannot chdir to directory, %s", dirpath);
