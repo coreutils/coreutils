@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-
 
-SUBDIRS = lib src doc man m4 po tests djgpp
+SUBDIRS = lib src doc man m4 po tests
 EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
   .kludge-stamp .prev-version
 
