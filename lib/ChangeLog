@@ -1,3 +1,8 @@
+2003-07-28  Paul Eggert  <eggert@twinsun.com>
+
+	* stdbool.hin (_Bool): Make it signed char, instead of
+	an enum type, so that it's guaranteed to promote to int.
+
 2003-07-23  Jim Meyering  <jim@meyering.net>
 
 	* xstrndup.h: New file.
