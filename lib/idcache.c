@@ -1,5 +1,5 @@
 /* idcache.c -- map user and group IDs, cached for speed
-   Copyright (C) 1985, 1988, 1989, 1990 Free Software Foundation, Inc.
+   Copyright (C) 1985, 1988, 1989, 1990, 1997 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,8 +15,8 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
+#if HAVE_CONFIG_H
+# include <config.h>
 #endif
 
 #include <stdio.h>
@@ -25,14 +25,15 @@
 #include <grp.h>
 
 #if defined(STDC_HEADERS) || defined(HAVE_STRING_H)
-#include <string.h>
+# include <string.h>
 #else
-#include <strings.h>
+# include <strings.h>
 #endif
 
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
+#if HAVE_UNISTD_H
+# include <unistd.h>
 #endif
+
 #ifndef _POSIX_VERSION
 struct passwd *getpwuid ();
 struct passwd *getpwnam ();
@@ -56,11 +57,14 @@ struct userid
 
 static struct userid *user_alist;
 
+#ifdef NOT_USED
 /* The members of this list have names not in the local passwd file.  */
 static struct userid *nouser_alist;
+#endif /* NOT_USED */
 
-/* Translate UID to a login name or a stringified number,
-   with cache.  */
+/* Translate UID to a login name, with cache.
+   If UID cannot be resolved, return NULL.
+   Cache lookup failures, too.  */
 
 char *
 getuser (uid)
@@ -68,7 +72,6 @@ getuser (uid)
 {
   register struct userid *tail;
   struct passwd *pwent;
-  char usernum_string[20];
 
   for (tail = user_alist; tail; tail = tail->next)
     if (tail->id.u == uid)
@@ -77,19 +80,15 @@ getuser (uid)
   pwent = getpwuid (uid);
   tail = (struct userid *) xmalloc (sizeof (struct userid));
   tail->id.u = uid;
-  if (pwent == 0)
-    {
-      sprintf (usernum_string, "%u", (unsigned) uid);
-      tail->name = xstrdup (usernum_string);
-    }
-  else
-    tail->name = xstrdup (pwent->pw_name);
+  tail->name = (pwent ? xstrdup (pwent->pw_name) : NULL);
 
   /* Add to the head of the list, so most recently used is first.  */
   tail->next = user_alist;
   user_alist = tail;
   return tail->name;
 }
+
+#ifdef NOT_USED
 
 /* Translate USER to a UID, with cache.
    Return NULL if there is no such user.
@@ -132,6 +131,8 @@ getuidbyname (user)
   return 0;
 }
 
+#endif /* NOT_USED */
+
 /* Use the same struct as for userids.  */
 static struct userid *group_alist;
 static struct userid *nogroup_alist;
@@ -145,7 +146,6 @@ getgroup (gid)
 {
   register struct userid *tail;
   struct group *grent;
-  char groupnum_string[20];
 
   for (tail = group_alist; tail; tail = tail->next)
     if (tail->id.g == gid)
@@ -154,13 +154,7 @@ getgroup (gid)
   grent = getgrgid (gid);
   tail = (struct userid *) xmalloc (sizeof (struct userid));
   tail->id.g = gid;
-  if (grent == 0)
-    {
-      sprintf (groupnum_string, "%u", (unsigned int) gid);
-      tail->name = xstrdup (groupnum_string);
-    }
-  else
-    tail->name = xstrdup (grent->gr_name);
+  tail->name = (grent ? xstrdup (grent->gr_name) : NULL);
 
   /* Add to the head of the list, so most recently used is first.  */
   tail->next = group_alist;
@@ -168,7 +162,9 @@ getgroup (gid)
   return tail->name;
 }
 
-/* Translate GROUP to a UID, with cache.
+#ifdef NOT_USED
+
+/* Translate GROUP to a GID, with cache.
    Return NULL if there is no such group.
    (We also cache which group names have no group entry,
    so we don't keep looking them up.)  */
@@ -208,3 +204,5 @@ getgidbyname (group)
   nogroup_alist = tail;
   return 0;
 }
+
+#endif /* NOT_USED */
