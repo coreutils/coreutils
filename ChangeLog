@@ -1,3 +1,9 @@
+2002-09-25  Jim Meyering  <meyering@lucent.com>
+
+	* src/test.c (eaccess): Change type of local `euid' from int to uid_t
+	and add a cast, to avoid a warning about `signed and unsigned type in
+	conditional expression'.
+
 2002-09-22  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.2.
