@@ -1,9 +1,15 @@
-Fri Jan 19 10:00:08 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+Mon Jan 29 19:24:04 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* acconfig.h (PROTOTYPES): Define it.
+
+Fri Jan 19 22:00:08 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* aclocal.m4 (fp_PROG_INSTALL): New macro.
 	* configure.in: Use it instead of AC_PROG_INSTALL.
 
-Wed Jan 17 11:37:59 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+	* who-users.c: Protoize.
+
+Wed Jan 17 23:37:59 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* stty.c: Protoize and __P-protect forward dcls.
 	(visible): Change parameter type to unsigned int from unsigned char.
