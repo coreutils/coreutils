@@ -1,3 +1,7 @@
+1999-01-30  Jim Meyering  <meyering@ascend.com>
+
+	* getloadavg.m4: Use 3-arg form of AC_DEFINE.
+
 1999-01-28  Jim Meyering  <meyering@ascend.com>
 
 	* jm-macros.m4: Use jm_AFS.
