@@ -1,3 +1,10 @@
+2002-03-04  Jim Meyering  <meyering@lucent.com>
+
+	* Version 4.1.7.
+
+	* Makefile.maint (tgz-size): Also handle a suffix of `K', since
+	the sizes in the output of `du -h' now look like `29K'
+
 2002-03-03  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.6.
