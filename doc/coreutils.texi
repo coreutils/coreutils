@@ -49,7 +49,7 @@
 * cut: (coreutils)cut invocation.               Print selected parts of lines.
 * date: (coreutils)date invocation.             Print/set system date and time.
 * dd: (coreutils)dd invocation.                 Copy and convert a file.
-* df: (coreutils)df invocation.                 Report filesystem disk usage.
+* df: (coreutils)df invocation.                 Report file system disk usage.
 * dir: (coreutils)dir invocation.               List directories briefly.
 * dircolors: (coreutils)dircolors invocation.   Color setup for ls.
 * dirname: (coreutils)dirname invocation.       Strip non-directory suffix.
@@ -317,9 +317,9 @@ Changing file attributes
 
 Disk usage
 
-* df invocation::               Report filesystem disk space usage
+* df invocation::               Report file system disk space usage
 * du invocation::               Estimate file space usage
-* stat invocation::             Report file or filesystem status
+* stat invocation::             Report file or file system status
 * sync invocation::             Synchronize data on disk with memory
 
 Printing text
@@ -755,7 +755,7 @@ It has been replaced with @w{@kbd{--backup}}.
 Some @sc{gnu} programs (at least @command{df}, @command{du}, and
 @command{ls}) display sizes in ``blocks''.  You can adjust the block size
 and method of display to make sizes easier to read.  The block size
-used for display is independent of any filesystem block size.
+used for display is independent of any file system block size.
 Fractional block counts are rounded up to the nearest integer.
 
 @opindex --block-size=@var{size}
@@ -5455,7 +5455,7 @@ provide this option for compatibility.)
 @cindex inode number, printing
 Print the inode number (also called the file serial number and index
 number) of each file to the left of the file name.  (This number
-uniquely identifies each file within a particular filesystem.)
+uniquely identifies each file within a particular file system.)
 
 @item -l
 @itemx --format=long
@@ -6428,10 +6428,10 @@ refers to a non-regular file, then do not attempt to make it sparse.
 For each sufficiently long sequence of zero bytes in the input file,
 attempt to create a corresponding hole in the output file, even if the
 input file does not appear to be sparse.
-This is useful when the input file resides on a filesystem
+This is useful when the input file resides on a file system
 that does not support sparse files
-(for example,  @samp{efs} filesystems in SGI IRIX 5.3 and earlier),
-but the output file is on a type of filesystem that does support them.
+(for example,  @samp{efs} file systems in SGI IRIX 5.3 and earlier),
+but the output file is on a type of file system that does support them.
 Holes may be created only in regular files, so if the destination file
 is of some other type, @command{cp} does not even try to make it sparse.
 
@@ -6482,8 +6482,8 @@ Print the name of each file before copying it.
 @itemx --one-file-system
 @opindex -x
 @opindex --one-file-system
-@cindex filesystems, omitting copying to different
-Skip subdirectories that are on different filesystems from the one that
+@cindex file systems, omitting copying to different
+Skip subdirectories that are on different file systems from the one that
 the copy started on.
 However, mount point directories @emph{are} copied.
 
@@ -6888,9 +6888,9 @@ Otherwise, if only two files are given, it renames the first as
 the second.  It is an error if the last argument is not a directory
 and more than two files are given.
 
-@command{mv} can move any type of file from one filesystem to another.
+@command{mv} can move any type of file from one file system to another.
 Prior to version @code{4.0} of the fileutils,
-@command{mv} could move only regular files between filesystems.
+@command{mv} could move only regular files between file systems.
 For example, now @command{mv} can move an entire directory hierarchy
 including special device files from one partition to another.  It first
 uses some of the same code that's used by @code{cp -a} to copy the
@@ -7020,7 +7020,7 @@ don't require a directory to be empty before trying to unlink it.  This works
 only if you have appropriate privileges and if your operating system supports
 @code{unlink} for directories.  Because unlinking a directory causes any files
 in the deleted directory to become unreferenced, it is wise to @command{fsck}
-the filesystem after doing this.
+the file system after doing this.
 
 @item -f
 @itemx --force
@@ -7040,7 +7040,7 @@ Ignore any previous @option{--force} (@option{-f}) option.
 @itemx --preserve-root
 @opindex --preserve-root
 @cindex root directory, disallow recursive destruction
-Fail upon any attempt to remove the filesystem root, @file{/},
+Fail upon any attempt to remove the file system root, @file{/},
 when used with the @option{--recursive} option.
 Without @option{--recursive}, this option has no effect.
 @xref{Treating / specially}.
@@ -7137,37 +7137,37 @@ California, 22--25 July, 1996).  The paper is also available online
 @url{http://www.cs.auckland.ac.nz/~pgut001/pubs/secure_del.html}.
 
 @strong{Please note} that @command{shred} relies on a very important assumption:
-that the filesystem overwrites data in place.  This is the traditional
-way to do things, but many modern filesystem designs do not satisfy this
+that the file system overwrites data in place.  This is the traditional
+way to do things, but many modern file system designs do not satisfy this
 assumption.  Exceptions include:
 
 @itemize @bullet
 
 @item
-Log-structured or journaled filesystems, such as those supplied with
+Log-structured or journaled file systems, such as those supplied with
 AIX and Solaris, and JFS, ReiserFS, XFS, Ext3, etc.
 
 @item
-Filesystems that write redundant data and carry on even if some writes
-fail, such as RAID-based filesystems.
+File systems that write redundant data and carry on even if some writes
+fail, such as RAID-based file systems.
 
 @item
-Filesystems that make snapshots, such as Network Appliance's NFS server.
+File systems that make snapshots, such as Network Appliance's NFS server.
 
 @item
-Filesystems that cache in temporary locations, such as NFS version 3
+File systems that cache in temporary locations, such as NFS version 3
 clients.
 
 @item
-Compressed filesystems.
+Compressed file systems.
 @end itemize
 
-If you are not sure how your filesystem operates, then you should assume
+If you are not sure how your file system operates, then you should assume
 that it does not overwrite data in place, which means that shred cannot
-reliably operate on regular files in your filesystem.
+reliably operate on regular files in your file system.
 
 Generally speaking, it is more reliable to shred a device than a file,
-since this bypasses the problem of filesystem design mentioned above.
+since this bypasses the problem of file system design mentioned above.
 However, even shredding devices is not always completely reliable.  For
 example, most disks map out bad sectors invisibly to the application; if
 the bad sectors contain sensitive data, @command{shred} won't be able to
@@ -7240,7 +7240,7 @@ Display status updates as sterilization proceeds.
 @opindex -x
 @opindex --exact
 By default, @command{shred} rounds the size of a regular file up to the next
-multiple of the filesystem block size to fully erase the last block of the file.
+multiple of the file system block size to fully erase the last block of the file.
 Use @option{--exact} to suppress that behavior.
 Thus, by default if you shred a 10-byte regular file on a system with 512-byte
 blocks, the resulting file will be 512 bytes long.  With this option,
@@ -7285,7 +7285,7 @@ Bourne-compatible shell) the command @samp{shred - 1<>file} instead.
 @end table
 
 You might use the following command to erase all trace of the
-filesystem you'd created on the floppy disk in your first drive.
+file system you'd created on the floppy disk in your first drive.
 That command takes about 20 minutes to erase a ``1.44MB'' (actually
 1440 KiB) floppy.
 
@@ -7381,7 +7381,7 @@ more portable in practice.
 @cindex symbolic (soft) links, creating
 @cindex creating links (hard or soft)
 
-@cindex filesystems and hard links
+@cindex file systems and hard links
 @command{ln} makes links between files.  By default, it makes hard links;
 with the @option{-s} option, it makes symbolic (or @dfn{soft}) links.
 Synopses:
@@ -7418,7 +7418,7 @@ original are indistinguishable.  Technically speaking, they share the
 same inode, and the inode contains all the information about a
 file---indeed, it is not incorrect to say that the inode @emph{is} the
 file.  On all existing implementations, you cannot make a hard link to
-a directory, and hard links cannot cross filesystem boundaries.  (These
+a directory, and hard links cannot cross file system boundaries.  (These
 restrictions are not mandated by @acronym{POSIX}, however.)
 
 @cindex dereferencing symbolic links
@@ -8007,7 +8007,7 @@ during a recursive traversal, but see @option{--verbose}.
 @itemx --preserve-root
 @opindex --preserve-root
 @cindex root directory, disallow recursive modification
-Fail upon any attempt to recursively change the filesystem root, @file{/}.
+Fail upon any attempt to recursively change the file system root, @file{/}.
 Without @option{--recursive}, this option has no effect.
 @xref{Treating / specially}.
 
@@ -8116,7 +8116,7 @@ during a recursive traversal, but see @option{--verbose}.
 @itemx --preserve-root
 @opindex --preserve-root
 @cindex root directory, disallow recursive modification
-Fail upon any attempt to recursively change the filesystem root, @file{/}.
+Fail upon any attempt to recursively change the file system root, @file{/}.
 Without @option{--recursive}, this option has no effect.
 @xref{Treating / specially}.
 
@@ -8213,7 +8213,7 @@ changed.
 @itemx --preserve-root
 @opindex --preserve-root
 @cindex root directory, disallow recursive modification
-Fail upon any attempt to recursively change the filesystem root, @file{/}.
+Fail upon any attempt to recursively change the file system root, @file{/}.
 Without @option{--recursive}, this option has no effect.
 @xref{Treating / specially}.
 
@@ -8381,30 +8381,30 @@ it runs; for that, you want @command{ps} or @command{pstat} or @command{swap}
 or some such command.)
 
 @menu
-* df invocation::               Report filesystem disk space usage.
+* df invocation::               Report file system disk space usage.
 * du invocation::               Estimate file space usage.
-* stat invocation::		Report file or filesystem status.
+* stat invocation::		Report file or file system status.
 * sync invocation::             Synchronize memory and disk.
 @end menu
 
 
 @node df invocation
-@section @command{df}: Report filesystem disk space usage
+@section @command{df}: Report file system disk space usage
 
 @pindex df
-@cindex filesystem disk usage
-@cindex disk usage by filesystem
+@cindex file system disk usage
+@cindex disk usage by file system
 
 @command{df} reports the amount of disk space used and available on
-filesystems.  Synopsis:
+file systems.  Synopsis:
 
 @example
 df [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
 With no arguments, @command{df} reports the space used and available on all
-currently mounted filesystems (of all types).  Otherwise, @command{df}
-reports on the filesystem containing each argument @var{file}.
+currently mounted file systems (of all types).  Otherwise, @command{df}
+reports on the file system containing each argument @var{file}.
 
 Normally the disk space is printed in units of
 1024 bytes, but this can be overridden (@pxref{Block size}).
@@ -8413,11 +8413,11 @@ Non-integer quantities are rounded up to the next higher unit.
 @cindex disk device file
 @cindex device file, disk
 If an argument @var{file} is a disk device file containing a mounted
-filesystem, @command{df} shows the space available on that filesystem
-rather than on the filesystem containing the device node (i.e., the root
-filesystem).  @sc{gnu} @command{df} does not attempt to determine the disk usage
-on unmounted filesystems, because on most kinds of systems doing so
-requires extremely nonportable intimate knowledge of filesystem
+file system, @command{df} shows the space available on that file system
+rather than on the file system containing the device node (i.e., the root
+file system).  @sc{gnu} @command{df} does not attempt to determine the disk usage
+on unmounted file systems, because on most kinds of systems doing so
+requires extremely nonportable intimate knowledge of file system
 structures.
 
 The program accepts the following options.  Also see @ref{Common options}.
@@ -8428,11 +8428,11 @@ The program accepts the following options.  Also see @ref{Common options}.
 @itemx --all
 @opindex -a
 @opindex --all
-@cindex automounter filesystems
-@cindex ignore filesystems
-Include in the listing filesystems that have a size of 0 blocks, which
-are omitted by default.  Such filesystems are typically special-purpose
-pseudo-filesystems, such as automounter entries.  Also, filesystems of
+@cindex automounter file systems
+@cindex ignore file systems
+Include in the listing file systems that have a size of 0 blocks, which
+are omitted by default.  Such file systems are typically special-purpose
+pseudo-file-systems, such as automounter entries.  Also, file systems of
 type ``ignore'' or ``auto'', supported by some operating systems, are
 only included if this option is specified.
 
@@ -8440,7 +8440,7 @@ only included if this option is specified.
 @itemx --block-size=@var{size}
 @opindex -B
 @opindex --block-size
-@cindex filesystem sizes
+@cindex file system sizes
 Scale sizes by @var{size} before printing them (@pxref{Block size}).
 For example, @option{-BG} prints sizes in units of 1,073,741,824 bytes.
 
@@ -8461,7 +8461,7 @@ permissions, timestamps, and location on the disk.
 
 @item -k
 @opindex -k
-@cindex kibibytes for filesystem sizes
+@cindex kibibytes for file system sizes
 Print sizes in 1024-byte blocks, overriding the default block size
 (@pxref{Block size}).
 This option is equivalent to @option{--block-size=1K}.
@@ -8470,13 +8470,13 @@ This option is equivalent to @option{--block-size=1K}.
 @itemx --local
 @opindex -l
 @opindex --local
-@cindex filesystem types, limiting output to certain
-Limit the listing to local filesystems.  By default, remote filesystems
+@cindex file system types, limiting output to certain
+Limit the listing to local file systems.  By default, remote file systems
 are also listed.
 
 @item --no-sync
 @opindex --no-sync
-@cindex filesystem space, retrieving old data more quickly
+@cindex file system space, retrieving old data more quickly
 Do not invoke the @code{sync} system call before getting any usage data.
 This may make @command{df} run significantly faster on systems with many
 disks, but on some systems (notably SunOS) the results may be slightly
@@ -8495,7 +8495,7 @@ for the following:
 
 @enumerate
 @item
-The information about each filesystem is always printed on exactly
+The information about each file system is always printed on exactly
 one line; a mount device is never put on a line by itself.  This means
 that if the mount device name is more than 20 characters long (e.g., for
 some network mounts), the columns are misaligned.
@@ -8508,27 +8508,27 @@ The labels in the header output line are changed to conform to @acronym{POSIX}.
 
 @item --sync
 @opindex --sync
-@cindex filesystem space, retrieving current data more slowly
+@cindex file system space, retrieving current data more slowly
 Invoke the @code{sync} system call before getting any usage data.  On
 some systems (notably SunOS), doing this yields more up to date results,
 but in general this option makes @command{df} much slower, especially when
-there are many or very busy filesystems.
+there are many or very busy file systems.
 
 @item -t @var{fstype}
 @itemx --type=@var{fstype}
 @opindex -t
 @opindex --type
-@cindex filesystem types, limiting output to certain
-Limit the listing to filesystems of type @var{fstype}.  Multiple
-filesystem types can be specified by giving multiple @option{-t} options.
+@cindex file system types, limiting output to certain
+Limit the listing to file systems of type @var{fstype}.  Multiple
+file system types can be specified by giving multiple @option{-t} options.
 By default, nothing is omitted.
 
 @item -T
 @itemx --print-type
 @opindex -T
 @opindex --print-type
-@cindex filesystem types, printing
-Print each filesystem's type.  The types printed here are the same ones
+@cindex file system types, printing
+Print each file system's type.  The types printed here are the same ones
 you can include or exclude with @option{-t} and @option{-x}.  The particular
 types printed are whatever is supported by the system.  Here are some of
 the common names (this list is certainly not exhaustive):
@@ -8536,35 +8536,35 @@ the common names (this list is certainly not exhaustive):
 @table @samp
 
 @item nfs
-@cindex NFS filesystem type
-An NFS filesystem, i.e., one mounted over a network from another
+@cindex NFS file system type
+An NFS file system, i.e., one mounted over a network from another
 machine.  This is the one type name which seems to be used uniformly by
 all systems.
 
 @item 4.2@r{, }ufs@r{, }efs@dots{}
-@cindex Linux filesystem types
-@cindex local filesystem types
-@opindex 4.2 @r{filesystem type}
-@opindex ufs @r{filesystem type}
-@opindex efs @r{filesystem type}
-A filesystem on a locally-mounted hard disk.  (The system might even
+@cindex Linux file system types
+@cindex local file system types
+@opindex 4.2 @r{file system type}
+@opindex ufs @r{file system type}
+@opindex efs @r{file system type}
+A file system on a locally-mounted hard disk.  (The system might even
 support more than one type here; Linux does.)
 
 @item hsfs@r{, }cdfs
-@cindex CD-ROM filesystem type
-@cindex High Sierra filesystem
-@opindex hsfs @r{filesystem type}
-@opindex cdfs @r{filesystem type}
-A filesystem on a CD-ROM drive.  HP-UX uses @samp{cdfs}, most other
+@cindex CD-ROM file system type
+@cindex High Sierra file system
+@opindex hsfs @r{file system type}
+@opindex cdfs @r{file system type}
+A file system on a CD-ROM drive.  HP-UX uses @samp{cdfs}, most other
 systems use @samp{hsfs} (@samp{hs} for ``High Sierra'').
 
 @item pcfs
-@cindex PC filesystem
-@cindex DOS filesystem
-@cindex MS-DOS filesystem
-@cindex diskette filesystem
+@cindex PC file system
+@cindex DOS file system
+@cindex MS-DOS file system
+@cindex diskette file system
 @opindex pcfs
-An MS-DOS filesystem, usually on a diskette.
+An MS-DOS file system, usually on a diskette.
 
 @end table
 
@@ -8572,9 +8572,9 @@ An MS-DOS filesystem, usually on a diskette.
 @itemx --exclude-type=@var{fstype}
 @opindex -x
 @opindex --exclude-type
-Limit the listing to filesystems not of type @var{fstype}.
-Multiple filesystem types can be eliminated by giving multiple
-@option{-x} options.  By default, no filesystem types are omitted.
+Limit the listing to file systems not of type @var{fstype}.
+Multiple file system types can be eliminated by giving multiple
+@option{-x} options.  By default, no file system types are omitted.
 
 @item -v
 Ignored; for compatibility with System V versions of @command{df}.
@@ -8758,8 +8758,8 @@ of subdirectories.
 @itemx --one-file-system
 @opindex -x
 @opindex --one-file-system
-@cindex one filesystem, restricting @command{du} to
-Skip directories that are on different filesystems from the one that
+@cindex one file system, restricting @command{du} to
+Skip directories that are on different file systems from the one that
 the argument being processed is on.
 
 @item --exclude=@var{PATTERN}
@@ -8791,11 +8791,11 @@ in HP-UX; it also affects the HP-UX @command{du} program.
 
 
 @node stat invocation
-@section @command{stat}: Report file or filesystem status
+@section @command{stat}: Report file or file system status
 
 @pindex stat
 @cindex file status
-@cindex filesystem status
+@cindex file system status
 
 @command{stat} displays information about the specified file(s).  Synopsis:
 
@@ -8804,7 +8804,7 @@ stat [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
 With no option, @command{stat} reports all information about the given files.
-But it also can be used to report the information of the filesystems the
+But it also can be used to report the information of the file systems the
 given files are located on. If the files are links, @command{stat} can
 also give information about the files the links point to.
 
@@ -8812,11 +8812,11 @@ also give information about the files the links point to.
 @table @samp
 
 @item -f
-@itemx --filesystem
+@itemx --file-system
 @opindex -f
-@opindex --filesystem
-@cindex filesystems
-Report information about the filesystems where the given files are located
+@opindex --file-system
+@cindex file systems
+Report information about the file systems where the given files are located
 instead of information about the files themselves.
 
 @item -L
@@ -8873,7 +8873,7 @@ Interpreted sequences for file stat are:
 @item %Z - Time of last change as seconds since Epoch
 @end itemize
 
-Interpreted sequences for filesystem stat are:
+Interpreted sequences for file system stat are:
 @itemize @bullet
 @item %n - File name
 @item %i - File System id in hex
@@ -8908,7 +8908,7 @@ call.
 @cindex crashes and corruption
 The kernel keeps data in memory to avoid doing (relatively slow) disk
 reads and writes.  This improves performance, but if the computer
-crashes, data may be lost or the filesystem corrupted as a
+crashes, data may be lost or the file system corrupted as a
 result. @command{sync} ensures everything in memory is written to disk.
 
 Any arguments are ignored, except for a lone @option{--help} or
@@ -9921,11 +9921,11 @@ these conditions is true:
 one of the existing directories in @var{name} does not have search
 (execute) permission,
 @item
-the length of @var{name} is larger than its filesystem's maximum
+the length of @var{name} is larger than its file system's maximum
 file name length,
 @item
 the length of one component of @var{name}, corresponding to an
-existing directory name, is larger than its filesystem's maximum
+existing directory name, is larger than its file system's maximum
 length for a file name component.
 @end enumerate
 
@@ -9937,7 +9937,7 @@ The program accepts the following option.  Also see @ref{Common options}.
 @itemx --portability
 @opindex -p
 @opindex --portability
-Instead of performing length checks on the underlying filesystem,
+Instead of performing length checks on the underlying file system,
 test the length of each file name and its components against the
 @acronym{POSIX} minimum limits for portability.  Also check that the file
 name contains no characters not in the portable file name character set.
