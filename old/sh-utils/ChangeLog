@@ -1,3 +1,16 @@
+Mon Oct 17 23:55:41 1994  Jim Meyering  (meyering@comco.com)
+
+	* doc/Makefile.in (install): Install the info files from either
+	the source directory or the object directory.
+	From Ian Lance Taylor (ian@cygnus.com).
+
+Sun Oct 16 12:14:02 1994  Jim Meyering  (meyering@comco.com)
+
+	* lib/Makefile.in (distclean): Don't delete getdate.c and posixtm.c
+	here since they are not distributed.
+	(realclean): Delete them here instead.
+	From Francois Pinard.
+
 Mon Oct 10 21:44:42 1994  Jim Meyering  (meyering@comco.com)
 
 	* id.c (print_group_list, print_full_info): Use more precise
@@ -67,7 +80,7 @@ Sat Oct 01 00:14:10 1994  Jim Meyering  (meyering@comco.com)
 	this one.  Don't include <config.h> either.
 	* safe-xstat.cin: Include <sys/types.h> and <sys/stat.h> here instead.
 	Include <config.h> here, too.
-	Kaveh Gahzi reported this problem.
+	Kaveh Ghazi reported this problem.
 
 Fri Sep 30 22:40:21 1994  Jim Meyering  (meyering@comco.com)
 

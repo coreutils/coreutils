@@ -24,7 +24,7 @@
 
 % This automatically updates the version number based on RCS.
 \def\deftexinfoversion$#1: #2 ${\def\texinfoversion{#2}}
-\deftexinfoversion$Revision: 1.3 $
+\deftexinfoversion$Revision: 1.4 $
 \message{Loading texinfo package [Version \texinfoversion]:}
 
 % Print the version number if in a .fmt file.
@@ -359,6 +359,15 @@
 % @. is an end-of-sentence period.
 \def\.{.\spacefactor=3000 }
 
+% @enddots{} is an end-of-sentence ellipsis.
+\gdef\enddots{$\mathinner{\ldotp\ldotp\ldotp\ldotp}$\spacefactor=3000}
+
+% @! is an end-of-sentence bang.
+\gdef\!{!\spacefactor=3000 }
+
+% @? is an end-of-sentence query.
+\gdef\?{?\spacefactor=3000 }
+
 % @w prevents a word break.  Without the \leavevmode, @w at the
 % beginning of a paragraph, when TeX is still in vertical mode, would
 % produce a whole line of output instead of starting the paragraph.
@@ -616,9 +625,11 @@ where each line of input produces a line of output.}
 %
 \def\ignore{\doignore{ignore}}
 
-% Also ignore @ifinfo, @menu, and @direntry text.
+% Also ignore @ifinfo, @ifhtml, @html, @menu, and @direntry text.
 %
 \def\ifinfo{\doignore{ifinfo}}
+\def\ifhtml{\doignore{ifhtml}}
+\def\html{\doignore{html}}
 \def\menu{\doignore{menu}}
 \def\direntry{\doignore{direntry}}
 
