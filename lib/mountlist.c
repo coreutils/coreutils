@@ -1,5 +1,5 @@
 /* mountlist.c -- return a list of mounted filesystems
-   Copyright (C) 1991, 1992, 1997-2000 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1997-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 #else
 void free ();
 #endif
-#if defined(STDC_HEADERS) || defined(HAVE_STRING_H)
+#if defined STDC_HEADERS || defined HAVE_STRING_H
 # include <string.h>
 #else
 # include <strings.h>
@@ -58,18 +58,21 @@ extern int errno;
 # include <sys/param.h>
 #endif
 
-#if defined (MOUNTED_GETFSSTAT)	/* __alpha running OSF_1 */
+#if defined MOUNTED_GETFSSTAT	/* __alpha running OSF_1 */
 # include <sys/mount.h>
 # include <sys/fs_types.h>
 #endif /* MOUNTED_GETFSSTAT */
 
 #ifdef MOUNTED_GETMNTENT1	/* 4.3BSD, SunOS, HP-UX, Dynix, Irix.  */
 # include <mntent.h>
-# if !defined(MOUNTED)
-#  if defined(MNT_MNTTAB)	/* HP-UX.  */
+# if !defined MOUNTED
+#  if defined _PATH_MOUNTED	/* GNU libc  */
+#   define MOUNTED _PATH_MOUNTED
+#  endif
+#  if defined MNT_MNTTAB	/* HP-UX.  */
 #   define MOUNTED MNT_MNTTAB
 #  endif
-#  if defined(MNTTABNAME)	/* Dynix.  */
+#  if defined MNTTABNAME	/* Dynix.  */
 #   define MOUNTED MNTTABNAME
 #  endif
 # endif
@@ -123,7 +126,7 @@ extern int errno;
 # include <sys/mntent.h>
 #endif
 
-#if defined (MNTOPT_IGNORE) && defined (HAVE_HASMNTOPT)
+#if defined MNTOPT_IGNORE && defined HAVE_HASMNTOPT
 # define MNT_IGNORE(M) hasmntopt ((M), MNTOPT_IGNORE)
 #else
 # define MNT_IGNORE(M) 0
@@ -417,7 +420,7 @@ read_filesystem_list (int need_fs_type)
   }
 #endif /* MOUNTED_GETMNT. */
 
-#if defined (MOUNTED_FS_STAT_DEV) /* BeOS */
+#if defined MOUNTED_FS_STAT_DEV /* BeOS */
   {
     /* The next_dev() and fs_stat_dev() system calls give the list of
        all filesystems, including the information returned by statvfs()
@@ -522,7 +525,7 @@ read_filesystem_list (int need_fs_type)
   }
 #endif /* MOUNTED_FS_STAT_DEV */
 
-#if defined (MOUNTED_GETFSSTAT)	/* __alpha running OSF_1 */
+#if defined MOUNTED_GETFSSTAT	/* __alpha running OSF_1 */
   {
     int numsys, counter, bufsize;
     struct statfs *stats;
@@ -560,7 +563,7 @@ read_filesystem_list (int need_fs_type)
   }
 #endif /* MOUNTED_GETFSSTAT */
 
-#if defined (MOUNTED_FREAD) || defined (MOUNTED_FREAD_FSTYP) /* SVR[23].  */
+#if defined MOUNTED_FREAD || defined MOUNTED_FREAD_FSTYP /* SVR[23].  */
   {
     struct mnttab mnt;
     char *table = "/etc/mnttab";
