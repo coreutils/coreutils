@@ -32,7 +32,9 @@
 #include <sys/types.h>
 
 char *malloc ();
+#ifndef strdup
 char *strdup ();
+#endif
 
 #ifndef DIRECTORY_SEPARATOR
 # define DIRECTORY_SEPARATOR '/'

@@ -43,7 +43,9 @@
 # include <arpa/inet.h>
 #endif
 
+#ifndef strdup
 char *strdup ();
+#endif
 void free ();
 
 /* Returns the canonical hostname associated with HOST (allocated in a static
