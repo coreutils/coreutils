@@ -28,7 +28,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 #include <stdio.h>
 #include <sys/types.h>
 
-#if defined __GNU_LIBRARY__ && defined HAVE_GETDELIM
+#if defined __GNU_LIBRARY__ && HAVE_GETDELIM
 
 int
 getline (lineptr, n, stream)
