@@ -1,5 +1,9 @@
 Sat Nov  2 00:16:16 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* doc/Makefile.am (MAKEINFO): Set to makeinfo --no-split.
+	Otherwise, the generated info files have names longer than
+	the 14-byte max of some old systems.
+
 	* src/date.c (main): Give better diagnostic.
 	Suggestion from Karl Berry.
 
