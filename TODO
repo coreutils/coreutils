@@ -1,1 +1,3 @@
 restore djgpp, eventually
+merge TODO lists
+add unit tests for lib/*.c
