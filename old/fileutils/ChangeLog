@@ -1,3 +1,8 @@
+2001-03-11  Jim Meyering  <meyering@lucent.com>
+
+	* tests/rm/isatty: Disable this test, for now.
+	It would block when run in the background.
+
 2001-03-09  Jim Meyering  <meyering@lucent.com>
 
 	* config.guess: Update from master repository.
