@@ -25,25 +25,11 @@
 #undef rename
 
 #include <stdio.h>
-#if HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
-
-#if HAVE_STRING_H
-# include <string.h>
-#else
-# include <strings.h>
-#endif
+#include <stdlib.h>
+#include <string.h>
 
 #include "dirname.h"
 #include "xalloc.h"
-
-#ifndef HAVE_DECL_FREE
-"this configure-time declaration test was not run"
-#endif
-#if !HAVE_DECL_FREE
-void free ();
-#endif
 
 /* Rename the file SRC_PATH to DST_PATH, removing any trailing
    slashes from SRC_PATH.  Needed for SunOS 4.1.1_U1.  */
