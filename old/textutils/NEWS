@@ -1,5 +1,6 @@
 Changes in release 1.23
 [1.22g]
+* md5sum can handle file names with embedded backslash characters
 * pr accepts long option names (see `pr --help')
 * new program: ptx (moved to this package from being its own distribution)
 [1.22f]
