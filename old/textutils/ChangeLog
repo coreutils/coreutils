@@ -1,3 +1,8 @@
+Sat May  4 20:40:01 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* configure.in (LINGUAS): Add de.
+	* po/de.po: New file.
+
 Sun Apr 28 17:10:03 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* fmt.c (copy_rest): Don't copy past end of prefix.  Output
