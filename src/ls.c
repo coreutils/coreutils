@@ -78,9 +78,6 @@
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
 
-#define MY_XARGMATCH(Result_ptr, Msg, Arg, Arg_list, Val_list) \
-	  XARGMATCH (Result_ptr, Msg, Arg, Arg_list, Val_list, usage (1))
-
 /* Return an int indicating the result of comparing two integers.
    Subtracting doesn't always work, due to overflow.  */
 #define longdiff(a, b) ((a) < (b) ? -1 : (a) > (b))
@@ -137,7 +134,6 @@ struct bin_str
 time_t time ();
 #endif
 
-char *base_name ();
 char *getgroup ();
 char *getuser ();
 void strip_trailing_slashes ();
@@ -205,7 +201,7 @@ static void print_with_commas PARAMS ((void));
 static void queue_directory PARAMS ((const char *name, const char *realname));
 static void sort_files PARAMS ((void));
 static void parse_ls_color PARAMS ((void));
-static void usage PARAMS ((int status));
+void usage PARAMS ((int status));
 
 /* The name the program was run with, stripped of any leading path. */
 char *program_name;
@@ -579,19 +575,19 @@ static enum time_type const time_types[] =
 };
 
 static char const *const color_args[] =
-  {
-    /* force and none are for compatibility with another color-ls version */
-    "always", "yes", "force",
-    "never", "no", "none",
-    "auto", "tty", "if-tty", 0
-  };
+{
+  /* force and none are for compatibility with another color-ls version */
+  "always", "yes", "force",
+  "never", "no", "none",
+  "auto", "tty", "if-tty", 0
+};
 
 static enum color_type const color_types[] =
-  {
-    color_always, color_always, color_always,
-    color_never, color_never, color_never,
-    color_if_tty, color_if_tty, color_if_tty
-  };
+{
+  color_always, color_always, color_always,
+  color_never, color_never, color_never,
+  color_if_tty, color_if_tty, color_if_tty
+};
 
 /* Information about filling a column.  */
 struct column_info
@@ -1102,20 +1098,20 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 10:		/* --sort */
-	  MY_XARGMATCH (&sort_type, "--sort", optarg, sort_args, sort_types);
+	  sort_type = XARGMATCH ("--sort", optarg, sort_args, sort_types);
 	  break;
 
 	case 11:		/* --time */
-	  MY_XARGMATCH (&time_type, "--time", optarg, time_args, time_types);
+	  time_type = XARGMATCH ("--time", optarg, time_args, time_types);
 	  break;
 
 	case 12:		/* --format */
-	  MY_XARGMATCH (&format, "--format", optarg, format_args, format_types);
+	  format = XARGMATCH ("--format", optarg, format_args, format_types);
 	  break;
 
 	case 13:		/* --color */
 	  if (optarg)
-	    MY_XARGMATCH (&i, "--color", optarg, color_args, color_types);
+	    i = XARGMATCH ("--color", optarg, color_args, color_types);
 	  else
 	    /* Using --color with no argument is equivalent to using
 	       --color=always.  */
@@ -1135,19 +1131,16 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 14:		/* --indicator-style */
-	  MY_XARGMATCH (&indicator_style, "--indicator-style", optarg,
-			indicator_style_args,
-			indicator_style_types);
+	  indicator_style = XARGMATCH ("--indicator-style", optarg,
+				       indicator_style_args,
+				       indicator_style_types);
 	  break;
 
 	case 15:		/* --quoting-style */
-	  {
-	    enum quoting_style qs;
-	    MY_XARGMATCH (&qs, "--quoting-style", optarg,
-			  quoting_style_args,
-			  quoting_style_vals);
-	    set_quoting_style (NULL, qs);
-	  }
+	  set_quoting_style (NULL,
+			     XARGMATCH ("--quoting-style", optarg,
+					quoting_style_args,
+					quoting_style_vals));
 	  break;
 
 	case 16:
@@ -2820,7 +2813,7 @@ init_column_info (void)
     }
 }
 
-static void
+void
 usage (int status)
 {
   if (status != 0)
