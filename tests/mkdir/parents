@@ -31,7 +31,7 @@ fail=0
 
 p=`ls -ld e-dir|sed 's/ .*//'`
 case $p in drwx------);; *) fail=1;; esac
-if test $fail = 1
+if test $fail = 1; then
   cat <<EOF >&2
 $0: Since it looks like you're running this test in a directory with
 the sticky bit set, we're skipping this test.
