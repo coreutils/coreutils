@@ -1,6 +1,6 @@
 /* memrchr -- find the last occurrence of a byte in a memory block
 
-   Copyright (C) 1991, 1993, 1996, 1997, 1999, 2000, 2003 Free
+   Copyright (C) 1991, 1993, 1996, 1997, 1999, 2000, 2003, 2004 Free
    Software Foundation, Inc.
 
    Based on strlen implementation by Torbjorn Granlund (tege@sics.se),
@@ -46,9 +46,11 @@
 # include <stdint.h>
 #endif
 
-#define alignof(type) offsetof (struct { char c; type x; }, x)
+/* Use sizeof, not alignof, for better performance on some hosts.  For
+   example, on m68k-linux alignof (type) will always be at most 2, but
+   you get better performance with a 4-byte aligned pointer.  */
 #ifdef UINTPTR_MAX
-# define UNALIGNED_P(p) (((uintptr_t) p) % alignof (unsigned long int) != 0)
+# define UNALIGNED_P(p) (((uintptr_t) p) % sizeof (unsigned long int) != 0)
 #else
 # define UNALIGNED_P(p) 1
 #endif
