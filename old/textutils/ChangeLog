@@ -1,3 +1,7 @@
+1999-08-07  Jim Meyering  <meyering@ascend.com>
+
+	* po/POTFILES.in: Add lots of lib/*.c files.  Remove src/system.h.
+
 1999-08-06  Jim Meyering  <meyering@ascend.com>
 
 	* Version 2.0.
