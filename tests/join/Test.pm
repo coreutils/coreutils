@@ -91,7 +91,12 @@ my @tv = (
 
 # From David Dyck
 ['9a', '', [" a 1\n b 2\n", " a Y\n b Z\n"], "a 1 Y\nb 2 Z\n", 0],
+
+# From Tim Smithers: fixed in 1.22l
+['trailing-sp', '-t: -1 1 -2 1', ["a:x \n", "a:y \n"], "a:x :y \n", 0],
+
 );
+
 
 sub test_vector
 {
