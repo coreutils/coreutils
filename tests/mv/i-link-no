@@ -32,7 +32,7 @@ fi
 
 fail=0
 
-mv -i a/bar a/foo b < no 2> err > out || fail=1
+mv ---reply=no a/bar a/foo b < no 2> err > out || fail=1
 cat <<EOF > exp
 EOF
 
