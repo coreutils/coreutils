@@ -1,5 +1,7 @@
 2003-01-07  Jim Meyering  <jim@meyering.net>
 
+	* src/cut.c (set_fields): Fix typo in comment.
+
 	* Version 4.5.5.
 
 	* tests/touch/not-owner: New test, mostly extracted from fail-diag.
