@@ -1,5 +1,8 @@
 2000-01-22  Jim Meyering  <meyering@lucent.com>
 
+	* src/sort.c (keycompare): Use global, hard_LC_COLLATE in place of
+	local that is sometimes undeclared.
+
 	* configure.in (ALL_LINGUAS): Add Brazilian Portuguese (pt_BR).
 	(AC_CHECK_HEADERS): Move these checks into m4/.
 
