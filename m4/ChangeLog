@@ -1,3 +1,10 @@
+2001-09-30  Jim Meyering  <meyering@lucent.com>
+
+	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS): See if
+	`struct fsstat' has the `f_fstypename' member.
+	Use that to define FS_TYPE, which is now used to make
+	the getfsstat link test tighter.
+
 2001-09-29  Jim Meyering  <meyering@lucent.com>
 
 	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS)
