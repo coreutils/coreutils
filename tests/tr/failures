@@ -14,5 +14,6 @@ tr a '' < /dev/null
 tr -s '\432' < /dev/null
 tr a 'abc\' < /dev/null
 tr a '\x' < /dev/null
+tr -s < /dev/null
 
 # And make sure tr does the right thing when POSIXLY_... is set.
