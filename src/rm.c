@@ -46,36 +46,36 @@ void strip_trailing_slashes ();
 void usage ();
 
 /* Path of file now being processed; extended as necessary. */
-char *pathname;
+static char *pathname;
 
 /* Number of bytes currently allocated for `pathname';
    made larger when necessary, but never smaller.  */
-int pnsize;
+static int pnsize;
 
 /* Name this program was run with.  */
 char *program_name;
 
 /* If nonzero, display the name of each file removed. */
-int verbose;
+static int verbose;
 
 /* If nonzero, ignore nonexistant files. */
-int ignore_missing_files;
+static int ignore_missing_files;
 
 /* If nonzero, recursively remove directories. */
-int recursive;
+static int recursive;
 
 /* If nonzero, query the user about whether to remove each file. */
-int interactive;
+static int interactive;
 
 /* If nonzero, remove directories with unlink instead of rmdir, and don't
    require a directory to be empty before trying to unlink it.
    Only works for the super-user. */
-int unlink_dirs;
+static int unlink_dirs;
 
 /* If nonzero, stdin is a tty. */
-int stdin_tty;
+static int stdin_tty;
 
-struct option long_opts[] =
+static struct option long_opts[] =
 {
   {"directory", 0, &unlink_dirs, 1},
   {"force", 0, NULL, 'f'},

@@ -38,12 +38,12 @@ void error ();
 void usage ();
 
 /* If nonzero, ensure that a path exists.  */
-int path_mode;
+static int path_mode;
 
 /* The name this program was run with. */
 char *program_name;
 
-struct option longopts[] =
+static struct option longopts[] =
 {
   {"mode", 1, NULL, 'm'},
   {"path", 0, &path_mode, 1},

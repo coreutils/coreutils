@@ -61,38 +61,38 @@ int utime_now ();
 #define CH_MTIME 2
 
 /* Which timestamps to change. */
-int change_times;
+static int change_times;
 
 /* (-c) If nonzero, don't create if not already there. */
-int no_create;
+static int no_create;
 
 /* (-d) If nonzero, date supplied on command line in get_date formats. */
-int flexible_date;
+static int flexible_date;
 
 /* (-r) If nonzero, use times from a reference file. */
-int use_ref;
+static int use_ref;
 
 /* (-t) If nonzero, date supplied on command line in POSIX format. */
-int posix_date;
+static int posix_date;
 
 /* If nonzero, the only thing we have to do is change both the
    modification and access time to the current time, so we don't
    have to own the file, just be able to read and write it.  */
-int amtime_now;
+static int amtime_now;
 
 /* New time to use when setting time. */
-time_t newtime;
+static time_t newtime;
 
 /* File to use for -r. */
-char *ref_file;
+static char *ref_file;
 
 /* Info about the reference file. */
-struct stat ref_stats;
+static struct stat ref_stats;
 
 /* The name by which this program was run. */
 char *program_name;
 
-struct option longopts[] =
+static struct option longopts[] =
 {
   {"time", 1, 0, 130},
   {"no-create", 0, 0, 'c'},
@@ -102,13 +102,13 @@ struct option longopts[] =
 };
 
 /* Valid arguments to the `--time' option. */
-char *time_args[] =
+static char *time_args[] =
 {
   "atime", "access", "use", "mtime", "modify", 0
 };
 
 /* The bits in `change_times' that those arguments set. */
-int time_masks[] =
+static int time_masks[] =
 {
   CH_ATIME, CH_ATIME, CH_ATIME, CH_MTIME, CH_MTIME
 };

@@ -114,60 +114,60 @@ void write_output ();
 char *program_name;
 
 /* The name of the input file, or NULL for the standard input. */
-char *input_file = NULL;
+static char *input_file = NULL;
 
 /* The input file descriptor. */
-int input_fd = 0;
+static int input_fd = 0;
 
 /* The name of the output file, or NULL for the standard output. */
-char *output_file = NULL;
+static char *output_file = NULL;
 
 /* The output file descriptor. */
-int output_fd = 1;
+static int output_fd = 1;
 
 /* The number of bytes in which atomic reads are done. */
-long input_blocksize = -1;
+static long input_blocksize = -1;
 
 /* The number of bytes in which atomic writes are done. */
-long output_blocksize = -1;
+static long output_blocksize = -1;
 
 /* Conversion buffer size, in bytes.  0 prevents conversions. */
-long conversion_blocksize = 0;
+static long conversion_blocksize = 0;
 
 /* Skip this many records of `input_blocksize' bytes before input. */
-long skip_records = 0;
+static long skip_records = 0;
 
 /* Skip this many records of `output_blocksize' bytes before output. */
-long seek_record = 0;
+static long seek_record = 0;
 
 /* Copy only this many records.  <0 means no limit. */
-int max_records = -1;
+static int max_records = -1;
 
 /* Bit vector of conversions to apply. */
-int conversions_mask = 0;
+static int conversions_mask = 0;
 
 /* If nonzero, filter characters through the translation table.  */
-int translation_needed = 0;
+static int translation_needed = 0;
 
 /* Number of partial blocks written. */
-unsigned w_partial = 0;
+static unsigned w_partial = 0;
 
 /* Number of full blocks written. */
-unsigned w_full = 0;
+static unsigned w_full = 0;
 
 /* Number of partial blocks read. */
-unsigned r_partial = 0;
+static unsigned r_partial = 0;
 
 /* Number of full blocks read. */
-unsigned r_full = 0;
+static unsigned r_full = 0;
 
 /* Records truncated by conv=block. */
-unsigned r_truncate = 0;
+static unsigned r_truncate = 0;
 
 /* Output representation of newline and space characters.
    They change if we're converting to EBCDIC.  */
-unsigned char newline_character = '\n';
-unsigned char space_character = ' ';
+static unsigned char newline_character = '\n';
+static unsigned char space_character = ' ';
 
 struct conversion
 {
@@ -175,7 +175,7 @@ struct conversion
   int conversion;
 };
 
-struct conversion conversions[] =
+static struct conversion conversions[] =
 {
   {"ascii", C_ASCII | C_TWOBUFS},	/* EBCDIC to ASCII. */
   {"ebcdic", C_EBCDIC | C_TWOBUFS},	/* ASCII to EBCDIC. */
@@ -192,9 +192,9 @@ struct conversion conversions[] =
 };
 
 /* Translation table formed by applying successive transformations. */
-unsigned char trans_table[256];
+static unsigned char trans_table[256];
 
-unsigned char ascii_to_ebcdic[] =
+static unsigned char ascii_to_ebcdic[] =
 {
   0, 01, 02, 03, 067, 055, 056, 057,
   026, 05, 045, 013, 014, 015, 016, 017,
@@ -230,7 +230,7 @@ unsigned char ascii_to_ebcdic[] =
   0356, 0357, 0372, 0373, 0374, 0375, 0376, 0377
 };
 
-unsigned char ascii_to_ibm[] =
+static unsigned char ascii_to_ibm[] =
 {
   0, 01, 02, 03, 067, 055, 056, 057,
   026, 05, 045, 013, 014, 015, 016, 017,
@@ -266,7 +266,7 @@ unsigned char ascii_to_ibm[] =
   0356, 0357, 0372, 0373, 0374, 0375, 0376, 0377
 };
 
-unsigned char ebcdic_to_ascii[] =
+static unsigned char ebcdic_to_ascii[] =
 {
   0, 01, 02, 03, 0234, 011, 0206, 0177,
   0227, 0215, 0216, 013, 014, 015, 016, 017,
@@ -433,10 +433,10 @@ translate_buffer (buf, nread)
 
 /* If nonnzero, the last char from the previous call to `swab_buffer'
    is saved in `saved_char'.  */
-int char_is_saved = 0;
+static int char_is_saved = 0;
 
 /* Odd char from previous call.  */
-unsigned char saved_char;
+static unsigned char saved_char;
 
 /* Swap NREAD bytes in BUF, plus possibly an initial char from the
    previous call.  If NREAD is odd, save the last char for the
@@ -478,13 +478,13 @@ swab_buffer (buf, nread)
 }
 
 /* Output buffer. */
-unsigned char *obuf;
+static unsigned char *obuf;
 
 /* Current index into `obuf'. */
-int oc = 0;
+static int oc = 0;
 
 /* Index into current line, for `conv=block' and `conv=unblock'.  */
-int col = 0;
+static int col = 0;
 
 /* The main loop.  */
 

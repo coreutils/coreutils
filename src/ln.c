@@ -42,27 +42,27 @@ void usage ();
 
 /* A pointer to the function used to make links.  This will point to either
    `link' or `symlink'. */
-int (*linkfunc) ();
+static int (*linkfunc) ();
 
 /* If nonzero, make symbolic links; otherwise, make hard links.  */
-int symbolic_link;
+static int symbolic_link;
 
 /* If nonzero, ask the user before removing existing files.  */
-int interactive;
+static int interactive;
 
 /* If nonzero, remove existing files unconditionally.  */
-int remove_existing_files;
+static int remove_existing_files;
 
 /* If nonzero, list each file as it is moved. */
-int verbose;
+static int verbose;
 
 /* If nonzero, allow the superuser to make hard links to directories. */
-int hard_dir_link;
+static int hard_dir_link;
 
 /* The name by which the program was run, for error messages.  */
 char *program_name;
 
-struct option long_options[] = 
+static struct option long_options[] = 
 {
   {"backup", 0, NULL, 'b'},
   {"directory", 0, &hard_dir_link, 1},

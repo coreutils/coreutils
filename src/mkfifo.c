@@ -34,7 +34,7 @@ void usage ();
 /* The name this program was run with. */
 char *program_name;
 
-struct option longopts[] =
+static struct option longopts[] =
 {
   {"mode", 1, NULL, 'm'},
   {NULL, 0, NULL, 0}

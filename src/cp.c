@@ -54,66 +54,66 @@ static int re_protect ();
 
 /* A pointer to either lstat or stat, depending on
    whether dereferencing of symlinks is done.  */
-int (*xstat) ();
+static int (*xstat) ();
 
 /* The invocation name of this program.  */
 char *program_name;
 
 /* If nonzero, copy all files except directories and, if not dereferencing
    them, symbolic links, as if they were regular files. */
-int flag_copy_as_regular = 1;
+static int flag_copy_as_regular = 1;
 
 /* If nonzero, dereference symbolic links (copy the files they point to). */
-int flag_dereference = 1;
+static int flag_dereference = 1;
 
 /* If nonzero, remove existing destination nondirectories. */
-int flag_force = 0;
+static int flag_force = 0;
 
 /* If nonzero, create hard links instead of copying files.
    Create destination directories as usual. */
-int flag_hard_link = 0;
+static int flag_hard_link = 0;
 
 /* If nonzero, query before overwriting existing destinations
    with regular files. */
-int flag_interactive = 0;
+static int flag_interactive = 0;
 
 /* If nonzero, the command "cp x/e_file e_dir" uses "e_dir/x/e_file"
    as its destination instead of the usual "e_dir/e_file." */
-int flag_path = 0;
+static int flag_path = 0;
 
 /* If nonzero, give the copies the original files' permissions,
    ownership, and timestamps. */
-int flag_preserve = 0;
+static int flag_preserve = 0;
 
 /* If nonzero, copy directories recursively and copy special files
    as themselves rather than copying their contents. */
-int flag_recursive = 0;
+static int flag_recursive = 0;
 
 /* If nonzero, create symbolic links instead of copying files.
    Create destination directories as usual. */
-int flag_symbolic_link = 0;
+static int flag_symbolic_link = 0;
 
 /* If nonzero, when copying recursively, skip any subdirectories that are
    on different filesystems from the one we started on. */
-int flag_one_file_system = 0;
+static int flag_one_file_system = 0;
 
 /* If nonzero, do not copy a nondirectory that has an existing destination
    with the same or newer modification time. */
-int flag_update = 0;
+static int flag_update = 0;
 
 /* If nonzero, display the names of the files before copying them. */
-int flag_verbose = 0;
+static int flag_verbose = 0;
 
 /* The error code to return to the system. */
-int exit_status = 0;
+static int exit_status = 0;
 
 /* The bits to preserve in created files' modes. */
-int umask_kill;
+static int umask_kill;
 
 /* This process's effective user ID.  */
-uid_t myeuid;
+static uid_t myeuid;
 
-struct option long_opts[] =
+static struct option long_opts[] =
 {
   {"archive", 0, NULL, 'a'},
   {"backup", 0, NULL, 'b'},

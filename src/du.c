@@ -107,25 +107,25 @@ void str_trunc ();
 char *program_name;
 
 /* If nonzero, display only a total for each argument. */
-int opt_summarize_only = 0;
+static int opt_summarize_only = 0;
 
 /* If nonzero, display counts for all files, not just directories. */
-int opt_all = 0;
+static int opt_all = 0;
 
 /* If nonzero, count each hard link of files with multiple links. */
-int opt_count_all = 0;
+static int opt_count_all = 0;
 
 /* If nonzero, do not cross file-system boundaries. */
-int opt_one_file_system = 0;
+static int opt_one_file_system = 0;
 
 /* If nonzero, print a grand total at the end. */
-int opt_combined_arguments = 0;
+static int opt_combined_arguments = 0;
 
 /* If nonzero, do not add sizes of subdirectories. */
-int opt_separate_dirs = 0;
+static int opt_separate_dirs = 0;
 
 /* If nonzero, dereference symlinks that are command line arguments. */
-int opt_dereference_arguments = 0;
+static int opt_dereference_arguments = 0;
 
 enum output_size
 {
@@ -135,26 +135,26 @@ enum output_size
 };
 
 /* The units to count in. */
-enum output_size output_size;
+static enum output_size output_size;
 
 /* Accumulated path for file or directory being processed.  */
-string path;
+static string path;
 
 /* Pointer to hash structure, used by the hash routines.  */
-struct htab *htab;
+static struct htab *htab;
 
 /* Globally used stat buffer.  */
-struct stat stat_buf;
+static struct stat stat_buf;
 
 /* A pointer to either lstat or stat, depending on whether
    dereferencing of all symbolic links is to be done. */
-int (*xstat) ();
+static int (*xstat) ();
 
 /* The exit status to use if we don't get any fatal errors. */
 
-int exit_status;
+static int exit_status;
 
-struct option long_options[] =
+static struct option long_options[] =
 {
   {"all", 0, &opt_all, 1},
   {"bytes", 0, NULL, 'b'},

@@ -33,12 +33,12 @@ void strip_trailing_slashes ();
 void usage ();
 
 /* If nonzero, remove empty parent directories. */
-int empty_paths;
+static int empty_paths;
 
 /* The name this program was run with. */
 char *program_name;
 
-struct option longopts[] =
+static struct option longopts[] =
 {
   {"path", 0, &empty_paths, 1},
   {NULL, 0, NULL, 0}

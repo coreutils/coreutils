@@ -144,15 +144,15 @@ struct file
 
 /* Address of block containing the files that are described.  */
 
-struct file *files;
+static struct file *files;
 
 /* Length of block that `files' points to, measured in files.  */
 
-int nfiles;
+static int nfiles;
 
 /* Index of first unused in `files'.  */
 
-int files_index;
+static int files_index;
 
 /* Record of one pending directory waiting to be listed.  */
 
@@ -166,17 +166,17 @@ struct pending
   struct pending *next;
 };
 
-struct pending *pending_dirs;
+static struct pending *pending_dirs;
 
 /* Current time (seconds since 1970).  When we are printing a file's time,
    include the year if it is more than 6 months before this time.  */
 
-time_t current_time;
+static time_t current_time;
 
 /* The number of digits to use for block sizes.
    4, or more if needed for bigger numbers.  */
 
-int block_size_size;
+static int block_size_size;
 
 /* The name the program was run with, stripped of any leading path. */
 char *program_name;
@@ -200,7 +200,7 @@ enum format
   with_commas			/* -m */
 };
 
-enum format format;
+static enum format format;
 
 /* Type of time to print or sort by.  Controlled by -c and -u.  */
 
@@ -211,7 +211,7 @@ enum time_type
   time_atime			/* -u */
 };
 
-enum time_type time_type;
+static enum time_type time_type;
 
 /* The file characteristic to sort by.  Controlled by -t, -S, -U, -X. */
 
@@ -224,7 +224,7 @@ enum sort_type
   sort_size			/* -S */
 };
 
-enum sort_type sort_type;
+static enum sort_type sort_type;
 
 /* Direction of sort.
    0 means highest first if numeric,
@@ -232,21 +232,21 @@ enum sort_type sort_type;
    these are the defaults.
    1 means the opposite order in each case.  -r  */
 
-int sort_reverse;
+static int sort_reverse;
 
 /* Nonzero means print the user and group id's as numbers rather
    than as names.  -n  */
 
-int numeric_users;
+static int numeric_users;
 
 /* Nonzero means mention the size in 512 byte blocks of each file.  -s  */
 
-int print_block_size;
+static int print_block_size;
 
 /* Nonzero means show file sizes in kilobytes instead of blocks
    (the size of which is system-dependant).  -k */
 
-int kilobyte_blocks;
+static int kilobyte_blocks;
 
 /* none means don't mention the type of files.
    all means mention the types of all files.
@@ -261,35 +261,35 @@ enum indicator_style
   not_programs			/* -p */
 };
 
-enum indicator_style indicator_style;
+static enum indicator_style indicator_style;
 
 /* Nonzero means mention the inode number of each file.  -i  */
 
-int print_inode;
+static int print_inode;
 
 /* Nonzero means when a symbolic link is found, display info on
    the file linked to.  -L  */
 
-int trace_links;
+static int trace_links;
 
 /* Nonzero means when a directory is found, display info on its
    contents.  -R  */
 
-int trace_dirs;
+static int trace_dirs;
 
 /* Nonzero means when an argument is a directory name, display info
    on it itself.  -d  */
 
-int immediate_dirs;
+static int immediate_dirs;
 
 /* Nonzero means don't omit files whose names start with `.'.  -A */
 
-int all_files;
+static int all_files;
 
 /* Nonzero means don't omit files `.' and `..'
    This flag implies `all_files'.  -a  */
 
-int really_all_files;
+static int really_all_files;
 
 /* A linked list of shell-style globbing patterns.  If a non-argument
    file name matches any of these patterns, it is omitted.
@@ -302,15 +302,15 @@ struct ignore_pattern
   struct ignore_pattern *next;
 };
 
-struct ignore_pattern *ignore_patterns;
+static struct ignore_pattern *ignore_patterns;
 
 /* Nonzero means quote nongraphic chars in file names.  -b  */
 
-int quote_funny_chars;
+static int quote_funny_chars;
 
 /* Nonzero means output nongraphic chars in file names as `?'.  -q  */
 
-int qmark_funny_chars;
+static int qmark_funny_chars;
 
 /* Nonzero means output each file name using C syntax for a string.
    Always accompanied by `quote_funny_chars'.
@@ -319,33 +319,33 @@ int qmark_funny_chars;
    is guaranteed to make it possible for a program receiving
    the output to tell exactly what file names are present.  -Q  */
 
-int quote_as_string;
+static int quote_as_string;
 
 /* The number of chars per hardware tab stop.  -T */
-int tabsize;
+static int tabsize;
 
 /* Nonzero means we are listing the working directory because no
    non-option arguments were given. */
 
-int dir_defaulted;
+static int dir_defaulted;
 
 /* Nonzero means print each directory name before listing it. */
 
-int print_dir_name;
+static int print_dir_name;
 
 /* The line length to use for breaking lines in many-per-line format.
    Can be set with -w.  */
 
-int line_length;
+static int line_length;
 
 /* If nonzero, the file listing format requires that stat be called on
    each file. */
 
-int format_needs_stat;
+static int format_needs_stat;
 
 /* The exit status to use if we don't get any fatal errors. */
 
-int exit_status;
+static int exit_status;
 
 void
 main (argc, argv)
@@ -419,7 +419,7 @@ main (argc, argv)
   exit (exit_status);
 }
 
-struct option long_options[] =
+static struct option long_options[] =
 {
   {"all", 0, 0, 'a'},
   {"escape", 0, 0, 'b'},
@@ -447,34 +447,34 @@ struct option long_options[] =
   {0, 0, 0, 0}
 };
 
-char *format_args[] =
+static char *format_args[] =
 {
   "verbose", "long", "commas", "horizontal", "across",
   "vertical", "single-column", 0
 };
 
-enum format formats[] =
+static enum format formats[] =
 {
   long_format, long_format, with_commas, horizontal, horizontal,
   many_per_line, one_per_line
 };
 
-char *sort_args[] =
+static char *sort_args[] =
 {
   "none", "time", "size", "extension", 0
 };
 
-enum sort_type sort_types[] =
+static enum sort_type sort_types[] =
 {
   sort_none, sort_time, sort_size, sort_extension
 };
 
-char *time_args[] =
+static char *time_args[] =
 {
   "atime", "access", "use", "ctime", "status", 0
 };
 
-enum time_type time_types[] =
+static enum time_type time_types[] =
 {
   time_atime, time_atime, time_atime, time_ctime, time_ctime
 };

@@ -45,16 +45,16 @@ void usage ();
 char *program_name;
 
 /* If nonzero, change the modes of directories recursively. */
-int recurse;
+static int recurse;
 
 /* If nonzero, force silence (no error messages). */
-int force_silent;
+static int force_silent;
 
 /* If nonzero, describe the modes we set. */
-int verbose;
+static int verbose;
 
 /* If nonzero, describe only modes that change. */
-int changes_only;
+static int changes_only;
 
 /* Parse the ASCII mode given on the command line into a linked list
    of `struct mode_change' and apply that to each file argument. */

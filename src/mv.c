@@ -66,26 +66,26 @@ void usage ();
 char *program_name;
 
 /* If nonzero, query the user before overwriting files. */
-int interactive;
+static int interactive;
 
 /* If nonzero, do not query the user before overwriting unwritable
    files. */
-int override_mode;
+static int override_mode;
 
 /* If nonzero, do not move a nondirectory that has an existing destination
    with the same or newer modification time. */
-int update = 0;
+static int update = 0;
 
 /* If nonzero, list each file as it is moved. */
-int verbose;
+static int verbose;
 
 /* If nonzero, stdin is a tty. */
-int stdin_tty;
+static int stdin_tty;
 
 /* This process's effective user ID.  */
-uid_t myeuid;
+static uid_t myeuid;
 
-struct option long_options[] =
+static struct option long_options[] =
 {
   {"backup", 0, NULL, 'b'},
   {"force", 0, NULL, 'f'},
@@ -193,7 +193,7 @@ movefile (source, dest)
     return do_move (source, dest);
 }
 
-struct stat dest_stats, source_stats;
+static struct stat dest_stats, source_stats;
 
 /* Move SOURCE onto DEST.  Handles cross-filesystem moves.
    If DEST is a directory, SOURCE must be also.

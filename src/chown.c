@@ -64,24 +64,24 @@ void usage ();
 char *program_name;
 
 /* If nonzero, change the ownership of directories recursively. */
-int recurse;
+static int recurse;
 
 /* If nonzero, force silence (no error messages). */
-int force_silent;
+static int force_silent;
 
 /* If nonzero, describe the files we process. */
-int verbose;
+static int verbose;
 
 /* If nonzero, describe only owners or groups that change. */
-int changes_only;
+static int changes_only;
 
 /* The name of the user to which ownership of the files is being given. */
-char *username;
+static char *username;
 
 /* The name of the group to which ownership of the files is being given. */
-char *groupname;
+static char *groupname;
 
-struct option long_options[] =
+static struct option long_options[] =
 {
   {"recursive", 0, 0, 'R'},
   {"changes", 0, 0, 'c'},

@@ -51,20 +51,20 @@ void show_point ();
 void usage ();
 
 /* If nonzero, show inode information. */
-int inode_format;
+static int inode_format;
 
 /* If nonzero, show even filesystems with zero size or
    uninteresting types. */
-int show_all_fs;
+static int show_all_fs;
 
 /* If nonzero, use 1K blocks instead of 512-byte blocks. */
-int kilobyte_blocks;
+static int kilobyte_blocks;
 
 /* If nonzero, use the POSIX output format.  */
-int posix_format;
+static int posix_format;
 
 /* Nonzero if errors have occurred. */
-int exit_status;
+static int exit_status;
 
 /* Name this program was run with. */
 char *program_name;
@@ -88,12 +88,12 @@ struct fs_select
    Some filesystem types:
    4.2 4.3 ufs nfs swap ignore io vm */
 
-struct fs_select *fs_list;
+static struct fs_select *fs_list;
 
 /* Linked list of mounted filesystems. */
-struct mount_entry *mount_list;
+static struct mount_entry *mount_list;
 
-struct option long_options[] =
+static struct option long_options[] =
 {
   {"all", 0, &show_all_fs, 1},
   {"inodes", 0, &inode_format, 1},

@@ -102,29 +102,29 @@ char *program_name;
 
 /* The user name that will own the files, or NULL to make the owner
    the current user ID. */
-char *owner_name;
+static char *owner_name;
 
 /* The user ID corresponding to `owner_name'. */
-uid_t owner_id;
+static uid_t owner_id;
 
 /* The group name that will own the files, or NULL to make the group
    the current group ID. */
-char *group_name;
+static char *group_name;
 
 /* The group ID corresponding to `group_name'. */
-gid_t group_id;
+static gid_t group_id;
 
 /* The permissions to which the files will be set.  The umask has
    no effect. */
-int mode;
+static int mode;
 
 /* If nonzero, strip executable files after copying them. */
-int strip_files;
+static int strip_files;
 
 /* If nonzero, install a directory instead of a regular file. */
-int dir_arg;
+static int dir_arg;
 
-struct option long_options[] =
+static struct option long_options[] =
 {
   {"strip", 0, NULL, 's'},
   {"directory", 0, NULL, 'd'},
