@@ -1,6 +1,10 @@
-2004-06-07  Jim Meyering  <jim@meyering.net>
+2004-06-08  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/shred.c (direct_mode): Turn it on/off with directio, too.
+
+2004-06-07  Jim Meyering  <jim@meyering.net>
 
 	Enable direct-mode I/O (bypassing the buffer cache), if possible.
 	Prompted by a suggestion from Kalle Olavi Niemitalo

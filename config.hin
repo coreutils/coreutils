@@ -345,6 +345,9 @@
    don't. */
 #undef HAVE_DECL___SYS_SIGLIST
 
+/* Define to 1 if you have the `directio' function. */
+#undef HAVE_DIRECTIO
+
 /* Define to 1 if you have the <dirent.h> header file, and it defines `DIR'.
    */
 #undef HAVE_DIRENT_H
