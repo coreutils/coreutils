@@ -1,4 +1,4 @@
-package Trtest;
+package Test;
 require 5.002;
 use strict;
 
