@@ -2848,8 +2848,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                     with -S or -s\n\
 "), stdout);
       fputs (_("\
-  --help            display this help and exit\n\
-  --version         output version information and exit\n\
+      --help        display this help and exit\n\
+      --version     output version information and exit\n\
 "), stdout);
       fputs (_("\
 \n\
