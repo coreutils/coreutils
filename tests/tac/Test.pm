@@ -25,6 +25,14 @@ my @tv = (
 ['b2-i', '', "12345\n8", "8\n12345\n", 0],
 ['b2-j', '', "1234\n8", "8\n1234\n", 0],
 ['b2-k', '', "123\n8", "8\n123\n", 0],
+
+['opt-b', '-b', "\na\nb\nc", "\nc\nb\na", 0],
+['opt-s', '-s:', "a:b:c:", "c:b:a:", 0],
+['opt-sb', '-s : -b', ":a:b:c", ":c:b:a", 0],
+['opt-r',     "-r -s '\\._+'", "1._2.__3.___4._", "4._3.___2.__1._", 0],
+
+# This gave incorrect output (.___4._2.__3._1) with tac-1.22.
+['opt-br', "-b -r -s '\\._+'", "._1._2.__3.___4", ".___4.__3._2._1", 0],
 );
 
 sub test_vector
@@ -41,7 +49,8 @@ sub test_vector
   # These tests lose because tac_file isn't yet up to snuff with tac_mem.
   foreach $t (qw (basic-a basic-d b2-e b2-f b2-g b2-h b2-i b2-j b2-k))
     {
-      $Test::input_via{$t} = {REDIR => 0, PIPE => 0};
+      # $Test::input_via{$t} = {REDIR => 0, PIPE => 0};
+      $Test::input_via{$t} = {};
     }
 
   return @tv;
