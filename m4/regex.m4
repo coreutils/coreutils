@@ -1,6 +1,7 @@
-#serial 3
+#serial 4
 
-dnl Derived from code in GNU grep.
+dnl Initially derived from code in GNU grep.
+dnl Mostly written by Jim Meyering.
 
 AC_DEFUN(jm_WITH_REGEX,
   [
@@ -9,18 +10,58 @@ AC_DEFUN(jm_WITH_REGEX,
     dnl Even packages that don't use regex.c can use this macro.
     dnl Of course, for them it doesn't do anything.
 
-    syscmd([test -f lib/regex.c])
+    # By default, don't use the included regex.c on systems with a version
+    # of glibc 2 that's new enough to pass the following run test.
+    # If cross compiling, assume the test would fail and use the included
+    # regex.c.  The failing regular expression is from `Spencer ere test
+    # #75' in grep-2.2f.
+    ac_use_included_regex=yes
+
+    if test "$ac_cv_glibc" = yes; then
+      # Without this run-test, on older glibc2 systems we'd end up
+      # using the buggy system regex.
+      AC_CACHE_CHECK([for working re_compile_pattern],
+                     jm_cv_func_working_re_compile_pattern,
+	AC_TRY_RUN(
+	  changequote(<<, >>)dnl
+	  <<
+#include <stdio.h>
+#include <regex.h>
+	    int
+	    main ()
+	    {
+	      static struct re_pattern_buffer regex;
+	      const char *s;
+	      re_set_syntax (RE_SYNTAX_POSIX_EGREP);
+	      /* Add this third left square bracket, [, to balance the
+		 three right ones below.  Otherwise autoconf-2.14 chokes.  */
+	      s = re_compile_pattern ("a[[:]:]]b\n", 9, &regex);
+	      /* This should fail with _Invalid character class name_ error.  */
+	      exit (s ? 0 : 1);
+	    }
+	  >>,
+	  changequote([, ])dnl
+
+		 jm_cv_func_working_re_compile_pattern=yes,
+		 jm_cv_func_working_re_compile_pattern=no,
+		 dnl When crosscompiling, assume it's broken.
+		 jm_cv_func_working_re_compile_pattern=no))
+      if test $jm_cv_func_working_re_compile_pattern = yes; then
+	ac_use_included_regex=no
+      fi
+    fi
+
+    test -n "$1" || AC_MSG_ERROR([missing argument])
+    syscmd([test -f $1])
     ifelse(sysval, 0,
       [
-	# By default, don't use the included regex.c on systems with glibc 2
-	test "$ac_cv_glibc" = yes && default=no || default=yes
 
 	AC_ARG_WITH(included-regex,
 	[  --without-included-regex don't compile regex; this is the default on
                           systems with version 2 of the GNU C library
                           (use with caution on other system)],
 		    jm_with_regex=$withval,
-		    jm_with_regex=$default)
+		    jm_with_regex=$ac_use_included_regex)
 	if test "$jm_with_regex" = yes; then
 	  LIBOBJS="$LIBOBJS regex.o"
 	fi
