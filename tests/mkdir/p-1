@@ -1,0 +1,26 @@
+#!/bin/sh
+
+: ${MKDIR=mkdir}
+
+# This should be an absolute dir for this test.
+# FIXME: enforce it
+: ${TMPDIR=/tmp}
+
+if test "$VERBOSE" = yes; then
+  set -x
+  $MKDIR --version
+fi
+
+tmp=$TMPDIR/t-mkdir.$$/a/b/c
+temp_files=$tmp
+rm -rf $temp_files
+
+# Specify both version control and suffix so the environment variables
+# (possibly set by the user running these tests) aren't used.
+$MKDIR --parents $tmp || fail=1
+
+test -d $tmp || fail=1
+
+rm -rf $temp_files
+
+exit $fail
