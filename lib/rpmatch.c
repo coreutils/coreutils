@@ -36,7 +36,8 @@
 # define _(Text) gettext (Text)
 
 static int
-try (const char *response, const char *pattern, const int match, const int nomatch, const char **lastp, regex_t *re)
+try (const char *response, const char *pattern, const int match,
+     const int nomatch, const char **lastp, regex_t *re)
 {
   if (pattern != *lastp)
     {
