@@ -57,7 +57,7 @@ Print the name of the current user.\n\
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   register char *cp;

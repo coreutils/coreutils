@@ -82,7 +82,7 @@ remove_suffix (char *name, const char *suffix)
     *np = '\0';
 }
 
-void
+int
 main (int argc, char **argv)
 {
   char *name;

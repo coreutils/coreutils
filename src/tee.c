@@ -76,7 +76,7 @@ Copy standard input to each FILE, and also to standard output.\n\
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int errs;

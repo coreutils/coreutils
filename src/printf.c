@@ -124,7 +124,7 @@ ARGUMENTs converted to proper type first.  Variable widths are handled.\n\
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   char *format;

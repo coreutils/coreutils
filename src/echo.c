@@ -100,7 +100,8 @@ Without -E, the following sequences are recognized and interpolated:\n\
 /* Print the words in LIST to standard output.  If the first word is
    `-n', then don't print a trailing newline.  We also support the
    echo syntax from Version 9 unix systems. */
-void
+
+int
 main (int argc, char **argv)
 {
   int display_return = 1, do_v9 = 0;

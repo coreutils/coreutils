@@ -141,7 +141,7 @@ batch_convert (const char *input_filename, const char *format)
   return status;
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int optc;

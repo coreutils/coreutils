@@ -60,7 +60,7 @@ SUFFIX may be s to keep seconds, m for minutes, h for hours or d for days.\n\
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int i;

@@ -72,7 +72,7 @@ Print the hostname of the current system.\n\
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   char *hostname;

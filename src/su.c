@@ -180,7 +180,7 @@ static struct option const longopts[] =
   {0, 0, 0, 0}
 };
 
-void
+int
 main (argc, argv)
      int argc;
      char **argv;

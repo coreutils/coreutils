@@ -148,7 +148,7 @@ Pattern matches return the string matched between \\( and \\) or null; if\n\
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   VALUE *v;

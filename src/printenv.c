@@ -71,7 +71,7 @@ If no environment VARIABLE specified, print them all.\n\
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   char **env;

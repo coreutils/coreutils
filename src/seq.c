@@ -94,7 +94,7 @@ Usage: %s [OPTION]... [from [step]] to\n\
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int errs;

@@ -54,7 +54,7 @@ output `.' (meaning the current directory).\n\
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   register char *path;

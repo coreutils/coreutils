@@ -636,7 +636,7 @@ settings, CHAR is taken literally, or coded as in ^c, 0x37, 0177 or\n\
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   struct termios mode;

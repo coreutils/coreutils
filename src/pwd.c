@@ -49,7 +49,7 @@ Print the full filename of the current working directory.\n\
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   char *wd;

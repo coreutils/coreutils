@@ -167,7 +167,7 @@ do_stdin (void)
   return fail;
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int fail;

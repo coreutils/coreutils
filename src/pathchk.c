@@ -112,7 +112,7 @@ static struct option const longopts[] =
   {NULL, 0, NULL, 0}
 };
 
-void
+int
 main (int argc, char **argv)
 {
   int exit_status = 0;

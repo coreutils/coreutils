@@ -110,7 +110,7 @@ static struct option const longopts[] =
   {NULL, 0, NULL, 0}
 };
 
-void
+int
 main (register int argc, register char **argv, char **envp)
 {
   char *dummy_environ[1];
