@@ -12,7 +12,6 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "near-prime.h"
 #include "hash.h"
 
 #ifdef USE_OBSTACK
@@ -26,6 +25,39 @@
 #define BUCKET_HEAD(ht, idx) ((ht)->hash_table[(idx)])
 
 static void hash_free_0 (HT *, int);
+
+static int
+is_prime (candidate)
+     unsigned long candidate;
+{
+  /* No even number and none less than 10 will be passed here.  */
+  unsigned long divn = 3;
+  unsigned long sq = divn * divn;
+
+  while (sq < candidate && (candidate % divn))
+    {
+      divn++;
+      sq += 4 * divn;
+      divn++;
+    }
+
+  return (candidate % divn);
+}
+
+/* Round a given number up to the nearest prime. */
+
+static unsigned long
+next_prime (candidate)
+     unsigned long candidate;
+{
+  /* Make it definitely odd.  */
+  candidate |= 1;
+
+  while (!is_prime (candidate))
+    candidate += 2;
+
+  return candidate;
+}
 
 static void
 hash_free_entry (HT *ht, HASH_ENT *e)
@@ -156,15 +188,16 @@ hash_get_table_size (const HT *ht)
    function is called (e.g. a second time).  */
 
 HT *
-hash_initialize (unsigned int table_size,
+hash_initialize (unsigned int candidate_table_size,
 		 Hash_key_freer_type key_freer,
 		 unsigned int (*hash) (const void *, unsigned int),
 		 int (*key_comparator) (const void *, const void *))
 {
   HT *ht;
   unsigned int i;
+  unsigned int table_size;
 
-  if (table_size <= 0)
+  if (candidate_table_size <= 0)
     return NULL;
 
   if (hash == NULL || key_comparator == NULL)
@@ -174,6 +207,7 @@ hash_initialize (unsigned int table_size,
   if (ht == NULL)
     return NULL;
 
+  table_size = next_prime (candidate_table_size);
   ht->hash_table = (HASH_ENT **) malloc (table_size * sizeof (HASH_ENT *));
   if (ht->hash_table == NULL)
     return NULL;
@@ -336,7 +370,7 @@ hash_insert_if_absent (HT *ht, const void *e, int *failed)
   if ((double) ht->hash_n_keys / ht->hash_table_size > 0.80)
     {
       unsigned int new_size;
-      new_size = near_prime (2 * ht->hash_table_size);
+      new_size = next_prime (2 * ht->hash_table_size + 1);
       *failed = hash_rehash (ht, new_size);
     }
 
