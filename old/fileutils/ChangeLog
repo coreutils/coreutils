@@ -2,6 +2,11 @@
 
 	* Version 4.1.1.
 
+	* src/df.c (show_point): Use canonicalize_file_name, if possible.
+	[HAVE_RESOLVEPATH], [!HAVE_RESOLVEPATH]: Use malloc, not alloca,
+	so that these two paths also produce `resolved' in malloc'd storage.
+	Free that memory when done with it.
+
 	* src/ls.c: Include "xreadlink.h".
 	(get_link_name): Don't use PATH_MAX.
 	Rewrite to use xreadlink.
