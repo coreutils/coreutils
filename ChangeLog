@@ -1,3 +1,8 @@
+2003-08-09  Jim Meyering  <jim@meyering.net>
+
+	* src/tail.c: Add new undocumented option, --presume-input-pipe.
+	(pipe_lines): Use memchr to skip lines, rather than an explicit loop.
+
 2003-08-08  Paul Eggert  <eggert@twinsun.com>
 
 	Use new gnulib 'extensions' module.
