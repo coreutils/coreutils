@@ -30,7 +30,6 @@
 #include "system.h"
 #include "long-options.h"
 #include "error.h"
-#include "xstrtod.h"
 #include "xalloc.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -46,6 +45,10 @@
 # define NAME_MAX_IN_DIR(Dir) pathconf (Dir, _PC_NAME_MAX)
 #else
 # define NAME_MAX_IN_DIR(Dir) 255
+#endif
+
+#ifndef STDC_HEADERS
+double strtod ();
 #endif
 
 char *xstrdup ();
@@ -1064,19 +1067,30 @@ numcompare (register const char *a, register const char *b)
 static int
 general_numcompare (const char *sa, const char *sb)
 {
-  double a, b;
   /* FIXME: add option to warn about failed conversions.  */
   /* FIXME: maybe add option to try expensive FP conversion
      only if A and B can't be compared more cheaply/accurately.  */
-  if (xstrtod (sa, NULL, &a))
-    {
-      a = 0;
-    }
-  if (xstrtod (sb, NULL, &b))
-    {
-      b = 0;
-    }
-  return a == b ? 0 : a < b ? -1 : 1;
+
+  char *ea;
+  char *eb;
+  double a = strtod (sa, &ea);
+  double b = strtod (sb, &eb);
+
+  /* Put conversion errors at the end of the collating sequence.  */
+  if (sa == ea)
+    return eb - sb;
+  if (sb == eb)
+    return -1;
+
+  /* Put NaNs after numbers but before conversion errors; sort them by
+     internal bit-pattern, for lack of a more portable alternative.
+     Don't test specially for the case where a is a NaN but b is not,
+     since the conditional at the end of this function does the right
+     thing for that case.  */
+  if (b != b)
+    return a == a ? -1 : memcmp ((char *) &a, (char *) &b, sizeof a);
+
+  return a < b ? -1 : a != b;
 }
 
 /* Return an integer in 1..12 of the month name S with length LEN.
