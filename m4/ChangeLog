@@ -1,5 +1,11 @@
 2003-07-10  Jim Meyering  <jim@meyering.net>
 
+	* jm-macros.m4 (jm_MACROS): Require gl_FUNC_VASPRINTF and
+	gl_FUNC_VASNPRINTF.
+
+	* longdouble.m4, signed.m4, vasnprintf.m4, vasprintf.m4, wchar_t.m4:
+	* wint_t.m4: New files, in support of new asprintf use.  From gnulib.
+
 	* stdint_h.m4: New file.
 	* inttypes_h.m4: New file.
 	* uintmax_t.m4: New file.
