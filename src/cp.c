@@ -55,6 +55,14 @@ struct dir_attr
   struct dir_attr *next;
 };
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  TARGET_DIRECTORY_OPTION = CHAR_MAX + 1,
+  SPARSE_OPTION = CHAR_MAX + 2
+};
+
 int stat ();
 int lstat ();
 
@@ -91,7 +99,7 @@ static struct option const long_opts[] =
   {"archive", no_argument, NULL, 'a'},
   {"backup", optional_argument, NULL, 'b'},
   {"force", no_argument, NULL, 'f'},
-  {"sparse", required_argument, NULL, CHAR_MAX + 1},
+  {"sparse", required_argument, NULL, SPARSE_OPTION},
   {"interactive", no_argument, NULL, 'i'},
   {"link", no_argument, NULL, 'l'},
   {"no-dereference", no_argument, NULL, 'd'},
@@ -102,6 +110,7 @@ static struct option const long_opts[] =
   {"recursive", no_argument, NULL, 'R'},
   {"suffix", required_argument, NULL, 'S'},
   {"symbolic-link", no_argument, NULL, 's'},
+  {"target-directory", required_argument, NULL, TARGET_DIRECTORY_OPTION},
   {"update", no_argument, NULL, 'u'},
   {"verbose", no_argument, NULL, 'v'},
   {"version-control", required_argument, NULL, 'V'}, /* Deprecated. FIXME. */
@@ -121,6 +130,7 @@ usage (int status)
       printf (_("\
 Usage: %s [OPTION]... SOURCE DEST\n\
   or:  %s [OPTION]... SOURCE... DIRECTORY\n\
+  or:  %s [OPTION]... --target-directory=DIRECTORY SOURCE...\n\
 "),
 	      program_name, program_name);
       printf (_("\
@@ -139,6 +149,7 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
   -R, --recursive              copy directories recursively\n\
   -s, --symbolic-link          make symbolic links instead of copying\n\
   -S, --suffix=SUFFIX          override the usual backup suffix\n\
+      --target-directory=DIR   move all SOURCE arguments into directory DIR\n\
   -u, --update                 copy only when the SOURCE file is newer\n\
                                  than the destination file or when the\n\
                                  destination file is missing\n\
@@ -387,25 +398,33 @@ make_path_private (const char *const_dirpath, int src_offset, int mode,
    Return 0 if successful, 1 if any errors occur. */
 
 static int
-do_copy (int argc, char **argv, const struct cp_options *x)
+do_copy (int n_files, char **file, const char *target_directory,
+	 const struct cp_options *x)
 {
   char *dest;
   struct stat sb;
   int new_dst = 0;
   int ret = 0;
+  int dest_is_dir = 0;
 
-  if (optind >= argc)
+  if (n_files <= 0)
     {
       error (0, 0, _("missing file arguments"));
       usage (1);
     }
-  if (optind >= argc - 1)
+  if (n_files == 1 && !target_directory)
     {
       error (0, 0, _("missing destination file"));
       usage (1);
     }
 
-  dest = argv[argc - 1];
+  if (target_directory)
+    dest = target_directory;
+  else
+    {
+      dest = file[n_files - 1];
+      --n_files;
+    }
 
   if (lstat (dest, &sb))
     {
@@ -414,8 +433,8 @@ do_copy (int argc, char **argv, const struct cp_options *x)
 	  error (0, errno, "%s", dest);
 	  return 1;
 	}
-      else
-	new_dst = 1;
+
+      new_dst = 1;
     }
   else
     {
@@ -426,24 +445,42 @@ do_copy (int argc, char **argv, const struct cp_options *x)
 	 into symlinks to directories. */
       if (stat (dest, &sbx) == 0)
 	sb = sbx;
+
+      dest_is_dir = S_ISDIR (sb.st_mode);
     }
 
-  if (!new_dst && S_ISDIR (sb.st_mode))
+  if (!dest_is_dir)
+    {
+      if (target_directory)
+	{
+	  error (0, 0, _("specified target, `%s' is not a directory"), dest);
+	  usage (1);
+	}
+
+      if (n_files > 1)
+	{
+	  error (0, 0,
+	 _("copying multiple files, but last argument (%s) is not a directory"),
+	     dest);
+	  usage (1);
+	}
+    }
+
+  if (dest_is_dir)
     {
       /* cp file1...filen edir
 	 Copy the files `file1' through `filen'
 	 to the existing directory `edir'. */
+      int i;
 
-      for (;;)
+      for (i = 0; i < n_files; i++)
 	{
-	  char *arg;
 	  char *ap;
 	  char *dst_path;
 	  int parent_exists = 1; /* True if dir_name (dst_path) exists. */
 	  struct dir_attr *attr_list;
 	  char *arg_in_concat = NULL;
-
-	  arg = argv[optind];
+	  char *arg = file[i];
 
 	  strip_trailing_slashes (arg);
 
@@ -495,13 +532,10 @@ do_copy (int argc, char **argv, const struct cp_options *x)
 	    }
 
 	  free (dst_path);
-	  ++optind;
-	  if (optind == argc - 1)
-	    break;
 	}
       return ret;
     }
-  else if (argc - optind == 2)
+  else /* if (n_files == 1) */
     {
       char *new_dest;
       char *source;
@@ -511,11 +545,11 @@ do_copy (int argc, char **argv, const struct cp_options *x)
       if (flag_path)
 	{
 	  error (0, 0,
-	       _("when preserving paths, last argument must be a directory"));
+	       _("when preserving paths, the destination must be a directory"));
 	  usage (1);
 	}
 
-      source = argv[optind];
+      source = file[0];
 
       /* When the force and backup options have been specified and
 	 the source and destination are the same name for an existing
@@ -574,17 +608,8 @@ do_copy (int argc, char **argv, const struct cp_options *x)
 
       return copy (source, new_dest, new_dst, x, &unused, NULL);
     }
-  else
-    {
-      error (0, 0,
-	     _("copying multiple files, but last argument (%s) \
-is not a directory"),
-	     dest);
-      usage (1);
-    }
 
   /* unreachable */
-  return 0;
 }
 
 static void
@@ -629,6 +654,7 @@ main (int argc, char **argv)
   char *backup_suffix_string;
   char *version_control_string = NULL;
   struct cp_options x;
+  char *target_directory = NULL;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -649,7 +675,7 @@ main (int argc, char **argv)
 	case 0:
 	  break;
 
-	case CHAR_MAX + 1:
+	case SPARSE_OPTION:
 	  x.sparse_mode = XARGMATCH ("--sparse", optarg,
 				     sparse_type_string, sparse_type);
 	  break;
@@ -721,6 +747,10 @@ main (int argc, char **argv)
 #endif
 	  break;
 
+	case TARGET_DIRECTORY_OPTION:
+	  target_directory = optarg;
+	  break;
+
 	case 'u':
 	  x.update = 1;
 	  break;
@@ -776,7 +806,7 @@ main (int argc, char **argv)
 
   hash_init (INITIAL_HASH_MODULE, INITIAL_ENTRY_TAB_SIZE);
 
-  exit_status |= do_copy (argc, argv, &x);
+  exit_status |= do_copy (argc - optind, argv + optind, target_directory, &x);
 
   if (x.verbose)
     close_stdout ();
