@@ -1,3 +1,18 @@
+2002-07-09  Jim Meyering  <meyering@lucent.com>
+
+	I added stat.x, but didn't update the definition of dist_man_MANS.
+	* man/Makefile.am (dist_man_MANS): Add stat.1.
+	(stat.1): Add dependency.
+	Reported by Michael Stone.
+
+	Ensure that the above never happens again.
+	* man/Makefile.am (check-x-vs-1): New target.
+	(check-local): Depend on check-x-vs-1.
+
+	* src/mv.c (euidaccess): Remove declaration.  It was unused.
+	From Michael Stone.
+	(yesno): Remove declaration.  It too was unused.
+
 2002-07-08  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.10.
