@@ -79,7 +79,6 @@ AC_DEFUN([jm_MACROS],
   AC_REQUIRE([jm_FUNC_GNU_STRFTIME])
   AC_REQUIRE([jm_FUNC_MKTIME])
   AC_REQUIRE([jm_FUNC_FPENDING])
-  AC_REQUIRE([AC_SYS_MMAP_STACK])
 
   # This is for od and stat, and any other program that
   # uses the PRI.MAX macros from inttypes.h.
