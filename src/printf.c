@@ -287,7 +287,7 @@ print_esc (const char *escstart)
 	error (1, 0, _("invalid universal character name \\%c%0*x"),
 	       esc_char, (esc_char == 'u' ? 4 : 8), uni_value);
 
-      print_unicode_char (stdout, uni_value);
+      print_unicode_char (stdout, uni_value, 0);
     }
   else
     error (1, 0, _("\\%c: invalid escape"), *p);
