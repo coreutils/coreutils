@@ -1116,10 +1116,14 @@ main (int argc, char **argv)
       /* `files_index' might be zero now.  */
     }
 
+  /* In the following if/else blocks, it is sufficient to test `pending_dirs'
+     (and not pending_dirs->name) because there may be no markers in the queue
+     at this point.  A marker may be enqueued when extract_dirs_from_files is
+     called with a non-empty string or via print_dir.  */
   if (files_index)
     {
       print_current_files ();
-      if (pending_dirs && pending_dirs->name)
+      if (pending_dirs)
 	DIRED_PUTCHAR ('\n');
     }
   else if (n_files <= 1 && pending_dirs && pending_dirs->next == 0)
@@ -2019,6 +2023,7 @@ print_dir (const char *name, const char *realname)
   register DIR *reading;
   register struct dirent *next;
   register uintmax_t total_blocks = 0;
+  static int first = 1;
 
   errno = 0;
   reading = opendir (name);
@@ -2094,6 +2099,9 @@ print_dir (const char *name, const char *realname)
 
   if (recursive || print_dir_name)
     {
+      if (!first)
+	DIRED_PUTCHAR ('\n');
+      first = 0;
       DIRED_INDENT ();
       PUSH_CURRENT_DIRED_POS (&subdired_obstack);
       dired_pos += quote_name (stdout, realname ? realname : name,
@@ -2119,9 +2127,6 @@ print_dir (const char *name, const char *realname)
 
   if (files_index)
     print_current_files ();
-
-  if (pending_dirs && pending_dirs->name)
-    DIRED_PUTCHAR ('\n');
 }
 
 /* Add `pattern' to the list of patterns for which files that match are
