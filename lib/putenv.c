@@ -1,67 +1,59 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994 Free Software Foundation, Inc.
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+NOTE: The canonical source of this file is maintained with the GNU C Library.
+Bugs can be reported to bug-glibc@prep.ai.mit.edu.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 2, or (at your option) any
+later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+
+#include <errno.h>
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
-#include <sys/types.h>
-#include <errno.h>
-#ifndef errno
-extern int errno;
-#endif
-
-/* Don't include stdlib.h for non-GNU C libraries because some of them
-   contain conflicting prototypes for getopt.
-   This needs to come after some library #include
-   to get __GNU_LIBRARY__ defined.  */
-#ifdef	__GNU_LIBRARY__
+#if defined (__GNU_LIBRARY__) || defined (HAVE_STDLIB_H)
 #include <stdlib.h>
-#else
-char *malloc ();
-#endif	/* GNU C library.  */
-
-#if defined(STDC_HEADERS) || defined(HAVE_STRING_H)
+#endif
+#if defined (__GNU_LIBRARY__) || defined (HAVE_STRING_H)
 #include <string.h>
-#else
-#include <strings.h>
-#ifndef strchr
-#define strchr index
 #endif
-#ifndef memcpy
-#define memcpy(d, s, n) bcopy((s), (d), (n))
-#endif
-#endif
-
-#ifdef HAVE_UNISTD_H
+#if defined (__GNU_LIBRARY__) || defined (HAVE_UNISTD_H)
 #include <unistd.h>
 #endif
 
-#ifndef NULL
-#define NULL 0
+#if !defined (__GNU_LIBRARY__) && !defined (HAVE_STRCHR)
+#define strchr index
+#endif
+#if !defined (__GNU_LIBRARY__) && !defined (HAVE_MEMCPY)
+#define memcpy(d,s,n) bcopy ((s), (d), (n))
 #endif
 
+#if HAVE_GNU_LD
+#define environ __environ
+#else
 extern char **environ;
+#endif
+
 
 /* Put STRING, which is of the form "NAME=VALUE", in the environment.  */
 int
 putenv (string)
      const char *string;
 {
-  char *name_end = strchr (string, '=');
+  const char *const name_end = strchr (string, '=');
   register size_t size;
   register char **ep;
 
@@ -96,11 +88,12 @@ putenv (string)
       char **new_environ = (char **) malloc ((size + 2) * sizeof (char *));
       if (new_environ == NULL)
 	return -1;
-      memcpy ((char *) new_environ, (char *) environ, size * sizeof (char *));
+      (void) memcpy ((void *) new_environ, (void *) environ,
+		     size * sizeof (char *));
       new_environ[size] = (char *) string;
       new_environ[size + 1] = NULL;
       if (last_environ != NULL)
-	free ((char *) last_environ);
+	free ((void *) last_environ);
       last_environ = new_environ;
       environ = new_environ;
     }
