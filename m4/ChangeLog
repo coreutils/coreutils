@@ -1,3 +1,11 @@
+2002-04-09  Jim Meyering  <meyering@lucent.com>
+
+	* malloc.m4: (jm_FUNC_MALLOC): Change the `checking ...' message
+	to be more precise.  Rather than saying we're checking whether the
+	function `works', say what we're testing.
+	* realloc.m4 (jm_FUNC_REALLOC): Likewise.
+	Reported by Bruno Haible.
+
 2002-02-27  Paul Eggert  <eggert@twinsun.com>
 
 	* jm-macros.m4 (jm_MACROS): Do not replace stime; no longer used.
