@@ -527,6 +527,14 @@ enum
 # define SIZE_MAX TYPE_MAXIMUM (size_t)
 #endif
 
+#ifndef OFF_T_MIN
+# define OFF_T_MIN TYPE_MINIMUM (off_t)
+#endif
+
+#ifndef OFF_T_MAX
+# define OFF_T_MAX TYPE_MAXIMUM (off_t)
+#endif
+
 #ifndef UID_T_MAX
 # define UID_T_MAX TYPE_MAXIMUM (uid_t)
 #endif
