@@ -1,5 +1,15 @@
 2000-04-27  Jim Meyering  <meyering@lucent.com>
 
+	Clean up.
+	* tests/mkdir/Makefile.am (TESTS_ENVIRONMENT): Set PATH, not MKDIR.
+	* tests/mkdir/p-1: Use mkdir, not $MKDIR.
+	* tests/mkdir/p-2: Likewise.
+
+	* configure.in (AC_OUTPUT): Add tests/du/Makefile.
+	* tests/Makefile.am (SUBDIRS): Add du.
+	* tests/du: New directory.
+	* tests/du/two-args: New test.
+
 	* tests/mkdir/special-1: New test.
 	* tests/mkdir/Makefile.am (TESTS): Add special-1.
 
@@ -19,7 +29,7 @@
 
 2000-04-17  Jim Meyering  <meyering@lucent.com>
 
-	* src/chown.c: Accept new option: --from=CURRENT_OWNER:CURRENT_GROUP.
+	* src/chown.c: New option: --from=CURRENT_OWNER:CURRENT_GROUP.
 	(enum) [FROM_OPTION]: New member.
 	(long_options): New getopt spec.
 	(change_file_owner): Add old_user, old_group parameters.  Use them.

@@ -1,5 +1,6 @@
 #!/bin/sh
-# make sure du d/1 d/2 works
+# Make sure `du d/1 d/2' works.
+# That command failed with du from fileutils-4.0q.
 
 if test "$VERBOSE" = yes; then
   set -x
