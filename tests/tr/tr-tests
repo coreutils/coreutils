@@ -1,5 +1,5 @@
 #! /bin/sh
-# run-test generated automatically by build-script from test.data.pl
+# This script was generated automatically by build-script.
 case $# in
   0) xx='../../src/tr';;
   *) xx="$1";;
