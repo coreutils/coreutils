@@ -3,7 +3,6 @@
 	* src/sys2.h: Include "unlocked-io.h", rather than hard-coding the
 	HAVE_*_UNLOCKED macros.
 
-	* Makefile.am (EXTRA_DIST): Add unlocked-io.hin and unlocked-io.h.
 	* Makefile.cfg ($(srcdir)/m4/jm-glibc-io.m4): New rule.
 
 2001-07-14  Jim Meyering  <meyering@lucent.com>
