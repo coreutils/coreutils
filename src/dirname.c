@@ -24,6 +24,7 @@
 #include "system.h"
 #include "long-options.h"
 #include "error.h"
+#include "dirname.h"
 #include "closeout.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -64,8 +65,8 @@ output `.' (meaning the current directory).\n\
 int
 main (int argc, char **argv)
 {
-  register char *path;
-  register char *slash;
+  const char *result;
+  size_t len;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -91,20 +92,9 @@ main (int argc, char **argv)
       usage (1);
     }
 
-  path = argv[1];
-  strip_trailing_slashes (path);
-
-  slash = strrchr (path, '/');
-  if (slash == NULL)
-    path = (char *) ".";
-  else
-    {
-      /* Remove any trailing slashes and final element. */
-      while (slash > path && *slash == '/')
-	--slash;
-      slash[1] = 0;
-    }
-  puts (path);
+  len = dir_name_r (argv[1], &result);
+  fwrite (result, 1, len, stdout);
+  putchar ('\n');
 
   exit (0);
 }
