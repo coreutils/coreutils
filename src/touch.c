@@ -111,12 +111,15 @@ touch (const char *file)
   int status;
   struct stat sbuf;
   int fd = -1;
+  int open_errno = 0;
 
   if (! no_create)
     {
       /* Try to open FILE, creating it if necessary.  */
       fd = open (file, O_WRONLY | O_CREAT,
 		 S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+      if (fd == -1)
+	open_errno = errno;
     }
 
   if (! amtime_now)
@@ -127,7 +130,7 @@ touch (const char *file)
 	 or FILE is inaccessible or a directory, so we have to use stat.  */
       if (fd != -1 ? fstat (fd, &sbuf) : stat (file, &sbuf))
 	{
-	  error (0, errno, "%s", file);
+	  error (0, open_errno ? open_errno : errno, "%s", file);
 	  close (fd);
 	  return 1;
 	}
@@ -172,7 +175,7 @@ touch (const char *file)
 
   if (status)
     {
-      error (0, errno, "%s", file);
+      error (0, open_errno ? open_errno : errno, "%s", file);
       return 1;
     }
 
