@@ -96,8 +96,8 @@ usage (status)
   else
     printf (_("\
 Usage: %s [OPTION] [FILE]...\n\
-  or:  %s [OPTION] --string=STRING\n\
   or:  %s [OPTION] --check [FILE]\n\
+  or:  %s [OPTION] --string=STRING ...\n\
 Print or check MD5 checksums.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
@@ -341,14 +341,31 @@ md5_check (checkfile_name, binary)
       return 1;
     }
 
-  if (!quiet)
-    printf (n_tests == 1 ? (n_tests_failed ? _("Test failed\n")
-					   : _("Test passed\n"))
-			 : _("%d out of %d tests failed\n"),
-	    n_tests_failed, n_tests);
+  if (n_tests == 0)
+    {
+      /* FIXME: warn (or even fail?) if no tests are found?  */
+    }
+  else
+    {
+      if (!quiet)
+	{
+	  if (n_tests_failed == 0)
+	    {
+	      printf (n_tests == 1
+		      ? _("the single test passed\n")
+		      : _("all %d tests passed\n"), n_tests);
+	    }
+	  else
+	    {
+	      printf (n_tests == 1
+		      ? _("the single test failed\n")
+		      : _("%d out of %d tests failed\n"),
+		      n_tests_failed, n_tests);
+	    }
+	}
+    }
 
-  /* FIXME: warn if no tests are found?  */
-  return (n_tests_failed == 0 ? 0 : 1);
+  return ((n_tests > 0 && n_tests_failed == 0) ? 0 : 1);
 }
 
 int
