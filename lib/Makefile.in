@@ -31,8 +31,6 @@ mandir = @mandir@
 includedir = @includedir@
 oldincludedir = /usr/include
 
-DESTDIR =
-
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -219,10 +217,10 @@ $(DEPDIR)/same$U.Po $(DEPDIR)/save-cwd$U.Po $(DEPDIR)/savedir$U.Po \
 $(DEPDIR)/stat.Po $(DEPDIR)/stime.Po $(DEPDIR)/stpcpy.Po \
 $(DEPDIR)/strcasecmp.Po $(DEPDIR)/strcspn.Po $(DEPDIR)/strdup.Po \
 $(DEPDIR)/strftime.Po $(DEPDIR)/stripslash$U.Po \
-$(DEPDIR)/strncasecmp.Po $(DEPDIR)/strndup.Po $(DEPDIR)/strpbrk.Po \
-$(DEPDIR)/strstr.Po $(DEPDIR)/strtod.Po $(DEPDIR)/strtol.Po \
-$(DEPDIR)/strtoul.Po $(DEPDIR)/strtoull.Po $(DEPDIR)/strtoumax.Po \
-$(DEPDIR)/strverscmp.Po $(DEPDIR)/unicodeio$U.Po \
+$(DEPDIR)/strncasecmp.Po $(DEPDIR)/strndup.Po $(DEPDIR)/strnlen.Po \
+$(DEPDIR)/strpbrk.Po $(DEPDIR)/strstr.Po $(DEPDIR)/strtod.Po \
+$(DEPDIR)/strtol.Po $(DEPDIR)/strtoul.Po $(DEPDIR)/strtoull.Po \
+$(DEPDIR)/strtoumax.Po $(DEPDIR)/strverscmp.Po $(DEPDIR)/unicodeio$U.Po \
 $(DEPDIR)/userspec$U.Po $(DEPDIR)/utime.Po $(DEPDIR)/version-etc$U.Po \
 $(DEPDIR)/xgetcwd$U.Po $(DEPDIR)/xgethostname$U.Po \
 $(DEPDIR)/xmalloc$U.Po $(DEPDIR)/xstrdup$U.Po $(DEPDIR)/xstrtod$U.Po \
@@ -235,8 +233,9 @@ gethostname.c getline.c getloadavg.c getusershell.c group-member.c \
 lchown.c malloc.c memchr.c memcmp.c memcpy.c memmove.c memset.c mkdir.c \
 mktime.c mountlist.c nanosleep.c obstack.c obstack.h putenv.c realloc.c \
 regex.c rmdir.c rpmatch.c stime.c stpcpy.c strcasecmp.c strcspn.c \
-strdup.c strftime.c strncasecmp.c strndup.c strpbrk.c strstr.c strtod.c \
-strtol.c strtoul.c strtoull.c strtoumax.c strverscmp.c utime.c
+strdup.c strftime.c strncasecmp.c strndup.c strnlen.c strpbrk.c \
+strstr.c strtod.c strtol.c strtoul.c strtoull.c strtoumax.c \
+strverscmp.c utime.c
 
 
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -454,6 +453,8 @@ strncasecmp_.c: strncasecmp.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strncasecmp.c; then echo $(srcdir)/strncasecmp.c; else echo strncasecmp.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strncasecmp_.c
 strndup_.c: strndup.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strndup.c; then echo $(srcdir)/strndup.c; else echo strndup.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strndup_.c
+strnlen_.c: strnlen.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strnlen.c; then echo $(srcdir)/strnlen.c; else echo strnlen.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strnlen_.c
 strpbrk_.c: strpbrk.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strpbrk.c; then echo $(srcdir)/strpbrk.c; else echo strpbrk.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strpbrk_.c
 strstr_.c: strstr.c $(ANSI2KNR)
@@ -510,11 +511,11 @@ path-concat_.o posixtm_.o putenv_.o quotearg_.o readtokens_.o \
 readutmp_.o realloc_.o regex_.o rmdir_.o rpmatch_.o safe-read_.o \
 same_.o save-cwd_.o savedir_.o stat_.o stime_.o stpcpy_.o strcasecmp_.o \
 strcspn_.o strdup_.o strftime_.o stripslash_.o strncasecmp_.o \
-strndup_.o strpbrk_.o strstr_.o strtod_.o strtol_.o strtoul_.o \
-strtoull_.o strtoumax_.o strverscmp_.o unicodeio_.o userspec_.o \
-utime_.o version-etc_.o xgetcwd_.o xgethostname_.o xmalloc_.o \
-xstrdup_.o xstrtod_.o xstrtol_.o xstrtoul_.o xstrtoumax_.o yesno_.o : \
-$(ANSI2KNR)
+strndup_.o strnlen_.o strpbrk_.o strstr_.o strtod_.o strtol_.o \
+strtoul_.o strtoull_.o strtoumax_.o strverscmp_.o unicodeio_.o \
+userspec_.o utime_.o version-etc_.o xgetcwd_.o xgethostname_.o \
+xmalloc_.o xstrdup_.o xstrtod_.o xstrtol_.o xstrtoul_.o xstrtoumax_.o \
+yesno_.o : $(ANSI2KNR)
 .y.c:
 	$(YACC) $(AM_YFLAGS) $(YFLAGS) $< && mv y.tab.c $*.c
 	if test -f y.tab.h; then \
@@ -635,6 +636,7 @@ maintainer-clean-tags:
 @AMDEP@include $(DEPDIR)/stripslash$U.Po
 @AMDEP@include $(DEPDIR)/strncasecmp.Po
 @AMDEP@include $(DEPDIR)/strndup.Po
+@AMDEP@include $(DEPDIR)/strnlen.Po
 @AMDEP@include $(DEPDIR)/strpbrk.Po
 @AMDEP@include $(DEPDIR)/strstr.Po
 @AMDEP@include $(DEPDIR)/strtod.Po

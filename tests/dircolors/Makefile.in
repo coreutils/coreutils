@@ -31,8 +31,6 @@ mandir = @mandir@
 includedir = @includedir@
 oldincludedir = /usr/include
 
-DESTDIR =
-
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
