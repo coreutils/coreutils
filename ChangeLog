@@ -1,6 +1,5 @@
 2003-07-23  Jim Meyering  <jim@meyering.net>
 
-
 	* Version 5.0.90.
 
 	Don't include headers already included by system.h:
