@@ -1,3 +1,12 @@
+2004-03-15  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.maint (alpha beta major): `Make' the emit_upload_commands
+	target before updating $(prev_version_file).
+
+	* tests/misc/date-sec: New file, to test for just-fixed bug in date.
+	See today's change in lib/getdate.y.
+	* tests/misc/Makefile.am (TESTS): Add date-sec.
+
 2004-03-14  Jim Meyering  <jim@meyering.net>
 
 	* announce-gen (print_changelog_deltas): Use `.sig' suffix for
