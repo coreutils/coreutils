@@ -1,5 +1,8 @@
 2000-11-12  Jim Meyering  <meyering@lucent.com>
 
+	* src/ls.c (print_long_format): Remove obsolete comment.
+	From Paul Eggert.
+
 	* doc/texinfo.tex: Update from master repository.
 
 2000-11-11  Paul Eggert  <eggert@sic.twinsun.com>
