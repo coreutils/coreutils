@@ -164,7 +164,8 @@ $(my_distdir).tar.bz2: $(my_distdir).tar.gz
 	rm -f $@
 	$(BZIP2) -9 $(my_distdir).tar
 
-announcement: NEWS ChangeLog $(distdir).tar.gz $(distdir).tar.bz2 $(xd-delta)
+rel-files = $(xd-delta) $(distdir).tar.bz2 $(distdir).tar.gz
+announcement: NEWS ChangeLog $(rel-files)
 	@( \
 	  echo Subject: $(my_distdir) released; \
 	  echo; \
@@ -268,10 +269,8 @@ $(xd-delta): $(release-archive-dir)/$(prev-tgz) $(distdir).tar.gz
 alpha: local-check $(xd-delta)
 	$(MAKE) cvs-dist
 	$(MAKE) -s announcement > /tmp/announce-$(my_distdir)
-	ln $(distdir).tar.gz $(release-archive-dir)
-	chmod a-w $(distdir).tar.gz
-	ln $(xd-delta) $(release-archive-dir)
-	chmod a-w $(xd-delta)
+	ln $(rel-files) $(release-archive-dir)
+	chmod a-w $(rel-files)
 	echo $(VERSION) > $(prev_version_file)
 	cvs ci -m. $(prev_version_file)
 	@$(emit-rsync-commands)
