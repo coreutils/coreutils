@@ -1,3 +1,37 @@
+2000-10-22  Jim Meyering  <meyering@lucent.com>
+
+	* tests/lang-default: New file.  Set LANG, LC_ALL, and LANGUAGE to ''
+	(rather than to `C') and export them into the environment.
+	Suggestion from Bruno Haible.
+
+	* tests/cp/backup-is-src: Source lang-default rather than open-coding
+	the setting/exporting of LANG, LC_ALL, and LANGUAGE.
+	* tests/cp/cp-mv-backup: Likewise.
+	* tests/cp/same-file: Likewise.
+	* tests/cp/slink-2-slink: Likewise.
+	* tests/cp/symlink-slash: Likewise.
+	* tests/ln/sf-1: Likewise.
+	* tests/ls/symlink-slash: Likewise.
+	* tests/ls/time-1: Likewise.
+	* tests/mv/backup-is-src: Likewise.
+	* tests/mv/diag: Likewise.
+	* tests/mv/force: Likewise.
+	* tests/mv/hard-link-1: Likewise.
+	* tests/mv/i-2: Likewise.
+	* tests/mv/into-self: Likewise.
+	* tests/mv/into-self-2: Likewise.
+	* tests/mv/into-self-3: Likewise.
+	* tests/mv/mv-special-1: Likewise.
+	* tests/mv/part-symlink: Likewise.
+	* tests/mv/partition-perm: Likewise.
+	* tests/rm/r-1: Likewise.
+	* tests/rm/r-2: Likewise.
+
+2000-10-21  Jim Meyering  <meyering@lucent.com>
+
+	* tests/cp/cp-parents: New test.
+	* tests/cp/Makefile.am (TESTS): Add cp-parents;
+
 2000-10-19  Jim Meyering  <meyering@lucent.com>
 
 	* doc/texinfo.tex: Update from master repository.
