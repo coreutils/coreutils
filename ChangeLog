@@ -2,6 +2,10 @@
 
 	* Version 5.0.90.
 
+	* src/uniq.c (writeline): Use a SPACE, not a TAB between the
+	count and the corresponding line, as required by POSIX.
+	Reported by Clement Wang.
+
 	* tests/expr/basic: Add tests for when exit status is 2.
 
 	* src/nohup.c (NOHUP_FOUND_BUT_CANNOT_INVOKE, NOHUP_FAILURE):
