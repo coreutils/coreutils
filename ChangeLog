@@ -1,6 +1,10 @@
-2004-01-23  Jim Meyering  <jim@meyering.net>
+2004-01-25  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.2.
+
+	* Makefile.maint (signatures): Comment out definition.
+
+2004-01-23  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (header_regexp): Add exitfail.
 
