@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1997, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -57,9 +57,7 @@ extern int errno;
 /* Convert NPTR to a double.  If ENDPTR is not NULL, a pointer to the
    character after the last one used in the number is put in *ENDPTR.  */
 double
-strtod (nptr, endptr)
-     const char *nptr;
-     char **endptr;
+strtod (const char *nptr, char **endptr)
 {
   register const char *s;
   short int sign;
