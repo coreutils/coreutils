@@ -259,12 +259,6 @@ send_signals (int signum, char *const *argv)
   int status = EXIT_SUCCESS;
   char const *arg = *argv;
 
-  if (! arg)
-    {
-      error (0, 0, _("missing operand after `%s'"), argv[-1]);
-      usage (EXIT_FAILURE);
-    }
-
   do
     {
       char *endp;
@@ -370,7 +364,13 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
+  if ( ! list && argc <= optind)
+    {
+      error (0, 0, _("no process ID specified"));
+      usage (EXIT_FAILURE);
+    }
+
   return (list
-	  ? list_signals (table, optind == argc ? NULL : argv + optind)
-	  : send_signals (signum, argv + optind));
+	  ? list_signals (table, optind < argc ? argv + optind : NULL)
+	  : send_signals (signum, argv));
 }
