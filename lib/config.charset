@@ -34,6 +34,7 @@
 #   ASCII, ANSI_X3.4-1968     glibc solaris freebsd
 #   ISO-8859-1                glibc aix hpux irix osf solaris freebsd   yes
 #   ISO-8859-2                glibc aix hpux irix solaris freebsd       yes
+#   ISO-8859-3                glibc                                     yes
 #   ISO-8859-4                solaris                                   yes
 #   ISO-8859-5                glibc aix hpux irix solaris               yes
 #   ISO-8859-6                glibc aix hpux solaris                    yes
@@ -41,28 +42,41 @@
 #   ISO-8859-8                glibc aix hpux solaris                    yes
 #   ISO-8859-9                glibc aix hpux irix osf solaris           yes
 #   ISO-8859-13               glibc
-#   ISO-8859-15               aix solaris freebsd
+#   ISO-8859-15               glibc aix solaris freebsd
 #   KOI8-R                    glibc solaris freebsd                     yes
 #   KOI8-U                    glibc                                     yes
 #   CP850                     aix osf
 #   CP856                     aix
 #   CP866                     freebsd
+#   CP874                     win32
 #   CP922                     aix
-#   CP932                     aix
+#   CP932                     aix win32
 #   CP943                     aix
+#   CP949                     win32
+#   CP950                     win32
 #   CP1046                    aix
 #   CP1124                    aix
 #   CP1129                    aix
-#   CP1251                    glibc
-#   CP1252                    aix
-#   EUC-CN                    aix hpux irix solaris
-#   EUC-JP                    aix hpux irix solaris                     yes
-#   EUC-KR                    aix hpux irix solaris                     yes
-#   EUC-TW                    aix hpux irix solaris
-#   BIG5                      aix hpux solaris                          yes
-#   GBK                       aix
+#   CP1250                    win32
+#   CP1251                    glibc win32
+#   CP1252                    aix win32
+#   CP1253                    win32
+#   CP1254                    win32
+#   CP1255                    win32
+#   CP1256                    win32
+#   CP1257                    win32
+#   GB2312                    glibc aix hpux irix solaris               yes
+#   EUC-JP                    glibc aix hpux irix solaris               yes
+#   EUC-KR                    glibc aix hpux irix solaris               yes
+#   EUC-TW                    glibc aix hpux irix solaris
+#   BIG5                      glibc aix hpux solaris                    yes
+#   BIG5HKSCS                 glibc
+#   GBK                       aix win32
+#   GB18030                   glibc
 #   SJIS                      hpux solaris
-#   TIS-620                   aix hpux solaris
+#   JOHAB                     glibc win32
+#   TIS-620                   glibc aix hpux solaris
+#   VISCII                    glibc                                     yes
 #   HP-ROMAN8                 hpux
 #   HP-ARABIC8                hpux
 #   HP-GREEK8                 hpux
@@ -117,7 +131,7 @@ case "$os" in
 	echo "IBM-1124 CP1124"
 	echo "IBM-1129 CP1129"
 	echo "IBM-1252 CP1252"
-	echo "IBM-eucCN EUC-CN"
+	echo "IBM-eucCN GB2312"
 	echo "IBM-eucJP EUC-JP"
 	echo "IBM-eucKR EUC-KR"
 	echo "IBM-eucTW EUC-TW"
@@ -146,7 +160,7 @@ case "$os" in
 	echo "eucJP EUC-JP"
 	echo "eucKR EUC-KR"
 	echo "eucTW EUC-TW"
-	echo "hp15CN EUC-CN"
+	echo "hp15CN GB2312"
 	#echo "ccdc ?" # what is this?
 	echo "SJIS SJIS"
 	echo "utf8 UTF-8"
@@ -157,7 +171,7 @@ case "$os" in
 	echo "ISO8859-5 ISO-8859-5"
 	echo "ISO8859-7 ISO-8859-7"
 	echo "ISO8859-9 ISO-8859-9"
-	echo "eucCN EUC-CN"
+	echo "eucCN GB2312"
 	echo "eucJP EUC-JP"
 	echo "eucKR EUC-KR"
 	echo "eucTW EUC-TW"
@@ -181,7 +195,7 @@ case "$os" in
 	echo "ISO8859-15 ISO-8859-15"
 	echo "koi8-r KOI8-R"
 	echo "BIG5 BIG5"
-	echo "gb2312 EUC-CN"
+	echo "gb2312 GB2312"
 	echo "cns11643 EUC-TW"
 	echo "5601 EUC-KR"
 	echo "eucJP EUC-JP"
