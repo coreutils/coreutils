@@ -209,10 +209,13 @@ tee (int nfiles, const char **files)
       /* Write to all NFILES + 1 descriptors.
 	 Standard output is the first one.  */
       for (i = 0; i <= nfiles; i++)
-	{
-	  if (descriptors[i] != NULL)
-	    fwrite (buffer, bytes_read, 1, descriptors[i]);
-	}
+	if (descriptors[i]
+	    && fwrite (buffer, bytes_read, 1, descriptors[i]) != bytes_read)
+	  {
+	    error (0, errno, "%s", files[i]);
+	    descriptors[i] = NULL;
+	    ret = 1;
+	  }
     }
 
   if (bytes_read == -1)
@@ -223,8 +226,7 @@ tee (int nfiles, const char **files)
 
   /* Close the files, but not standard output.  */
   for (i = 1; i <= nfiles; i++)
-    if (descriptors[i] != NULL
-	&& (ferror (descriptors[i]) || fclose (descriptors[i]) == EOF))
+    if (descriptors[i] && fclose (descriptors[i]) != 0)
       {
 	error (0, errno, "%s", files[i]);
 	ret = 1;
