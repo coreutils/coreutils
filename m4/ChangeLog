@@ -1,3 +1,11 @@
+2000-06-23  Jim Meyering  <meyering@lucent.com>
+
+	* afs.m4: Add missing AC_MSG_RESULT.
+	Reported by Bruno Haible.
+
+	* fsusage.m4: s/AC_MSG_CHECKING/AC_CHECKING/.
+	Suggestion from Bruno Haible.
+
 2000-06-21  Jim Meyering  <meyering@lucent.com>
 
 	* jm-macros.m4 (AC_REPLACE_FUNCS): Add getpass.
