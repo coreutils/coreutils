@@ -1,3 +1,80 @@
+2001-03-08  Paul Eggert  <eggert@twinsun.com>
+
+	* NEWS, doc/textutils.texi: Document pr changes.
+
+	* src/pr.c: Include mbswidth.h.
+	(standard_header, header, test_suite): Remove.
+	(date_format, date_text, file_text, header_width_available): New vars.
+	(long_options, main, init_header, usage):
+	Add new -D or --date-format option.
+	(CHARS_FOR_DATE_AND_PAGE, T_BUF_FMT, T_BUF_SIZE, NO_DATE): Remove.
+	(init_header): Allow arbitrary width for date format.  Change
+	"Page %5d" to "Page %d", since the code no longer assumes fixed width.
+	Do not assume that localtime succeeds.
+	(init_header, print_header, usage): Do not truncate headers.
+	(init_header, print_header): Defer width calculations until
+	page is printed, since "Page 100000" is wider than "Page 1".
+	Count columns, not bytes, in page headers.
+	Custom headers take up only the center, not the whole header.
+	(print_header): Use printf rather than fprintf(stdout).
+
+	* po/Makefile.in.in (install-data-yes): Install LC_TIME locale
+	for all packages, not just for fileutils.
+	(uninstall): Remove LC_TIME locale too.
+
+	* src/sys2.h (INT_STRLEN_BOUND): New macro.
+
+	* tests/pr/0F, tests/pr/0FF, tests/pr/2-S_f-t_notab,
+          tests/pr/2-Sf-t_notab, tests/pr/2f-t_notab,
+          tests/pr/2s_f-t_notab, tests/pr/2s_w60f-t_nota,
+          tests/pr/2sf-t_notab, tests/pr/2sw60f-t_notab,
+          tests/pr/2w60f-t_notab, tests/pr/3-0F, tests/pr/3-5l17f-t,
+          tests/pr/3-FF, tests/pr/3a2l17-FF, tests/pr/3a3f-0F,
+          tests/pr/3a3l15-t, tests/pr/3a3l8f-t, tests/pr/3b2l17-FF,
+          tests/pr/3b3f-0F, tests/pr/3b3f-0FF, tests/pr/3b3f-FF,
+          tests/pr/3b3l15-t, tests/pr/3b3l8f-t, tests/pr/3f-0F,
+          tests/pr/3f-FF, tests/pr/3l17f-t, tests/pr/3l24-t,
+          tests/pr/3ml17f-t, tests/pr/3ml24-FF, tests/pr/3ml24-t,
+          tests/pr/3ml24-t-FF, tests/pr/4-7l24-FF, tests/pr/4l24-FF,
+          tests/pr/a2l15-FF, tests/pr/a2l17-FF, tests/pr/a3-0F,
+          tests/pr/a3f-0F, tests/pr/a3f-0FF, tests/pr/a3f-FF,
+          tests/pr/a3l15-t, tests/pr/a3l17f-lm, tests/pr/a3l8f-t,
+          tests/pr/b2l15-FF, tests/pr/b2l17-FF, tests/pr/b3-0F,
+          tests/pr/b3f-0F, tests/pr/b3f-0FF, tests/pr/b3f-FF,
+          tests/pr/b3l15-t, tests/pr/b3l17f-lm, tests/pr/b3l8f-t,
+          tests/pr/FF, tests/pr/Ja3l17f-lm, tests/pr/Jb3l17f-lm,
+          tests/pr/Jml17f-lm-lo, tests/pr/l17f-t, tests/pr/l24-FF,
+          tests/pr/l24-t, tests/pr/ml17f-0F, tests/pr/ml17f-lm-lo,
+          tests/pr/ml17f-t, tests/pr/ml17f-t-0F, tests/pr/ml20-FF-t,
+          tests/pr/ml24-FF, tests/pr/ml24-t, tests/pr/ml24-t-FF,
+          tests/pr/n+2-5l17f-0FF, tests/pr/n+2l17f-0FF,
+          tests/pr/n+2l17f-bl, tests/pr/n+3-7l24-FF,
+          tests/pr/n+3l17f-0FF, tests/pr/n+3l17f-bl,
+          tests/pr/n+3ml13f-bl-FF, tests/pr/n+3ml17f-bl-tn,
+          tests/pr/n+3ml17f-tn-bl, tests/pr/n+4-8a2l17-FF,
+          tests/pr/n+4b2l10f-0FF, tests/pr/n+5-8b3l10f-FF,
+          tests/pr/n+5a3l6f-0FF, tests/pr/n+6a2l17-FF,
+          tests/pr/n+6b3l6f-FF, tests/pr/n+7l24-FF,
+          tests/pr/n+8l20-FF, tests/pr/nJml17f-lmlmlo,
+          tests/pr/nJml17f-lmlolm, tests/pr/nl17f-bl,
+          tests/pr/nN1+3l17f-bl, tests/pr/nN15l17f-bl,
+          tests/pr/nSml13-bl-FF, tests/pr/nSml13-t-t-FF,
+          tests/pr/nSml13-t-tFFFF, tests/pr/nSml17-bl-FF,
+          tests/pr/nSml17-t-t-FF, tests/pr/nSml17-t-tFFFF,
+          tests/pr/o3a3l17f-tn, tests/pr/o3a3Sl17f-tn,
+          tests/pr/o3a3Snl17f-tn, tests/pr/o3b3l17f-tn,
+          tests/pr/o3b3Sl17f-tn, tests/pr/o3b3Snl17f-tn,
+          tests/pr/o3Jml17f-lm-lo, tests/pr/o3ml17f-bl-tn,
+          tests/pr/o3mSl17f-bl-tn, tests/pr/o3mSnl17fbltn,
+          tests/pr/Test.pm, tests/pr/W-72l17f-ll, tests/pr/W20l17f-ll,
+          tests/pr/W26l17f-ll, tests/pr/W27l17f-ll,
+          tests/pr/W28l17f-ll, tests/pr/W35a3l17f-lm,
+          tests/pr/W35b3l17f-lm, tests/pr/W35Ja3l17f-lm,
+          tests/pr/W35Jb3l17f-lm, tests/pr/W35Jml17f-lmlo,
+          tests/pr/W35ml17f-lm-lo, tests/pr/W72Jl17f-ll,
+          tests/pr/w72l17f-ll:
+	Adjust to minor spacing changes in pr headers.
+
 2001-03-11  Paul Eggert  <eggert@twinsun.com>
 
 	* src/sort.c (die): New message arg, to describe failures
