@@ -33,9 +33,9 @@
 #include <sys/types.h>
 #include "system.h"
 #include "modechange.h"
+#include "makepath.h"
 #include "version.h"
 
-int make_path ();
 void error ();
 
 static void usage ();
@@ -123,7 +123,10 @@ main (argc, argv)
   for (; optind < argc; ++optind)
     {
       if (path_mode)
-	errors |= make_path (argv[optind], newmode, parent_mode, -1, -1, NULL);
+	{
+	  errors |= make_path (argv[optind], newmode, parent_mode,
+			       -1, -1, 1, NULL);
+	}
       else if (mkdir (argv[optind], newmode))
 	{
 	  error (0, errno, "cannot make directory `%s'", argv[optind]);

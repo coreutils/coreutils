@@ -63,6 +63,7 @@
 #include "version.h"
 #include "safe-stat.h"
 #include "modechange.h"
+#include "makepath.h"
 
 #if !defined (isascii) || defined (STDC_HEADERS)
 #undef isascii
@@ -98,7 +99,6 @@ char *xmalloc ();
 void error ();
 int safe_read ();
 int full_write ();
-int make_path ();
 int isdir ();
 
 static int change_attributes ();
@@ -238,7 +238,7 @@ main (argc, argv)
       for (; optind < argc; ++optind)
 	{
 	  errors |=
-	    make_path (argv[optind], mode, mode, owner_id, group_id, NULL);
+	    make_path (argv[optind], mode, mode, owner_id, group_id, 0, NULL);
 	}
     }
   else
