@@ -32,8 +32,8 @@
 extern int xalloc_exit_failure;
 
 /* If this pointer is non-zero, run the specified function upon each
-   allocation failure.  It is initialized to zero. */
-extern void (*xalloc_fail_func) ();
+   allocation failure.  It is initialized to zero.  */
+extern void (*xalloc_fail_func) PARAMS ((void));
 
 /* If XALLOC_FAIL_FUNC is undefined or a function that returns, this
    message must be non-NULL.  It is translated via gettext.
@@ -43,6 +43,7 @@ extern char *const xalloc_msg_memory_exhausted;
 void *xmalloc PARAMS ((size_t n));
 void *xcalloc PARAMS ((size_t n, size_t s));
 void *xrealloc PARAMS ((void *p, size_t n));
+char *xstrdup PARAMS ((const char *str));
 
 # define XMALLOC(Type, N_bytes) ((Type *) xmalloc (sizeof (Type) * (N_bytes)))
 # define XCALLOC(Type, N_bytes) ((Type *) xcalloc (sizeof (Type), (N_bytes)))
