@@ -1,3 +1,20 @@
+2003-12-24  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.1.1.
+
+2003-12-23  Paul Eggert  <eggert@twinsun.com>
+
+	* src/ls.c (length_of_file_names_and_frills):
+	Remove forward decl; not needed.
+	(print_file_name_and_frills, length_of_file_name_and_frills):
+	With -m, don't output spaces before inum or size.
+	(print_with_commas): Don't output space just before newline.
+
+2003-12-24  Jim Meyering  <jim@meyering.net>
+
+	* tests/ls/Makefile.am (TESTS): Add m-option.
+	* tests/ls/m-option: New file.  Test for above fixes.
+
 2003-12-20  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.0.
