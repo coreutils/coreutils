@@ -12,6 +12,17 @@ dnl
 
 AC_DEFUN(jm_FUNC_REALLOC,
 [
+ if test x = y; then
+   dnl This code is deliberately never run via ./configure.
+   dnl FIXME: this is a gross hack to make autoheader put an entry
+   dnl for this symbol in config.h.in.
+   AC_CHECK_FUNCS(DONE_WORKING_REALLOC_CHECK)
+ fi
+ dnl xmalloc.c requires that this symbol be defined so it doesn't
+ dnl mistakenly use a broken realloc -- as it might if this test were omitted.
+ ac_kludge=HAVE_DONE_WORKING_REALLOC_CHECK
+ AC_DEFINE_UNQUOTED($ac_kludge)
+
  AC_CACHE_CHECK([for working realloc], jm_cv_func_working_realloc,
   [AC_TRY_RUN([
     char *realloc ();
