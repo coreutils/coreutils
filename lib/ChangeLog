@@ -1,3 +1,8 @@
+2004-11-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getopt.c, getopt1.c, getopt_.h, getopt_int.h:
+	Sync from gnulib.
+
 2004-11-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* allocsa.h, mbswidth.c, mktime.c, readlink.c, getdate.y,

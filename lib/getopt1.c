@@ -41,14 +41,14 @@
 #endif
 
 int
-getopt_long (int argc, char *const *argv, const char *options,
+getopt_long (int argc, char *__getopt_argv_const *argv, const char *options,
 	     const struct option *long_options, int *opt_index)
 {
   return _getopt_internal (argc, argv, options, long_options, opt_index, 0);
 }
 
 int
-_getopt_long_r (int argc, char *const *argv, const char *options,
+_getopt_long_r (int argc, char *__getopt_argv_const *argv, const char *options,
 		const struct option *long_options, int *opt_index,
 		struct _getopt_data *d)
 {
@@ -62,14 +62,16 @@ _getopt_long_r (int argc, char *const *argv, const char *options,
    instead.  */
 
 int
-getopt_long_only (int argc, char *const *argv, const char *options,
+getopt_long_only (int argc, char *__getopt_argv_const *argv,
+		  const char *options,
 		  const struct option *long_options, int *opt_index)
 {
   return _getopt_internal (argc, argv, options, long_options, opt_index, 1);
 }
 
 int
-_getopt_long_only_r (int argc, char *const *argv, const char *options,
+_getopt_long_only_r (int argc, char *__getopt_argv_const *argv,
+		     const char *options,
 		     const struct option *long_options, int *opt_index,
 		     struct _getopt_data *d)
 {

@@ -1,4 +1,4 @@
-# getopt.m4 serial 4
+# getopt.m4 serial 6
 dnl Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -15,18 +15,9 @@ AC_DEFUN([gl_GETOPT_SUBSTITUTE],
   GETOPT_H=getopt.h
   AC_LIBOBJ([getopt])
   AC_LIBOBJ([getopt1])
-  AC_DEFINE([optarg], [rpl_optarg],
-    [Define to rpl_optarg if the replacement variable should be used.])
-  AC_DEFINE([optind], [rpl_optind],
-    [Define to rpl_optind if the replacement variable should be used.])
-  AC_DEFINE([optopt], [rpl_optopt],
-    [Define to rpl_optopt if the replacement variable should be used.])
-  AC_DEFINE([getopt], [rpl_getopt],
-    [Define to rpl_getopt if the replacement function should be used.])
-  AC_DEFINE([getopt_long], [rpl_getopt_long],
-    [Define to rpl_getopt_long if the replacement function should be used.])
-  AC_DEFINE([getopt_long_only], [rpl_getopt_long_only],
-    [Define to rpl_getopt_long_only if the replacement function should be used.])
+  AC_DEFINE([__GETOPT_PREFIX], [[rpl_]],
+    [Define to rpl_ if the getopt replacement functions and variables
+     should be used.])
   AC_SUBST([GETOPT_H])
 ])
 

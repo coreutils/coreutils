@@ -1485,6 +1485,10 @@
 # undef __EXTENSIONS__
 #endif
 
+/* Define to rpl_ if the getopt replacement functions and variables should be
+   used. */
+#undef __GETOPT_PREFIX
+
 /* Define like PROTOTYPES; this can be used by system headers. */
 #undef __PROTOTYPES
 
@@ -1511,16 +1515,6 @@
 
 /* Define to a replacement function name for getline(). */
 #undef getline
-
-/* Define to rpl_getopt if the replacement function should be used. */
-#undef getopt
-
-/* Define to rpl_getopt_long if the replacement function should be used. */
-#undef getopt_long
-
-/* Define to rpl_getopt_long_only if the replacement function should be used.
-   */
-#undef getopt_long_only
 
 /* Define to rpl_gettimeofday if the replacement function should be used. */
 #undef gettimeofday
@@ -1581,15 +1575,6 @@
 
 /* Define to `long' if <sys/types.h> does not define. */
 #undef off_t
-
-/* Define to rpl_optarg if the replacement variable should be used. */
-#undef optarg
-
-/* Define to rpl_optind if the replacement variable should be used. */
-#undef optind
-
-/* Define to rpl_optopt if the replacement variable should be used. */
-#undef optopt
 
 /* Define to `int' if <sys/types.h> does not define. */
 #undef pid_t
