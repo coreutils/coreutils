@@ -1,5 +1,11 @@
 2001-01-02  Paul Eggert  <eggert@twinsun.com>
 
+	* src/ls.c (long_time_expected_width, print_long_format): Fix
+	bug: the initial byte passed to strftime wasn't initialized to
+	a nonzero value after the buffer was reallocated.
+
+2001-01-02  Paul Eggert  <eggert@twinsun.com>
+
 	Make ls -l compatible with POSIX, which requires that the
 	behavior of time formats must depend only on LC_TIME, not on
 	LC_MESSAGES.
