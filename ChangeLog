@@ -1,3 +1,20 @@
+2003-02-22  Jim Meyering  <jim@meyering.net>
+
+	* Version 4.5.9.
+
+	* announce-gen: New option: --release-type=TYPE
+	* Makefile.maint (beta, major): New targets.  Remove `release'.
+	Put them all together on a line.
+	Pass the release type (via RELEASE_TYPE envvar) to the MAKE
+	invocation of `announcement'.
+	(announcement): Invoke announce-gen with --release-type=$RELEASE_TYPE.
+
+	* announce-gen: New option: --news=NEWS_FILE.
+	Extract NEWS entries here, not via rules in Makefile.maint.
+	* Makefile.maint (announcement): Now that NEWS entries are
+	extracted by announce-gen, don't do it here.
+	(news-r1, news-r2): Remove now-unused definitions.
+
 2003-02-21  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.8.
