@@ -1,3 +1,22 @@
+1998-05-02  Jim Meyering  <meyering@ascend.com>
+
+	* src/seq.c (check_format): Use ISDIGIT, not isdigit.
+
+1998-04-26  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in: Use jm_ASSERT.
+	* acconfig.h: Add NDEBUG.
+
+1998-04-13  Jim Meyering  <meyering@eng.ascend.com>
+
+	* lib/Makefile.am (noinst_HEADERS): Add safe-read.h.
+
+1998-04-09  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (AM_MAINTAINER_MODE): Remove it.
+	No longer use AC_PATH_PROG to check for perl.
+	(jm_PERL): Use this instead.
+
 1998-04-04  Jim Meyering  <meyering@ascend.com>
 
 	* lib/readutmp.h (PARAMS): Define.
