@@ -34,5 +34,4 @@ test -r dir2/file && fail=1
 test -r dir2/dir1/file || fail=1
 test -r dir1/file || fail=1
 
-(exit $fail)
 (exit $fail); exit
