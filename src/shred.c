@@ -120,13 +120,13 @@
 
 struct Options
 {
-  int force;		/* -f flag: chmod files if necessary */
+  bool force;		/* -f flag: chmod files if necessary */
   size_t n_iterations;	/* -n flag: Number of iterations */
   off_t size;		/* -s flag: size of file */
-  int remove_file;	/* -u flag: remove file after shredding */
-  int verbose;		/* -v flag: Print progress */
-  int exact;		/* -x flag: Do not round up file size */
-  int zero_fill;	/* -z flag: Add a final zero pass */
+  bool remove_file;	/* -u flag: remove file after shredding */
+  bool verbose;		/* -v flag: Print progress */
+  bool exact;		/* -x flag: Do not round up file size */
+  bool zero_fill;	/* -z flag: Add a final zero pass */
 };
 
 static struct option const long_opts[] =
@@ -455,8 +455,9 @@ isaac_seed_start (struct isaac_state *s)
 
 /* Add a buffer of seed material */
 static void
-isaac_seed_data (struct isaac_state *s, void const *buf, size_t size)
+isaac_seed_data (struct isaac_state *s, void const *buffer, size_t size)
 {
+  unsigned char const *buf = buffer;
   unsigned char *p;
   size_t avail;
   size_t i;
@@ -468,8 +469,8 @@ isaac_seed_data (struct isaac_state *s, void const *buf, size_t size)
     {
       p = (unsigned char *) s->mm + s->c;
       for (i = 0; i < avail; i++)
-	p[i] ^= ((unsigned char const *) buf)[i];
-      buf = (char const *) buf + avail;
+	p[i] ^= buf[i];
+      buf += avail;
       size -= avail;
       isaac_mix (s, s->mm);
       s->c = 0;
@@ -479,7 +480,7 @@ isaac_seed_data (struct isaac_state *s, void const *buf, size_t size)
   /* And the final partial block */
   p = (unsigned char *) s->mm + s->c;
   for (i = 0; i < size; i++)
-    p[i] ^= ((unsigned char const *) buf)[i];
+    p[i] ^= buf[i];
   s->c = size;
 }
 
@@ -537,7 +538,7 @@ isaac_seed_machdep (struct isaac_state *s)
       __asm__ __volatile__ ("rdtsc" : "=a" (t[0]), "=d" (t[1]));
 # endif
 # if __alpha__
-      unsigned long t;
+      unsigned long int t;
       __asm__ __volatile__ ("rpcc %0" : "=r" (t));
 # endif
 # if _ARCH_PPC
@@ -553,7 +554,7 @@ isaac_seed_machdep (struct isaac_state *s)
 # endif
 # if __sparc__
       /* This doesn't compile on all platforms yet.  How to fix? */
-      unsigned long t;
+      unsigned long int t;
       __asm__ __volatile__ ("rd	%%tick, %0" : "=r" (t));
 # endif
      signal (SIGILL, old_handler[0]);
@@ -636,7 +637,7 @@ isaac_seed (struct isaac_state *s)
 struct irand_state
 {
   uint32_t r[ISAAC_WORDS];
-  unsigned numleft;
+  unsigned int numleft;
   struct isaac_state *s;
 };
 
@@ -702,12 +703,12 @@ static void
 fillpattern (int type, unsigned char *r, size_t size)
 {
   size_t i;
-  unsigned bits = type & 0xfff;
+  unsigned int bits = type & 0xfff;
 
   bits |= bits << 12;
-  ((unsigned char *) r)[0] = (bits >> 4) & 255;
-  ((unsigned char *) r)[1] = (bits >> 8) & 255;
-  ((unsigned char *) r)[2] = bits & 255;
+  r[0] = (bits >> 4) & 255;
+  r[1] = (bits >> 8) & 255;
+  r[2] = bits & 255;
   for (i = 3; i < size / 2; i *= 2)
     memcpy ((char *) r + i, (char *) r, i);
   if (i < size)
@@ -824,7 +825,7 @@ direct_mode (int fd, bool enable)
  */
 static int
 dopass (int fd, char const *qname, off_t *sizep, int type,
-	struct isaac_state *s, unsigned long k, unsigned long n)
+	struct isaac_state *s, unsigned long int k, unsigned long int n)
 {
   off_t size = *sizep;
   off_t offset;			/* Current file posiiton */
@@ -1235,13 +1236,13 @@ do_wipefd (int fd, char const *qname, struct isaac_state *s,
   size_t i;
   struct stat st;
   off_t size;			/* Size to write, size to read */
-  unsigned long n;		/* Number of passes for printing purposes */
+  unsigned long int n;		/* Number of passes for printing purposes */
   int *passarray;
   bool ok = true;
 
   n = 0;		/* dopass takes n -- 0 to mean "don't print progress" */
   if (flags->verbose)
-    n = flags->n_iterations + ((flags->zero_fill) != 0);
+    n = flags->n_iterations + flags->zero_fill;
 
   if (fstat (fd, &st))
     {
@@ -1537,7 +1538,7 @@ wipefile (char *name, char const *qname,
 	{
 	  /* We accept /dev/fd/# even if the OS doesn't support it */
 	  int errnum = errno;
-	  unsigned long num;
+	  unsigned long int num;
 	  char *p;
 	  errno = 0;
 	  num = strtoul (name + 8, &p, 10);
@@ -1546,7 +1547,7 @@ wipefile (char *name, char const *qname,
 	      (('1' <= name[8] && name[8] <= '9')
 	       || (name[8] == '0' && !name[9])))
 	    {
-	      return wipefd ((int) num, qname, s, flags);
+	      return wipefd (num, qname, s, flags);
 	    }
 	  errno = errnum;
 	}
@@ -1602,7 +1603,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'f':
-	  flags.force = 1;
+	  flags.force = true;
 	  break;
 
 	case 'n':
@@ -1620,7 +1621,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'u':
-	  flags.remove_file = 1;
+	  flags.remove_file = true;
 	  break;
 
 	case 's':
@@ -1637,15 +1638,15 @@ main (int argc, char **argv)
 	  break;
 
 	case 'v':
-	  flags.verbose = 1;
+	  flags.verbose = true;
 	  break;
 
 	case 'x':
-	  flags.exact = 1;
+	  flags.exact = true;
 	  break;
 
 	case 'z':
-	  flags.zero_fill = 1;
+	  flags.zero_fill = true;
 	  break;
 
 	case_GETOPT_HELP_CHAR;
