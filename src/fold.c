@@ -126,6 +126,7 @@ fold_file (char *filename, int width)
   int offset_out = 0;	/* Index in `line_out' for next char. */
   static char *line_out = NULL;
   static int allocated_out = 0;
+  int saved_errno;
 
   if (STREQ (filename, "-"))
     {
@@ -209,12 +210,14 @@ fold_file (char *filename, int width)
       line_out[offset_out++] = c;
     }
 
+  saved_errno = errno;
+
   if (offset_out)
     fwrite (line_out, sizeof (char), (size_t) offset_out, stdout);
 
   if (ferror (istream))
     {
-      error (0, errno, "%s", filename);
+      error (0, saved_errno, "%s", filename);
       if (!STREQ (filename, "-"))
 	fclose (istream);
       return 1;
