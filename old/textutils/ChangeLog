@@ -1,6 +1,18 @@
+	* split.c: New option: --verbose.
+	(main): Recognize it.
+	(usage): Document it.
+	From Marty Leisner <leisner@sdsp.mc.xerox.com>.
+
 Sun Nov  5 06:59:27 1995  Jim Meyering  (meyering@comco.com)
 
-	* csplit.c Move prototypes after struct declarations.
+	* src/Makefile.in: Reflect protoization of csplit.c, fmt.c, pr.c,
+	and unexpand.c.
+
+	* pr.c: Protoize.
+	(store_columns): Remove spurious 2nd argument in call to read_line.
+	[__P]: Define.  Use it in prototyped forward decls.
+
+	* csplit.c: Move prototypes after struct declarations.
 	Remove prototypes for xmalloc, xrealloc.
 	Protect prototypes with __P.
 	(new_control_record): Cast arg 1 to realloc.
