@@ -1,6 +1,35 @@
-2002-01-28  Jim Meyering  <meyering@lucent.com>
+2002-02-02  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.6.
+
+	* src/shred.c: (VERBOSE_UPDATE): Update every 5 seconds, not every 10.
+	(wipename): Quote file names only when necessary.
+	(main): Copy quoted string into malloc'd storage so it doesn't
+	get clobbered when using -u and --verbose.
+
+	Minor clean-up.
+	* src/shred.c:
+	Use `NULL' rather than `(time_t *) 0'.
+	(dopass): Use STREQ in place of strcmp.
+	Add parentheses around use of nested ternary operator.
+
+2002-01-15  Paul Eggert  <eggert@twinsun.com>
+
+	* src/shred.c (VERBOSE_UPDATE): Now counts seconds, not bytes.
+
+	(dopass): If verbose, output a line every VERBOSE_UPDATE seconds,
+	and suppress duplicate output lines.  Output a percentage as well
+	as a count of bytes.
+
+	Also, fix comment/code typo regarding how many bytes have been
+	written; this typo was harmless before, but is no longer harmless with
+	the above change in effect.
+
+2002-02-02  Jim Meyering  <meyering@lucent.com>
+
+	* src/remove.c (rm): Add a comment.
+
+2002-01-28  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.am (AUTOMAKE_OPTIONS): Require automake-1.5d.
 	* configure.ac (AM_INIT_AUTOMAKE): Use zero-arg form of this macro.
@@ -53,18 +82,6 @@
 	* configure.ac: Remove code that set LIBOBJS in support of ansi2knr.
 	The latest version of autoconf objected to it, and besides, I don't
 	care too much about K&R support these days.
-
-2002-01-15  Paul Eggert  <eggert@twinsun.com>
-
-	* src/shred.c (VERBOSE_UPDATE): Now counts seconds, not bytes.
-
-	(dopass): If verbose, output a line every VERBOSE_UPDATE seconds,
-	and suppress duplicate output lines.  Output a percentage as well
-	as a count of bytes.
-
-	Also, fix comment/code typo regarding how many bytes have been
-	written; this typo was harmless before, but is no longer harmless with
-	the above change in effect.
 
 2002-01-14  Paul Eggert  <eggert@twinsun.com>
 
