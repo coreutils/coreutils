@@ -1436,7 +1436,7 @@ finish:
 
   if (disorder_line_number)
     {
-      char buf[LONGEST_HUMAN_READABLE + 1];
+      char hr_buf[LONGEST_HUMAN_READABLE + 1];
       fprintf (stderr, _("%s: %s:%s: disorder: "), program_name, file_name,
 	       human_readable (disorder_line_number, buf, 1, 1));
       write_bytes (disorder_line->text, disorder_line->length, stderr,
