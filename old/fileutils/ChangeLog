@@ -1,3 +1,21 @@
+1998-12-18  Jim Meyering  <meyering@ascend.com>
+
+	* Version 4.1-b1.
+
+	* src/copy.c (copy_internal): Remove errnoeous `%s: ' prefix
+	from format string.  From Michiel Bacchiani.
+
+	* src/chgrp.c (MAXGID): Define.
+	Use gid_t (not int) as the type for `group' variables.
+	(parse_group): Use MAXGID, not INT_MAX.
+
+	* src/install.c (UID_T_MAX, GID_T_MAX): Remove definitions.
+	* src/sys2.h (UID_T_MAX, GID_T_MAX): Define them here instead.
+
+1998-12-13  Jim Meyering  <meyering@ascend.com>
+
+	* lib/Makefile.am (EXTRA_DIST): Add xstat.in.
+
 1998-12-12  Jim Meyering  <meyering@ascend.com>
 
 	1998-10-15  Akim Demaille  <demaille@inf.enst.fr>
@@ -14,8 +32,6 @@
 	(struct color_ext_type): Renamed from struct col_ext_type.
 
 1998-12-11  Jim Meyering  <meyering@ascend.com>
-
-	* Version 4.1-b1.
 
 	* lib/Makefile.am (lstat.c): Add rule to generate this from xstat.in.
 	(stat.c): Likewise.
