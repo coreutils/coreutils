@@ -48,6 +48,8 @@ libfetish_a_SOURCES = \
   canon-host.c \
   c-stack.c c-stack.h \
   closeout.c closeout.h \
+  cycle-check.c cycle-check.h \
+  dev-ino.h \
   diacrit.c diacrit.h \
   dirname.c dirname.h \
   dirfd.h \
