@@ -1,6 +1,16 @@
 #serial 1
 
-dnl FIXME: describe
+dnl SunOS's readdir is broken in such a way that rm.c has to add extra code
+dnl to test whether a NULL return value really means there are no more files
+dnl in the directory.
+dnl
+dnl Detect the problem by creating a directory containing 300 files (254 not
+dnl counting . and .. is the minimum) and see if a loop doing `readdir; unlink'
+dnl removes all of them.
+dnl
+dnl Define HAVE_WORKING_READDIR if readdir does *not* have this problem.
+
+dnl Written by Jim Meyering.
 
 AC_DEFUN(jm_FUNC_READDIR,
 [dnl
