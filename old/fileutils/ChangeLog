@@ -4,6 +4,15 @@ Wed May 15 22:54:31 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	(change_file_mode): Likewise.
 	(change_dir_mode): Likewise.
 
+	* ln.c (do_link): Declare pointer parameters to be const.
+
+	* df.c (selected_fstype): Move definition to precede use.
+	Remove prototype.  Declare parameter FSTYPE to be const.
+	(excluded_fstype): Likewise.
+	(main): Fail with a diagnostic if both --human-readable and
+	--portability are used.
+	Likewise if --megabytes and --portability are used.
+
 	* modechange.c (mode_compile): Declare parameter MODE_STRING const.
 	Remove register attribute.
 	(mode_adjust): Likewise for CHANGES.
