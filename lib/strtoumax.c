@@ -47,7 +47,7 @@ unsigned long strtoul PARAMS ((char const *, char **, int));
 #ifndef HAVE_DECL_STRTOULL
 "this configure-time declaration test was not run"
 #endif
-#if !HAVE_DECL_STRTOULL
+#if !HAVE_DECL_STRTOULL && HAVE_UNSIGNED_LONG_LONG
 unsigned long long strtoull PARAMS ((char const *, char **, int));
 #endif
 
