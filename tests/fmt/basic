@@ -24,9 +24,9 @@ use strict;
 
 my @Tests =
     (
-     ['8-bit-pfx', qw (-p 'ç'),
-      {IN=> "ça\nçb\n"},
-      {OUT=>"ça b\n"}],
+     ['8-bit-pfx', qw (-p 'Ã§'),
+      {IN=> "Ã§a\nÃ§b\n"},
+      {OUT=>"Ã§a b\n"}],
      ['wide-1', '-w 32768',
       {ERR => "fmt: invalid width: `32768'\n"}, {EXIT => 1}],
      ['wide-2', '-w 2147483647',

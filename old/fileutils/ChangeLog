@@ -967,7 +967,7 @@
 	Reported by Michael Gaughen <mgaughen@polyserve.com>
 
 	* src/shred.c (usage): Also mention Ext3.
-	Suggestion from Göran Uddeborg.
+	Suggestion from GÃ¶ran Uddeborg.
 
 2002-01-06  Bruno Haible  <bruno@clisp.org>
 
@@ -1238,7 +1238,7 @@
 2001-11-06  Jim Meyering  <meyering@lucent.com>
 
 	* src/dircolors.hin: Remove duplicate entry for .png.
-	Reported by Frédéric L. W. Meunier.
+	Reported by FrÃ©dÃ©ric L. W. Meunier.
 
 2001-11-03  Jim Meyering  <meyering@lucent.com>
 
@@ -1959,7 +1959,7 @@
 	* src/mkfifo.c (main): Remove quotes around %s.
 	The argument is already quoted via the quote function.
 	* src/mknod.c (main): Likewise.
-	Reported by Göran Uddeborg.
+	Reported by GÃ¶ran Uddeborg.
 
 2001-05-21  Jim Meyering  <meyering@lucent.com>
 
@@ -2260,7 +2260,7 @@
 	that exists is a directory, don't treat it as if it were the only
 	argument.  Before, `mkdir d; ls no-dir d 2>/dev/null' would act like
 	`ls d' and produce no output.  Now, it prints `d:'.
-	Report and patch from Stéphane Chazelas.
+	Report and patch from StÃ©phane Chazelas.
 	* tests/ls-2/tests: New tests, for the above fix.
 
 2001-04-08  Jim Meyering  <meyering@lucent.com>
@@ -4085,7 +4085,7 @@
 	* src/mkdir.c: Allow -v as synonym for --verbose, to be consistent
 	with other fileutils.
 	* src/rmdir.c: Likewise.
-	Suggestion from François Pinard.
+	Suggestion from FranÃ§ois Pinard.
 
 2000-06-02  Jim Meyering  <meyering@lucent.com>
 
@@ -4615,7 +4615,7 @@
 	* src/Makefile.am: s/libfu/libfetish/
 
 	* lib/hash.c (hash_initialize): Fix typo in comment.
-	From François Pinard.
+	From FranÃ§ois Pinard.
 
 2000-01-10  Jim Meyering  <meyering@lucent.com>
 
@@ -4722,7 +4722,7 @@
 
 	* src/ln.c (usage): Correct typos.
 	List new --target-directory=... usage.
-	Reported by Göran Uddeborg
+	Reported by GÃ¶ran Uddeborg
 
 	* src/mv.c (usage): List new --target-directory=... usage.
 
@@ -5435,7 +5435,7 @@
 
 	* lib/fsusage.c (get_fs_usage) [STATFS_TRUNCATES_BLOCK_COUNTS]:
 	Work around SunOS botch also when block size is different from 1k.
-	From Jürgen Fluk.
+	From JÃ¼rgen Fluk.
 
 1999-07-10  Jim Meyering  <meyering@ascend.com>
 
@@ -6314,7 +6314,7 @@
 	(hash_rehash): Rewrite, updating for tuning.
 	(hash_insert): Honor tuning semantics.
 	(hash_delete): Likewise.
-	From François Pinard.
+	From FranÃ§ois Pinard.
 
 	* lib/hash.h (struct hash_tuning): Define.
 	(struct hash_table) [tuning]: Add member.
@@ -6325,12 +6325,12 @@
 
 	* lib/hash.c (hash_insert): Don't increment n_entries unconditionally --
 	otherwise, we'd do so even when the insertion failed.
-	From François Pinard.
+	From FranÃ§ois Pinard.
 
 1999-03-07  Jim Meyering  <meyering@ascend.com>
 
 	* lib/xmalloc.c (xalloc_fail): Use "%s" format so the message doesn't
-	have to be scanned for % signs.  Suggestion from François Pinard.
+	have to be scanned for % signs.  Suggestion from FranÃ§ois Pinard.
 
 	* Makefile.maint: Add two more URLs and the loops to use them.
 
@@ -6384,7 +6384,7 @@
 
 	* src/dircolors.c (dc_parse_stream): Don't try to dereference
 	NULL if there's an error in our built-in list.
-	Suggestion from François Pinard.
+	Suggestion from FranÃ§ois Pinard.
 
 1999-02-13  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
@@ -7250,7 +7250,7 @@
 
 	* tests/mv/into-self: Update to reflect changed behavior of mv.
 	* src/mv.c (do_move): Fail upon attempt to move a directory into itself.
-	With prodding from François Pinard :-)
+	With prodding from FranÃ§ois Pinard :-)
 
 	* tests/ls-2/Fetish.pm: New file
 	* tests/ls-2/run-test: New file
@@ -7616,7 +7616,7 @@
 1998-06-28  Jim Meyering  <meyering@ascend.com>
 
 	* src/ls.c (usage): Make --kilobytes description consistent with
-	that in du and df.  From Göran Uddeborg.
+	that in du and df.  From GÃ¶ran Uddeborg.
 
 	* lib/mountlist.c (fsp_to_string): Clean out some crufty #ifdefs
 	now that we're using the jm_FSTYPENAME autoconf macro.
@@ -7866,7 +7866,7 @@
 
 	* lib/hash.c: Lots of minor spec and name changes, and new comments.
 	(hash_rehash): Rewrite to be easier on the allocator.
-	From François Pinard.
+	From FranÃ§ois Pinard.
 	* lib/hash.h: More comments.
 	* src/remove.c: Change names/usage of hash-related functions to work
 	with the above.
@@ -8380,7 +8380,3 @@
 
 	* src/rm.c (remove_cwd_entries): Initialize the entry-name obstack
 	only once and never free it.
-
-Local Variables:
-version-control: never
-End:

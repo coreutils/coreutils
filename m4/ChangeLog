@@ -2389,7 +2389,7 @@
 2000-02-09  Jim Meyering  <jim@meyering.net>
 
 	* lib-check.m4 (jm_LIB_CHECK): Fix typo: check for sp_pwdp in
-	struct spwd, rather than in struct passwd.  Reported by Gaël Quéri.
+	struct spwd, rather than in struct passwd.  Reported by GaÃ«l QuÃ©ri.
 
 2000-02-08  Akim Demaille  <akim@epita.fr>
 
@@ -2447,7 +2447,7 @@
 2000-01-28  Jim Meyering  <jim@meyering.net>
 
 	* perl.m4: Change format of warning message to look more like that
-	from the missing script.  Suggestion from François Pinard.
+	from the missing script.  Suggestion from FranÃ§ois Pinard.
 
 2000-01-25  Jim Meyering  <jim@meyering.net>
 

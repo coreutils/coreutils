@@ -375,7 +375,7 @@
 	* Makefile.am (AUTOMAKE_OPTIONS): Require automake-1.5d.
 
 	* configure.ac (AM_INIT_AUTOMAKE): Use zero-arg form of this macro.
-	(ALL_LINGUAS): Add the bokmål dialect of Norwegian (nb).
+	(ALL_LINGUAS): Add the bokmÃ¥l dialect of Norwegian (nb).
 
 2002-01-27  Jim Meyering  <meyering@lucent.com>
 
@@ -1368,7 +1368,7 @@
 	a byte with the high bit set.
 	* src/fmt.c (prefix): Declare to be of type unsigned char, not `char'.
 	(get_prefix): Likewise for local, `p'.
-	Reported by François Pinard.
+	Reported by FranÃ§ois Pinard.
 
 	Add a test for the above-fixed problem.
 	* tests/fmt: New directory/files.
@@ -2295,7 +2295,7 @@
 	(IS_TAILABLE_FILE_TYPE): Define to produce similar result.
 	(recheck): Use it here.
 	(tail_file): Use it here.
-	Reported by François Pinard.
+	Reported by FranÃ§ois Pinard.
 
 	Once we encounter a file that is not of IS_TAILABLE_FILE_TYPE,
 	marke it as such and ignore it forever after.
@@ -2495,7 +2495,7 @@
 	Don't cast away `const'ness of parameters.
 	* lib/strpbrk.c (strpbrk): Ansideclify.
 	Use `#if' instead of `#ifdef' for `HAVE_CONFIG_H'.
-	Suggestions from François Pinard.
+	Suggestions from FranÃ§ois Pinard.
 
 2000-01-06  Jim Meyering  <meyering@ascend.com>
 
@@ -3786,7 +3786,7 @@
 	* src/ptx.c: Add braces to suppress warning about ambiguous `else'.
 	* lib/bumpalloc.h: Likewise.
 
-1998-08-13  François Pinard  <pinard@iro.umontreal.ca>
+1998-08-13  FranÃ§ois Pinard  <pinard@iro.umontreal.ca>
 
 	* src/ptx.c: New file.
 	* src/Makefile.am (bin_PROGRAMS): Add ptx.
@@ -4445,9 +4445,9 @@
 
 1997-10-16  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* src/sort.c (look_for_fraction): Patch from Ørn Hansen.
+	* src/sort.c (look_for_fraction): Patch from Ã˜rn Hansen.
 	(getmonth): Compare the two month names only to the length of the
-	string in the month table.  Patch from Ørn Hansen.
+	string in the month table.  Patch from Ã˜rn Hansen.
 	(NLS_STRNCMP): New macro.
 	(strncoll_s2_readonly): New function.
 	(inittables): Don't use temporary `comp' to hide type of
@@ -4460,7 +4460,7 @@
 1997-10-14  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/sort.c (_NL_ITEM) [!defined]: Define.
-	From from Ørn E. Hansen.
+	From from Ã˜rn E. Hansen.
 
 	* src/sort.c: Use STREQ in place of most uses of strcmp.
 	(NLS_STRCMP): Define.
@@ -4492,14 +4492,14 @@
 
 	* src/sort.c (look_for_fraction): Eliminate arbitrary limit on
 	number of `groups'.  Declare as void, not int.
-	Patch from Ørn E. Hansen.
+	Patch from Ã˜rn E. Hansen.
 	(main): When determining whether we're in the C or POSIX locale,
 	don't rely on the form of the string returned by setlocale.
 	Suggestion from Ulrich Drepper.
 
 1997-10-12  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* src/sort.c: Apply big patch from Ørn E. Hansen.
+	* src/sort.c: Apply big patch from Ã˜rn E. Hansen.
 	Clean up, indent.
 	(NLS_MEMCMP): Define.
 	(keycompare): Use it instead of open-coded #ifdefs.
@@ -5173,7 +5173,7 @@ Wed Oct  9 07:26:40 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 Tue Oct  8 21:32:17 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/error.c: Include error.h to align with libit --
-	under protest, François :-).
+	under protest, FranÃ§ois :-).
 
 Sun Oct  6 08:02:28 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
@@ -5411,7 +5411,7 @@ Wed Jul 17 00:30:28 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 Tue Jul 16 00:09:37 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* aclocal.m4 (fp_C_PROTOTYPES): Improved version from
-	François Pinard.
+	FranÃ§ois Pinard.
 	Update all other macros to reference $fp_cv_prog_cc_stdc, rather
 	than $ac_cv_prog_cc_stdc.
 
@@ -5692,7 +5692,7 @@ Sun Apr 28 17:10:03 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	trailing spaces if the prefix had any.  Before, fmt would
 	improperly output NUL bytes.  The command
 	perl -e 'print "| S";' |fmt -p' |  '|tr '\0' @
-	output `|@S'.  Reported by François Pinard.
+	output `|@S'.  Reported by FranÃ§ois Pinard.
 
 	* sort.c (main): Give a better diagnostic for `sort -0'.
 	Reported by Karl Berry.
@@ -5886,7 +5886,7 @@ Sat Mar  9 13:30:12 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	Link an nls file.
 	(AC_OUTPUT): Reflect addition of two new directories, intl and po.
 	Create po/Makefile.
-	From François Pinard.
+	From FranÃ§ois Pinard.
 
 	* tr.c (star_digits_closebracket): Declare formal param, IDX,
 	and local I to be of type size_t (rather than int) to avoid
@@ -5926,7 +5926,7 @@ Fri Feb 16 21:44:14 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* join.c (main): Mark two strings for translation.
 	* md5sum.c (md5_check): Mark a string for translation.
-	From François Pinard.
+	From FranÃ§ois Pinard.
 
 Mon Feb 12 21:12:28 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
@@ -5953,7 +5953,7 @@ Wed Jan 31 23:26:13 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 Fri Jan  5 18:30:28  1996 Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* aclocal.m4: For SVR4 systems, use -Xc -D_POSIX_C_SOURCE in CFLAGS,
-	not just -Xc.  From François Pinard.
+	not just -Xc.  From FranÃ§ois Pinard.
 
 	* doc/Makefile.am (DIST_OTHER): Don't set to mdate-sh.  mdate-sh is
 	distributed automatically.  From Tom Tromey.
@@ -5965,7 +5965,7 @@ Thu Jan  4 20:32:52 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	its definition.  From Kaveh Ghazi.
 
 	* src/Makefile.am (DIST_OTHER): Include md5-test.rfc so make check
-	works again.  Reported by François Pinard and Kaveh Ghazi.
+	works again.  Reported by FranÃ§ois Pinard and Kaveh Ghazi.
 
 	* rx.c [SYNTAX]: Rename from SYNTAX_TABLE.
 	[SYNTAX_TABLE]: Remove extern dcl of re_syntax_table.
@@ -6033,7 +6033,7 @@ Thu Dec  7 19:55:03 1995  Jim Meyering  (meyering@comco.com)
 	* csplit.c [!WITH_REGEX]: Include rx.h.
 	* nl.c [!WITH_REGEX]: Likewise.
 	* tac.c [!WITH_REGEX]: Likewise.
-	From Ulrich Drepper and François Pinard.
+	From Ulrich Drepper and FranÃ§ois Pinard.
 
 Tue Dec  5 17:49:53 1995  Jim Meyering  (meyering@comco.com)
 
@@ -8736,8 +8736,3 @@ Sat Dec 16 15:15:50 1989  David J. MacKenzie  (djm at hobbes.ai.mit.edu)
 	(error): Print to stderr, not stdout.
 	(xmalloc, xrealloc): Return char * instead of int.
 	Returning 0 is ok if 0 bytes requested (ANSI C).
-
-
-Local Variables:
-version-control: never
-End:

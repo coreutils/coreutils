@@ -24,9 +24,9 @@ fi
 
 fail=0
 
-$prog '\xf73\n' > out || fail=1
+$prog '\x7e3\n' > out || fail=1
 cat <<\EOF > exp
-÷3
+~3
 EOF
 
 cmp out exp || fail=1

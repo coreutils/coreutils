@@ -1355,7 +1355,7 @@
 2000-02-09  Jim Meyering  <meyering@lucent.com>
 
 	* src/su.c (correct_password): Correct HAVE_STRUCT_* name in #if guard
-	to go along with corrected autoconf test:  Reported by Gaël Quéri.
+	to go along with corrected autoconf test:  Reported by GaÃ«l QuÃ©ri.
 
 2000-02-05  Jim Meyering  <meyering@lucent.com>
 
@@ -3691,10 +3691,10 @@ Mon Oct 28 17:40:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/Makefile.am (install-exec-local): Redirect stderr of chown to
 	/dev/null and suggest running `make install-root' upon failure to
-	install su.  Suggestions from François Pinard.
+	install su.  Suggestions from FranÃ§ois Pinard.
 
 	* configure.in: Don't output confusing diagnostic: `checking for
-	shadow password routines'.  Suggestion from François Pinard.
+	shadow password routines'.  Suggestion from FranÃ§ois Pinard.
 
 Thu Oct 24 13:50:46 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
@@ -3731,7 +3731,7 @@ Sun Oct 20 09:03:51 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	* lib/Makefile.am (INCLUDES): Add -I../intl.  Reported by Eric Backus.
 
 	* src/Makefile.am (install-root): New rule.
-	Suggestion from François Pinard.
+	Suggestion from FranÃ§ois Pinard.
 
 	* src/who-users.c (print_entry): Don't take address of UT_TIME_MEMBER
 	directly.  From Ulrich Drepper.
@@ -3826,7 +3826,7 @@ Mon Oct  7 18:46:28 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	* lib/Makefile.am (EXTRA_DIST): Remove alloca.c, error.c, and mktime.
 	(su_SOURCES): Remove memcmp.c.
 	Automake automatically includes at least these, now.
-	From François Pinard.
+	From FranÃ§ois Pinard.
 
 	* lib/Makefile.am (su_SOURCES): Remove getline.c.
 
@@ -4139,7 +4139,7 @@ Mon Apr 29 22:23:40 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	* date.c (usage): Change TAB in message to spaces.  Doing that seems
 	to have worked around a problem with something in gettext that was
 	producing a truncated usage message for date's usage.
-	From François Pinard.
+	From FranÃ§ois Pinard.
 
 Sun Apr 28 17:10:03 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
@@ -4198,7 +4198,7 @@ Tue Apr 16 20:24:44 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	$(srcdir)/ prefix.
 	(users.c): Likewise.
 	(uptime.c): Likewise.
-	From François Pinard.
+	From FranÃ§ois Pinard.
 
 	* configure.in: Always invoke AC_GETLOADAVG, not just if we're
 	building uptime.
@@ -4295,7 +4295,7 @@ Sun Mar 31 16:26:06 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* configure.in: Simplify checking for math library.
 	This also eliminates some confusing output from configure.
-	Suggested by François Pinard.
+	Suggested by FranÃ§ois Pinard.
 
 Fri Mar 29 22:13:10 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
@@ -4371,7 +4371,7 @@ Sat Mar 16 10:07:49 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 Fri Mar 15 23:42:29 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* basename.c: Remove __P-protected prototype for basename.
-	Reported by François Pinard.
+	Reported by FranÃ§ois Pinard.
 	(remove_suffix): Move to precede use.  Remove prototype.
 	Declare formal parameter SUFFIX to be const.
 
@@ -4406,7 +4406,7 @@ Tue Mar 12 17:52:05 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	Link an nls file.
 	(AC_OUTPUT): Reflect addition of two new directories, intl and po.
 	Create po/Makefile.
-	Mostly from François Pinard.
+	Mostly from FranÃ§ois Pinard.
 
 Wed Mar  6 21:40:34 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
@@ -4423,7 +4423,7 @@ Tue Mar  5 22:49:33 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 Mon Mar  4 23:46:43 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* seq.c (main): Exit after processing --version.
-	Reported by François Pinard.
+	Reported by FranÃ§ois Pinard.
 
 Fri Mar  1 23:46:32 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 

@@ -15,7 +15,7 @@ my @tv = (
 ['6',  '',    "b\na\na\n",       "b\na\n",          0],
 ['7',  '',    "a\nb\nc\n",       "a\nb\nc\n",       0],
 # Make sure that eight bit characters work
-['8',  '',    "ö\nv\n",          "ö\nv\n",          0],
+['8',  '',    "Ã¶\nv\n",          "Ã¶\nv\n",          0],
 # Test output of -u option; only unique lines
 ['9',  '-u',  "a\na\n",          "",                0],
 ['10', '-u',  "a\nb\n",          "a\nb\n",          0],

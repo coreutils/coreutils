@@ -3934,7 +3934,7 @@
 
 	* src/factor.c (print_factors): Give a separate diagnostic
 	for numbers that are too large, but otherwise valid.
-	Reported by Dániel Varga.
+	Reported by DÃ¡niel Varga.
 
 2003-09-10  Jim Meyering  <jim@meyering.net>
 
@@ -5912,10 +5912,10 @@
 
 	* README: Refer new feature discussion to bug-coreutils@gnu.org,
 	rather than bug-gnu-utils, now that the former is better known.
-	Suggestion from Göran Uddeborg.
+	Suggestion from GÃ¶ran Uddeborg.
 
 	* src/stat.c (usage): Capitalize consistently.
-	Reported by Göran Uddeborg.
+	Reported by GÃ¶ran Uddeborg.
 
 	* Makefile.maint (rel-files): Include $(signatures), so that
 	those files are also copied into $(release_archive_dir).
@@ -6734,7 +6734,7 @@
 	the empty string.
 	(count_entry): When appending a file name component,
 	account for the fact that the current path may end in `/'.
-	François Pinard reported that `du symlink-to-dir/' was not
+	FranÃ§ois Pinard reported that `du symlink-to-dir/' was not
 	equivalent to `du symlink-to-dir/.'.  Now it is.
 	* tests/du/trailing-slash: New file/test, for the above fix.
 	* tests/du/Makefile.am (TESTS): Add trailing-slash.

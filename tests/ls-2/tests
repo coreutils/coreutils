@@ -92,7 +92,7 @@ my @Tests =
 				 {OUT => "\e[0m\e[01;32md\e[0m\n\e[m"},
 				  $exe_in_subdir, $remove_j],
 
-     # From Stéphane Chazelas.
+     # From StÃ©phane Chazelas.
      ['no-a-isdir-b', 'no-dir d',
 	 {OUT => "d:\n"},
 	 {ERR => "ls: no-dir: No such file or directory\n"},

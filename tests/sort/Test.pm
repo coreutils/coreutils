@@ -147,8 +147,8 @@ my @tv = (
 
 # From Erick Branderhorst -- fixed around 1.19e
 ["16a", '-f',
- "éminence\nüberhaupt\n's-Gravenhage\naëroclub\nAag\naagtappels\n",
- "'s-Gravenhage\nAag\naagtappels\naëroclub\néminence\nüberhaupt\n",
+ "Ã©minence\nÃ¼berhaupt\n's-Gravenhage\naÃ«roclub\nAag\naagtappels\n",
+ "'s-Gravenhage\nAag\naagtappels\naÃ«roclub\nÃ©minence\nÃ¼berhaupt\n",
  0],
 
 # This provokes a one-byte memory overrun of a malloc'd block for versions

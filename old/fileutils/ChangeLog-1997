@@ -773,7 +773,7 @@
 	* lib/idcache.c (getuidbyname): Declare parameter to be const.
 	(getgidbyname): Declare parameter to be const.
 
-1997-07-06 Jean-François Bignolles <bignolle@ecoledoc.ibp.fr>
+1997-07-06 Jean-FranÃ§ois Bignolles <bignolle@ecoledoc.ibp.fr>
 
 	* lib/modechange.h (mode_create_from_ref): Add prototype.
 	(MODE_MASK_ALL): New define.
@@ -797,7 +797,7 @@
 	(getgroup): Likewise.
 	(getuidbyname) [NOT_USED]: #ifdef-out unused function.
 	(getgidbyname) [NOT_USED]: #ifdef-out unused function.
-	Suggested by François Pinard.
+	Suggested by FranÃ§ois Pinard.
 	* src/ls.c (print_long_format): Reflect changes in semantics of
 	getuser, getgroup.
 
@@ -1472,7 +1472,7 @@ Mon Nov  4 23:18:03 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	* configure.in (test for group_member): Handle it separately
 	so I can keep the hyphen (not the underscore) in the filename.
 
-	* lib/rename.c: New version from François Pinard.
+	* lib/rename.c: New version from FranÃ§ois Pinard.
 
 Sat Nov  2 07:05:36 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
@@ -1548,7 +1548,7 @@ Thu Oct 10 23:47:34 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 Wed Oct  9 06:51:47 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/ls.c (usage): Improve brief descriptions of --sort and --time.
-	From François Pinard.
+	From FranÃ§ois Pinard.
 
 	* lib/rpmatch.c [!WITH_REGEX]: Include rx.h.
 	From Andreas Schwab.
@@ -1606,7 +1606,7 @@ Tue Oct  1 12:56:23 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/Makefile.am (fu_SOURCES): Remove getline.c.
 	(EXTRA_DIST): Add getline.c.
-	Reported by François Pinard.
+	Reported by FranÃ§ois Pinard.
 
 Mon Sep 30 20:08:45 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
@@ -1932,7 +1932,7 @@ Tue Jul  9 20:19:44 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/dircolors.c (dc_parse_stream): Don't give `unrecognized keyword'
 	message unless we've processed a matching TERM directive.  Reported
-	by Karl Berry and François Pinard.
+	by Karl Berry and FranÃ§ois Pinard.
 
 	* src/install.c (UID_T_MAX): Use `(unsigned long)1' rather than
 	`(uid_t)1' to avoid problems on systems where uid_t is signed.
@@ -2184,7 +2184,7 @@ Tue May 28 18:39:49 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* dd.c (print_stats): Don't mark "%u %s" as a translatable string.
 	* mv.c (main): Don't mark "%s" as a translatable string.
-	From Göran Uddeborg.
+	From GÃ¶ran Uddeborg.
 
 Thu May 23 07:50:38 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
@@ -2261,7 +2261,7 @@ Wed May 15 22:54:31 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 Tue May 14 23:36:54 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* dd.c (print_stats): Restructure pluralization of error message
-	so it's easier to translate.  Reported by Göran Uddeborg
+	so it's easier to translate.  Reported by GÃ¶ran Uddeborg
 	<gvran@uddeborg.pp.se>.
 	* mv.c (main): Likewise.
 
@@ -2300,7 +2300,7 @@ Wed May  1 00:20:00 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 Mon Apr 29 22:07:41 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
-	* POTFILES.in: Add chgrp.c.  From François Pinard.
+	* POTFILES.in: Add chgrp.c.  From FranÃ§ois Pinard.
 	Add dircolors.c.
 	* dircolors.c: New file.  Written by H. Peter Anvin.
 
@@ -2368,7 +2368,7 @@ Tue Apr 23 22:05:35 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	* chown.c [HAVE_LCHOWN]: Likewise.
 	* cp.c [HAVE_LCHOWN]: Likewise.
 	* mv.c [HAVE_LCHOWN]: Likewise.
-	Suggested by François Pinard.
+	Suggested by FranÃ§ois Pinard.
 
 	* backupfile.c (find_backup_file_name, max_backup_version,
 	make_version_name, version_number, concat): Const-ify decls of
@@ -2450,7 +2450,7 @@ Mon Apr  1 23:50:29 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	destination directory D includes a trailing slash -- as would
 	happen when cp is used like this:
 	mkdir D; touch file D/file; cp -i file D/
-	Reported by François Pinard.
+	Reported by FranÃ§ois Pinard.
 
 Sun Mar 31 11:18:09 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
@@ -2502,7 +2502,7 @@ Sun Mar 10 22:36:11 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	Link an nls file.
 	(AC_OUTPUT): Reflect addition of two new directories, intl and po.
 	Create po/Makefile.
-	From François Pinard.
+	From FranÃ§ois Pinard.
 
 Thu Mar  7 20:26:07 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
@@ -6154,7 +6154,3 @@ Thu Feb  8 21:25:40 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 Mon Feb  5 17:29:20 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 
 	* Version 1.0 released.
-
-Local Variables:
-version-control: never
-End:
