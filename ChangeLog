@@ -1,6 +1,14 @@
-2004-05-16  Paul Eggert  <eggert@cs.ucla.edu>
+2004-05-17  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* src/shred.c (names): Bring back lower-case letters, "_", and
+	".".  But continue to omit +, =, %, @, #, as they're either
+	shell metacharacters (for some shells) or are not in some
+	character sets, or (in the case of '%') must be a
+	metacharacter somewhere.
+
+2004-05-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/cut.c (cut_fields): Adjust to new signature of getndelim2.
 
