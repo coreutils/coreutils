@@ -1,7 +1,8 @@
 2000-01-15  Jim Meyering  <meyering@lucent.com>
 
-	* configure.in (AC_REPLACE_FUNCS): Remove gethostname and getusershell.
-	Now that's done in m4/.
+	* configure.in (AC_REPLACE_FUNCS): Remove gethostname, getusershell,
+	memcpy, and memset.  Now that's done in m4/.
+	Remove these, too: stime strcspn stpcpy strstr strtol strtoul.
 
 2000-01-12  Jim Meyering  <meyering@lucent.com>
 

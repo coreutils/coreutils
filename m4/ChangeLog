@@ -1,6 +1,8 @@
 2000-01-15  Jim Meyering  <meyering@lucent.com>
 
 	* jm-macros.m4 (AC_REPLACE_FUNCS): Add gethostname and getusershell.
+	(AC_REPLACE_FUNCS): Add memcpy and memset.
+	Add these, too: stime strcspn stpcpy strstr strtol strtoul.
 
 2000-01-12  Jim Meyering  <meyering@lucent.com>
 
