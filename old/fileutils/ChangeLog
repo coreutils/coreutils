@@ -1,5 +1,7 @@
 2000-09-03  Jim Meyering  <meyering@lucent.com>
 
+	* src/install.c (cp_option_init): Initialize new members.
+
 	* src/cp.c (enum): Add UNLINK_DEST_BEFORE_OPENING.
 	[long_options]: Add an entry for --remove-destination.
 	(usage): Describe --remove-destination.
