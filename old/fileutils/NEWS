@@ -1,3 +1,11 @@
+Major changes in release 3.5:
+* long-named options must be introduced with `--'; `+' is no longer
+  accepted since it is incompatible with the POSIX.2 standard
+* chmod accepts long-named options
+* dd conv=unblock doesn't hang
+* new df option --exclude fstype
+* new ls option --long-time
+
 Major changes in release 3.4:
 * cp -p and mv preserve setuid and setgid bits
 * chown works on systems where sizeof(uid_t) != sizeof(int) 
