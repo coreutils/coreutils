@@ -1,3 +1,8 @@
+2000-03-07  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/savedir.c (savedir): Work even if directory size is
+	negative; this can happen with some screwy NFS configurations.
+
 2000-03-05  Jim Meyering  <meyering@lucent.com>
 
 	* localcharset.c ("path-concat.h"): Include.
