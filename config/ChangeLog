@@ -14,6 +14,11 @@
 	Add a `Local variables' eval block to help emacs users update
 	the time-stamp variable added above.
 
+2002-12-20  Jim Meyering  <jim@meyering.net>
+
+	* install-sh: Ensure that this script is executable.
+	Reported by Vin Shelton.
+
 2002-11-09  Jim Meyering  <jim@meyering.net>
 
 	Make it work even when names contain spaces or shell metachars.
