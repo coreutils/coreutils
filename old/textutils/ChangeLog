@@ -1,3 +1,11 @@
+Tue Dec 10 00:15:50 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (VERSION): Bump to 1.19r.
+	(AC_ISC_POSIX): Remove kludgy macro.
+	Use this test instead:
+	(LIBS): Add -lcposix if it contains strerror.
+	Patch from Karl Heuer.
+
 Sun Dec  8 07:22:38 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	=========== Update for automake-1.1k.
