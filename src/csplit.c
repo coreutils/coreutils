@@ -134,9 +134,6 @@ static const unsigned int bytes_to_octal_digits[] =
 /* Input file descriptor. */
 static int input_desc = 0;
 
-/* List of available buffers. */
-static struct buffer_record *free_list = NULL;
-
 /* Start of buffer list. */
 static struct buffer_record *head = NULL;
 
@@ -302,17 +299,6 @@ clear_line_control (struct line *p)
   p->retrieve_index = 0;
 }
 
-/* Initialize all line records in B. */
-
-static void
-clear_all_line_control (struct buffer_record *b)
-{
-  struct line *l;
-
-  for (l = b->line_start; l; l = l->next)
-    clear_line_control (l);
-}
-
 /* Return a new, initialized line record. */
 
 static struct line *
@@ -436,7 +422,6 @@ create_new_buffer (unsigned int size)
 static struct buffer_record *
 get_new_buffer (unsigned int min_size)
 {
-  struct buffer_record *p, *q;
   struct buffer_record *new_buffer; /* Buffer to return. */
   unsigned int alloc_size;	/* Actual size that will be requested. */
 
@@ -444,34 +429,7 @@ get_new_buffer (unsigned int min_size)
   while (min_size > alloc_size)
     alloc_size += INCR_SIZE;
 
-  if (free_list == NULL)
-    new_buffer = create_new_buffer (alloc_size);
-  else
-    {
-      /* Use first-fit to find a buffer. */
-      p = new_buffer = NULL;
-      q = free_list;
-
-      do
-	{
-	  if (q->bytes_alloc >= min_size)
-	    {
-	      if (p == NULL)
-		free_list = q->next;
-	      else
-		p->next = q->next;
-	      break;
-	    }
-	  p = q;
-	  q = q->next;
-	}
-      while (q);
-
-      new_buffer = (q ? q : create_new_buffer (alloc_size));
-
-      new_buffer->curr_line = new_buffer->line_start;
-      clear_all_line_control (new_buffer);
-    }
+  new_buffer = create_new_buffer (alloc_size);
 
   new_buffer->num_lines = 0;
   new_buffer->bytes_used = 0;
@@ -481,13 +439,10 @@ get_new_buffer (unsigned int min_size)
   return new_buffer;
 }
 
-/* Add buffer BUF to the list of free buffers. */
-
 static void
 free_buffer (struct buffer_record *buf)
 {
-  buf->next = free_list;
-  free_list = buf;
+  free (buf->buffer);
 }
 
 /* Append buffer BUF to the linked list of buffers that contain
