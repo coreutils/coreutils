@@ -1,3 +1,10 @@
+2005-02-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* gethrxtime.m4: New file.
+	* gettime.m4 (gl_GETTIME): Check for nanotime.
+	* jm-macros.m4 (gl_MACROS): Don't check for gethrtime.
+	* prereq.m4 (gl_PREREQ): Require gl_GETHRXTIME.
+
 2005-02-20  Jim Meyering  <jim@meyering.net>
 
 	* stripslash.m4: New file.

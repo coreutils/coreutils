@@ -1,3 +1,19 @@
+2005-02-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* gethrxtime.h, gethrxtime.c, xtime.h: New files.
+	* timespec.h (gettime): Return void, since it always
+	succeeds now.  All uses changed.
+	* gettime.c (gettime) Likewise.
+	[HAVE_NANOTIME]: Prefer nanotime.
+	Assume gettimeofday succeeds, as POSIX requires.
+	Assime time () succeeds, since other code already does.
+	* xnanosleep.c: Include xtime.h and gethrxtime.h, not xalloc.h.
+	(timespec_subtract): Remove.
+	(NANOSLEEP_BUG_WORKAROUND): New constant.
+	(xnanosleep): Use gethrxtime rather than gettime; this simplifies
+	things considerably.  Use it only on GNU/Linux hosts, since the
+	workaround shouldn't be needed elsewhere.
+
 2005-02-20  Neil Conway  <neilc@samurai.com>
 
 	* xgethostname.c (xgethostname): Check for ENOMEM, which is

@@ -1,6 +1,29 @@
-2005-02-15  Jim Meyering  <jim@meyering.net>
+2005-02-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* NEWS: Describe user-visible change to dd.
+	* src/Makefile.am (dd_LDADD, shred_LDADD, nanosec_libs):
+	Remove $(LIB_CLOCK_GETTIME).  These functions now use
+	gethrxtime instead.
+	* src/dd.c: Include gethrxtime.h, xtime.h.
+	(start_time): Now of type xtime_t, not struct timespec.
+	(print_stats, main): Use gethrxtime rather than gettime.
+	* src/ls.c (time): Remove obsolete decl.
+	(get_current_time): gettimeofday always returns 0, so don't
+	check its result.
+	* src/shred.c: Include gethrxtime.h.
+	(isaac_seed): Use gethrxtime rather than a mishmash.
+	* src/touch.c (time): Remove obsolete decl.
+
+	* tests/misc/split-fail: Don't assume that the current host
+	supports integers wider than 32 bits.  Fix comment typo.
+	* tests/od/x8: Likewise.
+
+	* src/chown-core.c (enum RCH_status): Remove trailing comma,
+	as it's not valid in standard C89.
+
+2005-02-15  Jim Meyering  <jim@meyering.net>
 
 	* src/stat.c (human_fstype): Add case/definition for S_MAGIC_XFS
 	so that file systems of type `xfs' are recognized as such.
