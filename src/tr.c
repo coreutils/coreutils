@@ -319,8 +319,7 @@ static struct option const long_options[] =
 };
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",
@@ -393,9 +392,7 @@ translation or deletion.\n\
    equivalence class containing the character EQUIV_CLASS.  */
 
 static int
-is_equiv_class_member (equiv_class, c)
-     unsigned int equiv_class;
-     unsigned int c;
+is_equiv_class_member (unsigned int equiv_class, unsigned int c)
 {
   return (equiv_class == c);
 }
@@ -404,9 +401,7 @@ is_equiv_class_member (equiv_class, c)
    character class CHAR_CLASS.  */
 
 static int
-is_char_class_member (char_class, c)
-     enum Char_class char_class;
-     unsigned int c;
+is_char_class_member (enum Char_class char_class, unsigned int c)
 {
   int result;
 
@@ -465,9 +460,7 @@ is_char_class_member (char_class, c)
    cannot contain actual (non-escaped) zero bytes.  */
 
 static int
-unquote (s, len)
-     unsigned char *s;
-     size_t *len;
+unquote (unsigned char *s, size_t *len)
 {
   size_t i, j;
 
@@ -568,9 +561,7 @@ unquote (s, len)
    in the global char_class_name array.  Otherwise, return CC_NO_CLASS.  */
 
 static enum Char_class
-look_up_char_class (class_str, len)
-     const unsigned char *class_str;
-     size_t len;
+look_up_char_class (const unsigned char *class_str, size_t len)
 {
   unsigned int i;
 
@@ -585,8 +576,7 @@ look_up_char_class (class_str, len)
    This function is used solely for formatting error messages.  */
 
 static char *
-make_printable_char (c)
-     unsigned int c;
+make_printable_char (unsigned int c)
 {
   char *buf = xmalloc (5);
 
@@ -611,9 +601,7 @@ make_printable_char (c)
    sequences.  This function is used solely for printing error messages.  */
 
 static char *
-make_printable_str (s, len)
-     const unsigned char *s;
-     size_t len;
+make_printable_str (const unsigned char *s, size_t len)
 {
   /* Worst case is that every character expands to a backslash
      followed by a 3-character octal escape sequence.  */
@@ -672,9 +660,7 @@ make_printable_str (s, len)
    character C to the specification list LIST.  */
 
 static void
-append_normal_char (list, c)
-     struct Spec_list *list;
-     unsigned int c;
+append_normal_char (struct Spec_list *list, unsigned int c)
 {
   struct List_element *new;
 
@@ -693,10 +679,7 @@ append_normal_char (list, c)
    zero otherwise.  This means that '[c-c]' is acceptable.  */
 
 static int
-append_range (list, first, last)
-     struct Spec_list *list;
-     unsigned int first;
-     unsigned int last;
+append_range (struct Spec_list *list, unsigned int first, unsigned int last)
 {
   struct List_element *new;
 
@@ -729,10 +712,7 @@ append_range (list, first, last)
    a valid string, print an error message and return non-zero.  */
 
 static int
-append_char_class (list, char_class_str, len)
-     struct Spec_list *list;
-     const unsigned char *char_class_str;
-     size_t len;
+append_char_class (struct Spec_list *list, const unsigned char *char_class_str, size_t len)
 {
   enum Char_class char_class;
   struct List_element *new;
@@ -762,10 +742,7 @@ append_char_class (list, char_class_str, len)
    is a non-negative repeat count.  */
 
 static void
-append_repeated_char (list, the_char, repeat_count)
-     struct Spec_list *list;
-     unsigned int the_char;
-     size_t repeat_count;
+append_repeated_char (struct Spec_list *list, unsigned int the_char, size_t repeat_count)
 {
   struct List_element *new;
 
@@ -786,10 +763,7 @@ append_repeated_char (list, the_char, repeat_count)
    If LEN is not 1, issue an error message and return non-zero.  */
 
 static int
-append_equiv_class (list, equiv_class_str, len)
-     struct Spec_list *list;
-     const unsigned char *equiv_class_str;
-     size_t len;
+append_equiv_class (struct Spec_list *list, const unsigned char *equiv_class_str, size_t len)
 {
   struct List_element *new;
 
@@ -817,10 +791,7 @@ append_equiv_class (list, equiv_class_str, len)
    NUL bytes, and is *not* NUL-terminated.  */
 
 static unsigned char *
-substr (p, first_idx, last_idx)
-     const unsigned char *p;
-     size_t first_idx;
-     size_t last_idx;
+substr (const unsigned char *p, size_t first_idx, size_t last_idx)
 {
   size_t len;
   unsigned char *tmp;
@@ -842,12 +813,7 @@ substr (p, first_idx, last_idx)
    zero bytes.  */
 
 static int
-find_closing_delim (p, start_idx, p_len, pre_bracket_char, result_idx)
-     const unsigned char *p;
-     size_t start_idx;
-     size_t p_len;
-     unsigned int pre_bracket_char;
-     size_t *result_idx;
+find_closing_delim (const unsigned char *p, size_t start_idx, size_t p_len, unsigned int pre_bracket_char, size_t *result_idx)
 {
   size_t i;
 
@@ -868,10 +834,7 @@ find_closing_delim (p, start_idx, p_len, pre_bracket_char, result_idx)
    Otherwise, return zero and set *VAL to the converted value.  */
 
 static int
-non_neg_strtol (s, len, val)
-     const unsigned char *s;
-     size_t len;
-     size_t *val;
+non_neg_strtol (const unsigned char *s, size_t len, size_t *val)
 {
   size_t i;
   unsigned long sum = 0;
@@ -916,14 +879,7 @@ non_neg_strtol (s, len, val)
    and return -2.  */
 
 static int
-find_bracketed_repeat (p, start_idx, p_len, char_to_repeat, repeat_count,
-		       closing_bracket_idx)
-     const unsigned char *p;
-     size_t start_idx;
-     size_t p_len;
-     unsigned int *char_to_repeat;
-     size_t *repeat_count;
-     size_t *closing_bracket_idx;
+find_bracketed_repeat (const unsigned char *p, size_t start_idx, size_t p_len, unsigned int *char_to_repeat, size_t *repeat_count, size_t *closing_bracket_idx)
 {
   size_t i;
 
@@ -978,10 +934,7 @@ find_bracketed_repeat (p, start_idx, p_len, char_to_repeat, repeat_count,
       - c Any other character is interpreted as itself.  */
 
 static int
-build_spec_list (unescaped_string, len, result)
-     const unsigned char *unescaped_string;
-     size_t len;
-     struct Spec_list *result;
+build_spec_list (const unsigned char *unescaped_string, size_t len, struct Spec_list *result)
 {
   const unsigned char *p;
   size_t i;
@@ -1104,9 +1057,7 @@ build_spec_list (unescaped_string, len, result)
    positions.  */
 
 static int
-get_next (s, class)
-     struct Spec_list *s;
-     enum Upper_Lower_class *class;
+get_next (struct Spec_list *s, enum Upper_Lower_class *class)
 {
   struct List_element *p;
   int return_val;
@@ -1238,8 +1189,7 @@ get_next (s, class)
    same operations are (duplicated) performed in set_initialize.  */
 
 static int
-card_of_complement (s)
-     struct Spec_list *s;
+card_of_complement (struct Spec_list *s)
 {
   int c;
   int cardinality = N_CHARS;
@@ -1267,8 +1217,7 @@ card_of_complement (s)
    be 26 and S (representing string2) would be converted to 'A[\n*24]Z'.  */
 
 static void
-get_spec_stats (s)
-     struct Spec_list *s;
+get_spec_stats (struct Spec_list *s)
 {
   struct List_element *p;
   int len = 0;
@@ -1334,8 +1283,7 @@ get_spec_stats (s)
 }
 
 static void
-get_s1_spec_stats (s1)
-     struct Spec_list *s1;
+get_s1_spec_stats (struct Spec_list *s1)
 {
   get_spec_stats (s1);
   if (complement)
@@ -1343,9 +1291,7 @@ get_s1_spec_stats (s1)
 }
 
 static void
-get_s2_spec_stats (s2, len_s1)
-     struct Spec_list *s2;
-     size_t len_s1;
+get_s2_spec_stats (struct Spec_list *s2, size_t len_s1)
 {
   get_spec_stats (s2);
   if (len_s1 >= s2->length && s2->n_indefinite_repeats == 1)
@@ -1357,8 +1303,7 @@ get_s2_spec_stats (s2, len_s1)
 }
 
 static void
-spec_init (spec_list)
-     struct Spec_list *spec_list;
+spec_init (struct Spec_list *spec_list)
 {
   spec_list->head = spec_list->tail =
     (struct List_element *) xmalloc (sizeof (struct List_element));
@@ -1372,9 +1317,7 @@ spec_init (spec_list)
    of these passes detects an error, this function returns non-zero.  */
 
 static int
-parse_str (s, spec_list)
-     unsigned char *s;
-     struct Spec_list *spec_list;
+parse_str (unsigned char *s, struct Spec_list *spec_list)
 {
   size_t len;
 
@@ -1401,9 +1344,7 @@ parse_str (s, spec_list)
    sequence.  */
 
 static void
-string2_extend (s1, s2)
-     const struct Spec_list *s1;
-     struct Spec_list *s2;
+string2_extend (const struct Spec_list *s1, struct Spec_list *s2)
 {
   struct List_element *p;
   int char_to_repeat;
@@ -1462,9 +1403,7 @@ string2_extend (s1, s2)
    given, S2 may be extended.  */
 
 static void
-validate (s1, s2)
-     const struct Spec_list *s1;
-     struct Spec_list *s2;
+validate (const struct Spec_list *s1, struct Spec_list *s2)
 {
   get_s1_spec_stats (s1);
   if (s1->n_indefinite_repeats > 0)
@@ -1545,10 +1484,7 @@ when translating");
    character is in the squeeze set.  */
 
 static void
-squeeze_filter (buf, size, reader)
-     unsigned char *buf;
-     long int size;
-     PFI reader;
+squeeze_filter (unsigned char *buf, long int size, PFI reader)
 {
   unsigned int char_to_squeeze = NOT_A_CHAR;
   int i = 0;
@@ -1643,10 +1579,7 @@ squeeze_filter (buf, size, reader)
    or 0 upon EOF.  */
 
 static long
-read_and_delete (buf, size, not_used)
-     unsigned char *buf;
-     long int size;
-     PFI not_used;
+read_and_delete (unsigned char *buf, long int size, PFI not_used)
 {
   long n_saved;
   static int hit_eof = 0;
@@ -1696,10 +1629,7 @@ read_and_delete (buf, size, not_used)
    array `xlate'.  Return the number of characters read, or 0 upon EOF.  */
 
 static long
-read_and_xlate (buf, size, not_used)
-     unsigned char *buf;
-     long int size;
-     PFI not_used;
+read_and_xlate (unsigned char *buf, long int size, PFI not_used)
 {
   long chars_read = 0;
   static int hit_eof = 0;
@@ -1732,10 +1662,7 @@ read_and_xlate (buf, size, not_used)
    non-zero the resulting set is complemented.  */
 
 static void
-set_initialize (s, complement_this_set, in_set)
-     struct Spec_list *s;
-     int complement_this_set;
-     SET_TYPE *in_set;
+set_initialize (struct Spec_list *s, int complement_this_set, SET_TYPE *in_set)
 {
   int c;
   int i;
@@ -1750,9 +1677,7 @@ set_initialize (s, complement_this_set, in_set)
 }
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int c;
   int non_option_args;
