@@ -1,0 +1,15 @@
+## Process this file with automake to produce Makefile.in -*-Makefile-*-
+
+##m4-files-begin
+##m4-files-end
+
+Makefile.am: Makefile.am.in
+	rm -f $@ $@t
+	sed -n '1,/^##m4-files-begin/p' $< > $@t
+	( echo EXTRA_DIST = README; \
+	  find . -type f -name '*.m4' -printf '%f\n' |sort ) \
+	    |fmt | (tr '\012' @; echo) \
+	    |sed 's/@$$/%/;s/@/ \\@/g' |tr @% '\012\012' \
+	  >> $@t
+	sed -n '/^##m4-files-end/,$$p' $< >> $@t
+	mv $@t $@
