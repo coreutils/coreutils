@@ -55,7 +55,7 @@ static char *decimal_point = ".";
 static double first;
 
 /* The increment.  */
-static double step;
+static double step = 1.0;
 
 /* The last number.  */
 static double last;
@@ -178,55 +178,20 @@ valid_format (const char *fmt)
 static int
 print_numbers (const char *fmt)
 {
-  if (first > last)
+  int i;
+
+  for (i = 0; /* empty */; i++)
     {
-      int i;
-
-      if (step >= 0)
-	{
-	  error (0, 0,
-		 _("when the starting value is larger than the limit,\n\
-the increment must be negative"));
-	  usage (EXIT_FAILURE);
-	}
-
-      printf (fmt, first);
-      for (i = 1; /* empty */; i++)
-	{
-	  double x = first + i * step;
-
-	  if (x < last)
-	    break;
-
-	  fputs (separator, stdout);
-	  printf (fmt, x);
-	}
+      double x = first + i * step;
+      if (step < 0 ? x < last : last < x)
+	break;
+      if (i)
+	fputs (separator, stdout);
+      printf (fmt, x);
     }
-  else
-    {
-      int i;
 
-      if (step <= 0)
-	{
-	  error (0, 0,
-		 _("when the starting value is smaller than the limit,\n\
-the increment must be positive"));
-	  usage (EXIT_FAILURE);
-	}
-
-      printf (fmt, first);
-      for (i = 1; /* empty */; i++)
-	{
-	  double x = first + i * step;
-
-	  if (x > last)
-	    break;
-
-	  fputs (separator, stdout);
-	  printf (fmt, x);
-	}
-    }
-  fputs (terminator, stdout);
+  if (i)
+    fputs (terminator, stdout);
 
   return 0;
 }
@@ -333,7 +298,6 @@ main (int argc, char **argv)
 {
   int errs;
   int optc;
-  int step_is_set;
 
   /* The printf(3) format used for output.  */
   char *format_str = NULL;
@@ -349,7 +313,6 @@ main (int argc, char **argv)
   equal_width = 0;
   separator = "\n";
   first = 1.0;
-  step_is_set = 0;
 
   /* Figure out the locale's idea of a decimal point.  */
 #if HAVE_LOCALECONV
@@ -434,9 +397,7 @@ main (int argc, char **argv)
       if (optind < argc)
 	{
 	  step = last;
-	  step_is_set = 1;
 	  last = scan_double_arg (argv[optind++]);
-
 	}
     }
 
@@ -445,11 +406,6 @@ main (int argc, char **argv)
       error (0, 0, _("\
 format string may not be specified when printing equal width strings"));
       usage (EXIT_FAILURE);
-    }
-
-  if (!step_is_set)
-    {
-      step = first <= last ? 1.0 : -1.0;
     }
 
   if (format_str == NULL)
