@@ -20,8 +20,9 @@
 
 2002-03-16  Jim Meyering  <meyering@lucent.com>
 
-	* src/Makefile.am (datadir): Don't define.  Automake does it better.
-	Patch from Albert Chin-A-Young <china@thewrittenword.com>
+	* src/Makefile.am (datadir): Don't override $(datadir)
+	which might be set by --datadir and different from $(prefix)/share.
+	Patch from Albert Chin-A-Young.
 
 2002-03-10  Jim Meyering  <meyering@lucent.com>
 
