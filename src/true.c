@@ -47,10 +47,7 @@ main (int argc, char **argv)
 	usage (EXIT_SUCCESS);
 
       if (STREQ (argv[1], "--version"))
-	{
-	  version_etc (stdout, PROGRAM_NAME, GNU_PACKAGE, VERSION, AUTHORS);
-	  exit (EXIT_SUCCESS);
-	}
+	version_etc (stdout, PROGRAM_NAME, GNU_PACKAGE, VERSION, AUTHORS);
     }
 
   exit (EXIT_SUCCESS);
