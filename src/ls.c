@@ -141,10 +141,11 @@ void free ();
 
 void mode_string ();
 
-char *stpcpy ();
-char *xstrdup ();
 char *getgroup ();
 char *getuser ();
+char *stpcpy ();
+void strip_trailing_slashes ();
+char *xstrdup ();
 char *xmalloc ();
 char *xrealloc ();
 void invalid_arg ();
