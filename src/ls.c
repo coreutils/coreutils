@@ -814,7 +814,7 @@ decode_switches (int argc, char **argv)
       else
 	{
 	  error (0, 0,
-	       _("ignoring invalid width in enironment variable COLUMNS: %s"),
+	       _("ignoring invalid width in environment variable COLUMNS: %s"),
 		 p);
 	}
     }
@@ -841,7 +841,7 @@ decode_switches (int argc, char **argv)
       else
 	{
 	  error (0, 0,
-	     _("ignoring invalid tab size in enironment variable TABSIZE: %s"),
+	     _("ignoring invalid tab size in environment variable TABSIZE: %s"),
 		 p);
 	}
     }
