@@ -1,4 +1,5 @@
 User-visible changes in release 1.14
+* nl: rename misleading --first-page=N option to --starting-line-number=N.
 * sort diagnoses invalid arguments to -k, then fails
 * sort -n properly orders invalid integers with respect to valid integers
 * sorting works with character offsets larger than corresponding field width
