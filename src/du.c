@@ -51,10 +51,6 @@
 /* Initial size of the hash table.  */
 #define INITIAL_TABLE_SIZE 103
 
-/* The maximum number of simultaneously open file handles that
-   may be used by ftw.  */
-#define MAX_N_DESCRIPTORS (3 * UTILS_OPEN_MAX / 4)
-
 /* Hash structure for inode and device numbers.  The separate entry
    structure makes it easier to rehash "in place".  */
 
