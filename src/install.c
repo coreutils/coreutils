@@ -72,8 +72,6 @@ gid_t getgid ();
 /* Number of bytes of a file to copy at a time. */
 #define READ_SIZE (32 * 1024)
 
-bool isdir (char const *);
-
 int stat ();
 
 static bool change_timestamps (const char *from, const char *to);
@@ -414,28 +412,25 @@ static bool
 install_file_to_path (const char *from, const char *to,
 		      const struct cp_options *x)
 {
-  char *dest_dir;
+  char *dest_dir = dir_name (to);
   bool ok = true;
 
-  dest_dir = dir_name (to);
-
-  /* check to make sure this is a path (not install a b ) */
-  if (!STREQ (dest_dir, ".")
-      && !isdir (dest_dir))
+  /* Make sure that the parent of the destination is a directory.  */
+  if (! STREQ (dest_dir, "."))
     {
       /* Someone will probably ask for a new option or three to specify
 	 owner, group, and permissions for parent directories.  Remember
 	 that this option is intended mainly to help installers when the
 	 distribution doesn't provide proper install rules.  */
 #define DIR_MODE (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH)
-      ok = make_path (dest_dir, DIR_MODE, DIR_MODE, owner_id, group_id, false,
+      ok = make_path (dest_dir, DIR_MODE, DIR_MODE, owner_id, group_id, true,
 		      (x->verbose ? _("creating directory %s") : NULL));
     }
 
+  free (dest_dir);
+
   if (ok)
     ok = install_file_in_file (from, to, x);
-
-  free (dest_dir);
 
   return ok;
 }
@@ -484,12 +479,9 @@ copy_file (const char *from, const char *to, const struct cp_options *x)
 
   /* Allow installing from non-regular files like /dev/null.
      Charles Karney reported that some Sun version of install allows that
-     and that sendmail's installation process relies on the behavior.  */
-  if (isdir (from))
-    {
-      error (0, 0, _("%s is a directory"), quote (from));
-      return false;
-    }
+     and that sendmail's installation process relies on the behavior.
+     However, since !x->recursive, the call to "copy" will fail if FROM
+     is a directory.  */
 
   return copy (from, to, false, x, &copy_into_self, NULL);
 }
