@@ -1,5 +1,5 @@
 Changes in release 3.17:
-[3.16a]
+[3.16b]
 * install accepts new option, --verbose (-v)
 * mkdir -p is a lot faster when creating very deep directories on some systems
 * rm -i no longer exits with status indicating failure solely because the
