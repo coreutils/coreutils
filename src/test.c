@@ -47,6 +47,7 @@
 #  include "version.h"
 #  include "safe-stat.h"
 #  include "safe-lstat.h"
+#  include "group-member.h"
 #  if !defined (S_IXUGO)
 #    define S_IXUGO 0111
 #  endif /* S_IXUGO */
@@ -55,9 +56,6 @@
 #  else /* !_POSIX_VERSION */
 #    include <sys/param.h>
 #  endif /* _POSIX_VERSION */
-#  if defined (NGROUPS_MAX) || defined (_SC_NGROUPS_MAX) || defined (NGROUPS)
-#    define HAVE_GETGROUPS
-#  endif /* NGROUPS_MAX || _SC_NGROUPS_MAX || NGROUPS */
 #define whitespace(c) (((c) == ' ') || ((c) == '\t'))
 #define digit(c)  ((c) >= '0' && (c) <= '9')
 #define digit_value(c) ((c) - '0')
@@ -134,8 +132,6 @@ static int term ();
 static int and ();
 static int or ();
 
-static int group_member ();
-
 #if __GNUC__ >= 2 && defined (__GNUC_MINOR__) \
     && __GNUC_MINOR__ >= 5 && !defined (__STRICT_ANSI__)
 #define NO_RETURN_ATTRIBUTE __attribute__ ((noreturn))
@@ -208,52 +204,6 @@ eaccess (path, mode)
     return (0);
 
   return (-1);
-}
-
-#if defined (HAVE_GETGROUPS)
-/* The number of groups that this user is a member of. */
-static int ngroups = 0;
-static GETGROUPS_T *group_array = (GETGROUPS_T *)NULL;
-static int default_group_array_size = 0;
-#endif /* HAVE_GETGROUPS */
-
-/* Return non-zero if GID is one that we have in our groups list. */
-static int
-group_member (gid)
-     gid_t gid;
-{
-#if !defined (HAVE_GETGROUPS)
-  return ((gid == getgid ()) || (gid == getegid ()));
-#else
-  register int i;
-
-  /* getgroups () returns the number of elements that it was able to
-     place into the array.  We simply continue to call getgroups ()
-     until the number of elements placed into the array is smaller than
-     the physical size of the array. */
-
-  while (ngroups == default_group_array_size)
-    {
-      default_group_array_size += 64;
-
-      group_array = (GETGROUPS_T *)
-	xrealloc (group_array,
-		  default_group_array_size * sizeof (GETGROUPS_T));
-
-      ngroups = getgroups (default_group_array_size, group_array);
-    }
-
-  /* In case of error, the user loses. */
-  if (ngroups < 0)
-    return (0);
-
-  /* Search through the list looking for GID. */
-  for (i = 0; i < ngroups; i++)
-    if (gid == group_array[i])
-      return (1);
-
-  return (0);
-#endif /* HAVE_GETGROUPS */
 }
 
 /* Increment our position in the argument list.  Check that we're not
