@@ -1,6 +1,25 @@
 #! /bin/sh
 # Make sure stty can parse most of its options.
 
+reversible ()
+{
+  case $1 in
+    # The following list of reversible options was generated with
+    # grep -w REV stty.c |grep '{"' |sed 's/....//;s/".*//' \
+    #   |fmt |tr ' ' '|' |sed 's/$/) ;;/'
+    parenb|parodd|hupcl|hup|cstopb|cread|clocal|crtscts|ignbrk|brkint|ignpar) ;;
+    parmrk|inpck|istrip|inlcr|igncr|icrnl|ixon|ixoff|tandem|iuclc|ixany) ;;
+    imaxbel|opost|olcuc|ocrnl|onlcr|onocr|onlret|ofill|ofdel|isig|icanon) ;;
+    iexten|echo|echoe|crterase|echok|echonl|noflsh|xcase|tostop|echoprt) ;;
+    prterase|echoctl|ctlecho|echoke|crtkill|evenp|parity|oddp|nl|cooked|raw) ;;
+    pass8|litout|cbreak|decctlq|tabs|lcase|LCASE) ;;
+
+    *) echo no; return;;
+  esac
+
+  echo yes;
+}
+
 : ${STTY=stty}
 
 if test "$VERBOSE" = yes; then
@@ -19,22 +38,30 @@ options=`stty -a|tail +2|tr ';' '\012'|sed '/ = /d;s/^ //'|tr -s ' -' '\012'`
 # Take them one at a time, with and without the leading `-'.
 for opt in $options; do
   $STTY $opt || exit 1
-  case $opt in
-    # The following list of reversible options was generated with
-    # grep -w REV stty.c|grep '{"'|sed 's/....//;s/".*//'|fmt \
-    #   |tr ' ' '|'|sed 's/$/) ;;/'
-    parenb|parodd|hupcl|hup|cstopb|cread|clocal|crtscts|ignbrk|brkint|ignpar) ;;
-    parmrk|inpck|istrip|inlcr|igncr|icrnl|ixon|ixoff|tandem|iuclc|ixany) ;;
-    imaxbel|opost|olcuc|ocrnl|onlcr|onocr|onlret|ofill|ofdel|isig|icanon) ;;
-    iexten|echo|echoe|crterase|echok|echonl|noflsh|xcase|tostop|echoprt) ;;
-    prterase|echoctl|ctlecho|echoke|crtkill|evenp|parity|oddp|nl|cooked|raw) ;;
-    pass8|litout|cbreak|decctlq|tabs|lcase|LCASE) ;;
-    *) # Skip options that aren't reversible.
-       continue;;
-  esac
-  $STTY -$opt || exit 1
+  if test `reversible $opt` = yes; then
+    $STTY -$opt || exit 1
+  fi
 done
 
-# grep -w REV stty.c|grep '{"'|sed 's/....//;s/".*//'
+# Take them in pairs.
+for opt1 in $options; do
+  echo .|tr -d '\012'
+  for opt2 in $options; do
+
+    $STTY $opt1 $opt2 || exit 1
+
+    test `reversible $opt1` = yes && rev1=yes || rev1=no
+    test `reversible $opt2` = yes && rev2=yes || rev2=no
+    if test $rev1 = yes; then
+      $STTY -$opt1 $opt2 || exit 1
+    fi
+    if test $rev2 = yes; then
+      $STTY $opt1 -$opt2 || exit 1
+    fi
+    if test "$rev1$rev2" = yesyes; then
+      $STTY -$opt1 -$opt2 || exit 1
+    fi
+  done
+done
 
 exit 0
