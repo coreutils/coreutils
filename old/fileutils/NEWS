@@ -26,7 +26,9 @@ Changes in release 4.01:
 [4.0.33]
 * dd now accepts skip=nB and seek=nB, to advance past some number of bytes, n,
     that need not be a multiple of the block size.
-* dd (without conv=notrunc) now uses ftruncate only on regular files
+* dd (without conv=notrunc) now complains only when ftruncate fails on a
+    regular file, a directory, or a shared memory object -- not when it fails
+    to truncate other types of files, like /dev/fd0.
 * chmod --changes (-c) once again issues diagnostics only for the files
     with changed permissions
 * mkdir now gives one diagnostic (rather than two) for certain failures
