@@ -1,5 +1,10 @@
 1998-01-22  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/dd.c: Reorder functions to obviate forward dcls.
+	(quit): Declare to be inline to stifle compile warning.
+
+	* src/cp.c (do_copy): Add unreachable `return 0' to stifle warning.
+
 	* tests/rm/sunos-1: Don't use -f.  Do adjust $RM if it's a
 	relative path.
 
