@@ -79,9 +79,9 @@ my @tv = (
 ['113', '--all-repeated=separate',"a\na\n",          "a\na\n",           0],
 ['114', '--all-repeated=separate',"a\na\nb\nc\nc\n", "a\na\n\nc\nc\n",   0],
 ['115', '--all-repeated=separate',"a\na\nb\nb\nc\n", "a\na\n\nb\nb\n",   0],
-['116', '--all-repeated=precede', "a\na\n",          "\na\na\n",         0],
-['117', '--all-repeated=precede', "a\na\nb\nc\nc\n", "\na\na\n\nc\nc\n", 0],
-['118', '--all-repeated=precede', "a\nb\n",          "",                 0],
+['116', '--all-repeated=prepend', "a\na\n",          "\na\na\n",         0],
+['117', '--all-repeated=prepend', "a\na\nb\nc\nc\n", "\na\na\n\nc\nc\n", 0],
+['118', '--all-repeated=prepend', "a\nb\n",          "",                 0],
 ['119', '--all-repeated=badoption', "a\n",           "",                 1],
 );
 
