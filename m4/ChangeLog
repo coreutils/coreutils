@@ -1,5 +1,10 @@
 2003-02-12  Jim Meyering  <jim@meyering.net>
 
+	* restrict.m4 (ACX_C_RESTRICT): Remove #ifndef -- so now this
+	macro also checks for support when using a C++ compiler.
+	Also, remove the test for SGI's __restrict.
+	Suggested by Steven G. Johnson.
+
 	* regex.m4 (jm_PREREQ_REGEX): Require ACX_C_RESTRICT.
 
 	* restrict.m4 (ACX_C_RESTRICT): Minor syntactic changes:
