@@ -1,3 +1,7 @@
+2003-08-15  Paul Eggert  <eggert@twinsun.com>
+
+	* physmem.c: Include "physmem.h" before system includes.
+
 2003-08-10  Jim Meyering  <jim@meyering.net>
 
 	* utimens.c (utimens): Revert most of last change.
