@@ -4,6 +4,7 @@
 
 	* tests/stty/basic-1: Fail-77 if stdin is not a tty.
 	* tests/stty/row-col-1: Likewise.
+	Suggestion from Volker Borchert.
 
 1999-08-07  Jim Meyering  <meyering@ascend.com>
 
