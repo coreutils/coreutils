@@ -1,4 +1,4 @@
-#serial 2
+#serial 3
 
 dnl From Jim Meyering.
 dnl Determine whether chown accepts arguments of -1 for uid and gid.
@@ -17,7 +17,7 @@ AC_DEFUN(jm_FUNC_CHOWN,
  AC_CACHE_CHECK([for working chown], jm_cv_func_working_chown,
   [AC_TRY_RUN([
 #   include <sys/types.h>
-#   include <stat.h>
+#   include <sys/stat.h>
 #   include <fcntl.h>
 #   ifdef HAVE_UNISTD_H
 #    include <unistd.h>
@@ -27,6 +27,8 @@ AC_DEFUN(jm_FUNC_CHOWN,
     main ()
     {
       char *f = "conftestchown";
+      struct stat before, after;
+
       if (creat (f, 0600) < 0)
         exit (1);
       if (stat (f, &before) < 0)
