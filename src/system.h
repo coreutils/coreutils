@@ -338,7 +338,6 @@ char *alloca ();
 #endif
 
 #define ISPRINT(c) (IN_CTYPE_DOMAIN (c) && isprint (c))
-#define ISDIGIT(c) (IN_CTYPE_DOMAIN (c) && isdigit (c))
 #define ISALNUM(c) (IN_CTYPE_DOMAIN (c) && isalnum (c))
 #define ISALPHA(c) (IN_CTYPE_DOMAIN (c) && isalpha (c))
 #define ISCNTRL(c) (IN_CTYPE_DOMAIN (c) && iscntrl (c))
@@ -347,6 +346,17 @@ char *alloca ();
 #define ISSPACE(c) (IN_CTYPE_DOMAIN (c) && isspace (c))
 #define ISUPPER(c) (IN_CTYPE_DOMAIN (c) && isupper (c))
 #define ISXDIGIT(c) (IN_CTYPE_DOMAIN (c) && isxdigit (c))
+#define ISDIGIT_LOCALE(c) (IN_CTYPE_DOMAIN (c) && isdigit (c))
+
+/* ISDIGIT differs from ISDIGIT_LOCALE, as follows:
+   - Its arg may be any int or unsigned int; it need not be an unsigned char.
+   - It's guaranteed to evaluate its argument exactly once.
+   - It's typically faster.
+   Posix 1003.2-1992 section 2.5.2.1 page 50 lines 1556-1558 says that
+   only '0' through '9' are digits.  Prefer ISDIGIT to ISDIGIT_LOCALE unless
+   it's important to use the locale's definition of `digit' even when the
+   host does not conform to Posix.  */
+#define ISDIGIT(c) ((unsigned) (c) - '0' <= 9)
 
 #ifndef __P
 #if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
