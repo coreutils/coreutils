@@ -26,85 +26,62 @@
 /* Specification.  */
 #include "path-concat.h"
 
-#ifndef HAVE_MEMPCPY
-# define mempcpy(D, S, N) ((void *) ((char *) memcpy (D, S, N) + (N)))
-#endif
-
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
-#if HAVE_UNISTD_H
-# include <unistd.h>
-#endif
-
-#include "strdup.h"
 #include "dirname.h"
 #include "xalloc.h"
 
-/* Concatenate two pathname components, DIR and BASE, in
-   newly-allocated storage and return the result.  Return 0 if out of
-   memory.  Add a slash between DIR and BASE in the result if neither
-   would contribute one.  If each would contribute at least one, elide
-   one from the end of DIR.  Otherwise, simply concatenate DIR and
-   BASE.  In any case, if BASE_IN_RESULT is non-NULL, set
+#if ! HAVE_MEMPCPY && ! defined mempcpy
+# define mempcpy(D, S, N) ((void *) ((char *) memcpy (D, S, N) + (N)))
+#endif
+
+/* Return the longest suffix of F that is a relative file name.
+   If it has no such suffix, return the empty string.  */
+
+static char const *
+longest_relative_suffix (char const *f)
+{
+  for (f += FILE_SYSTEM_PREFIX_LEN (f); ISSLASH (*f); f++)
+    continue;
+  return f;
+}
+
+/* Concatenate two pathname components, DIR and ABASE, in
+   newly-allocated storage and return the result.
+   The resulting file name is equivalent to what you would get by
+   running (cd DIR; cat BASE), where BASE is ABASE with any file system
+   prefixes and leading separators removed.
+   Arrange for a directory separator if necessary between DIR and BASE
+   in the result, removing any redundant separators.
+   In any case, if BASE_IN_RESULT is non-NULL, set
    *BASE_IN_RESULT to point to the copy of BASE in the returned
    concatenation.
 
-   DIR may be NULL, BASE must not be.
-
-   Return NULL if memory is exhausted.  */
+   Report an error if memory is exhausted.  */
 
 char *
-path_concat (const char *dir, const char *base, char **base_in_result)
+path_concat (char const *dir, char const *abase, char **base_in_result)
 {
+  char const *dirbase = base_name (dir);
+  size_t dirbaselen = base_len (dirbase);
+  size_t dirlen = dirbase - dir + dirbaselen;
+  size_t needs_separator = (dirbaselen && ! ISSLASH (dirbase[dirbaselen - 1]));
+
+  char const *base = longest_relative_suffix (abase);
+  size_t baselen = strlen (base);
+
+  char *p_concat = xmalloc (dirlen + needs_separator + baselen + 1);
   char *p;
-  char *p_concat;
-  size_t baselen;
-  size_t dirlen;
-
-  if (!dir)
-    {
-      p_concat = strdup (base);
-      if (base_in_result)
-        *base_in_result = p_concat;
-      return p_concat;
-    }
-
-  /* DIR is not empty. */
-  baselen = base_len (base);
-  dirlen = strlen (dir);
-
-  p_concat = malloc (dirlen + baselen + 2);
-  if (!p_concat)
-    return 0;
 
   p = mempcpy (p_concat, dir, dirlen);
-
-  if (FILE_SYSTEM_PREFIX_LEN (dir) < dirlen)
-    {
-      if (ISSLASH (*(p - 1)) && ISSLASH (*base))
-	--p;
-      else if (!ISSLASH (*(p - 1)) && !ISSLASH (*base))
-	*p++ = DIRECTORY_SEPARATOR;
-    }
+  *p = DIRECTORY_SEPARATOR;
+  p += needs_separator;
 
   if (base_in_result)
     *base_in_result = p;
 
-  memcpy (p, base, baselen);
-  p[baselen] = '\0';
+  p = mempcpy (p, base, baselen);
+  *p = '\0';
 
   return p_concat;
-}
-
-/* Same, but die when memory is exhausted. */
-
-char *
-xpath_concat (const char *dir, const char *base, char **base_in_result)
-{
-  char *res = path_concat (dir, base, base_in_result);
-  if (! res)
-    xalloc_die ();
-  return res;
 }
