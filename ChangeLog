@@ -1,10 +1,10 @@
 2002-07-29  Jim Meyering  <meyering@lucent.com>
 
+	* Version 0.1.0.
+
 	* Makefile.am (SUBDIRS): Remove djgpp, for now.
 
 2002-07-08  Jim Meyering  <meyering@lucent.com>
-
-	* Version 0.1.0.
 
 	* src/Makefile.am (uninstall-local): Search for @GNU_PACKAGE@,
 	rather than the hard-coded `sh-utils'.
