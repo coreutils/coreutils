@@ -608,7 +608,7 @@ usage (int status)
 "), stdout);
       fputs (_("\
   -T, -w, --mesg    add user's message status as +, - or ?\n\
-  -u, --users       lists users logged in\n\
+  -u, --users       list users logged in\n\
       --message     same as -T\n\
       --writable    same as -T\n\
 "), stdout);
