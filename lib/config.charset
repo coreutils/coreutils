@@ -227,4 +227,8 @@ case "$os" in
 	  echo "$l.CP866 CP866"
 	done
 	;;
+    beos*)
+	# BeOS has a single locale, and it has UTF-8 encoding.
+	echo "C UTF-8"
+	;;
 esac
