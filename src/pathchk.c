@@ -66,6 +66,7 @@ extern int errno;
 # endif /* not PATH_MAX */
 # ifndef NAME_MAX
 #  define NAME_MAX_FOR(p) pathconf_wrapper ((p), _PC_NAME_MAX);
+#  undef NEED_PATHCONF_WRAPPER
 #  define NEED_PATHCONF_WRAPPER 1
 # endif /* not NAME_MAX */
 
