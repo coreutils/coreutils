@@ -2427,7 +2427,8 @@ Paginate or columnate FILE(s) for printing.\n\
   -j                merge full lines, turns off -w line truncation, no column\n\
                     alignment, -s[STRING] sets separators\n\
   -l PAGE_LENGTH    set the page length to PAGE_LENGTH (66) lines\n\
-                    (default number of lines of text 56, with -f 63)\n\
+                    (default number of lines of text 56, with -f 63)\n"));
+      printf (_("\
   -m                print all files in parallel, one in each column,\n\
                     truncate lines, but join lines of full length with -j\n\
   -n[SEP[DIGITS]]   number lines, use DIGITS (5) digits, then SEP (TAB)\n\
