@@ -483,9 +483,7 @@ prjoin (struct line *line1, struct line *line2)
 /* Print the join of the files in FP1 and FP2.  */
 
 static void
-join (fp1, fp2)
-     FILE *fp1;
-     FILE *fp2;
+join (FILE *fp1, FILE *fp2)
 {
   struct seq seq1, seq2;
   struct line line;
