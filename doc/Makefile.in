@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.1c from Makefile.am
+# Makefile.in generated automatically by automake 1.1e from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -49,7 +49,7 @@ CONFIG_CLEAN_FILES =
 
 MAKEINFO = makeinfo
 TEXI2DVI = texi2dvi
-INFOS = fileutils.info fileutils.info-[0-9] fileutils.info-[0-9][0-9]
+INFOS = fileutils.info fileutils.info[-0-9]*
 INFO_DEPS = fileutils.info
 DVIS = fileutils.dvi
 TEXINFOS = fileutils.texi
@@ -83,11 +83,8 @@ stamp-vti: fileutils.texi $(top_srcdir)/configure.in
 	  && $(SHELL) ./mdate-sh fileutils.texi`" > vti.tmp
 	echo "@set EDITION $(VERSION)" >> vti.tmp
 	echo "@set VERSION $(VERSION)" >> vti.tmp
-	if cmp -s vti.tmp $(srcdir)/version.texi; then \
-	  rm vti.tmp;			\
-	else					\
-	  mv vti.tmp $(srcdir)/version.texi; \
-	fi
+	cmp -s vti.tmp $(srcdir)/version.texi || cp vti.tmp $(srcdir)/version.texi
+	rm vti.tmp
 	echo timestamp > $(srcdir)/stamp-vti
 
 mostlyclean-vti:
@@ -111,7 +108,15 @@ fileutils.dvi: fileutils.texi version.texi
 .texi.dvi:
 	TEXINPUTS=$(srcdir):$$TEXINPUTS $(TEXI2DVI) $<
 
+.texinfo.info:
+	cd $(srcdir) \
+	  && $(MAKEINFO) `echo $< | sed 's,.*/,,'`
+
+.texinfo.dvi:
+	TEXINPUTS=$(srcdir):$$TEXINPUTS $(TEXI2DVI) $<
+
 install-info: $(INFO_DEPS)
+	$(NORMAL_INSTALL)
 	$(mkinstalldirs) $(infodir)
 	for file in $(INFO_DEPS); do \
 	  for ifile in `cd $(srcdir) && echo $$file $$file-[0-9] $$file-[0-9][0-9]`; do \
@@ -160,8 +165,10 @@ check: all
 installcheck:
 
 install-exec: 
+	$(NORMAL_INSTALL)
 
 install-data: install-info
+	$(NORMAL_INSTALL)
 
 install: install-exec install-data all
 	@:
@@ -210,7 +217,7 @@ installdirs mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 .SUFFIXES:
-.SUFFIXES: .texi .info .dvi
+.SUFFIXES: .texi .texinfo .info .dvi
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

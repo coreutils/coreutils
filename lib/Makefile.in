@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.1c from Makefile.am
+# Makefile.in generated automatically by automake 1.1e from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -82,7 +82,8 @@ isdir.o long-options.o makepath.o modechange.o path-concat.o regex.o \
 rx.o safe-read.o save-cwd.o savedir.o stripslash.o userspec.o xgetcwd.o \
 xmalloc.o xstrdup.o xstrtol.o xstrtoul.o yesno.o
 EXTRA_fu_SOURCES =
-LIBFILES =  libfu.a
+LIBFILES =  $(pkglib_LIBFILES) $(noinst_LIBFILES) $(check_LIBFILES) \
+$(lib_LIBFILES)
 AR = ar
 RANLIB = @RANLIB@
 CC = @CC@
@@ -91,7 +92,9 @@ COMPILE = $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 LINK = $(CC) $(LDFLAGS) -o $@
 HEADERS = $(noinst_HEADERS)
 
-DIST_COMMON = Makefile.am Makefile.in
+DIST_COMMON = Makefile.am Makefile.in alloca.c error.c fileblocks.c \
+fnmatch.c fsusage.c ftruncate.c getline.c mountlist.c obstack.c regex.c \
+regex.h rx.c rx.h
 
 
 PACKAGE = @PACKAGE@
@@ -103,25 +106,16 @@ DEP_DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
 	$(TEXINFOS) $(INFO_DEPS) $(MANS) $(EXTRA_DIST) $(DATA)
 
 TAR = tar
-DEP_FILES = $(srcdir)/.deps/alloca.P $(srcdir)/.deps/argmatch.P \
-$(srcdir)/.deps/backupfile.P $(srcdir)/.deps/dirname.P \
-$(srcdir)/.deps/error.P $(srcdir)/.deps/fileblocks.P \
-$(srcdir)/.deps/filemode.P $(srcdir)/.deps/fnmatch.P \
-$(srcdir)/.deps/fsusage.P $(srcdir)/.deps/ftruncate.P \
-$(srcdir)/.deps/full-write.P $(srcdir)/.deps/getdate.P \
-$(srcdir)/.deps/getline.P $(srcdir)/.deps/getopt.P \
-$(srcdir)/.deps/getopt1.P $(srcdir)/.deps/getversion.P \
-$(srcdir)/.deps/idcache.P $(srcdir)/.deps/isdir.P \
-$(srcdir)/.deps/long-options.P $(srcdir)/.deps/makepath.P \
-$(srcdir)/.deps/modechange.P $(srcdir)/.deps/mountlist.P \
-$(srcdir)/.deps/obstack.P $(srcdir)/.deps/path-concat.P \
-$(srcdir)/.deps/posixtm.P $(srcdir)/.deps/regex.P $(srcdir)/.deps/rx.P \
-$(srcdir)/.deps/safe-read.P $(srcdir)/.deps/save-cwd.P \
-$(srcdir)/.deps/savedir.P $(srcdir)/.deps/stripslash.P \
-$(srcdir)/.deps/userspec.P $(srcdir)/.deps/xgetcwd.P \
-$(srcdir)/.deps/xmalloc.P $(srcdir)/.deps/xstrdup.P \
-$(srcdir)/.deps/xstrtol.P $(srcdir)/.deps/xstrtoul.P \
-$(srcdir)/.deps/yesno.P
+DEP_FILES = .deps/alloca.P .deps/argmatch.P .deps/backupfile.P \
+.deps/dirname.P .deps/error.P .deps/fileblocks.P .deps/filemode.P \
+.deps/fnmatch.P .deps/fsusage.P .deps/ftruncate.P .deps/full-write.P \
+.deps/getdate.P .deps/getline.P .deps/getversion.P .deps/idcache.P \
+.deps/isdir.P .deps/long-options.P .deps/makepath.P .deps/modechange.P \
+.deps/mountlist.P .deps/obstack.P .deps/path-concat.P .deps/posixtm.P \
+.deps/regex.P .deps/rx.P .deps/safe-read.P .deps/save-cwd.P \
+.deps/savedir.P .deps/stripslash.P .deps/userspec.P .deps/xgetcwd.P \
+.deps/xmalloc.P .deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P \
+.deps/yesno.P
 SOURCES = $(fu_SOURCES)
 OBJECTS = $(fu_OBJECTS)
 
@@ -175,9 +169,9 @@ mostlyclean-tags:
 clean-tags:
 
 distclean-tags:
+	rm -f TAGS ID
 
 maintainer-clean-tags:
-	rm -f TAGS ID
 
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
 
@@ -189,21 +183,28 @@ distdir: $(DEP_DISTFILES)
 	  || cp -p $(srcdir)/$$file $(distdir)/$$file; \
 	done
 
-MKDEP = gcc -MM $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+MKDEP = gcc -M $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 
--include $(srcdir)/.deps/.P
-$(srcdir)/.deps/.P: $(BUILT_SOURCES)
-	cd $(srcdir) && test -d .deps || mkdir .deps
+-include .deps/.P
+.deps/.P: $(BUILT_SOURCES)
+	test -d .deps || mkdir .deps
 	echo > $@
 
 -include $(DEP_FILES)
-$(DEP_FILES): $(srcdir)/.deps/.P
+$(DEP_FILES): .deps/.P
 
-$(srcdir)/.deps/%.P: $(srcdir)/%.c
-	@echo "mkdeps $< > $@"
-	@re=`echo 's,^$(srcdir)//*,,g;s, $(srcdir)//*, ,g' | sed 's,\.,\\\\.,g'`; \
-	  $(MKDEP) $< | sed "$$re" > $@-tmp
-	@if test -n "$o"; then			\
+mostlyclean-depend:
+
+clean-depend:
+
+distclean-depend:
+
+maintainer-clean-depend:
+	rm -rf .deps
+
+.deps/%.P: $(srcdir)/%.c
+	$(MKDEP) $< > $@-tmp
+	if test -n "$o"; then			\
 	  sed 's/\.o:/$$o:/' $@-tmp > $@;	\
 	  rm $@-tmp;				\
 	else					\
@@ -218,8 +219,10 @@ check: all
 installcheck:
 
 install-exec: 
+	$(NORMAL_INSTALL)
 
 install-data: 
+	$(NORMAL_INSTALL)
 
 install: install-exec install-data all
 	@:
@@ -248,18 +251,19 @@ maintainer-clean-generic:
 	test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
 	test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 mostlyclean:  mostlyclean-noinstLIBRARIES mostlyclean-compile \
-		mostlyclean-tags mostlyclean-generic
+		mostlyclean-tags mostlyclean-depend mostlyclean-generic
 
-clean:  clean-noinstLIBRARIES clean-compile clean-tags clean-generic \
-		mostlyclean 
+clean:  clean-noinstLIBRARIES clean-compile clean-tags clean-depend \
+		clean-generic mostlyclean 
 
 distclean:  distclean-noinstLIBRARIES distclean-compile distclean-tags \
-		distclean-generic clean 
+		distclean-depend distclean-generic clean 
 	rm -f config.status
 
 maintainer-clean:  maintainer-clean-noinstLIBRARIES \
 		maintainer-clean-compile maintainer-clean-tags \
-		maintainer-clean-generic distclean 
+		maintainer-clean-depend maintainer-clean-generic \
+		distclean 
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
@@ -267,9 +271,10 @@ maintainer-clean:  maintainer-clean-noinstLIBRARIES \
 clean-noinstLIBRARIES maintainer-clean-noinstLIBRARIES \
 mostlyclean-compile distclean-compile clean-compile \
 maintainer-clean-compile tags mostlyclean-tags distclean-tags \
-clean-tags maintainer-clean-tags distdir info dvi check installcheck \
-install-exec install-data install uninstall all installdirs \
-mostlyclean-generic distclean-generic clean-generic \
+clean-tags maintainer-clean-tags distdir mostlyclean-depend \
+distclean-depend clean-depend maintainer-clean-depend info dvi check \
+installcheck install-exec install-data install uninstall all \
+installdirs mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 
