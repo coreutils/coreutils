@@ -1,5 +1,5 @@
 /* exclude.c -- exclude file names
-   Copyright 1992, 1993, 1994, 1997 Free Software Foundation, Inc.
+   Copyright 1992, 1993, 1994, 1997, 1999, 2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -54,14 +54,14 @@ new_exclude (void)
 }
 
 int
-excluded_filename (struct exclude const *ex, char const *f)
+excluded_filename (struct exclude const *ex, char const *f, int options)
 {
   char const * const *exclude = ex->exclude;
   int exclude_count = ex->exclude_count;
   int i;
 
   for (i = 0;  i < exclude_count;  i++)
-    if (fnmatch (exclude[i], f, 0) == 0)
+    if (fnmatch (exclude[i], f, options) == 0)
       return 1;
 
   return 0;
@@ -79,7 +79,8 @@ add_exclude (struct exclude *ex, char const *pattern)
 }
 
 int
-add_exclude_file (struct exclude *ex, char const *filename, char line_end)
+add_exclude_file (void (*add_func) PARAMS ((struct exclude *, char const *)),
+		  struct exclude *ex, char const *filename, char line_end)
 {
   int use_stdin = filename[0] == '-' && !filename[1];
   FILE *in;
@@ -118,7 +119,7 @@ add_exclude_file (struct exclude *ex, char const *filename, char line_end)
     if (p < lim ? *p == line_end : buf < p && p[-1])
       {
 	*p = '\0';
-	add_exclude (ex, pattern);
+	(*add_func) (ex, pattern);
 	pattern = p + 1;
       }
 
