@@ -1,0 +1,53 @@
+#!/bin/sh
+
+: ${PERL=perl}
+: ${srcdir=.}
+
+case "$PERL" in
+  *'missing perl')
+  echo 1>&2 "$0: configure didn't find a usable version of Perl, so can't run this test"
+  exit 77
+  ;;
+esac
+
+exec $PERL -w -I$srcdir/.. -MFetish -- - <<\EOF
+require 5.003;
+use strict;
+
+(my $program_name = $0) =~ s|.*/||;
+
+# Turn off localisation of executable's ouput.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+
+my @Tests =
+    (
+     ['1', {IN=> {f=> '0 1 ^'}},
+			{OUT=>'DA39A3EE5E6B4B0D3255BFEF95601890AFD80709'}],
+
+     ['2', {IN=> {f=> '5 0 2 1 2 1 2 ^'}},
+			{OUT=>'3CDF2936DA2FC556BFA533AB1EB59CE710AC80E5'}],
+
+     ['3', {IN=> {f=> '5 0 1 3 4 4 4 ^'}},
+			{OUT=>'19C1E2048FA7393CFBF2D310AD8209EC11D996E5'}],
+     ['4',
+      {IN=> {f=> '7 0 4 3 4 4 1 4 4 ^'}},
+			{OUT=>'CA775D8C80FAA6F87FA62BECA6CA6089D63B56E5'}],
+    );
+
+# Expand each input.
+# Convert each expected output string to lower case.
+# Append "  f\n" to each expected output
+# Insert the `--text' argument for each test.
+my $t;
+foreach $t (@Tests)
+  {
+    splice @$t, 1, 0, '--text';
+  }
+
+my $save_temps = $ENV{DEBUG};
+my $verbose = $ENV{VERBOSE};
+
+my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
+my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF
