@@ -95,33 +95,21 @@ VERSION = @VERSION@
 l = @l@
 
 
-x = tsort
-explicit = 
-maint_gen = cycle-1.I cycle-1.X cycle-2.I cycle-2.X posix-1.I posix-1.X \
-posix-2.I posix-2.X
+EXTRA_DIST = $(TESTS)
 
-run_gen = cycle-1.O cycle-1.E cycle-2.O cycle-2.E posix-1.O posix-1.E \
-posix-2.O posix-2.E
+TESTS_ENVIRONMENT = \
+  top_srcdir=$(top_srcdir) \
+  srcdir=$(srcdir) \
+  PERL="@PERL@" \
+  PATH=../../src:$$PATH \
+  PROG=tsort
 
 
-EXTRA_DIST = Test.pm $x-tests $(explicit) $(maint_gen)
-noinst_SCRIPTS = $x-tests
-
-PERL = @PERL@
-editpl = sed -e 's,@''PERL''@,$(PERL),g' -e 's,@''srcdir''@,@srcdir@,g'
-
-TESTS = $x-tests
-
-mk_script = $(srcdir)/../mk-script
-
-MAINTAINERCLEANFILES = $x-tests $(maint_gen)
-CLEANFILES = $(run_gen)
+TESTS = basic-1
 subdir = tests/tsort
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
-SCRIPTS =  $(noinst_SCRIPTS)
-
 DIST_SOURCES = 
 DIST_COMMON =  Makefile.am Makefile.in
 
@@ -232,7 +220,7 @@ install-am: all-am
 install: install-am
 uninstall-am:
 uninstall: uninstall-am
-all-am: Makefile $(SCRIPTS)
+all-am: Makefile
 all-redirect: all-am
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) INSTALL_STRIP_FLAG=-s install
@@ -242,14 +230,12 @@ installdirs:
 mostlyclean-generic:
 
 clean-generic:
-	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-rm -f Makefile $(CONFIG_CLEAN_FILES)
 	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
 
 maintainer-clean-generic:
-	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
 mostlyclean-am:  mostlyclean-generic
 
 mostlyclean: mostlyclean-am
@@ -275,21 +261,6 @@ all-redirect all-am all install-strip installdirs mostlyclean-generic \
 distclean-generic clean-generic maintainer-clean-generic clean \
 mostlyclean distclean maintainer-clean
 
-$(srcdir)/$x-tests: $(mk_script) Test.pm
-	$(PERL) -I. -w -- $(mk_script) ../../src/$x > $@.n
-	mv $@.n $@
-	chmod 755 $@
-
-check: $(maint_gen)
-
-Makefile.am: ../Makefile.am.in Test.pm $(mk_script)
-	rm -f $@ $@t
-	sed -n '1,/^##test-files-begin/p' $< > $@t
-	tool=`echo $(subdir)|sed 's/^tests.//;s/-test//'`; \
-	  echo "x = $$tool" >> $@t
-	$(PERL) -I. -w -- $(mk_script) --list >> $@t
-	sed -n '/^##test-files-end/,$$p' $< >> $@t
-	mv $@t $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
