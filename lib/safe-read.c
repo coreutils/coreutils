@@ -1,5 +1,7 @@
 /* An interface to read and write that retries after interrupts.
-   Copyright (C) 1993, 1994, 1998, 2002-2003 Free Software Foundation, Inc.
+
+   Copyright (C) 1993, 1994, 1998, 2002, 2003, 2004 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -33,9 +35,6 @@
 #endif
 
 #include <errno.h>
-#ifndef errno
-extern int errno;
-#endif
 
 #ifdef EINTR
 # define IS_EINTR(x) ((x) == EINTR)
@@ -61,22 +60,23 @@ extern int errno;
 size_t
 safe_rw (int fd, void const *buf, size_t count)
 {
-  ssize_t result;
+  /* Work around a bug in Tru64 5.1.  Attempting to read more than
+     INT_MAX bytes fails with errno == EINVAL.  See
+     <http://lists.gnu.org/archive/html/bug-gnu-utils/2002-04/msg00010.html>.
+     When decreasing COUNT, keep it block-aligned.  */
+  enum { BUGGY_READ_MAXIMUM = INT_MAX & ~8191 };
 
-  /* POSIX limits COUNT to SSIZE_MAX, but we limit it further, requiring
-     that COUNT <= INT_MAX, to avoid triggering a bug in Tru64 5.1.
-     When decreasing COUNT, keep the file pointer block-aligned.
-     Note that in any case, read(write) may succeed, yet read(write)
-     fewer than COUNT bytes, so the caller must be prepared to handle
-     partial results.  */
-  if (count > INT_MAX)
-    count = INT_MAX & ~8191;
-
-  do
+  for (;;)
     {
-      result = rw (fd, buf, count);
-    }
-  while (result < 0 && IS_EINTR (errno));
+      ssize_t result = rw (fd, buf, count);
 
-  return (size_t) result;
+      if (0 <= result)
+	return result;
+      else if (IS_EINTR (errno))
+	continue;
+      else if (errno == EINVAL && BUGGY_READ_MAXIMUM < count)
+	count = BUGGY_READ_MAXIMUM;
+      else
+	return result;
+    }
 }
