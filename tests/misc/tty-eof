@@ -22,7 +22,9 @@ use strict;
 
 (my $ME = $ENV{ARGV_0}) =~ s|.*/||;
 
-eval { require Expect };
+# Some older versions of Expect.pm (e.g. 1.07) lack the log_user method,
+# so check for that, too.
+eval { require Expect; my $exp = new Expect; $exp->log_user(0) };
 $@ and (warn "$ME: this script requires Perl's Expect package\n"), exit 77;
 
 {
