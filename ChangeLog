@@ -1,6 +1,12 @@
-2003-07-11  Jim Meyering  <jim@meyering.net>
+2003-07-12  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* tests/input-tty: Also check `test -t 1'.
+	This is necessary on linux-2.4.21, otherwise, the test
+	stty/basic-1 would hang when run in the background.
+
+2003-07-11  Jim Meyering  <jim@meyering.net>
 
 	* tests/sample-test: Also fail if cat-to-create-expected-output
 	fails.  Otherwise, if both `exp' and `out' end up empty because
