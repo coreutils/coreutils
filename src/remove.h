@@ -1,3 +1,4 @@
+#include "save-cwd.h"
 
 struct rm_options
 {
@@ -25,24 +26,23 @@ struct rm_options
 enum RM_status
 {
   /* These must be listed in order of increasing seriousness. */
-  RM_OK = 1,
+  RM_OK = 2,
   RM_USER_DECLINED,
-  RM_ERROR
+  RM_ERROR,
+  RM_NONEMPTY_DIR
 };
 
 #define VALID_STATUS(S) \
   ((S) == RM_OK || (S) == RM_USER_DECLINED || (S) == RM_ERROR)
 
-struct File_spec
-{
-  char *filename;
-  unsigned int have_filetype_mode:1;
-  unsigned int have_full_mode:1;
-  unsigned int have_device:1;
-  mode_t mode;
-  ino_t st_ino;
-  dev_t st_dev;
-};
+#define UPDATE_STATUS(S, New_value)				\
+  do								\
+    {								\
+      if ((New_value) == RM_ERROR				\
+	  || ((New_value) == RM_USER_DECLINED && (S) == RM_OK))	\
+	(S) = (New_value);					\
+    }								\
+  while (0)
 
 struct dev_ino
 {
@@ -50,10 +50,5 @@ struct dev_ino
   dev_t st_dev;
 };
 
-enum RM_status rm PARAMS ((struct File_spec *fs,
-			   int user_specified_name,
-			   struct rm_options const *x,
-			   struct dev_ino const *cwd_dev_ino));
-void fspec_init_file PARAMS ((struct File_spec *fs, const char *filename));
-void remove_init PARAMS ((void));
-void remove_fini PARAMS ((void));
+enum RM_status rm PARAMS ((size_t n_files, char const *const *file,
+			   struct rm_options const *x));
