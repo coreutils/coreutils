@@ -6,7 +6,7 @@ use Getopt::Long;
 use Digest::MD5;
 use Digest::SHA1;
 
-(my $VERSION = '$Revision: 1.12 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.13 $ ') =~ tr/[0-9].//cd;
 (my $ME = $0) =~ s|.*/||;
 
 my %valid_release_types = map {$_ => 1} qw (alpha beta major);
@@ -117,7 +117,7 @@ sub print_changelog_deltas ($$)
   # Remove leading `./'.
   @reordered = map { s!^\./!!; $_ } @reordered;
 
-  print "ChangeLog entries:\n\n";
+  print "\nChangeLog entries:\n\n";
   # print join ("\n", @reordered), "\n";
 
   $prev_version =~ s/\./_/g;
@@ -131,6 +131,7 @@ sub print_changelog_deltas ($$)
   # +++ ChangeLog   22 Feb 2003 16:52:51 -0000      1.247
   # and those starting with `+'.
   # Don't print the others.
+  my $prev_printed_line_empty = 1;
   while (defined (my $line = <DIFF>))
     {
       if ($line =~ /^\+\+\+ /)
@@ -138,12 +139,15 @@ sub print_changelog_deltas ($$)
 	  my $separator = "*"x70 ."\n";
 	  $line =~ s///;
 	  $line =~ s/\s.*//;
+	  $prev_printed_line_empty
+	    or print "\n";
 	  print $separator, $line, $separator;
 	}
       elsif ($line =~ /^\+/)
 	{
 	  $line =~ s///;
 	  print $line;
+	  $prev_printed_line_empty = ($line =~ /^$/);
 	}
     }
   close DIFF;
