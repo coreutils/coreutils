@@ -1,5 +1,11 @@
 2004-03-13  Jim Meyering  <jim@meyering.net>
 
+	* src/cp.c (do_copy): Tweak wording in a diagnostic.
+	Suggestion from Karl Berry.
+	Include "quoatearg.h".
+	(do_copy): Use quotearg_colon (not quote) for diagnostics
+	that begin with `"%s:'.
+
 	* src/nl.c (usage): Specify that nl uses _basic_ regular expressions.
 	Suggestion from Dan Jacobson.
 
