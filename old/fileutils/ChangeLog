@@ -2,6 +2,8 @@ Thu Dec 21 23:15:06 1995  Jim Meyering  (meyering@comco.com)
 
 	* argmatch.h: New file.
 	* lib/Makefile.am (HEADERS): Add argmatch.h.
+	* argmatch.c: (argmatch): Add const attribute to parameters.
+	(invalid_arg): Add const attribute to parameters.
 
 	* cp.c: Include argmatch.h.
 	* ls.c: Likewise.
