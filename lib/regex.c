@@ -4,7 +4,7 @@
    internationalization features.)
 
    Copyright (C) 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001,
-   2002, 2003 Free Software Foundation, Inc.
+   2002, 2003, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -275,13 +275,7 @@ init_syntax_once (void)
 #  ifndef alloca
 
 /* Make alloca work the best possible way.  */
-#   ifdef __GNUC__
-#    define alloca __builtin_alloca
-#   else /* not __GNUC__ */
-#    if HAVE_ALLOCA_H
-#     include <alloca.h>
-#    endif /* HAVE_ALLOCA_H */
-#   endif /* not __GNUC__ */
+#   include <alloca.h>
 
 #  endif /* not alloca */
 
