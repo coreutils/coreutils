@@ -2,6 +2,20 @@
 
 	* Most files: Update copyright dates to include 2000.
 
+2000-07-08  Jim Meyering  <meyering@lucent.com>
+
+	* xgethostname.c (ENAMETOOLONG): Define to an unlikely value
+	if not defined.
+	(xgethostname): Remove now-unnecessary #ifdef.
+	Move declaration of `err' into loop where it's used.
+
+2000-07-05  Bruno Haible  <haible@clisp.cons.org>
+
+	* xgethostname.c (xgethostname): Protect against the SunOS5.5 bug
+	by allocating a larger buffer. Test the gethostname return value for
+	being >= 0, not == 0, for BeOS.  Don't exhaust memory if gethostname
+	returns an error and ENAMETOOLONG isn't defined.
+
 2000-07-05  Paul Eggert  <eggert@twinsun.com>
 	and Bruno Haible  <haible@clisp.cons.org>
 
