@@ -1,3 +1,7 @@
+Sun Mar 23 15:20:17 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (ALL_LINGUAS): Add polish (pl).
+
 Sat Mar 22 00:03:02 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Makefile.am (AUTOMAKE_OPTIONS): Require automake-1.1l.
