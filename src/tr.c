@@ -451,7 +451,7 @@ is_char_class_member (char_class, c)
 /* Perform the first pass over each range-spec argument S,
    converting all \c and \ddd escapes to their one-byte representations.
    The conversion is done in-place, so S must point to writable
-   storage.  If an illegal quote sequence is found, an error message is
+   storage.  If an invalid quote sequence is found, an error message is
    printed and the function returns non-zero.  Otherwise the length of
    the resulting string is returned through LEN and the function returns 0.
    The resulting array of characters may contain zero-bytes; however,
@@ -1431,7 +1431,7 @@ validate (s1, s2)
       error (1, 0, "the [c*] repeat construct may not appear in string1");
     }
 
-  /* FIXME: it isn't clear from the POSIX spec that this is illegal,
+  /* FIXME: it isn't clear from the POSIX spec that this is invalid,
      but in the spirit of the other restrictions put on translation
      with character classes, this seems a logical interpretation.  */
   if (complement && s1->has_upper_or_lower)
@@ -1767,7 +1767,7 @@ main (argc, argv)
 
   /* Change this test if it is legal to give tr no options and
      no args at all.  POSIX doesn't specifically say anything
-     either way, but it looks like they implied it's illegal
+     either way, but it looks like they implied it's invalid
      by omission.  If you want to make tr do a slow imitation
      of `cat' use `tr a a'.  */
   if (non_option_args > 2)
