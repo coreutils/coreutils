@@ -35,6 +35,7 @@ libfetish_a_SOURCES = \
   strftime.c strftime.h \
   hash.c hash.h \
   hash-pjw.c hash-pjw.h \
+  __fpending.h \
   allocsa.c allocsa.h \
   argmatch.c argmatch.h \
   backupfile.c backupfile.h \
