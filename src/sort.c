@@ -35,6 +35,7 @@
 #include "human.h"
 #include "memcoll.h"
 #include "physmem.h"
+#include "stdio-safer.h"
 #include "xalloc.h"
 #include "xstrtol.h"
 
@@ -409,11 +410,12 @@ xfopen (const char *file, const char *how)
 
   if (STREQ (file, "-"))
     {
+      have_read_stdin = 1;
       fp = stdin;
     }
   else
     {
-      if ((fp = fopen (file, how)) == NULL)
+      if ((fp = fopen_safer (file, how)) == NULL)
 	{
 	  error (0, errno, "%s", file);
 	  cleanup ();
@@ -421,8 +423,6 @@ xfopen (const char *file, const char *how)
 	}
     }
 
-  if (fp == stdin)
-    have_read_stdin = 1;
   return fp;
 }
 
@@ -434,15 +434,6 @@ xfclose (FILE *fp)
       /* Allow reading stdin from tty more than once. */
       if (feof (fp))
 	clearerr (fp);
-    }
-  else if (fp == stdout)
-    {
-      if (fflush (fp) != 0)
-	{
-	  error (0, errno, _("flushing file"));
-	  cleanup ();
-	  exit (SORT_FAILURE);
-	}
     }
   else
     {
@@ -2520,12 +2511,7 @@ but lacks following character offset"));
     sort (files, nfiles, ofp, outfile);
   cleanup ();
 
-  /* If we wait for the implicit flush on exit, and the parent process
-     has closed stdout (e.g., exec >&- in a shell), then the output file
-     winds up empty.  I don't understand why.  This is under SunOS,
-     Solaris, Ultrix, and Irix.  This premature fflush makes the output
-     reappear. --karl@cs.umb.edu  */
-  if (fflush (ofp) < 0)
+  if (fclose (ofp) != 0)
     error (SORT_FAILURE, errno, _("%s: write error"), outfile);
 
   if (have_read_stdin && fclose (stdin) == EOF)
