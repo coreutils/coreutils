@@ -1,4 +1,6 @@
 Changes in release 3.17:
+[3.16v]
+* `ls -R EMPTY-DIR' now outputs the name of the directory
 [3.16u]
 * mv now fails (as it should) upon attempt to move a directory into itself
 * `cp -a --one-file-system' now copies any mount point directories it
