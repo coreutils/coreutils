@@ -31,7 +31,7 @@
 
 	* nanosleep.h (nanosleep): Guard declaration with
 	`#if ! HAVE_DECL_NANOSLEEP'.
-	Without this, OFS gets a redeclaration error for gnu_nanosleep, due to
+	Without this, OFS gets a redeclaration error for rpl_nanosleep, due to
 	the declaration in that vendor's sys/timers.h.
 	Reported by Christian Krackowizer.
 
