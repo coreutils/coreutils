@@ -1941,7 +1941,7 @@ store_columns (void)
   int i, j;
   int line = 0;
   int buff_start;
-  int last_col;			/* The rightmost column which will be saved in buff */
+  int last_col;		/* The rightmost column which will be saved in buff */
   COLUMN *p;
 
   buff_current = 0;
