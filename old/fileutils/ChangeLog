@@ -1,3 +1,9 @@
+Sun Oct 13 14:02:41 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/ls.c (print_long_format): Use strftime of localtime
+	(not ctime) to produce the date/time in long listings.
+	From Rafal Maszkowski.
+
 Sat Oct 12 18:20:38 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/mountlist.c (fstype_to_string): Handle fstypes of freebsd.
