@@ -49,9 +49,14 @@ struct cp_options
      on different filesystems from the one we started on. */
   int one_file_system;
 
-  /* If nonzero, give the copies the original files' permissions,
+  /* If nonzero, attempt to give the copies the original files' permissions,
      ownership, and timestamps. */
   int preserve;
+
+  /* If nonzero and any of the above (for preserve) file attributes cannot
+     be applied to a destination file, treat it as a failure.  E.g.  cp -p
+     requires this be nonzero, mv requires it be zero.  */
+  int require_preserve;
 
   /* If nonzero, copy directories recursively and copy special files
      as themselves rather than copying their contents. */
