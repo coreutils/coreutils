@@ -16,7 +16,8 @@ libfetish_a_SOURCES = \
   makepath.c mbswidth.c md5.c memcasecmp.c memcoll.c modechange.c \
   path-concat.c physmem.c \
   quote.c quotearg.c readtokens.c safe-read.c same.c save-cwd.c \
-  savedir.c sha.c stripslash.c unicodeio.c userspec.c version-etc.c xgetcwd.c \
+  savedir.c sha.c strftime.c stripslash.c \
+  unicodeio.c userspec.c version-etc.c xgetcwd.c \
   xgethostname.c xmalloc.c xstrdup.c xstrtod.c xstrtol.c xstrtoul.c \
   xstrtoumax.c yesno.c
 
