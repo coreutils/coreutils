@@ -1,42 +1,11 @@
-#! /sw/tools/bin/perl -w
-# FIXME: one line description
-# Generated automatically from @FROM@.
-# remember to add to perl_exe in Makefile.am
+#!/usr/bin/perl -w
+# -*- perl -*-
+
+eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+    if 0;
 
 use strict;
-use Getopt::Long;
-
-(my $VERSION = '$Revision: 1.4 $ ') =~ tr/[0-9].//cd;
 (my $program_name = $0) =~ s|.*/||;
-
-my $debug = 0;
-my $verbose = 0;
-
-sub usage ($)
-{
-  my ($exit_code) = @_;
-  my $STREAM = ($exit_code == 0 ? *STDOUT : *STDERR);
-  if ($exit_code != 0)
-    {
-      print $STREAM "Try `$program_name --help' for more information.\n";
-    }
-  else
-    {
-      # FIXME: add new option descriptions here
-      print $STREAM <<EOF;
-Usage: $program_name [OPTIONS] FIXME: FILE ?
-
-OPTIONS:
-
-   --help             display this help and exit
-   --version          output version information and exit
-   --debug            output debugging information
-   --verbose	      generate verbose output
-
-EOF
-    }
-  exit $exit_code;
-}
 
 sub END
 {
@@ -47,24 +16,33 @@ sub END
     or (warn "$program_name: closing standard output: $!\n"), _exit (1);
 }
 
+sub is_prime ($)
 {
-  GetOptions
-    (
-     # FIXME: add new options here
-     debug => \$debug,
-     verbose => \$verbose,
-     help => sub { usage 0 },
-     version => sub { print "$program_name version $VERSION\n"; exit },
-    ) or usage 1;
+  my ($n0) = @_;
+  use integer;
 
-  # FIXME: provide default here if necessary
-  # unshift (@ARGV, ".") if !@ARGV;
-#  print "$#ARGV ; $ARGV[0], $ARGV[1]\n" if $debug;
-#  foreach my $arg (@ARGV)
-#    {
-#      die "$program_name: FIXME - process $arg here"
-#    }
+  $n0 == 2
+    and return 1;
 
+  my $n = $n0;
+  my $d = 2;
+  my $w = 1;
+  my $q;
+  while (1)
+    {
+      $q = $n / $d;
+      #print "q=$q n=$n d=$d\n";
+      ($n == $q * $d)
+        and return 0;
+      $d += $w;
+      $q < $d
+	and last;
+      $w = 2;
+    }
+  return 1;
+}
+
+{
   my $wheel_size = $ARGV[0];
 
   my @primes = (2);
@@ -81,24 +59,29 @@ sub END
 	}
     }
 
+  my @increments;
   my $prev = 2;
   for (my $i = 3; ; $i += 2)
-  while (1)
     {
       my $rel_prime = 1;
-      foreach my $d (@primes)
+      foreach my $divisor (@primes)
 	{
-	  FIXME
+	  $i != $divisor && $i % $divisor == 0
+	    and $rel_prime = 0;
 	}
+
       if ($rel_prime)
 	{
-	  print $i, ' ', $i - $prev, "\n";
+	  #warn $i, ' ', $i - $prev, "\n";
+	  push @increments, $i - $prev;
 	  $prev = $i;
 
-	  $product < $i
+	  $product + 1 < $i
 	    and last;
 	}
     }
+
+  print "@increments\n";
 
   exit 0;
 }
