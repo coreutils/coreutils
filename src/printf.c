@@ -101,6 +101,7 @@ Usage: %s FORMAT [ARGUMENT]...\n\
   or:  %s OPTION\n\
 "),
 	      program_name, program_name);
+      printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
       fputs (_("\
 Print ARGUMENT(s) according to FORMAT.\n\
 \n\
