@@ -39,7 +39,9 @@
 
 #include "memcasecmp.h"
 
-/* Like memcmp, but ignore differences in case.  */
+/* Like memcmp, but ignore differences in case.
+   Convert to upper case (not lower) before comparing so that
+   join -i works with sort -f.  */
 
 int
 memcasecmp (vs1, vs2, n)
