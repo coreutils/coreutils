@@ -1,0 +1,74 @@
+#!/bin/sh
+# contrast ls -F and ls --indicator-style=file-type
+
+if test "$VERBOSE" = yes; then
+  set -x
+  ls --version
+fi
+
+. $srcdir/../envvar-check
+. $srcdir/../lang-default
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+mkdir sub
+cd sub
+mkdir dir
+touch regular executable
+chmod a+x executable
+ln -s regular slink-reg
+ln -s dir slink-dir
+ln -s nowhere slink-dangle
+mknod block b 20 20 2> /dev/null && block="block
+"
+mknod char c 10 10 2> /dev/null && char="char
+"
+mkfifo fifo
+cd ..
+
+
+if test $framework_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+fi
+
+fail=0
+
+ls -1F sub > out || fail=1
+cat <<EOF > exp
+$block${char}dir/
+executable*
+fifo|
+regular
+slink-dangle@
+slink-dir@
+slink-reg@
+EOF
+
+sed 's/\*//' exp > exp2
+ls -1 --indicator-style=file-type sub > out2 || fail=1
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
+cmp out2 exp2 || fail=1
+test $fail = 1 && diff out2 exp2 2> /dev/null
+
+ls --color -1F sub > out3 || fail=1
+cat <<EOF > exp3
+$block${char}dir/
+executable*
+fifo|
+regular
+slink-dangle@
+slink-dir@
+slink-reg@
+EOF
+
+(exit $fail); exit $fail
