@@ -1,6 +1,9 @@
 1998-01-10  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* Version 3.16k.
+
 	* src/install.c (install_file_to_path): New function.
+	FIXME: update fileutils.texi.
 	(main): Handle new option, -D.
 	Based on a patch from Marty Leisner.
 	(usage): Describe -D.
