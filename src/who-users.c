@@ -187,7 +187,7 @@ print_uptime (int n)
 			       ? 12 : tmn->tm_hour % 12),
 	  tmn->tm_min, (tmn->tm_hour < 12 ? _("am") : _("pm")));
   if (updays > 0)
-    printf ("%d %s,", updays, (updays == 1 ? _("days") : _("day")));
+    printf ("%d %s,", updays, (updays == 1 ? _("day") : _("days")));
   printf (" %2d:%02d,  %d %s", uphours, upmins, entries,
 	  (entries == 1) ? _("user") : _("users"));
 
