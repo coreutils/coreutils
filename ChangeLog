@@ -4,7 +4,7 @@
 
 	* src/factor.c (print_factors): Give a separate diagnostic
 	for numbers that are too large, but otherwise valid.
-	Reported by Varga Dániel.
+	Reported by Dániel Varga.
 
 2003-09-10  Jim Meyering  <jim@meyering.net>
 
