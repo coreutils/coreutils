@@ -1,6 +1,13 @@
-2002-06-24  Jim Meyering  <meyering@lucent.com>
+2002-06-25  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.10.
+
+	* src/remove.c (prompt): Add a comment to help translators work
+	around the problem of making the translations of the adjective
+	`write-protected' and the corresponding run-time-variable noun
+	(e.g., file, directory, symlink, etc.) consistent.  From Paul Eggert.
+
+2002-06-24  Jim Meyering  <meyering@lucent.com>
 
 	* src/stat.c (usage): Add missing open-quote.
 	Reported by Michael Piefel.
