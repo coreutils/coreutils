@@ -1,4 +1,24 @@
+Sat Oct 08 10:39:32 1994  Jim Meyering  (meyering@comco.com)
+
+	* mountlist.c: Always include <sys/param.h> if it exists.
+	(fstype_to_string) [__NetBSD__]: Don't define this function.
+	(read_filesystem_list) [__NetBSD__]: Use fsp's f_fstypename field,
+	rather than fstype_to_string (f_type).  With suggestions from
+	Greg Hudson (ghudson@mit.edu).
+
+	* lib/Makefile.in (OBJECTS): Remove eaccess.o.
+	* configure.in (AC_REPLACE_FUNCS): Add `eaccess' here instead.
+	The Hurd and Linux will have it.
+
 Fri Oct 07 20:27:48 1994  Jim Meyering  (meyering@comco.com)
+
+	* (doc): New subdirectory with texinfo documentation.
+	* fileutils.texi: Thanks to Franc,ois Pinard and Karl Berry!
+
+	* Makefile.in (All of them): Update from the ones in sh-utils.
+	From now on, rules and definitions that are comon to the fileutils,
+	textutils, and sh-utils will get ChangeLog entries only in the
+	sh-utils.
 
 	* Makefile.in (install, uninstall): Prepend ginstall->install
 	mapping to standard $(transform) sed mapping.

@@ -245,9 +245,6 @@ extern int errno;
    otherwise return it unchanged. */
 #define convert_blocks(b, k) ((k) ? ((b) + 1) / 2 : (b))
 
-#include "safe-stat.h"
-#include "safe-lstat.h"
-
 #ifndef RETSIGTYPE
 #define RETSIGTYPE void
 #endif
