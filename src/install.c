@@ -42,6 +42,9 @@
    -s, --strip
 	Strip the symbol tables from installed files.
 
+   -p, --preserve-timestamps
+        Retain creation and modification timestamps when installing files.
+
    -d, --directory
 	Create a directory and its leading directories, if they
 	do not already exist.  Set the owner, group and mode
@@ -123,6 +126,7 @@ int isdir ();
 enum backup_type get_version ();
 
 static int change_attributes __P ((char *path, int no_need_to_chown));
+static int change_timestamps __P ((char *from, char *to));
 static int copy_file __P ((char *from, char *to, int *to_created));
 static int install_file_in_dir __P ((char *from, char *to_dir));
 static int install_file_in_file __P ((char *from, char *to));
@@ -154,6 +158,9 @@ static int mode;
 /* If nonzero, strip executable files after copying them. */
 static int strip_files;
 
+/* If nonzero, preserve timestamps when installing files. */
+static int preserve_timestamps;
+
 /* If nonzero, install a directory instead of a regular file. */
 static int dir_arg;
 
@@ -170,6 +177,7 @@ static struct option const long_options[] =
   {"group", required_argument, NULL, 'g'},
   {"mode", required_argument, NULL, 'm'},
   {"owner", required_argument, NULL, 'o'},
+  {"preserve-timestamps", no_argument, NULL, 'p'},
   {"backup", no_argument, NULL, 'b'},
   {"version-control", required_argument, NULL, 'V'},
   {"help", no_argument, &show_help, 1},
@@ -195,6 +203,7 @@ main (int argc, char **argv)
   group_name = NULL;
   mode = 0755;
   strip_files = 0;
+  preserve_timestamps = 0;
   dir_arg = 0;
   umask (0);
 
@@ -203,7 +212,7 @@ main (int argc, char **argv)
       simple_backup_suffix = version;
    version = getenv ("VERSION_CONTROL");
 
-  while ((optc = getopt_long (argc, argv, "bcsdg:m:o:V:S:", long_options,
+  while ((optc = getopt_long (argc, argv, "bcsdg:m:o:pV:S:", long_options,
 			      NULL)) != -1)
     {
       switch (optc)
@@ -229,6 +238,9 @@ main (int argc, char **argv)
 	  break;
 	case 'o':
 	  owner_name = optarg;
+	  break;
+	case 'p':
+	  preserve_timestamps = 1;
 	  break;
 	case 'S':
 	  simple_backup_suffix = optarg;
@@ -324,7 +336,11 @@ install_file_in_file (char *from, char *to)
   no_need_to_chown = (to_created
 		      && owner_name == NULL
 		      && group_name == NULL);
-  return change_attributes (to, no_need_to_chown);
+  if (change_attributes (to, no_need_to_chown))
+    return 1;
+  if (preserve_timestamps)
+    return change_timestamps (from, to);
+  return 0;
 }
 
 /* Copy file FROM into directory TO_DIR, keeping its same name,
@@ -508,6 +524,30 @@ change_attributes (char *path, int no_need_to_chown)
   return 0;
 }
 
+/* Set the timestamps of file TO to match those of file FROM.
+   Return 0 if successful, 1 if not. */
+
+static int
+change_timestamps (char *from, char *to)
+{
+  struct stat stb;
+  struct utimbuf utb;
+
+  if (stat (from, &stb))
+    {
+      error (0, errno, "%s", from);
+      return 1;
+    }
+  utb.actime = stb.st_atime;
+  utb.modtime = stb.st_mtime;
+  if (utime (to, &utb))
+    {
+      error (0, errno, "%s", to);
+      return 1;
+    }
+  return 0;
+}
+
 /* Strip the symbol table from the file PATH.
    We could dig the magic number out of the file first to
    determine whether to strip it, but the header files and
@@ -605,8 +645,9 @@ format, make all components of the given DIRECTORY(ies).\n\
   -c                  (ignored)\n\
   -d, --directory     create [leading] directories, mandatory for 3rd format\n\
   -g, --group=GROUP   set group ownership, instead of process' current group\n\
-  -m, --mode=MODE     set permission mode (as in chmod), instead of rw-r--r--\n\
+  -m, --mode=MODE     set permission mode (as in chmod), instead of rwxr-xr-x\n\
   -o, --owner=OWNER   set ownership (super-user only)\n\
+  -p, --preserve-timestamps   Retain previous creation/modification times\n\
   -s, --strip         strip symbol tables, only for 1st and 2nd formats\n\
   -S, --suffix=SUFFIX override the usual backup suffix\n\
   -V, --version-control=WORD   override the usual version control\n\
