@@ -2921,7 +2921,7 @@ as @samp{-k 2}, or sort fields consisting of a range, as @samp{-k 2,3},
 retain the field separators present between the endpoints of the range.
 
 @item -T @var{tempdir}
-@itemx --temporary-directory=@var{tempdi
+@itemx --temporary-directory=@var{tempdir}
 @opindex -T
 @opindex --temporary-directory
 @cindex temporary directory
