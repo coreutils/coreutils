@@ -1091,6 +1091,8 @@ main (int margc, char **margv)
     parse_long_options (margc, margv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 			AUTHORS, usage);
 
+  argv = margv;
+
   if (LBRACKET)
     {
       --margc;
@@ -1099,7 +1101,6 @@ main (int margc, char **margv)
 	test_syntax_error (_("missing `]'\n"), NULL);
     }
 
-  argv = margv;
   argc = margc;
   pos = 1;
 
