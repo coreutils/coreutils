@@ -11,6 +11,9 @@
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
 
+@SET_MAKE@
+
+
 SHELL = @SHELL@
 
 srcdir = @srcdir@
@@ -59,9 +62,6 @@ POST_UNINSTALL = :
 
 host_alias = @host_alias@
 host_triplet = @host@
-
-@SET_MAKE@
-AMDEP = @AMDEP@
 AMTAR = @AMTAR@
 AWK = @AWK@
 CATALOGS = @CATALOGS@
@@ -101,7 +101,6 @@ NEED_SETGID = @NEED_SETGID@
 OPTIONAL_BIN_PROGS = @OPTIONAL_BIN_PROGS@
 OPTIONAL_BIN_ZCRIPTS = @OPTIONAL_BIN_ZCRIPTS@
 PACKAGE = @PACKAGE@
-PERL = @PERL@
 POFILES = @POFILES@
 POSUB = @POSUB@
 POW_LIBM = @POW_LIBM@
@@ -115,9 +114,11 @@ USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 YACC = @YACC@
 _am_include = @_am_include@
+_am_quote = @_am_quote@
 install_sh = @install_sh@
 l = @l@
 
+PERL = @PERL@
 
 x = date
 explicit = 
@@ -149,8 +150,6 @@ relative-2.O relative-2.E
 
 EXTRA_DIST = Test.pm $x-tests $(explicit) $(maint_gen)
 noinst_SCRIPTS = $x-tests
-
-PERL = @PERL@
 editpl = sed -e 's,@''PERL''@,$(PERL),g' -e 's,@''srcdir''@,@srcdir@,g'
 
 TESTS = $x-tests
@@ -169,16 +168,15 @@ SCRIPTS = $(noinst_SCRIPTS)
 
 DIST_SOURCES =
 DIST_COMMON = Makefile.am Makefile.in
-
 all: all-am
 
 .SUFFIXES:
 
-$(srcdir)/Makefile.in: Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
+$(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnits  tests/date/Makefile
 
-Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && \
 	  CONFIG_HEADERS= CONFIG_LINKS= \
 	  CONFIG_FILES=$(subdir)/$@ $(SHELL) ./config.status
@@ -249,6 +247,10 @@ distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
 distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
+	  dir=`echo "$$file" | sed -e 's,/[^/]*$$,,'`; \
+	  if test "$$dir" != "$$file" && test "$$dir" != "."; then \
+	    $(mkinstalldirs) "$(distdir)/$$dir"; \
+	  fi; \
 	  if test -d $$d/$$file; then \
 	    cp -pR $$d/$$file $(distdir) \
 	    || exit 1; \
@@ -326,6 +328,8 @@ maintainer-clean-am: distclean-am maintainer-clean-generic
 mostlyclean: mostlyclean-am
 
 mostlyclean-am: mostlyclean-generic
+
+uninstall-am:
 
 .PHONY: all all-am check check-TESTS check-am clean clean-generic \
 	distclean distclean-generic distdir dvi dvi-am info info-am \
