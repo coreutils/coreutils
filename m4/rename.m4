@@ -13,23 +13,23 @@ AC_DEFUN(vb_FUNC_RENAME,
  AC_CACHE_CHECK([whether rename is broken],
   vb_cv_func_rename_trailing_slash_bug,
   [
-    if mkdir conftestdir; then
-      vb_cv_func_rename_trailing_slash_bug=no
-    else
-      AC_TRY_RUN([
-#         include <stdio.h>
-          int
-          main ()
-          {
-            exit (rename ("conftestdir/", "conftestdir2") ? 1 : 0);
-          }
-	],
-	vb_cv_func_rename_trailing_slash_bug=no,
-	vb_cv_func_rename_trailing_slash_bug=yes,
-	dnl When crosscompiling, assume rename is broken.
-	vb_cv_func_rename_trailing_slash_bug=yes)
+    rm -rf conftestdir conftestdir2
+    mkdir conftestdir ||
+      AC_MSG_ERROR([cannot create temporary directory])
+    AC_TRY_RUN([
+#       include <stdio.h>
+        int
+        main ()
+        {
+          exit (rename ("conftestdir/", "conftestdir2") ? 1 : 0);
+        }
+      ],
+      vb_cv_func_rename_trailing_slash_bug=no,
+      vb_cv_func_rename_trailing_slash_bug=yes,
+      dnl When crosscompiling, assume rename is broken.
+      vb_cv_func_rename_trailing_slash_bug=yes)
+
       rm -rf conftestdir conftestdir2
-    fi
   ])
   if test $vb_cv_func_rename_trailing_slash_bug = yes; then
     AC_LIBOBJ(rename)
