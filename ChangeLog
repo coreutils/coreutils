@@ -1,6 +1,10 @@
-2004-07-02  Paul Eggert  <eggert@cs.ucla.edu>
+2004-07-04  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/copy.c (copy_internal): Add a FIXME comment.
+
+2004-07-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/copy.c (copy_dir): Assume path_concat returns non-NULL.
 	* src/cp.c (do_copy): Likewise.
