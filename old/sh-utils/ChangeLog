@@ -1,3 +1,8 @@
+1998-03-13  Jim Meyering  <meyering@eng.ascend.com>
+
+	* lib/getugroups.c (getugroups): Don't add a group number if it
+	would be a duplicate.  From Ulrich Drepper.
+
 1998-02-22  Jim Meyering  <meyering@eng.ascend.com>
 
 	* tests/Makefile.am (EXTRA_DIST): Add mk-script.
