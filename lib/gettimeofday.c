@@ -25,6 +25,7 @@
 /* Disable the definitions of these functions (from config.h)
    so we can use the library versions here.  */
 #undef gettimeofday
+#undef gmtime
 #undef localtime
 #undef tzset
 
@@ -55,6 +56,18 @@ struct tm *
 rpl_localtime (const time_t *timep)
 {
   struct tm *tm = localtime (timep);
+
+  if (! localtime_buffer_addr)
+    localtime_buffer_addr = tm;
+
+  return tm;
+}
+
+/* Same as above, since gmtime and localtime use the same buffer.  */
+struct tm *
+rpl_gmtime (const time_t *timep)
+{
+  struct tm *tm = gmtime (timep);
 
   if (! localtime_buffer_addr)
     localtime_buffer_addr = tm;
