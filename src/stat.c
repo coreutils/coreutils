@@ -84,196 +84,191 @@ print_human_type (mode_t mode)
 }
 
 static void
-print_human_fstype(struct statfs *statfsbuf)
+print_human_fstype (struct statfs const *statfsbuf)
 {
-  char *type;
+  char const *type;
 
   switch (statfsbuf->f_type)
+    {
 #if defined (__linux__)
-  {
-    	case S_MAGIC_AFFS:
-	  type = strdup("affs");
-	  break;
-	case S_MAGIC_EXT:
-	  type = strdup("ext");
-	  break;
-	case S_MAGIC_EXT2_OLD:
-	  type = strdup("ext2");
-	  break;
-	case S_MAGIC_EXT2:
-	  type = strdup("ext2/ext3");
-	  break;
-	case S_MAGIC_HPFS:
-	  type = strdup("hpfs");
-	  break;
-	case S_MAGIC_ISOFS:
-	  type = strdup("isofs");
-	  break;
-	case S_MAGIC_ISOFS_WIN:
-	  type = strdup("isofs");
-	  break;
-	case S_MAGIC_ISOFS_R_WIN:
-	  type = strdup("isofs");
-	  break;
-	case S_MAGIC_MINIX:
-	  type = strdup("minix");
-	case S_MAGIC_MINIX_30:
-	  type = strdup("minix (30 char.)");
-	  break;
-	case S_MAGIC_MINIX_V2:
-	  type = strdup("minix v2");
-	  break;
-	case S_MAGIC_MINIX_V2_30:
-	  type = strdup("minix v2 (30 char.)");
-	  break;
-	case S_MAGIC_MSDOS:
-	  type = strdup("msdos");
-	  break;
-	case S_MAGIC_FAT:
-	  type = strdup("fat");
-	  break;
-	case S_MAGIC_NCP:
-	  type = strdup("novell");
-	  break;
-	case S_MAGIC_NFS:
-	  type = strdup("nfs");
-	  break;
-	case S_MAGIC_PROC:
-	  type = strdup("proc");
-	  break;
-	case S_MAGIC_SMB:
-	  type = strdup("smb");
-	  break;
-	case S_MAGIC_XENIX:
-	  type = strdup("xenix");
-	  break;
-	case S_MAGIC_SYSV4:
-	  type = strdup("sysv4");
-	  break;
-	case S_MAGIC_SYSV2:
-	  type = strdup("sysv2");
-	  break;
-	case S_MAGIC_COH:
-	  type = strdup("coh");
-	  break;
-	case S_MAGIC_UFS:
-	  type = strdup("ufs");
-	  break;
-	case S_MAGIC_XIAFS:
-	  type = strdup("xia");
-	  break;
-	case S_MAGIC_NTFS:
-	  type = strdup("ntfs");
-	  break;
-	case S_MAGIC_TMPFS:
-	  type = strdup("tmpfs");
-	  break;
-	case S_MAGIC_REISERFS:
-	  type = strdup("reiserfs");
-	  break;
-	case S_MAGIC_CRAMFS:
-	  type = strdup("cramfs");
-	  break;
-	case S_MAGIC_ROMFS:
-	  type = strdup("romfs");
-	  break;
+    case S_MAGIC_AFFS:
+      type = "affs";
+      break;
+    case S_MAGIC_EXT:
+      type = "ext";
+      break;
+    case S_MAGIC_EXT2_OLD:
+      type = "ext2";
+      break;
+    case S_MAGIC_EXT2:
+      type = "ext2/ext3";
+      break;
+    case S_MAGIC_HPFS:
+      type = "hpfs";
+      break;
+    case S_MAGIC_ISOFS:
+      type = "isofs";
+      break;
+    case S_MAGIC_ISOFS_WIN:
+      type = "isofs";
+      break;
+    case S_MAGIC_ISOFS_R_WIN:
+      type = "isofs";
+      break;
+    case S_MAGIC_MINIX:
+      type = "minix";
+    case S_MAGIC_MINIX_30:
+      type = "minix (30 char.)";
+      break;
+    case S_MAGIC_MINIX_V2:
+      type = "minix v2";
+      break;
+    case S_MAGIC_MINIX_V2_30:
+      type = "minix v2 (30 char.)";
+      break;
+    case S_MAGIC_MSDOS:
+      type = "msdos";
+      break;
+    case S_MAGIC_FAT:
+      type = "fat";
+      break;
+    case S_MAGIC_NCP:
+      type = "novell";
+      break;
+    case S_MAGIC_NFS:
+      type = "nfs";
+      break;
+    case S_MAGIC_PROC:
+      type = "proc";
+      break;
+    case S_MAGIC_SMB:
+      type = "smb";
+      break;
+    case S_MAGIC_XENIX:
+      type = "xenix";
+      break;
+    case S_MAGIC_SYSV4:
+      type = "sysv4";
+      break;
+    case S_MAGIC_SYSV2:
+      type = "sysv2";
+      break;
+    case S_MAGIC_COH:
+      type = "coh";
+      break;
+    case S_MAGIC_UFS:
+      type = "ufs";
+      break;
+    case S_MAGIC_XIAFS:
+      type = "xia";
+      break;
+    case S_MAGIC_NTFS:
+      type = "ntfs";
+      break;
+    case S_MAGIC_TMPFS:
+      type = "tmpfs";
+      break;
+    case S_MAGIC_REISERFS:
+      type = "reiserfs";
+      break;
+    case S_MAGIC_CRAMFS:
+      type = "cramfs";
+      break;
+    case S_MAGIC_ROMFS:
+      type = "romfs";
+      break;
 #elif __GNU__
-        case FSTYPE_UFS:
-          type = strdup("ufs");
-          break;
-        case FSTYPE_NFS:
-          type = strdup("nfs");
-          break;
-        case FSTYPE_GFS:
-          type = strdup("gfs");
-          break;
-        case FSTYPE_LFS:
-          type = strdup("lfs");
-          break;
-        case FSTYPE_SYSV:
-          type = strdup("sysv");
-          break;
-        case FSTYPE_FTP:
-          type = strdup("ftp");
-          break;
-        case FSTYPE_TAR:
-          type = strdup("tar");
-          break;
-        case FSTYPE_AR:
-          type = strdup("ar");
-          break;
-        case FSTYPE_CPIO:
-          type = strdup("cpio");
-          break;
-        case FSTYPE_MSLOSS:
-          type = strdup("msloss");
-          break;
-        case FSTYPE_CPM:
-          type = strdup("cpm");
-          break;
-        case FSTYPE_HFS:
-          type = strdup("hfs");
-          break;
-        case FSTYPE_DTFS:
-          type = strdup("dtfs");
-          break;
-        case FSTYPE_GRFS:
-          type = strdup("grfs");
-          break;
-        case FSTYPE_TERM:
-          type = strdup("term");
-          break;
-        case FSTYPE_DEV:
-          type = strdup("dev");
-          break;
-        case FSTYPE_PROC:
-          type = strdup("proc");
-          break;
-        case FSTYPE_IFSOCK:
-          type = strdup("ifsock");
-          break;
-        case FSTYPE_AFS:
-          type = strdup("afs");
-          break;
-        case FSTYPE_DFS:
-          type = strdup("dfs");
-          break;
-        case FSTYPE_PROC9:
-          type = strdup("proc9");
-          break;
-        case FSTYPE_SOCKET:
-          type = strdup("socket");
-          break;
-        case FSTYPE_MISC:
-          type = strdup("misc");
-          break;
-        case FSTYPE_EXT2FS:
-          type = strdup("ext2/ext3");
-          break;
-        case FSTYPE_HTTP:
-          type = strdup("http");
-          break;
-        case FSTYPE_MEMFS:
-          type = strdup("memfs");
-          break;
-        case FSTYPE_ISO9660:
-          type = strdup("iso9660");
-          break;
+    case FSTYPE_UFS:
+      type = "ufs";
+      break;
+    case FSTYPE_NFS:
+      type = "nfs";
+      break;
+    case FSTYPE_GFS:
+      type = "gfs";
+      break;
+    case FSTYPE_LFS:
+      type = "lfs";
+      break;
+    case FSTYPE_SYSV:
+      type = "sysv";
+      break;
+    case FSTYPE_FTP:
+      type = "ftp";
+      break;
+    case FSTYPE_TAR:
+      type = "tar";
+      break;
+    case FSTYPE_AR:
+      type = "ar";
+      break;
+    case FSTYPE_CPIO:
+      type = "cpio";
+      break;
+    case FSTYPE_MSLOSS:
+      type = "msloss";
+      break;
+    case FSTYPE_CPM:
+      type = "cpm";
+      break;
+    case FSTYPE_HFS:
+      type = "hfs";
+      break;
+    case FSTYPE_DTFS:
+      type = "dtfs";
+      break;
+    case FSTYPE_GRFS:
+      type = "grfs";
+      break;
+    case FSTYPE_TERM:
+      type = "term";
+      break;
+    case FSTYPE_DEV:
+      type = "dev";
+      break;
+    case FSTYPE_PROC:
+      type = "proc";
+      break;
+    case FSTYPE_IFSOCK:
+      type = "ifsock";
+      break;
+    case FSTYPE_AFS:
+      type = "afs";
+      break;
+    case FSTYPE_DFS:
+      type = "dfs";
+      break;
+    case FSTYPE_PROC9:
+      type = "proc9";
+      break;
+    case FSTYPE_SOCKET:
+      type = "socket";
+      break;
+    case FSTYPE_MISC:
+      type = "misc";
+      break;
+    case FSTYPE_EXT2FS:
+      type = "ext2/ext3";
+      break;
+    case FSTYPE_HTTP:
+      type = "http";
+      break;
+    case FSTYPE_MEMFS:
+      type = "memfs";
+      break;
+    case FSTYPE_ISO9660:
+      type = "iso9660";
+      break;
 #endif
-	default:
-	  if ((type = (char*)malloc(30 * sizeof(char))) == NULL) {
-		perror("malloc error");
-		return;
-          }
-#ifdef __USE_FILE_OFFSET64
-	  sprintf (type, "UNKNOWN (0x%x)\n", statfsbuf->f_type);
-#else
-	  sprintf (type, "UNKNOWN (0x%x)\n", statfsbuf->f_type);
-#endif
-  }
+    default:
+      type = NULL;
+      break;
+    }
 
-  printf("%s", type);
-  free(type);
+  if (type)
+    fputs (type, stdout);
+  else
+    printf ("UNKNOWN (0x%x)\n", statfsbuf->f_type);
 }
 
 static void
