@@ -1,6 +1,11 @@
-2003-09-25  Jim Meyering  <jim@meyering.net>
+2003-09-26  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.92.
+
+	* man/rm.x: Also list `chattr' in SEE ALSO section.
+	Suggestion from Mark Hubbart.
+
+2003-09-25  Jim Meyering  <jim@meyering.net>
 
 	* configure.ac: Don't invoke AC_AIX or AC_MINIX explicitly, now
 	that we use gl_USE_SYSTEM_EXTENSIONS, since it AC_REQUIREs them.
