@@ -26,7 +26,7 @@ use Text::Tabs qw(expand);
 use POSIX qw(strftime setlocale LC_TIME);
 
 my $this_program = 'help2man';
-my $this_version = '1.012';
+my $this_version = '1.013';
 my $version_info = <<EOT;
 $this_program $this_version
 
@@ -285,8 +285,6 @@ for (@help)
 	$break = '';
     }
 
-    s/\\/\\\\/g;
-
     my $output = '';
     while (length)
     {
@@ -322,6 +320,9 @@ for (@help)
     }
 
     $_ = $output;
+
+    # Escape backslashes.
+    s/\\/\\e/g;
 
     # Convert options.
     s/(^| )(-[][\w=-]+)/$1 . convert_option $2/mge;
