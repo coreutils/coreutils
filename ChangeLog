@@ -1,6 +1,13 @@
-2002-10-14  Jim Meyering  <meyering@lucent.com>
+2002-10-17  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.4.
+
+	Fix a problem that could make cat misbehave on systems which
+	give invalid (unreasonably large) values for stat.st_blksize.
+	* src/system.h (ST_BLKSIZE): Ensure that the result is in [1..4MB].
+	Reported by Petter Reinholdtsen.
+
+2002-10-14  Jim Meyering  <meyering@lucent.com>
 
 	Specifying a printf conversion specifer as nl's separator string
 	could cause nl to segfault.
