@@ -1,23 +1,25 @@
 /* obstack.h - object stack macros
    Copyright (C) 1988,89,90,91,92,93,94,96,97 Free Software Foundation, Inc.
 
-   This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
 
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public License as
-   published by the Free Software Foundation; either version 2 of the
-   License, or (at your option) any later version.
+   NOTE: The canonical source of this file is maintained with the GNU C Library.
+   Bugs can be reported to bug-glibc@prep.ai.mit.edu.
 
-   The GNU C Library is distributed in the hope that it will be useful,
+   This program is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the
+   Free Software Foundation; either version 2, or (at your option) any
+   later version.
+
+   This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public
-   License along with the GNU C Library; see the file COPYING.LIB.  If not,
-   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+   USA.  */
 
 /* Summary:
 
@@ -104,9 +106,9 @@ Summary:
 
 /* Don't do the contents of this file more than once.  */
 
-#ifndef __OBSTACK_H__
-#define __OBSTACK_H__
-
+#ifndef _OBSTACK_H
+#define _OBSTACK_H 1
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -379,6 +381,11 @@ __extension__								\
      _obstack_newchunk (__o, __len);					\
    (void) 0; })
 
+#define obstack_empty_p(OBSTACK)					\
+  __extension__								\
+  ({ struct obstack *__o = (OBSTACK);					\
+     (__o->chunk->prev == 0 && __o->next_free - __o->chunk->contents == 0); })
+
 #define obstack_grow(OBSTACK,where,length)				\
 __extension__								\
 ({ struct obstack *__o = (OBSTACK);					\
@@ -492,6 +499,9 @@ __extension__								\
 #define obstack_room(h)		\
  (unsigned) ((h)->chunk_limit - (h)->next_free)
 
+#define obstack_empty_p(h) \
+ ((h)->chunk->prev == 0 && (h)->next_free - (h)->chunk->contents == 0)
+
 /* Note that the call to _obstack_newchunk is enclosed in (..., 0)
    so that we can avoid having void expressions
    in the arms of the conditional expression.
@@ -587,4 +597,4 @@ __extension__								\
 }	/* C++ */
 #endif
 
-#endif /* not __OBSTACK_H__ */
+#endif /* obstack.h */
