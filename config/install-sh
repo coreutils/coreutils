@@ -106,7 +106,7 @@ done
 
 if [ x"$src" = x ]
 then
-	echo "install: no input file specified" >&2
+	echo "$0: no input file specified" >&2
 	exit 1
 else
 	:
@@ -132,13 +132,13 @@ else
 	then
 		:
 	else
-		echo "install: $src does not exist" >&2
+		echo "$0: $src does not exist" >&2
 		exit 1
 	fi
 
 	if [ x"$dst" = x ]
 	then
-		echo "install: no destination specified" >&2
+		echo "$0: no destination specified" >&2
 		exit 1
 	else
 		:
@@ -255,7 +255,7 @@ else
 		$doit $rmcmd -f "$dstdir/$dstfile" 2>/dev/null ||
 		$doit $mvcmd -f "$dstdir/$dstfile" "$rmtmp" 2>/dev/null ||
 		{
-		  echo "install: cannot unlink or rename $dstdir/$dstfile" >&2
+		  echo "$0: cannot unlink or rename $dstdir/$dstfile" >&2
 		  (exit 1); exit
 		}
 	else
