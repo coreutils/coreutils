@@ -70,8 +70,8 @@ extern int errno;
 #  define member(c, s) ((c) ? (strchr ((s), (c)) ? 1 : 0) : 0)
 #endif /* !member */
 
-extern gid_t getgid (void), getegid (void);
-extern uid_t geteuid (void);
+extern gid_t getegid ();
+extern uid_t geteuid ();
 
 #if !defined (R_OK)
 #define R_OK 4
@@ -130,8 +130,8 @@ static int or __P ((void));
 #define NO_RETURN_ATTRIBUTE /* empty */
 #endif
 
-static void test_syntax_error (char *format, char *arg) NO_RETURN_ATTRIBUTE;
-static void beyond (void) NO_RETURN_ATTRIBUTE;
+static void test_syntax_error __P ((char *format, char *arg)) NO_RETURN_ATTRIBUTE;
+static void beyond __P ((void)) NO_RETURN_ATTRIBUTE;
 
 static void
 test_syntax_error (char *format, char *arg)
@@ -1041,6 +1041,10 @@ INTEGER may also be -l STRING, which evaluates to the length of STRING.\n\
 }
 #endif /* TEST_STANDALONE */
 
+#if !defined (TEST_STANDALONE)
+# define main test_command
+#endif
+
 /*
  * [:
  *	'[' expr ']'
@@ -1048,13 +1052,7 @@ INTEGER may also be -l STRING, which evaluates to the length of STRING.\n\
  *	test expr
  */
 int
-#if defined (TEST_STANDALONE)
-main (margc, margv)
-#else
-test_command (margc, margv)
-#endif /* !TEST_STANDALONE */
-     int margc;
-     char **margv;
+main (int margc, char **margv)
 {
   int value;
 
