@@ -1,5 +1,5 @@
 /* `dir', `vdir' and `ls' directory listing programs for GNU.
-   Copyright (C) 85, 88, 90, 91, 1995-2003 Free Software Foundation, Inc.
+   Copyright (C) 85, 88, 90, 91, 1995-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -662,7 +662,7 @@ static char const *long_time_format[2] =
     N_("%b %e %H:%M")
   };
 
-/* The exit status to use if we don't get any fatal errors. */
+/* Nonzero if a non-fatal error has occurred.  */
 
 static int exit_status;
 
@@ -1210,7 +1210,7 @@ main (int argc, char **argv)
       hash_free (active_dir_set);
     }
 
-  exit (exit_status);
+  exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /* Set all the option flags according to the switches specified.
@@ -3903,7 +3903,7 @@ calculate_columns (bool by_columns)
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
