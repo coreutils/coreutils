@@ -124,7 +124,7 @@ add_tabstop (int tabval)
    to the list of tabstops. */
 
 static void
-parse_tabstops (char *stops)
+parse_tabstops (const char *stops)
 {
   int tabval = -1;
 
@@ -152,7 +152,7 @@ parse_tabstops (char *stops)
    contains only nonzero, ascending values. */
 
 static void
-validate_tabstops (int *tabs, int entries)
+validate_tabstops (const int *tabs, int entries)
 {
   int prev_tab = 0;
   int i;
