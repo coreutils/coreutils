@@ -1,5 +1,7 @@
 Mon Sep  2 10:59:10 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* POTFILES.in: Add lib/rpmatch.c.
+
 	* lib/rpmatch.c (ENABLE_NLS): Include libintl.h and define _ to
 	gettext.
 
