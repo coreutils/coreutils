@@ -478,7 +478,6 @@ libfetish_a_SOURCES = \
   same.c same.h \
   save-cwd.c save-cwd.h \
   savedir.c savedir.h \
-  search_.h \
   settime.c \
   sha1.c sha1.h \
   sig2str.h \
@@ -531,7 +530,6 @@ EXTRA_DIST = config.charset ref-add.sin ref-del.sin \
 stdbool_.h alloca_.h fnmatch_.h fnmatch_loop.c
 charset_alias = $(DESTDIR)$(libdir)/charset.alias
 charset_tmp = $(DESTDIR)$(libdir)/charset.tmp
-DISTCLEANFILES = ftw.h search.h
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -876,7 +874,6 @@ clean-generic:
 
 distclean-generic:
 	-rm -f $(CONFIG_CLEAN_FILES)
-	-test -z "$(DISTCLEANFILES)" || rm -f $(DISTCLEANFILES)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"

@@ -1,3 +1,42 @@
+2003-12-19  Jim Meyering  <jim@meyering.net>
+
+	Rewrite fts to use a hash table or O(1)-mem cycle-detection
+	code rather than the tree-based tsearch functions.
+	* fts_.h: Include hash.h and cycle-check.h.
+	(FTS_TIGHT_CYCLE_CHECK): New value.
+	(FTS_OPTIONMASK): Adjust to include the new value.
+	(FTS_NAMEONLY, FTS_STOP): Increase to allow room for new value.
+	(struct FTS) [active_dir_ht]: New member.  Replaces fts_dir_signatures.
+	(struct FTS) [cycle_state]: New member.
+	* fts.c: Don't include <search.h>.
+	[HAVE_INTTYPES_H]: Include <inttypes.h>.
+	(tdestroy, tfind, tsearch): Remove definitions.
+	(struct Active_dir): Rename from `known_object'.
+	(AD_compare, AD_hash): New functions.
+	(enter_dir, leave_dir): Rewrite to manipulate a hash table
+	rather than a tree.
+	(fts_open): Initialize hash table or cycle_state buffer.
+	(free_node): Remove function.
+	(find_matching_ancestor): Renamed/rewritten from look_up_active_dir.
+	(fts_cross_check): Adapt to use new data structure.
+
+	* Makefile.am (libfetish_a_SOURCES): Remove search_.h.
+	(DISTCLEANFILES): Remove definition.
+
+2003-12-18  Jim Meyering  <jim@meyering.net>
+
+	Rewrite cycle detection code to work properly.
+	Add some framework (compiled out by default) to test it.
+	* fts.c (Dprintf, ENTER_DIR, LEAVE_DIR): Define.
+	(add_object): Remove function.  Rewritten as...
+	(enter_dir): New function.
+	(leave_dir, free_node): New functions.
+	(fts_read): Ensure that we call ENTER_DIR or LEAVE_DIR,
+	as appropriate, before returning.
+	(look_up_active_dir, fts_cross_check) [FTS_DEBUG]: New functions.
+	(fts_stat): Don't perform the cycle check here.
+	Now it's done via enter_dir.
+
 2003-12-12  Jim Meyering  <jim@meyering.net>
 
 	* fts_.h (FTS) [fts_dir_signatures]: Add comment.
