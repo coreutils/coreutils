@@ -15,17 +15,17 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* If the macro MULTI_COL is defined,
+/* If ls_mode is LS_MULTI_COL,
    the multi-column format is the default regardless
    of the type of output device.
    This is for the `dir' program.
 
-   If the macro LONG_FORMAT is defined,
+   If ls_mode is LS_LONG_FORMAT,
    the long format is the default regardless of the
    type of output device.
    This is for the `vdir' program.
 
-   If neither is defined,
+   If ls_mode is LS_LS,
    the output format depends on whether the output
    device is a terminal.
    This is for the `ls' program. */
