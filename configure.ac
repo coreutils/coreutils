@@ -250,7 +250,7 @@ if test $jm_cv_sys_tiocgwinsz_needs_termios_h = no && \
 fi
 
 # For src/kill.c.
-AC_CHECK_DECLS([strsignal, strtoimax, sys_siglist, _sys_siglist])
+AC_CHECK_DECLS([strsignal, strtoimax, sys_siglist, _sys_siglist, __sys_siglist])
 
 jm_LIB_CHECK
 
