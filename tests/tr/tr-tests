@@ -1998,8 +1998,80 @@ else
   esac
 fi
 test -s ross-6.E || rm -f ross-6.E
+cat $srcdir/empty-eq.I | $xx '[==]' x > empty-eq.O 2> empty-eq.E
+code=$?
+if test $code != 1; then
+  $echo "Test empty-eq(|) failed: ../../src/tr return code $code differs from expected value 1" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp empty-eq.O $srcdir/empty-eq.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed empty-eq(|)"; fi;;
+    1) $echo "Test empty-eq(|) failed: files empty-eq.O and $srcdir/empty-eq.X differ" 1>&2
+       (diff -c empty-eq.O $srcdir/empty-eq.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test empty-eq(|) may have failed." 1>&2
+       $echo The command "cmp empty-eq.O $srcdir/empty-eq.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s empty-eq.E || rm -f empty-eq.E
+$xx '[==]' x < $srcdir/empty-eq.I > empty-eq.O 2> empty-eq.E
+code=$?
+if test $code != 1; then
+  $echo "Test empty-eq(<) failed: ../../src/tr return code $code differs from expected value 1" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp empty-eq.O $srcdir/empty-eq.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed empty-eq(<)"; fi;;
+    1) $echo "Test empty-eq(<) failed: files empty-eq.O and $srcdir/empty-eq.X differ" 1>&2
+       (diff -c empty-eq.O $srcdir/empty-eq.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test empty-eq(<) may have failed." 1>&2
+       $echo The command "cmp empty-eq.O $srcdir/empty-eq.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s empty-eq.E || rm -f empty-eq.E
+cat $srcdir/empty-cc.I | $xx '[::]' x > empty-cc.O 2> empty-cc.E
+code=$?
+if test $code != 1; then
+  $echo "Test empty-cc(|) failed: ../../src/tr return code $code differs from expected value 1" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp empty-cc.O $srcdir/empty-cc.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed empty-cc(|)"; fi;;
+    1) $echo "Test empty-cc(|) failed: files empty-cc.O and $srcdir/empty-cc.X differ" 1>&2
+       (diff -c empty-cc.O $srcdir/empty-cc.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test empty-cc(|) may have failed." 1>&2
+       $echo The command "cmp empty-cc.O $srcdir/empty-cc.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s empty-cc.E || rm -f empty-cc.E
+$xx '[::]' x < $srcdir/empty-cc.I > empty-cc.O 2> empty-cc.E
+code=$?
+if test $code != 1; then
+  $echo "Test empty-cc(<) failed: ../../src/tr return code $code differs from expected value 1" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp empty-cc.O $srcdir/empty-cc.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed empty-cc(<)"; fi;;
+    1) $echo "Test empty-cc(<) failed: files empty-cc.O and $srcdir/empty-cc.X differ" 1>&2
+       (diff -c empty-cc.O $srcdir/empty-cc.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test empty-cc(<) may have failed." 1>&2
+       $echo The command "cmp empty-cc.O $srcdir/empty-cc.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s empty-cc.E || rm -f empty-cc.E
 if test $errors = 0; then
-  $echo Passed all 110 tests. 1>&2
+  $echo Passed all 114 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
