@@ -43,5 +43,39 @@ cat <<EOF > exp
 0
 3
 EOF
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+rm -f in out exp
+
+# `echo |csplit - 1 1' used to abort.
+echo > in
+csplit in 1 1 > out 2> err || fail=1
+cat <<EOF > exp
+0
+0
+1
+EOF
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+cat <<\EOF > experr
+csplit: warning: line number `1' is the same as preceding line number
+EOF
+cmp err experr || fail=1
+test $fail = 1 && diff err experr 2> /dev/null
+rm -f in out exp err experr
+
+# make sure `csplit FILE 0' fails.
+echo > in
+csplit in 0 > out 2> err && fail=1
+csplit in 2 1 > out 2>> err && fail=1
+csplit in 3 3 > out 2>> err && fail=1
+cat <<\EOF > experr
+csplit: 0: line number must be greater than zero
+csplit: line number `1' is smaller than preceding line number, 2
+csplit: warning: line number `3' is the same as preceding line number
+csplit: `3': line number out of range
+EOF
+cmp err experr || fail=1
+test $fail = 1 && diff err experr 2> /dev/null
 
 (exit $fail); exit
