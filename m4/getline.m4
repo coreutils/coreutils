@@ -1,7 +1,7 @@
-#serial 1
+#serial 2
 
 dnl See if there's a working, system-supplied version of the getline function.
-dnl We can't just to AC_REPLACE_FUNCS(getline) because some systems
+dnl We can't just do AC_REPLACE_FUNCS(getline) because some systems
 dnl have a function by that name in -linet that doesn't have anything
 dnl to do with the function we need.
 AC_DEFUN(AM_FUNC_GETLINE,
@@ -13,6 +13,7 @@ AC_DEFUN(AM_FUNC_GETLINE,
 		am_getline_needs_run_time_check=yes,
 		am_cv_func_working_getline=no)
   if test $am_getline_needs_run_time_check = yes; then
+    AC_CHECK_HEADERS(string.h)
     AC_CACHE_CHECK([for working getline function], am_cv_func_working_getline,
     [echo fooN |tr -d '\012'|tr N '\012' > conftestdata
     AC_TRY_RUN([
