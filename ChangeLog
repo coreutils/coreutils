@@ -4,6 +4,7 @@
 
 	* Makefile.am (SUBDIRS): Remove `old'.
 	(EXTRA_DIST): List the files in old/.
+	* configure.ac (AC_CONFIG_FILES): Remove old/* names.
 	Suggestion from Akim Demaille.
 
 2002-10-01  Jim Meyering  <meyering@lucent.com>
