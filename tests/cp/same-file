@@ -39,7 +39,10 @@ for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' 'foo hardlink'; do
 		 -l -dl -fl -dfl -bl -bdl -bfl -bdfl; do
     case $args$options in
       # These tests are not portable.
+      # They all involve making a hard link to a symbolic link.
       'symlink foo'-dfl)
+	continue;;
+      'symlink foo'-bdl)
 	continue;;
       'symlink foo'-bdfl)
 	continue;;
@@ -125,7 +128,6 @@ cat <<\EOF > $expected
 0 -dl (foo symlink -> foo)
 0 -fl (foo symlink -> foo)
 0 -bl (foo symlink -> foo)
-0 -bdl (foo -> foo foo.~1~ symlink -> foo) symlink-loop symlink-loop
 0 -bfl (foo symlink -> foo)
 
 1 [cp: `foo' and `foo' are the same file] (foo)
