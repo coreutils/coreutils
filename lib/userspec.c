@@ -304,7 +304,7 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
 	  else
 	    {
 	      unsigned long int tmp_long;
-	      if (xstrtoul (u, NULL, 0, &tmp_long, NULL) != LONGINT_OK
+	      if (xstrtoul (g, NULL, 0, &tmp_long, NULL) != LONGINT_OK
 		  || tmp_long > MAXGID)
 		return _(E_invalid_group);
 	      *gid = tmp_long;
