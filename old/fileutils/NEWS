@@ -1,4 +1,6 @@
 Changes in release 4.1:
+[4.0i]
+* shred's -u option (short form of --remove) is now accepted
 [4.0h]
 * cp --one-file-system (-x) no longer crosses filesystem boundaries.
 * touch can once again operate on directories
