@@ -65,7 +65,7 @@ int
 main (int argc, char **argv)
 {
   static char const dot = '.';
-  char *result;
+  char const *result;
   size_t len;
 
   program_name = argv[0];
