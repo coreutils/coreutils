@@ -171,6 +171,13 @@ static char *output_delimiter_string;
 /* Nonzero if we have ever read standard input. */
 static int have_read_stdin;
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  OUTPUT_DELIMITER_OPTION = CHAR_MAX + 1
+};
+
 static struct option const longopts[] =
 {
   {"bytes", required_argument, 0, 'b'},
@@ -178,7 +185,7 @@ static struct option const longopts[] =
   {"fields", required_argument, 0, 'f'},
   {"delimiter", required_argument, 0, 'd'},
   {"only-delimited", no_argument, 0, 's'},
-  {"output-delimiter", required_argument, 0, CHAR_MAX + 1},
+  {"output-delimiter", required_argument, 0, OUTPUT_DELIMITER_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {0, 0, 0, 0}
@@ -736,7 +743,7 @@ main (int argc, char **argv)
 	  delim_specified = 1;
 	  break;
 
-	case CHAR_MAX + 1:
+	case OUTPUT_DELIMITER_OPTION:
 	  /* Interpret --output-delimiter='' to mean
 	     `use the NUL byte as the delimiter.'  */
 	  output_delimiter_length = (optarg[0] == '\0'
