@@ -1,0 +1,198 @@
+# Makefile.in generated automatically by automake 1.1c from Makefile.am
+
+# Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
+
+
+SHELL = /bin/sh
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
+oldincludedir = /usr/include
+
+pkgdatadir = $(datadir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
+
+top_builddir = ../..
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+transform = @program_transform_name@
+
+AUTOMAKE_OPTIONS = 1.1
+
+x = sort
+in = \
+  t01a.in t02a.in t02b.in t02c.in t02d.in t02e.in t02f.in t03a.in \
+  t03b.in t03c.in t03d.in t03e.in t03f.in t03g.in t03h.in t03i.in \
+  t04a.in t04b.in t04c.in t04d.in t04e.in t05a.in t05b.in t05c.in \
+  t05d.in t05e.in t05f.in t06a.in t06b.in t06c.in t06d.in t06e.in \
+  t06f.in t07a.in t07b.in t07c.in t07d.in t08a.in t08b.in t09a.in \
+  t09b.in t09c.in t09d.in t10a.in t10a0.in t10a1.in t10a2.in t10b.in \
+  t10c.in t10d.in t10e.in t10f.in t10g.in t11a.in t11b.in t11c.in \
+  t11d.in t12a.in t12b.in t12c.in t12d.in t13a.in t13b.in t14a.in \
+  t14b.in t15a.in t15b.in t15c.in t15d.in t15e.in
+
+exp = $(in:.in=.exp)
+out = $(in:.in=.out)
+err = $(in:.in=.err)
+
+EXTRA_DIST = build-script.pl Test.pm $(in) $(exp)
+noinst_SCRIPTS = $x-tests
+
+PERL = @PERL@
+editpl = sed -e 's,@''PERL''@,$(PERL),g' -e 's,@''srcdir''@,@srcdir@,g'
+
+TESTS = $x-tests
+
+SUFFIXES = .pl
+
+MAINTAINERCLEANFILES = $x-tests $(in) $(exp)
+CLEANFILES = $(out) $(err)
+mkinstalldirs = $(top_srcdir)/mkinstalldirs
+CONFIG_HEADER = ../../config.h
+CONFIG_CLEAN_FILES = 
+SCRIPTS = $(noinst_SCRIPTS)
+
+DIST_COMMON = Makefile.am Makefile.in TODO
+
+
+PACKAGE = @PACKAGE@
+VERSION = @VERSION@
+
+DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
+	$(TEXINFOS) $(INFOS) $(MANS) $(EXTRA_DIST) $(DATA)
+DEP_DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
+	$(TEXINFOS) $(INFO_DEPS) $(MANS) $(EXTRA_DIST) $(DATA)
+
+TAR = tar
+default: all
+
+
+$(srcdir)/Makefile.in: @MAINT@Makefile.am $(top_srcdir)/configure.in
+	cd $(top_srcdir) && automake $(subdir)/Makefile
+
+Makefile: $(top_builddir)/config.status Makefile.in
+	cd $(top_builddir) && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
+tags: TAGS
+TAGS:
+
+
+distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+
+subdir = checks/sort-test
+distdir: $(DEP_DISTFILES)
+	@for file in `cd $(srcdir) && echo $(DISTFILES)`; do \
+	  test -f $(distdir)/$$file \
+	  || ln $(srcdir)/$$file $(distdir)/$$file 2> /dev/null \
+	  || cp -p $(srcdir)/$$file $(distdir)/$$file; \
+	done
+check-TESTS: $(TESTS)
+	@failed=0; all=0; \
+	srcdir=$(srcdir); export srcdir; \
+	for tst in $(TESTS); do \
+	  all=`expr $$all + 1`; \
+	  if test -f $$tst; then dir=.; \
+	  else dir="$(srcdir)"; fi; \
+	  if $(TESTS_ENVIRONMENT) $$dir/$$tst; then \
+	    echo "PASS: $$tst"; \
+	  else \
+	    failed=`expr $$failed + 1`; \
+	    echo "FAIL: $$tst"; \
+	  fi; \
+	done; \
+	if test "$$failed" -eq 0; then \
+	  echo "========================"; \
+	  echo "All $$all tests passed"; \
+	  echo "========================"; \
+	else \
+	  echo "$$failed of $$all tests failed"; \
+	fi
+info:
+
+dvi:
+
+check: all check-TESTS
+
+installcheck:
+
+install-exec: 
+
+install-data: 
+
+install: install-exec install-data all
+	@:
+
+uninstall: 
+
+all: $(SCRIPTS) Makefile
+
+install-strip:
+	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' install
+installdirs:
+
+
+mostlyclean-generic:
+	test -z "$(MOSTLYCLEANFILES)" || rm -f $(MOSTLYCLEANFILES)
+
+clean-generic:
+	test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
+	test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
+
+distclean-generic:
+	rm -f Makefile $(DISTCLEANFILES)
+	rm -f config.cache config.log $(CONFIG_HEADER) stamp-h
+
+maintainer-clean-generic:
+	test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
+	test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
+mostlyclean:  mostlyclean-generic
+
+clean:  clean-generic mostlyclean 
+
+distclean:  distclean-generic clean 
+	rm -f config.status
+
+maintainer-clean:  maintainer-clean-generic distclean 
+	@echo "This command is intended for maintainers to use;"
+	@echo "it deletes files that may require special tools to rebuild."
+
+.PHONY: default tags distdir check-TESTS info dvi check installcheck \
+install-exec install-data install uninstall all installdirs \
+mostlyclean-generic distclean-generic clean-generic \
+maintainer-clean-generic clean mostlyclean distclean maintainer-clean
+
+
+$x-tests: build-script Test.pm
+	./build-script ../../src/$x > $@.n
+	mv $@.n $@
+	chmod 755 $@
+
+.pl:
+	rm -f $@ $@.tmp
+	$(editpl) $< > $@.tmp && chmod +x $@.tmp && mv $@.tmp $@
+.SUFFIXES:
+.SUFFIXES: .pl
+
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:
