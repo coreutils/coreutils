@@ -1,5 +1,8 @@
 1999-12-23  Jim Meyering  <meyering@ascend.com>
 
+	* configure.in: Remove check for gettimeofday.
+	Now it's in m4/jm-macros.m4
+
 	* man/Makefile.summ: Remove now-unused summaries.
 
 1999-12-22  Jim Meyering  <meyering@ascend.com>
