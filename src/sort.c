@@ -538,7 +538,7 @@ zaptemp (const char *name)
   sigprocmask (SIG_SETMASK, &oldset, NULL);
 
   if (unlink_status != 0)
-    error (0, unlink_errno, "warning: cannot remove: %s", name);
+    error (0, unlink_errno, _("warning: cannot remove: %s"), name);
   if (! next)
     temptail = pnode;
   free (node);
