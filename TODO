@@ -51,3 +51,5 @@ Should printf '\0123' print "\n3"?
   http://mail.gnu.org/archive/html/bug-coreutils/2003-03/index.html
 
 printf: consider adapting builtins/printf.def from bash
+
+du: add `--total' option, suggested here http://bugs.debian.org/186007
