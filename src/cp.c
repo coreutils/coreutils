@@ -488,8 +488,8 @@ do_copy (int argc, char **argv, const struct cp_options *x)
   	    }
 	  else
 	    {
-	      int unused;
-	      ret |= copy (arg, dst_path, new_dst, x, &unused, NULL);
+	      int copy_into_self;
+	      ret |= copy (arg, dst_path, new_dst, x, &copy_into_self, NULL);
 	      forget_all ();
 
 	      if (flag_path)
