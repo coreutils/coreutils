@@ -223,11 +223,20 @@ static MONTHTAB_CONST struct month monthtab[] =
 /* During the merge phase, the number of files to merge at once. */
 #define NMERGE 16
 
-/* The approximate maximum number of bytes of main memory to use.  */
-static size_t sort_size;
+/* Minimum size for a merge or check buffer.  */
+#define MIN_MERGE_BUFFER_SIZE (2 + sizeof (struct line))
 
 /* Minimum sort size; the code might not work with smaller sizes.  */
-#define MIN_SORT_SIZE (NMERGE * (2 + sizeof (struct line)))
+#define MIN_SORT_SIZE (NMERGE * MIN_MERGE_BUFFER_SIZE)
+
+/* The number of bytes needed for a merge or check buffer, which can
+   function relatively efficiently even if it holds only one line.  If
+   a longer line is seen, this value is increased.  */
+static size_t merge_buffer_size = MAX (MIN_MERGE_BUFFER_SIZE, 256 * 1024);
+
+/* The approximate maximum number of bytes of main memory to use, as
+   specified by the user.  Zero if the user has not specified a size.  */
+static size_t sort_size;
 
 /* The guessed size for non-regular files.  */
 #define INPUT_FILE_SIZE_GUESS (1024 * 1024)
@@ -877,6 +886,7 @@ fillbuf (struct buffer *buf, register FILE *fp, char const *file)
   struct keyfield const *key = keylist;
   char eol = eolchar;
   size_t line_bytes = buf->line_bytes;
+  size_t mergesize = merge_buffer_size - MIN_MERGE_BUFFER_SIZE;
 
   if (buf->eof)
     return 0;
@@ -930,6 +940,7 @@ fillbuf (struct buffer *buf, register FILE *fp, char const *file)
 	      line--;
 	      line->text = line_start;
 	      line->length = ptr - line_start;
+	      mergesize = MAX (mergesize, line->length);
 	      avail -= line_bytes;
 
 	      if (key)
@@ -964,6 +975,7 @@ fillbuf (struct buffer *buf, register FILE *fp, char const *file)
       if (buf->nlines != 0)
 	{
 	  buf->left = ptr - line_start;
+	  merge_buffer_size = mergesize + MIN_MERGE_BUFFER_SIZE;
 	  return 1;
 	}
 
@@ -1492,8 +1504,7 @@ checkfp (FILE *fp, char *file_name)
   int disordered = 0;
 
   initbuf (&buf, sizeof (struct line),
-	   sort_buffer_size (&fp, 1, &file_name, 1,
-			     sizeof (struct line), sort_size));
+	   MAX (merge_buffer_size, sort_size));
   temp.text = NULL;
 
   while (fillbuf (&buf, fp, file_name))
@@ -1589,9 +1600,7 @@ mergefps (char **files, register int nfiles,
     {
       fps[i] = xfopen (files[i], "r");
       initbuf (&buffer[i], sizeof (struct line),
-	       sort_buffer_size (&fps[i], 1, &files[i], 1,
-				 sizeof (struct line),
-				 sort_size / nfiles));
+	       MAX (merge_buffer_size, sort_size));
       /* If a file is empty, eliminate it from future consideration. */
       while (i < nfiles && !fillbuf (&buffer[i], fps[i], files[i]))
 	{
@@ -1868,6 +1877,10 @@ sort (char **files, int nfiles, char const *output_file)
   int n_temp_files = 0;
   int output_file_created = 0;
 
+  static size_t size;
+  if (! size && ! (size = sort_size))
+    size = default_sort_size ();
+
   buf.alloc = 0;
 
   while (nfiles)
@@ -1880,7 +1893,7 @@ sort (char **files, int nfiles, char const *output_file)
       if (! buf.alloc)
 	initbuf (&buf, 2 * sizeof (struct line),
 		 sort_buffer_size (&fp, 1, files, nfiles,
-				   2 * sizeof (struct line), sort_size));
+				   2 * sizeof (struct line), size));
       buf.eof = 0;
       files++;
       nfiles--;
@@ -2436,9 +2449,6 @@ but lacks following character offset"));
       nfiles = 1;
       files = &minus;
     }
-
-  if (sort_size == 0)
-    sort_size = default_sort_size ();
 
   if (checkonly)
     {
