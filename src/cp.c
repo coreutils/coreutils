@@ -401,7 +401,7 @@ static int
 do_copy (int n_files, char **file, const char *target_directory,
 	 const struct cp_options *x)
 {
-  char *dest;
+  const char *dest;
   struct stat sb;
   int new_dst = 0;
   int ret = 0;
@@ -603,7 +603,7 @@ do_copy (int n_files, char **file, const char *target_directory,
 	}
       else
 	{
-	  new_dest = dest;
+	  new_dest = (char *) dest;
 	}
 
       return copy (source, new_dest, new_dst, x, &unused, NULL);
