@@ -236,7 +236,7 @@ static inline bool
 is_printable_field (unsigned int i)
 {
   size_t n = i / CHAR_BIT;
-  return (printable_field[n] & (1 << (i % CHAR_BIT))) ? true : false;
+  return (printable_field[n] >> (i % CHAR_BIT)) & 1;
 }
 
 unsigned int
