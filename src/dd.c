@@ -322,7 +322,7 @@ Each KEYWORD may be:\n\
   swab      swap every pair of input bytes\n\
   noerror   continue after read errors\n\
   sync      pad every input block with NULs to ibs-size; when used\n\
-              block or unblock, pad with spaces rather than NULs\n\
+              with block or unblock, pad with spaces rather than NULs\n\
 "));
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
