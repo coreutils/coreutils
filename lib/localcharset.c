@@ -252,18 +252,17 @@ locale_charset ()
   if (codeset == NULL)
     /* The canonical name cannot be determined.  */
     codeset = "";
-  else if (codeset[0] != '\0')
-    {
-      /* Resolve alias. */
-      for (aliases = get_charset_aliases ();
-	   *aliases != '\0';
-	   aliases += strlen (aliases) + 1, aliases += strlen (aliases) + 1)
-	if (!strcmp (codeset, aliases))
-	  {
-	    codeset = aliases + strlen (aliases) + 1;
-	    break;
-	  }
-    }
+
+  /* Resolve alias. */
+  for (aliases = get_charset_aliases ();
+       *aliases != '\0';
+       aliases += strlen (aliases) + 1, aliases += strlen (aliases) + 1)
+    if (strcmp (codeset, aliases) == 0
+	|| (aliases[0] == '*' && aliases[1] == '\0'))
+      {
+	codeset = aliases + strlen (aliases) + 1;
+	break;
+      }
 
   return codeset;
 }
