@@ -1,3 +1,7 @@
+2004-07-05  Jim Meyering  <jim@meyering.net>
+
+	* path-concat.c (path_concat): Improve comment.  From Paul Eggert.
+
 2004-07-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* canonicalize.c (canonicalize_file_name): Assume that path_concat
