@@ -1,3 +1,8 @@
+2001-01-15  Bruno Haible  <haible@clisp.cons.org>
+
+	* unicodeio.c (print_unicode_char): Cast the second iconv() arg,
+	to avoid a warning.  Add back 'const' to inptr.
+
 2001-01-16  Jim Meyering  <meyering@lucent.com>
 
 	* basename.c: Include <stdio.h>, needed by assert on SunOS4.
