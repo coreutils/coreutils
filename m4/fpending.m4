@@ -7,9 +7,8 @@ dnl and Ulrich Drepper.
 AC_DEFUN(jm_FUNC_FPENDING,
 [
   AC_CHECK_HEADERS(stdio_ext.h)
-  AC_FEPLACE_FUNCS([__fpending])
+  AC_REPLACE_FUNCS([__fpending])
   if test $ac_cv_func___fpending = no; then
-    AC_REPLACE_FUNCS(__fpending)
     AC_CACHE_CHECK(
 	      [how to determine the number of pending output bytes on a stream],
 		   ac_cv_sys_pending_output_n_bytes,
