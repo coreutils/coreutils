@@ -2,6 +2,7 @@
 
 	* host-os.m4 (UTILS_HOST_OS): New file/macro.
 	The body, by Paul Eggert, was moved here from configure.in.
+	* jm-macros.m4: Require UTILS_HOST_OS.
 
 2001-09-04  Paul Eggert  <eggert@twinsun.com>
 
