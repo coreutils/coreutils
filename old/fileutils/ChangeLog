@@ -1,5 +1,7 @@
 Thu Nov  9 23:27:05 1995  Jim Meyering  (meyering@comco.com)
 
+	* system.h [__P]: Define it.
+
 	* src/*.c: Protoize.
 
 	* ls.c (enum filetype): Move dcl to precede prototypes.
