@@ -2035,6 +2035,12 @@ the field and character skipping options, fields are skipped over first.
 @opindex --count
 Print the number of times each line occurred along with the line.
 
+@item -i
+@itemx --ignore-case
+@opindex -i
+@opindex --ignore-case
+Ignore differences in case when comparing lines.
+
 @item -d
 @itemx --repeated
 @opindex -d
