@@ -1,5 +1,9 @@
 Mon Jun 12 23:07:59 1995  Jim Meyering  (meyering@comco.com)
 
+	* sort.c (xfclose): Don't try to flush stdin, only stdout.
+	Otherwise, at least Ultrix-4.3's fflush would return EOF.
+	Reported by Jim Blandy (jimb@cyclic.com).
+
 	* tr.c (non_neg_strtol): Don't compare signed and unsigned.
 	[struct Spec_list] (indefinite_repeat_element): New member.
 	Use size_t rather than int or unsigned long where reasonable.
