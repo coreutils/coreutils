@@ -1,3 +1,17 @@
+Wed Sep  4 21:42:32 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/rpmatch.c: Make sure NULL is defined by including stddef.h
+	(if STDC_HEADERS || _LIBC) or simply defining it (otherwise).
+	Include sys/types.h for definition of size_t needed by regex.h.
+
+	* lib/Makefile.am (fu_SOURCES): Add regex.c and rx.c.
+	(noinst_HEADERS): Add regex.h and rx.h.
+
+	* configure.in (AM_SANITY_CHECK_CC): Use it.
+	(AM_WITH_REGEX): Use it.
+
+	* acconfig.h (WITH_REGEX): Add it.
+
 Tue Sep  3 08:13:09 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/rpmatch.c (rpmatch): Set yesexpr to "^[yY]" and noexpr to
