@@ -33,21 +33,19 @@
 #include "getline.h"
 #include "posixtm.h"
 #include "posixver.h"
+#include "timespec.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "date"
 
 #define AUTHORS "David MacKenzie"
 
-#ifndef STDC_HEADERS
-size_t strftime ();
-time_t time ();
-#endif
-
 int putenv ();
-int stime ();
 
-static void show_date PARAMS ((const char *format, time_t when));
+size_t nstrftime PARAMS ((char *, size_t, char const *,
+			  struct tm const *, int, int));
+
+static void show_date PARAMS ((const char *format, struct timespec when));
 
 enum Time_spec
 {
@@ -181,6 +179,7 @@ specifies Coordinated Universal Time.  Interpreted sequences are:\n\
 "), stdout);
       fputs (_("\
   %n   a newline\n\
+  %N   nanoseconds (000000000..999999999)\n\
   %p   locale's upper case AM or PM indicator\n\
   %P   locale's lower case am or pm indicator\n\
   %r   time, 12-hour (hh:mm:ss [AP]M)\n\
@@ -233,7 +232,7 @@ batch_convert (const char *input_filename, const char *format)
   char *line;
   int line_length;
   size_t buflen;
-  time_t when;
+  struct timespec when;
 
   if (strcmp (input_filename, "-") == 0)
     {
@@ -261,9 +260,10 @@ batch_convert (const char *input_filename, const char *format)
 	  break;
 	}
 
-      when = get_date (line, NULL);
+      when.tv_sec = get_date (line, NULL);
+      when.tv_nsec = 0; /* FIXME: get_date should set this.  */
 
-      if (when == -1)
+      if (when.tv_sec == -1)
 	{
 	  if (line[line_length - 1] == '\n')
 	    line[line_length - 1] = '\0';
@@ -291,7 +291,7 @@ main (int argc, char **argv)
   int optc;
   const char *datestr = NULL;
   const char *set_datestr = NULL;
-  time_t when;
+  struct timespec when;
   int set_date = 0;
   char *format;
   char *batch_file = NULL;
@@ -411,6 +411,7 @@ argument must be a format string beginning with `+'."),
     }
   else
     {
+      bool invalid_date = false;
       status = 0;
 
       if (!option_specified_date && !set_date)
@@ -421,15 +422,19 @@ argument must be a format string beginning with `+'."),
 		 given in the POSIX-format.  */
 	      set_date = 1;
 	      datestr = argv[optind];
-	      when = posixtime (datestr,
-				PDS_TRAILING_YEAR | PDS_CENTURY | PDS_SECONDS);
+	      when.tv_sec = posixtime (datestr,
+				       (PDS_TRAILING_YEAR
+					| PDS_CENTURY | PDS_SECONDS));
+	      when.tv_nsec = 0; /* FIXME: posixtime should set this.  */
+	      invalid_date = (when.tv_sec == (time_t) -1);
 	      format = NULL;
 	    }
 	  else
 	    {
 	      /* Prepare to print the current date/time.  */
 	      datestr = _("undefined");
-	      time (&when);
+	      if (gettime (&when) != 0)
+		error (EXIT_FAILURE, errno, _("cannot get time of day"));
 	      format = (n_args == 1 ? argv[optind] + 1 : NULL);
 	    }
 	}
@@ -440,24 +445,27 @@ argument must be a format string beginning with `+'."),
 	    {
 	      if (stat (reference, &refstats))
 		error (1, errno, "%s", reference);
-	      when = refstats.st_mtime;
+	      when.tv_sec = refstats.st_mtime;
+	      when.tv_nsec = TIMESPEC_NS (refstats.st_mtim);
 	    }
 	  else
 	    {
-	      when = get_date (datestr, NULL);
+	      when.tv_sec = get_date (datestr, NULL);
+	      when.tv_nsec = 0; /* FIXME: get_date should set this.  */
+	      invalid_date = (when.tv_sec == (time_t) -1);
 	    }
 
 	  format = (n_args == 1 ? argv[optind] + 1 : NULL);
 	}
 
-      if (when == -1)
+      if (invalid_date)
 	error (1, 0, _("invalid date `%s'"), datestr);
 
       if (set_date)
 	{
 	  /* Set the system clock to the specified date, then regardless of
 	     the success of that operation, format and print that date.  */
-	  if (stime (&when) == -1)
+	  if (settime (&when) != 0)
 	    {
 	      error (0, errno, _("cannot set date"));
 	      status = 1;
@@ -475,7 +483,7 @@ argument must be a format string beginning with `+'."),
    standard output format (ctime style but with a timezone inserted). */
 
 static void
-show_date (const char *format, time_t when)
+show_date (const char *format, struct timespec when)
 {
   struct tm *tm;
   char *out = NULL;
@@ -489,17 +497,10 @@ show_date (const char *format, time_t when)
     "%Y-%m-%dT%H:%M:%S%z"
   };
 
-  tm = localtime (&when);
+  tm = localtime (&when.tv_sec);
 
   if (format == NULL)
     {
-      /* Print the date in the default format.  Vanilla ANSI C strftime
-         doesn't support %e, but POSIX requires it.  If you don't use
-         a GNU strftime, make sure yours supports %e.
-	 If you are not using GNU strftime, you want to change %z
-	 in the RFC format to %Z; this gives, however, an invalid
-	 RFC time format outside the continental United States and GMT. */
-
       if (rfc_format)
 	format = "%a, %d %b %Y %H:%M:%S %z";
       else if (iso_8601_format)
@@ -530,7 +531,7 @@ show_date (const char *format, time_t when)
       out = (char *) xrealloc (out, out_length);
 
       /* Mark the first byte of the buffer so we can detect the case
-	 of strftime producing an empty string.  Otherwise, this loop
+	 of nstrftime producing an empty string.  Otherwise, this loop
 	 would not terminate when date was invoked like this
 	 `LANG=de date +%p' on a system with good language support.  */
       out[0] = '\1';
@@ -538,7 +539,8 @@ show_date (const char *format, time_t when)
       if (rfc_format)
 	setlocale (LC_ALL, "C");
 
-      done = (strftime (out, out_length, format, tm) || out[0] == '\0');
+      done = (nstrftime (out, out_length, format, tm, 0, when.tv_nsec)
+	      || out[0] == '\0');
 
       if (rfc_format)
 	setlocale (LC_ALL, "");
