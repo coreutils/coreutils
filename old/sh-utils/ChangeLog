@@ -1,9 +1,17 @@
 Sat Mar 16 10:07:49 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* configure.in (PACKAGE_VERSION): New macro.
+	(OPTIONAL_BIN_PROGS): Rename from OPTIONAL_PROGS.
 	* acconfig.h (PACKAGE_VERSION): Add it.
 	* src/Makefile.am: Remove rules for generating version.c.
-	Remove references to version.o and version.h.
+	Remove references to version.o, version.h, and stamp-v.
+	[.sh]: Change @VERSION@ to @PKG_VERSION@.
+	On RHS of sed substitution, use @PACKAGE_VERSION@, not GNUVER.
+	(OPTIONAL_BIN_PROGS): Rename from OPTIONAL_PROGS.
+	(install-exec-local): New target/rules to make the installed su
+	binary setuid root or failing that, to delete it.
+	* false.sh groups.sh nohup.sh true.sh: Use @PKG_VERSION@,
+	not @VERSION@.
 	* version.c: Remove file.
 	* version.h: Remove file.
 	* basename.c date.c dirname.c echo.c env.c expr.c factor.c
