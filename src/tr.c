@@ -1739,19 +1739,11 @@ main (int argc, char **argv)
 deleting and squeezing repeats"));
 
   /* If --delete is given without --squeeze-repeats, then
-     only one string argument may be specified.  But POSIX
-     says to ignore any string2 in this case, so if POSIXLY_CORRECT
-     is set, pretend we never saw string2.  But I think
-     this deserves a fatal error, so that's the default.  */
+     only one string argument may be specified.  */
   if ((delete && !squeeze_repeats) && non_option_args != 1)
-    {
-      if (non_option_args == 2 && getenv ("POSIXLY_CORRECT"))
-	--non_option_args;
-      else
-	error (EXIT_FAILURE, 0,
-	       _("only one string may be given when deleting \
+    error (EXIT_FAILURE, 0,
+	   _("only one string may be given when deleting \
 without squeezing repeats"));
-    }
 
   if (squeeze_repeats && non_option_args == 0)
     error (EXIT_FAILURE, 0,
