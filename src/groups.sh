@@ -37,7 +37,7 @@ case $# in
       z--help )
 	 echo "$usage"; exit 0 ;;
       z--version )
-	 echo "groups - @PKG_VERSION@"; exit 0 ;;
+	 echo "groups (@GNU_PACKAGE@) @VERSION@"; exit 0 ;;
       * ) ;;
     esac
     ;;

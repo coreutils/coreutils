@@ -47,7 +47,7 @@ case $# in
       z--help )
 	 echo "$usage"; echo "$usage_help"; exit 0 ;;
       z--version )
-	 echo "nohup - @PKG_VERSION@"; exit 0 ;;
+	 echo "nohup (@GNU_PACKAGE@) @VERSION@"; exit 0 ;;
       * ) ;;
     esac
     ;;
