@@ -85,9 +85,6 @@ char *xstrdup ();
 #define NEGATIVE_SIGN   '-'
 #define NUMERIC_ZERO    '0'
 
-/* Characters in abbreviated month name.  */
-#define CHARS_IN_ABM 3
-
 #ifdef ENABLE_NLS
 # define NLS_MEMCMP(S1, S2, Len) strncoll (S1, S2, Len)
 #else
@@ -96,9 +93,9 @@ char *xstrdup ();
 
 #ifdef ENABLE_NLS
 
-static unsigned char decimal_point = '.';
-static unsigned char th_sep = ',';
-static unsigned char *nls_grouping = (unsigned char *) "\003\003";
+static unsigned char decimal_point;
+static unsigned char th_sep;
+static unsigned char *nls_grouping;
 
 /* This is "C" locale, need another? */
 static int need_locale = 0;
@@ -589,26 +586,36 @@ inittables (void)
   /* If We're not in the "C" locale, read in different names for months. */
   if (need_locale)
     {
-      unsigned char *s;
-      int j;
       int (*comp) () = nls_sort_month_comp;
 
       nls_months_collide[0] = 1;	/* if an error, look again       */
       for (i = 0; i < NLS_NUM_MONTHS; i++)
 	{
+	  unsigned char *s;
+	  size_t s_len;
+	  int j;
+
 	  s = nl_langinfo (_NL_ITEM (LC_TIME,
 				     ABMON_1 + us_monthtab[i].val - 1));
-	  nls_monthtab[i].name = strdup (s);
+	  s_len = strlen (s);
+	  nls_monthtab[i].name = (char *) xmalloc (s_len + 1);
 	  nls_monthtab[i].val = us_monthtab[i].val;
 
-	  /* Abbreviated month names may be longer than
-	     the usual 3 characters.  */
-	  for (j = 0; j < strlen (s); j++)
+	  /* It has been pointed out, that abreviated month names
+	     may be longer than the usual 3 characters.  */
+	  for (j = 0; j < s_len; j++)
 	    nls_monthtab[i].name[j] = fold_toupper[s[j]];
+	  nls_monthtab[i].name[j] = '\0';
 
-	  nls_months_collide[nls_monthtab[i].val] =
-	    (strncmp (nls_monthtab[i].name,
-		      us_monthtab[i].name, CHARS_IN_ABM) == 0);
+	  nls_months_collide[nls_monthtab[i].val] = 0;
+	  for (j = 0; j < NLS_NUM_MONTHS; ++j)
+	    if (strcmp (nls_monthtab[i].name, us_monthtab[i].name) == 0)
+	      {
+		/* There are indeed some month names in English which
+		   collide with the NLS name.  */
+		nls_months_collide[nls_monthtab[i].val] = 1;
+		break;
+	      }
 	}
       /* Now quicksort the month table (should be sorted already!).
          However, another locale doesn't rule out the possibility
@@ -1471,18 +1478,26 @@ general_numcompare (const char *sa, const char *sb)
 static int
 getmonth (const char *s, int len)
 {
-  char month[4];
-  register int i, lo = 0, hi = 12;
+  char *month;
+  register int i, lo = 0, hi = 12, result;
 
   while (len > 0 && blanks[UCHAR (*s)])
     ++s, --len;
 
-  if (len < 3)
+  if (len == 0)
     return 0;
 
-  for (i = 0; i < CHARS_IN_ABM; ++i)
+#ifdef _HAVE_ALLOCA
+  month = (char *) alloca (len + 1);
+#else
+  month = (char *) malloc (len + 1);
+#endif
+
+  for (i = 0; i < len; ++i)
     month[i] = fold_toupper[UCHAR (s[i])];
-  month[3] = '\0';
+  while (blanks[UCHAR (month[i - 1])])
+    --i;
+  month[i] = '\0';
 
   while (hi - lo > 1)
     {
@@ -1495,9 +1510,13 @@ getmonth (const char *s, int len)
       else
 	lo = (lo + hi) / 2;
     }
-  if (!strcmp (month, monthtab[lo].name))
-    return monthtab[lo].val;
-  return 0;
+  result = !strcmp (month, monthtab[lo].name) ? monthtab[lo].val : 0;
+
+#ifndef _HAVE_ALLOCA
+  free (month);
+#endif
+
+  return result;
 }
 
 #ifdef ENABLE_NLS
@@ -2414,6 +2433,7 @@ key_init (struct keyfield *key)
 /* strdup and return the result of setlocale, but guard against a NULL
    return value.  If setlocale returns NULL, strdup FAIL_VAL instead.  */
 
+#if !defined __GLIBC__ || __GLIBC__ < 2
 static inline char *
 my_setlocale (const char *locale, const char *fail_val)
 {
@@ -2422,6 +2442,7 @@ my_setlocale (const char *locale, const char *fail_val)
     s = (char *) fail_val;
   return xstrdup (s);
 }
+#endif
 
 int
 main (int argc, char **argv)
@@ -2441,32 +2462,42 @@ main (int argc, char **argv)
 #ifdef ENABLE_NLS
 
   /* Determine whether the current locale is C or POSIX.  */
+# if defined __GLIBC__ && __GLIBC__ >= 2
+  s = setlocale (LC_ALL, "");
+  if (s != NULL && !STREQ (s, "C") && !STREQ (s, "POSIX"))
+    /* The current locale is neither C nor POSIX.  We'll need to do
+       more work.  */
+    need_locale = 1;
+# else
   {
     char *c_locale_string = my_setlocale ("C", "");
     char *posix_locale_string = my_setlocale ("POSIX", "");
-    char *current_locale_string = my_setlocale ("", "FAILED");
+    char *current_locale_string = setlocale (LC_ALL, "");
 
-    if (!STREQ (current_locale_string, c_locale_string)
+    if (current_locale_string != NULL
+	&& !STREQ (current_locale_string, c_locale_string)
 	&& !STREQ (current_locale_string, posix_locale_string))
-      {
 	/* The current locale is neither C nor POSIX.
 	   We'll need to do more work.  */
 	need_locale = 1;
-      }
 
     free (c_locale_string);
     free (posix_locale_string);
-    free (current_locale_string);
   }
+# endif
 
   /* Let's get locale's representation of the decimal point */
-  decimal_point = *( localeconv() )->decimal_point;
-  th_sep        = *( localeconv() )->thousands_sep;
-  nls_grouping  =  ( localeconv() )->grouping;
+  {
+    struct lconv *lconvp = localeconv ();
+
+    decimal_point = *lconvp->decimal_point;
+    th_sep        = *lconvp->thousands_sep;
+    nls_grouping  =  lconvp->grouping;
+  }
 
   /* if locale doesn't define a decimal point, we'll use the
      US notation.                                            */
-  if (decimal_point == 0)
+  if (decimal_point == '\0')
     decimal_point = FLOATING_POINT;
   else
     nls_fraction_found = 0;  /* Figure out which decimal point to use  */
