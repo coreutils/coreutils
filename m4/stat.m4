@@ -1,4 +1,4 @@
-#serial 3
+#serial 4
 
 dnl From Jim Meyering.
 dnl Determine whether stat has the bug that it succeeds when given the
@@ -11,6 +11,7 @@ dnl
 
 AC_DEFUN(jm_FUNC_STAT,
 [
+ AC_REQUIRE([jm_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK])
  AC_CACHE_CHECK([whether stat accepts an empty string],
   jm_cv_func_stat_empty_string_bug,
   [AC_TRY_RUN([
