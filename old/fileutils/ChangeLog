@@ -1,3 +1,23 @@
+1998-07-07  Jim Meyering  <meyering@ascend.com>
+
+	* src/sys2.h [HAVE_FCLOSE_UNLOCKED]: Remove unnecessary block.
+	Suggestion from Ulrich Drepper.
+
+1998-07-04  Jim Meyering  <meyering@ascend.com>
+
+	* lib/safe-read.c (safe_read): Change type of pointer parameter to
+	`void' to avoid Irix4 cc errors.  Reported by Kaveh Ghazi.
+	* lib/safe-read.h: Update prototype.
+
+	* src/dircolors.c (parse_line): Add casts to avoid errors from
+	Irix4's `cc' C compiler.  From Kaveh Ghazi.
+
+	* lib/xstrtol.c: Include stdio.h.  Required on some systems when
+	using assert.  From Kaveh Ghazi.
+
+	* tests/mv/backup-is-src: Use cmp, not diff.
+	Reported by Kaveh Ghazi.
+
 1998-07-03  Jim Meyering  <meyering@ascend.com>
 
 	* Version 3.16r.
