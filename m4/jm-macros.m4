@@ -191,6 +191,7 @@ AC_DEFUN([jm_MACROS],
   AC_FUNC_STRTOD
   AC_REQUIRE([UTILS_SYS_OPEN_MAX])
   AC_REQUIRE([GL_FUNC_GETCWD_PATH_MAX])
+  AC_REQUIRE([GL_FUNC_READDIR])
 
   # See if linking `seq' requires -lm.
   # It does on nearly every system.  The single exception (so far) is
