@@ -1,6 +1,10 @@
-2003-05-11  Jim Meyering  <jim@meyering.net>
+2003-05-12  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* src/head.c: Include <assert.h>.
+	(AUTHORS): Add my name.
+	(elide_tail_lines_pipe): New function.
 
 2003-05-10  Jim Meyering  <jim@meyering.net>
 
