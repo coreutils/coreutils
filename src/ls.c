@@ -158,11 +158,9 @@ int rpl_lstat PARAMS((const char *, struct stat *));
 # define lstat(Name, Stat_buf) rpl_lstat(Name, Stat_buf)
 #endif
 
-#if D_TYPE_IN_DIRENT && defined DTTOIF
-# define HAVE_STRUCT_DIRENT_D_TYPE 1
+#if HAVE_STRUCT_DIRENT_D_TYPE && defined DTTOIF
 # define DT_INIT(Val) = Val
 #else
-# define HAVE_STRUCT_DIRENT_D_TYPE 0
 # define DT_INIT(Val) /* empty */
 #endif
 
