@@ -1,5 +1,11 @@
 2003-12-02  Jim Meyering  <jim@meyering.net>
 
+	* sha.h: Correct stale references to MD5 and `16 bytes'.
+	Patch by Ulrich Drepper.
+
+	* sha.h: Add FSF Copyright.  Remove reference to Scott Miller,
+	since this file is now nearly identical to md5.h.
+
 	* md5.h (rol) [__GNUC__ && __i386__]: Don't use `asm' code.  These
 	days, gcc-3.x does better all by itself.  Patch from Dean Gaudet:
 	http://mail.gnu.org/archive/html/bug-coreutils/2003-11/msg00144.html
