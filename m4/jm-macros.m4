@@ -46,13 +46,12 @@ AC_DEFUN(jm_MACROS,
 
   AC_REPLACE_FUNCS(strcasecmp strncasecmp)
   AC_REPLACE_FUNCS(dup2)
-  AC_REPLACE_FUNCS(gethostbyname gethostbyaddr)
-
+  AC_REPLACE_FUNCS(
+gethostbyname and gethostbyaddr.
   dnl used by e.g. intl/*domain.c and lib/canon-host.c
   AC_REPLACE_FUNCS(strdup)
 
-  AC_REPLACE_FUNCS(memchr)
-  AC_REPLACE_FUNCS(memmove)
+  AC_REPLACE_FUNCS(memchr memmove memcpy memset)
   AC_CHECK_FUNCS(getpagesize)
 
   # By default, argmatch should fail calling usage (1).
