@@ -239,8 +239,8 @@ is_printable_field (unsigned int i)
   return (printable_field[n] >> (i % CHAR_BIT)) & 1;
 }
 
-unsigned int
-hash_int (const void *x, unsigned int tablesize)
+static size_t
+hash_int (const void *x, size_t tablesize)
 {
   unsigned int y = (unsigned int) x;
   return (y % tablesize);
