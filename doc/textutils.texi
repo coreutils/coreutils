@@ -2204,7 +2204,9 @@ Either @var{file1} or @var{file2} (but not both) can be @samp{-},
 meaning standard input.  @var{file1} and @var{file2} should be already
 sorted in increasing order (not numerically) on the join fields; unless
 the @samp{-t} option is given, they should be sorted ignoring blanks at
-the start of the line, as in @code{sort -b}.
+the start of the join field, as in @code{sort -b}.  If the
+@samp{--ignore-case} option is given, lines should be sorted without
+regard to the case of characters in the join field, as in @code{sort -f}.
 
 The defaults are: the join field is the first field in each line;
 fields in the input are separated by one or more blanks, with leading
@@ -2225,6 +2227,14 @@ Print a line for each unpairable line in file @var{file-number} (either
 @opindex -e
 Replace those output fields that are missing in the input with
 @var{string}.
+
+@item -i
+@itemx --ignore-case
+@opindex -i
+@opindex --ignore-case
+Ignore differences in case when comparing keys.
+With this option, the lines of the input files must be ordered in the same way.
+Use @samp{sort -f} to produce this ordering.
 
 @item -1 @var{field}
 @itemx -j1 @var{field}
