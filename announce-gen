@@ -6,7 +6,7 @@ use Getopt::Long;
 use Digest::MD5;
 use Digest::SHA1;
 
-(my $VERSION = '$Revision: 1.18 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.19 $ ') =~ tr/[0-9].//cd;
 (my $ME = $0) =~ s|.*/||;
 
 my %valid_release_types = map {$_ => 1} qw (alpha beta major);
@@ -206,7 +206,7 @@ sub print_changelog_deltas ($$)
   my $curr_version;
   my $release_archive_dir;
   my @url_dir_list;
-  my $news_file;
+  my @news_file;
 
   GetOptions
     (
@@ -252,7 +252,7 @@ sub print_changelog_deltas ($$)
 
   my %size;
 
-  foreach my $f (($tgz, $tbz, $xd))
+  foreach my $f ($tgz, $tbz, $xd)
     {
       my $cmd = "du --human $f";
       my $t = `$cmd`;
@@ -334,7 +334,8 @@ EOF
     or die "$ME: $tmp: while writing: $!\n";
   chmod 0400, $tmp;  # ignore failure
 
-  print_news_deltas ($_, $prev_version, $curr_version) foreach @news_file;
+  print_news_deltas ($_, $prev_version, $curr_version)
+    foreach @news_file;
 
   $release_type eq 'major'
     or print_changelog_deltas ($package_name, $prev_version);
