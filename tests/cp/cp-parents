@@ -20,7 +20,7 @@ framework_failure=0
 mkdir $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 mkdir foo bar || framework_failure=1
-mkdir -p a/b/c d e || framework_failure=1
+mkdir -p a/b/c d e e-dir || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
@@ -44,5 +44,10 @@ cp -a --parents d/a/b/c e || fail=1
 p=`ls -ld e/d|sed 's/ .*//'`; case $p in drwxr-xr-x);; *) fail=1;; esac
 p=`ls -ld e/d/a|sed 's/ .*//'`; case $p in drwx-w--w-);; *) fail=1;; esac
 p=`ls -ld e/d/a/b/c|sed 's/ .*//'`; case $p in drwxr-xr-x);; *) fail=1;; esac
+
+# Make sure `mkdir -p existing-dir' succeeds and
+# that `mkdir existing-dir' fails.
+mkdir -p e-dir || fail=1
+mkdir e-dir > /dev/null 2>&1 && fail=1
 
 (exit $fail); exit
