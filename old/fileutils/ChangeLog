@@ -1,5 +1,8 @@
 Wed Oct  9 06:51:47 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/ls.c (usage): Improve brief descriptions of --sort and --time.
+	From François Pinard.
+
 	* lib/rpmatch.c [!WITH_REGEX]: Include rx.h.
 	From Andreas Schwab.
 
