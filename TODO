@@ -145,9 +145,6 @@ Changes expected to go in, post-5.2.1:
 
   Apply Bruno Haible's hostname changes
 
-  stat: no longer output trailing newline for user-supplied FORMATs
-    This will mean adding \n to default formats, internally.
-
   test/mv/*: clean up $other_partition_tmpdir in all cases
 
   ls: when both -l and --dereference-command-line-symlink-to-dir are
