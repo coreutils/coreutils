@@ -2400,7 +2400,7 @@ Usage: %s [OPTION]... [FILE]...\n\
       printf (_("\
 Paginate or columnate FILE(s) for printing.\n\
 \n\
-  +FIRST_PAGE[:LAST_PAGE]
+  +FIRST_PAGE[:LAST_PAGE]\n\
                     begin [stop] printing with page FIRST_[LAST_]PAGE\n\
   -COLUMN           produce COLUMN-column output and print columns down,\n\
                     unless -a is used. Balance number of lines in the\n\
