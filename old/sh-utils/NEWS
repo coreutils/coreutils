@@ -1,5 +1,7 @@
 Changes in release 2.1
  [2.0e]
+* stty: fix long-standing bug that caused test failures on at least HPUX
+  systems when COLUMNS was set to zero
 * still more portability fixes
 * unified lib/: now that directory and most of the configuration framework
   is common between fileutils, textutils, and sh-utils
