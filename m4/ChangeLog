@@ -1,5 +1,16 @@
 2000-01-23  Jim Meyering  <meyering@lucent.com>
 
+	* ls-mntd-fs.m4: s/list_mounted_fs/ac_list_mounted_fs/
+	(jm_LIST_MOUNTED_FILESYSTEMS): Take two parameters.
+
+	* fsusage.m4: New file.  Extracted from fileutils/configure.in.
+	s/space/ac_fsusage_space/.
+	(jm_FILE_SYSTEM_USAGE): Take two parameters.
+
+	* ftruncate.m4: New file (derived from part of fileutils/configure.in).
+	* jm-macros.m4: (jm_FUNC_FTRUNCATE): AC_REQUIRE it.
+	(jm_CHECK_ALL_TYPES): Require AC_HEADER_MAJOR and AC_HEADER_DIRENT.
+
 	* jm-macros.m4: (OPTIONAL_BIN_PROGS, OPTIONAL_BIN_ZCRIPTS, MAN):
 	AC_SUBST these here, rather than just in sh-util/configure.in, so
 	that the now-shared-by-fileutils-and-textutils lib/Makefile.am are
