@@ -97,6 +97,14 @@ main (int argc, char **argv)
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
 
+  /* The above handles --help and --version.
+     Since there is no other invocation of getopt, handle `--' here.  */
+  if (1 < argc && STREQ (argv[1], "--"))
+    {
+      --argc;
+      ++argv;
+    }
+
 #ifdef HAVE_SETHOSTNAME
   if (argc == 2)
     {
