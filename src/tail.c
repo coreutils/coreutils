@@ -853,6 +853,15 @@ tail_file (const char *filename, off_t n_units, int filenum)
   return errors;
 }
 
+/* If the command line arguments are of the obsolescent form and the
+   option string is well-formed, set *FAIL to zero, set *N_UNITS, the
+   globals COUNT_LINES, FOREVER, and FROM_START, and return non-zero.
+   Otherwise, if the command line arguments appear to be of the
+   obsolescent form but the option string is malformed, set *FAIL to
+   non-zero, don't modify any other parameter or global variable, and
+   return non-zero. Otherwise, return zero and don't modify any parameter
+   or global variable.  */
+
 static int
 parse_obsolescent_option (int argc, const char *const *argv,
 			  off_t *n_units, int *fail)
@@ -865,7 +874,8 @@ parse_obsolescent_option (int argc, const char *const *argv,
   int t_count_lines;
   int t_forever;
 
-  /* FIXME: comment.  */
+  /* With the obsolescent form, there is one option string and at most
+     one file argument.  */
   if (argc < 2 || argc > 3)
     return 0;
 
@@ -965,6 +975,7 @@ parse_obsolescent_option (int argc, const char *const *argv,
 
   if (!*fail)
     {
+      /* Set globals.  */
       from_start = t_from_start;
       count_lines = t_count_lines;
       forever = t_forever;
