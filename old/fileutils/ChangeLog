@@ -16,7 +16,8 @@ Sun Oct 29 06:06:13 1995  Jim Meyering  (meyering@comco.com)
 
 	* doc/Makefile.in (mostlyclean): Remove *.info.
 
-	* touch.c: Change long option name `file' to `reference'.
+	* touch.c: Change long option name `--file' to `--reference'.
+	Leave --file as an alias, for now.  It will be removed later.
  	(usage): Reflect option name change.  From Franc,ois Pinard.
 
 Wed Oct 18 23:09:55 1995  Jim Meyering  (meyering@comco.com)
