@@ -10164,9 +10164,13 @@ minute (00@dots{}59)
 @item %N
 nanoseconds (000000000@dots{}999999999)
 @item %p
-locale's AM or PM
+locale's upper case @samp{AM} or @samp{PM} (blank in many locales)
+@item %P
+locale's lower case @samp{am} or @samp{pm} (blank in many locales)
 @item %r
 time, 12-hour (hh:mm:ss [AP]M)
+@item %R
+time, 24-hour (hh:mm).  Same as @code{%H:%M}.
 @item %s
 @cindex epoch, seconds since
 @cindex seconds since the epoch
@@ -10219,6 +10223,21 @@ century (year divided by 100 and truncated to an integer) (00@dots{}99)
 day of month (01@dots{}31)
 @item %D
 date (mm/dd/yy)
+@item %e
+blank-padded day of month (1@dots{}31)
+@item %F
+the @w{ISO 8601} standard date format: @code{%Y-%m-%d}.
+This is the preferred form for all uses.
+@item %g
+The year corresponding to the ISO week number, but without the century
+(range @code{00} through @code{99}).  This has the same format and value
+as @code{%y}, except that if the ISO week number (see @code{%V}) belongs
+to the previous or next year, that year is used instead.
+@item %G
+The year corresponding to the ISO week number.  This has the same format
+and value as @code{%Y}, except that if the ISO week number (see
+@code{%V}) belongs to the previous or next year, that year is used
+instead.
 @item %h
 same as %b
 @item %j
