@@ -1,7 +1,7 @@
 #serial 1
 
 dnl From Jim Meyering.
-dnl Determine whether chown accepts arguments of -1 for gid and uid.
+dnl Determine whether chown accepts arguments of -1 for uid and gid.
 dnl If it doesn't, arrange to use the replacement function.
 dnl
 dnl If you use this macro in a package, you should
@@ -28,7 +28,7 @@ AC_DEFUN(jm_FUNC_CHOWN,
       char *f = "conftestchown";
       if (creat (f, 0600) < 0)
         exit (1);
-      exit (chown (f, (gid_t) -1, (uid_t) -1) == -1 ? 1 : 0);
+      exit (chown (f, (uid_t) -1, (gid_t) -1) == -1 ? 1 : 0);
     }
 	      ],
 	     jm_cv_func_working_chown=yes,
