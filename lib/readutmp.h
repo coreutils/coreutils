@@ -37,7 +37,9 @@
 #  define SET_UTMP_ENT setutxent
 #  define GET_UTMP_ENT getutxent
 #  define END_UTMP_ENT endutxent
-#  define UTMP_NAME_FUNCTION utmpxname
+#  ifdef HAVE_UTMPXNAME
+#   define UTMP_NAME_FUNCTION utmpxname
+#  endif
 # else
 #  include <utmp.h>
 #  define UTMP_STRUCT_NAME utmp
@@ -45,18 +47,20 @@
 #  define SET_UTMP_ENT setutent
 #  define GET_UTMP_ENT getutent
 #  define END_UTMP_ENT endutent
-#  define UTMP_NAME_FUNCTION utmpname
+#  ifdef HAVE_UTMPNAME
+#   define UTMP_NAME_FUNCTION utmpname
+#  endif
 # endif
 
 /* Accessor macro for the member named ut_user or ut_name.  */
 # ifdef HAVE_UTMPX_H
 
 #  if HAVE_STRUCT_UTMPX_UT_USER
-#   define UT_USER(Utmp) Utmp->ut_user
+#   define UT_USER(Utmp) ((Utmp)->ut_user)
 #  endif
 #  if HAVE_STRUCT_UTMPX_UT_NAME
 #   undef UT_USER
-#   define UT_USER(Utmp) Utmp->ut_name
+#   define UT_USER(Utmp) ((Utmp)->ut_name)
 #  endif
 
 # else
