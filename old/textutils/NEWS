@@ -1,5 +1,6 @@
 Changes in release 2.1
 [2.0f]
+* cut no longer gets a segfault under some circumstances
 * unexpand accepts new option: --first-only
 [2.0e]
 * `tail -f directory' no longer gets a failed assertion
