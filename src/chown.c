@@ -79,7 +79,7 @@ enum Verbosity
 };
 
 static int change_dir_owner PARAMS ((const char *dir, uid_t user, gid_t group,
-				     struct stat *statp));
+				     const struct stat *statp));
 
 /* The name the program was run with. */
 char *program_name;
@@ -101,7 +101,7 @@ static enum Verbosity verbosity = V_off;
 static char *username;
 
 /* The name of the group to which ownership of the files is being given. */
-static char *groupname;
+static const char *groupname;
 
 /* The argument to the --reference option.  Use the owner and group IDs
    of this file.  This file must exist.  */
@@ -231,7 +231,8 @@ change_file_owner (int cmdline_arg, const char *file, uid_t user, gid_t group)
    Return 0 if successful, 1 if errors occurred. */
 
 static int
-change_dir_owner (const char *dir, uid_t user, gid_t group, struct stat *statp)
+change_dir_owner (const char *dir, uid_t user, gid_t group,
+		  const struct stat *statp)
 {
   char *name_space, *namep;
   char *path;			/* Full path of each entry to process. */
@@ -294,7 +295,7 @@ Usage: %s [OPTION]... OWNER[.[GROUP]] FILE...\n\
       printf (_("\
 Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
 \n\
-  -c, --changes          be verbose whenever change occurs\n\
+  -c, --changes          like verbose but report only when a change is made\n\
       --dereference      affect the referent of each symbolic link, rather\n\
                          than the symbolic link itself\n\
   -h, --no-dereference   affect symbolic links instead of any referenced file\n\
@@ -304,7 +305,7 @@ Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
       --reference=RFILE  use the owner and group of RFILE instead of using\n\
                          explicit OWNER.GROUP values\n\
   -R, --recursive        operate on files and directories recursively\n\
-  -v, --verbose          explain what is being done\n\
+  -v, --verbose          output a diagnostic for every file processed\n\
       --help             display this help and exit\n\
       --version          output version information and exit\n\
 \n\
