@@ -28,6 +28,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include "system.h"
+#include "version.h"
 #include "long-options.h"
 #include "safe-stat.h"
 
@@ -1453,7 +1454,7 @@ main (argc, argv)
 
   program_name = argv[0];
 
-  parse_long_options (argc, argv, "sort", usage);
+  parse_long_options (argc, argv, "sort", version_string, usage);
 
   have_read_stdin = 0;
   inittables ();
