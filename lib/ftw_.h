@@ -50,7 +50,7 @@ __BEGIN_DECLS
 
 /* Values for the FLAG argument to the user function passed to `ftw'
    and 'nftw'.  */
-enum
+enum Ftw_option
 {
   FTW_F,		/* Regular file.  */
 # define FTW_F	 FTW_F
@@ -89,10 +89,13 @@ enum
 /* These flags are only passed from the `nftw' function.  */
   FTW_DP,		/* Directory, all subdirs have been visited. */
 #  define FTW_DP	 FTW_DP
-  FTW_SLN		/* Symbolic link naming non-existing file.  */
+  FTW_SLN,		/* Symbolic link naming non-existing file.  */
 #  define FTW_SLN FTW_SLN
 
 # endif	/* extended X/Open */
+
+  FTW_N_MEMBERS
+# define FTW_N_MEMBERS FTW_N_MEMBERS
 };
 
 
