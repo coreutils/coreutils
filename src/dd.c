@@ -1100,7 +1100,7 @@ main (int argc, char **argv)
 	  if (o / output_blocksize != seek_record)
 	    error (1, 0, _("file offset out of range"));
 	  if (ftruncate (STDOUT_FILENO, o) < 0)
-	    error (0, errno, "%s", output_file);
+	    error (1, errno, "%s", output_file);
 	}
 #endif
     }
