@@ -401,10 +401,14 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 {
   uintmax_t size;
   struct stat stat_buf;
+  int (*tmp_stat) ();
 
-  if (((top && opt_dereference_arguments)
-       ? stat (ent, &stat_buf)
-       : (*xstat) (ent, &stat_buf)) < 0)
+  if (top && opt_dereference_arguments)
+    tmp_stat = stat;
+  else
+    tmp_stat = xstat;
+
+  if ((*tmp_stat) (ent, &stat_buf) < 0)
     {
       error (0, errno, "%s", quote (path->text));
       exit_status = 1;
@@ -448,7 +452,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 	 to one of those.  */
       if (strchr (ent, '/')
 	  || DOT_OR_DOTDOT (ent)
-	  || (xstat == stat
+	  || (tmp_stat == stat
 	      && lstat (ent, &e_buf) == 0
 	      && S_ISLNK (e_buf.st_mode)))
 	{
