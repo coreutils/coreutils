@@ -1,3 +1,13 @@
+Mon Dec  9 18:26:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (LIBOBJS): After AC_FUNC_FNMATCH, add fnmatch.o
+	and define fnmatch to rpl_fnmatch if necessary.
+
+	* acconfig.h (fnmatch): Add undef.
+
+	* src/df.c (find_mount_point): Convert from K&R style header to ANSI.
+	Patch from Kaveh Ghazi.
+
 Sun Dec  8 07:22:38 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	=========== Update for automake-1.1k.
