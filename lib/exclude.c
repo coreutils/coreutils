@@ -93,11 +93,7 @@ struct exclude
 struct exclude *
 new_exclude (void)
 {
-  struct exclude *ex = xmalloc (sizeof *ex);
-  ex->exclude_count = 0;
-  ex->exclude_alloc = 60;
-  ex->exclude = xmalloc (ex->exclude_alloc * sizeof ex->exclude[0]);
-  return ex;
+  return xzalloc (sizeof *new_exclude ());
 }
 
 /* Free the storage associated with an exclude list.  */
@@ -188,12 +184,9 @@ add_exclude (struct exclude *ex, char const *pattern, int options)
 {
   struct patopts *patopts;
 
-  if (ex->exclude_alloc <= ex->exclude_count)
-    {
-      ex->exclude = xnrealloc (ex->exclude, ex->exclude_alloc,
-			       2 * sizeof *ex->exclude);
-      ex->exclude_alloc *= 2;
-    }
+  if (ex->exclude_count == ex->exclude_alloc)
+    ex->exclude = x2nrealloc (ex->exclude, &ex->exclude_alloc,
+			      sizeof *ex->exclude);
 
   patopts = &ex->exclude[ex->exclude_count++];
   patopts->pattern = pattern;
@@ -212,11 +205,11 @@ add_exclude_file (void (*add_func) (struct exclude *, char const *, int),
 {
   bool use_stdin = filename[0] == '-' && !filename[1];
   FILE *in;
-  char *buf;
+  char *buf = NULL;
   char *p;
   char const *pattern;
   char const *lim;
-  size_t buf_alloc = 1000;
+  size_t buf_alloc = 0;
   size_t buf_count = 0;
   int c;
   int e = 0;
@@ -226,16 +219,11 @@ add_exclude_file (void (*add_func) (struct exclude *, char const *, int),
   else if (! (in = fopen (filename, "r")))
     return -1;
 
-  buf = xmalloc (buf_alloc);
-
   while ((c = getc (in)) != EOF)
     {
-      buf[buf_count++] = c;
       if (buf_count == buf_alloc)
-	{
-	  buf = xnrealloc (buf, buf_alloc, 2);
-	  buf_alloc *= 2;
-	}
+	buf = x2realloc (buf, &buf_alloc);
+      buf[buf_count++] = c;
     }
 
   if (ferror (in))
