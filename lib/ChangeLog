@@ -1,3 +1,10 @@
+2003-10-16  Jim Meyering  <jim@meyering.net>
+
+	* exclude.c: Update from gnulib.
+	* xgethostname.c: Include xgethostname.h.
+	* xgethostname.h: New file, from gnulib.
+	* Makefile.am (libfetish_a_SOURCES): Add xgethostname.h.
+
 2003-10-15  Jim Meyering  <jim@meyering.net>
 
 	* userspec.h: New file.
