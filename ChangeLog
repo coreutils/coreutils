@@ -2,6 +2,11 @@
 
 	* Version 5.0.90.
 
+	* src/rm.c: Include "dirname.h".
+	(usage): Use base_name (program_name) in body of --help output.
+	This lets me...
+	* man/Makefile.am (.x.1): ...back out the kludge of 2003-07-22.
+
 	* src/Makefile.am (AM_INSTALLCHECK_STD_OPTIONS_EXEMPT): Exempt test.
 
 2003-07-24  Paul Eggert  <eggert@twinsun.com>
@@ -31,6 +36,7 @@
 	(main) [!LBRACKET]: Do not recognize "--help" or "--verbose" unless.
 	* tests/test/Test.pm (test_vector): Add several tests to check
 	the above.  Syntax errors now exit with status 2, not 1.
+	* man/Makefile.am (mapped_name): Use `../src/[' binary to create test.1.
 
 2003-07-26  Jim Meyering  <jim@meyering.net>
 
