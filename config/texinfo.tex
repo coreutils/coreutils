@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2003-09-24.10}
+\def\texinfoversion{2003-09-25.11}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
@@ -5066,12 +5066,12 @@ width0pt\relax} \fi
   \begingroup\inENV
   % If there are two @def commands in a row, we'll have a \nobreak,
   % which is there to keep the function description together with its
-  % header.  But if there's nothing but headers, we want to allow a
-  % break after all.  Check for penalty 10002 (inserted by
+  % header.  But if there's nothing but headers, we need to allow a
+  % break somewhere.  Check for penalty 10002 (inserted by
   % \defargscommonending) instead of 10000, since the sectioning
   % commands insert a \penalty10000, and we don't want to allow a break
   % between a section heading and a defun.
-  \ifnum\lastpenalty=10002 \penalty0 \fi
+  \ifnum\lastpenalty=10002 \penalty2000 \fi
   %
   % Similarly, after a section heading, do not allow a break.
   % But do insert the glue.
@@ -5093,7 +5093,7 @@ width0pt\relax} \fi
 \def\defxbodycommon{%
   % As with \parsebodycommon above, allow line break if we have multiple
   % x headers in a row.  It's not a great place, though.
-  \ifnum\lastpenalty=10000 \penalty1000 \fi
+  \ifnum\lastpenalty=10002 \penalty2000 \fi
   %
   \begingroup\obeylines
 }
@@ -5241,7 +5241,7 @@ width0pt\relax} \fi
   \advance\rightskip by 0pt plus 1fil
   \endgraf
   \nobreak\vskip -\parskip
-  \penalty 10002  % signal to \parsebodycommon.
+  \penalty 10002  % signal to \parsebodycommon and \defxbodycommon.
 }
 
 % This expands the args and terminates the paragraph they comprise.
