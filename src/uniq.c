@@ -52,8 +52,8 @@
 /* The name this program was run with. */
 char *program_name;
 
-/* Nonzero if the LC_COLLATE locale is hard.  */
-static int hard_LC_COLLATE;
+/* True if the LC_COLLATE locale is hard.  */
+static bool hard_LC_COLLATE;
 
 /* Number of fields to skip on each line when doing comparisons. */
 static size_t skip_fields;
@@ -81,8 +81,8 @@ static bool output_unique;
 static bool output_first_repeated;
 static bool output_later_repeated;
 
-/* If nonzero, ignore case when comparing.  */
-static int ignore_case;
+/* If true, ignore case when comparing.  */
+static bool ignore_case;
 
 enum delimit_method
 {
@@ -210,12 +210,12 @@ find_field (const struct linebuffer *line)
   return lp + i;
 }
 
-/* Return zero if two strings OLD and NEW match, nonzero if not.
+/* Return false if two strings OLD and NEW match, true if not.
    OLD and NEW point not to the beginnings of the lines
    but rather to the beginnings of the fields to compare.
    OLDLEN and NEWLEN are their lengths. */
 
-static int
+static bool
 different (char *old, char *new, size_t oldlen, size_t newlen)
 {
   if (check_chars < oldlen)
@@ -229,7 +229,7 @@ different (char *old, char *new, size_t oldlen, size_t newlen)
       return oldlen != newlen || memcasecmp (old, new, oldlen);
     }
   else if (HAVE_SETLOCALE && hard_LC_COLLATE)
-    return xmemcoll (old, oldlen, new, newlen);
+    return xmemcoll (old, oldlen, new, newlen) != 0;
   else
     return oldlen != newlen || memcmp (old, new, oldlen);
 }
@@ -242,7 +242,7 @@ different (char *old, char *new, size_t oldlen, size_t newlen)
 
 static void
 writeline (struct linebuffer const *line, FILE *stream,
-	   bool match, int linecount)
+	   bool match, uintmax_t linecount)
 {
   if (! (linecount == 0 ? output_unique
 	 : !match ? output_first_repeated
@@ -250,7 +250,7 @@ writeline (struct linebuffer const *line, FILE *stream,
     return;
 
   if (countmode == count_occurrences)
-    fprintf (stream, "%7d ", linecount + 1);
+    fprintf (stream, "%7" PRIuMAX " ", linecount + 1);
 
   fwrite (line->buffer, sizeof (char), line->length, stream);
 }
@@ -322,8 +322,8 @@ check_file (const char *infile, const char *outfile)
     {
       char *prevfield;
       size_t prevlen;
-      int match_count = 0;
-      int first_delimiter = 1;
+      uintmax_t match_count = 0;
+      bool first_delimiter = true;
 
       if (readlinebuffer (prevline, istream) == 0)
 	goto closefiles;
@@ -344,16 +344,21 @@ check_file (const char *infile, const char *outfile)
 	  thisfield = find_field (thisline);
 	  thislen = thisline->length - 1 - (thisfield - thisline->buffer);
 	  match = !different (thisfield, prevfield, thislen, prevlen);
+	  match_count += match;
 
-	  if (match)
-	    ++match_count;
+	  if (match_count == UINTMAX_MAX)
+	    {
+	      if (count_occurrences)
+		error (EXIT_FAILURE, 0, _("too many repeated lines"));
+	      match_count--;
+	    }
 
           if (delimit_groups != DM_NONE)
 	    {
 	      if (!match)
 		{
 		  if (match_count) /* a previous match */
-		    first_delimiter = 0; /* Only used when DM_SEPARATE */
+		    first_delimiter = false; /* Only used when DM_SEPARATE */
 		}
 	      else if (match_count == 1)
 		{
@@ -506,7 +511,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'i':
-	  ignore_case = 1;
+	  ignore_case = true;
 	  break;
 
 	case 's':		/* Like '+#'. */
@@ -535,7 +540,7 @@ main (int argc, char **argv)
   if (obsolete_skip_fields && 200112 <= posix2_version ())
     {
       error (0, 0, _("`-%lu' option is obsolete; use `-f %lu'"),
-	     (unsigned long) skip_fields, (unsigned long) skip_fields);
+	     (unsigned long int) skip_fields, (unsigned long int) skip_fields);
       usage (EXIT_FAILURE);
     }
 
