@@ -5,6 +5,16 @@
 	* tests/Makefile.am (TESTS_ENVIRONMENT): Set PATH so that
 	the tests in help-version will use the just-built binaries.
 
+2003-07-31  Paul Eggert  <eggert@twinsun.com>
+
+	* NEWS: Add --rfc-2822 option to GNU date.
+	* doc/coreutils.texi (Time directives, Options for date, Examples
+	of date): Likewise.
+	* src/date.c (long_options, usage, main): Likewise.
+	* doc/getdate.texi (General date syntax): Likewise.
+	* doc/coreutils.texi (Options for date): Fix a typo in format:
+	it's now %d not %_d.  Add URLs.
+
 2003-08-01  Jim Meyering  <jim@meyering.net>
 
 	* tests/shred/remove: Ensure that $? is 0 for the final `exit 0'.
