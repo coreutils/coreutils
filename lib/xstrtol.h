@@ -1,14 +1,8 @@
 #ifndef XSTRTOL_H_
 # define XSTRTOL_H_ 1
 
-# if STRING_TO_UNSIGNED
-#  define __xstrtol xstrtoul
-#  define __strtol strtoul
-#  define __unsigned unsigned
-# else
-#  define __xstrtol xstrtol
-#  define __strtol strtol
-#  define __unsigned /* empty */
+# if HAVE_INTTYPES_H
+#  include <inttypes.h> /* for uintmax_t */
 # endif
 
 # ifndef PARAMS
@@ -27,11 +21,14 @@ enum strtol_error
 typedef enum strtol_error strtol_error;
 # endif
 
-strtol_error
-  __xstrtol PARAMS ((const char *s, char **ptr, int base,
-		     __unsigned long int *val, const char *valid_suffixes));
+# define _DECLARE_XSTRTOL(name, type) \
+  strtol_error \
+    name PARAMS ((const char *s, char **ptr, int base, \
+		  type *val, const char *valid_suffixes));
+_DECLARE_XSTRTOL (xstrtol, long int)
+_DECLARE_XSTRTOL (xstrtoul, unsigned long int)
+_DECLARE_XSTRTOL (xstrtoumax, uintmax_t)
 
-# undef _STRTOL_ERROR
 # define _STRTOL_ERROR(Exit_code, Str, Argument_type_string, Err)	\
   do									\
     {									\
@@ -51,8 +48,7 @@ strtol_error
 	  break;							\
 									\
 	case LONGINT_OVERFLOW:						\
-	  /* FIXME: make this message dependent on STRING_TO_UNSIGNED */\
-	  error ((Exit_code), 0, "%s `%s' larger than maximum long int",\
+	  error ((Exit_code), 0, "%s `%s' too large",			\
 		 (Argument_type_string), (Str));			\
 	  break;							\
 	}								\
