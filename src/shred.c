@@ -151,6 +151,10 @@ char *xstrdup PARAMS ((char const *));
 #  endif
 # endif
 
+/* POSIX doesn't require st_blksize, and 65536 is a reasonable
+   upper bound for existing filesystem practice.  */
+# define ST_BLKSIZE(Stat) 65536
+
 # define uintmax_t unsigned long
 
 /* Variant human-readable function that ignores last two args */
@@ -1418,9 +1422,9 @@ do_wipefd (int fd, char const *qname, struct isaac_state *s,
 	  error (0, 0, _("%s: file has negative size"), qname);
 	  return -1;
 	}
-      if (0 <= size && st.st_blksize && !(flags->exact))
+      if (0 <= size && !(flags->exact))
 	{
-	  size += st.st_blksize - 1 - (size - 1) % st.st_blksize;
+	  size += ST_BLKSIZE (st) - 1 - (size - 1) % ST_BLKSIZE (st);
 	  if (size < 0)
 	    size = TYPE_MAXIMUM (off_t);
 	}
