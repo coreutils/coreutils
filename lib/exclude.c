@@ -147,7 +147,7 @@ excluded_filename (struct exclude const *ex, char const *f)
 
   /* If no options are given, the default is to include.  */
   if (exclude_count == 0)
-    return 0;
+    return false;
   else
     {
       struct patopts const *exclude = ex->exclude;
