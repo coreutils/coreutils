@@ -137,7 +137,7 @@ int rpl_lstat (const char *, struct stat *);
 # define FTW_NAME ftw
 # define NFTW_NAME nftw
 # define INO_T ino_t
-# define STAT stat
+# define FTW_STAT stat
 # ifdef _LIBC
 #  define LXSTAT __lxstat
 #  define XSTAT __xstat
@@ -218,7 +218,8 @@ static const int ftw_arr[] =
 
 
 /* Forward declarations of local functions.  */
-static int ftw_dir (struct ftw_data *data, struct STAT *st) internal_function;
+static int ftw_dir (struct ftw_data *data, struct FTW_STAT *st)
+     internal_function;
 
 
 static int
@@ -237,7 +238,7 @@ object_compare (const void *p1, const void *p2)
 
 
 static inline int
-add_object (struct ftw_data *data, struct STAT *st)
+add_object (struct ftw_data *data, struct FTW_STAT *st)
 {
   struct known_object *newp = malloc (sizeof (struct known_object));
   if (newp == NULL)
@@ -249,7 +250,7 @@ add_object (struct ftw_data *data, struct STAT *st)
 
 
 static inline int
-find_object (struct ftw_data *data, struct STAT *st)
+find_object (struct ftw_data *data, struct FTW_STAT *st)
 {
   struct known_object obj;
   obj.dev = st->st_dev;
@@ -353,7 +354,7 @@ static inline int
 process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 	       size_t namlen)
 {
-  struct STAT st;
+  struct FTW_STAT st;
   int result = 0;
   int flag = 0;
   size_t new_buflen;
@@ -465,7 +466,7 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 
 static int
 internal_function
-ftw_dir (struct ftw_data *data, struct STAT *st)
+ftw_dir (struct ftw_data *data, struct FTW_STAT *st)
 {
   struct dir_data dir;
   struct dirent64 *d;
@@ -639,7 +640,7 @@ ftw_startup (const char *dir, int is_nftw, NFTW_FUNC_T func, int descriptors,
 	     int flags)
 {
   struct ftw_data data;
-  struct STAT st;
+  struct FTW_STAT st;
   int result = 0;
   int save_err;
   struct saved_cwd cwd;
