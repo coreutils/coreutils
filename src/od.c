@@ -1119,7 +1119,7 @@ write_block (current_offset, n_bytes, prev_block, curr_block)
     }
   else
     {
-      int i;
+      unsigned int i;
 
       prev_pair_equal = 0;
       for (i = 0; i < n_specs; i++)
@@ -1309,7 +1309,7 @@ read_block (n, block, n_bytes_in_buffer)
 static int
 get_lcm ()
 {
-  int i;
+  unsigned int i;
   int l_c_m = 1;
 
   for (i = 0; i < n_specs; i++)
@@ -1400,7 +1400,8 @@ dump ()
       while (current_offset < end_offset)
 	{
 	  size_t n_needed;
-	  n_needed = MIN (end_offset - current_offset, bytes_per_block);
+	  n_needed = MIN (end_offset - current_offset,
+			  (off_t) bytes_per_block);
 	  err |= read_block (n_needed, block[idx], &n_bytes_read);
 	  if (n_bytes_read < bytes_per_block)
 	    break;
@@ -1462,7 +1463,7 @@ dump ()
 static int
 dump_strings ()
 {
-  int bufsize = MAX (100, string_min);
+  size_t bufsize = MAX (100, string_min);
   char *buf = xmalloc (bufsize);
   off_t address = n_bytes_to_skip;
   int err;
@@ -1470,7 +1471,7 @@ dump_strings ()
   err = 0;
   while (1)
     {
-      int i;
+      unsigned int i;
       int c;
 
       /* See if the next `string_min' chars are all printing chars.  */
@@ -1581,7 +1582,7 @@ main (argc, argv)
 {
   int c;
   int n_files;
-  int i;
+  unsigned int i;
   unsigned int l_c_m;
   unsigned int address_pad_len;
   unsigned long int desired_width;
