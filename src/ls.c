@@ -444,9 +444,13 @@ static enum sort_type sort_type;
 
 static int sort_reverse;
 
-/* Nonzero means to NOT display group information.  -G  */
+/* Nonzero means to display owner information.  -g turns this off.  */
 
-static int inhibit_group;
+static int print_owner = 1;
+
+/* Nonzero means to display group information.  -o turns this off.  */
+
+static int print_group = 1;
 
 /* Nonzero means print the user and group id's as numbers rather
    than as names.  -n  */
@@ -1115,7 +1119,8 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'g':
-	  /* No effect.  For BSD compatibility. */
+	  format = long_format;
+	  print_owner = 0;
 	  break;
 
 	case 'h':
@@ -1150,11 +1155,12 @@ Use `--si' for the old meaning."));
 
 	case 'n':
 	  numeric_ids = 1;
+	  format = long_format;
 	  break;
 
 	case 'o':  /* Just like -l, but don't display group info.  */
 	  format = long_format;
-	  inhibit_group = 1;
+	  print_group = 0;
 	  break;
 
 	case 'p':
@@ -1222,7 +1228,7 @@ Use `--si' for the old meaning."));
 	  break;
 
 	case 'G':		/* inhibit display of group info */
-	  inhibit_group = 1;
+	  print_group = 0;
 	  break;
 
 	case 'I':
@@ -2453,7 +2459,6 @@ print_long_format (const struct fileinfo *f)
   time_t when;
   int when_ns IF_LINT (= 0);
   struct tm *when_local;
-  char *user_name;
 
 #if HAVE_ST_DM_MODE
   /* Cray DMF: look at the file's migrated, not real, status */
@@ -2506,14 +2511,17 @@ print_long_format (const struct fileinfo *f)
   sprintf (p, "%s %3u ", modebuf, (unsigned int) f->stat.st_nlink);
   p += strlen (p);
 
-  user_name = (numeric_ids ? NULL : getuser (f->stat.st_uid));
-  if (user_name)
-    sprintf (p, "%-8.8s ", user_name);
-  else
-    sprintf (p, "%-8u ", (unsigned int) f->stat.st_uid);
-  p += strlen (p);
+  if (print_owner)
+    {
+      char *user_name = (numeric_ids ? NULL : getuser (f->stat.st_uid));
+      if (user_name)
+	sprintf (p, "%-8.8s ", user_name);
+      else
+	sprintf (p, "%-8u ", (unsigned int) f->stat.st_uid);
+      p += strlen (p);
+    }
 
-  if (!inhibit_group)
+  if (print_group)
     {
       char *group_name = (numeric_ids ? NULL : getgroup (f->stat.st_gid));
       if (group_name)
@@ -3275,7 +3283,7 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
       --full-time            list both full date and full time\n"));
 
       printf (_("\
-  -g                         (ignored)\n\
+  -g                         use the long listing format and omit owner info\n\
   -G, --no-group             inhibit display of group information\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
       --si                   likewise, but use powers of 1000 not 1024\n\
@@ -3288,11 +3296,14 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -k, --kilobytes            like --block-size=1024\n\
   -l                         use a long listing format\n\
   -L, --dereference          list entries pointed to by symbolic links\n\
-  -m                         fill width with a comma separated list of entries\n\
-  -n, --numeric-uid-gid      list numeric UIDs and GIDs instead of names\n\
+  -m                         fill width with a comma separated list of entries\n"));
+
+      printf (_("\
+      --numeric-uid-gid      list numeric UIDs and GIDs instead of names\n\
+  -n                         equivalent to `-l --numeric-uid-gid'\n\
   -N, --literal              print raw entry names (don't treat e.g. control\n\
                                characters specially)\n\
-  -o                         use long listing format without group info\n\
+  -o                         use the long listing format and omit group info\n\
   -p, --file-type            append indicator (one of /=@|) to entries\n\
   -q, --hide-control-chars   print ? instead of non graphic characters\n\
       --show-control-chars   show non graphic characters as-is (default\n\
