@@ -1,4 +1,4 @@
-/* exclude.c -- exclude file names
+/* xreadlink.c -- readlink wrapper to return the link name in malloc'd storage
 
    Copyright 2001 Free Software Foundation, Inc.
 
