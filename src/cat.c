@@ -666,6 +666,9 @@ main (int argc, char **argv)
       /* Switch stdout to BINARY mode.  */
       binary_output = 1;
       SET_BINARY (output_desc);
+      /* When stdout is in binary mode, make sure all input files are
+	 also read in binary mode.  */
+      file_open_mode |= O_BINARY;
     }
   else if (quote)
     {
