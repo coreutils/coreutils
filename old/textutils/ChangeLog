@@ -1,3 +1,29 @@
+1998-10-03  Jim Meyering  <meyering@ascend.com>
+
+	* src/md5sum.c (split_3): Rename local variable, to `escaped_filename'.
+	(main): Output the leading backslash not just when there's a newline
+	in the file name, but also when there's a backslash.
+
+	* tests/md5sum/basic-1: Add tests with filenames containing newline
+	and backslash characters.  (for the bug fixed above)
+
+	* tests/Makefile.am (EXTRA_DIST): Add Fetish.pm.
+	* tests/Fetish.pm: New file.
+
+	* tests/md5sum/basic-1: New file: rewrite of old tests to use Fetish.pm.
+	* tests/md5sum/Test.pm: Remove file.
+	* tests/md5sum/Makefile.am: Rewrite.
+
+1998-09-19  Jim Meyering  <meyering@ascend.com>
+
+	* src/ptx.c (program_name): Declare *not* to be const.
+
+1998-08-29  Jim Meyering  <meyering@ascend.com>
+
+	* src/cut.c: Don't assume ASCII.
+	* src/pr.c: Likewise.
+	* src/tail.c: Likewise.
+
 1998-08-15  Jim Meyering  <meyering@ascend.com>
 
 	* src/pr.c (usage): Reformat.
