@@ -1,4 +1,5 @@
 Changes in release 3.15:
+* touch --date=DATE bug (due to broken getdate.y) has been fixed
 * ls -l no longer misformats the date when run in a locale for which the
   locale's abbreviated week-day name (strftime's %a format) is shorter or
   longer than the `normal' three bytes (with LANG=de it's a two-byte string).
