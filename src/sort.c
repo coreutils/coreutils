@@ -948,6 +948,7 @@ checkfp (fp)
 {
   struct buffer buf;		/* Input buffer. */
   struct lines lines;		/* Lines scanned from the buffer. */
+  struct line *prev_line;	/* Pointer to previous line. */
   struct line temp;		/* Copy of previous line. */
   int cc;			/* Character count. */
   int cmp;			/* Result of calling compare. */
@@ -977,15 +978,17 @@ checkfp (fp)
 	  }
 
 	/* Save the last line of the buffer and refill the buffer. */
-	if (lines.lines[lines.used - 1].length > alloc)
+	prev_line = lines.lines + lines.used - 1;
+	if (prev_line->length > alloc)
 	  {
-	    while (lines.lines[lines.used - 1].length + 1 > alloc)
+	    while (prev_line->length + 1 > alloc)
 	      alloc *= 2;
 	    temp.text = xrealloc (temp.text, alloc);
 	  }
-	bcopy (lines.lines[lines.used - 1].text, temp.text,
-	       lines.lines[lines.used - 1].length + 1);
-	temp.length = lines.lines[lines.used - 1].length;
+	bcopy (prev_line->text, temp.text, prev_line->length + 1);
+	temp.length = prev_line->length;
+	temp.keybeg = temp.text + (prev_line->keybeg - prev_line->text);
+	temp.keylim = temp.text + (prev_line->keylim - prev_line->text);
 
 	cc = fillbuf (&buf, fp);
 	if (cc)
