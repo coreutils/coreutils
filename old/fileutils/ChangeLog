@@ -1,4 +1,13 @@
+1999-01-17  Jim Meyering  <meyering@ascend.com>
+
+	* src/ln.c (same_name): Use SAME_INODE rather than open coding it.
+
 1999-01-16  Jim Meyering  <meyering@ascend.com>
+
+	* lib/argmatch.c (ARGMATCH_DIE_DECL): Use it.
+
+	* acconfig.h: Remove @BOTTOM@ section.
+	Instead, add the define and decl via m4/jm-macros.m4.
 
 	* src/ls.c: Don't declare base_name.
 	Use function-style XARGMATCH once again.
@@ -6,6 +15,8 @@
 	* acconfig.h: Add a @BOTTOM@ section.
 	(ARGMATCH_DIE) [@BOTTOM@]: Define to usage(1).
 	Declare usage.
+	From Akim Demaille.
+
 	* src/cp.c: Remove declarations of base_name and get_version.
 	(main): Don't call getenv ("VERSION_CONTROL"); xget_version does it.
 	Use xget_version and function-style XARGMATCH.
