@@ -1,5 +1,8 @@
 2005-03-10  Jim Meyering  <jim@meyering.net>
 
+	* save-cwd.c [!HAVE_FCHDIR]: Define open, fchdir, and chdir_long
+	so that this module works on systems without fchdir.
+
 	* Makefile.am (libfetish_a_SOURCES): Remove xstrtol.c and xstrtol.h.
 
 2005-03-09  Paul Eggert  <eggert@cs.ucla.edu>
