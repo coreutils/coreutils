@@ -1,4 +1,6 @@
 Changes in release 3.17:
+[3.16n]
+* `mv dir dir' once again does *not* remove dir/
 * ls accepts new options:
     --indicator-style=none (no indicators, the default)
     --indicator-style=classify (all indicators)
