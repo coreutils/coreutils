@@ -1,3 +1,7 @@
+2002-11-10  Jim Meyering  <jim@meyering.net>
+
+	* jm-macros.m4 (jm_MACROS): Add AC_REPLACE_FUNCS(raise).
+
 2002-10-30  Paul Eggert  <eggert@twinsun.com>
 
 	* getgroups.m4 (jm_FUNC_GETGROUPS):
