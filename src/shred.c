@@ -174,7 +174,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -u, --remove   truncate and remove file after overwriting\n\
   -v, --verbose  show progress\n\
-  -x, --exact    do not round file sizes up to the next full block\n\
+  -x, --exact    do not round file sizes up to the next full block;\n\
+                   this is the default for non-regular files\n\
   -z, --zero     add a final overwrite with zeros to hide shredding\n\
   -              shred standard output\n\
 "), stdout);
@@ -1223,7 +1224,8 @@ do_wipefd (int fd, char const *qname, struct isaac_state *s,
 	    }
 	}
 
-      if (0 <= size && !(flags->exact))
+      /* Allow `rounding up' only for regular files.  */
+      if (0 <= size && !(flags->exact) && S_ISREG (st.st_mode))
 	{
 	  size += ST_BLKSIZE (st) - 1 - (size - 1) % ST_BLKSIZE (st);
 
