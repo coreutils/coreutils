@@ -27,11 +27,12 @@
 
    David MacKenzie <djm@gnu.ai.mit.edu> */
 
+#include <config.h>
+
 #ifdef TERMIOS_NEEDS_XOPEN_SOURCE
 # define _XOPEN_SOURCE
 #endif
 
-#include <config.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <termios.h>
