@@ -1,6 +1,16 @@
-1998-09-19  Jim Meyering  <meyering@ascend.com>
+1998-09-20  Jim Meyering  <meyering@ascend.com>
 
 	* Version 3.16y.
+
+	* src/install.c (install_file_to_path) [-D]: Create any leading
+	directories with permissions of 0755.
+
+1998-09-19  Jim Meyering  <meyering@ascend.com>
+
+	* src/install.c (install_file_to_path): Copy the file after creating
+	any leading directories.
+	(main) [case 'v']: Set `x.verbose' to 1, not 0.
+	Reported by Marty Leisner.
 
 	* man/Makefile.am (transform): Define.
 	(man_MANS): Include ginstall.1, not install.1, to match the name
