@@ -1340,7 +1340,7 @@ parse_old_offset (s)
   /* Determine the radix we'll use to interpret S.  If there is a `.',
      it's decimal, otherwise, if the string begins with `0X'or `0x',
      it's hexadecimal, else octal.  */
-  if (index (s, '.') != NULL)
+  if (strchr (s, '.') != NULL)
     radix = 10;
   else
     {
