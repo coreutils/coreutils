@@ -1,3 +1,9 @@
+2003-02-17  Jim Meyering  <jim@meyering.net>
+
+	* physmem.c: Undo most of last change.
+	Use sysmp instead, since it provides a cleaner interface.
+	From Kaveh Ghazi.
+
 2003-02-16  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (libfetish_a_SOURCES): Add mmap-stack.h.
