@@ -85,6 +85,13 @@ my @tv = (
 ['out-delim5', '-c2-3,4- --output-d=:', "abcdefg\n", "bc:defg\n",	0],
 # This test would fail for cut from coreutils-5.0.1 and earlier.
 ['out-delim6', '-c2,1-3 --output-d=:', "abc\n", "abc\n",	0],
+#
+['od-abut',    '-b1-2,3-4 --output-d=:', "abcd\n", "ab:cd\n",	0],
+['od-overlap', '-b1-2,2   --output-d=:', "abc\n",  "ab\n",	0],
+['od-overlap2', '-b1-2,2- --output-d=:', "abc\n",  "abc\n",	0],
+['od-overlap3', '-b1-3,2- --output-d=:', "abcd\n",  "abcd\n",	0],
+['od-overlap4', '-b1-3,2-3 --output-d=:', "abcd\n",  "abc\n",	0],
+['od-overlap5', '-b1-3,1-4 --output-d=:', "abcde\n",  "abcd\n",	0],
 
 );
 
