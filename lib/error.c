@@ -1,5 +1,5 @@
 /* Error handler for noninteractive utilities
-   Copyright (C) 1990,91,92,93,94,95,96,97,98, 99 Free Software Foundation, Inc.
+   Copyright (C) 1990-2000 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
@@ -150,12 +150,16 @@ error (status, errnum, message, va_alist)
   ++error_message_count;
   if (errnum)
     {
-#if defined HAVE_STRERROR_R || defined _LIBC
+#if defined HAVE_STRERROR_R || _LIBC
       char errbuf[1024];
+# if HAVE_WORKING_STRERROR_R || _LIBC
+      fprintf (stderr, ": %s", __strerror_r (errnum, errbuf, sizeof errbuf));
+# else
       /* Don't use __strerror_r's return value because on some systems
 	 (at least DEC UNIX 4.0[A-D]) strerror_r returns `int'.  */
       __strerror_r (errnum, errbuf, sizeof errbuf);
       fprintf (stderr, ": %s", errbuf);
+# endif
 #else
       fprintf (stderr, ": %s", strerror (errnum));
 #endif
@@ -230,10 +234,14 @@ error_at_line (status, errnum, file_name, line_number, message, va_alist)
     {
 #if defined HAVE_STRERROR_R || defined _LIBC
       char errbuf[1024];
+# if HAVE_WORKING_STRERROR_R || _LIBC
+      fprintf (stderr, ": %s", __strerror_r (errnum, errbuf, sizeof errbuf));
+# else
       /* Don't use __strerror_r's return value because on some systems
 	 (at least DEC UNIX 4.0[A-D]) strerror_r returns `int'.  */
       __strerror_r (errnum, errbuf, sizeof errbuf);
       fprintf (stderr, ": %s", errbuf);
+# endif
 #else
       fprintf (stderr, ": %s", strerror (errnum));
 #endif
