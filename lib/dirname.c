@@ -57,7 +57,7 @@ size_t
 dir_name_r (const char *path, const char **result)
 {
   char *slash;
-  int length;			/* Length of result, not including NUL.  */
+  size_t length;		/* Length of result, not including NUL.  */
 
   slash = strrchr (path, '/');
   if (BACKSLASH_IS_PATH_SEPARATOR)
