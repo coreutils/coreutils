@@ -387,14 +387,6 @@ copy_internal (const char *src_path, const char *dst_path,
 
   earlier_file = remember_copied (dst_path, src_sb.st_ino, src_sb.st_dev);
 
-  /* Did we just create this file?  */
-
-  if (earlier_file == &new_file)
-    {
-      *copy_into_self = 1;
-      return 0;
-    }
-
   src_mode = src_sb.st_mode;
   src_type = src_sb.st_mode;
 
@@ -617,13 +609,30 @@ copy_internal (const char *src_path, const char *dst_path,
       return 0;
     }
 
-  if (move_mode && rename (src_path, dst_path) == 0)
+  if (move_mode)
     {
-      if (x->verbose && S_ISDIR (src_type))
-	printf ("%s -> %s\n", src_path, dst_path);
-      if (rename_succeeded)
-	*rename_succeeded = 1;
-      return 0;
+      if (rename (src_path, dst_path) == 0)
+	{
+	  if (x->verbose && S_ISDIR (src_type))
+	    printf ("%s -> %s\n", src_path, dst_path);
+	  if (rename_succeeded)
+	    *rename_succeeded = 1;
+	  return 0;
+	}
+
+      /* FIXME: someday, consider what to do when moving a directory into
+	 itself but when source and destination are on different devices.  */
+
+      /* This happens when attempting to rename a directory to a
+	 subdirectory of itself.  */
+      if (errno == EINVAL)
+	{
+	  /* FIXME: this is a little fragile in that it relies on rename(2)
+	     returning a specific errno (EINVAL).  Expect problems on
+	     non-POSIX systems.  */
+	  *copy_into_self = 1;
+	  return 0;
+	}
     }
 
   if (S_ISDIR (src_type))
