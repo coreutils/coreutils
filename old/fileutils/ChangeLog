@@ -1,3 +1,13 @@
+2000-07-25  Jim Meyering  <meyering@lucent.com>
+
+	* src/mv.c (main): Remove unnecessary "%s" argument.
+
+	* src/ln.c: Convert "`%s'" in format strings to "%s", and wrap each
+	corresponding argument in a `quote (...)' call.
+	Add more precise diagnostics.
+	* src/mv.c: Likewise.
+	* src/cp.c: Likewise.
+
 2000-07-23  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0x.
