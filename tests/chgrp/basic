@@ -62,6 +62,7 @@ chgrp $g2 f2 || fail=1
   touch f
   ln -s f symlink
   chgrp -c $g1 f
+  chgrp $g2 symlink 2> /dev/null
   # This should not change the group of f.
   chgrp -c $g2 symlink 2> /dev/null
   chgrp -c $g2 f
@@ -74,22 +75,22 @@ chgrp $g2 f2 || fail=1
 ) 2>&1 | sed "s/ $g1$/ G1/;s/ $g2$/ G2/" > actual
 
 cat <<\EOF > expected
-group of `f' changed to G1
-group of `f' changed to G2
-group of `f' changed to G1
+changed group of `f' to G1
+changed group of `f' to G2
+changed group of `f' to G1
 group of `f' retained as G1
-group of `f' changed to G2
-group of `d' changed to G2
-group of `d/f3' changed to G2
-group of `d' changed to G1
-group of `d/f3' changed to G1
-group of `d' changed to G2
-group of `d/f3' changed to G2
-group of `d' changed to G1
-group of `d/f3' changed to G1
-group of `d' changed to G2
-group of `f' changed to G2
-group of `symlink' changed to G1
+changed group of `f' to G2
+changed group of `d' to G2
+changed group of `d/f3' to G2
+changed group of `d' to G1
+changed group of `d/f3' to G1
+changed group of `d' to G2
+changed group of `d/f3' to G2
+changed group of `d' to G1
+changed group of `d/f3' to G1
+changed group of `d' to G2
+changed group of `f' to G2
+changed group of `symlink' to G1
 EOF
 
 cmp expected actual \
