@@ -557,25 +557,33 @@ swallow_file_in_memory (const char *file_name, BLOCK *block)
   if (fstat (file_handle, &stat_block) < 0)
     error (EXIT_FAILURE, errno, file_name);
 
-#if !MSDOS
-
-  /* On MSDOS, we cannot predict in memory size from file size, because of
-     end of line conversions.  */
-
   if (S_ISREG (stat_block.st_mode))
     {
+      size_t in_memory_size;
+
       block->start = (char *) xmalloc ((size_t) stat_block.st_size);
 
-      if (read (file_handle, block->start, (size_t) stat_block.st_size)
+      if ((in_memory_size = read (file_handle,
+				  block->start, (size_t) stat_block.st_size))
 	  != stat_block.st_size)
-	error (EXIT_FAILURE, errno, file_name);
-
-      block->end = block->start + stat_block.st_size;
-    }
-  else
-
+	{
+#if MSDOS
+	  /* On MSDOS, in memory size may be smaller than the file
+	     size, because of end of line conversions.  But it can
+	     never be smaller than half the file size, because the
+	     minimum is when all lines are empty and terminated by
+	     CR+LF.  */
+	  if (in_memory_size != (size_t)-1
+	      && in_memory_size >= stat_block.st_size / 2)
+	    block->start = (char *) xrealloc (block->start, in_memory_size);
+	  else
 #endif /* not MSDOS */
 
+	    error (EXIT_FAILURE, errno, file_name);
+	}
+      block->end = block->start + in_memory_size;
+    }
+  else
     {
       block->start = (char *) xmalloc ((size_t) 1 << SWALLOW_REALLOC_LOG);
       used_length = 0;
