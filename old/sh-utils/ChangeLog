@@ -1,3 +1,7 @@
+Wed Feb 28 20:53:24 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* expr.c (eval6): Cast strlen to int to avoid warning from gcc -Wall.
+
 Sun Feb 25 22:19:52 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* src/Makefile.am (BUILT_SOURCES): Set to `who.c users.c'.
