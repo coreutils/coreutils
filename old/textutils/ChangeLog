@@ -2,6 +2,8 @@
 
 	* Version 1.22g.
 
+	* lib/fnmatch.h: New file. (unused)
+	* lib/fnmatch.c: New file. (unused)
 	* lib/Makefile.am (noinst_HEADERS): Add fnmatch.h.
 
 1998-10-03  Jim Meyering  <meyering@ascend.com>
