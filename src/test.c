@@ -122,15 +122,9 @@ static int term PARAMS ((void));
 static int and PARAMS ((void));
 static int or PARAMS ((void));
 
-#if __GNUC__ >= 2 && defined (__GNUC_MINOR__) \
-    && __GNUC_MINOR__ >= 5 && !defined (__STRICT_ANSI__)
-# define NO_RETURN_ATTRIBUTE __attribute__ ((noreturn))
-#else
-# define NO_RETURN_ATTRIBUTE /* empty */
-#endif
-
-static void test_syntax_error PARAMS ((char *format, char *arg)) NO_RETURN_ATTRIBUTE;
-static void beyond PARAMS ((void)) NO_RETURN_ATTRIBUTE;
+static void test_syntax_error PARAMS ((char *format, char *arg))
+     ATTRIBUTE_NORETURN;
+static void beyond PARAMS ((void)) ATTRIBUTE_NORETURN;
 
 static void
 test_syntax_error (char *format, char *arg)
