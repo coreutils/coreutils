@@ -485,7 +485,8 @@ do_copy (int argc, char **argv, const struct cp_options *x)
   	    }
 	  else
 	    {
-	      ret |= copy (arg, dst_path, new_dst, x);
+	      int unused;
+	      ret |= copy (arg, dst_path, new_dst, x, &unused);
 	      forget_all ();
 
 	      if (flag_path)
@@ -506,6 +507,7 @@ do_copy (int argc, char **argv, const struct cp_options *x)
     {
       char *new_dest;
       char *source;
+      int unused;
       struct stat source_stats;
 
       if (flag_path)
@@ -572,7 +574,7 @@ do_copy (int argc, char **argv, const struct cp_options *x)
 	  new_dest = dest;
 	}
 
-      return copy (source, new_dest, new_dst, x);
+      return copy (source, new_dest, new_dst, x, &unused);
     }
   else
     {
