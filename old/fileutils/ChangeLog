@@ -6,7 +6,7 @@
 
 	* lib/getdate.y (get_date): Let mktime deduce tm_isdst if we
 	have an absolute timestamp, or if the relative timestamp
-	mentions days, months, or years.
+	mentions days, months, or years.  Reported by Volker Borchert.
 
 	* lib/human.c (human_readable): Allow from_block_size to be zero.
 
