@@ -1,5 +1,9 @@
 Fri Apr 23 21:53:47 1993  Jim Meyering  (meyering@comco.com)
 
+	* {lib,src}/Makefile.in [.c.o]: Make CPPFLAGS and CFLAGS follow
+	other options so users can use them to override DEFS.
+	* src/Makefile.in [.c.o]: Add -I$(srcdir) for version.h.
+
 	* Makefile.in [CFLAGS, LDFLAGS]: Don't set to -g explicitely;
 	configure's AC_SUBST will set these.
 

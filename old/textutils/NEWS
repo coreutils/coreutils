@@ -1,4 +1,5 @@
-Major changes in release 1.4:
+Major changes in release 1.5:
+* all programs accept --help and --version options
 * od --compatible accepts pre-POSIX arguments
 * pr -2a terminates
 
