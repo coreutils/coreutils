@@ -179,23 +179,23 @@
 #include "xstrtol.h"
 
 #if HAVE_LIMITS_H
-#include <limits.h>
+# include <limits.h>
 #endif
 
 char *xmalloc ();
 char *xrealloc ();
 
 #ifndef UINT_MAX
-#define UINT_MAX ((unsigned int) ~(unsigned int) 0)
+# define UINT_MAX ((unsigned int) ~(unsigned int) 0)
 #endif
 
 #ifndef INT_MAX
-#define INT_MAX ((int) (UINT_MAX >> 1))
+# define INT_MAX ((int) (UINT_MAX >> 1))
 #endif
 
 #ifndef TRUE
-#define TRUE	1
-#define FALSE	0
+# define TRUE	1
+# define FALSE	0
 #endif
 
 /* Used with start_position in the struct COLUMN described below.
@@ -1386,8 +1386,8 @@ init_header (char *filename, int desc)
     sprintf (header, "%s", " ");	/* blank line header */
   else
     {
-#define T_BUF_FMT "%y-%m-%d %H:%M"	/* date/time short format */
-#define T_BUF_SIZE 15
+#define T_BUF_FMT "%Y-%m-%d %H:%M"	/* date/time short format */
+#define T_BUF_SIZE 17  /* FIXME: using a literal here is fragile.  */
       char t_buf[T_BUF_SIZE];
 
       /* If parallel files or standard input, use current time. */
