@@ -58,6 +58,12 @@ my @tv = (
 ['empty-bl', '-b \'\'',	":\n",			"",			1],
 # Missing byte list
 ['missing-bl', '-b',	":\n",			"",			1],
+
+# This test fails with cut from textutils-1.22.
+['empty-f1', '-f1',	"",			"",			0],
+
+['empty-f2', '-f2',	"",			"",			0],
+
 );
 
 sub test_vector
