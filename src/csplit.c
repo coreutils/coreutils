@@ -227,7 +227,7 @@ cleanup_fatal (void)
   exit (EXIT_FAILURE);
 }
 
-void
+static void
 xalloc_die (void)
 {
   error (0, 0, "%s", _("memory exhausted"));
