@@ -36,11 +36,12 @@ static struct option const long_options[] =
    Be careful not to gobble up `--'.  */
 
 void
-parse_long_options (argc, argv, command_name, version_string, usage)
+parse_long_options (argc, argv, command_name, package, version, usage)
      int argc;
      char **argv;
      const char *command_name;
-     const char *version_string;
+     const char *package;
+     const char *version;
      void (*usage)();
 {
   int c;
@@ -62,7 +63,7 @@ parse_long_options (argc, argv, command_name, version_string, usage)
 	  (*usage) (0);
 
 	case 'v':
-	  printf ("%s - %s\n", command_name, version_string);
+	  printf ("%s (%s) %s\n", command_name, package, version);
 	  exit (0);
 
 	default:
