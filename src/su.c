@@ -138,7 +138,7 @@ char *getusershell ();
 void endusershell ();
 void setusershell ();
 
-char *basename ();
+char *base_name ();
 char *xmalloc ();
 char *xrealloc ();
 char *xstrdup ();
@@ -241,7 +241,7 @@ log_su (const struct passwd *pw, int successful)
   if (tty == NULL)
     tty = "none";
   /* 4.2BSD openlog doesn't have the third parameter.  */
-  openlog (basename (program_name), 0
+  openlog (base_name (program_name), 0
 # ifdef LOG_AUTH
 	   , LOG_AUTH
 # endif
@@ -375,14 +375,14 @@ run_shell (const char *shell, const char *command, char **additional_args)
       char *arg0;
       char *shell_basename;
 
-      shell_basename = basename (shell);
+      shell_basename = base_name (shell);
       arg0 = xmalloc (strlen (shell_basename) + 2);
       arg0[0] = '-';
       strcpy (arg0 + 1, shell_basename);
       args[0] = arg0;
     }
   else
-    args[0] = basename (shell);
+    args[0] = base_name (shell);
   if (fast_startup)
     args[argno++] = "-f";
   if (command)

@@ -33,8 +33,8 @@
 #include "long-options.h"
 #include "error.h"
 
-extern char *basename ();
-extern void strip_trailing_slashes ();
+char *base_name ();
+void strip_trailing_slashes ();
 
 /* The name this program was run with. */
 char *program_name;
@@ -104,7 +104,7 @@ main (int argc, char **argv)
 
   strip_trailing_slashes (argv[1]);
 
-  name = basename (argv[1]);
+  name = base_name (argv[1]);
 
   if (argc == 3)
     remove_suffix (name, argv[2]);
