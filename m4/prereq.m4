@@ -1,4 +1,4 @@
-#serial 10
+#serial 11
 
 dnl These are the prerequisite macros for files in the lib/
 dnl directories of the fileutils, sh-utils, and textutils packages.
@@ -10,6 +10,7 @@ AC_DEFUN(jm_PREREQ,
   jm_PREREQ_ERROR
   jm_PREREQ_GETPAGESIZE
   jm_PREREQ_HUMAN
+  jm_PREREQ_MBSWIDTH
   jm_PREREQ_QUOTEARG
   jm_PREREQ_READUTMP
   jm_PREREQ_REGEX
