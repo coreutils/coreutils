@@ -1,5 +1,5 @@
 /* tail -- output the last part of file(s)
-   Copyright (C) 89, 90, 91, 95, 96, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 95, 96, 1997, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1240,18 +1240,11 @@ parse_options (int argc, char **argv,
 
 	case 'f':
 	  forever = 1;
-	  if (optarg == NULL)
-	    follow_mode = DEFAULT_FOLLOW_MODE;
-	  else
-	    {
-	      int i = argmatch (optarg, follow_mode_string);
-	      if (i < 0)
-		{
-		  invalid_arg (_("follow mode"), optarg, i);
-		  usage (1);
-		}
-	      follow_mode = follow_mode_map[i];
-	    }
+	  follow_mode = (optarg == NULL
+			 ? DEFAULT_FOLLOW_MODE
+			 : XARGCASEMATCH ("--follow", optarg,
+					  follow_mode_string,
+					  follow_mode_map));
 	  break;
 
 	case CHAR_MAX + 1:
