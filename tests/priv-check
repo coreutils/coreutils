@@ -60,7 +60,7 @@ case $PRIV_CHECK_ARG:$my_uid in
 	echo "$0: skipping this test" 1>&2
 	(exit 77); exit
       }
-    exec setuidgid $NON_ROOT_USERNAME $0
+    exec setuidgid $NON_ROOT_USERNAME env PATH=$PATH $0
     ;;
   require-non-root:*) ;;
 esac
