@@ -1,5 +1,5 @@
 /* `dir', `vdir' and `ls' directory listing programs for GNU.
-   Copyright (C) 85, 88, 90, 91, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 85, 88, 90, 91, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -981,7 +981,7 @@ decode_switches (int argc, char **argv)
     }
 
   while ((c = getopt_long (argc, argv,
-			   "abcdefghiklmnopqrstuvw:xABCDFGHI:LNQRST:UX1",
+			   "abcdfghiklmnopqrstuvw:xABCDFGHI:LNQRST:UX1",
 			   long_options, NULL)) != -1)
     {
       switch (c)
