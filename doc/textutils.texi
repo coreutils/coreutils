@@ -383,8 +383,8 @@ Ignored; for Unix compatibility.
 Display control characters except for @key{LFD} and @key{TAB} using
 @samp{^} notation and precede characters that have the high bit set with
 @samp{M-}.  On MS-DOS and MS-Windows, this option causes @code{cat} to
-read files ! and standard input in DOS binary mode, so the @key{CR}
-characters at the ! end of each line are also visible.
+read files and standard input in DOS binary mode, so the @key{CR}
+characters at the end of each line are also visible.
 
 @end table
 
