@@ -1408,6 +1408,8 @@ copy_internal (const char *src_path, const char *dst_path,
 
       if (x->recursive && x->copy_as_regular)
 	{
+	  /* Warn that applying `cp -r' to symlinks is not portable,
+	     but go ahead and preserve the symlink.  */
 	  error (0, 0, _("%s: WARNING: using -r to copy symbolic\
  links is not portable"), quote (src_path));
 	}
