@@ -1,3 +1,7 @@
+Thu Mar 13 21:27:36 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/mktime.c: (TIME_T_MIN): Work around a bug in Cray C 5.0.3.0.
+
 Wed Mar 12 23:11:11 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/chgrp.c (change_file_group): Use uid of -1 to indicate
