@@ -1,4 +1,4 @@
-/* Parse dates.
+/* Parse dates for touch and date.
    Copyright (C) 1989, 1990, 1991, 1998 Free Software Foundation Inc.
 
    This program is free software; you can redistribute it and/or modify
