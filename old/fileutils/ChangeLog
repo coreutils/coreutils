@@ -1,5 +1,10 @@
 1998-12-06  Jim Meyering  <meyering@ascend.com>
 
+	* Version 4.1-b1.
+
+	* lib/rpmatch.c (rpmatch) [!ENABLE_NLS]: Hard-code tests to use
+	`^[yY]' and `^[nN]'.  From Karl Heuer.
+
 	* lib/*.c: Ansideclify.
 
 	Fix `ls -R .' formatting bug that broke mktexlsr.
