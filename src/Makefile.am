@@ -232,7 +232,7 @@ pm = progs-makefile
 pr = progs-readme
 # Ensure that the list of programs in README matches the list
 # of programs we can build.
-check: check-README check-misc
+check: check-README check-misc check-AUTHORS
 .PHONY: check-README
 check-README:
 	rm -rf $(pr) $(pm)
@@ -241,6 +241,28 @@ check-README:
 	sed -n '/^The programs .* are:/,/^[a-zA-Z]/p' $(top_srcdir)/README \
 	  | sed -n '/^   */s///p' | tr -s ' ' '\n' > $(pr)
 	diff $(pm) $(pr) && rm -rf $(pr) $(pm)
+
+# Ensure that the list of programs and author names is accurate.
+au_dotdot = authors-dotdot
+au_actual = authors-actual
+.PHONY: check-AUTHORS
+check-AUTHORS: $(all_programs)
+	rm -f $(au_actual) $(au_dotdot)
+	for i in $(all_programs); do			\
+	  test "$$i" = '[' && continue;			\
+	  exe=$$i;					\
+	  if test "$$i" = install; then			\
+	    exe=ginstall;				\
+	  elif test "$$i" = test; then			\
+	    exe='[';					\
+	  fi;						\
+	  ./printf "$$i: ";				\
+	  ./$$exe --version				\
+	    |sed -n '/Written by /s///p'		\
+	    |sed 's/,\? and /, /;s/\.$$//';		\
+	done | $(ASSORT) > $(au_actual)
+	sed -n '/:/p' $(top_srcdir)/AUTHORS > $(au_dotdot)
+	diff $(au_actual) $(au_dotdot) && rm -f $(au_actual) $(au_dotdot)
 
 # Make sure we don't define any S_IS* macros in src/*.c files.
 # Not a big deal, but they're already defined via system.h.
