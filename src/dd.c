@@ -109,7 +109,7 @@ static void translate_charset __P ((const unsigned char *new_trans));
 static void quit __P ((int code));
 static void scanargs __P ((int argc, char **argv));
 static void skip __P ((int fdesc, char *file, long int records,
-		       long int blocksize, char *buf));
+		       long int blocksize, unsigned char *buf));
 static void usage __P ((int status));
 static void write_output __P ((void));
 
@@ -411,7 +411,8 @@ main (int argc, char **argv)
    bytes of the data at a time in BUF, if necessary. */
 
 static void
-skip (int fdesc, char *file, long int records, long int blocksize, char *buf)
+skip (int fdesc, char *file, long int records, long int blocksize,
+      unsigned char *buf)
 {
   struct stat stats;
 
@@ -563,7 +564,7 @@ copy (void)
 	 whatever data we are able to read is followed by zeros.
 	 This minimizes data loss. */
       if ((conversions_mask & C_SYNC) && (conversions_mask & C_NOERROR))
-	memset (ibuf, 0, input_blocksize);
+	memset ((char *) ibuf, 0, input_blocksize);
 
       nread = safe_read (input_fd, ibuf, input_blocksize);
 
@@ -600,7 +601,7 @@ copy (void)
 	    {
 	      if (!(conversions_mask & C_NOERROR))
 		/* If C_NOERROR, we zeroed the block before reading. */
-		memset (ibuf + nread, 0, input_blocksize - nread);
+		memset ((char *) (ibuf + nread), 0, input_blocksize - nread);
 	      nread = input_blocksize;
 	    }
 	}
@@ -704,7 +705,7 @@ copy_simple (unsigned char *buf, int nread)
       if (nfree > nread)
 	nfree = nread;
 
-      memcpy (obuf + oc, start, nfree);
+      memcpy ((char *) (obuf + oc), (char *) start, nfree);
 
       nread -= nfree;		/* Update the number of bytes left to copy. */
       start += nfree;
