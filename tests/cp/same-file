@@ -12,6 +12,7 @@ LANG=C; export LANG
 
 VERSION_CONTROL=numbered; export VERSION_CONTROL
 
+pwd=`pwd`
 actual=actual-$$
 expected=expected-$$
 trap "cd $pwd; rm -rf $actual $expected dir" 0 1 2 3 15
