@@ -1539,7 +1539,7 @@ cksum [@var{option}]@dots{} [@var{file}]@dots{}
 @code{cksum} prints the CRC checksum for each file along with the number
 of bytes in the file, and the filename unless no arguments were given.
 
-@code{cksum} is typically used to ensure that files have been
+@code{cksum} is typically used to ensure that files
 transferred by unreliable means (e.g., netnews) have not been corrupted,
 by comparing the @code{cksum} output for the received files with the
 @code{cksum} output for the original files (typically given in the
