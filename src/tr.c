@@ -1,5 +1,5 @@
 /* tr -- a filter to translate characters
-   Copyright (C) 91, 1995-1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-1998, 1999, 2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -36,8 +36,8 @@
 
 #define N_CHARS (UCHAR_MAX + 1)
 
-/* A pointer to a function that returns an int.  */
-typedef int (*PFI) ();
+/* A pointer to a function that returns a `long'.  */
+typedef long (*PFL) (/* unsigned char *, long int, PFL */);
 
 /* Convert from character C to its index in the collating
    sequence array.  Just cast to an unsigned int to avoid
@@ -960,7 +960,7 @@ star_digits_closebracket (const struct E_string *es, size_t idx)
   return 0;
 }
 
-/* Convert string UNESACPED_STRING (which has been preprocessed to
+/* Convert string UNESCAPED_STRING (which has been preprocessed to
    convert backslash-escape sequences) of length LEN characters into
    a linked list of the following 5 types of constructs:
       - [:str:] Character class where `str' is one of the 12 valid strings.
@@ -1598,15 +1598,15 @@ when translating"));
    character is in the squeeze set.  */
 
 static void
-squeeze_filter (unsigned char *buf, long int size, PFI reader)
+squeeze_filter (unsigned char *buf, long int size, PFL reader)
 {
   unsigned int char_to_squeeze = NOT_A_CHAR;
-  int i = 0;
-  int nr = 0;
+  long i = 0;
+  long nr = 0;
 
   for (;;)
     {
-      int begin;
+      long begin;
 
       if (i >= nr)
 	{
@@ -1626,7 +1626,7 @@ squeeze_filter (unsigned char *buf, long int size, PFI reader)
 
       if (char_to_squeeze == NOT_A_CHAR)
 	{
-	  int out_len;
+	  long out_len;
 	  /* Here, by being a little tricky, we can get a significant
 	     performance increase in most cases when the input is
 	     reasonably large.  Since tr will modify the input only
@@ -1693,7 +1693,7 @@ squeeze_filter (unsigned char *buf, long int size, PFI reader)
    or 0 upon EOF.  */
 
 static long
-read_and_delete (unsigned char *buf, long int size, PFI not_used)
+read_and_delete (unsigned char *buf, long int size, PFL not_used)
 {
   long n_saved;
   static int hit_eof = 0;
@@ -1743,7 +1743,7 @@ read_and_delete (unsigned char *buf, long int size, PFI not_used)
    array `xlate'.  Return the number of characters read, or 0 upon EOF.  */
 
 static long
-read_and_xlate (unsigned char *buf, long int size, PFI not_used)
+read_and_xlate (unsigned char *buf, long int size, PFL not_used)
 {
   long chars_read = 0;
   static int hit_eof = 0;
@@ -1921,7 +1921,7 @@ without squeezing repeats"));
     {
       set_initialize (s1, complement, in_delete_set);
       set_initialize (s2, 0, in_squeeze_set);
-      squeeze_filter (io_buf, IO_BUF_SIZE, (PFI) read_and_delete);
+      squeeze_filter (io_buf, IO_BUF_SIZE, read_and_delete);
     }
   else if (translating)
     {
@@ -2010,7 +2010,7 @@ construct in string1 must be aligned with a corresponding construct\n\
       if (squeeze_repeats)
 	{
 	  set_initialize (s2, 0, in_squeeze_set);
-	  squeeze_filter (io_buf, IO_BUF_SIZE, (PFI) read_and_xlate);
+	  squeeze_filter (io_buf, IO_BUF_SIZE, read_and_xlate);
 	}
       else
 	{
