@@ -94,6 +94,9 @@ static struct option const long_options[] = {
   {NULL, 0, NULL, 0}
 };
 
+/* Nonzero means we should exit with EXIT_FAILURE upon completion.  */
+static int G_fail;
+
 char *program_name;
 
 /* Return the type of the specified file system.
@@ -315,19 +318,14 @@ static char *
 human_time (time_t const *t)
 {
   static char str[80];
-  char *s;
-
-#if 0  /* %c is too locale-dependent.  */
-  if (strftime (str, 40, "%c", localtime (t)) > 0)
-#else
-  if (nstrftime (str, sizeof str, "%Y-%m-%d %H:%M:%S.%N %z",
-		 localtime (t), 0, 0) > 0)
-#endif
-    s = str;
-  else
-    s = _("Cannot calculate human readable time, sorry");
-
-  return s;
+  struct tm *tm = localtime (t);
+  if (tm == NULL)
+    {
+      G_fail = 1;
+      return (char *) _("*** invalid date/time ***");
+    }
+  nstrftime (str, sizeof str, "%Y-%m-%d %H:%M:%S.%N %z", tm, 0, 0);
+  return str;
 }
 
 /* print statfs info */
@@ -807,5 +805,5 @@ main (int argc, char *argv[])
 	do_statfs (argv[i], terse, format);
     }
 
-  exit (EXIT_SUCCESS);
+  exit (G_fail ? EXIT_FAILURE : EXIT_SUCCESS);
 }
