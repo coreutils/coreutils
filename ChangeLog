@@ -1,6 +1,12 @@
-2005-03-09  Jim Meyering  <jim@meyering.net>
+2005-03-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* src/system.h: Include intprops.h.
+	(TYPE_SIGNED, TYPE_MINIMUM, TYPE_MAXIMUM, INT_STRLEN_BOUND): Remove;
+	they are now defined in intprops.h.
+
+2005-03-09  Jim Meyering  <jim@meyering.net>
 
 	* TODO: Remove entry about named pipes.  It was fixed in 5.3.0.
 
