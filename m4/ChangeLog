@@ -1,3 +1,9 @@
+2000-02-02  Bruno Haible  <haible@clisp.cons.org>
+
+	* codeset.m4: New file.
+	* iconv.m4: New file.
+	* jm-macros.m4 (jm_MACROS): Call jm_LANGINFO_CODESET and jm_ICONV.
+
 2000-03-04  Jim Meyering  <meyering@lucent.com>
 
 	* jm-macros.m4 (jm_CHECK_ALL_TYPES): Require AC_C_VOLATILE,
