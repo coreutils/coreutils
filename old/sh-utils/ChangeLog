@@ -1,4 +1,14 @@
+Sun Oct 23 23:36:26 1994  Jim Meyering  (meyering@comco.com)
+
+	* safe-xstat.hin: Don't use a statement expression here.
+	Use an inline function instead.  
+	* safe-xstat.cin: Don't duplicate the definition of safe_l?stat here.
+	Get the definition from safe-xstat.hin.
+
 Fri Oct 21 00:57:23 1994  Jim Meyering  (meyering@comco.com)
+
+	* man/Makefile.in: Fix typo that had su.1 being installed as
+	`man/man1/.1'.  From Kjetil Torgrim Homme.
 
 	* basename.c, dirname.c, expr.c, pathchk.c, sleep.c (main): Diagnose
 	wrong number of argument -- usually too few -- instead of just
