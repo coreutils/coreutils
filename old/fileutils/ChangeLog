@@ -1,3 +1,9 @@
+2000-01-15  Jim Meyering  <meyering@lucent.com>
+
+	* configure.in (AC_REPLACE_FUNCS): Remove these: euidaccess memcpy
+	memcmp memset mkdir rmdir rpmatch stpcpy strndup strstr strtol
+	strtoul strverscmp.  Now they're in m4/.
+
 2000-01-12  Jim Meyering  <meyering@lucent.com>
 
 	* tests/shred/remove: Make the warning that this shred test may not
