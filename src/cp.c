@@ -42,8 +42,8 @@ struct dir_attr
   struct dir_attr *next;
 };
 
-int stat (const char *, struct stat *);
-int lstat (const char *, struct stat *);
+int stat ();
+int lstat ();
 
 char *dirname (char *);
 char *xstrdup ();
