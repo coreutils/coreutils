@@ -367,8 +367,6 @@ all: $(BUILT_SOURCES)
 $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.ac $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnu  lib/Makefile
-Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
-	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
 
 AR = ar
 
@@ -1000,6 +998,8 @@ stat.c: xstat.in
 	  -e '/@BEGIN_LSTAT_ONLY@/,/@END_LSTAT_ONLY@/d' \
 	  $(srcdir)/xstat.in > $@-t
 	mv $@-t $@
+
+Makefile: $(BUILT_SOURCES)
 
 # The following is needed in order to install a simple file in $(libdir)
 # which is shared with other installed packages. We use a list of referencing
