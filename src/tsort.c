@@ -1,5 +1,5 @@
 /* tsort - topological sort.
-   Copyright (C) 1998-2002 Free Software Foundation, Inc.
+   Copyright (C) 1998-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -490,6 +490,10 @@ tsort (const char *file)
 
       j = k;
     }
+
+  if (k != NULL)
+    error (EXIT_FAILURE, 0, _("%s: input contains an odd number of tokens"),
+	   file);
 
   /* T1. Initialize (N <- n).  */
   walk_tree (root, count_items);
