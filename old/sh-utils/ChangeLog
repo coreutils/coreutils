@@ -1,3 +1,21 @@
+2001-02-03  Jim Meyering  <meyering@lucent.com>
+
+	Improve the performance of `factor'.
+	* src/factor.c (wheel_tab): New global table.
+	(WHEEL_START, WHEEL_END): Define.
+	(factor): Remove the loop that special-cased `2'.
+	Instead of incrementing by `2', use the offsets from the wheel table.
+	From Michael Steffens.
+
+2000-11-27  Prashant TR  <rprash@wilco-int.com>
+
+	* src/test.c (eaccess) [__MSDOS__]: Just use access.
+
+2001-01-26  Jim Meyering  <meyering@lucent.com>
+
+	* src/dirname.c (main): Declare local result as non-const, now
+	that it's freed.
+
 2001-01-20  Jim Meyering  <meyering@lucent.com>
 
 	* configure.in: Remove jm_CHECK_ALL_TYPES.
