@@ -1,5 +1,5 @@
 /* id -- print real and effective UIDs and GIDs
-   Copyright (C) 89, 90, 91, 92, 93, 94, 95, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1989-1995, 1996 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -104,12 +104,15 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  while ((optc = getopt_long (argc, argv, "gnruG", longopts, (int *) 0))
+  while ((optc = getopt_long (argc, argv, "agnruG", longopts, (int *) 0))
 	 != EOF)
     {
       switch (optc)
 	{
 	case 0:
+	  break;
+	case 'a':
+	  /* Ignore -a, for compatibility with SVR4.  */
 	  break;
 	case 'g':
 	  just_group = 1;
@@ -371,6 +374,7 @@ usage (int status)
       printf (_("\
 Print information for USERNAME, or the current user.\n\
 \n\
+  -a              ignore, for compatibility with other versions\n\
   -g, --group     print only the group ID\n\
   -G, --groups    print only the supplementary groups\n\
   -n, --name      print a name instead of a number, for -ugG\n\
