@@ -222,6 +222,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Removed features
 
+  md5sum and sha1sum's undocumented --string option has been removed.
+
   tail's undocumented --max-consecutive-size-changes option has been removed.
 
 * Major changes in release 5.2.1 (2004-03-12) [stable]
