@@ -1,5 +1,8 @@
 2004-08-11  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* obstack.m4 (gl_PREREQ_OBSTACK): Require
+	gl_AC_HEADER_INTTYPES_H, gl_AC_HEADER_STDINT_H, gl_AC_TYPE_UINTMAX_T.
+
 	* fnmatch.m4 (_AC_LIBOBJ_FNMATCH): Check for wmemchr and wmemcpy.
 
 2004-08-09  Paul Eggert  <eggert@cs.ucla.edu>
