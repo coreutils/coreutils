@@ -55,6 +55,11 @@
 # include <sys/ioctl.h>
 #endif
 
+#ifdef WINSIZE_IN_PTEM
+# include <sys/stream.h>
+# include <sys/ptem.h>
+#endif
+
 #include <stdio.h>
 #include <grp.h>
 #include <pwd.h>
