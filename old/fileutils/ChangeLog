@@ -1,3 +1,14 @@
+1997-07-06  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/idcache.c (getuser): Return NULL (rather than stringified uid)
+	upon lookup failure.
+	(getgroup): Likewise.
+	(getuidbyname) [NOT_USED]: #ifdef-out unused function.
+	(getgidbyname) [NOT_USED]: #ifdef-out unused function.
+	Suggested by François Pinard.
+	* src/ls.c (print_long_format): Reflect changes in semantics of
+	getuser, getgroup.
+
 1997-07-04  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Makefile.am (aclocal-files): Look in source directory, not build dir.
