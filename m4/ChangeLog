@@ -1,7 +1,8 @@
 1998-03-15  Jim Meyering  <meyering@eng.ascend.com>
 
+	* prereq.m4: New file.
 	* error.m4: New file.
-	* Makefile.am (EXTRA_DIST): Add error.m4.
+	* Makefile.am (EXTRA_DIST): Add error.m4 and prereq.m4.
 
 1998-02-07  Jim Meyering  <meyering@eng.ascend.com>
 
