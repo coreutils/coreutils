@@ -74,7 +74,7 @@ void verify ();
 char *program_name;
 
 /* The value to return to the calling program.  */
-int exit_status;
+static int exit_status;
 
 void
 main (argc, argv)

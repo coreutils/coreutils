@@ -136,7 +136,7 @@ main (argc, argv)
 /* Each element is nonzero if the corresponding ASCII character is
    in the POSIX portable character set, and zero if it is not.
    In addition, the entry for `/' is nonzero to simplify checking. */
-char portable_chars[] =
+static char portable_chars[] =
 {
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 0-15 */
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 16-31 */

@@ -91,7 +91,7 @@ extern char **environ;
 /* The name by which this program was run. */
 char *program_name;
 
-struct option longopts[] =
+static struct option longopts[] =
 {
   {"ignore-environment", 0, NULL, 'i'},
   {"unset", 1, NULL, 'u'},

@@ -68,28 +68,28 @@ void usage ();
 char *program_name;
 
 /* If nonzero, output only the group ID(s). -g */
-int just_group = 0;
+static int just_group = 0;
 
 /* If nonzero, output user/group name instead of ID number. -n */
-int use_name = 0;
+static int use_name = 0;
 
 /* If nonzero, output real UID/GID instead of default effective UID/GID. -r */
-int use_real = 0;
+static int use_real = 0;
 
 /* If nonzero, output only the user ID(s). -u */
-int just_user = 0;
+static int just_user = 0;
 
 /* If nonzero, output only the supplementary groups. -G */
-int just_group_list = 0;
+static int just_group_list = 0;
 
 /* The real and effective IDs of the user to print. */
-uid_t ruid, euid;
-gid_t rgid, egid;
+static uid_t ruid, euid;
+static gid_t rgid, egid;
 
 /* The number of errors encountered so far. */
-int problems = 0;
+static int problems = 0;
 
-struct option longopts[] =
+static struct option longopts[] =
 {
   {"group", 0, NULL, 'g'},
   {"name", 0, NULL, 'n'},

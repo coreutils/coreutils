@@ -160,7 +160,7 @@ struct mode_info
   unsigned long mask;		/* Other bits to turn off for this mode.  */
 };
 
-struct mode_info mode_info[] =
+static struct mode_info mode_info[] =
 {
   {"parenb", control, REV, PARENB, 0},
   {"parodd", control, REV, PARODD, 0},

@@ -76,21 +76,21 @@ char *program_name;
 /* If nonzero, display only a list of usernames and count of
    the users logged on.
    Ignored for `who am i'. */
-int short_list;
+static int short_list;
 
 /* If nonzero, display the hours:minutes since each user has touched
    the keyboard, or "." if within the last minute, or "old" if
    not within the last day. */
-int include_idle;
+static int include_idle;
 
 /* If nonzero, display a line at the top describing each field. */
-int include_heading;
+static int include_heading;
 
 /* If nonzero, display a `+' for each user if mesg y, a `-' if mesg n,
    or a `?' if their tty cannot be statted. */
-int include_mesg;
+static int include_mesg;
 
-struct option longopts[] =
+static struct option longopts[] =
 {
   {"count", 0, NULL, 'q'},
   {"idle", 0, NULL, 'u'},

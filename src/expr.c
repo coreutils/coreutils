@@ -62,7 +62,7 @@ struct valinfo
 typedef struct valinfo VALUE;
 
 /* The arguments given to the program, minus the program name.  */
-char **args;
+static char **args;
 
 /* The name this program was run with. */
 char *program_name;
