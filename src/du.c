@@ -491,7 +491,8 @@ count_entry (ent, top, last_dev)
     }
   else if (opt_all || top)
     {
-      int print_only_dir_size = 1;
+      /* FIXME: make this an option.  */
+      int print_only_dir_size = 0;
       if (!print_only_dir_size)
 	{
 	  printf ("%ld\t%s\n", output_size == size_bytes ? size
