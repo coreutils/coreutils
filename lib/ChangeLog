@@ -1,3 +1,7 @@
+2001-08-30  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/alloca.c (alloca): Arg is of type size_t, not unsigned.
+
 2001-08-27  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.am (libfetish_a_SOURCES): Add strtoxmax.c
