@@ -850,7 +850,6 @@ Usage: test EXPRESSION\n\
   or:  [ ]\n\
   or:  [ OPTION\n\
 "), stdout);
-      printf (USAGE_BUILTIN_WARNING, _("test and/or ["));
       fputs (_("\
 Exit with the status determined by EXPRESSION.\n\
 \n\
@@ -926,6 +925,7 @@ Except for -h and -L, all FILE-related tests dereference symbolic links.\n\
 Beware that parentheses need to be escaped (e.g., by backslashes) for shells.\n\
 INTEGER may also be -l STRING, which evaluates to the length of STRING.\n\
 "), stdout);
+      printf (USAGE_BUILTIN_WARNING, _("test and/or ["));
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);

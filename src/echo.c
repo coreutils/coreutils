@@ -62,7 +62,6 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]... [STRING]...\n"), program_name);
-      printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
       fputs (_("\
 Echo the STRING(s) to standard output.\n\
 \n\
@@ -95,6 +94,7 @@ If -e is in effect, the following sequences are recognized:\n\
   \\t     horizontal tab\n\
   \\v     vertical tab\n\
 "), stdout);
+      printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);

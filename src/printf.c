@@ -101,7 +101,6 @@ Usage: %s FORMAT [ARGUMENT]...\n\
   or:  %s OPTION\n\
 "),
 	      program_name, program_name);
-      printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
       fputs (_("\
 Print ARGUMENT(s) according to FORMAT.\n\
 \n\
@@ -141,6 +140,7 @@ FORMAT controls the output as in C printf.  Interpreted sequences are:\n\
 and all C format specifications ending with one of diouxXfeEgGcs, with\n\
 ARGUMENTs converted to proper type first.  Variable widths are handled.\n\
 "), stdout);
+      printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);

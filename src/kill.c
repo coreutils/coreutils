@@ -97,7 +97,6 @@ Usage: %s [-s SIGNAL | -SIGNAL] PID...\n\
   or:  %s -t [SIGNAL]...\n\
 "),
 	      program_name, program_name, program_name);
-      printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
       fputs (_("\
 Send signals to processes, or list signals.\n\
 \n\
@@ -118,6 +117,7 @@ SIGNAL may be a signal name like `HUP', or a signal number like `1',\n\
 or an exit status of a process terminated by a signal.\n\
 PID is an integer; if negative it identifies a process group.\n\
 "), stdout);
+      printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);

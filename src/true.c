@@ -34,7 +34,6 @@ Usage: %s [ignored command line arguments]\n\
   or:  %s OPTION\n\
 "),
 	  program_name, program_name);
-  printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
   fputs (_("\
 Exit with a status code indicating success.\n\
 \n\
@@ -44,6 +43,7 @@ These option names may not be abbreviated.\n\
 	 stdout);
   fputs (HELP_OPTION_DESCRIPTION, stdout);
   fputs (VERSION_OPTION_DESCRIPTION, stdout);
+  printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
   printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
   exit (status);
 }

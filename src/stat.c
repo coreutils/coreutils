@@ -678,7 +678,6 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION] FILE...\n"), program_name);
-      printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
       fputs (_("\
 Display file or file system status.\n\
 \n\
@@ -746,6 +745,7 @@ Valid format sequences for file systems:\n\
   %t   Type in hex\n\
   %T   Type in human readable form\n\
 "), stdout);
+      printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);

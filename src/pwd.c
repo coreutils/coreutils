@@ -64,13 +64,13 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]\n"), program_name);
-      printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
       fputs (_("\
 Print the full filename of the current working directory.\n\
 \n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);
