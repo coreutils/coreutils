@@ -1116,8 +1116,80 @@ else
   esac
 fi
 test -s moname-d-y.E || rm -f moname-d-y.E
+LANG=C TZ=UTC0 $xx --iso=sec -d @31536000  > epoch.O 2> epoch.E
+code=$?
+if test $code != 0; then
+  $echo "Test epoch(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp epoch.O $srcdir/epoch.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed epoch(LANG=C TZ=UTC0)"; fi;;
+    1) $echo "Test epoch(LANG=C TZ=UTC0) failed: files epoch.O and $srcdir/epoch.X differ" 1>&2
+       (diff -c epoch.O $srcdir/epoch.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test epoch(LANG=C TZ=UTC0) may have failed." 1>&2
+       $echo The command "cmp epoch.O $srcdir/epoch.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s epoch.E || rm -f epoch.E
+LANG=C TZ=UTC0 $xx --iso=ns -d "1969-12-31 13:00:00.00000001-1100"  > ns-10.O 2> ns-10.E
+code=$?
+if test $code != 0; then
+  $echo "Test ns-10(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp ns-10.O $srcdir/ns-10.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed ns-10(LANG=C TZ=UTC0)"; fi;;
+    1) $echo "Test ns-10(LANG=C TZ=UTC0) failed: files ns-10.O and $srcdir/ns-10.X differ" 1>&2
+       (diff -c ns-10.O $srcdir/ns-10.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test ns-10(LANG=C TZ=UTC0) may have failed." 1>&2
+       $echo The command "cmp ns-10.O $srcdir/ns-10.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s ns-10.E || rm -f ns-10.E
+LANG=C TZ=UTC0 $xx --iso=ns -d "2038-01-19 03:14:07.999999999"  > ns-max32.O 2> ns-max32.E
+code=$?
+if test $code != 0; then
+  $echo "Test ns-max32(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp ns-max32.O $srcdir/ns-max32.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed ns-max32(LANG=C TZ=UTC0)"; fi;;
+    1) $echo "Test ns-max32(LANG=C TZ=UTC0) failed: files ns-max32.O and $srcdir/ns-max32.X differ" 1>&2
+       (diff -c ns-max32.O $srcdir/ns-max32.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test ns-max32(LANG=C TZ=UTC0) may have failed." 1>&2
+       $echo The command "cmp ns-max32.O $srcdir/ns-max32.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s ns-max32.E || rm -f ns-max32.E
+LANG=C TZ=UTC0 $xx --iso=ns -d'1970-01-01 00:00:00.1234567 UTC +961062237.987654321 sec'  > ns-relative.O 2> ns-relative.E
+code=$?
+if test $code != 0; then
+  $echo "Test ns-relative(LANG=C TZ=UTC0) failed: $xx return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp ns-relative.O $srcdir/ns-relative.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed ns-relative(LANG=C TZ=UTC0)"; fi;;
+    1) $echo "Test ns-relative(LANG=C TZ=UTC0) failed: files ns-relative.O and $srcdir/ns-relative.X differ" 1>&2
+       (diff -c ns-relative.O $srcdir/ns-relative.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test ns-relative(LANG=C TZ=UTC0) may have failed." 1>&2
+       $echo The command "cmp ns-relative.O $srcdir/ns-relative.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s ns-relative.E || rm -f ns-relative.E
 if test $errors = 0; then
-  $echo Passed all 61 tests. 1>&2
+  $echo Passed all 65 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
