@@ -209,7 +209,8 @@ PROGRAMS = $(noinst_PROGRAMS)
 t_fpending_SOURCES = t-fpending.c
 t_fpending_OBJECTS = t-fpending.$(OBJEXT)
 t_fpending_LDADD = $(LDADD)
-t_fpending_DEPENDENCIES = libfetish.a
+am__DEPENDENCIES_3 = libfetish.a
+t_fpending_DEPENDENCIES = $(am__DEPENDENCIES_3)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
@@ -347,7 +348,7 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 noinst_LIBRARIES = libfetish.a
-LDADD = libfetish.a
+LDADD = $(noinst_LIBRARIES)
 AM_CPPFLAGS = -I.. -I$(srcdir)
 libfetish_a_SOURCES = acl.h acl.c getdate.h getdate.y posixtm.c \
 	posixtm.h posixver.c posixver.h strftime.c strftime.h hash.c \
@@ -893,7 +894,8 @@ fnmatch.h: fnmatch_.h
 
 check: unit-test
 
-unit-test:
+.PHONY: unit-test
+unit-test: t-fpending
 	./t-fpending > /dev/null
 
 # We need the following in order to create an <getopt.h> when the system
