@@ -68,10 +68,11 @@ rpl_chown (const char *file, uid_t uid, gid_t gid)
     /* Handle the case in which the system-supplied chown function
        does *not* follow symlinks.  Instead, it changes permissions
        on the symlink itself.  To work around that, we open the
-       file (but this can fail due to lack of read permission) and
+       file (but this can fail due to lack of read or write permission) and
        use fchown on the resulting descriptor.  */
     int fd = open (file, O_RDONLY | O_NONBLOCK | O_NOCTTY);
-    if (fd == -1)
+    if (fd < 0
+	&& (fd = open (file, O_WRONLY | O_NONBLOCK | O_NOCTTY)) < 0)
       return -1;
     if (fchown (fd, uid, gid))
       {
