@@ -1,5 +1,6 @@
 Changes in release 4.01:
 [4.0.28]
+* ls's date/time format strings are now local dependent
 * mkdir, mknod, mkfifo, and chmod work better in conjunction with ACLs
 * `cp --parents dir1/ dir2' no longer gets a failed assertion
 * `shred --exact file1 file2' wouldn't touch `file1'
