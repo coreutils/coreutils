@@ -67,7 +67,7 @@ my @Tests =
      ['slinkdir-dFH',  '-dFH d', {OUT => "d/\n"}, $slink_d, $unlink_d],
      ['slinkdir-dFL',  '-dFL d', {OUT => "d/\n"}, $slink_d, $unlink_d],
 
-     # Test for a bug that was fixed in ocreutils-4.5.4.
+     # Test for a bug that was fixed in coreutils-4.5.4.
      ['sl-F-color', '-F --color=always d',
 				 {OUT => "\e[0m\e[01;36md\e[0m\@\n\e[m"},
 				  $slink_d, $unlink_d],
