@@ -1,0 +1,74 @@
+#!/bin/sh
+# -*- perl -*-
+# Exercise du's --files0-from option.
+
+: ${PERL=perl}
+: ${srcdir=.}
+
+$PERL -e 1 > /dev/null 2>&1 || {
+  echo 1>&2 "$0: configure didn't find a usable version of Perl," \
+    "so can't run this test"
+  exit 77
+}
+
+exec $PERL -w -I$srcdir/.. -MFetish -- - <<\EOF
+#/
+require 5.003;
+use strict;
+
+(my $program_name = $0) =~ s|.*/||;
+
+$ENV{PROG} = 'du';
+
+# Turn off localization of executable's ouput.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+
+my @Tests =
+  (
+   # invalid extra command line argument
+   ['f-extra-arg', '--files0-from=- no-such', {IN=>"a"}, {EXIT=>1},
+    {ERR => "du: no-such: you may not specify command-line arguments "
+     . "with --files0-from\n"}
+    ],
+
+   # missing input file
+   ['missing', '--files0-from=missing', {EXIT=>1},
+    {ERR => "du: cannot open `missing' for reading: "
+     . "No such file or directory\n"}],
+
+   # empty input
+   ['empty', '--files0-from=-', {EXIT=>1},
+    {ERR => "du: no files specified in `-'\n"}],
+
+   # one NUL
+   ['nul-1', '--files0-from=-', '<', {IN=>"\0"}, {EXIT=>1},
+    {ERR => "du: no files specified in `-'\n"}],
+
+   # two NULs
+   ['nul-2', '--files0-from=-', '<', {IN=>"\0\0"}, {EXIT=>1},
+    {ERR => "du: no files specified in `-'\n"}],
+
+   # one file name, no NUL
+   ['1', '--files0-from=-', '<',
+    {IN=>{f=>"g"}}, {AUX=>{g=>"x".64*1024}}, {OUT=>"4\tg\n"} ],
+
+   # one file name, with NUL
+   ['1a', '--files0-from=-', '<',
+    {IN=>{f=>"g\0"}}, {AUX=>{g=>"x".64*1024}}, {OUT=>"4\tg\n"} ],
+
+   # two file names, no final NUL
+   ['2', '--files0-from=-', '<',
+    {IN=>{f=>"g\0g"}}, {AUX=>{g=>"x".64*1024}}, {OUT=>"4\tg\n4\tg\n"} ],
+
+   # two file names, with final NUL
+   ['2a', '--files0-from=-', '<',
+    {IN=>{f=>"g\0g\0"}}, {AUX=>{g=>"x".64*1024}}, {OUT=>"4\tg\n4\tg\n"} ],
+  );
+
+my $save_temps = $ENV{DEBUG};
+my $verbose = $ENV{VERBOSE};
+
+my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
+my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF
