@@ -1,3 +1,11 @@
+1998-02-07  Jim Meyering  <meyering@eng.ascend.com>
+
+	* getline.m4: Don't set am_cv_func_working_getline before the
+	cache-check for the same variable -- that defeated the purpose of
+	the test; the test program was never run.  This was a problem only
+	on systems with losing getline functions -- HP-UX 10.20 is one.
+	Reported by Bjorn Helgaas.
+
 1998-02-06  Jim Meyering  <meyering@eng.ascend.com>
 
 	* Makefile.am (EXTRA_DIST): Add perl.m4.
