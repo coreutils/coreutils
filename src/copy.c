@@ -1,5 +1,5 @@
 /* copy.c -- core functions for copying files and directories
-   Copyright (C) 89, 90, 91, 1995-2002 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2003 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1110,14 +1110,32 @@ copy_internal (const char *src_path, const char *dst_path,
 	  goto un_backup;
 	}
 
-      if (link (earlier_file, dst_path))
-	{
-	  error (0, errno, _("cannot create hard link %s to %s"),
-		 quote_n (0, dst_path), quote_n (1, earlier_file));
-	  goto un_backup;
-	}
+      {
+	int link_failed;
 
-      return 0;
+	link_failed = link (earlier_file, dst_path);
+
+	/* If the link failed because of an existing destination,
+	   remove that file and then call link again.  */
+	if (link_failed && errno == EEXIST)
+	  {
+	    if (unlink (dst_path))
+	      {
+		error (0, errno, _("cannot remove %s"), quote (dst_path));
+		goto un_backup;
+	      }
+	    link_failed = link (earlier_file, dst_path);
+	  }
+
+	if (link_failed)
+	  {
+	    error (0, errno, _("cannot create hard link %s to %s"),
+		   quote_n (0, dst_path), quote_n (1, earlier_file));
+	    goto un_backup;
+	  }
+
+	return 0;
+      }
     }
 
   if (x->move_mode)
