@@ -1,4 +1,25 @@
-Sun May 01 08:38:18 EDT 1994
+Fri May 13 09:45:23 1994  Jim Meyering  (meyering@comco.com)
+
+	* Makefile.in (Makefile): Remove dependencies on */Makefile.in.
+	Change the rule so running config.status creates only Makefile.
+	(stamp-config): Have config.status generate only config.h.
+
+	* {lib,man,src}/Makefile.in (Makefile): Add single dependency on
+	Makefile.in and rule to make config.status create only Makefile.
+
+	* hostname.c: New program.
+	* hostname.1: New file.
+	* Makefile.in (PROGS): Add hostname.
+	* src/Makefile.in: Add rules and dependencies for hostname.
+	* configure.in (AC_HAVE_FUNCS): Add sethostname.
+
+	* pathchk.c (validate_path) [lint]: Initialize a variable to
+	suppress `used before initialized' warning.
+
+	* who.c: Correct gethostname prototype to indicate the function
+	returns int, not char.
+
+Sun May 01 08:38:18 1994  Jim Meyering  (meyering@comco.com)
 
 	* who.c: Add #ifdefs to build the `users' executable.
 	* src/Makefile.in: Add corresponding rules.
