@@ -1290,10 +1290,11 @@ parse_ls_color (void)
   char *buf;			/* color_buf buffer pointer */
   int state;			/* State of parser */
   int ind_no;			/* Indicator number */
-  char label[3] = "??";		/* Indicator label */
+  char label[3];		/* Indicator label */
   struct col_ext_type *ext;	/* Extension we are working on */
   struct col_ext_type *ext2;	/* Extra pointer */
 
+  strcpy (label, "??");
   if (((p = getenv (whichvar = "LS_COLORS")) != NULL && *p != '\0')
       || ((p = getenv (whichvar = "LS_COLOURS")) != NULL && *p != '\0'))
     {
