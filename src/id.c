@@ -272,7 +272,7 @@ xgetgroups (const char *username, gid_t gid, int *n_groups,
       else
 	ng = getugroups (max_n_groups, g, username, gid);
     }
-      
+
   if (ng < 0)
     {
       error (0, errno, _("cannot get supplemental group list"));
