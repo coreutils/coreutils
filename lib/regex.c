@@ -65,7 +65,7 @@
 # define CHAR_CLASS_SIZE ((__alignof__(wctype_t)+sizeof(wctype_t))/sizeof(CHAR_TYPE)+1)
 # define PUT_CHAR(c) \
   do {									      \
-    if (MC_CUR_MAX == 1)						      \
+    if (MB_CUR_MAX == 1)						      \
       putchar (c);							      \
     else								      \
       printf ("%C", (wint_t) c); /* Should we use wide stream??  */	      \
@@ -2137,21 +2137,21 @@ typedef struct
 
 
 /* Get the next unsigned number in the uncompiled pattern.  */
-#define GET_UNSIGNED_NUMBER(num) 					\
-  { if (p != pend)							\
-     {									\
-       PATFETCH (c); 							\
-       while ('0' <= c && c <= '9')					\
-         { 								\
-           if (num < 0)							\
-              num = 0;							\
-           num = num * 10 + c - '0'; 					\
-           if (p == pend) 						\
-              break; 							\
-           PATFETCH (c);						\
-         } 								\
-       } 								\
-    }
+#define GET_UNSIGNED_NUMBER(num) \
+  {									\
+    while (p != pend)							\
+      {									\
+	PATFETCH (c);							\
+	if (c < '0' || c > '9')						\
+	  break;							\
+	if (num <= RE_DUP_MAX)						\
+	  {								\
+	    if (num < 0)						\
+	      num = 0;							\
+	    num = num * 10 + c - '0';					\
+	  }								\
+      }									\
+  }
 
 #if defined _LIBC || WIDE_CHAR_SUPPORT
 /* The GNU C library provides support for user-defined character classes
@@ -2325,14 +2325,6 @@ regex_compile (pattern, size, syntax, bufp)
   /* Address of beginning of regexp, or inside of last group.  */
   US_CHAR_TYPE *begalt;
 
-  /* Place in the uncompiled pattern (i.e., the {) to
-     which to go back if the interval is invalid.  */
-#ifdef MBS_SUPPORT
-  const US_CHAR_TYPE *beg_interval;
-#else
-  const char *beg_interval;
-#endif /* MBS_SUPPORT */
-
   /* Address of the place where a forward jump should go to the end of
      the containing expression.  Each alternative of an `or' -- except the
      last -- ends with a forward jump of this sort.  */
@@ -2345,23 +2337,24 @@ regex_compile (pattern, size, syntax, bufp)
 
 #ifdef MBS_SUPPORT
   /* Initialize the wchar_t PATTERN and offset_buffer.  */
-  p = pend = pattern = TALLOC(csize, CHAR_TYPE);
+  p = pend = pattern = TALLOC(csize + 1, CHAR_TYPE);
   mbs_offset = TALLOC(csize + 1, int);
   is_binary = TALLOC(csize + 1, char);
   if (pattern == NULL || mbs_offset == NULL || is_binary == NULL)
     {
-      if (pattern) free(pattern);
-      if (mbs_offset) free(mbs_offset);
-      if (is_binary) free(is_binary);
+      free(pattern);
+      free(mbs_offset);
+      free(is_binary);
       return REG_ESPACE;
     }
+  pattern[csize] = L'\0';	/* sentinel */
   size = convert_mbs_to_wcs(pattern, cpattern, csize, mbs_offset, is_binary);
   pend = p + size;
   if (size < 0)
     {
-      if (pattern) free(pattern);
-      if (mbs_offset) free(mbs_offset);
-      if (is_binary) free(is_binary);
+      free(pattern);
+      free(mbs_offset);
+      free(is_binary);
       return REG_BADPAT;
     }
 #endif
@@ -2383,9 +2376,9 @@ regex_compile (pattern, size, syntax, bufp)
   if (compile_stack.stack == NULL)
     {
 #ifdef MBS_SUPPORT
-      if (pattern) free(pattern);
-      if (mbs_offset) free(mbs_offset);
-      if (is_binary) free(is_binary);
+      free(pattern);
+      free(mbs_offset);
+      free(is_binary);
 #endif
       return REG_ESPACE;
     }
@@ -3826,25 +3819,19 @@ regex_compile (pattern, size, syntax, bufp)
 
                 /* At least (most) this many matches must be made.  */
                 int lower_bound = -1, upper_bound = -1;
-                beg_interval = p - 1;
+
+		/* Place in the uncompiled pattern (i.e., just after
+		   the '{') to go back to if the interval is invalid.  */
+		const CHAR_TYPE *beg_interval = p;
 
                 if (p == pend)
-                  {
-                    if (!(syntax & RE_INTERVALS) && (syntax & RE_NO_BK_BRACES))
-                      goto unfetch_interval;
-                    else
-                      FREE_STACK_RETURN (REG_EBRACE);
-                  }
+		  goto invalid_interval;
 
                 GET_UNSIGNED_NUMBER (lower_bound);
 
                 if (c == ',')
                   {
                     GET_UNSIGNED_NUMBER (upper_bound);
-		    if ((!(syntax & RE_NO_BK_BRACES) && c != '\\')
-			|| ((syntax & RE_NO_BK_BRACES) && c != '}'))
-		      FREE_STACK_RETURN (REG_BADBR);
-
 		    if (upper_bound < 0)
 		      upper_bound = RE_DUP_MAX;
                   }
@@ -3852,42 +3839,35 @@ regex_compile (pattern, size, syntax, bufp)
                   /* Interval such as `{1}' => match exactly once. */
                   upper_bound = lower_bound;
 
-                if (lower_bound < 0 || upper_bound > RE_DUP_MAX
-                    || lower_bound > upper_bound)
-                  {
-                    if (!(syntax & RE_INTERVALS) && (syntax & RE_NO_BK_BRACES))
-                      goto unfetch_interval;
-                    else
-                      FREE_STACK_RETURN (REG_BADBR);
-                  }
+                if (! (0 <= lower_bound && lower_bound <= upper_bound))
+		  goto invalid_interval;
 
                 if (!(syntax & RE_NO_BK_BRACES))
                   {
-                    if (c != '\\') FREE_STACK_RETURN (REG_EBRACE);
-
+		    if (c != '\\' || p == pend)
+		      goto invalid_interval;
                     PATFETCH (c);
                   }
 
                 if (c != '}')
-                  {
-                    if (!(syntax & RE_INTERVALS) && (syntax & RE_NO_BK_BRACES))
-                      goto unfetch_interval;
-                    else
-                      FREE_STACK_RETURN (REG_BADBR);
-                  }
-
-                /* We just parsed a valid interval.  */
+		  goto invalid_interval;
 
                 /* If it's invalid to have no preceding re.  */
                 if (!laststart)
                   {
-                    if (syntax & RE_CONTEXT_INVALID_OPS)
+		    if (syntax & RE_CONTEXT_INVALID_OPS
+			&& !(syntax & RE_INVALID_INTERVAL_ORD))
                       FREE_STACK_RETURN (REG_BADRPT);
                     else if (syntax & RE_CONTEXT_INDEP_OPS)
                       laststart = b;
                     else
                       goto unfetch_interval;
                   }
+
+                /* We just parsed a valid interval.  */
+
+                if (RE_DUP_MAX < upper_bound)
+		  FREE_STACK_RETURN (REG_BADBR);
 
                 /* If the upper bound is zero, don't want to succeed at
                    all; jump from `laststart' to `b + 3', which will be
@@ -3974,25 +3954,20 @@ regex_compile (pattern, size, syntax, bufp)
                        }
                    }
                 pending_exact = 0;
-                beg_interval = NULL;
-              }
-              break;
+		break;
 
-            unfetch_interval:
-              /* If an invalid interval, match the characters as literals.  */
-               assert (beg_interval);
-               p = beg_interval;
-               beg_interval = NULL;
-
-               /* normal_char and normal_backslash need `c'.  */
-               PATFETCH (c);
-
-               if (!(syntax & RE_NO_BK_BRACES))
-                 {
-                   if (p > pattern  &&  p[-1] == '\\')
-                     goto normal_backslash;
-                 }
-               goto normal_char;
+	      invalid_interval:
+		if (!(syntax & RE_INVALID_INTERVAL_ORD))
+		  FREE_STACK_RETURN (p == pend ? REG_EBRACE : REG_BADBR);
+	      unfetch_interval:
+		/* Match the characters as literals.  */
+		p = beg_interval;
+		c = '{';
+		if (syntax & RE_NO_BK_BRACES)
+		  goto normal_char;
+		else
+		  goto normal_backslash;
+	      }
 
 #ifdef emacs
             /* There is no way to specify the before_dot and after_dot
