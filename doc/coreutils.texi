@@ -9478,6 +9478,8 @@ True if @var{file} exists and is a regular file.
 @opindex -h
 @cindex symbolic link check
 True if @var{file} exists and is a symbolic link.
+Unlike all other file-related tests, this test does not dereference
+@var{file} if it is a symbolic link.
 
 @item -p @var{file}
 @opindex -p
