@@ -1,10 +1,17 @@
-1998-01-24  Jim Meyering  <meyering@na-net.ornl.gov>
+1998-01-25  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Version 1.22e.
+
+	* src/cat.c (cat): Convert comma-expressions to pairs of
+	semicolon-terminated stmts.
+	Add braces around compound if/else stmts.
+
+1998-01-24  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/tail.c (parse_obsolescent_option): Do not interpret `-f -n 1 ...'
 	as obsolescent options.
 	Accept new option: --sleep-interval=SECONDS (-s).
+	FIXME: document new option in textutils.texi.
 	(parse_options): Recognize it.
 	(usage): Describe it.
 	(tail_forever): Use it.
