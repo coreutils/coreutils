@@ -1,7 +1,7 @@
 /* Declarations for GNU's read utmp module.
 
    Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,
-   2001, 2002, 2003 Free Software Foundation, Inc.
+   2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -116,11 +116,11 @@
 # else
 
 #  if HAVE_STRUCT_UTMP_UT_USER
-#   define UT_USER(Utmp) Utmp->ut_user
+#   define UT_USER(Utmp) ((Utmp)->ut_user)
 #  endif
 #  if HAVE_STRUCT_UTMP_UT_NAME
 #   undef UT_USER
-#   define UT_USER(Utmp) Utmp->ut_name
+#   define UT_USER(Utmp) ((Utmp)->ut_name)
 #  endif
 
 # endif
@@ -142,6 +142,8 @@
      || HAVE_STRUCT_UTMPX_UT_TYPE)
 
 typedef struct UTMP_STRUCT_NAME STRUCT_UTMP;
+
+enum { UT_USER_SIZE = sizeof UT_USER ((STRUCT_UTMP *) 0) };
 
 # include <time.h>
 # ifdef HAVE_SYS_PARAM_H
@@ -180,6 +182,6 @@ extern int errno;
 # endif
 
 char *extract_trimmed_name (const STRUCT_UTMP *ut);
-int read_utmp (const char *filename, int *n_entries, STRUCT_UTMP **utmp_buf);
+int read_utmp (const char *filename, size_t *n_entries, STRUCT_UTMP **utmp_buf);
 
 #endif /* __READUTMP_H__ */
