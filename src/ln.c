@@ -316,8 +316,8 @@ do_link (const char *source, const char *dest)
 
   error (0, errno,
 	 (symbolic_link
-	  ? _("create symbolic link %s to %s")
-	  : _("create hard link %s to %s")),
+	  ? _("creating symbolic link %s to %s")
+	  : _("creating hard link %s to %s")),
 	 quote_n (0, dest), quote_n (1, source));
 
   if (dest_backup)
