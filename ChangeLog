@@ -2,6 +2,12 @@
 
 	* Version 5.1.0.
 
+	* src/chown-core.c (change_file_owner): Handle the cases in
+	which fts_info indicates an error with the given entry.
+
+	* src/du.c (main): Simply assign to bit_flags.
+	Don't bother with bit arithmetic.
+
 	* tests/chmod/no-x: New file.
 	* tests/chgrp/no-x: New file.
 	* tests/chmod/Makefile.am (TESTS): Add no-x.
