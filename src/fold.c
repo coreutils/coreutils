@@ -1,5 +1,5 @@
 /* fold -- wrap each input line to fit in specified width.
-   Copyright (C) 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -193,14 +193,13 @@ fold_file (char *filename, int width)
 		  goto rescan;
 		}
 	    }
-	  else
+
+	  if (offset_out == 0)
 	    {
-	      if (offset_out == 0)
-		{
-		  line_out[offset_out++] = c;
-		  continue;
-		}
+	      line_out[offset_out++] = c;
+	      continue;
 	    }
+
 	  line_out[offset_out++] = '\n';
 	  fwrite (line_out, sizeof (char), (size_t) offset_out, stdout);
 	  column = offset_out = 0;
