@@ -1,3 +1,9 @@
+2002-12-15  Jim Meyering  <jim@meyering.net>
+
+	* jm-glibc-io.m4n: Remove now-unused file.
+	* Makefile.am.in (Makefile.am): Remove jm-glibc-io.m4
+	and jm-glibc-io.m4n.
+
 2002-12-11  Jim Meyering  <jim@meyering.net>
 
 	* jm-glibc-io.m4: Maintain this file manually rather than generating it.
