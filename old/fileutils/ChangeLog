@@ -1,3 +1,8 @@
+Sat Aug 31 18:48:18 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/touch.c (utime_now): Protoize.
+	Reported by David S. Miller (davem@caip.rutgers.edu).
+
 Sun Aug 25 22:43:15 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* acinclude.m4 (AM_FUNC_MKTIME): New macro.
