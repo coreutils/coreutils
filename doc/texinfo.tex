@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2000-10-27.17}
+\def\texinfoversion{2000-11-09.08}
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
 % Free Software Foundation, Inc.
@@ -688,13 +688,14 @@ where each line of input produces a line of output.}
 \def\nofillexdentyyy #1{{\advance \leftskip by -\exdentamount
 \leftline{\hskip\leftskip{\rm#1}}}}
 
-% @inmargin{TEXT} puts TEXT in the left margin next to the current
-% paragraph.  For more general purposes, use the \margin insertion class.
+% @inmargin{WHICH}{TEXT} puts TEXT in the WHICH margin next to the current
+% paragraph.  For more general purposes, use the \margin insertion
+% class.  WHICH is `l' or `r'.
 %
 \newskip\inmarginspacing \inmarginspacing=1cm
 \def\strutdepth{\dp\strutbox}
 %
-\def\inmargin#1{\strut\vadjust{%
+\def\doinmargin#1#2{\strut\vadjust{%
   \nobreak
   \kern-\strutdepth
   \vtop to \strutdepth{%
@@ -702,11 +703,24 @@ where each line of input produces a line of output.}
     \vss
     % if you have multiple lines of stuff to put here, you'll need to
     % make the vbox yourself of the appropriate size.
-    \llap{#1\hskip\inmarginspacing}%
+    \ifx#1l%
+      \llap{#2\hskip\inmarginspacing}%
+    \else
+      \rlap{\hskip\hsize\hskip\inmarginspacing#2}%
+    \fi
     \null
   }%
 }}
-
+\def\inleftmargin{\doinmargin l}
+\def\inrightmargin{\doinmargin r}
+\def\inmargin{% not perfect, but better than nothing.
+  \ifodd\pageno
+    \let\temp=\inleftmargin
+  \else
+    \let\temp=\inrightmargin
+  \fi
+  \temp
+}
 
 % @include file    insert text of that file as input.
 % Allow normal characters that  we make active in the argument (a file name).
