@@ -1059,7 +1059,8 @@ main (int argc, char **argv)
 	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
 	        || tmp_long <= 0 || tmp_long > INT_MAX)
 	      error (EXIT_FAILURE, 0,
-	         _("`-w PAGE_WIDTH' invalid number of characters: `%s'"), optarg);
+	         _("`-w PAGE_WIDTH' invalid number of characters: `%s'"),
+		     optarg);
 	    if (!truncate_lines)
 	      chars_per_line = tmp_long;
 	    break;
@@ -1072,7 +1073,8 @@ main (int argc, char **argv)
 	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
 		|| tmp_long <= 0 || tmp_long > INT_MAX)
 	      error (EXIT_FAILURE, 0,
-		 _("`-W PAGE_WIDTH' invalid number of characters: `%s'"), optarg);
+		 _("`-W PAGE_WIDTH' invalid number of characters: `%s'"),
+		     optarg);
 	    chars_per_line = tmp_long;
 	    break;
 	  }
