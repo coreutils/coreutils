@@ -1,3 +1,6 @@
+[4.1.1]
+* ls honors the -g option, per POSIX
+
 Changes in release 4.1:
 [4.0.45]
 * dd conv=sync,block now pads only with spaces
