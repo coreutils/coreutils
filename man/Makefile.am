@@ -10,7 +10,7 @@ dist_man_MANS = \
   tee.1 test.1 true.1 tty.1 uname.1 uptime.1 users.1 who.1 whoami.1 yes.1 \
   chgrp.1 chmod.1 chown.1 cp.1 dir.1 dd.1 df.1 dircolors.1 \
   du.1 install.1 link.1 ln.1 ls.1 mkdir.1 mkfifo.1 mknod.1 mv.1 rm.1 rmdir.1 \
-  shred.1 sync.1 touch.1 unlink.1 vdir.1
+  shred.1 stat.1 sync.1 touch.1 unlink.1 vdir.1
 
 man_aux = $(dist_man_MANS:.1=.x)
 
@@ -104,6 +104,7 @@ mv.1:		$(common_dep)	$(srcdir)/mv.x		../src/mv.c
 rm.1:		$(common_dep)	$(srcdir)/rm.x		../src/rm.c
 rmdir.1:	$(common_dep)	$(srcdir)/rmdir.x	../src/rmdir.c
 shred.1:	$(common_dep)	$(srcdir)/shred.x	../src/shred.c
+stat.1:		$(common_dep)	$(srcdir)/stat.x	../src/stat.c
 sync.1:		$(common_dep)	$(srcdir)/sync.x	../src/sync.c
 touch.1:	$(common_dep)	$(srcdir)/touch.x	../src/touch.c
 unlink.1:	$(common_dep)	$(srcdir)/unlink.x	../src/unlink.c
