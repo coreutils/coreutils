@@ -139,7 +139,7 @@ extern int __tz_compute __P ((time_t timer, const struct tm *tm));
 # if ! HAVE_LOCALTIME_R
 #  if ! HAVE_TM_GMTOFF
 /* Approximate gmtime_r as best we can in its absence.  */
-#   define gmtime_r my_gmtime_r
+#  define gmtime_r my_gmtime_r
 static struct tm *gmtime_r __P ((const time_t *, struct tm *));
 static struct tm *
 gmtime_r (t, tp)
@@ -493,23 +493,25 @@ strftime (s, maxsize, format, tp)
 
 #endif /* ! DO_MULTIBYTE */
 
-      /* Check for flags that can modify a number format.  */
+      /* Check for flags that can modify a format.  */
+      pad = 0;
       while (1)
 	{
 	  switch (*++f)
 	    {
+	      /* This influences the number formats.  */
 	    case '_':
 	    case '-':
 	    case '0':
 	      pad = *f;
 	      continue;
 
+	      /* This changes textual output.  */
 	    case '^':
 	      to_uppcase = 1;
 	      continue;
 
 	    default:
-	      pad = 0;
 	      break;
 	    }
 	  break;
