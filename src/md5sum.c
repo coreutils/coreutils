@@ -289,7 +289,8 @@ md5_check (checkfile_name, binary)
 	{
 	  if (verbose)
 	    {
-	      error (0, 0, _("%s: %lu: invalid MD5 checksum line"),
+	      error (0, 0,
+		     _("%s: %lu: improperly formatted MD5 checksum line"),
 		     checkfile_name, (unsigned long) line_number);
 	    }
 	}
@@ -345,7 +346,9 @@ md5_check (checkfile_name, binary)
 
   if (n_tests == 0)
     {
-      /* FIXME: warn (or even fail?) if no tests are found?  */
+      /* Warn if no tests are found.  */
+      error (0, 0, _("%s: no properly formatted MD5 checksum lines found"),
+	     checkfile_name);
     }
   else
     {
@@ -354,14 +357,14 @@ md5_check (checkfile_name, binary)
 	  if (n_tests_failed == 0)
 	    {
 	      printf (n_tests == 1
-		      ? _("the single test passed\n")
-		      : _("all %d tests passed\n"), n_tests);
+		      ? _("the single computed checksum matched\n")
+		      : _("all %d computed checksums matched\n"), n_tests);
 	    }
 	  else
 	    {
 	      printf (n_tests == 1
-		      ? _("the single test failed\n")
-		      : _("%d out of %d tests failed\n"),
+	      ? _("WARNING: the single computed checksum did NOT match\n")
+	      : _("WARNING: %d out of %d computed checksums did NOT match\n"),
 		      n_tests_failed, n_tests);
 	    }
 	}
