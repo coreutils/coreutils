@@ -125,7 +125,7 @@ TESTS_ENVIRONMENT = \
   PROG=$$tst
 
 
-TESTS = head-pos sort head-c csplit
+TESTS = split-a head-pos sort head-c csplit
 subdir = tests/misc
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
