@@ -1,6 +1,6 @@
 /* provide consistent interface to chown for systems that don't interpret
    an ID of -1 as meaning `don't change the corresponding ID'.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,12 +30,26 @@
 #if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
+#if HAVE_FCNTL_H
+# include <fcntl.h>
+#else
+# include <sys/file.h>
+#endif
+#include <errno.h>
+#ifndef errno
+extern int errno;
+#endif
 
-/* FIXME: describe.  */
+/* Provide a more-closely POSIX-conforming version of chown on
+   systems with one or both of the following problems:
+   - chown doesn't treat an ID of -1 as meaning
+   `don't change the corresponding ID'.
+   - chown doesn't dereference symlinks.  */
 
 int
 rpl_chown (const char *file, uid_t uid, gid_t gid)
 {
+#if CHOWN_FAILS_TO_HONOR_ID_OF_NEGATIVE_ONE
   if (gid == (gid_t) -1 || uid == (uid_t) -1)
     {
       struct stat file_stats;
@@ -50,6 +64,28 @@ rpl_chown (const char *file, uid_t uid, gid_t gid)
       if (uid == (uid_t) -1)
 	uid = file_stats.st_uid;
     }
+#endif
 
+#if CHOWN_MODIFIES_SYMLINK
+  {
+    /* Handle the case in which the system-supplied chown function
+       does *not* follow symlinks.  Instead, it changes permissions
+       on the symlink itself.  To work around that, we open the
+       file (but this can fail due to lack of read permission) and
+       use fchown on the resulting descriptor.  */
+    int fd = open (file, O_RDONLY | O_NONBLOCK | O_NOCTTY);
+    if (fd == -1)
+      return -1;
+    if (fchown (fd, uid, gid))
+      {
+	int saved_errno = errno;
+	close (fd);
+	errno = saved_errno;
+	return -1;
+      }
+    return close (fd);
+  }
+#else
   return chown (file, uid, gid);
+#endif
 }
