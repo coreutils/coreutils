@@ -1,3 +1,12 @@
+Tue Jul  1 06:42:17 1997  /  <meyering@na-net.ornl.gov>
+
+	* lib/makepath.c (make_path): Reorder stat-then-mkdir-if-missing
+	calls so that mkdir is called first.  Before make_path would first
+	`stat' a directory, then call mkdir if it didn't exist.  But if
+	some other process created the directory between the stat & mkdir,
+	the mkdir would fail with EEXIST.  Diagnosis and suggestion from
+	Greg McGary.
+
 Sun Jun 29 17:19:30 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/dd.c (copy): Add FIXME comment.
