@@ -117,9 +117,12 @@ rm -rf a symlink hard-to-sym hard-to-dangle
 
 # Make sure ln can make simple backups.
 # This was fixed in 4.0.34.  Broken in 4.0r.
-touch a x || framework_failure=1
-ln --backup=simple --suffix=.orig x a || fail=1
-test -f a.orig || fail=1
+for cmd in ln cp mv ginstall; do
+  rm -rf a x a.orig
+  touch a x || framework_failure=1
+  $cmd --backup=simple --suffix=.orig x a || fail=1
+  test -f a.orig || fail=1
+done
 
 # ===================================================
 
