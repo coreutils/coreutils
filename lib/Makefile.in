@@ -114,7 +114,7 @@ makepath.h modechange.h mountlist.h hash.h path-concat.h pathmax.h \
 posixtm.h quotearg.h regex.h safe-read.h save-cwd.h savedir.h strverscmp.h \
 xalloc.h xstrtol.h xstrtoul.h
 
-BUILT_SOURCES = getdate.c
+BUILT_SOURCES = getdate.c lstat.c stat.c
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
@@ -159,17 +159,18 @@ DEP_FILES =  .deps/addext.P .deps/alloca.P .deps/argmatch.P \
 .deps/ftruncate.P .deps/full-write.P .deps/getdate .deps/getdate.P \
 .deps/getgroups.P .deps/getline.P .deps/getopt.P .deps/getopt1.P \
 .deps/group-member.P .deps/hash.P .deps/human.P .deps/idcache.P \
-.deps/isdir.P .deps/lchown.P .deps/long-options.P .deps/lstat.P \
-.deps/makepath.P .deps/malloc.P .deps/memcmp.P .deps/memcpy.P \
-.deps/memset.P .deps/mkdir.P .deps/mktime.P .deps/modechange.P \
-.deps/mountlist.P .deps/obstack.P .deps/path-concat.P .deps/posixtm.P \
-.deps/quotearg.P .deps/realloc.P .deps/regex.P .deps/rename.P \
-.deps/rmdir.P .deps/rpmatch.P .deps/safe-read.P .deps/save-cwd.P \
-.deps/savedir.P .deps/stat.P .deps/stpcpy.P .deps/strcasecmp.P \
-.deps/strdup.P .deps/strftime.P .deps/stripslash.P .deps/strndup.P \
-.deps/strstr.P .deps/strtol.P .deps/strtoul.P .deps/strverscmp.P \
-.deps/userspec.P .deps/utime.P .deps/xgetcwd.P .deps/xmalloc.P \
-.deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P .deps/yesno.P
+.deps/isdir.P .deps/lchown.P .deps/long-options.P .deps/lstat \
+.deps/lstat.P .deps/makepath.P .deps/malloc.P .deps/memcmp.P \
+.deps/memcpy.P .deps/memset.P .deps/mkdir.P .deps/mktime.P \
+.deps/modechange.P .deps/mountlist.P .deps/obstack.P \
+.deps/path-concat.P .deps/posixtm.P .deps/quotearg.P .deps/realloc.P \
+.deps/regex.P .deps/rename.P .deps/rmdir.P .deps/rpmatch.P \
+.deps/safe-read.P .deps/save-cwd.P .deps/savedir.P .deps/stat \
+.deps/stat.P .deps/stpcpy.P .deps/strcasecmp.P .deps/strdup.P \
+.deps/strftime.P .deps/stripslash.P .deps/strndup.P .deps/strstr.P \
+.deps/strtol.P .deps/strtoul.P .deps/strverscmp.P .deps/userspec.P \
+.deps/utime.P .deps/xgetcwd.P .deps/xmalloc.P .deps/xstrdup.P \
+.deps/xstrtol.P .deps/xstrtoul.P .deps/yesno.P
 SOURCES = $(libfu_a_SOURCES)
 OBJECTS = $(libfu_a_OBJECTS)
 
@@ -513,6 +514,14 @@ install-data install uninstall all installdirs mostlyclean-generic \
 distclean-generic clean-generic maintainer-clean-generic clean \
 mostlyclean distclean maintainer-clean
 
+
+lstat.c: xstat.in
+	sed -e '/@IGNORE@/d' -e 's/@xstat@/lstat/g' $(srcdir)/xstat.in > $@-t
+	mv $@-t $@
+
+stat.c: xstat.in
+	sed -e '/@IGNORE@/d' -e 's/@xstat@/stat/g' $(srcdir)/xstat.in > $@-t
+	mv $@-t $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
