@@ -2,25 +2,27 @@
 
 tmp=gen-uio.$$
 trap 'status=$?; rm -f $tmp && exit $status' 0
-trap 'exit $?' 1 2 13 15
+trap '{ (exit 1); exit 1; }' 1 2 13 15
 
-cat <<\EOF
+cat <<\EOF || exit 1
 #ifndef UNLOCKED_IO_H
 # define UNLOCKED_IO_H 1
 
 # if USE_UNLOCKED_IO
 
 /* These are wrappers for functions/macros from GNU libc.
-   The standard I/O functions are thread-safe.  These *_unlocked ones
-   are more efficient but not thread-safe.  That they're not thread-safe
-   is fine since all these applications are single threaded.  */
+   The standard I/O functions are thread-safe.  These *_unlocked ones are
+   more efficient but not thread-safe.  That they're not thread-safe is
+   fine since all of the applications in this package are single threaded.  */
 
 EOF
 
 for f in $@; do
   u=`echo $f|tr abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ`
-  echo "#  if HAVE_${u}_UNLOCKED"
-  echo "#   undef $f"
+  cat <<EOF || exit 1
+#  if HAVE_${u}_UNLOCKED
+#   undef $f
+EOF
   case $f in
     getchar)
       params=;;
@@ -35,12 +37,16 @@ for f in $@; do
     *)
       echo $0: missing case for $f 2>&1; exit 1;;
   esac
-  echo "#   define $f($params) ${f}_unlocked ($params)"
-  echo '#  endif'
+  cat <<EOF || exit 1
+#   define $f($params) ${f}_unlocked ($params)
+#  endif
+EOF
 done
 
-cat <<\EOF
+cat <<\EOF || exit 1
 
 # endif /* USE_UNLOCKED_IO */
 #endif /* UNLOCKED_IO_H */
 EOF
+
+(exit 0); exit
