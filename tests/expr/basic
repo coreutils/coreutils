@@ -1,0 +1,54 @@
+#!/bin/sh
+# -*-perl-*-
+
+: ${PERL=perl}
+: ${srcdir=.}
+
+case "$PERL" in
+  *'missing perl')
+    echo 1>&2 "$0: configure didn't find a usable version of Perl," \
+      "so can't run this test"
+    exit 77
+    ;;
+esac
+
+d=$srcdir/..
+exec $PERL -w -I$d -MFetish -- - << \EOF
+require 5.003;
+use strict;
+
+(my $program_name = $0) =~ s|.*/||;
+
+# Turn off localisation of executable's ouput.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+
+my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
+
+my @Tests =
+    (
+     ['invalid-a', '3 + -', {ERR => "$prog: non-numeric argument\n"},
+      {EXIT => 1}],
+
+     ['a', '5 + 6', {OUT => '11'}],
+    );
+
+# Prepend the command line argument and append a newline to end
+# of each expected `OUT' string.
+my $t;
+foreach $t (@Tests)
+  {
+    my $arg1 = $t->[1];
+    my $e;
+    foreach $e (@$t)
+      {
+	$e->{OUT} = "$arg1: $e->{OUT}\n"
+	  if ref $e eq 'HASH' and exists $e->{OUT};
+      }
+  }
+
+my $save_temps = $ENV{SAVE_TEMPS};
+my $verbose = $ENV{VERBOSE};
+
+my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF
