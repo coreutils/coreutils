@@ -1,6 +1,11 @@
-2002-01-22  Jim Meyering  <meyering@lucent.com>
+2002-01-28  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* Makefile.am (AUTOMAKE_OPTIONS): Require automake-1.5d.
+	* configure.ac (AM_INIT_AUTOMAKE): Use zero-arg form of this macro.
+
+2002-01-22  Jim Meyering  <meyering@lucent.com>
 
 	* po/POTFILES.in: Add lib/xmemcoll.c and src/sys2.h.
 
