@@ -6,5 +6,7 @@
 # endif
 #endif
 
-ssize_t
+#define SAFE_READ_ERROR ((size_t) -1)
+
+size_t
 safe_read PARAMS ((int desc, void *ptr, size_t len));
