@@ -65,16 +65,16 @@
 
 /* Number of bytes per item we are printing.
    If 0, tail in lines. */
-int unit_size;
+static int unit_size;
 
 /* If nonzero, read from end of file until killed. */
-int forever;
+static int forever;
 
 /* If nonzero, count from start of file instead of end. */
-int from_start;
+static int from_start;
 
 /* If nonzero, print filename headers. */
-int print_headers;
+static int print_headers;
 
 /* When to print the filename banners. */
 enum header_mode
@@ -83,30 +83,31 @@ enum header_mode
 };
 
 char *xmalloc ();
-int file_lines ();
-int pipe_bytes ();
-int pipe_lines ();
-int start_bytes ();
-int start_lines ();
-int tail ();
-int tail_bytes ();
-int tail_file ();
-int tail_lines ();
-long atou();
-void dump_remainder ();
-void error ();
-void parse_unit ();
-void usage ();
-void write_header ();
 void xwrite ();
+void error ();
+
+static int file_lines ();
+static int pipe_bytes ();
+static int pipe_lines ();
+static int start_bytes ();
+static int start_lines ();
+static int tail ();
+static int tail_bytes ();
+static int tail_file ();
+static int tail_lines ();
+static long atou();
+static void dump_remainder ();
+static void parse_unit ();
+static void usage ();
+static void write_header ();
 
 /* The name this program was run with. */
 char *program_name;
 
 /* Nonzero if we have ever read standard input. */
-int have_read_stdin;
+static int have_read_stdin;
 
-struct option long_options[] =
+static struct option const long_options[] =
 {
   {"bytes", 1, NULL, 'c'},
   {"follow", 0, NULL, 'f'},
@@ -277,7 +278,7 @@ main (argc, argv)
    "-" for FILENAME means the standard input.
    Return 0 if successful, 1 if an error occurred. */
 
-int
+static int
 tail_file (filename, number)
      char *filename;
      long number;
@@ -310,7 +311,7 @@ tail_file (filename, number)
     }
 }
 
-void
+static void
 write_header (filename)
      char *filename;
 {
@@ -331,7 +332,7 @@ write_header (filename)
    in FD.
    Return 0 if successful, 1 if an error occurred. */
 
-int
+static int
 tail (filename, fd, number)
      char *filename;
      int fd;
@@ -347,7 +348,7 @@ tail (filename, fd, number)
    using NUMBER characters.
    Return 0 if successful, 1 if an error occurred. */
 
-int
+static int
 tail_bytes (filename, fd, number)
      char *filename;
      int fd;
@@ -395,7 +396,7 @@ tail_bytes (filename, fd, number)
    using NUMBER lines.
    Return 0 if successful, 1 if an error occurred. */
 
-int
+static int
 tail_lines (filename, fd, number)
      char *filename;
      int fd;
@@ -439,7 +440,7 @@ tail_lines (filename, fd, number)
    byte of the file + 1).
    Return 0 if successful, 1 if an error occurred. */
 
-int
+static int
 file_lines (filename, fd, number, pos)
      char *filename;
      int fd;
@@ -512,7 +513,7 @@ file_lines (filename, fd, number, pos)
    Buffer the text as a linked list of LBUFFERs, adding them as needed.
    Return 0 if successful, 1 if an error occured. */
 
-int
+static int
 pipe_lines (filename, fd, number)
      char *filename;
      int fd;
@@ -634,7 +635,7 @@ free_lbuffers:
    This is a stripped down version of pipe_lines.
    Return 0 if successful, 1 if an error occurred. */
 
-int
+static int
 pipe_bytes (filename, fd, number)
      char *filename;
      int fd;
@@ -731,7 +732,7 @@ free_cbuffers:
    any extra characters that were read beyond that.
    Return 1 on error, 0 if ok.  */
 
-int
+static int
 start_bytes (filename, fd, number)
      char *filename;
      int fd;
@@ -756,7 +757,7 @@ start_bytes (filename, fd, number)
    any extra characters that were read beyond that.
    Return 1 on error, 0 if ok.  */
 
-int
+static int
 start_lines (filename, fd, number)
      char *filename;
      int fd;
@@ -787,7 +788,7 @@ start_lines (filename, fd, number)
    to the end.  If `forever' is nonzero, keep reading from the
    end of the file until killed. */
 
-void
+static void
 dump_remainder (filename, fd)
      char *filename;
      int fd;
@@ -807,7 +808,7 @@ output:
     }
 }
 
-void
+static void
 parse_unit (str)
      char *str;
 {
@@ -836,7 +837,7 @@ parse_unit (str)
 /* Convert STR, a string of ASCII digits, into an unsigned integer.
    Return -1 if STR does not represent a valid unsigned integer. */
 
-long
+static long
 atou (str)
      char *str;
 {
@@ -847,7 +848,7 @@ atou (str)
   return *str ? -1 : value;
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

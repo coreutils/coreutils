@@ -26,21 +26,21 @@
 #define min(x, y) ((x) < (y) ? (x) : (y))
 
 /* If nonzero, print lines that are found only in file 1. */
-int only_file_1;
+static int only_file_1;
 
 /* If nonzero, print lines that are found only in file 2. */
-int only_file_2;
+static int only_file_2;
 
 /* If nonzero, print lines that are found in both files. */
-int both;
+static int both;
 
 /* The name this program was run with. */
 char *program_name;
 
-int compare_files ();
 void error ();
-void writeline ();
-void usage ();
+static int compare_files ();
+static void writeline ();
+static void usage ();
 
 void
 main (argc, argv)
@@ -86,7 +86,7 @@ main (argc, argv)
    merge them and output the result.
    Return 0 if successful, 1 if any errors occur. */
 
-int
+static int
 compare_files (infiles)
      char **infiles;
 {
@@ -176,7 +176,7 @@ compare_files (infiles)
    CLASS is 1 for a line found only in file 1,
    2 for a line only in file 2, 3 for a line in both. */
 
-void
+static void
 writeline (line, stream, class)
      struct linebuffer *line;
      FILE *stream;
@@ -213,7 +213,7 @@ writeline (line, stream, class)
   putc ('\n', stream);
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "Usage: %s [-123] file1 file2\n", program_name);

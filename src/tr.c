@@ -99,7 +99,7 @@ enum Upper_Lower_class
    from upper or lower.  In fact, no other character classes are allowed
    when translating, but that condition is tested elsewhere.  This array
    is indexed by values of type enum Upper_Lower_class. */
-static int class_ok[3][3] =
+static int const class_ok[3][3] =
 {
   {0, 1, 0},
   {1, 0, 0},
@@ -263,7 +263,7 @@ static int translating;
 #define IO_BUF_SIZE BUFSIZ
 static unsigned char io_buf[IO_BUF_SIZE];
 
-char *char_class_name[] =
+static char const* const char_class_name[] =
 {
   "alnum", "alpha", "blank", "cntrl", "digit", "graph",
   "lower", "print", "punct", "space", "upper", "xdigit"
@@ -289,7 +289,7 @@ static SET_TYPE in_delete_set[N_CHARS];
    two specification strings and the delete switch is not given. */
 static char xlate[N_CHARS];
 
-static struct option long_options[] =
+static struct option const long_options[] =
 {
   {"complement", 0, NULL, 'c'},
   {"delete", 0, NULL, 'd'},
@@ -494,7 +494,7 @@ look_up_char_class (class_str)
   unsigned int i;
 
   for (i = 0; i < N_CHAR_CLASSES; i++)
-    if (strcmp (class_str, char_class_name[i]) == 0)
+    if (strcmp ((const char *) class_str, char_class_name[i]) == 0)
       return (enum Char_class) i;
   return CC_NO_CLASS;
 }

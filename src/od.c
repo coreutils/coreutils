@@ -240,7 +240,7 @@ static enum size_spec integral_type_size[MAX_INTEGRAL_TYPE_SIZE + 1];
 #define MAX_FP_TYPE_SIZE sizeof(LONG_DOUBLE)
 static enum size_spec fp_type_size[MAX_FP_TYPE_SIZE + 1];
 
-static struct option long_options[] =
+static struct option const long_options[] =
 {
   /* POSIX options.  */
   {"skip-bytes", 1, NULL, 'j'},

@@ -30,43 +30,43 @@
 char *xmalloc ();
 void error ();
 
-int convint ();
-int isdigits ();
-int stdread ();
-void line_bytes_split ();
-void bytes_split ();
-void cwrite ();
-void lines_split ();
-void next_file_name ();
+static int convint ();
+static int isdigits ();
+static int stdread ();
+static void line_bytes_split ();
+static void bytes_split ();
+static void cwrite ();
+static void lines_split ();
+static void next_file_name ();
 
 /* Name under which this program was invoked.  */
 char *program_name;
 
 /* Base name of output files.  */
-char *outfile;
+static char *outfile;
 
 /* Pointer to the end of the prefix in OUTFILE.
    Suffixes are inserted here.  */
-char *outfile_mid;
+static char *outfile_mid;
 
 /* Pointer to the end of OUTFILE. */
-char *outfile_end;
+static char *outfile_end;
 
 /* Status for outfile name generation.  */
-unsigned outfile_count = -1;
-unsigned outfile_name_limit = 25 * 26;
-unsigned outfile_name_generation = 1;
+static unsigned outfile_count = -1;
+static unsigned outfile_name_limit = 25 * 26;
+static unsigned outfile_name_generation = 1;
 
 /* Name of input file.  May be "-".  */
-char *infile;
+static char *infile;
 
 /* Descriptor on which input file is open.  */
-int input_desc;
+static int input_desc;
 
 /* Descriptor on which output file is open.  */
-int output_desc;
+static int output_desc;
 
-void
+static void
 usage (reason)
     char *reason;
 {
@@ -80,7 +80,7 @@ Usage: %s [-lines] [-l lines] [-b bytes[bkm]] [-C bytes[bkm]]\n\
   exit (2);
 }
 
-struct option longopts[] =
+static struct option const longopts[] =
 {
   {"bytes", 1, NULL, 'b'},
   {"lines", 1, NULL, 'l'},
@@ -241,6 +241,9 @@ main (argc, argv)
     case type_byteslines:
       line_bytes_split (num);
       break;
+
+    default:
+      abort ();
     }
 
   if (close (input_desc) < 0)
@@ -253,7 +256,7 @@ main (argc, argv)
 
 /* Return nonzero if the string STR is composed entirely of decimal digits.  */
 
-int
+static int
 isdigits (str)
     char *str;
 {
@@ -272,7 +275,7 @@ isdigits (str)
    to mean kilo or `m' to mean mega.
    Return 0 if STR is valid, -1 if not. */
 
-int
+static int
 convint (str, val)
      char *str;
      int *val;
@@ -307,7 +310,7 @@ convint (str, val)
 /* Split into pieces of exactly NCHARS bytes.
    Use buffer BUF, whose size is BUFSIZE.  */
 
-void
+static void
 bytes_split (nchars, buf, bufsize)
     int nchars;
     char *buf;
@@ -354,7 +357,7 @@ bytes_split (nchars, buf, bufsize)
 /* Split into pieces of exactly NLINES lines.
    Use buffer BUF, whose size is BUFSIZE.  */
 
-void
+static void
 lines_split (nlines, buf, bufsize)
     int nlines;
     char *buf;
@@ -403,7 +406,7 @@ lines_split (nlines, buf, bufsize)
    than NCHARS bytes, and are split on line boundaries except
    where lines longer than NCHARS bytes occur. */
 
-void
+static void
 line_bytes_split (nchars)
     int nchars;
 {
@@ -454,7 +457,7 @@ line_bytes_split (nchars)
    If NEW_FILE_FLAG is nonzero, open the next output file.
    Otherwise add to the same output file already in use.  */
 
-void
+static void
 cwrite (new_file_flag, bp, bytes)
     int new_file_flag;
     char *bp;
@@ -478,7 +481,7 @@ cwrite (new_file_flag, bp, bytes)
    Return the number of bytes successfully read.
    If this is less than NCHARS, do not call `stdread' again.  */
 
-int
+static int
 stdread (buf, nchars)
     char *buf;
     int nchars;
@@ -502,7 +505,7 @@ stdread (buf, nchars)
 /* Compute the next sequential output file name suffix and store it
    into the string `outfile' at the position pointed to by `outfile_mid'.  */
 
-void
+static void
 next_file_name ()
 {
   int x;

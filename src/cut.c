@@ -75,32 +75,33 @@
 
 char *xmalloc ();
 char *xrealloc ();
-int set_fields ();
-int cut_file ();
-void cut_stream ();
-void cut_bytes ();
-void cut_fields ();
-void enlarge_line ();
 void error ();
-void invalid_list ();
-void usage ();
+
+static int set_fields ();
+static int cut_file ();
+static void cut_stream ();
+static void cut_bytes ();
+static void cut_fields ();
+static void enlarge_line ();
+static void invalid_list ();
+static void usage ();
 
 /* The number of elements allocated for the input line
    and the byte or field number.
    Enlarged as necessary. */
-int line_size;
+static int line_size;
 
 /* Processed output buffer. */
-char *outbuf;
+static char *outbuf;
 
 /* Where to save next char to output. */
-char *outbufptr;
+static char *outbufptr;
 
 /* Raw line buffer for field mode. */
-char *inbuf;
+static char *inbuf;
 
 /* Where to save next input char. */
-char *inbufptr;
+static char *inbufptr;
 
 /* What can be done about a byte or field. */
 enum field_action
@@ -113,7 +114,7 @@ enum field_action
    In field mode, which `delim'-separated fields to output.
    Both bytes and fields are numbered starting with 1,
    so the first element of `fields' is unused. */
-enum field_action *fields;
+static enum field_action *fields;
 
 enum operating_mode
 {
@@ -126,22 +127,22 @@ enum operating_mode
   field_mode
 };
 
-enum operating_mode operating_mode;
+static enum operating_mode operating_mode;
 
 /* If nonzero,
    for field mode, do not output lines containing no delimeter characters. */
-int delimited_lines_only;
+static int delimited_lines_only;
 
 /* The delimeter character for field mode. */
-unsigned char delim;
+static unsigned char delim;
 
 /* Nonzero if we have ever read standard input. */
-int have_read_stdin;
+static int have_read_stdin;
 
 /* The name this program was run with. */
 char *program_name;
 
-struct option longopts[] =
+static struct option const longopts[] =
 {
   {"bytes", 1, 0, 'b'},
   {"characters", 1, 0, 'c'},
@@ -253,7 +254,7 @@ main (argc, argv)
 
    Return the number of fields selected. */
 
-int
+static int
 set_fields (fieldstr)
      char *fieldstr;
 {
@@ -381,7 +382,7 @@ set_fields (fieldstr)
 /* Process file FILE to standard output.
    Return 0 if successful, 1 if not. */
 
-int
+static int
 cut_file (file)
      char *file;
 {
@@ -419,7 +420,7 @@ cut_file (file)
   return 0;
 }
 
-void
+static void
 cut_stream (stream)
      FILE *stream;
 {
@@ -432,7 +433,7 @@ cut_stream (stream)
 /* Print the file open for reading on stream STREAM
    with the bytes marked `field_omit' in `fields' removed from each line. */
 
-void
+static void
 cut_bytes (stream)
      FILE *stream;
 {
@@ -475,7 +476,7 @@ cut_bytes (stream)
    All characters are initially stowed in the raw input buffer, until
    at least one field has been found. */
 
-void
+static void
 cut_fields (stream)
      FILE *stream;
 {
@@ -542,7 +543,7 @@ cut_fields (stream)
 
 /* Extend the buffers to accomodate at least NEW_SIZE characters. */
 
-void
+static void
 enlarge_line (new_size)
      int new_size;
 {
@@ -567,13 +568,13 @@ enlarge_line (new_size)
   line_size = new_size;
 }
 
-void
+static void
 invalid_list ()
 {
   error (2, 0, "invalid byte or field list");
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

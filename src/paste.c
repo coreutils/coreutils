@@ -43,13 +43,14 @@
 #include <sys/types.h>
 #include "system.h"
 
-char *collapse_escapes ();
+void error ();
 char *xmalloc ();
 char *xrealloc ();
-int paste_parallel ();
-int paste_serial ();
-void error ();
-void usage ();
+
+static char *collapse_escapes ();
+static int paste_parallel ();
+static int paste_serial ();
+static void usage ();
 
 /* Indicates that no delimiter should be added in the current position. */
 #define EMPTY_DELIM '\0'
@@ -64,19 +65,19 @@ void usage ();
 char *program_name;
 
 /* If nonzero, we have read standard input at some point. */
-int have_read_stdin;
+static int have_read_stdin;
 
 /* If nonzero, merge subsequent lines of each file rather than
    corresponding lines from each file in parallel. */
-int serial_merge;
+static int serial_merge;
 
 /* The delimeters between lines of input files (used cyclically). */
-char *delims;
+static char *delims;
 
 /* A pointer to the character after the end of `delims'. */
-char *delim_end;
+static char *delim_end;
 
-struct option longopts[] =
+static struct option const longopts[] =
 {
   {"serial", 0, 0, 's'},
   {"delimiters", 1, 0, 'd'},
@@ -142,7 +143,7 @@ main (argc, argv)
 
    Return a pointer to the character after the new end of STRPTR. */
 
-char *
+static char *
 collapse_escapes (strptr)
      char *strptr;
 {
@@ -200,7 +201,7 @@ collapse_escapes (strptr)
    Return 0 if no errors, 1 if one or more files could not be
    opened or read. */
 
-int
+static int
 paste_parallel (nfiles, fnamptr)
      int nfiles;
      char **fnamptr;
@@ -368,7 +369,7 @@ paste_parallel (nfiles, fnamptr)
    Return 0 if no errors, 1 if one or more files could not be
    opened or read. */
 
-int
+static int
 paste_serial (nfiles, fnamptr)
      int nfiles;
      char **fnamptr;
@@ -447,7 +448,7 @@ paste_serial (nfiles, fnamptr)
   return errors;
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

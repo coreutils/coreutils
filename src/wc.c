@@ -27,26 +27,27 @@
 #define BUFFER_SIZE (16 * 1024)
 
 void error ();
-void wc ();
-void wc_file ();
-void write_counts ();
+
+static void wc ();
+static void wc_file ();
+static void write_counts ();
 
 /* Cumulative number of lines, words, and chars in all files so far. */
-unsigned long total_lines, total_words, total_chars;
+static unsigned long total_lines, total_words, total_chars;
 
 /* Which counts to print. */
-int print_lines, print_words, print_chars;
+static int print_lines, print_words, print_chars;
 
 /* Nonzero if we have ever read the standard input. */
-int have_read_stdin;
+static int have_read_stdin;
 
 /* The name this program was run with. */
 char *program_name;
 
 /* The error code to return to the system. */
-int exit_status;
+static int exit_status;
 
-struct option longopts[] =
+static struct option const longopts[] =
 {
   {"bytes", 0, NULL, 'c'},
   {"chars", 0, NULL, 'c'},
@@ -114,7 +115,7 @@ Usage: %s [-clw] [--bytes] [--chars] [--lines] [--words] [file...]\n", argv[0]);
   exit (exit_status);
 }
 
-void
+static void
 wc_file (file)
      char *file;
 {
@@ -141,7 +142,7 @@ wc_file (file)
     }
 }
 
-void
+static void
 wc (fd, file)
      int fd;
      char *file;
@@ -206,7 +207,7 @@ wc (fd, file)
   total_chars += chars;
 }
 
-void
+static void
 write_counts (lc, wc, cc, file)
      unsigned long lc, wc, cc;
      char *file;

@@ -63,48 +63,48 @@ char *xmalloc ();
 char *xrealloc ();
 void error ();
 
-FILE *next_file ();
-void add_tabstop ();
-void parse_tabstops ();
-void unexpand ();
-void usage ();
-void validate_tabstops ();
+static FILE *next_file ();
+static void add_tabstop ();
+static void parse_tabstops ();
+static void unexpand ();
+static void usage ();
+static void validate_tabstops ();
 
 /* If nonzero, convert blanks even after nonblank characters have been
    read on the line. */
-int convert_entire_line;
+static int convert_entire_line;
 
 /* If nonzero, the size of all tab stops.  If zero, use `tab_list' instead. */
-int tab_size;
+static int tab_size;
 
 /* Array of the explicit column numbers of the tab stops;
    after `tab_list' is exhausted, the rest of the line is printed
    unchanged.  The first column is column 0. */
-int *tab_list;
+static int *tab_list;
 
 /* The index of the first invalid element of `tab_list',
    where the next element can be added. */
-int first_free_tab;
+static int first_free_tab;
 
 /* Null-terminated array of input filenames. */
-char **file_list;
+static char **file_list;
 
 /* Default for `file_list' if no files are given on the command line. */
-char *stdin_argv[] =
+static char *stdin_argv[] =
 {
   "-", NULL
 };
 
 /* Nonzero if we have ever read standard input. */
-int have_read_stdin;
+static int have_read_stdin;
 
 /* Status to return to the system. */
-int exit_status;
+static int exit_status;
 
 /* The name this program was run with. */
 char *program_name;
 
-struct option longopts[] =
+static struct option const longopts[] =
 {
   {"tabs", 1, NULL, 't'},
   {"all", 0, NULL, 'a'},
@@ -180,7 +180,7 @@ main (argc, argv)
 /* Add the comma or blank separated list of tabstops STOPS
    to the list of tabstops. */
 
-void
+static void
 parse_tabstops (stops)
      char *stops;
 {
@@ -209,7 +209,7 @@ parse_tabstops (stops)
 /* Add tab stop TABVAL to the end of `tab_list', except
    if TABVAL is -1, do nothing. */
 
-void
+static void
 add_tabstop (tabval)
      int tabval;
 {
@@ -223,7 +223,7 @@ add_tabstop (tabval)
 /* Check that the list of tabstops TABS, with ENTRIES entries,
    contains only nonzero, ascending values. */
 
-void
+static void
 validate_tabstops (tabs, entries)
      int *tabs;
      int entries;
@@ -244,7 +244,7 @@ validate_tabstops (tabs, entries)
 /* Change spaces to tabs, writing to stdout.
    Read each file in `file_list', in order. */
 
-void
+static void
 unexpand ()
 {
   FILE *fp;			/* Input stream. */
@@ -378,7 +378,7 @@ unexpand ()
    Open a filename of `-' as the standard input.
    Return NULL if there are no more input files.  */
 
-FILE *
+static FILE *
 next_file (fp)
      FILE *fp;
 {
@@ -421,7 +421,7 @@ next_file (fp)
   return NULL;
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

@@ -55,52 +55,53 @@ char *realloc ();
 
 char *mktemp ();
 
-RETSIGTYPE cleanup ();
-int tac ();
-int tac_file ();
-int tac_stdin ();
-char *xmalloc ();
-char *xrealloc ();
-void output ();
+static RETSIGTYPE cleanup ();
+static int tac ();
+static int tac_file ();
+static int tac_stdin ();
+static char *xmalloc ();
+static char *xrealloc ();
+static void output ();
+static void save_stdin ();
+static void xwrite ();
+
 void error ();
-void save_stdin ();
-void xwrite ();
 
 /* The name this program was run with. */
 char *program_name;
 
 /* The string that separates the records of the file. */
-char *separator;
+static char *separator;
 
 /* If nonzero, print `separator' along with the record preceding it
    in the file; otherwise with the record following it. */
-int separator_ends_record;
+static int separator_ends_record;
 
 /* 0 if `separator' is to be matched as a regular expression;
    otherwise, the length of `separator', used as a sentinel to
    stop the search. */
-int sentinel_length;
+static int sentinel_length;
 
 /* The length of a match with `separator'.  If `sentinel_length' is 0,
    `match_length' is computed every time a match succeeds;
    otherwise, it is simply the length of `separator'. */
-int match_length;
+static int match_length;
 
 /* The input buffer. */
-char *buffer;
+static char *buffer;
 
 /* The number of bytes to read at once into `buffer'. */
-unsigned read_size;
+static unsigned read_size;
 
 /* The size of `buffer'.  This is read_size * 2 + sentinel_length + 2.
    The extra 2 bytes allow `past_end' to have a value beyond the
    end of `buffer' and `match_start' to run off the front of `buffer'. */
-unsigned buffer_size;
+static unsigned buffer_size;
 
 /* The compiled regular expression representing `separator'. */
 static struct re_pattern_buffer compiled_separator;
 
-struct option longopts[] =
+static struct option const longopts[] =
 {
   {"before", 0, &separator_ends_record, 0},
   {"regex", 0, &sentinel_length, 0},
@@ -113,7 +114,7 @@ main (argc, argv)
      int argc;
      char **argv;
 {
-  char *error_message;		/* Return value from re_compile_pattern. */
+  const char *error_message;	/* Return value from re_compile_pattern. */
   int optc, errors;
   int have_read_stdin = 0;
 
@@ -213,7 +214,7 @@ char *tempfile;
    file `tempfile' first if it is a pipe.
    Return 0 if ok, 1 if an error occurs. */
 
-int
+static int
 tac_stdin ()
 {
   /* Previous values of signal handlers. */
@@ -305,7 +306,7 @@ tac_stdin ()
 
 /* Make a copy of the standard input in `tempfile'. */
 
-void
+static void
 save_stdin ()
 {
   static char *template = NULL;
@@ -350,7 +351,7 @@ save_stdin ()
 /* Print FILE in reverse.
    Return 0 if ok, 1 if an error occurs. */
 
-int
+static int
 tac_file (file)
      char *file;
 {
@@ -374,7 +375,7 @@ tac_file (file)
 /* Print in reverse the file open on descriptor FD for reading FILE.
    Return 0 if ok, 1 if an error occurs. */
 
-int
+static int
 tac (fd, file)
      int fd;
      char *file;
@@ -542,7 +543,7 @@ tac (fd, file)
 /* Print the characters from START to PAST_END - 1.
    If START is NULL, just flush the buffer. */
 
-void
+static void
 output (start, past_end)
      char *start;
      char *past_end;
@@ -574,14 +575,14 @@ output (start, past_end)
   bytes_in_buffer += bytes_to_add;
 }
 
-RETSIGTYPE
+static RETSIGTYPE
 cleanup ()
 {
   unlink (tempfile);
   exit (1);
 }
 
-void
+static void
 xwrite (desc, buffer, size)
      int desc;
      char *buffer;
@@ -596,7 +597,7 @@ xwrite (desc, buffer, size)
 
 /* Allocate N bytes of memory dynamically, with error checking.  */
 
-char *
+static char *
 xmalloc (n)
      unsigned n;
 {
@@ -613,7 +614,7 @@ xmalloc (n)
 
 /* Change the size of memory area P to N bytes, with error checking. */
 
-char *
+static char *
 xrealloc (p, n)
      char *p;
      unsigned n;

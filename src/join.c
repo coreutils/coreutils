@@ -89,10 +89,10 @@ static char *empty_filler;
 static int join_field_1, join_field_2;
 
 /* List of fields to print. */
-struct outlist *outlist;
+static struct outlist *outlist;
 
 /* Last element in `outlist', where a new element can be added. */
-struct outlist *outlist_end;
+static struct outlist *outlist_end;
 
 /* Tab character separating fields; if this is NUL fields are separated
    by any nonempty string of white space, otherwise by exactly one
@@ -558,7 +558,7 @@ add_field_list (str)
 
 /* When using getopt_long_only, no long option can start with
    a character that is a short option. */
-static struct option longopts[] =
+static struct option const longopts[] =
 {
   {"j", 1, NULL, 'j'},
   {"j1", 1, NULL, '1'},

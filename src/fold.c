@@ -28,23 +28,24 @@
 #include "system.h"
 
 char *xrealloc ();
-int adjust_column ();
-int fold_file ();
 void error ();
 
+static int adjust_column ();
+static int fold_file ();
+
 /* If nonzero, try to break on whitespace. */
-int break_spaces;
+static int break_spaces;
 
 /* If nonzero, count bytes, not column positions. */
-int count_bytes;
+static int count_bytes;
 
 /* If nonzero, at least one of the files we read was standard input. */
-int have_read_stdin;
+static int have_read_stdin;
 
 /* The name this program was run with. */
 char *program_name;
 
-struct option longopts[] =
+static struct option const longopts[] =
 {
   {"bytes", 0, NULL, 'b'},
   {"spaces", 0, NULL, 's'},
@@ -110,7 +111,7 @@ Usage: %s [-bs] [-w width] [--bytes] [--spaces] [--width=width] [file...]\n",
    to stdout, with maximum line length WIDTH.
    Return 0 if successful, 1 if an error occurs. */
 
-int
+static int
 fold_file (filename, width)
      char *filename;
      int width;
@@ -225,7 +226,7 @@ fold_file (filename, width)
    printing C will move the cursor to.
    The first column is 0. */
 
-int
+static int
 adjust_column (column, c)
      int column;
      char c;

@@ -108,27 +108,28 @@
 #define ISDIGIT(c) isdigit (c)
 #endif
 
-int char_to_clump ();
-int read_line ();
-int print_page ();
-int print_stored ();
 char *xmalloc ();
 char *xrealloc ();
-int open_file ();
-int skip_to_page ();
 void error ();
-void getoptarg ();
-void usage ();
-void print_files ();
-void init_header ();
-void init_store_cols ();
-void store_columns ();
-void balance ();
-void store_char ();
-void pad_down ();
-void read_rest_of_line ();
-void print_char ();
-void cleanup ();
+
+static int char_to_clump ();
+static int read_line ();
+static int print_page ();
+static int print_stored ();
+static int open_file ();
+static int skip_to_page ();
+static void getoptarg ();
+static void usage ();
+static void print_files ();
+static void init_header ();
+static void init_store_cols ();
+static void store_columns ();
+static void balance ();
+static void store_char ();
+static void pad_down ();
+static void read_rest_of_line ();
+static void print_char ();
+static void cleanup ();
 
 #ifndef TRUE
 #define TRUE	1
@@ -203,134 +204,134 @@ typedef struct COLUMN COLUMN;
 #define NULLCOL (COLUMN *)0
 
 /* All of the columns to print.  */
-COLUMN *column_vector;
+static COLUMN *column_vector;
 
 /* When printing a single file in multiple downward columns,
    we store the leftmost columns contiguously in buff.
    To print a line from buff, get the index of the first char
    from line_vector[i], and print up to line_vector[i + 1]. */
-char *buff;
+static char *buff;
 
 /* Index of the position in buff where the next character
    will be stored. */
-int buff_current;
+static int buff_current;
 
 /* The number of characters in buff.
    Used for allocation of buff and to detect overflow of buff. */
-int buff_allocated;
+static int buff_allocated;
 
 /* Array of indices into buff.
    Each entry is an index of the first character of a line.
    This is used when storing lines to facilitate shuffling when
    we do column balancing on the last page. */
-int *line_vector;
+static int *line_vector;
 
 /* Array of horizonal positions.
    For each line in line_vector, end_vector[line] is the horizontal
    position we are in after printing that line.  We keep track of this
    so that we know how much we need to pad to prepare for the next
    column. */
-int *end_vector;
+static int *end_vector;
 
 /* (-m) True means we're printing multiple files in parallel. */
-int parallel_files = FALSE;
+static int parallel_files = FALSE;
 
 /* (-[0-9]+) True means we're given an option explicitly specifying
    number of columns.  Used to detect when this option is used with -m. */
-int explicit_columns = FALSE;
+static int explicit_columns = FALSE;
 
 /* (-t) True means we're printing headers and footers. */
-int extremities = TRUE;
+static int extremities = TRUE;
 
 /* True means we need to print a header as soon as we know we've got input
    to print after it. */
-int print_a_header;
+static int print_a_header;
 
 /* (-h) True means we're using the standard header rather than a
    customized one specified by the -h flag. */
-int standard_header = TRUE;
+static int standard_header = TRUE;
 
 /* (-f) True means use formfeeds instead of newlines to separate pages. */
-int use_form_feed = FALSE;
+static int use_form_feed = FALSE;
 
 /* True means we haven't encountered any filenames in the argument list. */
-int input_is_stdin = TRUE;
+static int input_is_stdin = TRUE;
 
 /* True means we have read the standard input. */
-int have_read_stdin = FALSE;
+static int have_read_stdin = FALSE;
 
 /* True means the -a flag has been given. */
-int print_across_flag = FALSE;
+static int print_across_flag = FALSE;
 
 /* True means we're printing one file in multiple (>1) downward columns. */
-int storing_columns = TRUE;
+static int storing_columns = TRUE;
 
 /* (-b) True means balance columns on the last page as Sys V does. */
-int balance_columns = FALSE;
+static int balance_columns = FALSE;
 
 /* (-l) Number of lines on a page, including header and footer lines. */
-int lines_per_page = 66;
+static int lines_per_page = 66;
 
 /* Number of lines in the header and footer can be reset to 0 using
    the -t flag. */
-int lines_per_header = 5;
-int lines_per_body;
-int lines_per_footer = 5;
+static int lines_per_header = 5;
+static int lines_per_body;
+static int lines_per_footer = 5;
 
 /* (-w) Width in characters of the page.  Does not include the width of
    the margin. */
-int chars_per_line = 72;
+static int chars_per_line = 72;
 
 /* Number of characters in a column.  Based on the gutter and page widths. */
-int chars_per_column;
+static int chars_per_column;
 
 /* (-e) True means convert tabs to spaces on input. */
-int untabify_input = FALSE;
+static int untabify_input = FALSE;
 
 /* (-e) The input tab character. */
-char input_tab_char = '\t';
+static char input_tab_char = '\t';
 
 /* (-e) Tabstops are at chars_per_tab, 2*chars_per_tab, 3*chars_per_tab, ...
    where the leftmost column is 1. */
-int chars_per_input_tab = 8;
+static int chars_per_input_tab = 8;
 
 /* (-i) True means convert spaces to tabs on output. */
-int tabify_output = FALSE;
+static int tabify_output = FALSE;
 
 /* (-i) The output tab character. */
-char output_tab_char = '\t';
+static char output_tab_char = '\t';
 
 /* (-i) The width of the output tab. */
-int chars_per_output_tab = 8;
+static int chars_per_output_tab = 8;
 
 /* Keeps track of pending white space.  When we hit a nonspace
    character after some whitespace, we print whitespace, tabbing
    if necessary to get to output_position + spaces_not_printed. */
-int spaces_not_printed;
+static int spaces_not_printed;
 
 /* Number of spaces between columns (though tabs can be used when possible to
    use up the equivalent amount of space).  Not sure if this is worth making
    a flag for.  BSD uses 0, Sys V uses 1.  Sys V looks better. */
-int chars_per_gutter = 1;
+static int chars_per_gutter = 1;
 
 /* (-o) Number of spaces in the left margin (tabs used when possible). */
-int chars_per_margin = 0;
+static int chars_per_margin = 0;
 
 /* Position where the next character will fall.
    Leftmost position is 0 + chars_per_margin.
    Rightmost position is chars_per_margin + chars_per_line - 1.
    This is important for converting spaces to tabs on output. */
-int output_position;
+static int output_position;
 
 /* Horizontal position relative to the current file.
    (output_position depends on where we are on the page;
    input_position depends on where we are in the file.)
    Important for converting tabs to spaces on input. */
-int input_position;
+static int input_position;
 
 /* Count number of failed opens so we can exit with non-zero
    status if there were any.  */
-int failed_opens = 0;
+static int failed_opens = 0;
 
 /* The horizontal position we'll be at after printing a tab character
    of width c_ from the position h_. */
@@ -341,19 +342,19 @@ int failed_opens = 0;
 #define tab_width(c_, h_) - h_ % c_ + c_
 
 /* (-NNN) Number of columns of text to print. */
-int columns = 1;
+static int columns = 1;
 
 /* (+NNN) Page number on which to begin printing. */
-int first_page_number = 1;
+static int first_page_number = 1;
 
 /* Number of files open (not closed, not on hold). */
-int files_ready_to_read = 0;
+static int files_ready_to_read = 0;
 
 /* Number of columns with either an open file or stored lines. */
-int cols_ready_to_print = 0;
+static int cols_ready_to_print = 0;
 
 /* Current page number.  Displayed in header. */
-int page_number;
+static int page_number;
 
 /* Current line number.  Displayed when -n flag is specified.
 
@@ -368,75 +369,71 @@ int page_number;
    Otherwise, line numbering is as follows:
    1	foo	3	goo	5	too
    2	moo	4	hoo	6	zoo */
-int line_number;
+static int line_number;
 
 /* (-n) True means lines should be preceded by numbers. */
-int numbered_lines = FALSE;
-
-/* True means print a number as soon as we know we'll be printing
-   from the current column. */
-int print_a_number;
+static int numbered_lines = FALSE;
 
 /* (-n) Character which follows each line number. */
-char number_separator = '\t';
+static char number_separator = '\t';
 
 /* (-n) Width in characters of a line number. */
-int chars_per_number = 5;
+static int chars_per_number = 5;
 
 /* Used when widening the first column to accommodate numbers -- only
    needed when printing files in parallel.  Includes width of both the
    number and the number_separator. */
-int number_width;
+static int number_width;
 
 /* Buffer sprintf uses to format a line number. */
-char *number_buff;
+static char *number_buff;
 
 /* (-v) True means unprintable characters are printed as escape sequences.
    control-g becomes \007. */
-int use_esc_sequence = FALSE;
+static int use_esc_sequence = FALSE;
 
 /* (-c) True means unprintable characters are printed as control prefixes.
    control-g becomes ^G. */
-int use_cntrl_prefix = FALSE;
+static int use_cntrl_prefix = FALSE;
 
 /* (-d) True means output is double spaced. */
-int double_space = FALSE;
+static int double_space = FALSE;
 
 /* Number of files opened initially in init_files.  Should be 1
    unless we're printing multiple files in parallel. */
-int total_files = 0;
+static int total_files = 0;
 
 /* (-r) True means don't complain if we can't open a file. */
-int ignore_failed_opens = FALSE;
+static int ignore_failed_opens = FALSE;
 
 /* (-s) True means we separate columns with a specified character. */
-int use_column_separator = FALSE;
+static int use_column_separator = FALSE;
 
 /* Character used to separate columns if the the -s flag has been specified. */
-char column_separator = '\t';
+static char column_separator = '\t';
 
 /* Number of separator characters waiting to be printed as soon as we
    know that we have any input remaining to be printed. */
-int separators_not_printed;
+static int separators_not_printed;
 
 /* Position we need to pad to, as soon as we know that we have input
    remaining to be printed. */
-int padding_not_printed;
+static int padding_not_printed;
 
 /* True means we should pad the end of the page.  Remains false until we
    know we have a page to print. */
-int pad_vertically;
+static int pad_vertically;
 
 /* (-h) String of characters used in place of the filename in the header. */
-char *custom_header;
+static char *custom_header;
 
 /* String containing the date, filename or custom header, and "Page ". */
-char *header;
+static char *header;
 
-int *clump_buff;
+static int *clump_buff;
 
 /* True means we truncate lines longer than chars_per_column. */
-int truncate_lines = FALSE;
+static int truncate_lines = FALSE;
 
 /* The name under which this program was invoked. */
 char *program_name;
@@ -623,7 +620,7 @@ main (argc, argv)
    separator, and k is the optional width of the field used when printing
    a number. */
 
-void
+static void
 getoptarg (arg, switch_char, character, number)
      char *arg, switch_char, *character;
      int *number;
@@ -646,7 +643,7 @@ getoptarg (arg, switch_char, character, number)
 
 /* Set parameters related to formatting. */
 
-void
+static void
 init_parameters (number_of_files)
      int number_of_files;
 {
@@ -727,7 +724,7 @@ init_parameters (number_of_files)
    Return 1 if (number_of_files > 0) and no files can be opened,
    0 otherwise.  */
 
-int
+static int
 init_fps (number_of_files, av)
      int number_of_files;
      char **av;
@@ -796,7 +793,7 @@ init_fps (number_of_files, av)
    Determine the horizontal position desired when we begin
    printing a column (p->start_position). */
 
-void
+static void
 init_funcs ()
 {
   int i, h, h_next;
@@ -875,7 +872,7 @@ init_funcs ()
 
 /* Open a file.  Return nonzero if successful, zero if failed. */
 
-int
+static int
 open_file (name, p)
      char *name;
      COLUMN *p;
@@ -908,7 +905,7 @@ open_file (name, p)
    If we aren't dealing with multiple files in parallel, we change
    the status of all columns in the column list to reflect the close. */
 
-void
+static void
 close_file (p)
      COLUMN *p;
 {
@@ -952,7 +949,7 @@ close_file (p)
    If we aren't dealing with parallel files, we must change the
    status of all columns in the column list. */
 
-void
+static void
 hold_file (p)
      COLUMN *p;
 {
@@ -971,7 +968,7 @@ hold_file (p)
 /* Undo hold_file -- go through the column list and change any
    ON_HOLD columns to OPEN.  Used at the end of each page. */
 
-void
+static void
 reset_status ()
 {
   int i = columns;
@@ -994,7 +991,7 @@ reset_status ()
    in each column.
    Print the file(s). */
 
-void
+static void
 print_files (number_of_files, av)
      int number_of_files;
      char **av;
@@ -1036,7 +1033,7 @@ print_files (number_of_files, av)
    It might be nice to have a "blank headers" option, since
    pr -h "" still prints the date and page number. */
 
-void
+static void
 init_header (filename, desc)
      char *filename;
      int desc;
@@ -1077,7 +1074,7 @@ init_header (filename, desc)
        if we're reading straight from the file)
      Keep track of this total so we know when to stop printing */
 
-void
+static void
 init_page ()
 {
   int j;
@@ -1137,7 +1134,7 @@ init_page ()
    reset the status of all files -- any files which where on hold because
      of formfeeds are now put back into the lineup. */
 
-int
+static int
 print_page ()
 {
   int j;
@@ -1230,7 +1227,7 @@ print_page ()
    because the last entry tells us the index of the last character,
    which we need to know in order to print the last line in buff. */
 
-void
+static void
 init_store_cols ()
 {
   int total_lines = lines_per_body * columns;
@@ -1263,7 +1260,7 @@ init_store_cols ()
     buff_start is the index in buff of the first character in the
      current line. */
 
-void
+static void
 store_columns ()
 {
   int i, j;
@@ -1314,7 +1311,7 @@ store_columns ()
     balance (line);
 }
 
-void
+static void
 balance (total_stored)
      int total_stored;
 {
@@ -1337,7 +1334,7 @@ balance (total_stored)
 
 /* Store a character in the buffer. */
 
-void
+static void
 store_char (c)
      int c;
 {
@@ -1350,7 +1347,7 @@ store_char (c)
   buff[buff_current++] = (char) c;
 }
 
-void
+static void
 number (p)
      COLUMN *p;
 {
@@ -1378,7 +1375,7 @@ number (p)
 /* Print (or store) padding until the current horizontal position
    is position. */
 
-void
+static void
 pad_across_to (position)
      int position;
 {
@@ -1399,7 +1396,7 @@ pad_across_to (position)
    If the user has requested a formfeed, use one.
    Otherwise, use newlines. */
 
-void
+static void
 pad_down (lines)
      int lines;
 {
@@ -1418,7 +1415,7 @@ pad_down (lines)
    hit.  Used when we've truncated a line and we no longer need
    to print or store its characters. */
 
-void
+static void
 read_rest_of_line (p)
      COLUMN *p;
 {
@@ -1446,7 +1443,7 @@ read_rest_of_line (p)
    of our desired horizontal position and delays printing
    until this function is called. */
 
-void
+static void
 print_white_space ()
 {
   register int h_new;
@@ -1471,7 +1468,7 @@ print_white_space ()
    We keep a count until we know that we'll be printing a line,
    then print_separators() is called. */
 
-void
+static void
 print_separators ()
 {
   for (; separators_not_printed > 0; --separators_not_printed)
@@ -1481,7 +1478,7 @@ print_separators ()
 /* Print (or store, depending on p->char_func) a clump of N
    characters. */
 
-void
+static void
 print_clump (p, n, clump)
      COLUMN *p;
      int n;
@@ -1498,7 +1495,7 @@ print_clump (p, n, clump)
    a nonspace is encountered, call print_white_space() to print the
    required number of tabs and spaces. */
 
-void
+static void
 print_char (c)
      int c;
 {
@@ -1526,7 +1523,7 @@ print_char (c)
 
 /* Skip to page PAGE before printing. */
 
-int
+static int
 skip_to_page (page)
      int page;
 {
@@ -1550,7 +1547,7 @@ skip_to_page (page)
    Formfeeds are assumed to use up two lines at the beginning of
    the page. */
 
-void
+static void
 print_header ()
 {
   if (!use_form_feed)
@@ -1587,7 +1584,7 @@ print_header ()
    Return FALSE if we exceed chars_per_column before reading
      an end of line character, TRUE otherwise. */
 
-int
+static int
 read_line (p)
      COLUMN *p;
 {
@@ -1679,7 +1676,7 @@ read_line (p)
 
    Return TRUE, meaning there is no need to call read_rest_of_line. */
 
-int
+static int
 print_stored (p)
      COLUMN *p;
 {
@@ -1722,7 +1719,7 @@ print_stored (p)
    characters in clump_buff.  (e.g, the width of '\b' is -1, while the
    number of characters is 1.) */
 
-int
+static int
 char_to_clump (c)
      int c;
 {
@@ -1808,7 +1805,7 @@ char_to_clump (c)
 
    Free everything we've xmalloc'ed, except `header'. */
 
-void
+static void
 cleanup ()
 {
   if (number_buff)
@@ -1827,7 +1824,7 @@ cleanup ()
 
 /* Complain, print a usage message, and die. */
 
-void
+static void
 usage (reason)
      char *reason;
 {

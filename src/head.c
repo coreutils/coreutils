@@ -53,10 +53,10 @@
 
 /* Number of bytes per item we are printing.
    If 0, head in lines. */
-int unit_size;
+static int unit_size;
 
 /* If nonzero, print filename headers. */
-int print_headers;
+static int print_headers;
 
 /* When to print the filename banners. */
 enum header_mode
@@ -64,24 +64,25 @@ enum header_mode
   multiple_files, always, never
 };
 
-int head ();
-int head_bytes ();
-int head_file ();
-int head_lines ();
-long atou ();
 void error ();
-void parse_unit ();
-void usage ();
-void write_header ();
 void xwrite ();
+
+static int head ();
+static int head_bytes ();
+static int head_file ();
+static int head_lines ();
+static long atou ();
+static void parse_unit ();
+static void usage ();
+static void write_header ();
 
 /* The name this program was run with. */
 char *program_name;
 
 /* Have we ever read standard input?  */
-int have_read_stdin;
+static int have_read_stdin;
 
-struct option long_options[] =
+static struct option const long_options[] =
 {
   {"bytes", 1, NULL, 'c'},
   {"lines", 1, NULL, 'n'},
@@ -211,7 +212,7 @@ main (argc, argv)
   exit (exit_status);
 }
 
-int
+static int
 head_file (filename, number)
      char *filename;
      long number;
@@ -244,7 +245,7 @@ head_file (filename, number)
     }
 }
 
-void
+static void
 write_header (filename)
      char *filename;
 {
@@ -261,7 +262,7 @@ write_header (filename)
   xwrite (1, " <==\n", 5);
 }
 
-int
+static int
 head (filename, fd, number)
      char *filename;
      int fd;
@@ -273,7 +274,7 @@ head (filename, fd, number)
     return head_lines (filename, fd, number);
 }
 
-int
+static int
 head_bytes (filename, fd, bytes_to_write)
      char *filename;
      int fd;
@@ -300,7 +301,7 @@ head_bytes (filename, fd, bytes_to_write)
   return 0;
 }
 
-int
+static int
 head_lines (filename, fd, lines_to_write)
      char *filename;
      int fd;
@@ -329,7 +330,7 @@ head_lines (filename, fd, lines_to_write)
   return 0;
 }
 
-void
+static void
 parse_unit (str)
      char *str;
 {
@@ -358,7 +359,7 @@ parse_unit (str)
 /* Convert STR, a string of ASCII digits, into an unsigned integer.
    Return -1 if STR does not represent a valid unsigned integer. */
 
-long
+static long
 atou (str)
      char *str;
 {
@@ -369,7 +370,7 @@ atou (str)
   return *str ? -1 : value;
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

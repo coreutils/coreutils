@@ -24,20 +24,21 @@
 #include <getopt.h>
 #include "system.h"
 
-int bsd_sum_file ();
-int sysv_sum_file ();
+static int bsd_sum_file ();
+static int sysv_sum_file ();
+
 void error ();
 
 /* The name this program was run with. */
 char *program_name;
 
 /* Nonzero if any of the files read were the standard input. */
-int have_read_stdin;
+static int have_read_stdin;
 
 /* Right-rotate 32-bit integer variable C. */
 #define ROTATE_RIGHT(c) if ((c) & 01) (c) = ((c) >>1) + 0x8000; else (c) >>= 1;
 
-struct option longopts[] =
+static struct option const longopts[] =
 {
   {"sysv", 0, NULL, 's'},
   {NULL, 0, NULL, 0}
@@ -97,7 +98,7 @@ Usage: %s [-rs] [--sysv] [file...]\n", argv[0]);
    The checksum varies depending on sizeof(int).
    Return 0 if successful, -1 if an error occurs. */
 
-int
+static int
 bsd_sum_file (file, print_name)
      char *file;
      int print_name;
@@ -159,7 +160,7 @@ bsd_sum_file (file, print_name)
    If PRINT_NAME is >0, print FILE next to the checksum and size.
    Return 0 if successful, -1 if an error occurs. */
 
-int
+static int
 sysv_sum_file (file, print_name)
      char *file;
      int print_name;

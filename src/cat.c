@@ -34,44 +34,45 @@
 
 char *stpcpy ();
 char *xmalloc ();
-void cat ();
 void error ();
-void next_line_num ();
-void simple_cat ();
+
+static void cat ();
+static void next_line_num ();
+static void simple_cat ();
 
 /* Name under which this program was invoked.  */
 char *program_name;
 
 /* Name of input file.  May be "-".  */
-char *infile;
+static char *infile;
 
 /* Descriptor on which input file is open.  */
-int input_desc;
+static int input_desc;
 
 /* Descriptor on which output file is open.  Always is 1.  */
-int output_desc;
+static int output_desc;
 
 /* Buffer for line numbers.  */
-char line_buf[13] =
+static char line_buf[13] =
 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '0', '\t', '\0'};
 
 /* Position in `line_buf' where printing starts.  This will not change
    unless the number of lines are more than 999999.  */
-char *line_num_print = line_buf + 5;
+static char *line_num_print = line_buf + 5;
 
 /* Position of the first digit in `line_buf'.  */
-char *line_num_start = line_buf + 10;
+static char *line_num_start = line_buf + 10;
 
 /* Position of the last digit in `line_buf'.  */
-char *line_num_end = line_buf + 10;
+static char *line_num_end = line_buf + 10;
 
 /* Preserves the `cat' function's local `newlines' between invocations.  */
-int newlines2 = 0;
+static int newlines2 = 0;
 
 /* Count of non-fatal error conditions.  */
-int exit_stat = 0;
+static int exit_stat = 0;
 
-void
+static void
 usage (reason)
      char *reason;
 {
@@ -133,7 +134,7 @@ main (argc, argv)
   int output_tabs = 1;
   int options = 0;
 
-  static struct option long_options[] =
+  static struct option const long_options[] =
   {
     {"number-nonblank", 0, NULL, 'b'},
     {"number", 0, NULL, 'n'},
@@ -338,7 +339,7 @@ main (argc, argv)
 /* Plain cat.  Copies the file behind `input_desc' to the file behind
    `output_desc'.  */
 
-void
+static void
 simple_cat (buf, bufsize)
      /* Pointer to the buffer, used by reads and writes.  */
      unsigned char *buf;
@@ -382,7 +383,7 @@ simple_cat (buf, bufsize)
    A newline character is always put at the end of the buffer, to make
    an explicit test for buffer end unnecessary.  */
 
-void
+static void
 cat (inbuf, insize, outbuf, outsize, quote,
      output_tabs, numbers, numbers_at_empty_lines,
      mark_line_ends, squeeze_empty_lines)
@@ -643,7 +644,7 @@ cat (inbuf, insize, outbuf, outsize, quote,
 
 /* Compute the next line number.  */
 
-void
+static void
 next_line_num ()
 {
   char *endp = line_num_end;

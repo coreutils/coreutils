@@ -57,9 +57,9 @@
 #define GEN     (BIT(26)|BIT(23)|BIT(22)|BIT(16)|BIT(12)|BIT(11)|BIT(10)\
                 |BIT(8) |BIT(7) |BIT(5) |BIT(4) |BIT(2) |BIT(1) |BIT(0));
 
-unsigned long r[8];
+static unsigned long r[8];
 
-void
+static void
 fill_r ()
 {
   int i;
@@ -69,7 +69,7 @@ fill_r ()
     r[i] = (r[i - 1] & SBIT) ? (r[i - 1] << 1) ^ r[0] : r[i - 1] << 1;
 }
 
-unsigned long
+static unsigned long
 remainder (m)
      int m;
 {
@@ -109,7 +109,9 @@ main ()
 /* Number of bytes to read at once.  */
 #define BUFLEN (1 << 16)
 
-unsigned long crctab[256] =
+void error ();
+
+static unsigned long const crctab[256] =
 {
   0x0,
   0x04C11DB7, 0x09823B6E, 0x0D4326D9, 0x130476DC, 0x17C56B6B,
@@ -169,14 +171,14 @@ unsigned long crctab[256] =
 char *program_name;
 
 /* Nonzero if any of the files read were the standard input. */
-int have_read_stdin;
+static int have_read_stdin;
 
 /* Calculate and print the checksum and length in bytes
    of file FILE, or of the standard input if FILE is "-".
    If PRINT_NAME is nonzero, print FILE next to the checksum and size.
    Return 0 if successful, -1 if an error occurs. */
 
-int
+static int
 cksum (file, print_name)
      char *file;
      int print_name;

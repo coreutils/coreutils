@@ -30,21 +30,22 @@
 
 #define min(x, y) ((x) < (y) ? (x) : (y))
 
-char *find_field ();
-int different ();
-void check_file ();
 void error ();
-void usage ();
-void writeline ();
+
+static char *find_field ();
+static int different ();
+static void check_file ();
+static void usage ();
+static void writeline ();
 
 /* Number of fields to skip on each line when doing comparisons. */
-int skip_fields;
+static int skip_fields;
 
 /* Number of chars to skip after skipping any fields. */
-int skip_chars;
+static int skip_chars;
 
 /* Number of chars to compare; if 0, compare the whole lines. */
-int check_chars;
+static int check_chars;
 
 enum countmode
 {
@@ -54,7 +55,7 @@ enum countmode
 
 /* Whether and how to precede the output lines with a count of the number of
    times they occurred in the input. */
-enum countmode countmode;
+static enum countmode countmode;
 
 enum output_mode
 {
@@ -64,12 +65,12 @@ enum output_mode
 };
 
 /* Which lines to output. */
-enum output_mode mode;
+static enum output_mode mode;
 
 /* The name this program was run with. */
 char *program_name;
 
-struct option longopts[] =
+static struct option const longopts[] =
 {
   {"count", 0, NULL, 'c'},
   {"repeated", 0, NULL, 'd'},
@@ -162,7 +163,7 @@ main (argc, argv)
 /* Process input file INFILE with output to OUTFILE.
    If either is "-", use the standard I/O stream for it instead. */
 
-void
+static void
 check_file (infile, outfile)
      char *infile, *outfile;
 {
@@ -236,7 +237,7 @@ check_file (infile, outfile)
 /* Given a linebuffer LINE,
    return a pointer to the beginning of the line's field to be compared. */
 
-char *
+static char *
 find_field (line)
      struct linebuffer *line;
 {
@@ -264,7 +265,7 @@ find_field (line)
    but rather to the beginnings of the fields to compare.
    OLDLEN and NEWLEN are their lengths. */
 
-int
+static int
 different (old, new, oldlen, newlen)
      char *old;
      char *new;
@@ -291,7 +292,7 @@ different (old, new, oldlen, newlen)
    If requested, print the number of times it occurred, as well;
    LINECOUNT + 1 is the number of times that the line occurred. */
 
-void
+static void
 writeline (line, stream, linecount)
      struct linebuffer *line;
      FILE *stream;
@@ -308,7 +309,7 @@ writeline (line, stream, linecount)
   putc ('\n', stream);
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

@@ -49,105 +49,106 @@ enum section
 };
 
 /* Format of body lines (-b).  */
-char *body_type = "t";
+static char *body_type = "t";
 
 /* Format of header lines (-h).  */
-char *header_type = "n";
+static char *header_type = "n";
 
 /* Format of footer lines (-f).  */
-char *footer_type = "n";
+static char *footer_type = "n";
 
 /* Format currently being used (body, header, or footer).  */
-char *current_type;
+static char *current_type;
 
 /* Regex for body lines to number (-bp).  */
-struct re_pattern_buffer body_regex;
+static struct re_pattern_buffer body_regex;
 
 /* Regex for header lines to number (-hp).  */
-struct re_pattern_buffer header_regex;
+static struct re_pattern_buffer header_regex;
 
 /* Regex for footer lines to number (-fp).  */
-struct re_pattern_buffer footer_regex;
+static struct re_pattern_buffer footer_regex;
 
 /* Pointer to current regex, if any.  */
-struct re_pattern_buffer *current_regex = NULL;
+static struct re_pattern_buffer *current_regex = NULL;
 
 /* Separator string to print after line number (-s).  */
-char *separator_str = "\t";
+static char *separator_str = "\t";
 
 /* Input section delimiter string (-d).  */
-char *section_del = DEFAULT_SECTION_DELIMITERS;
+static char *section_del = DEFAULT_SECTION_DELIMITERS;
 
 /* Header delimiter string.  */
-char *header_del = NULL;
+static char *header_del = NULL;
 
 /* Header section delimiter length.  */
-int header_del_len;
+static int header_del_len;
 
 /* Body delimiter string.  */
-char *body_del = NULL;
+static char *body_del = NULL;
 
 /* Body section delimiter length.  */
-int body_del_len;
+static int body_del_len;
 
 /* Footer delimiter string.  */
-char *footer_del = NULL;
+static char *footer_del = NULL;
 
 /* Footer section delimiter length.  */
-int footer_del_len;
+static int footer_del_len;
 
 /* Input buffer.  */
-struct linebuffer line_buf;
+static struct linebuffer line_buf;
 
 /* printf format string for line number.  */
-char *print_fmt;
+static char *print_fmt;
 
 /* printf format string for unnumbered lines.  */
-char *print_no_line_fmt = NULL;
+static char *print_no_line_fmt = NULL;
 
 /* Starting line number on each page (-v).  */
-int page_start = 1;
+static int page_start = 1;
 
 /* Line number increment (-i).  */
-int page_incr = 1;
+static int page_incr = 1;
 
 /* If TRUE, reset line number at start of each page (-p).  */
-int reset_numbers = TRUE;
+static int reset_numbers = TRUE;
 
 /* Number of blank lines to consider to be one line for numbering (-l).  */
-int blank_join = 1;
+static int blank_join = 1;
 
 /* Width of line numbers (-w).  */
-int lineno_width = 6;
+static int lineno_width = 6;
 
 /* Line number format (-n).  */
-enum number_format lineno_format = FORMAT_RIGHT_NOLZ;
+static enum number_format lineno_format = FORMAT_RIGHT_NOLZ;
 
 /* Current print line number.  */
-int line_no;
+static int line_no;
 
 /* The name this program was run with. */
 char *program_name;
 
 /* Nonzero if we have ever read standard input. */
-int have_read_stdin;
+static int have_read_stdin;
 
-enum section check_section ();
 char *xmalloc ();
 char *xrealloc ();
-int build_type_arg ();
-int nl_file ();
-void usage ();
-void process_file ();
-void proc_header ();
-void proc_body ();
-void proc_footer ();
-void proc_text ();
-void print_lineno ();
-void build_print_fmt ();
 void error ();
+
+static enum section check_section ();
+static int build_type_arg ();
+static int nl_file ();
+static void usage ();
+static void process_file ();
+static void proc_header ();
+static void proc_body ();
+static void proc_footer ();
+static void proc_text ();
+static void print_lineno ();
+static void build_print_fmt ();
 
-struct option longopts[] =
+static struct option const longopts[] =
 {
   {"header-numbering", 1, NULL, 'h'},
   {"body-numbering", 1, NULL, 'b'},
@@ -300,7 +301,7 @@ main (argc, argv)
 /* Process file FILE to standard output.
    Return 0 if successful, 1 if not. */
 
-int
+static int
 nl_file (file)
      char *file;
 {
@@ -340,7 +341,7 @@ nl_file (file)
 
 /* Read and process the file pointed to by FP. */
 
-void
+static void
 process_file (fp)
      FILE *fp;
 {
@@ -366,7 +367,7 @@ process_file (fp)
 
 /* Return the type of line in `line_buf'. */
 
-enum section
+static enum section
 check_section ()
 {
   if (line_buf.length < 2 || memcmp (line_buf.buffer, section_del, 2))
@@ -385,7 +386,7 @@ check_section ()
 
 /* Switch to a header section. */
 
-void
+static void
 proc_header ()
 {
   current_type = header_type;
@@ -397,7 +398,7 @@ proc_header ()
 
 /* Switch to a body section. */
 
-void
+static void
 proc_body ()
 {
   current_type = body_type;
@@ -407,7 +408,7 @@ proc_body ()
 
 /* Switch to a footer section. */
 
-void
+static void
 proc_footer ()
 {
   current_type = footer_type;
@@ -417,7 +418,7 @@ proc_footer ()
 
 /* Process a regular text line in `line_buf'. */
 
-void
+static void
 proc_text ()
 {
   static int blank_lines = 0;	/* Consecutive blank lines so far. */
@@ -461,7 +462,7 @@ proc_text ()
 
 /* Print and increment the line number. */
 
-void
+static void
 print_lineno ()
 {
   printf (print_fmt, line_no);
@@ -470,7 +471,7 @@ print_lineno ()
 
 /* Build the printf format string, based on `lineno_format'. */
 
-void
+static void
 build_print_fmt ()
 {
   /* 12 = 10 chars for lineno_width, 1 for %, 1 for \0.  */
@@ -492,12 +493,12 @@ build_print_fmt ()
 /* Set the command line flag TYPEP and possibly the regex pointer REGEXP,
    according to `optarg'.  */
 
-int
+static int
 build_type_arg (typep, regexp)
      char **typep;
      struct re_pattern_buffer *regexp;
 {
-  char *errmsg;
+  const char *errmsg;
   int rval = TRUE;
   int optlen;
 
@@ -529,7 +530,7 @@ build_type_arg (typep, regexp)
 
 /* Print a usage message and quit. */
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

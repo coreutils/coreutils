@@ -87,20 +87,20 @@ static struct month
 {
   char *name;
   int val;
-} monthtab[] =
+} const monthtab[] =
 {
-  "APR", 4,
-  "AUG", 8,
-  "DEC", 12,
-  "FEB", 2,
-  "JAN", 1,
-  "JUL", 7,
-  "JUN", 6,
-  "MAR", 3,
-  "MAY", 5,
-  "NOV", 11,
-  "OCT", 10,
-  "SEP", 9
+  {"APR", 4},
+  {"AUG", 8},
+  {"DEC", 12},
+  {"FEB", 2},
+  {"JAN", 1},
+  {"JUL", 7},
+  {"JUN", 6},
+  {"MAR", 3},
+  {"MAY", 5},
+  {"NOV", 11},
+  {"OCT", 10},
+  {"SEP", 9}
 };
 
 /* During the merge phase, the number of files to merge at once. */
@@ -678,7 +678,7 @@ numcompare (a, b)
       else
 	logb = 0;
 
-      if (tmp = logb - loga)
+      if ((tmp = logb - loga) != 0)
 	return tmp;
 
       if (!loga)
@@ -717,7 +717,7 @@ numcompare (a, b)
       else
 	logb = 0;
 
-      if (tmp = loga - logb)
+      if ((tmp = loga - logb) != 0)
 	return tmp;
 
       if (!loga)
@@ -875,7 +875,7 @@ keycompare (a, b)
 
       if (diff)
 	return key->reverse ? -diff : diff;
-      if (diff = lena - lenb)
+      if ((diff = lena - lenb) != 0)
 	return key->reverse ? -diff : diff;
     }
 
