@@ -1,3 +1,10 @@
+2003-01-15  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (General output formatting): Reflect option name change:
+	s/--dereference-command-line/--dereference-command-line-symlink-to-dir/.
+	Say that this option changes how ls treats only symlinks to directories
+	specified on the command line.
+
 2002-08-27  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* coreutils.texi: Document readlink.
