@@ -1,3 +1,6 @@
+[4.5.11]
+* df now shows a HOSTNAME: prefix for each remote-mounted file system on AIX 5.1
+* minor portability tweaks
 [4.5.10]
 * printf no longer segfaults for a negative field width or precision
 * shred now always enables --exact for non-regular files
