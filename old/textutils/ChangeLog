@@ -1,3 +1,10 @@
+2000-04-16  Jim Meyering  <meyering@lucent.com>
+
+	* src/tail.c: Remove option: --max-consecutive-size-changes=N.
+	Doesn't seem useful.
+	(usage): Remove description.
+	* doc/textutils.texi (tail invocation): Remove description.
+
 2000-04-12  Jim Meyering  <meyering@lucent.com>
 
 	* src/tail.c (usage): Tweak --help output.  Suggestions from Karl Berry.
