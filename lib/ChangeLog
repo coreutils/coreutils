@@ -1,5 +1,6 @@
-2003-02-09  Jim Meyering  <jim@meyering.net>
+2003-02-10  Jim Meyering  <jim@meyering.net>
 
+	* euidaccess.c: Include "euidaccess.h".
 	* euidaccess.h: New file.
 
 2003-02-08  Jim Meyering  <jim@meyering.net>
