@@ -153,6 +153,15 @@ parse_user_spec (spec_arg, uid, gid, username_arg, groupname_arg)
   if (u == NULL && g == NULL)
     return "can not omit both user and group";
 
+#ifdef __DJGPP__
+  /* Pretend that we are the user U whose group is G.  This makes
+     pwd and grp functions ``know'' about the UID and GID of these.  */
+  if (u && !is_number (u))
+    setenv ("USER", u, 1);
+  if (g && !is_number (g))
+    setenv ("GROUP", g, 1);
+#endif
+
   if (u != NULL)
     {
       pwd = getpwnam (u);
