@@ -537,7 +537,7 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      "Torbjorn Granlund and Richard M. Stallman", usage);
+		      AUTHORS, usage);
 
   /* Parse command line options.  */
 

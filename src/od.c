@@ -1599,7 +1599,7 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      "Jim Meyering", usage);
+		      AUTHORS, usage);
 
   err = 0;
 

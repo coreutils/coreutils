@@ -290,7 +290,7 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      "Richard Stallman and David MacKenzie", usage);
+		      AUTHORS, usage);
 
   skip_chars = 0;
   skip_fields = 0;

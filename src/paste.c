@@ -437,7 +437,7 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      "David M. Ihnat", usage);
+		      AUTHORS, usage);
 
   have_read_stdin = 0;
   serial_merge = 0;

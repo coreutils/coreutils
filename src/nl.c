@@ -451,7 +451,7 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      "Scott Bartram and David MacKenzie", usage);
+		      AUTHORS, usage);
 
   have_read_stdin = 0;
 

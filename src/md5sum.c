@@ -478,7 +478,7 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      "Ulrich Drepper", usage);
+		      AUTHORS, usage);
 
   while ((opt = getopt_long (argc, argv, "bctw", long_options, NULL)) != -1)
     switch (opt)

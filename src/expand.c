@@ -339,7 +339,7 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      "David MacKenzie", usage);
+		      AUTHORS, usage);
 
   while ((c = getopt_long (argc, argv, "it:,0123456789", longopts, NULL)) != -1)
     {

@@ -316,7 +316,7 @@ main (register int argc, register char **argv)
   textdomain (PACKAGE);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      "Ross Paterson", usage);
+		      AUTHORS, usage);
 
   crown = tagged = split = uniform = FALSE;
   max_width = WIDTH;

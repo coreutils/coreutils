@@ -1804,7 +1804,7 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      "Jim Meyering", usage);
+		      AUTHORS, usage);
 
   while ((c = getopt_long (argc, argv, "cdst", long_options, NULL)) != -1)
     {

@@ -40,7 +40,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "tail"
 
-#define AUTHORS "Paul Rubin, David MacKenzie, Ian Lance Taylor, and Jim Meyering"
+#define AUTHORS \
+  "Paul Rubin, David MacKenzie, Ian Lance Taylor, and Jim Meyering"
 
 #ifndef OFF_T_MIN
 # define OFF_T_MIN TYPE_MINIMUM (off_t)
@@ -1343,8 +1344,7 @@ main (int argc, char **argv)
   have_read_stdin = 0;
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-	    "Paul Rubin, David MacKenzie, Ian Lance Taylor, and Jim Meyering",
-		      usage);
+		      AUTHORS, usage);
 
   {
     int found_obsolescent;

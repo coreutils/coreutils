@@ -695,7 +695,7 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      "David Ihnat, David MacKenzie, and Jim Meyering", usage);
+		      AUTHORS, usage);
 
   operating_mode = undefined_mode;
 

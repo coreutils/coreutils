@@ -220,7 +220,7 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      "Richard Stallman and David MacKenzie", usage);
+		      AUTHORS, usage);
 
   only_file_1 = 1;
   only_file_2 = 1;

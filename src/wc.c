@@ -303,7 +303,7 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      "Paul Rubin and David MacKenzie", usage);
+		      AUTHORS, usage);
 
   exit_status = 0;
   print_lines = print_words = print_chars = print_linelength = 0;

@@ -828,7 +828,7 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      "Pete TerMaat and Roland Huebner", usage);
+		      AUTHORS, usage);
 
   n_files = 0;
   file_names = (argc > 1

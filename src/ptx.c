@@ -1969,7 +1969,7 @@ main (int argc, char **argv)
 #endif
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      "François Pinard", usage);
+		      AUTHORS, usage);
 
   while (optchar = getopt_long (argc, argv, "ACF:GM:ORS:TW:b:i:fg:o:trw:",
 				long_options, NULL),

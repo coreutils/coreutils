@@ -1378,7 +1378,7 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      "Stuart Kemp and David MacKenzie", usage);
+		      AUTHORS, usage);
 
   global_argv = argv;
   controls = NULL;

@@ -462,7 +462,7 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      "Mark Kettenis", usage);
+		      AUTHORS, usage);
 
   while ((opt = getopt_long (argc, argv, "", long_options, NULL)) != -1)
     switch (opt)

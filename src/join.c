@@ -743,7 +743,7 @@ main (int argc, char **argv)
   uni_blank.nfields = 1;
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      "Mike Haertel", usage);
+		      AUTHORS, usage);
 
   nfiles = 0;
   print_pairables = 1;
