@@ -172,7 +172,17 @@ tee (nfiles, files)
   else
     mode |= O_TRUNC;
 
-  for (i = 0; i < nfiles; i++)
+  /* Move all the names `up' one in the argv array to make room for
+     the entry for standard output.  This writes into argv[argc].  */
+  for (i = nfiles; i >= 1; i--)
+    files[i] = files[i - 1];
+
+  /* In the array of NFILES + 1 descriptors, make
+     the first one correspond to standard output.   */
+  descriptors[0] = 1;
+  files[0] = "standard output";
+
+  for (i = 1; i <= nfiles; i++)
     {
       descriptors[i] = open (files[i], mode, 0666);
       if (descriptors[i] == -1)
@@ -181,12 +191,6 @@ tee (nfiles, files)
 	  ret = 1;
 	}
     }
-
-  /* In the array of NFILES + 1 descriptors, make
-     the last one correspond to standard output.   */
-  descriptors[nfiles] = 1;
-  /* This writes into argv[argc].  */
-  files[nfiles] = "standard output";
 
   while (1)
     {
@@ -199,14 +203,16 @@ tee (nfiles, files)
 	break;
 
       /* Write to all NFILES + 1 descriptors.
-	 Standard output is the last one.  */
+	 Standard output is the first one.  */
       for (i = 0; i <= nfiles; i++)
 	{
 	  if (descriptors[i] != -1
 	      && safe_write (descriptors[i], buffer, bytes_read))
 	    {
 	      error (0, errno, "%s", files[i]);
-	      close (descriptors[i]);
+	      /* Don't close stdout.  That's done in main.  */
+	      if (descriptors[i] != 1)
+		close (descriptors[i]);
 	      descriptors[i] = -1;
 	      ret = 1;
 	    }
@@ -219,7 +225,8 @@ tee (nfiles, files)
       ret = 1;
     }
 
-  for (i = 0; i < nfiles; i++)
+  /* Close the files, but not standard output.  */
+  for (i = 1; i <= nfiles; i++)
     if (descriptors[i] != -1 && close (descriptors[i]) != 0)
       {
 	error (0, errno, "%s", files[i]);
