@@ -1,5 +1,12 @@
 2001-08-14  Jim Meyering  <meyering@lucent.com>
 
+	* src/Makefile.am (INCLUDES): Add -I../lib so sys2.h can include
+	the new, generated file, unlocked-io.h.
+
+	* tests/Makefile.am (TESTS_ENVIRONMENT): Remove first definition
+	of this variable, and move its RHS into the RHS of the second.
+	Thanks, automake!
+
 	* src/su.c (xputenv): Remove parameter's const qualifier.
 
 	* src/dirname.c, src/env.c, src/id.c, src/pathchk.c, src/pinky.c,
