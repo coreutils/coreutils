@@ -1,3 +1,9 @@
+2000-11-02  Vesselin Atanasov  <vesselin@bgnet.bg>
+
+	* lib/fnmatch.c: Do not comment out all the code if we are using
+	the GNU C library, because in some cases we are replacing buggy
+	code in the GNU C library itself.
+
 2000-10-30  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/error.h, lib/getline.h, lib/modechange.h:
