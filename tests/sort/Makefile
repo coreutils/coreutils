@@ -1,8 +1,8 @@
 .PHONY: all
-all: sort-tests
-	./sort-tests
+all: run-tests
+	./run-tests
 
-sort-tests: main build-script test.data.pl
+run-tests: main build-script test.data.pl
 	./main test.data.pl > $@.n
 	mv $@.n $@
 	chmod 755 $@
@@ -16,4 +16,4 @@ clean: distclean
 
 .PHONY: realclean
 realclean: clean
-	rm -f sort-tests t*.in t*.exp t*.err
+	rm -f run-tests t*.in t*.exp t*.err
