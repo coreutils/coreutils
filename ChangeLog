@@ -2,6 +2,14 @@
 
 	* Version 5.0.1.
 
+2003-04-09  Paul Eggert  <eggert@twinsun.com>
+
+	* src/split.c (line_bytes_split): Arg is of type size_t, since
+	that's all that is supported for now.
+	(main): Check for overflow in obsolescent line count option.
+
+2003-04-09  Jim Meyering  <jim@meyering.net>
+
 	* src/split.c (bytes_split): Use size_t temporary (rather than
 	uintmax_t original) in remaining computations.  From Paul Eggert.
 
