@@ -690,7 +690,7 @@ append_normal_char (struct Spec_list *list, unsigned int c)
 {
   struct List_element *new;
 
-  new = xmalloc (sizeof (struct List_element));
+  new = xmalloc (sizeof *new);
   new->next = NULL;
   new->type = RE_NORMAL_CHAR;
   new->u.normal_char = c;
@@ -721,7 +721,7 @@ append_range (struct Spec_list *list, unsigned int first, unsigned int last)
       free (tmp2);
       return 1;
     }
-  new = xmalloc (sizeof (struct List_element));
+  new = xmalloc (sizeof *new);
   new->next = NULL;
   new->type = RE_RANGE;
   new->u.range.first_char = first;
@@ -747,7 +747,7 @@ append_char_class (struct Spec_list *list,
   char_class = look_up_char_class (char_class_str, len);
   if (char_class == CC_NO_CLASS)
     return 1;
-  new = xmalloc (sizeof (struct List_element));
+  new = xmalloc (sizeof *new);
   new->next = NULL;
   new->type = RE_CHAR_CLASS;
   new->u.char_class = char_class;
@@ -768,7 +768,7 @@ append_repeated_char (struct Spec_list *list, unsigned int the_char,
 {
   struct List_element *new;
 
-  new = xmalloc (sizeof (struct List_element));
+  new = xmalloc (sizeof *new);
   new->next = NULL;
   new->type = RE_REPEATED_CHAR;
   new->u.repeated_char.the_repeated_char = the_char;
@@ -792,7 +792,7 @@ append_equiv_class (struct Spec_list *list,
 
   if (len != 1)
     return 1;
-  new = xmalloc (sizeof (struct List_element));
+  new = xmalloc (sizeof *new);
   new->next = NULL;
   new->type = RE_EQUIV_CLASS;
   new->u.equiv_code = *equiv_class_str;
@@ -1386,8 +1386,8 @@ get_s2_spec_stats (struct Spec_list *s2, size_t len_s1)
 static void
 spec_init (struct Spec_list *spec_list)
 {
-  spec_list->head = spec_list->tail =
-    xmalloc (sizeof (struct List_element));
+  struct Spec_list *new = xmalloc (sizeof *new);
+  spec_list->head = spec_list->tail = new;
   spec_list->head->next = NULL;
 }
 
