@@ -620,6 +620,11 @@ copy (char *src_path, char *dst_path, int new_dst, dev_t device,
 	      char *tmp_backup = find_backup_file_name (dst_path);
 	      if (tmp_backup == NULL)
 		error (1, 0, _("virtual memory exhausted"));
+
+	      /* Detect (and fail) when creating the backup file would
+		 destroy the source file.  Before, running the commands
+		 cd /tmp; rm -f a a~; : > a; echo A > a~; cp -b -V simple a~ a
+		 would leave two zero-length files: a and a~.  */
 	      if (strcmp (tmp_backup, src_path) == 0)
 		{
 		  error (0, 0,
