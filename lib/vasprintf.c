@@ -1,5 +1,5 @@
 /* Formatted output to strings.
-   Copyright (C) 1999, 2002-2003 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@
 /* Specification.  */
 #include "vasprintf.h"
 
-#include <limits.h>
 #include <stdlib.h>
 
 #include "vasnprintf.h"
@@ -34,15 +33,10 @@ vasprintf (char **resultp, const char *format, va_list args)
   char *result = vasnprintf (NULL, &length, format, args);
   if (result == NULL)
     return -1;
-  if (length > INT_MAX)
-    {
-      /* We could produce such a big string, but can't return its length
-	 as an 'int'.  */
-      free (result);
-      return -1;
-    }
 
   *resultp = result;
-  /* Return the number of resulting bytes, excluding the trailing NUL.  */
+  /* Return the number of resulting bytes, excluding the trailing NUL.
+     If it wouldn't fit in an 'int', vasnprintf() would have returned NULL
+     and set errno to EOVERFLOW.  */
   return length;
 }

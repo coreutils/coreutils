@@ -1,5 +1,5 @@
 /* vsprintf with automatic memory allocation.
-   Copyright (C) 2002-2003 Free Software Foundation, Inc.
+   Copyright (C) 2002-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -47,7 +47,24 @@ extern "C" {
    If successful, return the address of the string (this may be = RESULTBUF
    if no dynamic memory allocation was necessary) and set *LENGTHP to the
    number of resulting bytes, excluding the trailing NUL.  Upon error, set
-   errno and return NULL.  */
+   errno and return NULL.
+
+   When dynamic memory allocation occurs, the preallocated buffer is left
+   alone (with possibly modified contents).  This makes it possible to use
+   a statically allocated or stack-allocated buffer, like this:
+
+          char buf[100];
+          size_t len = sizeof (buf);
+          char *output = vasnprintf (buf, &len, format, args);
+          if (output == NULL)
+            ... error handling ...;
+          else
+            {
+              ... use the output string ...;
+              if (output != buf)
+                free (output);
+            }
+  */
 extern char * asnprintf (char *resultbuf, size_t *lengthp, const char *format, ...)
        __attribute__ ((__format__ (__printf__, 3, 4)));
 extern char * vasnprintf (char *resultbuf, size_t *lengthp, const char *format, va_list args)

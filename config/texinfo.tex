@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2004-07-31.11}
+\def\texinfoversion{2004-09-06.16}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004 Free Software
@@ -2633,7 +2633,10 @@ where each line of input produces a line of output.}
   \startsavinginserts
   %
   % @item within a multitable starts a normal row.
-  \let\item\crcr
+  % We use \def instead of \let so that if one of the multitable entries
+  % contains an @itemize, we don't choke on the \item (seen as \crcr aka
+  % \endtemplate) expanding \doitemize.
+  \def\item{\crcr}%
   %
   \tolerance=9500
   \hbadness=9500
@@ -3530,7 +3533,10 @@ width0pt\relax} \fi
   \removelastskip
   %
   % We like breaks before the index initials, so insert a bonus.
-  \penalty -300
+  \nobreak
+  \vskip 0pt plus 3\baselineskip
+  \penalty 0
+  \vskip 0pt plus -3\baselineskip
   %
   % Typeset the initial.  Making this add up to a whole number of
   % baselineskips increases the chance of the dots lining up from column
@@ -3540,10 +3546,9 @@ width0pt\relax} \fi
   % No shrink because it confuses \balancecolumns.
   \vskip 1.67\baselineskip plus .5\baselineskip
   \leftline{\secbf #1}%
-  \vskip .33\baselineskip plus .1\baselineskip
-  %
   % Do our best not to break after the initial.
   \nobreak
+  \vskip .33\baselineskip plus .1\baselineskip
 }}
 
 % \entry typesets a paragraph consisting of the text (#1), dot leaders, and
@@ -5453,7 +5458,11 @@ width0pt\relax} \fi
     \newlinechar`\^^M
     \let\xeatspaces\eatspaces
     % Undo catcode changes of \startcontents and \doprintindex
-    \catcode`\@=0 \catcode`\\=\other \escapechar=`\@
+    % When called from @insertcopying or (short)caption, we need active
+    % backslash to get it printed correctly.  Previously, we had
+    % \catcode`\\=\other instead.  We'll see whether a problem appears
+    % with macro expansion.				--kasal, 19aug04
+    \catcode`\@=0 \catcode`\\=\active \escapechar=`\@
     % ... and \example
     \spaceisspace
     %
@@ -5477,13 +5486,15 @@ width0pt\relax} \fi
                     % \do\macro1\do\macro2...
 
 % Utility routines.
-% This does \let #1 = #2, except with \csnames.
+% This does \let #1 = #2, with \csnames; that is,
+%   \let \csname#1\endcsname = \csname#2\endcsname
+% (except of course we have to play expansion games).
+% 
 \def\cslet#1#2{%
-\expandafter\expandafter
-\expandafter\let
-\expandafter\expandafter
-\csname#1\endcsname
-\csname#2\endcsname}
+  \expandafter\let
+  \csname#1\expandafter\endcsname
+  \csname#2\endcsname
+}
 
 % Trim leading and trailing spaces off a string.
 % Concepts from aro-bend problem 15 (see CTAN).
@@ -5511,14 +5522,15 @@ width0pt\relax} \fi
 % body, and then making it the \newlinechar in \scanmacro.
 
 \def\scanctxt{%
-  \catcode`\~=\other
+  \catcode`\"=\other
+  \catcode`\+=\other
+  \catcode`\<=\other
+  \catcode`\>=\other
+  \catcode`\@=\other
   \catcode`\^=\other
   \catcode`\_=\other
   \catcode`\|=\other
-  \catcode`\<=\other
-  \catcode`\>=\other
-  \catcode`\+=\other
-  \catcode`\@=\other
+  \catcode`\~=\other
 }
 
 \def\scanargctxt{%
@@ -6468,6 +6480,9 @@ width0pt\relax} \fi
     \ifx\captionline\empty \else
       \vskip.5\parskip
       \captionline
+      %
+      % Space below caption.
+      \vskip\parskip
     \fi
     %
     % If have an xref label, write the list of floats info.  Do this
@@ -6478,19 +6493,22 @@ width0pt\relax} \fi
       % caption if specified, else the full caption if specified, else nothing.
       {%
         \atdummies \turnoffactive \otherbackslash
-        \immediate\write\auxfile{@xrdef{\floatlabel-lof}{%
-          \floatident
-          \ifx\thisshortcaption\empty
-            \ifx\thiscaption\empty \else : \thiscaption \fi
-          \else
-            : \thisshortcaption
-          \fi
-        }}%
+        % since we read the caption text in the macro world, where ^^M
+        % is turned into a normal character, we have to scan it back, so
+        % we don't write the literal three characters "^^M" into the aux file.
+	\scanexp{%
+	  \xdef\noexpand\gtemp{%
+	    \ifx\thisshortcaption\empty
+	      \thiscaption
+	    \else
+	      \thisshortcaption
+	    \fi
+	  }%
+	}%
+        \immediate\write\auxfile{@xrdef{\floatlabel-lof}{\floatident
+	  \ifx\gtemp\empty \else : \gtemp \fi}}%
       }%
     \fi
-    %
-    % Space below caption, if we printed anything.
-    \ifx\printedsomething\empty \else \vskip\parskip \fi
   \egroup  % end of \vtop
   %
   % place the captured inserts

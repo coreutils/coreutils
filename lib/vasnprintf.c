@@ -40,7 +40,7 @@
 #include <stdlib.h>	/* abort(), malloc(), realloc(), free() */
 #include <string.h>	/* memcpy(), strlen() */
 #include <errno.h>	/* errno */
-#include <limits.h>	/* CHAR_BIT */
+#include <limits.h>	/* CHAR_BIT, INT_MAX */
 #include <float.h>	/* DBL_MAX_EXP, LDBL_MAX_EXP */
 #if WIDE_CHAR_VERSION
 # include "wprintf-parse.h"
@@ -875,7 +875,18 @@ VASNPRINTF (CHAR_T *resultbuf, size_t *lengthp, const CHAR_T *format, va_list ar
       free (buf_malloced);
     CLEANUP ();
     *lengthp = length;
+    if (length > INT_MAX)
+      goto length_overflow;
     return result;
+
+  length_overflow:
+    /* We could produce such a big string, but its length doesn't fit into
+       an 'int'.  POSIX says that snprintf() fails with errno = EOVERFLOW in
+       this case.  */
+    if (result != resultbuf)
+      free (result);
+    errno = EOVERFLOW;
+    return NULL;
 
   out_of_memory:
     if (!(result == resultbuf || result == NULL))
