@@ -18,16 +18,12 @@
 
 /* Written by Ross Paterson <rap@doc.ic.ac.uk>.  */
 
-#ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif
-
 #include <stdio.h>
-
 #include <sys/types.h>
-#include "system.h"
+#include <getopt.h>
 
-#include "getopt.h"
+#include "system.h"
 #include "version.h"
 
 /* The following parameters represent the program's idea of what is
@@ -101,9 +97,9 @@ typedef long COST;
 
 /* Extra ctype(3)-style macros.  */
 
-#define	isopen(c)	(strchr ("([`'\"", c) != NULL)
-#define	isclose(c)	(strchr (")]'\"", c) != NULL)
-#define	isperiod(c)	(strchr (".?!", c) != NULL)
+#define	isopen(c)	(index ("([`'\"", c) != NULL)
+#define	isclose(c)	(index (")]'\"", c) != NULL)
+#define	isperiod(c)	(index (".?!", c) != NULL)
 
 /* Size of a tab stop, for expansion on input and re-introduction on
    output.  */
@@ -387,7 +383,7 @@ main (argc, argv)
 
   if (show_version)
     {
-      printf ("%s\n", version_string);
+      printf ("%s - %s\n", program_name, version_string);
       exit (0);
     }
 
