@@ -1,10 +1,12 @@
+Wed May  1 00:20:00 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* ls.c (parse_ls_color, usage): Remove support for alternate spellings:
+	--colours and LS_COLOURS.
+
 Mon Apr 29 22:07:41 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* POTFILES.in: Add chgrp.c.  From François Pinard.
 	Add dircolors.c.
-
-	* ls.c (parse_ls_color, usage): Remove support for alternate spellings:
-	--colours and LS_COLOURS.
 
 Sun Apr 28 16:32:38 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
