@@ -35,6 +35,10 @@ AC_DEFUN([GL_FUNC_GETCWD_ROBUST],
 #endif
 
 #ifndef PATH_MAX
+/* There might be a better way to handle this case, but note:
+   - the value shouldn't be anywhere near INT_MAX, and
+   - the value shouldn't be so big that the local declaration, below,
+   blows the stack.  */
 # define PATH_MAX 40000
 #endif
 
