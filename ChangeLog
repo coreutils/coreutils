@@ -1,6 +1,11 @@
-2003-02-04  Jim Meyering  <jim@meyering.net>
+2003-02-05  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.6.
+
+	* tests/du/exclude: New file.
+	* tests/du/Makefile.am (TESTS): Add exclude.
+
+2003-02-04  Jim Meyering  <jim@meyering.net>
 
 	`df /dev/block-or-char-device-file--not-mounted' now reports
 	the name of the file system on which the file resides, usually `/'.
