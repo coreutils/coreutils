@@ -33,11 +33,9 @@
 extern int errno;
 #endif
 
-#ifdef	STAT_MACROS_BROKEN
-#ifdef S_ISDIR
+#ifdef STAT_MACROS_BROKEN
 #undef S_ISDIR
-#endif
-#endif	/* STAT_MACROS_BROKEN.  */
+#endif /* STAT_MACROS_BROKEN.  */
 
 #if !defined(S_ISDIR) && defined(S_IFDIR)
 #define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
