@@ -1,3 +1,7 @@
+1999-01-04  Jim Meyering  <meyering@ascend.com>
+
+	* Version 4.1-b1.
+
 1999-01-02  Jim Meyering  <meyering@ascend.com>
 
 	* lib/argmatch.c (argmatch_invalid): Remove double quotes from the
