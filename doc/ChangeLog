@@ -1,3 +1,8 @@
+2003-07-24  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (su invocation): Use `@subsection', not invalid
+	`@heading'.
+
 2003-07-17  Paul Eggert  <eggert@twinsun.com>
 
 	* coreutils.texi (expr invocation): Exit status is 2 if the
