@@ -616,7 +616,7 @@ get_ids (void)
 	{
 	  long int tmp_long;
 	  if (xstrtol (group_name, NULL, 0, &tmp_long, NULL) != LONGINT_OK
-	      || tmp_long < 0 || tmp_long > (long) GID_T_MAX)
+	      || tmp_long < 0 || tmp_long > GID_T_MAX)
 	    error (1, 0, _("invalid group `%s'"), group_name);
 	  group_id = (gid_t) tmp_long;
 	}
