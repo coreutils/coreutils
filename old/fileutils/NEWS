@@ -1,5 +1,6 @@
 Changes in release 4.1:
 [4.0t]
+* rmdir and mkdir accept -v as synonym for --verbose
 [4.0s]
 * rm no longer segfaults on certain very deep hierarchies
 * IMPORTANT SECURITY FIX: a running `rm -r' may no longer be subverted to
