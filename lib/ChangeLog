@@ -3,8 +3,8 @@
 	* tempname.c [!HAVE_DECL_GETENV]: Declare getenv to avoid warning
 	on SunOS4.
 
-	* Makefile.am (Makefile): Depend on $(BUILT_SOURCES), so they'll
-	be created before anything else.
+	* Makefile.am (Makefile): Depend on $(BUILT_SOURCES), so those
+	files will be created before anything else.
 
 2001-11-17  Jim Meyering  <meyering@lucent.com>
 
