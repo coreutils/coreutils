@@ -1,5 +1,7 @@
 1999-03-10  Jim Meyering  <meyering@ascend.com>
 
+	* tests/stty/basic-1: Skip failing tests: parenb, -parenb, -cread.
+
 	* lib/canon-host.c (canon_host): Don't use he->h_addr directly.
 	Based on a patch from Savochkin Andrey Vladimirovich.
 
