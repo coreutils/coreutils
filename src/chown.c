@@ -175,7 +175,7 @@ main (int argc, char **argv)
   int dereference = -1;
 
   struct Chown_option chopt;
-  int fail;
+  bool ok;
   int optc;
 
   initialize_main (&argc, &argv);
@@ -320,7 +320,7 @@ main (int argc, char **argv)
       optind++;
     }
 
-  if (chopt.recurse && preserve_root)
+  if (chopt.recurse & preserve_root)
     {
       static struct dev_ino dev_ino_buf;
       chopt.root_dev_ino = get_root_dev_ino (&dev_ino_buf);
@@ -329,11 +329,11 @@ main (int argc, char **argv)
 	       quote ("/"));
     }
 
-  fail = chown_files (argv + optind, bit_flags,
-		      uid, gid,
-		      required_uid, required_gid, &chopt);
+  ok = chown_files (argv + optind, bit_flags,
+		    uid, gid,
+		    required_uid, required_gid, &chopt);
 
   chopt_free (&chopt);
 
-  exit (fail ? EXIT_FAILURE : EXIT_SUCCESS);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
