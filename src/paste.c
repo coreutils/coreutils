@@ -257,6 +257,10 @@ paste_parallel (nfiles, fnamptr)
   int i;			/* Loop index. */
   int opened_stdin = 0;		/* Nonzero if any fopen got fd 0. */
 
+#ifdef lint  /* Suppress `used before initialized' warning.  */
+  chr = 0;
+#endif
+
   delbuf = (char *) xmalloc (file_list_size + 2);
   fileptr = (FILE **) xmalloc ((file_list_size + 1) * sizeof (FILE *));
 

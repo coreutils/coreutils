@@ -1040,9 +1040,10 @@ decode_format_string (s)
 /* Given a list of one or more input filenames FILE_LIST, set the global
    file pointer IN_STREAM to position N_SKIP in the concatenation of
    those files.  If any file operation fails or if there are fewer than
-   N_SKIP bytes in the combined input, give an error message and exit.
-   When possible, use seek- rather than read operations to advance
-   IN_STREAM.  A file name of "-" is interpreted as standard input.  */
+   N_SKIP bytes in the combined input, give an error message and return
+   non-zero.  When possible, use seek- rather than read operations to
+   advance IN_STREAM.  A file name of "-" is interpreted as standard
+   input.  */
 
 static int
 skip (n_skip)
@@ -1495,6 +1496,10 @@ dump ()
   size_t n_bytes_read;
   size_t end_offset;
 
+#ifdef lint  /* Suppress `used before initialized' warning.  */
+  end_offset = 0;
+#endif
+
   block[0] = (char *) alloca (bytes_per_block);
   block[1] = (char *) alloca (bytes_per_block);
 
@@ -1701,6 +1706,10 @@ main (argc, argv)
   /* The old-style `pseudo starting address' to be printed in parentheses
      after any true address.  */
   long int pseudo_start;
+
+#ifdef lint  /* Suppress `used before initialized' warning.  */
+  pseudo_start = 0;
+#endif
 
   program_name = argv[0];
   err = 0;
@@ -1993,6 +2002,8 @@ main (argc, argv)
     }
 
   err |= skip (n_bytes_to_skip);
+  if (in_stream == NULL)
+    goto cleanup;
 
   pseudo_offset = (flag_pseudo_start ? pseudo_start - n_bytes_to_skip : 0);
 
@@ -2027,6 +2038,8 @@ main (argc, argv)
 #endif
 
   err |= (flag_dump_strings ? dump_strings () : dump ());
+
+cleanup:;
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (2, errno, "standard input");

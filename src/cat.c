@@ -288,7 +288,13 @@ main (argc, argv)
       out_ino = stat_buf.st_ino;
     }
   else
-    check_redirection = 0;
+    {
+      check_redirection = 0;
+#ifdef lint  /* Suppress `used before initialized' warning.  */
+      out_dev = 0;
+      out_ino = 0;
+#endif
+    }
 
   /* Check if any of the input files are the same as the output file.  */
 
@@ -549,9 +555,11 @@ cat (inbuf, insize, outbuf, outsize, quote,
 		     HP-UX returns ENOTTY on pipes.
 		     SunOS returns EINVAL and
 		     More/BSD returns ENODEV on special files
-		     like /dev/null.  */
+		     like /dev/null.
+		     Irix-5 returns ENOSYS on pipes.  */
 		  if (errno == EOPNOTSUPP || errno == ENOTTY
-		      || errno == EINVAL || errno == ENODEV)
+		      || errno == EINVAL || errno == ENODEV
+		      || errno == ENOSYS)
 		    use_fionread = 0;
 		  else
 		    {

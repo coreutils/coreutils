@@ -277,6 +277,8 @@ expand ()
   int convert = 1;		/* If nonzero, perform translations. */
 
   fp = next_file ((FILE *) NULL);
+  if (fp == NULL)
+    return;
   for (;;)
     {
       c = getc (fp);
