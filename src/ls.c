@@ -1179,6 +1179,9 @@ decode_switches (int argc, char **argv)
 	}
     }
 
+  if (human_readable_base)
+    output_units = 1;
+
   return optind;
 }
 
@@ -1594,7 +1597,8 @@ print_dir (const char *name, const char *realname)
       p = _("total");
       FPUTS (p, stdout, strlen (p));
       PUTCHAR (' ');
-      p = human_readable (total_blocks, buf, ST_NBLOCKSIZE, output_units, 0);
+      p = human_readable (total_blocks, buf, ST_NBLOCKSIZE, output_units,
+			  human_readable_base);
       FPUTS (p, stdout, strlen (p));
       PUTCHAR ('\n');
     }
@@ -1782,7 +1786,7 @@ gobble_file (const char *name, int explicit_arg, const char *dirname)
       {
 	char buf[LONGEST_HUMAN_READABLE + 1];
 	int len = strlen (human_readable (blocks, buf, ST_NBLOCKSIZE,
-					  output_units, 0));
+					  output_units, human_readable_base));
 	if (block_size_size < len)
 	  block_size_size = len < 7 ? len : 7;
       }
@@ -2205,7 +2209,8 @@ print_long_format (const struct fileinfo *f)
       char hbuf[LONGEST_HUMAN_READABLE + 1];
       sprintf (p, "%*s ", block_size_size,
 	       human_readable ((uintmax_t) ST_NBLOCKS (f->stat), hbuf,
-			       ST_NBLOCKSIZE, output_units, 0));
+			       ST_NBLOCKSIZE, output_units,
+			       human_readable_base));
       p += strlen (p);
     }
 
@@ -2482,7 +2487,7 @@ print_file_name_and_frills (const struct fileinfo *f)
   if (print_block_size)
     printf ("%*s ", block_size_size,
 	    human_readable ((uintmax_t) ST_NBLOCKS (f->stat), buf,
-			    ST_NBLOCKSIZE, output_units, 0));
+			    ST_NBLOCKSIZE, output_units, human_readable_base));
 
   print_name_with_quoting (f->name, f->stat.st_mode, f->linkok, NULL);
 
