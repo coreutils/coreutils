@@ -32,6 +32,9 @@ my @Tests =
      ['d', '100 / 6', {OUT => '16'}],
      ['e', '100 % 6', {OUT => '4'}],
 
+     # Before 2.0.12, this would output `1'.
+     ['00', '00 \< 0!', {OUT => '0'}, {EXIT => 1}],
+
      # This evoked a syntax error diagnostic before 2.0.12.
      ['minus2', '-- 2 + 2', {OUT => '4'}],
 
