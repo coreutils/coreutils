@@ -1,5 +1,6 @@
 [4.1.9]
 * new programs: link, unlink, and stat
+* `touch -c no-such-file' no longer fails, per POSIX
 [4.1.8]
 * mv no longer mistakenly creates links to preexisting destination files
     that aren't moved
