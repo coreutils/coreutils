@@ -2,7 +2,11 @@
 
 	* Version 4.0y.
 
-	* Update to use latest CVS versions of automake and autoconf.
+	* config.guess: Update from master repository.
+	* config.sub: Likewise.
+
+	* Regenerate build/config framework to use the latest CVS versions
+	of automake and autoconf.
 
 2000-07-31  Jim Meyering  <meyering@lucent.com>
 
