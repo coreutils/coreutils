@@ -2,6 +2,9 @@
 
 	* Version 5.1.0.
 
+	* src/du.c: Accept new option (-0, --null) that makes it so each
+	output line is NUL-terminated rather than newline-terminated.
+
 	* src/dd.c (apply_translations): Don't prohibit conv=unblock,sync.
 	Reported by Volker Paul.
 	* tests/dd/Makefile.am (TESTS): Add unblock-sync.

@@ -36,6 +36,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   not portable anyway, even with old GNU ls where the columns became
   ragged when a datum was too wide.
 
+  du accepts a new option, -0/--null, to make it produce NUL-terminated
+  output lines
+
 ** Bug fixes
 
   printf, seq, tail, and sleep now parse floating-point operands
