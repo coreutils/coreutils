@@ -188,27 +188,27 @@ files, most people use the --remove option.\n\
 "), stdout);
       fputs (_("\
 CAUTION: Note that shred relies on a very important assumption:\n\
-that the filesystem overwrites data in place.  This is the traditional\n\
-way to do things, but many modern filesystem designs do not satisfy this\n\
-assumption.  The following are examples of filesystems on which shred is\n\
+that the file system overwrites data in place.  This is the traditional\n\
+way to do things, but many modern file system designs do not satisfy this\n\
+assumption.  The following are examples of file systems on which shred is\n\
 not effective:\n\
 \n\
 "), stdout);
       fputs (_("\
-* log-structured or journaled filesystems, such as those supplied with\n\
+* log-structured or journaled file systems, such as those supplied with\n\
   AIX and Solaris (and JFS, ReiserFS, XFS, Ext3, etc.)\n\
 \n\
-* filesystems that write redundant data and carry on even if some writes\n\
-  fail, such as RAID-based filesystems\n\
+* file systems that write redundant data and carry on even if some writes\n\
+  fail, such as RAID-based file systems\n\
 \n\
-* filesystems that make snapshots, such as Network Appliance's NFS server\n\
+* file systems that make snapshots, such as Network Appliance's NFS server\n\
 \n\
 "), stdout);
       fputs (_("\
-* filesystems that cache in temporary locations, such as NFS\n\
+* file systems that cache in temporary locations, such as NFS\n\
   version 3 clients\n\
 \n\
-* compressed filesystems\n\
+* compressed file systems\n\
 \n\
 In addition, file system backups and remote mirrors may contain copies\n\
 of the file that cannot be removed, and that will allow a shredded file\n\
@@ -1446,7 +1446,7 @@ incname (char *name, size_t len)
  * invoke fdatasync and/or fsync on it.  This is non-standard, so don't
  * insist that it works: just fall back to a global sync in that case.
  * This is fairly significantly Unix-specific.  Of course, on any
- * filesystem with synchronous metadata updates, this is unnecessary.
+ * file system with synchronous metadata updates, this is unnecessary.
  */
 static bool
 wipename (char *oldname, char const *qoldname, struct Options const *flags)

@@ -207,7 +207,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -s, --summarize       display only a total for each argument\n\
 "), stdout);
       fputs (_("\
-  -x, --one-file-system  skip directories on different filesystems\n\
+  -x, --one-file-system  skip directories on different file systems\n\
   -X FILE, --exclude-from=FILE  Exclude files that match any pattern in FILE.\n\
       --exclude=PATTERN Exclude files that match PATTERN.\n\
       --max-depth=N     print the total for a directory (or file, with --all)\n\

@@ -50,14 +50,14 @@ char *program_name;
 /* If nonzero, show inode information. */
 static int inode_format;
 
-/* If nonzero, show even filesystems with zero size or
+/* If nonzero, show even file systems with zero size or
    uninteresting types. */
 static int show_all_fs;
 
-/* If nonzero, show only local filesystems.  */
+/* If nonzero, show only local file systems.  */
 static int show_local_fs;
 
-/* If nonzero, output data for each filesystem corresponding to a
+/* If nonzero, output data for each file system corresponding to a
    command line argument -- even if it's a dummy (automounter) entry.  */
 static int show_listed_fs;
 
@@ -79,7 +79,7 @@ static int require_sync = 0;
 /* Nonzero if errors have occurred. */
 static int exit_status;
 
-/* A filesystem type to display. */
+/* A file system type to display. */
 
 struct fs_type_list
 {
@@ -87,28 +87,28 @@ struct fs_type_list
   struct fs_type_list *fs_next;
 };
 
-/* Linked list of filesystem types to display.
+/* Linked list of file system types to display.
    If `fs_select_list' is NULL, list all types.
    This table is generated dynamically from command-line options,
    rather than hardcoding into the program what it thinks are the
-   valid filesystem types; let the user specify any filesystem type
-   they want to, and if there are any filesystems of that type, they
+   valid file system types; let the user specify any file system type
+   they want to, and if there are any file systems of that type, they
    will be shown.
 
-   Some filesystem types:
+   Some file system types:
    4.2 4.3 ufs nfs swap ignore io vm efs dbg */
 
 static struct fs_type_list *fs_select_list;
 
-/* Linked list of filesystem types to omit.
+/* Linked list of file system types to omit.
    If the list is empty, don't exclude any types.  */
 
 static struct fs_type_list *fs_exclude_list;
 
-/* Linked list of mounted filesystems. */
+/* Linked list of mounted file systems. */
 static struct mount_entry *mount_list;
 
-/* If nonzero, print filesystem type as well.  */
+/* If nonzero, print file system type as well.  */
 static int print_type;
 
 /* For long options that have no equivalent short option, use a
@@ -198,7 +198,7 @@ print_header (void)
   printf (_(" Mounted on\n"));
 }
 
-/* If FSTYPE is a type of filesystem that should be listed,
+/* If FSTYPE is a type of file system that should be listed,
    return nonzero, else zero. */
 
 static int
@@ -214,7 +214,7 @@ selected_fstype (const char *fstype)
   return 0;
 }
 
-/* If FSTYPE is a type of filesystem that should be omitted,
+/* If FSTYPE is a type of file system that should be omitted,
    return nonzero, else zero. */
 
 static int
@@ -255,8 +255,8 @@ df_readable (int negative, uintmax_t n, char *buf,
 
 /* Display a space listing for the disk device with absolute path DISK.
    If MOUNT_POINT is non-NULL, it is the path of the root of the
-   filesystem on DISK.
-   If FSTYPE is non-NULL, it is the type of the filesystem on DISK.
+   file system on DISK.
+   If FSTYPE is non-NULL, it is the type of the file system on DISK.
    If MOUNT_POINT is non-NULL, then DISK may be NULL -- certain systems may
    not be able to produce statistics in this case.
    ME_DUMMY and ME_REMOTE are the mount entry flags.  */
@@ -289,9 +289,9 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
   if (!selected_fstype (fstype) || excluded_fstype (fstype))
     return;
 
-  /* If MOUNT_POINT is NULL, then the filesystem is not mounted, and this
-     program reports on the filesystem that the special file is on.
-     It would be better to report on the unmounted filesystem,
+  /* If MOUNT_POINT is NULL, then the file system is not mounted, and this
+     program reports on the file system that the special file is on.
+     It would be better to report on the unmounted file system,
      but statfs doesn't do that on most systems.  */
   stat_file = mount_point ? mount_point : disk;
 
@@ -432,7 +432,7 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
   putchar ('\n');
 }
 
-/* Return the root mountpoint of the filesystem on which FILE exists, in
+/* Return the root mountpoint of the file system on which FILE exists, in
    malloced storage.  FILE_STAT should be the result of stating FILE.
    Give a diagnostic and return NULL if unable to determine the mount point.
    Exit if unable to restore current working directory.  */
@@ -481,7 +481,7 @@ find_mount_point (const char *file, const struct stat *file_stat)
 	}
     }
 
-  /* Now walk up FILE's parents until we find another filesystem or /,
+  /* Now walk up FILE's parents until we find another file system or /,
      chdiring as we go.  LAST_STAT holds stat information for the last place
      we visited.  */
   for (;;)
@@ -664,7 +664,7 @@ show_entry (const char *path, const struct stat *statp)
   show_point (path, statp);
 }
 
-/* Show all mounted filesystems, except perhaps those that are of
+/* Show all mounted file systems, except perhaps those that are of
    an unselected type or are empty. */
 
 static void
@@ -677,7 +677,7 @@ show_all_entries (void)
 	      me->me_dummy, me->me_remote);
 }
 
-/* Add FSTYPE to the list of filesystem types to display. */
+/* Add FSTYPE to the list of file system types to display. */
 
 static void
 add_fs_type (const char *fstype)
@@ -690,7 +690,7 @@ add_fs_type (const char *fstype)
   fs_select_list = fsp;
 }
 
-/* Add FSTYPE to the list of filesystem types to be omitted. */
+/* Add FSTYPE to the list of file system types to be omitted. */
 
 static void
 add_excluded_fs_type (const char *fstype)
@@ -713,15 +713,15 @@ usage (int status)
     {
       printf (_("Usage: %s [OPTION]... [FILE]...\n"), program_name);
       fputs (_("\
-Show information about the filesystem on which each FILE resides,\n\
-or all filesystems by default.\n\
+Show information about the file system on which each FILE resides,\n\
+or all file systems by default.\n\
 \n\
 "), stdout);
       fputs (_("\
 Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
-  -a, --all             include filesystems having 0 blocks\n\
+  -a, --all             include file systems having 0 blocks\n\
   -B, --block-size=SIZE use SIZE-byte blocks\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
   -H, --si              likewise, but use powers of 1000 not 1024\n\
@@ -729,15 +729,15 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -i, --inodes          list inode information instead of block usage\n\
   -k                    like --block-size=1K\n\
-  -l, --local           limit listing to local filesystems\n\
+  -l, --local           limit listing to local file systems\n\
       --no-sync         do not invoke sync before getting usage info (default)\n\
 "), stdout);
       fputs (_("\
   -P, --portability     use the POSIX output format\n\
       --sync            invoke sync before getting usage info\n\
-  -t, --type=TYPE       limit listing to filesystems of type TYPE\n\
-  -T, --print-type      print filesystem type\n\
-  -x, --exclude-type=TYPE   limit listing to filesystems not of type TYPE\n\
+  -t, --type=TYPE       limit listing to file systems of type TYPE\n\
+  -T, --print-type      print file system type\n\
+  -x, --exclude-type=TYPE   limit listing to file systems not of type TYPE\n\
   -v                    (ignored)\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
@@ -876,7 +876,7 @@ main (int argc, char **argv)
       int i;
 
       /* stat all the given entries to make sure they get automounted,
-	 if necessary, before reading the filesystem table.  */
+	 if necessary, before reading the file system table.  */
       stats = xnmalloc (argc - optind, sizeof *stats);
       for (i = optind; i < argc; ++i)
 	{
@@ -894,20 +894,20 @@ main (int argc, char **argv)
     }
 
   mount_list =
-    read_filesystem_list ((fs_select_list != NULL
-			   || fs_exclude_list != NULL
-			   || print_type
-			   || show_local_fs));
+    read_file_system_list ((fs_select_list != NULL
+			    || fs_exclude_list != NULL
+			    || print_type
+			    || show_local_fs));
 
   if (mount_list == NULL)
     {
-      /* Couldn't read the table of mounted filesystems.
+      /* Couldn't read the table of mounted file systems.
 	 Fail if df was invoked with no file name arguments;
 	 Otherwise, merely give a warning and proceed.  */
       const char *warning = (optind < argc ? _("Warning: ") : "");
       int status = (optind < argc ? 0 : EXIT_FAILURE);
       error (status, errno,
-	     _("%scannot read table of mounted filesystems"), warning);
+	     _("%scannot read table of mounted file systems"), warning);
     }
 
   if (require_sync)
@@ -917,7 +917,7 @@ main (int argc, char **argv)
     {
       int i;
 
-      /* Display explicitly requested empty filesystems. */
+      /* Display explicitly requested empty file systems. */
       show_listed_fs = 1;
 
       if (n_valid_args > 0)
