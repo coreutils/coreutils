@@ -217,7 +217,7 @@ while (@opt_include)
     close INC;
 
     kark N_("%s: no valid information found in `%s'"), $this_program, $inc
-    	unless $key;
+	unless $key;
 }
 
 # Compress trailing blank lines.
@@ -241,7 +241,7 @@ my $version;
 if ($opt_output)
 {
     unlink $opt_output or kark N_("%s: can't unlink %s (%s)"),
-    	$this_program, $opt_output, $! if -e $opt_output;
+	$this_program, $opt_output, $! if -e $opt_output;
 
     open STDOUT, ">$opt_output"
 	or kark N_("%s: can't create %s (%s)"), $this_program, $opt_output, $!;
