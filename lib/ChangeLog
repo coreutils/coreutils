@@ -1,6 +1,6 @@
 2004-05-20  Jim Meyering  <jim@meyering.net>
 
-	* obstack.h: Update from gnulib.
+	* obstack.c, obstack.h: Update from gnulib.
 
 2004-05-16  Paul Eggert  <eggert@cs.ucla.edu>
 
