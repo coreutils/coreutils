@@ -2,6 +2,11 @@
 
 	* Version 5.3.1.
 
+	* NEWS: pr -D "FORMAT" now accepts the same formats that
+	date +"FORMAT" does.
+	* src/pr.c: Include strftime.h, timespec.h.
+	(init_header): Obtain and format nanosecond part of time stamp.
+
 	* NEWS: nohup now ignores the umask when creating nohup.out.
 	nohup now closes stderr if it is a terminal and stdout is closed.
 	* src/nohup.c (main): Likewise.  Be a little more paranoid about
