@@ -2,6 +2,13 @@
 
 	* Version 4.5.2.
 
+	* src/stat.c (PRIdMAX, PRIuMAX): Remove definitions.
+	Now they're defined through system.h.
+
+	* src/cp-hash.c, src/dd.c, src/df.c, src/du.c, src/ls.c,
+	* src/stat.c, src/wc.c: Remove all inclusions of inttypes.h,
+	since it's already included from sys2.h via system.h.
+
 	* Use automake-1.6f.  Regenerate dependent files.
 
 	* src/Makefile.am (PERL): Remove duplicate definition.
