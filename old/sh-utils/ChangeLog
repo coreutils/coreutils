@@ -1,3 +1,14 @@
+Tue Dec 17 16:49:02 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* acinclude.m4 (jm_SYS_PROC_UPTIME): Require AC_PROG_CC, rather than
+	now-obsolete AC_C_CROSS.
+	(jm_FUNC_MKTIME): When redefining, use rpl_ prefix, not gnu_ one
+	since there's nothing GNU-specific about the replacement.  Contrast
+	with gnu_ prefix added to strftime.
+	(jm_FUNC_MEMCMP): New macro.
+	* configure.in: Use jm_FUNC_MEMCMP instead of AM_FUNC_MEMCMP.
+	* acconfig.h: Add memcmp.
+
 Sun Dec 15 18:37:08 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (check for 3-argument setpriority function): Complete
