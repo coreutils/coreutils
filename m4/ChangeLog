@@ -1,5 +1,9 @@
 2002-04-12  Jim Meyering  <meyering@lucent.com>
 
+	* ls-mntd-fs.m4 (checking for getmntinfo function...): Remove now-bogus
+	check for f_type in sys/mount.h.  Instead, just test for the existence
+	of the getmntinfo function.  Needed for Darwin 5.3.
+
 	* dirfd.m4 (UTILS_FUNC_DIRFD): Also detect when dirfd is a macro.
 	This is necessary at least on Darwin 5.3.
 
