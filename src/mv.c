@@ -327,7 +327,7 @@ movefile (char *source, char *dest, int dest_is_dir,
 	error (1, 0, _("virtual memory exhausted"));
       fail = do_move (source, new_dest, x);
 
-      /* Do not free new_dest.  It may have been squirelled away by
+      /* Do not free new_dest.  It may have been squirreled away by
 	 the remember_copied function.  */
     }
   else
