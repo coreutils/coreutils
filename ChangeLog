@@ -1,6 +1,10 @@
-2003-04-17  Jim Meyering  <jim@meyering.net>
+2003-04-21  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* Makefile.cfg (cvs_files): Add $(srcdir)/config/depcomp to the list.
+
+2003-04-17  Jim Meyering  <jim@meyering.net>
 
 	* src/stty.c: Remove uses of PROTOTYPE macro.
 
