@@ -47,9 +47,12 @@ char *program_name;
 /* If nonzero, show inode information. */
 static int inode_format;
 
-/* If positive, show all entries; if zero, omit size-zero entries and
-   automounter dummies; if negative, also omit non-local filesystems.  */
+/* If nonzero, show even filesystems with zero size or
+   uninteresting types. */
 static int show_all_fs;
+
+/* If nonzero, show only local filesystems.  */
+static int show_local_fs;
 
 /* If nonzero, output data for each filesystem corresponding to a
    command line argument -- even if it's a dummy (automounter) entry.  */
@@ -206,25 +209,30 @@ df_readable (uintmax_t n, char *buf,
    filesystem on DISK.
    If FSTYPE is non-NULL, it is the type of the filesystem on DISK.
    If MOUNT_POINT is non-NULL, then DISK may be NULL -- certain systems may
-   not be able to produce statistics in this case.  */
+   not be able to produce statistics in this case.
+   ME_DUMMY and ME_REMOTE are the mount entry flags.  */
 
 static void
-show_dev (const char *disk, const char *mount_point, const char *fstype)
+show_dev (const char *disk, const char *mount_point, const char *fstype,
+	  int me_dummy, int me_remote)
 {
   struct fs_usage fsu;
   const char *stat_file;
+
+  if (me_remote && show_local_fs)
+    return;
+
+  if (me_dummy && show_all_fs == 0 && !show_listed_fs)
+    return;
+
+  if (!selected_fstype (fstype) || excluded_fstype (fstype))
+    return;
 
   /* If MOUNT_POINT is NULL, then the filesystem is not mounted, and this
      program reports on the filesystem that the special file is on.
      It would be better to report on the unmounted filesystem,
      but statfs doesn't do that on most systems.  */
   stat_file = mount_point ? mount_point : disk;
-
-  if (show_all_fs < 0 && fstype && REMOTE_FS_TYPE (fstype))
-    return;
-
-  if (!selected_fstype (fstype) || excluded_fstype (fstype))
-    return;
 
   if (get_fs_usage (stat_file, disk, &fsu))
     {
@@ -233,7 +241,7 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
       return;
     }
 
-  if (fsu.fsu_blocks == 0 && show_all_fs <= 0 && !show_listed_fs)
+  if (fsu.fsu_blocks == 0 && !show_all_fs && !show_listed_fs)
     return;
 
   if (! disk)
@@ -354,11 +362,12 @@ show_disk (const char *disk)
   for (me = mount_list; me; me = me->me_next)
     if (STREQ (disk, me->me_devname))
       {
-	show_dev (me->me_devname, me->me_mountdir, me->me_type);
+	show_dev (me->me_devname, me->me_mountdir, me->me_type,
+		  me->me_dummy, me->me_remote);
 	return;
       }
   /* No filesystem is mounted on DISK. */
-  show_dev (disk, (char *) NULL, (char *) NULL);
+  show_dev (disk, (char *) NULL, (char *) NULL, 0, 0);
 }
 
 /* Return the root mountpoint of the filesystem on which FILE exists, in
@@ -440,6 +449,7 @@ show_point (const char *point, const struct stat *statp)
 {
   struct stat disk_stats;
   struct mount_entry *me;
+  struct mount_entry *matching_dummy = NULL;
 
   for (me = mount_list; me; me = me->me_next)
     {
@@ -462,9 +472,25 @@ show_point (const char *point, const struct stat *statp)
 	  if (stat (me->me_mountdir, &disk_stats) != 0 ||
 	      disk_stats.st_dev != me->me_dev)
 	    continue;
-	  show_dev (me->me_devname, me->me_mountdir, me->me_type);
+
+	  /* Prefer non-dummy entries.  */
+	  if (me->me_dummy)
+	    {
+	      matching_dummy = me;
+	      continue;
+	    }
+
+	  show_dev (me->me_devname, me->me_mountdir, me->me_type,
+		    me->me_dummy, me->me_remote);
 	  return;
 	}
+    }
+
+  if (matching_dummy)
+    {
+      show_dev (matching_dummy->me_devname, matching_dummy->me_mountdir,
+		matching_dummy->me_type, 1, matching_dummy->me_remote);
+      return;
     }
 
   /* We couldn't find the mount entry corresponding to POINT.  Go ahead and
@@ -475,7 +501,7 @@ show_point (const char *point, const struct stat *statp)
     char *mp = find_mount_point (point, statp);
     if (mp)
       {
-	show_dev (0, mp, 0);
+	show_dev (0, mp, 0, 0, 0);
 	free (mp);
       }
     else
@@ -504,7 +530,8 @@ show_all_entries (void)
   struct mount_entry *me;
 
   for (me = mount_list; me; me = me->me_next)
-    show_dev (me->me_devname, me->me_mountdir, me->me_type);
+    show_dev (me->me_devname, me->me_mountdir, me->me_type,
+	      me->me_dummy, me->me_remote);
 }
 
 /* Add FSTYPE to the list of filesystem types to display. */
@@ -616,7 +643,7 @@ main (int argc, char **argv)
 	  output_block_size = 1024;
 	  break;
 	case 'l':
-	  show_all_fs = -1;
+	  show_local_fs = 1;
 	  break;
 	case 'm':
 	  output_block_size = 1024 * 1024;
@@ -715,8 +742,8 @@ main (int argc, char **argv)
   mount_list =
     read_filesystem_list ((fs_select_list != NULL
 			   || fs_exclude_list != NULL
-			   || print_type),
-			  optind == argc ? show_all_fs : 1);
+			   || print_type
+			   || show_local_fs));
 
   if (mount_list == NULL)
     error (1, errno, _("cannot read table of mounted filesystems"));
