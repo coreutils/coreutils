@@ -1,5 +1,7 @@
 2002-07-03  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.1.10.
+
 	* src/stat.c (usage): Rename --link/-l to --dereference/-L.
 	Describe --secure.
 	Describe --format.
@@ -20,8 +22,6 @@
 	Report from Volker Borchert.
 
 2002-06-29  Jim Meyering  <meyering@lucent.com>
-
-	* Version 4.1.10.
 
 	* src/stat.c (print_statfs): Use `fputc ('*', stdout)'
 	instead of the combination of strcat and printf.
