@@ -464,8 +464,7 @@ set_fields (const char *fieldstr)
      (i.e. `2-6' or `-4', but not `5-') in FIELDSTR.  */
 
   printable_field = (int *) xmalloc ((max_range_endpoint + 1) * sizeof (int));
-  for (i = 1; i <= max_range_endpoint; i++)
-    printable_field[i] = 0;
+  memset (printable_field, 0, (max_range_endpoint + 1) * sizeof (int));
 
   /* Set the array entries corresponding to integers in the ranges of RP.  */
   for (i = 0; i < n_rp; i++)
