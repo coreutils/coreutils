@@ -966,9 +966,9 @@ find_bracketed_repeat (const struct E_string *es, size_t start_idx,
    the `]' must not be escaped.  */
 
 static int
-star_digits_closebracket (const struct E_string *es, int idx)
+star_digits_closebracket (const struct E_string *es, size_t idx)
 {
-  int i;
+  size_t i;
 
   if (!ES_MATCH (es, idx, '*'))
     return 0;
