@@ -1196,6 +1196,7 @@ get_next (s, class)
       abort ();
       break;
     }
+
   return return_val;
 }
 

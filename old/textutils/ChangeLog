@@ -1,5 +1,7 @@
 Sat Oct 23 01:00:12 1993  Jim Meyering  (meyering@comco.com)
 
+	* tr.c (get_next, string2_extend): Add default: label to switch stmt.
+
 	* cat.c, cksum.c, comm.c, csplit.c, cut.c, expand.c, fold.c, head.c,
 	join.c, nl.c, od.c, paste.c, pr.c, split.c, sum.c, tac.c, tail.c,
 	tr.c, unexpand.c, uniq.c, wc.c (usage): Add long --help.
