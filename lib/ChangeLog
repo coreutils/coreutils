@@ -1,5 +1,14 @@
 2000-10-30  Paul Eggert  <eggert@twinsun.com>
 
+	* lib/error.h, lib/getline.h, lib/modechange.h:
+	Remove "2000" from Copyright line, as the file hasn't been
+	changed this year other than in the copyright notice.
+
+	* lib/xalloc.h: Add "2000" to Copyright line, as this file
+	was changed this year.
+
+2000-10-30  Paul Eggert  <eggert@twinsun.com>
+
 	* lib/fnmatch.c (FOLD): Do not assume that characters are unsigned.
 	(fnmatch): Fix some FNM_FILE_NAME and FNM_LEADING_DIR bugs,
 	e.g. fnmatch("d*/*1", "d/s/1", FNM_FILE_NAME) incorrectly yielded zero.
