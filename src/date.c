@@ -79,11 +79,20 @@ static int iso_8601_format = 0;
 /* If non-zero, display time in RFC-(2)822 format for mail or news. */
 static int rfc_format = 0;
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  ISO_8601_OPTION = CHAR_MAX + 1
+};
+
+static char const short_options[] = "d:f:I" OPTARG_POSIX "r:Rs:u";
+
 static struct option const long_options[] =
 {
   {"date", required_argument, NULL, 'd'},
   {"file", required_argument, NULL, 'f'},
-  {"iso-8601", optional_argument, NULL, 'I'},
+  {"iso-8601", optional_argument, NULL, ISO_8601_OPTION},
   {"reference", required_argument, NULL, 'r'},
   {"rfc-822", no_argument, NULL, 'R'},
   {"set", required_argument, NULL, 's'},
@@ -125,7 +134,17 @@ Display the current time in the given FORMAT, or set the system date.\n\
 \n\
   -d, --date=STRING         display time described by STRING, not `now'\n\
   -f, --file=DATEFILE       like --date once for each line of DATEFILE\n\
-  -I, --iso-8601[=TIMESPEC] output an ISO-8601 compliant date/time string.\n\
+"), stdout);
+      if (POSIX2_VERSION < 200112)
+	fputs (_("\
+  -ITIMESPEC, --iso-8601[=TIMESPEC]  output date/time in ISO 8601 format.\n\
+  -I                        (obsolete) same as -Idate\n\
+"), stdout);
+      else
+	fputs (_("\
+  -I TIMESPEC, --iso-8601[=TIMESPEC]  output date/time in ISO 8601 format.\n\
+"), stdout);
+      fputs(_("\
                             TIMESPEC=`date' (or missing) for date only,\n\
                             `hours', `minutes', or `seconds' for date and\n\
                             time to the indicated precision.\n\
@@ -305,7 +324,7 @@ main (int argc, char **argv)
   close_stdout_set_status (2);
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "d:f:I::r:Rs:u", long_options, NULL))
+  while ((optc = getopt_long (argc, argv, short_options, long_options, NULL))
 	 != -1)
     switch (optc)
       {
@@ -318,6 +337,12 @@ main (int argc, char **argv)
 	batch_file = optarg;
 	break;
       case 'I':
+	if (POSIX2_VERSION < 200112 && OBSOLETE_OPTION_WARNINGS
+	    && ! optarg && ! getenv ("POSIXLY_CORRECT"))
+	  error (0, 0,
+		 _("warning: `-I' option is obsolete; use `--iso-8601'"));
+	/* Fall through.  */
+      case ISO_8601_OPTION:
 	iso_8601_format = (optarg
 			   ? XARGMATCH ("--iso-8601", optarg,
 					time_spec_string, time_spec)
