@@ -370,7 +370,7 @@ md5_check (const char *checkfile_name, int binary)
 	  if (n_mismatched_checksums > 0)
 	    {
 	      error (0, 0,
-		   _("WARNING: %d of %d computed checksum%s did NOT match\n"),
+		   _("WARNING: %d of %d computed checksum%s did NOT match"),
 		     n_mismatched_checksums, n_computed_checkums,
 		     (n_computed_checkums == 1 ? "" : "s"));
 	    }
