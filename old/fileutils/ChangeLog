@@ -1,3 +1,24 @@
+1999-09-03  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/lchown.h (ENOSYS): Don't use ENOMSG; it's not in NeXTStep3.3.
+	Use EINVAL instead.
+
+1999-09-01  Jim Meyering  <meyering@ascend.com>
+
+	* src/cp.c: Remove declaration of xstrdup.
+	* src/df.c: Likewise.
+	* src/ls.c: Likewise.
+
+1999-09-01  Akim Demaille  <akim@epita.fr>
+
+	* lib/xmalloc.c (xalloc_fail_func): Use `PARAMS'.
+	* lib/xalloc.h (xalloc_fail_func): Likewise.
+	(xstrdup): Add protoype.
+
+	* lib/version-etc.c (version_etc_copyright): Default copyright string.
+	(version_etc): Use it.
+	* lib/version-etc.h: Declare it.
+
 1999-08-29  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in (AC_YACC): Remove use, now that we require bison.
