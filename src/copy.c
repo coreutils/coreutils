@@ -195,17 +195,20 @@ copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
    Use DST_MODE as the 3rd argument in the call to open.
    X provides many option settings.
    Return 0 if successful, -1 if an error occurred.
-   *NEW_DST is as in copy_internal.  */
+   *NEW_DST is as in copy_internal.  SRC_SB is the result
+   of calling xstat (aka stat in this case) on SRC_PATH.  */
 
 static int
 copy_reg (const char *src_path, const char *dst_path,
-	  const struct cp_options *x, mode_t dst_mode, int *new_dst)
+	  const struct cp_options *x, mode_t dst_mode, int *new_dst,
+	  struct stat const *src_sb)
 {
   char *buf;
   int buf_size;
   int dest_desc;
   int source_desc;
   struct stat sb;
+  struct stat src_open_sb;
   char *cp;
   int *ip;
   int return_val = 0;
@@ -218,6 +221,31 @@ copy_reg (const char *src_path, const char *dst_path,
     {
       error (0, errno, _("cannot open %s for reading"), quote (src_path));
       return -1;
+    }
+
+  if (fstat (source_desc, &src_open_sb))
+    {
+      error (0, errno, _("cannot fstat %s"), quote (src_path));
+      return_val = -1;
+      goto close_src_desc;
+    }
+
+  /* Compare the source dev/ino from the open file to the incoming,
+     saved ones obtained via a previous call to stat.  */
+  if (! SAME_INODE (*src_sb, src_open_sb))
+    {
+      error (EXIT_FAILURE, 0,
+	     _("ERROR: the source file %s initially had device/inode\n\
+numbers %lu/%lu, but now (after opening it), the numbers\n\
+are %lu/%lu.  That means that while this program was running,\n\
+the file was replaced with another one.  Skipping this file."),
+	     quote (src_path),
+	     (unsigned long)(src_sb->st_dev),
+	     (unsigned long)(src_sb->st_ino),
+	     (unsigned long)(src_open_sb.st_dev),
+	     (unsigned long)(src_open_sb.st_ino));
+      return_val = -1;
+      goto close_src_desc;
     }
 
   /* These semantics are required for cp.
@@ -1339,7 +1367,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	 used as the 3rd argument in the open call, but that's not consistent
 	 with historical practice.  */
       if (copy_reg (src_path, dst_path, x,
-		    get_dest_mode (x, src_mode), &new_dst))
+		    get_dest_mode (x, src_mode), &new_dst, &src_sb))
 	goto un_backup;
     }
   else
