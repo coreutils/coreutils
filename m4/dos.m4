@@ -1,4 +1,4 @@
-#serial 6
+#serial 7
 
 # Define some macros required for proper operation of code in lib/*.c
 # on MSDOS/Windows systems.
