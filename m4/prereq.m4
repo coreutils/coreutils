@@ -1,4 +1,4 @@
-#serial 23
+#serial 24
 
 dnl These are the prerequisite macros for files in the lib/
 dnl directories of the fileutils, sh-utils, and textutils packages.
@@ -11,6 +11,7 @@ AC_DEFUN([jm_PREREQ],
   jm_PREREQ_ERROR
   jm_PREREQ_EXCLUDE
   jm_PREREQ_GETPAGESIZE
+  jm_PREREQ_HARD_LOCALE
   jm_PREREQ_HASH
   jm_PREREQ_HUMAN
   jm_PREREQ_MBSWIDTH
@@ -64,6 +65,12 @@ AC_DEFUN([jm_PREREQ_GETPAGESIZE],
 [
   AC_CHECK_FUNCS(getpagesize)
   AC_CHECK_HEADERS(OS.h unistd.h)
+])
+
+AC_DEFUN([jm_PREREQ_HARD_LOCALE],
+[
+  AC_CHECK_HEADERS(alloca.h locale.h stdbool.h string.h)
+  AC_CHECK_FUNCS(setlocale)
 ])
 
 AC_DEFUN([jm_PREREQ_HASH],
