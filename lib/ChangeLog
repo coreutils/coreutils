@@ -1,5 +1,9 @@
 2003-01-23  Jim Meyering  <jim@meyering.net>
 
+	* tsearch.c [HAVE_CONFIG_H]: Include <config.h>.
+	Add autoconf-recommended block of alloca-related code.
+	Cast each use of alloca to the required type, (node**).
+
 	* ftw.c: Add autoconf-recommended block of alloca-related code.
 	[!_LIBC] (__getcwd): Define to xgetcwd and declare xgetcwd.
 
