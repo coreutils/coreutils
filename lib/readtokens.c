@@ -58,7 +58,8 @@ void *xrealloc ();
 /* Initialize a tokenbuffer. */
 
 void
-init_tokenbuffer (token_buffer *tokenbuffer)
+init_tokenbuffer (tokenbuffer)
+     token_buffer *tokenbuffer;
 {
   tokenbuffer->size = INITIAL_TOKEN_LENGTH;
   tokenbuffer->buffer = ((char *) xmalloc (INITIAL_TOKEN_LENGTH));
@@ -76,8 +77,11 @@ init_tokenbuffer (token_buffer *tokenbuffer)
    and on files that aren't newline-terminated.  */
 
 long
-readtoken (FILE *stream, const char *delim, int n_delim,
-	   token_buffer *tokenbuffer)
+readtoken (stream, delim, n_delim, tokenbuffer)
+     FILE *stream;
+     const char *delim;
+     int n_delim;
+     token_buffer *tokenbuffer;
 {
   char *p;
   int c, i, n;
@@ -160,9 +164,14 @@ readtoken (FILE *stream, const char *delim, int n_delim,
    %%% realloc() of `tokens' just before returning? */
 
 int
-readtokens (FILE *stream, int projected_n_tokens,
-	    const char *delim, int n_delim,
-	    char ***tokens_out, long **token_lengths)
+readtokens (stream, projected_n_tokens, delim, n_delim,
+	    tokens_out, token_lengths)
+     FILE *stream;
+     int projected_n_tokens;
+     const char *delim;
+     int n_delim;
+     char ***tokens_out;
+     long **token_lengths;
 {
   token_buffer tb, *token = &tb;
   int token_length;
