@@ -1,3 +1,12 @@
+1997-11-09  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (jm_FUNC_STRFTIME): Use it.
+	* m4/jm-mktime.m4 (jm_FUNC_MKTIME): Check for localtime_r.
+	* m4/strftime.m4 (jm_STRFTIME_PREREQS): Check for localtime_r.
+	(jm_FUNC_GNU_STRFTIME): Use new macro.
+	(jm_FUNC_STRFTIME): New macro.  Likewise.
+	Reported by Noel Cragg.
+
 1997-11-08  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* m4/lfs.m4 (AC_LFS): New file/macro.
@@ -12,8 +21,7 @@
 
 1997-10-16  Paul Eggert  <eggert@twinsun.com>
 
-        * FIXME: do this differently
-	configure.in (AC_CHECK_FUNCS): Add fseeko.
+	* configure.in (AC_CHECK_FUNCS): Add fseeko.
 
 	* src/od.c (skip): Use fseeko.  Don't use lseek; it causes
 	the stdio stream to become out of sync with respect to the
