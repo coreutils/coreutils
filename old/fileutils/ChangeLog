@@ -1,3 +1,20 @@
+2000-04-26  Jim Meyering  <meyering@lucent.com>
+
+	* src/mkdir.c: Rename global: s/path_mode/create_parents/.
+	(main): No longer perform explicit chmod when creating
+	parent directories, since make_path now does the chmod.
+
+2000-04-17  Jim Meyering  <meyering@lucent.com>
+
+	* src/chown.c: Accept new option: --from=CURRENT_OWNER:CURRENT_GROUP.
+	(enum) [FROM_OPTION]: New member.
+	(long_options): New getopt spec.
+	(change_file_owner): Add old_user, old_group parameters.  Use them.
+	(change_dir_owner): Likewise.
+	(usage): Describe.
+	(main): New case.
+	From Andries Brouwer.
+
 2000-04-16  Jim Meyering  <meyering@lucent.com>
 
 	* src/cp.c: New option: --strip-trailing-slashes.
