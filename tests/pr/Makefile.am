@@ -21,7 +21,7 @@ tFFt-bl tFFt-lm tFnFt ta3-0FF ta3-FF tb3-0FF tb3-FF tn tt-0FF tt-FF tt-bl \
 tt-t tta3-0FF tta3-FF ttb3-0FF ttb3-FF w20l17f-lm w25l17f-lm w26l17f-lm \
 w35a3l17f-lm w35b3l17f-lm w35ja3l17f-lm w35jb3l17f-lm w35jml17f-lmlo \
 w35ml17f-lm-lo w48l17f-lm w72j-0FF
-maint_gen =
+maint_gen = margin-0.I margin-0.X
 run_gen = 1a.O 1a.E 1b.O 1b.E 1c.O 1c.E 1d.O 1d.E 1e.O 1e.E 1f.O 1f.E 1g.O \
 1g.E 1h.O 1h.E 1i.O 1i.E 1j.O 1j.E 1k.O 1k.E 1l.O 1l.E 2a.O 2a.E 2b.O 2b.E \
 2c.O 2c.E 2d.O 2d.E 2e.O 2e.E 2f.O 2f.E 2g.O 2g.E 2h.O 2h.E 2i.O 2i.E 2j.O \
@@ -55,7 +55,8 @@ run_gen = 1a.O 1a.E 1b.O 1b.E 1c.O 1c.E 1d.O 1d.E 1e.O 1e.E 1f.O 1f.E 1g.O \
 10ac.O 10ac.E 10ad.O 10ad.E 10ba.O 10ba.E 10bb.O 10bb.E 10bc.O 10bc.E 10bd.O \
 10bd.E 11a.O 11a.E 11b.O 11b.E 11e.O 11e.E 11f.O 11f.E 11g.O 11g.E 11h.O \
 11h.E 12aa.O 12aa.E 12ab.O 12ab.E 12ac.O 12ac.E 12ba.O 12ba.E 12bb.O 12bb.E \
-12bc.O 12bc.E 12ma.O 12ma.E 12mb.O 12mb.E 12mc.O 12mc.E 12md.O 12md.E
+12bc.O 12bc.E 12ma.O 12ma.E 12mb.O 12mb.E 12mc.O 12mc.E 12md.O 12md.E \
+margin-0.O margin-0.E
 ##test-files-end
 
 EXTRA_DIST = mk-script.pl Test.pm $x-tests $(explicit) $(maint_gen)
