@@ -1,3 +1,8 @@
+Sun Oct  6 08:02:28 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (AM_FUNC_ERROR_AT_LINE): Use it instead of
+	open-coding it.
+
 Sat Oct  5 12:40:22 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/memcpy.c [HAVE_CONFIG_H]: Include config.h.
