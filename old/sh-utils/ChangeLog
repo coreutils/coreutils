@@ -1,3 +1,8 @@
+Sat Aug 27 16:57:20 1994  Jim Meyering  (meyering@comco.com)
+
+	* system.h [BROKEN_STAT_MACROS]: Remove unnecessary #ifdef's.
+	From Francois Pinard.
+
 Thu Aug 18 11:44:48 1994  Jim Meyering  (meyering@comco.com)
 
 	* su.1: Explain why GNU doesn't support the `wheel group'.
