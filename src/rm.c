@@ -51,12 +51,12 @@ int euidaccess ();
 int yesno ();
 void strip_trailing_slashes ();
 
-static int clear_directory (struct stat *statp);
-static int duplicate_entry (struct pathstack *stack, ino_t inum);
-static int remove_dir (struct stat *statp);
-static int remove_file (struct stat *statp);
-static int rm (void);
-static void usage (int status);
+static int clear_directory __P ((struct stat *statp));
+static int duplicate_entry __P ((struct pathstack *stack, ino_t inum));
+static int remove_dir __P ((struct stat *statp));
+static int remove_file __P ((struct stat *statp));
+static int rm __P ((void));
+static void usage __P ((int status));
 
 /* Name this program was run with.  */
 char *program_name;
