@@ -196,6 +196,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   echo -e '\xHH' now outputs a byte whose hexadecimal value is HH,
   for compatibility with bash.
 
+  ls has a new --hide=PATTERN option that behaves like
+  --ignore=PATTERN, except that it is overridden by -a or -A.
+  This can be useful for aliases, e.g., if lh is an alias for
+  "ls --hide='*~'", then "lh -A" lists the file "README~".
+
   In the following cases POSIX allows the default GNU behavior,
   so when POSIXLY_CORRECT is set:
 
