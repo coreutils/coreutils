@@ -38,3 +38,6 @@ Set your environment variable CANDIDATE_TMP_DIRS to make this test use
 use a different list.
 EOF
 fi
+
+test "$VERBOSE" = yes && set -x
+
