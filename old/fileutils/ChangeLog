@@ -1,7 +1,10 @@
 Sun Oct 17 00:19:58 1993  Jim Meyering  (meyering@comco.com)
 
+	* fileblocks.c [!NINDIR]: Define BSIZE only if it's not already
+	defined.
+
 	* ls.c (print_long_format): Cast printf args major and minor
-	so they'll have types macthing %u format even on systems
+	so they'll have types matching %u format even on systems
 	where those macros have signed type.
 
 Sat Oct 16 00:25:42 1993  Jim Meyering  (meyering@comco.com)
@@ -523,7 +526,7 @@ Wed Mar 31 22:03:28 1993  Jim Meyering  (meyering@comco.com)
 Tue Mar 30 17:42:11 1993  david d `zoo' zuhn  (zoo at cirdan.cygnus.com)
 
 	* ls.c: Add -G,--no-group option to inhibit display of group
-	infomation.
+	information.
 	* ls.1: Document it.
 
 Mon Mar 29 22:22:40 1993  Jim Meyering  (meyering@comco.com)
@@ -833,7 +836,7 @@ Mon Mar 30 12:21:28 1992  David J. MacKenzie  (djm@wookumz.gnu.ai.mit.edu)
 	of loop.
 
 	* fsusage.c (adjust_blocks): New function.
-	(get_fs_usge): Call it.
+	(get_fs_usage): Call it.
 
 	* mvdir.c (main): Don't possibly try to use ".." entry of new dir
 	before creating it.
@@ -867,7 +870,7 @@ Tue Mar 24 14:53:19 1992  David J. MacKenzie  (djm@wookumz.gnu.ai.mit.edu)
 	work on SVR3.
 
 	* fsusage.c, mountlist.c: New files split from fsinfo.c.
-	Revise conditionals to make the two files independant of each other.
+	Revise conditionals to make the two files independent of each other.
 	* fsusage.h, mountlist.h: New files split from fsinfo.h.
 	* df.c: Use them.
 
@@ -1482,7 +1485,7 @@ Mon Oct 29 01:20:46 1990  David J. MacKenzie  (djm at apple-gunkies)
 	a tty and file is unwritable, prompt before overwriting.
 
 	* cp.c (copy_reg): Only make sparse files if
-	NO_SPARSE_FILES is undefined, to accomodate dumb kernels.
+	NO_SPARSE_FILES is undefined, to accommodate dumb kernels.
 
 	* du.c (count_entry): Remove misinformed HPUX kludge that
 	doesn't really fix the problem.
@@ -2359,7 +2362,7 @@ Sat Mar  3 11:27:27 1990  Torbj|rn Granlund  (tege at echnaton)
 	  Always copy fifo's and symbolic links as themselves.
 
 	* cp.c (copy_reg): Make int scan first, char scan then, to
-	  find frist non-zero byte.  This to avoid false hole
+	  find first non-zero byte.  This to avoid false hole
 	  creation.
 
 Sat Mar  3 10:22:28 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
