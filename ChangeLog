@@ -1,6 +1,12 @@
-2005-02-09  Jim Meyering  <jim@meyering.net>
+2005-02-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* src/sort.c (mergefps): Use binary search rather than linear one
+	when comparing new line to lines already in main memory.
+	Idea suggested by James Lemley.
+
+2005-02-09  Jim Meyering  <jim@meyering.net>
 
 	* src/copy.c (valid_options): Add an assertion that
 	not both hard_link and symbolic_link are set.
