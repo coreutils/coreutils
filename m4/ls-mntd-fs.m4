@@ -1,4 +1,4 @@
-#serial 4
+#serial 5
 
 dnl From Jim Meyering.
 dnl
@@ -213,7 +213,7 @@ if test -z "$ac_list_mounted_fs"; then
   AC_MSG_RESULT($fu_result)
   if test $fu_result = yes; then
     ac_list_mounted_fs=found
-    AC_DEFINE(MOUNTED_NEXT_DEV, 1,
+    AC_DEFINE(MOUNTED_FS_STAT_DEV, 1,
       [Define if there are functions named next_dev and fs_stat_dev for
    reading the list of mounted filesystems.  (BeOS)])
   fi
