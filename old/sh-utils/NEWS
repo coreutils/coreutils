@@ -1,5 +1,18 @@
 Major changes in release 1.9:
+* printenv and tty detect and report write errors
 * fix bug in stty
+* stty supports accepts the new options status and flush on systems that
+  provide them
+* fix bugs in expr
+* better support for Linux, Dec Alpha, and SGI Irix
+* all programs (even true and false) accept --version and --help options
+* uname's --version option is no longer equivalent to its -v option
+* configure uses config.h, so DEFS won't exceed preprocessor limits of
+  some compilers on the number of symbols defined via -D.
+* work around problem where $(srcdir)/config.h was used instead of
+  ../config.h -- this happened only when building in a subdirectory
+  and when config.h remained in $(srcdir) from a previous ./configure.
+* make may be run from the subdirectories
 
 Major changes in release 1.8:
 * add echo command

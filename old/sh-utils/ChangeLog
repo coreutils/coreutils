@@ -1,7 +1,22 @@
-Mon Oct 25 19:22:58 EDT 1993
+Tue Nov 02 01:14:21 1993  Jim Meyering  (meyering@comco.com)
+
+	* acconfig.h: Add comments.
+
+	* printenv.c (main): Exit with status == 2 for file error.
+
+	* yes.c (main): Restore argv/optind handling -- now that
+	parse_long_options doesn't change optind.
+
+Mon Oct 25 19:22:58 1993  Jim Meyering  (meyering@comco.com)
+
+	* basename.c, date.c, dirname.c, echo.c, env.c, expr.c, id.c,
+	logname.c, nice.c, pathchk.c, printenv.c, printf.c, sleep.c,
+	stty.c, su.c, tee.c, test.c, tty.c, uname.c, who.c, whoami.c,
+	yes.c: Use the preferred `--longopt=arg' syntax in --help message
+	rather than `--longopt arg'.  From Francois Pinard.
 
 	* stty.c (main, integer_arg): Don't just call error(1,... about
-	improper usage.  Call `error (0,...' them usage (1).
+	improper usage.  Call `error (0,...' then usage (1).
 
 Sun Oct 24 14:10:23 1993  Jim Meyering  (meyering@comco.com)
 
