@@ -57,6 +57,14 @@ char *alloca ();
 # include <unistd.h>
 #endif
 
+#if ENABLE_NLS
+# include <libintl.h>
+# define _(Text) gettext (Text)
+#else
+# define _(Text) Text
+#endif
+#define N_(Text) Text
+
 #ifndef _POSIX_VERSION
 struct passwd *getpwnam ();
 struct group *getgrnam ();
@@ -125,7 +133,14 @@ const char *
 parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
 		 char **username_arg, char **groupname_arg)
 {
-  static const char *tired = "virtual memory exhausted";
+  static const char *E_no_memory = N_("virtual memory exhausted");
+  static const char *E_invalid_user = N_("invalid user");
+  static const char *E_invalid_group = N_("invalid group");
+  static const char *E_bad_spec =
+    N_("cannot get the login group of a numeric UID");
+  static const char *E_cannot_omit_both =
+    N_("cannot omit both user and group");
+
   const char *error_msg;
   char *spec;			/* A copy we can write on.  */
   struct passwd *pwd;
@@ -141,6 +156,9 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
 
   /* Find the separator if there is one.  */
   separator = strchr (spec, ':');
+
+  /* FIXME: accepting `.' as the separator is contrary to POSIX.
+     someday we should drop support for this.  */
   if (separator == NULL)
     separator = strchr (spec, '.');
 
@@ -157,7 +175,7 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
        : separator + 1);
 
   if (u == NULL && g == NULL)
-    return "can not omit both user and group";
+    return _(E_cannot_omit_both);
 
 #ifdef __DJGPP__
   /* Pretend that we are the user U whose group is G.  This makes
@@ -175,13 +193,13 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
 	{
 
 	  if (!is_number (u))
-	    error_msg = "invalid user";
+	    error_msg = _(E_invalid_user);
 	  else
 	    {
 	      int use_login_group;
 	      use_login_group = (separator != NULL && g == NULL);
 	      if (use_login_group)
-		error_msg = "cannot get the login group of a numeric UID";
+		error_msg = _(E_bad_spec);
 	      else
 		{
 		  /* FIXME: don't use atoi!  */
@@ -224,7 +242,7 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
       if (grp == NULL)
 	{
 	  if (!is_number (g))
-	    error_msg = "invalid group";
+	    error_msg = _(E_invalid_group);
 	  else
 	    {
 	      /* FIXME: don't use atoi!  */
@@ -245,7 +263,7 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
 	{
 	  *username_arg = strdup (u);
 	  if (*username_arg == NULL)
-	    error_msg = tired;
+	    error_msg = _(E_no_memory);
 	}
 
       if (groupname != NULL && error_msg == NULL)
@@ -258,7 +276,7 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
 		  free (*username_arg);
 		  *username_arg = NULL;
 		}
-	      error_msg = tired;
+	      error_msg = _(E_no_memory);
 	    }
 	}
     }
