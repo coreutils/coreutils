@@ -24,6 +24,8 @@
 #include "error.h"
 #include "readutmp.h"
 
+char *xmalloc ();
+
 /* The name this program was run with. */
 char *program_name;
 
@@ -96,8 +98,8 @@ list_entries_users (int n)
 static void
 users (const char *filename)
 {
-  int users = read_utmp (filename);
-  list_entries_users (users);
+  int n_users = read_utmp (filename);
+  list_entries_users (n_users);
 }
 
 static void
