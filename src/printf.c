@@ -526,6 +526,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
   exit_status = 0;
 
   /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
@@ -554,8 +556,6 @@ main (int argc, char **argv)
 
   if (argc > 0)
     error (0, 0, _("warning: excess arguments have been ignored"));
-
-  close_stdout ();
 
   exit (exit_status);
 }
