@@ -26,14 +26,11 @@
 #include "system.h"
 #include "error.h"
 #include "xfts.h"
+#include "inttostr.h"
 #include "lchown.h"
 #include "quote.h"
 #include "root-dev-ino.h"
 #include "chown-core.h"
-
-/* The number of decimal digits required to represent the largest value of
-   type `unsigned int'.  This is enough for an 8-byte unsigned int type.  */
-#define UINT_MAX_DECIMAL_DIGITS 20
 
 #ifndef _POSIX_VERSION
 struct group *getgrnam ();
@@ -59,24 +56,6 @@ chopt_free (struct Chown_option *chopt)
      They're not always allocated.  */
 }
 
-/* Convert N to a string, and return a pointer to that string in memory
-   allocated from the heap.  */
-
-static char *
-uint_to_string (unsigned int n)
-{
-  char buf[UINT_MAX_DECIMAL_DIGITS + 1];
-  char *p = buf + sizeof buf;
-
-  *--p = '\0';
-
-  do
-    *--p = '0' + (n % 10);
-  while ((n /= 10) != 0);
-
-  return xstrdup (p);
-}
-
 /* Convert the numeric group-id, GID, to a string stored in xmalloc'd memory,
    and return it.  If there's no corresponding group name, use the decimal
    representation of the ID.  */
@@ -84,8 +63,11 @@ uint_to_string (unsigned int n)
 extern char *
 gid_to_name (gid_t gid)
 {
+  char buf[INT_BUFSIZE_BOUND (intmax_t)];
   struct group *grp = getgrgid (gid);
-  return grp ? xstrdup (grp->gr_name) : uint_to_string (gid);
+  return xstrdup (grp ? grp->gr_name
+		  : TYPE_SIGNED (gid_t) ? imaxtostr (gid, buf)
+		  : umaxtostr (gid, buf));
 }
 
 /* Convert the numeric user-id, UID, to a string stored in xmalloc'd memory,
@@ -95,8 +77,11 @@ gid_to_name (gid_t gid)
 extern char *
 uid_to_name (uid_t uid)
 {
+  char buf[INT_BUFSIZE_BOUND (intmax_t)];
   struct passwd *pwd = getpwuid (uid);
-  return pwd ? xstrdup (pwd->pw_name) : uint_to_string (uid);
+  return xstrdup (pwd ? pwd->pw_name
+		  : TYPE_SIGNED (uid_t) ? imaxtostr (uid, buf)
+		  : umaxtostr (uid, buf));
 }
 
 /* Tell the user how/if the user and group of FILE have been changed.
@@ -108,8 +93,8 @@ describe_change (const char *file, enum Change_status changed,
 		 char const *user, char const *group)
 {
   const char *fmt;
-  char *spec;
-  int spec_allocated = 0;
+  char const *spec;
+  char *spec_allocated = NULL;
 
   if (changed == CH_NOT_APPLIED)
     {
@@ -122,18 +107,18 @@ describe_change (const char *file, enum Change_status changed,
     {
       if (group)
 	{
-	  spec = xmalloc (strlen (user) + 1 + strlen (group) + 1);
-	  stpcpy (stpcpy (stpcpy (spec, user), ":"), group);
-	  spec_allocated = 1;
+	  spec_allocated = xmalloc (strlen (user) + 1 + strlen (group) + 1);
+	  stpcpy (stpcpy (stpcpy (spec_allocated, user), ":"), group);
+	  spec = spec_allocated;
 	}
       else
 	{
-	  spec = (char *) user;
+	  spec = user;
 	}
     }
   else
     {
-      spec = (char *) group;
+      spec = group;
     }
 
   switch (changed)
@@ -159,8 +144,7 @@ describe_change (const char *file, enum Change_status changed,
 
   printf (fmt, quote (file), spec);
 
-  if (spec_allocated)
-    free (spec);
+  free (spec_allocated);
 }
 
 /* Change the owner and/or group of the file specified by FTS and ENT
@@ -168,8 +152,8 @@ describe_change (const char *file, enum Change_status changed,
    If REQUIRED_UID is not -1, then skip files with any other user ID.
    If REQUIRED_GID is not -1, then skip files with any other group ID.
    CHOPT specifies additional options.
-   Return 0 if successful, -1 if errors occurred.  */
-static int
+   Return true if successful.  */
+static bool
 change_file_owner (FTS *fts, FTSENT *ent,
 		   uid_t uid, gid_t gid,
 		   uid_t required_uid, gid_t required_gid,
@@ -179,7 +163,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
   char const *file = ent->fts_accpath;
   struct stat const *file_stats IF_LINT (= NULL);
   struct stat stat_buf;
-  int errors = 0;
+  bool ok = true;
   bool do_chown;
   bool symlink_changed = true;
 
@@ -187,35 +171,35 @@ change_file_owner (FTS *fts, FTSENT *ent,
     {
     case FTS_D:
       if (chopt->recurse)
-	return 0;
+	return true;
       break;
 
     case FTS_DP:
       if (! chopt->recurse)
-	return 0;
+	return true;
       break;
 
     case FTS_NS:
       error (0, ent->fts_errno, _("cannot access %s"), quote (file_full_name));
-      errors = -1;
+      ok = false;
       break;
 
     case FTS_ERR:
       error (0, ent->fts_errno, _("%s"), quote (file_full_name));
-      errors = -1;
+      ok = false;
       break;
 
     case FTS_DNR:
       error (0, ent->fts_errno, _("cannot read directory %s"),
 	     quote (file_full_name));
-      errors = -1;
+      ok = false;
       break;
 
     default:
       break;
     }
 
-  if (errors)
+  if (!ok)
     do_chown = false;
   else if (required_uid == (uid_t) -1 && required_gid == (gid_t) -1
 	   && chopt->verbosity == V_off && ! chopt->root_dev_ino)
@@ -232,13 +216,13 @@ change_file_owner (FTS *fts, FTSENT *ent,
 	    {
 	      error (0, errno, _("cannot dereference %s"),
 		     quote (file_full_name));
-	      errors = -1;
+	      ok = false;
 	    }
 
 	  file_stats = &stat_buf;
 	}
 
-      do_chown = (!errors
+      do_chown = (ok
 		  && (required_uid == (uid_t) -1
 		      || required_uid == file_stats->st_uid)
 		  && (required_gid == (gid_t) -1
@@ -248,8 +232,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
   if (do_chown && ROOT_DEV_INO_CHECK (chopt->root_dev_ino, file_stats))
     {
       ROOT_DEV_INO_WARN (file_full_name);
-      errors = -1;
-      do_chown = false;
+      ok = do_chown = false;
     }
 
   if (do_chown)
@@ -259,18 +242,18 @@ change_file_owner (FTS *fts, FTSENT *ent,
 	  /* Applying chown to a symlink and expecting it to affect
 	     the referent is not portable, but here we may be using a
 	     wrapper that tries to correct for unconforming chown.  */
-	  errors = chown (file, uid, gid);
+	  ok = (chown (file, uid, gid) == 0);
 	}
       else
 	{
-	  errors = lchown (file, uid, gid);
+	  ok = (lchown (file, uid, gid) == 0);
 
 	  /* Ignore any error due to lack of support; POSIX requires
 	     this behavior for top-level symbolic links with -h, and
 	     implies that it's required for all symbolic links.  */
-	  if (errors && errno == EOPNOTSUPP)
+	  if (!ok && errno == EOPNOTSUPP)
 	    {
-	      errors = 0;
+	      ok = true;
 	      symlink_changed = false;
 	    }
 	}
@@ -282,7 +265,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
 	 by some other user and operating on files in a directory
 	 where M has write access.  */
 
-      if (errors && ! chopt->force_silent)
+      if (!ok && ! chopt->force_silent)
 	error (0, errno, (uid != (uid_t) -1
 			  ? _("changing ownership of %s")
 			  : _("changing group of %s")),
@@ -292,14 +275,14 @@ change_file_owner (FTS *fts, FTSENT *ent,
   if (chopt->verbosity != V_off)
     {
       bool changed =
-	(do_chown && !errors && symlink_changed
+	((do_chown & ok & symlink_changed)
 	 && ! ((uid == (uid_t) -1 || uid == file_stats->st_uid)
 	       && (gid == (gid_t) -1 || gid == file_stats->st_gid)));
 
       if (changed || chopt->verbosity == V_high)
 	{
 	  enum Change_status ch_status =
-	    (errors ? CH_FAILED
+	    (!ok ? CH_FAILED
 	     : !symlink_changed ? CH_NOT_APPLIED
 	     : !changed ? CH_NO_CHANGE_REQUESTED
 	     : CH_SUCCEEDED);
@@ -311,7 +294,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
   if ( ! chopt->recurse)
     fts_set (fts, ent, FTS_SKIP);
 
-  return errors;
+  return ok;
 }
 
 /* Change the owner and/or group of the specified FILES.
@@ -322,14 +305,14 @@ change_file_owner (FTS *fts, FTSENT *ent,
    If GID is not -1, then change the group id of each file to GID.
    If REQUIRED_UID and/or REQUIRED_GID is not -1, then change only
    files with user ID and group ID that match the non-(-1) value(s).
-   Return nonzero upon error, zero otherwise.  */
-extern int
+   Return true if successful.  */
+bool
 chown_files (char **files, int bit_flags,
 	     uid_t uid, gid_t gid,
 	     uid_t required_uid, gid_t required_gid,
 	     struct Chown_option const *chopt)
 {
-  int fail = 0;
+  bool ok = true;
 
   /* Use lstat and stat only if they're needed.  */
   int stat_flags = ((required_uid != (uid_t) -1 || required_gid != (gid_t) -1
@@ -350,13 +333,13 @@ chown_files (char **files, int bit_flags,
 	    {
 	      /* FIXME: try to give a better message  */
 	      error (0, errno, _("fts_read failed"));
-	      fail = 1;
+	      ok = false;
 	    }
 	  break;
 	}
 
-      fail |= change_file_owner (fts, ent, uid, gid,
-				 required_uid, required_gid, chopt);
+      ok &= change_file_owner (fts, ent, uid, gid,
+			       required_uid, required_gid, chopt);
     }
 
   /* Ignore failure, since the only way it can do so is in failing to
@@ -364,5 +347,5 @@ chown_files (char **files, int bit_flags,
      that doesn't matter.  */
   fts_close (fts);
 
-  return fail;
+  return ok;
 }
