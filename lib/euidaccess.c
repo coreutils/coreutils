@@ -21,7 +21,7 @@ Suite 330, Boston, MA 02111-1307, USA.  */
 /* Written by David MacKenzie and Torbjorn Granlund.
    Adapted for GNU C library by Roland McGrath.  */
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
 # include <config.h>
 #endif
 
@@ -111,7 +111,7 @@ static gid_t egid;
 /* Nonzero if UID, GID, EUID, and EGID have valid values. */
 static int have_ids = 0;
 
-# ifdef HAVE_GETGROUPS
+# if HAVE_GETGROUPS
 int group_member ();
 # else
 #  define group_member(gid)	0

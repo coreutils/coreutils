@@ -1,5 +1,5 @@
 /* isdir.c -- determine whether a directory exists
-   Copyright (C) 1990 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,19 +15,19 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
+#if HAVE_CONFIG_H
+# include <config.h>
 #endif
 
 #include <sys/types.h>
 #include <sys/stat.h>
 
 #ifdef STAT_MACROS_BROKEN
-#undef S_ISDIR
+# undef S_ISDIR
 #endif /* STAT_MACROS_BROKEN.  */
 
 #if !defined(S_ISDIR) && defined(S_IFDIR)
-#define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+# define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #endif
 
 /* If PATH is an existing directory or symbolic link to a directory,

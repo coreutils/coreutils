@@ -1,8 +1,8 @@
 /* ftruncate emulations that work on some System V's.
    This file is in the public domain.  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
+#if HAVE_CONFIG_H
+# include <config.h>
 #endif
 
 #include <sys/types.h>
@@ -19,15 +19,15 @@ ftruncate (fd, length)
 }
 
 #else /* not F_CHSIZE */
-#ifdef F_FREESP
+# ifdef F_FREESP
 
 /* By William Kucharski <kucharsk@netcom.com>.  */
 
-#include <sys/stat.h>
-#include <errno.h>
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
+#  include <sys/stat.h>
+#  include <errno.h>
+#  if HAVE_UNISTD_H
+#   include <unistd.h>
+#  endif
 
 int
 ftruncate (fd, length)
@@ -71,8 +71,8 @@ ftruncate (fd, length)
   return 0;
 }
 
-#else /* not F_CHSIZE nor F_FREESP */
-#ifdef HAVE_CHSIZE
+# else /* not F_CHSIZE nor F_FREESP */
+#  if HAVE_CHSIZE
 
 int
 ftruncate (fd, length)
@@ -82,12 +82,12 @@ ftruncate (fd, length)
   return chsize (fd, length);
 }
 
-#else /* not F_CHSIZE nor F_FREESP nor HAVE_CHSIZE */
+#  else /* not F_CHSIZE nor F_FREESP nor HAVE_CHSIZE */
 
-#include <errno.h>
-#ifndef errno
+#   include <errno.h>
+#   ifndef errno
 extern int errno;
-#endif
+#   endif
 
 int
 ftruncate (fd, length)
@@ -98,6 +98,6 @@ ftruncate (fd, length)
   return -1;
 }
 
-#endif /* not HAVE_CHSIZE */
-#endif /* not F_FREESP */
+#  endif /* not HAVE_CHSIZE */
+# endif /* not F_FREESP */
 #endif /* not F_CHSIZE */

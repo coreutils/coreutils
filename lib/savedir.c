@@ -1,5 +1,5 @@
 /* savedir.c -- save the list of files in a directory in a string
-   Copyright (C) 1990, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -17,13 +17,13 @@
 
 /* Written by David MacKenzie <djm@gnu.ai.mit.edu>. */
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
 # include <config.h>
 #endif
 
 #include <sys/types.h>
 
-#ifdef HAVE_UNISTD_H
+#if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
 

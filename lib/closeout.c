@@ -26,7 +26,7 @@
 # define _(Text) Text
 #endif
 
-#ifdef HAVE_STDLIB_H
+#if HAVE_STDLIB_H
 # include <stdlib.h>
 #endif
 #ifndef EXIT_FAILURE

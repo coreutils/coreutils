@@ -1,5 +1,5 @@
 /* save-cwd.c -- Save and restore current working directory.
-   Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 
 /* Written by Jim Meyering <meyering@na-net.ornl.gov>.  */
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
 # include "config.h"
 #endif
 
@@ -27,11 +27,11 @@
 # include <stdlib.h>
 #endif
 
-#ifdef HAVE_UNISTD_H
+#if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
 
-#ifdef HAVE_FCNTL_H
+#if HAVE_FCNTL_H
 # include <fcntl.h>
 #else
 # include <sys/file.h>
@@ -67,7 +67,7 @@ save_cwd (cwd)
 
   if (have_working_fchdir)
     {
-#ifdef HAVE_FCHDIR
+#if HAVE_FCHDIR
       cwd->desc = open (".", O_RDONLY);
       if (cwd->desc < 0)
 	{

@@ -1,5 +1,5 @@
 /* group-member.c -- determine whether group id is in calling user's group list
-   Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
 # include <config.h>
 #endif
 
@@ -26,7 +26,7 @@
 # include <stdlib.h>
 #endif
 
-#ifdef HAVE_UNISTD_H
+#if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
 
@@ -41,7 +41,7 @@ struct group_info
     GETGROUPS_T *group;
   };
 
-#ifdef HAVE_GETGROUPS
+#if HAVE_GETGROUPS
 
 static void
 free_group_info (struct group_info *g)

@@ -1,5 +1,5 @@
 /* mountlist.c -- return a list of mounted filesystems
-   Copyright (C) 1991, 1992, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
 # include <config.h>
 #endif
 
@@ -42,7 +42,7 @@ char *xrealloc ();
 char *xstrdup ();
 void error ();
 
-#ifdef HAVE_SYS_PARAM_H
+#if HAVE_SYS_PARAM_H
 # include <sys/param.h>
 #endif
 
@@ -101,7 +101,7 @@ void error ();
 # define MOUNTED_GETMNTTBL
 #endif
 
-#ifdef HAVE_SYS_MNTENT_H
+#if HAVE_SYS_MNTENT_H
 /* This is to get MNTOPT_IGNORE on e.g. SVR4.  */
 # include <sys/mntent.h>
 #endif
