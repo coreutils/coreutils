@@ -2,6 +2,9 @@
 
 	* Version 5.3.0.
 
+	* src/touch.c (usage): Improve wording in description of the
+	--time=WORD option.  Reported by Dan Jacobson.
+
 	* src/chown-core.c (change_file_owner): Change names of parameters
 	old_uid and old_gid to required_uid and required_gid respectively.
 
