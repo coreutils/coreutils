@@ -1,5 +1,6 @@
 #!/bin/sh
 # Ensure that several programs work fine, even with stdout initially closed.
+# This is effectively a test of closeout.c's close_stdout function.
 
 if test "$VERBOSE" = yes; then
   set -x
@@ -23,6 +24,9 @@ fi
 PATH="$pwd/../..:$PATH"
 export PATH
 
+fail=0
+
+# Ensure these exit successfully, even though stdout is closed.
 touch a
 cp a b >&- || fail=1
 test -f b || fail=1
@@ -36,5 +40,9 @@ touch e >&- || fail=1
 sleep 0 >&- || fail=1
 $pwd/../../src/true >&- || fail=1
 $pwd/../../src/printf '' >&- || fail=1
+
+# Ensure these fail, because stdout is closed.
+$pwd/../../src/printf 'foo' >&- 2>/dev/null && fail=1
+cp --verbose a b >&- 2>/dev/null && fail=1
 
 (exit $fail); exit $fail
