@@ -29,6 +29,7 @@
 #include "hard-locale.h"
 #include "linebuffer.h"
 #include "memcasecmp.h"
+#include "posixver.h"
 #include "quote.h"
 #include "xmemcoll.h"
 #include "xstrtol.h"
@@ -85,6 +86,9 @@ char *program_name;
 /* True if the LC_COLLATE locale is hard.  */
 static bool hard_LC_COLLATE;
 
+/* True if obsolete option usage should be supported.  */
+static bool obsolete_usage;
+
 /* If nonzero, print unpairable lines in file 1 or 2.  */
 static bool print_unpairables_1, print_unpairables_2;
 
@@ -112,20 +116,36 @@ static char tab;
    a character that is a short option.  */
 static struct option const longopts[] =
 {
-  {"ignore-case", no_argument, NULL, 'i'},
+  /* These three options are obsolete; see OBSOLETE_LONG_OPTIONS below.  */
   {"j", required_argument, NULL, 'j'},
   {"j1", required_argument, NULL, '1'},
   {"j2", required_argument, NULL, '2'},
+
+  {"ignore-case", no_argument, NULL, 'i'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
+
+/* Number of options at the start of longopts that are obsolete.  */
+enum { OBSOLETE_LONG_OPTIONS = 3 };
 
 /* Used to print non-joining lines */
 static struct line uni_blank;
 
 /* If nonzero, ignore case when comparing join fields.  */
 static bool ignore_case;
+
+/* Get the next option from the argument vector.  */
+
+static int
+get_option (int argc, char **argv)
+{
+  return (obsolete_usage
+	  ? getopt_long_only (argc, argv, "-a:e:i1:2:o:t:v:", longopts, NULL)
+	  : getopt_long (argc, argv, "a:e:ij:1:2:o:t:v:",
+			 longopts + OBSOLETE_LONG_OPTIONS, NULL));
+}
 
 void
 usage (int status)
@@ -150,9 +170,7 @@ by whitespace.  When FILE1 or FILE2 (not both) is -, read standard input.\n\
 "), stdout);
       fputs (_("\
   -i, --ignore-case ignore differences in case when comparing fields\n\
-  -j FIELD          (obsolescent) equivalent to `-1 FIELD -2 FIELD'\n\
-  -j1 FIELD         (obsolescent) equivalent to `-1 FIELD'\n\
-  -j2 FIELD         (obsolescent) equivalent to `-2 FIELD'\n\
+  -j FIELD          equivalent to `-1 FIELD -2 FIELD'\n\
   -o FORMAT         obey FORMAT while constructing output line\n\
   -t CHAR           use CHAR as input and output field separator\n\
 "), stdout);
@@ -710,10 +728,24 @@ add_field_list (char *str)
   return true;
 }
 
+/* Add NAME to the array of input file NAMES; currently there are
+   *NFILES names in the list.  */
+
+void
+add_file_name (char const *name, char const *names[2], int *nfiles)
+{
+  if (*nfiles == 2)
+    {
+      error (0, 0, _("too many non-option arguments"));
+      usage (EXIT_FAILURE);
+    }
+  names[(*nfiles)++] = name;
+}
+
 int
 main (int argc, char **argv)
 {
-  char *names[2];
+  char const *names[2];
   FILE *fp1, *fp2;
   int optc, prev_optc = 0, nfiles;
 
@@ -723,14 +755,14 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
   hard_LC_COLLATE = hard_locale (LC_COLLATE);
+  obsolete_usage = (posix2_version () < 200112);
 
   atexit (close_stdout);
 
   nfiles = 0;
   print_pairables = true;
 
-  while ((optc = getopt_long_only (argc, argv, "-a:e:i1:2:o:t:v:", longopts,
-				   NULL)) != -1)
+  while ((optc = get_option (argc, argv)) != -1)
     {
       long int val;
 
@@ -797,13 +829,7 @@ main (int argc, char **argv)
 	      /* Might be continuation of args to -o.  */
 	      continue;		/* Don't change `prev_optc'.  */
 	    }
-
-	  if (nfiles > 1)
-	    {
-	      error (0, 0, _("too many non-option arguments"));
-	      usage (EXIT_FAILURE);
-	    }
-	  names[nfiles++] = optarg;
+	  add_file_name (optarg, names, &nfiles);
 	  break;
 
 	case_GETOPT_HELP_CHAR;
@@ -815,6 +841,10 @@ main (int argc, char **argv)
 	}
       prev_optc = optc;
     }
+
+  if (! obsolete_usage)
+    while (optind < argc)
+      add_file_name (argv[optind++], names, &nfiles);
 
   if (nfiles != 2)
     {
