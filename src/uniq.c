@@ -87,8 +87,8 @@ enum delimit_method
   /* No delimiters output.  --all-repeated[=none] */
   DM_NONE,
 
-  /* Delimiter precedes all groups.  --all-repeated=precede */
-  DM_PRECEDE,
+  /* Delimiter precedes all groups.  --all-repeated=prepend */
+  DM_PREPEND,
 
   /* Delimit all groups.  --all-repeated=separate */
   DM_SEPARATE
@@ -96,12 +96,12 @@ enum delimit_method
 
 static char const *const delimit_method_string[] =
 {
-  "none", "precede", "separate", 0
+  "none", "prepend", "separate", 0
 };
 
 static enum delimit_method const delimit_method_map[] =
 {
-  DM_NONE, DM_PRECEDE, DM_SEPARATE
+  DM_NONE, DM_PREPEND, DM_SEPARATE
 };
 
 /* Select whether/how to delimit groups of duplicate lines.  */
@@ -141,7 +141,7 @@ standard input), writing to OUTPUT (or standard output).\n\
   -c, --count           prefix lines by the number of occurrences\n\
   -d, --repeated        only print duplicate lines\n\
   -D, --all-repeated[=delimit-method] print all duplicate lines\n\
-                        delimit-method={all,minimum,none(default)}\n\
+                        delimit-method={none(default),prepend,separate)}\n\
                         Delimiting is done with blank lines.\n\
   -f, --skip-fields=N   avoid comparing the first N fields\n\
   -i, --ignore-case     ignore differences in case when comparing\n\
@@ -341,7 +341,7 @@ check_file (const char *infile, const char *outfile)
 		}
 	      else if (match_count == 1)
 		{
-		  if ((delimit_groups == DM_PRECEDE)
+		  if ((delimit_groups == DM_PREPEND)
 		      || (delimit_groups == DM_SEPARATE
 			  && !first_delimiter))
 		    putc ('\n', ostream);
