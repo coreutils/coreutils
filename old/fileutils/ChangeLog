@@ -1,5 +1,13 @@
 2000-11-26  Jim Meyering  <meyering@lucent.com>
 
+	* src/dd.c (skip): Perform the `records < blocksize' test
+	at the top of the loop, not at the bottom.
+
+2000-11-26  Paul Eggert  <eggert@twinsun.com>
+
+	* src/dd.c (skip): New arg COUNT_BYTES.  Read with BLOCKSIZE
+	bytes, but consider RECORDS to be a byte count if COUNT_BYTES
+	is nonzero.
 
 2000-11-25  Paul Eggert  <eggert@twinsun.com>
 
