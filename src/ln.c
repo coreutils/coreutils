@@ -111,7 +111,10 @@ static int remove_existing_files;
 /* If nonzero, list each file as it is moved. */
 static int verbose;
 
-/* If nonzero, allow the superuser to make hard links to directories. */
+/* If nonzero, allow the superuser to *attempt* to make hard links
+   to directories.  However, it appears that this option is not useful
+   in practice, since even the superuser is prohibited from hard-linking
+   directories on most (all?) existing systems.  */
 static int hard_dir_link;
 
 /* If nonzero, and the specified destination is a symbolic link to a
@@ -360,7 +363,9 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
       --backup[=CONTROL]      make a backup of each existing destination file\n\
   -b                          like --backup but does not accept an argument\n\
-  -d, -F, --directory         hard link directories (super-user only)\n\
+  -d, -F, --directory         allow the superuser to attempt to hard link\n\
+                                directories (note: will probably fail due to\n\
+                                system restrictions, even for the superuser)\n\
   -f, --force                 remove existing destination files\n\
 "), stdout);
       fputs (_("\
