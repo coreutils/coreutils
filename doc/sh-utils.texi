@@ -826,7 +826,7 @@ it's described here.
 @cindex read from stdin and write to stdout and files
 
 The @code{tee} command copies standard input to standard output and also
-to any files given as arguments. This is useful when you not only want
+to any files given as arguments. This is useful when you want not only
 to send some data down a pipe, but also to save a copy.
 
 Synopsis:
@@ -2058,7 +2058,7 @@ time, 12-hour (hh:mm:ss [AP]M)
 @item %s
 @cindex epoch, seconds since
 @cindex seconds since the epoch
-seconds since 1970-01-01 00:00:00 UCT (a nonstandard extension)
+seconds since 1970-01-01 00:00:00 UTC (a nonstandard extension)
 @item %S
 second (00@dots{}61)
 @item %T
