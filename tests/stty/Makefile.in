@@ -155,6 +155,7 @@ TESTS_ENVIRONMENT = \
   PATH="`pwd`/../../src@PATH_SEPARATOR@$$PATH"
 
 subdir = tests/stty
+ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =

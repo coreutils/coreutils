@@ -278,6 +278,7 @@ SUFFIXES = .sed .sin
 CLEANFILES = charset.alias ref-add.sed ref-del.sed
 DISTCLEANFILES = ftw.h search.h fnmatch.h
 subdir = lib
+ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =

@@ -164,6 +164,7 @@ TESTS = \
   nl split-l printf split-a head-pos sort head-c csplit nice pathchk1
 
 subdir = tests/misc
+ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =

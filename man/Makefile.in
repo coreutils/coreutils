@@ -175,6 +175,7 @@ SUFFIXES = .x .1
 t = $*.td
 mapped_name = `echo $*|sed 's/install/ginstall/'`
 subdir = man
+ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
