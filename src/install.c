@@ -325,7 +325,7 @@ main (int argc, char **argv)
   n_files = argc - optind;
   file = argv + optind;
 
-  if (n_files <= !target_directory)
+  if (n_files <= !(dir_arg || target_directory))
     {
       if (n_files <= 0)
 	error (0, 0, _("missing file operand"));
