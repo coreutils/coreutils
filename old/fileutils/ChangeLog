@@ -1,6 +1,23 @@
-1998-05-16  Jim Meyering  <meyering@ascend.com>
+1998-05-24  Jim Meyering  <meyering@ascend.com>
 
 	* Version 3.16o.
+
+	* src/chown.c: Accept new option, --dereference.
+	--no-dereference is now the default.
+	(enum Change_status) [CH_NOT_APPLIED]: New member.
+	(change_symlinks): Enable this by default, now.
+	(describe_change): Handle new case.
+	(change_file_owner): Add new parameter: cmdline_arg.  Update callers.
+	Reorganize to reflect changed semantics.
+	(LCHOWN): Remove definitions.
+
+	* lib/lchown.c: New file.
+
+1998-05-21  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (ALL_LINGUAS): Add russian (ru).
+
+1998-05-16  Jim Meyering  <meyering@ascend.com>
 
 	* src/remove.c (hash_compare_strings): Return true or false, not 1/0.
 	(remove_cwd_entries): Use RM_OK, not equivalent literal `1'.
