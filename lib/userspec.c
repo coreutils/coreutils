@@ -114,7 +114,8 @@ is_number (const char *str)
    Return NULL if successful, a static error message string if not.  */
 
 const char *
-parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid, char **username_arg, char **groupname_arg)
+parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
+		 char **username_arg, char **groupname_arg)
 {
   static const char *tired = "virtual memory exhausted";
   const char *error_msg;
