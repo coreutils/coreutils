@@ -305,6 +305,18 @@ unsigned long strtoul ();
 unsigned long long strtoull ();
 #endif
 
+#if !HAVE_DECL_GETLOGIN
+char *getlogin ();
+#endif
+
+#if !HAVE_DECL_TTYNAME
+char *ttyname ();
+#endif
+
+#if !HAVE_DECL_GETEUID
+uid_t geteuid ();
+#endif
+
 #include "xalloc.h"
 
 #if ! defined HAVE_MEMPCPY && ! defined mempcpy
