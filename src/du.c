@@ -315,19 +315,12 @@ process_file (const char *file, const struct stat *sb, int file_type,
 	      struct FTW *info)
 {
   size_t size;
-  size_t s;
+  size_t size_including_subdirs;
+  size_t size_to_propagate_to_parent;
   static int first_call = 1;
   static size_t prev_level;
   static size_t n_alloc;
-  /* The sum of the st_size values of all entries in the single directory
-     at the corresponding level.  Although this does include the st_size
-     corresponding to each subdirectory, it does not include the size of
-     any file in a subdirectory.  */
-  static uintmax_t *sum_ent;
-
-  /* The sum of the sizes of all entries in the hierarchy at or below the
-     directory at the specified level.  */
-  static uintmax_t *sum_subdir;
+  static uintmax_t *sum;
 
   /* Always define info->skip before returning.  */
   info->skip = excluded_filename (exclude, file + info->base);
@@ -378,18 +371,17 @@ process_file (const char *file, const struct stat *sb, int file_type,
       /* Note that we must not simply return here.
 	 We still have to update prev_level and maybe propagate
 	 some sums up the hierarchy.  */
-      s = size = 0;
+      size = 0;
     }
   else
     {
-      s = size = ST_NBLOCKS (*sb);
+      size = ST_NBLOCKS (*sb);
     }
 
   if (first_call)
     {
       n_alloc = info->level + 10;
-      sum_ent = XCALLOC (uintmax_t, n_alloc);
-      sum_subdir = XCALLOC (uintmax_t, n_alloc);
+      sum = XCALLOC (uintmax_t, n_alloc);
     }
   else
     {
@@ -401,10 +393,11 @@ process_file (const char *file, const struct stat *sb, int file_type,
       if (n_alloc <= (size_t) info->level)
 	{
 	  n_alloc = info->level * 2;
-	  sum_ent = XREALLOC (sum_ent, uintmax_t, n_alloc);
-	  sum_subdir = XREALLOC (sum_subdir, uintmax_t, n_alloc);
+	  sum = XREALLOC (sum, uintmax_t, n_alloc);
 	}
     }
+
+  size_to_propagate_to_parent = size_including_subdirs = size;
 
   if (! first_call)
     {
@@ -412,7 +405,17 @@ process_file (const char *file, const struct stat *sb, int file_type,
 	{
 	  /* This is usually the most common case.  Do nothing.  */
 	}
-      else if ((size_t) info->level < prev_level)
+      else if ((size_t) info->level > prev_level)
+	{
+	  /* Descending the hierarchy.
+	     Clear the accumulators for *all* levels between prev_level
+	     and the current one.  The depth may change dramatically,
+	     e.g., from 1 to 10.  */
+	  int i;
+	  for (i = prev_level + 1; i <= info->level; i++)
+	    sum[i] = 0;
+	}
+      else /* info->level < prev_level */
 	{
 	  /* Ascending the hierarchy.
 	     nftw processes a directory only after all entries in that
@@ -421,31 +424,17 @@ process_file (const char *file, const struct stat *sb, int file_type,
 	     Here, the current level is always one smaller than the
 	     previous one.  */
 	  assert ((size_t) info->level == prev_level - 1);
-	  s += sum_ent[prev_level];
-	  if (!opt_separate_dirs)
-	    s += sum_subdir[prev_level];
-	  sum_subdir[info->level] += (sum_ent[prev_level]
-				      + sum_subdir[prev_level]);
-	}
-      else /* info->level > prev_level */
-	{
-	  /* Descending the hierarchy.
-	     Clear the accumulators for *all* levels between prev_level
-	     and the current one.  The depth may change dramatically,
-	     e.g., from 1 to 10.  */
-	  int i;
-	  for (i = prev_level + 1; i <= info->level; i++)
-	    {
-	      sum_ent[i] = 0;
-	      sum_subdir[i] = 0;
-	    }
+	  size_to_propagate_to_parent = size_including_subdirs
+	    = size + sum[prev_level];
+	  if (opt_separate_dirs)
+	    size_to_propagate_to_parent = 0;
 	}
     }
 
   prev_level = info->level;
   first_call = 0;
 
-  sum_ent[info->level] += size;
+  sum[info->level] += size_to_propagate_to_parent;
 
   /* Even if this directory was unreadable or we couldn't chdir into it,
      do let its size contribute to the total, ... */
@@ -461,7 +450,7 @@ process_file (const char *file, const struct stat *sb, int file_type,
 		     (info->level <= max_depth || info->level == 0))
       || ((opt_all && info->level <= max_depth) || info->level == 0))
     {
-      print_only_size (s);
+      print_only_size (size_including_subdirs);
       fputc ('\t', stdout);
       if (arg_length)
 	{
