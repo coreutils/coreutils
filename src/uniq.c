@@ -238,10 +238,12 @@ check_file (const char *infile, const char *outfile)
   initbuffer (thisline);
   initbuffer (prevline);
 
-  /* This duplication is to distinguish the common case (in which none of the
-     following options has been specified: --count, -repeated, --all-repeated,
-     --unique) from the others.  In the common case, we can output each new
-     line right away, without waiting to see if the next one is different).  */
+  /* The duplication in the following `if' and `else' blocks is an
+     optimization to distinguish the common case (in which none of
+     the following options has been specified: --count, -repeated,
+     --all-repeated, --unique) from the others.  In the common case,
+     this optimization lets uniq output each different line right away,
+     without waiting to see if the next one is different.  */
 
   if (mode == output_all && countmode == count_none)
     {
