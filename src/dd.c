@@ -74,23 +74,36 @@
 #define MAX_BLOCKSIZE MIN (SIZE_MAX, MIN (SSIZE_MAX, OFF_T_MAX))
 
 /* Conversions bit masks. */
-#define C_ASCII 01
-#define C_EBCDIC 02
-#define C_IBM 04
-#define C_BLOCK 010
-#define C_UNBLOCK 020
-#define C_LCASE 040
-#define C_UCASE 0100
-#define C_SWAB 0200
-#define C_NOERROR 0400
-#define C_NOTRUNC 01000
-#define C_SYNC 02000
-/* Use separate input and output buffers, and combine partial input blocks. */
-#define C_TWOBUFS 04000
-#define C_NOCREAT 010000
-#define C_EXCL 020000
-#define C_FDATASYNC 040000
-#define C_FSYNC 0100000
+enum
+  {
+    C_ASCII = 01,
+
+    C_EBCDIC = 02,
+    C_IBM = 04,
+    C_BLOCK = 010,
+    C_UNBLOCK = 020,
+    C_LCASE = 040,
+    C_UCASE = 0100,
+    C_SWAB = 0200,
+    C_NOERROR = 0400,
+    C_NOTRUNC = 01000,
+    C_SYNC = 02000,
+
+    /* Use separate input and output buffers, and combine partial
+       input blocks. */
+    C_TWOBUFS = 04000,
+
+    C_NOCREAT = 010000,
+    C_EXCL = 020000,
+    C_FDATASYNC = 040000,
+    C_FSYNC = 0100000
+  };
+
+/* Status bit masks.  */
+enum
+  {
+    STATUS_NOXFER = 01
+  };
 
 /* The name this program was run with. */
 char *program_name;
@@ -125,6 +138,9 @@ static int conversions_mask = 0;
 /* Open flags for the input and output files.  */
 static int input_flags = 0;
 static int output_flags = 0;
+
+/* Status flags for what is printed to stderr.  */
+static int status_flags = 0;
 
 /* If nonzero, filter characters through the translation table.  */
 static bool translation_needed = false;
@@ -217,6 +233,13 @@ static struct symbol_value const flags[] =
   {"nofollow",	O_NOFOLLOW},
   {"nonblock",	O_NONBLOCK},
   {"sync",	O_SYNC},
+  {"",		0}
+};
+
+/* Status, for status="...".  */
+static struct symbol_value const statuses[] =
+{
+  {"noxfer",	STATUS_NOXFER},
   {"",		0}
 };
 
@@ -361,6 +384,7 @@ Copy a file, converting and formatting according to the operands.\n\
   oflag=FLAGS     write as per the comma separated symbol list\n\
   seek=BLOCKS     skip BLOCKS obs-sized blocks at start of output\n\
   skip=BLOCKS     skip BLOCKS ibs-sized blocks at start of input\n\
+  status=noxfer   suppress transfer statistics\n\
 "), stdout);
       fputs (_("\
 \n\
@@ -414,9 +438,9 @@ print I/O statistics to standard error, then to resume copying.\n\
 \n\
   $ dd if=/dev/zero of=/dev/null& pid=$!\n\
   $ kill -USR1 $pid; sleep 1; kill $pid\n\
-  10807656+0 records in\n\
-  10807656+0 records out\n\
-  5.5GB copied in 20.8225s (266MB/s)\n\
+  18335302+0 records in\n\
+  18335302+0 records out\n\
+  9387674624 bytes (9.4 GB) copied, 34.6279 seconds, 271 MB/s\n\
 \n\
 Options are:\n\
 \n\
@@ -452,9 +476,11 @@ print_stats (void)
   char buf[2][MAX (INT_BUFSIZE_BOUND (uintmax_t), LONGEST_HUMAN_READABLE + 1)];
   struct timespec now;
   int human_opts =
-    human_autoscale | human_round_to_nearest | human_SI | human_B;
+    (human_autoscale | human_round_to_nearest
+     | human_space_before_unit | human_SI | human_B);
   uintmax_t start_sec = start_time.tv_sec;
   enum { BILLION = 1000000000 };
+  double BILLIONe0 = BILLION;
   double delta_s;
   char const *bytes_per_second;
 
@@ -472,9 +498,18 @@ print_stats (void)
 		: _("truncated records")));
     }
 
+  if (status_flags & STATUS_NOXFER)
+    return;
+
   /* Use integer arithmetic to compute the transfer rate if possible,
      since that makes it easy to use SI abbreviations; otherwise, fall
      back on floating-point without abbreviations.  */
+
+  fprintf (stderr,
+	   ngettext ("%s byte (%s) copied",
+		     "%s bytes (%s) copied", w_bytes == 1),
+	   umaxtostr (w_bytes, buf[0]),
+	   human_readable (w_bytes, buf[1], human_opts, 1, 1));
 
   if ((start_time.tv_sec < now.tv_sec
        || (start_time.tv_sec == now.tv_sec
@@ -483,7 +518,7 @@ print_stats (void)
     {
       uintmax_t delta_ns = (BILLION * (now.tv_sec - start_sec)
 			    + now.tv_nsec - start_time.tv_nsec);
-      delta_s = delta_ns / 1e9;
+      delta_s = delta_ns / BILLIONe0;
       bytes_per_second = human_readable (w_bytes, buf[1], human_opts,
 					 BILLION, delta_ns);
     }
@@ -491,7 +526,7 @@ print_stats (void)
     {
       delta_s = now.tv_sec;
       delta_s -= start_time.tv_sec;
-      delta_s += 1e-9 * (now.tv_nsec - start_time.tv_nsec);
+      delta_s += (now.tv_nsec - start_time.tv_nsec) / BILLIONe0;
       if (0 < delta_s)
 	sprintf (buf[1], "%gB", w_bytes / delta_s);
       else
@@ -499,8 +534,9 @@ print_stats (void)
       bytes_per_second = buf[1];
     }
 
-  fprintf (stderr, _("%s copied in %gs (%s/s)\n"),
-	   human_readable (w_bytes, buf[0], human_opts, 1, 1),
+  fprintf (stderr,
+	   ngettext (", %g second, %s/s\n",
+		     ", %g seconds, %s/s\n", delta_s == 1),
 	   delta_s, bytes_per_second);
 }
 
@@ -608,10 +644,6 @@ write_output (void)
   oc = 0;
 }
 
-/* Diagnostics for invalid iflag="..." and oflag="..." symbols.  */
-static char const iflag_error_msgid[] = N_("invalid input flag: %s");
-static char const oflag_error_msgid[] = N_("invalid output flag: %s");
-
 /* Interpret one "conv=..." or similar operand STR according to the
    symbols in TABLE, returning the flags specified.  If the operand
    cannot be parsed, use ERROR_MSGID to generate a diagnostic.
@@ -709,9 +741,14 @@ scanargs (int argc, char **argv)
 	conversions_mask |= parse_symbols (val, conversions,
 					   N_("invalid conversion: %s"));
       else if (STREQ (name, "iflag"))
-	input_flags |= parse_symbols (val, flags, iflag_error_msgid);
+	input_flags |= parse_symbols (val, flags,
+				      N_("invalid input flag: %s"));
       else if (STREQ (name, "oflag"))
-	output_flags |= parse_symbols (val, flags, oflag_error_msgid);
+	output_flags |= parse_symbols (val, flags,
+				       N_("invalid output flag: %s"));
+      else if (STREQ (name, "status"))
+	status_flags |= parse_symbols (val, statuses,
+				       N_("invalid status flag: %s"));
       else
 	{
 	  bool invalid = false;
