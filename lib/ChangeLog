@@ -5,7 +5,7 @@
 	Clean up, as part of merge with emacs version of strftime.c.
 	* strftime.c (my_strftime) [!_LIBC && HAVE_TZNAME && HAVE_TZSET]:
 	Remove function, now that we can rely on a working tzset function.
-	Ensure that the required autoconf test has been run.
+	[!_LIBC]: Ensure that the required autoconf test has been run.
 	* gettimeofday.c: Also undef tzset.
 	(rpl_tzset): New function, for use by new macro, gl_FUNC_TZSET_CLOBBER.
 
