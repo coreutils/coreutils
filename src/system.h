@@ -383,3 +383,23 @@ char *alloca ();
 #endif
 
 #define STREQ(a,b) (strcmp((a), (b)) == 0)
+
+#ifndef HAVE_DECLARATION_FREE
+void free ();
+#endif
+
+#ifndef HAVE_DECLARATION_MALLOC
+char *malloc ();
+#endif
+
+#ifndef HAVE_DECLARATION_REALLOC
+char *realloc ();
+#endif
+
+#ifndef HAVE_DECLARATION_STPCPY
+char *stpcpy ();
+#endif
+
+#ifndef HAVE_DECLARATION_STRSTR
+char *strstr ();
+#endif
