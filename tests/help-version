@@ -11,7 +11,7 @@ expected_failure_status_sort=2
 
 case "$all_programs" in
   *nohup*)
-    if test -w /dev/full && echo > /dev/full; then
+    if test -w /dev/full && test -c /dev/full && echo > /dev/full; then
       cat 1>&2 <<\EOF
 ************************************************
 WARNING: On this system, the built-in echo function of /bin/sh
@@ -51,7 +51,7 @@ for i in $all_programs; do
   ./$i --version >/dev/null || fail=1
 
   # Make sure they fail upon `disk full' error.
-  if test -w /dev/full; then
+  if test -w /dev/full && test -c /dev/full; then
     ./$i --help >/dev/full 2>/dev/null && fail=1
     ./$i --version >/dev/full 2>/dev/null
     status=$?
