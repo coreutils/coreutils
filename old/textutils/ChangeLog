@@ -1,4 +1,15 @@
+1999-10-07  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (ALL_LINGUAS): Add Japanese (ja).
+
+1999-10-04  Jim Meyering  <meyering@ascend.com>
+
+	* depcomp: New file, for automake's new dependency support.
+	* missing: New version, from automake's user-dep-gen-branch.
+
 1999-09-28  Jim Meyering  <meyering@ascend.com>
+
+	* src/system.h: Update from the system.h from fileutils.
 
 	* lib/error.c (error_at_line): Use strerror portably here, too,
 	just as was done in error.
