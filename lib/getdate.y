@@ -863,38 +863,50 @@ yylex()
     }
 }
 
+#define TM_YEAR_ORIGIN 1900
+
+/* Yield A - B, measured in seconds.  */
+static long
+difftm (a, b)
+     struct tm *a, *b;
+{
+  int ay = a->tm_year + (TM_YEAR_ORIGIN - 1);
+  int by = b->tm_year + (TM_YEAR_ORIGIN - 1);
+  int days = (
+	      /* difference in day of year */
+	      a->tm_yday - b->tm_yday
+	      /* + intervening leap days */
+	      +  ((ay >> 2) - (by >> 2))
+	      -  (ay/100 - by/100)
+	      +  ((ay/100 >> 2) - (by/100 >> 2))
+	      /* + difference in years * 365 */
+	      +  (long)(ay-by) * 365
+	      );
+  return (60*(60*(24*days + (a->tm_hour - b->tm_hour))
+	      + (a->tm_min - b->tm_min))
+	  + (a->tm_sec - b->tm_sec));
+}
+
 time_t
 get_date(p, now)
     char		*p;
     struct timeb	*now;
 {
-    struct tm		*tm;
+    struct tm		*tm, gmt;
     struct timeb	ftz;
     time_t		Start;
     time_t		tod;
 
     yyInput = p;
-    if (now == NULL)
-      {
-	int tz;
-	struct tm *tmp;
-	time_t epoch = 0;
-
+    if (now == NULL) {
         now = &ftz;
 	(void)time(&ftz.time);
 
-	/* Compute local timezone.  Do *not* take daylight savings
-	   into account here.  */
-	tmp = localtime (&epoch);
-	tz = tmp->tm_hour * 60 + tmp->tm_min;	/* Minutes east of UTC.  */
-	if (tz > 0)
-	  {
-	    tz = 24 * 60 - tz;			/* Minutes west of UTC.  */
-	    if (tmp->tm_year == 70)
-	      tz -= 24 * 60;			/* Account for date line.  */
-	  }
-	ftz.timezone = tz;
-      }
+	if (! (tm = gmtime (&ftz.time)))
+	    return -1;
+	gmt = *tm;	/* Make a copy, in case localtime modifies *tm.  */
+	ftz.timezone = difftm (&gmt, localtime (&ftz.time)) / 60;
+    }
 
     tm = localtime(&now->time);
     yyYear = tm->tm_year;
