@@ -1,3 +1,10 @@
+2003-02-15  Jim Meyering  <jim@meyering.net>
+
+	Add Irix6 support to physmem.c.
+	* physmem.c (irix_sysget): New function.
+	(IRIX_SYSGET_TOTAL, IRIX_SYSGET_AVAILABLE): New macros.
+	(physmem_total, physmem_available): Use them.
+
 2003-02-11  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (libfetish_a_SOURCES): Add euidaccess.h.
