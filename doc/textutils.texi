@@ -2183,6 +2183,16 @@ and an explicit @samp{n} with the second key specifier.
 sort -t : -b -k 5,5 -k 3,3n /etc/passwd
 @end example
 
+@c This example is a bit contrived and needs more explanation.
+@c @item
+@c Sort records separated by an arbitrary string by using a pipe to convert
+@c each record delimiter string to @samp{\0}, then using sort's -z option,
+@c and converting each @samp{\0} back to the original record delimiter.
+@c
+@c @example
+@c printf 'c\n\nb\n\na\n'|perl -0pe 's/\n\n/\n\0/g'|sort -z|perl -0pe 's/\0/\n/g'
+@c @end example
+
 @end itemize
 
 
