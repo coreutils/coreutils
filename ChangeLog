@@ -1,6 +1,25 @@
-2003-03-09  Jim Meyering  <jim@meyering.net>
+2003-03-11  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.10.
+
+	* tests/du/basic: Make the test larger than 64 bytes, so that we don't
+	immediately disqualify file systems (e.g., NetApp) on which smaller
+	files take up zero disk blocks.
+
+2003-03-10  Jim Meyering  <jim@meyering.net>
+
+	Don't segfault for a negative field width or precision in format string.
+	* src/printf.c: (UNSPECIFIED): Define.
+	(print_direc): Use the special value, UNSPECIFIED, to indicate
+	that field_width or precision has not been specified.
+	(print_formatted): Fail if field_width or precision is the
+	special value, UNSPECIFIED.
+	Reported by Oliver Kiddle <okiddle@yahoo.co.uk>
+
+	* src/sys2.h (INT_MIN): Define, if necessary.
+	* tests/misc/printf: Add a test for the above-fixed bug.
+
+2003-03-09  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (AD_stack_pop): Cast sizeof... to int before
 	changing its sign.  This avoids a warning from gcc on 64-bit systems.
