@@ -59,7 +59,7 @@
 	(make_filename): Use %u, not %d, to format unsigned file number.
 
 	(new_control_record): Use xrealloc exclusively, since it handles
-	NULL reliably,
+	NULL reliably.
 
 	(extract_regexp): Change misspelled word in diagnostic.
 
