@@ -1,5 +1,5 @@
 /* pr -- convert text files for printing.
-   Copyright (C) 88, 91, 1995-2003 Free Software Foundation, Inc.
+   Copyright (C) 88, 91, 1995-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -801,7 +801,7 @@ first_last_page (char *pages)
   if (*pages == ':')
     {
       error (0, 0, _("`--pages' invalid range of page numbers: `%s'"), pages);
-      usage (2);
+      usage (EXIT_FAILURE);
     }
 
   str1 = strchr (pages, ':');
@@ -1068,7 +1068,7 @@ main (int argc, char **argv)
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
-	  usage (2);
+	  usage (EXIT_FAILURE);
 	  break;
 	}
     }
@@ -1186,7 +1186,7 @@ getoptarg (char *arg, char switch_char, char *character, int *number)
 	  error (0, 0,
 		 _("`-%c' extra characters or invalid number in the argument: `%s'"),
 		 switch_char, arg);
-	  usage (2);
+	  usage (EXIT_FAILURE);
 	}
       *number = (int) tmp_long;
     }
@@ -2744,7 +2744,7 @@ cleanup (void)
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -2859,5 +2859,5 @@ FILE is -, read standard input.\n\
 "), stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
-  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (status);
 }
