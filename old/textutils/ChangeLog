@@ -4,8 +4,10 @@
 
 	csplit could get a failed assertion: printf 'a\n\n'|csplit - '/^$/' 2
 	* src/csplit.c: No longer include assert.h.
-	(process_line_count): Remove invalid assertion.
-	Reported by Eric Pemente.
+	(process_line_count): Remove invalid assertion.  The test that caused
+	the failure has been in the code since before 1992-11-08, but since
+	1996 it's been in an assertion.  That assertion was disabled by default
+	until textutils-1.22g (1999-01-10).  Reported by Eric Pemente.
 
 	* tests/misc/csplit: New file.  Test for the above fix and others.
 	* tests/misc/Makefile.am (TESTS): Add csplit.
