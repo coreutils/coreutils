@@ -1,4 +1,4 @@
-1998-04-04  Jim Meyering  <meyering@eng.ascend.com>
+1998-04-04  Jim Meyering  <meyering@ascend.com>
 
 	* tests/Makefile.am (SUBDIRS): Add stty.
 	* tests/stty/row-col-1: New file.
@@ -13,6 +13,8 @@
 	Remove #if-0'd block.
 	Move dcl of `fdflags' into scope where it's used.
 	Remove dcl of unused `cp'.
+	Use "%s", not device_name, as the format string, in case the
+	latter contains `%'.
 
 	[1998-03-31  Theodore Ts'o  <tytso@rsts-11.mit.edu>]
 	* src/stty.c (valid_options): New function.
