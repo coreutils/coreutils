@@ -394,8 +394,7 @@ alloc_and_compile_regex (const char *string)
   struct re_pattern_buffer *pattern; /* newly allocated structure */
   const char *message;		/* error message returned by regex.c */
 
-  pattern = (struct re_pattern_buffer *)
-    xmalloc (sizeof (struct re_pattern_buffer));
+  pattern = xmalloc (sizeof *pattern);
   memset (pattern, 0, sizeof (struct re_pattern_buffer));
 
   pattern->buffer = NULL;
@@ -2107,18 +2106,16 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"),
 
       /* No more argument simply means: read standard input.  */
 
-      input_file_name = xmalloc (sizeof (const char *));
-      file_line_count = xmalloc (sizeof (int));
+      input_file_name = xmalloc (sizeof *input_file_name);
+      file_line_count = xmalloc (sizeof *file_line_count);
       number_input_files = 1;
       input_file_name[0] = NULL;
     }
   else if (gnu_extensions)
     {
       number_input_files = argc - optind;
-      input_file_name
-	= xmalloc (number_input_files * sizeof (const char *));
-      file_line_count
-	= xmalloc (number_input_files * sizeof (int));
+      input_file_name = xmalloc (number_input_files * sizeof *input_file_name);
+      file_line_count = xmalloc (number_input_files * sizeof *file_line_count);
 
       for (file_index = 0; file_index < number_input_files; file_index++)
 	{
@@ -2136,8 +2133,8 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"),
       /* There is one necessary input file.  */
 
       number_input_files = 1;
-      input_file_name = xmalloc (sizeof (const char *));
-      file_line_count = xmalloc (sizeof (int));
+      input_file_name = xmalloc (sizeof *input_file_name);
+      file_line_count = xmalloc (sizeof *file_line_count);
       if (!*argv[optind] || strcmp (argv[optind], "-") == 0)
 	input_file_name[0] = NULL;
       else
