@@ -1106,7 +1106,8 @@ tail_lines (const char *pretty_filename, int fd, long int n_lines)
 	  && (length = lseek (fd, (off_t) 0, SEEK_END)) >= 0
 	  && start_pos < length)
 	{
-	  if (length != 0 && file_lines (pretty_filename, fd, n_lines, start_pos, length))
+	  if (length != 0 && file_lines (pretty_filename, fd, n_lines,
+					 start_pos, length))
 	    return 1;
 	}
       else
