@@ -1,6 +1,8 @@
 1999-01-30  Jim Meyering  <meyering@ascend.com>
 
 	* getloadavg.m4: Use 3-arg form of AC_DEFINE.
+	* uptime.m4: Likewise.
+	* uintmax_t.m4: Likewise.
 
 1999-01-28  Jim Meyering  <meyering@ascend.com>
 
