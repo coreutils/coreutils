@@ -5,6 +5,9 @@
 	that the now-shared-by-fileutils-and-textutils lib/Makefile.am are
 	all the same.
 	(AM_FUNC_OBSTACK): Add (from fileutils/configure.in).
+	(AC_CHECK_FUNCS): Merge all checks from fileutils, textutils, sh-utils.
+	(AM_FUNC_STRTOD): Added (from textutils', sh-utils' configure.in).
+	(AC_SUBST(POW_LIBM)): Likewise.
 
 2000-01-22  Jim Meyering  <meyering@lucent.com>
 
