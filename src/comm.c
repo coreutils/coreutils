@@ -187,7 +187,7 @@ compare_files (char **infiles)
 	order = -1;
       else
 	{
-	  if (HAVE_SETLOCALE && hard_LC_COLLATE)
+	  if (hard_LC_COLLATE)
 	    order = xmemcoll (thisline[0]->buffer, thisline[0]->length - 1,
 			      thisline[1]->buffer, thisline[1]->length - 1);
 	  else
