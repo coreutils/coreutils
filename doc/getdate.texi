@@ -440,7 +440,7 @@ to the local time.
 @cindex pure numbers in date strings
 
 The precise intepretation of a pure decimal number depends
-the context in the date string.
+on the context in the date string.
 
 If the decimal number is of the form @var{yyyy}@var{mm}@var{dd} and no
 other calendar date item (@pxref{Calendar date items}) appears before it
