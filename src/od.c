@@ -1400,13 +1400,13 @@ dump ()
       while (1)
 	{
 	  size_t n_needed;
-	  n_needed = MIN (end_offset - current_offset,
-			  (off_t) bytes_per_block);
-	  if (n_needed == 0)
+	  if (current_offset >= end_offset)
 	    {
 	      n_bytes_read = 0;
 	      break;
 	    }
+	  n_needed = MIN (end_offset - current_offset,
+			  (off_t) bytes_per_block);
 	  err |= read_block (n_needed, block[idx], &n_bytes_read);
 	  if (n_bytes_read < bytes_per_block)
 	    break;
