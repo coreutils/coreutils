@@ -103,7 +103,13 @@ setusershell ()
   if (shellstream == NULL)
     shellstream = fopen (SHELLS_FILE, "r");
   else
-    fseek (shellstream, 0L, 0);
+    {
+#ifdef HAVE_FSEEKO
+      fseeko (shellstream, 0, 0);
+#else
+      fseek (shellstream, 0L, 0);
+#endif
+    }
 }
 
 /* Close the shells file. */
