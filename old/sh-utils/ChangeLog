@@ -1,3 +1,16 @@
+1999-12-18  Jim Meyering  <meyering@ascend.com>
+
+	* src/who.c (print_entry): Correct do_lookup test so that who
+	prints whatever host information it has, even without --lookup.
+	Reported by Bill Peters.
+
+1999-12-12  Jim Meyering  <meyering@ascend.com>
+
+	Move 120+ lines of stat.h-related macros from system.h (not shared)
+	to sys2.h, which is shared between fileutils, sh-utils, textutils.
+	* src/system.h: Move them from here...
+	* src/sys2.h: ... to here.
+
 1999-11-27  Jim Meyering  <meyering@ascend.com>
 
 	Rewrite to allow fractional seconds and to handle SIGCONT.
