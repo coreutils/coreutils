@@ -1,3 +1,14 @@
+2001-09-25  Jim Meyering  <meyering@lucent.com>
+
+	* Version 2.0.16.
+
+2001-09-24  Paul Eggert  <eggert@twinsun.com>
+
+	* src/Makefile.am (sort_DEPENDENCIES): Depend only on
+	../lib/libfetish.a, not on $(LDADD), since the latter may
+	contain `-lintl'.  This resembles yesterday's patch for the
+	`$(PROGRAMS)' rule.
+
 2001-09-23  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.15.
