@@ -1,3 +1,9 @@
+1998-04-05  Jim Meyering  <meyering@ascend.com>
+
+	* lib/regex.c (WIDE_CHAR_SUPPORT): Define.
+	This now depends on HAVE_BTOWC so systems that lack btowc (like
+	solaris-2.5.1) don't lose.
+
 1998-04-04  Jim Meyering  <meyering@eng.ascend.com>
 
 	* GNUmakefile: Add conditionals so that running `make' in an

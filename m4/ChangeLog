@@ -1,3 +1,8 @@
+1998-04-05  Jim Meyering  <meyering@ascend.com>
+
+	* prereq.m4 (jm_PREREQ_REGEX): New macro.
+	(jm_PREREQ): Use it here.
+
 1998-03-23  Jim Meyering  <meyering@eng.ascend.com>
 
 	* inttypes_h.m4: Kludges so I don't have to add HAVE_INTTYPES_H
