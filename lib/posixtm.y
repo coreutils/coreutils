@@ -67,9 +67,56 @@ static struct tm t;
 
 time_t mktime ();
 
-#define yyparse posixtime_yyparse
+/* Remap normal yacc parser interface names (yyparse, yylex, yyerror, etc),
+   as well as gratuitiously global symbol names, so we can have multiple
+   yacc generated parsers in the same program.  Note that these are only
+   the variables produced by yacc.  If other parser generators (bison,
+   byacc, etc) produce additional global names that conflict at link time,
+   then those parser generators need to be fixed instead of adding those
+   names to this list. */
+
+#define yymaxdepth pt_maxdepth
+#define yyparse pt_parse
+#define yylex   pt_lex
+#define yyerror pt_error
+#define yylval  pt_lval
+#define yychar  pt_char
+#define yydebug pt_debug
+#define yypact  pt_pact
+#define yyr1    pt_r1
+#define yyr2    pt_r2
+#define yydef   pt_def
+#define yychk   pt_chk
+#define yypgo   pt_pgo
+#define yyact   pt_act
+#define yyexca  pt_exca
+#define yyerrflag pt_errflag
+#define yynerrs pt_nerrs
+#define yyps    pt_ps
+#define yypv    pt_pv
+#define yys     pt_s
+#define yy_yys  pt_yys
+#define yystate pt_state
+#define yytmp   pt_tmp
+#define yyv     pt_v
+#define yy_yyv  pt_yyv
+#define yyval   pt_val
+#define yylloc  pt_lloc
+#define yyreds  pt_reds          /* With YYDEBUG defined */
+#define yytoks  pt_toks          /* With YYDEBUG defined */
+#define yylhs   pt_yylhs
+#define yylen   pt_yylen
+#define yydefred pt_yydefred
+#define yydgoto pt_yydgoto
+#define yysindex pt_yysindex
+#define yyrindex pt_yyrindex
+#define yygindex pt_yygindex
+#define yytable  pt_yytable
+#define yycheck  pt_yycheck
+
 static int yylex ();
 static int yyerror ();
+
 %}
 
 %token DIGIT
