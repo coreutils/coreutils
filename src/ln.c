@@ -62,7 +62,6 @@ enum backup_type get_version ();
 int isdir ();
 int yesno ();
 void strip_trailing_slashes ();
-char *stpcpy ();
 
 /* The name by which the program was run, for error messages.  */
 char *program_name;

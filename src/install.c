@@ -118,7 +118,6 @@ gid_t getgid ();
 #endif
 
 char *base_name ();
-char *stpcpy ();
 char *xmalloc ();
 int safe_read ();
 int full_write ();
