@@ -50,7 +50,7 @@ AC_DEFUN([jm_MACROS],
   AC_REQUIRE([jm_FUNC_READDIR])
   AC_REQUIRE([jm_FUNC_MEMCMP])
   AC_REQUIRE([jm_FUNC_GLIBC_UNLOCKED_IO])
-  AC_REQUIRE([jm_FUNC_FNMATCH])
+  AC_REQUIRE([AC_FUNC_FNMATCH_GNU])
   AC_REQUIRE([jm_FUNC_GROUP_MEMBER])
   AC_REQUIRE([jm_FUNC_PUTENV])
   AC_REQUIRE([jm_AFS])
@@ -246,11 +246,6 @@ AC_DEFUN([jm_CHECK_ALL_HEADERS],
 # This macro must be invoked before any tests that run the compiler.
 AC_DEFUN([jm_CHECK_ALL_TYPES],
 [
-  # FIXME: I shouldn't have to require this macro here.  Rather, it should
-  # be required by any autoconf macro that performs a compile-time test or
-  # otherwise uses confdefs.h.
-  AC_REQUIRE([AC__GNU_SOURCE])
-
   dnl This test must come as early as possible after the compiler configuration
   dnl tests, because the choice of the file model can (in principle) affect
   dnl whether functions and headers are available, whether they work, etc.
