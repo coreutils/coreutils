@@ -51,6 +51,9 @@ AC_DEFUN([gl_PREREQ_VASNPRINTF],
   AC_REQUIRE([gt_TYPE_WCHAR_T])
   AC_REQUIRE([gt_TYPE_WINT_T])
   AC_CHECK_FUNCS(snprintf)
+
+  # Solaris 2.5.1 needs -lw to get the wcslen function.
+  AC_SEARCH_LIBS(wcslen, [w])
 ])
 
 # Prerequisites of lib/asnprintf.c.
