@@ -169,7 +169,6 @@ copy_reg (const char *src_path, const char *dst_path,
   int buf_size;
   int dest_desc;
   int source_desc;
-  int n_read;
   struct stat sb;
   char *cp;
   int *ip;
@@ -241,7 +240,7 @@ copy_reg (const char *src_path, const char *dst_path,
 
   for (;;)
     {
-      n_read = read (source_desc, buf, buf_size);
+      int n_read = read (source_desc, buf, buf_size);
       if (n_read < 0)
 	{
 #ifdef EINTR
@@ -815,8 +814,10 @@ copy_internal (const char *src_path, const char *dst_path,
     {
       copied_as_regular = 1;
       /* POSIX says the permission bits of the source file must be
-	 used as the 3rd argument in the open call.  */
-      if (copy_reg (src_path, dst_path, x->sparse_mode, src_mode))
+	 used as the 3rd argument in the open call, but that's not consistent
+	 with historical practice.  */
+      if (copy_reg (src_path, dst_path, x->sparse_mode,
+		    get_dest_mode (x, src_mode)))
 	goto un_backup;
     }
   else
