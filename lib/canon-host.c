@@ -43,6 +43,8 @@
 # include <arpa/inet.h>
 #endif
 
+void free ();
+
 /* Returns the canonical hostname associated with HOST (allocated in a static
    buffer), or 0 if it can't be determined.  */
 char *
@@ -67,9 +69,23 @@ canon_host (const char *host)
 	}
 
       if (addr && strcmp (he->h_name, addr) == 0)
-	/* gethostbyname() cheated!  Lookup the host name via the address
-	   this time to get the actual host name.  */
-	he = gethostbyaddr (he->h_addr, he->h_length, he->h_addrtype);
+	{
+	  /* gethostbyname has returned a string representation of the IP
+	     address, for example, "127.0.0.1".  So now, look up the host
+	     name via the address.  Although it may seem reasonable to look
+	     up the host name via the address, we must not pass `he->h_addr'
+	     directly to gethostbyaddr because on some systems he->h_addr
+	     is located in a static library buffer that is reused in the
+	     gethostbyaddr call.  Make a copy and use that instead.  */
+	  char *h_addr_copy = strdup (he->h_addr);
+	  if (h_addr_copy == NULL)
+	    he = NULL;
+	  else
+	    {
+	      he = gethostbyaddr (h_addr_copy, he->h_length, he->h_addrtype);
+	      free (h_addr_copy);
+	    }
+	}
 # endif /* HAVE_GETHOSTBYADDR */
 
       if (he)
