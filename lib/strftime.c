@@ -48,10 +48,9 @@
 #include <ctype.h>
 #include <sys/types.h>		/* Some systems define `time_t' here.  */
 
-/* Some systems require <unistd.h> to be included before <time.h>
-   for localtime_r to be declared properly.  */
-#if HAVE_UNISTD_H
-# include <unistd.h>
+/* Provide a declaration of localtime_r on systems that lack it.  */
+#if ! defined HAVE_DECL_LOCALTIME_R
+extern struct tm* localtime_r ();
 #endif
 
 #ifdef TIME_WITH_SYS_TIME
