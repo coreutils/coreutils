@@ -1,17 +1,17 @@
 2003-06-06  Jim Meyering  <jim@meyering.net>
 
 	Update from gnulib.
+	* modechange.c: Include <stddef.h>.
+	(NULL): Don't define, since <stddef.h> does that.
 	* memcoll.h: Include <stddef.h>, to get size_t.
-
-	Update from gnulib.
 	* memcoll.c: Include "memcoll.h", which gets us size_t and checks
 	our interface, instead of including <sys/types.h>
 	(memcoll): Fall back on a simple algorithm using
 	memcmp if strcoll doesn't work.
+	* memcasecmp.h: Include <stddef.h>.
+	* memcasecmp.c: Don't include <sys/types.h>.
 
-	* memcasecmp.h: Include <stddef.h>.  From gnulib.
-	* memcasecmp.c: Don't include <sys/types.h>.  From gnulib.
-
+	From gnulib.
 	* Makefile.am (EXTRA_DIST): Add alloca_.h.
 	(all-local $(lib_OBJECTS)): Depend on $(ALLOCA_H).
 	(alloca.h): New rule.
