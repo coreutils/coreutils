@@ -1,3 +1,12 @@
+Tue Oct 12 00:53:26 1993  Jim Meyering  (meyering@comco.com)
+
+	* xwrite.c [HAVE_CONFIG_H, CONFIG_BROKETS]: Include <config.h>
+	or "config.h".
+
+Sat Oct 09 23:37:43 1993  Jim Meyering  (meyering@comco.com)
+
+	* configure.in: Remove AC_UNISTD_H; add unistd.h to AC_HAVE_HEADERS.
+
 Thu Sep  9 21:52:10 1993  Jim Meyering  (meyering@comco.com)
 
 	* src/*.c: Print version on standard output, not stderr.
