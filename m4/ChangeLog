@@ -1,3 +1,82 @@
+2003-09-12  Jim Meyering  <jim@meyering.net>
+
+	* prereq.m4 (jm_PREREQ): Require gl_READTOKENS, gl_MD5, gl_MAKEPATH,
+	gl_LONG_OPTIONS, and gl_IDCACHE, gl_GETUGROUPS.
+	* readtokens.m4: New file, from gnulib
+	* md5.m4: Likewise.
+	* makepath.m4: Likewise.
+	* long-options.m4: Likewise.
+	* idcache.m4: Likewise.
+	* getugroups.m4: Likewise.
+
+2003-09-10  Bruno Haible  <bruno@clisp.org>
+
+	* strcspn.m4 (gl_PREREQ_STRCSPN): Remove <string.h> check.
+	* strpbrk.m4 (gl_PREREQ_STRPBRK): Remove <string.h> check.
+	* strstr.m4 (gl_PREREQ_STRSTR): Remove <string.h> check.
+	* unicodeio.m4 (gl_UNICODEIO): Remove <string.h> check.
+	* xreadlink.m4 (gl_XREADLINK): Remove <stdlib.h> check.
+	* yesno.m4 (gl_YESNO): Remove <stdlib.h> check.
+
+2003-09-09  Paul Eggert  <eggert@twinsun.com>
+
+	* getcwd.m4 (AC_FUNC_GETCWD_NULL): Don't check for stdlib.h.
+	* getopt.m4 (gl_GETOPT): Don't check for string.h.
+	* getusershell.m4 (gl_PREREQ_GETUSERSHELL): Do not check for stdlib.h.
+	* group-member.m4 (gl_PREREQ_GROUP_MEMBER): Do not require standard C
+	headers.
+	* hard-locale.m4 (gl_HARD_LOCALE): Do not check for stdlib.h,
+	string.h.
+	* hash.m4 (gl_HASH): Do not check for stdlib.h, malloc, free.
+	* human.m4 (gl_HUMAN): Do not check for stdlib.h, string.h, getenv.
+	* sha.m4 (gl_SHA): Don't check for standard Cheaders, memcpy.
+	* memchr.m4 (jm_PREREQ_MEMCHR): Don't check for limits.h, stdlib.h.
+	* memcmp.m4 (gl_PREREQ_MEMCMP): Don't check for string.h.
+	* memcoll.m4 (gl_MEMCOLL): Likewise.
+	* memrchr.c (gl_PREREQ_MEMRCHR): Don't check for limits.h.
+	* mkdir-slash.m4 (gl_PREREQ_MKDIR): Don't check for stdlib.h,
+	string.h, free.
+	* mktime.m4 (gl_PREREQ_MKTIME): Don't check for standard C headers.
+	* modechange.m4 (gl_MODECHANGE): Don't check for standard C headers.
+	* mountlist.m4 (gl_PREREQ_MOUNTLIST_EXTRA): Don't check for standard
+	C headers, or for string.h.
+	* obstack.m4 (gl_OBSTACK): Don't check for stddefe.h, string.h.
+	(gl_PREREQ_OBSTACK): Don't check for stdlib.h.
+	* path-concat.m4 (gl_PATH_CONCAT): Don't check for standard C
+	headers, memory.h, stdlib.h, string.h, strings.h.
+	* posixtm.m4 (gl_POSIXTM): Don't check for stdlib.h, string.h.
+	* posixver.m4 (gl_POSIXVER): Don't check for getenv.
+	* putenv.m4 (gl_PREREQ_PUTENV): Don't check for string.h, memcpy,
+	strchr.
+	* regex.m4 (jm_PREREQ_REGEX): Do not check for limits.h, string.h.
+	* rename.m4 (gl_PREREQ_RENAME): Do not check for stdlib.h, string.h,
+	free.
+	* rpmatch.m4 (gl_PREREQ_RPMATCH): Don't check for standard C headers.
+	* save-cwd.m4 (gl_SAVE_CWD): Don't check for standard C headers.
+	* savedir.m4 (gl_SAVEDIR): Don't check for standard C headers.
+	* xgetcwd.m4 (gl_XGETCWD): Don't check for stdlib.h.
+
+2003-09-09  Derek Robert Price  <derek@ximbiot.com>
+
+	* getndelim2.m4 (gl_PREREQ_GETNDELIM2): Assume stdlib.h per the
+	C89 spec.
+
+2003-09-08  Paul Eggert  <eggert@twinsun.com>
+
+	Assume C89 or better; remove K&R cruft.
+	* alloca.m4 (gl_PREREQ_ALLOCA): Don't check for stdlib.h, string.h.
+	* backupfile.m4 (gl_BACKUPFILE): Don't check for stdlib.h,
+	string.h, getenv, malloc.
+	* dirname.m4 (gl_DIRNAME): Don't check for string.h or C standard
+	headers.
+	* canon-host.m4 (gl_CANON_HOST): Don't check for string.h, stdlib.h.
+	* error.m4 (jm_PREREQ_ERROR): Do not require STDC headers, and
+	do not check for strerror.
+	* exclude.m4: Do not check for stdlib.h, string.h, strings.h.
+	* exitfail.m4 (gl_EXITFAIL): Do not check for stdlib.h.
+	* fnmatch.m4 (gl_PREREQ_FNMATCH_EXTRA): Remove.  All uses removed.
+	* getdate.m4 (gl_GETDATE): Don't check for stdlib.h or string.h.
+
 2003-08-27  Jim Meyering  <jim@meyering.net>
 
 	* mkstemp.m4: Require that the system mkstemp be able to create
