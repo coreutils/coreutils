@@ -1,3 +1,7 @@
+2004-08-07  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* canonicalize.m4, getcwd-path-max.m4, strdup.m4: Merge from gnulib.
+
 2004-08-05  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Merge from gnulib.

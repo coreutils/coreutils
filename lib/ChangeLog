@@ -1,3 +1,8 @@
+2004-08-07  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* canonicalize.h, cycle-check.h, stat-macros.h, strdup.h,
+	strftime.h, xnanosleep.c: Merge from gnulib.
+
 2004-08-05  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Merge with gnulib and deal with some minor cleanups resulting.

@@ -1,4 +1,4 @@
-# strdup.m4 serial 3
+# strdup.m4 serial 4
 dnl Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -9,12 +9,9 @@ dnl the same distribution terms as the rest of that program.
 AC_DEFUN([gl_FUNC_STRDUP],
 [
   AC_REPLACE_FUNCS(strdup)
-  if test $ac_cv_func_strdup = no; then
-    gl_PREREQ_STRDUP
-  fi
+  AC_CHECK_DECLS_ONCE(strdup)
+  gl_PREREQ_STRDUP
 ])
 
-# Prerequisites of lib/strdup.h and lib/strdup.c.
-AC_DEFUN([gl_PREREQ_STRDUP], [
-  AC_CHECK_DECLS(strdup)
-])
+# Prerequisites of lib/strdup.c.
+AC_DEFUN([gl_PREREQ_STRDUP], [:])

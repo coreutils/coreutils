@@ -22,6 +22,8 @@
 # include <config.h>
 #endif
 
+#include "xnanosleep.h"
+
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -44,7 +46,6 @@
 
 #include "timespec.h"
 #include "xalloc.h"
-#include "xnanosleep.h"
 
 /* Subtract the `struct timespec' values X and Y by computing X - Y.
    If the difference is negative or zero, return false.
