@@ -720,7 +720,8 @@ swab_buffer (unsigned char *buf, size_t *nread)
 
 /* Throw away RECORDS blocks of BLOCKSIZE bytes on file descriptor FDESC,
    which is open with read permission for FILE.  Store up to BLOCKSIZE
-   bytes of the data at a time in BUF, if necessary. */
+   bytes of the data at a time in BUF, if necessary.  RECORDS must be
+   nonzero.  */
 
 static void
 skip (int fdesc, char *file, uintmax_t records, size_t blocksize,
@@ -729,10 +730,12 @@ skip (int fdesc, char *file, uintmax_t records, size_t blocksize,
   off_t o;
 
   /* Try lseek and if an error indicates it was an inappropriate
-     operation, fall back on using read.  */
+     operation, fall back on using read.  Some broken versions of
+     lseek return zero, so count that as an error too as a valid zero
+     return is not possible here.  */
   o = records * blocksize;
   if (o / blocksize != records
-      || lseek (fdesc, o, SEEK_SET) == -1)
+      || lseek (fdesc, o, SEEK_CUR) <= 0)
     {
       while (records-- > 0)
 	{
