@@ -152,7 +152,7 @@ enum output_size
   size_blocks,			/* 512-byte blocks. */
   size_kilobytes,		/* 1K blocks. */
   size_megabytes,		/* 1024K blocks. */
-  size_bytes,			/* 1-byte blocks. */
+  size_bytes			/* 1-byte blocks. */
 };
 
 /* human style output */
@@ -351,6 +351,15 @@ main (int argc, char **argv)
   exit (exit_status);
 }
 
+/* Convert N_BYTES to a more readable string than %d would.
+   Most people visually process strings of 3-4 digits effectively,
+   but longer strings of digits are more prone to misinterpretation.
+   Hence, converting to an abbreviated form usually improves readability.
+   Use a suffix indicating multiples of 1024 (K), 1024*1024 (M), and
+   1024*1024*1024 (G).  For example, 8500 would be converted to 8.3K,
+   133456345 to 127M, 56990456345 to 53G, and so on.  Numbers smaller
+   than 1024 aren't modified.  */
+
 static char *
 human_readable (int n_bytes, char *buf, int buf_len)
 {
@@ -363,17 +372,17 @@ human_readable (int n_bytes, char *buf, int buf_len)
   p = buf;
   amt = n_bytes;
 
-  if (amt > 1024 * 1024 * 1024)
+  if (amt >= 1024 * 1024 * 1024)
     {
       amt /= (1024 * 1024 * 1024);
       suffix = "G";
     }
-  else if (amt > 1024 * 1024)
+  else if (amt >= 1024 * 1024)
     {
       amt /= (1024 * 1024);
       suffix = "M";
     }
-  else if (amt > 1024)
+  else if (amt >= 1024)
     {
       amt /= 1024;
       suffix = "K";
