@@ -1,3 +1,7 @@
+2001-09-02  Jim Meyering  <meyering@lucent.com>
+
+	* error.c: Update from GNU libc.
+
 2001-09-01  Jim Meyering  <meyering@lucent.com>
 
 	* xreadlink.c: New file.
