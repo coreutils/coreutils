@@ -1,3 +1,8 @@
+2003-03-14  Jim Meyering  <jim@meyering.net>
+
+	* prereq.m4 (jm_PREREQ): Also forbid the gl_[A-Z] prefix.
+	Don't require jm_PREREQ_C_STACK.
+
 2003-03-13  Paul Eggert  <eggert@twinsun.com>
 
 	[from gnulib]
