@@ -1,6 +1,10 @@
-2004-05-10  Jim Meyering  <jim@meyering.net>
+2004-05-11  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/rm.c: Don't include "save-cwd.h".  It's no longer used.
+
+2004-05-10  Jim Meyering  <jim@meyering.net>
 
 	* tests/install/trap: New file.  Test for bug fix of 2004-04-18.
 	* tests/install/Makefile.am (TESTS): Add trap.
