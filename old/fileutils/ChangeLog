@@ -7,6 +7,9 @@ Wed Apr  3 06:12:23 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	(fullpath): Rewrite to use save_cwd, xgetcwd, and restore_cwd
 	rather than explicit chdir/getcwd calls.
 
+	* src/Makefile.am (INCLUDES): Add -I$(srcdir) to get system.h
+	when srcdir != builddir.  From Kaveh Ghazi.
+
 Mon Apr  1 23:50:29 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* cp.c: Include assert.h (disabled).
