@@ -1,5 +1,15 @@
 2000-10-31  Jim Meyering  <meyering@lucent.com>
 
+	`mkdir -p' would create parent directories with permissions
+	that did not account for the umask. [introduced with the
+	2000-09-30 change that became part of fileutils-4.0.28]
+	* src/mkdir.c: Include dirname.h.
+	Compute the parent directory `mode' unconditionally, effectively
+	as `$(umask -S),u+wx'.
+	Use make_path to create only the parent directories, thus using
+	the same code, both with and without -p, to create the final
+	component in each file name.  Reported by Bob Proulx.
+
 	* tests/cp/cp-parents: Add some permission tests.
 
 	* tests/mkdir/perm: Fix the test so it actually does something.
