@@ -392,8 +392,6 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
 {
   const struct stat *src_sb_link;
   const struct stat *dst_sb_link;
-  const struct stat *src_sb_no_link;
-  const struct stat *dst_sb_no_link;
 
   int same_link;
   int same = (SAME_INODE (*src_sb, *dst_sb));
@@ -527,13 +525,6 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
 	  *return_now = 1;
 	  return 1;
 	}
-      src_sb_no_link = &tmp_src_sb;
-      dst_sb_no_link = &tmp_dst_sb;
-    }
-  else
-    {
-      src_sb_no_link = src_sb;
-      dst_sb_no_link = dst_sb;
     }
 
   return 0;
