@@ -287,7 +287,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 \n\
 In -wNUMBER, the letter `w' may be omitted.\n"),
 	     stdout);
-      puts (_("\nReport bugs to <textutils-bugs@gnu.org>."));
+      puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

@@ -211,7 +211,7 @@ FORMAT is one of:\n\
   rz   right justified, leading zeros\n\
 \n\
 "));
-      puts (_("\nReport bugs to <textutils-bugs@gnu.org>."));
+      puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

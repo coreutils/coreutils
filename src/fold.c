@@ -75,7 +75,7 @@ standard output.\n\
   -s, --spaces        break at spaces\n\
   -w, --width=WIDTH   use WIDTH columns instead of 80\n\
 "));
-      puts (_("\nReport bugs to <textutils-bugs@gnu.org>."));
+      puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

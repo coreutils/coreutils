@@ -349,7 +349,7 @@ any type adds a display of printable characters to the end of each line\n\
 of output.  -s without a number implies 3.  -w without a number implies 32.\n\
 By default, od uses -A o -t d2 -w 16.\n\
 "));
-      puts (_("\nReport bugs to <textutils-bugs@gnu.org>."));
+      puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

@@ -422,7 +422,7 @@ With no FILE, or when FILE is -, read standard input.\n\
       --version           output version information and exit\n\
 \n\
 "));
-      puts (_("\nReport bugs to <textutils-bugs@gnu.org>."));
+      puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

@@ -181,7 +181,7 @@ or +VALUE is treated like -n VALUE or -n +VALUE unless VALUE has one of\n\
 the [bkm] suffix multipliers, in which case it is treated like -c VALUE\n\
 or -c +VALUE.\n\
 "));
-      puts (_("\nReport bugs to <textutils-bugs@gnu.org>."));
+      puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

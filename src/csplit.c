@@ -1531,7 +1531,7 @@ Read standard input if FILE is -.  Each PATTERN may be:\n\
 \n\
 A line OFFSET is a required `+' or `-' followed by a positive integer.\n\
 "));
-      puts (_("\nReport bugs to <textutils-bugs@gnu.org>."));
+      puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

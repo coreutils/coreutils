@@ -104,7 +104,7 @@ SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
 If -VALUE is used as first OPTION, read -c VALUE when one of\n\
 multipliers bkm follows concatenated, else read -n VALUE.\n\
 "));
-      puts (_("\nReport bugs to <textutils-bugs@gnu.org>."));
+      puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
