@@ -26,13 +26,15 @@
 #include <stdio.h>
 
 #include "system.h"
-#include "getline.h"
-#include "long-options.h"
 #include "closeout.h"
-#include "error.h"
-#include "long-options.h"
-#include "obstack.h"
 #include "dircolors.h"
+#include "error.h"
+#include "getline.h"
+#include "obstack.h"
+#include "version-etc.h"
+
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "dircolors"
 
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
@@ -84,6 +86,8 @@ static struct option const long_options[] =
     {"csh", no_argument, NULL, 'c'},
     {"c-shell", no_argument, NULL, 'c'},
     {"print-database", no_argument, NULL, 'p'},
+    {GETOPT_HELP_OPTION_DECL},
+    {GETOPT_VERSION_OPTION_DECL},
     {NULL, 0, NULL, 0}
   };
 
@@ -427,9 +431,6 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "dircolors", GNU_PACKAGE, VERSION,
-		      "H. Peter Anvin", usage);
-
   while ((optc = getopt_long (argc, argv, "bcp", long_options, NULL)) != -1)
     switch (optc)
       {
@@ -444,6 +445,10 @@ main (int argc, char **argv)
       case 'p':
 	print_database = 1;
 	break;
+
+      case_GETOPT_HELP_CHAR;
+
+      case_GETOPT_VERSION_CHAR (PROGRAM_NAME, "H. Peter Anvin");
 
       default:
 	usage (1);
