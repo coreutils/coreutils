@@ -2,6 +2,10 @@
 
 	* Version 4.5.12.
 
+	* tests/stty/row-col-1: Skip this test if stty can't get window size.
+	This happens when connecting to sparc-solaris2.7 via ssh from within
+	emacs.  Reported by Karl Berry.
+
 	* tests/du/basic: Use seq, not `yes' to generate 4KB of data.
 	Otherwise, on systems (DJGPP) that emulate pipes using files,
 	this test would never complete, waiting for `yes' to terminate.
