@@ -2312,7 +2312,8 @@ During one iteration, every specified file is checked to see if it has
 changed size.
 Historical implementations of @command{tail} have required that
 @var{number} be an integer.  However, GNU @command{tail} accepts
-an arbitrary floating point number.
+an arbitrary floating point number (using a period before any
+fractional digits).
 
 @itemx --pid=@var{pid}
 @opindex --pid
@@ -8701,6 +8702,13 @@ directives and @samp{\} escapes in the same way as the C @command{printf}
 function.  The @var{format} argument is re-used as necessary to convert
 all of the given @var{argument}s.
 
+@vindex LC_NUMERIC
+A floating-point argument must use a period before any fractional
+digits, but is printed according to the LC_NUMERIC category of the
+current locale.  For example, in a locale whose radix character is a
+comma, the command @samp{printf %g 3.14} outputs @samp{3,14} whereas
+the command @samp{printf %g 3,14} is an error.
+
 @command{printf} has one additional directive, @samp{%b}, which prints its
 argument string with @samp{\} escapes interpreted in the same way as in
 the @var{format} string, except that octal escapes are of the form
@@ -11924,7 +11932,8 @@ days
 
 Historical implementations of @command{sleep} have required that
 @var{number} be an integer.  However, GNU @command{sleep} accepts
-arbitrary floating point numbers.
+arbitrary floating point numbers (using a period before any fractional
+digits).
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
@@ -11995,8 +12004,8 @@ seq [@var{option}]@dots{} [@var{first} [@var{increment}]] @var{last}@dots{}
 
 @command{seq} prints the numbers from @var{first} to @var{last} by
 @var{increment}.  By default, @var{first} and @var{increment} are both 1,
-and each number is printed on its own line.  All numbers can be reals,
-not just integers.
+and each number is printed on its own line.  Any floating-point number
+may be specified (using a period before any fractional digits).
 
 The program accepts the following options.  Also see @ref{Common options}.
 
