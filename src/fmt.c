@@ -780,7 +780,7 @@ flush_paragraph (void)
 
   if (word_limit == word)
     {
-      printf ("%*s", wptr - parabuf, parabuf);
+      printf ("%*s", (int) (wptr - parabuf), parabuf);
       wptr = parabuf;
       return;
     }
