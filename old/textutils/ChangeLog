@@ -1,5 +1,10 @@
 Thu May 30 00:07:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* tail.c (main): Interpret the old-style +VALUE and -VALUE options
+	like -c VALUE and -c +VALUE (resp) when VALUE has one of the [bkm]
+	suffix multipliers.  This makes the code consistent with --help
+	output.  Reported by Karl Heuer.
+
 	* sort.c (limfield): #ifdef-out a block of code that makes
 	GNU sort incompatible with Unix sort when a key-end spec refers
 	to the N'th character in a field that has fewer than N characters.
