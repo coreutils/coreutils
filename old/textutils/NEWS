@@ -1,5 +1,5 @@
 Changes in release 1.18
-* build sort linking with -lm on sytems that use replacement strtod
+* when building sort, link with -lm on sytems that use the replacement strtod
 * update from gettext-0.10.16.
 Changes in release 1.17
 * include texinfo.tex in the distribution
