@@ -4,6 +4,6 @@
 #  define ENOSYS ENOTSUP
 # else
 /* Some systems don't have ENOTSUP either.  */
-#  define ENOSYS ENOMSG
+#  define ENOSYS EINVAL
 # endif
 #endif
