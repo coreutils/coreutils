@@ -344,7 +344,7 @@ main (argc, argv)
     fprintf (stderr, "%s\n", version_string);
 
   if (flag_help)
-    usage ("", NULL, NULL);
+    usage ();
 
   apply_translations ();
 
@@ -807,7 +807,7 @@ scanargs (argc, argv)
 	  break;
 
 	default:
-	  usage ("", NULL, NULL);
+	  usage ();
 
 	}
     }
@@ -819,7 +819,10 @@ scanargs (argc, argv)
       name = argv[i];
       val = index (name, '=');
       if (val == NULL)
-	usage ("unrecognized option `%s'", name);
+	{
+	  error (0, 0, "unrecognized option `%s'", name);
+	  usage ();
+	}
       *val++ = '\0';
 
       if (equal (name, "if"))
@@ -855,7 +858,10 @@ scanargs (argc, argv)
 	  else if (equal (name, "count"))
 	    max_records = n;
 	  else
-	    usage ("unrecognized option `%s=%s'", name, val);
+	    {
+	      error (0, 0, "unrecognized option `%s=%s'", name, val);
+	      usage ();
+	    }
 	}
     }
 
@@ -937,8 +943,8 @@ parse_conversion (str)
 	  }
       if (conversions[i].convname == NULL)
 	{
-	  usage ("%s: invalid conversion", str);
-	  exit (1);
+	  error (0, 0, "%s: invalid conversion", str);
+	  usage ();
 	}
       str = new;
   } while (new != NULL);
@@ -1048,12 +1054,8 @@ interrupt_handler ()
 }
 
 static void
-usage (string, arg0, arg1)
-     char *string, *arg0, *arg1;
+usage ()
 {
-  fprintf (stderr, "%s: ", program_name);
-  fprintf (stderr, string, arg0, arg1);
-  fprintf (stderr, "\n");
   fprintf (stderr, "\
 Usage: %s [if=file] [of=file] [ibs=bytes] [obs=bytes] [bs=bytes] [cbs=bytes]\n\
        [skip=blocks] [seek=blocks] [count=blocks]\n\
