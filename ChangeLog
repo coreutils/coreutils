@@ -18,6 +18,9 @@
 	* src/cp-hash.c (src_to_dest_lookup): New function.
 	* src/cp-hash.h (src_to_dest_lookup): Add prototype.
 
+	* tests/mv/part-hardlink: New file.  Test for the above fix.
+	* tests/mv/Makefile.am (TESTS): Add part-hardlink.
+
 2004-03-11  Jim Meyering  <jim@meyering.net>
 
 	* Use automake-1.8.3.  Regenerate dependent files.
