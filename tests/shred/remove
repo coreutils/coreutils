@@ -6,7 +6,10 @@ if test "$VERBOSE" = yes; then
   shred --version
 fi
 
+pwd=`pwd`
 tmp=t-shred.$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap 'exit $?' 1 2 13 15
 
 # The length of the basename is what matters.
 # In this case, shred would try to rename the file 256^10 times
@@ -16,16 +19,16 @@ file=$tmp/0123456789
 framework_failure=0
 mkdir $tmp || framework_failure=1
 touch $file || framework_failure=1
-chmod u-w $tmp || framework_failure=1
+chmod u-w $file || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
   exit 1
 fi
 
-(echo foo >> $tmp/file) >/dev/null 2>&1 && {
+(echo foo >> $file) >/dev/null 2>&1 && {
   echo '********************************************'
-  echo 'NOTICE: This test case cannot be run as root.'
+  echo "$0: NOTICE: This test case cannot be run as root."
   echo '********************************************'
   exit 77
 }
