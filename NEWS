@@ -7,7 +7,7 @@ Planned changes:
 * du no longer lists hard-linked files more than once
 * du no longer dumps core due to `infinite' recursion via nftw's
   use of the buggy replacement function in getcwd.c
-* portability patches for a few vendor compilers
+* portability patches for a few vendor compilers and 64-bit systems
 * du -S *really* now works like it did before the change in 4.5.5
 
 [4.5.9]
