@@ -1,5 +1,5 @@
 /* nice -- run a program with modified scheduling priority
-   Copyright (C) 90,91,92,93,94,95,96,1997 Free Software Foundation, Inc.
+   Copyright (C) 1990-1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -41,7 +41,6 @@
 #endif
 
 static int isinteger PARAMS ((char *s));
-static void usage PARAMS ((int status));
 
 /* The name this program was run with. */
 char *program_name;
@@ -51,6 +50,29 @@ static struct option const longopts[] =
   {"adjustment", required_argument, NULL, 'n'},
   {NULL, 0, NULL, 0}
 };
+
+void
+usage (int status)
+{
+  if (status != 0)
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+	     program_name);
+  else
+    {
+      printf (_("Usage: %s [OPTION]... [COMMAND [ARG]...]\n"), program_name);
+      printf (_("\
+Run COMMAND with an adjusted scheduling priority.\n\
+With no COMMAND, print the current scheduling priority.  ADJUST is 10\n\
+by default.  Range goes from -20 (highest priority) to 19 (lowest).\n\
+\n\
+  -ADJUST                   increment priority by ADJUST first\n\
+  -n, --adjustment=ADJUST   same as -ADJUST\n\
+      --help                display this help and exit\n\
+      --version             output version information and exit\n"));
+      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
+    }
+  exit (status);
+}
 
 int
 main (int argc, char **argv)
@@ -185,27 +207,4 @@ isinteger (char *s)
       ++s;
     }
   return 1;
-}
-
-static void
-usage (int status)
-{
-  if (status != 0)
-    fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
-  else
-    {
-      printf (_("Usage: %s [OPTION]... [COMMAND [ARG]...]\n"), program_name);
-      printf (_("\
-Run COMMAND with an adjusted scheduling priority.\n\
-With no COMMAND, print the current scheduling priority.  ADJUST is 10\n\
-by default.  Range goes from -20 (highest priority) to 19 (lowest).\n\
-\n\
-  -ADJUST                   increment priority by ADJUST first\n\
-  -n, --adjustment=ADJUST   same as -ADJUST\n\
-      --help                display this help and exit\n\
-      --version             output version information and exit\n"));
-      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
-    }
-  exit (status);
 }
