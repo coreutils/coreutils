@@ -2327,7 +2327,7 @@ all GNU extensions and revert to traditional mode, thus introducing some
 limitations, and changes several of the program's default option values.
 When @samp{-G} is not specified, GNU extensions are always enabled.  GNU
 extensions to @code{ptx} are documented wherever appropriate in this
-document.  See @xref{Compatibility in ptx} for an explicit list of them.
+document.  For the full list, see @xref{Compatibility in ptx}.
 
 Individual options are explained in incoming sections.
 
@@ -2471,9 +2471,9 @@ only if it is given in the Only file and not given in the Ignore file.
 
 On each input line, the leading sequence of non white characters will be
 taken to be a reference that has the purpose of identifying this input
-line on the produced permuted index.  See @xref{Output formatting in ptx} for
-more information about reference production.  Using this option change
-the default value for option @code{-S}.
+line on the produced permuted index.  For more information about reference
+production, see @xref{Output formatting in ptx}.
+Using this option changes the default value for option @code{-S}.
 
 Using this option, the program does not try very hard to remove
 references from contexts in output, but it succeeds in doing so
