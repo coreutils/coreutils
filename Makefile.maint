@@ -76,7 +76,6 @@ syntax-check-rules = \
   sc_prohibit_atoi_atof \
   sc_prohibit_jm_in_m4 \
   sc_space_tab \
-  sc_tight_scope \
   sc_sun_os_names \
   sc_system_h_headers \
   sc_tight_scope \
@@ -194,7 +193,7 @@ sc_system_h_headers: .re-list
 	  ( cvsu --list ) > /dev/null 2>&1 || exit 0;			\
 	  trap 'rm -f .re-list' 0 1 2 3 15;				\
 	  grep -E -f .re-list						\
-	      $$(cvsu --list src | grep -Ev 'system\.h$$')		\
+	      $$(cvsu --list src | grep -Ev '(copy|system)\.h$$')	\
 	    && { echo '$(ME): the above are already included via system.h'\
 		  1>&2;  exit 1; } || :;				\
 	fi
