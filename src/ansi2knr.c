@@ -1,6 +1,6 @@
 /* Copyright (C) 1989, 1997, 1998, 1999 Aladdin Enterprises.  All rights reserved. */
 
-/*$Id: ansi2knr.c,v 1.12 1999/02/03 02:01:06 meyering Exp $*/
+/*$Id: ansi2knr.c,v 1.13 1999/02/03 15:23:21 meyering Exp $*/
 /* Convert ANSI C function definitions to K&R ("traditional C") syntax */
 
 /*
@@ -163,14 +163,14 @@ program under the GPL.
  * Compensate for this here.
  */
 #ifdef isascii
-#  undef HAVE_ISASCII		/* just in case */
-#  define HAVE_ISASCII 1
+# undef HAVE_ISASCII		/* just in case */
+# define HAVE_ISASCII 1
 #else
 #endif
 #if STDC_HEADERS || !HAVE_ISASCII
-#  define is_ascii(c) 1
+# define is_ascii(c) 1
 #else
-#  define is_ascii(c) isascii(c)
+# define is_ascii(c) isascii(c)
 #endif
 
 #define is_space(c) (is_ascii(c) && isspace(c))
