@@ -2,6 +2,11 @@
 
 	* Version 4.5.8.
 
+	Merge in changes from autoconf's version of this file.
+	* Makefile.maint (www-gnu): Define.
+	(standards.texi-url_prefix): Use $(www-gnu).
+	(make-stds.texi-url_prefix): Likewise.
+
 	* src/cp.c: Include "mmap-stack.h".
 	(main): Invoke `run' through a macro that (when possible) runs it
 	with a large, mmap'd stack.
