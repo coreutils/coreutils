@@ -1,6 +1,6 @@
-/* full-write.c -- an interface to write that retries after interrupts
+/* An interface to write() that writes all it is asked to write.
 
-   Copyright 1993, 1994, 1997, 1998, 1999, 2000, 2001 Free Software
+   Copyright (C) 1993, 1994, 1997, 1998, 1999, 2000, 2001, 2002 Free Software
    Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -15,53 +15,47 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
-   Written by Paul Eggert.  */
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #if HAVE_CONFIG_H
 # include <config.h>
 #endif
 
-#include <sys/types.h>
-
+/* Specification.  */
 #include "full-write.h"
-
-#if HAVE_UNISTD_H
-# include <unistd.h>
-#endif
 
 #include <errno.h>
 #ifndef errno
 extern int errno;
 #endif
 
-/* Write LEN bytes at PTR to descriptor DESC, retrying if interrupted
-   or if partial writes occur.  Return the number of bytes successfully
-   written, setting errno if that is less than LEN.  */
+#include "safe-write.h"
 
+/* Write COUNT bytes at BUF to descriptor FD, retrying if interrupted
+   or if partial writes occur.  Return the number of bytes successfully
+   written, setting errno if that is less than COUNT.  */
 size_t
-full_write (int desc, const char *ptr, size_t len)
+full_write (int fd, const void *buf, size_t count)
 {
   size_t total_written = 0;
+  const char *ptr = buf;
 
-  while (len > 0)
+  while (count > 0)
     {
-      ssize_t written = write (desc, ptr, len);
-      if (written <= 0)
+      size_t written = safe_write (fd, ptr, count);
+      if (written == (size_t)-1)
+	break;
+      if (written == 0)
 	{
-	  /* Some buggy drivers return 0 when you fall off a device's end.  */
-	  if (written == 0)
-	    errno = ENOSPC;
-#ifdef EINTR
-	  if (errno == EINTR)
-	    continue;
-#endif
+	  /* Some buggy drivers return 0 when you fall off a device's
+	     end.  (Example: Linux 1.2.13 on /dev/fd0.)  */
+	  errno = ENOSPC;
 	  break;
 	}
       total_written += written;
       ptr += written;
-      len -= written;
+      count -= written;
     }
+
   return total_written;
 }
