@@ -1,6 +1,8 @@
 1997-11-30  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (AC_LFS): Use this macro rather than open-coding it.
+	(jm_AC_HEADER_INTTTYPES_H): Likewise.
+	(jm_AC_TYPE_UINTMAX_T): Likewise.
 
 	* lib/human.c (human_readable): Convert to ANSI-style definition.
 	[lint]: Define `power'.
