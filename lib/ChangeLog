@@ -1,3 +1,12 @@
+2003-10-31  Paul Eggert  <eggert@twinsun.com>
+
+	* mountlist.h (struct mount_entry.me_type_malloced): New member.
+	* mountlist.c (SIZE_MAX): Define if not defined already.
+	(read_filesystem_list): Set and use me_type_malloced.
+	Use "sizeof *me" rather than "sizeof (struct mount_entry)" (or
+	whatever the type happens to be), for brevity and consistency.
+	Check for size calculation overflow on Alphas running OSF/1.
+
 2003-10-31  Jim Meyering  <jim@meyering.net>
 
 	* hash.c: Include "xalloc.h" for use of xalloc_oversized.
