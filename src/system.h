@@ -23,6 +23,7 @@
 # undef S_ISBLK
 # undef S_ISCHR
 # undef S_ISDIR
+# undef S_ISDOOR
 # undef S_ISFIFO
 # undef S_ISLNK
 # undef S_ISMPB
@@ -62,6 +63,9 @@
 #endif
 #if !defined(S_ISNWK) && defined(S_IFNWK) /* HP/UX */
 # define S_ISNWK(m) (((m) & S_IFMT) == S_IFNWK)
+#endif
+#if !defined(S_ISDOOR) && defined(S_IFDOOR) /* Solaris 2.5 and up */
+# define S_ISDOOR(m) (((m) & S_IFMT) == S_IFDOOR)
 #endif
 
 #ifndef S_IEXEC
