@@ -1,3 +1,7 @@
+2004-03-30  Jim Meyering  <jim@meyering.net>
+
+	* getloadavg.c: Merge changes from emacs (via gnulib).
+
 2004-03-28  Paul Eggert  <eggert@twinsun.com>
 
 	Fix some gotchas encountered when porting to Solaris 8, using
