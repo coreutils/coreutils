@@ -358,8 +358,14 @@ char *base_name PARAMS ((char const *));
 # define IF_LINT(Code) /* empty */
 #endif
 
-#if __GNUC__
+#if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 7)
+# define __attribute__(x)
+#endif
+
+#ifndef ATTRIBUTE_NORETURN
 # define ATTRIBUTE_NORETURN __attribute__ ((__noreturn__))
-#else
-# define ATTRIBUTE_NORETURN /* empty */
+#endif
+
+#ifndef ATTRIBUTE_UNUSED
+# define ATTRIBUTE_UNUSED __attribute__ ((__unused__))
 #endif
