@@ -1,6 +1,18 @@
+2001-11-27  Paul Eggert  <eggert@twinsun.com>
+
+	* quotearg.h (quotearg_n, quotearg_n_style):
+	First arg is int, not unsigned.
+	* quotearg.c (quotearg_n, quotearg_n_style): Likewise.
+	(SIZE_MAX, UINT_MAX): New macros.
+	(quotearg_n_options): Abort if N is negative.
+	Avoid overflow check on hosts where size_t is 64 bits and int
+	is 32 bits, as overflow is impossible there.
+	Fix off-by-one typo that caused unnecessary reallocation.
+
 2001-11-27  Jim Meyering  <meyering@lucent.com>
 
 	* tempname.c: Merge with version from libc.
+	* regex.c: Likewise.
 
 	* tempname.c: Include stdlib.h unconditionally.  On some old systems
 	for which STDC_HEADERS is 0, it was not included, resulting in a
@@ -10,6 +22,7 @@
 2001-11-26  Jim Meyering  <meyering@lucent.com>
 
 	* gtod.h: Remove file.
+	* Makefile.am (libfetish_a_SOURCES): Remove gtod.h.
 	* gettimeofday.c: Don't include gtod.h.
 	(GTOD_init): Remove function.
 	(rpl_gettimeofday): Do its job here instead, rather than aborting.
