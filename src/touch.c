@@ -52,10 +52,6 @@ time_t posixtime ();
 int full_write ();
 void invalid_arg ();
 
-#if ! HAVE_UTIME_NULL
-static int utime_now ();
-#endif
-
 /* Bitmasks for `change_times'. */
 #define CH_ATIME 1
 #define CH_MTIME 2
@@ -171,13 +167,9 @@ touch (char *file)
 
   if (amtime_now)
     {
-#if ! HAVE_UTIME_NULL
-      status = utime_now (file, sbuf.st_size);
-#else
       /* Pass NULL to utime so it will not fail if we just have
 	 write access to the file, but don't own it.  */
       status = utime (file, NULL);
-#endif
     }
   else
     {
@@ -208,32 +200,6 @@ touch (char *file)
 
   return 0;
 }
-
-#if ! HAVE_UTIME_NULL
-/* Emulate utime (file, NULL) for systems (like 4.3BSD) that do not
-   interpret it to set the access and modification times of FILE to
-   the current time.  FILESIZE is the correct size of FILE, used to
-   make sure empty files are not lengthened to 1 byte.
-   Return 0 if successful, -1 if not. */
-
-static int
-utime_now (const char *file, off_t filesize)
-{
-  int fd;
-  char c;
-  int status = 0;
-
-  fd = open (file, O_RDWR, 0666);
-  if (fd < 0
-      || safe_read (fd, &c, sizeof (char)) < 0
-      || lseek (fd, (off_t) 0, SEEK_SET) < 0
-      || full_write (fd, &c, sizeof (char)) < 0
-      || ftruncate (fd, filesize) < 0
-      || close (fd) < 0)
-    status = -1;
-  return status;
-}
-#endif
 
 static void
 usage (int status)
