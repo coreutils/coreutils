@@ -62,15 +62,15 @@ static void
 usage (int status)
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n\
-",
+"),
 	      program_name);
-      printf ("\
+      printf (_("\
 Compare sorted files LEFT_FILE and RIGHT_FILE line by line.\n\
 \n\
   -1              suppress lines unique to left file\n\
@@ -78,7 +78,7 @@ Compare sorted files LEFT_FILE and RIGHT_FILE line by line.\n\
   -3              suppress lines unique to both files\n\
       --help      display this help and exit\n\
       --version   output version information and exit\n\
-");
+"));
     }
   exit (status);
 }
@@ -206,7 +206,7 @@ compare_files (char **infiles)
     }
   if (ferror (stdout) || fclose (stdout) == EOF)
     {
-      error (0, errno, "write error");
+      error (0, errno, _("write error"));
       ret = 1;
     }
   return ret;

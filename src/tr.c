@@ -322,15 +322,15 @@ static void
 usage (int status)
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... SET1 [SET2]\n\
-",
+"),
 	      program_name);
-      printf ("\
+      printf (_("\
 Translate, squeeze, and/or delete characters from standard input,\n\
 writing to standard output.\n\
 \n\
@@ -340,8 +340,8 @@ writing to standard output.\n\
   -t, --truncate-set1     first truncate SET1 to length of SET2\n\
       --help              display this help and exit\n\
       --version           output version information and exit\n\
-");
-      printf ("\
+"));
+      printf (_("\
 \n\
 SETs are specified as strings of characters.  Most represent themselves.\n\
 Interpreted sequences are:\n\
@@ -372,8 +372,8 @@ Interpreted sequences are:\n\
   [:upper:]       all upper case letters\n\
   [:xdigit:]      all hexadecimal digits\n\
   [=CHAR=]        all characters which are equivalent to CHAR\n\
-");
-      printf ("\
+"));
+      printf (_("\
 \n\
 Translation occurs if -d is not given and both SET1 and SET2 appear.\n\
 -t may be used only when translating.  SET2 is extended to length of\n\
@@ -383,7 +383,7 @@ expand in ascending order; used in SET2 while translating, they may\n\
 only be used in pairs to specify case conversion.  -s uses SET1 if not\n\
 translating nor deleting; else squeezing uses SET2 and occurs after\n\
 translation or deletion.\n\
-");
+"));
     }
   exit (status);
 }
@@ -529,8 +529,8 @@ unquote (unsigned char *s, size_t *len)
 			     isn't clear on this, but one person has said
 			     that in his interpretation, POSIX says tr
 			     can't even give a warning.  */
-			  error (0, 0, "warning: the ambiguous octal escape \
-\\%c%c%c is being\n\tinterpreted as the 2-byte sequence \\0%c%c, `%c'",
+			  error (0, 0, _("warning: the ambiguous octal escape \
+\\%c%c%c is being\n\tinterpreted as the 2-byte sequence \\0%c%c, `%c'"),
 				 s[i], s[i + 1], s[i + 2],
 				 s[i], s[i + 1], s[i + 2]);
 			}
@@ -538,11 +538,11 @@ unquote (unsigned char *s, size_t *len)
 		}
 	      break;
 	    case '\0':
-	      error (0, 0, "invalid backslash escape at end of string");
+	      error (0, 0, _("invalid backslash escape at end of string"));
 	      return 1;
 
 	    default:
-	      error (0, 0, "invalid backslash escape `\\%c'", s[i + 1]);
+	      error (0, 0, _("invalid backslash escape `\\%c'"), s[i + 1]);
 	      return 1;
 	    }
 	  ++i;
@@ -689,7 +689,7 @@ append_range (struct Spec_list *list, unsigned int first, unsigned int last)
       char *tmp2 = make_printable_char (last);
 
       error (0, 0,
-       "range-endpoints of `%s-%s' are in reverse collating sequence order",
+       _("range-endpoints of `%s-%s' are in reverse collating sequence order"),
 	     tmp1, tmp2);
       free (tmp1);
       free (tmp2);
@@ -722,7 +722,7 @@ append_char_class (struct Spec_list *list, const unsigned char *char_class_str, 
     {
       char *tmp = make_printable_str (char_class_str, len);
 
-      error (0, 0, "invalid character class `%s'", tmp);
+      error (0, 0, _("invalid character class `%s'"), tmp);
       free (tmp);
       return 1;
     }
@@ -771,7 +771,7 @@ append_equiv_class (struct Spec_list *list, const unsigned char *equiv_class_str
     {
       char *tmp = make_printable_str (equiv_class_str, len);
 
-      error (0, 0, "%s: equivalence class operand must be a single character",
+      error (0, 0, _("%s: equivalence class operand must be a single character"),
 	     tmp);
       free (tmp);
       return 1;
@@ -909,7 +909,7 @@ find_bracketed_repeat (const unsigned char *p, size_t start_idx, size_t p_len, u
 	  if (non_neg_strtol (digit_str, digit_str_len, repeat_count))
 	    {
 	      char *tmp = make_printable_str (digit_str, digit_str_len);
-	      error (0, 0, "invalid repeat count `%s' in [c*n] construct",
+	      error (0, 0, _("invalid repeat count `%s' in [c*n] construct"),
 		     tmp);
 	      free (tmp);
 	      return -2;
@@ -1408,7 +1408,7 @@ validate (struct Spec_list *s1, struct Spec_list *s2)
   get_s1_spec_stats (s1);
   if (s1->n_indefinite_repeats > 0)
     {
-      error (1, 0, "the [c*] repeat construct may not appear in string1");
+      error (1, 0, _("the [c*] repeat construct may not appear in string1"));
     }
 
   /* FIXME: it isn't clear from the POSIX spec that this is invalid,
@@ -1417,8 +1417,8 @@ validate (struct Spec_list *s1, struct Spec_list *s2)
   if (complement && s1->has_upper_or_lower)
     {
       error (1, 0,
-	     "character classes may not be used when translating \
-and complementing");
+	     _("character classes may not be used when translating \
+and complementing"));
     }
 
   if (s2)
@@ -1427,13 +1427,13 @@ and complementing");
       if (s2->has_restricted_char_class)
 	{
 	  error (1, 0,
-		 "when translating, the only character classes that may \
-appear in\n\tstring2 are `upper' and `lower'");
+		 _("when translating, the only character classes that may \
+appear in\n\tstring2 are `upper' and `lower'"));
 	}
 
       if (s2->n_indefinite_repeats > 1)
 	{
-	  error (1, 0, "only one [c*] repeat construct may appear in string2");
+	  error (1, 0, _("only one [c*] repeat construct may appear in string2"));
 	}
 
       if (translating)
@@ -1441,8 +1441,8 @@ appear in\n\tstring2 are `upper' and `lower'");
 	  if (s2->has_equiv_class)
 	    {
 	      error (1, 0,
-		     "[=c=] expressions may not appear in string2 \
-when translating");
+		     _("[=c=] expressions may not appear in string2 \
+when translating"));
 	    }
 
 	  if (s1->length > s2->length)
@@ -1454,23 +1454,23 @@ when translating");
 
 		  if (s2->length == 0)
 		    error (1, 0,
-		     "when not truncating set1, string2 must be non-empty");
+		     _("when not truncating set1, string2 must be non-empty"));
 		  string2_extend (s1, s2);
 		}
 	    }
 
 	  if (complement && s2->has_upper_or_lower)
 	    error (1, 0,
-		   "character classes may not be used when translating \
-and complementing");
+		   _("character classes may not be used when translating \
+and complementing"));
 	}
       else
 	/* Not translating.  */
 	{
 	  if (s2->n_indefinite_repeats > 0)
 	    error (1, 0,
-		   "the [c*] construct may appear in string2 only \
-when translating");
+		   _("the [c*] construct may appear in string2 only \
+when translating"));
 	}
     }
 }
@@ -1502,7 +1502,7 @@ squeeze_filter (unsigned char *buf, long int size, PFI reader)
 	    nr = (*reader) (buf, size, NULL);
 
 	  if (nr < 0)
-	    error (1, errno, "read error");
+	    error (1, errno, _("read error"));
 	  if (nr == 0)
 	    break;
 	  i = 0;
@@ -1553,7 +1553,7 @@ squeeze_filter (unsigned char *buf, long int size, PFI reader)
 	    }
 	  if (out_len > 0
 	      && fwrite ((char *) &buf[begin], 1, out_len, stdout) == 0)
-	    error (1, errno, "write error");
+	    error (1, errno, _("write error"));
 	}
 
       if (char_to_squeeze != NOT_A_CHAR)
@@ -1599,7 +1599,7 @@ read_and_delete (unsigned char *buf, long int size, PFI not_used)
       int nr = safe_read (0, (char *) buf, size);
 
       if (nr < 0)
-	error (1, errno, "read error");
+	error (1, errno, _("read error"));
       if (nr == 0)
 	{
 	  hit_eof = 1;
@@ -1643,7 +1643,7 @@ read_and_xlate (unsigned char *buf, long int size, PFI not_used)
 
   chars_read = safe_read (0, (char *) buf, size);
   if (chars_read < 0)
-    error (1, errno, "read error");
+    error (1, errno, _("read error"));
   if (chars_read == 0)
     {
       hit_eof = 1;
@@ -1738,16 +1738,16 @@ main (int argc, char **argv)
      of `cat' use `tr a a'.  */
   if (non_option_args > 2)
     {
-      error (0, 0, "too many arguments");
+      error (0, 0, _("too many arguments"));
       usage (2);
     }
 
   if (!delete && !squeeze_repeats && non_option_args != 2)
-    error (1, 0, "two strings must be given when translating");
+    error (1, 0, _("two strings must be given when translating"));
 
   if (delete && squeeze_repeats && non_option_args != 2)
-    error (1, 0, "two strings must be given when both \
-deleting and squeezing repeats");
+    error (1, 0, _("two strings must be given when both \
+deleting and squeezing repeats"));
 
   /* If --delete is given without --squeeze-repeats, then
      only one string argument may be specified.  But POSIX
@@ -1760,12 +1760,12 @@ deleting and squeezing repeats");
 	--non_option_args;
       else
 	error (1, 0,
-	       "only one string may be given when deleting \
-without squeezing repeats");
+	       _("only one string may be given when deleting \
+without squeezing repeats"));
     }
 
   if (squeeze_repeats && non_option_args == 0)
-    error (1, 0, "at least one string must be given when squeezing repeats");
+    error (1, 0, _("at least one string must be given when squeezing repeats"));
 
   spec_init (s1);
   if (parse_str ((unsigned char *) argv[optind], s1))
@@ -1796,7 +1796,7 @@ without squeezing repeats");
 	{
 	  nr = read_and_delete (io_buf, IO_BUF_SIZE, NULL);
 	  if (nr > 0 && fwrite ((char *) io_buf, 1, nr, stdout) == 0)
-	    error (1, errno, "write error");
+	    error (1, errno, _("write error"));
 	}
       while (nr > 0);
     }
@@ -1851,7 +1851,7 @@ without squeezing repeats");
 	      c2 = get_next (s2, &class_s2);
 	      if (!class_ok[(int) class_s1][(int) class_s2])
 		error (1, 0,
-		     "misaligned or mismatched upper and/or lower classes");
+		     _("misaligned or mismatched upper and/or lower classes"));
 	      /* The following should have been checked by validate...  */
 	      if (c2 == -1)
 		break;
@@ -1873,17 +1873,17 @@ without squeezing repeats");
 	      chars_read = read_and_xlate (io_buf, IO_BUF_SIZE, NULL);
 	      if (chars_read > 0
 		  && fwrite ((char *) io_buf, 1, chars_read, stdout) == 0)
-		error (1, errno, "write error");
+		error (1, errno, _("write error"));
 	    }
 	  while (chars_read > 0);
 	}
     }
 
   if (fclose (stdout) == EOF)
-    error (2, errno, "write error");
+    error (2, errno, _("write error"));
 
   if (close (0) != 0)
-    error (2, errno, "standard input");
+    error (2, errno, _("standard input"));
 
   exit (0);
 }

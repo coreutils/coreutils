@@ -214,7 +214,7 @@ xmalloc (n)
   p = malloc (n);
   if (p == 0)
     {
-      error (0, 0, "virtual memory exhausted");
+      error (0, 0, _("virtual memory exhausted"));
       cleanup ();
       exit (2);
     }
@@ -241,7 +241,7 @@ xrealloc (p, n)
   p = realloc (p, n);
   if (p == 0)
     {
-      error (0, 0, "virtual memory exhausted");
+      error (0, 0, _("virtual memory exhausted"));
       cleanup ();
       exit (2);
     }
@@ -279,7 +279,7 @@ xfclose (fp)
     {
       if (fflush (fp) != 0)
 	{
-	  error (0, errno, "flushing file");
+	  error (0, errno, _("flushing file"));
 	  cleanup ();
 	  exit (2);
 	}
@@ -288,7 +288,7 @@ xfclose (fp)
     {
       if (fclose (fp) != 0)
 	{
-	  error (0, errno, "error closing file");
+	  error (0, errno, _("error closing file"));
 	  cleanup ();
 	  exit (2);
 	}
@@ -303,7 +303,7 @@ xfwrite (buf, size, nelem, fp)
 {
   if (fwrite (buf, size, nelem, fp) != nelem)
     {
-      error (0, errno, "write error");
+      error (0, errno, _("write error"));
       cleanup ();
       exit (2);
     }
@@ -414,7 +414,7 @@ fillbuf (buf, fp)
       cc = fread (buf->buf + buf->used, 1, buf->alloc - buf->used, fp);
       if (ferror (fp))
 	{
-	  error (0, errno, "read error");
+	  error (0, errno, _("read error"));
 	  cleanup ();
 	  exit (2);
 	}
@@ -1246,7 +1246,7 @@ check (files, nfiles)
       fp = xfopen (files[i], "r");
       if (!checkfp (fp))
 	{
-	  fprintf (stderr, "%s: disorder on %s\n", program_name, files[i]);
+	  fprintf (stderr, _("%s: disorder on %s\n"), program_name, files[i]);
 	  ++disorders;
 	}
     }
@@ -1387,7 +1387,7 @@ static void
 badfieldspec (s)
      char *s;
 {
-  error (2, 0, "invalid field specification `%s'", s);
+  error (2, 0, _("invalid field specification `%s'"), s);
 }
 
 /* Handle interrupts and hangups. */
@@ -1598,7 +1598,7 @@ main (argc, argv)
 		    else
 		      {
 			if (i == argc - 1)
-			  error (2, 0, "option `-k' requires an argument");
+			  error (2, 0, _("option `-k' requires an argument"));
 			else
 			  s = argv[++i];
 		      }
@@ -1676,7 +1676,7 @@ main (argc, argv)
 		    else
 		      {
 			if (i == argc - 1)
-			  error (2, 0, "option `-o' requires an argument");
+			  error (2, 0, _("option `-o' requires an argument"));
 			else
 			  outfile = argv[++i];
 		      }
@@ -1693,7 +1693,7 @@ main (argc, argv)
 			goto outer;
 		      }
 		    else
-		      error (2, 0, "option `-t' requires an argument");
+		      error (2, 0, _("option `-t' requires an argument"));
 		    break;
 		  case 'T':
 		    if (s[1])
@@ -1703,7 +1703,7 @@ main (argc, argv)
 			if (i < argc - 1)
 			  temp_file_prefix = argv[++i];
 			else
-			  error (2, 0, "option `-T' requires an argument");
+			  error (2, 0, _("option `-T' requires an argument"));
 		      }
 		    goto outer;
 		    /* break; */
@@ -1715,7 +1715,7 @@ main (argc, argv)
 		       Solaris 2.  */
 		    goto outer;
 		  default:
-		    fprintf (stderr, "%s: unrecognized option `-%c'\n",
+		    fprintf (stderr, _("%s: unrecognized option `-%c'\n"),
 			     argv[0], *s);
 		    usage (2);
 		  }
@@ -1834,12 +1834,12 @@ main (argc, argv)
      Solaris, Ultrix, and Irix.  This premature fflush makes the output
      reappear. --karl@cs.umb.edu  */
   if (fflush (ofp) < 0)
-    error (1, errno, "%s: write error", outfile);
+    error (1, errno, _("%s: write error"), outfile);
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (1, errno, outfile);
   if (ferror (stdout) || fclose (stdout) == EOF)
-    error (1, errno, "%s: write error", outfile);
+    error (1, errno, _("%s: write error"), outfile);
 
   exit (0);
 }
@@ -1849,15 +1849,15 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
-",
+"),
 	      program_name);
-      printf ("\
+      printf (_("\
 Write sorted concatenation of all FILE(s) to standard output.\n\
 \n\
   +POS1 [-POS2]    start a key at POS1, end it before POS2\n\
@@ -1885,7 +1885,7 @@ position in the field, both counted from zero.  OPTS is made up of one\n\
 or more of Mbdfinr, this effectively disable global -Mbdfinr settings\n\
 for that key.  If no key given, use the entire line as key.  With no\n\
 FILE, or when FILE is -, read standard input.\n\
-"
+")
 	      , DEFAULT_TMPDIR);
     }
   exit (status);

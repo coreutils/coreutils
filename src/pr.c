@@ -489,7 +489,7 @@ main (argc, argv)
 	      ++s;
 	      if (!ISDIGIT (*s))
 		{
-		  error (0, 0, "`+' requires a numeric argument");
+		  error (0, 0, _("`+' requires a numeric argument"));
 		  usage (2);
 		}
 	      /* FIXME: use strtol */
@@ -592,8 +592,8 @@ main (argc, argv)
 	      column_separator = *s;
 	      if (*++s)
 		{
-		  fprintf (stderr, "\
-%s: extra characters in the argument to the `-s' option: `%s'\n",
+		  fprintf (stderr, _("\
+%s: extra characters in the argument to the `-s' option: `%s'\n"),
 			   program_name, s);
 		  usage (2);
 		}
@@ -625,11 +625,11 @@ main (argc, argv)
 
   if (parallel_files && explicit_columns)
     error (1, 0,
-  "Cannot specify number of columns when printing in parallel.");
+  _("Cannot specify number of columns when printing in parallel."));
 
   if (parallel_files && print_across_flag)
     error (1, 0,
-  "Cannot specify both printing across and printing in parallel.");
+  _("Cannot specify both printing across and printing in parallel."));
 
   for ( ; optind < argc; optind++)
     {
@@ -656,9 +656,9 @@ main (argc, argv)
   cleanup ();
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    error (1, errno, "standard input");
+    error (1, errno, _("standard input"));
   if (ferror (stdout) || fclose (stdout) == EOF)
-    error (1, errno, "write error");
+    error (1, errno, _("write error"));
   if (failed_opens > 0)
     exit(1);
   exit (0);
@@ -683,8 +683,8 @@ getoptarg (arg, switch_char, character, number)
 	*number = atoi (arg);
       else
 	{
-	  fprintf (stderr, "\
-%s: extra characters in the argument to the `-%c' option: `%s'\n",
+	  fprintf (stderr, _("\
+%s: extra characters in the argument to the `-%c' option: `%s'\n"),
 		   program_name, switch_char, arg);
 	  usage (2);
 	}
@@ -748,7 +748,7 @@ init_parameters (number_of_files)
 		      (columns - 1) * chars_per_gutter) / columns;
 
   if (chars_per_column < 1)
-    error (1, 0, "page width too narrow");
+    error (1, 0, _("page width too narrow"));
 
   if (numbered_lines)
     {
@@ -816,7 +816,7 @@ init_fps (number_of_files, av)
 	}
       else
 	{
-	  p->name = "standard input";
+	  p->name = _("standard input");
 	  p->fp = stdin;
 	  have_read_stdin = TRUE;
 	  p->status = OPEN;
@@ -929,7 +929,7 @@ open_file (name, p)
 {
   if (!strcmp (name, "-"))
     {
-      p->name = "standard input";
+      p->name = _("standard input");
       p->fp = stdin;
       have_read_stdin = 1;
     }
@@ -1107,7 +1107,7 @@ init_header (filename, desc)
     free (header);
   header = (char *) xmalloc (chars_per_header * sizeof (char));
 
-  sprintf (header, "%s %s  %s Page", &t[4], &t[20], middle);
+  sprintf (header, _("%s %s  %s Page"), &t[4], &t[20], middle);
 }
 
 /* Set things up for printing a page
@@ -1871,15 +1871,15 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
-",
+"),
 	      program_name);
-      printf ("\
+      printf (_("\
 Paginate or columnate FILE(s) for printing.\n\
 \n\
   +PAGE             begin printing with page PAGE\n\
@@ -1906,7 +1906,7 @@ Paginate or columnate FILE(s) for printing.\n\
 \n\
 -t implied by -l N when N < 10.  Without -s, columns are separated by\n\
 spaces.  With no FILE, or when FILE is -, read standard input.\n\
-");
+"));
     }
   exit (status);
 }

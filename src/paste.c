@@ -157,7 +157,7 @@ main (argc, argv)
   if (have_read_stdin && fclose (stdin) == EOF)
     error (1, errno, "-");
   if (ferror (stdout) || fclose (stdout) == EOF)
-    error (1, errno, "write error");
+    error (1, errno, _("write error"));
   exit (exit_status);
 }
 
@@ -288,7 +288,7 @@ paste_parallel (nfiles, fnamptr)
   fileptr[files_open] = ENDLIST;
 
   if (opened_stdin && have_read_stdin)
-    error (1, 0, "standard input is closed");
+    error (1, 0, _("standard input is closed"));
 
   /* Read a line from each file and output it to stdout separated by a
      delimiter, until we go through the loop without successfully
@@ -482,15 +482,15 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
-",
+"),
 	      program_name);
-      printf ("\
+      printf (_("\
 Write lines consisting of the sequentially corresponding lines from\n\
 each FILE, separated by TABs, to standard output.\n\
 With no FILE, or when FILE is -, read standard input.\n\
@@ -500,7 +500,7 @@ With no FILE, or when FILE is -, read standard input.\n\
       --help              display this help and exit\n\
       --version           output version information and exit\n\
 \n\
-");
+"));
     }
   exit (status);
 }

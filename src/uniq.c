@@ -252,10 +252,10 @@ check_file (infile, outfile)
 
  closefiles:
   if (ferror (istream) || fclose (istream) == EOF)
-    error (1, errno, "error reading %s", infile);
+    error (1, errno, _("error reading %s"), infile);
 
   if (ferror (ostream) || fclose (ostream) == EOF)
-    error (1, errno, "error writing %s", outfile);
+    error (1, errno, _("error writing %s"), outfile);
 
   free (lb1.buffer);
   free (lb2.buffer);
@@ -341,15 +341,15 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... [INPUT [OUTPUT]]\n\
-",
+"),
 	      program_name);
-      printf ("\
+      printf (_("\
 Discard all but one of successive identical lines from INPUT (or\n\
 standard input), writing to OUTPUT (or standard output).\n\
 \n\
@@ -366,7 +366,7 @@ standard input), writing to OUTPUT (or standard output).\n\
 \n\
 A field is a run of whitespace, than non-whitespace characters.\n\
 Fields are skipped before chars. \n\
-");
+"));
     }
   exit (status);
 }

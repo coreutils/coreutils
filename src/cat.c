@@ -84,15 +84,15 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION] [FILE]...\n\
-",
+"),
 	      program_name);
-      printf ("\
+      printf (_("\
 Concatenate FILE(s), or standard input, to standard output.\n\
 \n\
   -b, --number-nonblank    number nonblank output lines\n\
@@ -109,7 +109,7 @@ Concatenate FILE(s), or standard input, to standard output.\n\
       --version            output version information and exit\n\
 \n\
 With no FILE, or when FILE is -, read standard input.\n\
-");
+"));
     }
   exit (status);
 }
@@ -267,7 +267,7 @@ main (argc, argv)
   /* Get device, i-node number, and optimal blocksize of output.  */
 
   if (fstat (output_desc, &stat_buf) < 0)
-    error (1, errno, "standard output");
+    error (1, errno, _("standard output"));
 
   outsize = ST_BLKSIZE (stat_buf);
   /* Input file can be output file for non-regular files.
@@ -334,7 +334,7 @@ main (argc, argv)
       if (check_redirection
 	  && stat_buf.st_dev == out_dev && stat_buf.st_ino == out_ino)
 	{
-	  error (0, 0, "%s: input file is output file", infile);
+	  error (0, 0, _("%s: input file is output file"), infile);
 	  exit_stat = 1;
 	  goto contin;
 	}
@@ -393,7 +393,7 @@ main (argc, argv)
   if (have_read_stdin && close (0) < 0)
     error (1, errno, "-");
   if (close (1) < 0)
-    error (1, errno, "write error");
+    error (1, errno, _("write error"));
 
   exit (exit_stat);
 }
@@ -435,7 +435,7 @@ simple_cat (buf, bufsize)
       /* Write this block out.  */
 
       if (full_write (output_desc, buf, n_read) < 0)
-	error (1, errno, "write error");
+	error (1, errno, _("write error"));
     }
 }
 
@@ -519,7 +519,7 @@ cat (inbuf, insize, outbuf, outsize, quote,
 	      do
 		{
 		  if (full_write (output_desc, wp, outsize) < 0)
-		    error (1, errno, "write error");
+		    error (1, errno, _("write error"));
 		  wp += outsize;
 		}
 	      while (bpout - wp >= outsize);
@@ -560,7 +560,7 @@ cat (inbuf, insize, outbuf, outsize, quote,
 		    use_fionread = 0;
 		  else
 		    {
-		      error (0, errno, "cannot do ioctl on `%s'", infile);
+		      error (0, errno, _("cannot do ioctl on `%s'"), infile);
 		      exit_stat = 1;
 		      newlines2 = newlines;
 		      return;
@@ -572,7 +572,7 @@ cat (inbuf, insize, outbuf, outsize, quote,
 		  int n_write = bpout - outbuf;
 
 		  if (full_write (output_desc, outbuf, n_write) < 0)
-		    error (1, errno, "write error");
+		    error (1, errno, _("write error"));
 		  bpout = outbuf;
 		}
 

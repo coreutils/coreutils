@@ -59,9 +59,6 @@
 # define TOLOWER(c) (ISUPPER (c) ? tolower (c) : (c))
 #endif
 
-/* Hook for i18n.  */
-#define _(str) str
-
 /* Nonzero if any of the files read were the standard input. */
 static int have_read_stdin;
 
@@ -247,7 +244,7 @@ md5_check (checkfile_name, binary)
   if (strcmp (checkfile_name, "-") == 0)
     {
       have_read_stdin = 1;
-      checkfile_name = "standard input";
+      checkfile_name = _("standard input");
       checkfile_stream = stdin;
     }
   else

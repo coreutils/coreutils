@@ -68,22 +68,22 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
-",
+"),
 	      program_name);
-      printf ("\
+      printf (_("\
 Wrap input lines in each FILE (standard input by default), writing to\n\
 standard output.\n\
 \n\
   -b, --bytes         count bytes rather than columns\n\
   -s, --spaces        break at word boundaries\n\
   -w, --width=WIDTH   use WIDTH columns instead of 80\n\
-");
+"));
     }
   exit (status);
 }
@@ -135,7 +135,7 @@ main (argc, argv)
 	case 'w':		/* Line width. */
 	  width = atoi (optarg);
 	  if (width < 1)
-	    error (1, 0, "%s: invalid line width", optarg);
+	    error (1, 0, _("%s: invalid line width"), optarg);
 	  break;
 
 	default:
@@ -161,7 +161,7 @@ main (argc, argv)
   if (have_read_stdin && fclose (stdin) == EOF)
     error (1, errno, "-");
   if (fclose (stdout) == EOF)
-    error (1, errno, "write error");
+    error (1, errno, _("write error"));
 
   exit (errs);
 }
@@ -282,7 +282,7 @@ fold_file (filename, width)
 
   if (ferror (stdout))
     {
-      error (0, errno, "write error");
+      error (0, errno, _("write error"));
       return 1;
     }
 

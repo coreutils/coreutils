@@ -192,15 +192,15 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
-",
+"),
 	      program_name);
-      printf ("\
+      printf (_("\
 Print selected parts of lines from each FILE to standard output.\n\
 \n\
   -b, --bytes=LIST        output only these bytes\n\
@@ -221,7 +221,7 @@ range, or many ranges separated by commas.  Each range is one of:\n\
   -M    from first to M'th (included) byte, character or field\n\
 \n\
 With no FILE, or when FILE is -, read standard input.\n\
-");
+"));
     }
   exit (status);
 }
@@ -365,7 +365,7 @@ set_fields (fieldstr)
 	{
 	  /* Starting a range. */
 	  if (dash_found)
-	    FATAL_ERROR ("invalid byte or field list");
+	    FATAL_ERROR (_("invalid byte or field list"));
 	  dash_found++;
 	  fieldstr++;
 
@@ -396,7 +396,7 @@ set_fields (fieldstr)
 		{
 		  /* `m-n' or `-n' (1-n). */
 		  if (value < initial)
-		    FATAL_ERROR ("invalid byte or field list");
+		    FATAL_ERROR (_("invalid byte or field list"));
 
 		  /* Is there already a range going to end of line? */
 		  if (eol_range_start != 0)
@@ -456,7 +456,7 @@ set_fields (fieldstr)
 	  fieldstr++;
 	}
       else
-	FATAL_ERROR ("invalid byte or field list");
+	FATAL_ERROR (_("invalid byte or field list"));
     }
 
   max_range_endpoint = 0;
@@ -711,26 +711,26 @@ main (argc, argv)
 	case 'c':
 	  /* Build the byte list. */
 	  if (operating_mode != undefined_mode)
-	    FATAL_ERROR ("only one type of list may be specified");
+	    FATAL_ERROR (_("only one type of list may be specified"));
 	  operating_mode = byte_mode;
 	  if (set_fields (optarg) == 0)
-	    FATAL_ERROR ("missing list of positions");
+	    FATAL_ERROR (_("missing list of positions"));
 	  break;
 
 	case 'f':
 	  /* Build the field list. */
 	  if (operating_mode != undefined_mode)
-	    FATAL_ERROR ("only one type of list may be specified");
+	    FATAL_ERROR (_("only one type of list may be specified"));
 	  operating_mode = field_mode;
 	  if (set_fields (optarg) == 0)
-	    FATAL_ERROR ("missing list of fields");
+	    FATAL_ERROR (_("missing list of fields"));
 	  break;
 
 	case 'd':
 	  /* New delimiter. */
 	  /* Interpret -d '' to mean `use the NUL byte as the delimiter.'  */
 	  if (optarg[0] != '\0' && optarg[1] != '\0')
-	    FATAL_ERROR ("the delimiter must be a single character");
+	    FATAL_ERROR (_("the delimiter must be a single character"));
 	  delim = optarg[0];
 	  break;
 
@@ -756,14 +756,14 @@ main (argc, argv)
     usage (0);
 
   if (operating_mode == undefined_mode)
-    FATAL_ERROR ("you must specify a list of bytes, characters, or fields");
+    FATAL_ERROR (_("you must specify a list of bytes, characters, or fields"));
 
   if (delim != '\0' && operating_mode != field_mode)
-    FATAL_ERROR ("a delimiter may be specified only when operating on fields");
+    FATAL_ERROR (_("a delimiter may be specified only when operating on fields"));
 
   if (suppress_non_delimited && operating_mode != field_mode)
-    FATAL_ERROR ("suppressing non-delimited lines makes sense\n\
-\tonly when operating on fields");
+    FATAL_ERROR (_("suppressing non-delimited lines makes sense\n\
+\tonly when operating on fields"));
 
   if (delim == '\0')
     delim = '\t';
@@ -780,7 +780,7 @@ main (argc, argv)
       exit_status = 1;
     }
   if (ferror (stdout) || fclose (stdout) == EOF)
-    error (1, errno, "write error");
+    error (1, errno, _("write error"));
 
   exit (exit_status);
 }

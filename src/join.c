@@ -641,7 +641,7 @@ main (argc, argv)
 	  else if (val == 2)
 	    print_unpairables_2 = 1;
 	  else
-	    error (2, 0, "invalid file number for `-a'");
+	    error (2, 0, _("invalid file number for `-a'"));
 	  break;
 
 	case 'e':
@@ -651,27 +651,27 @@ main (argc, argv)
 	case '1':
 	  val = atoi (optarg);
 	  if (val <= 0)
-	    error (2, 0, "invalid field number for `-1'");
+	    error (2, 0, _("invalid field number for `-1'"));
 	  join_field_1 = val - 1;
 	  break;
 
 	case '2':
 	  val = atoi (optarg);
 	  if (val <= 0)
-	    error (2, 0, "invalid field number for `-2'");
+	    error (2, 0, _("invalid field number for `-2'"));
 	  join_field_2 = val - 1;
 	  break;
 
 	case 'j':
 	  val = atoi (optarg);
 	  if (val <= 0)
-	    error (2, 0, "invalid field number for `-j'");
+	    error (2, 0, _("invalid field number for `-j'"));
 	  join_field_1 = join_field_2 = val - 1;
 	  break;
 
 	case 'o':
 	  if (add_field_list (optarg) == 0)
-	    error (2, 0, "invalid field list for `-o'");
+	    error (2, 0, _("invalid field list for `-o'"));
 	  break;
 
 	case 't':
@@ -685,7 +685,7 @@ main (argc, argv)
 	  else if (val == 2)
 	    print_unpairables_2 = 1;
 	  else
-	    error (2, 0, "invalid file number for `-v'");
+	    error (2, 0, _("invalid file number for `-v'"));
 	  print_pairables = 0;
 	  break;
 
@@ -722,13 +722,13 @@ main (argc, argv)
   if (!fp2)
     error (1, errno, "%s", names[1]);
   if (fp1 == fp2)
-    error (1, errno, "both files cannot be standard input");
+    error (1, errno, _("both files cannot be standard input"));
   join (fp1, fp2);
 
   if ((fp1 == stdin || fp2 == stdin) && fclose (stdin) == EOF)
     error (1, errno, "-");
   if (ferror (stdout) || fclose (stdout) == EOF)
-    error (1, errno, "write error");
+    error (1, errno, _("write error"));
 
   exit (0);
 }
@@ -738,15 +738,15 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... FILE1 FILE2\n\
-",
+"),
 	      program_name);
-      printf ("\
+      printf (_("\
 For each pair of input lines with identical join fields, write a line to\n\
 standard output.  The default join field is the first, delimited\n\
 by whitespace.  When FILE1 or FILE2 (not both) is -, read standard input.\n\
@@ -767,7 +767,7 @@ Any FIELD is a field number counted from 1.  FORMAT is one or more\n\
 comma or blank separated specifications, each being `SIDE.FIELD'.\n\
 Default FORMAT outputs the join field, the remaining fields from\n\
 FILE1, the remaining fields from FILE2, all separated by CHAR.\n\
-");
+"));
     }
   exit (status);
 }

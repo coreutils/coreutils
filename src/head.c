@@ -142,7 +142,7 @@ main (argc, argv)
 	      break;
 
 	    default:
-	      error (0, 0, "unrecognized option `-%c'", *argv[1]);
+	      error (0, 0, _("unrecognized option `-%c'"), *argv[1]);
 	      usage (1);
 	    }
 	  ++argv[1];
@@ -170,7 +170,7 @@ main (argc, argv)
 	getnum:
 	  number = atou (optarg);
 	  if (number == -1)
-	    error (1, 0, "invalid number `%s'", optarg);
+	    error (1, 0, _("invalid number `%s'"), optarg);
 	  break;
 
 	case 'q':
@@ -214,7 +214,7 @@ main (argc, argv)
   if (have_read_stdin && close (0) < 0)
     error (1, errno, "-");
   if (fclose (stdout) == EOF)
-    error (1, errno, "write error");
+    error (1, errno, _("write error"));
 
   exit (exit_status);
 }
@@ -229,7 +229,7 @@ head_file (filename, number)
   if (!strcmp (filename, "-"))
     {
       have_read_stdin = 1;
-      filename = "standard input";
+      filename = _("standard input");
       if (print_headers)
 	write_header (filename);
       return head (filename, 0, number);
@@ -296,7 +296,7 @@ head_bytes (filename, fd, bytes_to_write)
       if (bytes_read > bytes_to_write)
 	bytes_read = bytes_to_write;
       if (fwrite (buffer, 1, bytes_read, stdout) == 0)
-	error (1, errno, "write error");
+	error (1, errno, _("write error"));
       bytes_to_write -= bytes_read;
     }
   return 0;
@@ -327,7 +327,7 @@ head_lines (filename, fd, lines_to_write)
 	if (buffer[bytes_to_write++] == '\n' && --lines_to_write == 0)
 	  break;
       if (fwrite (buffer, 1, bytes_to_write, stdout) == 0)
-	error (1, errno, "write error");
+	error (1, errno, _("write error"));
     }
   return 0;
 }
@@ -377,15 +377,15 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
-",
+"),
 	      program_name);
-      printf ("\
+      printf (_("\
 Print first 10 lines of each FILE to standard output.\n\
 With more than one FILE, precede each with a header giving the file name.\n\
 With no FILE, or when FILE is -, read standard input.\n\
@@ -400,7 +400,7 @@ With no FILE, or when FILE is -, read standard input.\n\
 SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
 If -VALUE is used as first OPTION, read -c VALUE when one of\n\
 multipliers bkm follows concatenated, else read -n VALUE.\n\
-");
+"));
     }
   exit (status);
 }

@@ -302,16 +302,16 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
   or:  %s --traditional [FILE] [[+]OFFSET [[+]LABEL]]\n\
-",
+"),
 	      program_name, program_name);
-      printf ("\
+      printf (_("\
 Write an unambiguous representation, octal bytes by default, of FILE\n\
 to standard output.  With no FILE, or when FILE is -, read standard input.\n\
 \n\
@@ -337,8 +337,8 @@ Pre-POSIX format specifications may be intermixed, they accumulate:\n\
   -l   same as -t d4, select decimal longs\n\
   -o   same as -t o2, select octal shorts\n\
   -x   same as -t x2, select hexadecimal shorts\n\
-");
-      printf ("\
+"));
+      printf (_("\
 \n\
 For older syntax (second call format), OFFSET means -j OFFSET.  LABEL\n\
 is the pseudo-address at first byte printed, incremented when dump is\n\
@@ -365,7 +365,7 @@ BYTES is hexadecimal with 0x or 0X prefix, it is multiplied by 512\n\
 with b suffix, by 1024 with k and by 1048576 with m.  -s without a\n\
 number implies 3.  -w without a number implies 32.  By default, od\n\
 uses -A o -t d2 -w 16.\n\
-");
+"));
     }
   exit (status);
 }
@@ -961,7 +961,7 @@ skip (n_skip)
 
       if (STREQ (*file_list, "-"))
 	{
-	  input_filename = "standard input";
+	  input_filename = _("standard input");
 	  in_stream = stdin;
 	  have_read_stdin = 1;
 	}
@@ -1044,7 +1044,7 @@ skip (n_skip)
     }
 
   if (n_skip != 0)
-    error (2, 0, "cannot skip past end of combined input");
+    error (2, 0, _("cannot skip past end of combined input"));
 
   return err;
 }
@@ -1161,7 +1161,7 @@ check_and_close ()
 
   if (ferror (stdout))
     {
-      error (0, errno, "standard output");
+      error (0, errno, _("standard output"));
       err = 1;
     }
 
@@ -1210,7 +1210,7 @@ read_char (c)
 
 	  if (STREQ (*file_list, "-"))
 	    {
-	      input_filename = "standard input";
+	      input_filename = _("standard input");
 	      in_stream = stdin;
 	      have_read_stdin = 1;
 	    }
@@ -1285,7 +1285,7 @@ read_block (n, block, n_bytes_in_buffer)
 
 	  if (STREQ (*file_list, "-"))
 	    {
-	      input_filename = "standard input";
+	      input_filename = _("standard input");
 	      in_stream = stdin;
 	      have_read_stdin = 1;
 	    }
@@ -1353,7 +1353,7 @@ parse_old_offset (s)
   s_err = xstrtoul (s, NULL, radix, &tmp, "Bb");
   if (s_err != LONGINT_OK)
     {
-      STRTOL_FAIL_WARN (s, "old-style offset", s_err);
+      STRTOL_FAIL_WARN (s, _("old-style offset"), s_err);
       return -1;
     }
   offset = tmp;
@@ -1669,7 +1669,7 @@ main (argc, argv)
 	      break;
 	    default:
 	      error (2, 0,
-		     "invalid output address radix `%c'; it must be one character from [doxn]",
+		     _("invalid output address radix `%c'; it must be one character from [doxn]"),
 		     optarg[0]);
 	      break;
 	    }
@@ -1679,7 +1679,7 @@ main (argc, argv)
 	  s_err = xstrtoul (optarg, NULL, 0, &tmp, "bkm");
 	  n_bytes_to_skip = tmp;
 	  if (s_err != LONGINT_OK)
-	    STRTOL_FATAL_ERROR (optarg, "skip argument", s_err);
+	    STRTOL_FATAL_ERROR (optarg, _("skip argument"), s_err);
 	  break;
 
 	case 'N':
@@ -1690,11 +1690,11 @@ main (argc, argv)
 	  s_err = xstrtoul (optarg, NULL, 0, &tmp, "bkm");
 	  max_bytes_to_format = tmp;
 	  if (s_err != LONGINT_OK)
-	    STRTOL_FATAL_ERROR (optarg, "limit argument", s_err);
+	    STRTOL_FATAL_ERROR (optarg, _("limit argument"), s_err);
 
 	  if (tmp > OFF_T_MAX)
-	    error (2, 0, "specified number of bytes `%s' is larger than \
-the maximum\nrepresentable value of type off_t", optarg);
+	    error (2, 0, _("specified number of bytes `%s' is larger than \
+the maximum\nrepresentable value of type off_t"), optarg);
 	  break;
 
 	case 's':
@@ -1704,14 +1704,14 @@ the maximum\nrepresentable value of type off_t", optarg);
 	    {
 	      s_err = xstrtoul (optarg, NULL, 0, &string_min, "bkm");
 	      if (s_err != LONGINT_OK)
-		STRTOL_FATAL_ERROR (optarg, "minimum string length", s_err);
+		STRTOL_FATAL_ERROR (optarg, _("minimum string length"), s_err);
 	    }
 	  ++flag_dump_strings;
 	  break;
 
 	case 't':
 	  if (decode_format_string (optarg))
-	    error (2, 0, "invalid type string `%s'", optarg);
+	    error (2, 0, _("invalid type string `%s'"), optarg);
 	  break;
 
 	case 'v':
@@ -1759,7 +1759,7 @@ the maximum\nrepresentable value of type off_t", optarg);
 	    {
 	      s_err = xstrtoul (optarg, NULL, 10, &desired_width, NULL);
 	      if (s_err != LONGINT_OK)
-		STRTOL_FATAL_ERROR (optarg, "width specification", s_err);
+		STRTOL_FATAL_ERROR (optarg, _("width specification"), s_err);
 	    }
 	  break;
 
@@ -1779,7 +1779,7 @@ the maximum\nrepresentable value of type off_t", optarg);
     usage (0);
 
   if (flag_dump_strings && n_specs > 0)
-    error (2, 0, "no type may be specified when dumping strings");
+    error (2, 0, _("no type may be specified when dumping strings"));
 
   n_files = argc - optind;
 
@@ -1824,7 +1824,7 @@ the maximum\nrepresentable value of type off_t", optarg);
 	  else
 	    {
 	      error (0, 0,
-		     "invalid second operand in compatibility mode `%s'",
+		     _("invalid second operand in compatibility mode `%s'"),
 		     argv[optind + 1]);
 	      usage (1);
 	    }
@@ -1845,14 +1845,14 @@ the maximum\nrepresentable value of type off_t", optarg);
 	  else
 	    {
 	      error (0, 0,
-	      "in compatibility mode the last 2 arguments must be offsets");
+	      _("in compatibility mode the last 2 arguments must be offsets"));
 	      usage (1);
 	    }
 	}
       else
 	{
 	  error (0, 0,
-	     "in compatibility mode there may be no more than 3 arguments");
+	     _("in compatibility mode there may be no more than 3 arguments"));
 	  usage (1);
 	}
 
@@ -1916,7 +1916,7 @@ the maximum\nrepresentable value of type off_t", optarg);
 	bytes_per_block = desired_width;
       else
 	{
-	  error (0, 0, "warning: invalid width %lu; using %d instead",
+	  error (0, 0, _("warning: invalid width %lu; using %d instead"),
 		 desired_width, l_c_m);
 	  bytes_per_block = l_c_m;
 	}
@@ -1932,7 +1932,7 @@ the maximum\nrepresentable value of type off_t", optarg);
 #ifdef DEBUG
   for (i = 0; i < n_specs; i++)
     {
-      printf ("%d: fmt=\"%s\" width=%d\n",
+      printf (_("%d: fmt=\"%s\" width=%d\n"),
 	      i, spec[i].fmt_string, width_bytes[spec[i].size]);
     }
 #endif
@@ -1942,10 +1942,10 @@ the maximum\nrepresentable value of type off_t", optarg);
 cleanup:;
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    error (2, errno, "standard input");
+    error (2, errno, _("standard input"));
 
   if (fclose (stdout) == EOF)
-    error (2, errno, "write error");
+    error (2, errno, _("write error"));
 
   exit (err);
 }

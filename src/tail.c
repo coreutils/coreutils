@@ -64,7 +64,7 @@
       assert ((fd) == 1);						\
       assert ((n_bytes) >= 0);						\
       if (n_bytes > 0 && fwrite ((buffer), 1, (n_bytes), stdout) == 0)	\
-	error (1, errno, "write error");				\
+	error (1, errno, _("write error"));				\
     }									\
   while (0)
 
@@ -183,7 +183,7 @@ main (argc, argv)
 	  n_units = tmp_long;
 	  if (s_err == LONGINT_OVERFLOW)
 	    {
-	      STRTOL_FATAL_ERROR (argv[1], "argument", s_err);
+	      STRTOL_FATAL_ERROR (argv[1], _("argument"), s_err);
 	    }
 	  /* Parse any appended option letters.  */
 	  while (*p)
@@ -212,7 +212,7 @@ main (argc, argv)
 		  break;
 
 		default:
-		  error (0, 0, "unrecognized option `-%c'", *p);
+		  error (0, 0, _("unrecognized option `-%c'"), *p);
 		  usage (1);
 		}
 	      ++p;
@@ -253,8 +253,8 @@ main (argc, argv)
 	  if (s_err != LONGINT_OK)
 	    {
 	      STRTOL_FATAL_ERROR (optarg, (c == 'n'
-					   ? "number of lines"
-					   : "number of bytes"), s_err);
+					   ? _("number of lines")
+					   : _("number of bytes")), s_err);
 	    }
 	  break;
 
@@ -322,7 +322,7 @@ main (argc, argv)
   if (have_read_stdin && close (0) < 0)
     error (1, errno, "-");
   if (fclose (stdout) == EOF)
-    error (1, errno, "write error");
+    error (1, errno, _("write error"));
   exit (exit_status);
 }
 
@@ -343,7 +343,7 @@ tail_file (filename, n_units, filenum)
   if (!strcmp (filename, "-"))
     {
       have_read_stdin = 1;
-      filename = "standard input";
+      filename = _("standard input");
       if (print_headers)
 	write_header (filename, NULL);
       errors = tail (filename, 0, n_units);
@@ -351,13 +351,13 @@ tail_file (filename, n_units, filenum)
 	{
 	  if (fstat (0, &stats) < 0)
 	    {
-	      error (0, errno, "standard input");
+	      error (0, errno, _("standard input"));
 	      errors = 1;
 	    }
 	  else if (!S_ISREG (stats.st_mode))
 	    {
 	      error (0, 0,
-		     "standard input: cannot follow end of non-regular file");
+		     _("standard input: cannot follow end of non-regular file"));
 	      errors = 1;
 	    }
 	  if (errors)
@@ -394,7 +394,7 @@ tail_file (filename, n_units, filenum)
 		}
 	      else if (!S_ISREG (stats.st_mode))
 		{
-		  error (0, 0, "%s: cannot follow end of non-regular file",
+		  error (0, 0, _("%s: cannot follow end of non-regular file"),
 			 filename);
 		  errors = 1;
 		}
@@ -1000,7 +1000,7 @@ tail_forever (names, nfiles)
 
 	  if (stats.st_size < file_sizes[i])
 	    {
-	      write_header (names[i], "file truncated");
+	      write_header (names[i], _("file truncated"));
 	      last = i;
 	      lseek (file_descs[i], stats.st_size, SEEK_SET);
 	      file_sizes[i] = stats.st_size;
@@ -1027,15 +1027,15 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
-",
+"),
 	      program_name);
-      printf ("\
+      printf (_("\
 Print last 10 lines of each FILE to standard output.\n\
 With more than one FILE, precede each with a header giving the file name.\n\
 With no FILE, or when FILE is -, read standard input.\n\
@@ -1055,7 +1055,7 @@ b for 512, k for 1024, m for 1048576 (1 Meg).  A first OPTION of -VALUE\n\
 or +VALUE is treated like -n VALUE or -n +VALUE unless VALUE has one of\n\
 the [bkm] suffix multipliers, in which case it is treated like -c VALUE\n\
 or -c +VALUE.\n\
-");
+"));
     }
   exit (status);
 }

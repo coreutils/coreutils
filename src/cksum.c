@@ -265,20 +265,20 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
-",
+"),
 	      program_name);
-      printf ("\
+      printf (_("\
 Print CRC checksum and byte counts of each FILE.\n\
 \n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
-");
+"));
     }
   exit (status);
 }

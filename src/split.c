@@ -90,15 +90,15 @@ usage (status, reason)
     fprintf (stderr, "%s: %s\n", program_name, reason);
 
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION] [INPUT [PREFIX]]\n\
-",
+"),
 	      program_name);
-    printf ("\
+    printf (_("\
 Output fixed-size pieces of INPUT to PREFIXaa, PREFIXab, ...; default\n\
 PREFIX is `x'.  With no INPUT, or when INPUT is -, read standard input.\n\
 \n\
@@ -110,7 +110,7 @@ PREFIX is `x'.  With no INPUT, or when INPUT is -, read standard input.\n\
       --version           output version information and exit\n\
 \n\
 SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
-");
+"));
     }
   exit (status);
 }
@@ -156,27 +156,27 @@ main (argc, argv)
 
 	case 'b':
 	  if (split_type != type_undef)
-	    usage (2, "cannot split in more than one way");
+	    usage (2, _("cannot split in more than one way"));
 	  split_type = type_bytes;
 	  if (convint (optarg, &accum) == -1)
-	    usage (2, "invalid number of bytes");
+	    usage (2, _("invalid number of bytes"));
 	  break;
 
 	case 'l':
 	  if (split_type != type_undef)
-	    usage (2, "cannot split in more than one way");
+	    usage (2, _("cannot split in more than one way"));
 	  split_type = type_lines;
 	  if (!isdigits (optarg))
-	    usage (2, "invalid number of lines");
+	    usage (2, _("invalid number of lines"));
 	  accum = atoi (optarg);
 	  break;
 
 	case 'C':
 	  if (split_type != type_undef)
-	    usage (2, "cannot split in more than one way");
+	    usage (2, _("cannot split in more than one way"));
 	  split_type = type_byteslines;
 	  if (convint (optarg, &accum) == -1)
-	    usage (2, "invalid number of bytes");
+	    usage (2, _("invalid number of bytes"));
 	  break;
 
 	case '0':
@@ -190,7 +190,7 @@ main (argc, argv)
 	case '8':
 	case '9':
 	  if (split_type != type_undef && split_type != type_digits)
-	    usage (2, "cannot split in more than one way");
+	    usage (2, _("cannot split in more than one way"));
 	  if (digits_optind != 0 && digits_optind != this_optind)
 	    accum = 0;		/* More than one number given; ignore other. */
 	  digits_optind = this_optind;
@@ -220,7 +220,7 @@ main (argc, argv)
     }
 
   if (accum < 1)
-    usage (2, "invalid number");
+    usage (2, _("invalid number"));
   num = accum;
 
   /* Get out the filename arguments.  */
@@ -232,7 +232,7 @@ main (argc, argv)
     outbase = argv[optind++];
 
   if (optind < argc)
-    usage (2, "too many arguments");
+    usage (2, _("too many arguments"));
 
   /* Open the input file.  */
   if (!strcmp (infile, "-"))

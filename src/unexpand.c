@@ -188,7 +188,7 @@ main (argc, argv)
   if (have_read_stdin && fclose (stdin) == EOF)
     error (1, errno, "-");
   if (fclose (stdout) == EOF)
-    error (1, errno, "write error");
+    error (1, errno, _("write error"));
   exit (exit_status);
 }
 
@@ -215,7 +215,7 @@ parse_tabstops (stops)
 	  tabval = tabval * 10 + *stops - '0';
 	}
       else
-	error (1, 0, "tab size contains an invalid character");
+	error (1, 0, _("tab size contains an invalid character"));
     }
 
   add_tabstop (tabval);
@@ -249,9 +249,9 @@ validate_tabstops (tabs, entries)
   for (i = 0; i < entries; i++)
     {
       if (tabs[i] == 0)
-	error (1, 0, "tab size cannot be 0");
+	error (1, 0, _("tab size cannot be 0"));
       if (tabs[i] <= prev_tab)
-	error (1, 0, "tab sizes must be ascending");
+	error (1, 0, _("tab sizes must be ascending"));
       prev_tab = tabs[i];
     }
 }
@@ -444,15 +444,15 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
-",
+"),
 	      program_name);
-      printf ("\
+      printf (_("\
 Convert spaces in each FILE to tabs, writing to standard output.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
@@ -463,7 +463,7 @@ With no FILE, or when FILE is -, read standard input.\n\
       --version       output version information and exit\n\
 \n\
 Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.\n\
-");
+"));
     }
   exit (status);
 }

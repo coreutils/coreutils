@@ -316,7 +316,7 @@ main (argc, argv)
       exit_status = 1;
     }
   if (ferror (stdout) || fclose (stdout) == EOF)
-    error (1, errno, "write error");
+    error (1, errno, _("write error"));
 
   exit (exit_status);
 }
@@ -558,15 +558,15 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
-",
+"),
 	      program_name);
-      printf ("\
+      printf (_("\
 Write each FILE to standard output, with line numbers added.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
@@ -599,7 +599,7 @@ FORMAT is one of:\n\
   rn   right justified, no leading zeros\n\
   rz   right justified, leading zeros\n\
 \n\
-");
+"));
     }
   exit (status);
 }

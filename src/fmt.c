@@ -142,30 +142,32 @@ struct Word
 
 /* Forward declarations.  */
 
-/* My AC_PROTOTYPES would be better than __STDC__.  FIXME :-).  */
-#if __STDC__
-#define	_(x) x
-#else
-#define	_(x) ()
+/* My fp_PROTOTYPES would be better than __STDC__.  FIXME :-).  */
+#ifndef __P
+# if __STDC__
+#  define __P(Args) Args
+# else
+#  define __P(Args) ()
+# endif
 #endif
 
-static void set_prefix _ ((char *p));
-static void fmt _ ((FILE *f));
-static bool get_paragraph _ ((FILE *f));
-static int get_line _ ((FILE *f, int c));
-static int get_prefix _ ((FILE *f));
-static int get_space _ ((FILE *f, int c));
-static int copy_rest _ ((FILE *f, int c));
-static bool same_para _ ((int c));
-static void flush_paragraph _ ((void));
-static void fmt_paragraph _ ((void));
-static void check_punctuation _ ((WORD *w));
-static COST base_cost _ ((WORD *this));
-static COST line_cost _ ((WORD *next, int len));
-static void put_paragraph _ ((WORD *finish));
-static void put_line _ ((WORD *w, int indent));
-static void put_word _ ((WORD *w));
-static void put_space _ ((int space));
+static void set_prefix __P ((char *p));
+static void fmt __P ((FILE *f));
+static bool get_paragraph __P ((FILE *f));
+static int get_line __P ((FILE *f, int c));
+static int get_prefix __P ((FILE *f));
+static int get_space __P ((FILE *f, int c));
+static int copy_rest __P ((FILE *f, int c));
+static bool same_para __P ((int c));
+static void flush_paragraph __P ((void));
+static void fmt_paragraph __P ((void));
+static void check_punctuation __P ((WORD *w));
+static COST base_cost __P ((WORD *this));
+static COST line_cost __P ((WORD *next, int len));
+static void put_paragraph __P ((WORD *finish));
+static void put_line __P ((WORD *w, int indent));
+static void put_word __P ((WORD *w));
+static void put_space __P ((int space));
 
 /* The name this program was run with.  */
 const char *program_name;
@@ -273,11 +275,12 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n", program_name);
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+	     program_name);
   else
     {
-      printf ("Usage: %s [-DIGITS] [OPTION]... [FILE]...\n", program_name);
-      fputs ("\
+      printf (_("Usage: %s [-DIGITS] [OPTION]... [FILE]...\n"), program_name);
+      fputs (_("\
 Reformat each paragraph in the FILE(s), writing to standard output.\n\
 If no FILE or if FILE is `-', read standard input.\n\
 \n\
@@ -291,7 +294,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       --help                display this help and exit\n\
       --version             output version information and exit\n\
 \n\
-In -wNUMBER, the letter `w' may be omitted.\n",
+In -wNUMBER, the letter `w' may be omitted.\n"),
 	     stdout);
     }
   exit (status);

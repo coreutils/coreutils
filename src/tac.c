@@ -131,15 +131,15 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
-",
+"),
 	      program_name);
-      printf ("\
+      printf (_("\
 Write each FILE to standard output, last line first.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
@@ -148,7 +148,7 @@ With no FILE, or when FILE is -, read standard input.\n\
   -s, --separator=STRING   use STRING as the separator instead of newline\n\
       --help               display this help and exit\n\
       --version            output version information and exit\n\
-");
+"));
     }
   exit (status);
 }
@@ -184,7 +184,7 @@ main (argc, argv)
 	case 's':
 	  separator = optarg;
 	  if (*separator == 0)
-	    error (1, 0, "separator cannot be empty");
+	    error (1, 0, _("separator cannot be empty"));
 	  break;
 	default:
 	  usage (1);
@@ -252,7 +252,7 @@ main (argc, argv)
   if (have_read_stdin && close (0) < 0)
     error (1, errno, "-");
   if (close (1) < 0)
-    error (1, errno, "write error");
+    error (1, errno, _("write error"));
   exit (errors);
 }
 
@@ -280,11 +280,11 @@ tac_stdin ()
      error, either. */
   if (fstat (0, &stats))
     {
-      error (0, errno, "standard input");
+      error (0, errno, _("standard input"));
       return 1;
     }
   if (S_ISREG (stats.st_mode))
-    return tac (0, "standard input");
+    return tac (0, _("standard input"));
 
 #ifdef _POSIX_VERSION
   newact.sa_handler = cleanup;
@@ -392,7 +392,7 @@ save_stdin ()
     }
   if (bytes_read == -1)
     {
-      error (0, errno, "read error");
+      error (0, errno, _("read error"));
       cleanup ();
     }
 }
@@ -492,7 +492,7 @@ tac (fd, file)
 	    match_start = buffer - 1;
 	  else if (ret == -2)
 	    {
-	      error (0, 0, "error in regular expression search");
+	      error (0, 0, _("error in regular expression search"));
 	      cleanup ();
 	    }
 	  else
@@ -640,7 +640,7 @@ xwrite (desc, buffer, size)
 {
   if (full_write (desc, buffer, size) < 0)
     {
-      error (0, errno, "write error");
+      error (0, errno, _("write error"));
       cleanup ();
     }
 }
@@ -656,7 +656,7 @@ xmalloc (n)
   p = malloc (n);
   if (p == 0)
     {
-      error (0, 0, "virtual memory exhausted");
+      error (0, 0, _("virtual memory exhausted"));
       cleanup ();
     }
   return p;
@@ -672,7 +672,7 @@ xrealloc (p, n)
   p = realloc (p, n);
   if (p == 0)
     {
-      error (0, 0, "virtual memory exhausted");
+      error (0, 0, _("virtual memory exhausted"));
       cleanup ();
     }
   return p;

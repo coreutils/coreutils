@@ -73,15 +73,15 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
-",
+"),
 	      program_name);
-      printf ("\
+      printf (_("\
 Print line, word, and byte counts for each FILE, and a total line if\n\
 more than one FILE is specified.  With no FILE, or when FILE is -,\n\
 read standard input.\n\
@@ -90,7 +90,7 @@ read standard input.\n\
   -c, --bytes, --chars   print the byte counts\n\
       --help             display this help and exit\n\
       --version          output version information and exit\n\
-");
+"));
     }
   exit (status);
 }
@@ -155,7 +155,7 @@ main (argc, argv)
 	wc_file (argv[optind]);
 
       if (nfiles > 1)
-	write_counts (total_lines, total_words, total_chars, "total");
+	write_counts (total_lines, total_words, total_chars, _("total"));
     }
 
   if (have_read_stdin && close (0))

@@ -61,15 +61,15 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
-",
+"),
 	      program_name);
-      printf ("\
+      printf (_("\
 Print checksum and block counts for each FILE.\n\
 \n\
   -r              defeat -s, use BSD sum algorithm, use 1K blocks\n\
@@ -78,7 +78,7 @@ Print checksum and block counts for each FILE.\n\
       --version   output version information and exit\n\
 \n\
 With no FILE, or when FILE is -, read standard input.\n\
-");
+"));
     }
   exit (status);
 }

@@ -237,7 +237,7 @@ xmalloc (n)
   p = malloc (n);
   if (p == NULL)
     {
-      error (0, 0, "virtual memory exhausted");
+      error (0, 0, _("virtual memory exhausted"));
       cleanup ();
     }
   return p;
@@ -263,7 +263,7 @@ xrealloc (p, n)
   p = realloc (p, n);
   if (p == NULL)
     {
-      error (0, 0, "virtual memory exhausted");
+      error (0, 0, _("virtual memory exhausted"));
       cleanup ();
     }
   return p;
@@ -306,7 +306,7 @@ read_input (dest, max_n_bytes)
 
   if (bytes_read < 0)
     {
-      error (0, errno, "read error");
+      error (0, errno, _("read error"));
       cleanup ();
     }
 
@@ -610,7 +610,7 @@ static unsigned int
 get_first_line_in_buffer ()
 {
   if (head == NULL && !load_buffer ())
-    error (1, errno, "input disappeared");
+    error (1, errno, _("input disappeared"));
 
   return head->first_available;
 }
@@ -737,7 +737,7 @@ write_to_file (last_line, ignore, argnum)
 
   if (first_line > last_line)
     {
-      error (0, 0, "%s: line number out of range", global_argv[argnum]);
+      error (0, 0, _("%s: line number out of range"), global_argv[argnum]);
       cleanup ();
     }
 
@@ -748,7 +748,7 @@ write_to_file (last_line, ignore, argnum)
       line = remove_line ();
       if (line == NULL)
 	{
-	  error (0, 0, "%s: line number out of range", global_argv[argnum]);
+	  error (0, 0, _("%s: line number out of range"), global_argv[argnum]);
 	  cleanup ();
 	}
       if (!ignore)
@@ -775,10 +775,10 @@ handle_line_error (p, repetition)
      struct control *p;
      int repetition;
 {
-  fprintf (stderr, "%s: `%d': line number out of range",
+  fprintf (stderr, _("%s: `%d': line number out of range"),
 	   program_name, p->lines_required);
   if (repetition)
-    fprintf (stderr, " on repetition %d\n", repetition);
+    fprintf (stderr, _(" on repetition %d\n"), repetition);
   else
     fprintf (stderr, "\n");
 
@@ -830,11 +830,11 @@ regexp_error (p, repetition, ignore)
      int repetition;
      boolean ignore;
 {
-  fprintf (stderr, "%s: `%s': match not found",
+  fprintf (stderr, _("%s: `%s': match not found"),
 	   program_name, global_argv[p->argnum]);
 
   if (repetition)
-    fprintf (stderr, " on repetition %d\n", repetition);
+    fprintf (stderr, _(" on repetition %d\n"), repetition);
   else
     fprintf (stderr, "\n");
 
@@ -893,7 +893,7 @@ process_regexp (p, repetition)
 			   0, line_len, (struct re_registers *) 0);
 	  if (ret == -2)
 	    {
-	      error (0, 0, "error in regular expression search");
+	      error (0, 0, _("error in regular expression search"));
 	      cleanup ();
 	    }
 	  if (ret == -1)
@@ -933,7 +933,7 @@ process_regexp (p, repetition)
 			   0, line_len, (struct re_registers *) 0);
 	  if (ret == -2)
 	    {
-	      error (0, 0, "error in regular expression search");
+	      error (0, 0, _("error in regular expression search"));
 	      cleanup ();
 	    }
 	  if (ret >= 0)
@@ -1036,7 +1036,7 @@ close_output_file ()
     {
       if (fclose (output_stream) == EOF)
 	{
-	  error (0, errno, "write error for `%s'", output_filename);
+	  error (0, errno, _("write error for `%s'"), output_filename);
 	  cleanup ();
 	}
       if (bytes_written == 0 && elide_empty_files)
@@ -1146,10 +1146,10 @@ check_for_offset (p, str, num)
      char *num;
 {
   if (*num != '-' && *num != '+')
-    error (1, 0, "%s: `+' or `-' expected after delimeter", str);
+    error (1, 0, _("%s: `+' or `-' expected after delimeter"), str);
 
   if (!string_to_number (&p->offset, num + 1))
-    error (1, 0, "%s: integer expected after `%c'", str, *num);
+    error (1, 0, _("%s: integer expected after `%c'"), str, *num);
 
   if (*num == '-')
     p->offset = -p->offset;
@@ -1170,14 +1170,14 @@ parse_repeat_count (argnum, p, str)
 
   end = str + strlen (str) - 1;
   if (*end != '}')
-    error (1, 0, "%s: `}' is required in repeat count", str);
+    error (1, 0, _("%s: `}' is required in repeat count"), str);
   *end = '\0';
 
   if (str+1 == end-1 && *(str+1) == '*')
     p->repeat_forever = 1;
   else
     if (!string_to_number (&p->repeat, str +  1))
-      error (1, 0, "%s}: integer required between `{' and `}'",
+      error (1, 0, _("%s}: integer required between `{' and `}'"),
 	     global_argv[argnum]);
 
   *end = '}';
@@ -1203,7 +1203,7 @@ extract_regexp (argnum, ignore, str)
 
   closing_delim = strrchr (str + 1, delim);
   if (closing_delim == NULL)
-    error (1, 0, "%s: closing delimeter `%c' missing", str, delim);
+    error (1, 0, _("%s: closing delimeter `%c' missing"), str, delim);
 
   len = closing_delim - str - 1;
   p = new_control_record ();
@@ -1219,7 +1219,7 @@ extract_regexp (argnum, ignore, str)
   err = re_compile_pattern (p->regexpr, len, &p->re_compiled);
   if (err)
     {
-      error (0, 0, "%s: invalid regular expression: %s", str, err);
+      error (0, 0, _("%s: invalid regular expression: %s"), str, err);
       cleanup ();
     }
 
@@ -1252,7 +1252,7 @@ parse_patterns (argc, start, argv)
 	  p = new_control_record ();
 	  p->argnum = i;
 	  if (!string_to_number (&p->lines_required, argv[i]))
-	    error (1, 0, "%s: invalid pattern", argv[i]);
+	    error (1, 0, _("%s: invalid pattern"), argv[i]);
 	}
 
       if (i + 1 < argc && *argv[i + 1] == '{')
@@ -1375,14 +1375,14 @@ get_format_conv_type (format_ptr)
       break;
 
     case 0:
-      error (1, 0, "missing conversion specifier in suffix");
+      error (1, 0, _("missing conversion specifier in suffix"));
       break;
 
     default:
       if (ISPRINT (ch))
-        error (1, 0, "invalid conversion specifier in suffix: %c", ch);
+        error (1, 0, _("invalid conversion specifier in suffix: %c"), ch);
       else
-	error (1, 0, "invalid conversion specifier in suffix: \\%.3o", ch);
+	error (1, 0, _("invalid conversion specifier in suffix: \\%.3o"), ch);
     }
 }
 
@@ -1414,9 +1414,9 @@ max_out (format)
     }
 
   if (percents == 0)
-    error (1, 0, "missing %% conversion specification in suffix");
+    error (1, 0, _("missing %% conversion specification in suffix"));
   else if (percents > 1)
-    error (1, 0, "too many %% conversion specifications in suffix");
+    error (1, 0, _("too many %% conversion specifications in suffix"));
 
   return out_count;
 }
@@ -1425,7 +1425,7 @@ static void
 interrupt_handler (signum)
      int signum;
 {
-  error (0, 0, "interrupted");
+  error (0, 0, _("interrupted"));
   cleanup ();
 }
 
@@ -1499,7 +1499,7 @@ main (argc, argv)
 
       case 'n':
 	if (!string_to_number (&digits, optarg))
-	  error (1, 0, "%s: invalid number", optarg);
+	  error (1, 0, _("%s: invalid number"), optarg);
 	break;
 
       case 's':
@@ -1526,7 +1526,7 @@ main (argc, argv)
 
   if (argc - optind < 2)
     {
-      error (0, 0, "too few arguments");
+      error (0, 0, _("too few arguments"));
       usage (1);
     }
 
@@ -1543,7 +1543,7 @@ main (argc, argv)
 
   if (close (input_desc) < 0)
     {
-      error (0, errno, "read error");
+      error (0, errno, _("read error"));
       cleanup ();
     }
 
@@ -1555,15 +1555,15 @@ usage (status)
      int status;
 {
   if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
     {
-      printf ("\
+      printf (_("\
 Usage: %s [OPTION]... FILE PATTERN...\n\
-",
+"),
 	      program_name);
-      printf ("\
+      printf (_("\
 Output pieces of FILE separated by PATTERN(s) to files `xx01', `xx02', ...,\n\
 and output byte counts of each piece to standard output.\n\
 \n\
@@ -1585,7 +1585,7 @@ Read standard input if FILE is -.  Each PATTERN may be:\n\
   {*}                repeat the previous pattern as many times as possible\n\
 \n\
 A line OFFSET is a required `+' or `-' followed by a positive integer.\n\
-");
+"));
     }
   exit (status);
 }
