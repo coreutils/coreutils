@@ -139,7 +139,6 @@ A mere - implies -i.  If no COMMAND, print the resulting environment.\n\
 int
 main (register int argc, register char **argv, char **envp)
 {
-  char *dummy_environ[1];
   int optc;
   int ignore_environment = 0;
 
@@ -171,12 +170,11 @@ main (register int argc, register char **argv, char **envp)
   if (optind < argc && !strcmp (argv[optind], "-"))
     ignore_environment = 1;
 
-  environ = dummy_environ;
-  environ[0] = NULL;
-
-  if (!ignore_environment)
-    for (; *envp; envp++)
-      putenv (*envp);
+  if (ignore_environment)
+    {
+      static char *dummy_environ[] = { NULL };
+      environ = dummy_environ;
+    }
 
   optind = 0;			/* Force GNU getopt to re-initialize. */
   while ((optc = getopt_long (argc, argv, "+iu:", longopts, NULL)) != -1)
