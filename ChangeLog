@@ -1,10 +1,20 @@
 2003-04-10  Jim Meyering  <jim@meyering.net>
 
+	* src/fs.h:
+
 	* Version 5.0.1.
+
+	* tests/tail-2/big-4gb: Skip this test (don't fail) if creating a
+	file with nominal length > 4GB fails.  Reported by Michael Deutschmann.
 
 	* man/unexpand.x: Add `SEE ALSO' reference to expand.
 	* man/expand.x: Add `SEE ALSO' reference to unexpand.
 	Suggestion from Dan Jacobson.
+
+2003-04-10  Maciej W. Rozycki  <macro@ds2.pg.gda.pl>
+
+	* src/fs.h (S_MAGIC_DEVPTS): New magic for Linux's devpts.
+	* src/stat.c (human_fstype): Handle Linux's devpts.
 
 2003-04-09  Paul Eggert  <eggert@twinsun.com>
 
