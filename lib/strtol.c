@@ -1,5 +1,5 @@
 /* Convert string representation of a number into an integer value.
-   Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+   Copyright (C) 1991, 92, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    NOTE: The canonical source of this file is maintained with the GNU C
    Library.  Bugs can be reported to bug-glibc@gnu.org.
 
@@ -131,6 +131,31 @@ extern int errno;
 # define STRTOL_LONG_MIN LONG_LONG_MIN
 # define STRTOL_LONG_MAX LONG_LONG_MAX
 # define STRTOL_ULONG_MAX ULONG_LONG_MAX
+
+/* The extra casts work around common compiler bugs,
+   e.g. Cray C 5.0.3.0 when t == time_t.  */
+# ifndef TYPE_SIGNED
+#  define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
+# endif
+# ifndef TYPE_MINIMUM
+#  define TYPE_MINIMUM(t) ((t) (TYPE_SIGNED (t) \
+				? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) \
+				: (t) 0))
+# endif
+# ifndef TYPE_MAXIMUM
+#  define TYPE_MAXIMUM(t) ((t) (~ (t) 0 - TYPE_MINIMUM (t)))
+# endif
+
+# ifndef ULONG_LONG_MAX
+#  define ULONG_LONG_MAX TYPE_MAXIMUM (unsigned long long)
+# endif
+# ifndef LONG_LONG_MAX
+#  define LONG_LONG_MAX TYPE_MAXIMUM (long long int)
+# endif
+# ifndef LONG_LONG_MIN
+#  define LONG_LONG_MIN TYPE_MINIMUM (long long int)
+# endif
+
 # if __GNUC__ == 2 && __GNUC_MINOR__ < 7
    /* Work around gcc bug with using this constant.  */
    static const unsigned long long int maxquad = ULONG_LONG_MAX;
@@ -205,7 +230,9 @@ extern int errno;
 # endif
 #endif
 
-#ifdef __STDC__
+/* For compilers which are ansi but don't define __STDC__, like SGI
+   Irix-4.0.5 cc, also check whether PROTOTYPES is defined. */
+#if defined (__STDC__) || defined (PROTOTYPES)
 # define INTERNAL(X) INTERNAL1(X)
 # define INTERNAL1(X) __##X##_internal
 # define WEAKNAME(X) WEAKNAME1(X)
