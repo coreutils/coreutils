@@ -173,6 +173,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
 		   uid_t old_uid, gid_t old_gid,
 		   struct Chown_option const *chopt)
 {
+  const char *file_full_name = ent->fts_path;
   struct stat *file_stats = ent->fts_statp;
   int errors = 0;
 
@@ -180,10 +181,29 @@ change_file_owner (FTS *fts, FTSENT *ent,
   if (ent->fts_info == FTS_DP)
     return 0;
 
+  switch (ent->fts_info)
+    {
+    case FTS_NS:
+      error (0, ent->fts_errno, _("cannot access %s"), quote (file_full_name));
+      return 1;
+
+    case FTS_ERR:
+      /* if (S_ISDIR (ent->fts_statp->st_mode) && FIXME */
+      error (0, ent->fts_errno, _("%s"), quote (file_full_name));
+      return 1;
+
+    case FTS_DNR:
+      error (0, ent->fts_errno, _("cannot read directory %s"),
+	     quote (file_full_name));
+      return 1;
+
+    default:
+      break;
+    }
+
   if ((old_uid == (uid_t) -1 || file_stats->st_uid == old_uid)
       && (old_gid == (gid_t) -1 || file_stats->st_gid == old_gid))
     {
-      const char *file_full_name = ent->fts_path;
       uid_t new_uid = (uid == (uid_t) -1 ? file_stats->st_uid : uid);
       gid_t new_gid = (gid == (gid_t) -1 ? file_stats->st_gid : gid);
       if (new_uid != file_stats->st_uid || new_gid != file_stats->st_gid)
