@@ -94,7 +94,9 @@ close_stdout_status (int status)
 {
   int e = ferror (stdout) ? 0 : -1;
 
-  if (__fpending (stdout) == 0)
+  /* If the stream's error bit is clear and there is nothing to flush,
+     then return right away.  */
+  if (e && __fpending (stdout) == 0)
     return;
 
   if (fclose (stdout) != 0)
