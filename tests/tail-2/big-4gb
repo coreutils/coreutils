@@ -20,10 +20,11 @@ cd $tmp || framework_failure=1
 # at the beginning and another set of 8 bytes at the end.
 # The rest will be NUL bytes.  On most modern systems, the following
 # creates a file that takes up only a few KB.  Here, du -sh says 16KB.
-echo abcdefgh | tr -d '\n' > big
-echo 87654321 | tr -d '\n' > tmp
+echo abcdefgh | tr -d '\n' > big || framework_failure=1
+echo 87654321 | tr -d '\n' > tmp || framework_failure=1
 # Seek 4GB - 8
-dd bs=1 seek=4294967288 if=tmp of=big 2> /dev/null
+dd bs=1 seek=4294967288 if=tmp of=big 2> err || framework_failure=1
+test $framework_failure == 1 && cat err 1>&2
 
 if test $framework_failure = 1; then
   echo '$0: failure in testing framework' 1>&2
