@@ -106,8 +106,7 @@ static struct option const longopts[] =
 };
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -138,8 +137,7 @@ Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.\n\
    if TABVAL is -1, do nothing. */
 
 static void
-add_tabstop (tabval)
-     int tabval;
+add_tabstop (int tabval)
 {
   if (tabval == -1)
     return;
@@ -153,8 +151,7 @@ add_tabstop (tabval)
    to the list of tabstops. */
 
 static void
-parse_tabstops (stops)
-     char *stops;
+parse_tabstops (char *stops)
 {
   int tabval = -1;
 
@@ -182,9 +179,7 @@ parse_tabstops (stops)
    contains only nonzero, ascending values. */
 
 static void
-validate_tabstops (tabs, entries)
-     int *tabs;
-     int entries;
+validate_tabstops (int *tabs, int entries)
 {
   int prev_tab = 0;
   int i;
@@ -205,8 +200,7 @@ validate_tabstops (tabs, entries)
    Return NULL if there are no more input files.  */
 
 static FILE *
-next_file (fp)
-     FILE *fp;
+next_file (FILE *fp)
 {
   static char *prev_file;
   char *file;
@@ -251,7 +245,7 @@ next_file (fp)
    Read each file in `file_list', in order. */
 
 static void
-expand ()
+expand (void)
 {
   FILE *fp;			/* Input stream. */
   int c;			/* Each input character. */
@@ -329,9 +323,7 @@ expand ()
 }
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int tabval = -1;		/* Value of tabstop being read, or -1. */
   int c;			/* Option character. */
