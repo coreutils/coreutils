@@ -2,8 +2,9 @@
 AUTOMAKE_OPTIONS = 1.4 gnits
 
 TESTS = \
+  basic \
   deref \
-  basic
+  separator
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
   PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
