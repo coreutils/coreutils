@@ -24,18 +24,33 @@
 #include <grp.h>
 
 #include "system.h"
+#include "chown-core.h"
 #include "error.h"
-#include "xfts.h"
 #include "inttostr.h"
 #include "lchown.h"
 #include "quote.h"
 #include "root-dev-ino.h"
-#include "chown-core.h"
+#include "xfts.h"
 
 #ifndef _POSIX_VERSION
 struct group *getgrnam ();
 struct group *getgrgid ();
 #endif
+
+enum RCH_status
+  {
+    /* we called fchown and close, and both succeeded */
+    RC_ok = 2,
+
+    /* required_uid and/or required_gid are specified, but don't match */
+    RC_excluded,
+
+    /* SAME_INODE check failed */
+    RC_inode_changed,
+
+    /* open, fstat, fchown, or close failed */
+    RC_error,
+  };
 
 extern void
 chopt_init (struct Chown_option *chopt)
@@ -147,6 +162,86 @@ describe_change (const char *file, enum Change_status changed,
   free (spec_allocated);
 }
 
+/* Change the owner and/or group of the FILE to UID and/or GID (safely)
+   only if REQUIRED_UID and REQUIRED_GID match the owner and group IDs
+   of FILE.  ORIG_ST must be the result of `stat'ing FILE.  If this
+   function ends up being called with a FILE that is a symlink and when
+   we are *not* dereferencing symlinks, we'll detect the problem via
+   the SAME_INODE test below.
+
+   The `safely' part above means that we can't simply use chown(2),
+   since FILE might be replaced with some other file between the time
+   of the preceding stat/lstat and this chown call.  So here we open
+   FILE and do everything else via the resulting file descriptor.
+   We first call fstat and verify that the dev/inode match those from
+   the preceding stat call, and only then, if appropriate (given the
+   required_uid and required_gid constraints) do we call fchmod.
+
+   A minor problem:
+   This function fails when FILE cannot be opened, but chown/lchown have
+   no such limitation.  But this may not be a problem for chown(1),
+   since chown is useful mainly to root, and since root seems to have
+   no problem opening `unreadable' files (on Linux).  However, this can
+   cause trouble when non-root users apply chgrp to files they own but
+   to which they have neither read nor write access.  For now, that
+   isn't a problem since chgrp doesn't have a --from=O:G option.
+
+   Return one of the RCH_status values.  */
+
+static enum RCH_status
+restricted_chown (char const *file,
+		  struct stat const *orig_st,
+		  uid_t uid, gid_t gid,
+		  uid_t required_uid, gid_t required_gid)
+{
+  enum RCH_status status = RC_ok;
+  struct stat st;
+  int o_flags = (O_NONBLOCK | O_NOCTTY);
+
+  int fd = open (file, O_RDONLY | o_flags);
+  if (fd < 0)
+    {
+      fd = open (file, O_WRONLY | o_flags);
+      if (fd < 0)
+	return RC_error;
+    }
+
+  if (fstat (fd, &st) != 0)
+    {
+      status = RC_error;
+      goto Lose;
+    }
+
+  if ( ! SAME_INODE (*orig_st, st))
+    {
+      status = RC_inode_changed;
+      goto Lose;
+    }
+
+  if ((required_uid == (uid_t) -1 || required_uid == st.st_uid)
+      && (required_gid == (gid_t) -1 || required_gid == st.st_gid))
+    {
+      if (fchown (fd, uid, gid) == 0)
+	{
+	  status = (close (fd) == 0
+		    ? RC_ok : RC_error);
+	  return status;
+	}
+      else
+	{
+	  status = RC_error;
+	}
+    }
+
+ Lose:
+  { /* FIXME: remove these curly braces when we assume C99.  */
+    int saved_errno = errno;
+    close (fd);
+    errno = saved_errno;
+    return status;
+  }
+}
+
 /* Change the owner and/or group of the file specified by FTS and ENT
    to UID and/or GID as appropriate.
    If REQUIRED_UID is not -1, then skip files with any other user ID.
@@ -161,7 +256,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
 {
   char const *file_full_name = ent->fts_path;
   char const *file = ent->fts_accpath;
-  struct stat const *file_stats IF_LINT (= NULL);
+  struct stat const *file_stats;
   struct stat stat_buf;
   bool ok = true;
   bool do_chown;
@@ -200,16 +295,22 @@ change_file_owner (FTS *fts, FTSENT *ent,
     }
 
   if (!ok)
-    do_chown = false;
+    {
+      do_chown = false;
+      file_stats = NULL;
+    }
   else if (required_uid == (uid_t) -1 && required_gid == (gid_t) -1
 	   && chopt->verbosity == V_off && ! chopt->root_dev_ino)
-    do_chown = true;
+    {
+      do_chown = true;
+      file_stats = ent->fts_statp;
+    }
   else
     {
       file_stats = ent->fts_statp;
 
       /* If this is a symlink and we're dereferencing them,
-	 stat it to get the permissions of the referent.  */
+	 stat it to get info on the referent.  */
       if (S_ISLNK (file_stats->st_mode) && chopt->affect_symlink_referent)
 	{
 	  if (stat (file, &stat_buf) != 0)
@@ -237,14 +338,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
 
   if (do_chown)
     {
-      if (chopt->affect_symlink_referent)
-	{
-	  /* Applying chown to a symlink and expecting it to affect
-	     the referent is not portable, but here we may be using a
-	     wrapper that tries to correct for unconforming chown.  */
-	  ok = (chown (file, uid, gid) == 0);
-	}
-      else
+      if ( ! chopt->affect_symlink_referent)
 	{
 	  ok = (lchown (file, uid, gid) == 0);
 
@@ -255,6 +349,47 @@ change_file_owner (FTS *fts, FTSENT *ent,
 	    {
 	      ok = true;
 	      symlink_changed = false;
+	    }
+	}
+      else
+	{
+	  if ( required_uid == (uid_t) -1 && required_gid == (gid_t) -1)
+	    {
+	      ok = (chown (file, uid, gid) == 0);
+	    }
+	  else
+	    {
+	      /* Avoid a race condition with --from=O:G and without the
+		 (-h) --no-dereference option.  If fts' stat call determined
+		 that the uid/gid of FILE matched the --from=O:G-selected
+		 owner and group IDs, blindly using chown(2) here could lead
+		 chown(1) or chgrp(1) mistakenly to dereference a *symlink*
+		 to an arbitrary file that an attacker had moved into the
+		 place of FILE during the window between the stat and
+		 chown(2) calls. */
+	      enum RCH_status err
+		= restricted_chown (file, file_stats, uid, gid,
+				    required_uid, required_gid);
+	      switch (err)
+		{
+		case RC_ok:
+		  ok = true;
+		  break;
+
+		case RC_error:
+		  ok = false;
+		  break;
+
+		case RC_inode_changed:
+		  /* FIXME: give a diagnostic in this case?  */
+		case RC_excluded:
+		  do_chown = false;
+		  ok = false;
+		  goto Skip_chown;
+
+		default:
+		  abort ();
+		}
 	    }
 	}
 
@@ -271,6 +406,8 @@ change_file_owner (FTS *fts, FTSENT *ent,
 			  : _("changing group of %s")),
 	       quote (file_full_name));
     }
+
+ Skip_chown:;
 
   if (chopt->verbosity != V_off)
     {
