@@ -33,7 +33,7 @@ fi
 
 fail=0
 
-chgrp -h -HR $g2 1s 2 || fail=1
+chgrp -H -R $g2 1s 2 || fail=1
 
 # These must have group $g2.
 # =========================
@@ -41,8 +41,8 @@ changed='
 1
 1/1F
 2
-2/2s
 2/2F
+3
 '
 for i in $changed; do
   # Filter out symlinks (entries that end in `s'), since it's not
@@ -56,9 +56,9 @@ done
 # These must have group $g1.
 # =========================
 not_changed='
-3
-3/3F
 1s
+2/2s
+3/3F
 '
 for i in $not_changed; do
   # Filter out symlinks (entries that end in `s'), since it's not
