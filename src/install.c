@@ -138,6 +138,9 @@ static void usage PARAMS ((int status));
 /* The name this program was run with, for error messages. */
 char *program_name;
 
+/* FIXME: document */
+enum backup_type backup_type;
+
 /* The user name that will own the files, or NULL to make the owner
    the current user ID. */
 static char *owner_name;
@@ -281,8 +284,7 @@ main (int argc, char **argv)
     error (1, 0,
 	   _("the strip option may not be used when installing a directory"));
 
-  if (make_backups)
-    backup_type = get_version (version);
+  backup_type = (make_backups ? get_version (version) : none);
 
   if (optind == argc || (optind == argc - 1 && !dir_arg))
     {
@@ -465,7 +467,7 @@ copy_file (const char *from, const char *to, int *to_created)
       /* The destination file exists.  Try to back it up if required.  */
       if (backup_type != none)
         {
-	  char *tmp_backup = find_backup_file_name (to);
+	  char *tmp_backup = find_backup_file_name (to, backup_type);
 	  char *dst_backup;
 
 	  if (tmp_backup == NULL)
