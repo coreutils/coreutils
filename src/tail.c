@@ -876,7 +876,9 @@ parse_obsolescent_option (int argc, const char *const *argv,
   if (argc < 2)
     return 0;
 
-  if ( ! (p[0] == '+' || (p[0] == '-' && ISDIGIT (p[1]))) )
+  /* If P starts with `+', `-N' (where N is a digit), or `-l',
+     then it is obsolescent.  Return zero otherwise.  */
+  if ( ! (p[0] == '+' || (p[0] == '-' && (p[1] == 'l' || ISDIGIT (p[1])))) )
     return 0;
 
   if (*p == '+')
