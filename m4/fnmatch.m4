@@ -74,8 +74,6 @@ AC_CHECK_FUNCS([btowc mbsrtowcs mempcpy wmempcpy])
 AC_CHECK_HEADERS([wchar.h wctype.h])
 AC_LIBOBJ([fnmatch])
 FNMATCH_H=fnmatch.h
-AC_DEFINE(fnmatch, rpl_fnmatch,
-          [Define to rpl_fnmatch if the replacement function should be used.])
 ])# _AC_LIBOBJ_FNMATCH
 
 
