@@ -1,0 +1,28 @@
+#!/bin/sh
+# ensure that cp's --preserve=X,Y option is parsed properly
+
+if test "$VERBOSE" = yes; then
+  set -x
+  cp --version
+fi
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+touch f || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+fi
+
+fail=0
+
+cp --preserve=mode,links f g || fail=1
+
+(exit $fail); exit $fail
