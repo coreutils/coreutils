@@ -738,6 +738,10 @@
 /* Define to 1 if you have the `strchr' function. */
 #undef HAVE_STRCHR
 
+/* Define to 1 if you have the `strcoll' function and it is properly defined.
+   */
+#undef HAVE_STRCOLL
+
 /* Define to 1 if you have the `strcspn' function. */
 #undef HAVE_STRCSPN
 
