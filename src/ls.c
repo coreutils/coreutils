@@ -60,9 +60,6 @@
 #include <getopt.h>
 #include <signal.h>
 
-/* Get MB_CUR_MAX.  */
-#include <stdlib.h>
-
 /* Get mbstate_t, mbrtowc(), mbsinit(), wcwidth().  */
 #if HAVE_WCHAR_H
 # include <wchar.h>
