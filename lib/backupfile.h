@@ -36,7 +36,7 @@ extern enum backup_type backup_type;
 extern char *simple_backup_suffix;
 
 #ifdef __STDC__
-char *find_backup_file_name (char *file);
+char *find_backup_file_name (const char *file);
 #else
 char *find_backup_file_name ();
 #endif
