@@ -1,3 +1,8 @@
+2000-02-10  Jim Meyering  <meyering@lucent.com>
+
+	* nanosleep.m4 (jm_FUNC_NANOSLEEP): Rename replacement function from
+	gnu_nanosleep to rpl_nanosleep.
+
 2000-02-09  Jim Meyering  <meyering@lucent.com>
 
 	* lib-check.m4 (jm_LIB_CHECK): Fix typo: check for sp_pwdp in
