@@ -2665,7 +2665,7 @@ These commands work with (or produce) sorted files.
 
 @code{sort} sorts, merges, or compares all the lines from the given
 files, or standard input if none are given or for a @var{file} of
-@samp{-}.  By default, @code{sort} writes the results to standard
+@samp{-}.  By default, @command{sort} writes the results to standard
 output.  Synopsis:
 
 @example
@@ -2699,13 +2699,23 @@ works.
 
 @end table
 
+@vindex LC_ALL
 @vindex LC_COLLATE
-A pair of lines is compared as follows: if any key fields have been
-specified, @code{sort} compares each pair of fields, in the order
-specified on the command line, according to the associated ordering
-options, until a difference is found or no fields are left.
-Unless otherwise specified, all comparisons use the character
-collating sequence specified by the @env{LC_COLLATE} locale.
+A pair of lines is compared as follows: if any key fields have
+been specified, @code{sort} compares each pair of fields, in the
+order specified on the command line, according to the associated
+ordering options, until a difference is found or no fields are left.
+Unless otherwise specified, all comparisons use the character collating
+sequence specified by the @env{LC_COLLATE} locale.  @footnote{If you have
+arranged to use a non-@sc{posix} locale (e.g., by setting @env{LC_ALL}
+to @samp{en_US}), then @command{sort} may produce output that is sorted
+differently than you're accustomed to.  In that case, set the @env{LC_ALL}
+environment variable to @samp{C}.  Note that setting only @env{LC_COLLATE}
+has two problems.  First, it is ineffective if @env{LC_ALL} is also set.
+Second, it has undefined behavior if @env{LC_CTYPE} (or @env{LANG}, if
+@env{LC_CTYPE} is unset) is set to an incompatible value.  For example,
+you get undefined behavior if @env{LC_CTYPE} is @code{ja_JP.PCK} but
+@env{LC_COLLATE} is @code{en_US.UTF-8}. }
 
 If any of the global options @samp{bdfgiMnr} are given but no key fields
 are specified, @code{sort} compares the entire lines according to the
@@ -4571,12 +4581,12 @@ arguments, by default @code{ls} lists just the file name.  If no
 non-option argument is specified, @code{ls} operates on the current
 directory, acting as if it had been invoked with a single argument of @samp{.}.
 
-@vindex LC_COLLATE
+@vindex LC_ALL
 By default, the output is sorted alphabetically, according to the locale
 settings in effect. @footnote{If you have arranged to use a non-@sc{posix}
 locale (e.g., by setting @env{LC_ALL} to @samp{en_US}), then @code{ls} may
 produce output that is sorted differently than you're accustomed to.
-In that case, set the @env{LC_COLLATE} environment variable to @samp{C}.}
+In that case, set the @env{LC_ALL} environment variable to @samp{C}.}
 If standard output is
 a terminal, the output is in columns (sorted vertically) and control
 characters are output as question marks; otherwise, the output is listed
