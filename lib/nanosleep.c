@@ -1,5 +1,5 @@
 /* Provide a replacement for the POSIX nanosleep function.
-   Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2002, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -45,8 +45,7 @@ extern int errno;
 
 #include "timespec.h"
 
-static int suspended;
-int first_call = 1;
+static sig_atomic_t volatile suspended;
 
 /* Handle SIGCONT. */
 
@@ -63,7 +62,12 @@ my_usleep (const struct timespec *ts_delay)
 {
   struct timeval tv_delay;
   tv_delay.tv_sec = ts_delay->tv_sec;
-  tv_delay.tv_usec = ts_delay->tv_nsec / 1000;
+  tv_delay.tv_usec = (ts_delay->tv_nsec + 999) / 1000;
+  if (tv_delay.tv_usec == 1000000)
+    {
+      tv_delay.tv_sec++;
+      tv_delay.tv_usec = 0;
+    }
   select (0, (void *) 0, (void *) 0, (void *) 0, &tv_delay);
 }
 
@@ -73,6 +77,8 @@ int
 rpl_nanosleep (const struct timespec *requested_delay,
 	       struct timespec *remaining_delay)
 {
+  static int initialized;
+
 #ifdef SA_NOCLDSTOP
   struct sigaction oldact, newact;
 #endif
@@ -80,7 +86,7 @@ rpl_nanosleep (const struct timespec *requested_delay,
   suspended = 0;
 
   /* set up sig handler */
-  if (first_call)
+  if (! initialized)
     {
 #ifdef SA_NOCLDSTOP
       newact.sa_handler = sighandler;
@@ -94,7 +100,7 @@ rpl_nanosleep (const struct timespec *requested_delay,
       if (signal (SIGCONT, SIG_IGN) != SIG_IGN)
 	signal (SIGCONT, sighandler);
 #endif
-      first_call = 0;
+      initialized = 1;
     }
 
   my_usleep (requested_delay);
