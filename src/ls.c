@@ -310,7 +310,7 @@ static enum indicator_style indicator_style;
    The LS_COLORS variable is now in a termcap-like format.  -o or
    --color-if-tty. */
 
-int print_with_color;
+static int print_with_color;
 
 enum color_type
   {
@@ -330,7 +330,7 @@ enum indicator_no
     C_BLK, C_CHR, C_EXEC
   };
 
-char *indicator_name[] =
+const char *const indicator_name[] =
 {
   "lc", "rc", "ec", "fi", "di", "ln", "pi", "so", "bd", "cd", "ex", NULL
 };
@@ -341,25 +341,27 @@ struct indicator_type
     char string[MAXCOLORLEN];
   };
 
-struct indicator_type color_indicator[] =
+#define LEN_STR_PAIR(s) sizeof (s) - 1, s
+
+static struct indicator_type color_indicator[] =
 {
-  {2, "\033["},			/* lc: Left of color sequence */
-  {1, "m"},			/* rc: Right of color sequence */
-  {4, "\033[0m"},		/* ec: End color */
-  {1, "0"},			/* fi: File: default */
-  {2, "32"},			/* di: Directory: green */
-  {2, "36"},			/* ln: Symlink: cyan */
-  {2, "31"},			/* pi: Pipe: red */
-  {2, "33"},			/* so: Socket: yellow/brown */
-  {5, "44;37"},			/* bd: Block device: white on blue */
-  {5, "44;37"},			/* cd: Char device: white on blue */
-  {2, "35"},			/* ex: Executable: purple */
+  {LEN_STR_PAIR ("\033")},	/* lc: Left of color sequence */
+  {LEN_STR_PAIR ("m")},		/* rc: Right of color sequence */
+  {LEN_STR_PAIR ("\033[0m")},	/* ec: End color */
+  {LEN_STR_PAIR ("0")},		/* fi: File: default */
+  {LEN_STR_PAIR ("32")},	/* di: Directory: green */
+  {LEN_STR_PAIR ("36")},	/* ln: Symlink: cyan */
+  {LEN_STR_PAIR ("31")},	/* pi: Pipe: red */
+  {LEN_STR_PAIR ("33")},	/* so: Socket: yellow/brown */
+  {LEN_STR_PAIR ("44;37")},	/* bd: Block device: white on blue */
+  {LEN_STR_PAIR ("44;37")},	/* cd: Char device: white on blue */
+  {LEN_STR_PAIR ("35")},	/* ex: Executable: purple */
 };
 
 /* Nonzero means print using ISO 8859 characters.  The default is specified
    here as well.  -8 enables, -7 disables.  */
 
-int print_iso8859;
+static int print_iso8859;
 #ifndef DEFAULT_ISO8859
 #define DEFAULT_ISO8859  1
 #endif
@@ -566,7 +568,7 @@ static enum time_type const time_types[] =
   time_atime, time_atime, time_atime, time_ctime, time_ctime
 };
 
-static char const *color_args[] =
+static char const *const color_args[] =
 {
   /* Note: "no" is a prefix of "none" so we don't include it */
   "yes", "force", "none", "tty", "if-tty"
@@ -772,13 +774,20 @@ decode_switches (argc, argv)
   }
 #endif
 
+  /* FIXME: reference TABSIZE iff !posix_pedantic.  */
   p = getenv ("TABSIZE");
+  /* FIXME: use strtol here!  */
   tabsize = p ? atoi (p) : 8;
   if (tabsize < 1)
-    error (1, 0, "invalid tab size in enironment variable TABSIZE: %s",
-	   optarg);
+    {
+      error (0, 0,
+	     "ignoring invalid tab size in enironment variable TABSIZE: %s",
+	     optarg);
+      tabsize = 8;
+    }
 
-  while ((c = getopt_long (argc, argv, "abcdfgiklmnopqrstuw:xABCDFGI:LNQRST:UX178",
+  while ((c = getopt_long (argc, argv,
+			   "abcdfgiklmnopqrstuw:xABCDFGI:LNQRST:UX178",
 			   long_options, (int *) 0)) != EOF)
     {
       switch (c)
@@ -859,8 +868,12 @@ decode_switches (argc, argv)
 	    print_with_color = i;
 
 	  if (print_with_color)
-	    tabsize = line_length;	/* Some systems don't like tabs and
-					   color codes in combination */
+	    {
+	      /* Don't use TAB characters in output.  Some terminal
+		 emulators can't handle the combination of tabs and
+		 color codes on the same line.  */
+	      tabsize = line_length;
+	    }
 	  break;
 
 	case 'p':
@@ -1258,7 +1271,7 @@ parse_ls_color ()
 
       if (state < 0)
 	{
-	  fprintf (stderr, "Bad %s variable\n", whichvar);
+	  error (0, 0, "bad %s variable\n", whichvar);
 	  print_with_color = 0;
 	}
     }
@@ -2221,8 +2234,6 @@ static void
 print_color_indicator (mode)
      unsigned int mode;
 {
-  int i;
-  int shi;			/* Bits to shift mode */
   int type = C_FILE;
 
   if (S_ISDIR (mode))
