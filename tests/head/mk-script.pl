@@ -30,7 +30,7 @@ sub validate
       assert (!ref $flags);
       assert (!ref $e_ret_code);
 
-      die "$0: $.: duplicate test name \`$test_name'\n"
+      die "$0: duplicate test name \`$test_name'\n"
 	if (defined $seen{$test_name});
       $seen{$test_name} = 1;
     }
