@@ -18,14 +18,14 @@
 /* Written by David MacKenzie <djm@ai.mit.edu> */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
 #include <sys/types.h>
 
 #include <stdio.h>
 #ifdef STDC_HEADERS
-#include <string.h>
+# include <string.h>
 #endif
 
 extern char *program_name;
