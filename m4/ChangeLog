@@ -1,3 +1,7 @@
+2000-05-03  Jim Meyering  <meyering@lucent.com>
+
+	* check-decl.m4 (AC_CHECK_DECLS): Add strndup.
+
 2000-05-02  Paul Eggert  <eggert@twinsun.com>
 
 	* largefile.m4 (AC_SYS_LARGEFILE): Define _GNU_SOURCE if
