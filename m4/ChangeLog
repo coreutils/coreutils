@@ -1,5 +1,8 @@
 2002-04-12  Jim Meyering  <meyering@lucent.com>
 
+	* dirfd.m4 (UTILS_FUNC_DIRFD): Also detect when dirfd is a macro.
+	This is necessary at least on Darwin 5.3.
+
 	* jm-macros.m4: Don't AC_REPLACE(strnlen), now that we use
 	AC_FUNC_STRNLEN.  Otherwise, we'd end up putting two copies of strnlen.o
 	in the library, and that makes some versions of ranlib object.
