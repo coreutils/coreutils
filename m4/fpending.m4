@@ -12,6 +12,12 @@ AC_DEFUN(jm_FUNC_FPENDING,
 [
   AC_CHECK_HEADERS(stdio_ext.h)
   AC_REPLACE_FUNCS([__fpending])
+  fp_headers='
+#     if HAVE_STDIO_EXT_H
+#      include <stdio_ext.h>
+#     endif
+'
+  AC_CHECK_DECLS([__fpending], , , $fp_headers)
   if test $ac_cv_func___fpending = no; then
     AC_CACHE_CHECK(
 	      [how to determine the number of pending output bytes on a stream],
