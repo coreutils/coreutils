@@ -90,23 +90,23 @@ typedef struct
   char *text;			/* Pointer to the text.  */
 } *string, stringstruct;
 
-int stat ();
-int lstat ();
+int stat (const char *, struct stat *);
+int lstat (const char *, struct stat *);
 
 char *savedir ();
 char *xmalloc ();
 char *xrealloc ();
 
-static int hash_insert ();
-static int hash_insert2 ();
-static long count_entry ();
-static void du_files ();
-static void hash_init ();
-static void hash_reset ();
-static void str_concatc ();
-static void str_copyc ();
-static void str_init ();
-static void str_trunc ();
+static int hash_insert (ino_t ino, dev_t dev);
+static int hash_insert2 (struct htab *htab, ino_t ino, dev_t dev);
+static long count_entry (char *ent, int top, dev_t last_dev);
+static void du_files (char **files);
+static void hash_init (unsigned int modulus, unsigned int entry_tab_size);
+static void hash_reset (void);
+static void str_concatc (string s1, char *cstr);
+static void str_copyc (string s1, char *cstr);
+static void str_init (string *s1, unsigned int size);
+static void str_trunc (string s1, unsigned int length);
 
 /* Name under which this program was invoked.  */
 char *program_name;
@@ -185,9 +185,7 @@ static struct option const long_options[] =
 };
 
 static void
-usage (status, reason)
-     int status;
-     char *reason;
+usage (int status, char *reason)
 {
   if (reason != NULL)
     fprintf (status == 0 ? stdout : stderr, "%s: %s\n",
@@ -219,9 +217,7 @@ Summarize disk usage of each FILE, recursively for directories.\n\
 }
 
 void
-main (argc, argv)
-     int argc;
-     char *argv[];
+main (int argc, char **argv)
 {
   int c;
   char *cwd_only[2];
@@ -312,8 +308,7 @@ main (argc, argv)
    named in FILES, the last entry of which is NULL.  */
 
 static void
-du_files (files)
-     char **files;
+du_files (char **files)
 {
   struct saved_cwd cwd;
   ino_t initial_ino;		/* Initial directory's inode. */
@@ -381,10 +376,7 @@ du_files (files)
    LAST_DEV is the device that the parent directory of ENT is on.  */
 
 static long
-count_entry (ent, top, last_dev)
-     char *ent;
-     int top;
-     dev_t last_dev;
+count_entry (char *ent, int top, dev_t last_dev)
 {
   long size;
 
@@ -525,9 +517,7 @@ count_entry (ent, top, last_dev)
    doubled.)  */
 
 static void
-hash_init (modulus, entry_tab_size)
-     unsigned modulus;
-     unsigned entry_tab_size;
+hash_init (unsigned int modulus, unsigned int entry_tab_size)
 {
   struct htab *htab_r;
 
@@ -548,7 +538,7 @@ hash_init (modulus, entry_tab_size)
    contain no entries.  */
 
 static void
-hash_reset ()
+hash_reset (void)
 {
   int i;
   struct entry **p;
@@ -566,9 +556,7 @@ hash_reset ()
    if it wasn't.  */
 
 static int
-hash_insert (ino, dev)
-     ino_t ino;
-     dev_t dev;
+hash_insert (ino_t ino, dev_t dev)
 {
   struct htab *htab_r = htab;	/* Initially a copy of the global `htab'.  */
 
@@ -635,10 +623,7 @@ hash_insert (ino, dev)
    already existed.  */
 
 static int
-hash_insert2 (htab, ino, dev)
-     struct htab *htab;
-     ino_t ino;
-     dev_t dev;
+hash_insert2 (struct htab *htab, ino_t ino, dev_t dev)
 {
   struct entry **hp, *ep2, *ep;
   hp = &htab->hash[ino % htab->modulus];
@@ -675,9 +660,7 @@ hash_insert2 (htab, ino, dev)
 /* Initialize the struct string S1 for holding SIZE characters.  */
 
 static void
-str_init (s1, size)
-     string *s1;
-     unsigned size;
+str_init (string *s1, unsigned int size)
 {
   string s;
 
@@ -689,9 +672,7 @@ str_init (s1, size)
 }
 
 static void
-ensure_space (s, size)
-     string s;
-     unsigned size;
+ensure_space (string s, unsigned int size)
 {
   if (s->alloc < size)
     {
@@ -703,9 +684,7 @@ ensure_space (s, size)
 /* Assign the null-terminated C-string CSTR to S1.  */
 
 static void
-str_copyc (s1, cstr)
-     string s1;
-     char *cstr;
+str_copyc (string s1, char *cstr)
 {
   unsigned l = strlen (cstr);
   ensure_space (s1, l);
@@ -714,9 +693,7 @@ str_copyc (s1, cstr)
 }
 
 static void
-str_concatc (s1, cstr)
-     string s1;
-     char *cstr;
+str_concatc (string s1, char *cstr)
 {
   unsigned l1 = s1->length;
   unsigned l2 = strlen (cstr);
@@ -730,9 +707,7 @@ str_concatc (s1, cstr)
 /* Truncate the string S1 to have length LENGTH.  */
 
 static void
-str_trunc (s1, length)
-     string s1;
-     unsigned length;
+str_trunc (string s1, unsigned int length)
 {
   if (s1->length > length)
     {

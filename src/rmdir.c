@@ -33,8 +33,8 @@
 
 void strip_trailing_slashes ();
 
-static void remove_parents ();
-static void usage ();
+static void remove_parents (char *path);
+static void usage (int status);
 
 /* The name this program was run with. */
 char *program_name;
@@ -58,9 +58,7 @@ static struct option const longopts[] =
 };
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int errors = 0;
   int optc;
@@ -118,8 +116,7 @@ main (argc, argv)
    Replaces '/' characters in `path' with NULs. */
 
 static void
-remove_parents (path)
-     char *path;
+remove_parents (char *path)
 {
   char *slash;
 
@@ -138,8 +135,7 @@ remove_parents (path)
 }
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",

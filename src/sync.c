@@ -30,8 +30,7 @@
 char *program_name;
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",
@@ -50,9 +49,7 @@ Force changed blocks to disk, update the super block.\n\
 }
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   program_name = argv[0];
 

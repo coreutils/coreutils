@@ -33,7 +33,7 @@
 # define D_INO(dp) 1
 #endif
 
-char *basename ();
+char *basename (char *);
 char *stpcpy ();
 char *xmalloc ();
 char *xrealloc ();
@@ -41,12 +41,12 @@ int euidaccess ();
 int yesno ();
 void strip_trailing_slashes ();
 
-static int clear_directory ();
-static int duplicate_entry ();
-static int remove_dir ();
-static int remove_file ();
-static int rm ();
-static void usage ();
+static int clear_directory (struct stat *statp);
+static int duplicate_entry (struct pathstack *stack, ino_t inum);
+static int remove_dir (struct stat *statp);
+static int remove_file (struct stat *statp);
+static int rm (void);
+static void usage (int status);
 
 /* Name this program was run with.  */
 char *program_name;
@@ -97,9 +97,7 @@ static struct option const long_opts[] =
 };
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int err = 0;
   int c;
@@ -186,7 +184,7 @@ main (argc, argv)
    Return 0 if `pathname' is removed, 1 if not.  */
 
 static int
-rm ()
+rm (void)
 {
   struct stat path_stats;
   char *base = basename (pathname);
@@ -217,8 +215,7 @@ rm ()
    Return 0 if `pathname' is removed, 1 if not.  */
 
 static int
-remove_file (statp)
-     struct stat *statp;
+remove_file (struct stat *statp)
 {
   if (!ignore_missing_files && (interactive || stdin_tty)
       && euidaccess (pathname, W_OK)
@@ -261,8 +258,7 @@ remove_file (statp)
    Return 0 if `pathname' is removed, 1 if not.  */
 
 static int
-remove_dir (statp)
-     struct stat *statp;
+remove_dir (struct stat *statp)
 {
   int err;
 
@@ -339,8 +335,7 @@ static struct pathstack *pathstack = NULL;
    be larger, as well.  */
 
 static int
-clear_directory (statp)
-     struct stat *statp;
+clear_directory (struct stat *statp)
 {
   DIR *dirp;
   struct dirent *dp;
@@ -483,9 +478,7 @@ clear_directory (statp)
    a corrupted file system.  */
 
 static int
-duplicate_entry (stack, inum)
-     struct pathstack *stack;
-     ino_t inum;
+duplicate_entry (struct pathstack *stack, ino_t inum)
 {
 #ifdef D_INO_IN_DIRENT
   struct pathstack *p;
@@ -520,8 +513,7 @@ is the same file as\n", program_name, pathname);
 }
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",

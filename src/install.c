@@ -69,8 +69,8 @@
 #include <sys/wait.h>
 #endif
 
-struct passwd *getpwnam ();
-struct group *getgrnam ();
+struct passwd *getpwnam (const char *);
+struct group *getgrnam (const char *);
 
 #ifndef _POSIX_VERSION
 uid_t getuid ();
@@ -92,20 +92,20 @@ int wait ();
 /* Number of bytes of a file to copy at a time. */
 #define READ_SIZE (32 * 1024)
 
-char *basename ();
+char *basename (char *);
 char *stpcpy ();
 char *xmalloc ();
 int safe_read ();
 int full_write ();
 int isdir ();
 
-static int change_attributes ();
-static int copy_file ();
-static int install_file_in_dir ();
-static int install_file_in_file ();
-static void get_ids ();
-static void strip ();
-static void usage ();
+static int change_attributes (char *path, int no_need_to_chown);
+static int copy_file (char *from, char *to, int *to_created);
+static int install_file_in_dir (char *from, char *to_dir);
+static int install_file_in_file (char *from, char *to);
+static void get_ids (void);
+static void strip (char *path);
+static void usage (int status);
 
 /* The name this program was run with, for error messages. */
 char *program_name;
@@ -153,9 +153,7 @@ static struct option const long_options[] =
 };
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int optc;
   int errors = 0;
@@ -266,9 +264,7 @@ main (argc, argv)
    Return 0 if successful, 1 if an error occurs. */
 
 static int
-install_file_in_file (from, to)
-     char *from;
-     char *to;
+install_file_in_file (char *from, char *to)
 {
   int to_created;
   int no_need_to_chown;
@@ -288,9 +284,7 @@ install_file_in_file (from, to)
    Return 0 if successful, 1 if not. */
 
 static int
-install_file_in_dir (from, to_dir)
-     char *from;
-     char *to_dir;
+install_file_in_dir (char *from, char *to_dir)
 {
   char *from_base;
   char *to;
@@ -314,10 +308,7 @@ static char buffer[READ_SIZE];
    copy fails, don't modify *TO_CREATED.  */
 
 static int
-copy_file (from, to, to_created)
-     char *from;
-     char *to;
-     int *to_created;
+copy_file (char *from, char *to, int *to_created)
 {
   int fromfd, tofd;
   int bytes;
@@ -407,9 +398,7 @@ copy_file (from, to, to_created)
    Return 0 if successful, 1 if not. */
 
 static int
-change_attributes (path, no_need_to_chown)
-     char *path;
-     int no_need_to_chown;
+change_attributes (char *path, int no_need_to_chown)
 {
   int err = 0;
 
@@ -452,8 +441,7 @@ change_attributes (path, no_need_to_chown)
    it portable would be very difficult.  Not worth the effort. */
 
 static void
-strip (path)
-     char *path;
+strip (char *path)
 {
   int pid, status;
 
@@ -479,8 +467,7 @@ strip (path)
    decimal integer, zero if not. */
 
 static int
-is_number (str)
-     char *str;
+is_number (char *str)
 {
   if (*str == 0)
     return 0;
@@ -493,7 +480,7 @@ is_number (str)
 /* Initialize the user and group ownership of the files to install. */
 
 static void
-get_ids ()
+get_ids (void)
 {
   struct passwd *pw;
   struct group *gr;
@@ -535,8 +522,7 @@ get_ids ()
 }
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",

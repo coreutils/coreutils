@@ -38,7 +38,7 @@
 #include "version.h"
 #include "error.h"
 
-static void usage ();
+static void usage (int status);
 
 /* The name this program was run with. */
 char *program_name;
@@ -63,9 +63,7 @@ static struct option const longopts[] =
 };
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   unsigned int newmode;
   unsigned int parent_mode;
@@ -138,8 +136,7 @@ main (argc, argv)
 }
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",

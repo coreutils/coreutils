@@ -31,10 +31,10 @@
 #include "version.h"
 #include "error.h"
 
-int link ();			/* Some systems don't declare this anywhere. */
+int link (const char *, const char *);			/* Some systems don't declare this anywhere. */
 
 #ifdef S_ISLNK
-int symlink ();
+int symlink (const char *, const char *);
 #endif
 
 /* Construct a string NEW_DEST by concatenating DEST, a slash, and
@@ -57,15 +57,15 @@ int symlink ();
       }									\
     while (0)
 
-char *basename ();
+char *basename (char *);
 enum backup_type get_version ();
 int isdir ();
 int yesno ();
 void strip_trailing_slashes ();
 char *stpcpy ();
 
-static void usage ();
-static int do_link ();
+static void usage (int status);
+static int do_link (char *source, char *dest);
 
 /* The name by which the program was run, for error messages.  */
 char *program_name;
@@ -118,9 +118,7 @@ static struct option const long_options[] =
 };
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int c;
   int errors;
@@ -256,9 +254,7 @@ main (argc, argv)
    Return 1 if there is an error, otherwise 0.  */
 
 static int
-do_link (source, dest)
-     char *source;
-     char *dest;
+do_link (char *source, char *dest)
 {
   struct stat dest_stats;
   char *dest_backup = NULL;
@@ -395,8 +391,7 @@ do_link (source, dest)
 }
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",

@@ -95,22 +95,22 @@ char *xmalloc ();
 int safe_read ();
 int full_write ();
 
-static RETSIGTYPE interrupt_handler ();
-static int bit_count ();
-static int parse_integer ();
-static void apply_translations ();
-static void copy ();
-static void copy_simple ();
-static void copy_with_block ();
-static void copy_with_unblock ();
-static void parse_conversion ();
-static void print_stats ();
-static void translate_charset ();
-static void quit ();
-static void scanargs ();
-static void skip ();
-static void usage ();
-static void write_output ();
+static RETSIGTYPE interrupt_handler (void);
+static int bit_count (register unsigned int i);
+static int parse_integer (char *str);
+static void apply_translations (void);
+static void copy (void);
+static void copy_simple (unsigned char *buf, int nread);
+static void copy_with_block (unsigned char *buf, int nread);
+static void copy_with_unblock (unsigned char *buf, int nread);
+static void parse_conversion (char *str);
+static void print_stats (void);
+static void translate_charset (unsigned char *new_trans);
+static void quit (int code);
+static void scanargs (int argc, char **argv);
+static void skip (int fdesc, char *file, long int records, long int blocksize, char *buf);
+static void usage (int status);
+static void write_output (void);
 
 /* The name this program was run with. */
 char *program_name;
@@ -318,9 +318,7 @@ static struct option const long_options[] =
 };
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
 #ifdef _POSIX_VERSION
   struct sigaction sigact;
@@ -410,12 +408,7 @@ main (argc, argv)
    bytes of the data at a time in BUF, if necessary. */
 
 static void
-skip (fdesc, file, records, blocksize, buf)
-     int fdesc;
-     char *file;
-     long records;
-     long blocksize;
-     char *buf;
+skip (int fdesc, char *file, long int records, long int blocksize, char *buf)
 {
   struct stat stats;
 
@@ -465,9 +458,7 @@ skip (fdesc, file, records, blocksize, buf)
    to the NREAD bytes in BUF.  */
 
 static void
-translate_buffer (buf, nread)
-     unsigned char *buf;
-     int nread;
+translate_buffer (unsigned char *buf, int nread)
 {
   register unsigned char *cp;
   register int i;
@@ -488,9 +479,7 @@ static unsigned char saved_char;
    next call.   Return the new start of the BUF buffer.  */
 
 static unsigned char *
-swab_buffer (buf, nread)
-     unsigned char *buf;
-     int *nread;
+swab_buffer (unsigned char *buf, int *nread)
 {
   unsigned char *bufstart = buf;
   register unsigned char *cp;
@@ -534,7 +523,7 @@ static int col = 0;
 /* The main loop.  */
 
 static void
-copy ()
+copy (void)
 {
   unsigned char *ibuf, *bufstart; /* Input buffer. */
   int nread;			/* Bytes read in the current block. */
@@ -701,9 +690,7 @@ copy ()
 /* Copy NREAD bytes of BUF, with no conversions.  */
 
 static void
-copy_simple (buf, nread)
-     unsigned char *buf;
-     int nread;
+copy_simple (unsigned char *buf, int nread)
 {
   int nfree;			/* Number of unused bytes in `obuf'.  */
   unsigned char *start = buf; /* First uncopied char in BUF.  */
@@ -730,9 +717,7 @@ copy_simple (buf, nread)
    replacing the newline with trailing spaces).  */
 
 static void
-copy_with_block (buf, nread)
-     unsigned char *buf;
-     int nread;
+copy_with_block (unsigned char *buf, int nread)
 {
   register int i;
 
@@ -764,9 +749,7 @@ copy_with_block (buf, nread)
    with a newline).  */
 
 static void
-copy_with_unblock (buf, nread)
-     unsigned char *buf;
-     int nread;
+copy_with_unblock (unsigned char *buf, int nread)
 {
   register int i;
   register unsigned char c;
@@ -801,7 +784,7 @@ copy_with_unblock (buf, nread)
 /* Write, then empty, the output buffer `obuf'. */
 
 static void
-write_output ()
+write_output (void)
 {
   int nwritten = full_write (output_fd, obuf, output_blocksize);
   if (nwritten != output_blocksize)
@@ -817,9 +800,7 @@ write_output ()
 }
 
 static void
-scanargs (argc, argv)
-     int argc;
-     char **argv;
+scanargs (int argc, char **argv)
 {
   int i, n;
   int c;
@@ -909,8 +890,7 @@ scanargs (argc, argv)
 /* FIXME: use xstrtou?l */
 
 static int
-parse_integer (str)
-     char *str;
+parse_integer (char *str)
 {
   register int n = 0;
   register int temp;
@@ -952,8 +932,7 @@ loop:
 /* Interpret one "conv=..." option. */
 
 static void
-parse_conversion (str)
-     char *str;
+parse_conversion (char *str)
 {
   char *new;
   int i;
@@ -981,7 +960,7 @@ parse_conversion (str)
 /* Fix up translation table. */
 
 static void
-apply_translations ()
+apply_translations (void)
 {
   int i;
 
@@ -1029,8 +1008,7 @@ only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, {unblock,sy
 }
 
 static void
-translate_charset (new_trans)
-     unsigned char *new_trans;
+translate_charset (unsigned char *new_trans)
 {
   int i;
 
@@ -1042,8 +1020,7 @@ translate_charset (new_trans)
 /* Return the number of 1 bits in `i'. */
 
 static int
-bit_count (i)
-     register unsigned int i;
+bit_count (register unsigned int i)
 {
   register int set_bits;
 
@@ -1053,7 +1030,7 @@ bit_count (i)
 }
 
 static void
-print_stats ()
+print_stats (void)
 {
   fprintf (stderr, "%u+%u records in\n", r_full, r_partial);
   fprintf (stderr, "%u+%u records out\n", w_full, w_partial);
@@ -1063,8 +1040,7 @@ print_stats ()
 }
 
 static void
-quit (code)
-     int code;
+quit (int code)
 {
   int errcode = code ? code : 1;
   print_stats ();
@@ -1076,14 +1052,13 @@ quit (code)
 }
 
 static RETSIGTYPE
-interrupt_handler ()
+interrupt_handler (void)
 {
   quit (1);
 }
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",

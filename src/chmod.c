@@ -39,10 +39,10 @@ void strip_trailing_slashes ();
 char *xmalloc ();
 char *xrealloc ();
 
-static int change_file_mode ();
-static int change_dir_mode ();
-static void describe_change ();
-static void usage ();
+static int change_file_mode (char *file, struct mode_change *changes, int deref_symlink);
+static int change_dir_mode (char *dir, struct mode_change *changes, struct stat *statp);
+static void describe_change (char *file, short unsigned int mode, int changed);
+static void usage (int status);
 
 /* The name the program was run with. */
 char *program_name;
@@ -81,9 +81,7 @@ static struct option const long_options[] =
    of `struct mode_change' and apply that to each file argument. */
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   struct mode_change *changes;
   int errors = 0;
@@ -183,10 +181,7 @@ main (argc, argv)
    links.  Return 0 if successful, 1 if errors occurred. */
 
 static int
-change_file_mode (file, changes, deref_symlink)
-     char *file;
-     struct mode_change *changes;
-     int deref_symlink;
+change_file_mode (char *file, struct mode_change *changes, int deref_symlink)
 {
   struct stat file_stats;
   unsigned short newmode;
@@ -240,10 +235,7 @@ change_file_mode (file, changes, deref_symlink)
    Return 0 if successful, 1 if errors occurred. */
 
 static int
-change_dir_mode (dir, changes, statp)
-     char *dir;
-     struct mode_change *changes;
-     struct stat *statp;
+change_dir_mode (char *dir, struct mode_change *changes, struct stat *statp)
 {
   char *name_space, *namep;
   char *path;			/* Full path of each entry to process. */
@@ -293,10 +285,7 @@ change_dir_mode (dir, changes, statp)
    if CHANGED is zero, FILE had that mode already. */
 
 static void
-describe_change (file, mode, changed)
-     char *file;
-     unsigned short mode;
-     int changed;
+describe_change (char *file, short unsigned int mode, int changed)
 {
   char perms[11];		/* "-rwxrwxrwx" ls-style modes. */
 
@@ -311,8 +300,7 @@ describe_change (file, mode, changed)
 }
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",

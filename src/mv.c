@@ -55,7 +55,7 @@
 uid_t geteuid ();
 #endif
 
-char *basename ();
+char *basename (char *);
 enum backup_type get_version ();
 int isdir ();
 int yesno ();
@@ -65,10 +65,10 @@ void strip_trailing_slashes ();
 int euidaccess ();
 char *stpcpy ();
 
-static int copy_reg ();
-static int do_move ();
-static int movefile ();
-static void usage ();
+static int copy_reg (char *source, char *dest);
+static int do_move (char *source, char *dest);
+static int movefile (char *source, char *dest);
+static void usage (int status);
 
 /* The name this program was run with. */
 char *program_name;
@@ -114,9 +114,7 @@ static struct option const long_options[] =
 };
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int c;
   int errors;
@@ -200,8 +198,7 @@ main (argc, argv)
 /* If PATH is an existing directory, return nonzero, else 0.  */
 
 static int
-is_real_dir (path)
-     char *path;
+is_real_dir (char *path)
 {
   struct stat stats;
 
@@ -212,9 +209,7 @@ is_real_dir (path)
    Return 0 if successful, 1 if an error occurred.  */
 
 static int
-movefile (source, dest)
-     char *source;
-     char *dest;
+movefile (char *source, char *dest)
 {
   strip_trailing_slashes (source);
 
@@ -244,9 +239,7 @@ static struct stat dest_stats, source_stats;
    Return 0 if successful, 1 if an error occurred.  */
 
 static int
-do_move (source, dest)
-     char *source;
-     char *dest;
+do_move (char *source, char *dest)
 {
   char *dest_backup = NULL;
 
@@ -357,8 +350,7 @@ do_move (source, dest)
    Return 1 if an error occurred, 0 if successful. */
 
 static int
-copy_reg (source, dest)
-     char *source, *dest;
+copy_reg (char *source, char *dest)
 {
   int ifd;
   int ofd;
@@ -459,8 +451,7 @@ copy_reg (source, dest)
 }
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",

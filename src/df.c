@@ -47,17 +47,17 @@
 char *xmalloc ();
 char *xstrdup ();
 
-static int selected_fstype ();
-static int excluded_fstype ();
-static void add_excluded_fs_type ();
-static void add_fs_type ();
-static void print_header ();
-static void show_entry ();
-static void show_all_entries ();
-static void show_dev ();
-static void show_disk ();
-static void show_point ();
-static void usage ();
+static int selected_fstype (char *fstype);
+static int excluded_fstype (char *fstype);
+static void add_excluded_fs_type (char *fstype);
+static void add_fs_type (char *fstype);
+static void print_header (void);
+static void show_entry (char *path, struct stat *statp);
+static void show_all_entries (void);
+static void show_dev (char *disk, char *mount_point, char *fstype);
+static void show_disk (char *disk);
+static void show_point (char *point, struct stat *statp);
+static void usage (int status);
 
 /* Name this program was run with. */
 char *program_name;
@@ -145,9 +145,7 @@ static struct option const long_options[] =
 };
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int i;
   struct stat *stats;
@@ -285,7 +283,7 @@ main (argc, argv)
 }
 
 static void
-print_header ()
+print_header (void)
 {
   printf ("Filesystem ");
 
@@ -306,7 +304,7 @@ print_header ()
    an unselected type or are empty. */
 
 static void
-show_all_entries ()
+show_all_entries (void)
 {
   struct mount_entry *me;
 
@@ -318,9 +316,7 @@ show_all_entries ()
    for it.  STATP is the results of `stat' on PATH.  */
 
 static void
-show_entry (path, statp)
-     char *path;
-     struct stat *statp;
+show_entry (char *path, struct stat *statp)
 {
   if (S_ISBLK (statp->st_mode) || S_ISCHR (statp->st_mode))
     show_disk (path);
@@ -332,8 +328,7 @@ show_entry (path, statp)
    DISK is mounted on, and show its disk usage.  */
 
 static void
-show_disk (disk)
-     char *disk;
+show_disk (char *disk)
 {
   struct mount_entry *me;
 
@@ -352,9 +347,7 @@ show_disk (disk)
    STATP is the results of `stat' on POINT.  */
 
 static void
-show_point (point, statp)
-     char *point;
-     struct stat *statp;
+show_point (char *point, struct stat *statp)
 {
   struct stat disk_stats;
   struct mount_entry *me;
@@ -394,10 +387,7 @@ show_point (point, statp)
    If FSTYPE is non-NULL, it is the type of the filesystem on DISK. */
 
 static void
-show_dev (disk, mount_point, fstype)
-     char *disk;
-     char *mount_point;
-     char *fstype;
+show_dev (char *disk, char *mount_point, char *fstype)
 {
   struct fs_usage fsu;
   long blocks_used;
@@ -475,8 +465,7 @@ show_dev (disk, mount_point, fstype)
 /* Add FSTYPE to the list of filesystem types to display. */
 
 static void
-add_fs_type (fstype)
-     char *fstype;
+add_fs_type (char *fstype)
 {
   struct fs_type_list *fsp;
 
@@ -489,8 +478,7 @@ add_fs_type (fstype)
 /* Add FSTYPE to the list of filesystem types to be omitted. */
 
 static void
-add_excluded_fs_type (fstype)
-     char *fstype;
+add_excluded_fs_type (char *fstype)
 {
   struct fs_type_list *fsp;
 
@@ -504,8 +492,7 @@ add_excluded_fs_type (fstype)
    return nonzero, else zero. */
 
 static int
-selected_fstype (fstype)
-     char *fstype;
+selected_fstype (char *fstype)
 {
   struct fs_type_list *fsp;
 
@@ -522,8 +509,7 @@ selected_fstype (fstype)
    return nonzero, else zero. */
 
 static int
-excluded_fstype (fstype)
-     char *fstype;
+excluded_fstype (char *fstype)
 {
   struct fs_type_list *fsp;
 
@@ -536,8 +522,7 @@ excluded_fstype (fstype)
 }
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",

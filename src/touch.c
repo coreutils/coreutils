@@ -53,8 +53,8 @@ int safe_read ();
 int full_write ();
 void invalid_arg ();
 
-static int touch ();
-static void usage ();
+static int touch (char *file);
+static void usage (int status);
 #ifndef HAVE_UTIME_NULL
 static int utime_now ();
 #endif
@@ -126,9 +126,7 @@ static int const time_masks[] =
 };
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int c, i;
   int date_set = 0;
@@ -256,8 +254,7 @@ main (argc, argv)
    Return 0 if successful, 1 if an error occurs. */
 
 static int
-touch (file)
-     char *file;
+touch (char *file)
 {
   int status;
   struct stat sbuf;
@@ -369,8 +366,7 @@ utime_now (file, filesize)
 #endif
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",

@@ -53,11 +53,11 @@ char *savedir ();
 char *xmalloc ();
 char *xrealloc ();
 
-static int change_file_group ();
-static int change_dir_group ();
-static void describe_change ();
-static void parse_group ();
-static void usage ();
+static int change_file_group (char *file, int group);
+static int change_dir_group (char *dir, int group, struct stat *statp);
+static void describe_change (char *file, int changed);
+static void parse_group (char *name, int *g);
+static void usage (int status);
 
 /* The name the program was run with. */
 char *program_name;
@@ -96,9 +96,7 @@ static struct option const long_options[] =
 };
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int group;
   int errors = 0;
@@ -158,9 +156,7 @@ main (argc, argv)
 /* Set *G according to NAME. */
 
 static void
-parse_group (name, g)
-     char *name;
-     int *g;
+parse_group (char *name, int *g)
 {
   struct group *grp;
 
@@ -191,9 +187,7 @@ parse_group (name, g)
    Return 0 if successful, 1 if errors occurred. */
 
 static int
-change_file_group (file, group)
-     char *file;
-     int group;
+change_file_group (char *file, int group)
 {
   struct stat file_stats;
   int errors = 0;
@@ -249,10 +243,7 @@ change_file_group (file, group)
    Return 0 if successful, 1 if errors occurred. */
 
 static int
-change_dir_group (dir, group, statp)
-     char *dir;
-     int group;
-     struct stat *statp;
+change_dir_group (char *dir, int group, struct stat *statp)
 {
   char *name_space, *namep;
   char *path;			/* Full path of each entry to process. */
@@ -302,9 +293,7 @@ change_dir_group (dir, group, statp)
    has been given; if CHANGED is zero, FILE was that group already. */
 
 static void
-describe_change (file, changed)
-     char *file;
-     int changed;
+describe_change (char *file, int changed)
 {
   if (changed)
     printf ("group of %s changed to %s\n", file, groupname);
@@ -313,8 +302,7 @@ describe_change (file, changed)
 }
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",

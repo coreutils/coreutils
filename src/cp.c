@@ -42,21 +42,21 @@ struct dir_attr
   struct dir_attr *next;
 };
 
-int stat ();
-int lstat ();
+int stat (const char *, struct stat *);
+int lstat (const char *, struct stat *);
 
-char *dirname ();
+char *dirname (char *);
 char *xstrdup ();
 enum backup_type get_version ();
 int euidaccess ();
 int full_write ();
 
-static int do_copy ();
-static int copy ();
-static int copy_dir ();
-static int make_path_private ();
-static int copy_reg ();
-static int re_protect ();
+static int do_copy (int argc, char **argv);
+static int copy (char *src_path, char *dst_path, int new_dst, dev_t device, struct dir_list *ancestors);
+static int copy_dir (char *src_path_in, char *dst_path_in, int new_dst, struct stat *src_sb, struct dir_list *ancestors);
+static int make_path_private (char *const_dirpath, int src_offset, int mode, char *verbose_fmt_string, struct dir_attr **attr_list, int *new_dst);
+static int copy_reg (char *src_path, char *dst_path);
+static int re_protect (char *const_dst_path, int src_offset, struct dir_attr *attr_list);
 
 /* Initial number of entries in each hash table entry's table of inodes.  */
 #define INITIAL_HASH_MODULE 100
@@ -155,9 +155,7 @@ static struct option const long_opts[] =
 };
 
 void
-main (argc, argv)
-     int argc;
-     char *argv[];
+main (int argc, char **argv)
 {
   int c;
   int make_backups = 0;
@@ -305,9 +303,7 @@ main (argc, argv)
    Return 0 if successful, 1 if any errors occur. */
 
 static int
-do_copy (argc, argv)
-     int argc;
-     char *argv[];
+do_copy (int argc, char **argv)
 {
   char *dest;
   struct stat sb;
@@ -467,12 +463,7 @@ do_copy (argc, argv)
    Return 0 if successful, 1 if an error occurs. */
 
 static int
-copy (src_path, dst_path, new_dst, device, ancestors)
-     char *src_path;
-     char *dst_path;
-     int new_dst;
-     dev_t device;
-     struct dir_list *ancestors;
+copy (char *src_path, char *dst_path, int new_dst, dev_t device, struct dir_list *ancestors)
 {
   struct stat src_sb;
   struct stat dst_sb;
@@ -860,14 +851,7 @@ un_backup:
    permissions when done, otherwise 1. */
 
 static int
-make_path_private (const_dirpath, src_offset, mode, verbose_fmt_string,
-		   attr_list, new_dst)
-     char *const_dirpath;
-     int src_offset;
-     int mode;
-     char *verbose_fmt_string;
-     struct dir_attr **attr_list;
-     int *new_dst;
+make_path_private (char *const_dirpath, int src_offset, int mode, char *verbose_fmt_string, struct dir_attr **attr_list, int *new_dst)
 {
   struct stat stats;
   char *dirpath;		/* A copy of CONST_DIRPATH we can change. */
@@ -981,10 +965,7 @@ make_path_private (const_dirpath, src_offset, mode, verbose_fmt_string,
    when done, otherwise 1. */
 
 static int
-re_protect (const_dst_path, src_offset, attr_list)
-     char *const_dst_path;
-     int src_offset;
-     struct dir_attr *attr_list;
+re_protect (char *const_dst_path, int src_offset, struct dir_attr *attr_list)
 {
   struct dir_attr *p;
   char *dst_path;		/* A copy of CONST_DST_PATH we can change. */
@@ -1054,12 +1035,7 @@ re_protect (const_dst_path, src_offset, attr_list)
    Return 0 if successful, -1 if an error occurs. */
 
 static int
-copy_dir (src_path_in, dst_path_in, new_dst, src_sb, ancestors)
-     char *src_path_in;
-     char *dst_path_in;
-     int new_dst;
-     struct stat *src_sb;
-     struct dir_list *ancestors;
+copy_dir (char *src_path_in, char *dst_path_in, int new_dst, struct stat *src_sb, struct dir_list *ancestors)
 {
   char *name_space;
   char *namep;
@@ -1112,9 +1088,7 @@ copy_dir (src_path_in, dst_path_in, new_dst, src_sb, ancestors)
    Return 0 if successful, -1 if an error occurred. */
 
 static int
-copy_reg (src_path, dst_path)
-     char *src_path;
-     char *dst_path;
+copy_reg (char *src_path, char *dst_path)
 {
   char *buf;
   int buf_size;

@@ -100,45 +100,45 @@ char *xrealloc ();
 int argmatch ();
 void invalid_arg ();
 
-static char *make_link_path ();
-static int compare_atime ();
-static int rev_cmp_atime ();
-static int compare_ctime ();
-static int rev_cmp_ctime ();
-static int compare_mtime ();
-static int rev_cmp_mtime ();
-static int compare_size ();
-static int rev_cmp_size ();
-static int compare_name ();
-static int rev_cmp_name ();
-static int compare_extension ();
-static int rev_cmp_extension ();
-static int decode_switches ();
-static void parse_ls_color ();
-static int file_interesting ();
-static int gobble_file ();
-static int is_not_dot_or_dotdot ();
-static int length_of_file_name_and_frills ();
-static void add_ignore_pattern ();
-static void attach ();
-static void clear_files ();
-static void extract_dirs_from_files ();
-static void get_link_name ();
-static void indent ();
-static void print_current_files ();
-static void print_dir ();
-static void print_file_name_and_frills ();
-static void print_horizontal ();
-static void print_long_format ();
-static void print_many_per_line ();
-static void print_name_with_quoting ();
-static void print_type_indicator ();
-static void print_color_indicator ();
-static void put_indicator ();
-static void print_with_commas ();
-static void queue_directory ();
-static void sort_files ();
-static void usage ();
+static char *make_link_path (char *path, char *linkname);
+static int compare_atime (struct fileinfo *file1, struct fileinfo *file2);
+static int rev_cmp_atime (struct fileinfo *file2, struct fileinfo *file1);
+static int compare_ctime (struct fileinfo *file1, struct fileinfo *file2);
+static int rev_cmp_ctime (struct fileinfo *file2, struct fileinfo *file1);
+static int compare_mtime (struct fileinfo *file1, struct fileinfo *file2);
+static int rev_cmp_mtime (struct fileinfo *file2, struct fileinfo *file1);
+static int compare_size (struct fileinfo *file1, struct fileinfo *file2);
+static int rev_cmp_size (struct fileinfo *file2, struct fileinfo *file1);
+static int compare_name (struct fileinfo *file1, struct fileinfo *file2);
+static int rev_cmp_name (struct fileinfo *file2, struct fileinfo *file1);
+static int compare_extension (struct fileinfo *file1, struct fileinfo *file2);
+static int rev_cmp_extension (struct fileinfo *file2, struct fileinfo *file1);
+static int decode_switches (int argc, char **argv);
+static void parse_ls_color (void);
+static int file_interesting (register struct dirent *next);
+static int gobble_file (char *name, int explicit_arg, char *dirname);
+static int is_not_dot_or_dotdot (char *name);
+static int length_of_file_name_and_frills (struct fileinfo *f);
+static void add_ignore_pattern (char *pattern);
+static void attach (char *dest, char *dirname, char *name);
+static void clear_files (void);
+static void extract_dirs_from_files (char *dirname, int recursive);
+static void get_link_name (char *filename, struct fileinfo *f);
+static void indent (int from, int to);
+static void print_current_files (void);
+static void print_dir (const char *name, const char *realname);
+static void print_file_name_and_frills (struct fileinfo *f);
+static void print_horizontal (void);
+static void print_long_format (struct fileinfo *f);
+static void print_many_per_line (void);
+static void print_name_with_quoting (register char *p);
+static void print_type_indicator (unsigned int mode);
+static void print_color_indicator (unsigned int mode);
+static void put_indicator (int n);
+static void print_with_commas (void);
+static void queue_directory (char *name, char *realname);
+static void sort_files (void);
+static void usage (int status);
 
 /* The name the program was run with, stripped of any leading path. */
 char *program_name;
@@ -588,9 +588,7 @@ static enum color_type const color_types[] =
    list of the integers stored in OS all on one line.  */
 
 static void
-dired_dump_obstack (prefix, os)
-     const char *prefix;
-     struct obstack *os;
+dired_dump_obstack (const char *prefix, struct obstack *os)
 {
   int n_pos;
 
@@ -609,9 +607,7 @@ dired_dump_obstack (prefix, os)
 }
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   register int i;
   register struct pending *thispend;
@@ -706,9 +702,7 @@ main (argc, argv)
    Return the index of the first non-option argument.  */
 
 static int
-decode_switches (argc, argv)
-     int argc;
-     char **argv;
+decode_switches (int argc, char **argv)
 {
   register char *p;
   int c;
@@ -1044,7 +1038,7 @@ decode_switches (argc, argv)
 /* Parse the LS_COLORS/LS_COLOURS variable */
 
 static void
-parse_ls_color ()
+parse_ls_color (void)
 {
   register char *p;		/* Pointer to character being parsed */
   char *whichvar;		/* LS_COLORS or LS_COLOURS? */
@@ -1293,9 +1287,7 @@ parse_ls_color ()
    real names. */
 
 static void
-queue_directory (name, realname)
-     char *name;
-     char *realname;
+queue_directory (char *name, char *realname)
 {
   struct pending *new;
 
@@ -1314,9 +1306,7 @@ queue_directory (name, realname)
    this is used for symbolic links to directories. */
 
 static void
-print_dir (name, realname)
-     const char *name;
-     const char *realname;
+print_dir (const char *name, const char *realname)
 {
   register DIR *reading;
   register struct dirent *next;
@@ -1388,8 +1378,7 @@ print_dir (name, realname)
    not listed.  */
 
 static void
-add_ignore_pattern (pattern)
-     char *pattern;
+add_ignore_pattern (char *pattern)
 {
   register struct ignore_pattern *ignore;
 
@@ -1403,8 +1392,7 @@ add_ignore_pattern (pattern)
 /* Return nonzero if the file in `next' should be listed. */
 
 static int
-file_interesting (next)
-     register struct dirent *next;
+file_interesting (register struct dirent *next)
 {
   register struct ignore_pattern *ignore;
 
@@ -1427,7 +1415,7 @@ file_interesting (next)
 /* Empty the table of files. */
 
 static void
-clear_files ()
+clear_files (void)
 {
   register int i;
 
@@ -1447,10 +1435,7 @@ clear_files ()
    Return the number of blocks that the file occupies.  */
 
 static int
-gobble_file (name, explicit_arg, dirname)
-     char *name;
-     int explicit_arg;
-     char *dirname;
+gobble_file (char *name, int explicit_arg, char *dirname)
 {
   register int blocks;
   register int val;
@@ -1577,9 +1562,7 @@ gobble_file (name, explicit_arg, dirname)
    into the `linkname' field of `f'. */
 
 static void
-get_link_name (filename, f)
-     char *filename;
-     struct fileinfo *f;
+get_link_name (char *filename, struct fileinfo *f)
 {
   char *linkbuf;
   register int linksize;
@@ -1606,9 +1589,7 @@ get_link_name (filename, f)
    If `linkname' is zero, return zero. */
 
 static char *
-make_link_path (path, linkname)
-     char *path;
-     char *linkname;
+make_link_path (char *path, char *linkname)
 {
   char *linkbuf;
   int bufsiz;
@@ -1641,9 +1622,7 @@ make_link_path (path, linkname)
    This is desirable when processing directories recursively.  */
 
 static void
-extract_dirs_from_files (dirname, recursive)
-     char *dirname;
-     int recursive;
+extract_dirs_from_files (char *dirname, int recursive)
 {
   register int i, j;
   register char *path;
@@ -1684,8 +1663,7 @@ extract_dirs_from_files (dirname, recursive)
    This is so we don't try to recurse on `././././. ...' */
 
 static int
-is_not_dot_or_dotdot (name)
-     char *name;
+is_not_dot_or_dotdot (char *name)
 {
   char *t;
 
@@ -1704,7 +1682,7 @@ is_not_dot_or_dotdot (name)
 /* Sort the files now in the table.  */
 
 static void
-sort_files ()
+sort_files (void)
 {
   int (*func) ();
 
@@ -1747,71 +1725,61 @@ sort_files ()
 /* Comparison routines for sorting the files. */
 
 static int
-compare_ctime (file1, file2)
-     struct fileinfo *file1, *file2;
+compare_ctime (struct fileinfo *file1, struct fileinfo *file2)
 {
   return longdiff (file2->stat.st_ctime, file1->stat.st_ctime);
 }
 
 static int
-rev_cmp_ctime (file2, file1)
-     struct fileinfo *file1, *file2;
+rev_cmp_ctime (struct fileinfo *file2, struct fileinfo *file1)
 {
   return longdiff (file2->stat.st_ctime, file1->stat.st_ctime);
 }
 
 static int
-compare_mtime (file1, file2)
-     struct fileinfo *file1, *file2;
+compare_mtime (struct fileinfo *file1, struct fileinfo *file2)
 {
   return longdiff (file2->stat.st_mtime, file1->stat.st_mtime);
 }
 
 static int
-rev_cmp_mtime (file2, file1)
-     struct fileinfo *file1, *file2;
+rev_cmp_mtime (struct fileinfo *file2, struct fileinfo *file1)
 {
   return longdiff (file2->stat.st_mtime, file1->stat.st_mtime);
 }
 
 static int
-compare_atime (file1, file2)
-     struct fileinfo *file1, *file2;
+compare_atime (struct fileinfo *file1, struct fileinfo *file2)
 {
   return longdiff (file2->stat.st_atime, file1->stat.st_atime);
 }
 
 static int
-rev_cmp_atime (file2, file1)
-     struct fileinfo *file1, *file2;
+rev_cmp_atime (struct fileinfo *file2, struct fileinfo *file1)
 {
   return longdiff (file2->stat.st_atime, file1->stat.st_atime);
 }
 
 static int
-compare_size (file1, file2)
-     struct fileinfo *file1, *file2;
+compare_size (struct fileinfo *file1, struct fileinfo *file2)
 {
   return longdiff (file2->stat.st_size, file1->stat.st_size);
 }
 
 static int
-rev_cmp_size (file2, file1)
-     struct fileinfo *file1, *file2;
+rev_cmp_size (struct fileinfo *file2, struct fileinfo *file1)
 {
   return longdiff (file2->stat.st_size, file1->stat.st_size);
 }
 
 static int
-compare_name (file1, file2)
-     struct fileinfo *file1, *file2;
+compare_name (struct fileinfo *file1, struct fileinfo *file2)
 {
   return strcmp (file1->name, file2->name);
 }
 
 static int
-rev_cmp_name (file2, file1)
-     struct fileinfo *file1, *file2;
+rev_cmp_name (struct fileinfo *file2, struct fileinfo *file1)
 {
   return strcmp (file1->name, file2->name);
 }
@@ -1820,8 +1788,7 @@ rev_cmp_name (file2, file1)
    If extensions are the same, compare by filenames instead. */
 
 static int
-compare_extension (file1, file2)
-     struct fileinfo *file1, *file2;
+compare_extension (struct fileinfo *file1, struct fileinfo *file2)
 {
   register char *base1, *base2;
   register int cmp;
@@ -1841,8 +1808,7 @@ compare_extension (file1, file2)
 }
 
 static int
-rev_cmp_extension (file2, file1)
-     struct fileinfo *file1, *file2;
+rev_cmp_extension (struct fileinfo *file2, struct fileinfo *file1)
 {
   register char *base1, *base2;
   register int cmp;
@@ -1864,7 +1830,7 @@ rev_cmp_extension (file2, file1)
 /* List all the files now in the table.  */
 
 static void
-print_current_files ()
+print_current_files (void)
 {
   register int i;
 
@@ -1901,8 +1867,7 @@ print_current_files ()
 }
 
 static void
-print_long_format (f)
-     struct fileinfo *f;
+print_long_format (struct fileinfo *f)
 {
   char modebuf[20];
   char timebuf[40];
@@ -2031,9 +1996,7 @@ print_long_format (f)
    of P and set QUOTED_LENGTH to the length of the quoted P.  */
 
 static char *
-quote_filename (p, quoted_length)
-     register const char *p;
-     size_t *quoted_length;
+quote_filename (register const char *p, size_t *quoted_length)
 {
   register unsigned char c;
   const char *p0 = p;
@@ -2174,8 +2137,7 @@ quote_filename (p, quoted_length)
 }
 
 static void
-print_name_with_quoting (p)
-     register char *p;
+print_name_with_quoting (register char *p)
 {
   char *quoted;
   size_t quoted_length;
@@ -2191,8 +2153,7 @@ print_name_with_quoting (p)
    as requested by switches.  */
 
 static void
-print_file_name_and_frills (f)
-     struct fileinfo *f;
+print_file_name_and_frills (struct fileinfo *f)
 {
   if (print_inode)
     printf ("%*lu ", INODE_DIGITS, (unsigned long) f->stat.st_ino);
@@ -2213,8 +2174,7 @@ print_file_name_and_frills (f)
 }
 
 static void
-print_type_indicator (mode)
-     unsigned int mode;
+print_type_indicator (unsigned int mode)
 {
   if (S_ISDIR (mode))
     PUTCHAR ('/');
@@ -2240,8 +2200,7 @@ print_type_indicator (mode)
 }
 
 static void
-print_color_indicator (mode)
-     unsigned int mode;
+print_color_indicator (unsigned int mode)
 {
   int type = C_FILE;
 
@@ -2283,8 +2242,7 @@ print_color_indicator (mode)
 
 /* Output a color indicator (which may contain nulls) */
 static void
-put_indicator (n)
-     int n;
+put_indicator (int n)
 {
   register int i;
   register char *p;
@@ -2298,8 +2256,7 @@ put_indicator (n)
 }
 
 static int
-length_of_file_name_and_frills (f)
-     struct fileinfo *f;
+length_of_file_name_and_frills (struct fileinfo *f)
 {
   register char *p = f->name;
   register unsigned char c;
@@ -2377,7 +2334,7 @@ length_of_file_name_and_frills (f)
 }
 
 static void
-print_many_per_line ()
+print_many_per_line (void)
 {
   int filesno;			/* Index into files. */
   int row;			/* Current row. */
@@ -2431,7 +2388,7 @@ print_many_per_line ()
 }
 
 static void
-print_horizontal ()
+print_horizontal (void)
 {
   int filesno;
   int max_name_length;
@@ -2482,7 +2439,7 @@ print_horizontal ()
 }
 
 static void
-print_with_commas ()
+print_with_commas (void)
 {
   int filesno;
   int pos, old_pos;
@@ -2517,8 +2474,7 @@ print_with_commas ()
    Use a TAB character instead of two or more spaces whenever possible.  */
 
 static void
-indent (from, to)
-     int from, to;
+indent (int from, int to)
 {
   while (from < to)
     {
@@ -2538,8 +2494,7 @@ indent (from, to)
 /* Put DIRNAME/NAME into DEST, handling `.' and `/' properly. */
 
 static void
-attach (dest, dirname, name)
-     char *dest, *dirname, *name;
+attach (char *dest, char *dirname, char *name)
 {
   char *dirnamep = dirname;
 
@@ -2558,8 +2513,7 @@ attach (dest, dirname, name)
 }
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, "Try `%s --help' for more information.\n",
