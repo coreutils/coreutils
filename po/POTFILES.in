@@ -65,6 +65,7 @@ src/mknod.c
 src/mv.c
 src/nice.c
 src/nl.c
+src/nohup.c
 src/od.c
 src/paste.c
 src/pathchk.c
@@ -79,6 +80,7 @@ src/remove.c
 src/rm.c
 src/rmdir.c
 src/seq.c
+src/setuidgid.c
 src/shred.c
 src/sleep.c
 src/sort.c
