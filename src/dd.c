@@ -155,7 +155,7 @@ static size_t oc = 0;
 /* Index into current line, for `conv=block' and `conv=unblock'.  */
 static size_t col = 0;
 
-/* A longest symbol in the struct symbol_values table below.  */
+/* A longest symbol in the struct symbol_values tables below.  */
 #define LONGEST_SYMBOL "fdatasync"
 
 /* A symbol and the corresponding integer value.  */
