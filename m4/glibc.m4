@@ -28,7 +28,7 @@ AC_DEFUN(AM_GLIBC,
   Thanks for using GNU too
 #endif
 	],
-	  ac_cv_glibc=yes, ac_cv_glibc=no)
+	ac_cv_glibc=yes, ac_cv_glibc=no)
       ]
     )
   ]
