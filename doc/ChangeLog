@@ -1,3 +1,10 @@
+2004-09-06  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (od invocation): Several changes for POSIX
+	and FreeBSD compatibility.  Add support for XSI syntax
+	(POSIX 1003.1-2004).  Rename -s[N] to -S N.  Remove documentation
+	for -h.  -i is now -t dI (not d2) and -l is now -t dL (not d4).
+
 2004-09-05  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (String tests): Improve quality of warning about

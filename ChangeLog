@@ -1,3 +1,16 @@
+2004-09-06  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/od.c: Several changes for POSIX and FreeBSD compatibility.
+	(COMMON_SHORT_OPTIONS): Add -B, -D, -e, -F, -H, -I, -L, -O, -s, -X.
+	(long_options, main): --strings is now -S, not -s.
+	(usage): Reflect the usage changes.
+	(parse_old_offset): Do not issue a diagnostic on failure;
+	callers now do this as necessary.
+	(main): Support POSIX syntax.  Remove unused case 0 from getopt_long.
+	Add support for new short options (many undocumented) for
+	compatibility with FreeBSD.  Remove FIXME for -s; it's now
+	POSIX-compatible.  Default format is now oS, not o2.
+
 2004-09-05  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/stty.c (valid_options): Remove.
