@@ -1,5 +1,14 @@
 2004-11-16  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* coreutils.texi: Changes inspired by Debian coreutils 5.2.1-2.
+	(General output formatting): -x doesn't have an operand.
+	(Formatting the file names): Warn that even with -N unprintable
+	chars are still printed as '?' some times.
+	(rm invocation): Reword rm -d to note that it's sometimes useful
+	on non-directories.
+	(logname invocation, users invocation, who invocation):
+	The utmp and wtmp file names vary from system to system.
+
 	* getdate.texi (General date syntax): "next" is 1, not 2.
 	Document that "second" isn't allowed as an ordinal number.
 
