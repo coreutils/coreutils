@@ -38,28 +38,19 @@ enum Verbosity
   V_off
 };
 
-enum Dereference_symlink
-{
-  DEREF_UNDEFINED = 1,
-  DEREF_NEVER,			/* -P */
-  DEREF_COMMAND_LINE_ARGUMENTS,	/* -H */
-  DEREF_ALWAYS			/* -L */
-};
-
 struct Chown_option
 {
   /* Level of verbosity.  */
   enum Verbosity verbosity;
 
   /* If nonzero, change the ownership of directories recursively. */
-  int recurse;
+  bool recurse;
 
-  /* This is useful only on systems with support for changing the
-     ownership of symbolic links.  */
-  enum Dereference_symlink dereference;
+  /* This corresponds to the --dereference (opposite of -h) option.  */
+  bool affect_symlink_referent;
 
   /* If nonzero, force silence (no error messages). */
-  int force_silent;
+  bool force_silent;
 
   /* The name of the user to which ownership of the files is being given. */
   char *user_name;
@@ -81,9 +72,9 @@ char *
 uid_to_name (uid_t);
 
 int
-change_file_owner (int, const char *,
-		    uid_t, gid_t,
-		    uid_t, gid_t,
-		    struct Chown_option const *);
+chown_files (char **files, int bit_flags,
+	     uid_t uid, gid_t gid,
+	     uid_t required_uid, gid_t required_gid,
+	     struct Chown_option const *chopt);
 
 #endif /* CHOWN_CORE_H */
