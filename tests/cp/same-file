@@ -130,7 +130,7 @@ cat <<\EOF > $expected
 0 -bdfl (foo foo.~1~)
 
 1 [cp: `sl1' and `sl2' are the same file] (foo sl1 -> foo sl2 -> foo)
-1 -d [cp: `sl1' and `sl2' are the same file] (foo sl1 -> foo sl2 -> foo)
+1 -d [cp: cannot create symbolic link `sl2': File exists] (foo sl1 -> foo sl2 -> foo)
 0 -f (foo sl1 -> foo sl2)
 0 -df (foo sl1 -> foo sl2 -> foo)
 0 -b (foo sl1 -> foo sl2 sl2.~1~ -> foo)
@@ -138,7 +138,7 @@ cat <<\EOF > $expected
 0 -bf (foo sl1 -> foo sl2 sl2.~1~ -> foo)
 0 -bdf (foo sl1 -> foo sl2 -> foo sl2.~1~ -> foo)
 0 -l (foo sl1 -> foo sl2 -> foo)
-0 -dl (foo sl1 -> foo sl2 -> foo)
+1 -dl [cp: cannot create link `sl2': File exists] (foo sl1 -> foo sl2 -> foo)
 0 -fl (foo sl1 -> foo sl2 -> foo)
 0 -bl (foo sl1 -> foo sl2 -> foo)
 0 -bfl (foo sl1 -> foo sl2 -> foo)
@@ -163,7 +163,7 @@ cat <<\EOF > $expected
 EOF
 
 # Uncomment this if you see a failure and want to try to diagnose it.
-# diff -u $expected $actual 1>&2
+diff -u $expected $actual 1>&2
 
 cmp $expected $actual
 exit $?
