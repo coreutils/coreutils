@@ -598,11 +598,22 @@ copy_internal (const char *src_path, const char *dst_path,
 
   if (!x->dereference && src_sb.st_nlink > 1 && earlier_file)
     {
+      /* Avoid damaging the destination filesystem by refusing to preserve
+	 hard-linked directories (which are found at least in Netapp snapshot
+	 directories).  */
+      if (S_ISDIR (src_type))
+	{
+	  error (0, 0, _("%s: won't create hard link `%s' to directory `%s'"),
+		 dst_path, earlier_file);
+	  goto un_backup;
+	}
+
       if (link (earlier_file, dst_path))
 	{
 	  error (0, errno, "%s", dst_path);
 	  goto un_backup;
 	}
+
       return 0;
     }
 
