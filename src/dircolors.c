@@ -37,9 +37,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 #ifndef STDC_HEADERS
 void free ();
+char *malloc ();
 #endif
 
-char *xmalloc ();
 char *base_name ();
 char *strndup();
 
