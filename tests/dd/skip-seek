@@ -42,6 +42,14 @@ my @Tests =
       {ERR=> "1+0 records in\n1+0 records out\n"},
       {CMP=> ['zy12345srqponmlkji', {'@AUX@'=> undef}]},
      ],
+     [
+      '3', qw (bs=5 skip=1 seek=1 conv=notrunc count=1 of=@AUX@ < ),
+      {IN=> '0123456789abcdef'},
+      {AUX=> 'zyxwvutsrqponmlkji'},
+      {OUT=> ''},
+      {ERR=> "1+0 records in\n1+0 records out\n"},
+      {CMP=> ['zyxwv56789ponmlkji', {'@AUX@'=> undef}]},
+     ],
     );
 
 my $save_temps = $ENV{DEBUG};
