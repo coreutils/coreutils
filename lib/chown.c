@@ -24,7 +24,7 @@
 # include <unistd.h>
 #endif
 
-/* FIXME.  */
+/* FIXME: describe.  */
 
 int
 chown (file, gid, uid)
