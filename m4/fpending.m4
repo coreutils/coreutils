@@ -1,4 +1,4 @@
-#serial 2
+#serial 3
 
 dnl From Jim Meyering
 dnl Using code from emacs, based on suggestions from Paul Eggert
@@ -23,7 +23,6 @@ AC_DEFUN([jm_FUNC_FPENDING],
 	      [how to determine the number of pending output bytes on a stream],
 		   ac_cv_sys_pending_output_n_bytes,
       [
-        fp_save_DEFS=$DEFS
 	for ac_expr in						\
 								\
 	    '# glibc2'						\
@@ -54,14 +53,12 @@ AC_DEFUN([jm_FUNC_FPENDING],
 	  # Skip each embedded comment.
 	  case "$ac_expr" in '#'*) continue;; esac
 
-	  DEFS="$DEFS -DPENDING_OUTPUT_N_BYTES=$ac_expr"
 	  AC_TRY_COMPILE(
 	    [#include <stdio.h>
 	    ],
 	    [FILE *fp = stdin; (void) ($ac_expr);],
 	    fp_done=yes
 	  )
-	  DEFS=$fp_save_DEFS
 	  test "$fp_done" = yes && break
 	done
 
