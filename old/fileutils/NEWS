@@ -1,4 +1,6 @@
 Changes in release 3.17:
+[3.16w]
+* `ls EMPTY-DIR EMPTY-DIR' once again outputs the directory names
 [3.16v]
 * portability fixes
 * `ls -R EMPTY-DIR' now outputs the name of the directory
