@@ -276,7 +276,7 @@ print_user (const STRUCT_UTMP *utmp_ent)
   char mesg;
   char idlestr[IDLESTR_LEN];
   static char *hoststr;
-  static int hostlen;
+  static size_t hostlen;
 
 #define DEV_DIR_WITH_TRAILING_SLASH "/dev/"
 #define DEV_DIR_LEN (sizeof (DEV_DIR_WITH_TRAILING_SLASH) - 1)
