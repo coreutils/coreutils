@@ -102,6 +102,12 @@ static uintmax_t skip_records = 0;
 /* Skip this many records of `output_blocksize' bytes before output. */
 static uintmax_t seek_record = 0;
 
+/* Skip this many bytes before input. */
+static uintmax_t skip_bytes = 0;
+
+/* Skip this many bytes before output. */
+static uintmax_t seek_bytes = 0;
+
 /* Copy only this many records.  The default is effectively infinity.  */
 static uintmax_t max_records = (uintmax_t) -1;
 
@@ -294,9 +300,14 @@ Copy a file, converting and formatting according to the options.\n\
   obs=BYTES       write BYTES bytes at a time\n\
   of=FILE         write to FILE instead of stdout\n\
   seek=BLOCKS     skip BLOCKS obs-sized blocks at start of output\n\
+  bseek=BYTES     skip BYTES at start of output\n\
   skip=BLOCKS     skip BLOCKS ibs-sized blocks at start of input\n\
+  bskip=BYTES     skip BYTES at start of input\n\
       --help      display this help and exit\n\
       --version   output version information and exit\n\
+\n\
+Only one of each of the [b]seek or [b]skip option pairs may be used\n\
+at any one time.\n\
 \n\
 BYTES may be followed by the following multiplicative suffixes:\n\
 xM M, c 1, w 2, b 512, kD 1000, k 1024, MD 1,000,000, M 1,048,576,\n\
@@ -581,9 +592,29 @@ scanargs (int argc, char **argv)
 			  || conversion_blocksize == 0);
 	    }
 	  else if (STREQ (name, "skip"))
-	    skip_records = n;
+	    {
+	      skip_records = n;
+	      /* may use option only when bskip=BYTES option is not used */
+	      invalid |= skip_bytes != 0;
+	    }
 	  else if (STREQ (name, "seek"))
-	    seek_record = n;
+	    {
+	      seek_record = n;
+	      /* may use option only when bseek=BYTES option is not used */
+	      invalid |= seek_bytes != 0;
+	    }
+	  else if (STREQ (name, "bseek"))
+	    {
+	      seek_bytes = n;
+	      /* may use option only when seek=BLOCKS option is not used */
+	      invalid |= seek_record != 0;
+	    }
+	  else if (STREQ (name, "bskip"))
+	    {
+	      skip_bytes = n;
+	      /* may use option only when skip=BLOCKS option is not used */
+	      invalid |= skip_records != 0;
+	    }
 	  else if (STREQ (name, "count"))
 	    max_records = n;
 	  else
@@ -788,6 +819,63 @@ skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
     }
 }
 
+/* Throw away BYTES on file descriptor FDESC,
+   which is open with read permission for FILE.
+   Store up to BYTES of the data (one BLOCKSIZE at a time) in BUF,
+   if necessary. */
+
+static void
+bskip (int fdesc, char *file, uintmax_t bytes, size_t blocksize,
+       unsigned char *buf)
+{
+  struct stat stats;
+
+  /* Use fstat instead of checking for errno == ESPIPE because
+     lseek doesn't work on some special files but doesn't return an
+     error, either. */
+  /* FIXME: can this really happen?  What system?  */
+  if (fstat (fdesc, &stats))
+    {
+      error (0, errno, "%s", file);
+      quit (1);
+    }
+
+  /* Try lseek and if an error indicates it was an inappropriate
+     operation, fall back on using read.  */
+  if (lseek (fdesc, bytes, SEEK_SET) == -1)
+    {
+      int nread;
+
+      while ((bytes-=blocksize) >= 0)
+	{
+	  nread = safe_read (fdesc, buf, blocksize);
+	  if (nread < 0)
+	    {
+	      error (0, errno, "%s", file);
+	      quit (1);
+	    }
+	  /* POSIX doesn't say what to do when dd detects it has been
+	     asked to skip past EOF, so I assume it's non-fatal.
+	     FIXME: maybe give a warning.  */
+	  if (nread == 0)
+	    break;
+	}
+
+      /* sop up any residue .. */
+      if (bytes < 0)
+	{
+	  bytes += blocksize;
+
+	  nread = safe_read (fdesc, buf, bytes);
+	  if (nread < 0)
+	    {
+	      error (0, errno, "%s", file);
+	      quit (1);
+	    }
+	}
+    }
+}
+
 /* Copy NREAD bytes of BUF, with no conversions.  */
 
 static void
@@ -935,6 +1023,9 @@ dd_copy (void)
   if (skip_records != 0)
     skip (STDIN_FILENO, input_file, skip_records, input_blocksize, ibuf);
 
+  if (skip_bytes != 0)
+    bskip (STDIN_FILENO, input_file, skip_bytes, input_blocksize, ibuf);
+
   if (seek_record != 0)
     {
       /* FIXME: this loses for
@@ -947,6 +1038,9 @@ dd_copy (void)
       skip (STDOUT_FILENO, output_file, seek_record, output_blocksize,
 	    obuf);
     }
+
+  if (seek_bytes != 0)
+    bskip (STDOUT_FILENO, output_file, seek_bytes, output_blocksize, obuf);
 
   if (max_records == 0)
     quit (exit_status);
@@ -1143,17 +1237,28 @@ main (int argc, char **argv)
       /* Open the output file with *read* access only if we might
 	 need to read to satisfy a `seek=' request.  If we can't read
 	 the file, go ahead with write-only access; it might work.  */
-      if ((! seek_record
+      if (((seek_record == 0
+	    && seek_bytes == 0)
 	   || open_fd (STDOUT_FILENO, output_file, O_RDWR | opts, perms) < 0)
 	  && open_fd (STDOUT_FILENO, output_file, O_WRONLY | opts, perms) < 0)
 	error (1, errno, _("opening %s"), quote (output_file));
+
 #if HAVE_FTRUNCATE
-      if (seek_record != 0 && !(conversions_mask & C_NOTRUNC))
+      if ((seek_record != 0 || seek_bytes != 0)
+	  && !(conversions_mask & C_NOTRUNC))
 	{
 	  struct stat stdout_stat;
-	  off_t o = seek_record * output_blocksize;
-	  if (o / output_blocksize != seek_record)
-	    error (1, 0, _("file offset out of range"));
+	  off_t o;
+	  if (seek_record)
+	    {
+	      o = seek_record * output_blocksize;
+	      if (o / output_blocksize != seek_record)
+		error (1, 0, _("file offset out of range"));
+	    }
+	  else
+	    {
+	      o = seek_bytes;
+	    }
 
 	  /* Attempt to use ftruncate only if STDOUT refers to a regular file.
 	     On Linux 2.4.0, ftruncate fails with for non-regular files.  */
@@ -1162,9 +1267,16 @@ main (int argc, char **argv)
 	      && ftruncate (STDOUT_FILENO, o) < 0)
 	    {
 	      char buf[LONGEST_HUMAN_READABLE + 1];
-	      error (1, errno, _("advancing past %s blocks in output file %s"),
-		     human_readable (seek_record, buf, 1, 1),
-		     quote (output_file));
+	      if (seek_record)
+		error (1, errno,
+		       _("advancing past %s blocks in output file %s"),
+		       human_readable (seek_record, buf, 1, 1),
+		       quote (output_file));
+	      else
+		error (1, errno,
+		       _("advancing past %s bytes in output file %s"),
+		       human_readable (seek_bytes, buf, 1, 1),
+		       quote (output_file));
 	    }
 	}
 #endif
