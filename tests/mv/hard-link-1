@@ -8,9 +8,20 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/setup
+# Make sure we get English translations.
+. $srcdir/../lang-default
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
 
 if test -z "$other_partition_tmpdir"; then
-  exit 77
+  (exit 77); exit 77
 fi
 
 dir=hlink
@@ -22,11 +33,8 @@ ln $dir/a $dir/b || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
-  exit 1
+  (exit 1); exit 1
 fi
-
-# Make sure we get English translations.
-. $srcdir/../lang-default
 
 mv $dir $other_partition_tmpdir || fail=1
 
