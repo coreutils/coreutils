@@ -1,3 +1,9 @@
+2003-07-10  Jim Meyering  <jim@meyering.net>
+
+	Update from gnulib.
+	* alloca_.h, getpass.c, memrchr.c, obstack.h, posixver.c,
+	strftime.c, strnlen.c, strverscmp.c: Switch from LGPL to GPL.
+
 2003-07-09  Jim Meyering  <jim@meyering.net>
 
 	* mktime.c: Update from gnulib.
