@@ -55,7 +55,7 @@ lifetime of the universe.
 * Day of week items::              Monday and others.
 * Relative items in date strings:: next tuesday, 2 years ago.
 * Pure numbers in date strings::   19931219, 1440.
-* Authors of getdate::             Bellovin, Salz, Berets, et al.
+* Authors of getdate::             Bellovin, Eggert, Salz, Berets, et al.
 @end menu
 
 
