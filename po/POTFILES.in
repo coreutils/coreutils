@@ -92,7 +92,7 @@ src/stty.c
 src/su.c
 src/sum.c
 src/sync.c
-src/system.c
+src/system.h
 src/tac-pipe.c
 src/tac.c
 src/tail.c
