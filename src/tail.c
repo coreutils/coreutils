@@ -874,15 +874,15 @@ main (int argc, char **argv)
 	  strtol_error s_err;
 	  char *p;
 
-	  s_err = xstrtol (++argv[1], &p, 0, &tmp_long, "bkm");
+	  s_err = xstrtol (++argv[1], &p, 0, &tmp_long, "cbkm");
 	  n_units = tmp_long;
 	  if (s_err == LONGINT_OVERFLOW)
 	    {
 	      STRTOL_FATAL_ERROR (argv[1], _("argument"), s_err);
 	    }
 
-	  /* If a [bkm] suffix was given then count bytes, not lines.  */
-	  if (p[-1] == 'b' || p[-1] == 'k' || p[-1] == 'm')
+	  /* If a [bckm] suffix was given then count bytes, not lines.  */
+	  if (p[-1] == 'b' || p[-1] == 'c' || p[-1] == 'k' || p[-1] == 'm')
 	    count_lines = 0;
 
 	  /* Parse any appended option letters.  */
@@ -890,11 +890,6 @@ main (int argc, char **argv)
 	    {
 	      switch (*p)
 		{
-		case 'c':
-		  /* Interpret N_UNITS as # of bytes.  */
-		  count_lines = 0;
-		  break;
-
 		case 'f':
 		  forever = 1;
 		  break;
