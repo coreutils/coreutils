@@ -1,4 +1,7 @@
 Changes in release 2.1
+[2.0g]
+* sort: if the -T tmpdir option is given multiple times, all the given
+  directories are used; this can improve performance for huge sort/merges.
 [2.0f]
 * all programs fail when printing --help or --version output to a full device
 * cut no longer gets a segfault under some circumstances
