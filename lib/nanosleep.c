@@ -61,7 +61,7 @@ int
 nanosleep (const struct timespec *requested_delay,
 	   struct timespec *remaining_delay)
 {
-#ifdef SA_INTERRUPT
+#ifdef SA_NOCLDSTOP
   struct sigaction oldact, newact;
 #endif
 
@@ -70,7 +70,7 @@ nanosleep (const struct timespec *requested_delay,
   /* set up sig handler */
   if (first_call)
     {
-#ifdef SA_INTERRUPT
+#ifdef SA_NOCLDSTOP
       newact.sa_handler = sighandler;
       sigemptyset (&newact.sa_mask);
       newact.sa_flags = 0;
