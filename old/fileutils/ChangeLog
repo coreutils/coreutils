@@ -1,3 +1,9 @@
+Thu Jul 11 21:50:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* Version 3.13.
+
+	* configure.in (VERSION): Bump to 3.13.
+
 Wed Jul 10 22:57:29 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* aclocal.m4 (fp_PROG_CC_STDC): Include sys/stat.h in test program
