@@ -1,3 +1,9 @@
+2004-07-02  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* path-concat.m4 (gl_PATH_CONCAT): Don't require gl_AC_DOS, the
+	prerequisite modules now handle the DOS stuff.
+	Don't check for unistd.h.
+
 2004-06-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* dos.m4 (gl_AC_DOS): Define FILE_SYSTEM_PREFIX_LEN, not
