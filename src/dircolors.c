@@ -3,6 +3,7 @@
    FIXME: add option to print that default mapping?
 
    Only distinction necessary: Bourne vs. C-shell
+   Use obstack to accumulate rhs of setenv
  */
 /* dircolors - parse a Slackware-style DIR_COLORS file.
    Copyright (C) 1994, 1995 H. Peter Anvin
