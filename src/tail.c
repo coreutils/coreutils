@@ -35,6 +35,7 @@
 #include "closeout.h"
 #include "argmatch.h"
 #include "error.h"
+#include "human.h"
 #include "safe-read.h"
 #include "xstrtol.h"
 
@@ -374,6 +375,45 @@ dump_remainder (const char *pretty_filename, int fd, off_t n_bytes)
   return n_written;
 }
 
+/* Call lseek with the specified arguments, where file descriptor FD
+   corresponds to the file, FILENAME.
+   Give a diagnostic and exit nonzero if lseek fails.  */
+
+static void
+xlseek (int fd, off_t offset, int whence, char const *filename)
+{
+  off_t new_offset = lseek (fd, offset, whence);
+  char buf[LONGEST_HUMAN_READABLE + 1];
+  char *s;
+  char const *sign;
+
+  if (0 <= new_offset)
+    return;
+
+  sign = offset < 0 ? "-" : "";
+  if (offset < 0)
+    offset = -offset;
+
+  s = human_readable ((uintmax_t) offset, buf, 1, 1);
+  switch (whence)
+    {
+    case SEEK_SET:
+      error (1, errno, _("%s: cannot seek to offset %s%s"),
+	     filename, sign, s);
+      break;
+    case SEEK_CUR:
+      error (1, errno, _("%s: cannot seek to relative offset %s%s"),
+	     filename, sign, s);
+      break;
+    case SEEK_END:
+      error (1, errno, _("%s: cannot seek to end-relative offset %s%s"),
+	     filename, sign, s);
+      break;
+    default:
+      abort ();
+    }
+}
+
 /* Print the last N_LINES lines from the end of file FD.
    Go backward through the file, reading `BUFSIZ' bytes at a time (except
    probably the first), until we hit the start of the file or have
@@ -403,8 +443,7 @@ file_lines (const char *pretty_filename, int fd, long int n_lines,
   /* Make `pos' a multiple of `BUFSIZ' (0 if the file is short), so that all
      reads will be on block boundaries, which might increase efficiency.  */
   pos -= bytes_read;
-  /* FIXME: check lseek return value  */
-  lseek (fd, pos, SEEK_SET);
+  xlseek (fd, pos, SEEK_SET, pretty_filename);
   bytes_read = safe_read (fd, buffer, bytes_read);
   if (bytes_read == -1)
     {
@@ -438,14 +477,12 @@ file_lines (const char *pretty_filename, int fd, long int n_lines,
       if (pos == start_pos)
 	{
 	  /* Not enough lines in the file; print the entire file.  */
-	  /* FIXME: check lseek return value  */
-	  lseek (fd, start_pos, SEEK_SET);
+	  xlseek (fd, start_pos, SEEK_SET, pretty_filename);
 	  dump_remainder (pretty_filename, fd, file_length);
 	  return 0;
 	}
       pos -= BUFSIZ;
-      /* FIXME: check lseek return value  */
-      lseek (fd, pos, SEEK_SET);
+      xlseek (fd, pos, SEEK_SET, pretty_filename);
     }
   while ((bytes_read = safe_read (fd, buffer, BUFSIZ)) > 0);
 
@@ -850,8 +887,7 @@ recheck (struct File_spec *f)
       f->n_unchanged_stats = 0;
       f->n_consecutive_size_changes = 0;
       f->ignore = 0;
-      /* FIXME: check lseek return value  */
-      lseek (f->fd, f->size, SEEK_SET);
+      xlseek (f->fd, f->size, SEEK_SET, pretty_name (f));
     }
 }
 
@@ -951,8 +987,8 @@ tail_forever (struct File_spec *f, int nfiles)
 	    {
 	      error (0, 0, _("%s: file truncated"), pretty_name (&f[i]));
 	      last = i;
-	      /* FIXME: check lseek return value  */
-	      lseek (f[i].fd, (off_t) stats.st_size, SEEK_SET);
+	      xlseek (f[i].fd, (off_t) stats.st_size, SEEK_SET,
+		      pretty_name (&f[i]));
 	      f[i].size = stats.st_size;
 	      continue;
 	    }
@@ -1014,8 +1050,7 @@ tail_bytes (const char *pretty_filename, int fd, off_t n_bytes)
     {
       if (S_ISREG (stats.st_mode))
 	{
-	  /* FIXME: check lseek return value  */
-	  lseek (fd, n_bytes, SEEK_CUR);
+	  xlseek (fd, n_bytes, SEEK_CUR, pretty_filename);
 	}
       else if (start_bytes (pretty_filename, fd, n_bytes))
 	{
@@ -1050,15 +1085,13 @@ tail_bytes (const char *pretty_filename, int fd, off_t n_bytes)
 		 more bytes than have been requested.  So reposition the
 		 file pointer to the incoming current position and print
 		 everything after that.  */
-	      /* FIXME: check lseek return value  */
-	      lseek (fd, current_pos, SEEK_SET);
+	      xlseek (fd, current_pos, SEEK_SET, pretty_filename);
 	    }
 	  else
 	    {
 	      /* There are more bytes remaining than were requested.
 		 Back up.  */
-	      /* FIXME: check lseek return value  */
-	      lseek (fd, -n_bytes, SEEK_END);
+	      xlseek (fd, -n_bytes, SEEK_END, pretty_filename);
 	    }
 	  dump_remainder (pretty_filename, fd, n_bytes);
 	}
