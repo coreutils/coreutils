@@ -1,5 +1,16 @@
 Fri Dec 27 17:25:18 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/who-users.c [!WTMP_FILE]: Provide default path.
+	(UTMP_FILE) [UTMPX_FILE]: Use UTMPX_FILE in favor of UTMP_FILE.
+	Patch from Kaveh R. Ghazi.
+	Indent cpp directives.
+
+	* m4/getgroups.m4: Rewrite the test so that systems lacking
+	getgroups don't try to use the supplied replacement function --
+	that depends on the existence of such a function.
+
+	* Makefile.am (aclocal.m4): No longer depend on acinclude.m4.
+
 	* configure.in (jm_FUNC_GETGROUPS): Use it.
 	Reported by Marcus Daniels.
 	AC_REQUIRE version 2.12 of autoconf.
