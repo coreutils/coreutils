@@ -1,3 +1,7 @@
+2003-06-07  Jim Meyering  <jim@meyering.net>
+
+	* mktime.m4: New file.  From gnulib.
+
 2003-06-06  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4: Require gl_FUNC_ALLOCA.
