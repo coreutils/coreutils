@@ -1,5 +1,5 @@
 /* path-concat.c -- concatenate two arbitrary pathnames
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,11 +18,17 @@
 /* Written by Jim Meyering.  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
+#ifndef HAVE_MEMPCPY
+# define mempcpy(D, S, N) ((void *) ((char *) memcpy (D, S, N) + (N)))
+#endif
+
+#include <stdio.h>
+#include <sys/types.h>
+
 char *malloc ();
-char *stpcpy ();
 
 /* Concatenate two pathname components, DIR and BASE, in newly-allocated
    storage and return the result.  Return 0 if out of memory.  Add a slash
@@ -40,22 +46,24 @@ path_concat (dir, base, base_in_result)
 {
   char *p;
   char *p_concat;
+  size_t base_len = strlen (base);
+  size_t dir_len = strlen (dir);
 
-  p_concat = malloc (strlen (dir) + strlen (base) + 2);
+  p_concat = malloc (dir_len + base_len + 2);
   if (!p_concat)
     return 0;
 
-  p = stpcpy (p_concat, dir);
+  p = mempcpy (p_concat, dir, dir_len);
 
   if (*(p - 1) == '/' && *base == '/')
     --p;
   else if (*(p - 1) != '/' && *base != '/')
-    p = stpcpy (p, "/");
+    *p++ = '/';
 
   if (base_in_result)
     *base_in_result = p;
 
-  stpcpy (p, base);
+  mempcpy (p, base, base_len + 1);
 
   return p_concat;
 }
