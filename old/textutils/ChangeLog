@@ -2,6 +2,11 @@
 
 	* Version 2.0.9.
 
+	* src/checksum.h: Don't include system.h here.
+	* src/md5.c: Include config.h, stdio.h, sys/types.h. and system.h here
+	instead.
+	* src/sha1sum.c: Likewise.
+
 2000-11-18  Paul Eggert  <eggert@twinsun.com>
 
 	* src/pr.c (main): Do not assume EOF == -1.
