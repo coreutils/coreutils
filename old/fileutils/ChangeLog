@@ -26,8 +26,6 @@
 	* tests/shred: New directory
 	* tests/shred/remove: New file.  Tests for the above-fixed bug.
 
-1999-12-15  Jim Meyering  <meyering@ascend.com>
-
 1999-12-13  Jim Meyering  <meyering@ascend.com>
 
 	* lib/makepath.c (make_path): Consistently use `error' to output
