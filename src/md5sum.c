@@ -520,13 +520,6 @@ main (int argc, char **argv)
 	    {
 	      size_t filename_len;
 
-	      if (strchr (file, '\n'))
-		error (0, 0,
-		       _("\
-warning: filename contains a NEWLINE character `%s';  \
-you will not be able to verify this checksum using `md5sum --check'"),
-		       file);
-
 	      for (i = 0; i < 16; ++i)
 		printf ("%02x", md5buffer[i]);
 
