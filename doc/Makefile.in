@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.2f from Makefile.am
+# Makefile.in generated automatically by automake 1.2h from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -31,6 +31,8 @@ infodir = @infodir@
 mandir = @mandir@
 includedir = @includedir@
 oldincludedir = /usr/include
+
+DISTDIR =
 
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
@@ -111,14 +113,14 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
 GZIP = --best
-default: all
+all: Makefile $(INFO_DEPS)
 
 .SUFFIXES:
 .SUFFIXES: .dvi .info .ps .texi .texinfo .txi
-$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && $(AUTOMAKE) --gnits doc/Makefile
 
-Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
@@ -198,21 +200,21 @@ DVIPS = dvips
 
 install-info-am: $(INFO_DEPS)
 	@$(NORMAL_INSTALL)
-	$(mkinstalldirs) $(infodir)
+	$(mkinstalldirs) $(DESTDIR)$(infodir)
 	@for file in $(INFO_DEPS); do \
 	  d=$(srcdir); \
 	  for ifile in `cd $$d && echo $$file $$file-[0-9] $$file-[0-9][0-9]`; do \
 	    if test -f $$d/$$ifile; then \
-	      echo " $(INSTALL_DATA) $$d/$$ifile $(infodir)/$$ifile"; \
-	      $(INSTALL_DATA) $$d/$$ifile $(infodir)/$$ifile; \
+	      echo " $(INSTALL_DATA) $$d/$$ifile $(DESTDIR)$(infodir)/$$ifile"; \
+	      $(INSTALL_DATA) $$d/$$ifile $(DESTDIR)$(infodir)/$$ifile; \
 	    else : ; fi; \
 	  done; \
 	done
 	@$(POST_INSTALL)
 	@if $(SHELL) -c 'install-info --version | sed 1q | fgrep -s -v -i debian' >/dev/null 2>&1; then \
 	  for file in $(INFO_DEPS); do \
-	    echo " install-info --info-dir=$(infodir) $(infodir)/$$file";\
-	    install-info --info-dir=$(infodir) $(infodir)/$$file || :;\
+	    echo " install-info --info-dir=$(DESTDIR)$(infodir) $(DESTDIR)$(infodir)/$$file";\
+	    install-info --info-dir=$(DESTDIR)$(infodir) $(DESTDIR)$(infodir)/$$file || :;\
 	  done; \
 	else : ; fi
 
@@ -223,11 +225,11 @@ uninstall-info:
 	else ii=; fi; \
 	for file in $(INFO_DEPS); do \
 	  test -z "$ii" \
-	    || install-info --info-dir=$(infodir) --remove $$file; \
+	    || install-info --info-dir=$(DESTDIR)$(infodir) --remove $$file; \
 	done
 	@$(NORMAL_UNINSTALL)
 	for file in $(INFO_DEPS); do \
-	  (cd $(infodir) && rm -f $$file $$file-[0-9] $$file-[0-9][0-9]); \
+	  (cd $(DESTDIR)$(infodir) && rm -f $$file $$file-[0-9] $$file-[0-9][0-9]); \
 	done
 
 dist-info: $(INFO_DEPS)
@@ -295,12 +297,10 @@ install: install-exec install-data all
 
 uninstall: uninstall-info
 
-all: Makefile $(INFO_DEPS)
-
 install-strip:
 	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' INSTALL_SCRIPT='$(INSTALL_PROGRAM)' install
 installdirs:
-	$(mkinstalldirs)  $(infodir)
+	$(mkinstalldirs)  $(DESTDIR)$(infodir)
 
 
 mostlyclean-generic:
@@ -329,11 +329,11 @@ maintainer-clean:  maintainer-clean-vti maintainer-clean-aminfo \
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
-.PHONY: default mostlyclean-vti distclean-vti clean-vti \
-maintainer-clean-vti install-info-am uninstall-info mostlyclean-aminfo \
-distclean-aminfo clean-aminfo maintainer-clean-aminfo tags distdir info \
-dvi installcheck install-exec install-data install uninstall all \
-installdirs mostlyclean-generic distclean-generic clean-generic \
+.PHONY: mostlyclean-vti distclean-vti clean-vti maintainer-clean-vti \
+install-info-am uninstall-info mostlyclean-aminfo distclean-aminfo \
+clean-aminfo maintainer-clean-aminfo tags distdir info dvi installcheck \
+install-exec install-data install uninstall all installdirs \
+mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 

@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.2f from Makefile.am
+# Makefile.in generated automatically by automake 1.2h from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -31,6 +31,8 @@ infodir = @infodir@
 mandir = @mandir@
 includedir = @includedir@
 oldincludedir = /usr/include
+
+DISTDIR =
 
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
@@ -173,14 +175,14 @@ DEP_FILES =  .deps/addext.P .deps/alloca.P .deps/argmatch.P \
 SOURCES = $(libfu_a_SOURCES)
 OBJECTS = $(libfu_a_OBJECTS)
 
-default: all
+all: Makefile $(LIBRARIES) $(HEADERS)
 
 .SUFFIXES:
 .SUFFIXES: .S .c .o .s .y
-$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && $(AUTOMAKE) --gnits lib/Makefile
 
-Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
@@ -212,6 +214,9 @@ maintainer-clean-compile:
 ../src/ansi2knr: ../src/ansi2knr.o
 	cd ../src && $(MAKE) ansi2knr
 
+../src/ansi2knr.o:
+	cd ../src && $(MAKE) ansi2knr.o
+
 
 mostlyclean-kr:
 	-rm -f *_.c
@@ -232,143 +237,143 @@ posixtm.h: posixtm.c
 getdate.h: getdate.c
 
 addext_.c: addext.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/addext.c; then echo $(srcdir)/addext.c; else echo addext.c; fi` addext_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/addext.c; then echo $(srcdir)/addext.c; else echo addext.c; fi` | $(ANSI2KNR) - addext_.c
 alloca_.c: alloca.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/alloca.c; then echo $(srcdir)/alloca.c; else echo alloca.c; fi` alloca_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/alloca.c; then echo $(srcdir)/alloca.c; else echo alloca.c; fi` | $(ANSI2KNR) - alloca_.c
 argmatch_.c: argmatch.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/argmatch.c; then echo $(srcdir)/argmatch.c; else echo argmatch.c; fi` argmatch_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/argmatch.c; then echo $(srcdir)/argmatch.c; else echo argmatch.c; fi` | $(ANSI2KNR) - argmatch_.c
 backupfile_.c: backupfile.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/backupfile.c; then echo $(srcdir)/backupfile.c; else echo backupfile.c; fi` backupfile_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/backupfile.c; then echo $(srcdir)/backupfile.c; else echo backupfile.c; fi` | $(ANSI2KNR) - backupfile_.c
 basename_.c: basename.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/basename.c; then echo $(srcdir)/basename.c; else echo basename.c; fi` basename_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/basename.c; then echo $(srcdir)/basename.c; else echo basename.c; fi` | $(ANSI2KNR) - basename_.c
 chown_.c: chown.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/chown.c; then echo $(srcdir)/chown.c; else echo chown.c; fi` chown_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/chown.c; then echo $(srcdir)/chown.c; else echo chown.c; fi` | $(ANSI2KNR) - chown_.c
 closeout_.c: closeout.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/closeout.c; then echo $(srcdir)/closeout.c; else echo closeout.c; fi` closeout_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/closeout.c; then echo $(srcdir)/closeout.c; else echo closeout.c; fi` | $(ANSI2KNR) - closeout_.c
 dirname_.c: dirname.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/dirname.c; then echo $(srcdir)/dirname.c; else echo dirname.c; fi` dirname_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/dirname.c; then echo $(srcdir)/dirname.c; else echo dirname.c; fi` | $(ANSI2KNR) - dirname_.c
 error_.c: error.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/error.c; then echo $(srcdir)/error.c; else echo error.c; fi` error_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/error.c; then echo $(srcdir)/error.c; else echo error.c; fi` | $(ANSI2KNR) - error_.c
 euidaccess_.c: euidaccess.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/euidaccess.c; then echo $(srcdir)/euidaccess.c; else echo euidaccess.c; fi` euidaccess_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/euidaccess.c; then echo $(srcdir)/euidaccess.c; else echo euidaccess.c; fi` | $(ANSI2KNR) - euidaccess_.c
 exclude_.c: exclude.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/exclude.c; then echo $(srcdir)/exclude.c; else echo exclude.c; fi` exclude_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/exclude.c; then echo $(srcdir)/exclude.c; else echo exclude.c; fi` | $(ANSI2KNR) - exclude_.c
 fileblocks_.c: fileblocks.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/fileblocks.c; then echo $(srcdir)/fileblocks.c; else echo fileblocks.c; fi` fileblocks_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/fileblocks.c; then echo $(srcdir)/fileblocks.c; else echo fileblocks.c; fi` | $(ANSI2KNR) - fileblocks_.c
 filemode_.c: filemode.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/filemode.c; then echo $(srcdir)/filemode.c; else echo filemode.c; fi` filemode_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/filemode.c; then echo $(srcdir)/filemode.c; else echo filemode.c; fi` | $(ANSI2KNR) - filemode_.c
 fnmatch_.c: fnmatch.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/fnmatch.c; then echo $(srcdir)/fnmatch.c; else echo fnmatch.c; fi` fnmatch_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/fnmatch.c; then echo $(srcdir)/fnmatch.c; else echo fnmatch.c; fi` | $(ANSI2KNR) - fnmatch_.c
 fsusage_.c: fsusage.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/fsusage.c; then echo $(srcdir)/fsusage.c; else echo fsusage.c; fi` fsusage_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/fsusage.c; then echo $(srcdir)/fsusage.c; else echo fsusage.c; fi` | $(ANSI2KNR) - fsusage_.c
 ftruncate_.c: ftruncate.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/ftruncate.c; then echo $(srcdir)/ftruncate.c; else echo ftruncate.c; fi` ftruncate_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/ftruncate.c; then echo $(srcdir)/ftruncate.c; else echo ftruncate.c; fi` | $(ANSI2KNR) - ftruncate_.c
 full-write_.c: full-write.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/full-write.c; then echo $(srcdir)/full-write.c; else echo full-write.c; fi` full-write_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/full-write.c; then echo $(srcdir)/full-write.c; else echo full-write.c; fi` | $(ANSI2KNR) - full-write_.c
 getdate_.c: getdate.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/getdate.c; then echo $(srcdir)/getdate.c; else echo getdate.c; fi` getdate_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/getdate.c; then echo $(srcdir)/getdate.c; else echo getdate.c; fi` | $(ANSI2KNR) - getdate_.c
 getgroups_.c: getgroups.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/getgroups.c; then echo $(srcdir)/getgroups.c; else echo getgroups.c; fi` getgroups_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/getgroups.c; then echo $(srcdir)/getgroups.c; else echo getgroups.c; fi` | $(ANSI2KNR) - getgroups_.c
 getline_.c: getline.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/getline.c; then echo $(srcdir)/getline.c; else echo getline.c; fi` getline_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/getline.c; then echo $(srcdir)/getline.c; else echo getline.c; fi` | $(ANSI2KNR) - getline_.c
 getopt_.c: getopt.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/getopt.c; then echo $(srcdir)/getopt.c; else echo getopt.c; fi` getopt_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/getopt.c; then echo $(srcdir)/getopt.c; else echo getopt.c; fi` | $(ANSI2KNR) - getopt_.c
 getopt1_.c: getopt1.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/getopt1.c; then echo $(srcdir)/getopt1.c; else echo getopt1.c; fi` getopt1_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/getopt1.c; then echo $(srcdir)/getopt1.c; else echo getopt1.c; fi` | $(ANSI2KNR) - getopt1_.c
 group-member_.c: group-member.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/group-member.c; then echo $(srcdir)/group-member.c; else echo group-member.c; fi` group-member_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/group-member.c; then echo $(srcdir)/group-member.c; else echo group-member.c; fi` | $(ANSI2KNR) - group-member_.c
 hash_.c: hash.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/hash.c; then echo $(srcdir)/hash.c; else echo hash.c; fi` hash_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/hash.c; then echo $(srcdir)/hash.c; else echo hash.c; fi` | $(ANSI2KNR) - hash_.c
 human_.c: human.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/human.c; then echo $(srcdir)/human.c; else echo human.c; fi` human_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/human.c; then echo $(srcdir)/human.c; else echo human.c; fi` | $(ANSI2KNR) - human_.c
 idcache_.c: idcache.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/idcache.c; then echo $(srcdir)/idcache.c; else echo idcache.c; fi` idcache_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/idcache.c; then echo $(srcdir)/idcache.c; else echo idcache.c; fi` | $(ANSI2KNR) - idcache_.c
 isdir_.c: isdir.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/isdir.c; then echo $(srcdir)/isdir.c; else echo isdir.c; fi` isdir_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/isdir.c; then echo $(srcdir)/isdir.c; else echo isdir.c; fi` | $(ANSI2KNR) - isdir_.c
 long-options_.c: long-options.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/long-options.c; then echo $(srcdir)/long-options.c; else echo long-options.c; fi` long-options_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/long-options.c; then echo $(srcdir)/long-options.c; else echo long-options.c; fi` | $(ANSI2KNR) - long-options_.c
 lstat_.c: lstat.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/lstat.c; then echo $(srcdir)/lstat.c; else echo lstat.c; fi` lstat_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/lstat.c; then echo $(srcdir)/lstat.c; else echo lstat.c; fi` | $(ANSI2KNR) - lstat_.c
 makepath_.c: makepath.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/makepath.c; then echo $(srcdir)/makepath.c; else echo makepath.c; fi` makepath_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/makepath.c; then echo $(srcdir)/makepath.c; else echo makepath.c; fi` | $(ANSI2KNR) - makepath_.c
 malloc_.c: malloc.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/malloc.c; then echo $(srcdir)/malloc.c; else echo malloc.c; fi` malloc_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/malloc.c; then echo $(srcdir)/malloc.c; else echo malloc.c; fi` | $(ANSI2KNR) - malloc_.c
 memcmp_.c: memcmp.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/memcmp.c; then echo $(srcdir)/memcmp.c; else echo memcmp.c; fi` memcmp_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/memcmp.c; then echo $(srcdir)/memcmp.c; else echo memcmp.c; fi` | $(ANSI2KNR) - memcmp_.c
 memcpy_.c: memcpy.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/memcpy.c; then echo $(srcdir)/memcpy.c; else echo memcpy.c; fi` memcpy_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/memcpy.c; then echo $(srcdir)/memcpy.c; else echo memcpy.c; fi` | $(ANSI2KNR) - memcpy_.c
 memset_.c: memset.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/memset.c; then echo $(srcdir)/memset.c; else echo memset.c; fi` memset_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/memset.c; then echo $(srcdir)/memset.c; else echo memset.c; fi` | $(ANSI2KNR) - memset_.c
 mkdir_.c: mkdir.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/mkdir.c; then echo $(srcdir)/mkdir.c; else echo mkdir.c; fi` mkdir_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/mkdir.c; then echo $(srcdir)/mkdir.c; else echo mkdir.c; fi` | $(ANSI2KNR) - mkdir_.c
 mktime_.c: mktime.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/mktime.c; then echo $(srcdir)/mktime.c; else echo mktime.c; fi` mktime_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/mktime.c; then echo $(srcdir)/mktime.c; else echo mktime.c; fi` | $(ANSI2KNR) - mktime_.c
 modechange_.c: modechange.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/modechange.c; then echo $(srcdir)/modechange.c; else echo modechange.c; fi` modechange_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/modechange.c; then echo $(srcdir)/modechange.c; else echo modechange.c; fi` | $(ANSI2KNR) - modechange_.c
 mountlist_.c: mountlist.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/mountlist.c; then echo $(srcdir)/mountlist.c; else echo mountlist.c; fi` mountlist_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/mountlist.c; then echo $(srcdir)/mountlist.c; else echo mountlist.c; fi` | $(ANSI2KNR) - mountlist_.c
 obstack_.c: obstack.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/obstack.c; then echo $(srcdir)/obstack.c; else echo obstack.c; fi` obstack_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/obstack.c; then echo $(srcdir)/obstack.c; else echo obstack.c; fi` | $(ANSI2KNR) - obstack_.c
 path-concat_.c: path-concat.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/path-concat.c; then echo $(srcdir)/path-concat.c; else echo path-concat.c; fi` path-concat_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/path-concat.c; then echo $(srcdir)/path-concat.c; else echo path-concat.c; fi` | $(ANSI2KNR) - path-concat_.c
 posixtm_.c: posixtm.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/posixtm.c; then echo $(srcdir)/posixtm.c; else echo posixtm.c; fi` posixtm_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/posixtm.c; then echo $(srcdir)/posixtm.c; else echo posixtm.c; fi` | $(ANSI2KNR) - posixtm_.c
 quotearg_.c: quotearg.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/quotearg.c; then echo $(srcdir)/quotearg.c; else echo quotearg.c; fi` quotearg_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/quotearg.c; then echo $(srcdir)/quotearg.c; else echo quotearg.c; fi` | $(ANSI2KNR) - quotearg_.c
 realloc_.c: realloc.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/realloc.c; then echo $(srcdir)/realloc.c; else echo realloc.c; fi` realloc_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/realloc.c; then echo $(srcdir)/realloc.c; else echo realloc.c; fi` | $(ANSI2KNR) - realloc_.c
 regex_.c: regex.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/regex.c; then echo $(srcdir)/regex.c; else echo regex.c; fi` regex_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/regex.c; then echo $(srcdir)/regex.c; else echo regex.c; fi` | $(ANSI2KNR) - regex_.c
 rename_.c: rename.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/rename.c; then echo $(srcdir)/rename.c; else echo rename.c; fi` rename_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/rename.c; then echo $(srcdir)/rename.c; else echo rename.c; fi` | $(ANSI2KNR) - rename_.c
 rmdir_.c: rmdir.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/rmdir.c; then echo $(srcdir)/rmdir.c; else echo rmdir.c; fi` rmdir_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/rmdir.c; then echo $(srcdir)/rmdir.c; else echo rmdir.c; fi` | $(ANSI2KNR) - rmdir_.c
 rpmatch_.c: rpmatch.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/rpmatch.c; then echo $(srcdir)/rpmatch.c; else echo rpmatch.c; fi` rpmatch_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/rpmatch.c; then echo $(srcdir)/rpmatch.c; else echo rpmatch.c; fi` | $(ANSI2KNR) - rpmatch_.c
 rx_.c: rx.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/rx.c; then echo $(srcdir)/rx.c; else echo rx.c; fi` rx_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/rx.c; then echo $(srcdir)/rx.c; else echo rx.c; fi` | $(ANSI2KNR) - rx_.c
 safe-read_.c: safe-read.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/safe-read.c; then echo $(srcdir)/safe-read.c; else echo safe-read.c; fi` safe-read_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/safe-read.c; then echo $(srcdir)/safe-read.c; else echo safe-read.c; fi` | $(ANSI2KNR) - safe-read_.c
 save-cwd_.c: save-cwd.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/save-cwd.c; then echo $(srcdir)/save-cwd.c; else echo save-cwd.c; fi` save-cwd_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/save-cwd.c; then echo $(srcdir)/save-cwd.c; else echo save-cwd.c; fi` | $(ANSI2KNR) - save-cwd_.c
 savedir_.c: savedir.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/savedir.c; then echo $(srcdir)/savedir.c; else echo savedir.c; fi` savedir_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/savedir.c; then echo $(srcdir)/savedir.c; else echo savedir.c; fi` | $(ANSI2KNR) - savedir_.c
 stat_.c: stat.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/stat.c; then echo $(srcdir)/stat.c; else echo stat.c; fi` stat_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/stat.c; then echo $(srcdir)/stat.c; else echo stat.c; fi` | $(ANSI2KNR) - stat_.c
 stpcpy_.c: stpcpy.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/stpcpy.c; then echo $(srcdir)/stpcpy.c; else echo stpcpy.c; fi` stpcpy_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/stpcpy.c; then echo $(srcdir)/stpcpy.c; else echo stpcpy.c; fi` | $(ANSI2KNR) - stpcpy_.c
 strcasecmp_.c: strcasecmp.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/strcasecmp.c; then echo $(srcdir)/strcasecmp.c; else echo strcasecmp.c; fi` strcasecmp_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/strcasecmp.c; then echo $(srcdir)/strcasecmp.c; else echo strcasecmp.c; fi` | $(ANSI2KNR) - strcasecmp_.c
 strdup_.c: strdup.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/strdup.c; then echo $(srcdir)/strdup.c; else echo strdup.c; fi` strdup_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/strdup.c; then echo $(srcdir)/strdup.c; else echo strdup.c; fi` | $(ANSI2KNR) - strdup_.c
 strftime_.c: strftime.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/strftime.c; then echo $(srcdir)/strftime.c; else echo strftime.c; fi` strftime_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/strftime.c; then echo $(srcdir)/strftime.c; else echo strftime.c; fi` | $(ANSI2KNR) - strftime_.c
 stripslash_.c: stripslash.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/stripslash.c; then echo $(srcdir)/stripslash.c; else echo stripslash.c; fi` stripslash_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/stripslash.c; then echo $(srcdir)/stripslash.c; else echo stripslash.c; fi` | $(ANSI2KNR) - stripslash_.c
 strndup_.c: strndup.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/strndup.c; then echo $(srcdir)/strndup.c; else echo strndup.c; fi` strndup_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/strndup.c; then echo $(srcdir)/strndup.c; else echo strndup.c; fi` | $(ANSI2KNR) - strndup_.c
 strstr_.c: strstr.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/strstr.c; then echo $(srcdir)/strstr.c; else echo strstr.c; fi` strstr_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/strstr.c; then echo $(srcdir)/strstr.c; else echo strstr.c; fi` | $(ANSI2KNR) - strstr_.c
 strtol_.c: strtol.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/strtol.c; then echo $(srcdir)/strtol.c; else echo strtol.c; fi` strtol_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/strtol.c; then echo $(srcdir)/strtol.c; else echo strtol.c; fi` | $(ANSI2KNR) - strtol_.c
 strtoul_.c: strtoul.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/strtoul.c; then echo $(srcdir)/strtoul.c; else echo strtoul.c; fi` strtoul_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/strtoul.c; then echo $(srcdir)/strtoul.c; else echo strtoul.c; fi` | $(ANSI2KNR) - strtoul_.c
 strverscmp_.c: strverscmp.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/strverscmp.c; then echo $(srcdir)/strverscmp.c; else echo strverscmp.c; fi` strverscmp_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/strverscmp.c; then echo $(srcdir)/strverscmp.c; else echo strverscmp.c; fi` | $(ANSI2KNR) - strverscmp_.c
 userspec_.c: userspec.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/userspec.c; then echo $(srcdir)/userspec.c; else echo userspec.c; fi` userspec_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/userspec.c; then echo $(srcdir)/userspec.c; else echo userspec.c; fi` | $(ANSI2KNR) - userspec_.c
 xgetcwd_.c: xgetcwd.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/xgetcwd.c; then echo $(srcdir)/xgetcwd.c; else echo xgetcwd.c; fi` xgetcwd_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/xgetcwd.c; then echo $(srcdir)/xgetcwd.c; else echo xgetcwd.c; fi` | $(ANSI2KNR) - xgetcwd_.c
 xmalloc_.c: xmalloc.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/xmalloc.c; then echo $(srcdir)/xmalloc.c; else echo xmalloc.c; fi` xmalloc_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/xmalloc.c; then echo $(srcdir)/xmalloc.c; else echo xmalloc.c; fi` | $(ANSI2KNR) - xmalloc_.c
 xstrdup_.c: xstrdup.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/xstrdup.c; then echo $(srcdir)/xstrdup.c; else echo xstrdup.c; fi` xstrdup_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/xstrdup.c; then echo $(srcdir)/xstrdup.c; else echo xstrdup.c; fi` | $(ANSI2KNR) - xstrdup_.c
 xstrtol_.c: xstrtol.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/xstrtol.c; then echo $(srcdir)/xstrtol.c; else echo xstrtol.c; fi` xstrtol_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/xstrtol.c; then echo $(srcdir)/xstrtol.c; else echo xstrtol.c; fi` | $(ANSI2KNR) - xstrtol_.c
 xstrtoul_.c: xstrtoul.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/xstrtoul.c; then echo $(srcdir)/xstrtoul.c; else echo xstrtoul.c; fi` xstrtoul_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/xstrtoul.c; then echo $(srcdir)/xstrtoul.c; else echo xstrtoul.c; fi` | $(ANSI2KNR) - xstrtoul_.c
 yesno_.c: yesno.c $(ANSI2KNR)
-	$(ANSI2KNR) `if test -f $(srcdir)/yesno.c; then echo $(srcdir)/yesno.c; else echo yesno.c; fi` yesno_.c
+	$(CPP) $(DEFS) $(INCLUDES) $(CPPFLAGS) `if test -f $(srcdir)/yesno.c; then echo $(srcdir)/yesno.c; else echo yesno.c; fi` | $(ANSI2KNR) - yesno_.c
 addext_.o alloca_.o argmatch_.o backupfile_.o basename_.o chown_.o \
 closeout_.o dirname_.o error_.o euidaccess_.o exclude_.o fileblocks_.o \
 filemode_.o fnmatch_.o fsusage_.o ftruncate_.o full-write_.o getdate_.o \
@@ -463,8 +468,6 @@ install: install-exec install-data all
 
 uninstall: 
 
-all: Makefile $(LIBRARIES) $(HEADERS)
-
 install-strip:
 	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' INSTALL_SCRIPT='$(INSTALL_PROGRAM)' install
 installdirs:
@@ -502,7 +505,7 @@ maintainer-clean:  maintainer-clean-noinstLIBRARIES \
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
-.PHONY: default mostlyclean-noinstLIBRARIES distclean-noinstLIBRARIES \
+.PHONY: mostlyclean-noinstLIBRARIES distclean-noinstLIBRARIES \
 clean-noinstLIBRARIES maintainer-clean-noinstLIBRARIES \
 mostlyclean-compile distclean-compile clean-compile \
 maintainer-clean-compile mostlyclean-kr distclean-kr clean-kr \
