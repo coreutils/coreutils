@@ -1,42 +1,7 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-.
 
-##test-files-begin
-x = ls
-explicit = '""""" "' b
-maint_gen = q1.X q2.X
-run_gen = q1.O q1.E q2.O q2.E
-##test-files-end
+AUTOMAKE_OPTIONS = 1.2 gnits
 
-EXTRA_DIST = mk-script.pl Test.pm $x-tests $(explicit) $(maint_gen)
-noinst_SCRIPTS = $x-tests
-
-PERL = @PERL@
-editpl = sed -e 's,@''PERL''@,$(PERL),g' -e 's,@''srcdir''@,@srcdir@,g'
-
-TESTS = $x-tests
-
-$x-tests: @MAINT@mk-script Test.pm
-	./mk-script ../../src/$x > $@.n
-	mv $@.n $@
-	chmod 755 $@
-
-SUFFIXES = .pl
-
-.pl:
-	rm -f $@ $@.tmp
-	$(editpl) $< > $@.tmp
-	chmod +x-w $@.tmp
-	mv $@.tmp $@
-
-MAINTAINERCLEANFILES = $x-tests $(maint_gen)
-CLEANFILES = $(run_gen)
-
-@MAINT@rebuild-check: Test.pm mk-script
-@MAINT@	rb=rb-check; rm -f $rb; \
-@MAINT@	m_template=../Makefile.am.in; \
-@MAINT@	sed -n '1,/^##test-files-begin/p' $$m_template > $$rb; \
-@MAINT@	tool=`echo $(subdir)|sed 's/^tests.//;s/-test//'`; \
-@MAINT@	echo "x = $$tool" >> $$rb; \
-@MAINT@	./mk-script --list >> $$rb; \
-@MAINT@	sed -n '/^##test-files-end/,$$p' $$m_template >> $$rb; \
-@MAINT@	diff -u Makefile.am $$rb && echo ok || echo no
+TESTS = time-1
+EXTRA_DIST = $(TESTS)
+TESTS_ENVIRONMENT = LS=../../src/ls
