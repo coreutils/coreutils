@@ -1,6 +1,7 @@
 [5.0.1]
 * readlink's --canonicalize option now works on systems like Solaris that
   lack the canonicalize_file_name function but do have resolvepath.
+* split can now handle --bytes=N and --lines=N with N=2^31 or more.
 * `kill -t' now prints signal descriptions (not `?') on systems like Tru64
   with __sys_siglist but no strsignal function.
 * mv now removes `a' in this example on all systems: touch a; ln a b; mv a b
