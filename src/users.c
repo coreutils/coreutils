@@ -57,7 +57,7 @@ list_entries_users (int n, const STRUCT_UTMP *this)
   int n_entries;
 
   n_entries = 0;
-  u = xmalloc (n * sizeof (u[0]));
+  u = xnmalloc (n, sizeof *u);
   for (i = 0; i < n; i++)
     {
       if (UT_USER (this) [0]
