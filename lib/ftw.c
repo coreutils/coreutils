@@ -691,13 +691,13 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
   data.known_objects = NULL;
 
   /* Now go to the directory containing the initial file/directory.  */
-  if ((flags & FTW_CHDIR) && data.ftw.base > 0)
+  if (flags & FTW_CHDIR)
     {
       /* GNU extension ahead.  */
       cwd =  __getcwd (NULL, 0);
       if (cwd == NULL)
 	result = -1;
-      else
+      else if (data.ftw.base > 0)
 	{
 	  /* Change to the directory the file is in.  In data.dirbuf
 	     we have a writable copy of the file name.  Just NUL
