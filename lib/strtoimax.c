@@ -23,7 +23,8 @@
 
 #if HAVE_INTTYPES_H
 # include <inttypes.h>
-#elif HAVE_STDINT_H
+#endif
+#if HAVE_STDINT_H
 # include <stdint.h>
 #endif
 
@@ -66,14 +67,14 @@ strtoimax (char const *ptr, char **endptr, int base)
 {
 #if HAVE_LONG_LONG
   verify (size_is_that_of_long_or_long_long,
-	  (sizeof (INT) == sizeof (long)
-	   || sizeof (INT) == sizeof (long long)));
+	  (sizeof (INT) == sizeof (long int)
+	   || sizeof (INT) == sizeof (long long int)));
 
-  if (sizeof (INT) != sizeof (long))
+  if (sizeof (INT) != sizeof (long int))
     return strtoll (ptr, endptr, base);
 #else
   verify (size_is_that_of_long,
-	  sizeof (INT) == sizeof (long));
+	  sizeof (INT) == sizeof (long int));
 #endif
 
   return strtol (ptr, endptr, base);
