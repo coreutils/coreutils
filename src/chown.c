@@ -92,11 +92,10 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION]... OWNER[:[GROUP]] FILE...\n\
-  or:  %s [OPTION]... :GROUP FILE...\n\
+Usage: %s [OPTION]... [OWNER][:[GROUP]] FILE...\n\
   or:  %s [OPTION]... --reference=RFILE FILE...\n\
 "),
-	      program_name, program_name, program_name);
+	      program_name, program_name);
       fputs (_("\
 Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
 With --reference, change the owner and group of each FILE to those of RFILE.\n\
@@ -146,8 +145,8 @@ one takes effect.\n\
       fputs (_("\
 \n\
 Owner is unchanged if missing.  Group is unchanged if missing, but changed\n\
-to login group if implied by a `:'.  OWNER and GROUP may be numeric as well\n\
-as symbolic.\n\
+to login group if implied by a `:' following a symbolic OWNER.\n\
+OWNER and GROUP may be numeric as well as symbolic.\n\
 "), stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
@@ -313,8 +312,10 @@ main (int argc, char **argv)
       if (e)
         error (EXIT_FAILURE, 0, "%s: %s", quote (argv[optind]), e);
 
-      /* FIXME: set it to the empty string?  */
-      if (chopt.user_name == NULL)
+      /* If a group is specified but no user, set the user name to the
+	 empty string so that diagnostics say "ownership :GROUP"
+	 rather than "group GROUP".  */
+      if (!chopt.user_name && chopt.group_name)
         chopt.user_name = "";
 
       optind++;
