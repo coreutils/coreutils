@@ -1,8 +1,6 @@
 restore djgpp, eventually
 merge TODO lists
 add unit tests for lib/*.c
-Implement chown, chmod, using fts.
-Implement POSIX-required -L, -H, -P options for chown
 
 strip: add an option to specify the program used to strip binaries.
   suggestion from Karl Berry
@@ -122,37 +120,21 @@ sort: Investigate better sorting algorithms; see Knuth vol. 3.
   5.3.1, who credits Lester Ford, Jr. and Selmer Johnson, American
   Mathematical Monthly 66 (1959), 387-389.
 
-doc/coreutils.texi:
-  Document the exit status of each and every program.
-  Suggestion from Dan Jacobson.
-  The sentence or two describing the common case must appear just once,
-  and then it must be made to appear in the 70+ places where it's needed.
-
-du: rewrite to use something other than nftw to perform directory traversal.
-  Due to design limitations of nftw, ...
-    using -D makes du dereference each command
-    line argument that is a symlink to a directory.
-    A symlink to non-directory is not dereferenced.
-
 cp --recursive: perform dir traversals in source and dest hierarchy rather
   than forming full file names.  The latter (current) approach fails
   unnecessarily when the names become very long.
 
-`tail --follow=name --retry' should elicit a diagnostic, since no file name
-  was specified.
-
-du and wc: add an option to make them read NUL-delimited
+du and wc: add an option, --from0-file, to make them read NUL-delimited
   file name arguments from a file.
-
-du: warn that -H is going to change to POSIX meaning (not --si)
 
 tail --p is now ambiguous
 
 patch from Olivier Delhomme
 
-du: add option to use \0 as line terminator rather than \n so that
-  tools like xdiskusage that parse du output don't choke on file names
-  with embedded newlines.
-
 Remove suspicious uses of alloca (ones that may allocate more than
    about 4k)
+
+Move help2man from man/ to config?
+
+Make the default _POSIX2_VERSION= setting be configure-time selectable
+as well as run-time selectable.
