@@ -1,5 +1,5 @@
 /* tail -- output the last part of file(s)
-   Copyright (C) 1989, 90, 91, 1995-2003 Free Software Foundation, Inc.
+   Copyright (C) 1989, 90, 91, 1995-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1699,7 +1699,6 @@ main (int argc, char **argv)
 	--n_units;
     }
 
-
   if (optind < argc)
     {
       n_files = argc - optind;
@@ -1711,6 +1710,25 @@ main (int argc, char **argv)
       n_files = 1;
       file = &dummy_stdin;
     }
+
+  {
+    bool found_hyphen = false;
+
+    for (i = 0; i < n_files; i++)
+      if (STREQ (file[i], "-"))
+	found_hyphen = true;
+
+    /* When following by name, there must be a name.  */
+    if (found_hyphen && follow_mode == Follow_name)
+      error (EXIT_FAILURE, 0, _("cannot follow %s by name"), quote ("-"));
+
+    /* When following forever, warn if any file is `-'.
+       This is only a warning, since tail's output (before a failing seek,
+       and that from any non-stdin files) might still be useful.  */
+    if (forever && found_hyphen)
+      error (0, 0, _("warning: following standard input"
+		     " indefinitely is ineffective"));
+  }
 
   F = xmalloc (n_files * sizeof (F[0]));
   for (i = 0; i < n_files; i++)
