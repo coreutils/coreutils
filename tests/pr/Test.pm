@@ -3,8 +3,6 @@ package Test;
 require 5.002;
 use strict;
 
-$Test::common_option_prefix = '--test -h x ';
-
 my @tv = (
 
 # -b option is no longer an official option. But it's still working to
@@ -265,10 +263,25 @@ my @tv = (
 ['12md', '-o3 -j -m -l17 -f', [\'tFFt-lm', \'loli'], [\'o3jml17f-lm-lo'], 0],
 
 );
+#']]);
 
 sub test_vector
 {
-  return @tv;
+  my $common_option_prefix = '--test -h x';
+
+  my @new_tv;
+  my $t;
+  foreach $t (@tv)
+    {
+      my ($test_name, $flags, $in, $exp, $ret) = @$t;
+
+      # Prepend the common options to $FLAGS.
+      my $sep = ($flags ? ' ' : '');
+      $flags = "$common_option_prefix$sep$flags";
+      push (@new_tv, [$test_name, $flags, $in, $exp, $ret]);
+    }
+
+  return @new_tv;
 }
 
 1;
