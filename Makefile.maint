@@ -273,9 +273,10 @@ move_if_change ?= move-if-change
 # The following pseudo table associates a local directory and a URL
 # with each of the files that belongs to some other package and is
 # regularly updated from the specified URL.
-wget_files ?= $(srcdir)/config.guess $(srcdir)/config.sub \
+wget_files ?= $(srcdir)/config/config.guess \
+              $(srcdir)/config/config.sub \
               $(srcdir)/src/ansi2knr.c \
-	      $(srcdir)/doc/texinfo.tex
+	      $(srcdir)/config/texinfo.tex
 get-targets = $(patsubst %, get-%, $(wget_files))
 
 config.guess-url_prefix = $(ftp-gnu)/config/
@@ -299,11 +300,12 @@ $(get-targets):
 automake_repo=:pserver:anoncvs@anoncvs.cygnus.com:/cvs/automake
 .PHONY: wget-update
 wget-update: $(get-targets)
-	for f in depcomp missing mkinstalldirs; do                      \
-	  test -f $$f || continue;					\
-	  echo checking out $$f...;                                     \
-	  $(CVS) -d $(automake_repo) co -p automake/lib/$$f > $$f.t     \
-	    && $(move_if_change) $$f.t $$f;                             \
+	cd config &&							\
+	for f in depcomp missing mkinstalldirs; do			\
+	  test -f $$f || { echo "*** skipping $$f" 1>&2; continue; };	\
+	  echo checking out $$f...;					\
+	  $(CVS) -d $(automake_repo) co -p automake/lib/$$f > $$f.t	\
+	    && $(move_if_change) $$f.t $$f;				\
 	done
 
 define emit-upload-commands
