@@ -152,7 +152,6 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-AUTOMAKE_OPTIONS = ansi2knr
 
 EXTRA_PROGRAMS = chroot df hostid nice pinky stty su uname uptime users who
 EXTRA_SCRIPTS = nohup
@@ -312,421 +311,420 @@ bin_PROGRAMS = chgrp$(EXEEXT) chown$(EXEEXT) chmod$(EXEEXT) cp$(EXEEXT) \
 PROGRAMS = $(bin_PROGRAMS)
 
 basename_SOURCES = basename.c
-basename_OBJECTS = basename$U.$(OBJEXT)
+basename_OBJECTS = basename.$(OBJEXT)
 basename_LDADD = $(LDADD)
 basename_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 basename_LDFLAGS =
 cat_SOURCES = cat.c
-cat_OBJECTS = cat$U.$(OBJEXT)
+cat_OBJECTS = cat.$(OBJEXT)
 cat_LDADD = $(LDADD)
 cat_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 cat_LDFLAGS =
-am_chgrp_OBJECTS = chgrp$U.$(OBJEXT) chown-core$U.$(OBJEXT)
+am_chgrp_OBJECTS = chgrp.$(OBJEXT) chown-core.$(OBJEXT)
 chgrp_OBJECTS = $(am_chgrp_OBJECTS)
 chgrp_LDADD = $(LDADD)
 chgrp_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 chgrp_LDFLAGS =
 chmod_SOURCES = chmod.c
-chmod_OBJECTS = chmod$U.$(OBJEXT)
+chmod_OBJECTS = chmod.$(OBJEXT)
 chmod_LDADD = $(LDADD)
 chmod_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 chmod_LDFLAGS =
-am_chown_OBJECTS = chown$U.$(OBJEXT) chown-core$U.$(OBJEXT)
+am_chown_OBJECTS = chown.$(OBJEXT) chown-core.$(OBJEXT)
 chown_OBJECTS = $(am_chown_OBJECTS)
 chown_LDADD = $(LDADD)
 chown_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 chown_LDFLAGS =
 chroot_SOURCES = chroot.c
-chroot_OBJECTS = chroot$U.$(OBJEXT)
+chroot_OBJECTS = chroot.$(OBJEXT)
 chroot_LDADD = $(LDADD)
 chroot_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 chroot_LDFLAGS =
 cksum_SOURCES = cksum.c
-cksum_OBJECTS = cksum$U.$(OBJEXT)
+cksum_OBJECTS = cksum.$(OBJEXT)
 cksum_LDADD = $(LDADD)
 cksum_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 cksum_LDFLAGS =
 comm_SOURCES = comm.c
-comm_OBJECTS = comm$U.$(OBJEXT)
+comm_OBJECTS = comm.$(OBJEXT)
 comm_LDADD = $(LDADD)
 comm_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 comm_LDFLAGS =
-am_cp_OBJECTS = cp$U.$(OBJEXT) copy$U.$(OBJEXT) cp-hash$U.$(OBJEXT)
+am_cp_OBJECTS = cp.$(OBJEXT) copy.$(OBJEXT) cp-hash.$(OBJEXT)
 cp_OBJECTS = $(am_cp_OBJECTS)
 cp_LDADD = $(LDADD)
 cp_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 cp_LDFLAGS =
 csplit_SOURCES = csplit.c
-csplit_OBJECTS = csplit$U.$(OBJEXT)
+csplit_OBJECTS = csplit.$(OBJEXT)
 csplit_LDADD = $(LDADD)
 csplit_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 csplit_LDFLAGS =
 cut_SOURCES = cut.c
-cut_OBJECTS = cut$U.$(OBJEXT)
+cut_OBJECTS = cut.$(OBJEXT)
 cut_LDADD = $(LDADD)
 cut_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 cut_LDFLAGS =
 date_SOURCES = date.c
-date_OBJECTS = date$U.$(OBJEXT)
+date_OBJECTS = date.$(OBJEXT)
 date_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 date_LDFLAGS =
 dd_SOURCES = dd.c
-dd_OBJECTS = dd$U.$(OBJEXT)
+dd_OBJECTS = dd.$(OBJEXT)
 dd_LDADD = $(LDADD)
 dd_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 dd_LDFLAGS =
 df_SOURCES = df.c
-df_OBJECTS = df$U.$(OBJEXT)
+df_OBJECTS = df.$(OBJEXT)
 df_LDADD = $(LDADD)
 df_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 df_LDFLAGS =
-am_dir_OBJECTS = ls$U.$(OBJEXT) ls-dir$U.$(OBJEXT)
+am_dir_OBJECTS = ls.$(OBJEXT) ls-dir.$(OBJEXT)
 dir_OBJECTS = $(am_dir_OBJECTS)
 dir_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 dir_LDFLAGS =
 dircolors_SOURCES = dircolors.c
-dircolors_OBJECTS = dircolors$U.$(OBJEXT)
+dircolors_OBJECTS = dircolors.$(OBJEXT)
 dircolors_LDADD = $(LDADD)
 dircolors_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 dircolors_LDFLAGS =
 dirname_SOURCES = dirname.c
-dirname_OBJECTS = dirname$U.$(OBJEXT)
+dirname_OBJECTS = dirname.$(OBJEXT)
 dirname_LDADD = $(LDADD)
 dirname_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 dirname_LDFLAGS =
 du_SOURCES = du.c
-du_OBJECTS = du$U.$(OBJEXT)
+du_OBJECTS = du.$(OBJEXT)
 du_LDADD = $(LDADD)
 du_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 du_LDFLAGS =
 echo_SOURCES = echo.c
-echo_OBJECTS = echo$U.$(OBJEXT)
+echo_OBJECTS = echo.$(OBJEXT)
 echo_LDADD = $(LDADD)
 echo_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 echo_LDFLAGS =
 env_SOURCES = env.c
-env_OBJECTS = env$U.$(OBJEXT)
+env_OBJECTS = env.$(OBJEXT)
 env_LDADD = $(LDADD)
 env_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 env_LDFLAGS =
 expand_SOURCES = expand.c
-expand_OBJECTS = expand$U.$(OBJEXT)
+expand_OBJECTS = expand.$(OBJEXT)
 expand_LDADD = $(LDADD)
 expand_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 expand_LDFLAGS =
 expr_SOURCES = expr.c
-expr_OBJECTS = expr$U.$(OBJEXT)
+expr_OBJECTS = expr.$(OBJEXT)
 expr_LDADD = $(LDADD)
 expr_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 expr_LDFLAGS =
 factor_SOURCES = factor.c
-factor_OBJECTS = factor$U.$(OBJEXT)
+factor_OBJECTS = factor.$(OBJEXT)
 factor_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 factor_LDFLAGS =
 false_SOURCES = false.c
-false_OBJECTS = false$U.$(OBJEXT)
+false_OBJECTS = false.$(OBJEXT)
 false_LDADD = $(LDADD)
 false_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 false_LDFLAGS =
 fmt_SOURCES = fmt.c
-fmt_OBJECTS = fmt$U.$(OBJEXT)
+fmt_OBJECTS = fmt.$(OBJEXT)
 fmt_LDADD = $(LDADD)
 fmt_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 fmt_LDFLAGS =
 fold_SOURCES = fold.c
-fold_OBJECTS = fold$U.$(OBJEXT)
+fold_OBJECTS = fold.$(OBJEXT)
 fold_LDADD = $(LDADD)
 fold_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 fold_LDFLAGS =
-am_ginstall_OBJECTS = install$U.$(OBJEXT) copy$U.$(OBJEXT) \
-	cp-hash$U.$(OBJEXT)
+am_ginstall_OBJECTS = install.$(OBJEXT) copy.$(OBJEXT) cp-hash.$(OBJEXT)
 ginstall_OBJECTS = $(am_ginstall_OBJECTS)
 ginstall_LDADD = $(LDADD)
 ginstall_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 ginstall_LDFLAGS =
 head_SOURCES = head.c
-head_OBJECTS = head$U.$(OBJEXT)
+head_OBJECTS = head.$(OBJEXT)
 head_LDADD = $(LDADD)
 head_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 head_LDFLAGS =
 hostid_SOURCES = hostid.c
-hostid_OBJECTS = hostid$U.$(OBJEXT)
+hostid_OBJECTS = hostid.$(OBJEXT)
 hostid_LDADD = $(LDADD)
 hostid_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 hostid_LDFLAGS =
 hostname_SOURCES = hostname.c
-hostname_OBJECTS = hostname$U.$(OBJEXT)
+hostname_OBJECTS = hostname.$(OBJEXT)
 hostname_LDADD = $(LDADD)
 hostname_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 hostname_LDFLAGS =
 id_SOURCES = id.c
-id_OBJECTS = id$U.$(OBJEXT)
+id_OBJECTS = id.$(OBJEXT)
 id_LDADD = $(LDADD)
 id_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 id_LDFLAGS =
 join_SOURCES = join.c
-join_OBJECTS = join$U.$(OBJEXT)
+join_OBJECTS = join.$(OBJEXT)
 join_LDADD = $(LDADD)
 join_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 join_LDFLAGS =
 kill_SOURCES = kill.c
-kill_OBJECTS = kill$U.$(OBJEXT)
+kill_OBJECTS = kill.$(OBJEXT)
 kill_LDADD = $(LDADD)
 kill_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 kill_LDFLAGS =
 link_SOURCES = link.c
-link_OBJECTS = link$U.$(OBJEXT)
+link_OBJECTS = link.$(OBJEXT)
 link_LDADD = $(LDADD)
 link_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 link_LDFLAGS =
 ln_SOURCES = ln.c
-ln_OBJECTS = ln$U.$(OBJEXT)
+ln_OBJECTS = ln.$(OBJEXT)
 ln_LDADD = $(LDADD)
 ln_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 ln_LDFLAGS =
 logname_SOURCES = logname.c
-logname_OBJECTS = logname$U.$(OBJEXT)
+logname_OBJECTS = logname.$(OBJEXT)
 logname_LDADD = $(LDADD)
 logname_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 logname_LDFLAGS =
-am_ls_OBJECTS = ls$U.$(OBJEXT) ls-ls$U.$(OBJEXT)
+am_ls_OBJECTS = ls.$(OBJEXT) ls-ls.$(OBJEXT)
 ls_OBJECTS = $(am_ls_OBJECTS)
 ls_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 ls_LDFLAGS =
-am_md5sum_OBJECTS = md5sum$U.$(OBJEXT) md5$U.$(OBJEXT)
+am_md5sum_OBJECTS = md5sum.$(OBJEXT) md5.$(OBJEXT)
 md5sum_OBJECTS = $(am_md5sum_OBJECTS)
 md5sum_LDADD = $(LDADD)
 md5sum_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 md5sum_LDFLAGS =
 mkdir_SOURCES = mkdir.c
-mkdir_OBJECTS = mkdir$U.$(OBJEXT)
+mkdir_OBJECTS = mkdir.$(OBJEXT)
 mkdir_LDADD = $(LDADD)
 mkdir_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 mkdir_LDFLAGS =
 mkfifo_SOURCES = mkfifo.c
-mkfifo_OBJECTS = mkfifo$U.$(OBJEXT)
+mkfifo_OBJECTS = mkfifo.$(OBJEXT)
 mkfifo_LDADD = $(LDADD)
 mkfifo_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 mkfifo_LDFLAGS =
 mknod_SOURCES = mknod.c
-mknod_OBJECTS = mknod$U.$(OBJEXT)
+mknod_OBJECTS = mknod.$(OBJEXT)
 mknod_LDADD = $(LDADD)
 mknod_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 mknod_LDFLAGS =
-am_mv_OBJECTS = mv$U.$(OBJEXT) copy$U.$(OBJEXT) cp-hash$U.$(OBJEXT) \
-	remove$U.$(OBJEXT)
+am_mv_OBJECTS = mv.$(OBJEXT) copy.$(OBJEXT) cp-hash.$(OBJEXT) \
+	remove.$(OBJEXT)
 mv_OBJECTS = $(am_mv_OBJECTS)
 mv_LDADD = $(LDADD)
 mv_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 mv_LDFLAGS =
 nice_SOURCES = nice.c
-nice_OBJECTS = nice$U.$(OBJEXT)
+nice_OBJECTS = nice.$(OBJEXT)
 nice_LDADD = $(LDADD)
 nice_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 nice_LDFLAGS =
 nl_SOURCES = nl.c
-nl_OBJECTS = nl$U.$(OBJEXT)
+nl_OBJECTS = nl.$(OBJEXT)
 nl_LDADD = $(LDADD)
 nl_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 nl_LDFLAGS =
 od_SOURCES = od.c
-od_OBJECTS = od$U.$(OBJEXT)
+od_OBJECTS = od.$(OBJEXT)
 od_LDADD = $(LDADD)
 od_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 od_LDFLAGS =
 paste_SOURCES = paste.c
-paste_OBJECTS = paste$U.$(OBJEXT)
+paste_OBJECTS = paste.$(OBJEXT)
 paste_LDADD = $(LDADD)
 paste_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 paste_LDFLAGS =
 pathchk_SOURCES = pathchk.c
-pathchk_OBJECTS = pathchk$U.$(OBJEXT)
+pathchk_OBJECTS = pathchk.$(OBJEXT)
 pathchk_LDADD = $(LDADD)
 pathchk_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 pathchk_LDFLAGS =
 pinky_SOURCES = pinky.c
-pinky_OBJECTS = pinky$U.$(OBJEXT)
+pinky_OBJECTS = pinky.$(OBJEXT)
 pinky_LDADD = $(LDADD)
 pinky_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 pinky_LDFLAGS =
 pr_SOURCES = pr.c
-pr_OBJECTS = pr$U.$(OBJEXT)
+pr_OBJECTS = pr.$(OBJEXT)
 pr_LDADD = $(LDADD)
 pr_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 pr_LDFLAGS =
 printenv_SOURCES = printenv.c
-printenv_OBJECTS = printenv$U.$(OBJEXT)
+printenv_OBJECTS = printenv.$(OBJEXT)
 printenv_LDADD = $(LDADD)
 printenv_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 printenv_LDFLAGS =
 printf_SOURCES = printf.c
-printf_OBJECTS = printf$U.$(OBJEXT)
+printf_OBJECTS = printf.$(OBJEXT)
 printf_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 printf_LDFLAGS =
 ptx_SOURCES = ptx.c
-ptx_OBJECTS = ptx$U.$(OBJEXT)
+ptx_OBJECTS = ptx.$(OBJEXT)
 ptx_LDADD = $(LDADD)
 ptx_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 ptx_LDFLAGS =
 pwd_SOURCES = pwd.c
-pwd_OBJECTS = pwd$U.$(OBJEXT)
+pwd_OBJECTS = pwd.$(OBJEXT)
 pwd_LDADD = $(LDADD)
 pwd_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 pwd_LDFLAGS =
-am_rm_OBJECTS = rm$U.$(OBJEXT) remove$U.$(OBJEXT)
+am_rm_OBJECTS = rm.$(OBJEXT) remove.$(OBJEXT)
 rm_OBJECTS = $(am_rm_OBJECTS)
 rm_LDADD = $(LDADD)
 rm_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 rm_LDFLAGS =
 rmdir_SOURCES = rmdir.c
-rmdir_OBJECTS = rmdir$U.$(OBJEXT)
+rmdir_OBJECTS = rmdir.$(OBJEXT)
 rmdir_LDADD = $(LDADD)
 rmdir_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 rmdir_LDFLAGS =
 seq_SOURCES = seq.c
-seq_OBJECTS = seq$U.$(OBJEXT)
+seq_OBJECTS = seq.$(OBJEXT)
 seq_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 seq_LDFLAGS =
-am_sha1sum_OBJECTS = md5sum$U.$(OBJEXT) sha1sum$U.$(OBJEXT)
+am_sha1sum_OBJECTS = md5sum.$(OBJEXT) sha1sum.$(OBJEXT)
 sha1sum_OBJECTS = $(am_sha1sum_OBJECTS)
 sha1sum_LDADD = $(LDADD)
 sha1sum_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 sha1sum_LDFLAGS =
 shred_SOURCES = shred.c
-shred_OBJECTS = shred$U.$(OBJEXT)
+shred_OBJECTS = shred.$(OBJEXT)
 shred_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 shred_LDFLAGS =
 sleep_SOURCES = sleep.c
-sleep_OBJECTS = sleep$U.$(OBJEXT)
+sleep_OBJECTS = sleep.$(OBJEXT)
 sleep_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 sleep_LDFLAGS =
 sort_SOURCES = sort.c
-sort_OBJECTS = sort$U.$(OBJEXT)
+sort_OBJECTS = sort.$(OBJEXT)
 sort_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 sort_LDFLAGS =
 split_SOURCES = split.c
-split_OBJECTS = split$U.$(OBJEXT)
+split_OBJECTS = split.$(OBJEXT)
 split_LDADD = $(LDADD)
 split_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 split_LDFLAGS =
 stat_SOURCES = stat.c
-stat_OBJECTS = stat$U.$(OBJEXT)
+stat_OBJECTS = stat.$(OBJEXT)
 stat_LDADD = $(LDADD)
 stat_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 stat_LDFLAGS =
 stty_SOURCES = stty.c
-stty_OBJECTS = stty$U.$(OBJEXT)
+stty_OBJECTS = stty.$(OBJEXT)
 stty_LDADD = $(LDADD)
 stty_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 stty_LDFLAGS =
 su_SOURCES = su.c
-su_OBJECTS = su$U.$(OBJEXT)
+su_OBJECTS = su.$(OBJEXT)
 su_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 su_LDFLAGS =
 sum_SOURCES = sum.c
-sum_OBJECTS = sum$U.$(OBJEXT)
+sum_OBJECTS = sum.$(OBJEXT)
 sum_LDADD = $(LDADD)
 sum_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 sum_LDFLAGS =
 sync_SOURCES = sync.c
-sync_OBJECTS = sync$U.$(OBJEXT)
+sync_OBJECTS = sync.$(OBJEXT)
 sync_LDADD = $(LDADD)
 sync_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 sync_LDFLAGS =
 tac_SOURCES = tac.c
-tac_OBJECTS = tac$U.$(OBJEXT)
+tac_OBJECTS = tac.$(OBJEXT)
 tac_LDADD = $(LDADD)
 tac_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 tac_LDFLAGS =
 tail_SOURCES = tail.c
-tail_OBJECTS = tail$U.$(OBJEXT)
+tail_OBJECTS = tail.$(OBJEXT)
 tail_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 tail_LDFLAGS =
 tee_SOURCES = tee.c
-tee_OBJECTS = tee$U.$(OBJEXT)
+tee_OBJECTS = tee.$(OBJEXT)
 tee_LDADD = $(LDADD)
 tee_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 tee_LDFLAGS =
 test_SOURCES = test.c
-test_OBJECTS = test$U.$(OBJEXT)
+test_OBJECTS = test.$(OBJEXT)
 test_LDADD = $(LDADD)
 test_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 test_LDFLAGS =
 touch_SOURCES = touch.c
-touch_OBJECTS = touch$U.$(OBJEXT)
+touch_OBJECTS = touch.$(OBJEXT)
 touch_LDADD = $(LDADD)
 touch_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 touch_LDFLAGS =
 tr_SOURCES = tr.c
-tr_OBJECTS = tr$U.$(OBJEXT)
+tr_OBJECTS = tr.$(OBJEXT)
 tr_LDADD = $(LDADD)
 tr_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 tr_LDFLAGS =
 true_SOURCES = true.c
-true_OBJECTS = true$U.$(OBJEXT)
+true_OBJECTS = true.$(OBJEXT)
 true_LDADD = $(LDADD)
 true_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 true_LDFLAGS =
 tsort_SOURCES = tsort.c
-tsort_OBJECTS = tsort$U.$(OBJEXT)
+tsort_OBJECTS = tsort.$(OBJEXT)
 tsort_LDADD = $(LDADD)
 tsort_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 tsort_LDFLAGS =
 tty_SOURCES = tty.c
-tty_OBJECTS = tty$U.$(OBJEXT)
+tty_OBJECTS = tty.$(OBJEXT)
 tty_LDADD = $(LDADD)
 tty_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 tty_LDFLAGS =
 uname_SOURCES = uname.c
-uname_OBJECTS = uname$U.$(OBJEXT)
+uname_OBJECTS = uname.$(OBJEXT)
 uname_LDADD = $(LDADD)
 uname_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 uname_LDFLAGS =
 unexpand_SOURCES = unexpand.c
-unexpand_OBJECTS = unexpand$U.$(OBJEXT)
+unexpand_OBJECTS = unexpand.$(OBJEXT)
 unexpand_LDADD = $(LDADD)
 unexpand_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 unexpand_LDFLAGS =
 uniq_SOURCES = uniq.c
-uniq_OBJECTS = uniq$U.$(OBJEXT)
+uniq_OBJECTS = uniq.$(OBJEXT)
 uniq_LDADD = $(LDADD)
 uniq_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 uniq_LDFLAGS =
 unlink_SOURCES = unlink.c
-unlink_OBJECTS = unlink$U.$(OBJEXT)
+unlink_OBJECTS = unlink.$(OBJEXT)
 unlink_LDADD = $(LDADD)
 unlink_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 unlink_LDFLAGS =
 uptime_SOURCES = uptime.c
-uptime_OBJECTS = uptime$U.$(OBJEXT)
+uptime_OBJECTS = uptime.$(OBJEXT)
 uptime_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 uptime_LDFLAGS =
 users_SOURCES = users.c
-users_OBJECTS = users$U.$(OBJEXT)
+users_OBJECTS = users.$(OBJEXT)
 users_LDADD = $(LDADD)
 users_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 users_LDFLAGS =
-am_vdir_OBJECTS = ls$U.$(OBJEXT) ls-vdir$U.$(OBJEXT)
+am_vdir_OBJECTS = ls.$(OBJEXT) ls-vdir.$(OBJEXT)
 vdir_OBJECTS = $(am_vdir_OBJECTS)
 vdir_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 vdir_LDFLAGS =
 wc_SOURCES = wc.c
-wc_OBJECTS = wc$U.$(OBJEXT)
+wc_OBJECTS = wc.$(OBJEXT)
 wc_LDADD = $(LDADD)
 wc_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 wc_LDFLAGS =
 who_SOURCES = who.c
-who_OBJECTS = who$U.$(OBJEXT)
+who_OBJECTS = who.$(OBJEXT)
 who_LDADD = $(LDADD)
 who_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 who_LDFLAGS =
 whoami_SOURCES = whoami.c
-whoami_OBJECTS = whoami$U.$(OBJEXT)
+whoami_OBJECTS = whoami.$(OBJEXT)
 whoami_LDADD = $(LDADD)
 whoami_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 whoami_LDFLAGS =
 yes_SOURCES = yes.c
-yes_OBJECTS = yes$U.$(OBJEXT)
+yes_OBJECTS = yes.$(OBJEXT)
 yes_LDADD = $(LDADD)
 yes_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 yes_LDFLAGS =
@@ -736,52 +734,52 @@ SCRIPTS = $(bin_SCRIPTS)
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/basename$U.Po ./$(DEPDIR)/cat$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/chgrp$U.Po ./$(DEPDIR)/chmod$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/chown$U.Po ./$(DEPDIR)/chown-core$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/chroot$U.Po ./$(DEPDIR)/cksum$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/comm$U.Po ./$(DEPDIR)/copy$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/cp$U.Po ./$(DEPDIR)/cp-hash$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/csplit$U.Po ./$(DEPDIR)/cut$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/date$U.Po ./$(DEPDIR)/dd$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/df$U.Po ./$(DEPDIR)/dircolors$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/dirname$U.Po ./$(DEPDIR)/du$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/echo$U.Po ./$(DEPDIR)/env$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/expand$U.Po ./$(DEPDIR)/expr$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/factor$U.Po ./$(DEPDIR)/false$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/fmt$U.Po ./$(DEPDIR)/fold$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/head$U.Po ./$(DEPDIR)/hostid$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/hostname$U.Po ./$(DEPDIR)/id$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/install$U.Po ./$(DEPDIR)/join$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/kill$U.Po ./$(DEPDIR)/link$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/ln$U.Po ./$(DEPDIR)/logname$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/ls$U.Po ./$(DEPDIR)/ls-dir$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/ls-ls$U.Po ./$(DEPDIR)/ls-vdir$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/md5$U.Po ./$(DEPDIR)/md5sum$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/mkdir$U.Po ./$(DEPDIR)/mkfifo$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/mknod$U.Po ./$(DEPDIR)/mv$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/nice$U.Po ./$(DEPDIR)/nl$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/od$U.Po ./$(DEPDIR)/paste$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/pathchk$U.Po ./$(DEPDIR)/pinky$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/pr$U.Po ./$(DEPDIR)/printenv$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/printf$U.Po ./$(DEPDIR)/ptx$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/pwd$U.Po ./$(DEPDIR)/remove$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/rm$U.Po ./$(DEPDIR)/rmdir$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/seq$U.Po ./$(DEPDIR)/sha1sum$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/shred$U.Po ./$(DEPDIR)/sleep$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/sort$U.Po ./$(DEPDIR)/split$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/stat$U.Po ./$(DEPDIR)/stty$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/su$U.Po ./$(DEPDIR)/sum$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/sync$U.Po ./$(DEPDIR)/tac$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/tail$U.Po ./$(DEPDIR)/tee$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/test$U.Po ./$(DEPDIR)/touch$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/tr$U.Po ./$(DEPDIR)/true$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/tsort$U.Po ./$(DEPDIR)/tty$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/uname$U.Po ./$(DEPDIR)/unexpand$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/uniq$U.Po ./$(DEPDIR)/unlink$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/uptime$U.Po ./$(DEPDIR)/users$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/wc$U.Po ./$(DEPDIR)/who$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/whoami$U.Po ./$(DEPDIR)/yes$U.Po
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/basename.Po ./$(DEPDIR)/cat.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/chgrp.Po ./$(DEPDIR)/chmod.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/chown-core.Po ./$(DEPDIR)/chown.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/chroot.Po ./$(DEPDIR)/cksum.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/comm.Po ./$(DEPDIR)/copy.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/cp-hash.Po ./$(DEPDIR)/cp.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/csplit.Po ./$(DEPDIR)/cut.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/date.Po ./$(DEPDIR)/dd.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/df.Po ./$(DEPDIR)/dircolors.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/dirname.Po ./$(DEPDIR)/du.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/echo.Po ./$(DEPDIR)/env.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/expand.Po ./$(DEPDIR)/expr.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/factor.Po ./$(DEPDIR)/false.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/fmt.Po ./$(DEPDIR)/fold.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/head.Po ./$(DEPDIR)/hostid.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/hostname.Po ./$(DEPDIR)/id.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/install.Po ./$(DEPDIR)/join.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/kill.Po ./$(DEPDIR)/link.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/ln.Po ./$(DEPDIR)/logname.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/ls-dir.Po ./$(DEPDIR)/ls-ls.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/ls-vdir.Po ./$(DEPDIR)/ls.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/md5.Po ./$(DEPDIR)/md5sum.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mkdir.Po ./$(DEPDIR)/mkfifo.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mknod.Po ./$(DEPDIR)/mv.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/nice.Po ./$(DEPDIR)/nl.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/od.Po ./$(DEPDIR)/paste.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/pathchk.Po ./$(DEPDIR)/pinky.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/pr.Po ./$(DEPDIR)/printenv.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/printf.Po ./$(DEPDIR)/ptx.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/pwd.Po ./$(DEPDIR)/remove.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/rm.Po ./$(DEPDIR)/rmdir.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/seq.Po ./$(DEPDIR)/sha1sum.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/shred.Po ./$(DEPDIR)/sleep.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/sort.Po ./$(DEPDIR)/split.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/stat.Po ./$(DEPDIR)/stty.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/su.Po ./$(DEPDIR)/sum.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/sync.Po ./$(DEPDIR)/tac.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/tail.Po ./$(DEPDIR)/tee.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/test.Po ./$(DEPDIR)/touch.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/tr.Po ./$(DEPDIR)/true.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/tsort.Po ./$(DEPDIR)/tty.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/uname.Po ./$(DEPDIR)/unexpand.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/uniq.Po ./$(DEPDIR)/unlink.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/uptime.Po ./$(DEPDIR)/users.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/wc.Po ./$(DEPDIR)/who.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/whoami.Po ./$(DEPDIR)/yes.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -838,7 +836,7 @@ uninstall-binPROGRAMS:
 	done
 
 clean-binPROGRAMS:
-	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS) > /dev/null 2>&1 || /bin/rm -f $(bin_PROGRAMS)
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 
 installcheck-binPROGRAMS: $(bin_PROGRAMS)
 	bad=0; pid=$$$$; list="$(bin_PROGRAMS)"; for p in $$list; do \
@@ -1153,109 +1151,98 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-ANSI2KNR = @ANSI2KNR@
-ansi2knr: ansi2knr.$(OBJEXT)
-	$(LINK) ansi2knr.$(OBJEXT) $(LIBS)
-ansi2knr.$(OBJEXT): $(CONFIG_HEADER)
-
-clean-krextra:
-	-rm -f ansi2knr
-
-mostlyclean-kr:
-	-test "$U" = "" || rm -f *_.c
-
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/basename$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cat$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chgrp$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chmod$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chown$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chown-core$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chroot$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cksum$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/comm$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/copy$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cp$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cp-hash$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/csplit$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cut$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/date$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dd$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/df$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dircolors$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dirname$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/du$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/echo$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/env$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/expand$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/expr$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/factor$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/false$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fmt$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fold$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/head$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hostid$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hostname$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/id$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/install$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/join$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/kill$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/link$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ln$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/logname$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ls$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ls-dir$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ls-ls$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ls-vdir$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/md5$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/md5sum$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mkdir$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mkfifo$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mknod$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mv$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nice$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nl$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/od$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/paste$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pathchk$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pinky$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pr$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/printenv$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/printf$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ptx$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pwd$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/remove$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rm$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rmdir$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/seq$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha1sum$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/shred$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sleep$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sort$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/split$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stat$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stty$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/su$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sum$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sync$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tac$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tail$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tee$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/touch$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tr$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/true$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tsort$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tty$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/uname$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/unexpand$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/uniq$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/unlink$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/uptime$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/users$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wc$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/who$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/whoami$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/yes$U.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/basename.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cat.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chgrp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chmod.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chown-core.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chown.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chroot.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cksum.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/comm.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/copy.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cp-hash.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/csplit.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cut.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/date.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dd.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/df.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dircolors.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dirname.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/du.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/echo.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/env.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/expand.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/expr.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/factor.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/false.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fmt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fold.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/head.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hostid.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hostname.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/id.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/install.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/join.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/kill.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/link.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ln.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/logname.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ls-dir.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ls-ls.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ls-vdir.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ls.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/md5.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/md5sum.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mkdir.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mkfifo.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mknod.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mv.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nice.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/od.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/paste.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pathchk.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pinky.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pr.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/printenv.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/printf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ptx.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pwd.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/remove.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rm.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rmdir.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/seq.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha1sum.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/shred.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sleep.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sort.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/split.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stat.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stty.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/su.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sum.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sync.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tac.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tail.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tee.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/touch.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tr.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/true.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tsort.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tty.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/uname.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/unexpand.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/uniq.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/unlink.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/uptime.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/users.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/who.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/whoami.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/yes.Po@am__quote@
 
 distclean-depend:
 	-rm -rf ./$(DEPDIR)
@@ -1281,214 +1268,6 @@ distclean-depend:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c `if test -f '$<'; then $(CYGPATH_W) '$<'; else $(CYGPATH_W) '$(srcdir)/$<'`
-basename_.c: basename.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/basename.c; then echo $(srcdir)/basename.c; else echo basename.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > basename_.c || rm -f basename_.c
-cat_.c: cat.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/cat.c; then echo $(srcdir)/cat.c; else echo cat.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > cat_.c || rm -f cat_.c
-chgrp_.c: chgrp.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/chgrp.c; then echo $(srcdir)/chgrp.c; else echo chgrp.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > chgrp_.c || rm -f chgrp_.c
-chmod_.c: chmod.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/chmod.c; then echo $(srcdir)/chmod.c; else echo chmod.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > chmod_.c || rm -f chmod_.c
-chown_.c: src/chown.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/src/chown.c; then echo $(srcdir)/src/chown.c; else echo src/chown.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > chown_.c || rm -f chown_.c
-chown-core_.c: chown-core.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/chown-core.c; then echo $(srcdir)/chown-core.c; else echo chown-core.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > chown-core_.c || rm -f chown-core_.c
-chroot_.c: chroot.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/chroot.c; then echo $(srcdir)/chroot.c; else echo chroot.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > chroot_.c || rm -f chroot_.c
-cksum_.c: cksum.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/cksum.c; then echo $(srcdir)/cksum.c; else echo cksum.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > cksum_.c || rm -f cksum_.c
-comm_.c: comm.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/comm.c; then echo $(srcdir)/comm.c; else echo comm.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > comm_.c || rm -f comm_.c
-copy_.c: copy.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/copy.c; then echo $(srcdir)/copy.c; else echo copy.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > copy_.c || rm -f copy_.c
-cp_.c: cp.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/cp.c; then echo $(srcdir)/cp.c; else echo cp.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > cp_.c || rm -f cp_.c
-cp-hash_.c: cp-hash.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/cp-hash.c; then echo $(srcdir)/cp-hash.c; else echo cp-hash.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > cp-hash_.c || rm -f cp-hash_.c
-csplit_.c: csplit.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/csplit.c; then echo $(srcdir)/csplit.c; else echo csplit.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > csplit_.c || rm -f csplit_.c
-cut_.c: cut.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/cut.c; then echo $(srcdir)/cut.c; else echo cut.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > cut_.c || rm -f cut_.c
-date_.c: date.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/date.c; then echo $(srcdir)/date.c; else echo date.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > date_.c || rm -f date_.c
-dd_.c: dd.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/dd.c; then echo $(srcdir)/dd.c; else echo dd.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > dd_.c || rm -f dd_.c
-df_.c: df.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/df.c; then echo $(srcdir)/df.c; else echo df.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > df_.c || rm -f df_.c
-dircolors_.c: dircolors.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/dircolors.c; then echo $(srcdir)/dircolors.c; else echo dircolors.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > dircolors_.c || rm -f dircolors_.c
-dirname_.c: dirname.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/dirname.c; then echo $(srcdir)/dirname.c; else echo dirname.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > dirname_.c || rm -f dirname_.c
-du_.c: du.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/du.c; then echo $(srcdir)/du.c; else echo du.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > du_.c || rm -f du_.c
-echo_.c: echo.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/echo.c; then echo $(srcdir)/echo.c; else echo echo.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > echo_.c || rm -f echo_.c
-env_.c: env.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/env.c; then echo $(srcdir)/env.c; else echo env.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > env_.c || rm -f env_.c
-expand_.c: expand.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/expand.c; then echo $(srcdir)/expand.c; else echo expand.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > expand_.c || rm -f expand_.c
-expr_.c: expr.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/expr.c; then echo $(srcdir)/expr.c; else echo expr.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > expr_.c || rm -f expr_.c
-factor_.c: factor.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/factor.c; then echo $(srcdir)/factor.c; else echo factor.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > factor_.c || rm -f factor_.c
-false_.c: false.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/false.c; then echo $(srcdir)/false.c; else echo false.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > false_.c || rm -f false_.c
-fmt_.c: fmt.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/fmt.c; then echo $(srcdir)/fmt.c; else echo fmt.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > fmt_.c || rm -f fmt_.c
-fold_.c: fold.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/fold.c; then echo $(srcdir)/fold.c; else echo fold.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > fold_.c || rm -f fold_.c
-head_.c: head.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/head.c; then echo $(srcdir)/head.c; else echo head.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > head_.c || rm -f head_.c
-hostid_.c: hostid.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/hostid.c; then echo $(srcdir)/hostid.c; else echo hostid.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > hostid_.c || rm -f hostid_.c
-hostname_.c: hostname.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/hostname.c; then echo $(srcdir)/hostname.c; else echo hostname.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > hostname_.c || rm -f hostname_.c
-id_.c: id.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/id.c; then echo $(srcdir)/id.c; else echo id.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > id_.c || rm -f id_.c
-install_.c: install.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/install.c; then echo $(srcdir)/install.c; else echo install.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > install_.c || rm -f install_.c
-join_.c: join.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/join.c; then echo $(srcdir)/join.c; else echo join.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > join_.c || rm -f join_.c
-kill_.c: kill.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/kill.c; then echo $(srcdir)/kill.c; else echo kill.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > kill_.c || rm -f kill_.c
-link_.c: link.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/link.c; then echo $(srcdir)/link.c; else echo link.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > link_.c || rm -f link_.c
-ln_.c: ln.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/ln.c; then echo $(srcdir)/ln.c; else echo ln.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > ln_.c || rm -f ln_.c
-logname_.c: logname.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/logname.c; then echo $(srcdir)/logname.c; else echo logname.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > logname_.c || rm -f logname_.c
-ls_.c: ls.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/ls.c; then echo $(srcdir)/ls.c; else echo ls.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > ls_.c || rm -f ls_.c
-ls-dir_.c: ls-dir.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/ls-dir.c; then echo $(srcdir)/ls-dir.c; else echo ls-dir.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > ls-dir_.c || rm -f ls-dir_.c
-ls-ls_.c: ls-ls.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/ls-ls.c; then echo $(srcdir)/ls-ls.c; else echo ls-ls.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > ls-ls_.c || rm -f ls-ls_.c
-ls-vdir_.c: ls-vdir.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/ls-vdir.c; then echo $(srcdir)/ls-vdir.c; else echo ls-vdir.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > ls-vdir_.c || rm -f ls-vdir_.c
-md5_.c: md5.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/md5.c; then echo $(srcdir)/md5.c; else echo md5.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > md5_.c || rm -f md5_.c
-md5sum_.c: md5sum.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/md5sum.c; then echo $(srcdir)/md5sum.c; else echo md5sum.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > md5sum_.c || rm -f md5sum_.c
-mkdir_.c: src/mkdir.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/src/mkdir.c; then echo $(srcdir)/src/mkdir.c; else echo src/mkdir.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > mkdir_.c || rm -f mkdir_.c
-mkfifo_.c: mkfifo.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/mkfifo.c; then echo $(srcdir)/mkfifo.c; else echo mkfifo.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > mkfifo_.c || rm -f mkfifo_.c
-mknod_.c: mknod.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/mknod.c; then echo $(srcdir)/mknod.c; else echo mknod.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > mknod_.c || rm -f mknod_.c
-mv_.c: mv.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/mv.c; then echo $(srcdir)/mv.c; else echo mv.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > mv_.c || rm -f mv_.c
-nice_.c: nice.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/nice.c; then echo $(srcdir)/nice.c; else echo nice.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > nice_.c || rm -f nice_.c
-nl_.c: nl.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/nl.c; then echo $(srcdir)/nl.c; else echo nl.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > nl_.c || rm -f nl_.c
-od_.c: od.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/od.c; then echo $(srcdir)/od.c; else echo od.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > od_.c || rm -f od_.c
-paste_.c: paste.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/paste.c; then echo $(srcdir)/paste.c; else echo paste.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > paste_.c || rm -f paste_.c
-pathchk_.c: pathchk.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/pathchk.c; then echo $(srcdir)/pathchk.c; else echo pathchk.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > pathchk_.c || rm -f pathchk_.c
-pinky_.c: pinky.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/pinky.c; then echo $(srcdir)/pinky.c; else echo pinky.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > pinky_.c || rm -f pinky_.c
-pr_.c: pr.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/pr.c; then echo $(srcdir)/pr.c; else echo pr.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > pr_.c || rm -f pr_.c
-printenv_.c: printenv.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/printenv.c; then echo $(srcdir)/printenv.c; else echo printenv.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > printenv_.c || rm -f printenv_.c
-printf_.c: printf.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/printf.c; then echo $(srcdir)/printf.c; else echo printf.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > printf_.c || rm -f printf_.c
-ptx_.c: ptx.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/ptx.c; then echo $(srcdir)/ptx.c; else echo ptx.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > ptx_.c || rm -f ptx_.c
-pwd_.c: pwd.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/pwd.c; then echo $(srcdir)/pwd.c; else echo pwd.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > pwd_.c || rm -f pwd_.c
-remove_.c: remove.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/remove.c; then echo $(srcdir)/remove.c; else echo remove.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > remove_.c || rm -f remove_.c
-rm_.c: rm.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/rm.c; then echo $(srcdir)/rm.c; else echo rm.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > rm_.c || rm -f rm_.c
-rmdir_.c: src/rmdir.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/src/rmdir.c; then echo $(srcdir)/src/rmdir.c; else echo src/rmdir.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > rmdir_.c || rm -f rmdir_.c
-seq_.c: seq.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/seq.c; then echo $(srcdir)/seq.c; else echo seq.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > seq_.c || rm -f seq_.c
-sha1sum_.c: sha1sum.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/sha1sum.c; then echo $(srcdir)/sha1sum.c; else echo sha1sum.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > sha1sum_.c || rm -f sha1sum_.c
-shred_.c: shred.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/shred.c; then echo $(srcdir)/shred.c; else echo shred.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > shred_.c || rm -f shred_.c
-sleep_.c: sleep.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/sleep.c; then echo $(srcdir)/sleep.c; else echo sleep.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > sleep_.c || rm -f sleep_.c
-sort_.c: sort.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/sort.c; then echo $(srcdir)/sort.c; else echo sort.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > sort_.c || rm -f sort_.c
-split_.c: split.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/split.c; then echo $(srcdir)/split.c; else echo split.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > split_.c || rm -f split_.c
-stat_.c: src/stat.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/src/stat.c; then echo $(srcdir)/src/stat.c; else echo src/stat.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > stat_.c || rm -f stat_.c
-stty_.c: stty.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/stty.c; then echo $(srcdir)/stty.c; else echo stty.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > stty_.c || rm -f stty_.c
-su_.c: su.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/su.c; then echo $(srcdir)/su.c; else echo su.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > su_.c || rm -f su_.c
-sum_.c: sum.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/sum.c; then echo $(srcdir)/sum.c; else echo sum.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > sum_.c || rm -f sum_.c
-sync_.c: sync.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/sync.c; then echo $(srcdir)/sync.c; else echo sync.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > sync_.c || rm -f sync_.c
-tac_.c: tac.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/tac.c; then echo $(srcdir)/tac.c; else echo tac.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > tac_.c || rm -f tac_.c
-tail_.c: tail.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/tail.c; then echo $(srcdir)/tail.c; else echo tail.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > tail_.c || rm -f tail_.c
-tee_.c: tee.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/tee.c; then echo $(srcdir)/tee.c; else echo tee.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > tee_.c || rm -f tee_.c
-test_.c: test.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/test.c; then echo $(srcdir)/test.c; else echo test.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > test_.c || rm -f test_.c
-touch_.c: touch.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/touch.c; then echo $(srcdir)/touch.c; else echo touch.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > touch_.c || rm -f touch_.c
-tr_.c: tr.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/tr.c; then echo $(srcdir)/tr.c; else echo tr.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > tr_.c || rm -f tr_.c
-true_.c: true.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/true.c; then echo $(srcdir)/true.c; else echo true.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > true_.c || rm -f true_.c
-tsort_.c: tsort.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/tsort.c; then echo $(srcdir)/tsort.c; else echo tsort.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > tsort_.c || rm -f tsort_.c
-tty_.c: tty.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/tty.c; then echo $(srcdir)/tty.c; else echo tty.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > tty_.c || rm -f tty_.c
-uname_.c: uname.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/uname.c; then echo $(srcdir)/uname.c; else echo uname.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > uname_.c || rm -f uname_.c
-unexpand_.c: unexpand.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/unexpand.c; then echo $(srcdir)/unexpand.c; else echo unexpand.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > unexpand_.c || rm -f unexpand_.c
-uniq_.c: uniq.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/uniq.c; then echo $(srcdir)/uniq.c; else echo uniq.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > uniq_.c || rm -f uniq_.c
-unlink_.c: unlink.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/unlink.c; then echo $(srcdir)/unlink.c; else echo unlink.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > unlink_.c || rm -f unlink_.c
-uptime_.c: uptime.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/uptime.c; then echo $(srcdir)/uptime.c; else echo uptime.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > uptime_.c || rm -f uptime_.c
-users_.c: users.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/users.c; then echo $(srcdir)/users.c; else echo users.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > users_.c || rm -f users_.c
-wc_.c: wc.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/wc.c; then echo $(srcdir)/wc.c; else echo wc.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > wc_.c || rm -f wc_.c
-who_.c: who.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/who.c; then echo $(srcdir)/who.c; else echo who.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > who_.c || rm -f who_.c
-whoami_.c: whoami.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/whoami.c; then echo $(srcdir)/whoami.c; else echo whoami.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > whoami_.c || rm -f whoami_.c
-yes_.c: yes.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/yes.c; then echo $(srcdir)/yes.c; else echo yes.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > yes_.c || rm -f yes_.c
-basename_.$(OBJEXT) cat_.$(OBJEXT) chgrp_.$(OBJEXT) chmod_.$(OBJEXT) \
-chown_.$(OBJEXT) chown-core_.$(OBJEXT) chroot_.$(OBJEXT) \
-cksum_.$(OBJEXT) comm_.$(OBJEXT) copy_.$(OBJEXT) cp_.$(OBJEXT) \
-cp-hash_.$(OBJEXT) csplit_.$(OBJEXT) cut_.$(OBJEXT) date_.$(OBJEXT) \
-dd_.$(OBJEXT) df_.$(OBJEXT) dircolors_.$(OBJEXT) dirname_.$(OBJEXT) \
-du_.$(OBJEXT) echo_.$(OBJEXT) env_.$(OBJEXT) expand_.$(OBJEXT) \
-expr_.$(OBJEXT) factor_.$(OBJEXT) false_.$(OBJEXT) fmt_.$(OBJEXT) \
-fold_.$(OBJEXT) head_.$(OBJEXT) hostid_.$(OBJEXT) hostname_.$(OBJEXT) \
-id_.$(OBJEXT) install_.$(OBJEXT) join_.$(OBJEXT) kill_.$(OBJEXT) \
-link_.$(OBJEXT) ln_.$(OBJEXT) logname_.$(OBJEXT) ls_.$(OBJEXT) \
-ls-dir_.$(OBJEXT) ls-ls_.$(OBJEXT) ls-vdir_.$(OBJEXT) md5_.$(OBJEXT) \
-md5sum_.$(OBJEXT) mkdir_.$(OBJEXT) mkfifo_.$(OBJEXT) mknod_.$(OBJEXT) \
-mv_.$(OBJEXT) nice_.$(OBJEXT) nl_.$(OBJEXT) od_.$(OBJEXT) \
-paste_.$(OBJEXT) pathchk_.$(OBJEXT) pinky_.$(OBJEXT) pr_.$(OBJEXT) \
-printenv_.$(OBJEXT) printf_.$(OBJEXT) ptx_.$(OBJEXT) pwd_.$(OBJEXT) \
-remove_.$(OBJEXT) rm_.$(OBJEXT) rmdir_.$(OBJEXT) seq_.$(OBJEXT) \
-sha1sum_.$(OBJEXT) shred_.$(OBJEXT) sleep_.$(OBJEXT) sort_.$(OBJEXT) \
-split_.$(OBJEXT) stat_.$(OBJEXT) stty_.$(OBJEXT) su_.$(OBJEXT) \
-sum_.$(OBJEXT) sync_.$(OBJEXT) tac_.$(OBJEXT) tail_.$(OBJEXT) \
-tee_.$(OBJEXT) test_.$(OBJEXT) touch_.$(OBJEXT) tr_.$(OBJEXT) \
-true_.$(OBJEXT) tsort_.$(OBJEXT) tty_.$(OBJEXT) uname_.$(OBJEXT) \
-unexpand_.$(OBJEXT) uniq_.$(OBJEXT) unlink_.$(OBJEXT) uptime_.$(OBJEXT) \
-users_.$(OBJEXT) wc_.$(OBJEXT) who_.$(OBJEXT) whoami_.$(OBJEXT) \
-yes_.$(OBJEXT) : $(ANSI2KNR)
 uninstall-info-am:
 
 ETAGS = etags
@@ -1578,7 +1357,7 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(ANSI2KNR) $(PROGRAMS) $(SCRIPTS) $(HEADERS) all-local
+all-am: Makefile $(PROGRAMS) $(SCRIPTS) $(HEADERS) all-local
 
 installdirs:
 	$(mkinstalldirs) $(DESTDIR)$(bindir) $(DESTDIR)$(bindir)
@@ -1612,7 +1391,7 @@ maintainer-clean-generic:
 	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am
 
-clean-am: clean-binPROGRAMS clean-generic clean-krextra mostlyclean-am
+clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
 
@@ -1644,7 +1423,7 @@ maintainer-clean-am: distclean-am maintainer-clean-generic
 
 mostlyclean: mostlyclean-am
 
-mostlyclean-am: mostlyclean-compile mostlyclean-generic mostlyclean-kr
+mostlyclean-am: mostlyclean-compile mostlyclean-generic
 
 pdf: pdf-am
 
@@ -1658,7 +1437,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-binSCRIPTS \
 	uninstall-info-am uninstall-local
 
 .PHONY: CTAGS GTAGS all all-am all-local check check-am clean \
-	clean-binPROGRAMS clean-generic clean-krextra ctags distclean \
+	clean-binPROGRAMS clean-generic ctags distclean \
 	distclean-compile distclean-depend distclean-generic \
 	distclean-tags distdir dvi dvi-am info info-am install \
 	install-am install-binPROGRAMS install-binSCRIPTS install-data \
@@ -1667,9 +1446,9 @@ uninstall-am: uninstall-binPROGRAMS uninstall-binSCRIPTS \
 	installcheck installcheck-am installcheck-binPROGRAMS \
 	installcheck-binSCRIPTS installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-kr pdf pdf-am ps ps-am tags \
-	uninstall uninstall-am uninstall-binPROGRAMS \
-	uninstall-binSCRIPTS uninstall-info-am uninstall-local
+	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
+	uninstall-am uninstall-binPROGRAMS uninstall-binSCRIPTS \
+	uninstall-info-am uninstall-local
 
 
 $(PROGRAMS): ../lib/libfetish.a
