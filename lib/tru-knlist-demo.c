@@ -1,4 +1,6 @@
-/* From the knlist manpage */
+/* Derived from the example in the OSF1 knlist manpage.
+   OSF1 spe154.testdrive.compaq.com V5.0 1094 alpha
+   aka (w/my private hostname compaq-tru64-50a)  */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
