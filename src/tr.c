@@ -29,6 +29,10 @@
 #include <sys/types.h>
 #include <getopt.h>
 
+#if HAVE_LIMITS_H
+# include <limits.h>
+#endif
+
 #include "system.h"
 #include "version.h"
 #include "error.h"
@@ -39,6 +43,14 @@
 
 #ifndef LONG_MAX
 #define LONG_MAX ((long int) (ULONG_MAX >> 1))
+#endif
+
+#ifndef UINT_MAX
+# define UINT_MAX ((unsigned int) ~(unsigned int) 0)
+#endif
+
+#ifndef INT_MAX
+# define INT_MAX ((int) (UINT_MAX >> 1))
 #endif
 
 #ifndef UCHAR_MAX
@@ -60,9 +72,10 @@ typedef int (*PFI) ();
 
 /* The value for Spec_list->state that indicates to
    get_next that it should initialize the tail pointer.
-   Its value doesn't matter as long as it can't be
-   confused with a valid character code.  */
-#define BEGIN_STATE (2 * N_CHARS)
+   Its value should be as large as possible to avoid conflict
+   a valid value for the state field -- and that may be as
+   large as any valid repeat_count.  */
+#define BEGIN_STATE (INT_MAX - 1)
 
 /* The value for Spec_list->state that indicates to
    get_next that the element pointed to by Spec_list->tail is
@@ -201,14 +214,21 @@ struct Spec_list
     int has_restricted_char_class;
   };
 
-/* FIXME: comment */
-
+/* A representation for escaped string1 or string2.  As a string is parsed,
+   any backslash-escaped characters (other than octal or \a, \b, \f, \n,
+   etc.) are marked as such in this structure by setting the corresponding
+   entry in the ESCAPED vector.  */
 struct E_string
 {
   unsigned char *s;
   int *escaped;
   size_t len;
 };
+
+/* Return non-zero if the Ith character of escaped string ES matches C
+   and is not escaped itself.  */
+#define ES_MATCH(ES, I, C) ((ES)->s[(I)] == (C) && !(ES)->escaped[(I)])
+
 
 char *xmalloc ();
 char *stpcpy ();
@@ -734,7 +754,7 @@ append_range (struct Spec_list *list, unsigned int first, unsigned int last)
 /* If CHAR_CLASS_STR is a valid character class string, append a
    newly allocated structure representing that character class to the end
    of the specification list LIST and return 0.  If CHAR_CLASS_STR is not
-   a valid string, print an error message and return non-zero.  */
+   a valid string return non-zero.  */
 
 static int
 append_char_class (struct Spec_list *list,
@@ -745,13 +765,7 @@ append_char_class (struct Spec_list *list,
 
   char_class = look_up_char_class (char_class_str, len);
   if (char_class == CC_NO_CLASS)
-    {
-      char *tmp = make_printable_str (char_class_str, len);
-
-      error (0, 0, _("invalid character class `%s'"), tmp);
-      free (tmp);
-      return 1;
-    }
+    return 1;
   new = (struct List_element *) xmalloc (sizeof (struct List_element));
   new->next = NULL;
   new->type = RE_CHAR_CLASS;
@@ -787,7 +801,7 @@ append_repeated_char (struct Spec_list *list, unsigned int the_char,
    the length of that string, LEN, if LEN is exactly one, append
    a newly allocated structure representing the specified
    equivalence class to the specification list, LIST and return zero.
-   If LEN is not 1, issue an error message and return non-zero.  */
+   If LEN is not 1, return non-zero.  */
 
 static int
 append_equiv_class (struct Spec_list *list,
@@ -796,15 +810,7 @@ append_equiv_class (struct Spec_list *list,
   struct List_element *new;
 
   if (len != 1)
-    {
-      char *tmp = make_printable_str (equiv_class_str, len);
-
-      error (0, 0,
-	     _("%s: equivalence class operand must be a single character"),
-	     tmp);
-      free (tmp);
-      return 1;
-    }
+    return 1;
   new = (struct List_element *) xmalloc (sizeof (struct List_element));
   new->next = NULL;
   new->type = RE_EQUIV_CLASS;
@@ -842,13 +848,14 @@ substr (const unsigned char *p, size_t first_idx, size_t last_idx)
    zero bytes.  */
 
 static int
-find_closing_delim (const unsigned char *p, size_t start_idx, size_t p_len,
+find_closing_delim (const struct E_string *es, size_t start_idx,
 		    unsigned int pre_bracket_char, size_t *result_idx)
 {
   size_t i;
 
-  for (i = start_idx; i < p_len - 1; i++)
-    if (p[i] == pre_bracket_char && p[i + 1] == ']')
+  for (i = start_idx; i < es->len - 1; i++)
+    if (es->s[i] == pre_bracket_char && es->s[i + 1] == ']'
+	&& !es->escaped[i] && !es->escaped[i + 1])
       {
 	*result_idx = i;
 	return 1;
@@ -909,24 +916,24 @@ non_neg_strtol (const unsigned char *s, size_t len, size_t *val)
    and return -2.  */
 
 static int
-find_bracketed_repeat (const unsigned char *p, size_t start_idx, size_t p_len,
+find_bracketed_repeat (const struct E_string *es, size_t start_idx,
 		       unsigned int *char_to_repeat, size_t *repeat_count,
 		       size_t *closing_bracket_idx)
 {
   size_t i;
 
-  assert (start_idx + 1 < p_len);
-  if (p[start_idx + 1] != '*')
+  assert (start_idx + 1 < es->len);
+  if (!ES_MATCH (es, start_idx + 1, '*'))
     return -1;
 
-  for (i = start_idx + 2; i < p_len; i++)
+  for (i = start_idx + 2; i < es->len; i++)
     {
-      if (p[i] == ']')
+      if (ES_MATCH (es, i, ']'))
 	{
 	  const unsigned char *digit_str;
 	  size_t digit_str_len = i - start_idx - 2;
 
-	  *char_to_repeat = p[start_idx];
+	  *char_to_repeat = es->s[start_idx];
 	  if (digit_str_len == 0)
 	    {
 	      /* We've matched [c*] -- no explicit repeat count.  */
@@ -937,8 +944,9 @@ find_bracketed_repeat (const unsigned char *p, size_t start_idx, size_t p_len,
 
 	  /* Here, we have found [c*s] where s should be a string
 	     of octal or decimal digits.  */
-	  digit_str = &p[start_idx + 2];
-	  if (non_neg_strtol (digit_str, digit_str_len, repeat_count))
+	  digit_str = &es->s[start_idx + 2];
+	  if (non_neg_strtol (digit_str, digit_str_len, repeat_count)
+	      || *repeat_count > BEGIN_STATE)
 	    {
 	      char *tmp = make_printable_str (digit_str, digit_str_len);
 	      error (0, 0, _("invalid repeat count `%s' in [c*n] construct"),
@@ -951,6 +959,30 @@ find_bracketed_repeat (const unsigned char *p, size_t start_idx, size_t p_len,
 	}
     }
   return -1;			/* No bracket found.  */
+}
+
+/* Return non-zero if the string at ES->s[IDX] matches the regular
+   expression `\*[0-9]*\]', zero otherwise.  To match, the `*' and
+   the `]' must not be escaped.  */
+
+static int
+star_digits_closebracket (const struct E_string *es, int idx)
+{
+  int i;
+
+  if (!ES_MATCH (es, idx, '*'))
+    return 0;
+
+  for (i = idx + 1; i < es->len; i++)
+    {
+      if (!ISDIGIT (es->s[i]))
+	{
+	  if (ES_MATCH (es, i, ']'))
+	    return 1;
+	  return 0;
+	}
+    }
+  return 0;
 }
 
 /* Convert string UNESACPED_STRING (which has been preprocessed to
@@ -969,11 +1001,9 @@ static int
 build_spec_list (const struct E_string *es, struct Spec_list *result)
 {
   const unsigned char *p;
-  size_t len;
   size_t i;
 
   p = es->s;
-  len = es->len;
 
   /* The main for-loop below recognizes the 4 multi-character constructs.
      A character that matches (in its context) none of the multi-character
@@ -982,37 +1012,81 @@ build_spec_list (const struct E_string *es, struct Spec_list *result)
      less are composed solely of normal characters.  Hence, the index of
      the outer for-loop runs only as far as LEN-2.  */
 
-  for (i = 0; i + 2 < len; /* empty */)
+  for (i = 0; i + 2 < es->len; /* empty */)
     {
-      if (p[i] == '[')
+      if (ES_MATCH (es, i, '['))
 	{
-	  int fall_through;
+	  int matched_multi_char_construct;
+	  size_t closing_bracket_idx;
+	  unsigned int char_to_repeat;
+	  size_t repeat_count;
 	  int err;
 
-	  fall_through = 0;
-	  switch (p[i + 1])
+	  matched_multi_char_construct = 1;
+	  if (ES_MATCH (es, i + 1, ':')
+	      || ES_MATCH (es, i + 1, '='))
 	    {
 	      size_t closing_delim_idx;
-	      size_t closing_bracket_idx;
-	      unsigned int char_to_repeat;
-	      size_t repeat_count;
 	      int found;
 
-	    case ':':
-	    case '=':
-	      found = find_closing_delim (p, i + 2, len, p[i + 1],
+	      found = find_closing_delim (es, i + 2, p[i + 1],
 					  &closing_delim_idx);
 	      if (found)
 		{
 		  int parse_failed;
 		  unsigned char *opnd_str = substr (p, i + 2,
 						    closing_delim_idx - 1);
+		  size_t opnd_str_len = closing_delim_idx - 1 - (i + 2) + 1;
+
 		  if (p[i + 1] == ':')
-		    parse_failed = append_char_class (result, opnd_str,
-				     (closing_delim_idx - 1) - (i + 2) + 1);
+		    {
+		      parse_failed = append_char_class (result, opnd_str,
+							opnd_str_len);
+
+		      /* FIXME: big comment.  */
+		      if (parse_failed)
+			{
+			  if (star_digits_closebracket (es, i + 2))
+			    {
+			      free (opnd_str);
+			      goto try_bracketed_repeat;
+			    }
+			  else
+			    {
+			      char *tmp = make_printable_str (opnd_str,
+							      opnd_str_len);
+			      error (0, 0, _("invalid character class `%s'"),
+				     tmp);
+			      free (tmp);
+			      return 1;
+			    }
+			}
+		    }
 		  else
-		    parse_failed = append_equiv_class (result, opnd_str,
-				     (closing_delim_idx - 1) - (i + 2) + 1);
+		    {
+		      parse_failed = append_equiv_class (result, opnd_str,
+							 opnd_str_len);
+
+		      /* FIXME: big comment.  */
+		      if (parse_failed)
+			{
+			  if (star_digits_closebracket (es, i + 2))
+			    {
+			      free (opnd_str);
+			      goto try_bracketed_repeat;
+			    }
+			  else
+			    {
+			      char *tmp = make_printable_str (opnd_str,
+							      opnd_str_len);
+			      error (0, 0,
+	       _("%s: equivalence class operand must be a single character"),
+				     tmp);
+			      free (tmp);
+			      return 1;
+			    }
+			}
+		    }
 		  free (opnd_str);
 
 		  /* Return non-zero if append_*_class reports a problem.  */
@@ -1020,42 +1094,44 @@ build_spec_list (const struct E_string *es, struct Spec_list *result)
 		    return 1;
 		  else
 		    i = closing_delim_idx + 2;
-		  break;
+		  continue;
 		}
 	      /* Else fall through.  This could be [:*] or [=*].  */
-	    default:
-	      /* Determine whether this is a bracketed repeat range
-	         matching the RE \[.\*(dec_or_oct_number)?\].  */
-	      err = find_bracketed_repeat (p, i + 1, len, &char_to_repeat,
-					   &repeat_count,
-					   &closing_bracket_idx);
-	      if (err == 0)
-		{
-		  append_repeated_char (result, char_to_repeat, repeat_count);
-		  i = closing_bracket_idx + 1;
-		  break;
-		}
-	      else if (err == -1)
-		{
-		  fall_through = 1;
-		}
-	      else
-		/* Found a string that looked like [c*n] but the
-		   numeric part was invalid.  */
-		return 1;
-	      break;
 	    }
 
-	  if (!fall_through)
+	try_bracketed_repeat:
+
+	  /* Determine whether this is a bracketed repeat range
+	     matching the RE \[.\*(dec_or_oct_number)?\].  */
+	  err = find_bracketed_repeat (es, i + 1, &char_to_repeat,
+				       &repeat_count,
+				       &closing_bracket_idx);
+	  if (err == 0)
+	    {
+	      append_repeated_char (result, char_to_repeat, repeat_count);
+	      i = closing_bracket_idx + 1;
+	    }
+	  else if (err == -1)
+	    {
+	      matched_multi_char_construct = 0;
+	    }
+	  else
+	    {
+	      /* Found a string that looked like [c*n] but the
+		 numeric part was invalid.  */
+	      return 1;
+	    }
+
+	  if (matched_multi_char_construct)
 	    continue;
 
-	  /* Here if we've tried to match [c*n], [:str:], and [=c=]
-	     and none of them fit.  So we still have to consider the
-	     range `[-c' (from `[' to `c').  */
+	  /* We reach this point if P does not match [:str:], [=c=],
+	     [c*n], or [c*].  Now, see if P looks like a range `[-c'
+	     (from `[' to `c').  */
 	}
 
       /* Look ahead one char for ranges like a-z.  */
-      if (p[i + 1] == '-')
+      if (ES_MATCH (es, i + 1, '-'))
 	{
 	  if (append_range (result, p[i], p[i + 2]))
 	    return 1;
@@ -1068,8 +1144,8 @@ build_spec_list (const struct E_string *es, struct Spec_list *result)
 	}
     }
 
-  /* Now handle the (2 or fewer) remaining characters p[i]..p[len - 1].  */
-  for (; i < len; i++)
+  /* Now handle the (2 or fewer) remaining characters p[i]..p[es->len - 1].  */
+  for (; i < es->len; i++)
     append_normal_char (result, p[i]);
 
   return 0;
