@@ -1,5 +1,9 @@
 1999-04-26  Paul Eggert  <eggert@twinsun.com>
 
+	* src/dd.c (main): If you can't open an output file (with
+	seek=...) read-write, then open it for write and report an
+	error if we can't seek.
+
 	* lib/filemode.c (setst, ftypelet, mode_string):
 	* lib/mkdir.c (mkdir):
 	* lib/makepath.c (make_path):
