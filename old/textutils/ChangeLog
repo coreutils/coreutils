@@ -1,3 +1,9 @@
+Mon Dec 16 23:03:27 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/Makefile.am (pkgdata_DATA): Remove unnecessary assignment.
+	From Eric Backus.
+	(AUTOMAKE_OPTIONS): Likewise.
+
 Sat Dec 14 14:51:50 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* acinclude.m4 (jm_SYS_PROC_UPTIME): Fix typo in cache variable
