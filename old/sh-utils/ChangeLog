@@ -1,5 +1,13 @@
 1999-05-05  Jim Meyering  <meyering@ascend.com>
 
+	Add definitions to help read utmpx on systems with utmpname.
+	* lib/readutmp.h (UTMP_NAME_FUNCTION): Define.
+	(SET_UTMP_ENT): Likewise.
+	(GET_UTMP_ENT): Likewise.
+	(END_UTMP_ENT): Likewise.
+	* lib/readutmp.c (read_utmp): Use the new definitions.
+	From Kaveh Ghazi.
+
 	* src/date.c (show_date): Change an automatic aggregate initializer
 	to be a static one.  For SunOS4's cc.  From Kaveh Ghazi.
 
