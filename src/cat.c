@@ -95,7 +95,7 @@ Concatenate FILE(s), or standard input, to standard output.\n\
   -s, --squeeze-blank      never more than one single blank line\n\
   -t                       equivalent to -vT\n\
   -u                       (ignored)\n\
-  -v, --show-nonprinting   use ^ and M- notation, save for LFD and TAB\n\
+  -v, --show-nonprinting   use ^ and M- notation, except for LFD and TAB\n\
   -A, --show-all           equivalent to -vET\n\
   -E, --show-ends          display $ at end of each line\n\
   -T, --show-tabs          display TAB characters as ^I\n\
