@@ -95,7 +95,7 @@ void usage ();
 /* The name this program was run with. */
 char *program_name;
 
-struct option longopts[] =
+static struct option longopts[] =
 {
   {"portability", 0, NULL, 'p'},
   {NULL, 0, NULL, 0}
