@@ -3,8 +3,27 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  du can now process hierarchies of virtually unlimited depth.
+  Before, du was limited by the user's stack size and it would get a
+  stack overflow error (often a segmentation fault) when applied to
+  a hierarchy of depth around 30,000.
+
+  du works even when run from an inaccessible directory
+
+  du -D now dereferences all symlinks specified on the command line,
+  not just the ones that reference directories
+  FIXME: confirm this, and add a test
+
+  du now accepts -P (--no-dereference), for compatibility with du
+  of NetBSD and for consistency with e.g., chown and chgrp
+
+  du's -H option will soon have the meaning required by POSIX
+  (--dereference-args, aka -D) rather then the current meaning of --si.
+  Now, using -H elicits a warning to that effect.
+
 ** Bug fixes
 
+  csplit would mistakenly exhaust virtual memory in some cases
 
 * Major changes in release 5.0.91:
 
