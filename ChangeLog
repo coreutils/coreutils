@@ -1,3 +1,7 @@
+2003-11-27  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.1.0.
+
 2003-11-24  Paul Eggert  <eggert@twinsun.com>
 
 	Parse floating-point operands and options in the C locale.
@@ -13,8 +17,6 @@
 	* src/tail.c (parse_options): Likewise.
 
 2003-11-24  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.1.0.
 
 	* tests/rm/fail-2eperm: Handle another errno variant (HPUX, EPERM).
 	Reported by Mark Conty.
