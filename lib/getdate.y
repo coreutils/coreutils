@@ -1,6 +1,8 @@
 %{
 /* Parse a string into an internal time stamp.
-   Copyright (C) 1999, 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
+
+   Copyright (C) 1999, 2000, 2002, 2003, 2004, 2005 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1125,8 +1127,7 @@ get_date (struct timespec *result, char const *p, struct timespec const *now)
 
   if (! now)
     {
-      if (gettime (&gettime_buffer) != 0)
-	return false;
+      gettime (&gettime_buffer);
       now = &gettime_buffer;
     }
 
