@@ -2,6 +2,9 @@
 
 	* Version 5.3.0.
 
+	* tests/install/trap: New file.  Test for bug fix of 2004-04-18.
+	* tests/install/Makefile.am (TESTS): Add trap.
+
 	* src/remove.c (AD_push): Don't use errno in diagnostic about
 	`changed dev/ino'.
 
