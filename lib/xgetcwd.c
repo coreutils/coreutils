@@ -51,7 +51,7 @@ char *getwd ();
 char *
 xgetcwd ()
 {
-#if defined __GLIBC__ && __GLIBC__ >= 2
+#if HAVE_GETCWD_NULL
   return getcwd (NULL, 0);
 #else
   size_t buf_size = 128;  /* must be a power of 2 */
