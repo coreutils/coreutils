@@ -27,6 +27,7 @@
 # include <utime.h>
 #endif
 
+#include "full-write.h"
 #include "safe-read.h"
 
 /* Some systems (even some that do have <utime.h>) don't declare this
@@ -57,9 +58,9 @@ utime_null (const char *file)
   fd = open (file, O_RDWR);
   if (fd < 0
       || fstat (fd, &sb) < 0
-      || safe_read (fd, &c, sizeof (char)) < 0
+      || safe_read (fd, &c, sizeof c) < 0
       || lseek (fd, (off_t) 0, SEEK_SET) < 0
-      || full_write (fd, &c, sizeof (char)) < 0
+      || full_write (fd, &c, sizeof c) != sizeof c
       /* Maybe do this -- it's necessary on SunOS4.1.3 with some combination
 	 of patches, but that system doesn't use this code: it has utimes.
 	 || fsync (fd) < 0
