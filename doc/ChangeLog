@@ -1,5 +1,8 @@
 2004-03-27  Paul Eggert  <eggert@twinsun.com>
 
+	cp -pu and mv -u (when copying) now take the destination
+	file system time stamp resolution into account.
+
 	* coreutils.texi (mv invocation): Document this.
 	(cp invocation): Document -u (it was missing!) with new behavior.
 
