@@ -1,3 +1,18 @@
+2003-09-16  Paul Eggert  <eggert@twinsun.com>
+
+	* linebuffer.c (readlinebuffer): Return NULL immediately upon
+	input error, instead of returning NULL the next time we are called
+	(and therefore losing track of errno).
+
+2003-09-15  Paul Eggert  <eggert@twinsun.com>
+
+	* getndelim2.c (getndelim2): Don't trash errno when a read
+	fails, so that the caller gets the proper errno.
+
+	* readutmp.c (read_utmp): Likewise.
+	Check for fstat error.  Close stream and free storage
+	when failing.
+
 2003-09-14  Jim Meyering  <jim@meyering.net>
 
 	* argmatch.c: Update from gnulib.
