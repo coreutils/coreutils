@@ -1,6 +1,51 @@
-2001-10-24  Jim Meyering  <meyering@lucent.com>
+2001-11-01  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.1.
+
+	Make ls -R detect directory cycles.
+	Add loop detection without incurring an additional stat call per
+	directory processed.  To detect loops efficiently (i.e., time: +O(1)
+	per directory processed by ls -R, total additional space:
+	O(max-tree-depth)), record the dev/ino of each `active' directory
+	in a hash table.  To know when a directory is no longer active,
+	insert a marker (name == NULL) entry for it in the pending queue.
+	When a marker comes to the front of the queue, that directory is no
+	longer active, and must be removed from the hash table.  To remove it,
+	we need to know its dev/ino again.  Since by the time a directory
+	has become inactive its files[] info is long gone and it's DIR*
+	is closed, I must either save the dev/ino someplace (pending seemed
+	logical) or recompute them via stat.
+
+	A subsequent change will convert to using a stack of dev/ino pairs
+	instead, pushing an entry when doing the opendir (use fstat on
+	dirfd (reading)), and popping (when encountering a marker) to get
+	the dev/ino pair to be removed from the hash table.
+
+	* src/ls.c: Include hash.h, same.h, and xalloc.h.
+	(INITIAL_TABLE_SIZE, LOOP_DETECT): Define.
+	(active_dir_set): New global.
+	(struct dev_ino): Declare.
+	(dev_ino_hash, dev_ino_compare, dev_ino_free): New functions.
+	(visit_dir, free_pending_ent): New functions.
+	(main): Initialize the active_dir_set hash table, if necessary.
+	Don't confuse a marker entry with a real one.
+	Detect loops.
+	Manage the set of active directories.
+	Free the hash table.
+	(queue_directory): Add a new parameter.
+	Ensure that we set the new dev/ino members for each enqueued directory.
+	Update all callers.
+	(print_dir): Don't confuse a marker entry with a real one.
+	(extract_dirs_from_files): Insert a marker entry before inserting
+	the entries for subdirectories.
+
+	Don't try to print a NULL pointer.
+	* src/ls.c (main): Don't use ARGMATCH_TO_ARGUMENT.
+	This reverts part of the 1998-12-31 change.
+	* tests/ls/dired: New test, for the above.
+	* tests/ls/Makefile.am (TESTS): Add dired.
+
+2001-10-24  Jim Meyering  <meyering@lucent.com>
 
 	* src/cp.c (main): Free hash table storage.
 	* src/cp-hash.c (forget_all): Use hash_free, not hash_clear.
