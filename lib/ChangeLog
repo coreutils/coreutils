@@ -1,3 +1,8 @@
+2000-06-04  Jim Meyering  <meyering@lucent.com>
+
+	* getugroups.c (getugroups): Cast -1 to gid_t, for systems like
+	SunOS4.1.4 for which gid_t is an unsigned type.
+
 2000-06-03  Jim Meyering  <meyering@lucent.com>
 
 	* strnlen.c [!HAVE_DECL_MEMCHR]: Declare memchr.
