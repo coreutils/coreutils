@@ -749,6 +749,7 @@ valid_options (const struct cp_options *co)
   assert (co->xstat);
 
   assert (co->sparse_mode != SPARSE_UNUSED);
+  return 1;
 }
 
 /* Copy the file SRC_PATH to the file DST_PATH.  The files may be of
@@ -765,5 +766,5 @@ copy (const char *src_path, const char *dst_path,
       int nonexistent_dst, const struct cp_options *options)
 {
   assert (valid_options (options));
-  copy_internal (src_path, dst_path, nonexistent_dst, 0, NULL, options);
+  return copy_internal (src_path, dst_path, nonexistent_dst, 0, NULL, options);
 }
