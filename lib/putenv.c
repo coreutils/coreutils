@@ -26,8 +26,12 @@ extern int errno;
 
 #if defined(STDC_HEADERS) || defined(USG)
 #include <string.h>
+#ifndef index
 #define index strchr
+#endif
+#ifndef bcopy
 #define bcopy(s, d, n) memcpy((d), (s), (n))
+#endif
 #else /* not (STDC_HEADERS or USG) */
 #include <strings.h>
 #endif /* STDC_HEADERS or USG */
