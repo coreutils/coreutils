@@ -1,6 +1,20 @@
-1998-12-06  Jim Meyering  <meyering@ascend.com>
+1998-12-07  Jim Meyering  <meyering@ascend.com>
 
 	* Version 4.1-b1.
+
+	* src/copy.c: Use dir_name, not dirname.  Include dirname.h.
+	* src/cp.c: Likewise.
+	* src/df.c: Likewise.
+	* src/install.c: Likewise.
+	* src/ln.c: Likewise.
+	* src/mvdir.c: Likewise.
+
+	* lib/dirname.c (dir_name): Rename from dirname.
+	Make argument `const'.  Include "dirname.h"
+	* lib/dirname.h: New file.
+	* lib/Makefile.am (noinst_HEADERS): Add dirname.h.
+
+1998-12-06  Jim Meyering  <meyering@ascend.com>
 
 	* lib/rpmatch.c (rpmatch) [!ENABLE_NLS]: Hard-code tests to use
 	`^[yY]' and `^[nN]' (avoiding regex).  From Karl Heuer.
