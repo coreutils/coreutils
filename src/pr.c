@@ -2805,6 +2805,8 @@ produce empty pages.\n\
                     use form feeds instead of newlines to separate pages\n\
                     (by a 3-line page header with -F or a 5-line header\n\
                     and trailer without -F)\n\
+"));
+      printf (_("\
   -h HEADER, --header=HEADER\n\
                     use a centered HEADER instead of filename in page header,\n\
                     with long headers left-hand-side truncation may occur,\n\
@@ -2815,8 +2817,7 @@ produce empty pages.\n\
                     alignment, -S[STRING] sets separators\n\
   -l PAGE_LENGTH, --length=PAGE_LENGTH\n\
                     set the page length to PAGE_LENGTH (66) lines\n\
-                    (default number of lines of text 56, and with -F 63)\n"));
-      printf (_("\
+                    (default number of lines of text 56, and with -F 63)\n\
   -m, --merge       print all files in parallel, one in each column,\n\
                     truncate lines, but join lines of full length with -J\n\
   -n[SEP[DIGITS]], --number-lines[=SEP[DIGITS]]\n\
@@ -2830,6 +2831,8 @@ produce empty pages.\n\
                     affect -w or -W, MARGIN will be added to PAGE_WIDTH\n\
   -r, --no-file-warnings\n\
                     omit warning when a file cannot be opened\n\
+"));
+      printf (_("\
   -s[CHAR],--separator[=CHAR]\n\
                     separate columns by a single character, default for CHAR\n\
                     is the <TAB> character without -w and \'no char\' with -w\n\
