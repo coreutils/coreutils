@@ -23,8 +23,11 @@ Sat Mar  9 13:30:12 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	Link an nls file.
 	(AC_OUTPUT): Reflect addition of two new directories, intl and po.
 	Create po/Makefile.
-
   	From François Pinard.
+
+	* tr.c (star_digits_closebracket): Declare formal param, IDX,
+	and local I to be of type size_t (rather than int) to avoid
+	warnings from gcc -Wall.
 
 Wed Feb 28 20:32:48 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
