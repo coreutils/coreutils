@@ -1,6 +1,7 @@
 1999-01-24  Jim Meyering  <meyering@ascend.com>
 
 	* src/ansi2knr.c: Exit nonzero upon failed write to stdout.
+	New version from L. Peter Deutsch.
 
 	* lib/quotearg.c (quotearg_n_options): Revert type of parameter `n'
 	(and hence that of the local `n1', too) to `int' at Paul's request.
