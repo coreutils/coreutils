@@ -12,6 +12,7 @@
 	Don't report a failure with F_SETFD unless it returns -1.
 	* cloexec.h: Include <stdbool.h>.
 	Adjust signature to use `bool' rather than `int'.
+	* getloadavg.c (getloadavg): Use `true', not `1'.
 
 2004-03-02  Dmitry V. Levin  <ldv@altlinux.org>
 
