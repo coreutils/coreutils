@@ -40,8 +40,8 @@
 #include "modechange.h"
 #include "system.h"
 #include "version.h"
-
-int lstat ();
+#include "safe-stat.h"
+#include "safe-lstat.h"
 
 char *savedir ();
 char *xmalloc ();
@@ -196,7 +196,7 @@ change_file_mode (file, changes, deref_symlink)
   unsigned short newmode;
   int errors = 0;
 
-  if (lstat (file, &file_stats))
+  if (SAFE_LSTAT (file, &file_stats))
     {
       if (force_silent == 0)
 	error (0, errno, "%s", file);
@@ -207,7 +207,7 @@ change_file_mode (file, changes, deref_symlink)
     if (! deref_symlink)
       return 0;
     else 
-      if (stat (file, &file_stats))
+      if (SAFE_STAT (file, &file_stats))
 	{
 	  if (force_silent == 0)
 	    error (0, errno, "%s", file);
