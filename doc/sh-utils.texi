@@ -860,9 +860,9 @@ Interpret @var{token} as a string, even if it is a keyword like @var{match}
 or an operator like @code{/}.
 This makes it possible to test @code{expr length quote "$x"} or
 @code{expr quote "$x" : '.*/\(.\)'} and have it do the right thing even if
-the value of @var{$x} happens to be @code{/} or @code{index}.
-This operator is provided as a GNU extension.  It is disabled when
-the environment variable, @var{POSIXLY_CORRECT} is set.
+the value of @var{$x} happens to be (for example) @code{/} or @code{index}.
+This operator is a GNU extension.  It is disabled when
+the environment variable @var{POSIXLY_CORRECT} is set.
 
 @end table
 
