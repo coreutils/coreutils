@@ -135,6 +135,7 @@ main (int argc, char **argv)
       if ('0' <= optc && optc <= '9')
 	{
 	  /* means negative number */
+	  --optind;
 	  break;
 	}
 
