@@ -1,6 +1,15 @@
-2001-10-18  Jim Meyering  <meyering@lucent.com>
+2001-10-20  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.1.
+
+	* tests/mv/partition-perm: Don't use a umask that removes owner
+	read/write.  Use a stricter test for permissions.
+
+	* tests/cp/link-preserve: Don't use a umask that removes owner
+	read/write.  That would induce spurious failures in a probably-
+	outdated version of purify.
+
+2001-10-18  Jim Meyering  <meyering@lucent.com>
 
 	* src/mv.c (movefile): Now that remember_copied xstrdup's the file
 	name, free `new_dest'.
