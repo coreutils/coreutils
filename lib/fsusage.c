@@ -156,7 +156,9 @@ get_fs_usage (path, disk, fsp)
      no matter what value f_bsize has.  */
 #define convert_blocks(b) (b)
 #ifndef _SEQUENT_		/* _SEQUENT_ is DYNIX/ptx.  */
+#ifndef DOLPHIN			/* DOLPHIN 3.8.alfa/7.18 has f_bavail */
 #define f_bavail f_bfree
+#endif
 #endif
 #endif
 

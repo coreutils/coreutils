@@ -1,4 +1,6 @@
 Major changes in release 3.6:
+* `ln -s dir_pathname .' works when the pathname has a trailing slash
+* with the --version option programs print the version and exit immediately
 * GNU ls -f works like Unix ls -f
 * mktime replacement works
 

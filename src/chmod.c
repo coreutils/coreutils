@@ -143,7 +143,10 @@ main (argc, argv)
     }
 
   if (flag_version)
-    fprintf (stderr, "%s\n", version_string);
+    {
+      fprintf (stderr, "%s\n", version_string);
+      exit (0);
+    }
 
   if (flag_help)
     usage ();

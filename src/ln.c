@@ -38,6 +38,7 @@ enum backup_type get_version ();
 int isdir ();
 int yesno ();
 void error ();
+void strip_trailing_slashes ();
 
 static void usage ();
 static int do_link ();
@@ -150,7 +151,10 @@ main (argc, argv)
     }
 
   if (flag_version)
-    fprintf (stderr, "%s\n", version_string);
+    {
+      fprintf (stderr, "%s\n", version_string);
+      exit (0);
+    }
 
   if (flag_help)
     usage ();
@@ -212,8 +216,13 @@ do_link (source, dest)
       /* Target is a directory; build the full filename. */
       char *new_dest;
       char *source_base;
+      char *tmp_source;
 
-      source_base = basename (source);
+      tmp_source = (char *) alloca (strlen (source) + 1);
+      strcpy (tmp_source, source);
+      strip_trailing_slashes (tmp_source);
+
+      source_base = basename (tmp_source);
       new_dest = (char *)
 	alloca (strlen (source_base) + 1 + strlen (dest) + 1);
       sprintf (new_dest, "%s/%s", dest, source_base);
