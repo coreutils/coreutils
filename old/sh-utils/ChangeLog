@@ -1,3 +1,7 @@
+2000-10-29  Jim Meyering  <meyering@lucent.com>
+
+	* Version 2.0.11.
+
 2000-10-27  Jim Meyering  <meyering@lucent.com>
 
 	* src/date.c (usage): Mention the time zone, UTC, and write the date
