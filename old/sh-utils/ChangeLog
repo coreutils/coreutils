@@ -1,5 +1,9 @@
 Tue Mar 18 06:46:54 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/su.c: Indent cpp-directives to reflect nesting.
+	Change a few #ifdef to #if.
+	Remove 3 spurious #ifdef that were guarding an #undef each.
+
 	* src/seq.c (check_format): Rename local, FORMAT_STRING, to avoid
 	shadowing global.
 	(print_numbers): Likewise.
