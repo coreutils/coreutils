@@ -560,7 +560,7 @@ prompt (char const *filename, struct rm_options const *x,
   *is_dir = T_UNKNOWN;
 
   if ((!x->ignore_missing_files && (x->interactive || x->stdin_tty)
-       && (write_protected = euidaccess (filename, W_OK)))
+       && (write_protected = (euidaccess (filename, W_OK) && errno == EACCES)))
       || x->interactive)
     {
       struct stat sbuf;
