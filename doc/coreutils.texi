@@ -8477,6 +8477,21 @@ Does not affect other symbolic links.  This is helpful for finding
 out the disk usage of directories, such as @file{/usr/tmp}, which
 are often symbolic links.
 
+@itemx --files0-from=@var{FILE0}
+@opindex --files0-from=@var{FILE0}
+@cindex including files from @command{du}
+Rather than processing files named on the command line, process those
+in the NUL-separated list in file @var{FILE0}.
+This is useful with the @option{--summarize} (@option{-s}) option when
+the list of file names is so long that it may exceed a command line
+length limitation.
+In such cases, running @command{du} via @command{xargs} is undesirable
+because it splits the list into pieces and makes @command{du} print a
+total for each sublist rather than for the entire list.
+One way to produce a list of NUL-separated file names is with @sc{gnu}
+@command{find}, using its @option{-print0} predicate.
+Do not specify any @var{FILE} on the command line when using this option.
+
 @optHumanReadable
 
 @item -H
@@ -9322,7 +9337,7 @@ e.g., spaces.  However, regardless of whether it is quoted, a string
 operand should not be a parenthesis or any of @command{expr}'s
 operators like @code{+}, so you cannot safely pass an arbitrary string
 @code{$str} to expr merely by quoting it to the shell.  One way to
-work around this is to use the @command{GNU} extension @code{+},
+work around this is to use the @sc{gnu} extension @code{+},
 (e.g., @code{+ "$str" = foo}); a more portable way is to use
 @code{@w{" $str"}} and to adjust the rest of the expression to take
 the leading space into account (e.g., @code{@w{" $str" = " foo"}}).
