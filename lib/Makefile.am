@@ -43,7 +43,7 @@ libfetish_a_SOURCES = \
   c-strtod.c c-strtod.h c-strtold.c \
   canon-host.c \
   canonicalize.c canonicalize.h \
-  chdir.h \
+  chdir-long.c chdir-long.h \
   cloexec.c cloexec.h \
   closeout.c closeout.h \
   cycle-check.c cycle-check.h \
