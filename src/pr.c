@@ -380,7 +380,7 @@ struct COLUMN;
 struct COLUMN
   {
     FILE *fp;			/* Input stream for this column. */
-    char *name;			/* File name. */
+    char const *name;		/* File name. */
     enum
       {
 	OPEN,
@@ -1335,7 +1335,7 @@ init_fps (int number_of_files, char **av)
   int i, files_left;
   COLUMN *p;
   FILE *firstfp;
-  char *firstname;
+  char const *firstname;
 
   total_files = 0;
 
