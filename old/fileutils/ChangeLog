@@ -1,3 +1,29 @@
+Wed Jan 31 21:50:41 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* dd.c (skip): Change type of parameter #5 from char* to
+	unsigned char* to match type of argument.
+	(copy): Cast first arg in memset call to char* to avoid warnings
+	from SunOS's acc.
+	(copy_simple): Likewise.
+
+	* du.c: Remove comma after last item in enum.
+
+	* df.c: Remove block of usage comments at beginning of file.
+
+	* df.c (main): New options --human-readable (-h) and --megabytes (-m).
+	(human_readable_1k_blocks): New function.
+	(print_header): Honor new options.
+	(show_dev): Honor new options.
+	Add ifdef'd-out code to avoid printing lines for mount points that
+	match ^/auto/.* and ^/tmp_mnt.*.  Rather than hard-coding those
+	two prefixes, the code should allow the user to specify a regular
+	expression.  From Larry McVoy (lm@sgi.com).
+
+	* du.c (human_readable): Fix off-by-one error that converted
+	1024*1024 to 1024K rather than 1G.  Describe the function.
+	* df.c (human_readable_1k_blocks): Likewise
+	(usage): Update usage message to reflect additions.
+
 Sat Jan 20 06:00:09 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* cp-aux.c (usage): Fix description of --archive.  From Andreas Schwab.
@@ -11,6 +37,10 @@ Sat Jan 20 06:00:09 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* lib/Makefile.am (BUILT_SOURCES): Set to posixtm.c getdate.c so
 	autodependencies work after `make maintainer-clean.'
+
+	* du.c (main): New options --human-readable (-h) and --megabytes (-m).
+	(human_readable): New function.
+	From Larry McVoy (lm@sgi.com).
 
 Fri Dec 22 21:34:55 1995  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
