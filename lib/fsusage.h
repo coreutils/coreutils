@@ -26,6 +26,7 @@ struct fs_usage
   uintmax_t fsu_blocks;		/* Total blocks. */
   uintmax_t fsu_bfree;		/* Free blocks available to superuser. */
   uintmax_t fsu_bavail;		/* Free blocks available to non-superuser. */
+  int fsu_bavail_top_bit_set;	/* 1 if fsu_bavail represents a value < 0.  */
   uintmax_t fsu_files;		/* Total file nodes. */
   uintmax_t fsu_ffree;		/* Free file nodes. */
 };
