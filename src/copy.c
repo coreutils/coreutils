@@ -167,12 +167,13 @@ copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
    in the source file as holes in the destination file.
    (Holes are read as zeroes by the `read' system call.)
    Use DST_MODE as the 3rd argument in the call to open.
+   X provides many option settings.
    Return 0 if successful, -1 if an error occurred.
-   FIXME: describe sparse_mode.  */
+   *NEW_DST is as in copy_internal.  */
 
 static int
 copy_reg (const char *src_path, const char *dst_path,
-	  enum Sparse_type sparse_mode, mode_t dst_mode)
+	  const struct cp_options *x, mode_t dst_mode, int *new_dst)
 {
   char *buf;
   int buf_size;
@@ -184,7 +185,7 @@ copy_reg (const char *src_path, const char *dst_path,
   int return_val = 0;
   off_t n_read_total = 0;
   int last_write_made_hole = 0;
-  int make_holes = (sparse_mode == SPARSE_ALWAYS);
+  int make_holes = (x->sparse_mode == SPARSE_ALWAYS);
 
   source_desc = open (src_path, O_RDONLY);
   if (source_desc < 0)
@@ -202,7 +203,34 @@ copy_reg (const char *src_path, const char *dst_path,
       return -1;
     }
 
-  dest_desc = open (dst_path, O_WRONLY | O_CREAT | O_TRUNC, dst_mode);
+  /* These semantics are required for cp.
+     The if-block will be taken in move_mode.  */
+  if (*new_dst)
+    {
+      dest_desc = open (dst_path, O_WRONLY | O_CREAT, dst_mode);
+    }
+  else
+    {
+      dest_desc = open (dst_path, O_WRONLY | O_TRUNC, dst_mode);
+
+      /* FIXME: Rename force to unlink_dest_upon_failed_open.  */
+      if (dest_desc < 0 && x->force)
+	{
+	  if (unlink (dst_path))
+	    {
+	      error (0, errno, _("cannot remove %s"), quote (dst_path));
+	      return_val = -1;
+	      goto close_src_desc;
+	    }
+
+	  /* Tell caller that the destination file was unlinked.  */
+	  *new_dst = 1;
+
+	  /* Try the open again, but this time with different flags.  */
+	  dest_desc = open (dst_path, O_WRONLY | O_CREAT, dst_mode);
+	}
+    }
+
   if (dest_desc < 0)
     {
       error (0, errno, _("cannot create regular file %s"), quote (dst_path));
@@ -222,7 +250,7 @@ copy_reg (const char *src_path, const char *dst_path,
   buf_size = ST_BLKSIZE (sb);
 
 #if HAVE_STRUCT_STAT_ST_BLOCKS
-  if (sparse_mode == SPARSE_AUTO && S_ISREG (sb.st_mode))
+  if (x->sparse_mode == SPARSE_AUTO && S_ISREG (sb.st_mode))
     {
       /* Use a heuristic to determine whether SRC_PATH contains any
 	 sparse blocks. */
@@ -498,7 +526,7 @@ copy_internal (const char *src_path, const char *dst_path,
 
 	  if (!S_ISDIR (src_type) && x->interactive)
 	    {
-	      if (euidaccess (dst_path, W_OK) != 0 && x->force)
+	      if (euidaccess (dst_path, W_OK) != 0)
 		{
 		  fprintf (stderr,
 			   _("%s: overwrite %s, overriding mode %04lo? "),
@@ -578,35 +606,6 @@ copy_internal (const char *src_path, const char *dst_path,
 		  backup_succeeded = 1;
 		}
 	      new_dst = 1;
-	    }
-	  else if (x->force)
-	    {
-	      if (S_ISDIR (dst_sb.st_mode))
-		{
-		  /* Temporarily change mode to allow overwriting. */
-		  if (euidaccess (dst_path, W_OK | X_OK) != 0
-		      && chmod (dst_path, S_IRWXU))
-		    {
-		      error (0, errno,
-			     _("cannot change permissions for %s"),
-			     quote (dst_path));
-		      return 1;
-		    }
-		}
-	      else
-		{
-		  if (unlink (dst_path) && errno != ENOENT)
-		    {
-		      error (0, errno, _("cannot remove old link to %s"),
-			     quote (dst_path));
-		      if (x->failed_unlink_is_fatal)
-			return 1;
-		    }
-		  else
-		    {
-		      new_dst = 1;
-		    }
-		}
 	    }
 	}
     }
@@ -827,8 +826,8 @@ copy_internal (const char *src_path, const char *dst_path,
       /* POSIX says the permission bits of the source file must be
 	 used as the 3rd argument in the open call, but that's not consistent
 	 with historical practice.  */
-      if (copy_reg (src_path, dst_path, x->sparse_mode,
-		    get_dest_mode (x, src_mode)))
+      if (copy_reg (src_path, dst_path, x,
+		    get_dest_mode (x, src_mode), &new_dst))
 	goto un_backup;
     }
   else
