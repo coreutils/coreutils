@@ -1,9 +1,6 @@
 /* TODO:
-   x use getopt_long
-   x use error, not pferror
    - don't use pfstatus (at least vprintf isn't portable) -- or maybe
        leave it in and see who complains
-   x bracket strings with _(...) for gettext
    - use consistent non-capitalization in error messages
    - add standard GNU copyleft comment
  */
@@ -40,7 +37,7 @@
  * If asked to wipe a file, this also deletes it, renaming it to in a
  * clever way to try to leave no trace of the original filename.
  *
- * Copyright 1997, 1998 Colin Plumb <colin@nyx.net>.  This program may
+ * Copyright 1997-1999 Colin Plumb <colin@nyx.net>.  This program may
  * be freely distributed under the terms of the GNU GPL, the BSD license,
  * or Larry Wall's "Artistic License"   Even if you use the BSD license,
  * which does not require it, I'd really like to get improvements back.
