@@ -27,7 +27,9 @@
 #include <sys/types.h>
 #include <signal.h>
 #include <stdio.h>
-#define NDEBUG 1
+#ifndef ENABLE_ASSERTIONS
+# define NDEBUG 1
+#endif
 #include <assert.h>
 #include "system.h"
 #include "long-options.h"
@@ -1247,12 +1249,16 @@ checkfp (FILE *fp)
 
       /* Save the last line of the buffer and refill the buffer. */
       prev_line = lines.lines + (lines.used - 1);
-      if (prev_line->length > alloc)
+      if (prev_line->length + 1 > alloc)
 	{
-	  while (prev_line->length + 1 > alloc)
+	  do
+	{
 	    alloc *= 2;
+	    }
+	  while (alloc < prev_line->length + 1);
 	  temp.text = xrealloc (temp.text, alloc);
 	}
+      assert (prev_line->length + 1 <= alloc);
       memcpy (temp.text, prev_line->text, prev_line->length + 1);
       temp.length = prev_line->length;
       temp.keybeg = temp.text + (prev_line->keybeg - prev_line->text);
