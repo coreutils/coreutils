@@ -1720,8 +1720,8 @@ Double space the output.
 @cindex time formats
 @cindex formatting times
 Format header dates using @var{format}, using the same conventions as
-for the the command @samp{date +@var{format}}; @xref{date invocation, ,
-,sh-utils,GNU shell utilities}.  Except for directives, which start with
+for the the command @samp{date +@var{format}}; @xref{date invocation}.
+Except for directives, which start with
 @samp{%}, characters in @var{format} are printed unchanged.  You can use
 this option to specify an arbitrary string in place of the header date,
 e.g., @option{--date-format="Monday morning"}.
@@ -2933,7 +2933,7 @@ An initial string, consisting of any amount of whitespace, followed
 by a month name abbreviation, is folded to UPPER case and
 compared in the order @samp{JAN} < @samp{FEB} < @dots{} < @samp{DEC}.
 Invalid names compare low to valid names.  The @env{LC_TIME} locale
-determines the month spellings.
+category determines the month spellings.
 
 @item -n
 @itemx --numeric-sort
@@ -5356,76 +5356,116 @@ is 80.
 @node Formatting file timestamps
 @subsection Formatting file timestamps
 
-By default, file timestamps are output in abbreviated form.  For files
-with a time more than six months old or in the future, the timestamp
-contains the year instead of the time of day.  If the timestamp contains
-today's date with the year rather than a time of day, the file's time is
-in the future, which means you probably have clock skew problems which
-may break programs like @command{make} that rely on file times.
+By default, file timestamps are listed in abbreviated form.  Most
+locales use a timestamp like @samp{2002-03-30 23:45}.  However, the
+default @acronym{POSIX} locale uses a date like @samp{Mar 30@ @ 2002}
+for non-recent timestamps, and a date-without-year and time like
+@samp{Mar 30 23:45} for recent timestamps.
+
+A timestamp is considered to be @dfn{recent} if it is less than six
+months old, and is not dated in the future.  If a timestamp dated
+today is not listed in recent form, the timestamp is in the future,
+which means you probably have clock skew problems which may break
+programs like @command{make} that rely on file timestamps.
 
 The following option changes how file timestamps are printed.
 
 @table @samp
-@item --time-style=@var{word}
+@item --time-style=@var{style}
 @opindex --time-style
 @cindex time style
-Use style @var{word} to output file timestamps.  The @var{word} should
+List timestamps in style @var{style}.  The @var{style} should
 be one of the following:
 
 @table @samp
+@item +@var{format}
+@vindex LC_TIME
+List timestamps using @var{format}, where @var{format} is interpreted
+like the format argument of @command{date} (@pxref{date invocation}).
+For example, @option{--time-style="+%Y-%m-%d %H:%M:S"} causes
+@command{ls} to list timestamps like @samp{2002-03-30 23:45:56}.  As
+with @command{date}, @var{format}'s interpretation is affected by the
+@env{LC_TIME} locale category.
+
+If @var{format} contains two format strings separated by a newline,
+the former is used for non-recent files and the latter for recent
+files; if you want output columns to line up, you may need to insert
+spaces in one of the two formats.
+
 @item full-iso
-List timestamps in full, rather than using the standard abbreviation
-heuristics.  The format is @acronym{ISO} 8601 date, time, and time zone
-format with nanosecond precision, e.g., @samp{2001-05-14
-23:45:56.477817180 -0700}.  It's not possible to change the format, but
-you can extract out the date string with @command{cut} and then pass the
-result to @code{date -d}.  @xref{date invocation, @command{date}
-invocation, , sh-utils, Shell utilities}.
+List timestamps in full using @acronym{ISO} 8601 date, time, and time zone
+format with nanosecond precision, e.g., @samp{2002-03-30
+23:45:56.477817180 -0700}.  This style is equivalent to
+@samp{+%Y-%m-%d %H:%M:%S.%N %z}.
 
 This is useful because the time output includes all the information that
 is available from the operating system.  For example, this can help
-when you have a Makefile that is not regenerating files properly.
+explain @command{make}'s behavior, since @acronym{GNU} @command{make}
+uses the full timestamp to determine whether a file is out of date.
+
+@item long-iso
+List @acronym{ISO} 8601 date and time in minutes, e.g.,
+@samp{2002-03-30 23:45}.  These timestamps are shorter than
+@samp{full-iso} timestamps, and are usually good enough for everyday
+work.  This style is equivalent to @samp{%Y-%m-%d %H:%M}.
 
 @item iso
-Use @acronym{ISO}-style time stamps like @samp{2001-05-14@ } and @samp{05-14
-23:45}.
+List @acronym{ISO} 8601 dates for non-recent timestamps (e.g.,
+@samp{2002-03-30@ }), and @acronym{ISO} 8601 month, day, hour, and
+minute for recent timestamps (e.g., @samp{03-30 23:45}).  These
+timestamps are uglier than @samp{long-iso} timestamps, but they carry
+nearly the same information in a smaller space and their brevity helps
+@command{ls} output fit within traditional 80-column output lines.
+The following two @command{ls} invocations are equivalent:
+
+@example
+newline='
+'
+ls -l --time-style="+%Y-%m-%d $newline%m-%d %H:%M"
+ls -l --time-style="iso"
+@end example
 
 @item locale
-@vindex LC_ALL
 @vindex LC_TIME
-@vindex LANG
-Use locale-dependent dates like @samp{touko@ @ 14 2001} and @samp{touko@
-@ 14 23:45}, time stamps that might occur in a Finnish locale.  The
-locale for formatting timestamps is specified by the first of three
-environment variables @env{LC_ALL}, @env{LC_TIME}, @env{LANG} that is
-set.
+List timestamps in a locale-dependent form.  For example, a Finnish
+locale might list non-recent timestamps like @samp{maalis 30@ @ 2002}
+and recent timestamps like @samp{maalis 30 23:45}.  Locale-dependent
+timestamps typically consume more space than @samp{iso} timestamps and
+are harder for programs to parse because locale conventions vary so
+widely, but they are easier for many people to read.
 
-@item posix-iso
-Use traditional @acronym{POSIX}-locale dates like @samp{May 14@ @ 2001} and
-@samp{May 14 23:45} unless the user specifies a non-@acronym{POSIX} locale,
-in which case use @acronym{ISO}-style dates.  This is the default.
-
-@item +@var{format}
-Use @var{format} for dates, where @var{format} is interpreted like the
-format argument of @command{date} (@pxref{date invocation}).  If
-@var{format} contains two format strings separated by a newline, the
-former is used for non-recent files and the latter for recent files;
-if you want the columns to line up, you may need to append trailing
-spaces to one of the two formats.  For example, the following two
+The @env{LC_TIME} locale category specifies the timestamp format.  The
+default @acronym{POSIX} locale uses timestamps like @samp{Mar 30@
+@ 2002} and @samp{Mar 30 23:45}; in this locale, the following two
 @command{ls} invocations are equivalent:
 
 @example
 newline='
 '
-ls -l --time-style=iso
-ls -l --time-style=+"%Y-%m-%d $@{newline@}%m-%d %H:%M"
+ls -l --time-style="+%b %e  %Y$newline%b %e %H:%M"
+ls -l --time-style="locale"
 @end example
+
+Other locales behave differently.  For example, in a German locale,
+@option{--time-style="locale"} might be equivalent to
+@option{--time-style="+%e. %b %Y $newline%e. %b %H:%M"}
+and might generate timestamps like @samp{30. M@"ar 2002@ } and
+@samp{30. M@"ar 23:45}.
+
+@item posix-@var{style}
+@vindex LC_TIME
+List @acronym{POSIX}-locale timestamps if the @env{LC_TIME} locale
+category is @acronym{POSIX}, @var{style} timestamps otherwise.  For
+example, the default style, which is @samp{posix-long-iso}, lists
+timestamps like @samp{Mar 30@ @ 2002} and @samp{Mar 30 23:45} when in
+the @acronym{POSIX} locale, and like @samp{2002-03-30 23:45} otherwise.
 @end table
 @end table
 
 @vindex TIME_STYLE
 You can specify the default value of the @option{--time-style} option
-with the environment variable @env{TIME_STYLE}.  @sc{gnu} Emacs 21 and
+with the environment variable @env{TIME_STYLE}; if @env{TIME_STYLE} is not set
+the default style is @samp{posix-long-iso}.  @acronym{GNU} Emacs 21 and
 later can parse @acronym{ISO} dates, but older Emacs versions do not, so if
 you are using an older version of Emacs and specify a non-@acronym{POSIX}
 locale, you may need to set @samp{TIME_STYLE="locale"}.
@@ -10193,7 +10233,7 @@ Days in a new year preceding the first Sunday are in week zero.
 week number of year with Monday as first day of the week as a decimal
 (01@dots{}53). If the week containing January 1 has four or more days in
 the new year, then it is considered week 1; otherwise, it is week 53 of
-the previous year, and the next week is week 1. (See the ISO 8601: 1988
+the previous year, and the next week is week 1. (See the @acronym{ISO} 8601
 standard.)
 @item %w
 day of week (0@dots{}6) with 0 corresponding to Sunday
@@ -10342,7 +10382,7 @@ be considerable.
 @itemx --iso-8601[=@var{timespec}]
 @opindex -I @var{timespec}
 @opindex --iso-8601[=@var{timespec}]
-Display the date using the ISO 8601 format, @samp{%Y-%m-%d}.
+Display the date using the @acronym{ISO} 8601 format, @samp{%Y-%m-%d}.
 
 The argument @var{timespec} specifies the number of additional
 terms of the time to include.  It can be one of the following:
