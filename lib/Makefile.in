@@ -23,7 +23,7 @@ VPATH = @srcdir@
 CC = @CC@
 AR = ar
 RANLIB = @RANLIB@
-DEFS = -DMVDIR="\"$(libdir)/mvdir\"" @DEFS@
+DEFS = -DCONFIG_BROKETS @DEFS@
 CFLAGS = @CFLAGS@
 YACC = @YACC@
 
@@ -105,7 +105,11 @@ posixtm.c: posixtm.y getdate.c
 	mv tposixtm.c posixtm.c
 	rm -f posixtm.tab.c
 
-$(OBJECTS): config.h
+rename.o: rename.c
+	$(CC) -c $(CPPFLAGS) -DMVDIR="\"$(libdir)/mvdir\"" $(DEFS) \
+	    -I.. -I$(srcdir) $(CFLAGS) $(srcdir)/rename.c
+
+$(OBJECTS): $(srcdir)/../config.h
 
 backupfile.o getversion.o: backupfile.h
 fnmatch.o: fnmatch.h
