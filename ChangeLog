@@ -2,6 +2,10 @@
 
 	* Version 5.0.1.
 
+	* tests/sample-test: Also fail if cat-to-create-expected-output
+	fails.  Otherwise, if both `exp' and `out' end up empty because
+	of e.g., a full disk, they would mistakenly compare equal.
+
 	* src/nohup.c: New file.  Rewrite of nohup.sh in C.
 	This solves a portability problem: on at least Solaris systems,
 	when nohup.sh used the vendor /bin/sh, it would exit with status
