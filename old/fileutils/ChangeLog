@@ -1,3 +1,58 @@
+1998-08-15  Jim Meyering  <meyering@ascend.com>
+
+	* tests/mv/into-self: Update to reflect changed behavior of mv.
+	* src/mv.c (do_move): Fail upon attempt to move a directory into itself.
+	With prodding from François Pinard :-)
+
+	* tests/ls-2/Fetish.pm: New file
+	* tests/ls-2/run-test: New file
+
+	* src/copy.c (copy_internal) [one-file-system]: Do copy mount point
+	directories (but none of their entries).  This makes `cp --archive
+	 --one-file-system' use the same policy `tar --one-file-system' does.
+	From Marty Leisner.
+
+	* src/ls.c (qmark_funny_chars): Add comment from Paul eggert.
+
+1998-08-14  Jim Meyering  <meyering@ascend.com>
+
+	* tests/mv/setup: Work around another bug in Ultrix4.3a's /bin/sh.
+	Reported by Christian von Roques.
+
+	* configure.in (AC_OUTPUT): Add tests/ls-2/Makefile.
+	* tests/Makefile.am (SUBDIRS): Add ls-2.
+	* tests/ls-2: New directory
+
+1998-08-14  Christian von Roques  <roques@pond.sub.org>
+
+	* lib/mountlist.c (read_filesystem_list) [MOUNTED_GETMNT]: Don't
+	infloop on getmnt(2) returning 0.
+
+	* tests/cp/backup-is-src: Avoid bug in Ultrix4.3a /bin/sh,
+	not initializing output redirection of : command.
+	* tests/mv/backup-is-src: Likewise.
+	* tests/rm/i-1: Likewise.
+
+1998-08-12  Jim Meyering  <meyering@ascend.com>
+
+	* po/Makefile.in.in: Provide automake-style DESTDIR support.
+	From Johan Danielsson.
+	(DISTFILES): Remove ChangeLog.
+	po/ChangeLog: Remove empty file.
+
+	* configure.in (AC_STRUCT_ST_DM_MODE): Use it.
+
+	* src/ls.c: Include filemode.h.
+	* src/chmod.c: Likewise.
+
+	* lib/filemode.c (ftypelet): Add comments for Cray DMF support.
+	From Johan Danielsson.
+	Protoize.  Tsort function definitions and remove prototypes of
+	static functions.
+	(mode_string): Remove prototype.
+	* lib/filemode.h (mode_string): New file.
+	* lib/Makefile.am (noinst_HEADERS): Add filemode.h.
+
 1998-08-09  Jim Meyering  <meyering@ascend.com>
 
 	* Version 3.16t.
