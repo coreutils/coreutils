@@ -102,10 +102,10 @@ struct File_spec
   dev_t dev;
   ino_t ino;
 
-  /* FIXME: describe */
+  /* See description of DEFAULT_MAX_N_... below.  */
   unsigned int n_unchanged_stats;
 
-  /* FIXME: describe */
+  /* See description of DEFAULT_MAX_N_... below.  */
   unsigned int n_consecutive_size_changes;
 
   /* A file is tailable if it is a regular file or a fifo and it is
