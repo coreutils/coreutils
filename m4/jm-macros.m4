@@ -1,4 +1,4 @@
-#serial 4
+#serial 5
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -32,6 +32,7 @@ AC_DEFUN(jm_MACROS,
   AC_REQUIRE([jm_FUNC_MEMCMP])
   AC_REQUIRE([jm_FUNC_GLIBC_UNLOCKED_IO])
   AC_REQUIRE([jm_FUNC_FNMATCH])
+  AC_REQUIRE([jm_AFS])
   AC_REPLACE_FUNCS(strcasecmp strncasecmp)
 
   # By default, argmatch should fail calling usage (1).
