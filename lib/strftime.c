@@ -120,15 +120,12 @@ extern char *tzname[];
    ? (a) >> (b)		\
    : (a) / (1 << (b)) - ((a) % (1 << (b)) < 0))
 
-#define TYPE_SIGNED(t) ((t) -1 < 0)
-
-/* Bound on length of the string representing an integer value of type t.
-   Subtract one for the sign bit if t is signed;
-   302 / 1000 is log10 (2) rounded up;
-   add one for integer division truncation;
-   add one more for a minus sign if t is signed.  */
+/* Bound on length of the string representing an integer value or type T.
+   Subtract 1 for the sign bit if t is signed; log10 (2.0) < 146/485;
+   add 1 for integer division truncation; add 1 more for a minus sign
+   if needed.  */
 #define INT_STRLEN_BOUND(t) \
- ((sizeof (t) * CHAR_BIT - TYPE_SIGNED (t)) * 302 / 1000 + 1 + TYPE_SIGNED (t))
+  ((sizeof (t) * CHAR_BIT - 1) * 146 / 485 + 2)
 
 #define TM_YEAR_BASE 1900
 
