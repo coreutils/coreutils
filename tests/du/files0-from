@@ -46,11 +46,12 @@ my @Tests =
 
    # one NUL
    ['nul-1', '--files0-from=-', '<', {IN=>"\0"}, {EXIT=>1},
-    {ERR => "du: no files specified in `-'\n"}],
+    {ERR => "du: -:1: invalid zero-length file name\n"}],
 
    # two NULs
    ['nul-2', '--files0-from=-', '<', {IN=>"\0\0"}, {EXIT=>1},
-    {ERR => "du: no files specified in `-'\n"}],
+    {ERR => "du: -:1: invalid zero-length file name\n"
+          . "du: -:2: invalid zero-length file name\n"}],
 
    # one file name, no NUL
    ['1', '--files0-from=-', '<',
