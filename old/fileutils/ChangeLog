@@ -2,6 +2,8 @@
 
 	* Version 4.0p.
 
+	* configure.in: Move library-related tests into m4/lib-check.m4.
+
 	* src/system.h (ST_NBLOCKS): Use st_size only for regular files and
 	for directories.  From H. J. Lu.
 
