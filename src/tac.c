@@ -375,6 +375,12 @@ tac_seekable (int input_fd, const char *file)
 
 #if DONT_UNLINK_WHILE_OPEN
 
+/* FIXME-someday: remove all of this DONT_UNLINK_WHILE_OPEN junk.
+   Using atexit like this is wrong, since it can fail
+   when called e.g. 32 or more times.
+   But this isn't a big deal, since the code is used only on WOE/DOS
+   systems, and few people invoke tac on that many nonseekable files.  */
+
 static const char *file_to_remove;
 static FILE *fp_to_close;
 
