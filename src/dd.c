@@ -421,12 +421,16 @@ skip (fdesc, file, records, blocksize, buf)
   /* Use fstat instead of checking for errno == ESPIPE because
      lseek doesn't work on some special files but doesn't return an
      error, either. */
+  /* FIXME: can this really happen?  What system?  */
   if (fstat (fdesc, &stats))
     {
       error (0, errno, "%s", file);
       quit (1);
     }
 
+  /* FIXME: why use lseek only on regular files?
+     Better: try lseek and if an error indicates it was an inappropriate
+     operation, fall back on using read.  */
   if (S_ISREG (stats.st_mode))
     {
       if (lseek (fdesc, records * blocksize, SEEK_SET) < 0)
@@ -439,17 +443,17 @@ skip (fdesc, file, records, blocksize, buf)
     {
       while (records-- > 0)
 	{
-	  if (read (fdesc, buf, blocksize) < 0
-#ifdef EINTR
-	      && errno != EINTR
-#endif
-	      )
+	  nread = safe_read (fdesc, buf, blocksize).
+	  if (nread < 0)
 	    {
 	      error (0, errno, "%s", file);
 	      quit (1);
 	    }
-	  /* FIXME If fewer bytes were read than requested, meaning that
-	     EOF was reached, POSIX wants the output file padded with NULs. */
+	  /* POSIX doesn't say what to do when dd detects it has been
+	     asked to skip past EOF, so I assume it's non-fatal.
+	     FIXME: maybe give a warning.  */
+	  if (nread == 0)
+	    break;
 	}
     }
 }
@@ -610,7 +614,7 @@ copy ()
 
       if (ibuf == obuf)		/* If not C_TWOBUFS. */
 	{
-	  int nwritten = write (output_fd, obuf, nread);
+	  int nwritten = full_write (output_fd, obuf, nread);
 	  if (nwritten != nread)
 	    {
 	      error (0, errno, "%s", output_file);
@@ -674,7 +678,7 @@ copy ()
   /* Write out the last block. */
   if (oc > 0)
     {
-      int nwritten = write (output_fd, obuf, oc);
+      int nwritten = full_write (output_fd, obuf, oc);
       if (nwritten > 0)
 	w_partial++;
       if (nwritten != oc)
@@ -796,7 +800,7 @@ copy_with_unblock (buf, nread)
 static void
 write_output ()
 {
-  int nwritten = write (output_fd, obuf, output_blocksize);
+  int nwritten = full_write (output_fd, obuf, output_blocksize);
   if (nwritten != output_blocksize)
     {
       error (0, errno, "%s", output_file);
