@@ -1,3 +1,20 @@
+Sat May 24 09:20:12 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/mountlist.c (read_filesystem_list): Show automount-related
+	duplicate filesystems only when --all specified.  With suggestions
+	from Stuart Kemp.  Also indent cpp directives.
+
+	* configure.in (AC_CHECK_FUNCS): Add hasmntopt.
+	(AC_CHECK_HEADERS): Add sys/mntent.h.
+	(ALL_LINGUAS): Add Czech (cs).
+
+Wed Mar 26 23:43:57 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/du.c (main): Implement new --max-depth=N option.
+	Based on the idea and a patch from Torbjorn Lindgren.
+	(du_files): Likewise.
+	(count_entry): Likewise.
+
 Sat Mar 22 20:29:10 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* missing: New file -- from the automake-1.1m distribution.
