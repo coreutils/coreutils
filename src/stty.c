@@ -680,7 +680,7 @@ valid_options (char *opt, const char *valid_opts,
 {
   char ch;
 
-  if (*opt++ != '-')
+  if (*opt++ != '-' || *opt == 0)
     return 0;
 
   while ((ch = *opt))
