@@ -1,3 +1,8 @@
+2000-10-29  Jim Meyering  <meyering@lucent.com>
+
+	* fsusage.m4: s/AC_SHELL_IFELSE/AS_IFELSE/ to match autoconf renaming.
+	* ls-mntd-fs.m4: Likewise
+
 2000-10-28  Jim Meyering  <meyering@lucent.com>
 
 	* prereq.m4 (jm_PREREQ): Add jm_PREREQ_MEMCHR.
