@@ -1,5 +1,6 @@
 2001-11-11  Jim Meyering  <meyering@lucent.com>
 
+	* Version 2.0.17.
 
 	* src/od.c (struct tspec): Declare function pointer with prototype.
 
@@ -11,8 +12,6 @@
 	cpp condition that guards the use.
 
 	* src/tail.c (xwrite): Remove assertion that size_t N >= 0.
-
-	* Version 2.0.17.
 
 	* src/pr.c (struct COLUMN) [print_func]: Declare with a protype.
 	(struct COLUMN) [char_func]: Declare with a protype.
