@@ -62,8 +62,19 @@ char *malloc ();
 char *realloc ();
 #endif
 
-/* We used to test for `BSTRING' here, but only GCC and Emacs define
-   `BSTRING', as far as I know, and neither of them use this code.  */
+/* When used in Emacs's lib-src, we need to get bzero and bcopy somehow.
+   If nothing else has been done, use the method below.  */
+#ifdef INHIBIT_STRING_HEADER
+#if !(defined (HAVE_BZERO) && defined (HAVE_BCOPY))
+#if !defined (bzero) && !defined (bcopy)
+#undef INHIBIT_STRING_HEADER
+#endif
+#endif
+#endif
+
+/* This is the normal way of making sure we have a bcopy and a bzero.
+   This is used in most programs--a few other programs avoid this
+   by defining INHIBIT_STRING_HEADER.  */
 #ifndef INHIBIT_STRING_HEADER
 #if HAVE_STRING_H || STDC_HEADERS || defined (_LIBC)
 #include <string.h>

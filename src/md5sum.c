@@ -120,6 +120,8 @@ typedef unsigned short uint32;
 # endif
 #endif
 
+#define TOLOWER(c) (ISUPPER (c) ? tolower (c) : (c))
+
 /* Hook for i18n.  */
 #define _(str) str
 
@@ -350,8 +352,8 @@ main (argc, argv)
 	      /* Compare generated binary number with text representation
 		 in check file.  Ignore case of hex digits.  */
 	      for (cnt = 0; cnt < 16; ++cnt)
-		if (tolower (md5num[2 * cnt]) != bin2hex[md5buffer[cnt] >> 4]
-		    || tolower (md5num[2 * cnt + 1])
+		if (TOLOWER (md5num[2 * cnt]) != bin2hex[md5buffer[cnt] >> 4]
+		    || TOLOWER (md5num[2 * cnt + 1])
 		       != (bin2hex[md5buffer[cnt] & 0xf]))
 		  break;
 
@@ -481,7 +483,7 @@ md5_file (filename, resblock, binary)
 	}
       while (sum < BLOCKSIZE && n != 0);
 
-      /* RFC 1321 specifies the possible length of the file upto 2^64 bits.
+      /* RFC 1321 specifies the possible length of the file up to 2^64 bits.
 	 Here we only compute the number of bytes.  Do a double word
          increment.  */
       len[0] += sum;
