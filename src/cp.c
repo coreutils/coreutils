@@ -661,21 +661,22 @@ copy (const char *src_path, const char *dst_path, int new_dst, dev_t device,
 		return 0;
 	    }
 
-	  if (S_ISREG (src_type) && !flag_force)
+	  if (!S_ISDIR (src_type) && !flag_force && flag_interactive)
 	    {
-	      if (flag_interactive)
+	      if (euidaccess (dst_path, W_OK) != 0)
 		{
-		  if (euidaccess (dst_path, W_OK) != 0)
-		    fprintf (stderr,
-			     _("%s: overwrite `%s', overriding mode %04o? "),
-			     program_name, dst_path,
-			     (unsigned int) (dst_sb.st_mode & 07777));
-		  else
-		    fprintf (stderr, _("%s: overwrite `%s'? "),
-			     program_name, dst_path);
-		  if (!yesno ())
-		    return 0;
+		  fprintf (stderr,
+			   _("%s: overwrite `%s', overriding mode %04o? "),
+			   program_name, dst_path,
+			   (unsigned int) (dst_sb.st_mode & 07777));
 		}
+	      else
+		{
+		  fprintf (stderr, _("%s: overwrite `%s'? "),
+			   program_name, dst_path);
+		}
+	      if (!yesno ())
+		return 0;
 	    }
 
 	  if (backup_type != none && !S_ISDIR (dst_sb.st_mode))
