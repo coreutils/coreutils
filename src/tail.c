@@ -194,6 +194,7 @@ enum
   MAX_UNCHANGED_STATS_OPTION,
   MAX_CONSECUTIVE_SIZE_CHANGES_OPTION,
   PID_OPTION,
+  LONG_FOLLOW_OPTION,
 };
 
 static struct option const long_options[] =
@@ -202,7 +203,7 @@ static struct option const long_options[] =
      FIXME: remove it some day */
   {"allow-missing", no_argument, NULL, RETRY_OPTION},
   {"bytes", required_argument, NULL, 'c'},
-  {"follow", optional_argument, NULL, 'f'},
+  {"follow", optional_argument, NULL, LONG_FOLLOW_OPTION},
   {"lines", required_argument, NULL, 'n'},
   {"max-unchanged-stats", required_argument, NULL, MAX_UNCHANGED_STATS_OPTION},
   {"max-consecutive-size-changes", required_argument, NULL,
@@ -1312,7 +1313,7 @@ parse_options (int argc, char **argv,
   count_lines = 1;
   forever = from_start = print_headers = 0;
 
-  while ((c = getopt_long (argc, argv, "c:n:f::qs:v", long_options, NULL))
+  while ((c = getopt_long (argc, argv, "c:n:fqs:v", long_options, NULL))
 	 != -1)
     {
       switch (c)
@@ -1351,6 +1352,7 @@ parse_options (int argc, char **argv,
 	  break;
 
 	case 'f':
+	case LONG_FOLLOW_OPTION:
 	  forever = 1;
 	  if (optarg == NULL)
 	    follow_mode = DEFAULT_FOLLOW_MODE;
