@@ -1,3 +1,27 @@
+1999-01-25  Jim Meyering  <meyering@ascend.com>
+
+	* src/date.c (usage): Remove static attribute.
+	Move function be the first in the file.
+	* src/env.c: Likewise.
+	* src/id.c: Likewise.
+	* src/nice.c: Likewise.
+	* src/pathchk.c: Likewise.
+	* src/tty.c: Likewise.
+	* src/uname.c: Likewise.
+
+	* src/*.c (usage): Remove static attribute.
+
+1999-01-14  Jim Meyering  <meyering@ascend.com>
+
+	* src/date.c: Include closeout.h.
+	(main): Use close_stdout_status.
+	* src/printenv.c: Likewise.
+	* src/tty.c: Likewise.
+
+	* src/hostid.c: Include closeout.h.
+	(main): Use close_stdout.
+	* src/tee.c: Likewise.
+
 1999-01-10  Jim Meyering  <meyering@ascend.com>
 
 	* src/Makefile.am (pinky_LDADD, pinky_DEPENDENCIES, who_LDADD,
