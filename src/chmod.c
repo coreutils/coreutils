@@ -118,7 +118,7 @@ mode_changed (char const *file, mode_t old_mode, mode_t new_mode)
 	{
 	  if (!force_silent)
 	    error (0, errno, _("getting new attributes of %s"), quote (file));
-	  return 0;
+	  return false;
 	}
 
       new_mode = new_stats.st_mode;
