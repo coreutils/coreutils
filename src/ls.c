@@ -85,6 +85,8 @@
 		      : (ls_mode == LS_MULTI_COL \
 			 ? "dir" : "vdir"))
 
+#define AUTHORS "Richard Stallman and David MacKenzie"
+
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
 
@@ -1176,8 +1178,7 @@ decode_switches (int argc, char **argv)
 
 	case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME,
-				  "Richard Stallman and David MacKenzie");
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
 	  usage (EXIT_FAILURE);
