@@ -1,3 +1,11 @@
+2000-08-01  Jim Meyering  <meyering@lucent.com>
+
+	* dirname.c (ISSLASH): Define.
+	(BACKSLASH_IS_PATH_SEPARATOR): Define.
+	(dir_name) [BACKSLASH_IS_PATH_SEPARATOR]: Handle the case in which
+	both `\' and `/' may be use as path separators.
+	Based on a patch from Prashant TR.
+
 2000-07-31  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/quotearg.c (quotearg_n_options): Don't make the initial
