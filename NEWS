@@ -15,6 +15,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   factor no longer reports a usage error if stdin has the wrong format.
 
+  paste no longer infloops on ppc and AIX systems.
+
 
 * Major changes in release 5.1.1 (2004-01-17):
 
