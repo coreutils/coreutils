@@ -1,3 +1,11 @@
+1999-01-02  Jim Meyering  <meyering@ascend.com>
+
+	* lib/backupfile.c (get_version): Adapt to use new interface to
+	XARGMATCH.
+	* src/cp.c: Likewise.
+	* src/ls.c: Likewise.
+	* src/touch.c: Likewise.
+
 1999-01-01  Jim Meyering  <meyering@ascend.com>
 
 	* lib/makepath.c (make_dir): New function, factored out of make_path.
@@ -25,32 +33,27 @@
 
 	* lib/human.c (humblock): Use ARGMATCH in place of argmatch.
 
-	* lib/backupfile.c (get_version): Use XARGCASEMATCH in place of
+	* lib/backupfile.c (get_version): Use XARGMATCH in place of
 	argmatch & co.
 
 1998-12-31  Jim Meyering  <meyering@ascend.com>
-
-	* lib/Makefile.am (libfu_a_SOURCES): Remove strcasecmp.c.
-	(BUILT_SOURCES): Add strcasecmp.c and strncasecmp.c.
-	(EXTRA_DIST): Add strcasecmp.cin.
-	(strcasecmp.c): New rule.
-	(strncasecmp.c): New rule.
 
 	* src/ls.c (indicator_style_types): New variable.
 	(format_types): Rename from `formats'.
 	(color_args): Remove unnecessary `no' string.
 	(color_types): Remove corresponding `color_never' entry.
 	(main): Use ARGMATCH_TO_ARGUMENT.
-	(decode_switches): Use ARGCASEMATCH instead of argmatch code
+	(decode_switches): Use ARGMATCH instead of argmatch code
 	in each of several cases.
 	From Akim Demaille.
 
-	* src/cp.c (main): Use XARGCASEMATCH in place of argmatch & co.
+	* src/cp.c (main): Use XARGMATCH in place of argmatch & co.
 	* src/touch.c (main): Likewise.
 	* lib/backupfile.c (get_version): Likewise.
 	From Akim Demaille.
 
-	* lib/strcasecmp.cin: New file.
+	* lib/strncasecmp.c: New file.
+	* lib/strcasecmp.c: Add #ifdefs so it can be used for strncasecmp, too.
 	* lib/argmatch.c (strncasecmp): Move to a separate file.
 	Add curly braces around some one-stmt-but-multiline blocks.
 
