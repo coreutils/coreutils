@@ -29,9 +29,14 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
-#include "getdelim2.h"
+
 #include "closeout.h"
 #include "error.h"
+#include "getdelim2.h"
+#include "hash.h"
+#include "quote.h"
+#include "stdbool.h"
+#include "xstrndup.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "cut"
@@ -92,10 +97,6 @@ static unsigned int max_range_endpoint;
    to end of line. */
 static unsigned int eol_range_start;
 
-/* A nonzero, non-1 value with which to distinguish the index
-   corresponding to the lower bound of a range.  */
-#define RANGE_START_SENTINEL 2
-
 /* In byte mode, which bytes to output.
    In field mode, which DELIM-separated fields to output.
    Both bytes and fields are numbered starting with 1,
@@ -141,6 +142,15 @@ static char *output_delimiter_string;
 
 /* Nonzero if we have ever read standard input. */
 static int have_read_stdin;
+
+#define HT_RANGE_START_INDEX_INITIAL_CAPACITY 31
+
+/* The set of range-start indices.  For example, given a range-spec list like
+   `-b1,3-5,4-9,15-', the following indices will be recorded here: 1, 3, 15.
+   Note that although `4' looks like a range-start index, it is in the middle
+   of the `3-5' range, so it doesn't count.
+   This table is created/used IFF output_delimiter_specified is set.  */
+static Hash_table *range_start_ht;
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
@@ -216,6 +226,25 @@ With no FILE, or when FILE is -, read standard input.\n\
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
+unsigned int
+hash_int (const void *x, unsigned int tablesize)
+{
+  unsigned int y = (unsigned int) x;
+  return (y % tablesize);
+}
+
+static bool
+hash_compare_ints (void const *x, void const *y)
+{
+  return (x == y) ? true : false;
+}
+
+static bool
+is_range_start_index (int i)
+{
+  return hash_lookup (range_start_ht, (void *) i) ? true : false;
+}
+
 /* Return nonzero if the K'th field or byte is printable.
    When returning nonzero, if RANGE_START is non-NULL,
    set *RANGE_START to nonzero if K is the beginning of a range, and
@@ -234,7 +263,7 @@ print_kth (unsigned int k, int *range_start)
   if (k <= max_range_endpoint && printable_field[k])
     {
       if (range_start)
-	*range_start = (printable_field[k] == RANGE_START_SENTINEL);
+	*range_start = is_range_start_index (k);
       return 1;
     }
 
@@ -270,6 +299,7 @@ set_fields (const char *fieldstr)
   unsigned int n_rp;
   unsigned int n_rp_allocated;
   unsigned int i;
+  bool in_digits = false;
 
   n_rp = 0;
   n_rp_allocated = 16;
@@ -282,6 +312,7 @@ set_fields (const char *fieldstr)
     {
       if (*fieldstr == '-')
 	{
+	  in_digits = false;
 	  /* Starting a range. */
 	  if (dash_found)
 	    FATAL_ERROR (_("invalid byte or field list"));
@@ -298,6 +329,7 @@ set_fields (const char *fieldstr)
 	}
       else if (*fieldstr == ',' || ISBLANK (*fieldstr) || *fieldstr == '\0')
 	{
+	  in_digits = false;
 	  /* Ending the string, or this field/byte sublist. */
 	  if (dash_found)
 	    {
@@ -370,8 +402,33 @@ set_fields (const char *fieldstr)
 	}
       else if (ISDIGIT (*fieldstr))
 	{
-	  /* FIXME: detect overflow?  */
+	  unsigned int prev;
+	  /* Record beginning of digit string, in case we have to
+	     complain about it.  */
+	  static char const *num_start;
+	  if (!in_digits || !num_start)
+	    num_start = fieldstr;
+	  in_digits = true;
+
+	  /* Detect overflow.  */
+	  prev = value;
 	  value = 10 * value + *fieldstr - '0';
+	  if (value < prev)
+	    {
+	      /* In case the user specified -c4294967296-22,
+		 complain only about the first number.  */
+	      /* Determine the length of the offending number.  */
+	      size_t len = strspn (num_start, "0123456789");
+	      char *bad_num = xstrndup (num_start, len);
+	      if (operating_mode == byte_mode)
+		error (0, 0,
+		       _("byte offset %s is too large"), quote (bad_num));
+	      else
+		error (0, 0,
+		       _("field number %s is too large"), quote (bad_num));
+	      free (bad_num);
+	      exit (EXIT_FAILURE);
+	    }
 	  fieldstr++;
 	}
       else
@@ -397,10 +454,24 @@ set_fields (const char *fieldstr)
     {
       unsigned int j = rp[i].lo;
 
-      /* Mark the first position of field or range with a sentinel,
+      /* Mark the first position of each field or range with a sentinel,
 	 but not if it's already part of another range.  */
       if (j <= rp[i].hi && ! printable_field[j])
-	printable_field[j] = RANGE_START_SENTINEL;
+	{
+	  if (output_delimiter_specified)
+	    {
+	      /* Remember that `j' is a range-start index.  */
+	      void *ent_from_table = hash_insert (range_start_ht, (void*) j);
+	      if (ent_from_table == NULL)
+		{
+		  /* Insertion failed due to lack of memory.  */
+		  xalloc_die ();
+		}
+	      assert ((unsigned int) ent_from_table == j);
+	    }
+	  printable_field[j] = 1;
+	}
+
       for (++j; j <= rp[i].hi; j++)
 	{
 	  printable_field[j] = 1;
@@ -445,9 +516,10 @@ cut_bytes (FILE *stream)
       else
 	{
 	  int range_start;
-	  if (print_kth (++byte_idx, &range_start))
+	  int *rs = output_delimiter_specified ? &range_start : NULL;
+	  if (print_kth (++byte_idx, rs))
 	    {
-	      if (range_start && print_delimiter && output_delimiter_specified)
+	      if (rs && *rs && print_delimiter)
 		{
 		  fwrite (output_delimiter_string, sizeof (char),
 			  output_delimiter_length, stdout);
@@ -636,6 +708,7 @@ main (int argc, char **argv)
 {
   int optc, exit_status = 0;
   int delim_specified = 0;
+  char *spec_list_string;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -666,8 +739,7 @@ main (int argc, char **argv)
 	  if (operating_mode != undefined_mode)
 	    FATAL_ERROR (_("only one type of list may be specified"));
 	  operating_mode = byte_mode;
-	  if (set_fields (optarg) == 0)
-	    FATAL_ERROR (_("missing list of positions"));
+	  spec_list_string = optarg;
 	  break;
 
 	case 'f':
@@ -675,8 +747,7 @@ main (int argc, char **argv)
 	  if (operating_mode != undefined_mode)
 	    FATAL_ERROR (_("only one type of list may be specified"));
 	  operating_mode = field_mode;
-	  if (set_fields (optarg) == 0)
-	    FATAL_ERROR (_("missing list of fields"));
+	  spec_list_string = optarg;
 	  break;
 
 	case 'd':
@@ -724,6 +795,24 @@ main (int argc, char **argv)
     FATAL_ERROR (_("suppressing non-delimited lines makes sense\n\
 \tonly when operating on fields"));
 
+  if (output_delimiter_specified)
+    {
+      range_start_ht = hash_initialize (HT_RANGE_START_INDEX_INITIAL_CAPACITY,
+					NULL, hash_int,
+					hash_compare_ints, NULL);
+      if (range_start_ht == NULL)
+	xalloc_die ();
+
+    }
+
+  if (set_fields (spec_list_string) == 0)
+    {
+      if (operating_mode == field_mode)
+	FATAL_ERROR (_("missing list of fields"));
+      else
+	FATAL_ERROR (_("missing list of positions"));
+    }
+
   if (!delim_specified)
     delim = '\t';
 
@@ -741,6 +830,9 @@ main (int argc, char **argv)
   else
     for (; optind < argc; optind++)
       exit_status |= cut_file (argv[optind]);
+
+  if (range_start_ht)
+    hash_free (range_start_ht);
 
   if (have_read_stdin && fclose (stdin) == EOF)
     {
