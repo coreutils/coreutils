@@ -63,6 +63,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 # endif
 #endif
 
+#undef __P
+#if defined (__STDC__) && __STDC__
+#define	__P(x) x
+#else
+#define	__P(x) ()
+#endif
+
 /* Structure to save state of computation between the single steps.  */
 struct md5_ctx
 {
@@ -97,8 +104,7 @@ void *md5_read_ctx __P ((const struct md5_ctx *ctx, void *resbuf));
 /* Compute MD5 message digest for bytes read from STREAM.  The
    resulting message digest number will be written into the 16 bytes
    beginning at RESBLOCK.  */
-void *
-md5_stream __P ((FILE *stream, void *resblock));
+int md5_stream __P ((FILE *stream, void *resblock));
 
 /* Compute MD5 message digest for LEN bytes beginning at BUFFER.  The
    result is always in little endian byte order, so that a byte-wise
