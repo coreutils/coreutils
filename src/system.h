@@ -115,7 +115,7 @@
 #endif
 
 #ifndef CHAR_BIT
-#define CHAR_BIT 8
+# define CHAR_BIT 8
 #endif
 
 /* The extra casts work around common compiler bugs.  */
@@ -124,11 +124,11 @@
 #define TYPE_MAXIMUM(t) (~ (t) 0 - TYPE_MINIMUM (t))
 
 #ifndef INT_MAX
-#define INT_MAX TYPE_MAXIMUM (int)
+# define INT_MAX TYPE_MAXIMUM (int)
 #endif
 
 #ifndef UINT_MAX
-#define UINT_MAX TYPE_MAXIMUM (unsigned int)
+# define UINT_MAX TYPE_MAXIMUM (unsigned int)
 #endif
 
 #include "pathmax.h"
@@ -298,11 +298,11 @@ extern int errno;
 #endif /* HAVE_ST_BLOCKS */
 
 #ifndef ST_NBLOCKS
-#define ST_NBLOCKS(statbuf) ((statbuf).st_blocks)
+# define ST_NBLOCKS(statbuf) ((statbuf).st_blocks)
 #endif
 
 #ifndef ST_NBLOCKSIZE
-#define ST_NBLOCKSIZE 512
+# define ST_NBLOCKSIZE 512
 #endif
 
 #include "sys2.h"
