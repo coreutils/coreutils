@@ -2,6 +2,14 @@
 
 	* Version 5.0.91.
 
+	* Makefile.maint (sc_sun_os_names): New rule based on a regexp
+	from Paul Eggert.
+	(syntax-check-rules): Add it.
+
+	* src/tail.c (main): Tweak Solaris OS version number in comment.
+	* src/wc.c (wc): Likewise
+	* tests/tail-2/fflush: Likewise.
+
 	* src/tail.c: Add new undocumented option, --presume-input-pipe.
 	(pipe_lines): Use memchr to skip lines, rather than an explicit loop.
 
