@@ -805,6 +805,9 @@ skip (int fdesc, char *file, int count_bytes, uintmax_t records,
 	{
 	  int nread;
 
+	  if (count_bytes && records < blocksize)
+	    blocksize = records;
+
 	  nread = safe_read (fdesc, buf, blocksize);
 	  if (nread < 0)
 	    {
@@ -817,14 +820,7 @@ skip (int fdesc, char *file, int count_bytes, uintmax_t records,
 	  if (nread == 0)
 	    break;
 
-	  if (count_bytes)
-	    {
-	      records -= nread;
-	      if (records < blocksize)
-		blocksize = records;
-	    }
-	  else
-	    records--;
+	  records -= (count_bytes ? nread : 1);
 	}
     }
 }
