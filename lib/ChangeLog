@@ -1,3 +1,10 @@
+2005-01-19  Jim Meyering  <jim@meyering.net>
+
+	* openat.c (fdopendir, fstatat): New functions.
+	* openat.h: Include headers required for use of DIR and struct stat.
+	[AT_SYMLINK_NOFOLLOW]: Define.
+	(fdopendir, fstatat): Add prototypes.
+
 2005-01-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* human.c (SIZE_MAX, UINTMAX_MAX): Move these conditional
