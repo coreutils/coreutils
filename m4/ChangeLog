@@ -1,3 +1,7 @@
+2000-07-03  Jim Meyering  <meyering@lucent.com>
+
+	* check-decl.m4 (AC_CHECK_DECLS): Add strnlen.
+
 2000-07-03  Paul Eggert  <eggert@twinsun.com>
 
 	* mbstate_t.m4 (AC_MBSTATE_T_OBJECT): Port to autoconf 2.13.
