@@ -1,3 +1,8 @@
+1999-02-07  Jim Meyering  <meyering@ascend.com>
+
+	1999-02-05  Eli Zaretskii  <eliz@is.elta.co.il>
+	* m4/gettext.m4: Support DOS-style d:/foo/bar absolute file names.
+
 1999-02-06  Jim Meyering  <meyering@ascend.com>
 
 	* chown.m4: Use `AC_SUBST(LIBOBJS)' since we set LIBOBJS.
@@ -10,6 +15,7 @@
 	* regex.m4: Likewise.
 	* stat.m4: Likewise.
 	* strftime.m4: Likewise.
+	Suggestion from Alain Magloire.
 
 	* chown.m4: Use `.$ac_objext', not `.o'.
 	* fnmatch.m4: Likewise.
