@@ -155,7 +155,7 @@ check-x-vs-1:
 
 all_programs =								\
       (cd ../src && MAKEFLAGS= $(MAKE) -s all_programs.list)		\
-    | grep -v '\['
+       | sed -e 's,$(EXEEXT)$$,,' | grep -v '\['
 
 .PHONY: check-programs-vs-x
 check-programs-vs-x:
