@@ -1,3 +1,7 @@
+2002-12-09  Jim Meyering  <jim@meyering.net>
+
+	* unlocked-io.h: Sync from gnulib.
+
 2002-12-06  Jim Meyering  <jim@meyering.net>
 
 	* unlocked-io.h: New file, but with proper copyright notice and
