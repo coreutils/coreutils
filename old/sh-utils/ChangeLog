@@ -1,7 +1,7 @@
 2000-02-09  Jim Meyering  <meyering@lucent.com>
 
 	* src/su.c (correct_password): Correct HAVE_STRUCT_* name in #if guard
-	to go along with corrected autoconf test:  Reported by G Queri.
+	to go along with corrected autoconf test:  Reported by Gaël Quéri.
 
 2000-02-05  Jim Meyering  <meyering@lucent.com>
 
