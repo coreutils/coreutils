@@ -1,6 +1,14 @@
-2003-04-10  Jim Meyering  <jim@meyering.net>
+2003-04-11  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* copy.c, cp-hash.c, cp.c, csplit.c, cut.c, date.c, df.c, du.c:
+	* expand.c, expr.c, id.c, join.c, md5sum.c, nl.c, od.c, paste.c:
+	* pr.c, ptx.c, sort.c, split.c, su.c, tail.c, tee.c, tr.c:
+	* unexpand.c, users.c: Remove anachronistic casts of xmalloc,
+	xrealloc, and xcalloc return values and of xrealloc's first argument.
+
+2003-04-10  Jim Meyering  <jim@meyering.net>
 
 	* src/stty.c (wrapf): Declare with format attribute.
 
