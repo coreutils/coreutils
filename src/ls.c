@@ -663,7 +663,7 @@ main (int argc, char **argv)
     {
       printf ("%s - %s\n",
 	      (ls_mode == LS_LS ? "ls"
-	       : (ls_mode == LS_MULTI_COL ? "dir" : "vdir")
+	       : (ls_mode == LS_MULTI_COL ? "dir" : "vdir")),
 	      PACKAGE_VERSION);
       exit (0);
     }
