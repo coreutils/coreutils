@@ -1,5 +1,7 @@
 1998-04-04  Jim Meyering  <meyering@ascend.com>
 
+	* lib/readutmp.h (PARAMS): Define.
+
 	* tests/Makefile.am (SUBDIRS): Add stty.
 	* tests/stty/row-col-1: New file.
 	* tests/stty: New directory.
