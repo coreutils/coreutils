@@ -293,7 +293,7 @@ correct_password (const struct passwd *pw)
     }
   encrypted = crypt (unencrypted, correct);
   memset (unencrypted, 0, strlen (unencrypted));
-  return strcmp (encrypted, correct) == 0;
+  return STREQ (encrypted, correct);
 }
 
 /* Update `environ' for the new shell based on PW, with SHELL being
@@ -415,7 +415,7 @@ restricted_shell (const char *shell)
   setusershell ();
   while ((line = getusershell ()) != NULL)
     {
-      if (*line != '#' && strcmp (line, shell) == 0)
+      if (*line != '#' && STREQ (line, shell))
 	{
 	  endusershell ();
 	  return 0;
@@ -516,7 +516,7 @@ main (int argc, char **argv)
 	}
     }
 
-  if (optind < argc && !strcmp (argv[optind], "-"))
+  if (optind < argc && STREQ (argv[optind], "-"))
     {
       simulate_login = 1;
       ++optind;
