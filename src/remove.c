@@ -878,7 +878,7 @@ The following two directories have the same inode number:\n"));
 	      if (yesno ())
 		return RM_ERROR;
 	    }
-	  exit (1);
+	  exit (EXIT_FAILURE);
 	}
 
       /* Put this directory in the active_dir_map.  */
