@@ -64,8 +64,8 @@ install-exec-local: all-local
 	$(INSTALL_DATA) charset.alias $(libdir)/charset.alias
 
 # Probably not a good idea. Other packages need $(libdir)/charset.alias too.
-#uninstall-local:
-#	-rm -f $(libdir)/charset.alias
+uninstall-local:
+	-rm -f $(libdir)/charset.alias
 
 charset.alias: config.charset
 	$(SHELL) $(srcdir)/config.charset '@host@' > $@-t
