@@ -1,0 +1,21 @@
+#!/bin/sh
+# `tail /proc/ksyms' would segfault on Linux.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  tail --version
+fi
+
+pwd=`pwd`
+tmp=proc-ksyms.$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+fail=0
+
+ksyms=/proc/ksyms
+if test -f $ksyms; then
+  tail $ksyms > /dev/null || fail=1
+fi
+
+(exit $fail); exit
