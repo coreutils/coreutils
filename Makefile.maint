@@ -250,10 +250,11 @@ rel-files = $(xd-delta) $(distdir).tar.bz2 $(distdir).tar.gz
 announcement: NEWS ChangeLog $(rel-files) $(signatures)
 	@(								\
 	  ./announce-gen						\
+	    --release-type=$(RELEASE_TYPE)				\
 	    --package=$(PACKAGE)					\
 	    --prev=$(PREV_VERSION)					\
 	    --curr=$(VERSION)						\
-	    --rel=$(release_archive_dir)				\
+	    --release-archive-directory=$(release_archive_dir)		\
 	    --news=NEWS							\
 	    $(addprefix --url-dir=, $(url_dir_list));			\
 	  echo;								\
@@ -372,12 +373,11 @@ endef
 $(xd-delta): $(release_archive_dir)/$(prev-tgz) $(distdir).tar.gz
 	xdelta delta -9 $^ $@ || :
 
-.PHONY: alpha release
-alpha: release
-release: $(local-check)
+.PHONY: alpha beta major
+alpha beta major: $(local-check)
 	$(MAKE) cvs-dist
 	$(MAKE) $(xd-delta)
-	$(MAKE) -s announcement > /tmp/announce-$(my_distdir)
+	$(MAKE) -s announcement RELEASE_TYPE=$@ > /tmp/announce-$(my_distdir)
 	ln $(rel-files) $(release_archive_dir)
 	chmod a-w $(rel-files)
 	echo $(VERSION) > $(prev_version_file)
