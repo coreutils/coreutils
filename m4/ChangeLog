@@ -1,3 +1,12 @@
+2001-09-16  Paul Eggert  <eggert@twinsun.com>
+
+	* fnmatch.m4 (jm_FUNC_FNMATCH): Remove test for GNU C
+	library.  It's not correct, as some older glibcs are buggy.
+	fnmatch wasn't fixed until glibc 2.2.
+
+	Use AC_DEFINE, not AC_DEFINE_UNQUOTED, as there's no
+	special shell magic here.
+
 2001-09-16  Jim Meyering  <meyering@lucent.com>
 
 	* mkdir-slash.m4 (UTILS_FUNC_MKDIR_TRAILING_SLASH): New file/macro.
