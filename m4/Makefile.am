@@ -14,6 +14,8 @@ decl.m4 \
 error.m4 \
 fnmatch.m4 \
 fstypename.m4 \
+fsusage.m4 \
+ftruncate.m4 \
 getgroups.m4 \
 getline.m4 \
 getloadavg.m4 \
