@@ -2,6 +2,9 @@
 
 	* Version 2.0.12.
 
+	* tests/nice: Export _POSIX2_VERSION=199209, so we can continue
+	to exercise the now-obsolete options.
+
 	* Makefile.maint (strftime-check): Add `N'.
 
 2002-02-27  Paul Eggert  <eggert@twinsun.com>
