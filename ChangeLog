@@ -1,5 +1,7 @@
 2003-08-17  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.0.91.
+
 	Avoid unnecessary and sometimes time-consuming hostname lookups.
 	* src/who.c (print_user): Use strchr, not strrchr.
 	* src/pinky.c (print_entry): Likewise.
@@ -17,8 +19,6 @@
 	* src/sys2.h (strtoull): Remove unused declaration.
 
 2003-08-16  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.91.
 
 	* man/Makefile.am (.x.1): Ensure that generated PROGRAM.1 files
 	are read-only.
