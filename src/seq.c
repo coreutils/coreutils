@@ -26,7 +26,6 @@
 
 #include "version.h"
 
-static void usage ();
 static double scan_double_arg ();
 static int check_format ();
 static char *get_width_format ();
@@ -61,24 +60,12 @@ static double last;
 
 static struct option const long_options[] =
 {
-  {
-    "equal-width", no_argument, NULL, 'w'
-  },
-  {
-    "format", required_argument, NULL, 'f'
-  },
-  {
-    "help", no_argument, &show_help, 1
-  },
-  {
-    "seperator", required_argument, NULL, 's'
-  },
-  {
-    "version", no_argument, &show_version, 1
-  },
-  {
-    NULL, 0, NULL, 0
-  }
+  { "equal-width", no_argument, NULL, 'w'},
+  { "format", required_argument, NULL, 'f'},
+  { "help", no_argument, &show_help, 1},
+  { "seperator", required_argument, NULL, 's'},
+  { "version", no_argument, &show_version, 1},
+  { NULL, 0, NULL, 0}
 };
 
 static void
@@ -101,10 +88,9 @@ Usage: %s [OPTION]... [from [step]] to\n\
       --version            output version information and exit\n\
   -w, --equal-width        equalize width by padding with leading zeroes\n\
 \n\
-  FROM, STEP, TO are interpreted as floating point.  STEP has to be > 0 if\n\
-  FROM is bigger than TO and vice versa.  When given the FORMAT argument\n\
-  of the -f option has to contain exactly one of the float output formats\n\
-  %%e, %%f, or %%g.\n\
+  FROM, STEP, TO are interpreted as floating point.  STEP should be > 0 if\n\
+  FROM is smaller than TO and vice versa.  When given, the FORMAT argument\n\
+  must contain exactly one of the float output formats %%e, %%f, or %%g.\n\
 ");
     }
   exit (status);
