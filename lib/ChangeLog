@@ -1,3 +1,9 @@
+2005-02-21  Neil Conway  <neilc@samurai.com>
+
+	* xgethostname.c (xgethostname): Check for ENOMEM, which is
+	returned by OSX/Darwin if the specified buffer is not large
+	enough for the hostname.
+
 2005-02-20  Jim Meyering  <jim@meyering.net>
 
 	More of the same.
