@@ -2226,6 +2226,8 @@ Each element in @var{field-list} consists of a file number (either 1 or
 the list are separated by commas or blanks.  Multiple @var{field-list}
 arguments can be given after a single @samp{-o} option; the values
 of all lists given with @samp{-o} are concatenated together.
+All output lines -- including those printed because of any -a or -v
+option -- are subject to the specified @var{field-list}.
 
 @item -t @var{char}
 Use character @var{char} as the input and output field separator.
