@@ -1,6 +1,6 @@
 1999-08-05  Jim Meyering  <meyering@ascend.com>
 
-	* src/tail.c (enup Follow_mode): Remove comma at end of enumerator list.
+	* src/tail.c (Follow_mode): Remove comma at end of enumerator list.
 	Reported by Kaveh Ghazi.
 
 	* config.sub: Update from autoconf.
