@@ -1,5 +1,10 @@
 2004-07-27  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* tests/readlink/can-e: Don't assume that we can remove the
+	working directory: this isn't possible under Solaris 8, say.
+	* tests/readlink/can-f: Likewise.
+	* tests/readlink/can-m: Likewise.
+
 	* src/copy.c (copy_internal): find_backup_file_name no longer
 	returns NULL, so don't bother to check for this.
 	* src/cp.c (do_copy): Likewise.
