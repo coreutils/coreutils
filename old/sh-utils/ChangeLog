@@ -1,3 +1,21 @@
+Sun Mar 24 11:44:35 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* su.c: Protoize and reorder functions to obviate forward decls.
+
+	* seq.c: Make parameters const where appropriate.
+	Rename global FROM to START.
+	(print_numbers): Rewrite loops to avoid incrementing.  Instead,
+	use `x = first + i * increment' paradigm.  Otherwise, with inexact
+	increment, you could miss the last value.
+
+	* xstrtod.c: New file.
+	* xstrtod.h: New file.
+	* lib/Makefile.am: Add xstrtod.c and xstrtod.h.
+	* seq.c: Include xstrtod.h.
+	(scan_double_arg): Use xstrtod rather than strtod directly.
+
+	* src/*: Update FSF's address.
+
 Thu Mar 21 16:43:13 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* src/*.c (main): Declare to be of type int, not void.
