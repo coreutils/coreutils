@@ -153,7 +153,7 @@ next_file_name (void)
       memcpy (outfile, outbase, outbase_length);
       memset (outfile_mid, suffix_alphabet[0], suffix_length);
       outfile[outfile_length] = 0;
-      sufindex = xcalloc (suffix_length, sizeof (size_t));
+      sufindex = xcalloc (suffix_length, sizeof *sufindex);
 
 #if ! _POSIX_NO_TRUNC && HAVE_PATHCONF && defined _PC_NAME_MAX
       /* POSIX requires that if the output file name is too long for
