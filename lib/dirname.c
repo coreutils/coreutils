@@ -22,7 +22,9 @@ char *malloc ();
 #endif
 #if defined(USG) || defined(STDC_HEADERS)
 #include <string.h>
+#ifndef rindex
 #define rindex strrchr
+#endif
 #else
 #include <strings.h>
 #endif
