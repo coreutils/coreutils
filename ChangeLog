@@ -2,6 +2,10 @@
 
 	* Version 4.5.9.
 
+	* src/df.c (find_mount_point): Call error here, now that restore_cwd
+	no longer does it.
+	* src/remove.c (AD_pop_and_chdir): Likewise.
+
 	* tests/Makefile.am (check-root): Add fail-2eperm.
 
 2003-03-03  Jim Meyering  <jim@meyering.net>
