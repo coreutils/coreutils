@@ -15,8 +15,8 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
+#if HAVE_CONFIG_H
+# include <config.h>
 #endif
 
 #include <sys/types.h>
@@ -25,40 +25,40 @@
 
 int statfs ();
 
-#ifdef HAVE_SYS_PARAM_H
-#include <sys/param.h>
+#if HAVE_SYS_PARAM_H
+# include <sys/param.h>
 #endif
 
-#ifdef HAVE_SYS_MOUNT_H
-#include <sys/mount.h>
+#if HAVE_SYS_MOUNT_H
+# include <sys/mount.h>
 #endif
 
-#ifdef HAVE_SYS_VFS_H
-#include <sys/vfs.h>
+#if HAVE_SYS_VFS_H
+# include <sys/vfs.h>
 #endif
 
-#ifdef HAVE_SYS_FS_S5PARAM_H /* Fujitsu UXP/V */
-#include <sys/fs/s5param.h>
+#if HAVE_SYS_FS_S5PARAM_H /* Fujitsu UXP/V */
+# include <sys/fs/s5param.h>
 #endif
 
 #if defined(HAVE_SYS_FILSYS_H) && !defined(_CRAY)
-#include <sys/filsys.h>		/* SVR2.  */
+# include <sys/filsys.h>		/* SVR2.  */
 #endif
 
-#ifdef HAVE_FCNTL_H
-#include <fcntl.h>
+#if HAVE_FCNTL_H
+# include <fcntl.h>
 #endif
 
-#ifdef HAVE_SYS_STATFS_H
-#include <sys/statfs.h>
+#if HAVE_SYS_STATFS_H
+# include <sys/statfs.h>
 #endif
 
-#ifdef HAVE_DUSTAT_H		/* AIX PS/2.  */
-#include <sys/dustat.h>
+#if HAVE_DUSTAT_H		/* AIX PS/2.  */
+# include <sys/dustat.h>
 #endif
 
-#ifdef HAVE_SYS_STATVFS_H	/* SVR4.  */
-#include <sys/statvfs.h>
+#if HAVE_SYS_STATVFS_H	/* SVR4.  */
+# include <sys/statvfs.h>
 int statvfs ();
 #endif
 
@@ -103,7 +103,7 @@ get_fs_usage (path, disk, fsp)
 
   if (statfs (path, &fsd, sizeof (struct statfs)) != 0)
     return -1;
-#define CONVERT_BLOCKS(b) adjust_blocks ((b), fsd.f_fsize, 512)
+# define CONVERT_BLOCKS(b) adjust_blocks ((b), fsd.f_fsize, 512)
 #endif /* STAT_STATFS3_OSF1 */
 
 #ifdef STAT_STATFS2_FS_DATA	/* Ultrix.  */
@@ -111,7 +111,7 @@ get_fs_usage (path, disk, fsp)
 
   if (statfs (path, &fsd) != 1)
     return -1;
-#define CONVERT_BLOCKS(b) adjust_blocks ((b), 1024, 512)
+# define CONVERT_BLOCKS(b) adjust_blocks ((b), 1024, 512)
   fsp->fsu_blocks = CONVERT_BLOCKS (fsd.fd_req.btot);
   fsp->fsu_bfree = CONVERT_BLOCKS (fsd.fd_req.bfree);
   fsp->fsu_bavail = CONVERT_BLOCKS (fsd.fd_req.bfreen);
@@ -120,9 +120,9 @@ get_fs_usage (path, disk, fsp)
 #endif
 
 #ifdef STAT_READ_FILSYS		/* SVR2.  */
-#ifndef SUPERBOFF
-#define SUPERBOFF (SUPERB * 512)
-#endif
+# ifndef SUPERBOFF
+#  define SUPERBOFF (SUPERB * 512)
+# endif
   struct filsys fsd;
   int fd;
 
@@ -136,7 +136,7 @@ get_fs_usage (path, disk, fsp)
       return -1;
     }
   close (fd);
-#define CONVERT_BLOCKS(b) adjust_blocks ((b), (fsd.s_type == Fs2b ? 1024 : 512), 512)
+# define CONVERT_BLOCKS(b) adjust_blocks ((b), (fsd.s_type == Fs2b ? 1024 : 512), 512)
   fsp->fsu_blocks = CONVERT_BLOCKS (fsd.s_fsize);
   fsp->fsu_bfree = CONVERT_BLOCKS (fsd.s_tfree);
   fsp->fsu_bavail = CONVERT_BLOCKS (fsd.s_tfree);
@@ -150,7 +150,7 @@ get_fs_usage (path, disk, fsp)
   if (statfs (path, &fsd) < 0)
     return -1;
 
-#ifdef STATFS_TRUNCATES_BLOCK_COUNTS
+# ifdef STATFS_TRUNCATES_BLOCK_COUNTS
   /* In SunOS 4.1.2, 4.1.3, and 4.1.3_U1, the block counts in the
      struct statfs are truncated to 2GB.  These conditions detect that
      truncation, presumably without botching the 4.1.1 case, in which
@@ -162,9 +162,9 @@ get_fs_usage (path, disk, fsp)
       fsd.f_bfree = fsd.f_spare[1];
       fsd.f_bavail = fsd.f_spare[2];
     }
-#endif /* STATFS_TRUNCATES_BLOCK_COUNTS */
+# endif /* STATFS_TRUNCATES_BLOCK_COUNTS */
 
-#define CONVERT_BLOCKS(b) adjust_blocks ((b), fsd.f_bsize, 512)
+# define CONVERT_BLOCKS(b) adjust_blocks ((b), fsd.f_bsize, 512)
 #endif
 
 #ifdef STAT_STATFS2_FSIZE	/* 4.4BSD.  */
@@ -172,7 +172,7 @@ get_fs_usage (path, disk, fsp)
 
   if (statfs (path, &fsd) < 0)
     return -1;
-#define CONVERT_BLOCKS(b) adjust_blocks ((b), fsd.f_fsize, 512)
+# define CONVERT_BLOCKS(b) adjust_blocks ((b), fsd.f_fsize, 512)
 #endif
 
 #ifdef STAT_STATFS4		/* SVR3, Dynix, Irix, AIX.  */
@@ -204,7 +204,7 @@ get_fs_usage (path, disk, fsp)
   if (statvfs (path, &fsd) < 0)
     return -1;
   /* f_frsize isn't guaranteed to be supported.  */
-#define CONVERT_BLOCKS(b) \
+# define CONVERT_BLOCKS(b) \
   adjust_blocks ((b), fsd.f_frsize ? fsd.f_frsize : fsd.f_bsize, 512)
 #endif
 
