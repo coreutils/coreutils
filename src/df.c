@@ -259,7 +259,7 @@ show_dev (const char *disk, const char *mount_point, const char *fstype)
       double blocks_percent_used;
       uintmax_t blocks_used;
 
-      if (fsu.fsu_blocks == 0)
+      if (fsu.fsu_blocks == 0 || fsu.fsu_bavail == (unsigned long) -1)
 	{
 	  blocks_used = 0;
 	  fsu.fsu_bavail = 0;
