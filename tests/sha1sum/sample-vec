@@ -34,14 +34,43 @@ my @Tests =
 			{OUT=>'CA775D8C80FAA6F87FA62BECA6CA6089D63B56E5'}],
     );
 
-# Expand each input.
-# Convert each expected output string to lower case.
-# Append "  f\n" to each expected output
-# Insert the `--text' argument for each test.
+sub binary_expand ($$)
+{
+  my ($test_name, $line) = @_;
+  my @a = split ' ', $line;
+  @a >= 2 or die "$test_name: too few args";
+  my $n = shift @a;
+  my $b = shift @a;
+  my $caret = pop @a;
+  $caret eq '^' or die "$test_name: missing `^'";
+  $b eq '1' || $b eq '0' or die "$test_name: bad `b'=$b\n";
+  my $n_bad = @a;
+  @a == $n or
+    die "$test_name: wrong number of args (expected $n, found $n_bad)\n";
+  my $bit_string = '';
+  foreach my $a (@a)
+    {
+      $bit_string .= $b x $a;
+      $b = 1 - $b;
+    }
+  my $t = pack ("B*", $bit_string);
+  # print "$bit_string\n $t\n";
+  return $t;
+}
+
 my $t;
 foreach $t (@Tests)
   {
-    splice @$t, 1, 0, '--text';
+    # Expand each input.
+    my $in = $t->[1]->{IN};
+    $in->{f} = binary_expand $t->[0], $in->{f};
+
+    # Convert each expected output string to lower case, and append "  f\n".
+    my $h = $t->[2];
+    $h->{OUT} = lc $h->{OUT} . "  f\n";
+
+    # Insert the `--text' argument for each test.
+    #splice @$t, 1, 0, '--text';
   }
 
 my $save_temps = $ENV{DEBUG};
