@@ -633,11 +633,11 @@ md5_buffer (buffer, len, resblock)
 /* These are the four functions used in the four steps of the MD5 algorithm
    and defined in the RFC 1321.  The first function is a little bit optimized
    (as found in Colin Plumbs public domain implementation).  */
-/* #define FF(b, c, d) ((work.b & work.c) | (~work.b & work.d)) */
-#define FF(b, c, d) (work.d ^ (work.b & (work.c ^ work.d)))
+/* #define FF(b, c, d) ((b & c) | (~b & d)) */
+#define FF(b, c, d) (d ^ (b & (c ^ d)))
 #define FG(b, c, d) FF (d, b, c)
-#define FH(b, c, d) (work.b ^ work.c ^ work.d)
-#define FI(b, c, d) (work.c ^ (work.b | ~work.d))
+#define FH(b, c, d) (b ^ c ^ d)
+#define FI(b, c, d) (c ^ (b | ~d))
 
 /* Process LEN bytes of BUFFER, accumulating context into CTX.
    It is assumed that LEN % 64 == 0.  */
@@ -652,14 +652,20 @@ process_buffer (buffer, len, ctx)
   const uint32 *words = buffer;
   size_t nwords = len / sizeof (uint32);
   const uint32 *endp = words + nwords;
-  struct md5_ctx work = *ctx;
+  uint32 A = ctx->A;
+  uint32 B = ctx->B;
+  uint32 C = ctx->C;
+  uint32 D = ctx->D;
 
   /* Process all bytes in the buffer with 64 bytes in each round of
      the loop.  */
   while (words < endp)
     {
-      struct md5_ctx save = work;
       uint32 *cwp = correct_words;
+      uint32 A_save = A;
+      uint32 B_save = B;
+      uint32 C_save = C;
+      uint32 D_save = D;
 
       /* First round: using the given function, the context and a constant
 	 the next context is computed.  Because the algorithms processing
@@ -671,10 +677,10 @@ process_buffer (buffer, len, ctx)
 #define OP(a, b, c, d, s, T)						\
       do								\
         {								\
-	  work.a += FF (b, c, d) + (*cwp++ = SWAP (*words)) + T;	\
+	  a += FF (b, c, d) + (*cwp++ = SWAP (*words)) + T;		\
 	  ++words;							\
-	  CYCLIC (work.a, s);						\
-	  work.a += work.b;						\
+	  CYCLIC (a, s);						\
+	  a += b;							\
         }								\
       while (0)
 
@@ -713,9 +719,9 @@ process_buffer (buffer, len, ctx)
 #define OP(f, a, b, c, d, k, s, T)					\
       do 								\
 	{								\
-	  work.a += f (b, c, d) + correct_words[k] + T;			\
-	  CYCLIC (work.a, s);						\
-	  work.a += work.b;						\
+	  a += f (b, c, d) + correct_words[k] + T;			\
+	  CYCLIC (a, s);						\
+	  a += b;							\
 	}								\
       while (0)
 
@@ -774,12 +780,15 @@ process_buffer (buffer, len, ctx)
       OP (FI, B, C, D, A,  9, 21, 0xeb86d391);
 
       /* Add the starting values of the context.  */
-      work.A += save.A;
-      work.B += save.B;
-      work.C += save.C;
-      work.D += save.D;
+      A += A_save;
+      B += B_save;
+      C += C_save;
+      D += D_save;
     }
 
   /* Put checksum in context given as argument.  */
-  *ctx = work;
+  ctx->A = A;
+  ctx->B = B;
+  ctx->C = C;
+  ctx->D = D;
 }
