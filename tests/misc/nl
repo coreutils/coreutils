@@ -27,12 +27,17 @@ echo b | nl -s%n >> out || fail=1
 echo c | nl -n ln >> out || fail=1
 echo d | nl -n rn >> out || fail=1
 echo e | nl -n rz >> out || fail=1
+echo === >> out
+printf 'a\n\n' | nl > t || fail=1; cat -A t >> out
 cat <<\EOF > exp
      1	a
      1%nb
 1     	c
      1	d
 000001	e
+===
+     1^Ia$
+       $
 EOF
 
 cmp out exp || fail=1
