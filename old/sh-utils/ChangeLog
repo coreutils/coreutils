@@ -1,3 +1,16 @@
+Fri Mar 15 23:42:29 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* basename.c: Remove __P-protected prototype for basename.
+	Reported by François Pinard.
+	(remove_suffix): Move to precede use.  Remove prototype.
+	Declare formal parameter SUFFIX to be const.
+
+	* pathchk.c (validate_path): Cast path_max to size_t before
+	comparing with strlen(path).
+
+	* who-users.c (read_utmp): Declare n_read to be of type size_t
+	rather than int.
+
 Tue Mar 12 17:52:05 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* basename.c date.c dirname.c echo.c env.c expr.c factor.c hostname.c
