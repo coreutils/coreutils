@@ -125,7 +125,7 @@ usage (int status)
     {
       printf (_("\
 Usage: %s [OPTION]... [+FORMAT]\n\
-  or:  %s [OPTION] [MMDDhhmm[[CC]YY][.ss]]\n\
+  or:  %s [-u|--utc|--universal] [MMDDhhmm[[CC]YY][.ss]]\n\
 "),
 	      program_name, program_name);
       printf (_("\
