@@ -1,5 +1,12 @@
 2004-03-22  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.3.0.
+
+	* man/Makefile.am (.x.1): Remove --info-page= option, reverting
+	the change of 2004-01-22.  I can no longer reproduce the problem
+	that prompted that change, and `info coreutils pr' would display the
+	`printing text' section of the manual, not the one on `pr invocation'.
+
 	* tests/du/files0-from (nul-1, nul-2): Adjust expected diagnostics
 	to match corrected output.
 
