@@ -51,8 +51,15 @@ THIS_VERSION_REGEXP = $(subst .,\.,$(VERSION))
 PREV_VERSION := $(shell echo $(VERSION)|tr a-z Xa-y)
 PREV_VERSION_REGEXP := $(shell echo $(PREV_VERSION)|sed 's/\./\\./g')
 v = Version
-url-host-prefix = ftp://alpha.gnu.org
-url = $(url-host-prefix)/gnu/fetish/$(distdir).tar.gz
+url_list = \
+  ftp://alpha.gnu.org/gnu/fetish/$(distdir).tar.gz \
+  ftp://tug.org/pub/FIXME/fetish/$(distdir).tar.gz \
+  ftp://ftp.enst.fr/pub/gnu/gnits/fetish/$(distdir).tar.gz
+dir_list = \
+  /fs/share/ftp/gnu/fetish \
+  /home/ftp/FIXME \
+  /pub/gnu/gnits/fetish
+
 md5 = $(shell md5sum < $(distdir).tar.gz|sed 's/  -//')
 
 rel-check:
@@ -70,7 +77,9 @@ announcement: NEWS ChangeLog $(distdir).tar.gz
 	  echo; \
 	  echo FIXME: put comments here; \
 	  echo; \
-	  echo "  $(url)"; \
+	  for url in $(url_list); do \
+	    echo "  $$url"; \
+	  done; \
 	  echo; \
 	  echo "$(md5)  $(distdir).tar.gz"; \
 	  echo; \
@@ -89,7 +98,9 @@ alpha:
 	ln $(distdir).tar.gz ../release
 	chmod a-w $(distdir).tar.gz
 	@echo =====================================
-	@echo 'ncftp -u $(url-host-prefix)/fs/share/ftp/gnu/fetish/'
+	@for url in $(dir_list); do \
+	  echo 'ncftp -u $$url'; \
+	done
 	@echo '#   put $(distdir).tar.gz'
 	@echo '# send the /tmp/announcement e-mail'
 	@echo 'pot-mail $(distdir).tar.gz | bash'
