@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.1e from Makefile.am
+# Makefile.in generated automatically by automake 1.1f from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -53,18 +53,17 @@ INFOS = fileutils.info fileutils.info[-0-9]*
 INFO_DEPS = fileutils.info
 DVIS = fileutils.dvi
 TEXINFOS = fileutils.texi
-
-DIST_COMMON = Makefile.am Makefile.in mdate-sh stamp-vti texinfo.tex \
+DIST_COMMON =  Makefile.am Makefile.in mdate-sh stamp-vti texinfo.tex \
 version.texi
 
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
 
-DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
-	$(TEXINFOS) $(INFOS) $(MANS) $(EXTRA_DIST) $(DATA)
-DEP_DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
-	$(TEXINFOS) $(INFO_DEPS) $(MANS) $(EXTRA_DIST) $(DATA)
+DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) \
+	$(TEXINFOS) $(INFOS) $(MANS) $(EXTRA_DIST)
+DEP_DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) \
+	$(TEXINFOS) $(INFO_DEPS) $(MANS) $(EXTRA_DIST)
 
 TAR = tar
 default: all
@@ -73,7 +72,7 @@ default: all
 $(srcdir)/Makefile.in: @MAINT@Makefile.am $(top_srcdir)/configure.in
 	cd $(top_srcdir) && automake $(subdir)/Makefile
 
-Makefile: $(top_builddir)/config.status Makefile.in
+Makefile: $(top_builddir)/config.status $(srcdir)/Makefile.in
 	cd $(top_builddir) && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
 
 version.texi: @MAINT@stamp-vti
@@ -125,10 +124,20 @@ install-info: $(INFO_DEPS)
 	    else : ; fi; \
 	  done; \
 	done
+	$(POST_INSTALL)
+	if $(SHELL) -c 'install-info --version' >/dev/null 2>&1; then \
+	  for file in $(INFO_DEPS); do \
+	    install-info --info-dir=$(infodir) $$file; :;\
+	  done; \
+	else : ; fi
 
 uninstall-info:
-	cd $(srcdir) && for file in *.info*; do	\
-	  rm -f $(infodir)/$$file; \
+	if $(SHELL) -c 'install-info --version' >/dev/null 2>&1; then \
+	  ii=yes; \
+	else ii=; fi; \
+	for file in $(INFO_DEPS); do \
+	  (cd $(infodir) && rm -f $$file $$file-[0-9] $$file-[0-9][0-9]); \
+	  test -z $ii || install-info --info-dir=$(infodir) --remove $$file; \
 	done
 
 mostlyclean-info:
@@ -157,13 +166,9 @@ distdir: $(DEP_DISTFILES)
 	  || cp -p $(srcdir)/$$file $(distdir)/$$file; \
 	done
 info: $(INFO_DEPS)
-
 dvi: $(DVIS)
-
 check: all
-
 installcheck:
-
 install-exec: 
 	$(NORMAL_INSTALL)
 
@@ -188,11 +193,11 @@ mostlyclean-generic:
 
 clean-generic:
 	test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
-	test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 
 distclean-generic:
 	rm -f Makefile $(DISTCLEANFILES)
-	rm -f config.cache config.log $(CONFIG_HEADER) stamp-h
+	rm -f config.cache config.log stamp-h
+	test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 
 maintainer-clean-generic:
 	test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)

@@ -40,9 +40,9 @@ transform = @program_transform_name@
 
 noinst_LIBRARIES = fu
 
-EXTRA_DIST = alloca.c basename.c error.c euidaccess.c fnmatch.c fsusage.c \
-ftruncate.c getdate.y getline.c group-member.c memcmp.c memcpy.c memset.c \
-mkdir.c mktime.c mountlist.c obstack.c posixtm.y regex.c rx.c \
+EXTRA_DIST = basename.c euidaccess.c \
+getdate.y group-member.c memcpy.c memset.c \
+mkdir.c posixtm.y \
 rename.c rmdir.c rpmatch.c \
 stpcpy.c strcasecmp.c strdup.c strndup.c strstr.c strtol.c strtoul.c
 
@@ -57,10 +57,11 @@ safe-read.c save-cwd.c savedir.c stripslash.c userspec.c xgetcwd.c \
 xmalloc.c xstrdup.c xstrtol.c xstrtoul.c yesno.c
 
 fu_LIBADD = @LIBOBJS@ @ALLOCA@
+fu_DEPENDENCIES = $(fu_LIBADD)
 
 noinst_HEADERS = argmatch.h backupfile.h error.h fnmatch.h fsusage.h \
 getline.h getopt.h group-member.h long-options.h makepath.h modechange.h \
-mountlist.h obstack.h path-concat.h pathmax.h regex.h rx.h \
+mountlist.h path-concat.h pathmax.h \
 save-cwd.h xstrtol.h xstrtoul.h
 
 BUILT_SOURCES = getdate.c posixtm.c
@@ -75,7 +76,6 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
-fu_DEPENDENCIES = 
 fu_OBJECTS =  getdate.o getopt.o getopt1.o posixtm.o argmatch.o \
 backupfile.o dirname.o filemode.o full-write.o getversion.o idcache.o \
 isdir.o long-options.o makepath.o modechange.o path-concat.o \
