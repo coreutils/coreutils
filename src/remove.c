@@ -37,6 +37,7 @@ typedef enum {false = 0, true = 1} bool;
 #include "error.h"
 #include "obstack.h"
 #include "hash.h"
+#include "quote.h"
 #include "remove.h"
 
 #define obstack_chunk_alloc malloc
@@ -493,7 +494,8 @@ remove_cwd_entries (const struct rm_options *x)
 	{
 	  if (errno != ENOENT || !x->ignore_missing_files)
 	    {
-	      error (0, errno, "%s", full_filename ("."));
+	      error (0, errno, _("cannot open directory %s"),
+		     quote (full_filename (".")));
 	      status = RM_ERROR;
 	    }
 	  break;
@@ -600,7 +602,8 @@ remove_cwd_entries (const struct rm_options *x)
     {
       if (CLOSEDIR (dirp))
 	{
-	  error (0, errno, "%s", full_filename ("."));
+	  error (0, errno, _("closing directory %s"),
+		 quote (full_filename (".")));
 	  status = RM_ERROR;
 	}
       dirp = NULL;
@@ -634,9 +637,9 @@ remove_file (struct File_spec *fs, const struct rm_options *x)
 	{
 	  fprintf (stderr,
 		   (S_ISDIR (fspec_filetype_mode (fs))
-		    ? _("%s: remove write-protected directory `%s'? ")
-		    : _("%s: remove write-protected file `%s'? ")),
-		   program_name, full_filename (pathname));
+		    ? _("%s: remove write-protected directory %s? ")
+		    : _("%s: remove write-protected file %s? ")),
+		   program_name, quote (full_filename (pathname)));
 	  if (!yesno ())
 	    return RM_USER_DECLINED;
 
@@ -651,9 +654,9 @@ remove_file (struct File_spec *fs, const struct rm_options *x)
 	 this file.  */
       fprintf (stderr,
 	       (S_ISDIR (fspec_filetype_mode (fs))
-		? _("%s: remove directory `%s'? ")
-		: _("%s: remove `%s'? ")),
-	       program_name, full_filename (pathname));
+		? _("%s: remove directory %s? ")
+		: _("%s: remove %s? ")),
+	       program_name, quote (full_filename (pathname)));
       if (!yesno ())
 	return RM_USER_DECLINED;
     }
@@ -663,7 +666,7 @@ remove_file (struct File_spec *fs, const struct rm_options *x)
 
   if (unlink (pathname) && (errno != ENOENT || !x->ignore_missing_files))
     {
-      error (0, errno, _("cannot unlink `%s'"), full_filename (pathname));
+      error (0, errno, _("cannot unlink %s"), quote (full_filename (pathname)));
       return RM_ERROR;
     }
   return RM_OK;
@@ -685,23 +688,23 @@ remove_dir (struct File_spec *fs, int need_save_cwd, const struct rm_options *x)
 
   if (!x->recursive)
     {
-      error (0, 0, _("%s: is a directory"), full_filename (dir_name));
+      error (0, 0, _("%s is a directory"), quote (full_filename (dir_name)));
       return RM_ERROR;
     }
 
   if (!x->ignore_missing_files && (x->interactive || x->stdin_tty)
       && euidaccess (dir_name, W_OK))
     {
-      fmt = _("%s: directory `%s' is write protected; descend into it anyway? ");
+      fmt = _("%s: directory %s is write protected; descend into it anyway? ");
     }
   else if (x->interactive)
     {
-      fmt = _("%s: descend into directory `%s'? ");
+      fmt = _("%s: descend into directory %s? ");
     }
 
   if (fmt)
     {
-      fprintf (stderr, fmt, program_name, full_filename (dir_name));
+      fprintf (stderr, fmt, program_name, quote (full_filename (dir_name)));
       if (!yesno ())
 	return RM_USER_DECLINED;
     }
@@ -718,7 +721,7 @@ remove_dir (struct File_spec *fs, int need_save_cwd, const struct rm_options *x)
   if (chdir (dir_name) < 0)
     {
       error (0, errno, _("cannot change to directory %s"),
-	     full_filename (dir_name));
+	     quote (full_filename (dir_name)));
       if (need_save_cwd)
 	free_cwd (&cwd);
       return RM_ERROR;
@@ -734,17 +737,17 @@ remove_dir (struct File_spec *fs, int need_save_cwd, const struct rm_options *x)
     struct stat sb;
     if (lstat (".", &sb))
       error (EXIT_FAILURE, errno,
-	     _("cannot lstat `.' in `%s'"), full_filename (dir_name));
+	     _("cannot lstat `.' in %s"), quote (full_filename (dir_name)));
 
     assert (fs->have_device);
     if (!SAME_INODE (sb, *fs))
       {
 	error (EXIT_FAILURE, 0,
-	       _("ERROR: the directory `%s' initially had device/inode\n\
+	       _("ERROR: the directory %s initially had device/inode\n\
 numbers %lu/%lu, but now (after a chdir into it), the numbers for `.'\n\
 are %lu/%lu.  That means that while rm was running, the directory\n\
 was replaced with either another directory or a link to another directory."),
-	       full_filename (dir_name),
+	       quote (full_filename (dir_name)),
 	       (unsigned long)(fs->st_dev),
 	       (unsigned long)(fs->st_ino),
 	       (unsigned long)(sb.st_dev),
@@ -776,15 +779,15 @@ was replaced with either another directory or a link to another directory."),
   else if (chdir ("..") < 0)
     {
       error (0, errno, _("cannot change back to directory %s via `..'"),
-	     full_filename (dir_name));
+	     quote (full_filename (dir_name)));
       return RM_ERROR;
     }
 
   if (x->interactive)
     {
-      fprintf (stderr, _("%s: remove directory `%s'%s? "),
+      fprintf (stderr, _("%s: remove directory %s%s? "),
 	       program_name,
-	       full_filename (dir_name),
+	       quote (full_filename (dir_name)),
 	       (status != RM_OK ? _(" (might be nonempty)") : ""));
       if (!yesno ())
 	{
@@ -793,7 +796,8 @@ was replaced with either another directory or a link to another directory."),
     }
 
   if (x->verbose)
-    printf (_("removing the directory itself: %s\n"), full_filename (dir_name));
+    printf (_("removing the directory itself: %s\n"),
+	    full_filename (dir_name));
 
   if (rmdir (dir_name) && (errno != ENOENT || !x->ignore_missing_files))
     {
@@ -807,13 +811,13 @@ was replaced with either another directory or a link to another directory."),
 	 `...': Invalid argument'  */
       if (errno == EINVAL && same_file (".", dir_name))
 	{
-	  error (0, 0, _("cannot remove current directory `%s'"),
-		 full_filename (dir_name));
+	  error (0, 0, _("cannot remove current directory %s"),
+		 quote (full_filename (dir_name)));
 	}
       else
 	{
-	  error (0, saved_errno, _("cannot remove directory `%s'"),
-		 full_filename (dir_name));
+	  error (0, saved_errno, _("cannot remove directory %s"),
+		 quote (full_filename (dir_name)));
 	}
       return RM_ERROR;
     }
@@ -848,7 +852,8 @@ rm (struct File_spec *fs, int user_specified_name, const struct rm_options *x)
       if (x->ignore_missing_files && errno == ENOENT)
 	return RM_OK;
 
-      error (0, errno, _("cannot remove `%s'"), full_filename (fs->filename));
+      error (0, errno, _("cannot remove %s"),
+	     quote (full_filename (fs->filename)));
       return RM_ERROR;
     }
 
@@ -863,7 +868,8 @@ rm (struct File_spec *fs, int user_specified_name, const struct rm_options *x)
 
       if (fspec_get_device_number (fs))
 	{
-	  error (0, errno, _("cannot stat `%s'"), full_filename (fs->filename));
+	  error (0, errno, _("cannot stat %s"),
+		 quote (full_filename (fs->filename)));
 	  return RM_ERROR;
 	}
       new_ent = make_active_dir_ent (fs->st_ino, fs->st_dev, current_depth ());
@@ -876,7 +882,7 @@ This almost certainly means that you have a corrupted file system.\n\
 NOTIFY YOUR SYSTEM MANAGER.\n\
 The following two directories have the same inode number:\n"));
 	  print_nth_dir (stderr, old_ent->depth);
-	  fprintf (stderr, "\n%s\n", full_filename (fs->filename));
+	  fprintf (stderr, "\n%s\n", quote (full_filename (fs->filename)));
 	  fflush (stderr);
 
 	  if (x->interactive)
