@@ -1,5 +1,5 @@
 /* nice -- run a program with modified scheduling priority
-   Copyright (C) 1990-2004 Free Software Foundation, Inc.
+   Copyright (C) 1990-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -50,6 +50,12 @@
 #endif
 
 #ifndef NZERO
+# define NZERO 20
+#endif
+
+/* This is required for Darwin Kernel Version 7.7.0.  */
+#if NZERO == 0
+# undef  NZERO
 # define NZERO 20
 #endif
 
