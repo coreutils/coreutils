@@ -1,4 +1,4 @@
-#serial 61   -*- autoconf -*-
+#serial 62   -*- autoconf -*-
 
 m4_undefine([AC_LANG_SOURCE(C)])
 dnl The following is identical to the definition in c.m4
