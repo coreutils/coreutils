@@ -145,7 +145,7 @@ split_3 (char *s, size_t s_len, char **u, int *binary, char **w)
      Ignore this line if it is too short.  */
   if (!(s_len - i >= MIN_DIGEST_LINE_LENGTH
 	|| (s[i] == '\\' && s_len - i >= 1 + MIN_DIGEST_LINE_LENGTH)))
-    return 1
+    return 1;
 
   if (s[i] == '\\')
     {
