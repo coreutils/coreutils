@@ -1,6 +1,9 @@
 2000-12-02  Jim Meyering  <meyering@lucent.com>
 
-	* src/od.c:
+	* src/sort.c (checkfp): Rename local `buf' to avoid shadowing previous
+	declaration.
+
+	* src/od.c: FIXME
 	Reported by Mark Nudelman, via Andreas Jaeger.
 
 	* src/sort.c (NONZERO): Define and use it to make the code a tiny
@@ -8,6 +11,12 @@
 
 	* doc/textutils.texi (sort invocation): Clarify how -t works
 	when a sort key specifies a range of fields.  From Karl O. Pinc.
+
+2000-11-26  Paul Eggert  <eggert@twinsun.com>
+
+	* src/od.c (skip): Use lseek instead of worrying about fseeko or fseek.
+	This should be portable, as we seek before doing any I/O.
+	(fseeko): Remove; no longer used.
 
 2000-11-30  Jim Meyering  <meyering@lucent.com>
 
