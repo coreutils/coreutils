@@ -59,6 +59,14 @@
 # define TOLOWER(c) (ISUPPER (c) ? tolower (c) : (c))
 #endif
 
+/* The string with which to replace NEWLINE characters in filenames.
+   This is required to make it so md5sum --check can parse the output
+   of `md5sum FILENAME' for FILENAME contain NL characters.  */
+#define NEWLINE_REPLACEMENT_STRING "<\"NL'\\>"
+
+#define NEWLINE_REPLACEMENT_STRING_LENGTH \
+    (sizeof (NEWLINE_REPLACEMENT_STRING) - 1)
+
 /* Nonzero if any of the files read were the standard input. */
 static int have_read_stdin;
 
@@ -136,6 +144,7 @@ split_3 (char *s, size_t s_len, char **u, int *binary, char **w)
      message digest information.  */
   if (s_len >= 32 + 2 + 1)
     {
+      char *p;
       *u = &s[i];
 
       /* The first field has to be the 32-character hexadecimal
@@ -155,12 +164,17 @@ split_3 (char *s, size_t s_len, char **u, int *binary, char **w)
 	 significant -- that includes leading and trailing white space.  */
       *w = &s[i];
 
-      /* Translate each NUL byte in the file name to a NEWLINE.
-         But not the last.  */
-      for (/* empty */ ; i < s_len; ++i)
+      /* Translate each NEWLINE_REPLACEMENT_STRING in the file name
+	 to a NEWLINE.  */
+      p = &s[i];
+      while ((p = strstr (p, NEWLINE_REPLACEMENT_STRING)))
 	{
-	  if (s[i] == '\0')
-	    s[i] = '\n';
+	  size_t len;
+
+	  *p++ = '\n';
+	  len = s_len - (p - s) - (NEWLINE_REPLACEMENT_STRING_LENGTH - 1) + 1;
+	  memmove (p, p + NEWLINE_REPLACEMENT_STRING_LENGTH - 1, len);
+	  s_len -= NEWLINE_REPLACEMENT_STRING_LENGTH - 1;
 	}
       return 0;
     }
@@ -277,8 +291,6 @@ md5_check (const char *checkfile_name, int binary)
       if (line[line_length - 1] == '\n')
 	line[--line_length] = '\0';
 
-      /* FIXME: filename might contain NUL bytes.  Map then to NEWLINEs
-	 in split_3.  */
       err = split_3 (line, line_length, &md5num, &type_flag, &filename);
       if (err || !hex_digits (md5num))
 	{
@@ -529,17 +541,17 @@ main (int argc, char **argv)
 	      else
 		putchar (' ');
 
-	      /* Translate NEWLINE bytes to NUL bytes.
-	         But first record the length of the filename, FILE.  */
+	      /* Translate each NEWLINE byte to the string,
+		 NEWLINE_REPLACEMENT_STRING.  But first record
+		 the length of the filename, FILE.  */
 	      filename_len = strlen (file);
-	      for (i = 0; i < strlen (file); ++i)
+	      for (i = 0; i < filename_len; ++i)
 		{
 		  if (file[i] == '\n')
-		    file[i] = '\0';
+		    fputs (NEWLINE_REPLACEMENT_STRING, stdout);
+		  else
+		    putchar (file[i]);
 		}
-	      /* Use fwrite, not printf, to output FILE --
-		 now it may contain NUL bytes.  */
-	      fwrite (file, sizeof (char), filename_len, stdout);
 	      putchar ('\n');
 	    }
 	}
