@@ -57,6 +57,13 @@
 #include "error.h"
 #include "unicodeio.h"
 
+#if ! (HAVE_DECL_STRTOIMAX || defined strtoimax)
+intmax_t strtoimax ();
+#endif
+#if ! (HAVE_DECL_STRTOUMAX || defined strtoumax)
+uintmax_t strtoumax ();
+#endif
+
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "printf"
 
@@ -177,15 +184,15 @@ FUNC_NAME (char const *s)						 \
   else									 \
     {									 \
       errno = 0;							 \
-      val = LIB_FUNC_EXPR;						 \
+      val = (LIB_FUNC_EXPR);						 \
       verify (s, end);							 \
     }									 \
   return val;								 \
 }									 \
 
-STRTOX (intmax_t,    vstrtoimax, (strtoimax (s, &end, 0)))
-STRTOX (uintmax_t,   vstrtoumax, (strtoumax (s, &end, 0)))
-STRTOX (long double, vstrtold,   (c_strtold (s, &end)))
+STRTOX (intmax_t,    vstrtoimax, strtoimax (s, &end, 0))
+STRTOX (uintmax_t,   vstrtoumax, strtoumax (s, &end, 0))
+STRTOX (long double, vstrtold,   c_strtold (s, &end))
 
 /* Output a single-character \ escape.  */
 
