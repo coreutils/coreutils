@@ -1,4 +1,6 @@
 Changes in release 2.1
+[2.0.16]
+* tail -F no longer segfaults
 [2.0.15]
 * `head -c N' and `od -N N' now read no more than N bytes of input
 * tail accepts new option: -F, equivalent to `--follow=name --retry',
