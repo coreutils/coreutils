@@ -248,8 +248,11 @@ announcement: NEWS ChangeLog $(rel-files)
 	  done; \
 	  echo; \
 	  echo "Here are GPG detached signatures:"; \
+	  echo; \
+	  for url in $(url_dir_list); do \
 	    echo "  $$url/$(my_distdir).tar.gz.sig"; \
 	    echo "  $$url/$(my_distdir).tar.bz2.sig"; \
+	  done; \
 	  echo; \
 	  echo "Here are the MD5 and SHA1 signatures:"; \
 	  echo; \
