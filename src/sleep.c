@@ -22,22 +22,15 @@
 
 #include "system.h"
 #include "error.h"
+#include "long-options.h"
 
 static long argdecode PARAMS ((const char *s));
 
 /* The name by which this program was run. */
 char *program_name;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
-
 static struct option const long_options[] =
 {
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {0, 0, 0, 0}
 };
 
@@ -73,6 +66,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "sleep", GNU_PACKAGE, VERSION,
+		      "FIXME: unknown", usage);
+
   while ((c = getopt_long (argc, argv, "", long_options, NULL)) != -1)
     {
       switch (c)
@@ -84,15 +80,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("sleep (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (argc == 1)
     {

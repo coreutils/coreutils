@@ -82,6 +82,7 @@
 #define getusershell _getusershell_sys_proto_
 
 #include "system.h"
+#include "long-options.h"
 
 #undef getusershell
 
@@ -152,12 +153,6 @@ extern char **environ;
 /* The name this program was run with.  */
 char *program_name;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
-
 /* If nonzero, pass the `-f' option to the subshell.  */
 static int fast_startup;
 
@@ -171,11 +166,9 @@ static struct option const longopts[] =
 {
   {"command", required_argument, 0, 'c'},
   {"fast", no_argument, NULL, 'f'},
-  {"help", no_argument, &show_help, 1},
   {"login", no_argument, NULL, 'l'},
   {"preserve-environment", no_argument, &change_environment, 0},
   {"shell", required_argument, 0, 's'},
-  {"version", no_argument, &show_version, 1},
   {0, 0, 0, 0}
 };
 
@@ -467,6 +460,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "su", GNU_PACKAGE, VERSION,
+		      "David MacKenzie", usage);
+
   fast_startup = 0;
   simulate_login = 0;
   change_environment = 1;
@@ -503,15 +499,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("su (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (optind < argc && !strcmp (argv[optind], "-"))
     {

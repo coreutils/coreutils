@@ -29,6 +29,7 @@
 #include <stdio.h>
 
 #include "error.h"
+#include "long-options.h"
 #include "readutmp.h"
 #include "system.h"
 
@@ -45,12 +46,6 @@ char *ttyname ();
 
 /* The name this program was run with. */
 char *program_name;
-
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
 
 /* If nonzero, attempt to canonicalize hostnames via a DNS lookup. */
 static int do_lookup;
@@ -81,8 +76,6 @@ static struct option const longopts[] =
   {"message", no_argument, NULL, 'T'},
   {"mesg", no_argument, NULL, 'T'},
   {"writable", no_argument, NULL, 'T'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -390,7 +383,11 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  while ((optc = getopt_long (argc, argv, "ilmqsuwHT", longopts, &longind)) != -1)
+  parse_long_options (argc, argv, "who", GNU_PACKAGE, VERSION,
+		      "Joseph Arceneaux and David MacKenzie", usage);
+
+  while ((optc = getopt_long (argc, argv, "ilmqsuwHT", longopts, &longind))
+	 != -1)
     {
       switch (optc)
 	{
@@ -430,15 +427,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("who (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   switch (argc - optind)
     {

@@ -24,6 +24,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "long-options.h"
 #include "readutmp.h"
 
 #ifndef MAXHOSTNAMELEN
@@ -39,12 +40,6 @@ char *ttyname ();
 
 /* The name this program was run with. */
 const char *program_name;
-
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
 
 /* If nonzero, display the hours:minutes since each user has touched
    the keyboard, or blank if within the last minute, or days followed
@@ -77,8 +72,6 @@ static int include_where = 1;
 
 static struct option const longopts[] =
 {
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -433,7 +426,7 @@ The utmp file will be %s.\n\
 }
 
 int
-main (int argc, char *const argv[])
+main (int argc, char **argv)
 {
   int optc, longind;
 
@@ -441,6 +434,10 @@ main (int argc, char *const argv[])
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  parse_long_options (argc, argv, "pinky", GNU_PACKAGE, VERSION,
+		      "Joseph Arceneaux, David MacKenzie, and Kaveh Ghazi",
+		      usage);
 
   while ((optc = getopt_long (argc, argv, "sfwiqbhlp", longopts, &longind))
 	 != -1)
@@ -497,15 +494,6 @@ main (int argc, char *const argv[])
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("pinky (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (do_short_format)
     short_pinky (UTMP_FILE, argc - optind, argv + optind);

@@ -26,6 +26,7 @@
 #include "system.h"
 #include "closeout.h"
 #include "error.h"
+#include "long-options.h"
 
 int full_write ();
 
@@ -40,18 +41,10 @@ static int ignore_interrupts;
 /* The name that this program was run with. */
 char *program_name;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
-
 static struct option const long_options[] =
 {
   {"append", no_argument, NULL, 'a'},
-  {"help", no_argument, &show_help, 1},
   {"ignore-interrupts", no_argument, NULL, 'i'},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -88,6 +81,10 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "tee", GNU_PACKAGE, VERSION,
+		      "Mike Parker, Richard M. Stallman, and David MacKenzie",
+		      usage);
+
   append = 0;
   ignore_interrupts = 0;
 
@@ -110,15 +107,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("tee (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (ignore_interrupts)
     {

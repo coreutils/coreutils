@@ -25,6 +25,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "long-options.h"
 #include "xstrtod.h"
 
 static double scan_double_arg PARAMS ((const char *arg));
@@ -52,12 +53,6 @@ static char *separator;
 /* FIXME: make this an option.  */
 static char *terminator = "\n";
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
-
 /* The increment.  */
 static double step;
 
@@ -68,9 +63,7 @@ static struct option const long_options[] =
 {
   { "equal-width", no_argument, NULL, 'w'},
   { "format", required_argument, NULL, 'f'},
-  { "help", no_argument, &show_help, 1},
   { "separator", required_argument, NULL, 's'},
-  { "version", no_argument, &show_version, 1},
   { NULL, 0, NULL, 0}
 };
 
@@ -119,6 +112,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "seq", GNU_PACKAGE, VERSION,
+		      "Ulrich Drepper", usage);
+
   equal_width = 0;
   format_str = NULL;
   separator = "\n";
@@ -160,18 +156,6 @@ main (int argc, char **argv)
 	  usage (1);
 	  /* NOTREACHED */
 	}
-    }
-
-  if (show_version)
-    {
-      printf ("seq (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (0);
-    }
-
-  if (show_help)
-    {
-      usage (0);
-      /* NOTREACHED */
     }
 
   if (optind >= argc)

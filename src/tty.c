@@ -30,6 +30,7 @@
 #include "system.h"
 #include "closeout.h"
 #include "error.h"
+#include "long-options.h"
 
 /* The name under which this program was run. */
 char *program_name;
@@ -37,18 +38,10 @@ char *program_name;
 /* If nonzero, return an exit status but produce no output. */
 static int silent;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
-
 static struct option const longopts[] =
 {
-  {"help", no_argument, &show_help, 1},
   {"silent", no_argument, NULL, 's'},
   {"quiet", no_argument, NULL, 's'},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -84,6 +77,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "tty", GNU_PACKAGE, VERSION,
+		      "David MacKenzie", usage);
+
   silent = 0;
 
   while ((optc = getopt_long (argc, argv, "s", longopts, NULL)) != -1)
@@ -101,15 +97,6 @@ main (int argc, char **argv)
 	  usage (2);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("tty (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (optind != argc)
     usage (2);

@@ -28,6 +28,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "long-options.h"
 
 #ifndef _POSIX_VERSION
 struct passwd *getpwuid ();
@@ -70,21 +71,13 @@ static gid_t rgid, egid;
 /* The number of errors encountered so far. */
 static int problems = 0;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
-
 static struct option const longopts[] =
 {
   {"group", no_argument, NULL, 'g'},
   {"groups", no_argument, NULL, 'G'},
-  {"help", no_argument, &show_help, 1},
   {"name", no_argument, NULL, 'n'},
   {"real", no_argument, NULL, 'r'},
   {"user", no_argument, NULL, 'u'},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -126,6 +119,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "id", GNU_PACKAGE, VERSION,
+		      "Arnold Robbins and David MacKenzie", usage);
+
   while ((optc = getopt_long (argc, argv, "agnruG", longopts, NULL)) != -1)
     {
       switch (optc)
@@ -154,15 +150,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("id (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (just_user + just_group + just_group_list > 1)
     error (1, 0, _("cannot print only user and only group"));

@@ -22,22 +22,15 @@
 #include <stdio.h>
 
 #include "error.h"
+#include "long-options.h"
 #include "readutmp.h"
 #include "system.h"
 
 /* The name this program was run with. */
 char *program_name;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
-
 static struct option const longopts[] =
 {
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -190,6 +183,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "uptime", GNU_PACKAGE, VERSION,
+		      "Joseph Arceneaux and David MacKenzie", usage);
+
   while ((optc = getopt_long (argc, argv, "", longopts, &longind)) != -1)
     {
       switch (optc)
@@ -201,15 +197,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("uptime (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   switch (argc - optind)
     {

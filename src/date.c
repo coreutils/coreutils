@@ -24,9 +24,10 @@
 
 #include "system.h"
 #include "closeout.h"
-#include "getline.h"
 #include "error.h"
 #include "getdate.h"
+#include "getline.h"
+#include "long-options.h"
 #include "posixtm.h"
 
 #ifndef STDC_HEADERS
@@ -44,12 +45,6 @@ static void show_date PARAMS ((const char *format, time_t when));
 /* The name this program was run with, for error messages. */
 char *program_name;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
-
 /* If non-zero, display time in RFC-822 format for mail or news. */
 static int rfc_format = 0;
 
@@ -60,14 +55,12 @@ static struct option const long_options[] =
 {
   {"date", required_argument, NULL, 'd'},
   {"file", required_argument, NULL, 'f'},
-  {"help", no_argument, &show_help, 1},
   {"reference", required_argument, NULL, 'r'},
   {"rfc-822", no_argument, NULL, 'R'},
   {"set", required_argument, NULL, 's'},
   {"uct", no_argument, NULL, 'u'},
   {"utc", no_argument, NULL, 'u'},
   {"universal", no_argument, NULL, 'u'},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -287,6 +280,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "date", GNU_PACKAGE, VERSION,
+		      "David MacKenzie", usage);
+
   while ((optc = getopt_long (argc, argv, "d:f:r:Rs:u", long_options, NULL))
 	 != -1)
     switch (optc)
@@ -315,15 +311,6 @@ main (int argc, char **argv)
       default:
 	usage (1);
       }
-
-  if (show_version)
-    {
-      printf ("date (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   n_args = argc - optind;
 
