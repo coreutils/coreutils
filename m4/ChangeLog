@@ -1,5 +1,8 @@
 2001-11-03  Jim Meyering  <meyering@lucent.com>
 
+	* jm-glibc-io.m4n (jm_FUNC_GLIBC_UNLOCKED_IO): Quote first arg
+	of AC_DEFUN.
+
 	* dirfd.m4 (UTILS_FUNC_DIRFD): Rework so dirfd.c doesn't have to
 	know the name of the variable in the macro definition.
 
