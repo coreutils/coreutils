@@ -1,4 +1,6 @@
 Changes in release 3.17:
+[3.16k]
+* install accepts new option, -D
 [3.16j]
 * du accepts new options, --exclude=PAT and --exclude-from=FILE (-X FILE)
 * ls now quotes file names for the shell by default, if they contain
