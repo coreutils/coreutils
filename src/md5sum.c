@@ -1,5 +1,5 @@
 /* Compute MD5 or SHA1 checksum of files or strings
-   Copyright (C) 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -110,11 +110,11 @@ enum
 
 static const struct option long_options[] =
 {
-  { "binary", no_argument, 0, 'b' },
-  { "check", no_argument, 0, 'c' },
-  { "status", no_argument, 0, STATUS_OPTION },
-  { "text", no_argument, 0, 't' },
-  { "warn", no_argument, 0, 'w' },
+  { "binary", no_argument, NULL, 'b' },
+  { "check", no_argument, NULL, 'c' },
+  { "status", no_argument, NULL, STATUS_OPTION },
+  { "text", no_argument, NULL, 't' },
+  { "warn", no_argument, NULL, 'w' },
   { GETOPT_HELP_OPTION_DECL },
   { GETOPT_VERSION_OPTION_DECL },
   { NULL, 0, NULL, 0 }
