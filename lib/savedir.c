@@ -62,7 +62,9 @@ char *realloc ();
 # define NULL 0
 #endif
 
+#ifndef stpcpy
 char *stpcpy ();
+#endif
 
 #include "savedir.h"
 
