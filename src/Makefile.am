@@ -143,7 +143,6 @@ rm_SOURCES = rm.c remove.c
 md5sum_SOURCES = md5sum.c md5.c
 sha1sum_SOURCES = md5sum.c sha1sum.c
 
-PERL = @PERL@
 editpl = sed -e 's,@''PERL''@,$(PERL),g'
 
 localedir = $(datadir)/locale
