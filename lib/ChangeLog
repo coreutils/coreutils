@@ -1,3 +1,8 @@
+2003-07-13  Jim Meyering  <jim@meyering.net>
+
+	* xgethostname.c (xgethostname): Return NULL, rather than exiting,
+	upon any non-malloc/realloc error.
+
 2003-07-12  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (BUILT_SOURCES): Use `BUILT_SOURCES += $(STDBOOL_H)'
