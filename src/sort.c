@@ -684,13 +684,18 @@ default_sort_size (void)
    by FPS and FILES, which are alternate paths to the same files.
    NFILES gives the number of input files; NFPS may be less.  Assume
    that each input line requires LINE_BYTES extra bytes' worth of line
-   information.  Return at most SIZE_BOUND.  */
+   information.  Do not exceed a bound on the size: if the bound is
+   not specified by the user, use a default.  */
 
 static size_t
 sort_buffer_size (FILE *const *fps, int nfps,
 		  char *const *files, int nfiles,
-		  size_t line_bytes, size_t size_bound)
+		  size_t line_bytes)
 {
+  /* A bound on the input size.  If zero, the bound hasn't been
+     determined yet.  */
+  static size_t size_bound;
+
   /* In the worst case, each input byte is a newline.  */
   size_t worst_case_per_input_byte = line_bytes + 1;
 
@@ -712,7 +717,23 @@ sort_buffer_size (FILE *const *fps, int nfps,
 	  != 0)
 	die (_("stat failed"), files[i]);
 
-      file_size = S_ISREG (st.st_mode) ? st.st_size : INPUT_FILE_SIZE_GUESS;
+      if (S_ISREG (st.st_mode))
+	file_size = st.st_size;
+      else
+	{
+	  /* The file has unknown size.  If the user specified a sort
+	     buffer size, use that; otherwise, guess the size.  */
+	  if (sort_size)
+	    return sort_size;
+	  file_size = INPUT_FILE_SIZE_GUESS;
+	}
+
+      if (! size_bound)
+	{
+	  size_bound = sort_size;
+	  if (! size_bound)
+	    size_bound = default_sort_size ();
+	}
 
       /* Add the amount of memory needed to represent the worst case
 	 where the input consists entirely of newlines followed by a
@@ -1963,10 +1984,6 @@ sort (char * const *files, int nfiles, char const *output_file)
   int n_temp_files = 0;
   bool output_file_created = false;
 
-  static size_t size;
-  if (! size && ! (size = sort_size))
-    size = default_sort_size ();
-
   buf.alloc = 0;
 
   while (nfiles)
@@ -1979,8 +1996,7 @@ sort (char * const *files, int nfiles, char const *output_file)
 
       if (! buf.alloc)
 	initbuf (&buf, bytes_per_line,
-		 sort_buffer_size (&fp, 1, files, nfiles,
-				   bytes_per_line, size));
+		 sort_buffer_size (&fp, 1, files, nfiles, bytes_per_line));
       buf.eof = false;
       files++;
       nfiles--;
