@@ -73,10 +73,14 @@ Here is one possible patch to correct the problem.
 -#ifndef __STDC_32_MODE__
 +#ifndef __LP64__
 
-On some systems, some of the tests fail when run as root.  All failures
-I've seen appear to be due to problems in the testing framework, not
-in the tools themselves.  I'll address that for the next release by
-using a program like setuidgid (see the comment in TODO).
+If you run the tests as root, note that a few of them create files
+and/or run programs as a non-root user, `nobody' by default.
+If you want to use some other non-root username, specify it via
+the NON_ROOT_USERNAME environment variable.
+If you can run the tests as root, please do so and report any
+problems.  We get much less test coverage in that mode, and it's
+arguably more important that these tools work well when run by
+root than when run by unprivileged users.
 
 ***************************************
 
