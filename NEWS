@@ -1,5 +1,5 @@
 [4.5.9]
-* du no longer truncates file sizes or sums to fit in size_t
+* du no longer truncates file sizes or sums to fit in 32-bit size_t
 * work around Linux kernel bug in getcwd (fixed in 2.4.21-pre4), so that pwd
   now fails if the name of the working directory is so long that getcwd
   truncates it.  Before it would print the truncated name and exit successfully.
