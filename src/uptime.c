@@ -50,9 +50,9 @@ static struct option const longopts[] =
 };
 
 static void
-print_uptime (int n, const STRUCT_UTMP *this)
+print_uptime (size_t n, const STRUCT_UTMP *this)
 {
-  register int entries = 0;
+  size_t entries = 0;
   time_t boot_time = 0;
   time_t time_now;
   time_t uptime = 0;
@@ -70,7 +70,6 @@ print_uptime (int n, const STRUCT_UTMP *this)
   if (fp != NULL)
     {
       char buf[BUFSIZ];
-      int res;
       char *b = fgets (buf, BUFSIZ, fp);
       if (b == buf)
 	{
@@ -149,7 +148,8 @@ print_uptime (int n, const STRUCT_UTMP *this)
 	printf (ngettext ("%ld day", "%ld days", updays), updays);
       printf (" %2d:%02d,  ", uphours, upmins);
     }
-  printf (ngettext ("%d user", "%d users", entries), entries);
+  printf (ngettext ("%lu user", "%lu users", entries),
+	  (unsigned long int) entries);
 
 #if defined (HAVE_GETLOADAVG) || defined (C_GETLOADAVG)
   loads = getloadavg (avg, 3);
@@ -178,11 +178,10 @@ print_uptime (int n, const STRUCT_UTMP *this)
 static void
 uptime (const char *filename)
 {
-  int n_users;
+  size_t n_users;
   STRUCT_UTMP *utmp_buf;
-  int fail = read_utmp (filename, &n_users, &utmp_buf);
 
-  if (fail)
+  if (read_utmp (filename, &n_users, &utmp_buf) != 0)
     error (EXIT_FAILURE, errno, "%s", filename);
 
   print_uptime (n_users, utmp_buf);
@@ -215,7 +214,7 @@ If FILE is not specified, use %s.  %s as FILE is common.\n\
 int
 main (int argc, char **argv)
 {
-  int optc, longind;
+  int optc;
   initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -227,7 +226,7 @@ main (int argc, char **argv)
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
 
-  while ((optc = getopt_long (argc, argv, "", longopts, &longind)) != -1)
+  while ((optc = getopt_long (argc, argv, "", longopts, NULL)) != -1)
     {
       switch (optc)
 	{
