@@ -116,7 +116,7 @@ default: all
 
 .SUFFIXES:
 .SUFFIXES: .dvi .info .ps .texi .texinfo
-$(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --gnits doc/Makefile
 
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
@@ -124,7 +124,7 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
 	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
 
-version.texi: @MAINT@stamp-vti
+version.texi: stamp-vti
 	cp $(srcdir)/stamp-vti $(srcdir)/version.texi
 
 stamp-vti: fileutils.texi $(top_srcdir)/configure.in
@@ -145,7 +145,7 @@ clean-vti:
 distclean-vti:
 
 maintainer-clean-vti:
-	-@MAINT@rm -f stamp-vti version.texi
+	-rm -f stamp-vti version.texi
 
 fileutils.info: fileutils.texi version.texi
 fileutils.dvi: fileutils.texi version.texi
