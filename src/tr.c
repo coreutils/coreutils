@@ -1599,7 +1599,7 @@ when translating"));
 	    {
 	      error (EXIT_FAILURE, 0,
 		     _("when translating, the only character classes that may \
-appear in\n\tstring2 are `upper' and `lower'"));
+appear in\nstring2 are `upper' and `lower'"));
 	    }
 	}
       else
