@@ -1,3 +1,8 @@
+1999-07-10  Jim Meyering  <meyering@ascend.com>
+
+	* tests/join/Test.pm: New test case (but commented out) for
+	Paul's 1999-06-01 fix.
+
 1999-07-09  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in (ALL_LINGUAS): Add Greek (el).
