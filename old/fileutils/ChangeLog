@@ -23,7 +23,7 @@
 	* src/copy.c (copy_internal): Don't return immediately after a failed
 	copy_dir call -- otherwise, the failure to read a single file in a
 	source directory would cause the containing destination directory
-	not to have owner and/or permissions set properly.
+	not to have the owner and/or permissions set properly.
 	Reported by Piotr and Maciej Kwapulinski.
 	* tests/cp/fail-perm: Test for it.
 	* tests/cp/Makefile.am (TESTS): Add fail-perm.
