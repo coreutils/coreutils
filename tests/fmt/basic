@@ -11,14 +11,17 @@ case "$PERL" in
   ;;
 esac
 
+# Export this to avoid hassles when run in a UTF-8 locale,
+# since we use 8-bit characters below, and those values are
+# interpolated into strings (to perform substitution) in Fetish.pm.
+LC_ALL=C
+export LC_ALL
+
 exec $PERL -w -I$srcdir/.. -MFetish -- - <<\EOF
 require 5.003;
 use strict;
 
 (my $program_name = $0) =~ s|.*/||;
-
-# Turn off localisation of executable's ouput.
-@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
 my @Tests =
     (
