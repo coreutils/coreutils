@@ -1,3 +1,8 @@
+2003-09-22  Jim Meyering  <jim@meyering.net>
+
+	* Makevars (XGETTEXT_OPTIONS): Add --from-code=UTF-8 to accommodate the
+	non-ASCII comment to translators in ptx.c regarding the author's name.
+
 2003-08-27  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.in.in: Update from gettext-0.12.2.
