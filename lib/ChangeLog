@@ -2,6 +2,7 @@
 
 	* lib/human.c (human_readable_inexact): Allow an input block
 	size that is not a multiple of the output block size, and vice versa.
+	Reported by Piergiorgio Sartor.
 
 2000-06-14  Paul Eggert  <eggert@twinsun.com>
 
