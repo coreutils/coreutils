@@ -382,15 +382,15 @@ static struct bin_str color_indicator[] =
     { 0, NULL },			/* ec: End color (replaces lc+no+rc) */
     { LEN_STR_PAIR ("0") },		/* no: Normal */
     { LEN_STR_PAIR ("0") },		/* fi: File: default */
-    { LEN_STR_PAIR ("32") },		/* di: Directory: green */
-    { LEN_STR_PAIR ("36") },		/* ln: Symlink: cyan */
-    { LEN_STR_PAIR ("31") },		/* pi: Pipe: red */
-    { LEN_STR_PAIR ("33") },		/* so: Socket: yellow/brown */
-    { LEN_STR_PAIR ("44;37") },		/* bd: Block device: white on blue */
-    { LEN_STR_PAIR ("44;37") },		/* cd: Char device: white on blue */
+    { LEN_STR_PAIR ("01;34") },		/* di: Directory: bright blue */
+    { LEN_STR_PAIR ("01;36") },		/* ln: Symlink: bright cyan */
+    { LEN_STR_PAIR ("33") },		/* pi: Pipe: yellow/brown */
+    { LEN_STR_PAIR ("01;35") },		/* so: Socket: bright magenta */
+    { LEN_STR_PAIR ("01;33") },		/* bd: Block device: bright yellow */
+    { LEN_STR_PAIR ("01;33") },		/* cd: Char device: bright yellow */
     { 0, NULL },			/* mi: Missing file: undefined */
     { 0, NULL },			/* or: Orphanned symlink: undefined */
-    { LEN_STR_PAIR ("35") }		/* ex: Executable: purple */
+    { LEN_STR_PAIR ("01;32") }		/* ex: Executable: bright green */
   };
 
 /* FIXME: comment  */
