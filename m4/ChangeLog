@@ -1,3 +1,8 @@
+2001-09-16  Jim Meyering  <meyering@lucent.com>
+
+	* mkdir-slash.m4 (UTILS_FUNC_MKDIR_TRAILING_SLASH): New file/macro.
+	* jm-macros.m4: Require it.
+
 2001-09-15  Jim Meyering  <meyering@lucent.com>
 
 	* jm-macros.m4: Check for help2man.
