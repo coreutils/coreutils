@@ -55,7 +55,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "yes", GNU_PACKAGE, VERSION, usage);
+  /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
+  if (getenv ("POSIXLY_CORRECT") == NULL)
+    parse_long_options (argc, argv, "yes", GNU_PACKAGE, VERSION, usage);
 
   if (argc == 1)
     while (1)
