@@ -16,7 +16,7 @@
 
 2002-12-20  Jim Meyering  <jim@meyering.net>
 
-	* install-sh: Ensure that this script is executable.
+	* install-sh: Set the execute bit on this file.
 	Reported by Vin Shelton.
 
 2002-11-09  Jim Meyering  <jim@meyering.net>
