@@ -1,6 +1,18 @@
-2001-10-14  Jim Meyering  <meyering@lucent.com>
+2001-10-18  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.1.
+
+	Plug a leak.
+	* src/cp-hash.c (remember_copied): Use src_to_dest_free to free
+	the entry we couldn't insert.
+
+	Don't use free'd memory.
+	* src/copy.c (dest_info_free): New function.
+	(dest_info_init): Make the hash table code use it.
+	(record_dest): Store each DEST in malloc'd  memory.  Hence the above.
+	Use dest_info_free to free the `ent' we couldn't insert.
+
+2001-10-14  Jim Meyering  <meyering@lucent.com>
 
 	Now, -P is the same as --no-dereference, per POSIX.
 	Use --parents to get the old meaning.
