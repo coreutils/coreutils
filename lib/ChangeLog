@@ -1,3 +1,7 @@
+2001-05-27  Jim Meyering  <meyering@lucent.com>
+
+	* readutmp.h (UT_TYPE): Define.
+
 2001-05-24  Jim Meyering  <meyering@lucent.com>
 
 	* argmatch.c: Include "quote.h".
