@@ -70,8 +70,9 @@ AC_DEFUN([jm_PREREQ_GETPAGESIZE],
 
 AC_DEFUN([jm_PREREQ_HARD_LOCALE],
 [
-  AC_CHECK_HEADERS(alloca.h locale.h stdbool.h string.h)
+  AC_CHECK_HEADERS(locale.h stdlib.h string.h)
   AC_CHECK_FUNCS(setlocale)
+  AM_C_PROTOTYPES
 ])
 
 AC_DEFUN([jm_PREREQ_HASH],
