@@ -1546,17 +1546,6 @@ terminate until long after the real writer has terminated.
 Note that @samp{--pid} cannot be supported on some systems; @code{tail}
 will print a warning if this is the case.
 
-@itemx --max-consecutive-size-changes=@var{n}
-@opindex --max-consecutive-size-changes
-This option is meaningful only when following by name.
-Use it to control how long @code{tail} follows the descriptor of a file
-that continues growing at a rapid pace even after it is deleted or renamed.
-After detecting @var{n}
-(default N=@value{DEFAULT_MAX_N_CONSECUTIVE_SIZE_CHANGES})
-consecutive size changes for a file,
-@code{open}/@code{fstat} the file to determine if that file name is
-still associated with the same device/inode-number pair as before.
-
 @itemx --max-unchanged-stats=@var{n}
 @opindex --max-unchanged-stats
 When tailing a file by name, if there have been @var{n} (default
