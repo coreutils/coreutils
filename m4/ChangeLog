@@ -26,6 +26,16 @@
 	(AM_GNU_GETTEXT): Fix problem with brackets and m4 quoting,
 	and simplify the shell code.
 
+1999-07-03  Paul Eggert  <eggert@twinsun.com>
+
+	* mktime.m4: New file, which is a preview of what should appear
+	in the next public autoconf release.
+	[[ This file used to be distributed here, but was removed when
+	automake test releases started including the latest version.
+	But now automake no longer includes mktime.m4, and since
+	autoconf hasn't yet included it, we're back to including the
+	very same file all over again. -- Jim ]]
+
 1999-07-20  Jim Meyering  <meyering@ascend.com>
 
 	* jm-macros.m4 (AC_REPLACE_FUNCS): Add memmove.
@@ -482,7 +492,7 @@
 	Add lseek and memchr.
 
 	* decl.m4: s/HAVE_DECLARATION_/HAVE_DECL_/g.
-     	T.E.Dickey <dickey@clark.net> said that some older preprocessors
+	T.E.Dickey <dickey@clark.net> said that some older preprocessors
 	have a 20-character limit on names.
 
 1997-11-30  Jim Meyering  <meyering@na-net.ornl.gov>
