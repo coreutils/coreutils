@@ -462,7 +462,8 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
     }
 
 #if 0
-  /* FIXME: remove or use */
+  /* FIXME: use or remove */
+
   /* If we're making a backup, we'll detect the problem case in
      copy_reg because SRC_PATH will no longer exist.  Allowing
      the test to be deferred lets cp do some useful things.
@@ -473,7 +474,6 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
       || S_ISLNK (dst_sb_link->st_mode))
     return 1;
 
-  /* FIXME: explain */
   if (x->dereference != DEREF_NEVER)
     return 1;
 #endif
@@ -503,6 +503,13 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
 	}
     }
 
+  /* It's ok to remove a destination symlink.  But that works only when we
+     unlink before opening the destination and when they're on the same
+     partition.  */
+  if (x->unlink_dest_before_opening
+      && S_ISLNK (dst_sb_link->st_mode))
+    return src_sb_link->st_dev == src_sb_link->st_dev;
+
   if (x->xstat == lstat)
     {
       static struct stat tmp_dst_sb;
@@ -526,14 +533,6 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
       src_sb_no_link = src_sb;
       dst_sb_no_link = dst_sb;
     }
-
-  /* FIXME: hoist this to precede if/else? */
-  /* It's ok to remove a destination symlink.  But that works only when we
-     unlink before opening the destination and when they're on the same
-     partition.  */
-  if (x->unlink_dest_before_opening
-      && S_ISLNK (dst_sb_link->st_mode))
-    return src_sb_link->st_dev == src_sb_link->st_dev;
 
   return 0;
 }
