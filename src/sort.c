@@ -634,7 +634,8 @@ fillbuf (struct buffer *buf, FILE *fp)
   memmove (buf->buf, buf->buf + buf->used - buf->left, buf->left);
   buf->used = buf->left;
 
-  while (!feof (fp) && (buf->used == 0 || !memchr (buf->buf, eolchar, buf->used)))
+  while (!feof (fp) && (buf->used == 0
+			|| !memchr (buf->buf, eolchar, buf->used)))
     {
       if (buf->used == buf->alloc)
 	{
