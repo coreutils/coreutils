@@ -54,6 +54,10 @@ enum Dereference_symlink
    || (Mode) == SPARSE_AUTO		\
    || (Mode) == SPARSE_ALWAYS)
 
+/* These options control how files are copied by at least the
+   following programs: mv (when rename doesn't work), cp, install.
+   So, if you add a new member, be sure to initialize it in
+   mv.c, cp.c, and install.c.  */
 struct cp_options
 {
   enum backup_type backup_type;
