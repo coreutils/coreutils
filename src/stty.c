@@ -823,7 +823,11 @@ main (argc, argv)
 	      set_window_size (-1, (int) integer_arg (argv[k]));
 	    }
 	  else if (!strcmp (argv[k], "size"))
+	  {
+	    max_col = screen_columns ();
+	    current_col = 0;
 	    display_window_size (0);
+	  }
 #endif
 #ifdef HAVE_C_LINE
 	  else if (!strcmp (argv[k], "line"))
