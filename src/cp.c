@@ -187,7 +187,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -L, --dereference            always follow symbolic links\n\
 "), stdout);
       fputs (_("\
-  -P  --no-dereference         never follow symbolic links\n\
+  -P, --no-dereference         never follow symbolic links\n\
 "), stdout);
       fputs (_("\
   -p                           same as --preserve=mode,ownership,timestamps\n\
