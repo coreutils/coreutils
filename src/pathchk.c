@@ -32,7 +32,7 @@
 			pathname and its components against the POSIX.1
 			minimum limits for portability, _POSIX_NAME_MAX
 			and _POSIX_PATH_MAX in 2.9.2.  Also check that
-			the pathname contains no characters not in the
+			the pathname contains no character not in the
 			portable filename character set.
 
    David MacKenzie <djm@gnu.ai.mit.edu>
@@ -87,7 +87,7 @@
 #define NAME_MAX_FOR(p) NAME_MAX
 #endif
 
-char *xstrdup();
+char *xstrdup ();
 void error ();
 
 static int validate_path ();
@@ -137,7 +137,7 @@ main (argc, argv)
 /* Each element is nonzero if the corresponding ASCII character is
    in the POSIX portable character set, and zero if it is not.
    In addition, the entry for `/' is nonzero to simplify checking. */
-static char const portable_chars[] =
+static char const portable_chars[256] =
 {
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 0-15 */
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 16-31 */
@@ -161,12 +161,12 @@ static char const portable_chars[] =
 
 static int
 portable_chars_only (path)
-     char *path;
+     const char *path;
 {
-  char *p;
+  const char *p;
 
   for (p = path; *p; ++p)
-    if (portable_chars[(unsigned char)*p] == 0)
+    if (portable_chars[(const unsigned char) *p] == 0)
       {
 	error (0, 0, "path `%s' contains nonportable character `%c'",
 	       path, *p);
@@ -180,7 +180,7 @@ portable_chars_only (path)
 
 static int
 dir_ok (path)
-     char *path;
+     const char *path;
 {
   struct stat stats;
 

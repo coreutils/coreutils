@@ -179,6 +179,6 @@ just_echo:
 	}
     }
   if (display_return)
-    printf ("\n");
+    putchar ('\n');
   exit (0);
 }

@@ -14,7 +14,11 @@
 /* SUPPRESS 288 on yyerrlab *//* Label unused */
 
 #ifdef HAVE_CONFIG_H
+#if defined (emacs) || defined (CONFIG_BROKETS)
+#include <config.h>
+#else
 #include "config.h"
+#endif
 #endif
 
 /* Since the code of getdate.y is not included in the Emacs executable
@@ -115,7 +119,7 @@ static int yyerror ();
 
 #if	!defined(lint) && !defined(SABER)
 static char RCS[] =
-	"$Header: str2date.y,v 2.1 90/09/06 08:15:06 cronan Exp $";
+	"$Header: /w/src/cvsroot/shellutils/lib/getdate.y,v 1.5 1993/09/08 18:23:16 meyering Exp $";
 #endif	/* !defined(lint) && !defined(SABER) */
 
 

@@ -1,8 +1,31 @@
+Mon Oct 04 22:15:07 1993  Jim Meyering (meyering@comco.com)
+
+	* who.c (print_entry, print_heading, who_am_i):
+	Cast printf field width arguments to int to avoid warnings.
+	(idle_string): Cast idle seconds and minutes to int.
+	Declare functions read_utmp and idle_string to be static.
+	Don't declare ttyname as static.
+
+	* echo.c (just_echo): Use putchar instead of printf.
+
+	* expr.c (parse_long_options): New function.
+	(main): Use it to handle --version and --help properly.
+
+	* tee.c (main): Put entire #ifdef inside if-braces to make structure
+	clearer.
+	(main, tee): Compare close() != 0 rather than close () == -1.
+
+	* pathchk.c (portable_chars_only, dir_ok): Make a couple variables
+	const.
+
 Wed Sep 08 00:07:36 1993  Jim Meyering (meyering@comco.com)
 
 	* test.c [advance, unary_advance]: Rewrite using do{...}while(0)
 	paradigm instead of comma expressions that make Alpha OSFv1.3
 	C compiler segfault.
+
+	* basename.c, date.c, dirname.c, env.c, id.c, logname.c, nice.c:
+	Add --help and --version options.
 
 Sat Jul 24 08:52:18 1993  Jim Meyering (meyering@comco.com)
 

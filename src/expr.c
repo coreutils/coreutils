@@ -32,6 +32,7 @@
 #include <ctype.h>
 #include <sys/types.h>
 #include <regex.h>
+#include <getopt.h>
 
 #include "system.h"
 #include "version.h"
@@ -98,12 +99,52 @@ static void tostring ();
 static void trace ();
 #endif
 
+static struct option const long_options[] =
+{
+  {"help", no_argument, 0, 'h'},
+  {"version", no_argument, 0, 'v'},
+  {0, 0, 0, 0}
+};
+
 static void
 usage ()
 {
   fprintf (stderr, "Usage: %s [{--help,--version}] expression...\n",
 	   program_name);
   exit (1);
+}
+
+/* Process long options that precede all other command line arguments.  */
+
+static void
+parse_long_options (argc, argv)
+     int argc;
+     char **argv;
+{
+  int c;
+
+  while ((c = getopt_long (argc, argv, "+", long_options, (int *) 0)) != EOF)
+    {
+      switch (c)
+        {
+	case 'h':
+          usage ();
+
+	case 'v':
+	  printf ("%s\n", version_string);
+	  exit (0);
+	
+	default:
+	  usage ();
+        }
+    }
+
+  /* Restore optind in case it has advanced past a leading `--'.  We can use a
+     simple assignment here because all brances of the above switch statement
+     exit.  Otherwise, we'd have to be careful to decrement only when optind
+     is larger than 1 and the last argument processed was `--'.  */
+
+  optind = 1;
 }
 
 void
@@ -115,18 +156,7 @@ main (argc, argv)
 
   program_name = argv[0];
 
-  if (argc > 1)
-    {
-      if (strcmp (argv[1], "--version") == 0)
-	{
-	  printf ("%s\n", version_string);
-	  exit (0);
-	}
-      else if (strcmp (argv[1], "--help") == 0)
-	{
-	  usage ();
-	}
-    }
+  parse_long_options (argc, argv);
 
   if (argc == 1)
     usage ();

@@ -77,23 +77,23 @@ Usage: %s [-ai] [--append] [--ignore-interrupts] [file...]\n",
     }
 
   if (ignore_interrupts)
-#ifdef _POSIX_VERSION
     {
+#ifdef _POSIX_VERSION
       struct sigaction sigact;
 
       sigact.sa_handler = SIG_IGN;
       sigemptyset (&sigact.sa_mask);
       sigact.sa_flags = 0;
       sigaction (SIGINT, &sigact, NULL);
-    }
 #else				/* !_POSIX_VERSION */
-    signal (SIGINT, SIG_IGN);
+      signal (SIGINT, SIG_IGN);
 #endif				/* _POSIX_VERSION */
+    }
 
   errs = tee (argc - optind, &argv[optind]);
-  if (close (0) == -1)
+  if (close (0) != 0)
     error (1, errno, "standard input");
-  if (close (1) == -1)
+  if (close (1) != 0)
     error (1, errno, "standard output");
   exit (errs);
 }
@@ -143,7 +143,7 @@ tee (nfiles, files)
     }
 
   for (i = 0; i < nfiles; i++)
-    if (descriptors[i] != -1 && close (descriptors[i]) == -1)
+    if (descriptors[i] != -1 && close (descriptors[i]) != 0)
       {
 	error (0, errno, "%s", files[i]);
 	ret = 1;

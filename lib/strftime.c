@@ -104,7 +104,13 @@ static char const * const months[] =
 /* Add character C to STRING and increment LENGTH,
    unless LENGTH would exceed MAX. */
 
-#define add_char(c) (length + 1 <= max) && (string[length++] = (c))
+#define add_char(c)							\
+  do									\
+    {									\
+      if (length + 1 <= max)						\
+	string[length++] = (c);						\
+    }									\
+  while (0)
 
 /* Add a 2 digit number to STRING, padding if specified.
    Return the number of characters added, up to MAX. */

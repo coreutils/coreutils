@@ -57,12 +57,12 @@
 #define MESG_BIT 020		/* Group write bit. */
 
 
-char *idle_string ();
 char *xmalloc ();
 void error ();
+char *ttyname ();
 
-
-static char *ttyname ();
+static int read_utmp ();
+static char *idle_string ();
 static struct utmp *search_entries ();
 static void list_entries ();
 static void print_entry ();
@@ -222,7 +222,7 @@ read_utmp (filename)
   if (read (desc, utmp_contents, file_stats.st_size) < file_stats.st_size)
     error (1, errno, "%s", filename);
 
-  if (close (desc))
+  if (close (desc) != 0)
     error (1, errno, "%s", filename);
 
   return file_stats.st_size / sizeof (struct utmp);
@@ -253,12 +253,12 @@ print_entry (this)
     }
   
   printf ("%-*.*s",
-	  sizeof (this->ut_name), sizeof (this->ut_name),
+	  (int) sizeof (this->ut_name), (int) sizeof (this->ut_name),
 	  this->ut_name);
   if (include_mesg)
     printf ("  %c  ", mesg);
   printf (" %-*.*s",
-	  sizeof (this->ut_line), sizeof (this->ut_line),
+	  (int) sizeof (this->ut_line), (int) sizeof (this->ut_line),
 	  this->ut_line);
   printf (" %-12.12s", ctime (&this->ut_time) + 4);
   if (include_idle)
@@ -270,7 +270,7 @@ print_entry (this)
     }
 #ifdef HAVE_UT_HOST
   if (this->ut_host[0])
-    printf (" (%-.*s)", sizeof (this->ut_host), this->ut_host);
+    printf (" (%-.*s)", (int) sizeof (this->ut_host), this->ut_host);
 #endif
 
   putchar ('\n');
@@ -307,10 +307,10 @@ print_heading ()
 {
   struct utmp *ut;
 
-  printf ("%-*s ", sizeof (ut->ut_name), "USER");
+  printf ("%-*s ", (int) sizeof (ut->ut_name), "USER");
   if (include_mesg)
     printf ("MESG ");
-  printf ("%-*s ", sizeof (ut->ut_line), "LINE");
+  printf ("%-*s ", (int) sizeof (ut->ut_line), "LINE");
   printf ("LOGIN-TIME   ");
   if (include_idle)
     printf ("IDLE  ");
@@ -381,7 +381,7 @@ who_am_i (filename)
 
   if (include_heading)
     {
-      printf ("%*s ", strlen (hostname), " ");
+      printf ("%*s ", (int) strlen (hostname), " ");
       print_heading ();
     }
 
@@ -418,8 +418,8 @@ idle_string (when)
   if (seconds_idle < (24 * 60 * 60)) /* One day. */
     {
       sprintf (idle, "%02d:%02d",
-	       seconds_idle / (60 * 60),
-	       (seconds_idle % (60 * 60)) / 60);
+	       (int) (seconds_idle / (60 * 60)),
+	       (int) ((seconds_idle % (60 * 60)) / 60));
       return idle;
     }
   return " old ";
