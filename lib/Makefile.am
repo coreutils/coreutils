@@ -189,4 +189,5 @@ SUFFIXES = .sed .sin
 	sed -e '/^#/d' -e 's/@''PACKAGE''@/@PACKAGE@/g' $< > t-$@
 	mv t-$@ $@
 
-CLEANFILES = charset.alias ref-add.sed ref-del.sed ftw.h search.h
+CLEANFILES = charset.alias ref-add.sed ref-del.sed
+DISTCLEANFILES = ftw.h search.h fnmatch.h
