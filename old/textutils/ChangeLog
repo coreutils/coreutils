@@ -1,6 +1,11 @@
-2001-09-28  Jim Meyering  <meyering@lucent.com>
+2001-09-30  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.16.
+
+	tail -F would segfault
+	* src/tail.c (parse_options): Add missing `break;' from last change.
+
+2001-09-28  Jim Meyering  <meyering@lucent.com>
 
 	* configure.ac: Tell automake to use the file name `config.hin'
 	rather than the two-`.' config.h.in.
