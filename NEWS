@@ -6,6 +6,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   time stamps output by stat now include actual fractional seconds,
   when available -- or .0000000 for files without that information.
 
+  seq no longer suffers integer overflow when printing 2^32 or more numbers.
+  For reference, seq `echo 2^32|bc` > /dev/null takes about two hours
+  on a 1.6 GHz Athlon 2000 XP.  Now it can output 2^53-1 numbers before
+  misbehaving.
 
 * Major changes in release 5.1.2 (2004-01-25):
 
