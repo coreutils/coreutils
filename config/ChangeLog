@@ -1,5 +1,7 @@
 2004-09-24  Jim Meyering  <jim@meyering.net>
 
+	* cvsu: Remove file.  The version of cvsu from the cvsutils package
+	does the same job with --find --type=... options.
 	* cvsu: New file, used by rules in coreutils' Makefile.maint.
 
 2004-08-05  Paul Eggert  <eggert@cs.ucla.edu>
