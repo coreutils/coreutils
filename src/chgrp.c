@@ -24,7 +24,7 @@
 #include <getopt.h>
 #include "system.h"
 
-#ifndef isascii
+#if !defined (isascii) || defined (STDC_HEADERS)
 #define isascii(c) 1
 #endif
 

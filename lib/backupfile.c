@@ -15,14 +15,14 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-/* David MacKenzie <djm@ai.mit.edu>.
+/* David MacKenzie <djm@gnu.ai.mit.edu>.
    Some algorithms adapted from GNU Emacs. */
 
 #include <stdio.h>
 #include <ctype.h>
 #include <sys/types.h>
 #include "backupfile.h"
-#if defined(USG) || defined(STDC_HEADERS)
+#if defined(STDC_HEADERS) || defined(HAVE_STRING_H)
 #include <string.h>
 #define index strchr
 #define rindex strrchr
@@ -30,25 +30,22 @@
 #include <strings.h>
 #endif
 
-#ifdef DIRENT
+#if defined(DIRENT) || defined(_POSIX_VERSION)
 #include <dirent.h>
-#ifdef direct
-#undef direct
-#endif
-#define direct dirent
 #define NLENGTH(direct) (strlen((direct)->d_name))
-#else /* !DIRENT */
+#else /* not (DIRENT or _POSIX_VERSION) */
+#define dirent direct
 #define NLENGTH(direct) ((direct)->d_namlen)
-#ifdef USG
 #ifdef SYSNDIR
 #include <sys/ndir.h>
-#else /* !SYSNDIR */
-#include <ndir.h>
-#endif /* !SYSNDIR */
-#else /* !USG */
+#endif /* SYSNDIR */
+#ifdef SYSDIR
 #include <sys/dir.h>
-#endif /* !USG */
-#endif /* !DIRENT */
+#endif /* SYSDIR */
+#ifdef NDIR
+#include <ndir.h>
+#endif /* NDIR */
+#endif /* DIRENT or _POSIX_VERSION */
 
 #ifdef VOID_CLOSEDIR
 /* Fake a return value. */
@@ -63,11 +60,12 @@
 char *malloc ();
 #endif
 
-#ifndef isascii
-#define ISDIGIT(c) (isdigit ((unsigned char) (c)))
-#else
-#define ISDIGIT(c) (isascii (c) && isdigit (c))
+#if !defined (isascii) || defined (STDC_HEADERS)
+#define isascii(c) 1
 #endif
+
+#define ISDIGIT(c) (isascii ((unsigned char ) c) \
+		    && isdigit ((unsigned char) (c)))
 
 #if defined (HAVE_UNISTD_H)
 #include <unistd.h>
@@ -138,7 +136,7 @@ max_backup_version (file, dir)
      char *file, *dir;
 {
   DIR *dirp;
-  struct direct *dp;
+  struct dirent *dp;
   int highest_version;
   int this_version;
   int file_name_length;

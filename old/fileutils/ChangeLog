@@ -1,6 +1,8 @@
 Wed Mar 31 22:03:28 1993  Jim Meyering  (meyering@comco.com)
 
 	* configure.in [MVDIR]: Don't quote right hand side.
+	* backupfile.c, chgrp.c, install.c: Define isascii macro to be 1
+	also if STDC_HEADERS.
 
 Tue Mar 30 17:42:11 1993  david d `zoo' zuhn  (zoo at cirdan.cygnus.com)
 
