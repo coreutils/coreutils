@@ -25,6 +25,7 @@
 	Add .bz2 suffix.
 	Add .png for real this time.
 	Change the image types colors to be visible in a black-on-white xterm.
+	From Michael Stone.
 
 	* src/chgrp.c (xstat): New global.
 	(main): Define it.
