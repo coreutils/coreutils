@@ -1,7 +1,18 @@
 Fri Jan 31 19:53:54 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/tac.c: Rename globals buffer and buffer_size to have G_ prefix
+	to avoid shadowing local variables.
+
+	* lib/long-options.c (parse_long_options): Compare getopt_long return
+	value against -1, not EOF.  Use NULL, not `(int *) 0' as last parameter
+	in getopt_long call.
+
+	* src/pr.c (add_line_number): Rename from `number' to avoid shadowing
+	local variables.
+
 	* src/*.c: Compare getopt_long return value against -1, not EOF.
 	Use NULL, not `(int *) 0' as last parameter in getopt_long call.
+	(usage): Bracket bug-reporting address with <> and append a period.
 
 Wed Jan 29 20:54:24 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 

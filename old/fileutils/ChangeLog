@@ -2,6 +2,7 @@ Fri Jan 31 21:13:04 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/*.c: Compare getopt_long return value against -1, not EOF.
 	Use NULL, not `(int *) 0' as last parameter in getopt_long call.
+	(usage): Bracket bug-reporting address with <> and append a period.
 
 1997-01-27  Paul Eggert  <eggert@twinsun.com>
 
