@@ -60,7 +60,7 @@ time_t mktime ();
     8, 10, or 12 digits, followed by optional .ss
     (PDS_LEADING_YEAR | PDS_CENTURY | PDS_SECONDS)
 
-  touch mmddhhmm[YY] FILE...
+  touch mmddhhmm[YY] FILE... (obsolescent)
     8 or 10 digits
     (PDS_TRAILING_YEAR)
 
