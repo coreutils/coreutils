@@ -1813,7 +1813,7 @@ option has the form @samp{@var{f}.@var{c}}, where @var{f} is the number
 of the field to use and @var{c} is the number of the first character
 from the beginning of the field (for @samp{+@var{pos}}) or from the end
 of the previous field (for @samp{-@var{pos}}).  If the @samp{.@var{c}}
-is omitted, it's taken to be the first character in the field.  If the
+is omitted, it is taken to be the first character in the field.  If the
 @samp{-b} option was specified, the @samp{.@var{c}} part of a field
 specification is counted from the first nonblank character of the field
 (for @samp{+@var{pos}}) or from the first nonblank character following
@@ -1829,6 +1829,81 @@ from the global options it will be attached to both.  If a @samp{-n} or
 @samp{-b} option is taken to apply to both the @samp{+@var{pos}} and the
 @samp{-@var{pos}} parts of a key specification.  Keys may span multiple
 fields.
+
+Here are some examples to illustrate various combinations of options.
+In them, the POSIX @samp{-k} option is used to specify sort keys rather
+than the obsolete @samp{+@var{pos1}-@var{pos2}} syntax.
+
+@itemize @bullet
+
+@item
+Sort in descending (reverse) numeric order.
+
+@example
+sort -nr
+@end example
+
+Sort alphabetically, omitting the first and second fields.
+This uses a single key composed of the characters beginning
+at the start of field three and extending to the end of each line.
+
+@example
+sort -k3
+@end example
+
+@item
+Sort numerically on the second field and resolve ties by sorting
+alphabetically on the third and fourth characters of field five.
+Use @samp{:} as the field delimiter.
+
+@example
+sort -t : -k 2,2n -k 5.3,5.4
+@end example
+
+Note that if you had written @samp{-k 2} instead of @samp{-k 2,2}
+@samp{sort} would have used all characters beginning in the second field
+and extending to the end of the line as the primary @emph{numeric}
+key.  For the large majority of applications, treating keys spanning
+more than one field as numeric will not do what you expect.
+
+Also note that the @samp{n} modifier was applied to the field-end
+specifier for the first key.  It would have been equivalent to
+specify @samp{-k 2n,2} or @samp{-k 2n,2n}.  All modifiers except
+@samp{b} apply to the associated @emph{field}, regardless of whether
+the modifier character is attached to the field-start and/or the
+field-end part of the key specifier.
+
+@item
+Sort the password file on the fifth field and ignore any
+leading white space.  Sort lines with equal values in field five
+on the numeric user ID in field three.
+
+@example
+sort -t : -k 5b,5 -k 3,3n /etc/passwd
+@end example
+
+An alternative is to use the global numeric modifier @samp{-n}.
+
+@example
+sort -t : -n -k 5b,5 -k 3,3 /etc/passwd
+@end example
+
+Finally, to ignore both leading and trailing white space, you
+could have applied the @samp{b} modifier to the field-end specifier
+for the first key,
+
+@example
+sort -t : -n -k 5b,5b -k 3,3 /etc/passwd
+@end example
+
+or by using the global @samp{-b} modifier instead of @samp{-n}
+and an explicit @samp{n} with the second key specifier.
+
+@example
+sort -t : -b -k 5,5 -k 3,3n /etc/passwd
+@end example
+
+@end itemize
 
 
 @node uniq invocation
