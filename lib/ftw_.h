@@ -60,9 +60,17 @@ enum
 # define FTW_DNR	 FTW_DNR
   FTW_NS,		/* Unstatable file.  */
 # define FTW_NS	 FTW_NS
-  FTW_DCH,		/* Can't chdir to named directory.  */
+
+  /* Can't chdir to named directory.  This can happen only when using
+     FTW_CHDIR.  Note that although we can't chdir into that directory,
+     we were able to stat it, so SB (2nd argument to callback) is valid.  */
+  FTW_DCH,
 # define FTW_DCH FTW_DCH
-  FTW_DCHP,		/* Can't chdir to parent of named directory.  */
+
+  /* Can't chdir to parent of named directory.  This can happen only when
+     using FTW_CHDIR.  Unlike for FTW_DCH, in this case, SB is not valid.
+     In fact, it is NULL.  */
+  FTW_DCHP,
 # define FTW_DCHP FTW_DCHP
 
 # if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
