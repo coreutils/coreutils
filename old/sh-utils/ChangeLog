@@ -3,6 +3,7 @@ Sat Nov 23 16:15:37 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	* env.c (usage): Alphabetize option descriptions the way sort -f would.
 	* test.c (usage): Likewise.
 	* who-users.c (usage): Likewise.
+	From Karl Berry.
 
 Fri Nov 22 20:33:26 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
