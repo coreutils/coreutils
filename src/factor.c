@@ -15,26 +15,41 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-/* Written by Paul Rubin <phr@ocf.berkeley.edu>.  */
+/* Written by Paul Rubin <phr@ocf.berkeley.edu>.
+   Adapted for GNU, fixed to factor UINT_MAX by Jim Meyering.  */
 
 #include <config.h>
 #include <stdio.h>
+#include <math.h>
 #include <sys/types.h>
-#include <assert.h>
 
+#include <assert.h>
 #define NDEBUG 1
+
+#ifdef HAVE_LIMITS_H
+#include <limits.h>
+#endif /* HAVE_LIMITS_H */
+
+#ifndef UINT_MAX
+# define UINT_MAX ((unsigned int) ~(unsigned int) 0)
+#endif
+
+#ifndef INT_MAX
+# define INT_MAX ((int) (UINT_MAX >> 1))
+#endif
 
 #include "system.h"
 #include "version.h"
 #include "long-options.h"
 #include "error.h"
+#include "xstrtoul.h"
 #include "readtokens.h"
 
 /* Token delimiters when reading from a file.  */
 #define DELIM "\n\t "
 
 /* FIXME: if this program is ever modified to factor integers larger
-   than 2^128, this (and the algorithm :-) will have to change.  */
+   than 2^128, this constant (and the algorithm :-) will have to change.  */
 #define MAX_N_FACTORS 128
 
 /* The name this program was run with. */
@@ -49,7 +64,7 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [NUMBER]\n\
+Usage: %s [NUMBER...]\n\
   or:  %s OPTION\n\
 "),
 	      program_name, program_name);
@@ -62,11 +77,14 @@ Usage: %s [NUMBER]\n\
   exit (status);
 }
 
+/* FIXME: comment */
+
 static int
 factor (long unsigned int n0, int max_n_factors, long unsigned int *factors)
 {
   register unsigned long n = n0, d;
   int n_factors = 0;
+  unsigned int sqrt_n;
 
   if (n < 1)
     return n_factors;
@@ -85,7 +103,8 @@ factor (long unsigned int n0, int max_n_factors, long unsigned int *factors)
       (3) n is composite but has no factors less than d.
      If (1) or (2) obviously the right thing happens.
      If (3), then since n is composite it is >= d^2. */
-  for (d = 3; d * d <= n; d += 2)
+  sqrt_n = (unsigned int) sqrt ((double) n);
+  for (d = 3; d <= sqrt_n; d += 2)
     {
       while (n % d == 0)
 	{
@@ -103,22 +122,33 @@ factor (long unsigned int n0, int max_n_factors, long unsigned int *factors)
   return n_factors;
 }
 
-static void
-print_factors (long unsigned int n)
+/* FIXME: comment */
+
+static int
+print_factors (const char *s)
 {
   unsigned long int factors[MAX_N_FACTORS];
+  unsigned long n;
   int n_factors;
   int i;
 
+  if (xstrtoul (s, NULL, 10, &n, NULL) != LONGINT_OK)
+    {
+      error (0, 0, _("%s: invalid argument"), s);
+      return 1;
+    }
   n_factors = factor (n, MAX_N_FACTORS, factors);
+  printf ("%lu:", n);
   for (i = 0; i < n_factors; i++)
-    printf ("     %lu\n", factors[i]);
+    printf (" %lu", factors[i]);
   putchar ('\n');
+  return 0;
 }
 
-static void
+static int
 do_stdin (void)
 {
+  int fail = 0;
   token_buffer tokenbuffer;
 
   init_tokenbuffer (&tokenbuffer);
@@ -131,35 +161,31 @@ do_stdin (void)
 				&tokenbuffer);
       if (token_length < 0)
 	break;
-      /* FIXME: Use xstrtoul, not atoi.  */
-      print_factors ((unsigned long) atoi (tokenbuffer.buffer));
+      fail |= print_factors (tokenbuffer.buffer);
     }
   free (tokenbuffer.buffer);
+
+  return fail;
 }
 
 void
 main (int argc, char **argv)
 {
+  int fail;
+
   program_name = argv[0];
 
   parse_long_options (argc, argv, "factor", version_string, usage);
 
-  if (argc > 2)
-    {
-      error (0, 0, _("too many arguments"));
-      usage (1);
-    }
-
+  fail = 0;
   if (argc == 1)
-    do_stdin ();
-  else if (argc == 2)
-    {
-      print_factors ((unsigned long) atoi (argv[1]));
-    }
+    fail = do_stdin ();
   else
     {
-      fprintf (stderr, _("Usage: %s [number]\n"), argv[0]);
-      exit (1);
+      int i;
+      for (i = 1; i < argc; i++)
+	fail |= print_factors (argv[i]);
     }
-  exit (0);
+
+  exit (fail);
 }
