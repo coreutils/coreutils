@@ -70,13 +70,11 @@ enum
 {
   COPY_CONTENTS_OPTION = CHAR_MAX + 1,
   NO_PRESERVE_ATTRIBUTES_OPTION,
-  NO_TARGET_DIRECTORY_OPTION,
   PARENTS_OPTION,
   PRESERVE_ATTRIBUTES_OPTION,
   REPLY_OPTION,
   SPARSE_OPTION,
   STRIP_TRAILING_SLASHES_OPTION,
-  TARGET_DIRECTORY_OPTION,
   UNLINK_DEST_BEFORE_OPENING
 };
 
@@ -129,7 +127,7 @@ static struct option const long_opts[] =
   {"link", no_argument, NULL, 'l'},
   {"no-dereference", no_argument, NULL, 'P'},
   {"no-preserve", required_argument, NULL, NO_PRESERVE_ATTRIBUTES_OPTION},
-  {"no-target-directory", no_argument, NULL, NO_TARGET_DIRECTORY_OPTION},
+  {"no-target-directory", no_argument, NULL, 'T'},
   {"one-file-system", no_argument, NULL, 'x'},
   {"parents", no_argument, NULL, PARENTS_OPTION},
   {"path", no_argument, NULL, PARENTS_OPTION},   /* Deprecated.  */
@@ -141,7 +139,7 @@ static struct option const long_opts[] =
   {"strip-trailing-slashes", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
   {"suffix", required_argument, NULL, 'S'},
   {"symbolic-link", no_argument, NULL, 's'},
-  {"target-directory", required_argument, NULL, TARGET_DIRECTORY_OPTION},
+  {"target-directory", required_argument, NULL, 't'},
   {"update", no_argument, NULL, 'u'},
   {"verbose", no_argument, NULL, 'v'},
   {"version-control", required_argument, NULL, 'V'}, /* Deprecated. FIXME. */
@@ -159,9 +157,9 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION]... SOURCE DEST\n\
+Usage: %s [OPTION]... [-T] SOURCE DEST\n\
   or:  %s [OPTION]... SOURCE... DIRECTORY\n\
-  or:  %s [OPTION]... --target-directory=DIRECTORY SOURCE...\n\
+  or:  %s [OPTION]... -t DIRECTORY SOURCE...\n\
 "),
 	      program_name, program_name, program_name);
       fputs (_("\
@@ -213,8 +211,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -s, --symbolic-link          make symbolic links instead of copying\n\
   -S, --suffix=SUFFIX          override the usual backup suffix\n\
-      --target-directory=DIRECTORY  copy all SOURCE arguments into DIRECTORY\n\
-      --no-target-directory    treat DEST as a normal file\n\
+  -t, --target-directory=DIRECTORY  copy all SOURCE arguments into DIRECTORY\n\
+  -T, --no-target-directory    treat DEST as a normal file\n\
 "), stdout);
       fputs (_("\
   -u, --update                 copy only when the SOURCE file is newer\n\
@@ -518,8 +516,8 @@ do_copy (int n_files, char **file, const char *target_directory,
     {
       if (target_directory)
 	error (EXIT_FAILURE, 0,
-	       _("Cannot combine --target-directory "
-		 "and --no-target-directory"));
+	       _("Cannot combine --target-directory (-t) "
+		 "and --no-target-directory (-T)"));
       if (2 < n_files)
 	{
 	  error (0, 0, _("extra operand %s"), quote (file[2]));
@@ -824,7 +822,8 @@ main (int argc, char **argv)
      we'll actually use backup_suffix_string.  */
   backup_suffix_string = getenv ("SIMPLE_BACKUP_SUFFIX");
 
-  while ((c = getopt_long (argc, argv, "abdfHilLprsuvxPRS:V:", long_opts, NULL))
+  while ((c = getopt_long (argc, argv, "abdfHilLprst:uvxPRS:TV:",
+			   long_opts, NULL))
 	 != -1)
     {
       switch (c)
@@ -897,10 +896,6 @@ main (int argc, char **argv)
 	  decode_preserve_arg (optarg, &x, 0);
 	  break;
 
-	case NO_TARGET_DIRECTORY_OPTION:
-	  no_target_directory = true;
-	  break;
-
 	case PRESERVE_ATTRIBUTES_OPTION:
 	  if (optarg == NULL)
 	    {
@@ -951,7 +946,7 @@ main (int argc, char **argv)
 #endif
 	  break;
 
-	case TARGET_DIRECTORY_OPTION:
+	case 't':
 	  if (target_directory)
 	    error (EXIT_FAILURE, 0,
 		   _("multiple target directories specified"));
@@ -965,6 +960,10 @@ main (int argc, char **argv)
 		       quote (optarg));
 	    }
 	  target_directory = optarg;
+	  break;
+
+	case 'T':
+	  no_target_directory = true;
 	  break;
 
 	case 'u':
