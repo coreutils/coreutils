@@ -69,7 +69,7 @@ Create named pipes (FIFOs) with the given NAMEs.\n\
 }
 #endif
 
-void
+int
 main (int argc, char **argv)
 {
   unsigned short newmode;

@@ -79,7 +79,7 @@ MAJOR MINOR are forbidden for TYPE p, mandatory otherwise.  TYPE may be:\n\
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   unsigned short newmode;

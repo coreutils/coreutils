@@ -260,7 +260,7 @@ Change the group membership of each FILE to GROUP.\n\
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int group;

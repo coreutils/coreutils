@@ -229,7 +229,7 @@ one or more of the letters rwxXstugo.\n"));
 /* Parse the ASCII mode given on the command line into a linked list
    of `struct mode_change' and apply that to each file argument. */
 
-void
+int
 main (int argc, char **argv)
 {
   struct mode_change *changes;

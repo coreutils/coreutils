@@ -617,7 +617,7 @@ dired_dump_obstack (const char *prefix, struct obstack *os)
     }
 }
 
-void
+int
 main (int argc, char **argv)
 {
   register int i;

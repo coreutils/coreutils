@@ -94,7 +94,7 @@ Remove the DIRECTORY(ies), if they are empty.\n\
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int errors = 0;

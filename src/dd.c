@@ -317,7 +317,7 @@ static struct option const long_options[] =
   {0, 0, 0, 0}
 };
 
-void
+int
 main (int argc, char **argv)
 {
 #ifdef _POSIX_VERSION

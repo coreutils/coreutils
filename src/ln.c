@@ -297,7 +297,7 @@ version control may be set with VERSION_CONTROL, values are:\n\
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int c;

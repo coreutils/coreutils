@@ -238,7 +238,7 @@ Summarize disk usage of each FILE, recursively for directories.\n\
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int c;

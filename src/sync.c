@@ -47,7 +47,7 @@ Force changed blocks to disk, update the super block.\n\
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   program_name = argv[0];

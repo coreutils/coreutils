@@ -79,8 +79,7 @@ Create the DIRECTORY(ies), if they do not already exist.\n\
   exit (status);
 }
 
-
-void
+int
 main (int argc, char **argv)
 {
   unsigned int newmode;

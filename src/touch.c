@@ -265,7 +265,7 @@ STAMP may be used without -t if none of -drt, nor --, are used.\n"));
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   int c, i;

@@ -233,7 +233,7 @@ to login group if implied by a period.  A colon may replace the period.\n"));
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   uid_t user = (uid_t) -1;	/* New uid; -1 if not to be changed. */

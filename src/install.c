@@ -155,7 +155,7 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
-void
+int
 main (int argc, char **argv)
 {
   int optc;

@@ -110,7 +110,7 @@ static struct option const long_opts[] =
   {NULL, 0, NULL, 0}
 };
 
-void
+int
 main (int argc, char **argv)
 {
   int err = 0;
