@@ -5,4 +5,4 @@ TESTS = p-1 p-2 special-1 perm parents t-slash
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
   srcdir=$(srcdir) \
-  PATH=`pwd`/../../src:$$PATH
+  PATH="`pwd`/../../src@PATH_SEPARATOR@$$PATH"

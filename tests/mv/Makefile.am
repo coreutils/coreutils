@@ -14,5 +14,5 @@ TESTS = \
 EXTRA_DIST = $(TESTS) setup
 TESTS_ENVIRONMENT = \
   PERL="@PERL@" \
-  PATH=`pwd`/../../src:$$PATH \
+  PATH="`pwd`/../../src@PATH_SEPARATOR@$$PATH" \
   PROG=mv

@@ -25,7 +25,7 @@ SUITE = suite.at dd.at m4sh.at
 EXTRA_DIST = $(SUITE) testsuite
 
 TESTS_ENVIRONMENT = \
-  PATH=`pwd`/../../src:$$PATH
+  PATH="`pwd`/../../src@PATH_SEPARATOR@$$PATH"
 
 TESTS = testsuite
 
