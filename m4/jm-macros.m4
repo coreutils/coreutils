@@ -55,6 +55,11 @@ AC_DEFUN(jm_MACROS,
   dnl ...: warning: AC_TRY_RUN called without default to allow cross compiling
   AC_FUNC_SETVBUF_REVERSED
 
+  AM_FUNC_GETLINE
+  if test $am_cv_func_working_getline != yes; then
+    AC_CHECK_FUNCS(getdelim)
+  fi
+
 ])
 
 AC_DEFUN(jm_CHECK_ALL_TYPES,
