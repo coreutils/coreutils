@@ -22,7 +22,7 @@
 #ifndef __READUTMP_H__
 # define __READUTMP_H__
 
-# include <stddef.h>
+# include <sys/types.h>
 
 /* AIX 4.3.3 has both utmp.h and utmpx.h, but only struct utmp
    has the ut_exit member.  */
