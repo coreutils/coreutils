@@ -1,5 +1,5 @@
 #!/bin/sh
-# Test some of ls's sorting options.
+# Exercise a bug that was fixed in shred-4.0l
 
 if test "$VERBOSE" = yes; then
   set -x
@@ -7,6 +7,11 @@ if test "$VERBOSE" = yes; then
 fi
 
 tmp=t-shred.$$
+
+# The length of the basename is what matters.
+# In this case, shred would try to rename the file 256^10 times
+# before terminating.
+file=$tmp/0123456789
 
 framework_failure=0
 mkdir $tmp || framework_failure=1
@@ -20,8 +25,9 @@ fi
 
 fail=0
 
-# This would infloop with the version from fileutils-4.0k.
-# Expect it to fail.
+# This would take so long that it appears to infloop
+# when using version from fileutils-4.0k.
+# When the command completes, expect it to fail.
 shred -u $tmp/file > /dev/null 2>&1 && fail=1
 
 chmod u+w $tmp
