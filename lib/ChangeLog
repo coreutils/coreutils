@@ -1,3 +1,9 @@
+2003-03-19  Jim Meyering  <jim@meyering.net>
+
+	* fnmatch_.h: Don't define __const.
+	(fnmatch): Use const, not __const in prototype.
+	From Paul Eggert.
+
 2003-03-18  Jim Meyering  <jim@meyering.net>
 
 	* mountlist.c (read_filesystem_list) [MOUNTED_VMOUNT]: Detect any
@@ -6,9 +12,6 @@
 	we can't rely on the value of the vmt_length member in the last
 	entry.  On some systems doing so could result in exhausting
 	virtual memory.  Based in part on a patch from Mike Jetzer.
-
-	* exclude.c (excluded_filename): Define and use typedef to
-	avoid type mismatch in conditional expression.
 
 	* quote.c (quote_n): Fix typo in comment.
 
