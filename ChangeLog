@@ -48,6 +48,8 @@
 	* src/tr.c: * src/unexpand.c, src/users.c:
 	Remove anachronistic casts of xmalloc, xrealloc, and xcalloc
 	return values and of xrealloc's first argument.
+	Fix the former with this:
+	perl -pi -e 's/\([^(]*?\*\) *(x(m|c|re)alloc)\b/$1/'
 
 2003-04-10  Jim Meyering  <jim@meyering.net>
 
