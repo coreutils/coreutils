@@ -1,5 +1,7 @@
 2000-07-23  Jim Meyering  <meyering@lucent.com>
 
+	* src/help-version (su_args): Punt, so we don't try to start a shell.
+
 	* src/su.c: Include <sys/param.h> if HAVE_SYS_PARAM_H is defined,
 	rather than if _POSIX_VERSION is defined.  Remove declarations of
 	getpwuid, getgrgid, and getuid, now that they're in sys2.h.
