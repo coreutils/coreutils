@@ -113,13 +113,14 @@ enum Upper_Lower_class
 /* A shortcut to ensure that when constructing the translation array,
    one of the values returned by paired calls to get_next (from s1 and s2)
    is from [:upper:] and the other is from [:lower:], or neither is from
-   upper or lower.  In fact, no other character classes are allowed when
-   translating, but that condition is tested elsewhere.  This array is
-   indexed by values of type enum Upper_Lower_class.  */
+   upper or lower.  By default, GNU tr permits the identity mappings: from
+   [:upper:] to [:upper:] and [:lower:] to [:lower:].  But when
+   POSIXLY_CORRECT is set, those evoke diagnostics. This array is indexed
+   by values of type enum Upper_Lower_class.  */
 static int const class_ok[3][3] =
 {
-  {0, 1, 0},
-  {1, 0, 0},
+  {1, 1, 0},
+  {1, 1, 0},
   {0, 0, 1}
 };
 
@@ -2001,7 +2002,7 @@ without squeezing repeats"));
 	      c2 = get_next (s2, &class_s2);
 	      if (!class_ok[(int) class_s1][(int) class_s2])
 		error (EXIT_FAILURE, 0,
-		     _("misaligned or mismatched upper and/or lower classes"));
+		       _("misaligned [:upper:] and/or [:lower:] construct"));
 
 	      if (class_s1 == UL_LOWER && class_s2 == UL_UPPER)
 		{
@@ -2014,6 +2015,21 @@ without squeezing repeats"));
 		  for (i = 0; i < N_CHARS; i++)
 		    if (ISUPPER (i))
 		      xlate[i] = tolower (i);
+		}
+	      else if ((class_s1 == UL_LOWER && class_s2 == UL_LOWER)
+		       || (class_s1 == UL_UPPER && class_s2 == UL_UPPER))
+		{
+		  /* By default, GNU tr permits the identity mappings: from
+		     [:upper:] to [:upper:] and [:lower:] to [:lower:].  But
+		     when POSIXLY_CORRECT is set, those evoke diagnostics.  */
+		  if (posix_pedantic)
+		    {
+		      error (EXIT_FAILURE, 0,
+			     _("\
+invalid identity mapping;  when translating, any [:lower:] or [:upper:]\n\
+construct in string1 must be aligned with a corresponding construct\n\
+([:upper:] or [:lower:], respectively) in string2"));
+		    }
 		}
 	      else
 		{
