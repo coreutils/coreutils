@@ -2,6 +2,26 @@
 
 	* Version 5.3.0.
 
+2004-04-13  Paul Eggert  <eggert@twinsun.com>
+
+	Use page-aligned buffers whenever we bother to do I/O using buffer
+	sizes that are tailored for the files.
+
+	* src/cat.c: Include getpagesize.h.
+	* src/copy.c: Likewise.
+	* src/shred.c: Likewise.
+	* src/split.c: Likewise.
+	* src/cat.c (main): Align I/O buffers to page boundaries.
+	* src/copy.c (copy_reg): Likewise.
+	* src/shred.c (dopass): Likewise.
+	* src/split.c (main): Likewise.
+	* src/dd.c (ROUND_UP_OFFSET, PTR_ALIGN): Remove.
+	All uses replaced by ptr_align.
+	* src/od.c (gcd, lcm): Remove; now in system.h.
+	* src/system.h (gcd, lcm, ptr_align): New functions, moved from od.c.
+
+2004-04-14  Jim Meyering  <jim@meyering.net>
+
 	Remove m4/Makefile.am: it's no longer needed, with newer automake
 	* configure.ac (AC_CONFIG_FILES): Remove m4/Makefile.in from the list.
 	* Makefile.am (SUBDIRS): Remove `m4' from the list.
