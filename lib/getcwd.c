@@ -280,7 +280,7 @@ __getcwd (char *buf, size_t size)
 	      entry_status = __lstat (dotlist, &st);
 #endif
 	      /* We don't fail here if we cannot stat() a directory entry.
-		 This can happen when (network) filesystems fail.  If this
+		 This can happen when (network) file systems fail.  If this
 		 entry is in fact the one we are looking for we will find
 		 out soon as we reach the end of the directory without
 		 having found anything.  */
