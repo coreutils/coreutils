@@ -240,4 +240,12 @@ off_t lseek ();
   (Basename[0] == '.' && (Basename[1] == '\0' \
 			  || (Basename[1] == '.' && Basename[2] == '\0')))
 
+#if SETVBUF_REVERSED
+# define SETVBUF(Stream, Buffer, Type, Size) \
+    setvbuf (Stream, Type, Buffer, Size)
+#else
+# define SETVBUF(Stream, Buffer, Type, Size) \
+    setvbuf (Stream, Buffer, Type, Size)
+#endif
+
 char *base_name PARAMS ((char const *));
