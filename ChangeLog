@@ -2,6 +2,9 @@
 
 	* Version 4.5.2.
 
+	* src/rmdir.c: Include "dirname.h", for declaration of
+	strip_trailing_slashes.
+
 	* src/stat.c (PRIdMAX, PRIuMAX): Remove definitions.
 	Now they're defined through system.h.
 
