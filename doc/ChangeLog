@@ -1,3 +1,8 @@
+2004-06-30  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi, perm.texi: Standardize on "file system" rather
+	than "filesystem", as POSIX prefers it with a space.
+
 2004-06-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (Common options, Target directory, cp
