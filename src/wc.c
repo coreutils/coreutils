@@ -554,7 +554,7 @@ get_input_fstatus (int nfiles, char * const *file)
       int i;
 
       for (i = 0; i < nfiles; i++)
-	fstatus[i].failed = (file[i] && STREQ (file[i], "-")
+	fstatus[i].failed = (! file[i] || STREQ (file[i], "-")
 			     ? fstat (STDIN_FILENO, &fstatus[i].st)
 			     : stat (file[i], &fstatus[i].st));
     }
