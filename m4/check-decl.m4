@@ -5,6 +5,7 @@ dnl Putting it in a separate file like this helps share it between
 dnl different packages.
 AC_DEFUN(jm_CHECK_DECLS,
 [
+  AC_REQUIRE([_jm_DECL_HEADERS])
   headers='
 #include <stdio.h>
 #if HAVE_STRING_H
@@ -44,4 +45,12 @@ AC_DEFUN(jm_CHECK_DECLS,
 
   jm_CHECK_DECLARATIONS($headers, free lseek malloc \
                         memchr realloc stpcpy strstr strtoul strtoull)
+])
+
+dnl FIXME: when autoconf has support for it.
+dnl This is a little helper so we can require these header checks.
+AC_DEFUN(_jm_DECL_HEADERS,
+[
+  AC_REQUIRE([AC_HEADER_STDC])
+  AC_CHECK_HEADERS(memory.h string.h strings.h stdlib.h unistd.h)
 ])
