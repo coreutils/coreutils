@@ -1,12 +1,19 @@
-2003-11-02  Jim Meyering  <jim@meyering.net>
+2003-11-03  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.0.
+
+	* tests/misc/Makefile.am (TESTS_ENVIRONMENT): Define PACKAGE_VERSION.
+	* tests/misc/fold: Fail the test immediately if we're not running
+	the expected version of fold.
+
+2003-11-02  Jim Meyering  <jim@meyering.net>
 
 	* src/tr.c (append_normal_char, append_range, append_char_class)
 	(append_repeated_char, append_equiv_class, spec_init): Use `sizeof *var'
 	rather than `sizeof EXPLICIT_TYPE'.  The former is more maintainable
 	and usually shorter.
 	* src/copy.c (copy_internal): Likewise.
+	* src/od.c (main): Likewise.
 	* src/cp.c (make_path_private): Likewise.
 	* src/tsort.c (new_item, record_relation): Likewise.
 
