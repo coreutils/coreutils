@@ -1,3 +1,25 @@
+Sun Oct  1 13:22:36 1995  Jim Meyering  (meyering@comco.com)
+
+	* configure.in (AC_REPLACE_FUNCS): Add strtoul.
+	* strtoul.c: New file.
+	* lib/Makefile.in (SOURCES): Add strtoul.c.
+
+	* acconfig.h (STATFS_TRUNCATES_BLOCK_COUNTS): Add it.
+	* configure.in (STATFS_TRUNCATES_BLOCK_COUNTS): New check to enable
+	workaround for SunOS statfs brokenness.  Block counts in struct
+	statfs for partitions 2GB and larger are truncated, but correct
+	values are stored in f_spare array member.
+
+	* fsusage.c (get_fs_usage) [STATFS_TRUNCATES_BLOCK_COUNTS]: Copy
+	untruncated block counts from f_spare array into proper members
+	of struct statfs. From Eirik Fuller (eirik@netapp.com);
+
+	* ls.c (dired_dump_obstack): Don't generate any output if the
+	obstack is empty.
+	(main): Always initialize and dump subdired_obstack, not just if -R.
+	`ls -lDR dir dir2' was using uninitialized subdired_obstack.
+	Reported by Samuli K{rkk{inen <hskarkka@snakemail.hut.fi>.
+
 Tue Sep 26 23:05:01 1995  Jim Meyering  (meyering@comco.com)
 
 	* man/Makefile.in (install-data, uninstall): Use sed not basename.
