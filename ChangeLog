@@ -1,8 +1,11 @@
 2003-04-10  Jim Meyering  <jim@meyering.net>
 
-	* src/fs.h:
-
 	* Version 5.0.1.
+
+	* src/Makefile.am (fs.h): New rule to generate fs.h from stat.c.
+	* src/extract-magic: New script to extract fs.h definitions from stat.c.
+	* src/stat.c (human_fstype) [__linux__]: Append each hex constant from
+	fs.h in a comment after the corresponding `case S_MAGIC_...:' statement.
 
 	* tests/tail-2/big-4gb: Skip this test (don't fail) if creating a
 	file with nominal length > 4GB fails.  Reported by Michael Deutschmann.
