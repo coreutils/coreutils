@@ -161,20 +161,29 @@ static struct exclude *exclude;
 /* Grand total size of all args, in units of ST_NBLOCKSIZE-byte blocks. */
 static uintmax_t tot_size = 0;
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  EXCLUDE_OPTION = CHAR_MAX + 1,
+  BLOCK_SIZE_OPTION,
+  MAX_DEPTH_OPTION
+};
+
 static struct option const long_options[] =
 {
   {"all", no_argument, NULL, 'a'},
-  {"block-size", required_argument, 0, CHAR_MAX + 2},
+  {"block-size", required_argument, 0, BLOCK_SIZE_OPTION},
   {"bytes", no_argument, NULL, 'b'},
   {"count-links", no_argument, NULL, 'l'},
   {"dereference", no_argument, NULL, 'L'},
   {"dereference-args", no_argument, NULL, 'D'},
-  {"exclude", required_argument, 0, CHAR_MAX + 1},
+  {"exclude", required_argument, 0, EXCLUDE_OPTION},
   {"exclude-from", required_argument, 0, 'X'},
   {"human-readable", no_argument, NULL, 'h'},
   {"si", no_argument, 0, 'H'},
   {"kilobytes", no_argument, NULL, 'k'},
-  {"max-depth", required_argument, NULL, CHAR_MAX + 3},
+  {"max-depth", required_argument, NULL, MAX_DEPTH_OPTION},
   {"megabytes", no_argument, NULL, 'm'},
   {"one-file-system", no_argument, NULL, 'x'},
   {"separate-dirs", no_argument, NULL, 'S'},
@@ -695,7 +704,7 @@ main (int argc, char **argv)
 	  output_block_size = 1024;
 	  break;
 
-	case CHAR_MAX + 3:		/* --max-depth=N */
+	case MAX_DEPTH_OPTION:		/* --max-depth=N */
 	  if (xstrtol (optarg, NULL, 0, &tmp_long, NULL) != LONGINT_OK
 	      || tmp_long < 0 || tmp_long > INT_MAX)
 	    error (1, 0, _("invalid maximum depth `%s'"), optarg);
@@ -737,11 +746,11 @@ main (int argc, char **argv)
 	    error (1, errno, "%s", optarg);
 	  break;
 
-	case CHAR_MAX + 1:
+	case EXCLUDE_OPTION:
 	  add_exclude (exclude, optarg);
 	  break;
 
-	case CHAR_MAX + 2:
+	case BLOCK_SIZE_OPTION:
 	  human_block_size (optarg, 1, &output_block_size);
 	  break;
 
