@@ -370,6 +370,26 @@ When a relative item causes the resulting date to cross a boundary
 where the clocks were adjusted, typically for daylight-saving time,
 the resulting date and time are adjusted accordingly.
 
+The fuzz in units can cause problems with relative items.  For
+example, @samp{2003-07-31 -1 month} might evaluate to 2003-07-01,
+because 2003-06-31 is an invalid date.  To determine the previous
+month more reliably, you can ask for the month before the 15th of the
+current month.  For example:
+
+@example
+$ date -R
+Thu, 31 Jul 2003 13:02:39 -0700
+$ date --date="-1 month" +'Last month was %B?'
+Last month was July?
+$ date --date="$(date +%Y-%m-15) -1 month" +'Last month was %B!'
+Last month was June!
+@end example
+
+Also, take care when manipulating dates around clock changes such as
+daylight saving leaps.  In a few cases these have added or subtracted
+as much as 24 hours from the clock, so it is often wise to adopt
+universal time by setting the @env{TZ} environment variable to
+@samp{UTC0} before embarking on calendrical calculations.
 
 @node Pure numbers in date strings
 @section Pure numbers in date strings
