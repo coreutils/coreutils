@@ -1,5 +1,17 @@
 Tue Dec 10 00:15:50 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	The file name, `build-script.pl' is longer than 14 characters.
+	Rename it.
+	* tests/cut-test/mk-script.pl: Rename from build-script.pl.
+	* tests/cut-test/Makefile.am: Reflect renaming.
+	* tests/tr-test/mk-script.pl: Rename from build-script.pl.
+	* tests/tr-test/Makefile.am: Reflect renaming.
+	* tests/sort-test/mk-script.pl: Rename from build-script.pl.
+	* tests/sort-test/Makefile.am: Reflect renaming.
+	* tests/join-test/mk-script.pl: Rename from build-script.pl.
+	* tests/join-test/Makefile.am: Reflect renaming.
+	Reported by Karl Heuer.
+
 	* configure.in (VERSION): Bump to 1.19r.
 	(AC_ISC_POSIX): Remove kludgy macro.
 	Use this test instead:
