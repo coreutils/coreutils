@@ -236,11 +236,8 @@ invalid:
   return MODE_INVALID;
 }
 
-/* Return a file mode change operation created from the reference REF_FILE
-   Don't affect special permissions, use umask, affect 'x' if any 'x', for
-   maximum security
-
-   Return MODE_BAD_REFERENCE if REF_FILE can't be accessed */
+/* Return a file mode change operation that sets permissions to match those
+   of REF_FILE.  Return MODE_BAD_REFERENCE if REF_FILE can't be accessed.  */
 
 struct mode_change *
 mode_create_from_ref (ref_file)
@@ -249,7 +246,6 @@ mode_create_from_ref (ref_file)
   struct mode_change *change;	/* the only change element */
   struct stat ref_stats;
   int i;
-  int umask_value;
 
   if (stat (ref_file, &ref_stats))
     return MODE_BAD_REFERENCE;
@@ -259,12 +255,9 @@ mode_create_from_ref (ref_file)
   if (change == NULL)
     return MODE_MEMORY_EXHAUSTED;
 
-  umask_value = umask (0);
-  umask (umask_value);
-
   change->op = '=';
-  change->flags = MODE_X_IF_ANY_X;
-  change->affected = 0777 & ~umask_value;
+  change->flags = 0;
+  change->affected = 07777;
   change->value = ref_stats.st_mode;
   change->next = NULL;
 
