@@ -1,4 +1,4 @@
-#!/p/bin/perl5.000 -w
+#!/usr/bin/perl -w
 
 $join = 'join';
 $join = '/usr/bin/join';
