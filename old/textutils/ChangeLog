@@ -1,5 +1,8 @@
 1999-03-07  Jim Meyering  <meyering@ascend.com>
 
+	* lib/long-options.c (parse_long_options): Add the `...NO warranty...'
+	message.
+
 	* src/pr.c (usage): Add missing \n\.
 
 	The newline test would always fail on MSDOS/Windows systems --
