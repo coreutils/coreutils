@@ -699,6 +699,8 @@ copy_internal (const char *src_path, const char *dst_path,
 		 quote_n (0, src_path), quote_n (1, dst_path));
 	  return 1;
 	}
+
+      new_dst = 1;
     }
 
   delayed_fail = 0;
