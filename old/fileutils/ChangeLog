@@ -1,7 +1,17 @@
+2001-08-05  Jim Meyering  <meyering@lucent.com>
+
+	* tests/root-only: Generalize.  Rename to ...
+	* tests/priv-check: ...this.  New file.  Renamed from the above.
+	* tests/Makefile.am (EXTRA_DIST): Reflect renaming.
+	* tests/mv/i-3: Reflect name and usage changes.
+	* tests/chown/basic: Likewise.
+	* tests/cp/special-bits: Likewise.
+	* tests/sample-test: Likewise.
+
 2001-08-04  Jim Meyering  <meyering@lucent.com>
 
-	* tests/root-only: Correct the primary test: s/||/&&/.
-	Remove *all* write access, no just that of the owner.
+	* tests/root-only: Remove *all* write access, not just that
+	of the owner.
 
 	* src/copy.c (copy_internal):
 	Reported by Vin Shelton.
@@ -9,6 +19,7 @@
 	* src/copy.c: FIXME
 
 	* tests/mv/i-3: New test for the above fix.
+	* tests/mv/Makefile.am (TESTS): Add i-3.
 
 2001-08-03  Paul Eggert  <eggert@twinsun.com>
 
@@ -1758,7 +1769,7 @@
 	Perform POSIX-mandated (for cp) open-with-O_WRONLY|O_TRUNC when copying
 	a regular source file and the destination file exists;  upon failure,
 	unlink that existing file, then open again, but with O_WRONLY|O_CREAT.
-	(copy_internal): `force' in not related to interactive; remove
+	(copy_internal): `force' is not related to interactive; remove
 	the conjunct.
 	Remove the entire `else if (x->force)' block;  justifying
 	removal of the non-directory part is easy:  POSIX requires we try
