@@ -1,3 +1,7 @@
+2005-03-27  Jim Meyering  <jim@meyering.net>
+
+	* argmatch.c: Clarify comment: null-terminated -> NULL-terminated.
+
 2005-03-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* intprops.h (INT_STRLEN_BOUND, INT_BUFSIZE_BOUND):
