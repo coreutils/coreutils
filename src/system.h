@@ -68,6 +68,14 @@
 # define S_ISDOOR(m) (((m) & S_IFMT) == S_IFDOOR)
 #endif
 
+#if !S_IWUSR
+# if S_IWRITE
+#  define S_IWUSR S_IWRITE
+# else
+#  define S_IWUSR 00200
+# endif
+#endif
+
 #ifndef S_IEXEC
 # define S_IEXEC S_IXUSR
 #endif
