@@ -17,7 +17,7 @@ my_distdir = $(PACKAGE)-$(VERSION)
 
 # Old releases are stored here.
 # Used for diffs and xdeltas.
-release-archive-dir = ../release
+release-archive-dir ?= ../release
 
 
 
@@ -256,7 +256,8 @@ endef
 # Make sure that the copyright date in lib/version-etc.c is up to date.
 check-copyright:
 	@if test -f lib/version-etc.c; then \
-	  grep 'N_("Copyright (C) $(shell date +%Y) Free' lib/version-etc.c > /dev/null \
+	  grep 'N_("Copyright (C) $(shell date +%Y) Free' lib/version-etc.c \
+	    > /dev/null \
 	  || { echo 'out of date copyright in $<; update it' 1>&2; exit 1; }; \
 	fi
 
@@ -264,7 +265,7 @@ check-copyright:
 $(xd-delta): $(release-archive-dir)/$(prev-tgz) $(distdir).tar.gz
 	xdelta delta -9 $^ $@ || :
 
-alpha: static-check $(xd-delta)
+alpha: local-check $(xd-delta)
 	$(MAKE) cvs-dist
 	$(MAKE) -s announcement > /tmp/announce-$(my_distdir)
 	ln $(distdir).tar.gz $(release-archive-dir)
