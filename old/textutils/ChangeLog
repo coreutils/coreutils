@@ -1,4 +1,12 @@
-Thu Mar 21 06:58:36 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+Thu Mar 21 22:47:50 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* csplit.c: Include assert.h, but disable assertions.
+	(process_line_count): Replace if-abort with a slightly relaxed
+	assertion.  Before, `echo |csplit - 1 1' would abort.
+	Reported by Samuli.Karkkainen@hut.fi.
+	(parse_patterns): Disallow uses like `csplit FILE 0' with zero
+	line number, `csplit FILE 2 1' with decreasing line numbers, and
+	warn about uses like `csplit FILE 3 3' that have equal line numbers.
 
 	* sort.c (main): Declare to be of type int, not void.
 	From Peter Seebach <seebs@taniemarie.solon.com>.
