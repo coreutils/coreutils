@@ -2,6 +2,9 @@
 
 	* Version 2.0.18.
 
+	* Makefile.maint (po-check): Check for uses of _() not just in .c
+	files, but also in .h files.
+
 	Ideally, there would be just one translation for all --help
 	and --version description strings.  Before this change, they
 	differed only in the number of blanks between the option name
