@@ -1,7 +1,8 @@
 2004-07-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* makepath.h: Include <stdbool.h>.
-	(make_path, make_dir): Use bool, not int, since we're not setting errno.
+	(make_path, make_dir): Use bool, not int, since we're not setting
+	errno.
 	Use mode_t for modes, not int.  All uses changed.
 	* makepath.c: Likewise.
 	(errno): Remove decl; no longer needed since we assume C89.
@@ -110,7 +111,7 @@
 	* euidaccess.c [!defined LIBC]: Included group-member.h, stat-macros.h.
 	(S_IXUSR, S_IXGRP, S_IXOTH, S_IROTH, S_IWOTH, S_IXOTH):
 	Remove; now done by stat-macros.h.
-	(NGROUPS_MAX, group_member): Remove; now down by group-member.h.
+	(NGROUPS_MAX, group_member): Remove; now done by group-member.h.
 	No need to include <limits.h>.
 	(errno): Remove decl; we now assume C89 or better.
 	(access, getuid, getgid, geteuid, getegid, stat) [defined _LIBC]:
