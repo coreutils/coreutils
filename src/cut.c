@@ -514,7 +514,7 @@ cut_fields (stream)
      FILE *stream;
 {
   register int c;		/* Each character from the file. */
-  int last_c;			/* The previour character. */
+  int last_c;			/* The previous character. */
   int doneflag = 0;		/* Nonzero if EOF reached. */
   int char_count;		/* Number of chars in line before any delim. */
   int fieldfound;		/* Nonzero if any fields to print found. */
