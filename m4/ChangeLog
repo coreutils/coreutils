@@ -7,6 +7,7 @@
 	* utimbuf.m4 (jm_CHECK_TYPE_STRUCT_UTIMBUF): Rename from
 	jm_STRUCT_UTIMBUF.
 	* jm-macros.m4: Reflect s/jm_STRUCT_/jm_CHECK_TYPE_STRUCT_/ renamings.
+	* utime.m4: Likewise.
 
 	* timespec.m4 (jm_CHECK_TYPE_STRUCT_TIMESPEC): New file, macro.
 	* jm-macros.m4 (jm_CHECK_TYPE_STRUCT_TIMESPEC): Require it.
