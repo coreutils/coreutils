@@ -7,6 +7,27 @@
 
 	* tests/stty/basic-1: Use `tail -n +2', rather than `tail +2'.
 
+2002-02-03  Paul Eggert  <eggert@twinsun.com>
+
+	Add more support for POSIX 1003.1-2001, which requires removal
+	for support of obsolete "-DIGITS" option syntax in nice, and
+	which prohibits options with optional arguments like date's
+	-I option.
+
+	* NEWS, coreutils.texi: Document this.
+
+	* src/date.c (ISO_8601_OPTION): New enum value.
+	(long_options): Use it.
+	(short_options): New constant.
+
+	* src/date.c (usage): Document the change.
+	* src/nice.c (usage): Likewise.
+
+	* src/date.c (main): Conform to POSIX 1003.1-2001 if
+	POSIX2_VERSION says to, otherwise warn of obsolete usage if
+	OBSOLETE_OPTION_WARNINGS is nonzero and if not POSIXLY_CORRECT.
+	* src/nice.c (main): Likewise.
+
 2002-02-02  Bruno Haible  <bruno@clisp.org>
 
 	* printf.c (print_esc): Call print_unicode_char with exit_on_error =
