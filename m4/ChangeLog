@@ -1,3 +1,11 @@
+1999-08-04  Jim Meyering  <meyering@ascend.com>
+
+	* jm-macros.m4: Move a 4-line block of code from the configure.in of
+	fileutils and sh-utils (textutils's getline test was inadequate).
+	(AM_FUNC_GETLINE): Run this test.
+	(AC_CHECK_FUNCS): Check for getdelim.
+	Reported by Bob Proulx.
+
 1999-08-02  Jim Meyering  <meyering@ascend.com>
 
 	* jm-macros.m4: Add a comment.
