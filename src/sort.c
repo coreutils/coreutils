@@ -2525,7 +2525,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "sort", GNU_PACKAGE, VERSION, usage);
+  parse_long_options (argc, argv, "sort", GNU_PACKAGE, VERSION,
+		      "Mike Haertel", usage);
 
   have_read_stdin = 0;
   inittables ();
