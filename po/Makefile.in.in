@@ -1,10 +1,12 @@
 # Makefile for program source directory in GNU NLS utilities package.
 # Copyright (C) 1995-1997, 2000, 2001 by Ulrich Drepper <drepper@gnu.ai.mit.edu>
 #
-# This file file be copied and used freely without restrictions.  It can
-# be used in projects which are not available under the GNU General Public License
-# but which still want to provide support for the GNU gettext functionality.
-# Please note that the actual code is *not* freely available.
+# This file can be copied and used freely without restrictions.  It can
+# be used in projects which are not available under the GNU General Public
+# License but which still want to provide support for the GNU gettext
+# functionality.
+# Please note that the actual code of GNU gettext is covered by the GNU
+# General Public License and is *not* in the public domain.
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
@@ -31,19 +33,10 @@ INSTALL_DATA = @INSTALL_DATA@
 MKINSTALLDIRS = @MKINSTALLDIRS@
 mkinstalldirs = $(SHELL) `case "$(MKINSTALLDIRS)" in /*) echo "$(MKINSTALLDIRS)" ;; *) echo "$(top_builddir)/$(MKINSTALLDIRS)" ;; esac`
 
-CC = @CC@
 GMSGFMT = @GMSGFMT@
 MSGFMT = @MSGFMT@
 XGETTEXT = @XGETTEXT@
 MSGMERGE = msgmerge
-
-DEFS = @DEFS@
-CFLAGS = @CFLAGS@
-CPPFLAGS = @CPPFLAGS@
-
-INCLUDES = -I.. -I$(top_srcdir)/intl
-
-COMPILE = $(CC) -c $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $(XCFLAGS)
 
 POFILES = @POFILES@
 GMOFILES = @GMOFILES@
@@ -55,21 +48,18 @@ POTFILES = \
 CATALOGS = @CATALOGS@
 
 .SUFFIXES:
-.SUFFIXES: .c .o .po .pox .gmo .mo
-
-.c.o:
-	$(COMPILE) $<
+.SUFFIXES: .po .pox .gmo .mo
 
 .po.pox:
 	$(MAKE) $(PACKAGE).pot
 	$(MSGMERGE) $< $(srcdir)/$(PACKAGE).pot -o $*.pox
 
 .po.mo:
-	$(MSGFMT) -o $@ $<
+	$(MSGFMT) -c -o $@ $<
 
 .po.gmo:
 	file=$(srcdir)/`echo $* | sed 's,.*/,,'`.gmo \
-	  && rm -f $$file && $(GMSGFMT) --statistics -o $$file $<
+	  && rm -f $$file && $(GMSGFMT) -c --statistics -o $$file $<
 
 
 all: all-@USE_NLS@
@@ -122,18 +112,22 @@ install-data-yes: all
 # Define this as empty until I found a useful application.
 installcheck:
 
-uninstall:
+uninstall: uninstall-exec uninstall-data
+uninstall-exec:
+uninstall-data: uninstall-data-@USE_NLS@
+	if test "$(PACKAGE)" = "gettext"; then \
+	  rm -f $(DESTDIR)$(gettextsrcdir)/Makefile.in.in; \
+	else \
+	  : ; \
+	fi
+uninstall-data-no:
+uninstall-data-yes:
 	catalogs='$(CATALOGS)'; \
 	for cat in $$catalogs; do \
 	  cat=`basename $$cat`; \
 	  lang=`echo $$cat | sed 's/\.gmo$$//'`; \
 	  rm -f $(DESTDIR)$(localedir)/$$lang/LC_MESSAGES/$(PACKAGE).mo; \
 	done
-	if test "$(PACKAGE)" = "gettext"; then \
-	  rm -f $(DESTDIR)$(gettextsrcdir)/Makefile.in.in; \
-	else \
-	  : ; \
-	fi
 
 check: all
 
