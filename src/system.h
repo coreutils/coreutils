@@ -197,6 +197,14 @@ initialize_exit_failure (int status)
 # define O_TEXT _O_TEXT
 #endif
 
+#if !defined O_DIRECT
+# define O_DIRECT 0
+#endif
+
+#if !defined O_DSYNC
+# define O_DSYNC 0
+#endif
+
 #if !defined O_NDELAY
 # define O_NDELAY 0
 #endif
@@ -207,6 +215,18 @@ initialize_exit_failure (int status)
 
 #if !defined O_NOCTTY
 # define O_NOCTTY 0
+#endif
+
+#if !defined O_NOFOLLOW
+# define O_NOFOLLOW 0
+#endif
+
+#if !defined O_RSYNC
+# define O_RSYNC 0
+#endif
+
+#if !defined O_SYNC
+# define O_SYNC 0
 #endif
 
 #ifdef __BEOS__
