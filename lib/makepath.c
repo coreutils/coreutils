@@ -1,6 +1,6 @@
 /* makepath.c -- Ensure that a directory path exists.
 
-   Copyright (C) 1990, 1997, 1998, 1999, 2000, 2002, 2003 Free
+   Copyright (C) 1990, 1997, 1998, 1999, 2000, 2002, 2003, 2004 Free
    Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -34,18 +34,6 @@
 # include <unistd.h>
 #endif
 
-#if STAT_MACROS_BROKEN
-# undef S_ISDIR
-#endif
-
-#if !defined S_ISDIR && defined S_IFDIR
-# define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
-#endif
-
-#ifndef S_IRWXUGO
-# define S_IRWXUGO (S_IRWXU | S_IRWXG | S_IRWXO)
-#endif
-
 #include <stdlib.h>
 
 #include <errno.h>
@@ -56,31 +44,6 @@ extern int errno;
 
 #include <string.h>
 
-#ifndef S_ISUID
-# define S_ISUID 04000
-#endif
-#ifndef S_ISGID
-# define S_ISGID 02000
-#endif
-#ifndef S_ISVTX
-# define S_ISVTX 01000
-#endif
-#ifndef S_IRUSR
-# define S_IRUSR 0200
-#endif
-#ifndef S_IWUSR
-# define S_IWUSR 0200
-#endif
-#ifndef S_IXUSR
-# define S_IXUSR 0100
-#endif
-
-#ifndef S_IRWXU
-# define S_IRWXU (S_IRUSR | S_IWUSR | S_IXUSR)
-#endif
-
-#define WX_USR (S_IWUSR | S_IXUSR)
-
 #include "gettext.h"
 #define _(msgid) gettext (msgid)
 
@@ -88,6 +51,9 @@ extern int errno;
 #include "dirname.h"
 #include "error.h"
 #include "quote.h"
+#include "stat-macros.h"
+
+#define WX_USR (S_IWUSR | S_IXUSR)
 
 #define CLEANUP_CWD					\
   do							\

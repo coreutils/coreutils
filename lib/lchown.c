@@ -26,18 +26,7 @@
 extern int errno;
 #endif
 #include "lchown.h"
-
-#ifdef STAT_MACROS_BROKEN
-# undef S_ISLNK
-#endif
-
-#ifndef S_ISLNK
-# ifdef S_IFLNK
-#  define S_ISLNK(m) (((m) & S_IFMT) == S_IFLNK)
-# else
-#  define S_ISLNK(m) 0
-# endif
-#endif
+#include "stat-macros.h"
 
 /* Declare chown to avoid a warning.  Don't include unistd.h,
    because it may have a conflicting prototype for lchown.  */
