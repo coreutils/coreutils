@@ -1,7 +1,7 @@
 #! /bin/sh
 # depcomp - compile a program generating dependencies as side-effects
 
-scriptversion=2003-11-08.23
+scriptversion=2003-12-28.12
 
 # Copyright (C) 1999, 2000, 2003 Free Software Foundation, Inc.
 
@@ -43,6 +43,7 @@ Environment variables:
   depmode     Dependency tracking mode.
   source      Source file read by `PROGRAMS ARGS'.
   object      Object file output by `PROGRAMS ARGS'.
+  DEPDIR      directory where to store dependencies.
   depfile     Dependency file to output.
   tmpdepfile  Temporary file to use when outputing dependencies.
   libtool     Whether libtool is used (yes/no).
@@ -61,18 +62,10 @@ if test -z "$depmode" || test -z "$source" || test -z "$object"; then
   echo "depcomp: Variables source, object and depmode must be set" 1>&2
   exit 1
 fi
-# `libtool' can also be set to `yes' or `no'.
 
-if test -z "$depfile"; then
-   base=`echo "$object" | sed -e 's,^.*/,,' -e 's,\.\([^.]*\)$,.P\1,'`
-   dir=`echo "$object" | sed 's,/.*$,/,'`
-   if test "$dir" = "$object"; then
-      dir=
-   fi
-   # FIXME: should be _deps on DOS.
-   depfile="$dir.deps/$base"
-fi
-
+# Dependencies for sub/bar.o or sub/bar.obj go into sub/.deps/bar.Po.
+depfile=${depfile-`echo "$object" |
+  sed 's|[^\\/]*$|'${DEPDIR-.deps}'/&|;s|\.\([^.]*\)$|.P\1|;s|Pobj$|Po|'`}
 tmpdepfile=${tmpdepfile-`echo "$depfile" | sed 's/\.\([^.]*\)$/.T\1/'`}
 
 rm -f "$tmpdepfile"
