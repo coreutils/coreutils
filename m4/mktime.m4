@@ -1,13 +1,13 @@
 #serial 1000
 
 dnl Just like mktime.m4 from automake-1.3b, but with an additional test.
+dnl Renamed to have jm_ prefix and to use jm_ prefix on cache variable names.
 
-undefine([AM_FUNC_MKTIME])
-AC_DEFUN(AM_FUNC_MKTIME,
+AC_DEFUN(jm_AM_FUNC_MKTIME,
 [AC_REQUIRE([AC_HEADER_TIME])dnl
  AC_CHECK_HEADERS(sys/time.h unistd.h)
  AC_CHECK_FUNCS(alarm)
- AC_CACHE_CHECK([for working mktime], am_cv_func_working_mktime,
+ AC_CACHE_CHECK([for working mktime], jm_am_cv_func_working_mktime,
   [AC_TRY_RUN(
 changequote(<<, >>)dnl
 <</* Test program from Paul Eggert (eggert@twinsun.com)
@@ -151,11 +151,11 @@ main ()
 }
 	      >>,
 changequote([, ])dnl
-	     am_cv_func_working_mktime=yes, am_cv_func_working_mktime=no,
+	     jm_am_cv_func_working_mktime=yes, jm_am_cv_func_working_mktime=no,
 	     dnl When crosscompiling, assume mktime is missing or broken.
-	     am_cv_func_working_mktime=no)
+	     jm_am_cv_func_working_mktime=no)
   ])
-  if test $am_cv_func_working_mktime = no; then
+  if test $jm_am_cv_func_working_mktime = no; then
     LIBOBJS="$LIBOBJS mktime.o"
   fi
 ])
