@@ -32,7 +32,10 @@
 
 /* MAXUID may come from limits.h *or* sys/params.h (via system.h) above. */
 #ifndef MAXUID
-# define MAXUID INT_MAX
+# define MAXUID UID_T_MAX
+#endif
+#ifndef MAXGID
+# define MAXGID GID_T_MAX
 #endif
 
 #ifndef _POSIX_VERSION
@@ -68,7 +71,7 @@ enum Verbosity
   V_off
 };
 
-static int change_dir_group PARAMS ((const char *dir, int group,
+static int change_dir_group PARAMS ((const char *dir, gid_t group,
 				     const struct stat *statp));
 
 /* The name the program was run with. */
@@ -141,7 +144,7 @@ describe_change (const char *file, enum Change_status changed)
 /* Set *G according to NAME. */
 
 static void
-parse_group (const char *name, int *g)
+parse_group (const char *name, gid_t *g)
 {
   struct group *grp;
 
@@ -162,7 +165,7 @@ parse_group (const char *name, int *g)
       if (s_err != LONGINT_OK)
 	STRTOL_FATAL_ERROR (name, _("group number"), s_err);
 
-      if (tmp_long > INT_MAX)
+      if (tmp_long > MAXGID)
 	error (1, 0, _("invalid group number `%s'"), name);
 
       *g = tmp_long;
@@ -177,7 +180,7 @@ parse_group (const char *name, int *g)
    Return 0 if successful, 1 if errors occurred. */
 
 static int
-change_file_group (const char *file, int group)
+change_file_group (const char *file, gid_t group)
 {
   struct stat file_stats;
   int errors = 0;
@@ -242,7 +245,7 @@ change_file_group (const char *file, int group)
    Return 0 if successful, 1 if errors occurred. */
 
 static int
-change_dir_group (const char *dir, int group, const struct stat *statp)
+change_dir_group (const char *dir, gid_t group, const struct stat *statp)
 {
   char *name_space, *namep;
   char *path;			/* Full path of each entry to process. */
@@ -323,7 +326,7 @@ Change the group membership of each FILE to GROUP.\n\
 int
 main (int argc, char **argv)
 {
-  int group;
+  gid_t group;
   int errors = 0;
   int optc;
 
