@@ -4,6 +4,7 @@
 	* fatal.c, getdate.y, getpass.c, getstr.c, getusershell.c: Likewise.
 	* mountlist.c, posixtm.c, readtokens.c, readutmp.c: Likewise.
 	* regex.c, sha.c, version-etc.c, yesno.c: Likewise.
+	Reported by Padraig Brady.
 
 	* mkstemp.c: #undef mkstemp.
 	Include config.h.
