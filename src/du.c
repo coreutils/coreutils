@@ -538,6 +538,7 @@ main (int argc, char **argv)
   char *cwd_only[2];
   int max_depth_specified = 0;
   char **files;
+  int fail;
 
   /* Bit flags that control how nftw works.  */
   int ftw_flags = FTW_DEPTH | FTW_PHYS | FTW_CHDIR;
@@ -560,6 +561,7 @@ main (int argc, char **argv)
   human_output_opts = human_options (getenv ("DU_BLOCK_SIZE"), false,
 				     &output_block_size);
 
+  fail = 0;
   while ((c = getopt_long (argc, argv, "abchHklmsxB:DLSX:", long_options, NULL))
 	 != -1)
     {
@@ -598,15 +600,18 @@ main (int argc, char **argv)
 	  break;
 
 	case MAX_DEPTH_OPTION:		/* --max-depth=N */
-	  /* FIXME: merely set `fail' here, in case there are
-	     additional invalid options */
-	  if (xstrtol (optarg, NULL, 0, &tmp_long, NULL) != LONGINT_OK
-	      || tmp_long < 0 || tmp_long > INT_MAX)
-	    error (EXIT_FAILURE, 0, _("invalid maximum depth %s"),
-		   quote (optarg));
-
-	  max_depth_specified = 1;
-	  max_depth = (int) tmp_long;
+	  if (xstrtol (optarg, NULL, 0, &tmp_long, NULL) == LONGINT_OK
+	      && 0 <= tmp_long && tmp_long <= INT_MAX)
+	    {
+	      max_depth_specified = 1;
+	      max_depth = (int) tmp_long;
+	    }
+	  else
+	    {
+	      error (0, 0, _("invalid maximum depth %s"),
+		     quote (optarg));
+	      fail = 1;
+	    }
  	  break;
 
 	case 'm': /* obsolescent */
@@ -643,11 +648,12 @@ main (int argc, char **argv)
 	  break;
 
 	case 'X':
-	  /* FIXME: merely set `fail' here, in case there are
-	     additional invalid options */
 	  if (add_exclude_file (add_exclude, exclude, optarg,
 				EXCLUDE_WILDCARDS, '\n'))
-	    error (EXIT_FAILURE, errno, "%s", quotearg_colon (optarg));
+	    {
+	      error (0, errno, "%s", quotearg_colon (optarg));
+	      fail = 1;
+	    }
 	  break;
 
 	case EXCLUDE_OPTION:
@@ -662,6 +668,9 @@ main (int argc, char **argv)
 	  usage (EXIT_FAILURE);
 	}
     }
+
+  if (fail)
+    exit (EXIT_FAILURE);
 
   if (opt_all && opt_summarize_only)
     {
