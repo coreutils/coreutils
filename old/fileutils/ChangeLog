@@ -1,5 +1,8 @@
 Sun Sep  8 12:54:31 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/dircolors.c (usage): Refer to LS_COLORS, not LS_COLOR.
+	From Santiago Vila Doncel.
+
 	* src/cp.c (do_copy): Set backup_type to `none' only *after*
 	calling to find_backup_file_name.  Reported by Eli Zaretskii.
 
