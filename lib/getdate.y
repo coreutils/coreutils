@@ -844,7 +844,8 @@ yylex (YYSTYPE *lvalp, parser_control *pc)
 	  if (c == '-' || c == '+')
 	    {
 	      sign = c == '-' ? -1 : 1;
-	      c = *++pc->input;
+	      while (c = *++pc->input, ISSPACE (c))
+		continue;
 	      if (! ISDIGIT (c))
 		/* skip the '-' sign */
 		continue;
