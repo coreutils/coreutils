@@ -1,4 +1,4 @@
-# inttostr.m4 serial 4
+#serial 5
 dnl Copyright (C) 2004, 2005 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -6,7 +6,7 @@ dnl with or without modifications, as long as this notice is preserved.
 
 AC_DEFUN([gl_INTTOSTR],
 [
-  AC_LIBSOURCES([inttostr.c, inttostr.h])
+  AC_LIBSOURCES([inttostr.c, inttostr.h, intprops.h])
 
   dnl We don't technically need to list the following .c files, since their
   dnl functions are named in the AC_LIBOBJ calls, but this is an unusual
