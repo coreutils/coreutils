@@ -146,8 +146,8 @@ struct keyfield
   size_t echar;			/* Additional characters in field. */
   bool const *ignore;		/* Boolean array of characters to ignore. */
   char const *translate;	/* Translation applied to characters. */
-  bool skipsblanks;		/* Skip leading white space at start. */
-  bool skipeblanks;		/* Skip trailing white space at finish. */
+  bool skipsblanks;		/* Skip leading blanks at start. */
+  bool skipeblanks;		/* Skip trailing blanks at finish. */
   bool numeric;			/* Flag for numeric comparison.  Handle
 				   strings of digits with optional decimal
 				   point, but no exponential notation. */
@@ -173,7 +173,7 @@ char *program_name;
    internally, but doing this with good performance is a bit
    tricky.  */
 
-/* Table of white space. */
+/* Table of blanks.  */
 static bool blanks[UCHAR_LIM];
 
 /* Table of non-printing characters. */
@@ -243,10 +243,13 @@ static bool reverse;
    they were read if all keys compare equal.  */
 static bool stable;
 
-/* Tab character separating fields.  If NUL, then fields are separated
-   by the empty string between a non-whitespace character and a whitespace
+/* If TAB has this value, blanks separate fields.  */
+enum { TAB_DEFAULT = CHAR_MAX + 1 };
+
+/* Tab character separating fields.  If TAB_DEFAULT, then fields are
+   separated by the empty string between a non-blank character and a blank
    character. */
-static char tab;
+static int tab = TAB_DEFAULT;
 
 /* Flag to remove consecutive duplicate lines from the output.
    Only the last of a sequence of equal lines will be output. */
@@ -305,7 +308,7 @@ Other options:\n\
   -S, --buffer-size=SIZE    use SIZE for main memory buffer\n\
 "), stdout);
       printf (_("\
-  -t, --field-separator=SEP use SEP instead of non- to whitespace transition\n\
+  -t, --field-separator=SEP use SEP instead of non-blank to blank transition\n\
   -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %s\n\
                               multiple options specify multiple directories\n\
   -u, --unique              with -c: check for strict ordering\n\
@@ -618,6 +621,11 @@ specify_sort_size (char const *s)
 
   if (e == LONGINT_OK)
     {
+      /* If multiple sort sizes are specified, take the maximum, so
+	 that option order does not matter.  */
+      if (n < sort_size)
+	return;
+
       sort_size = n;
       if (sort_size == n)
 	{
@@ -769,7 +777,7 @@ begfield (const struct line *line, const struct keyfield *key)
   /* The leading field separator itself is included in a field when -t
      is absent.  */
 
-  if (tab)
+  if (tab != TAB_DEFAULT)
     while (ptr < lim && sword--)
       {
 	while (ptr < lim && *ptr != tab)
@@ -817,7 +825,7 @@ limfield (const struct line *line, const struct keyfield *key)
      `beginning' is the first character following the delimiting TAB.
      Otherwise, leave PTR pointing at the first `blank' character after
      the preceding field.  */
-  if (tab)
+  if (tab != TAB_DEFAULT)
     while (ptr < lim && eword--)
       {
 	while (ptr < lim && *ptr != tab)
@@ -866,7 +874,7 @@ limfield (const struct line *line, const struct keyfield *key)
      */
 
   /* Make LIM point to the end of (one byte past) the current field.  */
-  if (tab)
+  if (tab != TAB_DEFAULT)
     {
       char *newlim;
       newlim = memchr (ptr, tab, lim - ptr);
@@ -2159,7 +2167,10 @@ set_ordering (register const char *s, struct keyfield *key,
 	  key->general_numeric = true;
 	  break;
 	case 'i':
-	  key->ignore = nonprinting;
+	  /* Option order should not matter, so don't let -i override
+	     -d.  -d implies -i, but -i does not imply -d.  */
+	  if (! key->ignore)
+	    key->ignore = nonprinting;
 	  break;
 	case 'M':
 	  key->month = true;
@@ -2428,6 +2439,8 @@ main (int argc, char **argv)
 	  break;
 
 	case 'o':
+	  if (outfile != minus && strcmp (outfile, optarg) != 0)
+	    error (SORT_FAILURE, 0, _("multiple output files specified"));
 	  outfile = optarg;
 	  break;
 
@@ -2440,15 +2453,28 @@ main (int argc, char **argv)
 	  break;
 
 	case 't':
-	  tab = optarg[0];
-	  if (tab && optarg[1])
-	    {
-	      /* Provoke with `sort -txx'.  Complain about
-		 "multi-character tab" instead of "multibyte tab", so
-		 that the diagnostic's wording does not need to be
-		 changed once multibyte characters are supported.  */
-	      error (SORT_FAILURE, 0, _("multi-character tab `%s'"), optarg);
-	    }
+	  {
+	    int newtab = optarg[0];
+	    if (! newtab)
+	      error (SORT_FAILURE, 0, _("empty tab"));
+	    if (optarg[1])
+	      {
+		if (strcmp (optarg, "\\0") == 0)
+		  newtab = '\0';
+		else
+		  {
+		    /* Provoke with `sort -txx'.  Complain about
+		       "multi-character tab" instead of "multibyte tab", so
+		       that the diagnostic's wording does not need to be
+		       changed once multibyte characters are supported.  */
+		    error (SORT_FAILURE, 0, _("multi-character tab `%s'"),
+			   optarg);
+		  }
+	      }
+	    if (tab != TAB_DEFAULT && tab != newtab)
+	      error (SORT_FAILURE, 0, _("incompatible tabs"));
+	    tab = newtab;
+	  }
 	  break;
 
 	case 'T':
