@@ -136,5 +136,5 @@ Remove suspicious uses of alloca (ones that may allocate more than
 
 Move help2man from man/ to config?
 
-Make the default _POSIX2_VERSION= setting be configure-time selectable
-as well as run-time selectable.
+Adapt these contribution guidelines for coreutils:
+  http://sources.redhat.com/automake/contribute.html
