@@ -1,3 +1,7 @@
+2005-03-29  Jim Meyering  <jim@meyering.net>
+
+	* long-options.c (long_options): Use NULL, not `0'.
+
 2005-03-27  Jim Meyering  <jim@meyering.net>
 
 	* argmatch.c: Clarify comment: null-terminated -> NULL-terminated.
