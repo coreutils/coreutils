@@ -52,9 +52,6 @@
 
 #ifdef STDC_HEADERS
 # include <stdlib.h>
-#else
-char *malloc ();
-char *realloc ();
 #endif
 
 #ifndef MAX
