@@ -1,3 +1,11 @@
+2002-11-28  Jim Meyering  <jim@meyering.net>
+
+	Merge in changes from libc.
+	* error.c [_LIBC]: Include <libio/libioP.h>.
+	[USE_IN_LIBIO]: Include <libio/iolibio.h>
+	(fflush): Tweak definition to use INTUSE.
+	(putc): Define.
+
 2002-11-23  Jim Meyering  <jim@meyering.net>
 
 	From gnulib, by Bruno Haible
