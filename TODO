@@ -45,6 +45,7 @@ as thousands separator in e.g. 1,000,000.  Instead, do this:
 
 Integrate use of sendfile, suggested here:
   http://mail.gnu.org/archive/html/bug-fileutils/2003-03/msg00030.html
+I don't plan to do that, since a few tests demonstrate no significant benefit.
 
 Should printf '\0123' print "\n3"?
   per report from TAKAI Kousuke on Mar 27
@@ -53,8 +54,6 @@ Should printf '\0123' print "\n3"?
 printf: consider adapting builtins/printf.def from bash
 
 df: add `--total' option, suggested here http://bugs.debian.org/186007
-
-Martin Michlmayr's patch to provide ls with `--sort directory' option
 
 seq: give better diagnostics for invalid formats:
    e.g. no or too many % directives
@@ -77,3 +76,10 @@ document that `true --version' can fail, e.g., like this:
   ./true --version >&-
   ./true: write error: Bad file number
   Reported by Paul Eggert
+
+resolve RH report on cp -a forwarded by Tim Waugh
+
+Martin Michlmayr's patch to provide ls with `--sort directory' option
+
+clean-up: Remove all of the casts (they're unnecessary) found by this:
+  grep -E '\*\) *x(m|re)alloc\>' {lib,src}/*.[ch]
