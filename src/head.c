@@ -79,8 +79,7 @@ static struct option const long_options[] =
 };
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -115,8 +114,7 @@ multipliers bkm follows concatenated, else read -n VALUE.\n\
    Return -1 if STR does not represent a valid unsigned integer. */
 
 static long
-atou (str)
-     char *str;
+atou (char *str)
 {
   int value;
 
@@ -126,8 +124,7 @@ atou (str)
 }
 
 static void
-parse_unit (str)
-     char *str;
+parse_unit (char *str)
 {
   int arglen = strlen (str);
 
@@ -152,8 +149,7 @@ parse_unit (str)
 }
 
 static void
-write_header (filename)
-     char *filename;
+write_header (char *filename)
 {
   static int first_file = 1;
 
@@ -162,10 +158,7 @@ write_header (filename)
 }
 
 static int
-head_bytes (filename, fd, bytes_to_write)
-     char *filename;
-     int fd;
-     long bytes_to_write;
+head_bytes (char *filename, int fd, long int bytes_to_write)
 {
   char buffer[BUFSIZE];
   int bytes_read;
@@ -190,10 +183,7 @@ head_bytes (filename, fd, bytes_to_write)
 }
 
 static int
-head_lines (filename, fd, lines_to_write)
-     char *filename;
-     int fd;
-     long lines_to_write;
+head_lines (char *filename, int fd, long int lines_to_write)
 {
   char buffer[BUFSIZE];
   int bytes_read;
@@ -220,10 +210,7 @@ head_lines (filename, fd, lines_to_write)
 }
 
 static int
-head (filename, fd, number)
-     char *filename;
-     int fd;
-     long number;
+head (char *filename, int fd, long int number)
 {
   if (unit_size)
     return head_bytes (filename, fd, number);
@@ -232,9 +219,7 @@ head (filename, fd, number)
 }
 
 static int
-head_file (filename, number)
-     char *filename;
-     long number;
+head_file (char *filename, long int number)
 {
   int fd;
 
@@ -265,9 +250,7 @@ head_file (filename, number)
 }
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   enum header_mode header_mode = multiple_files;
   int exit_status = 0;
