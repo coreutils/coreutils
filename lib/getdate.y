@@ -876,10 +876,10 @@ get_date (const char *p, const time_t *now)
   /* Probe the names used in the next three calendar quarters, looking
      for a tm_isdst different from the one we already have.  */
   {
-    int probe;
-    for (probe = 1; probe <= 3; probe++)
+    int quarter;
+    for (quarter = 1; quarter <= 3; quarter++)
       {
-	time_t probe = Start + probe * (90 * 24 * 60 * 60);
+	time_t probe = Start + quarter * (90 * 24 * 60 * 60);
 	struct tm *tm = localtime (&probe);
 	if (tm && tm->tm_zone
 	    && tm->tm_isdst != pc.local_time_zone_table[0].value)
