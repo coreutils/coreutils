@@ -1,3 +1,5 @@
+[4.1.9]
+* new programs: link, unlink, and stat
 [4.1.8]
 * mv no longer mistakenly creates links to preexisting destination files
     that aren't moved
