@@ -1,5 +1,5 @@
 /* head -- output first part of file(s)
-   Copyright (C) 89, 90, 91, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -231,7 +231,7 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0)
   if (SIZE_MAX < n_elide_0 + READ_BUFSIZE)
     {
       char umax_buf[INT_BUFSIZE_BOUND (uintmax_t)];
-      error (EXIT_FAILURE, 0, _("%s: number of bytes is large"),
+      error (EXIT_FAILURE, 0, _("%s: number of bytes is too large"),
 	     umaxtostr (n_elide_0, umax_buf));
     }
 
