@@ -90,3 +90,6 @@
 # Try some other (e.g. `X') invalid character.
 ("12c", '-n -t: +1', "a:1\nb:X\n", "b:X\na:1\n", 0);
 ("12d", '-n -t: +1', "b:X\na:1\n", "b:X\na:1\n", 0);
+# From Karl Heuer
+("13a", '+0.1n', "axx\nb-1\n", "b-1\naxx\n", 0);
+("13b", '+0.1n', "b-1\naxx\n", "b-1\naxx\n", 0);
