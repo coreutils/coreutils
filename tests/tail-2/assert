@@ -10,7 +10,7 @@ if test "$VERBOSE" = yes; then
   tail --version
 fi
 
-tmp=t1-tail.$$
+tmp=tail-assert.$$
 pwd=`pwd`
 trap "cd $pwd; rm -rf $dir" 0 1 2 3 15
 
