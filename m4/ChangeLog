@@ -1,3 +1,8 @@
+2000-02-09  Jim Meyering  <meyering@lucent.com>
+
+	* lib-check.m4 (jm_LIB_CHECK): Fix typo: check for sp_pwdp in
+	struct spwd, rather than in struct passwd.  Reported by G. Queri.
+
 2000-02-08  Akim Demaille  <akim@epita.fr>
 
 	* largefile.m4 (AC_SYS_LARGEFILE_FLAGS): Quote square brackets with `[' and `]'
