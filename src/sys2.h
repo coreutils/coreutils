@@ -133,7 +133,9 @@ char *realloc ();
 #endif
 
 #ifndef HAVE_DECL_STPCPY
+# ifndef stpcpy
 char *stpcpy ();
+# endif
 #endif
 
 #ifndef HAVE_DECL_STRSTR
