@@ -33,9 +33,19 @@ DISTCLEANFILES = lstat.c stat.c
 
 EXTRA_DIST = xstat.in
 lstat.c: xstat.in
-	sed -e '/@IGNORE@/d' -e 's/@xstat@/lstat/g' $(srcdir)/xstat.in > $@-t
+	sed \
+	  -e '/@IGNORE@/d' \
+	  -e 's/@xstat@/lstat/g' \
+	  -e '/_LSTAT_ONLY@/d' \
+	  -e '/@BEGIN_STAT_ONLY@/,/@END_STAT_ONLY@/d' \
+	  $(srcdir)/xstat.in > $@-t
 	mv $@-t $@
 
 stat.c: xstat.in
-	sed -e '/@IGNORE@/d' -e 's/@xstat@/stat/g' $(srcdir)/xstat.in > $@-t
+	sed \
+	  -e '/@IGNORE@/d' \
+	  -e 's/@xstat@/stat/g' \
+	  -e '/_STAT_ONLY@/d' \
+	  -e '/@BEGIN_LSTAT_ONLY@/,/@END_LSTAT_ONLY@/d' \
+	  $(srcdir)/xstat.in > $@-t
 	mv $@-t $@
