@@ -1,12 +1,15 @@
 2003-03-14  Jim Meyering  <jim@meyering.net>
 
+	* Version 4.5.10.
+
+	* tests/du/slink: Relax the test for the `local'ness of a file system,
+	so that now it works also for tmpfs.
+
 	* tests/du/hard-link: Transform output from first du, so that this
 	test doesn't fail on file systems like tmpfs that order directory
 	entries differently.
 
 2003-03-13  Jim Meyering  <jim@meyering.net>
-
-	* Version 4.5.10.
 
 	* tests/du/8gb: Work around what appears to be an NFS failure that
 	would make this test fail on some systems.
