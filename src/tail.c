@@ -53,6 +53,7 @@
 #include "system.h"
 #include "xstrtoul.h"
 #include "error.h"
+#include "safe-read.h"
 
 #ifndef OFF_T_MIN
 # define OFF_T_MIN TYPE_MINIMUM (off_t)
@@ -157,8 +158,6 @@ enum header_mode
 
 /* FIXME: rename, document, and use this -- add option */
 static unsigned long max_no_change_count = 5;
-
-int safe_read ();
 
 /* The name this program was run with.  */
 char *program_name;
