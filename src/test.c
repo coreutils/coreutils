@@ -20,7 +20,7 @@
    with Bash; see the file COPYING.  If not, write to the Free Software
    Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
 
-/* Define TEST_STANDALONE to get the /bin/test version.  Otherwise, you get 
+/* Define TEST_STANDALONE to get the /bin/test version.  Otherwise, you get
    the shell builtin version. */
 /* #define TEST_STANDALONE */
 
@@ -365,7 +365,7 @@ term ()
       return (value ^ (term ()));
     }
 
-  /* A paren-bracketed argument. */  
+  /* A paren-bracketed argument. */
   if (argv[pos][0] == '(' && !argv[pos][1])
     {
       advance (1);
@@ -817,7 +817,7 @@ unary_operator ()
       return (TRUE == (argv[pos - 1][0] == '\0'));
     }
 }
-	
+
 /*
  * and:
  *	term
@@ -1039,16 +1039,12 @@ EXPRESSION is true or false and sets exit status.  It is one of:\n\
   -p FILE     FILE exists and is a named pipe\n\
   -r FILE     FILE exists and is readable\n\
   -s FILE     FILE exists and has a size greater than zero\n\
-  -t          standard output is opened on a terminal\n\
-  -t FD       file descriptor FD is opened on a terminal\n\
+  -t [FD]     file descriptor FD (stdout by default) is opened on a terminal\n\
   -u FILE     FILE exists and its set-user-ID bit is set\n\
   -w FILE     FILE exists and is writable\n\
   -x FILE     FILE exists and is executable\n\
 ");
       printf ("\
-\n\
-  --help      display this help and exit\n\
-  --version   output version information and exit\n\
 \n\
 Beware that parentheses need to be escaped by backslashes for shells.\n\
 INTEGER may also be -l STRING, which evaluates to the length of STRING.\n\
