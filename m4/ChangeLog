@@ -1,3 +1,10 @@
+2000-04-02  Paul Eggert  <eggert@twinsun.com>
+
+	* m4/strftime.m4 (jm_FUNC_GNU_STRFTIME): Set TZ environment
+	variable in the shell rather than using putenv, which isn't
+	portable.  This avoids the configure-time inter-test dependency
+	on the potentially-renamed putenv function.
+
 2000-03-30  Paul Eggert  <eggert@twinsun.com>
 
 	* jm-macros.m4 (jm_CHECK_ALL_TYPES): Include <sys/stat.h>
