@@ -2280,7 +2280,9 @@ sort (char **files, int nfiles, FILE *ofp)
 #endif
 	  sortlines (lines.lines, lines.used, tmp);
 	  if (feof (fp) && !nfiles && !n_temp_files && !buf.left)
-	    tfp = ofp;
+	    {
+	      tfp = ofp;
+	    }
 	  else
 	    {
 	      ++n_temp_files;
@@ -2857,49 +2859,73 @@ but lacks following character offset"));
 	  for (i = 0; i < nfiles; ++i)
 	    {
 	      char buf[8192];
-	      FILE *fp;
+	      FILE *in_fp;
+	      FILE *out_fp;
 	      int cc;
 
 	      if (S_ISREG (outstat.st_mode) && !STREQ (outfile, files[i]))
 		{
 		  struct stat instat;
-		  if ((!STREQ (files[i], "-")
-		       ? stat (files[i], &instat)
-		       : fstat (STDIN_FILENO, &instat)) != 0)
+		  if ((STREQ (files[i], "-")
+		       ? fstat (STDIN_FILENO, &instat)
+		       : stat (files[i], &instat)) != 0)
 		    {
 		      error (0, errno, "%s", files[i]);
 		      cleanup ();
 		      exit (SORT_FAILURE);
 		    }
-		  if (S_ISREG (instat.st_mode)
-		      && (instat.st_ino != outstat.st_ino
-			  || instat.st_dev != outstat.st_dev))
+		  if (S_ISREG (instat.st_mode) && !SAME_INODE (instat, outstat))
 		    {
 		      /* We know the files are distinct.  */
 		      continue;
 		    }
 		}
 
-	      fp = xfopen (files[i], "r");
+	      in_fp = xfopen (files[i], "r");
 	      tmp = tempname ();
-	      ofp = xtmpfopen (tmp);
-	      while ((cc = fread (buf, 1, sizeof buf, fp)) > 0)
-		write_bytes (buf, cc, ofp);
-	      if (ferror (fp))
+	      out_fp = xtmpfopen (tmp);
+	      /* FIXME: maybe use copy.c(copy) here. */
+	      while ((cc = fread (buf, 1, sizeof buf, in_fp)) > 0)
+		write_bytes (buf, cc, out_fp);
+	      if (ferror (in_fp))
 		{
 		  error (0, errno, "%s", files[i]);
 		  cleanup ();
 		  exit (SORT_FAILURE);
 		}
-	      xfclose (ofp);
-	      xfclose (fp);
+	      xfclose (out_fp);
+	      xfclose (in_fp);
 	      files[i] = tmp;
 	    }
+	  ofp = xfopen (outfile, "w");
 	}
-      ofp = xfopen (outfile, "w");
+      else
+	{
+	  /* A non-`-' outfile was specified, but the file doesn't yet exist.
+	     Before opening it for writing (thus creating it), make sure all
+	     of the input files exist.  Otherwise, creating the output file
+	     could create an otherwise missing input file, making sort succeed
+	     when it should fail.  */
+	  for (i = 0; i < nfiles; ++i)
+	    {
+	      struct stat sb;
+	      if (STREQ (files[i], "-"))
+		continue;
+	      if (stat (files[i], &sb))
+		{
+		  error (0, errno, "%s", files[i]);
+		  cleanup ();
+		  exit (SORT_FAILURE);
+		}
+	    }
+
+	  ofp = xfopen (outfile, "w");
+	}
     }
   else
-    ofp = stdout;
+    {
+      ofp = stdout;
+    }
 
   if (mergeonly)
     merge (files, nfiles, ofp);
