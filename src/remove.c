@@ -1151,7 +1151,10 @@ remove_dir (Dirstack_state *ds, char const *dir, struct cwd_state **cwd_state,
 	free (empty_dir);
 
 	if (AD_stack_height (ds) == 1)
-	  break;
+	  {
+	    free_cwd (&AD_stack_top(ds)->u.saved_cwd);
+	    break;
+	  }
       }
     }
 
