@@ -1,3 +1,9 @@
+Sun Dec  1 13:07:39 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/getdate.y (date): Interpret the date, L/M/N, as YYYY/MM/DD
+	if L >= 1000, otherwise as MM/DD/YY.  With this change,
+	date --date=DATE accepts dates like those in an RCS log listing.
+
 Sat Nov 30 22:11:42 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* acinclude.m4: (jm_FUNC_MKTIME): New macro.  This is like
