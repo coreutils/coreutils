@@ -1,4 +1,4 @@
-#serial 40
+#serial 41
 
 dnl We use gl_ for non Autoconf macros.
 m4_pattern_forbid([^gl_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
@@ -17,6 +17,7 @@ AC_DEFUN([gl_PREREQ],
   AC_REQUIRE([gl_FUNC_MKSTEMP])
   AC_REQUIRE([gl_ALLOCSA])
   AC_REQUIRE([gl_BACKUPFILE])
+  AC_REQUIRE([gl_C_STRTOLD])
   AC_REQUIRE([gl_CANON_HOST])
   AC_REQUIRE([gl_CLOEXEC])
   AC_REQUIRE([gl_CLOSEOUT])
