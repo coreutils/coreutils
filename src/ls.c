@@ -2169,17 +2169,17 @@ print_long_format (const struct fileinfo *f)
 
   if (print_inode)
     {
-      char buf[LONGEST_HUMAN_READABLE + 1];
+      char hbuf[LONGEST_HUMAN_READABLE + 1];
       sprintf (p, "%*s ", INODE_DIGITS,
-	       human_readable ((uintmax_t) f->stat.st_ino, buf, 1, 1, 0));
+	       human_readable ((uintmax_t) f->stat.st_ino, hbuf, 1, 1, 0));
       p += strlen (p);
     }
 
   if (print_block_size)
     {
-      char buf[LONGEST_HUMAN_READABLE + 1];
+      char hbuf[LONGEST_HUMAN_READABLE + 1];
       sprintf (p, "%*s ", block_size_size,
-	       human_readable ((uintmax_t) ST_NBLOCKS (f->stat), buf,
+	       human_readable ((uintmax_t) ST_NBLOCKS (f->stat), hbuf,
 			       ST_NBLOCKSIZE, output_units, 0));
       p += strlen (p);
     }
@@ -2211,10 +2211,10 @@ print_long_format (const struct fileinfo *f)
 	     (unsigned) minor (f->stat.st_rdev));
   else
     {
-      char buf[LONGEST_HUMAN_READABLE + 1];
+      char hbuf[LONGEST_HUMAN_READABLE + 1];
       sprintf (p, "%8s ",
 	       human_readable ((uintmax_t) f->stat.st_size,
-			       buf, 1, 1, human_readable_base));
+			       hbuf, 1, 1, human_readable_base));
     }
 
   p += strlen (p);
@@ -2242,18 +2242,18 @@ print_long_format (const struct fileinfo *f)
     {
       /* The time cannot be represented as a local time;
 	 print it as a huge integer number of seconds.  */
-      char buf[LONGEST_HUMAN_READABLE + 1];
+      char hbuf[LONGEST_HUMAN_READABLE + 1];
       int width = full_time ? 24 : 12;
 
       if (when < 0)
 	{
-	  const char *num = human_readable (- (uintmax_t) when, buf, 1, 1, 0);
+	  const char *num = human_readable (- (uintmax_t) when, hbuf, 1, 1, 0);
 	  int sign_width = width - strlen (num);
 	  sprintf (p, "%*s%s ", sign_width < 0 ? 0 : sign_width, "-", num);
 	}
       else
 	sprintf (p, "%*s ", width,
-		 human_readable ((uintmax_t) when, buf, 1, 1, 0));
+		 human_readable ((uintmax_t) when, hbuf, 1, 1, 0));
 
       p += strlen (p);
     }
