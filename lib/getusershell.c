@@ -1,5 +1,5 @@
 /* getusershell.c -- Return names of valid user shells.
-   Copyright (C) 1991 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1997 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -28,6 +28,14 @@
 
 #include <stdio.h>
 #include <ctype.h>
+
+#if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
+# define IN_CTYPE_DOMAIN(c) 1
+#else
+# define IN_CTYPE_DOMAIN(c) isascii(c)
+#endif
+
+#define ISSPACE(c) (IN_CTYPE_DOMAIN (c) && isspace (c))
 
 #ifdef STDC_HEADERS
 # include <stdlib.h>
@@ -175,10 +183,10 @@ readname (name, size, stream)
     }
 
   /* Skip blank space.  */
-  while ((c = getc (stream)) != EOF && isspace (c))
+  while ((c = getc (stream)) != EOF && ISSPACE (c))
     /* Do nothing. */ ;
 
-  while (c != EOF && !isspace (c))
+  while (c != EOF && !ISSPACE (c))
     {
       (*name)[name_index++] = c;
       while (name_index >= *size)
