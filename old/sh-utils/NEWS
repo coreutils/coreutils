@@ -1,4 +1,5 @@
 Changes in release 1.17
+* date -d DATE now works on Unicos systems
 * add tests for factor and more for date.
 * factor runs a lot faster for large 64-bit inputs
 

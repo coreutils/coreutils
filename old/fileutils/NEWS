@@ -1,3 +1,6 @@
+Changes in release 3.17:
+* touch -d DATE now works on Unicos
+
 Changes in release 3.16:
 * du --megabytes (-m) works
 * ls -l works even on systems with non-POSIX strftime in their C library
