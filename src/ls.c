@@ -665,7 +665,7 @@ enum
   BLOCK_SIZE_OPTION = CHAR_MAX + 1,
   COLOR_OPTION,
   FORMAT_OPTION,
-  FULL_TIME,
+  FULL_TIME_OPTION,
   INDICATOR_STYLE_OPTION,
   QUOTING_STYLE_OPTION,
   SHOW_CONTROL_CHARS_OPTION,
@@ -680,7 +680,7 @@ static struct option const long_options[] =
   {"escape", no_argument, 0, 'b'},
   {"directory", no_argument, 0, 'd'},
   {"dired", no_argument, 0, 'D'},
-  {"full-time", no_argument, 0, FULL_TIME},
+  {"full-time", no_argument, 0, FULL_TIME_OPTION},
   {"human-readable", no_argument, 0, 'h'},
   {"inode", no_argument, 0, 'i'},
   {"kilobytes", no_argument, 0, 'k'},
@@ -1290,7 +1290,7 @@ Use `--si' for the old meaning."));
 	  format = XARGMATCH ("--format", optarg, format_args, format_types);
 	  break;
 
-	case FULL_TIME:
+	case FULL_TIME_OPTION:
 	  format = long_format;
 	  full_time = 1;
 	  break;
