@@ -2,6 +2,10 @@
 
 	* Version 5.0.1.
 
+	* src/ls.c: Include <stdlib.h> unconditionally.
+
+	* Makefile.maint (xalloc-check): Rename from header-check.
+
 	* src/yes.c: Include error.h after system.h, not before.
 
 	* copy.c, cp-hash.c, cp.c, csplit.c, cut.c, date.c, df.c, du.c:
