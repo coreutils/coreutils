@@ -88,22 +88,22 @@ void
 run_on_mmaped_stack (void (*func) (void), size_t argc, ...)
 {
     ucontext_t ctx;
-    size_t size = 1024 * 1024 * 1024;
-    long bs_argv[ARGC_MAX];
+    size_t size = 256 * 1024 * 1024;
+    long argv[ARGC_MAX];
     unsigned i;
     va_list ap;
 
     assert (argc <= ARGC_MAX);
     va_start (ap, argc);
     for (i = 0; i < argc; i++)
-      bs_argv[i] = va_arg (ap, long);
+      argv[i] = va_arg (ap, long);
     va_end (ap);
 
     if (get_context (&ctx, size) == 0)
       {
 	makecontext (&ctx, func, argc,
-		     bs_argv[0], bs_argv[1], bs_argv[2],
-		     bs_argv[3], bs_argv[4], bs_argv[5]);
+		     argv[0], argv[1], argv[2],
+		     argv[3], argv[4], argv[5]);
 	setcontext (&ctx);
       }
 
