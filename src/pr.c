@@ -99,6 +99,7 @@
 #include <sys/types.h>
 #include <time.h>
 #include "system.h"
+#include "version.h"
 
 char *xmalloc ();
 char *xrealloc ();
@@ -195,6 +196,9 @@ typedef struct COLUMN COLUMN;
 
 #define NULLCOL (COLUMN *)0
 
+/* The name under which this program was invoked. */
+char *program_name;
+
 /* All of the columns to print.  */
 static COLUMN *column_vector;
 
@@ -245,9 +249,6 @@ static int standard_header = TRUE;
 
 /* (-f) True means use formfeeds instead of newlines to separate pages. */
 static int use_form_feed = FALSE;
-
-/* True means we haven't encountered any filenames in the argument list. */
-static int input_is_stdin = TRUE;
 
 /* True means we have read the standard input. */
 static int have_read_stdin = FALSE;
@@ -427,70 +428,33 @@ static int *clump_buff;
 /* True means we truncate lines longer than chars_per_column. */
 static int truncate_lines = FALSE;
 
-/* The name under which this program was invoked. */
-char *program_name;
-
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
+
+static struct option const long_options[] =
+{
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
+  {0, 0, 0, 0}
+};
+
 void
 main (argc, argv)
      int argc;
      char **argv;
 {
   int c;
-  char *s;
-  int files = 0;
-  char **file_names, **file_name_vector;
   int accum = 0;
 
   program_name = argv[0];
 
-  file_name_vector = (char **) xmalloc (argc * sizeof (char **));
-  file_names = file_name_vector;
-
-  for (;;)
+  while ((c = getopt_long (argc, argv,
+			   "0123456789abcde::fFh:i::l:mn::o:rs::tvw:",
+			   long_options, (int *) 0)) != EOF)
     {
-      c = getopt (argc, argv, "-0123456789abcde::fFh:i::l:mn::o:rs::tvw:");
-
-      if (c == 1)		/* Non-option argument. */
-	{
-	  s = optarg;
-	  if (*s == '+')
-	    {
-	      ++s;
-	      if (!ISDIGIT (*s))
-		usage ("`+' requires a numeric argument");
-	      first_page_number = atoi (s);
-	    }
-	  else
-	    {
-	      *file_names++ = optarg;
-	      ++files;
-	    }
-	}
-      else if (files > 0)
-	{
-	  if (parallel_files && explicit_columns)
-	    error (1, 0,
-"Cannot specify number of columns when printing in parallel.");
-
-	  if (parallel_files && print_across_flag)
-	    error (1, 0,
-"Cannot specify both printing across and printing in parallel.");
-
-	  if (parallel_files)
-	    print_files (files, file_name_vector);
-	  else
-	    {
-	      file_names = file_name_vector;
-	      while (files--)
-		print_files (1, file_names++);
-	    }
-
-	  input_is_stdin = FALSE;
-	  file_names = file_name_vector;
-	  files = 0;
-	  cleanup ();
-	}
-
       if (ISDIGIT (c))
 	{
 	  accum = accum * 10 + c - '0';
@@ -508,6 +472,9 @@ main (argc, argv)
 
       switch (c)
 	{
+	case 0: /* getopt long option */
+	  break;
+
 	case 'a':
 	  print_across_flag = TRUE;
 	  storing_columns = FALSE;
@@ -566,6 +533,7 @@ main (argc, argv)
 	  use_column_separator = TRUE;
 	  if (optarg)
 	    {
+	      char *s;
 	      s = optarg;
 	      column_separator = *s;
 	      if (*++s)
@@ -573,7 +541,7 @@ main (argc, argv)
 		  fprintf (stderr, "\
 %s: extra characters in the argument to the `-s' option: `%s'\n",
 			   program_name, s);
-		  usage ((char *) 0);
+		  usage ();
 		}
 	    }
 	  break;
@@ -586,17 +554,56 @@ main (argc, argv)
 	case 'w':
 	  chars_per_line = atoi (optarg);
 	  break;
-	case '?':
-	  usage ((char *) 0);
+	default:
+	  usage ();
 	  break;
 	}
-
-      if (c == EOF)
-	break;
     }
 
-  if (input_is_stdin)
-    print_files (0, (char **) 0);
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
+
+  if (parallel_files && explicit_columns)
+    error (1, 0,
+  "Cannot specify number of columns when printing in parallel.");
+
+  if (parallel_files && print_across_flag)
+    error (1, 0,
+  "Cannot specify both printing across and printing in parallel.");
+
+  if (optind >= 2 && strcmp (argv[optind - 1], "--") == 0)
+    {
+      /* We've seen `--', so interpret all remaining arguments as
+	 filenames. */
+    }
+  else
+    {
+      for ( ; optind < argc && argv[optind][0] == '+'; optind++)
+	{
+	  first_page_number = atoi (&argv[optind][1]);
+	}
+    }
+
+  if (optind >= argc)
+    {
+      /* No file arguments specified;  read from standard input.  */
+      print_files (0, (char **) 0);
+    }
+  else
+    {
+      if (parallel_files)
+	print_files (argc - optind, &argv[optind]);
+      else
+	{
+	  for ( ; optind < argc; optind++)
+	    print_files (1, &argv[optind]);
+	}
+    }
+
+  cleanup ();
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (1, errno, "standard input");
@@ -629,7 +636,7 @@ getoptarg (arg, switch_char, character, number)
 	  fprintf (stderr, "\
 %s: extra characters in the argument to the `-%c' option: `%s'\n",
 		   program_name, switch_char, arg);
-	  usage ((char *) 0);
+	  usage ();
 	}
     }
 }
@@ -1821,17 +1828,13 @@ cleanup ()
 /* Complain, print a usage message, and die. */
 
 static void
-usage (reason)
-     char *reason;
+usage ()
 {
-  if (reason)
-    fprintf (stderr, "%s: %s\n", program_name, reason);
-
   fprintf (stderr, "\
 Usage: %s [+PAGE] [-COLUMN] [-abcdfFmrtv] [-e[in-tab-char[in-tab-width]]]\n\
        [-h header] [-i[out-tab-char[out-tab-width]]] [-l page-length]\n\
        [-n[number-separator[digits]]] [-o left-margin]\n\
-       [-s[column-separator]] [-w page-width] [file...]\n",
+       [-s[column-separator]] [-w page-width] [--help] [--version] [file...]\n",
 	   program_name);
   exit (2);
 }

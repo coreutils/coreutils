@@ -22,8 +22,12 @@
 #include <sys/types.h>
 #include "system.h"
 #include "linebuffer.h"
+#include "version.h"
 
 #define min(x, y) ((x) < (y) ? (x) : (y))
+
+/* The name this program was run with. */
+char *program_name;
 
 /* If nonzero, print lines that are found only in file 1. */
 static int only_file_1;
@@ -34,8 +38,18 @@ static int only_file_2;
 /* If nonzero, print lines that are found in both files. */
 static int both;
 
-/* The name this program was run with. */
-char *program_name;
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
+
+static struct option const long_options[] =
+{
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
+  {0, 0, 0, 0}
+};
 
 void error ();
 static int compare_files ();
@@ -55,9 +69,12 @@ main (argc, argv)
   only_file_2 = 1;
   both = 1;
 
-  while ((c = getopt (argc, argv, "123")) != EOF)
+  while ((c = getopt_long (argc, argv, "123", long_options, (int *) 0)) != EOF)
     switch (c)
       {
+      case 0:
+	break;
+
       case '1':
 	only_file_1 = 0;
 	break;
@@ -73,6 +90,12 @@ main (argc, argv)
       default:
 	usage ();
       }
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
 
   if (optind + 2 != argc)
     usage ();
@@ -216,6 +239,7 @@ writeline (line, stream, class)
 static void
 usage ()
 {
-  fprintf (stderr, "Usage: %s [-123] file1 file2\n", program_name);
+  fprintf (stderr, "Usage: %s [-123] [--help] [--version] file1 file2\n",
+	   program_name);
   exit (1);
 }

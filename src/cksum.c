@@ -103,13 +103,31 @@ main ()
 #else /* !CRCTAB */
 
 #include <stdio.h>
+#include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "version.h"
 
 /* Number of bytes to read at once.  */
 #define BUFLEN (1 << 16)
 
 void error ();
+
+/* The name this program was run with.  */
+char *program_name;
+
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
+
+static struct option const long_options[] =
+{
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
+  {0, 0, 0, 0}
+};
 
 static unsigned long const crctab[256] =
 {
@@ -166,9 +184,6 @@ static unsigned long const crctab[256] =
   0x933EB0BB, 0x97FFAD0C, 0xAFB010B1, 0xAB710D06, 0xA6322BDF,
   0xA2F33668, 0xBCB4666D, 0xB8757BDA, 0xB5365D03, 0xB1F740B4
 };
-
-/* The name this program was run with.  */
-char *program_name;
 
 /* Nonzero if any of the files read were the standard input. */
 static int have_read_stdin;
@@ -244,27 +259,52 @@ cksum (file, print_name)
   return 0;
 }
 
+static void
+usage ()
+{
+  fprintf (stderr, "\
+Usage: %s [--help] [--version] [file...]\n", program_name);
+  exit (1);
+}
+
 void
 main (argc, argv)
      int argc;
      char **argv;
 {
+  int i, c;
   int errors = 0;
 
   program_name = argv[0];
   have_read_stdin = 0;
 
-  if (argc == 1)
+  while ((c = getopt_long (argc, argv, "", long_options, (int *) 0)) != EOF)
+    {
+      switch (c)
+	{
+	case 0:
+	  break;
+
+	default:
+	  usage ();
+	}
+    }
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
+
+  if (optind >= argc)
     {
       if (cksum ("-", 0) < 0)
 	errors = 1;
     }
   else
     {
-      int optind;
-
-      for (optind = 1; optind < argc; ++optind)
-	if (cksum (argv[optind], 1) < 0)
+      for (i = optind; i < argc; i++)
+	if (cksum (argv[i], 1) < 0)
 	  errors = 1;
     }
 

@@ -23,6 +23,7 @@
 #include <sys/types.h>
 #include <getopt.h>
 #include "system.h"
+#include "version.h"
 
 static int bsd_sum_file ();
 static int sysv_sum_file ();
@@ -38,11 +39,27 @@ static int have_read_stdin;
 /* Right-rotate 32-bit integer variable C. */
 #define ROTATE_RIGHT(c) if ((c) & 01) (c) = ((c) >>1) + 0x8000; else (c) >>= 1;
 
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
+
 static struct option const longopts[] =
 {
   {"sysv", no_argument, NULL, 's'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {NULL, 0, NULL, 0}
 };
+
+static void
+usage ()
+{
+  fprintf (stderr, "\
+Usage: %s [-rs] [--help] [--version] [--sysv] [file...]\n", program_name);
+  exit (1);
+}
 
 void
 main (argc, argv)
@@ -61,6 +78,9 @@ main (argc, argv)
     {
       switch (optc)
 	{
+	case 0:
+	  break;
+
 	case 'r':		/* For SysV compatibility. */
 	  sum_func = bsd_sum_file;
 	  break;
@@ -69,12 +89,16 @@ main (argc, argv)
 	  sum_func = sysv_sum_file;
 	  break;
 
-	case '?':
-	  fprintf (stderr, "\
-Usage: %s [-rs] [--sysv] [file...]\n", argv[0]);
-	  exit (1);
+	default:
+	  usage ();
 	}
     }
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
 
   files_given = argc - optind;
   if (files_given == 0)

@@ -29,6 +29,7 @@
 #include <sys/ioctl.h>
 #endif
 #include "system.h"
+#include "version.h"
 
 #define max(h,i) ((h) > (i) ? (h) : (i))
 
@@ -82,7 +83,7 @@ usage (reason)
   fprintf (stderr, "\
 Usage: %s [-benstuvAET] [--number] [--number-nonblank] [--squeeze-blank]\n\
        [--show-nonprinting] [--show-ends] [--show-tabs] [--show-all]\n\
-       [file...]\n",
+       [--help] [--version] [file...]\n",
 	   program_name);
 
   exit (2);
@@ -132,7 +133,15 @@ main (argc, argv)
   int mark_line_ends = 0;
   int quote = 0;
   int output_tabs = 1;
+
+/* If non-zero, call cat, otherwise call simple_cat to do the actual work. */
   int options = 0;
+
+  /* If non-zero, display usage information and exit.  */
+  static int flag_help;
+
+  /* If non-zero, print the version on standard error.  */
+  static int flag_version;
 
   static struct option const long_options[] =
   {
@@ -143,6 +152,8 @@ main (argc, argv)
     {"show-ends", no_argument, NULL, 'E'},
     {"show-tabs", no_argument, NULL, 'T'},
     {"show-all", no_argument, NULL, 'A'},
+    {"help", no_argument, &flag_help, 1},
+    {"version", no_argument, &flag_version, 1},
     {NULL, 0, NULL, 0}
   };
 
@@ -153,52 +164,62 @@ main (argc, argv)
   while ((c = getopt_long (argc, argv, "benstuvAET", long_options, (int *) 0))
 	 != EOF)
     {
-      options++;
       switch (c)
 	{
+	case 0:
+	  break;
+
 	case 'b':
+	  ++options;
 	  numbers = 1;
 	  numbers_at_empty_lines = 0;
 	  break;
 
 	case 'e':
+	  ++options;
 	  mark_line_ends = 1;
 	  quote = 1;
 	  break;
 
 	case 'n':
+	  ++options;
 	  numbers = 1;
 	  break;
 
 	case 's':
+	  ++options;
 	  squeeze_empty_lines = 1;
 	  break;
 
 	case 't':
+	  ++options;
 	  output_tabs = 0;
 	  quote = 1;
 	  break;
 
 	case 'u':
 	  /* We provide the -u feature unconditionally.  */
-	  options--;
 	  break;
 
 	case 'v':
+	  ++options;
 	  quote = 1;
 	  break;
 
 	case 'A':
+	  ++options;
 	  quote = 1;
 	  mark_line_ends = 1;
 	  output_tabs = 0;
 	  break;
 
 	case 'E':
+	  ++options;
 	  mark_line_ends = 1;
 	  break;
 
 	case 'T':
+	  ++options;
 	  output_tabs = 0;
 	  break;
 
@@ -206,6 +227,12 @@ main (argc, argv)
 	  usage ((char *) 0);
 	}
     }
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
 
   output_desc = 1;
 
@@ -278,8 +305,9 @@ main (argc, argv)
 	  goto contin;
 	}
 
-      /* Select which version of `cat' to use. If any options (more than -u)
-	 were specified, use `cat', otherwise use `simple_cat'.  */
+      /* Select which version of `cat' to use. If any options (more than -u,
+	 --version, or --help) were specified, use `cat', otherwise use
+	 `simple_cat'.  */
 
       if (options == 0)
 	{

@@ -24,6 +24,7 @@
 #include <regex.h>
 #include "linebuffer.h"
 #include "system.h"
+#include "version.h"
 
 #ifndef TRUE
 #define TRUE   1
@@ -47,7 +48,26 @@ enum section
 {
   Header, Body, Footer, Text
 };
-
+
+char *xmalloc ();
+char *xrealloc ();
+void error ();
+
+static enum section check_section ();
+static int build_type_arg ();
+static int nl_file ();
+static void usage ();
+static void process_file ();
+static void proc_header ();
+static void proc_body ();
+static void proc_footer ();
+static void proc_text ();
+static void print_lineno ();
+static void build_print_fmt ();
+
+/* The name this program was run with. */
+char *program_name;
+
 /* Format of body lines (-b).  */
 static char *body_type = "t";
 
@@ -126,28 +146,15 @@ static enum number_format lineno_format = FORMAT_RIGHT_NOLZ;
 /* Current print line number.  */
 static int line_no;
 
-/* The name this program was run with. */
-char *program_name;
-
 /* Nonzero if we have ever read standard input. */
 static int have_read_stdin;
 
-char *xmalloc ();
-char *xrealloc ();
-void error ();
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
 
-static enum section check_section ();
-static int build_type_arg ();
-static int nl_file ();
-static void usage ();
-static void process_file ();
-static void proc_header ();
-static void proc_body ();
-static void proc_footer ();
-static void proc_text ();
-static void print_lineno ();
-static void build_print_fmt ();
-
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
+
 static struct option const longopts[] =
 {
   {"header-numbering", required_argument, NULL, 'h'},
@@ -161,6 +168,8 @@ static struct option const longopts[] =
   {"number-width", required_argument, NULL, 'w'},
   {"number-format", required_argument, NULL, 'n'},
   {"section-delimiter", required_argument, NULL, 'd'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -179,6 +188,9 @@ main (argc, argv)
     {
       switch (c)
 	{
+	case 0:
+	  break;
+
 	case 'h':
 	  if (build_type_arg (&header_type, &header_regex) != TRUE)
 	    usage ();
@@ -249,6 +261,12 @@ main (argc, argv)
 	  break;
 	}
     }
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
 
   /* Initialize the section delimiters.  */
   c = strlen (section_del);
@@ -541,7 +559,7 @@ Usage: %s [-h header-style] [-b body-style] [-f footer-style] [-p] [-d cc]\n\
        [--first-page=number] [--page-increment=number] [--no-renumber]\n\
        [--join-blank-lines=number] [--number-separator=string]\n\
        [--number-width=number] [--number-format={ln,rn,rz}]\n\
-       [--section-delimiter=cc] [file...]\n",
+       [--section-delimiter=cc] [--help] [--version] [file...]\n",
 	   program_name);
   exit (2);
 }

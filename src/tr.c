@@ -26,6 +26,7 @@
 #include <sys/types.h>
 #include "getopt.h"
 #include "system.h"
+#include "version.h"
 
 #ifndef LONG_MAX
 #define LONG_MAX 0x7FFFFFFF
@@ -286,12 +287,20 @@ static SET_TYPE in_delete_set[N_CHARS];
    two specification strings and the delete switch is not given. */
 static char xlate[N_CHARS];
 
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
+
 static struct option const long_options[] =
 {
   {"complement", no_argument, NULL, 'c'},
   {"delete", no_argument, NULL, 'd'},
   {"squeeze-repeats", no_argument, NULL, 's'},
   {"truncate-set1", no_argument, NULL, 't'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -300,7 +309,7 @@ usage ()
 {
   fprintf (stderr, "\
 Usage: %s [-cdst] [--complement] [--delete] [--squeeze-repeats]\n\
-       [--truncate-set1] string1 [string2]\n",
+       [--truncate-set1] [--help] [--version] string1 [string2]\n",
 	   program_name);
   exit (2);
 }
@@ -1655,6 +1664,12 @@ main (argc, argv)
 	  break;
 	}
     }
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
 
   posix_pedantic = (getenv ("POSIXLY_CORRECT") != NULL);
 

@@ -64,6 +64,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "version.h"
 
 char *xmalloc ();
 char *xrealloc ();
@@ -119,6 +120,9 @@ enum operating_mode
   field_mode
 };
 
+/* The name this program was run with. */
+char *program_name;
+
 static enum operating_mode operating_mode;
 
 /* If nonzero,
@@ -131,8 +135,11 @@ static unsigned char delim;
 /* Nonzero if we have ever read standard input. */
 static int have_read_stdin;
 
-/* The name this program was run with. */
-char *program_name;
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
 
 static struct option const longopts[] =
 {
@@ -141,6 +148,8 @@ static struct option const longopts[] =
   {"fields", required_argument, 0, 'f'},
   {"delimiter", required_argument, 0, 'd'},
   {"only-delimited", no_argument, 0, 's'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {0, 0, 0, 0}
 };
 
@@ -172,6 +181,9 @@ main (argc, argv)
     {
       switch (optc)
 	{
+	case 0:
+	  break;
+
 	case 'b':
 	case 'c':
 	  /* Build the byte list. */
@@ -211,6 +223,12 @@ main (argc, argv)
 	  usage ();
 	}
     }
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
 
   if (operating_mode == undefined_mode)
     usage ();
@@ -570,10 +588,11 @@ static void
 usage ()
 {
   fprintf (stderr, "\
-Usage: %s {-b byte-list,--bytes=byte-list} [-n] [file...]\n\
-       %s {-c character-list,--characters=character-list} [file...]\n\
-       %s {-f field-list,--fields=field-list} [-d delim] [-s]\n\
-       [--delimiter=delim] [--only-delimited] [file...]\n",
+Usage: %s {-b byte-list,--bytes=byte-list} [-n] [file...] <options> \n\
+       %s {-c character-list,--characters=character-list} <options> [file...]\n\
+       %s {-f field-list,--fields=field-list} [-d delim] [-s] \n\
+       [--delimiter=delim] [--only-delimited] <options> [file...]\n\
+  Options: [--help] [--version]\n",
 	   program_name, program_name, program_name);
   exit (2);
 }

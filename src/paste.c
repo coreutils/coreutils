@@ -42,6 +42,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "version.h"
 
 void error ();
 char *xmalloc ();
@@ -77,10 +78,18 @@ static char *delims;
 /* A pointer to the character after the end of `delims'. */
 static char *delim_end;
 
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
+
 static struct option const longopts[] =
 {
   {"serial", no_argument, 0, 's'},
   {"delimiters", required_argument, 0, 'd'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {0, 0, 0, 0}
 };
 
@@ -104,6 +113,9 @@ main (argc, argv)
     {
       switch (optc)
 	{
+	case 0:
+	  break;
+
 	case 'd':
 	  /* Delimiter character(s). */
 	  if (optarg[0] == '\0')
@@ -119,6 +131,12 @@ main (argc, argv)
 	  usage ();
 	}
     }
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
 
   if (optind == argc)
     argv[argc++] = "-";
@@ -453,7 +471,7 @@ usage ()
 {
   fprintf (stderr, "\
 Usage: %s [-s] [-d delim-list] [--serial] [--delimiters=delim-list]\n\
-       [file...]\n",
+       [--help] [--version] [file...]\n",
 	   program_name);
   exit (1);
 }

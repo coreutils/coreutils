@@ -37,6 +37,7 @@ char *alloca ();
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "version.h"
 
 #if defined(__GNUC__) || defined(STDC_HEADERS)
 #include <float.h>
@@ -137,6 +138,9 @@ struct tspec
     void (*print_function) ();
     char *fmt_string;
   };
+
+/* The name this program was run with.  */
+char *program_name;
 
 /* Convert the number of 8-bit bytes of a binary representation to
    the number of characters (digits + sign if the type is signed)
@@ -267,6 +271,12 @@ static enum size_spec integral_type_size[MAX_INTEGRAL_TYPE_SIZE + 1];
 #define MAX_FP_TYPE_SIZE sizeof(LONG_DOUBLE)
 static enum size_spec fp_type_size[MAX_FP_TYPE_SIZE + 1];
 
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
+
 static struct option const long_options[] =
 {
   /* POSIX options.  */
@@ -280,11 +290,10 @@ static struct option const long_options[] =
   {"compatible", no_argument, NULL, 'C'},
   {"strings", optional_argument, NULL, 's'},
   {"width", optional_argument, NULL, 'w'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {NULL, 0, NULL, 0}
 };
-
-/* The name this program was run with.  */
-char *program_name;
 
 static void
 usage ()
@@ -293,7 +302,7 @@ usage ()
 Usage: %s [-abcdfhiloxv] [-s[bytes]] [-w[bytes]] [-A radix] [-j bytes]\n\
        [-N bytes] [-t type] [--skip-bytes=bytes] [--address-radix=radix]\n\
        [--read-bytes=bytes] [--format=type] [--output-duplicates]\n\
-       [--strings[=bytes]] [--width[=bytes]] [file...]\n",
+       [--strings[=bytes]] [--width[=bytes]] [--help] [--version] [file...]\n",
 	   program_name);
   exit (1);
 }
@@ -1659,6 +1668,9 @@ main (argc, argv)
 
       switch (c)
 	{
+	case 0:
+	  break;
+
 	case 'A':
 	  switch (optarg[0])
 	    {
@@ -1775,6 +1787,12 @@ main (argc, argv)
 	  break;
 	}
     }
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
 
   if (flag_dump_strings && n_specs > 0)
     error (2, 0, "no type may be specified when dumping strings");

@@ -42,6 +42,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "version.h"
 
 /* The number of bytes added at a time to the amount of memory
    allocated for the output line. */
@@ -61,6 +62,9 @@ static void parse_tabstops ();
 static void unexpand ();
 static void usage ();
 static void validate_tabstops ();
+
+/* The name this program was run with. */
+char *program_name;
 
 /* If nonzero, convert blanks even after nonblank characters have been
    read on the line. */
@@ -93,13 +97,18 @@ static int have_read_stdin;
 /* Status to return to the system. */
 static int exit_status;
 
-/* The name this program was run with. */
-char *program_name;
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
 
 static struct option const longopts[] =
 {
   {"tabs", required_argument, NULL, 't'},
   {"all", no_argument, NULL, 'a'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -123,6 +132,9 @@ main (argc, argv)
     {
       switch (c)
 	{
+	case 0:
+	  break;
+
 	case '?':
 	  usage ();
 	case 'a':
@@ -143,6 +155,12 @@ main (argc, argv)
 	  break;
 	}
     }
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
 
   add_tabstop (tabval);
 
@@ -418,7 +436,7 @@ usage ()
 {
   fprintf (stderr, "\
 Usage: %s [-tab1[,tab2[,...]]] [-t tab1[,tab2[,...]]] [-a]\n\
-       [--tabs=tab1[,tab2[,...]]] [--all] [file...]\n",
+       [--tabs=tab1[,tab2[,...]]] [--all] [--help] [--version] [file...]\n",
 	   program_name);
   exit (1);
 }

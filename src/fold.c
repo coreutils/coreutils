@@ -24,9 +24,13 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "version.h"
 
 char *xrealloc ();
 void error ();
+
+/* The name this program was run with. */
+char *program_name;
 
 static int adjust_column ();
 static int fold_file ();
@@ -40,17 +44,32 @@ static int count_bytes;
 /* If nonzero, at least one of the files we read was standard input. */
 static int have_read_stdin;
 
-/* The name this program was run with. */
-char *program_name;
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
 
 static struct option const longopts[] =
 {
   {"bytes", no_argument, NULL, 'b'},
   {"spaces", no_argument, NULL, 's'},
   {"width", required_argument, NULL, 'w'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {NULL, 0, NULL, 0}
 };
 
+static void
+usage ()
+{
+  fprintf (stderr, "\
+Usage: %s [-bs] [-w width] [--bytes] [--spaces] [--width=width]\n\
+       [--help] [--version] [file...]\n",
+	   program_name);
+  exit (1);
+}
+
 void
 main (argc, argv)
      int argc;
@@ -69,6 +88,9 @@ main (argc, argv)
     {
       switch (optc)
 	{
+	case 0:
+	  break;
+
 	case 'b':		/* Count bytes rather than columns. */
 	  count_bytes = 1;
 	  break;
@@ -84,12 +106,15 @@ main (argc, argv)
 	  break;
 
 	default:
-	  fprintf (stderr, "\
-Usage: %s [-bs] [-w width] [--bytes] [--spaces] [--width=width] [file...]\n",
-		   argv[0]);
-	  exit (1);
+	  usage ();
 	}
     }
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
 
   if (argc == optind)
     errs |= fold_file ("-", width);

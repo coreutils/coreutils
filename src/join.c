@@ -24,6 +24,7 @@
 #include <sys/types.h>
 #include <getopt.h>
 #include "system.h"
+#include "version.h"
 
 char *xmalloc ();
 char *xrealloc ();
@@ -66,6 +67,9 @@ struct seq
   struct line *lines;
 };
 
+/* The name this program was run with. */
+char *program_name;
+
 /* If nonzero, print unpairable lines in file 1 or 2. */
 static int print_unpairables_1, print_unpairables_2;
 
@@ -89,8 +93,23 @@ static struct outlist *outlist_end;
    tab character. */
 static char tab;
 
-/* The name this program was run with. */
-char *program_name;
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
+
+/* When using getopt_long_only, no long option can start with
+   a character that is a short option. */
+static struct option const longopts[] =
+{
+  {"j", required_argument, NULL, 'j'},
+  {"j1", required_argument, NULL, '1'},
+  {"j2", required_argument, NULL, '2'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
+  {NULL, 0, NULL, 0}
+};
 
 /* Fill in the `fields' structure in LINE. */
 
@@ -546,16 +565,6 @@ add_field_list (str)
   return added;
 }
 
-/* When using getopt_long_only, no long option can start with
-   a character that is a short option. */
-static struct option const longopts[] =
-{
-  {"j", required_argument, NULL, 'j'},
-  {"j1", required_argument, NULL, '1'},
-  {"j2", required_argument, NULL, '2'},
-  {NULL, 0, NULL, 0}
-};
-
 void
 main (argc, argv)
      int argc;
@@ -574,6 +583,9 @@ main (argc, argv)
     {
       switch (optc)
 	{
+	case 0:
+	  break;
+
 	case 'a':
 	  val = atoi (optarg);
 	  if (val == 1)
@@ -647,6 +659,12 @@ main (argc, argv)
 	}
       prev_optc = optc;
     }
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
   
   if (nfiles != 2)
     usage ();

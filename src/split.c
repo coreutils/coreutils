@@ -25,6 +25,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "version.h"
 
 char *xmalloc ();
 void error ();
@@ -38,7 +39,7 @@ static void cwrite ();
 static void lines_split ();
 static void next_file_name ();
 
-/* Name under which this program was invoked.  */
+/* The name this program was run with. */
 char *program_name;
 
 /* Base name of output files.  */
@@ -64,7 +65,23 @@ static int input_desc;
 
 /* Descriptor on which output file is open.  */
 static int output_desc;
-
+
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
+
+static struct option const longopts[] =
+{
+  {"bytes", required_argument, NULL, 'b'},
+  {"lines", required_argument, NULL, 'l'},
+  {"line-bytes", required_argument, NULL, 'C'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
+  {NULL, 0, NULL, 0}
+};
+
 static void
 usage (reason)
     char *reason;
@@ -74,18 +91,10 @@ usage (reason)
   fprintf (stderr, "\
 Usage: %s [-lines] [-l lines] [-b bytes[bkm]] [-C bytes[bkm]]\n\
        [--lines=lines] [--bytes=bytes[bkm]] [--line-bytes=bytes[bkm]]\n\
-       [infile [outfile-prefix]]\n",
+       [--help] [--version] [infile [outfile-prefix]]\n",
 	   program_name);
   exit (2);
 }
-
-static struct option const longopts[] =
-{
-  {"bytes", required_argument, NULL, 'b'},
-  {"lines", required_argument, NULL, 'l'},
-  {"line-bytes", required_argument, NULL, 'C'},
-  {NULL, 0, NULL, 0}
-};
 
 void
 main (argc, argv)
@@ -123,6 +132,9 @@ main (argc, argv)
 
       switch (c)
 	{
+	case 0:
+	  break;
+
 	case 'b':
 	  if (split_type != type_undef)
 	    usage ("cannot split in more than one way");
@@ -171,6 +183,12 @@ main (argc, argv)
 	  usage ((char *)0);
 	}
     }
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
 
   /* Handle default case.  */
   if (split_type == type_undef)

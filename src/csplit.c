@@ -24,6 +24,7 @@
 #include <signal.h>
 #include "regex.h"
 #include "system.h"
+#include "version.h"
 
 #ifdef STDC_HEADERS
 #include <stdlib.h>
@@ -118,6 +119,9 @@ struct buffer_record
   struct buffer_record *next;
 };
 
+/* The name this program was run with. */
+char *program_name;
+
 /* Input file descriptor. */
 static int input_desc = 0;
 
@@ -179,8 +183,23 @@ static struct control *controls;
 /* Number of elements in `controls'. */
 static unsigned control_used;
 
-/* The name this program was run with. */
-char *program_name;
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
+
+static struct option const longopts[] =
+{
+  {"digits", required_argument, NULL, 'n'},
+  {"quiet", no_argument, NULL, 's'},
+  {"silent", no_argument, NULL, 's'},
+  {"keep-files", no_argument, NULL, 'k'},
+  {"prefix", required_argument, NULL, 'f'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
+  {NULL, 0, NULL, 0}
+};
 
 /* Allocate N bytes of memory dynamically, with error checking.  */
 
@@ -1191,16 +1210,6 @@ interrupt_handler ()
   cleanup ();
 }
 
-static struct option const longopts[] =
-{
-  {"digits", required_argument, NULL, 'n'},
-  {"quiet", no_argument, NULL, 's'},
-  {"silent", no_argument, NULL, 's'},
-  {"keep-files", no_argument, NULL, 'k'},
-  {"prefix", required_argument, NULL, 'f'},
-  {NULL, 0, NULL, 0}
-};
-
 void
 main (argc, argv)
      int argc;
@@ -1254,6 +1263,9 @@ main (argc, argv)
 	 != EOF)
     switch (optc)
       {
+      case 0:
+	break;
+
       case 'f':
 	prefix = optarg;
 	break;
@@ -1274,6 +1286,12 @@ main (argc, argv)
       default:
 	usage ();
       }
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
 
   if (optind >= argc - 1)
     usage ();
@@ -1300,7 +1318,8 @@ usage ()
 {
   fprintf (stderr, "\
 Usage: %s [-sk] [-f prefix] [-n digits] [--prefix=prefix]\n\
-       [--digits=digits] [--quiet] [--silent] [--keep-files] file pattern...\n",
+       [--digits=digits] [--quiet] [--silent] [--keep-files]\n\
+       [--help] [--version] file pattern...\n",
 	   program_name);
   exit (1);
 }

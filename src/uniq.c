@@ -25,6 +25,7 @@
 #include <sys/types.h>
 #include "system.h"
 #include "linebuffer.h"
+#include "version.h"
 
 #define min(x, y) ((x) < (y) ? (x) : (y))
 
@@ -35,6 +36,9 @@ static int different ();
 static void check_file ();
 static void usage ();
 static void writeline ();
+
+/* The name this program was run with. */
+char *program_name;
 
 /* Number of fields to skip on each line when doing comparisons. */
 static int skip_fields;
@@ -65,8 +69,11 @@ enum output_mode
 /* Which lines to output. */
 static enum output_mode mode;
 
-/* The name this program was run with. */
-char *program_name;
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
 
 static struct option const longopts[] =
 {
@@ -76,6 +83,8 @@ static struct option const longopts[] =
   {"skip-fields", required_argument, NULL, 'f'},
   {"skip-chars", required_argument, NULL, 's'},
   {"check-chars", required_argument, NULL, 'w'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -99,6 +108,9 @@ main (argc, argv)
     {
       switch (optc)
 	{
+	case 0:
+	  break;
+
 	case '0':
 	case '1':
 	case '2':
@@ -140,6 +152,12 @@ main (argc, argv)
 	  usage ();
 	}
     }
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
 
   while (optind < argc && argv[optind][0] == '+')
     skip_chars = atoi (argv[optind++]);
@@ -314,7 +332,7 @@ usage ()
 Usage: %s [-cdu] [-f skip-fields] [-s skip-chars] [-w check-chars]\n\
        [-#skip-fields] [+#skip-chars] [--count] [--repeated] [--unique]\n\
        [--skip-fields=skip-fields] [--skip-chars=skip-chars]\n\
-       [--check-chars=check-chars] [infile] [outfile]\n",
+       [--check-chars=check-chars] [--help] [--version] [infile] [outfile]\n",
 	   program_name);
   exit (1);
 }

@@ -22,6 +22,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "version.h"
 
 /* Size of atomic reads. */
 #define BUFFER_SIZE (16 * 1024)
@@ -32,6 +33,9 @@ static void wc ();
 static void wc_file ();
 static void write_counts ();
 
+/* The name this program was run with. */
+char *program_name;
+
 /* Cumulative number of lines, words, and chars in all files so far. */
 static unsigned long total_lines, total_words, total_chars;
 
@@ -41,11 +45,14 @@ static int print_lines, print_words, print_chars;
 /* Nonzero if we have ever read the standard input. */
 static int have_read_stdin;
 
-/* The name this program was run with. */
-char *program_name;
-
 /* The error code to return to the system. */
 static int exit_status;
+
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
 
 static struct option const longopts[] =
 {
@@ -53,8 +60,20 @@ static struct option const longopts[] =
   {"chars", no_argument, NULL, 'c'},
   {"lines", no_argument, NULL, 'l'},
   {"words", no_argument, NULL, 'w'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {NULL, 0, NULL, 0}
 };
+
+static void
+usage ()
+{
+  fprintf (stderr, "\
+Usage: %s [-clw] [--bytes] [--chars] [--lines] [--words]\n\
+       [--help] [--version] [file...]\n",
+	   program_name);
+  exit (1);
+}
 
 void
 main (argc, argv)
@@ -72,6 +91,9 @@ main (argc, argv)
   while ((optc = getopt_long (argc, argv, "clw", longopts, (int *) 0)) != EOF)
     switch (optc)
       {
+      case 0:
+	break;
+
       case 'c':
 	print_chars = 1;
 	break;
@@ -85,10 +107,14 @@ main (argc, argv)
 	break;
 
       default:
-	fprintf (stderr, "\
-Usage: %s [-clw] [--bytes] [--chars] [--lines] [--words] [file...]\n", argv[0]);
-	exit (1);
+	usage ();
       }
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
 
   if (print_lines + print_words + print_chars == 0)
     print_lines = print_words = print_chars = 1;

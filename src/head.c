@@ -37,6 +37,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "version.h"
 
 /* Number of lines/chars/blocks to head. */
 #define DEFAULT_NUMBER 10
@@ -75,6 +76,12 @@ char *program_name;
 /* Have we ever read standard input?  */
 static int have_read_stdin;
 
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
+
 static struct option const long_options[] =
 {
   {"bytes", required_argument, NULL, 'c'},
@@ -82,6 +89,8 @@ static struct option const long_options[] =
   {"quiet", no_argument, NULL, 'q'},
   {"silent", no_argument, NULL, 'q'},
   {"verbose", no_argument, NULL, 'v'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -156,6 +165,9 @@ main (argc, argv)
     {
       switch (c)
 	{
+	case 0:
+	  break;
+
 	case 'c':
 	  unit_size = 1;
 	  parse_unit (optarg);
@@ -180,6 +192,12 @@ main (argc, argv)
 	  usage ();
 	}
     }
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
 
   if (number == -1)
     number = DEFAULT_NUMBER;
@@ -368,7 +386,8 @@ usage ()
 {
   fprintf (stderr, "\
 Usage: %s [-c N[bkm]] [-n N] [-qv] [--bytes=N[bkm]] [--lines=N]\n\
-       [--quiet] [--silent] [--verbose] [file...]\n\
-       %s [-Nbcklmqv] [file...]\n", program_name, program_name);
+       [--quiet] [--silent] [--verbose] [--help] [--version] [file...]\n\
+       %s [-Nbcklmqv] [--help] [--version] [file...]\n",
+       program_name, program_name);
   exit (1);
 }

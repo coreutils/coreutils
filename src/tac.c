@@ -41,6 +41,7 @@ tac -r -s '.\|
 #include <signal.h>
 #include <regex.h>
 #include "system.h"
+#include "version.h"
 
 #ifndef STDC_HEADERS
 char *malloc ();
@@ -101,13 +102,31 @@ static unsigned buffer_size;
 /* The compiled regular expression representing `separator'. */
 static struct re_pattern_buffer compiled_separator;
 
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
+
 static struct option const longopts[] =
 {
   {"before", no_argument, &separator_ends_record, 0},
   {"regex", no_argument, &sentinel_length, 0},
   {"separator", required_argument, NULL, 's'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {NULL, 0, NULL, 0}
 };
+
+static void
+usage ()
+{
+  fprintf (stderr, "\
+Usage: %s [-br] [-s separator] [--before] [--regex] [--separator=separator]\n\
+      [--help] [--version] [file...]\n",
+	   program_name);
+  exit (1);
+}
 
 void
 main (argc, argv)
@@ -143,13 +162,15 @@ main (argc, argv)
 	    error (1, 0, "separator cannot be empty");
 	  break;
 	default:
-	  fprintf (stderr, "\
-Usage: %s [-br] [-s separator] [--before] [--regex] [--separator=separator]\n\
-       [file...]\n",
-		   program_name);
-	  exit (1);
+	  usage ();
 	}
     }
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
 
   if (sentinel_length == 0)
     {
