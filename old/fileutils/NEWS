@@ -1,4 +1,7 @@
 Changes in release 4.1:
+[4.0h]
+* cp --one-file-system (-x) no longer crosses filesystem boundaries.
+* touch can once again operate on directories
 [4.0g]
 * New large-file support for AIX and HP-UX, and for cross-compiles.
 * shred's default options are now suitable for devices, not files, since
