@@ -22,6 +22,8 @@ struct mount_entry
   char *me_mountdir;		/* Mount point directory pathname. */
   char *me_type;		/* "nfs", "4.2", etc. */
   dev_t me_dev;			/* Device number of me_mountdir. */
+  unsigned int me_dummy : 1;	/* Nonzero for dummy filesystems. */
+  unsigned int me_remote : 1;	/* Nonzero for remote fileystems. */
   struct mount_entry *me_next;
 };
 
@@ -33,11 +35,13 @@ struct mount_entry
 # endif
 #endif
 
-struct mount_entry *read_filesystem_list PARAMS ((int need_fs_type,
-						  int all_fs));
+struct mount_entry *read_filesystem_list PARAMS ((int need_fs_type));
 
-/* In most environments, by default, a filesystem type is remote if it
-   begins with "nfs".  This allows variants like "nfs3".  */
-#ifndef REMOTE_FS_TYPE
-# define REMOTE_FS_TYPE(t) (!strncmp (t, "nfs", 3))
+#ifndef ME_DUMMY
+# define ME_DUMMY(fs_name, fs_type) \
+    (!strcmp (fs_type, "auto") || !strcmp (fs_type, "ignore"))
+#endif
+
+#ifndef ME_REMOTE
+# define ME_REMOTE(fs_name, fs_type) (strchr (fs_name, ':') != 0)
 #endif
