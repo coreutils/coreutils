@@ -140,7 +140,7 @@ utilities.
 * Working context::             pwd stty printenv tty
 * User information::            id logname whoami groups users who
 * System context::              date uname hostname
-* Modified command invocation:: env nice nohup su
+* Modified command invocation:: chroot env nice nohup su
 * Delaying::                    sleep
 * Numeric operations::          factor seq
 
