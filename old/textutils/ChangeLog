@@ -5,6 +5,15 @@
 
 2001-02-18  Paul Eggert  <eggert@twinsun.com>
 
+	Fix a race condition: freed storage accessed during a signal handler.
+
+	* src/sort.c (struct tempnode.next): Now volatile.
+	(zaptemp): Free the file name after removing it from the temp list,
+	not before, because a signal can arrive between the two actions
+	and cleanup () traverses the list.
+
+2001-02-18  Paul Eggert  <eggert@twinsun.com>
+
 	Check for input size, and do not overallocate memory.
 	Also check for memory quotas.
 
