@@ -1,3 +1,7 @@
+1999-10-04  Jim Meyering  <meyering@ascend.com>
+
+	* jm-macros.m4: Don't require autoconf-2.14.1.
+
 1999-09-22  Paul Eggert  <eggert@twinsun.com>
 
 	* largefile.m4 (AC_SYS_LARGEFILE_FLAGS): Work around GCC
