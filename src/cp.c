@@ -785,9 +785,9 @@ decode_preserve_arg (char const *arg, struct cp_options *x, int on_off)
       char *comma = strchr (s, ',');
       enum File_attribute val;
 
-      /* put a NUL in its place */
+      /* If we found a comma, put a NUL in its place and advance.  */
       if (comma)
-	*comma = 0;
+	*comma++ = 0;
 
       /* process S.  */
       val = XARGMATCH ("--preserve", s, preserve_args, preserve_vals);
