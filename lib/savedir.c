@@ -102,7 +102,7 @@ savedir (const char *dir, off_t name_size)
 	  || (dp->d_name[1] != '\0'
 	      && (dp->d_name[1] != '.' || dp->d_name[2] != '\0')))
 	{
-	  size_t off_t = (namep - name_space) + NAMLEN (dp) + 2;
+	  off_t size_needed = (namep - name_space) + NAMLEN (dp) + 2;
 
 	  if (size_needed > name_size)
 	    {
