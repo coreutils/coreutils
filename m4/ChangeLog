@@ -1,3 +1,11 @@
+1999-12-07  Jim Meyering  <meyering@ascend.com>
+
+	* perl.m4: Require that File::Compare be available, too.
+	Too many systems seem to lack it.
+
+	* strftime.m4: Add checks for most of the cpp macros tested in
+	GNU's strftime.c.  Prompted by a patch from Paul Eggert.
+
 1999-11-18  Paul Eggert  <eggert@twinsun.com>
 
 	* m4/largefile.m4 (AC_SYS_LARGEFILE_FLAGS): Work around a
