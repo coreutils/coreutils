@@ -245,7 +245,6 @@ mode_create_from_ref (ref_file)
 {
   struct mode_change *change;	/* the only change element */
   struct stat ref_stats;
-  int i;
 
   if (stat (ref_file, &ref_stats))
     return MODE_BAD_REFERENCE;
