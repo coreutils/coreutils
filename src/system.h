@@ -304,4 +304,10 @@ extern int errno;
 # define ST_NBLOCKSIZE 512
 #endif
 
+/* Redirection and wildcarding when done by the utility itself.
+   Generally a noop, but used in particular for native VMS. */
+#ifndef initialize_main
+# define initialize_main(ac, av)
+#endif
+
 #include "sys2.h"
