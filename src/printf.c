@@ -59,20 +59,11 @@ unsigned long strtoul ();
 #endif
 
 #define isodigit(c) ((c) >= '0' && (c) <= '7')
-#define hextobin(c) ((c)>='a'&&(c)<='f' ? (c)-'a'+10 : (c)>='A'&&(c)<='F' ? (c)-'A'+10 : (c)-'0')
+#define hextobin(c) ((c) >= 'a' && (c) <= 'f' ? (c) - 'a' + 10 : \
+		     (c) >= 'A' && (c) <= 'F' ? (c) - 'A' + 10 : (c) - '0')
 #define octtobin(c) ((c) - '0')
 
 char *xmalloc ();
-
-static double xstrtod __P ((char *s));
-static int print_esc __P ((char *escstart));
-static int print_formatted __P ((char *format, int argc, char **argv));
-static long xstrtol __P ((char *s));
-static unsigned long xstrtoul __P ((char *s));
-static void print_direc __P ((char *start, size_t length, int field_width, int precision, char *argument));
-static void print_esc_char __P ((int c));
-static void print_esc_string __P ((char *str));
-static void verify __P ((char *s, char *end));
 
 /* The value to return to the calling program.  */
 static int exit_status;
@@ -125,45 +116,244 @@ ARGUMENTs converted to proper type first.  Variable widths are handled.\n\
   exit (status);
 }
 
-int
-main (int argc, char **argv)
+static void
+verify (const char *s, const char *end)
 {
-  char *format;
-  int args_used;
-
-  program_name = argv[0];
-  setlocale (LC_ALL, "");
-  bindtextdomain (PACKAGE, LOCALEDIR);
-  textdomain (PACKAGE);
-
-  exit_status = 0;
-
-  /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
-  if (getenv ("POSIXLY_CORRECT") == NULL)
-    parse_long_options (argc, argv, "printf", GNU_PACKAGE, VERSION, usage);
-
-  if (argc == 1)
+  if (errno)
     {
-      fprintf (stderr, _("Usage: %s format [argument...]\n"), program_name);
-      exit (1);
+      error (0, errno, "%s", s);
+      exit_status = 1;
+    }
+  else if (*end)
+    {
+      if (s == end)
+	error (0, 0, _("%s: expected a numeric value"), s);
+      else
+	error (0, 0, _("%s: value not completely converted"), s);
+      exit_status = 1;
+    }
+}
+
+static unsigned long
+xstrtoul (const char *s)
+{
+  char *end;
+  unsigned long val;
+
+  errno = 0;
+  val = strtoul (s, &end, 0);
+  verify (s, end);
+  return val;
+}
+
+static long
+xstrtol (const char *s)
+{
+  char *end;
+  long val;
+
+  errno = 0;
+  val = strtol (s, &end, 0);
+  verify (s, end);
+  return val;
+}
+
+static double
+xstrtod (const char *s)
+{
+  char *end;
+  double val;
+
+  errno = 0;
+  val = strtod (s, &end);
+  verify (s, end);
+  return val;
+}
+
+/* Output a single-character \ escape.  */
+
+static void
+print_esc_char (int c)
+{
+  switch (c)
+    {
+    case 'a':			/* Alert. */
+      putchar (7);
+      break;
+    case 'b':			/* Backspace. */
+      putchar (8);
+      break;
+    case 'c':			/* Cancel the rest of the output. */
+      exit (0);
+      break;
+    case 'f':			/* Form feed. */
+      putchar (12);
+      break;
+    case 'n':			/* New line. */
+      putchar (10);
+      break;
+    case 'r':			/* Carriage return. */
+      putchar (13);
+      break;
+    case 't':			/* Horizontal tab. */
+      putchar (9);
+      break;
+    case 'v':			/* Vertical tab. */
+      putchar (11);
+      break;
+    default:
+      putchar (c);
+      break;
+    }
+}
+
+/* Print a \ escape sequence starting at ESCSTART.
+   Return the number of characters in the escape sequence
+   besides the backslash. */
+
+static int
+print_esc (char *escstart)
+{
+  register char *p = escstart + 1;
+  int esc_value = 0;		/* Value of \nnn escape. */
+  int esc_length;		/* Length of \nnn escape. */
+
+  /* \0ooo and \xhhh escapes have maximum length of 3 chars. */
+  if (*p == 'x')
+    {
+      for (esc_length = 0, ++p;
+	   esc_length < 3 && ISXDIGIT (*p);
+	   ++esc_length, ++p)
+	esc_value = esc_value * 16 + hextobin (*p);
+      if (esc_length == 0)
+	error (1, 0, _("missing hexadecimal number in escape"));
+      putchar (esc_value);
+    }
+  else if (*p == '0')
+    {
+      for (esc_length = 0, ++p;
+	   esc_length < 3 && isodigit (*p);
+	   ++esc_length, ++p)
+	esc_value = esc_value * 8 + octtobin (*p);
+      putchar (esc_value);
+    }
+  else if (strchr ("\"\\abcfnrtv", *p))
+    print_esc_char (*p++);
+  else
+    error (1, 0, _("\\%c: invalid escape"), *p);
+  return p - escstart - 1;
+}
+
+/* Print string STR, evaluating \ escapes. */
+
+static void
+print_esc_string (char *str)
+{
+  for (; *str; str++)
+    if (*str == '\\')
+      str += print_esc (str);
+    else
+      putchar (*str);
+}
+
+/* Output a % directive.  START is the start of the directive,
+   LENGTH is its length, and ARGUMENT is its argument.
+   If FIELD_WIDTH or PRECISION is non-negative, they are args for
+   '*' values in those fields. */
+
+static void
+print_direc (char *start, size_t length, int field_width, int precision, char *argument)
+{
+  char *p;		/* Null-terminated copy of % directive. */
+
+  p = xmalloc ((unsigned) (length + 1));
+  strncpy (p, start, length);
+  p[length] = 0;
+
+  switch (p[length - 1])
+    {
+    case 'd':
+    case 'i':
+      if (field_width < 0)
+	{
+	  if (precision < 0)
+	    printf (p, xstrtol (argument));
+	  else
+	    printf (p, precision, xstrtol (argument));
+	}
+      else
+	{
+	  if (precision < 0)
+	    printf (p, field_width, xstrtol (argument));
+	  else
+	    printf (p, field_width, precision, xstrtol (argument));
+	}
+      break;
+
+    case 'o':
+    case 'u':
+    case 'x':
+    case 'X':
+      if (field_width < 0)
+	{
+	  if (precision < 0)
+	    printf (p, xstrtoul (argument));
+	  else
+	    printf (p, precision, xstrtoul (argument));
+	}
+      else
+	{
+	  if (precision < 0)
+	    printf (p, field_width, xstrtoul (argument));
+	  else
+	    printf (p, field_width, precision, xstrtoul (argument));
+	}
+      break;
+
+    case 'f':
+    case 'e':
+    case 'E':
+    case 'g':
+    case 'G':
+      if (field_width < 0)
+	{
+	  if (precision < 0)
+	    printf (p, xstrtod (argument));
+	  else
+	    printf (p, precision, xstrtod (argument));
+	}
+      else
+	{
+	  if (precision < 0)
+	    printf (p, field_width, xstrtod (argument));
+	  else
+	    printf (p, field_width, precision, xstrtod (argument));
+	}
+      break;
+
+    case 'c':
+      printf (p, *argument);
+      break;
+
+    case 's':
+      if (field_width < 0)
+	{
+	  if (precision < 0)
+	    printf (p, argument);
+	  else
+	    printf (p, precision, argument);
+	}
+      else
+	{
+	  if (precision < 0)
+	    printf (p, field_width, argument);
+	  else
+	    printf (p, field_width, precision, argument);
+	}
+      break;
     }
 
-  format = argv[1];
-  argc -= 2;
-  argv += 2;
-
-  do
-    {
-      args_used = print_formatted (format, argc, argv);
-      argc -= args_used;
-      argv += args_used;
-    }
-  while (args_used > 0 && argc > 0);
-
-  if (argc > 0)
-    error (0, 0, _("warning: excess arguments have been ignored"));
-
-  exit (exit_status);
+  free (p);
 }
 
 /* Print the text in FORMAT, using ARGV (with ARGC elements) for
@@ -283,242 +473,43 @@ print_formatted (char *format, int argc, char **argv)
   return save_argc - argc;
 }
 
-/* Print a \ escape sequence starting at ESCSTART.
-   Return the number of characters in the escape sequence
-   besides the backslash. */
-
-static int
-print_esc (char *escstart)
+int
+main (int argc, char **argv)
 {
-  register char *p = escstart + 1;
-  int esc_value = 0;		/* Value of \nnn escape. */
-  int esc_length;		/* Length of \nnn escape. */
+  char *format;
+  int args_used;
 
-  /* \0ooo and \xhhh escapes have maximum length of 3 chars. */
-  if (*p == 'x')
+  program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
+  exit_status = 0;
+
+  /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
+  if (getenv ("POSIXLY_CORRECT") == NULL)
+    parse_long_options (argc, argv, "printf", GNU_PACKAGE, VERSION, usage);
+
+  if (argc == 1)
     {
-      for (esc_length = 0, ++p;
-	   esc_length < 3 && ISXDIGIT (*p);
-	   ++esc_length, ++p)
-	esc_value = esc_value * 16 + hextobin (*p);
-      if (esc_length == 0)
-	error (1, 0, _("missing hexadecimal number in escape"));
-      putchar (esc_value);
-    }
-  else if (*p == '0')
-    {
-      for (esc_length = 0, ++p;
-	   esc_length < 3 && isodigit (*p);
-	   ++esc_length, ++p)
-	esc_value = esc_value * 8 + octtobin (*p);
-      putchar (esc_value);
-    }
-  else if (strchr ("\"\\abcfnrtv", *p))
-    print_esc_char (*p++);
-  else
-    error (1, 0, _("\\%c: invalid escape"), *p);
-  return p - escstart - 1;
-}
-
-/* Output a single-character \ escape.  */
-
-static void
-print_esc_char (int c)
-{
-  switch (c)
-    {
-    case 'a':			/* Alert. */
-      putchar (7);
-      break;
-    case 'b':			/* Backspace. */
-      putchar (8);
-      break;
-    case 'c':			/* Cancel the rest of the output. */
-      exit (0);
-      break;
-    case 'f':			/* Form feed. */
-      putchar (12);
-      break;
-    case 'n':			/* New line. */
-      putchar (10);
-      break;
-    case 'r':			/* Carriage return. */
-      putchar (13);
-      break;
-    case 't':			/* Horizontal tab. */
-      putchar (9);
-      break;
-    case 'v':			/* Vertical tab. */
-      putchar (11);
-      break;
-    default:
-      putchar (c);
-      break;
-    }
-}
-
-/* Print string STR, evaluating \ escapes. */
-
-static void
-print_esc_string (char *str)
-{
-  for (; *str; str++)
-    if (*str == '\\')
-      str += print_esc (str);
-    else
-      putchar (*str);
-}
-
-/* Output a % directive.  START is the start of the directive,
-   LENGTH is its length, and ARGUMENT is its argument.
-   If FIELD_WIDTH or PRECISION is non-negative, they are args for
-   '*' values in those fields. */
-
-static void
-print_direc (char *start, size_t length, int field_width, int precision, char *argument)
-{
-  char *p;		/* Null-terminated copy of % directive. */
-
-  p = xmalloc ((unsigned) (length + 1));
-  strncpy (p, start, length);
-  p[length] = 0;
-
-  switch (p[length - 1])
-    {
-    case 'd':
-    case 'i':
-      if (field_width < 0)
-	{
-	  if (precision < 0)
-	    printf (p, xstrtol (argument));
-	  else
-	    printf (p, precision, xstrtol (argument));
-	}
-      else
-	{
-	  if (precision < 0)
-	    printf (p, field_width, xstrtol (argument));
-	  else
-	    printf (p, field_width, precision, xstrtol (argument));
-	}
-      break;
-
-    case 'o':
-    case 'u':
-    case 'x':
-    case 'X':
-      if (field_width < 0)
-	{
-	  if (precision < 0)
-	    printf (p, xstrtoul (argument));
-	  else
-	    printf (p, precision, xstrtoul (argument));
-	}
-      else
-	{
-	  if (precision < 0)
-	    printf (p, field_width, xstrtoul (argument));
-	  else
-	    printf (p, field_width, precision, xstrtoul (argument));
-	}
-      break;
-
-    case 'f':
-    case 'e':
-    case 'E':
-    case 'g':
-    case 'G':
-      if (field_width < 0)
-	{
-	  if (precision < 0)
-	    printf (p, xstrtod (argument));
-	  else
-	    printf (p, precision, xstrtod (argument));
-	}
-      else
-	{
-	  if (precision < 0)
-	    printf (p, field_width, xstrtod (argument));
-	  else
-	    printf (p, field_width, precision, xstrtod (argument));
-	}
-      break;
-
-    case 'c':
-      printf (p, *argument);
-      break;
-
-    case 's':
-      if (field_width < 0)
-	{
-	  if (precision < 0)
-	    printf (p, argument);
-	  else
-	    printf (p, precision, argument);
-	}
-      else
-	{
-	  if (precision < 0)
-	    printf (p, field_width, argument);
-	  else
-	    printf (p, field_width, precision, argument);
-	}
-      break;
+      fprintf (stderr, _("Usage: %s format [argument...]\n"), program_name);
+      exit (1);
     }
 
-  free (p);
-}
+  format = argv[1];
+  argc -= 2;
+  argv += 2;
 
-static unsigned long
-xstrtoul (char *s)
-{
-  char *end;
-  unsigned long val;
-
-  errno = 0;
-  val = strtoul (s, &end, 0);
-  verify (s, end);
-  return val;
-}
-
-static long
-xstrtol (char *s)
-{
-  char *end;
-  long val;
-
-  errno = 0;
-  val = strtol (s, &end, 0);
-  verify (s, end);
-  return val;
-}
-
-static double
-xstrtod (char *s)
-{
-  char *end;
-  double val;
-
-  errno = 0;
-  val = strtod (s, &end);
-  verify (s, end);
-  return val;
-}
-
-static void
-verify (char *s, char *end)
-{
-  if (errno)
+  do
     {
-      error (0, errno, "%s", s);
-      exit_status = 1;
+      args_used = print_formatted (format, argc, argv);
+      argc -= args_used;
+      argv += args_used;
     }
-  else if (*end)
-    {
-      if (s == end)
-	error (0, 0, _("%s: expected a numeric value"), s);
-      else
-	error (0, 0, _("%s: value not completely converted"), s);
-      exit_status = 1;
-    }
+  while (args_used > 0 && argc > 0);
+
+  if (argc > 0)
+    error (0, 0, _("warning: excess arguments have been ignored"));
+
+  exit (exit_status);
 }
