@@ -1,6 +1,7 @@
 Changes in release 3.15:
-* fix a bug in ls that manifested with e.g., LANG=de by eliding the first
-  character of the month name.
+* ls -l no longer misformats the date when run in a locale for which the
+  locale's abbreviated week-day name (strftime's %a format) is shorter or
+  longer than the `normal' three bytes (with LANG=de it's a two-byte string).
 [3.14b]:
 * Using --program-prefix no longer applies the prefix twice
 * ls --color properly restores color attributes upon completion when the
