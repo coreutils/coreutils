@@ -45,6 +45,34 @@ sleep 2
 # Create a link, updating c's ctime.
 ln c d || framework_failure=1
 
+# Before we go any further, verify that touch's -m option works.
+set -- `ls --full -l a`
+case "$*" in
+  *'Jan 15 23:00:00 1998 a') ;;
+  *)
+  # This might be what's making HPUX 11 systems fail this test.
+  cat >&2 << \EOF
+A basic test of touch -a has just failed, so the subsequent
+tests in this file will not be run.
+EOF
+  framework_failure=1
+  ;;
+esac
+
+# Now test touch's -a option.
+set -- `ls --full -lu a`
+case "$*" in
+  *'Jan 14 11:00:00 1998 a') ;;
+  *)
+  # This might be what's making HPUX 11 systems fail this test.
+  cat >&2 << \EOF
+A basic test of touch -m has just failed, so the subsequent
+tests in this file will not be run.
+EOF
+  framework_failure=1
+  ;;
+esac
+
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
   exit 1
