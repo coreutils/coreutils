@@ -127,6 +127,9 @@
    to 0 otherwise. */
 #undef HAVE_CALLOC
 
+/* Define to 1 if you have the `canonicalize_file_name' function. */
+#undef HAVE_CANONICALIZE_FILE_NAME
+
 /* Define to 1 if your system has a working `chown' function. */
 #undef HAVE_CHOWN
 
