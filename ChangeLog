@@ -2,6 +2,9 @@
 
 	* Version 4.5.9.
 
+	* src/remove.c (remove_cwd_entries): Include the full filename of
+	the offending file, not just the basename.
+
 	* tests/misc/tty-eof: Set $ME properly.
 
 	* Makefile.maint (THIS_VERSION_REGEXP, PREV_VERSION_REGEXP):
@@ -13,9 +16,8 @@
 	user.  Reported by Ivo Timmermans via Michael Stone.
 	This fixes Debian bug# 178471.
 
-	FIXME
-	* tests/rm/Makefile.am (TESTS): Add hard-3.
-	* tests/rm/hard-3: New test, for the above-fixed bug.
+	* tests/rm/Makefile.am (TESTS): Add fail-2eperm.
+	* tests/rm/fail-2eperm: New test, for the above-fixed bug.
 	Based on a report from Ivo Timmermans.
 
 2003-03-02  Jim Meyering  <jim@meyering.net>
