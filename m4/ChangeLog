@@ -1,3 +1,8 @@
+2000-04-18  Jim Meyering  <meyering@lucent.com>
+
+	* prereq.m4 (jm_PREREQ_GETPAGESIZE): New macro.
+	(jm_PREREQ): Use it.
+
 2000-04-17  Jim Meyering  <meyering@lucent.com>
 
 	Get it right :-)
