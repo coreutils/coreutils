@@ -951,11 +951,6 @@ make_path (const_dirpath, src_offset, mode, verbose_fmt_string,
       error (0, 0, "`%s' exists but is not a directory", dst_dirname);
       return 1;
     }
-  else if (chmod (dst_dirname, mode))
-    {
-      error (0, errno, "%s", dst_dirname);
-      return 1;
-    }
   else
     {
       *new_dst = 0;

@@ -79,6 +79,10 @@ static int kilobyte_blocks;
 /* If nonzero, use the POSIX output format.  */
 static int posix_format;
 
+/* If nonzero, invoke the `sync' system call.  Using this option
+   can make df very slow, especially with many or very busy disks.  */
+static int require_sync;
+
 /* Nonzero if errors have occurred. */
 static int exit_status;
 
@@ -127,6 +131,7 @@ static struct option const long_options[] =
   {"kilobytes", no_argument, &kilobyte_blocks, 1},
   {"portability", no_argument, &posix_format, 1},
   {"print-type", no_argument, &print_type, 1},
+  {"sync", no_argument, 0, 's'},
   {"type", required_argument, 0, 't'},
   {"exclude-type", required_argument, 0, 'x'},
   {"help", no_argument, &show_help, 1},
@@ -174,6 +179,9 @@ main (argc, argv)
 	  break;
 	case 'P':
 	  posix_format = 1;
+	  break;
+	case 's':
+	  require_sync = 1;
 	  break;
 	case 't':
 	  add_fs_type (optarg);
@@ -227,7 +235,8 @@ main (argc, argv)
     error (1, errno, "cannot read table of mounted filesystems");
 
   print_header ();
-  sync ();
+  if (require_sync)
+    sync ();
 
   if (optind == argc)
     show_all_entries ();
@@ -505,6 +514,7 @@ usage (status)
   -a, --all                 include filesystems having 0 blocks\n\
   -i, --inodes              list inode information instead of block usage\n\
   -k, --kilobytes           use 1024 blocks, not 512 despite POSIXLY_CORRECT\n\
+  -s, --sync                invoke sync system call before getting usage info\n\
   -t, --type=TYPE           limit the listing to TYPE filesystems type\n\
   -x, --exclude-type=TYPE   limit the listing to not TYPE filesystems type\n\
   -v                        (ignored)\n\
