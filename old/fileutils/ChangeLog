@@ -2,6 +2,9 @@
 
 	* Version 4.0.34.
 
+	* configure: Regenerate using the very latest version (in CVS) of
+	autoconf.
+
 	* tests/dd/skip-seek: Remove test #2, now that support for the
 	`B' suffix is gone.
 	* tests/dd/Makefile.am (TESTS): Add skip-seek2
