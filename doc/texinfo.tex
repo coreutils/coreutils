@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{1999-07-22.19} % updated for pdfTeX
+\def\texinfoversion{1999-08-09.17} % updated for pdfTeX
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99
 % Free Software Foundation, Inc.
@@ -855,7 +855,6 @@ where each line of input produces a line of output.}
 \newtoks\toksD
 \newbox\boxA
 \newcount\countA
-\newcount\charcode
 \newif\ifpdf
 \newif\ifpdfmakepagedest
 
@@ -870,9 +869,9 @@ where each line of input produces a line of output.}
   \pdftrue
   \pdfoutput = 1
   \input pdfcolor
-  \def\dopdfimage#1#2#3#4{
-    \def\imagewidth{#2}
-    \def\imageheight{#3}
+  \def\dopdfimage#1#2#3{%
+    \def\imagewidth{#2}%
+    \def\imageheight{#3}%
     \ifnum\pdftexversion < 14
       \pdfimage
     \else
@@ -880,9 +879,9 @@ where each line of input produces a line of output.}
     \fi
       \ifx\empty\imagewidth\else width \imagewidth \fi
       \ifx\empty\imageheight\else height \imageheight \fi
-      {#1.pdf}
+      {#1.pdf}%
     \ifnum\pdftexversion < 14 \else
-      \pdfrefxform \pdflastxform
+      \pdfrefximage \pdflastximage
     \fi}
   \def\pdfmkdest#1{\pdfdest name{#1@} xyz}
   \def\pdfmkpgn#1{#1@}
@@ -2672,7 +2671,7 @@ width0pt\relax} \fi
 \def\@{@}% will be @@ when we switch to @ as escape char.
 % Need these in case \tex is in effect and \{ is a \delimiter again.
 % But can't use \lbracecmd and \rbracecmd because texindex assumes
-% braces and backslashes are used only as delimiters.
+% braces and backslashes are used only as delimiters.  
 \let\{ = \mylbrace
 \let\} = \myrbrace
 \def\_{{\realbackslash _}}%
@@ -2717,8 +2716,6 @@ width0pt\relax} \fi
 \def\dfn##1{\realbackslash dfn {##1}}%
 \def\emph##1{\realbackslash emph {##1}}%
 \def\acronym##1{\realbackslash acronym {##1}}%
-\def\{{\realbackslash mylbrace}%
-\def\}{\realbackslash myrbrace}%
 %
 % Handle some cases of @value -- where the variable name does not
 % contain - or _, and the value does not contain any
@@ -3240,7 +3237,8 @@ width0pt\relax} \fi
 % This counter is funny since it counts through charcodes of letters A, B, ...
 \newcount\appendixno  \appendixno = `\@
 % \def\appendixletter{\char\the\appendixno}
-% Now we do the following for the sake of pdftex.
+% We do the following for the sake of pdftex, which needs the actual
+% letter in the expansion, not just typeset.
 \def\appendixletter{%
   \ifnum\appendixno=`A A%
   \else\ifnum\appendixno=`B B%
