@@ -1,5 +1,8 @@
 2004-04-14  Jim Meyering  <jim@meyering.net>
 
+	* stat-prog.m4 (cu_PREREQ_STAT_PROG): Don't use AC_CHECK_HEADERS to
+	check for inttypes.h.  Instead, require gt_HEADER_INTTYPES_H.
+
 	* jm-macros.m4: Require cu_PREREQ_STAT_PROG.
 
 	* prereq.m4: Move prerequisite function for src/stat.c to ...
