@@ -1,5 +1,5 @@
 /* df - summarize free disk space
-   Copyright (C) 91, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -438,7 +438,7 @@ find_mount_point (const char *file, const struct stat *file_stat)
 {
   struct saved_cwd cwd;
   struct stat last_stat;
-  char *mp = 0;			/* The malloced mount point path.  */
+  char *mp = NULL;		/* The malloced mount point path.  */
 
   if (save_cwd (&cwd) != 0)
     {
@@ -642,7 +642,7 @@ show_point (const char *point, const struct stat *statp)
       char *mp = find_mount_point (point, statp);
       if (mp)
 	{
-	  show_dev (0, mp, 0, false, false);
+	  show_dev (NULL, mp, NULL, false, false);
 	  free (mp);
 	}
     }
