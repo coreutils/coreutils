@@ -88,14 +88,14 @@ main (int argc, char **argv)
   if (argc - optind != 0)
     usage (1);
 
-  /* POSIX.2 requires using getlogin (or equivalent code).  */
+  /* POSIX requires using getlogin (or equivalent code).  */
   cp = getlogin ();
   if (cp)
     {
       puts (cp);
       exit (0);
     }
-  /* POSIX.2 prohibits using a fallback technique.  */
+  /* POSIX prohibits using a fallback technique.  */
   fprintf (stderr, _("%s: no login name\n"), argv[0]);
   exit (1);
 }
