@@ -2,6 +2,8 @@
 
 	* Version 5.3.0.
 
+	* src/remove.c (is_empty_dir): Clarify comment.
+
 	* man/help2man: Accept new option: --program-name=NAME, so that we
 	can override the one in --version output.  This is needed solely
 	so that test.1 doesn't refer to `[' as the program name.
