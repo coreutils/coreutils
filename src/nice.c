@@ -59,6 +59,7 @@ main (int argc, char **argv)
   int adjustment = 0;
   int minusflag = 0;
   int adjustment_given = 0;
+  int i;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -67,11 +68,9 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, "nice", GNU_PACKAGE, VERSION, usage);
 
-  for (optind = 1; optind < argc; /* empty */)
+  for (i = 1; i < argc; /* empty */)
     {
-      char *s;
-
-      s = argv[optind];
+      char *s = argv[i];
 
       if (s[0] == '-' && s[1] == '-' && ISDIGIT (s[2]))
 	{
@@ -82,7 +81,7 @@ main (int argc, char **argv)
 	  /* FIXME: use xstrtol */
 	  adjustment = atoi (&s[2]);
 	  adjustment_given = 1;
-	  ++optind;
+	  ++i;
 	}
       else if (s[0] == '-' && (ISDIGIT (s[1])
 			       || (s[1] == '+' && ISDIGIT (s[2]))))
@@ -96,12 +95,17 @@ main (int argc, char **argv)
 	  /* FIXME: use xstrtol */
 	  adjustment = atoi (&s[1]);
 	  adjustment_given = 1;
-	  ++optind;
+	  ++i;
 	}
       else
 	{
 	  int optc;
-	  if ((optc = getopt_long (argc, argv, "+n:",
+	  char **fake_argv = argv + i - 1;
+
+	  /* Initialize getopt_long's internal state.  */
+	  optind = 0;
+
+	  if ((optc = getopt_long (argc - (i - 1), fake_argv, "+n:",
 				   longopts, (int *) 0)) != EOF)
 	    {
 	      switch (optc)
@@ -121,6 +125,8 @@ main (int argc, char **argv)
 		}
 	    }
 
+	  i += optind - 1;
+
 	  if (optc == EOF)
 	    break;
 	}
@@ -131,7 +137,7 @@ main (int argc, char **argv)
   if (!adjustment_given)
     adjustment = 10;
 
-  if (optind == argc)
+  if (i == argc)
     {
       if (adjustment_given)
 	{
@@ -158,8 +164,8 @@ main (int argc, char **argv)
 #endif
     error (1, errno, _("cannot set priority"));
 
-  execvp (argv[optind], &argv[optind]);
-  error (errno == ENOENT ? 127 : 126, errno, "%s", argv[optind]);
+  execvp (argv[i], &argv[i]);
+  error (errno == ENOENT ? 127 : 126, errno, "%s", argv[i]);
 }
 
 /* Return nonzero if S represents a (possibly signed) decimal integer,
