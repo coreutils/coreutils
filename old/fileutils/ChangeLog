@@ -1,5 +1,10 @@
 1999-11-20  Jim Meyering  <meyering@ascend.com>
 
+	* src/rmdir.c (errno_rmdir_non_empty): New function to encapsulate
+	errno comparison.
+	(remove_parents): Use it.
+	(main): Use it.
+
 	* tests/cp/cp-mv-backup: Run `diff -c' if the test fails.
 
 	* tests/ls/time-1: Use `ls' and `touch', not $LS and $TOUCH.
