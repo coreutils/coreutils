@@ -55,6 +55,8 @@ int full_write ();
 int euidaccess ();
 int yesno ();
 
+int lstat ();
+
 static int copy_internal PARAMS ((const char *src_path, const char *dst_path,
 				  int new_dst, dev_t device,
 				  struct dir_list *ancestors,
@@ -116,6 +118,7 @@ copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
 {
   char *name_space;
   char *namep;
+  struct cp_options non_command_line_options = *x;
   int ret = 0;
 
   name_space = savedir (src_path_in, src_sb->st_size);
@@ -126,6 +129,11 @@ copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
       error (0, errno, _("cannot access %s"), quote (src_path_in));
       return -1;
     }
+
+  /* For cp's -H option, dereference command line arguments, but do not
+     dereference symlinks that are found via recursive traversal.  */
+  if (x->dereference == DEREF_COMMAND_LINE_ARGUMENTS)
+    non_command_line_options.xstat = lstat;
 
   namep = name_space;
   while (*namep != '\0')
@@ -138,7 +146,8 @@ copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
 	xalloc_die ();
 
       ret |= copy_internal (src_path, dst_path, new_dst, src_sb->st_dev,
-			    ancestors, x, 0, &local_copy_into_self, NULL);
+			    ancestors, &non_command_line_options, 0,
+			    &local_copy_into_self, NULL);
       *copy_into_self |= local_copy_into_self;
 
       /* Free the memory for `src_path'.  The memory for `dst_path'
@@ -445,7 +454,7 @@ copy_internal (const char *src_path, const char *dst_path,
 		  || (x->hard_link
 		      && S_ISLNK (src_sb.st_mode)
 		      && !S_ISLNK (dst_sb.st_mode)))
-	      && !x->dereference
+	      && x->dereference == DEREF_NEVER
 	      && (S_ISLNK (dst_sb.st_mode) ^ S_ISLNK (src_sb.st_mode)))
 	    {
 	      struct stat dst2_sb;
@@ -616,7 +625,7 @@ copy_internal (const char *src_path, const char *dst_path,
   /* Did we copy this inode somewhere else (in this command line argument)
      and therefore this is a second hard link to the inode?  */
 
-  if (!x->dereference && src_sb.st_nlink > 1 && earlier_file)
+  if (x->dereference == DEREF_NEVER && src_sb.st_nlink > 1 && earlier_file)
     {
       /* Avoid damaging the destination filesystem by refusing to preserve
 	 hard-linked directories (which are found at least in Netapp snapshot
