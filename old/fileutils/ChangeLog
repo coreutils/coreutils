@@ -1,3 +1,10 @@
+1998-01-12  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/fileblocks.c: Include sys/param.h only #if HAVE_SYS_PARAM_H.
+	Move function-spanning `#if ...BSIZE' stmt to follow inclusion of
+	sys/param.h since BSIZE is sometimes defined in sys/param.h.
+	Based on a patch from Philippe De Muyter.
+
 1998-01-10  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Version 3.16k.
