@@ -19,7 +19,6 @@ TESTS = \
   expand \
   fold \
   nohup \
-  readlink \
   head-elide-tail \
   split-fail \
   false \
