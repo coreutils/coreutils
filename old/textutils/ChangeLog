@@ -1,5 +1,18 @@
 1999-04-11  Jim Meyering  <meyering@ascend.com>
 
+	Fix the problem whereby `yes > k & sleep 1; tail -2c k' would infloop.
+	* src/tail.c (COPY_TO_EOF): Define.
+	(dump_remainder): Add parameter, n_bytes, and rewrite to use it.
+	Update callers.
+	(file_lines): Rename parameter.
+	(tail_bytes): Remove obsolete comment.
+
+	Fix the problem whereby `yes > k & tail -1 k' would infloop.
+	* src/tail.c (dump_remainder): Move this function to precede the
+	new use in file_lines.
+	(tail_lines): Don't call dump_remainder here.
+	(file_lines): Call dump_remainder here instead.
+
 	* lib/readtokens.c (readtoken, readtokens): Protoize.
 
 1999-04-10  Jim Meyering  <meyering@ascend.com>
