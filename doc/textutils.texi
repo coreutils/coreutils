@@ -2260,6 +2260,24 @@ If @var{output-file} is one of the input files, @code{sort} copies
 it to a temporary file before sorting and writing the output to
 @var{output-file}.
 
+@item -S @var{size}
+@opindex -S
+@cindex size for main memory sorting
+Use a main-memory sort buffer of the given @var{size}.  By default,
+@var{size} is in units of 1,024 bytes.  Appending @samp{%} causes
+@var{size} to be interpreted as a percentage of physical memory.
+Appending @samp{k} multiplies @var{size} by 1,024 (the default),
+@samp{M} by 1,048,576, @samp{G} by 1,073,741,824, and so on for
+@samp{T}, @samp{P}, @samp{E}, @samp{Z}, and @samp{Y}.  Appending
+@samp{b} causes @var{size} to be interpreted as a byte count, with no
+multiplication.
+
+This option can improve the performance of @command{sort} by causing it
+to start with a larger or smaller sort buffer than the default.
+However, this option affects only the initial buffer size.  The buffer
+grows beyond @var{size} if @command{sort} encounters input lines larger
+than @var{size}.
+
 @item -t @var{separator}
 @opindex -t
 @cindex field separator character
