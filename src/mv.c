@@ -49,10 +49,8 @@
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  NO_TARGET_DIRECTORY_OPTION = CHAR_MAX + 1,
-  REPLY_OPTION,
-  STRIP_TRAILING_SLASHES_OPTION,
-  TARGET_DIRECTORY_OPTION
+  REPLY_OPTION = CHAR_MAX + 1,
+  STRIP_TRAILING_SLASHES_OPTION
 };
 
 /* The name this program was run with. */
@@ -78,11 +76,11 @@ static struct option const long_options[] =
   {"backup", optional_argument, NULL, 'b'},
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
-  {"no-target-directory", no_argument, NULL, NO_TARGET_DIRECTORY_OPTION},
+  {"no-target-directory", no_argument, NULL, 'T'},
   {"reply", required_argument, NULL, REPLY_OPTION},
   {"strip-trailing-slashes", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
   {"suffix", required_argument, NULL, 'S'},
-  {"target-directory", required_argument, NULL, TARGET_DIRECTORY_OPTION},
+  {"target-directory", required_argument, NULL, 't'},
   {"update", no_argument, NULL, 'u'},
   {"verbose", no_argument, NULL, 'v'},
   {"version-control", required_argument, NULL, 'V'},
@@ -302,9 +300,9 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION]... SOURCE DEST\n\
+Usage: %s [OPTION]... [-T] SOURCE DEST\n\
   or:  %s [OPTION]... SOURCE... DIRECTORY\n\
-  or:  %s [OPTION]... --target-directory=DIRECTORY SOURCE...\n\
+  or:  %s [OPTION]... -t DIRECTORY SOURCE...\n\
 "),
 	      program_name, program_name, program_name);
       fputs (_("\
@@ -330,8 +328,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -S, --suffix=SUFFIX          override the usual backup suffix\n\
 "), stdout);
       fputs (_("\
-      --target-directory=DIRECTORY  move all SOURCE arguments into DIRECTORY\n\
-      --no-target-directory    treat DEST as a normal file\n\
+  -t, --target-directory=DIRECTORY  move all SOURCE arguments into DIRECTORY\n\
+  -T, --no-target-directory    treat DEST as a normal file\n\
   -u, --update                 move only when the SOURCE file is newer\n\
                                  than the destination file or when the\n\
                                  destination file is missing\n\
@@ -387,7 +385,8 @@ main (int argc, char **argv)
 
   errors = 0;
 
-  while ((c = getopt_long (argc, argv, "bfiuvS:V:", long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "bfit:uvS:TV:", long_options, NULL))
+	 != -1)
     {
       switch (c)
 	{
@@ -412,9 +411,6 @@ main (int argc, char **argv)
 	case 'i':
 	  x.interactive = I_ASK_USER;
 	  break;
-	case NO_TARGET_DIRECTORY_OPTION:
-	  no_target_directory = true;
-	  break;
 	case REPLY_OPTION:
 	  x.interactive = XARGMATCH ("--reply", optarg,
 				     reply_args, reply_vals);
@@ -422,7 +418,7 @@ main (int argc, char **argv)
 	case STRIP_TRAILING_SLASHES_OPTION:
 	  remove_trailing_slashes = 1;
 	  break;
-	case TARGET_DIRECTORY_OPTION:
+	case 't':
 	  if (target_directory)
 	    error (EXIT_FAILURE, 0, _("multiple target directories specified"));
 	  else
@@ -435,6 +431,9 @@ main (int argc, char **argv)
 		       quote (optarg));
 	    }
 	  target_directory = optarg;
+	  break;
+	case 'T':
+	  no_target_directory = true;
 	  break;
 	case 'u':
 	  x.update = 1;
@@ -470,8 +469,8 @@ main (int argc, char **argv)
     {
       if (target_directory)
 	error (EXIT_FAILURE, 0,
-	       _("Cannot combine --target-directory "
-		 "and --no-target-directory"));
+	       _("Cannot combine --target-directory (-t) "
+		 "and --no-target-directory (-T)"));
       if (2 < n_files)
 	{
 	  error (0, 0, _("extra operand %s"), quote (file[2]));

@@ -39,14 +39,6 @@
 # define ENABLE_HARD_LINK_TO_SYMLINK_WARNING 0
 #endif
 
-/* For long options that have no equivalent short option, use a
-   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
-enum
-{
-  NO_TARGET_DIRECTORY_OPTION = CHAR_MAX + 1,
-  TARGET_DIRECTORY_OPTION
-};
-
 int link ();			/* Some systems don't declare this anywhere. */
 
 #ifdef S_ISLNK
@@ -127,11 +119,11 @@ static struct option const long_options[] =
   {"backup", optional_argument, NULL, 'b'},
   {"directory", no_argument, NULL, 'F'},
   {"no-dereference", no_argument, NULL, 'n'},
-  {"no-target-directory", no_argument, NULL, NO_TARGET_DIRECTORY_OPTION},
+  {"no-target-directory", no_argument, NULL, 'T'},
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
   {"suffix", required_argument, NULL, 'S'},
-  {"target-directory", required_argument, NULL, TARGET_DIRECTORY_OPTION},
+  {"target-directory", required_argument, NULL, 't'},
   {"symbolic", no_argument, NULL, 's'},
   {"verbose", no_argument, NULL, 'v'},
   {"version-control", required_argument, NULL, 'V'}, /* Deprecated. FIXME. */
@@ -353,18 +345,18 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION]... TARGET [LINK_NAME]\n\
-  or:  %s [OPTION]... TARGET... DIRECTORY\n\
-  or:  %s [OPTION]... --target-directory=DIRECTORY TARGET...\n\
+Usage: %s [OPTION]... [-T] TARGET LINK_NAME   (1st form)\n\
+  or:  %s [OPTION]... TARGET                  (2nd form)\n\
+  or:  %s [OPTION]... TARGET... DIRECTORY     (3rd form)\n\
+  or:  %s [OPTION]... -t DIRECTORY TARGET...  (4th form)\n\
 "),
-	      program_name, program_name, program_name);
+	      program_name, program_name, program_name, program_name);
       fputs (_("\
-Create a link to the specified TARGET with optional LINK_NAME.\n\
-If LINK_NAME is omitted, a link with the same basename as the TARGET is\n\
-created in the current directory.  When using the second form with more\n\
-than one TARGET, the last argument must be a directory;  create links\n\
-in DIRECTORY to each TARGET.  Create hard links by default, symbolic\n\
-links with --symbolic.  When creating hard links, each TARGET must exist.\n\
+In the 1st form, create a link to TARGET with the name LINK_NAME.\n\
+In the 2nd form, create a link to TARGET in the current directory.\n\
+In the 3rd and 4th forms, create links to each TARGET in DIRECTORY.\n\
+Create hard links by default, symbolic links with --symbolic.\n\
+When creating hard links, each TARGET must exist.\n\
 \n\
 "), stdout);
       fputs (_("\
@@ -386,9 +378,9 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -S, --suffix=SUFFIX         override the usual backup suffix\n\
-      --target-directory=DIRECTORY  specify the DIRECTORY in which to create\n\
+  -t, --target-directory=DIRECTORY  specify the DIRECTORY in which to create\n\
                                 the links\n\
-      --no-target-directory   treat LINK_NAME as a normal file\n\
+  -T, --no-target-directory   treat LINK_NAME as a normal file\n\
   -v, --verbose               print name of each file before linking\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
@@ -440,7 +432,7 @@ main (int argc, char **argv)
     = hard_dir_link = 0;
   errors = 0;
 
-  while ((c = getopt_long (argc, argv, "bdfinsvFS:V:", long_options, NULL))
+  while ((c = getopt_long (argc, argv, "bdfinst:vFS:TV:", long_options, NULL))
 	 != -1)
     {
       switch (c)
@@ -475,9 +467,6 @@ main (int argc, char **argv)
 	case 'n':
 	  dereference_dest_dir_symlinks = 0;
 	  break;
-	case NO_TARGET_DIRECTORY_OPTION:
-	  no_target_directory = true;
-	  break;
 	case 's':
 #ifdef S_ISLNK
 	  symbolic_link = 1;
@@ -486,7 +475,7 @@ main (int argc, char **argv)
 		 _("symbolic links are not supported on this system"));
 #endif
 	  break;
-	case TARGET_DIRECTORY_OPTION:
+	case 't':
 	  if (target_directory)
 	    error (EXIT_FAILURE, 0, _("multiple target directories specified"));
 	  else
@@ -499,6 +488,9 @@ main (int argc, char **argv)
 		       quote (optarg));
 	    }
 	  target_directory = optarg;
+	  break;
+	case 'T':
+	  no_target_directory = true;
 	  break;
 	case 'v':
 	  verbose = 1;

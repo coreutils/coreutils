@@ -90,14 +90,6 @@ static void get_ids (void);
 static void strip (const char *path);
 void usage (int status);
 
-/* For long options that have no equivalent short option, use a
-   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
-enum
-{
-  NO_TARGET_DIRECTORY_OPTION = CHAR_MAX + 1,
-  TARGET_DIRECTORY_OPTION
-};
-
 /* The name this program was run with, for error messages. */
 char *program_name;
 
@@ -131,12 +123,12 @@ static struct option const long_options[] =
   {"directory", no_argument, NULL, 'd'},
   {"group", required_argument, NULL, 'g'},
   {"mode", required_argument, NULL, 'm'},
-  {"no-target-directory", no_argument, NULL, NO_TARGET_DIRECTORY_OPTION},
+  {"no-target-directory", no_argument, NULL, 'T'},
   {"owner", required_argument, NULL, 'o'},
   {"preserve-timestamps", no_argument, NULL, 'p'},
   {"strip", no_argument, NULL, 's'},
   {"suffix", required_argument, NULL, 'S'},
-  {"target-directory", required_argument, NULL, TARGET_DIRECTORY_OPTION},
+  {"target-directory", required_argument, NULL, 't'},
   {"version-control", required_argument, NULL, 'V'}, /* Deprecated. FIXME. */
   {"verbose", no_argument, NULL, 'v'},
   {GETOPT_HELP_OPTION_DECL},
@@ -237,7 +229,7 @@ main (int argc, char **argv)
      we'll actually use backup_suffix_string.  */
   backup_suffix_string = getenv ("SIMPLE_BACKUP_SUFFIX");
 
-  while ((optc = getopt_long (argc, argv, "bcsDdg:m:o:pvV:S:", long_options,
+  while ((optc = getopt_long (argc, argv, "bcsDdg:m:o:pt:TvV:S:", long_options,
 			      NULL)) != -1)
     {
       switch (optc)
@@ -281,9 +273,6 @@ main (int argc, char **argv)
 	case 'm':
 	  specified_mode = optarg;
 	  break;
-	case NO_TARGET_DIRECTORY_OPTION:
-	  no_target_directory = true;
-	  break;
 	case 'o':
 	  owner_name = optarg;
 	  break;
@@ -294,7 +283,7 @@ main (int argc, char **argv)
 	  make_backups = 1;
 	  backup_suffix_string = optarg;
 	  break;
-	case TARGET_DIRECTORY_OPTION:
+	case 't':
 	  if (target_directory)
 	    error (EXIT_FAILURE, 0,
 		   _("multiple target directories specified"));
@@ -308,6 +297,9 @@ main (int argc, char **argv)
 		       quote (optarg));
 	    }
 	  target_directory = optarg;
+	  break;
+	case 'T':
+	  no_target_directory = true;
 	  break;
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -349,8 +341,8 @@ main (int argc, char **argv)
     {
       if (target_directory)
 	error (EXIT_FAILURE, 0,
-	       _("Cannot combine --target-directory "
-		 "and --no-target-directory"));
+	       _("Cannot combine --target-directory (-t) "
+		 "and --no-target-directory (-T)"));
       if (2 < n_files)
 	{
 	  error (0, 0, _("extra operand %s"), quote (file[2]));
@@ -662,16 +654,16 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION]... SOURCE DEST                            (1st format)\n\
-  or:  %s [OPTION]... SOURCE... DIRECTORY                    (2nd format)\n\
-  or:  %s [OPTION]... --target-directory=DIRECTORY SOURCE... (3rd format)\n\
-  or:  %s -d [OPTION]... DIRECTORY...                        (4th format)\n\
+Usage: %s [OPTION]... [-T] SOURCE DEST        (1st form)\n\
+  or:  %s [OPTION]... SOURCE... DIRECTORY     (2nd form)\n\
+  or:  %s [OPTION]... -t DIRECTORY SOURCE...  (3rd form)\n\
+  or:  %s [OPTION]... -d DIRECTORY...         (4th form)\n\
 "),
 	      program_name, program_name, program_name, program_name);
       fputs (_("\
-In the first three formats, copy SOURCE to DEST or multiple SOURCE(s) to\n\
+In the first three forms, copy SOURCE to DEST or multiple SOURCE(s) to\n\
 the existing DIRECTORY, while setting permission modes and owner/group.\n\
-In the fourth format, create all components of the given DIRECTORY(ies).\n\
+In the 4th form, create all components of the given DIRECTORY(ies).\n\
 \n\
 "), stdout);
       fputs (_("\
@@ -696,8 +688,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                         to corresponding destination files\n\
   -s, --strip         strip symbol tables, only for 1st and 2nd formats\n\
   -S, --suffix=SUFFIX override the usual backup suffix\n\
-      --target-directory=DIRECTORY  copy all SOURCE arguments into DIRECTORY\n\
-      --no-target-directory  treat DEST as a normal file\n\
+  -t, --target-directory=DIRECTORY  copy all SOURCE arguments into DIRECTORY\n\
+  -T, --no-target-directory  treat DEST as a normal file\n\
   -v, --verbose       print the name of each directory as it is created\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
