@@ -1,6 +1,11 @@
-2002-04-28  Jim Meyering  <meyering@lucent.com>
+2002-04-29  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* configure, config.hin, Makefile.in, etc.: Regenerate using
+	autoconf-2.53a.
+
+2002-04-28  Jim Meyering  <meyering@lucent.com>
 
 	* src/who.c: Don't include xalloc.h.
 	It's already included via system.h.
