@@ -1,0 +1,69 @@
+#!/bin/sh
+# Test both cp and mv for their behavior with -if and -fi
+# The standards (POSIX and SuS) dictate annoyingly inconsistent behavior.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  mv --version
+  cp --version
+fi
+
+unset VERSION_CONTROL
+if test "${VERSION_CONTROL+set}" = set; then
+  echo '$0: the VERSION_CONTROL envvar is set --' \
+    ' unset it and rerun this test' >&2
+  exit 1
+fi
+
+# Make sure we get English translations.
+LANGUAGE=C
+export LANGUAGE
+LC_ALL=C
+export LC_ALL
+LANG=C
+export LANG
+
+pwd=`pwd`
+tmp=cp-mv-if-$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap 'exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp
+
+for i in a b c d e f g h; do
+  echo $i > $i || framework_failure=1
+done
+chmod 0 b d f h || framework_failure=1
+echo y > y || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+fail=0
+mv -if a b || fail=1
+mv -fi c d < y >/dev/null 2>&1 || fail=1
+
+# Before 4.0s, this would not prompt.
+cp -if e f < y > out 2>&1 || fail=1
+    cp out /tmp
+
+# Make sure out contains the prompt.
+case "`cat out`" in
+  "cp: overwrite \`f', overriding mode 0000?"*) ;;
+  *) fail=1 ;;
+esac
+
+test -f e || fail=1
+test -f f || fail=1
+cmp e f || fail=1
+
+cp -fi g h < y > out 2>&1 || fail=1
+test -f g || fail=1
+test -f h || fail=1
+cmp g h || fail=1
+
+exit $fail
