@@ -1,0 +1,92 @@
+- Date/Time --  Page    1
+
+
+1<<<  -Test: FF's in Text
+2<<<  -b -3 / -a -3 / ...
+3<<<  >>>
+4<<<  123456789 123456789
+
+6<<<  -Arangements: One E
+7<<<  \f\f\n; text\f\n\ft
+8<<<  f\f\n; \f\n\f\n;  >
+9<<<  >>> 
+10<<<  >>>
+1<<<  >>>
+2<<<  >>>
+3<<<  truncation before F
+14<<<  123456789 12345678
+- Date/Time --  Page    2
+
+
+
+- Date/Time --  Page    3
+
+
+15<<<  xyzxyzxyz XYZXYZXY
+16<<<  123456789 xyzxyzxy
+7<<<  >>>
+8<<<  >>>
+9<<<  >>>
+20<<<  >>>
+1<<<  >>>
+
+
+4<<<  >>>
+5<<<  >>>
+6<<<  >>>
+27<<<  truncation before 
+28<<<  trunc
+- Date/Time --  Page    4
+
+
+
+- Date/Time --  Page    5
+
+
+29<<<xyzxyzxyz XYZXYZXYZ 
+30<<<  123456789 xyzxyzxy
+1<<<  >>>
+2<<<  abcdefghi  >>>
+3<<<  >>>
+4<<<  >>>
+5<<<  >>>
+6<<<  >>>
+7<<<  >>>
+8<<<  >>>
+9<<<  abcdefghi  >>>
+40<<<  123456789  >>>
+41<<<  XYZXYZXYZ abcabcab
+42<<<  123456789 abcdefgh
+- Date/Time --  Page    6
+
+
+
+- Date/Time --  Page    7
+
+
+
+- Date/Time --  Page    8
+
+
+43<<<  xyzxyzxyz XYZXYZXY
+44<<<  123456789 xyzxyzxy
+5<<<  >>>
+6<<<  >>>
+7<<<  >>>
+8<<<  >>>
+9<<<  >>>
+50<<<  >>>
+1<<<  >>>
+2<<<  >>>
+3<<<  >>>
+4<<<  >>>
+55<<<  XYZXYZXYZ abcabcab
+56<<<  123456789 abcdefgh
+- Date/Time --  Page    9
+
+
+57<<<  xyzxyzxyz XYZXYZXY
+58<<<  123456789 xyzxyzxy
+9<<<  >>>
+60<<<  123456789  >>>
+
