@@ -2,6 +2,9 @@
 
 	* Version 5.0.1.
 
+	* src/rm.c (usage): Mention that --directory (-d) works only
+	on some systems.  Suggestion from Samuel Tardieu.
+
 	* tests/misc/Makefile.am (TESTS): Add split-fail.
 	* tests/misc/split-fail: New file.
 
