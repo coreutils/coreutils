@@ -39,13 +39,11 @@
 extern int errno;
 #endif
 
-#if HAVE_WCHAR_H
-# include <wchar.h>
+#if HAVE_LIMITS_H
+# include <limits.h>
 #endif
-
-/* Some systems, like BeOS, have multibyte encodings but lack mbstate_t.  */
-#if HAVE_WCRTOMB && defined mbstate_t
-# define wcrtomb(s, wc, ps) (wcrtomb) (s, wc, 0)
+#ifndef MB_LEN_MAX
+# define MB_LEN_MAX 1
 #endif
 
 #if HAVE_ICONV
@@ -63,35 +61,21 @@ extern int errno;
 
 #include "unicodeio.h"
 
-#if __STDC_ISO_10646__ && HAVE_WCRTOMB
+#if __STDC_ISO_10646__ && HAVE_WCTOMB
 
 /* Values of type wchar_t are Unicode code points.  */
 
-/* Outputs the Unicode character CODE to the output stream STREAM.
-   Assumes that the locale doesn't change between two calls.  */
-void
-print_unicode_char (FILE *stream, unsigned int code)
+/* Place into BUF the locale-dependent representation of the character
+   CODE.  Return the size of the result.  If there is a conversion
+   error, return -1, setting errno appropriately.  Assumes that the
+   locale doesn't change between two calls.  */
+static size_t
+convert_unicode_char (char buf[MB_LEN_MAX], unsigned int code)
 {
-  wchar_t wc = (wchar_t) code;
-
-  /* Test for truncation.  */
-  if (wc == code)
-    {
-      /* Convert from wide character to multibyte representation.  */
-      char buf[64]; /* Assume MB_LEN_MAX <= 64.  */
-      mbstate_t state;
-      size_t res;
-
-      memset (&state, 0, sizeof (mbstate_t));
-      res = wcrtomb (buf, wc, &state);
-      if (res != (size_t)(-1))
-	fwrite (buf, 1, res, stream);
-      else
-	error (1, errno,
-	       _("cannot convert U+%04X to local character set"), code);
-    }
-  else
-    error (1, 0, _("cannot convert U+%04X to local character set"), code);
+  wchar_t wc = code;
+  errno = 0;
+  /* Test for truncation before invoking wctomb.  */
+  return wc == code ? wctomb (buf, wc) : -1;
 }
 
 #else
@@ -147,19 +131,18 @@ utf8_wctomb (unsigned char *r, unsigned int wc)
 /* Luckily, the encoding's name is platform independent.  */
 # define UTF8_NAME "UTF-8"
 
-/* Outputs the Unicode character CODE to the output stream STREAM.
-   Assumes that the locale doesn't change between two calls.  */
-void
-print_unicode_char (FILE *stream, unsigned int code)
+/* Place into BUF the locale-dependent representation of the character
+   CODE.  Return the size of the result.  If there is a conversion
+   error, return -1, setting errno appropriately.  Assumes that the
+   locale doesn't change between two calls.  */
+static size_t
+convert_unicode_char (char buf[MB_LEN_MAX], unsigned int code)
 {
   static int initialized;
   static int is_utf8;
 # if HAVE_ICONV
   static iconv_t utf8_to_local;
 # endif
-
-  char inbuf[6];
-  int count;
 
   if (!initialized)
     {
@@ -172,15 +155,16 @@ print_unicode_char (FILE *stream, unsigned int code)
 	{
 	  utf8_to_local = (charset != NULL
 			   ? iconv_open (charset, UTF8_NAME)
-			   : (iconv_t)(-1));
-	  if (utf8_to_local == (iconv_t)(-1))
+			   : (iconv_t) -1);
+	  if (utf8_to_local == (iconv_t) -1)
 	    {
 	      /* For an unknown encoding, assume ASCII.  */
 	      utf8_to_local = iconv_open ("ASCII", UTF8_NAME);
-	      if (utf8_to_local == (iconv_t)(-1))
-		error (1, 0,
-		       _("cannot output U+%04X: iconv function not usable"),
-		       code);
+	      if (utf8_to_local == (iconv_t) -1)
+		{
+		  errno = ENOTSUP;
+		  return -1;
+		}
 	    }
 	}
 # endif
@@ -188,57 +172,58 @@ print_unicode_char (FILE *stream, unsigned int code)
     }
 
   /* Convert the character to UTF-8.  */
-  count = utf8_wctomb ((unsigned char *) inbuf, code);
-  if (count < 0)
-    error (1, 0, _("U+%04X: character out of range"), code);
-
   if (is_utf8)
-    {
-      fwrite (inbuf, 1, count, stream);
-    }
+    return utf8_wctomb ((unsigned char *) buf, code);
   else
     {
 # if HAVE_ICONV
-      char outbuf[25];
-      const char *inptr;
-      size_t inbytesleft;
-      char *outptr;
-      size_t outbytesleft;
+      char inbuf[6];
+      const char *inptr = inbuf;
+      size_t inbytesleft = utf8_wctomb ((unsigned char *) inbuf, code);
+      char *outptr = buf;
+      size_t outbytesleft = MB_LEN_MAX;
       size_t res;
 
-      inptr = inbuf;
-      inbytesleft = count;
-      outptr = outbuf;
-      outbytesleft = sizeof (outbuf);
+      if (inbytesleft == (size_t) -1)
+	return -1;
 
       /* Convert the character from UTF-8 to the locale's charset.  */
       res = iconv (utf8_to_local, &inptr, &inbytesleft, &outptr, &outbytesleft);
-      if (inbytesleft > 0 || res == (size_t)(-1)
+      if (inbytesleft > 0 || res == (size_t) -1
 	  /* Irix iconv() inserts a NUL byte if it cannot convert. */
 #  if !defined _LIBICONV_VERSION && (defined sgi || defined __sgi)
 	  || (res > 0 && code != 0 && outptr - outbuf == 1 && *outbuf == '\0')
 #  endif
-         )
-	error (1, res == (size_t)(-1) ? errno : 0,
-	       _("cannot convert U+%04X to local character set"), code);
+	  )
+	return -1;
 
       /* Avoid glibc-2.1 bug and Solaris 2.7 bug.  */
 #  if defined _LIBICONV_VERSION \
     || !((__GLIBC__ - 0 == 2 && __GLIBC_MINOR__ - 0 <= 1) || defined __sun)
 
       /* Get back to the initial shift state.  */
-      res = iconv (utf8_to_local, NULL, NULL, &outptr, &outbytesleft);
-      if (res == (size_t)(-1))
-	error (1, errno, _("cannot convert U+%04X to local character set"),
-	       code);
+      return iconv (utf8_to_local, NULL, NULL, &outptr, &outbytesleft);
 #  endif
 
-      fwrite (outbuf, 1, outptr - outbuf, stream);
+      return outptr - buf;
 # else
-      error (1, 0, _("cannot output U+%04X: iconv function not available"),
-	     code);
+      errno = ENOTSUP;
+      return -1;
 # endif
     }
 }
 
 #endif
+
+/* Output the Unicode character CODE to the output stream STREAM.  */
+void
+print_unicode_char (FILE *stream, unsigned int code)
+{
+  char buf[MB_LEN_MAX];
+  size_t s = convert_unicode_char (buf, code);
+
+  if (s == (size_t) -1)
+    error (1, errno, _("cannot convert U+%04X to local character set"), code);
+  else
+    fwrite (buf, 1, s, stream);
+}
