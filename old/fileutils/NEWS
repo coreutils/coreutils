@@ -1,5 +1,11 @@
 [4.1.10]
+* New ls time style: long-iso, which generates YYYY-MM-DD HH:MM.
+* Any time style can be preceded by "posix-"; this causes "ls" to
+  use traditional timestamp format when in the POSIX locale.
+* The default time style is now posix-long-iso instead of posix-iso.
+  Set TIME_STYLE="posix-iso" to revert to the behavior of 4.1.1 thru 4.1.9.
 * `rm dangling-symlink' doesn't prompt [introduced in 4.1.9]
+* stat: remove support for --secure/-s option and related %S and %C format specs
 * stat: rename --link/-l to --dereference/-L.
     The old options will continue to work for a while.
 [4.1.9]
