@@ -1,3 +1,10 @@
+2001-11-17  Jim Meyering  <meyering@lucent.com>
+
+	* mkstemp.c: #undef mkstemp.
+	Include config.h.
+	(rpl_mkstemp): Rename from mkstemp.
+	Protoize.
+
 2001-11-16  Jim Meyering  <meyering@lucent.com>
 
 	* physmem.c [HAVE_SYS_PSTAT_H]: Include <sys/pstat.h>.
