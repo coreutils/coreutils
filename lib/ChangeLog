@@ -1,5 +1,8 @@
 2003-06-07  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.am (MOSTLYCLEANFILES): Add alloca.h and alloca.ht.
+	(MOSTLYCLEANFILES): Add stdbool.ht.
+
 	* human.c: Include <stdio.h>, once again, for declaration of sprintf.
 
 	Update from gnulib.
