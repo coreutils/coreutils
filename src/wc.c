@@ -1,5 +1,5 @@
 /* wc - print the number of bytes, words, and lines in files
-   Copyright (C) 85, 91, 1995-2000 Free Software Foundation, Inc.
+   Copyright (C) 85, 91, 1995-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -306,13 +306,13 @@ wc (int fd, const char *file)
 	  bytes_read += prev;
 	  do
 	    {
-	      wchar_t wc;
+	      wchar_t wide_char;
 	      size_t n;
 
 # if SUPPORT_OLD_MBRTOWC
 	      backup_state = state;
 # endif
-	      n = mbrtowc (&wc, p, bytes_read, &state);
+	      n = mbrtowc (&wide_char, p, bytes_read, &state);
 	      if (n == (size_t) -2)
 		{
 # if SUPPORT_OLD_MBRTOWC
@@ -326,11 +326,11 @@ wc (int fd, const char *file)
 		  if (!(lines + 1 == last_error_line
 			&& errno == last_error_errno))
 		    {
-		      char buf[LONGEST_HUMAN_READABLE + 1];
+		      char hr_buf[LONGEST_HUMAN_READABLE + 1];
 		      last_error_line = lines + 1;
 		      last_error_errno = errno;
 		      error (0, errno, "%s:%s", file,
-			     human_readable (lines + 1, buf, 1, 1));
+			     human_readable (lines + 1, hr_buf, 1, 1));
 		    }
 		  p++;
 		  bytes_read--;
@@ -339,13 +339,13 @@ wc (int fd, const char *file)
 		{
 		  if (n == 0)
 		    {
-		      wc = 0;
+		      wide_char = 0;
 		      n = 1;
 		    }
 		  p += n;
 		  bytes_read -= n;
 		  chars++;
-		  switch (wc)
+		  switch (wide_char)
 		    {
 		    case '\n':
 		      lines++;
@@ -371,9 +371,9 @@ wc (int fd, const char *file)
 			}
 		      break;
 		    default:
-		      if (iswprint (wc))
+		      if (iswprint (wide_char))
 			{
-			  int width = wcwidth (wc);
+			  int width = wcwidth (wide_char);
 			  if (width > 0)
 			    linepos += width;
 			  in_word = 1;
