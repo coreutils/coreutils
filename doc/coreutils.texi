@@ -8323,13 +8323,13 @@ True if @var{file} exists and has a size greater than zero.
 @opindex -nt
 @cindex newer-than file check
 True if @var{file1} is newer (according to modification date) than
-@var{file2}.
+@var{file2}, or if @var{file1} exists and @var{file2} does not.
 
 @item @var{file1} -ot @var{file2}
 @opindex -ot
 @cindex older-than file check
 True if @var{file1} is older (according to modification date) than
-@var{file2}.
+@var{file2}, or if @var{file2} exists and @var{file1} does not.
 
 @item @var{file1} -ef @var{file2}
 @opindex -ef
