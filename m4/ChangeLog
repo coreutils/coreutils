@@ -1,7 +1,6 @@
 2003-07-12  Jim Meyering  <jim@meyering.net>
 
-	* jm-macros.m4 (OPTIONAL_BIN_PROGS, OPTIONAL_BIN_ZCRIPTS): Remove
-	unused variables.
+	* jm-macros.m4 (OPTIONAL_BIN_ZCRIPTS): Remove unused variable.
 
 2003-07-10  Jim Meyering  <jim@meyering.net>
 
