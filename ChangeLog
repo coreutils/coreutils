@@ -1,5 +1,14 @@
 2004-08-03  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/uname.c: Do not depend on HAVE_SYSCTL when deciding
+	whether to include files.  Include <sys/param.h> if
+	HAVE_SYS_PARAM_H (not HAVE_SYSCTL).
+	(main) [defined __POWERPC__]: Add a kludge to work around a
+	Mac OS X bug, so that uname -p defaults to "powerpc" if
+	sysctl ((int[]) {CTL_HW, HW_MACHINE_ARCH}, 2, buffer, &bufsize, 0, 0)
+	fails.  Problem reported by Petter Reinholdtsen in:
+	http://lists.gnu.org/archive/html/bug-gnu-utils/2003-02/msg00201.html
+
 	* src/uniq.c (hard_LC_COLLATE, ignore_case, different, check_file,
 	main): Use bool for booleans.
 	(writeline, check_file): Use uintmax_t for line counts.
