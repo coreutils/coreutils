@@ -91,6 +91,7 @@ static struct option const long_options[] =
     {"print-data-base", no_argument, NULL, 'p'},
     {"print-database", no_argument, NULL, 'p'},
     {"version", no_argument, NULL, 'v'},
+    {NULL, 0, NULL, 0}
   };
 
 char *program_name;
