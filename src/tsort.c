@@ -470,11 +470,9 @@ tsort (const char *file)
 
   while (1)
     {
-      long int len;
-
       /* T2. Next Relation.  */
-      len = readtoken (fp, DELIM, sizeof (DELIM) - 1, &tokenbuffer);
-      if (len < 0)
+      size_t len = readtoken (fp, DELIM, sizeof (DELIM) - 1, &tokenbuffer);
+      if (len == (size_t) -1)
 	break;
 
       assert (len != 0);
