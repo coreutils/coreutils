@@ -581,7 +581,7 @@ static struct option const long_options[] =
   {"almost-all", no_argument, 0, 'A'},
   {"ignore-backups", no_argument, 0, 'B'},
   {"classify", no_argument, 0, 'F'},
-  {"file-type", no_argument, 0, 'F'},
+  {"file-type", no_argument, 0, 'p'},
   {"si", no_argument, 0, 'H'},
   {"ignore", required_argument, 0, 'I'},
   {"indicator-style", required_argument, 0, 14},
