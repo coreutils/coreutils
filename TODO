@@ -9,6 +9,8 @@ strip: add an option to specify the program used to strip binaries.
 Makefile.maint: extract announcement-generation into a perl script
 
 remove PARAMS macros
+grep -lE 'PARAMS ?\(\(.*\)\);?$' *.[ch] \
+  | xargs perl -pi -e 's/PARAMS ?\((\(.*\))\)(;?)$/$1$2/'
 
 doc/coreutils.texi:
   Address this comment: FIXME: mv's behavior in this case is system-dependent
