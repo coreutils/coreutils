@@ -1,3 +1,9 @@
+Mon May 20 22:56:06 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+        * lib/Makefile.am (getdate.c): Disable dependencies that can
+        require rerunning YACC when not in maintainer mode.
+        (posixtm.c): Likewise.
+
 Sun May 19 21:45:49 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* seq.c (usage): Make it clearer.
