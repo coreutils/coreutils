@@ -489,7 +489,7 @@ usage (int status)
 A lightweight `finger' program;  print user information.\n\
 The utmp file will be %s.\n\
 "), UTMP_FILE);
-      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
+      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);
 }

@@ -1064,7 +1064,7 @@ EXPRESSION is true or false and sets exit status.  It is one of:\n\
 Beware that parentheses need to be escaped (e.g., by backslashes) for shells.\n\
 INTEGER may also be -l STRING, which evaluates to the length of STRING.\n\
 "), stdout);
-      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
+      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);
 }

@@ -145,7 +145,7 @@ Comparisons are arithmetic if both ARGs are numbers, else lexicographical.\n\
 Pattern matches return the string matched between \\( and \\) or null; if\n\
 \\( and \\) are not used, they return the number of characters matched or 0.\n\
 "), stdout);
-      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
+      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);
 }

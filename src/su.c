@@ -447,7 +447,7 @@ Change the effective user id and group id to that of USER.\n\
 \n\
 A mere - implies -l.   If USER not given, assume root.\n\
 "), stdout);
-      puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
+      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
       close_stdout ();
     }
   exit (status);

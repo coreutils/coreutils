@@ -25,7 +25,7 @@ These option names may not be abbreviated.\n\
 	  program_name, program_name);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
-  puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
+  printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
   exit (status);
 }
 
