@@ -1,4 +1,4 @@
-#serial 17
+#serial 18
 # How to list mounted file systems.
 
 # Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2004 Free Software
@@ -23,6 +23,15 @@ dnl
 dnl This is not pretty.  I've just taken the autoconf code and wrapped
 dnl it in an AC_DEFUN and made some other fixes.
 dnl
+
+# Replace Autoconf's AC_FUNC_GETMNTENT to work around a bug in Autoconf
+# through Autoconf 2.59.  We can remove this once we assume Autoconf 2.60
+# or later.
+AC_DEFUN([AC_FUNC_GETMNTENT],
+[# getmntent is in the standard C library on UNICOS, in -lsun on Irix 4,
+# -lseq on Dynix/PTX, -lgen on Unixware.
+AC_SEARCH_LIBS(getmntent, -lsun -lseq -lgen, [AC_CHECK_FUNCS(getmntent)])
+])
 
 # gl_LIST_MOUNTED_FILE_SYSTEMS([ACTION-IF-FOUND[, ACTION-IF-NOT-FOUND]])
 AC_DEFUN([gl_LIST_MOUNTED_FILE_SYSTEMS],
@@ -63,7 +72,7 @@ AC_CHECK_MEMBERS([struct fsstat.f_fstypename],,,[$getfsstat_includes])
 ac_list_mounted_fs=
 
 # If the getmntent function is available but not in the standard library,
-# make sure LIBS contains -lsun (on Irix4) or -lseq (on PTX).
+# make sure LIBS contains the appropriate -l option.
 AC_FUNC_GETMNTENT
 
 # This test must precede the ones for getmntent because Unicos-9 is
