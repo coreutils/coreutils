@@ -5,7 +5,7 @@ Thu Oct 27 00:02:45 1994  Jim Meyering  (meyering@comco.com)
 
 	* df.c: New option: --sync (-s).  No longer perform sync by default.
 	Do it only when this option is used.  Invoking sync can be very
-	expensive, and it's not that clear doing so yields more up to date
+	expensive, and it's not clear that doing so yields more up to date
 	results.  With encouragement/prodding from Paolo Zeppegno
 	(paolo@to.sem.it), Nick Holloway, and Kaveh Ghazi.
 

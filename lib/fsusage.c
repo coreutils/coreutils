@@ -20,6 +20,7 @@
 #endif
 
 #include <sys/types.h>
+#include <sys/stat.h>
 #include "fsusage.h"
 #include "safe-stat.h"
 
@@ -50,7 +51,6 @@ int statfs ();
 #endif
 
 #ifdef HAVE_DUSTAT_H		/* AIX PS/2.  */
-#include <sys/stat.h>
 #include <sys/dustat.h>
 #endif
 
