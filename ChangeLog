@@ -1,3 +1,7 @@
+2003-09-05  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.0.91.
+
 2003-09-02  Paul Eggert  <eggert@twinsun.com>
 
 	* NEWS: sort -t '\0' now uses a NUL tab.
@@ -26,8 +30,6 @@
 	* src/head.c (elide_tail_lines_pipe): Likewise.
 
 2003-09-03  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.91.
 
 	* src/du.c (AUTHORS): Remove Larry McVoy's name, since the relatively
 	small amount of code from him was first moved to lib/human.c, and was
