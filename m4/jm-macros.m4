@@ -1,4 +1,4 @@
-#serial 55   -*- autoconf -*-
+#serial 56   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -131,7 +131,6 @@ AC_DEFUN([jm_MACROS],
 
   AC_CHECK_FUNCS( \
     bcopy \
-    canonicalize_file_name \
     endgrent \
     endpwent \
     fchdir \
@@ -151,7 +150,6 @@ AC_DEFUN([jm_MACROS],
     mempcpy \
     mkfifo \
     realpath \
-    resolvepath \
     sethostname \
     strchr \
     strerror \
