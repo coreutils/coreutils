@@ -1,5 +1,11 @@
 2000-09-25  Jim Meyering  <meyering@lucent.com>
 
+	* Makefile.maint (PREV_VERSION): Get the value from a file, rather
+	than trying to derive it from the current version number.
+	This is much more robust.
+	(alpha): Record just-released version number in `.prev-version',
+	and commit (post-tag).
+
 	* Version 4.0.27.
 
 2000-09-24  Paul Eggert  <eggert@twinsun.com>
