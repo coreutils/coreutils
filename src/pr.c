@@ -775,7 +775,7 @@ static struct option const long_options[] =
   {"page-width", required_argument, NULL, 'W'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {0, 0, 0, 0}
+  {NULL, 0, NULL, 0}
 };
 
 /* Return the number of columns that have either an open file or
