@@ -1617,7 +1617,7 @@ AC_DEFUN([_jm_DECL_HEADERS],
                    unistd.h sys/time.h utmp.h utmpx.h)
 ])
 
-#serial 27
+#serial 28
 
 dnl We use jm_ for non Autoconf macros.
 m4_pattern_forbid([^jm_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
@@ -1707,11 +1707,13 @@ AC_DEFUN([jm_PREREQ_HASH],
 ])
 
 # If you use human.c, you need the following files:
-# inttypes.m4 ulonglong.m4
+# inttypes.m4 longlong.m4
 AC_DEFUN([jm_PREREQ_HUMAN],
 [
-  AC_CHECK_HEADERS(limits.h stdlib.h string.h)
+  AC_CHECK_HEADERS(locale.h)
   AC_CHECK_DECLS([getenv])
+  AC_CHECK_FUNCS(localeconv)
+  AC_HEADER_STDBOOL
   AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])
 ])
 
@@ -3237,14 +3239,14 @@ char *p = PRId32;
   fi
 ])
 
-#serial 6
+#serial 7
 
 dnl From Jim Meyering.
 dnl A wrapper around AC_FUNC_GETGROUPS.
 
 AC_DEFUN([jm_FUNC_GETGROUPS],
 [AC_REQUIRE([AC_FUNC_GETGROUPS])dnl
-  if test $cv_func_getgroups_works = no; then
+  if test $ac_cv_func_getgroups_works = no; then
     AC_LIBOBJ(getgroups)
     AC_DEFINE(getgroups, rpl_getgroups,
       [Define as rpl_getgroups if getgroups doesn't work right.])
