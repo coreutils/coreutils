@@ -2,10 +2,21 @@
 
 	* Version 4.5.9.
 
+	* tests/misc/tty-eof: Set $ME properly.
+
+	* Makefile.maint (THIS_VERSION_REGEXP, PREV_VERSION_REGEXP):
+	Remove now-unused variables.
+	(tag-prev-version, prev-cvs-tag): Likewise.
+
 	* src/remove.c (remove_cwd_entries) [!ROOT_CAN_UNLINK_DIRS]: Give an
 	accurate diagnostic when failing to remove a file owned by some other
 	user.  Reported by Ivo Timmermans via Michael Stone.
 	This fixes Debian bug# 178471.
+
+	FIXME
+	* tests/rm/Makefile.am (TESTS): Add hard-3.
+	* tests/rm/hard-3: New test, for the above-fixed bug.
+	Based on a report from Ivo Timmermans.
 
 2003-03-02  Jim Meyering  <jim@meyering.net>
 
