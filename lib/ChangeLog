@@ -1,6 +1,8 @@
 2001-02-17  Jim Meyering  <meyering@lucent.com>
 
-	* strftime.c: Update from libc (the only changes were to comments).
+	* strnlen.c (__strnlen): Merge in a change from GNU libc.
+
+	* strftime.c: Update from GNU libc (the only changes were to comments).
 
 2001-02-13  Bruno Haible  <haible@clisp.cons.org>
 
