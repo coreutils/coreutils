@@ -1378,6 +1378,7 @@ parse_options (int argc, char **argv,
 	  forever = 1;
 	  follow_mode = Follow_name;
 	  reopen_inaccessible_files = 1;
+	  break;
 
 	case 'c':
 	case 'n':
