@@ -1,4 +1,4 @@
-# lib-prefix.m4 serial 2 (gettext-0.12)
+# lib-prefix.m4 serial 3 (gettext-0.13)
 dnl Copyright (C) 2001-2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -13,7 +13,7 @@ dnl similar to AC_ARG_WITH in autoconf 2.52...2.57 except that is doesn't
 dnl require excessive bracketing.
 ifdef([AC_HELP_STRING],
 [AC_DEFUN([AC_LIB_ARG_WITH], [AC_ARG_WITH([$1],[[$2]],[$3],[$4])])],
-[AC_DEFUN([AC_LIB_ARG_WITH], [AC_ARG_WITH([$1],[$2],[$3],[$4])])])
+[AC_DEFUN([AC_][LIB_ARG_WITH], [AC_ARG_WITH([$1],[$2],[$3],[$4])])])
 
 dnl AC_LIB_PREFIX adds to the CPPFLAGS and LDFLAGS the flags that are needed
 dnl to access previously installed libraries. The basic assumption is that
