@@ -1,3 +1,10 @@
+2004-09-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: Document that "tr xy -z" now works as per POSIX.
+	Sort the descriptions.
+	* src/tr.c (main): Don't reorder options.
+	* tests/tr/Test.pm (fowler-1): New test case.
+
 2004-09-06  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/touch.c (main): Fix POSIX-conformance bug: "touch --
