@@ -1,3 +1,10 @@
+2004-04-07  Paul Eggert  <eggert@twinsun.com>
+
+	New dd conv= symbols nocreat, excl, fdatasync, fsync,
+	and new dd options iflag= and oflag=.
+
+	* coreutils.texi (dd invocation): Document them.
+
 2004-04-07  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (stty invocation - Input): Document new iutf8 option.
