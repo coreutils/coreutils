@@ -346,3 +346,7 @@ char *base_name PARAMS ((char const *));
 #ifndef GID_T_MAX
 # define GID_T_MAX TYPE_MAXIMUM (gid_t)
 #endif
+
+#ifndef PID_T_MAX
+# define PID_T_MAX TYPE_MAXIMUM (pid_t)
+#endif
