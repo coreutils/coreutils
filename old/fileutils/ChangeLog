@@ -2,6 +2,12 @@
 
 	* Version 4.1.1.
 
+	* src/copy.c (copy_internal): Tighten up and add comments
+	describing the test for when to record (via remember_copied)
+	a <dst_path, source_dev, source_ino> triple.
+	Relax the test that guards the hard-linked-dir check and
+	the hard-link-preserving code.
+
 	Remove the link-preserving semantics from cp_options.dereference.
 	Clean up the code that preserves links for `cp -d' and `mv'.
 	Introduce new options:
@@ -31,6 +37,8 @@
 	(struct cp_options) [preserve_links]: New member.
 	* src/install.c (cp_option_init): Initialize new member to 0.
 	* src/mv.c (cp_option_init): Initialize new member to 1.
+
+	* tests/cp/link-preserve: Add tests for some of the above.
 
 2001-10-13  Jim Meyering  <meyering@lucent.com>
 
