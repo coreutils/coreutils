@@ -1,5 +1,9 @@
 1999-09-28  Jim Meyering  <meyering@ascend.com>
 
+	* src/system.h: Do s/#ifdef HAVE_/#if HAVE_/ -- solely for aesthetics.
+	Do the same for other config.h macros like CLOSEDIR_VOID and MAJOR_*.
+	* src/sys2.h: Likewise.
+
 	* lib/xalloc.h (__attribute__): Protect against redefinition.
 	From Akim Demaille.
 
