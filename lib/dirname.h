@@ -19,6 +19,7 @@
 #ifndef DIRNAME_H_
 # define DIRNAME_H_ 1
 
+# include <stdbool.h>
 # include <stddef.h>
 
 # ifndef DIRECTORY_SEPARATOR
@@ -41,6 +42,6 @@ char *dir_name (char const *path);
 size_t base_len (char const *path);
 size_t dir_len (char const *path);
 
-int strip_trailing_slashes (char *path);
+bool strip_trailing_slashes (char *path);
 
 #endif /* not DIRNAME_H_ */
