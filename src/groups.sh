@@ -31,11 +31,11 @@ Same as id -Gn.  If no USERNAME, use current process."
 
 case $# in
   1 )
-    case "z${1}" in 
+    case "z${1}" in
       z--help )
 	 echo "$usage"; exit 0 ;;
       z--version )
-	 echo "groups - @VERSION@"; exit 0 ;;
+	 echo "groups - @PKG_VERSION@"; exit 0 ;;
       * ) ;;
     esac
     ;;

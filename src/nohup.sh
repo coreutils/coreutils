@@ -41,11 +41,11 @@ fi
 
 case $# in
   1 )
-    case "z${1}" in 
+    case "z${1}" in
       z--help )
 	 echo "$usage"; echo "$usage_help"; exit 0 ;;
       z--version )
-	 echo "nohup - @VERSION@"; exit 0 ;;
+	 echo "nohup - @PKG_VERSION@"; exit 0 ;;
       * ) ;;
     esac
     ;;
