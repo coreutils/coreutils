@@ -114,14 +114,14 @@ struct File_spec
   /* The specified name initially referred to a directory or some other
      type for which tail isn't meaningful.  Unlike for a permission problem
      (tailable, below) once this is set, the name is not checked ever again.  */
-  int ignore;
+  bool ignore;
 
   /* See description of DEFAULT_MAX_N_... below.  */
-  unsigned int n_unchanged_stats;
+  uintmax_t n_unchanged_stats;
 
   /* A file is tailable if it exists, is readable, and is of type
      IS_TAILABLE_FILE_TYPE.  */
-  int tailable;
+  bool tailable;
 
   /* The value of errno seen last time we checked this file.  */
   int errnum;
@@ -130,24 +130,24 @@ struct File_spec
 
 /* Keep trying to open a file even if it is inaccessible when tail starts
    or if it becomes inaccessible later -- useful only with -f.  */
-static int reopen_inaccessible_files;
+static bool reopen_inaccessible_files;
 
-/* If nonzero, interpret the numeric argument as the number of lines.
+/* If true, interpret the numeric argument as the number of lines.
    Otherwise, interpret it as the number of bytes.  */
-static int count_lines;
+static bool count_lines;
 
 /* Whether we follow the name of each file or the file descriptor
    that is initially associated with each name.  */
 static enum Follow_mode follow_mode = Follow_descriptor;
 
-/* If nonzero, read from the ends of all specified files until killed.  */
-static int forever;
+/* If true, read from the ends of all specified files until killed.  */
+static bool forever;
 
-/* If nonzero, count from start of file instead of end.  */
-static int from_start;
+/* If true, count from start of file instead of end.  */
+static bool from_start;
 
-/* If nonzero, print filename headers.  */
-static int print_headers;
+/* If true, print filename headers.  */
+static bool print_headers;
 
 /* When to print the filename banners.  */
 enum header_mode
@@ -161,7 +161,7 @@ enum header_mode
    same device/inode-number pair as before.  This option is meaningful only
    when following by name.  --max-unchanged-stats=N  */
 #define DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS 5
-static unsigned long max_n_unchanged_stats_between_opens =
+static uintmax_t max_n_unchanged_stats_between_opens =
   DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS;
 
 /* The name this program was run with.  */
@@ -171,8 +171,8 @@ char *program_name;
    that is writing to all followed files.  */
 static pid_t pid;
 
-/* Nonzero if we have ever read standard input.  */
-static int have_read_stdin;
+/* True if we have ever read standard input.  */
+static bool have_read_stdin;
 
 /* If nonzero, skip the is-regular-file test used to determine whether
    to use the lseek optimization.  Instead, use the more general (and
@@ -291,7 +291,7 @@ recreated by some other program.\n\
   exit (status);
 }
 
-static int
+static bool
 valid_file_spec (struct File_spec const *f)
 {
   /* Exactly one of the following subexpressions must be true. */
@@ -346,10 +346,10 @@ close_fd (int fd, const char *filename)
 static void
 write_header (const char *pretty_filename)
 {
-  static int first_file = 1;
+  static bool first_file = true;
 
   printf ("%s==> %s <==\n", (first_file ? "" : "\n"), pretty_filename);
-  first_file = 0;
+  first_file = false;
 }
 
 /* Read and output N_BYTES of file PRETTY_FILENAME starting at the current
@@ -435,9 +435,9 @@ xlseek (int fd, off_t offset, int whence, char const *filename)
    START_POS is the starting position of the read pointer for the file
    associated with FD (may be nonzero).
    END_POS is the file offset of EOF (one larger than offset of last byte).
-   Return 0 if successful, 1 if an error occurred.  */
+   Return true if successful.  */
 
-static int
+static bool
 file_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
 	    off_t start_pos, off_t end_pos, uintmax_t *read_pos)
 {
@@ -446,7 +446,7 @@ file_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
   off_t pos = end_pos;
 
   if (n_lines == 0)
-    return 0;
+    return true;
 
   /* Set `bytes_read' to the size of the last, probably partial, buffer;
      0 < `bytes_read' <= `BUFSIZ'.  */
@@ -461,7 +461,7 @@ file_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
   if (bytes_read == SAFE_READ_ERROR)
     {
       error (0, errno, _("error reading %s"), quote (pretty_filename));
-      return 1;
+      return false;
     }
   *read_pos = pos + bytes_read;
 
@@ -489,7 +489,7 @@ file_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
 		xwrite (STDOUT_FILENO, nl + 1, bytes_read - (n + 1));
 	      *read_pos += dump_remainder (pretty_filename, fd,
 					   end_pos - (pos + bytes_read));
-	      return 0;
+	      return true;
 	    }
 	}
 
@@ -501,7 +501,7 @@ file_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
 	  xlseek (fd, start_pos, SEEK_SET, pretty_filename);
 	  *read_pos = start_pos + dump_remainder (pretty_filename, fd,
 						  end_pos);
-	  return 0;
+	  return true;
 	}
       pos -= BUFSIZ;
       xlseek (fd, pos, SEEK_SET, pretty_filename);
@@ -510,22 +510,22 @@ file_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
       if (bytes_read == SAFE_READ_ERROR)
 	{
 	  error (0, errno, _("error reading %s"), quote (pretty_filename));
-	  return 1;
+	  return false;
 	}
 
       *read_pos = pos + bytes_read;
     }
   while (bytes_read > 0);
 
-  return 0;
+  return true;
 }
 
 /* Print the last N_LINES lines from the end of the standard input,
    open for reading as pipe FD.
    Buffer the text as a linked list of LBUFFERs, adding them as needed.
-   Return 0 if successful, 1 upon error.  */
+   Return true if successful.  */
 
-static int
+static bool
 pipe_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
 	    uintmax_t *read_pos)
 {
@@ -539,7 +539,7 @@ pipe_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
   typedef struct linebuffer LBUFFER;
   LBUFFER *first, *last, *tmp;
   size_t total_lines = 0;	/* Total number of newlines in all buffers.  */
-  int errors = 0;
+  bool ok = true;
   size_t n_read;		/* Size in bytes of most recent read */
 
   first = last = xmalloc (sizeof (LBUFFER));
@@ -603,7 +603,7 @@ pipe_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
   if (n_read == SAFE_READ_ERROR)
     {
       error (0, errno, _("error reading %s"), quote (pretty_filename));
-      errors = 1;
+      ok = false;
       goto free_lbuffers;
     }
 
@@ -657,14 +657,14 @@ free_lbuffers:
       free (first);
       first = tmp;
     }
-  return errors;
+  return ok;
 }
 
 /* Print the last N_BYTES characters from the end of pipe FD.
    This is a stripped down version of pipe_lines.
-   Return 0 if successful, 1 if an error occurred.  */
+   Return true if successful.  */
 
-static int
+static bool
 pipe_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
 	    uintmax_t *read_pos)
 {
@@ -678,7 +678,7 @@ pipe_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
   CBUFFER *first, *last, *tmp;
   size_t i;			/* Index into buffers.  */
   size_t total_bytes = 0;	/* Total characters in all buffers.  */
-  int errors = 0;
+  bool ok = true;
   size_t n_read;
 
   first = last = xmalloc (sizeof (CBUFFER));
@@ -731,7 +731,7 @@ pipe_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
   if (n_read == SAFE_READ_ERROR)
     {
       error (0, errno, _("error reading %s"), quote (pretty_filename));
-      errors = 1;
+      ok = false;
       goto free_cbuffers;
     }
 
@@ -758,7 +758,7 @@ free_cbuffers:
       free (first);
       first = tmp;
     }
-  return errors;
+  return ok;
 }
 
 /* Skip N_BYTES characters from the start of pipe FD, and print
@@ -843,11 +843,11 @@ recheck (struct File_spec *f, bool blocking)
 {
   /* open/fstat the file and announce if dev/ino have changed */
   struct stat new_stats;
-  int fail = 0;
-  int is_stdin = (STREQ (f->name, "-"));
-  int was_tailable = f->tailable;
+  bool ok = true;
+  bool is_stdin = (STREQ (f->name, "-"));
+  bool was_tailable = f->tailable;
   int prev_errnum = f->errnum;
-  int new_file;
+  bool new_file;
   int fd = (is_stdin
 	    ? STDIN_FILENO
 	    : open_safer (f->name, O_RDONLY | (blocking ? 0 : O_NONBLOCK)));
@@ -860,7 +860,7 @@ recheck (struct File_spec *f, bool blocking)
 
   if (fd == -1 || fstat (fd, &new_stats) < 0)
     {
-      fail = 1;
+      ok = false;
       f->errnum = errno;
       if (!f->tailable)
 	{
@@ -885,20 +885,20 @@ recheck (struct File_spec *f, bool blocking)
     }
   else if (!IS_TAILABLE_FILE_TYPE (new_stats.st_mode))
     {
-      fail = 1;
+      ok = false;
       f->errnum = -1;
       error (0, 0, _("`%s' has been replaced with an untailable file;\
  giving up on this name"),
 	     pretty_name (f));
-      f->ignore = 1;
+      f->ignore = true;
     }
   else
     {
       f->errnum = 0;
     }
 
-  new_file = 0;
-  if (fail)
+  new_file = false;
+  if (!ok)
     {
       close_fd (fd, pretty_name (f));
       close_fd (f->fd, pretty_name (f));
@@ -906,13 +906,13 @@ recheck (struct File_spec *f, bool blocking)
     }
   else if (prev_errnum && prev_errnum != ENOENT)
     {
-      new_file = 1;
+      new_file = true;
       assert (f->fd == -1);
       error (0, 0, _("`%s' has become accessible"), pretty_name (f));
     }
   else if (f->ino != new_stats.st_ino || f->dev != new_stats.st_dev)
     {
-      new_file = 1;
+      new_file = true;
       if (f->fd == -1)
 	{
 	  error (0, 0,
@@ -938,7 +938,7 @@ recheck (struct File_spec *f, bool blocking)
 	  /* This happens when one iteration finds the file missing,
 	     then the preceding <dev,inode> pair is reused as the
 	     file is recreated.  */
-	  new_file = 1;
+	  new_file = true;
 	}
       else
 	{
@@ -982,7 +982,7 @@ tail_forever (struct File_spec *f, int nfiles, double sleep_interval)
   bool blocking = (pid == 0 && follow_mode == Follow_descriptor
 		   && nfiles == 1 && ! S_ISREG (f[0].mode));
   int last;
-  int writer_is_dead = 0;
+  bool writer_is_dead = false;
 
   last = nfiles - 1;
 
@@ -1113,9 +1113,9 @@ tail_forever (struct File_spec *f, int nfiles, double sleep_interval)
 }
 
 /* Output the last N_BYTES bytes of file FILENAME open for reading in FD.
-   Return 0 if successful, 1 if an error occurred.  */
+   Return true if successful.  */
 
-static int
+static bool
 tail_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
 	    uintmax_t *read_pos)
 {
@@ -1128,7 +1128,7 @@ tail_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
   if (fstat (fd, &stats))
     {
       error (0, errno, _("cannot fstat %s"), quote (pretty_filename));
-      return 1;
+      return false;
     }
 
   if (from_start)
@@ -1141,11 +1141,9 @@ tail_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
 	}
       else
 	{
-	  int t;
-	  if ((t = start_bytes (pretty_filename, fd, n_bytes, read_pos)) < 0)
-	    return 0;
+	  int t = start_bytes (pretty_filename, fd, n_bytes, read_pos);
 	  if (t)
-	    return 1;
+	    return t < 0;
 	}
       *read_pos += dump_remainder (pretty_filename, fd, COPY_TO_EOF);
     }
@@ -1181,13 +1179,13 @@ tail_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
       else
 	return pipe_bytes (pretty_filename, fd, n_bytes, read_pos);
     }
-  return 0;
+  return true;
 }
 
 /* Output the last N_LINES lines of file FILENAME open for reading in FD.
-   Return 0 if successful, 1 if an error occurred.  */
+   Return true if successful.  */
 
-static int
+static bool
 tail_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
 	    uintmax_t *read_pos)
 {
@@ -1200,16 +1198,14 @@ tail_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
   if (fstat (fd, &stats))
     {
       error (0, errno, _("cannot fstat %s"), quote (pretty_filename));
-      return 1;
+      return false;
     }
 
   if (from_start)
     {
-      int t;
-      if ((t = start_lines (pretty_filename, fd, n_lines, read_pos)) < 0)
-	return 0;
+      int t = start_lines (pretty_filename, fd, n_lines, read_pos);
       if (t)
-	return 1;
+	return t < 0;
       *read_pos += dump_remainder (pretty_filename, fd, COPY_TO_EOF);
     }
   else
@@ -1225,9 +1221,10 @@ tail_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
 	   && start_pos < (end_pos = lseek (fd, 0, SEEK_END)))
 	{
 	  *read_pos = end_pos;
-	  if (end_pos != 0 && file_lines (pretty_filename, fd, n_lines,
-					  start_pos, end_pos, read_pos))
-	    return 1;
+	  if (end_pos != 0
+	      && ! file_lines (pretty_filename, fd, n_lines,
+			       start_pos, end_pos, read_pos))
+	    return false;
 	}
       else
 	{
@@ -1241,7 +1238,7 @@ tail_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
 	  return pipe_lines (pretty_filename, fd, n_lines, read_pos);
 	}
     }
-  return 0;
+  return true;
 }
 
 /* Display the last N_UNITS units of file FILENAME, open for reading
@@ -1252,9 +1249,9 @@ tail_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
    number of bytes read (when an input pointer is initially not at
    beginning of file), and may be far greater than the number of bytes
    actually read for an input file that is seekable.
-   Return 0 if successful, 1 if an error occurred.  */
+   Return true if successful.  */
 
-static int
+static bool
 tail (const char *filename, int fd, uintmax_t n_units,
       uintmax_t *read_pos)
 {
@@ -1266,18 +1263,19 @@ tail (const char *filename, int fd, uintmax_t n_units,
 }
 
 /* Display the last N_UNITS units of the file described by F.
-   Return 0 if successful, 1 if an error occurred.  */
+   Return true if successful.  */
 
-static int
+static bool
 tail_file (struct File_spec *f, uintmax_t n_units)
 {
-  int fd, errors;
+  int fd;
+  bool ok;
 
-  int is_stdin = (STREQ (f->name, "-"));
+  bool is_stdin = (STREQ (f->name, "-"));
 
   if (is_stdin)
     {
-      have_read_stdin = 1;
+      have_read_stdin = true;
       fd = STDIN_FILENO;
     }
   else
@@ -1293,13 +1291,13 @@ tail_file (struct File_spec *f, uintmax_t n_units)
 	{
 	  f->fd = -1;
 	  f->errnum = errno;
-	  f->ignore = 0;
+	  f->ignore = false;
 	  f->ino = 0;
 	  f->dev = 0;
 	}
       error (0, errno, _("cannot open %s for reading"),
 	     quote (pretty_name (f)));
-      errors = 1;
+      ok = false;
     }
   else
     {
@@ -1307,7 +1305,7 @@ tail_file (struct File_spec *f, uintmax_t n_units)
 
       if (print_headers)
 	write_header (pretty_name (f));
-      errors = tail (pretty_name (f), fd, n_units, &read_pos);
+      ok = tail (pretty_name (f), fd, n_units, &read_pos);
       if (forever)
 	{
 	  struct stat stats;
@@ -1321,7 +1319,7 @@ tail_file (struct File_spec *f, uintmax_t n_units)
 	  f->errnum = 0;
 	  if (fstat (fd, &stats) < 0)
 	    {
-	      errors = 1;
+	      ok = false;
 	      f->errnum = errno;
 	      error (0, errno, _("error reading %s"), quote (pretty_name (f)));
 	    }
@@ -1330,12 +1328,12 @@ tail_file (struct File_spec *f, uintmax_t n_units)
 	      error (0, 0, _("%s: cannot follow end of this type of file;\
  giving up on this name"),
 		     pretty_name (f));
-	      errors = 1;
+	      ok = false;
 	      f->errnum = -1;
-	      f->ignore = 1;
+	      f->ignore = true;
 	    }
 
-	  if (errors)
+	  if (!ok)
 	    {
 	      close_fd (fd, pretty_name (f));
 	      f->fd = -1;
@@ -1353,57 +1351,57 @@ tail_file (struct File_spec *f, uintmax_t n_units)
 	  if (!is_stdin && close (fd))
 	    {
 	      error (0, errno, _("error reading %s"), quote (pretty_name (f)));
-	      errors = 1;
+	      ok = false;
 	    }
 	}
     }
 
-  return errors;
+  return ok;
 }
 
 /* If the command line arguments are of the obsolescent form and the
-   option string is well-formed, set *FAIL to zero, set *N_UNITS, the
-   globals COUNT_LINES, FOREVER, and FROM_START, and return non-zero.
+   option string is well-formed, set *OK to true, set *N_UNITS, the
+   globals COUNT_LINES, FOREVER, and FROM_START, and return true.
    Otherwise, if the command line arguments appear to be of the
-   obsolescent form but the option string is malformed, set *FAIL to
-   non-zero, don't modify any other parameter or global variable, and
-   return non-zero. Otherwise, return zero and don't modify any parameter
+   obsolescent form but the option string is malformed, set *OK to
+   false, don't modify any other parameter or global variable, and
+   return true.  Otherwise, return false and don't modify any parameter
    or global variable.  */
 
-static int
+static bool
 parse_obsolescent_option (int argc, const char *const *argv,
-			  uintmax_t *n_units, int *fail)
+			  uintmax_t *n_units, bool *ok)
 {
   const char *p = argv[1];
   const char *n_string = NULL;
   const char *n_string_end;
   bool obsolete_usage;
 
-  int t_from_start;
-  int t_count_lines;
-  int t_forever;
+  bool t_from_start;
+  bool t_count_lines;
+  bool t_forever;
 
   /* With the obsolescent form, there is one option string and
      (technically) at most one file argument.  But we allow two or more
      by default.  */
   if (argc < 2)
-    return 0;
+    return false;
 
   obsolete_usage = (posix2_version () < 200112);
 
   /* If P starts with `+' and the POSIX version predates 1003.1-2001,
      or if P starts with `-N' (where N is a digit), or `-l', then it
-     is obsolescent.  Return zero otherwise.  */
+     is obsolescent.  Return false otherwise.  */
   if (! ((p[0] == '+' && obsolete_usage)
 	 || (p[0] == '-' && (p[1] == 'l' || ISDIGIT (p[1])))))
-    return 0;
+    return false;
 
   if (*p == '+')
-    t_from_start = 1;
+    t_from_start = true;
   else if (*p == '-')
-    t_from_start = 0;
+    t_from_start = false;
   else
-    return 0;
+    return false;
 
   ++p;
   if (ISDIGIT (*p))
@@ -1417,10 +1415,10 @@ parse_obsolescent_option (int argc, const char *const *argv,
     }
   n_string_end = p;
 
-  t_count_lines = 1;
+  t_count_lines = true;
   if (*p == 'c' || *p == 'b')
     {
-      t_count_lines = 0;
+      t_count_lines = false;
       ++p;
     }
   else if (*p == 'l')
@@ -1428,10 +1426,10 @@ parse_obsolescent_option (int argc, const char *const *argv,
       ++p;
     }
 
-  t_forever = 0;
+  t_forever = false;
   if (*p == 'f')
     {
-      t_forever = 1;
+      t_forever = true;
       ++p;
     }
 
@@ -1445,15 +1443,15 @@ parse_obsolescent_option (int argc, const char *const *argv,
 	{
 	  error (0, 0,
 		 _("%c: invalid suffix character in obsolescent option"), *p);
-	  *fail = 1;
-	  return 1;
+	  *ok = false;
+	  return true;
 	}
 
       /* Otherwise, it might be a valid non-obsolescent option like -n.  */
-      return 0;
+      return false;
     }
 
-  *fail = 0;
+  *ok = true;
   if (n_string == NULL)
     *n_units = DEFAULT_N_LINES;
   else
@@ -1481,17 +1479,18 @@ parse_obsolescent_option (int argc, const char *const *argv,
 				? _("number of lines")
 				: _("number of bytes")));
 	  free (n_string_tmp);
-	  *fail = 1;
+	  *ok = false;
 	}
     }
 
-  if (!*fail)
+  if (*ok)
     {
       if (! obsolete_usage)
 	{
+	  int n_string_len = n_string_end - n_string;
 	  error (0, 0, _("`%s' option is obsolete; use `%s-%c %.*s'"),
 		 argv[1], t_forever ? " -f" : "", t_count_lines ? 'n' : 'c',
-		 (int) (n_string_end - n_string), n_string);
+		 n_string_len, n_string);
 	  usage (EXIT_FAILURE);
 	}
 
@@ -1501,7 +1500,7 @@ parse_obsolescent_option (int argc, const char *const *argv,
       forever = t_forever;
     }
 
-  return 1;
+  return true;
 }
 
 static void
@@ -1511,8 +1510,8 @@ parse_options (int argc, char **argv,
 {
   int c;
 
-  count_lines = 1;
-  forever = from_start = print_headers = 0;
+  count_lines = true;
+  forever = from_start = print_headers = false;
 
   while ((c = getopt_long (argc, argv, "c:n:fFqs:v", long_options, NULL))
 	 != -1)
@@ -1523,16 +1522,16 @@ parse_options (int argc, char **argv,
 	  break;
 
 	case 'F':
-	  forever = 1;
+	  forever = true;
 	  follow_mode = Follow_name;
-	  reopen_inaccessible_files = 1;
+	  reopen_inaccessible_files = true;
 	  break;
 
 	case 'c':
 	case 'n':
 	  count_lines = (c == 'n');
 	  if (*optarg == '+')
-	    from_start = 1;
+	    from_start = true;
 	  else if (*optarg == '-')
 	    ++optarg;
 
@@ -1551,7 +1550,7 @@ parse_options (int argc, char **argv,
 
 	case 'f':
 	case LONG_FOLLOW_OPTION:
-	  forever = 1;
+	  forever = true;
 	  if (optarg == NULL)
 	    follow_mode = DEFAULT_FOLLOW_MODE;
 	  else
@@ -1564,13 +1563,15 @@ parse_options (int argc, char **argv,
 	   _("the --allow-missing option is deprecated; use --retry instead"));
 	  /* fall through */
 	case RETRY_OPTION:
-	  reopen_inaccessible_files = 1;
+	  reopen_inaccessible_files = true;
 	  break;
 
 	case MAX_UNCHANGED_STATS_OPTION:
 	  /* --max-unchanged-stats=N */
-	  if (xstrtoul (optarg, NULL, 10,
-			&max_n_unchanged_stats_between_opens, "") != LONGINT_OK)
+	  if (xstrtoumax (optarg, NULL, 10,
+			  &max_n_unchanged_stats_between_opens,
+			  "")
+	      != LONGINT_OK)
 	    {
 	      error (EXIT_FAILURE, 0,
 	       _("%s: invalid maximum number of unchanged stats between opens"),
@@ -1602,7 +1603,7 @@ parse_options (int argc, char **argv,
 	case 's':
 	  {
 	    double s;
-	    if (xstrtod (optarg, NULL, &s, c_strtod) || ! (0 <= s))
+	    if (! (xstrtod (optarg, NULL, &s, c_strtod) && 0 <= s))
 	      error (EXIT_FAILURE, 0,
 		     _("%s: invalid number of seconds"), optarg);
 	    *sleep_interval = s;
@@ -1639,7 +1640,7 @@ int
 main (int argc, char **argv)
 {
   enum header_mode header_mode = multiple_files;
-  int exit_status = 0;
+  bool ok = true;
   /* If from_start, the number of items to skip before printing; otherwise,
      the number of items at the end of the file to print.  Although the type
      is signed, the value is never negative.  */
@@ -1662,16 +1663,16 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  have_read_stdin = 0;
+  have_read_stdin = false;
 
   {
-    int fail;
+    bool ok;
 
     if (parse_obsolescent_option (argc,
 				  (const char *const *) argv,
-				  &n_units, &fail))
+				  &n_units, &ok))
       {
-	if (fail)
+	if (!ok)
 	  exit (EXIT_FAILURE);
 	optind = 2;
       }
@@ -1736,15 +1737,15 @@ main (int argc, char **argv)
 
   if (header_mode == always
       || (header_mode == multiple_files && n_files > 1))
-    print_headers = 1;
+    print_headers = true;
 
   for (i = 0; i < n_files; i++)
-    exit_status |= tail_file (&F[i], n_units);
+    ok &= tail_file (&F[i], n_units);
 
   if (forever)
     tail_forever (F, n_files, sleep_interval);
 
   if (have_read_stdin && close (STDIN_FILENO) < 0)
     error (EXIT_FAILURE, errno, "-");
-  exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
