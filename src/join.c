@@ -117,6 +117,48 @@ static struct option const longopts[] =
 static struct line uni_blank;
 
 static void
+usage (status)
+     int status;
+{
+  if (status != 0)
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+	     program_name);
+  else
+    {
+      printf (_("\
+Usage: %s [OPTION]... FILE1 FILE2\n\
+"),
+	      program_name);
+      printf (_("\
+For each pair of input lines with identical join fields, write a line to\n\
+standard output.  The default join field is the first, delimited\n\
+by whitespace.  When FILE1 or FILE2 (not both) is -, read standard input.\n\
+\n\
+  -a SIDE          print unpairable lines coming from file SIDE\n\
+  -e EMPTY         replace missing input fields with EMPTY\n\
+  -j FIELD         (Obsolescent) equivalent to `-1 FIELD -2 FIELD'\n\
+  -j1 FIELD        (Obsolescent) equivalent to `-1 FIELD'\n\
+  -j2 FIELD        (Obsolescent) equivalent to `-2 FIELD'\n\
+  -1 FIELD         join on this FIELD of file 1\n\
+  -2 FIELD         join on this FIELD of file 2\n\
+  -o FORMAT        obey FORMAT while constructing output line\n\
+  -t CHAR          use CHAR as input and output field separator\n\
+  -v SIDE          like -a SIDE, but suppress joined output lines\n\
+  --help           display this help and exit\n\
+  --version        output version information and exit\n\
+\n\
+Unless -t CHAR is given, leading blanks separate fields and are ignored,\n\
+else fields are separated by CHAR.  Any FIELD is a field number counted\n\
+from 1.  FORMAT is one or more comma or blank separated specifications,\n\
+each being `SIDE.FIELD' or `0'.  Default FORMAT outputs the join field,\n\
+the remaining fields from FILE1, the remaining fields from FILE2, all\n\
+separated by CHAR.\n\
+"));
+    }
+  exit (status);
+}
+
+static void
 ADD_FIELD (line, field, len)
      struct line *line;
      const char *field;
@@ -737,46 +779,4 @@ main (argc, argv)
     error (1, errno, _("write error"));
 
   exit (0);
-}
-
-static void
-usage (status)
-     int status;
-{
-  if (status != 0)
-    fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
-  else
-    {
-      printf (_("\
-Usage: %s [OPTION]... FILE1 FILE2\n\
-"),
-	      program_name);
-      printf (_("\
-For each pair of input lines with identical join fields, write a line to\n\
-standard output.  The default join field is the first, delimited\n\
-by whitespace.  When FILE1 or FILE2 (not both) is -, read standard input.\n\
-\n\
-  -a SIDE          print unpairable lines coming from file SIDE\n\
-  -e EMPTY         replace missing input fields with EMPTY\n\
-  -j FIELD         (Obsolescent) equivalent to `-1 FIELD -2 FIELD'\n\
-  -j1 FIELD        (Obsolescent) equivalent to `-1 FIELD'\n\
-  -j2 FIELD        (Obsolescent) equivalent to `-2 FIELD'\n\
-  -1 FIELD         join on this FIELD of file 1\n\
-  -2 FIELD         join on this FIELD of file 2\n\
-  -o FORMAT        obey FORMAT while constructing output line\n\
-  -t CHAR          use CHAR as input and output field separator\n\
-  -v SIDE          like -a SIDE, but suppress joined output lines\n\
-  --help           display this help and exit\n\
-  --version        output version information and exit\n\
-\n\
-Unless -t CHAR is given, leading blanks separate fields and are ignored,\n\
-else fields are separated by CHAR.  Any FIELD is a field number counted\n\
-from 1.  FORMAT is one or more comma or blank separated specifications,\n\
-each being `SIDE.FIELD' or `0'.  Default FORMAT outputs the join field,\n\
-the remaining fields from FILE1, the remaining fields from FILE2, all\n\
-separated by CHAR.\n\
-"));
-    }
-  exit (status);
 }
