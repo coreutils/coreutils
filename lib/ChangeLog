@@ -1,3 +1,7 @@
+2000-06-04  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/strnlen.c: Include <config.h> if HAVE_CONFIG_H.
+
 2000-06-04  Jim Meyering  <meyering@lucent.com>
 
 	* getugroups.c (getugroups): Cast -1 to gid_t, for systems like
