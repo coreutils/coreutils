@@ -38,6 +38,7 @@
 #include "error.h"
 #include "xstrtod.h"
 
+#undef ENABLE_NLS
 #ifdef ENABLE_NLS
 /* FIXME: this may need some heading.... applies to Debian linux for
    reading the structure of _NL_ITEM... to get abbreviated month names */
@@ -937,7 +938,7 @@ findlines (struct buffer *buf, struct lines *lines)
    The above implementation duplicates code, and thus there is room
    for improvement:
       the difference in code of a and b, is solved by using a
-      reference to s, assigned to either a or b. and using n
+      reference to s, assigned to either a or b. and using diff
       to denote return value.
       the difference in either that start being a digit or
       the decimal point, is solved by testing if either is
@@ -947,52 +948,60 @@ findlines (struct buffer *buf, struct lines *lines)
       skip all chars where *a == *b
       if *a and *b are digits
         return *a - *b
-      s is b, and return code is -1
       if *a is a digit or *a is a decimal_point
 	s is a
-	return code 1
+	diff is 1
+      else
+	s is b
+	diff is -1
       skip decimal_point in s
       skip zeroes in s
       if *s is a digit
-        return n
-    return 0                                                          */
+        return diff
+    return 0 */
 
-#ifdef ENABLE_NLS
+#define USE_NEW_FRAC_COMPARE
+#ifdef USE_NEW_FRAC_COMPARE
 
 static int
 fraccompare (register const char *a, register const char *b)
 {
-  if (!nls_fraction_found)
-    nls_fraction_found = 1;
+# ifdef ENABLE_NLS
+  nls_fraction_found = 1;
+# endif
 
   if (*a == decimal_point || *b == decimal_point)
     {
       register const char *s;
-      int n = -1;
+      int diff;
 
       while (*a == *b)
 	{
 	  ++a;
 	  ++b;
-	  if (ISDIGIT (*a))
+	  if (!ISDIGIT (*a))
 	    break;
 	}
 
       if (ISDIGIT (*a) && ISDIGIT (*b))
 	return (*a) - (*b);
 
-      s = b;
       if (*a == decimal_point || (ISDIGIT (*a) && *b != decimal_point))
 	{
 	  s = a;
-	  n = 1;
+	  diff = 1;
+	}
+      else
+	{
+	  s = b;
+	  diff = -1;
 	}
       if (*s == decimal_point)
 	++s;
       while (*s == NUMERIC_ZERO)
 	++s;
       if (ISDIGIT (*s))
-	return n;
+	return diff;
     }
   return 0;
 }
