@@ -25,12 +25,7 @@ if test $framework_failure = 1; then
 fi
 
 # Make sure we get English translations.
-LANGUAGE=C
-export LANGUAGE
-LC_ALL=C
-export LC_ALL
-LANG=C
-export LANG
+. $srcdir/../lang-default
 
 # These mv commands should all exit nonzero.
 

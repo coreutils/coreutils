@@ -8,13 +8,14 @@ fi
 
 . $srcdir/setup
 . $srcdir/../envvar-check
+. $srcdir/../lang-default
 
 if test -z "$other_partition_tmpdir"; then
   exit 77
 fi
 
-LANGUAGE=C; export LANGUAGE
-LANG=C; export LANG
+=''; export LANGUAGE
+=''; export LANG
 
 pwd=`pwd`
 dir=p-perm-$$

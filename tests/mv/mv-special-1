@@ -1,6 +1,8 @@
 #! /bin/sh
 
 . $srcdir/setup
+# Make sure we get English translations.
+. $srcdir/../lang-default
 
 if test -z "$other_partition_tmpdir"; then
   exit 77
@@ -25,14 +27,6 @@ if test $framework_failure = 1; then
   # from an OpenBSD system, the above mknod fails.
   exit 77
 fi
-
-# Make sure we get English translations.
-LANGUAGE=C
-export LANGUAGE
-LC_ALL=C
-export LC_ALL
-LANG=C
-export LANG
 
 fail=0
 mv --verbose $null $dir $other_partition_tmpdir > out || fail=1

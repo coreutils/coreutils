@@ -23,12 +23,7 @@ fi
 fail=0
 
 # Make sure we get English translations.
-LANGUAGE=C
-export LANGUAGE
-LC_ALL=C
-export LC_ALL
-LANG=C
-export LANG
+. $srcdir/../lang-default
 
 # This mv command should fail.
 mv $dir $file $dir > out 2>&1 && fail=1

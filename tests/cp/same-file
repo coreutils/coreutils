@@ -7,8 +7,7 @@ if test "$VERBOSE" = yes; then
   cp --version
 fi
 
-LANGUAGE=C; export LANGUAGE
-LANG=C; export LANG
+. $srcdir/../lang-default
 
 VERSION_CONTROL=numbered; export VERSION_CONTROL
 
