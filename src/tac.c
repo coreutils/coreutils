@@ -128,17 +128,19 @@ usage (int status)
 Usage: %s [OPTION]... [FILE]...\n\
 "),
 	      program_name);
-      printf (_("\
+      fputs (_("\
 Write each FILE to standard output, last line first.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
 Mandatory arguments to long options are mandatory for short options too.\n\
   -b, --before             attach the separator before instead of after\n\
+"), stdout);
+      fputs (_("\
   -r, --regex              interpret the separator as a regular expression\n\
   -s, --separator=STRING   use STRING as the separator instead of newline\n\
       --help               display this help and exit\n\
       --version            output version information and exit\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
