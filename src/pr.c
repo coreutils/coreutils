@@ -460,7 +460,7 @@ static int buff_current;
 
 /* The number of characters in buff.
    Used for allocation of buff and to detect overflow of buff. */
-static int buff_allocated;
+static size_t buff_allocated;
 
 /* Array of indices into buff.
    Each entry is an index of the first character of a line.
