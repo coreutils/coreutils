@@ -1,6 +1,10 @@
-2002-05-22  Jim Meyering  <meyering@lucent.com>
+2002-06-15  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.22.
+
+	* src/cksum.c: Include <sys/types.h> before system.h.
+
+2002-05-22  Jim Meyering  <meyering@lucent.com>
 
 	* src/od.c [struct dummy]: Renamed.  Don't rely on portability of
 	zero-length arrays.  Instead, use sizes of -1 or +1.
