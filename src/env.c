@@ -1,5 +1,5 @@
 /* env - run a program in a modified environment
-   Copyright (C) 1986, 1991-2003 Free Software Foundation, Inc.
+   Copyright (C) 1986, 1991-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -110,7 +110,7 @@ static struct option const longopts[] =
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -147,6 +147,7 @@ main (register int argc, register char **argv, char **envp)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  initialize_exit_failure (EXIT_FAIL);
   atexit (close_stdout);
 
   while ((optc = getopt_long (argc, argv, "+iu:", longopts, NULL)) != -1)
@@ -163,7 +164,7 @@ main (register int argc, register char **argv, char **envp)
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
-	  usage (2);
+	  usage (EXIT_FAIL);
 	}
     }
 
@@ -198,7 +199,7 @@ main (register int argc, register char **argv, char **envp)
   execvp (argv[optind], &argv[optind]);
 
   {
-    int exit_status = (errno == ENOENT ? 127 : 126);
+    int exit_status = (errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE);
     error (0, errno, "%s", argv[optind]);
     exit (exit_status);
   }
