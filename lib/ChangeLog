@@ -1,3 +1,8 @@
+2004-12-31  Jim Meyering  <jim@meyering.net>
+
+	* openat.c (rpl_openat): Correct comment.
+	Call free_cwd, to avoid leaking a file descriptor.
+
 2004-12-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getdate.y (YYSTACK_USE_ALLOCA): Define to 0, since there's no
