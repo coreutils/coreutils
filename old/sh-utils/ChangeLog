@@ -1,3 +1,7 @@
+Sun Nov 17 20:49:37 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/id.c (main): Ignore -a, for compatibility with SVR4.
+
 Mon Nov  4 20:24:31 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (test for group_member): Handle it separately
