@@ -24,6 +24,15 @@
 
 #include <sys/types.h>
 
+#if STDC_HEADERS
+# include <stdlib.h>
+# include <string.h>
+#else
+# ifndef HAVE_MEMCPY
+#  define memcpy(d, s, n) bcopy ((s), (d), (n))
+# endif
+#endif
+
 #include "md5.h"
 
 #ifdef WORDS_BIGENDIAN
@@ -182,8 +191,8 @@ md5_buffer (buffer, len, resblock)
   pad = rest >= 56 ? 64 + 56 - rest : 56 - rest;
 
   /* Put length of buffer in *bits* in last eight bytes.  */
-  *(md5_uint32 *) &restbuf[rest + pad] = SWAP (len << 3);
-  *(md5_uint32 *) &restbuf[rest + pad + 4] = SWAP (len >> 29);
+  *(md5_uint32 *) &restbuf[rest + pad] = (md5_uint32) SWAP (len << 3);
+  *(md5_uint32 *) &restbuf[rest + pad + 4] = (md5_uint32) SWAP (len >> 29);
 
   /* Process last bytes.  */
   md5_process_block (restbuf, rest + pad + 8, &ctx);
