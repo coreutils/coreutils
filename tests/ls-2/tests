@@ -39,6 +39,8 @@ my @Tests =
      ['q-qs-sh-a', '--quoting=shell-always', $q_bell, {OUT => "'q\a'\n"}],
      ['q-qs-c', '--quoting=c',               $q_bell, {OUT => "\"q\\a\"\n"}],
      ['q-qs-esc', '--quoting=escape',        $q_bell, {OUT => "q\\a\n"}],
+     ['q-qs-c-1', '--quoting=c',
+      {IN => {"t\004" => ''}}, {OUT => "\"t\\004\"\n"}],
 
      ['emptydir', 'd',  {OUT => ''}, $mkdir, $rmdir],
      ['emptydir-x2', 'd d',  {OUT => "d:\n\nd:\n"}, $mkdir, $rmdir],
