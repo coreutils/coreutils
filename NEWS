@@ -2,6 +2,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 * Major changes in release 5.0.2:
 
 ** Bug fixes
+- `su --version > /dev/full' now fails, as it should.
 - uniq -c now uses a SPACE, not a TAB between the count and the
   corresponding line, as required by POSIX.
 - kill no longer tries to operate on argv[0] (introduced in 5.0.1)
