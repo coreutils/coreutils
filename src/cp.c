@@ -42,6 +42,9 @@ struct dir_attr
   struct dir_attr *next;
 };
 
+int stat ();
+int lstat ();
+
 char *dirname ();
 char *xstrdup ();
 enum backup_type get_version ();
