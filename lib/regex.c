@@ -2756,7 +2756,7 @@ at_endline_loc_p (p, pend, syntax)
 {
   const char *next = p;
   boolean next_backslash = *next == '\\';
-  const char *next_next = p + 1 < pend ? p + 1 : NULL;
+  const char *next_next = p + 1 < pend ? p + 1 : 0;
   
   return
        /* Before a subexpression?  */

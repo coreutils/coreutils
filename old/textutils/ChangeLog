@@ -15,8 +15,6 @@ Sat May 27 00:35:47 1995  Jim Meyering  (meyering@comco.com)
 
 Thu May 25 00:06:50 1995  Jim Meyering  (meyering@comco.com)
 
-	* Version 1.11.4.
-
 	* tail.c (tail_lines): Change one more `long' to `off_t'.
 	Otherwise, tail didn't work on NetBSD.  From by Arne H. Juul.
 

@@ -1,4 +1,5 @@
 User-visible changes in release 1.12
+* all --help messages have been improved
 * join's -a1 and -a2 options work
 * tr '[:upper:]' '[:lower:]' no longer reads uninitialized memory
 * sort properly handles command line arguments like `+7.2n'
