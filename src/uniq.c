@@ -537,7 +537,7 @@ main (int argc, char **argv)
     }
 
   if (OBSOLETE_OPTION_WARNINGS && obsolete_skip_fields)
-    error (0, 0, _("`uniq -%lu' is obsolete; use `uniq -f %lu'"),
+    error (0, 0, _("warning: `uniq -%lu' is obsolete; use `uniq -f %lu'"),
 	   (unsigned long) skip_fields, (unsigned long) skip_fields);
 
   if (countmode == count_occurrences && mode == output_all_repeated)
