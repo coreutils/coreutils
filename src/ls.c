@@ -119,6 +119,7 @@ int wcwidth ();
 #include "quotearg.h"
 #include "strverscmp.h"
 #include "xstrtol.h"
+#include "gtod.h"
 
 /* Use access control lists only under all the following conditions.
    Some systems (OSF4, Irix5, Irix6) have the acl function, but not
@@ -894,6 +895,8 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   atexit (close_stdout);
+
+  GETTIMEOFDAY_INIT ();
 
 #define N_ENTRIES(Array) (sizeof Array / sizeof *(Array))
   assert (N_ENTRIES (color_indicator) + 1 == N_ENTRIES (indicator_name));
@@ -2662,7 +2665,13 @@ print_long_format (const struct fileinfo *f)
 	 the last time we checked the clock.  */
       if (current_time < when
 	  || (current_time == when && current_time_ns < when_ns))
-	get_current_time ();
+	{
+	  /* Note that get_current_time calls gettimeofday which, on some non-
+	     compliant systems, clobbers the buffer used for localtime's result.
+	     But it's ok here, because we use a gettimeofday wrapper that
+	     saves and restores the buffer around the gettimeofday call.  */
+	  get_current_time ();
+	}
 
       /* Consider a time to be recent if it is within the past six
 	 months.  A Gregorian year has 365.2425 * 24 * 60 * 60 ==
