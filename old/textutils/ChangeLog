@@ -1,5 +1,8 @@
 2001-12-17  Jim Meyering  <meyering@lucent.com>
 
+	* src/uniq.c (usage): Remove stray `)' in --help output.
+	Reported by Padraig Brady.
+
 	* Version 2.0.20.
 
 	* Makefile.maint (real_dir): Remove unused variable.
