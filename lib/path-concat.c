@@ -31,7 +31,13 @@
 #endif
 #include <sys/types.h>
 
+#ifndef HAVE_DECL_MALLOC
+"this configure-time declaration test was not run"
+#endif
+#if !HAVE_DECL_MALLOC
 char *malloc ();
+#endif
+
 #ifndef strdup
 char *strdup ();
 #endif
