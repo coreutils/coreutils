@@ -1,5 +1,11 @@
 2000-10-21  Jim Meyering  <meyering@lucent.com>
 
+	* dirname.c (memrchr): Declare if necessary.
+	(dir_name): Remove the restriction that there be no
+	trailing slashes.  Now, this code skips past them, effectively
+	ignoring them.
+	[TEST_DIRNAME] (main): New unit tests.
+
 	* memrchr.c: New file from GNU libc.
 	Undef __memrchr, too.
 	[!weak_alias]: Define __memrchr to memrchr.
