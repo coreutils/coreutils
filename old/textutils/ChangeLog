@@ -1,3 +1,8 @@
+Sat Oct  5 12:40:22 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/memcpy.c [HAVE_CONFIG_H]: Include config.h.
+	From Karl Berry.
+
 Fri Oct  4 07:20:37 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (GNU_PACKAGE): New variable.
