@@ -1,3 +1,9 @@
+1998-03-18  Jim Meyering  <meyering@eng.ascend.com>
+
+	* src/Makefile.am (rm-prep): Add dependency and rule to save users
+	with `.' too early in their PATH from the `rm: cannot unlink `rm':
+	Text file busy' error.  Suggestion from Philippe De Muyter.
+
 1998-03-15  Jim Meyering  <meyering@eng.ascend.com>
 
 	* Version 3.16n.
