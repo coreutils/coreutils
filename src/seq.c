@@ -49,9 +49,8 @@ static char *separator;
 /* FIXME: make this an option.  */
 static char *terminator = "\n";
 
-/* The representation of the decimal point in the current locale.
-   Always "." if the localeconv function is not supported.  */
-static char *decimal_point = ".";
+/* The representation of the decimal point in the current locale.  */
+static char decimal_point;
 
 /* The starting number.  */
 static double first;
@@ -251,9 +250,7 @@ get_width_format ()
   else
     {
       if (buffer[0] != '1'
-	  /* FIXME: assumes that decimal_point is a single character
-	     string.  */
-	  || buffer[1] != decimal_point[0]
+	  || buffer[1] != decimal_point
 	  || buffer[2 + strspn (&buffer[2], "0123456789")] != '\0')
 	return "%g";
       width1 -= 2;
@@ -266,9 +263,7 @@ get_width_format ()
   else
     {
       if (buffer[0] != '1'
-	  /* FIXME: assumes that decimal_point is a single character
-	     string.  */
-	  || buffer[1] != decimal_point[0]
+	  || buffer[1] != decimal_point
 	  || buffer[2 + strspn (&buffer[2], "0123456789")] != '\0')
 	return "%g";
       width2 -= 2;
@@ -315,17 +310,17 @@ main (int argc, char **argv)
   separator = "\n";
   first = 1.0;
 
-  /* Figure out the locale's idea of a decimal point.  */
-#if HAVE_LOCALECONV
+  /* Get locale's representation of the decimal point.  */
   {
-    struct lconv *locale;
+    struct lconv const *locale = localeconv ();
 
-    locale = localeconv ();
-    /* Paranoia.  */
-    if (locale && locale->decimal_point && locale->decimal_point[0] != '\0')
-      decimal_point = locale->decimal_point;
+    /* If the locale doesn't define a decimal point, or if the decimal
+       point is multibyte, use the C locale's decimal point.  FIXME:
+       add support for multibyte decimal points.  */
+    decimal_point = locale->decimal_point[0];
+    if (! decimal_point || locale->decimal_point[1])
+      decimal_point = '.';
   }
-#endif
 
   /* We have to handle negative numbers in the command line but this
      conflicts with the command line arguments.  So explicitly check first
@@ -333,7 +328,7 @@ main (int argc, char **argv)
   while (optind < argc)
     {
       if (argv[optind][0] == '-'
-	  && ((optc = argv[optind][1]) == decimal_point[0]
+	  && ((optc = argv[optind][1]) == decimal_point
 	      || ISDIGIT (optc)))
 	{
 	  /* means negative number */
