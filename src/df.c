@@ -161,6 +161,7 @@ main (int argc, char **argv)
     kilobyte_blocks = 0;
   else
     {
+      char *bs;
       kilobyte_blocks = 1;
       if ((bs = getenv ("BLOCKSIZE"))
 	  && strncmp (bs, "HUMAN", sizeof ("HUMAN") - 1) == 0)
