@@ -34,7 +34,7 @@ lchown (const char *file, uid_t uid, gid_t gid)
 {
   struct stat stats;
 
-  if (lstat (file, &stats) && S_ISLNK (stats.st_mode))
+  if (lstat (file, &stats) == 0 && S_ISLNK (stats.st_mode))
     {
       errno = ENOSYS;
       return -1;
