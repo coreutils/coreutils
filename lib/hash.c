@@ -995,13 +995,14 @@ hash_print (const Hash_table *table)
       struct hash_entry *cursor;
 
       if (bucket)
-	printf ("%d:\n", slot);
+	printf ("%d:\n", bucket - table->bucket);
 
       for (cursor = bucket; cursor; cursor = cursor->next)
 	{
 	  char *s = (char *) cursor->data;
 	  /* FIXME */
-	  printf ("  %s\n", s);
+	  if (s)
+	    printf ("  %s\n", s);
 	}
     }
 }
