@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2001-06-21.10}
+\def\texinfoversion{2001-07-25.07}
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99,
 %               2000, 01 Free Software Foundation, Inc.
@@ -1614,6 +1614,10 @@ where each line of input produces a line of output.}
    \oldpage
    \endgroup
    %
+   % Need this before the \...aftertitlepage checks so that if they are
+   % in effect the toc pages will come out with page numbers.
+   \HEADINGSon
+   %
    % If they want short, they certainly want long too.
    \ifsetshortcontentsaftertitlepage
      \shortcontents
@@ -1629,8 +1633,6 @@ where each line of input produces a line of output.}
    \fi
    %
    \ifpdf \pdfmakepagedesttrue \fi
-   %
-   \HEADINGSon
 }
 
 \def\finishtitlepage{%
@@ -2392,13 +2394,15 @@ width0pt\relax} \fi
 %
 \def\ignore{\doignore{ignore}}
 
-% Ignore @ifinfo, @ifhtml, @ifnottex, @html, @menu, and @direntry text.
+% Also ignore @ifinfo, @ifhtml, @ifnottex, @html, @menu,
+% @documentdescription, and @direntry text.
 %
 \def\ifinfo{\doignore{ifinfo}}
 \def\ifhtml{\doignore{ifhtml}}
 \def\ifnottex{\doignore{ifnottex}}
 \def\html{\doignore{html}}
 \def\menu{\doignore{menu}}
+\def\documentdescription{\doignore{documentdescription}}
 \def\direntry{\doignore{direntry}}
 
 % @dircategory CATEGORY  -- specify a category of the dir file
