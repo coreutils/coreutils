@@ -28,6 +28,12 @@
 * Date input formats: (coreutils)Date input formats.
 @end direntry
 
+@c FIXME: the following need documentation
+@c * [: (coreutils)[ invocation.                   File/string tests.
+@c * pinky: (coreutils)pinky invocation.           FIXME.
+@c * shasum: (coreutils)shasum invocation.         Print or check message-digests.
+@c * uptime: (coreutils)uptime invocation.         FIXME.
+
 @dircategory Individual utilities
 @direntry
 * basename: (coreutils)basename invocation.     Strip directory and suffix.
