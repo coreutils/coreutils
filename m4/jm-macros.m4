@@ -190,7 +190,9 @@ AC_DEFUN(jm_MACROS,
 
   # See if linking `seq' requires -lm.
   # It does on nearly every system.  The single exception (so far) is
-  # BeOS which doesn't even have a separate math library.
+  # BeOS which has all the math functions in the normal runtime library
+  # and doesn't have a separate math library.
+
   AC_SUBST(SEQ_LIBM)
   ac_seq_body='
      static double x, y;
