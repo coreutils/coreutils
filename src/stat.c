@@ -610,15 +610,14 @@ print_it (char const *masterformat, char const *filename,
       char *p = strchr (b, '%');
       if (p != NULL)
 	{
-	  char *d;
 	  size_t len;
 	  *p++ = '\0';
 	  fputs (b, stdout);
 
 	  len = strspn (p, "#-+.I 0123456789");
 	  dest[0] = '%';
-	  d = stpncpy (dest + 1, p, len);
-	  *d = 0;
+	  memcpy (dest + 1, p, len);
+	  dest[1 + len] = 0;
 	  p += len;
 
 	  switch (*p)
