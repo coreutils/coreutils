@@ -83,3 +83,7 @@ Martin Michlmayr's patch to provide ls with `--sort directory' option
 
 clean-up: Remove all of the casts (they're unnecessary) found by this:
   grep -E '\*\) *x(m|re)alloc\>' {lib,src}/*.[ch]
+Fix with this:
+  perl -pi -e 's/\([^(]*?\*\) *(x(m|re)alloc)\b/$1/'
+
+Remove uses of PROTOTYPES
