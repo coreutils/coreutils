@@ -160,6 +160,10 @@
    */
 #undef HAVE_DECL_DIRFD
 
+/* Define to 1 if you have the declaration of `eaccess', and to 0 if you
+   don't. */
+#undef HAVE_DECL_EACCESS
+
 /* Define to 1 if you have the declaration of `euidaccess', and to 0 if you
    don't. */
 #undef HAVE_DECL_EUIDACCESS
@@ -275,6 +279,10 @@
 /* Define to 1 if you have the declaration of `realloc', and to 0 if you
    don't. */
 #undef HAVE_DECL_REALLOC
+
+/* Define to 1 if you have the declaration of `setregid', and to 0 if you
+   don't. */
+#undef HAVE_DECL_SETREGID
 
 /* Define to 1 if you have the declaration of `stpcpy', and to 0 if you don't.
    */
@@ -1269,6 +1277,13 @@
 
 /* the number of pending output bytes on stream `fp' */
 #undef PENDING_OUTPUT_N_BYTES
+
+/* Define this if you prefer euidaccess to return the correct result even if
+   this would make it nonreentrant. Define this only if your entire
+   application is safe even if the uid or gid might temporarily change. If
+   your application uses signal handlers or threads it is probably not safe.
+   */
+#undef PREFER_NONREENTRANT_EUIDACCESS
 
 /* Define if <inttypes.h> exists and defines unusable PRI* macros. */
 #undef PRI_MACROS_BROKEN
