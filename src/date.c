@@ -399,8 +399,14 @@ show_date (const char *format, time_t when)
     {
       out_length += 200;
       out = (char *) xrealloc (out, out_length);
+
+      /* Mark the first byte of the buffer so we can detect the case
+	 of strftime producing an empty string.  Otherwise, this loop
+	 would not terminate when date was invoked like this
+	 `LANG=de date +%p' on a system with good language support.  */
+      out[0] = '\1';
     }
-  while (strftime (out, out_length, format, tm) == 0);
+  while (strftime (out, out_length, format, tm) == 0 && out[0] != '\0');
 
   printf ("%s\n", out);
   free (out);
