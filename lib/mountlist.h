@@ -30,3 +30,9 @@ struct mount_entry *read_filesystem_list (int need_fs_type, int all_fs);
 #else
 struct mount_entry *read_filesystem_list ();
 #endif
+
+/* In most environments, by default, a filesystem type is remote if it
+   begins with "nfs".  This allows variants like "nfs3".  */
+#ifndef REMOTE_FS_TYPE
+# define REMOTE_FS_TYPE(t) (!strncmp (t, "nfs", 3))
+#endif
