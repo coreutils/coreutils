@@ -3,10 +3,11 @@
 
 #if defined __linux__
 # define S_MAGIC_AFFS		0xADFF
+# define S_MAGIC_DEVPTS		0x1CD1
 # define S_MAGIC_EXT		0x137D
 # define S_MAGIC_EXT2_OLD	0xEF51
 # define S_MAGIC_EXT2		0xEF53
-# define S_MAGIC_HPFS	  	0xF995E849
+# define S_MAGIC_HPFS		0xF995E849
 # define S_MAGIC_ISOFS		0x9660
 # define S_MAGIC_ISOFS_WIN	0x4000
 # define S_MAGIC_ISOFS_R_WIN	0x4004
@@ -26,7 +27,7 @@
 # define S_MAGIC_COH		0x012FF7B7
 # define S_MAGIC_UFS		0x00011954
 # define S_MAGIC_XIAFS		0x012FD16D
-# define S_MAGIC_NTFS 		0x5346544e
+# define S_MAGIC_NTFS		0x5346544e
 # define S_MAGIC_TMPFS		0x1021994
 # define S_MAGIC_REISERFS	0x52654973
 # define S_MAGIC_CRAMFS		0x28cd3d45
