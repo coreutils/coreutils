@@ -1,4 +1,4 @@
-#serial 49   -*- autoconf -*-
+#serial 50   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -67,7 +67,10 @@ AC_DEFUN([jm_MACROS],
   AC_REQUIRE([AC_FUNC_FSEEKO])
   AC_REQUIRE([AC_FUNC_VPRINTF])
   AC_REQUIRE([AC_FUNC_ALLOCA])
-  AC_FUNC_GETLOADAVG([lib])
+
+  AC_CONFIG_LIBOBJ_DIR([lib])
+  AC_FUNC_GETLOADAVG
+
   AC_REQUIRE([jm_SYS_PROC_UPTIME])
   AC_REQUIRE([jm_FUNC_FTRUNCATE])
   AC_REQUIRE([vb_FUNC_RENAME])
