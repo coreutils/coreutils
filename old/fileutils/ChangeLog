@@ -1,3 +1,49 @@
+1998-06-29  Jim Meyering  <meyering@ascend.com>
+
+	* Version 3.16q.
+
+1998-06-28  Paul Eggert  <eggert@twinsun.com>
+
+	Add support for new --block-size option and
+	BLOCK_SIZE. DF_BLOCK_SIZE, etc. variables to `df', `du', and `ls'.
+	Adjust df output slightly to accommodate larger filesystems.
+
+	* lib/human.c, lib/human.h (human_readable): Coalesce last two args
+	into one, for convenience.  All callers changed.
+	(human_block_size): New function.
+	* lib/human.c: Include <config.h> only if HAVE_CONFIG_H.
+	Include <stdlib.h> if HAVE_STDLIB_H;
+	declare getenv unless HAVE_DECL_GETENV.
+	(_): New macro.
+	Include <argmatch.h>, <error.h>, <xstrtoul.h>.
+	(DEFAULT_BLOCK_SIZE): New macro.
+	(block_size_args, block_size_types): New constants.
+	(humblock): New function.
+	* lib/xstrtol.h (__ZLONG_MAX): Remove.
+	* lib/xstrtol.c (bkm_scale): Don't assume that you can convert
+	unsigned long to double without losing information.
+	(bkm_scale_by_power): New function.
+
+	* lib/xstrtol.c (__xstrtol), src/dd.c (parse_integer):
+	Add support for SI-like suffixes like "GB" and "TD".
+	* src/dd.c (usage): Describe it.
+
+	* src/df.c, src/du.c, src/ls.c (human_readable_base, output_units):
+	Remove;	replace with new variable output_block_size.  All uses changed.
+	(long_options, usage, main): Add --block-size.
+	(main, decode_switches): Use new human_block_size function to
+	initialize output block size consistently with other programs.
+
+	* src/df.c (print_header, show_dev): Shrink some columns and expand
+	others, to squeeze in support for today's larger filesystems.
+	(print_header): Print output block size using power-of-1024 SI format.
+	(df_readable): Coalesce last two args into one, for convenience.
+	All callers changed.
+	(main): Remove check for portable output format and larger
+	or human-readable block sizes.
+
+	* NEWS, doc/fileutils.texi: Describe above changes.
+
 1998-06-28  Jim Meyering  <meyering@ascend.com>
 
 	* src/ls.c (usage): Make --kilobytes description consistent with
@@ -22,8 +68,6 @@
 
 	* src/copy.c (copy_reg): Detect identical source and dest here.
 	(copy_internal): Make the test symmetric.
-
-	* Version 3.16q.
 
 	* tests/cp/same-file: New file.
 	* tests/cp/Makefile.am (TESTS): Add it.
