@@ -87,7 +87,7 @@ AC_DEFUN([jm_PREREQ_MEMCHR],
 
 AC_DEFUN([jm_PREREQ_PHYSMEM],
 [
-  AC_CHECK_HEADERS(sys/pstat.h unistd.h bp-sym.h)
+  AC_CHECK_HEADERS(sys/pstat.h unistd.h)
   AC_CHECK_FUNCS(pstat_getstatic pstat_getdynamic)
 ])
 
