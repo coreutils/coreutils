@@ -168,23 +168,29 @@ usage (int status)
 Usage: %s [OPTION]... [FILE]...\n\
 "),
 	      program_name);
-      printf (_("\
+      fputs (_("\
 Print selected parts of lines from each FILE to standard output.\n\
 \n\
 Mandatory arguments to long options are mandatory for short options too.\n\
   -b, --bytes=LIST        output only these bytes\n\
   -c, --characters=LIST   output only these characters\n\
   -d, --delimiter=DELIM   use DELIM instead of TAB for field delimiter\n\
+"), stdout);
+      fputs (_("\
   -f, --fields=LIST       output only these fields;  also print any line\n\
                             that contains no delimiter character, unless\n\
                             the -s option is specified\n\
   -n                      (ignored)\n\
+"), stdout);
+      fputs (_("\
   -s, --only-delimited    do not print lines not containing delimiters\n\
       --output-delimiter=STRING  use STRING as the output delimiter\n\
                             the default is to use the input delimiter\n\
       --help              display this help and exit\n\
       --version           output version information and exit\n\
 \n\
+"), stdout);
+      fputs (_("\
 Use one, and only one of -b, -c or -f.  Each LIST is made up of one\n\
 range, or many ranges separated by commas.  Each range is one of:\n\
 \n\
@@ -194,7 +200,7 @@ range, or many ranges separated by commas.  Each range is one of:\n\
   -M    from first to M'th (included) byte, character or field\n\
 \n\
 With no FILE, or when FILE is -, read standard input.\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
