@@ -1,4 +1,16 @@
+2000-01-08  Jim Meyering  <meyering@ascend.com>
+
+	* lib/error.c (error): Use __strerror_r's return value only if
+	HAVE_WORKING_STRERROR_R.
+	(error_at_line): Likewise.
+
+	* Makefile.maint (null_AM_MAKEFLAGS): Define.
+	(my-distcheck): Use it to avoid distributing out of date files
+	whose derivation would require a maintainer tool.
+
 2000-01-07  Jim Meyering  <meyering@ascend.com>
+
+	* lib/euidaccess.c: Sync with the GNU C library.
 
 	* tests/dir/Makefile.am: (TESTS_ENVIRONMENT): Add `pwd`/ prefix
 	to exported PATH value (though not strictly necessary, here).
