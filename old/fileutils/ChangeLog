@@ -1,6 +1,12 @@
-2001-09-22  Jim Meyering  <meyering@lucent.com>
+2001-09-23  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.1.
+
+	* Makefile.am (SUBDIRS): When using newer gettext (in which
+	intl/libintl.h is created by rules intl/Makefile)
+	`intl' must precede `lib'.
+
+2001-09-22  Jim Meyering  <meyering@lucent.com>
 
 	Mostly clean-up (modulo the better diagnostic).
 	* src/copy.c (copy_internal): Rename parameter, move_mode, to
