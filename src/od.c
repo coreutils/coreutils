@@ -265,7 +265,7 @@ static enum size_spec integral_type_size[MAX_INTEGRAL_TYPE_SIZE + 1];
 #define MAX_FP_TYPE_SIZE sizeof (LONG_DOUBLE)
 static enum size_spec fp_type_size[MAX_FP_TYPE_SIZE + 1];
 
-#define COMMON_SHORT_OPTIONS "A:N:abcdfhij:lot:vx"
+#define COMMON_SHORT_OPTIONS "A:aBbcDdeFfHhIij:LlN:OoS:st:vXx"
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
@@ -281,7 +281,7 @@ static struct option const long_options[] =
   {"read-bytes", required_argument, NULL, 'N'},
   {"format", required_argument, NULL, 't'},
   {"output-duplicates", no_argument, NULL, 'v'},
-  {"strings", optional_argument, NULL, 's'},
+  {"strings", optional_argument, NULL, 'S'},
   {"traditional", no_argument, NULL, TRADITIONAL_OPTION},
   {"width", optional_argument, NULL, 'w'},
 
@@ -300,9 +300,10 @@ usage (int status)
     {
       printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
-  or:  %s --traditional [FILE] [[+]OFFSET [[+]LABEL]]\n\
+  or:  %s [-abcdfilosx]... [FILE] [[+]OFFSET[.][b]]\n\
+  or:  %s --traditional [OPTION]... [FILE] [[+]OFFSET[.][b] [+][LABEL][.][b]]\n\
 "),
-	      program_name, program_name);
+	      program_name, program_name, program_name);
       fputs (_("\n\
 Write an unambiguous representation, octal bytes by default,\n\
 of FILE to standard output.  With more than one FILE argument,\n\
@@ -319,7 +320,7 @@ All arguments to long options are mandatory for short options.\n\
 "), stdout);
       fputs (_("\
   -N, --read-bytes=BYTES      limit dump to BYTES input bytes\n\
-  -s, --strings[=BYTES]       output strings of at least BYTES graphic chars\n\
+  -S, --strings[=BYTES]       output strings of at least BYTES graphic chars\n\
   -t, --format=TYPE           select output format or formats\n\
   -v, --output-duplicates     do not use * to mark line suppression\n\
   -w, --width[=BYTES]         output BYTES bytes per output line\n\
@@ -331,24 +332,26 @@ All arguments to long options are mandatory for short options.\n\
 \n\
 Traditional format specifications may be intermixed; they accumulate:\n\
   -a   same as -t a,  select named characters\n\
-  -b   same as -t oC, select octal bytes\n\
+  -b   same as -t o1, select octal bytes\n\
   -c   same as -t c,  select ASCII characters or backslash escapes\n\
-  -d   same as -t u2, select unsigned decimal shorts\n\
+  -d   same as -t u2, select unsigned decimal 2-byte units\n\
 "), stdout);
       fputs (_("\
   -f   same as -t fF, select floats\n\
-  -h   same as -t x2, select hexadecimal shorts\n\
-  -i   same as -t d2, select decimal shorts\n\
-  -l   same as -t d4, select decimal longs\n\
-  -o   same as -t o2, select octal shorts\n\
-  -x   same as -t x2, select hexadecimal shorts\n\
+  -i   same as -t dI, select decimal ints\n\
+  -l   same as -t dL, select decimal longs\n\
+  -o   same as -t o2, select octal 2-byte units\n\
+  -s   same as -t d2, select decimal 2-byte units\n\
+  -x   same as -t x2, select hexadecimal 2-byte units\n\
 "), stdout);
       fputs (_("\
 \n\
-For older syntax (second call format), OFFSET means -j OFFSET.  LABEL\n\
-is the pseudo-address at first byte printed, incremented when dump is\n\
-progressing.  For OFFSET and LABEL, a 0x or 0X prefix indicates\n\
-hexadecimal, suffixes may be . for octal and b for multiply by 512.\n\
+If first and second call formats both apply, the second format is assumed\n\
+if the last operand begins with + or (if there are 2 operands) a digit.\n\
+An OFFSET operand means -j OFFSET.  LABEL is the pseudo-address\n\
+at first byte printed, incremented when dump is progressing.\n\
+For OFFSET and LABEL, a 0x or 0X prefix indicates hexadecimal;\n\
+suffixes may be . for octal and b for multiply by 512.\n\
 \n\
 TYPE is made up of one or more of these specifications:\n\
 \n\
@@ -1308,7 +1311,6 @@ static bool
 parse_old_offset (const char *s, uintmax_t *offset)
 {
   int radix;
-  enum strtol_error s_err;
 
   if (*s == '\0')
     return false;
@@ -1330,13 +1332,7 @@ parse_old_offset (const char *s, uintmax_t *offset)
 	radix = 8;
     }
 
-  s_err = xstrtoumax (s, NULL, radix, offset, "Bb");
-  if (s_err != LONGINT_OK)
-    {
-      STRTOL_FAIL_WARN (s, _("old-style offset"), s_err);
-      return false;
-    }
-  return true;
+  return xstrtoumax (s, NULL, radix, offset, "Bb") == LONGINT_OK;
 }
 
 /* Read a chunk of size BYTES_PER_BLOCK from the input files, write the
@@ -1553,11 +1549,12 @@ main (int argc, char **argv)
   size_t i;
   int l_c_m;
   size_t desired_width IF_LINT (= 0);
+  bool modern = false;
   bool width_specified = false;
   bool ok = true;
   char const *short_options = (posix2_version () < 200112
-			       ? COMMON_SHORT_OPTIONS "s::w::"
-			       : COMMON_SHORT_OPTIONS "s:w:");
+			       ? COMMON_SHORT_OPTIONS "w::"
+			       : COMMON_SHORT_OPTIONS "w:");
 
   /* The old-style `pseudo starting address' to be printed in parentheses
      after any true address.  */
@@ -1611,10 +1608,8 @@ main (int argc, char **argv)
 
       switch (c)
 	{
-	case 0:
-	  break;
-
 	case 'A':
+	  modern = true;
 	  switch (optarg[0])
 	    {
 	    case 'd':
@@ -1646,12 +1641,14 @@ it must be one character from [doxn]"),
 	  break;
 
 	case 'j':
+	  modern = true;
 	  s_err = xstrtoumax (optarg, NULL, 0, &n_bytes_to_skip, "bkm");
 	  if (s_err != LONGINT_OK)
 	    STRTOL_FATAL_ERROR (optarg, _("skip argument"), s_err);
 	  break;
 
 	case 'N':
+	  modern = true;
 	  limit_bytes_to_format = true;
 
 	  s_err = xstrtoumax (optarg, NULL, 0, &max_bytes_to_format, "bkm");
@@ -1659,7 +1656,8 @@ it must be one character from [doxn]"),
 	    STRTOL_FATAL_ERROR (optarg, _("limit argument"), s_err);
 	  break;
 
-	case 's':
+	case 'S':
+	  modern = true;
 	  if (optarg == NULL)
 	    string_min = 3;
 	  else
@@ -1679,10 +1677,12 @@ it must be one character from [doxn]"),
 	  break;
 
 	case 't':
+	  modern = true;
 	  ok &= decode_format_string (optarg);
 	  break;
 
 	case 'v':
+	  modern = true;
 	  abbreviate_duplicate_blocks = false;
 	  break;
 
@@ -1693,7 +1693,9 @@ it must be one character from [doxn]"),
 	  /* The next several cases map the traditional format
 	     specification options to the corresponding modern format
 	     specs.  GNU od accepts any combination of old- and
-	     new-style options.  Format specification options accumulate.  */
+	     new-style options.  Format specification options accumulate.
+	     The obsolescent and undocumented formats are compatible
+	     with FreeBSD 4.10 od.  */
 
 #define CASE_OLD_ARG(old_char,new_string)		\
 	case old_char:					\
@@ -1701,26 +1703,29 @@ it must be one character from [doxn]"),
 	  break
 
 	  CASE_OLD_ARG ('a', "a");
-	  CASE_OLD_ARG ('b', "oC");
+	  CASE_OLD_ARG ('b', "o1");
 	  CASE_OLD_ARG ('c', "c");
+	  CASE_OLD_ARG ('D', "u4"); /* obsolescent and undocumented */
 	  CASE_OLD_ARG ('d', "u2");
+	case 'F': /* obsolescent and undocumented alias */
+	  CASE_OLD_ARG ('e', "fD"); /* obsolescent and undocumented */
 	  CASE_OLD_ARG ('f', "fF");
-	  CASE_OLD_ARG ('h', "x2");
-	  CASE_OLD_ARG ('i', "d2");
-	  CASE_OLD_ARG ('l', "d4");
+	case 'X': /* obsolescent and undocumented alias */
+	  CASE_OLD_ARG ('H', "x4"); /* obsolescent and undocumented */
+	  CASE_OLD_ARG ('i', "dI");
+	case 'I': case 'L': /* obsolescent and undocumented aliases */
+	  CASE_OLD_ARG ('l', "dL");
+	  CASE_OLD_ARG ('O', "o4"); /* obsolesent and undocumented */
+	case 'B': /* obsolescent and undocumented alias */
 	  CASE_OLD_ARG ('o', "o2");
+	  CASE_OLD_ARG ('s', "d2");
+	case 'h': /* obsolescent and undocumented alias */
 	  CASE_OLD_ARG ('x', "x2");
-
-	  /* FIXME: POSIX 1003.1-2001 with XSI requires this:
-
-	     CASE_OLD_ARG ('s', "d2");
-
-	     for the traditional syntax, but this conflicts with case
-	     's' above. */
 
 #undef CASE_OLD_ARG
 
 	case 'w':
+	  modern = true;
 	  width_specified = true;
 	  if (optarg == NULL)
 	    {
@@ -1761,55 +1766,57 @@ it must be one character from [doxn]"),
      0 to 3 remaining command line arguments;  handle each case
      separately.
 	od [file] [[+]offset[.][b] [[+]label[.][b]]]
-     The offset and pseudo_start have the same syntax.
+     The offset and label have the same syntax.
 
-     FIXME: POSIX 1003.1-2001 with XSI requires support for the
-     traditional syntax even if --traditional is not given.  */
+     If --traditional is not given, and if no modern options are
+     given, and if the offset begins with + or (if there are two
+     operands) a digit, accept only this form, as per POSIX:
+	od [file] [[+]offset[.][b]]
+  */
 
-  if (traditional)
+  if (!modern | traditional)
     {
-      uintmax_t offset;
+      uintmax_t o1;
+      uintmax_t o2;
 
-      if (n_files == 1)
+      switch (n_files)
 	{
-	  if (parse_old_offset (argv[optind], &offset))
-	    {
-	      n_bytes_to_skip = offset;
-	      --n_files;
-	      ++argv;
-	    }
-	}
-      else if (n_files == 2)
-	{
-	  uintmax_t o1, o2;
-	  if (parse_old_offset (argv[optind], &o1)
-	      && parse_old_offset (argv[optind + 1], &o2))
+	case 1:
+	  if ((traditional || argv[optind][0] == '+')
+	      && parse_old_offset (argv[optind], &o1))
 	    {
 	      n_bytes_to_skip = o1;
-	      flag_pseudo_start = true;
-	      pseudo_start = o2;
-	      argv += 2;
-	      n_files -= 2;
-	    }
-	  else if (parse_old_offset (argv[optind + 1], &o2))
-	    {
-	      n_bytes_to_skip = o2;
 	      --n_files;
-	      argv[optind + 1] = argv[optind];
 	      ++argv;
 	    }
-	  else
+	  break;
+
+	case 2:
+	  if ((traditional || argv[optind + 1][0] == '+'
+	       || ISDIGIT (argv[optind + 1][0]))
+	      && parse_old_offset (argv[optind + 1], &o2))
 	    {
-	      error (0, 0,
-		     _("invalid second operand in compatibility mode `%s'"),
-		     argv[optind + 1]);
-	      usage (EXIT_FAILURE);
+	      if (traditional && parse_old_offset (argv[optind], &o1))
+		{
+		  n_bytes_to_skip = o1;
+		  flag_pseudo_start = true;
+		  pseudo_start = o2;
+		  argv += 2;
+		  n_files -= 2;
+		}
+	      else
+		{
+		  n_bytes_to_skip = o2;
+		  --n_files;
+		  argv[optind + 1] = argv[optind];
+		  ++argv;
+		}
 	    }
-	}
-      else if (n_files == 3)
-	{
-	  uintmax_t o1, o2;
-	  if (parse_old_offset (argv[optind + 1], &o1)
+	  break;
+
+	case 3:
+	  if (traditional
+	      && parse_old_offset (argv[optind + 1], &o1)
 	      && parse_old_offset (argv[optind + 2], &o2))
 	    {
 	      n_bytes_to_skip = o1;
@@ -1819,32 +1826,28 @@ it must be one character from [doxn]"),
 	      argv += 2;
 	      n_files -= 2;
 	    }
-	  else
-	    {
-	      error (0, 0,
-	    _("in compatibility mode, the last two arguments must be offsets"));
-	      usage (EXIT_FAILURE);
-	    }
-	}
-      else if (n_files > 3)
-	{
-	  error (0, 0, _("extra operand %s"), quote (argv[optind + 3]));
-	  fprintf (stderr, "%s\n",
-		   _("Compatibility mode supports at most three operands."));
-	  usage (EXIT_FAILURE);
+	  break;
 	}
 
-      if (flag_pseudo_start)
+      if (traditional && 1 < n_files)
 	{
-	  if (format_address == format_address_none)
-	    {
-	      address_base = 8;
-	      address_pad_len = 7;
-	      format_address = format_address_paren;
-	    }
-	  else
-	    format_address = format_address_label;
+	  error (0, 0, _("extra operand %s"), quote (argv[optind + 1]));
+	  error (0, 0, "%s\n",
+		 _("Compatibility mode supports at most one file."));
+	  usage (EXIT_FAILURE);
 	}
+    }
+
+  if (flag_pseudo_start)
+    {
+      if (format_address == format_address_none)
+	{
+	  address_base = 8;
+	  address_pad_len = 7;
+	  format_address = format_address_paren;
+	}
+      else
+	format_address = format_address_label;
     }
 
   if (limit_bytes_to_format)
@@ -1855,16 +1858,7 @@ it must be one character from [doxn]"),
     }
 
   if (n_specs == 0)
-    {
-      if (! decode_format_string ("o2"))
-	{
-	  /* This happens on Cray systems that don't have a 2-byte
-	     integral type.  */
-	  exit (EXIT_FAILURE);
-	}
-
-      n_specs = 1;
-    }
+    decode_format_string ("oS");
 
   if (n_files > 0)
     {
