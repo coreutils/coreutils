@@ -5,6 +5,8 @@
 	This effectively reverses the order of the latter pair of stat/mkdir
 	calls and fixes a race condition bug whereby one of two concurrent
 	`mkdir -p' processes could fail with EEXIST.
+	Include locale.h and libintl.h, and define `_()'.
+	Mark translatable strings.
 
 	* lib/xmalloc.c: Add comments.
 	(xcalloc, xmalloc, xrealloc): Remove prototypes.
@@ -48,7 +50,7 @@
 	* lib/backupfile.c (get_version): Likewise.
 	From Akim Demaille.
 
-	* lib/strncasecmp.cin: New file.
+	* lib/strcasecmp.cin: New file.
 	* lib/argmatch.c (strncasecmp): Move to a separate file.
 	Add curly braces around some one-stmt-but-multiline blocks.
 
