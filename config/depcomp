@@ -1,9 +1,9 @@
 #! /bin/sh
 # depcomp - compile a program generating dependencies as side-effects
 
-scriptversion=2003-12-28.12
+scriptversion=2004-04-25.14
 
-# Copyright (C) 1999, 2000, 2003 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2003, 2004 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -287,26 +287,32 @@ tru64)
    base=`echo "$object" | sed -e 's|^.*/||' -e 's/\.o$//' -e 's/\.lo$//'`
 
    if test "$libtool" = yes; then
+      # Dependencies are output in .lo.d with libtool 1.4.
+      # They are output in .o.d with libtool 1.5.
       tmpdepfile1="$dir.libs/$base.lo.d"
-      tmpdepfile2="$dir.libs/$base.d"
+      tmpdepfile2="$dir.libs/$base.o.d"
+      tmpdepfile3="$dir.libs/$base.d"
       "$@" -Wc,-MD
    else
       tmpdepfile1="$dir$base.o.d"
       tmpdepfile2="$dir$base.d"
+      tmpdepfile3="$dir$base.d"
       "$@" -MD
    fi
 
    stat=$?
    if test $stat -eq 0; then :
    else
-      rm -f "$tmpdepfile1" "$tmpdepfile2"
+      rm -f "$tmpdepfile1" "$tmpdepfile2" "$tmpdepfile3"
       exit $stat
    fi
 
    if test -f "$tmpdepfile1"; then
       tmpdepfile="$tmpdepfile1"
-   else
+   elif test -f "$tmpdepfile2"; then
       tmpdepfile="$tmpdepfile2"
+   else
+      tmpdepfile="$tmpdepfile3"
    fi
    if test -f "$tmpdepfile"; then
       sed -e "s,^.*\.[a-z]*:,$object:," < "$tmpdepfile" > "$depfile"
