@@ -684,8 +684,26 @@ else
   esac
 fi
 test -s sp-vs-blank.E || rm -f sp-vs-blank.E
+$xx -t§ $srcdir/8-bit-t.I1 $srcdir/8-bit-t.I2 > 8-bit-t.O 2> 8-bit-t.E
+code=$?
+if test $code != 0; then
+  $echo "Test 8-bit-t failed: ../../src/join return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp 8-bit-t.O $srcdir/8-bit-t.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed 8-bit-t"; fi;;
+    1) $echo "Test 8-bit-t failed: files 8-bit-t.O and $srcdir/8-bit-t.X differ" 1>&2
+       (diff -c 8-bit-t.O $srcdir/8-bit-t.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test 8-bit-t may have failed." 1>&2
+       $echo The command "cmp 8-bit-t.O $srcdir/8-bit-t.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s 8-bit-t.E || rm -f 8-bit-t.E
 if test $errors = 0; then
-  $echo Passed all 37 tests. 1>&2
+  $echo Passed all 38 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi

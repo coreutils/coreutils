@@ -127,14 +127,14 @@ maint_gen = 1a.I1 1a.I2 1a.X 1b.I1 1b.I2 1b.X 1c.I1 1c.I2 1c.X 1d.I1 1d.I2 \
 5k.I2 5k.X 5l.I1 5l.I2 5l.X 5m.I1 5m.I2 5m.X 6a.I1 6a.I2 6a.X 6b.I1 6b.I2 \
 6b.X 6c.I1 6c.I2 6c.X 7a.I1 7a.I2 7a.X 8a.I1 8a.I2 8a.X 8b.I1 8b.I2 8b.X \
 9a.I1 9a.I2 9a.X trailing-sp.I1 trailing-sp.I2 trailing-sp.X sp-vs-blank.I1 \
-sp-vs-blank.I2 sp-vs-blank.X
+sp-vs-blank.I2 sp-vs-blank.X 8-bit-t.I1 8-bit-t.I2 8-bit-t.X
 
 run_gen = 1a.O 1a.E 1b.O 1b.E 1c.O 1c.E 1d.O 1d.E 1e.O 1e.E 1f.O 1f.E 2a.O \
 2a.E 2b.O 2b.E 2c.O 2c.E 3a.O 3a.E 4a.O 4a.E 4b.O 4b.E 4c.O 4c.E 4d.O 4d.E \
 4e.O 4e.E 5a.O 5a.E 5b.O 5b.E 5c.O 5c.E 5d.O 5d.E 5e.O 5e.E 5f.O 5f.E 5g.O \
 5g.E 5h.O 5h.E 5i.O 5i.E 5j.O 5j.E 5k.O 5k.E 5l.O 5l.E 5m.O 5m.E 6a.O 6a.E \
 6b.O 6b.E 6c.O 6c.E 7a.O 7a.E 8a.O 8a.E 8b.O 8b.E 9a.O 9a.E trailing-sp.O \
-trailing-sp.E sp-vs-blank.O sp-vs-blank.E
+trailing-sp.E sp-vs-blank.O sp-vs-blank.E 8-bit-t.O 8-bit-t.E
 
 
 EXTRA_DIST = Test.pm $x-tests $(explicit) $(maint_gen)
