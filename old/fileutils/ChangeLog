@@ -38,10 +38,6 @@
 
 	* src/remove.c (rm): Call exit with EXIT_FAILURE, not `1'.
 
-	* src/remove.c (rm, remove_init, remove_fini): Don't use or even
-	initialize the active_dir_map unless --recursive (-r) is specified.
-	Suggestion from Andi Kleen
-
 2002-04-19  Jim Meyering  <meyering@lucent.com>
 
 	* tests/cp/*: Clean up.
