@@ -20,6 +20,9 @@
 #include <config.h>
 #include <stdio.h>
 #include <sys/types.h>
+#include <assert.h>
+
+#define NDEBUG 1
 
 #include "system.h"
 #include "version.h"
@@ -27,8 +30,12 @@
 #include "error.h"
 #include "readtokens.h"
 
-/* FIXME */
+/* Token delimiters when reading from a file.  */
 #define DELIM "\n\t "
+
+/* FIXME: if this program is ever modified to factor integers larger
+   than 2^128, this (and the algorithm :-) will have to change.  */
+#define MAX_N_FACTORS 128
 
 /* The name this program was run with. */
 char *program_name;
@@ -70,6 +77,7 @@ factor (n0, max_n_factors, factors)
 
   while (n % 2 == 0)
     {
+      assert (n_factors < max_n_factors);
       factors[n_factors++] = 2;
       n /= 2;
     }
@@ -85,12 +93,16 @@ factor (n0, max_n_factors, factors)
     {
       while (n % d == 0)
 	{
+	  assert (n_factors < max_n_factors);
 	  factors[n_factors++] = d;
 	  n /= d;
 	}
     }
   if (n != 1 || n0 == 1)
-    factors[n_factors++] = n;
+    {
+      assert (n_factors < max_n_factors);
+      factors[n_factors++] = n;
+    }
 
   return n_factors;
 }
@@ -99,12 +111,12 @@ static void
 print_factors (n)
      unsigned long int n;
 {
-  unsigned long int factors[64];
+  unsigned long int factors[MAX_N_FACTORS];
   int n_factors;
   int i;
 
-  n_factors = factor (n, 64, factors);
-  for (i=0; i<n_factors; i++)
+  n_factors = factor (n, MAX_N_FACTORS, factors);
+  for (i = 0; i < n_factors; i++)
     printf ("     %lu\n", factors[i]);
   putchar ('\n');
 }
@@ -124,7 +136,7 @@ do_stdin ()
 				&tokenbuffer);
       if (token_length < 0)
 	break;
-      /* FIXME: Use strtoul.  */
+      /* FIXME: Use strtoul, not atoi.  */
       print_factors ((unsigned long) atoi (tokenbuffer.buffer));
     }
   free (tokenbuffer.buffer);
