@@ -1,3 +1,9 @@
+2005-02-07  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am (libfetish_a_SOURCES): Remove fts.c, fts_.h, and
+	getcwd.h now that they're mentioned in AC_LIBSOURCES and AC_LIBOBJ
+	uses in the corresponding ../m4/*.m4.
+
 2005-02-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* memrchr.h: New file.
