@@ -142,7 +142,7 @@ batch_convert (const char *input_filename, const char *format)
 	{
 	  size_t tz_len = strlen (initial_TZ);
 	  char *buf = xmalloc (3 + tz_len + 1);
-	  mempcpy (mempcpy (buf, "TZ=", 3), initial_TZ, tz_len + 1);
+	  memcpy (mempcpy (buf, "TZ=", 3), initial_TZ, tz_len + 1);
 	  initial_TZ = buf;
 	}
     }
