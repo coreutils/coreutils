@@ -1,3 +1,152 @@
+1997-11-29  Paul Eggert  <eggert@twinsun.com>
+
+	Port to LFS and C9X in general, and to Solaris 2.6 in particular.
+
+	* NEWS: Describe ls -h, -H, rounding, new SI prefixes,
+	64-bit accumulators, and LFS.
+
+	* acconfig.h (HAVE_INTTYPES_H, uintmax_t): New macros.
+
+	* configure.in (CPPFLAGS, LDFLAGS, LIBS): Set to appropriate
+	values if large file support needs explicit enabling.
+	(HAVE_INTTYPES_H, uintmax_t): New macros to configure.
+
+	* doc/fileutils.texi: Describe new -H option, new ls -h option.
+	Clarify about powers of 1000 vs 1024.
+
+	* lib/Makefile.am (libfu_a_SOURCES): Add new file human.c.
+	(noinst_HEADERS): Add new file human.h.
+
+	* lib/fileblocks.c (st_blocks): long -> off_t.
+	Avoid arithmetic overflow when size is near max.
+	Depend on _POSIX_SOURCE and BSIZE, not _POSIX_VERSION, for
+	compatibility with system.h.
+	(BSIZE): Remove definition, since if BSIZE is not defined
+	we're never invoked.
+
+	* lib/fsusage.c: Do all calculations using uintmax_t.
+	Include <inttypes.h> if available.
+	(adjust_blocks, CONVERT_BLOCKS): Remove.
+	(get_fs_usage): Set new member fsu_blocksize, and do not convert
+	numbers to 512-byte block units; this avoids overflow here.
+	Cast lseek arg to off_t, not long.
+
+	* lib/fsusage.h (struct fs_usage): New member fsu_blocksize.
+	Other members are now uintmax_t, not long.
+
+	* lib/human.c, lib/human.h: New files.  The interface is inspired
+	by the human_readable function that was in du.c, but it's pretty
+	much rewritten from scratch.
+
+	* lib/idcache.c (getuidbyname, getgidbyname): Names can now
+	be NULL in cache.  This change merely fixes ifdeffed-out code.
+
+	* lib/savedir.c (savedir): Check for size zero before invoking
+	malloc; this can occur if st_size arg overflows on conversion to
+	unsigned int.  All callers now cast st_size arg to unsigned int.
+
+	* src/chgrp.c (<limits.h>, UINT_MAX, UINT_MAX): Remove; now
+	done by system.h.
+
+	* src/copy.c (copy_reg): Store file size as off_t, not long.
+	Do not assume st_size has been normalized to 512 byte blocks,
+	or that it fits in size_t after dividing by the blocksize.
+
+	* src/cp-hash.c (<inttypes.h>): Include if HAVE_INTTYPES_H.
+	(hash_insert2): Cast inode number to uintmax_t; this prevents
+	negative remainders if the inode number is negative and ino_t
+	is longer than unsigned.
+
+	* src/dd.c, src/df.c, src/du.c, src/ls.c (<inttypes.h>): Include if
+	HAVE_INTTYPES_H.
+	("human.h"): Include.
+
+	* src/dd.c (input_blocksize, output_blocksize, conversion_blocksize):
+	Now size_t instead of long.  0 means unset.
+	(skip_records, seek_record, max_records): Now uintmax_t, not long.
+	(w_partial, w_full, r_partial, r_full, r_truncate):
+	Now uintmax_t instead of unsigned.
+	(print_stats): Print counts as uintmax_t, not unsigned.
+	(main, skip): Check for overflow when computing file offsets.
+	(skip): Records count arg is uintmax_t, not long; blocksize arg is
+	size_t, not long.  Try lseek even on non regular files, as per comment.
+	(oc, col): Now size_t, not int.
+	(copy): No need to check max_records >= 0 any more, as the
+	default value is now effectively infinity.
+	Cast lseek arg to off_t.
+	(copy, copy_with_block): conversion_blocksize - col can never
+	be negative now, since it's unsigned, so rewrite loops to
+	avoid problems with unsigned.
+	(scanargs): Parse numeric args using uintmax_t, not int.
+	Check for overflow when converting block size args to size_t.
+	Blocksize options are now unsigned, and are now 0 when not set yet.
+	(parse_integer): Return uintmax_t, not int; accept new int * arg
+	to store error indicator, since all returned values are now valid.
+	Check for overflow when scanning integer.
+
+	* src/df.c (LONGEST_HUMAN_READABLE_1K_BYTE_BLOCKS): Remove.
+	(human_readable_base): Renamed from human_blocks; value is now
+	zero or positive integer, not just zero or nonzero.
+	(output_units): New variable;
+	replaces booleans kilobyte_blocks and megabyte_blocks.
+	(long_options): Add --si or -H.
+	(print_header): Adjust to renamed option variables.
+	(human_readable_1k_blocks): Remove.
+	(show_dev): Count blocks using uintmax_t, not long.
+	Calculate percentages using double, not long; this still isn't
+	perfect as it suffers double rounding, but it's more likely to
+	round correctly in practice than using long did.
+	Adjust to renamed option variables.
+	Use new human_readable library function to format uintmax_t values.
+	(usage): Add -H, --si.
+	(main): Adjust to renamed option variables.
+	Use -H if BLOCKSIZE is SI.  Add -H.
+
+	* src/du.c (LONGEST_HUMAN_READABLE, enum Output_units): Remove.
+	(count_entry): Now returns uintmax_t, not long.
+	(human_readable_base): Renamed from opt_human_readable; value is now
+	zero or positive integer, not just zero or nonzero.
+	(output_units): Now an integer giving output size.
+	(tot_size): Now uintmax_t, not long.
+	(long_options, usage): Add --si or -H.
+	(main): Adjust to renamed option variables.
+	Use -H if BLOCKSIZE is SI.  Add -H.
+	(human_readable): Remove; rewritten and now in lib/human.c.
+	(print_size): Rewrite in terms of human_readable.
+	Accept extra arg to be printed after size; all callers changed.
+
+	* src/install.c (BITSPERBYTE): Remove.
+	(UID_T_MAX, GID_T_MAX): Define in terms of TYPE_MAXIMUM.
+
+	* src/ls.c (<limits.h>): Don't include; system.h does it now.
+	(INT_MAX): Remove.
+	(longdiff): Remove bogus definition that uses subtraction;
+	it gives the wrong answer when overflows occur.
+	(convert_blocks): Remove.
+	(output_units): New variable;
+	replaces booleans kilobyte_blocks and megabyte_blocks.
+	(human_readable_base): New variable.
+	(long_options, usage): Add -h or --human-readable and -H or --si.
+	(decode_switches): Adjust to renamed option variables.
+	Use -H if BLOCKSIZE is SI.  Add -h, -H.
+	(print_dir): Count blocks using uintmax_t, not int.
+	(gobble_file): Now returns uintmax_t, not int.
+	Don't convert blocks to 512 byte units, as this might overflow;
+	let caller handle the problem.  Deduce what caller will print
+	by invoking human_readable.
+	(print_long_format, print_file_name_and_frills): Don't assume
+	inode number, block count, file size fit in unsigned long.
+	Use human_readable to do block count conversion and to print
+	file sizes.
+	(prep_non_filename_text): Print decimal string for time if
+	localtime fails due to enormous time_t.
+
+	* src/system.h (<limits.h>): Include if HAVE_LIMITS_H.
+	(CHAR_BIT, TYPE_SIGNED, TYPE_MINIMUM, TYPE_MAXIMUM, INT_MAX, UINT_MAX):
+	New macros.
+	(ST_NBLOCKS): Now counts actual blocks, not 512-byte blocks.
+	(ST_NBLOCKSIZE): New macro.
+
 1997-11-24  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/sys2.h: New file -- but just temporary.

@@ -11,10 +11,16 @@ Changes in release 3.17:
   vertical space
 * install accepts new option, --preserve-timestamps
 * du --megabytes --total now shows total in megabytes
+* ls accepts new option, -h or --human-readable
+* df, du, and ls now accept new option, -H or --si, for powers of 1000 not 1024
+* df, du, and ls now consistently round to nearest, with ties going to even
+* df, du, and ls now use `k' instead of `K' for `kilo',
+  and support larger abbreviations T(era), P(eta), E(xa), Z(etta), Y(otta)
 * touch -d DATE now works on Unicos
 * du accepts new option --max-depth=N
 * rmdir accepts new options: --ignore-fail-on-non-empty and --verbose
-* du now overflows its accumulator for 1 terabyte directories, not 2GB.
+* on most hosts df, du, and ls now overflow at 2**64 bytes, not 2**31 bytes
+* all programs now work on large files on LFS hosts like Solaris 2.6
 * df now works with OpenBSD 2.1 beta
 * cp -d FILE SYMLINK-TO-FILE doesn't erase FILE.  Now it gives an error.
 
