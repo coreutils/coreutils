@@ -1,3 +1,11 @@
+1999-12-23  Jim Meyering  <meyering@ascend.com>
+
+	* src/ln.c (usage): Correct typos.
+	List new --target-directory=... usage.
+	Reported by Göran Uddeborg
+
+	* src/mv.c (usage): List new --target-directory=... usage.
+
 1999-12-22  Jim Meyering  <meyering@ascend.com>
 
 	* lib/getdate.y (get_date): Fix typo in time_t overflow test.
