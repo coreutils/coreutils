@@ -1,4 +1,6 @@
 Changes in release 4.1:
+[4.0o]
+* Include lib/nanosleep.h.
 [4.0n]
 * cp, install, ln, and mv: when making backup files in verbose mode, these
   commands now print the backup file name on the same line as the rest of the
