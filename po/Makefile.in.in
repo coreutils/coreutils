@@ -58,19 +58,14 @@ CATALOGS = @CATALOGS@
 .SUFFIXES: .po .gmo .mo .sed .sin .nop .po-update
 
 .po.mo:
-	$(MSGFMT) -c -o t-$@ $<
-	mv t-$@ $@
-
-gmsgfmt_cmd = \
-  rm -f $${lang}.gmo \
-    && $(GMSGFMT) -c --statistics -o t-$${lang}.gmo $${lang}.po \
-    && mv t-$${lang}.gmo $${lang}.gmo
+	@echo "$(MSGFMT) -c -o $@ $<"; \
+	$(MSGFMT) -c -o t-$@ $< && mv t-$@ $@
 
 .po.gmo:
 	@lang=`echo $* | sed -e 's,.*/,,'`; \
 	test "$(srcdir)" = . && cdcmd="" || cdcmd="cd $(srcdir) && "; \
-	echo "$(gmsgfmt_cmd)"; \
-	cd $(srcdir) && $(gmsgfmt_cmd)
+	echo "$${cdcmd}rm -f $${lang}.gmo && $(GMSGFMT) -c --statistics -o $${lang}.gmo $${lang}.po"; \
+	cd $(srcdir) && rm -f $${lang}.gmo && $(GMSGFMT) -c --statistics -o t-$${lang}.gmo $${lang}.po && mv t-$${lang}.gmo $${lang}.gmo
 
 .sin.sed:
 	sed -e '/^#/d' $< > t-$@
