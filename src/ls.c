@@ -122,7 +122,6 @@ int wcwidth ();
 #include "same.h"
 #include "strverscmp.h"
 #include "xstrtol.h"
-#include "gtod.h"
 #include "xalloc.h"
 #include "xreadlink.h"
 
@@ -1026,8 +1025,6 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   atexit (close_stdout);
-
-  GETTIMEOFDAY_INIT ();
 
 #define N_ENTRIES(Array) (sizeof Array / sizeof *(Array))
   assert (N_ENTRIES (color_indicator) + 1 == N_ENTRIES (indicator_name));
