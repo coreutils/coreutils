@@ -12,6 +12,11 @@ if test "$VERBOSE" = yes; then
   $TOUCH --version
 fi
 
+DEFAULT_SLEEP_SECONDS=2
+SLEEP_SECONDS=${SLEEP_SECONDS=$DEFAULT_SLEEP_SECONDS}
+
+fail=0
+
 # FIXME: find writable directories on other partitions
 # and run the test in those directories, too.
 
@@ -32,14 +37,14 @@ if test $framework_failure = 1; then
   exit 1
 fi
 
-sleep 2
+sleep $SLEEP_SECONDS
 for d in $TOUCH_DIR_LIST; do
   $TOUCH $d/a || fail=1
   set x `$LS -t $d/a $d/b`
   test "$*" = "x $d/a $d/b" || fail=1
 done
 
-sleep 2
+sleep $SLEEP_SECONDS
 for d in $TOUCH_DIR_LIST; do
   $TOUCH $d/b
   set x `$LS -t $d/a $d/b`
@@ -47,5 +52,15 @@ for d in $TOUCH_DIR_LIST; do
 
   $RM -rf $d/a $d/b
 done
+
+if test $fail != 0; then
+  cat 1>&2 <<EOF
+*** This test has just failed.  That can happen when the test is run in an
+*** NFS-mounted directory on a system whose clock is not well synchronized
+*** with that of the NFS server.  If you think that is the reason, set the
+*** environment variable SLEEP_SECONDS to some number of seconds larger than
+*** the default of $DEFAULT_SLEEP_SECONDS and rerun the test.
+EOF
+fi
 
 exit $fail
