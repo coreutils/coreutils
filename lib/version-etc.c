@@ -48,14 +48,13 @@ char* version_etc_copyright =
 void
 version_etc (FILE *stream,
 	     const char *command_name, const char *package,
-	     const char *version, const char *authors)
+	     const char *version, const char *written_by)
 {
   if (command_name)
     fprintf (stream, "%s (%s) %s\n", command_name, package, version);
   else
     fprintf (stream, "%s %s\n", package, version);
-  fprintf (stream, _("Written by %s.\n"), authors);
-  putc ('\n', stream);
+  fprintf (stream, "%s\n\n", written_by);
 
   fputs (version_etc_copyright, stream);
   putc ('\n', stream);
