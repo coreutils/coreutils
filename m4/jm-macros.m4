@@ -1,4 +1,4 @@
-#serial 62   -*- autoconf -*-
+#serial 63   -*- autoconf -*-
 
 m4_undefine([AC_LANG_SOURCE(C)])
 dnl The following is identical to the definition in c.m4
@@ -22,7 +22,7 @@ dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
 AC_DEFUN([jm_MACROS],
 [
-  AC_PREREQ(2.56)
+  AC_PREREQ(2.57)
 
   GNU_PACKAGE="GNU $PACKAGE"
   AC_DEFINE_UNQUOTED(GNU_PACKAGE, "$GNU_PACKAGE",
@@ -234,6 +234,7 @@ AC_DEFUN([jm_MACROS],
   AC_CHECK_FUNC([fchown], , [AC_LIBOBJ(fchown-stub)])
   AC_CHECK_FUNC([lstat], , [AC_LIBOBJ(lstat-stub)])
   AC_CHECK_FUNC([readlink], , [AC_LIBOBJ(readlink-stub)])
+  AC_REQUIRE([AM_STDBOOL_H])
 
 ])
 
