@@ -1,3 +1,13 @@
+2000-02-05  Jim Meyering  <meyering@lucent.com>
+
+	* jm-macros.m4: (jm_CHECK_ALL_TYPES): Require most macros.
+	Remove explicit use of AC_HEADER_TIME.  It is required by
+	jm_CHECK_TYPE_STRUCT_TIMESPEC.  Using AC_HEADER_TIME and
+	`AC_REQUIRE'ing jm_CHECK_TYPE_STRUCT_TIMESPEC provoked a but
+	in autoconf whereby the expansion of the latter ended up preceding
+	the expansion of its prerequisite, AC_HEADER_TIME.
+	Reported by Volker Borchert.
+
 2000-02-03  Jim Meyering  <meyering@lucent.com>
 
 	* prereq.m4 (jm_PREREQ_READUTMP): Check for utmpxname.
