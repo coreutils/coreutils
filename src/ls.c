@@ -1887,23 +1887,9 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 	  attach (path, dirname, name);
 	}
 
-      if (trace_links)
-	{
-	  val = stat (path, &files[files_index].stat);
-	  if (val < 0)
-	    {
-	      /* Perhaps a symbolically-linked to file doesn't exist; stat
-		 the link instead. */
-	      val = lstat (path, &files[files_index].stat);
-	    }
-	}
-      else
-	{
-	  val = lstat (path, &files[files_index].stat);
-#if USE_ACL
-	  files[files_index].have_acl = (acl (path, GETACLCNT, 0, NULL) > 4);
-#endif
-	}
+      val = (trace_links
+	     ? stat (path, &files[files_index].stat)
+	     : lstat (path, &files[files_index].stat));
 
       if (val < 0)
 	{
@@ -1911,6 +1897,11 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 	  exit_status = 1;
 	  return 0;
 	}
+
+#if USE_ACL
+      if (! S_ISLNK (files[files_index].stat.st_mode))
+	files[files_index].have_acl = 4 < acl (path, GETACLCNT, 0, NULL);
+#endif
 
       if (S_ISLNK (files[files_index].stat.st_mode)
 	  && (explicit_arg || format == long_format || check_symlink_color))
