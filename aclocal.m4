@@ -2525,7 +2525,7 @@ AC_DEFUN([AC_FUNC_GETCWD_NULL],
 	       [Define if getcwd (NULL, 0) allocates memory for result.])
    fi])
 
-#serial 4
+#serial 5
 
 dnl Find out how to get the file descriptor associated with an open DIR*.
 dnl From Jim Meyering
@@ -2572,7 +2572,7 @@ AC_DEFUN([UTILS_FUNC_DIRFD],
     AC_REPLACE_FUNCS([dirfd])
     AC_CACHE_CHECK(
 	      [how to get the file descriptor associated with an open DIR*],
-		   ac_cv_sys_dir_fd_member_name,
+		   gl_cv_sys_dir_fd_member_name,
       [
         dirfd_save_CFLAGS=$CFLAGS
 	for ac_expr in d_fd dd_fd; do
@@ -2587,14 +2587,14 @@ AC_DEFUN([UTILS_FUNC_DIRFD],
 	  CFLAGS=$dirfd_save_CFLAGS
 	  test "$dir_fd_found" = yes && break
 	done
-	test "$dir_fd_found" = yes || ac_expr=-1
+	test "$dir_fd_found" = yes || ac_expr=no_such_member
 
-	ac_cv_sys_dir_fd_member_name=$ac_expr
+	gl_cv_sys_dir_fd_member_name=$ac_expr
       ]
     )
-    if test $ac_cv_have_decl_dirfd = no; then
+    if test $gl_cv_sys_dir_fd_member_name != no_such_member; then
       AC_DEFINE_UNQUOTED(DIR_FD_MEMBER_NAME,
-	$ac_cv_sys_dir_fd_member_name,
+	$gl_cv_sys_dir_fd_member_name,
 	[the name of the file descriptor member of DIR])
     fi
     AH_VERBATIM(DIR_TO_FD,
