@@ -1,6 +1,6 @@
-2003-06-17  Jim Meyering  <jim@meyering.net>
+2003-06-09  John David Anglin  <dave.anglin@nrc-cnrc.gc.ca>
 
-	* acl.c: Include sys/types.h before sys/stat.h.
+	* acl.c: Include <sys/types.h> before <sys/stat.h>.
 	Required on Ultrix 4.3.
 
 2003-05-20  Derek Price  <derek@ximbiot.com>
