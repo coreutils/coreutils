@@ -190,6 +190,7 @@ static void clear_files __P ((void));
 static void extract_dirs_from_files __P ((const char *dirname, int recursive));
 static void get_link_name __P ((const char *filename, struct fileinfo *f));
 static void indent __P ((int from, int to));
+static void init_col_info __P ((void));
 static void print_current_files __P ((void));
 static void print_dir __P ((const char *name, const char *realname));
 static void print_file_name_and_frills __P ((const struct fileinfo *f));
@@ -622,6 +623,25 @@ static enum color_type const color_types[] =
     color_never, color_never,
     color_if_tty, color_if_tty, color_if_tty
   };
+
+
+/* Information about filling a column.  */
+struct col_info
+{
+  int valid;
+  int line_len;
+  int *col_arr;
+};
+
+/* Array with information about column filledness.  */
+static struct col_info *col_info;
+
+/* Maximum number of columns ever possible for this display.  */
+static int max_idx;
+
+/* The minimum width of a colum is 3: 1 character for the name and 2
+   for the separating white space.  */
+#define MIN_COLUMN_WIDTH	3
 
 
 /* Write to standard output the string PREFIX followed by a space-separated
@@ -2018,10 +2038,12 @@ print_current_files (void)
       break;
 
     case many_per_line:
+      init_col_info ();
       print_many_per_line ();
       break;
 
     case horizontal:
+      init_col_info ();
       print_horizontal ();
       break;
 
@@ -2568,6 +2590,7 @@ length_of_file_name_and_frills (const struct fileinfo *f)
 static void
 print_many_per_line (void)
 {
+  struct col_info *line_fmt;
   int filesno;			/* Index into files. */
   int row;			/* Current row. */
   int max_name_length;		/* Length of longest file name + frills. */
@@ -2575,31 +2598,48 @@ print_many_per_line (void)
   int pos;			/* Current character column. */
   int cols;			/* Number of files across. */
   int rows;			/* Maximum number of files down. */
+  int max_cols;
 
-  /* Compute the maximum file name length.  */
-  max_name_length = 0;
-  for (filesno = 0; filesno < files_index; filesno++)
+  /* Normally the maximum number of columns is determined by the
+     screen width.  But if few files are available this might limit it
+     as well.  */
+  max_cols = max_idx > files_index ? files_index : max_idx;
+
+  /* Compute the maximum number of possible columns.  */
+  for (filesno = 0; filesno < files_index; ++filesno)
     {
+      int i;
+
       name_length = length_of_file_name_and_frills (files + filesno);
-      if (name_length > max_name_length)
-	max_name_length = name_length;
+
+      for (i = 0; i < max_cols; ++i)
+	if (col_info[i].valid)
+	  {
+	    int idx = filesno / ((files_index + i) / (i + 1));
+	    int real_length = name_length + (idx == i ? 0 : 2);
+
+	    if (real_length > col_info[i].col_arr[idx])
+	      {
+		col_info[i].line_len += real_length - col_info[i].col_arr[idx];
+		col_info[i].col_arr[idx] = real_length;
+		col_info[i].valid = col_info[i].line_len < line_length;
+	      }
+	  }
     }
 
-  /* Allow at least two spaces between names.  */
-  max_name_length += 2;
+  /* Find maximum allowed columns.  */
+  for (cols = max_cols; cols > 1; --cols)
+    if (col_info[cols - 1].valid)
+      break;
+  line_fmt = &col_info[cols - 1];
 
-  /* Calculate the maximum number of columns that will fit. */
-  cols = line_length / max_name_length;
-  if (cols == 0)
-    cols = 1;
   /* Calculate the number of rows that will be in each column except possibly
      for a short column on the right. */
   rows = files_index / cols + (files_index % cols != 0);
-  /* Recalculate columns based on rows. */
-  cols = files_index / rows + (files_index % rows != 0);
 
   for (row = 0; row < rows; row++)
     {
+      int col = 0;
       filesno = row;
       pos = 0;
       /* Print the next row.  */
@@ -2607,6 +2647,7 @@ print_many_per_line (void)
 	{
 	  print_file_name_and_frills (files + filesno);
 	  name_length = length_of_file_name_and_frills (files + filesno);
+	  max_name_length = line_fmt->col_arr[col++];
 
 	  filesno += rows;
 	  if (filesno >= files_index)
@@ -2622,50 +2663,75 @@ print_many_per_line (void)
 static void
 print_horizontal (void)
 {
+  struct col_info *line_fmt;
   int filesno;
   int max_name_length;
   int name_length;
   int cols;
   int pos;
+  int max_cols;
+
+  /* Normally the maximum number of columns is determined by the
+     screen width.  But if few files are available this might limit it
+     as well.  */
+  max_cols = max_idx > files_index ? files_index : max_idx;
 
   /* Compute the maximum file name length.  */
   max_name_length = 0;
-  for (filesno = 0; filesno < files_index; filesno++)
+  for (filesno = 0; filesno < files_index; ++filesno)
     {
+      int i;
+
       name_length = length_of_file_name_and_frills (files + filesno);
-      if (name_length > max_name_length)
-	max_name_length = name_length;
+
+      for (i = 0; i < max_cols; ++i)
+	if (col_info[i].valid)
+	  {
+	    int idx = filesno % (i + 1);
+	    int real_length = name_length + (idx == i ? 0 : 2);
+
+	    if (real_length > col_info[i].col_arr[idx])
+	      {
+		col_info[i].line_len += real_length - col_info[i].col_arr[idx];
+		col_info[i].col_arr[idx] = real_length;
+		col_info[i].valid = col_info[i].line_len < line_length;
+	      }
+	  }
     }
 
-  /* Allow two spaces between names.  */
-  max_name_length += 2;
-
-  cols = line_length / max_name_length;
-  if (cols == 0)
-    cols = 1;
+  /* Find maximum allowed columns.  */
+  for (cols = max_cols; cols > 1; --cols)
+    if (col_info[cols - 1].valid)
+      break;
+  line_fmt = &col_info[cols - 1];
 
   pos = 0;
-  name_length = 0;
 
-  for (filesno = 0; filesno < files_index; filesno++)
+  /* Print first entry.  */
+  print_file_name_and_frills (files);
+  name_length = length_of_file_name_and_frills (files);
+  max_name_length = line_fmt->col_arr[0];
+
+  /* Now the rest.  */
+  for (filesno = 1; filesno < files_index; ++filesno)
     {
-      if (filesno != 0)
+      int col = filesno % cols;
+
+      if (col == 0)
 	{
-	  if (filesno % cols == 0)
-	    {
-	      putchar ('\n');
-	      pos = 0;
-	    }
-	  else
-	    {
-	      indent (pos + name_length, pos + max_name_length);
-	      pos += max_name_length;
-	    }
+	  putchar ('\n');
+	  pos = 0;
+	}
+      else
+	{
+	  indent (pos + name_length, pos + max_name_length);
+	  pos += max_name_length;
 	}
 
       print_file_name_and_frills (files + filesno);
 
       name_length = length_of_file_name_and_frills (files + filesno);
+      max_name_length = line_fmt->col_arr[col];
     }
   putchar ('\n');
 }
@@ -2742,6 +2808,38 @@ attach (char *dest, const char *dirname, const char *name)
   while (*name)
     *dest++ = *name++;
   *dest = 0;
+}
+
+static void
+init_col_info (void)
+{
+  int i;
+  int allocate = 0;
+
+  max_idx = line_length / MIN_COLUMN_WIDTH;
+  if (max_idx == 0)
+    max_idx = 1;
+
+  if (col_info == NULL)
+    {
+      col_info = (struct col_info *) xmalloc (max_idx
+					      * sizeof (struct col_info));
+      allocate = 1;
+    }
+
+  for (i = 0; i < max_idx; ++i)
+    {
+      int j;
+
+      col_info[i].valid = 1;
+      col_info[i].line_len = (i + 1) * MIN_COLUMN_WIDTH;
+
+      if (allocate)
+	col_info[i].col_arr = (int *) xmalloc ((i + 1) * sizeof (int));
+
+      for (j = 0; j <= i; ++j)
+	col_info[i].col_arr[j] = MIN_COLUMN_WIDTH;
+    }
 }
 
 static void
