@@ -1,6 +1,12 @@
-2005-02-14  Paul Eggert  <eggert@cs.ucla.edu>
+2005-02-15  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/nice.c (NZERO) [NZERO == 0]: Undefine and define to 20,
+	to work around the invalid definition from Darwin 7.7.0.
+	Test failure reported by Sébastien Maret.
+
+2005-02-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/sort.c (mergefps): Use binary search rather than linear one
 	when comparing new line to lines already in main memory.
