@@ -1,3 +1,11 @@
+2001-08-26  Jim Meyering  <meyering@lucent.com>
+
+	* jm-macros.m4: Require jm_AC_PREREQ_XSTRTOIMAX.
+
+	* xstrtoimax.m4: New file.
+	* xstrtoumax.m4: Add comments explaining why we
+	AC_REPLACE_FUNCS(strtol).
+
 2001-06-20  Paul Eggert  <eggert@twinsun.com>
 
 	* inttypes.m4: Add AC_PREREQ(2.13).
