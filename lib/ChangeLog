@@ -1,3 +1,15 @@
+2003-01-25  Jim Meyering  <jim@meyering.net>
+
+	* ftw.c [_LIBC] (ISSLASH, FILESYSTEM_PREFIX_LEN): Define.
+	(base_name): New function.
+	(ftw_startup): Don't strip trailing slashes.
+	Use base_name to find the offset of the basename.
+
+2003-01-25  Jim Meyering  <jim@meyering.net>
+
+	* ftw.c (object_compare): Compare inode numbers before device numbers.
+	The former is much more likely to differ for any two given file objects.
+
 2003-01-23  Jim Meyering  <jim@meyering.net>
 
 	* tsearch.c [HAVE_CONFIG_H]: Include <config.h>.
