@@ -1,5 +1,5 @@
 /* csplit - split a file into sections determined by context lines
-   Copyright (C) 91, 1995-2001 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -34,7 +34,6 @@
 #include "human.h"
 #include "safe-read.h"
 #include "xstrtol.h"
-#include "xalloc.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "csplit"
