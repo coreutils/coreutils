@@ -139,7 +139,7 @@ extern int errno;
 #define decstation
 #endif
 
-#if defined(sun) && defined(SVR4)
+#if (defined(sun) || defined(__sun)) && defined(SVR4)
 #define SUNOS_5
 #endif
 
@@ -168,7 +168,7 @@ extern int errno;
 #define LOAD_AVE_TYPE long
 #endif
 
-#ifdef sun
+#if defined(sun) || defined(__sun)
 #define LOAD_AVE_TYPE long
 #endif
 
@@ -284,7 +284,7 @@ extern int errno;
 #define NLIST_STRUCT
 #endif
 
-#ifdef sun
+#if defined(sun) || defined(__sun)
 #define NLIST_STRUCT
 #endif
 
