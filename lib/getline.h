@@ -24,8 +24,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 #   define PARAMS(args) args
 #  else
 #   define PARAMS(args) ()
-#  endif  /* GCC.  */
-# endif  /* Not PARAMS.  */
+#  endif
+# endif
 
 int
 getline PARAMS ((char **_lineptr, size_t *_n, FILE *_stream));
