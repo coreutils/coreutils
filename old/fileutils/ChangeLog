@@ -1,6 +1,10 @@
-2002-06-15  Jim Meyering  <meyering@lucent.com>
+2002-06-17  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.9.
+
+	* tests/setgid-check: Interpret a permissions string of
+	drwxr-xr-x (DOS/Windows) as meaning the cwd is not setgid.
+	Reported by Rich Dawe.
 
 2002-05-19  Paul Eggert  <eggert@twinsun.com>
 
