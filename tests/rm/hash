@@ -11,12 +11,12 @@ if test "$VERBOSE" = yes; then
 fi
 
 pwd=`pwd`
-tmp=hash-$$
-trap 'status=$?; cd $pwd; rm -rf $tmp || exit $?; exit $status' 0
+t0=`echo "$0"|sed 's,.*/,,'`.tmp;tmp=$t0/$$
+trap 'status=$?; cd $pwd; rm -rf $t0 || exit $?; exit $status' 0
 trap 'exit $?' 1 2 13 15
 
 framework_failure=0
-mkdir $tmp || framework_failure=1
+mkdir -p $tmp || framework_failure=1
 cd $tmp
 
 # Create a hierarchy with 3*26 leaf directories, each at depth 153.
