@@ -16,6 +16,10 @@
 
 2001-11-17  Jim Meyering  <meyering@lucent.com>
 
+	* modechange.c (mode_adjust): Fix error introduced on 1999-04-26
+	that made e.g., `chmod a=,o=w,g=o F' cause F to be group readable
+	rather than group writable.  Patch by Juan F. Codagnone.
+
 	* readtokens.c: Remove explicit declarations of xmalloc and xrealloc,
 	Instead, include "xalloc.h".
 
