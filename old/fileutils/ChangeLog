@@ -7,6 +7,7 @@
 	rm: cannot chdir from `.' to `foo': Not a directory
 	* src/remove.c (remove_dir): Detect the case in which unlinking a
 	non-directory fails with EPERM, and give an appropriate diagnostic.
+	Reported by Michael Stone.
 
 2002-07-13  Jim Meyering  <meyering@lucent.com>
 
