@@ -143,7 +143,7 @@ main (argc, argv)
 #endif				/* _POSIX_VERSION */
     }
 
-  errs = tee (argc - optind, &argv[optind]);
+  errs = tee (argc - optind, (const char **) &argv[optind]);
   if (close (0) != 0)
     error (1, errno, "standard input");
   if (close (1) != 0)
@@ -158,7 +158,7 @@ main (argc, argv)
 static int
 tee (nfiles, files)
      int nfiles;
-     char **files;
+     const char **files;
 {
   int *descriptors;
   char buffer[BUFSIZ];
