@@ -1,3 +1,7 @@
+2001-03-18  Jim Meyering  <meyering@lucent.com>
+
+	* Version 2.0.13.
+
 2001-03-17  Paul Eggert  <eggert@twinsun.com>
 
 	* src/sort.c, src/tail.c, src/uniq.c (usage):
