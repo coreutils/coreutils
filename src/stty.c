@@ -1193,9 +1193,9 @@ set_speed (enum speed_setting type, const char *arg, struct termios *mode)
 #ifdef TIOCGWINSZ
 
 static int
-get_win_size (int fileno, struct winsize *win)
+get_win_size (int fd, struct winsize *win)
 {
-  int err = ioctl (fileno, TIOCGWINSZ, (char *) win);
+  int err = ioctl (fd, TIOCGWINSZ, (char *) win);
   return err;
 }
 
