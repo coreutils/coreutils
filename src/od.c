@@ -1003,12 +1003,12 @@ skip (off_t n_skip)
 	  continue;
 	}
 
-      /* The st_size field is valid only for regular files and
-	 directories.  FIXME: is the preceding true?
+      /* The st_size field is valid only for regular files
+	 (and for symbolic links, which cannot occur here).
 	 If the number of bytes left to skip is at least as large as
 	 the size of the current file, we can decrement
 	 n_skip and go on to the next file.  */
-      if (S_ISREG (file_stats.st_mode) || S_ISDIR (file_stats.st_mode))
+      if (S_ISREG (file_stats.st_mode))
 	{
 	  if (n_skip >= file_stats.st_size)
 	    {
