@@ -1,3 +1,25 @@
+2000-04-16  Jim Meyering  <meyering@lucent.com>
+
+	* src/cp.c: New option: --strip-trailing-slashes.
+	(enum) [STRIP_TRAILING_SLASHES_OPTION]: New member.
+	(remove_trailing_slashes): New global.
+	(long_opts): New getopt spec.
+	(usage): Describe.
+	(do_copy): Strip trailing slashes on SOURCE names only if the new
+	option has been specified.
+	(main): New case.
+
+	* tests/cp/symlink-slash: New test for the change in behavior.
+	* tests/cp/Makefile.am (TESTS): Add symlink-slash.
+
+	* doc/fileutils.texi (Trailing slashes): Factor out discussion on
+	trailing slashes into its own node.
+	Cross reference from cp and mv.
+
+2000-04-14  Jim Meyering  <meyering@lucent.com>
+
+	* src/touch.c (touch): Add O_NOCTTY to the list of open-time flags.
+
 2000-04-13  Jim Meyering  <meyering@lucent.com>
 
 	Move some code into m4/.
