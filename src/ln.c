@@ -73,9 +73,10 @@ int symlink ();
       {									\
 	const char *source_base;					\
 	char *tmp_source;						\
+	size_t buf_len = strlen (source) + 1;				\
 									\
-	tmp_source = (char *) alloca (strlen ((source)) + 1);		\
-	strcpy (tmp_source, (source));					\
+	tmp_source = (char *) alloca (buf_len);				\
+	memcpy (tmp_source, (source), buf_len);				\
 	strip_trailing_slashes (tmp_source);				\
 	source_base = base_name (tmp_source);				\
 									\
@@ -260,11 +261,13 @@ do_link (const char *source, const char *dest)
 
       if (backup_type != none)
 	{
+	  size_t buf_len;
 	  char *tmp_backup = find_backup_file_name (dest, backup_type);
 	  if (tmp_backup == NULL)
 	    xalloc_die ();
-	  dest_backup = (char *) alloca (strlen (tmp_backup) + 1);
-	  strcpy (dest_backup, tmp_backup);
+	  buf_len = strlen (tmp_backup) + 1;
+	  dest_backup = (char *) alloca (buf_len);
+	  memcpy (dest_backup, tmp_backup, buf_len);
 	  free (tmp_backup);
 	  if (rename (dest, dest_backup))
 	    {
