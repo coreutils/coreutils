@@ -1,3 +1,10 @@
+2003-08-27  Jim Meyering  <jim@meyering.net>
+
+	* mkstemp.m4: Require that the system mkstemp be able to create
+	70 temporary files, not just 30.  Tru64 V4.0F's mkstemp function
+	would fail after 32.  Reported by Danny Levinson.  Details here:
+	http://mail.gnu.org/archive/html/bug-coreutils/2003-08/msg00124.html
+
 2003-08-19  Jim Meyering  <jim@meyering.net>
 
 	* lib-ld.m4: Revert yesterday's change, per Bruno's request here:
