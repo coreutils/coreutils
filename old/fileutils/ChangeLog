@@ -2,6 +2,17 @@
 
 	* Version 4.0.34.
 
+	* tests/ls/Makefile.am (TESTS): Add follow-slink.
+	* tests/ls/follow-slink: New file.
+
+2000-12-01  Paul Eggert  <eggert@twinsun.com>
+
+	* src/ls.c (gobble_file): Do not fall back on lstat if stat
+	fails; POSIX.2 does not allow this.  Invoke acl only on
+	non-symlinks, and only if lstat or stat succeeds.
+
+2000-12-02  Jim Meyering  <meyering@lucent.com>
+
 	* configure: Regenerate using the very latest version (in CVS) of
 	autoconf.
 
