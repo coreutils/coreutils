@@ -1,5 +1,7 @@
 /* xgethostname.c -- return current hostname with unlimited length
-   Copyright (C) 1992, 1996, 2000, 2001, 2003 Free Software Foundation, Inc.
+
+   Copyright (C) 1992, 1996, 2000, 2001, 2003, 2004 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,22 +27,18 @@
 #include "xgethostname.h"
 
 #include <stdlib.h>
-#include <sys/types.h>
-
 #include <errno.h>
-#ifndef errno
-extern int errno;
+
+#if HAVE_UNISTD_H
+# include <unistd.h>
 #endif
 
 #include "error.h"
-#include "exit.h"
 #include "xalloc.h"
 
 #ifndef ENAMETOOLONG
-# define ENAMETOOLONG 9999
+# define ENAMETOOLONG 0
 #endif
-
-int gethostname ();
 
 #ifndef INITIAL_HOSTNAME_LENGTH
 # define INITIAL_HOSTNAME_LENGTH 34
@@ -48,37 +46,37 @@ int gethostname ();
 
 /* Return the current hostname in malloc'd storage.
    If malloc fails, exit.
-   Upon any other failure, return NULL.  */
+   Upon any other failure, return NULL and set errno.  */
 char *
 xgethostname (void)
 {
-  char *hostname;
-  size_t size;
+  char *hostname = NULL;
+  size_t size = INITIAL_HOSTNAME_LENGTH;
 
-  size = INITIAL_HOSTNAME_LENGTH;
-  /* Use size + 1 here rather than size to work around the bug
-     in SunOS 5.5's gethostname whereby it NUL-terminates HOSTNAME
-     even when the name is longer than the supplied buffer.  */
-  hostname = xmalloc (size + 1);
   while (1)
     {
-      int k = size - 1;
-      int err;
+      /* Use SIZE_1 here rather than SIZE to work around the bug in
+	 SunOS 5.5's gethostname whereby it NUL-terminates HOSTNAME
+	 even when the name is as long as the supplied buffer.  */
+      size_t size_1;
 
+      hostname = x2realloc (hostname, &size);
+      size_1 = size - 1;
+      hostname[size_1 - 1] = '\0';
       errno = 0;
-      hostname[k] = '\0';
-      err = gethostname (hostname, size);
-      if (err >= 0 && hostname[k] == '\0')
-	break;
-      else if (err < 0 && errno != ENAMETOOLONG && errno != 0)
+
+      if (gethostname (hostname, size_1) == 0)
+	{
+	  if (! hostname[size_1 - 1])
+	    break;
+	}
+      else if (errno != 0 && errno != ENAMETOOLONG && errno != EINVAL)
 	{
 	  int saved_errno = errno;
 	  free (hostname);
 	  errno = saved_errno;
 	  return NULL;
 	}
-      size *= 2;
-      hostname = xrealloc (hostname, size + 1);
     }
 
   return hostname;
