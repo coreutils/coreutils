@@ -1,5 +1,8 @@
 2003-02-28  Jim Meyering  <jim@meyering.net>
 
+	* fts.c (fts_children): If opening `.' fails, set the fts_child
+	member to NULL before returning.  From NetBSD.
+
 	* fts.c (fts_children): If fchdir fails, close file descriptor
 	before returning.  From NetBSD.
 
