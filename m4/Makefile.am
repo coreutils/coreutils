@@ -19,6 +19,7 @@ d-type.m4 \
 dirfd.m4 \
 dos.m4 \
 error.m4 \
+extensions.m4 \
 fnmatch.m4 \
 fpending.m4 \
 fstypename.m4 \
@@ -34,7 +35,6 @@ gettext.m4 \
 gettimeofday.m4 \
 glibc.m4 \
 glibc21.m4 \
-gnu-source.m4 \
 group-member.m4 \
 host-os.m4 \
 human.m4 \
@@ -45,7 +45,6 @@ inttypes-pri.m4 \
 inttypes.m4 \
 inttypes_h.m4 \
 isc-posix.m4 \
-jm-glibc-io.m4 \
 jm-macros.m4 \
 jm-mktime.m4 \
 jm-winsz1.m4 \
@@ -94,6 +93,7 @@ tm_gmtoff.m4 \
 tzset.m4 \
 uintmax_t.m4 \
 unlink-busy.m4 \
+unlocked-io.m4 \
 uptime.m4 \
 utimbuf.m4 \
 utime.m4 \
