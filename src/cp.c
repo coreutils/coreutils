@@ -285,7 +285,7 @@ re_protect (const char *const_dst_path, int src_offset,
   char *src_path;		/* The source name in `dst_path'. */
   uid_t myeuid = geteuid ();
 
-  dst_path = (char *) alloca (strlen (const_dst_path) + 1);
+  dst_path = alloca (strlen (const_dst_path) + 1);
   strcpy (dst_path, const_dst_path);
   src_path = dst_path + src_offset;
 
@@ -383,13 +383,13 @@ make_path_private (const char *const_dirpath, int src_offset, int mode,
   char *dst_dirname;		/* Leading path of `dirpath'. */
   size_t dirlen;		/* Length of leading path of `dirpath'. */
 
-  dirpath = (char *) alloca (strlen (const_dirpath) + 1);
+  dirpath = alloca (strlen (const_dirpath) + 1);
   strcpy (dirpath, const_dirpath);
 
   src = dirpath + src_offset;
 
   dirlen = dir_len (dirpath);
-  dst_dirname = (char *) alloca (dirlen + 1);
+  dst_dirname = alloca (dirlen + 1);
   memcpy (dst_dirname, dirpath, dirlen);
   dst_dirname[dirlen] = '\0';
 
@@ -691,8 +691,7 @@ do_copy (int n_files, char **file, const char *target_directory,
 	  char *source_base;
 
 	  ASSIGN_BASENAME_STRDUPA (source_base, source);
-	  new_dest = (char *) alloca (strlen (dest)
-				      + strlen (source_base) + 1);
+	  new_dest = alloca (strlen (dest) + strlen (source_base) + 1);
 	  stpcpy (stpcpy (new_dest, dest), source_base);
 	}
       else

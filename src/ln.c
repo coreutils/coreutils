@@ -75,12 +75,12 @@ int symlink ();
 	char *tmp_source;						\
 	size_t buf_len = strlen (source) + 1;				\
 									\
-	tmp_source = (char *) alloca (buf_len);				\
+	tmp_source = alloca (buf_len);					\
 	memcpy (tmp_source, (source), buf_len);				\
 	strip_trailing_slashes (tmp_source);				\
 	source_base = base_name (tmp_source);				\
 									\
-	(new_dest) = (char *) alloca (strlen ((dest)) + 1		\
+	(new_dest) = alloca (strlen ((dest)) + 1			\
 				      + strlen (source_base) + 1);	\
 	stpcpy (stpcpy (stpcpy ((new_dest), (dest)), "/"), source_base);\
       }									\
@@ -266,7 +266,7 @@ do_link (const char *source, const char *dest)
 	  if (tmp_backup == NULL)
 	    xalloc_die ();
 	  buf_len = strlen (tmp_backup) + 1;
-	  dest_backup = (char *) alloca (buf_len);
+	  dest_backup = alloca (buf_len);
 	  memcpy (dest_backup, tmp_backup, buf_len);
 	  free (tmp_backup);
 	  if (rename (dest, dest_backup))
