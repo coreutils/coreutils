@@ -43,17 +43,23 @@ void *memrchr ();
 
 #include "dirname.h"
 
+#ifndef FILESYSTEM_PREFIX_LEN
+# define FILESYSTEM_PREFIX_LEN(Filename) 0
+#endif
+
 #ifndef ISSLASH
 # define ISSLASH(C) ((C) == '/')
 #endif
 
 #define BACKSLASH_IS_PATH_SEPARATOR ISSLASH ('\\')
 
-/* Return the length of `dirname (PATH)' and set *RESULT
-   to point to PATH or to `"."', as appropriate.
-   Works properly even if there are trailing slashes
-   (by effectively ignoring them).  */
-size_t
+/* Return the length of `dirname (PATH)' and set *RESULT to point
+   to PATH or to `"."', as appropriate.  Works properly even if
+   there are trailing slashes (by effectively ignoring them).
+   WARNING: This function doesn't work for cwd-relative names like
+   `a:foo' that are specified with a drive-letter prefix.  That case
+   is handled in the caller.  */
+static size_t
 dir_name_r (char const *path, char const **result)
 {
   char const *slash;
@@ -78,10 +84,11 @@ dir_name_r (char const *path, char const **result)
 
       if (path < slash)
 	{
-	  slash = memrchr (path, '/', slash - path);
+	  size_t len = slash - path;
+	  slash = memrchr (path, '/', len);
 	  if (BACKSLASH_IS_PATH_SEPARATOR)
 	    {
-	      char const *b = memrchr (path, '\\', slash - path);
+	      char const *b = memrchr (path, '\\', len);
 	      if (b && slash < b)
 		slash = b;
 	    }
@@ -91,27 +98,23 @@ dir_name_r (char const *path, char const **result)
   if (slash == 0)
     {
       /* File is in the current directory.  */
-      path = ".";
-      length = 1;
+
+      length = FILESYSTEM_PREFIX_LEN (path);
+
+      if (length == 0)
+	{
+	  path = ".";
+	  length = 1;
+	}
     }
   else
     {
-      /* Remove any trailing slashes from the result.  */
-      if (BACKSLASH_IS_PATH_SEPARATOR)
-	{
-	  char const *lim = ((path[0] >= 'A' && path[0] <= 'z'
-			      && path[1] == ':')
-			     ? path + 2 : path);
+      /* Remove any trailing slashes from the result.  If we have a
+	 canonicalized "d:/path", leave alone the root case "d:/".  */
+      char const *lim = path + FILESYSTEM_PREFIX_LEN (path);
 
-	  /* If canonicalized "d:/path", leave alone the root case "d:/".  */
-	  while (slash > lim && ISSLASH (*slash))
-	    --slash;
-	}
-      else
-	{
-	  while (slash > path && ISSLASH (*slash))
-	    --slash;
-	}
+      while (slash > lim && ISSLASH (*slash))
+	--slash;
 
       length = slash - path + 1;
     }
@@ -130,10 +133,14 @@ dir_name (char const *path)
 {
   char const *result;
   size_t length = dir_name_r (path, &result);
-  char *newpath = (char *) malloc (length + 1);
+  int append_dot = (length && length == FILESYSTEM_PREFIX_LEN (newpath));
+  char *newpath = (char *) malloc (length + append_dot + 1);
   if (newpath == 0)
     return 0;
   strncpy (newpath, result, length);
+  /* If PATH is "d:foo", return "d:.", the CWD on drive d:  */
+  if (append_dot)
+    newpath[length++] = '.';
   newpath[length] = 0;
   return newpath;
 }
