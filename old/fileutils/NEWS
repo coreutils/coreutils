@@ -1,4 +1,7 @@
 Changes in release 3.17:
+[3.16z]
+* portability tweaks
+* avoid `root `cp -a' from Netapp snapshot' corruption
 [3.16y]
 * `install -D' now works
 * distribute maintainer Makefiles in man/
