@@ -1,19 +1,23 @@
 /* obstack.h - object stack macros
-   Copyright (C) 1988,89,90,91,92,93,94,96 Free Software Foundation, Inc.
+   Copyright (C) 1988,89,90,91,92,93,94,96,97 Free Software Foundation, Inc.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
+   This file is part of the GNU C Library.  Its master source is NOT part of
+   the C library, however.  The master source lives in /gd/gnu/lib.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* Summary:
 
@@ -102,26 +106,17 @@ Summary:
 
 #ifndef __OBSTACK_H__
 #define __OBSTACK_H__
-
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
-
-#if !defined (HAVE_BCOPY) && defined (HAVE_MEMCPY) && !defined (bcopy)
-# define bcopy(from, to, len) memcpy ((to), (from), (len))
-#endif
-
 
-/* We use subtraction of (char *)0 instead of casting to int
+/* We use subtraction of (char *) 0 instead of casting to int
    because on word-addressable machines a simple cast to int
    may ignore the byte-within-word field of the pointer.  */
 
 #ifndef __PTR_TO_INT
-#define __PTR_TO_INT(P) ((P) - (char *)0)
+#define __PTR_TO_INT(P) ((P) - (char *) 0)
 #endif
 
 #ifndef __INT_TO_PTR
-#define __INT_TO_PTR(P) ((P) + (char *)0)
+#define __INT_TO_PTR(P) ((P) + (char *) 0)
 #endif
 
 /* We need the type of the resulting object.  In ANSI C it is ptrdiff_t
@@ -141,16 +136,21 @@ Summary:
 #include <stddef.h>
 #endif
 
-#include <sys/types.h>
-
-#ifndef HAVE_PTRDIFF_T
-# define ptrdiff_t off_t
-#endif
-
 #if defined (__STDC__) && __STDC__
 #define PTR_INT_TYPE ptrdiff_t
 #else
 #define PTR_INT_TYPE long
+#endif
+
+#if defined (_LIBC) || defined (HAVE_STRING_H)
+#include <string.h>
+#define _obstack_memcpy(To, From, N) memcpy ((To), (From), (N))
+#else
+#ifdef memcpy
+#define _obstack_memcpy(To, From, N) memcpy ((To), (From), (N))
+#else
+#define _obstack_memcpy(To, From, N) bcopy ((From), (To), (N))
+#endif
 #endif
 
 struct _obstack_chunk		/* Lives at front of each chunk. */
@@ -163,7 +163,7 @@ struct _obstack_chunk		/* Lives at front of each chunk. */
 struct obstack		/* control current object in current chunk */
 {
   long	chunk_size;		/* preferred size to allocate chunks in */
-  struct _obstack_chunk* chunk;	/* address of current struct obstack_chunk */
+  struct _obstack_chunk *chunk;	/* address of current struct obstack_chunk */
   char	*object_base;		/* address of object we are building */
   char	*next_free;		/* where to add next char to current object */
   char	*chunk_limit;		/* address of char after current chunk */
@@ -175,7 +175,7 @@ struct obstack		/* control current object in current chunk */
      but having prototypes here quiets -Wstrict-prototypes.  */
   struct _obstack_chunk *(*chunkfun) (void *, long);
   void (*freefun) (void *, struct _obstack_chunk *);
-  void *extra_arg;             /* first arg for chunk alloc/dealloc funcs */
+  void *extra_arg;		/* first arg for chunk alloc/dealloc funcs */
 #else
   struct _obstack_chunk *(*chunkfun) (); /* User's fcn to allocate a chunk.  */
   void (*freefun) ();		/* User's function to free a chunk.  */
@@ -186,7 +186,9 @@ struct obstack		/* control current object in current chunk */
 				   chunk contains a zero-length object.  This
 				   prevents freeing the chunk if we allocate
 				   a bigger chunk to replace it. */
-  unsigned alloc_failed:1;	/* chunk alloc func returned 0 */
+  unsigned alloc_failed:1;	/* No longer used, as we now call the failed
+				   handler on error, but retained for binary
+				   compatibility.  */
 };
 
 /* Declare the external functions we use; they are in obstack.c.  */
@@ -199,11 +201,13 @@ extern int _obstack_begin (struct obstack *, int, int,
 extern int _obstack_begin_1 (struct obstack *, int, int,
 			     void *(*) (void *, long),
 			     void (*) (void *, void *), void *);
+extern int _obstack_memory_used (struct obstack *);
 #else
 extern void _obstack_newchunk ();
 extern void _obstack_free ();
 extern int _obstack_begin ();
 extern int _obstack_begin_1 ();
+extern int _obstack_memory_used ();
 #endif
 
 #if defined (__STDC__) && __STDC__
@@ -234,6 +238,7 @@ void * obstack_finish (struct obstack *obstack);
 int obstack_object_size (struct obstack *obstack);
 
 int obstack_room (struct obstack *obstack);
+void obstack_make_room (struct obstack *obstack, int size);
 void obstack_1grow_fast (struct obstack *obstack, int data_char);
 void obstack_ptr_grow_fast (struct obstack *obstack, void *data);
 void obstack_int_grow_fast (struct obstack *obstack, int data);
@@ -243,17 +248,30 @@ void * obstack_base (struct obstack *obstack);
 void * obstack_next_free (struct obstack *obstack);
 int obstack_alignment_mask (struct obstack *obstack);
 int obstack_chunk_size (struct obstack *obstack);
+int obstack_memory_used (struct obstack *obstack);
 
 #endif /* __STDC__ */
 
 /* Non-ANSI C cannot really support alternative functions for these macros,
    so we do not declare them.  */
+
+/* Error handler called when `obstack_chunk_alloc' failed to allocate
+   more memory.  This can be set to a user defined function.  The
+   default action is to print a message and abort.  */
+#if defined (__STDC__) && __STDC__
+extern void (*obstack_alloc_failed_handler) (void);
+#else
+extern void (*obstack_alloc_failed_handler) ();
+#endif
+
+/* Exit value used when `print_and_abort' is used.  */
+extern int obstack_exit_failure;
 
 /* Pointer to beginning of object being allocated or to be allocated next.
    Note that this might not be the final address of the object
    because a new chunk might be needed to hold the final size.  */
 
-#define obstack_base(h) ((h)->alloc_failed ? 0 : (h)->object_base)
+#define obstack_base(h) ((h)->object_base)
 
 /* Size for allocating ordinary chunks.  */
 
@@ -261,7 +279,7 @@ int obstack_chunk_size (struct obstack *obstack);
 
 /* Pointer to next byte not yet allocated in current chunk.  */
 
-#define obstack_next_free(h)	((h)->alloc_failed ? 0 : (h)->next_free)
+#define obstack_next_free(h)	((h)->next_free)
 
 /* Mask specifying low bits that should be clear in address of an object.  */
 
@@ -273,19 +291,19 @@ int obstack_chunk_size (struct obstack *obstack);
 
 #define obstack_init(h) \
   _obstack_begin ((h), 0, 0, \
-                 (void *(*) (long)) obstack_chunk_alloc, (void (*) (void *)) obstack_chunk_free)
+		  (void *(*) (long)) obstack_chunk_alloc, (void (*) (void *)) obstack_chunk_free)
 
 #define obstack_begin(h, size) \
   _obstack_begin ((h), (size), 0, \
-                 (void *(*) (long)) obstack_chunk_alloc, (void (*) (void *)) obstack_chunk_free)
+		  (void *(*) (long)) obstack_chunk_alloc, (void (*) (void *)) obstack_chunk_free)
 
 #define obstack_specify_allocation(h, size, alignment, chunkfun, freefun) \
   _obstack_begin ((h), (size), (alignment), \
-                   (void *(*) (long)) (chunkfun), (void (*) (void *)) (freefun))
+		    (void *(*) (long)) (chunkfun), (void (*) (void *)) (freefun))
 
 #define obstack_specify_allocation_with_arg(h, size, alignment, chunkfun, freefun, arg) \
   _obstack_begin_1 ((h), (size), (alignment), \
-                   (void *(*) (long)) (chunkfun), (void (*) (void *)) (freefun), (arg))
+		    (void *(*) (long)) (chunkfun), (void (*) (void *)) (freefun), (arg))
 
 #define obstack_chunkfun(h, newchunkfun) \
   ((h) -> chunkfun = (struct _obstack_chunk *(*)(long)) (newchunkfun))
@@ -322,6 +340,8 @@ int obstack_chunk_size (struct obstack *obstack);
 #define obstack_1grow_fast(h,achar) (*((h)->next_free)++ = achar)
 
 #define obstack_blank_fast(h,n) ((h)->next_free += (n))
+
+#define obstack_memory_used(h) _obstack_memory_used (h)
 
 #if defined (__GNUC__) && defined (__STDC__) && __STDC__
 /* NextStep 2.0 cc is really gcc 1.93 but it defines __GNUC__ = 2 and
@@ -339,7 +359,6 @@ int obstack_chunk_size (struct obstack *obstack);
 #define obstack_object_size(OBSTACK)					\
   __extension__								\
   ({ struct obstack *__o = (OBSTACK);					\
-     __o->alloc_failed ? 0 :						\
      (unsigned) (__o->next_free - __o->object_base); })
 
 #define obstack_room(OBSTACK)						\
@@ -347,17 +366,22 @@ int obstack_chunk_size (struct obstack *obstack);
   ({ struct obstack *__o = (OBSTACK);					\
      (unsigned) (__o->chunk_limit - __o->next_free); })
 
+#define obstack_make_room(OBSTACK,length)				\
+__extension__								\
+({ struct obstack *__o = (OBSTACK);					\
+   int __len = (length);						\
+   if (__o->chunk_limit - __o->next_free < __len)			\
+     _obstack_newchunk (__o, __len);					\
+   (void) 0; })
+
 #define obstack_grow(OBSTACK,where,length)				\
 __extension__								\
 ({ struct obstack *__o = (OBSTACK);					\
    int __len = (length);						\
    if (__o->next_free + __len > __o->chunk_limit)			\
      _obstack_newchunk (__o, __len);					\
-   if (!__o->alloc_failed)						\
-     {									\
-        bcopy ((char *) (where), __o->next_free, __len);		\
-	__o->next_free += __len;					\
-     }									\
+   _obstack_memcpy (__o->next_free, (char *) (where), __len);		\
+   __o->next_free += __len;						\
    (void) 0; })
 
 #define obstack_grow0(OBSTACK,where,length)				\
@@ -366,12 +390,9 @@ __extension__								\
    int __len = (length);						\
    if (__o->next_free + __len + 1 > __o->chunk_limit)			\
      _obstack_newchunk (__o, __len + 1);				\
-   if (!__o->alloc_failed)						\
-     {									\
-       bcopy ((char *) (where), __o->next_free, __len);			\
-       __o->next_free += __len;						\
-       *(__o->next_free)++ = 0;						\
-     }									\
+   _obstack_memcpy (__o->next_free, (char *) (where), __len);		\
+   __o->next_free += __len;						\
+   *(__o->next_free)++ = 0;						\
    (void) 0; })
 
 #define obstack_1grow(OBSTACK,datum)					\
@@ -379,8 +400,7 @@ __extension__								\
 ({ struct obstack *__o = (OBSTACK);					\
    if (__o->next_free + 1 > __o->chunk_limit)				\
      _obstack_newchunk (__o, 1);					\
-   if (!__o->alloc_failed)						\
-     *(__o->next_free)++ = (datum);					\
+   *(__o->next_free)++ = (datum);					\
    (void) 0; })
 
 /* These assume that the obstack alignment is good enough for pointers or ints,
@@ -392,8 +412,7 @@ __extension__								\
 ({ struct obstack *__o = (OBSTACK);					\
    if (__o->next_free + sizeof (void *) > __o->chunk_limit)		\
      _obstack_newchunk (__o, sizeof (void *));				\
-   if (!__o->alloc_failed)						\
-     *((void **)__o->next_free)++ = ((void *)datum);			\
+   *((void **)__o->next_free)++ = ((void *)datum);			\
    (void) 0; })
 
 #define obstack_int_grow(OBSTACK,datum)					\
@@ -401,12 +420,11 @@ __extension__								\
 ({ struct obstack *__o = (OBSTACK);					\
    if (__o->next_free + sizeof (int) > __o->chunk_limit)		\
      _obstack_newchunk (__o, sizeof (int));				\
-   if (!__o->alloc_failed)						\
-     *((int *)__o->next_free)++ = ((int)datum);				\
+   *((int *)__o->next_free)++ = ((int)datum);				\
    (void) 0; })
 
-#define obstack_ptr_grow_fast(h,aptr) (*((void **)(h)->next_free)++ = (void *)aptr)
-#define obstack_int_grow_fast(h,aint) (*((int *)(h)->next_free)++ = (int)aint)
+#define obstack_ptr_grow_fast(h,aptr) (*((void **) (h)->next_free)++ = (void *)aptr)
+#define obstack_int_grow_fast(h,aint) (*((int *) (h)->next_free)++ = (int) aint)
 
 #define obstack_blank(OBSTACK,length)					\
 __extension__								\
@@ -414,8 +432,7 @@ __extension__								\
    int __len = (length);						\
    if (__o->chunk_limit - __o->next_free < __len)			\
      _obstack_newchunk (__o, __len);					\
-   if (!__o->alloc_failed)						\
-     __o->next_free += __len;						\
+   __o->next_free += __len;						\
    (void) 0; })
 
 #define obstack_alloc(OBSTACK,length)					\
@@ -442,21 +459,16 @@ __extension__								\
 __extension__								\
 ({ struct obstack *__o1 = (OBSTACK);					\
    void *value;								\
-   if (__o1->alloc_failed)						\
-     value = 0;								\
-   else									\
-     {									\
-       value = (void *) __o1->object_base;				\
-       if (__o1->next_free == value)					\
-         __o1->maybe_empty_object = 1;					\
-       __o1->next_free							\
-	 = __INT_TO_PTR ((__PTR_TO_INT (__o1->next_free)+__o1->alignment_mask)\
-			 & ~ (__o1->alignment_mask));			\
-       if (__o1->next_free - (char *)__o1->chunk			\
-	   > __o1->chunk_limit - (char *)__o1->chunk)			\
-	 __o1->next_free = __o1->chunk_limit;				\
-       __o1->object_base = __o1->next_free;				\
-      }									\
+   value = (void *) __o1->object_base;					\
+   if (__o1->next_free == value)					\
+     __o1->maybe_empty_object = 1;					\
+   __o1->next_free							\
+     = __INT_TO_PTR ((__PTR_TO_INT (__o1->next_free)+__o1->alignment_mask)\
+		     & ~ (__o1->alignment_mask));			\
+   if (__o1->next_free - (char *)__o1->chunk				\
+       > __o1->chunk_limit - (char *)__o1->chunk)			\
+     __o1->next_free = __o1->chunk_limit;				\
+   __o1->object_base = __o1->next_free;					\
    value; })
 
 #define obstack_free(OBSTACK, OBJ)					\
@@ -470,7 +482,7 @@ __extension__								\
 #else /* not __GNUC__ or not __STDC__ */
 
 #define obstack_object_size(h) \
- (unsigned) ((h)->alloc_failed ? 0 : (h)->next_free - (h)->object_base)
+ (unsigned) ((h)->next_free - (h)->object_base)
 
 #define obstack_room(h)		\
  (unsigned) ((h)->chunk_limit - (h)->next_free)
@@ -481,50 +493,49 @@ __extension__								\
    Casting the third operand to void was tried before,
    but some compilers won't accept it.  */
 
+#define obstack_make_room(h,length)					\
+( (h)->temp = (length),							\
+  (((h)->next_free + (h)->temp > (h)->chunk_limit)			\
+   ? (_obstack_newchunk ((h), (h)->temp), 0) : 0))
+
 #define obstack_grow(h,where,length)					\
 ( (h)->temp = (length),							\
   (((h)->next_free + (h)->temp > (h)->chunk_limit)			\
    ? (_obstack_newchunk ((h), (h)->temp), 0) : 0),			\
-  ((h)->alloc_failed ? 0 :						\
-  (bcopy ((char *) (where), (h)->next_free, (h)->temp),			\
-  (h)->next_free += (h)->temp)))
+  _obstack_memcpy ((h)->next_free, (char *) (where), (h)->temp),	\
+  (h)->next_free += (h)->temp)
 
 #define obstack_grow0(h,where,length)					\
 ( (h)->temp = (length),							\
   (((h)->next_free + (h)->temp + 1 > (h)->chunk_limit)			\
    ? (_obstack_newchunk ((h), (h)->temp + 1), 0) : 0),			\
-  ((h)->alloc_failed ? 0 :						\
-  (bcopy ((char *) (where), (h)->next_free, (h)->temp),			\
+  _obstack_memcpy ((h)->next_free, (char *) (where), (h)->temp),	\
   (h)->next_free += (h)->temp,						\
-  *((h)->next_free)++ = 0)))
+  *((h)->next_free)++ = 0)
 
 #define obstack_1grow(h,datum)						\
 ( (((h)->next_free + 1 > (h)->chunk_limit)				\
    ? (_obstack_newchunk ((h), 1), 0) : 0),				\
- ((h)->alloc_failed ? 0 :						\
-  (*((h)->next_free)++ = (datum))))
+  (*((h)->next_free)++ = (datum)))
 
 #define obstack_ptr_grow(h,datum)					\
 ( (((h)->next_free + sizeof (char *) > (h)->chunk_limit)		\
    ? (_obstack_newchunk ((h), sizeof (char *)), 0) : 0),		\
-  ((h)->alloc_failed ? 0 :						\
-  (*((char **)(((h)->next_free+=sizeof(char *))-sizeof(char *))) = ((char *)datum))))
+  (*((char **) (((h)->next_free+=sizeof(char *))-sizeof(char *))) = ((char *) datum)))
 
 #define obstack_int_grow(h,datum)					\
 ( (((h)->next_free + sizeof (int) > (h)->chunk_limit)			\
    ? (_obstack_newchunk ((h), sizeof (int)), 0) : 0),			\
-  ((h)->alloc_failed ? 0 :						\
-  (*((int *)(((h)->next_free+=sizeof(int))-sizeof(int))) = ((int)datum))))
+  (*((int *) (((h)->next_free+=sizeof(int))-sizeof(int))) = ((int) datum)))
 
-#define obstack_ptr_grow_fast(h,aptr) (*((char **)(h)->next_free)++ = (char *)aptr)
-#define obstack_int_grow_fast(h,aint) (*((int *)(h)->next_free)++ = (int)aint)
+#define obstack_ptr_grow_fast(h,aptr) (*((char **) (h)->next_free)++ = (char *) aptr)
+#define obstack_int_grow_fast(h,aint) (*((int *) (h)->next_free)++ = (int) aint)
 
 #define obstack_blank(h,length)						\
 ( (h)->temp = (length),							\
   (((h)->chunk_limit - (h)->next_free < (h)->temp)			\
    ? (_obstack_newchunk ((h), (h)->temp), 0) : 0),			\
-  ((h)->alloc_failed ? 0 :						\
-  ((h)->next_free += (h)->temp)))
+  ((h)->next_free += (h)->temp))
 
 #define obstack_alloc(h,length)						\
  (obstack_blank ((h), (length)), obstack_finish ((h)))
@@ -536,30 +547,29 @@ __extension__								\
  (obstack_grow0 ((h), (where), (length)), obstack_finish ((h)))
 
 #define obstack_finish(h)  						\
-( (h)->alloc_failed ? 0 :						\
-  (((h)->next_free == (h)->object_base					\
+( ((h)->next_free == (h)->object_base					\
    ? (((h)->maybe_empty_object = 1), 0)					\
    : 0),								\
   (h)->temp = __PTR_TO_INT ((h)->object_base),				\
   (h)->next_free							\
     = __INT_TO_PTR ((__PTR_TO_INT ((h)->next_free)+(h)->alignment_mask)	\
 		    & ~ ((h)->alignment_mask)),				\
-  (((h)->next_free - (char *)(h)->chunk					\
-    > (h)->chunk_limit - (char *)(h)->chunk)				\
+  (((h)->next_free - (char *) (h)->chunk				\
+    > (h)->chunk_limit - (char *) (h)->chunk)				\
    ? ((h)->next_free = (h)->chunk_limit) : 0),				\
   (h)->object_base = (h)->next_free,					\
-  __INT_TO_PTR ((h)->temp)))
+  __INT_TO_PTR ((h)->temp))
 
 #if defined (__STDC__) && __STDC__
 #define obstack_free(h,obj)						\
-( (h)->temp = (char *)(obj) - (char *) (h)->chunk,			\
+( (h)->temp = (char *) (obj) - (char *) (h)->chunk,			\
   (((h)->temp > 0 && (h)->temp < (h)->chunk_limit - (char *) (h)->chunk)\
    ? (int) ((h)->next_free = (h)->object_base				\
 	    = (h)->temp + (char *) (h)->chunk)				\
    : (((obstack_free) ((h), (h)->temp + (char *) (h)->chunk), 0), 0)))
 #else
 #define obstack_free(h,obj)						\
-( (h)->temp = (char *)(obj) - (char *) (h)->chunk,			\
+( (h)->temp = (char *) (obj) - (char *) (h)->chunk,			\
   (((h)->temp > 0 && (h)->temp < (h)->chunk_limit - (char *) (h)->chunk)\
    ? (int) ((h)->next_free = (h)->object_base				\
 	    = (h)->temp + (char *) (h)->chunk)				\
