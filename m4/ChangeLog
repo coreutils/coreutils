@@ -1,3 +1,8 @@
+2004-12-07  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* ls-mntd-fs.m4 (AC_FUNC_GETMNTENT): Fix typo in previous change:
+	spurious "-l"s.  Problem reported by Stepan Kasal.
+
 2004-12-06  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* ls-mntd-fs.m4 (AC_FUNC_GETMNTENT): New macro, to work around bug
