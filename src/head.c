@@ -258,6 +258,10 @@ main (int argc, char **argv)
   int c;			/* Option character. */
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   have_read_stdin = 0;
   unit_size = 0;
   print_headers = 0;

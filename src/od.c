@@ -1586,6 +1586,10 @@ main (int argc, char **argv)
 #endif
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   err = 0;
 
   for (i = 0; i <= MAX_INTEGRAL_TYPE_SIZE; i++)

@@ -218,6 +218,9 @@ main (int argc, char **argv)
   int c;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
   only_file_1 = 1;
   only_file_2 = 1;

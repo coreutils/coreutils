@@ -467,6 +467,9 @@ main (int argc, char **argv)
   char **file_names;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
   n_files = 0;
   file_names = (argc > 1

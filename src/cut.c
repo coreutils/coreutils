@@ -676,6 +676,9 @@ main (int argc, char **argv)
   int optc, exit_status = 0;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
   operating_mode = undefined_mode;
 

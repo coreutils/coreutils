@@ -255,6 +255,10 @@ main (int argc, char **argv)
   int errs = 0;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   break_spaces = count_bytes = have_read_stdin = 0;
 
   /* Turn any numeric options into -w options.  */

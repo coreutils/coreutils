@@ -207,6 +207,10 @@ main (int argc, char **argv)
   int (*sum_func) () = bsd_sum_file;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   have_read_stdin = 0;
 
   while ((optc = getopt_long (argc, argv, "rs", longopts, (int *) 0)) != -1)

@@ -261,6 +261,10 @@ main (int argc, char **argv)
   int nfiles;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   exit_status = 0;
   print_lines = print_words = print_chars = 0;
   total_lines = total_words = total_chars = 0;

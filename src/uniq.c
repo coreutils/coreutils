@@ -280,6 +280,10 @@ main (int argc, char **argv)
   char *infile = "-", *outfile = "-";
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   skip_chars = 0;
   skip_fields = 0;
   check_chars = 0;

@@ -399,6 +399,9 @@ main (int argc, char **argv)
 
   /* Setting values of global variables.  */
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
   parse_long_options (argc, argv, "md5sum", version_string, usage);
 

@@ -1404,9 +1404,13 @@ main (int argc, char **argv)
   unsigned long val;
 #ifdef SA_INTERRUPT
   struct sigaction oldact, newact;
-#endif				/* SA_INTERRUPT */
+#endif
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   global_argv = argv;
   controls = NULL;
   control_used = 0;
@@ -1434,7 +1438,7 @@ main (int argc, char **argv)
   sigaction (SIGTERM, NULL, &oldact);
   if (oldact.sa_handler != SIG_IGN)
     sigaction (SIGTERM, &newact, NULL);
-#else
+#else /* not SA_INTERRUPT */
   if (signal (SIGHUP, SIG_IGN) != SIG_IGN)
     signal (SIGHUP, interrupt_handler);
   if (signal (SIGINT, SIG_IGN) != SIG_IGN)
@@ -1443,7 +1447,7 @@ main (int argc, char **argv)
     signal (SIGQUIT, interrupt_handler);
   if (signal (SIGTERM, SIG_IGN) != SIG_IGN)
     signal (SIGTERM, interrupt_handler);
-#endif
+#endif /* not SA_INTERRUPT */
 
   while ((optc = getopt_long (argc, argv, "f:b:kn:sqz", longopts, (int *) 0))
 	 != EOF)

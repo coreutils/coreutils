@@ -505,6 +505,9 @@ main (int argc, char **argv)
   };
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
   /* Parse command line options.  */
 

@@ -327,6 +327,9 @@ main (register int argc, register char **argv)
   FILE *infile;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
   crown = tagged = split = uniform = FALSE;
   max_width = WIDTH;

@@ -588,6 +588,10 @@ main (int argc, char **argv)
   int have_read_stdin = 0;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   errors = 0;
   separator = "\n";
   sentinel_length = 1;

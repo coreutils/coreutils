@@ -1796,6 +1796,9 @@ main (int argc, char **argv)
   struct Spec_list *s2 = &buf2;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
   while ((c = getopt_long (argc, argv, "cdst", long_options,
 			   (int *) 0)) != EOF)

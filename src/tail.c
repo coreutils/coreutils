@@ -851,6 +851,10 @@ main (int argc, char **argv)
   int fileind;			/* Index in ARGV of first file name.  */
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   have_read_stdin = 0;
   count_lines = 1;
   forever = forever_multiple = from_start = print_headers = 0;

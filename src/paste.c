@@ -437,6 +437,10 @@ main (int argc, char **argv)
   char default_delims[2], zero_delims[3];
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   have_read_stdin = 0;
   serial_merge = 0;
   delims = default_delims;

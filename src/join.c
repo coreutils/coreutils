@@ -774,6 +774,9 @@ main (int argc, char **argv)
   int optc, prev_optc = 0, nfiles;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
   /* Initialize this before parsing options.  In parsing options,
      it may be increased.  */
