@@ -1,3 +1,11 @@
+2000-08-07  Jim Meyering  <meyering@lucent.com>
+
+	* src/cp.c (enum) [PARENTS_OPTION]: New member.
+	(long_opts): Update "parents" and deprecated "path" entries to use
+	`PARENTS_OPTION', not `P'.
+	(usage): Update --help output.
+	(main): Warn that the meaning of `-P' will soon change.
+
 2000-08-06  Jim Meyering  <meyering@lucent.com>
 
 	* doc/fileutils.texi (cp invocation) [-r]: Remove inaccurate mention of
