@@ -1,3 +1,12 @@
+2000-01-24  Jim Meyering  <meyering@lucent.com>
+
+	* src/ln.c (usage): Describe behavior when LINK_NAME is omitted.
+	From Michael Stone.
+
+	* src/mv.c (main): Don't expect array index `n_files - 1' to evaluate
+	to `-1' for unsigned int n_files == 0.  Doing so lead to a segfault on
+	alpha.  From Michael Stone.
+
 2000-01-23  Jim Meyering  <meyering@lucent.com>
 
 	* configure.in (AM_FUNC_OBSTACK): Remove. (move to m4/.)
