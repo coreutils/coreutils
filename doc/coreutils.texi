@@ -61,6 +61,7 @@ START-INFO-DIR-ENTRY
 * id: (coreutils)id invocation.                 Print real/effective uid/gid.
 * install: (coreutils)install invocation.       Copy and change attributes.
 * join: (coreutils)join invocation.             Join lines on a common field.
+* kill: (coreutils)kill invocation.             Send a signal to processes.
 * link: (coreutils)link invocation.             Make hard links between files.
 * ln: (coreutils)ln invocation.                 Make links between files.
 * logname: (coreutils)logname invocation.       Print current login name.
@@ -181,6 +182,7 @@ Free Documentation License''.
 * User information::                   id logname whoami groups users who
 * System context::                     date uname hostname
 * Modified command invocation::        chroot env nice nohup su
+* Process control::                    kill
 * Delaying::                           sleep
 * Numeric operations::                 factor seq
 * File permissions::                   Access modes.
@@ -398,6 +400,10 @@ Modified command invocation
 * nice invocation::              Run a command with modified scheduling priority
 * nohup invocation::             Run a command immune to hangups
 * su invocation::                Run a command with substitute user and group id
+
+Process control
+
+* kill invocation::              Sending a signal to processes.
 
 Delaying
 
@@ -10916,6 +10922,115 @@ power of the rulers.
 I'm on the side of the masses, not that of the rulers.  If you are
 used to supporting the bosses and sysadmins in whatever they do, you
 might find this idea strange at first.
+
+
+@node Process control
+@chapter Process control
+
+@cindex processes, commands for controlling
+@cindex commands for controlling processes
+
+@menu
+* kill invocation::             Sending a signal to processes.
+@end menu
+
+
+@node kill invocation
+@section @code{kill}: Send a signal to processes
+
+@pindex kill
+@cindex send a signal to processes
+
+@code{kill} sends a signal to processes, causing the processes to
+terminate or otherwise act upon receiving the signal in some way.
+Synopsis:
+
+@example
+kill [-s @var{sigspec} | -@var{sigspec}] @var{pid}@dots{}
+kill [-l | -L] [@var{sigspec}]@dots{}
+@end example
+
+A signal specification @var{sigspec} is either the symbolic name or
+the number of a signal, and specifes the signal to be sent.  The
+default signal to send if none is specified is @samp{TERM}.  The
+symbolic signal name can be given in canonical form or prefixed by
+@samp{SIG}.  The case of the letters is ignored.  The following signal
+names and numbers are supported on all POSIX compliant systems:
+
+@table @asis
+@item 1
+@samp{HUP}
+@item 2
+@samp{INT}
+@item 3
+@samp{QUIT}
+@item 6
+@samp{ABRT}
+@item 9
+@samp{KILL}
+@item 14
+@samp{ALRM}
+@item 15
+@samp{TERM}
+@end table
+
+Other supported signal names have system-dependent corresponding
+numbers.  All POSIX compliant systems support the signal names
+@samp{FPE}, @samp{ILL}, @samp{BUS}, @samp{CHLD}, @samp{CONT},
+@samp{PIPE}, @samp{SEGV}, @samp{STOP}, @samp{TSTP}, @samp{TTIN},
+@samp{TTOU}, @samp{USR1}, @samp{USR2}, @samp{POLL}, @samp{PROF},
+@samp{SYS}, @samp{TRAP}, @samp{URG}, @samp{VTALRM}, @samp{XCPU} and
+@samp{XFSZ}.
+
+The special signal name @samp{0} does not denote a valid signal, but
+can be used to test if the @var{pid} arguments specify processes to
+which a signal could be sent.
+
+If @code{kill} is invoked in its first form, the specified signal is
+sent to all @var{pid} arguments.  If @var{pid} is greater than 0, the
+signal is sent to the process with the process id @var{pid}.  If
+@var{pid} is 0, the signal is sent to all processes in the process
+group of the current process.  If @var{pid} is -1, the signal is sent
+to all processes for which the user has permission to send a signal.
+If @var{pid} is negative but not -1, the signal is sent to all
+processes in the process group that equals the absolute value of
+@var{pid}.
+
+If @var{pid} is 0 or negative, a system-dependent set of system
+processes is excluded from the list of processes to which the signal
+is sent.
+
+The @code{kill} program returns true if every @var{pid} argument
+specified at least one process and for each @var{pid} argument at
+least one signal was sent successfully, or false if an error occurs or
+an invalid option is encountered.
+
+If @code{kill} is invoked with the @samp{-l} or @samp{-L} arguments, a
+list of signal names is printed.  Without any @var{sigspec} argument,
+both lists contain all supported signal names.  The output of
+@samp{-l} is a flat list of the names seperated by spaces and
+newlines.  The option @samp{-L} is a GNU extension and prints a table
+of signal names with their corresponding numbers.  The maximum width
+of either output can be controlled with the @code{COLUMNS} environment
+variable.  If @var{sigspec} arguments are specified, either option
+prints out a list of the corresponding signal names, each in a line of
+its own, in uppercase letters and without the leading @samp{SIG}.  If
+all signal specifiers were valid, @code{kill} returns true.  Otherwise
+false is returned.
+
+If a negative @var{PID} argument is desired as the first one, either a
+signal specification must be provided as well, or the option parsing
+must be interrupted with `--' before the first @var{pid} argument.
+The following three commands are equivalent:
+
+@example
+kill -15 -1
+kill -TERM -1
+kill -- -1
+@end example
+
+GNU @code{kill} also supports the options are @samp{--help} and
+@samp{--version}.  @xref{Common options}.
 
 
 @node Delaying
