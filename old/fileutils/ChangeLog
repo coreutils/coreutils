@@ -1,3 +1,24 @@
+2002-05-13  Jim Meyering  <meyering@lucent.com>
+
+	* src/remove.c (rm): Free cwd_state, if necessary.
+
+2002-05-01  Jim Meyering  <meyering@lucent.com>
+
+	* src/remove.c (rm_1): Remove now useless (always true)
+	user_specified_name parameter.  Adjust sole caller.
+
+	* src/mv.c (do_move): Adapt to new calling sequence for rm.
+	* src/rm.c (main): Likewise.
+
+	* src/remove.c (rm): New function.  This interface allows
+	one to remove multiple arguments at a time.  This is important in
+	that it allows us to hide the remove_init/remove_fini functions and
+	the cwd_state parameter.
+	(rm_1): Renamed from rm.
+	(remove_init, remove_fini): Remove functions.  Each body is now
+	part of `rm'.
+	* src/remove.h (rm): Update prototype.
+
 2002-04-27  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.9.
