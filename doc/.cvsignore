@@ -1,6 +1,7 @@
 Makefile
 fileutils.info
 version.texi
+fileutils.info*
 fileutils.log
 fileutils.dvi
 fileutils.aux
@@ -15,3 +16,4 @@ fileutils.cm
 fileutils.fl
 fileutils.op
 fileutils.cps
+stamp-vti
