@@ -210,7 +210,7 @@ do_link (const char *source, const char *dest)
 	 beyond this point, because the error message you'd get is
 	 misleading.  */
       && (backup_type == none || !symlink)
-      && (!symlink || stat (source, &source_stats) == 0)
+      && (!symbolic_link || stat (source, &source_stats) == 0)
       && source_stats.st_dev == dest_stats.st_dev
       && source_stats.st_ino == dest_stats.st_ino
       /* The following detects whether removing DEST will also remove
