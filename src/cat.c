@@ -350,13 +350,21 @@ cat (
 
 	      if (++newlines > 0)
 		{
-		  /* Are multiple adjacent empty lines to be substituted by
-		     single ditto (-s), and this was the second empty line?  */
-
-		  if (squeeze_empty_lines && newlines >= 2)
+		  if (newlines >= 2)
 		    {
-		      ch = *bpin++;
-		      continue;
+		      /* Limit this to 2 here.  Otherwise, with lots of
+			 consecutive newlines, the counter could wrap
+			 around at INT_MAX.  */
+		      newlines = 2;
+
+		      /* Are multiple adjacent empty lines to be substituted
+			 by single ditto (-s), and this was the second empty
+			 line?  */
+		      if (squeeze_empty_lines)
+			{
+			  ch = *bpin++;
+			  continue;
+			}
 		    }
 
 		  /* Are line numbers to be written at empty lines (-n)?  */
