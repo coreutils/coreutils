@@ -3,3 +3,4 @@
 AUTOMAKE_OPTIONS = 1.1
 
 TESTS = md5-rfc
+EXTRA_DIST = $(TESTS)
