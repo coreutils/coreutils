@@ -452,7 +452,6 @@ Change the effective user id and group id to that of USER.\n\
 A mere - implies -l.   If USER not given, assume root.\n\
 "), stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
-      close_stdout ();
     }
   exit (status);
 }
@@ -473,6 +472,8 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 
   fast_startup = 0;
   simulate_login = 0;
