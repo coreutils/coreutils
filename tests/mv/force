@@ -6,8 +6,8 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-ff=force-file
-ff2=force-file-2
+ff=mvforce
+ff2=mvforce2
 
 framework_failure=0
 rm -f $ff $ff2 || framework_failure=1
