@@ -1,5 +1,10 @@
 2002-12-01  Jim Meyering  <jim@meyering.net>
 
+	* safe-read.c: Merge from gnulib.
+	(CHAR_BIT, TYPE_SIGNED, TYPE_MINIMUM, TYPE_MAXIMUM, INT_MAX): Define.
+
+	* Makefile.am (libfetish_a_SOURCES): Add safe-write.c and safe-write.h.
+
 	* strtoll.c: Update from gnulib (trivial changes).
 	* strdup.c: Likewise.
 	* strpbrk.c: Likewise.
