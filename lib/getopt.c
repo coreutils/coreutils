@@ -764,7 +764,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	      {
 		/* 1003.2 specifies the format of this message.  */
 		fprintf (stderr,
-			 gettext ("%s: option requires an argument -- %c\n"),
+			 _ ("%s: option requires an argument -- %c\n"),
 			 argv[0], c);
 	      }
 	    optopt = c;
@@ -811,7 +811,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	if (ambig && !exact)
 	  {
 	    if (opterr)
-	      fprintf (stderr, gettext ("%s: option `-W %s' is ambiguous\n"),
+	      fprintf (stderr, _ ("%s: option `-W %s' is ambiguous\n"),
 		       argv[0], argv[optind]);
 	    nextchar += strlen (nextchar);
 	    optind++;
@@ -830,8 +830,8 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 		  {
 		    if (opterr)
 		      fprintf (stderr,
-				 gettext ("%s: option `-W %s' doesn't allow an argument\n"),
-				 argv[0], pfound->name);
+			       _ ("%s: option `-W %s' doesn't allow an argument\n"),
+			       argv[0], pfound->name);
 
 		    nextchar += strlen (nextchar);
 		    return '?';
@@ -845,7 +845,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 		  {
 		    if (opterr)
 		      fprintf (stderr,
-			 gettext ("%s: option `%s' requires an argument\n"),
+			       _ ("%s: option `%s' requires an argument\n"),
 			       argv[0], argv[optind - 1]);
 		    nextchar += strlen (nextchar);
 		    return optstring[0] == ':' ? ':' : '?';
