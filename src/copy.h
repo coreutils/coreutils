@@ -46,8 +46,13 @@ struct cp_options
   /* If nonzero, dereference symbolic links (copy the files they point to). */
   enum Dereference_symlink dereference;
 
-  /* If nonzero, remove existing destination nondirectories. */
-  int force;
+  /* If nonzero, remove each existing destination nondirectory before
+     trying to open it. */
+  int unlink_dest_before_opening;
+
+  /* If nonzero, first try to open each existing destination nondirectory,
+     then, if the open fails, unlink and try again.  */
+  int unlink_dest_after_failed_open;
 
   /* Setting this member is meaningful only if FORCE is also set.
      If nonzero, copy returns nonzero upon failed unlink.
