@@ -53,6 +53,7 @@ chgrp $g2 f2 || fail=1
   chgrp -R --verbose $g1 d
   chgrp -R -c $g2 d
   chgrp -R -c $g1 d
+  chgrp -c $g2 d
 ) 2>&1 | sed "s/ $g1$/ G1/;s/ $g2$/ G2/" > actual
 
 cat <<\EOF > expected
@@ -69,6 +70,7 @@ group of `d' changed to G2
 group of `d/f3' changed to G2
 group of `d' changed to G1
 group of `d/f3' changed to G1
+group of `d' changed to G2
 EOF
 
 cmp expected actual \
