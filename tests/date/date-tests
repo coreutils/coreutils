@@ -24,7 +24,7 @@ if test $code != 0 ; then
   $echo "Test 1(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 1.O $srcdir/1.X
+  cmp 1.O $srcdir/1.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 1(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test 1(LANG=C TZ=UTC) failed: files 1.O and $srcdir/1.X differ" 1>&2;
@@ -41,7 +41,7 @@ if test $code != 0 ; then
   $echo "Test 2(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 2.O $srcdir/2.X
+  cmp 2.O $srcdir/2.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 2(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test 2(LANG=C TZ=UTC) failed: files 2.O and $srcdir/2.X differ" 1>&2;
@@ -58,7 +58,7 @@ if test $code != 0 ; then
   $echo "Test 3(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 3.O $srcdir/3.X
+  cmp 3.O $srcdir/3.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 3(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test 3(LANG=C TZ=UTC) failed: files 3.O and $srcdir/3.X differ" 1>&2;
@@ -75,7 +75,7 @@ if test $code != 0 ; then
   $echo "Test 4(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 4.O $srcdir/4.X
+  cmp 4.O $srcdir/4.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 4(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test 4(LANG=C TZ=UTC) failed: files 4.O and $srcdir/4.X differ" 1>&2;
@@ -92,7 +92,7 @@ if test $code != 0 ; then
   $echo "Test 5(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 5.O $srcdir/5.X
+  cmp 5.O $srcdir/5.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 5(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test 5(LANG=C TZ=UTC) failed: files 5.O and $srcdir/5.X differ" 1>&2;
@@ -109,7 +109,7 @@ if test $code != 0 ; then
   $echo "Test 6(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 6.O $srcdir/6.X
+  cmp 6.O $srcdir/6.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 6(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test 6(LANG=C TZ=UTC) failed: files 6.O and $srcdir/6.X differ" 1>&2;
@@ -126,7 +126,7 @@ if test $code != 0 ; then
   $echo "Test 7(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 7.O $srcdir/7.X
+  cmp 7.O $srcdir/7.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 7(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test 7(LANG=C TZ=UTC) failed: files 7.O and $srcdir/7.X differ" 1>&2;
@@ -143,7 +143,7 @@ if test $code != 0 ; then
   $echo "Test 8(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 8.O $srcdir/8.X
+  cmp 8.O $srcdir/8.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 8(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test 8(LANG=C TZ=UTC) failed: files 8.O and $srcdir/8.X differ" 1>&2;
@@ -160,7 +160,7 @@ if test $code != 0 ; then
   $echo "Test 9(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 9.O $srcdir/9.X
+  cmp 9.O $srcdir/9.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 9(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test 9(LANG=C TZ=UTC) failed: files 9.O and $srcdir/9.X differ" 1>&2;
@@ -177,7 +177,7 @@ if test $code != 0 ; then
   $echo "Test leap-1(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp leap-1.O $srcdir/leap-1.X
+  cmp leap-1.O $srcdir/leap-1.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed leap-1(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test leap-1(LANG=C TZ=UTC) failed: files leap-1.O and $srcdir/leap-1.X differ" 1>&2;
@@ -194,7 +194,7 @@ if test $code != 0 ; then
   $echo "Test U95-1(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp U95-1.O $srcdir/U95-1.X
+  cmp U95-1.O $srcdir/U95-1.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed U95-1(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test U95-1(LANG=C TZ=UTC) failed: files U95-1.O and $srcdir/U95-1.X differ" 1>&2;
@@ -211,7 +211,7 @@ if test $code != 0 ; then
   $echo "Test U95-2(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp U95-2.O $srcdir/U95-2.X
+  cmp U95-2.O $srcdir/U95-2.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed U95-2(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test U95-2(LANG=C TZ=UTC) failed: files U95-2.O and $srcdir/U95-2.X differ" 1>&2;
@@ -228,7 +228,7 @@ if test $code != 0 ; then
   $echo "Test U95-3(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp U95-3.O $srcdir/U95-3.X
+  cmp U95-3.O $srcdir/U95-3.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed U95-3(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test U95-3(LANG=C TZ=UTC) failed: files U95-3.O and $srcdir/U95-3.X differ" 1>&2;
@@ -245,7 +245,7 @@ if test $code != 0 ; then
   $echo "Test U92-1(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp U92-1.O $srcdir/U92-1.X
+  cmp U92-1.O $srcdir/U92-1.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed U92-1(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test U92-1(LANG=C TZ=UTC) failed: files U92-1.O and $srcdir/U92-1.X differ" 1>&2;
@@ -262,7 +262,7 @@ if test $code != 0 ; then
   $echo "Test U92-2(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp U92-2.O $srcdir/U92-2.X
+  cmp U92-2.O $srcdir/U92-2.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed U92-2(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test U92-2(LANG=C TZ=UTC) failed: files U92-2.O and $srcdir/U92-2.X differ" 1>&2;
@@ -279,7 +279,7 @@ if test $code != 0 ; then
   $echo "Test U92-3(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp U92-3.O $srcdir/U92-3.X
+  cmp U92-3.O $srcdir/U92-3.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed U92-3(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test U92-3(LANG=C TZ=UTC) failed: files U92-3.O and $srcdir/U92-3.X differ" 1>&2;
@@ -296,7 +296,7 @@ if test $code != 0 ; then
   $echo "Test V92-1(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp V92-1.O $srcdir/V92-1.X
+  cmp V92-1.O $srcdir/V92-1.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed V92-1(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test V92-1(LANG=C TZ=UTC) failed: files V92-1.O and $srcdir/V92-1.X differ" 1>&2;
@@ -313,7 +313,7 @@ if test $code != 0 ; then
   $echo "Test V92-2(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp V92-2.O $srcdir/V92-2.X
+  cmp V92-2.O $srcdir/V92-2.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed V92-2(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test V92-2(LANG=C TZ=UTC) failed: files V92-2.O and $srcdir/V92-2.X differ" 1>&2;
@@ -330,7 +330,7 @@ if test $code != 0 ; then
   $echo "Test V92-3(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp V92-3.O $srcdir/V92-3.X
+  cmp V92-3.O $srcdir/V92-3.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed V92-3(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test V92-3(LANG=C TZ=UTC) failed: files V92-3.O and $srcdir/V92-3.X differ" 1>&2;
@@ -347,7 +347,7 @@ if test $code != 0 ; then
   $echo "Test W92-1(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp W92-1.O $srcdir/W92-1.X
+  cmp W92-1.O $srcdir/W92-1.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed W92-1(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test W92-1(LANG=C TZ=UTC) failed: files W92-1.O and $srcdir/W92-1.X differ" 1>&2;
@@ -364,7 +364,7 @@ if test $code != 0 ; then
   $echo "Test W92-2(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp W92-2.O $srcdir/W92-2.X
+  cmp W92-2.O $srcdir/W92-2.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed W92-2(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test W92-2(LANG=C TZ=UTC) failed: files W92-2.O and $srcdir/W92-2.X differ" 1>&2;
@@ -381,7 +381,7 @@ if test $code != 0 ; then
   $echo "Test W92-3(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp W92-3.O $srcdir/W92-3.X
+  cmp W92-3.O $srcdir/W92-3.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed W92-3(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test W92-3(LANG=C TZ=UTC) failed: files W92-3.O and $srcdir/W92-3.X differ" 1>&2;
@@ -398,7 +398,7 @@ if test $code != 0 ; then
   $echo "Test millen-1(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp millen-1.O $srcdir/millen-1.X
+  cmp millen-1.O $srcdir/millen-1.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed millen-1(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test millen-1(LANG=C TZ=UTC) failed: files millen-1.O and $srcdir/millen-1.X differ" 1>&2;
@@ -415,7 +415,7 @@ if test $code != 0 ; then
   $echo "Test rel-0(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp rel-0.O $srcdir/rel-0.X
+  cmp rel-0.O $srcdir/rel-0.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed rel-0(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test rel-0(LANG=C TZ=UTC) failed: files rel-0.O and $srcdir/rel-0.X differ" 1>&2;
@@ -432,7 +432,7 @@ if test $code != 0 ; then
   $echo "Test rel-1a(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp rel-1a.O $srcdir/rel-1a.X
+  cmp rel-1a.O $srcdir/rel-1a.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed rel-1a(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test rel-1a(LANG=C TZ=UTC) failed: files rel-1a.O and $srcdir/rel-1a.X differ" 1>&2;
@@ -449,7 +449,7 @@ if test $code != 0 ; then
   $echo "Test rel-1b(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp rel-1b.O $srcdir/rel-1b.X
+  cmp rel-1b.O $srcdir/rel-1b.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed rel-1b(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test rel-1b(LANG=C TZ=UTC) failed: files rel-1b.O and $srcdir/rel-1b.X differ" 1>&2;
@@ -466,7 +466,7 @@ if test $code != 0 ; then
   $echo "Test rel-2a(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp rel-2a.O $srcdir/rel-2a.X
+  cmp rel-2a.O $srcdir/rel-2a.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed rel-2a(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test rel-2a(LANG=C TZ=UTC) failed: files rel-2a.O and $srcdir/rel-2a.X differ" 1>&2;
@@ -483,7 +483,7 @@ if test $code != 0 ; then
   $echo "Test rel-2b(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp rel-2b.O $srcdir/rel-2b.X
+  cmp rel-2b.O $srcdir/rel-2b.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed rel-2b(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test rel-2b(LANG=C TZ=UTC) failed: files rel-2b.O and $srcdir/rel-2b.X differ" 1>&2;
@@ -500,7 +500,7 @@ if test $code != 0 ; then
   $echo "Test rel-2c(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp rel-2c.O $srcdir/rel-2c.X
+  cmp rel-2c.O $srcdir/rel-2c.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed rel-2c(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test rel-2c(LANG=C TZ=UTC) failed: files rel-2c.O and $srcdir/rel-2c.X differ" 1>&2;
@@ -517,7 +517,7 @@ if test $code != 0 ; then
   $echo "Test rel-2d(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp rel-2d.O $srcdir/rel-2d.X
+  cmp rel-2d.O $srcdir/rel-2d.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed rel-2d(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test rel-2d(LANG=C TZ=UTC) failed: files rel-2d.O and $srcdir/rel-2d.X differ" 1>&2;
@@ -534,7 +534,7 @@ if test $code != 0 ; then
   $echo "Test rel-2e(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp rel-2e.O $srcdir/rel-2e.X
+  cmp rel-2e.O $srcdir/rel-2e.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed rel-2e(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test rel-2e(LANG=C TZ=UTC) failed: files rel-2e.O and $srcdir/rel-2e.X differ" 1>&2;
@@ -551,7 +551,7 @@ if test $code != 0 ; then
   $echo "Test rel-2f(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp rel-2f.O $srcdir/rel-2f.X
+  cmp rel-2f.O $srcdir/rel-2f.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed rel-2f(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test rel-2f(LANG=C TZ=UTC) failed: files rel-2f.O and $srcdir/rel-2f.X differ" 1>&2;
@@ -568,7 +568,7 @@ if test $code != 0 ; then
   $echo "Test rel-2g(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp rel-2g.O $srcdir/rel-2g.X
+  cmp rel-2g.O $srcdir/rel-2g.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed rel-2g(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test rel-2g(LANG=C TZ=UTC) failed: files rel-2g.O and $srcdir/rel-2g.X differ" 1>&2;
@@ -585,7 +585,7 @@ if test $code != 0 ; then
   $echo "Test rel-3a(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp rel-3a.O $srcdir/rel-3a.X
+  cmp rel-3a.O $srcdir/rel-3a.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed rel-3a(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test rel-3a(LANG=C TZ=UTC) failed: files rel-3a.O and $srcdir/rel-3a.X differ" 1>&2;
@@ -602,7 +602,7 @@ if test $code != 0 ; then
   $echo "Test next-s(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp next-s.O $srcdir/next-s.X
+  cmp next-s.O $srcdir/next-s.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed next-s(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test next-s(LANG=C TZ=UTC) failed: files next-s.O and $srcdir/next-s.X differ" 1>&2;
@@ -619,7 +619,7 @@ if test $code != 0 ; then
   $echo "Test next-m(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp next-m.O $srcdir/next-m.X
+  cmp next-m.O $srcdir/next-m.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed next-m(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test next-m(LANG=C TZ=UTC) failed: files next-m.O and $srcdir/next-m.X differ" 1>&2;
@@ -636,7 +636,7 @@ if test $code != 0 ; then
   $echo "Test next-h(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp next-h.O $srcdir/next-h.X
+  cmp next-h.O $srcdir/next-h.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed next-h(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test next-h(LANG=C TZ=UTC) failed: files next-h.O and $srcdir/next-h.X differ" 1>&2;
@@ -653,7 +653,7 @@ if test $code != 0 ; then
   $echo "Test next-d(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp next-d.O $srcdir/next-d.X
+  cmp next-d.O $srcdir/next-d.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed next-d(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test next-d(LANG=C TZ=UTC) failed: files next-d.O and $srcdir/next-d.X differ" 1>&2;
@@ -670,7 +670,7 @@ if test $code != 0 ; then
   $echo "Test next-w(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp next-w.O $srcdir/next-w.X
+  cmp next-w.O $srcdir/next-w.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed next-w(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test next-w(LANG=C TZ=UTC) failed: files next-w.O and $srcdir/next-w.X differ" 1>&2;
@@ -687,7 +687,7 @@ if test $code != 0 ; then
   $echo "Test next-mo(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp next-mo.O $srcdir/next-mo.X
+  cmp next-mo.O $srcdir/next-mo.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed next-mo(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test next-mo(LANG=C TZ=UTC) failed: files next-mo.O and $srcdir/next-mo.X differ" 1>&2;
@@ -704,7 +704,7 @@ if test $code != 0 ; then
   $echo "Test next-y(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp next-y.O $srcdir/next-y.X
+  cmp next-y.O $srcdir/next-y.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed next-y(LANG=C TZ=UTC)"; fi ;;
     1) $echo "Test next-y(LANG=C TZ=UTC) failed: files next-y.O and $srcdir/next-y.X differ" 1>&2;

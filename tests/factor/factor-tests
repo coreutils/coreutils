@@ -24,7 +24,7 @@ if test $code != 0 ; then
   $echo "Test 1 failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 1.O $srcdir/1.X
+  cmp 1.O $srcdir/1.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 1"; fi ;;
     1) $echo "Test 1 failed: files 1.O and $srcdir/1.X differ" 1>&2;
@@ -41,7 +41,7 @@ if test $code != 0 ; then
   $echo "Test 1a failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 1a.O $srcdir/1a.X
+  cmp 1a.O $srcdir/1a.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 1a"; fi ;;
     1) $echo "Test 1a failed: files 1a.O and $srcdir/1a.X differ" 1>&2;
@@ -58,7 +58,7 @@ if test $code != 0 ; then
   $echo "Test 2 failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 2.O $srcdir/2.X
+  cmp 2.O $srcdir/2.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 2"; fi ;;
     1) $echo "Test 2 failed: files 2.O and $srcdir/2.X differ" 1>&2;
@@ -75,7 +75,7 @@ if test $code != 0 ; then
   $echo "Test 3 failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 3.O $srcdir/3.X
+  cmp 3.O $srcdir/3.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 3"; fi ;;
     1) $echo "Test 3 failed: files 3.O and $srcdir/3.X differ" 1>&2;
@@ -92,7 +92,7 @@ if test $code != 0 ; then
   $echo "Test 4 failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 4.O $srcdir/4.X
+  cmp 4.O $srcdir/4.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 4"; fi ;;
     1) $echo "Test 4 failed: files 4.O and $srcdir/4.X differ" 1>&2;
@@ -109,7 +109,7 @@ if test $code != 0 ; then
   $echo "Test a failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp a.O $srcdir/a.X
+  cmp a.O $srcdir/a.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed a"; fi ;;
     1) $echo "Test a failed: files a.O and $srcdir/a.X differ" 1>&2;
@@ -126,7 +126,7 @@ if test $code != 0 ; then
   $echo "Test b failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp b.O $srcdir/b.X
+  cmp b.O $srcdir/b.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed b"; fi ;;
     1) $echo "Test b failed: files b.O and $srcdir/b.X differ" 1>&2;
@@ -143,7 +143,7 @@ if test $code != 0 ; then
   $echo "Test c failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp c.O $srcdir/c.X
+  cmp c.O $srcdir/c.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed c"; fi ;;
     1) $echo "Test c failed: files c.O and $srcdir/c.X differ" 1>&2;
@@ -160,7 +160,7 @@ if test $code != 0 ; then
   $echo "Test d failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp d.O $srcdir/d.X
+  cmp d.O $srcdir/d.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed d"; fi ;;
     1) $echo "Test d failed: files d.O and $srcdir/d.X differ" 1>&2;
@@ -177,7 +177,7 @@ if test $code != 0 ; then
   $echo "Test e failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp e.O $srcdir/e.X
+  cmp e.O $srcdir/e.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed e"; fi ;;
     1) $echo "Test e failed: files e.O and $srcdir/e.X differ" 1>&2;
@@ -194,7 +194,7 @@ if test $code != 0 ; then
   $echo "Test f failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp f.O $srcdir/f.X
+  cmp f.O $srcdir/f.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed f"; fi ;;
     1) $echo "Test f failed: files f.O and $srcdir/f.X differ" 1>&2;
@@ -211,7 +211,7 @@ if test $code != 0 ; then
   $echo "Test g failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp g.O $srcdir/g.X
+  cmp g.O $srcdir/g.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed g"; fi ;;
     1) $echo "Test g failed: files g.O and $srcdir/g.X differ" 1>&2;
@@ -228,7 +228,7 @@ if test $code != 0 ; then
   $echo "Test h failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp h.O $srcdir/h.X
+  cmp h.O $srcdir/h.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed h"; fi ;;
     1) $echo "Test h failed: files h.O and $srcdir/h.X differ" 1>&2;
@@ -245,7 +245,7 @@ if test $code != 0 ; then
   $echo "Test i failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp i.O $srcdir/i.X
+  cmp i.O $srcdir/i.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed i"; fi ;;
     1) $echo "Test i failed: files i.O and $srcdir/i.X differ" 1>&2;
@@ -262,7 +262,7 @@ if test $code != 0 ; then
   $echo "Test j failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp j.O $srcdir/j.X
+  cmp j.O $srcdir/j.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed j"; fi ;;
     1) $echo "Test j failed: files j.O and $srcdir/j.X differ" 1>&2;
@@ -279,7 +279,7 @@ if test $code != 0 ; then
   $echo "Test k failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp k.O $srcdir/k.X
+  cmp k.O $srcdir/k.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed k"; fi ;;
     1) $echo "Test k failed: files k.O and $srcdir/k.X differ" 1>&2;
@@ -296,7 +296,7 @@ if test $code != 0 ; then
   $echo "Test l failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp l.O $srcdir/l.X
+  cmp l.O $srcdir/l.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed l"; fi ;;
     1) $echo "Test l failed: files l.O and $srcdir/l.X differ" 1>&2;
@@ -313,7 +313,7 @@ if test $code != 0 ; then
   $echo "Test m failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp m.O $srcdir/m.X
+  cmp m.O $srcdir/m.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed m"; fi ;;
     1) $echo "Test m failed: files m.O and $srcdir/m.X differ" 1>&2;
@@ -330,7 +330,7 @@ if test $code != 0 ; then
   $echo "Test n failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp n.O $srcdir/n.X
+  cmp n.O $srcdir/n.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed n"; fi ;;
     1) $echo "Test n failed: files n.O and $srcdir/n.X differ" 1>&2;
@@ -347,7 +347,7 @@ if test $code != 0 ; then
   $echo "Test o failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp o.O $srcdir/o.X
+  cmp o.O $srcdir/o.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed o"; fi ;;
     1) $echo "Test o failed: files o.O and $srcdir/o.X differ" 1>&2;
@@ -364,7 +364,7 @@ if test $code != 0 ; then
   $echo "Test p failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp p.O $srcdir/p.X
+  cmp p.O $srcdir/p.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed p"; fi ;;
     1) $echo "Test p failed: files p.O and $srcdir/p.X differ" 1>&2;
@@ -381,7 +381,7 @@ if test $code != 0 ; then
   $echo "Test q failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp q.O $srcdir/q.X
+  cmp q.O $srcdir/q.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed q"; fi ;;
     1) $echo "Test q failed: files q.O and $srcdir/q.X differ" 1>&2;
@@ -398,7 +398,7 @@ if test $code != 0 ; then
   $echo "Test s failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp s.O $srcdir/s.X
+  cmp s.O $srcdir/s.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed s"; fi ;;
     1) $echo "Test s failed: files s.O and $srcdir/s.X differ" 1>&2;
@@ -415,7 +415,7 @@ if test $code != 0 ; then
   $echo "Test t failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp t.O $srcdir/t.X
+  cmp t.O $srcdir/t.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed t"; fi ;;
     1) $echo "Test t failed: files t.O and $srcdir/t.X differ" 1>&2;
@@ -432,7 +432,7 @@ if test $code != 0 ; then
   $echo "Test u failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp u.O $srcdir/u.X
+  cmp u.O $srcdir/u.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed u"; fi ;;
     1) $echo "Test u failed: files u.O and $srcdir/u.X differ" 1>&2;
@@ -449,7 +449,7 @@ if test $code != 0 ; then
   $echo "Test v failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp v.O $srcdir/v.X
+  cmp v.O $srcdir/v.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed v"; fi ;;
     1) $echo "Test v failed: files v.O and $srcdir/v.X differ" 1>&2;
@@ -466,7 +466,7 @@ if test $code != 0 ; then
   $echo "Test w failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp w.O $srcdir/w.X
+  cmp w.O $srcdir/w.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed w"; fi ;;
     1) $echo "Test w failed: files w.O and $srcdir/w.X differ" 1>&2;
@@ -483,7 +483,7 @@ if test $code != 0 ; then
   $echo "Test x failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp x.O $srcdir/x.X
+  cmp x.O $srcdir/x.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed x"; fi ;;
     1) $echo "Test x failed: files x.O and $srcdir/x.X differ" 1>&2;
@@ -500,7 +500,7 @@ if test $code != 0 ; then
   $echo "Test y failed: ../../src/factor return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp y.O $srcdir/y.X
+  cmp y.O $srcdir/y.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed y"; fi ;;
     1) $echo "Test y failed: files y.O and $srcdir/y.X differ" 1>&2;
