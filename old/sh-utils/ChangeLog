@@ -2,6 +2,8 @@
 
 	* Version 2.0.12.
 
+	* man/Makefile.am (common_dep): Define it, so we depend on configure.ac.
+
 	* configure.ac: Renamed from configure.in.
 
 2001-09-25  Jim Meyering  <meyering@lucent.com>
