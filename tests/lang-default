@@ -5,3 +5,4 @@
 LANGUAGE=''; export LANGUAGE
 LC_ALL=''; export LC_ALL
 LANG=''; export LANG
+LC_COLLATE=''; export LC_COLLATE
