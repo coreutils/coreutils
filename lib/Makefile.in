@@ -148,6 +148,7 @@ libfetish_a_SOURCES = \
   dup-safer.c \
   exclude.c exclude.h \
   filemode.c filemode.h \
+  file-type.c file-type.h \
   fnmatch.h \
   fopen-safer.c \
   fsusage.h \
@@ -247,19 +248,19 @@ am_libfetish_a_OBJECTS = acl$U.$(OBJEXT) getdate$U.$(OBJEXT) \
 	backupfile$U.$(OBJEXT) basename$U.$(OBJEXT) \
 	canon-host$U.$(OBJEXT) closeout$U.$(OBJEXT) diacrit$U.$(OBJEXT) \
 	dirname$U.$(OBJEXT) dup-safer$U.$(OBJEXT) exclude$U.$(OBJEXT) \
-	filemode$U.$(OBJEXT) fopen-safer$U.$(OBJEXT) \
-	full-write$U.$(OBJEXT) getstr$U.$(OBJEXT) gettime$U.$(OBJEXT) \
-	getugroups$U.$(OBJEXT) hard-locale$U.$(OBJEXT) \
-	human$U.$(OBJEXT) idcache$U.$(OBJEXT) isdir$U.$(OBJEXT) \
-	linebuffer$U.$(OBJEXT) localcharset$U.$(OBJEXT) \
-	long-options$U.$(OBJEXT) makepath$U.$(OBJEXT) \
-	mbswidth$U.$(OBJEXT) md5$U.$(OBJEXT) memcasecmp$U.$(OBJEXT) \
-	memcoll$U.$(OBJEXT) modechange$U.$(OBJEXT) \
-	path-concat$U.$(OBJEXT) physmem$U.$(OBJEXT) quote$U.$(OBJEXT) \
-	quotearg$U.$(OBJEXT) readtokens$U.$(OBJEXT) \
-	safe-read$U.$(OBJEXT) same$U.$(OBJEXT) save-cwd$U.$(OBJEXT) \
-	savedir$U.$(OBJEXT) settime$U.$(OBJEXT) sha$U.$(OBJEXT) \
-	stripslash$U.$(OBJEXT) unicodeio$U.$(OBJEXT) \
+	filemode$U.$(OBJEXT) file-type$U.$(OBJEXT) \
+	fopen-safer$U.$(OBJEXT) full-write$U.$(OBJEXT) \
+	getstr$U.$(OBJEXT) gettime$U.$(OBJEXT) getugroups$U.$(OBJEXT) \
+	hard-locale$U.$(OBJEXT) human$U.$(OBJEXT) idcache$U.$(OBJEXT) \
+	isdir$U.$(OBJEXT) linebuffer$U.$(OBJEXT) \
+	localcharset$U.$(OBJEXT) long-options$U.$(OBJEXT) \
+	makepath$U.$(OBJEXT) mbswidth$U.$(OBJEXT) md5$U.$(OBJEXT) \
+	memcasecmp$U.$(OBJEXT) memcoll$U.$(OBJEXT) \
+	modechange$U.$(OBJEXT) path-concat$U.$(OBJEXT) \
+	physmem$U.$(OBJEXT) quote$U.$(OBJEXT) quotearg$U.$(OBJEXT) \
+	readtokens$U.$(OBJEXT) safe-read$U.$(OBJEXT) same$U.$(OBJEXT) \
+	save-cwd$U.$(OBJEXT) savedir$U.$(OBJEXT) settime$U.$(OBJEXT) \
+	sha$U.$(OBJEXT) stripslash$U.$(OBJEXT) unicodeio$U.$(OBJEXT) \
 	userspec$U.$(OBJEXT) version-etc$U.$(OBJEXT) \
 	xgetcwd$U.$(OBJEXT) xgethostname$U.$(OBJEXT) \
 	xmalloc$U.$(OBJEXT) xmemcoll$U.$(OBJEXT) xreadlink$U.$(OBJEXT) \
@@ -311,7 +312,8 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/canon-host$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/closeout$U.Po ./$(DEPDIR)/diacrit$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/dirname$U.Po ./$(DEPDIR)/dup-safer$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/exclude$U.Po ./$(DEPDIR)/filemode$U.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/exclude$U.Po ./$(DEPDIR)/file-type$U.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/filemode$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/fopen-safer$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/full-write$U.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/getdate$U.Po ./$(DEPDIR)/getopt$U.Po \
@@ -478,6 +480,7 @@ mostlyclean-kr:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dirname$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dup-safer$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/exclude$U.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/file-type$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filemode$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fopen-safer$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-write$U.Po@am__quote@
@@ -586,6 +589,8 @@ euidaccess_.c: lib/euidaccess.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/lib/euidaccess.c; then echo $(srcdir)/lib/euidaccess.c; else echo lib/euidaccess.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > euidaccess_.c || rm -f euidaccess_.c
 exclude_.c: exclude.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/exclude.c; then echo $(srcdir)/exclude.c; else echo exclude.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > exclude_.c || rm -f exclude_.c
+file-type_.c: file-type.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/file-type.c; then echo $(srcdir)/file-type.c; else echo file-type.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > file-type_.c || rm -f file-type_.c
 fileblocks_.c: lib/fileblocks.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/lib/fileblocks.c; then echo $(srcdir)/lib/fileblocks.c; else echo lib/fileblocks.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > fileblocks_.c || rm -f fileblocks_.c
 filemode_.c: filemode.c $(ANSI2KNR)
@@ -810,15 +815,15 @@ backupfile_.$(OBJEXT) basename_.$(OBJEXT) canon-host_.$(OBJEXT) \
 chown_.$(OBJEXT) closeout_.$(OBJEXT) diacrit_.$(OBJEXT) \
 dirfd_.$(OBJEXT) dirname_.$(OBJEXT) dup-safer_.$(OBJEXT) \
 dup2_.$(OBJEXT) error_.$(OBJEXT) euidaccess_.$(OBJEXT) \
-exclude_.$(OBJEXT) fileblocks_.$(OBJEXT) filemode_.$(OBJEXT) \
-fnmatch_.$(OBJEXT) fopen-safer_.$(OBJEXT) fsusage_.$(OBJEXT) \
-ftruncate_.$(OBJEXT) full-write_.$(OBJEXT) getdate_.$(OBJEXT) \
-getgroups_.$(OBJEXT) gethostname_.$(OBJEXT) getline_.$(OBJEXT) \
-getloadavg_.$(OBJEXT) getopt_.$(OBJEXT) getopt1_.$(OBJEXT) \
-getpass_.$(OBJEXT) getstr_.$(OBJEXT) gettime_.$(OBJEXT) \
-gettimeofday_.$(OBJEXT) getugroups_.$(OBJEXT) getusershell_.$(OBJEXT) \
-group-member_.$(OBJEXT) hard-locale_.$(OBJEXT) hash_.$(OBJEXT) \
-hash-pjw_.$(OBJEXT) human_.$(OBJEXT) idcache_.$(OBJEXT) \
+exclude_.$(OBJEXT) file-type_.$(OBJEXT) fileblocks_.$(OBJEXT) \
+filemode_.$(OBJEXT) fnmatch_.$(OBJEXT) fopen-safer_.$(OBJEXT) \
+fsusage_.$(OBJEXT) ftruncate_.$(OBJEXT) full-write_.$(OBJEXT) \
+getdate_.$(OBJEXT) getgroups_.$(OBJEXT) gethostname_.$(OBJEXT) \
+getline_.$(OBJEXT) getloadavg_.$(OBJEXT) getopt_.$(OBJEXT) \
+getopt1_.$(OBJEXT) getpass_.$(OBJEXT) getstr_.$(OBJEXT) \
+gettime_.$(OBJEXT) gettimeofday_.$(OBJEXT) getugroups_.$(OBJEXT) \
+getusershell_.$(OBJEXT) group-member_.$(OBJEXT) hard-locale_.$(OBJEXT) \
+hash_.$(OBJEXT) hash-pjw_.$(OBJEXT) human_.$(OBJEXT) idcache_.$(OBJEXT) \
 isdir_.$(OBJEXT) lchown_.$(OBJEXT) linebuffer_.$(OBJEXT) \
 localcharset_.$(OBJEXT) long-options_.$(OBJEXT) lstat_.$(OBJEXT) \
 makepath_.$(OBJEXT) malloc_.$(OBJEXT) mbswidth_.$(OBJEXT) \
