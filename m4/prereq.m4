@@ -1,15 +1,24 @@
-#serial 4
+#serial 5
 
 dnl These are the prerequisite macros for files in the lib/
 dnl directories of the fileutils, sh-utils, and textutils packages.
 
 AC_DEFUN(jm_PREREQ,
 [
+  jm_PREREQ_ADDEXT
   jm_PREREQ_CANON_HOST
   jm_PREREQ_ERROR
   jm_PREREQ_QUOTEARG
   jm_PREREQ_READUTMP
   jm_PREREQ_REGEX
+])
+
+AC_DEFUN(jm_PREREQ_ADDEXT,
+[
+  dnl For addext.c.
+  AC_SYS_LONG_FILE_NAMES
+  AC_CHECK_FUNC(pathconf)
+  AC_CHECK_HEADERS(limits.h string.h unistd.h)
 ])
 
 AC_DEFUN(jm_PREREQ_CANON_HOST,
