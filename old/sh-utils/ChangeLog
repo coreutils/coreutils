@@ -1,3 +1,12 @@
+2001-05-27  Jim Meyering  <meyering@lucent.com>
+
+	* src/dirname.c (main): Add `const' to declaration of local, `result'.
+
+2001-04-01  Michael Stone  <mstone@debian.org>
+
+	Add options to make `who' more POSIX compliant.
+	* who.c:
+
 2001-05-11  Paul Eggert  <eggert@twinsun.com>
 
 	dirname code cleanup.  base_name now behaves more compatibly
