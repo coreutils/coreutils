@@ -1,6 +1,12 @@
-2002-04-25  Jim Meyering  <meyering@lucent.com>
+2002-04-28  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.22.
+
+	Avoid new warnings from gcc.
+	* src/pr.c [struct COLUMN] <name>: Declare member to be const.
+	(init_fps): Declare local variable `firstname' to be const.
+
+2002-04-25  Jim Meyering  <meyering@lucent.com>
 
 	* src/wc.c (usage): Adjust ordering to match that of default output.
 	Suggestion from Gaute Hvoslef Kvalnes.
