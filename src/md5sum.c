@@ -121,8 +121,8 @@ a line with checksum, type, and name for each FILE.\n"),
   exit (status);
 }
 
-/* FIXME: but this won't work with filenames containing blanks.  */
-/* FIXME: This is provisory.  Use strtok.  */
+/* FIXME: new format doesn't work with filenames containing blanks.  */
+/* FIXME: neither format works with filenames containing newline.  */
 
 static int
 split_3 (s, u, binary, w)
@@ -143,7 +143,7 @@ split_3 (s, u, binary, w)
     {
       *u = &s[i];
 
-      /* The first field has to be the 32 character hexadecimal
+      /* The first field has to be the 32-character hexadecimal
 	 representation of the message digest.  If it not immediately
 	 followed by a white space it's an error.  */
       if (!ISWHITE (s[i + 32]))
@@ -310,6 +310,7 @@ main (argc, argv)
       if (optind == argc)
 	argv[argc++] = "-";
 
+      /* FIXME: allow newline in filename by encoding it. */
       for (; optind < argc; ++optind)
 	{
 	  size_t cnt;
