@@ -2,6 +2,7 @@
 
 	* readtokens.c: Put `Free Software Foundation, Inc.' in place of
 	my name in the copyright comment.
+	(init_tokenbuffer): Remove unnecessary parentheses around malloc.
 
 	Update from gnulib.
 	* xmemcoll.h: Include <stddef.h>.
