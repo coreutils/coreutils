@@ -17,7 +17,7 @@
 
 /* Written by David MacKenzie <djm@gnu.ai.mit.edu>.  */
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
 # include <config.h>
 #endif
 
@@ -26,14 +26,15 @@
 #ifndef errno
 extern int errno;
 #endif
+
 #include <sys/types.h>
 #include "pathmax.h"
 
-#ifndef HAVE_GETCWD
-char *getwd ();
-# define getcwd(buf, max) getwd (buf)
-#else
+#if HAVE_GETCWD
 char *getcwd ();
+#else
+char *getwd ();
+# define getcwd(Buf, Max) getwd (Buf)
 #endif
 
 /* Amount to increase buffer size by in each try. */
