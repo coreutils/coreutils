@@ -47,10 +47,10 @@ AC_DEFUN(jm_CHECK_DECLS,
     free,
     getenv,
     geteuid,
-    getgrgid
+    getgrgid,
     getlogin,
-    getpwuid
-    getuid
+    getpwuid,
+    getuid,
     getutent,
     lseek,
     malloc,
