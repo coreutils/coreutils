@@ -115,33 +115,11 @@ main (int argc, char **argv)
     }
 
   if (ignore_interrupts)
-    {
-#ifdef _POSIX_SOURCE
-      struct sigaction sigact;
-
-      sigact.sa_handler = SIG_IGN;
-      sigemptyset (&sigact.sa_mask);
-      sigact.sa_flags = 0;
-      sigaction (SIGINT, &sigact, NULL);
-#else				/* !_POSIX_SOURCE */
-      signal (SIGINT, SIG_IGN);
-#endif				/* _POSIX_SOURCE */
-    }
+    signal (SIGINT, SIG_IGN);
 
   /* Don't let us be killed if one of the output files is a pipe that
      doesn't consume all its input.  */
-#ifdef _POSIX_SOURCE
-  {
-    struct sigaction sigact;
-
-    sigact.sa_handler = SIG_IGN;
-    sigemptyset (&sigact.sa_mask);
-    sigact.sa_flags = 0;
-    sigaction (SIGPIPE, &sigact, NULL);
-  }
-#else
   signal (SIGPIPE, SIG_IGN);
-#endif
 
   /* Do *not* warn if tee is given no file arguments.
      POSIX requires that it work when given no arguments.  */
