@@ -20,6 +20,7 @@ mkdir $tmp || framework_fail=1
 a=1
 n=300
 i=$a
+echo 'creating $n files... in $tmp'
 while :; do
   touch $tmp/$i || framework_fail=1
   test `expr $i = $n` = 1 && break
