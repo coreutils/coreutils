@@ -1,3 +1,8 @@
+2002-08-01  Jim Meyering  <meyering@lucent.com>
+
+	* prereq.m4 (jm_PREREQ_TEMPNAME): lib/tempname.c may use uintmax_t,
+	so require require jm_AC_TYPE_UINTMAX_T.  Patch by Joe Orton.
+
 2002-07-28  Jim Meyering  <meyering@lucent.com>
 
 	* jm-macros.m4: Don't require jm_FUNC_READDIR.
