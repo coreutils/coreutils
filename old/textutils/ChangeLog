@@ -1,3 +1,18 @@
+Tue Oct  3 22:44:05 1995  Jim Meyering  (meyering@comco.com)
+
+	* csplit.c, sort.c, tac.c: Test SA_INTERRUPT, not _POSIX_VERSION,
+	to determine whether `sigaction' functions are available.
+	Reported by Paul Nevai <nevai@ops.mps.ohio-state.edu>.
+	Fix suggested by Karl Berry.
+
+	* md5sum.c (main): Declare counter, N_STRINGS, to be an integral
+	type, not `char'.
+
+	* cut.c: Convert many declarations using `int' to use `unsigned int'
+	to avoid warnings from `gcc -Wall' about comparing signed and
+	unsigned types.
+	(set_fields): Use memset (not open coded loop) to initialize array.
+
 Thu Sep 28 23:16:05 1995  Jim Meyering  (meyering@comco.com)
 
 	* Version 1.13.
