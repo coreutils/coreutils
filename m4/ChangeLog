@@ -1,3 +1,10 @@
+2003-02-27  Jim Meyering  <jim@meyering.net>
+
+	* prereq.m4 (gl_SYS__SYSTEM_CONFIGURATION): New function.
+	(jm_PREREQ_PHYSMEM): Check for new headers and functions.
+	Use gl_SYS__SYSTEM_CONFIGURATION.
+	With suggestions from Kaveh Ghazi.
+
 2003-02-19  Jim Meyering  <jim@meyering.net>
 
 	* c-stack.m4 (AC_SYS_XSI_STACK_OVERFLOW_HEURISTIC): Limit stack size
