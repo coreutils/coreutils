@@ -1,4 +1,5 @@
 Major changes in release 1.9:
+* su fails gracefully when getpass is unable to open /dev/tty.
 * printenv and tty detect and report write errors
 * fix bug in stty
 * stty supports accepts the new options status and flush on systems that

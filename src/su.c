@@ -331,6 +331,11 @@ correct_password (pw)
     return 1;
 
   unencrypted = getpass ("Password:");
+  if (unencrypted == NULL)
+    {
+      error (0, 0, "getpass: cannot open /dev/tty");
+      return 0;
+    }
   encrypted = crypt (unencrypted, correct);
   bzero (unencrypted, strlen (unencrypted));
   return strcmp (encrypted, correct) == 0;

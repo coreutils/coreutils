@@ -1,3 +1,10 @@
+Mon Nov 08 23:16:36 1993  Jim Meyering  (meyering@comco.com)
+
+	* Version 1.9.
+
+	* su.c (correct_password): Report an error and fail if getpass
+	returns NULL.
+
 Tue Nov 02 01:14:21 1993  Jim Meyering  (meyering@comco.com)
 
 	* acconfig.h: Add comments.

@@ -97,7 +97,7 @@ void *alloca ();
 #undef timezone /* needed for sgi */
 #endif
 
-#if defined(HAVE_SYS_TIMEB_H) || (!defined(USG) && defined(HAVE_FTIME))
+#if defined(HAVE_SYS_TIMEB_H)
 #include <sys/timeb.h>
 #else
 /*
