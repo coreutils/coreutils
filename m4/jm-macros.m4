@@ -1,4 +1,4 @@
-#serial 32   -*- autoconf -*-
+#serial 33   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -219,6 +219,7 @@ AC_DEFUN(jm_CHECK_ALL_HEADERS,
     sys/mntent.h \
     sys/mount.h \
     sys/param.h \
+    sys/resource.h \
     sys/socket.h \
     sys/statfs.h \
     sys/statvfs.h \
