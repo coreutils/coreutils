@@ -504,7 +504,7 @@ du_files (char **files, int bit_flags)
 	  if (errno != 0)
 	    {
 	      /* FIXME: try to give a better message  */
-	      error (0, errno, "fts_read failed");
+	      error (0, errno, _("fts_read failed"));
 	      fail = 1;
 	    }
 	  break;
