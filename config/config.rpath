@@ -50,9 +50,7 @@ if test "$GCC" = yes; then
 else
   case "$host_os" in
     aix3* | aix4* | aix5*)
-      if test "$host_cpu" = ia64; then
-        wl='-Wl,'
-      fi
+      wl='-Wl,'
       ;;
     hpux9* | hpux10* | hpux11*)
       wl='-Wl,'
@@ -95,13 +93,16 @@ hardcode_direct=no
 hardcode_minus_L=no
 
 case "$host_os" in
-  cygwin* | mingw* | pw32* )
+  cygwin* | mingw* | pw32*)
     # FIXME: the MSVC++ port hasn't been tested in a loooong time
     # When not using gcc, we currently assume that we are using
     # Microsoft Visual C++.
     if test "$GCC" != yes; then
       with_gnu_ld=no
     fi
+    ;;
+  openbsd*)
+    with_gnu_ld=no
     ;;
 esac
 
@@ -171,38 +172,42 @@ else
       fi
       ;;
     aix4* | aix5*)
-      hardcode_libdir_separator=':'
-      if test "$GCC" = yes; then
-        collect2name=`${CC} -print-prog-name=collect2`
-        if test -f "$collect2name" && \
-          strings "$collect2name" | grep resolve_lib_name >/dev/null
-        then
-          # We have reworked collect2
-          hardcode_direct=yes
-        else
-          # We have old collect2
-          hardcode_direct=unsupported
-          hardcode_minus_L=yes
-          hardcode_libdir_flag_spec='-L$libdir'
-          hardcode_libdir_separator=
-        fi
-      else
-        hardcode_direct=yes
-      fi
       if test "$host_cpu" = ia64; then
         # On IA64, the linker does run time linking by default, so we don't
         # have to do anything special.
         aix_use_runtimelinking=no
       else
-        # Test if we are trying to use run time linking, or normal AIX style linking.
-        # If -brtl is somewhere in LDFLAGS, we need to do run time linking.
         aix_use_runtimelinking=no
-        for ld_flag in $LDFLAGS; do
-          if (test $ld_flag = "-brtl" || test $ld_flag = "-Wl,-brtl" ); then
-            aix_use_runtimelinking=yes
-            break
+        # Test if we are trying to use run time linking or normal
+        # AIX style linking. If -brtl is somewhere in LDFLAGS, we
+        # need to do runtime linking.
+        case $host_os in aix4.[23]|aix4.[23].*|aix5*)
+          for ld_flag in $LDFLAGS; do
+            if (test $ld_flag = "-brtl" || test $ld_flag = "-Wl,-brtl"); then
+              aix_use_runtimelinking=yes
+              break
+            fi
+          done
+        esac
+      fi
+      hardcode_direct=yes
+      hardcode_libdir_separator=':'
+      if test "$GCC" = yes; then
+        case $host_os in aix4.[012]|aix4.[012].*)
+          collect2name=`${CC} -print-prog-name=collect2`
+          if test -f "$collect2name" && \
+            strings "$collect2name" | grep resolve_lib_name >/dev/null
+          then
+            # We have reworked collect2
+            hardcode_direct=yes
+          else
+            # We have old collect2
+            hardcode_direct=unsupported
+            hardcode_minus_L=yes
+            hardcode_libdir_flag_spec='-L$libdir'
+            hardcode_libdir_separator=
           fi
-        done
+        esac
       fi
       if test "$aix_use_runtimelinking" = yes; then
         hardcode_libdir_flag_spec='${wl}-blibpath:$libdir:/usr/lib:/lib'
@@ -267,8 +272,19 @@ else
       hardcode_libdir_separator=:
       ;;
     openbsd*)
-      hardcode_libdir_flag_spec='-R$libdir'
       hardcode_direct=yes
+      if test -z "`echo __ELF__ | $CC -E - | grep __ELF__`" || test "$host_os-$host_cpu" = "openbsd2.8-powerpc"; then
+        hardcode_libdir_flag_spec='${wl}-rpath,$libdir'
+      else
+        case "$host_os" in
+          openbsd[01].* | openbsd2.[0-7] | openbsd2.[0-7].*)
+            hardcode_libdir_flag_spec='-R$libdir'
+            ;;
+          *)
+            hardcode_libdir_flag_spec='${wl}-rpath,$libdir'
+            ;;
+        esac
+      fi
       ;;
     os2*)
       hardcode_libdir_flag_spec='-L$libdir'
