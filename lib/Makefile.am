@@ -13,6 +13,7 @@ DEFS = -DLIBDIR=\"$(libdir)\" @DEFS@
 ## added by automake, but on systems with an up to date GNU libc,
 ## regex.c isn't even compiled.
 libfetish_a_SOURCES = \
+  acl.h acl.c \
   getdate.h getdate.y \
   posixtm.c posixtm.h \
   posixver.c posixver.h \
