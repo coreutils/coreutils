@@ -42,6 +42,6 @@ a/x/y
 EOF
 
 cmp out exp || fail=1
-test $fail = 1 && diff -u out exp 2> /dev/null
+test $fail = 1 && diff out exp 2> /dev/null
 
 (exit $fail); exit $fail
