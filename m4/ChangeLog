@@ -1,3 +1,27 @@
+1999-01-28  Jim Meyering  <meyering@ascend.com>
+
+	* jm-macros.m4: Use jm_AFS.
+	* afs.m4: New file (from fileutils' configure.in).
+
+	* assert.m4: Use the 3-argument forms of AC_DEFINE* macros.
+	* chown.m4: Likewise.
+	* d-ino.m4: Likewise.
+	* d-type.m4: Likewise.
+	* fnmatch.m4: Likewise.
+	* getgroups.m4: Likewise.
+	* gettext.m4: Likewise.
+	* jm-mktime.m4: Likewise.
+	* jm-winsz2.m4: Likewise.
+	* lcmessage.m4: Likewise.
+	* ls-mntd-fs.m4: Likewise.
+	* malloc.m4: Likewise.
+	* memcmp.m4: Likewise.
+	* putenv.m4: Likewise.
+	* realloc.m4: Likewise.
+	* st_mtim.m4: Likewise.
+	* strftime.m4: Likewise.
+
+
 1999-01-16  Jim Meyering  <meyering@ascend.com>
 
 	* jm-macros.m4 (ARGMATCH_DIE): Define.
