@@ -273,8 +273,13 @@ main (int argc, char **argv)
     error (1, 0,
 	   _("the strip option may not be used when installing a directory"));
 
-  if (make_backups)
-    x.backup_type = xget_version ("backup type", version_control_string);
+  if (backup_suffix_string)
+    simple_backup_suffix = xstrdup (backup_suffix_string);
+
+  x.backup_type = (make_backups
+		   ? xget_version (_("backup type"),
+				   version_control_string)
+		   : none);
 
   n_files = argc - optind;
   file = argv + optind;
