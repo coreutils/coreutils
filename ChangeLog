@@ -1,6 +1,13 @@
+2002-10-08  Dmitry V. Levin  <ldv@altlinux.org>
+
+ 	* src/ln.c (main): Fix target_directory parsing when n_files == 1.
+
 2002-10-08  Jim Meyering  <meyering@lucent.com>
 
+	* src/wc.c (wc): FIXME
+
 	* tests/tail-2/big-4gb: Use double quotes around diagnostic.
+	Fix syntax in test: use =, not ==.
 	Reported by Bob Proulx.
 	Change all the rest like this: grep -lR "testing framework'" .\
 	|xargs perl -pi -e 's/'\''(\$0: failure in testing framework)'\''/"$1"/'
