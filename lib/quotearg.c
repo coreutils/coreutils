@@ -75,7 +75,7 @@
 # define ISASCII(c) isascii (c)
 #endif
 /* Undefine to protect against the definition in wctype.h of solaris2.6.   */
-#undef ISASCII
+#undef ISPRINT
 #define ISPRINT(c) (ISASCII (c) && isprint (c))
 
 struct quoting_options
