@@ -119,7 +119,7 @@ sub test_vector
      ['datevtime-1', "-d 000909 $fmt", {}, "2000-09-09 00:00:00", 0],
 
      # test for RFC-822 conformance
-     ['rfc822-1', "-R -d '$d1'", {}, "Sun, 19 Jan 1997 09:17:48 +0100", 0],
+     ['rfc822-1', "-R -d '$d1'", {}, "Sun, 19 Jan 1997 08:17:48 +0000", 0],
 
      # FIXME: add a lot more...
      );
@@ -145,7 +145,7 @@ sub test_vector
 
   $Test::env{'date2sec-0'} = ['TZ=UTC+2'];
 
-  $Test::env{'rfc822-1'} = ['LC_ALL=de_DE'];
+  $Test::env{'rfc822-1'} = ['LC_ALL=de_DE TZ=UTC'];
 
   return @tv;
 }
