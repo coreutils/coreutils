@@ -1,5 +1,5 @@
 /* remove.c -- core functions for removing files and directories
-   Copyright (C) 88, 90, 91, 1994-2004 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1994-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -153,7 +153,7 @@ struct cwd_state
 };
 
 static Dirstack_state *
-ds_init ()
+ds_init (void)
 {
   Dirstack_state *ds = xmalloc (sizeof *ds);
   obstack_init (&ds->dir_stack);
