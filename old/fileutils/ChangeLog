@@ -2,6 +2,9 @@
 
 	* Version 4.1.1.
 
+	* Makefile.maint (alpha): Depend on local-check so that they run
+	a little earlier.
+
 2001-09-01  Jim Meyering  <meyering@lucent.com>
 
 	* src/df.c (show_point): Use canonicalize_file_name, if possible.
