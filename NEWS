@@ -1,4 +1,10 @@
 [4.5.5]
+* cut: new feature: when used to select ranges of byte offsets (as opposed
+  to ranges of fields) and when --output-delimiter=STRING is specified,
+  output STRING between ranges of selected bytes.
+* rm -r can no longer be tricked into mistakenly reporting a cycle.
+* when rm detects a directory cycle, it no longer aborts the entire command,
+  but rather just the affected command line argument.
 
 [4.5.4]
 * cp no longer fails to parse options like this: --preserve=mode,ownership
