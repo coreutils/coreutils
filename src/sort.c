@@ -934,10 +934,10 @@ findlines (struct buffer *buf, struct lines *lines)
      if digit return -1, else 0
    return 0
 
-   As can be clearly seen, the above implementation duplicates code,
-   and thus there is place for improvement:
+   The above implementation duplicates code, and thus there is room
+   for improvement:
       the difference in code of a and b, is solved by using a
-      refernce to s, assigned to either a or b. and using n
+      reference to s, assigned to either a or b. and using n
       to denote return value.
       the difference in either that start being a digit or
       the decimal point, is solved by testing if either is
@@ -945,12 +945,16 @@ findlines (struct buffer *buf, struct lines *lines)
 
    if *a or *b is a decimal_point
       skip all chars where *a == *b
-      if *a and *b are digits return *a - *b
+      if *a and *b are digits
+        return *a - *b
       s is b, and return code is -1
-      if *a is a digit or *a is a decimal_pointm then  s is a, return code 1
+      if *a is a digit or *a is a decimal_point
+	s is a
+	return code 1
       skip decimal_point in s
       skip zeroes in s
-      if *s is a digit, return n
+      if *s is a digit
+        return n
     return 0                                                          */
 
 #ifdef ENABLE_NLS
@@ -958,25 +962,31 @@ findlines (struct buffer *buf, struct lines *lines)
 static int
 fraccompare (register const char *a, register const char *b)
 {
-  register const char *s;
-  int n = -1;
-
   if (!nls_fraction_found)
     nls_fraction_found = 1;
+
   if (*a == decimal_point || *b == decimal_point)
     {
-      if (*a == *b)
-	do {
+      register const char *s;
+      int n = -1;
+
+      while (*a == *b)
+	{
 	  ++a;
 	  ++b;
-	} while (*a == *b && ISDIGIT (*a));
+	  if (ISDIGIT (*a))
+	    break;
+	}
+
       if (ISDIGIT (*a) && ISDIGIT (*b))
 	return (*a) - (*b);
+
       s = b;
-      if (*a == decimal_point || (ISDIGIT (*a) && *b != decimal_point)) {
-	s = a;
-	n = 1;
-      }
+      if (*a == decimal_point || (ISDIGIT (*a) && *b != decimal_point))
+	{
+	  s = a;
+	  n = 1;
+	}
       if (*s == decimal_point)
 	++s;
       while (*s == NUMERIC_ZERO)
