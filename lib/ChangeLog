@@ -2,6 +2,8 @@
 
 	* utimens.c (utimens): Test HAVE_UTIME, not HAVE_UTIMES.
 	Prefer utime, since it works and utimes doesn't on some systems.
+	FIXME: Revert the above change once we have a working utimes
+	replacement function.
 
 2003-08-06  Paul Eggert  <eggert@twinsun.com>
 
