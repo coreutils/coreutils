@@ -41,13 +41,13 @@ fi
 fail=0
 
 cp -p a a2 || fail=1
-set _ `ls -l a`; shift; a_perms=$1
-set _ `ls -l a2`; shift; a2_perms=$1
-test $a_perms = $a2_perms || fail=1
+set _ `ls -l a`; shift; p1=$1
+set _ `ls -l a2`; shift; p2=$1
+test $p1 = $p2 || fail=1
 
 cp -p b b2 || fail=1
-set _ `ls -l b`; shift; b_perms=$1
-set _ `ls -l b2`; shift; b2_perms=$1
-test $b_perms = $b2_perms || fail=1
+set _ `ls -l b`; shift; p1=$1
+set _ `ls -l b2`; shift; p2=$1
+test $p1 = $p2 || fail=1
 
 (exit $fail); exit
