@@ -491,10 +491,14 @@ count_entry (ent, top, last_dev)
     }
   else if (opt_all || top)
     {
-      printf ("%ld\t%s\n", output_size == size_bytes ? size
-	      : convert_blocks (size, output_size == size_kilobytes),
-	      path->text);
-      fflush (stdout);
+      int print_only_dir_size = 1;
+      if (!print_only_dir_size)
+	{
+	  printf ("%ld\t%s\n", output_size == size_bytes ? size
+		  : convert_blocks (size, output_size == size_kilobytes),
+		  path->text);
+	  fflush (stdout);
+	}
     }
 
   return size;

@@ -22,7 +22,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
-#ifndef STDC_HEADERS
+#ifndef errno
 extern int errno;
 #endif
 

@@ -1,3 +1,50 @@
+Thu Oct 20 00:52:59 1994  Jim Meyering  (meyering@comco.com)
+
+	* system.h [!S_IEXEC]: Define as S_IXUSR.
+
+	* cp.h [S_IEXEC]: Remove definition.  cp.c doesn't use it.
+
+	* ls.c [!INT_MAX]: Define to 2^31 - 1 so subsequent #if test works.
+	[S_IEXEC]: Remove definition.  It's in system.h now.
+
+	* ls.c: Support for new option: --dired (-D).
+	(dired, dired_pos, dired_obstack, subdired_obstack): Global variables.
+	[PUTCHAR, FPUTS, FPUTS_LITERAL, PUSH_CURRENT_DIRED_POS]: New macros
+	(dired_dump_obstack, quote_filename): New functions.
+	(main): Initialize obstacks.
+	(decode_switches): Recognize -D.
+	(print_dir): Make arguments `const.'
+	Record directory name indices in obstack.
+	(print_dir, print_long_format, print_type_indicator): Use macros
+	FPUTS, FPUTS_LITERAL, PUTCHAR for output.
+	(print_long_format): Record file name indices in obstack.
+	(print_name_with_quoting): Just call quote_filename and output the
+	result.
+
+Mon Oct 17 23:56:36 1994  Jim Meyering  (meyering@comco.com)
+
+	* savedir.c: Indent CPP conditionals.  Change some #ifdefs to #ifs.
+	From Franc,ois Pinard.
+
+Mon Oct 17 10:27:26 1994  David J. MacKenzie  (djm@duality.gnu.ai.mit.edu)
+
+	* lib/dirname.c: Use strrchr, not rindex.
+
+Sun Oct 16 07:53:27 1994  Jim Meyering  (meyering@comco.com)
+
+	* system.h (S_IXUSR, S_IXGRP, S_IXOTH): Define these in terms of
+	S_IEXEC if they're not already defined. From Kaveh Ghazi.
+
+	* eaccess.c (eaccess_stat): Don't use NULL in comparison.
+	Some systems don't define it except in stdio.h -- and including
+	(yes, just including) stdio.h has been known to significantly
+	increase object code size (though admittedly, that probably
+	happens only on old systems).  Kaveh Ghazi reported the problem.
+
+	* src/Makfile.in lib/Makfile.in (DEFS): Remove -Dlint.
+	It causes problems on broken pyramid system.
+	From Kaveh Ghazi.
+
 Sat Oct 08 10:39:32 1994  Jim Meyering  (meyering@comco.com)
 
 	* mountlist.c: Always include <sys/param.h> if it exists.

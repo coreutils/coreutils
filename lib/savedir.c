@@ -57,9 +57,9 @@
 #else
 char *malloc ();
 char *realloc ();
+#endif
 #ifndef NULL
 #define NULL 0
-#endif
 #endif
 
 char *stpcpy ();
