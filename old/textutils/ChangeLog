@@ -1,3 +1,24 @@
+2000-01-24  Mark Kettenis  <kettenis@gnu.org>
+
+	* src/tsort.c (exit_status): New variable.
+	(loop): New varibale.
+	(count_items, scan_zeroes): Change return type to int.
+	(detect_loop): Complete rewrite to correctly implement detection
+	of loops.  Also change return type to int.
+	(recurse_tree): Stop if ACTION returns non-zero.  This involves
+	changing the return type of this function and ACTION to int.
+	(walk_tree): Change return type of ACTION to int.
+	(tsort): Continue sort after a loop has been detected (and
+	broken).  Set exit_status to 1 if a loop was detected.
+	(main): Use exit_status to determine exit code.
+	* tests/tsort/basic-1: Change expected output for cycle-1 and
+	cycle-2 tests.
+
+2000-01-23  Jim Meyering  <meyering@lucent.com>
+
+	* configure.in (AM_FUNC_STRTOD): Move to m4/.
+	(AC_SUBST(POW_LIBM)): Likewise.
+
 2000-01-22  Jim Meyering  <meyering@lucent.com>
 
 	* src/sort.c (keycompare): Use global, hard_LC_COLLATE in place of
