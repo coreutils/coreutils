@@ -1,4 +1,5 @@
 [4.1.1]
+* ls -R detects directory cycles, per POSIX.  It warns and doesn't infloop.
 * cp's -P option now means the same as --no-dereference, per POSIX.
     Use --parents to get the old meaning.
 * When copying with the -H and -L options, cp can preserve logical
