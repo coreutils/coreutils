@@ -1,3 +1,7 @@
+2002-04-12  Jim Meyering  <meyering@lucent.com>
+
+	* dirfd.h (dirfd): Elide prototype if dirfd is a macro.
+
 2002-03-10  Jim Meyering  <meyering@lucent.com>
 
 	* makepath.c (make_path): Remove a comma from a diagnostic.
