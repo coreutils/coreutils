@@ -1,6 +1,10 @@
-Sat Jan 25 00:34:39 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+Sun Jan 26 20:17:50 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Version 3.16.
+
+	* acconfig.h (strftime): Add #undef.  From Marcus Daniels.
+
+Sat Jan 25 00:34:39 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/du.c (count_entry): Fix blatant bug (typo?) that made
 	--megabytes report numbers in units of kilobytes.
