@@ -516,6 +516,6 @@ alpha beta major: news-date-check $(local-check)
 	$(MAKE) -s announcement RELEASE_TYPE=$@ > /tmp/announce-$(my_distdir)
 	ln $(rel-files) $(release_archive_dir)
 	chmod a-w $(rel-files)
+	$(MAKE) -s emit_upload_commands RELEASE_TYPE=$@
 	echo $(VERSION) > $(prev_version_file)
 	$(CVS) ci -m. $(prev_version_file)
-	$(MAKE) -s emit_upload_commands RELEASE_TYPE=$@
