@@ -64,6 +64,12 @@
 char *malloc ();
 #endif
 
+#ifndef HAVE_DECL_GETENV
+char *getenv ();
+#endif
+
+char *base_name PARAMS ((char const *));
+
 #if HAVE_DIRENT_H || HAVE_NDIR_H || HAVE_SYS_DIR_H || HAVE_SYS_NDIR_H
 # define HAVE_DIR 1
 #else
@@ -214,25 +220,49 @@ version_number (const char *base, const char *backup, size_t base_length)
 
 static const char * const backup_args[] =
 {
-  "never", "simple", "nil", "existing", "t", "numbered", 0
+  /* In a series of synonyms, present the most meaning full first, so
+     that argmatch_valid be more readable. */
+  "none", "off",
+  "simple", "never",
+  "existing", "nil",
+  "numbered", "t",
+  0
 };
 
 static const enum backup_type backup_types[] =
 {
-  simple, simple, numbered_existing, numbered_existing, numbered, numbered
+  none, none,
+  simple, simple,
+  numbered_existing, numbered_existing,
+  numbered, numbered
 };
 
-/* Return the type of backup indicated by VERSION.
-   Unique abbreviations are accepted. */
+/* Return the type of backup specified by VERSION.
+   If VERSION is NULL or the empty string, return numbered_existing.
+   If VERSION is invalid or ambiguous, fail with a diagnostic appropriate
+   for the specified CONTEXT.  Unambiguous abbreviations are accepted.  */
 
 enum backup_type
-get_version (const char *version)
+get_version (const char *context, const char *version)
 {
-  enum backup_type type;
   if (version == 0 || *version == 0)
-    type = numbered_existing;
+    return numbered_existing;
   else
-    XARGMATCH (&type, "version control type", version,
-	       backup_args, backup_types, exit (2));
-  return type;
+    return XARGMATCH (context, version, backup_args, backup_types);
+}
+
+
+/* Return the type of backup specified by VERSION.
+   If VERSION is NULL, use the value of the envvar VERSION_CONTROL.
+   If the specified string is invalid or ambiguous, fail with a diagnostic
+   appropriate for the specified CONTEXT.
+   Unambiguous abbreviations are accepted.  */
+
+enum backup_type
+xget_version (const char *context, const char *version)
+{
+  if (version && *version)
+    return get_version (context, version);
+  else
+    return get_version ("$VERSION_CONTROL", getenv ("VERSION_CONTROL"));
 }
