@@ -91,6 +91,7 @@ libfetish_a_SOURCES = \
   physmem.c physmem.h \
   quote.c quote.h \
   quotearg.c quotearg.h \
+  readtokens0.c readtokens0.h \
   readtokens.c readtokens.h \
   readutmp.h \
   regex.h \
