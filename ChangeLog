@@ -2,6 +2,41 @@
 
 	* Version 5.0.90.
 
+	* src/Makefile.am (AM_INSTALLCHECK_STD_OPTIONS_EXEMPT): Exempt test.
+
+2003-07-24  Paul Eggert  <eggert@twinsun.com>
+
+	Fix some POSIX-compliance problems with 'test'.  This makes
+	'test' more compatible with Bash.
+
+	* NEWS, doc/coreutils.texi: Document the following.
+	* src/test.c: Include exitfail.h.
+	(TEST_FAILURE): New constant, used for exit status if 'test' fails.
+	(test-syntax_error): Use it.
+	(binary_operator): Now takes bool arg specifying whether left operand
+	is -l ARG, so that caller determines this rather than us.
+	All uses changed.
+	(term): Use posixtest to evaluate parenthesized subexpressions.
+	(unary_operator, one_argument): Remove support for -t without operand.
+	(one_argument): Take argument from argv[pos].
+	(one_argument, two_arguments, three_arguments): Advance pos.
+	All callers changed.
+	(three_arguments): Look for binary ops before "!".  Then look
+	for parenthesized one_argument expressions, instead of trusting
+	expr () to do the right thing.
+	(posixtest): Now takes number of args.  All callers changed.
+	Treat "( A B )" like "A B".
+	(main): Set exit_failure to TEST_FAILURE.  Don't depend on
+	POSIXLY_CORRECT, as we now conform to POSIX by default.
+	(main) [!LBRACKET]: Do not recognize "--help" or "--verbose" unless.
+	* tests/test/Test.pm (test_vector): Add several tests to check
+	the above.  Syntax errors now exit with status 2, not 1.
+
+2003-07-26  Jim Meyering  <jim@meyering.net>
+
+	* tests/help-version: Adjust for above change in test behavior:
+	`[' exits with 2, not 1, and test doesn't accept --help or --version.
+
 	* Makefile.maint (ME): Don't use trick suggested in Make manual.
 	It doesn't work for make-3.79.1.  Reported by Christian Krackowizer.
 
