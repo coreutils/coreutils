@@ -123,7 +123,7 @@ Fields are skipped before chars. \n\
    return a pointer to the beginning of the line's field to be compared. */
 
 static char *
-find_field (struct linebuffer *line)
+find_field (const struct linebuffer *line)
 {
   register int count;
   register char *lp = line->buffer;
@@ -150,7 +150,7 @@ find_field (struct linebuffer *line)
    OLDLEN and NEWLEN are their lengths. */
 
 static int
-different (char *old, char *new, int oldlen, int newlen)
+different (const char *old, const char *new, int oldlen, int newlen)
 {
   register int order;
 
@@ -173,7 +173,7 @@ different (char *old, char *new, int oldlen, int newlen)
    LINECOUNT + 1 is the number of times that the line occurred. */
 
 static void
-writeline (struct linebuffer *line, FILE *stream, int linecount)
+writeline (const struct linebuffer *line, FILE *stream, int linecount)
 {
   if ((mode == output_unique && linecount != 0)
       || (mode == output_repeated && linecount == 0))
@@ -190,7 +190,7 @@ writeline (struct linebuffer *line, FILE *stream, int linecount)
    If either is "-", use the standard I/O stream for it instead. */
 
 static void
-check_file (char *infile, char *outfile)
+check_file (const char *infile, const char *outfile)
 {
   FILE *istream;
   FILE *ostream;
