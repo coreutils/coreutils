@@ -1,5 +1,7 @@
 1999-11-20  Jim Meyering  <meyering@ascend.com>
 
+	* tests/cp/cp-mv-backup: Run `diff -c' if the test fails.
+
 	* tests/ls/time-1: Use `ls' and `touch', not $LS and $TOUCH.
 	* tests/ls/Makefile.am (TESTS_ENVIRONMENT): Specify PATH, etc.
 
