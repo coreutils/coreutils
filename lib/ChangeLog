@@ -1,3 +1,9 @@
+2001-09-03  Paul Eggert  <eggert@twinsun.com>
+
+	* exclude.c (fnmatch_no_wildcards): Fix confusion between
+	usage of FNM_CASEFOLD and FNM_LEADING_DIR.  The bug was
+	spotted by Jim Meyering.
+
 2001-09-03  Jim Meyering  <meyering@lucent.com>
 
 	* xreadlink.c (xreadlink): Preserve errno around `free' during failure.
