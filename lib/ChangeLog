@@ -1,3 +1,9 @@
+2004-01-16  Jim Meyering  <jim@meyering.net>
+
+	Merge from gnulib.
+	* localcharset.c: Test HAVE_DECL_GETC_UNLOCKED,
+	rather than HAVE_GETC_UNLOCKED.
+
 2003-10-08  Paul Eggert  <eggert@twinsun.com>
 
 	Merge from gnulib.
