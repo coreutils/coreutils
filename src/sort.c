@@ -75,12 +75,6 @@ char *xstrdup ();
 #define NUMERIC_ZERO    '0'
 
 #ifdef ENABLE_NLS
-# define NLS_MEMCMP(S1, S2, Len) strncoll (S1, S2, Len)
-#else
-# define NLS_MEMCMP(S1, S2, Len) memcmp (S1, S2, Len)
-#endif
-
-#ifdef ENABLE_NLS
 
 static char decimal_point;
 static int th_sep; /* if CHAR_MAX + 1, then there is no thousands separator */
@@ -472,29 +466,39 @@ struct_month_cmp (const void *m1, const void *m2)
 		 ((const struct month *) m2)->name);
 }
 
-/* Do collation on strings S1 and S2, but for at most L characters.
-   we use the fact, that we KNOW that LEN is the min of the two lengths */
+/* Compare S1 (with length S1LEN) and S2 (with length S2LEN) according
+   to the LC_COLLATE locale.  */
 static int
-strncoll (char *s1, char *s2, int len)
+memcoll (char *s1, int s1len, char *s2, int s2len)
 {
   register int diff;
+  char n1 = s1[s1len];
+  char n2 = s2[s2len];
 
-  if (need_locale)
-    {
-      /* Emulate a strncoll function, by forcing strcoll to compare
-	 only the first LEN characters in each string. */
-      register unsigned char n1 = s1[len];
-      register unsigned char n2 = s2[len];
+  s1[s1len] = 0;
+  s2[s2len] = 0;
 
-      s1[len] = s2[len] = 0;
-      diff = strcoll (s1, s2);
-      s1[len] = n1;
-      s2[len] = n2;
-    }
-  else
+  while (! (diff = strcoll (s1, s2)))
     {
-      diff = memcmp (s1, s2, len);
+      /* strcoll found no difference, but perhaps it was fooled by NUL
+	 characters in the data.  Work around this problem by advancing
+	 past the NUL chars.  */
+      int size1 = strlen (s1) + 1;
+      int size2 = strlen (s2) + 1;
+      s1 += size1;
+      s2 += size2;
+      s1len -= size1;
+      s2len -= size2;
+
+      if (s1len <= 0 || s2len <= 0)
+	{
+	  diff = s1len - s2len;
+	  break;
+	}
     }
+
+  s1[s1len] = n1;
+  s2[s2len] = n2;
 
   return diff;
 }
@@ -1211,45 +1215,42 @@ keycompare (const struct line *a, const struct line *b)
          can select a faster sort that is similar to ascii sort  */
       else if (need_locale)
 	{
-	  /* FIXME: consider making parameters non-const, then when
-	     both ignore and translate are NULL (which should be most
-	     of the time) we could temporarily NUL-terminate them in
-	     place and avoid the copy.  */
-
-	  char *copy_a = (char *) alloca (lena + 1);
-	  char *copy_b = (char *) alloca (lenb + 1);
-	  int new_len_a, new_len_b, i;
-
-	  /* We can't use strcoll directly on the two strings,
-	     but rather must extract the text for the key
-	     (to NUL-terminate for strcoll) and handle any
-	     'ignore' and/or 'translate' before comparing.   */
-	  for (new_len_a = new_len_b = i = 0; i < max (lena, lenb); i++)
+	  if (ignore || translate)
 	    {
-	      if (i < lena)
+	      char *copy_a = (char *) alloca (lena + 1);
+	      char *copy_b = (char *) alloca (lenb + 1);
+	      int new_len_a, new_len_b, i;
+
+	      /* Ignore and/or translate chars before comparing.  */
+	      for (new_len_a = new_len_b = i = 0; i < max (lena, lenb); i++)
 		{
-		  copy_a[new_len_a] = (translate
-				       ? translate[UCHAR (texta[i])]
-				       : texta[i]);
-		  if (!ignore || !ignore[UCHAR (texta[i])])
-		    ++new_len_a;
+		  if (i < lena)
+		    {
+		      copy_a[new_len_a] = (translate
+					   ? translate[UCHAR (texta[i])]
+					   : texta[i]);
+		      if (!ignore || !ignore[UCHAR (texta[i])])
+			++new_len_a;
+		    }
+		  if (i < lenb)
+		    {
+		      copy_b[new_len_b] = (translate
+					   ? translate[UCHAR (textb[i])]
+					   : textb [i]);
+		      if (!ignore || !ignore[UCHAR (textb[i])])
+			++new_len_b;
+		    }
 		}
-	      if (i < lenb)
-		{
-		  copy_b[new_len_b] = (translate
-				       ? translate[UCHAR (textb[i])]
-				       : textb [i]);
-		  if (!ignore || !ignore[UCHAR (textb[i])])
-		    ++new_len_b;
-		}
+
+	      diff = memcoll (copy_a, new_len_a, copy_b, new_len_b);
+
+	      /* Free copy_a and copy_b.  */
+	      alloca (0);
 	    }
-
-	  copy_a[new_len_a] = copy_b[new_len_b] = 0;
-
-	  diff = strcoll (copy_a, copy_b);
-
-	  /* Free copy_a and copy_b.  */
-	  alloca (0);
+	  else
+	    {
+	      diff = memcoll (texta, lena, textb, lenb);
+	    }
 
 	  if (diff)
 	    return key->reverse ? -diff : diff;
@@ -1321,7 +1322,12 @@ keycompare (const struct line *a, const struct line *b)
 	  }
       else
 	{
-	  diff = NLS_MEMCMP (texta, textb, min (lena, lenb));
+#ifdef ENABLE_NLS
+	  if (need_locale)
+	    diff = memcoll (texta, lena, textb, lenb);
+	  else
+#endif
+	    diff = memcmp (texta, textb, min (lena, lenb));
 	}
 
       if (diff)
@@ -1366,7 +1372,7 @@ compare (register const struct line *a, register const struct line *b)
 #ifdef ENABLE_NLS
       if (need_locale)  /* want absolutely correct sorting */
 	{
-	  diff = strcoll (ap, bp);
+	  diff = memcoll (ap, tmpa, bp, tmpb);
 	  return reverse ? -diff : diff;
 	}
 #endif
