@@ -1,3 +1,10 @@
+1999-03-29  Jim Meyering  <meyering@ascend.com>
+
+	* jm-macros.m4 (jm_CHECK_ALL_TYPES): New macro, contains the
+	superset of the AC_TYPE_* checks in the textutils, fileutils,
+	and sh-utils, plus AC_TYPE_PID_T.  Paul Eggert suggested adding
+	AC_TYPE_PID_T.
+
 1999-03-28  Jim Meyering  <meyering@ascend.com>
 
 	* jm-macros.m4: Define GNU_PACKAGE here.
