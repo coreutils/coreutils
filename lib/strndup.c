@@ -43,5 +43,5 @@ strndup (s, n)
     return NULL;
 
   new[n] = '\0';
-  return memcpy (new, s, n);
+  return (char *) memcpy (new, s, n);
 }
