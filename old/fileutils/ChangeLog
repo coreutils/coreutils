@@ -2,6 +2,9 @@
 
 	* Version 4.1.2.
 
+	* src/sync.c (usage): Make --help and --version strings
+	start in column 7.
+
 	* Makefile.cfg (move_if_change): Remove definition.
 	($(srcdir)/m4/jm-glibc-io.m4): Use mv, not move-if-change.
 
