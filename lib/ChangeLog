@@ -1,3 +1,11 @@
+2001-11-26  Jim Meyering  <meyering@lucent.com>
+
+	* gtod.h: Remove file.
+	* gettimeofday.c: Don't include gtod.h.
+	(GTOD_init): Remove function.
+	(rpl_gettimeofday): Do its job here instead, rather than aborting.
+	Suggestion from Volker Borchert.
+
 2001-11-23  Jim Meyering  <meyering@lucent.com>
 
 	* hash.h (struct hash_table): Don't define here.  Merely declare it.
