@@ -9,14 +9,24 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
-   stty now provides support (iutf8) for setting UTF-8 input mode.
+  dd has new conversions for the conv= option:
 
-   'df', 'du', and 'ls' now take the default block size from the
-   BLOCKSIZE environment variable if the BLOCK_SIZE, DF_BLOCK_SIZE,
-   DU_BLOCK_SIZE, and LS_BLOCK_SIZE environment variables are not set.
-   Unlike the other variables, though, BLOCKSIZE does not affect
-   values like 'ls -l' sizes that are normally displayed as bytes.
-   This new behavior is for compatibility with BSD.
+    nocreat   do not create the output file
+    excl      fail if the output file already exists
+    fdatasync physically write output file data before finishing
+    fsync     likewise, but also write metadata
+
+  dd has new iflag= and oflag= options with the following flags:
+
+    append    append mode (makes sense for output file only)
+    direct    use direct I/O for data
+    dsync     use synchronized I/O for data
+    sync      likewise, but also for metadata
+    nonblock  use non-blocking I/O
+    nofollow  do not follow symlinks
+    noctty    do not assign controlling terminal from file
+
+  stty now provides support (iutf8) for setting UTF-8 input mode.
 
   With stat, a specified format is no longer automatically newline terminated.
   If you want a newline at the end of your output, append `\n' to the format
