@@ -1,3 +1,9 @@
+1997-10-13  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (AC_CHECK_HEADERS): Add termios.h.
+	* src/ls.c: Bracket inclusion of termios.h with #ifdef HAVE_TERMIOS_H.
+	Masami Takikawa reported that this is necessary on NeXTStep 3.0 systems.
+
 1997-10-07  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/*.c: Update bug-reporting address.
