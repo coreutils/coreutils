@@ -1,3 +1,14 @@
+Sat Oct 28 00:49:13 1995  Jim Meyering  (meyering@comco.com)
+
+	* date.c: New option --reference=FILE (-r FILE) analogous to the
+	like-named touch option.
+ 	(main): Recognize it and give diagnostic for misuse.
+	(usage): Describe briefly.
+	From Franc,ois Pinard.
+
+	* date.c (batch_convert): Close input stream also when it's not stdin.
+	(main): Reorganize to do option-consistency checks before all else.
+
 Tue Sep 26 23:05:01 1995  Jim Meyering  (meyering@comco.com)
 
 	* man/Makefile.in (install-data, uninstall): Use sed not basename.
