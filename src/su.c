@@ -1,5 +1,5 @@
 /* su for GNU.  Run a shell with substitute user and group IDs.
-   Copyright (C) 1992-2000 Free Software Foundation, Inc.
+   Copyright (C) 1992-2000, 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -83,6 +83,7 @@
 
 #include "system.h"
 #include "closeout.h"
+#include "dirname.h"
 
 #undef getusershell
 
@@ -146,8 +147,6 @@ char *getpass ();
 char *getusershell ();
 void endusershell ();
 void setusershell ();
-
-char *base_name ();
 
 extern char **environ;
 
