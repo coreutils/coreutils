@@ -1,5 +1,6 @@
 package Trtest;
 require 5.002;
+use strict;
 
 @Trtest::t = (
 # test input    flags  1 or 2 strings   expected output    expected return code
