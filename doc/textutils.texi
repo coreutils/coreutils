@@ -2129,10 +2129,12 @@ or global options are specified, @samp{-s} has no effect.
 GNU @code{sort} (as specified for all GNU utilities) has no limits on
 input line length or restrictions on bytes allowed within lines.  In
 addition, if the final byte of an input file is not a newline, GNU
-@code{sort} silently supplies one.  A line's trailing newline is part of
-the line for comparison purposes; for example, with no options in an
-@sc{ascii} locale, a line starting with a tab sorts before an empty line
-because tab precedes newline in the @sc{ascii} collating sequence.
+@code{sort} silently supplies one.  A line's trailing newline is not
+part of the line for comparison purposes.@footnote{@sc{posix}.2-1992
+requires that the trailing newline be part of the comparison, and some
+@code{sort} implementations obey this requirement, but it is widely
+considered to be a bug in the standard and the next version of
+@sc{posix}.2 will likely remove this requirement.}
 
 Upon any error, @code{sort} exits with a status of @samp{2}.
 
@@ -2347,17 +2349,6 @@ Sort in descending (reverse) numeric order.
 
 @example
 sort -nr
-@end example
-
-@item
-Ignore trailing newlines when comparing lines,
-so that empty lines always sort first.
-
-@example
-# "$newline" is a single newline character.
-newline='
-'
-sort -t "$newline" -k 1,1
 @end example
 
 @item
