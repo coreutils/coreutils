@@ -214,7 +214,7 @@ print_uptime (int n)
   printf (" %2d:%02d,  %d %s", uphours, upmins, entries,
 	  (entries == 1) ? _("user") : _("users"));
 
-#ifdef HAVE_GETLOADAVG
+#if defined (HAVE_GETLOADAVG) || defined (C_GETLOADAVG)
   loads = getloadavg (avg, 3);
 #else
   loads = -1;
