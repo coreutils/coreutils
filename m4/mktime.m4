@@ -8,7 +8,8 @@ dnl FIXME: when this goes back into automake, remove all jm_ prefixes
 
 AC_DEFUN(jm_AM_FUNC_MKTIME,
 [AC_REQUIRE([AC_HEADER_TIME])dnl
- AC_CHECK_HEADERS(sys/time.h)
+ AC_CHECK_HEADERS(sys/time.h unistd.h)
+ AC_CHECK_FUNCS(alarm)
  AC_CACHE_CHECK([for working mktime], jm_am_cv_func_working_mktime,
   [AC_TRY_RUN(
 changequote(<<, >>)dnl
@@ -25,11 +26,16 @@ changequote(<<, >>)dnl
 # endif
 #endif
 
+#if !HAVE_ALARM
+# define alarm(X) /* empty */
+#endif
+
 static time_t time_t_max;
 
 /* Values we'll use to set the TZ environment variable.  */
 static const char *const tz_strings[] = {
-  NULL, "GMT0", "JST-9", "EST+3EDT+2,M10.1.0/00:00:00,M2.3.0/00:00:00"
+  (const char *) 0, "GMT0", "JST-9",
+  "EST+3EDT+2,M10.1.0/00:00:00,M2.3.0/00:00:00"
 };
 #define N_STRINGS (sizeof (tz_strings) / sizeof (tz_strings[0]))
 
@@ -37,10 +43,11 @@ static void
 mktime_test (now)
      time_t now;
 {
-  if (mktime (localtime (&now)) != now)
+  struct tm *lt;
+  if ((lt = localtime (&now)) && mktime (lt) != now)
     exit (1);
   now = time_t_max - now;
-  if (mktime (localtime (&now)) != now)
+  if ((lt = localtime (&now)) && mktime (lt) != now)
     exit (1);
 }
 
@@ -61,11 +68,41 @@ irix_6_4_bug ()
     exit (1);
 }
 
+static void
+bigtime_test (j)
+     int j;
+{
+  struct tm tm;
+  time_t now;
+  tm.tm_year = tm.tm_mon = tm.tm_mday = tm.tm_hour = tm.tm_min = tm.tm_sec = j;
+  /* This test makes some buggy mktime implementations loop.
+     Give up after 10 seconds.  */
+  alarm (10);
+  now = mktime (&tm);
+  alarm (0);
+  if (now != (time_t) -1)
+    {
+      struct tm *lt = localtime (&now);
+      if (! (lt
+	     && lt->tm_year == tm.tm_year
+	     && lt->tm_mon == tm.tm_mon
+	     && lt->tm_mday == tm.tm_mday
+	     && lt->tm_hour == tm.tm_hour
+	     && lt->tm_min == tm.tm_min
+	     && lt->tm_sec == tm.tm_sec
+	     && lt->tm_yday == tm.tm_yday
+	     && lt->tm_wday == tm.tm_wday
+	     && ((lt->tm_isdst < 0 ? -1 : 0 < lt->tm_isdst)
+		  == (tm.tm_isdst < 0 ? -1 : 0 < tm.tm_isdst))))
+	exit (1);
+    }
+}
+
 int
 main ()
 {
   time_t t, delta;
-  int i;
+  int i, j;
 
   for (time_t_max = 1; 0 < time_t_max; time_t_max *= 2)
     continue;
@@ -80,6 +117,10 @@ main ()
 	mktime_test (t);
       mktime_test ((time_t) 60 * 60);
       mktime_test ((time_t) 60 * 60 * 24);
+
+      for (j = 1; 0 < j; j *= 2)
+        bigtime_test (j);
+      bigtime_test (j - 1);
     }
   irix_6_4_bug ();
   exit (0);
