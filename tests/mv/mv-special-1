@@ -16,14 +16,14 @@ fi
 null=.mv-null
 dir=.mv-dir
 
-test_failure=0
+framework_failure=0
 
-$RM -f $null || test_failure=1
-$MKNOD $null p || test_failure=1
-$MKDIR -p $dir/a/b/c $dir/d/e/f || test_failure=1
-$TOUCH $dir/a/b/c/file1 $dir/d/e/f/file2 || test_failure=1
+$RM -f $null || framework_failure=1
+$MKNOD $null p || framework_failure=1
+$MKDIR -p $dir/a/b/c $dir/d/e/f || framework_failure=1
+$TOUCH $dir/a/b/c/file1 $dir/d/e/f/file2 || framework_failure=1
 
-if test $test_failure = 1; then
+if test $framework_failure = 1; then
   echo 'failure in testing framework'
   exit 1
 fi
