@@ -36,7 +36,7 @@ GNU coreutils NEWS                                    -*- outline -*-
     recursively-encountered symbolic link cannot be updated because
     the file system does not support it.
 
-  rm no longer required read access to the current directory.
+  rm no longer requires read access to the current directory.
 
   For some types of errors (e.g., read-only file system, I/O error)
   when first encountering a directory, `rm -r' would mistakenly fail
