@@ -397,10 +397,10 @@ main (register int argc, register char **argv)
 		{
 		  fmt (in_stream);
 		  if (fclose (in_stream) == EOF)
-		    error (EXIT_FAILURE, errno, file);
+		    error (EXIT_FAILURE, errno, "%s", file);
 		}
 	      else
-		error (0, errno, file);
+		error (0, errno, "%s", file);
 	    }
 	}
     }
