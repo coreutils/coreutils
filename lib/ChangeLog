@@ -1,10 +1,42 @@
+2001-08-28  Paul Eggert  <eggert@twinsun.com>
+
+	* Makefile.am (libfetish_a_SOURCES): Remove strtoxmax.c.
+
+	* strtoimax.c: Renamed from strtoxmax.c, removing the
+	old strtoimax.c.
+
+	Also, make the following further changes to make this file's
+	configuration more similar to that of strtol.c:
+	(UNSIGNED): Renamed from STRTOUXMAX_UNSIGNED.  All uses changed.
+	(strtoumax, uintmax_t, strtoull, strtol): Remove.
+	(intmax_t, strtoimax, strtol, strtoll): New macros, if UNSIGNED.
+	(strtoimax): Renamed from strtoumax.  All uses of unsigned values
+	changed to signed values.
+
+	And make the following changes as well:
+	Fix copyright notice, as 1999 was missing.
+	(verify): New macro.
+	(strtoimax): Check sizes at compile-time, not run-time.
+	Prefer strtol to strtoll if both work.
+	(main): Remove; it was not that useful and was a pain to maintain.
+
+	* strtoumax.c: Include strtoimax.c, not strtouxmax.c.
+
 2001-08-30  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/xstrtol.c (strtoimax): New decl.
+	* savedir.c (savedir): Remove size parameter, as POSIX says that
+	a directory's st_size can have an arbitrary value, so the old
+	usage could waste an arbitrary amount of memory.  All uses
+	changed.
+	* savedir.h: Update prototype.
+
+2001-08-30  Paul Eggert  <eggert@twinsun.com>
+
+	* xstrtol.c (strtoimax): New decl.
 
 2001-08-28  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/xstrtol.h: Add copyright notice.
+	* xstrtol.h: Add copyright notice.
 	(_DECLARE_XSTRTOL): Improve quality of diagnostic for
 	LONGINT_INVALID_SUFFIX_CHAR.
 
