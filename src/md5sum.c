@@ -156,10 +156,10 @@ split_3 (s, u, binary, w)
 	return 1;
       *binary = s[i++] == '*';
 
-      /* When using the old format, all characters between the type
-	 indicator and end of line are significant -- that includes
-	 leading and trailing white space.  */
+      /* All characters between the type indicator and end of line are
+	 significant -- that includes leading and trailing white space.  */
       *w = &s[i];
+
       /* So this line is valid as long as there is at least one character
 	 for the filename.  */
       return (**w ? 0 : 1);
@@ -182,13 +182,58 @@ hex_digits (s)
   return 1;
 }
 
+/* FIXME: allow newline in filename by encoding it. */
+
+static int
+md5_file (filename, binary)
+     const char *filename;
+     int binary;
+{
+  unsigned char md5buffer[16];
+  FILE *fp;
+  size_t i;
+  int err;
+
+  if (strcmp (filename, "-") == 0)
+    fp = stdin;
+  else
+    {
+      /* OPENOPTS is a macro.  It varies with the system.
+	 Some systems distinguish between internal and
+	 external text representations.  */
+
+      fp = fopen (filename, OPENOPTS);
+      if (fp == NULL)
+	error (EXIT_FAILURE, errno, "%s", filename);
+    }
+
+  err = md5_stream (fp, md5buffer);
+  if (err)
+    {
+      error (0, errno, "%s", filename);
+      fclose (fp);
+      return 1;
+    }
+
+  if (fp != stdin && fclose (fp) == EOF)
+    {
+      error (0, errno, "%s", filename);
+      return 1;
+    }
+
+  for (i = 0; i < 16; ++i)
+    printf ("%02x", md5buffer[i]);
+
+  printf (" %c%s\n", binary ? '*' : ' ', filename);
+  return 0;
+}
+
 int
 main (argc, argv)
      int argc;
      char *argv[];
 {
   unsigned char md5buffer[16];
-  int old_format = 1;	/* Use Plumb/Lankester format by default.  */
   int binary = 0;	/* Text is default of the Plumb/Lankester format.  */
   int do_check = 0;
   int do_help = 0;
@@ -289,47 +334,9 @@ main (argc, argv)
       if (optind == argc)
 	argv[argc++] = "-";
 
-      /* FIXME: allow newline in filename by encoding it. */
       for (; optind < argc; ++optind)
 	{
-	  size_t cnt;
-	  FILE *fp;
-
-	  if (strcmp (argv[optind], "-") == 0)
-	    fp = stdin;
-	  else
-	    {
-	      /* OPENOPTS is a macro.  It varies with the system.
-		 Some systems distinguish between internal and
-		 external text representations.  */
-
-	      fp = fopen (argv[optind], OPENOPTS);
-	      if (fp == NULL)
-		error (EXIT_FAILURE, errno, "%s", argv[optind]);
-	    }
-
-	  err |= md5_stream (fp, md5buffer);
-	  if (err)
-	    {
-	      error (0, errno, argv[optind]);
-	      fclose (fp);
-	      continue;
-	    }
-
-	  if (fp != stdin && fclose (fp) == EOF)
-	    {
-	      err = 1;
-	      error (0, errno, argv[optind]);
-	      continue;
-	    }
-
-	  for (cnt = 0; cnt < 16; ++cnt)
-	    printf ("%02x", md5buffer[cnt]);
-
-	  if (old_format)
-	    printf (" %c%s\n", binary ? '*' : ' ', argv[optind]);
-	  else
-	    printf (" %c %s\n", binary ? 'b' : 't', argv[optind]);
+	  err |= md5_file (argv[optind], binary);
 	}
     }
   else
@@ -359,8 +366,7 @@ main (argc, argv)
 	    if (quiet)
 	      exit (EXIT_FAILURE);
 	    else
-	      error (EXIT_FAILURE, errno,
-		     _("check file: %s"), checkfile_name);
+	      error (EXIT_FAILURE, errno, "%s", checkfile_name);
 	}
 
       do
@@ -388,6 +394,7 @@ main (argc, argv)
 
 	  if (err || !hex_digits (md5num))
 	    {
+	      /* FIXME: report file name and line number.  */
 	      if (verbose)
 		error (0, 0, _("invalid line in check file: %s"), line);
 	    }
@@ -421,9 +428,8 @@ main (argc, argv)
 	      ++n_tests;
 	      md5_stream (fp, md5buffer);
 
-	      if (fp != stdin)
-		if (fclose (fp) == EOF)
-		  error (EXIT_FAILURE, errno, filename);
+	      if (fp != stdin && fclose (fp) == EOF)
+		error (EXIT_FAILURE, errno, "%s", filename);
 
 	      /* Compare generated binary number with text representation
 		 in check file.  Ignore case of hex digits.  */
@@ -433,16 +439,16 @@ main (argc, argv)
 		       != (bin2hex[md5buffer[cnt] & 0xf]))
 		  break;
 
-	      if (cnt < 16)
+	      if (cnt != 16)
 		++n_tests_failed;
 	      if (!quiet)
-		puts (cnt < 16 ? _("FAILED") : _("OK"));
+		puts (cnt == 16 ? _("OK") : _("FAILED"));
 	    }
 	}
       while (!feof (checkfile_stream));
 
       if (fclose (checkfile_stream) == EOF)
-	error (EXIT_FAILURE, errno, checkfile_name);
+	error (EXIT_FAILURE, errno, "%s", checkfile_name);
 
       if (!quiet)
 	printf (n_tests == 1 ? (n_tests_failed ? _("Test failed\n")
@@ -450,11 +456,11 @@ main (argc, argv)
                              : _("%d out of %d tests failed\n"),
 		n_tests_failed, n_tests);
 
-      exit (n_tests_failed > 0);
+      exit (n_tests_failed == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
     }
 
   if (fclose (stdout) == EOF)
-    error (EXIT_FAILURE, errno, "write error");
+    error (EXIT_FAILURE, errno, _("standard output"));
 
   exit (err == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
