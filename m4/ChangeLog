@@ -1,3 +1,8 @@
+2003-08-18  Paul Eggert <eggert@twinsun.com>
+
+	* same.m4 (gl_SAME): Do not check for stdlib.h or string.h or free.
+        Check for pathconf.
+
 2003-08-18  Jim Meyering  <jim@meyering.net>
 
 	* gettextext.m4 (AM_PO_SUBDIRS, AM_NLS): Don't define as no-ops.
