@@ -90,7 +90,7 @@ l = @l@
 
 noinst_LIBRARIES = libfu.a
 
-EXTRA_DIST = chown.c getgroups.c getline.c lstat.c mktime.c \
+EXTRA_DIST = chown.c getgroups.c getline.c lstat.c malloc.c mktime.c \
   realloc.c stat.c strftime.c
 
 INCLUDES = -I.. -I$(srcdir) -I../intl
@@ -135,11 +135,11 @@ HEADERS =  $(noinst_HEADERS)
 
 DIST_COMMON =  Makefile.am Makefile.in alloca.c chown.c error.c error.h \
 euidaccess.c fileblocks.c fnmatch.c fsusage.c ftruncate.c getdate.c \
-getgroups.c getline.c group-member.c lstat.c memcmp.c memcpy.c memset.c \
-mkdir.c mktime.c mountlist.c obstack.c obstack.h posixtm.c realloc.c \
-regex.c regex.h rename.c rmdir.c rpmatch.c rx.c rx.h stat.c stpcpy.c \
-strcasecmp.c strdup.c strftime.c strndup.c strstr.c strtol.c strtoul.c \
-strverscmp.c ylwrap
+getgroups.c getline.c group-member.c lstat.c malloc.c memcmp.c memcpy.c \
+memset.c mkdir.c mktime.c mountlist.c obstack.c obstack.h posixtm.c \
+realloc.c regex.c regex.h rename.c rmdir.c rpmatch.c rx.c rx.h stat.c \
+stpcpy.c strcasecmp.c strdup.c strftime.c strndup.c strstr.c strtol.c \
+strtoul.c strverscmp.c ylwrap
 
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
@@ -153,10 +153,10 @@ DEP_FILES =  .deps/addext.P .deps/alloca.P .deps/argmatch.P \
 .deps/getdate.P .deps/getgroups.P .deps/getline.P .deps/getopt.P \
 .deps/getopt1.P .deps/group-member.P .deps/hash.P .deps/idcache.P \
 .deps/isdir.P .deps/long-options.P .deps/lstat.P .deps/makepath.P \
-.deps/memcmp.P .deps/memcpy.P .deps/memset.P .deps/mkdir.P \
-.deps/mktime.P .deps/modechange.P .deps/mountlist.P .deps/obstack.P \
-.deps/path-concat.P .deps/posixtm.P .deps/realloc.P .deps/regex.P \
-.deps/rename.P .deps/rmdir.P .deps/rpmatch.P .deps/rx.P \
+.deps/malloc.P .deps/memcmp.P .deps/memcpy.P .deps/memset.P \
+.deps/mkdir.P .deps/mktime.P .deps/modechange.P .deps/mountlist.P \
+.deps/obstack.P .deps/path-concat.P .deps/posixtm.P .deps/realloc.P \
+.deps/regex.P .deps/rename.P .deps/rmdir.P .deps/rpmatch.P .deps/rx.P \
 .deps/safe-read.P .deps/save-cwd.P .deps/savedir.P .deps/stat.P \
 .deps/stpcpy.P .deps/strcasecmp.P .deps/strdup.P .deps/strftime.P \
 .deps/stripslash.P .deps/strndup.P .deps/strstr.P .deps/strtol.P \
