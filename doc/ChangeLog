@@ -1,3 +1,8 @@
+2003-05-10  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (Exit status): Remove `uniq' from the list.
+	It uses standard exit codes.
+
 2003-04-21  Jim Meyering  <jim@meyering.net>
 
 	Fix printf POSIX compatibility bug reported by Ben Harris in
