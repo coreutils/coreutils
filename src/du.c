@@ -638,7 +638,7 @@ count_entry (char *ent, int top, dev_t last_dev)
 	  else
 	    {
 	      printf ("%ld\t%s\n", output_size == size_bytes ? size
-		      : convert_blocks (size, output_size == size_kilobytes),
+		      : convert_blocks (size, output_size),
 		      path->text);
 	    }
 	  fflush (stdout);
