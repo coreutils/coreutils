@@ -1,3 +1,43 @@
+2004-04-22  Paul Eggert  <eggert@twinsun.com>
+
+	More signal-handling cleanup for ls.c.  Do not allow signals to
+	happen between arbitrary output bytes, as the
+	restore-default-color sequence can bollix up multibyte chars or
+	color-change sequences in the ordinary output.  Instead, process
+	signals only between printing a file name and changing the color
+	back to non_filename_text color.  That way, if the signal handler
+	changes the color (to the default), 'ls' will change it back when
+	'ls' continues (after being suspended).
+
+	Also, do not bother with signal-handling unless stdout is a
+	controlling terminal; this lets stdio buffer better when "ls
+	--color" is piped or sent to a file.
+
+	* src/ls.c (sigprocmask, sigset_t) [!defined SA_NOCLDSTOP]: New macros.
+	Do not include "full-write.h"; no longer needed.
+	(tcgetpgrp) [! HAVE_TCGETPGRP]: New macro.
+	(put_indicator_direct): Remove.  All callers changed to use
+	put_indicator.
+	(caught_signals, interrupt_signal, stop_signal_count): New vars.
+	(restore_default_color): Don't bother checking for put_indicator
+	failure.
+	(sighandler): Don't handle SIGTSTP; that's another handler now.
+	Simply set interrupt_signal to the signal, then exit.
+	(stophandler, process_signals): New functions.
+	(main): Don't output any color changes until _after_ the signal
+	handlers are set up.  This fixes a race condition where 'ls'
+	could be interrupted while initializing colors, and leaving the
+	terminal in an undesirable state.
+	Don't mess with signal-handling if standard output is not a
+	controlling terminal.
+	When exiting, restore the default color, then restore the
+	default signal handling, then act on any signals that weren't
+	acted on yet.
+	Do not print //DIRED// etc. in colors; this avoids the need
+	to catch signals when printing them.
+	(print_name_with_quoting): Process signals just before switching
+	color back to non_filename_text.
+
 2004-04-23  Jim Meyering  <jim@meyering.net>
 
 	Avoid segfault on systems for which SIZE_MAX != (size_t) -1.
