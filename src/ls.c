@@ -2348,7 +2348,7 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 	path = (char *) name;
       else
 	{
-	  path = (char *) alloca (strlen (name) + strlen (dirname) + 2);
+	  path = alloca (strlen (name) + strlen (dirname) + 2);
 	  attach (path, dirname, name);
 	}
 
@@ -3115,7 +3115,7 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options,
     buf = smallbuf;
   else
     {
-      buf = (char *) alloca (len + 1);
+      buf = alloca (len + 1);
       quotearg_buffer (buf, len + 1, name, -1, options);
     }
 
