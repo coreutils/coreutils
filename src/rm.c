@@ -145,13 +145,13 @@ truly unrecoverable, consider using shred.\n\
 static void
 rm_option_init (struct rm_options *x)
 {
-  x->unlink_dirs = 0;
-  x->ignore_missing_files = 0;
-  x->interactive = 0;
-  x->recursive = 0;
+  x->unlink_dirs = false;
+  x->ignore_missing_files = false;
+  x->interactive = false;
+  x->recursive = false;
   x->root_dev_ino = NULL;
   x->stdin_tty = isatty (STDIN_FILENO);
-  x->verbose = 0;
+  x->verbose = false;
 
   /* Since this program exits immediately after calling `rm', rm need not
      expend unnecessary effort to preserve the initial working directory.  */
@@ -163,7 +163,6 @@ main (int argc, char **argv)
 {
   bool preserve_root = false;
   struct rm_options x;
-  int fail = 0;
   int c;
 
   initialize_main (&argc, &argv);
@@ -184,22 +183,22 @@ main (int argc, char **argv)
 	  break;
 
 	case 'd':
-	  x.unlink_dirs = 1;
+	  x.unlink_dirs = true;
 	  break;
 
 	case 'f':
-	  x.interactive = 0;
-	  x.ignore_missing_files = 1;
+	  x.interactive = false;
+	  x.ignore_missing_files = true;
 	  break;
 
 	case 'i':
-	  x.interactive = 1;
-	  x.ignore_missing_files = 0;
+	  x.interactive = true;
+	  x.ignore_missing_files = false;
 	  break;
 
 	case 'r':
 	case 'R':
-	  x.recursive = 1;
+	  x.recursive = true;
 	  break;
 
 	case NO_PRESERVE_ROOT:
@@ -211,11 +210,11 @@ main (int argc, char **argv)
 	  break;
 
 	case PRESUME_INPUT_TTY_OPTION:
-	  x.stdin_tty = 1;
+	  x.stdin_tty = true;
 	  break;
 
 	case 'v':
-	  x.verbose = 1;
+	  x.verbose = true;
 	  break;
 
 	case_GETOPT_HELP_CHAR;
@@ -236,7 +235,7 @@ main (int argc, char **argv)
 	}
     }
 
-  if (x.recursive && preserve_root)
+  if (x.recursive & preserve_root)
     {
       static struct dev_ino dev_ino_buf;
       x.root_dev_ino = get_root_dev_ino (&dev_ino_buf);
@@ -251,9 +250,6 @@ main (int argc, char **argv)
 
     enum RM_status status = rm (n_files, file, &x);
     assert (VALID_STATUS (status));
-    if (status == RM_ERROR)
-      fail = 1;
+    exit (status == RM_ERROR ? EXIT_FAILURE : EXIT_SUCCESS);
   }
-
-  exit (fail);
 }
