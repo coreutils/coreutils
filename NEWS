@@ -4,13 +4,6 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
-  rm (without -f) no longer hangs when attempting to remove a symlink
-  to a file on an off-line NFS-mounted partition.
-
-  cut's --output-delimiter=D option works with abutting byte ranges.
-
-  rm no longer gets a failed assertion under some unusual conditions.
-
   Several fixes to chgrp and chown for compatibility with POSIX and BSD:
 
     Do not affect symbolic links by default.
@@ -39,24 +32,26 @@ GNU coreutils NEWS                                    -*- outline -*-
     recursively-encountered symbolic link cannot be updated because
     the file system does not support it.
 
+  cut's --output-delimiter=D option works with abutting byte ranges.
+
+  echo now conforms to POSIX better.  It supports the \0ooo syntax for
+  octal escapes, and \c now terminates printing immediately.  If
+  POSIXLY_CORRECT is set and the first argument is not "-n", echo now
+  outputs all option-like arguments instead of treating them as options.
+
+  expand and unexpand now conform to POSIX better.  They check for
+  blanks (which can include characters other than space and tab in
+  non-POSIX locales) instead of spaces and tabs.  Unexpand now
+  preserves some blanks instead of converting them to tabs or spaces.
+
+  "ln x d/" now reports an error if d/x is a directory and x a file,
+  instead of incorrectly creating a link to d/x/x.
+
+  ls no longer segfaults on systems for which SIZE_MAX != (size_t) -1.
+
   md5sum and sha1sum now report an error when given so many input
   lines that their line counter overflows, instead of silently
   reporting incorrect results.
-
-  rm no longer requires read access to the current directory.
-
-  "sort -o -" now writes to a file named "-" instead of to standard
-  output; POSIX requires this.
-
-  tail -f no longer mishandles pipes and fifos.  With no operands,
-  tail now ignores -f if standard input is a pipe, as POSIX requires.
-
-  For some types of errors (e.g., read-only file system, I/O error)
-  when first encountering a directory, `rm -r' would mistakenly fail
-  to remove files under that directory.
-
-  If d/x is a directory and x a file, "ln x d/" now reports an error
-  instead of incorrectly creating a link to d/x/x.
 
   Fixes for "nice":
 
@@ -71,25 +66,6 @@ GNU coreutils NEWS                                    -*- outline -*-
     It now consistently adjusts out-of-range nice values to the
     closest values in range; formerly it sometimes reported an error.
 
-  ptx now diagnoses invalid values for its --width=N (-w)
-  and --gap-size=N (-g) options.
-
-  tee now exits when it gets a SIGPIPE signal, as POSIX requires.
-  To get tee's old behavior, use the shell command "(trap '' PIPE; tee)".
-  Also, "tee -" now writes to standard output instead of to a file named "-".
-
-  ls no longer segfaults on systems for which SIZE_MAX != (size_t) -1
-
-  echo now conforms to POSIX better.  It supports the \0ooo syntax for
-  octal escapes, and \c now terminates printing immediately.  If
-  POSIXLY_CORRECT is set and the first argument is not "-n", echo now
-  outputs all option-like arguments instead of treating them as options.
-
-  expand and unexpand now conform to POSIX better.  They check for
-  blanks (which can include characters other than space and tab in
-  non-POSIX locales) instead of spaces and tabs.  Unexpand now
-  preserves some blanks instead of converting them to tabs or spaces.
-
   printf has several changes:
 
     It now uses 'intmax_t' (not 'long int') to format integers, so it
@@ -103,8 +79,34 @@ GNU coreutils NEWS                                    -*- outline -*-
     like %#d, instead of relying on undefined behavior in the underlying
     printf function.
 
+  ptx now diagnoses invalid values for its --width=N (-w)
+  and --gap-size=N (-g) options.
+
+  rm (without -f) no longer hangs when attempting to remove a symlink
+  to a file on an off-line NFS-mounted partition.
+
+  rm no longer gets a failed assertion under some unusual conditions.
+
+  rm no longer requires read access to the current directory.
+
+  "rm -r" would mistakenly fail to remove files under a directory
+  for some types of errors (e.g., read-only file system, I/O error)
+  when first encountering the directory.
+
+  "sort -o -" now writes to a file named "-" instead of to standard
+  output; POSIX requires this.
+
+  "tail -f" no longer mishandles pipes and fifos.  With no operands,
+  tail now ignores -f if standard input is a pipe, as POSIX requires.
+
+  tee now exits when it gets a SIGPIPE signal, as POSIX requires.
+  To get tee's old behavior, use the shell command "(trap '' PIPE; tee)".
+  Also, "tee -" now writes to standard output instead of to a file named "-".
+
   "touch -- MMDDhhmm[yy] file" is now equivalent to
   "touch MMDDhhmm[yy] file" even when conforming to pre-2001 POSIX.
+
+  tr no longer mishandles a second operand with leading "-".
 
   who now prints user names in full instead of truncating them after 8 bytes.
 
