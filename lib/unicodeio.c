@@ -158,7 +158,7 @@ print_unicode_char (FILE *stream, unsigned int code)
     {
 #if HAVE_ICONV
       char outbuf[25];
-      const char *inptr;
+      char *inptr;
       size_t inbytesleft;
       char *outptr;
       size_t outbytesleft;
