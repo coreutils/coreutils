@@ -238,7 +238,7 @@ With no FILE, or when FILE is -, read standard input.\n\
    including the null terminator), or -1 on error or EOF.  */
 
 static int
-getstr (char **lineptr, int *n, FILE *stream, char terminator)
+getstr (char **lineptr, int *n, FILE *stream, int terminator)
 {
   int nchars_avail;		/* Allocated but unused chars in *LINEPTR.  */
   char *read_pos;		/* Where we're reading into *LINEPTR. */
@@ -555,7 +555,7 @@ cut_fields (FILE *stream)
 	  /* If the first field extends to the end of line (it is not
 	     delimited) and we are printing all non-delimited lines,
 	     print this one.  */
-	  if (field_1_buffer[len - 1] != delim)
+	  if ((unsigned char) field_1_buffer[len - 1] != delim)
 	    {
 	      if (suppress_non_delimited)
 		{
@@ -731,7 +731,7 @@ main (int argc, char **argv)
 	  /* Interpret -d '' to mean `use the NUL byte as the delimiter.'  */
 	  if (optarg[0] != '\0' && optarg[1] != '\0')
 	    FATAL_ERROR (_("the delimiter must be a single character"));
-	  delim = optarg[0];
+	  delim = (unsigned char) optarg[0];
 	  delim_specified = 1;
 	  break;
 
