@@ -114,8 +114,8 @@ cat <<\EOF > $expected
 
 1 [cp: `foo' and `foo' are the same file] (foo)
 1 -d [cp: `foo' and `foo' are the same file] (foo)
-1 -f [cp: `foo' and `foo' are the same file] () symlink-loop symlink-loop
-1 -df [cp: `foo' and `foo' are the same file] () symlink-loop symlink-loop
+1 -f [cp: `foo' and `foo' are the same file] (foo)
+1 -df [cp: `foo' and `foo' are the same file] (foo)
 1 -b [cp: `foo' and `foo' are the same file] (foo)
 1 -bd [cp: `foo' and `foo' are the same file] (foo)
 0 -bf (foo foo.~1~)
