@@ -1,3 +1,81 @@
+1999-01-16  Jim Meyering  <meyering@ascend.com>
+
+	* src/ls.c: Don't declare base_name.
+	Use function-style XARGMATCH once again.
+	* src/touch.c: Likewise.
+	* acconfig.h: Add a @BOTTOM@ section.
+	(ARGMATCH_DIE) [@BOTTOM@]: Define to usage(1).
+	Declare usage.
+	* src/cp.c: Remove declarations of base_name and get_version.
+	(main): Don't call getenv ("VERSION_CONTROL"); xget_version does it.
+	Use xget_version and function-style XARGMATCH.
+	* src/mv.c (main): Likewise.
+	* src/ln.c (main): Likewise.
+	* src/install.c (main): Likewise.
+	* lib/quotearg.c (quotearg_n_options): Declare n1 to be of type
+	unsigned int, not just int.
+	* lib/backupfile.h (get_version): Adjust prototype.
+	(xget_version): Add prototype.
+	(base_name): Remove prototype.
+	* lib/backupfile.c [!HAVE_DECL_GETENV]: Declare getenv.
+	(backup_args): Reorder enum members.
+	(backup_types): Likewise.
+	(get_version): Take an additional parameter, `context'.
+	(xget_version): Like get_version, but if the `version' argument is NULL,
+	use the value of the envvar VERSION_CONTROL.
+	(base_name): Declare.
+	Mostly from Akim Demaille.
+
+	* lib/addext.c: (base_name): Declare.
+	* src/sys2.h: Add prototype for base_name.
+
+	* lib/argmatch.c: s/argmatch_exit_failure/argmatch_die/
+	* lib/argmatch.h: Likewise.
+
+	* lib/argmatch.h (XARGMATCH): Define to return a value once again.
+	(XARGCASEMATCH): Likewise.
+
+	* lib/argmatch.c (EXIT_FAILURE): Define.
+	(ARGMATCH_DIE): Provide default.
+	(__xargmatch_internal): New function.
+	s/rogram_name/program_name.
+	From Akim Demaille.
+
+1999-01-14  Akim Demaille  <demaille@inf.enst.fr>
+
+	* src/touch.c (usage): Don't make it static so that it can be
+	called from libfu.a by xargmatch.
+	* src/chgrp.c (usage): Likewise
+	* src/chmod.c (usage): Likewise
+	* src/chown.c (usage): Likewise
+	* src/cp.c (usage): Likewise
+	* src/dd.c (usage): Likewise
+	* src/df.c (usage): Likewise
+	* src/dircolors.c (usage): Likewise
+	* src/du.c (usage): Likewise
+	* src/install.c (usage): Likewise
+	* src/ln.c (usage): Likewise
+	* src/ls.c (usage): Likewise
+	* src/mkdir.c (usage): Likewise
+	* src/mkfifo.c (usage): Likewise
+	* src/mknod.c (usage): Likewise
+	* src/mv.c (usage): Likewise
+	* src/mvdir.c (usage): Likewise
+	* src/rm.c (usage): Likewise
+	* src/rmdir.c (usage): Likewise
+	* src/sync.c (usage): Likewise
+
+1999-01-12  Akim Demaille  <demaille@inf.enst.fr>
+
+	* lib/backupfile.c (get_version): added the parameters KIND.
+	(xget_version): like get_version, but if argument is NULL, honor
+	the envvar VERSION_CONTROL.
+	* src/cp.c: Remove declarations of base_name and get_version.
+	(main): Use xget_version.
+	* src/mv.c (main): Likewise.
+	* src/ln.c (main): Likewise.
+	* src/install.c (main): Likewise.
+
 1999-01-12  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in (ALL_LINGUAS): Add Greek (el).
@@ -355,12 +433,12 @@
 
 1998-10-08  Paul Eggert  <eggert@twinsun.com>
 
-        * mktime.c (__mktime_internal): When the requested time falls
-        in a spring-forward gap of size DT, return a time that is DT
-        away from the requested time, preferring a time whose tm_isdst
-        differs from the requested value.  Bump the max number of
-        probes from 4 to 6 to account for the extra probes needed to
-        discover a spring-forward gap in the worst case.
+	* mktime.c (__mktime_internal): When the requested time falls
+	in a spring-forward gap of size DT, return a time that is DT
+	away from the requested time, preferring a time whose tm_isdst
+	differs from the requested value.  Bump the max number of
+	probes from 4 to 6 to account for the extra probes needed to
+	discover a spring-forward gap in the worst case.
 
 1998-10-08  Paul Eggert  <eggert@twinsun.com>
 
@@ -919,11 +997,11 @@
 
 1998-06-29  Paul Eggert  <eggert@twinsun.com>
 
- 	* lib/mountlist.c: (read_filesystem_list): If SVR4, lock
- 	/etc/.mnttab.lock if available, to avoid race conditions
- 	(e.g. with the automounter on Solaris 2.6).
+	* lib/mountlist.c: (read_filesystem_list): If SVR4, lock
+	/etc/.mnttab.lock if available, to avoid race conditions
+	(e.g. with the automounter on Solaris 2.6).
 
- 	Include <errno.h>, <fcntl.h>, <unistd.h>.
+	Include <errno.h>, <fcntl.h>, <unistd.h>.
 
 1998-06-29  Jim Meyering  <meyering@ascend.com>
 
@@ -1255,7 +1333,7 @@
 
 	* src/system.h (TYPE_MAXIMUM): Cast result to `(t)' so this macro
 	works with `unsigned char'.
-        From Greg Wooledge.
+	From Greg Wooledge.
 	(SCHAR_MIN, SCHAR_MAX, SHRT_MIN, SHRT_MAX, LONG_MAX, ULONG_MAX): Define.
 
 	* lib/xstrtol.c: Merge with the version from textutils.
@@ -1612,7 +1690,7 @@
 1998-01-13  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* src/df.c (print_header): Fix inode format header to line it up
-        with the rest of the output.
+	with the rest of the output.
 
 1998-01-13  Jim Meyering  <meyering@na-net.ornl.gov>
 
@@ -1664,7 +1742,7 @@
 1998-01-05  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* lib/makepath.c (make_path): Put only newly created directories
-        on the LEADING_DIRS list.
+	on the LEADING_DIRS list.
 
 1998-01-05  Paul Eggert  <eggert@twinsun.com>
 

@@ -1,4 +1,4 @@
-#serial 3
+#serial 4
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
