@@ -1,6 +1,10 @@
-2002-02-10  Jim Meyering  <meyering@lucent.com>
+2002-02-16  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.6.
+
+	* tests/ls/infloop: Use `head -n 7', not `head -7'.
+
+2002-02-10  Jim Meyering  <meyering@lucent.com>
 
 	* configure.in (ALL_LINGUAS): Add Hungarian (hu).
 
