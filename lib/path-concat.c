@@ -63,7 +63,7 @@ path_concat (dir, base, base_in_result)
   if (base_in_result)
     *base_in_result = p;
 
-  mempcpy (p, base, base_len + 1);
+  memcpy (p, base, base_len + 1);
 
   return p_concat;
 }
