@@ -2342,6 +2342,36 @@ print_current_files (void)
       break;
     }
 }
+ 
+/* Return the expected number of columns in a long-format time stamp,
+   or zero if it cannot be calculated.  */
+
+static int
+long_time_expected_width (void)
+{
+  static int width = -1;
+
+  if (width < 0)
+    {
+      time_t epoch = 0;
+      struct tm const *tm = localtime (&epoch);
+      char const *fmt = long_time_format[0];
+      char initbuf[100];
+      char *buf = initbuf;
+      size_t bufsize = sizeof initbuf;
+      size_t len;
+
+      *buf = '\1';
+      while (! (len = strftime (buf, bufsize, fmt, tm)) && *buf)
+	buf = alloca (bufsize *= 2);
+
+      width = mbsnwidth (buf, len, 0);
+      if (width < 0)
+	width = 0;
+    }
+
+  return width;
+}
 
 static void
 print_long_format (const struct fileinfo *f)
@@ -2482,7 +2512,7 @@ print_long_format (const struct fileinfo *f)
       /* The time cannot be represented as a local time;
 	 print it as a huge integer number of seconds.  */
       char hbuf[LONGEST_HUMAN_READABLE + 1];
-      int width = full_time ? 24 : 12;
+      int width = long_time_expected_width ();
 
       if (when < 0)
 	{
