@@ -1,6 +1,16 @@
 2000-12-16  Jim Meyering  <meyering@lucent.com>
 
+	* src/chown-core.c (uint_to_string): New function.
+	(uid_to_name): Use it.
+	(gid_to_name): Use it.
+	Rename locals, user/group, to uid/gid.
+
 	* Version 4.0.34.
+
+	* src/chown-core.h (enum Change_status): Start with 1.
+
+	* src/chown.c (main): Rename locals, user/group, to uid/gid.
+	* src/chgrp.c (main): Rename local, group, to gid.
 
 	* tests/group-names: New file.
 	* tests/Makefile.am (EXTRA_DIST): Add group-names.
