@@ -32,11 +32,13 @@
 /* For the sake of symbolic names in gdb, define true and false as
    enum constants.  However, do not define _Bool as the enum type,
    since the enum type might be compatible with unsigned int, whereas
-   _Bool must promote to int.  */
+   _Bool must promote to int.  Also, make _Bool a macro rather than a
+   typedef, to suppress warnings by the Sun Forte Developer 7 C
+   compiler that _Bool is a keyword in ISO C99.  */
 #ifndef __cplusplus
 # if !@HAVE__BOOL@
 enum { false = 0, true = 1 };
-typedef signed char _Bool;
+#  define _Bool signed char
 # endif
 #else
 typedef bool _Bool;
