@@ -1,6 +1,6 @@
 /* TODO:
    x use getopt_long
-   - use error, not pferror
+   x use error, not pferror
    - bracket strings with _(...) for gettext
  */
 
@@ -58,6 +58,7 @@
 
 #include <config.h>
 #include <getopt.h>
+#include <stdio.h>
 #include <stdarg.h>		/* Used by pferror */
 
 #include "system.h"
@@ -507,7 +508,6 @@ irand_mod (struct irand_state *r, word32 n)
  */
 #if __GNUC__ >= 2
 static void pfstatus (char const *,...) __attribute__ ((format (printf, 1, 2)));
-static void pferror (char const *,...) __attribute__ ((format (printf, 1, 2)));
 #endif
 
 /*
@@ -562,28 +562,6 @@ flushstatus (void)
       fflush (stdout);
       status_pos = 0;
     }
-}
-
-/* Print an error message on stderr, leaving any status message visible. */
-static void
-pferror (char const *fmt,...)
-{
-  va_list ap;
-  int e = errno;
-
-  flushstatus ();		/* Make it look pretty */
-
-  if (program_name)
-    {
-      fputs (program_name, stderr);
-      fputs (": ", stderr);
-    }
-  va_start (ap, fmt);
-  vfprintf (stderr, fmt, ap);
-  va_end (ap);
-  fputs (": ", stderr);
-  fputs (strerror (e), stderr);
-  putc ('\n', stderr);
 }
 
 /*
@@ -717,7 +695,7 @@ dopass (int fd, char const *name, off_t size, int type,
 
   if (lseek (fd, 0, SEEK_SET) < 0)
     {
-      pferror ("Error seeking `%s'", name);
+      error (0, 0, _("Error seeking `%s'"), name);
       return -1;
     }
 
@@ -761,8 +739,8 @@ dopass (int fd, char const *name, off_t size, int type,
 	  if (ssize < 0)
 	    {
 	      int e = errno;
-	      pferror ("Error writing `%s' at %lu",
-		       name, size - cursize + soff);
+	      error (0, 0, _("Error writing `%s' at %lu"),
+		     name, size - cursize + soff);
 	      /* FIXME: this is slightly fragile in that some systems
 		 may fail with a different errno.  */
 	      /* This error confuses people. */
@@ -792,7 +770,7 @@ dopass (int fd, char const *name, off_t size, int type,
   /* Force what we just wrote to hit the media. */
   if (fdatasync (fd) < 0)
     {
-      pferror ("Error syncing `%s'", name);
+      error (0, 0, _("Error syncing `%s'"), name);
       return -1;
     }
   return 0;
@@ -1012,22 +990,22 @@ wipefd (int fd, char const *name, struct isaac_state *s,
   if (!passes)
     passes = DEFAULT_PASSES;
 
-  n = 0;			/* dopass takes n -- 0 to mean "don't print progress" */
+  n = 0;		/* dopass takes n -- 0 to mean "don't print progress" */
   if (flags->verbose)
     n = passes + ((flags->zero_fill) != 0);
 
   if (fstat (fd, &st))
     {
-      pferror ("Can't fstat file `%s'", name);
+      error (0, 0, _("Can't fstat file `%s'"), name);
       return -1;
     }
 
   /* Check for devices */
   if (!S_ISREG (st.st_mode) && !(flags->allow_devices))
     {
-      fprintf (stderr,
-	       "`%s' is not a regular file: use -d to enable operations on devices\n",
-	       name);
+      error (0, 0,
+	     _("`%s' is not a regular file: use -d to enable operations on devices"),
+	     name);
       return -1;
     }
 
@@ -1035,8 +1013,8 @@ wipefd (int fd, char const *name, struct isaac_state *s,
   passarray = malloc (passes * sizeof (int));
   if (!passarray)
     {
-      pferror ("Can't alllocate array for %lu passes",
-	       (unsigned long) passes);
+      error (0, 0, _("unable to allocate storage for %lu passes"),
+	     (unsigned long) passes);
       return -1;
     }
 
@@ -1173,7 +1151,7 @@ wipename (char *oldname, struct Options const *flags)
   newname = strdup (oldname);	/* This is a malloc */
   if (!newname)
     {
-      pferror ("malloc failed");
+      error (0, 0, _("malloc failed"));
       return -1;
     }
   if (flags->verbose)
@@ -1181,7 +1159,7 @@ wipename (char *oldname, struct Options const *flags)
       origname = strdup (oldname);
       if (!origname)
 	{
-	  pferror ("malloc failed");
+	  error (0, 0, _("malloc failed"));
 	  free (newname);
 	  return -1;
 	}
@@ -1266,7 +1244,7 @@ wipefile (char *name, struct isaac_state *s, size_t passes,
     }
   if (fd < 0)
     {
-      pferror ("Unable to open `%s'", name);
+      error (0, 0, _("Unable to open `%s'"), name);
       return -1;
     }
 
@@ -1280,7 +1258,7 @@ wipefile (char *name, struct isaac_state *s, size_t passes,
     {
       err = wipename (name, flags);
       if (err < 0)
-	pferror ("Unable to delete file `%s'", name);
+	error (0, 0, _("Unable to delete file `%s'"), name);
     }
   return err;
 }
