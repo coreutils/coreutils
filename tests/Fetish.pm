@@ -12,7 +12,7 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.5 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.6 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my $debug = $ENV{DEBUG};
@@ -123,7 +123,7 @@ sub run_tests ($$$$$)
   return 1 if $found_duplicate;
 
   # FIXME check exit status
-  system ($prog, '--version');
+  system ($prog, '--version') if $verbose;
 
   my @junk_files;
   my $fail = 0;
