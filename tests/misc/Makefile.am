@@ -9,4 +9,4 @@ TESTS_ENVIRONMENT = \
   PATH=`pwd`/../../src:$$PATH \
   PROG=$$tst
 
-TESTS = printf split-a head-pos sort head-c csplit nice pathchk1
+TESTS = split-l printf split-a head-pos sort head-c csplit nice pathchk1
