@@ -1184,7 +1184,7 @@ tail_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
     }
   else
     {
-      off_t start_pos;
+      off_t start_pos = -1;
       off_t end_pos;
 
       /* Use file_lines only if FD refers to a regular file for
@@ -1201,6 +1201,13 @@ tail_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
 	}
       else
 	{
+	  /* Under very unlikely circumstances, it is possible to reach
+	     this point after positioning the file pointer to end of file
+	     via the `lseek (...SEEK_END)' above.  In that case, reposition
+	     the file pointer back to start_pos before calling pipe_lines.  */
+	  if (start_pos != -1)
+	    xlseek (fd, start_pos, SEEK_SET, pretty_filename);
+
 	  return pipe_lines (pretty_filename, fd, n_lines, read_pos);
 	}
     }
