@@ -319,6 +319,7 @@
 #include "closeout.h"
 #include "error.h"
 #include "mbswidth.h"
+#include "posixver.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -735,12 +736,11 @@ static int last_line = FALSE;
 enum
 {
   COLUMNS_OPTION = CHAR_MAX + 1,
-  PAGES_OPTION,
-  SEP_STRING_OPTION
+  PAGES_OPTION
 };
 
-static char const short_options[] =
-"-0123456789abcdD:e::fFh:i::Jl:mn::N:o:rs::S" OPTARG_POSIX "tTvw:W:";
+#define COMMON_SHORT_OPTIONS \
+	"-0123456789D:FJN:TW:abcde::fh:i::l:mn::o:rs::tvw:"
 
 static struct option const long_options[] =
 {
@@ -762,7 +762,7 @@ static struct option const long_options[] =
   {"indent", required_argument, NULL, 'o'},
   {"no-file-warnings", no_argument, NULL, 'r'},
   {"separator", optional_argument, NULL, 's'},
-  {"sep-string", optional_argument, NULL, SEP_STRING_OPTION},
+  {"sep-string", optional_argument, NULL, 'S'},
   {"omit-header", no_argument, NULL, 't'},
   {"omit-pagination", no_argument, NULL, 'T'},
   {"show-nonprinting", no_argument, NULL, 'v'},
@@ -856,7 +856,9 @@ main (int argc, char **argv)
   int old_w = FALSE;
   int old_s = FALSE;
   char **file_names;
-  bool posix_pedantic = (getenv ("POSIXLY_CORRECT") != NULL);
+  char const *short_options = (posix2_version () < 200112
+			       ? COMMON_SHORT_OPTIONS "S::"
+			       : COMMON_SHORT_OPTIONS "S:");
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -1023,12 +1025,6 @@ main (int argc, char **argv)
 	    separator_string (optarg);
 	  break;
 	case 'S':
-	  if (POSIX2_VERSION < 200112 && OBSOLETE_OPTION_WARNINGS
-	      && ! optarg && ! posix_pedantic)
-	    error (0, 0,
-		   _("warning: `pr -S' is obsolete; use `pr --sep-string'"));
-	  /* Fall through.  */
-	case SEP_STRING_OPTION:
 	  old_s = FALSE;
 	  /* Reset an additional input of -s, -S dominates -s */
 	  col_sep_string = "";
@@ -1081,7 +1077,7 @@ main (int argc, char **argv)
     }
 
   if (! date_format)
-    date_format = (posix_pedantic
+    date_format = (getenv ("POSIXLY_CORRECT")
 		   ? dcgettext (NULL, "%b %e %H:%M %Y", LC_TIME)
 		   : "%Y-%m-%d %H:%M");
 
@@ -2833,14 +2829,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                     -s[CHAR] turns off line truncation of all 3 column\n\
                     options (-COLUMN|-a -COLUMN|-m) except -w is set\n\
 "), stdout);
-      if (POSIX2_VERSION < 200112)
-	fputs (_("\
-  -S[STRING], --sep-string[=STRING]\n\
-                    (`-S' with empty STRING is obsolete; use `--sep-string'.)\n\
-"), stdout);
-      else
-	fputs (_("\
-  -S STRING, --sep-string[=STRING]\n\
+      fputs (_("\
+  -SSTRING, --sep-string[=STRING]\n\
 "), stdout);
       fputs (_("\
                     separate columns by STRING,\n\
