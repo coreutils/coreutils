@@ -1,10 +1,10 @@
-#serial 31   -*- autoconf -*-
+#serial 32   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
 AC_DEFUN(jm_MACROS,
 [
-  AC_PREREQ(2.14a)
+  AC_PREREQ(2.14d)
 
   GNU_PACKAGE="GNU $PACKAGE"
   AC_DEFINE_UNQUOTED(GNU_PACKAGE, "$GNU_PACKAGE",
