@@ -570,8 +570,8 @@
 /* Define to 1 if you have the <mach/mach.h> header file. */
 #undef HAVE_MACH_MACH_H
 
-/* Define to 1 if your system has a working `malloc' function, and to 0
-   otherwise. */
+/* Define to 1 if your system has a GNU libc compatible `malloc' function, and
+   to 0 otherwise. */
 #undef HAVE_MALLOC
 
 /* Define to 1 if you have the `mblen' function. */
@@ -679,8 +679,8 @@
 /* Define to 1 if you have the `raise' function. */
 #undef HAVE_RAISE
 
-/* Define to 1 if your system has a working `realloc' function, and to 0
-   otherwise. */
+/* Define to 1 if your system has a GNU libc compatible `realloc' function,
+   and to 0 otherwise. */
 #undef HAVE_REALLOC
 
 /* Define to 1 if you have the `realpath' function. */
