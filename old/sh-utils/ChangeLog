@@ -1,3 +1,9 @@
+2000-07-01  Jim Meyering  <meyering@lucent.com>
+
+	* configure.in (jm_DUMMY_1): Wrap a snippet in a macro definition
+	so we can use AC_REQUIRE.
+	(jm_BOOT_TIME): Likewise.
+
 2000-06-17  Bruno Haible  <haible@clisp.cons.org>
 
 	* configure.in: Add pinky, users, who to OPTIONAL_BIN_PROGS if either
