@@ -461,9 +461,7 @@ process_file (const char *file, const struct stat *sb, int file_type,
   if (!print)
     return 0;
 
-  /* FIXME: This looks suspiciously like it could be simplified.  */
-  if ((IS_FTW_DIR_TYPE (file_type) &&
-		     (info->level <= max_depth || info->level == 0))
+  if ((IS_FTW_DIR_TYPE (file_type) && info->level <= max_depth)
       || ((opt_all && info->level <= max_depth) || info->level == 0))
     {
       print_only_size (size_to_print);
