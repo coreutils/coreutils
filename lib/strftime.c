@@ -461,7 +461,7 @@ strftime (s, maxsize, format, tp)
 		 && *(subfmt = _NL_CURRENT (LC_TIME, ERA_D_T_FMT)) != '\0'))
 	    subfmt = _NL_CURRENT (LC_TIME, D_T_FMT);
 #else
-	  subfmt = "%a %b %e %H:%M:%S %Z %Y";
+	  subfmt = "%a %b %e %H:%M:%S %Y";
 #endif
 
 	subformat:
