@@ -1,5 +1,8 @@
 /* Convert string representation of a number into an integer value.
-   Copyright (C) 1991, 92, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+
+   Copyright (C) 1991, 1992, 1994, 1995, 1996, 1997, 1998, 1999, 2003
+   Free Software Foundation, Inc.
+
    NOTE: The canonical source of this file is maintained with the GNU C
    Library.  Bugs can be reported to bug-glibc@gnu.org.
 
@@ -23,8 +26,6 @@
 
 #ifdef _LIBC
 # define USE_NUMBER_GROUPING
-# define STDC_HEADERS
-# define HAVE_LIMITS_H
 #endif
 
 #include <ctype.h>
@@ -36,19 +37,10 @@ extern int errno;
 # define __set_errno(Val) errno = (Val)
 #endif
 
-#ifdef HAVE_LIMITS_H
-# include <limits.h>
-#endif
-
-#ifdef STDC_HEADERS
-# include <stddef.h>
-# include <stdlib.h>
-# include <string.h>
-#else
-# ifndef NULL
-#  define NULL 0
-# endif
-#endif
+#include <limits.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
 
 #ifdef USE_NUMBER_GROUPING
 # include "../locale/localeinfo.h"
@@ -164,13 +156,6 @@ extern int errno;
 # endif
 #else
 # define LONG long
-
-# ifndef ULONG_MAX
-#  define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
-# endif
-# ifndef LONG_MAX
-#  define LONG_MAX ((long int) (ULONG_MAX >> 1))
-# endif
 # define STRTOL_LONG_MIN LONG_MIN
 # define STRTOL_LONG_MAX LONG_MAX
 # define STRTOL_ULONG_MAX ULONG_MAX
@@ -186,10 +171,10 @@ extern int errno;
 # define _NL_CURRENT(category, item) \
   (current->values[_NL_ITEM_INDEX (item)].string)
 # define LOCALE_PARAM , loc
-# define LOCALE_PARAM_DECL __locale_t loc;
+# define LOCALE_PARAM_PROTO , __locale_t loc
 #else
 # define LOCALE_PARAM
-# define LOCALE_PARAM_DECL
+# define LOCALE_PARAM_PROTO
 #endif
 
 #if defined _LIBC || defined HAVE_WCHAR_H
@@ -230,15 +215,9 @@ extern int errno;
 # endif
 #endif
 
-/* For compilers which are ansi but don't define __STDC__, like SGI
-   Irix-4.0.5 cc, also check whether PROTOTYPES is defined. */
-#if defined (__STDC__) || defined (PROTOTYPES)
-# define INTERNAL(X) INTERNAL1(X)
-# define INTERNAL1(X) __##X##_internal
-# define WEAKNAME(X) WEAKNAME1(X)
-#else
-# define INTERNAL(X) __/**/X/**/_internal
-#endif
+#define INTERNAL(X) INTERNAL1(X)
+#define INTERNAL1(X) __##X##_internal
+#define WEAKNAME(X) WEAKNAME1(X)
 
 #ifdef USE_NUMBER_GROUPING
 /* This file defines a function to check for correct grouping.  */
@@ -255,12 +234,8 @@ extern int errno;
    one converted is stored in *ENDPTR.  */
 
 INT
-INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
-     const STRING_TYPE *nptr;
-     STRING_TYPE **endptr;
-     int base;
-     int group;
-     LOCALE_PARAM_DECL
+INTERNAL (strtol) (const STRING_TYPE *nptr, STRING_TYPE **endptr,
+		   int base, int group LOCALE_PARAM_PROTO)
 {
   int negative;
   register unsigned LONG int cutoff;
@@ -445,28 +420,13 @@ noconv:
 
 /* External user entry point.  */
 
-#if _LIBC - 0 == 0
-# undef PARAMS
-# if defined (__STDC__) && __STDC__
-#  define PARAMS(Args) Args
-# else
-#  define PARAMS(Args) ()
-# endif
-
-/* Prototype.  */
-INT strtol PARAMS ((const STRING_TYPE *nptr, STRING_TYPE **endptr, int base));
-#endif
-
 
 INT
 #ifdef weak_function
 weak_function
 #endif
-strtol (nptr, endptr, base LOCALE_PARAM)
-     const STRING_TYPE *nptr;
-     STRING_TYPE **endptr;
-     int base;
-     LOCALE_PARAM_DECL
+strtol (const STRING_TYPE *nptr, STRING_TYPE **endptr,
+	int base LOCALE_PARAM_PROTO)
 {
   return INTERNAL (strtol) (nptr, endptr, base, 0 LOCALE_PARAM);
 }
