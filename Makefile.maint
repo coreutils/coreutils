@@ -77,6 +77,7 @@ syntax-check-rules = \
   sc_space_tab \
   sc_sun_os_names \
   sc_system_h_headers \
+  sc_trailing_blank \
   sc_unmarked_diagnostics
 
 syntax-check: $(syntax-check-rules)
@@ -90,15 +91,6 @@ syntax-check: $(syntax-check-rules)
 #	  { echo '$(ME): FIXME' 1>&2;					\
 #	    exit 1; } || :
 # FIXME: don't allow `#include .strings\.h' anywhere
-
-# Look for diagnostics that aren't marked for translation.
-# This won't find any for which error's format string is on a separate line.
-sc_unmarked_diagnostics:
-	@grep --exclude=$(srcdir)/src/shred.c -E			\
-	    '\<error \([^"]*"[^"]*[a-z]{3}' $(srcdir)/{lib,src}/*.c	\
-	  | grep -v '_(' &&						\
-	  { echo '$(ME): found unmarked diagnostic(s)' 1>&2;		\
-	    exit 1; } || :
 
 sc_cast_of_argument_to_free:
 	@grep -E '\<free \(\(' $(srcdir)/{lib,src}/*.[chly] &&		\
@@ -203,6 +195,22 @@ sc_sun_os_names:
 	    'solaris[^[:alnum:]]*2\.(7|8|9|[1-9][0-9])|sunos[^[:alnum:]][6-9]' \
 	  $$(cvsu --list | grep -vEf .x-$@ ) &&				\
 	  { echo '$(ME): found misuse of Sun OS version numbers' 1>&2;	\
+	    exit 1; } || :
+
+sc_trailing_blank:
+	@( cvsu --list ) > /dev/null 2>&1 || : &&			\
+	  grep '[	 ]$$'						\
+	     $$(cvsu --list | grep -vEf .x-$@ ) &&			\
+	  { echo '$(ME): found trailing blank(s)'			\
+		1>&2; exit 1; } || :
+
+# Look for diagnostics that aren't marked for translation.
+# This won't find any for which error's format string is on a separate line.
+sc_unmarked_diagnostics:
+	@grep --exclude=$(srcdir)/src/shred.c -E			\
+	    '\<error \([^"]*"[^"]*[a-z]{3}' $(srcdir)/{lib,src}/*.c	\
+	  | grep -v '_(' &&						\
+	  { echo '$(ME): found unmarked diagnostic(s)' 1>&2;		\
 	    exit 1; } || :
 
 # Ensure that date's --help output stays in sync with the info
