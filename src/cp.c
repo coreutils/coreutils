@@ -482,6 +482,12 @@ do_copy (int n_files, char **file, const char *target_directory,
       --n_files;
     }
 
+  /* Initialize the hash table only if we'll need it.
+     The problem it is used to detect can arise only if there are
+     two or more files to copy.  */
+  if (n_files >= 2)
+    dest_info_init ();
+
   if (lstat (dest, &sb))
     {
       if (errno != ENOENT)
