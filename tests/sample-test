@@ -28,7 +28,7 @@ fi
 fail=0
 
 FIXME > out || fail=1
-cat <<EOF > exp
+cat <<\EOF > exp
 FIXME
 EOF
 
