@@ -1,3 +1,7 @@
+2000-09-25  Jim Meyering  <meyering@lucent.com>
+
+	* Version 4.0.27.
+
 2000-09-24  Paul Eggert  <eggert@twinsun.com>
 
 	* doc/fileutils.texi: Update to more closely match changes in 4.0z.
