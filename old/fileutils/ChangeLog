@@ -42,7 +42,7 @@
 	not less-portable ((void *) (~0U)).
 	(HASH_VACANT): Define here, not in hash.h.
 
-	* lib/oa-hash.c: (HASH_DELETED_ITEM_MARKER): Move definition to hash.c.
+	* lib/oa-hash.h: (HASH_DELETED_ITEM_MARKER): Move definition to hash.c.
 	(HASH_VACANT): Likewise.
 
 	* lib/strverscmp.c [HAVE_CONFIG_H]: Include config.h.
