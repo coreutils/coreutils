@@ -1,5 +1,9 @@
 Changes in release 2.1
-[2.0h]
+[2.0.8]
+* new program: shasum
+* wc accepts new -m option (count characters, not necessarily bytes)
+* wc's `--chars' option is now equivalent to -m, not --bytes as it used to be
+* `cat -n' works better when processing 2^31 or more lines
 [2.0g]
 * sort's --help output now warns that it is locale-aware
 * tail: fix a buffer underrun error that occurred on an empty pipe,
