@@ -1,5 +1,5 @@
 /* `rm' file deletion utility for GNU.
-   Copyright (C) 88, 90, 91, 1994-2000 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1994-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -100,7 +100,12 @@ Remove (unlink) the FILE(s).\n\
 To remove a file whose name starts with a `-', for example `-foo',\n\
 use one of these commands:\n\
   %s -- -foo\n\
+\n\
   %s ./-foo\n\
+\n\
+Note that if you use rm to remove a file, it is usually possible to recover\n\
+the contents of that file.  If you want more assurance that the contents are\n\
+truly unrecoverable, consider using shred.\n\
 "),
 	      program_name, program_name);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
