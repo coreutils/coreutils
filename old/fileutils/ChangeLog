@@ -1,3 +1,19 @@
+Sun May 19 09:32:51 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* chown.c: New option: --no-dereference (-h).  Solaris 5.4's chown
+	provides -h.
+	(change_file_owner): Use lchown if --no-dereference (-h) was given.
+	(usage): Update.
+	(main): Fail if user requests --no-dereference on a system that
+	doesn't have support for it.
+
+	* chgrp.c: New option: --no-dereference (-h).
+	[!MAXUID]: Define to INT_MAX.
+	(change_file_group): Use lchown if --no-dereference (-h) was given.
+	(usage): Update.
+	(main): Fail if user requests --no-dereference on a system that
+	doesn't have support for it.
+
 Wed May 15 22:54:31 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* fsusage.c (get_fs_usage): Declare parameter PATH to be const.
