@@ -2,6 +2,9 @@
 
 	* Version 3.16n.
 
+	Revert most `getdate.h -> get-date.h' changes of 1998-02-20.
+	With automake-1.2f, that hack is no longer needed.
+
 	* src/remove.c: Use `virtual memory exhausted' message, not
 	`Memory exhausted' to be consistent with the majority of other
 	such messages.
@@ -24,18 +27,6 @@
 
 	* tests/mv/into-self: Test for the above.
 	* tests/mv/Makefile.am (TESTS): Add into-self.
-
-1998-03-10  Jim Meyering  <meyering@eng.ascend.com>
-
-	* Running this command
-    	mkdir j;touch k; ./mv j k j
-  	(correctly) copies j into j/j and moves k to j/k,
-  	but then it removes `j' and you're left with nothing.
-  	Not nice, eh?
-
-	The fix is simple in concept: don't remove a source directory
-	if it is a parent of (or the same as) the destination directory.
-	I don't think POSIX discusses this case.
 
 1998-02-28   Eli Zaretskii  <eliz@is.elta.co.il>
 
