@@ -1,3 +1,16 @@
+1999-04-10  Jim Meyering  <meyering@ascend.com>
+
+	`ls --color' would segfault
+	* src/ls.c: Include assert.h.
+	(color_indicator[]): Add an entry for the type, `door.'
+	(main): Assert that the lengths of the color_indicator and
+	indicator_name arrays are appropriately related.
+	Reported by John Gotts.
+
+	* src/dd.c (scanargs): Fix bug introduced with last change: now that
+	the loop is gone, manually decrement argc and increment argv.
+	Reported by Andreas Jaeger and jvogel@linkny.com.
+
 1999-04-07  Jim Meyering  <meyering@ascend.com>
 
 	* lib/getdate.y (difftm): Protoize.
