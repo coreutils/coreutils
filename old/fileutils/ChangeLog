@@ -1,3 +1,10 @@
+1998-04-04  Jim Meyering  <meyering@eng.ascend.com>
+
+	* Makefile.am (ACLOCAL_AMFLAGS): Define this, so automake/aclocal
+	know about the m4/ subdirectory.
+	* Makefile.maint (aclocal-files): Remove now-unnecessary (with
+	automake-1.2h and the above change) aclocal-related rules and includes.
+
 1998-04-01  Jim Meyering  <meyering@eng.ascend.com>
 
 	* tests/ls/cr-1: New file.
@@ -11,16 +18,6 @@
 	(SCHAR_MIN, SCHAR_MAX, SHRT_MIN, SHRT_MAX, LONG_MAX, ULONG_MAX): Define.
 
 	* lib/xstrtol.c: Merge with the version from textutils.
-
-	* tests/Makefile.am (EXTRA_DIST): Add mk-script.
-	* tests/Makefile.am.in (EXTRA_DIST): Remove mk-script.pl.
-	(mk_script): Set to ../mk-script.
-	(x-tests): Use `$(PERL) -w -- $(mk_script)', not ./mk-script.
-	Remove @MAINT@ cruft.
-	(Makefile.am): Likewise.
-	Remove @MAINT@ cruft.  Now `missing' will explain the failure
-	when people don't have Perl yet modify a file whose rebuilding
-	would lead to the use of Perl.
 
 	* lib/memcmp.c (rpl_memcmp): Rename from memcmp.
 
