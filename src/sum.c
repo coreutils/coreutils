@@ -26,6 +26,7 @@
 #include <getopt.h>
 #include "system.h"
 #include "error.h"
+#include "long-options.h"
 #include "safe-read.h"
 
 /* The name this program was run with. */
@@ -37,17 +38,9 @@ static int have_read_stdin;
 /* Right-rotate 32-bit integer variable C. */
 #define ROTATE_RIGHT(c) if ((c) & 01) (c) = ((c) >>1) + 0x8000; else (c) >>= 1;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output then exit.  */
-static int show_version;
-
 static struct option const longopts[] =
 {
   {"sysv", no_argument, NULL, 's'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -216,6 +209,9 @@ main (int argc, char **argv)
 
   have_read_stdin = 0;
 
+  parse_long_options (argc, argv, "sum", GNU_PACKAGE, VERSION,
+		      "Kayvan Aghaiepour and David MacKenzie", usage);
+
   while ((optc = getopt_long (argc, argv, "rs", longopts, NULL)) != -1)
     {
       switch (optc)
@@ -235,15 +231,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("sum (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (EXIT_SUCCESS);
-    }
-
-  if (show_help)
-    usage (0);
 
   files_given = argc - optind;
   if (files_given == 0)

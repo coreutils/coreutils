@@ -32,6 +32,7 @@
 #endif
 #include "system.h"
 #include "error.h"
+#include "long-options.h"
 #include "safe-read.h"
 
 /* Undefine, to avoid warning about redefinition on some systems.  */
@@ -510,12 +511,6 @@ main (int argc, char **argv)
 /* If nonzero, call cat, otherwise call simple_cat to do the actual work. */
   int options = 0;
 
-  /* If nonzero, display usage information and exit.  */
-  static int show_help;
-
-  /* If nonzero, print the version on standard output then exit.  */
-  static int show_version;
-
   static struct option const long_options[] =
   {
     {"number-nonblank", no_argument, NULL, 'b'},
@@ -528,8 +523,6 @@ main (int argc, char **argv)
 #if O_BINARY
     {"binary", no_argument, NULL, 'B'},
 #endif
-    {"help", no_argument, &show_help, 1},
-    {"version", no_argument, &show_version, 1},
     {NULL, 0, NULL, 0}
   };
 
@@ -537,6 +530,9 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  parse_long_options (argc, argv, "cat", GNU_PACKAGE, VERSION,
+		      "Torbjorn Granlund and Richard M. Stallman", usage);
 
   /* Parse command line options.  */
 
@@ -618,15 +614,6 @@ main (int argc, char **argv)
 	  usage (EXIT_FAILURE);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("cat (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (EXIT_SUCCESS);
-    }
-
-  if (show_help)
-    usage (0);
 
   output_desc = 1;
 

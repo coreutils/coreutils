@@ -12,8 +12,8 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /* Written by Q. Frank Xia, qx@math.columbia.edu.
    Cosmetic changes and reorganization by David MacKenzie, djm@gnu.ai.mit.edu.
@@ -108,6 +108,7 @@ main ()
 # include <getopt.h>
 # include <sys/types.h>
 # include "system.h"
+# include "long-options.h"
 # include "error.h"
 
 /* Number of bytes to read at once.  */
@@ -116,16 +117,8 @@ main ()
 /* The name this program was run with.  */
 char *program_name;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output then exit.  */
-static int show_version;
-
 static struct option const long_options[] =
 {
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {0, 0, 0, 0}
 };
 
@@ -294,6 +287,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "cksum", GNU_PACKAGE, VERSION,
+		      "Q. Frank Xia", usage);
+
   have_read_stdin = 0;
 
   while ((c = getopt_long (argc, argv, "", long_options, NULL)) != -1)
@@ -307,15 +303,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("cksum (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (EXIT_SUCCESS);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (optind >= argc)
     {

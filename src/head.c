@@ -31,6 +31,7 @@
 #include <sys/types.h>
 #include "system.h"
 #include "error.h"
+#include "long-options.h"
 #include "xstrtoul.h"
 #include "safe-read.h"
 
@@ -58,12 +59,6 @@ char *program_name;
 /* Have we ever read standard input?  */
 static int have_read_stdin;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output then exit.  */
-static int show_version;
-
 static struct option const long_options[] =
 {
   {"bytes", required_argument, NULL, 'c'},
@@ -71,8 +66,6 @@ static struct option const long_options[] =
   {"quiet", no_argument, NULL, 'q'},
   {"silent", no_argument, NULL, 'q'},
   {"verbose", no_argument, NULL, 'v'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -268,6 +261,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "head", GNU_PACKAGE, VERSION,
+		      "David MacKenzie", usage);
+
   have_read_stdin = 0;
 
   print_headers = 0;
@@ -371,15 +367,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("head (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (EXIT_SUCCESS);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (header_mode == always
       || (header_mode == multiple_files && optind < argc - 1))

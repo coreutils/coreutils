@@ -31,9 +31,10 @@
 #include <regex.h>
 
 #include "error.h"
+#include "long-options.h"
+#include "safe-read.h"
 #include "xstrtoul.h"
 #include "xalloc.h"
-#include "safe-read.h"
 
 #ifdef STDC_HEADERS
 # include <stdlib.h>
@@ -202,12 +203,6 @@ static struct control *controls;
 /* Number of elements in `controls'. */
 static unsigned int control_used;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output then exit.  */
-static int show_version;
-
 static struct option const longopts[] =
 {
   {"digits", required_argument, NULL, 'n'},
@@ -217,8 +212,6 @@ static struct option const longopts[] =
   {"elide-empty-files", no_argument, NULL, 'z'},
   {"prefix", required_argument, NULL, 'f'},
   {"suffix-format", required_argument, NULL, 'b'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -1379,6 +1372,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "csplit", GNU_PACKAGE, VERSION,
+		      "Stuart Kemp and David MacKenzie", usage);
+
   global_argv = argv;
   controls = NULL;
   control_used = 0;
@@ -1457,15 +1453,6 @@ main (int argc, char **argv)
       default:
 	usage (1);
       }
-
-  if (show_version)
-    {
-      printf ("csplit (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (EXIT_SUCCESS);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (argc - optind < 2)
     {

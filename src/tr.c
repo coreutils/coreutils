@@ -27,6 +27,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "long-options.h"
 #include "safe-read.h"
 
 #define N_CHARS (UCHAR_MAX + 1)
@@ -298,20 +299,12 @@ static SET_TYPE in_delete_set[N_CHARS];
    two specification strings and the delete switch is not given.  */
 static char xlate[N_CHARS];
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output then exit.  */
-static int show_version;
-
 static struct option const long_options[] =
 {
   {"complement", no_argument, NULL, 'c'},
   {"delete", no_argument, NULL, 'd'},
   {"squeeze-repeats", no_argument, NULL, 's'},
   {"truncate-set1", no_argument, NULL, 't'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -1805,6 +1798,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "tr", GNU_PACKAGE, VERSION,
+		      "Jim Meyering", usage);
+
   while ((c = getopt_long (argc, argv, "cdst", long_options, NULL)) != -1)
     {
       switch (c)
@@ -1833,15 +1829,6 @@ main (int argc, char **argv)
 	  break;
 	}
     }
-
-  if (show_version)
-    {
-      printf ("tr (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (EXIT_SUCCESS);
-    }
-
-  if (show_help)
-    usage (0);
 
   posix_pedantic = (getenv ("POSIXLY_CORRECT") != NULL);
 

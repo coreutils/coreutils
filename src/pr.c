@@ -15,7 +15,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/*  Author: Pete TerMaat.  */
+/*  By Pete TerMaat, with considerable refinement by Roland Huebner.  */
 
 /* Things to watch: Sys V screws up on ...
    pr -n -3 -s: /usr/dict/words
@@ -175,6 +175,7 @@
 #include <time.h>
 #include "system.h"
 #include "error.h"
+#include "long-options.h"
 #include "xstrtol.h"
 
 #ifndef TRUE
@@ -558,12 +559,6 @@ static char *header;
 
 static int *clump_buff;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output then exit.  */
-static int show_version;
-
 /* True means we read the line no. lines_per_body in skip_read
    called by skip_to_page. That variable controls the coincidence of a
    "FF set by hand" and "full_page_printed", see above the definition of
@@ -576,8 +571,6 @@ static int test_suite;
 
 static struct option const long_options[] =
 {
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {"test", no_argument, &test_suite, 1},
   {"pages", required_argument, NULL, CHAR_MAX + 1},
   {"columns", required_argument, NULL, CHAR_MAX + 2},
@@ -688,6 +681,9 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  parse_long_options (argc, argv, "pr", GNU_PACKAGE, VERSION,
+		      "Pete TerMaat and Roland Huebner", usage);
 
   n_files = 0;
   file_names = (argc > 1
@@ -880,15 +876,6 @@ main (int argc, char **argv)
 	  break;
 	}
     }
-
-  if (show_version)
-    {
-      printf ("pr (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (EXIT_SUCCESS);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (parallel_files && explicit_columns)
     error (EXIT_FAILURE, 0,

@@ -24,8 +24,9 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "xstrtol.h"
 #include "error.h"
+#include "long-options.h"
+#include "xstrtol.h"
 
 /* The name this program was run with. */
 char *program_name;
@@ -39,19 +40,11 @@ static int count_bytes;
 /* If nonzero, at least one of the files we read was standard input. */
 static int have_read_stdin;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output then exit.  */
-static int show_version;
-
 static struct option const longopts[] =
 {
   {"bytes", no_argument, NULL, 'b'},
   {"spaces", no_argument, NULL, 's'},
   {"width", required_argument, NULL, 'w'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -243,6 +236,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "fold", GNU_PACKAGE, VERSION,
+		      "David MacKenzie", usage);
+
   break_spaces = count_bytes = have_read_stdin = 0;
 
   /* Turn any numeric options into -w options.  */
@@ -290,15 +286,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("fold (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (EXIT_SUCCESS);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (argc == optind)
     errs |= fold_file ("-", width);

@@ -1,5 +1,5 @@
 /* paste - merge lines of files
-   Copyright (C) 1984, 1997, 1998 by David M. Ihnat
+   Copyright (C) 1984, 1997, 1998, 1999 by David M. Ihnat
 
    This program is a total rewrite of the Bell Laboratories Unix(Tm)
    command of the same name, as of System V.  It contains no proprietary
@@ -45,6 +45,7 @@
 #include <sys/types.h>
 #include "system.h"
 #include "error.h"
+#include "long-options.h"
 
 /* Indicates that no delimiter should be added in the current position. */
 #define EMPTY_DELIM '\0'
@@ -73,18 +74,10 @@ static char *delims;
 /* A pointer to the character after the end of `delims'. */
 static char *delim_end;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output then exit.  */
-static int show_version;
-
 static struct option const longopts[] =
 {
   {"serial", no_argument, 0, 's'},
   {"delimiters", required_argument, 0, 'd'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {0, 0, 0, 0}
 };
 
@@ -438,6 +431,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "paste", GNU_PACKAGE, VERSION,
+		      "David M. Ihnat", usage);
+
   have_read_stdin = 0;
   serial_merge = 0;
   delims = default_delims;
@@ -466,15 +462,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("paste (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (EXIT_SUCCESS);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (optind == argc)
     argv[argc++] = "-";

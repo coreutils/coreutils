@@ -40,6 +40,7 @@
 #include <sys/types.h>
 #include "system.h"
 #include "error.h"
+#include "long-options.h"
 
 /* The number of bytes added at a time to the amount of memory
    allocated for the output line. */
@@ -83,18 +84,10 @@ static int have_read_stdin;
 /* Status to return to the system. */
 static int exit_status;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output then exit.  */
-static int show_version;
-
 static struct option const longopts[] =
 {
   {"tabs", required_argument, NULL, 't'},
   {"initial", no_argument, NULL, 'i'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -340,6 +333,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "expand", GNU_PACKAGE, VERSION,
+		      "David MacKenzie", usage);
+
   while ((c = getopt_long (argc, argv, "it:,0123456789", longopts, NULL)) != -1)
     {
       switch (c)
@@ -366,15 +362,6 @@ main (int argc, char **argv)
 	  break;
 	}
     }
-
-  if (show_version)
-    {
-      printf ("expand (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (EXIT_SUCCESS);
-    }
-
-  if (show_help)
-    usage (0);
 
   add_tabstop (tabval);
 

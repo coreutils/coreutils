@@ -29,8 +29,9 @@
 
 #include "system.h"
 #include "error.h"
-#include "xstrtol.h"
+#include "long-options.h"
 #include "safe-read.h"
+#include "xstrtol.h"
 
 int full_write ();
 
@@ -56,12 +57,6 @@ static int input_desc;
 /* Descriptor on which output file is open.  */
 static int output_desc;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output then exit.  */
-static int show_version;
-
 /* If nonzero, print a diagnostic on standard error just before each
    output file is opened. */
 static int verbose;
@@ -72,8 +67,6 @@ static struct option const longopts[] =
   {"lines", required_argument, NULL, 'l'},
   {"line-bytes", required_argument, NULL, 'C'},
   {"verbose", no_argument, NULL, 2},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -349,6 +342,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "split", GNU_PACKAGE, VERSION,
+		      "Torbjorn Granlund and Richard M. Stallman", usage);
+
   /* Parse command line options.  */
 
   infile = "-";
@@ -448,15 +444,6 @@ main (int argc, char **argv)
 	  usage (EXIT_FAILURE);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("split (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (EXIT_SUCCESS);
-    }
-
-  if (show_help)
-    usage (0);
 
   /* Handle default case.  */
   if (split_type == type_undef)

@@ -1,5 +1,5 @@
 /* cut - remove parts of lines of files
-   Copyright (C) 1984, 1997, 1998 by David M. Ihnat
+   Copyright (C) 1984, 1997, 1998, 1999 by David M. Ihnat
 
    This program is a total rewrite of the Bell Laboratories Unix(Tm)
    command of the same name, as of System V.  It contains no proprietary
@@ -66,6 +66,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "long-options.h"
 #include "error.h"
 
 char *xstrdup ();
@@ -168,12 +169,6 @@ static char *output_delimiter_string;
 /* Nonzero if we have ever read standard input. */
 static int have_read_stdin;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output then exit.  */
-static int show_version;
-
 static struct option const longopts[] =
 {
   {"bytes", required_argument, 0, 'b'},
@@ -182,8 +177,6 @@ static struct option const longopts[] =
   {"delimiter", required_argument, 0, 'd'},
   {"only-delimited", no_argument, 0, 's'},
   {"output-delimiter", required_argument, 0, CHAR_MAX + 1},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {0, 0, 0, 0}
 };
 
@@ -696,6 +689,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "cut", GNU_PACKAGE, VERSION,
+		      "David Ihnat, David MacKenzie, and Jim Meyering", usage);
+
   operating_mode = undefined_mode;
 
   /* By default, all non-delimited lines are printed.  */
@@ -758,15 +754,6 @@ main (int argc, char **argv)
 	  usage (2);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("cut (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (EXIT_SUCCESS);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (operating_mode == undefined_mode)
     FATAL_ERROR (_("you must specify a list of bytes, characters, or fields"));

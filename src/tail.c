@@ -32,9 +32,10 @@
 
 #include "system.h"
 #include "argmatch.h"
-#include "xstrtoul.h"
 #include "error.h"
+#include "long-options.h"
 #include "safe-read.h"
+#include "xstrtoul.h"
 
 #ifndef OFF_T_MIN
 # define OFF_T_MIN TYPE_MINIMUM (off_t)
@@ -160,12 +161,6 @@ static unsigned int sleep_interval = 1;
 /* Nonzero if we have ever read standard input.  */
 static int have_read_stdin;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output then exit.  */
-static int show_version;
-
 static struct option const long_options[] =
 {
   {"allow-missing", no_argument, NULL, CHAR_MAX + 1},
@@ -178,8 +173,6 @@ static struct option const long_options[] =
   {"silent", no_argument, NULL, 'q'},
   {"sleep-interval", required_argument, NULL, 's'},
   {"verbose", no_argument, NULL, 'v'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -1348,6 +1341,10 @@ main (int argc, char **argv)
 
   have_read_stdin = 0;
 
+  parse_long_options (argc, argv, "tail", GNU_PACKAGE, VERSION,
+	    "Paul Rubin, David MacKenzie, Ian Lance Taylor, and Jim Meyering",
+		      usage);
+
   {
     int found_obsolescent;
     int fail;
@@ -1365,15 +1362,6 @@ main (int argc, char **argv)
 	parse_options (argc, argv, &n_units, &header_mode);
       }
   }
-
-  if (show_version)
-    {
-      printf ("tail (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (EXIT_SUCCESS);
-    }
-
-  if (show_help)
-    usage (0);
 
   /* To start printing with item N_UNITS from the start of the file, skip
      N_UNITS - 1 items.  `tail +0' is actually meaningless, but for Unix

@@ -24,12 +24,13 @@
 #include <sys/types.h>
 #include <getopt.h>
 
-#include "linebuffer.h"
 #include "system.h"
 
 #include <regex.h>
 
 #include "error.h"
+#include "linebuffer.h"
+#include "long-options.h"
 #include "xstrtol.h"
 
 #ifndef TRUE
@@ -139,12 +140,6 @@ static int line_no;
 /* Nonzero if we have ever read standard input. */
 static int have_read_stdin;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output then exit.  */
-static int show_version;
-
 static struct option const longopts[] =
 {
   {"header-numbering", required_argument, NULL, 'h'},
@@ -158,8 +153,6 @@ static struct option const longopts[] =
   {"number-width", required_argument, NULL, 'w'},
   {"number-format", required_argument, NULL, 'n'},
   {"section-delimiter", required_argument, NULL, 'd'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -452,6 +445,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "nl", GNU_PACKAGE, VERSION,
+		      "Scott Bartram and David MacKenzie", usage);
+
   have_read_stdin = 0;
 
   while ((c = getopt_long (argc, argv, "h:b:f:v:i:pl:s:w:n:d:", longopts,
@@ -558,15 +554,6 @@ main (int argc, char **argv)
 	  break;
 	}
     }
-
-  if (show_version)
-    {
-      printf ("nl (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (EXIT_SUCCESS);
-    }
-
-  if (show_help)
-    usage (0);
 
   /* Initialize the section delimiters.  */
   c = strlen (section_del);

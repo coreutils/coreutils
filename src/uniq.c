@@ -25,6 +25,7 @@
 
 #include "system.h"
 #include "linebuffer.h"
+#include "long-options.h"
 #include "error.h"
 #include "xstrtol.h"
 #include "memcasecmp.h"
@@ -69,12 +70,6 @@ static enum output_mode mode;
 /* If nonzero, ignore case when comparing.  */
 static int ignore_case;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output then exit.  */
-static int show_version;
-
 static struct option const longopts[] =
 {
   {"count", no_argument, NULL, 'c'},
@@ -85,8 +80,6 @@ static struct option const longopts[] =
   {"skip-fields", required_argument, NULL, 'f'},
   {"skip-chars", required_argument, NULL, 's'},
   {"check-chars", required_argument, NULL, 'w'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -291,6 +284,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "uniq", GNU_PACKAGE, VERSION,
+		      "Richard Stallman and David MacKenzie", usage);
+
   skip_chars = 0;
   skip_fields = 0;
   check_chars = 0;
@@ -378,15 +374,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("uniq (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (EXIT_SUCCESS);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (optind >= 2 && !STREQ (argv[optind - 1], "--"))
     {

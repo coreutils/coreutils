@@ -28,6 +28,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "long-options.h"
 #include "xstrtol.h"
 
 /* The following parameters represent the program's idea of what is
@@ -164,12 +165,6 @@ static void put_space PARAMS ((int space));
 /* The name this program was run with.  */
 const char *program_name;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help = 0;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version = 0;
-
 /* Option values.  */
 
 /* If TRUE, first 2 lines may have different indent (default FALSE).  */
@@ -297,12 +292,10 @@ In -wNUMBER, the letter `w' may be omitted.\n"),
 static const struct option long_options[] =
 {
   {"crown-margin", no_argument, NULL, 'c'},
-  {"help", no_argument, &show_help, 1},
   {"prefix", required_argument, NULL, 'p'},
   {"split-only", no_argument, NULL, 's'},
   {"tagged-paragraph", no_argument, NULL, 't'},
   {"uniform-spacing", no_argument, NULL, 'u'},
-  {"version", no_argument, &show_version, 1},
   {"width", required_argument, NULL, 'w'},
   {0, 0, 0, 0},
 };
@@ -316,6 +309,9 @@ main (register int argc, register char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  parse_long_options (argc, argv, "fmt", GNU_PACKAGE, VERSION,
+		      "Ross Paterson", usage);
 
   crown = tagged = split = uniform = FALSE;
   max_width = WIDTH;
@@ -381,15 +377,6 @@ main (register int argc, register char **argv)
 	break;
 
       }
-
-  if (show_version)
-    {
-      printf ("fmt (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (EXIT_SUCCESS);
-    }
-
-  if (show_help)
-    usage (0);
 
   best_width = max_width * (2 * (100 - LEEWAY) + 1) / 200;
 

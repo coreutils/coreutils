@@ -24,8 +24,9 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
-#include "xstrtoul.h"
 #include "error.h"
+#include "long-options.h"
+#include "xstrtoul.h"
 
 #if defined(__GNUC__) || defined(STDC_HEADERS)
 # include <float.h>
@@ -239,12 +240,6 @@ static enum size_spec integral_type_size[MAX_INTEGRAL_TYPE_SIZE + 1];
 #define MAX_FP_TYPE_SIZE sizeof(LONG_DOUBLE)
 static enum size_spec fp_type_size[MAX_FP_TYPE_SIZE + 1];
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output then exit.  */
-static int show_version;
-
 static struct option const long_options[] =
 {
   /* POSIX options.  */
@@ -258,8 +253,6 @@ static struct option const long_options[] =
   {"strings", optional_argument, NULL, 's'},
   {"traditional", no_argument, NULL, 'B'},
   {"width", optional_argument, NULL, 'w'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -1600,6 +1593,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "od", GNU_PACKAGE, VERSION,
+		      "Jim Meyering", usage);
+
   err = 0;
 
   for (i = 0; i <= MAX_INTEGRAL_TYPE_SIZE; i++)
@@ -1768,15 +1764,6 @@ the maximum\nrepresentable value of type `long'"), optarg);
 
   if (n_failed_decodes > 0)
     exit (EXIT_FAILURE);
-
-  if (show_version)
-    {
-      printf ("od (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (EXIT_SUCCESS);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (flag_dump_strings && n_specs > 0)
     error (EXIT_FAILURE, 0,

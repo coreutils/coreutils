@@ -24,6 +24,7 @@
 #include <sys/types.h>
 #include "system.h"
 #include "linebuffer.h"
+#include "long-options.h"
 #include "error.h"
 
 /* Undefine, to avoid warning about redefinition on some systems.  */
@@ -42,16 +43,8 @@ static int only_file_2;
 /* If nonzero, print lines that are found in both files. */
 static int both;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output then exit.  */
-static int show_version;
-
 static struct option const long_options[] =
 {
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {0, 0, 0, 0}
 };
 
@@ -221,6 +214,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "comm", GNU_PACKAGE, VERSION,
+		      "Richard Stallman and David MacKenzie", usage);
+
   only_file_1 = 1;
   only_file_2 = 1;
   both = 1;
@@ -246,15 +242,6 @@ main (int argc, char **argv)
       default:
 	usage (1);
       }
-
-  if (show_version)
-    {
-      printf ("comm (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (EXIT_SUCCESS);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (optind + 2 != argc)
     usage (1);

@@ -45,6 +45,7 @@ tac -r -s '.\|
 #include <regex.h>
 
 #include "error.h"
+#include "long-options.h"
 #include "safe-read.h"
 
 #if defined __MSDOS__ || defined _WIN32
@@ -102,19 +103,11 @@ static unsigned G_buffer_size;
 /* The compiled regular expression representing `separator'. */
 static struct re_pattern_buffer compiled_separator;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output then exit.  */
-static int show_version;
-
 static struct option const longopts[] =
 {
   {"before", no_argument, NULL, 'b'},
   {"regex", no_argument, NULL, 'r'},
   {"separator", required_argument, NULL, 's'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -614,6 +607,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "tac", GNU_PACKAGE, VERSION,
+		      "Jay Lepreau and David MacKenzie", usage);
+
   errors = 0;
   separator = "\n";
   sentinel_length = 1;
@@ -640,15 +636,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("tac (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (EXIT_SUCCESS);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (sentinel_length == 0)
     {

@@ -29,6 +29,7 @@
 #include "system.h"
 #include "error.h"
 #include "human.h"
+#include "long-options.h"
 #include "safe-read.h"
 
 /* Size of atomic reads. */
@@ -53,12 +54,6 @@ static int have_read_stdin;
 /* The error code to return to the system. */
 static int exit_status;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output then exits.  */
-static int show_version;
-
 static struct option const longopts[] =
 {
   {"bytes", no_argument, NULL, 'c'},
@@ -66,8 +61,6 @@ static struct option const longopts[] =
   {"lines", no_argument, NULL, 'l'},
   {"words", no_argument, NULL, 'w'},
   {"max-line-length", no_argument, NULL, 'L'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -304,6 +297,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "wc", GNU_PACKAGE, VERSION,
+		      "Paul Rubin and David MacKenzie", usage);
+
   exit_status = 0;
   print_lines = print_words = print_chars = print_linelength = 0;
   total_lines = total_words = total_chars = max_line_length = 0;
@@ -333,15 +329,6 @@ main (int argc, char **argv)
       default:
 	usage (1);
       }
-
-  if (show_version)
-    {
-      printf ("wc (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (EXIT_SUCCESS);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (print_lines + print_words + print_chars + print_linelength == 0)
     print_lines = print_words = print_chars = 1;
