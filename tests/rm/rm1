@@ -30,9 +30,8 @@ fail=0
 
 # This should fail.
 rm -rf b > out 2>&1 && fail=1
-cat <<EOF > exp
-rm: cannot remove \`b/a/p': Permission denied
-rm: cannot remove directory \`b': Directory not empty
+cat <<\EOF > exp
+rm: cannot remove directory `b/a/p': Permission denied
 EOF
 
 cmp out exp || fail=1
