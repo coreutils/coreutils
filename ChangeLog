@@ -1,3 +1,22 @@
+2004-11-12  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: Document the following change.
+	* src/pr.c (strtoumax): Declare if not declared.
+	(skip_to_page, first_page_number, last_page_number, page_number,
+	first_last_page, print_header):
+	Use uintmax_t for page numbers.
+	(first_last_page): Remove unnecessary forward declaration.
+	Do not modify arg (it is now a const pointer).
+	Return a true if successful, false (without print a diagnostic)
+	otherwise.
+	(main): If +XXX does not specify a valid page range, treat it
+	as a file name.  This follows the response to Open Group XCU ERN 41
+	<http://www.opengroup.org/sophocles/show_mail.tpl?source=L&listname=austin-group-l&id=7717>,
+	which says the behavior is allowed.
+	(skip_to_page): When starting page number exceeds page count,
+	print both numbers in the diagnostic.
+	(print_header): Detect page number overflow.
+
 2004-11-07  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
