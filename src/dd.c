@@ -66,6 +66,12 @@
 /* Default input and output blocksize. */
 #define DEFAULT_BLOCKSIZE 512
 
+/* Maximum blocksize.  Keep it smaller than SIZE_MAX, so that we can
+   allocate buffers that size.  Keep it smaller than SSIZE_MAX, for
+   the benefit of system calls like "read".  And keep it smaller than
+   OFF_T_MAX, for the benefit of the large-offset seek code.  */
+#define MAX_BLOCKSIZE MIN (SIZE_MAX, MIN (SSIZE_MAX, OFF_T_MAX))
+
 /* Conversions bit masks. */
 #define C_ASCII 01
 #define C_EBCDIC 02
@@ -133,6 +139,19 @@ static uintmax_t r_partial = 0;
 
 /* Number of full blocks read. */
 static uintmax_t r_full = 0;
+
+/* True if input is seekable.  */
+static bool input_seekable;
+
+/* Error number corresponding to initial attempt to lseek input.
+   If ESPIPE, do not issue any more diagnostics about it.  */
+int input_seek_errno;
+
+/* File offset of the input, in bytes, along with a flag recording
+   whether it overflowed.  The offset is valid only if the input is
+   seekable and if the offset has not overflowed.  */
+static uintmax_t input_offset;
+static bool input_offset_overflow;
 
 /* Records truncated by conv=block. */
 static uintmax_t r_truncate = 0;
@@ -653,26 +672,20 @@ scanargs (int argc, char **argv)
 
 	  if (STREQ (name, "ibs"))
 	    {
-	      /* Ensure that each blocksize is <= SSIZE_MAX.  */
-	      invalid |= SSIZE_MAX < n;
+	      invalid |= ! (0 < n && n <= MAX_BLOCKSIZE);
 	      input_blocksize = n;
-	      invalid |= input_blocksize != n || input_blocksize == 0;
 	      conversions_mask |= C_TWOBUFS;
 	    }
 	  else if (STREQ (name, "obs"))
 	    {
-	      /* Ensure that each blocksize is <= SSIZE_MAX.  */
-	      invalid |= SSIZE_MAX < n;
+	      invalid |= ! (0 < n && n <= MAX_BLOCKSIZE);
 	      output_blocksize = n;
-	      invalid |= output_blocksize != n || output_blocksize == 0;
 	      conversions_mask |= C_TWOBUFS;
 	    }
 	  else if (STREQ (name, "bs"))
 	    {
-	      /* Ensure that each blocksize is <= SSIZE_MAX.  */
-	      invalid |= SSIZE_MAX < n;
+	      invalid |= ! (0 < n && n <= MAX_BLOCKSIZE);
 	      output_blocksize = input_blocksize = n;
-	      invalid |= output_blocksize != n || output_blocksize == 0;
 	    }
 	  else if (STREQ (name, "cbs"))
 	    {
@@ -823,6 +836,17 @@ swab_buffer (char *buf, size_t *nread)
   return ++bufstart;
 }
 
+/* Add OFFSET to the input offset, setting the overflow flag if
+   necessary.  */
+
+static void
+advance_input_offset (uintmax_t offset)
+{
+  input_offset += offset;
+  if (input_offset < offset)
+    input_offset_overflow = true;
+}
+
 /* This is a wrapper for lseek.  It detects and warns about a kernel
    bug that makes lseek a no-op for tape devices, even though the kernel
    lseek return value suggests that the function succeeded.
@@ -867,6 +891,7 @@ skip_via_lseek (char const *filename, int fdesc, off_t offset, int whence)
       error (0, 0, _("warning: working around lseek kernel bug for file (%s)\n\
   of mt_type=0x%0lx -- see <sys/mtio.h> for the list of types"),
 	     filename, s2.mt_type);
+      errno = 0;
       new_position = -1;
     }
 
@@ -879,7 +904,7 @@ skip_via_lseek (char const *filename, int fdesc, off_t offset, int whence)
 /* Throw away RECORDS blocks of BLOCKSIZE bytes on file descriptor FDESC,
    which is open with read permission for FILE.  Store up to BLOCKSIZE
    bytes of the data at a time in BUF, if necessary.  RECORDS must be
-   nonzero.  */
+   nonzero.  If fdesc is STDIN_FILENO, advance the input offset.  */
 
 static void
 skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
@@ -891,15 +916,32 @@ skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
      or if the the file offset is not representable as an off_t --
      fall back on using read.  */
 
-  if ((uintmax_t) offset / blocksize != records
-      || skip_via_lseek (file, fdesc, offset, SEEK_CUR) < 0)
+  errno = 0;
+  if ((uintmax_t) offset / blocksize == records
+      && 0 <= skip_via_lseek (file, fdesc, offset, SEEK_CUR))
     {
+      if (fdesc == STDIN_FILENO)
+	advance_input_offset (offset);
+    }
+  else
+    {
+      int lseek_errno = errno;
       while (records--)
 	{
 	  size_t nread = safe_read (fdesc, buf, blocksize);
 	  if (nread == SAFE_READ_ERROR)
 	    {
-	      error (0, errno, _("reading %s"), quote (file));
+	      if (fdesc == STDIN_FILENO)
+		{
+		  error (0, errno, _("reading %s"), quote (file));
+		  if (conversions_mask & C_NOERROR)
+		    {
+		      print_stats ();
+		      continue;
+		    }
+		}
+	      else
+		error (0, lseek_errno, _("%s: cannot seek"), quote (file));
 	      quit (EXIT_FAILURE);
 	    }
 	  /* POSIX doesn't say what to do when dd detects it has been
@@ -907,8 +949,56 @@ skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
 	     FIXME: maybe give a warning.  */
 	  if (nread == 0)
 	    break;
+	  if (fdesc == STDIN_FILENO)
+	    advance_input_offset (nread);
 	}
     }
+}
+
+/* Advance the input by NBYTES if possible, after a read error.
+   The input file offset may or may not have advanced after the failed
+   read; adjust it to point just after the bad record regardless.
+   Return true if successful, or if the input is already known to not
+   be seekable.  */
+
+static bool
+advance_input_after_read_error (size_t nbytes)
+{
+  if (! input_seekable)
+    {
+      if (input_seek_errno == ESPIPE)
+	return true;
+      errno = input_seek_errno;
+    }
+  else
+    {
+      off_t offset;
+      advance_input_offset (nbytes);
+      input_offset_overflow |= (OFF_T_MAX < input_offset);
+      if (input_offset_overflow)
+	{
+	  error (0, 0, _("offset overflow while reading file %s"),
+		 quote (input_file));
+	  return false;
+	}
+      offset = lseek (STDIN_FILENO, 0, SEEK_CUR);
+      if (0 <= offset)
+	{
+	  off_t diff;
+	  if (offset == input_offset)
+	    return true;
+	  diff = input_offset - offset;
+	  if (! (0 <= diff && diff <= nbytes))
+	    error (0, 0, _("warning: screwy file offset after failed read"));
+	  if (0 <= skip_via_lseek (input_file, STDIN_FILENO, diff, SEEK_CUR))
+	    return true;
+	  if (errno == 0)
+	    error (0, 0, _("cannot work around kernel bug after all"));
+	}
+    }
+
+  error (0, errno, _("%s: cannot seek"), quote (input_file));
+  return false;
 }
 
 /* Copy NREAD bytes of BUF, with no conversions.  */
@@ -1030,6 +1120,11 @@ dd_copy (void)
   char *real_buf;		/* real buffer address before alignment */
   char *real_obuf;
   size_t nread;			/* Bytes read in the current block. */
+
+  /* If nonzero, then the previously read block was partial and
+     PARTREAD was its size.  */
+  size_t partread = 0;
+
   int exit_status = EXIT_SUCCESS;
   size_t page_size = getpagesize ();
   size_t n_bytes_read;
@@ -1075,16 +1170,7 @@ dd_copy (void)
     skip (STDIN_FILENO, input_file, skip_records, input_blocksize, ibuf);
 
   if (seek_records != 0)
-    {
-      /* FIXME: this loses for
-	 % ./dd if=dd seek=1 |:
-	 ./dd: standard output: Bad file descriptor
-	 0+0 records in
-	 0+0 records out
-	 */
-
-      skip (STDOUT_FILENO, output_file, seek_records, output_blocksize, obuf);
-    }
+    skip (STDOUT_FILENO, output_file, seek_records, output_blocksize, obuf);
 
   if (max_records == 0)
     return exit_status;
@@ -1114,8 +1200,15 @@ dd_copy (void)
 	    {
 	      print_stats ();
 	      /* Seek past the bad block if possible. */
-	      lseek (STDIN_FILENO, (off_t) input_blocksize, SEEK_CUR);
-	      if (conversions_mask & C_SYNC)
+	      if (!advance_input_after_read_error (input_blocksize - partread))
+		{
+		  exit_status = EXIT_FAILURE;
+
+		  /* Suppress duplicate diagnostics.  */
+		  input_seekable = false;
+		  input_seek_errno = ESPIPE;
+		}
+	      if ((conversions_mask & C_SYNC) && !partread)
 		/* Replace the missing input with null bytes and
 		   proceed normally.  */
 		nread = 0;
@@ -1131,10 +1224,12 @@ dd_copy (void)
 	}
 
       n_bytes_read = nread;
+      advance_input_offset (nread);
 
       if (n_bytes_read < input_blocksize)
 	{
 	  r_partial++;
+	  partread = n_bytes_read;
 	  if (conversions_mask & C_SYNC)
 	    {
 	      if (!(conversions_mask & C_NOERROR))
@@ -1146,7 +1241,10 @@ dd_copy (void)
 	    }
 	}
       else
-	r_full++;
+	{
+	  r_full++;
+	  partread = 0;
+	}
 
       if (ibuf == obuf)		/* If not C_TWOBUFS. */
 	{
@@ -1260,6 +1358,7 @@ main (int argc, char **argv)
 {
   int i;
   int exit_status;
+  off_t offset;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -1296,6 +1395,11 @@ main (int argc, char **argv)
       if (open_fd (STDIN_FILENO, input_file, O_RDONLY | opts, 0) < 0)
 	error (EXIT_FAILURE, errno, _("opening %s"), quote (input_file));
     }
+
+  offset = lseek (STDIN_FILENO, 0, SEEK_CUR);
+  input_seekable = (0 <= offset);
+  input_offset = offset;
+  input_seek_errno = errno;
 
   if (output_file == NULL)
     {
