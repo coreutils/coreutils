@@ -6348,17 +6348,25 @@ reads these as zeroes.  This can both save considerable disk space and
 increase speed, since many binary files contain lots of consecutive zero
 bytes.  By default, @command{cp} detects holes in input source files via a crude
 heuristic and makes the corresponding output file sparse as well.
+Only regular files may be sparse.
 
 The @var{when} value can be one of the following:
 @table @samp
 @item auto
-The default behavior: the output file is sparse if the input file is sparse.
+The default behavior: if the input file is sparse, attempt to make
+the output file sparse, too.  However, if an output file exists but
+refers to a non-regular file, then do not attempt to make it sparse.
 
 @item always
-Always make the output file sparse.  This is useful when the input
-file resides on a filesystem that does not support sparse files (the
-most notable example is @samp{efs} filesystems in SGI IRIX 5.3 and
-earlier), but the output file is on another type of filesystem.
+For each sufficiently long sequence of zero bytes in the input file,
+attempt to create a corresponding hole in the output file, even if the
+input file does not appear to be sparse.
+This is useful when the input file resides on a filesystem
+that does not support sparse files
+(for example,  @samp{efs} filesystems in SGI IRIX 5.3 and earlier),
+but the output file is on a type of filesystem that does support them.
+Holes may be created only in regular files, so if the destination file
+is of some other type, @command{cp} does not even try to make it sparse.
 
 @item never
 Never make the output file sparse.
