@@ -1,4 +1,6 @@
 package Fetish;
+# This is a testing framework.
+
 # In case you're wondering about the name, it comes from the
 # names of the three packages: FIleutils, SH-utils, TExtutils.
 
@@ -10,7 +12,7 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.4 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.5 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my @Types = qw (IN OUT ERR EXIT);
