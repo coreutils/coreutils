@@ -2,6 +2,9 @@
 
 	* Version 5.0.90.
 
+	* tests/priv-check (my_uid): Use `!', not `^' in case pattern `[!0-9]',
+	since /bin/sh of at least NetBSD 1.6 and OpenBSD 3.2 don't accept `^'.
+
 	* src/remove.c (prompt) [! recursive]: Don't prompt about unwritable
 	directories, as required by POSIX.   Reported by Karl Berry.
 	* tests/rm/dir-no-w: New file.  Test for the above fix.
