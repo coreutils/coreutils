@@ -25,18 +25,6 @@
 #include <assert.h>
 #define NDEBUG 1
 
-#ifdef HAVE_LIMITS_H
-# include <limits.h>
-#endif /* HAVE_LIMITS_H */
-
-#ifndef UINT_MAX
-# define UINT_MAX ((unsigned int) ~(unsigned int) 0)
-#endif
-
-#ifndef INT_MAX
-# define INT_MAX ((int) (UINT_MAX >> 1))
-#endif
-
 #include "system.h"
 #include "long-options.h"
 #include "error.h"
