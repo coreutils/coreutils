@@ -145,7 +145,7 @@ main (argc, argv, envp)
 	case 'u':
 	  break;
 	default:
-	  usage ();
+	  usage (2);
 	}
     }
 
@@ -156,7 +156,7 @@ main (argc, argv, envp)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (optind != argc && !strcmp (argv[optind], "-"))
     ignore_environment = 1;
@@ -192,11 +192,28 @@ main (argc, argv, envp)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s [{--help,--version}] [-] [-i] [-u name] [--ignore-environment]\n\
-       [--unset=name] [name=value]... [command [args...]]\n",
+  fprintf (status == 0 ? stdout : stderr, "\
+Usage: %s [OPTION]... [-] [NAME=VALUE]... [COMMAND [ARG]...]\n\
+",
 	   program_name);
-  exit (2);
+
+  if (status != 0)
+    fprintf (stderr, "\nTry `%s --help' for more information.\n",
+	     program_name);
+  else
+
+    printf ("\
+\n\
+  -u, --unset NAME           remove variable from the environment\n\
+  -i, --ignore-environment   start with an empty environment\n\
+  --help                     display this help and exit\n\
+  --version                  output version information and exit\n\
+\n\
+A mere - implies -i.  If no COMMAND, print the resulting environment.\n\
+");
+
+  exit (status);
 }

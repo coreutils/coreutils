@@ -1,3 +1,24 @@
+Sat Oct 16 22:32:54 1993  Jim Meyering  (meyering@comco.com)
+
+	* whoami.c (main): Cast printf arg UID so it matches the type
+	expected by %u format no matter how uid_t is defined.
+
+	* stty.c: Accept `status' option and VDISCARD as an alias for
+	VFLUSHO.  From Arne H. Juul (arnej@imf.unit.no).
+
+	* basename.c, date.c, dirname.c, echo.c, env.c, expr.c,
+	false.sh, groups.sh, id.c, logname.c, long-options.c, nice.c,
+	nohup.sh, pathchk.c, printenv.c, printf.c, sleep.c, stty.c,
+	su.c, tee.c, test.c, true.sh, tty.c, uname.c, who.c, whoami.c,
+	yes.c: Using --help gets long well- formatted help.  Now --help
+	writes to stdout and exits successfully.  From Francois Pinard
+	<pinard@iro.umontreal.ca>.
+
+Wed Oct 13 13:10:27 1993  Jim Meyering  (meyering@comco.com)
+
+	* long-options.c: Include sys/types before system.h.
+	From Franc,ois Pinard (pinard@iro.umontreal.ca).
+
 Tue Oct 12 00:53:26 1993  Jim Meyering  (meyering@comco.com)
 
 	* stime.c [HAVE_CONFIG_H, CONFIG_BROKETS]: Include <config.h>

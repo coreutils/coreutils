@@ -140,7 +140,7 @@ main (argc, argv)
 	universal_time = 1;
 	break;
       default:
-	usage ();
+	usage (1);
       }
 
   if (show_version)
@@ -150,10 +150,10 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (argc - optind > 1)
-    usage ();
+    usage (1);
 
   if (universal_time && putenv (TZ_UCT) != 0)
     error (1, 0, "virtual memory exhausted");
@@ -221,12 +221,63 @@ show_date (format, when)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s [{--help,--version}] [-u] [-d datestr] [-s datestr]\n\
-       [--date datestr] [--set datestr] [--uct] [--universal]\n\
-       [+FORMAT] [MMDDhhmm[[CC]YY][.ss]]\n",
+  fprintf (status == 0 ? stdout : stderr, "\
+Usage: %s [OPTION]... [+FORMAT] [MMDDhhmm[[CC]YY][.ss]]\n\
+",
 	   program_name);
-  exit (1);
+
+  if (status != 0)
+    fprintf (stderr, "\nTry `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
+\n\
+  -d, --date STRING        display time described by STRING, not `now'\n\
+  -s, --set STRING         set time described by STRING\n\
+  -u, --uct, --universal   print or set Universal Coordinated Time\n\
+      --help               display this help and exit\n\
+      --version            output version information and exit\n\
+");
+      printf ("\
+\n\
+FORMAT controls the output.  Interpreted sequences are:\n\
+\n\
+  %%%%   a literal %%\n\
+  %%A   locale's full weekday name, variable length (Sunday..Saturday)\n\
+  %%B   locale's full month name, variable length (January..December)\n\
+  %%D   date (mm/dd/yy)\n\
+  %%H   hour (00..23)\n\
+  %%I   hour (01..12)\n\
+  %%M   minute (00..59)\n\
+  %%S   second (00..61)\n\
+  %%T   time, 24-hour (hh:mm:ss)\n\
+  %%U   week number of year with Sunday as first day of week (00..53)\n\
+  %%W   week number of year with Monday as first day of week (00..53)\n\
+  %%X   locale's time representation (%%H:%%M:%%S)\n\
+  %%Y   year (1970...)\n\
+  %%Z   time zone (e.g., EDT), or nothing if no time zone is determinable\n\
+  %%a   locale's abbreviated weekday name (Sun..Sat)\n\
+  %%b   locale's abbreviated month name (Jan..Dec)\n\
+  %%c   locale's date and time (Sat Nov 04 12:02:33 EST 1989)\n\
+  %%d   day of month (01..31)\n\
+  %%h   same as %%b\n\
+  %%j   day of year (001..366)\n\
+  %%k   hour ( 0..23)\n\
+  %%l   hour ( 1..12)\n\
+  %%m   month (01..12)\n\
+  %%n   a newline\n\
+  %%p   locale's AM or PM\n\
+  %%r   time, 12-hour (hh:mm:ss [AP]M)\n\
+  %%t   a horizontal tab\n\
+  %%w   day of week (0..6)\n\
+  %%x   locale's date representation (mm/dd/yy)\n\
+  %%y   last two digits of year (00..99)\n\
+");
+    }
+
+  exit (status);
 }

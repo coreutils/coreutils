@@ -168,7 +168,7 @@ main (argc, argv)
 	  break;
 
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -179,7 +179,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (chdir ("/dev"))
     error (1, errno, "cannot change directory to /dev");
@@ -205,7 +205,7 @@ main (argc, argv)
       break;
 
     default:			/* lose */
-      usage ();
+      usage (1);
     }
 
   exit (0);
@@ -459,11 +459,35 @@ idle_string (when)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s [-imqsuwHT] [--count] [--idle] [--heading] [--message] [--mesg]\n\
-       [--writable] [file] [am i]\n",
+  fprintf (status == 0 ? stdout : stderr, "\
+Usage: %s [OPTION]... [ FILE | ARG1 ARG2 ]\n\
+",
 	   program_name);
-  exit (1);
+
+  if (status != 0)
+    fprintf (stderr, "\nTry `%s --help' for more information.\n",
+	     program_name);
+  else
+
+    printf ("\
+\n\
+  -H, --heading     print line of column headings\n\
+  -T, -w, --mesg    add user's message status as +, - or ?\n\
+  -i, -u, --idle    add user idle time as HOURS:MINUTES, . or old\n\
+  -m                only hostname and user associated with stdin\n\
+  -q, --count       all login names and number of users logged on\n\
+  -s                (ignored)\n\
+      --help        display this help and exit\n\
+      --message     same as -T\n\
+      --version     output version information and exit\n\
+      --writeable   same as -T\n\
+\n\
+If FILE not given, uses /etc/utmp.  /etc/wtmp as FILE is common.\n\
+If ARG1 ARG2 given, -m presumed: `am i' or `mom likes' are usual.\n\
+");
+
+  exit (status);
 }

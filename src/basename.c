@@ -65,11 +65,26 @@ static struct option const long_options[] =
 };
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "Usage: %s [{--help,--version}] name [suffix]\n",
+  fprintf (status == 0 ? stdout : stderr, "\
+Usage: %s [OPTION]... PATH [SUFFIX]\n\
+",
 	   program_name);
-  exit (1);
+
+  if (status != 0)
+    fprintf (stderr, "\nTry `%s --help' for more information.\n",
+	     program_name);
+  else
+
+    printf ("\
+\n\
+  --help      display this help and exit\n\
+  --version   output version information and exit\n\
+");
+
+  exit (status);
 }
 
 void
@@ -90,7 +105,7 @@ main (argc, argv)
 	  break;
 
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -101,10 +116,10 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (argc - optind == 0 || argc - optind > 2)
-    usage ();
+    usage (1);
 
   strip_trailing_slashes (argv[optind]);
 

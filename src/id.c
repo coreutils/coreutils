@@ -143,7 +143,7 @@ main (argc, argv)
 	  just_group_list = 1;
 	  break;
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -154,7 +154,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (just_user + just_group + just_group_list > 1)
     error (1, 0, "cannot print only user and only group");
@@ -163,7 +163,7 @@ main (argc, argv)
     error (1, 0, "cannot print only names or real IDs in default format");
 
   if (argc - optind > 1)
-    usage ();
+    usage (1);
 
   if (argc - optind == 1)
     {
@@ -360,10 +360,31 @@ print_full_info (username)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s [-gnruG] [--group] [--name] [--real] [--user] [--groups] [username]\n",
+  fprintf (status == 0 ? stdout : stderr, "\
+Usage: %s [OPTION]... [USERNAME]\n\
+",
 	   program_name);
-  exit (1);
+
+  if (status != 0)
+    fprintf (stderr, "\nTry `%s --help' for more information.\n",
+	     program_name);
+  else
+
+    printf ("\
+\n\
+  -g, --group     print only the group ID\n\
+  -n, --name      print a name instead of a number, for -ugG\n\
+  -r, --real      print the real ID instead of effective ID, for -ugG\n\
+  -u, --user      print only the user ID\n\
+  -G, --groups    print only the supplementary groups\n\
+      --help      display this help and exit\n\
+      --version   output version information and exit\n\
+\n\
+Without any OPTION, print some useful set of identified information.\n\
+");
+
+  exit (status);
 }

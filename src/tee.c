@@ -67,13 +67,28 @@ static struct option const long_options[] =
 };
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-	  fprintf (stderr, "\
-Usage: %s [{--help,--version}] [-ai] [--append]\n\
-       [--ignore-interrupts] [file...]\n",
-		   program_name);
-  exit (1);
+  fprintf (status == 0 ? stdout : stderr, "\
+Usage: %s [OPTION]... [FILE]...\n\
+",
+	   program_name);
+
+  if (status != 0)
+    fprintf (stderr, "\nTry `%s --help' for more information.\n",
+	     program_name);
+  else
+
+    printf ("\
+\n\
+  -a, --append              append to the given FILEs, do not overwrite\n\
+  -i, --ignore-interrupts   ignore interrupt signals\n\
+      --help                display this help and exit\n\
+      --version             output version information and exit\n\
+");
+
+  exit (status);
 }
 
 void
@@ -105,7 +120,7 @@ main (argc, argv)
 	  break;
 
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -116,7 +131,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (ignore_interrupts)
     {

@@ -88,7 +88,7 @@ main (argc, argv)
 	  break;
 
 	default:
-	  usage ();
+	  usage (2);
 	}
     }
 
@@ -99,10 +99,10 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (optind != argc)
-    usage ();
+    usage (2);
 
   tty = ttyname (0);
   if (!silent)
@@ -120,9 +120,25 @@ main (argc, argv)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s [-s] [--silent] [--quiet]\n", program_name);
-  exit (2);
+  fprintf (status == 0 ? stdout : stderr, "\
+Usage: %s [OPTION]...\n\
+",
+	   program_name);
+
+  if (status != 0)
+    fprintf (stderr, "\nTry `%s --help' for more information.\n",
+	     program_name);
+  else
+
+    printf ("\
+\n\
+  -s, --silent, --quiet   print nothing, only return an exit status\n\
+      --help              display this help and exit\n\
+      --version           output version information and exit\n\
+");
+
+  exit (status);
 }

@@ -74,11 +74,42 @@ char *program_name;
 void parse_long_options ();
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "Usage: %s [{--help,--version}] [-ne] [string ...]\n",
+  fprintf (status == 0 ? stdout : stderr, "\
+Usage: %s [OPTION]... [STRING]...\n\
+",
 	   program_name);
-  exit (1);
+
+  if (status != 0)
+    fprintf (stderr, "\nTry `%s --help' for more information.\n",
+	     program_name);
+  else
+
+    printf ("\
+\n\
+  -n              do not output the trailing newline\n\
+  -e              (unused)\n\
+  -E              disable interpolation of some sequences in STRINGs\n\
+      --help      display this help and exit (should be alone)\n\
+      --version   output version information and exit (should be alone)\n\
+\n\
+Without -E, the following sequences are recognized and interpolated:\n\
+\n\
+  \\NNN   the character whose ASCII code is NNN (octal)\n\
+  \\\\     backslash\n\
+  \\a     alert (BEL)\n\
+  \\b     backspace\n\
+  \\c     suppress trailing newline\n\
+  \\f     form feed\n\
+  \\n     new line\n\
+  \\r     carriage return\n\
+  \\t     horizontal tab\n\
+  \\v     vertical tab\n\
+");
+
+  exit (status);
 }
 
 /* Print the words in LIST to standard output.  If the first word is

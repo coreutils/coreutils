@@ -1011,11 +1011,84 @@ posixtest ()
 void parse_long_options ();
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "Usage: %s [{--help,--version}] [expr]\n",
-	   program_name);
-  exit (1);
+  fprintf (status == 0 ? stdout : stderr, "\
+Usage: %s EXPRESSION\n\
+  or:  [ EXPRESSION ]\n\
+  or:  %s OPTION\n\
+",
+	   program_name, program_name);
+
+  if (status != 0)
+    fprintf (stderr, "\nTry `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
+\n\
+  --help      display this help and exit\n\
+  --version   output version information and exit\n\
+\n\
+EXPRESSION is true or false and sets exit status.  It is one of:\n\
+");
+      printf ("\
+\n\
+  ( EXPRESSION )               EXPRESSION is true\n\
+  ! EXPRESSION                 EXPRESSION is false\n\
+  EXPRESSION1 -a EXPRESSION2   both EXPRESSION1 and EXPRESSION2 are true\n\
+  EXPRESSION1 -o EXPRESSION2   either EXPRESSION1 or EXPRESSION2 is true\n\
+\n\
+  [-n] STRING          the length of STRING is non-zero\n\
+  -z STRING            the length of STRING is zero\n\
+  STRING1 = STRING2    the strings are equal\n\
+  STRING1 != STRING2   the strings are not equal\n\
+\n\
+  INTEGER1 -eq INTEGER2   INTEGER1 is equal to INTEGER2\n\
+  INTEGER1 -ge INTEGER2   INTEGER1 is greater than or equal to INTEGER2\n\
+  INTEGER1 -gt INTEGER2   INTEGER1 is greater than INTEGER2\n\
+  INTEGER1 -le INTEGER2   INTEGER1 is less than or equal to INTEGER2\n\
+  INTEGER1 -lt INTEGER2   INTEGER1 is less than INTEGER2\n\
+  INTEGER1 -ne INTEGER2   INTEGER1 is not equal to INTEGER2\n\
+");
+      printf ("\
+\n\
+  FILE1 -ef FILE2   FILE1 and FILE2 have the same device and inode numbers\n\
+  FILE1 -nt FILE2   FILE1 is newer (modification date) than FILE2\n\
+  FILE1 -ot FILE2   FILE1 is older than FILE2\n\
+\n\
+  -G FILE     FILE exists and is owned by the effective group ID\n\
+  -L FILE     FILE exists and is a symbolic link\n\
+  -O FILE     FILE exists and is owned by the effective user ID\n\
+  -S FILE     FILE exists and is a socket\n\
+  -b FILE     FILE exists and is block special\n\
+  -c FILE     FILE exists and is character special\n\
+  -d FILE     FILE exists and is a directory\n\
+  -e FILE     FILE exists\n\
+  -f FILE     FILE exists and is a regular file\n\
+  -g FILE     FILE exists and is set-group-ID\n\
+  -k FILE     FILE exists and has its sticky bit set\n\
+  -p FILE     FILE exists and is a named pipe\n\
+  -r FILE     FILE exists and is readable\n\
+  -s FILE     FILE exists and has a size greater than zero\n\
+  -t          standard output is opened on a terminal\n\
+  -t FD       file descriptor FD is opened on a terminal\n\
+  -u FILE     FILE exists and its set-user-ID bit is set\n\
+  -w FILE     FILE exists and is writable\n\
+  -x FILE     FILE exists and is executable\n\
+");
+      printf ("\
+\n\
+  --help      display this help and exit\n\
+  --version   output version information and exit\n\
+\n\
+Beware that parentheses need to be escaped by backslashes for shells.\n\
+INTEGER may also be -l STRING, which evaluates to the length of STRING.\n\
+");
+    }
+
+  exit (status);
 }
 #endif /* TEST_STANDALONE */
 

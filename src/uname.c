@@ -137,7 +137,7 @@ main (argc, argv)
 	  break;
 
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -148,10 +148,10 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (optind != argc)
-    usage ();
+    usage (1);
 
   if (toprint == 0)
     toprint = PRINT_SYSNAME;
@@ -185,10 +185,32 @@ print_element (mask, element)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s [-snrvma] [--sysname] [--nodename] [--release] [--version]\n\
-       [--machine] [--all]\n", program_name);
-  exit (1);
+  fprintf (status == 0 ? stdout : stderr, "\
+Usage: %s [OPTION]...\n\
+",
+	   program_name);
+
+  if (status != 0)
+    fprintf (stderr, "\nTry `%s --help' for more information.\n",
+	     program_name);
+  else
+
+    printf ("\
+\n\
+  -a, --all        print all information\n\
+  -m, --machine    print the machine (hardware) type\n\
+  -n, --nodename   print the machine's network node hostname\n\
+  -r, --release    print the operating system release\n\
+  -s, --sysname    print the operating system name\n\
+  -v               print the operating system version\n\
+      --help       display this help and exit\n\
+      --version    output version information and exit\n\
+\n\
+Without any OPTION, assume -s.\n\
+");
+
+  exit (status);
 }

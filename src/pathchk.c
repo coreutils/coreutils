@@ -146,7 +146,7 @@ main (argc, argv)
 	  break;
 
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -157,10 +157,10 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (optind == argc)
-    usage ();
+    usage (1);
 
   for (; optind < argc; ++optind)
     exit_status |= validate_path (argv[optind], check_portability);
@@ -358,10 +358,25 @@ validate_path (path, portability)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s [-p] [--portability] path...\n",
+  fprintf (status == 0 ? stdout : stderr, "\
+Usage: %s [OPTION]... PATH...\n\
+",
 	   program_name);
-  exit (1);
+
+  if (status != 0)
+    fprintf (stderr, "\nTry `%s --help' for more information.\n",
+	     program_name);
+  else
+
+    printf ("\
+\n\
+  -p, --portability   check for all POSIX systems, not only this one\n\
+      --help          display this help and exit\n\
+      --version       output version information and exit\n\
+");
+
+  exit (status);
 }

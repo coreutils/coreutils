@@ -101,11 +101,48 @@ static int exit_status;
 char *program_name;
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "Usage: %s [{--help,--version}] format [argument...]\n",
-	   program_name);
-  exit (1);
+  fprintf (status == 0 ? stdout : stderr, "\
+Usage: %s FORMAT [ARGUMENT]...\n\
+  or:  %s OPTION\n\
+",
+	   program_name, program_name);
+
+  if (status != 0)
+    fprintf (stderr, "\nTry `%s --help' for more information.\n",
+	     program_name);
+  else
+
+    printf ("\
+\n\
+  --help      display this help and exit\n\
+  --version   output version information and exit\n\
+\n\
+FORMAT controls the output as in C printf.  Interpreted sequences are:\n\
+\n\
+  \\\"      double quote\n\
+  \\0NNN   character with octal value NNN (0 to 3 digits)\n\
+  \\\\      backslash\n\
+  \\a      alert (BEL)\n\
+  \\b      backspace\n\
+  \\c      produce no further output\n\
+  \\f      form feed\n\
+  \\n      new line\n\
+  \\r      carriage return\n\
+  \\t      horizontal tab\n\
+  \\v      vertical tab\n\
+  \\xNNN   character with hexadecimal value NNN (1 to 3 digits)\n\
+\n\
+  %%%%      a single %%\n\
+  %%b      ARGUMENT as a string with `\\' escapes interpreted\n\
+\n\
+and all C format specifications ending with one of diouxXfeEgGcs, with\n\
+ARGUMENTs converted to proper type first.  Variable widths are handled.\n\
+");
+
+  exit (status);
 }
 
 void

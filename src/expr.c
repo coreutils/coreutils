@@ -111,11 +111,62 @@ static void trace ();
 #endif
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "Usage: %s [{--help,--version}] expression...\n",
-	   program_name);
-  exit (1);
+  fprintf (status == 0 ? stdout : stderr, "\
+Usage: %s EXPRESSION\n\
+  or:  %s OPTION\n\
+",
+	   program_name, program_name);
+
+  if (status != 0)
+    fprintf (stderr, "\nTry `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("\
+\n\
+  --help      display this help and exit\n\
+  --version   output version information and exit\n\
+\n\
+");
+      printf ("\
+EXPRESSION value is written on standard output.  A white line\n\
+separates increasing precedence groups.  EXPRESSION may be:\n\
+\n\
+  ARG1 | ARG2       ARG1 if it is neither null nor 0, otherwise ARG2\n\
+\n\
+  ARG1 & ARG2       ARG1 if neither argument is null or 0, otherwise 0\n\
+\n\
+  ARG1 < ARG2       ARG1 is less than ARG2\n\
+  ARG1 <= ARG2      ARG1 is less than or equal to ARG2\n\
+  ARG1 = ARG2       ARG1 is equal to ARG2\n\
+  ARG1 != ARG2      ARG1 is unequal to ARG2\n\
+  ARG1 >= ARG2      ARG1 is greater than or equal to ARG2\n\
+  ARG1 > ARG2       ARG1 is greater than ARG2\n\
+\n\
+  ARG1 + ARG2       arithmetic sum of ARG1 and ARG2\n\
+  ARG1 - ARG2       arithmetic difference of ARG1 and ARG2\n\
+\n\
+  ARG1 * ARG2       arithmetic product of ARG1 and ARG2\n\
+  ARG1 / ARG2       arithmetic quotient of ARG1 divided by ARG2\n\
+  ARG1 %% ARG2       arithmetic remainder of ARG1 divided by ARG2\n\
+\n\
+  STRING : REGEXP   anchored pattern match of REGEXP in STRING\n\
+\n\
+  ( EXPRESSION )    value of EXPRESSION\n\
+");
+      printf ("\
+\n\
+Beware that some operators need to be escaped by backslashes for shells.\n\
+Comparisons are arithmetic if both ARGs are numbers, else lexicographical.\n\
+Pattern matches return the string matched between \\( and \\) or null; if\n\
+\\( and \\) are not used, they return the number of characters matched or 0.\n\
+");
+    }
+
+  exit (status);
 }
 
 void
@@ -130,7 +181,7 @@ main (argc, argv)
   parse_long_options (argc, argv, usage);
 
   if (argc == 1)
-    usage ();
+    usage (1);
   args = argv + 1;
 
   v = eval ();

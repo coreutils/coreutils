@@ -241,7 +241,7 @@ main (argc, argv)
 	  break;
 
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -252,7 +252,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (optind < argc && !strcmp (argv[optind], "-"))
     {
@@ -548,11 +548,32 @@ concat (s1, s2, s3)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s [-flmp] [-c command] [-s shell] [--login] [--fast]\n\
-       [--preserve-environment] [--command=command] [--shell=shell] [-]\n\
-       [user [arg...]]\n", program_name);
-  exit (1);
+  fprintf (status == 0 ? stdout : stderr, "\
+Usage: %s [OPTION]... [-] [USER [ARG]...]\n\
+",
+	   program_name);
+
+  if (status != 0)
+    fprintf (stderr, "\nTry `%s --help' for more information.\n",
+	     program_name);
+  else
+
+    printf ("\
+\n\
+  -l, --login                  make the shell a login shell\n\
+  -c, --commmand COMMAND       pass a single COMMAND to the shell with -c\n\
+  -f, --fast                   pass -f to the shell (for csh or tcsh)\n\
+  -m, --preserve-environment   do not reset environment variables\n\
+  -p                           same as -m\n\
+  -s, --shell SHELL            run SHELL if /etc/shells allows it\n\
+      --help                   display this help and exit\n\
+      --version                output version information and exit\n\
+\n\
+A mere - implies -l.   If USER not given, assume root.\n\
+");
+
+  exit (status);
 }

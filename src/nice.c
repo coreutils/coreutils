@@ -86,7 +86,7 @@ main (argc, argv)
       switch (optc)
 	{
 	case '?':
-	  usage ();
+	  usage (1);
 
 	case 0:
 	  break;
@@ -115,7 +115,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (minusflag)
     adjustment = -adjustment;
@@ -125,7 +125,7 @@ main (argc, argv)
   if (optind == argc)
     {
       if (adjustment_given)
-	usage ();
+	usage (1);
       /* No command given; print the priority. */
       errno = 0;
       current_priority = GET_PRIORITY ();
@@ -171,11 +171,29 @@ isinteger (s)
 }
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "\
-Usage: %s [-n adjustment] [-adjustment] [--adjustment=adjustment]\n\
-       [command [arg...]]\n",
+  fprintf (status == 0 ? stdout : stderr, "\
+Usage: %s [OPTION]... [COMMAND [ARG]...]\n\
+",
 	   program_name);
-  exit (1);
+
+  if (status != 0)
+    fprintf (stderr, "\nTry `%s --help' for more information.\n",
+	     program_name);
+  else
+
+    printf ("\
+\n\
+  -ADJUST                   increment priority by ADJUST first\n\
+  -n, --adjustment ADJUST   same as -ADJUST\n\
+  --help                    display this help and exit\n\
+  --version                 output version information and exit\n\
+\n\
+With no COMMAND, print the current scheduling priority.  ADJUST is 10\n\
+by default.  Range goes from -20 (highest priority) to 19 (lowest).\n\
+");
+
+  exit (status);
 }

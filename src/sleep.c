@@ -54,11 +54,28 @@ static struct option const long_options[] =
 };
 
 static void
-usage ()
+usage (status)
+     int status;
 {
-  fprintf (stderr, "Usage: %s [{--help,--version}] number[smhd]...\n",
+  fprintf (status == 0 ? stdout : stderr, "\
+Usage: %s [OPTION]... NUMBER[SUFFIX]\n\
+",
 	   program_name);
-  exit (1);
+
+  if (status != 0)
+    fprintf (stderr, "\nTry `%s --help' for more information.\n",
+	     program_name);
+  else
+
+    printf ("\
+\n\
+  --help      display this help and exit\n\
+  --version   output version information and exit\n\
+\n\
+SUFFIX may be s for seconds, m for minutes, h for hours or d for days.\n\
+");
+
+  exit (status);
 }
 
 void
@@ -80,7 +97,7 @@ main (argc, argv)
 	  break;
 
 	default:
-	  usage ();
+	  usage (1);
 	}
     }
 
@@ -91,7 +108,7 @@ main (argc, argv)
     }
 
   if (show_help)
-    usage ();
+    usage (0);
 
   if (argc == 1)
     {
