@@ -1,5 +1,5 @@
 /* remove.c -- core functions for removing files and directories
-   Copyright (C) 88, 90, 91, 1994-2003 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1994-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -162,6 +162,7 @@ ds_free (Dirstack_state *ds)
   obstack_free (&ds->dir_stack, NULL);
   obstack_free (&ds->len_stack, NULL);
   obstack_free (&ds->Active_dir, NULL);
+  free (ds);
 }
 
 static void
