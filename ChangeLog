@@ -1,6 +1,20 @@
-2004-10-21  Jim Meyering  <jim@meyering.net>
+2004-10-29  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	`tac /proc/modules' would print nothing
+	* src/tac.c (copy_to_temp): Renamed from save_stdin, since
+	now it copies a general file descriptor, not just stdin.
+	(tac_nonseekable): Renamed/adapted from tac_stdin.
+	(tac_file): Get fd via `open' directly rather than via fopen/fileno,
+	since we never used the stream.  Perform "-" to stdin mapping here
+	rather than in main.  Determine whether a file is seekable,
+	by trying to `lseek' to its end, and dispatch to tac_seekable or
+	tac_nonseekable accordingly.
+	(main): Rewrite argument handling now that it uses only tac_file.
+	Reported by Harald Dunkel in http://bugs.debian.org/278604.
+
+2004-10-21  Jim Meyering  <jim@meyering.net>
 
 	* tests/mv/leak-fd: New file.
 	* tests/mv/Makefile.am (TESTS): Add it.
