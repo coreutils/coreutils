@@ -25,11 +25,11 @@
 #include <ctype.h>
 
 #if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
-#define ISASCII(c) 1
+#define IN_CTYPE_DOMAIN(c) 1
 #else
-#define ISASCII(c) isascii(c)
+#define IN_CTYPE_DOMAIN(c) isascii(c)
 #endif
-#define ISUPPER(c) (ISASCII (c) && isupper (c))
+#define ISUPPER(c) (IN_CTYPE_DOMAIN (c) && isupper (c))
 
 #if _LIBC || STDC_HEADERS
 # define TOLOWER(c) tolower (c)
