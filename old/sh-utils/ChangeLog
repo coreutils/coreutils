@@ -1,3 +1,7 @@
+Wed Dec 11 19:33:36 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* Version 1.13.
+
 Tue Dec 10 06:36:57 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* acinclude.m4 (jm_SYS_PROC_UPTIME): New macro.  Derived from the
