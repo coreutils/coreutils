@@ -1,6 +1,12 @@
-2000-06-10  Jim Meyering  <meyering@lucent.com>
+2000-06-12  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0u.
+
+	* src/mv.c (main): Give the correct diagnostic when using the
+	--target-dir=DIR option, but no arguments.
+	Patch from Michael Stone.  Reported by herbert@gondor.apana.org.au.
+	* tests/mv/diag: New test for this.
+	* tests/mv/Makefile.am (TESTS): Add diag.
 
 2000-06-08  Brian Youmans  <3diff@gnu.org>
 
