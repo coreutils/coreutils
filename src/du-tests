@@ -1,5 +1,5 @@
 #!/bin/bash
-cat - <<\EOF
+cat - <<\EOF > /dev/null
 Invoke e.g., like this
 DU1=du-4.5.2 DU2=du ./du-tests
 EOF
