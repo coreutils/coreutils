@@ -745,7 +745,15 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 		result = add_object (&data, &st);
 
 	      if (result == 0)
-		result = ftw_dir (&data, &st);
+		{
+		  /* If we're doing a depth-first traversal, give the user
+		     a chance to prune the top-level directory.  */
+		  if ((flags & FTW_DEPTH)
+		      && (result = (*data.func) (data.dirbuf, &st, FTW_DPRE,
+						 &data.ftw)) == 0
+		      && ! data.ftw.skip)
+		    result = ftw_dir (&data, &st);
+		}
 	    }
 	  else
 	    {
