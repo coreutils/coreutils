@@ -7,7 +7,7 @@
 2003-07-14  Paul Eggert  <eggert@twinsun.com>
 
 	* doc/coreutils.texi (uname invocation): Explain the POSIX
-        terminology behind uname -m and uname -s.
+	terminology behind uname -m and uname -s.
 
 2003-07-13  Jim Meyering  <jim@meyering.net>
 
