@@ -3,6 +3,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  chgrp -R can now process hierarchies of virtually unlimited depth.
+  chgrp now accepts POSIX-mandated -L, -H, and -P options
+
+  chmod accepts new options: --preserve-root, --no-preserve-root
+
   du can now process hierarchies of virtually unlimited depth.
   Before, du was limited by the user's stack size and it would get a
   stack overflow error (often a segmentation fault) when applied to
