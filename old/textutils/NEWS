@@ -1,4 +1,5 @@
 Changes in release 1.20
+* fix bug in treatment by sort -f of bytes with high-bit set
 * update configuration system to use automake's aclocal program
 * configure performs sanity check on CC and CFLAGS to avoid a misleading
   failure that suggested cross-compiling was the cause
