@@ -76,27 +76,22 @@ main (int argc, char **argv)
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
 
-  /* The above handles --help and --version.
-     Since there is no other invocation of getopt, handle `--' here.  */
-  if (1 < argc && STREQ (argv[1], "--"))
-    {
-      --argc;
-      ++argv;
-    }
+  if (getopt_long (argc, argv, "", NULL, NULL) != -1)
+    usage (EXIT_FAILURE);
 
-  if (argc <= 1)
+  if (argc <= optind)
     {
       error (0, 0, _("missing operand"));
       usage (EXIT_FAIL);
     }
 
-  if (chroot (argv[1]))
+  if (chroot (argv[optind]) != 0)
     error (EXIT_FAIL, errno, _("cannot change root directory to %s"), argv[1]);
 
   if (chdir ("/"))
     error (EXIT_FAIL, errno, _("cannot chdir to root directory"));
 
-  if (argc == 2)
+  if (argc == optind + 1)
     {
       /* No command.  Run an interactive shell.  */
       char *shell = getenv ("SHELL");
@@ -104,11 +99,12 @@ main (int argc, char **argv)
 	shell = "/bin/sh";
       argv[0] = shell;
       argv[1] = "-i";
+      argv[2] = NULL;
     }
   else
     {
       /* The following arguments give the command.  */
-      argv += 2;
+      argv += optind + 1;
     }
 
   /* Execute the given command.  */
