@@ -1,0 +1,70 @@
+/* rpmatch - determine whether string value is affirmation or negative
+	     response according to current locale's data
+Copyright (C) 1996 Free Software Foundation, Inc.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software Foundation,
+Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
+#include <stdlib.h>
+#include <regex.h>
+
+
+static int
+try (tag, match, nomatch, lastp, re)
+     const char *pattern;
+     const int match;
+     const int nomatch;
+     const char **lastp;
+     regex_t *re;
+{
+  if (pattern != *lastp)
+    {
+      /* The pattern has changed.  */
+      if (*lastp)
+	{
+	  /* Free the old compiled pattern.  */
+	  regfree (re);
+	  *lastp = NULL;
+	}
+      /* Compile the pattern and cache it for future runs.  */
+      if (regcomp (re, pattern, REG_EXTENDED) != 0)
+	return -1;
+      *lastp = pattern;
+    }
+
+  /* Try the pattern.  */
+  return regexec (re, response, 0, NULL, 0) == 0 ? match : nomatch;
+}
+
+
+int
+rpmatch (response)
+     const char *response;
+{
+  /* Match against one of the response patterns, compiling the pattern
+     first if necessary.  */
+
+  /* We cache the response patterns and compiled regexps here.  */
+  static const char *yesexpr, *noexpr;
+  static regex_t yesre, nore;
+  int result;
+
+  return ((result = try (_("[yY][[:alpha:]]"), 1, 0, &yesexpr, &yesre))
+	  ? result
+	  : try (_("[nN][[:alpha:]]"), 0, -1, &noexpr, &nore));
+}
