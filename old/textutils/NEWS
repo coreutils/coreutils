@@ -1,4 +1,9 @@
 Changes in release 2.1
+* The following obsolete usages are no longer supported on systems conforming
+  to POSIX 1003.1-2001:
+  - sort +POS1 -POS2  (Use sort -k instead.)
+  - tail +N  (Use tail -n instead.)
+  - uniq +N  (Use uniq -s instead.)
 [2.0.20]
 * sort -m no longer segfaults when given an empty file
 * sort -S now accepts 'K' as a synonym for 'k'.
