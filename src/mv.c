@@ -1,5 +1,5 @@
 /* mv -- move or rename files
-   Copyright (C) 86, 89, 90, 91, 95, 96, 97, 1998 Free Software Foundation, Inc.
+   Copyright (C) 86, 89, 90, 91, 95, 96, 97, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -62,10 +62,8 @@
 /* Initial number of entries in the inode hash table.  */
 #define INITIAL_ENTRY_TAB_SIZE 70
 
-char *base_name ();
 int euidaccess ();
 int full_write ();
-enum backup_type get_version ();
 int isdir ();
 int lstat ();
 int yesno ();
@@ -320,7 +318,7 @@ movefile (char *source, char *dest, int dest_is_dir, const struct cp_options *x)
   return fail;
 }
 
-static void
+void
 usage (int status)
 {
   if (status != 0)
@@ -351,9 +349,10 @@ Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n\
 The backup suffix is ~, unless set with SIMPLE_BACKUP_SUFFIX.  The\n\
 version control may be set with VERSION_CONTROL, values are:\n\
 \n\
-  t, numbered     make numbered backups\n\
-  nil, existing   numbered if numbered backups exist, simple otherwise\n\
-  never, simple   always make simple backups\n\
+  none, off       never make backups (even if --backup is given)\n\
+  numbered, t     make numbered backups\n\
+  existing, nil   numbered if numbered backups exist, simple otherwise\n\
+  simple, never   always make simple backups\n\
 "));
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
       close_stdout ();
@@ -378,10 +377,12 @@ main (int argc, char **argv)
 
   cp_option_init (&x);
 
+  /* FIXME: consider not calling getenv for SIMPLE_BACKUP_SUFFIX unless
+     we'll actually use simple_backup_suffix.  */
   version = getenv ("SIMPLE_BACKUP_SUFFIX");
   if (version)
     simple_backup_suffix = version;
-  version = getenv ("VERSION_CONTROL");
+  version = NULL;
 
   errors = 0;
 
@@ -437,7 +438,9 @@ main (int argc, char **argv)
       usage (1);
     }
 
-  x.backup_type = (make_backups ? get_version (version) : none);
+  x.backup_type = (make_backups
+		   ? xget_version (_("--version-control"), version)
+		   : none);
 
   stdin_tty = isatty (STDIN_FILENO);
   dest_is_dir = isdir (argv[argc - 1]);
