@@ -1,10 +1,10 @@
 1999-02-07  Jim Meyering  <meyering@ascend.com>
 
+	Include stdio.h before defining `_unlocked' macros.
 	* src/pinky.c: Include stdio.h.
 	* src/uptime.c: Likewise.
 	* src/users.c: Likewise.
 	* src/who.c: Likewise.
-
 	* lib/readutmp.c: Include stdio.h here...
 	* lib/readutmp.h: ...not here.
 	From Ulrich Drepper.
