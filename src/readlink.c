@@ -25,6 +25,7 @@
 #include <getopt.h>
 
 #include "system.h"
+#include "canonicalize.h"
 #include "error.h"
 #include "xreadlink.h"
 #include "long-options.h"
