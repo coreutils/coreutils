@@ -24,12 +24,11 @@
 #endif
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include "linebuffer.h"
 #include "unlocked-io.h"
 #include "xalloc.h"
-
-void free ();
 
 /* Initialize linebuffer LINEBUFFER for use. */
 
