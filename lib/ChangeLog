@@ -1,7 +1,8 @@
 2003-10-15  Jim Meyering  <jim@meyering.net>
 
-	* Makefile.am (libfetish_a_SOURCES): Add userspec.h.
 	* userspec.h: New file.
+	* userspec.c: Include "userspec.h".
+	* Makefile.am (libfetish_a_SOURCES): Add userspec.h.
 
 2003-10-14  Paul Eggert  <eggert@twinsun.com>
 
