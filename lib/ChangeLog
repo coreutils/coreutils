@@ -1,5 +1,10 @@
 2001-11-17  Jim Meyering  <meyering@lucent.com>
 
+	* argmatch.c, closeout.c, error.c, exclude.c: Include unlocked-io.h.
+	* fatal.c, getdate.y, getpass.c, getstr.c, getusershell.c: Likewise.
+	* mountlist.c, posixtm.c, readtokens.c, readutmp.c: Likewise.
+	* regex.c, sha.c, version-etc.c, yesno.c: Likewise.
+
 	* mkstemp.c: #undef mkstemp.
 	Include config.h.
 	(rpl_mkstemp): Rename from mkstemp.
