@@ -1,6 +1,6 @@
 /* shred.c - overwrite files and devices to make it harder to recover data
 
-   Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999-2002 Free Software Foundation, Inc.
    Copyright (C) 1997, 1998, 1999 Colin Plumb.
 
    This program is free software; you can redistribute it and/or modify
@@ -34,7 +34,7 @@
  */
 
 /*
- * Do a securer overwrite of given files or devices, to make it harder
+ * Do a more secure overwrite of given files or devices, to make it harder
  * for even very expensive hardware probing to recover the data.
  *
  * Although this process is also known as "wiping", I prefer the longer
@@ -130,7 +130,7 @@ char *xstrdup PARAMS ((char const *));
 
 /* How many seconds to wait before checking whether to output another
    verbose output line.  */
-#define VERBOSE_UPDATE 10
+#define VERBOSE_UPDATE 5
 
 /* If positive, the units to use when printing sizes;
    if negative, the human-readable base.  */
@@ -635,7 +635,7 @@ isaac_seed (struct isaac_state *s)
     gettimeofday (&t, (struct timezone *) 0);
 #  else
     time_t t;
-    t = time ((time_t *) 0);
+    t = time (NULL);
 #  endif
 # endif
 #endif
@@ -843,7 +843,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   if (n)
     {
       error (0, 0, _("%s: pass %lu/%lu (%s)..."), qname, k, n, pass_string);
-      thresh = time ((time_t *) 0) + VERBOSE_UPDATE;
+      thresh = time (NULL) + VERBOSE_UPDATE;
       previous_human_offset = "";
     }
 
@@ -919,7 +919,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
       /* Time to print progress? */
       if (n
 	  && ((offset == size && *previous_human_offset)
-	      || thresh <= (now = time ((time_t *) 0))))
+	      || thresh <= (now = time (NULL))))
 	{
 	  char offset_buf[LONGEST_HUMAN_READABLE + 1];
 	  char size_buf[LONGEST_HUMAN_READABLE + 1];
@@ -928,7 +928,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 			      OUTPUT_BLOCK_SIZE);
 
 	  if (offset == size
-	      || strcmp (previous_human_offset, human_offset) != 0)
+	      || !STREQ (previous_human_offset, human_offset))
 	    {
 	      if (size == -1)
 		error (0, 0, _("%s: pass %lu/%lu (%s)...%s"),
@@ -937,9 +937,9 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 		{
 		  int percent = (size == 0
 				 ? 100
-				 : offset <= TYPE_MAXIMUM (uintmax_t) / 100
-				 ? offset * (uintmax_t) 100 / size
-				 : offset / (size / 100));
+				 : (offset <= TYPE_MAXIMUM (uintmax_t) / 100
+				    ? offset * (uintmax_t) 100 / size
+				    : offset / (size / 100)));
 		  error (0, 0, _("%s: pass %lu/%lu (%s)...%s/%s %d%%"),
 			 qname, k, n, pass_string, human_offset,
 			 human_readable ((uintmax_t) size, size_buf, 1,
@@ -1370,6 +1370,7 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
 {
   char *newname, *base;	  /* Base points to filename part of newname */
   unsigned len;
+  int first = 1;
   int err;
   int dir_fd;			/* Try to open directory to sync *it* */
 
@@ -1412,10 +1413,12 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
 		      /*
 		       * People seem to understand this better than talking
 		       * about renaming oldname.  newname doesn't need
-		       * quoting because we picked it.
+		       * quoting because we picked it.  oldname needs to
+		       * be quoted only the first time.
 		       */
-		      error (0, 0, _("%s: renamed to %s"), qoldname,
-			     quote (newname));
+		      char const *old = (first ? qoldname : oldname);
+		      error (0, 0, _("%s: renamed to %s"), old, newname);
+		      first = 0;
 		    }
 		  memcpy (oldname + (base - newname), base, len + 1);
 		  break;
@@ -1609,8 +1612,8 @@ main (int argc, char **argv)
 
   for (i = 0; i < n_files; i++)
     {
-      char const *qname = quotearg_colon (file[i]);
-      if (strcmp (file[i], "-") == 0)
+      char *qname = xstrdup (quotearg_colon (file[i]));
+      if (STREQ (file[i], "-"))
 	{
 	  if (wipefd (STDOUT_FILENO, qname, &s, &flags) < 0)
 	    err = 1;
@@ -1621,6 +1624,7 @@ main (int argc, char **argv)
 	  if (wipefile (file[i], qname, &s, &flags) < 0)
 	    err = 1;
 	}
+      free (qname);
     }
 
   /* Just on general principles, wipe s. */
